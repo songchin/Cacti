@@ -69,7 +69,7 @@ if (read_config_option("auth_method") != "0") {
 		$user_expire = api_user_expire_info($_SESSION["sess_user_id"]);
 		if ($user_expire == "0") {
 			$_SESSION["sess_change_password"] = true;
-			if (read_config_option("auth_method") == 1) {
+			if ((read_config_option("auth_method") == 1) || (($current_user["realm"] == "0") && (read_config_option("auth_method") == "3"))) {
 				header ("Location: auth_changepassword.php?ref=" . (isset($_SERVER["HTTP_REFERER"]) ? $_SERVER["HTTP_REFERER"] : "index.php"));
 				exit;
 			}
