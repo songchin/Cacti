@@ -96,7 +96,7 @@ function html_graph_area(&$graph_array, $no_graphs_message = "", $extra_url_args
 
 	if (sizeof($graph_array) > 0) {
 		if ($header != "") {
-			print "<tr bgcolor='#" . $colors["graph_type_background"] . "' " . $header . "</tr>";
+			print $header;
 		}
 
 		foreach ($graph_array as $graph) {
@@ -140,7 +140,7 @@ function html_graph_thumbnail_area(&$graph_array, $no_graphs_message = "", $extr
 	$i = 0; $k = 0;
 	if (sizeof($graph_array) > 0) {
 		if ($header != "") {
-			print "<tr bgcolor='#" . $colors["graph_type_background"] . "' " . $header . "</tr>";
+			print $header;
 		}
 
 		print "<tr>";
