@@ -239,7 +239,7 @@ function wizard_footer($button_back = true,$button_cancel = false,$button_save =
 	print "</form>\n";
 
 	/* debug output */
-	wizard_print_debug($wizard_array["debug"]);
+	wizard_print_debug();
 
 }
 
@@ -312,7 +312,9 @@ function wizard_clear_vars() {
 function wizard_history($action = "current",$page = "") {
 
 	if ($action == "next") {
-		array_push($_SESSION["wizard_vars"]["page_history"],$page);
+		if (end($_SESSION["wizard_vars"]["page_history"]) != $page) {
+			array_push($_SESSION["wizard_vars"]["page_history"],$page);
+		}
 		return $page;
 	}elseif ($action == "back") {
 		return array_pop($_SESSION["wizard_vars"]["page_history"]);
@@ -326,11 +328,15 @@ function wizard_history($action = "current",$page = "") {
 		}
 		return $_SESSION["wizard_vars"]["page_history"][$count];
 	}else{
-		$count = count($_SESSION["wizard_vars"]["page_history"]) - 1;
-		if ($count < 0) {
+		if (isset($_SESSION["wizard_vars"]["page_history"])) {
+			$count = count($_SESSION["wizard_vars"]["page_history"]) - 1;
+			if ($count < 0) {
+				return "intro";
+			}
+			return $_SESSION["wizard_vars"]["page_history"][$count];
+		}else{
 			return "intro";
 		}
-		return $_SESSION["wizard_vars"]["page_history"][$count];
 	}
 
 }
@@ -344,6 +350,7 @@ function wizard_process_action() {
 				include_once("include/top_header.php");
 				wizard_continue_prompt();
 				include_once("include/bottom_footer.php");
+				exit;
 			}
 		}
 	}
@@ -402,20 +409,23 @@ function wizard_continue_prompt() {
 
 }
 
-function wizard_print_debug($value) {
+function wizard_print_debug() {
 
-	if ($value) {
-		print "<br><br><br>";
-		print "<hr noshade>";
-		print "<table border='1' cellpadding='4' cellspacing='0' align='center'>\n";
-		print "<tr><td align='center' colspan='2'><b>WIZARD DEBUG</b></td></tr>\n";
-		print "<tr><td valign='top'><pre>";
-		print "Wizard Session Variables:\n";
-		print_r($_SESSION["wizard_vars"]);
-		print "</pre></td><td valign='top'><pre>";
-		print "\nForm Variables:\n";
-		print_r($_REQUEST);
-		print "</pre></td></tr></table>\n";
+	global $wizard_array;
+	if (isset($wizard_array["debug"])) {
+		if ($wizard_array["debug"]) {
+			print "<br><br><br>";
+			print "<hr noshade>";
+			print "<table border='1' cellpadding='4' cellspacing='0' align='center'>\n";
+			print "<tr><td align='center' colspan='2'><b>WIZARD DEBUG</b></td></tr>\n";
+			print "<tr><td valign='top'><pre>";
+			print "Wizard Session Variables:\n";
+			print_r($_SESSION["wizard_vars"]);
+			print "</pre></td><td valign='top'><pre>";
+			print "\nForm Variables:\n";
+			print_r($_REQUEST);
+			print "</pre></td></tr></table>\n";
+		}
 	}
 
 }

@@ -24,7 +24,7 @@
 
 
 
-
+/* Merges settings array with wizard helper array for render function */
 function wizard_settings_array_merge($section) {
 	global $settings;
 	
@@ -34,7 +34,7 @@ function wizard_settings_array_merge($section) {
 			"page" => "1"
 			),
 		"db_pconnections" => array(
-			"helper_text" => "Enabling this setting will allow mysql and php to pool connections.  This typically will reduce the number off connections to the database.  If you are running Solaris, you should consider disabling this option.",
+			"helper_text" => "Enabling this setting will allow mysql and php to pool connections.  This typically will reduce the number of connections to the database.  If you are running Solaris, you should consider disabling this option.",
 			"page" => "1"
 			),
 		"db_retries" => array(
@@ -46,11 +46,11 @@ function wizard_settings_array_merge($section) {
 			"page" => "2"
 			),
 		"max_memory" => array(
-			"helper_text" => "This is the number of Megabytes of RAM that PHP will use while executing Cacti related tasks.  If you are or are planing on monitoring devices with a large number of metrics, i.e. switch ports in excess of 300, then set this to 64.  Otherwise the default value of 32 will be more than enough.",
+			"helper_text" => "This is the number of Megabytes of RAM that PHP will use while executing Cacti related tasks.  If you are or are planning on monitoring devices with a large number of metrics, i.e. switch ports in excess of 300, then set this to 64.  Otherwise the default value of 32 will be more than enough.",
 			"page" => "2"
 			),
 		"max_execution_time" => array(
-			"helper_text" => "PHP timeout used while executing Cacti related tasks.  Typically not change is needed, the default is 10 seconds.",
+			"helper_text" => "PHP timeout used while executing Cacti related tasks.  If you are or are planning on monitoring devices with a large number of metrics, i.e. switch ports in excess of 300, then set this to 60 seconds.  Typically not change is needed, the default is 10 seconds.",
 			"page" => "2"
 			),
 		"other_header" => array(
@@ -84,40 +84,58 @@ function wizard_settings_array_merge($section) {
 
 }
 
-function wizard_render($wizard) {
-	
+/* Renders form and loads saved values from the session, database, default, in that order */
+function wizard_render_settings_section($wizard,$page) {
+
 	$wizard_settings = wizard_settings_array_merge($wizard);
 
 
-	switch (wizard_history()) {
+
+
+
+}
+
+/* Page save of values from previous page to session */
+function wizard_save_settings_section($wizard,$page) {
+
+
+
+
+}
+
+/* Final save to database from session */
+function wizard_save_commit($wizard) {
+
+
+
+}
+
+/* Render the html pages of the wizards */
+function wizard_render($wizard) {
+	
+	$page = wizard_history();
+
+	switch ($page) {
 		case "1":
-			$page = "1";
 			break;
 
 		case "2":
-			$page = "2";
 			break;
 
+		case "3":
+			break;
 
 		default:
 			/* page 0 */
-			$page = "0";
+			wizard_header($wizard,"80%");
+			wizard_start_area();
+
+			print "<input type='hidden' name='next_page' value='" . ($page + 1) . "'>";
+			wizard_end_area();
+			wizard_footer(true,false,false,true,"80%");
 
 	}
 
-
-	wizard_header($wizard,"80%");
-	wizard_start_area();
-	print "<input type='hidden' name='next_page' value='" . ($page + 1) . "'>";
-
-	print "Page: " . $page . "<br><br>";	
-	
-	print "<pre>";
-	print_r($wizard_settings);
-	print "</pre>"; 
-
-	wizard_end_area();
-	wizard_footer(true,false,false,true,"80%");
 
 }
 
