@@ -2629,9 +2629,9 @@ CREATE TABLE user_auth (
   policy_hosts tinyint(1) unsigned NOT NULL default '1',
   policy_graph_templates tinyint(1) unsigned NOT NULL default '1',
   enabled tinyint(1) unsigned NOT NULL default '1',
+  created datetime NOT NULL default '0000-00-00 00:00:00',
   password_expire_length int(4) unsigned NOT NULL default '0',
   password_change_last datetime NOT NULL default '0000-00-00 00:00:00',
-  created datetime NOT NULL default '0000-00-00 00:00:00',
   PRIMARY KEY  (id),
   UNIQUE KEY ID (id),
   KEY id_2 (id)
@@ -2641,8 +2641,8 @@ CREATE TABLE user_auth (
 -- Dumping data for table `user_auth`
 --
 
-INSERT INTO user_auth VALUES (1,'admin','21232f297a57a5a743894a0e4a801fc3',0,'Administrator','on','on','on','on','on',1,1,1,1,1,1,0,'',NOW());
-INSERT INTO user_auth VALUES (3,'guest','43e9a4ab75570f5b',0,'Guest Account','on','on','on','on','on',3,1,1,1,1,1,0,'',NOW());
+INSERT INTO user_auth VALUES (1,'admin','21232f297a57a5a743894a0e4a801fc3',0,'Administrator','on','on','on','on','on',1,1,1,1,1,1,NOW(),0,'');
+INSERT INTO user_auth VALUES (3,'guest','43e9a4ab75570f5b',0,'Guest Account','on','on','on','on','on',3,1,1,1,1,0,NOW(),0,'');
 
 --
 -- Table structure for table `user_auth_perms`

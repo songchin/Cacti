@@ -615,7 +615,7 @@ $settings = array(
 			"method" => "drop_sql",
 			"none_value" => "No User",
 			"sql" => "select username as id, username as name from user_auth where realm = 0 order by username",
-			"default" => "guest"
+			"default" => "0"
 			),
 		"user_template" => array(
 			"friendly_name" => "User Template",
@@ -623,7 +623,7 @@ $settings = array(
 			"method" => "drop_sql",
 			"none_value" => "No User",
 			"sql" => "select username as id, username as name from user_auth where realm = 0 order by username",
-			"default" => "guest"
+			"default" => "0"
 			),
 		"expiration_header" => array (
 			"friendly_name" => "Password Expiration",
