@@ -58,21 +58,18 @@ switch ($_REQUEST["action"]) {
 
 		include_once("./include/bottom_footer.php");
 		break;
-	case 'view_logfile':
+	case 'view_syslog':
 		include_once("./include/top_header.php");
 
-		utilities();
-		utilities_view_logfile();
+		utilities_view_syslog();
 
 		include_once("./include/bottom_footer.php");
 		break;
-	case 'clear_logfile':
+	case 'clear_syslog':
 		include_once("./include/top_header.php");
 
-		utilities_clear_logfile();
-
+		utilities_clear_syslog();
 		utilities();
-		utilities_view_logfile();
 
 		include_once("./include/bottom_footer.php");
 		break;
@@ -89,76 +86,140 @@ switch ($_REQUEST["action"]) {
     Utilities Functions
    ----------------------- */
 
-function utilities_view_logfile() {
-	global $colors;
+function utilities_view_syslog() {
+	global $colors, $device_actions;
 
-	$logfile = read_config_option("path_cactilog");
+	/* if the user pushed the 'clear' button */
+	if (isset($_REQUEST["clear_x"])) {
+		kill_session_var("sess_device_current_page");
+		kill_session_var("sess_device_filter");
+		kill_session_var("sess_facility");
+		kill_session_var("sess_severity");
+		kill_session_var("sess_poller");
 
-	if ($logfile == "") {
-		$logfile = "./log/rrd.log";
+		unset($_REQUEST["page"]);
+		unset($_REQUEST["filter"]);
+		unset($_REQUEST["facility"]);
+		unset($_REQUEST["severity"]);
+		unset($_REQUEST["poller"]);
 	}
 
-	/* helps determine output color */
-	$linecolor = True;
+	/* remember these search fields in session vars so we don't have to keep passing them around */
+	load_current_session_value("page", "sess_device_current_page", "1");
+	load_current_session_value("filter", "sess_device_filter", "");
+	load_current_session_value("facility", "sess_facility", "All");
+	load_current_session_value("severity", "sess_severity", "All");
+	load_current_session_value("poller", "sess_poller", "All");
 
-	/* read logfile into an array and display */
-	if (file_exists($logfile)) {
-		$logcontents = file($logfile);
-	}else{
-		touch($logfile);
-		$logcontents = file($logfile);
-	}
+	html_start_box("<strong>Cacti Logfile</strong>", "98%", $colors["header_background"], "3", "center");
 
-	$logcontents = array_reverse($logcontents);
-
-	html_start_box("<strong>View Cacti Log File</strong> [" . sizeof($logcontents) . " Item" . ((sizeof($logcontents) > 0) ? "s" : "") . "]", "98%", $colors["header_background"], "3", "center", "");
-
-	$i = 0;
-	foreach ($logcontents as $item) {
-		if (strpos($item,":") <> 0) {
-			if ($linecolor = True) {
-				$linecolor = False;
-			}else{
-				$linecolor = True;
-			}
-		}
-
-		switch ($linecolor) {
-			case True:
-				form_alternate_row_color($colors["form_alternate1"],$colors["form_alternate2"],$i);
-				?>
-				<td>
-				<?php print $item;?>
-				</td>
-				</tr>
-				<?php
-				break;
-			case False:
-				form_alternate_row_color($colors["form_alternate1"],$colors["form_alternate2"],$i); $i++;
-				?>
-				<td>
-				<?php print $item;?>
-				</td>
-				</tr>
-				<?php
-				break;
-		}
-	}
+	include("./include/html/inc_syslog_filter_table.php");
 
 	html_end_box();
+
+	/* form the 'where' clause for our main sql query */
+	$sql_where = "where syslog.message like '%%" . $_REQUEST["filter"] . "%%'";
+
+	if ($_REQUEST["facility"] != "ALL") {
+		$sql_where .= " and syslog.facility='" . $_REQUEST["facility"] . "'";
+	}
+
+	if ($_REQUEST["severity"] != "ALL") {
+		$sql_where .= " and syslog.severity='" . $_REQUEST["severity"] . "'";
+	}
+
+	if ($_REQUEST["poller"] != "ALL") {
+		$sql_where .= " and poller.id='" . $_REQUEST["poller"] . "'";
+	}
+
+	html_start_box("", "98%", $colors["header_background"], "3", "center", "");
+
+	$total_rows = db_fetch_cell("select
+		COUNT(syslog.id)
+		from syslog
+		$sql_where");
+
+	$syslog_entries = db_fetch_assoc("SELECT
+		syslog.id,
+		syslog.logdate,
+		syslog.facility,
+		syslog.severity,
+		poller.name as poller_name,
+		poller.id as poller_id,
+		host.hostname as host,
+		syslog.username,
+		syslog.message
+		FROM (syslog LEFT JOIN host ON syslog.host_id = host.id)
+		LEFT JOIN poller ON syslog.poller_id = poller.id
+		$sql_where
+		order by syslog.logdate
+		limit " . (read_config_option("num_rows_device")*($_REQUEST["page"]-1)) . "," . read_config_option("num_rows_device"));
+
+	/* generate page list */
+	$url_page_select = get_page_list($_REQUEST["page"], MAX_DISPLAY_PAGES, read_config_option("num_rows_device"), $total_rows, "utilities.php?action=view_syslog&filter=" . $_REQUEST["filter"] . "&facility=" . $_REQUEST["facility"] . "&severity=" . $REQUEST["severity"]);
+
+	$nav = "<tr bgcolor='#" . $colors["header_background"] . "'>
+			<td colspan='7'>
+				<table width='100%' cellspacing='0' cellpadding='0' border='0'>
+					<tr>
+						<td align='left' class='textHeaderDark'>
+							<strong>&lt;&lt; "; if ($_REQUEST["page"] > 1) { $nav .= "<a class='linkOverDark' href='utilities.php?action=view_syslog&filter=" . $_REQUEST["filter"] . "&facility=" . $_REQUEST["facility"] . "&page=" . ($_REQUEST["page"]-1) . "'>"; } $nav .= "Previous"; if ($_REQUEST["page"] > 1) { $nav .= "</a>"; } $nav .= "</strong>
+						</td>\n
+						<td align='center' class='textHeaderDark'>
+							Showing Rows " . ((read_config_option("num_rows_device")*($_REQUEST["page"]-1))+1) . " to " . ((($total_rows < read_config_option("num_rows_device")) || ($total_rows < (read_config_option("num_rows_device")*$_REQUEST["page"]))) ? $total_rows : (read_config_option("num_rows_device")*$_REQUEST["page"])) . " of $total_rows [$url_page_select]
+						</td>\n
+						<td align='right' class='textHeaderDark'>
+							<strong>"; if (($_REQUEST["page"] * read_config_option("num_rows_device")) < $total_rows) { $nav .= "<a class='linkOverDark' href='utilities.php?action=view_syslog&filter=" . $_REQUEST["filter"] . "&facility=" . $_REQUEST["facility"] . "&page=" . ($_REQUEST["page"]+1) . "'>"; } $nav .= "Next"; if (($_REQUEST["page"] * read_config_option("num_rows_device")) < $total_rows) { $nav .= "</a>"; } $nav .= " &gt;&gt;</strong>
+						</td>\n
+					</tr>
+				</table>
+			</td>
+		</tr>\n";
+
+	print $nav;
+
+	html_header(array("Logdate", "Facility", "Severity", "Poller", "Host", "User", "Log Message"));
+
+	$i = 0;
+	if (sizeof($syslog_entries) > 0) {
+		foreach ($syslog_entries as $syslog_entry) {
+			form_alternate_row_color($colors["form_alternate1"],$colors["form_alternate2"],$i); $i++;
+				?>
+				<td>
+					<a class="linkEditMain" href="utilities_viewsyslog.php?action=view&id=<?php print $syslog_entry["id"];?>"><?php print eregi_replace("(" . preg_quote($_REQUEST["filter"]) . ")", "<span style='background-color: #F8D93D;'>\\1</span>", $syslog_entry["logdate"]);?></a>
+				</td>
+				<td>
+					<?php print $syslog_entry["facility"];?>
+				</td>
+				<td>
+					<?php print $syslog_entry["severity"];?>
+				</td>
+				<td>
+					<?php print $syslog_entry["poller_name"];?>
+				</td>
+				<td>
+					<?php print $syslog_entry["host"];?>
+				</td>
+				<td>
+					<?php print $syslog_entry["username"];?>
+				</td>
+				<td>
+					<?php print $syslog_entry["message"];?>
+				</td>
+			</tr>
+			<?php
+		}
+
+		/* put the nav bar on the bottom as well */
+		print $nav;
+	}else{
+		print "<tr><td bgcolor='#" . $colors["form_alternate1"] . "' colspan=7><em>No Entries</em></td></tr>";
+	}
+	html_end_box(false);
 }
 
-function utilities_clear_logfile() {
-	$logfile = read_config_option("path_cactilog");
-
-	if ($logfile == "") {
-		$logfile = "./log/rrd.log";
-	}
-
-	if (file_exists($logfile)) {
-		unlink($logfile);
-		touch($logfile);
-	}
+function utilities_clear_syslog() {
+	db_execute("truncate table syslog");
 }
 
 function utilities_view_snmp_cache() {
@@ -297,7 +358,7 @@ function utilities() {
 
 	<tr bgcolor="#<?php print $colors["form_alternate2"];?>">
 		<td class="textArea">
-			<p><a href='utilities.php?action=view_logfile'>View Cacti Log File</a></p>
+			<p><a href='utilities.php?action=view_syslog'>View Cacti Log File</a></p>
 		</td>
 		<td class="textArea">
 			<p>The Cacti Log File stores statistic, error and other message depending on system settings.  This information can be used to identify problems with the poller and application.</p>
@@ -305,7 +366,7 @@ function utilities() {
 	</tr>
 	<tr bgcolor="#<?php print $colors["form_alternate1"];?>">
 		<td class="textArea">
-			<p><a href='utilities.php?action=clear_logfile'>Clear Cacti Log File</a></p>
+			<p><a href='utilities.php?action=clear_syslog'>Clear Cacti Log File</a></p>
 		</td>
 		<td class="textArea">
 			<p>This action will reset the Cacti Log File.  Please note that if you are using the Syslog/Eventlog only, this action will have no effect.</p>

@@ -103,10 +103,6 @@ function form_save() {
 		raise_message(13);
 	}
 
-//	if ($_POST["snmpv3_priv_passphrase"] != $_POST["snmpv3_priv_passphrase_confirm"]) {
-//		raise_message(14);
-//	}
-
 	if ((!empty($_POST["add_dq_y"])) && (!empty($_POST["snmp_query_id"]))) {
 		db_execute("replace into host_snmp_query (host_id,snmp_query_id,reindex_method) values (" . $_POST["id"] . "," . $_POST["snmp_query_id"] . "," . $_POST["reindex_method"] . ")");
 
