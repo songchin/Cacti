@@ -296,7 +296,7 @@ function graph_perms_edit() {
 			<?php form_dropdown("policy_graphs",$graph_policy_array,"","",$policy["policy_graphs"],"",""); ?>
 		</td>
 	</tr>
-	<tr>
+	<tr bgcolor="<?php print $colors["form_alternate2"];?>">
 		<td colspan="2">
 			<table width="100%" cellpadding="1">
 				<?php
@@ -348,7 +348,7 @@ function graph_perms_edit() {
 			<?php form_dropdown("policy_hosts",$graph_policy_array,"","",$policy["policy_hosts"],"",""); ?>
 		</td>
 	</tr>
-	<tr>
+	<tr bgcolor="<?php print $colors["form_alternate2"];?>">
 		<td colspan="2">
 			<table width="100%" cellpadding="1">
 				<?php
@@ -401,7 +401,7 @@ function graph_perms_edit() {
 			<?php form_dropdown("policy_graph_templates",$graph_policy_array,"","",$policy["policy_graph_templates"],"",""); ?>
 		</td>
 	</tr>
-	<tr>
+	<tr bgcolor="<?php print $colors["form_alternate2"];?>">
 		<td colspan="2">
 			<table width="100%" cellpadding="1">
 				<?php
@@ -454,7 +454,7 @@ function graph_perms_edit() {
 			<?php form_dropdown("policy_trees",$graph_policy_array,"","",$policy["policy_trees"],"",""); ?>
 		</td>
 	</tr>
-	<tr>
+	<tr bgcolor="<?php print $colors["form_alternate2"];?>">
 		<td colspan="2">
 			<table width="100%" cellpadding="1">
 				<?php
