@@ -71,12 +71,13 @@ int db_connect(char *database, MYSQL *mysql) {
 
 	retries = 1;
 	mysql_init(mysql);
-	
+	mysql_options(mysql, MYSQL_OPT_CONNECT_TIMEOUT, "5");
+		
 	while (1) {
 		thread_mutex_lock(LOCK_MYSQL);
 
 		if (!mysql_real_connect(mysql, set.dbhost, set.dbuser, set.dbpass, database, 0, NULL, 0)) {
-			if (retries > 20) {
+			if (retries > 10) {
 				snprintf(logmessage, LOGSIZE, "MYSQL: Connection failed after 10 attempts : %s\n", mysql_error(mysql));
 				cacti_log(logmessage);
 				thread_mutex_unlock(LOCK_MYSQL);

@@ -389,9 +389,7 @@ void poll_host(int host_id) {
 	free(ping);
 
 	mysql_free_result(result);
-
 	mysql_thread_end();
-
 	mysql_close(&mysql);
 
 	if (set.verbose == POLLER_VERBOSITY_DEBUG) {
