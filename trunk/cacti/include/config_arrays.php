@@ -29,7 +29,7 @@ $messages = array(
 		"message" => 'Save Successful.',
 		"type" => "info"),
 	2  => array(
-		"message" => 'Save Failed',
+		"message" => 'Save Failed.',
 		"type" => "error"),
 	3  => array(
 		"message" => 'Save Failed: Field Input Error (Check Red Fields)',
@@ -45,7 +45,19 @@ $messages = array(
 		"type" => "error"),
 	7  => array(
 		"message" => 'XML parse error.',
-		"type" => "error")
+		"type" => "error"),
+	8  => array(
+		"message" => 'Authentication Failure.',
+		"type" => "error"),
+	9  => array(
+		"message" => 'Unable to change password.',
+		"type" => "error"),
+	10 => array(
+		"message" => 'You must fill in required values.',
+		"type" => "error"),
+	11 => array(
+		"message" => 'Password changed successfully.',
+		"type" => "info")
 		);
 
 $cdef_operators = array(1 =>
