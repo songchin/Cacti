@@ -301,52 +301,40 @@ function array_rekey($array, $key, $key_value) {
 /* cacti_log - logs a string to Cacti's log file or optionally to the browser
    @arg $string - the string to append to the log file
    @arg $output - (bool) whether to output the log line to the browser using pring() or not */
-function cacti_log($string, $output = false, $environ = "CMDPHP") {
+function cacti_log($message, $severity = SEV_INFO, $poller_id = 0, $host_id = 0, $user_id = 0, $output = false, $facility = FACIL_CMDPHP) {
 	global $config;
 
 	/* fill in the current date for printing in the log */
-	$date = date("m/d/Y h:i:s A");
+	$logdate = date("Y-m-d H:i:s");
 
 	/* determine how to log data */
 	$logdestination = read_config_option("log_destination");
-	$logfile        = read_config_option("path_cactilog");
 
 	/* format the message */
-	if ($environ != "SYSTEM") {
-		$message = "$date - " . $environ . ": " . $string . "\n";
-	}else {
-		$message = "$date - " . $environ . " " . $string . "\n";
+	$textmessage = "$logdate - " . get_severity($severity) . ": " . get_facility($facility) . ": " . $message . "\n";
+
+	/* get username */
+	if ($user_id) {
+	    $username = db_fetch_cell("select username from user_auth where user_id=$user_id");
+	}else{
+		$username = "system";
 	}
 
-	/* Log to Logfile */
+	/* set the IP Address */
+	$source = "0.0.0.0";
+
+	/* Log to Cacti Syslog */
 	if ((($logdestination == 1) || ($logdestination == 2)) && (read_config_option("log_verbosity") != POLLER_VERBOSITY_NONE)) {
-		if ($logfile == "") {
-			$logfile = $config["base_path"] . "/log/cacti.log";
-		}
-
 		/* echo the data to the log (append) */
-		$fp = @fopen($logfile, "a");
-
-		if ($fp) {
-			@fwrite($fp, $message);
-			fclose($fp);
-		}
+		db_execute("insert into syslog
+			(logdate,facility,severity,poller_id,host_id,user_id,username,source,message) values
+			('$logdate', '" . get_facility($facility) . "', '" . get_severity($severity) . "', '$poller_id', '$host_id', '$user_id', '$username', '$source', '$message');");
 	}
 
-	/* Log to Syslog/Eventlog */
+	/* Log to System Syslog/Eventlog */
 	/* Syslog is currently Unstable in Win32 */
 	if (($logdestination == 2) || ($logdestination == 3)) {
-		$log_type = "";
-		if (substr_count($string,"ERROR:"))
-			$log_type = "err";
-		else if (substr_count($string,"WARNING:"))
-			$log_type = "warn";
-		else if (substr_count($string,"STATS:"))
-			$log_type = "stat";
-		else if (substr_count($string,"NOTICE:"))
-			$log_type = "note";
-
-		if (strlen($log_type)) {
+		if ($severity <= SEV_WARNING) {
 			define_syslog_variables();
 
 			if ($config["cacti_server_os"] == "win32")
@@ -354,16 +342,16 @@ function cacti_log($string, $output = false, $environ = "CMDPHP") {
 			else
 				openlog("Cacti Logging", LOG_NDELAY | LOG_PID, LOG_SYSLOG);
 
-			if (($log_type == "err") && (read_config_option("log_perror"))) {
-				syslog(LOG_CRIT, $message);
+			if (($severity <= SEV_ERROR) && (read_config_option("log_perror"))) {
+				syslog(LOG_CRIT, $textmessage);
 			}
 
-			if (($log_type == "warn") && (read_config_option("log_pwarn"))) {
-				syslog(LOG_WARNING, $message);
+			if (($severity == SEV_WARNING) && (read_config_option("log_pwarn"))) {
+				syslog(LOG_WARNING, $textmessage);
 			}
 
-			if ((($log_type == "stat") || ($log_type == "note")) && (read_config_option("log_pstat"))) {
-				syslog(LOG_INFO, $message);
+			if ((($severity == SEV_NOTICE) || ($severity == SEV_INFO)) && (read_config_option("log_pstat"))) {
+				syslog(LOG_INFO, $textmessage);
 			}
 
 			closelog();
@@ -372,7 +360,70 @@ function cacti_log($string, $output = false, $environ = "CMDPHP") {
 
 	/* print output to standard out if required */
 	if ($output == true) {
-		print $message;
+		print $textmessage;
+	}
+}
+
+/* get_facility - returns the text version of the facility name
+   @arg $facility - the facility integer value */
+function get_facility($facility) {
+	switch ($facility) {
+		case FACIL_CMDPHP:
+			return "CMDPHP";
+			break;
+		case FACIL_CACTID:
+			return "CACTID";
+			break;
+		case FACIL_POLLER:
+			return "POLLER";
+			break;
+		case FACIL_SCRPTSVR:
+			return "SCRPTSVR";
+			break;
+		case FACIL_WEBUI:
+			return "WEBUI";
+			break;
+		case FACIL_AUTH:
+			return "AUTH";
+			break;
+		default:
+			return "UNKNOWN";
+			break;
+
+	}
+}
+
+/* get_severity - returns the text version of the message severity
+   @arg $severity - the severity integer value */
+function get_severity($severity) {
+	switch ($severity) {
+		case SEV_EMERGENCY:
+			return "EMERGENCY";
+			break;
+		case SEV_ALERT:
+			return "ALERT";
+			break;
+		case SEV_CRITICAL:
+			return "CRITICAL";
+			break;
+		case SEV_ERROR:
+			return "ERROR";
+			break;
+		case SEV_WARNING:
+			return "WARNING";
+			break;
+		case SEV_NOTICE:
+			return "NOTICE";
+			break;
+		case SEV_INFO:
+			return "INFO";
+			break;
+		case SEV_INFO:
+			return "DEBUG";
+			break;
+		default:
+			return "UNKNOWN";
+			break;
 	}
 }
 
@@ -905,8 +956,6 @@ function get_browser_query_string() {
    @returns - (array) an array containing a list of graph trees */
 function get_graph_tree_array($return_sql = false, $force_refresh = false) {
 
-	$result = array();
-
 	/* set the tree update time if not already set */
 	if (!isset($_SESSION["tree_update_time"])) {
 		$_SESSION["tree_update_time"] = time();
@@ -937,17 +986,16 @@ function get_graph_tree_array($return_sql = false, $force_refresh = false) {
 			$sql = "select * from graph_tree order by name";
 		}
 
-		$result = db_fetch_assoc($sql);
-		$_SESSION["tree_array"] = $result;
+		$_SESSION["tree_array"] = $sql;
 		$_SESSION["tree_update_time"] = time();
 	} else {
-		$result = $_SESSION["tree_array"];
+		$sql = $_SESSION["tree_array"];
 	}
 
 	if ($return_sql == true) {
 		return $sql;
 	}else{
-		return $result;
+		return db_fetch_assoc($sql);
 	}
 }
 
