@@ -48,5 +48,6 @@ function upgrade_to_0_8_7() {
 	db_install_execute("0.8.7", "ALTER TABLE `graph_templates_graph` ADD `t_no_minor` char(2) default '0' AFTER `y_grid_alt`, ADD `no_minor` char(2) default NULL AFTER `t_no_minor`;");
 	db_install_execute("0.8.7", "ALTER TABLE `graph_templates_graph` ADD `t_unit_length` char(2) default '0' AFTER `unit_value`, ADD `unit_length` varchar(5) default '' AFTER `t_unit_length`;");
 	db_install_execute("0.8.7", "ALTER TABLE `user_auth` ADD `created` datetime NOT NULL;");
+	db_install_execute("0.8.7", "UPDATE `user_auth` SET `created` = NOW() WHERE `created` = `0000-00-00 00:00:00`;");
 }
 ?>
