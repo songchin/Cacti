@@ -26,6 +26,8 @@
 global $colors;
 global $config;
 
+$current_user = api_user_info( array("id" => $_SESSION["sess_user_id"]) );
+
 ?>
 <html>
 <head>
@@ -66,9 +68,17 @@ global $config;
 					<td>
 						<?php draw_navigation_text();?>
 					</td>
+						<?php if (read_config_option("auth_method") == "1") {
+							$expire_days = api_user_expire_info($current_user["id"]);
+							if (($expire_days != -1) && ($expire_days <= read_config_option("password_expire_warning"))) {
+						?>
+					<td align="right" class="textError">
+						Password expires in <?php print $expire_days; ?> days 
+					</td> 
+						<?php } } ?>
 					<td align="right">
 						<?php if (read_config_option("auth_method") != "0") { ?>
-						Logged in as <strong><?php print db_fetch_cell("select username from user_auth where id=" . $_SESSION["sess_user_id"]);?></strong> (<a href="logout.php">Logout</a>)&nbsp;
+						Logged in as <strong><?php print $current_user["username"];?></strong> (<a href="logout.php">Logout</a>)&nbsp;
 						<?php } ?>
 					</td>
 				</tr>
