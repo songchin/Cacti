@@ -27,6 +27,7 @@ include("./include/auth.php");
 include_once("./lib/graph/graph_template_update.php");
 include_once("./lib/graph/graph_template.php"); // remove
 include_once("./lib/graph/graph_form.php");
+include_once("./lib/sys/sequence.php");
 include_once("./include/graph/graph_constants.php");
 include_once("./include/graph/graph_arrays.php");
 include_once("./include/graph/graph_form.php");
