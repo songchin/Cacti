@@ -120,8 +120,8 @@ function api_user_ldap_auth($username,$password = "",$ldap_dn = "",$ldap_host = 
 			return $output;
 		}
 		/* set referrals */
-		cacti_log("LDAP: Setting referral option to " . $ldap_referrals, SEV_DEBUG, 0, 0, 0, false, FACIL_AUTH);
 		if ($ldap_referrals == "0") {
+			cacti_log("LDAP: Setting referral option to " . $ldap_referrals, SEV_DEBUG, 0, 0, 0, false, FACIL_AUTH);
 			if (!@ldap_set_option($ldap_conn, LDAP_OPT_REFERRALS, 0)) {
 				$output["error_num"] = "4";
 				$output["error_text"] = "Unable to set referrals option";
@@ -131,8 +131,8 @@ function api_user_ldap_auth($username,$password = "",$ldap_dn = "",$ldap_host = 
 			}
 		}
 		/* start TLS if requested */
-		cacti_log("LDAP: Starting TLS encryption", SEV_DEBUG, 0, 0, 0, false, FACIL_AUTH);
 		if ($ldap_encryption == "2") {
+			cacti_log("LDAP: Starting TLS encryption", SEV_DEBUG, 0, 0, 0, false, FACIL_AUTH);
 			if (!@ldap_start_tls($ldap_conn)) {
 				$output["error_num"] = "5";
 				$output["error_text"] = "Protocol error, unable to start TLS communications";
@@ -307,7 +307,7 @@ function api_user_ldap_search_dn($username,$ldap_dn = "",$ldap_host = "",$ldap_p
 		if (empty($ldap_specific_password)) {
 			$ldap_specific_password = read_config_option("ldap_specific_password");
 		}
-		cacti_log("LDAP_SEARCH: Using username '" . $ldap_specific_username . "' and password '" . $ldap_specific_password . "' for binding ", SEV_DEBUG, 0, 0, 0, false, FACIL_AUTH);
+		cacti_log("LDAP_SEARCH: Using DN '" . $ldap_specific_dn . "' and password '" . $ldap_specific_password . "' for binding ", SEV_DEBUG, 0, 0, 0, false, FACIL_AUTH);
 	}elseif ($ldap_mode == "1"){
 		/* assume anonymous */
 		$ldap_specific_dn = "";
@@ -343,8 +343,8 @@ function api_user_ldap_search_dn($username,$ldap_dn = "",$ldap_host = "",$ldap_p
 			return $output;
 		}
 		/* set referrals */
-		cacti_log("LDAP_SEARCH: Setting referral option to " . $ldap_referrals, SEV_DEBUG, 0, 0, 0, false, FACIL_AUTH);
 		if ($ldap_referrals == "0") {
+			cacti_log("LDAP_SEARCH: Setting referral option to " . $ldap_referrals, SEV_DEBUG, 0, 0, 0, false, FACIL_AUTH);
 			if (!@ldap_set_option($ldap_conn, LDAP_OPT_REFERRALS, 0)) {
 				/* referrals set error */
 				$output["dn"] = "";
@@ -356,8 +356,8 @@ function api_user_ldap_search_dn($username,$ldap_dn = "",$ldap_host = "",$ldap_p
 			}
 		}
 		/* start TLS if requested */
-		cacti_log("LDAP_SEARCH: Starting TLS encryption", SEV_DEBUG, 0, 0, 0, false, FACIL_AUTH);
 		if ($ldap_encryption == "2") {
+			cacti_log("LDAP_SEARCH: Starting TLS encryption", SEV_DEBUG, 0, 0, 0, false, FACIL_AUTH);
 			if (!@ldap_start_tls($ldap_conn)) {
 				/* TLS startup error */
 				$output["dn"] = "";
@@ -383,6 +383,7 @@ function api_user_ldap_search_dn($username,$ldap_dn = "",$ldap_host = "",$ldap_p
 					$output["dn"] = $ldap_entries["0"]["dn"];
 					$output["error_num"] = "0";
 					$output["error_text"] = "User found";
+					cacti_log("LDAP_SEARCH: User found, DN '" . $output["dn"] . "'", SEV_DEBUG, 0, 0, 0, false, FACIL_AUTH);
 				}elseif ($ldap_entries["count"] > 1) {
 					/* more than 1 result */
 					$output["dn"] = "";
