@@ -88,7 +88,7 @@ if ((read_graph_config_option("default_tree_view_mode") == "2") && ($_REQUEST["a
 	<link rel="shortcut icon" href="<?php print html_get_theme_images_path('favicon.ico');?>" type="image/x-icon">
 	<link href="<?php print html_get_theme_images_path('favicon.ico');?>" rel="image/x-icon">
 	<title>cacti</title>
-	<?php if ($_SESSION["custom"]) {
+	<?php if (isset($_SESSION["custom"])) {
 		print "<meta http-equiv=refresh content='99999'; url='" . basename($_SERVER["PHP_SELF"]) . "'>\r\n";
 	}else{
 		print "<meta http-equiv=refresh content='" . read_graph_config_option("page_refresh") . "'; url='" . basename($_SERVER["PHP_SELF"]) . "'>\r\n";
