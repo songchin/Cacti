@@ -30,7 +30,8 @@ $user_actions = array(
 	1 => "Delete",
 	2 => "Copy",
 	3 => "Enable",
-	4 => "Disable"
+	4 => "Disable",
+	5 => "Password Expiration"
 	);
 
 /* set default action */
@@ -728,7 +729,7 @@ function user() {
    ------------------------ */
 
 function user_actions() {
-	global $colors, $user_actions, $fields_user_edit;
+	global $colors, $user_actions, $fields_user_edit, $user_password_expire_intervals;
 
 	/* if we are to save this form, instead of display it */
 	if (isset($_POST["selected_items"])) {
@@ -758,6 +759,12 @@ function user_actions() {
 					raise_message(12);
 				}
 			}
+		}elseif ($_POST["drp_action"] == "5") {
+			/* Password Expiration */
+			for ($i=0; $i<count($selected_items); $i++) {
+				api_user_expire_length_set($selected_items[$i], $_POST["expire_interval"]);
+			}
+
 		}
 
 		header("Location: user_admin.php");
@@ -841,6 +848,31 @@ function user_actions() {
 				</td>
 			</tr>\n
 			";
+
+	}elseif ($_POST["drp_action"] == "5") { /* Password Expiration */
+		print "	<tr>
+				<td colspan='2' class='textArea' bgcolor='#" . $colors["form_alternate1"]. "'>
+					<p>Would you like to set Password Expiration?</p>
+					<p>$user_list</p>
+				</td>
+				</tr>";
+
+
+		$form_array = array(
+		"expire_interval" => array(
+			"method" => "drop_array",
+			"friendly_name" => "Password Expiration Interval",
+			"description" => "Select the interval that you would like to apply to the selected users.",
+			"value" => "",
+			"array" => $user_password_expire_intervals
+			)
+		);
+		draw_edit_form(
+			array(
+				"config" => array("no_form_tag" => true),
+				"fields" => $form_array
+				)
+			);
 	}
 
 	if (!isset($user_array)) {

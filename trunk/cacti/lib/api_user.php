@@ -236,6 +236,18 @@ function api_user_disable($user_id) {
 	}
 }
 
+/* api_user_expire_length_set - sets a users expire interval
+   @arg $user_id - user id 
+   @arg $interval - integer, the number of days */
+function api_user_expire_length_set($user_id, $interval) {
+	if (!empty($user_id)) {
+		$user = array();
+		$user["id"] = $user_id;
+		$user["password_expire_length"] = $interval;
+		api_user_save($user);	
+	}
+}
+
 /* api_user_copy - copies a user account
    @arg $template_user - username of account that should be used as the template
    @arg $new_user - username of the account to be created
