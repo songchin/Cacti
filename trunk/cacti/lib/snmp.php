@@ -41,8 +41,12 @@ if ($config["cacti_server_os"] == "unix") {
 function cacti_snmp_get($hostname, $community, $oid, $version, $v3username, $v3password, $v3authproto, $v3privpassphrase, $v3privptoto, $port = 161, $timeout = 500, $environ = SNMP_POLLER) {
 	global $config;
 
+	/* determine default retries */
 	$retries = read_config_option("snmp_retries");
 	if ($retries == "") $retries = 3;
+
+	/* get rid of quotes in privacy passphrase */
+	$v3privpassphrase = str_replace("#space#", " ", $v3privpassphrase);
 
 	if (snmp_get_method($version) == SNMP_METHOD_PHP) {
 		/* make sure snmp* is verbose so we can see what types of data
@@ -92,8 +96,12 @@ function cacti_snmp_walk($hostname, $community, $oid, $version, $v3username, $v3
 	$snmp_array = array();
 	$temp_array = array();
 
+	/* determine default retries */
 	$retries = read_config_option("snmp_retries");
 	if ($retries == "") $retries = 3;
+
+	/* get rid of quotes in privacy passphrase */
+	$v3privpassphrase = str_replace("#space#", " ", $v3privpassphrase);
 
 	if (snmp_get_method($version) == SNMP_METHOD_PHP) {
 		if ($version == "1") {

@@ -23,7 +23,7 @@ function ss_host_disk($hostname, $snmp_community, $snmp_version, $snmpv3_auth_us
 		"sau" => ".1.3.6.1.2.1.25.2.3.1.4"
 		);
 
-	if ((func_num_args() == "9") || (func_num_args() == "7") || (func_num_args() == "6") || (func_num_args() == "5")) {
+	if ((func_num_args() == "14") || (func_num_args() == "12") || (func_num_args() == "11") || (func_num_args() == "10")) {
 		if ($cmd == "index") {
 			$return_arr = ss_host_disk_reindex(cacti_snmp_walk($hostname, $snmp_community, $oids["index"], $snmp_version, $snmpv3_auth_username, $snmpv3_auth_password, $snmpv3_auth_protocol, $snmpv3_priv_passphrase, $snmpv3_priv_protocol, $snmp_port, $snmp_timeout, SNMP_POLLER));
 

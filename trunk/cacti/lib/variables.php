@@ -176,7 +176,7 @@ function substitute_host_data($string, $l_escape_string, $r_escape_string, $host
 	$string = str_replace($l_escape_string . "host_snmpv3_auth_username" . $r_escape_string, $_SESSION["sess_host_cache_array"][$host_id]["snmpv3_auth_username"], $string);
 	$string = str_replace($l_escape_string . "host_snmpv3_auth_password" . $r_escape_string, $_SESSION["sess_host_cache_array"][$host_id]["snmpv3_auth_password"], $string);
 	$string = str_replace($l_escape_string . "host_snmpv3_auth_protocol" . $r_escape_string, $_SESSION["sess_host_cache_array"][$host_id]["snmpv3_auth_protocol"], $string);
-	$string = str_replace($l_escape_string . "host_snmpv3_priv_passphrase" . $r_escape_string, '"' . $_SESSION["sess_host_cache_array"][$host_id]["snmpv3_priv_passphrase"] . '"', $string);
+	$string = str_replace($l_escape_string . "host_snmpv3_priv_passphrase" . $r_escape_string, str_replace(" ", "#space#", $_SESSION["sess_host_cache_array"][$host_id]["snmpv3_priv_passphrase"]), $string);
 	$string = str_replace($l_escape_string . "host_snmpv3_priv_protocol" . $r_escape_string, $_SESSION["sess_host_cache_array"][$host_id]["snmpv3_priv_protocol"], $string);
 	$string = str_replace($l_escape_string . "host_snmp_port" . $r_escape_string, $_SESSION["sess_host_cache_array"][$host_id]["snmp_port"], $string);
 	$string = str_replace($l_escape_string . "host_snmp_timeout" . $r_escape_string, $_SESSION["sess_host_cache_array"][$host_id]["snmp_timeout"], $string);

@@ -19,7 +19,7 @@ function ss_host_cpu($hostname, $snmp_community, $snmp_version, $snmpv3_auth_use
 		"usage" => ".1.3.6.1.2.1.25.3.3.1"
 		);
 
-	if (($cmd == "index") && (func_num_args() == "4")) {
+	if (($cmd == "index") && (func_num_args() == "9")) {
 		$arr_index = ss_host_cpu_get_indexes($hostname, $snmp_community, $snmp_version, $snmpv3_auth_username, $snmpv3_auth_password, $snmpv3_auth_protocol, $snmpv3_priv_passphrase, $snmpv3_priv_protocol, $snmp_port, $snmp_timeout);
 
 		for ($i=0;($i<sizeof($arr_index));$i++) {
@@ -41,6 +41,7 @@ function ss_host_cpu($hostname, $snmp_community, $snmp_version, $snmpv3_auth_use
 	} elseif ($cmd == "get") {
 		$arg = $arg1;
 		$index = rtrim($arg2);
+
 		$arr_index = ss_host_cpu_get_indexes($hostname, $snmp_community, $snmp_version, $snmpv3_auth_username, $snmpv3_auth_password, $snmpv3_auth_protocol, $snmpv3_priv_passphrase, $snmpv3_priv_protocol, $snmp_port, $snmp_timeout);
 		$arr = ss_host_cpu_get_cpu_usage($hostname, $snmp_community, $snmp_version, $snmpv3_auth_username, $snmpv3_auth_password, $snmpv3_auth_protocol, $snmpv3_priv_passphrase, $snmpv3_priv_protocol, $snmp_port, $snmp_timeout);
 		if (isset($arr_index[$index])) {
