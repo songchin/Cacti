@@ -27,6 +27,7 @@
 function api_poller_cache_item_add($host_id, $host_field_override, $local_data_id, $poller_action_id, $data_source_item_name, $num_rrd_items, $arg1 = "", $arg2 = "", $arg3 = "") {
 	$host = db_fetch_row("select
 		host.id,
+		host.poller_id,
 		host.hostname,
 		host.snmp_community,
 		host.snmp_version,
@@ -50,6 +51,7 @@ function api_poller_cache_item_add($host_id, $host_field_override, $local_data_i
 			}
 		} else {
 			$host["id"] = 0;
+			$host["poller_id"] = 0;
 			$host["snmp_community"] = "";
 			$host["snmp_timeout"] = "";
 			$host["snmp_username"] = "";
@@ -59,9 +61,9 @@ function api_poller_cache_item_add($host_id, $host_field_override, $local_data_i
 			$host["hostname"] = "None";
 		}
 
-		return db_execute("insert into poller_item (local_data_id,host_id,action,hostname,
+		return db_execute("insert into poller_item (local_data_id,host_id,poller_id,action,hostname,
 			snmp_community,snmp_version,snmp_timeout,snmp_username,snmp_password,snmp_port,rrd_name,rrd_path,
-			rrd_num,arg1,arg2,arg3) values ($local_data_id," . $host["id"] . ",$poller_action_id,'" . $host["hostname"] . "',
+			rrd_num,arg1,arg2,arg3) values ($local_data_id," . $host["id"] . "," . $host["poller_id"] . ",$poller_action_id,'" . $host["hostname"] . "',
 			'" . $host["snmp_community"] . "','" . $host["snmp_version"] . "','" . $host["snmp_timeout"] . "',
 			'" . $host["snmp_username"] . "','" . $host["snmp_password"] . "','" . $host["snmp_port"] . "',
 			'$data_source_item_name','" . addslashes(clean_up_path(get_data_source_path($local_data_id, true))) . "',
