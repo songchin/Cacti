@@ -31,6 +31,13 @@ include/config.php
 
 */
 
+$graph_perms_type_array = array(
+	"graph" => "1",
+	"tree" => "2",
+	"host" => "3",
+	"graph_template" => "4"
+	);
+
 /* api_user_save
    @arg $array - an array containing each column -> value mapping in the user_auth table, always remember the id field
    @return - id of user saved, new or existing 
@@ -43,29 +50,101 @@ function api_user_save($array) {
 
 }
 
+
+/* api_user_realms_list 
+  @arg $user_id - user id
+  @return - Array of indexed by realm_id with a sub array of realm_name and value */
+function api_user_realms_list($user_id) {
+	global $user_auth_realms;
+
+	if (!empty($user_id)) {
+		/* process realms */
+		while (list($realm_id, $realm_name) = each($user_auth_realms)) {
+				
+			if (sizeof(db_fetch_assoc("select realm_id from user_auth_realm where user_id = '" . $user_id . "' and realm_id = '" . $realm_id . "'")) > 0) {
+				$value = "1";
+			}else{
+				$value = "0";
+			}
+			$realm_list[$realm_id] = array(
+				"realm_name" => $realm_name,
+				"value" => $value
+			);
+	
+		}
+		return $realm_list;
+	}else{
+		return "";
+	}
+
+}
+
+
+/* api_user_realms_save
+  @arg $user_id - user id
+  @arg $array - single dimension array of realm_id that are granted, empty array will clear all realms */
+function api_user_realms_save($user_id,$array) {
+
+	/* validate */
+	if (!empty($user_id)) {
+
+		/* remove any existing permissions */
+		db_execute("delete from user_auth_realm where user_id = '" . $user_id . "'");
+		
+		/* insert the new permission */
+		foreach($array as $realm_id) {
+			db_execute("replace into user_auth_realm (user_id,realm_id) values ('" . $user_id . "','" . $realm_id . "')");
+		}
+	}
+
+}
+
 /* coming soon */
-function api_user_realms_save($array) {
+function api_user_graph_perms_list($type,$user_id) {
+
+
+}
+
+/* api_user_graph_perms_add 
+  @arg $type - graph, tree, host, graph_template types
+  @arg $user_id - user id
+  @arg $item_id = item id of the type of item, example type = graph id is from graph table */
+function api_user_graph_perms_add($type,$user_id,$item_id) {
+	global $graph_perms_type_array;
+
+	/* validation */
+	if ((!empty($graph_perms_type_array[$type])) && (!empty($user_id)) && (!empty($item_id))) {
+		db_execute("replace into user_auth_perms (user_id,item_id,type) values ('" . $user_id . "','" . $item_id . "','" . $graph_perms_type_array[$type] . "')");
+	}
+
+}
+
+/* api_user_graph_perms_remove 
+  @arg $type - graph, tree, host, graph_template types
+  @arg $user_id - user id 
+  @arg $item_id - item id of type of item, example type = graph id is from graph table */
+function api_user_graph_perms_remove($type,$user_id,$item_id) {
+	global $graph_perms_type_array;
+	
+	/* validation */
+	if ((!empty($graph_perms_type_array[$type])) && (!empty($user_id)) && (!empty($item_id))) {
+		db_execute("delete from user_auth_perms where type = '" . $graph_perms_type_array[$type] . "' and user_id = '" . $user_id . "' and item_id = '" . $item_id . "'");
+	}
+
+}
+
+
+/* coming soon */
+function api_user_graph_setting_save($user_id,$array) {
 
 
 }
 
 /* coming soon */
-function api_user_graph_perms_save($array) {
+function api_user_graph_setting_list($user_id) {
 
 
 }
-
-/* coming soon */
-function api_user_graph_setting_save($array) {
-
-
-}
-
-
-
-
-
-
 
 
 

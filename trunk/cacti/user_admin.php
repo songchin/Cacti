@@ -88,7 +88,7 @@ switch ($_REQUEST["action"]) {
 }
 
 /* --------------------------
-    The Save Function
+    form_save function
    -------------------------- */
 
 function form_save() {
@@ -99,16 +99,16 @@ function form_save() {
 		$add_button_clicked = false;
 
 		if (isset($_POST["add_graph_y"])) {
-			db_execute("replace into user_auth_perms (user_id,item_id,type) values (" . $_POST["id"] . "," . $_POST["perm_graphs"] . ",1)");
+			api_user_graph_perms_add("graph",$_POST["id"],$_POST["perm_graphs"]);
 			$add_button_clicked = true;
 		}elseif (isset($_POST["add_tree_y"])) {
-			db_execute("replace into user_auth_perms (user_id,item_id,type) values (" . $_POST["id"] . "," . $_POST["perm_trees"] . ",2)");
+			api_user_graph_perms_add("tree",$_POST["id"],$_POST["perm_trees"]);
 			$add_button_clicked = true;
 		}elseif (isset($_POST["add_host_y"])) {
-			db_execute("replace into user_auth_perms (user_id,item_id,type) values (" . $_POST["id"] . "," . $_POST["perm_hosts"] . ",3)");
+			api_user_graph_perms_add("host",$_POST["id"],$_POST["perm_hosts"]);
 			$add_button_clicked = true;
 		}elseif (isset($_POST["add_graph_template_y"])) {
-			db_execute("replace into user_auth_perms (user_id,item_id,type) values (" . $_POST["id"] . "," . $_POST["perm_graph_templates"] . ",4)");
+			api_user_graph_perms_add("graph_template",$_POST["id"],$_POST["perm_graph_templates"]);
 			$add_button_clicked = true;
 		}
 
@@ -169,16 +169,21 @@ function form_save() {
 				raise_message(2);
 			}
 
+			/* realms perms */
 			if (isset($_POST["save_component_realm_perms"])) {
-				db_execute("delete from user_auth_realm where user_id=$user_id");
-
+				$i = 0;
+				$realm_perms_list = array();
 				while (list($var, $val) = each($_POST)) {
 					if (eregi("^[section]", $var)) {
 						if (substr($var, 0, 7) == "section") {
-						    db_execute("replace into user_auth_realm (user_id,realm_id) values($user_id," . substr($var, 7) . ")");
+							$realm_perms_list[$i] = substr($var, 7);
+							$i++;
 						}
 					}
 				}
+				api_user_realms_save($user_id,$realm_perms_list);
+	
+			/* graph settings */
 			}elseif (isset($_POST["save_component_graph_settings"])) {
 				while (list($tab_short_name, $tab_fields) = each($settings_graphs)) {
 					while (list($field_name, $field_array) = each($tab_fields)) {
@@ -211,22 +216,19 @@ function form_save() {
 }
 
 /* --------------------------
-    Graph Permissions
+    perm_remove function
    -------------------------- */
 
 function perm_remove() {
-	if ($_GET["type"] == "graph") {
-		db_execute("delete from user_auth_perms where type=1 and user_id=" . $_GET["user_id"] . " and item_id=" . $_GET["id"]);
-	}elseif ($_GET["type"] == "tree") {
-		db_execute("delete from user_auth_perms where type=2 and user_id=" . $_GET["user_id"] . " and item_id=" . $_GET["id"]);
-	}elseif ($_GET["type"] == "host") {
-		db_execute("delete from user_auth_perms where type=3 and user_id=" . $_GET["user_id"] . " and item_id=" . $_GET["id"]);
-	}elseif ($_GET["type"] == "graph_template") {
-		db_execute("delete from user_auth_perms where type=4 and user_id=" . $_GET["user_id"] . " and item_id=" . $_GET["id"]);
-	}
 
+	api_user_graph_perms_remove($_GET["type"],$_GET["user_id"],$_GET["id"]);
 	header("Location: user_admin.php?action=graph_perms_edit&id=" . $_GET["user_id"]);
 }
+
+
+/* ---------------------------------
+    graph_perms_edit function
+   --------------------------------- */
 
 function graph_perms_edit() {
 	global $colors;
@@ -236,9 +238,8 @@ function graph_perms_edit() {
 		2 => "Deny");
 
 	if (!empty($_GET["id"])) {
-		$policy = db_fetch_row("select policy_graphs,policy_trees,policy_hosts,policy_graph_templates from user_auth where id=" . $_GET["id"]);
-
-		$header_label = "[edit: " . db_fetch_cell("select username from user_auth where id=" . $_GET["id"]) . "]";
+		$policy = api_user_info( array( "id" => $_GET["id"] ) ); 
+		$header_label = "[edit: " . $policy["username"] . "]";
 	}
 
 	?>
@@ -492,6 +493,11 @@ function graph_perms_edit() {
 	form_hidden_box("save_component_graph_perms","1","");
 }
 
+
+/* ---------------------------------
+    user_realms_edit function
+   --------------------------------- */
+
 function user_realms_edit() {
 	global $colors, $user_auth_realms;
 
@@ -512,14 +518,6 @@ function user_realms_edit() {
 			<td width='1%' align='center' bgcolor='#819bc0' style='" . get_checkbox_style() . "'><input type='checkbox' style='margin: 0px;' name='all' title='Select All' onClick='SelectAll(\"section\",this.checked)'></td>\n
 		</tr>\n";
 
-	$realms = db_fetch_assoc("select
-		user_auth_realm.user_id,
-		user_realm.id,
-		user_realm.name
-		from user_realm
-		left join user_auth_realm on (user_realm.id=user_auth_realm.realm_id and user_auth_realm.user_id=" . (empty($_GET["id"]) ? "0" : $_GET["id"]) . ")
-		order by user_realm.name");
-
 	?>
 
 	<tr>
@@ -529,20 +527,21 @@ function user_realms_edit() {
 					<td align="top" width="50%">
 						<?php
 						$i = 0;
-						while (list($realm_id, $realm_name) = each($user_auth_realms)) {
-							if (sizeof(db_fetch_assoc("select realm_id from user_auth_realm where user_id=" . (empty($_GET["id"]) ? "0" : $_GET["id"]) . " and realm_id=$realm_id")) > 0) {
+						$user_realms_list = api_user_realms_list((empty($_GET["id"]) ? "-1" : $_GET["id"]));
+						while (list($realm_id, $realm_data) = each($user_realms_list)) {
+							if ($realm_data["value"] == "1") {
 								$old_value = "on";
 							}else{
 								$old_value = "";
 							}
 
-							$column1 = floor((sizeof($user_auth_realms) / 2) + (sizeof($user_auth_realms) % 2));
+							$column1 = floor((sizeof($user_realms_list) / 2) + (sizeof($user_realms_list) % 2));
 
 							if ($i == $column1) {
 								print "</td><td valign='top' width='50%'>";
 							}
 
-							form_checkbox("section" . $realm_id, $old_value, $realm_name, "", (!empty($_GET["id"]) ? 1 : 0)); print "<br>";
+							form_checkbox("section" . $realm_id, $old_value, $realm_data["realm_name"], "", (!empty($_GET["id"]) ? 1 : 0)); print "<br>";
 
 							$i++;
 						}
@@ -558,6 +557,11 @@ function user_realms_edit() {
 
 	form_hidden_box("save_component_realm_perms","1","");
 }
+
+
+/* ---------------------------------
+    graph_settings_edit function
+   --------------------------------- */
 
 function graph_settings_edit() {
 	global $settings_graphs, $tabs_graphs, $colors, $graph_views, $graph_tree_views;
@@ -621,19 +625,8 @@ function graph_settings_edit() {
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
 /* --------------------------
-    User Administration
+    user_edit function
    -------------------------- */
 
 function user_edit() {
@@ -691,12 +684,17 @@ function user_edit() {
 	form_save_button("user_admin.php");
 }
 
+
+/* ------------------------
+    user function
+   ------------------------ */
+
 function user() {
 	global $user_actions, $colors, $auth_realms;
 
 	html_start_box("<strong>User Management</strong>", "98%", $colors["header"], "3", "center", "user_admin.php?action=user_edit");
 
-	html_header_checkbox(array("User Name", "Full Name", "Status","Realm", "Default Graph Policy", "Last Login"));
+	html_header_checkbox(array("User Name", "Full Name", "Status","Realm", "Default Graph Policy", "Last Login", "Last Login From"));
 
 	$user_list = api_user_list( array( "1" => "username" ) );
 
@@ -722,7 +720,10 @@ function user() {
 				<?php if ($user["policy_graphs"] == "1") { print "ALLOW"; }else{ print "DENY"; }?>
 			</td>
 			<td>
-				<?php print $user["time"];?>
+				<?php print $user["lastlogin"];?>
+			</td>
+			<td>
+				<?php print $user["ip"];?>
 			</td>
 			<td style="<?php print get_checkbox_style();?>" width="1%" align="right">
 				<input type='checkbox' style='margin: 0px;' name='chk_<?php print $user["id"];?>' title="<?php print $user["username"];?>">
@@ -741,9 +742,8 @@ function user() {
 
 }
 
-
 /* ------------------------
-    The "actions" function
+    actions function
    ------------------------ */
 
 function user_actions() {
@@ -773,7 +773,9 @@ function user_actions() {
 			/* Copy User */
 			/* Check for new user name */
 			if ((!empty($_POST["user_new"])) && (!empty($_POST["user_name"]))) {
-				api_user_copy($_POST["user_name"],$_POST["user_new"]);
+				if (api_user_copy($_POST["user_name"],$_POST["user_new"]) == 1) {
+					raise_message(12);
+				}
 			}
 		}
 
