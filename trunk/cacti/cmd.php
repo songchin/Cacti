@@ -260,7 +260,7 @@ if ((sizeof($polling_items) > 0) && (read_config_option("poller_enabled") == "on
 		if (!$host_down) {
 			switch ($item["action"]) {
 			case POLLER_ACTION_SNMP: /* snmp */
-				$output = cacti_snmp_get($item["hostname"], $item["snmp_community"], $item["arg1"], $item["snmp_version"], $item["snmpv3_auth_username"], $item["snmpv3_auth_password"], $item["snmp_port"], $item["snmp_timeout"], SNMP_CMDPHP);
+				$output = cacti_snmp_get($item["hostname"], $item["snmp_community"], $item["arg1"], $item["snmp_version"], $item["snmpv3_auth_username"], $item["snmpv3_auth_password"], $item["snmpv3_auth_protocol"], $item["snmpv3_priv_passphrase"], $item["snmpv3_priv_protocol"], $item["snmp_port"], $item["snmp_timeout"], SNMP_CMDPHP);
 
 				/* remove any quotes from string */
 				$output = strip_quotes($output);
