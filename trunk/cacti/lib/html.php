@@ -237,6 +237,12 @@ function html_header_checkbox($header_items, $form_action = "") {
 	print "</tr>\n";
 }
 
+/* html_get_theme_css() - returns the Style sheet reference for the current theme
+   */
+function html_get_theme_css() {
+	return "themes/" . read_config_option("current_theme") . "/" . read_config_option("current_theme") . ".css";
+}
+
 /* create_list - draws the items for an html dropdown given an array of data
    @arg $form_data - an array containing data for this dropdown. it can be formatted
      in one of two ways:

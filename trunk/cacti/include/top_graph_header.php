@@ -86,7 +86,7 @@ if ((read_graph_config_option("default_tree_view_mode") == "2") && ($_REQUEST["a
 		print "<meta http-equiv=refresh content='" . read_graph_config_option("page_refresh") . "'; url='" . basename($_SERVER["PHP_SELF"]) . "'>\r\n";
 	}
 	?>
-	<link href="include/main.css" rel="stylesheet">
+	<link href='<?php print html_get_theme_css();?>' rel='stylesheet'>
 
 	<script type="text/javascript" src="include/treeview/ua.js"></script>
 	<script type="text/javascript" src="include/treeview/ftiens4.js"></script>

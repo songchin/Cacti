@@ -268,11 +268,11 @@ function export() {
 
 	/* copy the css/images on the first time */
 	if (file_exists("$cacti_export_path/main.css") == false) {
-		copy("$cacti_root_path/include/main.css", "$cacti_export_path/main.css");
-		copy("$cacti_root_path/images/tab_cacti.gif", "$cacti_export_path/tab_cacti.gif");
-		copy("$cacti_root_path/images/cacti_backdrop.gif", "$cacti_export_path/cacti_backdrop.gif");
-		copy("$cacti_root_path/images/transparent_line.gif", "$cacti_export_path/transparent_line.gif");
-		copy("$cacti_root_path/images/shadow.gif", "$cacti_export_path/shadow.gif");
+		copy("$cacti_root_path/" . html_get_theme_css(), "$cacti_export_path/main.css");
+		copy("$cacti_root_path/themes" . read_config_option("current_theme") . "/images/tab_cacti.gif", "$cacti_export_path/tab_cacti.gif");
+		copy("$cacti_root_path/themes" . read_config_option("current_theme") . "/images/cacti_backdrop.gif", "$cacti_export_path/cacti_backdrop.gif");
+		copy("$cacti_root_path/themes" . read_config_option("current_theme") . "/images/transparent_line.gif", "$cacti_export_path/transparent_line.gif");
+		copy("$cacti_root_path/themes" . read_config_option("current_theme") . "/images/shadow.gif", "$cacti_export_path/shadow.gif");
 	}
 
 	/* if the index file already exists, delete it */

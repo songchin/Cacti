@@ -79,13 +79,13 @@ if (read_config_option("auth_method") != "0") {
 			<html>
 			<head>
 				<title>Cacti</title>
-				<link href="include/main.css" rel="stylesheet">
+				<link href='<?php print html_get_theme_css();?>' rel='stylesheet'>
 			</style>
 			</head>
 
 			<br><br>
 
-			<table width="450" align='center'>
+			<table width='450' align='center'>
 				<tr>
 					<td colspan='2'><img src='images/auth_deny.gif' border='0' alt='Access Denied'></td>
 				</tr>

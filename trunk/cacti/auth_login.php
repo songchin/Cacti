@@ -27,15 +27,15 @@
 include("lib/api_user.php");
 
 /* set default action */
-if (!isset($_REQUEST["action"])) { 
-	$action = ""; 
+if (!isset($_REQUEST["action"])) {
+	$action = "";
 }else{
 	$action = $_REQUEST["action"];
 }
 
 
 /* Get the username */
-if (read_config_option("auth_method") == "2") { 
+if (read_config_option("auth_method") == "2") {
 	/* Get the Web Basic Auth username and set action so we login right away */
 	$action = "login";
 	if (isset($_SERVER["PHP_AUTH_USER"])) {
@@ -70,13 +70,13 @@ if ($action == 'login') {
 	case "2":
 		/* Web Basic Auth */
 		$copy_user = true;
-		$user_auth = true;	
+		$user_auth = true;
 		$realm = 0;
 		/* Locate user in database */
 		$user = db_fetch_row("select * from user_auth where username='" . $username . "' and realm = 0");
 		break;
-	case "3": 
-		/* LDAP Auth */ 
+	case "3":
+		/* LDAP Auth */
  		if (($_POST["realm"] == "ldap") && (strlen($_POST["password"]) > 0)) {
 			/* Connect to LDAP server */
 			$ldap_conn = ldap_connect(read_config_option("ldap_server"));
@@ -99,7 +99,7 @@ if ($action == 'login') {
 					which means auth failure, not able to connect.  This will get fixed when
 					the LDAP code is updated. */
 					auth_display_custom_error_message("Unable to connect to LDAP Server.");
-					exit;	
+					exit;
 				}
 			}else{
 				/* Error intializing LDAP */
@@ -129,7 +129,7 @@ if ($action == 'login') {
 			exit;
 		}
 	}
-	
+
 	/* Guest account checking - Not for builtin */
 	$guest_user = false;
 	if ((!sizeof($user)) && ($user_auth) && (read_config_option("guest_user") != "0")) {
@@ -139,7 +139,7 @@ if ($action == 'login') {
 			$guest_user = true;
 		}else{
 			/* error */
-			auth_display_custom_error_message("Guest user \"" . read_config_option("guest_user") . "\" does not exist.");	
+			auth_display_custom_error_message("Guest user \"" . read_config_option("guest_user") . "\" does not exist.");
 			exit;
 		}
 	}
@@ -170,7 +170,7 @@ if ($action == 'login') {
 
 			/* set the php session */
 			$_SESSION["sess_user_id"] = $user["id"];
-	
+
 			/* handle "force change password" */
 			if ($user["must_change_password"] == "on") {
 				$_SESSION["sess_change_password"] = true;
@@ -190,17 +190,17 @@ if ($action == 'login') {
 					header("Location: index.php"); break;
 				case '3': /* default graph page */
 					header("Location: graph_view.php"); break;
-			}	
+			}
 			exit;
 		}
 	}else{
 		if ((!$guest_user) && ($user_auth)) {
 			/* No guest account defined */
 			auth_display_custom_error_message("Access Denied, please contact you Cacti Administrator.");
-			exit;	
+			exit;
 		}else{
 			/* BAD username/password builtin and LDAP */
-			db_execute("insert into user_log (username,user_id,result,ip,time) values('" . $username . "',0,0,'" . $_SERVER["REMOTE_ADDR"] . "',NOW())");		
+			db_execute("insert into user_log (username,user_id,result,ip,time) values('" . $username . "',0,0,'" . $_SERVER["REMOTE_ADDR"] . "',NOW())");
 		}
 	}
 }
@@ -210,11 +210,11 @@ if ($action == 'login') {
    @arg $message - the actual text of the error message to display */
 function auth_display_custom_error_message($message) {
 	/* kill the session */
-	setcookie(session_name(),"",time() - 3600,"/");	
+	setcookie(session_name(),"",time() - 3600,"/");
 	/* print error */
 	print "<html>\n<head>\n";
         print "     <title>cacti</title>\n";
-        print "     <link href=\"include/main.css\" rel=\"stylesheet\">";
+        print "     <link href=\"" . html_get_theme_css() . "\" rel=\"stylesheet\">";
 	print "</head>\n";
 	print "<body leftmargin=\"0\" topmargin=\"0\" marginwidth=\"0\" marginheight=\"0\">\n<br><br>\n";
 	display_custom_error_message($message);
@@ -292,4 +292,3 @@ function auth_display_custom_error_message($message) {
 </form>
 </body>
 </html>
-

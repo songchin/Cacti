@@ -29,7 +29,7 @@ global $colors;
 <html>
 <head>
 	<title>cacti</title>
-	<link href="include/main.css" rel="stylesheet">
+	<link href='<?php print html_get_theme_css();?>' rel='stylesheet'>
 	<script type="text/javascript" src="include/layout.js"></script>
 </style>
 </head>
@@ -77,7 +77,7 @@ global $colors;
 			<img src="images/transparent_line.gif" width="135" height="2" border="0"><br>
 		</td>
 		<td colspan="2" height="8" style="background-image: url(images/shadow.gif); background-repeat: repeat-x;" bgcolor="#ffffff">
-			
+
 		</td>
 	</tr>
 	<tr height="5">
@@ -85,7 +85,7 @@ global $colors;
 			<table bgcolor="#f5f5f5" width="100%" cellpadding="1" cellspacing="0" border="0">
 				<?php draw_menu();?>
 			</table>
-			
+
 			<img src="images/transparent_line.gif" width="135" height="5" border="0"><br>
 			<p align="center"><a href='about.php'><img src="images/cacti_logo.gif" border="0"></a></p>
 		</td>
