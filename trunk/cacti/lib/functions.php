@@ -327,7 +327,8 @@ function cacti_log($message, $severity = SEV_INFO, $poller_id = 1, $host_id = 0,
 	}else{
 		if (isset($_SESSION["sess_user_id"])) {
 			$user_info = api_user_info(array("id" => $_SESSION["sess_user_id"]));
-			$username = $user_info;
+			$user_id = $_SESSION["sess_user_id"];
+			$username = $user_info["username"];
 		}else{
 			$username = "SYSTEM";
 		}
