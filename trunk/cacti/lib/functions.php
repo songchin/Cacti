@@ -296,13 +296,6 @@ function array_rekey($array, $key, $key_value) {
 	return $ret_array;
 }
 
-/* strip_newlines - removes \n\r from lines
-	@arg $string - the string to strip
-*/
-function strip_newlines($string) {
-	return strtr(strtr($string, "\n", "\0"), "\r","\0");
-}
-
 /* cacti_log - logs a string to Cacti's log file or optionally to the browser
    @arg $string - the string to append to the log file
    @arg $output - (bool) whether to output the log line to the browser using pring() or not */
@@ -373,7 +366,7 @@ function cacti_log($string, $output = false, $environ = "CMDPHP") {
 
 			closelog();
 		}
-   }
+	}
 
 	/* print output to standard out if required */
 	if ($output == true) {
@@ -381,278 +374,21 @@ function cacti_log($string, $output = false, $environ = "CMDPHP") {
 	}
 }
 
-/* update_host_status - updates the host table with informaton about it's status.
-	  It will also output to the appropriate log file when an event occurs.
-
-	@arg $status - (int constant) the status of the host (Up/Down)
-		  $host_id - (int) the host ID for the results
-	     $hosts - (array) a memory resident host table for speed
-		  $ping - (class array) results of the ping command			*/
-function update_host_status($status, $host_id, &$hosts, &$ping, $ping_availability, $print_data_to_stdout) {
-	$issue_log_message   = false;
-	$ping_failure_count  = read_config_option("ping_failure_count");
-	$ping_recovery_count = read_config_option("ping_recovery_count");
-
-	if ($status == HOST_DOWN) {
-		/* update total polls, failed polls and availability */
-		$hosts[$host_id]["failed_polls"]++;
-		$hosts[$host_id]["total_polls"]++;
-		$hosts[$host_id]["availability"] = 100 * ($hosts[$host_id]["total_polls"] - $hosts[$host_id]["failed_polls"]) / $hosts[$host_id]["total_polls"];
-
-		/* determine the error message to display */
-		if ($ping_availability == AVAIL_SNMP_AND_PING) {
-			if ($hosts[$host_id]["snmp_community"] == "") {
-				$hosts[$host_id]["status_last_error"] = $ping->ping_response;
-			}else {
-				$hosts[$host_id]["status_last_error"] = $ping->snmp_response . ", " . $ping->ping_response;
-			}
-		}elseif ($ping_availability == AVAIL_SNMP) {
-			if ($hosts[$host_id]["snmp_community"] == "") {
-				$hosts[$host_id]["status_last_error"] = "Device does not require SNMP";
-			}else {
-				$hosts[$host_id]["status_last_error"] = $ping->snmp_response;
-			}
-		}else {
-			$hosts[$host_id]["status_last_error"] = $ping->ping_response;
-		}
-
-		/* determine if to send an alert and update remainder of statistics */
-		if ($hosts[$host_id]["status"] == HOST_UP) {
-			/* increment the event failure count */
-			$hosts[$host_id]["status_event_count"]++;
-
-			/* if it's time to issue an error message, indicate so */
-			if ($hosts[$host_id]["status_event_count"] >= $ping_failure_count) {
-				/* host is now down, flag it that way */
-				$hosts[$host_id]["status"] = HOST_DOWN;
-
-				$issue_log_message = true;
-
-				/* update the failure date only if the failure count is 1 */
-				if ($ping_failure_count == 1) {
-					$hosts[$host_id]["status_fail_date"] = date("Y-m-d h:i:s");
-				}
-			/* host is down, but not ready to issue log message */
-			} else {
-				/* host down for the first time, set event date */
-				if ($hosts[$host_id]["status_event_count"] == 1) {
-					$hosts[$host_id]["status_fail_date"] = date("Y-m-d h:i:s");
-				}
-			}
-		/* host is recovering, put back in failed state */
-		} elseif ($hosts[$host_id]["status"] == HOST_RECOVERING) {
-			$hosts[$host_id]["status_event_count"] = 1;
-			$hosts[$host_id]["status"] = HOST_DOWN;
-
-		/* host was unknown and now is down */
-		} elseif ($hosts[$host_id]["status"] == HOST_UNKNOWN) {
-			$hosts[$host_id]["status"] = HOST_DOWN;
-			$hosts[$host_id]["status_event_count"] = 0;
-		} else {
-			$hosts[$host_id]["status_event_count"]++;
-		}
-	/* host is up!! */
-	} else {
-		/* update total polls and availability */
-		$hosts[$host_id]["total_polls"]++;
-		$hosts[$host_id]["availability"] = 100 * ($hosts[$host_id]["total_polls"] - $hosts[$host_id]["failed_polls"]) / $hosts[$host_id]["total_polls"];
-
-		/* determine the ping statistic to set and do so */
-		if ($ping_availability == AVAIL_SNMP_AND_PING) {
-			if ($hosts[$host_id]["snmp_community"] == "") {
-				$ping_time = $ping->ping_status;
-			}else {
-				/* calculate the average of the two times */
-				$ping_time = ($ping->snmp_status + $ping->ping_status) / 2;
-			}
-		}elseif ($ping_availability == AVAIL_SNMP) {
-			if ($hosts[$host_id]["snmp_community"] == "") {
-				$ping_time = 0.000;
-			}else {
-				$ping_time = $ping->snmp_status;
-			}
-		}else {
-			$ping_time = $ping->ping_status;
-		}
-
-		/* update times as required */
-		$hosts[$host_id]["cur_time"] = $ping_time;
-
-		/* maximum time */
-		if ($ping_time > $hosts[$host_id]["max_time"])
-			$hosts[$host_id]["max_time"] = $ping_time;
-
-		/* minimum time */
-		if ($ping_time < $hosts[$host_id]["min_time"])
-			$hosts[$host_id]["min_time"] = $ping_time;
-
-		/* average time */
-		$hosts[$host_id]["avg_time"] = (($hosts[$host_id]["total_polls"]-1-$hosts[$host_id]["failed_polls"])
-			* $hosts[$host_id]["avg_time"] + $ping_time) / ($hosts[$host_id]["total_polls"]-$hosts[$host_id]["failed_polls"]);
-
-		/* the host was down, now it's recovering */
-		if (($hosts[$host_id]["status"] == HOST_DOWN) || ($hosts[$host_id]["status"] == HOST_RECOVERING )) {
-			/* just up, change to recovering */
-			if ($hosts[$host_id]["status"] == HOST_DOWN) {
-				$hosts[$host_id]["status"] = HOST_RECOVERING;
-				$hosts[$host_id]["status_event_count"] = 1;
-			} else {
-				$hosts[$host_id]["status_event_count"]++;
-			}
-
-			/* if it's time to issue a recovery message, indicate so */
-			if ($hosts[$host_id]["status_event_count"] >= $ping_recovery_count) {
-				/* host is up, flag it that way */
-				$hosts[$host_id]["status"] = HOST_UP;
-
-				$issue_log_message = true;
-
-				/* update the recovery date only if the recovery count is 1 */
-				if ($ping_recovery_count == 1) {
-					$hosts[$host_id]["status_rec_date"] = date("Y-m-d h:i:s");
-				}
-
-				/* reset the event counter */
-				$hosts[$host_id]["status_event_count"] = 0;
-			/* host is recovering, but not ready to issue log message */
-			} else {
-				/* host recovering for the first time, set event date */
-				if ($hosts[$host_id]["status_event_count"] == 1) {
-					$hosts[$host_id]["status_rec_date"] = date("Y-m-d h:i:s");
-				}
-			}
-		} else {
-		/* host was unknown and now is up */
-			$hosts[$host_id]["status"] = HOST_UP;
-			$hosts[$host_id]["status_event_count"] = 0;
-		}
-	}
-	/* if the user wants a flood of information then flood them */
-	if (read_config_option("log_verbosity") >= POLLER_VERBOSITY_HIGH) {
-		if (($hosts[$host_id]["status"] == HOST_UP) || ($hosts[$host_id]["status"] == HOST_RECOVERING)) {
-			/* log ping result if we are to use a ping for reachability testing */
-			if ($ping_availability == AVAIL_SNMP_AND_PING) {
-				cacti_log("Host[$host_id] PING: " . $ping->ping_response, $print_data_to_stdout);
-				cacti_log("Host[$host_id] SNMP: " . $ping->snmp_response, $print_data_to_stdout);
-			} elseif ($ping_availability == AVAIL_SNMP) {
-				if ($hosts[$host_id]["snmp_community"] == "") {
-					cacti_log("Host[$host_id] SNMP: Device does not require SNMP", $print_data_to_stdout);
-				}else{
-					cacti_log("Host[$host_id] SNMP: " . $ping->snmp_response, $print_data_to_stdout);
-				}
-			} else {
-				cacti_log("Host[$host_id] PING: " . $ping->ping_response, $print_data_to_stdout);
-			}
-		} else {
-			if ($ping_availability == AVAIL_SNMP_AND_PING) {
-				cacti_log("Host[$host_id] PING: " . $ping->ping_response, $print_data_to_stdout);
-				cacti_log("Host[$host_id] SNMP: " . $ping->snmp_response, $print_data_to_stdout);
-			} elseif ($ping_availability == AVAIL_SNMP) {
-				cacti_log("Host[$host_id] SNMP: " . $ping->snmp_response, $print_data_to_stdout);
-			} else {
-				cacti_log("Host[$host_id] PING: " . $ping->ping_response, $print_data_to_stdout);
-			}
-		}
-	}
-
-	/* if there is supposed to be an event generated, do it */
-	if ($issue_log_message) {
-		if ($hosts[$host_id]["status"] == HOST_DOWN) {
-			cacti_log("Host[$host_id] ERROR: HOST EVENT: Host is DOWN Message: " . $hosts[$host_id]["status_last_error"], $print_data_to_stdout);
-		} else {
-			cacti_log("Host[$host_id] NOTICE: HOST EVENT: Host Returned from DOWN State: ", $print_data_to_stdout);
-		}
-	}
-
-	db_execute("update host set
-		status = '" . $hosts[$host_id]["status"] . "',
-		status_event_count = '" . $hosts[$host_id]["status_event_count"] . "',
-		status_fail_date = '" . $hosts[$host_id]["status_fail_date"] . "',
-		status_rec_date = '" . $hosts[$host_id]["status_rec_date"] . "',
-		status_last_error = '" . $hosts[$host_id]["status_last_error"] . "',
-		min_time = '" . $hosts[$host_id]["min_time"] . "',
-		max_time = '" . $hosts[$host_id]["max_time"] . "',
-		cur_time = '" . $hosts[$host_id]["cur_time"] . "',
-		avg_time = '" . $hosts[$host_id]["avg_time"] . "',
-		total_polls = '" . $hosts[$host_id]["total_polls"] . "',
-		failed_polls = '" . $hosts[$host_id]["failed_polls"] . "',
-		availability = '" . $hosts[$host_id]["availability"] . "'
-		where hostname = '" . $hosts[$host_id]["hostname"] . "'");
+/* strip_newlines - removes \n\r from lines
+   @arg $string - the string to strip */
+function strip_newlines($string) {
+	return strtr(strtr($string, "\n", "\0"), "\r","\0");
 }
 
 /* strip_quotes - Strip single and double quotes from a string
-	@arg $result - (string) the result from the poll
-	@returns - (string) the string with quotes stripped */
+   @arg $result - (string) the result from the poll
+   @returns - (string) the string with quotes stripped */
 function strip_quotes($result) {
-  	/* first strip all single and double quotes from the string */
+	/* first strip all single and double quotes from the string */
 	$result = strtr($result,"'","");
 	$result = strtr($result,'"','');
 
 	return($result);
-}
-
-/* validate_result - determine's if the result value is valid or not.  If not valid returns a "U"
-   @arg $result - (string) the result from the poll
-   @returns - (int) either to result is valid or not */
-function validate_result($result) {
-	$delim_cnt = 0;
-   $space_cnt = 0;
-
-	$valid_result = false;
-	$checked = false;
-
-	/* check the easy cases first */
-	/* it has no delimiters, and no space, therefore, must be numeric */
-	if ((substr_count($result, ":") == 0) && (substr_count($result, "!") == 0) && (substr_count($result, " ") == 0)) {
-		$checked = true;
-		if (is_numeric($result)) {
-			$valid_result = true;
-		} else if (is_float($result)) {
-			$valid_result = true;
-  		} else {
-			$valid_result = false;
-		}
-	}
-	/* it has delimiters and has no space */
-	if (!$checked) {
-		if (((substr_count($result, ":")) || (substr_count($result, "!")))) {
-			if (substr_count($result, " ") == 0) {
-				$valid_result = true;
-				$checked = true;
-			}
-
-			if (substr_count($result, " ") != 0) {
-				$checked = true;
-				if (substr_count($result, ":")) {
-					$delim_cnt = substr_count($result, ":");
-				} else if (strstr($result, "!")) {
-					$delim_cnt = substr_count($result, "!");
-				}
-
-				$space_cnt = substr_count($result, " ");
-
-				if ($space_cnt+1 == $delim_cnt) {
-					$valid_result = true;
-				} else {
-					$valid_result = false;
-				}
-			}
-		}
-	}
-
-	/* default handling */
-
-	if (!$checked) {
-		if (is_numeric($result)) {
-			$valid_result = true;
-		} else if (is_float($result)) {
-			$valid_result = true;
-		} else {
-			$valid_result = false;
-		}
-	}
-
-	return($valid_result);
 }
 
 /* get_full_script_path - gets the full path to the script to execute to obtain data for a
@@ -738,9 +474,9 @@ function get_data_source_item_name($data_template_rrd_id) {
 function get_data_source_path($local_data_id, $expand_paths) {
 	global $config;
 
-	    if (empty($local_data_id)) { return ""; }
+	if (empty($local_data_id)) { return ""; }
 
-	    $data_source = db_fetch_row("select name,data_source_path from data_template_data where local_data_id=$local_data_id");
+	$data_source = db_fetch_row("select name,data_source_path from data_template_data where local_data_id=$local_data_id");
 
 	if (sizeof($data_source) > 0) {
 		if (empty($data_source["data_source_path"])) {
@@ -1150,6 +886,16 @@ function get_web_browser() {
 	}
 }
 
+/* get_browser_query_string - returns the full url, including args requested by the browser
+   @returns - the url requested by the browser */
+function get_browser_query_string() {
+	if (isset($_SERVER["REQUEST_URI"])) {
+		return basename($_SERVER["REQUEST_URI"]);
+	}else{
+		return basename($_SERVER["PHP_SELF"]) . (empty($_SERVER["QUERY_STRING"]) ? "" : "?" . $_SERVER["QUERY_STRING"]);
+	}
+}
+
 /* get_graph_tree_array - returns a list of graph trees taking permissions into account if
      necessary
    @arg $return_sql - (bool) Whether to return the SQL to create the dropdown rather than an array
@@ -1210,164 +956,6 @@ function get_host_array() {
 	return $host_list;
 }
 
-/* draw_navigation_text - determines the top header navigation text for the current page and displays it to
-     the browser */
-function draw_navigation_text() {
-	$nav_level_cache = (isset($_SESSION["sess_nav_level_cache"]) ? $_SESSION["sess_nav_level_cache"] : array());
-
-	$nav = array(
-		"graph_view.php:" => array("title" => "Graphs", "mapping" => "", "url" => "graph_view.php", "level" => "0"),
-		"graph_view.php:tree" => array("title" => "Tree Mode", "mapping" => "graph_view.php:", "url" => "graph_view.php?action=tree", "level" => "1"),
-		"graph_view.php:list" => array("title" => "List Mode", "mapping" => "graph_view.php:", "url" => "graph_view.php?action=list", "level" => "1"),
-		"graph_view.php:preview" => array("title" => "Preview Mode", "mapping" => "graph_view.php:", "url" => "graph_view.php?action=preview", "level" => "1"),
-		"graph.php:" => array("title" => "|current_graph_title|", "mapping" => "graph_view.php:,?", "level" => "2"),
-		"graph.php:view" => array("title" => "|current_graph_title|", "mapping" => "graph_view.php:,?", "level" => "2"),
-		"graph.php:zoom" => array("title" => "Zoom", "mapping" => "graph_view.php:,?,graph.php:view", "level" => "3"),
-		"graph.php:properties" => array("title" => "Properties", "mapping" => "graph_view.php:,?,graph.php:view", "level" => "3"),
-		"graph_settings.php:" => array("title" => "Settings", "mapping" => "graph_view.php:", "url" => "graph_settings.php", "level" => "1"),
-		"index.php:" => array("title" => "Console", "mapping" => "", "url" => "index.php", "level" => "0"),
-		"graphs.php:" => array("title" => "Graph Management", "mapping" => "index.php:", "url" => "graphs.php", "level" => "1"),
-		"graphs.php:graph_edit" => array("title" => "(Edit)", "mapping" => "index.php:,graphs.php:", "url" => "", "level" => "2"),
-		"graphs.php:graph_diff" => array("title" => "Change Graph Template", "mapping" => "index.php:,graphs.php:,graphs.php:graph_edit", "url" => "", "level" => "3"),
-		"graphs.php:actions" => array("title" => "Actions", "mapping" => "index.php:,graphs.php:", "url" => "", "level" => "2"),
-		"graphs_items.php:item_edit" => array("title" => "Graph Items", "mapping" => "index.php:,graphs.php:,graphs.php:graph_edit", "url" => "", "level" => "3"),
-		"graphs_new.php:" => array("title" => "Create New Graphs", "mapping" => "index.php:", "url" => "graphs_new.php", "level" => "1"),
-		"graphs_new.php:save" => array("title" => "Create Graphs from Data Query", "mapping" => "index.php:,graphs_new.php:", "url" => "", "level" => "2"),
-		"gprint_presets.php:" => array("title" => "GPRINT Presets", "mapping" => "index.php:", "url" => "gprint_presets.php", "level" => "1"),
-		"gprint_presets.php:edit" => array("title" => "(Edit)", "mapping" => "index.php:,gprint_presets.php:", "url" => "", "level" => "2"),
-		"gprint_presets.php:remove" => array("title" => "(Remove)", "mapping" => "index.php:,gprint_presets.php:", "url" => "", "level" => "2"),
-		"cdef.php:" => array("title" => "CDEF's", "mapping" => "index.php:", "url" => "cdef.php", "level" => "1"),
-		"cdef.php:edit" => array("title" => "(Edit)", "mapping" => "index.php:,cdef.php:", "url" => "", "level" => "2"),
-		"cdef.php:remove" => array("title" => "(Remove)", "mapping" => "index.php:,cdef.php:", "url" => "", "level" => "2"),
-		"cdef.php:item_edit" => array("title" => "CDEF Items", "mapping" => "index.php:,cdef.php:,cdef.php:edit", "url" => "", "level" => "3"),
-		"tree.php:" => array("title" => "Graph Trees", "mapping" => "index.php:", "url" => "tree.php", "level" => "1"),
-		"tree.php:edit" => array("title" => "(Edit)", "mapping" => "index.php:,tree.php:", "url" => "", "level" => "2"),
-		"tree.php:remove" => array("title" => "(Remove)", "mapping" => "index.php:,tree.php:", "url" => "", "level" => "2"),
-		"tree.php:item_edit" => array("title" => "Graph Tree Items", "mapping" => "index.php:,tree.php:,tree.php:edit", "url" => "", "level" => "3"),
-		"tree.php:item_remove" => array("title" => "(Remove Item)", "mapping" => "index.php:,tree.php:,tree.php:edit", "url" => "", "level" => "3"),
-		"color.php:" => array("title" => "Colors", "mapping" => "index.php:", "url" => "color.php", "level" => "1"),
-		"color.php:edit" => array("title" => "(Edit)", "mapping" => "index.php:,color.php:", "url" => "", "level" => "2"),
-		"graph_templates.php:" => array("title" => "Graph Templates", "mapping" => "index.php:", "url" => "graph_templates.php", "level" => "1"),
-		"graph_templates.php:template_edit" => array("title" => "(Edit)", "mapping" => "index.php:,graph_templates.php:", "url" => "", "level" => "2"),
-		"graph_templates.php:actions" => array("title" => "Actions", "mapping" => "index.php:,graph_templates.php:", "url" => "", "level" => "2"),
-		"graph_templates_items.php:item_edit" => array("title" => "Graph Template Items", "mapping" => "index.php:,graph_templates.php:,graph_templates.php:template_edit", "url" => "", "level" => "3"),
-		"graph_templates_inputs.php:input_edit" => array("title" => "Graph Item Inputs", "mapping" => "index.php:,graph_templates.php:,graph_templates.php:template_edit", "url" => "", "level" => "3"),
-		"graph_templates_inputs.php:input_remove" => array("title" => "(Remove)", "mapping" => "index.php:,graph_templates.php:,graph_templates.php:template_edit", "url" => "", "level" => "3"),
-		"host_templates.php:" => array("title" => "Host Templates", "mapping" => "index.php:", "url" => "host_templates.php", "level" => "1"),
-		"host_templates.php:edit" => array("title" => "(Edit)", "mapping" => "index.php:,host_templates.php:", "url" => "", "level" => "2"),
-		"host_templates.php:actions" => array("title" => "Actions", "mapping" => "index.php:,host_templates.php:", "url" => "", "level" => "2"),
-		"graph_templates.php:actions" => array("title" => "Actions", "mapping" => "index.php:,graph_templates.php:", "url" => "", "level" => "2"),
-		"data_templates.php:" => array("title" => "Data Templates", "mapping" => "index.php:", "url" => "data_templates.php", "level" => "1"),
-		"data_templates.php:template_edit" => array("title" => "(Edit)", "mapping" => "index.php:,data_templates.php:", "url" => "", "level" => "2"),
-		"data_templates.php:actions" => array("title" => "Actions", "mapping" => "index.php:,data_templates.php:", "url" => "", "level" => "2"),
-		"data_sources.php:" => array("title" => "Data Sources", "mapping" => "index.php:", "url" => "data_sources.php", "level" => "1"),
-		"data_sources.php:ds_edit" => array("title" => "(Edit)", "mapping" => "index.php:,data_sources.php:", "url" => "", "level" => "2"),
-		"data_sources.php:actions" => array("title" => "Actions", "mapping" => "index.php:,data_sources.php:", "url" => "", "level" => "2"),
-		"host.php:" => array("title" => "Devices", "mapping" => "index.php:", "url" => "host.php", "level" => "1"),
-		"host.php:edit" => array("title" => "(Edit)", "mapping" => "index.php:,host.php:", "url" => "", "level" => "2"),
-		"host.php:actions" => array("title" => "Actions", "mapping" => "index.php:,host.php:", "url" => "", "level" => "2"),
-		"rra.php:" => array("title" => "Round Robin Archives", "mapping" => "index.php:", "url" => "rra.php", "level" => "1"),
-		"rra.php:edit" => array("title" => "(Edit)", "mapping" => "index.php:,rra.php:", "url" => "", "level" => "2"),
-		"rra.php:remove" => array("title" => "(Remove)", "mapping" => "index.php:,rra.php:", "url" => "", "level" => "2"),
-		"data_input.php:" => array("title" => "Data Input Methods", "mapping" => "index.php:", "url" => "data_input.php", "level" => "1"),
-		"data_input.php:edit" => array("title" => "(Edit)", "mapping" => "index.php:,data_input.php:", "url" => "", "level" => "2"),
-		"data_input.php:remove" => array("title" => "(Remove)", "mapping" => "index.php:,data_input.php:", "url" => "", "level" => "2"),
-		"data_input.php:field_edit" => array("title" => "Data Input Fields", "mapping" => "index.php:,data_input.php:,data_input.php:edit", "url" => "", "level" => "3"),
-		"data_input.php:field_remove" => array("title" => "(Remove Item)", "mapping" => "index.php:,data_input.php:,data_input.php:edit", "url" => "", "level" => "3"),
-		"data_queries.php:" => array("title" => "Data Queries", "mapping" => "index.php:", "url" => "data_queries.php", "level" => "1"),
-		"data_queries.php:edit" => array("title" => "(Edit)", "mapping" => "index.php:,data_queries.php:", "url" => "", "level" => "2"),
-		"data_queries.php:remove" => array("title" => "(Remove)", "mapping" => "index.php:,data_queries.php:", "url" => "", "level" => "2"),
-		"data_queries.php:item_edit" => array("title" => "Associated Graph Templates", "mapping" => "index.php:,data_queries.php:,data_queries.php:edit", "url" => "", "level" => "3"),
-		"data_queries.php:item_remove" => array("title" => "(Remove Item)", "mapping" => "index.php:,data_queries.php:,data_queries.php:edit", "url" => "", "level" => "3"),
-		"utilities.php:" => array("title" => "Utilities", "mapping" => "index.php:", "url" => "utilities.php", "level" => "1"),
-		"utilities.php:view_poller_cache" => array("title" => "View Poller Cache", "mapping" => "index.php:,utilities.php:", "url" => "utilities.php", "level" => "2"),
-		"utilities.php:view_snmp_cache" => array("title" => "View SNMP Cache", "mapping" => "index.php:,utilities.php:", "url" => "utilities.php", "level" => "2"),
-		"utilities.php:clear_poller_cache" => array("title" => "Clear Poller Cache", "mapping" => "index.php:,utilities.php:", "url" => "utilities.php", "level" => "2"),
-		"utilities.php:view_logfile" => array("title" => "View Cacti Log File", "mapping" => "index.php:,utilities.php:", "url" => "utilities.php", "level" => "2"),
-		"utilities.php:clear_logfile" => array("title" => "Clear Cacti Log File", "mapping" => "index.php:,utilities.php:", "url" => "utilities.php", "level" => "2"),
-		"settings.php:" => array("title" => "Cacti Settings", "mapping" => "index.php:", "url" => "settings.php", "level" => "1"),
-		"user_admin.php:" => array("title" => "User Management", "mapping" => "index.php:", "url" => "user_admin.php", "level" => "1"),
-		"user_admin.php:actions" => array("title" => "User Management", "mapping" => "index.php:", "url" => "user_admin.php", "level" => "2"),
-		"user_admin.php:user_edit" => array("title" => "(Edit)", "mapping" => "index.php:,user_admin.php:", "url" => "", "level" => "2"),
-		"user_admin.php:user_remove" => array("title" => "(Remove)", "mapping" => "index.php:,user_admin.php:", "url" => "", "level" => "2"),
-		"user_admin.php:graph_perms_edit" => array("title" => "Edit (Graph Permissions)", "mapping" => "index.php:,user_admin.php:", "url" => "", "level" => "2"),
-		"user_admin.php:user_realms_edit" => array("title" => "Edit (Realm Permissions)", "mapping" => "index.php:,user_admin.php:", "url" => "", "level" => "2"),
-		"user_admin.php:graph_settings_edit" => array("title" => "Edit (Graph Settings)", "mapping" => "index.php:,user_admin.php:", "url" => "", "level" => "2"),
-		"about.php:" => array("title" => "About Cacti", "mapping" => "index.php:", "url" => "about.php", "level" => "1"),
-		"templates_export.php:" => array("title" => "Export Templates", "mapping" => "index.php:", "url" => "templates_export.php", "level" => "1"),
-		"templates_export.php:save" => array("title" => "Export Results", "mapping" => "index.php:,templates_export.php:", "url" => "templates_export.php", "level" => "2"),
-		"templates_import.php:" => array("title" => "Import Templates", "mapping" => "index.php:", "url" => "templates_import.php", "level" => "1"),
-		"smtp_servers.php:" => array("title" => "Coming Soon", "mapping" => "index.php:", "url" => "smtp_servers.php", "level" => "1"),
-		"email_templates.php:" => array("title" => "Coming Soon", "mapping" => "index.php:", "url" => "email_templates.php", "level" => "1"),
-		"event_queue.php:" => array("title" => "Coming Soon", "mapping" => "index.php:", "url" => "event_queue.php", "level" => "1"),
-		"smtp_queue.php:" => array("title" => "Coming Soon", "mapping" => "index.php:", "url" => "smtp_queue.php", "level" => "1"),
-		"user_changepassword.php:" => array("title" => "Change Password", "mapping" => "index.php:", "url" => "user_changepassword.php", "level" => "1"),
-		"user_changepassword.php:save" => array("title" => "Change Password", "mapping" => "index.php:", "url" => "user_changepassword.php", "level" => "1")
-		);
-
-	$current_page = basename($_SERVER["PHP_SELF"]);
-	$current_action = (isset($_REQUEST["action"]) ? $_REQUEST["action"] : "");
-
-	/* find the current page in the big array */
-	$current_array = $nav{$current_page . ":" . $current_action};
-	$current_mappings = split(",", $current_array["mapping"]);
-	$current_nav = "";
-
-	/* resolve all mappings to build the navigation string */
-	for ($i=0; ($i<count($current_mappings)); $i++) {
-		if (empty($current_mappings[$i])) { continue; }
-
-		if  ($i == 0) {
-			/* always use the default for level == 0 */
-			$url = $nav{$current_mappings[$i]}["url"];
-		}elseif (!empty($nav_level_cache{$i}["url"])) {
-			/* found a match in the url cache for this level */
-			$url = $nav_level_cache{$i}["url"];
-		}elseif (!empty($current_array["url"])) {
-			/* found a default url in the above array */
-			$url = $current_array["url"];
-		}else{
-			/* default to no url */
-			$url = "";
-		}
-
-		if ($current_mappings[$i] == "?") {
-			/* '?' tells us to pull title from the cache at this level */
-			if (isset($nav_level_cache{$i})) {
-				$current_nav .= (empty($url) ? "" : "<a href='$url'>") . resolve_navigation_variables($nav{$nav_level_cache{$i}["id"]}["title"]) . (empty($url) ? "" : "</a>") . " -> ";
-			}
-		}else{
-			/* there is no '?' - pull from the above array */
-			$current_nav .= (empty($url) ? "" : "<a href='$url'>") . resolve_navigation_variables($nav{$current_mappings[$i]}["title"]) . (empty($url) ? "" : "</a>") . " -> ";
-		}
-	}
-
-	$current_nav .= resolve_navigation_variables($current_array["title"]);
-
-	/* keep a cache for each level we encounter */
-	$nav_level_cache{$current_array["level"]} = array("id" => $current_page . ":" . $current_action, "url" => get_browser_query_string());
-	$_SESSION["sess_nav_level_cache"] = $nav_level_cache;
-
-	print $current_nav;
-}
-
-/* resolve_navigation_variables - substitute any variables contained in the navigation text
-   @arg $text - the text to substitute in
-   @returns - the original navigation text with all substitutions made */
-function resolve_navigation_variables($text) {
-	if (preg_match_all("/\|([a-zA-Z0-9_]+)\|/", $text, $matches)) {
-		for ($i=0; $i<count($matches[1]); $i++) {
-			switch ($matches[1][$i]) {
-			case 'current_graph_title':
-				$text = str_replace("|" . $matches[1][$i] . "|", get_graph_title($_GET["local_graph_id"]), $text);
-				break;
-			}
-		}
-	}
-
-	return $text;
-}
-
 /* get_associated_rras - returns a list of all RRAs referenced by a particular graph
    @arg $local_graph_id - (int) the ID of the graph to retrieve a list of RRAs for
    @returns - (array) an array containing the name and id of each RRA found */
@@ -1387,16 +975,6 @@ function get_associated_rras($local_graph_id) {
 		and graph_templates_item.local_graph_id=$local_graph_id
 		group by rra.id
 		order by rra.timespan");
-}
-
-/* get_browser_query_string - returns the full url, including args requested by the browser
-   @returns - the url requested by the browser */
-function get_browser_query_string() {
-	if (isset($_SERVER["REQUEST_URI"])) {
-		return basename($_SERVER["REQUEST_URI"]);
-	}else{
-		return basename($_SERVER["PHP_SELF"]) . (empty($_SERVER["QUERY_STRING"]) ? "" : "?" . $_SERVER["QUERY_STRING"]);
-	}
 }
 
 /* get_hash_graph_template - returns the current unique hash for a graph template
@@ -1589,6 +1167,19 @@ function debug_log_return($type) {
 	}
 
 	return $log_text;
+}
+
+/* is_graph_item_type_primary - determines if a given graph item type id is primary,
+     that is an AREA, STACK, LINE1, LINE2, or LINE3
+   @arg $graph_item_type_id - the graph item type id to evaluate
+   @returns - (bool) true if the item is primary, false otherwise  */
+function is_graph_item_type_primary($graph_item_type_id) {
+	if (($graph_item_type_id == GRAPH_ITEM_TYPE_LINE1) || ($graph_item_type_id == GRAPH_ITEM_TYPE_LINE2) || ($graph_item_type_id == GRAPH_ITEM_TYPE_LINE3) || ($graph_item_type_id == GRAPH_ITEM_TYPE_AREA) || ($graph_item_type_id == GRAPH_ITEM_TYPE_STACK)) {
+		return true;
+	}else{
+		return false;
+	}
+
 }
 
 ?>
