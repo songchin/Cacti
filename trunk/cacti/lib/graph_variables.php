@@ -78,7 +78,7 @@ function ninety_fifth_percentile($local_data_id, $start_time, $end_time) {
    @arg $ds_steps - how many seconds each period represents
    @returns - (array) an array containing each data source item, and its sum */
 function bandwidth_summation($local_data_id, $start_time, $end_time, $rra_steps, $ds_steps) {
-	$fetch_array = rrdtool_function_fetch($local_data_id, $start_time, $end_time);
+	$fetch_array = rrdtool_function_fetch($local_data_id, $start_time, $end_time, $rra_steps * $ds_steps);
 
 	if ((!isset($fetch_array["data_source_names"])) || (count($fetch_array["data_source_names"]) == 0)) {
 		return;
