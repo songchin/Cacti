@@ -346,14 +346,16 @@ $menu = array(
 		),
 	"Configuration"  => array(
 		"settings.php" => "Settings",
-		"settings_wizard.php" => "Wizard"
+		"settings_wizard.php" => "Wizard",
+		"user_settings.php" => "User Settings"
 		),
 	"Utilities" => array(
 		"utilities.php" => "System Utilities",
 		"user_admin.php" => "User Management",
 		"user_changepassword.php" => "Change Password",
 		"logout.php" => "Logout User"
-	));
+		)
+	);
 
 $user_auth_realms = array(
 	1 => "User Administration",
@@ -410,7 +412,8 @@ $user_auth_realm_filenames = array(
 	"event_queue.php" => 8,
 	"smtp_queue.php" => 8,
 	"user_changepassword.php" => "18",
-	"settings_wizard.php" => "15"
+	"settings_wizard.php" => "15",
+	"user_settings.php" => "7"
 	);
 
 $hash_type_codes = array(

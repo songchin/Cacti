@@ -90,6 +90,57 @@ function read_graph_config_option($config_name) {
 	return $graph_config_array[$config_name];
 }
 
+/* read_user_config_option - finds the current value of a user configuration setting
+   @arg $config_name - the name of the configuration setting as specified $settings_users array
+     in 'include/config_settings.php'
+   @returns - the current value of the graph configuration option */
+function read_user_config_option($config_name) {
+	/* users must have cacti user auth turned on to use this */
+	if ((read_config_option("auth_method") == "0") || (!isset($_SESSION["sess_user_id"]))) {
+		return read_default_user_config_option($config_name);
+	}
+
+	if (isset($_SESSION["sess_user_config_array"])) {
+		$user_config_array = $_SESSION["sess_user_config_array"];
+	}
+
+	if (!isset($user_config_array[$config_name])) {
+		$db_setting = db_fetch_row("select value from settings_users where name='$config_name' and user_id=" . $_SESSION["sess_user_id"]);
+
+		if (isset($db_setting["value"])) {
+			$user_config_array[$config_name] = $db_setting["value"];
+		}else{
+			$user_config_array[$config_name] = read_default_user_config_option($config_name);
+		}
+
+		$_SESSION["sess_user_config_array"] = $user_config_array;
+	}
+
+	return $user_config_array[$config_name];
+}
+
+/* read_default_user_config_option - finds the default value of a user configuration setting
+   @arg $config_name - the name of the configuration setting as specified $settings array
+     in 'include/config_settings.php'
+   @returns - the default value of the configuration option */
+function read_default_user_config_option($config_name) {
+	global $config;
+
+	include($config["include_path"] . "/config_settings.php");
+
+	while (list($tab_name, $tab_array) = each($settings_users)) {
+		if ((isset($tab_array[$config_name])) && (isset($tab_array[$config_name]["default"]))) {
+			return $tab_array[$config_name]["default"];
+		}else{
+			while (list($field_name, $field_array) = each($tab_array)) {
+				if ((isset($field_array["items"])) && (isset($field_array["items"][$config_name])) && (isset($field_array["items"][$config_name]["default"]))) {
+					return $field_array["items"][$config_name]["default"];
+				}
+			}
+		}
+	}
+}
+
 /* config_value_exists - determines if a value exists for the current user/setting specified
    @arg $config_name - the name of the configuration setting as specified $settings array
      in 'include/config_settings.php'
@@ -106,6 +157,16 @@ function config_value_exists($config_name) {
 function graph_config_value_exists($config_name, $user_id) {
 	return sizeof(db_fetch_assoc("select value from settings_graphs where name='$config_name' and user_id='$user_id'"));
 }
+
+/* user_config_value_exists - determines if a value exists for the current user/setting specified
+   @arg $config_name - the name of the configuration setting as specified $settings_users array
+     in 'include/config_settings.php'
+   @arg $user_id - the id of the user to check the configuration value for
+   @returns (bool) - true if a value exists, false if a value does not exist */
+function user_config_value_exists($config_name, $user_id) {
+	return sizeof(db_fetch_assoc("select value from settings_users where name='$config_name' and user_id='$user_id'"));
+}
+
 
 /* read_default_config_option - finds the default value of a Cacti configuration setting
    @arg $config_name - the name of the configuration setting as specified $settings array

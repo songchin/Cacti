@@ -2336,6 +2336,20 @@ INSERT INTO settings_graphs VALUES (1,'general','');
 INSERT INTO settings_graphs VALUES (1,'tree','');
 
 --
+-- Table structure for table `settings_users`
+--
+
+
+CREATE TABLE `settings_graphs` (
+  `user_id` smallint(8) unsigned NOT NULL default '0',
+  `name` varchar(50) NOT NULL default '',
+  `value` varchar(255) NOT NULL default '',
+  PRIMARY KEY  (`user_id`,`name`),
+  KEY `user_id` (`user_id`,`name`)
+) TYPE=MyISAM;
+
+
+--
 -- Table structure for table `settings_tree`
 --
 

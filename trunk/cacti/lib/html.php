@@ -1146,6 +1146,12 @@ function draw_navigation_text() {
 			"mapping" => "index.php:", 
 			"url" => "settings_wizard.php", 
 			"level" => "1"
+			),
+		"user_settings.php:" => array(
+			"title" => "User Settings", 
+			"mapping" => "index.php:", 
+			"url" => "user_settings.php", 
+			"level" => "1"
 			)
 		);
 
