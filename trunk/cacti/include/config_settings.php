@@ -874,6 +874,18 @@ $settings_users = array(
 			"method" => "drop_array",
 			"default" => "default",
 			"array" => $user_themes
+			),
+		"email_address_primary" => array(
+			"friendly_name" => "The Primary E-Mail Address for User",
+			"description" => "The primary e-mail address for this user.",
+			"method" => "textbox",
+			"max_length" => "255"
+			),
+		"email_address_secondary" => array(
+			"friendly_name" => "The Secondary E-Mail Addres for User",
+			"description" => "The Secondary E-Mail Address for User.  This would typically be an e-mail address to a handheld or portable device.",
+			"method" => "textbox",
+			"max_length" => "255"
 			)
 		)
 	)
