@@ -25,6 +25,14 @@
 */
 
 include("./include/auth.php");
+include("./lib/api_user.php");
+
+$user_actions = array(
+	1 => "Delete",
+	2 => "Copy",
+	3 => "Enable",
+	4 => "Disable"
+	);
 
 /* set default action */
 if (!isset($_REQUEST["action"])) { $_REQUEST["action"] = ""; }
@@ -32,16 +40,15 @@ if (!isset($_REQUEST["action"])) { $_REQUEST["action"] = ""; }
 switch ($_REQUEST["action"]) {
 	case 'save':
 		form_save();
+		
+		break;
+	case 'actions':
+		user_actions();
 
 		break;
 	case 'perm_remove':
 		perm_remove();
 
-		break;
-	case 'user_remove':
-		user_remove();
-
-			header("Location: user_admin.php");
 		break;
 	case 'user_realms_edit':
 		include_once("include/top_header.php");
@@ -128,7 +135,7 @@ function form_save() {
 		form_input_validate($_POST["password_confirm"], "password_confirm", "" . preg_quote($_POST["password"]) . "", true, 4);
 
 		$save["id"] = $_POST["id"];
-		$save["username"] = form_input_validate($_POST["username"], "username", "^[A-Za-z_0-9]+$", false, 3);
+		$save["username"] = form_input_validate($_POST["username"], "username", "^[A-Za-z_0-9\.]+$", false, 3);
 		$save["full_name"] = form_input_validate($_POST["full_name"], "full_name", "", true, 3);
 		$save["password"] = $password;
 		$save["must_change_password"] = form_input_validate((isset($_POST["must_change_password"]) ? $_POST["must_change_password"] : ""), "must_change_password", "", true, 3);
@@ -137,6 +144,7 @@ function form_save() {
 		$save["show_preview"] = form_input_validate((isset($_POST["show_preview"]) ? $_POST["show_preview"] : ""), "show_preview", "", true, 3);
 		$save["graph_settings"] = form_input_validate((isset($_POST["graph_settings"]) ? $_POST["graph_settings"] : ""), "graph_settings", "", true, 3);
 		$save["login_opts"] = form_input_validate($_POST["login_opts"], "login_opts", "", true, 3);
+		$save["enabled"] = form_input_validate($_POST["enabled"], "enabled", "", true, 3);
 		$save["policy_graphs"] = form_input_validate((isset($_POST["policy_graphs"]) ? $_POST["policy_graphs"] : $_POST["_policy_graphs"]), "policy_graphs", "", true, 3);
 		$save["policy_trees"] = form_input_validate((isset($_POST["policy_trees"]) ? $_POST["policy_trees"] : $_POST["_policy_trees"]), "policy_trees", "", true, 3);
 		$save["policy_hosts"] = form_input_validate((isset($_POST["policy_hosts"]) ? $_POST["policy_hosts"] : $_POST["_policy_hosts"]), "policy_hosts", "", true, 3);
@@ -609,22 +617,6 @@ function graph_settings_edit() {
     User Administration
    -------------------------- */
 
-function user_remove() {
-	if ((read_config_option("remove_verification") == "on") && (!isset($_GET["confirm"]))) {
-		include("./include/top_header.php");
-		form_confirm("Are You Sure?", "Are you sure you want to delete the user <strong>'" . db_fetch_cell("select username from user_auth where id=" . $_GET["id"]) . "'</strong>?", "user_admin.php", "user_admin.php?action=user_remove&id=" . $_GET["id"]);
-		include("./include/bottom_footer.php");
-		exit;
-	}
-
-	if ((read_config_option("remove_verification") == "") || (isset($_GET["confirm"]))) {
-		db_execute("delete from user_auth where id=" . $_GET["id"]);
-		db_execute("delete from user_auth_realm where user_id=" . $_GET["id"]);
-		db_execute("delete from user_auth_perms where user_id=" . $_GET["id"]);
-		db_execute("delete from settings_graphs where user_id=" . $_GET["id"]);
-	}
-}
-
 function user_edit() {
 	global $colors, $fields_user_user_edit_host;
 
@@ -681,13 +673,13 @@ function user_edit() {
 }
 
 function user() {
-	global $colors, $auth_realms;
+	global $user_actions, $colors, $auth_realms;
 
 	html_start_box("<strong>User Management</strong>", "98%", $colors["header"], "3", "center", "user_admin.php?action=user_edit");
 
-	html_header(array("User Name", "Full Name", "Realm", "Default Graph Policy", "Last Login"), 2);
+	html_header_checkbox(array("User Name", "Full Name", "Status","Realm", "Default Graph Policy", "Last Login"));
 
-	$user_list = db_fetch_assoc("select id, user_auth.username, full_name, realm, policy_graphs, DATE_FORMAT(max(time),'%M %e %Y %H:%i:%s') as time from user_auth left join user_log on user_auth.id = user_log.user_id group by id");
+	$user_list = db_fetch_assoc("select id, user_auth.username, full_name, enabled, realm, policy_graphs, DATE_FORMAT(max(time),'%M %e %Y %H:%i:%s') as time from user_auth left join user_log on user_auth.id = user_log.user_id group by id");
 
 	$i = 0;
 	if (sizeof($user_list) > 0) {
@@ -701,6 +693,9 @@ function user() {
 				<?php print $user["full_name"];?>
 			</td>
 			<td>
+				<?php if ($user["enabled"] == "1") { print "Enabled"; }else{ print "Disabled"; }?>
+			</td>
+			<td>
 				<?php print $auth_realms[$user["realm"]];?>
 			</td>
 			<td>
@@ -709,14 +704,163 @@ function user() {
 			<td>
 				<?php print $user["time"];?>
 			</td>
-			<td align="right">
-				<a href="user_admin.php?action=user_remove&id=<?php print $user["id"];?>"><img src="images/delete_icon.gif" width="10" height="10" border="0" alt="Delete"></a>
+			<td style="<?php print get_checkbox_style();?>" width="1%" align="right">
+				<input type='checkbox' style='margin: 0px;' name='chk_<?php print $user["id"];?>' title="<?php print $user["username"];?>">
 			</td>
 		</tr>
 	<?php
 	$i++;
 	}
 	}
-	html_end_box();
+	html_end_box(false);
+	
+	/* draw the dropdown containing a list of available actions for this form */
+	draw_actions_dropdown($user_actions);
+
+
+
 }
+
+
+/* ------------------------
+    The "actions" function
+   ------------------------ */
+
+function user_actions() {
+	global $colors, $user_actions, $fields_user_edit;
+
+	/* if we are to save this form, instead of display it */
+	if (isset($_POST["selected_items"])) {
+		$selected_items = unserialize(stripslashes($_POST["selected_items"]));
+
+		if ($_POST["drp_action"] == "3") { 
+			/* Enable Selected Users */
+			for ($i=0;($i<count($selected_items));$i++) {
+				api_user_enable($selected_items[$i]);
+			}
+		}elseif ($_POST["drp_action"] == "4") { 
+			/* Disable Selected Users */
+			for ($i=0;($i<count($selected_items));$i++) {
+				api_user_disable($selected_items[$i]);
+			}
+		}elseif ($_POST["drp_action"] == "1") { 
+			/* Delete User */
+			for ($i=0; $i<count($selected_items); $i++) {
+				api_user_remove($selected_items[$i]);
+			}
+
+		}elseif ($_POST["drp_action"] == "2") { 
+			/* Copy User */
+			/* Check for new user name */
+			if ((!empty($_POST["user_new"])) && (!empty($_POST["user_name"]))) {
+				api_user_copy($_POST["user_name"],$_POST["user_new"]);
+			}
+		}
+
+		header("Location: user_admin.php");
+		exit;
+	}
+
+	/* setup some variables */
+	$user_list = ""; $i = 0; $username = "";
+
+	/* loop through each of the users selected on the previous page and get more info about them */
+	while (list($var,$val) = each($_POST)) {
+		if (ereg("^chk_([0-9]+)$", $var, $matches)) {
+			$username = db_fetch_cell("select username from user_auth where id=" . $matches[1]);
+			$user_list .= "<li>" . $username . "<br>";
+			$username_list[$username] = $username;
+			$user_array[$i] = $matches[1];
+		}
+		$i++;
+	}
+
+	include_once("./include/top_header.php");
+
+	html_start_box("<strong>" . $user_actions{$_POST["drp_action"]} . "</strong>", "60%", $colors["header_panel"], "3", "center", "");
+
+	print "<form action='user_admin.php' method='post'>\n";
+
+	if ($_POST["drp_action"] == "3") { /* Enable Users */
+		print "	<tr>
+				<td colspan='2' class='textArea' bgcolor='#" . $colors["form_alternate1"]. "'>
+					<p>To enable the following users, press the \"yes\" button below.</p>
+					<p>$user_list</p>
+				</td>
+				</tr>";
+	}elseif ($_POST["drp_action"] == "4") { /* Disable Users */
+		print "	<tr>
+				<td colspan='4' class='textArea' bgcolor='#" . $colors["form_alternate1"]. "'>
+					<p>To disable the following users, press the \"yes\" button below.</p>
+					<p>$user_list</p>
+				</td>
+				</tr>";
+
+	}elseif ($_POST["drp_action"] == "2") { /* copy user */
+		print "	<tr>
+				<td colspan='2' class='textArea' bgcolor='#" . $colors["form_alternate1"]. "'>
+					<p>Would you like to copy a user to a new user?</p>
+				</td>
+				</tr>";
+
+		if (isset($user_array)) {
+
+			$form_array = array(
+			"user_name" => array(
+				"method" => "drop_array",
+				"friendly_name" => "User Name",
+				"description" => "Select the user name you would like to copy from.",
+				"value" => "",
+				"array" => $username_list
+				),
+			"user_new" => array(
+				"method" => "textbox",
+				"friendly_name" => "New User Name",
+				"description" => "Type the user name of the new user.",
+				"value" => "",
+				"max_length" => "100"
+				)
+			);
+			draw_edit_form(
+				array(
+					"config" => array("no_form_tag" => true),
+					"fields" => $form_array
+					)
+				);
+		}
+
+	}elseif ($_POST["drp_action"] == "1") { /* delete */
+		print "	<tr>
+				<td class='textArea' bgcolor='#" . $colors["form_alternate1"]. "'>
+					<p>Are you sure you want to delete the following users?</p>
+					<p>$user_list</p>
+					</td></tr>
+				</td>
+			</tr>\n
+			";
+	}
+
+	if (!isset($user_array)) {
+		print "<tr><td bgcolor='#" . $colors["form_alternate1"]. "'><span class='textError'>You must select at least one user.</span></td></tr>\n";
+		$save_html = "";
+	}else{
+		$save_html = "<input type='image' src='images/button_yes.gif' alt='Save' align='absmiddle'>";
+	}
+
+	print "	<tr>
+			<td colspan='2' align='right' bgcolor='#eaeaea'>
+				<input type='hidden' name='action' value='actions'>
+				<input type='hidden' name='selected_items' value='" . (isset($user_array) ? serialize($user_array) : '') . "'>
+				<input type='hidden' name='drp_action' value='" . $_POST["drp_action"] . "'>
+				<a href='user_admin.php'><img src='images/button_no.gif' alt='Cancel' align='absmiddle' border='0'></a>
+				$save_html
+			</td>
+		</tr>
+		";
+
+	html_end_box();
+
+	include_once("./include/bottom_footer.php");
+}
+
 ?>
