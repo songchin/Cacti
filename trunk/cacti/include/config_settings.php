@@ -29,6 +29,7 @@ include($config["include_path"] . "/config_arrays.php");
 /* tab information */
 $tabs = array(
 	"general" => "General",
+	"logging" => "Logging",
 	"snmp" => "SNMP",
 	"path" => "Paths",
 	"poller" => "Poller",
@@ -74,19 +75,8 @@ $settings = array(
 			"method" => "textbox",
 			"max_length" => "255"
 			),
-		"logging_header" => array(
-			"friendly_name" => "Logging",
-			"method" => "spacer"
-			),
-		"path_cactilog" => array(
-			"friendly_name" => "Cacti Log File Path",
-			"description" => "The path to your Cacti log file (if blank, defaults to <path_cacti>/log/cacti.log)",
-			"method" => "textbox",
-			"default" => $config["base_path"] . "/log/cacti.log",
-			"max_length" => "255"
-			),
-		"pollerpaths_header" => array(
-			"friendly_name" => "Poller Path",
+		"opt_tools_header" => array(
+			"friendly_name" => "Optional Tools",
 			"method" => "spacer"
 			),
 		"path_cactid" => array(
@@ -96,49 +86,21 @@ $settings = array(
 			"max_length" => "255"
 			)
 		),
-	"general" => array(
+	"logging" => array(
 		"logging_header" => array(
 			"friendly_name" => "Event Logging",
 			"method" => "spacer"
 			),
 		"log_destination" => array(
-			"friendly_name" => "Log File Destination",
+			"friendly_name" => "Log Destination",
 			"description" => "How will Cacti handle event logging.",
 			"method" => "drop_array",
 			"default" => 1,
 			"array" => $logfile_options
 			),
-		"ui_header" => array(
-			"friendly_name" => "User Interface Logging",
-			"method" => "spacer"
-			),
-		"web_log" => array(
-			"friendly_name" => "Web Events",
-			"description" => "What Cacti website messages should be placed in the Cacti logfile.  These events will not be placed in the Syslog/Eventlog.",
-			"method" => "checkbox_group",
-			"tab" => "general",
-			"items" => array(
-				"log_snmp" => array(
-					"friendly_name" => "Web SNMP Messages",
-					"default" => ""
-					),
-				"log_graph" => array(
-					"friendly_name" => "Web RRD Graph Syntax",
-					"default" => ""
-					),
-				"log_export" => array(
-					"friendly_name" => "Graph Export Messages",
-					"default" => ""
-					)
-				),
-			),
-		"poller_header" => array(
-			"friendly_name" => "Poller Logging",
-			"method" => "spacer"
-			),
 		"log_verbosity" => array(
-			"friendly_name" => "Poller Logging Level",
-			"description" => "What level of detail do you want sent to the log file.  WARNING: Leaving in any other status than NONE or LOW can exaust your disk space rapidly.",
+			"friendly_name" => "Event Logging Level",
+			"description" => "What level of detail do you want sent to the log file.",
 			"method" => "drop_array",
 			"default" => POLLER_VERBOSITY_LOW,
 			"array" => $logfile_verbosity
@@ -163,6 +125,33 @@ $settings = array(
 					)
 				)
 			),
+		"syslog_header" => array(
+			"friendly_name" => "Log Size and Control",
+			"method" => "spacer"
+			),
+		"syslog_size" => array(
+			"friendly_name" => "Maximum Log Size in kbytes",
+			"description" => "The maximum log size in kilo bytes.  The log will be pruned after each polling cycle.",
+			"default" => "1024",
+			"method" => "textbox",
+			"max_length" => "10"
+			),
+		"syslog_control" => array(
+			"friendly_name" => "Log Control Mechanism",
+			"description" => "How Cacti controls the log size.  The default is to overwrite as needed.",
+			"method" => "drop_array",
+			"default" => 1,
+			"array" => $syslog_control_options
+			),
+		"syslog_maxdays" => array(
+			"friendly_name" => "Maximum Days Retained",
+			"description" => "All events older than the specified number of days will be discarded.",
+			"method" => "textbox",
+			"default" => "7",
+			"max_length" => "10"
+			)
+		),
+	"general" => array(
 		"db_header" => array(
 			"friendly_name" => "Database Settings",
 			"method" => "spacer"

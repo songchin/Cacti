@@ -96,12 +96,14 @@ function utilities_view_syslog() {
 		kill_session_var("sess_facility");
 		kill_session_var("sess_severity");
 		kill_session_var("sess_poller");
+		kill_session_var("sess_host");
 
 		unset($_REQUEST["page"]);
 		unset($_REQUEST["filter"]);
 		unset($_REQUEST["facility"]);
 		unset($_REQUEST["severity"]);
 		unset($_REQUEST["poller"]);
+		unset($_REQUEST["host"]);
 	}
 
 	/* remember these search fields in session vars so we don't have to keep passing them around */
@@ -110,8 +112,9 @@ function utilities_view_syslog() {
 	load_current_session_value("facility", "sess_facility", "All");
 	load_current_session_value("severity", "sess_severity", "All");
 	load_current_session_value("poller", "sess_poller", "All");
+	load_current_session_value("host", "sess_host", "All");
 
-	html_start_box("<strong>Cacti Logfile</strong>", "98%", $colors["header_background"], "3", "center");
+	html_start_box("<strong>Cacti System Log</strong>", "98%", $colors["header_background"], "3", "center");
 
 	include("./include/html/inc_syslog_filter_table.php");
 
@@ -132,6 +135,10 @@ function utilities_view_syslog() {
 		$sql_where .= " and poller.id='" . $_REQUEST["poller"] . "'";
 	}
 
+	if ($_REQUEST["host"] != "ALL") {
+		$sql_where .= " and host.description='" . $_REQUEST["host"] . "'";
+	}
+
 	html_start_box("", "98%", $colors["header_background"], "3", "center", "");
 
 	$total_rows = db_fetch_cell("select
@@ -146,7 +153,7 @@ function utilities_view_syslog() {
 		syslog.severity,
 		poller.name as poller_name,
 		poller.id as poller_id,
-		host.hostname as host,
+		host.description as host,
 		syslog.username,
 		syslog.message
 		FROM (syslog LEFT JOIN host ON syslog.host_id = host.id)

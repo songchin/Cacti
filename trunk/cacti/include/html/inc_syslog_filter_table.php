@@ -3,7 +3,7 @@
 		<td>
 			<table width="100%" cellpadding="0" cellspacing="0">
 				<tr>
-					<td width="1">
+					<td width="20">
 						Facility:&nbsp;
 					</td>
 					<td width="1">
@@ -34,7 +34,7 @@
 							<option value="utilities.php?action=view_syslog&page=1&severity=DEBUG<?php print '&poller=' . $_REQUEST['poller'] . '&facility=' . $_REQUEST['facility'] . '&filter=' . $_REQUEST['filter'];?>"<?php if ($_REQUEST["severity"] == "DEBUG") {?> selected<?php }?>>Debug</option>
 						</select>
 					</td>
-					<td width="1">
+					<td width="20">
 						&nbsp;Poller:&nbsp;
 					</td>
 					<td width="1">
@@ -51,16 +51,36 @@
 							?>
 						</select>
 					</td>
-					<td width="1"></td>
 					<td width="1">
-						&nbsp;Search:&nbsp;
+						&nbsp;Host:&nbsp;
 					</td>
-					<td width="100">
-						<input type="text" name="filter" size="20" value="<?php print $_REQUEST["filter"];?>">
+					<td width="1">
+						<select name="cbo_host" onChange="window.location=document.form_syslog_id.cbo_host.options[document.form_syslog_id.cbo_host.selectedIndex].value">
+							<option value="utilities.php?action=view_syslog&page=1&host=ALL<?php print '&poller=' . $_REQUEST['poller'] . '&severity=' . $_REQUEST['severity'] . '&facility=' . $_REQUEST['facility'] . '&filter=' . $_REQUEST['filter'];?>"<?php if ($_REQUEST["host"] == "ALL") {?> selected<?php }?>>All</option>
+							<?php
+							$hosts = db_fetch_assoc("select id,description from host order by description");
+
+							if (sizeof($hosts) > 0) {
+							foreach ($hosts as $host) {
+								print "<option value='utilities.php?action=view_syslog&page=1&host=" . $host[id] . "&poller=" . $_REQUEST['poller'] . "&severity=" . $_REQUEST['severity'] . "&facility=" . $_REQUEST['facility'] . "&filter=" . $_REQUEST['filter'] . "&page=1'"; if ($_REQUEST["host"] == $host["id"]) { print " selected"; } print ">" . $host["description"] . "</option>\n";
+							}
+							}
+							?>
+						</select>
 					</td>
 					<td>
-						&nbsp;<input type="image" src="<?php print html_get_theme_images_path('button_go.gif');?>" alt="Go" border="0" align="absmiddle">
-						&nbsp;<input type="image" src="<?php print html_get_theme_images_path('button_clear.gif');?>" name="clear" alt="Clear" border="0" align="absmiddle">
+						&nbsp;<input type="image" src="<?php print html_get_theme_images_path('button_go.gif');?>" alt="Go" border="0" align="absmiddle" action="submit">
+						&nbsp;<input type="image" src="<?php print html_get_theme_images_path('button_clear.gif');?>" name="clear" alt="Clear" border="0" align="absmiddle" action="submit">
+					</td>
+				</tr>
+			</table>
+			<table cellpadding="0" cellspacing="0">
+				<tr>
+					<td width="10">
+						Search:&nbsp;
+					</td>
+					<td width="90">
+						<input type="text" name="filter" size="40" value="<?php print $_REQUEST["filter"];?>">
 					</td>
 				</tr>
 			</table>

@@ -278,6 +278,12 @@ $ldap_modes = array(
 	2 => "Specific Searching"
 );
 
+$syslog_control_options = array(
+	0 => "Overwrite events as needed",
+	1 => "Overwrite events older than the maximum days",
+	2 => "Stop logging if maximum log size is exceeded"
+);
+
 $snmp_implimentations = array(
 	"ucd-snmp" => "UCD-SNMP 4.x",
 	"net-snmp" => "NET-SNMP < 5.2",
