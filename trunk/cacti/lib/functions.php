@@ -1301,7 +1301,8 @@ function draw_navigation_text() {
 		"email_templates.php:" => array("title" => "Coming Soon", "mapping" => "index.php:", "url" => "email_templates.php", "level" => "1"),
 		"event_queue.php:" => array("title" => "Coming Soon", "mapping" => "index.php:", "url" => "event_queue.php", "level" => "1"),
 		"smtp_queue.php:" => array("title" => "Coming Soon", "mapping" => "index.php:", "url" => "smtp_queue.php", "level" => "1"),
-		"user_changepassword.php:" => array("title" => "Change Password", "mapping" => "index.php:", "url" => "user_changepassword.php", "level" => "1")
+		"user_changepassword.php:" => array("title" => "Change Password", "mapping" => "index.php:", "url" => "user_changepassword.php", "level" => "1"),
+		"user_changepassword.php:save" => array("title" => "Change Password", "mapping" => "index.php:", "url" => "user_changepassword.php", "level" => "1")
 		);
 
 	$current_page = basename($_SERVER["PHP_SELF"]);
