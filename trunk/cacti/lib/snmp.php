@@ -99,7 +99,7 @@ function cacti_snmp_walk($hostname, $community, $oid, $version, $v3username, $v3
 		if ($version == "1") {
 			$temp_array = @snmpwalkoid("$hostname:$port", $community, trim($oid), ($timeout * 1000), $retries);
 		} else {
-			$temp_array = @snmp3_walk("$hostname:$port", $v3username, snmp_get_v3authpriv($v3privproto), $v3authproto,
+			$temp_array = @snmp3_real_walk("$hostname:$port", $v3username, snmp_get_v3authpriv($v3privproto), $v3authproto,
 				$v3password, $v3privproto, $v3privpassphrase, trim($oid), ($timeout * 1000), $retries);
 		}
 
