@@ -147,11 +147,11 @@ function intro() {
 	print "\t\t\t\t\t</tr>\n"; 
 	print "\t\t\t\t\t<tr>\n";
 	print "\t\t\t\t\t\t<td width='15' valign='top' bgcolor='" . $colors["form_alternate1"] . "' class='textArea'></td>\n";
-	print "\t\t\t\t\t\t<td width='25%' valign='top' bgcolor='" . $colors["form_alternate1"] . "' class='textArea'><b> Section:</b><br><br>\n";
+	print "\t\t\t\t\t\t<td width='25%' valign='top' bgcolor='" . $colors["form_alternate1"] . "' class='textArea'><b> Section</b><br><br>\n";
 	print $html;
 	print "\t\t\t\t\t\t</td>\n";
 	print "\t\t\t\t\t\t<td width='15' valign='top' bgcolor='" . $colors["form_alternate1"] . "' class='textArea'></td>\n";
-	print "\t\t\t\t\t\t<td valign='top' bgcolor='" . $colors["form_alternate1"] . "' class='textArea'><b>Description:</b><br><br>\n";
+	print "\t\t\t\t\t\t<td valign='top' bgcolor='" . $colors["form_alternate1"] . "' class='textArea'><b>Description</b><br><br>\n";
 	print "\t\t\t\t\t\t\t\t<div id='wizardarea' style='height:150px; overflow:auto;'>None</div><br>\n";
 	print "\t\t\t\t\t\t</td>\n";
 	print "\t\t\t\t\t\t<td width='15' valign='top' bgcolor='" . $colors["form_alternate1"] . "' class='textArea'></td>\n";
