@@ -2337,20 +2337,6 @@ INSERT INTO settings_graphs VALUES (1,'general','');
 INSERT INTO settings_graphs VALUES (1,'tree','');
 
 --
--- Table structure for table `settings_users`
---
-
-
-CREATE TABLE `settings_users` (
-  `user_id` smallint(8) unsigned NOT NULL default '0',
-  `name` varchar(50) NOT NULL default '',
-  `value` varchar(255) NOT NULL default '',
-  PRIMARY KEY  (`user_id`,`name`),
-  KEY `user_id` (`user_id`,`name`)
-) TYPE=MyISAM;
-
-
---
 -- Table structure for table `settings_tree`
 --
 
@@ -2660,6 +2646,9 @@ CREATE TABLE user_auth (
   created datetime NOT NULL default '0000-00-00 00:00:00',
   password_expire_length int(4) unsigned NOT NULL default '0',
   password_change_last datetime NOT NULL default '0000-00-00 00:00:00',
+  current_theme varchar(25) NOT NULL default 'default',
+  email_address_primary varchar(255) NOT NULL default '',
+  email_address_secondary varchar(255) NOT NULL default '',
   PRIMARY KEY  (id),
   UNIQUE KEY ID (id),
   KEY id_2 (id)
