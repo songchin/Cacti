@@ -29,6 +29,7 @@ $colors["panel"] = "E5E5E5";
 
 /* Form Colors */
 $colors["header_background"] = "00438C";
+$colors["header_background_template"] = "00438C";
 $colors["header_text"] = "FFFFFF";
 $colors["header_panel_background"] = "6D88AD";
 $colors["header_panel_text"] = "FFFFFF";

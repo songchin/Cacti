@@ -113,6 +113,6 @@ include($config["include_path"] . "/config_colors.php");
 include(html_theme_color_scheme());
 
 /* current cacti version */
-$config["cacti_version"] = "0.8.7";
+$config["cacti_version"] = "0.9-dev";
 
 ?>

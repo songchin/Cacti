@@ -14,9 +14,9 @@
 							$hosts = get_host_array();
 
 							if (sizeof($hosts) > 0) {
-							foreach ($hosts as $host) {
-								print "<option value='graph_view.php?action=preview&host_id=" . $host["id"] . "&filter=" . $_REQUEST["filter"] . "'"; if ($_REQUEST["host_id"] == $host["id"]) { print " selected"; } print ">" . $host["name"] . "</option>\n";
-							}
+								foreach ($hosts as $host) {
+									print "<option value='graph_view.php?action=preview&host_id=" . $host["id"] . "&filter=" . $_REQUEST["filter"] . "'"; if ($_REQUEST["host_id"] == $host["id"]) { print " selected"; } print ">" . $host["name"] . "</option>\n";
+								}
 							}
 							?>
 						</select>

@@ -14,9 +14,9 @@
 							$host_templates = db_fetch_assoc("select id,name from host_template order by name");
 
 							if (sizeof($host_templates) > 0) {
-							foreach ($host_templates as $host_template) {
-								print "<option value='host.php?host_template_id=" . $host_template["id"] . "&filter=" . $_REQUEST["filter"] . "&page=1'"; if ($_REQUEST["host_template_id"] == $host_template["id"]) { print " selected"; } print ">" . $host_template["name"] . "</option>\n";
-							}
+								foreach ($host_templates as $host_template) {
+									print "<option value='host.php?host_template_id=" . $host_template["id"] . "&filter=" . $_REQUEST["filter"] . "&page=1'"; if ($_REQUEST["host_template_id"] == $host_template["id"]) { print " selected"; } print ">" . $host_template["name"] . "</option>\n";
+								}
 							}
 							?>
 						</select>

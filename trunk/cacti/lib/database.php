@@ -229,7 +229,6 @@ function sql_sanitize($value) {
 	$value = str_replace(";", "", $value);
 
 	return $value;
-
 }
 
 ?>

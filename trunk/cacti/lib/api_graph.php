@@ -22,16 +22,15 @@
  +-------------------------------------------------------------------------+
 */
 
-function api_graph_remove($local_graph_id) {
-	if (empty($local_graph_id)) {
-		return;
-	}
+/* Variable includes */
+include_once(CACTI_BASE_PATH . "/include/graph/user_constants.php");
+include_once(CACTI_BASE_PATH . "/include/graph/user_arrays.php");
 
-	db_execute("delete from graph_templates_graph where local_graph_id=$local_graph_id");
-	db_execute("delete from graph_templates_item where local_graph_id=$local_graph_id");
-	db_execute("delete from graph_tree_items where local_graph_id=$local_graph_id");
-	db_execute("delete from graph_local where id=$local_graph_id");
-}
+/* Functions includes */
+include_once(CACTI_BASE_PATH . "/lib/graph/graph_update.php");
+include_once(CACTI_BASE_PATH . "/lib/graph/graph_info.php");
+include_once(CACTI_BASE_PATH . "/lib/graph/graph_template.php");
+include_once(CACTI_BASE_PATH . "/lib/graph/graph_template_update.php");
 
 /* api_reapply_suggested_graph_title - reapplies the suggested name to a graph title
    @arg $graph_templates_graph_id - the id of the graph to reapply the name to
@@ -59,7 +58,7 @@ function api_reapply_suggested_graph_title($local_graph_id) {
 	foreach ($suggested_values as $suggested_value) {
 		/* once we find a match; don't try to find more */
 		if (!isset($suggested_values_graph[$graph_template_id]{$suggested_value["field_name"]})) {
-			$subs_string = substitute_snmp_query_data($suggested_value["text"], $graph_local["host_id"], $graph_local["snmp_query_id"], $graph_local["snmp_index"], read_config_option("max_data_query_field_length"));
+			$subs_string = substitute_data_query_variables($suggested_value["text"], $graph_local["host_id"], $graph_local["snmp_query_id"], $graph_local["snmp_index"], read_config_option("max_data_query_field_length"));
 			/* if there are no '|' characters, all of the substitutions were successful */
 			if (!strstr($subs_string, "|query")) {
 				db_execute("update graph_templates_graph set " . $suggested_value["field_name"] . "='" . $suggested_value["text"] . "' where local_graph_id=" . $local_graph_id);

@@ -30,7 +30,6 @@ if (isset($_SESSION["sess_user_id"])) {
 	$current_user = array();
 }
 
-
 ?>
 <html>
 <head>

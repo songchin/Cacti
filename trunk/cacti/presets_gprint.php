@@ -36,19 +36,12 @@ switch ($_REQUEST["action"]) {
 	case 'remove':
 		gprint_presets_remove();
 
-		header("Location: gprint_presets.php");
+		header("Location: presets_gprint.php");
 		break;
 	case 'edit':
 		include_once("./include/top_header.php");
 
 		gprint_presets_edit();
-
-		include_once("./include/bottom_footer.php");
-		break;
-	default:
-		include_once("./include/top_header.php");
-
-		gprint_presets();
 
 		include_once("./include/bottom_footer.php");
 		break;
@@ -66,7 +59,7 @@ function form_save() {
 		$save["gprint_text"] = form_input_validate($_POST["gprint_text"], "gprint_text", "", false, 3);
 
 		if (!is_error_message()) {
-			$gprint_preset_id = sql_save($save, "graph_templates_gprint");
+			$gprint_preset_id = sql_save($save, "graph_template_gprint");
 
 			if ($gprint_preset_id) {
 				raise_message(1);
@@ -76,10 +69,10 @@ function form_save() {
 		}
 
 		if (is_error_message()) {
-			header("Location: gprint_presets.php?action=edit&id=" . (empty($gprint_preset_id) ? $_POST["id"] : $gprint_preset_id));
+			header("Location: presets_gprint.php?action=edit&id=" . (empty($gprint_preset_id) ? $_POST["id"] : $gprint_preset_id));
 			exit;
 		}else{
-			header("Location: gprint_presets.php");
+			header("Location: presets_gprint.php");
 			exit;
 		}
 	}
@@ -92,12 +85,12 @@ function form_save() {
 function gprint_presets_remove() {
 	if ((read_config_option("remove_verification") == "on") && (!isset($_GET["confirm"]))) {
 		include_once("./include/top_header.php");
-		form_confirm("Are You Sure?", "Are you sure you want to delete the GPRINT preset <strong>'" . db_fetch_cell("select name from graph_templates_gprint where id=" . $_GET["id"]) . "'</strong>? This could affect every graph that uses this preset, make sure you know what you are doing first!", "gprint_presets.php", "gprint_presets.php?action=remove&id=" . $_GET["id"]);
+		form_confirm("Are You Sure?", "Are you sure you want to delete the GPRINT preset <strong>'" . db_fetch_cell("select name from preset_gprint where id=" . $_GET["id"]) . "'</strong>? This could affect every graph that uses this preset, make sure you know what you are doing first!", "presets.php?action=view_gprint", "presets_gprint.php?action=remove&id=" . $_GET["id"]);
 		exit;
 	}
 
 	if ((read_config_option("remove_verification") == "") || (isset($_GET["confirm"]))) {
-		db_execute("delete from graph_templates_gprint where id=" . $_GET["id"]);
+		db_execute("delete from preset_gprint where id=" . $_GET["id"]);
 	}
 }
 
@@ -105,7 +98,7 @@ function gprint_presets_edit() {
 	global $colors, $fields_grprint_presets_edit;
 
 	if (!empty($_GET["id"])) {
-		$gprint_preset = db_fetch_row("select * from graph_templates_gprint where id=" . $_GET["id"]);
+		$gprint_preset = db_fetch_row("select * from preset_gprint where id=" . $_GET["id"]);
 		$header_label = "[edit: " . $gprint_preset["name"] . "]";
 	}else{
 		$header_label = "[new]";
@@ -120,44 +113,7 @@ function gprint_presets_edit() {
 
 	html_end_box();
 
-	form_save_button("gprint_presets.php");
+	form_save_button("presets.php?action=view_gprint");
 }
 
-function gprint_presets() {
-	global $colors;
-
-	html_start_box("<strong>GPRINT Presets</strong>", "98%", $colors["header_background"], "3", "center", "gprint_presets.php?action=edit");
-
-	print "	<tr bgcolor='#" . $colors["header_panel_background"] . "'>
-			<td colspan='2' class='textSubHeaderDark'>GPRINT Preset Title</td>
-		</tr>";
-
-	$template_list = db_fetch_assoc("select
-		graph_templates_gprint.id,
-		graph_templates_gprint.name
-		from graph_templates_gprint");
-
-	$i = 0;
-	if (sizeof($template_list) > 0) {
-	foreach ($template_list as $template) {
-		form_alternate_row_color($colors["form_alternate1"],$colors["form_alternate2"],$i);
-			?>
-			<td>
-				<a class="linkEditMain" href="gprint_presets.php?action=edit&id=<?php print $template["id"];?>"><?php print $template["name"];?></a>
-			</td>
-			<td align="right">
-				<a href="gprint_presets.php?action=remove&id=<?php print $template["id"];?>"><img src="<?php print html_get_theme_images_path('delete_icon.gif');?>" width="10" height="10" border="0" alt="Delete"></a>
-			</td>
-		</tr>
-		<?php
-		$i++;
-	}
-	}else{
-		form_alternate_row_color($colors["form_alternate1"],$colors["form_alternate2"],0); ?>
-			<td colspan="2">
-				<em>No Items</em>
-			</td>
-		</tr><?php
-	}
-	html_end_box();
-}
+?>

@@ -236,54 +236,46 @@ function template_edit() {
 		html_start_box("<strong>Associated Graph Templates</strong>", "98%", $colors["header_background"], "3", "center", "");
 
 		$selected_graph_templates = db_fetch_assoc("select
-			graph_templates.id,
-			graph_templates.name
-			from graph_templates,host_template_graph
-			where graph_templates.id=host_template_graph.graph_template_id
+			graph_template.id,
+			graph_template.template_name
+			from graph_template,host_template_graph
+			where graph_template.id=host_template_graph.graph_template_id
 			and host_template_graph.host_template_id=" . $_GET["id"] . "
-			order by graph_templates.name");
+			order by graph_template.template_name");
 
-		$available_graph_templates = db_fetch_assoc("SELECT
-			graph_templates.id, graph_templates.name
-			FROM snmp_query_graph RIGHT JOIN graph_templates
-			ON snmp_query_graph.graph_template_id = graph_templates.id
-			WHERE (((snmp_query_graph.name) Is Null)) ORDER BY graph_templates.name");
-
-		$keeper = array();
-		foreach ($available_graph_templates as $item) {
-			if (sizeof(db_fetch_assoc("select graph_template_id from host_template_graph where graph_template_id=" .
-					$item["id"] . " and host_template_id=" . $_GET["id"])) > 0) {
-				/* do nothing */
-			} else {
-				array_push($keeper, $item);
-			}
-		}
-
-		$available_graph_templates = $keeper;
+		$available_graph_templates = db_fetch_assoc("select
+			graph_template.id,
+			graph_template.template_name
+			from graph_template left join host_template_graph
+			on host_template_graph.graph_template_id = graph_template.id
+			where host_template_graph.graph_template_id is  null
+			order by graph_template.template_name");
 
 		$i = 0;
 		if (sizeof($selected_graph_templates) > 0) {
-		foreach ($selected_graph_templates as $item) {
-			$i++;
-			?>
-			<tr bgcolor="<?php print $colors["form_alternate2"];?>">
-				<td style="padding: 4px;">
-					<strong><?php print $i;?>)</strong> <?php print $item["name"];?>
-				</td>
-				<td align="right">
-					<a href='host_templates.php?action=item_remove_gt&id=<?php print $item["id"];?>&host_template_id=<?php print $_GET["id"];?>'><img src='<?php print html_get_theme_images_path("delete_icon.gif");?>' width='10' height='10' border='0' alt='Delete'></a>
-				</td>
-			</tr>
-			<?php
+			foreach ($selected_graph_templates as $item) {
+				$i++;
+				?>
+				<tr bgcolor="<?php print $colors["form_alternate2"];?>">
+					<td style="padding: 4px;">
+						<strong><?php print $i;?>)</strong> <?php print $item["template_name"];?>
+					</td>
+					<td align="right">
+						<a href='host_templates.php?action=item_remove_gt&id=<?php print $item["id"];?>&host_template_id=<?php print $_GET["id"];?>'><img src='<?php print html_get_theme_images_path("delete_icon.gif");?>' width='10' height='10' border='0' alt='Delete'></a>
+					</td>
+				</tr>
+				<?php
+			}
+		}else{
+			print "<tr bgcolor='#" . $colors["form_alternate2"] . "'><td><em>No associated graph templates.</em></td></tr>";
 		}
-		}else{ print "<tr bgcolor='#" . $colors["form_alternate2"] . "'><td><em>No associated graph templates.</em></td></tr>"; }
 
 		?>
 		<tr bgcolor="#<?php print $colors["form_alternate1"];?>">
 			<td colspan="2">
 				<table cellspacing="0" cellpadding="1" width="100%">
 					<td nowrap>Add Graph Template:&nbsp;
-						<?php form_dropdown("graph_template_id",$available_graph_templates,"name","id","","","");?>
+						<?php form_dropdown("graph_template_id",$available_graph_templates,"template_name","id","","","");?>
 					</td>
 					<td align="right">
 						&nbsp;<input type="image" src="<?php print html_get_theme_images_path('button_add.gif');?>" alt="Add" name="add_gt" align="absmiddle">
@@ -307,20 +299,22 @@ function template_edit() {
 
 		$i = 0;
 		if (sizeof($selected_data_queries) > 0) {
-		foreach ($selected_data_queries as $item) {
-			$i++;
-			?>
-			<tr bgcolor="<?php print $colors["form_alternate2"];?>">
-				<td style="padding: 4px;">
-					<strong><?php print $i;?>)</strong> <?php print $item["name"];?>
-				</td>
-				<td align='right'>
-					<a href='host_templates.php?action=item_remove_dq&id=<?php print $item["id"];?>&host_template_id=<?php print $_GET["id"];?>'><img src='<?php print html_get_theme_images_path("delete_icon.gif");?>' width='10' height='10' border='0' alt='Delete'></a>
-				</td>
-			</tr>
-			<?php
+			foreach ($selected_data_queries as $item) {
+				$i++;
+				?>
+				<tr bgcolor="<?php print $colors["form_alternate2"];?>">
+					<td style="padding: 4px;">
+						<strong><?php print $i;?>)</strong> <?php print $item["name"];?>
+					</td>
+					<td align='right'>
+						<a href='host_templates.php?action=item_remove_dq&id=<?php print $item["id"];?>&host_template_id=<?php print $_GET["id"];?>'><img src='<?php print html_get_theme_images_path("delete_icon.gif");?>' width='10' height='10' border='0' alt='Delete'></a>
+					</td>
+				</tr>
+				<?php
+			}
+		}else{
+			print "<tr bgcolor='#" . $colors["form_alternate2"] . "'><td><em>No associated data queries.</em></td></tr>";
 		}
-		}else{ print "<tr bgcolor='#" . $colors["form_alternate2"] . "'><td><em>No associated data queries.</em></td></tr>"; }
 
 		?>
 		<tr bgcolor="#<?php print $colors["form_alternate1"];?>">

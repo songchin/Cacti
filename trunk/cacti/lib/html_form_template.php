@@ -30,55 +30,37 @@
      variables can be used:
        |field| - the current field name
    @arg $header_title - the title to use on the header for this form
-   @arg $alternate_colors (bool) - whether to alternate colors for each row on the form or not
-   @arg $include_hidden_fields (bool) - should elements that are not to be displayed be represented as hidden
-     html input elements or omitted altogether?
-   @arg $snmp_query_graph_id - if this graph template is part of a data query, specify the graph id here. this
-     will be used to determine if a given field is using suggested values */
-function draw_nontemplated_fields_graph($graph_template_id, &$values_array, $field_name_format = "|field|", $header_title = "", $alternate_colors = true, $include_hidden_fields = true, $snmp_query_graph_id = 0) {
-	global $struct_graph, $colors;
+   @arg $alternate_colors (bool) - whether to alternate colors for each row on the form or not */
+function draw_nontemplated_fields_graph($graph_template_id, &$values_array, $field_name_format = "|field|", $header_title = "", $alternate_colors = true) {
+	global $colors;
+
+	include(CACTI_BASE_PATH . "/include/graph/graph_form.php");
+
+	if (empty($graph_template_id)) {
+		return;
+	}
 
 	$form_array = array();
-	$draw_any_items = false;
 
 	/* fetch information about the graph template */
-	$graph_template = db_fetch_row("select * from graph_templates_graph where graph_template_id=$graph_template_id and local_graph_id=0");
+	$graph_template = db_fetch_row("select * from graph_template where id = $graph_template_id");
 
 	while (list($field_name, $field_array) = each($struct_graph)) {
-		/* find our field name */
-		$form_field_name = str_replace("|field|", $field_name, $field_name_format);
+		if ((isset($graph_template{"t_" . $field_name}) ? $graph_template{"t_" . $field_name} : "0") == "1") {
+			/* find our field name */
+			$form_field_name = str_replace("|field|", $field_name, $field_name_format);
 
-		$form_array += array($form_field_name => $struct_graph[$field_name]);
+			$form_array += array($form_field_name => $struct_graph[$field_name]);
 
-		/* modifications to the default form array */
-		$form_array[$form_field_name]["value"] = (isset($values_array[$field_name]) ? $values_array[$field_name] : "");
-		$form_array[$form_field_name]["form_id"] = (isset($values_array["id"]) ? $values_array["id"] : "0");
-		unset($form_array[$form_field_name]["default"]);
-
-
-		if ($field_array["method"] <> "spacer") {
-			if ($graph_template{"t_" . $field_name} != "on") {
-				if ($include_hidden_fields == true) {
-					$form_array[$form_field_name]["method"] = "hidden";
-				}else{
-					unset($form_array[$form_field_name]);
-				}
-			}elseif ((!empty($snmp_query_graph_id)) && (sizeof(db_fetch_assoc("select id from snmp_query_graph_sv where snmp_query_graph_id=$snmp_query_graph_id and field_name='$field_name'")) > 0)) {
-				if ($include_hidden_fields == true) {
-					$form_array[$form_field_name]["method"] = "hidden";
-				}else{
-					unset($form_array[$form_field_name]);
-				}
-			}else{
-				if (($draw_any_items == false) && ($header_title != "")) {
-					print "<tr bgcolor='#" . $colors["header_panel_background"] . "'><td colspan='2' style='font-size: 10px; color: white;'>$header_title</td></tr>\n";
-				}
-
-				$draw_any_items = true;
-			}
-		}else{
-			unset($form_array[$form_field_name]);
+			/* modifications to the default form array */
+			$form_array[$form_field_name]["value"] = (isset($values_array[$field_name]) ? $values_array[$field_name] : "");
+			$form_array[$form_field_name]["form_id"] = (isset($values_array["id"]) ? $values_array["id"] : "0");
+			unset($form_array[$form_field_name]["default"]);
 		}
+	}
+
+	if ((sizeof($form_array) > 0) && ($header_title != "")) {
+		echo "<tr bgcolor='#" . $colors["header_panel_background"] . "'><td colspan='2' style='font-size: 10px; color: white;'>$header_title</td></tr>\n";
 	}
 
 	/* setup form options */
@@ -95,174 +77,62 @@ function draw_nontemplated_fields_graph($graph_template_id, &$values_array, $fie
 			)
 		);
 
-	return (isset($form_array) ? sizeof($form_array) : 0);
+	return sizeof($form_array);
 }
 
 /* draw_nontemplated_fields_graph_item - draws a form that consists of all non-templated graph item fields
      associated with a particular graph template
+   @arg $values_array - any values that should be included by default on the form
    @arg $graph_template_id - the id of the graph template to base the form after
-   @arg $local_graph_id - specify the id of the associated graph if it exists
    @arg $field_name_format - all fields on the form will be named using the following format, the following
      variables can be used:
        |field| - the current field name
        |id| - the current graph input id
    @arg $header_title - the title to use on the header for this form
    @arg $alternate_colors (bool) - whether to alternate colors for each row on the form or not */
-function draw_nontemplated_fields_graph_item($graph_template_id, $local_graph_id, $field_name_format = "|field|_|id|", $header_title = "", $alternate_colors = true) {
-	global $struct_graph_item, $colors;
+function draw_nontemplated_fields_graph_item($graph_template_id, &$values_array, $field_name_format = "|field|_|id|", $header_title = "", $alternate_colors = true) {
+	global $colors;
 
-	$form_array = array();
-	$draw_any_items = false;
+	include(CACTI_BASE_PATH . "/include/graph/graph_form.php");
 
-	/* fetch information about the graph template */
-	$input_item_list = db_fetch_assoc("select * from graph_template_input where graph_template_id=$graph_template_id order by column_name,name");
-
-	/* modifications to the default graph items array */
-	if (!empty($local_graph_id)) {
-		$host_id = db_fetch_cell("select host_id from graph_local where id=$local_graph_id");
-
-		$struct_graph_item["task_item_id"]["sql"] = "select
-			CONCAT_WS('',
-			case
-			when host.description is null then 'No Host - '
-			when host.description is not null then ''
-			end,data_template_data.name_cache,' (',data_template_rrd.data_source_name,')') as name,
-			data_template_rrd.id
-			from data_template_data,data_template_rrd,data_local
-			left join host on data_local.host_id=host.id
-			where data_template_rrd.local_data_id=data_local.id
-			and data_template_data.local_data_id=data_local.id
-			" . (empty($host_id) ? "" : " and data_local.host_id=$host_id") . "
-			order by name";
+	if (empty($graph_template_id)) {
+		return;
 	}
 
-	if (sizeof($input_item_list) > 0) {
-		foreach ($input_item_list as $item) {
-			if (!empty($local_graph_id)) {
-				$current_def_value = db_fetch_row("select
-					graph_templates_item." . $item["column_name"] . ",
-					graph_templates_item.id
-					from graph_templates_item,graph_template_input_defs
-					where graph_template_input_defs.graph_template_item_id=graph_templates_item.local_graph_template_item_id
-					and graph_template_input_defs.graph_template_input_id=" . $item["id"] . "
-					and graph_templates_item.local_graph_id=$local_graph_id
-					limit 0,1");
-			}else{
-				$current_def_value = db_fetch_row("select
-					graph_templates_item." . $item["column_name"] . ",
-					graph_templates_item.id
-					from graph_templates_item,graph_template_input_defs
-					where graph_template_input_defs.graph_template_item_id=graph_templates_item.id
-					and graph_template_input_defs.graph_template_input_id=" . $item["id"] . "
-					and graph_templates_item.graph_template_id=" . $graph_template_id . "
-					limit 0,1");
-			}
+	$form_array = array();
 
-			/* find our field name */
-			$form_field_name = str_replace("|field|", $item["column_name"], $field_name_format);
-			$form_field_name = str_replace("|id|", $item["id"], $form_field_name);
+	/* fetch a list of graph item inputs for this graph template */
+	$graph_template_item_inputs = db_fetch_assoc("select * from graph_template_item_input where graph_template_id = $graph_template_id order by field_name,name");
 
-			$form_array += array($form_field_name => $struct_graph_item{$item["column_name"]});
+	if (sizeof($graph_template_item_inputs) > 0) {
+		foreach ($graph_template_item_inputs as $item) {
+			/* grab the first graph template item referenced by this graph item input */
+			$first_graph_template_item = db_fetch_row("select graph_template_item_id from graph_template_item_input_item where graph_template_item_input_id = " . $item["id"]);
 
-			/* modifications to the default form array */
-			$form_array[$form_field_name]["friendly_name"] = $item["name"];
-			$form_array[$form_field_name]["value"] = $current_def_value{$item["column_name"]};
+			if (sizeof($first_graph_template_item) > 0) {
+				/* get a complete list of graph template items for this graph template */
+				$ordered_graph_items_list = array_rekey(db_fetch_assoc("select id from graph_template_item where graph_template_id = $graph_template_id order by sequence"), "", "id");
 
-			/* if we are drawing the graph input list in the pre-graph stage we should omit the data
-			source fields because they are basically meaningless at this point */
-			if ((empty($local_graph_id)) && ($item["column_name"] == "task_item_id")) {
-				unset($form_array[$form_field_name]);
-			}else{
-				if (($draw_any_items == false) && ($header_title != "")) {
-					print "<tr bgcolor='#" . $colors["header_panel_background"] . "'><td colspan='2' style='font-size: 10px; color: white;'>$header_title</td></tr>\n";
+				/* find the sequential index for the graph template item that we want to retrieve a value for */
+				$graph_item_index = array_search($first_graph_template_item["graph_template_item_id"], $ordered_graph_items_list);
+
+				if ($graph_item_index !== false) {
+					/* find our field name */
+					$form_field_name = str_replace("|field|", $item["field_name"], $field_name_format);
+					$form_field_name = str_replace("|id|", $item["id"], $form_field_name);
+
+					$form_array += array($form_field_name => $struct_graph_item{$item["field_name"]});
+
+					/* modifications to the default form array */
+					$form_array[$form_field_name]["friendly_name"] = $item["name"];
+					$form_array[$form_field_name]["value"] = $values_array[$graph_item_index]{$item["field_name"]};
 				}
-
-				$draw_any_items = true;
 			}
 		}
 	}
 
-	/* setup form options */
-	if ($alternate_colors == true) {
-		$form_config_array = array("no_form_tag" => true);
-	}else{
-		$form_config_array = array("no_form_tag" => true, "force_row_color" => $colors["form_alternate1"]);
-	}
-
-	if (sizeof($input_item_list > 0)) {
-		draw_edit_form(
-			array(
-				"config" => $form_config_array,
-				"fields" => $form_array
-				)
-			);
-	}
-
-	return (isset($form_array) ? sizeof($form_array) : 0);
-}
-
-/* draw_nontemplated_fields_data_source - draws a form that consists of all non-templated data source fields
-     associated with a particular data template
-   @arg $data_template_id - the id of the data template to base the form after
-   @arg $local_data_id - specify the id of the associated data source if it exists
-   @arg $values_array - any values that should be included by default on the form
-   @arg $field_name_format - all fields on the form will be named using the following format, the following
-     variables can be used:
-       |field| - the current field name
-   @arg $header_title - the title to use on the header for this form
-   @arg $alternate_colors (bool) - whether to alternate colors for each row on the form or not
-   @arg $include_hidden_fields (bool) - should elements that are not to be displayed be represented as hidden
-     html input elements or omitted altogether?
-   @arg $snmp_query_graph_id - if this data template is part of a data query, specify the graph id here. this
-     will be used to determine if a given field is using suggested values */
-function draw_nontemplated_fields_data_source($data_template_id, $local_data_id, &$values_array, $field_name_format = "|field|", $header_title = "", $alternate_colors = true, $include_hidden_fields = true, $snmp_query_graph_id = 0) {
-	global $struct_data_source, $colors;
-
-	$form_array = array();
-	$draw_any_items = false;
-
-	/* fetch information about the data template */
-	$data_template = db_fetch_row("select * from data_template_data where data_template_id=$data_template_id and local_data_id=0");
-
-	while (list($field_name, $field_array) = each($struct_data_source)) {
-		/* find our field name */
-		$form_field_name = str_replace("|field|", $field_name, $field_name_format);
-
-		$form_array += array($form_field_name => $struct_data_source[$field_name]);
-
-		/* modifications to the default form array */
-		$form_array[$form_field_name]["value"] = (isset($values_array[$field_name]) ? $values_array[$field_name] : "");
-		$form_array[$form_field_name]["form_id"] = (isset($values_array["id"]) ? $values_array["id"] : "0");
-		unset($form_array[$form_field_name]["default"]);
-
-		$current_flag = (isset($field_array["flags"]) ? $field_array["flags"] : "");
-		$current_template_flag = (isset($data_template{"t_" . $field_name}) ? $data_template{"t_" . $field_name} : "on");
-
-		if (($current_template_flag != "on") || ($current_flag == "ALWAYSTEMPLATE")) {
-			if ($include_hidden_fields == true) {
-				$form_array[$form_field_name]["method"] = "hidden";
-			}else{
-				unset($form_array[$form_field_name]);
-			}
-		}elseif ((!empty($snmp_query_graph_id)) && (sizeof(db_fetch_assoc("select id from snmp_query_graph_rrd_sv where snmp_query_graph_id=$snmp_query_graph_id and data_template_id=$data_template_id and field_name='$field_name'")) > 0)) {
-			if ($include_hidden_fields == true) {
-				$form_array[$form_field_name]["method"] = "hidden";
-			}else{
-				unset($form_array[$form_field_name]);
-			}
-		}elseif ((empty($local_data_id)) && ($field_name == "data_source_path")) {
-			if ($include_hidden_fields == true) {
-				$form_array[$form_field_name]["method"] = "hidden";
-			}else{
-				unset($form_array[$form_field_name]);
-			}
-		}else{
-			if (($draw_any_items == false) && ($header_title != "")) {
-				print "<tr bgcolor='#" . $colors["header_panel_background"] . "'><td colspan='2' style='font-size: 10px; color: white;'>$header_title</td></tr>\n";
-			}
-
-			$draw_any_items = true;
-		}
+	if ((sizeof($form_array) > 0) && ($header_title != "")) {
+		echo "<tr bgcolor='#" . $colors["header_panel_background"] . "'><td colspan='2' style='font-size: 10px; color: white;'>$header_title</td></tr>\n";
 	}
 
 	/* setup form options */
@@ -279,7 +149,69 @@ function draw_nontemplated_fields_data_source($data_template_id, $local_data_id,
 			)
 		);
 
-	return (isset($form_array) ? sizeof($form_array) : 0);
+	return sizeof($form_array);
+}
+
+/* draw_nontemplated_fields_data_source - draws a form that consists of all non-templated data source fields
+     associated with a particular data template
+   @arg $data_template_id - the id of the data template to base the form after
+   @arg $values_array - any values that should be included by default on the form
+   @arg $field_name_format - all fields on the form will be named using the following format, the following
+     variables can be used:
+       |field| - the current field name
+   @arg $header_title - the title to use on the header for this form
+   @arg $alternate_colors (bool) - whether to alternate colors for each row on the form or not */
+function draw_nontemplated_fields_data_source($data_template_id, &$values_array, $field_name_format = "|field|", $header_title = "", $alternate_colors = true, $include_hidden_fields = true) {
+	global $colors;
+
+	include(CACTI_BASE_PATH . "/include/data_source/data_source_form.php");
+
+	if (empty($data_template_id)) {
+		return;
+	}
+
+	$form_array = array();
+
+	/* fetch information about the data template */
+	$data_template = db_fetch_row("select * from data_template where id = $data_template_id");
+
+	while (list($field_name, $field_array) = each($struct_data_source)) {
+		if (((isset($data_template{"t_" . $field_name}) ? $data_template{"t_" . $field_name} : "0") == "1")
+			|| ((!empty($values_array["id"])) && ($field_name == "rrd_path"))
+			&& !(($field_name == "rrd_path") && ($include_hidden_fields == false))
+			&& ((isset($field_array["flags"]) ? $field_array["flags"] : "") != "ALWAYSTEMPLATE")) {
+
+			/* find our field name */
+			$form_field_name = str_replace("|field|", $field_name, $field_name_format);
+
+			$form_array += array($form_field_name => $struct_data_source[$field_name]);
+
+			/* modifications to the default form array */
+			$form_array[$form_field_name]["value"] = (isset($values_array[$field_name]) ? $values_array[$field_name] : "");
+			$form_array[$form_field_name]["form_id"] = (isset($values_array["id"]) ? $values_array["id"] : "0");
+			unset($form_array[$form_field_name]["default"]);
+		}
+	}
+
+	if ((sizeof($form_array) > 0) && ($header_title != "")) {
+		echo "<tr bgcolor='#" . $colors["header_panel_background"] . "'><td colspan='2' style='font-size: 10px; color: white;'>$header_title</td></tr>\n";
+	}
+
+	/* setup form options */
+	if ($alternate_colors == true) {
+		$form_config_array = array("no_form_tag" => true);
+	}else{
+		$form_config_array = array("no_form_tag" => true, "force_row_color" => $colors["form_alternate1"]);
+	}
+
+	draw_edit_form(
+		array(
+			"config" => $form_config_array,
+			"fields" => $form_array
+			)
+		);
+
+	return sizeof($form_array);
 }
 
 /* draw_nontemplated_fields_data_source_item - draws a form that consists of all non-templated data source
@@ -289,19 +221,21 @@ function draw_nontemplated_fields_data_source($data_template_id, $local_data_id,
    @arg $field_name_format - all fields on the form will be named using the following format, the following
      variables can be used:
        |field| - the current field name
+       |name| - the data source item name
        |id| - the id of the current data source item
    @arg $header_title - the title to use on the header for this form
    @arg $draw_title_for_each_item (bool) - should a separate header be drawn for each data source item, or
      should all data source items be drawn under one header?
-   @arg $alternate_colors (bool) - whether to alternate colors for each row on the form or not
-   @arg $include_hidden_fields (bool) - should elements that are not to be displayed be represented as hidden
-     html input elements or omitted altogether?
-   @arg $snmp_query_graph_id - if this graph template is part of a data query, specify the graph id here. this
-     will be used to determine if a given field is using suggested values */
-function draw_nontemplated_fields_data_source_item($data_template_id, &$values_array, $field_name_format = "|field_id|", $header_title = "", $draw_title_for_each_item = true, $alternate_colors = true, $include_hidden_fields = true, $snmp_query_graph_id = 0) {
-	global $struct_data_source_item, $colors;
+   @arg $alternate_colors (bool) - whether to alternate colors for each row on the form or not */
+function draw_nontemplated_fields_data_source_item($data_template_id, &$values_array, $field_name_format = "|field_id|", $header_title = "", $draw_title_for_each_item = true, $alternate_colors = true) {
+	global $colors;
 
-	$draw_any_items = false;
+	include(CACTI_BASE_PATH . "/include/data_source/data_source_form.php");
+
+	if (empty($data_template_id)) {
+		return;
+	}
+
 	$num_fields_drawn = 0;
 
 	/* setup form options */
@@ -312,207 +246,124 @@ function draw_nontemplated_fields_data_source_item($data_template_id, &$values_a
 	}
 
 	if (sizeof($values_array) > 0) {
-	foreach ($values_array as $rrd) {
-		reset($struct_data_source_item);
-		$form_array = array();
+		foreach ($values_array as $item) {
+			reset($struct_data_source_item);
+			$form_array = array();
 
-		/* if the user specifies a title, we only want to draw that. if not, we should create our
-		own title for each data source item */
-		if ($draw_title_for_each_item == true) {
-			$draw_any_items = false;
-		}
+			$data_template_item = db_fetch_row("select * from data_template_item where data_template_id = $data_template_id and data_source_name = '" . $item["data_source_name"] . "'");
 
-		if (empty($rrd["local_data_id"])) { /* this is a template */
-			$data_template_rrd = $rrd;
-		}else{ /* this is not a template */
-			$data_template_rrd = db_fetch_row("select * from data_template_rrd where id=" . $rrd["local_data_template_rrd_id"]);
-		}
+			while (list($field_name, $field_array) = each($struct_data_source_item)) {
+				if ($data_template_item{"t_" . $field_name} == "1") {
+					/* find our field name */
+					$form_field_name = str_replace("|field|", $field_name, $field_name_format);
+					$form_field_name = str_replace("|name|", $item["data_source_name"], $form_field_name);
+					$form_field_name = str_replace("|id|", $item["id"], $form_field_name);
 
-		while (list($field_name, $field_array) = each($struct_data_source_item)) {
-			/* find our field name */
-			$form_field_name = str_replace("|field|", $field_name, $field_name_format);
-			$form_field_name = str_replace("|id|", $rrd["id"], $form_field_name);
+					$form_array += array($form_field_name => $struct_data_source_item[$field_name]);
 
-			$form_array += array($form_field_name => $struct_data_source_item[$field_name]);
+					/* modifications to the default form array */
+					$form_array[$form_field_name]["value"] = (isset($item[$field_name]) ? $item[$field_name] : "");
+					$form_array[$form_field_name]["form_id"] = (isset($item["id"]) ? $item["id"] : "0");
+					unset($form_array[$form_field_name]["default"]);
 
-			/* modifications to the default form array */
-			$form_array[$form_field_name]["value"] = (isset($rrd[$field_name]) ? $rrd[$field_name] : "");
-			$form_array[$form_field_name]["form_id"] = (isset($rrd["id"]) ? $rrd["id"] : "0");
-			unset($form_array[$form_field_name]["default"]);
-
-			/* append the data source item name so the user will recognize it */
-			if ($draw_title_for_each_item == false) {
-				$form_array[$form_field_name]["friendly_name"] .= " [" . $rrd["data_source_name"] . "]";
+					/* append the data source item name so the user will recognize it */
+					if ($draw_title_for_each_item == false) {
+						$form_array[$form_field_name]["friendly_name"] .= " [" . $item["data_source_name"] . "]";
+					}
+				}
 			}
 
-			if ($data_template_rrd{"t_" . $field_name} != "on") {
-				if ($include_hidden_fields == true) {
-					$form_array[$form_field_name]["method"] = "hidden";
-				}else{
-					unset($form_array[$form_field_name]);
-				}
-			}elseif ((!empty($snmp_query_graph_id)) && (sizeof(db_fetch_assoc("select id from snmp_query_graph_rrd_sv where snmp_query_graph_id=$snmp_query_graph_id and data_template_id=$data_template_id and field_name='$field_name'")) > 0)) {
-				if ($include_hidden_fields == true) {
-					$form_array[$form_field_name]["method"] = "hidden";
-				}else{
-					unset($form_array[$form_field_name]);
-				}
-			}else{
-				if (($draw_any_items == false) && ($draw_title_for_each_item == false) && ($header_title != "")) {
-					print "<tr bgcolor='#" . $colors["header_panel_background"] . "'><td colspan='2' style='font-size: 10px; color: white;'>$header_title</td></tr>\n";
-				}elseif (($draw_any_items == false) && ($draw_title_for_each_item == true) && ($header_title != "")) {
-					print "<tr bgcolor='#" . $colors["header_panel_background"] . "'><td colspan='2' style='font-size: 10px; color: white;'>$header_title [" . $rrd["data_source_name"] . "]</td></tr>\n";
-				}
-
-				$draw_any_items = true;
+			if ((sizeof($form_array) > 0) && ($draw_title_for_each_item == false) && ($header_title != "")) {
+				echo "<tr bgcolor='#" . $colors["header_panel_background"] . "'><td colspan='2' style='font-size: 10px; color: white;'>$header_title</td></tr>\n";
+			}elseif ((sizeof($form_array) > 0) && ($draw_title_for_each_item == true) && ($header_title != "")) {
+				echo "<tr bgcolor='#" . $colors["header_panel_background"] . "'><td colspan='2' style='font-size: 10px; color: white;'>$header_title [" . $item["data_source_name"] . "]</td></tr>\n";
 			}
+
+			draw_edit_form(
+				array(
+					"config" => $form_config_array,
+					"fields" => $form_array
+					)
+				);
+
+			$num_fields_drawn += sizeof($form_array);
 		}
-
-		draw_edit_form(
-			array(
-				"config" => $form_config_array,
-				"fields" => $form_array
-				)
-			);
-
-		$num_fields_drawn += sizeof($form_array);
-	}
 	}
 
 	return $num_fields_drawn;
 }
 
-/* draw_nontemplated_fields_custom_data - draws a form that consists of all non-templated custom data fields
-     associated with a particular data template
+/* draw_nontemplated_fields_data_input - draws a form that consists of all non-templated data input
+     item fields associated with a particular data template
    @arg $data_template_id - the id of the data template to base the form after
+   @arg $values_array - any values that should be included by default on the form
    @arg $field_name_format - all fields on the form will be named using the following format, the following
      variables can be used:
-       |id| - the id of the current field
+       |field| - the current field name
    @arg $header_title - the title to use on the header for this form
-   @arg $draw_title_for_each_item (bool) - should a separate header be drawn for each data source item, or
-     should all data source items be drawn under one header?
-   @arg $alternate_colors (bool) - whether to alternate colors for each row on the form or not
-   @arg $include_hidden_fields (bool) - should elements that are not to be displayed be represented as hidden
-     html input elements or omitted altogether?
-   @arg $snmp_query_id - if this graph template is part of a data query, specify the data query id here. this
-     will be used to determine if a given field is associated with a suggested value */
-function draw_nontemplated_fields_custom_data($data_template_data_id, $field_name_format = "|field|", $header_title = "", $alternate_colors = true, $include_hidden_fields = true, $snmp_query_id = 0) {
-	global $colors;
+   @arg $alternate_colors (bool) - whether to alternate colors for each row on the form or not */
+function draw_nontemplated_fields_data_input($data_template_id, &$values_array, $field_name_format = "|field_id|", $header_title = "", $alternate_colors = true) {
+	global $colors, $fields_host_edit;
 
-	$data = db_fetch_row("select id,data_input_id,data_template_id,name,local_data_id from data_template_data where id=$data_template_data_id");
-	$host_id = db_fetch_cell("select host.id from data_local,host where data_local.host_id=host.id and data_local.id=" . $data["local_data_id"]);
-	$template_data = db_fetch_row("select id,data_input_id from data_template_data where data_template_id=" . $data["data_template_id"] . " and local_data_id=0");
+	if (empty($data_template_id)) {
+		return;
+	}
 
-	$draw_any_items = false;
+	$form_array = array();
 
-	/* get each INPUT field for this data input source */
-	$fields = db_fetch_assoc("select * from data_input_fields where data_input_id=" . $data["data_input_id"] . " and input_output='in' order by name");
+	$data_input_type = db_fetch_cell("select data_input_type from data_template where id = $data_template_id");
+	$data_template_fields = array_rekey(db_fetch_assoc("select name,t_value,value from data_template_field where data_template_id = $data_template_id"), "name", array("t_value", "value"));
 
-	/* loop through each field found */
-	$i = 0;
-	if (sizeof($fields) > 0) {
-	foreach ($fields as $field) {
-		$data_input_data = db_fetch_row("select * from data_input_data where data_template_data_id=" . $data["id"] . " and data_input_field_id=" . $field["id"]);
-
-		if (sizeof($data_input_data) > 0) {
-			$old_value = $data_input_data["value"];
-		}else{
-			$old_value = "";
-		}
-
-		/* if data template then get t_value from template, else always allow user input */
-		if (empty($data["data_template_id"])) {
-			$can_template = "on";
-		}else{
-			$can_template = db_fetch_cell("select t_value from data_input_data where data_template_data_id=" . $template_data["id"] . " and data_input_field_id=" . $field["id"]);
-		}
-
+	while (list($field_name, $field_array) = each($values_array)) {
 		/* find our field name */
-		$form_field_name = str_replace("|id|", $field["id"], $field_name_format);
+		$form_field_name = str_replace("|field|", $field_name, $field_name_format);
 
-		if ((!empty($host_id)) && (eregi('^' . VALID_HOST_FIELDS . '$', $field["type_code"])) && (empty($can_template))) { /* no host fields */
-			if ($include_hidden_fields == true) {
-				form_hidden_box($form_field_name, $old_value, "");
-			}
-		}elseif ((!empty($snmp_query_id)) && (eregi('^(index_type|index_value|output_type)$', $field["type_code"]))) { /* no data query fields */
-			if ($include_hidden_fields == true) {
-				form_hidden_box($form_field_name, $old_value, "");
-			}
-		}elseif (empty($can_template)) { /* no templated fields */
-			if ($include_hidden_fields == true) {
-				form_hidden_box($form_field_name, $old_value, "");
-			}
-		}else{
-			if (($draw_any_items == false) && ($header_title != "")) {
-				print "<tr bgcolor='#" . $colors["header_panel_background"] . "'><td colspan='2' style='font-size: 10px; color: white;'>$header_title</td></tr>\n";
-			}
+		if ( ((isset($data_template_fields[$field_name])) && ($data_template_fields[$field_name]["t_value"] == "1"))
+			&& (($field_name != "script_id") && ($field_name != "data_query_id")) ) {
+			if ($data_input_type == "snmp") {
+				$form_array += array($form_field_name => $fields_host_edit[$field_name]);
+			}else if ($data_input_type == "script") {
+				$form_array += array(
+					$form_field_name => array(
+						"method" => "textbox",
+						"friendly_name" => (isset($values_array["script_id"]) ? db_fetch_cell("select name from data_input_fields where data_input_id = " . $values_array["script_id"]["value"] . " and data_name = '$field_name' and input_output = 'in'") : $field_name),
+						"max_length" => "255",
+						)
+					);
+			}else if ($data_input_type == "data_query") {
 
-			if ($alternate_colors == true) {
-				form_alternate_row_color($colors["form_alternate1"],$colors["form_alternate2"],$i);
-			}else{
-				print "<tr bgcolor='#" . $colors["form_alternate1"] . "'>\n";
 			}
 
-			print "<td width='50%'><strong>" . $field["name"] . "</strong></td>\n";
-			print "<td>";
-
-			draw_custom_data_row($form_field_name, $field["id"], $data["id"], $old_value);
-
-			print "</td>";
-			print "</tr>\n";
-
-			$draw_any_items = true;
-			$i++;
+			/* modifications to the default form array */
+			$form_array[$form_field_name]["value"] = $field_array["value"];
+			//$form_array[$form_field_name]["form_id"] = (isset($item["id"]) ? $item["id"] : "0");
+			unset($form_array[$form_field_name]["default"]);
 		}
 	}
+
+	if (sizeof($form_array) > 0) {
+		if ($header_title != "") {
+			echo "<tr bgcolor='#" . $colors["header_panel_background"] . "'><td colspan='2' style='font-size: 10px; color: white;'>$header_title</td></tr>\n";
+		}else{
+			echo "<tr bgcolor='#" . $colors["header_panel_background"] . "'><td colspan='2' style='font-size: 10px; color: white;'>Data Input</td></tr>\n";
+		}
 	}
 
-	return $i;
-}
-
-/* draw_custom_data_row - draws a single row representing 'custom data' for a single data input field.
-     this function is where additional logic can be applied to control how a certain field of custom
-     data is represented on the HTML form
-   @arg $field_name - the name of this form element
-   @arg $data_input_field_id - the id of the data input field that this row represents
-   @arg $data_template_data_id - the id of the data source data element that this data input field
-     belongs to
-   @arg $current_value - the current value of this field */
-function draw_custom_data_row($field_name, $data_input_field_id, $data_template_data_id, $current_value) {
-	$field = db_fetch_row("select data_name,type_code from data_input_fields where id=$data_input_field_id");
-
-	if (($field["type_code"] == "index_type") && (db_fetch_cell("select local_data_id from data_template_data where id=$data_template_data_id") > 0)) {
-		$index_type = db_fetch_assoc("select
-			host_snmp_cache.field_name
-			from data_template_data,data_local,host_snmp_cache
-			where data_template_data.local_data_id=data_local.id
-			and data_local.snmp_query_id=host_snmp_cache.snmp_query_id
-			and data_template_data.id=$data_template_data_id
-			group by host_snmp_cache.field_name");
-
-		if (sizeof($index_type) == 0) {
-			print "<em>Data query data sources must be created through <a href='graphs_new.php'>New Graphs</a>.</em>\n";
-		}else{
-			form_dropdown($field_name, $index_type, "field_name", "field_name", $current_value, "", "", "");
-		}
-	}elseif (($field["type_code"] == "output_type") && (db_fetch_cell("select local_data_id from data_template_data where id=$data_template_data_id") > 0)) {
-		$output_type = db_fetch_assoc("select
-			snmp_query_graph.id,
-			snmp_query_graph.name
-			from data_template_data,data_local,snmp_query_graph
-			where data_template_data.local_data_id=data_local.id
-			and data_local.snmp_query_id=snmp_query_graph.snmp_query_id
-			and data_template_data.id=$data_template_data_id
-			group by snmp_query_graph.id");
-
-		if (sizeof($output_type) == 0) {
-			print "<em>Data query data sources must be created through <a href='graphs_new.php'>New Graphs</a>.</em>\n";
-		}else{
-			form_dropdown($field_name, $output_type, "name", "id", $current_value, "", "", "");
-		}
+	/* setup form options */
+	if ($alternate_colors == true) {
+		$form_config_array = array("no_form_tag" => true);
 	}else{
-		form_text_box($field_name, $current_value, "", "");
+		$form_config_array = array("no_form_tag" => true, "force_row_color" => $colors["form_alternate1"]);
 	}
+
+	draw_edit_form(
+		array(
+			"config" => $form_config_array,
+			"fields" => $form_array
+			)
+		);
+
+	return sizeof($form_array);
 }
 
 ?>

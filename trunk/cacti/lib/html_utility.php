@@ -40,6 +40,8 @@
 function inject_form_variables(&$form_array, $arg1 = array(), $arg2 = array(), $arg3 = array(), $arg4 = array()) {
 	$check_fields = array("value", "array", "friendly_name", "description", "sql", "sql_print", "form_id", "items");
 
+	reset($form_array);
+
 	/* loop through each available field */
 	while (list($field_name, $field_array) = each($form_array)) {
 		/* loop through each sub-field that we are going to check for variables */
@@ -56,6 +58,9 @@ function inject_form_variables(&$form_array, $arg1 = array(), $arg2 = array(), $
 					}else{
 						/* the existing value is probably a single variable */
 						$form_array[$field_name][$field_to_check] = str_replace($matches[0], ${$matches[1]}, $field_array[$field_to_check]);
+
+						/* extra global variables */
+						//$form_array[$field_name][$field_to_check] = str_replace("|var:current_page|", basename($_SERVER["PHP_SELF"]), $field_array[$field_to_check]);
 					}
 				}else{
 					/* copy the value down from the array/key specified in the variable */
@@ -90,10 +95,12 @@ function form_alternate_row_color($row_color1, $row_color2, $row_value) {
    @arg $html_boolean - the value of the HTML checkbox
    @returns - true or false based on the value of the HTML checkbox */
 function html_boolean($html_boolean) {
-	if ($html_boolean == "on") {
-		return true;
+	if ($html_boolean == "") {
+		return 0;
+	}else if ($html_boolean == "on") {
+		return 1;
 	}else{
-		return false;
+		return $html_boolean;
 	}
 }
 

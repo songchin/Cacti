@@ -22,7 +22,8 @@
  +-------------------------------------------------------------------------+
 */
 
-include($config["include_path"] . "/config_arrays.php");
+include(CACTI_BASE_PATH . "/include/graph/graph_arrays.php");
+include(CACTI_BASE_PATH . "/include/config_arrays.php");
 
 /* tab information */
 $tabs = array(

@@ -284,7 +284,13 @@ function graph_perms_edit() {
 	/* box: graph permissions */
 	html_start_box("<strong>Graph Permissions (By Graph)</strong>", "98%", $colors["header_background"], "3", "center", "");
 
-	$graphs = api_user_graph_perms_list("graph", $_GET["id"]);
+	$graphs = db_fetch_assoc("select
+		graph.id,
+		graph.title_cache
+		from graph
+		left join user_auth_perms on (graph.id=user_auth_perms.item_id and user_auth_perms.type=1)
+		where user_auth_perms.user_id = " . $_GET["id"] . "
+		order by graph.title_cache");
 
 	?>
 	<form method="post" action="user_admin.php">
@@ -304,14 +310,15 @@ function graph_perms_edit() {
 				<?php
 				$i = 0;
 				if (sizeof($graphs) > 0) {
-				foreach ($graphs as $item) {
-					$i++;
-					print "	<tr>
-							<td><span style='font-weight: bold; color: " . (($policy["policy_graphs"] == "1") ? "red" : "blue") . ";'>$i)</span> " . $item["title_cache"] . "</td>
-							<td align='right'><a href='user_admin.php?action=perm_remove&type=graph&id=" . $item["local_graph_id"] . "&user_id=" . $_GET["id"] . "'><img src='" . html_get_theme_images_path("delete_icon.gif") . "' width='10' height='10' border='0' alt='Delete'></a>&nbsp;</td>
-						</tr>\n";
-				}
-				}else{ print "<tr><td><em>No Graphs</em></td></tr>";
+					foreach ($graphs as $item) {
+						$i++;
+						print "	<tr>
+								<td><span style='font-weight: bold; color: " . (($policy["policy_graphs"] == "1") ? "red" : "blue") . ";'>$i)</span> " . $item["title_cache"] . "</td>
+								<td align='right'><a href='user_admin.php?action=perm_remove&type=graph&id=" . $item["id"] . "&user_id=" . $_GET["id"] . "'><img src='" . html_get_theme_images_path("delete_icon.gif") . "' width='10' height='10' border='0' alt='Delete'></a>&nbsp;</td>
+							</tr>\n";
+					}
+				}else{
+					print "<tr><td><em>No Graphs</em></td></tr>";
 				}
 				?>
 			</table>
@@ -325,7 +332,7 @@ function graph_perms_edit() {
 	<table align='center' width='98%'>
 		<tr>
 			<td nowrap>Add Graph:&nbsp;
-				<?php form_dropdown("perm_graphs",db_fetch_assoc("select local_graph_id,title_cache from graph_templates_graph where local_graph_id>0 order by title_cache"),"title_cache","local_graph_id","","","");?>
+				<?php form_dropdown("perm_graphs",db_fetch_assoc("select id,title_cache from graph order by title_cache"),"title_cache","id","","","");?>
 			</td>
 			<td align="right">
 				&nbsp;<input type="image" src="<?php print html_get_theme_images_path('button_add.gif');?>" alt="Add" name="add_graph" align="absmiddle">
@@ -338,7 +345,13 @@ function graph_perms_edit() {
 	/* box: host permissions */
 	html_start_box("<strong>Graph Permissions (By Host)</strong>", "98%", $colors["header_background"], "3", "center", "");
 
-	$hosts = api_user_graph_perms_list("host", $_GET["id"]);
+	$hosts = db_fetch_assoc("select
+		host.id,
+		CONCAT_WS('',host.description,' (',host.hostname,')') as name
+		from host
+		left join user_auth_perms on (host.id=user_auth_perms.item_id and user_auth_perms.type=3)
+		where user_auth_perms.user_id = " . $_GET["id"] . "
+		order by host.description,host.hostname");
 
 	?>
 	<tr bgcolor="#<?php print $colors["form_alternate1"];?>">
@@ -356,14 +369,15 @@ function graph_perms_edit() {
 				<?php
 				$i = 0;
 				if (sizeof($hosts) > 0) {
-				foreach ($hosts as $item) {
-					$i++;
-					print "	<tr>
-							<td><span style='font-weight: bold; color: " . (($policy["policy_hosts"] == "1") ? "red" : "blue") . ";'>$i)</span> " . $item["name"] . "</td>
-							<td align='right'><a href='user_admin.php?action=perm_remove&type=host&id=" . $item["id"] . "&user_id=" . $_GET["id"] . "'><img src='" . html_get_theme_images_path("delete_icon.gif") . "' width='10' height='10' border='0' alt='Delete'></a>&nbsp;</td>
-						</tr>\n";
-				}
-				}else{ print "<tr><td><em>No Hosts</em></td></tr>";
+					foreach ($hosts as $item) {
+						$i++;
+						print "	<tr>
+								<td><span style='font-weight: bold; color: " . (($policy["policy_hosts"] == "1") ? "red" : "blue") . ";'>$i)</span> " . $item["name"] . "</td>
+								<td align='right'><a href='user_admin.php?action=perm_remove&type=host&id=" . $item["id"] . "&user_id=" . $_GET["id"] . "'><img src='" . html_get_theme_images_path("delete_icon.gif") . "' width='10' height='10' border='0' alt='Delete'></a>&nbsp;</td>
+							</tr>\n";
+					}
+				}else{
+					print "<tr><td><em>No Hosts</em></td></tr>";
 				}
 				?>
 			</table>
@@ -391,7 +405,13 @@ function graph_perms_edit() {
 	/* box: graph template permissions */
 	html_start_box("<strong>Graph Permissions (By Graph Template)</strong>", "98%", $colors["header_background"], "3", "center", "");
 
-	$graph_templates = api_user_graph_perms_list("graph_template", $_GET["id"]);
+	$graph_templates = db_fetch_assoc("select
+		graph_template.id,
+		graph_template.template_name
+		from graph_template
+		left join user_auth_perms on (graph_template.id=user_auth_perms.item_id and user_auth_perms.type=4)
+		where user_auth_perms.user_id = " . $_GET["id"] . "
+		order by graph_template.template_name");
 
 	?>
 	<tr bgcolor="#<?php print $colors["form_alternate1"];?>">
@@ -409,14 +429,15 @@ function graph_perms_edit() {
 				<?php
 				$i = 0;
 				if (sizeof($graph_templates) > 0) {
-				foreach ($graph_templates as $item) {
-					$i++;
-					print "	<tr>
-							<td><span style='font-weight: bold; color: " . (($policy["policy_graph_templates"] == "1") ? "red" : "blue") . ";'>$i)</span> " . $item["name"] . "</td>
-							<td align='right'><a href='user_admin.php?action=perm_remove&type=graph_template&id=" . $item["id"] . "&user_id=" . $_GET["id"] . "'><img src='" . html_get_theme_images_path("delete_icon.gif") . "' width='10' height='10' border='0' alt='Delete'></a>&nbsp;</td>
-						</tr>\n";
-				}
-				}else{ print "<tr><td><em>No Graph Templates</em></td></tr>";
+					foreach ($graph_templates as $item) {
+						$i++;
+						print "	<tr>
+								<td><span style='font-weight: bold; color: " . (($policy["policy_graph_templates"] == "1") ? "red" : "blue") . ";'>$i)</span> " . $item["template_name"] . "</td>
+								<td align='right'><a href='user_admin.php?action=perm_remove&type=graph_template&id=" . $item["id"] . "&user_id=" . $_GET["id"] . "'><img src='" . html_get_theme_images_path("delete_icon.gif") . "' width='10' height='10' border='0' alt='Delete'></a>&nbsp;</td>
+							</tr>\n";
+					}
+				}else{
+					print "<tr><td><em>No Graph Templates</em></td></tr>";
 				}
 				?>
 			</table>
@@ -431,7 +452,7 @@ function graph_perms_edit() {
 	<table align='center' width='98%'>
 		<tr>
 			<td nowrap>Add Graph Template:&nbsp;
-				<?php form_dropdown("perm_graph_templates",db_fetch_assoc("select id,name from graph_templates order by name"),"name","id","","","");?>
+				<?php form_dropdown("perm_graph_templates",db_fetch_assoc("select id,template_name from graph_template order by template_name"),"template_name","id","","","");?>
 			</td>
 			<td align="right">
 				&nbsp;<input type="image" src="<?php print html_get_theme_images_path('button_add.gif');?>" alt="Add" name="add_graph_template" align="absmiddle">
@@ -444,7 +465,13 @@ function graph_perms_edit() {
 	/* box: tree permissions */
 	html_start_box("<strong>Tree Permissions</strong>", "98%", $colors["header_background"], "3", "center", "");
 
-	$trees = api_user_graph_perms_list("tree", $_GET["id"]);
+	$trees = db_fetch_assoc("select
+		graph_tree.id,
+		graph_tree.name
+		from graph_tree
+		left join user_auth_perms on (graph_tree.id=user_auth_perms.item_id and user_auth_perms.type=2)
+		where user_auth_perms.user_id = " . $_GET["id"] . "
+		order by graph_tree.name");
 
 	?>
 	<tr bgcolor="#<?php print $colors["form_alternate1"];?>">
@@ -462,14 +489,15 @@ function graph_perms_edit() {
 				<?php
 				$i = 0;
 				if (sizeof($trees) > 0) {
-				foreach ($trees as $item) {
-					$i++;
-					print "	<tr>
-							<td><span style='font-weight: bold; color: " . (($policy["policy_trees"] == "1") ? "red" : "blue") . ";'>$i)</span> " . $item["name"] . "</td>
-							<td align='right'><a href='user_admin.php?action=perm_remove&type=tree&id=" . $item["id"] . "&user_id=" . $_GET["id"] . "'><img src='" . html_get_theme_images_path("delete_icon.gif") . "' width='10' height='10' border='0' alt='Delete'></a>&nbsp;</td>
-						</tr>\n";
-				}
-				}else{ print "<tr><td><em>No Trees</em></td></tr>";
+					foreach ($trees as $item) {
+						$i++;
+						print "	<tr>
+								<td><span style='font-weight: bold; color: " . (($policy["policy_trees"] == "1") ? "red" : "blue") . ";'>$i)</span> " . $item["name"] . "</td>
+								<td align='right'><a href='user_admin.php?action=perm_remove&type=tree&id=" . $item["id"] . "&user_id=" . $_GET["id"] . "'><img src='" . html_get_theme_images_path("delete_icon.gif") . "' width='10' height='10' border='0' alt='Delete'></a>&nbsp;</td>
+							</tr>\n";
+					}
+				}else{
+					print "<tr><td><em>No Trees</em></td></tr>";
 				}
 				?>
 			</table>

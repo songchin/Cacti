@@ -21,7 +21,8 @@
  +-------------------------------------------------------------------------+
 */
 
-/* graph template stuff */
+/* functions for the graph templates box on the New Graphs page */
+
 function gt_update_selection_indicators() {
 	if (document.getElementById) {
 		there_are_any_unchecked_ones = false;
@@ -103,7 +104,8 @@ function gt_reset_deps(num_columns) {
 	}
 }
 
-/* data query stuff */
+/* functions for the data queries box(es) on the New Graphs page */
+
 function dq_update_selection_indicators() {
 	if (document.getElementById) {
 		there_are_any_unchecked_ones = false;
@@ -195,10 +197,129 @@ function dq_reset_deps(snmp_query_id, num_columns) {
 	}
 }
 
+/* generic selection functions */
+
+function gi_select_line(id) {
+	if (document.getElementById) {
+		line1 = document.getElementById('gi_1_' + id);
+		line2 = document.getElementById('gi_2_' + id);
+		line3 = document.getElementById('gi_3_' + id);
+		line4 = document.getElementById('gi_4_' + id);
+		line5 = document.getElementById('gi_5_' + id);
+		line6 = document.getElementById('gi_6_' + id);
+
+		val = document.getElementById('gi_value_' + id);
+		//val_above = document.getElementById('gi_value_' + (sequence-1));
+		//val_below = document.getElementById('gi_value_' + (sequence+1));
+
+		if (line1.className == 'jsRowSelect') {
+			line1.className = 'jsRowUnSelect';
+			line2.className = 'jsRowUnSelect';
+			line3.className = 'jsRowUnSelect';
+			line4.className = 'jsRowUnSelect';
+			line5.className = 'jsRowUnSelect';
+			line6.className = 'jsRowUnSelect';
+			val.value = '0';
+		}else{
+			//if ( ((val_below) && (val_below.value == '1')) || ((val_below) && (val_below.value == '1')) ) {
+				line1.className = 'jsRowSelect';
+				line2.className = 'jsRowSelect';
+				line3.className = 'jsRowSelect';
+				line4.className = 'jsRowSelect';
+				line5.className = 'jsRowSelect';
+				line6.className = 'jsRowSelect';
+				val.value = '1';
+			//}
+		}
+	}
+}
+
+function graph_item_rows_selection(checkbox_state) {
+	for (var i = 0; i < item_rows.length; i++) {
+		row_chk = document.getElementById('row_chk_' + item_rows[i]);
+
+		row_chk.checked = checkbox_state;
+
+		graph_item_row_selection(item_rows[i]);
+	}
+}
+
+function graph_item_row_selection(row_id) {
+	row_chk = document.getElementById('row_chk_' + row_id);
+
+	for (var i = 0; i < item_row_list[row_id].length; i++) {
+		chk = document.getElementById('chk_' + item_row_list[row_id][i]);
+
+		if (row_chk.checked == true) {
+			chk.checked = true;
+			//chk.disabled = true;
+		}else{
+
+			chk.checked = false;
+			//chk.disabled = false;
+		}
+	}
+}
+
+function graph_item_row_visibility(row_id) {
+	image = document.getElementById('img_' + row_id);
+
+	if (image.src.indexOf('hide.gif') > 0) {
+		image.src = image.src.replace('hide.gif', 'show.gif');
+	}else{
+		image.src = image.src.replace('show.gif', 'hide.gif');
+	}
+
+	for (var i = 0; i < item_row_list[row_id].length; i++) {
+		row = document.getElementById('tr_' + item_row_list[row_id][i]);
+
+		if (row.style.display == 'none') {
+			row.style.display = 'table-row';
+		}else{
+			row.style.display = 'none';
+		}
+	}
+}
+
+/* miscellaneous form-related functions */
+
+function SelectAllX(prefix, checkbox_state) {
+	for (var i = 0; i < document.form_graph_template.elements.length; i++) {
+		if ((document.form_graph_template.elements[i].name.substr(0, prefix.length) == prefix) && (document.form_graph_template.elements[i].style.visibility != 'hidden')) {
+			document.form_graph_template.elements[i].checked = checkbox_state;
+		}
+	}
+}
+
 function SelectAll(prefix, checkbox_state) {
 	for (var i = 0; i < document.chk.elements.length; i++) {
 		if ((document.chk.elements[i].name.substr(0, prefix.length) == prefix) && (document.chk.elements[i].style.visibility != 'hidden')) {
 			document.chk.elements[i].checked = checkbox_state;
+		}
+	}
+}
+
+function submit_redirect(form_index, redirect_url, field_value) {
+	redirect = document.getElementById('cacti_js_dropdown_redirect_x');
+
+	redirect.value = redirect_url.replace("|dropdown_value|", field_value);
+	redirect.name = 'cacti_js_dropdown_redirect';
+
+	document.forms[form_index].submit();
+}
+
+function template_checkbox_status(field_name, t_field_name, field_method) {
+	if ((field_method == 'drop_multi') || (field_method == 'drop_multi_rra')) {
+		if (document.getElementById(t_field_name).checked == true) {
+			document.getElementById(field_name + '[]').disabled = true;
+		}else{
+			document.getElementById(field_name + '[]').disabled = false;
+		}
+	}else{
+		if (document.getElementById(t_field_name).checked == true) {
+			document.getElementById(field_name).disabled = true;
+		}else{
+			document.getElementById(field_name).disabled = false;
 		}
 	}
 }

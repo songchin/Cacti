@@ -38,21 +38,21 @@ if ($_GET["rra_id"] == "all") {
 }
 
 /* make sure the graph requested exists (sanity) */
-if (!(db_fetch_cell("select local_graph_id from graph_templates_graph where local_graph_id=" . $_GET["local_graph_id"]))) {
+if (!(db_fetch_cell("select id from graph where id = " . $_GET["graph_id"]))) {
 	print "<strong><font size='+1' color='FF0000'>GRAPH DOES NOT EXIST</font></strong>"; exit;
 }
 
 /* take graph permissions into account here, if the user does not have permission
 give an "access denied" message */
 if (read_config_option("auth_method") != "0") {
-	$access_denied = !(is_graph_allowed($_GET["local_graph_id"]));
+	$access_denied = !(is_graph_allowed($_GET["graph_id"]));
 
 	if ($access_denied == true) {
 		print "<strong><font size='+1' color='FF0000'>ACCESS DENIED</font></strong>"; exit;
 	}
 }
 
-$graph_title = get_graph_title($_GET["local_graph_id"]);
+$graph_title = get_graph_title($_GET["graph_id"]);
 
 if ($_REQUEST["view_type"] == "tree") {
 	print "<table width='98%' style='background-color: #" . $colors["graph_menu_background"] . "; border: 1px solid #" . $colors["graph_menu_border"] . ";' align='center' cellpadding='3'>";
@@ -60,7 +60,7 @@ if ($_REQUEST["view_type"] == "tree") {
 	print "<br><table width='98%' style='background-color: #" . $colors["console_menu_background"] . "; border: 1px solid #" . $colors["console_menu_border"] . ";' align='center' cellpadding='3'>";
 }
 
-$rras = get_associated_rras($_GET["local_graph_id"]);
+$rras = get_associated_rras($_GET["graph_id"]);
 
 switch ($_REQUEST["action"]) {
 case 'view':
@@ -81,11 +81,11 @@ case 'view':
 				<table width='1' cellpadding='0'>
 					<tr>
 						<td>
-							<img src='graph_image.php?local_graph_id=<?php print $_GET["local_graph_id"];?>&rra_id=<?php print $rra["id"];?>' border='0' alt='<?php print $graph_title;?>'>
+							<img src='graph_image.php?graph_id=<?php print $_GET["graph_id"];?>&rra_id=<?php print $rra["id"];?>' border='0' alt='<?php print $graph_title;?>'>
 						</td>
 						<td valign='top' style='padding: 3px;' class='noprint'>
-							<a href='graph.php?action=zoom&local_graph_id=<?php print $_GET["local_graph_id"];?>&rra_id=<?php print $rra["id"];?>&view_type=<?php print $_REQUEST["view_type"];?>'><img src='images/graph_zoom.gif' border='0' alt='Zoom Graph' title='Zoom Graph' style='padding: 3px;'></a><br>
-							<?php if (! $using_guest_account) { ?><a href='graph.php?action=properties&local_graph_id=<?php print $_GET["local_graph_id"];?>&rra_id=<?php print $rra["id"];?>&view_type=<?php print $_REQUEST["view_type"];?>'><img src='images/graph_properties.gif' border='0' alt='Graph Source/Properties' title='Graph Source/Properties' style='padding: 3px;'></a> <?php } ?>
+							<a href='graph.php?action=zoom&graph_id=<?php print $_GET["graph_id"];?>&rra_id=<?php print $rra["id"];?>&view_type=<?php print $_REQUEST["view_type"];?>'><img src='images/graph_zoom.gif' border='0' alt='Zoom Graph' title='Zoom Graph' style='padding: 3px;'></a><br>
+							<?php if (! $using_guest_account) { ?><a href='graph.php?action=properties&graph_id=<?php print $_GET["graph_id"];?>&rra_id=<?php print $rra["id"];?>&view_type=<?php print $_REQUEST["view_type"];?>'><img src='images/graph_properties.gif' border='0' alt='Graph Source/Properties' title='Graph Source/Properties' style='padding: 3px;'></a> <?php } ?>
 						</td>
 					</tr>
 					<tr>
@@ -121,11 +121,11 @@ case 'zoom':
 
 	/* find the step and how often this graph is updated with new data */
 	$ds_step = db_fetch_cell("select
-		data_template_data.rrd_step
-		from data_template_data,data_template_rrd,graph_templates_item
-		where graph_templates_item.task_item_id=data_template_rrd.id
-		and data_template_rrd.local_data_id=data_template_data.local_data_id
-		and graph_templates_item.local_graph_id=" . $_GET["local_graph_id"] .
+		data_source.rrd_step
+		from data_source,data_source_item,graph_item
+		where graph_item.data_source_item_id=data_source_item.id
+		and data_source_item.data_source_id=data_source.id
+		and graph_item.graph_id = " . $_GET["graph_id"] .
 		"limit 0,1");
 	$ds_step = empty($ds_step) ? 300 : $ds_step;
 	$seconds_between_graph_updates = ($ds_step * $rra["steps"]);
@@ -154,10 +154,10 @@ case 'zoom':
 	}
 
 	$graph = db_fetch_row("select
-		graph_templates_graph.height,
-		graph_templates_graph.width
-		from graph_templates_graph
-		where graph_templates_graph.local_graph_id=" . $_GET["local_graph_id"]);
+		graph.height,
+		graph.width
+		from graph
+		where graph.id = " . $_GET["graph_id"]);
 
 	$graph_height = $graph["height"];
 	$graph_width = $graph["width"];
@@ -175,10 +175,10 @@ case 'zoom':
 			<table width='1' cellpadding='0'>
 				<tr>
 					<td>
-						<img id='zoomGraphImage' src='graph_image.php?local_graph_id=<?php print $_GET["local_graph_id"];?>&rra_id=<?php print $_GET["rra_id"];?>&view_type=<?php print $_REQUEST["view_type"];?>&graph_start=<?php print $graph_start;?>&graph_end=<?php print $graph_end;?>&graph_height=<?php print $graph_height;?>&graph_width=<?php print $graph_width;?>' border='0' alt='<?php print $graph_title;?>'>
+						<img id='zoomGraphImage' src='graph_image.php?graph_id=<?php print $_GET["graph_id"];?>&rra_id=<?php print $_GET["rra_id"];?>&view_type=<?php print $_REQUEST["view_type"];?>&graph_start=<?php print $graph_start;?>&graph_end=<?php print $graph_end;?>&graph_height=<?php print $graph_height;?>&graph_width=<?php print $graph_width;?>' border='0' alt='<?php print $graph_title;?>'>
 					</td>
 					<td valign='top' style='padding: 3px;' class='noprint'>
-						<?php if (! $using_guest_account) { ?><a href='graph.php?action=properties&local_graph_id=<?php print $_GET["local_graph_id"];?>&rra_id=<?php print $_GET["rra_id"];?>&view_type=<?php print $_REQUEST["view_type"];?>&graph_start=<?php print $graph_start;?>&graph_end=<?php print $graph_end;?>'><img src='images/graph_properties.gif' border='0' alt='Graph Source/Properties' title='Graph Source/Properties' style='padding: 3px;'></a><?php } ?>
+						<?php if (! $using_guest_account) { ?><a href='graph.php?action=properties&graph_id=<?php print $_GET["graph_id"];?>&rra_id=<?php print $_GET["rra_id"];?>&view_type=<?php print $_REQUEST["view_type"];?>&graph_start=<?php print $graph_start;?>&graph_end=<?php print $graph_end;?>'><img src='images/graph_properties.gif' border='0' alt='Graph Source/Properties' title='Graph Source/Properties' style='padding: 3px;'></a><?php } ?>
 					</td>
 				</tr>
 				<tr>
@@ -206,10 +206,10 @@ case 'properties':
 			<table width='1' cellpadding='0'>
 				<tr>
 					<td>
-						<img src='graph_image.php?local_graph_id=<?php print $_GET["local_graph_id"];?>&rra_id=<?php print $_GET["rra_id"];?>&graph_start=<?php print (isset($_GET["graph_start"]) ? $_GET["graph_start"] : 0);?>&graph_end=<?php print (isset($_GET["graph_end"]) ? $_GET["graph_end"] : 0);?>' border='0' alt='<?php print $graph_title;?>'>
+						<img src='graph_image.php?graph_id=<?php print $_GET["graph_id"];?>&rra_id=<?php print $_GET["rra_id"];?>&graph_start=<?php print (isset($_GET["graph_start"]) ? $_GET["graph_start"] : 0);?>&graph_end=<?php print (isset($_GET["graph_end"]) ? $_GET["graph_end"] : 0);?>' border='0' alt='<?php print $graph_title;?>'>
 					</td>
 					<td valign='top' style='padding: 3px;' class="noprint">
-						<a href='graph.php?action=zoom&local_graph_id=<?php print $_GET["local_graph_id"];?>&rra_id=<?php print $_GET["rra_id"];?>&view_type=<?php print $_REQUEST["view_type"];?><?php print (isset($_GET["graph_start"]) ? print "&graph_start=" . $_GET["graph_start"] : "");?><?php print (isset($_GET["graph_end"]) ? print "&graph_end=" . $_GET["graph_end"] : "");?>'><img src='images/graph_zoom.gif' border='0' alt='Zoom Graph' title='Zoom Graph' style='padding: 3px;'></a><br>
+						<a href='graph.php?action=zoom&graph_id=<?php print $_GET["graph_id"];?>&rra_id=<?php print $_GET["rra_id"];?>&view_type=<?php print $_REQUEST["view_type"];?><?php print (isset($_GET["graph_start"]) ? print "&graph_start=" . $_GET["graph_start"] : "");?><?php print (isset($_GET["graph_end"]) ? print "&graph_end=" . $_GET["graph_end"] : "");?>'><img src='images/graph_zoom.gif' border='0' alt='Zoom Graph' title='Zoom Graph' style='padding: 3px;'></a><br>
 					</td>
 				</tr>
 				<tr>

@@ -115,9 +115,9 @@ case 'preview':
 	if (read_config_option("auth_method") != "0") {
 		$sql_where = "where " . get_graph_permissions_sql($current_user["policy_graphs"], $current_user["policy_hosts"], $current_user["policy_graph_templates"]);
 
-		$sql_join = "left join host on host.id=graph_local.host_id
-			left join graph_templates on graph_templates.id=graph_local.graph_template_id
-			left join user_auth_perms on ((graph_templates_graph.local_graph_id=user_auth_perms.item_id and user_auth_perms.type=1 and user_auth_perms.user_id=" . $_SESSION["sess_user_id"] . ") OR (host.id=user_auth_perms.item_id and user_auth_perms.type=3 and user_auth_perms.user_id=" . $_SESSION["sess_user_id"] . ") OR (graph_templates.id=user_auth_perms.item_id and user_auth_perms.type=4 and user_auth_perms.user_id=" . $_SESSION["sess_user_id"] . "))";
+		$sql_join = "left join host on host.id=graph.host_id
+			left join graph_template on graph_template.id=graph.graph_template_id
+			left join user_auth_perms on ((graph.id=user_auth_perms.item_id and user_auth_perms.type=1 and user_auth_perms.user_id=" . $_SESSION["sess_user_id"] . ") OR (host.id=user_auth_perms.item_id and user_auth_perms.type=3 and user_auth_perms.user_id=" . $_SESSION["sess_user_id"] . ") OR (graph_template.id=user_auth_perms.item_id and user_auth_perms.type=4 and user_auth_perms.user_id=" . $_SESSION["sess_user_id"] . "))";
 	}
 
 	/* the user select a bunch of graphs of the 'list' view and wants them dsplayed here */
@@ -133,7 +133,7 @@ case 'preview':
 
 			if ((isset($graph_array)) && (sizeof($graph_array) > 0)) {
 				/* build sql string including each graph the user checked */
-				$sql_or = "and " . array_to_sql_or($graph_array, "graph_templates_graph.local_graph_id");
+				$sql_or = "and " . array_to_sql_or($graph_array, "graph.id");
 
 				/* clear the filter vars so they don't affect our results */
 				$_REQUEST["filter"] = "";
@@ -145,24 +145,20 @@ case 'preview':
 		}
 	}
 
-	$sql_base = "from graph_templates_graph,graph_local
+	$sql_base = "from graph
 		$sql_join
 		$sql_where
-		" . (empty($sql_where) ? "where" : "and") . " graph_templates_graph.local_graph_id > 0
-		and graph_templates_graph.local_graph_id=graph_local.id
-		and graph_templates_graph.title_cache like '%%" . $_REQUEST["filter"] . "%%'
-		" . (empty($_REQUEST["host_id"]) ? "" : " and graph_local.host_id=" . $_REQUEST["host_id"]) . "
+		" . (empty($sql_where) ? "where" : "and") . " graph.title_cache like '%%" . $_REQUEST["filter"] . "%%'
+		" . (empty($_REQUEST["host_id"]) ? "" : " and graph.host_id=" . $_REQUEST["host_id"]) . "
 		$sql_or";
 
-	$total_rows = count(db_fetch_assoc("select
-		graph_templates_graph.local_graph_id
-		$sql_base"));
+	$total_rows = db_fetch_cell("select count(*) $sql_base");
 	$graphs = db_fetch_assoc("select
-		graph_templates_graph.local_graph_id,
-		graph_templates_graph.title_cache
+		graph.id as graph_id,
+		graph.title_cache
 		$sql_base
-		group by graph_templates_graph.local_graph_id
-		order by graph_templates_graph.title_cache
+		group by graph.id
+		order by graph.title_cache
 		limit " . (ROWS_PER_PAGE*($_REQUEST["page"]-1)) . "," . ROWS_PER_PAGE);
 
 	/* include graph view filter selector */
@@ -211,24 +207,20 @@ case 'list':
 		$sql_where = get_graph_permissions_sql($current_user["policy_graphs"], $current_user["policy_hosts"], $current_user["policy_graph_templates"]);
 
 		$graphs = db_fetch_assoc("select
-			graph_templates_graph.local_graph_id,
-			graph_templates_graph.title_cache,
-			graph_templates_graph.height,
-			graph_templates_graph.width
-			from graph_templates_graph,graph_local
-			left join host on host.id=graph_local.host_id
-			left join graph_templates on graph_templates.id=graph_local.graph_template_id
-			left join user_auth_perms on ((graph_templates_graph.local_graph_id=user_auth_perms.item_id and user_auth_perms.type=1 and user_auth_perms.user_id=" . $_SESSION["sess_user_id"] . ") OR (host.id=user_auth_perms.item_id and user_auth_perms.type=3 and user_auth_perms.user_id=" . $_SESSION["sess_user_id"] . ") OR (graph_templates.id=user_auth_perms.item_id and user_auth_perms.type=4 and user_auth_perms.user_id=" . $_SESSION["sess_user_id"] . "))
-			where graph_templates_graph.local_graph_id=graph_local.id
-			and graph_templates_graph.local_graph_id>0
-			" . (empty($sql_where) ? "" : "and $sql_where") . "
-			group by graph_templates_graph.local_graph_id
-			order by graph_templates_graph.title_cache");
+			graph.id,
+			graph.title_cache,
+			graph.height,
+			graph.width
+			from graph
+			left join host on host.id=graph.host_id
+			left join graph_template on graph_template.id=graph.graph_template_id
+			left join user_auth_perms on ((graph.id=user_auth_perms.item_id and user_auth_perms.type=1 and user_auth_perms.user_id=" . $_SESSION["sess_user_id"] . ") OR (host.id=user_auth_perms.item_id and user_auth_perms.type=3 and user_auth_perms.user_id=" . $_SESSION["sess_user_id"] . ") OR (graph_template.id=user_auth_perms.item_id and user_auth_perms.type=4 and user_auth_perms.user_id=" . $_SESSION["sess_user_id"] . "))
+			group by graph.id
+			order by graph.title_cache");
 	}else{
 		$graphs = db_fetch_assoc("select
-			local_graph_id,title_cache,height,width
-			from graph_templates_graph
-			where local_graph_id > 0
+			id,title_cache,height,width
+			from graph
 			order by title_cache");
 	}
 
@@ -244,10 +236,10 @@ case 'list':
 		form_alternate_row_color($colors["form_alternate1"], $colors["form_alternate2"], $i);
 
 		print "<td width='1%'>";
-		form_checkbox("graph_" . $graph["local_graph_id"], "", "", "", 0);
+		form_checkbox("graph_" . $graph["id"], "", "", "", 0);
 		print "</td>";
 
-		print "<td><strong><a href='graph.php?local_graph_id=" . $graph["local_graph_id"] . "&rra_id=all'>" . $graph["title_cache"] . "</a></strong></td>\n";
+		print "<td><strong><a href='graph.php?graph_id=" . $graph["id"] . "&rra_id=all'>" . $graph["title_cache"] . "</a></strong></td>\n";
 		print "<td>" . $graph["height"] . "x" . $graph["width"] . "</td>\n";
 		print "</tr>";
 
@@ -273,7 +265,5 @@ case 'list':
 
 	break;
 }
-
-//print "<pre>";print $_SESSION["sess_debug_buffer"];print "</pre>";session_unregister("sess_debug_buffer");
 
 include_once("./include/bottom_footer.php");

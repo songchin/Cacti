@@ -77,7 +77,7 @@ function api_user_info($array) {
 
 	/* get the user info */
 	$user = db_fetch_row($sql_query);
-	
+
 	return $user;
 
 }
@@ -92,13 +92,13 @@ function api_user_expire_info($user_id) {
 	}
 
 	$user = api_user_info( array( "id" => $user_id) );
-	
+
 	if ($user) {
 		/* check that user has expire length */
 		if ($user["password_expire_length"] == "0") {
 			return -1;
 		}
-		
+
 		/* get last time the password was changed */
 		if ($user["password_change_last"] == "0000-00-00 00:00:00") {
 			$change_last = strtotime($user["created"]);
@@ -110,7 +110,7 @@ function api_user_expire_info($user_id) {
 		$now = strtotime("now");
 
 		$days = ( $change_last + $expire_time - $now ) / 86400;
-		
+
 		if ($days <= 0) {
 			$days = 0;
 		}
@@ -118,14 +118,14 @@ function api_user_expire_info($user_id) {
 
 		return $days;
 
-		
+
 	}else{
 		return -1;
-	}	
+	}
 
 	return -1;
 
-} 
+}
 
 /* api_user_theme - returns the users current theme, stores in session variable so the database is hit only once
    @arg $user_id = user id
@@ -160,7 +160,7 @@ function api_user_theme($user_id) {
 ########################################
 */
 
-/* api_user_realms_list 
+/* api_user_realms_list
   @arg $user_id - user id
   @return - Array of indexed by realm_id with a sub array of realm_name and value */
 function api_user_realms_list($user_id) {
@@ -175,10 +175,10 @@ function api_user_realms_list($user_id) {
 	if (!is_numeric($user_id)) {
 		$user_id = "0";
 	}
-	/* prevent array sqaushing */	
+	/* prevent array sqaushing */
 	$user_auth_realms_local = $user_auth_realms;
 
-	/* process realms */	
+	/* process realms */
 	$user_realms = db_fetch_assoc("select realm_id from user_auth_realm where user_id = " . $user_id);
 	while (list($realm_id, $realm_name) = each($user_auth_realms_local)) {
 		$value = 0;
@@ -206,7 +206,7 @@ function api_user_realms_list($user_id) {
 */
 
 /* api_user_graph_setting_list
-  @arg $user_id - user id 
+  @arg $user_id - user id
   @return - array of field => value
 */
 function api_user_graph_setting_list($user_id) {
@@ -251,86 +251,6 @@ function api_user_graph_setting_list($user_id) {
 				}
 			}
 		}
-	}
-
-	return $return_array;
-	
-}
-
-/*
-########################################
-# graph permission functions
-########################################
-*/
-
-/* api_user_graph_perms_list 
-   @arg $type - type of perms to look at.
-   @arg $user_id - User ID to query values for
-   @return - Array of values: id, name */
-function api_user_graph_perms_list($type,$user_id) {
-	global $graph_perms_type_array;
-
-	/* validation */
-	if (empty($user_id)) {
-		$user_id = 0;
-	}
-	if (! is_numeric($user_id)) {
-		$user_id = 0;
-	}
-
-	switch ($graph_perms_type_array[$type]) {
-
-	case "1":
-
-		$return_array = db_fetch_assoc("select 
-			graph_templates_graph.local_graph_id,
-			graph_templates_graph.title_cache
-			from graph_templates_graph
-			left join user_auth_perms on (graph_templates_graph.local_graph_id=user_auth_perms.item_id and user_auth_perms.type=1)
-			where graph_templates_graph.local_graph_id > 0
-			and user_auth_perms.user_id = " . $user_id . "
-			order by graph_templates_graph.title_cache");
-		break;
-
-	case "2":
-
-		$return_array = db_fetch_assoc("select
-			graph_tree.id,
-			graph_tree.name
-			from graph_tree
-			left join user_auth_perms on (graph_tree.id=user_auth_perms.item_id and user_auth_perms.type=2)
-			where user_auth_perms.user_id = " . $user_id . "
-			order by graph_tree.name");
-
-		break;
-
-	case "3":
-
-		$return_array = db_fetch_assoc("select
-			host.id,
-			CONCAT_WS('',host.description,' (',host.hostname,')') as name
-			from host
-			left join user_auth_perms on (host.id=user_auth_perms.item_id and user_auth_perms.type=3)
-			where user_auth_perms.user_id = " . $user_id . "
-			order by host.description,host.hostname");
-
-		break;
-
-	case "4":
-
-		$return_array = db_fetch_assoc("select
-			graph_templates.id,
-			graph_templates.name
-			from graph_templates
-			left join user_auth_perms on (graph_templates.id=user_auth_perms.item_id and user_auth_perms.type=4)
-			where user_auth_perms.user_id = " . $user_id . "
-			order by graph_templates.name");
-
-		break;
-	
-	default:
-		$return_array = array();
-
 	}
 
 	return $return_array;

@@ -578,13 +578,13 @@ function onMouseUpEvent(e) {
   newGraphStart = graphStart - Timespan * 2;
 
   var urlBase = cURLBase;
-  var localGraphId = gUrlObj.getUrlParameterValue("local_graph_id");
+  var graphId = gUrlObj.getUrlParameterValue("graph_id");
   var rraId = gUrlObj.getUrlParameterValue("rra_id");
   var graphWidth = gUrlObj.getUrlParameterValue("graph_width");
   var graphHeight = gUrlObj.getUrlParameterValue("graph_height");
   var viewType = gUrlObj.getUrlParameterValue("view_type");
 
-  open(urlBase + "&local_graph_id=" + localGraphId + "&rra_id=" + rraId + "&view_type=" + viewType + "&graph_start=" + newGraphStart + "&graph_end=" + newGraphEnd + "&graph_height=" + graphHeight + "&graph_width=" + graphWidth, "_self");
+  open(urlBase + "&graph_id=" + graphId + "&rra_id=" + rraId + "&view_type=" + viewType + "&graph_start=" + newGraphStart + "&graph_end=" + newGraphEnd + "&graph_height=" + graphHeight + "&graph_width=" + graphWidth, "_self");
  }
 
  if ((gMouseObj.leftButtonPressed()) && (gMouseObj.dragging)) {
@@ -624,13 +624,13 @@ function onMouseUpEvent(e) {
 
 //  var urlBase = gUrlObj.getUrlBase();
    var urlBase = cURLBase;
-   var localGraphId = gUrlObj.getUrlParameterValue("local_graph_id");
+   var graphId = gUrlObj.getUrlParameterValue("graph_id");
    var rraId = gUrlObj.getUrlParameterValue("rra_id");
    var graphWidth = gUrlObj.getUrlParameterValue("graph_width");
    var graphHeight = gUrlObj.getUrlParameterValue("graph_height");
    var viewType = gUrlObj.getUrlParameterValue("view_type");
 
-   open(urlBase + "&local_graph_id=" + localGraphId + "&rra_id=" + rraId + "&view_type=" + viewType + "&graph_start=" + newGraphStart + "&graph_end=" + newGraphEnd + "&graph_height=" + graphHeight + "&graph_width=" + graphWidth, "_self");
+   open(urlBase + "&graph_id=" + graphId + "&rra_id=" + rraId + "&view_type=" + viewType + "&graph_start=" + newGraphStart + "&graph_end=" + newGraphEnd + "&graph_height=" + graphHeight + "&graph_width=" + graphWidth, "_self");
   }
  }
 }

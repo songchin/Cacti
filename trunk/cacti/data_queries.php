@@ -24,7 +24,10 @@
 
 include("./include/config.php");
 include("./include/auth.php");
-include_once("./lib/data_query.php");
+include_once("./include/data_query/data_query_constants.php");
+include_once("./include/data_query/data_query_arrays.php");
+include_once("./include/data_query/data_query_form.php");
+include_once("./lib/data_query/data_query_update.php");
 
 /* set default action */
 if (!isset($_REQUEST["action"])) { $_REQUEST["action"] = ""; }
@@ -108,7 +111,7 @@ function form_save() {
 		$save["name"] = form_input_validate($_POST["name"], "name", "", false, 3);
 		$save["description"] = form_input_validate($_POST["description"], "description", "", true, 3);
 		$save["xml_path"] = form_input_validate($_POST["xml_path"], "xml_path", "", false, 3);
-		$save["data_input_id"] = $_POST["data_input_id"];
+		$save["input_type"] = $_POST["input_type"];
 
 		if (!is_error_message()) {
 			$snmp_query_id = sql_save($save, "snmp_query");
@@ -540,10 +543,10 @@ function data_query_edit() {
 
 			$snmp_query_graphs = db_fetch_assoc("select
 				snmp_query_graph.id,
-				graph_templates.name as graph_template_name,
+				graph_template.template_name,
 				snmp_query_graph.name
 				from snmp_query_graph
-				left join graph_templates on snmp_query_graph.graph_template_id=graph_templates.id
+				left join graph_template on snmp_query_graph.graph_template_id=graph_template.id
 				where snmp_query_graph.snmp_query_id=" . $snmp_query["id"] . "
 				order by snmp_query_graph.name");
 
@@ -556,7 +559,7 @@ function data_query_edit() {
 						<strong><a href="data_queries.php?action=item_edit&id=<?php print $snmp_query_graph["id"];?>&snmp_query_id=<?php print $snmp_query["id"];?>"><?php print $snmp_query_graph["name"];?></a></strong>
 					</td>
 					<td>
-						<?php print $snmp_query_graph["graph_template_name"];?>
+						<?php print $snmp_query_graph["template_name"];?>
 					</td>
 					<td align="right">
 						<a href="data_queries.php?action=item_remove&id=<?php print $snmp_query_graph["id"];?>&snmp_query_id=<?php print $snmp_query["id"];?>"><img src="<?php print html_get_theme_images_path('delete_icon.gif');?>" width="10" height="10" border="0" alt="Delete"></a>
@@ -576,40 +579,36 @@ function data_query_edit() {
 }
 
 function data_query() {
-	global $colors;
+	global $colors, $data_query_input_types;
 
-	html_start_box("<strong>Data Input Queries</strong>", "98%", $colors["header_background"], "3", "center", "data_queries.php?action=edit");
+	html_start_box("<strong>Data Queries</strong>", "98%", $colors["header_background"], "3", "center", "data_queries.php?action=edit");
 
-	print "<tr bgcolor='#" . $colors["header_panel_background"] . "'>";
-		DrawMatrixHeaderItem("Name",$colors["header_text"],1);
-		DrawMatrixHeaderItem("Data Input Method",$colors["header_text"],1);
-		DrawMatrixHeaderItem("&nbsp;",$colors["header_text"],1);
-	print "</tr>";
+	html_header(array("Name", "Input Type"), 2);
 
-	$snmp_queries = db_fetch_assoc("SELECT
-			snmp_query.id,
-			snmp_query.name,
-			data_input.name AS data_input_method
-			FROM snmp_query INNER JOIN data_input ON snmp_query.data_input_id = data_input.id
-			ORDER BY snmp_query.name");
+	$snmp_queries = db_fetch_assoc("select
+		snmp_query.id,
+		snmp_query.name,
+		snmp_query.input_type
+		from snmp_query
+		order by snmp_query.name");
 
 	$i = 0;
 	if (sizeof($snmp_queries) > 0) {
-	foreach ($snmp_queries as $snmp_query) {
-		form_alternate_row_color($colors["form_alternate1"],$colors["form_alternate2"],$i); $i++;
-			?>
-			<td>
-				<a class="linkEditMain" href="data_queries.php?action=edit&id=<?php print $snmp_query["id"];?>"><?php print $snmp_query["name"];?></a>
-			</td>
-			<td>
-				<?php print $snmp_query["data_input_method"]; ?>
-			</td>
-			<td align="right">
-				<a href="data_queries.php?action=remove&id=<?php print $snmp_query["id"];?>"><img src="<?php print html_get_theme_images_path('delete_icon.gif');?>" width="10" height="10" border="0" alt="Delete"></a>
-			</td>
-		</tr>
-	<?php
-	}
+		foreach ($snmp_queries as $snmp_query) {
+			form_alternate_row_color($colors["form_alternate1"],$colors["form_alternate2"],$i); $i++;
+				?>
+				<td>
+					<a class="linkEditMain" href="data_queries.php?action=edit&id=<?php print $snmp_query["id"];?>"><?php print $snmp_query["name"];?></a>
+				</td>
+				<td>
+					<?php print $data_query_input_types{$snmp_query["input_type"]}; ?>
+				</td>
+				<td align="right">
+					<a href="data_queries.php?action=remove&id=<?php print $snmp_query["id"];?>"><img src="<?php print html_get_theme_images_path('delete_icon.gif');?>" width="10" height="10" border="0" alt="Delete"></a>
+				</td>
+			</tr>
+		<?php
+		}
 	}
 	html_end_box();
 }

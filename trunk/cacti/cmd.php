@@ -37,6 +37,7 @@ ini_set("memory_limit", "32M");
 $no_http_headers = true;
 
 include(dirname(__FILE__) . "/include/config.php");
+include_once($config["base_path"] . "/lib/string.php");
 include_once($config["base_path"] . "/lib/snmp.php");
 include_once($config["base_path"] . "/lib/poller.php");
 include_once($config["base_path"] . "/lib/rrd.php");

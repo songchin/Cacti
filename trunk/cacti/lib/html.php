@@ -26,11 +26,11 @@
    @arg $title - the title of this box ("" for no title)
    @arg $width - the width of the box in pixels or percent
    @arg $background_color - the color of the box border and title row background
-     color
+	color
    @arg $cell_padding - the amount of cell padding to use inside of the box
    @arg $align - the HTML alignment to use for the box (center, left, or right)
    @arg $add_text - the url to use when the user clicks 'Add' in the upper-right
-     corner of the box ("" for no 'Add' link) */
+	corner of the box ("" for no 'Add' link) */
 function html_start_box($title, $width, $background_color, $cell_padding, $align, $add_text) {
 	global $colors; ?>
 	<table align="<?php print $align;?>" width="<?php print $width;?>" cellpadding=1 cellspacing=0 border=0 bgcolor="#<?php print $background_color;?>">
@@ -52,7 +52,7 @@ function html_start_box($title, $width, $background_color, $cell_padding, $align
 
 /* html_end_box - draws the end of an HTML box
    @arg $trailing_br (bool) - whether to draw a trailing <br> tag after ending
-     the box */
+	the box */
 function html_end_box($trailing_br = true) { ?>
 				</table>
 			</td>
@@ -81,9 +81,9 @@ function html_graph_end_box() {
 
 /* html_graph_area - draws an area the contains full sized graphs
    @arg $graph_array - the array to contains graph information. for each graph in the
-     array, the following two keys must exist
-     $arr[0]["local_graph_id"] // graph id
-     $arr[0]["title_cache"] // graph title
+	array, the following two keys must exist
+	$arr[0]["local_graph_id"] // graph id
+	$arr[0]["title_cache"] // graph title
    @arg $no_graphs_message - display this message if no graphs are found in $graph_array
    @arg $extra_url_args - extra arguments to append to the url
    @arg $header - html to use as a header */
@@ -104,10 +104,10 @@ function html_graph_area(&$graph_array, $no_graphs_message = "", $extra_url_args
 					<table width='1' cellpadding='0'>
 						<tr>
 							<td>
-								<a href='graph.php?local_graph_id=<?php print $graph["local_graph_id"];?>&rra_id=all'><img src='graph_image.php?local_graph_id=<?php print $graph["local_graph_id"];?>&rra_id=0<?php print (($extra_url_args == "") ? "" : "&$extra_url_args");?>' border='0' alt='<?php print $graph["title_cache"];?>'></a>
+								<a href='graph.php?graph_id=<?php print $graph["graph_id"];?>&rra_id=all'><img src='graph_image.php?graph_id=<?php print $graph["graph_id"];?>&rra_id=0<?php print (($extra_url_args == "") ? "" : "&$extra_url_args");?>' border='0' alt='<?php print $graph["title_cache"];?>'></a>
 							</td>
 							<td valign='top' style='padding: 3px;' class='noprint'>
-								<a href='graph.php?action=zoom&local_graph_id=<?php print $graph["local_graph_id"];?>&rra_id=0&<?php print $extra_url_args;?>'><img src='<?php print html_get_theme_images_path("graph_zoom.gif");?>' border='0' alt='Zoom Graph' title='Zoom Graph' style='padding: 3px;'></a><br>
+								<a href='graph.php?action=zoom&graph_id=<?php print $graph["graph_id"];?>&rra_id=0&<?php print $extra_url_args;?>'><img src='<?php print html_get_theme_images_path("graph_zoom.gif");?>' border='0' alt='Zoom Graph' title='Zoom Graph' style='padding: 3px;'></a><br>
 							</td>
 						</tr>
 					</table>
@@ -126,9 +126,9 @@ function html_graph_area(&$graph_array, $no_graphs_message = "", $extra_url_args
 
 /* html_graph_thumbnail_area - draws an area the contains thumbnail sized graphs
    @arg $graph_array - the array to contains graph information. for each graph in the
-     array, the following two keys must exist
-     $arr[0]["local_graph_id"] // graph id
-     $arr[0]["title_cache"] // graph title
+	array, the following two keys must exist
+	$arr[0]["local_graph_id"] // graph id
+	$arr[0]["title_cache"] // graph title
    @arg $no_graphs_message - display this message if no graphs are found in $graph_array
    @arg $extra_url_args - extra arguments to append to the url
    @arg $header - html to use as a header */
@@ -149,10 +149,10 @@ function html_graph_thumbnail_area(&$graph_array, $no_graphs_message = "", $extr
 				<table width='1' cellpadding='0'>
 					<tr>
 						<td>
-							<a href='graph.php?rra_id=all&local_graph_id=<?php print $graph["local_graph_id"];?>'><img src='graph_image.php?local_graph_id=<?php print $graph["local_graph_id"];?>&rra_id=0&graph_height=<?php print read_graph_config_option("default_height");?>&graph_width=<?php print read_graph_config_option("default_width");?>&graph_nolegend=true<?php print (($extra_url_args == "") ? "" : "&$extra_url_args");?>' border='0' alt='<?php print $graph["title_cache"];?>'></a>
+							<a href='graph.php?rra_id=all&graph_id=<?php print $graph["graph_id"];?>'><img src='graph_image.php?graph_id=<?php print $graph["graph_id"];?>&rra_id=0&graph_height=<?php print read_graph_config_option("default_height");?>&graph_width=<?php print read_graph_config_option("default_width");?>&graph_nolegend=true<?php print (($extra_url_args == "") ? "" : "&$extra_url_args");?>' border='0' alt='<?php print $graph["title_cache"];?>'></a>
 						</td>
 						<td valign='top' style='padding: 3px;'>
-							<a href='graph.php?action=zoom&local_graph_id=<?php print $graph["local_graph_id"];?>&rra_id=0&<?php print $extra_url_args;?>'><img src='<?php print html_get_theme_images_path("graph_zoom.gif");?>' border='0' alt='Zoom Graph' title='Zoom Graph' style='padding: 3px;'></a><br>
+							<a href='graph.php?action=zoom&graph_id=<?php print $graph["graph_id"];?>&rra_id=0&<?php print $extra_url_args;?>'><img src='<?php print html_get_theme_images_path("graph_zoom.gif");?>' border='0' alt='Zoom Graph' title='Zoom Graph' style='padding: 3px;'></a><br>
 						</td>
 					</tr>
 				</table>
@@ -177,14 +177,14 @@ function html_graph_thumbnail_area(&$graph_array, $no_graphs_message = "", $extr
 }
 
 /* html_nav_bar - draws a navigation bar which includes previous/next links as well as current
-     page information
+	page information
    @arg $background_color - the background color of this navigation bar row
    @arg $colspan - the colspan for the entire row
    @arg $current_page - the current page in the navigation system
    @arg $rows_per_page - the number of rows that are displayed on a single page
    @arg $total_rows - the total number of rows in the navigation system
    @arg $nav_url - the url to use when presenting users with previous/next links. the variable
-     <PAGE> will be substituted with the correct page number if included */
+	<PAGE> will be substituted with the correct page number if included */
 function html_nav_bar($background_color, $colspan, $current_page, $rows_per_page, $total_rows, $nav_url) {
 	?>
 	<tr bgcolor='#<?php print $background_color;?>'>
@@ -223,7 +223,7 @@ function html_header($header_items, $last_item_colspan = 1) {
 }
 
 /* html_header_checkbox - draws a header row with a 'select all' checkbox in the last cell
-     suitable for display inside of a box element
+	suitable for display inside of a box element
    @arg $header_items - an array containing a list of items to be included in the header
    @arg $form_action - the url to post the 'select all' form to */
 function html_header_checkbox($header_items, $form_action = "") {
@@ -292,41 +292,53 @@ function html_theme_color_scheme() {
 
 /* create_list - draws the items for an html dropdown given an array of data
    @arg $form_data - an array containing data for this dropdown. it can be formatted
-     in one of two ways:
-     $array["id"] = "value";
-     -- or --
-     $array[0]["id"] = 43;
-     $array[0]["name"] = "Red";
+	in one of two ways:
+	$array["id"] = "value";
+	-- or --
+	$array[0]["id"] = 43;
+	$array[0]["name"] = "Red";
    @arg $column_display - used to indentify the key to be used for display data. this
-     is only applicable if the array is formatted using the second method above
+	is only applicable if the array is formatted using the second method above
    @arg $column_id - used to indentify the key to be used for id data. this
-     is only applicable if the array is formatted using the second method above
+	is only applicable if the array is formatted using the second method above
    @arg $form_previous_value - the current value of this form element */
-function html_create_list($form_data, $column_display, $column_id, $form_previous_value) {
+function html_create_list($form_data, $column_display, $column_id, $form_previous_value, $trim_display_length = 0) {
 	if (empty($column_display)) {
 		foreach (array_keys($form_data) as $id) {
-			print '<option value="' . $id . '"';
-
-			if ($form_previous_value == $id) {
-			print " selected";
+			if (empty($trim_display_length)) {
+				$item_text = htmlspecialchars((remove_variables($form_data[$id])), ENT_QUOTES);
+			}else{
+				$item_text = htmlspecialchars((title_trim(remove_variables($form_data[$id]), $trim_display_length)), ENT_QUOTES);
 			}
 
-			print ">" . title_trim(null_out_substitutions($form_data[$id]), 75) . "</option>\n";
+			echo '<option value="' . htmlspecialchars($id, ENT_QUOTES) . '"';
+
+			if (strval($form_previous_value) == $id) {
+				echo " selected";
+			}
+
+			echo ">$item_text</option>\n";
 		}
 	}else{
 		if (sizeof($form_data) > 0) {
 			foreach ($form_data as $row) {
-				print "<option value='$row[$column_id]'";
-
-				if ($form_previous_value == $row[$column_id]) {
-					print " selected";
-				}
-
-				if (isset($row["host_id"])) {
-					print ">" . title_trim($row[$column_display], 75) . "</option>\n";
+				if (empty($trim_display_length)) {
+					$item_text = htmlspecialchars((remove_variables($row[$column_display])), ENT_QUOTES);
 				}else{
-					print ">" . title_trim(null_out_substitutions($row[$column_display]), 75) . "</option>\n";
+					$item_text = htmlspecialchars((title_trim(remove_variables($row[$column_display]), $trim_display_length)), ENT_QUOTES);
 				}
+
+				echo "<option value='" . htmlspecialchars($row[$column_id], ENT_QUOTES) . "'";
+
+				if (strval($form_previous_value) == $row[$column_id]) {
+					echo " selected";
+				}
+
+				//if (isset($row["host_id"])) {
+				//	print ">" . htmlspecialchars(title_trim($row[$column_display], 75), ENT_QUOTES) . "</option>\n";
+				//}else{
+				echo ">$item_text</option>\n";
+				//}
 			}
 		}
 	}
@@ -347,105 +359,6 @@ function html_get_php_os_icon() {
 		return "images/os_" . $os . ".gif";
 	} else {
 		return "images/os_cacti.gif";
-	}
-}
-
-/* draw_graph_items_list - draws a nicely formatted list of graph items for display
-     on an edit form
-   @arg $item_list - an array representing the list of graph items. this array should
-     come directly from the output of db_fetch_assoc()
-   @arg $filename - the filename to use when referencing any external url
-   @arg $url_data - any extra GET url information to pass on when referencing any
-     external url
-   @arg $disable_controls - whether to hide all edit/delete functionality on this form */
-function draw_graph_items_list($item_list, $filename, $url_data, $disable_controls) {
-	global $colors, $config;
-
-	include($config["include_path"] . "/config_arrays.php");
-
-	print "<tr bgcolor='#" . $colors["header_panel_background"] . "'>";
-		DrawMatrixHeaderItem("Graph Item",$colors["header_text"],1);
-		DrawMatrixHeaderItem("Data Source",$colors["header_text"],1);
-		DrawMatrixHeaderItem("Graph Item Type",$colors["header_text"],1);
-		DrawMatrixHeaderItem("CF Type",$colors["header_text"],1);
-		DrawMatrixHeaderItem("Item Color",$colors["header_text"],4);
-	print "</tr>";
-
-	$group_counter = 0; $_graph_type_name = ""; $i = 0;
-	$alternate_color_1 = $colors["form_alternate1"]; $alternate_color_2 = $colors["form_alternate1"];
-
-	if (sizeof($item_list) > 0) {
-	foreach ($item_list as $item) {
-		/* graph grouping display logic */
-		$this_row_style = ""; $use_custom_row_color = false; $hard_return = "";
-
-		if ($graph_item_types{$item["graph_type_id"]} != "GPRINT") {
-			$this_row_style = "font-weight: bold;"; $use_custom_row_color = true;
-
-			if ($group_counter % 2 == 0) {
-				$alternate_color_1 = $colors["form_alternate2"];
-				$alternate_color_2 = $colors["form_alternate2"];
-				$custom_row_color = $colors["form_custom1"];
-			}else{
-				$alternate_color_1 = $colors["form_alternate1"];
-				$alternate_color_2 = $colors["form_alternate1"];
-				$custom_row_color = $colors["form_custom2"];
-			}
-
-			$group_counter++;
-		}
-
-		$_graph_type_name = $graph_item_types{$item["graph_type_id"]};
-
-		/* alternating row color */
-		if ($use_custom_row_color == false) {
-			form_alternate_row_color($alternate_color_1,$alternate_color_2,$i);
-		}else{
-			print "<tr bgcolor='#$custom_row_color'>";
-		}
-
-		print "<td>";
-		if ($disable_controls == false) { print "<a href='$filename?action=item_edit&id=" . $item["id"] . "&$url_data'>"; }
-		print "<strong>Item # " . ($i+1) . "</strong>";
-		if ($disable_controls == false) { print "</a>"; }
-		print "</td>\n";
-
-		if (empty($item["data_source_name"])) { $item["data_source_name"] = "No Task"; }
-
-		switch (true) {
-		case ereg("(AREA|STACK|GPRINT|LINE[123])", $_graph_type_name):
-			$matrix_title = "(" . $item["data_source_name"] . "): " . $item["text_format"];
-			break;
-		case ereg("(HRULE|VRULE)", $_graph_type_name):
-			$matrix_title = "HRULE: " . $item["value"];
-			break;
-		case ereg("(COMMENT)", $_graph_type_name):
-			$matrix_title = "COMMENT: " . $item["text_format"];
-			break;
-		}
-
-		if ($item["hard_return"] == "on") {
-			$hard_return = "<strong><font color=\"#FF0000\">&lt;HR&gt;</font></strong>";
-		}
-
-		print "<td style='$this_row_style'>" . htmlspecialchars($matrix_title) . $hard_return . "</td>\n";
-		print "<td style='$this_row_style'>" . $graph_item_types{$item["graph_type_id"]} . "</td>\n";
-		print "<td style='$this_row_style'>" . $consolidation_functions{$item["consolidation_function_id"]} . "</td>\n";
-		print "<td" . ((!empty($item["hex"])) ? " bgcolor='#" . $item["hex"] . "'" : "") . " width='1%'>&nbsp;</td>\n";
-		print "<td style='$this_row_style'>" . $item["hex"] . "</td>\n";
-
-		if ($disable_controls == false) {
-			print "<td><a href='$filename?action=item_movedown&id=" . $item["id"] . "&$url_data'><img src='" . html_get_theme_images_path("move_down.gif") . "' border='0' alt='Move Down'></a>
-					<a href='$filename?action=item_moveup&id=" . $item["id"] . "&$url_data'><img src='" . html_get_theme_images_path("move_up.gif") . "' border='0' alt='Move Up'></a></td>\n";
-			print "<td align='right'><a href='$filename?action=item_remove&id=" . $item["id"] . "&$url_data'><img src='" . html_get_theme_images_path("delete_icon.gif") . "' width='10' height='10' border='0' alt='Delete'></a></td>\n";
-		}
-
-		print "</tr>";
-
-		$i++;
-	}
-	}else{
-		print "<tr bgcolor='#" . $colors["form_alternate2"] . "'><td colspan='7'><em>No Items</em></td></tr>";
 	}
 }
 
@@ -555,28 +468,30 @@ function draw_menu() {
 }
 
 /* draw_actions_dropdown - draws a table the allows the user to select an action to perform
-     on one or more data elements
+	on one or more data elements
    @arg $actions_array - an array that contains a list of possible actions. this array should
-     be compatible with the form_dropdown() function */
-function draw_actions_dropdown($actions_array) {
+	be compatible with the form_dropdown() function */
+function draw_actions_dropdown($actions_array, $padding = 6, $percent_width = 98, $action_variable = true) {
 	?>
-	<table align='center' width='98%'>
+	<table align='center' width='<?php echo $percent_width;?>%' cellspacing="0" cellpadding="0">
 		<tr>
-			<td width='1' valign='top'>
-				<img src='<?php print html_get_theme_images_path("arrow.gif");?>' alt='' align='absmiddle'>&nbsp;
+			<td width='1' valign='middle' style='padding: <?php echo $padding;?>px;'>
+				<img src='<?php print html_get_theme_images_path("arrow.gif");?>' alt='' align='absmiddle'>
 			</td>
 			<td align='right'>
 				Choose an action:
 				<?php form_dropdown("drp_action",$actions_array,"","","1","","");?>
 			</td>
-			<td width='1' align='right'>
-				<input type='image' src='<?php print html_get_theme_images_path("button_go.gif");?>' alt='Go'>
+			<td width='1' align='right' style='padding: <?php echo $padding;?>px;'>
+				<input type='image' src='<?php print html_get_theme_images_path("button_go.gif");?>' name='action_button' alt='Go'>
 			</td>
 		</tr>
 	</table>
-
-	<input type='hidden' name='action' value='actions'>
 	<?php
+
+	if ($action_variable == true) {
+		echo "<input type='hidden' name='action' value='actions'>\n";
+	}
 }
 
 /*
@@ -598,7 +513,7 @@ function form_area($text) { ?>
 <?php }
 
 /* draw_navigation_text - determines the top header navigation text for the current page and displays it to
-     the browser */
+	the browser */
 function draw_navigation_text() {
 	$nav_level_cache = (isset($_SESSION["sess_nav_level_cache"]) ? $_SESSION["sess_nav_level_cache"] : array());
 
@@ -650,7 +565,6 @@ function draw_navigation_text() {
 		"graph_settings.php:" => array(
 			"title" => "Settings",
 			"mapping" => "graph_view.php:",
-			"url" => "graph_settings.php",
 			"level" => "1"
 			),
 		"index.php:" => array(
@@ -662,500 +576,418 @@ function draw_navigation_text() {
 		"graphs.php:" => array(
 			"title" => "Graph Management",
 			"mapping" => "index.php:",
-			"url" => "graphs.php",
 			"level" => "1"
 			),
-		"graphs.php:graph_edit" => array(
+		"graphs.php:edit" => array(
 			"title" => "(Edit)",
 			"mapping" => "index.php:,graphs.php:",
-			"url" => "",
 			"level" => "2"
-			),
-		"graphs.php:graph_diff" => array(
-			"title" => "Change Graph Template",
-			"mapping" => "index.php:,graphs.php:,graphs.php:graph_edit",
-			"url" => "",
-			"level" => "3"
 			),
 		"graphs.php:actions" => array(
 			"title" => "Actions",
 			"mapping" => "index.php:,graphs.php:",
-			"url" => "",
 			"level" => "2"
 			),
-		"graphs_items.php:item_edit" => array(
+		"graphs_items.php:edit" => array(
 			"title" => "Graph Items",
-			"mapping" => "index.php:,graphs.php:,graphs.php:graph_edit",
-			"url" => "",
+			"mapping" => "index.php:,graphs.php:,graphs.php:edit",
 			"level" => "3"
 			),
 		"graphs_new.php:" => array(
 			"title" => "Create New Graphs",
 			"mapping" => "index.php:",
-			"url" => "graphs_new.php",
 			"level" => "1"
 			),
 		"graphs_new.php:save" => array(
 			"title" => "Create Graphs from Data Query",
 			"mapping" => "index.php:,graphs_new.php:",
-			"url" => "",
 			"level" => "2"
-			),
-		"gprint_presets.php:" => array(
-			"title" => "GPRINT Presets",
-			"mapping" => "index.php:",
-			"url" => "gprint_presets.php",
-			"level" => "1"
-			),
-		"gprint_presets.php:edit" => array(
-			"title" => "(Edit)",
-			"mapping" => "index.php:,gprint_presets.php:",
-			"url" => "",
-			"level" => "2"
-			),
-		"gprint_presets.php:remove" => array(
-			"title" => "(Remove)",
-			"mapping" => "index.php:,gprint_presets.php:",
-			"url" => "",
-			"level" => "2"
-			),
-		"cdef.php:" => array(
-			"title" => "CDEF's",
-			"mapping" => "index.php:",
-			"url" => "cdef.php",
-			"level" => "1"
-			),
-		"cdef.php:edit" => array(
-			"title" => "(Edit)",
-			"mapping" => "index.php:,cdef.php:",
-			"url" => "",
-			"level" => "2"
-			),
-		"cdef.php:remove" => array(
-			"title" => "(Remove)",
-			"mapping" => "index.php:,cdef.php:",
-			"url" => "",
-			"level" => "2"
-			),
-		"cdef.php:item_edit" => array(
-			"title" => "CDEF Items",
-			"mapping" => "index.php:,cdef.php:,cdef.php:edit",
-			"url" => "",
-			"level" => "3"
 			),
 		"tree.php:" => array(
 			"title" => "Graph Trees",
 			"mapping" => "index.php:",
-			"url" => "tree.php",
 			"level" => "1"
 			),
 		"tree.php:edit" => array(
 			"title" => "(Edit)",
 			"mapping" => "index.php:,tree.php:",
-			"url" => "",
 			"level" => "2"
 			),
 		"tree.php:remove" => array(
 			"title" => "(Remove)",
 			"mapping" => "index.php:,tree.php:",
-			"url" => "",
 			"level" => "2"
 			),
 		"tree.php:item_edit" => array(
 			"title" => "Graph Tree Items",
 			"mapping" => "index.php:,tree.php:,tree.php:edit",
-			"url" => "",
 			"level" => "3"
 			),
 		"tree.php:item_remove" => array(
 			"title" => "(Remove Item)",
 			"mapping" => "index.php:,tree.php:,tree.php:edit",
-			"url" => "",
 			"level" => "3"
-			),
-		"color.php:" => array(
-			"title" => "Colors",
-			"mapping" => "index.php:",
-			"url" => "color.php",
-			"level" => "1"
-			),
-		"color.php:edit" => array(
-			"title" => "(Edit)",
-			"mapping" => "index.php:,color.php:",
-			"url" => "",
-			"level" => "2"
 			),
 		"graph_templates.php:" => array(
 			"title" => "Graph Templates",
 			"mapping" => "index.php:",
-			"url" => "graph_templates.php",
 			"level" => "1"
 			),
-		"graph_templates.php:template_edit" => array(
+		"graph_templates.php:sv_add" => array(
 			"title" => "(Edit)",
 			"mapping" => "index.php:,graph_templates.php:",
-			"url" => "",
+			"level" => "2"
+			),
+		"graph_templates.php:edit" => array(
+			"title" => "(Edit)",
+			"mapping" => "index.php:,graph_templates.php:",
 			"level" => "2"
 			),
 		"graph_templates.php:actions" => array(
 			"title" => "Actions",
 			"mapping" => "index.php:,graph_templates.php:",
-			"url" => "",
 			"level" => "2"
 			),
-		"graph_templates_items.php:item_edit" => array(
+		"graph_templates_items.php:edit" => array(
 			"title" => "Graph Template Items",
-			"mapping" => "index.php:,graph_templates.php:,graph_templates.php:template_edit",
-			"url" => "",
+			"mapping" => "index.php:,graph_templates.php:,graph_templates.php:edit",
 			"level" => "3"
 			),
-		"graph_templates_inputs.php:input_edit" => array(
+		"graph_templates_inputs.php:edit" => array(
 			"title" => "Graph Item Inputs",
-			"mapping" => "index.php:,graph_templates.php:,graph_templates.php:template_edit",
-			"url" => "",
+			"mapping" => "index.php:,graph_templates.php:,graph_templates.php:edit",
 			"level" => "3"
 			),
-		"graph_templates_inputs.php:input_remove" => array(
+		"graph_templates_inputs.php:remove" => array(
 			"title" => "(Remove)",
-			"mapping" => "index.php:,graph_templates.php:,graph_templates.php:template_edit",
-			"url" => "",
+			"mapping" => "index.php:,graph_templates.php:,graph_templates.php:edit",
 			"level" => "3"
 			),
 		"host_templates.php:" => array(
 			"title" => "Host Templates",
 			"mapping" => "index.php:",
-			"url" => "host_templates.php",
 			"level" => "1"
 			),
 		"host_templates.php:edit" => array(
 			"title" => "(Edit)",
 			"mapping" => "index.php:,host_templates.php:",
-			"url" => "",
 			"level" => "2"
 			),
 		"host_templates.php:actions" => array(
 			"title" => "Actions",
 			"mapping" => "index.php:,host_templates.php:",
-			"url" => "",
 			"level" => "2"
 			),
 		"graph_templates.php:actions" => array(
 			"title" => "Actions",
 			"mapping" => "index.php:,graph_templates.php:",
-			"url" => "",
 			"level" => "2"
 			),
 		"data_templates.php:" => array(
 			"title" => "Data Templates",
 			"mapping" => "index.php:",
-			"url" => "data_templates.php",
 			"level" => "1"
 			),
-		"data_templates.php:template_edit" => array(
+		"data_templates.php:edit" => array(
 			"title" => "(Edit)",
 			"mapping" => "index.php:,data_templates.php:",
-			"url" => "",
+			"level" => "2"
+			),
+		"data_templates.php:sv_add" => array(
+			"title" => "(Edit)",
+			"mapping" => "index.php:,data_templates.php:",
+			"level" => "2"
+			),
+		"data_templates.php:item_add" => array(
+			"title" => "(Edit)",
+			"mapping" => "index.php:,data_templates.php:",
 			"level" => "2"
 			),
 		"data_templates.php:actions" => array(
 			"title" => "Actions",
 			"mapping" => "index.php:,data_templates.php:",
-			"url" => "",
 			"level" => "2"
 			),
 		"data_sources.php:" => array(
 			"title" => "Data Sources",
 			"mapping" => "index.php:",
-			"url" => "data_sources.php",
 			"level" => "1"
 			),
-		"data_sources.php:ds_edit" => array(
+		"data_sources.php:edit" => array(
 			"title" => "(Edit)",
 			"mapping" => "index.php:,data_sources.php:",
-			"url" => "",
+			"level" => "2"
+			),
+		"data_sources.php:item_add" => array(
+			"title" => "(Edit)",
+			"mapping" => "index.php:,data_sources.php:",
 			"level" => "2"
 			),
 		"data_sources.php:actions" => array(
 			"title" => "Actions",
 			"mapping" => "index.php:,data_sources.php:",
-			"url" => "",
 			"level" => "2"
 			),
 		"host.php:" => array(
 			"title" => "Devices",
 			"mapping" => "index.php:",
-			"url" => "host.php",
 			"level" => "1"
 			),
 		"host.php:edit" => array(
 			"title" => "(Edit)",
 			"mapping" => "index.php:,host.php:",
-			"url" => "",
 			"level" => "2"
 			),
 		"host.php:actions" => array(
 			"title" => "Actions",
 			"mapping" => "index.php:,host.php:",
-			"url" => "",
 			"level" => "2"
 			),
 		"rra.php:" => array(
 			"title" => "Round Robin Archives",
 			"mapping" => "index.php:",
-			"url" => "rra.php",
 			"level" => "1"
 			),
 		"rra.php:edit" => array(
 			"title" => "(Edit)",
 			"mapping" => "index.php:,rra.php:",
-			"url" => "",
 			"level" => "2"
 			),
 		"rra.php:remove" => array(
 			"title" => "(Remove)",
 			"mapping" => "index.php:,rra.php:",
-			"url" => "",
 			"level" => "2"
 			),
 		"data_input.php:" => array(
 			"title" => "Data Input Methods",
 			"mapping" => "index.php:",
-			"url" => "data_input.php",
 			"level" => "1"
 			),
 		"data_input.php:edit" => array(
 			"title" => "(Edit)",
 			"mapping" => "index.php:,data_input.php:",
-			"url" => "",
 			"level" => "2"
 			),
 		"data_input.php:remove" => array(
 			"title" => "(Remove)",
 			"mapping" => "index.php:,data_input.php:",
-			"url" => "",
 			"level" => "2"
 			),
 		"data_input.php:field_edit" => array(
 			"title" => "Data Input Fields",
 			"mapping" => "index.php:,data_input.php:,data_input.php:edit",
-			"url" => "",
 			"level" => "3"
 			),
 		"data_input.php:field_remove" => array(
 			"title" => "(Remove Item)",
 			"mapping" => "index.php:,data_input.php:,data_input.php:edit",
-			"url" => "",
 			"level" => "3"
 			),
 		"data_queries.php:" => array(
 			"title" => "Data Queries",
 			"mapping" => "index.php:",
-			"url" => "data_queries.php",
 			"level" => "1"
 			),
 		"data_queries.php:edit" => array(
 			"title" => "(Edit)",
 			"mapping" => "index.php:,data_queries.php:",
-			"url" => "",
 			"level" => "2"
 			),
 		"data_queries.php:remove" => array(
 			"title" => "(Remove)",
 			"mapping" => "index.php:,data_queries.php:",
-			"url" => "",
 			"level" => "2"
 			),
 		"data_queries.php:item_edit" => array(
 			"title" => "Associated Graph Templates",
 			"mapping" => "index.php:,data_queries.php:,data_queries.php:edit",
-			"url" => "",
 			"level" => "3"
 			),
 		"data_queries.php:item_remove" => array(
 			"title" => "(Remove Item)",
 			"mapping" => "index.php:,data_queries.php:,data_queries.php:edit",
-			"url" => "",
 			"level" => "3"
 			),
 		"utilities.php:" => array(
 			"title" => "Utilities",
 			"mapping" => "index.php:",
-			"url" => "utilities.php",
 			"level" => "1"
 			),
 		"utilities.php:view_poller_cache" => array(
 			"title" => "View Poller Cache",
-			"mapping" => "index.php:,utilities.php:",
 			"url" => "utilities.php",
 			"level" => "2"
 			),
 		"utilities.php:view_snmp_cache" => array(
 			"title" => "View SNMP Cache",
 			"mapping" => "index.php:,utilities.php:",
-			"url" => "utilities.php",
 			"level" => "2"
 			),
 		"utilities.php:clear_poller_cache" => array(
 			"title" => "Clear Poller Cache",
 			"mapping" => "index.php:,utilities.php:",
-			"url" => "utilities.php",
 			"level" => "2"
 			),
 		"utilities.php:view_syslog" => array(
 			"title" => "View Cacti Syslog",
 			"mapping" => "index.php:,utilities.php:",
-			"url" => "utilities.php",
 			"level" => "2"
 			),
 		"utilities.php:clear_syslog" => array(
 			"title" => "Clear Cacti Syslog",
 			"mapping" => "index.php:,utilities.php:",
-			"url" => "utilities.php",
 			"level" => "2"
 			),
 		"settings.php:" => array(
 			"title" => "Cacti Settings",
 			"mapping" => "index.php:",
-			"url" => "settings.php",
 			"level" => "1"
 			),
 		"user_admin.php:" => array(
 			"title" => "User Management",
 			"mapping" => "index.php:",
-			"url" => "user_admin.php",
 			"level" => "1"
 			),
 		"user_admin.php:actions" => array(
 			"title" => "User Management",
 			"mapping" => "index.php:",
-			"url" => "user_admin.php",
 			"level" => "2"
 			),
 		"user_admin.php:user_edit" => array(
 			"title" => "(Edit)",
 			"mapping" => "index.php:,user_admin.php:",
-			"url" => "",
 			"level" => "2"
 			),
 		"user_admin.php:user_remove" => array(
 			"title" => "(Remove)",
 			"mapping" => "index.php:,user_admin.php:",
-			"url" => "",
 			"level" => "2"
 			),
 		"user_admin.php:graph_perms_edit" => array(
 			"title" => "Edit (Graph Permissions)",
 			"mapping" => "index.php:,user_admin.php:",
-			"url" => "",
 			"level" => "2"
 			),
 		"user_admin.php:user_realms_edit" => array(
 			"title" => "Edit (Realm Permissions)",
 			"mapping" => "index.php:,user_admin.php:",
-			"url" => "",
 			"level" => "2"
 			),
 		"user_admin.php:graph_settings_edit" => array(
 			"title" => "Edit (Graph Settings)",
 			"mapping" => "index.php:,user_admin.php:",
-			"url" => "",
 			"level" => "2"
 			),
 		"user_admin.php:user_settings_edit" => array(
 			"title" => "Edit (User Settings)",
 			"mapping" => "index.php:,user_admin.php:",
-			"url" => "",
 			"level" => "2"
 			),
 		"about.php:" => array(
 			"title" => "About Cacti",
 			"mapping" => "index.php:",
-			"url" => "about.php",
 			"level" => "1"
 			),
 		"templates_export.php:" => array(
 			"title" => "Export Templates",
 			"mapping" => "index.php:",
-			"url" => "templates_export.php",
 			"level" => "1"
 			),
 		"templates_export.php:save" => array(
 			"title" => "Export Results",
 			"mapping" => "index.php:,templates_export.php:",
-			"url" => "templates_export.php",
 			"level" => "2"
 			),
 		"templates_import.php:" => array(
 			"title" => "Import Templates",
 			"mapping" => "index.php:",
-			"url" => "templates_import.php",
-			"level" => "1"
-			),
-		"smtp_servers.php:" => array(
-			"title" => "Coming Soon",
-			"mapping" => "index.php:",
-			"url" => "smtp_servers.php",
-			"level" => "1"
-			),
-		"email_templates.php:" => array(
-			"title" => "Coming Soon",
-			"mapping" => "index.php:",
-			"url" => "email_templates.php",
-			"level" => "1"
-			),
-		"event_queue.php:" => array(
-			"title" => "Coming Soon",
-			"mapping" => "index.php:",
-			"url" => "event_queue.php",
-			"level" => "1"
-			),
-		"smtp_queue.php:" => array(
-			"title" => "Coming Soon",
-			"mapping" => "index.php:",
-			"url" => "smtp_queue.php",
 			"level" => "1"
 			),
 		"data_pollers.php:" => array(
 			"title" => "Pollers",
 			"mapping" => "index.php:",
-			"url" => "data_pollers.php",
 			"level" => "1"
 			),
 		"data_pollers.php:edit" => array(
 			"title" => "(Edit)",
 			"mapping" => "index.php:,data_pollers.php:",
-			"url" => "",
 			"level" => "2"
 			),
 		"data_pollers.php:actions" => array(
 			"title" => "Actions",
 			"mapping" => "index.php:,data_pollers.php:",
-			"url" => "",
 			"level" => "2"
 			),
 		"user_changepassword.php:" => array(
 			"title" => "Change Password",
 			"mapping" => "index.php:",
-			"url" => "user_changepassword.php",
 			"level" => "1"
 			),
 		"user_changepassword.php:save" => array(
 			"title" => "Change Password",
 			"mapping" => "index.php:",
-			"url" => "user_changepassword.php",
 			"level" => "1"
 			),
 		"settings_wizard.php:" => array(
 			"title" => "Settings Wizard",
 			"mapping" => "index.php:",
-			"url" => "settings_wizard.php",
 			"level" => "1"
 			),
 		"user_settings.php:" => array(
 			"title" => "User Settings",
 			"mapping" => "index.php:",
-			"url" => "user_settings.php",
 			"level" => "1"
+			),
+		"presets.php:" => array(
+			"title" => "Data Presets",
+			"mapping" => "index.php:",
+			"url" => "presets.php",
+			"level" => "1"
+			),
+		"presets.php:view_cdef" => array(
+			"title" => "CDEFs",
+			"mapping" => "index.php:,presets.php:",
+			"level" => "2"
+			),
+		"presets.php:view_color" => array(
+			"title" => "Colors",
+			"mapping" => "index.php:,presets.php:",
+			"level" => "2"
+			),
+		"presets.php:view_gprint" => array(
+			"title" => "GPRINTs",
+			"mapping" => "index.php:,presets.php:",
+			"level" => "2"
+			),
+		"presets_cdef.php:edit" => array(
+			"title" => "(Edit)",
+			"mapping" => "index.php:,presets.php:,presets.php:view_cdef",
+			"level" => "3"
+			),
+		"presets_cdef.php:remove" => array(
+			"title" => "(Remove)",
+			"mapping" => "index.php:,presets.php:,presets.php:view_cdef",
+			"level" => "3"
+			),
+		"presets_cdef.php:item_edit" => array(
+			"title" => "CDEF Items",
+			"mapping" => "index.php:,presets.php:,presets.php:view_cdef,presets_cdef.php:edit",
+			"level" => "4"
+			),
+		"presets_color.php:edit" => array(
+			"title" => "(Edit)",
+			"mapping" => "index.php:,presets.php:,presets.php:view_color",
+			"level" => "3"
+			),
+		"presets_gprint.php:edit" => array(
+			"title" => "(Edit)",
+			"mapping" => "index.php:,presets.php:,presets.php:view_gprint",
+			"level" => "3"
+			),
+		"presets_gprint.php:remove" => array(
+			"title" => "(Remove)",
+			"mapping" => "index.php:,presets.php:,presets.php:view_gprint",
+			"level" => "3"
 			)
 		);
 
@@ -1164,22 +996,20 @@ function draw_navigation_text() {
 
 	/* find the current page in the big array */
 	$current_array = $nav{$current_page . ":" . $current_action};
-	$current_mappings = split(",", $current_array["mapping"]);
+	$current_mappings = explode(",", $current_array["mapping"]);
 	$current_nav = "";
 
 	/* resolve all mappings to build the navigation string */
 	for ($i=0; ($i<count($current_mappings)); $i++) {
 		if (empty($current_mappings[$i])) { continue; }
 
-		if  ($i == 0) {
+		if  (isset($nav{$current_mappings[$i]}["url"])) {
 			/* always use the default for level == 0 */
 			$url = $nav{$current_mappings[$i]}["url"];
 		}elseif (!empty($nav_level_cache{$i}["url"])) {
 			/* found a match in the url cache for this level */
 			$url = $nav_level_cache{$i}["url"];
-		}elseif (!empty($current_array["url"])) {
-			/* found a default url in the above array */
-			$url = $current_array["url"];
+
 		}else{
 			/* default to no url */
 			$url = "";
@@ -1209,11 +1039,13 @@ function draw_navigation_text() {
    @arg $text - the text to substitute in
    @returns - the original navigation text with all substitutions made */
 function resolve_navigation_variables($text) {
+	include_once(CACTI_BASE_PATH . "/lib/graph/graph_info.php");
+
 	if (preg_match_all("/\|([a-zA-Z0-9_]+)\|/", $text, $matches)) {
 		for ($i=0; $i<count($matches[1]); $i++) {
 			switch ($matches[1][$i]) {
 			case 'current_graph_title':
-				$text = str_replace("|" . $matches[1][$i] . "|", get_graph_title($_GET["local_graph_id"]), $text);
+				$text = str_replace("|" . $matches[1][$i] . "|", get_graph_title($_GET["graph_id"]), $text);
 				break;
 			}
 		}

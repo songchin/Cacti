@@ -40,7 +40,7 @@ session_write_close();
 
 $graph_data_array = array();
 
-/* override: graph start time (unix time) */ 
+/* override: graph start time (unix time) */
 if (!empty($_GET["graph_start"])) {
 	$graph_data_array["graph_start"] = $_GET["graph_start"];
 }
@@ -70,6 +70,6 @@ if (!empty($_GET["show_source"])) {
 	$graph_data_array["print_source"] = $_GET["show_source"];
 }
 
-print rrdtool_function_graph($_GET["local_graph_id"], $_GET["rra_id"], $graph_data_array);
+print rrdtool_function_graph($_GET["graph_id"], $_GET["rra_id"], $graph_data_array);
 
 ?>

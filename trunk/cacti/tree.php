@@ -244,7 +244,7 @@ function item_edit() {
 				Choose a graph from this list to add it to the tree.
 			</td>
 			<td>
-				<?php form_dropdown("local_graph_id", db_fetch_assoc("select graph_templates_graph.local_graph_id as id,graph_templates_graph.title_cache as name from graph_templates_graph,graph_local where graph_local.id=graph_templates_graph.local_graph_id and local_graph_id != 0 order by title_cache"), "name", "id", (isset($tree_item["local_graph_id"]) ? $tree_item["local_graph_id"] : ""), "", "");?>
+				<?php form_dropdown("local_graph_id", db_fetch_assoc("select id,title_cache as name from graph order by title_cache"), "name", "id", (isset($tree_item["local_graph_id"]) ? $tree_item["local_graph_id"] : ""), "", "");?>
 			</td>
 		</tr>
 		<?php form_alternate_row_color($colors["form_alternate1"],$colors["form_alternate2"],1); ?>
@@ -309,7 +309,7 @@ function item_remove() {
 		$graph_tree_item = db_fetch_row("select title,local_graph_id,host_id from graph_tree_items where id=" . $_GET["id"]);
 
 		if (!empty($graph_tree_item["local_graph_id"])) {
-			$text = "Are you sure you want to delete the graph item <strong>'" . db_fetch_cell("select title_cache from graph_templates_graph where local_graph_id=" . $graph_tree_item["local_graph_id"]) . "'</strong>?";
+			$text = "Are you sure you want to delete the graph item <strong>'" . db_fetch_cell("select title_cache from graph where id=" . $graph_tree_item["local_graph_id"]) . "'</strong>?";
 		}elseif ($graph_tree_item["title"] != "") {
 			$text = "Are you sure you want to delete the header item <strong>'" . $graph_tree_item["title"] . "'</strong>?";
 		}elseif (!empty($graph_tree_item["host_id"])) {
@@ -352,7 +352,7 @@ function tree_edit() {
 	global $colors, $fields_tree_edit;
 
 	if (!empty($_GET["id"])) {
-		$tree = db_fetch_row("select * from graph_tree where id=" . $_GET["id"]);
+		$tree = db_fetch_row("select * from graph_tree where id = " . $_GET["id"]);
 		$header_label = "[edit: " . $tree["name"] . "]";
 	}else{
 		$header_label = "[new]";
@@ -370,13 +370,64 @@ function tree_edit() {
 	if (!empty($_GET["id"])) {
 		html_start_box("<strong>Tree Items</strong>", "98%", $colors["header_background"], "3", "center", "tree.php?action=item_edit&tree_id=" . $tree["id"] . "&parent_id=0");
 
-		print "<tr bgcolor='#" . $colors["header_panel_background"] . "'>";
-			DrawMatrixHeaderItem("Item",$colors["header_text"],1);
-			DrawMatrixHeaderItem("Value",$colors["header_text"],1);
-			DrawMatrixHeaderItem("&nbsp;",$colors["header_text"],2);
-		print "</tr>";
+		html_header(array("Item", "Value"), 3);
 
-		grow_edit_graph_tree($_GET["id"], "", "");
+		$tree_items = db_fetch_assoc("select
+			graph_tree_items.id,
+			graph_tree_items.title,
+			graph_tree_items.local_graph_id,
+			graph_tree_items.host_id,
+			graph_tree_items.order_key,
+			graph_tree_items.sort_children_type,
+			graph.title_cache as graph_title,
+			CONCAT_WS('',description,' (',hostname,')') as hostname
+			from graph_tree_items
+			left join graph on (graph_tree_items.local_graph_id=graph.id)
+			left join host on host.id=graph_tree_items.host_id
+			where graph_tree_items.graph_tree_id=" . $_GET["id"] . "
+			order by graph_tree_items.order_key");
+
+		print "<!-- <P>Building Heirarchy w/ " . sizeof($tree) . " leaves</P>  -->\n";
+
+		##  Here we go.  Starting the main tree drawing loop.
+
+		$i = 0;
+		if (sizeof($tree_items) > 0) {
+			foreach ($tree_items as $leaf) {
+				$tier = tree_tier($leaf["order_key"]);
+				$transparent_indent = "<img width='" . (($tier-1) * 20) . "' height='1' align='middle' alt=''>&nbsp;";
+				$sort_cache[$tier] = $leaf["sort_children_type"];
+
+				if ($i % 2 == 0) { $row_color = $colors["form_alternate1"]; }else{ $row_color = $colors["form_alternate2"]; } $i++;
+
+				if ($leaf["local_graph_id"] > 0) {
+					print "<td bgcolor='#$row_color'>$transparent_indent<a href='tree.php?action=item_edit&tree_id=" . $_GET["id"] . "&id=" . $leaf["id"] . "'>" . $leaf["graph_title"] . "</a></td>\n";
+					print "<td bgcolor='#$row_color'>Graph</td>";
+				}elseif ($leaf["title"] != "") {
+					print "<td bgcolor='#$row_color'>$transparent_indent<a href='tree.php?action=item_edit&tree_id=" . $_GET["id"] . "&id=" . $leaf["id"] . "'><strong>" . $leaf["title"] . "</strong></a> (<a href='tree.php?action=item_edit&tree_id=" . $_GET["id"] . "&parent_id=" . $leaf["id"] . "'>Add</a>)</td>\n";
+					print "<td bgcolor='#$row_color'>Heading</td>";
+				}elseif ($leaf["host_id"] > 0) {
+					print "<td bgcolor='#$row_color'>$transparent_indent<a href='tree.php?action=item_edit&tree_id=" . $_GET["id"] . "&id=" . $leaf["id"] . "'><strong>Host:</strong> " . $leaf["hostname"] . "</a></td>\n";
+					print "<td bgcolor='#$row_color'>Host</td>";
+				}
+
+				if ( ((isset($sort_cache{$tier-1})) && ($sort_cache{$tier-1} != TREE_ORDERING_NONE)) || ($tree["sort_type"] != TREE_ORDERING_NONE) )  {
+					print "<td bgcolor='#$row_color' width='80'></td>\n";
+				}else{
+					print 	"<td bgcolor='#$row_color' width='80' align='center'>\n
+						<a href='tree.php?action=item_movedown&id=" . $leaf["id"] . "&tree_id=" . $_GET["id"] . "'><img src='" . html_get_theme_images_path("move_down.gif") . "' border='0' alt='Move Down'></a>\n
+						<a href='tree.php?action=item_moveup&id=" . $leaf["id"] . "&tree_id=" . $_GET["id"] . "'><img src='" . html_get_theme_images_path("move_up.gif") . "' border='0' alt='Move Up'></a>\n
+						</td>\n";
+				}
+
+				print 	"<td bgcolor='#$row_color' align='right'>\n
+					<a href='tree.php?action=item_remove&id=" . $leaf["id"] . "&tree_id=" . $_GET["id"] . "'><img src='" . html_get_theme_images_path("delete_icon.gif") . "' width='10' height='10' border='0' alt='Delete'></a>\n
+					</td></tr>\n";
+			}
+		}else{
+			print "<tr><td><em>No Graph Tree Items</em></td></tr>";
+		}
+
 		html_end_box();
 	}
 
@@ -388,10 +439,7 @@ function tree() {
 
 	html_start_box("<strong>Graph Trees</strong>", "98%", $colors["header_background"], "3", "center", "tree.php?action=edit");
 
-	print "<tr bgcolor='#" . $colors["header_panel_background"] . "'>";
-		DrawMatrixHeaderItem("Name",$colors["header_text"],1);
-		DrawMatrixHeaderItem("&nbsp;",$colors["header_text"],1);
-	print "</tr>";
+	html_header(array("Name"), 2);
 
 	$trees = db_fetch_assoc("select * from graph_tree order by name");
 

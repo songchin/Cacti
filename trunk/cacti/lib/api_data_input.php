@@ -44,18 +44,19 @@ function api_data_input_save($id, $name, $input_string, $type_id) {
 	return $data_input_id;
 }
 
-function api_data_input_field_save($id, $data_input_id, $name, $data_name, $input_output, $update_rra, $type_code,
-	$regexp_match, $allow_nulls) {
+function api_data_input_field_save($id, $data_input_id, $field_input_type, $field_input_value, $name, $data_name, $input_output,
+	$update_rrd, $regexp_match, $allow_empty) {
 	$save["id"] = $id;
 	$save["hash"] = get_hash_data_input($id, "data_input_field");
 	$save["data_input_id"] = $data_input_id;
+	$save["field_input_type"] = form_input_validate($field_input_type, "field_input_type", "", true, 3);
+	$save["field_input_value"] = form_input_validate($field_input_value, "field_input_value", "", true, 3);
 	$save["name"] = form_input_validate($name, "name", "", false, 3);
 	$save["data_name"] = form_input_validate($data_name, "data_name", "", false, 3);
 	$save["input_output"] = $input_output;
-	$save["update_rra"] = form_input_validate($update_rra, "update_rra", "", true, 3);
-	$save["type_code"] = form_input_validate($type_code, "type_code", "", true, 3);
+	$save["update_rrd"] = form_input_validate(html_boolean($update_rrd), "update_rrd", "", true, 3);
 	$save["regexp_match"] = form_input_validate($regexp_match, "regexp_match", "", true, 3);
-	$save["allow_nulls"] = form_input_validate($allow_nulls, "allow_nulls", "", true, 3);
+	$save["allow_empty"] = form_input_validate(html_boolean($allow_empty), "allow_empty", "", true, 3);
 
 	$data_input_field_id = 0;
 

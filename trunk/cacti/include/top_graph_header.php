@@ -195,7 +195,7 @@ if ((read_graph_config_option("default_tree_view_mode") == "2") && ($_REQUEST["a
 				$graph_data_array["graph_end"] = $_GET["graph_end"];
 			}
 
-			print trim(rrdtool_function_graph($_GET["local_graph_id"], $_GET["rra_id"], $graph_data_array));
+			print trim(rrdtool_function_graph($_GET["graph_id"], $_GET["rra_id"], $graph_data_array));
 			?>
 		</td>
 	</tr>

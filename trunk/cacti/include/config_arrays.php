@@ -69,7 +69,7 @@ $messages = array(
 		"message" => 'XML: Cacti version does not exist.',
 		"type" => "error"),
 	16 => array(
-		"message" => 'XML: Hash version does not exist.',
+		"message" => 'XML: Generated with an unknown (probably newer) version of Cacti.',
 		"type" => "error"),
 	17 => array(
 		"message" => 'XML: Generated with a newer version of Cacti.',
@@ -79,107 +79,37 @@ $messages = array(
 		"type" => "error")
 		);
 
-$cdef_operators = array(1 =>
-	"+",
-	"-",
-	"*",
-	"/",
-	"%");
-
-$cdef_functions = array(1 =>
-	"SIN",
-	"COS",
-	"LOG",
-	"EXP",
-	"FLOOR",
-	"CEIL",
-	"LT",
-	"LE",
-	"GT",
-	"GE",
-	"EQ",
-	"IF",
-	"MIN",
-	"MAX",
-	"LIMIT",
-	"DUP",
-	"EXC",
-	"POP",
-	"UN",
-	"UNKN",
-	"PREV",
-	"INF",
-	"NEGINF",
-	"NOW",
-	"TIME",
-	"LTIME");
-
-$input_types = array(
-	DATA_INPUT_TYPE_SNMP => "SNMP", // Action 0:
-	DATA_INPUT_TYPE_SNMP_QUERY => "SNMP Query",
-	DATA_INPUT_TYPE_SCRIPT => "Script/Command",  // Action 1:
-	DATA_INPUT_TYPE_SCRIPT_QUERY => "Script Query", // Action 1:
-	DATA_INPUT_TYPE_PHP_SCRIPT_SERVER => "Script - Script Server (PHP)",
-	DATA_INPUT_TYPE_QUERY_SCRIPT_SERVER => "Script Query - Script Server"
+$data_input_field_inputs = array(
+	1 => "Custom Value",
+	2 => "Device Field Value"
 	);
 
 $script_types = array(
-	DATA_INPUT_TYPE_SCRIPT => "Script/Command",
-	DATA_INPUT_TYPE_PHP_SCRIPT_SERVER => "Script - Script Server (PHP)"
+	SCRIPT_INPUT_TYPE_SCRIPT => "Script/Command",
+	SCRIPT_INPUT_TYPE_PHP_SCRIPT_SERVER => "Script - Script Server (PHP)"
 	);
 
-$reindex_types = array(
-	DATA_QUERY_AUTOINDEX_NONE => "None",
-	DATA_QUERY_AUTOINDEX_BACKWARDS_UPTIME => "Uptime Goes Backwards",
-	DATA_QUERY_AUTOINDEX_INDEX_NUM_CHANGE => "Index Count Changed",
-	DATA_QUERY_AUTOINDEX_FIELD_VERIFICATION => "Verify All Fields"
+$snmp_query_field_actions = array(
+	1 => "SNMP Field Name (Dropdown)",
+	2 => "SNMP Field Value (From User)",
+	3 => "SNMP Output Type (Dropdown)"
 	);
 
-$snmp_query_field_actions = array(1 =>
-	"SNMP Field Name (Dropdown)",
-	"SNMP Field Value (From User)",
-	"SNMP Output Type (Dropdown)");
-
-$consolidation_functions = array(1 =>
-	"AVERAGE",
-	"MIN",
-	"MAX",
-	"LAST");
-
-$data_source_types = array(1 =>
-	"GAUGE",
-	"COUNTER",
-	"DERIVE",
-	"ABSOLUTE");
-
-$graph_item_types = array(
-	GRAPH_ITEM_TYPE_COMMENT => "COMMENT",
-	GRAPH_ITEM_TYPE_HRULE => "HRULE",
-	GRAPH_ITEM_TYPE_VRULE => "VRULE",
-	GRAPH_ITEM_TYPE_LINE1 => "LINE1",
-	GRAPH_ITEM_TYPE_LINE2 => "LINE2",
-	GRAPH_ITEM_TYPE_LINE3 => "LINE3",
-	GRAPH_ITEM_TYPE_AREA => "AREA",
-	GRAPH_ITEM_TYPE_STACK => "STACK",
-	GRAPH_ITEM_TYPE_GPRINT => "GPRINT",
-	GRAPH_ITEM_TYPE_LEGEND => "LEGEND");
-
-$image_types = array(1 =>
-	"PNG",
-	"GIF");
-
-$snmp_versions = array(1 =>
-	"Version 1",
-	"Version 2",
-	"Version 3");
+$snmp_versions = array(
+	1 => "Version 1",
+	2 => "Version 2",
+	3 => "Version 3"
+	);
 
 $snmpv3_security_level = array(
 	"authNoPriv" => "No Privacy Protocol",
-	"authPriv" => "Privacy Protocol");
+	"authPriv" => "Privacy Protocol"
+	);
 
 $snmpv3_auth_protocol = array(
 	"MD5" => "MD5 (default)",
-	"SHA" => "SHA");
+	"SHA" => "SHA"
+	);
 
 $snmpv3_priv_protocol = array(
 	"[None]" => "[None]",
@@ -195,45 +125,54 @@ $availability_options = array(
 	AVAIL_SNMP_AND_PING => "Ping and SNMP - Most Recommended",
 	AVAIL_SNMP => "SNMP - Reliable",
 	AVAIL_PING => "Ping - Faster Option with Risk",
-	AVAIL_NONE => "None - Don't Precheck Device Status");
+	AVAIL_NONE => "None - Don't Precheck Device Status"
+	);
 
 $ping_methods = array(
 	PING_ICMP => "ICMP Ping",
 	PING_UDP => "UDP Ping",
-	PING_NONE => "Not Applicable");
+	PING_NONE => "Not Applicable"
+	);
 
 $syslog_verbosity = array(
 	POLLER_VERBOSITY_NONE => "NONE - Syslog Only if Selected",
 	POLLER_VERBOSITY_LOW => "LOW - Statistics and Errors",
 	POLLER_VERBOSITY_MEDIUM => "MEDIUM - Statistics, Errors and Results",
 	POLLER_VERBOSITY_HIGH => "HIGH - Statistics, Errors, Results and Major I/O Events",
-	POLLER_VERBOSITY_DEBUG => "DEBUG - Statistics, Errors, Results, I/O and Program Flow");
+	POLLER_VERBOSITY_DEBUG => "DEBUG - Statistics, Errors, Results, I/O and Program Flow"
+	);
 
-$poller_options = array(1 =>
-	"cmd.php",
-	"cactid");
+$poller_options = array(
+	1 => "cmd.php",
+	2 => "cactid"
+	);
 
 $registered_cacti_names = array(
-	"path_cacti");
+	1 => "path_cacti"
+	);
 
-$graph_views = array(1 =>
-	"Tree View",
-	"List View",
-	"Preview View");
+$graph_views = array(
+	1 => "Tree View",
+	2 => "List View",
+	3 => "Preview View"
+	);
 
-$graph_tree_views = array(1 =>
-	"Single Pane",
-	"Dual Pane");
+$graph_tree_views = array(
+	1 => "Single Pane",
+	2 => "Dual Pane"
+	);
 
-$auth_realms = array(0 =>
-	"Local",
-	"LDAP");
+$auth_realms = array(
+	0 => "Local",
+	1 => "LDAP"
+	);
 
 $auth_methods = array(
 	0 => "None",
 	1 => "Builtin Authentication",
 	2 => "Web Basic Authentication",
-	3 => "LDAP Authentication");
+	3 => "LDAP Authentication"
+	);
 
 $user_password_expire_intervals = array(
 	0 => "Never",
@@ -260,19 +199,19 @@ $graph_perms_type_array = array(
 $ldap_versions = array(
 	2 => "Version 2",
 	3 => "Version 3"
-);
+	);
 
 $ldap_encryption = array(
 	0 => "None",
 	1 => "SSL",
 	2 => "TLS",
-);
+	);
 
 $ldap_modes = array(
 	0 => "No Searching",
 	1 => "Anonymous Searching",
 	2 => "Specific Searching"
-);
+	);
 
 $syslog_control_options = array(
 	SYSLOG_MNG_ASNEEDED => "Overwrite events as needed",
@@ -289,7 +228,8 @@ $cdef_item_types = array(
 	2 => "Operator",
 	4 => "Special Data Source",
 	5 => "Another CDEF",
-	6 => "Custom String");
+	6 => "Custom String"
+	);
 
 $tree_sort_types = array(
 	TREE_ORDERING_NONE => "Manual Ordering (No Sorting)",
@@ -330,12 +270,6 @@ $menu = array(
 		"data_input.php" => "Scripts",
 		"data_queries.php" => "Queries"
 		),
-	//"Event Management" => array(
-	//	"smtp_servers.php" => "Mail Servers",
-	//	"email_templates.php" => "Email Templates",
-	//	"event_queue.php" => "Event Queue",
-	//	"smtp_queue.php" => "Mail Queue"
-	//	),
 	"Templates" => array(
 		"graph_templates.php" => "Graph Templates",
 		"host_templates.php" => "Host Templates",
@@ -348,7 +282,8 @@ $menu = array(
 	"Configuration"  => array(
 		"settings.php" => "System Settings",
 		"user_settings.php" => "User Settings",
-		"settings_wizard.php" => "Setup Wizard"
+		"settings_wizard.php" => "Setup Wizard",
+		"presets.php?action=view_cdef" => "Data Presets"
 		),
 	"Utilities" => array(
 		"utilities.php" => "System Utilities",
@@ -371,7 +306,7 @@ $user_auth_realms = array(
 	11 => "Update Data Templates",
 	12 => "Update Host Templates",
 	13 => "Data Queries",
-	14 => "Update CDEF's",
+	14 => "Update Data Presets",
 	15 => "Global Settings",
 	16 => "Export Data",
 	17 => "Import Data",
@@ -381,7 +316,10 @@ $user_auth_realms = array(
 
 $user_auth_realm_filenames = array(
 	"about.php" => 8,
-	"cdef.php" => 14,
+	"presets.php" => 14,
+	"presets_cdef.php" => 14,
+	"presets_color.php" => 14,
+	"presets_gprint.php" => 14,
 	"color.php" => 5,
 	"data_input.php" => 2,
 	"data_pollers.php" => 2,
@@ -491,28 +429,6 @@ $host_struc = array(
 	"total_polls",
 	"failed_polls",
 	"availability"
-	);
-
-$graph_timespans = array(
-	GT_LAST_HALF_HOUR => "Last Half Hour",
-	GT_LAST_HOUR => "Last Hour",
-	GT_LAST_2_HOURS => "Last 2 Hours",
-	GT_LAST_4_HOURS => "Last 4 Hours",
-	GT_LAST_6_HOURS =>"Last 6 Hours",
-	GT_LAST_12_HOURS =>"Last 12 Hours",
-	GT_LAST_DAY =>"Last Day",
-	GT_LAST_2_DAYS =>"Last 2 Days",
-	GT_LAST_3_DAYS =>"Last 3 Days",
-	GT_LAST_4_DAYS =>"Last 4 Days",
-	GT_LAST_WEEK =>"Last Week",
-	GT_LAST_2_WEEKS =>"Last 2 Weeks",
-	GT_LAST_MONTH =>"Last Month",
-	GT_LAST_2_MONTHS =>"Last 2 Months",
-	GT_LAST_3_MONTHS =>"Last 3 Months",
-	GT_LAST_4_MONTHS =>"Last 4 Months",
-	GT_LAST_6_MONTHS =>"Last 6 Months",
-	GT_LAST_YEAR =>"Last Year",
-	GT_LAST_2_YEARS =>"Last 2 Years"
 	);
 
 $graph_dateformats = array(

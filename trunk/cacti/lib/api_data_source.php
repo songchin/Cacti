@@ -22,22 +22,14 @@
  +-------------------------------------------------------------------------+
 */
 
-function api_data_source_remove($local_data_id) {
-	if (empty($local_data_id)) {
-		return;
-	}
+/* Variable includes */
+include_once(CACTI_BASE_PATH . "/include/data_source/data_source_constants.php");
+include_once(CACTI_BASE_PATH . "/include/data_source/data_source_arrays.php");
 
-	$data_template_data_id = db_fetch_cell("select id from data_template_data where local_data_id=$local_data_id");
-
-	if (!empty($data_template_data_id)) {
-		db_execute("delete from data_template_data_rra where data_template_data_id=$data_template_data_id");
-		db_execute("delete from data_input_data where data_template_data_id=$data_template_data_id");
-	}
-
-	db_execute("delete from data_template_data where local_data_id=$local_data_id");
-	db_execute("delete from data_template_rrd where local_data_id=$local_data_id");
-	db_execute("delete from poller_item where local_data_id=$local_data_id");
-	db_execute("delete from data_local where id=$local_data_id");
-}
+/* Functions includes */
+include_once(CACTI_BASE_PATH . "/lib/data_source/data_source_update.php");
+include_once(CACTI_BASE_PATH . "/lib/data_source/data_source_info.php");
+include_once(CACTI_BASE_PATH . "/lib/data_source/data_source_template.php");
+include_once(CACTI_BASE_PATH . "/lib/data_source/data_source_template_update.php");
 
 ?>

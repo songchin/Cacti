@@ -25,19 +25,17 @@
 /* get_cdef_item_name - resolves a single CDEF item into its text-based representation
    @arg $cdef_item_id - the id of the individual cdef item
    @returns - a text-based representation of the cdef item */
-function get_cdef_item_name($cdef_item_id) 	{
-	global $config;
+function get_cdef_item_name($cdef_item_id) {
+	include(CACTI_BASE_PATH . "/include/graph/graph_arrays.php");
 
-	include($config["include_path"] . "/config_arrays.php");
-
-	$cdef_item = db_fetch_row("select type,value from cdef_items where id=$cdef_item_id");
+	$cdef_item = db_fetch_row("select type,value from preset_cdef_item where id=$cdef_item_id");
 	$current_cdef_value = $cdef_item["value"];
 
 	switch ($cdef_item["type"]) {
 		case '1': return $cdef_functions[$current_cdef_value]; break;
 		case '2': return $cdef_operators[$current_cdef_value]; break;
 		case '4': return $current_cdef_value; break;
-		case '5': return db_fetch_cell("select name from cdef where id=$current_cdef_value"); break;
+		case '5': return db_fetch_cell("select name from preset_cdef where id=$current_cdef_value"); break;
 		case '6': return $current_cdef_value; break;
 	}
 }
@@ -47,7 +45,7 @@ function get_cdef_item_name($cdef_item_id) 	{
    @arg $cdef_id - the id of the cdef to resolve
    @returns - a text-based representation of the cdef */
 function get_cdef($cdef_id) {
-	$cdef_items = db_fetch_assoc("select * from cdef_items where cdef_id=$cdef_id order by sequence");
+	$cdef_items = db_fetch_assoc("select * from preset_cdef_item where cdef_id = $cdef_id order by sequence");
 
 	$i = 0; $cdef_string = "";
 

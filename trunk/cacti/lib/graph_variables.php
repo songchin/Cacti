@@ -129,6 +129,8 @@ $ninety_fifth_cache = array();
 function variable_ninety_fifth_percentile($var_scale, $var_divisor, $var_type, $var_precision, &$graph_item, &$graph_items, $graph_start, $graph_end) {
 	global $ninety_fifth_cache;
 
+	include_once(CACTI_BASE_PATH . "/lib/graph/graph_utility.php");
+
 	if (($var_type == "current") || ($var_type == "max")) {
 		if (!isset($ninety_fifth_cache{$graph_item["local_data_id"]})) {
 			$ninety_fifth_cache{$graph_item["local_data_id"]} = ninety_fifth_percentile($graph_item["local_data_id"], $graph_start, $graph_end);
@@ -232,6 +234,8 @@ $summation_cache = array();
    @returns - a string containg the bandwidth summation suitable for placing on the graph */
 function variable_bandwidth_summation($var_divisor, $var_type, $var_precision, $var_timespan, &$graph_item, &$graph_items, $graph_start, $graph_end, $rra_step, $ds_step) {
 	global $summation_cache;
+
+	include_once(CACTI_BASE_PATH . "/lib/graph/graph_utility.php");
 
 	if (is_numeric($var_timespan)) {
 		$summation_timespan_start = -$var_timespan;

@@ -36,19 +36,12 @@ switch ($_REQUEST["action"]) {
 	case 'remove':
 		color_remove();
 
-		header ("Location: color.php");
+		header ("Location: presets.php?action=view_color");
 		break;
 	case 'edit':
 		include_once("./include/top_header.php");
 
 		color_edit();
-
-		include_once("./include/bottom_footer.php");
-		break;
-	default:
-		include_once("./include/top_header.php");
-
-		color();
 
 		include_once("./include/bottom_footer.php");
 		break;
@@ -74,9 +67,9 @@ function form_save() {
 		}
 
 		if (is_error_message()) {
-			header("Location: color.php?action=edit&id=" . (empty($color_id) ? $_POST["id"] : $color_id));
+			header("Location: presets_color.php?action=edit&id=" . (empty($color_id) ? $_POST["id"] : $color_id));
 		}else{
-			header("Location: color.php");
+			header("Location: presets_color.php");
 		}
 	}
 }
@@ -86,14 +79,14 @@ function form_save() {
    ----------------------- */
 
 function color_remove() {
-	db_execute("delete from colors where id=" . $_GET["id"]);
+	db_execute("delete from preset_color where id=" . $_GET["id"]);
 }
 
 function color_edit() {
 	global $colors, $fields_color_edit;
 
 	if (!empty($_GET["id"])) {
-		$color = db_fetch_row("select * from colors where id=" . $_GET["id"]);
+		$color = db_fetch_row("select * from preset_color where id=" . $_GET["id"]);
 		$header_label = "[edit: " . $color["hex"] . "]";
 	}else{
 		$header_label = "[new]";
@@ -108,65 +101,7 @@ function color_edit() {
 
 	html_end_box();
 
-	form_save_button("color.php");
-}
-
-function color() {
-	global $colors;
-
-	html_start_box("<strong>Colors</strong>", "98%", $colors["header_background"], "3", "center", "color.php?action=edit");
-
-	print "<tr bgcolor='#" . $colors["header_panel_background"] . "'>";
-		DrawMatrixHeaderItem("Hex Value",$colors["header_text"],1);
-		DrawMatrixHeaderItem("Color",$colors["header_text"],1);
-		DrawMatrixHeaderItem("&nbsp;",$colors["header_text"],1);
-		## Space
-		DrawMatrixHeaderItem("&nbsp; &nbsp; ",$colors["header_text"],1);
-		DrawMatrixHeaderItem("Hex Value",$colors["header_text"],1);
-                DrawMatrixHeaderItem("Color",$colors["header_text"],1);
-		DrawMatrixHeaderItem("&nbsp;",$colors["header_text"],1);
-	print "</tr>";
-
-	$color_list = db_fetch_assoc("select * from colors order by hex");
-
-	$i = 0;
-	if (sizeof($color_list) > 0) {
-		$j=0; ## even/odd counter
-		foreach ($color_list as $color) {
-			$j++;
-			if ($j % 2 == 1) {
-				form_alternate_row_color($colors["form_alternate1"],$colors["form_alternate2"],$i); $i++;
-					?>
-					<td>
-						<a class="linkEditMain" href="color.php?action=edit&id=<?php print $color["id"];?>"><?php print $color["hex"];?></a>
-					</td>
-					<td bgcolor="#<?php print $color["hex"];?>" width="1%">&nbsp;</td>
-					<td align="right">
-						<a href="color.php?action=remove&id=<?php print $color["id"];?>"><img src="<?php print html_get_theme_images_path('delete_icon.gif');?>" width="10" height="10" border="0" alt="Delete"></a>
-					</td>
-				<?php	$j=1;
-			} else { ?>
-					<td></td>
-					<td>
-						<a class="linkEditMain" href="color.php?action=edit&id=<?php print $color["id"];?>"><?php print $color["hex"];?></a>
-					</td>
-					<td bgcolor="#<?php print $color["hex"];?>" width="1%">&nbsp;</td>
-					<td align="right">
-						<a href="color.php?action=remove&id=<?php print $color["id"];?>"><img src="<?php print html_get_theme_images_path('delete_icon.gif');?>" width="10" height="10" border="0" alt="Delete"></a>
-					</td>
-				</tr>
-			<?php
-			}
-		}
-		## check for completion of odd number second column:
-		if ($j == 1) {
-			?>
-				<td colspan=4></td>
-				</tr>
-			<?php
-		}
-	}
-	html_end_box();
+	form_save_button("presets.php?action=view_color");
 }
 
 ?>

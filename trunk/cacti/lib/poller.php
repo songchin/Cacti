@@ -22,6 +22,134 @@
  +-------------------------------------------------------------------------+
 */
 
+function repopulate_poller_cache() {
+	db_execute("truncate table poller_item");
+
+	$data_sources = db_fetch_assoc("select id from data_source");
+
+	if (sizeof($data_sources) > 0) {
+		foreach ($data_sources as $item) {
+			update_poller_cache($item["id"], true);
+		}
+	}
+}
+
+function update_poller_cache_from_query($host_id, $data_query_id) {
+	$poller_data = db_fetch_assoc("select id from data_local where host_id = '$host_id' and snmp_query_id = '$data_query_id'");
+
+	if (sizeof($poller_data) > 0) {
+		foreach ($poller_data as $data) {
+			update_poller_cache($data["id"]);
+		}
+	}
+}
+
+$c_xml_data = array();
+
+function update_poller_cache($data_source_id, $truncate_performed = false) {
+	global $c_xml_data;
+
+	include_once(CACTI_BASE_PATH . "/include/data_query/data_query_constants.php");
+	include_once(CACTI_BASE_PATH . "/include/data_source/data_source_constants.php");
+	include_once(CACTI_BASE_PATH . "/lib/data_query/data_query_info.php");
+	include_once(CACTI_BASE_PATH . "/lib/api_poller.php");
+
+	if (empty($data_source_id)) {
+		return;
+	}
+
+	/* clear cache for this local_data_id */
+	if (!$truncate_performed) {
+		db_execute("delete from poller_item where local_data_id = $data_source_id");
+	}
+
+	/* fetch information about this data source */
+	$data_source = db_fetch_row("select host_id,data_input_type,active from data_source where id = $data_source_id");
+
+	/* device is marked as disabled */
+	if ((!empty($data_source["host_id"])) && (db_fetch_cell("select disabled from host where id = " . $data_source["host_id"]) == "on")) {
+		return;
+	}
+
+	$field_list = array_rekey(db_fetch_assoc("select name,value from data_source_field where data_source_id = $data_source_id"), "name", "value");
+
+	if (!empty($data_source["active"])) {
+		if (($data_source["data_input_type"] == DATA_INPUT_TYPE_SCRIPT) && (isset($field_list["script_id"]))) {
+			/* how does the script get its data? */
+			$script_input_type = db_fetch_cell("select type_id from data_input where id = " . $field_list["script_id"]);
+
+			/* fall back to non-script server actions if the user is running a version of php older than 4.3 */
+			if (($script_input_type == SCRIPT_INPUT_TYPE_PHP_SCRIPT_SERVER) && (function_exists("proc_open"))) {
+				$action = POLLER_ACTION_SCRIPT_PHP;
+				$script_path = get_full_script_path($data_source_id);
+			}else if (($script_input_type == SCRIPT_INPUT_TYPE_PHP_SCRIPT_SERVER) && (!function_exists("proc_open"))) {
+				$action = POLLER_ACTION_SCRIPT;
+				$script_path = read_config_option("path_php_binary") . " -q " . get_full_script_path($data_source_id);
+			}else{
+				$action = POLLER_ACTION_SCRIPT;
+				$script_path = get_full_script_path($data_source_id);
+			}
+
+			$num_output_fields = db_fetch_cell("select count(*) from data_input_fields where data_input_id = " . $field_list["script_id"] . " and input_output = 'out' and update_rra = 1");
+
+			api_poller_cache_item_add($data_source["host_id"], $data_source_id, $action, (($num_output_fields == 1) ? db_fetch_cell("select data_source_name from data_source_item where data_source_id = $data_source_id") : ""), 1, addslashes($script_path));
+		}else if ($data_source["data_input_type"] == DATA_INPUT_TYPE_SNMP) {
+			$data_source_items = db_fetch_assoc("select data_source_name,field_input_value from data_source_item where data_source_id = $data_source_id");
+
+			if (sizeof($data_source_items) > 0) {
+				foreach ($data_source_items as $item) {
+					api_poller_cache_item_add($data_source["host_id"], $data_source_id, POLLER_ACTION_SNMP, $item["data_source_item"], 1, $item["field_input_value"]);
+				}
+			}
+		}else if (($data_source["data_input_type"] == DATA_INPUT_TYPE_DATA_QUERY) && (isset($field_list["data_query_id"])) && (isset($field_list["data_query_index"]))) {
+			/* how does this data query get its data? */
+			$data_query_input_type = db_fetch_cell("select input_type from snmp_query where id = " . $field_list["data_query_id"]);
+
+			/* parse the xml file associated with this data query (yuk!!!) */
+			if (isset($c_xml_data{$field_list["data_query_id"]})) {
+				$xml_data = $c_xml_data{$field_list["data_query_id"]};
+			}else{
+				$xml_data = get_data_query_array($field_list["data_query_id"]);
+				$c_xml_data{$field_list["data_query_id"]} = $xml_data;
+			}
+
+			/* obtain a list of data source items for this data source */
+			$data_source_items = db_fetch_assoc("select id,field_input_value,data_source_name from data_source_item where data_source_id = $data_source_id");
+
+			if (sizeof($data_source_items) > 0) {
+				foreach ($data_source_items as $item) {
+					if ($data_query_input_type == DATA_QUERY_INPUT_TYPE_SNMP_QUERY) {
+						/* create the oid using the data query/index information that we have */
+						if (isset($xml_data["fields"]{$item["field_input_value"]}["oid"])) {
+							$oid = $xml_data["fields"]{$item["field_input_value"]}["oid"] . "." . $field_list["data_query_index"];
+						}
+
+						if (isset($oid)) {
+							api_poller_cache_item_add($data_source["host_id"], $data_source_id, POLLER_ACTION_SNMP, $item["data_source_name"], sizeof($data_source_items), $oid);
+						}
+					}else if (($data_query_input_type == DATA_QUERY_INPUT_TYPE_SCRIPT_QUERY) || ($data_query_input_type == DATA_QUERY_INPUT_TYPE_PHP_SCRIPT_SERVER_QUERY)) {
+						$identifier = $xml_data["fields"]{$item["field_input_value"]}["query_name"];
+
+						/* fall back to non-script server actions if the user is running a version of php older than 4.3 */
+						if (($data_query_input_type == DATA_QUERY_INPUT_TYPE_PHP_SCRIPT_SERVER_QUERY) && (function_exists("proc_open"))) {
+							$action = POLLER_ACTION_SCRIPT_PHP;
+							$script_path = get_script_query_path((isset($xml_data["arg_prepend"]) ? $xml_data["arg_prepend"] : "") . " " . $xml_data["arg_get"] . " " . $identifier . " " . $field_list["data_query_index"], $xml_data["script_path"] . " " . $xml_data["script_function"], $data_source["host_id"]);
+						}else if (($data_query_input_type == DATA_QUERY_INPUT_TYPE_PHP_SCRIPT_SERVER_QUERY) && (!function_exists("proc_open"))) {
+							$action = POLLER_ACTION_SCRIPT;
+							$script_path = read_config_option("path_php_binary") . " -q " . get_script_query_path((isset($xml_data["arg_prepend"]) ? $xml_data["arg_prepend"] : "") . " " . $xml_data["arg_get"] . " " . $identifier . " " . $field_list["data_query_index"], $xml_data["script_path"], $data_source["host_id"]);
+						}else{
+							$action = POLLER_ACTION_SCRIPT;
+							$script_path = get_script_query_path((isset($xml_data["arg_prepend"]) ? $xml_data["arg_prepend"] : "") . " " . $xml_data["arg_get"] . " " . $identifier . " " . $field_list["data_query_index"], $xml_data["script_path"], $data_source["host_id"]);
+						}
+
+						api_poller_cache_item_add($data_source["host_id"], $data_source_id, $action, $item["data_source_name"], sizeof($data_source_items), addslashes($script_path));
+					}
+				}
+			}
+		}
+	}
+}
+
 /* exec_poll - executes a command and returns its output
    @arg $command - the command to execute
    @returns - the output of $command after execution */
@@ -91,17 +219,16 @@ function exec_background($filename, $args = "") {
    @arg $host_id - the id of the host to which the data query belongs
    @arg $data_query_id - the id of the data query to rebuild the reindex cache for */
 function update_reindex_cache($host_id, $data_query_id) {
-	global $config;
-
-	include_once($config["library_path"] . "/data_query.php");
-	include_once($config["library_path"] . "/snmp.php");
+	include_once(CACTI_BASE_PATH . "/include/data_query/data_query_constants.php");
+	include_once(CACTI_BASE_PATH . "/lib/data_query/data_query_info.php");
+	include_once(CACTI_BASE_PATH . "/lib/snmp.php");
 
 	/* will be used to keep track of sql statements to execute later on */
 	$recache_stack = array();
 
 	$host = db_fetch_row("select hostname,snmp_community,snmp_version,snmpv3_auth_username,snmpv3_auth_password,snmpv3_auth_protocol,snmpv3_priv_passphrase,snmpv3_priv_protocol,snmp_port,snmp_timeout from host where id=$host_id");
 	$data_query = db_fetch_row("select reindex_method,sort_field from host_snmp_query where host_id=$host_id and snmp_query_id=$data_query_id");
-	$data_query_type = db_fetch_cell("select data_input.type_id from data_input,snmp_query where data_input.id=snmp_query.data_input_id and snmp_query.id=$data_query_id");
+	$data_query_input_type = db_fetch_cell("select input_type from snmp_query where id=$data_query_id");
 	$data_query_xml = get_data_query_array($data_query_id);
 
 	switch ($data_query["reindex_method"]) {
@@ -112,17 +239,17 @@ function update_reindex_cache($host_id, $data_query_id) {
 			 * on this device first */
 			if ($host["snmp_community"] != "") {
 				$assert_value = cacti_snmp_get($host["hostname"],
-											$host["snmp_community"],
-											".1.3.6.1.2.1.1.3.0",
-											$host["snmp_version"],
-											$host["snmpv3_auth_username"],
-											$host["snmpv3_auth_password"],
-											$host["snmpv3_auth_protocol"],
-											$host["snmpv3_priv_passphrase"],
-											$host["snmpv3_priv_protocol"],
-											$host["snmp_port"],
-											$host["snmp_timeout"],
-											SNMP_POLLER);
+					$host["snmp_community"],
+					".1.3.6.1.2.1.1.3.0",
+					$host["snmp_version"],
+					$host["snmpv3_auth_username"],
+					$host["snmpv3_auth_password"],
+					$host["snmpv3_auth_protocol"],
+					$host["snmpv3_priv_passphrase"],
+					$host["snmpv3_priv_protocol"],
+					$host["snmp_port"],
+					$host["snmp_timeout"],
+					SNMP_POLLER);
 
 				array_push($recache_stack, "insert into poller_reindex (host_id,data_query_id,action,op,assert_value,arg1) values ($host_id,$data_query_id,0,'<','$assert_value','.1.3.6.1.2.1.1.3.0')");
 			}
@@ -131,13 +258,13 @@ function update_reindex_cache($host_id, $data_query_id) {
 		case DATA_QUERY_AUTOINDEX_INDEX_NUM_CHANGE:
 			/* this method requires that some command/oid can be used to determine the
 			 * current number of indexes in the data query */
-			$assert_value = sizeof(db_fetch_assoc("select snmp_index from host_snmp_cache where host_id=$host_id and snmp_query_id=$data_query_id group by snmp_index"));
+			$assert_value = db_fetch_cell("select count(*) from host_snmp_cache where host_id=$host_id and snmp_query_id=$data_query_id group by snmp_index");
 
-			if ($data_query_type == DATA_INPUT_TYPE_SNMP_QUERY) {
+			if ($data_query_type == DATA_QUERY_INPUT_TYPE_SNMP_QUERY) {
 				if (isset($data_query_xml["oid_num_indexes"])) {
 					array_push($recache_stack, "insert into poller_reindex (host_id,data_query_id,action,op,assert_value,arg1) values ($host_id,$data_query_id,0,'=','$assert_value','" . $data_query_xml["oid_num_indexes"] . "')");
 				}
-			}else if ($data_query_type == DATA_INPUT_TYPE_SCRIPT_QUERY) {
+			}else if ($data_query_type == DATA_QUERY_INPUT_TYPE_SCRIPT_QUERY) {
 				if (isset($data_query_xml["arg_num_indexes"])) {
 					array_push($recache_stack, "insert into poller_reindex (host_id,data_query_id,action,op,assert_value,arg1) values ($host_id,$data_query_id,1,'=','$assert_value','" . get_script_query_path((isset($data_query_xml["arg_prepend"]) ? $data_query_xml["arg_prepend"] . " ": "") . $data_query_xml["arg_num_indexes"], $data_query_xml["script_path"], $host_id) . "')");
 				}
@@ -151,9 +278,9 @@ function update_reindex_cache($host_id, $data_query_id) {
 				foreach ($primary_indexes as $index) {
 					$assert_value = $index["field_value"];
 
-					if ($data_query_type == DATA_INPUT_TYPE_SNMP_QUERY) {
+					if ($data_query_type == DATA_QUERY_INPUT_TYPE_SNMP_QUERY) {
 						array_push($recache_stack, "insert into poller_reindex (host_id,data_query_id,action,op,assert_value,arg1) values ($host_id,$data_query_id,0,'=','$assert_value','" . $data_query_xml["fields"]{$data_query["sort_field"]}["oid"] . "." . $index["snmp_index"] . "')");
-					}else if ($data_query_type == DATA_INPUT_TYPE_SCRIPT_QUERY) {
+					}else if ($data_query_type == DATA_QUERY_INPUT_TYPE_SCRIPT_QUERY) {
 						array_push($recache_stack, "insert into poller_reindex (host_id,data_query_id,action,op,assert_value,arg1) values ($host_id,$data_query_id,1,'=','$assert_value','" . get_script_query_path((isset($data_query_xml["arg_prepend"]) ? $data_query_xml["arg_prepend"] . " ": "") . $data_query_xml["arg_get"] . " " . $data_query_xml["fields"]{$data_query["sort_field"]}["query_name"] . " " . $index["snmp_index"], $data_query_xml["script_path"], $host_id) . "')");
 					}
 				}
@@ -174,9 +301,7 @@ function update_reindex_cache($host_id, $data_query_id) {
      results to RRDTool for processing
    @arg $rrdtool_pipe - the array of pipes containing the file descriptor for rrdtool */
 function process_poller_output($rrdtool_pipe) {
-	global $config;
-
-	include_once($config["library_path"] . "/rrd.php");
+	include_once(CACTI_BASE_PATH . "/lib/rrd.php");
 
 	/* create/update the rrd files */
 	$results = db_fetch_assoc("select
@@ -195,21 +320,16 @@ function process_poller_output($rrdtool_pipe) {
 			$value = rtrim(strtr(strtr($item["output"],'\r',''),'\n',''));
 			$unix_time = strtotime($item["time"]);
 
-			$rrd_update_array{$item["rrd_path"]}["local_data_id"] = $item["local_data_id"];
+			$rrd_update_array{$item["rrd_path"]}["data_source_id"] = $item["local_data_id"];
 
 			/* single one value output */
 			if ((is_numeric($value)) || ($value == "U")) {
 				$rrd_update_array{$item["rrd_path"]}["times"][$unix_time]{$item["rrd_name"]} = $value;
-			/* multiple value output */
+			/* multiple value output (only supported for scripts) */
 			}else{
 				$values = explode(" ", $value);
 
-				$rrd_field_names = array_rekey(db_fetch_assoc("select
-					data_template_rrd.data_source_name,
-					data_input_fields.data_name
-					from data_template_rrd,data_input_fields
-					where data_template_rrd.data_input_field_id=data_input_fields.id
-					and data_template_rrd.local_data_id=" . $item["local_data_id"]), "data_name", "data_source_name");
+				$rrd_field_names = array_rekey(db_fetch_assoc("select data_source_name,field_input_value from data_source_item where data_source_id = " . $item["local_data_id"]), "field_input_value", "data_source_name");
 
 				for ($i=0; $i<count($values); $i++) {
 					if (preg_match("/^([a-zA-Z0-9_.-]+):([+-0-9Ee.]+)$/", $values[$i], $matches)) {
@@ -239,7 +359,7 @@ function process_poller_output($rrdtool_pipe) {
 
 			if (isset($rrd_update_array{$item["rrd_path"]}["times"][$unix_time])) {
 				if ($item["rrd_num"] <= sizeof($rrd_update_array{$item["rrd_path"]}["times"][$unix_time])) {
-					db_execute("delete from poller_output where local_data_id='" . $item["local_data_id"] . "' and rrd_name='" . $item["rrd_name"] . "' and time='" . $item["time"] . "'");
+					db_execute("delete from poller_output where local_data_id = " . $item["local_data_id"] . " and rrd_name = '" . $item["rrd_name"] . "' and time = '" . $item["time"] . "'");
 				}else{
 					unset($rrd_update_array{$item["rrd_path"]}["times"][$unix_time]);
 				}

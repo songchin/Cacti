@@ -24,7 +24,7 @@
 
 include("./include/config.php");
 include("./include/auth.php");
-include_once("./lib/utility.php");
+include_once("./lib/poller.php");
 
 /* set default action */
 if (!isset($_REQUEST["action"])) { $_REQUEST["action"] = ""; }
@@ -242,11 +242,10 @@ function utilities_view_poller_cache() {
 
 	$poller_cache = db_fetch_assoc("select
 		poller_item.*,
-		data_template_data.name_cache,
-		data_local.host_id
-		from poller_item,data_template_data,data_local
-		where poller_item.local_data_id=data_template_data.local_data_id
-		and data_template_data.local_data_id=data_local.id");
+		data_source.name_cache,
+		data_source.host_id
+		from poller_item,data_source
+		where poller_item.local_data_id=data_source.id");
 
 	html_start_box("<strong>View Poller Cache</strong> [" . sizeof($poller_cache) . " Item" . ((sizeof($poller_cache) > 0) ? "s" : "") . "]", "98%", $colors["header_background"], "3", "center", "");
 

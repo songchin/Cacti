@@ -186,9 +186,7 @@ function form_input_validate($field_value, $field_name, $regexp_match, $allow_nu
      user
    @returns - (bool) whether the messages array contains an error or not */
 function is_error_message() {
-	global $config;
-
-	include($config["include_path"] . "/config_arrays.php");
+	global $messages;
 
 	if (isset($_SESSION["sess_messages"])) {
 		if (is_array($_SESSION["sess_messages"])) {
@@ -278,506 +276,66 @@ function kill_session_var($var_name) {
    @returns - the modified array */
 function array_rekey($array, $key, $key_value) {
 	$ret_array = array();
+	$k = 0;
 
 	if (sizeof($array) > 0) {
-	foreach ($array as $item) {
-		$item_key = $item[$key];
-
-		if (is_array($key_value)) {
-			for ($i=0; $i<count($key_value); $i++) {
-				$ret_array[$item_key]{$key_value[$i]} = $item{$key_value[$i]};
+		foreach ($array as $item) {
+			if ($key == "") {
+				$item_key = $k;
+				$k++;
+			}else{
+				$item_key = $item[$key];
 			}
-		}else{
-			$ret_array[$item_key] = $item[$key_value];
+
+			if (is_array($key_value)) {
+				for ($i=0; $i<count($key_value); $i++) {
+					$ret_array[$item_key]{$key_value[$i]} = $item{$key_value[$i]};
+				}
+			}else{
+				$ret_array[$item_key] = $item[$key_value];
+			}
 		}
-	}
 	}
 
 	return $ret_array;
-}
-
-/* strip_newlines - removes \n\r from lines
-   @arg $string - the string to strip */
-function strip_newlines($string) {
-	return strtr(strtr($string, "\n", "\0"), "\r","\0");
-}
-
-/* strip_quotes - Strip single and double quotes from a string
-   @arg $result - (string) the result from the poll
-   @returns - (string) the string with quotes stripped */
-function strip_quotes($result) {
-	/* first strip all single and double quotes from the string */
-	$result = strtr($result,"'","");
-	$result = strtr($result,'"','');
-
-	return($result);
 }
 
 /* get_full_script_path - gets the full path to the script to execute to obtain data for a
      given data source. this function does not work on SNMP actions, only script-based actions
    @arg $local_data_id - (int) the ID of the data source
    @returns - the full script path or (bool) false for an error */
-function get_full_script_path($local_data_id) {
-	global $config;
+function get_full_script_path($data_source_id) {
+	include_once(CACTI_BASE_PATH . "/include/data_source/data_source_constants.php");
+	include_once(CACTI_BASE_PATH . "/lib/variables.php");
 
-	$data_source = db_fetch_row("select
-		data_template_data.id,
-		data_template_data.data_input_id,
-		data_input.type_id,
-		data_input.input_string
-		from data_template_data,data_input
-		where data_template_data.data_input_id=data_input.id
-		and data_template_data.local_data_id=$local_data_id");
+	$data_input_type = db_fetch_cell("select data_input_type from data_source where id = $data_source_id");
 
 	/* snmp-actions don't have paths */
-	if (($data_source["type_id"] == DATA_INPUT_TYPE_SNMP) || ($data_source["type_id"] == DATA_INPUT_TYPE_SNMP_QUERY)) {
+	if ($data_input_type != DATA_INPUT_TYPE_SCRIPT) {
 		return false;
 	}
 
-	$data = db_fetch_assoc("select
-		data_input_fields.data_name,
-		data_input_data.value
-		from data_input_fields
-		left join data_input_data
-		on data_input_fields.id=data_input_data.data_input_field_id
-		where data_input_fields.data_input_id=" . $data_source["data_input_id"] . "
-		and data_input_data.data_template_data_id=" . $data_source["id"] . "
-		and data_input_fields.input_output='in'");
+	$data_source_fields = array_rekey(db_fetch_assoc("select name,value from data_source_field where data_source_id = $data_source_id"), "name", "value");
 
-	$full_path = $data_source["input_string"];
+	if (isset($data_source_fields["script_id"])) {
+		$script_path = db_fetch_cell("select input_string from data_input where id = " . $data_source_fields["script_id"]);
 
-	if (sizeof($data) > 0) {
-	foreach ($data as $item) {
-		$full_path = str_replace("<" . $item["data_name"] . ">", $item["value"], $full_path);
-	}
-	}
+		/* exclude the manditory script_id field */
+		unset($data_source_fields["script_id"]);
 
-	$full_path = str_replace("<path_cacti>", $config["base_path"], $full_path);
-	$full_path = str_replace("<path_snmpget>", read_config_option("path_snmpget"), $full_path);
-	$full_path = str_replace("<path_php_binary>", read_config_option("path_php_binary"), $full_path);
-
-	/* sometimes a certain input value will not have anything entered... null out these fields
-	in the input string so we don't mess up the script */
-	$full_path = preg_replace("/(<[A-Za-z0-9_]+>)+/", "", $full_path);
-
-	return $full_path;
-}
-
-/* get_data_source_item_name - gets the name of a data source item or generates a new one if one does not
-     already exist
-   @arg $data_template_rrd_id - (int) the ID of the data source item
-   @returns - the name of the data source item or an empty string for an error */
-function get_data_source_item_name($data_template_rrd_id) {
-	if (empty($data_template_rrd_id)) { return ""; }
-
-	$data_source = db_fetch_row("select
-		data_template_rrd.data_source_name,
-		data_template_data.name
-		from data_template_rrd,data_template_data
-		where data_template_rrd.local_data_id=data_template_data.local_data_id
-		and data_template_rrd.id=$data_template_rrd_id");
-
-	/* use the cacti ds name by default or the user defined one, if entered */
-	if (empty($data_source["data_source_name"])) {
-		/* limit input to 19 characters */
-		$data_source_name = clean_up_name($data_source["name"]);
-		$data_source_name = substr(strtolower($data_source_name),0,(19-strlen($data_template_rrd_id))) . $data_template_rrd_id;
-
-		return $data_source_name;
-	}else{
-		return $data_source["data_source_name"];
-	}
-}
-
-/* get_data_source_path - gets the full path to the .rrd file associated with a given data source
-   @arg $local_data_id - (int) the ID of the data source
-   @arg $expand_paths - (bool) whether to expand the <path_rra> variable into its full path or not
-   @returns - the full path to the data source or an empty string for an error */
-function get_data_source_path($local_data_id, $expand_paths) {
-	global $config;
-
-	if (empty($local_data_id)) { return ""; }
-
-	$data_source = db_fetch_row("select name,data_source_path from data_template_data where local_data_id=$local_data_id");
-
-	if (sizeof($data_source) > 0) {
-		if (empty($data_source["data_source_path"])) {
-			/* no custom path was specified */
-			$data_source_path = generate_data_source_path($local_data_id);
-		}else{
-			if (!strstr($data_source["data_source_path"], "/")) {
-				$data_source_path = "<path_rra>/" . $data_source["data_source_path"];
-			}else{
-				$data_source_path = $data_source["data_source_path"];
-			}
+		/* substitute user variables */
+		while (list($name, $value) = each($data_source_fields)) {
+			$script_path = str_replace("<" . $name . ">", $value, $script_path);
 		}
 
-		/* whether to show the "actual" path or the <path_rra> variable name (for edit boxes) */
-		if ($expand_paths == true) {
-			$data_source_path = str_replace("<path_rra>", $config["base_path"] . "/rra", $data_source_path);
-		}
+		/* substitute path variables */
+		$script_path = substitute_path_variables($script_path);
 
-		return $data_source_path;
+		/* remove all remaining variables */
+		$script_path = preg_replace("/(<[A-Za-z0-9_]+>)+/", "", $script_path);
+
+		return $script_path;
 	}
-}
-
-/* stri_replace - a case insensitive string replace
-   @arg $find - needle
-   @arg $replace - replace needle with this
-   @arg $string - haystack
-   @returns - the original string with '$find' replaced by '$replace' */
-function stri_replace($find, $replace, $string) {
-	$parts = explode(strtolower($find), strtolower($string));
-
-	$pos = 0;
-
-	foreach ($parts as $key=>$part) {
-		$parts[$key] = substr($string, $pos, strlen($part));
-		$pos += strlen($part) + strlen($find);
-	}
-
-	return (join($replace, $parts));
-}
-
-/* clean_up_name - runs a string through a series of regular expressions designed to
-     eliminate "bad" characters
-   @arg $string - the string to modify/clean
-   @returns - the modified string */
-function clean_up_name($string) {
-	$string = preg_replace("/[\s\.]+/", "_", $string);
-	$string = preg_replace("/[^a-zA-Z0-9_]+/", "", $string);
-	$string = preg_replace("/_{2,}/", "_", $string);
-
-	return $string;
-}
-
-/* clean_up_path - takes any path and makes sure it contains the correct directory
-     separators based on the current operating system
-   @arg $path - the path to modify
-   @returns - the modified path */
-function clean_up_path($path) {
-	global $config;
-
-	if ($config["cacti_server_os"] == "unix" or read_config_option("using_cygwin") == "on") {
-		$path = str_replace("\\", "/", $path);
-	}elseif ($config["cacti_server_os"] == "win32") {
-		$path = str_replace("/", "\\", $path);
-
-	}
-
-	return $path;
-}
-
-/* get_data_source_title - returns the title of a data source without using the title cache
-   @arg $local_data_id - (int) the ID of the data source to get a title for
-   @returns - the data source title */
-function get_data_source_title($local_data_id) {
-	$data = db_fetch_row("select
-		data_local.host_id,
-		data_local.snmp_query_id,
-		data_local.snmp_index,
-		data_template_data.name
-		from data_template_data,data_local
-		where data_template_data.local_data_id=data_local.id
-		and data_local.id=$local_data_id");
-
-	if ((strstr($data["name"], "|")) && (!empty($data["host_id"]))) {
-		return expand_title($data["host_id"], $data["snmp_query_id"], $data["snmp_index"], $data["name"]);
-	}else{
-		return $data["name"];
-	}
-}
-
-/* get_graph_title - returns the title of a graph without using the title cache
-   @arg $local_graph_id - (int) the ID of the graph to get a title for
-   @returns - the graph title */
-function get_graph_title($local_graph_id) {
-	$graph = db_fetch_row("select
-		graph_local.host_id,
-		graph_local.snmp_query_id,
-		graph_local.snmp_index,
-		graph_templates_graph.title
-		from graph_templates_graph,graph_local
-		where graph_templates_graph.local_graph_id=graph_local.id
-		and graph_local.id=$local_graph_id");
-
-	if ((strstr($graph["title"], "|")) && (!empty($graph["host_id"]))) {
-		return expand_title($graph["host_id"], $graph["snmp_query_id"], $graph["snmp_index"], $graph["title"]);
-	}else{
-		return $graph["title"];
-	}
-}
-
-/* generate_data_source_path - creates a new data source path from scratch using the first data source
-     item name and updates the database with the new value
-   @arg $local_data_id - (int) the ID of the data source to generate a new path for
-   @returns - the new generated path */
-function generate_data_source_path($local_data_id) {
-	$host_part = ""; $ds_part = "";
-
-	/* try any prepend the name with the host description */
-	$host_name = db_fetch_cell("select host.description from host,data_local where data_local.host_id=host.id and data_local.id=$local_data_id");
-
-	if (!empty($host_name)) {
-		$host_part = strtolower(clean_up_name($host_name)) . "_";
-	}
-
-	/* then try and use the internal DS name to identify it */
-	$data_source_rrd_name = db_fetch_cell("select data_source_name from data_template_rrd where local_data_id=$local_data_id order by id");
-
-	if (!empty($data_source_rrd_name)) {
-		$ds_part = strtolower(clean_up_name($data_source_rrd_name));
-	}else{
-		$ds_part = "ds";
-	}
-
-	/* put it all together using the local_data_id at the end */
-	$new_path = "<path_rra>/$host_part$ds_part" . "_" . "$local_data_id.rrd";
-
-	/* update our changes to the db */
-	db_execute("update data_template_data set data_source_path='$new_path' where local_data_id=$local_data_id");
-
-	return $new_path;
-}
-
-/* generate_graph_def_name - takes a number and turns each digit into its letter-based
-     counterpart for RRDTool DEF names (ex 1 -> a, 2 -> b, etc)
-   @arg $graph_item_id - (int) the ID to generate a letter-based representation of
-   @returns - a letter-based representation of the input argument */
-function generate_graph_def_name($graph_item_id) {
-	$lookup_table = array("a","b","c","d","e","f","g","h","i","j");
-
-	$result = "";
-
-	for ($i=0; $i<strlen(strval($graph_item_id)); $i++) {
-		$result .= $lookup_table{substr(strval($graph_item_id), $i, 1)};
-	}
-
-	return $result;
-}
-
-/* move_graph_group - takes a graph group (parent+children) and swaps it with another graph
-     group
-   @arg $graph_template_item_id - (int) the ID of the (parent) graph item that was clicked
-   @arg $graph_group_array - (array) an array containing the graph group to be moved
-   @arg $target_id - (int) the ID of the (parent) graph item of the target group
-   @arg $direction - ('next' or 'previous') whether the graph group is to be swapped with
-      group above or below the current group */
-function move_graph_group($graph_template_item_id, $graph_group_array, $target_id, $direction) {
-	$graph_item = db_fetch_row("select local_graph_id,graph_template_id from graph_templates_item where id=$graph_template_item_id");
-
-	if (empty($graph_item["local_graph_id"])) {
-		$sql_where = "graph_template_id = " . $graph_item["graph_template_id"] . " and local_graph_id=0";
-	}else{
-		$sql_where = "local_graph_id = " . $graph_item["local_graph_id"];
-	}
-
-	$graph_items = db_fetch_assoc("select id,sequence from graph_templates_item where $sql_where order by sequence");
-
-	/* get a list of parent+children of our target group */
-	$target_graph_group_array = get_graph_group($target_id);
-
-	/* if this "parent" item has no children, then treat it like a regular gprint */
-	if (sizeof($target_graph_group_array) == 0) {
-		if ($direction == "next") {
-			move_item_down("graph_templates_item", $graph_template_item_id, $sql_where);
-		}elseif ($direction == "previous") {
-			move_item_up("graph_templates_item", $graph_template_item_id, $sql_where);
-		}
-
-		return;
-	}
-
-	/* start the sequence at '1' */
-	$sequence_counter = 1;
-
-	if (sizeof($graph_items) > 0) {
-	foreach ($graph_items as $item) {
-		/* check to see if we are at the "target" spot in the loop; if we are, update the sequences and move on */
-		if ($target_id == $item["id"]) {
-			if ($direction == "next") {
-				$group_array1 = $target_graph_group_array;
-				$group_array2 = $graph_group_array;
-			}elseif ($direction == "previous") {
-				$group_array1 = $graph_group_array;
-				$group_array2 = $target_graph_group_array;
-			}
-
-			while (list($sequence,$graph_template_item_id) = each($group_array1)) {
-				db_execute("update graph_templates_item set sequence=$sequence_counter where id=$graph_template_item_id");
-
-				/* propagate to ALL graphs using this template */
-				if (empty($graph_item["local_graph_id"])) {
-					db_execute("update graph_templates_item set sequence=$sequence_counter where local_graph_template_item_id=$graph_template_item_id");
-				}
-
-				$sequence_counter++;
-			}
-
-			while (list($sequence,$graph_template_item_id) = each($group_array2)) {
-				db_execute("update graph_templates_item set sequence=$sequence_counter where id=$graph_template_item_id");
-
-				/* propagate to ALL graphs using this template */
-				if (empty($graph_item["local_graph_id"])) {
-					db_execute("update graph_templates_item set sequence=$sequence_counter where local_graph_template_item_id=$graph_template_item_id");
-				}
-
-				$sequence_counter++;
-			}
-		}
-
-		/* make sure to "ignore" the items that we handled above */
-		if ((!isset($graph_group_array{$item["id"]})) && (!isset($target_graph_group_array{$item["id"]}))) {
-			db_execute("update graph_templates_item set sequence=$sequence_counter where id=" . $item["id"]);
-			$sequence_counter++;
-		}
-	}
-	}
-}
-
-/* get_graph_group - returns an array containing each item in the graph group given a single
-     graph item in that group
-   @arg $graph_template_item_id - (int) the ID of the graph item to return the group of
-   @returns - (array) an array containing each item in the graph group */
-function get_graph_group($graph_template_item_id) {
-	global $graph_item_types;
-
-	$graph_item = db_fetch_row("select graph_type_id,sequence,local_graph_id,graph_template_id from graph_templates_item where id=$graph_template_item_id");
-
-	if (empty($graph_item["local_graph_id"])) {
-		$sql_where = "graph_template_id = " . $graph_item["graph_template_id"] . " and local_graph_id=0";
-	}else{
-		$sql_where = "local_graph_id = " . $graph_item["local_graph_id"];
-	}
-
-	/* a parent must NOT be the following graph item types */
-	if (ereg("(GPRINT|VRULE|HRULE|COMMENT)", $graph_item_types{$graph_item["graph_type_id"]})) {
-		return;
-	}
-
-	$graph_item_children_array = array();
-
-	/* put the parent item in the array as well */
-	$graph_item_children_array[$graph_template_item_id] = $graph_template_item_id;
-
-	$graph_items = db_fetch_assoc("select id,graph_type_id from graph_templates_item where sequence > " . $graph_item["sequence"] . " and $sql_where order by sequence");
-
-	if (sizeof($graph_items) > 0) {
-	foreach ($graph_items as $item) {
-		if ($graph_item_types{$item["graph_type_id"]} == "GPRINT") {
-			/* a child must be a GPRINT */
-			$graph_item_children_array{$item["id"]} = $item["id"];
-		}else{
-			/* if not a GPRINT then get out */
-			return $graph_item_children_array;
-		}
-	}
-	}
-
-	return $graph_item_children_array;
-}
-
-/* get_graph_parent - returns the ID of the next or previous parent graph item id
-   @arg $graph_template_item_id - (int) the ID of the current graph item
-   @arg $direction - ('next' or 'previous') whether to find the next or previous parent
-   @returns - (int) the ID of the next or previous parent graph item id */
-function get_graph_parent($graph_template_item_id, $direction) {
-	$graph_item = db_fetch_row("select sequence,local_graph_id,graph_template_id from graph_templates_item where id=$graph_template_item_id");
-
-	if (empty($graph_item["local_graph_id"])) {
-		$sql_where = "graph_template_id = " . $graph_item["graph_template_id"] . " and local_graph_id=0";
-	}else{
-		$sql_where = "local_graph_id = " . $graph_item["local_graph_id"];
-	}
-
-	if ($direction == "next") {
-		$sql_operator = ">";
-		$sql_order = "ASC";
-	}elseif ($direction == "previous") {
-		$sql_operator = "<";
-		$sql_order = "DESC";
-	}
-
-	$next_parent_id = db_fetch_cell("select id from graph_templates_item where sequence $sql_operator " . $graph_item["sequence"] . " and graph_type_id != 9 and $sql_where order by sequence $sql_order limit 1");
-
-	if (empty($next_parent_id)) {
-		return 0;
-	}else{
-		return $next_parent_id;
-	}
-}
-
-/* get_item - returns the ID of the next or previous item id
-   @arg $tblname - the table name that contains the target id
-   @arg $field - the field name that contains the target id
-   @arg $startid - (int) the current id
-   @arg $lmt_query - an SQL "where" clause to limit the query
-   @arg $direction - ('next' or 'previous') whether to find the next or previous item id
-   @returns - (int) the ID of the next or previous item id */
-function get_item($tblname, $field, $startid, $lmt_query, $direction) {
-	if ($direction == "next") {
-		$sql_operator = ">";
-		$sql_order = "ASC";
-	}elseif ($direction == "previous") {
-		$sql_operator = "<";
-		$sql_order = "DESC";
-	}
-
-	$current_sequence = db_fetch_cell("select $field from $tblname where id=$startid");
-	$new_item_id = db_fetch_cell("select id from $tblname where $field $sql_operator $current_sequence and $lmt_query order by $field $sql_order limit 1");
-
-	if (empty($new_item_id)) {
-		return $startid;
-	}else{
-		return $new_item_id;
-	}
-}
-
-/* get_sequence - returns the next available sequence id
-   @arg $id - (int) the current id
-   @arg $field - the field name that contains the target id
-   @arg $table_name - the table name that contains the target id
-   @arg $group_query - an SQL "where" clause to limit the query
-   @returns - (int) the next available sequence id */
-function get_sequence($id, $field, $table_name, $group_query) {
-	if (empty($id)) {
-		$data = db_fetch_row("select max($field)+1 as seq from $table_name where $group_query");
-
-		if ($data["seq"] == "") {
-			return 1;
-		}else{
-			return $data["seq"];
-		}
-	}else{
-		$data = db_fetch_row("select $field from $table_name where id=$id");
-		return $data[$field];
-	}
-}
-
-/* move_item_down - moves an item down by swapping it with the item below it
-   @arg $table_name - the table name that contains the target id
-   @arg $current_id - (int) the current id
-   @arg $group_query - an SQL "where" clause to limit the query */
-function move_item_down($table_name, $current_id, $group_query) {
-	$next_item = get_item($table_name, "sequence", $current_id, $group_query, "next");
-
-	$sequence = db_fetch_cell("select sequence from $table_name where id=$current_id");
-	$sequence_next = db_fetch_cell("select sequence from $table_name where id=$next_item");
-	db_execute("update $table_name set sequence=$sequence_next where id=$current_id");
-	db_execute("update $table_name set sequence=$sequence where id=$next_item");
-}
-
-/* move_item_up - moves an item down by swapping it with the item above it
-   @arg $table_name - the table name that contains the target id
-   @arg $current_id - (int) the current id
-   @arg $group_query - an SQL "where" clause to limit the query */
-function move_item_up($table_name, $current_id, $group_query) {
-	$last_item = get_item($table_name, "sequence", $current_id, $group_query, "previous");
-
-	$sequence = db_fetch_cell("select sequence from $table_name where id=$current_id");
-	$sequence_last = db_fetch_cell("select sequence from $table_name where id=$last_item");
-	db_execute("update $table_name set sequence=$sequence_last where id=$current_id");
-	db_execute("update $table_name set sequence=$sequence where id=$last_item");
 }
 
 /* exec_into_array - executes a command and puts each line of its output into
@@ -895,27 +453,6 @@ function get_host_array() {
 	return $host_list;
 }
 
-/* get_associated_rras - returns a list of all RRAs referenced by a particular graph
-   @arg $local_graph_id - (int) the ID of the graph to retrieve a list of RRAs for
-   @returns - (array) an array containing the name and id of each RRA found */
-function get_associated_rras($local_graph_id) {
-	return db_fetch_assoc("select
-		rra.id,
-		rra.steps,
-		rra.rows,
-		rra.name,
-		rra.timespan,
-		data_template_data.rrd_step
-		from graph_templates_item,data_template_data_rra,data_template_rrd,data_template_data,rra
-		where graph_templates_item.task_item_id=data_template_rrd.id
-		and data_template_rrd.local_data_id=data_template_data.local_data_id
-		and data_template_data.id=data_template_data_rra.data_template_data_id
-		and data_template_data_rra.rra_id=rra.id
-		and graph_templates_item.local_graph_id=$local_graph_id
-		group by rra.id
-		order by rra.timespan");
-}
-
 /* get_hash_graph_template - returns the current unique hash for a graph template
    @arg $graph_template_id - (int) the ID of the graph template to return a hash for
    @arg $sub_type (optional) return the hash for a particlar sub-type of this type
@@ -944,7 +481,7 @@ function get_hash_data_template($data_template_id, $sub_type = "data_template") 
 	if ($sub_type == "data_template") {
 		$hash = db_fetch_cell("select hash from data_template where id=$data_template_id");
 	}elseif ($sub_type == "data_template_item") {
-		$hash = db_fetch_cell("select hash from data_template_rrd where id=$data_template_id");
+		$hash = db_fetch_cell("select hash from data_template_item where id=$data_template_id");
 	}
 
 	if (ereg("[a-fA-F0-9]{32}", $hash)) {
@@ -1108,17 +645,21 @@ function debug_log_return($type) {
 	return $log_text;
 }
 
-/* is_graph_item_type_primary - determines if a given graph item type id is primary,
-     that is an AREA, STACK, LINE1, LINE2, or LINE3
-   @arg $graph_item_type_id - the graph item type id to evaluate
-   @returns - (bool) true if the item is primary, false otherwise  */
-function is_graph_item_type_primary($graph_item_type_id) {
-	if (($graph_item_type_id == GRAPH_ITEM_TYPE_LINE1) || ($graph_item_type_id == GRAPH_ITEM_TYPE_LINE2) || ($graph_item_type_id == GRAPH_ITEM_TYPE_LINE3) || ($graph_item_type_id == GRAPH_ITEM_TYPE_AREA) || ($graph_item_type_id == GRAPH_ITEM_TYPE_STACK)) {
-		return true;
-	}else{
-		return false;
+/* array_merge_recursive_replace - merges $paArray2 into $paArray1 recursively even if they keys do
+     not match between the two arrays
+   @arg $paArray1 - the array that data will be merged into
+   @arg $paArray2 - the array that will be merged into paArray1
+   @returns - a new array containing the merged two original two arrays  */
+function array_merge_recursive_replace($paArray1, $paArray2) {
+	if (!is_array($paArray1) || !is_array($paArray2)) {
+		return $paArray2;
 	}
 
+	foreach ($paArray2 as $sKey2 => $sValue2) {
+		$paArray1[$sKey2] = array_merge_recursive_replace(@$paArray1[$sKey2], $sValue2);
+	}
+
+	return $paArray1;
 }
 
 ?>

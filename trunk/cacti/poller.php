@@ -36,7 +36,6 @@ $no_http_headers = true;
 /* Start Initialization Section */
 include(dirname(__FILE__) . "/include/config.php");
 include_once($config["base_path"] . "/lib/poller.php");
-include_once($config["base_path"] . "/lib/data_query.php");
 include_once($config["base_path"] . "/lib/graph_export.php");
 include_once($config["base_path"] . "/lib/rrd.php");
 
@@ -63,6 +62,7 @@ $num_pollers = 0;
 /* poller_id 1 tasks only */
 if ($poller_id == 1) {
 	/* get total number of polling items from the database for the specified poller */
+
 	$num_polling_items = db_fetch_cell("SELECT count(*) FROM poller_item WHERE poller_id=" . $poller_id);
 	$polling_hosts = array_merge(array(0 => array("id" => "0")), db_fetch_assoc("SELECT id FROM host WHERE (disabled = '' AND poller_id=" . $poller_id . ") ORDER BY id"));
 
@@ -91,7 +91,7 @@ if ($poller_id == 1) {
 	db_execute("UPDATE poller SET run_state='Ready' WHERE active='on'");
 
 	/* show main poller as running */
-    db_execute("UPDATE poller SET run_state='Running' WHERE id=1");
+	db_execute("UPDATE poller SET run_state='Running' WHERE id=1");
 
 } else {
 	/* verify I am a valid poller */
@@ -363,13 +363,13 @@ if ((($num_polling_items > 0) || ($num_pollers > 1)) && (read_config_option("pol
 		graph_export();
 
 		/* i don't know why we are doing this */
-		db_execute("truncate table poller_output");
+		//db_execute("truncate table poller_output");
 
 		/* i don't know why we are doing this */
 		db_execute("truncate table poller_time");
 
 		/* idle the pollers till the next polling cycle */
-	   	db_execute("update poller set run_state = 'Wait' where active='on'");
+		db_execute("update poller set run_state = 'Wait' where active='on'");
 	}
 
 	if ($method == "cactid") {

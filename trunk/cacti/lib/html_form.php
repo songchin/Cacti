@@ -50,7 +50,7 @@ function draw_edit_form($array) {
 		while (list($field_name, $field_array) = each($fields_array)) {
 			if ($i == 0) {
 				if (!isset($config_array["no_form_tag"])) {
-					print "<form method='post' action='" . ((isset($config_array["post_to"])) ? $config_array["post_to"] : basename($_SERVER["PHP_SELF"])) . "'" . ((isset($config_array["form_name"])) ? " name='" . $config_array["form_name"] . "'" : "") . ">\n";
+					echo "<form method='post' action='" . ((isset($config_array["post_to"])) ? $config_array["post_to"] : basename($_SERVER["PHP_SELF"])) . "'" . ((isset($config_array["form_name"])) ? " name='" . $config_array["form_name"] . "'" : "") . ">\n";
 				}
 			}
 
@@ -59,27 +59,64 @@ function draw_edit_form($array) {
 			}elseif ($field_array["method"] == "hidden_zero") {
 				form_hidden_box($field_name, $field_array["value"], "0");
 			}elseif ($field_array["method"] == "spacer") {
-				print "<tr bgcolor='" . $colors["header_panel_background"] . "'><td colspan='2' class='textSubHeaderDark'>" . $field_array["friendly_name"] . "</td></tr>\n";
+				echo "<tr bgcolor='" . $colors["header_panel_background"] . "'><td colspan='2' class='textSubHeaderDark'>" . $field_array["friendly_name"] . "</td></tr>\n";
 			}else{
+				/* row color */
 				if (isset($config_array["force_row_color"])) {
-					print "<tr bgcolor='#" . $config_array["force_row_color"] . "'>";
+					echo "<tr bgcolor='#" . $config_array["force_row_color"] . "'>";
 				}else{
 					form_alternate_row_color($colors["form_alternate1"],$colors["form_alternate2"],$i);
 				}
 
-				print "<td width='" . ((isset($config_array["left_column_width"])) ? $config_array["left_column_width"] : "50%") . "'>\n<font class='textEditTitle'>" . $field_array["friendly_name"] . "</font><br>\n";
+				/* column width */
+				echo "<td width='" . ((isset($config_array["left_column_width"])) ? $config_array["left_column_width"] : "50%") . "'>\n<font class='textEditTitle'>" . $field_array["friendly_name"] . "</font><br>\n";
 
-				if (isset($field_array["sub_checkbox"])) {
-					form_checkbox($field_array["sub_checkbox"]["name"], $field_array["sub_checkbox"]["value"], $field_array["sub_checkbox"]["friendly_name"], "", ((isset($field_array["form_id"])) ? $field_array["form_id"] : ""));
+				/* sub-field name components */
+				if (isset($field_array["sub_template_checkbox"])) {
+					form_checkbox($field_array["sub_template_checkbox"]["name"], $field_array["sub_template_checkbox"]["value"], $field_array["sub_template_checkbox"]["friendly_name"], "", ((isset($field_array["form_id"])) ? $field_array["form_id"] : ""), "template_checkbox_status(\"$field_name\",\"" . $field_array["sub_template_checkbox"]["name"] . "\",\"" . $field_array["method"] . "\")");
 				}
 
-				print ((isset($field_array["description"])) ? $field_array["description"] : "") . "</td>\n";
+				/* field description */
+				echo ((isset($field_array["description"])) ? $field_array["description"] : "") . "</td>\n";
 
-				print "<td>";
+				echo "<td>";
 
-				draw_edit_control($field_name, $field_array);
+				if (isset($field_array["preset"])) {
+					$field_array["preset"]["js_onchange"] = "document.forms[0].$field_name.value=document.forms[0].preset_$field_name.value";
+					echo "<table width='100%' cellspacing='0' cellpadding='0'><tr>";
 
-				print "</td>\n</tr>\n";
+					/* main form item */
+					echo "<td>";
+					draw_edit_control($field_name, $field_array);
+					echo "</td>";
+
+					/* special handling for drop_array's so we can add a 'none' option that clears the
+					 * preset value */
+					if (($field_array["preset"]["method"] == "drop_array") || ($field_array["preset"]["method"] == "drop_color")) {
+						$_arr = array();
+
+						/* convert sql-keyed array into array("id" => "value") style */
+						if (isset($field_array["preset"]["sql"])) {
+							$_arr = array_rekey(db_fetch_assoc($field_array["preset"]["sql"]), "id", "name");
+						}
+
+						/* add a "None" option that clears the preset */
+						$field_array["preset"]["array"][""] = "(None)";
+						$field_array["preset"]["array"] += $_arr;
+					}
+
+					/* preset form item */
+					echo "<td align='right'>";
+					draw_edit_control("preset_$field_name", $field_array["preset"]);
+					echo "<span style='font-weight: bold; color: #c34138; font-size: 14px;' title='Preset Selection'>*</span\n";
+					echo "</td>";
+
+					echo "</tr></table>\n";
+				}else{
+					draw_edit_control($field_name, $field_array);
+				}
+
+				echo "</td>\n</tr>\n";
 
 				$i++;
 			}
@@ -109,15 +146,22 @@ function draw_edit_control($field_name, &$field_array) {
 		form_text_box($field_name, $field_array["value"], ((isset($field_array["default"])) ? $field_array["default"] : ""), $field_array["max_length"], ((isset($field_array["size"])) ? $field_array["size"] : "40"), "password");
 		print "<br>";
 		break;
-
+	case 'textbox_sv':
+		form_text_box_sv($field_name, $field_array["value"], $field_array["url_moveup"], $field_array["url_movedown"], $field_array["url_delete"], $field_array["url_add"], ((isset($field_array["force_blank_field"])) ? $field_array["force_blank_field"] : false), ((isset($field_array["max_length"])) ? $field_array["max_length"] : "255"), ((isset($field_array["size"])) ? $field_array["size"] : "40"));
+		print "<input type='hidden' name='cacti_js_dropdown_redirect_x' value='' id='cacti_js_dropdown_redirect_x'>\n";
+		break;
 	case 'textarea':
 		form_text_area($field_name, $field_array["value"], $field_array["textarea_rows"], $field_array["textarea_cols"], ((isset($field_array["default"])) ? $field_array["default"] : ""));
 		break;
 	case 'drop_array':
-		form_dropdown($field_name, $field_array["array"], "", "", $field_array["value"], ((isset($field_array["none_value"])) ? $field_array["none_value"] : ""), ((isset($field_array["default"])) ? $field_array["default"] : ""));
+		form_dropdown($field_name, $field_array["array"], "", "", $field_array["value"], ((isset($field_array["none_value"])) ? $field_array["none_value"] : ""), ((isset($field_array["default"])) ? $field_array["default"] : ""), "", ((isset($field_array["trim_length"])) ? $field_array["trim_length"] : "0"), ((isset($field_array["js_onchange"])) ? $field_array["js_onchange"] : ""));
+		break;
+	case 'drop_array_js':
+		form_dropdown($field_name, $field_array["array"], "", "", $field_array["value"], ((isset($field_array["none_value"])) ? $field_array["none_value"] : ""), ((isset($field_array["default"])) ? $field_array["default"] : ""), "", ((isset($field_array["trim_length"])) ? $field_array["trim_length"] : "0"), "submit_redirect(\"" . $field_array["form_index"] . "\", \"" . htmlspecialchars($field_array["redirect_url"]) . "\", document.forms[" . $field_array["form_index"] . "].$field_name.options[document.forms[" . $field_array["form_index"] . "].$field_name.selectedIndex].value)");
+		print "<input type='hidden' name='cacti_js_dropdown_redirect_x' value='' id='cacti_js_dropdown_redirect_x'>\n";
 		break;
 	case 'drop_sql':
-		form_dropdown($field_name, db_fetch_assoc($field_array["sql"]), "name", "id", $field_array["value"], ((isset($field_array["none_value"])) ? $field_array["none_value"] : ""), ((isset($field_array["default"])) ? $field_array["default"] : ""));
+		form_dropdown($field_name, db_fetch_assoc($field_array["sql"]), "name", "id", $field_array["value"], ((isset($field_array["none_value"])) ? $field_array["none_value"] : ""), ((isset($field_array["default"])) ? $field_array["default"] : ""), "", ((isset($field_array["trim_length"])) ? $field_array["trim_length"] : "0"), ((isset($field_array["js_onchange"])) ? $field_array["js_onchange"] : ""));
 		break;
 	case 'drop_multi':
 		form_multi_dropdown($field_name, $field_array["array"], db_fetch_assoc($field_array["sql"]), "id");
@@ -129,10 +173,10 @@ function draw_edit_control($field_name, &$field_array) {
 		grow_dropdown_tree($field_array["tree_id"], $field_name, $field_array["value"]);
 		break;
 	case 'drop_color':
-		form_color_dropdown($field_name, $field_array["value"], "None", ((isset($field_array["default"])) ? $field_array["default"] : ""));
+		form_color_dropdown($field_name, $field_array["array"], $field_array["value"], ((isset($field_array["none_value"])) ? $field_array["none_value"] : ""), ((isset($field_array["default"])) ? $field_array["default"] : ""), ((isset($field_array["js_onchange"])) ? $field_array["js_onchange"] : ""));
 		break;
 	case 'checkbox':
-		form_checkbox($field_name, $field_array["value"], $field_array["friendly_name"], ((isset($field_array["default"])) ? $field_array["default"] : ""), ((isset($field_array["form_id"])) ? $field_array["form_id"] : ""));
+		form_checkbox($field_name, $field_array["value"], $field_array["friendly_name"], ((isset($field_array["default"])) ? $field_array["default"] : ""), ((isset($field_array["form_id"])) ? $field_array["form_id"] : ""), ((isset($field_array["js_onclick"])) ? $field_array["js_onclick"] : ""));
 		break;
 	case 'checkbox_group':
 		while (list($check_name, $check_array) = each($field_array["items"])) {
@@ -174,7 +218,7 @@ function draw_edit_control($field_name, &$field_array) {
 }
 
 /* form_text_box - draws a standard html textbox
-   @arg $form_name - the name of this form element
+   @arg $field_name - the name of this form element
    @arg $form_previous_value - the current value of this form element
    @arg $form_default_value - the value of this form element to use if there is
      no current value available
@@ -185,7 +229,7 @@ function draw_edit_control($field_name, &$field_array) {
    @arg $current_id - used to determine if a current value for this form element
      exists or not. a $current_id of '0' indicates that no current value exists,
      a non-zero value indicates that a current value does exist */
-function form_text_box($form_name, $form_previous_value, $form_default_value, $form_max_length, $form_size = 30, $type = "text", $current_id = 0) {
+function form_text_box($field_name, $form_previous_value, $form_default_value, $form_max_length, $form_size = 30, $type = "text", $current_id = 0) {
 	if (($form_previous_value == "") && (empty($current_id))) {
 		$form_previous_value = $form_default_value;
 	}
@@ -193,36 +237,96 @@ function form_text_box($form_name, $form_previous_value, $form_default_value, $f
 	print "<input type='$type'";
 
 	if (isset($_SESSION["sess_error_fields"])) {
-		if (!empty($_SESSION["sess_error_fields"][$form_name])) {
+		if (!empty($_SESSION["sess_error_fields"][$field_name])) {
 			print "class='txtErrorTextBox'";
-			unset($_SESSION["sess_error_fields"][$form_name]);
+			unset($_SESSION["sess_error_fields"][$field_name]);
 		}
 	}
 
 	if (isset($_SESSION["sess_field_values"])) {
-		if (!empty($_SESSION["sess_field_values"][$form_name])) {
-			$form_previous_value = $_SESSION["sess_field_values"][$form_name];
+		if (!empty($_SESSION["sess_field_values"][$field_name])) {
+			$form_previous_value = $_SESSION["sess_field_values"][$field_name];
 		}
 	}
 
-	print " name='$form_name' size='$form_size'" . (!empty($form_max_length) ? " maxlength='$form_max_length'" : "") . " value='" . htmlspecialchars($form_previous_value, ENT_QUOTES) . "'>\n";
+	print " name='$field_name' id='$field_name' size='$form_size'" . (!empty($form_max_length) ? " maxlength='$form_max_length'" : "") . " value='" . htmlspecialchars($form_previous_value, ENT_QUOTES) . "'>\n";
+}
+
+function form_text_box_sv($field_name, $values_array, $url_moveup, $url_movedown, $url_delete, $url_add, $force_blank_field = false, $form_max_length, $form_size = 30) {
+	?>
+	<table cellpadding='1' cellspacing='0' width='100%'>
+		<?php
+		$i = 1;
+		while (list($id, $value) = each($values_array)) {
+			?>
+			<tr>
+				<td>
+					<strong>[<?php echo $i;?>]</strong>&nbsp;
+					<?php form_text_box("sv|$field_name|$id", $value, "", $form_max_length, $form_size, "text", 0);?>
+					<?php
+					if (sizeof($values_array) > 1) {
+						?>
+						<a href="<?php echo str_replace("|id|", $id, $url_movedown);?>"><img src="<?php echo html_get_theme_images_path('move_down.gif');?>" border="0" alt="Move Down"></a>
+						<a href="<?php echo str_replace("|id|", $id, $url_moveup);?>"><img src="<?php echo html_get_theme_images_path('move_up.gif');?>" border="0" alt="Move Up"></a>
+						<?php
+					}
+					?>
+				</td>
+				<td align="right">
+					<?php
+					if (sizeof($values_array) > 1) {
+						?>
+						<a href="<?php echo str_replace("|id|", $id, $url_delete);?>"><img src="<?php echo html_get_theme_images_path('delete_icon.gif');?>" width="10" height="10" border="0" alt="Delete"></a>
+						<?php
+					}
+					?>
+				</td>
+			</tr>
+			<?php
+			$i++;
+		}
+
+		if ((sizeof($values_array) == 0) || ($force_blank_field == true)) {
+			?>
+			<tr>
+				<td>
+					<?php echo ((sizeof($values_array) > 0) ? "<strong>[$i]</strong>&nbsp;" : "");?>
+					<?php form_text_box("sv|$field_name|0", "", "", $form_max_length, $form_size, "text", 0);?>
+					<br>
+				</td>
+			</tr>
+			<?php
+		}
+
+		if (sizeof($values_array) > 0) {
+			?>
+			<tr>
+				<td align="right" style="border-top: 1px dashed gray; padding: 2px; font-size: 12px;" colspan="2">
+					<strong><a href="<?php echo $url_add;?>">Add New Field</a</strong>
+				</td>
+			</tr>
+		<?php
+		}
+		?>
+	</table>
+	<?php
 }
 
 /* form_hidden_box - draws a standard html hidden element
-   @arg $form_name - the name of this form element
+   @arg $field_name - the name of this form element
    @arg $form_previous_value - the current value of this form element
    @arg $form_default_value - the value of this form element to use if there is
      no current value available */
-function form_hidden_box($form_name, $form_previous_value, $form_default_value) {
+function form_hidden_box($field_name, $form_previous_value, $form_default_value) {
 	if ($form_previous_value == "") {
 		$form_previous_value = $form_default_value;
 	}
 
-	print "<input type='hidden' name='$form_name' value='$form_previous_value'>\n";
+	print "<input type='hidden' name='$field_name' value='$form_previous_value'>\n";
 }
 
 /* form_dropdown - draws a standard html dropdown box
-   @arg $form_name - the name of this form element
+   @arg $field_name - the name of this form element
    @arg $form_data - an array containing data for this dropdown. it can be formatted
      in one of two ways:
      $array["id"] = "value";
@@ -238,30 +342,30 @@ function form_hidden_box($form_name, $form_previous_value, $form_default_value) 
    @arg $form_default_value - the value of this form element to use if there is
      no current value available
    @arg $css_style - any css that needs to be applied to this form element */
-function form_dropdown($form_name, $form_data, $column_display, $column_id, $form_previous_value, $form_none_entry, $form_default_value, $css_style = "") {
+function form_dropdown($field_name, $form_data, $column_display, $column_id, $form_previous_value, $form_none_entry, $form_default_value, $css_style = "", $trim_display_length = 0, $js_onchange = "") {
 	if ($form_previous_value == "") {
 		$form_previous_value = $form_default_value;
 	}
 
 	if (isset($_SESSION["sess_field_values"])) {
-		if (!empty($_SESSION["sess_field_values"][$form_name])) {
-			$form_previous_value = $_SESSION["sess_field_values"][$form_name];
+		if (!empty($_SESSION["sess_field_values"][$field_name])) {
+			$form_previous_value = $_SESSION["sess_field_values"][$field_name];
 		}
 	}
 
-	print "<select name='$form_name' style='$css_style'>";
+	print "<select name='$field_name' id='$field_name' style='$css_style'" . ($js_onchange == "" ? "" : " onChange='$js_onchange'") . ">";
 
 	if (!empty($form_none_entry)) {
 		print "<option value='0'" . (empty($form_previous_value) ? " selected" : "") . ">$form_none_entry</option>\n";
 	}
 
-	html_create_list($form_data, $column_display, $column_id, htmlspecialchars($form_previous_value, ENT_QUOTES));
+	html_create_list($form_data, $column_display, $column_id, $form_previous_value, $trim_display_length);
 
 	print "</select>\n";
 }
 
 /* form_text_box - draws a standard html checkbox
-   @arg $form_name - the name of this form element
+   @arg $field_name - the name of this form element
    @arg $form_previous_value - the current value of this form element
    @arg $form_caption - the text to display to the right of the checkbox
    @arg $form_default_value - the value of this form element to use if there is
@@ -269,64 +373,64 @@ function form_dropdown($form_name, $form_data, $column_display, $column_id, $for
    @arg $current_id - used to determine if a current value for this form element
      exists or not. a $current_id of '0' indicates that no current value exists,
      a non-zero value indicates that a current value does exist */
-function form_checkbox($form_name, $form_previous_value, $form_caption, $form_default_value, $current_id = 0) {
+function form_checkbox($field_name, $form_previous_value, $form_caption, $form_default_value, $current_id = 0, $js_onclick = "") {
 	if (($form_previous_value == "") && (empty($current_id))) {
 		$form_previous_value = $form_default_value;
 	}
 
 	if (isset($_SESSION["sess_field_values"])) {
-		if (!empty($_SESSION["sess_field_values"][$form_name])) {
-			$form_previous_value = $_SESSION["sess_field_values"][$form_name];
+		if (!empty($_SESSION["sess_field_values"][$field_name])) {
+			$form_previous_value = $_SESSION["sess_field_values"][$field_name];
 		}
 	}
 
-	print "<input type='checkbox' name='$form_name' id='$form_name'" . (($form_previous_value == "on") ? " checked" : "") . "> $form_caption\n";
+	print "<input type='checkbox' name='$field_name' id='$field_name'" . ($js_onclick == "" ? "" : " onClick='$js_onclick'") . ((($form_previous_value == "on") || ($form_previous_value == "1")) ? " checked" : "") . "> $form_caption\n";
 }
 
 /* form_text_box - draws a standard html radio button
-   @arg $form_name - the name of this form element
+   @arg $field_name - the name of this form element
    @arg $form_previous_value - the current value of this form element (selected or not)
    @arg $form_current_value - the current value of this form element (element id)
    @arg $form_caption - the text to display to the right of the checkbox
    @arg $form_default_value - the value of this form element to use if there is
      no current value available */
-function form_radio_button($form_name, $form_previous_value, $form_current_value, $form_caption, $form_default_value) {
+function form_radio_button($field_name, $form_previous_value, $form_current_value, $form_caption, $form_default_value) {
 	if ($form_previous_value == "") {
 		$form_previous_value = $form_default_value;
 	}
 
 	if (isset($_SESSION["sess_field_values"])) {
-		if (!empty($_SESSION["sess_field_values"][$form_name])) {
-			$form_previous_value = $_SESSION["sess_field_values"][$form_name];
+		if (!empty($_SESSION["sess_field_values"][$field_name])) {
+			$form_previous_value = $_SESSION["sess_field_values"][$field_name];
 		}
 	}
 
-	print "<input type='radio' name='$form_name' value='$form_current_value'" . (($form_previous_value == $form_current_value) ? " checked" : "") . "> $form_caption\n";
+	print "<input type='radio' name='$field_name' id='$field_name' value='$form_current_value'" . (($form_previous_value == $form_current_value) ? " checked" : "") . "> $form_caption\n";
 }
 
 /* form_text_box - draws a standard html text area box
-   @arg $form_name - the name of this form element
+   @arg $field_name - the name of this form element
    @arg $form_previous_value - the current value of this form element (selected or not)
    @arg $form_rows - the number of rows in the text area box
    @arg $form_columns - the number of columns in the text area box
    @arg $form_default_value - the value of this form element to use if there is
      no current value available */
-function form_text_area($form_name, $form_previous_value, $form_rows, $form_columns, $form_default_value) {
+function form_text_area($field_name, $form_previous_value, $form_rows, $form_columns, $form_default_value) {
 	if ($form_previous_value == "") {
 		$form_previous_value = $form_default_value;
 	}
 
 	if (isset($_SESSION["sess_field_values"])) {
-		if (!empty($_SESSION["sess_field_values"][$form_name])) {
-			$form_previous_value = $_SESSION["sess_field_values"][$form_name];
+		if (!empty($_SESSION["sess_field_values"][$field_name])) {
+			$form_previous_value = $_SESSION["sess_field_values"][$field_name];
 		}
 	}
 
-	print "<textarea cols='$form_columns' rows='$form_rows' name='$form_name'>" . htmlspecialchars($form_previous_value, ENT_QUOTES) . "</textarea>\n";
+	print "<textarea cols='$form_columns' id='$field_name' rows='$form_rows' name='$field_name'>" . htmlspecialchars($form_previous_value, ENT_QUOTES) . "</textarea>\n";
 }
 
 /* form_multi_dropdown - draws a standard html multiple select dropdown
-   @arg $form_name - the name of this form element
+   @arg $field_name - the name of this form element
    @arg $array_display - an array containing display values for this dropdown. it must
      be formatted like:
      $array[id] = display;
@@ -334,8 +438,8 @@ function form_text_area($form_name, $form_previous_value, $form_rows, $form_colu
      it must be formatted like:
      $array[0][$column_id] = key
    @arg $column_id - the name of the key used to reference the keys above */
-function form_multi_dropdown($form_name, $array_display, $sql_previous_values, $column_id) {
-	print "<select name='$form_name" . "[]' multiple>\n";
+function form_multi_dropdown($field_name, $array_display, $sql_previous_values, $column_id) {
+	print "<select name='$field_name" . "[]' id='$field_name" . "[]' multiple>\n";
 
 	foreach (array_keys($array_display) as $id) {
 		print "<option value='" . $id . "'";
@@ -360,34 +464,30 @@ function form_multi_dropdown($form_name, $array_display, $sql_previous_values, $
 /* form_color_dropdown - draws a dropdown containing a list of colors that uses a bit
      of css magic to make the dropdown item background color represent each color in
      the list
-   @arg $form_name - the name of this form element
+   @arg $field_name - the name of this form element
    @arg $form_previous_value - the current value of this form element
    @arg $form_none_entry - the name to use for a default 'none' element in the dropdown
    @arg $form_default_value - the value of this form element to use if there is
      no current value available */
-function form_color_dropdown($form_name, $form_previous_value, $form_none_entry, $form_default_value) {
+function form_color_dropdown($field_name, $form_data, $form_previous_value, $form_none_entry, $form_default_value, $js_onchange = "") {
 	if ($form_previous_value == "") {
 		$form_previous_value = $form_default_value;
 	}
 
-	$colors_list = db_fetch_assoc("select id,hex from colors order by hex desc");
-
-	print "<select name='$form_name'>\n";
+	print "<select name='$field_name'" . ($js_onchange == "" ? "" : " onChange='$js_onchange'") . ">\n";
 
 	if ($form_none_entry != "") {
 		print "<option value='0'>$form_none_entry</option>\n";
 	}
 
-	if (sizeof($colors_list) > 0) {
-		foreach ($colors_list as $color) {
-			print "<option style='background: #" . $color["hex"] . ";' value='" . $color["id"] . "'";
+	while (list($id, $hex) = each($form_data)) {
+		print "<option style='background: #" . $hex . ";' value='" . $id . "'";
 
-			if ($form_previous_value == $color["id"]) {
-				print " selected";
-			}
-
-			print ">" . $color["hex"] . "</option>\n";
+		if ($form_previous_value == $hex) {
+			print " selected";
 		}
+
+		print ">" . $hex . "</option>\n";
 	}
 
 	print "</select>\n";
