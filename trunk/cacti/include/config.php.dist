@@ -42,6 +42,7 @@ $config["php_snmp_support"] = function_exists("snmpget");
 /* used for includes */
 $config["base_path"] = ereg_replace("(.*)[\/\\]include", "\\1", dirname(__FILE__));
 $config["library_path"] = ereg_replace("(.*[\/\\])include", "\\1lib", dirname(__FILE__));
+$config["images_path"] = ereg_replace("(.*[\/\\])include", "\\1images", dirname(__FILE__));
 $config["themes_path"] = ereg_replace("(.*[\/\\])include", "\\1themes", dirname(__FILE__));
 $config["include_path"] = dirname(__FILE__);
 

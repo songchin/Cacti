@@ -86,13 +86,13 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.</tt></p>
 
 		<p><strong>Cacti Variables</a></strong><span style="font-family: monospace; font-size: 10px;"><br>
-		<strong>Operating System:</strong> <?php print $config["cacti_server_os"];?><br>
+		<strong>Cacti OS:</strong> <?php print $config["cacti_server_os"];?><br>
 		<strong>PHP SNMP Support:</strong> <?php print $config["php_snmp_support"] ? "yes" : "no";?><br>
+		<strong>PHP OS:</strong> <?php print PHP_OS ?><br>
+		<img src="<?php print html_get_php_os_icon();?>"><br>
 		</span></p>
 	</td>
 </tr>
 
 <?php
 html_end_box();
-include("./include/bottom_footer.php");
-?>

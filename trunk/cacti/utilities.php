@@ -338,6 +338,17 @@ function utilities() {
 		</td>
 	</tr>
 
+	<?php html_header(array("General Utilities"), 2);?>
+
+	<tr bgcolor="#<?php print $colors["form_alternate2"];?>">
+		<td class="textArea">
+			<p><a href='php_info.php' target="_blank">PHP Information</a></p>
+		</td>
+		<td class="textArea">
+			<p>This utility will retreive PHP version information to your browser.  This utility can aid in determining sources of problems and verification of your operating environment.</p>
+		</td>
+	</tr>
+
 	<?php
 
 	html_end_box();
