@@ -2279,7 +2279,6 @@ INSERT INTO settings VALUES ('path_snmpwalk','/usr/bin/snmpwalk');
 INSERT INTO settings VALUES ('path_snmpget','/usr/bin/snmpget');
 INSERT INTO settings VALUES ('path_rrdtool','/usr/bin/rrdtool');
 INSERT INTO settings VALUES ('path_php_binary','/usr/bin/php');
-INSERT INTO settings VALUES ('path_cactilog','');
 INSERT INTO settings VALUES ('path_cactid','');
 INSERT INTO settings VALUES ('poller_enabled','on');
 INSERT INTO settings VALUES ('poller_type','1');

@@ -185,7 +185,7 @@ function utilities_view_syslog() {
 
 	print $nav;
 
-	html_header(array("Logdate", "Facility", "Severity", "Poller", "Host", "User", "Log Message"));
+	html_header(array("Logdate", "Facility", "Severity", "Poller", "Host", "Log Message"));
 
 	$i = 0;
 	if (sizeof($syslog_entries) > 0) {
@@ -206,9 +206,6 @@ function utilities_view_syslog() {
 				</td>
 				<td>
 					<?php if ($syslog_entry["host"] != "") { print $syslog_entry["host"]; } else { print "SYSTEM"; }?>
-				</td>
-				<td>
-					<?php print $syslog_entry["username"];?>
 				</td>
 				<td>
 					<?php print $syslog_entry["message"];?>
@@ -301,7 +298,7 @@ function utilities_view_poller_cache() {
 		form_alternate_row_color($colors["form_alternate1"],$colors["form_alternate2"],$i); $i++;
 		?>
 			<td>
-				Action: <?php print $item["action"];?>, <?php print ((($item["action"] == "1") || ($item["action"] == "2")) ? "Script: " . $item["arg1"] : "OID: " . $item["arg1"] . " (Host: " . $item["hostname"] . ", Community: " . $item["snmp_community"] . ")");?>
+				Action: <?php print $item["action"] . ", ";?><?php print ((($item["action"] == "1") || ($item["action"] == "2")) ? "Script: " . $item["arg1"] : "OID: " . $item["arg1"] . " (Host: " . $item["hostname"] . ", SNMP Version: " . $item["snmp_version"])?><?php if ($item["snmp_version"] == 3) { print ", User: " . $item["snmpv3_auth_username"] . ", AuthProto: " . $item["snmpv3_auth_protocol"] . ", PrivProto: " . $item["snmpv3_priv_protocol"] . ")";} else { print ", Community: " . $item["snmp_community"] . ")";}?>
 			</td>
 		</tr>
 		<?php

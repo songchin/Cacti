@@ -152,15 +152,6 @@ if ($config["cacti_server_os"] == "unix") {
 	$input["path_snmpget"]["default"] = "c:/net-snmp/bin/snmpget.exe";
 }
 
-/* log file path */
-$input["path_cactilog"] = $settings["path"]["path_cactilog"];
-$input["path_cactilog"]["description"] = "The path to your Cacti log file.";
-if (strlen(read_config_option("path_cactilog"))) {
-	$input["path_cactilog"]["default"] = read_config_option("path_cactilog");
-} else {
-	$input["path_cactilog"]["default"] = $config["base_path"] . "/log/cacti.log";
-}
-
 /* SNMP Version */
 if ($config["cacti_server_os"] == "unix") {
 	$input["snmp_version"] = $settings["snmp"]["snmp_version"];
