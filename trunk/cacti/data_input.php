@@ -251,7 +251,7 @@ function data_edit() {
 		<?php
 		}
 		}else{
-			print "<tr bgcolor='#" . $colors["form_alternate1"] . "'><td><em>No Input Fields</em></td><td></td><td></td></tr>";
+			print "<tr bgcolor='#" . $colors["form_alternate2"] . "'><td><em>No Input Fields</em></td><td></td><td></td></tr>";
 		}
 		html_end_box();
 
@@ -285,7 +285,7 @@ function data_edit() {
 		<?php
 		}
 		}else{
-			print "<tr><td bgcolor='#" . $colors["form_alternate1"] . "' colspan=4><em>No Output Fields</em></td></tr>";
+			print "<tr><td bgcolor='#" . $colors["form_alternate2"] . "' colspan=4><em>No Output Fields</em></td></tr>";
 		}
 		html_end_box();
 	}
