@@ -24,7 +24,7 @@
  +-------------------------------------------------------------------------+
 */
 
-include("./include/auth.php");
+include("./include/config.php");
 include("./lib/api_user.php");
 
 /* set default action */
