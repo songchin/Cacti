@@ -44,11 +44,6 @@ function cacti_snmp_get($hostname, $community, $oid, $version, $v3username, $v3p
 	$retries = read_config_option("snmp_retries");
 	if ($retries == "") $retries = 3;
 
-	/* always use SNMP version 1 for UI stuff */
-	if ($environ == SNMP_WEBUI) {
-		$version = "1";
-	}
-
 	if (snmp_get_method($version) == SNMP_METHOD_PHP) {
 		/* make sure snmp* is verbose so we can see what types of data
 		we are getting back */
@@ -99,11 +94,6 @@ function cacti_snmp_walk($hostname, $community, $oid, $version, $v3username, $v3
 
 	$retries = read_config_option("snmp_retries");
 	if ($retries == "") $retries = 3;
-
-	/* always use SNMP version 1 for UI stuff */
-	if ($environ == SNMP_WEBUI) {
-		$version = "1";
-	}
 
 	if (snmp_get_method($version) == SNMP_METHOD_PHP) {
 		if ($version == "1") {
