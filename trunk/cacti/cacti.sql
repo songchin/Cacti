@@ -2628,7 +2628,7 @@ INSERT INTO snmp_query_graph_sv VALUES (49,'183bb486c92a566fddcb0585ede37865',22
 
 CREATE TABLE `syslog` (
   `id` bigint(20) unsigned NOT NULL auto_increment,
-  `logdate` date NOT NULL default '0000-00-00',
+  `logdate` datetime NOT NULL default '0000-00-00 00:00:00',
   `facility` enum('POLLER','CMDPHP','CACTID','SCPTSVR','AUTH','WEBUI') NOT NULL default 'POLLER',
   `severity` enum('EMERGENCY','ALERT','CRITICAL','ERROR','WARNING','NOTICE','INFO','DEBUG') NOT NULL default 'EMERGENCY',
   `poller_id` smallint(5) unsigned NOT NULL default '0',
@@ -2645,7 +2645,7 @@ CREATE TABLE `syslog` (
   KEY `user_id` (`user_id`),
   KEY `username` (`username`),
   KEY `logdate` (`logdate`)
-) TYPE=MyISAM; 
+) TYPE=MyISAM;
 
 --
 -- Table structure for table `user_auth`
