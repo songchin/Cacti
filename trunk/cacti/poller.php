@@ -75,7 +75,7 @@ if ($poller_id == 1) {
 	$num_pollers = sizeof($pollers) + 1;
 
 	/* update web paths for the poller */
-	db_execute("REPLACE INTO settings (name,value) VALUES ('path_webroot','" . addslashes(($config["cacti_server_os"] == "win32") ? strtolower(substr(dirname(__FILE__), 0, 1)) . substr(dirname(__FILE__), 1) : dirname(__FILE__)) . "')");
+	db_execute("REPLACE INTO settings (name,value) VALUES ('path_webroot','" . addslashes(($config["cacti_server_os"] == "win32") ? strtolower(str_replace("\\","/",substr(dirname(__FILE__), 0, 1))) . str_replace("\\","/",substr(dirname(__FILE__), 1)) : dirname(__FILE__)) . "')");
 
 	/* initialize poller_time and poller_output tables */
 	db_execute("TRUNCATE TABLE poller_time");
