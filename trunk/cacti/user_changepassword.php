@@ -25,7 +25,6 @@
 */
 
 include("./include/config.php");
-include("./lib/api_user.php");
 
 /* set default action */
 if (!isset($_REQUEST["action"])) { $_REQUEST["action"] = ""; }
