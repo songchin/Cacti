@@ -418,8 +418,8 @@ $settings = array(
 			"method" => "spacer"
 			),
 		"current_theme" => array(
-			"friendly_name" => "Cacti Theme to Use",
-			"description" => "The Cacti color theme to use.  Changes the default look of Cacti.",
+			"friendly_name" => "Default Visual Theme to Use",
+			"description" => "The Cacti theme to use by default.  Changes the default look of Cacti.",
 			"method" => "drop_array",
 			"default" => "classic",
 			"array" => $themes
@@ -730,6 +730,13 @@ $settings = array(
 
 $settings_graphs = array(
 	"general" => array(
+		"current_theme" => array(
+			"friendly_name" => "Visual Theme to Use",
+			"description" => "The Cacti theme to use.  Changes the look of Cacti.",
+			"method" => "drop_array",
+			"default" => "classic",
+			"array" => $themes
+			),
 		"default_rra_id" => array(
 			"friendly_name" => "Default RRA",
 			"description" => "The default RRA to use when thumbnail graphs are not being displayed or when 'Thumbnail Timespan' is set to '0'.",

@@ -247,14 +247,26 @@ function html_header_checkbox($header_items, $form_action = "") {
 /* html_get_theme_css() - returns the Style sheet reference for the current theme
    */
 function html_get_theme_css() {
-	return "themes/" . read_config_option("current_theme") . "/" . read_config_option("current_theme") . ".css";
+	if (strlen(read_graph_config_option("current_theme")) > 0) {
+		$theme = read_graph_config_option("current_theme");
+	}else{
+		$theme = read_config_option("current_theme");
+	}
+
+	return "themes/" . $theme . "/" . $theme . ".css";
 }
 
 /* html_get_theme_image_path() - returns the Style sheet reference for the current theme
    */
 function html_get_theme_images_path($image_file = "") {
-	if (file_exists("themes/" . read_config_option("current_theme") . "/images/" . $image_file)) {
-		return "themes/" . read_config_option("current_theme") . "/images/" . $image_file;
+	if (strlen(read_graph_config_option("current_theme")) > 0) {
+		$theme = read_graph_config_option("current_theme");
+	}else{
+		$theme = read_config_option("current_theme");
+	}
+
+	if (file_exists("themes/" . $theme . "/images/" . $image_file)) {
+		return "themes/" . $theme . "/images/" . $image_file;
 	} else {
 		if ($image_file != "") {
 			return "images/" . $image_file;
@@ -266,8 +278,15 @@ function html_get_theme_images_path($image_file = "") {
 
 function html_theme_color_scheme() {
 	global $config;
-	if (file_exists($config["themes_path"] . "/" . read_config_option("current_theme") . "/" . read_config_option("current_theme") . ".php")) {
-		return $config["themes_path"] . "/" . read_config_option("current_theme") . "/" . read_config_option("current_theme") . ".php";
+
+	if (strlen(read_graph_config_option("current_theme")) > 0) {
+		$theme = read_graph_config_option("current_theme");
+	}else{
+		$theme = read_config_option("current_theme");
+	}
+
+	if (file_exists($config["themes_path"] . "/" . $theme . "/" . $theme . ".php")) {
+		return $config["themes_path"] . "/" . $theme . "/" . $theme . ".php";
 	} else {
 		return $config["include_path"] . "/config_colors.php";
 	}
