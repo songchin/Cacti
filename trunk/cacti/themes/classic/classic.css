@@ -130,6 +130,26 @@ table.tabs      {
     border-bottom: 1px solid #666;
 }
 
+/* Begin - Java Script Row Selection Logic for Layout.js */
+.jsRowSelect {
+	background-color: gold;
+	font-family: Verdana,Helvetica,sans-serif;
+	color: #000000;
+}
+
+.jsRowUnSelect {
+	color: #FFFFFF;
+	font-family: Verdana,Helvetica,sans-serif;
+	font-weight: normal;
+}
+
+.jsRowUnavailable {
+	color: #999999;
+	font-family: Verdana,Helvetica,sans-serif;
+	font-weight: normal;
+}
+/* End - Java Script Row Selection Logic for Layout.js */
+
 /* The main calendar widget.  DIV containing a table. */
 
 div.calendar { position: relative; }

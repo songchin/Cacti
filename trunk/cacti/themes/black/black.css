@@ -56,6 +56,26 @@ tr {
     font-size: 15px;
 }
 
+/* Begin - Java Script Row Selection Logic for Layout.js */
+.jsRowSelect {
+	background-color: gold;
+	font-family: Verdana,Helvetica,sans-serif;
+	color: #000000;
+}
+
+.jsRowUnSelect {
+	color: #FFFFFF;
+	font-family: Verdana,Helvetica,sans-serif;
+	font-weight: normal;
+}
+
+.jsRowUnavailable {
+	color: #999999;
+	font-family: Verdana,Helvetica,sans-serif;
+	font-weight: normal;
+}
+/* End - Java Script Row Selection Logic for Layout.js */
+
 select {
     color: black;
     text-decoration: none;
