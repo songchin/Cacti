@@ -577,7 +577,7 @@ function grow_right_pane_tree($tree_id, $leaf_id, $host_group_data) {
 
 				/* re-key the results on data query index */
 				if (sizeof($graphs) > 0) {
-					print "<tr bgcolor='#a9b7cb'><td colspan='3' class='textHeaderDark'><strong>Data Query:</strong> " . $data_query["name"] . "</td></tr>";
+					print "<tr bgcolor='#" . $colors["graph_type_background"] . "'><td colspan='3' class='textHeaderDark'><strong>Data Query:</strong> " . $data_query["name"] . "</td></tr>";
 
 					foreach ($graphs as $graph) {
 						$snmp_index_to_graph{$graph["snmp_index"]}{$graph["local_graph_id"]} = $graph["title_cache"];

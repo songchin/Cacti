@@ -66,7 +66,7 @@ case 'tree':
 	if ((!empty($tree_dropdown_html)) && (read_graph_config_option("default_tree_view_mode") == "1")) {
 		print "
 		<br>
-		<table width='98%' style='background-color: #f5f5f5; border: 1px solid #bbbbbb;' align='center' cellpadding='3'>
+			<table width='98%' style='background-color: #" . $colors["graph_menu_background"] . "; border: 1px solid #" . $colors["graph_menu_border"] . ";' align='center' cellpadding='3'>
 			<tr>
 				$tree_dropdown_html
 			</tr>
@@ -242,7 +242,7 @@ case 'list':
 	$i = 0;
 	if (sizeof($graphs) > 0) {
 	foreach ($graphs as $graph) {
-		form_alternate_row_color("f5f5f5", "ffffff", $i);
+		form_alternate_row_color($colors["form_alternate1"], $colors["form_alternate2"], $i);
 
 		print "<td width='1%'>";
 		form_checkbox("graph_" . $graph["local_graph_id"], "", "", "", 0);

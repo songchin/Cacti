@@ -65,6 +65,8 @@ $colors["console_menu_background"] = "F5F5F5";
 
 /* Graph Menu Colors */
 $colors["graph_menu_background"] = "EFEFEF";
+$colors["graph_menu_border"] = "BBBBBB";
+$colors["graph_type_background"] = "A9B7CB";
 $colors["graph_alternate1"] = "F5F5F5";
 $colors["graph_alternate2"] = "E5E5E5";
 

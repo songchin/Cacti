@@ -67,11 +67,13 @@ function html_end_box($trailing_br = true) { ?>
    @arg $cellpadding - the table cell padding for the box
    @arg $leading_br (bool) - whether to draw a leader <br> tag before the start of the table */
 function html_graph_start_box($cellpadding = 3, $leading_br = true) {
+	global $colors;
+
 	if ($leading_br == true) {
 		print "<br>\n";
 	}
 
-	print "<table width='98%' style='background-color: #f5f5f5; border: 1px solid #bbbbbb;' align='center' cellpadding='$cellpadding'>\n";
+	print "<table width='98%' style='background-color: #" . $colors["graph_menu_background"] . "; border: 1px solid #" . $colors["graph_menu_border"] . ";' align='center' cellpadding='$cellpadding'>\n";
 }
 
 /* html_graph_end_box - draws the end of an HTML graph view box */
@@ -89,11 +91,12 @@ function html_graph_end_box() {
    @arg $header - html to use as a header */
 function html_graph_area(&$graph_array, $no_graphs_message = "", $extra_url_args = "", $header = "") {
 	global $colors;
+
 	$i = 0;
 
 	if (sizeof($graph_array) > 0) {
 		if ($header != "") {
-			print $header;
+			print "<tr bgcolor='#" . $colors["graph_type_background"] . "' " . $header . "</tr>";
 		}
 
 		foreach ($graph_array as $graph) {
@@ -132,10 +135,12 @@ function html_graph_area(&$graph_array, $no_graphs_message = "", $extra_url_args
    @arg $extra_url_args - extra arguments to append to the url
    @arg $header - html to use as a header */
 function html_graph_thumbnail_area(&$graph_array, $no_graphs_message = "", $extra_url_args = "", $header = "") {
+	global $colors;
+
 	$i = 0; $k = 0;
 	if (sizeof($graph_array) > 0) {
 		if ($header != "") {
-			print $header;
+			print "<tr bgcolor='#" . $colors["graph_type_background"] . "' " . $header . "</tr>";
 		}
 
 		print "<tr>";
