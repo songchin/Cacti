@@ -113,11 +113,11 @@ function intro() {
 	$html = "";
 	while (list($field_name, $field_array) = each($wizard_array)) {
 		if (($field_name != "default") && ($field_name != "intro") && ($field_name != "title")) {
+			$selected = "";
 			if ($wizard_array["default"] == $field_name) {
-				$html .= "\t\t\t\t\t\t\t<input type='radio' name='wizard' value='" . $field_name . "' checked onClick='applyDescription(this.value)'><i>" . $field_array["friendly_name"] . "</i><br>\n";
-			}else{
-				$html .= "\t\t\t\t\t\t\t<input type='radio' name='wizard' value='" . $field_name . "' onClick='applyDescription(this.value)'><i>" . $field_array["friendly_name"] . "</i><br>\n";
+				$selected = " checked";
 			}
+			$html .= "\t\t<input type='radio' name='wizard' value='" . $field_name . "' onClick='applyDescription(\"" . $field_name . "\");'" . $selected . "><i><span onClick='setSelect(document.forms[0].wizard,\"" . $field_name . "\");' style='cursor:pointer;cursor:hand'>" . $field_array["friendly_name"] . "</span></i><br>\n";
 			$javascript .= "  arrayValues['" . $field_name . "'] = '" . str_replace("'","\\'",$field_array["description"]) . "';\n";
 		}
 	}
@@ -132,41 +132,51 @@ function intro() {
 	print "  obj = document.getElementById('wizardarea');\n";
 	print "  obj.innerHTML = arrayValues[strIndex];\n";
 	print "}\n";
+	print "function setSelect(objSelect,strIndex) {\n";
+	print "  applyDescription(strIndex);\n";
+	print "  for(x=0; x < objSelect.length; x++) {\n";
+	print "    if (objSelect[x].value == strIndex) {\n";
+	print "      objSelect[x].checked = true;\n";
+	print "    }\n";
+	print "  }\n";
+	print "}\n";
 	print "-->\n";
 	print "</script>\n";
 
 	/* html output */
-	print "\t<form method='POST'>\n";
+	print "<form method='POST'>\n";
 
 	html_start_box("<strong>" . $wizard_array["title"] . "</strong>", "70%", $colors["header_background"], "3", "center", "");
 
-	print "\t\t\t\t\t<tr>\n";
-	print "\t\t\t\t\t\t<td colspan='5' bgcolor='" . $colors["form_alternate1"] . "' class='textArea'><br><blockquote>";
+	print "<tr bgcolor='" . $colors["header_panel_background"] . "'><td colspan='5' class='textSubHeaderDark'>Introduction</td></tr>\n";
+	print "<tr>\n";
+	print "\t<td colspan='5' bgcolor='" . $colors["form_alternate1"] . "' class='textArea'><br><blockquote>";
 	print $wizard_array["intro"];
-	print "</blockquote><br><hr noshade></td>\n";
-	print "\t\t\t\t\t</tr>\n"; 
-	print "\t\t\t\t\t<tr>\n";
-	print "\t\t\t\t\t\t<td width='15' valign='top' bgcolor='" . $colors["form_alternate1"] . "' class='textArea'></td>\n";
-	print "\t\t\t\t\t\t<td width='25%' valign='top' bgcolor='" . $colors["form_alternate1"] . "' class='textArea'><b> Section</b><br><br>\n";
+	print "</blockquote><br></td>\n";
+	print "</tr>\n"; 
+	print "<tr bgcolor='" . $colors["header_panel_background"] . "'><td colspan='5' class='textSubHeaderDark'>Available Wizards</td></tr>\n";
+	print "<tr>\n";
+	print "\t<td width='15' valign='top' bgcolor='" . $colors["form_alternate1"] . "' class='textArea'></td>\n";
+	print "\t<td width='25%' valign='top' bgcolor='" . $colors["form_alternate1"] . "' class='textArea'><b>Wizard</b><br><br>\n";
 	print $html;
-	print "\t\t\t\t\t\t</td>\n";
-	print "\t\t\t\t\t\t<td width='15' valign='top' bgcolor='" . $colors["form_alternate1"] . "' class='textArea'></td>\n";
-	print "\t\t\t\t\t\t<td valign='top' bgcolor='" . $colors["form_alternate1"] . "' class='textArea'><b>Description</b><br><br>\n";
-	print "\t\t\t\t\t\t\t\t<div id='wizardarea' style='height:150px; overflow:auto;'>None</div><br>\n";
-	print "\t\t\t\t\t\t</td>\n";
-	print "\t\t\t\t\t\t<td width='15' valign='top' bgcolor='" . $colors["form_alternate1"] . "' class='textArea'></td>\n";
-	print "\t\t\t\t\t</tr>\n";
+	print "\t</td>\n";
+	print "\t<td width='15' valign='top' bgcolor='" . $colors["form_alternate1"] . "' class='textArea'></td>\n";
+	print "\t<td valign='top' bgcolor='" . $colors["form_alternate1"] . "' class='textArea'><b>Description</b><br><br>\n";
+	print "\t\t<div id='wizardarea' style='height:150px; overflow:auto;'>None</div><br>\n";
+	print "\t</td>\n";
+	print "\t<td width='15' valign='top' bgcolor='" . $colors["form_alternate1"] . "' class='textArea'></td>\n";
+	print "</tr>\n";
 
 	html_end_box();
 
-	print "\n\t<table align='center' width='70%' style='background-color: " . $colors['buttonbar_background'] . "; border: 1px solid #" . $colors["buttonbar_border"] . ";'>\n";
-	print "\t\t<tr>\n";
-	print "\t\t\t<td bgcolor='" . $colors['buttonbar_background'] . "' align='right'>\n";
-	print "\t\t\t\t<input type='image' src='" . html_get_theme_images_path("button_next.gif") . "' alt='Save' align='absmiddle'>\n";
-	print "\t\t\t</td>\n";
-	print "\t\t</tr>\n";
-	print "\t</table>\n";
-	print "\t</form>\n";
+	print "\n<table align='center' width='70%' style='background-color: " . $colors['buttonbar_background'] . "; border: 1px solid #" . $colors["buttonbar_border"] . ";'>\n";
+	print "\t<tr>\n";
+	print "\t\t<td bgcolor='" . $colors['buttonbar_background'] . "' align='right'>\n";
+	print "\t\t\t<input type='image' src='" . html_get_theme_images_path("button_next.gif") . "' alt='Save' align='absmiddle'>\n";
+	print "\t\t</td>\n";
+	print "\t</tr>\n";
+	print "</table>\n";
+	print "</form>\n";
 
 	/* javascript function to change description box to default */
 	print "<script type=\"text/javascript\">\n";
@@ -176,10 +186,5 @@ function intro() {
 	print "</script>\n";
 
 }
-
-
-
-
-
 
 ?>
