@@ -32,17 +32,23 @@
    @arg $db_name - the name of the database to connect to
    @arg $db_type - the type of database server to connect to, only 'mysql' is currently supported
    @returns - (bool) '1' for success, '0' for error */
-function db_connect_real($host,$user,$pass,$db_name,$db_type) {
+function db_connect_real($host,$user,$pass,$db_name,$db_type, $retries = 3) {
 	global $cnn_id;
 
-	$cnn_id = NewADOConnection($db_type);
-	if ($cnn_id->Connect($host,$user,$pass,$db_name)) {
-		return(1);
-	}else{
-		die("<br>Cannot connect to MySQL server on '$host'. Please make sure you have specified a valid MySQL
-		database name in 'include/config.php'.");
+	$i = 1;
+	while ($i <= $retries) {
+		$cnn_id = NewADOConnection($db_type);
+		if ($cnn_id->Connect($host,$user,$pass,$db_name)) {
+			return(1);
+		}else{
+			die("<br>Cannot connect to MySQL server on '$host'. Please make sure you have specified a valid MySQL
+			database name in 'include/config.php'.");
 
-		return(0);
+			return(0);
+		}
+
+		$i++;
+		usleep(500000);
 	}
 }
 
