@@ -29,21 +29,30 @@ $show_console_tab = true;
 
 include_once($config["library_path"] . "/html_tree.php");
 include_once($config["library_path"] . "/rrd.php");
+include_once($config["library_path"] . "/api_user.php");
 
 if (read_config_option("auth_method") != "0") {
-	/* at this point this user is good to go... so get some setting about this
-	user and put them into variables to save excess SQL in the future */
-	$current_user = db_fetch_row("select * from user_auth where id=" . $_SESSION["sess_user_id"]);
+	/* at this point this user is good to go... get user info */
+	$current_user = api_user_info( array( "id" => $_SESSION["sess_user_id"]) );
 
 	/* find out if we are logged in as a 'guest user' or not */
-	if (db_fetch_cell("select id from user_auth where username='" . read_config_option("guest_user") . "'") == $_SESSION["sess_user_id"]) {
-		$using_guest_account = true;
+	if (read_config_option("guest_user") != "0") {
+		if ($current_user["username"] == read_config_option("guest_user")) {
+			$using_guest_account = true;
+		}
 	}
-
 	/* find out if we should show the "console" tab or not, based on this user's permissions */
-	if (sizeof(db_fetch_assoc("select realm_id from user_auth_realm where realm_id=8 and user_id=" . $_SESSION["sess_user_id"])) == 0) {
+	$current_user_realms = api_user_realms_list($current_user["id"]);
+	if ($current_user_realms["8"]["value"] != "1") {
 		$show_console_tab = false;
 	}
+}else{
+	/* set permission for no auth */
+	$current_user["graph_settings"] = 'on';
+	$current_user["show_tree"] = 'on';
+	$current_user["show_list"] = 'on';
+	$current_user["show_preview"] = 'on';
+	
 }
 
 /* use cached url if available and applicable */
@@ -109,7 +118,11 @@ if ((read_graph_config_option("default_tree_view_mode") == "2") && ($_REQUEST["a
 						<img src="<?php print html_get_theme_images_path('cacti_backdrop2.gif');?>" align="absmiddle">
 					</td>
 					<td align="right" nowrap>
+						<?php if ($current_user["graph_settings"] == "on") { ?>
 						<a href="graph_settings.php"><img src="<?php if (basename($_SERVER["PHP_SELF"]) == "graph_settings.php") print html_get_theme_images_path('tab_settings_down.gif'); else print html_get_theme_images_path('tab_settings.gif');?>" border="0" alt="Settings" align="absmiddle"></a>
+						<?php }else{ ?>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						<?php } ?>
 						&nbsp;&nbsp;<?php if ((!isset($_SESSION["sess_user_id"])) || ($current_user["show_tree"] == "on")) {?>
 						<a href="graph_view.php?action=tree"><img src="<?php if ($_REQUEST["action"] == "tree") print html_get_theme_images_path('tab_mode_tree_down.gif'); else print html_get_theme_images_path('tab_mode_tree.gif');?>" border="0" title="Tree View" alt="Tree View" align="absmiddle"></a>
 						<?php }?><?php if ((!isset($_SESSION["sess_user_id"])) || ($current_user["show_list"] == "on")) {?>
@@ -134,9 +147,17 @@ if ((read_graph_config_option("default_tree_view_mode") == "2") && ($_REQUEST["a
 						<?php draw_navigation_text();?>
 					</td>
 					<td align="right">
-						<?php if ((isset($_SESSION["sess_user_id"])) && ($using_guest_account == false)) { ?>
-						Logged in as <strong><?php print db_fetch_cell("select username from user_auth where id=" . $_SESSION["sess_user_id"]);?></strong> (<?php if (read_config_option("auth_method") == "1") { ?><a href="user_changepassword.php">Change Password</a>|<?php } ?><a href="logout.php">Logout</a>)&nbsp;
-						<?php } ?>
+						<?php if ((isset($_SESSION["sess_user_id"])) && ($using_guest_account == false) && (read_config_option("auth_method") != "0")) { ?>
+						Logged in as <strong><?php print $current_user["username"];?></strong> (<?php if ((read_config_option("auth_method") == "1") && ($current_user_realms["18"]["value"] == "1")) { ?><a href="user_changepassword.php">Change Password</a>|<?php } ?><a href="logout.php">Logout</a>)&nbsp;
+						<?php 
+						}else{ 
+							if ((read_config_option("auth_method") != "0") && (read_config_option("auth_method") != "2")) {
+						?>
+						&nbsp;(<a href="logout.php">Login</a>)&nbsp;
+
+						<?php 
+							} 
+						} ?>
 					</td>
 				</tr>
 			</table>
