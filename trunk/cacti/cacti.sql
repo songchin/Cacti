@@ -2724,4 +2724,4 @@ CREATE TABLE version (
 -- Dumping data for table `version`
 --
 
-INSERT INTO version VALUES ('0.8.7');
+INSERT INTO version VALUES ('0.8.6');
