@@ -64,6 +64,8 @@ int main(int argc, char *argv[]) {
 	int canexit = 0;
 	int host_id;
 	int i;
+	char *first_host_ptr, *last_host_ptr, *poller_id_ptr;
+	int first_host, last_host, poller_id;
 	int mutex_status = 0;
 	int thread_status = 0;
 	char result_string[BUFSIZE] = "";
@@ -82,23 +84,59 @@ int main(int argc, char *argv[]) {
 	if (strftime(start_datetime, sizeof(start_datetime), "%Y-%m-%d %H:%M:%S", nowstruct) == (size_t) 0)
 		printf("ERROR: Could not get string from strftime()\n");
 
+	/* set default verbosity */
 	set.verbose = POLLER_VERBOSITY_HIGH;
+
+	/* set the default poller ID */
+	set.poller_id = 0;
 
 	/* get static defaults for system */
 	config_defaults(&set);
 
 	/* scan arguments for errors */
-	if ((argc != 1) && (argc != 3)) {
-		printf("ERROR: Cactid requires either 0 or 2 input parameters\n");
-		printf("USAGE: <cactidpath>/cactid [start_id end_id]\n");
+	if ((argc != 1) && (argc != 2) && (argc != 4)) {
+		printf("ERROR: Cactid requires either 0 or 3 input parameters\n");
+		printf("USAGE: <cactidpath>/cactid [-f=first_host -l=last_host -p=poller_id] | [-p=poller_id]\n");
 		exit(-1);
 	}
 
 	/* return error if the first arg is greater than the second */
-	if (argc == 3) {
-		if (atol(argv[1]) > atol(argv[2])) {
-			printf("ERROR: Invalid row specifications.  First row must be less than the second row\n");
+	if (argc == 4) {
+	    for(i=1;i<argc;i++) {
+			if (strstr(argv[i],"-l=") != NULL) {
+			    last_host_ptr = strtok(argv[i],"=");
+			    last_host_ptr = strtok(NULL, "=");
+				last_host = atoi(last_host_ptr);
+			} else if (strstr(argv[i],"-f=") != NULL) {
+      			first_host_ptr = strtok(argv[i],"=");
+			    first_host_ptr = strtok(NULL, "=");
+				first_host = atoi(first_host_ptr);
+			} else if (strstr(argv[i],"-p=") != NULL) {
+	         	poller_id_ptr = strtok(argv[i],"=");
+			    poller_id_ptr = strtok(NULL, "=");
+				set.poller_id = atoi(poller_id_ptr);
+    		} else {
+				printf("ERROR: Invalid calling parameters.  First row must be less than the second row\n");
+				printf("USAGE: <cactidpath>/cactid [-f=first_host -l=last_host -p=poller_id] | [-p=poller_id]\n");
+				exit(-1);
+			}
+		}
+
+		if (first_host > last_host) {
+			printf("ERROR: Invalid row specifications.  First host_id must be less than the second host_id\n");
 			exit(-2);
+		}
+	}
+	
+	if (argc == 2) {
+		if (strstr(argv[1],"-p=") != NULL) {
+	    	poller_id_ptr = strtok(argv[1],"=");
+			poller_id_ptr = strtok(NULL, "=");
+			set.poller_id = atoi(poller_id_ptr);
+    	} else {
+			printf("ERROR: Invalid calling parameters.  First row must be less than the second row\n");
+			printf("USAGE: <cactidpath>/cactid [-f=first_host -l=last_host -p=poller_id] | [-p=poller_id]\n");
+			exit(-1);
 		}
 	}
 
@@ -132,9 +170,6 @@ int main(int argc, char *argv[]) {
 	/* read settings table from the database to further establish environment */
 	read_config_options(&set);
 
-	/* set the poller ID, stub for next version */
-	set.poller_id = 0;
-
 	if (set.verbose == POLLER_VERBOSITY_DEBUG) {
 		snprintf(logmessage, LOGSIZE, "CACTID: Version %s starting\n", VERSION);
 		cacti_log(logmessage);
@@ -157,8 +192,13 @@ int main(int argc, char *argv[]) {
 			result = db_query(&mysql, "SELECT id FROM host WHERE disabled='' ORDER BY id");
 
 			break;
-		case 3:
-			snprintf(result_string, sizeof(result_string), "SELECT id FROM host WHERE (disabled='' and (id >= %s and id <= %s)) ORDER BY id\0", argv[1], argv[2]);
+		case 2:
+			snprintf(result_string, sizeof(result_string), "SELECT id FROM host WHERE (disabled='' and poller_id = %s) ORDER BY id\0", poller_id_ptr);
+			result = db_query(&mysql, result_string);
+
+			break;
+		case 4:
+			snprintf(result_string, sizeof(result_string), "SELECT id FROM host WHERE (disabled='' and (id >= %s and id <= %s) and poller_id = %s) ORDER BY id\0", first_host_ptr, last_host_ptr, poller_id_ptr);
 			result = db_query(&mysql, result_string);
 
 			break;
