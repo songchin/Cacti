@@ -992,7 +992,7 @@ function user_actions() {
 	}
 
 	print "	<tr>
-			<td colspan='2' align='right' bgcolor='#eaeaea'>
+			<td colspan='2' align='right' bgcolor='#" . $colors["buttonbar_background"] . "'>
 				<input type='hidden' name='action' value='actions'>
 				<input type='hidden' name='selected_items' value='" . (isset($user_array) ? serialize($user_array) : '') . "'>
 				<input type='hidden' name='drp_action' value='" . $_POST["drp_action"] . "'>
