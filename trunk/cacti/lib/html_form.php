@@ -449,9 +449,9 @@ function form_message($title_text, $body_text, $ok_url) { ?>
      on a confirmation form
    @arg $cancel_url - the url to go to when the user clicks 'cancel'
    @arg $action_url - the url to go to when the user clicks 'delete' */
-function form_confirm_buttons($action_url, $cancel_url) { ?>
+function form_confirm_buttons($action_url, $cancel_url) { global $colors; ?>
 	<tr>
-		<td bgcolor="#E1E1E1">
+		<td bgcolor="#<?php print $colors['buttonbar_background'];?>">
 			<a href="<?php print $cancel_url;?>"><img src="<?php print html_get_theme_images_path('button_cancel.gif');?>" border="0" alt="Cancel" align="absmiddle"></a>
 			<a href="<?php print $action_url . "&confirm=yes";?>"><img src="<?php print html_get_theme_images_path('button_delete.gif');?>" border="0" alt="Delete" align="absmiddle"></a>
 		</td>
@@ -464,6 +464,8 @@ function form_confirm_buttons($action_url, $cancel_url) { ?>
    @arg $force_type - if specified, will force the 'action' button to be either
      'save' or 'create'. otherwise this field should be properly auto-detected */
 function form_save_button($cancel_url, $force_type = "") {
+	global $colors;
+
 	if (empty($force_type)) {
 		if (!isset($_GET["id"])) {
 			$img = "button_create.gif";
@@ -482,7 +484,7 @@ function form_save_button($cancel_url, $force_type = "") {
 	?>
 	<table align='center' width='98%' style='background-color: #ffffff; border: 1px solid #bbbbbb;'>
 		<tr>
-			 <td bgcolor="#f5f5f5" align="right">
+			 <td bgcolor="#<?php print $colors['buttonbar_background'];?>" align="right">
 				<input type='hidden' name='action' value='save'>
 				<a href='<?php print $cancel_url;?>'><img src='<?php print html_get_theme_images_path("button_cancel2.gif");?>' alt='Cancel' align='absmiddle' border='0'></a>
 				<input type='image' src='<?php print html_get_theme_images_path($img);?>' alt='<?php print $alt;?>' align='absmiddle'>

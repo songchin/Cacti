@@ -29,7 +29,7 @@
 /* colors */
 $colors["dark_outline"] = "454E53";
 $colors["dark_bar"] = "AEB4B7";
-$colors["panel"] = "000000";
+$colors["panel"] = "FF0000";
 $colors["panel_text"] = "000000";
 $colors["panel_link"] = "FFFFFF";
 $colors["light"] = "000000";
@@ -44,17 +44,27 @@ $colors["form_background_dark"] = "000000";
 $colors["form_alternate1"] = "0f0f0f";
 $colors["form_alternate2"] = "000000";
 
+/* Filter Colors */
+$colors["filter_background"] = "000000";
+
+/* RRDTool Graph Colors */
 $colors["rrd_canvas"] = "000000";
 $colors["rrd_font"] = "FFFFFF";
 $colors["rrd_back"] = "000000";
 
+/* Main Header Colors */
 $colors["main_background"] = "000000";
 $colors["main_border"] = "183c8f";
 
+/* Navbar Colors */
 $colors["navbar_background"] = "000000";
 
+/* Console Colors */
 $colors["console_menu_background"] = "000000";
 
-$colors["graph_menu_background"] = "efefef";
+/* Graph Menu Colors */
+$colors["graph_menu_background"] = "000000";
+$colors["graph_alternate1"] = "0f0f0f";
+$colors["graph_alternate2"] = "000000";
 
 ?>
