@@ -863,14 +863,18 @@ $settings_graphs = array(
 		)
 	);
 
+$user_themes = $themes;
+$user_themes["default"] = "System Default";
+
+
 $settings_users = array(
 	"general" => array(
 		"current_theme" => array(
 			"friendly_name" => "Visual Theme to Use",
 			"description" => "The Cacti theme to use.  Changes the look of Cacti.",
 			"method" => "drop_array",
-			"default" => "classic",
-			"array" => $themes
+			"default" => "default",
+			"array" => $user_themes
 			)
 		)
 	)

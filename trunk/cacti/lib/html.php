@@ -247,10 +247,10 @@ function html_header_checkbox($header_items, $form_action = "") {
 /* html_get_theme_css() - returns the Style sheet reference for the current theme
    */
 function html_get_theme_css() {
-	if (strlen(read_user_config_option("current_theme")) > 0) {
+	if ((strlen(read_user_config_option("current_theme")) > 0) && (read_user_config_option("current_theme") != "default")) {
 		$theme = read_user_config_option("current_theme");
 	}else{
-		$theme = read_user_option("current_theme");
+		$theme = read_config_option("default_theme");
 	}
 
 	return "themes/" . $theme . "/" . $theme . ".css";
@@ -259,10 +259,10 @@ function html_get_theme_css() {
 /* html_get_theme_image_path() - returns the Style sheet reference for the current theme
    */
 function html_get_theme_images_path($image_file = "") {
-	if (strlen(read_user_config_option("current_theme")) > 0) {
+	if ((strlen(read_user_config_option("current_theme")) > 0) && (read_user_config_option("current_theme") != "default")) {
 		$theme = read_user_config_option("current_theme");
 	}else{
-		$theme = read_config_option("current_theme");
+		$theme = read_config_option("default_theme");
 	}
 
 	if (file_exists("themes/" . $theme . "/images/" . $image_file)) {
@@ -279,10 +279,10 @@ function html_get_theme_images_path($image_file = "") {
 function html_theme_color_scheme() {
 	global $config;
 
-	if (strlen(read_user_config_option("current_theme")) > 0) {
+	if ((strlen(read_user_config_option("current_theme")) > 0) && (read_user_config_option("current_theme") != "default")) {
 		$theme = read_user_config_option("current_theme");
 	}else{
-		$theme = read_config_option("current_theme");
+		$theme = read_config_option("default_theme");
 	}
 
 	if (file_exists($config["themes_path"] . "/" . $theme . "/" . $theme . ".php")) {
