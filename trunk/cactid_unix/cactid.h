@@ -60,6 +60,7 @@
 #define DEFAULT_DB_DB "cacti"
 #define DEFAULT_DB_USER "cactiuser"
 #define DEFAULT_DB_PASS "cactiuser"
+#define DEFAULT_DB_PORT 3306
 #define DEFAULT_LOGFILE "/wwwroot/cacti/log/rrd.log"
 #define DEFAULT_SNMP_VER 1
 
@@ -121,6 +122,12 @@
 #define RESULT_ALPHA 5
 #define RESULT_DIGIT 6
 
+/* snmp session status */
+#define SNMP_1 0
+#define SNMP_2c 1
+#define SNMP_3 3
+#define SNMP_NONE 4
+
 /* Typedefs */
 typedef struct config_struct {
 	int interval;
@@ -130,6 +137,7 @@ typedef struct config_struct {
 	char dbdb[80];
 	char dbuser[80];
 	char dbpass[80];
+    int dbport;
 	char path_logfile[250];
 	char path_php[250];
 	char path_php_server[250];

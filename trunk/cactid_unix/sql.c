@@ -76,7 +76,7 @@ int db_connect(char *database, MYSQL *mysql) {
 	while (1) {
 		thread_mutex_lock(LOCK_MYSQL);
 
-		if (!mysql_real_connect(mysql, set.dbhost, set.dbuser, set.dbpass, database, 0, NULL, 0)) {
+		if (!mysql_real_connect(mysql, set.dbhost, set.dbuser, set.dbpass, database, set.dbport, NULL, 0)) {
 			if (retries > 10) {
 				snprintf(logmessage, LOGSIZE, "MYSQL: Connection failed after 10 attempts : %s\n", mysql_error(mysql));
 				cacti_log(logmessage);

@@ -368,6 +368,7 @@ int read_cactid_config(char *file, config_t *set) {
 				else if (!strcasecmp(p1, "DB_Database")) strncpy(set->dbdb, p2, sizeof(set->dbdb));
 				else if (!strcasecmp(p1, "DB_User")) strncpy(set->dbuser, p2, sizeof(set->dbuser));
 				else if (!strcasecmp(p1, "DB_Pass")) strncpy(set->dbpass, p2, sizeof(set->dbpass));
+                else if (!strcasecmp(p1, "DB_Port")) set->dbport = atoi(p2);
 				else {
 					printf("WARNING: Unrecongized directive: %s=%s in %s\n", p1, p2, file);
 				}
@@ -400,6 +401,7 @@ void config_defaults(config_t * set) {
 	strncpy(set->dbdb, DEFAULT_DB_DB, sizeof(set->dbhost));
 	strncpy(set->dbuser, DEFAULT_DB_USER, sizeof(set->dbhost));
 	strncpy(set->dbpass, DEFAULT_DB_PASS, sizeof(set->dbhost));
+    set->dbport = DEFAULT_DB_PORT;
 
 	strncpy(config_paths[0], CONFIG_PATH_1, sizeof(config_paths[0]));
 	strncpy(config_paths[1], CONFIG_PATH_2, sizeof(config_paths[1]));
