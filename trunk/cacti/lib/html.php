@@ -257,11 +257,11 @@ function html_get_theme_images_path($image_file = "") {
 	}
 }
 
-function html_load_theme_color_scheme() {
+function html_theme_color_scheme() {
 	if (file_exists("themes/" . read_config_option("current_theme") . "/" . read_config_option("current_theme") . ".php")) {
-		include("themes/" . read_config_option("current_theme") . "/" . read_config_option("current_theme") . ".php");
+		return "themes/" . read_config_option("current_theme") . "/" . read_config_option("current_theme") . ".php";
 	} else {
-		include("include/" . "config_colors.php");
+		return "include/" . "config_colors.php";
 	}
 }
 
