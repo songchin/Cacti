@@ -33,8 +33,15 @@ Check respective includes for functions definitions
 
 */
 
-include("user/user_action.php");
-include("user/user_info.php");
-include("user/user_ldap.php");
+$root_dir = ereg_replace("(.*)[\/\\]lib", "\\1", dirname(__FILE__));
+
+/* Variable includes */
+include_once($root_dir . "/include/user/user_constants.php");
+include_once($root_dir . "/include/user/user_arrays.php");
+
+/* Functions includes */
+include_once($root_dir . "/lib/user/user_action.php");
+include_once($root_dir . "/lib/user/user_info.php");
+include_once($root_dir . "/lib/user/user_ldap.php");
 
 ?>

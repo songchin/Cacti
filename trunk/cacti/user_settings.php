@@ -79,7 +79,9 @@ function save() {
    -------------------------- */
 
 function settings() {
-	global $colors, $user_themes;
+	global $colors, $themes;
+
+	$themes["default"] = "System Default (Global Setting)";
 
 	/* you cannot have per-user settings if cacti's user management is not turned on */
 	if (read_config_option("auth_method") == "0") {
@@ -106,7 +108,7 @@ function settings() {
 			"friendly_name" => "Visual Theme",
 			"description" => "The Cacti theme to use. Changes the look of Cacti.",
 			"method" => "drop_array",
-			"array" => $user_themes,
+			"array" => $themes,
 			"value" => api_user_theme($_SESSION["sess_user_id"]),
 			"default" => "default"
 			)
