@@ -48,7 +48,7 @@ $settings = array(
 	"path" => array(
 		"dependent_header" => array(
 			"friendly_name" => "Required Tools",
-			"method" => "spacer",
+			"method" => "spacer"
 			),
 		"path_snmpwalk" => array(
 			"friendly_name" => "snmpwalk Binary Path",
@@ -76,7 +76,7 @@ $settings = array(
 			),
 		"logging_header" => array(
 			"friendly_name" => "Logging",
-			"method" => "spacer",
+			"method" => "spacer"
 			),
 		"path_cactilog" => array(
 			"friendly_name" => "Cacti Log File Path",
@@ -87,7 +87,7 @@ $settings = array(
 			),
 		"pollerpaths_header" => array(
 			"friendly_name" => "Poller Path",
-			"method" => "spacer",
+			"method" => "spacer"
 			),
 		"path_cactid" => array(
 			"friendly_name" => "Cactid Poller File Path",
@@ -99,14 +99,14 @@ $settings = array(
 	"general" => array(
 		"logging_header" => array(
 			"friendly_name" => "Event Logging",
-			"method" => "spacer",
+			"method" => "spacer"
 			),
 		"log_destination" => array(
 			"friendly_name" => "Log File Destination",
 			"description" => "How will Cacti handle event logging.",
 			"method" => "drop_array",
 			"default" => 1,
-			"array" => $logfile_options,
+			"array" => $logfile_options
 			),
 		"web_log" => array(
 			"friendly_name" => "Web Events",
@@ -130,14 +130,14 @@ $settings = array(
 			),
 		"poller_header" => array(
 			"friendly_name" => "Poller Specific Logging",
-			"method" => "spacer",
+			"method" => "spacer"
 			),
 		"log_verbosity" => array(
 			"friendly_name" => "Poller Logging Level",
 			"description" => "What level of detail do you want sent to the log file.  WARNING: Leaving in any other status than NONE or LOW can exaust your disk space rapidly.",
 			"method" => "drop_array",
 			"default" => POLLER_VERBOSITY_LOW,
-			"array" => $logfile_verbosity,
+			"array" => $logfile_verbosity
 			),
 		"poller_log" => array(
 			"friendly_name" => "Poller Syslog/Eventlog Selection",
@@ -157,7 +157,7 @@ $settings = array(
 					"friendly_name" => "Poller Errors",
 					"default" => "on"
 					)
-				),
+				)
 			),
 		"db_header" => array(
 			"friendly_name" => "Database Settings",
@@ -196,7 +196,7 @@ $settings = array(
 			),
 		"other_header" => array(
 			"friendly_name" => "Other Defaults",
-			"method" => "spacer",
+			"method" => "spacer"
 			),
 		"remove_verification" => array(
 			"friendly_name" => "Remove Verification",
@@ -208,102 +208,102 @@ $settings = array(
 	"snmp" => array(
 		"snmp_header" => array(
 			"friendly_name" => "General Defaults",
-			"method" => "spacer",
+			"method" => "spacer"
 			),
 		"snmp_version" => array(
 			"friendly_name" => "SNMP Utility Version",
 			"description" => "The type of SNMP you have installed.  Required if you are using SNMP v2c or don't have embedded SNMP support in PHP.",
 			"method" => "drop_array",
 			"default" => "net-snmp",
-			"array" => $snmp_implimentations,
+			"array" => $snmp_implimentations
 			),
 		"snmp_timeout" => array(
 			"friendly_name" => "Timeout",
 			"description" => "Default SNMP timeout in milli-seconds.",
 			"method" => "textbox",
 			"default" => "500",
-			"max_length" => "100",
+			"max_length" => "100"
 			),
 		"snmp_port" => array(
 			"friendly_name" => "Port Number",
 			"description" => "Default UDP port to be used for SNMP Calls.  Typically 161.",
 			"method" => "textbox",
 			"default" => "161",
-			"max_length" => "100",
+			"max_length" => "100"
 			),
 		"snmp_retries" => array(
 			"friendly_name" => "Retries",
 			"description" => "The number times the SNMP poller will attempt to reach the host before failing.",
 			"method" => "textbox",
 			"default" => "3",
-			"max_length" => "100",
+			"max_length" => "100"
 			),
 		"snmp_ver" => array(
 			"friendly_name" => "Version",
 			"description" => "Default SNMP version for all new hosts.",
 			"method" => "drop_array",
 			"default" => "Version 1",
-			"array" => $snmp_versions,
+			"array" => $snmp_versions
 			),
 		"snmpv12c_header" => array(
 			"friendly_name" => "v1/v2c Default",
-			"method" => "spacer",
+			"method" => "spacer"
 			),
 		"snmp_community" => array(
 			"friendly_name" => "Community",
 			"description" => "Default SNMP read community for all new hosts.",
 			"method" => "textbox",
 			"default" => "public",
-			"max_length" => "100",
+			"max_length" => "100"
 			),
 		"snmpv3_auth_header" => array(
 			"friendly_name" => "v3 Authentication Defaults",
-			"method" => "spacer",
+			"method" => "spacer"
 			),
 		"snmpv3_auth_username" => array(
 			"friendly_name" => "Username",
 			"description" => "The default SNMP v3 username.",
 			"method" => "textbox",
 			"default" => "",
-			"max_length" => "100",
+			"max_length" => "100"
 			),
 		"snmpv3_auth_password" => array(
 			"friendly_name" => "Password",
 			"description" => "The default SNMP v3 password.",
 			"method" => "textbox_password",
 			"default" => "",
-			"max_length" => "100",
+			"max_length" => "100"
 			),
 		"snmpv3_auth_protocol" => array(
 			"friendly_name" => "Authentication Protocol",
 			"description" => "Select the default SNMP v3 authentication protocol to use.",
 			"method" => "drop_array",
 			"default" => "MD5",
-			"array" => $snmpv3_auth_protocol,
+			"array" => $snmpv3_auth_protocol
 			),
 		"snmpv3_priv_header" => array(
 			"friendly_name" => "v3 Privacy Defaults",
-			"method" => "spacer",
+			"method" => "spacer"
 			),
 		"snmpv3_priv_passphrase" => array(
 			"friendly_name" => "Privacy Passphrase",
 			"description" => "The default SNMP v3 privacy passphrase.",
 			"method" => "textbox_password",
 			"default" => "",
-			"max_length" => "100",
+			"max_length" => "100"
 			),
 		"snmpv3_priv_protocol" => array(
 			"friendly_name" => "Privacy Protocol",
 			"description" => "Select the default SNMP v3 privacy protocol to use.",
 			"method" => "drop_array",
 			"default" => "DES",
-			"array" => $snmpv3_priv_protocol,
-			),
+			"array" => $snmpv3_priv_protocol
+			)
 		),
 	"export" => array(
 		"export_hdr_general" => array(
 			"friendly_name" => "General",
-			"method" => "spacer",
+			"method" => "spacer"
 			),
 		"export_type" => array(
 			"friendly_name" => "Export Method",
@@ -315,11 +315,11 @@ $settings = array(
 						"local" => "Classic (local path)",
 						"ftp_php" => "Ftp (remote) - use php functions",
 						"ftp_ncftpput" => "Ftp (remote) - use ncftpput"
-						),
+						)
 			),
 		"export_hdr_paths" => array(
 			"friendly_name" => "Paths",
-			"method" => "spacer",
+			"method" => "spacer"
 			),
 		"path_html_export" => array(
 			"friendly_name" => "Export Path (both local and ftp)",
@@ -329,7 +329,7 @@ $settings = array(
 			),
 		"export_hdr_timing" => array(
 			"friendly_name" => "Timing",
-			"method" => "spacer",
+			"method" => "spacer"
 			),
 		"export_timing" => array(
 			"friendly_name" => "Export timing",
@@ -341,7 +341,7 @@ $settings = array(
 						"classic" => "Classic (export every x times)",
 						"export_hourly" => "Hourly at specified minutes",
 						"export_daily" => "Daily at specified time"
-						),
+						)
 			),
 		"path_html_export_skip" => array(
 			"friendly_name" => "Export Every x Times",
@@ -363,7 +363,7 @@ $settings = array(
 			),
 		"export_hdr_ftp" => array(
 			"friendly_name" => "FTP Options",
-			"method" => "spacer",
+			"method" => "spacer"
 			),
 		"export_ftp_sanitize" => array(
 			"friendly_name" => "Sanitize remote directory",
@@ -405,7 +405,7 @@ $settings = array(
 	"visual" => array(
 		"graphmgmt_header" => array(
 			"friendly_name" => "Graph Management",
-			"method" => "spacer",
+			"method" => "spacer"
 			),
 		"num_rows_graph" => array(
 			"friendly_name" => "Rows Per Page",
@@ -423,7 +423,7 @@ $settings = array(
 			),
 		"dataqueries_header" => array(
 			"friendly_name" => "Data Queries",
-			"method" => "spacer",
+			"method" => "spacer"
 			),
 		"max_data_query_field_length" => array(
 			"friendly_name" => "Maximum Field Length",
@@ -441,7 +441,7 @@ $settings = array(
 			),
 		"datasources_header" => array(
 			"friendly_name" => "Data Sources",
-			"method" => "spacer",
+			"method" => "spacer"
 			),
 		"num_rows_data_source" => array(
 			"friendly_name" => "Rows Per Page",
@@ -459,7 +459,7 @@ $settings = array(
 			),
 		"hosts_header" => array(
 			"friendly_name" => "Hosts",
-			"method" => "spacer",
+			"method" => "spacer"
 			),
 		"num_rows_device" => array(
 			"friendly_name" => "Rows Per Page",
@@ -472,25 +472,30 @@ $settings = array(
 	"poller" => array(
 		"poller_header" => array(
 			"friendly_name" => "General",
-			"method" => "spacer",
+			"method" => "spacer"
 			),
 		"poller_enabled" => array(
 			"friendly_name" => "Poller Enabled",
 			"description" => "If you wish to stop the polling process, uncheck this box.",
 			"method" => "checkbox",
-			"default" => "on",
-			"tab" => "poller"
+			"default" => "on"
 			),
 		"poller_type" => array(
 			"friendly_name" => "Poller Type",
 			"description" => "The Cacti poller to use.  This Setting will take effect at next polling interval.",
 			"method" => "drop_array",
 			"default" => 1,
-			"array" => $poller_options,
+			"array" => $poller_options
+			),
+		"poller_graph" => array(
+			"friendly_name" => "Graph Poller Statistics",
+			"description" => "The statistical results of polling times will be saved to a special RRD file if selected.",
+			"method" => "checkbox",
+			"default" => "on"
 			),
 		"methods_header" => array(
 			"friendly_name" => "Poller Execution Parameters",
-			"method" => "spacer",
+			"method" => "spacer"
 			),
 		"concurrent_processes" => array(
 			"friendly_name" => "Maximum Concurrent Poller Processes",
@@ -522,21 +527,21 @@ $settings = array(
 			),
 		"availability_header" => array(
 			"friendly_name" => "Poller Host Availability Settings",
-			"method" => "spacer",
+			"method" => "spacer"
 			),
 		"availability_method" => array(
 			"friendly_name" => "Downed Host Detection",
 			"description" => "The method Cacti will use to determine if a host is available for polling.  NOTE: It is recommended that, at a minimum, SNMP always be selected.",
 			"method" => "drop_array",
 			"default" => AVAIL_SNMP,
-			"array" => $availability_options,
+			"array" => $availability_options
 			),
 		"ping_method" => array(
 			"friendly_name" => "Ping Type",
 			"description" => "The type of ping packet to sent.  NOTE: ICMP requires that the Cacti Service ID have root privilages in Unix.",
 			"method" => "drop_array",
 			"default" => PING_UDP,
-			"array" => $ping_methods,
+			"array" => $ping_methods
 			),
 		"ping_timeout" => array(
 			"friendly_name" => "Ping Timeout Value",
@@ -554,7 +559,7 @@ $settings = array(
 			),
 		"updown_header" => array(
 			"friendly_name" => "Host Up/Down Settings",
-			"method" => "spacer",
+			"method" => "spacer"
 			),
 		"ping_failure_count" => array(
 			"friendly_name" => "Failure Count",
@@ -574,14 +579,14 @@ $settings = array(
 	"authentication" => array(
 		"general_header" => array(
 			"friendly_name" => "General",
-			"method" => "spacer",
+			"method" => "spacer"
 			),
 		"auth_method" => array(
 			"friendly_name" => "Authentication Method",
 			"description" => "<ul><li><i>None</i> - No authentication will be used, all users will have full access.</li><li><i>Builtin Authentication</i> - Cacti handles user authentication, which allows you to create users and give them rights to different areas within Cacti.</li><li><i>Web Basic Authentication</i> - Authentication is handled by the web server. Users can be added or created automatically on first login if the Template User is defined, otherwise the defined guest permissions will be used.</li><li><i>LDAP Authentication</i> - Allows for authentication against a LDAP server. Users will be created automatically on first login if the Template User is defined, otherwise the defined guest permissions will be used.</li><ul>",
 			"method" => "drop_array",
 			"default" => 1,
-			"array" => $auth_methods,
+			"array" => $auth_methods
 			),
 		"guest_user" => array(
 			"friendly_name" => "Guest User",
@@ -601,7 +606,7 @@ $settings = array(
 			),
 		"ldap_header" => array(
 			"friendly_name" => "LDAP Settings",
-			"method" => "spacer",
+			"method" => "spacer"
 			),
 		"ldap_server" => array(
 			"friendly_name" => "LDAP Server",
@@ -614,7 +619,7 @@ $settings = array(
 			"description" => "This is the Distinguished Name syntax, such as &lt;username&gt;@win2kdomain.lcl.",
 			"method" => "textbox",
 			"max_length" => "100"
-			),
+			)
 		)
 	);
 
@@ -646,7 +651,7 @@ $settings_graphs = array(
 			"description" => "Choose if you want the time span selection box to be displayed.",
 			"method" => "checkbox",
 			"default" => "on"
-		),
+			),
 		"default_date_format" => array(
 			"friendly_name" => "Graph Date Display Format",
 			"description" => "The date format to use for graphs",
