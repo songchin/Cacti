@@ -64,7 +64,7 @@ function form_save() {
 	global $registered_cacti_names;
 
 	if (isset($_POST["save_component_data_poller"])) {
-		$data_poller_id = api_data_poller_save($_POST["id"], $_POST["active"], $_POST["hostname"], $_POST["description"]);
+		$data_poller_id = api_data_poller_save($_POST["id"], (isset($_POST["active"]) ? $_POST["active"] : ""), $_POST["hostname"], $_POST["description"]);
 
 		if ((is_error_message()) || (empty($_POST["id"]))) {
 			header("Location: data_pollers.php?action=edit&id=" . (empty($data_poller_id) ? $_POST["id"] : $data_poller_id));

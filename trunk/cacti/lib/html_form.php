@@ -460,7 +460,7 @@ function form_confirm_buttons($action_url, $cancel_url) { ?>
      'save' or 'create'. otherwise this field should be properly auto-detected */
 function form_save_button($cancel_url, $force_type = "") {
 	if (empty($force_type)) {
-		if (empty($_GET["id"])) {
+		if (!isset($_GET["id"])) {
 			$img = "button_create.gif";
 			$alt = "Create";
 		}else{
