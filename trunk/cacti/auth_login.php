@@ -61,6 +61,8 @@ if (read_config_option("auth_method") == "2") {
 $copy_user = false;
 $user_auth = false;
 $user_enabled = 1;
+$ldap_error = false;
+$ldap_error_message = "";
 if ($action == 'login') {
 
 	switch (read_config_option("auth_method")) {
@@ -79,9 +81,32 @@ if ($action == 'login') {
 	case "3":
 		/* LDAP Auth */
  		if (($_POST["realm"] == "ldap") && (strlen($_POST["login_password"]) > 0)) {
+			/* get LDAP parameters */
+			$ldap_host = read_config_option("ldap_server");
+			$ldap_port = read_config_option("ldap_port");  
+			$ldap_version = read_config_option("ldap_version");
+			if (read_config_option("ldap_encryption") == "1") {
+				$ldap_host = "ldaps://" . $ldap_host;
+				$ldap_port = read_config_option("ldap_port_ssl");
+			}else{
+				$ldap_host = "ldap://" . $ldap_host;
+			}
 			/* Connect to LDAP server */
-			$ldap_conn = ldap_connect(read_config_option("ldap_server"));
+			$ldap_conn = @ldap_connect($ldap_host,$ldap_port);
+
 			if ($ldap_conn) {
+				/* Set protocol version */
+				if (!@ldap_set_option($ldap_conn, LDAP_OPT_PROTOCOL_VERSION, $ldap_version)) {
+					auth_display_custom_error_message("Unable to set LDAP protocol version.");
+					exit;
+				}
+				/* start TLS if requested */
+				if (read_config_option("ldap_encryption") == "2") {
+					if (!@ldap_start_tls($ldap_conn)) {
+						auth_display_custom_error_message("Unable able to start connection with TLS enabled.");
+						exit;
+					}
+				}
 				/* Create DN */
 				$ldap_dn = str_replace("<username>",$username,read_config_option("ldap_dn"));
 				/* Query LDAP directory */
@@ -96,26 +121,30 @@ if ($action == 'login') {
 					/* Close LDAP connection */
 					ldap_close($ldap_conn);
 				}else{
-					/* Error LDAP Connection - This bad because this is also a bind error.
-					which means auth failure, not able to connect.  This will get fixed when
-					the LDAP code is updated. */
-					auth_display_custom_error_message("Unable to connect to LDAP Server.");
-					exit;
+					/* Error LDAP Connection 
+					This catches, password failure, server connection issues, 
+					and protocol problems.*/
+					$user_auth = false;
+					$ldap_error = true;
+					$ldap_error_message = "LDAP Error: " . ldap_error($ldap_conn);
+					$user = array();
 				}
 			}else{
 				/* Error intializing LDAP */
-				auth_display_custom_error_message("Unable to initialize LDAP Server.");
+				auth_display_custom_error_message("Unable to initialize LDAP connection.");
 				exit;
 			}
 		}
 
 	case "1":
 		/* Builtin Auth */
-		if (!$user_auth) {
+		if ((!$user_auth) && (!$ldap_error)) {
 			/* if auth has not occured process for builtin - AKA Ldap fall through */
 			$user = db_fetch_row("select * from user_auth where username='" . $username . "' and password = '" . md5($_POST["login_password"]) . "' and realm = 0");
 		}
 	}
+	/* end of switch */
+
 	/* Create user from template if requested */
 	if ((!sizeof($user)) && ($copy_user) && (read_config_option("user_template") != "0") && (strlen($username) > 0)) {
 		/* check that template user exists */
@@ -247,6 +276,13 @@ function auth_display_custom_error_message($message) {
 		<td colspan="2"><img src="<?php print html_get_theme_images_path('auth_login.gif');?>" border="0" alt=""></td>
 	</tr>
 	<?php
+
+	if ($ldap_error) {?>
+	<tr height="10"><td></td></tr>
+	<tr>
+		<td colspan="2"><font color="#FF0000"><strong><?php print $ldap_error_message; ?></strong></font></td>
+	</tr>
+	<?php }else {
 	if ($action == "login") {?>
 	<tr height="10"><td></td></tr>
 	<tr>
@@ -258,7 +294,7 @@ function auth_display_custom_error_message($message) {
 	<tr>
 		<td colspan="2"><font color="#FF0000"><strong>User Account Disabled</strong></font></td>
 	</tr>
-	<?php }?>
+	<?php } } ?>
 
 
 	<tr height="10"><td></td></tr>

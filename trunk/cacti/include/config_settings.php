@@ -658,41 +658,22 @@ $settings = array(
 			"default" => "636"
 			),
 		"ldap_version" => array(
-			"friendly_name" => "Version",
-			"description" => "Version that the server supports.",
+			"friendly_name" => "Protocol Version",
+			"description" => "Protocol Version that the server supports.",
 			"method" => "drop_array",
 			"default" => "3",
 			"array" => $ldap_versions
 			),
 		"ldap_encryption" => array(
 			"friendly_name" => "Encryption",
-			"description" => "Encryption that the server supports.",
+			"description" => "Encryption that the server supports. TLS is only supported by Protocol Version 3.",
 			"method" => "drop_array",
 			"default" => "0",
 			"array" => $ldap_encryption
 			),
-		"ldap_mode" => array(
-			"friendly_name" => "Mode",
-			"description" => "Mode which cacti will attempt to authenicate against the LDAP server.<ul><li><i>No Binding</i> - No username validation occurs, just attempt to authenticate. This mode has limited error messages.</li><li><i>Anonymous Binding</i> - Attempts to validate username against LDAP directory via anonymous search.</li><li><i>Specific Binding</i> - Attempts to validate username against LDAP directory via Specific Distinguished Name (DN) and Specific Password.</li></ul>",
-			"method" => "drop_array",
-			"default" => "0",
-			"array" => $ldap_modes
-			),
 		"ldap_dn" => array(
 			"friendly_name" => "Distinguished Name (DN)",
-			"description" => "Distinguished Name syntax, such as &lt;username&gt;@win2kdomain.local. or uid=&lt;username&gt;,ou=People,dc=domain,dc=local",
-			"method" => "textbox",
-			"max_length" => "255"
-			),
-		"ldap_specific_dn" => array(
-			"friendly_name" => "Specific Distingished Name (DN)",
-			"description" => "Distinguished Name for Specific Binding to LDAP directory.",
-			"method" => "textbox",
-			"max_length" => "255"
-			),
-		"ldap_specific_password" => array(
-			"friendly_name" => "Specific Password",
-			"description" => "Password for Specific Binding to LDAP directory.",
+			"description" => "Distinguished Name syntax, such as \"&lt;username&gt;@win2kdomain.local\" or \"uid=&lt;username&gt;,ou=people,dc=domain,dc=local\".",
 			"method" => "textbox",
 			"max_length" => "255"
 			)
