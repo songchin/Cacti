@@ -29,11 +29,11 @@
 /* colors */
 $colors["panel"] = "E5E5E5";
 
-$colors["header_text"] = "ffffff";
-
 /* Form Colors */
 $colors["header_background"] = "00438C";
-$colors["header_panel_background"] = "6d88ad";
+$colors["header_text"] = "FFFFFF";
+$colors["header_panel_background"] = "6D88AD";
+$colors["header_panel_text"] = "FFFFFF";
 $colors["form_alternate1"] = "F5F5F5";
 $colors["form_alternate2"] = "E5E5E5";
 

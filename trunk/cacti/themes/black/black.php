@@ -29,12 +29,12 @@
 /* colors */
 $colors["panel"] = "FF0000";
 
-$colors["header_background"] = "FF0000";
-$colors["header_panel_background"] = "FFFFFF";
-$colors["header_text"] = "ffffff";
-
 /* Form Colors */
-$colors["form_alternate1"] = "0f0f0f";
+$colors["header_background"] = "0F5F0F";
+$colors["header_text"] = "FFFFFF";
+$colors["header_panel_background"] = "0F1F4F";
+$colors["header_panel_text"] = "FFFFFF";
+$colors["form_alternate1"] = "0F0F0F";
 $colors["form_alternate2"] = "000000";
 
 /* Filter Colors */
@@ -52,8 +52,8 @@ $colors["rrd_font"] = "FFFFFF";
 $colors["rrd_back"] = "000000";
 
 /* Main Header Colors */
-$colors["main_background"] = "000000";
-$colors["main_border"] = "183c8f";
+$colors["main_background"] = "0F1F5F";
+$colors["main_border"] = "183C8F";
 
 /* Navbar Colors */
 $colors["navbar_background"] = "000000";
@@ -63,7 +63,7 @@ $colors["console_menu_background"] = "000000";
 
 /* Graph Menu Colors */
 $colors["graph_menu_background"] = "000000";
-$colors["graph_alternate1"] = "0f0f0f";
+$colors["graph_alternate1"] = "0F0F0F";
 $colors["graph_alternate2"] = "000000";
 
 ?>
