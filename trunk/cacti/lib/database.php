@@ -223,8 +223,8 @@ function sql_save($array_items, $table_name, $key_cols='id') {
 	}
 }
 
-/* sql_fix - removes and quotes unwanted chars in values passed for use in SQL statements
-   @arg $value - value to fix
+/* sql_sanitize - removes and quotes unwanted chars in values passed for use in SQL statements
+   @arg $value - value to sanitize
    @return - fixed value */
 function sql_sanitize($value) {
 
