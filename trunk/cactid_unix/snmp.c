@@ -129,7 +129,7 @@ void snmp_host_init(host_t *current_host) {
 			* As we want this extension to compile on both versions, we use the latter
 			* symbol on purpose, as it's defined to be the same as the former.
 			*/
-			|| (!strcmp(current_host->snmpv3_priv_protocol, "AES")))
+			|| (!strcmp(current_host->snmpv3_priv_protocol, "AES"))) {
 				session.securityPrivProto = usmAESPrivProtocol;
 				session.securityPrivProtoLen = OIDSIZE(usmAESPrivProtocol);
 			#else
