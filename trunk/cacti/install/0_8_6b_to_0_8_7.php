@@ -30,8 +30,8 @@ function upgrade_to_0_8_7() {
 	db_install_execute("0.8.7", "ALTER TABLE `host` ADD `poller_id` smallint(5) unsigned NOT NULL default '0' AFTER `id`;");
 	db_install_execute("0.8.7", "ALTER TABLE `host` ADD `availability_method` smallint(5) unsigned NOT NULL default '1' AFTER `snmp_timeout`;");
 	db_install_execute("0.8.7", "ALTER TABLE `host` ADD `ping_method` smallint(5) unsigned default '' AFTER `availability_method`;");
-	db_install_execute("0.8.7", "ALTER TABLE `host` CHANGE `snmp_username` `snmpv3_auth_username`, CHANGE `snmp_password` `snmpv3_auth_password`;");
-	db_install_execute("0.8.7", "ALTER TABLE `host` `snmpv3_auth_protocol` varchar(5) AFTER `snmp_community`, `snmpv3_priv_passphrase` varchar(200) AFTER `snmpv3_auth_protocol`, `snmpv3_priv_protocol` varchar(5) AFTER `snmpv3_auth_protocol`;");
+	db_install_execute("0.8.7", "ALTER TABLE `host` CHANGE `snmp_username` `snmpv3_auth_username` varchar(50), CHANGE `snmp_password` `snmpv3_auth_password` varchar(50);");
+	db_install_execute("0.8.7", "ALTER TABLE `host` ADD `snmpv3_auth_protocol` varchar(5) AFTER `snmpv3_auth_password`, ADD `snmpv3_priv_passphrase` varchar(200) AFTER `snmpv3_auth_protocol`, ADD `snmpv3_priv_protocol` varchar(5) AFTER `snmpv3_priv_passphrase`;");
 	db_install_execute("0.8.7", "ALTER TABLE `data_input` ADD `reserved` tinyint unsigned NOT NULL default '0' AFTER `id`;");
 	db_install_execute("0.8.7", "UPDATE data_input set reserved = '1' where hash = '3eb92bb845b9660a7445cf9740726522' or hash = 'bf566c869ac6443b0c75d1c32b5a350e' or hash = '80e9e4c4191a5da189ae26d0e237f015' or hash = '332111d8b54ac8ce939af87a7eac0c06';");
 	db_install_execute("0.8.7", "ALTER TABLE `poller` ADD `active` varchar(5) default 'On' AFTER `id`;");
