@@ -355,14 +355,17 @@ function api_user_realms_list($user_id) {
 	/* prevent array sqaushing */	
 	$user_auth_realms_local = $user_auth_realms;
 
-	/* process realms */
+	/* process realms */	
+	$user_realms = db_fetch_assoc("select realm_id from user_auth_realm where user_id = " . sql_fix($user_id));
 	while (list($realm_id, $realm_name) = each($user_auth_realms_local)) {
-			
-		if (sizeof(db_fetch_assoc("select realm_id from user_auth_realm where user_id = '" . $user_id . "' and realm_id = '" . $realm_id . "'")) > 0) {
-			$value = "1";
-		}else{
-			$value = "0";
+		$value = 0;
+		while (list($record,$user_realm) = each($user_realms)) {
+			if ($user_realm["realm_id"] == $realm_id) {
+				$value = "1";
+			}
 		}
+		/* return to the start of the recordset */
+		reset($user_realms);
 		$realm_list[$realm_id] = array(
 			"realm_name" => $realm_name,
 			"value" => $value
