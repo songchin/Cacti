@@ -174,38 +174,32 @@ function form_save() {
 				$i = 0;
 				$realm_perms_list = array();
 				while (list($var, $val) = each($_POST)) {
-					if (eregi("^[section]", $var)) {
-						if (substr($var, 0, 7) == "section") {
-							$realm_perms_list[$i] = substr($var, 7);
-							$i++;
-						}
+					if (substr($var, 0, 7) == "section") {
+						$realm_perms_list[$i] = substr($var, 7);
+						$i++;
 					}
 				}
 				api_user_realms_save($user_id,$realm_perms_list);
 
 			/* graph settings */
 			}elseif (isset($_POST["save_component_graph_settings"])) {
-				while (list($tab_short_name, $tab_fields) = each($settings_graphs)) {
-					while (list($field_name, $field_array) = each($tab_fields)) {
-						if ((isset($field_array["items"])) && (is_array($field_array["items"]))) {
-							while (list($sub_field_name, $sub_field_array) = each($field_array["items"])) {
-								db_execute("replace into settings_graphs (user_id,name,value) values (" . (!empty($user_id) ? $user_id : $_POST["id"]) . ",'$sub_field_name', '" . (isset($_POST[$sub_field_name]) ? $_POST[$sub_field_name] : "") . "')");
-							}
-						}else{
-							db_execute("replace into settings_graphs (user_id,name,value) values (" . (!empty($user_id) ? $user_id : $_POST["id"]) . ",'$field_name', '" . (isset($_POST[$field_name]) ? $_POST[$field_name] : "") . "')");
-						}
-					}
+				if (api_user_graph_setting_save($_POST["id"],$_POST) == 1) {
+					raise_message(2);
 				}
 
-				/* reset local settings cache so the user sees the new settings */
-				kill_session_var("sess_graph_config_array");
+				if ($_SESSION["sess_user_id"] == $_POST["id"]) {
+					/* reset local settings cache so the user sees the new settings */
+					kill_session_var("sess_graph_config_array");
+				}
+			/* graph perms - allow/deny */
 			}elseif (isset($_POST["save_component_graph_perms"])) {
-				db_execute("update user_auth set
-					policy_graphs='" . $_POST["policy_graphs"] . "',
-					policy_trees='" . $_POST["policy_trees"] . "',
-					policy_hosts='" . $_POST["policy_hosts"] . "',
-					policy_graph_templates='" . $_POST["policy_graph_templates"] . "'
-					where id=" . $_POST["id"]);
+				$user = array();
+				$user["policy_graphs"] = $_POST["policy_graphs"];
+				$user["policy_tress"] = $_POST["policy_trees"];
+				$user["policy_hosts"] = $_POST["policy_hosts"];
+				$user["policy_graph_templates"] = $_POST["policy_graph_templates"];
+				$user["id"] = $_POST["id"];
+				api_user_save($user);
 			}
 		}
 	}
@@ -255,14 +249,7 @@ function graph_perms_edit() {
 	/* box: graph permissions */
 	html_start_box("<strong>Graph Permissions (By Graph)</strong>", "98%", $colors["header"], "3", "center", "");
 
-	$graphs = db_fetch_assoc("select
-		graph_templates_graph.local_graph_id,
-		graph_templates_graph.title_cache
-		from graph_templates_graph
-		left join user_auth_perms on (graph_templates_graph.local_graph_id=user_auth_perms.item_id and user_auth_perms.type=1)
-		where graph_templates_graph.local_graph_id > 0
-		and user_auth_perms.user_id=" . (empty($_GET["id"]) ? "0" : $_GET["id"]) . "
-		order by graph_templates_graph.title_cache");
+	$graphs = api_user_graph_perms_list("graph", $_GET["id"]);
 
 	?>
 	<form method="post" action="user_admin.php">
@@ -316,13 +303,7 @@ function graph_perms_edit() {
 	/* box: host permissions */
 	html_start_box("<strong>Graph Permissions (By Host)</strong>", "98%", $colors["header"], "3", "center", "");
 
-	$hosts = db_fetch_assoc("select
-		host.id,
-		CONCAT_WS('',host.description,' (',host.hostname,')') as name
-		from host
-		left join user_auth_perms on (host.id=user_auth_perms.item_id and user_auth_perms.type=3)
-		where user_auth_perms.user_id=" . (empty($_GET["id"]) ? "0" : $_GET["id"]) . "
-		order by host.description,host.hostname");
+	$hosts = api_user_graph_perms_list("host", $_GET["id"]);
 
 	?>
 	<tr bgcolor="#<?php print $colors["form_alternate1"];?>">
@@ -375,13 +356,7 @@ function graph_perms_edit() {
 	/* box: graph template permissions */
 	html_start_box("<strong>Graph Permissions (By Graph Template)</strong>", "98%", $colors["header"], "3", "center", "");
 
-	$graph_templates = db_fetch_assoc("select
-		graph_templates.id,
-		graph_templates.name
-		from graph_templates
-		left join user_auth_perms on (graph_templates.id=user_auth_perms.item_id and user_auth_perms.type=4)
-		where user_auth_perms.user_id=" . (empty($_GET["id"]) ? "0" : $_GET["id"]) . "
-		order by graph_templates.name");
+	$graph_templates = api_user_graph_perms_list("graph_template", $_GET["id"]);
 
 	?>
 	<tr bgcolor="#<?php print $colors["form_alternate1"];?>">
@@ -434,13 +409,7 @@ function graph_perms_edit() {
 	/* box: tree permissions */
 	html_start_box("<strong>Tree Permissions</strong>", "98%", $colors["header"], "3", "center", "");
 
-	$trees = db_fetch_assoc("select
-		graph_tree.id,
-		graph_tree.name
-		from graph_tree
-		left join user_auth_perms on (graph_tree.id=user_auth_perms.item_id and user_auth_perms.type=2)
-		where user_auth_perms.user_id=" . (empty($_GET["id"]) ? "0" : $_GET["id"]) . "
-		order by graph_tree.name");
+	$trees = api_user_graph_perms_list("tree", $_GET["id"]);
 
 	?>
 	<tr bgcolor="#<?php print $colors["form_alternate1"];?>">
@@ -578,6 +547,9 @@ function graph_settings_edit() {
 
 	html_start_box("<strong>Graph Settings</strong>", "98%", $colors["header"], "3", "center", "");
 
+	/* get user graph settings */
+	$user_settings = api_user_graph_setting_list($_GET["id"]);
+
 	while (list($tab_short_name, $tab_fields) = each($settings_graphs)) {
 		?>
 		<tr bgcolor='<?php print $colors["header_panel"];?>'>
@@ -597,15 +569,13 @@ function graph_settings_edit() {
 					if (graph_config_value_exists($sub_field_name, $_GET["id"])) {
 						$form_array[$field_name]["items"][$sub_field_name]["form_id"] = 1;
 					}
-
-					$form_array[$field_name]["items"][$sub_field_name]["value"] =  db_fetch_cell("select value from settings_graphs where name='$sub_field_name' and user_id=" . $_GET["id"]);
+					$form_array[$field_name]["items"][$sub_field_name]["value"] =  $user_settings[$sub_field_name];
 				}
 			}else{
 				if (graph_config_value_exists($field_name, $_GET["id"])) {
 					$form_array[$field_name]["form_id"] = 1;
 				}
-
-				$form_array[$field_name]["value"] = db_fetch_cell("select value from settings_graphs where name='$field_name' and user_id=" . $_GET["id"]);
+				$form_array[$field_name]["value"] = $user_settings[$field_name];
 			}
 		}
 
