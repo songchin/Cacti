@@ -24,6 +24,8 @@
  +-------------------------------------------------------------------------+
 */
 
+include("lib/api_user.php");
+
 /* set default action */
 if (!isset($_REQUEST["action"])) { 
 	$action = ""; 
@@ -118,7 +120,7 @@ if ($action == 'login') {
 		/* check that template user exists */
 		if (sizeof(db_fetch_row("select * from user_auth where username='" . read_config_option("user_template") . "' and realm = 0")) != 0) {
 			/* template user found */
-			user_copy(read_config_option("user_template"), $username, $realm);
+			api_user_copy(read_config_option("user_template"), $username, $realm);
 			/* requery newly created user */
 			$user = db_fetch_row("select * from user_auth where username='" . $username . "' and realm = " . $realm);
 		}else{
