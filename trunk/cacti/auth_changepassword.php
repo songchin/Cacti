@@ -27,7 +27,6 @@
 include("./include/config.php");
 include("./lib/api_user.php");
 
-#$user = db_fetch_row("select * from user_auth where id=" . $_SESSION["sess_user_id"]);
 $user = api_user_info( array( "id" => $_SESSION["sess_user_id"] ) );
 
 /* find out if we are logged in as a 'guest user' or not */
