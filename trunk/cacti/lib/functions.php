@@ -315,20 +315,26 @@ function cacti_log($message, $severity = SEV_INFO, $poller_id = 0, $host_id = 0,
 
 	/* get username */
 	if ($user_id) {
-	    $username = db_fetch_cell("select username from user_auth where user_id=$user_id");
+	    $user_info = api_user_info(array("id" => $user_id));
+	    $username = $user_info["username"];
+	    //"select username from user_auth where user_id=$user_id");
 	}else{
 		$username = "system";
 	}
 
 	/* set the IP Address */
-	$source = "0.0.0.0";
+	if (isset($_SERVER["REMOTE_ADDR"])) {
+		$source = $_SERVER["REMOTE_ADDR"];
+	}else {
+		$source = "system";
+	}
 
 	/* Log to Cacti Syslog */
 	if ((($logdestination == 1) || ($logdestination == 2)) && (read_config_option("log_verbosity") != POLLER_VERBOSITY_NONE)) {
 		/* echo the data to the log (append) */
 		db_execute("insert into syslog
 			(logdate,facility,severity,poller_id,host_id,user_id,username,source,message) values
-			('$logdate', '" . get_facility($facility) . "', '" . get_severity($severity) . "', '$poller_id', '$host_id', '$user_id', '$username', '$source', '$message');");
+			('$logdate', '" . get_facility($facility) . "', '" . get_severity($severity) . "', '$poller_id', '$host_id', '$user_id', '$username', '$source', '". addslashes($message) . "');");
 	}
 
 	/* Log to System Syslog/Eventlog */
@@ -377,11 +383,14 @@ function get_facility($facility) {
 		case FACIL_POLLER:
 			return "POLLER";
 			break;
-		case FACIL_SCRPTSVR:
-			return "SCRPTSVR";
+		case FACIL_SCPTSVR:
+			return "SCPTSVR";
 			break;
 		case FACIL_WEBUI:
 			return "WEBUI";
+			break;
+		case FACIL_EXPORT:
+			return "EXPORT";
 			break;
 		case FACIL_AUTH:
 			return "AUTH";
@@ -389,7 +398,6 @@ function get_facility($facility) {
 		default:
 			return "UNKNOWN";
 			break;
-
 	}
 }
 
@@ -418,7 +426,7 @@ function get_severity($severity) {
 		case SEV_INFO:
 			return "INFO";
 			break;
-		case SEV_INFO:
+		case SEV_DEBUG:
 			return "DEBUG";
 			break;
 		default:

@@ -159,4 +159,5 @@ define("FACIL_CACTID",2);
 define("FACIL_SCPTSVR",3);
 define("FACIL_AUTH",4);
 define("FACIL_WEBUI",5);
+define("FACIL_EXPORT", 6);
 ?>

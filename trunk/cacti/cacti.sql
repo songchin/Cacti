@@ -2629,7 +2629,7 @@ INSERT INTO snmp_query_graph_sv VALUES (49,'183bb486c92a566fddcb0585ede37865',22
 CREATE TABLE `syslog` (
   `id` bigint(20) unsigned NOT NULL auto_increment,
   `logdate` datetime NOT NULL default '0000-00-00 00:00:00',
-  `facility` enum('POLLER','CMDPHP','CACTID','SCPTSVR','AUTH','WEBUI') NOT NULL default 'POLLER',
+  `facility` enum('POLLER','CMDPHP','CACTID','SCPTSVR','AUTH','WEBUI','EXPORT') NOT NULL default 'POLLER',
   `severity` enum('EMERGENCY','ALERT','CRITICAL','ERROR','WARNING','NOTICE','INFO','DEBUG') NOT NULL default 'EMERGENCY',
   `poller_id` smallint(5) unsigned NOT NULL default '0',
   `host_id` mediumint(8) unsigned NOT NULL default '0',

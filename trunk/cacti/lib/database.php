@@ -48,8 +48,7 @@ function db_connect_real($host,$user,$pass,$db_name,$db_type, $retries = 20) {
 		usleep(100000);
 	}
 
-	cacti_log("ERROR: Cannot connect to MySQL server on '$host'. Please make sure you have specified a valid MySQL   database name in 'include/config.php'.");
-
+	cacti_log("Cannot connect to MySQL server on '$host'. Please make sure you have specified a valid MySQL database name in 'include/config.php'.", SEV_ERROR, 0, 0, 0, false, FACIL_WEBUI);
 	die("<br>Cannot connect to MySQL server on '$host'. Please make sure you have specified a valid MySQL database name in 'include/config.php'.");
 
 	return(0);
@@ -223,10 +222,10 @@ function sql_save($array_items, $table_name, $key_cols='id') {
 	}
 }
 
-/* sql_sanitize - removes and quotes unwanted chars in values passed for use in SQL statements
-   @arg $value - value to sanitize
+/* sql_fix - removes and quotes unwanted chars in values passed for use in SQL statements
+   @arg $value - value to fix
    @return - fixed value */
-function sql_sanitize($value) {
+function sql_fix($value) {
 
 	$value = str_replace("'", "''", $value);
 	$value = str_replace(";", "", $value);
