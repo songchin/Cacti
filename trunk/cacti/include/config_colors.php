@@ -36,6 +36,8 @@ $colors["header_panel_background"] = "6D88AD";
 $colors["header_panel_text"] = "FFFFFF";
 $colors["form_alternate1"] = "F5F5F5";
 $colors["form_alternate2"] = "E5E5E5";
+$colors["form_custom1"] = "D5D5D5";
+$colors["form_custom2"] = "D2D6E7";
 
 /* Filter Colors */
 $colors["filter_background"] = "E5E5E5";

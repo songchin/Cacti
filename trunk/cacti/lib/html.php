@@ -361,13 +361,13 @@ function draw_graph_items_list($item_list, $filename, $url_data, $disable_contro
 			$this_row_style = "font-weight: bold;"; $use_custom_row_color = true;
 
 			if ($group_counter % 2 == 0) {
-				$alternate_color_1 = "EEEEEE";
-				$alternate_color_2 = "EEEEEE";
-				$custom_row_color = "D5D5D5";
+				$alternate_color_1 = $colors["form_alternate2"];
+				$alternate_color_2 = $colors["form_alternate2"];
+				$custom_row_color = $colors["form_custom1"];
 			}else{
 				$alternate_color_1 = $colors["form_alternate1"];
 				$alternate_color_2 = $colors["form_alternate1"];
-				$custom_row_color = "D2D6E7";
+				$custom_row_color = $colors["form_custom2"];
 			}
 
 			$group_counter++;

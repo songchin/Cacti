@@ -66,7 +66,7 @@ $rras = get_associated_rras($_GET["local_graph_id"]);
 switch ($_REQUEST["action"]) {
 case 'view':
 	?>
-	<tr bgcolor='#<?php print $colors["header_panel"];?>'>
+	<tr bgcolor='#<?php print $colors["header_panel_background"];?>'>
 		<td colspan='3' class='textHeaderDark'>
 			<strong>Viewing Graph</strong> '<?php print $graph_title;?>'
 		</td>

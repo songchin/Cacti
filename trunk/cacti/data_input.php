@@ -251,7 +251,7 @@ function data_edit() {
 		<?php
 		}
 		}else{
-			print "<tr><td><em>No Input Fields</em></td></tr>";
+			print "<tr bgcolor='#" . $colors["form_alternate1"] . "'><td><em>No Input Fields</em></td><td></td><td></td></tr>";
 		}
 		html_end_box();
 

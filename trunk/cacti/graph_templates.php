@@ -317,7 +317,7 @@ function item() {
 	$i = 0;
 	if (sizeof($template_item_list) > 0) {
 	foreach ($template_item_list as $item) {
-		form_alternate_row_color($colors["form_alternate1"],$colors["form_alternate2"],$i);
+      form_alternate_row_color($colors["form_alternate1"],$colors["form_alternate2"],$i);
 	?>
 			<td>
 				<a class="linkEditMain" href="graph_templates_inputs.php?action=input_edit&id=<?php print $item["id"];?>&graph_template_id=<?php print $_GET["id"];?>"><?php print $item["name"];?></a>
