@@ -35,7 +35,7 @@ $fields_cdef_edit = array(
 		"friendly_name" => "Name",
 		"description" => "A useful name for this CDEF.",
 		"value" => "|arg1:name|",
-		"max_length" => "255",
+		"max_length" => "255"
 		),
 	"id" => array(
 		"method" => "hidden_zero",
@@ -54,7 +54,7 @@ $fields_color_edit = array(
 		"friendly_name" => "Hex Value",
 		"description" => "The hex value for this color; valid range: 000000-FFFFFF.",
 		"value" => "|arg1:hex|",
-		"max_length" => "6",
+		"max_length" => "6"
 		),
 	"id" => array(
 		"method" => "hidden_zero",
@@ -107,21 +107,21 @@ $fields_data_input_edit = array(
 		"friendly_name" => "Name",
 		"description" => "Enter a meaningful name for this data input method.",
 		"value" => "|arg1:name|",
-		"max_length" => "255",
+		"max_length" => "255"
 		),
 	"type_id" => array(
 		"method" => "drop_array",
 		"friendly_name" => "Input Type",
 		"description" => "Choose what type of data input method this is.",
 		"value" => "|arg1:type_id|",
-		"array" => $input_types,
+		"array" => $input_types
 		),
 	"input_string" => array(
 		"method" => "textbox",
 		"friendly_name" => "Input String",
 		"description" => "The data that is sent to the script, which includes the complete path to the script and input sources in &lt;&gt; brackets.",
 		"value" => "|arg1:input_string|",
-		"max_length" => "255",
+		"max_length" => "255"
 		),
 	"id" => array(
 		"method" => "hidden_zero",
@@ -140,7 +140,7 @@ $fields_data_input_field_edit_1 = array(
 		"friendly_name" => "Field [|arg1:|]",
 		"description" => "Choose the associated field from the |arg1:| field.",
 		"value" => "|arg3:data_name|",
-		"array" => "|arg2:|",
+		"array" => "|arg2:|"
 		)
 	);
 
@@ -151,7 +151,7 @@ $fields_data_input_field_edit_2 = array(
 		"friendly_name" => "Field [|arg1:|]",
 		"description" => "Enter a name for this |arg1:| field.",
 		"value" => "|arg2:data_name|",
-		"max_length" => "50",
+		"max_length" => "50"
 		)
 	);
 
@@ -162,7 +162,7 @@ $fields_data_input_field_edit = array(
 		"friendly_name" => "Friendly Name",
 		"description" => "Enter a meaningful name for this data input method.",
 		"value" => "|arg1:name|",
-		"max_length" => "200",
+		"max_length" => "200"
 		),
 	"update_rra" => array(
 		"method" => "checkbox",
@@ -223,7 +223,7 @@ $fields_data_template_template_edit = array(
 		"friendly_name" => "Name",
 		"description" => "The name given to this data template.",
 		"value" => "|arg1:name|",
-		"max_length" => "150",
+		"max_length" => "150"
 		),
 	"data_template_id" => array(
 		"method" => "hidden_zero",
@@ -354,14 +354,14 @@ $fields_grprint_presets_edit = array(
 		"friendly_name" => "Name",
 		"description" => "Enter a name for this GPRINT preset, make sure it is something you recognize.",
 		"value" => "|arg1:name|",
-		"max_length" => "50",
+		"max_length" => "50"
 		),
 	"gprint_text" => array(
 		"method" => "textbox",
 		"friendly_name" => "GPRINT Text",
 		"description" => "Enter the custom GPRINT string here.",
 		"value" => "|arg1:gprint_text|",
-		"max_length" => "50",
+		"max_length" => "50"
 		),
 	"id" => array(
 		"method" => "hidden_zero",
@@ -586,7 +586,7 @@ $fields_graph_template_template_edit = array(
 		"friendly_name" => "Name",
 		"description" => "The name given to this graph template.",
 		"value" => "|arg1:name|",
-		"max_length" => "150",
+		"max_length" => "150"
 		),
 	"graph_template_id" => array(
 		"method" => "hidden_zero",
@@ -624,7 +624,7 @@ $fields_graph_template_input_edit = array(
 		"friendly_name" => "Field Type",
 		"description" => "How data is to be represented on the graph.",
 		"value" => "|arg1:column_name|",
-		"array" => "|arg2:|",
+		"array" => "|arg2:|"
 		),
 	"graph_template_id" => array(
 		"method" => "hidden_zero",
@@ -808,7 +808,7 @@ $fields_host_template_edit = array(
 		"friendly_name" => "Name",
 		"description" => "A useful name for this host template.",
 		"value" => "|arg1:name|",
-		"max_length" => "255",
+		"max_length" => "255"
 		),
 	"id" => array(
 		"method" => "hidden_zero",
@@ -827,42 +827,42 @@ $fields_rra_edit = array(
 		"friendly_name" => "Name",
 		"description" => "How data is to be entered in RRA's.",
 		"value" => "|arg1:name|",
-		"max_length" => "100",
+		"max_length" => "100"
 		),
 	"consolidation_function_id" => array(
 		"method" => "drop_multi",
 		"friendly_name" => "Consolidation Functions",
 		"description" => "How data is to be entered in RRA's.",
 		"array" => $consolidation_functions,
-		"sql" => "select consolidation_function_id as id,rra_id from rra_cf where rra_id=|arg1:id|",
+		"sql" => "select consolidation_function_id as id,rra_id from rra_cf where rra_id=|arg1:id|"
 		),
 	"x_files_factor" => array(
 		"method" => "textbox",
 		"friendly_name" => "X-Files Factor",
 		"description" => "The amount of unknown data that can still be regarded as known.",
 		"value" => "|arg1:x_files_factor|",
-		"max_length" => "10",
+		"max_length" => "10"
 		),
 	"steps" => array(
 		"method" => "textbox",
 		"friendly_name" => "Steps",
 		"description" => "How many data points are needed to put data into the RRA.",
 		"value" => "|arg1:steps|",
-		"max_length" => "8",
+		"max_length" => "8"
 		),
 	"rows" => array(
 		"method" => "textbox",
 		"friendly_name" => "Rows",
 		"description" => "How many generations data is kept in the RRA.",
 		"value" => "|arg1:rows|",
-		"max_length" => "8",
+		"max_length" => "8"
 		),
 	"timespan" => array(
 		"method" => "textbox",
 		"friendly_name" => "Timespan",
 		"description" => "How many seconds to display in graph for this RRA.",
 		"value" => "|arg1:timespan|",
-		"max_length" => "8",
+		"max_length" => "8"
 		),
 	"id" => array(
 		"method" => "hidden_zero",
@@ -881,14 +881,14 @@ $fields_data_query_edit = array(
 		"friendly_name" => "Name",
 		"description" => "A name for this data query.",
 		"value" => "|arg1:name|",
-		"max_length" => "100",
+		"max_length" => "100"
 		),
 	"description" => array(
 		"method" => "textbox",
 		"friendly_name" => "Description",
 		"description" => "A description for this data query.",
 		"value" => "|arg1:description|",
-		"max_length" => "255",
+		"max_length" => "255"
 		),
 	"xml_path" => array(
 		"method" => "textbox",
@@ -896,18 +896,18 @@ $fields_data_query_edit = array(
 		"description" => "The full path to the XML file containing definitions for this data query.",
 		"value" => "|arg1:xml_path|",
 		"default" => "<path_cacti>/resource/",
-		"max_length" => "255",
+		"max_length" => "255"
 		),
 	"data_input_id" => array(
 		"method" => "drop_sql",
 		"friendly_name" => "Data Input Method",
 		"description" => "Choose what type of host, host template this is. The host template will govern what kinds of data should be gathered from this type of host.",
 		"value" => "|arg1:data_input_id|",
-		"sql" => "select id,name from data_input where (type_id=3 or type_id=4 or type_id=5 or type_id=6) order by name",
+		"sql" => "select id,name from data_input where (type_id=3 or type_id=4 or type_id=5 or type_id=6) order by name"
 		),
 	"id" => array(
 		"method" => "hidden_zero",
-		"value" => "|arg1:id|",
+		"value" => "|arg1:id|"
 		),
 	"save_component_snmp_query" => array(
 		"method" => "hidden",
@@ -922,14 +922,14 @@ $fields_data_query_item_edit = array(
 		"friendly_name" => "Name",
 		"description" => "A name for this associated graph.",
 		"value" => "|arg1:name|",
-		"max_length" => "100",
+		"max_length" => "100"
 		),
 	"graph_template_id" => array(
 		"method" => "drop_sql",
 		"friendly_name" => "Graph Template",
 		"description" => "Choose what type of host, host template this is. The host template will govern what kinds of data should be gathered from this type of host.",
 		"value" => "|arg1:graph_template_id|",
-		"sql" => "select id,name from graph_templates order by name",
+		"sql" => "select id,name from graph_templates order by name"
 		),
 	"id" => array(
 		"method" => "hidden_zero",
@@ -956,14 +956,14 @@ $fields_tree_edit = array(
 		"friendly_name" => "Name",
 		"description" => "A useful name for this graph tree.",
 		"value" => "|arg1:name|",
-		"max_length" => "255",
+		"max_length" => "255"
 		),
 	"sort_type" => array(
 		"method" => "drop_array",
 		"friendly_name" => "Sorting Type",
 		"description" => "Choose how items in this tree will be sorted.",
 		"value" => "|arg1:sort_type|",
-		"array" => $tree_sort_types,
+		"array" => $tree_sort_types
 		),
 	"id" => array(
 		"method" => "hidden_zero",
