@@ -25,6 +25,7 @@
 */
 
 include("lib/api_user.php");
+include_once("lib/html.php");
 
 /* set default action */
 if (!isset($_REQUEST["action"])) {
@@ -227,6 +228,8 @@ function auth_display_custom_error_message($message) {
 <html>
 <head>
 	<title>Login to Cacti</title>
+	<link href='<?php print html_get_theme_images_path("favicon.ico");?>' rel='image/x-icon'>
+	<link rel='shortcut icon' href='<?php print html_get_theme_images_path("favicon.ico");?>' type='image/x-icon'>
 	<STYLE TYPE="text/css">
 	<!--
 		BODY, TABLE, TR, TD {font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 12px;}

@@ -52,7 +52,7 @@ if (read_config_option("auth_method") != "0") {
 	$current_user["show_tree"] = 'on';
 	$current_user["show_list"] = 'on';
 	$current_user["show_preview"] = 'on';
-	
+
 }
 
 /* use cached url if available and applicable */
@@ -95,6 +95,8 @@ if ((read_graph_config_option("default_tree_view_mode") == "2") && ($_REQUEST["a
 		print "<meta http-equiv=refresh content='" . read_graph_config_option("page_refresh") . "'; url='" . basename($_SERVER["PHP_SELF"]) . "'>\r\n";
 	}
 	?>
+	<link href="<?php print html_get_theme_images_path('favicon.ico');?>" rel="image/x-icon">
+	<link rel="shortcut icon" href="<?php print html_get_theme_images_path('favicon.ico');?>" type="image/x-icon">
 	<link href='<?php print html_get_theme_css();?>' rel='stylesheet'>
 
 	<script type="text/javascript" src="include/treeview/ua.js"></script>
@@ -149,14 +151,14 @@ if ((read_graph_config_option("default_tree_view_mode") == "2") && ($_REQUEST["a
 					<td align="right">
 						<?php if ((isset($_SESSION["sess_user_id"])) && ($using_guest_account == false) && (read_config_option("auth_method") != "0")) { ?>
 						Logged in as <strong><?php print $current_user["username"];?></strong> (<?php if ((read_config_option("auth_method") == "1") && ($current_user_realms["18"]["value"] == "1")) { ?><a href="user_changepassword.php">Change Password</a>|<?php } ?><a href="logout.php">Logout</a>)&nbsp;
-						<?php 
-						}else{ 
+						<?php
+						}else{
 							if ((read_config_option("auth_method") != "0") && (read_config_option("auth_method") != "2")) {
 						?>
 						&nbsp;(<a href="logout.php">Login</a>)&nbsp;
 
-						<?php 
-							} 
+						<?php
+							}
 						} ?>
 					</td>
 				</tr>

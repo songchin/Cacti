@@ -29,6 +29,8 @@ global $colors;
 <html>
 <head>
 	<title>cacti</title>
+	<link href='<?php print html_get_theme_images_path("favicon.ico");?>' rel='image/x-icon'>
+	<link rel='shortcut icon' href='<?php print html_get_theme_images_path("favicon.ico");?>' type='image/x-icon'>
 	<link href='<?php print html_get_theme_css();?>' rel='stylesheet'>
 	<script type="text/javascript" src="include/layout.js"></script>
 </style>
