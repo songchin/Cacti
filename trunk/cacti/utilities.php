@@ -90,12 +90,13 @@ function utilities_view_syslog() {
 
 	/* if the user pushed the 'clear' button */
 	if (isset($_REQUEST["clear_x"])) {
-		kill_session_var("sess_device_current_page");
-		kill_session_var("sess_device_filter");
-		kill_session_var("sess_facility");
-		kill_session_var("sess_severity");
-		kill_session_var("sess_poller");
-		kill_session_var("sess_host");
+		kill_session_var("sess_syslog_current_page");
+		kill_session_var("sess_syslog_filter");
+		kill_session_var("sess_syslog_facility");
+		kill_session_var("sess_syslog_severity");
+		kill_session_var("sess_syslog_poller");
+		kill_session_var("sess_syslog_host");
+		kill_session_var("sess_syslog_username");
 
 		unset($_REQUEST["page"]);
 		unset($_REQUEST["filter"]);
@@ -103,6 +104,7 @@ function utilities_view_syslog() {
 		unset($_REQUEST["severity"]);
 		unset($_REQUEST["poller"]);
 		unset($_REQUEST["host"]);
+		unset($_REQUEST["username"]);
 	}
 
 	if (isset($_REQUEST["clear_log_x"])) {
@@ -110,12 +112,13 @@ function utilities_view_syslog() {
 	}
 
 	/* remember these search fields in session vars so we don't have to keep passing them around */
-	load_current_session_value("page", "sess_device_current_page", "1");
-	load_current_session_value("filter", "sess_device_filter", "");
-	load_current_session_value("facility", "sess_facility", "ALL");
-	load_current_session_value("severity", "sess_severity", "ALL");
-	load_current_session_value("poller", "sess_poller", "ALL");
-	load_current_session_value("host", "sess_host", "ALL");
+	load_current_session_value("page", "sess_syslog_current_page", "1");
+	load_current_session_value("filter", "sess_syslog_filter", "");
+	load_current_session_value("facility", "sess_syslog_facility", "ALL");
+	load_current_session_value("severity", "sess_syslog_severity", "ALL");
+	load_current_session_value("poller", "sess_syslog_poller", "ALL");
+	load_current_session_value("host", "sess_syslog_host", "ALL");
+	load_current_session_value("username", "sess_syslog_username", "ALL");
 
 	html_start_box("<strong>Cacti Log Filters</strong>", "98%", $colors["header_background"], "3", "center", "");
 
@@ -142,12 +145,16 @@ function utilities_view_syslog() {
 		$sql_where .= " and syslog.host_id='" . $_REQUEST["host"] . "'";
 	}
 
+	if ($_REQUEST["username"] != "ALL") {
+		$sql_where .= " and syslog.username='" . $_REQUEST["username"] . "'";
+	}
+
 	html_start_box("<strong>Cacti Log Operations</strong>", "98%", $colors["header_background"], "3", "center", "");
 
 	print "<form name='syslog_actions'>";
 	print "<input type='hidden' name='action' value='view_syslog'>";
 	print "<td bgcolor='#" . $colors["console_menu_background"] . "'>";
-	print "&nbsp;<input type='image' src='" . html_get_theme_images_path('button_clear_log.gif') . "' name='clear_log' alt='Clear Log' border='0' align='absmiddle' action='submit'>";
+	print "<input type='image' src='" . html_get_theme_images_path('button_clear_log.gif') . "' name='clear_log' alt='Clear Log' border='0' align='absmiddle' action='submit'>";
 	print "&nbsp;<input type='image' src='" . html_get_theme_images_path('button_export.gif') . "' name='export' alt='Export Log' border='0' align='absmiddle' action='submit'>";
     print "</td>";
 	print "<input type='hidden' name='page' value='1'>";
@@ -208,22 +215,22 @@ function utilities_view_syslog() {
 		foreach ($syslog_entries as $syslog_entry) {
 			form_alternate_row_color($colors["form_alternate1"],$colors["form_alternate2"],$i); $i++;
 				?>
-				<td>
+				<td width='10%'>
 					<?php print $syslog_entry["logdate"];?>
 				</td>
-				<td>
+				<td width='10%'>
 					<?php print $syslog_entry["facility"];?>
 				</td>
-				<td>
+				<td width='10%'>
 					<?php print $syslog_entry["severity"];?>
 				</td>
-				<td>
+				<td width='10%' nowrap>
 					<?php if ($syslog_entry["poller_name"] != "") { print $syslog_entry["poller_name"]; } else { print "SYSTEM"; }?>
 				</td>
-				<td>
+				<td width='10%' nowrap>
 					<?php if ($syslog_entry["host"] != "") { print $syslog_entry["host"]; } else { print "SYSTEM"; }?>
 				</td>
-				<td>
+				<td width='50%'>
 					<?php print $syslog_entry["message"];?>
 				</td>
 			</tr>

@@ -6,6 +6,7 @@
 		strURL = strURL + '&severity=' + objForm.severity[objForm.severity.selectedIndex].value;
 		strURL = strURL + '&poller=' + objForm.poller[objForm.poller.selectedIndex].value;
 		strURL = strURL + '&host=' + objForm.host[objForm.host.selectedIndex].value;
+		strURL = strURL + '&username=' + objForm.username[objForm.username.selectedIndex].value;
 		strURL = strURL + '&filter=' + objForm.filter.value;
 		document.location = strURL;
 	}
@@ -16,9 +17,9 @@
 		<form name="form_syslog_id">
 		<input type="hidden" name="action" value="view_syslog">
 		<td>
-			<table width="100%" cellpadding="0" cellspacing="0">
+			<table cellpadding="1" cellspacing="1">
 				<tr>
-					<td width="20">
+					<td width="45">
 						Facility:&nbsp;
 					</td>
 					<td width="1">
@@ -49,10 +50,39 @@
 							<option value="DEBUG"<?php if ($_REQUEST["severity"] == "DEBUG") {?> selected<?php }?>>Debug</option>
 						</select>
 					</td>
-					<td width="20">
-						&nbsp;Poller:&nbsp;
+					<td width="1">
+						&nbsp;Username:&nbsp;
 					</td>
 					<td width="1">
+						<select name="username" onChange="applyFilterChange(document.form_syslog_id)">
+							<option value="ALL"<?php if ($_REQUEST["username"] == "ALL") {?> selected<?php }?>>All</option>
+							<?php
+							$usernames = db_fetch_assoc("select distinct username from syslog order by username");
+
+							if ($usernames) {
+								foreach ($usernames as $username) {
+									print "<option value=\"" . $username['username'] . "\"";
+									if ($_REQUEST["username"] == $username["username"]) {
+										print " selected";
+									}
+									print ">" . $username["username"] . "</option>\n";
+								}
+							}
+							?>
+						</select>
+					</td>
+					<td nowrap>
+						&nbsp;<input type="image" src="<?php print html_get_theme_images_path('button_go.gif');?>" alt="Go" border="0" align="absmiddle" action="submit">
+						&nbsp;<input type="image" src="<?php print html_get_theme_images_path('button_clear.gif');?>" name="clear" alt="Clear" border="0" align="absmiddle" action="submit">
+					</td>
+				</tr>
+			</table>
+			<table cellpadding="1" cellspacing="1">
+				<tr>
+					<td width="45">
+						Poller:&nbsp;
+					</td>
+					<td>
 						<select name="poller" onChange="applyFilterChange(document.form_syslog_id)">
 							<option value="ALL"<?php if ($_REQUEST["poller"] == "ALL") {?> selected<?php }?>>All</option>
 							<option value="0"<?php if ($_REQUEST["poller"] == "0") {?> selected<?php }?>>System</option>
@@ -71,10 +101,10 @@
 							?>
 						</select>
 					</td>
-					<td width="20">
+					<td>
 						&nbsp;Host:&nbsp;
 					</td>
-					<td width="1">
+					<td>
 						<select name="host" onChange="applyFilterChange(document.form_syslog_id)">
 							<option value="ALL"<?php if ($_REQUEST["host"] == "ALL") {?> selected<?php }?>>All</option>
 							<option value="0"<?php if ($_REQUEST["host"] == "0") {?> selected<?php }?>>System</option>
@@ -93,19 +123,15 @@
 							?>
 						</select>
 					</td>
-					<td>
-						&nbsp;<input type="image" src="<?php print html_get_theme_images_path('button_go.gif');?>" alt="Go" border="0" align="absmiddle" action="submit">
-						&nbsp;<input type="image" src="<?php print html_get_theme_images_path('button_clear.gif');?>" name="clear" alt="Clear" border="0" align="absmiddle" action="submit">
-					</td>
 				</tr>
 			</table>
-			<table cellpadding="0" cellspacing="0">
+			<table cellpadding="1" cellspacing="1">
 				<tr>
-					<td width="20">
+					<td width="45">
 						Search:&nbsp;
 					</td>
-					<td width="1">
-						<input type="text" name="filter" size="40" value="<?php print $_REQUEST["filter"];?>">
+					<td colspan="2">
+						<input type="text" name="filter" size="49" value="<?php print $_REQUEST["filter"];?>">
 					</td>
 				</tr>
 			</table>
