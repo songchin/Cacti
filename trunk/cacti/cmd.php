@@ -178,6 +178,10 @@ if ((sizeof($polling_items) > 0) && (read_config_option("poller_enabled") == "on
 				$ping_availability = $item["availability_method"];
 			}
 
+			/* for this host, get it's current status for spike detection and set default spike value */
+			$pre_host_status = $hosts[$host_id]["status"];
+            $set_spike_kill = FALSE;
+
 			/* if we are only allowed to use an snmp check and this host does not support snnp, we
 			must assume that this host is up */
 			if ((($ping_availability == AVAIL_SNMP) && ($item["snmp_community"] == "")) || ($ping_availability == AVAIL_NONE)) {
@@ -191,6 +195,13 @@ if ((sizeof($polling_items) > 0) && (read_config_option("poller_enabled") == "on
 				if ($ping->ping($ping_availability, $item["ping_method"], read_config_option("ping_timeout"), read_config_option("ping_retries"))) {
 					$host_down = false;
 					update_host_status($poller_id, HOST_UP, $host_id, $hosts, $ping, $ping_availability, $print_data_to_stdout);
+
+					/* spike detection logic */
+					if ($pre_host_status == HOST_DOWN) {
+						$set_spike_kill = TRUE;
+					} else {
+						$set_spike_kill = FALSE;
+					}
 				}else{
 					$host_down = true;
 					update_host_status($poller_id, HOST_DOWN, $host_id, $hosts, $ping, $ping_availability, $print_data_to_stdout);
@@ -276,6 +287,10 @@ if ((sizeof($polling_items) > 0) && (read_config_option("poller_enabled") == "on
 					$output = "U";
 				}
 
+                if ($set_spike_kill) {
+                	$output = "nan";
+                }
+
 				if (read_config_option("log_verbosity") >= POLLER_VERBOSITY_MEDIUM) {
 					api_syslog_cacti_log("SNMP: v" . $item["snmp_version"] . ": " . $item["hostname"] . ", dsname: " . $item["rrd_name"] . ", oid: " . $item["arg1"] . ", output: $output", SEV_INFO, $poller_id, $host_id, 0, $print_data_to_stdout, FACIL_CMDPHP);
 				}
@@ -297,6 +312,10 @@ if ((sizeof($polling_items) > 0) && (read_config_option("poller_enabled") == "on
 					api_syslog_cacti_log("Result from CMD not valid.  Partial Result: " . substr($output, 0, $strout), SEV_NOTICE, $poller_id, $host_id, 0, $print_data_to_stdout, FACIL_CMDPHP);
 					$output = "U";
 				}
+
+                if ($set_spike_kill) {
+                	$output = "nan";
+                }
 
 				if (read_config_option("log_verbosity") >= POLLER_VERBOSITY_MEDIUM) {
 					api_syslog_cacti_log("CMD: " . $item["arg1"] . ", output: $output", SEV_INFO, $poller_id, $host_id, 0, $print_data_to_stdout, FACIL_CMDPHP);
@@ -320,6 +339,10 @@ if ((sizeof($polling_items) > 0) && (read_config_option("poller_enabled") == "on
 						api_syslog_cacti_log("Result from SERVER not valid.  Partial Result: " . substr($output, 0, $strout), SEV_NOTICE, $poller_id, $host_id, 0, $print_data_to_stdout, FACIL_CMDPHP);
 						$output = "U";
 					}
+
+	                if ($set_spike_kill) {
+    	            	$output = "nan";
+        	        }
 
 					if (read_config_option("log_verbosity") >= POLLER_VERBOSITY_MEDIUM) {
 						api_syslog_cacti_log("SERVER: " . $item["arg1"] . ", output: $output", SEV_INFO, $poller_id, $host_id, 0, $print_data_to_stdout, FACIL_CMDPHP);
