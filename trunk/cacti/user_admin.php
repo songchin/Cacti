@@ -153,6 +153,7 @@ function form_save() {
 		$save["graph_settings"] = form_input_validate((isset($_POST["graph_settings"]) ? $_POST["graph_settings"] : ""), "graph_settings", "", true, 3);
 		$save["login_opts"] = form_input_validate($_POST["login_opts"], "login_opts", "", true, 3);
 		$save["enabled"] = form_input_validate($_POST["enabled"], "enabled", "", true, 3);
+		$save["password_expire_length"] = form_input_validate($_POST["password_expire_length"], "password_expire_length", "", true, 3);
 		$save["policy_graphs"] = form_input_validate((isset($_POST["policy_graphs"]) ? $_POST["policy_graphs"] : $_POST["_policy_graphs"]), "policy_graphs", "", true, 3);
 		$save["policy_trees"] = form_input_validate((isset($_POST["policy_trees"]) ? $_POST["policy_trees"] : $_POST["_policy_trees"]), "policy_trees", "", true, 3);
 		$save["policy_hosts"] = form_input_validate((isset($_POST["policy_hosts"]) ? $_POST["policy_hosts"] : $_POST["_policy_hosts"]), "policy_hosts", "", true, 3);
@@ -664,7 +665,7 @@ function user() {
 
 	html_start_box("<strong>User Management</strong>", "98%", $colors["header"], "3", "center", "user_admin.php?action=user_edit");
 
-	html_header_checkbox(array("User Name", "Full Name", "Status","Realm", "Default Graph Policy", "Last Login", "Last Login From"));
+	html_header_checkbox(array("User Name", "Full Name", "Status","Realm", "Default Graph Policy", "Last Login", "Last Login From","Last Password Change"));
 
 	$user_list = api_user_list( array( "1" => "username" ) );
 
@@ -690,11 +691,20 @@ function user() {
 				<?php if ($user["policy_graphs"] == "1") { print "ALLOW"; }else{ print "DENY"; }?>
 			</td>
 			<td>
-				<?php print $user["lastlogin"];?>
+				<?php print $user["lastlogin_formatted"];?>
 			</td>
 			<td>
 				<?php print $user["ip"];?>
 			</td>
+			<td>
+				<?php if ($user["password_change_last"] == "0000-00-00 00:00:00") {
+					print "Never";
+				}else{
+					print $user["password_change_last_formatted"];
+				} ?>
+			</td>
+
+
 			<td style="<?php print get_checkbox_style();?>" width="1%" align="right">
 				<input type='checkbox' style='margin: 0px;' name='chk_<?php print $user["id"];?>' title="<?php print $user["username"];?>">
 			</td>
