@@ -14,6 +14,9 @@ do this, please contact me first; that would be much appreciated.
 
 Cacti has been successfully run on the following operating systems:
 
+Fedora Core 3 (Linux 2.6.9-1)
+Fedora Core 2 (Linux 2.6.5-1)
+Fedora Core 1 (Linux 2.4.22-1)
 Redhat 9 (Linux 2.4.20-8)
 Redhat 8.0 (Linux 2.4.18-14)
 Redhat 7.3 (Linux 2.4.18-3)
@@ -24,6 +27,7 @@ FreeBSD 4.8
 Windows 2000 Professional/Server
 Windows XP Professional
 Slackware 8.0
+Slackware 10.0 (Linux 2.6.9)
 Debian Linux
 SuSE Linux 7.3
 AIX 4.3
