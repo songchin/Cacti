@@ -60,6 +60,12 @@ $messages = array(
 		"type" => "info"),
 	12 => array(
 		"message" => 'Username already in use.',
+		"type" => "error"),
+	13 => array(
+		"message" => 'SNMP v3 authentication passwords do not match.',
+		"type" => "error"),
+	14 => array(
+		"message" => 'SNMP v3 privacy passphrases do not match.',
 		"type" => "error")
 		);
 
