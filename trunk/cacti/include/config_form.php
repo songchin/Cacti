@@ -25,7 +25,7 @@
 */
 
 if (!defined("VALID_HOST_FIELDS")) {
-	define("VALID_HOST_FIELDS", "(hostname|snmp_community|snmp_username|snmp_password|snmp_version|snmp_port|snmp_timeout)");
+	define("VALID_HOST_FIELDS", "(hostname|snmp_community|snmpv3_auth_username|snmpv3_auth_password|snmp_version|snmp_port|snmp_timeout)");
 }
 
 /* file: cdef.php, action: edit */
@@ -190,7 +190,7 @@ $fields_data_input_field_edit = array(
 	"type_code" => array(
 		"method" => "textbox",
 		"friendly_name" => "Special Type Code",
-		"description" => "If this field should be treated specially by host templates, indicate so here. Valid keywords for this field are 'hostname', 'snmp_community', 'snmp_username', 'snmp_password', 'snmp_port', 'snmp_timeout', and 'snmp_version'.",
+		"description" => "If this field should be treated specially by host templates, indicate so here. Valid keywords for this field are 'hostname', 'snmp_community', 'snmpv3_auth_username', 'snmpv3_auth_password', 'snmp_port', 'snmp_timeout', and 'snmp_version'.",
 		"value" => "|arg1:type_code|",
 		"max_length" => "40"
 		),

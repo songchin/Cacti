@@ -439,14 +439,14 @@ CREATE TABLE data_input_fields (
 
 INSERT INTO data_input_fields VALUES (1,'92f5906c8dc0f964b41f4253df582c38',1,'SNMP IP Address','management_ip','in','',0,'hostname','','');
 INSERT INTO data_input_fields VALUES (2,'32285d5bf16e56c478f5e83f32cda9ef',1,'SNMP Community','snmp_community','in','',0,'snmp_community','','');
-INSERT INTO data_input_fields VALUES (3,'ad14ac90641aed388139f6ba86a2e48b',1,'SNMP Username','snmp_username','in','',0,'snmp_username','','on');
-INSERT INTO data_input_fields VALUES (4,'9c55a74bd571b4f00a96fd4b793278c6',1,'SNMP Password','snmp_password','in','',0,'snmp_password','','on');
+INSERT INTO data_input_fields VALUES (3,'ad14ac90641aed388139f6ba86a2e48b',1,'SNMP v3 Username','snmpv3_auth_username','in','',0,'snmpv3_auth_username','','on');
+INSERT INTO data_input_fields VALUES (4,'9c55a74bd571b4f00a96fd4b793278c6',1,'SNMP v3 Password','snmpv3_auth_password','in','',0,'snmpv3_auth_password','','on');
 INSERT INTO data_input_fields VALUES (5,'012ccb1d3687d3edb29c002ea66e72da',1,'SNMP Version (1, 2, or 3)','snmp_version','in','',0,'snmp_version','','on');
 INSERT INTO data_input_fields VALUES (6,'4276a5ec6e3fe33995129041b1909762',1,'OID','oid','in','',0,'snmp_oid','','');
 INSERT INTO data_input_fields VALUES (7,'617cdc8a230615e59f06f361ef6e7728',2,'SNMP IP Address','management_ip','in','',0,'hostname','','');
 INSERT INTO data_input_fields VALUES (8,'acb449d1451e8a2a655c2c99d31142c7',2,'SNMP Community','snmp_community','in','',0,'snmp_community','','');
-INSERT INTO data_input_fields VALUES (9,'f4facc5e2ca7ebee621f09bc6d9fc792',2,'SNMP Username (v3)','snmp_username','in','',0,'snmp_username','','on');
-INSERT INTO data_input_fields VALUES (10,'1cc1493a6781af2c478fa4de971531cf',2,'SNMP Password (v3)','snmp_password','in','',0,'snmp_password','','on');
+INSERT INTO data_input_fields VALUES (9,'f4facc5e2ca7ebee621f09bc6d9fc792',2,'SNMP Username (v3)','snmpv3_auth_username','in','',0,'snmpv3_auth_username','','on');
+INSERT INTO data_input_fields VALUES (10,'1cc1493a6781af2c478fa4de971531cf',2,'SNMP Password (v3)','snmpv3_auth_password','in','',0,'snmpv3_auth_password','','on');
 INSERT INTO data_input_fields VALUES (11,'b5c23f246559df38662c255f4aa21d6b',2,'SNMP Version (1, 2, or 3)','snmp_version','in','',0,'snmp_version','','');
 INSERT INTO data_input_fields VALUES (12,'6027a919c7c7731fbe095b6f53ab127b',2,'Index Type','index_type','in','',0,'index_type','','');
 INSERT INTO data_input_fields VALUES (13,'cbbe5c1ddfb264a6e5d509ce1c78c95f',2,'Index Value','index_value','in','',0,'index_value','','');
@@ -1863,8 +1863,8 @@ CREATE TABLE host (
   hostname varchar(250) default NULL,
   snmp_community varchar(100) default NULL,
   snmp_version tinyint(1) unsigned NOT NULL default '1',
-  snmp_username varchar(50) default NULL,
-  snmp_password varchar(50) default NULL,
+  snmpv3_auth_username varchar(50) default NULL,
+  snmpv3_auth_password varchar(50) default NULL,
   snmp_port mediumint(5) unsigned NOT NULL default '161',
   snmp_timeout mediumint(8) unsigned NOT NULL default '500',
   disabled char(2) default NULL,
@@ -2081,8 +2081,8 @@ CREATE TABLE poller_item (
   hostname varchar(250) NOT NULL default '',
   snmp_community varchar(100) NOT NULL default '',
   snmp_version tinyint(1) unsigned NOT NULL default '0',
-  snmp_username varchar(50) NOT NULL default '',
-  snmp_password varchar(50) NOT NULL default '',
+  snmpv3_auth_username varchar(50) NOT NULL default '',
+  snmpv3_auth_password varchar(50) NOT NULL default '',
   snmp_port mediumint(5) unsigned NOT NULL default '161',
   snmp_timeout mediumint(8) unsigned NOT NULL default '0',
   rrd_name varchar(19) NOT NULL default '',
@@ -2692,4 +2692,3 @@ CREATE TABLE version (
 --
 
 INSERT INTO version VALUES ('0.8.6');
-

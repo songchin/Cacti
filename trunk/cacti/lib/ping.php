@@ -174,8 +174,8 @@ class Net_Ping
 				$this->host["snmp_community"],
 				".1.3.6.1.2.1.1.1.0" ,
 				$this->host["snmp_version"],
-				$this->host["snmp_username"],
-				$this->host["snmp_password"],
+				$this->host["snmpv3_auth_username"],
+				$this->host["snmpv3_auth_password"],
 				$this->host["snmp_port"],
 				$this->host["snmp_timeout"],
 				SNMP_CMDPHP);

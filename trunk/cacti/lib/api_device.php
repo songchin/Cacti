@@ -54,7 +54,7 @@ function api_device_gt_remove($device_id, $graph_template_id) {
 }
 
 function api_device_save($id, $poller_id, $host_template_id, $description, $hostname, $snmp_community, $snmp_version,
-	$snmp_username, $snmp_password, $snmp_port, $snmp_timeout, $disabled) {
+	$snmpv3_auth_username, $snmpv3_auth_password, $snmp_port, $snmp_timeout, $disabled) {
 	/* fetch some cache variables */
 	if (empty($id)) {
 		$_host_template_id = 0;
@@ -69,8 +69,8 @@ function api_device_save($id, $poller_id, $host_template_id, $description, $host
 	$save["hostname"] = form_input_validate($hostname, "hostname", "", false, 3);
 	$save["snmp_community"] = form_input_validate($snmp_community, "snmp_community", "", true, 3);
 	$save["snmp_version"] = form_input_validate($snmp_version, "snmp_version", "", true, 3);
-	$save["snmp_username"] = form_input_validate($snmp_username, "snmp_username", "", true, 3);
-	$save["snmp_password"] = form_input_validate($snmp_password, "snmp_password", "", true, 3);
+	$save["snmpv3_auth_username"] = form_input_validate($snmpv3_auth_username, "snmpv3_auth_username", "", true, 3);
+	$save["snmpv3_auth_password"] = form_input_validate($snmpv3_auth_password, "snmpv3_auth_password", "", true, 3);
 	$save["snmp_port"] = form_input_validate($snmp_port, "snmp_port", "^[0-9]+$", false, 3);
 	$save["snmp_timeout"] = form_input_validate($snmp_timeout, "snmp_timeout", "^[0-9]+$", false, 3);
 	$save["disabled"] = form_input_validate($disabled, "disabled", "", true, 3);
