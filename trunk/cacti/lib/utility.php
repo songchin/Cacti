@@ -230,11 +230,11 @@ function push_out_host($host_id, $local_data_id = 0, $data_template_id = 0) {
 		 - the value of the field is empty
 		 - the field is set to 'templated' */
 		if (sizeof($template_fields{$data_source["local_data_template_data_id"]})) {
-		foreach ($template_fields{$data_source["local_data_template_data_id"]} as $template_field) {
-			if ((eregi('^' . VALID_HOST_FIELDS . '$', $template_field["type_code"])) && ($template_field["value"] == "") && ($template_field["t_value"] == "")) {
-				db_execute("replace into data_input_data (data_input_field_id,data_template_data_id,value) values (" . $template_field["id"] . "," . $data_source["id"] . ",'" . $host{$template_field["type_code"]} . "')");
+			foreach ($template_fields{$data_source["local_data_template_data_id"]} as $template_field) {
+				if ((eregi('^' . VALID_HOST_FIELDS . '$', $template_field["type_code"])) && ($template_field["value"] == "") && ($template_field["t_value"] == "")) {
+					db_execute("replace into data_input_data (data_input_field_id,data_template_data_id,value) values (" . $template_field["id"] . "," . $data_source["id"] . ",'" . $host{$template_field["type_code"]} . "')");
+				}
 			}
-		}
 		}
 
 		/* make sure to update the poller cache as well */
