@@ -58,7 +58,7 @@ function ss_host_cpu_get_cpu_usage($hostname, $snmp_community, $snmp_version, $s
 	$j = 0;
 
 	for ($i=0;($i<sizeof($arr));$i++) {
-		if (ereg("^[0-9]+$", $arr[$i])) {
+		if (is_numeric($arr[$i])) {
 			$return_arr[$j] = $arr[$i];
 			$j++;
 		}
@@ -74,7 +74,7 @@ function ss_host_cpu_get_indexes($hostname, $snmp_community, $snmp_version, $snm
 	$j = 0;
 
 	for ($i=0;($i<sizeof($arr));$i++) {
-		if (ereg("^[0-9]+$", $arr[$i])) {
+		if (is_numeric($arr[$i])) {
 			$return_arr[$j] = $j;
 			$j++;
 		}
