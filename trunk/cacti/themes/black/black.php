@@ -29,19 +29,19 @@
 /* colors */
 $colors["dark_outline"] = "454E53";
 $colors["dark_bar"] = "AEB4B7";
-$colors["panel"] = "E5E5E5";
-$colors["panel_text"] = "E5E5E5";
-$colors["panel_link"] = "E5E5E5";
-$colors["light"] = "F5F5F5";
-$colors["alternate"] = "E7E9F2";
-$colors["panel_dark"] = "C5C5C5";
+$colors["panel"] = "000000";
+$colors["panel_text"] = "000000";
+$colors["panel_link"] = "FFFFFF";
+$colors["light"] = "000000";
+$colors["alternate"] = "0F0F0F";
+$colors["panel_dark"] = "0F0F0F";
 
 $colors["header"] = "00038C";
 $colors["header_panel"] = "000000";
 $colors["header_text"] = "ffffff";
-$colors["form_background_dark"] = "E1E1E1";
+$colors["form_background_dark"] = "000000";
 
-$colors["form_alternate1"] = "2E3127";
+$colors["form_alternate1"] = "0f0f0f";
 $colors["form_alternate2"] = "000000";
 
 $colors["rrd_canvas"] = "000000";

@@ -8,6 +8,13 @@ a:hover {
 	color: #333333;
 }
 
+.textHeader {
+	background-color: black;
+	font-size: 12px;
+	font-weight: bold;
+}
+
+
 body {
 	color: silver;
 	background-color: black;
