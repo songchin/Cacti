@@ -25,42 +25,57 @@
 */
 
 include("./include/config.php");
+include("./lib/api_user.php");
 
 $user = db_fetch_row("select * from user_auth where id=" . $_SESSION["sess_user_id"]);
 
 /* default to !bad_password */
 $bad_password = false;
+$old_password = false;
 
 /* set default action */
 if (!isset($_REQUEST["action"])) { $_REQUEST["action"] = ""; }
 
 switch ($_REQUEST["action"]) {
 case 'changepassword':
-	if (($_POST["password"] == $_POST["confirm"]) && ($_POST["password"] != "")) {
-		/* Log password change */
-		db_execute("insert into user_log (user_id,username,time,result,ip) values('" . $_SESSION["sess_user_id"] . "','" . $user["username"] . "',NOW(),3,'" . $_SERVER["REMOTE_ADDR"] . "')");
-
-		/* update database */
-		db_execute("update user_auth set must_change_password='',password='" . md5($_POST["password"]) . "' where id=" . $_SESSION["sess_user_id"]);
-
-		kill_session_var("sess_change_password");
-
-		/* ok, at the point the user has been sucessfully authenticated; so we must
-		decide what to do next */
-		switch ($user["login_opts"]) {
-			case '1': /* referer */
-				header("Location: " . $_POST["ref"]); break;
-			case '2': /* default console page */
-				header("Location: index.php"); break;
-			case '3': /* default graph page */
-				header("Location: graph_view.php"); break;
-		}
-
-		exit;
+	
+	if (db_fetch_cell("select password from user_auth where id=" . $_SESSION["sess_user_id"]) == md5($_POST["password"])) {
+		$old_password = true;
 	}else{
-		$bad_password = true;
-	}
+		if (($_POST["password"] == $_POST["confirm"]) && ($_POST["password"] != "")) {
 
+			/* Log password change */
+			db_execute("insert into user_log (user_id,username,time,result,ip) values('" . $_SESSION["sess_user_id"] . "','" . $user["username"] . "',NOW(),3,'" . $_SERVER["REMOTE_ADDR"] . "')");
+
+			/* change password */
+			api_user_changepassword($_SESSION["sess_user_id"], $_POST["password"]);
+	
+			kill_session_var("sess_change_password");
+
+			/* ok, at the point the user has been sucessfully authenticated; so we must
+			decide what to do next */
+	
+			/* if no console permissions show graphs otherwise, pay attention to user setting */
+			$realm_id = $user_auth_realm_filenames["index.php"];
+
+			if (sizeof(db_fetch_assoc("select user_auth_realm.realm_id from user_auth_realm where user_auth_realm.user_id = '" . $_SESSION["sess_user_id"] . "' and user_auth_realm.realm_id = '" . $realm_id . "'")) > 0) {
+				switch ($user["login_opts"]) {
+					case '1': /* referer */
+						header("Location: " . $_POST["ref"]); break;
+					case '2': /* default console page */
+						header("Location: index.php"); break;
+					case '3': /* default graph page */
+						header("Location: graph_view.php"); break;
+				}
+			}else{
+				header("Location: graph_view.php");
+			}
+
+			exit;
+		}else{
+			$bad_password = true;
+		}
+	}
 	break;
 }
 ?>
@@ -91,7 +106,14 @@ case 'changepassword':
 	<tr>
 		<td colspan="2"><font color="#FF0000"><strong>Your passwords do not match, please retype:</strong></font></td>
 	</tr>
+	<?php }
+	if ($old_password == true) {?>
+	<tr height="10"><td></td></tr>
+	<tr>
+		<td colspan="2"><font color="#FF0000"><strong>You cannot reuse your old password, please retype:</strong></font></td>
+	</tr>
 	<?php }?>
+
 	<tr height="10"><td></td></tr>
 	<tr>
 		<td colspan="2">
