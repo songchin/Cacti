@@ -414,7 +414,7 @@ function &rrdtool_function_fetch($local_data_id, $start_time, $end_time, $resolu
 }
 
 function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rrd_struc = array()) {
-	global $config;
+	global $config, $colors;
 
 	include_once($config["library_path"] . "/cdef.php");
 	include_once($config["library_path"] . "/graph_variables.php");
@@ -664,6 +664,7 @@ function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rr
 		"--imgformat=" . $image_types{$graph["image_format_id"]} . RRD_NL .
 		"--start=$graph_start" . RRD_NL .
 		"--end=$graph_end" . RRD_NL .
+		"-c CANVAS#" . $colors["rrd_canvas"] . " -c FONT#" . $colors["rrd_font"] . " -c BACK#" . $colors["rrd_back"] . " " .
 		"--title=\"" . $graph["title_cache"] . "\"" . RRD_NL .
 		"$rigid" .
 		"--base=" . $graph["base_value"] . RRD_NL .

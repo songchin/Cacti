@@ -97,7 +97,8 @@ include_once($config["library_path"] . "/html_utility.php");
 include_once($config["library_path"] . "/variables.php");
 include_once($config["library_path"] . "/auth.php");
 
-/* load color scheme from theme file */
+/* load color scheme from theme file.  Load the default first and then overwrite as required with theme */
+include_once($config["include_path"] . "/config_colors.php");
 include_once(html_theme_color_scheme());
 
 /* current cacti version */

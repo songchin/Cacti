@@ -44,4 +44,8 @@ $colors["form_background_dark"] = "E1E1E1";
 $colors["form_alternate1"] = "F5F5F5";
 $colors["form_alternate2"] = "E5E5E5";
 
+$colors["rrd_canvas"] = "000000";
+$colors["rrd_font"] = "FFFFFF";
+$colors["rrd_back"] = "000000";
+
 ?>
