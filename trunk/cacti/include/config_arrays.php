@@ -280,7 +280,7 @@ $syslog_control_options = array(
 	SYSLOG_MNG_STOPLOG => "Stop logging if maximum log size is exceeded"
 );
 
-$snmp_implimentations = array(
+$snmp_implementations = array(
 	"ucd-snmp" => "UCD-SNMP 4.x",
 	"net-snmp" => "NET-SNMP");
 

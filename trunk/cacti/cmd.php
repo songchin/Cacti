@@ -46,6 +46,7 @@ include_once($config["base_path"] . "/lib/ping.php");
 list($micro,$seconds) = split(" ", microtime());
 $start = $seconds + $micro;
 
+/* process command line arguments */
 if ( $_SERVER["argc"] == 1 ) {
 	$polling_items = db_fetch_assoc("SELECT * from poller_item ORDER by host_id");
 	$print_data_to_stdout = true;
@@ -61,7 +62,7 @@ if ( $_SERVER["argc"] == 1 ) {
 		array_shift($parms);
 
 		foreach($parms as $parameter) {
-   	   switch (substr($parameter,0,2)) {
+			switch (substr($parameter,0,2)) {
 				case "-l":
 					$last_host = substr($parameter,3);
 					break;
@@ -117,16 +118,17 @@ if ((sizeof($polling_items) > 0) && (read_config_option("poller_enabled") == "on
 	$new_host  = true;
 	$last_host = ""; $current_host = "";
 
-	// startup Cacti php polling server and include the include file for script processing
+	/* file descriptors for the script_server */
 	$cactides = array(
 		0 => array("pipe", "r"), // stdin is a pipe that the child will read from
 		1 => array("pipe", "w"), // stdout is a pipe that the child will write to
 		2 => array("pipe", "w")  // stderr is a pipe to write to
 		);
 
-	// create new ping socket for host pinging
+	/* create new ping object for host availability checking */
 	$ping = new Net_Ping;
 
+	/* start the script_server */
 	if (function_exists("proc_open")) {
 		$cactiphp = proc_open(read_config_option("path_php_binary") . " " . $config["base_path"] . "/script_server.php cmd " . $poller_id, $cactides, $pipes);
 		$output = fgets($pipes[1], 1024);
@@ -154,6 +156,7 @@ if ((sizeof($polling_items) > 0) && (read_config_option("poller_enabled") == "on
 
 		$host_id = $item["host_id"];
 
+		/* check for host availability and requirement to re-index host */
 		if (($new_host) && (!empty($host_id))) {
 			$ping->host["hostname"]       = $item["hostname"];
 			$ping->host["snmp_community"] = $item["snmp_community"];
@@ -253,6 +256,7 @@ if ((sizeof($polling_items) > 0) && (read_config_option("poller_enabled") == "on
 			$last_host = $current_host;
 		}
 
+		/* poll host if it's up */
 		if (!$host_down) {
 			switch ($item["action"]) {
 			case POLLER_ACTION_SNMP: /* snmp */
@@ -337,6 +341,7 @@ if ((sizeof($polling_items) > 0) && (read_config_option("poller_enabled") == "on
 		} /* Next Cache Item */
 	} /* End foreach */
 
+	/* stop the script server */
 	if ($using_proc_function == true) {
 		// close php server process
 		fwrite($pipes[0], "quit\r\n");
@@ -347,6 +352,7 @@ if ((sizeof($polling_items) > 0) && (read_config_option("poller_enabled") == "on
 		$return_value = proc_close($cactiphp);
 	}
 
+	/* log performance data */
 	if (($print_data_to_stdout) || (read_config_option("log_verbosity") >= POLLER_VERBOSITY_MEDIUM)) {
 		/* take time and log performance data */
 		list($micro,$seconds) = split(" ", microtime());
@@ -359,7 +365,7 @@ if ((sizeof($polling_items) > 0) && (read_config_option("poller_enabled") == "on
 	api_syslog_cacti_log("Either there are no items in the cache or polling is disabled", SEV_ERROR, $poller_id, 0, 0, $print_data_to_stdout, FACIL_CMDPHP);
 }
 
-/* Let the poller server know about cmd.php being finished */
+/* Let the poller.php know about cmd.php being finished */
 db_execute("insert into poller_time (poller_id, start_time, end_time) values (" . $poller_id . ", NOW(), NOW())");
 
 ?>

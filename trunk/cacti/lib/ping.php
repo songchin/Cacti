@@ -31,6 +31,7 @@ class Net_Ping
 	var $ping_response;
 	var $snmp_status;
 	var $snmp_response;
+	var $packet_loss;
 	var $request;
 	var $request_len;
 	var $reply;
@@ -92,6 +93,7 @@ class Net_Ping
 			/* initialize variables */
 			$this->ping_status = "down";
 			$this->ping_response = "ICMP Ping timed out";
+			$this->packet_loss = 1;
 
 			/* initialize the socket */
 			$this->socket = socket_create(AF_INET, SOCK_RAW, 1);
@@ -117,12 +119,22 @@ class Net_Ping
 			/* build the packet */
 			$this->build_icmp_packet();
 
-   		$retry_count = 0;
+			$retry_count = 0;
+			$success_count = 0;
+			$total_time = 0;
 			while (1) {
 				if ($retry_count >= $this->retries) {
-					$this->status = "down";
-					$this->response = "ICMP ping Timed out";
-					return false;
+					$this->packet_loss = 1 - ($success_count / $retry_count);
+
+					if ($this->packet_loss == 1) {
+						$this->ping_status = "down";
+						$this->ping_response = "ICMP ping Timed out";
+						return false;
+					} else {
+						$this->ping_response = "Host is alive";
+						$this->ping_status = $total_time / $success_count;
+						return true;
+					}
 				}
 
 				/* get start time */
@@ -135,12 +147,11 @@ class Net_Ping
 				$this->time = $this->get_time($this->precision);
 
 				if ($code) {
-					$this->ping_status = $this->time * 1000;
-					$this->ping_response = "Host is alive";
-					return true;
+					$total_time = $total_time + $this->time * 1000;
+					$success_count = $success_count + 1;
 				}
 
-            $retry_count++;
+	            $retry_count++;
 			}
 			$this->close_socket();
 		} else {
@@ -154,6 +165,7 @@ class Net_Ping
 		/* initialize variables */
 		$this->snmp_status = "down";
 		$this->snmp_response = "Host did not respond to SNMP";
+		$this->packet_loss = 1;
 		$output = "";
 
 		/* get start time */
@@ -161,11 +173,20 @@ class Net_Ping
 
 		/* poll ifDescription for status */
 		$retry_count = 0;
+		$success_count = 0;
+		$total_time = 0;
 		while (1) {
 			if ($retry_count >= $this->retries) {
-				$this->snmp_status   = "down";
-				$this->snmp_response = "Host did not respond to SNMP";
-				return false;
+				$this->packet_loss = 1 - ($success_count / $retry_count);
+				if ($this->packet_loss == 1) {
+					$this->snmp_status   = "down";
+					$this->snmp_response = "Host did not respond to SNMP";
+					return false;
+				} else {
+					$this->snmp_response = "Host responded to SNMP";
+					$this->snmp_status = $total_time / $success_count;
+					return true;
+				}
 			}
 
 			$output = cacti_snmp_get($this->host["hostname"],
@@ -187,9 +208,8 @@ class Net_Ping
 			/* check result for uptime */
 			if (!empty($output)) {
 				/* calculte total time */
-				$this->snmp_status = $this->time*1000;
-				$this->snmp_response = "Host responded to SNMP";
-				return true;
+				$total_time = $total_time + $this->time * 1000;
+				$success_count = $success_count + 1;
 			}
 
 			$retry_count++;
@@ -202,6 +222,7 @@ class Net_Ping
 			/* initialize variables */
 			$this->ping_status   = "down";
 			$this->ping_response = "default";
+			$this->packet_loss = 1;
 
 			/* initilize the socket */
 			$this->socket = socket_create(AF_INET, SOCK_DGRAM, SOL_UDP);
@@ -228,11 +249,21 @@ class Net_Ping
 			$this->build_udp_packet();
 
 			$retry_count = 0;
-   		while (1) {
+			$success_count = 0;
+			$total_time = 0;
+			while (1) {
 				if ($retry_count >= $this->retries) {
-					$this->ping_response = "UDP ping timed out";
-					$this->ping_status   = "down";
-					return false;
+					$this->packet_loss = 1 - ($success_count / $retry_count);
+
+					if ($this->packet_loss == 1) {
+						$this->ping_response = "UDP ping timed out";
+						$this->ping_status   = "down";
+						return false;
+					} else {
+						$this->ping_response = "Host is alive";
+						$this->ping_status = $total_time / $success_count;
+						return true;
+					}
 				}
 
 				/* set start time */
@@ -249,9 +280,8 @@ class Net_Ping
 
 				if (($code) || (empty($code))) {
 					if (($this->time*1000) <= $this->timeout) {
-						$this->ping_response = "Host is Alive";
-						$this->ping_status   = $this->time*1000;
-						return true;
+						$total_time = $total_time + $this->time * 1000;
+						$success_count = $success_count + 1;
 					}
 				}
 				$retry_count++;

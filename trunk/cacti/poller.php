@@ -60,7 +60,7 @@ $start = $seconds + $micro;
 /* default the number of pollers to 0 */
 $num_pollers = 0;
 
-/* poller_id 0 tasks only */
+/* poller_id 1 tasks only */
 if ($poller_id == 1) {
 	/* get total number of polling items from the database for the specified poller */
 	$num_polling_items = db_fetch_cell("SELECT count(*) FROM poller_item WHERE poller_id=" . $poller_id);
@@ -85,10 +85,14 @@ if ($poller_id == 1) {
 	$rrdtool_pipe = rrd_init($rrd_processes);
 
 	/* insert the current date/time for graphs */
-	db_execute("REPLACE into settings (name,value) values ('date',NOW())");
+	db_execute("REPLACE INTO settings (name,value) VALUES ('date',NOW())");
 
 	/* allow remote pollers to start */
-	db_execute("UPDATE poller SET run_state='Ready' where active='on'");
+	db_execute("UPDATE poller SET run_state='Ready' WHERE active='on'");
+
+	/* show main poller as running */
+    db_execute("UPDATE poller SET run_state='Running' WHERE id=1");
+
 } else {
 	/* verify I am a valid poller */
 	if (sizeof(db_fetch_assoc("SELECT id FROM poller WHERE id = " . $poller_id)) == 0) {
@@ -103,6 +107,8 @@ if ($poller_id == 1) {
 		$state = db_fetch_cell("SELECT run_state FROM poller where id=" . $poller_id);
 
 		if ($state == "Ready") {
+			/* show that I am not running */
+			db_execute("UPDATE poller SET run_state='Running' WHERE id=". $poller_id);
 			break;
 		}
 
@@ -200,7 +206,6 @@ if ((($num_polling_items > 0) || ($num_pollers > 1)) && (read_config_option("pol
 		$max_threads = "N/A";
 	}
 
-	$loop_count = 0;
 	while (1) {
 		$polling_items = db_fetch_assoc("SELECT poller_id,end_time FROM poller_time WHERE poller_id = " . $poller_id);
 
@@ -278,19 +283,23 @@ if ((($num_polling_items > 0) || ($num_pollers > 1)) && (read_config_option("pol
 
 			/* end the process if the runtime exceeds MAX_POLLER_RUNTIME */
 			if (($start + MAX_POLLER_RUNTIME) < time()) {
-				/* close rrdtool if poller is 0 */
+				/* close RRDTool */
 				if ($poller_id == 1) { rrd_close($rrdtool_pipe); }
+
 				api_syslog_cacti_log("Maximum runtime of " . MAX_POLLER_RUNTIME . " seconds exceeded for Poller_ID " . $poller_id . " - Exiting.", SEV_ERROR, $poller_id, 0, 0, true, FACIL_POLLER);
 				db_execute("update poller set run_state = 'Timeout' where poller_id=" . $poller_id);
+
+				/* manage cacti syslog size */
 				api_syslog_manage_cacti_log(true);
+
 				exit;
 			}
 
 			sleep(1);
-			$loop_count++;
 		}
 	}
 
+	/* close RRDTool */
 	if ($poller_id == 1) { rrd_close($rrdtool_pipe, $rrd_processes); }
 
 	/* process poller commands */
@@ -360,7 +369,7 @@ if ((($num_polling_items > 0) || ($num_pollers > 1)) && (read_config_option("pol
 		db_execute("truncate table poller_time");
 
 		/* idle the pollers till the next polling cycle */
-   	db_execute("update poller set run_state = 'Wait' where active='on'");
+	   	db_execute("update poller set run_state = 'Wait' where active='on'");
 	}
 
 	if ($method == "cactid") {
@@ -375,7 +384,7 @@ if ((($num_polling_items > 0) || ($num_pollers > 1)) && (read_config_option("pol
 	}
 }
 
-/* manage size of cacti_syslog */
+/* manage size of cacti syslog */
 api_syslog_manage_cacti_log(true);
 
 /* end mainline processing */

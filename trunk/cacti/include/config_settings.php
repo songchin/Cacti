@@ -212,7 +212,7 @@ $settings = array(
 			"description" => "The type of SNMP you have installed.  Required if you are using SNMP v2c or don't have embedded SNMP support in PHP.",
 			"method" => "drop_array",
 			"default" => "net-snmp",
-			"array" => $snmp_implimentations
+			"array" => $snmp_implementations
 			),
 		"snmp_timeout" => array(
 			"friendly_name" => "Timeout",
@@ -559,8 +559,8 @@ $settings = array(
 			"max_length" => "10"
 			),
 		"ping_retries" => array(
-			"friendly_name" => "Ping Retry Count",
-			"description" => "The number of times Cacti will attempt to ping a host before failing.",
+			"friendly_name" => "Ping Count",
+			"description" => "The number of times Cacti will ping a host for availability checking.  Average ping time and packet loss data will be stored as applicable.",
 			"method" => "textbox",
 			"default" => "1",
 			"max_length" => "10"
