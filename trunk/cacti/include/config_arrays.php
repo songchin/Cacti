@@ -125,6 +125,11 @@ $input_types = array(
 	DATA_INPUT_TYPE_QUERY_SCRIPT_SERVER => "Script Query - Script Server"
 	);
 
+$script_types = array(
+	SCRIPT_TYPE_SCRIPT => "Script/Command",
+	SCRIPT_PHP_SCRIPT_SERVER => "Script - Script Server (PHP)"
+	);
+
 $reindex_types = array(
 	DATA_QUERY_AUTOINDEX_NONE => "None",
 	DATA_QUERY_AUTOINDEX_BACKWARDS_UPTIME => "Uptime Goes Backwards",
@@ -265,7 +270,7 @@ $ldap_versions = array(
 $ldap_encryption = array(
 	0 => "None",
 	1 => "SSL",
-	2 => "TLS", 
+	2 => "TLS",
 );
 
 $ldap_modes = array(

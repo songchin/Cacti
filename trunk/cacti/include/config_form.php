@@ -114,7 +114,7 @@ $fields_data_input_edit = array(
 		"friendly_name" => "Input Type",
 		"description" => "Choose what type of data input method this is.",
 		"value" => "|arg1:type_id|",
-		"array" => $input_types,
+		"array" => $script_types,
 		),
 	"input_string" => array(
 		"method" => "textbox",
