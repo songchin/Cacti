@@ -30,6 +30,8 @@ include("./lib/api_user.php");
 /* set default action */
 if (!isset($_REQUEST["action"])) { $_REQUEST["action"] = ""; }
 
+
+/* process action */
 switch ($_REQUEST["action"]) {
 	case 'save':
 		change_password();
@@ -44,32 +46,42 @@ function change_password() {
 
 	$change_result = 1;
 
-	if ((!empty($_POST["password_old"])) && (!empty($_POST["password_new"])) && (!empty($_POST["password_new_confirm"]))) {
-		if ($_POST["password_new"] != $_POST["password_new_confirm"]) {
-			/* New passwords do not match */
-			raise_message(4);
-		}else{
-			$change_result = api_user_changepassword($_SESSION["sess_user_id"],$_POST["password_new"],$_POST["password_old"]);
-			if ($change_result == "0") {
-				/* Password changed successfully */
-				raise_message(11);
-				/* Log password change */
-				$username = db_fetch_cell("select username from user_auth where id=" . $_SESSION["sess_user_id"]);
-				db_execute("insert into user_log (user_id,username,time,result,ip) values('" . $_SESSION["sess_user_id"] . "','" . $username . "',NOW(),3,'" . $_SERVER["REMOTE_ADDR"] . "')");
-			}elseif ($change_result == "2") {
-				/* Authentication failure for old password */
-				raise_message(8);
+	$user_realms = api_user_realms_list($_SESSION["sess_user_id"]);
+
+	/* check if authorized */
+	if ($user_realms["18"]["value"] == "1") {
+		/* check passwords */
+		if ((!empty($_POST["password_old"])) && (!empty($_POST["password_new"])) && (!empty($_POST["password_new_confirm"]))) {
+			if ($_POST["password_new"] != $_POST["password_new_confirm"]) {
+				/* New passwords do not match */
+				raise_message(4);
 			}else{
-				/* General error changing password */
-				raise_message(9);
-			}	
+				$change_result = api_user_changepassword($_SESSION["sess_user_id"],$_POST["password_new"],$_POST["password_old"]);
+				if ($change_result == "0") {
+					/* Password changed successfully */
+					raise_message(11);
+					/* Log password change */
+					$username = db_fetch_cell("select username from user_auth where id=" . $_SESSION["sess_user_id"]);
+					db_execute("insert into user_log (user_id,username,time,result,ip) values('" . $_SESSION["sess_user_id"] . "','" . $username . "',NOW(),3,'" . $_SERVER["REMOTE_ADDR"] . "')");
+				}elseif ($change_result == "2") {
+					/* Authentication failure for old password */
+					raise_message(8);
+				}else{
+					/* General error changing password */
+					raise_message(9);
+				}	
+			}
+		}else{
+			/* error empty fields */
+			raise_message(10);
 		}
-	}else{
-		/* error empty fields */
-		raise_message(10);
 	}
 
-	include_once("include/top_header.php");
+	include_once("include/top_header.php");	
+	if ($user_realms["18"]["value"] != "1") {
+		/* Access Denied */
+		display_custom_error_message("Access Denied.");
+	}
 	include_once("include/bottom_footer.php");
 
 }
@@ -78,6 +90,8 @@ function change_password() {
 
 function change_password_form() {
 	global $colors;
+
+	$user_realms = api_user_realms_list($_SESSION["sess_user_id"]);
 
 	$form_fields = array (
 		"password_old" => array(
@@ -100,18 +114,24 @@ function change_password_form() {
 
 	include_once("include/top_header.php");
 
-	if (read_config_option("auth_method") == "1") {
-		/* Builtin auth method, password can be changed */
-		html_start_box("<strong>Change Password</strong>", "98%", $colors["header"], "3", "center", "");
-		draw_edit_form(array(
-			"config" => array("form_name" => "chk"),
-			"fields" => inject_form_variables($form_fields, (isset($user) ? $user : array()))
-			));
-		html_end_box();
-		form_save_button((isset($_SERVER["HTTP_REFERER"]) ? $_SERVER["HTTP_REFERER"] : "index.php"),"save");
+	/* check if authorized */
+	if ($user_realms["18"]["value"] == "1") {
+		if (read_config_option("auth_method") == "1") {
+			/* Builtin auth method, password can be changed */
+			html_start_box("<strong>Change Password</strong>", "98%", $colors["header"], "3", "center", "");
+			draw_edit_form(array(
+				"config" => array("form_name" => "chk"),
+				"fields" => inject_form_variables($form_fields, (isset($user) ? $user : array()))
+				));
+			html_end_box();
+			form_save_button((isset($_SERVER["HTTP_REFERER"]) ? $_SERVER["HTTP_REFERER"] : "index.php"),"save");
+		}else{
+			/* Password changing not supported */
+			display_custom_error_message("Current selected Authentication Method does not support changing of passwords.");
+		}
 	}else{
-		/* Password changing not supported */
-		display_custom_error_message("Current selected Authentication Method does not support changing of passwords.");
+		/* access denied */
+		display_custom_error_message("Access Denied.");
 	}
 
 	include_once("include/bottom_footer.php");
