@@ -628,7 +628,7 @@ $settings = array(
 			),
 		"password_expire_warning" => array(
 			"friendly_name" => "User Expiration Warning",
-			"description" => "Number of days to start warning the user that thier password is about to expire. Only applys for Builtin Authentication.",
+			"description" => "Number of days to start warning the user that their password is about to expire. Only applys for Builtin Authentication.",
 			"method" => "textbox",
 			"default" => "15",
 			"max_length" => "4"
