@@ -370,17 +370,20 @@ function template_edit() {
 
 	$form_array = array();
 
-	while (list($field_name, $field_array) = each($struct_graph)) {
-		$form_array += array($field_name => $struct_graph[$field_name]);
 
-		$form_array[$field_name]["value"] = (isset($template_graph) ? $template_graph[$field_name] : "");
-		$form_array[$field_name]["form_id"] = (isset($template_graph) ? $template_graph["id"] : "0");
-		$form_array[$field_name]["description"] = "";
-		$form_array[$field_name]["sub_checkbox"] = array(
-			"name" => "t_" . $field_name,
-			"friendly_name" => "Use Per-Graph Value (Ignore this Value)",
-			"value" => (isset($template_graph) ? $template_graph{"t_" . $field_name} : "")
-			);
+	while (list($field_name, $field_array) = each($struct_graph)) {
+		if ($field_array["method"] != "spacer") {
+			$form_array += array($field_name => $struct_graph[$field_name]);
+
+			$form_array[$field_name]["value"] = (isset($template_graph) ? $template_graph[$field_name] : "");
+			$form_array[$field_name]["form_id"] = (isset($template_graph) ? $template_graph["id"] : "0");
+			$form_array[$field_name]["description"] = "";
+			$form_array[$field_name]["sub_checkbox"] = array(
+				"name" => "t_" . $field_name,
+				"friendly_name" => "Use Per-Graph Value (Ignore this Value)",
+				"value" => (isset($template_graph) ? $template_graph{"t_" . $field_name} : "")
+				);
+		}
 	}
 
 	draw_edit_form(
