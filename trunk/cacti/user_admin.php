@@ -724,19 +724,19 @@ function user_edit() {
 		<table class='tabs' width='98%' cellspacing='0' cellpadding='3' align='center'>
 			<tr>
 				<td width='1'></td>
-				<td <?php print ((($_GET["action"] == "user_realms_edit") || ($_GET["action"] == "user_edit")) ? "bgcolor='silver'" : "bgcolor='#DFDFDF'");?> nowrap='nowrap' width='150' align='center' class='tab'>
+				<td <?php print ((($_GET["action"] == "user_realms_edit") || ($_GET["action"] == "user_edit")) ? "bgcolor='" . $colors["form_alternate1"] . "'" : "bgcolor='" . $colors["form_alternate2"] . "'");?> nowrap='nowrap' width='150' align='center' class='tab'>
 					<span class='textHeader'><a href='user_admin.php?action=user_realms_edit&id=<?php print $_GET["id"];?>'>Realm Permissions</a></span>
 				</td>
 				<td width='1'></td>
-				<td <?php print (($_GET["action"] == "graph_perms_edit") ? "bgcolor='silver'" : "bgcolor='#DFDFDF'");?> nowrap='nowrap' width='150' align='center' class='tab'>
+				<td <?php print (($_GET["action"] == "graph_perms_edit") ? "bgcolor='" . $colors["form_alternate1"] . "'" : "bgcolor='" . $colors["form_alternate2"] . "'");?> nowrap='nowrap' width='150' align='center' class='tab'>
 					<span class='textHeader'><a href='user_admin.php?action=graph_perms_edit&id=<?php print $_GET["id"];?>'>Graph Permissions</a></span>
 				</td>
 				<td width='1'></td>
-				<td <?php print (($_GET["action"] == "graph_settings_edit") ? "bgcolor='silver'" : "bgcolor='#DFDFDF'");?> nowrap='nowrap' width='130' align='center' class='tab'>
+				<td <?php print (($_GET["action"] == "graph_settings_edit") ? "bgcolor='" . $colors["form_alternate1"] . "'" : "bgcolor='" . $colors["form_alternate2"] . "'");?> nowrap='nowrap' width='130' align='center' class='tab'>
 					<span class='textHeader'><a href='user_admin.php?action=graph_settings_edit&id=<?php print $_GET["id"];?>'>Graph Settings</a></span>
 				</td>
 				<td width='1'></td>
-				<td <?php print (($_GET["action"] == "user_settings_edit") ? "bgcolor='silver'" : "bgcolor='#DFDFDF'");?> nowrap='nowrap' width='130' align='center' class='tab'>
+				<td <?php print (($_GET["action"] == "user_settings_edit") ? "bgcolor='" . $colors["form_alternate1"] . "'" : "bgcolor='" . $colors["form_alternate2"] . "'");?> nowrap='nowrap' width='130' align='center' class='tab'>
 					<span class='textHeader'><a href='user_admin.php?action=user_settings_edit&id=<?php print $_GET["id"];?>'>User Settings</a></span>
 				</td>
 
