@@ -203,7 +203,7 @@ function api_syslog_manage_cacti_log($print_data_to_stdout) {
 
 			break;
 		case SYSLOG_MNG_DAYSOLD:
-			db_execute("delete from syslog where logdate <= '" . date("Y-m-d H:i:s", strtotime("-" . $syslog_maxdays . " Days"))."'");
+			db_execute("delete from syslog where logdate <= '" . date("Y-m-d H:i:s", strtotime("-" . $syslog_maxdays * 24 * 3600 . " Seconds"))."'");
 
 			break;
 		case SYSLOG_MNG_STOPLOG:
