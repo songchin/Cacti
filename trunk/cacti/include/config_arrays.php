@@ -279,6 +279,7 @@ $menu = array(
 	"Utilities" => array(
 		"utilities.php" => "System Utilities",
 		"user_admin.php" => "User Management",
+		"user_changepassword.php" => "Change Password",
 		"logout.php" => "Logout User"
 	));
 
