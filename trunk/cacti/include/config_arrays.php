@@ -299,7 +299,8 @@ $user_auth_realms = array(
 	14 => "Update CDEF's",
 	15 => "Global Settings",
 	16 => "Export Data",
-	17 => "Import Data"
+	17 => "Import Data",
+	18 => "Change Password"
 	);
 
 $user_auth_realm_filenames = array(
@@ -335,7 +336,8 @@ $user_auth_realm_filenames = array(
 	"smtp_servers.php" => 8,
 	"email_templates.php" => 8,
 	"event_queue.php" => 8,
-	"smtp_queue.php" => 8
+	"smtp_queue.php" => 8,
+	"user_changepassword.php" => "18"
 	);
 
 $hash_type_codes = array(

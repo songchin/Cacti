@@ -107,6 +107,11 @@ function draw_edit_control($field_name, &$field_array) {
 		print "<br>";
 		form_text_box($field_name . "_confirm", $field_array["value"], ((isset($field_array["default"])) ? $field_array["default"] : ""), $field_array["max_length"], ((isset($field_array["size"])) ? $field_array["size"] : "40"), "password");
 		break;
+	case 'textbox_password_single':
+		form_text_box($field_name, $field_array["value"], ((isset($field_array["default"])) ? $field_array["default"] : ""), $field_array["max_length"], ((isset($field_array["size"])) ? $field_array["size"] : "40"), "password");
+		print "<br>";
+		break;
+
 	case 'textarea':
 		form_text_area($field_name, $field_array["value"], $field_array["textarea_rows"], $field_array["textarea_cols"], ((isset($field_array["default"])) ? $field_array["default"] : ""));
 		break;
