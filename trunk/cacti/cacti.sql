@@ -2623,6 +2623,31 @@ INSERT INTO snmp_query_graph_sv VALUES (48,'993a87c04f550f1209d689d584aa8b45',22
 INSERT INTO snmp_query_graph_sv VALUES (49,'183bb486c92a566fddcb0585ede37865',22,3,'title','|host_description| - Traffic - |query_ifDescr|/|query_ifIndex|');
 
 --
+-- Table structure for table `syslog`
+--
+
+CREATE TABLE `syslog` (
+  `id` bigint(20) unsigned NOT NULL auto_increment,
+  `logdate` date NOT NULL default '0000-00-00',
+  `facility` enum('POLLER','CMDPHP','CACTID','SCPTSVR','AUTH','WEBUI') NOT NULL default 'POLLER',
+  `severity` enum('EMERGENCY','ALERT','CRITICAL','ERROR','WARNING','NOTICE','INFO','DEBUG') NOT NULL default 'EMERGENCY',
+  `poller_id` smallint(5) unsigned NOT NULL default '0',
+  `host_id` mediumint(8) unsigned NOT NULL default '0',
+  `user_id` mediumint(8) unsigned NOT NULL default '0',
+  `username` varchar(50) NOT NULL default 'system',
+  `source` varchar(50) NOT NULL default 'localhost',
+  `message` varchar(255) NOT NULL default '',
+  PRIMARY KEY  (`id`),
+  KEY `facility` (`facility`),
+  KEY `severity` (`severity`),
+  KEY `host_id` (`host_id`),
+  KEY `poller_id` (`poller_id`),
+  KEY `user_id` (`user_id`),
+  KEY `username` (`username`),
+  KEY `logdate` (`logdate`)
+) TYPE=MyISAM; 
+
+--
 -- Table structure for table `user_auth`
 --
 
