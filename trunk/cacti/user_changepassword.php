@@ -31,20 +31,48 @@ include("./lib/api_user.php");
 if (!isset($_REQUEST["action"])) { $_REQUEST["action"] = ""; }
 
 switch ($_REQUEST["action"]) {
-	case 'change':
-		/* change the password */
-		
+	case 'save':
+		change_password();
 		break;
 	default:
-
 		change_password_form();
-
 		break;
 }
 
-/* --------------------------
-    User Administration
-   -------------------------- */
+function change_password() {
+	global $colors;
+
+	$change_result = 1;
+
+	if ((!empty($_POST["password_old"])) && (!empty($_POST["password_new"])) && (!empty($_POST["password_new_confirm"]))) {
+		if ($_POST["password_new"] != $_POST["password_old"]) {
+			/* New passwords do not match */
+			raise_message(4);
+		}else{
+			$change_result = api_user_changepassword($_SESSION["sess_user_id"],$_POST["password_new"],$_POST["password_old"]);
+			if ($change_result == "0") {
+				/* Password changed successfully */
+				raise_message(11);
+				$_SESSION["sess_messages"]["11"] = "11";
+			}elseif ($change_result == "2") {
+				/* Authentication failure for old password */
+				raise_message(8);
+			}else{
+				/* General error changing password */
+				raise_message(9);
+			}	
+		}
+	}else{
+		/* error empty fields */
+		raise_message(10);
+	}
+
+	include_once("include/top_header.php");
+	include_once("include/bottom_footer.php");
+
+}
+
+
 
 function change_password_form() {
 	global $colors;
@@ -69,17 +97,21 @@ function change_password_form() {
 
 
 	include_once("include/top_header.php");
-	html_start_box("<strong>Change Password</strong>", "98%", $colors["header"], "3", "center", "");
 
-	draw_edit_form(array(
-		"config" => array("form_name" => "chk"),
-		"fields" => inject_form_variables($form_fields, (isset($user) ? $user : array()))
-		));
+	if (read_config_option("auth_method") == "1") {
+		/* Builtin auth method, password can be changed */
+		html_start_box("<strong>Change Password</strong>", "98%", $colors["header"], "3", "center", "");
+		draw_edit_form(array(
+			"config" => array("form_name" => "chk"),
+			"fields" => inject_form_variables($form_fields, (isset($user) ? $user : array()))
+			));
+		html_end_box();
+		form_save_button("index.php","save");
+	}else{
+		/* Password changing not supported */
+		display_custom_error_message("Current selected Authentication Method does not support changing of passwords.");
+	}
 
-	html_end_box();
-
-
-	form_save_button("index.php","save");
 	include_once("include/bottom_footer.php");
 }
 
