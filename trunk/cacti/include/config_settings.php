@@ -671,6 +671,13 @@ $settings = array(
 			"default" => "0",
 			"array" => $ldap_encryption
 			),
+		"ldap_referrals" => array(
+			"friendly_name" => "Referrals",
+			"description" => "Enable or Disable LDAP referrals.  If disabled, it may increase the speed of searches.",
+			"method" => "drop_array",
+			"default" => "0",
+			"array" => array( "0" => "Disabled", "1" => "Enable")
+			),
 		"ldap_mode" => array(
 			"friendly_name" => "Mode", 	 
 			"description" => "Mode which cacti will attempt to authenicate against the LDAP server.<ul><li><i>No Searching</i> - No Distinguished Name (DN) searching occurs, just attempt to bind with the provided Distinguished Name (DN) format.</li><li><i>Anonymous Searching</i> - Attempts to search for username against LDAP directory via anonymous binding to locate the users Distinguished Name (DN).</li><li><i>Specific Searching</i> - Attempts search for username against LDAP directory via Specific Distinguished Name (DN) and Specific Password for binding to locate the users Distinguished Name (DN).</li></ul>",
@@ -686,7 +693,7 @@ $settings = array(
 			),
 		"ldap_search_base" => array(
 			"friendly_name" => "Search Base",
-			"description" => "Search base for searching the LDAP directory, such as \"dc=win2kdomain,dc=local\" or \"ou=people,dc=domain,dc=local\".",
+			"description" => "Search base for searching the LDAP directory, such as <i>\"dc=win2kdomain,dc=local\"</i> or <i>\"ou=people,dc=domain,dc=local\"</i>.",
 			"method" => "textbox",
 			"max_length" => "255"
 			),
@@ -697,13 +704,13 @@ $settings = array(
 			"max_length" => "255"
 			),
 		"ldap_specific_dn" => array(
-			"friendly_name" => "Specific Search Distingished Name (DN)",
+			"friendly_name" => "Search Distingished Name (DN)",
 			"description" => "Distinguished Name for Specific Searching binding to the LDAP directory.",
 			"method" => "textbox",
 			"max_length" => "255"
 			),
 		"ldap_specific_password" => array(
-			"friendly_name" => "Specific Search Password",
+			"friendly_name" => "Search Password",
 			"description" => "Password for Specific Searching binding to the LDAP directory.",
 			"method" => "textbox",
 			"max_length" => "255"

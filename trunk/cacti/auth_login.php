@@ -85,12 +85,23 @@ if ($action == 'login') {
 			$ldap_host = read_config_option("ldap_server");
 			$ldap_port = read_config_option("ldap_port");  
 			$ldap_version = read_config_option("ldap_version");
+
 			if (read_config_option("ldap_encryption") == "1") {
 				$ldap_host = "ldaps://" . $ldap_host;
 				$ldap_port = read_config_option("ldap_port_ssl");
 			}else{
 				$ldap_host = "ldap://" . $ldap_host;
 			}
+
+			/* get user DN */
+			$ldap_dn_search = api_user_search_ldap_dn($username);
+			if ($ldap_dn_search["error_num"] == 0) {
+				$ldap_dn = $ldap_dn_search["dn"];
+			}else{
+				auth_display_custom_error_message("User DN Search Error: " . $ldap_dn_search["error_text"]);
+				exit;
+			}
+
 			/* Connect to LDAP server */
 			$ldap_conn = @ldap_connect($ldap_host,$ldap_port);
 
@@ -100,6 +111,13 @@ if ($action == 'login') {
 					auth_display_custom_error_message("Unable to set LDAP protocol version.");
 					exit;
 				}
+				/* set referrals */
+				if (read_config_option("ldap_referrals") == "0") {
+					if (!@ldap_set_option($ldap_conn, LDAP_OPT_REFERRALS, 0)) {
+						auth_display_custom_error_message("Unable to set LDAP referrals.");
+						exit;
+					}
+				}
 				/* start TLS if requested */
 				if (read_config_option("ldap_encryption") == "2") {
 					if (!@ldap_start_tls($ldap_conn)) {
@@ -107,8 +125,6 @@ if ($action == 'login') {
 						exit;
 					}
 				}
-				/* Create DN */
-				$ldap_dn = str_replace("<username>",$username,read_config_option("ldap_dn"));
 				/* Query LDAP directory */
 				$ldap_response = @ldap_bind($ldap_conn,$ldap_dn,$_POST["login_password"]);
 				$realm = 1;
@@ -119,7 +135,7 @@ if ($action == 'login') {
 					/* Locate user in database */
 					$user = db_fetch_row("select * from user_auth where username='" . $username . "' and realm = 1");
 					/* Close LDAP connection */
-					ldap_close($ldap_conn);
+					@ldap_close($ldap_conn);
 				}else{
 					/* Error LDAP Connection 
 					This catches, password failure, server connection issues, 
@@ -269,7 +285,7 @@ function auth_display_custom_error_message($message) {
 	-->
 	</style>
 </head>
-<body onload="document.login.username.focus()">
+<body onload="document.login.login_username.focus()">
 <form name="login" method="post" action="<?php print basename($_SERVER["PHP_SELF"]);?>">
 <table align="center">
 	<tr>
