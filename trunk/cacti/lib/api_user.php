@@ -293,7 +293,7 @@ function api_user_graph_perms_remove($type,$user_id,$item_id) {
    @arg $password_new - New password to set for user 
    @arg $password_old - Old password, optional, if passed will validate 
    @returns - '0' is success, '1' is general error, '2' fail password authentication,
-              '3' user not found, '4' old password same as new password */
+              '3' user not found  */
 function api_user_changepassword($user_id, $password_new, $password_old="") {
 
 	/* validate we can change the password */
