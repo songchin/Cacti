@@ -83,7 +83,6 @@ switch ($_REQUEST["action"]) {
 /* -----------------------
     Utilities Functions
    ----------------------- */
-
 function utilities_view_syslog() {
 	global $colors, $device_actions;
 
@@ -210,7 +209,7 @@ function utilities_view_syslog() {
 			form_alternate_row_color($colors["form_alternate1"],$colors["form_alternate2"],$i); $i++;
 				?>
 				<td>
-					<a class="linkEditMain" href="utilities_viewsyslog.php?action=view&id=<?php print $syslog_entry["id"];?>"><?php print eregi_replace("(" . preg_quote($_REQUEST["filter"]) . ")", "<span style='background-color: #F8D93D;'>\\1</span>", $syslog_entry["logdate"]);?></a>
+					<?php print $syslog_entry["logdate"];?>
 				</td>
 				<td>
 					<?php print $syslog_entry["facility"];?>
