@@ -63,7 +63,7 @@ function api_user_list($array) {
 function api_user_info($array) {
 
 	/* build SQL query */
-	$sql_query = "SELECT *, DATE_FORMAT(password_change_last,'%M %e %Y %H:%i:%s') as password_change_last_formatted FROM user_auth WHERE ";
+	$sql_query = "SELECT *, DATE_FORMAT(password_change_last,'%M %e %Y %H:%i:%s') as password_change_last_formatted, DATE_FORMAT(last_login,'%M %e %Y %H:%i:%s') as last_login_formatted FROM user_auth WHERE ";
 	$sql_where = "";
 	if (($array) && (is_array($array))) {
 		foreach ($array as $field => $value) {
@@ -80,14 +80,6 @@ function api_user_info($array) {
 	/* get the user info */
 	$user = db_fetch_row($sql_query);
 	
-	/* get last login and append */
-	if ($user) {
-		$last_login = db_fetch_row("select username,time as lastlogin,DATE_FORMAT(time,'%M %e %Y %H:%i:%s') as lastlogin_formatted, ip from user_log where user_id = '" . $user["id"] . "' and result = 1 order by time desc limit 1");
-		$user["lastlogin"] = $last_login["lastlogin"];
-		$user["lastlogin_formatted"] = $last_login["lastlogin_formatted"];
-		$user["ip"] = $last_login["ip"];
-	}
-
 	return $user;
 
 }
@@ -189,7 +181,7 @@ function api_user_realms_list($user_id) {
 	$user_auth_realms_local = $user_auth_realms;
 
 	/* process realms */	
-	$user_realms = db_fetch_assoc("select realm_id from user_auth_realm where user_id = " . sql_sanitize($user_id));
+	$user_realms = db_fetch_assoc("select realm_id from user_auth_realm where user_id = " . $user_id);
 	while (list($realm_id, $realm_name) = each($user_auth_realms_local)) {
 		$value = 0;
 		while (list($record,$user_realm) = each($user_realms)) {
@@ -229,9 +221,9 @@ function api_user_graph_setting_list($user_id) {
 	$user_settings = array();
 	if (!empty($user_id)) {
 		if (is_numeric($user_id)) {
-			$setting = db_fetch_assoc("select name,value from settings_graphs where user_id = '" . $user_id . "'");
+			$setting = db_fetch_assoc("select name,value from settings_graphs where user_id = " . $user_id);
 			while (list($record, $fields) = each($setting)) {
-				$user_settings[$fields["name"]] = $fields["value"];	
+				$user_settings[$fields["name"]] = $fields["value"];
 			}
 		}
 	}
@@ -298,7 +290,7 @@ function api_user_graph_perms_list($type,$user_id) {
 			from graph_templates_graph
 			left join user_auth_perms on (graph_templates_graph.local_graph_id=user_auth_perms.item_id and user_auth_perms.type=1)
 			where graph_templates_graph.local_graph_id > 0
-			and user_auth_perms.user_id = '" . $user_id . "'
+			and user_auth_perms.user_id = " . $user_id . "
 			order by graph_templates_graph.title_cache");
 		break;
 
@@ -309,7 +301,7 @@ function api_user_graph_perms_list($type,$user_id) {
 			graph_tree.name
 			from graph_tree
 			left join user_auth_perms on (graph_tree.id=user_auth_perms.item_id and user_auth_perms.type=2)
-			where user_auth_perms.user_id = '" . $user_id . "'
+			where user_auth_perms.user_id = " . $user_id . "
 			order by graph_tree.name");
 
 		break;
@@ -321,7 +313,7 @@ function api_user_graph_perms_list($type,$user_id) {
 			CONCAT_WS('',host.description,' (',host.hostname,')') as name
 			from host
 			left join user_auth_perms on (host.id=user_auth_perms.item_id and user_auth_perms.type=3)
-			where user_auth_perms.user_id = '" . $user_id . "'
+			where user_auth_perms.user_id = " . $user_id . "
 			order by host.description,host.hostname");
 
 		break;
@@ -333,7 +325,7 @@ function api_user_graph_perms_list($type,$user_id) {
 			graph_templates.name
 			from graph_templates
 			left join user_auth_perms on (graph_templates.id=user_auth_perms.item_id and user_auth_perms.type=4)
-			where user_auth_perms.user_id = '" . $user_id . "'
+			where user_auth_perms.user_id = " . $user_id . "
 			order by graph_templates.name");
 
 		break;

@@ -725,10 +725,10 @@ function user() {
 				<?php if ($user["policy_graphs"] == "1") { print "ALLOW"; }else{ print "DENY"; }?>
 			</td>
 			<td>
-				<?php print $user["lastlogin_formatted"];?>
+				<?php print $user["last_login_formatted"];?>
 			</td>
 			<td>
-				<?php print $user["ip"];?>
+				<?php print $user["last_login_ip"];?>
 			</td>
 			<td>
 				<?php

@@ -55,26 +55,26 @@ if (!$access_denied) {
 	case 'changepassword':
 	
 		
-		if (db_fetch_cell("select password from user_auth where id=" . $_SESSION["sess_user_id"]) == md5($_POST["password"])) {
+		if (api_user_info( array( "id" => $_SESSION["sess_user_id"], "password" => md5($_POST["password"]) ) ) ) {
 			$old_password = true;
 		}else{
 			if (($_POST["password"] == $_POST["confirm"]) && ($_POST["password"] != "")) {
 
 				/* Log password change */
-				db_execute("insert into user_log (user_id,username,time,result,ip) values('" . $_SESSION["sess_user_id"] . "','" . $user["username"] . "',NOW(),3,'" . $_SERVER["REMOTE_ADDR"] . "')");
+				cacti_log("CHANGEPASSWORD: Password change successful", SEV_INFO, 0, 0, 0, false, FACIL_AUTH);
 	
 				/* change password */
 				api_user_changepassword($_SESSION["sess_user_id"], $_POST["password"]);
 		
 				kill_session_var("sess_change_password");
 
-				/* ok, at the point the user has been sucessfully authenticated; so we must
+				/* ok, at the point the user has been successfully authenticated; so we must
 				decide what to do next */
 	
 				/* if no console permissions show graphs otherwise, pay attention to user setting */
-				$realm_id = $user_auth_realm_filenames["index.php"];
+				$user_realms = api_user_realms_list($_SESSION["sess_user_id"]);
 
-				if (sizeof(db_fetch_assoc("select user_auth_realm.realm_id from user_auth_realm where user_auth_realm.user_id = '" . $_SESSION["sess_user_id"] . "' and user_auth_realm.realm_id = '" . $realm_id . "'")) > 0) {
+				if ($user_realms[$user_auth_realm_filenames["index.php"]]["value"] == "1") {
 					switch ($user["login_opts"]) {
 						case '1': /* referer */
 							header("Location: " . $_POST["ref"]); break;
