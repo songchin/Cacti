@@ -472,4 +472,14 @@ $graph_datechar = array(
 	GDC_SLASH => "/"
 	);
 
+$themes = array(
+	"aq" => "Soft New Look",
+	"classic" => "Traditional Cacti Theme",
+	"black" => "Dark and Distinguished",
+	"blue" => "Don't Know Yet",
+	"bulix" => "Nostalgic Look",
+	"kde" => "Matches the KDE Desktop",
+	"metal" => "Wrapped in Chains",
+	"witendoxp" => "Windows XP Default"
+	);
 ?>

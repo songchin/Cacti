@@ -403,6 +403,17 @@ $settings = array(
 			)
 		),
 	"visual" => array(
+		"themes_header" => array(
+			"friendly_name" => "Cacti Theme",
+			"method" => "spacer"
+			),
+		"current_theme" => array(
+			"friendly_name" => "Cacti Theme to Use",
+			"description" => "The Cacti color theme to use.  Changes the default look of Cacti.",
+			"method" => "drop_array",
+			"default" => "classic",
+			"array" => $themes
+			),
 		"graphmgmt_header" => array(
 			"friendly_name" => "Graph Management",
 			"method" => "spacer"
