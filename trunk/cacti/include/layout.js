@@ -78,7 +78,6 @@ function gt_update_deps(num_columns) {
 		for (var j = 0; j < num_columns; j++) {
 			lineid = document.getElementById('gt_text' + gt_created_graphs[i] + '_' + j);
 			lineid.className = 'jsRowUnavailable';
-/*			lineid.style.color = '999999';*/
 		}
 
 		chkbx = document.getElementById('cg_' + gt_created_graphs[i]);
@@ -165,7 +164,6 @@ function dq_update_deps(snmp_query_id, num_columns) {
 		for (var j = 0; j < num_columns; j++) {
 			lineid = document.getElementById('text' + snmp_query_id + '_' + created_graphs[snmp_query_graph_id][i] + '_' + j);
 			if (lineid) {
-/*				lineid.style.color = '999999';*/
 				lineid.className = 'jsRowUnavailable';
 			}
 		}
