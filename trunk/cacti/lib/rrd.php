@@ -30,15 +30,20 @@ function escape_command($command) {
 	return ereg_replace("(\\\$|`)", "", $command);
 }
 
-function rrd_init() {
-	$rrd_struc["fd"] = popen(read_config_option("path_rrdtool") . " -", "w");
+function rrd_init($rrd_count = 1) {
+
+	for ($i = 0; $i < $rrd_count; $i++) {
+		$rrd_struc[$i]["fd"] = popen(read_config_option("path_rrdtool") . " -", "w");
+	}
 
 	return $rrd_struc;
 }
 
-function rrd_close($rrd_struc) {
+function rrd_close($rrd_struc, $rrd_count = 1) {
 	/* close the rrdtool file descriptor */
-	pclose($rrd_struc["fd"]);
+	for ($i = 0; $i < $rrd_count; $i++) {
+		pclose($rrd_struc[$i]["fd"]);
+	}
 }
 
 function rrd_get_fd(&$rrd_struc, $fd_type) {
@@ -214,7 +219,12 @@ function rrdtool_function_create($local_data_id, $show_source, $rrd_struc) {
 }
 
 function rrdtool_function_update($update_cache_array, $rrd_struc) {
+	/* set the first RRD pipe to process from */
+	$rrd_process = 1;
+
 	while (list($rrd_path, $rrd_fields) = each($update_cache_array)) {
+		$rrd_num = bcmod($rrd_process, read_config_option("concurrent_rrd_processes"));
+
 		$create_rrd_file = false;
 
 		/* create the rrd if one does not already exist */
@@ -258,9 +268,11 @@ function rrdtool_function_update($update_cache_array, $rrd_struc) {
 					$i++;
 				}
 
-				rrdtool_execute("update $rrd_path --template $rrd_update_template $rrd_update_values", true, RRDTOOL_OUTPUT_STDOUT, $rrd_struc, "POLLER");
+				rrdtool_execute("update $rrd_path --template $rrd_update_template $rrd_update_values", true, RRDTOOL_OUTPUT_STDOUT, $rrd_struc[$rrd_num], "POLLER");
 			}
 		}
+
+		$rrd_process++;
 	}
 }
 

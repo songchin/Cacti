@@ -142,7 +142,8 @@ if (($num_polling_items > 0) && (read_config_option("poller_enabled") == "on")) 
 	}
 
 	/* open a pipe to rrdtool for writing */
-	$rrdtool_pipe = rrd_init();
+	$rrd_processes = read_config_option("concurrent_rrd_processes");
+	$rrdtool_pipe = rrd_init($rrd_processes);
 
 	$loop_count = 0;
 	while (1) {
@@ -189,7 +190,7 @@ if (($num_polling_items > 0) && (read_config_option("poller_enabled") == "on")) 
 		}
 	}
 
-	rrd_close($rrdtool_pipe);
+	rrd_close($rrdtool_pipe, $rrd_processes);
 
 	/* process poller commands */
 	$poller_commands = db_fetch_assoc("select
