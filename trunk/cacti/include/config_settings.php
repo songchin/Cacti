@@ -199,13 +199,19 @@ $settings = array(
 			"max_length" => "10"
 			),
 		"other_header" => array(
-			"friendly_name" => "Other Defaults",
+			"friendly_name" => "Other Settings",
 			"method" => "spacer"
 			),
 		"remove_verification" => array(
 			"friendly_name" => "Remove Verification",
 			"description" => "Prompt user before item deletion.",
 			"default" => "on",
+			"method" => "checkbox"
+			),
+		"show_hidden" => array(
+			"friendly_name" => "Show Hidden Fields",
+			"description" => "Allow console operators to view and edit system/reserved table information.",
+			"default" => "",
 			"method" => "checkbox"
 			)
 		),

@@ -33,7 +33,7 @@ function upgrade_to_0_8_7() {
 	db_install_execute("0.8.7", "ALTER TABLE `host` CHANGE `snmp_username` `snmpv3_auth_username` varchar(50), CHANGE `snmp_password` `snmpv3_auth_password` varchar(50);");
 	db_install_execute("0.8.7", "ALTER TABLE `host` ADD `snmpv3_auth_protocol` varchar(5) AFTER `snmpv3_auth_password`, ADD `snmpv3_priv_passphrase` varchar(200) AFTER `snmpv3_auth_protocol`, ADD `snmpv3_priv_protocol` varchar(5) AFTER `snmpv3_priv_passphrase`;");
 	db_install_execute("0.8.7", "ALTER TABLE `data_input` ADD `reserved` tinyint unsigned NOT NULL default '0' AFTER `id`;");
-	db_install_execute("0.8.7", "UPDATE data_input set reserved = '1' where hash = '3eb92bb845b9660a7445cf9740726522' or hash = 'bf566c869ac6443b0c75d1c32b5a350e' or hash = '80e9e4c4191a5da189ae26d0e237f015' or hash = '332111d8b54ac8ce939af87a7eac0c06';");
+	db_install_execute("0.8.7", "UPDATE `data_input` set reserved = '1' where hash = '3eb92bb845b9660a7445cf9740726522' or hash = 'bf566c869ac6443b0c75d1c32b5a350e' or hash = '80e9e4c4191a5da189ae26d0e237f015' or hash = '332111d8b54ac8ce939af87a7eac0c06';");
 	db_install_execute("0.8.7", "ALTER TABLE `poller` ADD `active` varchar(5) default 'On' AFTER `id`;");
 	db_install_execute("0.8.7", "ALTER TABLE `poller` CHANGE `ip_address` `name` varchar(150) NOT NULL default 'Description';");
 	db_install_execute("0.8.7", "ALTER TABLE `user_auth` ADD column `enabled` tinyint(1) unsigned NOT NULL default '1';");
@@ -49,5 +49,11 @@ function upgrade_to_0_8_7() {
 	db_install_execute("0.8.7", "ALTER TABLE `graph_templates_graph` ADD `t_unit_length` char(2) default '0' AFTER `unit_value`, ADD `unit_length` varchar(5) default '' AFTER `t_unit_length`;");
 	db_install_execute("0.8.7", "ALTER TABLE `user_auth` ADD `created` datetime NOT NULL;");
 	db_install_execute("0.8.7", "UPDATE `user_auth` SET `created` = NOW() WHERE `created` = `0000-00-00 00:00:00`;");
+	db_install_execute("0.8.7", "UPDATE `data_input_fields` SET `name` = 'SNMP Password (v3)' WHERE `name` = `SNMP Password`;");
+	db_install_execute("0.8.7", "UPDATE `data_input_fields` SET `name` = 'SNMP Username (v3)' WHERE `name` = `SNMP Username`;");
+	db_install_execute("0.8.7", "UPDATE `data_input_fields` SET `data_name` = 'snmpv3_auth_username' WHERE `data_name` = `snmp_username`;");
+	db_install_execute("0.8.7", "UPDATE `data_input_fields` SET `data_name` = 'snmpv3_auth_password' WHERE `data_name` = `snmp_password`;");
+	db_install_execute("0.8.7", "UPDATE `data_input_fields` SET `type_code` = 'snmpv3_auth_username' WHERE `type_code` = `snmp_username`;");
+	db_install_execute("0.8.7", "UPDATE `data_input_fields` SET `type_code` = 'snmpv3_auth_password' WHERE `type_code` = `snmp_password`;");
 }
 ?>
