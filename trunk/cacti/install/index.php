@@ -113,7 +113,11 @@ if ($config["cacti_server_os"] == "unix") {
 		$input["path_php_binary"]["default"] = "/usr/bin/php";
 	}
 }elseif ($config["cacti_server_os"] == "win32") {
-	$input["path_php_binary"]["default"] = "c:/php/php.exe";
+	if (strlen(read_config_option("path_php_binary"))) {
+		$input["path_php_binary"]["default"] = read_config_option("path_php_binary");
+	} else {
+		$input["path_php_binary"]["default"] = "c:/php/php.exe";
+	}
 }
 
 /* snmpwalk Binary Path */
@@ -153,7 +157,11 @@ if ($config["cacti_server_os"] == "unix") {
 /* log file path */
 $input["path_cactilog"] = $settings["path"]["path_cactilog"];
 $input["path_cactilog"]["description"] = "The path to your Cacti log file.";
-$input["path_cactilog"]["default"] = $config["base_path"] . "/log/cacti.log";
+if (strlen(read_config_option("path_cactilog"))) {
+	$input["path_cactilog"]["default"] = read_config_option("path_cactilog");
+} else {
+	$input["path_cactilog"]["default"] = $config["base_path"] . "/log/cacti.log";
+}
 
 /* SNMP Version */
 if ($config["cacti_server_os"] == "unix") {
