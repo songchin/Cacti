@@ -2599,6 +2599,9 @@ CREATE TABLE user_auth (
   policy_trees tinyint(1) unsigned NOT NULL default '1',
   policy_hosts tinyint(1) unsigned NOT NULL default '1',
   policy_graph_templates tinyint(1) unsigned NOT NULL default '1',
+  `enabled` tinyint(1) unsigned NOT NULL default '1',
+  password_expire_length int(4) unsigned NOT NULL default '0',
+  password_change_last datetime NOT NULL default '0000-00-00 00:00:00',
   PRIMARY KEY  (id),
   UNIQUE KEY ID (id),
   KEY id_2 (id)
