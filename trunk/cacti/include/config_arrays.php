@@ -345,7 +345,8 @@ $menu = array(
 		"templates_export.php" => "Export Templates"
 		),
 	"Configuration"  => array(
-		"settings.php" => "Settings"
+		"settings.php" => "Settings",
+		"settings_wizard.php" => "Wizard"
 		),
 	"Utilities" => array(
 		"utilities.php" => "System Utilities",
@@ -408,7 +409,8 @@ $user_auth_realm_filenames = array(
 	"email_templates.php" => 8,
 	"event_queue.php" => 8,
 	"smtp_queue.php" => 8,
-	"user_changepassword.php" => "18"
+	"user_changepassword.php" => "18",
+	"settings_wizard.php" => "15"
 	);
 
 $hash_type_codes = array(
