@@ -31,11 +31,16 @@ include("./lib/api_user.php");
 $user = api_user_info( array( "id" => $_SESSION["sess_user_id"] ) );
 
 /* find out if we are logged in as a 'guest user' or not */
-$using_guest_account = false;
+$access_denied = false;
 if (read_config_option("guest_user") != "0") {
 	if ($user["username"] == read_config_option("guest_user")) {
-		$using_guest_account = true;
+		$access_denied = true;
 	}
+}
+
+/* check that force password change it set */
+if (!isset($_SESSION["sess_change_password"])) {
+	$access_denied = true;
 }
 
 /* default to !bad_password */
@@ -45,7 +50,7 @@ $old_password = false;
 /* set default action */
 if (!isset($_REQUEST["action"])) { $_REQUEST["action"] = ""; }
 
-if (!$using_guest_account) {
+if (!$access_denied) {
 
 	switch ($_REQUEST["action"]) {
 	case 'changepassword':
@@ -106,7 +111,7 @@ if (!$using_guest_account) {
 	-->
 	</style>
 </head>
-<?php if (!$using_guest_account) { ?>
+<?php if (!$access_denied) { ?>
 
 <body onload="document.login.password.focus()">
 
@@ -118,7 +123,7 @@ if (!$using_guest_account) {
 	<tr>
 		<td colspan="2"><img src="<?php print html_get_theme_images_path('auth_login.gif');?>" border="0" alt=""></td>
 	</tr>
-<?php if ($using_guest_account) { ?>
+<?php if ($access_denied) { ?>
 	<tr height="10"><td></td></tr>
 	<tr>
 		<td colspan="2" align="center"><font color="#FF0000" size="+2"><strong>Access Denied</strong></font></td>
@@ -162,7 +167,7 @@ if (!$using_guest_account) {
 </table>
 
 
-<?php if (!$using_guest_account) { ?>
+<?php if (!$access_denied) { ?>
 <input type="hidden" name="action" value="changepassword">
 <input type="hidden" name="ref" value="<?php print $_REQUEST["ref"];?>">
 
