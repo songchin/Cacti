@@ -565,7 +565,160 @@ function api_user_graph_perms_remove($type,$user_id,$item_id) {
 ########################################
 */
 
-/* api_user_search_ldap_dn
+/* api_user_ldap_auth
+  @arg $username - username of the user
+  @arg $password - password of the user
+  @arg $ldap_dn - LDAP DN for binding
+  @arg $ldap_host - Hostname or IP of LDAP server, Default = Configured settings value
+  @arg $ldap_port - Port of the LDAP server uses, Default = Configured settings value
+  @arg $ldap_port_ssl - Port of the LDAP server uses for SSL, Default = Configured settings value
+  @arg $ldap_version - '2' or '3', LDAP protocol version, Default = Configured settings value
+  @arg $ldap_encryption - '0' None, '1' SSL, '2' TLS, Default = Configured settings value
+  @arg $ldap_referrals - '0' Referrals from server are ignored, '1' Referrals from server are processed, Default = Configured setting value
+
+  @return - array of values 
+    "error_num" = error number returned
+    "error_text" = error text
+
+Error codes:
+
+#	Text
+==============================================================
+0	Authentication Success
+1	Authentication Failure
+2	No username defined
+3	Protocol error, unable to set version
+4	Unable to set referrals option
+5	Protocol error, unable to start TLS communications
+6	Unable to create LDAP object
+7	Protocol error
+8	Insuffient access
+9	Unable to connect to server
+10	Timeout
+11	General bind error
+
+
+*/
+function api_user_ldap_auth($username,$password = "",$ldap_dn = "",$ldap_host = "",$ldap_port = "",$ldap_port_ssl = "",$ldap_version = "",$ldap_encryption = "",$ldap_referrals = "") {
+
+	$output = array();
+
+	/* validation */
+	if (empty($username)) {
+		$output["error_num"] = "2";
+		$output["error_text"] = "No username defined";
+		return $output;
+	}
+
+	/* get LDAP parameters */
+	if (empty($ldap_dn)) {
+		$ldap_dn = read_config_option("ldap_dn");
+	}
+	$ldap_dn = str_replace("<username>",$username,$ldap_dn);
+	if (empty($ldap_host)) {
+		$ldap_host = read_config_option("ldap_server");
+	}
+	if (empty($ldap_port)) {
+		$ldap_port = read_config_option("ldap_port");
+	}
+	if (empty($ldap_port_ssl)) {
+		$ldap_port_ssl = read_config_option("ldap_port_ssl");
+	}
+	if (empty($ldap_version)) {
+		$ldap_version = read_config_option("ldap_version");
+	}
+	if (empty($ldap_encryption)) {
+		$ldap_encryption = read_config_option("ldap_encryption");
+	}
+	if (empty($ldap_referrals)) {
+		$ldap_referrals = read_config_option("ldap_referrals");
+	}
+	if ($ldap_encryption == "1") {
+		$ldap_host = "ldaps://" . $ldap_host;
+		$ldap_port = $ldap_port_ssl;
+	}else{
+		$ldap_host = "ldap://" . $ldap_host;
+	}
+
+	/* Connect to LDAP server */
+	$ldap_conn = @ldap_connect($ldap_host,$ldap_port);
+
+	if ($ldap_conn) {
+		/* Set protocol version */
+		if (!@ldap_set_option($ldap_conn, LDAP_OPT_PROTOCOL_VERSION, $ldap_version)) {
+			$output["error_num"] = "3";
+			$output["error_text"] = "Protocol Error, Unable to set version";
+			@ldap_close($ldap_conn);
+			return $output;
+		}
+		/* set referrals */
+		if ($ldap_referrals == "0") {
+			if (!@ldap_set_option($ldap_conn, LDAP_OPT_REFERRALS, 0)) {
+				$output["error_num"] = "4";
+				$output["error_text"] = "Unable to set referrals option";
+				@ldap_close($ldap_conn);
+				return $output;
+			}
+		}
+		/* start TLS if requested */
+		if ($ldap_encryption == "2") {
+			if (!@ldap_start_tls($ldap_conn)) {
+				$output["error_num"] = "5";
+				$output["error_text"] = "Protocol error, unable to start TLS communications";
+				@ldap_close($ldap_conn);
+				return $output;
+			}
+		}
+		/* Bind to the LDAP directory */
+		$ldap_response = @ldap_bind($ldap_conn,$ldap_dn,$password);
+		if ($ldap_response) {
+			/* Auth ok */
+			$output["error_num"] = "0";
+			$output["error_text"] = "Authentication Success";
+		}else{
+			/* unable to bind */
+			$ldap_error = ldap_errno($ldap_conn);
+			if ($ldap_error == 0x03) {
+				/* protocol error */
+				$output["error_num"] = "7";
+				$output["error_text"] = "Protocol error";
+			}elseif ($ldap_error == 0x31) {
+				/* invalid credentials */
+				$output["error_num"] = "1";
+				$output["error_text"] = "Authenication Failure";
+			}elseif ($ldap_error == 0x32) {
+				/* insuffient access */
+				$output["error_num"] = "8";
+				$output["error_text"] = "Insuffient access";
+			}elseif ($ldap_error == 0x51) {
+				/* unable to connect to server */
+				$output["error_num"] = "9";
+				$output["error_text"] = "Unable to connect to server";
+			}elseif ($ldap_error == 0x55) {
+				/* timeout */
+				$output["error_num"] = "10";
+				$output["error_text"] = "Timeout";
+			}else{
+				/* general bind error */
+				$output["error_num"] = "11";
+				$output["error_text"] = "General bind error, LDAP result: " . ldap_error($ldap_conn);
+			}
+		}
+	}else{
+		/* Error intializing LDAP */
+		$output["error_num"] = "6";
+		$output["error_text"] = "Unable to create LDAP object";
+	}
+
+	/* Close LDAP connection */
+	@ldap_close($ldap_conn);
+
+	return $output;
+
+
+}
+
+/* api_user_ldap_search_dn
   @arg $username - username to search for in the LDAP directory
   @arg $ldap_dn - configured LDAP DN for binding, "<username>" will be replaced with $username
   @arg $ldap_host - Hostname or IP of LDAP server, Default = Configured settings value
@@ -573,6 +726,7 @@ function api_user_graph_perms_remove($type,$user_id,$item_id) {
   @arg $ldap_port_ssl - Port of the LDAP server uses for SSL, Default = Configured settings value
   @arg $ldap_version - '2' or '3', LDAP protocol version, Default = Configured settings value
   @arg $ldap_encryption - '0' None, '1' SSL, '2' TLS, Default = Configured settings value
+  @arg $ldap_referrals - '0' Referrals from server are ignored, '1' Referrals from server are processed, Default = Configured setting value
   @arg $ldap_mode - '0' No Searching, '1' Anonymous Searching, '2' Specfic Searching, Default = Configured settings value
   @arg $ldap_search_base - Search base DN, Default = Configured settings value
   @arg $ldap_search_filter - Filter to find the user, Default = Configured settings value
@@ -604,7 +758,7 @@ Error codes:
 13	More than one matching user found
 
 */
-function api_user_search_ldap_dn($username,$ldap_dn = "",$ldap_host = "",$ldap_port = "",$ldap_port_ssl = "",$ldap_version = "",$ldap_encryption = "",$ldap_referrals = "", $ldap_mode = "",$ldap_search_base = "", $ldap_search_filter = "",$ldap_specific_dn = "",$ldap_specific_password = "") {
+function api_user_ldap_search_dn($username,$ldap_dn = "",$ldap_host = "",$ldap_port = "",$ldap_port_ssl = "",$ldap_version = "",$ldap_encryption = "",$ldap_referrals = "", $ldap_mode = "",$ldap_search_base = "", $ldap_search_filter = "",$ldap_specific_dn = "",$ldap_specific_password = "") {
 
 	$output = array();
 
@@ -637,6 +791,9 @@ function api_user_search_ldap_dn($username,$ldap_dn = "",$ldap_host = "",$ldap_p
 	}
 	if (empty($ldap_port)) {
 		$ldap_port = read_config_option("ldap_port");
+	}
+	if (empty($ldap_port_ssl)) {
+		$ldap_port_ssl = read_config_option("ldap_port_ssl");
 	}
 	if (empty($ldap_version)) {
 		$ldap_version = read_config_option("ldap_version");
@@ -689,7 +846,6 @@ function api_user_search_ldap_dn($username,$ldap_dn = "",$ldap_host = "",$ldap_p
 	}
 
 	/* Searching mode */
-
         /* Setup connection to LDAP server */
         $ldap_conn = @ldap_connect($ldap_host,$ldap_port);
 
@@ -700,6 +856,8 @@ function api_user_search_ldap_dn($username,$ldap_dn = "",$ldap_host = "",$ldap_p
 			$output["dn"] = "";
 			$output["error_num"] = "4";
 			$output["error_text"] = "Protocol error, unable to set version";
+			@ldap_close($ldap_conn);
+			return $output;
 		}
 		/* set referrals */
 		if ($ldap_referrals == "0") {
@@ -708,6 +866,8 @@ function api_user_search_ldap_dn($username,$ldap_dn = "",$ldap_host = "",$ldap_p
 				$output["dn"] = "";
 				$output["error_num"] = "13";
 				$output["error_text"] = "Unable to set referrals option";
+				@ldap_close($ldap_conn);
+				return $output;
 			}
 		}
 		/* start TLS if requested */
@@ -717,6 +877,8 @@ function api_user_search_ldap_dn($username,$ldap_dn = "",$ldap_host = "",$ldap_p
 				$output["dn"] = "";
 				$output["error_num"] = "5";
 				$output["error_text"] = "Protocol error, unable to start TLS communications";
+				@ldap_close($ldap_conn);
+				return $output;
 			}
 		}
 
@@ -782,7 +944,7 @@ function api_user_search_ldap_dn($username,$ldap_dn = "",$ldap_host = "",$ldap_p
 				/* general bind error */
 				$output["dn"] = "";
 				$output["error_num"] = "11";
-				$output["error_text"] = "General bind error";
+				$output["error_text"] = "General bind error, LDAP result: " . ldap_error($ldap_conn);
 			}
 		}
 	}else{
@@ -791,6 +953,8 @@ function api_user_search_ldap_dn($username,$ldap_dn = "",$ldap_host = "",$ldap_p
 		$output["error_num"] = "2";
 		$output["error_text"] = "Unable to create LDAP connection object";
 	}
+
+	@ldap_close($ldap_conn);
 
 	return $output;
 

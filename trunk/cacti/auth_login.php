@@ -81,75 +81,38 @@ if ($action == 'login') {
 	case "3":
 		/* LDAP Auth */
  		if (($_POST["realm"] == "ldap") && (strlen($_POST["login_password"]) > 0)) {
-			/* get LDAP parameters */
-			$ldap_host = read_config_option("ldap_server");
-			$ldap_port = read_config_option("ldap_port");  
-			$ldap_version = read_config_option("ldap_version");
-
-			if (read_config_option("ldap_encryption") == "1") {
-				$ldap_host = "ldaps://" . $ldap_host;
-				$ldap_port = read_config_option("ldap_port_ssl");
-			}else{
-				$ldap_host = "ldap://" . $ldap_host;
-			}
 
 			/* get user DN */
-			$ldap_dn_search = api_user_search_ldap_dn($username);
-			if ($ldap_dn_search["error_num"] == 0) {
-				$ldap_dn = $ldap_dn_search["dn"];
+			$ldap_dn_search_response = api_user_ldap_search_dn($username);
+			if ($ldap_dn_search_response["error_num"] == "0") {
+				$ldap_dn = $ldap_dn_search_response["dn"];
 			}else{
-				auth_display_custom_error_message("User DN Search Error: " . $ldap_dn_search["error_text"]);
-				exit;
+				/* Error searching */
+				$ldap_error = true;
+				$ldap_error_message = "LDAP Search Error: " . $ldap_dn_search_response["error_text"];
+				$user_auth = false;
+				$user = array();
 			}
 
-			/* Connect to LDAP server */
-			$ldap_conn = @ldap_connect($ldap_host,$ldap_port);
+			if (!$ldap_error) {
+				/* auth user with LDAP */
+				$ldap_auth_response = api_user_ldap_auth($username,$_POST["login_password"],$ldap_dn);
 
-			if ($ldap_conn) {
-				/* Set protocol version */
-				if (!@ldap_set_option($ldap_conn, LDAP_OPT_PROTOCOL_VERSION, $ldap_version)) {
-					auth_display_custom_error_message("Unable to set LDAP protocol version.");
-					exit;
-				}
-				/* set referrals */
-				if (read_config_option("ldap_referrals") == "0") {
-					if (!@ldap_set_option($ldap_conn, LDAP_OPT_REFERRALS, 0)) {
-						auth_display_custom_error_message("Unable to set LDAP referrals.");
-						exit;
-					}
-				}
-				/* start TLS if requested */
-				if (read_config_option("ldap_encryption") == "2") {
-					if (!@ldap_start_tls($ldap_conn)) {
-						auth_display_custom_error_message("Unable able to start connection with TLS enabled.");
-						exit;
-					}
-				}
-				/* Query LDAP directory */
-				$ldap_response = @ldap_bind($ldap_conn,$ldap_dn,$_POST["login_password"]);
-				$realm = 1;
-				if ($ldap_response) {
-					/* Auth ok */
+				if ($ldap_auth_response["error_num"] == "0") {
+					/* User ok */
 					$user_auth = true;
 					$copy_user = true;
 					/* Locate user in database */
 					$user = db_fetch_row("select * from user_auth where username='" . $username . "' and realm = 1");
-					/* Close LDAP connection */
-					@ldap_close($ldap_conn);
 				}else{
-					/* Error LDAP Connection 
-					This catches, password failure, server connection issues, 
-					and protocol problems.*/
-					$user_auth = false;
+					/* error */ 
 					$ldap_error = true;
-					$ldap_error_message = "LDAP Error: " . ldap_error($ldap_conn);
+					$ldap_error_message = "LDAP Error: " . $ldap_auth_response["error_text"];
+					$user_auth = false;
 					$user = array();
 				}
-			}else{
-				/* Error intializing LDAP */
-				auth_display_custom_error_message("Unable to initialize LDAP connection.");
-				exit;
 			}
+
 		}
 
 	case "1":
