@@ -1,0 +1,7 @@
+0.8.6c
+-feature: Added some compiler directives for better compatibility with cygwin.
+-feature: Added MySQL connection timeout and retry logic.
+-bug: Increased the default script timeout from 5 to 10 seconds.
+-bug: Changed the stdout log format to consume less space.
+-bug: Removed a cygwin workaround that was causing problems under Windows.
+-bug: Increased the BUFSIZE and LOGSIZE constants.
