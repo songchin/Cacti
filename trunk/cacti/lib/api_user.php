@@ -209,7 +209,7 @@ function api_user_changepassword($user_id, $password_new, $password_old="") {
 function api_user_remove($user_id) {
 
 	if (!empty($user_id)) {
-		if ($user_id != 1) {
+		if (($user_id != 1) && (is_numeric($user_id))) {
 			db_execute("delete from user_auth where id = '" . $user_id . "'");
 			db_execute("delete from user_auth_realm where user_id = '" . $user_id . "'");
 			db_execute("delete from user_auth_perms where user_id = '" . $user_id . "'");
@@ -222,7 +222,7 @@ function api_user_remove($user_id) {
    @arg $user_id - user id */
 function api_user_enable($user_id) {
 	if (!empty($user_id)) {
-		if ($user_id != 1) {
+		if (($user_id != 1) && (is_numeric($user_id))) {
 			db_execute("update user_auth set enabled = 1 where id=" . $user_id);
 		}
 	}
@@ -232,7 +232,7 @@ function api_user_enable($user_id) {
    @arg $user_id - user id */
 function api_user_disable($user_id) {
 	if (!empty($user_id)) {
-		if ($user_id != 1) {
+		if (($user_id != 1) && (is_numeric($user_id))) {
 			db_execute("update user_auth set enabled = 0 where id=" . $user_id);
 		}
 	}
@@ -243,10 +243,12 @@ function api_user_disable($user_id) {
    @arg $interval - integer, the number of days */
 function api_user_expire_length_set($user_id, $interval) {
 	if (!empty($user_id)) {
-		$user = array();
-		$user["id"] = $user_id;
-		$user["password_expire_length"] = $interval;
-		api_user_save($user);	
+		if (is_numeric($user_id)) {
+			$user = array();
+			$user["id"] = $user_id;
+			$user["password_expire_length"] = $interval;
+			api_user_save($user);
+		}
 	}
 }
 
@@ -346,6 +348,10 @@ function api_user_realms_list($user_id) {
 	if (empty($user_id)) {
 		$user_id = "0";
 	}
+
+	if (!is_numeric($user_id)) {
+		$user_id = "0";
+	}
 	/* prevent array sqaushing */	
 	$user_auth_realms_local = $user_auth_realms;
 
@@ -374,13 +380,14 @@ function api_user_realms_save($user_id,$array) {
 
 	/* validate */
 	if (!empty($user_id)) {
-
-		/* remove any existing permissions */
-		db_execute("delete from user_auth_realm where user_id = '" . $user_id . "'");
+		if (is_numeric($user_id)) {
+			/* remove any existing permissions */
+			db_execute("delete from user_auth_realm where user_id = '" . $user_id . "'");
 		
-		/* insert the new permission */
-		foreach($array as $realm_id) {
-			db_execute("replace into user_auth_realm (user_id,realm_id) values ('" . $user_id . "','" . $realm_id . "')");
+			/* insert the new permission */
+			foreach($array as $realm_id) {
+				db_execute("replace into user_auth_realm (user_id,realm_id) values ('" . $user_id . "','" . $realm_id . "')");
+			}
 		}
 	}
 
@@ -405,9 +412,11 @@ function api_user_graph_setting_list($user_id) {
 	/* Get settings from database */
 	$user_settings = array();
 	if (!empty($user_id)) {
-		$setting = db_fetch_assoc("select name,value from settings_graphs where user_id = '" . $user_id . "'");
-		while (list($record, $fields) = each($setting)) {
-			$user_settings[$fields["name"]] = $fields["value"];	
+		if (is_numeric($user_id)) {
+			$setting = db_fetch_assoc("select name,value from settings_graphs where user_id = '" . $user_id . "'");
+			while (list($record, $fields) = each($setting)) {
+				$user_settings[$fields["name"]] = $fields["value"];	
+			}
 		}
 	}
 
@@ -457,6 +466,10 @@ function api_user_graph_setting_save($user_id,$array) {
 		return 1;
 	}
 
+	if (! is_numeric($user_id)) {
+		return 1;
+	}
+
 	/* build array of values */
 	$return_array = array();
 
@@ -496,6 +509,9 @@ function api_user_graph_perms_list($type,$user_id) {
 
 	/* validation */
 	if (empty($user_id)) {
+		$user_id = 0;
+	}
+	if (! is_numeric($user_id)) {
 		$user_id = 0;
 	}
 
@@ -566,7 +582,7 @@ function api_user_graph_perms_add($type,$user_id,$item_id) {
 	global $graph_perms_type_array;
 
 	/* validation */
-	if ((!empty($graph_perms_type_array[$type])) && (!empty($user_id)) && (!empty($item_id))) {
+	if ((!empty($graph_perms_type_array[$type])) && (!empty($user_id)) && (!empty($item_id) && (is_numeric($user_id)) && (is_numeric($item_id)))) {
 		db_execute("replace into user_auth_perms (user_id,item_id,type) values ('" . $user_id . "','" . $item_id . "','" . $graph_perms_type_array[$type] . "')");
 	}
 
@@ -580,7 +596,7 @@ function api_user_graph_perms_remove($type,$user_id,$item_id) {
 	global $graph_perms_type_array;
 	
 	/* validation */
-	if ((!empty($graph_perms_type_array[$type])) && (!empty($user_id)) && (!empty($item_id))) {
+	if ((!empty($graph_perms_type_array[$type])) && (!empty($user_id)) && (!empty($item_id)  && (is_numeric($user_id)) && (is_numeric($item_id)))) {
 		db_execute("delete from user_auth_perms where type = '" . $graph_perms_type_array[$type] . "' and user_id = '" . $user_id . "' and item_id = '" . $item_id . "'");
 	}
 
