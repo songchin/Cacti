@@ -698,42 +698,9 @@ $fields_host_edit = array(
 		"default" => PING_UDP,
 		"array" => $ping_methods
 		),
-	"spacer2" => array(
+	"spacer15" => array(
 		"method" => "spacer",
-		"friendly_name" => "SNMP Options"
-		),
-	"snmp_community" => array(
-		"method" => "textbox",
-		"friendly_name" => "SNMP Community",
-		"description" => "Fill in the SNMP read community for this device.",
-		"value" => "|arg1:snmp_community|",
-		"form_id" => "|arg1:id|",
-		"default" => read_config_option("snmp_community"),
-		"max_length" => "100"
-		),
-	"snmp_username" => array(
-		"method" => "hidden",
-		"friendly_name" => "SNMP Username",
-		"description" => "Fill in the SNMP username for this device (v3).",
-		"value" => "|arg1:snmp_username|",
-		"default" => read_config_option("snmp_username"),
-		"max_length" => "50"
-		),
-	"snmp_password" => array(
-		"method" => "hidden",
-		"friendly_name" => "SNMP Password",
-		"description" => "Fill in the SNMP password for this device (v3).",
-		"value" => "|arg1:snmp_password|",
-		"default" => read_config_option("snmp_password"),
-		"max_length" => "50"
-		),
-	"snmp_version" => array(
-		"method" => "drop_array",
-		"friendly_name" => "SNMP Version",
-		"description" => "Choose the SNMP version for this host.",
-		"value" => "|arg1:snmp_version|",
-		"default" => read_config_option("snmp_ver"),
-		"array" => $snmp_versions
+		"friendly_name" => "SNMP Generic Options"
 		),
 	"snmp_port" => array(
 		"method" => "textbox",
@@ -752,6 +719,66 @@ $fields_host_edit = array(
 		"max_length" => "8",
 		"default" => read_config_option("snmp_timeout"),
 		"size" => "15"
+		),
+	"snmp_version" => array(
+		"method" => "drop_array",
+		"friendly_name" => "SNMP Version",
+		"description" => "Choose the SNMP version for this host.",
+		"value" => "|arg1:snmp_version|",
+		"default" => read_config_option("snmp_ver"),
+		"array" => $snmp_versions
+		),
+	"spacer2" => array(
+		"method" => "spacer",
+		"friendly_name" => "SNMP v1/v2c Option"
+		),
+	"snmp_community" => array(
+		"method" => "textbox",
+		"friendly_name" => "SNMP Community",
+		"description" => "Fill in the SNMP read community for this device.",
+		"value" => "|arg1:snmp_community|",
+		"form_id" => "|arg1:id|",
+		"default" => read_config_option("snmp_community"),
+		"max_length" => "100"
+		),
+	"spacer3" => array(
+		"method" => "spacer",
+		"friendly_name" => "SNMP v3 Options"
+		),
+	"snmpv3_auth_username" => array(
+		"friendly_name" => "Username",
+		"description" => "The default SNMP v3 username.",
+		"method" => "textbox",
+		"default" => "",
+		"max_length" => "100",
+		),
+	"snmpv3_auth_passphrase" => array(
+		"friendly_name" => "Password",
+		"description" => "The default SNMP v3 password.",
+		"method" => "textbox_password",
+		"default" => "",
+		"max_length" => "100",
+		),
+	"snmpv3_auth_protocol" => array(
+		"friendly_name" => "Authentication Protocol",
+		"description" => "Select the default SNMP v3 authentication protocol to use.",
+		"method" => "drop_array",
+		"default" => "MD5",
+		"array" => $snmpv3_auth_protocol,
+		),
+	"snmpv3_priv_passphrase" => array(
+		"friendly_name" => "Privacy Passphrase",
+		"description" => "The default SNMP v3 privacy passphrase.",
+		"method" => "textbox_password",
+		"default" => "",
+		"max_length" => "100",
+		),
+	"snmpv3_priv_protocol" => array(
+		"friendly_name" => "Privacy Protocol",
+		"description" => "Select the default SNMP v3 privacy protocol to use.",
+		"method" => "drop_array",
+		"default" => "DES",
+		"array" => $snmpv3_priv_protocol,
 		),
 	"id" => array(
 		"method" => "hidden_zero",
