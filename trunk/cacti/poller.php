@@ -105,7 +105,7 @@ if ($poller_id == 0) {
 	   	db_execute("update poller set run_state = 'Timeout' where poller_id=" . $poller_id);
 			exit;
 		}
-		sleep(2);
+		sleep(1);
 	}
 
 	/* get total number of polling items from the database for the specified poller */
