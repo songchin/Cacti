@@ -484,6 +484,7 @@ char *exec_poll(host_t *current_host, char *command) {
 	int return_value;
 	int bytes_read;
 	char logmessage[LOGSIZE];
+	char *win32_command;
 
 	fd_set fds;
 	int rescode, numfds;
