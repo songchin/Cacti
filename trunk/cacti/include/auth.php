@@ -44,7 +44,7 @@ if (read_config_option("auth_method") != "0") {
 			if (!empty($guest_user_id)) {
 				$_SESSION["sess_user_id"] = $guest_user_id;
 			}
-			api_syslog_cacti_log("AUTH: Guest access enabled, using username \'" . $user["username"] . "\' as guest", SEV_INFO, 0, 0, 0, false, FACIL_AUTH);
+			api_syslog_cacti_log("AUTH: Guest access enabled, using username '" . $user["username"] . "' as guest", SEV_INFO, 0, 0, 0, false, FACIL_AUTH);
 		}
 	}
 
