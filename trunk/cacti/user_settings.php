@@ -64,7 +64,7 @@ function save() {
 }
 
 /* --------------------------
-    Graph Settings Functions
+    User Settings Functions
    -------------------------- */
 
 function settings() {
@@ -76,7 +76,6 @@ function settings() {
 		display_output_messages();
 		return;
 	}
-
 
 	print "<form method='post'>\n";
 
@@ -132,6 +131,7 @@ function settings() {
 
 	form_hidden_box("save_component_user_config","1","");
 	form_save_button((isset($_SERVER["HTTP_REFERER"]) ? $_SERVER["HTTP_REFERER"] : "index.php"), "save");
+
 }
 
 ?>
