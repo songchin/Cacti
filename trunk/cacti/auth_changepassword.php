@@ -37,7 +37,10 @@ if (!isset($_REQUEST["action"])) { $_REQUEST["action"] = ""; }
 switch ($_REQUEST["action"]) {
 case 'changepassword':
 	if (($_POST["password"] == $_POST["confirm"]) && ($_POST["password"] != "")) {
-		db_execute("insert into user_log (username,result,ip) values('" . $user["username"] . "',3,'" . $_SERVER["REMOTE_ADDR"] . "')");
+		/* Log password change */
+		db_execute("insert into user_log (user_id,username,time,result,ip) values('" . $_SESSION["sess_user_id"] . "','" . $user["username"] . "',NOW(),3,'" . $_SERVER["REMOTE_ADDR"] . "')");
+
+		/* update database */
 		db_execute("update user_auth set must_change_password='',password='" . md5($_POST["password"]) . "' where id=" . $_SESSION["sess_user_id"]);
 		
 		kill_session_var("sess_change_password");

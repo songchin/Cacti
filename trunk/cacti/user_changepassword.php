@@ -53,7 +53,9 @@ function change_password() {
 			if ($change_result == "0") {
 				/* Password changed successfully */
 				raise_message(11);
-				$_SESSION["sess_messages"]["11"] = "11";
+				/* Log password change */
+				$username = db_fetch_cell("select username from user_auth where id=" . $_SESSION["sess_user_id"]);
+				db_execute("insert into user_log (user_id,username,time,result,ip) values('" . $_SESSION["sess_user_id"] . "','" . $username . "',NOW(),3,'" . $_SERVER["REMOTE_ADDR"] . "')");
 			}elseif ($change_result == "2") {
 				/* Authentication failure for old password */
 				raise_message(8);
