@@ -91,6 +91,8 @@ function change_password() {
 function change_password_form() {
 	global $colors;
 
+	$user = api_user_info( array( "id" => $_SESSION["sess_user_id"]) );
+
 	$user_realms = api_user_realms_list($_SESSION["sess_user_id"]);
 
 	$form_fields = array (
@@ -116,7 +118,7 @@ function change_password_form() {
 
 	/* check if authorized */
 	if ($user_realms["18"]["value"] == "1") {
-		if (read_config_option("auth_method") == "1") {
+		if ((read_config_option("auth_method") == "1") || (($current_user["realm"] == "0") && (read_config_option("auth_method") == "3"))) {
 			/* Builtin auth method, password can be changed */
 			html_start_box("<strong>Change Password</strong>", "98%", $colors["header_background"], "3", "center", "");
 			draw_edit_form(array(
