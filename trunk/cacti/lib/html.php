@@ -103,7 +103,7 @@ function html_graph_area(&$graph_array, $no_graphs_message = "", $extra_url_args
 							<td>
 								<a href='graph.php?local_graph_id=<?php print $graph["local_graph_id"];?>&rra_id=all'><img src='graph_image.php?local_graph_id=<?php print $graph["local_graph_id"];?>&rra_id=0<?php print (($extra_url_args == "") ? "" : "&$extra_url_args");?>' border='0' alt='<?php print $graph["title_cache"];?>'></a>
 							</td>
-							<td valign='top' style='padding: 3px;'>
+							<td valign='top' style='padding: 3px;' class='noprint'>
 								<a href='graph.php?action=zoom&local_graph_id=<?php print $graph["local_graph_id"];?>&rra_id=0&<?php print $extra_url_args;?>'><img src='images/graph_zoom.gif' border='0' alt='Zoom Graph' title='Zoom Graph' style='padding: 3px;'></a><br>
 							</td>
 						</tr>
