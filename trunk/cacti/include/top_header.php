@@ -33,7 +33,7 @@ $current_user = api_user_info( array("id" => $_SESSION["sess_user_id"]) );
 <head>
 	<link rel='shortcut icon' href='<?php print html_get_theme_images_path("favicon.ico");?>' type='image/x-icon'>
 	<script type="text/javascript" src="include/layout.js"></script>
-	<title>cacti</title>
+	<title>Cacti</title>
 	<link href='<?php print html_get_theme_css();?>' rel='stylesheet'>
 	<link href='<?php print html_get_theme_images_path("favicon.ico");?>' rel='image/x-icon'>
 </style>
@@ -73,8 +73,8 @@ $current_user = api_user_info( array("id" => $_SESSION["sess_user_id"]) );
 							if (($expire_days != -1) && ($expire_days <= read_config_option("password_expire_warning"))) {
 						?>
 					<td align="right" class="textError">
-						Password expires in <?php print $expire_days; ?> days 
-					</td> 
+						Password expires in <?php print $expire_days; ?> days
+					</td>
 						<?php } } ?>
 					<td align="right">
 						<?php if (read_config_option("auth_method") != "0") { ?>

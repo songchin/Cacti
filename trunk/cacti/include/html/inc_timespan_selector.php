@@ -43,7 +43,7 @@
 	}
 </script>
 
-	<tr bgcolor="<?php print $colors["panel"];?>" class="noprint">
+	<tr bgcolor="<?php print $colors["filter_background"];?>" class="noprint">
 		<form name="form_timespan_selector" method="post">
 		<td>
 			<table width="100%" cellpadding="0" cellspacing="0">

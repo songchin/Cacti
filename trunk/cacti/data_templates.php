@@ -306,7 +306,7 @@ function form_actions() {
 	}
 
 	print "	<tr>
-			<td align='right' bgcolor='#eaeaea'>
+			<td align='right' bgcolor='#" . $colors["buttonbar_background"] . "'>
 				<input type='hidden' name='action' value='actions'>
 				<input type='hidden' name='selected_items' value='" . (isset($ds_array) ? serialize($ds_array) : '') . "'>
 				<input type='hidden' name='drp_action' value='" . $_POST["drp_action"] . "'>
@@ -440,7 +440,13 @@ function template_edit() {
 
 				foreach ($template_data_rrds as $template_data_rrd) {
 					$i++;
-					print "	<td " . (($template_data_rrd["id"] == $_GET["view_rrd"]) ? "bgcolor='silver'" : "bgcolor='#DFDFDF'") . " nowrap='nowrap' width='" . ((strlen($template_data_rrd["data_source_name"]) * 9) + 50) . "' align='center' class='tab'>
+               if ($template_data_rrd["id"] == $_GET["view_rrd"]) {
+						$background = $colors["form_alternate1"];
+					} else {
+						$background = $colors["form_alternate2"];
+					}
+
+					print "	<td bgcolor='#" . $background . "' nowrap='nowrap' width='" . ((strlen($template_data_rrd["data_source_name"]) * 9) + 50) . "' align='center' class='tab'>
 							<span class='textHeader'><a href='data_templates.php?action=template_edit&id=" . $_GET["id"] . "&view_rrd=" . $template_data_rrd["id"] . "'>$i: " . $template_data_rrd["data_source_name"] . "</a> <a href='data_templates.php?action=rrd_remove&id=" . $template_data_rrd["id"] . "&data_template_id=" . $_GET["id"] . "'><img src='" . html_get_theme_images_path("delete_icon.gif") . "' border='0' alt='Delete'></a></span>
 						</td>\n
 						<td width='1'></td>\n";

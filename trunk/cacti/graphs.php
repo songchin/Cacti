@@ -442,7 +442,7 @@ function form_actions() {
 	}
 
 	print "	<tr>
-			<td align='right' bgcolor='#eaeaea'>
+			<td align='right' bgcolor='#" . $colors["buttonbar_background"] . "'>
 				<input type='hidden' name='action' value='actions'>
 				<input type='hidden' name='selected_items' value='" . (isset($graph_array) ? serialize($graph_array) : '') . "'>
 				<input type='hidden' name='drp_action' value='" . $_POST["drp_action"] . "'>
