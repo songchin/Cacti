@@ -345,9 +345,9 @@ $menu = array(
 		"templates_export.php" => "Export Templates"
 		),
 	"Configuration"  => array(
-		"settings.php" => "Settings",
-		"settings_wizard.php" => "Wizard",
-		"user_settings.php" => "My (User) Settings"
+		"settings.php" => "System Settings",
+		"user_settings.php" => "User Settings",
+		"settings_wizard.php" => "Setup Wizard"
 		),
 	"Utilities" => array(
 		"utilities.php" => "System Utilities",
@@ -375,7 +375,7 @@ $user_auth_realms = array(
 	16 => "Export Data",
 	17 => "Import Data",
 	18 => "Change Password",
-	19 => "My (User) Settings"
+	19 => "User Settings"
 	);
 
 $user_auth_realm_filenames = array(
