@@ -29,7 +29,8 @@ int read_cactid_config(char *file, config_t * set);
 void config_defaults(config_t *);
 
 /* Cacti logging utilities */
-void cacti_log(char *logmessage);
+void cacti_log(char *logmessage, int severity, int host);
+char *get_severity(int severity);
 
 /* Number validation tools */
 int is_numeric(char *string);
