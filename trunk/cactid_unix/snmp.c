@@ -169,11 +169,11 @@ void snmp_host_init(host_t *current_host) {
 	        cacti_log("ERROR: SNMP: Error generating SNMPv3 Ku from authentication pass phrase.\n");
 		}
 		/* set the privacy key to the correct hashed version */
-		if (!strcmp(current_host->snmpv3_priv_protocol,"[None]")) {
+		if (strcmp(current_host->snmpv3_priv_protocol,"[None]") != 0) {
 		    if (generate_Ku(session.securityAuthProto, 
 							session.securityAuthProtoLen,
-							(u_char *) current_host->snmpv3_auth_password,
-							strlen(current_host->snmpv3_auth_password),
+							(u_char *) current_host->snmpv3_priv_passphrase,
+							strlen(current_host->snmpv3_priv_passphrase),
 	            	        session.securityPrivKey,
 	                	    &session.securityPrivKeyLen) != SNMPERR_SUCCESS) {
 		        cacti_log("ERROR: SNMP: Error generating SNMPv3 Ku from privacy pass phrase.\n");
