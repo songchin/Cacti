@@ -86,6 +86,7 @@ void snmp_host_init(host_t *current_host) {
 
 	session.peername = hostname;
 	session.retries = 3;
+	session.remote_port = current_host->snmp_port;
 	session.timeout = (current_host->snmp_timeout * 1000); /* net-snmp likes microseconds */
 
 	if ((current_host->snmp_version == 2) || (current_host->snmp_version == 1)) {
