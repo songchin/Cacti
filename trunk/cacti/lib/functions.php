@@ -905,6 +905,8 @@ function get_browser_query_string() {
    @returns - (array) an array containing a list of graph trees */
 function get_graph_tree_array($return_sql = false, $force_refresh = false) {
 
+	$result = array();
+
 	/* set the tree update time if not already set */
 	if (!isset($_SESSION["tree_update_time"])) {
 		$_SESSION["tree_update_time"] = time();
@@ -935,16 +937,17 @@ function get_graph_tree_array($return_sql = false, $force_refresh = false) {
 			$sql = "select * from graph_tree order by name";
 		}
 
-		$_SESSION["tree_array"] = $sql;
+		$result = db_fetch_assoc($sql);
+		$_SESSION["tree_array"] = $result;
 		$_SESSION["tree_update_time"] = time();
 	} else {
-		$sql = $_SESSION["tree_array"];
+		$result = $_SESSION["tree_array"];
 	}
 
 	if ($return_sql == true) {
 		return $sql;
 	}else{
-		return db_fetch_assoc($sql);
+		return $result;
 	}
 }
 
