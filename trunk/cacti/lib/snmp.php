@@ -36,7 +36,7 @@ if ($config["cacti_server_os"] == "unix") {
 	define("SNMP_ESCAPE_CHARACTER", "\"");
 }
 
-function cacti_snmp_get($hostname, $community, $oid, $version, $v3username, $v3password, $v3authproto, $v3privpassphrase, $v3privproto, $port = 161, $timeout = 500, $environ = SNMP_POLLER) {
+function cacti_snmp_get($hostname, $community, $oid, $version, $v3username, $v3password, $v3authproto = "", $v3privpassphrase = "", $v3privproto = "", $port = 161, $timeout = 500, $environ = SNMP_POLLER) {
 	global $config;
 
 	/* determine default retries */
@@ -57,6 +57,8 @@ function cacti_snmp_get($hostname, $community, $oid, $version, $v3username, $v3p
 
 		if ($version == "1") {
 			$snmp_value = @snmpget("$hostname:$port", $community, trim($oid), ($timeout * 1000), $retries);
+		} else if ($version == "2") {
+			$snmp_value = @snmp2_get("$hostname:$port", $community, $oid, ($timeout * 1000), $retries);
 		} else {
 			$snmp_value = @snmp3_get("$hostname:$port", $v3username, snmp_get_v3authpriv($v3privproto), $v3authproto,
 				$v3password, $v3privproto, $v3privpassphrase, trim($oid), ($timeout * 1000), $retries);
@@ -67,10 +69,10 @@ function cacti_snmp_get($hostname, $community, $oid, $version, $v3username, $v3p
 
 		if ($version == "1") {
 			$snmp_auth = (read_config_option("snmp_version") == "ucd-snmp") ? SNMP_ESCAPE_CHARACTER . $community . SNMP_ESCAPE_CHARACTER : "-c " . SNMP_ESCAPE_CHARACTER . $community . SNMP_ESCAPE_CHARACTER; /* v1/v2 - community string */
-		}elseif ($version == "2") {
+		}else if ($version == "2") {
 			$snmp_auth = (read_config_option("snmp_version") == "ucd-snmp") ? SNMP_ESCAPE_CHARACTER . $community . SNMP_ESCAPE_CHARACTER : "-c " . SNMP_ESCAPE_CHARACTER . $community . SNMP_ESCAPE_CHARACTER; /* v1/v2 - community string */
 			$version = "2c"; /* ucd/net snmp prefers this over '2' */
-		}elseif ($version == "3") {
+		}else if ($version == "3") {
 			$snmp_auth = "-u $v3username -A $v3password -a $v3authproto -X $v3privpassphrase -x $v3privproto -l " . snmp_get_v3authpriv($v3privproto); /* v3 - username/password/etc... */
 		}
 
@@ -92,7 +94,7 @@ function cacti_snmp_get($hostname, $community, $oid, $version, $v3username, $v3p
 	return $snmp_value;
 }
 
-function cacti_snmp_walk($hostname, $community, $oid, $version, $v3username, $v3password, $v3authproto, $v3privpassphrase, $v3privproto, $port = 161, $timeout = 500, $environ = SNMP_POLLER) {
+function cacti_snmp_walk($hostname, $community, $oid, $version, $v3username, $v3password, $v3authproto = "", $v3privpassphrase = "", $v3privproto = "", $port = 161, $timeout = 500, $environ = SNMP_POLLER) {
 	global $config;
 
 	$snmp_array = array();
@@ -112,6 +114,8 @@ function cacti_snmp_walk($hostname, $community, $oid, $version, $v3username, $v3
 	if (snmp_get_method($version) == SNMP_METHOD_PHP) {
 		if ($version == "1") {
 			$temp_array = @snmpwalkoid("$hostname:$port", $community, trim($oid), ($timeout * 1000), $retries);
+		} else if ($version == "2") {
+			$temp_array = @snmp2_walk("$hostname:$port", $community, trim($oid), ($timeout * 1000), $retries);
 		} else {
 			$temp_array = @snmp3_real_walk("$hostname:$port", $v3username, snmp_get_v3authpriv($v3privproto), $v3authproto,
 				$v3password, $v3privproto, $v3privpassphrase, trim($oid), ($timeout * 1000), $retries);
@@ -198,14 +202,16 @@ function format_snmp_string($string) {
 function snmp_get_method($version = 1) {
 	if ((function_exists("snmp3_get")) && ($version == 3)) {
 		return SNMP_METHOD_PHP;
-	}else if ((function_exists("snmpget")) && ($version == 1)) {
+	}elseif ((function_exists("snmpget")) && ($version == 1)) {
 		return SNMP_METHOD_PHP;
-	}else if (($version == 2) && (file_exists(read_config_option("path_snmpget")))) {
+	}elseif ((function_exists("snmp2_get")) && ($version == 2)) {
+		return SNMP_METHOD_PHP;
+	}elseif (($version == 2) && (file_exists(read_config_option("path_snmpget")))) {
 		return SNMP_METHOD_BINARY;
-	}else if (function_exists("snmpget")) {
+	}elseif (function_exists("snmpget")) {
 		/* last resort (hopefully it isn't a 64-bit result) */
 		return SNMP_METHOD_PHP;
-	}else if (file_exists(read_config_option("path_snmpget"))) {
+	}elseif (file_exists(read_config_option("path_snmpget"))) {
 		return SNMP_METHOD_BINARY;
 	}else{
 		/* looks like snmp is broken */
