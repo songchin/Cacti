@@ -43,7 +43,7 @@ if (read_config_option("auth_method") != "0") {
 	/* Check if we are logged in, and process guest account if set, used by graph_view.php */
 	if ((isset($guest_account)) && (empty($_SESSION["sess_user_id"]))) {
 		if (read_config_option("guest_user") != "0") {
-			$user = api_user_info( array( "username" => read_config_option("guest_user") ) );
+			$user = api_user_info( array( "username" => read_config_option("guest_user"), "enabled" => "1" ) );
 			$guest_user_id = $user["id"];
 			if (!empty($guest_user_id)) {
 				$_SESSION["sess_user_id"] = $guest_user_id;
