@@ -54,16 +54,17 @@
 					</td>
 					<td width="1">
 						<select name="poller" onChange="applyFilterChange(document.form_syslog_id)">
-							<option value="ALL"<?php if ($_REQUEST["severity"] == "ALL") {?> selected<?php }?>>All</option>
+							<option value="ALL"<?php if ($_REQUEST["poller"] == "ALL") {?> selected<?php }?>>All</option>
+							<option value="0"<?php if ($_REQUEST["poller"] == "0") {?> selected<?php }?>>System</option>
 							<?php
 							$pollers = db_fetch_assoc("select id,name from poller order by name");
 
 							if ($pollers) {
 								foreach ($pollers as $poller) {
 									print "<option value=\"" . $poller['id'] . "\"";
-									if ($_REQUEST["poller"] == $poller["id"]) { 
-										print " selected"; 
-									} 
+									if ($_REQUEST["poller"] == $poller["id"]) {
+										print " selected";
+									}
 									print ">" . $poller["name"] . "</option>\n";
 								}
 							}
@@ -76,15 +77,16 @@
 					<td width="1">
 						<select name="host" onChange="applyFilterChange(document.form_syslog_id)">
 							<option value="ALL"<?php if ($_REQUEST["host"] == "ALL") {?> selected<?php }?>>All</option>
+							<option value="0"<?php if ($_REQUEST["host"] == "0") {?> selected<?php }?>>System</option>
 							<?php
 							$hosts = db_fetch_assoc("select id,description from host order by description");
 
 							if ($hosts) {
 								foreach ($hosts as $host) {
-									print "<option value=\"" . $host['id'] . "\""; 
-									if ($_REQUEST["host"] == $host["id"]) { 
-										print " selected"; 
-									} 
+									print "<option value=\"" . $host['id'] . "\"";
+									if ($_REQUEST["host"] == $host["id"]) {
+										print " selected";
+									}
 									print ">" . $host["description"] . "</option>\n";
 								}
 							}
