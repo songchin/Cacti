@@ -690,6 +690,9 @@ function draw_navigation_text() {
 		"email_templates.php:" => array("title" => "Coming Soon", "mapping" => "index.php:", "url" => "email_templates.php", "level" => "1"),
 		"event_queue.php:" => array("title" => "Coming Soon", "mapping" => "index.php:", "url" => "event_queue.php", "level" => "1"),
 		"smtp_queue.php:" => array("title" => "Coming Soon", "mapping" => "index.php:", "url" => "smtp_queue.php", "level" => "1"),
+		"data_pollers.php:" => array("title" => "Pollers", "mapping" => "index.php:", "url" => "data_pollers.php", "level" => "1"),
+		"data_pollers.php:edit" => array("title" => "(Edit)", "mapping" => "index.php:,data_pollers.php:", "url" => "", "level" => "2"),
+		"data_pollers.php:actions" => array("title" => "Actions", "mapping" => "index.php:,data_pollers.php:", "url" => "", "level" => "2"),
 		"user_changepassword.php:" => array("title" => "Change Password", "mapping" => "index.php:", "url" => "user_changepassword.php", "level" => "1"),
 		"user_changepassword.php:save" => array("title" => "Change Password", "mapping" => "index.php:", "url" => "user_changepassword.php", "level" => "1")
 		);
