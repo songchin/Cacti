@@ -403,10 +403,12 @@ function change_graph_template($local_graph_id, $graph_template_id, $intrusive) 
 	while (list($field_name, $field_array) = each($struct_graph)) {
 		$value_type = "t_$field_name";
 
-		if ((!empty($template_graph_list[$value_type])) && ($new_save == false)) {
-			$save[$field_name] = $graph_list[$field_name];
-		}else{
-			$save[$field_name] = $template_graph_list[$field_name];
+		if ($field_array["method"] <> "spacer") {
+			if ((!empty($template_graph_list[$value_type])) && ($new_save == false)) {
+				$save[$field_name] = $graph_list[$field_name];
+			}else{
+				$save[$field_name] = $template_graph_list[$field_name];
+			}
 		}
 	}
 
