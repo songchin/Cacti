@@ -30,6 +30,8 @@ results in some situations.
 -bug: Corrected user form edit array problem that didn't show the graph options for an edited user
 -feature#0000236: graph settings image link still show up even if user does not have rights
 -feature# 0000163: Link to login as guest
+-feature: Added new x and y grid settings and units length graph template options.
+-bug: Added unit value into RRD graph generation.  Was left off in previous versions.
 
 0.8.6
 -bug#0000118: Data source screen UI enhancements (0.8.5).

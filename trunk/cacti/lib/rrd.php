@@ -493,10 +493,15 @@ function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rr
 		graph_templates_graph.base_value,
 		graph_templates_graph.upper_limit,
 		graph_templates_graph.lower_limit,
+		graph_templates_graph.x_grid,
+		graph_templates_graph.y_grid,
+		graph_templates_graph.y_grid_alt,
+		graph_templates_graph.no_minor,
 		graph_templates_graph.height,
 		graph_templates_graph.width,
 		graph_templates_graph.image_format_id,
 		graph_templates_graph.unit_value,
+		graph_templates_graph.unit_length,
 		graph_templates_graph.unit_exponent_value,
 		graph_templates_graph.export
 		from graph_templates_graph,graph_local
@@ -532,6 +537,12 @@ function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rr
 	/* define some variables */
 	$scale = "";
 	$rigid = "";
+	$no_minor = "";
+	$y_grid = "";
+	$y_grid_alt = "";
+	$x_grid = "";
+	$unit_value = "";
+	$unit_legth = "";
 	$unit_exponent_value = "";
 	$graph_legend = "";
 	$graph_defs = "";
@@ -540,7 +551,7 @@ function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rr
 	$greatest_text_format = 0;
 	$last_graph_type = "";
 
-		if ($graph["auto_scale"] == "on") {
+	if ($graph["auto_scale"] == "on") {
 		if ($graph["auto_scale_opts"] == "1") {
 			$scale = "--alt-autoscale" . RRD_NL;
 		}elseif ($graph["auto_scale_opts"] == "2") {
@@ -558,6 +569,30 @@ function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rr
 
 	if ($graph["auto_scale_rigid"] == "on") {
 		$rigid = "--rigid" . RRD_NL;
+	}
+
+	if (!empty($graph["unit_value"])) {
+		$unit_value = "--unit=" . $graph["unit_value"] . RRD_NL;
+	}
+
+	if (!empty($graph["no_minor"])) {
+		$no_minor = "--no_minor" . RRD_NL;
+	}
+
+	if (!empty($graph["y_grid_alt"])) {
+		$y_grid_alt = "--alt-y-grid" . RRD_NL;
+	}
+
+	if (!empty($graph["y_grid"])) {
+		$y_grid = $graph["y_grid"] . RRD_NL;
+	}
+
+	if (!empty($grph["x_grid"])) {
+		$x_grid = $graph["x_grid"] . RRD_NL;
+	}
+
+	if (is_numeric($graph["unit_length"])) {
+		$unit_length = "--unit-length=" . $graph["unit_length"] . RRD_NL;
 	}
 
 	if (!empty($graph["unit_value"])) {
@@ -671,6 +706,12 @@ function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rr
 		"--height=$graph_height" . RRD_NL .
 		"--width=$graph_width" . RRD_NL .
 		"$scale" .
+		"$x_grid" .
+		"$y_grid" .
+		"$y_grid_alt" .
+		"$no_minor" .
+		"$unit_value" .
+		"$unit_length" .
 		"$unit_exponent_value" .
 		"$graph_legend" .
 		"--vertical-label=\"" . $graph["vertical_label"] . "\"" . RRD_NL;

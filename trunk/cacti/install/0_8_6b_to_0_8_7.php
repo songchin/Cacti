@@ -42,5 +42,10 @@ function upgrade_to_0_8_7() {
 	db_install_execute("0.8.7", "ALTER TABLE `poller_item` CHANGE `snmp_username` `snmpv3_auth_username` varchar(50), CHANGE `snmp_password` `snmpv3_auth_password` varchar(50);");
 	db_install_execute("0.8.7", "ALTER TABLE `poller_item` ADD `snmpv3_auth_protocol` varchar(5) AFTER `snmpv3_auth_password`, ADD `snmpv3_priv_passphrase` varchar(200) AFTER `snmpv3_auth_protocol`, ADD `snmpv3_priv_protocol` varchar(5) AFTER `snmpv3_priv_passphrase`;");
 	db_install_execute("0.8.7", "ALTER TABLE `user_auth` ADD `password_expire_length` int(4) unsigned NOT NULL default '0', ADD `password_change_last` datetime NOT NULL;");
+	db_install_execute("0.8.7", "ALTER TABLE `graph_templates_graph` ADD `t_x_grid` varchar(50) default '0' AFTER `width`, ADD `x_grid` varchar(50) default NULL AFTER `t_x_grid`;");
+	db_install_execute("0.8.7", "ALTER TABLE `graph_templates_graph` ADD `t_y_grid` varchar(50) default '0' AFTER `x_grid`, ADD `y_grid` varchar(50) default NULL AFTER `t_y_grid`;");
+	db_install_execute("0.8.7", "ALTER TABLE `graph_templates_graph` ADD `t_y_grid_alt` char(2) default '0' AFTER `y_grid`, ADD `y_grid_alt` char(2) default NULL AFTER `t_y_grid_alt`;");
+	db_install_execute("0.8.7", "ALTER TABLE `graph_templates_graph` ADD `t_no_minor` char(2) default '0' AFTER `y_grid_alt`, ADD `no_minor` char(2) default NULL AFTER `t_no_minor`;");
+	db_install_execute("0.8.7", "ALTER TABLE `graph_templates_graph` ADD `unit_length` smallint(5) default '0' AFTER `unit_value`, ADD `unit_length` smallint(5) default NULL AFTER `t_unit_lentgh`;");
 }
 ?>

@@ -101,6 +101,14 @@ function form_save() {
 		$save2["height"] = form_input_validate($_POST["height"], "height", "^[0-9]+$", false, 3);
 		$save2["t_width"] = form_input_validate((isset($_POST["t_width"]) ? $_POST["t_width"] : ""), "t_width", "", true, 3);
 		$save2["width"] = form_input_validate($_POST["width"], "width", "^[0-9]+$", false, 3);
+		$save2["t_x_grid"] = form_input_validate((isset($_POST["t_x_grid"]) ? $_POST["t_x_grid"] : ""), "t_x_grid", "", true, 3);
+		$save2["x_grid"] = form_input_validate((isset($_POST["x_grid"]) ? $_POST["x_grid"] : ""), "x_grid", "", true, 3);
+		$save2["t_y_grid"] = form_input_validate((isset($_POST["t_y_grid"]) ? $_POST["t_y_grid"] : ""), "t_y_grid", "", true, 3);
+		$save2["y_grid"] = form_input_validate((isset($_POST["y_grid"]) ? $_POST["y_grid"] : ""), "y_grid", "", true, 3);
+		$save2["t_y_grid_alt"] = form_input_validate((isset($_POST["t_y_grid_alt"]) ? $_POST["t_y_grid_alt"] : ""), "t_y_grid_alt", "", true, 3);
+		$save2["y_grid_alt"] = form_input_validate((isset($_POST["y_grid_alt"]) ? $_POST["y_grid_alt"] : ""), "y_grid_alt", "", true, 3);
+		$save2["t_no_minor"] = form_input_validate((isset($_POST["t_no_minor"]) ? $_POST["t_no_minor"] : ""), "t_no_minor", "", true, 3);
+		$save2["no_minor"] = form_input_validate((isset($_POST["no_minor"]) ? $_POST["no_minor"] : ""), "no_minor", "", true, 3);
 		$save2["t_upper_limit"] = form_input_validate((isset($_POST["t_upper_limit"]) ? $_POST["t_upper_limit"] : ""), "t_upper_limit", "", true, 3);
 		$save2["upper_limit"] = form_input_validate($_POST["upper_limit"], "upper_limit", "^-?[0-9]+$", false, 3);
 		$save2["t_lower_limit"] = form_input_validate((isset($_POST["t_lower_limit"]) ? $_POST["t_lower_limit"] : ""), "t_lower_limit", "", true, 3);
@@ -123,6 +131,8 @@ function form_save() {
 		$save2["export"] = form_input_validate((isset($_POST["export"]) ? $_POST["export"] : ""), "export", "", true, 3);
 		$save2["t_unit_value"] = form_input_validate((isset($_POST["t_unit_value"]) ? $_POST["t_unit_value"] : ""), "t_unit_value", "", true, 3);
 		$save2["unit_value"] = form_input_validate($_POST["unit_value"], "unit_value", "", true, 3);
+		$save2["t_unit_length"] = form_input_validate((isset($_POST["t_unit_length"]) ? $_POST["t_unit_length"] : ""), "t_unit_length", "", true, 3);
+		$save2["unit_length"] = form_input_validate($_POST["unit_length"], "unit_length", "^[0-9]+$", true, 3);
 		$save2["t_unit_exponent_value"] = form_input_validate((isset($_POST["t_unit_exponent_value"]) ? $_POST["t_unit_exponent_value"] : ""), "t_unit_exponent_value", "", true, 3);
 		$save2["unit_exponent_value"] = form_input_validate($_POST["unit_exponent_value"], "unit_exponent_value", "^-?[0-9]+$", true, 3);
 
