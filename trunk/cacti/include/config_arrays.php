@@ -201,6 +201,13 @@ $auth_methods = array(
 	2 => "Web Basic Authentication",
 	3 => "LDAP Authentication");
 
+$user_log_result = array(
+	0 => "Failure",
+	1 => "Success",
+	2 => "Unknown",
+	3 => "Password Changed",
+	4 => "Account Disabled");
+
 $snmp_implimentations = array(
 	"ucd-snmp" => "UCD-SNMP 4.x",
 	"net-snmp" => "NET-SNMP 5.x");
