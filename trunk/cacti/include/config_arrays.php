@@ -184,10 +184,7 @@ $snmpv3_auth_protocol = array(
 $snmpv3_priv_protocol = array(
 	"[None]" => "[None]",
 	"DES" => "DES (default)",
-	"AES" => "AES",
-	"AES128" => "AES128",
-	"AES192" => "AES192",
-	"AES256" => "AES256");
+	"AES128" => "AES");
 
 $syslog_options = array(
 	SYSLOG_CACTI => "Cacti Syslog Only",
