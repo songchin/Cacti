@@ -38,7 +38,7 @@ function db_connect_real($host,$user,$pass,$db_name,$db_type, $retries = 3) {
 	$i = 1;
 	while ($i <= $retries) {
 		$cnn_id = NewADOConnection($db_type);
-		if ($cnn_id->Connect($host,$user,$pass,$db_name)) {
+		if ($cnn_id->PConnect($host,$user,$pass,$db_name)) {
 			return(1);
 		}else{
 			die("<br>Cannot connect to MySQL server on '$host'. Please make sure you have specified a valid MySQL
