@@ -26,6 +26,18 @@
 
 include("./include/auth.php");
 
+/* settings */
+$wizard_array = array(
+	"auth" => array(
+		"friendly_name" => "Authenication",
+		"description" => "Authenication wizard aids you in setting up Cacti's Authenication system for your enviroment.",
+		"include" => "include/wizards/settings_auth.php"
+		),
+	"default" => "auth"
+	);
+
+
+
 /* set default action */
 if (!isset($_REQUEST["action"])) { $_REQUEST["action"] = ""; }
 
@@ -34,15 +46,48 @@ switch ($_REQUEST["action"]) {
 
 		break;
 	default:
-		include_once("include/top_header.php");
-
-
-		include_once("include/bottom_footer.php");
+		default_menu();
 		break;
 }
 
 
+function default_menu() {
 
+	$value_array = array("auth" => "Authenication");
+
+
+	$form_array = array(
+		"wizard" => array(
+			"method" => "drop_array",
+			"friendly_name" => "Settings Section",
+			"description" => "Please select the settings wizard you would like to run.",
+			"value" => "",
+			"array" => $value_array
+			),
+		"description" => array(
+			"method" => "",
+			"friendly_name" => "",
+			"description" => "",
+			"default" => "boo",
+			"value" => ""
+			)
+		);
+
+
+	include_once("include/top_header.php");
+
+	html_start_box("<strong>Settings Wizard</strong>", "98%", $colors["header_background"], "3", "center", "");
+
+	draw_edit_form( array( "fields" => $form_array ) );
+
+
+
+	html_end_box();
+
+	include_once("include/bottom_footer.php");
+
+
+}
 
 
 
