@@ -1,6 +1,6 @@
 <interface>
 	<name>Get Netware Processor Information</name>
-	<oid_index>.1.3.6.1.4.1.23.2.27.3.16.1 </oid_index>
+	<oid_index>.1.3.6.1.4.1.23.2.27.3.16.1</oid_index>
 	<index_order>nwhrProcessorNum:nwhrProcessorIndex</index_order>
 	<index_order_type>numeric</index_order_type>
 	<index_title_format>CPU#|chosen_order_field|</index_title_format>
