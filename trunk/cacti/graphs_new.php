@@ -419,7 +419,7 @@ function graphs() {
 
 	print "	<tr bgcolor='#" . $colors["header_panel_background"] . "'>
 			<td class='textSubHeaderDark'>Graph Template Name</td>
-			<td width='1%' align='center' bgcolor='#819bc0' style='" . get_checkbox_style() . "'><input type='checkbox' style='margin: 0px;' name='all_cg' title='Select All' onClick='SelectAll(\"cg\",this.checked);gt_update_selection_indicators();'></td>\n
+			<td width='1%' align='center' bgcolor='#" . $colors["header_panel_background"] . "' style='" . get_checkbox_style() . "'><input type='checkbox' style='margin: 0px;' name='all_cg' title='Select All' onClick='SelectAll(\"cg\",this.checked);gt_update_selection_indicators();'></td>\n
 		</tr>\n";
 
 	$graph_templates = db_fetch_assoc("select
@@ -461,7 +461,7 @@ function graphs() {
 	foreach ($graph_templates as $graph_template) {
 		$query_row = $graph_template["graph_template_id"];
 
-		print "<tr id='gt_line$query_row' bgcolor='#" . (($i % 2 == 0) ? "ffffff" : $colors["form_alternate2"]) . "'>"; $i++;
+		print "<tr id='gt_line$query_row' bgcolor='#" . (($i % 2 == 0) ? $colors["form_alternate1"] : $colors["form_alternate2"]) . "'>"; $i++;
 
 		print "		<td" . (($use_javascript == true) ? " onClick='gt_select_line(" . $graph_template["graph_template_id"] . ");'" : "") . "><span id='gt_text$query_row" . "_0'>
 					<span id='gt_text$query_row" . "_0'><strong>Create:</strong> " . $graph_template["graph_template_name"] . "</span>
@@ -496,7 +496,7 @@ function graphs() {
 	$available_graph_templates = $keeper;
 
 	/* create a row at the bottom that lets the user create any graph they choose */
-	print "	<tr bgcolor='#" . (($i % 2 == 0) ? "ffffff" : $colors["form_alternate2"]) . "'>
+	print "	<tr bgcolor='#" . (($i % 2 == 0) ? $colors["form_alternate1"] : $colors["form_alternate2"]) . "'>
 			<td colspan='2' width='60' nowrap>
 				<strong>Create:</strong>&nbsp;";
 				form_dropdown("cg_g", $available_graph_templates, "name", "id", "", "(Select a graph type to create)", "", "font-size: 10px;");
@@ -646,7 +646,7 @@ function graphs() {
 			}else{
 				print "	<tr bgcolor='#" . $colors["header_panel_background"] . "'>
 						$html_dq_header
-						<td width='1%' align='center' bgcolor='#819bc0' style='" . get_checkbox_style() . "'><input type='checkbox' style='margin: 0px;' name='all_" . $snmp_query["id"] . "' title='Select All' onClick='SelectAll(\"sg_" . $snmp_query["id"] . "\",this.checked);" . (($use_javascript == true) ? "dq_update_selection_indicators();" : "") . "'></td>\n
+						<td width='1%' align='center' bgcolor='#" . $colors["header_panel_background"] . "' style='" . get_checkbox_style() . "'><input type='checkbox' style='margin: 0px;' name='all_" . $snmp_query["id"] . "' title='Select All' onClick='SelectAll(\"sg_" . $snmp_query["id"] . "\",this.checked);" . (($use_javascript == true) ? "dq_update_selection_indicators();" : "") . "'></td>\n
 					</tr>\n";
 			}
 
@@ -655,7 +655,7 @@ function graphs() {
 			while (list($id, $snmp_index) = each($snmp_query_indexes)) {
 				$query_row = $snmp_query["id"] . "_" . encode_data_query_index($snmp_index);
 
-				print "<tr id='line$query_row' bgcolor='#" . (($row_counter % 2 == 0) ? "ffffff" : $colors["form_alternate2"]) . "'>"; $i++;
+				print "<tr id='line$query_row' bgcolor='#" . (($row_counter % 2 == 0) ? $colors["form_alternate1"] : $colors["form_alternate2"]) . "'>"; $i++;
 
 				$column_counter = 0;
 				reset($xml_array["fields"]);

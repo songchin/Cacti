@@ -533,7 +533,7 @@ function host_edit() {
 			$is_being_graphed = (sizeof(db_fetch_assoc("select id from graph_local where graph_template_id=" . $item["id"] . " and host_id=" . $_GET["id"])) > 0) ? true : false;
 
 			?>
-			<tr>
+			<tr bgcolor='#<?php print $colors["form_alternate1"];?>'>
 				<td style="padding: 4px;">
 					<strong><?php print $i;?>)</strong> <?php print $item["name"];?>
 				</td>
@@ -549,7 +549,7 @@ function host_edit() {
 		}else{ print "<tr><td><em>No associated graph templates.</em></td></tr>"; }
 
 		?>
-		<tr bgcolor="#<?php print $colors["form_alternate1"];?>">
+		<tr bgcolor="#<?php print $colors["buttonbar_background"];?>">
 			<td colspan="4">
 				<table cellspacing="0" cellpadding="1" width="100%">
 					<td nowrap>Add Graph Template:&nbsp;
@@ -609,7 +609,7 @@ function host_edit() {
 			$status = "success";
 
 			?>
-			<tr>
+			<tr bgcolor='#<?php print $colors["form_alternate1"];?>'>
 				<td style="padding: 4px;">
 					<strong><?php print $i;?>)</strong> <?php print $item["name"];?>
 				</td>
@@ -632,7 +632,7 @@ function host_edit() {
 		}else{ print "<tr><td><em>No associated data queries.</em></td></tr>"; }
 
 		?>
-		<tr bgcolor="#<?php print $colors["form_alternate1"];?>">
+		<tr bgcolor="#<?php print $colors["buttonbar_background"];?>">
 			<td colspan="5">
 				<table cellspacing="0" cellpadding="1" width="100%">
 					<td nowrap>Add Data Query:&nbsp;
