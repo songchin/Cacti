@@ -1054,6 +1054,13 @@ $fields_user_user_edit_host = array(
 				)
 			)
 		),
+	"enabled" => array(
+		"method" => "drop_array",
+		"friendly_name" => "Status",
+		"description" => "User status, enabled or disabled.",
+		"value" => "|arg1:enabled|",
+		"array" => array(1 => "Enabled", 0 => "Disabled"),
+		),
 	"id" => array(
 		"method" => "hidden_zero",
 		"value" => "|arg1:id|"
