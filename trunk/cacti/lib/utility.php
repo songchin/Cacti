@@ -129,6 +129,8 @@ function update_poller_cache($local_data_id, $truncate_performed = false) {
 					or data_input_fields.type_code='snmpv3_priv_protocol'
 					or data_input_fields.type_code='snmp_version'
 					or data_input_fields.type_code='snmp_port'
+					or data_input_fields.type_code='availability_method'
+					or data_input_fields.type_code='ping_method'
 					or data_input_fields.type_code='snmp_timeout')
 				and data_input_data.value != ''"), "type_code", "value");
 
