@@ -116,7 +116,9 @@ function form_save() {
 	if ((isset($_POST["save_component_host"])) && (empty($_POST["add_dq_y"]))) {
 		$host_id = api_device_save($_POST["id"], $_POST["poller_id"], $_POST["host_template_id"], $_POST["description"], $_POST["hostname"],
 			$_POST["snmp_community"], $_POST["snmp_version"], $_POST["snmpv3_auth_username"], $_POST["snmpv3_auth_password"],
-			$_POST["snmp_port"], $_POST["snmp_timeout"], (isset($_POST["disabled"]) ? $_POST["disabled"] : ""));
+			$_POST["snmpv3_auth_protocol"], $_POST["snmpv3_priv_passphrase"], $_POST["snmpv3_priv_protocol"],
+			$_POST["snmp_port"], $_POST["snmp_timeout"], $_POST["availability_method"], $_POST["ping_method"],
+			(isset($_POST["disabled"]) ? $_POST["disabled"] : ""));
 
 		if ((is_error_message()) || ($_POST["host_template_id"] != $_POST["_host_template_id"])) {
 			header("Location: host.php?action=edit&id=" . (empty($host_id) ? $_POST["id"] : $host_id));
@@ -268,7 +270,7 @@ function form_actions() {
 				</tr>";
 				$form_array = array();
 				while (list($field_name, $field_array) = each($fields_host_edit)) {
-					if (ereg("^snmp_", $field_name)) {
+					if ((ereg("^snmp_", $field_name)) || (ereg("^snmpv3_", $field_name))) {
 						$form_array += array($field_name => $fields_host_edit[$field_name]);
 
 						$form_array[$field_name]["value"] = "";

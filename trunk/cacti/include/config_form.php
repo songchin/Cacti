@@ -688,12 +688,14 @@ $fields_host_edit = array(
 		"method" => "drop_array",
 		"friendly_name" => "Availability Method",
 		"description" => "Choose the availability method to use for this host.",
+		"value" => "|arg1:availability_method|",
 		"default" => AVAIL_SNMP,
 		"array" => $availability_options
 		),
 	"ping_method" => array(
 		"friendly_name" => "Ping Type",
 		"description" => "The type of ping packet to sent.  NOTE: ICMP requires that the Cacti Service ID have root privilages in Unix.",
+		"value" => "|arg1:ping_method|",
 		"method" => "drop_array",
 		"default" => PING_UDP,
 		"array" => $ping_methods
@@ -746,39 +748,44 @@ $fields_host_edit = array(
 		"friendly_name" => "SNMP v3 Options"
 		),
 	"snmpv3_auth_username" => array(
+		"method" => "textbox",
 		"friendly_name" => "Username",
 		"description" => "The default SNMP v3 username.",
-		"method" => "textbox",
+		"value" => "|arg1:snmpv3_auth_username|",
 		"default" => read_config_option("snmpv3_auth_username"),
-		"max_length" => "100",
+		"max_length" => "100"
 		),
 	"snmpv3_auth_password" => array(
+		"method" => "textbox_password",
 		"friendly_name" => "Password",
 		"description" => "The default SNMP v3 password.",
-		"method" => "textbox_password",
+		"value" => "|arg1:snmpv3_auth_password|",
 		"default" => read_config_option("snmpv3_auth_password"),
-		"max_length" => "100",
+		"max_length" => "100"
 		),
 	"snmpv3_auth_protocol" => array(
+		"method" => "drop_array",
 		"friendly_name" => "Authentication Protocol",
 		"description" => "Select the default SNMP v3 authentication protocol to use.",
-		"method" => "drop_array",
+		"value" => "|arg1:snmpv3_auth_protocol|",
 		"default" => read_config_option("snmpv3_auth_protocol"),
-		"array" => $snmpv3_auth_protocol,
+		"array" => $snmpv3_auth_protocol
 		),
 	"snmpv3_priv_passphrase" => array(
+		"method" => "textbox_password",
 		"friendly_name" => "Privacy Passphrase",
 		"description" => "The default SNMP v3 privacy passphrase.",
-		"method" => "textbox_password",
+		"value" => "|arg1:snmpv3_priv_passphrase|",
 		"default" => read_config_option("snmpv3_priv_passphrase"),
-		"max_length" => "100",
+		"max_length" => "100"
 		),
 	"snmpv3_priv_protocol" => array(
+		"method" => "drop_array",
 		"friendly_name" => "Privacy Protocol",
 		"description" => "Select the default SNMP v3 privacy protocol to use.",
-		"method" => "drop_array",
+		"value" => "|arg1:snmpv3_priv_protocol|",
 		"default" => read_config_option("snmpv3_priv_protocol"),
-		"array" => $snmpv3_priv_protocol,
+		"array" => $snmpv3_priv_protocol
 		),
 	"id" => array(
 		"method" => "hidden_zero",
