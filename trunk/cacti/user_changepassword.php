@@ -106,7 +106,7 @@ function change_password_form() {
 			"fields" => inject_form_variables($form_fields, (isset($user) ? $user : array()))
 			));
 		html_end_box();
-		form_save_button("index.php","save");
+		form_save_button((isset($_SERVER["HTTP_REFERER"]) ? $_SERVER["HTTP_REFERER"] : "index.php"),"save");
 	}else{
 		/* Password changing not supported */
 		display_custom_error_message("Current selected Authentication Method does not support changing of passwords.");
