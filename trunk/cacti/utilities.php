@@ -294,7 +294,7 @@ function utilities() {
 
 	<?php html_header(array("System Log Administration"), 2);?>
 
-	<tr bgcolor="#<?php print $colors["form_alternate1"];?>">
+	<tr bgcolor="#<?php print $colors["form_alternate2"];?>">
 		<td class="textArea">
 			<p><a href='utilities.php?action=view_logfile'>View Cacti Log File</a></p>
 		</td>
@@ -302,7 +302,7 @@ function utilities() {
 			<p>The Cacti Log File stores statistic, error and other message depending on system settings.  This information can be used to identify problems with the poller and application.</p>
 		</td>
 	</tr>
-	<tr bgcolor="#<?php print $colors["form_alternate2"];?>">
+	<tr bgcolor="#<?php print $colors["form_alternate1"];?>">
 		<td class="textArea">
 			<p><a href='utilities.php?action=clear_logfile'>Clear Cacti Log File</a></p>
 		</td>
@@ -321,7 +321,7 @@ function utilities() {
 			<p>This action will allow for the resizing of RRD files.  This is helpful if you want additional or less data to be included in these files.</p>
 		</td>
 	</tr>
-	<tr bgcolor="#<?php print $colors["form_alternate2"];?>">
+	<tr bgcolor="#<?php print $colors["form_alternate1"];?>">
 		<td class="textArea">
 			<p><a href='utilities.php?action=rrd_rename'>RRD Rename Utility</a></p>
 		</td>
@@ -331,7 +331,7 @@ function utilities() {
 	</tr>
 	<tr bgcolor="#<?php print $colors["form_alternate2"];?>">
 		<td class="textArea">
-			<p><a href='utilities.php?action=rrd_orphan_detction'>RRD Orphan Detection</a></p>
+			<p><a href='utilities.php?action=rrd_orphan_detection'>RRD Orphan Detection</a></p>
 		</td>
 		<td class="textArea">
 			<p>This action will search the RRA directory for orphaned RRD files and provide the option to delete them.</p>
