@@ -45,7 +45,7 @@ function change_password() {
 	$change_result = 1;
 
 	if ((!empty($_POST["password_old"])) && (!empty($_POST["password_new"])) && (!empty($_POST["password_new_confirm"]))) {
-		if ($_POST["password_new"] != $_POST["password_old"]) {
+		if ($_POST["password_new"] != $_POST["password_new_confirm"]) {
 			/* New passwords do not match */
 			raise_message(4);
 		}else{
