@@ -65,7 +65,6 @@ int db_connect(char *database, MYSQL *mysql) {
 
 	retries = 1;
 	mysql_init(mysql);
-	mysql_options(mysql, MYSQL_OPT_CONNECT_TIMEOUT, "5");
 
 	while (1) {
 		if (!mysql_real_connect(mysql, set.dbhost, set.dbuser, set.dbpass, database, set.dbport, NULL, 0)) {
