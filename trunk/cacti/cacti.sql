@@ -2065,11 +2065,22 @@ INSERT INTO host_template_snmp_query VALUES (8,6);
 
 CREATE TABLE poller (
   id smallint(5) unsigned NOT NULL auto_increment,
-  run_state varchar(20) default 'Wait',
-  active tinyint unsigned NOT NULL default '0',
-  hostname varchar(250) NOT NULL default '',
-  name varchar(150) NOT NULL default 'Description',
+  run_state varchar(20) NOT NULL default 'Wait',
+  active varchar(5) default 'On',
+  hostname varchar(250) default '',
+  name varchar(150) default NULL,
   last_update datetime NOT NULL default '0000-00-00 00:00:00',
+  status_event_count int(10) unsigned NOT NULL default '0',
+  status_fail_date datetime NOT NULL default '0000-00-00 00:00:00',
+  status_rec_date datetime NOT NULL default '0000-00-00 00:00:00',
+  status_last_error varchar(50) NOT NULL default '',
+  min_time decimal(9,5) NOT NULL default '9999.99000',
+  max_time decimal(9,5) NOT NULL default '0.00000',
+  cur_time decimal(9,5) NOT NULL default '0.00000',
+  avg_time decimal(9,5) NOT NULL default '0.00000',
+  total_polls bigint(20) unsigned NOT NULL default '0',
+  failed_polls bigint(20) unsigned NOT NULL default '0',
+  availability decimal(7,5) NOT NULL default '100.00000',
   PRIMARY KEY  (id)
 ) TYPE=MyISAM;
 

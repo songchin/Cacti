@@ -45,6 +45,9 @@ function upgrade_to_0_8_7() {
 	db_install_execute("0.8.7", "ALTER TABLE `poller` ADD `active` varchar(5) default 'On' AFTER `id`;");
 	db_install_execute("0.8.7", "ALTER TABLE `poller` ADD `run_state` varchar(20) default 'Wait' AFTER `id`;");
 	db_install_execute("0.8.7", "ALTER TABLE `poller` CHANGE `ip_address` `name` varchar(150) NOT NULL default 'Description';");
+	db_install_execute("0.8.7", "ALTER TABLE `poller` ADD `status_event_count` mediumint(8) NOT NULL default '0', ADD `status_fail_date` datetime NOT NULL default '0000-00-00 00:00:00', ADD `status_rec_date` datetime NOT NULL default '0000-00-00 00:00:00', ADD `status_last_error` varchar(50) NOT NULL default '';");
+	db_install_execute("0.8.7", "ALTER TABLE `poller` ADD `min_time` DECIMAL(9,5) NOT NULL default '9999.99', ADD `max_time` DECIMAL(9,5) NOT NULL default '0.00', ADD `cur_time` DECIMAL(9,5) NOT NULL default '0.00', ADD `avg_time` DECIMAL(9,5) NOT NULL default '0.00';");
+	db_install_execute("0.8.7", "ALTER TABLE `poller` ADD `total_polls` BIGINT(20) NOT NULL default '0', ADD `failed_polls` BIGINT(20) NOT NULL default '0.00', ADD `availability` DECIMAL(7,5) NOT NULL default '100.00';");
 
 	/* New Graph Template Options */
 	db_install_execute("0.8.7", "ALTER TABLE `graph_templates_graph` ADD `t_x_grid` char(2) default '0' AFTER `width`, ADD `x_grid` varchar(50) default NULL AFTER `t_x_grid`;");
