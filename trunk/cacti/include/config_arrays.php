@@ -241,6 +241,23 @@ $user_log_result = array(
 	3 => "Password Changed",
 	4 => "Account Disabled");
 
+$user_password_expire_intervals = array(
+	0 => "Never",
+	30 => "30 Days",
+	60 => "60 Days",
+	90 => "90 Days",
+	120 => "120 Days",
+	150 => "150 Days",
+	180 => "180 Days",
+	210 => "210 Days",
+	240 => "240 Days",
+	270 => "270 Days",
+	300 => "300 Days",
+	330 => "330 Days",
+	360 => "360 Days"
+	);
+
+
 $snmp_implimentations = array(
 	"ucd-snmp" => "UCD-SNMP 4.x",
 	"net-snmp" => "NET-SNMP 5.x");
