@@ -41,6 +41,7 @@ $graph_actions = array(
 	1 => "Delete",
 	2 => "Change Graph Template",
 	5 => "Change Host",
+	6 => "Reapply Suggested Names",
 	3 => "Duplicate",
 	4 => "Convert to Graph Template"
 	);
@@ -300,6 +301,11 @@ function form_actions() {
 				db_execute("update graph_local set host_id=" . $_POST["host_id"] . " where id=" . $selected_items[$i]);
 				update_graph_title_cache($selected_items[$i]);
 			}
+		}elseif ($_POST["drp_action"] == "6") { /* reapply suggested naming */
+			for ($i=0;($i<count($selected_items));$i++) {
+				api_reapply_suggested_graph_title($selected_items[$i]);
+				update_graph_title_cache($selected_items[$i]);
+			}
 		}
 
 		header("Location: graphs.php");
@@ -414,6 +420,15 @@ function form_actions() {
 					<p>Choose a new host for these graphs:</p>
 					<p>$graph_list</p>
 					<p><strong>New Host:</strong><br>"; form_dropdown("host_id",db_fetch_assoc("select id,CONCAT_WS('',description,' (',hostname,')') as name from host order by description,hostname"),"name","id","","","0"); print "</p>
+				</td>
+			</tr>\n
+			";
+	}elseif ($_POST["drp_action"] == "6") { /* reapply suggested naming to host */
+		print "	<tr>
+				<td class='textArea' bgcolor='#" . $colors["form_alternate1"]. "'>
+					<p>When you click save, the following graphs will have thier suggested naming convensions
+					recalculated and applies to the graphs.</p>
+					<p>$graph_list</p>
 				</td>
 			</tr>\n
 			";
