@@ -97,8 +97,10 @@ void snmp_host_init(host_t *current_host) {
 	    /* set the authentication method to MD5 */
 		if (strcmp(current_host->snmpv3_auth_protocol,"MD5")) {
 		    session.securityAuthProto = usmHMACMD5AuthProtocol;
-		}else {
+		}else if (strcmp(current_host->snmpv3_auth_protocol,"SHA")){
 		    session.securityAuthProto = usmHMACSHA1AuthProtocol;
+		}else {
+			cacti_log("ERROR: SNMP: Error with SNMPv3 autorization protocol setting.\n");
 		}
 		
 	    session.securityAuthProtoLen = sizeof(session.securityAuthProto)/sizeof(oid);
@@ -110,14 +112,14 @@ void snmp_host_init(host_t *current_host) {
 			session.securityPrivProto = usmNoPrivProtocol;
 		} else if (strcmp(current_host->snmpv3_priv_protocol,"AES128")) {
 			session.securityPrivProto = usmAES128PrivProtocol;
-		} else if (strcmp(current_host->snmpv3_priv_protocol,"AES192")) {
-			session.securityPrivProto = usmAES192PrivProtocol;
+//		} else if (strcmp(current_host->snmpv3_priv_protocol,"AES")) {
+//			session.securityPrivProto = usmAESPrivProtocol;
 		}else {			
-			session.securityPrivProto = usmAES256PrivProtocol;
+			cacti_log("ERROR: SNMP: Error with SNMPv3 privacy protocol setting.\n");
 		}
 		
 	    session.securityPrivProtoLen = sizeof(session.securityPrivProto)/sizeof(oid);
-	    session.securityPrivKeyLen = USM_AUTH_KU_LEN;
+	    session.securityPrivKeyLen = USM_PRIV_KU_LEN;
 
 	    /* set the security level to authenticate, but not encrypted */
 		if (strcmp(current_host->snmpv3_priv_protocol,"[None]")) {
@@ -126,9 +128,7 @@ void snmp_host_init(host_t *current_host) {
 			session.securityLevel = SNMP_SEC_LEVEL_AUTHPRIV;
 		}
 
-	    /* set the authentication key to a MD5 hashed version of our
-	       passphrase "The UCD Demo Password" (which must be at least 8
-	       characters long) */
+	    /* set the authentication key to the hashed version. The password must me at least 8 char */
 	    if (generate_Ku(session.securityAuthProto, 
 						session.securityAuthProtoLen,
 						(u_char *) current_host->snmpv3_auth_password,
@@ -136,6 +136,15 @@ void snmp_host_init(host_t *current_host) {
 	                    session.securityAuthKey,
 	                    &session.securityAuthKeyLen) != SNMPERR_SUCCESS) {
 	        cacti_log("ERROR: SNMP: Error generating SNMPv3 Ku from authentication pass phrase.\n");
+		}
+		/* set the privacy key to the correct hashed version */
+	    if (generate_Ku(session.securityAuthProto, 
+						session.securityAuthProtoLen,
+						(u_char *) current_host->snmpv3_auth_password,
+						strlen(current_host->snmpv3_auth_password),
+	                    session.securityPrivKey,
+	                    &session.securityPrivKeyLen) != SNMPERR_SUCCESS) {
+	        cacti_log("ERROR: SNMP: Error generating SNMPv3 Ku from privacy pass phrase.\n");
 		}
 	}
 
