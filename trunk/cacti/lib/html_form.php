@@ -415,6 +415,31 @@ function form_confirm($title_text, $body_text, $cancel_url, $action_url) { ?>
 
 <?php }
 
+/* form_message - draws a table presenting the user with a message and an Ok button.
+   @arg $body_text - the text to prompt the user with on this form
+   @arg $ok_url - the url to go to when the user clicks 'ok' */
+function form_message($title_text, $body_text, $ok_url) { ?>
+		<br>
+		<table align="center" cellpadding=1 cellspacing=0 border=0 bgcolor="#B61D22" width="60%">
+			<tr>
+				<td bgcolor="#B61D22" colspan="10">
+					<table width="100%" cellpadding="3" cellspacing="0">
+						<tr>
+							<td bgcolor="#B61D22" class="textHeaderDark"><strong><?php print $title_text;?></strong></td>
+						</tr>
+						<?php	form_area($body_text); ?>
+						<tr>
+							<td bgcolor="#E1E1E1">
+								<a href="<?php print $ok_url;?>"><img src="images/button_ok.gif" border="0" alt="Ok" align="absmiddle"></a>
+							</td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+		</table>
+
+<?php }
+
 /* form_confirm_buttons - draws a cancel and delete button suitable for display
      on a confirmation form
    @arg $cancel_url - the url to go to when the user clicks 'cancel'

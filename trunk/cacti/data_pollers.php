@@ -25,7 +25,7 @@
 */
 
 include ("./include/auth.php");
-//include_once('./lib/api_data_input.php');
+include_once('./lib/api_data_pollers.php');
 
 /* set default action */
 if (!isset($_REQUEST["action"])) { $_REQUEST["action"] = ""; }
@@ -63,24 +63,13 @@ switch ($_REQUEST["action"]) {
 function form_save() {
 	global $registered_cacti_names;
 
-	if (isset($_POST["save_component_data_input"])) {
-		$data_input_id = api_data_input_save($_POST["id"], $_POST["name"], $_POST["input_string"], $_POST["type_id"]);
+	if (isset($_POST["save_component_data_poller"])) {
+		$data_poller_id = api_data_poller_save($_POST["id"], $_POST["active"], $_POST["hostname"], $_POST["description"]);
 
 		if ((is_error_message()) || (empty($_POST["id"]))) {
 			header("Location: data_pollers.php?action=edit&id=" . (empty($data_poller_id) ? $_POST["id"] : $data_poller_id));
 		}else{
 			header("Location: data_pollers.php");
-		}
-	}elseif (isset($_POST["save_component_field"])) {
-		$data_input_field_id = api_data_input_field_save($_POST["id"], $_POST["data_input_id"], $_POST["name"],
-			$_POST["data_name"], $_POST["input_output"], (isset($_POST["update_rra"]) ? $_POST["update_rra"] : ""),
-			(isset($_POST["type_code"]) ? $_POST["type_code"] : ""), (isset($_POST["regexp_match"]) ? $_POST["regexp_match"] : ""),
-			(isset($_POST["allow_nulls"]) ? $_POST["allow_nulls"] : ""));
-
-		if (is_error_message()) {
-			header("Location: data_pollers.php?action=field_edit&data_poller_id=" . $_POST["data_poller_id"] . "&id=" . (empty($data_poller_field_id) ? $_POST["id"] : $data_poller_field_id) . (!empty($_POST["input_output"]) ? "&type=" . $_POST["input_output"] : ""));
-		}else{
-			header("Location: data_pollers.php?action=edit&id=" . $_POST["data_poller_id"]);
 		}
 	}
 }
@@ -97,12 +86,17 @@ function poller_delete() {
 		exit;
 	}
 
-	if ($_GET["id"] != 0) {
+	$hosts_polled = db_fetch_assoc("select poller_id from host where poller_id=" . $_GET["id"]);
+
+	if (sizeof($hosts_polled) == 0) {
 		if ((read_config_option("remove_verification") == "") || (isset($_GET["confirm"]))) {
-			api_data_input_remove($_GET["id"]);
+			api_data_poller_delete($_GET["id"]);
 		}
 	} else {
-		// Can't delete poller id = 0
+		$error_message = "The poller selected is in use for " . sizeof($hosts_polled) . " hosts and can not be deleted.  You can not delete a poller when it has hosts associated with it.";
+		include("./include/top_header.php");
+		form_message("Can Not Delete Poller", $error_message, "data_pollers.php");
+		include("./include/bottom_footer.php");
 	}
 }
 
@@ -111,7 +105,7 @@ function poller_edit() {
 
 	if ((isset($_GET["id"])) && ($_GET["id"] >= 0)) {
 		$data_poller = db_fetch_row("select * from poller where id=" . $_GET["id"]);
-		$header_label = "[edit: " . $data_poller["hostname"] . "]";
+		$header_label = "[edit: " . $data_poller["description"] . "]";
 	}else{
 		$header_label = "[new]";
 	}
