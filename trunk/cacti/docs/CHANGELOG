@@ -9,6 +9,7 @@ handle timeout’s over 1 second
 -feature: Added ability to choose up/down availability check on a per host basis
 -feature: Added ability to change up/down availability preferences in bulk to hosts
 -feature: Added SNMP v3 to Cacti functions with the exception of Cactid
+-feature/bug: Added ability to disable all availability checking for a host.
 -bug#XXXXXXX: Fixed typo in LDAP settings
 -bug#0000330: Fixed problem with Graph Settings changes under user management not
 applying settings
