@@ -1,12 +1,7 @@
-05/28/03
-- fixed segfaults when action == 2
-- unified pthread mutex locking code
-
-05/26/03
-- addition of create_rrd()
-
-05/25/03
-- major code cleanup and autoconf fixes
-
-05/24/03
-- merged code from RTG and the previous poller
+0.8.6c
+-feature: Added some compiler directives for better compatibility with cygwin.
+-feature: Added MySQL connection timeout and retry logic.
+-bug: Increased the default script timeout from 5 to 10 seconds.
+-bug: Changed the stdout log format to consume less space.
+-bug: Removed a cygwin workaround that was causing problems under Windows.
+-bug: Increased the BUFSIZE and LOGSIZE constants.
