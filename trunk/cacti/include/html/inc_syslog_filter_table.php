@@ -1,5 +1,6 @@
 	<tr bgcolor="<?php print $colors["filter_background"];?>">
 		<form name="form_syslog_id">
+		<input type="hidden" name="action" value="view_syslog">
 		<td>
 			<table width="100%" cellpadding="0" cellspacing="0">
 				<tr>
