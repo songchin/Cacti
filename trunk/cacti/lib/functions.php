@@ -313,7 +313,7 @@ function cacti_log($string, $output = false, $environ = "CMDPHP") {
 
 	/* format the message */
 	if ($environ != "SYSTEM") {
-		$message = "$date - " . $environ . ": Poller[0] " . $string . "\n";
+		$message = "$date - " . $environ . ": " . $string . "\n";
 	}else {
 		$message = "$date - " . $environ . " " . $string . "\n";
 	}

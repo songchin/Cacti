@@ -258,7 +258,7 @@ function process_poller_output($rrdtool_pipe) {
    @arg $host_id - (int) the host ID for the results
    @arg $hosts - (array) a memory resident host table for speed
    @arg $ping - (class array) results of the ping command */
-function update_host_status($status, $host_id, &$hosts, &$ping, $ping_availability, $print_data_to_stdout) {
+function update_host_status($poller_id, $status, $host_id, &$hosts, &$ping, $ping_availability, $print_data_to_stdout) {
 	$issue_log_message   = false;
 	$ping_failure_count  = read_config_option("ping_failure_count");
 	$ping_recovery_count = read_config_option("ping_recovery_count");
@@ -402,25 +402,25 @@ function update_host_status($status, $host_id, &$hosts, &$ping, $ping_availabili
 		if (($hosts[$host_id]["status"] == HOST_UP) || ($hosts[$host_id]["status"] == HOST_RECOVERING)) {
 			/* log ping result if we are to use a ping for reachability testing */
 			if ($ping_availability == AVAIL_SNMP_AND_PING) {
-				cacti_log("Host[$host_id] PING: " . $ping->ping_response, $print_data_to_stdout);
-				cacti_log("Host[$host_id] SNMP: " . $ping->snmp_response, $print_data_to_stdout);
+				cacti_log("Poller[$poller_id] Host[$host_id] PING: " . $ping->ping_response, $print_data_to_stdout);
+				cacti_log("Poller[$poller_id] Host[$host_id] SNMP: " . $ping->snmp_response, $print_data_to_stdout);
 			} elseif ($ping_availability == AVAIL_SNMP) {
 				if ($hosts[$host_id]["snmp_community"] == "") {
-					cacti_log("Host[$host_id] SNMP: Device does not require SNMP", $print_data_to_stdout);
+					cacti_log("Poller[$poller_id] Host[$host_id] SNMP: Device does not require SNMP", $print_data_to_stdout);
 				}else{
-					cacti_log("Host[$host_id] SNMP: " . $ping->snmp_response, $print_data_to_stdout);
+					cacti_log("Poller[$poller_id] Host[$host_id] SNMP: " . $ping->snmp_response, $print_data_to_stdout);
 				}
 			} else {
-				cacti_log("Host[$host_id] PING: " . $ping->ping_response, $print_data_to_stdout);
+				cacti_log("Poller[$poller_id] Host[$host_id] PING: " . $ping->ping_response, $print_data_to_stdout);
 			}
 		} else {
 			if ($ping_availability == AVAIL_SNMP_AND_PING) {
-				cacti_log("Host[$host_id] PING: " . $ping->ping_response, $print_data_to_stdout);
-				cacti_log("Host[$host_id] SNMP: " . $ping->snmp_response, $print_data_to_stdout);
+				cacti_log("Poller[$poller_id] Host[$host_id] PING: " . $ping->ping_response, $print_data_to_stdout);
+				cacti_log("Poller[$poller_id] Host[$host_id] SNMP: " . $ping->snmp_response, $print_data_to_stdout);
 			} elseif ($ping_availability == AVAIL_SNMP) {
-				cacti_log("Host[$host_id] SNMP: " . $ping->snmp_response, $print_data_to_stdout);
+				cacti_log("Poller[$poller_id] Host[$host_id] SNMP: " . $ping->snmp_response, $print_data_to_stdout);
 			} else {
-				cacti_log("Host[$host_id] PING: " . $ping->ping_response, $print_data_to_stdout);
+				cacti_log("Poller[$poller_id] Host[$host_id] PING: " . $ping->ping_response, $print_data_to_stdout);
 			}
 		}
 	}
@@ -428,9 +428,9 @@ function update_host_status($status, $host_id, &$hosts, &$ping, $ping_availabili
 	/* if there is supposed to be an event generated, do it */
 	if ($issue_log_message) {
 		if ($hosts[$host_id]["status"] == HOST_DOWN) {
-			cacti_log("Host[$host_id] ERROR: HOST EVENT: Host is DOWN Message: " . $hosts[$host_id]["status_last_error"], $print_data_to_stdout);
+			cacti_log("Poller[$poller_id] Host[$host_id] ERROR: HOST EVENT: Host is DOWN Message: " . $hosts[$host_id]["status_last_error"], $print_data_to_stdout);
 		} else {
-			cacti_log("Host[$host_id] NOTICE: HOST EVENT: Host Returned from DOWN State: ", $print_data_to_stdout);
+			cacti_log("Poller[$poller_id] Host[$host_id] NOTICE: HOST EVENT: Host Returned from DOWN State: ", $print_data_to_stdout);
 		}
 	}
 

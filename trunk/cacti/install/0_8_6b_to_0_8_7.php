@@ -43,6 +43,7 @@ function upgrade_to_0_8_7() {
 
 	/* Multi Poller Architecture Changes */
 	db_install_execute("0.8.7", "ALTER TABLE `poller` ADD `active` varchar(5) default 'On' AFTER `id`;");
+	db_install_execute("0.8.7", "ALTER TABLE `poller` ADD `run_state` varchar(20) default 'Wait' AFTER `id`;");
 	db_install_execute("0.8.7", "ALTER TABLE `poller` CHANGE `ip_address` `name` varchar(150) NOT NULL default 'Description';");
 
 	/* New Graph Template Options */
