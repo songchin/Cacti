@@ -246,7 +246,7 @@ $settings = array(
 			"array" => $snmp_versions,
 			),
 		"snmpv12c_header" => array(
-			"friendly_name" => "V1/V2c Defaults",
+			"friendly_name" => "v1/v2c Default",
 			"method" => "spacer",
 			),
 		"snmp_community" => array(
@@ -256,19 +256,8 @@ $settings = array(
 			"default" => "public",
 			"max_length" => "100",
 			),
-		"snmpv3_header" => array(
-			"friendly_name" => "V3 Defaults",
-			"method" => "spacer",
-			),
-		"snmpv3_security_level" => array(
-			"friendly_name" => "Security Level",
-			"description" => "The SNMP Security Level you wish to use.",
-			"method" => "drop_array",
-			"default" => "noAutoNoPriv",
-			"array" => $snmpv3_security_level,
-			),
 		"snmpv3_auth_header" => array(
-			"friendly_name" => "Authentication",
+			"friendly_name" => "v3 Authentication Defaults",
 			"method" => "spacer",
 			),
 		"snmpv3_auth_username" => array(
@@ -293,7 +282,7 @@ $settings = array(
 			"array" => $snmpv3_auth_protocol,
 			),
 		"snmpv3_priv_header" => array(
-			"friendly_name" => "Privacy",
+			"friendly_name" => "v3 Privacy Defaults",
 			"method" => "spacer",
 			),
 		"snmpv3_priv_passphrase" => array(
@@ -522,6 +511,13 @@ $settings = array(
 			"description" => "The maximum time, in seconds, allowed for a script or script server object to run before forcing a timeout of the script process.",
 			"method" => "textbox",
 			"default" => "10",
+			"max_length" => "10"
+			),
+		"concurrent_rrd_processes" => array(
+			"friendly_name" => "Maximum Concurrent RRDTool Processes",
+			"description" => "The number of concurrent RRDTool processes to execute.  Using a will improve performance to a point.",
+			"method" => "textbox",
+			"default" => "1",
 			"max_length" => "10"
 			),
 		"availability_header" => array(
