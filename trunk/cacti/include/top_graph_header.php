@@ -29,7 +29,6 @@ $show_console_tab = true;
 
 include_once($config["library_path"] . "/html_tree.php");
 include_once($config["library_path"] . "/rrd.php");
-include_once($config["library_path"] . "/api_user.php");
 
 if (read_config_option("auth_method") != "0") {
 	/* at this point this user is good to go... get user info */
