@@ -53,7 +53,7 @@ function cacti_snmp_get($hostname, $community, $oid, $version, $v3username, $v3p
 			$snmp_value = @snmpget("$hostname:$port", $community, trim($oid), ($timeout * 1000), $retries);
 		} else {
 			$snmp_value = @snmp3_get("$hostname:$port", $v3username, snmp_get_v3authpriv($v3privproto), $v3authproto,
-				$v3password, $v3privproto, $v3privpassphrase, $oid, ($timeout * 1000), $retries);
+				$v3password, $v3privproto, $v3privpassphrase, trim($oid), ($timeout * 1000), $retries);
 		}
 	}else{
 		/* ucd/net snmp want the timeout in seconds */
@@ -100,7 +100,7 @@ function cacti_snmp_walk($hostname, $community, $oid, $version, $v3username, $v3
 			$temp_array = @snmpwalkoid("$hostname:$port", $community, trim($oid), ($timeout * 1000), $retries);
 		} else {
 			$temp_array = @snmp3_walk("$hostname:$port", $v3username, snmp_get_v3authpriv($v3privproto), $v3authproto,
-				$v3password, $v3privproto, $v3privpassphrase, $oid, ($timeout * 1000), $retries);
+				$v3password, $v3privproto, $v3privpassphrase, trim($oid), ($timeout * 1000), $retries);
 		}
 
 		$o = 0;
