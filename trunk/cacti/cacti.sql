@@ -2340,7 +2340,7 @@ INSERT INTO settings_graphs VALUES (1,'tree','');
 --
 
 
-CREATE TABLE `settings_graphs` (
+CREATE TABLE `settings_users` (
   `user_id` smallint(8) unsigned NOT NULL default '0',
   `name` varchar(50) NOT NULL default '',
   `value` varchar(255) NOT NULL default '',
