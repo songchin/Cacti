@@ -85,7 +85,7 @@ function gt_update_deps(num_columns) {
 		chkbx.checked = false;
 
 		lineid = document.getElementById('gt_line' + gt_created_graphs[i]);
-		lineid.style.backgroundColor = '';
+		lineid.className = 'jsRowUnavailable';
 	}
 }
 
@@ -175,7 +175,9 @@ function dq_update_deps(snmp_query_id, num_columns) {
 		}
 
 		lineid = document.getElementById('line' + snmp_query_id + '_' + created_graphs[snmp_query_graph_id][i]);
-		if (lineid) { lineid.style.backgroundColor = '' };
+		if (lineid) {
+			lineid.className = 'jsRowUnavailable';
+		}
 	}
 }
 
