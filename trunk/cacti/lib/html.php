@@ -258,10 +258,11 @@ function html_get_theme_images_path($image_file = "") {
 }
 
 function html_theme_color_scheme() {
-	if (file_exists("themes/" . read_config_option("current_theme") . "/" . read_config_option("current_theme") . ".php")) {
-		return "themes/" . read_config_option("current_theme") . "/" . read_config_option("current_theme") . ".php";
+	global $config;
+	if (file_exists($config["themes_path"] . "/" . read_config_option("current_theme") . "/" . read_config_option("current_theme") . ".php")) {
+		return $config["themes_path"] . "/" . read_config_option("current_theme") . "/" . read_config_option("current_theme") . ".php";
 	} else {
-		return "include/" . "config_colors.php";
+		return $config["include_path"] . "/config_colors.php";
 	}
 }
 
