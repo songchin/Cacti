@@ -64,6 +64,14 @@ switch ($_REQUEST["action"]) {
 
 		include_once("include/bottom_footer.php");
 		break;
+	case 'user_settings_edit':
+		include_once("include/top_header.php");
+
+		user_edit();
+
+		include_once("include/bottom_footer.php");
+		break;
+
 	case 'graph_perms_edit':
 		include_once("include/top_header.php");
 
@@ -205,6 +213,16 @@ function form_save() {
 				if ($_SESSION["sess_user_id"] == $_POST["id"]) {
 					/* reset local settings cache so the user sees the new settings */
 					kill_session_var("sess_graph_config_array");
+				}
+			/* user settings */
+			}elseif (isset($_POST["save_component_user_settings"])) {
+				if (api_user_user_setting_save($_POST["id"],$_POST) == 1) {
+					raise_message(2);
+				}
+
+				if ($_SESSION["sess_user_id"] == $_POST["id"]) {
+					/* reset local settings cache so the user sees the new settings */
+					kill_session_var("sess_user_config_array");
 				}
 			/* graph perms - allow/deny */
 			}elseif (isset($_POST["save_component_graph_perms"])) {
@@ -609,6 +627,73 @@ function graph_settings_edit() {
 	form_hidden_box("save_component_graph_settings","1","");
 }
 
+/* ---------------------------------
+    user_settings_edit function
+   --------------------------------- */
+
+function user_settings_edit() {
+	global $settings_users, $tabs_graphs, $colors, $graph_views, $graph_tree_views;
+
+	?>
+	<table width='98%' align='center' cellpadding="5">
+		<tr>
+			<td>
+				<span style='font-size: 12px; font-weight: bold;'>User settings that the user can modify, if permitted.</span>
+			</td>
+		</tr>
+	</table>
+	<?php
+
+	html_start_box("<strong>User Settings</strong>", "98%", $colors["header_background"], "3", "center", "");
+
+	/* get user graph settings */
+	$user_settings = api_user_user_setting_list($_GET["id"]);
+
+	while (list($tab_short_name, $tab_fields) = each($settings_users)) {
+		?>
+		<tr bgcolor='<?php print $colors["header_panel_background"];?>'>
+			<td colspan='2' class='textSubHeaderDark' style='padding: 3px;'>
+				<?php print $tabs_graphs[$tab_short_name];?>
+			</td>
+		</tr>
+		<?php
+
+		$form_array = array();
+
+		while (list($field_name, $field_array) = each($tab_fields)) {
+			$form_array += array($field_name => $tab_fields[$field_name]);
+
+			if ((isset($field_array["items"])) && (is_array($field_array["items"]))) {
+				while (list($sub_field_name, $sub_field_array) = each($field_array["items"])) {
+					if (user_config_value_exists($sub_field_name, $_GET["id"])) {
+						$form_array[$field_name]["items"][$sub_field_name]["form_id"] = 1;
+					}
+					$form_array[$field_name]["items"][$sub_field_name]["value"] =  $user_settings[$sub_field_name];
+				}
+			}else{
+				if (user_config_value_exists($field_name, $_GET["id"])) {
+					$form_array[$field_name]["form_id"] = 1;
+				}
+				$form_array[$field_name]["value"] = $user_settings[$field_name];
+			}
+		}
+
+		draw_edit_form(
+			array(
+				"config" => array(
+					"no_form_tag" => true
+					),
+				"fields" => $form_array
+				)
+			);
+	}
+
+	html_end_box();
+
+	form_hidden_box("save_component_user_settings","1","");
+}
+
+
 
 /* --------------------------
     user_edit function
@@ -650,6 +735,11 @@ function user_edit() {
 				<td <?php print (($_GET["action"] == "graph_settings_edit") ? "bgcolor='silver'" : "bgcolor='#DFDFDF'");?> nowrap='nowrap' width='130' align='center' class='tab'>
 					<span class='textHeader'><a href='user_admin.php?action=graph_settings_edit&id=<?php print $_GET["id"];?>'>Graph Settings</a></span>
 				</td>
+				<td width='1'></td>
+				<td <?php print (($_GET["action"] == "user_settings_edit") ? "bgcolor='silver'" : "bgcolor='#DFDFDF'");?> nowrap='nowrap' width='130' align='center' class='tab'>
+					<span class='textHeader'><a href='user_admin.php?action=user_settings_edit&id=<?php print $_GET["id"];?>'>User Settings</a></span>
+				</td>
+
 				<td></td>
 			</tr>
 		</table>
@@ -658,6 +748,8 @@ function user_edit() {
 
 	if ($_GET["action"] == "graph_settings_edit") {
 		graph_settings_edit();
+	}elseif ($_GET["action"] == "user_settings_edit") {
+		user_settings_edit();
 	}elseif ($_GET["action"] == "user_realms_edit") {
 		user_realms_edit();
 	}elseif ($_GET["action"] == "graph_perms_edit") {

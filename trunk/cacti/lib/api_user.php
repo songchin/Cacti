@@ -561,6 +561,101 @@ function api_user_graph_perms_remove($type,$user_id,$item_id) {
 
 /*
 ########################################
+# User Settings functions
+########################################
+*/
+
+/* api_user_graph_setting_list
+  @arg $user_id - user id 
+  @return - array of field => value
+*/
+function api_user_user_setting_list($user_id) {
+	global $settings_users;
+
+	/* prevent array squashing */
+	$settings_users_local = $settings_users;
+
+	/* Get settings from database */
+	$user_settings = array();
+	if (!empty($user_id)) {
+		$setting = db_fetch_assoc("select name,value from settings_users where user_id = '" . $user_id . "'");
+		while (list($record, $fields) = each($setting)) {
+			$user_settings[$fields["name"]] = $fields["value"];	
+		}
+	}
+
+	/* build array of values */
+	$return_array = array();
+
+	/* go through form sections */
+	while (list($tab_short_name, $tab_fields) = each($settings_users_local)) {
+		/* process fields */
+		while (list($field_name, $field_array) = each($tab_fields)) {
+			if ((isset($field_array["items"])) && (is_array($field_array["items"]))) {
+				/* sub fields detected */
+				while (list($sub_field_name, $sub_field_array) = each($field_array["items"])) {
+					if (isset($user_settings[$sub_field_name])) {
+						$return_array[$sub_field_name] = $user_settings[$sub_field_name];
+					}else{
+						$return_array[$sub_field_name] = $sub_field_array["default"];
+					}
+				}
+			}else{
+				/* regular field */
+				if (isset($user_settings[$field_name])) {
+					$return_array[$field_name] = $user_settings[$field_name];
+				}else{
+					$return_array[$field_name] = $field_array["default"];
+				}
+			}
+		}
+	}
+
+	return $return_array;
+	
+}
+
+/* api_user_graph_settings_save
+  @arg $user_id - user id
+  @arg $array - Array containing values to save to the database. fieldname => value
+  @return - '0' success, '1' error */
+function api_user_user_setting_save($user_id,$array) {
+	global $settings_users;
+
+	/* prevent array squashing */
+	$settings_users_local = $settings_users;
+
+	/* validation */
+	if (empty($user_id)) {
+		return 1;
+	}
+
+	/* build array of values */
+	$return_array = array();
+
+	/* go through form sections */
+	while (list($tab_short_name, $tab_fields) = each($settings_users_local)) {
+		/* process fields */
+		while (list($field_name, $field_array) = each($tab_fields)) {
+			if ((isset($field_array["items"])) && (is_array($field_array["items"]))) {
+				/* sub fields detected */
+				while (list($sub_field_name, $sub_field_array) = each($field_array["items"])) {
+					db_execute("replace into settings_users (user_id,name,value) values (" . $user_id . ",'" . $sub_field_name . "', '" . (isset($array[$sub_field_name]) ? $array[$sub_field_name] : "") . "')");
+				}
+			}else{
+				/* normal field */
+				db_execute("replace into settings_users (user_id,name,value) values (" . $user_id . ",'$field_name', '" . (isset($array[$field_name]) ? $array[$field_name] : "") . "')");
+			}
+		}
+	}
+	
+	return 0;
+
+
+}
+
+/*
+########################################
 # LDAP functions
 ########################################
 */

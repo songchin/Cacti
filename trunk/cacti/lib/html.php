@@ -1063,6 +1063,12 @@ function draw_navigation_text() {
 			"url" => "", 
 			"level" => "2"
 			),
+		"user_admin.php:user_settings_edit" => array(
+			"title" => "Edit (User Settings)", 
+			"mapping" => "index.php:,user_admin.php:", 
+			"url" => "", 
+			"level" => "2"
+			),
 		"about.php:" => array(
 			"title" => "About Cacti", 
 			"mapping" => "index.php:", 
