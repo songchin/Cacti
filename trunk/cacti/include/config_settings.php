@@ -29,6 +29,7 @@ include($config["include_path"] . "/config_arrays.php");
 /* tab information */
 $tabs = array(
 	"general" => "General",
+	"dbphp" => "Database & PHP",
 	"path" => "Paths",
 	"poller" => "Poller",
 	"export" => "Graph Export",
@@ -44,6 +45,40 @@ $tabs_graphs = array(
 
 /* setting information */
 $settings = array(
+	"dbphp" => array(
+		"db_header" => array(
+			"friendly_name" => "Database Settings",
+			"method" => "spacer"
+			),
+		"db_pconnections" => array(
+			"friendly_name" => "Persistent Connections",
+			"description" => "Utilize persistent connections to conserve database resources.",
+			"default" => "on",
+			"method" => "checkbox"
+			),
+		"db_retries" => array(
+			"friendly_name" => "Database Retries",
+			"description" => "The number of retries that Cacti will attempt to access the Cacti database prior to failing.",
+			"method" => "textbox",
+			"default" => "20"
+			),
+		"php_header" => array(
+			"friendly_name" => "PHP Settings",
+			"method" => "spacer"
+			),
+		"max_memory" => array(
+			"friendly_name" => "PHP Maximum Memory",
+			"description" => "Maximum allowed memory for PHP processes in Megabytes",
+			"method" => "textbox",
+			"default" => "32"
+			),
+		"max_execution_time" => array(
+			"friendly_name" => "PHP Graph Timeout",
+			"description" => "Maximum allowed time for a graph to render.  Will stop server from hanging during eroneous graphing operations.",
+			"method" => "textbox",
+			"default" => "10"
+			)
+		),
 	"path" => array(
 		"dependent_header" => array(
 			"friendly_name" => "Required Tools",
@@ -433,6 +468,13 @@ $settings = array(
 			"description" => "The maximum threads allowed per process.  Using a higher number when using cactid will improve performance.  NOTE Applies only to CACTID!",
 			"method" => "textbox",
 			"default" => "1",
+			"max_length" => "10"
+			),
+		"max_script_runtime" => array(
+			"friendly_name" => "Maximum Script Runtime",
+			"description" => "The maximum time, in seconds, allowed for a script or script server object to run before forcing a timeout of the script process.",
+			"method" => "textbox",
+			"default" => "10",
 			"max_length" => "10"
 			),
 		"availability_header" => array(
