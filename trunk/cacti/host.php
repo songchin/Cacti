@@ -39,7 +39,8 @@ $device_actions = array(
 	2 => "Enable",
 	3 => "Disable",
 	4 => "Change SNMP Options",
-	5 => "Clear Statistics"
+	5 => "Clear Statistics",
+	6 => "Change Poller"
 	);
 
 /* set default action */
@@ -168,6 +169,17 @@ function form_actions() {
 
 				push_out_host($selected_items[$i]);
 			}
+		}elseif ($_POST["drp_action"] == "6") { /* change poller */
+			for ($i=0;($i<count($selected_items));$i++) {
+				reset($fields_host_edit);
+				while (list($field_name, $field_array) = each($fields_host_edit)) {
+					if (isset($_POST["t_$field_name"])) {
+						db_execute("update host set $field_name = '" . $_POST[$field_name] . "' where id='" . $selected_items[$i] . "'");
+					}
+				}
+
+				push_out_host($selected_items[$i]);
+			}
 		}elseif ($_POST["drp_action"] == "5") { /* Clear Statisitics for Selected Devices */
 			for ($i=0;($i<count($selected_items));$i++) {
 				db_execute("update host set min_time = '9.99999', max_time = '0', cur_time = '0',	avg_time = '0',
@@ -276,6 +288,37 @@ function form_actions() {
 						"fields" => $form_array
 						)
 					);
+	}elseif ($_POST["drp_action"] == "6") { /* change poller */
+		print "	<tr>
+				<td colspan='2' class='textArea' bgcolor='#" . $colors["form_alternate1"]. "'>
+					<p>To change the poller that will, by default handle the processing for the selected host(s)
+					simply select the host from the list, toggle the checkbox and select yes.</p>
+					<p>$host_list</p>
+				</td>
+				</tr>";
+				$form_array = array();
+				while (list($field_name, $field_array) = each($fields_host_edit)) {
+					if (ereg("^poller_", $field_name)) {
+						$form_array += array($field_name => $fields_host_edit[$field_name]);
+
+						$form_array[$field_name]["value"] = "";
+						$form_array[$field_name]["description"] = "";
+						$form_array[$field_name]["form_id"] = 0;
+						$form_array[$field_name]["sub_checkbox"] = array(
+							"name" => "t_" . $field_name,
+							"friendly_name" => "Update this Field",
+							"value" => ""
+							);
+					}
+				}
+
+				draw_edit_form(
+					array(
+						"config" => array("no_form_tag" => true),
+						"fields" => $form_array
+						)
+					);
+
 	}elseif ($_POST["drp_action"] == "5") { /* Clear Statisitics for Selected Devices */
 		print "	<tr>
 				<td colspan='2' class='textArea' bgcolor='#" . $colors["form_alternate1"]. "'>
