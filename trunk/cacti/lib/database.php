@@ -40,7 +40,7 @@ function db_connect_real($host,$user,$pass,$db_name,$db_type, $retries = 20) {
 	$cnn_id = NewADOConnection($db_type);
 
 	while ($i <= $retries) {
-		if ($cnn_id->Connect($host,$user,$pass,$db_name)) {
+		if ($cnn_id->PConnect($host,$user,$pass,$db_name)) {
 			return(1);
 		}
 
