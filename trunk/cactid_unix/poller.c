@@ -96,7 +96,9 @@ void poll_host(int host_id) {
 	host = (host_t *) malloc(sizeof(host_t));
 	ping = (ping_t *) malloc(sizeof(ping_t));
 
+	#ifndef OLD_MYSQL   
 	mysql_thread_init();
+	#endif 
 
 	snprintf(query1, sizeof(query1), "select action,hostname,snmp_community,snmp_version,snmpv3_auth_username,snmpv3_auth_password,snmpv3_auth_protocol,snmpv3_priv_passphrase,snmpv3_priv_protocol,snmp_port,snmp_timeout,availability_method,ping_method,rrd_name,rrd_path,arg1,arg2,arg3,local_data_id,rrd_num from poller_item where host_id=%i order by rrd_path,rrd_name", host_id);
 	snprintf(query2, sizeof(query2), "select id,hostname,snmp_community,snmp_version,snmpv3_auth_username,snmpv3_auth_password,snmpv3_auth_protocol,snmpv3_priv_passphrase,snmpv3_priv_protocol,snmp_port,snmp_timeout,availability_method,ping_method,status,status_event_count,status_fail_date,status_rec_date,status_last_error,min_time,max_time,cur_time,avg_time,total_polls,failed_polls,availability from host where id=%i", host_id);
@@ -405,7 +407,11 @@ void poll_host(int host_id) {
 	free(ping);
 
 	mysql_free_result(result);
+
+	#ifndef OLD_MYSQL   
 	mysql_thread_end();
+	#endif 
+
 	mysql_close(&mysql);
 
 	if (set.verbose == POLLER_VERBOSITY_DEBUG) {
