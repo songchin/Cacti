@@ -37,7 +37,7 @@ $colors["alternate"] = "0F0F0F";
 $colors["panel_dark"] = "0F0F0F";
 
 $colors["header_background"] = "FF0000";
-$colors["header_panel"] = "FFFFFF";
+$colors["header_panel_background"] = "FFFFFF";
 $colors["header_text"] = "ffffff";
 
 /* Form Colors */

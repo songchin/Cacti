@@ -223,7 +223,7 @@ function form_actions() {
 
 	include_once("./include/top_header.php");
 
-	html_start_box("<strong>" . $graph_actions{$_POST["drp_action"]} . "</strong>", "60%", $colors["header_panel"], "3", "center", "");
+	html_start_box("<strong>" . $graph_actions{$_POST["drp_action"]} . "</strong>", "60%", $colors["header_panel_background"], "3", "center", "");
 
 	print "<form action='graph_templates.php' method='post'>\n";
 
@@ -308,7 +308,7 @@ function item() {
 
 	html_start_box("<strong>Graph Item Inputs</strong>", "98%", $colors["header_background"], "3", "center", "graph_templates_inputs.php?action=input_edit&graph_template_id=" . $_GET["id"]);
 
-	print "<tr bgcolor='#" . $colors["header_panel"] . "'>";
+	print "<tr bgcolor='#" . $colors["header_panel_background"] . "'>";
 		DrawMatrixHeaderItem("Name",$colors["header_text"],2);
 	print "</tr>";
 

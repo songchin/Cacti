@@ -36,7 +36,7 @@ $colors["light"] = "F5F5F5";
 $colors["alternate"] = "E7E9F2";
 $colors["panel_dark"] = "C5C5C5";
 
-$colors["header_panel"] = "6d88ad";
+$colors["header_panel_background"] = "6d88ad";
 $colors["header_text"] = "ffffff";
 
 $colors["form_background_dark"] = "E1E1E1";

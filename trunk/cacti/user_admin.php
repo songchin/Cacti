@@ -554,7 +554,7 @@ function graph_settings_edit() {
 
 	while (list($tab_short_name, $tab_fields) = each($settings_graphs)) {
 		?>
-		<tr bgcolor='<?php print $colors["header_panel"];?>'>
+		<tr bgcolor='<?php print $colors["header_panel_background"];?>'>
 			<td colspan='2' class='textSubHeaderDark' style='padding: 3px;'>
 				<?php print $tabs_graphs[$tab_short_name];?>
 			</td>
@@ -780,7 +780,7 @@ function user_actions() {
 
 	include_once("./include/top_header.php");
 
-	html_start_box("<strong>" . $user_actions{$_POST["drp_action"]} . "</strong>", "60%", $colors["header_panel"], "3", "center", "");
+	html_start_box("<strong>" . $user_actions{$_POST["drp_action"]} . "</strong>", "60%", $colors["header_panel_background"], "3", "center", "");
 
 	print "<form action='user_admin.php' method='post'>\n";
 

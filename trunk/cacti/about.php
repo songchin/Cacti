@@ -31,7 +31,7 @@ html_start_box("<strong>About Cacti</strong>", "98%", $colors["header_background
 ?>
 
 <tr>
-	<td bgcolor="#<?php print $colors["header_panel"];?>" colspan="2">
+	<td bgcolor="#<?php print $colors["header_panel_background"];?>" colspan="2">
 		<strong><font color="#<?php print $colors["header_text"];?>">Version <?php print $config["cacti_version"];?></font></strong>
 	</td>
 </tr>

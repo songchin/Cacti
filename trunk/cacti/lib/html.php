@@ -210,7 +210,7 @@ function html_nav_bar($background_color, $colspan, $current_page, $rows_per_page
 function html_header($header_items, $last_item_colspan = 1) {
 	global $colors;
 
-	print "<tr bgcolor='#" . $colors["header_panel"] . "'>\n";
+	print "<tr bgcolor='#" . $colors["header_panel_background"] . "'>\n";
 
 	for ($i=0; $i<count($header_items); $i++) {
 		print "<td " . ((($i+1) == count($header_items)) ? "colspan='$last_item_colspan' " : "") . "class='textSubHeaderDark'>" . $header_items[$i] . "</td>\n";
@@ -229,7 +229,7 @@ function html_header_checkbox($header_items, $form_action = "") {
 	/* default to the 'current' file */
 	if ($form_action == "") { $form_action = basename($_SERVER["PHP_SELF"]); }
 
-	print "<tr bgcolor='#" . $colors["header_panel"] . "'>\n";
+	print "<tr bgcolor='#" . $colors["header_panel_background"] . "'>\n";
 
 	for ($i=0; $i<count($header_items); $i++) {
 		print "<td class='textSubHeaderDark'>" . $header_items[$i] . "</td>\n";
@@ -341,7 +341,7 @@ function draw_graph_items_list($item_list, $filename, $url_data, $disable_contro
 
 	include($config["include_path"] . "/config_arrays.php");
 
-	print "<tr bgcolor='#" . $colors["header_panel"] . "'>";
+	print "<tr bgcolor='#" . $colors["header_panel_background"] . "'>";
 		DrawMatrixHeaderItem("Graph Item",$colors["header_text"],1);
 		DrawMatrixHeaderItem("Data Source",$colors["header_text"],1);
 		DrawMatrixHeaderItem("Graph Item Type",$colors["header_text"],1);

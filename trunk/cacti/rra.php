@@ -140,7 +140,7 @@ function rra() {
 
 	html_start_box("<strong>Round Robin Archives</strong>", "98%", $colors["header_background"], "3", "center", "rra.php?action=edit");
 
-	print "<tr bgcolor='#" . $colors["header_panel"] . "'>";
+	print "<tr bgcolor='#" . $colors["header_panel_background"] . "'>";
 		DrawMatrixHeaderItem("Name",$colors["header_text"],1);
 		DrawMatrixHeaderItem("Steps",$colors["header_text"],1);
 		DrawMatrixHeaderItem("Rows",$colors["header_text"],1);

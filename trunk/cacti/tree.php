@@ -186,7 +186,7 @@ function item_edit() {
 			</select>
 		</td>
 	</tr>
-	<tr bgcolor='#<?php print $colors["header_panel"];?>'>
+	<tr bgcolor='#<?php print $colors["header_panel_background"];?>'>
 		<td colspan="2" class='textSubHeaderDark'>Tree Item Value</td>
 	</tr>
 	<?php
@@ -371,7 +371,7 @@ function tree_edit() {
 	if (!empty($_GET["id"])) {
 		html_start_box("<strong>Tree Items</strong>", "98%", $colors["header_background"], "3", "center", "tree.php?action=item_edit&tree_id=" . $tree["id"] . "&parent_id=0");
 
-		print "<tr bgcolor='#" . $colors["header_panel"] . "'>";
+		print "<tr bgcolor='#" . $colors["header_panel_background"] . "'>";
 			DrawMatrixHeaderItem("Item",$colors["header_text"],1);
 			DrawMatrixHeaderItem("Value",$colors["header_text"],1);
 			DrawMatrixHeaderItem("&nbsp;",$colors["header_text"],2);
@@ -389,7 +389,7 @@ function tree() {
 
 	html_start_box("<strong>Graph Trees</strong>", "98%", $colors["header_background"], "3", "center", "tree.php?action=edit");
 
-	print "<tr bgcolor='#" . $colors["header_panel"] . "'>";
+	print "<tr bgcolor='#" . $colors["header_panel_background"] . "'>";
 		DrawMatrixHeaderItem("Name",$colors["header_text"],1);
 		DrawMatrixHeaderItem("&nbsp;",$colors["header_text"],1);
 	print "</tr>";

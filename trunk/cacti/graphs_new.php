@@ -417,7 +417,7 @@ function graphs() {
 
 	html_start_box("<strong>Graph Templates</strong>", "98%", $colors["header_background"], "3", "center", "");
 
-	print "	<tr bgcolor='#" . $colors["header_panel"] . "'>
+	print "	<tr bgcolor='#" . $colors["header_panel_background"] . "'>
 			<td class='textSubHeaderDark'>Graph Template Name</td>
 			<td width='1%' align='center' bgcolor='#819bc0' style='" . get_checkbox_style() . "'><input type='checkbox' style='margin: 0px;' name='all_cg' title='Select All' onClick='SelectAll(\"cg\",this.checked);gt_update_selection_indicators();'></td>\n
 		</tr>\n";
@@ -644,7 +644,7 @@ function graphs() {
 					data query. You can <a href='host.php?action=query_verbose&id=" . $snmp_query["id"] . "&host_id=" . $host["id"] . "'>run this data
 					query in debug mode</a> to get more information.</td></tr>\n";
 			}else{
-				print "	<tr bgcolor='#" . $colors["header_panel"] . "'>
+				print "	<tr bgcolor='#" . $colors["header_panel_background"] . "'>
 						$html_dq_header
 						<td width='1%' align='center' bgcolor='#819bc0' style='" . get_checkbox_style() . "'><input type='checkbox' style='margin: 0px;' name='all_" . $snmp_query["id"] . "' title='Select All' onClick='SelectAll(\"sg_" . $snmp_query["id"] . "\",this.checked);" . (($use_javascript == true) ? "dq_update_selection_indicators();" : "") . "'></td>\n
 					</tr>\n";

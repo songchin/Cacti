@@ -127,7 +127,7 @@ function pollers() {
 
 	html_start_box("<strong>Data Pollers</strong>", "98%", $colors["header_background"], "3", "center", "data_pollers.php?action=edit");
 
-	print "<tr bgcolor='#" . $colors["header_panel"] . "'>";
+	print "<tr bgcolor='#" . $colors["header_panel_background"] . "'>";
 		DrawMatrixHeaderItem("Name",$colors["header_text"],1);
 		DrawMatrixHeaderItem("Hostname",$colors["header_text"],1);
 		DrawMatrixHeaderItem("Active",$colors["header_text"],1);
