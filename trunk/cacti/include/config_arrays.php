@@ -57,7 +57,10 @@ $messages = array(
 		"type" => "error"),
 	11 => array(
 		"message" => 'Password changed successfully.',
-		"type" => "info")
+		"type" => "info"),
+	12 => array(
+		"message" => 'Username already in use.',
+		"type" => "error")
 		);
 
 $cdef_operators = array(1 =>
