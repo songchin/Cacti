@@ -98,7 +98,7 @@ include($config["library_path"] . "/html_form.php");
 include($config["library_path"] . "/html_utility.php");
 include($config["library_path"] . "/variables.php");
 include($config["library_path"] . "/auth.php");
-include($config["library_path"] . "/api_user.php");
+include($config["library_path"] . "/user/user_info.php");
 
 /* load color scheme from theme file.  Load the default first and then overwrite as required with theme */
 include($config["include_path"] . "/config_colors.php");

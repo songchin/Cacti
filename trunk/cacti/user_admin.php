@@ -26,6 +26,7 @@
 
 include("./include/config.php");
 include("./include/auth.php");
+include("./lib/user/user_action.php");
 
 /* Detect deep linking the remove it */
 if (! isset($_SERVER["HTTP_REFERER"]) && ((strlen($_SERVER["QUERY_STRING"]) > 0) || (sizeof($_POST) > 0))) {

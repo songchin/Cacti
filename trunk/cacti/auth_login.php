@@ -24,6 +24,8 @@
  +-------------------------------------------------------------------------+
 */
 
+include("./lib/user/user_ldap.php");
+
 /* set default action */
 if (!isset($_REQUEST["action"])) {
 	$action = "";

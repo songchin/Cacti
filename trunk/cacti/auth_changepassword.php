@@ -25,6 +25,7 @@
 */
 
 include("./include/config.php");
+include("./lib/user/user_action.php");
 
 $user = api_user_info( array( "id" => $_SESSION["sess_user_id"] ) );
 
