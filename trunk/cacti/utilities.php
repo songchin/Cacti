@@ -66,7 +66,7 @@ switch ($_REQUEST["action"]) {
 	case 'clear_syslog':
 		include_once("./include/top_header.php");
 
-		utilities_clear_syslog();
+		api_syslog_clear();
 		utilities();
 
 		include_once("./include/bottom_footer.php");
@@ -223,10 +223,6 @@ function utilities_view_syslog() {
 		print "<tr><td bgcolor='#" . $colors["form_alternate1"] . "' colspan=7><em>No Entries</em></td></tr>";
 	}
 	html_end_box(false);
-}
-
-function utilities_clear_syslog() {
-	db_execute("truncate table syslog");
 }
 
 function utilities_view_snmp_cache() {

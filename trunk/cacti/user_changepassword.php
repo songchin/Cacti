@@ -62,15 +62,15 @@ function change_password() {
 					raise_message(11);
 					/* Log password change */
 					$username = db_fetch_cell("select username from user_auth where id=" . $_SESSION["sess_user_id"]);
-					cacti_log("CHANGEPASSWORD: Password change successful", SEV_INFO, 0, 0, 0, false, FACIL_AUTH);
+					api_syslog_cacti_log("CHANGEPASSWORD: Password change successful", SEV_INFO, 0, 0, 0, false, FACIL_AUTH);
 				}elseif ($change_result == "2") {
 					/* Authentication failure for old password */
 					raise_message(8);
-					cacti_log("CHANGEPASSWORD: Authenication failure on old password", SEV_WARNING, 0, 0, 0, false, FACIL_AUTH);
+					api_syslog_cacti_log("CHANGEPASSWORD: Authenication failure on old password", SEV_WARNING, 0, 0, 0, false, FACIL_AUTH);
 				}else{
 					/* General error changing password */
 					raise_message(9);
-					cacti_log("CHANGEPASSWORD: General Error unable to change password", SEV_ERROR, 0, 0, 0, false, FACIL_AUTH);
+					api_syslog_cacti_log("CHANGEPASSWORD: General Error unable to change password", SEV_ERROR, 0, 0, 0, false, FACIL_AUTH);
 				}
 			}
 		}else{

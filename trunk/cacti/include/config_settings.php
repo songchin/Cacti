@@ -89,19 +89,19 @@ $settings = array(
 			"friendly_name" => "Event Logging",
 			"method" => "spacer"
 			),
-		"log_destination" => array(
+		"syslog_destination" => array(
 			"friendly_name" => "Log Destination(s)",
 			"description" => "How will Cacti handle event logging.",
 			"method" => "drop_array",
 			"default" => 1,
-			"array" => $logfile_options
+			"array" => $syslog_options
 			),
 		"log_verbosity" => array(
 			"friendly_name" => "Cacti Syslog Detail Level",
 			"description" => "What level of detail do you want sent to the log file.",
 			"method" => "drop_array",
 			"default" => POLLER_VERBOSITY_LOW,
-			"array" => $logfile_verbosity
+			"array" => $syslog_verbosity
 			),
 		"poller_log" => array(
 			"friendly_name" => "System Syslog/Eventlog Logging Levels",

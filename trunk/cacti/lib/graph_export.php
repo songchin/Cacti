@@ -105,7 +105,7 @@ function export_fatal($stMessage) {
 
 function export_log($stMessage) {
 	if (read_config_option("log_export") == "on") {
-		cacti_log($stMessage, SEV_INFO, 0, 0, 0, true, FACIL_EXPORT);
+		api_syslog_cacti_log($stMessage, SEV_INFO, 0, 0, 0, true, FACIL_EXPORT);
 	};
 };
 

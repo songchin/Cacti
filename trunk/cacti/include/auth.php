@@ -31,7 +31,7 @@ if (db_fetch_cell("select cacti from version") != $config["cacti_version"]) {
 if (read_config_option("auth_method") != "0") {
 	/* handle change password dialog - only with builtin auth */
 	if ((isset($_SESSION['sess_change_password'])) && (read_config_option("auth_method") == 1)) {
-		cacti_log("AUTH: User password change forced", SEV_NOTICE, 0, 0, 0, false, FACIL_AUTH);
+		api_syslog_cacti_log("AUTH: User password change forced", SEV_NOTICE, 0, 0, 0, false, FACIL_AUTH);
 		header ("Location: auth_changepassword.php?ref=" . (isset($_SERVER["HTTP_REFERER"]) ? $_SERVER["HTTP_REFERER"] : "index.php"));
 		exit;
 	}
@@ -44,7 +44,7 @@ if (read_config_option("auth_method") != "0") {
 			if (!empty($guest_user_id)) {
 				$_SESSION["sess_user_id"] = $guest_user_id;
 			}
-			cacti_log("AUTH: Guest access enabled, using username \'" . $user["username"] . "\' as guest", SEV_INFO, 0, 0, 0, false, FACIL_AUTH);
+			api_syslog_cacti_log("AUTH: Guest access enabled, using username \'" . $user["username"] . "\' as guest", SEV_INFO, 0, 0, 0, false, FACIL_AUTH);
 		}
 	}
 
@@ -66,11 +66,11 @@ if (read_config_option("auth_method") != "0") {
 		if (api_user_expire_info($_SESSION["sess_user_id"]) == "0") {
 			$_SESSION["sess_change_password"] = true;
 			if ((read_config_option("auth_method") == 1) || (($current_user["realm"] == "0") && (read_config_option("auth_method") == "3"))) {
-				cacti_log("AUTH: User password expired, password change forced", SEV_NOTICE, 0, 0, 0, false, FACIL_AUTH);
+				api_syslog_cacti_log("AUTH: User password expired, password change forced", SEV_NOTICE, 0, 0, 0, false, FACIL_AUTH);
 				header ("Location: auth_changepassword.php?ref=" . (isset($_SERVER["HTTP_REFERER"]) ? $_SERVER["HTTP_REFERER"] : "index.php"));
 				exit;
 			}
-		}	
+		}
 
 		/* Check permissions to use this realm against database */
 		$realm_id = 0;
@@ -82,7 +82,7 @@ if (read_config_option("auth_method") != "0") {
 		$user_realms = api_user_realms_list($_SESSION["sess_user_id"]);
 
 		if ($user_realms[$realm_id]["value"] != "1") {
-			cacti_log("AUTH: User access denied to realm " . $user_auth_realms[$realm_id], SEV_WARNING, 0, 0, 0, false, FACIL_AUTH);
+			api_syslog_cacti_log("AUTH: User access denied to realm " . $user_auth_realms[$realm_id], SEV_WARNING, 0, 0, 0, false, FACIL_AUTH);
 			?>
 			<html>
 			<head>

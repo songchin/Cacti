@@ -68,7 +68,7 @@ function rrdtool_execute($command_line, $log_to_stdout, $output_flag, $rrd_struc
 
 	/* output information to the log file if appropriate */
 	if (read_config_option("log_verbosity") >= POLLER_VERBOSITY_DEBUG) {
-		cacti_log("CACTI2RRD: " . addslashes(read_config_option("path_rrdtool")) . " $command_line", SEV_DEBUG, 0, 0, 0, $log_to_stdout, FACIL_POLLER);
+		api_syslog_cacti_log("CACTI2RRD: " . addslashes(read_config_option("path_rrdtool")) . " $command_line", SEV_DEBUG, 0, 0, 0, $log_to_stdout, FACIL_POLLER);
 	}
 
 	/* if we want to see the error output from rrdtool; make sure to specify this */
@@ -173,7 +173,7 @@ function rrdtool_function_create($local_data_id, $show_source, $rrd_struc) {
 
 	/* if we find that this DS has no RRA associated; get out */
 	if (sizeof($rras) <= 0) {
-		cacti_log("There are no RRA's assigned to local_data_id: $local_data_id.", SEV_ERROR, 0, 0, 0, false, FACIL_WEBUI);
+		api_syslog_cacti_log("There are no RRA's assigned to local_data_id: $local_data_id.", SEV_ERROR, 0, 0, 0, false, FACIL_WEBUI);
 		return false;
 	}
 
@@ -309,7 +309,7 @@ function rrdtool_function_tune($rrd_tune_array) {
 			pclose($fp);
 
 			if (read_config_option("log_verbosity") >= POLLER_VERBOSITY_DEBUG) {
-				cacti_log("CACTI2RRD: " . addslashes(read_config_option("path_rrdtool")) . " tune $data_source_path $rrd_tune", SEV_DEBUG, 0, 0, 0, false, FACIL_WEBUI);
+				api_syslog_cacti_log("CACTI2RRD: " . addslashes(read_config_option("path_rrdtool")) . " tune $data_source_path $rrd_tune", SEV_DEBUG, 0, 0, 0, false, FACIL_WEBUI);
 			}
 		}
 	}
@@ -937,7 +937,7 @@ function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rr
 			how fun! */
 
 			$pad_number = ($greatest_text_format - $text_format_lengths{$graph_item["data_template_rrd_id"]});
-			//cacti_log("MAX: $greatest_text_format, CURR: $text_format_lengths[$item_dsid], DSID: $item_dsid");
+			//api_syslog_cacti_log("MAX: $greatest_text_format, CURR: $text_format_lengths[$item_dsid], DSID: $item_dsid");
 			$text_padding = str_pad("", $pad_number);
 
 			/* two GPRINT's in a row screws up the padding, lets not do that */

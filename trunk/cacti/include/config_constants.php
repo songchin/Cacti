@@ -158,4 +158,12 @@ define("FACIL_SCPTSVR",3);
 define("FACIL_AUTH",4);
 define("FACIL_WEBUI",5);
 define("FACIL_EXPORT", 6);
+
+define("SYSLOG_CACTI",1);
+define("SYSLOG_BOTH",2);
+define("SYSLOG_SYSTEM",3);
+
+define("SYSLOG_MNG_ASNEEDED",1);
+define("SYSLOG_MNG_DAYSOLD",2);
+define("SYSLOG_MNG_STOPLOG",3);
 ?>

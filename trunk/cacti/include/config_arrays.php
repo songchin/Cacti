@@ -188,10 +188,10 @@ $snmpv3_priv_protocol = array(
 	"AES192" => "AES192",
 	"AES256" => "AES256");
 
-$logfile_options = array(1 =>
-	"Cacti Syslog Only",
-	"Cacti Syslog and System Syslog/Eventlog",
-	"System Syslog/Eventlog Only");
+$syslog_options = array(
+	SYSLOG_CACTI => "Cacti Syslog Only",
+	SYSLOG_BOTH => "Cacti Syslog and System Syslog/Eventlog",
+	SYSLOG_SYSTEM => "System Syslog/Eventlog Only");
 
 $availability_options = array(
 	AVAIL_SNMP_AND_PING => "Ping and SNMP - Most Recommended",
@@ -204,7 +204,7 @@ $ping_methods = array(
 	PING_UDP => "UDP Ping",
 	PING_NONE => "Not Applicable");
 
-$logfile_verbosity = array(
+$syslog_verbosity = array(
 	POLLER_VERBOSITY_NONE => "NONE - Syslog Only if Selected",
 	POLLER_VERBOSITY_LOW => "LOW - Statistics and Errors",
 	POLLER_VERBOSITY_MEDIUM => "MEDIUM - Statistics, Errors and Results",
@@ -277,9 +277,9 @@ $ldap_modes = array(
 );
 
 $syslog_control_options = array(
-	0 => "Overwrite events as needed",
-	1 => "Overwrite events older than the maximum days",
-	2 => "Stop logging if maximum log size is exceeded"
+	SYSLOG_MNG_ASNEEDED => "Overwrite events as needed",
+	SYSLOG_MNG_DAYSOLD => "Overwrite events older than the maximum days",
+	SYSLOG_MNG_STOPLOG => "Stop logging if maximum log size is exceeded"
 );
 
 $snmp_implimentations = array(

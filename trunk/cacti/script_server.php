@@ -65,21 +65,21 @@ if ($_SERVER["argc"] >= 2) {
 if ($config["cacti_server_os"] == "win32") {
 	$guess = substr(__FILE__,0,2);
 	if ($guess == strtoupper($guess)) {
-		cacti_log("The PHP Script Server MUST be started using the full path to the file and in lower case.  This is a PHP Bug!!!", SEV_ERROR, $poller_id, 0, 0, false, FACIL_SCPTSVR);
+		api_syslog_cacti_log("The PHP Script Server MUST be started using the full path to the file and in lower case.  This is a PHP Bug!!!", SEV_ERROR, $poller_id, 0, 0, false, FACIL_SCPTSVR);
 		exit(-1);
 	}
 }
 
 if(read_config_option("log_verbosity") == POLLER_VERBOSITY_DEBUG) {
-	cacti_log("SERVER: " . $environ, SEV_DEBUG, $poller_id, 0, 0, false, FACIL_SCPTSVR);
-	cacti_log("GETCWD: " . strtolower(strtr(getcwd(),"\\","/")), SEV_DEBUG, $poller_id, 0, 0, false, FACIL_SCPTSVR);
-	cacti_log("DIRNAM: " . strtolower(strtr(dirname(__FILE__),"\\","/")), SEV_DEBUG, $poller_id, 0, 0, false, FACIL_SCPTSVR);
-	cacti_log("FILENM: " . __FILE__, SEV_DEBUG, $poller_id, 0, 0, false, FACIL_SCPTSVR);
+	api_syslog_cacti_log("SERVER: " . $environ, SEV_DEBUG, $poller_id, 0, 0, false, FACIL_SCPTSVR);
+	api_syslog_cacti_log("GETCWD: " . strtolower(strtr(getcwd(),"\\","/")), SEV_DEBUG, $poller_id, 0, 0, false, FACIL_SCPTSVR);
+	api_syslog_cacti_log("DIRNAM: " . strtolower(strtr(dirname(__FILE__),"\\","/")), SEV_DEBUG, $poller_id, 0, 0, false, FACIL_SCPTSVR);
+	api_syslog_cacti_log("FILENM: " . __FILE__, SEV_DEBUG, $poller_id, 0, 0, false, FACIL_SCPTSVR);
 }
 
 /* send status back to the server */
 if (read_config_option("log_verbosity") >= POLLER_VERBOSITY_HIGH) {
-	cacti_log("PHP Script Server has Started - Parent is " . $environ, SEV_DEBUG, $poller_id, 0, 0, false, FACIL_SCPTSVR);
+	api_syslog_cacti_log("PHP Script Server has Started - Parent is " . $environ, SEV_DEBUG, $poller_id, 0, 0, false, FACIL_SCPTSVR);
 }
 
 fputs(STDOUT, "PHP Script Server has Started - Parent is " . $environ . "\n");
@@ -110,7 +110,7 @@ while (1) {
 			}
 
 			if (read_config_option("log_verbosity") == POLLER_VERBOSITY_DEBUG) {
-				cacti_log("INCLUDE: '". $inc . "' SCRIPT: '" .$cmd . "' CMD: '" . $preparm . "'", SEV_DEBUG, $poller_id, 0, 0, false, FACIL_SCPTSVR);
+				api_syslog_cacti_log("INCLUDE: '". $inc . "' SCRIPT: '" .$cmd . "' CMD: '" . $preparm . "'", SEV_DEBUG, $poller_id, 0, 0, false, FACIL_SCPTSVR);
 			}
 
 			/* check for existance of function.  If exists call it */
@@ -127,11 +127,11 @@ while (1) {
 
 						include_once($inc);
 					} else {
-						cacti_log("PHP Script File to be included, does not exist", SEV_WARNING, $poller_id, 0, 0, false, FACIL_SCPTSVR);
+						api_syslog_cacti_log("PHP Script File to be included, does not exist", SEV_WARNING, $poller_id, 0, 0, false, FACIL_SCPTSVR);
 					}
 				}
 			} else {
-				cacti_log("PHP Script Server encountered errors parsing the command", SEV_WARNING, $poller_id, 0, 0, false, FACIL_SCPTSVR);
+				api_syslog_cacti_log("PHP Script Server encountered errors parsing the command", SEV_WARNING, $poller_id, 0, 0, false, FACIL_SCPTSVR);
 			}
 
 			if (function_exists($cmd)) {
@@ -154,24 +154,24 @@ while (1) {
 				}
 
 				if (read_config_option("log_verbosity") == POLLER_VERBOSITY_DEBUG) {
-					cacti_log("SERVER: " . $in_string . " output " . $result, SEV_DEBUG, $poller_id, 0, 0, false, FACIL_SCPTSVR);
+					api_syslog_cacti_log("SERVER: " . $in_string . " output " . $result, SEV_DEBUG, $poller_id, 0, 0, false, FACIL_SCPTSVR);
 				}
 			} else {
-				cacti_log("Function does not exist", SEV_WARNING, $poller_id, 0, 0, false, FACIL_SCPTSVR);
+				api_syslog_cacti_log("Function does not exist", SEV_WARNING, $poller_id, 0, 0, false, FACIL_SCPTSVR);
 				fputs(STDOUT, "WARNING: Function does not exist\n");
 			}
 		}elseif ($in_string == "quit") {
 			fputs(STDOUT, "PHP Script Server Shutdown request received, exiting\n");
 			if (read_config_option("log_verbosity") == POLLER_VERBOSITY_DEBUG) {
-				cacti_log("PHP Script Server Shutdown request received, exiting", SEV_DEBUG, $poller_id, 0, 0, false, FACIL_SCPTSVR);
+				api_syslog_cacti_log("PHP Script Server Shutdown request received, exiting", SEV_DEBUG, $poller_id, 0, 0, false, FACIL_SCPTSVR);
 			}
 			break;
 		}else {
-			cacti_log("Problems with input, command ingnored", SEV_WARNING, $poller_id, 0, 0, false, FACIL_SCPTSVR);
+			api_syslog_cacti_log("Problems with input, command ingnored", SEV_WARNING, $poller_id, 0, 0, false, FACIL_SCPTSVR);
 			fputs(STDOUT, "ERROR: Problems with input\n");
 		}
 	}else {
-		cacti_log("Input Expected, Script Server Terminating", SEV_ERROR, $poller_id, 0, 0, false, FACIL_SCPTSVR);
+		api_syslog_cacti_log("Input Expected, Script Server Terminating", SEV_ERROR, $poller_id, 0, 0, false, FACIL_SCPTSVR);
 		fputs(STDOUT, "ERROR: Input Expected, Script Server Terminating\n");
 		exit (-1);
 	}

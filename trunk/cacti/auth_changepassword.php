@@ -51,24 +51,24 @@ if (!$access_denied) {
 
 	switch ($_REQUEST["action"]) {
 	case 'changepassword':
-	
-		
+
+
 		if (api_user_info( array( "id" => $_SESSION["sess_user_id"], "password" => md5($_POST["password"]) ) ) ) {
 			$old_password = true;
 		}else{
 			if (($_POST["password"] == $_POST["confirm"]) && ($_POST["password"] != "")) {
 
 				/* Log password change */
-				cacti_log("CHANGEPASSWORD: Password change successful", SEV_INFO, 0, 0, 0, false, FACIL_AUTH);
-	
+				api_syslog_cacti_log("CHANGEPASSWORD: Password change successful", SEV_INFO, 0, 0, 0, false, FACIL_AUTH);
+
 				/* change password */
 				api_user_changepassword($_SESSION["sess_user_id"], $_POST["password"]);
-		
+
 				kill_session_var("sess_change_password");
 
 				/* ok, at the point the user has been successfully authenticated; so we must
 				decide what to do next */
-	
+
 				/* if no console permissions show graphs otherwise, pay attention to user setting */
 				$user_realms = api_user_realms_list($_SESSION["sess_user_id"]);
 
@@ -84,7 +84,7 @@ if (!$access_denied) {
 				}else{
 					header("Location: graph_view.php");
 				}
-	
+
 				exit;
 			}else{
 				$bad_password = true;

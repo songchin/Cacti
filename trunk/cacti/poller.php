@@ -45,7 +45,7 @@ $poller_id = 1;
 if ( $_SERVER["argc"] == 2 ) {
 	$poller_id = $_SERVER["argv"][1];
 	if (!is_numeric($poller_id)) {
-		cacti_log("The Poller ID is not numeric", SEV_ERROR, $poller_id, 0, 0, true, FACIL_POLLER);
+		api_syslog_cacti_log("The Poller ID is not numeric", SEV_ERROR, $poller_id, 0, 0, true, FACIL_POLLER);
 		exit -1;
 	}
 }
@@ -93,7 +93,7 @@ if ($poller_id == 1) {
 	/* verify I am a valid poller */
 	if (sizeof(db_fetch_assoc("SELECT id FROM poller WHERE id = " . $poller_id)) == 0) {
 		print "Poller ID " . $poller_id . " does not exist in this system.\n";
-		cacti_log("Poller " . $poller_id . " is attempting to run, but does not exist on this system.", SEV_ERROR, $poller_id, 0, 0, true, FACIL_POLLER);
+		api_syslog_cacti_log("Poller " . $poller_id . " is attempting to run, but does not exist on this system.", SEV_ERROR, $poller_id, 0, 0, true, FACIL_POLLER);
 		exit;
 	}
 
@@ -107,7 +107,7 @@ if ($poller_id == 1) {
 		}
 
 		if (($start + MAX_POLLER_RUNTIME) < time()) {
-			cacti_log("Maximum runtime of " . MAX_POLLER_RUNTIME . " seconds exceeded for Poller_ID " . $poller_id . " - Exiting.", SEV_ERROR, $poller_id, 0, 0, true, FACIL_POLLER);
+			api_syslog_cacti_log("Maximum runtime of " . MAX_POLLER_RUNTIME . " seconds exceeded for Poller_ID " . $poller_id . " - Exiting.", SEV_ERROR, $poller_id, 0, 0, true, FACIL_POLLER);
 			db_execute("update poller set run_state = 'Timeout' where poller_id=" . $poller_id);
 			exit;
 		}
@@ -232,7 +232,7 @@ if ((($num_polling_items > 0) || ($num_pollers > 1)) && (read_config_option("pol
 						if (($start + MAX_POLLER_RUNTIME) < time()) {
 							/* close rrdtool if poller is 0 */
 							rrd_close($rrdtool_pipe);
-							cacti_log("Maximum runtime of " . MAX_POLLER_RUNTIME . " seconds exceeded for Poller_ID " . $poller_id . " - Exiting.", SEV_ERROR, $poller_id, 0, 0, true, FACIL_POLLER);
+							api_syslog_cacti_log("Maximum runtime of " . MAX_POLLER_RUNTIME . " seconds exceeded for Poller_ID " . $poller_id . " - Exiting.", SEV_ERROR, $poller_id, 0, 0, true, FACIL_POLLER);
 							db_execute("update poller set run_state = 'Timeout' WHERE (active='on' AND run_state != 'Complete')");
 							exit;
 						}
@@ -246,7 +246,7 @@ if ((($num_polling_items > 0) || ($num_pollers > 1)) && (read_config_option("pol
 				list($micro,$seconds) = split(" ", microtime());
 				$end = $seconds + $micro;
 
-				cacti_log(sprintf("System Time: %01.4f s, " .
+				api_syslog_cacti_log(sprintf("System Time: %01.4f s, " .
 					"Total Pollers: %s, " .
 					"Method: %s, " .
 					"Processes: %s, " .
@@ -280,8 +280,9 @@ if ((($num_polling_items > 0) || ($num_pollers > 1)) && (read_config_option("pol
 			if (($start + MAX_POLLER_RUNTIME) < time()) {
 				/* close rrdtool if poller is 0 */
 				if ($poller_id == 1) { rrd_close($rrdtool_pipe); }
-				cacti_log("Maximum runtime of " . MAX_POLLER_RUNTIME . " seconds exceeded for Poller_ID " . $poller_id . " - Exiting.", SEV_ERROR, $poller_id, 0, 0, true, FACIL_POLLER);
+				api_syslog_cacti_log("Maximum runtime of " . MAX_POLLER_RUNTIME . " seconds exceeded for Poller_ID " . $poller_id . " - Exiting.", SEV_ERROR, $poller_id, 0, 0, true, FACIL_POLLER);
 				db_execute("update poller set run_state = 'Timeout' where poller_id=" . $poller_id);
+				api_syslog_manage_cacti_log(true);
 				exit;
 			}
 
@@ -318,17 +319,17 @@ if ((($num_polling_items > 0) || ($num_pollers > 1)) && (read_config_option("pol
 				}
 
 				if ($first_host) {
-					cacti_log("Recache Event Detected for Host", SEV_WARNING, $poller_id, 0, 0, true, FACIL_POLLER);
+					api_syslog_cacti_log("Recache Event Detected for Host", SEV_WARNING, $poller_id, 0, 0, true, FACIL_POLLER);
 				}
 
 				if (read_config_option("log_verbosity") == POLLER_VERBOSITY_DEBUG) {
-					cacti_log("RECACHE: Re-cache for Host, data query #$data_query_id", SEV_NOTICE, $poller_id, 0, 0, true, FACIL_POLLER);
+					api_syslog_cacti_log("RECACHE: Re-cache for Host, data query #$data_query_id", SEV_NOTICE, $poller_id, 0, 0, true, FACIL_POLLER);
 				}
 
 				run_data_query($host_id, $data_query_id);
 
 				if (read_config_option("log_verbosity") == POLLER_VERBOSITY_DEBUG) {
-					cacti_log("RECACHE: Re-cache successful.", SEV_NOTICE, $poller_id, 0, 0, true, FACIL_POLLER);
+					api_syslog_cacti_log("RECACHE: Re-cache successful.", SEV_NOTICE, $poller_id, 0, 0, true, FACIL_POLLER);
 				}
 			}
 		}
@@ -339,7 +340,7 @@ if ((($num_polling_items > 0) || ($num_pollers > 1)) && (read_config_option("pol
 		list($micro,$seconds) = split(" ", microtime());
 		$recache = $seconds + $micro;
 
-		cacti_log(sprintf("Recache Runtime: %01.4f s, " .
+		api_syslog_cacti_log(sprintf("Recache Runtime: %01.4f s, " .
 			"Poller: %s",
 			"Hosts Recached: %s",
 			round($recache - $end,4),
@@ -367,12 +368,16 @@ if ((($num_polling_items > 0) || ($num_pollers > 1)) && (read_config_option("pol
 	}
 }else{
 	if ($poller_id == 1) {
-		cacti_log("Either there are no pollers enabled, no items in your poller cache or polling is disabled. Make sure you have at least one data source created, your poller is active. If both are true, go to 'Utilities', and select 'Clear Poller Cache'.", SEV_WARNING, $poller_id, 0, 0, true, FACIL_POLLER);
+		api_syslog_cacti_log("Either there are no pollers enabled, no items in your poller cache or polling is disabled. Make sure you have at least one data source created, your poller is active. If both are true, go to 'Utilities', and select 'Clear Poller Cache'.", SEV_WARNING, $poller_id, 0, 0, true, FACIL_POLLER);
 	} else {
 		db_execute("update poller set run_state = 'Complete' where id=" . $poller_id);
-		cacti_log("Poller had not items to process.", SEV_WARNING, $poller_id, 0, 0, true, FACIL_POLLER);
+		api_syslog_cacti_log("Poller had not items to process.", SEV_WARNING, $poller_id, 0, 0, true, FACIL_POLLER);
 	}
 }
+
+/* manage size of cacti_syslog */
+api_syslog_manage_cacti_log(true);
+
 /* end mainline processing */
 
 ?>
