@@ -1134,7 +1134,7 @@ $fields_user_user_edit_host = array(
 		"description" => "How often the users password will expire and a password change will be forced.",
 		"value" => "|arg1:password_expire_length|",
 		"array" => $user_password_expire_intervals,
-		"default" => "0"
+		"default" => read_config_option("password_expire_length")
 		),
 	"id" => array(
 		"method" => "hidden_zero",

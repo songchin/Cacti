@@ -615,6 +615,24 @@ $settings = array(
 			"sql" => "select username as id, username as name from user_auth where realm = 0 order by username",
 			"default" => "guest"
 			),
+		"expiration_header" => array (
+			"friendly_name" => "Password Expiration",
+			"method" => "spacer",
+			),
+		"password_expire_length" => array(
+			"friendly_name" => "Default Password Expiration",
+			"description" => "Applys when creating new users.  Only applys for Builtin Authentication.",
+			"method" => "drop_array",
+			"default" => 0,
+			"array" => $user_password_expire_intervals
+			),
+		"password_expire_warning" => array(
+			"friendly_name" => "User Expiration Warning",
+			"description" => "Number of days to start warning the user that thier password is about to expire. Only applys for Builtin Authentication.",
+			"method" => "textbox",
+			"default" => "15",
+			"max_length" => "4"
+			),
 		"ldap_header" => array(
 			"friendly_name" => "LDAP Settings",
 			"method" => "spacer"
