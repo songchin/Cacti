@@ -165,7 +165,7 @@ if (strlen(read_config_option("path_cactilog"))) {
 
 /* SNMP Version */
 if ($config["cacti_server_os"] == "unix") {
-	$input["snmp_version"] = $settings["general"]["snmp_version"];
+	$input["snmp_version"] = $settings["snmp"]["snmp_version"];
 	$input["snmp_version"]["default"] = "net-snmp";
 }
 
@@ -283,7 +283,6 @@ if ($_REQUEST["step"] == "4") {
 			}
 		}elseif ($cacti_versions[$i] == "0.8.6c") {
 			/* no database upgrades for 0.8.6b -> 0.8.6c */
-			}
 		}elseif ($cacti_versions[$i] == "0.8.7") {
 			include ("0_8_6b_to_0_8_7.php");
 			upgrade_to_0_8_7();
