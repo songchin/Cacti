@@ -189,6 +189,7 @@ INSERT INTO colors VALUES (104,'2E3127');
 
 CREATE TABLE data_input (
   id mediumint(8) unsigned NOT NULL auto_increment,
+  reserved tinyint unsigned NOT NULL default '0',
   hash varchar(32) NOT NULL default '',
   name varchar(200) NOT NULL default '',
   input_string varchar(255) default NULL,
@@ -202,18 +203,18 @@ CREATE TABLE data_input (
 -- Dumping data for table `data_input`
 --
 
-INSERT INTO data_input VALUES (1,'3eb92bb845b9660a7445cf9740726522','Get SNMP Data','',2);
-INSERT INTO data_input VALUES (2,'bf566c869ac6443b0c75d1c32b5a350e','Get SNMP Data (Indexed)','',3);
-INSERT INTO data_input VALUES (3,'274f4685461170b9eb1b98d22567ab5e','Unix - Get Free Disk Space','<path_cacti>/scripts/diskfree.sh <partition>',1);
-INSERT INTO data_input VALUES (4,'95ed0993eb3095f9920d431ac80f4231','Unix - Get Load Average','perl <path_cacti>/scripts/loadavg_multi.pl',1);
-INSERT INTO data_input VALUES (5,'79a284e136bb6b061c6f96ec219ac448','Unix - Get Logged In Users','perl <path_cacti>/scripts/unix_users.pl <username>',1);
-INSERT INTO data_input VALUES (6,'362e6d4768937c4f899dd21b91ef0ff8','Linux - Get Memory Usage','perl <path_cacti>/scripts/linux_memory.pl <grepstr>',1);
-INSERT INTO data_input VALUES (7,'a637359e0a4287ba43048a5fdf202066','Unix - Get System Processes','perl <path_cacti>/scripts/unix_processes.pl',1);
-INSERT INTO data_input VALUES (8,'47d6bfe8be57a45171afd678920bd399','Unix - Get TCP Connections','perl <path_cacti>/scripts/unix_tcp_connections.pl <grepstr>',1);
-INSERT INTO data_input VALUES (9,'cc948e4de13f32b6aea45abaadd287a3','Unix - Get Web Hits','perl <path_cacti>/scripts/webhits.pl <log_path>',1);
-INSERT INTO data_input VALUES (10,'8bd153aeb06e3ff89efc73f35849a7a0','Unix - Ping Host','perl <path_cacti>/scripts/ping.pl <ip>',1);
-INSERT INTO data_input VALUES (11,'80e9e4c4191a5da189ae26d0e237f015','Get Script Data (Indexed)','',4);
-INSERT INTO data_input VALUES (12,'332111d8b54ac8ce939af87a7eac0c06','Get Script Server Data (Indexed)','',6);
+INSERT INTO data_input VALUES (1,1,'3eb92bb845b9660a7445cf9740726522','Get SNMP Data','',2);
+INSERT INTO data_input VALUES (2,1,'bf566c869ac6443b0c75d1c32b5a350e','Get SNMP Data (Indexed)','',3);
+INSERT INTO data_input VALUES (3,0,'274f4685461170b9eb1b98d22567ab5e','Unix - Get Free Disk Space','<path_cacti>/scripts/diskfree.sh <partition>',1);
+INSERT INTO data_input VALUES (4,0,'95ed0993eb3095f9920d431ac80f4231','Unix - Get Load Average','perl <path_cacti>/scripts/loadavg_multi.pl',1);
+INSERT INTO data_input VALUES (5,0,'79a284e136bb6b061c6f96ec219ac448','Unix - Get Logged In Users','perl <path_cacti>/scripts/unix_users.pl <username>',1);
+INSERT INTO data_input VALUES (6,0,'362e6d4768937c4f899dd21b91ef0ff8','Linux - Get Memory Usage','perl <path_cacti>/scripts/linux_memory.pl <grepstr>',1);
+INSERT INTO data_input VALUES (7,0,'a637359e0a4287ba43048a5fdf202066','Unix - Get System Processes','perl <path_cacti>/scripts/unix_processes.pl',1);
+INSERT INTO data_input VALUES (8,0,'47d6bfe8be57a45171afd678920bd399','Unix - Get TCP Connections','perl <path_cacti>/scripts/unix_tcp_connections.pl <grepstr>',1);
+INSERT INTO data_input VALUES (9,0,'cc948e4de13f32b6aea45abaadd287a3','Unix - Get Web Hits','perl <path_cacti>/scripts/webhits.pl <log_path>',1);
+INSERT INTO data_input VALUES (10,0,'8bd153aeb06e3ff89efc73f35849a7a0','Unix - Ping Host','perl <path_cacti>/scripts/ping.pl <ip>',1);
+INSERT INTO data_input VALUES (11,1,'80e9e4c4191a5da189ae26d0e237f015','Get Script Data (Indexed)','',4);
+INSERT INTO data_input VALUES (12,1,'332111d8b54ac8ce939af87a7eac0c06','Get Script Server Data (Indexed)','',6);
 
 --
 -- Table structure for table `data_input_data`
@@ -1858,6 +1859,7 @@ INSERT INTO graph_tree_items VALUES (7,1,0,0,'',1,'00100000000000000000000000000
 
 CREATE TABLE host (
   id mediumint(8) unsigned NOT NULL auto_increment,
+  poller_id smallint(5) unsigned NOT NULL default '0',
   host_template_id mediumint(8) unsigned NOT NULL default '0',
   description varchar(150) NOT NULL default '',
   hostname varchar(250) default NULL,
@@ -1865,18 +1867,23 @@ CREATE TABLE host (
   snmp_version tinyint(1) unsigned NOT NULL default '1',
   snmpv3_auth_username varchar(50) default NULL,
   snmpv3_auth_password varchar(50) default NULL,
+  snmpv3_auth_protocol varchar(5),
+  snmpv3_priv_passphrase varchar(200),
+  snmpv3_priv_protocol varchar(5),
   snmp_port mediumint(5) unsigned NOT NULL default '161',
   snmp_timeout mediumint(8) unsigned NOT NULL default '500',
+  availability_method smallint(5) unsigned NOT NULL default '1',
+  ping_method smallint(5) unsigned NOT NULL default '',
   disabled char(2) default NULL,
   status tinyint(2) NOT NULL default '0',
   status_event_count mediumint(8) unsigned NOT NULL default '0',
   status_fail_date datetime NOT NULL default '0000-00-00 00:00:00',
   status_rec_date datetime NOT NULL default '0000-00-00 00:00:00',
   status_last_error varchar(50) default '',
-  min_time decimal(7,5) default '9.99999',
-  max_time decimal(7,5) default '0.00000',
-  cur_time decimal(7,5) default '0.00000',
-  avg_time decimal(7,5) default '0.00000',
+  min_time decimal(9,5) default '99999.99',
+  max_time decimal(9,5) default '0.00000',
+  cur_time decimal(9,5) default '0.00000',
+  avg_time decimal(9,5) default '0.00000',
   total_polls int(12) unsigned default '0',
   failed_polls int(12) unsigned default '0',
   availability decimal(7,5) NOT NULL default '100.00000',
@@ -2041,8 +2048,9 @@ INSERT INTO host_template_snmp_query VALUES (8,6);
 
 CREATE TABLE poller (
   id smallint(5) unsigned NOT NULL auto_increment,
+  active tinyint unsigned NOT NULL default '0',
   hostname varchar(250) NOT NULL default '',
-  ip_address int(11) unsigned NOT NULL default '0',
+  name varchar(150) NOT NULL default 'Description',
   last_update datetime NOT NULL default '0000-00-00 00:00:00',
   PRIMARY KEY  (id)
 ) TYPE=MyISAM;
@@ -2083,8 +2091,12 @@ CREATE TABLE poller_item (
   snmp_version tinyint(1) unsigned NOT NULL default '0',
   snmpv3_auth_username varchar(50) NOT NULL default '',
   snmpv3_auth_password varchar(50) NOT NULL default '',
+  snmpv3_priv_passphrase varchar(200),
+  snmpv3_priv_protocol varchar(5),
   snmp_port mediumint(5) unsigned NOT NULL default '161',
   snmp_timeout mediumint(8) unsigned NOT NULL default '0',
+  availability_method tinyint unsigned NOT NULL default '1',
+  ping_method tinyint unsigned default '',
   rrd_name varchar(19) NOT NULL default '',
   rrd_path varchar(255) NOT NULL default '',
   rrd_num tinyint(2) unsigned NOT NULL default '0',
