@@ -110,10 +110,29 @@ void snmp_host_init(host_t *current_host) {
 			session.securityPrivProto = usmDESPrivProtocol;
 		} else if (strcmp(current_host->snmpv3_priv_protocol,"[None]")) {
 			session.securityPrivProto = usmNoPrivProtocol;
-		} else if (strcmp(current_host->snmpv3_priv_protocol,"AES128")) {
+#ifdef HAVE_AES
+		} else if ((strcmp(current_host->snmpv3_priv_protocol,"AES128"))
+#ifdef SNMP_VALIDATE_ERR
+/* 
+* In Net-SNMP before 5.2, the following symbols exist:
+* usmAES128PrivProtocol, usmAES192PrivProtocol, usmAES256PrivProtocol
+* In an effort to be more standards-compliant, 5.2 removed the last two.
+* As of 5.2, the symbols are:
+* usmAESPrivProtocol, usmAES128PrivProtocol
+* 
+* As we want this extension to compile on both versions, we use the latter
+* symbol on purpose, as it's defined to be the same as the former.
+*/
+		|| ((strcmp(current_host->snmpv3_priv_protocol, "AES"))
+#else
+		) {
 			session.securityPrivProto = usmAES128PrivProtocol;
-//		} else if (strcmp(current_host->snmpv3_priv_protocol,"AES")) {
-//			session.securityPrivProto = usmAESPrivProtocol;
+		} else if (strcmp(current_host->snmpv3_priv_protocol,"AES192")) {
+			session.securityPrivProto = usmAES192PrivProtocol;
+		} else if (strcmp(current_host->snmpv3_priv_protocol,"AES256")) {
+			session.securityPrivProto = usmAES256PrivProtocol;
+#endif
+#endif
 		}else {			
 			cacti_log("ERROR: SNMP: Error with SNMPv3 privacy protocol setting.\n");
 		}
