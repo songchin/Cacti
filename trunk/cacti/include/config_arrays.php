@@ -257,6 +257,22 @@ $user_password_expire_intervals = array(
 	360 => "360 Days"
 	);
 
+$ldap_versions = array(
+	2 => "Version 2",
+	3 => "Version 3"
+);
+
+$ldap_encryption = array(
+	0 => "None",
+	1 => "SSL",
+	2 => "TLS", 
+);
+
+$ldap_modes = array(
+	0 => "No Binding",
+	1 => "Anonymous Binding",
+	2 => "Specific Binding"
+);
 
 $snmp_implimentations = array(
 	"ucd-snmp" => "UCD-SNMP 4.x",
