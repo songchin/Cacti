@@ -31,7 +31,7 @@ if (!isset($_REQUEST["action"])) { $_REQUEST["action"] = ""; }
 
 switch ($_REQUEST["action"]) {
 	case 'save':
-		form_save();
+		save();
 
 		break;
 	default:
@@ -47,25 +47,20 @@ switch ($_REQUEST["action"]) {
     The Save Function
    -------------------------- */
 
-function form_save() {
+function save() {
 	global $settings_users;
 
-	while (list($tab_short_name, $tab_fields) = each($settings_users)) {
-		while (list($field_name, $field_array) = each($tab_fields)) {
-			if ((isset($field_array["items"])) && (is_array($field_array["items"]))) {
-				while (list($sub_field_name, $sub_field_array) = each($field_array["items"])) {
-					db_execute("replace into settings_users (user_id,name,value) values (" . $_SESSION["sess_user_id"] . ",'$sub_field_name', '" . (isset($_POST[$sub_field_name]) ? $_POST[$sub_field_name] : "") . "')");
-				}
-			}else{
-				db_execute("replace into settings_users (user_id,name,value) values (" . $_SESSION["sess_user_id"] . ",'$field_name', '" . (isset($_POST[$field_name]) ? $_POST[$field_name] : "") . "')");
-			}
-		}
+	if (api_user_user_setting_save($_SESSION["sess_user_id"],$_POST) == 1) {
+		raise_message(2);
+	}else{
+		raise_message(1);
 	}
 
 	/* reset local settings cache so the user sees the new settings */
 	kill_session_var("sess_user_config_array");
 
 	header("Location: user_settings.php");
+
 }
 
 /* --------------------------
@@ -89,6 +84,9 @@ function settings() {
 
 	print "<tr bgcolor='#" . $colors["header_background"] . "'><td colspan='3'><table cellspacing='0' cellpadding='3' width='100%'><tr><td class='textHeaderDark'><strong>My (User) Settings</strong></td></tr></table></td></tr>";
 
+	/* get user settings */
+	$user_settings = api_user_user_setting_list($_SESSION["sess_user_id"]);
+
 	while (list($tab_short_name, $tab_fields) = each($settings_users)) {
 		?>
 		<tr bgcolor='<?php print $colors["header_panel_background"];?>'>
@@ -108,15 +106,13 @@ function settings() {
 					if (user_config_value_exists($sub_field_name, $_SESSION["sess_user_id"])) {
 						$form_array[$field_name]["items"][$sub_field_name]["form_id"] = 1;
 					}
-
-					$form_array[$field_name]["items"][$sub_field_name]["value"] =  db_fetch_cell("select value from settings_users where name='$sub_field_name' and user_id=" . $_SESSION["sess_user_id"]);
+					$form_array[$field_name]["items"][$sub_field_name]["value"] =  $user_settings[$sub_field_name];
 				}
 			}else{
 				if (user_config_value_exists($field_name, $_SESSION["sess_user_id"])) {
 					$form_array[$field_name]["form_id"] = 1;
 				}
-
-				$form_array[$field_name]["value"] = db_fetch_cell("select value from settings_users where name='$field_name' and user_id=" . $_SESSION["sess_user_id"]);
+				$form_array[$field_name]["value"] = $user_settings[$field_name];
 			}
 		}
 
@@ -135,7 +131,7 @@ function settings() {
 	print "<br>";
 
 	form_hidden_box("save_component_user_config","1","");
-	form_save_button("user_settings.php", "save");
+	form_save_button((isset($_SERVER["HTTP_REFERER"]) ? $_SERVER["HTTP_REFERER"] : "index.php"), "save");
 }
 
 ?>

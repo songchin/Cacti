@@ -646,7 +646,7 @@ function user_settings_edit() {
 
 	html_start_box("<strong>User Settings</strong>", "98%", $colors["header_background"], "3", "center", "");
 
-	/* get user graph settings */
+	/* get user settings */
 	$user_settings = api_user_user_setting_list($_GET["id"]);
 
 	while (list($tab_short_name, $tab_fields) = each($settings_users)) {
