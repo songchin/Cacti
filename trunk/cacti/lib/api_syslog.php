@@ -133,6 +133,9 @@ function api_syslog_get_facility($facility) {
 		case FACIL_AUTH:
 			return "AUTH";
 			break;
+		case FACIL_SMTP:
+			return "SMTP";
+			break;
 		default:
 			return "UNKNOWN";
 			break;

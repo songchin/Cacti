@@ -158,6 +158,7 @@ define("FACIL_SCPTSVR",3);
 define("FACIL_AUTH",4);
 define("FACIL_WEBUI",5);
 define("FACIL_EXPORT", 6);
+define("FACIL_SMTP",7);
 
 define("SYSLOG_CACTI",1);
 define("SYSLOG_BOTH",2);
