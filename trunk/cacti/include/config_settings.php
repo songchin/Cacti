@@ -90,22 +90,22 @@ $settings = array(
 			"method" => "spacer"
 			),
 		"log_destination" => array(
-			"friendly_name" => "Log Destination",
+			"friendly_name" => "Log Destination(s)",
 			"description" => "How will Cacti handle event logging.",
 			"method" => "drop_array",
 			"default" => 1,
 			"array" => $logfile_options
 			),
 		"log_verbosity" => array(
-			"friendly_name" => "Event Logging Level",
+			"friendly_name" => "Cacti Syslog Detail Level",
 			"description" => "What level of detail do you want sent to the log file.",
 			"method" => "drop_array",
 			"default" => POLLER_VERBOSITY_LOW,
 			"array" => $logfile_verbosity
 			),
 		"poller_log" => array(
-			"friendly_name" => "Poller Syslog/Eventlog Selection",
-			"description" => "If you are using the Syslog/Eventlog, What Cacti poller messages should be placed in the Syslog/Eventlog.",
+			"friendly_name" => "System Syslog/Eventlog Logging Levels",
+			"description" => "If you are using the Poller Systems Syslog/Eventlog, What level of Cacti poller messages should be placed in the log.",
 			"method" => "checkbox_group",
 			"tab" => "poller",
 			"items" => array(
@@ -118,7 +118,7 @@ $settings = array(
 					"default" => ""
 					),
 				"log_perror" => array(
-					"friendly_name" => "Poller Errors",
+					"friendly_name" => "Poller Errors or Higher",
 					"default" => "on"
 					)
 				)
@@ -128,9 +128,9 @@ $settings = array(
 			"method" => "spacer"
 			),
 		"syslog_size" => array(
-			"friendly_name" => "Maximum Log Size in kbytes",
-			"description" => "The maximum log size in kilo bytes.  The log will be pruned after each polling cycle.",
-			"default" => "1024",
+			"friendly_name" => "Maximum Log Size",
+			"description" => "The maximum number of records to store in the Cacti Syslog.  The log will be pruned after each polling cycle.  The maximum number of records is an approximate value due to the nature of the record count check.",
+			"default" => "1024k",
 			"method" => "textbox",
 			"max_length" => "10"
 			),
@@ -142,8 +142,8 @@ $settings = array(
 			"array" => $syslog_control_options
 			),
 		"syslog_maxdays" => array(
-			"friendly_name" => "Maximum Days Retained",
-			"description" => "All events older than the specified number of days will be discarded.",
+			"friendly_name" => "Maximum Retention Period",
+			"description" => "All events older than the specified number of days will be discarded if the maximum number of recrods in the Cacti Syslog is reached.",
 			"method" => "textbox",
 			"default" => "7",
 			"max_length" => "10"

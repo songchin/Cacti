@@ -189,9 +189,9 @@ $snmpv3_priv_protocol = array(
 	"AES256" => "AES256");
 
 $logfile_options = array(1 =>
-	"Logfile Only",
-	"Logfile and Syslog/Eventlog",
-	"Syslog/Eventlog Only");
+	"Cacti Syslog Only",
+	"Cacti Syslog and System Syslog/Eventlog",
+	"System Syslog/Eventlog Only");
 
 $availability_options = array(
 	AVAIL_SNMP_AND_PING => "Ping and SNMP - Most Recommended",
