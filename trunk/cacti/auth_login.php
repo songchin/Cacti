@@ -24,9 +24,6 @@
  +-------------------------------------------------------------------------+
 */
 
-include_once("lib/api_user.php");
-include_once("lib/html.php");
-
 /* set default action */
 if (!isset($_REQUEST["action"])) {
 	$action = "";
