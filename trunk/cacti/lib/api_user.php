@@ -31,12 +31,33 @@ include/config.php
 
 */
 
-/* coming soon */
+/* api_user_save
+   @arg $array - an array containing each column -> value mapping in the user_auth table, always remember the id field
+   @return - id of user saved, new or existing 
+   reference user_admin.php for examples */
 function api_user_save($array) {
 
 	$user_id = sql_save($array, "user_auth");
 
 	return $user_id;
+
+}
+
+/* coming soon */
+function api_user_realms_save($array) {
+
+
+}
+
+/* coming soon */
+function api_user_graph_perms_save($array) {
+
+
+}
+
+/* coming soon */
+function api_user_graph_setting_save($array) {
+
 
 }
 
@@ -137,15 +158,16 @@ function api_user_info($array) {
 	$user = db_fetch_row($sql_query);
 	
 	/* get last login and append */
-	$last_login = db_fetch_row("select DATE_FORMAT(max(time),'%M %e %Y %H:%i:%s') as time from user_log where user_id = " . $user["id"] . " and result = 1");
-	$user["time"] = $last_login["time"];
+	$last_login = db_fetch_row("select username, DATE_FORMAT(time,'%M %e %Y %H:%i:%s') as lastlogin, ip from user_log where user_id = '" . $user["id"] . "' and result = 1 order by time desc limit 1");
+	$user["lastlogin"] = $last_login["lastlogin"];
+	$user["ip"] = $last_login["ip"];
 
 	return $user;
 
 }
 
 /* api_user_remove - removes a user account
-   @arg $user_id - user id */
+   @arg $user_id - user id */ 
 function api_user_remove($user_id) {
 
 	if (!empty($user_id)) {
@@ -184,15 +206,24 @@ function api_user_disable($user_id) {
 /* api_user_copy - copies a user account
    @arg $template_user - username of account that should be used as the template
    @arg $new_user - username of the account to be created
-   @arg $new_realm - the realm the new account should be a member of */
+   @arg $new_realm - the realm the new account should be a member of 
+   @return - '0' success, '1' error */
 function api_user_copy($template_user, $new_user, $new_realm=-1) {
-        $user_auth = db_fetch_row("select * from user_auth where username = '$template_user'");
+
+	$user_auth = db_fetch_row("select * from user_auth where username = '$template_user'");
         $user_auth['username'] = $new_user;
 	if ($new_realm != -1) {
 		$user_auth['realm'] = $new_realm;
         }
 	$old_id = $user_auth['id'];
         $user_auth['id'] = 0;
+
+	/* check that destination user doesn't already exist */
+	$user = api_user_info( array( "username" => $new_user, "realm" => $user_auth['realm'] ) );
+	if (!empty($user["id"])) {
+		return 1;
+	}
+
 
         $new_id = sql_save($user_auth, 'user_auth');
 
@@ -220,6 +251,7 @@ function api_user_copy($template_user, $new_user, $new_realm=-1) {
                 sql_save($settings_tree, 'settings_tree', array('user_id', 'graph_tree_item_id'));
         }
 
+	return 0;
 }
 
 
