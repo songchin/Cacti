@@ -305,6 +305,8 @@ class Net_Ping
 				$ping_result = $this->ping_icmp();
 			}else if ($ping_type == PING_UDP) {
 				$ping_result = $this->ping_udp();
+			}else if ($ping_type == PING_NONE) {
+				$ping_result = true;
 			}
 		}
 
@@ -332,6 +334,8 @@ class Net_Ping
 					return true;
 				else
 					return false;
+			case AVAIL_NONE:
+				return true;
 			case AVAIL_PING:
 				if ($ping_result)
 					return true;

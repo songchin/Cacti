@@ -181,15 +181,15 @@ if ((sizeof($polling_items) > 0) && (read_config_option("poller_enabled") == "on
 
 			/* if we are only allowed to use an snmp check and this host does not support snnp, we
 			must assume that this host is up */
-			if (($ping_availability == AVAIL_SNMP) && ($item["snmp_community"] == "")) {
+			if ((($ping_availability == AVAIL_SNMP) && ($item["snmp_community"] == "")) || ($ping_availability == AVAIL_NONE)) {
 				$host_down = false;
 				update_host_status($poller_id, HOST_UP, $host_id, $hosts, $ping, $ping_availability, $print_data_to_stdout);
 
 				if (read_config_option("log_verbosity") >= POLLER_VERBOSITY_MEDIUM) {
-					cacti_log("Poller[$poller_id] Host[$host_id] No host availability check possible for '" . $item["hostname"] . "'.", $print_data_to_stdout);
+					cacti_log("Poller[$poller_id] Host[$host_id] Availability Disabled for Host '" . $item["hostname"] . "'.", $print_data_to_stdout);
 				}
 			}else{
-				if ($ping->ping($ping_availability, read_config_option("ping_method"), read_config_option("ping_timeout"), read_config_option("ping_retries"))) {
+				if ($ping->ping($ping_availability, $item["ping_method"], read_config_option("ping_timeout"), read_config_option("ping_retries"))) {
 					$host_down = false;
 					update_host_status($poller_id, HOST_UP, $host_id, $hosts, $ping, $ping_availability, $print_data_to_stdout);
 				}else{

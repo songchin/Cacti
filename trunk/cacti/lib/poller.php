@@ -282,6 +282,8 @@ function update_host_status($poller_id, $status, $host_id, &$hosts, &$ping, $pin
 			}else {
 				$hosts[$host_id]["status_last_error"] = $ping->snmp_response;
 			}
+		}elseif ($ping_availability == AVAIL_NONE) {
+			$hosts[$host_id]["status_last_error"] = "Availability disabled for host";
 		}else {
 			$hosts[$host_id]["status_last_error"] = $ping->ping_response;
 		}
@@ -341,6 +343,8 @@ function update_host_status($poller_id, $status, $host_id, &$hosts, &$ping, $pin
 			}else {
 				$ping_time = $ping->snmp_status;
 			}
+		}elseif ($ping_availability == AVAIL_NONE) {
+			$ping_time = 0.000;
 		}else {
 			$ping_time = $ping->ping_status;
 		}
@@ -410,6 +414,8 @@ function update_host_status($poller_id, $status, $host_id, &$hosts, &$ping, $pin
 				}else{
 					cacti_log("Poller[$poller_id] Host[$host_id] SNMP: " . $ping->snmp_response, $print_data_to_stdout);
 				}
+			} elseif ($ping_availability == AVAIL_NONE) {
+				cacti_log("Poller[$poller_id] Host[$host_id] AVAIL: Availability cheking disabled for host", $print_data_to_stdout);
 			} else {
 				cacti_log("Poller[$poller_id] Host[$host_id] PING: " . $ping->ping_response, $print_data_to_stdout);
 			}
@@ -419,6 +425,8 @@ function update_host_status($poller_id, $status, $host_id, &$hosts, &$ping, $pin
 				cacti_log("Poller[$poller_id] Host[$host_id] SNMP: " . $ping->snmp_response, $print_data_to_stdout);
 			} elseif ($ping_availability == AVAIL_SNMP) {
 				cacti_log("Poller[$poller_id] Host[$host_id] SNMP: " . $ping->snmp_response, $print_data_to_stdout);
+			} elseif ($ping_availability == AVAIL_NONE) {
+				cacti_log("Poller[$poller_id] Host[$host_id] AVAIL: Availability cheking disabled for host", $print_data_to_stdout);
 			} else {
 				cacti_log("Poller[$poller_id] Host[$host_id] PING: " . $ping->ping_response, $print_data_to_stdout);
 			}
