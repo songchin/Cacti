@@ -52,10 +52,10 @@ function cacti_snmp_get($hostname, $community, $oid, $version, $v3username, $v3p
 		snmp_set_quick_print(0);
 
 		if ($version == "1") {
-			$snmp_value = @snmpget("$hostname:$port", $community, $oid, ($timeout * 1000), $retries);
+			$snmp_value = @snmpget("$hostname:$port", $community, trim($oid), ($timeout * 1000), $retries);
 		} else {
- 			$snmp_value = @snmp3_get("$hostname:$port", $v3username, snmp_get_v3authpriv($v3privproto), $v3authproto,
-												$v3password, $v3privproto, $v3privpassphrase, $oid, ($timeout * 1000), retries);
+			$snmp_value = @snmp3_get("$hostname:$port", $v3username, snmp_get_v3authpriv($v3privproto), $v3authproto,
+				$v3password, $v3privproto, $v3privpassphrase, $oid, ($timeout * 1000), $retries);
 		}
 	}else{
 		/* ucd/net snmp want the timeout in seconds */
@@ -104,10 +104,10 @@ function cacti_snmp_walk($hostname, $community, $oid, $version, $v3username, $v3
 
 	if (($config["php_snmp_support"] == true) && (($version == "1") || ($version == "3"))) {
 		if ($version == "1") {
-			$temp_array = @snmpwalkoid("$hostname:$port", $community, $oid, ($timeout * 1000), $retries);
+			$temp_array = @snmpwalkoid("$hostname:$port", $community, trim($oid), ($timeout * 1000), $retries);
 		} else {
- 			$temp_array = @snmp3_walk("$hostname:$port", $v3username, snmp_get_v3authpriv($v3privproto), $v3authproto,
-												$v3password, $v3privproto, $v3privpassphrase, $oid, ($timeout * 1000), retries);
+			$temp_array = @snmp3_walk("$hostname:$port", $v3username, snmp_get_v3authpriv($v3privproto), $v3authproto,
+				$v3password, $v3privproto, $v3privpassphrase, $oid, ($timeout * 1000), $retries);
 		}
 
 		$o = 0;

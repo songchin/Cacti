@@ -71,21 +71,17 @@ function api_poller_cache_item_add($host_id, $host_field_override, $local_data_i
 			$host["hostname"] = "None";
 		}
 
-		$sql_string = "insert into poller_item (local_data_id,host_id,poller_id,action,hostname,
+		db_execute("insert into poller_item (local_data_id,host_id,poller_id,action,hostname,
 			snmp_community,snmp_version,snmpv3_auth_username,snmpv3_auth_password,
 			snmpv3_auth_protocol,snmpv3_priv_passphrase,snmpv3_priv_protocol,snmp_timeout,snmp_port,
 			availability_method,ping_method,rrd_name,rrd_path,rrd_num,arg1,arg2,arg3)
 			values ($local_data_id," . $host["id"] . "," . $host["poller_id"] . ",$poller_action_id,'" . $host["hostname"] . "','" .
-				$host["snmp_community"] . "','" . $host["snmp_version"] . "','" .
-				$host["snmpv3_auth_username"] . "','" . $host["snmpv3_auth_password"] . "','" .
-				$host["snmpv3_auth_protocol"] . "','" . $host["snmpv3_priv_passphrase"] . "','" . $host["snmpv3_priv_protocol"] . "','" .
-				$host["snmp_timeout"] . "','" . $host["snmp_port"] . "','" . $host["availability_method"] . "','" . $host["ping_method"] .
-				"','$data_source_item_name','" .	addslashes(clean_up_path(get_data_source_path($local_data_id, true))) .
-				"','$num_rrd_items','$arg1','$arg2','$arg3')";
-
-		db_execute($sql_string);
-
-		return;
+			$host["snmp_community"] . "','" . $host["snmp_version"] . "','" .
+			$host["snmpv3_auth_username"] . "','" . $host["snmpv3_auth_password"] . "','" .
+			$host["snmpv3_auth_protocol"] . "','" . $host["snmpv3_priv_passphrase"] . "','" . $host["snmpv3_priv_protocol"] . "','" .
+			$host["snmp_timeout"] . "','" . $host["snmp_port"] . "','" . $host["availability_method"] . "','" . $host["ping_method"] .
+			"','$data_source_item_name','" .	addslashes(clean_up_path(get_data_source_path($local_data_id, true))) .
+			"','$num_rrd_items','$arg1','$arg2','$arg3')");
 	}
 }
 ?>
