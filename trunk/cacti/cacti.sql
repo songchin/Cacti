@@ -1459,7 +1459,7 @@ CREATE TABLE graph_templates_graph (
   export char(2) default NULL,
   t_unit_value char(2) default '0',
   unit_value varchar(20) default NULL,
-  t_unit_length smallint(5) default '0',
+  t_unit_length char(2) default '0',
   unit_length varchar(5) default '',
   t_unit_exponent_value char(2) default '0',
   unit_exponent_value varchar(5) NOT NULL default '',
