@@ -1130,7 +1130,7 @@ $fields_user_user_edit_host = array(
 		),
 	"password_expire_length" => array(
 		"method" => "drop_array",
-		"friendly_name" => "Password Expiration",
+		"friendly_name" => "Password Expiration Interval",
 		"description" => "How often the users password will expire and a password change will be forced.",
 		"value" => "|arg1:password_expire_length|",
 		"array" => $user_password_expire_intervals,
