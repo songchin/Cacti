@@ -24,7 +24,7 @@
  +-------------------------------------------------------------------------+
 */
 
-include("lib/api_user.php");
+include_once("lib/api_user.php");
 include_once("lib/html.php");
 
 /* set default action */
