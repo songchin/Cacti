@@ -48,11 +48,11 @@ if (!isset($_REQUEST["action"])) { $_REQUEST["action"] = ""; }
 
 switch ($_REQUEST["action"]) {
 case 'tree':
-	if ((read_config_option("global_auth") == "on") && (empty($current_user["show_tree"]))) {
+	if ((read_config_option("auth_method") != "0") && (empty($current_user["show_tree"]))) {
 		print "<strong><font size='+1' color='FF0000'>YOU DO NOT HAVE RIGHTS FOR TREE VIEW</font></strong>"; exit;
 	}
 
-	/* if cacti's builtin authentication is turned on then make sure to take
+	/* if any authentication is turned on then make sure to take
 	graph permissions into account here. if a user does not have rights to a
 	particular graph; do not show it. they will get an access denied message
 	if they try and view the graph directly. */
@@ -74,7 +74,7 @@ case 'tree':
 	}
 
 	if (isset($_SESSION["sess_view_tree_id"])) {
-		if (read_config_option("global_auth") == "on") {
+		if (read_config_option("auth_method") != "0") {
 			/* take tree permissions into account here, if the user does not have permission
 			give an "access denied" message */
 			$access_denied = !(is_tree_allowed($_SESSION["sess_view_tree_id"]));
@@ -99,7 +99,7 @@ case 'preview':
 
 	$sql_or = ""; $sql_where = ""; $sql_join = "";
 
-	if ((read_config_option("global_auth") == "on") && (empty($current_user["show_preview"]))) {
+	if ((read_config_option("auth_method") != "0") && (empty($current_user["show_preview"]))) {
 		print "<strong><font size='+1' color='FF0000'>YOU DO NOT HAVE RIGHTS FOR PREVIEW VIEW</font></strong>"; exit;
 	}
 
@@ -113,7 +113,7 @@ case 'preview':
 	load_current_session_value("page", "sess_graph_view_current_page", "1");
 
 	/* graph permissions */
-	if (read_config_option("global_auth") == "on") {
+	if (read_config_option("auth_method") != "0") {
 		$sql_where = "where " . get_graph_permissions_sql($current_user["policy_graphs"], $current_user["policy_hosts"], $current_user["policy_graph_templates"]);
 
 		$sql_join = "left join host on host.id=graph_local.host_id
@@ -202,12 +202,12 @@ case 'preview':
 
 	break;
 case 'list':
-	if ((read_config_option("global_auth") == "on") && (empty($current_user["show_list"]))) {
+	if ((read_config_option("auth_method") != "0") && (empty($current_user["show_list"]))) {
 		print "<strong><font size='+1' color='FF0000'>YOU DO NOT HAVE RIGHTS FOR LIST VIEW</font></strong>"; exit;
 	}
 
 	/* graph permissions */
-	if (read_config_option("global_auth") == "on") {
+	if (read_config_option("auth_method") != "0") {
 		/* get policy information for the sql where clause */
 		$sql_where = get_graph_permissions_sql($current_user["policy_graphs"], $current_user["policy_hosts"], $current_user["policy_graph_templates"]);
 

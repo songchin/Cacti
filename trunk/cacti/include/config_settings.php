@@ -61,7 +61,8 @@ $settings = array(
 			"friendly_name" => "Database Retries",
 			"description" => "The number of retries that Cacti will attempt to access the Cacti database prior to failing.",
 			"method" => "textbox",
-			"default" => "20"
+			"default" => "20",
+			"max_length" => "3"
 			),
 		"php_header" => array(
 			"friendly_name" => "PHP Settings",
@@ -71,13 +72,15 @@ $settings = array(
 			"friendly_name" => "PHP Maximum Memory",
 			"description" => "Maximum allowed memory for PHP processes in Megabytes",
 			"method" => "textbox",
-			"default" => "32"
+			"default" => "32",
+			"max_length" => "30"
 			),
 		"max_execution_time" => array(
 			"friendly_name" => "PHP Graph Timeout",
 			"description" => "Maximum allowed time for a graph to render.  Will stop server from hanging during eroneous graphing operations.",
 			"method" => "textbox",
-			"default" => "10"
+			"default" => "10",
+			"max_length" => "10"
 			)
 		),
 	"path" => array(
@@ -576,25 +579,28 @@ $settings = array(
 			"friendly_name" => "General",
 			"method" => "spacer",
 			),
-		"global_auth" => array(
-			"friendly_name" => "Use Cacti's Builtin Authentication",
-			"description" => "By default Cacti handles user authentication, which allows you to create users and give them rights to different areas within Cacti. You can optionally turn this off if you are using other other means of authentication.",
-			"method" => "checkbox",
-			"default" => "on",
-			"tab" => "authentication"
-			),
-		"ldap_enabled" => array(
-			"friendly_name" => "Use LDAP Authentication",
-			"description" => "This will allow users to use their LDAP credentials with cacti.",
-			"method" => "checkbox",
-			"tab" => "authentication"
+		"auth_method" => array(
+			"friendly_name" => "Authentication Method",
+			"description" => "<ul><li><i>None</i> - No authentication will be used, all users will have full access.</li><li><i>Builtin Authentication</i> - Cacti handles user authentication, which allows you to create users and give them rights to different areas within Cacti.</li><li><i>Web Basic Authentication</i> - Authentication is handled by the web server. Users can be added or created automatically on first login if the Template User is defined, otherwise the defined guest permissions will be used.</li><li><i>LDAP Authentication</i> - Allows for authentication against a LDAP server. Users will be created automatically on first login if the Template User is defined, otherwise the defined guest permissions will be used.</li><ul>",
+			"method" => "drop_array",
+			"default" => 1,
+			"array" => $auth_methods,
 			),
 		"guest_user" => array(
 			"friendly_name" => "Guest User",
 			"description" => "The name of the guest user for viewing graphs; is \"guest\" by default.",
-			"method" => "textbox",
-			"default" => "guest",
-			"max_length" => "100"
+			"method" => "drop_sql",
+			"none_value" => "No User",
+			"sql" => "select username as id, username as name from user_auth where realm = 0 order by username",
+			"default" => "guest"
+			),
+		"user_template" => array(
+			"friendly_name" => "User Template",
+			"description" => "The name of the user that cacti will use as a template for new Web Basic and LDAP users; is \"guest\" by default.",
+			"method" => "drop_sql",
+			"none_value" => "No User",
+			"sql" => "select username as id, username as name from user_auth where realm = 0 order by username",
+			"default" => "guest"
 			),
 		"ldap_header" => array(
 			"friendly_name" => "LDAP Settings",
@@ -612,12 +618,6 @@ $settings = array(
 			"method" => "textbox",
 			"max_length" => "100"
 			),
-		"ldap_template" => array(
-			"friendly_name" => "LDAP Cacti Template User",
-			"description" => "This is the user that cacti will use as a template for new LDAP users.",
-			"method" => "textbox",
-			"max_length" => "100"
-			)
 		)
 	);
 

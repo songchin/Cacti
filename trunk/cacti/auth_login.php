@@ -25,39 +25,133 @@
 */
 
 /* set default action */
-if (!isset($_REQUEST["action"])) { $_REQUEST["action"] = ""; }
+if (!isset($_REQUEST["action"])) { 
+	$action = ""; 
+}else{
+	$action = $_REQUEST["action"];
+}
 
-switch ($_REQUEST["action"]) {
-case 'login':
-	/* --- start ldap section --- */
-	$ldap_auth = false;
-	if ((read_config_option("ldap_enabled") == "on") && ($_POST["realm"] == "ldap") && (strlen($_POST["password"]))){
-		$ldap_conn = ldap_connect(read_config_option("ldap_server"));
 
-		if ($ldap_conn) {
-			$ldap_dn = str_replace("<username>",$_POST["username"],read_config_option("ldap_dn"));
-			$ldap_response = @ldap_bind($ldap_conn,$ldap_dn,$_POST["password"]);
+/* Get the username */
+if (read_config_option("auth_method") == "2") { 
+	/* Get the Web Basic Auth username and set action so we login right away */
+	$action = "login";
+	if (isset($_SERVER["PHP_AUTH_USER"])) {
+		$username = $_SERVER["PHP_AUTH_USER"];
+	} else {
+		/* No user - Bad juju! */
+		$username = "";
+		auth_display_custom_error_message("Web Basic Authentication configured, but no username was passed from the web server.  Please make sure you have authentication enabled on the web server.");
+		exit;
+	}
+}else{
+	/* LDAP and Builtin get username from Form */
+	if (isset($_POST["username"])) {
+		$username = $_POST["username"];
+	}else{
+		$username = "";
+	}
+}
 
-			if ($ldap_response) {
-				$ldap_auth = true;
-				if (sizeof(db_fetch_assoc("select * from user_auth where username='" . $_POST["username"] . "' and realm = 1")) == 0) {
-					/* copy template user's settings */
-					user_copy(read_config_option("ldap_template"), $_POST["username"], 1);
+
+/* process login */
+$copy_user = false;
+$user_auth = false;
+if ($action == 'login') {
+
+	switch (read_config_option("auth_method")) {
+	case "0":
+		/* No auth, no action, also shouldn't get here */
+		exit;
+		break;
+	case "2":
+		/* Web Basic Auth */
+		$copy_user = true;
+		$user_auth = true;	
+		$realm = 0;
+		/* Locate user in database */
+		$user = db_fetch_row("select * from user_auth where username='" . $username . "' and realm = 0");
+		break;
+	case "3": 
+		/* LDAP Auth */ 
+ 		if (($_POST["realm"] == "ldap") && (strlen($_POST["password"]) > 0)) {
+			/* Connect to LDAP server */
+			$ldap_conn = ldap_connect(read_config_option("ldap_server"));
+			if ($ldap_conn) {
+				/* Create DN */
+				$ldap_dn = str_replace("<username>",$username,read_config_option("ldap_dn"));
+				/* Query LDAP directory */
+				$ldap_response = @ldap_bind($ldap_conn,$ldap_dn,$_POST["password"]);
+				$realm = 1;
+				if ($ldap_response) {
+					/* Auth ok */
+					$user_auth = true;
+					$copy_user = true;
+					/* Locate user in database */
+					$user = db_fetch_row("select * from user_auth where username='" . $username . "' and realm = 1");
+					/* Close LDAP connection */
+					ldap_close($ldap_conn);
+				}else{
+					/* Error LDAP Connection - This bad because this is also a bind error.
+					which means auth failure, not able to connect.  This will get fixed when
+					the LDAP code is updated. */
+					auth_display_custom_error_message("Unable to connect to LDAP Server.");
+					exit;	
 				}
+			}else{
+				/* Error intializing LDAP */
+				auth_display_custom_error_message("Unable to initialize LDAP Server.");
+				exit;
 			}
 		}
-	}
-	/* --- end ldap section --- */
 
-	if ($ldap_auth) {
-		$user = db_fetch_row("select * from user_auth where username='" . $_POST["username"] . "' and realm = 1");
-	} else {
-		$user = db_fetch_row("select * from user_auth where username='" . $_POST["username"] . "' and password = '" . md5($_POST["password"]) . "' and realm = 0");
+	case "1":
+		/* Builtin Auth */
+		if (!$user_auth) {
+			/* if auth has not occured process for builtin - AKA Ldap fall through */
+			$user = db_fetch_row("select * from user_auth where username='" . $username . "' and password = '" . md5($_POST["password"]) . "' and realm = 0");
+		}
+	}
+	/* Create user from template if requested */
+	if ((!sizeof($user)) && ($copy_user) && (read_config_option("user_template") != "0") && (strlen($username) > 0)) {
+		/* check that template user exists */
+		if (sizeof(db_fetch_assoc("select * from user_auth where username='" . read_config_option("user_template") . "' and realm = 0")) != 0) {
+			/* template user found */
+			user_copy(read_config_option("user_template"), $username, $realm);
+			/* requery newly created user */
+			$user = db_fetch_row("select * from user_auth where username='" . $username . "' and realm = " . $realm);
+		}else{
+			/* error */
+			auth_display_custom_error_message("Template user \"" . read_config_option("user_template") . "\" does not exist.");
+			exit;
+		}
+	}
+	
+	/* Guest account checking - Not for builtin */
+	$guest_user = false;
+	if ((!sizeof($user)) && ($user_auth) && (read_config_option("guest_user") != "0")) {
+		/* Locate guest user record */
+		$user = db_fetch_row("select * from user_auth where username='" . read_config_option("guest_user") . "'");
+		if (sizeof($user)) {
+			$guest_user = true;
+		}else{
+			/* error */
+			auth_display_custom_error_message("Guest user \"" . read_config_option("guest_user") . "\" does not exist.");	
+			exit;
+		}
 	}
 
+	/* Process the user  */
 	if (sizeof($user)) {
 		/* make entry in the transactions log */
-		db_execute("insert into user_log (username,user_id,result,ip,time) values('" . $_POST["username"] ."'," . $user["id"] . ",1,'" . $_SERVER["REMOTE_ADDR"] . "',NOW())");
+		if ($guest_user) {
+			/* We know this is a guest, let's log it so everyone knows,
+			username format is <guest user>(logged in Web Basic or LDAP user>) */
+			$log_username = read_config_option("guest_user") . "(" . $username .")";
+		}else{
+			$log_username = $username;
+		}
+		db_execute("insert into user_log (username,user_id,result,ip,time) values('" . $log_username ."'," . $user["id"] . ",1,'" . $_SERVER["REMOTE_ADDR"] . "',NOW())");
 
 		/* set the php session */
 		$_SESSION["sess_user_id"] = $user["id"];
@@ -85,12 +179,36 @@ case 'login':
 
 		exit;
 	}else{
-		/* --- BAD username/password --- */
-		db_execute("insert into user_log (username,user_id,result,ip,time) values('" . $_POST["username"] . "',0,0,'" . $_SERVER["REMOTE_ADDR"] . "',NOW())");
+		if ((!$guest_user) && ($user_auth)) {
+			/* No guest account defined */
+			auth_display_custom_error_message("Access Denied, please contact you Cacti Administrator.");
+			exit;	
+		}else{
+			/* BAD username/password builtin and LDAP */
+			db_execute("insert into user_log (username,user_id,result,ip,time) values('" . $username . "',0,0,'" . $_SERVER["REMOTE_ADDR"] . "',NOW())");		
+		}
 	}
 }
 
+/* auth_display_custom_error_message - displays a custom error message to the browser that looks like
+     the pre-defined error messages
+   @arg $message - the actual text of the error message to display */
+function auth_display_custom_error_message($message) {
+	/* kill the session */
+	setcookie(session_name(),"",time() - 3600,"/");	
+	/* print error */
+	print "<html>\n<head>\n";
+        print "     <title>cacti</title>\n";
+        print "     <link href=\"include/main.css\" rel=\"stylesheet\">";
+	print "</head>\n";
+	print "<body leftmargin=\"0\" topmargin=\"0\" marginwidth=\"0\" marginheight=\"0\">\n<br><br>\n";
+	display_custom_error_message($message);
+        print "</body>\n</html>\n";
+}
+
 ?>
+
+
 <html>
 <head>
 	<title>Login to Cacti</title>
@@ -104,19 +222,14 @@ case 'login':
 	-->
 	</style>
 </head>
-
 <body onload="document.login.username.focus()">
-
-<!-- apparently IIS 5/4 have a bug (Q176113) where setting a cookie and calling the header via
-'Location' does not work. This seems to fix the bug for me at least... -->
 <form name="login" method="post" action="<?php print basename($_SERVER["PHP_SELF"]);?>">
-
 <table align="center">
 	<tr>
 		<td colspan="2"><img src="images/auth_login.gif" border="0" alt=""></td>
 	</tr>
 	<?php
-	if ($_REQUEST["action"] == "login") {?>
+	if ($action == "login") {?>
 	<tr height="10"><td></td></tr>
 	<tr>
 		<td colspan="2"><font color="#FF0000"><strong>Invalid User Name/Password Please Retype:</strong></font></td>
@@ -129,14 +242,14 @@ case 'login':
 	<tr height="10"><td></td></tr>
 	<tr>
 		<td>User Name:</td>
-		<td><input type="text" name="username" size="40" style="width: 295px;"></td>
+		<td><input type="text" name="username" size="40" style="width: 295px;" value="<?php print $username; ?>"></td>
 	</tr>
 	<tr>
 		<td>Password:</td>
 		<td><input type="password" name="password" size="40" style="width: 295px;"></td>
 	</tr>
 	<?php
-	if (read_config_option("ldap_enabled") == "on") {?>
+	if (read_config_option("auth_method") == "3") {?>
         <tr>
                 <td>Realm:</td>
                 <td>
@@ -152,10 +265,8 @@ case 'login':
 		<td><input type="submit" value="Login"></td>
 	</tr>
 </table>
-
 <input type="hidden" name="action" value="login">
-
 </form>
-
 </body>
 </html>
+

@@ -30,7 +30,7 @@ $show_console_tab = true;
 include_once($config["library_path"] . "/html_tree.php");
 include_once($config["library_path"] . "/rrd.php");
 
-if (read_config_option("global_auth") == "on") {
+if (read_config_option("auth_method") != "0") {
 	/* at this point this user is good to go... so get some setting about this
 	user and put them into variables to save excess SQL in the future */
 	$current_user = db_fetch_row("select * from user_auth where id=" . $_SESSION["sess_user_id"]);

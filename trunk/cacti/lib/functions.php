@@ -67,7 +67,7 @@ function read_default_graph_config_option($config_name) {
    @returns - the current value of the graph configuration option */
 function read_graph_config_option($config_name) {
 	/* users must have cacti user auth turned on to use this */
-	if ((read_config_option("global_auth") != "on") || (!isset($_SESSION["sess_user_id"]))) {
+	if ((read_config_option("auth_method") == "0") || (!isset($_SESSION["sess_user_id"]))) {
 		return read_default_graph_config_option($config_name);
 	}
 
@@ -1155,7 +1155,7 @@ function get_web_browser() {
    @arg $return_sql - (bool) Whether to return the SQL to create the dropdown rather than an array
    @returns - (array) an array containing a list of graph trees */
 function get_graph_tree_array($return_sql = false) {
-	if (read_config_option("global_auth") == "on") {
+	if (read_config_option("auth_method") != "0") {
 		$current_user = db_fetch_row("select policy_trees from user_auth where id=" . $_SESSION["sess_user_id"]);
 
 		if ($current_user["policy_trees"] == "1") {
@@ -1186,7 +1186,7 @@ function get_graph_tree_array($return_sql = false) {
 /* get_host_array - returns a list of hosts taking permissions into account if necessary
    @returns - (array) an array containing a list of hosts */
 function get_host_array() {
-	if (read_config_option("global_auth") == "on") {
+	if (read_config_option("auth_method") != "0") {
 		$current_user = db_fetch_row("select policy_hosts from user_auth where id=" . $_SESSION["sess_user_id"]);
 
 		if ($current_user["policy_hosts"] == "1") {

@@ -24,8 +24,46 @@
  +-------------------------------------------------------------------------+
 */
 
+include("./include/config.php");
+
+/* Clear session */
 setcookie(session_name(),"",time() - 3600,"/");
-header("Location: index.php");
-exit;
+
+/* Check to see if we are using Web Basic Auth */
+if (read_config_option("auth_method") == "2") { 
+
+		?>
+<html>
+<head>
+	<title>Logout of Cacti</title>
+	<STYLE TYPE="text/css">
+	<!--
+		BODY, TABLE, TR, TD {font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 12px;}
+		A {text-decoration: none;}
+		A:active { text-decoration: none;}
+		A:hover {text-decoration: underline; color: #333333;}
+		A:visited {color: Blue;}
+	-->
+	</style>
+</head> 
+<body>
+<table align="center">
+	<tr>
+		<td><img src="images/auth_logout.gif" border="0" alt=""></td>
+	</tr><tr>
+		<td><br>To end your Cacti session please close your web browser.<br><br><a href="index.php">Return to Cacti</a></td>
+	</tr>
+</table> 
+</body>
+</html>
+		<?php
+
+}else{
+        /* Default action */	
+	header("Location: index.php");
+	exit;
+}
 
 ?>
+
+

@@ -32,24 +32,22 @@ if (db_fetch_cell("select cacti from version") != $config["cacti_version"]) {
 	exit;
 }
 
-if (read_config_option("global_auth") == "on") {
+if (read_config_option("auth_method") != "0") {
 	/* handle change password dialog */
-	if (isset($_SESSION['sess_change_password'])) {
+	if ((isset($_SESSION['sess_change_password'])) && (read_config_option("auth_method") == 1)) {
 		header ("Location: auth_changepassword.php?ref=" . (isset($_SERVER["HTTP_REFERER"]) ? $_SERVER["HTTP_REFERER"] : "index.php"));
 		exit;
 	}
 
-	/* don't even bother with the guest code if we're already logged in */
+	/* Check if we are logged in, and process guest account if set */
 	if ((isset($guest_account)) && (empty($_SESSION["sess_user_id"]))) {
 		$guest_user_id = db_fetch_cell("select id from user_auth where username='" . read_config_option("guest_user") . "'");
-
-		/* cannot find guest user */
 		if (!empty($guest_user_id)) {
 			$_SESSION["sess_user_id"] = $guest_user_id;
 		}
 	}
 
-	/* if we are a guest user in a non-guest area, wipe credentials */
+	/* if we are a guest user in a non-guest area, wipe credentials and prompt for login */
 	if (!empty($_SESSION["sess_user_id"])) {
 		if ((!isset($guest_account)) && (db_fetch_cell("select id from user_auth where username='" . read_config_option("guest_user") . "'") == $_SESSION["sess_user_id"])) {
 			kill_session_var("sess_user_id");
@@ -57,15 +55,17 @@ if (read_config_option("global_auth") == "on") {
 	}
 
 	if (empty($_SESSION["sess_user_id"])) {
+		/* User not authenticated, prompt for login */
 		include("./auth_login.php");
 		exit;
 	}elseif (!empty($_SESSION["sess_user_id"])) {
+		/* User authenticated */
 		$realm_id = 0;
 
 		if (isset($user_auth_realm_filenames{basename($_SERVER["PHP_SELF"])})) {
 			$realm_id = $user_auth_realm_filenames{basename($_SERVER["PHP_SELF"])};
 		}
-
+		/* Check permissions to use this realm against database */
 		if ((!db_fetch_assoc("select
 			user_auth_realm.realm_id
 			from

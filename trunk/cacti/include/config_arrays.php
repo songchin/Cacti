@@ -41,7 +41,7 @@ $messages = array(
 		"message" => 'You must select at least one field.',
 		"type" => "error"),
 	6  => array(
-		"message" => 'You must have built in user authentication turned on to use this feature.',
+		"message" => 'You must have authentication turned on to use this feature.',
 		"type" => "error"),
 	7  => array(
 		"message" => 'XML parse error.',
@@ -194,6 +194,12 @@ $graph_tree_views = array(1 =>
 $auth_realms = array(0 =>
 	"Local",
 	"LDAP");
+
+$auth_methods = array(
+	0 => "None",
+	1 => "Builtin Authentication",
+	2 => "Web Basic Authentication",
+	3 => "LDAP Authentication");
 
 $snmp_implimentations = array(
 	"ucd-snmp" => "UCD-SNMP 4.x",
