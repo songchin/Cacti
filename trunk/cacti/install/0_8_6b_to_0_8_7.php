@@ -57,7 +57,6 @@ function upgrade_to_0_8_7() {
 	db_indtall_execute("0.8.7", "INSERT INTO `data_input_fields` FIELDS (hash,data_input_id,name,data_name,input_output,update_rra,sequence,type_code,regexp_match,allow_nulls) VALUES ('aa9632293ac20ecd87f5e4691fc244f6','2','SNMP Authorization Protocol (v3)','snmpv3_auth_protocol','in','','0','snmpv3_auth_protocol','','on';");
 	db_indtall_execute("0.8.7", "INSERT INTO `data_input_fields` FIELDS (hash,data_input_id,name,data_name,input_output,update_rra,sequence,type_code,regexp_match,allow_nulls) VALUES ('b9a06e0ff7c042506a0adf013db5a533','2','SNMP Privacy Passphrase (v3)','snmpv3_priv_passphrase','in','','0','snmpv3_priv_passphrase','','on';");
 	db_indtall_execute("0.8.7", "INSERT INTO `data_input_fields` FIELDS (hash,data_input_id,name,data_name,input_output,update_rra,sequence,type_code,regexp_match,allow_nulls) VALUES ('7c3011fb886b6345ed761a173dffd120','2','SNMP Privacy Protocol (v3)','snmpv3_priv_protocol','in','','0','snmpv3_priv_protocol','','on';");
-}
 
 
 	/* Convert to new authentication system */
@@ -77,4 +76,5 @@ function upgrade_to_0_8_7() {
 	db_install_execute("0.8.7", "UPDATE `settings` SET name = 'user_template' WHERE name = 'ldap_template';");
 
 
+}
 ?>
