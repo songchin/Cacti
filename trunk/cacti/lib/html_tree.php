@@ -645,15 +645,15 @@ function draw_tree_header_row($tree_id, $tree_item_id, $current_tier, $current_t
 	if (($use_expand_contract) && (!empty($current_title))) {
 		if ($expand_contract_status == "1") {
 			$other_status = '0';
-			$ec_icon = 'show';
+			$ec_icon = 'show.gif';
 		}else{
 			$other_status = '1';
-			$ec_icon =  'hide';
+			$ec_icon =  'hide.gif';
 		}
 
 		print "<td bgcolor='" . $colors["panel"] . "' align='center' width='1%'><a
 			href='graph_view.php?action=tree&tree_id=$tree_id&hide=$other_status&branch_id=$tree_item_id'>
-			<img src='" . html_get_theme_images_path("$ec_icon.gif") . "' border='0'></a></td>\n";
+			<img src='" . html_get_theme_images_path($ec_icon) . "' border='0'></a></td>\n";
 	}elseif (!($use_expand_contract) && (!empty($current_title))) {
 		print "<td bgcolor='" . $colors["panel"] . "' width='10'></td>\n";
 	}
