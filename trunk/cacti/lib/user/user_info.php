@@ -39,9 +39,9 @@ function api_user_list($array) {
 	/* build SQL query */
 	$sql_query = "SELECT id,username FROM user_auth ";
 	$sql_sort = "ORDER BY ";
-	if ((sizeof($array) > 0) && (is_array($array))) {
+	if (($array) && (is_array($array))) {
 		foreach ($array as $field => $value) {
-			$sql_sort .= $value . ", ";
+			$sql_sort .= sql_sanitize($value) . ", ";
 		}
 		/* remove trailing comma */
 		$sql_sort = preg_replace("/\,\ $/", "", $sql_sort);
@@ -52,8 +52,7 @@ function api_user_list($array) {
 	}
 
 	/* get the user list */
-	$user_list = db_fetch_assoc($sql_query);
-	return $user_list;
+	return db_fetch_assoc($sql_query);
 
 }
 
@@ -66,9 +65,9 @@ function api_user_info($array) {
 	/* build SQL query */
 	$sql_query = "SELECT *, DATE_FORMAT(password_change_last,'%M %e %Y %H:%i:%s') as password_change_last_formatted FROM user_auth WHERE ";
 	$sql_where = "";
-	if ((sizeof($array) > 0) && (is_array($array))) {
+	if (($array) && (is_array($array))) {
 		foreach ($array as $field => $value) {
-			$sql_where .= $field . " = '" . $value . "' AND ";
+			$sql_where .= $field . " = '" . sql_sanitize($value) . "' AND ";
 		}
 		/* remove trailing AND */
 		$sql_where = preg_replace("/ AND\ $/", "", $sql_where);
@@ -82,7 +81,7 @@ function api_user_info($array) {
 	$user = db_fetch_row($sql_query);
 	
 	/* get last login and append */
-	if (sizeof($user)) {
+	if ($user) {
 		$last_login = db_fetch_row("select username,time as lastlogin,DATE_FORMAT(time,'%M %e %Y %H:%i:%s') as lastlogin_formatted, ip from user_log where user_id = '" . $user["id"] . "' and result = 1 order by time desc limit 1");
 		$user["lastlogin"] = $last_login["lastlogin"];
 		$user["lastlogin_formatted"] = $last_login["lastlogin_formatted"];
@@ -104,7 +103,7 @@ function api_user_expire_info($user_id) {
 
 	$user = api_user_info( array( "id" => $user_id) );
 	
-	if (sizeof($user)) {
+	if ($user) {
 		/* check that user has expire length */
 		if ($user["password_expire_length"] == "0") {
 			return -1;
