@@ -68,8 +68,10 @@ int main(int argc, char *argv[]) {
 	int first_host, last_host, poller_id;
 	int mutex_status = 0;
 	int thread_status = 0;
+	char sql_string[BUFSIZE];
 	char result_string[BUFSIZE] = "";
 	char logmessage[LOGSIZE];
+	char timetxt[20];
 
 	/* set start time for cacti */
 	gettimeofday(&now, NULL);
@@ -321,7 +323,8 @@ int main(int argc, char *argv[]) {
 
 	/* update the db for |data_time| on graphs */
 	db_insert(&mysql, "replace into settings (name,value) values ('date',NOW())");
-	db_insert(&mysql, "insert into poller_time (poller_id, start_time, end_time) values (0, NOW(), NOW())");
+	snprintf(sql_string,sizeof(sql_string),"insert into poller_time (poller_id, start_time, end_time) values (%i, '%s', NOW())",set.poller_id,start_datetime);
+	db_insert(&mysql, sql_string);
 
 	/* cleanup and exit program */
 	pthread_attr_destroy(&attr);
