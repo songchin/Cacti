@@ -121,7 +121,6 @@ function settings() {
 
 	html_end_box();
 
-	print "<br>";
 
 	form_hidden_box("save_component_user","1","");
 	form_save_button((isset($_SERVER["HTTP_REFERER"]) ? $_SERVER["HTTP_REFERER"] : "index.php"), "save");
