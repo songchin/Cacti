@@ -31,7 +31,7 @@
    @arg $pass - the password to connect to the database server with
    @arg $db_name - the name of the database to connect to
    @arg $db_type - the type of database server to connect to, only 'mysql' is currently supported
-	@arg $retries - the number a time the server should attempt to connect before failing
+   @arg $retries - the number a time the server should attempt to connect before failing
    @returns - (bool) '1' for success, '0' for error */
 function db_connect_real($host,$user,$pass,$db_name,$db_type, $retries = 20) {
 	global $cnn_id;
@@ -48,7 +48,9 @@ function db_connect_real($host,$user,$pass,$db_name,$db_type, $retries = 20) {
 		usleep(100000);
 	}
 
-	cacti_log("<br>Cannot connect to MySQL server on '$host'. Please make sure you have specified a valid MySQL	database name in 'include/config.php'.");
+	cacti_log("ERROR: Cannot connect to MySQL server on '$host'. Please make sure you have specified a valid MySQL   database name in 'include/config.php'.");
+
+	die("<br>Cannot connect to MySQL server on '$host'. Please make sure you have specified a valid MySQL database name in 'include/config.php'.");
 
 	return(0);
 }
