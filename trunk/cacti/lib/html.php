@@ -247,7 +247,7 @@ function html_header_checkbox($header_items, $form_action = "") {
 /* html_get_theme_css() - returns the Style sheet reference for the current theme
    */
 function html_get_theme_css() {
-	if ((strlen(api_user_theme($_SESSION["sess_user_id"])) > 0) && (api_user_theme($_SESSION["sess_user_id"]) != "default")) {
+	if ((isset($_SESSION["sess_user_id"])) && (api_user_theme($_SESSION["sess_user_id"]) != "default")) {
 		$theme = api_user_theme($_SESSION["sess_user_id"]);
 	}else{
 		$theme = read_config_option("default_theme");
@@ -259,7 +259,7 @@ function html_get_theme_css() {
 /* html_get_theme_image_path() - returns the Style sheet reference for the current theme
    */
 function html_get_theme_images_path($image_file = "") {
-	if ((strlen(api_user_theme($_SESSION["sess_user_id"])) > 0) && (api_user_theme($_SESSION["sess_user_id"]) != "default")) {
+	if ((isset($_SESSION["sess_user_id"])) && (api_user_theme($_SESSION["sess_user_id"]) != "default")) {
 		$theme = api_user_theme($_SESSION["sess_user_id"]);
 	}else{
 		$theme = read_config_option("default_theme");
@@ -279,7 +279,7 @@ function html_get_theme_images_path($image_file = "") {
 function html_theme_color_scheme() {
 	global $config;
 
-	if ((strlen(api_user_theme($_SESSION["sess_user_id"])) > 0) && (api_user_theme($_SESSION["sess_user_id"]) != "default")) {
+	if ((isset($_SESSION["sess_user_id"])) && (api_user_theme($_SESSION["sess_user_id"]) != "default")) {
 		$theme = api_user_theme($_SESSION["sess_user_id"]);
 	}else{
 		$theme = read_config_option("default_theme");
