@@ -508,8 +508,8 @@ $settings = array(
 			"default" => 1,
 			"array" => $poller_options
 			),
-		"poller_graph" => array(
-			"friendly_name" => "Graph Poller Statistics",
+		"poller_stats" => array(
+			"friendly_name" => "Save Poller Statistics",
 			"description" => "The statistical results of polling times will be saved to a special RRD file if selected.",
 			"method" => "checkbox",
 			"default" => "on"
