@@ -476,6 +476,12 @@ INSERT INTO data_input_fields VALUES (35,'172b4b0eacee4948c6479f587b62e512',12,'
 INSERT INTO data_input_fields VALUES (36,'30fb5d5bcf3d66bb5abe88596f357c26',12,'Index Value','index_value','in','',0,'index_value','','');
 INSERT INTO data_input_fields VALUES (37,'31112c85ae4ff821d3b288336288818c',12,'Output Type ID','output_type','in','',0,'output_type','','');
 INSERT INTO data_input_fields VALUES (38,'5be8fa85472d89c621790b43510b5043',12,'Output Value','output','out','on',0,'','','');
+INSERT INTO data_input_fields VALUES (39,'0979c0fb287db7db9fa9adddbb399aa3',1,'SNMP Authority Protocol','snmpv3_auth_protocol','in','',0,'snmpv3_auth_protocol','','on');
+INSERT INTO data_input_fields VALUES (40,'a5dfa3c1fe626393994a4f28d83d0c63',1,'SNMP Privacy Passphrase','snmpv3_priv_passphrase','in','',0,'snmpv3_priv_passphrase','','on');
+INSERT INTO data_input_fields VALUES (41,'f986f1acfd61582c3bf035ecd985b49f',1,'SNMP Privacy Protocol','snmpv3_priv_protocol','in','',0,'snmpv3_priv_protocol','','on');
+INSERT INTO data_input_fields VALUES (42,'aa9632293ac20ecd87f5e4691fc244f6',2,'SNMP Authority Protocol','snmpv3_auth_protocol','in','',0,'snmpv3_auth_protocol','','on');
+INSERT INTO data_input_fields VALUES (43,'b9a06e0ff7c042506a0adf013db5a533',2,'SNMP Privacy Passphrase','snmpv3_priv_passphrase','in','',0,'snmpv3_priv_passphrase','','on');
+INSERT INTO data_input_fields VALUES (44,'7c3011fb886b6345ed761a173dffd120',2,'SNMP Privacy Protocol','snmpv3_priv_protocol','in','',0,'snmpv3_priv_protocol','','on');
 
 --
 -- Table structure for table `data_local`
