@@ -225,7 +225,7 @@ function data_edit() {
 			DrawMatrixHeaderItem("Friendly Name",$colors["header_text"],2);
 		print "</tr>";
 
-		$fields = db_fetch_assoc("select id,data_name,name from data_input_fields where data_input_id=" . $_GET["id"] . " and input_output='in'");
+		$fields = db_fetch_assoc("select id,data_name,name from data_input_fields where data_input_id=" . $_GET["id"] . " and input_output='in' order by data_name");
 
 		/* locate all fields in the input string */
 		preg_match_all("/<([_a-zA-Z0-9]+)>/", $data_input["input_string"], $matches);
@@ -304,7 +304,11 @@ function data() {
 		DrawMatrixHeaderItem("&nbsp;",$colors["header_text"],1);
 	print "</tr>";
 
-	$data_inputs = db_fetch_assoc("select * from data_input where reserved = '0' order by name");
+	if (read_config_option("show_hidden") == "on") {
+		$data_inputs = db_fetch_assoc("select * from data_input order by name");
+	}else{
+		$data_inputs = db_fetch_assoc("select * from data_input where reserved = '0' order by name");
+	}
 
 	$i = 0;
 	if (sizeof($data_inputs) > 0) {
