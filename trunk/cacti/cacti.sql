@@ -2065,6 +2065,7 @@ INSERT INTO host_template_snmp_query VALUES (8,6);
 
 CREATE TABLE poller (
   id smallint(5) unsigned NOT NULL auto_increment,
+  run_state varchar(20) default 'Wait',
   active tinyint unsigned NOT NULL default '0',
   hostname varchar(250) NOT NULL default '',
   name varchar(150) NOT NULL default 'Description',
