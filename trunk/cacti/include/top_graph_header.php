@@ -179,7 +179,7 @@ if ((read_graph_config_option("default_tree_view_mode") == "2") && ($_REQUEST["a
 		</td>
 	</tr>
 
-	<?php if ((basename($_SERVER["PHP_SELF"]) == "graph.php") && ($_REQUEST["action"] == "properties")) {?>
+	<?php if ((basename($_SERVER["PHP_SELF"]) == "graph.php") && ($_REQUEST["action"] == "properties") && (! $using_guest_account)) {?>
 	<tr>
 		<td valign="top" height="1" colspan="3" bgcolor="#<?php print $colors['graph_menu_background'];?>">
 			<?php
