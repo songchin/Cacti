@@ -46,6 +46,10 @@ function cacti_snmp_get($hostname, $community, $oid, $version, $v3username, $v3p
 	/* get rid of quotes in privacy passphrase */
 	$v3privpassphrase = str_replace("#space#", " ", $v3privpassphrase);
 
+	if ($v3privproto == "[None]") {
+		$v3privproto = "";
+	}
+
 	if (snmp_get_method($version) == SNMP_METHOD_PHP) {
 		/* make sure snmp* is verbose so we can see what types of data
 		we are getting back */
@@ -100,6 +104,10 @@ function cacti_snmp_walk($hostname, $community, $oid, $version, $v3username, $v3
 
 	/* get rid of quotes in privacy passphrase */
 	$v3privpassphrase = str_replace("#space#", " ", $v3privpassphrase);
+
+	if ($v3privproto == "[None]") {
+		$v3privproto = "";
+	}
 
 	if (snmp_get_method($version) == SNMP_METHOD_PHP) {
 		if ($version == "1") {
@@ -206,7 +214,7 @@ function snmp_get_method($version = 1) {
 }
 
 function snmp_get_v3authpriv($v3privproto) {
-	if ($v3privproto == "[None]") {
+	if (($v3privproto == "[None]") || ($v3privproto == "")) {
 		return "authNoPriv";
 	} else {
 		return "authPriv";
