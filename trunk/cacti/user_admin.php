@@ -230,7 +230,7 @@ function form_save() {
 	}
 
 	/* redirect page */
-	header("Location: user_admin.php?action=user_edit&id=" . (empty($user_id) ? $_POST["id"] : $user_id));
+	header("Location: user_admin.php?action=" . (isset($_POST["last_action"]) ? $_POST["last_action"] : "user_edit") . "&id=" . (empty($user_id) ? $_POST["id"] : $user_id));
 
 }
 
@@ -647,6 +647,7 @@ function user_edit() {
 	if (!empty($_GET["id"])) {
 		/* draw user admin nav tabs */
 		?>
+		<input type='hidden' name='last_action' value='<?php print $_GET["action"] ?>'>
 		<table class='tabs' width='98%' cellspacing='0' cellpadding='3' align='center'>
 			<tr>
 				<td width='1'></td>
