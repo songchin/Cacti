@@ -79,6 +79,11 @@ define("POLLER_VERBOSITY_MEDIUM", 3);
 define("POLLER_VERBOSITY_HIGH", 4);
 define("POLLER_VERBOSITY_DEBUG", 5);
 
+define("POLLER_UNKNOWN", 0);
+define("POLLER_DOWN", 1);
+define("POLLER_RECOVERING", 2);
+define("POLLER_UP", 3);
+
 define("AVAIL_SNMP_AND_PING", 1);
 define("AVAIL_SNMP", 2);
 define("AVAIL_PING", 3);

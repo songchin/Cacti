@@ -252,6 +252,145 @@ function process_poller_output($rrdtool_pipe) {
 	}
 }
 
+/* update_poller_status - updates the poller table with informaton about each pollers status.
+   It will also output to the appropriate log file when an event occurs.
+   @arg $status - (int constant) the status of the poller (Up/Down)
+   @arg $poller_id - (int) the poller ID for the results
+   @arg $poller_time - (array) the start_time, end_time and total_time for the poller
+*/
+function update_poller_status($status, $poller_id, $pollers, $poller_time) {
+	$issue_log_message   = false;
+	$poller_failure_count  = read_config_option("poller_failure_count");
+	$poller_recovery_count = read_config_option("poller_recovery_count");
+
+	if ($status == POLLER_DOWN) {
+		/* update total polls, failed polls and availability */
+		$pollers[$poller_id]["failed_polls"]++;
+		$pollers[$poller_id]["total_polls"]++;
+		$pollers[$poller_id]["availability"] = 100 * ($pollers[$poller_id]["total_polls"] - $pollers[$poller_id]["failed_polls"]) / $pollers[$poller_id]["total_polls"];
+
+		/* set the error message */
+		$pollers[$poller_id]["status_last_error"] = "Poller is down for some reason";
+
+		/* determine if to send an alert and update remainder of statistics */
+		if ($pollers[$poller_id]["status"] == POLLER_UP) {
+			/* increment the event failure count */
+			$pollers[$poller_id]["status_event_count"]++;
+
+			/* if it's time to issue an error message, indicate so */
+			if ($pollers[$poller_id]["status_event_count"] >= $poller_failure_count) {
+				/* poller is now down, flag it that way */
+				$pollers[$poller_id]["status"] = POLLER_DOWN;
+
+				$issue_log_message = true;
+
+				/* update the failure date only if the failure count is 1 */
+				if ($poller_failure_count == 1) {
+					$pollers[$poller_id]["status_fail_date"] = date("Y-m-d h:i:s");
+				}
+			/* poller is down, but not ready to issue log message */
+			} else {
+				/* poller down for the first time, set event date */
+				if ($pollers[$poller_id]["status_event_count"] == 1) {
+					$pollers[$poller_id]["status_fail_date"] = date("Y-m-d h:i:s");
+				}
+			}
+		/* poller is recovering, put back in failed state */
+		} elseif ($pollers[$poller_id]["status"] == POLLER_RECOVERING) {
+			$pollers[$poller_id]["status_event_count"] = 1;
+			$pollers[$poller_id]["status"] = POLLER_DOWN;
+
+		/* poller was unknown and now is down */
+		} elseif ($pollers[$poller_id]["status"] == POLLER_UNKNOWN) {
+			$pollers[$poller_id]["status"] = POLLER_DOWN;
+			$pollers[$poller_id]["status_event_count"] = 0;
+		} else {
+			$pollers[$poller_id]["status_event_count"]++;
+		}
+	/* poller is up!! */
+	} else {
+		/* update total polls and availability */
+		$pollers[$poller_id]["total_polls"]++;
+		$pollers[$poller_id]["availability"] = 100 * ($pollers[$poller_id]["total_polls"] - $pollers[$poller_id]["failed_polls"]) / $pollers[$poller_id]["total_polls"];
+
+		/* update times as required */
+		$pollers[$poller_id]["cur_time"] = $ping_time;
+
+		/* maximum time */
+		if ($ping_time > $pollers[$poller_id]["max_time"])
+			$pollers[$poller_id]["max_time"] = $ping_time;
+
+		/* minimum time */
+		if ($ping_time < $pollers[$poller_id]["min_time"])
+			$pollers[$poller_id]["min_time"] = $ping_time;
+
+		/* average time */
+		$pollers[$poller_id]["avg_time"] = (($pollers[$poller_id]["total_polls"]-1-$pollers[$poller_id]["failed_polls"])
+			* $pollers[$poller_id]["avg_time"] + $ping_time) / ($pollers[$poller_id]["total_polls"]-$pollers[$poller_id]["failed_polls"]);
+
+		/* the poller was down, now it's recovering */
+		if (($pollers[$poller_id]["status"] == POLLER_DOWN) || ($pollers[$poller_id]["status"] == POLLER_RECOVERING )) {
+			/* just up, change to recovering */
+			if ($pollers[$poller_id]["status"] == POLLER_DOWN) {
+				$pollers[$poller_id]["status"] = POLLER_RECOVERING;
+				$pollers[$poller_id]["status_event_count"] = 1;
+			} else {
+				$pollers[$poller_id]["status_event_count"]++;
+			}
+
+			/* if it's time to issue a recovery message, indicate so */
+			if ($pollers[$poller_id]["status_event_count"] >= $poller_recovery_count) {
+				/* host is up, flag it that way */
+				$pollers[$poller_id]["status"] = POLLER_UP;
+
+				$issue_log_message = true;
+
+				/* update the recovery date only if the recovery count is 1 */
+				if ($poller_recovery_count == 1) {
+					$pollers[$poller_id]["status_rec_date"] = date("Y-m-d h:i:s");
+				}
+
+				/* reset the event counter */
+				$pollers[$poller_id]["status_event_count"] = 0;
+			/* host is recovering, but not ready to issue log message */
+			} else {
+				/* poller recovering for the first time, set event date */
+				if ($pollers[$poller_id]["status_event_count"] == 1) {
+					$pollers[$poller_id]["status_rec_date"] = date("Y-m-d h:i:s");
+				}
+			}
+		} else {
+		/* poller was unknown and now is up */
+			$pollers[$poller_id]["status"] = POLLER_UP;
+			$pollers[$poller_id]["status_event_count"] = 0;
+		}
+	}
+
+	/* if there is supposed to be an event generated, do it */
+	if ($issue_log_message) {
+		if ($pollers[$poller_id]["status"] == HOST_DOWN) {
+			cacti_log("Poller[$poller_id] ERROR: POLLER EVENT: Poller is DOWN Message: " . $pollers[$poller_id]["status_last_error"], $print_data_to_stdout);
+		} else {
+			cacti_log("Poller[$poller_id] NOTICE: POLLER EVENT: Poller Returned from DOWN State: ", $print_data_to_stdout);
+		}
+	}
+
+	db_execute("UPDATE poller SET
+		run_state = '" . $pollers[$poller_id]["status"] . "',
+		status_event_count = '" . $pollers[$poller_id]["status_event_count"] . "',
+		status_fail_date = '" . $pollers[$poller_id]["status_fail_date"] . "',
+		status_rec_date = '" . $pollers[$poller_id]["status_rec_date"] . "',
+		status_last_error = '" . $pollers[$poller_id]["status_last_error"] . "',
+		min_time = '" . $pollers[$poller_id]["min_time"] . "',
+		max_time = '" . $pollers[$poller_id]["max_time"] . "',
+		cur_time = '" . $pollers[$poller_id]["cur_time"] . "',
+		avg_time = '" . $pollers[$poller_id]["avg_time"] . "',
+		total_polls = '" . $pollers[$poller_id]["total_polls"] . "',
+		failed_polls = '" . $pollers[$poller_id]["failed_polls"] . "',
+		availability = '" . $pollers[$poller_id]["availability"] . "'
+		where id = '" . $pollers[$poller_id]["id"] . "'");
+}
+
 /* update_host_status - updates the host table with informaton about it's status.
    It will also output to the appropriate log file when an event occurs.
    @arg $status - (int constant) the status of the host (Up/Down)
