@@ -54,6 +54,9 @@ function run_data_query($host_id, $snmp_query_id) {
 	/* update the the "local" data query cache */
 	update_data_query_cache($host_id, $snmp_query_id);
 
+	/* update the poller cache */
+	update_poller_cache_from_query($host_id, $snmp_query_id);
+
 	return (isset($result) ? $result : true);
 }
 
