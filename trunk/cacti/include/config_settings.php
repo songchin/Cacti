@@ -671,9 +671,40 @@ $settings = array(
 			"default" => "0",
 			"array" => $ldap_encryption
 			),
+		"ldap_mode" => array(
+			"friendly_name" => "Mode", 	 
+			"description" => "Mode which cacti will attempt to authenicate against the LDAP server.<ul><li><i>No Searching</i> - No Distinguished Name (DN) searching occurs, just attempt to bind with the provided Distinguished Name (DN) format.</li><li><i>Anonymous Searching</i> - Attempts to search for username against LDAP directory via anonymous binding to locate the users Distinguished Name (DN).</li><li><i>Specific Searching</i> - Attempts search for username against LDAP directory via Specific Distinguished Name (DN) and Specific Password for binding to locate the users Distinguished Name (DN).</li></ul>",
+			"method" => "drop_array",
+			"default" => "0",	 
+			"array" => $ldap_modes
+			),
 		"ldap_dn" => array(
 			"friendly_name" => "Distinguished Name (DN)",
-			"description" => "Distinguished Name syntax, such as \"&lt;username&gt;@win2kdomain.local\" or \"uid=&lt;username&gt;,ou=people,dc=domain,dc=local\".",
+			"description" => "Distinguished Name syntax, such as for windows: <i>\"&lt;username&gt;@win2kdomain.local\"</i> or for OpenLDAP: <i>\"uid=&lt;username&gt;,ou=people,dc=domain,dc=local\"</i>.   \"&lt;username&gt\" is replaced with the username that was supplied at the login prompt.  This is only used when in \"No Searching\" mode.",
+			"method" => "textbox",
+			"max_length" => "255"
+			),
+		"ldap_search_base" => array(
+			"friendly_name" => "Search Base",
+			"description" => "Search base for searching the LDAP directory, such as \"dc=win2kdomain,dc=local\" or \"ou=people,dc=domain,dc=local\".",
+			"method" => "textbox",
+			"max_length" => "255"
+			),
+		"ldap_search_filter" => array(
+			"friendly_name" => "Search Filter",
+			"description" => "Search filter to use to locate the user in the LDAP directory, such as for windows: <i>\"(&amp;(objectclass=user)(objectcategory=user)(userPrincipalName=&lt;username&gt;*))\"</i> or for OpenLDAP: <i>\"(&(objectClass=account)(uid=&lt;username&gt))\"</i>.  \"&lt;username&gt is replaced with the username that was supplied at the login prompt. ",
+			"method" => "textbox",
+			"max_length" => "255"
+			),
+		"ldap_specific_dn" => array(
+			"friendly_name" => "Specific Search Distingished Name (DN)",
+			"description" => "Distinguished Name for Specific Searching binding to the LDAP directory.",
+			"method" => "textbox",
+			"max_length" => "255"
+			),
+		"ldap_specific_password" => array(
+			"friendly_name" => "Specific Search Password",
+			"description" => "Password for Specific Searching binding to the LDAP directory.",
 			"method" => "textbox",
 			"max_length" => "255"
 			)

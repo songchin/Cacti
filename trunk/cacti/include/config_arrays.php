@@ -268,6 +268,12 @@ $ldap_encryption = array(
 	2 => "TLS", 
 );
 
+$ldap_modes = array(
+	0 => "No Searching",
+	1 => "Anonymous Searching",
+	2 => "Specific Searching"
+);
+
 $snmp_implimentations = array(
 	"ucd-snmp" => "UCD-SNMP 4.x",
 	"net-snmp" => "NET-SNMP 5.x");
