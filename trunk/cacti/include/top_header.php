@@ -28,11 +28,11 @@ global $colors;
 ?>
 <html>
 <head>
+	<link rel='shortcut icon' href='<?php print html_get_theme_images_path("favicon.ico");?>' type='image/x-icon'>
+	<script type="text/javascript" src="include/layout.js"></script>
 	<title>cacti</title>
 	<link href='<?php print html_get_theme_css();?>' rel='stylesheet'>
 	<link href='<?php print html_get_theme_images_path("favicon.ico");?>' rel='image/x-icon'>
-	<link rel='shortcut icon' href='<?php print html_get_theme_images_path("favicon.ico");?>' type='image/x-icon'>
-	<script type="text/javascript" src="include/layout.js"></script>
 </style>
 </head>
 
