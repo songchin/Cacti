@@ -131,6 +131,7 @@ function pollers() {
 		DrawMatrixHeaderItem("Name",$colors["header_text"],1);
 		DrawMatrixHeaderItem("Hostname",$colors["header_text"],1);
 		DrawMatrixHeaderItem("Active",$colors["header_text"],1);
+		DrawMatrixHeaderItem("Last Update",$colors["header_text"],1);
 		DrawMatrixHeaderItem("&nbsp;",$colors["header_text"],1);
 	print "</tr>";
 
@@ -149,6 +150,9 @@ function pollers() {
 			</td>
 			<td>
 				<?php print $data_poller["active"];?></a>
+			</td>
+			<td>
+				<?php print $data_poller["last_update"];?></a>
 			</td>
 			<td align="right">
 				<a href="data_pollers.php?action=delete&id=<?php print $data_poller["id"];?>"><img src="images/delete_icon.gif" width="10" height="10" border="0" alt="Delete"></a>
