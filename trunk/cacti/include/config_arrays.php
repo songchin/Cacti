@@ -253,12 +253,7 @@ $menu = array(
 		),
 	"Management" => array(
 		"tree.php" => "Trees",
-		"graphs.php" => array(
-			"graphs.php" => "Graphs",
-			"cdef.php" => "CDEFs",
-			"color.php" => "Colors",
-			"gprint_presets.php" => "GPRINT Presets"
-			),
+		"graphs.php" => "Graphs",
 		"host.php" => "Devices",
 		"data_sources.php" => array(
 			"data_sources.php" => "Data Sources",
