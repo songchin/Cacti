@@ -57,24 +57,29 @@ function draw_nontemplated_fields_graph($graph_template_id, &$values_array, $fie
 		$form_array[$form_field_name]["form_id"] = (isset($values_array["id"]) ? $values_array["id"] : "0");
 		unset($form_array[$form_field_name]["default"]);
 
-		if ($graph_template{"t_" . $field_name} != "on") {
-			if ($include_hidden_fields == true) {
-				$form_array[$form_field_name]["method"] = "hidden";
+
+		if ($field_array["method"] <> "spacer") {
+			if ($graph_template{"t_" . $field_name} != "on") {
+				if ($include_hidden_fields == true) {
+					$form_array[$form_field_name]["method"] = "hidden";
+				}else{
+					unset($form_array[$form_field_name]);
+				}
+			}elseif ((!empty($snmp_query_graph_id)) && (sizeof(db_fetch_assoc("select id from snmp_query_graph_sv where snmp_query_graph_id=$snmp_query_graph_id and field_name='$field_name'")) > 0)) {
+				if ($include_hidden_fields == true) {
+					$form_array[$form_field_name]["method"] = "hidden";
+				}else{
+					unset($form_array[$form_field_name]);
+				}
 			}else{
-				unset($form_array[$form_field_name]);
-			}
-		}elseif ((!empty($snmp_query_graph_id)) && (sizeof(db_fetch_assoc("select id from snmp_query_graph_sv where snmp_query_graph_id=$snmp_query_graph_id and field_name='$field_name'")) > 0)) {
-			if ($include_hidden_fields == true) {
-				$form_array[$form_field_name]["method"] = "hidden";
-			}else{
-				unset($form_array[$form_field_name]);
+				if (($draw_any_items == false) && ($header_title != "")) {
+					print "<tr bgcolor='#" . $colors["header_panel_background"] . "'><td colspan='2' style='font-size: 10px; color: white;'>$header_title</td></tr>\n";
+				}
+
+				$draw_any_items = true;
 			}
 		}else{
-			if (($draw_any_items == false) && ($header_title != "")) {
-				print "<tr bgcolor='#" . $colors["header_panel_background"] . "'><td colspan='2' style='font-size: 10px; color: white;'>$header_title</td></tr>\n";
-			}
-
-			$draw_any_items = true;
+			unset($form_array[$form_field_name]);
 		}
 	}
 
