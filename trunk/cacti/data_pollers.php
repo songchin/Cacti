@@ -64,7 +64,7 @@ function form_save() {
 	global $registered_cacti_names;
 
 	if (isset($_POST["save_component_data_poller"])) {
-		$data_poller_id = api_data_poller_save($_POST["id"], (isset($_POST["active"]) ? $_POST["active"] : ""), $_POST["hostname"], $_POST["description"]);
+		$data_poller_id = api_data_poller_save($_POST["id"], (isset($_POST["active"]) ? $_POST["active"] : ""), $_POST["hostname"], $_POST["name"]);
 
 		if ((is_error_message()) || (empty($_POST["id"]))) {
 			header("Location: data_pollers.php?action=edit&id=" . (empty($data_poller_id) ? $_POST["id"] : $data_poller_id));
@@ -105,7 +105,7 @@ function poller_edit() {
 
 	if ((isset($_GET["id"])) && ($_GET["id"] >= 0)) {
 		$data_poller = db_fetch_row("select * from poller where id=" . $_GET["id"]);
-		$header_label = "[edit: " . $data_poller["description"] . "]";
+		$header_label = "[edit: " . $data_poller["name"] . "]";
 	}else{
 		$header_label = "[new]";
 	}
@@ -128,13 +128,13 @@ function pollers() {
 	html_start_box("<strong>Data Pollers</strong>", "98%", $colors["header"], "3", "center", "data_pollers.php?action=edit");
 
 	print "<tr bgcolor='#" . $colors["header_panel"] . "'>";
-		DrawMatrixHeaderItem("Description",$colors["header_text"],1);
+		DrawMatrixHeaderItem("Name",$colors["header_text"],1);
 		DrawMatrixHeaderItem("Hostname",$colors["header_text"],1);
 		DrawMatrixHeaderItem("Active",$colors["header_text"],1);
 		DrawMatrixHeaderItem("&nbsp;",$colors["header_text"],1);
 	print "</tr>";
 
-	$data_pollers = db_fetch_assoc("select * from poller order by description");
+	$data_pollers = db_fetch_assoc("select * from poller order by name");
 
 	$i = 0;
 	if (sizeof($data_pollers) > 0) {
@@ -142,7 +142,7 @@ function pollers() {
 		form_alternate_row_color($colors["alternate"],$colors["light"],$i); $i++;
 			?>
 			<td>
-				<a class="linkEditMain" href="data_pollers.php?action=edit&id=<?php print $data_poller["id"];?>"><?php print $data_poller["description"];?></a>
+				<a class="linkEditMain" href="data_pollers.php?action=edit&id=<?php print $data_poller["id"];?>"><?php print $data_poller["name"];?></a>
 			</td>
 			<td>
 				<?php print $data_poller["hostname"];?></a>
