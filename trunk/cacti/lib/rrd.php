@@ -542,7 +542,7 @@ function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rr
 	$y_grid_alt = "";
 	$x_grid = "";
 	$unit_value = "";
-	$unit_legth = "";
+	$unit_length = "";
 	$unit_exponent_value = "";
 	$graph_legend = "";
 	$graph_defs = "";
@@ -587,7 +587,7 @@ function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rr
 		$y_grid = $graph["y_grid"] . RRD_NL;
 	}
 
-	if (!empty($grph["x_grid"])) {
+	if (!empty($graph["x_grid"])) {
 		$x_grid = $graph["x_grid"] . RRD_NL;
 	}
 
