@@ -70,7 +70,7 @@ function rrdtool_execute($command_line, $log_to_stdout, $output_flag, $rrd_struc
 
 	/* output information to the log file if appropriate */
 	if (read_config_option("log_verbosity") >= POLLER_VERBOSITY_DEBUG) {
-		cacti_log("CACTI2RRD: " . addslashes(read_config_option("path_rrdtool")) . " $command_line", SEV_DEBUG, $poller_id, 0, 0, $log_to_stdout, FACIL_POLLER);
+		cacti_log("CACTI2RRD: " . addslashes(read_config_option("path_rrdtool")) . " $command_line", SEV_DEBUG, 0, 0, 0, $log_to_stdout, FACIL_POLLER);
 	}
 
 	/* if we want to see the error output from rrdtool; make sure to specify this */
