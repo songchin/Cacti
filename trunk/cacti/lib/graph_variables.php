@@ -52,8 +52,7 @@ function ninety_fifth_percentile($local_data_id, $start_time, $end_time) {
 
 			/* grab the 95% row (or 5% in reverse) and use that as our 95th percentile
 			value */
-			$target = ((count($values_array) + 1) * .05);
-			$target = sprintf("%d", $target);
+			$target = (int)(count($values_array) / 20);
 		}
 
 		if (empty($values_array[$target])) { $values_array[$target] = 0; }
@@ -176,7 +175,6 @@ function variable_ninety_fifth_percentile($var_scale, $var_divisor, $var_type, $
 			}
 		}
 	}elseif ($var_type == "all_max_current") {
-		$ninety_fifth = 0;
 		for ($t=0; $t<count($graph_items); $t++) {
 			if ((is_graph_item_type_primary($graph_items[$t]["graph_type_id"])) && (!empty($graph_items[$t]["data_template_rrd_id"]))) {
 				$local_ninety_fifth = $ninety_fifth_cache{$graph_items[$t]["local_data_id"]}{$graph_items[$t]["data_source_name"]};
@@ -189,7 +187,6 @@ function variable_ninety_fifth_percentile($var_scale, $var_divisor, $var_type, $
 			}
 		}
 	}elseif ($var_type == "all_max_peak") {
-		$ninety_fifth = 0;
 		for ($t=0; $t<count($graph_items); $t++) {
 			if ((is_graph_item_type_primary($graph_items[$t]["graph_type_id"])) && (!empty($graph_items[$t]["data_template_rrd_id"]))) {
 				$local_ninety_fifth = $ninety_fifth_cache{$graph_items[$t]["local_data_id"]}["ninety_fifth_percentile_maximum"];
