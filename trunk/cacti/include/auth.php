@@ -25,6 +25,7 @@
 */
 
 include("./include/config.php");
+include($config["library_path"] . "/api_user.php");
 
 /* check to see if this is a new installation */
 if (db_fetch_cell("select cacti from version") != $config["cacti_version"]) {
@@ -39,10 +40,11 @@ if (read_config_option("auth_method") != "0") {
 		exit;
 	}
 
-	/* Check if we are logged in, and process guest account if set */
+	/* Check if we are logged in, and process guest account if set, used by graph_view.php */
 	if ((isset($guest_account)) && (empty($_SESSION["sess_user_id"]))) {
 		if (read_config_option("guest_user") != "0") {
-			$guest_user_id = db_fetch_cell("select id from user_auth where username='" . read_config_option("guest_user") . "'");
+			$user = api_user_info( array( "username" => read_config_option("guest_user") ) );
+			$guest_user_id = $user["id"];
 			if (!empty($guest_user_id)) {
 				$_SESSION["sess_user_id"] = $guest_user_id;
 			}
@@ -51,7 +53,7 @@ if (read_config_option("auth_method") != "0") {
 
 	/* if we are a guest user in a non-guest area, wipe credentials and prompt for login */
 	if (!empty($_SESSION["sess_user_id"])) {
-		if ((!isset($guest_account)) && (db_fetch_cell("select id from user_auth where username='" . read_config_option("guest_user") . "'") == $_SESSION["sess_user_id"])) {
+		if ((!isset($guest_account)) && ( sizeof( api_user_info( array( "username" => read_config_option("guest_user") ) ) ) == $_SESSION["sess_user_id"])) {
 			kill_session_var("sess_user_id");
 		}
 	}
@@ -62,18 +64,27 @@ if (read_config_option("auth_method") != "0") {
 		exit;
 	}elseif (!empty($_SESSION["sess_user_id"])) {
 		/* User authenticated */
+
+		/* check if password is expired */
+		$user_expire = api_user_expire_info($_SESSION["sess_user_id"]);
+		if ($user_expire == "0") {
+			$_SESSION["sess_change_password"] = true;
+			if (read_config_option("auth_method") == 1) {
+				header ("Location: auth_changepassword.php?ref=" . (isset($_SERVER["HTTP_REFERER"]) ? $_SERVER["HTTP_REFERER"] : "index.php"));
+				exit;
+			}
+		}	
+
+		/* Check permissions to use this realm against database */
 		$realm_id = 0;
 
 		if (isset($user_auth_realm_filenames{basename($_SERVER["PHP_SELF"])})) {
 			$realm_id = $user_auth_realm_filenames{basename($_SERVER["PHP_SELF"])};
 		}
-		/* Check permissions to use this realm against database */
-		if ((!db_fetch_assoc("select
-			user_auth_realm.realm_id
-			from
-			user_auth_realm
-			where user_auth_realm.user_id='" . $_SESSION["sess_user_id"] . "'
-			and user_auth_realm.realm_id='$realm_id'")) || (empty($realm_id))) {
+
+		$user_realms = api_user_realms_list($_SESSION["sess_user_id"]);
+
+		if ($user_realms[$realm_id]["value"] != "1") {
 
 			?>
 			<html>
