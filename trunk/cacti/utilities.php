@@ -109,10 +109,10 @@ function utilities_view_syslog() {
 	/* remember these search fields in session vars so we don't have to keep passing them around */
 	load_current_session_value("page", "sess_device_current_page", "1");
 	load_current_session_value("filter", "sess_device_filter", "");
-	load_current_session_value("facility", "sess_facility", "All");
-	load_current_session_value("severity", "sess_severity", "All");
-	load_current_session_value("poller", "sess_poller", "All");
-	load_current_session_value("host", "sess_host", "All");
+	load_current_session_value("facility", "sess_facility", "ALL");
+	load_current_session_value("severity", "sess_severity", "ALL");
+	load_current_session_value("poller", "sess_poller", "ALL");
+	load_current_session_value("host", "sess_host", "ALL");
 
 	html_start_box("<strong>Cacti System Log</strong>", "98%", $colors["header_background"], "3", "center", "");
 
@@ -136,7 +136,7 @@ function utilities_view_syslog() {
 	}
 
 	if ($_REQUEST["host"] != "ALL") {
-		$sql_where .= " and host.description='" . $_REQUEST["host"] . "'";
+		$sql_where .= " and host.id='" . $_REQUEST["host"] . "'";
 	}
 
 	html_start_box("", "98%", $colors["header_background"], "3", "center", "");
