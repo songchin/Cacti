@@ -26,6 +26,9 @@
 
 define("REGEXP_SNMP_TRIM", "(hex|counter(32|64)|gauge|gauge(32|64)|float|ipaddress|string|integer):");
 
+define("SNMP_METHOD_PHP", 1);
+define("SNMP_METHOD_BINARY", 2);
+
 /* we must use an apostrophe to escape community names under Unix in case the user uses
 characters that the shell might interpret. the ucd-snmp binaries on Windows flip out when
 you do this, but are perfectly happy with a quotation mark. */
@@ -46,7 +49,7 @@ function cacti_snmp_get($hostname, $community, $oid, $version, $v3username, $v3p
 		$version = "1";
 	}
 
-	if (($config["php_snmp_support"] == true) && (($version == "1") || ($version == "3"))) {
+	if (snmp_get_method($version) == SNMP_METHOD_PHP) {
 		/* make sure snmp* is verbose so we can see what types of data
 		we are getting back */
 		snmp_set_quick_print(0);
@@ -102,7 +105,7 @@ function cacti_snmp_walk($hostname, $community, $oid, $version, $v3username, $v3
 		$version = "1";
 	}
 
-	if (($config["php_snmp_support"] == true) && (($version == "1") || ($version == "3"))) {
+	if (snmp_get_method($version) == SNMP_METHOD_PHP) {
 		if ($version == "1") {
 			$temp_array = @snmpwalkoid("$hostname:$port", $community, trim($oid), ($timeout * 1000), $retries);
 		} else {
@@ -186,6 +189,24 @@ function format_snmp_string($string) {
 	$string = eregi_replace(REGEXP_SNMP_TRIM, "", $string);
 
 	return trim($string);
+}
+
+function snmp_get_method($version = 1) {
+	if ((function_exists("snmp3_get")) && ($version == 3)) {
+		return SNMP_METHOD_PHP;
+	}else if ((function_exists("snmpget")) && ($version == 1)) {
+		return SNMP_METHOD_PHP;
+	}else if (($version == 2) && (file_exists(read_config_option("path_snmpget")))) {
+		return SNMP_METHOD_BINARY;
+	}else if (function_exists("snmpget")) {
+		/* last resort (hopefully it isn't a 64-bit result) */
+		return SNMP_METHOD_PHP;
+	}else if (file_exists(read_config_option("path_snmpget"))) {
+		return SNMP_METHOD_BINARY;
+	}else{
+		/* looks like snmp is broken */
+		return SNMP_METHOD_BINARY;
+	}
 }
 
 function snmp_get_v3authpriv($v3privproto) {
