@@ -520,7 +520,7 @@ function data_edit() {
 
 			form_alternate_row_color($colors["form_alternate1"],$colors["form_alternate2"],$i);
 
-			if ((!empty($host["id"])) && (eregi('^(hostname|snmp_community|snmpv3_auth_username|snmpv3_auth_password|snmp_version)$', $field["type_code"]))) {
+			if ((!empty($host["id"])) && (eregi('^(hostname|snmp_community|snmpv3_auth_username|snmpv3_auth_password|snmpv3_auth_protocol|snmpv3_priv_passphrase|snmpv3_priv_protocol|snmp_version)$', $field["type_code"]))) {
 				print "<td width='50%'><strong>" . $field["name"] . "</strong> (From Host: " . $host["hostname"] . ")</td>\n";
 				print "<td><em>$old_value</em></td>\n";
 			}elseif (empty($can_template)) {

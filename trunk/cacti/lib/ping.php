@@ -176,6 +176,9 @@ class Net_Ping
 				$this->host["snmp_version"],
 				$this->host["snmpv3_auth_username"],
 				$this->host["snmpv3_auth_password"],
+				$this->host["snmpv3_auth_protocol"],
+				$this->host["snmpv3_priv_passphrase"],
+				$this->host["snmpv3_priv_protocol"],
 				$this->host["snmp_port"],
 				$this->host["snmp_timeout"],
 				SNMP_CMDPHP);

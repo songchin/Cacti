@@ -143,8 +143,13 @@ if ((sizeof($polling_items) > 0) && (read_config_option("poller_enabled") == "on
 			$ping->host["snmp_version"]   = $item["snmp_version"];
 			$ping->host["snmpv3_auth_username"]  = $item["snmpv3_auth_username"];
 			$ping->host["snmpv3_auth_password"]  = $item["snmpv3_auth_password"];
+			$ping->host["snmpv3_auth_protocol"]  = $item["snmpv3_auth_protocol"];
+			$ping->host["snmpv3_priv_passphrase"]  = $item["snmpv3_priv_passphrase"];
+			$ping->host["snmpv3_priv_protocol"]  = $item["snmpv3_priv_protocol"];
 			$ping->host["snmp_port"]      = $item["snmp_port"];
 			$ping->host["snmp_timeout"]   = $item["snmp_timeout"];
+			$ping->host["availability_method"] = $item["availability_method"];
+			$ping->host["ping_method"] = $item["ping_method"];
 
 			if ((!function_exists("socket_create")) || (phpversion() < "4.3")) {
 				/* the ping test will fail under PHP < 4.3 without socket support */
