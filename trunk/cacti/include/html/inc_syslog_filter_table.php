@@ -45,7 +45,7 @@
 
 							if (sizeof($pollers) > 0) {
 							foreach ($pollers as $poller) {
-								print "<option value='utilities.php?action=view_syslog&poller=" . $poller[id] . "&severity=ALL&facility=" . $_REQUEST['facility'] . "&filter=" . $_REQUEST['filter'] . "&page=1'"; if ($_REQUEST["poller"] == $poller["id"]) { print " selected"; } print ">" . $poller["name"] . "</option>\n";
+								print "<option value='utilities.php?action=view_syslog&poller=" . $poller['id'] . "&severity=ALL&facility=" . $_REQUEST['facility'] . "&filter=" . $_REQUEST['filter'] . "&page=1'"; if ($_REQUEST["poller"] == $poller["id"]) { print " selected"; } print ">" . $poller["name"] . "</option>\n";
 							}
 							}
 							?>
@@ -62,7 +62,7 @@
 
 							if (sizeof($hosts) > 0) {
 							foreach ($hosts as $host) {
-								print "<option value='utilities.php?action=view_syslog&page=1&host=" . $host[id] . "&poller=" . $_REQUEST['poller'] . "&severity=" . $_REQUEST['severity'] . "&facility=" . $_REQUEST['facility'] . "&filter=" . $_REQUEST['filter'] . "&page=1'"; if ($_REQUEST["host"] == $host["id"]) { print " selected"; } print ">" . $host["description"] . "</option>\n";
+								print "<option value='utilities.php?action=view_syslog&page=1&host=" . $host['id'] . "&poller=" . $_REQUEST['poller'] . "&severity=" . $_REQUEST['severity'] . "&facility=" . $_REQUEST['facility'] . "&filter=" . $_REQUEST['filter'] . "&page=1'"; if ($_REQUEST["host"] == $host["id"]) { print " selected"; } print ">" . $host["description"] . "</option>\n";
 							}
 							}
 							?>

@@ -89,6 +89,8 @@ switch ($_REQUEST["action"]) {
 function utilities_view_syslog() {
 	global $colors, $device_actions;
 
+    define("MAX_DISPLAY_PAGES", 21);
+
 	/* if the user pushed the 'clear' button */
 	if (isset($_REQUEST["clear_x"])) {
 		kill_session_var("sess_device_current_page");
@@ -114,7 +116,7 @@ function utilities_view_syslog() {
 	load_current_session_value("poller", "sess_poller", "All");
 	load_current_session_value("host", "sess_host", "All");
 
-	html_start_box("<strong>Cacti System Log</strong>", "98%", $colors["header_background"], "3", "center");
+	html_start_box("<strong>Cacti System Log</strong>", "98%", $colors["header_background"], "3", "center", "");
 
 	include("./include/html/inc_syslog_filter_table.php");
 
@@ -163,7 +165,7 @@ function utilities_view_syslog() {
 		limit " . (read_config_option("num_rows_device")*($_REQUEST["page"]-1)) . "," . read_config_option("num_rows_device"));
 
 	/* generate page list */
-	$url_page_select = get_page_list($_REQUEST["page"], MAX_DISPLAY_PAGES, read_config_option("num_rows_device"), $total_rows, "utilities.php?action=view_syslog&filter=" . $_REQUEST["filter"] . "&facility=" . $_REQUEST["facility"] . "&severity=" . $REQUEST["severity"]);
+	$url_page_select = get_page_list($_REQUEST["page"], MAX_DISPLAY_PAGES, read_config_option("num_rows_device"), $total_rows, "utilities.php?action=view_syslog&filter=" . $_REQUEST["filter"] . "&facility=" . $_REQUEST["facility"] . "&severity=" . $_REQUEST["severity"]);
 
 	$nav = "<tr bgcolor='#" . $colors["header_background"] . "'>
 			<td colspan='7'>
