@@ -37,11 +37,14 @@ int db_insert(MYSQL *mysql, char *query) {
 		cacti_log(logmessage);
 	}
 
+	thread_mutex_lock(LOCK_MYSQL);
 	if (mysql_query(mysql, query)) {
 		snprintf(logmessage, LOGSIZE, "ERROR: Problem with MySQL: %s\n", mysql_error(mysql));
 		cacti_log(logmessage);
+  		thread_mutex_unlock(LOCK_MYSQL);
 		return (FALSE);
 	}else{
+		thread_mutex_unlock(LOCK_MYSQL);
 		return (TRUE);
 	}
 }
@@ -49,8 +52,10 @@ int db_insert(MYSQL *mysql, char *query) {
 MYSQL_RES *db_query(MYSQL *mysql, char *query) {
 	MYSQL_RES *mysql_res;
 
+	thread_mutex_lock(LOCK_MYSQL);
  	mysql_query(mysql, query);
 	mysql_res = mysql_store_result(mysql);
+	thread_mutex_unlock(LOCK_MYSQL);
 
 	return mysql_res;
 }
@@ -63,6 +68,7 @@ int db_connect(char *database, MYSQL *mysql) {
 		cacti_log(logmessage);
 	}
 
+	thread_mutex_lock(LOCK_MYSQL);
 	mysql_init(mysql);
 
 	if (!mysql_real_connect(mysql, set.dbhost, set.dbuser, set.dbpass, database, 0, NULL, 0)) {

@@ -56,7 +56,7 @@ void *child(void * arg) {
 	poll_host(host_id);
 
 	thread_mutex_lock(LOCK_THREAD);
-	active_threads = active_threads - 1;
+	active_threads--;
 	thread_mutex_unlock(LOCK_THREAD);
 
 	if (set.verbose == POLLER_VERBOSITY_DEBUG) {
@@ -96,9 +96,7 @@ void poll_host(int host_id) {
 	host = (host_t *) malloc(sizeof(host_t));
 	ping = (ping_t *) malloc(sizeof(ping_t));
 
-	#ifndef OLD_MYSQL
 	mysql_thread_init();
-	#endif
 
 	snprintf(query1, sizeof(query1), "select action,hostname,snmp_community,snmp_version,snmp_username,snmp_password,rrd_name,rrd_path,arg1,arg2,arg3,local_data_id,rrd_num,snmp_port,snmp_timeout from poller_item where host_id=%i order by rrd_path,rrd_name", host_id);
 	snprintf(query2, sizeof(query2), "select id, hostname,snmp_community,snmp_version,snmp_port,snmp_timeout,status,status_event_count,status_fail_date,status_rec_date,status_last_error,min_time,max_time,cur_time,avg_time,total_polls,failed_polls,availability from host where id=%i", host_id);
@@ -392,9 +390,7 @@ void poll_host(int host_id) {
 
 	mysql_free_result(result);
 
-	#ifndef OLD_MYSQL
 	mysql_thread_end();
-	#endif
 
 	mysql_close(&mysql);
 
