@@ -699,6 +699,10 @@ $fields_graph_template_input_edit = array(
 
 /* file: host.php, action: edit */
 $fields_host_edit = array(
+	"spacer0" => array(
+		"method" => "spacer",
+		"friendly_name" => "General Options"
+		),
 	"description" => array(
 		"method" => "textbox",
 		"friendly_name" => "Description",
@@ -789,7 +793,7 @@ $fields_host_edit = array(
 		),
 	"spacer2" => array(
 		"method" => "spacer",
-		"friendly_name" => "SNMP v1/v2c Option"
+		"friendly_name" => "SNMP v1/v2c Options"
 		),
 	"snmp_community" => array(
 		"method" => "textbox",

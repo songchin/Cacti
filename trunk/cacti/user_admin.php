@@ -522,7 +522,7 @@ function user_realms_edit() {
 
 	?>
 
-	<tr>
+	<tr bgcolor='#<?php print $colors["form_alternate2"]; ?>'>
 		<td colspan="2" width="100%">
 			<table width="100%">
 				<tr>
@@ -803,7 +803,7 @@ function user() {
 				<?php print $user["ip"];?>
 			</td>
 			<td>
-				<?php 
+				<?php
 				if ($user["realm"] != "0") {
 					print "N/A";
 				}else{

@@ -79,9 +79,7 @@ function settings() {
 
 	print "<form method='post'>\n";
 
-	html_graph_start_box(1, true);
-
-	print "<tr bgcolor='#" . $colors["header_background"] . "'><td colspan='3'><table cellspacing='0' cellpadding='3' width='100%'><tr><td class='textHeaderDark'><strong>User Settings</strong></td></tr></table></td></tr>";
+	html_start_box("<strong>User Settings</strong>", "98%", $colors["header_background"], "3", "center", "");
 
 	/* get user settings */
 	$user_settings = api_user_user_setting_list($_SESSION["sess_user_id"]);
@@ -125,7 +123,7 @@ function settings() {
 			);
 	}
 
-	html_graph_end_box();
+	html_end_box();
 
 	print "<br>";
 
