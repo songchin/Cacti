@@ -299,8 +299,14 @@ function array_rekey($array, $key, $key_value) {
 }
 
 /* cacti_log - logs a string to Cacti's log file or optionally to the browser
-   @arg $string - the string to append to the log file
-   @arg $output - (bool) whether to output the log line to the browser using pring() or not */
+   @arg $message - string value to log
+   @arg $severity - integer value severity level
+   @arg $poller_id - integer value poller id, if applicable
+   @arg $host_id - integer value host_id, if applicable
+   @arg $user_id - integer value user_id, optional, if not passed, figured out.
+   @arg $output - (bool) whether to output the log line to the browser using pring() or not
+   @arg $facility - integer value facility, if applicable, default FACIL_CMDPHP 
+   Note: Constants are defined for Severity and Facility, please reference include/config_constants.php*/
 function cacti_log($message, $severity = SEV_INFO, $poller_id = 1, $host_id = 0, $user_id = 0, $output = false, $facility = FACIL_CMDPHP) {
 	global $config;
 
@@ -319,7 +325,12 @@ function cacti_log($message, $severity = SEV_INFO, $poller_id = 1, $host_id = 0,
 	    $username = $user_info["username"];
 	    //"select username from user_auth where user_id=$user_id");
 	}else{
-		$username = "SYSTEM";
+		if (isset($_SESSION["sess_user_id"])) {
+			$user_info = api_user_info(array("id" => $_SESSION["sess_user_id"]));
+			$username = $user_info;
+		}else{
+			$username = "SYSTEM";
+		}
 	}
 
 	/* set the IP Address */
