@@ -24,7 +24,8 @@
  +-------------------------------------------------------------------------+
 */
 
-include ("./include/auth.php");
+include("./include/config.php");
+include("./include/auth.php");
 include_once('./lib/api_data_pollers.php');
 
 /* set default action */

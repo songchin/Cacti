@@ -29,6 +29,7 @@ if (!isset($_REQUEST["action"])) { $_REQUEST["action"] = "view"; }
 if (!isset($_REQUEST["view_type"])) { $_REQUEST["view_type"] = ""; }
 
 $guest_account = true;
+include("./include/config.php");
 include("./include/auth.php");
 include("./include/top_graph_header.php");
 

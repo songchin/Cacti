@@ -24,7 +24,8 @@
  +-------------------------------------------------------------------------+
 */
 
-include ("./include/auth.php");
+include("./include/config.php");
+include("./include/auth.php");
 include_once("./lib/tree.php");
 include_once("./lib/html_tree.php");
 include_once("./lib/utility.php");

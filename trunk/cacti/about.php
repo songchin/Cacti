@@ -24,6 +24,7 @@
  +-------------------------------------------------------------------------+
 */
 
+include("./include/config.php");
 include("./include/auth.php");
 include("./include/top_header.php");
 

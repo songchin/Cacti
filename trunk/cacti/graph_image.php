@@ -29,8 +29,9 @@ ob_start();
 
 $guest_account = true;
 
+include("./include/config.php");
 include("./include/auth.php");
-include_once("./lib/rrd.php");
+include("./lib/rrd.php");
 
 header("Content-type: image/png");
 

@@ -24,6 +24,7 @@
  +-------------------------------------------------------------------------+
 */
 
+include("./include/config.php");
 include("./include/auth.php");
 include_once('./lib/api_tree.php');
 include_once('./lib/tree.php');

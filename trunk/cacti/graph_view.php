@@ -25,6 +25,7 @@
 */
 
 $guest_account = true;
+include("./include/config.php");
 include("./include/auth.php");
 include("./include/html/inc_timespan_settings.php");
 include("./include/top_graph_header.php");

@@ -24,7 +24,8 @@
  +-------------------------------------------------------------------------+
 */
 
-include ("./include/auth.php");
+include("./include/config.php");
+include("./include/auth.php");
 include_once('./lib/api_data_input.php');
 
 /* set default action */
