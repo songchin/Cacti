@@ -270,7 +270,7 @@ $settings = array(
 			"default" => "",
 			"max_length" => "100",
 			),
-		"snmpv3_auth_passphrase" => array(
+		"snmpv3_auth_password" => array(
 			"friendly_name" => "Password",
 			"description" => "The default SNMP v3 password.",
 			"method" => "textbox_password",
