@@ -396,12 +396,12 @@ void config_defaults(config_t * set) {
 	set->interval = DEFAULT_INTERVAL;
 	set->snmp_ver = DEFAULT_SNMP_VER;
 	set->threads = DEFAULT_THREADS;
+    set->dbport = DEFAULT_DB_PORT;
 
 	strncpy(set->dbhost, DEFAULT_DB_HOST, sizeof(set->dbhost));
 	strncpy(set->dbdb, DEFAULT_DB_DB, sizeof(set->dbhost));
 	strncpy(set->dbuser, DEFAULT_DB_USER, sizeof(set->dbhost));
 	strncpy(set->dbpass, DEFAULT_DB_PASS, sizeof(set->dbhost));
-    set->dbport = DEFAULT_DB_PORT;
 
 	strncpy(config_paths[0], CONFIG_PATH_1, sizeof(config_paths[0]));
 	strncpy(config_paths[1], CONFIG_PATH_2, sizeof(config_paths[1]));
@@ -480,7 +480,7 @@ void cacti_log(char *logmessage) {
 	}
 
 	if (set.verbose >= POLLER_VERBOSITY_MEDIUM) {
-	    snprintf(flogmessage, BUFSIZE, "CACTID: %s", logmessage);
+	    snprintf(flogmessage, LOGSIZE, "CACTID: %s", logmessage);
 		printf(flogmessage);
 	}
 }

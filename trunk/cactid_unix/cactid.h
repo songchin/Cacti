@@ -137,7 +137,7 @@ typedef struct config_struct {
 	char dbdb[80];
 	char dbuser[80];
 	char dbpass[80];
-    int dbport;
+    unsigned int dbport;
 	char path_logfile[250];
 	char path_php[250];
 	char path_php_server[250];
