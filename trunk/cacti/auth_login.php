@@ -228,8 +228,6 @@ function auth_display_custom_error_message($message) {
 <html>
 <head>
 	<title>Login to Cacti</title>
-	<link href='<?php print html_get_theme_images_path("favicon.ico");?>' rel='image/x-icon'>
-	<link rel='shortcut icon' href='<?php print html_get_theme_images_path("favicon.ico");?>' type='image/x-icon'>
 	<STYLE TYPE="text/css">
 	<!--
 		BODY, TABLE, TR, TD {font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 12px;}
@@ -239,6 +237,8 @@ function auth_display_custom_error_message($message) {
 		A:visited {color: Blue;}
 	-->
 	</style>
+	<link href='<?php print html_get_theme_images_path("favicon.ico");?>' rel='image/x-icon'>
+	<link rel='shortcut icon' href='<?php print html_get_theme_images_path("favicon.ico");?>' type='image/x-icon'>
 </head>
 <body onload="document.login.username.focus()">
 <form name="login" method="post" action="<?php print basename($_SERVER["PHP_SELF"]);?>">
