@@ -149,7 +149,6 @@ void snmp_host_init(host_t *current_host) {
 			}
 		}
 
-		session.securityPrivProtoLen = sizeof(session.securityPrivProto)/sizeof(oid);
 		session.securityPrivKeyLen = USM_PRIV_KU_LEN;
 
 	    /* set the security level to authenticate, but not encrypted */
