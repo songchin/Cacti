@@ -239,13 +239,6 @@ $auth_methods = array(
 	2 => "Web Basic Authentication",
 	3 => "LDAP Authentication");
 
-$user_log_result = array(
-	0 => "Failure",
-	1 => "Success",
-	2 => "Unknown",
-	3 => "Password Changed",
-	4 => "Account Disabled");
-
 $user_password_expire_intervals = array(
 	0 => "Never",
 	30 => "30 Days",
@@ -260,6 +253,13 @@ $user_password_expire_intervals = array(
 	300 => "300 Days",
 	330 => "330 Days",
 	360 => "360 Days"
+	);
+
+$graph_perms_type_array = array(
+	"graph" => "1",
+	"tree" => "2",
+	"host" => "3",
+	"graph_template" => "4"
 	);
 
 $ldap_versions = array(
