@@ -71,10 +71,7 @@ if ($config["cacti_server_os"] == "win32") {
 }
 
 if(read_config_option("log_verbosity") == POLLER_VERBOSITY_DEBUG) {
-	api_syslog_cacti_log("SERVER: " . $environ, SEV_DEBUG, $poller_id, 0, 0, false, FACIL_SCPTSVR);
-	api_syslog_cacti_log("GETCWD: " . strtolower(strtr(getcwd(),"\\","/")), SEV_DEBUG, $poller_id, 0, 0, false, FACIL_SCPTSVR);
-	api_syslog_cacti_log("DIRNAM: " . strtolower(strtr(dirname(__FILE__),"\\","/")), SEV_DEBUG, $poller_id, 0, 0, false, FACIL_SCPTSVR);
-	api_syslog_cacti_log("FILENM: " . __FILE__, SEV_DEBUG, $poller_id, 0, 0, false, FACIL_SCPTSVR);
+	api_syslog_cacti_log("POLLER: " . $environ . " CWD: " . strtolower(strtr(getcwd(),"\\","/")) . " ROOT: " . strtolower(strtr(dirname(__FILE__),"\\","/")) . " SERVER: " . __FILE__, SEV_DEBUG, $poller_id, 0, 0, false, FACIL_SCPTSVR);
 }
 
 /* send status back to the server */

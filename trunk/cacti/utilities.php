@@ -106,6 +106,10 @@ function utilities_view_syslog() {
 		unset($_REQUEST["host"]);
 	}
 
+	if (isset($_REQUEST["clear_log_x"])) {
+		api_syslog_clear();
+	}
+
 	/* remember these search fields in session vars so we don't have to keep passing them around */
 	load_current_session_value("page", "sess_device_current_page", "1");
 	load_current_session_value("filter", "sess_device_filter", "");
@@ -114,7 +118,7 @@ function utilities_view_syslog() {
 	load_current_session_value("poller", "sess_poller", "ALL");
 	load_current_session_value("host", "sess_host", "ALL");
 
-	html_start_box("<strong>Cacti System Log</strong>", "98%", $colors["header_background"], "3", "center", "");
+	html_start_box("<strong>Cacti Log Filters</strong>", "98%", $colors["header_background"], "3", "center", "");
 
 	include("./include/html/inc_syslog_filter_table.php");
 
@@ -132,12 +136,25 @@ function utilities_view_syslog() {
 	}
 
 	if ($_REQUEST["poller"] != "ALL") {
-		$sql_where .= " and poller.id='" . $_REQUEST["poller"] . "'";
+		$sql_where .= " and syslog.poller_id='" . $_REQUEST["poller"] . "'";
 	}
 
 	if ($_REQUEST["host"] != "ALL") {
-		$sql_where .= " and host.id='" . $_REQUEST["host"] . "'";
+		$sql_where .= " and syslog.host_id='" . $_REQUEST["host"] . "'";
 	}
+
+	html_start_box("<strong>Cacti Log Operations</strong>", "98%", $colors["header_background"], "3", "center", "");
+
+	print "<form name='syslog_actions'>";
+	print "<input type='hidden' name='action' value='view_syslog'>";
+	print "<td bgcolor='#" . $colors["console_menu_background"] . "'>";
+	print "&nbsp;<input type='image' src='" . html_get_theme_images_path('button_clear_log.gif') . "' name='clear_log' alt='Clear Log' border='0' align='absmiddle' action='submit'>";
+	print "&nbsp;<input type='image' src='" . html_get_theme_images_path('button_export.gif') . "' name='export' alt='Export Log' border='0' align='absmiddle' action='submit'>";
+    print "</td>";
+	print "<input type='hidden' name='page' value='1'>";
+    print "</form>";
+
+  	html_end_box();
 
 	html_start_box("", "98%", $colors["header_background"], "3", "center", "");
 
@@ -219,7 +236,7 @@ function utilities_view_syslog() {
 	}else{
 		print "<tr><td bgcolor='#" . $colors["form_alternate1"] . "' colspan=7><em>No Entries</em></td></tr>";
 	}
-	html_end_box(false);
+	html_end_box();
 }
 
 function utilities_view_snmp_cache() {
