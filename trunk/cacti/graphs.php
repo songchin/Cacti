@@ -626,8 +626,8 @@ function graph_diff() {
 				$alternate_color_2 = "EEEEEE";
 				$custom_row_color = "D5D5D5";
 			}else{
-				$alternate_color_1 = $colors["alternate"];
-				$alternate_color_2 = $colors["alternate"];
+				$alternate_color_1 = $colors["form_alternate1"];
+				$alternate_color_2 = $colors["form_alternate1"];
 				$custom_row_color = "D2D6E7";
 			}
 
@@ -994,7 +994,7 @@ function graph() {
 	$i = 0;
 	if (sizeof($graph_list) > 0) {
 		foreach ($graph_list as $graph) {
-			form_alternate_row_color($colors["alternate"],$colors["light"],$i); $i++;
+			form_alternate_row_color($colors["form_alternate1"],$colors["form_alternate2"],$i); $i++;
 				?>
 				<td>
 					<a class="linkEditMain" href="graphs.php?action=graph_edit&id=<?php print $graph["local_graph_id"];?>"><?php print eregi_replace("(" . preg_quote($_REQUEST["filter"]) . ")", "<span style='background-color: #F8D93D;'>\\1</span>", title_trim($graph["title_cache"], read_config_option("max_title_graph")));?></a>

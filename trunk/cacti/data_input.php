@@ -233,7 +233,7 @@ function data_edit() {
 		$i = 0;
 		if (sizeof($fields) > 0) {
 		foreach ($fields as $field) {
-			form_alternate_row_color($colors["alternate"],$colors["light"],$i); $i++;
+			form_alternate_row_color($colors["form_alternate1"],$colors["form_alternate2"],$i); $i++;
 				?>
 				<td>
 					<a class="linkEditMain" href="data_input.php?action=field_edit&id=<?php print $field["id"];?>&data_input_id=<?php print $_GET["id"];?>"><?php print $field["data_name"];?></a>
@@ -267,7 +267,7 @@ function data_edit() {
 		$i = 0;
 		if (sizeof($fields) > 0) {
 		foreach ($fields as $field) {
-			form_alternate_row_color($colors["alternate"],$colors["light"],$i); $i++;
+			form_alternate_row_color($colors["form_alternate1"],$colors["form_alternate2"],$i); $i++;
 				?>
 				<td>
 					<a class="linkEditMain" href="data_input.php?action=field_edit&id=<?php print $field["id"];?>&data_input_id=<?php print $_GET["id"];?>"><?php print $field["data_name"];?></a>
@@ -309,7 +309,7 @@ function data() {
 	$i = 0;
 	if (sizeof($data_inputs) > 0) {
 	foreach ($data_inputs as $data_input) {
-		form_alternate_row_color($colors["alternate"],$colors["light"],$i); $i++;
+		form_alternate_row_color($colors["form_alternate1"],$colors["form_alternate2"],$i); $i++;
 			?>
 			<td>
 				<a class="linkEditMain" href="data_input.php?action=edit&id=<?php print $data_input["id"];?>"><?php print $data_input["name"];?></a>

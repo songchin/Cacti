@@ -295,7 +295,7 @@ function cdef_edit() {
 		$i = 0;
 		if (sizeof($cdef_items) > 0) {
 		foreach ($cdef_items as $cdef_item) {
-			form_alternate_row_color($colors["alternate"],$colors["light"],$i); $i++;
+			form_alternate_row_color($colors["form_alternate1"],$colors["form_alternate2"],$i); $i++;
 				?>
 				<td>
 					<a class="linkEditMain" href="cdef.php?action=item_edit&id=<?php print $cdef_item["id"];?>&cdef_id=<?php print $cdef["id"];?>">Item #<?php print $i;?></a>
@@ -335,7 +335,7 @@ function cdef() {
 	$i = 0;
 	if (sizeof($cdefs) > 0) {
 	foreach ($cdefs as $cdef) {
-		form_alternate_row_color($colors["alternate"],$colors["light"],$i); $i++;
+		form_alternate_row_color($colors["form_alternate1"],$colors["form_alternate2"],$i); $i++;
 			?>
 			<td>
 				<a class="linkEditMain" href="cdef.php?action=edit&id=<?php print $cdef["id"];?>"><?php print $cdef["name"];?></a>

@@ -399,7 +399,7 @@ function tree() {
 	$i = 0;
 	if (sizeof($trees) > 0) {
 	foreach ($trees as $tree) {
-		form_alternate_row_color($colors["alternate"],$colors["light"],$i); $i++;
+		form_alternate_row_color($colors["form_alternate1"],$colors["form_alternate2"],$i); $i++;
 			?>
 			<td>
 				<a class="linkEditMain" href="tree.php?action=edit&id=<?php print $tree["id"];?>"><?php print $tree["name"];?></a>

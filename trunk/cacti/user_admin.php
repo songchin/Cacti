@@ -674,7 +674,7 @@ function user() {
 	if (sizeof($user_list) > 0) {
 	foreach ($user_list as $user_list_values) {
 		$user = api_user_info( array( "id" => $user_list_values["id"] ) );
-		form_alternate_row_color($colors["alternate"],$colors["light"],$i);
+		form_alternate_row_color($colors["form_alternate1"],$colors["form_alternate2"],$i);
 			?>
 			<td>
 				<a class="linkEditMain" href="user_admin.php?action=user_edit&id=<?php print $user["id"];?>"><?php print $user["username"];?></a>

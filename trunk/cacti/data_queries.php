@@ -597,7 +597,7 @@ function data_query() {
 	$i = 0;
 	if (sizeof($snmp_queries) > 0) {
 	foreach ($snmp_queries as $snmp_query) {
-		form_alternate_row_color($colors["alternate"],$colors["light"],$i); $i++;
+		form_alternate_row_color($colors["form_alternate1"],$colors["form_alternate2"],$i); $i++;
 			?>
 			<td>
 				<a class="linkEditMain" href="data_queries.php?action=edit&id=<?php print $snmp_query["id"];?>"><?php print $snmp_query["name"];?></a>

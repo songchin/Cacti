@@ -140,7 +140,7 @@ function pollers() {
 	$i = 0;
 	if (sizeof($data_pollers) > 0) {
 	foreach ($data_pollers as $data_poller) {
-		form_alternate_row_color($colors["alternate"],$colors["light"],$i); $i++;
+		form_alternate_row_color($colors["form_alternate1"],$colors["form_alternate2"],$i); $i++;
 			?>
 			<td>
 				<a class="linkEditMain" href="data_pollers.php?action=edit&id=<?php print $data_poller["id"];?>"><?php print $data_poller["name"];?></a>

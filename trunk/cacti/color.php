@@ -136,7 +136,7 @@ function color() {
 		foreach ($color_list as $color) {
 			$j++;
 			if ($j % 2 == 1) {
-				form_alternate_row_color($colors["alternate"],$colors["light"],$i); $i++;
+				form_alternate_row_color($colors["form_alternate1"],$colors["form_alternate2"],$i); $i++;
 					?>
 					<td>
 						<a class="linkEditMain" href="color.php?action=edit&id=<?php print $color["id"];?>"><?php print $color["hex"];?></a>

@@ -27,21 +27,13 @@
 /* Classic Theme Color Scheme */
 
 /* colors */
-$colors["dark_outline"] = "454E53";
-$colors["dark_bar"] = "AEB4B7";
 $colors["panel"] = "FF0000";
-$colors["panel_text"] = "000000";
-$colors["panel_link"] = "FFFFFF";
-$colors["light"] = "000000";
-$colors["alternate"] = "0F0F0F";
-$colors["panel_dark"] = "0F0F0F";
 
 $colors["header_background"] = "FF0000";
 $colors["header_panel_background"] = "FFFFFF";
 $colors["header_text"] = "ffffff";
 
 /* Form Colors */
-$colors["form_background_dark"] = "000000";
 $colors["form_alternate1"] = "0f0f0f";
 $colors["form_alternate2"] = "000000";
 

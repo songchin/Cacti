@@ -347,7 +347,7 @@ function graphs() {
 		debug_log_clear("new_graphs");
 		?>
 		<table width='98%' style='background-color: #f5f5f5; border: 1px solid #bbbbbb;' align='center'>
-			<tr bgcolor="<?php print $colors["light"];?>">
+			<tr bgcolor="<?php print $colors["form_alternate2"];?>">
 				<td style="padding: 3px; font-family: monospace;">
 					<?php print $debug_log;?>
 				</td>
@@ -461,7 +461,7 @@ function graphs() {
 	foreach ($graph_templates as $graph_template) {
 		$query_row = $graph_template["graph_template_id"];
 
-		print "<tr id='gt_line$query_row' bgcolor='#" . (($i % 2 == 0) ? "ffffff" : $colors["light"]) . "'>"; $i++;
+		print "<tr id='gt_line$query_row' bgcolor='#" . (($i % 2 == 0) ? "ffffff" : $colors["form_alternate2"]) . "'>"; $i++;
 
 		print "		<td" . (($use_javascript == true) ? " onClick='gt_select_line(" . $graph_template["graph_template_id"] . ");'" : "") . "><span id='gt_text$query_row" . "_0'>
 					<span id='gt_text$query_row" . "_0'><strong>Create:</strong> " . $graph_template["graph_template_name"] . "</span>
@@ -496,7 +496,7 @@ function graphs() {
 	$available_graph_templates = $keeper;
 
 	/* create a row at the bottom that lets the user create any graph they choose */
-	print "	<tr bgcolor='#" . (($i % 2 == 0) ? "ffffff" : $colors["light"]) . "'>
+	print "	<tr bgcolor='#" . (($i % 2 == 0) ? "ffffff" : $colors["form_alternate2"]) . "'>
 			<td colspan='2' width='60' nowrap>
 				<strong>Create:</strong>&nbsp;";
 				form_dropdown("cg_g", $available_graph_templates, "name", "id", "", "(Select a graph type to create)", "", "font-size: 10px;");
@@ -655,7 +655,7 @@ function graphs() {
 			while (list($id, $snmp_index) = each($snmp_query_indexes)) {
 				$query_row = $snmp_query["id"] . "_" . encode_data_query_index($snmp_index);
 
-				print "<tr id='line$query_row' bgcolor='#" . (($row_counter % 2 == 0) ? "ffffff" : $colors["light"]) . "'>"; $i++;
+				print "<tr id='line$query_row' bgcolor='#" . (($row_counter % 2 == 0) ? "ffffff" : $colors["form_alternate2"]) . "'>"; $i++;
 
 				$column_counter = 0;
 				reset($xml_array["fields"]);

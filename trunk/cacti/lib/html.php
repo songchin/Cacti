@@ -350,7 +350,7 @@ function draw_graph_items_list($item_list, $filename, $url_data, $disable_contro
 	print "</tr>";
 
 	$group_counter = 0; $_graph_type_name = ""; $i = 0;
-	$alternate_color_1 = $colors["alternate"]; $alternate_color_2 = $colors["alternate"];
+	$alternate_color_1 = $colors["form_alternate1"]; $alternate_color_2 = $colors["form_alternate1"];
 
 	if (sizeof($item_list) > 0) {
 	foreach ($item_list as $item) {
@@ -365,8 +365,8 @@ function draw_graph_items_list($item_list, $filename, $url_data, $disable_contro
 				$alternate_color_2 = "EEEEEE";
 				$custom_row_color = "D5D5D5";
 			}else{
-				$alternate_color_1 = $colors["alternate"];
-				$alternate_color_2 = $colors["alternate"];
+				$alternate_color_1 = $colors["form_alternate1"];
+				$alternate_color_2 = $colors["form_alternate1"];
 				$custom_row_color = "D2D6E7";
 			}
 

@@ -567,7 +567,7 @@ function template() {
 	$i = 0;
 	if (sizeof($template_list) > 0) {
 	foreach ($template_list as $template) {
-		form_alternate_row_color($colors["alternate"],$colors["light"],$i);
+		form_alternate_row_color($colors["form_alternate1"],$colors["form_alternate2"],$i);
 			?>
 			<td>
 				<a class="linkEditMain" href="data_templates.php?action=template_edit&id=<?php print $template["id"];?>"><?php print $template["name"];?></a>

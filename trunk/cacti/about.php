@@ -36,7 +36,7 @@ html_start_box("<strong>About Cacti</strong>", "98%", $colors["header_background
 	</td>
 </tr>
 <tr>
-	<td valign="top" bgcolor="#<?php print $colors["light"];?>" class="textArea">
+	<td valign="top" bgcolor="#<?php print $colors["form_alternate2"];?>" class="textArea">
 		<a href="http://www.raxnet.net/"><img align="right" src="<?php print html_get_theme_images_path('raxnet_logo.gif');?>" border="0" alt="raXnet"></a>
 
 		Cacti is designed to be a complete graphing solution for your network. Its goal is to make the
