@@ -375,6 +375,10 @@ $fields_grprint_presets_edit = array(
 
 /* file: (graphs.php|graph_templates.php), action: (graph|template)_edit */
 $struct_graph = array(
+	"general_header" => array(
+		"friendly_name" => "General Options",
+		"method" => "spacer"
+		),
 	"title" => array(
 		"friendly_name" => "Title",
 		"method" => "textbox",
@@ -382,12 +386,37 @@ $struct_graph = array(
 		"default" => "",
 		"description" => "The name that is printed on the graph."
 		),
+	"vertical_label" => array(
+		"friendly_name" => "Vertical Label",
+		"method" => "textbox",
+		"max_length" => "255",
+		"default" => "",
+		"description" => "The label vertically printed to the left of the graph."
+		),
 	"image_format_id" => array(
 		"friendly_name" => "Image Format",
 		"method" => "drop_array",
 		"array" => $image_types,
 		"default" => "1",
 		"description" => "The type of graph that is generated; GIF or PNG."
+		),
+	"export" => array(
+		"friendly_name" => "Allow Graph Export",
+		"method" => "checkbox",
+		"default" => "on",
+		"description" => "Choose whether this graph will be included in the static html/png export if you use
+			cacti's export feature."
+		),
+	"base_value" => array(
+		"friendly_name" => "Base Value",
+		"method" => "textbox",
+		"max_length" => "50",
+		"default" => "1000",
+		"description" => "Should be set to 1024 for memory and 1000 for traffic measurements."
+		),
+	"size_header" => array(
+		"friendly_name" => "Image Size Options",
+		"method" => "spacer"
 		),
 	"height" => array(
 		"friendly_name" => "Height",
@@ -403,15 +432,49 @@ $struct_graph = array(
 		"default" => "500",
 		"description" => "The width (in pixels) that the graph is."
 		),
+	"grid_header" => array(
+		"friendly_name" => "Grid Options",
+		"method" => "spacer"
+		),
+	"x_grid" => array(
+		"friendly_name" => "X-Grid",
+		"method" => "textbox",
+		"max_length" => "100",
+		"default" => "",
+		"description" => "Controls the layout of the x-grid.  See the RRDTool manual for additional details."
+		),
+	"y_grid" => array(
+		"friendly_name" => "Y-Grid",
+		"method" => "textbox",
+		"max_length" => "100",
+		"default" => "",
+		"description" => "Controls the layout of the y-grid.  See the RRDTool manual for additional details."
+		),
+	"y_grid_alt" => array(
+		"friendly_name" => "Alternate Y-Grid",
+		"method" => "checkbox",
+		"default" => "",
+		"description" => "Allows the dynamic placement of the y-grid based upon min and max values."
+		),
+	"no_minor" => array(
+		"friendly_name" => "No Minor Grid Lines",
+		"method" => "checkbox",
+		"default" => "",
+		"description" => "Removes minor grid lines.  Especially usefull on small graphs."
+		),
+	"ascale_header" => array(
+		"friendly_name" => "Auto Scaling Options",
+		"method" => "spacer"
+		),
 	"auto_scale" => array(
-		"friendly_name" => "Auto Scale",
+		"friendly_name" => "Utilize Auto Scale",
 		"method" => "checkbox",
 		"default" => "on",
 		"description" => "Auto scale the y-axis instead of defining an upper and lower limit. Note: if this is check both the
 			Upper and Lower limit will be ignored."
 		),
 	"auto_scale_opts" => array(
-		"friendly_name" => "Auto Scale Options",
+		"friendly_name" => "Standard Auto Scale Options",
 		"method" => "radio",
 		"default" => "2",
 		"description" => "Use --alt-autoscale-max to scale to the maximum value, or --alt-autoscale to scale to the absolute
@@ -447,12 +510,9 @@ $struct_graph = array(
 			graphs to take longer to render because of the larger overhead. Also Auto Padding may not
 			be accurate on all types of graphs, consistant labeling usually helps."
 		),
-	"export" => array(
-		"friendly_name" => "Allow Graph Export",
-		"method" => "checkbox",
-		"default" => "on",
-		"description" => "Choose whether this graph will be included in the static html/png export if you use
-			cacti's export feature."
+	"rscale_header" => array(
+		"friendly_name" => "Fixed Scaling Options",
+		"method" => "spacer"
 		),
 	"upper_limit" => array(
 		"friendly_name" => "Upper Limit",
@@ -468,35 +528,32 @@ $struct_graph = array(
 		"default" => "0",
 		"description" => "The minimum vertical value for the rrd graph."
 		),
-	"base_value" => array(
-		"friendly_name" => "Base Value",
-		"method" => "textbox",
-		"max_length" => "50",
-		"default" => "1000",
-		"description" => "Should be set to 1024 for memory and 1000 for traffic measurements."
+	"unit_header" => array(
+		"friendly_name" => "Units Display Options",
+		"method" => "spacer"
 		),
 	"unit_value" => array(
-		"friendly_name" => "Unit Value",
+		"friendly_name" => "Units Value",
 		"method" => "textbox",
 		"max_length" => "50",
 		"default" => "",
 		"description" => "(--unit) Sets the exponent value on the Y-axis for numbers. Note: This option was
 			recently added in rrdtool 1.0.36."
 		),
+	"unit_length" => array(
+		"friendly_name" => "Units Length (default 9)",
+		"method" => "textbox",
+		"max_length" => "50",
+		"default" => "",
+		"description" => "Sets the number of spaces for the units value to the left of the graph."
+		),
 	"unit_exponent_value" => array(
-		"friendly_name" => "Unit Exponent Value",
+		"friendly_name" => "Units Exponent Value",
 		"method" => "textbox",
 		"max_length" => "50",
 		"default" => "",
 		"description" => "What unit cacti should use on the Y-axis. Use 3 to display everything in 'k' or -6
 			to display everything in 'u' (micro)."
-		),
-	"vertical_label" => array(
-		"friendly_name" => "Vertical Label",
-		"method" => "textbox",
-		"max_length" => "255",
-		"default" => "",
-		"description" => "The label vertically printed to the left of the graph."
 		)
 	);
 
