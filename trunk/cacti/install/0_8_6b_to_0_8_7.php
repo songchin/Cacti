@@ -34,6 +34,8 @@ function upgrade_to_0_8_7() {
 	db_install_execute("0.8.7", "ALTER TABLE `host` ADD `poller_id` smallint(5) unsigned NOT NULL default '0' AFTER `id`;");
 	db_install_execute("0.8.7", "ALTER TABLE `host` ADD `availability_method` smallint(5) unsigned NOT NULL default '1' AFTER `snmp_timeout`;");
 	db_install_execute("0.8.7", "ALTER TABLE `host` ADD `ping_method` smallint(5) unsigned default '' AFTER `availability_method`;");
+	db_install_execute("0.8.7", "ALTER TABLE `poller_item` ADD `availability_method` smallint(5) unsigned NOT NULL default '1' AFTER `snmp_timeout`;");
+	db_install_execute("0.8.7", "ALTER TABLE `poller_item` ADD `ping_method` smallint(5) unsigned default '' AFTER `availability_method`;");
 
 	/* Start the Creation of Reserved/Hidden Items in Tables */
 	db_install_execute("0.8.7", "ALTER TABLE `data_input` ADD `reserved` tinyint unsigned NOT NULL default '0' AFTER `id`;");
@@ -42,8 +44,6 @@ function upgrade_to_0_8_7() {
 	/* Multi Poller Architecture Changes */
 	db_install_execute("0.8.7", "ALTER TABLE `poller` ADD `active` varchar(5) default 'On' AFTER `id`;");
 	db_install_execute("0.8.7", "ALTER TABLE `poller` CHANGE `ip_address` `name` varchar(150) NOT NULL default 'Description';");
-	db_install_execute("0.8.7", "ALTER TABLE `poller_item` ADD `availability_method` smallint(5) unsigned NOT NULL default '1' AFTER `snmp_timeout`;");
-	db_install_execute("0.8.7", "ALTER TABLE `poller_item` ADD `ping_method` smallint(5) unsigned default '' AFTER `availability_method`;");
 
 	/* New Graph Template Options */
 	db_install_execute("0.8.7", "ALTER TABLE `graph_templates_graph` ADD `t_x_grid` char(2) default '0' AFTER `width`, ADD `x_grid` varchar(50) default NULL AFTER `t_x_grid`;");
