@@ -347,7 +347,7 @@ $menu = array(
 	"Configuration"  => array(
 		"settings.php" => "Settings",
 		"settings_wizard.php" => "Wizard",
-		"user_settings.php" => "User Settings"
+		"user_settings.php" => "My (User) Settings"
 		),
 	"Utilities" => array(
 		"utilities.php" => "System Utilities",
@@ -374,7 +374,8 @@ $user_auth_realms = array(
 	15 => "Global Settings",
 	16 => "Export Data",
 	17 => "Import Data",
-	18 => "Change Password"
+	18 => "Change Password",
+	19 => "My (User) Settings"
 	);
 
 $user_auth_realm_filenames = array(
@@ -413,7 +414,7 @@ $user_auth_realm_filenames = array(
 	"smtp_queue.php" => 8,
 	"user_changepassword.php" => "18",
 	"settings_wizard.php" => "15",
-	"user_settings.php" => "7"
+	"user_settings.php" => "19"
 	);
 
 $hash_type_codes = array(
