@@ -56,7 +56,7 @@ $colors["rrd_font"] = "FFFFFF";
 $colors["rrd_back"] = "000000";
 
 /* Main Header Colors */
-$colors["main_background"] = "0F1F5F";
+$colors["main_background"] = "2F2F2F";
 $colors["main_border"] = "183C8F";
 
 /* Navbar Colors */
