@@ -43,14 +43,7 @@ void *child(void * arg) {
 	char logmessage[LOGSIZE];
 
 	if (set.verbose == POLLER_VERBOSITY_DEBUG) {
-		snprintf(logmessage, LOGSIZE, "DEBUG: In Poller, About to Start Polling of Host\n");
-		cacti_log(logmessage);
-	}
-
-	if (active_threads == 1) {
-		if (set.verbose == POLLER_VERBOSITY_DEBUG) {
-			snprintf(logmessage, LOGSIZE, "DEBUG: This is where popen DEADLOCKs errors occur\n");
-		}
+		cacti_log("In Poller, About to Start Polling of Host", SEV_DEBUG, 0);
 	}
 
 	poll_host(host_id);
@@ -60,8 +53,8 @@ void *child(void * arg) {
 	thread_mutex_unlock(LOCK_THREAD);
 
 	if (set.verbose == POLLER_VERBOSITY_DEBUG) {
-		snprintf(logmessage, LOGSIZE, "DEBUG: The Value of Active Threads is %i\n" ,active_threads);
-		cacti_log(logmessage);
+		snprintf(logmessage, LOGSIZE, "The Value of Active Threads is %i" ,active_threads);
+		cacti_log(logmessage, SEV_DEBUG, 0);
 	}
 
 	pthread_exit(0);
@@ -112,8 +105,7 @@ void poll_host(int host_id) {
 		num_rows = (int)mysql_num_rows(result);
 
 		if (num_rows != 1) {
-			snprintf(logmessage, LOGSIZE, "Host[%i] ERROR: Unknown Host ID", host_id);
-			cacti_log(logmessage);
+			cacti_log("Unknown Host ID", SEV_ERROR, host_id);
 			return;
 		}
 
@@ -162,8 +154,8 @@ void poll_host(int host_id) {
 			update_host_status(HOST_UP, host, ping, host->availability_method);	
 
 			if (set.verbose >= POLLER_VERBOSITY_MEDIUM) {
-				snprintf(logmessage, LOGSIZE, "Host[%i] Availability Checking Disabled for Host '%s'\n", host->id, host->hostname);
-				cacti_log(logmessage);
+				snprintf(logmessage, LOGSIZE, "Availability Checking Disabled for Host '%s'", host->hostname);
+				cacti_log(logmessage, SEV_NOTICE, host->id);
 			}
 		}else{
 			if (ping_host(host, ping) == HOST_UP) {
@@ -206,8 +198,8 @@ void poll_host(int host_id) {
 
 		if (num_rows > 0) {
 			if (set.verbose == POLLER_VERBOSITY_DEBUG) {
-				snprintf(logmessage, LOGSIZE, "Host[%i] RECACHE: Processing %i items in the auto reindex cache for '%s'\n", host->id, num_rows, host->hostname);
-				cacti_log(logmessage);
+				snprintf(logmessage, LOGSIZE, "RECACHE: Processing %i items in the auto reindex cache for '%s'", num_rows, host->hostname);
+				cacti_log(logmessage, SEV_DEBUG, host->id);
 			}
 
 			while ((row = mysql_fetch_row(result))) {
@@ -232,8 +224,8 @@ void poll_host(int host_id) {
 				if (!strcmp(poll_result,"U")) {
 					assert_fail = 0;
 				}else if ((!strcmp(reindex->op, "=")) && (strcmp(reindex->assert_value,poll_result) != 0)) {
-					snprintf(logmessage, LOGSIZE, "ASSERT: '%s=%s' failed. Recaching host '%s', data query #%i\n", reindex->assert_value, poll_result, host->hostname, reindex->data_query_id);
-					cacti_log(logmessage);
+					snprintf(logmessage, LOGSIZE, "ASSERT: '%s=%s' failed. Recaching host '%s', data query #%i", reindex->assert_value, poll_result, host->hostname, reindex->data_query_id);
+					cacti_log(logmessage, SEV_NOTICE, host->id);
 
 					query3 = (char *)malloc(128);
 					snprintf(query3, 128, "insert into poller_command (poller_id,time,action,command) values (0,NOW(),%i,'%i:%i')", POLLER_COMMAND_REINDEX, host_id, reindex->data_query_id);
@@ -242,8 +234,8 @@ void poll_host(int host_id) {
 
 					assert_fail = 1;
 				}else if ((!strcmp(reindex->op, ">")) && (strtoll(reindex->assert_value, (char **)NULL, 10) <= strtoll(poll_result, (char **)NULL, 10))) {
-					snprintf(logmessage, LOGSIZE, "ASSERT: '%s>%s' failed. Recaching host '%s', data query #%i\n", reindex->assert_value, poll_result, host->hostname, reindex->data_query_id);
-					cacti_log(logmessage);
+					snprintf(logmessage, LOGSIZE, "ASSERT: '%s>%s' failed. Recaching host '%s', data query #%i", reindex->assert_value, poll_result, host->hostname, reindex->data_query_id);
+					cacti_log(logmessage, SEV_NOTICE, host->id);
 
 					query3 = (char *)malloc(128);
 					snprintf(query3, 128, "insert into poller_command (poller_id,time,action,command) values (0,NOW(),%i,'%i:%i')", POLLER_COMMAND_REINDEX, host_id, reindex->data_query_id);
@@ -252,8 +244,8 @@ void poll_host(int host_id) {
 
 					assert_fail = 1;
 				}else if ((!strcmp(reindex->op, "<")) && (strtoll(reindex->assert_value, (char **)NULL, 10) >= strtoll(poll_result, (char **)NULL, 10))) {
-					snprintf(logmessage, LOGSIZE, "ASSERT: '%s<%s' failed. Recaching host '%s', data query #%i\n", reindex->assert_value, poll_result, host->hostname, reindex->data_query_id);
-					cacti_log(logmessage);
+					snprintf(logmessage, LOGSIZE, "ASSERT: '%s<%s' failed. Recaching host '%s', data query #%i", reindex->assert_value, poll_result, host->hostname, reindex->data_query_id);
+					cacti_log(logmessage, SEV_NOTICE, host->id);
 
 					query3 = (char *)malloc(128);
 					snprintf(query3, 128, "insert into poller_command (poller_id,time,action,command) values (0,NOW(),%i,'%i:%i')", POLLER_COMMAND_REINDEX, host_id, reindex->data_query_id);
@@ -322,8 +314,8 @@ void poll_host(int host_id) {
 				free(poll_result);
 
 				if (host->ignore_host) {
-					snprintf(logmessage, LOGSIZE, "Host[%i] ERROR: SNMP timeout detected [%i milliseconds], ignoring host '%s'\n", host_id, host->snmp_timeout, host->hostname);
-					cacti_log(logmessage);
+					snprintf(logmessage, LOGSIZE, "SNMP timeout detected [%i milliseconds], ignoring host '%s'", host->snmp_timeout, host->hostname);
+					cacti_log(logmessage, SEV_ERROR, host->id);
 					snprintf(entry->result, sizeof(entry->result), "%s", "U");
 				} else {
 					/* remove double or single quotes from string */
@@ -332,15 +324,15 @@ void poll_host(int host_id) {
 					/* detect erroneous non-numeric result */
 					if (!is_numeric(entry->result)) {
 						strncpy(errstr, entry->result,sizeof(errstr));
-						snprintf(logmessage, LOGSIZE, "Host[%i] WARNING: Result from SNMP not valid. Partial Result: %.20s...\n", host_id, errstr);
-						cacti_log(logmessage);
+						snprintf(logmessage, LOGSIZE, "Result from SNMP not valid. Partial Result: %.20s...", errstr);
+						cacti_log(logmessage, SEV_WARNING, host->id);
 						strncpy(entry->result, "U", sizeof(entry->result));
 					}
 				}
 
 				if (set.verbose >= POLLER_VERBOSITY_MEDIUM) {
-					snprintf(logmessage, LOGSIZE, "Host[%i] SNMP: v%i: %s, dsname: %s, oid: %s, value: %s\n", host_id, host->snmp_version, host->hostname, entry->rrd_name, entry->arg1, entry->result);
-					cacti_log(logmessage);
+					snprintf(logmessage, LOGSIZE, "SNMP: v%i: %s, dsname: %s, oid: %s, value: %s", host->snmp_version, host->hostname, entry->rrd_name, entry->arg1, entry->result);
+					cacti_log(logmessage, SEV_INFO, host->id);
 				}
 
 				break;
@@ -355,14 +347,14 @@ void poll_host(int host_id) {
 				/* detect erroneous result. can be non-numeric */
 				if (!validate_result(entry->result)) {
 					strncpy(errstr, (char *) strip_string_crlf(entry->result),sizeof(errstr));
-					snprintf(logmessage, LOGSIZE, "Host[%i] WARNING: Result from SCRIPT not valid. Partial Result: %.20s...\n", host_id, errstr);
-					cacti_log(logmessage);
+					snprintf(logmessage, LOGSIZE, "Result from SCRIPT not valid. Partial Result: %.20s...", errstr);
+					cacti_log(logmessage, SEV_WARNING, host->id);
 					strncpy(entry->result, "U", sizeof(entry->result));
 				}
 
 				if (set.verbose >= POLLER_VERBOSITY_MEDIUM) {
-					snprintf(logmessage, LOGSIZE, "Host[%i] SCRIPT: %s, output: %s\n", host_id, entry->arg1, entry->result);
-					cacti_log(logmessage);
+					snprintf(logmessage, LOGSIZE, "SCRIPT: %s, output: %s", entry->arg1, entry->result);
+					cacti_log(logmessage, SEV_INFO, host->id);
 				}
 
 				break;
@@ -377,20 +369,20 @@ void poll_host(int host_id) {
 				/* detect erroneous result. can be non-numeric */
 				if (!validate_result(entry->result)) {
 					strncpy(errstr, entry->result, sizeof(errstr));
-					snprintf(logmessage, LOGSIZE, "Host[%i] WARNING: Result from SERVER not valid.  Partial Result: %.20s...\n", host_id, errstr);
-					cacti_log(logmessage);
+					snprintf(logmessage, LOGSIZE, "Result from SERVER not valid.  Partial Result: %.20s...", errstr);
+					cacti_log(logmessage, SEV_WARNING, host_id);
 					strncpy(entry->result, "U", sizeof(entry->result));
 				}
 
 				if (set.verbose >= POLLER_VERBOSITY_MEDIUM) {
-					snprintf(logmessage, LOGSIZE, "Host[%i] SERVER: %s, output: %s\n", host_id, entry->arg1, entry->result);
-					cacti_log(logmessage);
+					snprintf(logmessage, LOGSIZE, "SERVER: %s, output: %s", entry->arg1, entry->result);
+					cacti_log(logmessage, SEV_INFO, host_id);
 				}
 
 				break;
 			default: /* unknown action, generate error */
-				snprintf(logmessage, LOGSIZE, "Host[%i] ERROR: Unknown Poller Action: %s\n", host_id, entry->arg1);
-				cacti_log(logmessage);
+				snprintf(logmessage, LOGSIZE, "Unknown Poller Action: %s", entry->arg1);
+				cacti_log(logmessage, SEV_ERROR, host_id);
 
 				break;
 			}
@@ -420,11 +412,10 @@ void poll_host(int host_id) {
 	mysql_thread_end();
 	#endif 
 
-	mysql_close(&mysql);
+	db_disconnect(&mysql);
 
 	if (set.verbose == POLLER_VERBOSITY_DEBUG) {
-		snprintf(logmessage, LOGSIZE, "Host[%i] DEBUG: HOST COMPLETE: About to Exit Host Polling Thread Function\n", host_id);
-		cacti_log(logmessage);
+		cacti_log("HOST COMPLETE: About to Exit Host Polling Thread Function", SEV_DEBUG, host_id);
 	}
 }
 
@@ -504,11 +495,11 @@ char *exec_poll(host_t *current_host, char *command) {
     	timeout.tv_sec = set.max_script_runtime;
     	timeout.tv_usec = 0;
 
-	cmd_fd = nft_popen((char *)command, "r");
+	cmd_fd = nft_popen((char *)clean_string(command), "r");
 
 	if (set.verbose == POLLER_VERBOSITY_DEBUG) {
-		snprintf(logmessage, LOGSIZE, "Host[%i] DEBUG: The POPEN returned the following File Descriptor %i\n", current_host->id, cmd_fd);
-		cacti_log(logmessage);
+		snprintf(logmessage, LOGSIZE, "The POPEN returned the following File Descriptor %i", cmd_fd);
+		cacti_log(logmessage, SEV_DEBUG, current_host->id);
 	}
 
 	if (cmd_fd >= 0) {
@@ -523,29 +514,24 @@ char *exec_poll(host_t *current_host, char *command) {
 		case -1:
 			switch (errno) {
 				case EBADF:
-					snprintf(logmessage, LOGSIZE, "Host[%i] ERROR: One or more of the file descriptor sets specified a file descriptor that is not a valid open file descriptor.\n", current_host->id);
-					cacti_log(logmessage);
+					cacti_log("One or more of the file descriptor sets specified a file descriptor that is not a valid open file descriptor.", SEV_ERROR, current_host->id);
 					snprintf(result_string, 2, "%s", "U");
 					break;
 				case EINTR:
-					snprintf(logmessage, LOGSIZE, "Host[%i] ERROR: The function was interrupted before any of the selected events occurred and before the timeout interval expired.\n", current_host->id);
-					cacti_log(logmessage);
+					cacti_log("The function was interrupted before any of the selected events occurred and before the timeout interval expired.", SEV_ERROR, current_host->id);
 					snprintf(result_string, 2, "%s", "U");
 					break;
 				case EINVAL:
-					snprintf(logmessage, LOGSIZE, "Host[%i] ERROR: Possible invalid timeout specified in select() statement.\n", current_host->id);
-					cacti_log(logmessage);
+					cacti_log("Possible invalid timeout specified in select() statement.", SEV_ERROR, current_host->id);
 					snprintf(result_string, 2, "%s", "U");
 					break;
 				default:
-					snprintf(logmessage, LOGSIZE, "Host[%i] ERROR: The script/command select() failed\n", current_host->id);
-					cacti_log(logmessage);
+					cacti_log("The script/command select() failed", SEV_ERROR, current_host->id);
 					snprintf(result_string, 2, "%s", "U");
 					break;
 			}
 		case 0:
-			snprintf(logmessage, LOGSIZE, "Host[%i] ERROR: The POPEN timed out\n", current_host->id);
-			cacti_log(logmessage);
+			cacti_log("The POPEN timed out", SEV_ERROR, current_host->id);
 			snprintf(result_string, 2, "%s", "U");
 			break;
 		default:
@@ -555,8 +541,8 @@ char *exec_poll(host_t *current_host, char *command) {
 				result_string[bytes_read] = '\0';
 				strip_string_crlf(result_string);
 			} else {
-				snprintf(logmessage, LOGSIZE, "Host[%i] ERROR: Empty result [%s]: '%s'\n", current_host->id, current_host->hostname, command);
-				cacti_log(logmessage);
+				snprintf(logmessage, LOGSIZE, "Empty result [%s]: '%s'", current_host->hostname, command);
+				cacti_log(logmessage, SEV_ERROR, current_host->id);
 				snprintf(result_string, BUFSIZE, "%s", "U");
 			}
 		}
@@ -564,8 +550,8 @@ char *exec_poll(host_t *current_host, char *command) {
 		/* close pipe */
 		nft_pclose(cmd_fd);
 	}else{
-		snprintf(logmessage, LOGSIZE, "Host[%i] ERROR: Problem executing POPEN [%s]: '%s'\n", current_host->id, current_host->hostname, command);
-		cacti_log(logmessage);
+		snprintf(logmessage, LOGSIZE, "Problem executing POPEN [%s]: '%s'", current_host->hostname, command);
+		cacti_log(logmessage, SEV_ERROR, current_host->id);
 		snprintf(result_string, BUFSIZE, "%s", "U");
 	}
 
