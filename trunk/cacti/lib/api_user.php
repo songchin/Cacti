@@ -105,6 +105,51 @@ function api_user_info($array) {
 
 }
 
+/* api_user_expire_info
+  @arg $user_id - user id
+  @return - Days till expire, "-1" for no expire. */
+function api_user_expire_info($user_id) {
+
+	if (empty($user_id)) {
+		return -1;
+	}
+
+	$user = api_user_info( array( "id" => $user_id) );
+	
+	if (sizeof($user)) {
+		/* check that user has expire length */
+		if ($user["password_expire_length"] == "0") {
+			return -1;
+		}
+		
+		/* get last time the password was changed */
+		if ($user["password_change_last"] == "0000-00-00 00:00:00") {
+			$change_last = strtotime($user["created"]);
+		}else{
+			$change_last = strtotime($user["password_change_last"]);
+		}
+		$expire_time = $user["password_expire_length"] * 86400;
+
+		$now = strtotime("now");
+
+		$days = ( $change_last + $expire_time - $now ) / 86400;
+		
+		if ($days <= 0) {
+			$days = 0;
+		}
+		$days = floor($days);
+
+		return $days;
+
+		
+	}else{
+		return -1;
+	}	
+
+	return -1;
+
+} 
+
 /* api_user_save
    @arg $array - an array containing each column -> value mapping in the user_auth table, always remember the id field
    @return - id of user saved, new or existing 
@@ -140,7 +185,7 @@ function api_user_changepassword($user_id, $password_new, $password_old="") {
 
 	/* validate user exists */
 	if (sizeof(db_fetch_row("select id from user_auth where id ='" . $user_id . "' and realm = 0"))) {
-		if (db_execute("update user_auth set password = '" . md5($password_new) . "',must_change_password = '' where id = '" . $user_id . "'") == 1) {
+		if (db_execute("update user_auth set password = '" . md5($password_new) . "',must_change_password = '', password_change_last = NOW() where id = '" . $user_id . "'") == 1) {
 			/* password changed */
 			return 0;
 		}else{
@@ -205,13 +250,14 @@ function api_user_copy($template_user, $new_user, $new_realm=-1) {
         }
 	$old_id = $user_auth['id'];
         $user_auth['id'] = 0;
+	$user_auth["created"] = "now()";
+	$user_auth["password_change_last"] = "";
 
 	/* check that destination user doesn't already exist */
 	$user = api_user_info( array( "username" => $new_user, "realm" => $user_auth['realm'] ) );
 	if (!empty($user["id"])) {
 		return 1;
 	}
-
 
         $new_id = sql_save($user_auth, 'user_auth');
 
@@ -254,26 +300,30 @@ function api_user_copy($template_user, $new_user, $new_realm=-1) {
 function api_user_realms_list($user_id) {
 	global $user_auth_realms;
 
-	if (!empty($user_id)) {
-		/* process realms */
-		while (list($realm_id, $realm_name) = each($user_auth_realms)) {
-				
-			if (sizeof(db_fetch_assoc("select realm_id from user_auth_realm where user_id = '" . $user_id . "' and realm_id = '" . $realm_id . "'")) > 0) {
-				$value = "1";
-			}else{
-				$value = "0";
-			}
-			$realm_list[$realm_id] = array(
-				"realm_name" => $realm_name,
-				"value" => $value
-			);
-	
+	$realm_list = array();
+
+	if (empty($user_id)) {
+		$user_id = "0";
+	}
+	/* prevent array sqaushing */	
+	$user_auth_realms_local = $user_auth_realms;
+
+	/* process realms */
+	while (list($realm_id, $realm_name) = each($user_auth_realms_local)) {
+			
+		if (sizeof(db_fetch_assoc("select realm_id from user_auth_realm where user_id = '" . $user_id . "' and realm_id = '" . $realm_id . "'")) > 0) {
+			$value = "1";
+		}else{
+			$value = "0";
 		}
-		return $realm_list;
-	}else{
-		return "";
+		$realm_list[$realm_id] = array(
+			"realm_name" => $realm_name,
+			"value" => $value
+		);
+
 	}
 
+	return $realm_list;
 }
 
 /* api_user_realms_save
