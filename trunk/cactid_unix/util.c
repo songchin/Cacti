@@ -91,14 +91,14 @@ int read_config_options(config_t *set) {
 
 	/* log the path_webroot variable */
 	if (set->verbose == POLLER_VERBOSITY_DEBUG) {
-		snprintf(logmessage, LOGSIZE, "DEBUG: The path_php_server variable is %s\n" ,set->path_php_server);
-		cacti_log(logmessage);
+		snprintf(logmessage, LOGSIZE, "The path_php_server variable is %s" ,set->path_php_server);
+		cacti_log(logmessage, SEV_DEBUG, 0);
 	}
 
 	/* log the path_cactilog variable */
 	if (set->verbose == POLLER_VERBOSITY_DEBUG) {
-		snprintf(logmessage, LOGSIZE, "DEBUG: The path_cactilog variable is %s\n" ,set->path_logfile);
-		cacti_log(logmessage);
+		snprintf(logmessage, LOGSIZE, "The path_cactilog variable is %s" ,set->path_logfile);
+		cacti_log(logmessage, SEV_DEBUG, 0);
 	}
 
 	/* determine log file, syslog or both, default is 1 or log file only */
@@ -114,8 +114,8 @@ int read_config_options(config_t *set) {
 
 	/* log the log_destination variable */
 	if (set->verbose == POLLER_VERBOSITY_DEBUG) {
-		snprintf(logmessage, LOGSIZE, "DEBUG: The log_destination variable is %i\n" ,set->log_destination);
-		cacti_log(logmessage);
+		snprintf(logmessage, LOGSIZE, "The log_destination variable is %i" ,set->log_destination);
+		cacti_log(logmessage, SEV_DEBUG, 0);
 	}
 
 	/* get PHP Path Information for Scripting */
@@ -129,8 +129,8 @@ int read_config_options(config_t *set) {
 
 	/* log the path_php variable */
 	if (set->verbose == POLLER_VERBOSITY_DEBUG) {
-		snprintf(logmessage, LOGSIZE, "DEBUG: The path_php variable is %s\n" ,set->path_php);
-		cacti_log(logmessage);
+		snprintf(logmessage, LOGSIZE, "The path_php variable is %s" ,set->path_php);
+		cacti_log(logmessage, SEV_DEBUG, 0);
 	}
 
 	/* set availability_method */
@@ -145,8 +145,8 @@ int read_config_options(config_t *set) {
 
 	/* log the availability_method variable */
 	if (set->verbose == POLLER_VERBOSITY_DEBUG) {
-		snprintf(logmessage, LOGSIZE, "DEBUG: The availability_method variable is %i\n" ,set->availability_method);
-		cacti_log(logmessage);
+		snprintf(logmessage, LOGSIZE, "The availability_method variable is %i" ,set->availability_method);
+		cacti_log(logmessage, SEV_DEBUG, 0);
 	}
 
 	/* set ping_recovery_count */
@@ -161,8 +161,8 @@ int read_config_options(config_t *set) {
 
 	/* log the ping_recovery_count variable */
 	if (set->verbose == POLLER_VERBOSITY_DEBUG) {
-		snprintf(logmessage, LOGSIZE, "DEBUG: The ping_recovery_count variable is %i\n" ,set->ping_recovery_count);
-		cacti_log(logmessage);
+		snprintf(logmessage, LOGSIZE, "The ping_recovery_count variable is %i" ,set->ping_recovery_count);
+		cacti_log(logmessage, SEV_DEBUG, 0);
 	}
 
 	/* set ping_failure_count */
@@ -177,8 +177,8 @@ int read_config_options(config_t *set) {
 
 	/* log the ping_failure_count variable */
 	if (set->verbose == POLLER_VERBOSITY_DEBUG) {
-		snprintf(logmessage, LOGSIZE, "DEBUG: The ping_failure_count variable is %i\n" ,set->ping_failure_count);
-		cacti_log(logmessage);
+		snprintf(logmessage, LOGSIZE, "The ping_failure_count variable is %i" ,set->ping_failure_count);
+		cacti_log(logmessage, SEV_DEBUG, 0);
 	}
 
 	/* set ping_method */
@@ -210,8 +210,7 @@ int read_config_options(config_t *set) {
 				printf("CACTID: WARNING: Falling back to UDP Ping due to User not being ROOT\n");
 				printf("        To setup a process to run as root, see your documentaion\n");
 				if (set->verbose == POLLER_VERBOSITY_DEBUG) {
-					snprintf(logmessage, LOGSIZE, "DEBUG: Falling back to UDP Ping due to the running User not being ROOTBEER\n");
-					cacti_log(logmessage);
+					cacti_log("DEBUG: Falling back to UDP Ping due to the running User not being ROOTBEER", SEV_DEBUG, 0);
 				}
 			}
 		}
@@ -223,8 +222,8 @@ int read_config_options(config_t *set) {
 
 	/* log the ping_method variable */
 	if (set->verbose == POLLER_VERBOSITY_DEBUG) {
-		snprintf(logmessage, LOGSIZE, "DEBUG: The ping_method variable is %i\n" ,set->ping_method);
-		cacti_log(logmessage);
+		snprintf(logmessage, LOGSIZE, "The ping_method variable is %i" ,set->ping_method);
+		cacti_log(logmessage, SEV_DEBUG, 0);
 	}
 
 	/* set ping_retries */
@@ -239,8 +238,8 @@ int read_config_options(config_t *set) {
 
 	/* log the ping_retries variable */
 	if (set->verbose == POLLER_VERBOSITY_DEBUG) {
-		snprintf(logmessage, LOGSIZE, "DEBUG: The ping_retries variable is %i\n" ,set->ping_retries);
-		cacti_log(logmessage);
+		snprintf(logmessage, LOGSIZE, "The ping_retries variable is %i" ,set->ping_retries);
+		cacti_log(logmessage, SEV_DEBUG, 0);
 	}
 
 	/* set ping_timeout */
@@ -255,8 +254,8 @@ int read_config_options(config_t *set) {
 
 	/* log the ping_timeout variable */
 	if (set->verbose == POLLER_VERBOSITY_DEBUG) {
-		snprintf(logmessage, LOGSIZE, "DEBUG: The ping_timeout variable is %i\n" ,set->ping_timeout);
-		cacti_log(logmessage);
+		snprintf(logmessage, LOGSIZE, "The ping_timeout variable is %i" ,set->ping_timeout);
+		cacti_log(logmessage, SEV_DEBUG, 0);
 	}
 
 	/* set max_script_runtime for script timeouts */
@@ -271,8 +270,8 @@ int read_config_options(config_t *set) {
 
 	/* log the max_script_runtime variable */
 	if (set->verbose == POLLER_VERBOSITY_DEBUG) {
-		snprintf(logmessage, LOGSIZE, "DEBUG: The max_script_runtime variable is %i\n" ,set->max_script_runtime);
-		cacti_log(logmessage);
+		snprintf(logmessage, LOGSIZE, "The max_script_runtime variable is %i" ,set->max_script_runtime);
+		cacti_log(logmessage, SEV_DEBUG, 0);
 	}
 
 	/* set logging option for errors */
@@ -291,8 +290,8 @@ int read_config_options(config_t *set) {
 
 	/* log the log_perror variable */
 	if (set->verbose == POLLER_VERBOSITY_DEBUG) {
-		snprintf(logmessage, LOGSIZE, "DEBUG: The log_perror variable is %i\n" ,set->log_perror);
-		cacti_log(logmessage);
+		snprintf(logmessage, LOGSIZE, "The log_perror variable is %i" ,set->log_perror);
+		cacti_log(logmessage, SEV_DEBUG, 0);
 	}
 
 	/* set logging option for errors */
@@ -311,8 +310,8 @@ int read_config_options(config_t *set) {
 
 	/* log the log_pwarn variable */
 	if (set->verbose == POLLER_VERBOSITY_DEBUG) {
-		snprintf(logmessage, LOGSIZE, "DEBUG: The log_pwarn variable is %i\n" ,set->log_pwarn);
-		cacti_log(logmessage);
+		snprintf(logmessage, LOGSIZE, "The log_pwarn variable is %i" ,set->log_pwarn);
+		cacti_log(logmessage, SEV_DEBUG, 0);
 	}
 
 	/* set logging option for statistics */
@@ -331,8 +330,8 @@ int read_config_options(config_t *set) {
 
 	/* log the log_pstats variable */
 	if (set->verbose == POLLER_VERBOSITY_DEBUG) {
-		snprintf(logmessage, LOGSIZE, "DEBUG: The log_pstats variable is %i\n" ,set->log_pstats);
-		cacti_log(logmessage);
+		snprintf(logmessage, LOGSIZE, "The log_pstats variable is %i" ,set->log_pstats);
+		cacti_log(logmessage, SEV_DEBUG, 0);
 	}
 
 	/* get Cacti defined max threads override cactid.conf */
@@ -346,12 +345,12 @@ int read_config_options(config_t *set) {
 
 	/* log the threads variable */
 	if (set->verbose == POLLER_VERBOSITY_DEBUG) {
-		snprintf(logmessage, LOGSIZE, "DEBUG: The threads variable is %i\n" ,set->threads);
-		cacti_log(logmessage);
+		snprintf(logmessage, LOGSIZE, "The threads variable is %i" ,set->threads);
+		cacti_log(logmessage, SEV_DEBUG, 0);
 	}
 
 	mysql_free_result(result);
-	mysql_close(&mysql);
+	db_disconnect(&mysql);
 }
 
 /******************************************************************************/
@@ -432,52 +431,35 @@ void config_defaults(config_t * set) {
 /*  cacti_log() - output user messages to the Cacti logfile facility.         */
 /*                Can also output to the syslog facility if desired.          */
 /******************************************************************************/
-void cacti_log(char *logmessage) {
-	FILE *log_file = NULL;
+void cacti_log(char *message, int severity, int host_id) {
+	MYSQL mysql;
 
 	/* Variables for Time Display */
 	time_t nowbin;
-	const struct tm *nowstruct;
 	char logprefix[40]; /* Formatted Log Prefix */
-	char flogmessage[LOGSIZE];	/* Formatted Log Message */
+	char logdate[20]; /* logdate for logging */
+	char flogmessage[LOGSIZE];
+	char sqlstring[BUFSIZE];	/* SQL String for SQL Command */
 	extern config_t set;
-	int fileopen = 0;
 
 	/* log message prefix */
 	snprintf(logprefix, sizeof(logprefix), "CACTID: Poller[%i] ", set.poller_id);
 
-	if (((set.log_destination == 1) || (set.log_destination == 2)) && (set.verbose != POLLER_VERBOSITY_NONE)) {
-		while (!fileopen) {
-			if (!file_exists(set.path_logfile)) {
-				log_file = fopen(set.path_logfile, "w");
-			}else {
-				log_file = fopen(set.path_logfile, "a");
-			}
-
-			if (log_file != NULL) {
-				fileopen = 1;
-			}else {
-				printf("ERROR: Could not open Logfile will not be logging\n");
-				break;
-			}
-		}
+	if (strftime(logdate, sizeof(logdate), "%Y-%m-%d %H:%M:%S", localtime(&nowbin)) == (size_t) 0) {
+		printf("ERROR: Could not get string from strftime()\n");
 	}
 
-	/* get time for logfile */
-	if (time(&nowbin) == (time_t) - 1)
-		printf("ERROR: Could not get time of day from time()\n");
-
-	nowstruct = localtime(&nowbin);
-
-	if (strftime(flogmessage, 50, "%m/%d/%Y %I:%M:%S %p - ", nowstruct) == (size_t) 0)
-		printf("ERROR: Could not get string from strftime()\n");
-
-	strcat(flogmessage, logprefix);
-	strcat(flogmessage, logmessage);
-
-	if ( fileopen != 0 ) {
-		fputs(flogmessage, log_file);
-		fclose(log_file);
+	if (((set.log_destination == 1) || (set.log_destination == 2)) && (set.verbose != POLLER_VERBOSITY_NONE)) {
+		/* connect to database */
+		db_connect(set.dbdb, &mysql);
+		snprintf(sqlstring, sizeof(sqlstring), "insert into syslog (logdate,facility,severity,poller_id,host_id,user_id,username,source,message) values	('%s', 'CACTID', '%s', %i, %i, 0, 'SYSTEM', 'SYSTEM', '%s')",
+							logdate, 
+							get_severity(severity), 
+							set.poller_id, 
+							host_id, 
+							message);
+		db_insert(&mysql, sqlstring);
+		db_disconnect(&mysql);
 	}
 
 	/* output to syslog/eventlog */
@@ -496,11 +478,42 @@ void cacti_log(char *logmessage) {
 	}
 
 	if (set.verbose >= POLLER_VERBOSITY_MEDIUM) {
-	    snprintf(flogmessage, LOGSIZE, "CACTID: %s", logmessage);
+	    snprintf(flogmessage, LOGSIZE, "CACTID: %s\n", message);
 		printf(flogmessage);
 	}
 }
 
+char * get_severity(int severity) {
+	switch (severity) {
+		case SEV_DEBUG:
+			return "DEBUG";
+			break;
+		case SEV_INFO:
+			return "INFO";
+			break;
+		case SEV_NOTICE:
+			return "NOTICE";
+			break;
+		case SEV_WARNING:
+			return "WARNING";
+			break;
+		case SEV_ERROR:
+			return "ERROR";
+			break;
+		case SEV_CRITICAL:
+			return "CRITICAL";
+			break;
+		case SEV_ALERT:
+			return "ALERT";
+			break;
+		case SEV_EMERGENCY:
+			return "EMERGENCY";
+			break;
+		default:
+			return "UNKNOWN";
+	}
+}
+			
 /******************************************************************************/
 /*  ping_host() - check for availability using the desired user method.       */
 /******************************************************************************/
@@ -619,7 +632,7 @@ int init_socket()
 	/* error getting socket */
 	if ((icmp_socket = socket(AF_INET, SOCK_RAW, IPPROTO_ICMP)) < 0)
 	{
-		cacti_log("ERROR: init_socket: cannot open the ICMP socket\n");
+		cacti_log("init_socket: cannot open the ICMP socket", SEV_ERROR, 0);
 		exit(-1);
 	}
 
@@ -863,8 +876,8 @@ int ping_udp(host_t *host, ping_t *ping) {
 			total_time = end_time - begin_time;
 
 			if (set.verbose == POLLER_VERBOSITY_DEBUG) {
-				snprintf(logmessage, LOGSIZE, "DEBUG: The UDP Ping return_code was %i, errno was %i, total_time was %.4f\n",return_code,errno,(total_time*1000));
-				cacti_log(logmessage);
+				snprintf(logmessage, LOGSIZE, "The UDP Ping return_code was %i, errno was %i, total_time was %.4f",return_code,errno,(total_time*1000));
+				cacti_log(logmessage, SEV_DEBUG, 0);
 			}
 
 			if ((return_code >= 0) || ((return_code == -1) && ((errno == ECONNRESET) || (errno = ECONNREFUSED)))) {
@@ -1056,40 +1069,37 @@ int update_host_status(int status, host_t *host, ping_t *ping, int availability_
 		if ((host->status == HOST_UP) || (host->status == HOST_RECOVERING)) {
 			/* log ping result if we are to use a ping for reachability testing */
 			if (availability_method == AVAIL_SNMP_AND_PING) {
-				snprintf(logmessage, LOGSIZE, "Host[%i] PING Result: %s\n", host->id, ping->ping_response);
-				cacti_log(logmessage);
-				snprintf(logmessage, LOGSIZE, "Host[%i] SNMP Result: %s\n", host->id, ping->snmp_response);
-				cacti_log(logmessage);
+				snprintf(logmessage, LOGSIZE, "PING Result: %s", ping->ping_response);
+				cacti_log(logmessage, SEV_INFO, host->id);
+				snprintf(logmessage, LOGSIZE, "SNMP Result: %s", ping->snmp_response);
+				cacti_log(logmessage, SEV_INFO, host->id);
 			} else if (availability_method == AVAIL_SNMP) {
 				if (host->snmp_community == "") {
-					snprintf(logmessage, LOGSIZE, "Host[%i] SNMP Result: Device does not require SNMP\n", host->id);
-					cacti_log(logmessage);
+					cacti_log("SNMP Result: Device does not require SNMP", SEV_INFO, host->id);
 				}else{
-					snprintf(logmessage, LOGSIZE, "Host[%i] SNMP Result: %s\n", host->id, ping->snmp_response);
-					cacti_log(logmessage);
+					snprintf(logmessage, LOGSIZE, "SNMP Result: %s", ping->snmp_response);
+					cacti_log(logmessage, SEV_INFO, host->id);
 				}
 			} else if (availability_method == AVAIL_NONE) {
-				snprintf(logmessage, LOGSIZE, "Host[%i] AVAIL Result: Availability Checking id Disabled for Host\n", host->id);
-				cacti_log(logmessage);
+				cacti_log("AVAIL Result: Availability Checking id Disabled for Host", SEV_INFO, host->id);
 			} else { /* availability_ping */
-				snprintf(logmessage, LOGSIZE, "Host[%i] PING: Result %s\n", host->id, ping->ping_response);
-				cacti_log(logmessage);
+				snprintf(logmessage, LOGSIZE, "PING: Result %s", ping->ping_response);
+				cacti_log(logmessage, SEV_INFO, host->id);
 			}
 		} else {
 			if (availability_method == AVAIL_SNMP_AND_PING) {
-				snprintf(logmessage, LOGSIZE, "Host[%i] PING Result: %s\n", host->id, ping->ping_response);
-				cacti_log(logmessage);
-				snprintf(logmessage, LOGSIZE, "Host[%i] SNMP Result: %s\n", host->id, ping->snmp_response);
-				cacti_log(logmessage);
+				snprintf(logmessage, LOGSIZE, "PING Result: %s", ping->ping_response);
+				cacti_log(logmessage, SEV_INFO, host->id);
+				snprintf(logmessage, LOGSIZE, "SNMP Result: %s", ping->snmp_response);
+				cacti_log(logmessage, SEV_INFO, host->id);
 			} else if (availability_method == AVAIL_SNMP) {
-				snprintf(logmessage, LOGSIZE, "Host[%i] SNMP Result: %s\n", host->id, ping->snmp_response);
-				cacti_log(logmessage);
+				snprintf(logmessage, LOGSIZE, "SNMP Result: %s", ping->snmp_response);
+				cacti_log(logmessage, SEV_INFO, host->id);
 			} else if (availability_method == AVAIL_NONE) {
-				snprintf(logmessage, LOGSIZE, "Host[%i] AVAIL Result: Availability Checking is Disabled for Host\n", host->id);
-				cacti_log(logmessage);
+				cacti_log("AVAIL Result: Availability Checking is Disabled for Host", SEV_INFO, host->id);
 			} else { /* availability_ping */
-				snprintf(logmessage, LOGSIZE, "Host[%i] PING Result: %s\n", host->id, ping->ping_response);
-				cacti_log(logmessage);
+				snprintf(logmessage, LOGSIZE, "PING Result: %s", ping->ping_response);
+				cacti_log(logmessage, SEV_INFO, host->id);
 			}
 		}
 	}
@@ -1097,11 +1107,10 @@ int update_host_status(int status, host_t *host, ping_t *ping, int availability_
 	/* if there is supposed to be an event generated, do it */
 	if (issue_log_message) {
 		if (host->status == HOST_DOWN) {
-			snprintf(logmessage, LOGSIZE, "Host[%i] ERROR: HOST EVENT: Host is DOWN Message: %s\n", host->id, host->status_last_error);
-			cacti_log(logmessage);
+			snprintf(logmessage, LOGSIZE, "HOST EVENT: Host is DOWN Message: %s", host->status_last_error);
+			cacti_log(logmessage, SEV_ERROR, host->id);
 		} else {
-			snprintf(logmessage, LOGSIZE, "Host[%i] NOTICE: HOST EVENT: Host Returned from DOWN State\n", host->id);
-			cacti_log(logmessage);
+			cacti_log("NOTICE: HOST EVENT: Host Returned from DOWN State", SEV_NOTICE, host->id);
 		}
 	}
 }
@@ -1283,8 +1292,8 @@ void init_sockaddr (struct sockaddr_in *name, const char *hostname, unsigned sho
 	name->sin_port = htons (port);
 	hostinfo = gethostbyname (hostname);
 	if (hostinfo == NULL) {
-		snprintf(logmessage, LOGSIZE, "WARNING: Unknown host %s\n", hostname);
-		cacti_log(logmessage);
+		snprintf(logmessage, LOGSIZE, "WARNING: Unknown host %s", hostname);
+		cacti_log(logmessage, SEV_WARNING, 0);
 	}
 	name->sin_addr = *(struct in_addr *) hostinfo->h_addr;
 }

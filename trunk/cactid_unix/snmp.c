@@ -106,7 +106,7 @@ void snmp_host_init(host_t *current_host) {
 		    session.securityAuthProto = snmp_duplicate_objid(usmHMACSHA1AuthProtocol, OIDSIZE(usmHMACSHA1AuthProtocol));
 		    session.securityAuthProtoLen = OIDSIZE(usmHMACSHA1AuthProtocol);
 		}else {
-			cacti_log("ERROR: SNMP: Error with SNMPv3 autorization protocol setting.\n");
+			cacti_log("SNMP: Error with SNMPv3 autorization protocol setting.", SEV_ERROR, 0);
 		}
 
 		if (!strcmp(current_host->snmpv3_priv_protocol,"[None]")) {
@@ -145,7 +145,7 @@ void snmp_host_init(host_t *current_host) {
 			#endif
 			#endif
 			}else {			
-				cacti_log("ERROR: SNMP: Error with SNMPv3 privacy protocol setting.\n");
+				cacti_log("SNMP: Error with SNMPv3 privacy protocol setting.", SEV_ERROR, 0);
 			}
 		}
 
@@ -165,7 +165,7 @@ void snmp_host_init(host_t *current_host) {
 						strlen(current_host->snmpv3_auth_password),
 	                    session.securityAuthKey,
 	                    &(session.securityAuthKeyLen)) != SNMPERR_SUCCESS) {
-	        cacti_log("ERROR: SNMP: Error generating SNMPv3 Ku from authentication pass phrase.\n");
+	        cacti_log("SNMP: Error generating SNMPv3 Ku from authentication pass phrase.", SEV_ERROR, 0);
 		}
 		/* set the privacy key to the correct hashed version */
 		if (strcmp(current_host->snmpv3_priv_protocol,"[None]") != 0) {
@@ -175,7 +175,7 @@ void snmp_host_init(host_t *current_host) {
 							strlen(current_host->snmpv3_priv_passphrase),
 	            	        session.securityPrivKey,
 	                	    &session.securityPrivKeyLen) != SNMPERR_SUCCESS) {
-		        cacti_log("ERROR: SNMP: Error generating SNMPv3 Ku from privacy pass phrase.\n");
+		        cacti_log("SNMP: Error generating SNMPv3 Ku from privacy pass phrase.", SEV_ERROR, 0);
 			}
 		}
 	}
@@ -191,8 +191,8 @@ void snmp_host_init(host_t *current_host) {
 	thread_mutex_unlock(LOCK_SNMP);
 
 	if (!sessp) {
-		snprintf(logmessage, LOGSIZE, "ERROR: Problem initializing SNMP session '%s'\n", current_host->hostname);
-		cacti_log(logmessage);
+		snprintf(logmessage, LOGSIZE, "ERROR: Problem initializing SNMP session '%s'", current_host->hostname);
+		cacti_log(logmessage, SEV_ERROR, current_host->id);
 		current_host->snmp_session = NULL;
 	}else{
 		current_host->snmp_session = sessp;

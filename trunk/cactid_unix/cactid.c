@@ -64,6 +64,8 @@ int main(int argc, char *argv[]) {
 	int canexit = 0;
 	int host_id;
 	int i;
+	int loop_count = 0;
+	int max_loops;
 	char *first_host_ptr, *last_host_ptr, *poller_id_ptr;
 	int first_host, last_host, poller_id;
 	int mutex_status = 0;
@@ -172,6 +174,9 @@ int main(int argc, char *argv[]) {
 	/* read settings table from the database to further establish environment */
 	read_config_options(&set);
 
+	/* find out how many loops we can perform before terminating */
+	max_loops = DEFAULT_TIMEOUT / THREAD_SLEEP;
+
 	if (set.verbose == POLLER_VERBOSITY_DEBUG) {
 		snprintf(logmessage, LOGSIZE, "CACTID: Version %s starting", VERSION);
 		cacti_log(logmessage, SEV_DEBUG, 0);
@@ -214,7 +219,7 @@ int main(int argc, char *argv[]) {
 
 	/* initialize threads and mutexes */
 	pthread_attr_init(&attr);
-	#ifndef __linux__
+	#ifdef PTHREAD_MUTEX_ERRORCHECK
 	pthread_mutexattr_settype(&mutexattr, PTHREAD_MUTEX_ERRORCHECK);	
 	#endif
 	pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED);
@@ -227,7 +232,7 @@ int main(int argc, char *argv[]) {
 	}
 
 	/* loop through devices until done */
-	while (device_counter < num_rows) {
+	while ((device_counter < num_rows) && (canexit == 0)) {
 		mutex_status = thread_mutex_trylock(LOCK_THREAD);
 
 		switch (mutex_status) {
@@ -282,6 +287,13 @@ int main(int argc, char *argv[]) {
 						break;
 				}
 				usleep(THREAD_SLEEP);
+
+				loop_count++;
+				if (loop_count > max_loops) {
+					cacti_log("ERROR: Cactid Timed Out While Processing Hosts Internal", SEV_CRITICAL, 0);
+					canexit = 1;
+					break;
+				}
 			}
 
 			thread_mutex_unlock(LOCK_THREAD);
@@ -306,6 +318,13 @@ int main(int argc, char *argv[]) {
 		}
 
 		usleep(THREAD_SLEEP);
+
+		loop_count++;
+		if (loop_count > max_loops) {
+			cacti_log("ERROR: Cactid Timed Out While Processing Hosts External", SEV_CRITICAL, 0);
+			canexit = 1;
+			break;
+		}
 	}
 
 	/* wait for all threads to complete */
@@ -323,6 +342,12 @@ int main(int argc, char *argv[]) {
 		}
 
 		usleep(THREAD_SLEEP);
+
+		loop_count++;
+		if (loop_count > max_loops) {
+			cacti_log("ERROR: Cactid Timed Out While Processing Hosts", SEV_CRITICAL, 0);
+			break;
+		}
 	}
 
 	/* print out stats */
@@ -335,6 +360,9 @@ int main(int argc, char *argv[]) {
 
 	/* cleanup and exit program */
 	pthread_attr_destroy(&attr);
+	#ifdef PTHREAD_MUTEX_ERRORCHECK
+	pthread_mutexattr_destroy(&mutexattr);
+	#endif
 
 	if (set.verbose == POLLER_VERBOSITY_DEBUG) {
 		cacti_log("Thread Cleanup Complete", SEV_DEBUG, 0);

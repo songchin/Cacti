@@ -63,6 +63,7 @@
 #define DEFAULT_DB_PORT 3306
 #define DEFAULT_LOGFILE "/wwwroot/cacti/log/rrd.log"
 #define DEFAULT_SNMP_VER 1
+#define DEFAULT_TIMEOUT 294000000
 
 /* threads constants */
 #define LOCK_SNMP 0
@@ -129,6 +130,16 @@
 #define SNMP_2c 1
 #define SNMP_3 3
 #define SNMP_NONE 4
+
+/* syslog severities */
+#define SEV_DEBUG 7
+#define SEV_INFO 6
+#define SEV_NOTICE 5
+#define SEV_WARNING 4
+#define SEV_ERROR 3
+#define SEV_CRITICAL 2
+#define SEV_ALERT 1
+#define SEV_EMERGENCY 0
 
 /* Typedefs */
 typedef struct config_struct {

@@ -227,8 +227,8 @@ void poll_host(int host_id) {
 					snprintf(logmessage, LOGSIZE, "ASSERT: '%s=%s' failed. Recaching host '%s', data query #%i", reindex->assert_value, poll_result, host->hostname, reindex->data_query_id);
 					cacti_log(logmessage, SEV_NOTICE, host->id);
 
-					query3 = (char *)malloc(128);
-					snprintf(query3, 128, "insert into poller_command (poller_id,time,action,command) values (0,NOW(),%i,'%i:%i')", POLLER_COMMAND_REINDEX, host_id, reindex->data_query_id);
+					query3 = (char *)malloc(256);
+					snprintf(query3, 256, "insert into poller_command (poller_id,time,action,command) values (0,NOW(),%i,'%i:%i')", POLLER_COMMAND_REINDEX, host_id, reindex->data_query_id);
 					db_insert(&mysql, query3);
 					free(query3);
 
@@ -237,8 +237,8 @@ void poll_host(int host_id) {
 					snprintf(logmessage, LOGSIZE, "ASSERT: '%s>%s' failed. Recaching host '%s', data query #%i", reindex->assert_value, poll_result, host->hostname, reindex->data_query_id);
 					cacti_log(logmessage, SEV_NOTICE, host->id);
 
-					query3 = (char *)malloc(128);
-					snprintf(query3, 128, "insert into poller_command (poller_id,time,action,command) values (0,NOW(),%i,'%i:%i')", POLLER_COMMAND_REINDEX, host_id, reindex->data_query_id);
+					query3 = (char *)malloc(256);
+					snprintf(query3, 256, "insert into poller_command (poller_id,time,action,command) values (0,NOW(),%i,'%i:%i')", POLLER_COMMAND_REINDEX, host_id, reindex->data_query_id);
 					db_insert(&mysql, query3);
 					free(query3);
 
@@ -247,8 +247,8 @@ void poll_host(int host_id) {
 					snprintf(logmessage, LOGSIZE, "ASSERT: '%s<%s' failed. Recaching host '%s', data query #%i", reindex->assert_value, poll_result, host->hostname, reindex->data_query_id);
 					cacti_log(logmessage, SEV_NOTICE, host->id);
 
-					query3 = (char *)malloc(128);
-					snprintf(query3, 128, "insert into poller_command (poller_id,time,action,command) values (0,NOW(),%i,'%i:%i')", POLLER_COMMAND_REINDEX, host_id, reindex->data_query_id);
+					query3 = (char *)malloc(256);
+					snprintf(query3, 256, "insert into poller_command (poller_id,time,action,command) values (0,NOW(),%i,'%i:%i')", POLLER_COMMAND_REINDEX, host_id, reindex->data_query_id);
 					db_insert(&mysql, query3);
 					free(query3);
 
@@ -491,9 +491,9 @@ char *exec_poll(host_t *current_host, char *command) {
 
 	char *result_string = (char *) malloc(BUFSIZE);
 
-    	/* establish timeout of 5 seconds for pipe response */
-    	timeout.tv_sec = set.max_script_runtime;
-    	timeout.tv_usec = 0;
+	/* establish timeout of x seconds for pipe response */
+	timeout.tv_sec = set.max_script_runtime;
+	timeout.tv_usec = 0;
 
 	cmd_fd = nft_popen((char *)clean_string(command), "r");
 
@@ -515,31 +515,30 @@ char *exec_poll(host_t *current_host, char *command) {
 			switch (errno) {
 				case EBADF:
 					cacti_log("One or more of the file descriptor sets specified a file descriptor that is not a valid open file descriptor.", SEV_ERROR, current_host->id);
-					snprintf(result_string, 2, "%s", "U");
+					snprintf(result_string, BUFSIZE, "%s", "U");
 					break;
 				case EINTR:
 					cacti_log("The function was interrupted before any of the selected events occurred and before the timeout interval expired.", SEV_ERROR, current_host->id);
-					snprintf(result_string, 2, "%s", "U");
+					snprintf(result_string, BUFSIZE, "%s", "U");
 					break;
 				case EINVAL:
 					cacti_log("Possible invalid timeout specified in select() statement.", SEV_ERROR, current_host->id);
-					snprintf(result_string, 2, "%s", "U");
+					snprintf(result_string, BUFSIZE, "%s", "U");
 					break;
 				default:
 					cacti_log("The script/command select() failed", SEV_ERROR, current_host->id);
-					snprintf(result_string, 2, "%s", "U");
+					snprintf(result_string, BUFSIZE, "%s", "U");
 					break;
 			}
 		case 0:
 			cacti_log("The POPEN timed out", SEV_ERROR, current_host->id);
-			snprintf(result_string, 2, "%s", "U");
+			snprintf(result_string, BUFSIZE, "%s", "U");
 			break;
 		default:
 			/* get only one line of output, we will ignore the rest */
 			bytes_read = read(cmd_fd, result_string, BUFSIZE-1);
 			if (bytes_read > 0) {
-				result_string[bytes_read] = '\0';
-				strip_string_crlf(result_string);
+				snprintf(result_string, BUFSIZE, "%s\0", strip_string_crlf(result_string));
 			} else {
 				snprintf(logmessage, LOGSIZE, "Empty result [%s]: '%s'", current_host->hostname, command);
 				cacti_log(logmessage, SEV_ERROR, current_host->id);
