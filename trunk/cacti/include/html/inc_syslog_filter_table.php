@@ -131,7 +131,7 @@
 						Search:&nbsp;
 					</td>
 					<td colspan="2">
-						<input type="text" name="filter" size="49" value="<?php print $_REQUEST["filter"];?>">
+						<input type="text" name="filter" size="50" value="<?php print $_REQUEST["filter"];?>">
 					</td>
 				</tr>
 			</table>

@@ -40,14 +40,6 @@ switch ($_REQUEST["action"]) {
 
 		include_once("./include/bottom_footer.php");
 		break;
-	case 'view_snmp_cache':
-		include_once("./include/top_header.php");
-
-		utilities();
-		utilities_view_snmp_cache();
-
-		include_once("./include/bottom_footer.php");
-		break;
 	case 'view_poller_cache':
 		include_once("./include/top_header.php");
 
@@ -245,49 +237,6 @@ function utilities_view_syslog() {
 	html_end_box();
 }
 
-function utilities_view_snmp_cache() {
-	global $colors;
-
-	$snmp_cache = db_fetch_assoc("select host_snmp_cache.*,
-		host.description,
-		snmp_query.name
-		from host_snmp_cache,snmp_query,host
-		where host_snmp_cache.host_id=host.id
-		and host_snmp_cache.snmp_query_id=snmp_query.id
-		order by host_snmp_cache.host_id,host_snmp_cache.snmp_query_id,host_snmp_cache.snmp_index");
-
-	html_start_box("<strong>View SNMP Cache</strong> [" . sizeof($snmp_cache) . " Item" . ((sizeof($snmp_cache) > 0) ? "s" : "") . "]", "98%", $colors["header_background"], "3", "center", "");
-
-	$i = 0;
-	if (sizeof($snmp_cache) > 0) {
-	foreach ($snmp_cache as $item) {
-			form_alternate_row_color($colors["form_alternate1"],$colors["form_alternate2"],$i);
-			?>
-				<td>
-					Host: <?php print $item["description"];?>, SNMP Query: <?php print $item["name"];?>
-				</td>
-			</tr>
-			<?php
-			form_alternate_row_color($colors["form_alternate1"],$colors["form_alternate2"],$i);
-			?>
-				<td>
-					Index: <?php print $item["snmp_index"];?>, Field Name: <?php print $item["field_name"];?>, Field Value: <?php print $item["field_value"];?>
-				</td>
-			</tr>
-			<?php
-			form_alternate_row_color($colors["form_alternate1"],$colors["form_alternate2"],$i); $i++;
-			?>
-				<td>
-					OID: <?php print $item["oid"];?>
-				</td>
-			</tr>
-			<?php
-	}
-	}
-
-	html_end_box();
-}
-
 function utilities_view_poller_cache() {
 	global $colors;
 
@@ -360,14 +309,6 @@ function utilities() {
 			<p>This is the data that is being passed to the poller each time it runs. This data is then in turn executed/interpreted and the results are fed into the rrd files for graphing or the database for display.</p>
 		</td>
 	</tr>
-	<tr bgcolor="#<?php print $colors["form_alternate2"];?>">
-		<td class="textArea">
-			<p><a href='utilities.php?action=view_snmp_cache'>View SNMP Cache</a></p>
-		</td>
-		<td class="textArea">
-			<p>The SNMP cache stores information gathered from SNMP queries. It is used by cacti to determine the OID to use when gathering information from an SNMP-enabled host.</p>
-		</td>
-	</tr>
 	<tr bgcolor="#<?php print $colors["form_alternate1"];?>">
 		<td class="textArea">
 			<p><a href='utilities.php?action=clear_poller_cache'>Clear Poller Cache</a></p>
@@ -381,18 +322,10 @@ function utilities() {
 
 	<tr bgcolor="#<?php print $colors["form_alternate2"];?>">
 		<td class="textArea">
-			<p><a href='utilities.php?action=view_syslog'>View Cacti Log File</a></p>
+			<p><a href='utilities.php?action=view_syslog'>View Cacti Syslog</a></p>
 		</td>
 		<td class="textArea">
-			<p>The Cacti Log File stores statistic, error and other message depending on system settings.  This information can be used to identify problems with the poller and application.</p>
-		</td>
-	</tr>
-	<tr bgcolor="#<?php print $colors["form_alternate1"];?>">
-		<td class="textArea">
-			<p><a href='utilities.php?action=clear_syslog'>Clear Cacti Log File</a></p>
-		</td>
-		<td class="textArea">
-			<p>This action will reset the Cacti Log File.  Please note that if you are using the Syslog/Eventlog only, this action will have no effect.</p>
+			<p>The Cacti Syslog stores statistics, errors, warnings and other message depending on system settings.  This information can be used to identify problems with the poller and application.</p>
 		</td>
 	</tr>
 
