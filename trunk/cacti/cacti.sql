@@ -2109,6 +2109,7 @@ CREATE TABLE poller_item (
   snmp_version tinyint(1) unsigned NOT NULL default '0',
   snmpv3_auth_username varchar(50) NOT NULL default '',
   snmpv3_auth_password varchar(50) NOT NULL default '',
+  snmpv3_auth_protocol varchar(5) NOT NULL default '',
   snmpv3_priv_passphrase varchar(200),
   snmpv3_priv_protocol varchar(5),
   snmp_port mediumint(5) unsigned NOT NULL default '161',
