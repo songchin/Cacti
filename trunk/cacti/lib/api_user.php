@@ -214,6 +214,7 @@ function api_user_remove($user_id) {
 			db_execute("delete from user_auth_realm where user_id = '" . $user_id . "'");
 			db_execute("delete from user_auth_perms where user_id = '" . $user_id . "'");
 			db_execute("delete from settings_graphs where user_id = '" . $user_id . "'");
+			db_execute("delete from settings_users where user_id = '" . $user_id . "'");
 		}
 	}
 }
@@ -276,9 +277,9 @@ function api_user_copy($template_user, $new_user, $new_realm=-1) {
         $new_id = sql_save($user_auth, 'user_auth');
 
         $user_auth_perms = db_fetch_assoc("select * from user_auth_perms where user_id = '$old_id'");
-        foreach ($user_auth_perms as $user_auth_perm) {
-                $user_auth_perm['user_id'] = $new_id;
-                sql_save($user_auth_perm, 'user_auth_perms', array('user_id', 'item_id', 'type'));
+        foreach ($user_auth_perms as $row) {
+                $row['user_id'] = $new_id;
+                sql_save($row, 'user_auth_perms', array('user_id', 'item_id', 'type'));
         }
 
         $user_auth_realm = db_fetch_assoc("select * from user_auth_realm where user_id = '$old_id'");
@@ -288,15 +289,15 @@ function api_user_copy($template_user, $new_user, $new_realm=-1) {
         }
 
         $settings_graphs = db_fetch_assoc("select * from settings_graphs where user_id = '$old_id'");
-        foreach ($settings_graphs as $settings_graph) {
-                $settings_graph['user_id'] = $new_id;
-                sql_save($settings_graph, 'settings_graphs', array('user_id', 'name'));
+        foreach ($settings_graphs as $row) {
+                $row['user_id'] = $new_id;
+                sql_save($row, 'settings_graphs', array('user_id', 'name'));
         }
 
         $settings_tree = db_fetch_assoc("select * from settings_tree where user_id = '$old_id'");
         foreach ($settings_tree as $row) {
                 $row['user_id'] = $new_id;
-                sql_save($settings_tree, 'settings_tree', array('user_id', 'graph_tree_item_id'));
+                sql_save($row, 'settings_tree', array('user_id', 'graph_tree_item_id'));
         }
 
 	return 0;
