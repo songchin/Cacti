@@ -559,9 +559,9 @@ function update_host_status($poller_id, $status, $host_id, &$hosts, &$ping, $pin
 		} else {
 			if ($ping_availability == AVAIL_SNMP_AND_PING) {
 				api_syslog_cacti_log("PING: " . $ping->ping_response, SEV_INFO, $poller_id, $host_id, 0, $print_data_to_stdout, FACIL_POLLER);
-				api_syslog_cacti_log("SNMP: " . $snmp->ping_response, SEV_INFO, $poller_id, $host_id, 0, $print_data_to_stdout, FACIL_POLLER);
+				api_syslog_cacti_log("SNMP: " . $ping->snmp_response, SEV_INFO, $poller_id, $host_id, 0, $print_data_to_stdout, FACIL_POLLER);
 			} elseif ($ping_availability == AVAIL_SNMP) {
-				api_syslog_cacti_log("SNMP: " . $snmp->ping_response, SEV_INFO, $poller_id, $host_id, 0, $print_data_to_stdout, FACIL_POLLER);
+				api_syslog_cacti_log("SNMP: " . $ping->snmp_response, SEV_INFO, $poller_id, $host_id, 0, $print_data_to_stdout, FACIL_POLLER);
 			} elseif ($ping_availability == AVAIL_NONE) {
 				api_syslog_cacti_log("AVAIL: Availability cheking disabled for host", SEV_INFO, $poller_id, $host_id, 0, $print_data_to_stdout, FACIL_POLLER);
 			} else {
