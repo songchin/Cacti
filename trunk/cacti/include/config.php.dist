@@ -88,21 +88,21 @@ include($config["library_path"] . "/adodb/adodb.inc.php");
 include($config["library_path"] . "/database.php");
 db_connect_real($database_hostname, $database_username, $database_password, $database_default, $database_type);
 
-include_once($config["library_path"] . "/functions.php");
-include_once($config["include_path"] . "/config_constants.php");
-include_once($config["include_path"] . "/config_arrays.php");
-include_once($config["include_path"] . "/config_settings.php");
-include_once($config["include_path"] . "/config_form.php");
-include_once($config["library_path"] . "/html.php");
-include_once($config["library_path"] . "/html_form.php");
-include_once($config["library_path"] . "/html_utility.php");
-include_once($config["library_path"] . "/variables.php");
-include_once($config["library_path"] . "/auth.php");
-include_once($config["library_path"] . "/api_user.php");
+include($config["library_path"] . "/functions.php");
+include($config["include_path"] . "/config_constants.php");
+include($config["include_path"] . "/config_arrays.php");
+include($config["include_path"] . "/config_settings.php");
+include($config["include_path"] . "/config_form.php");
+include($config["library_path"] . "/html.php");
+include($config["library_path"] . "/html_form.php");
+include($config["library_path"] . "/html_utility.php");
+include($config["library_path"] . "/variables.php");
+include($config["library_path"] . "/auth.php");
+include($config["library_path"] . "/api_user.php");
 
 /* load color scheme from theme file.  Load the default first and then overwrite as required with theme */
-include_once($config["include_path"] . "/config_colors.php");
-include_once(html_theme_color_scheme());
+include($config["include_path"] . "/config_colors.php");
+include(html_theme_color_scheme());
 
 /* current cacti version */
 $config["cacti_version"] = "0.8.7";
