@@ -33,7 +33,7 @@ if (db_fetch_cell("select cacti from version") != $config["cacti_version"]) {
 }
 
 if (read_config_option("auth_method") != "0") {
-	/* handle change password dialog */
+	/* handle change password dialog - only with builtin auth */
 	if ((isset($_SESSION['sess_change_password'])) && (read_config_option("auth_method") == 1)) {
 		header ("Location: auth_changepassword.php?ref=" . (isset($_SERVER["HTTP_REFERER"]) ? $_SERVER["HTTP_REFERER"] : "index.php"));
 		exit;
@@ -41,9 +41,11 @@ if (read_config_option("auth_method") != "0") {
 
 	/* Check if we are logged in, and process guest account if set */
 	if ((isset($guest_account)) && (empty($_SESSION["sess_user_id"]))) {
-		$guest_user_id = db_fetch_cell("select id from user_auth where username='" . read_config_option("guest_user") . "'");
-		if (!empty($guest_user_id)) {
-			$_SESSION["sess_user_id"] = $guest_user_id;
+		if (read_config_option("guest_user") != "0") {
+			$guest_user_id = db_fetch_cell("select id from user_auth where username='" . read_config_option("guest_user") . "'");
+			if (!empty($guest_user_id)) {
+				$_SESSION["sess_user_id"] = $guest_user_id;
+			}
 		}
 	}
 
