@@ -318,11 +318,10 @@ function html_get_php_os_icon() {
 	} else {
 		$os = PHP_OS;
 	}
-cacti_log($config["images_path"] . "/os_" . $os . ".gif");
+
 	if (file_exists($config["images_path"] . "/os_" . $os . ".gif")) {
 		return "images/os_" . $os . ".gif";
 	} else {
-	cacti_log("SHIT");
 		return "";
 	}
 }
