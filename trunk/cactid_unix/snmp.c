@@ -37,6 +37,7 @@ extern char **environ;
 #else
  #include <ucd-snmp/ucd-snmp-config.h>
  #include <ucd-snmp/ucd-snmp-includes.h>
+ #include <ucd-snmp/transform_oids.h>
  #include <ucd-snmp/system.h>
  #include <mib.h>
 #endif
@@ -59,6 +60,8 @@ void snmp_host_init(host_t *current_host) {
 	char logmessage[LOGSIZE];
 	void *sessp = NULL;
 	struct snmp_session session;
+	oid anOID[MAX_OID_LEN];
+	size_t anOID_len = MAX_OID_LEN;
 
 	char hostname[BUFSIZE];
 
@@ -70,8 +73,10 @@ void snmp_host_init(host_t *current_host) {
 
 	if (current_host->snmp_version == 2) {
 		session.version = SNMP_VERSION_2c;
-	}else{
+	}else if (current_host->snmp_version == 1) {
 		session.version = SNMP_VERSION_1;
+	}else {
+		session.version = SNMP_VERSION_3;
 	}
 
 	/* net-snmp likes the hostname in 'host:port' format */
@@ -80,8 +85,59 @@ void snmp_host_init(host_t *current_host) {
 	session.peername = hostname;
 	session.retries = 3;
 	session.timeout = (current_host->snmp_timeout * 1000); /* net-snmp likes microseconds */
-	session.community = current_host->snmp_community;
-	session.community_len = strlen(current_host->snmp_community);
+
+	if ((current_host->snmp_version == 2) || (current_host->snmp_version == 1)) {
+		session.community = current_host->snmp_community;
+		session.community_len = strlen(current_host->snmp_community);
+	}else {
+	    /* set the SNMPv3 user name */
+	    session.securityName = current_host->snmpv3_auth_username;
+	    session.securityNameLen = strlen(session.securityName);
+
+	    /* set the authentication method to MD5 */
+		if (strcmp(current_host->snmpv3_auth_protocol,"MD5")) {
+		    session.securityAuthProto = usmHMACMD5AuthProtocol;
+		}else {
+		    session.securityAuthProto = usmHMACSHA1AuthProtocol;
+		}
+		
+	    session.securityAuthProtoLen = sizeof(session.securityAuthProto)/sizeof(oid);
+	    session.securityAuthKeyLen = USM_AUTH_KU_LEN;
+
+		if (strcmp(current_host->snmpv3_priv_protocol,"DES")) {
+			session.securityPrivProto = usmDESPrivProtocol;
+		} else if (strcmp(current_host->snmpv3_priv_protocol,"[None]")) {
+			session.securityPrivProto = usmNoPrivProtocol;
+		} else if (strcmp(current_host->snmpv3_priv_protocol,"AES128")) {
+			session.securityPrivProto = usmAES128PrivProtocol;
+		} else if (strcmp(current_host->snmpv3_priv_protocol,"AES192")) {
+			session.securityPrivProto = usmAES192PrivProtocol;
+		}else {			
+			session.securityPrivProto = usmAES256PrivProtocol;
+		}
+		
+	    session.securityPrivProtoLen = sizeof(session.securityPrivProto)/sizeof(oid);
+	    session.securityPrivKeyLen = USM_AUTH_KU_LEN;
+
+	    /* set the security level to authenticate, but not encrypted */
+		if (strcmp(current_host->snmpv3_priv_protocol,"[None]")) {
+			session.securityLevel = SNMP_SEC_LEVEL_AUTHNOPRIV;
+		}else {
+			session.securityLevel = SNMP_SEC_LEVEL_AUTHPRIV;
+		}
+
+	    /* set the authentication key to a MD5 hashed version of our
+	       passphrase "The UCD Demo Password" (which must be at least 8
+	       characters long) */
+	    if (generate_Ku(session.securityAuthProto, 
+						session.securityAuthProtoLen,
+						(u_char *) current_host->snmpv3_auth_password,
+						strlen(current_host->snmpv3_auth_password),
+	                    session.securityAuthKey,
+	                    &session.securityAuthKeyLen) != SNMPERR_SUCCESS) {
+	        cacti_log("ERROR: SNMP: Error generating SNMPv3 Ku from authentication pass phrase.\n");
+		}
+	}
 
  	thread_mutex_lock(LOCK_SNMP);
 
@@ -120,15 +176,6 @@ char *snmp_get(host_t *current_host, char *snmp_oid) {
 	char storedoid[BUFSIZE];
 
 	char *result_string = (char *) malloc(BUFSIZE);
-
-	/* only SNMP v1 and v2c are supported right now */
-	if ((current_host->snmp_version != 1) && (current_host->snmp_version != 2)) {
-		snprintf(logmessage, LOGSIZE, "Host[%i] ERROR: Only SNMP v1 and v2c are supported in Cactid [host: %s]\n", current_host->id, current_host->hostname);
-		cacti_log(logmessage);
-		snprintf(result_string, BUFSIZE, "%s", "U");
-
-		return result_string;
-	}
 
 	anOID_len = MAX_OID_LEN;
 	pdu = snmp_pdu_create(SNMP_MSG_GET);
