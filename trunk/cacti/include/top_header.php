@@ -86,7 +86,7 @@ $current_user = api_user_info( array("id" => $_SESSION["sess_user_id"]) );
 		</td>
 	</tr>
 	<tr>
-		<td bgcolor="#<?php print $colors['console_menu_background'];?>" colspan="1" height="8" width="135" style="background-image: url(<?php print html_get_theme_images_path('shadow_gray.gif');?>); background-repeat: repeat-x; border-right: #aaaaaa 1px solid;">
+		<td bgcolor="#<?php print $colors['console_menu_background'];?>" colspan="1" height="8" width="135" style="background-image: url(<?php print html_get_theme_images_path('shadow_gray.gif');?>); background-repeat: repeat-x; border-right: #<?php print $colors['console_menu_border'];?> 1px solid;">
 			<img src="<?php print html_get_theme_images_path('transparent_line.gif');?>" width="135" height="2" border="0"><br>
 		</td>
 		<td colspan="2" height="8" style="background-image: url(<?php print html_get_theme_images_path('shadow.gif');?>); background-repeat: repeat-x;" bgcolor="#<?php print $colors['console_menu_background'];?>">
@@ -94,7 +94,7 @@ $current_user = api_user_info( array("id" => $_SESSION["sess_user_id"]) );
 		</td>
 	</tr>
 	<tr height="5">
-		<td valign="top" rowspan="2" width="135" style="padding: 5px; border-right: #aaaaaa 1px solid;" bgcolor='#<?php print $colors['console_menu_background'];?>'>
+		<td valign="top" rowspan="2" width="135" style="padding: 5px; border-right: #<?php print $colors['console_menu_border'];?> 1px solid;" bgcolor='#<?php print $colors['console_menu_background'];?>'>
 			<table bgcolor="#<?php print $colors['console_menu_background'];?>" width="100%" cellpadding="1" cellspacing="0" border="0">
 				<?php draw_menu();?>
 			</table>

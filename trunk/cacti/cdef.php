@@ -84,7 +84,7 @@ switch ($_REQUEST["action"]) {
 
 function draw_cdef_preview($cdef_id) {
 	global $colors; ?>
-	<tr bgcolor="#<?php print $colors["panel"];?>">
+	<tr bgcolor="#<?php print $colors["messagebar_background"];?>">
 		<td>
 			<pre>cdef=<?php print get_cdef($cdef_id, true);?></pre>
 		</td>
@@ -170,7 +170,7 @@ function item_edit() {
 		$values[$current_type] = $cdef["value"];
 	}
 
-	html_start_box("", "98%", "aaaaaa", "3", "center", "");
+	html_start_box("", "98%", $colors["messagebar_border"], "3", "center", "");
 	draw_cdef_preview($_GET["cdef_id"]);
 	html_end_box();
 
@@ -278,7 +278,7 @@ function cdef_edit() {
 	html_end_box();
 
 	if (!empty($_GET["id"])) {
-		html_start_box("", "98%", "aaaaaa", "3", "center", "");
+		html_start_box("", "98%", $colors["messagebar_border"], "3", "center", "");
 		draw_cdef_preview($_GET["id"]);
 		html_end_box();
 

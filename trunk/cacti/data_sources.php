@@ -613,7 +613,7 @@ function ds_edit() {
 					<?php print get_data_source_title($_GET["id"]);?>
 				</td>
 				<td class="textInfo" align="right" valign="top">
-					<span style="color: #c16921;">*<a href='data_sources.php?action=ds_edit&id=<?php print (isset($_GET["id"]) ? $_GET["id"] : 0);?>&debug=<?php print (isset($_SESSION["ds_debug_mode"]) ? "0" : "1");?>'>Turn <strong><?php print (isset($_SESSION["ds_debug_mode"]) ? "Off" : "On");?></strong> Data Source Debug Mode.</a>
+						<span style="color: #c16921;">*<a href='data_sources.php?action=ds_edit&id=<?php print (isset($_GET["id"]) ? $_GET["id"] : 0);?>&debug=<?php print (isset($_SESSION["ds_debug_mode"]) ? "0" : "1");?>'>Turn <strong><?php print (isset($_SESSION["ds_debug_mode"]) ? "Off" : "On");?></strong> Data Source Debug Mode.</a>
 				</td>
 			</tr>
 		</table>
@@ -838,16 +838,9 @@ function ds_edit() {
 
 	/* display the debug mode box if the user wants it */
 	if ((isset($_SESSION["ds_debug_mode"])) && (isset($_GET["id"]))) {
-		?>
-		<table width="98%" align="center">
-			<tr>
-				<td>
-					<span class="textInfo">Data Source Debug</span><br>
-					<pre><?php print rrdtool_function_create($_GET["id"], true, array());?></pre>
-				</td>
-			</tr>
-		</table>
-		<?php
+		html_start_box("<strong>Data Source Debug</strong>", "98%", $colors["header_background"], "3", "center", "");
+		print "<tr><td bgcolor=#'" . $colors["messagebar_background"] . "' <pre>" . rrdtool_function_create($_GET["id"], true, array()) . "</pre></td></tr>";
+		html_end_box();
 	}
 
 	if ((isset($_GET["id"])) || (isset($_GET["new"]))) {

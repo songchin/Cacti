@@ -526,7 +526,7 @@ function data_query_edit() {
 			$xml_file_exists = false;
 		}
 
-		html_start_box("", "98%", "aaaaaa", "3", "center", "");
+		html_start_box("", "98%", $colors["messagebar_border"], "3", "center", "");
 		print "<tr bgcolor='#" . $colors["messagebar_background"] . "'><td>$text</td></tr>";
 		html_end_box();
 

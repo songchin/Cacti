@@ -80,7 +80,7 @@ function import() {
 	<?php
 
 	if ((isset($_SESSION["import_debug_info"])) && (is_array($_SESSION["import_debug_info"]))) {
-		html_start_box("<strong>Import Results</strong>", "98%", "aaaaaa", "3", "center", "");
+		html_start_box("<strong>Import Results</strong>", "98%", $colors["messagebar_border"], "3", "center", "");
 
 		print "<tr bgcolor='#" . $colors["form_alternate1"] . "'><td><p class='textArea'>Cacti has imported the following items:</p>";
 

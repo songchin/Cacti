@@ -346,7 +346,7 @@ function graphs() {
 	if (!empty($debug_log)) {
 		debug_log_clear("new_graphs");
 		?>
-		<table width='98%' style='background-color: #f5f5f5; border: 1px solid #bbbbbb;' align='center'>
+		<table width='98%' style='background-color: #<?php print $colors["messagebar_background"];?>; border: 1px solid #<?php print $colors["messagebar_border"];?>;' align='center'>
 			<tr bgcolor="<?php print $colors["form_alternate2"];?>">
 				<td style="padding: 3px; font-family: monospace;">
 					<?php print $debug_log;?>

@@ -558,7 +558,7 @@ function graph_diff() {
 	}
 
 	?>
-	<table style="background-color: #f5f5f5; border: 1px solid #aaaaaa;" width="98%" align="center">
+	<table style="background-color: #<?php print $colors['messagebar_background'];?>; border: 1px solid #<?php print $colors['messagebar_border'];?>;" width="98%" align="center">
 		<tr>
 			<td class="textArea">
 				The template you have selected requires some changes to be made to the structure of
@@ -710,7 +710,7 @@ function graph_diff() {
 
 	?>
 	<form action="graphs.php" method="post">
-	<table style="background-color: #f5f5f5; border: 1px solid #aaaaaa;" width="98%" align="center">
+	<table style="background-color: #<?php print $colors['messagebar_background'];?>; border: 1px solid #<?php print $colors['messagebar_border'];?>;" width="98%" align="center">
 		<tr>
 			<td class="textArea">
 				<input type='radio' name='type' value='1' checked>&nbsp;<?php print $user_message;?><br>

@@ -482,7 +482,7 @@ function form_save_button($cancel_url, $force_type = "") {
 		$alt = "Create";
 	}
 	?>
-	<table align='center' width='98%' style='background-color: #ffffff; border: 1px solid #bbbbbb;'>
+	<table align='center' width='98%' style='background-color: #<?php print $colors["buttonbar_background"];?>; border: 1px solid #<?php print $colors["buttonbar_border"];?>;'>
 		<tr>
 			 <td bgcolor="#<?php print $colors['buttonbar_background'];?>" align="right">
 				<input type='hidden' name='action' value='save'>

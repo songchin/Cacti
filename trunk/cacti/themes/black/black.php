@@ -44,9 +44,11 @@ $colors["filter_background"] = "000000";
 
 /* Messagebar Colors */
 $colors["messagebar_background"] = "000000";
+$colors["messagebar_border"] = "0F5F0F";
 
 /* Buttonbar Colors */
 $colors["buttonbar_background"] = "000000";
+$colors["buttonbar_border"] = "0F1F1F";
 
 /* RRDTool Graph Colors */
 $colors["rrd_canvas"] = "000000";

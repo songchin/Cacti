@@ -44,9 +44,11 @@ $colors["filter_background"] = "E5E5E5";
 
 /* Messagebar Colors */
 $colors["messagebar_background"] = "FFFFFF";
+$colors["messagebar_border"] = "AAAAAA";
 
 /* Buttonbar Colors */
 $colors["buttonbar_background"] = "E5E5E5";
+$colors["buttonbar_border"] = "AAAAAA";
 
 /* RRDTool Graph Colors */
 $colors["rrd_canvas"] = "000000";
@@ -62,6 +64,7 @@ $colors["navbar_background"] = "E9E9E9";
 
 /* Console Colors */
 $colors["console_menu_background"] = "F5F5F5";
+$colors["console_menu_border"] = "AAAAAA";
 
 /* Graph Menu Colors */
 $colors["graph_menu_background"] = "EFEFEF";

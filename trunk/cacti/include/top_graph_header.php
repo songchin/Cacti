@@ -172,7 +172,7 @@ if ((read_graph_config_option("default_tree_view_mode") == "2") && ($_REQUEST["a
 		</td>
 	</tr>
 	<tr class="noprint">
-		<td bgcolor="#<?php print $colors['graph_menu_background'];?>" colspan="1" height="8" style="background-image: url(<?php print html_get_theme_images_path('shadow_gray.gif');?>); background-repeat: repeat-x; border-right: #aaaaaa 1px solid;">
+		<td bgcolor="#<?php print $colors['graph_menu_background'];?>" colspan="1" height="8" style="background-image: url(<?php print html_get_theme_images_path('shadow_gray.gif');?>); background-repeat: repeat-x; border-right: #<?php print $colors['graph_menu_border'];?> 1px solid;">
 			<img src="<?php print html_get_theme_images_path('transparent_line.gif');?>" width="170" height="2" border="0"><br>
 		</td>
 		<td bgcolor="#<?php print $colors['graph_menu_background'];?>" colspan="1" height="8" style="background-image: url(<?php print html_get_theme_images_path('shadow.gif');?>); background-repeat: repeat-x;">
@@ -204,7 +204,7 @@ if ((read_graph_config_option("default_tree_view_mode") == "2") && ($_REQUEST["a
 
 	<tr>
 		<?php if ((read_graph_config_option("default_tree_view_mode") == "2") && (($_REQUEST["action"] == "tree") || ((isset($_REQUEST["view_type"]) ? $_REQUEST["view_type"] : "") == "tree"))) { ?>
-		<td valign="top" style="padding: 5px; border-right: #aaaaaa 1px solid;" bgcolor="#<?php print $colors['graph_menu_background'];?>" width="200" class="noprint">
+		<td valign="top" style="padding: 5px; border-right: #<?php print $colors['graph_menu_border'];?> 1px solid;" bgcolor="#<?php print $colors['graph_menu_background'];?>" width="200" class="noprint">
 			<table border=0 cellpadding=0 cellspacing=0><tr><td><font size=-2><a style="font-size:7pt;text-decoration:none;color:silver" href="http://www.treemenu.net/" target=_blank></a></font></td></tr></table>
 			<?php grow_dhtml_trees(); ?>
 			<script type="text/javascript">initializeDocument();</script>

@@ -224,7 +224,7 @@ function display_output_messages() {
 				switch ($messages[$current_message_id]["type"]) {
 				case 'info':
 					if ($error_message == false) {
-						print "<table align='center' width='98%' style='background-color: #ffffff; border: 1px solid #bbbbbb;'>";
+						print "<table align='center' width='98%' style='background-color: #" . $colors['messagebar_background'] . "; border: 1px solid #" . $colors['messagebar_border'] . ";'>";
 						print "<tr><td bgcolor='#" . $colors["messagebar_background"] . "'><p class='textInfo'>$message</p></td></tr>";
 						print "</table><br>";
 
@@ -233,7 +233,7 @@ function display_output_messages() {
 					}
 					break;
 				case 'error':
-					print "<table align='center' width='98%' style='background-color: #ffffff; border: 1px solid #ff0000;'>";
+					print "<table align='center' width='98%' style='background-color: #" . $colors['messagebar_background'] . "; border: 1px solid #ff0000;'>";
 					print "<tr><td bgcolor='#" . $colors["messagebar_background"] . "'><p class='textError'>Error: $message</p></td></tr>";
 					print "</table><br>";
 					break;

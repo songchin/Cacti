@@ -106,7 +106,7 @@ function export() {
 
 	?>
 	<form name="form_graph_id">
-	<table width='98%' style='background-color: #f5f5f5; border: 1px solid #bbbbbb;' align='center'>
+	<table width='98%' style='background-color: #<?php print $colors["messagebar_background"];?>; border: 1px solid #<?php print $colors["messagebar_border"];?>;' align='center'>
 		<tr bgcolor="<?php print $colors["form_alternate2"];?>">
 			<td class="textArea" style="padding: 3px;">
 				What would you like to export?&nbsp;
