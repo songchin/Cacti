@@ -108,7 +108,7 @@ if ((read_graph_config_option("default_tree_view_mode") == "2") && ($_REQUEST["a
 <body leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
 
 <table width="100%" height="100%" cellspacing="0" cellpadding="0">
-	<tr height="37" bgcolor="#a9a9a9" class="noprint">
+	<tr height="37" bgcolor="#<?php print $colors['main_background'];?>" class="noprint">
 		<td colspan="2" valign="bottom" nowrap>
 			<table width="100%" cellspacing="0" cellpadding="0">
 				<tr>
@@ -135,12 +135,12 @@ if ((read_graph_config_option("default_tree_view_mode") == "2") && ($_REQUEST["a
 			</table>
 		</td>
 	</tr>
-	<tr height="2" colspan="2" bgcolor="#183c8f" class="noprint">
+	<tr height="2" colspan="2" bgcolor="#<?php print $colors['main_border'];?>" class="noprint">
 		<td colspan="2">
 			<img src="<?php print html_get_theme_images_path('transparent_line.gif');?>" width="170" height="2" border="0"><br>
 		</td>
 	</tr>
-	<tr height="5" bgcolor="#e9e9e9" class="noprint">
+	<tr height="5" bgcolor="#<?php print $colors['navbar_background'];?>" class="noprint">
 		<td colspan="2">
 			<table width="100%">
 				<tr>
@@ -165,17 +165,17 @@ if ((read_graph_config_option("default_tree_view_mode") == "2") && ($_REQUEST["a
 		</td>
 	</tr>
 	<tr class="noprint">
-		<td bgcolor="#efefef" colspan="1" height="8" style="background-image: url(<?php print html_get_theme_images_path('shadow_gray.gif');?>); background-repeat: repeat-x; border-right: #aaaaaa 1px solid;">
+		<td bgcolor="#<?php print $colors['graph_menu_background'];?>" colspan="1" height="8" style="background-image: url(<?php print html_get_theme_images_path('shadow_gray.gif');?>); background-repeat: repeat-x; border-right: #aaaaaa 1px solid;">
 			<img src="<?php print html_get_theme_images_path('transparent_line.gif');?>" width="170" height="2" border="0"><br>
 		</td>
-		<td bgcolor="#ffffff" colspan="1" height="8" style="background-image: url(<?php print html_get_theme_images_path('shadow.gif');?>); background-repeat: repeat-x;">
+		<td bgcolor="#<?php print $colors['graph_menu_background'];?>" colspan="1" height="8" style="background-image: url(<?php print html_get_theme_images_path('shadow.gif');?>); background-repeat: repeat-x;">
 
 		</td>
 	</tr>
 
 	<?php if ((basename($_SERVER["PHP_SELF"]) == "graph.php") && ($_REQUEST["action"] == "properties")) {?>
 	<tr>
-		<td valign="top" height="1" colspan="3" bgcolor="#efefef">
+		<td valign="top" height="1" colspan="3" bgcolor="#<?php print $colors['graph_menu_background'];?>">
 			<?php
 			$graph_data_array["print_source"] = true;
 
@@ -197,7 +197,7 @@ if ((read_graph_config_option("default_tree_view_mode") == "2") && ($_REQUEST["a
 
 	<tr>
 		<?php if ((read_graph_config_option("default_tree_view_mode") == "2") && (($_REQUEST["action"] == "tree") || ((isset($_REQUEST["view_type"]) ? $_REQUEST["view_type"] : "") == "tree"))) { ?>
-		<td valign="top" style="padding: 5px; border-right: #aaaaaa 1px solid;" bgcolor='#efefef' width='200' class="noprint">
+		<td valign="top" style="padding: 5px; border-right: #aaaaaa 1px solid;" bgcolor='#$colors["graph_menu_background"]' width='200' class="noprint">
 			<table border=0 cellpadding=0 cellspacing=0><tr><td><font size=-2><a style="font-size:7pt;text-decoration:none;color:silver" href="http://www.treemenu.net/" target=_blank></a></font></td></tr></table>
 			<?php grow_dhtml_trees(); ?>
 			<script type="text/javascript">initializeDocument();</script>

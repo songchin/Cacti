@@ -48,4 +48,12 @@ $colors["rrd_canvas"] = "000000";
 $colors["rrd_font"] = "FFFFFF";
 $colors["rrd_back"] = "000000";
 
+$colors["main_background"] = "a9a9a9";
+$colors["main_border"] = "183c8f";
+
+$colors["navbar_background"] = "e9e9e9";
+
+$colors["console_menu_background"] = "f5f5f5";
+$colors["graph_menu_background"] = "efefef";
+
 ?>

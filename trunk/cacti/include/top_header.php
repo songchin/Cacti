@@ -23,8 +23,9 @@
  | - raXnet - http://www.raxnet.net/                                       |
  +-------------------------------------------------------------------------+
 */
-
 global $colors;
+global $config;
+
 ?>
 <html>
 <head>
@@ -39,7 +40,7 @@ global $colors;
 <body leftmargin="0" topmargin="0" marginwidth="0" marginheight="0" background="<?php print html_get_theme_images_path('left_border.gif');?>">
 
 <table width="100%" cellspacing="0" cellpadding="0">
-	<tr height="37" bgcolor="#a9a9a9">
+	<tr height="37" bgcolor="#<?php print $colors['main_background'];?>">
 		<td valign="bottom" colspan="3" nowrap>
 			<table width="100%" cellspacing="0" cellpadding="0">
 				<tr>
@@ -53,12 +54,12 @@ global $colors;
 			</table>
 		</td>
 	</tr>
-	<tr height="2" bgcolor="#183c8f">
+	<tr height="2" bgcolor="#<?php print $colors['main_border'];?>">
 		<td colspan="3">
 			<img src="<?php print html_get_theme_images_path('transparent_line.gif');?>" width="170" height="2" border="0"><br>
 		</td>
 	</tr>
-	<tr height="5" bgcolor="#e9e9e9">
+	<tr height="5" bgcolor="#<?php print $colors['navbar_background'];?>">
 		<td colspan="3">
 			<table width="100%">
 				<tr>
@@ -75,16 +76,16 @@ global $colors;
 		</td>
 	</tr>
 	<tr>
-		<td bgcolor="#f5f5f5" colspan="1" height="8" width="135" style="background-image: url(<?php print html_get_theme_images_path('shadow_gray.gif');?>); background-repeat: repeat-x; border-right: #aaaaaa 1px solid;">
+		<td bgcolor="#<?php print $colors['console_menu_background'];?>" colspan="1" height="8" width="135" style="background-image: url(<?php print html_get_theme_images_path('shadow_gray.gif');?>); background-repeat: repeat-x; border-right: #aaaaaa 1px solid;">
 			<img src="<?php print html_get_theme_images_path('transparent_line.gif');?>" width="135" height="2" border="0"><br>
 		</td>
-		<td colspan="2" height="8" style="background-image: url(<?php print html_get_theme_images_path('shadow.gif');?>); background-repeat: repeat-x;" bgcolor="#ffffff">
+		<td colspan="2" height="8" style="background-image: url(<?php print html_get_theme_images_path('shadow.gif');?>); background-repeat: repeat-x;" bgcolor="#<?php print $colors['console_menu_background'];?>">
 
 		</td>
 	</tr>
 	<tr height="5">
-		<td valign="top" rowspan="2" width="135" style="padding: 5px; border-right: #aaaaaa 1px solid;" bgcolor='#f5f5f5'>
-			<table bgcolor="#f5f5f5" width="100%" cellpadding="1" cellspacing="0" border="0">
+		<td valign="top" rowspan="2" width="135" style="padding: 5px; border-right: #aaaaaa 1px solid;" bgcolor='#<?php print $colors['console_menu_background'];?>'>
+			<table bgcolor="#<?php print $colors['console_menu_background'];?>" width="100%" cellpadding="1" cellspacing="0" border="0">
 				<?php draw_menu();?>
 			</table>
 
