@@ -68,19 +68,23 @@ $wizard_array = array(
 	);
 
 
+/* Includes */
 
 if (isset($_REQUEST["wizard"])) {
 
 	include_once("include/top_header.php");
 
-	include_wizard($_REQUEST["wizard"]);
+	if (wizard_include($_REQUEST["wizard"])) {
+		/* wizard_render must exist in the included wizard file.  All actions should occur from there. */
+		wizard_render();
+	}
 
 	include_once("include/bottom_footer.php");
 
 }else{
 	include_once("include/top_header.php");
 
-	intro();
+	wizard_intro();
 	
 	include_once("include/bottom_footer.php");
 }
@@ -91,21 +95,28 @@ if (isset($_REQUEST["wizard"])) {
 #########################################
 */
 
-function include_wizard($wizard) {
+function wizard_include($wizard) {
 	global $wizard_array;
-	
-	$file = $wizard_array[$wizard]["include"];
-	
-	if (file_exists($file)) {
-		include_once($file);
+
+	if (isset($wizard_array[$wizard]["include"])) {
+		$file = $wizard_array[$wizard]["include"];
+		if (file_exists($file)) {
+			include_once($file);
+		}else{
+			display_custom_error_message("Unable to include Wizard File for wizard \"" . $wizard . "\"");
+			return false;
+		}
 	}else{
-		display_custom_error_message("Unable to include Wizard File for wizard \"" . $wizard . "\"");
+		display_custom_error_message("Invalid wizard \"" . $wizard . "\"");
+		return false;
 	}
+
+	return true;
 
 }
 
-function intro() {
-	global $wizard_array,$colors;
+function wizard_intro() {
+	global $colors, $wizard_array;
 
 	/* create html and javascript lists for use in the html output */
 	$javascript = "";
@@ -144,38 +155,31 @@ function intro() {
 
 	/* html output */
 	print "<form method='POST'>\n";
-
+	print "<input type='hidden' name='slide' value='0'>\n";
 	html_start_box("<strong>" . $wizard_array["title"] . "</strong>", "70%", $colors["header_background"], "3", "center", "");
-
-	print "<tr bgcolor='" . $colors["header_panel_background"] . "'><td colspan='5' class='textSubHeaderDark'>Introduction</td></tr>\n";
-	print "<tr>\n";
-	print "\t<td colspan='5' bgcolor='" . $colors["form_alternate1"] . "' class='textArea'><br><blockquote>";
+	wizard_sub_header("Introduction");
+	wizard_start_area();
+	print "<br><blockquote>";
 	print $wizard_array["intro"];
-	print "</blockquote><br></td>\n";
-	print "</tr>\n"; 
-	print "<tr bgcolor='" . $colors["header_panel_background"] . "'><td colspan='5' class='textSubHeaderDark'>Available Wizards</td></tr>\n";
-	print "<tr>\n";
-	print "\t<td width='15' valign='top' bgcolor='" . $colors["form_alternate1"] . "' class='textArea'></td>\n";
-	print "\t<td width='25%' valign='top' bgcolor='" . $colors["form_alternate1"] . "' class='textArea'><b>Wizard</b><br><br>\n";
-	print $html;
-	print "\t</td>\n";
-	print "\t<td width='15' valign='top' bgcolor='" . $colors["form_alternate1"] . "' class='textArea'></td>\n";
-	print "\t<td valign='top' bgcolor='" . $colors["form_alternate1"] . "' class='textArea'><b>Description</b><br><br>\n";
-	print "\t\t<div id='wizardarea' style='height:150px; overflow:auto;'>None</div><br>\n";
-	print "\t</td>\n";
-	print "\t<td width='15' valign='top' bgcolor='" . $colors["form_alternate1"] . "' class='textArea'></td>\n";
-	print "</tr>\n";
-
-	html_end_box();
-
-	print "\n<table align='center' width='70%' style='background-color: " . $colors['buttonbar_background'] . "; border: 1px solid #" . $colors["buttonbar_border"] . ";'>\n";
+	print "</blockquote><br>\n";
+	wizard_end_area();
+	wizard_sub_header("Available Wizards");
+	wizard_start_area();
+	print "<table border='0' width='100%'>\n";
 	print "\t<tr>\n";
-	print "\t\t<td bgcolor='" . $colors['buttonbar_background'] . "' align='right'>\n";
-	print "\t\t\t<input type='image' src='" . html_get_theme_images_path("button_next.gif") . "' alt='Save' align='absmiddle'>\n";
+	print "\t\t<td width='15' valign='top' bgcolor='" . $colors["form_alternate1"] . "' class='textArea'></td>\n";
+	print "\t\t<td width='25%' valign='top' bgcolor='" . $colors["form_alternate1"] . "' class='textArea'><b>Wizard</b><br><br>\n";
+	print $html;
 	print "\t\t</td>\n";
+	print "\t\t<td width='15' valign='top' bgcolor='" . $colors["form_alternate1"] . "' class='textArea'></td>\n";
+	print "\t\t<td valign='top' bgcolor='" . $colors["form_alternate1"] . "' class='textArea'><b>Description</b><br><br>\n";
+	print "\t\t\t<div id='wizardarea' style='height:150px; overflow:auto;'>None</div><br>\n";
+	print "\t\t</td>\n";
+	print "\t\t<td width='15' valign='top' bgcolor='" . $colors["form_alternate1"] . "' class='textArea'></td>\n";
 	print "\t</tr>\n";
 	print "</table>\n";
-	print "</form>\n";
+	wizard_end_area();
+	wizard_footer(false,false,false,true);
 
 	/* javascript function to change description box to default */
 	print "<script type=\"text/javascript\">\n";
@@ -183,6 +187,76 @@ function intro() {
 	print "applyDescription('" . $wizard_array["default"] . "');\n";
 	print "-->\n";
 	print "</script>\n";
+
+}
+
+function wizard_header($wizard) {
+	global $colors, $wizard_array;
+
+	/* html output */
+	print "<form method='POST'>\n";
+	print "<input type='hidden' name='wizard' value='" . $wizard . "'>\n";
+	if (isset($_REQUEST["slide_prev"])) {
+		print "<input type='hidden' name='slide_prev' value='" . $_REQUEST["slide_prev"] . "'>\n";
+	}
+
+	html_start_box("<strong>" . $wizard_array[$wizard]["friendly_name"] . " Wizard</strong>", "70%", $colors["header_background"], "3", "center", "");
+
+}
+
+function wizard_footer($button_back = true,$button_cancel = false,$button_save = false,$button_next = false) {
+	global $colors;
+
+	html_end_box();
+
+	print "\n<table align='center' width='70%' style='background-color: " . $colors['buttonbar_background'] . "; border: 1px solid #" . $colors["buttonbar_border"] . ";'>\n";
+	print "\t<tr>\n";
+	print "\t\t<td bgcolor='" . $colors['buttonbar_background'] . "' align='right'>\n";
+
+	if ($button_back) {
+		if (isset($_REQUEST["slide_prev"])) {
+			print "\t\t\t<input type='image' src='" . html_get_theme_images_path("button_back.gif") . "' name='wizard_action' value='back' alt='Back' align='absmiddle'>\n";
+		}else{
+			print "\t\t\t<input type='image' src='" . html_get_theme_images_path("button_back.gif") . "' alt='Back' align='absmiddle' onClick=\"history.back(); return false;\">\n";
+		}
+	}
+	if ($button_cancel) {
+		print "\t\t\t<input type='image' src='" . html_get_theme_images_path("button_cancel2.gif") . "' name='wizard_action' value='cancel' alt='Cancel' align='absmiddle'>\n";
+	}	
+	if ($button_save) {
+		print "\t\t\t<input type='image' src='" . html_get_theme_images_path("button_save.gif") . "' name='wizard_action' value='save' alt='Save' align='absmiddle'>\n";
+	}
+	if ($button_next) {
+		print "\t\t\t<input type='image' src='" . html_get_theme_images_path("button_next.gif") . "' name='wizard_action' value='next' alt='Next' align='absmiddle'>\n";
+	}
+
+	print "\t\t</td>\n";
+	print "\t</tr>\n";
+	print "</table>\n";
+	print "</form>\n";
+
+}
+
+function wizard_sub_header($title) {
+	global $colors;
+
+	print "<tr bgcolor='" . $colors["header_panel_background"] . "'><td class='textSubHeaderDark'>" . $title . "</td></tr>\n";
+
+}
+
+function wizard_start_area() {
+	global $colors;
+
+	print "<tr>\n";
+	print "\t<td bgcolor='" . $colors["form_alternate1"] . "' class='textArea'>\n";
+
+}
+
+function wizard_end_area() {
+	global $colors;
+
+	print "\t</td>\n";
+	print "</tr>\n"; 
 
 }
 

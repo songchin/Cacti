@@ -22,9 +22,19 @@
  +-------------------------------------------------------------------------+
 */
 
+function wizard_render() {
+	
+	$wizard="auth";
+	wizard_header($wizard);
 
+	wizard_start_area();
 
+	print "Opps, not finished.";
 
-print "Auth wizard"
+	wizard_end_area();
+
+	wizard_footer(true,false,false,true);
+
+}
 
 ?>
