@@ -172,9 +172,9 @@ typedef struct target_struct {
 	int snmp_version;
 	char snmpv3_auth_username[50];
 	char snmpv3_auth_password[50];
-    char snmpv3_auth_protocol[5];
+    char snmpv3_auth_protocol[10];
     char snmpv3_priv_passphrase[200];
-    char snmpv3_priv_protocol[5];
+    char snmpv3_priv_protocol[10];
 	int snmp_port;
 	int snmp_timeout;
     int availability_method;
@@ -198,9 +198,9 @@ typedef struct host_struct {
 	int snmp_version;
     char snmpv3_auth_username[50];
     char snmpv3_auth_password[50];
-    char snmpv3_auth_protocol[5];
+    char snmpv3_auth_protocol[10];
     char snmpv3_priv_passphrase[200];
-    char snmpv3_priv_protocol[5];
+    char snmpv3_priv_protocol[10];
 	int snmp_port;
 	int snmp_timeout;
     int availability_method;

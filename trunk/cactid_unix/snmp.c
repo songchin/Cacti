@@ -42,6 +42,8 @@ extern char **environ;
  #include <mib.h>
 #endif
 
+#define OIDSIZE(p) (sizeof(p)/sizeof(oid))
+
 void snmp_init(int host_id) {
 	char cactid_session[10];
 
@@ -94,54 +96,62 @@ void snmp_host_init(host_t *current_host) {
 	    session.securityName = strdup(current_host->snmpv3_auth_username);
 	    session.securityNameLen = strlen(session.securityName);
 
+		session.securityAuthKeyLen = USM_AUTH_KU_LEN;
+
 	    /* set the authentication method to MD5 */
-		if (strcmp(current_host->snmpv3_auth_protocol,"MD5")) {
-		    session.securityAuthProto = usmHMACMD5AuthProtocol;
-		}else if (strcmp(current_host->snmpv3_auth_protocol,"SHA")){
-		    session.securityAuthProto = usmHMACSHA1AuthProtocol;
+		if (!strcmp(current_host->snmpv3_auth_protocol,"MD5")) {
+		    session.securityAuthProto = snmp_duplicate_objid(usmHMACMD5AuthProtocol, OIDSIZE(usmHMACMD5AuthProtocol));
+		    session.securityAuthProtoLen = OIDSIZE(usmHMACMD5AuthProtocol);
+		}else if (!strcmp(current_host->snmpv3_auth_protocol,"SHA")){
+		    session.securityAuthProto = snmp_duplicate_objid(usmHMACSHA1AuthProtocol, OIDSIZE(usmHMACSHA1AuthProtocol));
+		    session.securityAuthProtoLen = OIDSIZE(usmHMACSHA1AuthProtocol);
 		}else {
 			cacti_log("ERROR: SNMP: Error with SNMPv3 autorization protocol setting.\n");
 		}
-		
-	    session.securityAuthProtoLen = sizeof(session.securityAuthProto)/sizeof(oid);
-	    session.securityAuthKeyLen = USM_AUTH_KU_LEN;
 
-		if (strcmp(current_host->snmpv3_priv_protocol,"DES")) {
-			session.securityPrivProto = usmDESPrivProtocol;
-		} else if (strcmp(current_host->snmpv3_priv_protocol,"[None]")) {
+		if (!strcmp(current_host->snmpv3_priv_protocol,"[None]")) {
 			session.securityPrivProto = usmNoPrivProtocol;
-#ifdef HAVE_AES
-		} else if ((strcmp(current_host->snmpv3_priv_protocol,"AES128"))
-#ifdef SNMP_VALIDATE_ERR
-/* 
-* In Net-SNMP before 5.2, the following symbols exist:
-* usmAES128PrivProtocol, usmAES192PrivProtocol, usmAES256PrivProtocol
-* In an effort to be more standards-compliant, 5.2 removed the last two.
-* As of 5.2, the symbols are:
-* usmAESPrivProtocol, usmAES128PrivProtocol
-* 
-* As we want this extension to compile on both versions, we use the latter
-* symbol on purpose, as it's defined to be the same as the former.
-*/
-		|| ((strcmp(current_host->snmpv3_priv_protocol, "AES"))
-#else
-		) {
-			session.securityPrivProto = usmAES128PrivProtocol;
-		} else if (strcmp(current_host->snmpv3_priv_protocol,"AES192")) {
-			session.securityPrivProto = usmAES192PrivProtocol;
-		} else if (strcmp(current_host->snmpv3_priv_protocol,"AES256")) {
-			session.securityPrivProto = usmAES256PrivProtocol;
-#endif
-#endif
-		}else {			
-			cacti_log("ERROR: SNMP: Error with SNMPv3 privacy protocol setting.\n");
+			session.securityPrivProtoLen = OIDSIZE(usmNoPrivProtocol);
+		}else {
+			if (!strcmp(current_host->snmpv3_priv_protocol,"DES")) {
+				session.securityPrivProto = usmDESPrivProtocol;
+				session.securityPrivProtoLen = OIDSIZE(usmDESPrivProtocol);
+			#ifdef HAVE_AES
+			} else if ((!strcmp(current_host->snmpv3_priv_protocol,"AES128"))
+			#ifdef SNMP_VALIDATE_ERR
+			/* 
+			* In Net-SNMP before 5.2, the following symbols exist:
+			* usmAES128PrivProtocol, usmAES192PrivProtocol, usmAES256PrivProtocol
+			* In an effort to be more standards-compliant, 5.2 removed the last two.
+			* As of 5.2, the symbols are:
+			* usmAESPrivProtocol, usmAES128PrivProtocol
+			* 
+			* As we want this extension to compile on both versions, we use the latter
+			* symbol on purpose, as it's defined to be the same as the former.
+			*/
+			|| ((!strcmp(current_host->snmpv3_priv_protocol, "AES"))
+			#else
+			) {
+				session.securityPrivProto = usmAES128PrivProtocol;
+				session.securityPrivProtoLen = OIDSIZE(usmAES128PrivProtocol);
+			} else if (!strcmp(current_host->snmpv3_priv_protocol,"AES192")) {
+				session.securityPrivProto = usmAES192PrivProtocol;
+				session.securityPrivProtoLen = OIDSIZE(usmAES192PrivProtocol);
+			} else if (!strcmp(current_host->snmpv3_priv_protocol,"AES256")) {
+				session.securityPrivProto = usmAES256PrivProtocol;
+				session.securityPrivProtoLen = OIDSIZE(usmAES256PrivProtocol);
+			#endif
+			#endif
+			}else {			
+				cacti_log("ERROR: SNMP: Error with SNMPv3 privacy protocol setting.\n");
+			}
 		}
-		
-	    session.securityPrivProtoLen = sizeof(session.securityPrivProto)/sizeof(oid);
-	    session.securityPrivKeyLen = USM_PRIV_KU_LEN;
+
+		session.securityPrivProtoLen = sizeof(session.securityPrivProto)/sizeof(oid);
+		session.securityPrivKeyLen = USM_PRIV_KU_LEN;
 
 	    /* set the security level to authenticate, but not encrypted */
-		if (strcmp(current_host->snmpv3_priv_protocol,"[None]")) {
+		if (!strcmp(current_host->snmpv3_priv_protocol,"[None]")) {
 			session.securityLevel = SNMP_SEC_LEVEL_AUTHNOPRIV;
 		}else {
 			session.securityLevel = SNMP_SEC_LEVEL_AUTHPRIV;
@@ -153,17 +163,19 @@ void snmp_host_init(host_t *current_host) {
 						(u_char *) current_host->snmpv3_auth_password,
 						strlen(current_host->snmpv3_auth_password),
 	                    session.securityAuthKey,
-	                    &session.securityAuthKeyLen) != SNMPERR_SUCCESS) {
+	                    &(session.securityAuthKeyLen)) != SNMPERR_SUCCESS) {
 	        cacti_log("ERROR: SNMP: Error generating SNMPv3 Ku from authentication pass phrase.\n");
 		}
 		/* set the privacy key to the correct hashed version */
-	    if (generate_Ku(session.securityAuthProto, 
-						session.securityAuthProtoLen,
-						(u_char *) current_host->snmpv3_auth_password,
-						strlen(current_host->snmpv3_auth_password),
-	                    session.securityPrivKey,
-	                    &session.securityPrivKeyLen) != SNMPERR_SUCCESS) {
-	        cacti_log("ERROR: SNMP: Error generating SNMPv3 Ku from privacy pass phrase.\n");
+		if (strcmp(current_host->snmpv3_priv_protocol,"[None]")) {
+		    if (generate_Ku(session.securityAuthProto, 
+							session.securityAuthProtoLen,
+							(u_char *) current_host->snmpv3_auth_password,
+							strlen(current_host->snmpv3_auth_password),
+	            	        session.securityPrivKey,
+	                	    &session.securityPrivKeyLen) != SNMPERR_SUCCESS) {
+		        cacti_log("ERROR: SNMP: Error generating SNMPv3 Ku from privacy pass phrase.\n");
+			}
 		}
 	}
 
