@@ -88,7 +88,9 @@ function html_graph_end_box() {
    @arg $extra_url_args - extra arguments to append to the url
    @arg $header - html to use as a header */
 function html_graph_area(&$graph_array, $no_graphs_message = "", $extra_url_args = "", $header = "") {
+	global $colors;
 	$i = 0;
+
 	if (sizeof($graph_array) > 0) {
 		if ($header != "") {
 			print $header;
@@ -96,7 +98,7 @@ function html_graph_area(&$graph_array, $no_graphs_message = "", $extra_url_args
 
 		foreach ($graph_array as $graph) {
 			?>
-			<tr bgcolor='#<?php print ($i % 2 == 0 ? "f9f9f9" : "ffffff");?>'>
+			<tr bgcolor='#<?php print ($i % 2 == 0 ? $colors["graph_alternate1"] : $colors["graph_alternate2"]);?>'>
 				<td align='center'>
 					<table width='1' cellpadding='0'>
 						<tr>

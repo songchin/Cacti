@@ -39,21 +39,31 @@ $colors["panel_dark"] = "C5C5C5";
 $colors["header"] = "00438C";
 $colors["header_panel"] = "6d88ad";
 $colors["header_text"] = "ffffff";
+
 $colors["form_background_dark"] = "E1E1E1";
 
 $colors["form_alternate1"] = "F5F5F5";
 $colors["form_alternate2"] = "E5E5E5";
 
+
+/* RRDTool Graph Colors */
 $colors["rrd_canvas"] = "000000";
 $colors["rrd_font"] = "FFFFFF";
 $colors["rrd_back"] = "000000";
 
+/* Main Header Colors */
 $colors["main_background"] = "a9a9a9";
 $colors["main_border"] = "183c8f";
 
+/* Navbar Colors */
 $colors["navbar_background"] = "e9e9e9";
 
+/* Console Colors */
 $colors["console_menu_background"] = "f5f5f5";
+
+/* Graph Menu Colors */
 $colors["graph_menu_background"] = "efefef";
+$colors["graph_alternate1"] = "F5F5F5";
+$colors["graph_alternate2"] = "E5E5E5";
 
 ?>
