@@ -245,6 +245,14 @@ function utilities_view_poller_cache() {
 
 	html_end_box();
 }
+function utilities_rrd_oprhan_detection() {
+}
+
+function utilities_rrd_resize() {
+}
+
+function utilities_rrd_rename() {
+}
 
 function utilities() {
 	global $colors;
@@ -302,6 +310,34 @@ function utilities() {
 			<p>This action will reset the Cacti Log File.  Please note that if you are using the Syslog/Eventlog only, this action will have no effect.</p>
 		</td>
 	</tr>
+
+	<?php html_header(array("RRD File Utilities"), 2);?>
+
+	<tr bgcolor="#<?php print $colors["form_alternate2"];?>">
+		<td class="textArea">
+			<p><a href='utilities.php?action=rrd_resize'>RRD Resize Utility</a></p>
+		</td>
+		<td class="textArea">
+			<p>This action will allow for the resizing of RRD files.  This is helpful if you want additional or less data to be included in these files.</p>
+		</td>
+	</tr>
+	<tr bgcolor="#<?php print $colors["form_alternate2"];?>">
+		<td class="textArea">
+			<p><a href='utilities.php?action=rrd_rename'>RRD Rename Utility</a></p>
+		</td>
+		<td class="textArea">
+			<p>This action will allow for the renaming of RRD files based upon the current naming conventions set for for the data source.</p>
+		</td>
+	</tr>
+	<tr bgcolor="#<?php print $colors["form_alternate2"];?>">
+		<td class="textArea">
+			<p><a href='utilities.php?action=rrd_orphan_detction'>RRD Orphan Detection</a></p>
+		</td>
+		<td class="textArea">
+			<p>This action will search the RRA directory for orphaned RRD files and provide the option to delete them.</p>
+		</td>
+	</tr>
+
 	<?php
 
 	html_end_box();
