@@ -57,6 +57,7 @@ if (read_config_option("auth_method") == "2") {
 /* process login */
 $copy_user = false;
 $user_auth = false;
+$user_enabled = 1;
 if ($action == 'login') {
 
 	switch (read_config_option("auth_method")) {
@@ -143,41 +144,53 @@ if ($action == 'login') {
 
 	/* Process the user  */
 	if (sizeof($user)) {
-		/* make entry in the transactions log */
-		if ($guest_user) {
-			/* We know this is a guest, let's log it so everyone knows,
-			username format is <guest user>(logged in Web Basic or LDAP user>) */
-			$log_username = read_config_option("guest_user") . "(" . $username .")";
+
+		/* is user enabled */
+		$user_enabled = $user["enabled"];
+		if ($user_enabled == "0") {
+			if (read_config_option("auth_method") == "2") {
+				/* Display error */
+				auth_display_custom_error_message("Access Denied, user account disabled.");
+				exit;
+			}
+			$action = "";
 		}else{
-			$log_username = $username;
+
+			/* make entry in the transactions log */
+			if ($guest_user) {
+				/* We know this is a guest, let's log it so everyone knows,
+				username format is <guest user>(logged in Web Basic or LDAP user>) */
+				$log_username = read_config_option("guest_user") . "(" . $username .")";
+			}else{
+				$log_username = $username;
+			}
+			db_execute("insert into user_log (username,user_id,result,ip,time) values('" . $log_username ."'," . $user["id"] . ",1,'" . $_SERVER["REMOTE_ADDR"] . "',NOW())");
+
+			/* set the php session */
+			$_SESSION["sess_user_id"] = $user["id"];
+	
+			/* handle "force change password" */
+			if ($user["must_change_password"] == "on") {
+				$_SESSION["sess_change_password"] = true;
+			}
+
+			/* ok, at the point the user has been sucessfully authenticated; so we must
+			decide what to do next */
+			switch ($user["login_opts"]) {
+				case '1': /* referer */
+					if (sizeof(db_fetch_assoc("select realm_id from user_auth_realm where realm_id=8 and user_id=" . $_SESSION["sess_user_id"])) == 0) {
+						header("Location: graph_view.php");
+					}else{
+						header("Location: " . (isset($_SERVER["HTTP_REFERER"]) ? $_SERVER["HTTP_REFERER"] : "index.php"));
+					}
+					break;
+				case '2': /* default console page */
+					header("Location: index.php"); break;
+				case '3': /* default graph page */
+					header("Location: graph_view.php"); break;
+			}	
+			exit;
 		}
-		db_execute("insert into user_log (username,user_id,result,ip,time) values('" . $log_username ."'," . $user["id"] . ",1,'" . $_SERVER["REMOTE_ADDR"] . "',NOW())");
-
-		/* set the php session */
-		$_SESSION["sess_user_id"] = $user["id"];
-
-		/* handle "force change password" */
-		if ($user["must_change_password"] == "on") {
-			$_SESSION["sess_change_password"] = true;
-		}
-
-		/* ok, at the point the user has been sucessfully authenticated; so we must
-		decide what to do next */
-		switch ($user["login_opts"]) {
-			case '1': /* referer */
-				if (sizeof(db_fetch_assoc("select realm_id from user_auth_realm where realm_id=8 and user_id=" . $_SESSION["sess_user_id"])) == 0) {
-					header("Location: graph_view.php");
-				}else{
-					header("Location: " . (isset($_SERVER["HTTP_REFERER"]) ? $_SERVER["HTTP_REFERER"] : "index.php"));
-				}
-				break;
-			case '2': /* default console page */
-				header("Location: index.php"); break;
-			case '3': /* default graph page */
-				header("Location: graph_view.php"); break;
-		}
-
-		exit;
 	}else{
 		if ((!$guest_user) && ($user_auth)) {
 			/* No guest account defined */
@@ -234,7 +247,15 @@ function auth_display_custom_error_message($message) {
 	<tr>
 		<td colspan="2"><font color="#FF0000"><strong>Invalid User Name/Password Please Retype:</strong></font></td>
 	</tr>
+	<?php }
+	if ($user_enabled == "0") {?>
+	<tr height="10"><td></td></tr>
+	<tr>
+		<td colspan="2"><font color="#FF0000"><strong>User Account Disabled</strong></font></td>
+	</tr>
 	<?php }?>
+
+
 	<tr height="10"><td></td></tr>
 	<tr>
 		<td colspan="2">Please enter your Cacti user name and password below:</td>
