@@ -202,10 +202,10 @@ function utilities_view_syslog() {
 					<?php print $syslog_entry["severity"];?>
 				</td>
 				<td>
-					<?php print $syslog_entry["poller_name"];?>
+					<?php if ($syslog_entry["poller_name"] != "") { print $syslog_entry["poller_name"]; } else { print "SYSTEM"; }?>
 				</td>
 				<td>
-					<?php print $syslog_entry["host"];?>
+					<?php if ($syslog_entry["host"] != "") { print $syslog_entry["host"]; } else { print "SYSTEM"; }?>
 				</td>
 				<td>
 					<?php print $syslog_entry["username"];?>
