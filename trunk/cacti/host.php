@@ -555,18 +555,6 @@ function host_edit() {
 			ON snmp_query_graph.graph_template_id = graph_templates.id
 			WHERE (((snmp_query_graph.name) Is Null)) ORDER BY graph_templates.name");
 
-		$keeper = array();
-		foreach ($available_graph_templates as $item) {
-			if (sizeof(db_fetch_assoc("select id from graph_local where graph_template_id=" .
-					$item["id"] . " and host_id=" . $_GET["id"])) > 0) {
-				/* do nothing */
-			} else {
-				array_push($keeper, $item);
-			}
-		}
-
-		$available_graph_templates = $keeper;
-
 		$i = 0;
 		if (sizeof($selected_graph_templates) > 0) {
 		foreach ($selected_graph_templates as $item) {
@@ -589,7 +577,7 @@ function host_edit() {
 			</tr>
 			<?php
 		}
-		}else{ print "<tr><td><em>No associated graph templates.</em></td></tr>"; }
+		}else{ print "<tr><td bgcolor='#" . $colors["form_alternate1"] . "' colspan=7><em>No associated graph templates.</em></td></tr>"; }
 
 		?>
 		<tr bgcolor="#<?php print $colors["buttonbar_background"];?>">
@@ -672,7 +660,7 @@ function host_edit() {
 			</tr>
 			<?php
 		}
-		}else{ print "<tr><td><em>No associated data queries.</em></td></tr>"; }
+		}else{ print "<tr><td bgcolor='#" . $colors["form_alternate1"] . "' colspan=7><em>No associated data queries.</em></td></tr>"; }
 
 		?>
 		<tr bgcolor="#<?php print $colors["buttonbar_background"];?>">
@@ -815,7 +803,7 @@ function host() {
 		/* put the nav bar on the bottom as well */
 		print $nav;
 	}else{
-		print "<tr><td><em>No Hosts</em></td></tr>";
+		print "<tr><td bgcolor='#" . $colors["form_alternate1"] . "' colspan=7><em>No Hosts</em></td></tr>";
 	}
 	html_end_box(false);
 

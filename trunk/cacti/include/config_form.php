@@ -730,7 +730,6 @@ $fields_host_edit = array(
 		"friendly_name" => "Default Poller",
 		"description" => "Choose the default poller to handle this hosts request.",
 		"value" => "|arg1:poller_id|",
-		"none_value" => "Main Cacti System",
 		"sql" => "select id,name from poller"
 		),
 	"disabled" => array(

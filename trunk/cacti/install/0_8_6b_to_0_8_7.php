@@ -31,7 +31,7 @@ function upgrade_to_0_8_7() {
 	db_install_execute("0.8.7", "ALTER TABLE `host` CHANGE `min_time` `min_time` decimal(9,5) default '99999.99', CHANGE `max_time` `max_time` decimal(9,5) default '0.00000', CHANGE `cur_time` `cur_time` decimal(9,5) default '0.00000', CHANGE `avg_time` `avg_time` decimal(9,5) default '0.00000';");
 
 	/* Host Specific Availability Checking Feature */
-	db_install_execute("0.8.7", "ALTER TABLE `host` ADD `poller_id` smallint(5) unsigned NOT NULL default '0' AFTER `id`;");
+	db_install_execute("0.8.7", "ALTER TABLE `host` ADD `poller_id` smallint(5) unsigned NOT NULL default '1' AFTER `id`;");
 	db_install_execute("0.8.7", "ALTER TABLE `host` ADD `availability_method` smallint(5) unsigned NOT NULL default '1' AFTER `snmp_timeout`;");
 	db_install_execute("0.8.7", "ALTER TABLE `host` ADD `ping_method` smallint(5) unsigned default '' AFTER `availability_method`;");
 	db_install_execute("0.8.7", "ALTER TABLE `poller_item` ADD `availability_method` smallint(5) unsigned NOT NULL default '1' AFTER `snmp_timeout`;");
