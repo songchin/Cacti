@@ -285,7 +285,7 @@ function data_edit() {
 		<?php
 		}
 		}else{
-			print "<tr><td><em>No Output Fields</em></td></tr>";
+			print "<tr><td bgcolor='#" . $colors["form_alternate1"] . "' colspan=4><em>No Output Fields</em></td></tr>";
 		}
 		html_end_box();
 	}
