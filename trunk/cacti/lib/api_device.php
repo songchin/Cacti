@@ -91,7 +91,7 @@ function api_device_save($id, $poller_id, $host_template_id, $description, $host
 			kill_session_var("sess_host_cache_array");
 
 			/* push out relavant fields to data sources using this host */
-			push_out_host($host_id, 0);
+			//push_out_host($host_id, 0);
 
 			/* update title cache for graph and data source */
 			//update_data_source_title_cache_from_host($host_id);
