@@ -204,7 +204,7 @@ if ((read_graph_config_option("default_tree_view_mode") == "2") && ($_REQUEST["a
 
 	<tr>
 		<?php if ((read_graph_config_option("default_tree_view_mode") == "2") && (($_REQUEST["action"] == "tree") || ((isset($_REQUEST["view_type"]) ? $_REQUEST["view_type"] : "") == "tree"))) { ?>
-		<td valign="top" style="padding: 5px; border-right: #aaaaaa 1px solid;" bgcolor='#$colors["graph_menu_background"]' width='200' class="noprint">
+		<td valign="top" style="padding: 5px; border-right: #aaaaaa 1px solid;" bgcolor="#<?php print $colors['graph_menu_background'];?>" width="200" class="noprint">
 			<table border=0 cellpadding=0 cellspacing=0><tr><td><font size=-2><a style="font-size:7pt;text-decoration:none;color:silver" href="http://www.treemenu.net/" target=_blank></a></font></td></tr></table>
 			<?php grow_dhtml_trees(); ?>
 			<script type="text/javascript">initializeDocument();</script>
@@ -223,4 +223,4 @@ if ((read_graph_config_option("default_tree_view_mode") == "2") && ($_REQUEST["a
 			<?php } ?>
 		</td>
 		<?php } ?>
-		<td valign="top">
+			<td valign="top">
