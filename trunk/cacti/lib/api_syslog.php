@@ -224,6 +224,42 @@ function api_syslog_clear() {
 	db_execute("REPLACE INTO settings (name,value) VALUES('syslog_status','active')");
 }
 
+/* api_syslog_color - Set's the foreground and background color of the syslog entries.
+   @arg $severity - The log item severity. */
+function api_syslog_color($severity) {
+	global $colors	;
+
+	switch ($severity) {
+		case "EMERGENCY":
+			return print "<tr bgcolor='#" . $colors["syslog_emergency_background"] . "'>\n";
+			break;
+		case "ALERT":
+			return print "<tr bgcolor='#" . $colors["syslog_alert_background"] . "'>\n";
+			break;
+		case "CRITICAL":
+			return print "<tr bgcolor='#" . $colors["syslog_critical_background"] . "'>\n";
+			break;
+		case "ERROR":
+			return print "<tr bgcolor='#" . $colors["syslog_error_background"] . "'>\n";
+			break;
+		case "WARNING":
+			return print "<tr bgcolor='#" . $colors["syslog_warning_background"] . "'>\n";
+			break;
+		case "NOTICE":
+			return print "<tr bgcolor='#" . $colors["syslog_notice_background"] . "'>\n";
+			break;
+		case "INFO":
+			return print "<tr bgcolor='#" . $colors["syslog_info_background"] . "'>\n";
+			break;
+		case "DEBUG":
+			return print "<tr bgcolor='#" . $colors["syslog_debug_background"] . "'>\n";
+			break;
+		default:
+			return print "<tr bgcolor='#" . $colors["syslog_info_background"] . "'>\n";
+			break;
+	}
+}
+
 /* api_syslog_export - exports the syslog to a file of the users choosing in CSV format.
    @arg none */
 function api_syslog_export() {

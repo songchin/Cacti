@@ -71,4 +71,14 @@ $colors["graph_type_background"] = "A9B7CB";
 $colors["graph_alternate1"] = "F5F5F5";
 $colors["graph_alternate2"] = "E5E5E5";
 
+/* Cacti Syslog Colors */
+$colors["syslog_debug_background"] = "F9FD4B";
+$colors["syslog_info_background"] = "FFFFFF";
+$colors["syslog_notice_background"] = "C4FD3D";
+$colors["syslog_warning_background"] = "EAAF00";
+$colors["syslog_error_background"] = "EE5019";
+$colors["syslog_critical_background"] = "F51D30";
+$colors["syslog_alert_background"] = "FF0000";
+$colors["syslog_emergency_background"] = "FF00FF";
+
 ?>

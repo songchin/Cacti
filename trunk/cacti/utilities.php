@@ -213,7 +213,7 @@ function utilities_view_syslog() {
 	$i = 0;
 	if (sizeof($syslog_entries) > 0) {
 		foreach ($syslog_entries as $syslog_entry) {
-			form_alternate_row_color($colors["form_alternate1"],$colors["form_alternate2"],$i); $i++;
+			api_syslog_color($syslog_entry["severity"]);
 				?>
 				<td width='10%'>
 					<?php print $syslog_entry["logdate"];?>
@@ -230,7 +230,7 @@ function utilities_view_syslog() {
 				<td width='10%' nowrap>
 					<?php if ($syslog_entry["host"] != "") { print $syslog_entry["host"]; } else { print "SYSTEM"; }?>
 				</td>
-				<td width='50%'>
+				<td width='40%'>
 					<?php print $syslog_entry["message"];?>
 				</td>
 			</tr>
