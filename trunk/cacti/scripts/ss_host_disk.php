@@ -10,10 +10,38 @@ if (!isset($called_by_script_server)) {
 	include_once(dirname(__FILE__) . "/../include/config.php");
 
 	array_shift($_SERVER["argv"]);
-	print call_user_func_array("ss_host_disk", $_SERVER["argv"]);
+
+	$parms = ss_host_disk_parms($_SERVER["argv"]);
+
+	print call_user_func_array("ss_host_disk", $parms);
 }
 
-function ss_host_disk($hostname, $snmp_community, $snmp_version, $snmpv3_auth_username, $snmpv3_auth_password, $snmpv3_auth_protocol, $snmpv3_priv_passphrase, $snmpv3_priv_protocol, $host_id, $cmd, $arg1 = "", $arg2 = "", $snmp_port = 161, $snmp_timeout = 500) {
+function ss_host_disk_parms($parms) {
+	if ($parms[1] == 3) {
+		$newparms[0] = $parms[1]; /* hostname */
+		$newparms[1] = $parms[2]; /* snmp version */
+		$newparms[2] = "";
+		for($i=2;$i<sizeof($parms);$i++) {
+			$newparms[$i+1] = $parms[$i];
+		}
+	}else{
+		$newparms[0] = $parms[0];
+		$newparms[1] = $parms[1]; /* snmp version */
+		$newparms[2] = $parms[2];
+		$newparms[3] = "";
+		$newparms[4] = "";
+		$newparms[5] = "";
+		$newparms[6] = "";
+		$newparms[7] = "";
+		for($i=3;$i<sizeof($parms);$i++) {
+			$newparms[$i+5] = $parms[$i];
+		}
+	}
+
+	return $newparms;
+}
+
+function ss_host_disk($hostname, $snmp_version, $snmp_community, $snmpv3_auth_username, $snmpv3_auth_password, $snmpv3_auth_protocol, $snmpv3_priv_passphrase, $snmpv3_priv_protocol, $host_id, $cmd, $arg1 = "", $arg2 = "", $snmp_port = 161, $snmp_timeout = 500) {
 	$oids = array(
 		"total" => ".1.3.6.1.2.1.25.2.3.1.5",
 		"used" => ".1.3.6.1.2.1.25.2.3.1.6",
