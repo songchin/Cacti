@@ -116,13 +116,10 @@ $ninety_fifth_cache = array();
 
 /* variable_ninety_fifth_percentile - given a 95th percentile variable, calculate the 95th percentile
      and format it for display on the graph
-   @arg $regexp_match_array - the array that contains each argument in the 95th percentile variable. it
-     should be formatted like so:
-       $arr[0] // full variable string
-       $arr[1] // bits or bytes
-       $arr[2] // power of 10 divisor
-       $arr[3] // current, total, or max
-       $arr[4] // digits of floating point precision
+   @arg $var_scale - variable scale (bytes or bytes)
+   @arg $var_divisor - variable power of 10 divisor (3 = kilo, 6 = mega, etc)
+   @arg $var_type - variable type (current, total, max, total_peak, all_max_current, all_max_current)
+   @arg $var_precision - variable digits of floating point precision
    @arg $graph_item - an array that contains the current graph item
    @arg $graph_items - an array that contains all graph items
    @arg $graph_start - the start time to use for the data calculation. this value can
@@ -132,18 +129,14 @@ $ninety_fifth_cache = array();
    @arg $seconds_between_graph_updates - the number of seconds between each update on the graph which
      varies depending on the RRA in use
    @returns - a string containg the 95th percentile suitable for placing on the graph */
-function variable_ninety_fifth_percentile(&$regexp_match_array, &$graph_item, &$graph_items, $graph_start, $graph_end) {
-	global $ninety_fifth_cache, $graph_item_types;
+function variable_ninety_fifth_percentile($var_scale, $var_divisor, $var_type, $var_precision, &$graph_item, &$graph_items, $graph_start, $graph_end) {
+	global $ninety_fifth_cache;
 
-	if (sizeof($regexp_match_array) == 0) {
-		return 0;
-	}
-
-	if (($regexp_match_array[3] == "current") || ($regexp_match_array[3] == "max")) {
+	if (($var_type == "current") || ($var_type == "max")) {
 		if (!isset($ninety_fifth_cache{$graph_item["local_data_id"]})) {
 			$ninety_fifth_cache{$graph_item["local_data_id"]} = ninety_fifth_percentile($graph_item["local_data_id"], $graph_start, $graph_end);
 		}
-	}elseif ($regexp_match_array[3] == "total") {
+	}elseif (($var_type == "total") || ($var_type == "total_peak") || ($var_type == "all_max_current") || ($var_type == "all_max_peak")) {
 		for ($t=0;($t<count($graph_items));$t++) {
 			if ((!isset($ninety_fifth_cache{$graph_items[$t]["local_data_id"]})) && (!empty($graph_items[$t]["local_data_id"]))) {
 				$ninety_fifth_cache{$graph_items[$t]["local_data_id"]} = ninety_fifth_percentile($graph_items[$t]["local_data_id"], $graph_start, $graph_end);
@@ -154,29 +147,65 @@ function variable_ninety_fifth_percentile(&$regexp_match_array, &$graph_item, &$
 	$ninety_fifth = 0;
 
 	/* format the output according to args passed to the variable */
-	if ($regexp_match_array[3] == "current") {
+	if ($var_type == "current") {
 		$ninety_fifth = $ninety_fifth_cache{$graph_item["local_data_id"]}{$graph_item["data_source_name"]};
-		$ninety_fifth = ($regexp_match_array[1] == "bits") ? $ninety_fifth * 8 : $ninety_fifth;
-		$ninety_fifth /= pow(10,intval($regexp_match_array[2]));
-	}elseif ($regexp_match_array[3] == "total") {
-		for ($t=0;($t<count($graph_items));$t++) {
-			if ((ereg("(AREA|STACK|LINE[123])", $graph_item_types{$graph_items[$t]["graph_type_id"]})) && (!empty($graph_items[$t]["data_template_rrd_id"]))) {
+		$ninety_fifth = ($var_scale == "bits") ? $ninety_fifth * 8 : $ninety_fifth;
+		$ninety_fifth /= pow(10, intval($var_divisor));
+	}elseif ($var_type == "total") {
+		for ($t=0; $t<count($graph_items); $t++) {
+			if ((is_graph_item_type_primary($graph_items[$t]["graph_type_id"])) && (!empty($graph_items[$t]["data_template_rrd_id"]))) {
 				$local_ninety_fifth = $ninety_fifth_cache{$graph_items[$t]["local_data_id"]}{$graph_items[$t]["data_source_name"]};
-				$local_ninety_fifth = ($regexp_match_array[1] == "bits") ? $local_ninety_fifth * 8 : $local_ninety_fifth;
-				$local_ninety_fifth /= pow(10,intval($regexp_match_array[2]));
+				$local_ninety_fifth = ($var_scale == "bits") ? $local_ninety_fifth * 8 : $local_ninety_fifth;
+				$local_ninety_fifth /= pow(10, intval($var_divisor));
 
 				$ninety_fifth += $local_ninety_fifth;
 			}
 		}
-	}elseif ($regexp_match_array[3] == "max") {
+	}elseif ($var_type == "max") {
 		$ninety_fifth = $ninety_fifth_cache{$graph_item["local_data_id"]}["ninety_fifth_percentile_maximum"];
-		$ninety_fifth = ($regexp_match_array[1] == "bits") ? $ninety_fifth * 8 : $ninety_fifth;
-		$ninety_fifth /= pow(10,intval($regexp_match_array[2]));
+		$ninety_fifth = ($var_scale == "bits") ? $ninety_fifth * 8 : $ninety_fifth;
+		$ninety_fifth /= pow(10, intval($var_divisor));
+	}elseif ($var_type == "total_peak") {
+		for ($t=0; $t<count($graph_items); $t++) {
+			if ((is_graph_item_type_primary($graph_items[$t]["graph_type_id"])) && (!empty($graph_items[$t]["data_template_rrd_id"]))) {
+				$local_ninety_fifth = $ninety_fifth_cache{$graph_items[$t]["local_data_id"]}["ninety_fifth_percentile_maximum"];
+				$local_ninety_fifth = ($var_scale == "bits") ? $local_ninety_fifth * 8 : $local_ninety_fifth;
+				$local_ninety_fifth /= pow(10, intval($var_divisor));
+
+				$ninety_fifth += $local_ninety_fifth;
+			}
+		}
+	}elseif ($var_type == "all_max_current") {
+		$ninety_fifth = 0;
+		for ($t=0; $t<count($graph_items); $t++) {
+			if ((is_graph_item_type_primary($graph_items[$t]["graph_type_id"])) && (!empty($graph_items[$t]["data_template_rrd_id"]))) {
+				$local_ninety_fifth = $ninety_fifth_cache{$graph_items[$t]["local_data_id"]}{$graph_items[$t]["data_source_name"]};
+				$local_ninety_fifth = ($var_scale == "bits") ? $local_ninety_fifth * 8 : $local_ninety_fifth;
+				$local_ninety_fifth /= pow(10, intval($var_divisor));
+
+				if ($local_ninety_fifth > $ninety_fifth) {
+					$ninety_fifth = $local_ninety_fifth;
+				}
+			}
+		}
+	}elseif ($var_type == "all_max_peak") {
+		$ninety_fifth = 0;
+		for ($t=0; $t<count($graph_items); $t++) {
+			if ((is_graph_item_type_primary($graph_items[$t]["graph_type_id"])) && (!empty($graph_items[$t]["data_template_rrd_id"]))) {
+				$local_ninety_fifth = $ninety_fifth_cache{$graph_items[$t]["local_data_id"]}["ninety_fifth_percentile_maximum"];
+				$local_ninety_fifth = ($var_scale == "bits") ? $local_ninety_fifth * 8 : $local_ninety_fifth;
+				$local_ninety_fifth /= pow(10, intval($var_divisor));
+
+				if ($local_ninety_fifth > $ninety_fifth) {
+					$ninety_fifth = $local_ninety_fifth;
+				}
+			}
+		}
 	}
 
 	/* determine the floating point precision */
-	if ((isset($regexp_match_array[5])) && (ereg("^[0-9]+$", $regexp_match_array[5]))) {
-		$round_to = $regexp_match_array[5];
+	if ((isset($var_precision)) && (is_numeric($var_precision))) {
+		$round_to = $var_precision;
 	}else{
 		$round_to = 2;
 	}
@@ -190,13 +219,10 @@ $summation_cache = array();
 
 /* variable_bandwidth_summation - given a bandwidth summation variable, calculate the summation
      and format it for display on the graph
-   @arg $regexp_match_array - the array that contains each argument in the bandwidth summation variable. it
-     should be formatted like so:
-       $arr[0] // full variable string
-       $arr[1] // power of 10 divisor or 'auto'
-       $arr[2] // current, total
-       $arr[3] // digits of floating point precision
-       $arr[4] // seconds to perform the calculation for or 'auto'
+   @arg $var_divisor - variable power of 10 divisor (3 = kilo, 6 = mega, etc)
+   @arg $var_type - variable type (current, total, atomic)
+   @arg $var_precision - variable digits of floating point precision
+   @arg $var_timespan - seconds to perform the calculation for or 'auto'
    @arg $graph_item - an array that contains the current graph item
    @arg $graph_items - an array that contains all graph items
    @arg $graph_start - the start time to use for the data calculation. this value can
@@ -209,30 +235,26 @@ $summation_cache = array();
      averaged summation
    @arg $ds_step - how many seconds each period represents
    @returns - a string containg the bandwidth summation suitable for placing on the graph */
-function variable_bandwidth_summation(&$regexp_match_array, &$graph_item, &$graph_items, $graph_start, $graph_end, $rra_step, $ds_step) {
-	global $summation_cache, $graph_item_types;
+function variable_bandwidth_summation($var_divisor, $var_type, $var_precision, $var_timespan, &$graph_item, &$graph_items, $graph_start, $graph_end, $rra_step, $ds_step) {
+	global $summation_cache;
 
-	if (sizeof($regexp_match_array) == 0) {
-		return 0;
-	}
-
-	if (is_numeric($regexp_match_array[4])) {
-		$summation_timespan_start = -$regexp_match_array[4];
+	if (is_numeric($var_timespan)) {
+		$summation_timespan_start = -$var_timespan;
 	}else{
 		$summation_timespan_start = $graph_start;
 	}
 
-	if ($regexp_match_array[2] == "current") {
+	if ($var_type == "current") {
 		if (!isset($summation_cache{$graph_item["local_data_id"]})) {
 			$summation_cache{$graph_item["local_data_id"]} = bandwidth_summation($graph_item["local_data_id"], $summation_timespan_start, $graph_end, $rra_step, $ds_step);
 		}
-	}elseif ($regexp_match_array[2] == "total") {
-		for ($t=0;($t<count($graph_items));$t++) {
+	}elseif ($var_type == "total") {
+		for ($t=0; $t<count($graph_items); $t++) {
 			if ((!isset($summation_cache{$graph_items[$t]["local_data_id"]})) && (!empty($graph_items[$t]["local_data_id"]))) {
 				$summation_cache{$graph_items[$t]["local_data_id"]} = bandwidth_summation($graph_items[$t]["local_data_id"], $summation_timespan_start, $graph_end, $rra_step, $ds_step);
 			}
 		}
-	}elseif ($regexp_match_array[2] == "atomic") {
+	}elseif ($var_type == "atomic") {
 		if (!isset($summation_cache{$graph_item["local_data_id"]})) {
 			$summation_cache{$graph_item["local_data_id"]} = bandwidth_summation($graph_item["local_data_id"], $summation_timespan_start, $graph_end, $rra_step, 1);
 		}
@@ -241,11 +263,11 @@ function variable_bandwidth_summation(&$regexp_match_array, &$graph_item, &$grap
 	$summation = 0;
 
 	/* format the output according to args passed to the variable */
-	if (($regexp_match_array[2] == "current") || ($regexp_match_array[2] == "atomic")) {
+	if (($var_type == "current") || ($var_type == "atomic")) {
 		$summation = $summation_cache{$graph_item["local_data_id"]}{$graph_item["data_source_name"]};
-	}elseif ($regexp_match_array[2] == "total") {
-		for ($t=0;($t<count($graph_items));$t++) {
-			if ((ereg("(AREA|STACK|LINE[123])", $graph_item_types{$graph_items[$t]["graph_type_id"]})) && (!empty($graph_items[$t]["data_template_rrd_id"]))) {
+	}elseif ($var_type == "total") {
+		for ($t=0; $t<count($graph_items); $t++) {
+			if ((is_graph_item_type_primary($graph_items[$t]["graph_type_id"])) && (!empty($graph_items[$t]["data_template_rrd_id"]))) {
 				$local_summation = $summation_cache{$graph_items[$t]["local_data_id"]}{$graph_items[$t]["data_source_name"]};
 
 				$summation += $local_summation;
@@ -253,9 +275,9 @@ function variable_bandwidth_summation(&$regexp_match_array, &$graph_item, &$grap
 		}
 	}
 
-	if (preg_match("/\d+/", $regexp_match_array[1])) {
-		$summation /= pow(10,intval($regexp_match_array[1]));
-	}elseif ($regexp_match_array[1] == "auto") {
+	if (is_numeric($var_divisor)) {
+		$summation /= pow(10, intval($var_divisor));
+	}elseif ($var_divisor == "auto") {
 		if ($summation < 1000) {
 			$summation_label = "bytes";
 		}elseif ($summation < 1000000) {
@@ -274,8 +296,8 @@ function variable_bandwidth_summation(&$regexp_match_array, &$graph_item, &$grap
 	}
 
 	/* determine the floating point precision */
-	if (is_numeric($regexp_match_array[3])) {
-		$round_to = $regexp_match_array[3];
+	if (is_numeric($var_precision)) {
+		$round_to = $var_precision;
 	}else{
 		$round_to = 2;
 	}

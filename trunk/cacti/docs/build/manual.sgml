@@ -3256,7 +3256,7 @@ disk /</userinput></screen>
 			</sect2>
 			<sect2 id="variable_95th_percentile">
 				<title>95th Percentile</title>
-				<screen><userinput>|95:(bits|bytes):[0-9]:(current|total|max):[0-9]|</userinput></screen>
+				<screen><userinput>|95:scale:divisor:type:precision|</userinput></screen>
 				<para>
 					95th percentile is often used by hosting providers to bill customers based on their peak traffic usage while
 					ignoring their top 5 percent. This way if a customer has a fairly consistent traffic pattern and decides to
@@ -3279,19 +3279,31 @@ disk /</userinput></screen>
 						</thead>
 						<tbody>
 							<row>
-								<entry><function>(bits|bytes)</function></entry>
+								<entry><function>scale</function></entry>
 								<entry>Choose whether you want to represent your 95th percentile in bits or bytes. The only valid values for this field are 'bits' and 'bytes'.</entry>
 							</row>
 							<row>
-								<entry><function>[0-9]</function></entry>
+								<entry><function>divisor</function></entry>
 								<entry>This field determines the power of 10 divisor that will be applied to your 95th percentile number. Enter '0' to leave the number alone, '3' for kilo or '6' for mega, etc.</entry>
 							</row>
 							<row>
-								<entry><function>(current|total|max)</function></entry>
-								<entry>You can choose to calculate the 95th percentile based on the current data source or a total of all data sources used on the graph. The only valid values for this field are 'current' and 'total'.</entry>
+								<entry><function>type</function></entry>
+								<entry><para>
+									<emphasis>current</emphasis>: Calculate the 95th percentile for the current data source item selected in the current graph item.
+								</para><para>
+									<emphasis>total</emphasis>: Calculate the 95th percentile for each data source item referenced on the graph and sum the results.
+								</para><para>
+									<emphasis>max</emphasis>: Calculate the 95th percentile for the current data source by choosing the data source item with the greatest value. This makes the most sense for billing purposes.
+								</para><para>
+									<emphasis>total_peak</emphasis>: Calculate the 95th percentile by calculating the <emphasis>max</emphasis> described above for each data source referenced on the graph and sum the results.
+								</para><para>
+									<emphasis>all_max_current</emphasis>: Calculate the 95th percentile for each data source item referenced on the graph and choose the result with the greatest value.
+								</para><para>
+									<emphasis>all_max_peak</emphasis>: Calculate the 95th percentile for each data source referenced on the graph using the <emphasis>max</emphasis> type described above and choose the result with the greatest value.
+								</para></entry>
 							</row>
 							<row>
-								<entry><function>[0-9]</function></entry>
+								<entry><function>precision</function></entry>
 								<entry>Enter the number of digits to use for floating point precision when printing out the final number. The default value for this field is two decimal places.</entry>
 							</row>
 						</tbody>
@@ -3306,7 +3318,7 @@ disk /</userinput></screen>
 			</sect2>
 			<sect2 id="variable_bandwidth_summation">
 				<title>Bandwidth Summation</title>
-				<screen><userinput>|sum:([0-9]|auto):(current|total):([0-9]):([0-9]+|auto)|</userinput></screen>
+				<screen><userinput>|sum:divisor:type:precision:time_offset|</userinput></screen>
 				<para>
 					Bandwidth summation is useful for summing up all values in an RRD file for a given time range. This is typically
 					useful on traffic graphs where you can see a total of all traffic that has gone through an interface in a given
@@ -3329,19 +3341,25 @@ disk /</userinput></screen>
 						</thead>
 						<tbody>
 							<row>
-								<entry><function>([0-9]|auto)</function></entry>
+								<entry><function>divisor</function></entry>
 								<entry>This field determines the power of 10 divisor that will be applied to your number. Enter '0' to leave the number alone, '3' for kilo or '6' for mega, etc. You can also enter 'auto' for this field to have Cacti automatically scale the number and insert the appropriate label.</entry>
 							</row>
 							<row>
-								<entry><function>(current|total)</function></entry>
-								<entry>You can choose to calculate the summation based on the current data source or a total of all data sources used on the graph. The only valid values for this field are 'current' and 'total'.</entry>
+								<entry><function>type</function></entry>
+								<entry><para>
+										<emphasis>current</emphasis>: Calculate the for the current selected data source item.
+									</para><para>
+										<emphasis>total</emphasis>: Calculate the for all data source items referenced on the graph and sum the results.
+									</para><para>
+										<emphasis>atomic</emphasis>: Calculate the for the current selected data source item without interpolating the data in a continuous manner.
+									</para></entry>
 							</row>
 							<row>
-								<entry><function>[0-9]</function></entry>
+								<entry><function>precision</function></entry>
 								<entry>Enter the number of digits to use for floating point precision when printing out the final number. The default value for this field is two decimal places.</entry>
 							</row>
 							<row>
-								<entry><function>([0-9]+|auto)</function></entry>
+								<entry><function>time_offset</function></entry>
 								<entry>Enter the number of seconds in the past to perform the summation calculation for. For instance '86400' for 24 hours, '172800' for 48 hours, etc. You can also enter 'auto' for this field to have Cacti use the graph timespan.</entry>
 							</row>
 						</tbody>

@@ -564,7 +564,7 @@ function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rr
 		$unit_value = "--unit=" . $graph["unit_value"] . RRD_NL;
 	}
 
-	if (ereg("^[0-9]+$", $graph["unit_exponent_value"])) {
+	if (is_numeric($graph["unit_exponent_value"])) {
 		$unit_exponent_value = "--units-exponent=" . $graph["unit_exponent_value"] . RRD_NL;
 	}
 
@@ -677,7 +677,7 @@ function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rr
 	$i = 0;
 	if (sizeof($graph_items > 0)) {
 	foreach ($graph_items as $graph_item) {
-		if ((ereg("(AREA|STACK|LINE[123])", $graph_item_types{$graph_item["graph_type_id"]})) && ($graph_item["data_source_name"] != "")) {
+		if ((is_graph_item_type_primary($graph_item["graph_type_id"])) && ($graph_item["data_source_name"] != "")) {
 			/* use a user-specified ds path if one is entered */
 			$data_source_path = get_data_source_path($graph_item["local_data_id"], true);
 
@@ -741,16 +741,16 @@ function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rr
 			}
 
 			/* 95th percentile */
-			if (preg_match_all("/\|95:(bits|bytes):(\d):(current|total|max)(:(\d))?\|/", $graph_variables[$field_name][$graph_item_id], $matches, PREG_SET_ORDER)) {
+			if (preg_match_all("/\|95:(bits|bytes):(\d):(current|total|max|total_peak|all_max_current|all_max_peak):(\d)?\|/", $graph_variables[$field_name][$graph_item_id], $matches, PREG_SET_ORDER)) {
 				foreach ($matches as $match) {
-					$graph_variables[$field_name][$graph_item_id] = str_replace($match[0], variable_ninety_fifth_percentile($match, $graph_item, $graph_items, $graph_start, $graph_end), $graph_variables[$field_name][$graph_item_id]);
+					$graph_variables[$field_name][$graph_item_id] = str_replace($match[0], variable_ninety_fifth_percentile($match[1], $match[2], $match[3], $match[4], $graph_item, $graph_items, $graph_start, $graph_end), $graph_variables[$field_name][$graph_item_id]);
 				}
 			}
 
 			/* bandwidth summation */
 			if (preg_match_all("/\|sum:(\d|auto):(current|total|atomic):(\d):(\d+|auto)\|/", $graph_variables[$field_name][$graph_item_id], $matches, PREG_SET_ORDER)) {
 				foreach ($matches as $match) {
-					$graph_variables[$field_name][$graph_item_id] = str_replace($match[0], variable_bandwidth_summation($match, $graph_item, $graph_items, $graph_start, $graph_end, $rra["steps"], $ds_step), $graph_variables[$field_name][$graph_item_id]);
+					$graph_variables[$field_name][$graph_item_id] = str_replace($match[0], variable_bandwidth_summation($match[1], $match[2], $match[3], $match[4], $graph_item, $graph_items, $graph_start, $graph_end, $rra["steps"], $ds_step), $graph_variables[$field_name][$graph_item_id]);
 				}
 			}
 		}
@@ -773,7 +773,7 @@ function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rr
 			If you have any additions to this small peice of code, feel free to send them to me. */
 			if ($graph["auto_padding"] == "on") {
 				/* only applies to AREA and STACK */
-				if (ereg("(AREA|STACK|LINE[123])", $graph_item_types{$graph_item["graph_type_id"]})) {
+				if (is_graph_item_type_primary($graph_item["graph_type_id"])) {
 					$text_format_lengths{$graph_item["data_template_rrd_id"]} = strlen($graph_variables["text_format"][$graph_item_id]);
 
 					if ((strlen($graph_variables["text_format"][$graph_item_id]) > $greatest_text_format) && ($graph_item_types{$graph_item["graph_type_id"]} != "COMMENT")) {
@@ -823,7 +823,7 @@ function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rr
 			if (ereg("ALL_DATA_SOURCES_(NO)?DUPS", $cdef_string)) {
 				$item_count = 0;
 				for ($t=0;($t<count($graph_items));$t++) {
-					if ((ereg("(AREA|STACK|LINE[123])", $graph_item_types{$graph_items[$t]["graph_type_id"]})) && (!empty($graph_items[$t]["data_template_rrd_id"]))) {
+					if ((is_graph_item_type_primary($graph_items[$t]["graph_type_id"])) && (!empty($graph_items[$t]["data_template_rrd_id"]))) {
 						/* if the user screws up CF settings, PHP will generate warnings if left unchecked */
 						if (isset($cf_ds_cache{$graph_items[$t]["data_template_rrd_id"]}[$cf_id])) {
 							$def_name = generate_graph_def_name(strval($cf_ds_cache{$graph_items[$t]["data_template_rrd_id"]}[$cf_id]));
@@ -846,7 +846,7 @@ function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rr
 				$item_count = 0;
 
 				for ($t=0;($t<count($graph_items));$t++) {
-					if ((ereg("(AREA|STACK|LINE[123])", $graph_item_types{$graph_items[$t]["graph_type_id"]})) && (!empty($graph_items[$t]["data_template_rrd_id"])) && ($graph_item["data_source_name"] == $graph_items[$t]["data_source_name"]) && ($graph_item["graph_templates_item_id"] != $graph_items[$t]["graph_templates_item_id"])) {
+					if ((is_graph_item_type_primary($graph_items[$t]["graph_type_id"])) && (!empty($graph_items[$t]["data_template_rrd_id"])) && ($graph_item["data_source_name"] == $graph_items[$t]["data_source_name"]) && ($graph_item["graph_templates_item_id"] != $graph_items[$t]["graph_templates_item_id"])) {
 						/* if the user screws up CF settings, PHP will generate warnings if left unchecked */
 						if (isset($cf_ds_cache{$graph_items[$t]["data_template_rrd_id"]}[$cf_id]) && (!isset($sources_seen{$graph_items[$t]["data_template_rrd_id"]}))) {
 							$def_name = generate_graph_def_name(strval($cf_ds_cache{$graph_items[$t]["data_template_rrd_id"]}[$cf_id]));
@@ -937,7 +937,7 @@ function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rr
 
 		/* most of the calculations have been done above. now we have for print everything out
 		in an RRDTool-friendly fashion */
-		if (ereg("^(AREA|STACK|LINE[123])$", $graph_item_types{$graph_item["graph_type_id"]})) {
+		if (is_graph_item_type_primary($graph_item["graph_type_id"])) {
 			$graph_variables["text_format"][$graph_item_id] = str_replace(":", "\:", $graph_variables["text_format"][$graph_item_id]); /* escape colons */
 			$txt_graph_items .= $graph_item_types{$graph_item["graph_type_id"]} . ":" . $data_source_name . "#" . $graph_item["hex"] . ":" . "\"" . $graph_variables["text_format"][$graph_item_id] . $hardreturn[$graph_item_id] . "\" ";
 		}elseif ($graph_item_types{$graph_item["graph_type_id"]} == "COMMENT") {

@@ -1,5 +1,24 @@
 Documentation of user-contributed code:
 
+2004-11-13: Mike Mitchell [Mike.Mitchell@sas.com]
+  Recently I needed the 95% line in a graph.  We'll be going to a "burstable" circuit soon
+  and the provider will be billing based on the 95% usage.  I'm graphing both the input and
+  the output rates on the same graph.  If I use "total" for the 95% line, the line is the sum
+  of the two 95% rates, which is not what I expected.
+
+  What I think I want is the maximum of the two 95% rates.  I tried "max", but that has to be
+  tied to a particular input.  "max" is the 95% of all the peak values for the sample period
+  for one data input.
+
+  I've modified graph_variables.php and rrd.php to allow different types of 95% aggregations:
+
+    current           current field of one data source
+    total             sum of all 95% values for all data sources
+    max               peak field of one data source
+    total_peak        sum of all 95% peak values for all data sources
+    all_max_current   maximum 95% value over all data sources
+    all_max_peak      maximum 95% peak value over all data sources
+
 2004-10-10: Neptune [mungerts@yahoo.com]
   I made some cumulative Gigabyte graphs and noticed the 'sum' function multiplies the sum by
   the Data Source step - which is great for interpolating a continuous function, but does not
