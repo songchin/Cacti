@@ -324,7 +324,7 @@ function html_get_php_os_icon() {
 	if (file_exists($config["images_path"] . "/os_" . $os . ".gif")) {
 		return "images/os_" . $os . ".gif";
 	} else {
-		return "";
+		return "images/os_cacti.gif";
 	}
 }
 
