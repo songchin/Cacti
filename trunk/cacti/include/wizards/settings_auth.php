@@ -22,18 +22,22 @@
  +-------------------------------------------------------------------------+
 */
 
-function wizard_render() {
-	
-	$wizard="auth";
-	wizard_header($wizard);
+function wizard_render($wizard) {
+		
+	$next_page = wizard_history() + 1;
+
+
+	wizard_header($wizard,"90%");
 
 	wizard_start_area();
 
-	print "Opps, not finished.";
+	print "<br><br><br><b>Previous Page:</b> " . wizard_history("prev") . "<br><b>Current Page:</b> " . wizard_history() . "<br><b>Next Page:</b> " . $next_page . "<br><br><br><br>";
+
+	print "<input type='hidden' name='next_page' value='" . $next_page . "'>\n";
 
 	wizard_end_area();
 
-	wizard_footer(true,false,false,true);
+	wizard_footer(true,false,false,true,"90%");
 
 }
 

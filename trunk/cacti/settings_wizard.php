@@ -64,19 +64,28 @@ $wizard_array = array(
 		),
 	"default" => "general",
 	"intro" => "<b>Welcome to the Settings Wizard</b><br><br>This wizard is designed to help you setup features in Cacti.  Please select the section you would like to setup.",
-	"title" => "Setup Wizard"
+	"title" => "Setup Wizard",
+	"debug" => true
 	);
 
 
-/* Includes */
+/* Wizard processing */
+wizard_process_action();
 
-if (isset($_REQUEST["wizard"])) {
+if (! is_null(wizard_read_var("wizard"))) {
 
 	include_once("include/top_header.php");
 
-	if (wizard_include($_REQUEST["wizard"])) {
+	if (wizard_include(wizard_read_var("wizard"))) {
 		/* wizard_render must exist in the included wizard file.  All actions should occur from there. */
-		wizard_render();
+		if (function_exists("wizard_render")) {
+			wizard_render(wizard_read_var("wizard"));
+		}else{
+			display_custom_error_message("Invalid wizard \"" . $_REQUEST["wizard"] . "\" unable to execute wizard_render function.");
+			wizard_clear_vars();
+		}
+	}else{
+		wizard_clear_vars();
 	}
 
 	include_once("include/bottom_footer.php");
@@ -91,7 +100,7 @@ if (isset($_REQUEST["wizard"])) {
 
 /* 
 #########################################
-# Functions
+# Wizard Functions
 #########################################
 */
 
@@ -118,11 +127,14 @@ function wizard_include($wizard) {
 function wizard_intro() {
 	global $colors, $wizard_array;
 
+	wizard_clear_vars();
+	wizard_history("next","intro");
+
 	/* create html and javascript lists for use in the html output */
 	$javascript = "";
 	$html = "";
 	while (list($field_name, $field_array) = each($wizard_array)) {
-		if (($field_name != "default") && ($field_name != "intro") && ($field_name != "title")) {
+		if (($field_name != "default") && ($field_name != "intro") && ($field_name != "title") && ($field_name != "debug")) {
 			$selected = "";
 			if ($wizard_array["default"] == $field_name) {
 				$selected = " checked";
@@ -155,7 +167,6 @@ function wizard_intro() {
 
 	/* html output */
 	print "<form method='POST'>\n";
-	print "<input type='hidden' name='slide' value='0'>\n";
 	html_start_box("<strong>" . $wizard_array["title"] . "</strong>", "70%", $colors["header_background"], "3", "center", "");
 	wizard_sub_header("Introduction");
 	wizard_start_area();
@@ -190,35 +201,27 @@ function wizard_intro() {
 
 }
 
-function wizard_header($wizard) {
+function wizard_header($wizard,$width = "70%") {
 	global $colors, $wizard_array;
 
 	/* html output */
 	print "<form method='POST'>\n";
-	print "<input type='hidden' name='wizard' value='" . $wizard . "'>\n";
-	if (isset($_REQUEST["slide_prev"])) {
-		print "<input type='hidden' name='slide_prev' value='" . $_REQUEST["slide_prev"] . "'>\n";
-	}
+	html_start_box("<strong>" . $wizard_array[$wizard]["friendly_name"] . " Wizard</strong>", $width, $colors["header_background"], "3", "center", "");
 
-	html_start_box("<strong>" . $wizard_array[$wizard]["friendly_name"] . " Wizard</strong>", "70%", $colors["header_background"], "3", "center", "");
 
 }
 
-function wizard_footer($button_back = true,$button_cancel = false,$button_save = false,$button_next = false) {
-	global $colors;
+function wizard_footer($button_back = true,$button_cancel = false,$button_save = false,$button_next = false, $width = "70%") {
+	global $colors, $wizard_array;
 
 	html_end_box();
 
-	print "\n<table align='center' width='70%' style='background-color: " . $colors['buttonbar_background'] . "; border: 1px solid #" . $colors["buttonbar_border"] . ";'>\n";
+	print "\n<table align='center' width='" . $width . "' style='background-color: " . $colors['buttonbar_background'] . "; border: 1px solid #" . $colors["buttonbar_border"] . ";'>\n";
 	print "\t<tr>\n";
 	print "\t\t<td bgcolor='" . $colors['buttonbar_background'] . "' align='right'>\n";
 
 	if ($button_back) {
-		if (isset($_REQUEST["slide_prev"])) {
-			print "\t\t\t<input type='image' src='" . html_get_theme_images_path("button_back.gif") . "' name='wizard_action' value='back' alt='Back' align='absmiddle'>\n";
-		}else{
-			print "\t\t\t<input type='image' src='" . html_get_theme_images_path("button_back.gif") . "' alt='Back' align='absmiddle' onClick=\"history.back(); return false;\">\n";
-		}
+		print "\t\t\t<input type='image' src='" . html_get_theme_images_path("button_back.gif") . "' name='wizard_action' value='back' alt='Back' align='absmiddle'>\n";
 	}
 	if ($button_cancel) {
 		print "\t\t\t<input type='image' src='" . html_get_theme_images_path("button_cancel2.gif") . "' name='wizard_action' value='cancel' alt='Cancel' align='absmiddle'>\n";
@@ -234,6 +237,9 @@ function wizard_footer($button_back = true,$button_cancel = false,$button_save =
 	print "\t</tr>\n";
 	print "</table>\n";
 	print "</form>\n";
+
+	/* debug output */
+	wizard_print_debug($wizard_array["debug"]);
 
 }
 
@@ -257,6 +263,160 @@ function wizard_end_area() {
 
 	print "\t</td>\n";
 	print "</tr>\n"; 
+
+}
+
+function wizard_read_var($varname) {
+
+	if (isset($_SESSION["wizard_vars"][$varname])) {
+		return $_SESSION["wizard_vars"][$varname];
+	}else{
+		return NULL;
+	}
+
+}
+
+function wizard_erase_var($varname) {
+
+	if (isset($_SESSION["wizard_vars"][$varname])) {
+		unset($_SESSION["wizard_vars"][$varname]);
+	}
+
+}
+
+function wizard_save_var($varname,$value) {
+
+	$_SESSION["wizard_vars"][$varname] = $value;
+
+	if (isset($_SESSION["wizard_vars"][$varname])) {
+		if ($_SESSION["wizard_vars"][$varname] == $value) {
+			return true;
+		}else{
+			return false;
+		}
+	}else{
+		return false;
+	}
+
+}
+
+function wizard_clear_vars() {
+
+	if (isset($_SESSION["wizard_vars"])) {
+		unset($_SESSION["wizard_vars"]);
+	}
+	$_SESSION["wizard_vars"]["page_history"] = array();
+
+}
+
+function wizard_history($action = "current",$page = "") {
+
+	if ($action == "next") {
+		array_push($_SESSION["wizard_vars"]["page_history"],$page);
+		return $page;
+	}elseif ($action == "back") {
+		return array_pop($_SESSION["wizard_vars"]["page_history"]);
+	}elseif ($action == "prev") {
+		$count = count($_SESSION["wizard_vars"]["page_history"]);
+		if ($count > 0) {
+			$count = $count - 2;
+		}
+		if ($count < 0) {
+			return "intro";
+		}
+		return $_SESSION["wizard_vars"]["page_history"][$count];
+	}else{
+		$count = count($_SESSION["wizard_vars"]["page_history"]) - 1;
+		if ($count < 0) {
+			return "intro";
+		}
+		return $_SESSION["wizard_vars"]["page_history"][$count];
+	}
+
+}
+
+function wizard_process_action() {
+
+	/* If the user leaves wizard and returns, prompt to continue */
+	if (isset($_SERVER["HTTP_REFERER"])) {
+		if (basename($_SERVER["HTTP_REFERER"]) != basename(__FILE__)) {
+			if (wizard_history() != "intro") {
+				include_once("include/top_header.php");
+				wizard_continue_prompt();
+				include_once("include/bottom_footer.php");
+			}
+		}
+	}
+
+	/* Process buttons */
+	if (isset($_REQUEST["wizard_action"])) {
+		switch ($_REQUEST["wizard_action"]) {
+			case "next":
+				if (wizard_history() == "intro") {
+					wizard_save_var("wizard",$_REQUEST["wizard"]);
+					wizard_history("next","0");
+				}
+				if (isset($_REQUEST["next_page"])) {
+					wizard_history("next",$_REQUEST["next_page"]);
+				}
+				break;
+
+			case "back":
+				if (wizard_history("prev") == "intro") {
+					wizard_clear_vars();
+				}
+				if (isset($_REQUEST["back_page"])) {
+					wizard_history("next",$_REQUEST["back_page"]);
+				}else{
+					wizard_history("back");
+				}
+				break;
+
+			case "reset":
+				wizard_clear_vars();
+				break;
+		}
+	}
+
+}
+
+function wizard_continue_prompt() {
+	global $colors;	
+
+	html_start_box("<strong>Wizard Continuation</strong>", "50%", $colors["header_background"], "3", "center", "");
+	print "<form method='POST'>\n";
+	wizard_start_area();
+	print "<br><blockquote>It has been detected that you have left the wizard and returned.<br><br>Would you like to continue where you left off?</blockquote><br>";
+	wizard_end_area();
+	html_end_box();
+
+	print "\n<table align='center' width='50%' style='background-color: " . $colors['buttonbar_background'] . "; border: 1px solid #" . $colors["buttonbar_border"] . ";'>\n";
+	print "\t<tr>\n";
+	print "\t\t<td bgcolor='" . $colors['buttonbar_background'] . "' align='right'>\n";
+	print "\t\t\t<input type='image' src='" . html_get_theme_images_path("button_no.gif") . "' name='wizard_action' value='reset' alt='No' align='absmiddle'>\n";
+	print "\t\t\t<input type='image' src='" . html_get_theme_images_path("button_yes.gif") . "' name='wizard_action' value='continue_yes' alt='Yes' align='absmiddle'>\n";
+	print "\t\t</td>\n";
+	print "\t</tr>\n";
+	print "</table>\n";
+	print "</form>\n";
+
+}
+
+function wizard_print_debug($value) {
+
+	if ($value) {
+		print "<br><br><br>";
+		print "<hr noshade>";
+		print "<table border='1' cellpadding='4' cellspacing='0' align='center'>\n";
+		print "<tr><td align='center' colspan='2'><b>WIZARD DEBUG</b></td></tr>\n";
+		print "<tr><td valign='top'><pre>";
+		print "Wizard Session Variables:\n";
+		print_r($_SESSION["wizard_vars"]);
+		print "</pre></td><td valign='top'><pre>";
+		print "\nForm Variables:\n";
+		print_r($_REQUEST);
+		print "</pre></td></tr></table>\n";
+	}
 
 }
 
