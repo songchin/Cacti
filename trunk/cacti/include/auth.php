@@ -24,15 +24,6 @@
  +-------------------------------------------------------------------------+
 */
 
-
-include("./include/config.php");
-
-/* Detect deep linking the remove it */
-if (! isset($_SERVER["HTTP_REFERER"]) && ((strlen($_SERVER["QUERY_STRING"]) > 0) || (sizeof($_POST) > 0))) {
-	/* invalid no referer, but we have a query string or a form post, this is not normal */
-	header("Location: " . basename($_SERVER["PHP_SELF"]));
-}
-
 /* check to see if this is a new installation */
 if (db_fetch_cell("select cacti from version") != $config["cacti_version"]) {
 	header ("Location: install/");
