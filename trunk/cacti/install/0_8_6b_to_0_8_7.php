@@ -88,10 +88,11 @@ function upgrade_to_0_8_7() {
 			db_install_execute("0.8.7", "INSERT INTO settings VALUES ('auth_method','0');");
 		}
 	}
+	db_install_execute("0.8.7", "REPLACE INTO `user_auth_realm` VALUES (18,1);");
+	db_install_execute("0.8.7", "REPLACE INTO `user_auth_realm` VALUES (19,1);");
 	db_install_execute("0.8.7", "DELETE FROM `settings` WHERE name = 'global_auth';");
 	db_install_execute("0.8.7", "DELETE FROM `settings` WHERE name = 'ldap_enabled';");
 	db_install_execute("0.8.7", "UPDATE `settings` SET name = 'user_template' WHERE name = 'ldap_template';");
-
 	db_install_execute("0.8.7", "CREATE TABLE `settings_users` (`user_id` smallint(8) unsigned NOT NULL default '0', `name` varchar(50) NOT NULL default '', `value` varchar(255) NOT NULL default '', PRIMARY KEY  (`user_id`,`name`), KEY `user_id` (`user_id`,`name`) );");
 
 }
