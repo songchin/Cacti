@@ -123,7 +123,7 @@ function rra_edit() {
 		$header_label = "[new]";
 	}
 
-	html_start_box("<strong>Round Robin Archives</strong> $header_label", "98%", $colors["header"], "3", "center", "");
+	html_start_box("<strong>Round Robin Archives</strong> $header_label", "98%", $colors["header_background"], "3", "center", "");
 
 	draw_edit_form(array(
 		"config" => array(),
@@ -138,7 +138,7 @@ function rra_edit() {
 function rra() {
 	global $colors;
 
-	html_start_box("<strong>Round Robin Archives</strong>", "98%", $colors["header"], "3", "center", "rra.php?action=edit");
+	html_start_box("<strong>Round Robin Archives</strong>", "98%", $colors["header_background"], "3", "center", "rra.php?action=edit");
 
 	print "<tr bgcolor='#" . $colors["header_panel"] . "'>";
 		DrawMatrixHeaderItem("Name",$colors["header_text"],1);

@@ -249,7 +249,7 @@ function graph_perms_edit() {
 	<?php
 
 	/* box: graph permissions */
-	html_start_box("<strong>Graph Permissions (By Graph)</strong>", "98%", $colors["header"], "3", "center", "");
+	html_start_box("<strong>Graph Permissions (By Graph)</strong>", "98%", $colors["header_background"], "3", "center", "");
 
 	$graphs = api_user_graph_perms_list("graph", $_GET["id"]);
 
@@ -303,7 +303,7 @@ function graph_perms_edit() {
 	<?php
 
 	/* box: host permissions */
-	html_start_box("<strong>Graph Permissions (By Host)</strong>", "98%", $colors["header"], "3", "center", "");
+	html_start_box("<strong>Graph Permissions (By Host)</strong>", "98%", $colors["header_background"], "3", "center", "");
 
 	$hosts = api_user_graph_perms_list("host", $_GET["id"]);
 
@@ -356,7 +356,7 @@ function graph_perms_edit() {
 	<?php
 
 	/* box: graph template permissions */
-	html_start_box("<strong>Graph Permissions (By Graph Template)</strong>", "98%", $colors["header"], "3", "center", "");
+	html_start_box("<strong>Graph Permissions (By Graph Template)</strong>", "98%", $colors["header_background"], "3", "center", "");
 
 	$graph_templates = api_user_graph_perms_list("graph_template", $_GET["id"]);
 
@@ -409,7 +409,7 @@ function graph_perms_edit() {
 	<?php
 
 	/* box: tree permissions */
-	html_start_box("<strong>Tree Permissions</strong>", "98%", $colors["header"], "3", "center", "");
+	html_start_box("<strong>Tree Permissions</strong>", "98%", $colors["header_background"], "3", "center", "");
 
 	$trees = api_user_graph_perms_list("tree", $_GET["id"]);
 
@@ -482,9 +482,9 @@ function user_realms_edit() {
 	</table>
 	<?php
 
-	html_start_box("", "98%", $colors["header"], "3", "center", "");
+	html_start_box("", "98%", $colors["header_background"], "3", "center", "");
 
-	print "	<tr bgcolor='#" . $colors["header"] . "'>
+	print "	<tr bgcolor='#" . $colors["header_background"] . "'>
 			<td class='textHeaderDark'><strong>Realm Permissions</strong></td>
 			<td width='1%' align='center' bgcolor='#819bc0' style='" . get_checkbox_style() . "'><input type='checkbox' style='margin: 0px;' name='all' title='Select All' onClick='SelectAll(\"section\",this.checked)'></td>\n
 		</tr>\n";
@@ -547,7 +547,7 @@ function graph_settings_edit() {
 	</table>
 	<?php
 
-	html_start_box("<strong>Graph Settings</strong>", "98%", $colors["header"], "3", "center", "");
+	html_start_box("<strong>Graph Settings</strong>", "98%", $colors["header_background"], "3", "center", "");
 
 	/* get user graph settings */
 	$user_settings = api_user_graph_setting_list($_GET["id"]);
@@ -611,7 +611,7 @@ function user_edit() {
 		$header_label = "[new]";
 	}
 
-	html_start_box("<strong>User Management</strong> $header_label", "98%", $colors["header"], "3", "center", "");
+	html_start_box("<strong>User Management</strong> $header_label", "98%", $colors["header_background"], "3", "center", "");
 
 	draw_edit_form(array(
 		"config" => array("form_name" => "chk"),
@@ -664,7 +664,7 @@ function user_edit() {
 function user() {
 	global $user_actions, $colors, $auth_realms;
 
-	html_start_box("<strong>User Management</strong>", "98%", $colors["header"], "3", "center", "user_admin.php?action=user_edit");
+	html_start_box("<strong>User Management</strong>", "98%", $colors["header_background"], "3", "center", "user_admin.php?action=user_edit");
 
 	html_header_checkbox(array("User Name", "Full Name", "Status","Realm", "Default Graph Policy", "Last Login", "Last Login From","Last Password Change"));
 

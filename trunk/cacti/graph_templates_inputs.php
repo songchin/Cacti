@@ -149,7 +149,7 @@ function input_edit() {
 		$graph_template_input = db_fetch_row("select * from graph_template_input where id=" . $_GET["id"]);
 	}
 
-	html_start_box("<strong>Graph Item Inputs</strong> $header_label", "98%", $colors["header"], "3", "center", "");
+	html_start_box("<strong>Graph Item Inputs</strong> $header_label", "98%", $colors["header_background"], "3", "center", "");
 
 	draw_edit_form(array(
 		"config" => array(),

@@ -110,7 +110,7 @@ function utilities_view_logfile() {
 
 	$logcontents = array_reverse($logcontents);
 
-	html_start_box("<strong>View Cacti Log File</strong> [" . sizeof($logcontents) . " Item" . ((sizeof($logcontents) > 0) ? "s" : "") . "]", "98%", $colors["header"], "3", "center", "");
+	html_start_box("<strong>View Cacti Log File</strong> [" . sizeof($logcontents) . " Item" . ((sizeof($logcontents) > 0) ? "s" : "") . "]", "98%", $colors["header_background"], "3", "center", "");
 
 	$i = 0;
 	foreach ($logcontents as $item) {
@@ -171,7 +171,7 @@ function utilities_view_snmp_cache() {
 		and host_snmp_cache.snmp_query_id=snmp_query.id
 		order by host_snmp_cache.host_id,host_snmp_cache.snmp_query_id,host_snmp_cache.snmp_index");
 
-	html_start_box("<strong>View SNMP Cache</strong> [" . sizeof($snmp_cache) . " Item" . ((sizeof($snmp_cache) > 0) ? "s" : "") . "]", "98%", $colors["header"], "3", "center", "");
+	html_start_box("<strong>View SNMP Cache</strong> [" . sizeof($snmp_cache) . " Item" . ((sizeof($snmp_cache) > 0) ? "s" : "") . "]", "98%", $colors["header_background"], "3", "center", "");
 
 	$i = 0;
 	if (sizeof($snmp_cache) > 0) {
@@ -214,7 +214,7 @@ function utilities_view_poller_cache() {
 		where poller_item.local_data_id=data_template_data.local_data_id
 		and data_template_data.local_data_id=data_local.id");
 
-	html_start_box("<strong>View Poller Cache</strong> [" . sizeof($poller_cache) . " Item" . ((sizeof($poller_cache) > 0) ? "s" : "") . "]", "98%", $colors["header"], "3", "center", "");
+	html_start_box("<strong>View Poller Cache</strong> [" . sizeof($poller_cache) . " Item" . ((sizeof($poller_cache) > 0) ? "s" : "") . "]", "98%", $colors["header_background"], "3", "center", "");
 
 	$i = 0;
 	if (sizeof($poller_cache) > 0) {
@@ -257,7 +257,7 @@ function utilities_rrd_rename() {
 function utilities() {
 	global $colors;
 
-	html_start_box("<strong>Cacti System Utilities</strong>", "98%", $colors["header"], "3", "center", "");
+	html_start_box("<strong>Cacti System Utilities</strong>", "98%", $colors["header_background"], "3", "center", "");
 
 	html_header(array("Poller Cache Administration"), 2);
 

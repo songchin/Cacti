@@ -498,7 +498,7 @@ function data_edit() {
 		/* get each INPUT field for this data input source */
 		$fields = db_fetch_assoc("select * from data_input_fields where data_input_id=" . $data["data_input_id"] . " and input_output='in' order by name");
 
-		html_start_box("<strong>Custom Data</strong> [data input: " . db_fetch_cell("select name from data_input where id=" . $data["data_input_id"]) . "]", "98%", $colors["header"], "3", "center", "");
+		html_start_box("<strong>Custom Data</strong> [data input: " . db_fetch_cell("select name from data_input where id=" . $data["data_input_id"]) . "]", "98%", $colors["header_background"], "3", "center", "");
 
 		/* loop through each field found */
 		if (sizeof($fields) > 0) {
@@ -621,7 +621,7 @@ function ds_edit() {
 		<?php
 	}
 
-	html_start_box("<strong>Data Template Selection</strong> $header_label", "98%", $colors["header"], "3", "center", "");
+	html_start_box("<strong>Data Template Selection</strong> $header_label", "98%", $colors["header_background"], "3", "center", "");
 
 	$form_array = array(
 		"data_template_id" => array(
@@ -679,7 +679,7 @@ function ds_edit() {
 	if (!empty($data["data_template_id"])) {
 		$template_data_rrds = db_fetch_assoc("select * from data_template_rrd where local_data_id=" . $_GET["id"] . " order by data_source_name");
 
-		html_start_box("<strong>Supplemental Data Template Data</strong>", "98%", $colors["header"], "3", "center", "");
+		html_start_box("<strong>Supplemental Data Template Data</strong>", "98%", $colors["header_background"], "3", "center", "");
 
 		draw_nontemplated_fields_data_source($data["data_template_id"], $data["local_data_id"], $data, "|field|", "<strong>Data Source Fields</strong>", true, true, 0);
 		draw_nontemplated_fields_data_source_item($data["data_template_id"], $template_data_rrds, "|field|_|id|", "<strong>Data Source Item Fields</strong>", true, true, true, 0);
@@ -691,7 +691,7 @@ function ds_edit() {
 	}
 
 	if (((isset($_GET["id"])) || (isset($_GET["new"]))) && (empty($data["data_template_id"]))) {
-		html_start_box("<strong>Data Source</strong>", "98%", $colors["header"], "3", "center", "");
+		html_start_box("<strong>Data Source</strong>", "98%", $colors["header_background"], "3", "center", "");
 
 		$form_array = array();
 
@@ -769,13 +769,13 @@ function ds_edit() {
 			}
 		}
 
-		html_start_box("", "98%", $colors["header"], "3", "center", "");
+		html_start_box("", "98%", $colors["header_background"], "3", "center", "");
 
 		print "	<tr>
-				<td bgcolor='#" . $colors["header"] . "' class='textHeaderDark'>
+				<td bgcolor='#" . $colors["header_background"] . "' class='textHeaderDark'>
 					<strong>Data Source Item</strong> $header_label
 				</td>
-				<td class='textHeaderDark' align='right' bgcolor='" . $colors["header"] . "'>
+				<td class='textHeaderDark' align='right' bgcolor='" . $colors["header_background"] . "'>
 					" . ((!empty($_GET["id"]) && (empty($data_template["id"]))) ? "<strong><a class='linkOverDark' href='data_sources.php?action=rrd_add&id=" . $_GET["id"] . "'>New</a>&nbsp;</strong>" : "") . "
 				</td>
 			</tr>\n";
@@ -873,7 +873,7 @@ function ds() {
 
 	$host = db_fetch_row("select hostname from host where id=" . $_REQUEST["host_id"]);
 
-	html_start_box("<strong>Data Sources</strong> [host: " . (empty($host["hostname"]) ? "No Host" : $host["hostname"]) . "]", "98%", $colors["header"], "3", "center", "data_sources.php?action=ds_edit&host_id=" . $_REQUEST["host_id"]);
+	html_start_box("<strong>Data Sources</strong> [host: " . (empty($host["hostname"]) ? "No Host" : $host["hostname"]) . "]", "98%", $colors["header_background"], "3", "center", "data_sources.php?action=ds_edit&host_id=" . $_REQUEST["host_id"]);
 
 	include("./include/html/inc_data_source_filter_table.php");
 
@@ -912,12 +912,12 @@ function ds() {
 		order by data_template_data.name_cache,data_local.host_id
 		limit " . (read_config_option("num_rows_data_source")*($_REQUEST["page"]-1)) . "," . read_config_option("num_rows_data_source"));
 
-	html_start_box("", "98%", $colors["header"], "3", "center", "");
+	html_start_box("", "98%", $colors["header_background"], "3", "center", "");
 
 	/* generate page list */
 	$url_page_select = get_page_list($_REQUEST["page"], MAX_DISPLAY_PAGES, read_config_option("num_rows_data_source"), $total_rows, "data_sources.php?filter=" . $_REQUEST["filter"] . "&host_id=" . $_REQUEST["host_id"]);
 
-	$nav = "<tr bgcolor='#" . $colors["header"] . "'>
+	$nav = "<tr bgcolor='#" . $colors["header_background"] . "'>
 			<td colspan='5'>
 				<table width='100%' cellspacing='0' cellpadding='0' border='0'>
 					<tr>

@@ -500,7 +500,7 @@ function item() {
 		$add_text = "";
 	}
 
-	html_start_box("<strong>Graph Items</strong> $header_label", "98%", $colors["header"], "3", "center", $add_text);
+	html_start_box("<strong>Graph Items</strong> $header_label", "98%", $colors["header_background"], "3", "center", $add_text);
 	draw_graph_items_list($template_item_list, "graphs_items.php", "local_graph_id=" . $_GET["id"], (empty($graph_template_id) ? false : true));
 	html_end_box();
 }
@@ -570,7 +570,7 @@ function graph_diff() {
 	<br>
 	<?php
 
-	html_start_box("<strong>Graph Preview</strong>", "98%", $colors["header"], "3", "center", "");
+	html_start_box("<strong>Graph Preview</strong>", "98%", $colors["header_background"], "3", "center", "");
 
 	$graph_item_actions = array("normal" => "", "add" => "+", "delete" => "-");
 
@@ -651,7 +651,7 @@ function graph_diff() {
 
 		/* make the left-hand column blue or red depending on if "add"/"remove" mode is set */
 		if ($mode == "add") {
-			$action_column_color = $colors["header"];
+			$action_column_color = $colors["header_background"];
 			$action_css = "";
 		}elseif ($mode == "delete") {
 			$action_column_color = "C63636";
@@ -777,7 +777,7 @@ function graph_edit() {
 		<?php
 	}
 
-	html_start_box("<strong>Graph Template Selection</strong> $header_label", "98%", $colors["header"], "3", "center", "");
+	html_start_box("<strong>Graph Template Selection</strong> $header_label", "98%", $colors["header_background"], "3", "center", "");
 
 	$form_array = array(
 		"graph_template_id" => array(
@@ -829,7 +829,7 @@ function graph_edit() {
 
 	/* only display the "inputs" area if we are using a graph template for this graph */
 	if (!empty($graphs["graph_template_id"])) {
-		html_start_box("<strong>Supplemental Graph Template Data</strong>", "98%", $colors["header"], "3", "center", "");
+		html_start_box("<strong>Supplemental Graph Template Data</strong>", "98%", $colors["header_background"], "3", "center", "");
 
 		print "<form method='post' action='graphs.php'>\n";
 
@@ -869,7 +869,7 @@ function graph_edit() {
 	}
 
 	if (((isset($_GET["id"])) || (isset($_GET["new"]))) && (empty($graphs["graph_template_id"]))) {
-		html_start_box("<strong>Graph Configuration</strong>", "98%", $colors["header"], "3", "center", "");
+		html_start_box("<strong>Graph Configuration</strong>", "98%", $colors["header_background"], "3", "center", "");
 
 		$form_array = array();
 
@@ -926,7 +926,7 @@ function graph() {
 	load_current_session_value("filter", "sess_graph_filter", "");
 	load_current_session_value("host_id", "sess_graph_host_id", "-1");
 
-	html_start_box("<strong>Graph Management</strong>", "98%", $colors["header"], "3", "center", "graphs.php?action=graph_edit&host_id=" . $_REQUEST["host_id"]);
+	html_start_box("<strong>Graph Management</strong>", "98%", $colors["header_background"], "3", "center", "graphs.php?action=graph_edit&host_id=" . $_REQUEST["host_id"]);
 
 	include("./include/html/inc_graph_filter_table.php");
 
@@ -943,7 +943,7 @@ function graph() {
 		$sql_where .= " and graph_local.host_id=" . $_REQUEST["host_id"];
 	}
 
-	html_start_box("", "98%", $colors["header"], "3", "center", "");
+	html_start_box("", "98%", $colors["header_background"], "3", "center", "");
 
 	$total_rows = db_fetch_cell("select
 		COUNT(graph_templates_graph.id)
@@ -969,7 +969,7 @@ function graph() {
 	/* generate page list */
 	$url_page_select = get_page_list($_REQUEST["page"], MAX_DISPLAY_PAGES, read_config_option("num_rows_graph"), $total_rows, "graphs.php?filter=" . $_REQUEST["filter"] . "&host_id=" . $_REQUEST["host_id"]);
 
-	$nav = "<tr bgcolor='#" . $colors["header"] . "'>
+	$nav = "<tr bgcolor='#" . $colors["header_background"] . "'>
 			<td colspan='4'>
 				<table width='100%' cellspacing='0' cellpadding='0' border='0'>
 					<tr>

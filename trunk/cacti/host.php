@@ -471,7 +471,7 @@ function host_edit() {
 		<?php
 	}
 
-	html_start_box("<strong>Devices</strong> $header_label", "98%", $colors["header"], "3", "center", "");
+	html_start_box("<strong>Devices</strong> $header_label", "98%", $colors["header_background"], "3", "center", "");
 
 	/* preserve the host template id if passed in via a GET variable */
 	if (!empty($_GET["host_template_id"])) {
@@ -486,7 +486,7 @@ function host_edit() {
 	html_end_box();
 
 	if ((isset($_GET["display_dq_details"])) && (isset($_SESSION["debug_log"]["data_query"]))) {
-		html_start_box("<strong>Data Query Debug Information</strong>", "98%", $colors["header"], "3", "center", "");
+		html_start_box("<strong>Data Query Debug Information</strong>", "98%", $colors["header_background"], "3", "center", "");
 
 		print "<tr><td><span style='font-family: monospace;'>" . debug_log_return("data_query") . "</span></td></tr>";
 
@@ -494,7 +494,7 @@ function host_edit() {
 	}
 
 	if (!empty($host["id"])) {
-		html_start_box("<strong>Associated Graph Templates</strong>", "98%", $colors["header"], "3", "center", "");
+		html_start_box("<strong>Associated Graph Templates</strong>", "98%", $colors["header_background"], "3", "center", "");
 
 		html_header(array("Graph Template Name", "Status"), 2);
 
@@ -565,7 +565,7 @@ function host_edit() {
 		<?php
 		html_end_box();
 
-		html_start_box("<strong>Associated Data Queries</strong>", "98%", $colors["header"], "3", "center", "");
+		html_start_box("<strong>Associated Data Queries</strong>", "98%", $colors["header_background"], "3", "center", "");
 
 		html_header(array("Data Query Name", "Debugging", "Re-Index Method", "Status"), 2);
 
@@ -674,7 +674,7 @@ function host() {
 	load_current_session_value("filter", "sess_device_filter", "");
 	load_current_session_value("host_template_id", "sess_device_host_template_id", "-1");
 
-	html_start_box("<strong>Devices</strong>", "98%", $colors["header"], "3", "center", "host.php?action=edit&host_template_id=" . $_REQUEST["host_template_id"]);
+	html_start_box("<strong>Devices</strong>", "98%", $colors["header_background"], "3", "center", "host.php?action=edit&host_template_id=" . $_REQUEST["host_template_id"]);
 
 	include("./include/html/inc_device_filter_table.php");
 
@@ -691,7 +691,7 @@ function host() {
 		$sql_where .= " and host.host_template_id=" . $_REQUEST["host_template_id"];
 	}
 
-	html_start_box("", "98%", $colors["header"], "3", "center", "");
+	html_start_box("", "98%", $colors["header_background"], "3", "center", "");
 
 	$total_rows = db_fetch_cell("select
 		COUNT(host.id)
@@ -717,7 +717,7 @@ function host() {
 	/* generate page list */
 	$url_page_select = get_page_list($_REQUEST["page"], MAX_DISPLAY_PAGES, read_config_option("num_rows_device"), $total_rows, "host.php?filter=" . $_REQUEST["filter"] . "&host_template_id=" . $_REQUEST["host_template_id"]);
 
-	$nav = "<tr bgcolor='#" . $colors["header"] . "'>
+	$nav = "<tr bgcolor='#" . $colors["header_background"] . "'>
 			<td colspan='7'>
 				<table width='100%' cellspacing='0' cellpadding='0' border='0'>
 					<tr>

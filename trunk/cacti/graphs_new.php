@@ -228,7 +228,7 @@ function host_new_graphs($host_id, $host_template_id, $selected_graphs_array) {
 			if ($form_type == "cg") {
 				$graph_template_id = $form_id1;
 
-				html_start_box("<strong>Create Graph from '" . db_fetch_cell("select name from graph_templates where id=$graph_template_id") . "'", "98%", $colors["header"], "3", "center", "");
+				html_start_box("<strong>Create Graph from '" . db_fetch_cell("select name from graph_templates where id=$graph_template_id") . "'", "98%", $colors["header_background"], "3", "center", "");
 			}elseif ($form_type == "sg") {
 				while (list($form_id2, $form_array3) = each($form_array2)) {
 					$snmp_query_id = $form_id1;
@@ -245,7 +245,7 @@ function host_new_graphs($host_id, $host_template_id, $selected_graphs_array) {
 				}
 
 				/* DRAW: Data Query */
-				html_start_box("<strong>Create $num_graphs Graph" . (($num_graphs>1) ? "s" : "") . " from '" . db_fetch_cell("select name from snmp_query where id=$snmp_query_id") . "'", "98%", $colors["header"], "3", "center", "");
+				html_start_box("<strong>Create $num_graphs Graph" . (($num_graphs>1) ? "s" : "") . " from '" . db_fetch_cell("select name from snmp_query where id=$snmp_query_id") . "'", "98%", $colors["header_background"], "3", "center", "");
 			}
 
 			$data_templates = db_fetch_assoc("select
@@ -415,7 +415,7 @@ function graphs() {
 		$use_javascript = false;
 	}
 
-	html_start_box("<strong>Graph Templates</strong>", "98%", $colors["header"], "3", "center", "");
+	html_start_box("<strong>Graph Templates</strong>", "98%", $colors["header_background"], "3", "center", "");
 
 	print "	<tr bgcolor='#" . $colors["header_panel"] . "'>
 			<td class='textSubHeaderDark'>Graph Template Name</td>
@@ -583,9 +583,9 @@ function graphs() {
 			print "//-->\n</script>\n";
 		}
 
-		print "	<table width='98%' style='background-color: #" . $colors["form_alternate2"] . "; border: 1px solid #" . $colors["header"] . ";' align='center' cellpadding='3' cellspacing='0'>\n
+		print "	<table width='98%' style='background-color: #" . $colors["form_alternate2"] . "; border: 1px solid #" . $colors["header_background"] . ";' align='center' cellpadding='3' cellspacing='0'>\n
 				<tr>
-					<td bgcolor='#" . $colors["header"] . "' colspan='" . ($num_input_fields+1) . "'>
+					<td bgcolor='#" . $colors["header_background"] . "' colspan='" . ($num_input_fields+1) . "'>
 						<table  cellspacing='0' cellpadding='0' width='100%' >
 							<tr>
 								<td class='textHeaderDark'>

@@ -242,7 +242,7 @@ function data_query_item_edit() {
 	$snmp_query = db_fetch_row("select name,xml_path from snmp_query where id=" . $_GET["snmp_query_id"]);
 	$header_label = "[edit: " . $snmp_query["name"] . "]";
 
-	html_start_box("<strong>Associated Graph/Data Templates</strong> $header_label", "98%", $colors["header"], "3", "center", "");
+	html_start_box("<strong>Associated Graph/Data Templates</strong> $header_label", "98%", $colors["header_background"], "3", "center", "");
 
 	draw_edit_form(array(
 		"config" => array(),
@@ -252,7 +252,7 @@ function data_query_item_edit() {
 	html_end_box();
 
 	if (!empty($snmp_query_item["id"])) {
-		html_start_box("<strong>Associated Data Templates</strong>", "98%", $colors["header"], "3", "center", "");
+		html_start_box("<strong>Associated Data Templates</strong>", "98%", $colors["header_background"], "3", "center", "");
 
 		$data_templates = db_fetch_assoc("select
 			data_template.id,
@@ -332,7 +332,7 @@ function data_query_item_edit() {
 
 		html_end_box();
 
-		html_start_box("<strong>Suggested Values</strong>", "98%", $colors["header"], "0", "center", "");
+		html_start_box("<strong>Suggested Values</strong>", "98%", $colors["header_background"], "0", "center", "");
 
 		reset($data_templates);
 
@@ -506,7 +506,7 @@ function data_query_edit() {
 		$header_label = "[new]";
 	}
 
-	html_start_box("<strong>Data Queries</strong> $header_label", "98%", $colors["header"], "3", "center", "");
+	html_start_box("<strong>Data Queries</strong> $header_label", "98%", $colors["header_background"], "3", "center", "");
 
 	draw_edit_form(array(
 		"config" => array(),
@@ -531,7 +531,7 @@ function data_query_edit() {
 		html_end_box();
 
 		if ($xml_file_exists == true) {
-			html_start_box("<strong>Associated Graph Templates</strong>", "98%", $colors["header"], "3", "center", "data_queries.php?action=item_edit&snmp_query_id=" . $snmp_query["id"]);
+			html_start_box("<strong>Associated Graph Templates</strong>", "98%", $colors["header_background"], "3", "center", "data_queries.php?action=item_edit&snmp_query_id=" . $snmp_query["id"]);
 
 			print "	<tr bgcolor='#" . $colors["header_panel"] . "'>
 					<td><span style='color: white; font-weight: bold;'>Name</span></td>
@@ -579,7 +579,7 @@ function data_query_edit() {
 function data_query() {
 	global $colors;
 
-	html_start_box("<strong>Data Input Queries</strong>", "98%", $colors["header"], "3", "center", "data_queries.php?action=edit");
+	html_start_box("<strong>Data Input Queries</strong>", "98%", $colors["header_background"], "3", "center", "data_queries.php?action=edit");
 
 	print "<tr bgcolor='#" . $colors["header_panel"] . "'>";
 		DrawMatrixHeaderItem("Name",$colors["header_text"],1);

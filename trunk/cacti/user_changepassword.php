@@ -69,7 +69,7 @@ function change_password() {
 				}else{
 					/* General error changing password */
 					raise_message(9);
-				}	
+				}
 			}
 		}else{
 			/* error empty fields */
@@ -77,7 +77,7 @@ function change_password() {
 		}
 	}
 
-	include_once("include/top_header.php");	
+	include_once("include/top_header.php");
 	if ($user_realms["18"]["value"] != "1") {
 		/* Access Denied */
 		display_custom_error_message("Access Denied.");
@@ -118,7 +118,7 @@ function change_password_form() {
 	if ($user_realms["18"]["value"] == "1") {
 		if (read_config_option("auth_method") == "1") {
 			/* Builtin auth method, password can be changed */
-			html_start_box("<strong>Change Password</strong>", "98%", $colors["header"], "3", "center", "");
+			html_start_box("<strong>Change Password</strong>", "98%", $colors["header_background"], "3", "center", "");
 			draw_edit_form(array(
 				"config" => array("form_name" => "chk"),
 				"fields" => inject_form_variables($form_fields, (isset($user) ? $user : array()))

@@ -125,7 +125,7 @@ function export() {
 	<form method="post" action="templates_export.php">
 	<?php
 
-	html_start_box("<strong>Export Template</strong> [" . $export_types{$_REQUEST["export_type"]}["name"] . "]", "98%", $colors["header"], "3", "center", "");
+	html_start_box("<strong>Export Template</strong> [" . $export_types{$_REQUEST["export_type"]}["name"] . "]", "98%", $colors["header_background"], "3", "center", "");
 
 	form_alternate_row_color($colors["form_alternate1"],$colors["form_alternate2"],0); ?>
 		<td width="50%">

@@ -371,7 +371,7 @@ function template_edit() {
 		$header_label = "[new]";
 	}
 
-	html_start_box("<strong>Data Templates</strong> $header_label", "98%", $colors["header"], "3", "center", "");
+	html_start_box("<strong>Data Templates</strong> $header_label", "98%", $colors["header_background"], "3", "center", "");
 
 	draw_edit_form(array(
 		"config" => array(),
@@ -380,7 +380,7 @@ function template_edit() {
 
 	html_end_box();
 
-	html_start_box("<strong>Data Source</strong>", "98%", $colors["header"], "3", "center", "");
+	html_start_box("<strong>Data Source</strong>", "98%", $colors["header_background"], "3", "center", "");
 
 	/* make sure 'data source path' doesn't show up for a template... we should NEVER template this field */
 	unset($struct_data_source["data_source_path"]);
@@ -456,13 +456,13 @@ function template_edit() {
 		}
 	}
 
-	html_start_box("", "98%", $colors["header"], "3", "center", "");
+	html_start_box("", "98%", $colors["header_background"], "3", "center", "");
 
 	print "	<tr>
-			<td bgcolor='#" . $colors["header"] . "' class='textHeaderDark'>
+			<td bgcolor='#" . $colors["header_background"] . "' class='textHeaderDark'>
 				<strong>Data Source Item</strong> [" . (isset($template_rrd) ? $template_rrd["data_source_name"] : "") . "]
 			</td>
-			<td class='textHeaderDark' align='right' bgcolor='" . $colors["header"] . "'>
+			<td class='textHeaderDark' align='right' bgcolor='" . $colors["header_background"] . "'>
 				" . (!empty($_GET["id"]) ? "<strong><a class='linkOverDark' href='data_templates.php?action=rrd_add&id=" . $_GET["id"] . "'>New</a>&nbsp;</strong>" : "") . "
 			</td>
 		</tr>\n";
@@ -509,7 +509,7 @@ function template_edit() {
 		/* get each INPUT field for this data input source */
 		$fields = db_fetch_assoc("select * from data_input_fields where data_input_id=" . $template_data["data_input_id"] . " and input_output='in' order by name");
 
-		html_start_box("<strong>Custom Data</strong> [data input: " . db_fetch_cell("select name from data_input where id=" . $template_data["data_input_id"]) . "]", "98%", $colors["header"], "3", "center", "");
+		html_start_box("<strong>Custom Data</strong> [data input: " . db_fetch_cell("select name from data_input where id=" . $template_data["data_input_id"]) . "]", "98%", $colors["header_background"], "3", "center", "");
 
 		/* loop through each field found */
 		if (sizeof($fields) > 0) {
@@ -549,7 +549,7 @@ function template_edit() {
 function template() {
 	global $colors, $ds_actions;
 
-	html_start_box("<strong>Data Templates</strong>", "98%", $colors["header"], "3", "center", "data_templates.php?action=template_edit");
+	html_start_box("<strong>Data Templates</strong>", "98%", $colors["header_background"], "3", "center", "data_templates.php?action=template_edit");
 
 	html_header_checkbox(array("Template Name", "Data Input Method", "Status"));
 

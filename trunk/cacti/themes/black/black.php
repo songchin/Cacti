@@ -36,16 +36,23 @@ $colors["light"] = "000000";
 $colors["alternate"] = "0F0F0F";
 $colors["panel_dark"] = "0F0F0F";
 
-$colors["header"] = "00038C";
-$colors["header_panel"] = "000000";
+$colors["header_background"] = "FF0000";
+$colors["header_panel"] = "FFFFFF";
 $colors["header_text"] = "ffffff";
-$colors["form_background_dark"] = "000000";
 
+/* Form Colors */
+$colors["form_background_dark"] = "000000";
 $colors["form_alternate1"] = "0f0f0f";
 $colors["form_alternate2"] = "000000";
 
 /* Filter Colors */
 $colors["filter_background"] = "000000";
+
+/* Messagebar Colors */
+$colors["messagebar_background"] = "000000";
+
+/* Buttonbar Colors */
+$colors["buttonbar_background"] = "000000";
 
 /* RRDTool Graph Colors */
 $colors["rrd_canvas"] = "000000";

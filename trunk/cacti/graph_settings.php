@@ -104,7 +104,7 @@ function settings() {
 
 	html_graph_start_box(1, true);
 
-	print "<tr bgcolor='#" . $colors["header"] . "'><td colspan='3'><table cellspacing='0' cellpadding='3' width='100%'><tr><td class='textHeaderDark'><strong>Graph Settings</strong></td></tr></table></td></tr>";
+	print "<tr bgcolor='#" . $colors["header_background"] . "'><td colspan='3'><table cellspacing='0' cellpadding='3' width='100%'><tr><td class='textHeaderDark'><strong>Graph Settings</strong></td></tr></table></td></tr>";
 
 	while (list($tab_short_name, $tab_fields) = each($settings_graphs)) {
 		?>

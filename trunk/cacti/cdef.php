@@ -174,7 +174,7 @@ function item_edit() {
 	draw_cdef_preview($_GET["cdef_id"]);
 	html_end_box();
 
-	html_start_box("<strong>CDEF Items</strong> [edit: " . db_fetch_cell("select name from cdef where id=" . $_GET["cdef_id"]) . "]", "98%", $colors["header"], "3", "center", "");
+	html_start_box("<strong>CDEF Items</strong> [edit: " . db_fetch_cell("select name from cdef where id=" . $_GET["cdef_id"]) . "]", "98%", $colors["header_background"], "3", "center", "");
 
 	if (isset($_GET["type_select"])) {
 		$current_type = $_GET["type_select"];
@@ -268,7 +268,7 @@ function cdef_edit() {
 		$header_label = "[new]";
 	}
 
-	html_start_box("<strong>CDEF's</strong> $header_label", "98%", $colors["header"], "3", "center", "");
+	html_start_box("<strong>CDEF's</strong> $header_label", "98%", $colors["header_background"], "3", "center", "");
 
 	draw_edit_form(array(
 		"config" => array(),
@@ -282,7 +282,7 @@ function cdef_edit() {
 		draw_cdef_preview($_GET["id"]);
 		html_end_box();
 
-		html_start_box("<strong>CDEF Items</strong>", "98%", $colors["header"], "3", "center", "cdef.php?action=item_edit&cdef_id=" . $cdef["id"]);
+		html_start_box("<strong>CDEF Items</strong>", "98%", $colors["header_background"], "3", "center", "cdef.php?action=item_edit&cdef_id=" . $cdef["id"]);
 
 		print "<tr bgcolor='#" . $colors["header_panel"] . "'>";
 			DrawMatrixHeaderItem("Item",$colors["header_text"],1);
@@ -323,7 +323,7 @@ function cdef_edit() {
 function cdef() {
 	global $colors;
 
-	html_start_box("<strong>CDEF's</strong>", "98%", $colors["header"], "3", "center", "cdef.php?action=edit");
+	html_start_box("<strong>CDEF's</strong>", "98%", $colors["header_background"], "3", "center", "cdef.php?action=edit");
 
 	print "<tr bgcolor='#" . $colors["header_panel"] . "'>";
 		DrawMatrixHeaderItem("Name",$colors["header_text"],1);

@@ -130,7 +130,7 @@ function import() {
 		kill_session_var("import_debug_info");
 	}
 
-	html_start_box("<strong>Import Templates</strong>", "98%", $colors["header"], "3", "center", "");
+	html_start_box("<strong>Import Templates</strong>", "98%", $colors["header_background"], "3", "center", "");
 
 	form_alternate_row_color($colors["form_alternate1"],$colors["form_alternate2"],0); ?>
 		<td width="50%">

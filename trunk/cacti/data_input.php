@@ -151,7 +151,7 @@ function field_edit() {
 		return;
 	}
 
-	html_start_box("<strong>$header_name Fields</strong> [edit: " . $data_input["name"] . "]", "98%", $colors["header"], "3", "center", "");
+	html_start_box("<strong>$header_name Fields</strong> [edit: " . $data_input["name"] . "]", "98%", $colors["header_background"], "3", "center", "");
 
 	$form_array = array();
 
@@ -208,7 +208,7 @@ function data_edit() {
 		$header_label = "[new]";
 	}
 
-	html_start_box("<strong>Data Input Methods</strong> $header_label", "98%", $colors["header"], "3", "center", "");
+	html_start_box("<strong>Data Input Methods</strong> $header_label", "98%", $colors["header_background"], "3", "center", "");
 
 	draw_edit_form(array(
 		"config" => array(),
@@ -218,7 +218,7 @@ function data_edit() {
 	html_end_box();
 
 	if (!empty($_GET["id"])) {
-		html_start_box("<strong>Input Fields</strong>", "98%", $colors["header"], "3", "center", "data_input.php?action=field_edit&type=in&data_input_id=" . $_GET["id"]);
+		html_start_box("<strong>Input Fields</strong>", "98%", $colors["header_background"], "3", "center", "data_input.php?action=field_edit&type=in&data_input_id=" . $_GET["id"]);
 		print "<tr bgcolor='#" . $colors["header_panel"] . "'>";
 			DrawMatrixHeaderItem("Name",$colors["header_text"],1);
 			DrawMatrixHeaderItem("Found in Input String?",$colors["header_text"],1);
@@ -255,7 +255,7 @@ function data_edit() {
 		}
 		html_end_box();
 
-		html_start_box("<strong>Output Fields</strong>", "98%", $colors["header"], "3", "center", "data_input.php?action=field_edit&type=out&data_input_id=" . $_GET["id"]);
+		html_start_box("<strong>Output Fields</strong>", "98%", $colors["header_background"], "3", "center", "data_input.php?action=field_edit&type=out&data_input_id=" . $_GET["id"]);
 		print "<tr bgcolor='#" . $colors["header_panel"] . "'>";
 			DrawMatrixHeaderItem("Name",$colors["header_text"],1);
 			DrawMatrixHeaderItem("Friendly Name",$colors["header_text"],1);
@@ -296,7 +296,7 @@ function data_edit() {
 function data() {
 	global $colors, $input_types;
 
-	html_start_box("<strong>Data Input Scripts</strong>", "98%", $colors["header"], "3", "center", "data_input.php?action=edit");
+	html_start_box("<strong>Data Input Scripts</strong>", "98%", $colors["header_background"], "3", "center", "data_input.php?action=edit");
 
 	print "<tr bgcolor='#" . $colors["header_panel"] . "'>";
 		DrawMatrixHeaderItem("Name",$colors["header_text"],1);

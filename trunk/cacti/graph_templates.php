@@ -302,11 +302,11 @@ function item() {
 		$header_label = "[edit: " . db_fetch_cell("select name from graph_templates where id=" . $_GET["id"]) . "]";
 	}
 
-	html_start_box("<strong>Graph Template Items</strong> $header_label", "98%", $colors["header"], "3", "center", "graph_templates_items.php?action=item_edit&graph_template_id=" . $_GET["id"]);
+	html_start_box("<strong>Graph Template Items</strong> $header_label", "98%", $colors["header_background"], "3", "center", "graph_templates_items.php?action=item_edit&graph_template_id=" . $_GET["id"]);
 	draw_graph_items_list($template_item_list, "graph_templates_items.php", "graph_template_id=" . $_GET["id"], false);
 	html_end_box();
 
-	html_start_box("<strong>Graph Item Inputs</strong>", "98%", $colors["header"], "3", "center", "graph_templates_inputs.php?action=input_edit&graph_template_id=" . $_GET["id"]);
+	html_start_box("<strong>Graph Item Inputs</strong>", "98%", $colors["header_background"], "3", "center", "graph_templates_inputs.php?action=input_edit&graph_template_id=" . $_GET["id"]);
 
 	print "<tr bgcolor='#" . $colors["header_panel"] . "'>";
 		DrawMatrixHeaderItem("Name",$colors["header_text"],2);
@@ -357,7 +357,7 @@ function template_edit() {
 		$header_label = "[new]";
 	}
 
-	html_start_box("<strong>Template</strong> $header_label", "98%", $colors["header"], "3", "center", "");
+	html_start_box("<strong>Template</strong> $header_label", "98%", $colors["header_background"], "3", "center", "");
 
 	draw_edit_form(array(
 		"config" => array(),
@@ -366,7 +366,7 @@ function template_edit() {
 
 	html_end_box();
 
-	html_start_box("<strong>Graph Template</strong>", "98%", $colors["header"], "3", "center", "");
+	html_start_box("<strong>Graph Template</strong>", "98%", $colors["header_background"], "3", "center", "");
 
 	$form_array = array();
 
@@ -402,7 +402,7 @@ function template_edit() {
 function template() {
 	global $colors, $graph_actions;
 
-	html_start_box("<strong>Graph Templates</strong>", "98%", $colors["header"], "3", "center", "graph_templates.php?action=template_edit");
+	html_start_box("<strong>Graph Templates</strong>", "98%", $colors["header_background"], "3", "center", "graph_templates.php?action=template_edit");
 
 	html_header_checkbox(array("Template Title"));
 

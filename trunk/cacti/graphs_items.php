@@ -184,7 +184,7 @@ function item_edit() {
 
 	$header_label = "[edit graph: " . db_fetch_cell("select title_cache from graph_templates_graph where local_graph_id=" . $_GET["local_graph_id"]) . "]";
 
-	html_start_box("<strong>Graph Items</strong> $header_label", "98%", $colors["header"], "3", "center", "");
+	html_start_box("<strong>Graph Items</strong> $header_label", "98%", $colors["header_background"], "3", "center", "");
 
 	/* by default, select the LAST DS chosen to make everyone's lives easier */
 	if (!empty($_GET["local_graph_id"])) {
