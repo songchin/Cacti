@@ -28,6 +28,8 @@ results in some situations.
 -feature: Add support for the 'total_peak', 'all_max_current', and 'all_max_peak'
 95th percentile types.
 -bug: Corrected user form edit array problem that didn't show the graph options for an edited user
+-feature#0000236: graph settings image link still show up even if user does not have rights
+-feature# 0000163: Link to login as guest
 
 0.8.6
 -bug#0000118: Data source screen UI enhancements (0.8.5).
