@@ -592,7 +592,7 @@ function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rr
 	}
 
 	if (is_numeric($graph["unit_length"])) {
-		$unit_length = "--unit-length=" . $graph["unit_length"] . RRD_NL;
+		$unit_length = "--units-length=" . $graph["unit_length"] . RRD_NL;
 	}
 
 	if (!empty($graph["unit_value"])) {
