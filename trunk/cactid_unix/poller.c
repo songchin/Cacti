@@ -106,94 +106,99 @@ void poll_host(int host_id) {
 
 	db_connect(set.dbdb, &mysql);
 
-	/* get data about this host */
-	result = db_query(&mysql, query2);
-	num_rows = (int)mysql_num_rows(result);
+	if (host_id) {
+		/* get data about this host */
+		result = db_query(&mysql, query2);
+		num_rows = (int)mysql_num_rows(result);
 
-	if (num_rows != 1) {
-		snprintf(logmessage, LOGSIZE, "Host[%i] ERROR: Unknown Host ID", host_id);
-		cacti_log(logmessage);
-		return;
-	}
-
-	row = mysql_fetch_row(result);
-
-	/* populate host structure */
-	host->id = atoi(row[0]);
-	if (row[1] != NULL) snprintf(host->hostname, sizeof(host->hostname), "%s", row[1]);
-	if (row[2] != NULL) {
-        snprintf(host->snmp_community, sizeof(host->snmp_community), "%s", row[2]);
-    } else {
-        snprintf(host->snmp_community, sizeof(host->snmp_community), "%s", "");
-    }
-	host->snmp_version = atoi(row[3]);
-	if (row[4] != NULL) snprintf(host->snmpv3_auth_username, sizeof(host->snmpv3_auth_username), "%s", row[4]);
-	if (row[5] != NULL) snprintf(host->snmpv3_auth_password, sizeof(host->snmpv3_auth_password), "%s", row[5]);
-	if (row[6] != NULL) snprintf(host->snmpv3_auth_protocol, sizeof(host->snmpv3_auth_protocol), "%s", row[6]);
-	if (row[7] != NULL) snprintf(host->snmpv3_priv_passphrase, sizeof(host->snmpv3_priv_passphrase), "%s", row[7]);
-	if (row[8] != NULL) snprintf(host->snmpv3_priv_protocol, sizeof(host->snmpv3_priv_protocol), "%s", row[8]);
-	host->snmp_port = atoi(row[9]);
-	host->snmp_timeout = atoi(row[10]);
-    host->availability_method = atoi(row[11]);
-    host->ping_method = atoi(row[12]);
-	if (row[13] != NULL) host->status = atoi(row[13]);
-	host->status_event_count = atoi(row[14]);
-	snprintf(host->status_fail_date, sizeof(host->status_fail_date), "%s", row[15]);
-	snprintf(host->status_rec_date, sizeof(host->status_rec_date), "%s", row[16]);
-	snprintf(host->status_last_error, sizeof(host->status_last_error), "%s", row[17]);
-	host->min_time = atof(row[18]);
-	host->max_time = atof(row[19]);
-	host->cur_time = atof(row[20]);
-	host->avg_time = atof(row[21]);
-	host->total_polls = atoi(row[22]);
-	host->failed_polls = atoi(row[23]);
-	host->availability = atof(row[24]);
-
-	host->ignore_host = 0;
-
-	/* initialize SNMP */
-	snmp_host_init(host);
-
-	/* perform a check to see if the host is alive by polling it's SysDesc
-	 * if the host down from an snmp perspective, don't poll it.
-	 * function sets the ignore_host bit */
-	if ((host->availability_method == AVAIL_SNMP) && (host->snmp_community == "") || 
-		(host->availability_method == AVAIL_NONE)) {
-		update_host_status(HOST_UP, host, ping, host->availability_method);
-
-		if (set.verbose >= POLLER_VERBOSITY_MEDIUM) {
-			snprintf(logmessage, LOGSIZE, "Host[%i] Availability Checking Disabled for Host '%s'\n", host->id, host->hostname);
+		if (num_rows != 1) {
+			snprintf(logmessage, LOGSIZE, "Host[%i] ERROR: Unknown Host ID", host_id);
 			cacti_log(logmessage);
+			return;
 		}
-	}else{
-		if (ping_host(host, ping) == HOST_UP) {
-			update_host_status(HOST_UP, host, ping, host->availability_method);
+
+		row = mysql_fetch_row(result);
+
+		/* populate host structure */
+		host->ignore_host = 0;
+		host->id = atoi(row[0]);
+		if (row[1] != NULL) snprintf(host->hostname, sizeof(host->hostname), "%s", row[1]);
+		if (row[2] != NULL) {
+			snprintf(host->snmp_community, sizeof(host->snmp_community), "%s", row[2]);
+		} else {
+			snprintf(host->snmp_community, sizeof(host->snmp_community), "%s", "");
+		}
+		host->snmp_version = atoi(row[3]);
+		if (row[4] != NULL) snprintf(host->snmpv3_auth_username, sizeof(host->snmpv3_auth_username), "%s", row[4]);
+		if (row[5] != NULL) snprintf(host->snmpv3_auth_password, sizeof(host->snmpv3_auth_password), "%s", row[5]);
+		if (row[6] != NULL) snprintf(host->snmpv3_auth_protocol, sizeof(host->snmpv3_auth_protocol), "%s", row[6]);
+		if (row[7] != NULL) snprintf(host->snmpv3_priv_passphrase, sizeof(host->snmpv3_priv_passphrase), "%s", row[7]);
+		if (row[8] != NULL) snprintf(host->snmpv3_priv_protocol, sizeof(host->snmpv3_priv_protocol), "%s", row[8]);
+		host->snmp_port = atoi(row[9]);
+		host->snmp_timeout = atoi(row[10]);
+		host->availability_method = atoi(row[11]);
+		host->ping_method = atoi(row[12]);
+		if (row[13] != NULL) host->status = atoi(row[13]);
+		host->status_event_count = atoi(row[14]);
+		snprintf(host->status_fail_date, sizeof(host->status_fail_date), "%s", row[15]);
+		snprintf(host->status_rec_date, sizeof(host->status_rec_date), "%s", row[16]);
+		snprintf(host->status_last_error, sizeof(host->status_last_error), "%s", row[17]);
+		host->min_time = atof(row[18]);
+		host->max_time = atof(row[19]);
+		host->cur_time = atof(row[20]);
+		host->avg_time = atof(row[21]);
+		host->total_polls = atoi(row[22]);
+		host->failed_polls = atoi(row[23]);
+		host->availability = atof(row[24]);
+		
+		/* initialize SNMP */
+		snmp_host_init(host);
+
+		/* perform a check to see if the host is alive by polling it's SysDesc
+		 * if the host down from an snmp perspective, don't poll it.
+		 * function sets the ignore_host bit */
+		if ((host->availability_method == AVAIL_SNMP) && (host->snmp_community == "") || 
+			(host->availability_method == AVAIL_NONE)) {
+			update_host_status(HOST_UP, host, ping, host->availability_method);	
+
+			if (set.verbose >= POLLER_VERBOSITY_MEDIUM) {
+				snprintf(logmessage, LOGSIZE, "Host[%i] Availability Checking Disabled for Host '%s'\n", host->id, host->hostname);
+				cacti_log(logmessage);
+			}
 		}else{
-			host->ignore_host = 1;
-			update_host_status(HOST_DOWN, host, ping, host->availability_method);
+			if (ping_host(host, ping) == HOST_UP) {
+				update_host_status(HOST_UP, host, ping, host->availability_method);
+			}else{
+				host->ignore_host = 1;
+				update_host_status(HOST_DOWN, host, ping, host->availability_method);
+			}
 		}
+
+		/* update host table */
+		snprintf(update_sql, sizeof(update_sql), "update host set status='%i',status_event_count='%i', status_fail_date='%s',status_rec_date='%s',status_last_error='%s',min_time='%f',max_time='%f',cur_time='%f',avg_time='%f',total_polls='%i',failed_polls='%i',availability='%.4f' where id='%i'\n",
+			host->status,
+			host->status_event_count,
+			host->status_fail_date,
+			host->status_rec_date,
+			host->status_last_error,
+			host->min_time,
+			host->max_time,
+			host->cur_time,
+			host->avg_time,
+			host->total_polls,
+			host->failed_polls,
+			host->availability,
+			host->id);
+
+		db_insert(&mysql, update_sql);
+	} else {
+		host->id = 0;
+		host->ignore_host = 0;
 	}
 
-	/* update host table */
-	snprintf(update_sql, sizeof(update_sql), "update host set status='%i',status_event_count='%i', status_fail_date='%s',status_rec_date='%s',status_last_error='%s',min_time='%f',max_time='%f',cur_time='%f',avg_time='%f',total_polls='%i',failed_polls='%i',availability='%.4f' where id='%i'\n",
-		host->status,
-		host->status_event_count,
-		host->status_fail_date,
-		host->status_rec_date,
-		host->status_last_error,
-		host->min_time,
-		host->max_time,
-		host->cur_time,
-		host->avg_time,
-		host->total_polls,
-		host->failed_polls,
-		host->availability,
-		host->id);
 
-	db_insert(&mysql, update_sql);
-
-	/* do the reindex check for this host */
-	if (!host->ignore_host) {
+	/* do the reindex check for this host if not script based */
+	if ((!host->ignore_host) && (host_id)) {
 		reindex = (reindex_t *) malloc(sizeof(reindex_t));
 
 		result = db_query(&mysql, query4);
@@ -401,7 +406,9 @@ void poll_host(int host_id) {
 	}
 
 	/* cleanup memory and prepare for function exit */
-	snmp_host_cleanup(host);
+	if (host_id) {
+		snmp_host_cleanup(host);
+	}
 
 	free(entry);
 	free(host);
@@ -497,7 +504,7 @@ char *exec_poll(host_t *current_host, char *command) {
     	timeout.tv_sec = set.max_script_runtime;
     	timeout.tv_usec = 0;
 
-	cmd_fd = nft_popen((char *)clean_string(command), "r");
+	cmd_fd = nft_popen((char *)command, "r");
 
 	if (set.verbose == POLLER_VERBOSITY_DEBUG) {
 		snprintf(logmessage, LOGSIZE, "Host[%i] DEBUG: The POPEN returned the following File Descriptor %i\n", current_host->id, cmd_fd);

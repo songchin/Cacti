@@ -91,7 +91,7 @@ void snmp_host_init(host_t *current_host) {
 		session.community_len = strlen(current_host->snmp_community);
 	}else {
 	    /* set the SNMPv3 user name */
-	    session.securityName = current_host->snmpv3_auth_username;
+	    session.securityName = strdup(current_host->snmpv3_auth_username);
 	    session.securityNameLen = strlen(session.securityName);
 
 	    /* set the authentication method to MD5 */
