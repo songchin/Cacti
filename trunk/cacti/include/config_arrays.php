@@ -285,8 +285,7 @@ $syslog_control_options = array(
 
 $snmp_implimentations = array(
 	"ucd-snmp" => "UCD-SNMP 4.x",
-	"net-snmp" => "NET-SNMP < 5.2",
-   	"net-snmp-52" => "NET-SNMP >= 5.2");
+	"net-snmp" => "NET-SNMP");
 
 $cdef_item_types = array(
 	1 => "Function",
