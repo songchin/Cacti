@@ -55,7 +55,7 @@ if ((isset($no_http_headers) ? $no_http_headers : false) != true) {
 	header("Pragma: no-cache");
 
 	/* initilize php session */
-	if(ini_get('session.auto_start') == 0) {
+	if(ini_get('session.auto_start') != 1) {
 		session_start();
 	}
 
