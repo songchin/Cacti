@@ -209,22 +209,23 @@ $menu = array(
 		"graphs_new.php" => "New Graphs"
 		),
 	"Management" => array(
+		"tree.php" => "Trees",
 		"graphs.php" => array(
-			"graphs.php" => "Graph Management",
+			"graphs.php" => "Graphs",
 			"cdef.php" => "CDEFs",
 			"color.php" => "Colors",
 			"gprint_presets.php" => "GPRINT Presets"
 			),
-		"tree.php" => "Graph Trees",
+		"host.php" => "Hosts/Devices",
 		"data_sources.php" => array(
 			"data_sources.php" => "Data Sources",
 			"rra.php" => "RRAs"
-			),
-		"host.php" => 'Devices'
+			)
 		),
-	"Collection Methods" => array(
-		"data_queries.php" => "Data Queries",
-		"data_input.php" => "Data Input Methods"
+	"Data Collection" => array(
+		"data_pollers.php" => "Pollers",
+		"data_input.php" => "Scripts",
+		"data_queries.php" => "Queries"
 		),
 	//"Event Management" => array(
 	//	"smtp_servers.php" => "Mail Servers",
@@ -274,6 +275,7 @@ $user_auth_realm_filenames = array(
 	"cdef.php" => 14,
 	"color.php" => 5,
 	"data_input.php" => 2,
+	"data_pollers.php" => 2,
 	"data_sources.php" => 3,
 	"data_templates.php" => 11,
 	"gprint_presets.php" => 5,

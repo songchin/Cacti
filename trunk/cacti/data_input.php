@@ -296,7 +296,7 @@ function data_edit() {
 function data() {
 	global $colors, $input_types;
 
-	html_start_box("<strong>Data Input Methods</strong>", "98%", $colors["header"], "3", "center", "data_input.php?action=edit");
+	html_start_box("<strong>Data Input Scripts</strong>", "98%", $colors["header"], "3", "center", "data_input.php?action=edit");
 
 	print "<tr bgcolor='#" . $colors["header_panel"] . "'>";
 		DrawMatrixHeaderItem("Name",$colors["header_text"],1);
@@ -304,7 +304,7 @@ function data() {
 		DrawMatrixHeaderItem("&nbsp;",$colors["header_text"],1);
 	print "</tr>";
 
-	$data_inputs = db_fetch_assoc("select * from data_input order by name");
+	$data_inputs = db_fetch_assoc("select * from data_input where reserved = '0' order by name");
 
 	$i = 0;
 	if (sizeof($data_inputs) > 0) {

@@ -29,7 +29,7 @@ include("../include/config.php");
 /* allow the upgrade script to run for as long as it needs to */
 ini_set("max_execution_time", "0");
 
-$cacti_versions = array("0.8", "0.8.1", "0.8.2", "0.8.2a", "0.8.3", "0.8.3a", "0.8.4", "0.8.5", "0.8.5a", "0.8.6", "0.8.6a", "0.8.6b");
+$cacti_versions = array("0.8", "0.8.1", "0.8.2", "0.8.2a", "0.8.3", "0.8.3a", "0.8.4", "0.8.5", "0.8.5a", "0.8.6", "0.8.6a", "0.8.6b", "0.8.7");
 
 $old_cacti_version = db_fetch_cell("select cacti from version");
 
@@ -129,6 +129,8 @@ if ($config["cacti_server_os"] == "unix") {
 	}else{
 		$input["path_snmpwalk"]["default"] = "/usr/local/bin/snmpwalk";
 	}
+}elseif ($config["cacti_server_os"] == "win32") {
+	$input["path_snmpwalk"]["default"] = "c:/net-snmp/bin/snmpwalk.exe";
 }
 
 /* snmpget Binary Path */
@@ -144,6 +146,8 @@ if ($config["cacti_server_os"] == "unix") {
 	}else{
 		$input["path_snmpget"]["default"] = "/usr/local/bin/snmpget";
 	}
+}elseif ($config["cacti_server_os"] == "win32") {
+	$input["path_snmpget"]["default"] = "c:/net-snmp/bin/snmpget.exe";
 }
 
 /* log file path */
@@ -269,6 +273,9 @@ if ($_REQUEST["step"] == "4") {
 				/* no database upgrades for 0.8.6a -> 0.8.6b */
 				$_REQUEST["step"] = "3";
 			}
+		}elseif ($cacti_versions[$i] == "0.8.7") {
+			include ("0_8_6b_to_0_8_7.php");
+			upgrade_to_0_8_7();
 		}
 	}
 }

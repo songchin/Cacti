@@ -66,6 +66,41 @@ $fields_color_edit = array(
 		)
 	);
 
+/* file: data_pollers.php, action: edit */
+$fields_data_poller_edit = array(
+	"description" => array(
+		"method" => "textbox",
+		"friendly_name" => "Description",
+		"description" => "Enter a meaningful name for this poller.",
+		"value" => "|arg1:description|",
+		"max_length" => "255",
+		),
+	"hostname" => array(
+		"method" => "textbox",
+		"friendly_name" => "Hostname",
+		"description" => "Enter the IP address or hostname of this poller.",
+		"value" => "|arg1:hostname|",
+		"max_length" => "255",
+		),
+	"active" => array(
+		"method" => "checkbox",
+		"friendly_name" => "Poller Active",
+		"description" => "Whether or not this data poller is to be used.",
+		"value" => "|arg1:active|",
+		"default" => "on",
+		"form_id" => "|arg1:id|"
+		),
+
+	"id" => array(
+		"method" => "hidden_zero",
+		"value" => "|arg1:id|"
+		),
+	"save_component_data_poller" => array(
+		"method" => "hidden",
+		"value" => "1"
+		)
+	);
+
 /* file: data_input.php, action: edit */
 $fields_data_input_edit = array(
 	"name" => array(

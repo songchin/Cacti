@@ -579,7 +579,7 @@ function data_query_edit() {
 function data_query() {
 	global $colors;
 
-	html_start_box("<strong>Data Queries</strong>", "98%", $colors["header"], "3", "center", "data_queries.php?action=edit");
+	html_start_box("<strong>Data Input Queries</strong>", "98%", $colors["header"], "3", "center", "data_queries.php?action=edit");
 
 	print "<tr bgcolor='#" . $colors["header_panel"] . "'>";
 		DrawMatrixHeaderItem("Name",$colors["header_text"],1);
