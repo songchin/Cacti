@@ -156,7 +156,7 @@ if ((read_graph_config_option("default_tree_view_mode") == "2") && ($_REQUEST["a
 					<?php } } ?>
 					<td align="right">
 						<?php if ((isset($_SESSION["sess_user_id"])) && ($using_guest_account == false) && (read_config_option("auth_method") != "0")) { ?>
-						Logged in as <strong><?php print $current_user["username"];?></strong> (<?php if (((read_config_option("auth_method") == "1") || (($current_user["realm"] == "0") && (read_config_option("auth_method") == "3"))) && ($current_user_realms["18"]["value"] == "1")) { ?><a href="user_changepassword.php">Change Password</a>|<?php } ?><a href="logout.php">Logout</a>)&nbsp;
+						Logged in as <strong><?php print $current_user["username"];?></strong> (<?php if ($current_user_realms["19"]["value"] == "1") { ?><a href="user_settings.php">My (User) Settings</a>|<?php } if (((read_config_option("auth_method") == "1") || (($current_user["realm"] == "0") && (read_config_option("auth_method") == "3"))) && ($current_user_realms["18"]["value"] == "1")) { ?><a href="user_changepassword.php">Change Password</a>|<?php } ?><a href="logout.php">Logout</a>)&nbsp;
 						<?php
 						}else{
 							if ((read_config_option("auth_method") != "0") && (read_config_option("auth_method") != "2")) {
