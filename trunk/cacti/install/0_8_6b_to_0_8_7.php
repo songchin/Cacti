@@ -58,7 +58,7 @@ function upgrade_to_0_8_7() {
 	db_install_execute("0.8.7", "ALTER TABLE `host` CHANGE `snmp_username` `snmpv3_auth_username` varchar(50), CHANGE `snmp_password` `snmpv3_auth_password` varchar(50);");
 	db_install_execute("0.8.7", "ALTER TABLE `host` ADD `snmpv3_auth_protocol` varchar(10) AFTER `snmpv3_auth_password`, ADD `snmpv3_priv_passphrase` varchar(200) AFTER `snmpv3_auth_protocol`, ADD `snmpv3_priv_protocol` varchar(10) AFTER `snmpv3_priv_passphrase`;");
 	db_install_execute("0.8.7", "ALTER TABLE `poller_item` CHANGE `snmp_username` `snmpv3_auth_username` varchar(50), CHANGE `snmp_password` `snmpv3_auth_password` varchar(50);");
-	db_install_execute("0.8.7", "ALTER TABLE `poller_item` ADD `snmpv3_auth_protocol` varchar(5) AFTER `snmpv3_auth_password`, ADD `snmpv3_priv_passphrase` varchar(200) AFTER `snmpv3_auth_protocol`, ADD `snmpv3_priv_protocol` varchar(5) AFTER `snmpv3_priv_passphrase`;");
+	db_install_execute("0.8.7", "ALTER TABLE `poller_item` ADD `snmpv3_auth_protocol` varchar(10) AFTER `snmpv3_auth_password`, ADD `snmpv3_priv_passphrase` varchar(200) AFTER `snmpv3_auth_protocol`, ADD `snmpv3_priv_protocol` varchar(10) AFTER `snmpv3_priv_passphrase`;");
 	db_install_execute("0.8.7", "UPDATE `data_input_fields` SET `name` = 'SNMP Authorization Password (v3)' WHERE `name` = 'SNMP Password';");
 	db_install_execute("0.8.7", "UPDATE `data_input_fields` SET `name` = 'SNMP Authorization Username (v3)' WHERE `name` = 'SNMP Username';");
 	db_install_execute("0.8.7", "UPDATE `data_input_fields` SET `data_name` = 'snmpv3_auth_username' WHERE `data_name` = 'snmp_username';");
