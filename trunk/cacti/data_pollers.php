@@ -89,8 +89,15 @@ function poller_delete() {
 	$hosts_polled = db_fetch_assoc("select poller_id from host where poller_id=" . $_GET["id"]);
 
 	if (sizeof($hosts_polled) == 0) {
-		if ((read_config_option("remove_verification") == "") || (isset($_GET["confirm"]))) {
-			api_data_poller_delete($_GET["id"]);
+		if ($_GET["id"] == 1) {
+			$error_message = "This poller is the main system poller.  It can not be deleted.";
+			include("./include/top_header.php");
+			form_message("Can Not Delete Poller", $error_message, "data_pollers.php");
+			include("./include/bottom_footer.php");
+		}else {
+			if ((read_config_option("remove_verification") == "") || (isset($_GET["confirm"]))) {
+				api_data_poller_delete($_GET["id"]);
+			}
 		}
 	} else {
 		$error_message = "The poller selected is in use for " . sizeof($hosts_polled) . " hosts and can not be deleted.  You can not delete a poller when it has hosts associated with it.";
@@ -130,6 +137,11 @@ function pollers() {
 	print "<tr bgcolor='#" . $colors["header_panel_background"] . "'>";
 		DrawMatrixHeaderItem("Name",$colors["header_text"],1);
 		DrawMatrixHeaderItem("Hostname",$colors["header_text"],1);
+		DrawMatrixHeaderItem("Status", $colors["header_text"],1);
+		DrawMatrixHeaderItem("Last Time", $colors["header_text"],1);
+		DrawMatrixHeaderItem("Min Time", $colors["header_text"],1);
+		DrawMatrixHeaderItem("Max Time", $colors["header_text"],1);
+		DrawMatrixHeaderItem("Avg Time", $colors["header_text"],1);
 		DrawMatrixHeaderItem("Active",$colors["header_text"],1);
 		DrawMatrixHeaderItem("Last Update",$colors["header_text"],1);
 		DrawMatrixHeaderItem("&nbsp;",$colors["header_text"],1);
@@ -147,6 +159,21 @@ function pollers() {
 			</td>
 			<td>
 				<?php print $data_poller["hostname"];?></a>
+			</td>
+			<td>
+				<?php print $data_poller["run_state"];?></a>
+			</td>
+			<td>
+				<?php print $data_poller["cur_time"];?></a>
+			</td>
+			<td>
+				<?php print $data_poller["min_time"];?></a>
+			</td>
+			<td>
+				<?php print $data_poller["max_time"];?></a>
+			</td>
+			<td>
+				<?php print $data_poller["avg_time"];?></a>
 			</td>
 			<td>
 				<?php print $data_poller["active"];?></a>

@@ -2087,6 +2087,7 @@ CREATE TABLE poller (
 --
 -- Dumping data for table `poller`
 --
+INSERT INTO poller VALUES (1,'Waiting','On','locahost','Main Cacti System');
 
 
 --

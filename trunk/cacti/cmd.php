@@ -66,7 +66,7 @@ if ( $_SERVER["argc"] == 1 ) {
 	$hosts = db_fetch_assoc("select * from host where disabled = '' order by id");
 	$hosts = array_rekey($hosts,"id",$host_struc);
 	$host_count = sizeof($hosts);
-	$poller_id = 0;
+	$poller_id = 1;
 }else{
 	if ($_SERVER["argc"] == "4") {
 		$print_data_to_stdout = true;

@@ -43,7 +43,7 @@ include_once($config["base_path"] . "/lib/graph_export.php");
 include_once($config["base_path"] . "/lib/rrd.php");
 
 /* determine the poller_id if specified */
-$poller_id = 0;
+$poller_id = 1;
 if ( $_SERVER["argc"] == 2 ) {
 	$poller_id = $_SERVER["argv"][1];
 	if (!is_numeric($poller_id)) {
@@ -63,13 +63,13 @@ $start = $seconds + $micro;
 $num_pollers = 0;
 
 /* poller_id 0 tasks only */
-if ($poller_id == 0) {
+if ($poller_id == 1) {
 	/* get total number of polling items from the database for the specified poller */
-	$num_polling_items = db_fetch_cell("SELECT count(*) FROM poller_item WHERE poller_id=0");
-	$polling_hosts = array_merge(array(0 => array("id" => "0")), db_fetch_assoc("SELECT id FROM host WHERE (disabled = '' AND poller_id=0) ORDER BY id"));
+	$num_polling_items = db_fetch_cell("SELECT count(*) FROM poller_item WHERE poller_id=" . $poller_id);
+	$polling_hosts = array_merge(array(0 => array("id" => "0")), db_fetch_assoc("SELECT id FROM host WHERE (disabled = '' AND poller_id=" . $poller_id . ") ORDER BY id"));
 
 	/* get total number of polling items from the database for all pollers */
-	$all_num_polling_items = db_fetch_cell("SELECT count(*) FROM poller_item WHERE poller_id=0");
+	$all_num_polling_items = db_fetch_cell("SELECT count(*) FROM poller_item WHERE poller_id=" . $poller_id);
 	$all_polling_hosts = array_merge(array(0 => array("id" => "0")), db_fetch_assoc("select id from host where disabled = '' ORDER BY id"));
 
 	/* get the number of active pollers */
@@ -92,8 +92,16 @@ if ($poller_id == 0) {
 	/* allow remote pollers to start */
 	db_execute("UPDATE poller SET run_state='Ready' where active='on'");
 } else {
+	/* verify I am a valid poller */
+	if (sizeof(db_fetch_assoc("SELECT id FROM poller WHERE id = " . $poller_id)) == 0) {
+		print "Poller ID " . $poller_id . " does not exist in this system.\n";
+		cacti_log("ERROR: Poller " . $poller_id . " is attempting to run, but does not exist on this system.");
+		exit;
+	}
+
 	/* wait for signal from main poller to begin polling */
 	while (1) {
+		print "Poller " . $poller_id . " waiting on signal from main poller to begin.\n";
 		$state = db_fetch_cell("SELECT run_state FROM poller where id=" . $poller_id);
 
 		if ($state == "Ready") {
@@ -110,7 +118,7 @@ if ($poller_id == 0) {
 
 	/* get total number of polling items from the database for the specified poller */
 	$num_polling_items = db_fetch_cell("SELECT count(*) FROM poller_item WHERE poller_id='" . $poller_id . "'");
-	$polling_hosts = db_fetch_assoc("SELECT id FROM host WHERE (disabled = '' and poller_id = '" . $poller_id . "') ORDER BY id");
+	$polling_hosts = db_fetch_assoc("SELECT id FROM host WHERE (disabled != 'on' and poller_id = '" . $poller_id . "') ORDER BY id");
 
 	db_execute("UPDATE poller SET run_state='Running' where id=" . $poller_id);
 }
@@ -186,7 +194,6 @@ if ((($num_polling_items > 0) || ($num_pollers > 1)) && (read_config_option("pol
 	/* execute the last process if present */
 	if ($host_count > 1) {
 		$last_host = $item["id"];
-
 		exec_background($command_string, "$extra_args -f=$first_host -l=$last_host -p=$poller_id");
 		$process_file_number++;
 	}
@@ -201,18 +208,19 @@ if ((($num_polling_items > 0) || ($num_pollers > 1)) && (read_config_option("pol
 
 		if (sizeof($polling_items) == $process_file_number) {
 			/* set poller status complete */
-			if ($poller_id != 0) {
-				db_execute("UPDATE poller SET run_state='Complete' WHERE id=" . $poller_id);
+			db_execute("UPDATE poller SET run_state='Complete' WHERE id=" . $poller_id);
+
+			if ($poller_id != 1) {
 				break;
 			} else {
 				/* process RRD output if any exists */
 				process_poller_output($rrdtool_pipe);
 
 				/* wait for other pollers to finish */
-				$total_pollers = sizeof(db_fetch_assoc("SELECT * FROM poller WHERE active='on'"))+1;
+				$active_pollers = sizeof(db_fetch_assoc("SELECT * FROM poller WHERE active='on'"));
 				while (1) {
-					$active_pollers = sizeof(db_fetch_assoc("SELECT * FROM poller WHERE (active='on' AND run_state != 'Complete')"));
-					if ($active_pollers == 0) {
+					$running_pollers = sizeof(db_fetch_assoc("SELECT * FROM poller WHERE (active='on' AND (run_state = 'Running' OR run_state = 'Ready'))"));
+					if ($running_pollers == 0) {
 						process_poller_output($rrdtool_pipe);
 
 						break;
@@ -220,14 +228,14 @@ if ((($num_polling_items > 0) || ($num_pollers > 1)) && (read_config_option("pol
 						process_poller_output($rrdtool_pipe);
 
 						if (read_config_option("log_verbosity") >= POLLER_VERBOSITY_MEDIUM) {
-							print "Poller 0 Complete.  Waiting on " . ($total_pollers - $active_pollers) . " Pollers to complete.\n";
+							print "Main Poller Complete.  Waiting on " . ($active_pollers - $running_pollers) . " Pollers to complete.\n";
 						}
 
 						if (($start + MAX_POLLER_RUNTIME) < time()) {
 							/* close rrdtool if poller is 0 */
-							if ($poller_id == 0) { rrd_close($rrdtool_pipe); }
+							rrd_close($rrdtool_pipe);
 							cacti_log("ERROR: Maximum runtime of " . MAX_POLLER_RUNTIME . " seconds exceeded for Poller_ID " . $poller_id . " - Exiting.", true, "POLLER");
-					   	db_execute("update poller set run_state = 'Timeout' where poller_id=" . $poller_id);
+					   	db_execute("update poller set run_state = 'Timeout' WHERE (active='on' AND run_state != 'Complete')");
 							exit;
 						}
 					}
@@ -266,14 +274,14 @@ if ((($num_polling_items > 0) || ($num_pollers > 1)) && (read_config_option("pol
 			}
 
 			/* process RRD output if any exists */
-			if ($poller_id == 0) {
+			if ($poller_id == 1) {
 				process_poller_output($rrdtool_pipe);
 			}
 
 			/* end the process if the runtime exceeds MAX_POLLER_RUNTIME */
 			if (($start + MAX_POLLER_RUNTIME) < time()) {
 				/* close rrdtool if poller is 0 */
-				if ($poller_id == 0) { rrd_close($rrdtool_pipe); }
+				if ($poller_id == 1) { rrd_close($rrdtool_pipe); }
 				cacti_log("Poller[$poller_id] ERROR: Maximum runtime of " . MAX_POLLER_RUNTIME . " seconds exceeded for Poller_ID " . $poller_id . " - Exiting.", true, "POLLER");
 		   	db_execute("update poller set run_state = 'Timeout' where poller_id=" . $poller_id);
 				exit;
@@ -284,7 +292,7 @@ if ((($num_polling_items > 0) || ($num_pollers > 1)) && (read_config_option("pol
 		}
 	}
 
-	if ($poller_id == 0) { rrd_close($rrdtool_pipe, $rrd_processes); }
+	if ($poller_id == 1) { rrd_close($rrdtool_pipe, $rrd_processes); }
 
 	/* process poller commands */
 	$poller_commands = db_fetch_assoc("select
@@ -343,7 +351,7 @@ if ((($num_polling_items > 0) || ($num_pollers > 1)) && (read_config_option("pol
 			true,"RECACHE");
 	}
 
-	if ($poller_id == 0) {
+	if ($poller_id == 1) {
 		/* graph export */
 		graph_export();
 
@@ -361,10 +369,10 @@ if ((($num_polling_items > 0) || ($num_pollers > 1)) && (read_config_option("pol
 		chdir(read_config_option("path_webroot"));
 	}
 }else{
-	if ($poller_id == 0) {
+	if ($poller_id == 1) {
 		cacti_log("Poller[$poller_id] ERROR: Either there are no pollers enabled, no items in your poller cache or polling is disabled. Make sure you have at least one data source created, your poller is active. If both are true, go to 'Utilities', and select 'Clear Poller Cache'.", true, "POLLER");
 	} else {
-   	db_execute("update poller set run_state = 'Complete' where poller_id=" . $poller_id);
+   	db_execute("update poller set run_state = 'Complete' where id=" . $poller_id);
 		cacti_log("Poller[$poller_id] WARNING: Poller had not items to process.", true, "POLLER");
 	}
 }
