@@ -386,13 +386,13 @@ $settings = array(
 			"default" => "45",
 			"max_length" => "10"
 			),
-		"devices_header" => array(
-			"friendly_name" => "Devices",
+		"hosts_header" => array(
+			"friendly_name" => "Hosts",
 			"method" => "spacer",
 			),
 		"num_rows_device" => array(
 			"friendly_name" => "Rows Per Page",
-			"description" => "The number of rows to display on a single page for devices.",
+			"description" => "The number of rows to display on a single page for Hosts.",
 			"method" => "textbox",
 			"default" => "30",
 			"max_length" => "10"
