@@ -34,7 +34,6 @@ $tabs = array(
 	"poller" => "Poller",
 	"visual" => "Visual",
 	"authentication" => "Authentication",
-	"dbphp" => "Database & PHP",
 	"export" => "Graph Export");
 
 $tabs_graphs = array(
@@ -46,43 +45,6 @@ $tabs_graphs = array(
 
 /* setting information */
 $settings = array(
-	"dbphp" => array(
-		"db_header" => array(
-			"friendly_name" => "Database Settings",
-			"method" => "spacer"
-			),
-		"db_pconnections" => array(
-			"friendly_name" => "Persistent Connections",
-			"description" => "Utilize persistent connections to conserve database resources.",
-			"default" => "on",
-			"method" => "checkbox"
-			),
-		"db_retries" => array(
-			"friendly_name" => "Database Retries",
-			"description" => "The number of retries that Cacti will attempt to access the Cacti database prior to failing.",
-			"method" => "textbox",
-			"default" => "20",
-			"max_length" => "3"
-			),
-		"php_header" => array(
-			"friendly_name" => "PHP Settings",
-			"method" => "spacer"
-			),
-		"max_memory" => array(
-			"friendly_name" => "PHP Maximum Memory",
-			"description" => "Maximum allowed memory for PHP processes in Megabytes",
-			"method" => "textbox",
-			"default" => "32",
-			"max_length" => "30"
-			),
-		"max_execution_time" => array(
-			"friendly_name" => "PHP Graph Timeout",
-			"description" => "Maximum allowed time for a graph to render.  Will stop server from hanging during eroneous graphing operations.",
-			"method" => "textbox",
-			"default" => "10",
-			"max_length" => "10"
-			)
-		),
 	"path" => array(
 		"dependent_header" => array(
 			"friendly_name" => "Required Tools",
@@ -196,6 +158,41 @@ $settings = array(
 					"default" => "on"
 					)
 				),
+			),
+		"db_header" => array(
+			"friendly_name" => "Database Settings",
+			"method" => "spacer"
+			),
+		"db_pconnections" => array(
+			"friendly_name" => "Persistent Connections",
+			"description" => "Utilize persistent connections to conserve database resources.",
+			"default" => "on",
+			"method" => "checkbox"
+			),
+		"db_retries" => array(
+			"friendly_name" => "Database Retries",
+			"description" => "The number of retries that Cacti will attempt to access the Cacti database prior to failing.",
+			"method" => "textbox",
+			"default" => "20",
+			"max_length" => "3"
+			),
+		"php_header" => array(
+			"friendly_name" => "PHP Settings",
+			"method" => "spacer"
+			),
+		"max_memory" => array(
+			"friendly_name" => "PHP Maximum Memory",
+			"description" => "Maximum allowed memory for PHP processes in Megabytes",
+			"method" => "textbox",
+			"default" => "32",
+			"max_length" => "30"
+			),
+		"max_execution_time" => array(
+			"friendly_name" => "PHP Graph Timeout",
+			"description" => "Maximum allowed time for a graph to render.  Will stop server from hanging during eroneous graphing operations.",
+			"method" => "textbox",
+			"default" => "10",
+			"max_length" => "10"
 			),
 		"other_header" => array(
 			"friendly_name" => "Other Defaults",

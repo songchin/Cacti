@@ -240,7 +240,7 @@ $menu = array(
 			"color.php" => "Colors",
 			"gprint_presets.php" => "GPRINT Presets"
 			),
-		"host.php" => "Hosts/Devices",
+		"host.php" => "Devices",
 		"data_sources.php" => array(
 			"data_sources.php" => "Data Sources",
 			"rra.php" => "RRAs"
