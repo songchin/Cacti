@@ -56,9 +56,9 @@ if (read_config_option("auth_method") != "0") {
 $graph_title = get_graph_title($_GET["local_graph_id"]);
 
 if ($_REQUEST["view_type"] == "tree") {
-	print "<table width='98%' style='background-color: #ffffff; border: 1px solid #ffffff;' align='center' cellpadding='3'>";
+	print "<table width='98%' style='background-color: #" . $colors["graph_menu_background"] . "; border: 1px solid #" . $colors["graph_menu_border"] . ";' align='center' cellpadding='3'>";
 }else{
-	print "<br><table width='98%' style='background-color: #f5f5f5; border: 1px solid #bbbbbb;' align='center' cellpadding='3'>";
+	print "<br><table width='98%' style='background-color: #" . $colors["console_menu_background"] . "; border: 1px solid #" . $colors["console_menu_border"] . ";' align='center' cellpadding='3'>";
 }
 
 $rras = get_associated_rras($_GET["local_graph_id"]);

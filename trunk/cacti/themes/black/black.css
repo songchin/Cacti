@@ -1,19 +1,8 @@
-a, a:active, a:visited {
-	color: blue;
-	text-decoration: none;
+/* Cacti Main Defaults */
+body, table, tr, td {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 10px;
 }
-
-a:hover {
-	text-decoration: underline;
-	color: #333333;
-}
-
-.textHeader {
-	background-color: black;
-	font-size: 12px;
-	font-weight: bold;
-}
-
 
 body {
 	color: silver;
@@ -25,36 +14,126 @@ body {
 	font-weight: normal;
 }
 
-font {
-    color:#c7c7c7;
-    text-decoration: none;
-    font-family: Verdana,Helvetica,sans-serif;
-    font-size: 11px;
-    font-weight: normal;
+/* links */
+
+a, a:active, a:visited {
+	color: yellow;
+	text-decoration: none;
 }
 
-H1 {
-    color:#FFFFFF;
-    text-decoration: none;
-    font-family: Verdana,Helvetica,sans-serif;
-    font-size: 20px;
+a:hover {
+	text-decoration: underline;
+	color: red;
 }
 
-td {
-    color:#FFFFFF;
-    text-decoration: none;
-    font-family: Verdana,Helvetica,sans-serif;
-    font-weight: normal;
-    font-size: 10px;
+.linkEditMain, .linkEditMain:visited, .linkEditMain:active {
+	color: yellow;
+	text-decoration: none;
+	font-weight: bold;
 }
 
-tr {
-    color:#FFFFFF;
-    text-decoration: none;
-    font-family: Verdana,Helvetica,sans-serif;
-    font-weight: normal;
-    font-size: 15px;
+.linkEditMain:hover {
+	color: red;
+	text-decoration: underline;
+	font-weight: bold;
 }
+
+.linkOverDark, .linkOverDark:visited, .linkOverDark:active {
+	color: white;
+	text-decoration: none;
+}
+
+.linkOverDark:hover {
+	color: white;
+	text-decoration: underline;
+}
+
+/* text styles */
+
+.textError {
+	font-size: 16px;
+	font-weight: bold;
+	color: red;
+}
+
+.textInfo {
+	font-size: 16px;
+	font-weight: bold;
+	color: white;
+}
+
+.textHeader {
+	font-size: 12px;
+	font-weight: bold;
+}
+
+.textHeaderDark {
+	font-size: 12px;
+	color: #FFFFFF;
+}
+
+.textSubHeaderDark {
+	font-size: 10px;
+	color: #FFFFFF;
+	font-weight: bold;
+}
+
+.textArea {
+	font-size: 12px;
+}
+
+.textEditTitle {
+	font-size: 10px;
+	font-weight: bold;
+}
+
+.textMenuHeader {
+	color: #FFFFFF;
+	background-color: #0F5F0F;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	font-weight: bold;
+}
+
+.textMenuItem {
+	background-color: #0F5F0F;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 10px;
+}
+
+.textMenuSubItem {
+	background-color: #0F5F0F;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 10px;
+}
+
+.textMenuItemSelected {
+	background-color: #000000;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 10px;
+}
+
+.txtErrorTextBox {
+	border: 2px solid #FF0000;
+}
+
+/* tabs */
+td.tab {
+    border-top: 1px solid #999;
+    border-right: 1px solid #666;
+    border-left: 1px solid #999;
+    border-bottom: none;
+    border-radius: 2px;
+    -moz-border-radius: 2px;
+}
+
+table.tabs      {
+    border-top: none;
+    border-right: none;
+    border-left: none;
+    border-bottom: 1px solid #666;
+}
+/* End - Cacti Defaults */
 
 /* Begin - Java Script Row Selection Logic for Layout.js */
 .jsRowSelect {
