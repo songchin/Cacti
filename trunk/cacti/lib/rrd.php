@@ -229,7 +229,7 @@ function rrdtool_function_update($update_cache_array, $rrd_struc) {
 
 		/* create the rrd if one does not already exist */
 		if (!file_exists($rrd_path)) {
-			rrdtool_function_create($rrd_fields["local_data_id"], false, $rrd_struc);
+			rrdtool_function_create($rrd_fields["local_data_id"], false, $rrd_struc[$rrd_num]);
 
 			$create_rrd_file = true;
 		}
