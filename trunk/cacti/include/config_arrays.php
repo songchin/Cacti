@@ -134,7 +134,23 @@ $image_types = array(1 =>
 
 $snmp_versions = array(1 =>
 	"Version 1",
-	"Version 2");
+	"Version 2",
+	"Version 3");
+
+$snmpv3_security_level = array(
+	"noAuthNoPriv" => "No authentication, No Privacy",
+	"authNoPriv" => "Authentication, No Privacy",
+	"authPriv" => "Authentication and Privacy");
+
+$snmpv3_auth_protocol = array(
+	"MD5" => "MD5 (default)",
+	"SHA" => "SHA");
+
+$snmpv3_priv_protocol = array(
+	"DES" => "DES (default)",
+	"AES128" => "AES128",
+	"AES192" => "AES192",
+	"AES256" => "AES256");
 
 $logfile_options = array(1 =>
 	"Logfile Only",
@@ -144,11 +160,13 @@ $logfile_options = array(1 =>
 $availability_options = array(
 	AVAIL_SNMP_AND_PING => "Ping and SNMP - Most Recommended",
 	AVAIL_SNMP => "SNMP - Reliable",
-	AVAIL_PING => "Ping - Faster Option with Risk");
+	AVAIL_PING => "Ping - Faster Option with Risk",
+	AVAIL_NONE => "None - Don't Precheck Device Status");
 
 $ping_methods = array(
 	PING_ICMP => "ICMP Ping",
-	PING_UDP => "UDP Ping");
+	PING_UDP => "UDP Ping",
+	PING_NONE => "Not Applicable");
 
 $logfile_verbosity = array(
 	POLLER_VERBOSITY_NONE => "NONE - Syslog Only if Selected",

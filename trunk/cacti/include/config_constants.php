@@ -71,9 +71,11 @@ define("POLLER_VERBOSITY_DEBUG", 5);
 define("AVAIL_SNMP_AND_PING", 1);
 define("AVAIL_SNMP", 2);
 define("AVAIL_PING", 3);
+define("AVAIL_NONE",4);
 
 define("PING_ICMP", 1);
 define("PING_UDP", 2);
+define("PING_NONE", 3);
 
 define("HOST_UNKNOWN", 0);
 define("HOST_DOWN", 1);
@@ -116,5 +118,13 @@ define("GDC_SLASH", 1);
 define("SNMP_POLLER", 0);
 define("SNMP_CMDPHP", 1);
 define("SNMP_WEBUI", 2);
+
+define("SNMPV3_PP_DES", 0);
+define("SNMPV3_PP_AES128", 1);
+define("SNMPV3_PP_AES192", 2);
+define("SNMPV3_PP_AES256", 3);
+
+define("SNMPV3_AP_MD5", 0);
+define("SNMPV3_AP_SHA", 1);
 
 ?>

@@ -666,8 +666,8 @@ $fields_host_edit = array(
 		),
 	"poller_id" => array(
 		"method" => "drop_sql",
-		"friendly_name" => "Host Poller",
-		"description" => "Choose the poller to handle this hosts request.",
+		"friendly_name" => "Default Poller",
+		"description" => "Choose the default poller to handle this hosts request.",
 		"value" => "|arg1:poller_id|",
 		"none_value" => "Main Cacti System",
 		"sql" => "select id,name from poller"
@@ -681,6 +681,24 @@ $fields_host_edit = array(
 		"form_id" => false
 		),
 	"spacer1" => array(
+		"method" => "spacer",
+		"friendly_name" => "Availability Detection"
+		),
+	"availability_method" => array(
+		"method" => "drop_array",
+		"friendly_name" => "Availability Method",
+		"description" => "Choose the availability method to use for this host.",
+		"default" => AVAIL_SNMP,
+		"array" => $availability_options
+		),
+	"ping_method" => array(
+		"friendly_name" => "Ping Type",
+		"description" => "The type of ping packet to sent.  NOTE: ICMP requires that the Cacti Service ID have root privilages in Unix.",
+		"method" => "drop_array",
+		"default" => PING_UDP,
+		"array" => $ping_methods
+		),
+	"spacer2" => array(
 		"method" => "spacer",
 		"friendly_name" => "SNMP Options"
 		),

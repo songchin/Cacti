@@ -29,12 +29,13 @@ include($config["include_path"] . "/config_arrays.php");
 /* tab information */
 $tabs = array(
 	"general" => "General",
-	"dbphp" => "Database & PHP",
+	"snmp" => "SNMP",
 	"path" => "Paths",
 	"poller" => "Poller",
-	"export" => "Graph Export",
 	"visual" => "Visual",
-	"authentication" => "Authentication");
+	"authentication" => "Authentication",
+	"dbphp" => "Database & PHP",
+	"export" => "Graph Export");
 
 $tabs_graphs = array(
 	"general" => "General",
@@ -193,66 +194,6 @@ $settings = array(
 					)
 				),
 			),
-		"snmp_header" => array(
-			"friendly_name" => "SNMP Defaults",
-			"method" => "spacer",
-			),
-		"snmp_version" => array(
-			"friendly_name" => "SNMP Utility Version",
-			"description" => "The type of SNMP you have installed.  Required if you are using SNMP v2c or don't have embedded SNMP support in PHP.",
-			"method" => "drop_array",
-			"default" => "net-snmp",
-			"array" => $snmp_implimentations,
-			),
-		"snmp_ver" => array(
-			"friendly_name" => "SNMP Version",
-			"description" => "Default SNMP version for all new hosts.",
-			"method" => "drop_array",
-			"default" => "Version 1",
-			"array" => $snmp_versions,
-			),
-		"snmp_community" => array(
-			"friendly_name" => "SNMP Community",
-			"description" => "Default SNMP read community for all new hosts.",
-			"method" => "textbox",
-			"default" => "public",
-			"max_length" => "100",
-			),
-//		"snmp_username" => array(
-//			"friendly_name" => "SNMP v3 Username",
-//			"description" => "The SNMP v3 Username for polling hosts.",
-//			"method" => "textbox",
-//			"default" => "",
-//			"max_length" => "100",
-//			),
-//		"snmp_password" => array(
-//			"friendly_name" => "SNMP v3 Password",
-//			"description" => "The SNMP v3 Password for polling hosts.",
-//			"method" => "textbox_password",
-//			"default" => "",
-//			"max_length" => "100",
-//			),
-		"snmp_timeout" => array(
-			"friendly_name" => "SNMP Timeout",
-			"description" => "Default SNMP timeout in milli-seconds.",
-			"method" => "textbox",
-			"default" => "500",
-			"max_length" => "100",
-			),
-		"snmp_port" => array(
-			"friendly_name" => "SNMP Port Number",
-			"description" => "Default UDP port to be used for SNMP Calls.  Typically 161.",
-			"method" => "textbox",
-			"default" => "161",
-			"max_length" => "100",
-			),
-		"snmp_retries" => array(
-			"friendly_name" => "SNMP Retries",
-			"description" => "The number times the SNMP poller will attempt to reach the host before failing.",
-			"method" => "textbox",
-			"default" => "3",
-			"max_length" => "100",
-			),
 		"other_header" => array(
 			"friendly_name" => "Other Defaults",
 			"method" => "spacer",
@@ -263,6 +204,119 @@ $settings = array(
 			"default" => "on",
 			"method" => "checkbox"
 			)
+		),
+	"snmp" => array(
+		"snmp_header" => array(
+			"friendly_name" => "General Defaults",
+			"method" => "spacer",
+			),
+		"snmp_version" => array(
+			"friendly_name" => "SNMP Utility Version",
+			"description" => "The type of SNMP you have installed.  Required if you are using SNMP v2c or don't have embedded SNMP support in PHP.",
+			"method" => "drop_array",
+			"default" => "net-snmp",
+			"array" => $snmp_implimentations,
+			),
+		"snmp_timeout" => array(
+			"friendly_name" => "Timeout",
+			"description" => "Default SNMP timeout in milli-seconds.",
+			"method" => "textbox",
+			"default" => "500",
+			"max_length" => "100",
+			),
+		"snmp_port" => array(
+			"friendly_name" => "Port Number",
+			"description" => "Default UDP port to be used for SNMP Calls.  Typically 161.",
+			"method" => "textbox",
+			"default" => "161",
+			"max_length" => "100",
+			),
+		"snmp_retries" => array(
+			"friendly_name" => "Retries",
+			"description" => "The number times the SNMP poller will attempt to reach the host before failing.",
+			"method" => "textbox",
+			"default" => "3",
+			"max_length" => "100",
+			),
+		"snmp_ver" => array(
+			"friendly_name" => "Version",
+			"description" => "Default SNMP version for all new hosts.",
+			"method" => "drop_array",
+			"default" => "Version 1",
+			"array" => $snmp_versions,
+			),
+		"snmpv12c_header" => array(
+			"friendly_name" => "V1/V2c Defaults",
+			"method" => "spacer",
+			),
+		"snmp_community" => array(
+			"friendly_name" => "Community",
+			"description" => "Default SNMP read community for all new hosts.",
+			"method" => "textbox",
+			"default" => "public",
+			"max_length" => "100",
+			),
+		"snmpv3_header" => array(
+			"friendly_name" => "V3 Defaults",
+			"method" => "spacer",
+			),
+		"snmpv3_security_level" => array(
+			"friendly_name" => "Security Level",
+			"description" => "The SNMP Security Level you wish to use.",
+			"method" => "drop_array",
+			"default" => "noAutoNoPriv",
+			"array" => $snmpv3_security_level,
+			),
+		"snmpv3_auth_header" => array(
+			"friendly_name" => "Authentication",
+			"method" => "spacer",
+			),
+		"snmpv3_auth_username" => array(
+			"friendly_name" => "Username",
+			"description" => "The default SNMP v3 authentication username.",
+			"method" => "textbox",
+			"default" => "",
+			"max_length" => "100",
+			),
+		"snmpv3_auth_passphrase" => array(
+			"friendly_name" => "Authentication Passphrase",
+			"description" => "The default SNMP v3 authentication passphrase.",
+			"method" => "textbox_password",
+			"default" => "",
+			"max_length" => "100",
+			),
+		"snmpv3_auth_protocol" => array(
+			"friendly_name" => "Authentication Protocol",
+			"description" => "Select the default SNMP v3 authentication protocol to use.",
+			"method" => "drop_array",
+			"default" => "MD5",
+			"array" => $snmpv3_auth_protocol,
+			),
+		"snmpv3_priv_header" => array(
+			"friendly_name" => "Privacy",
+			"method" => "spacer",
+			),
+		"snmpv3_priv_username" => array(
+			"friendly_name" => "Username",
+			"description" => "The default SNMP v3 privacy username.",
+			"method" => "textbox",
+			"default" => "",
+			"max_length" => "100",
+			),
+		"snmpv3_priv_passphrase" => array(
+			"friendly_name" => "Privacy Passphrase",
+			"description" => "The default SNMP v3 privacy passphrase.",
+			"method" => "textbox_password",
+			"default" => "",
+			"max_length" => "100",
+			),
+		"snmpv3_priv_protocol" => array(
+			"friendly_name" => "Privacy Protocol",
+			"description" => "Select the default SNMP v3 privacy protocol to use.",
+			"method" => "drop_array",
+			"default" => "DES",
+			"array" => $snmpv3_priv_protocol,
+			),
 		),
 	"export" => array(
 		"export_hdr_general" => array(
