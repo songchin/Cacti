@@ -126,8 +126,8 @@ $input_types = array(
 	);
 
 $script_types = array(
-	SCRIPT_TYPE_SCRIPT => "Script/Command",
-	SCRIPT_PHP_SCRIPT_SERVER => "Script - Script Server (PHP)"
+	DATA_INPUT_TYPE_SCRIPT => "Script/Command",
+	DATA_INPUT_TYPE_PHP_SCRIPT_SERVER => "Script - Script Server (PHP)"
 	);
 
 $reindex_types = array(
