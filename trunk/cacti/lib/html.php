@@ -38,7 +38,7 @@ function html_start_box($title, $width, $background_color, $cell_padding, $align
 	<table align="<?php print $align;?>" width="<?php print $width;?>" cellpadding=1 cellspacing=0 border=0 bgcolor="#<?php print $background_color;?>">
 		<tr>
 			<td>
-				<table cellpadding=<?php print $cell_padding;?> cellspacing=0 border=0 bgcolor="#<?php print $colors["form_background_dark"];?>" width="100%">
+				<table cellpadding=<?php print $cell_padding;?> cellspacing=0 border=0 bgcolor="#<?php print $background_color;?>" width="100%">
 					<?php if ($title != "") {?><tr>
 						<td bgcolor="#<?php print $background_color;?>" style="padding: 3px;" colspan="10">
 							<table width="100%" cellpadding="0" cellspacing="0">
