@@ -138,15 +138,16 @@ $snmp_versions = array(1 =>
 	"Version 3");
 
 $snmpv3_security_level = array(
-	"noAuthNoPriv" => "No authentication, No Privacy",
-	"authNoPriv" => "Authentication, No Privacy",
-	"authPriv" => "Authentication and Privacy");
+	"authNoPriv" => "No Privacy Protocol, No Privacy Passphrase",
+	"authPriv1" => "Privacy Protocol, No Privacy Passphrase",
+	"authPriv2" => "Privacy Protocol, Privacy Passphrase");
 
 $snmpv3_auth_protocol = array(
 	"MD5" => "MD5 (default)",
 	"SHA" => "SHA");
 
 $snmpv3_priv_protocol = array(
+	"[None]" => "[None]",
 	"DES" => "DES (default)",
 	"AES128" => "AES128",
 	"AES192" => "AES192",

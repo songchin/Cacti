@@ -273,14 +273,14 @@ $settings = array(
 			),
 		"snmpv3_auth_username" => array(
 			"friendly_name" => "Username",
-			"description" => "The default SNMP v3 authentication username.",
+			"description" => "The default SNMP v3 username.",
 			"method" => "textbox",
 			"default" => "",
 			"max_length" => "100",
 			),
 		"snmpv3_auth_passphrase" => array(
-			"friendly_name" => "Authentication Passphrase",
-			"description" => "The default SNMP v3 authentication passphrase.",
+			"friendly_name" => "Password",
+			"description" => "The default SNMP v3 password.",
 			"method" => "textbox_password",
 			"default" => "",
 			"max_length" => "100",
@@ -295,13 +295,6 @@ $settings = array(
 		"snmpv3_priv_header" => array(
 			"friendly_name" => "Privacy",
 			"method" => "spacer",
-			),
-		"snmpv3_priv_username" => array(
-			"friendly_name" => "Username",
-			"description" => "The default SNMP v3 privacy username.",
-			"method" => "textbox",
-			"default" => "",
-			"max_length" => "100",
 			),
 		"snmpv3_priv_passphrase" => array(
 			"friendly_name" => "Privacy Passphrase",
