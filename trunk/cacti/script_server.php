@@ -41,6 +41,7 @@ if (php_sapi_name() != "cli") {
 
 /* used for includes */
 include_once(dirname(__FILE__) . "/include/config.php");
+include_once(dirname(__FILE__) . "/lib/poller.php");
 
 /* PHP Bug.  Not yet logged */
 if ($config["cacti_server_os"] == "win32") {
