@@ -96,10 +96,12 @@ function api_user_info($array) {
 	$user = db_fetch_row($sql_query);
 	
 	/* get last login and append */
-	$last_login = db_fetch_row("select username,time as lastlogin,DATE_FORMAT(time,'%M %e %Y %H:%i:%s') as lastlogin_formatted, ip from user_log where user_id = '" . $user["id"] . "' and result = 1 order by time desc limit 1");
-	$user["lastlogin"] = $last_login["lastlogin"];
-	$user["lastlogin_formatted"] = $last_login["lastlogin_formatted"];
-	$user["ip"] = $last_login["ip"];
+	if (sizeof($user)) {
+		$last_login = db_fetch_row("select username,time as lastlogin,DATE_FORMAT(time,'%M %e %Y %H:%i:%s') as lastlogin_formatted, ip from user_log where user_id = '" . $user["id"] . "' and result = 1 order by time desc limit 1");
+		$user["lastlogin"] = $last_login["lastlogin"];
+		$user["lastlogin_formatted"] = $last_login["lastlogin_formatted"];
+		$user["ip"] = $last_login["ip"];
+	}
 
 	return $user;
 

@@ -126,6 +126,18 @@ function form_save() {
 			raise_message(4);
 		}
 
+		/* check for duplicate username */
+		$user = api_user_info( array( "username" => $_POST["username"] ) );
+		if (sizeof($user)) {
+			if (!empty($_POST["id"])) {
+				if (($user["id"] != $_POST["id"]) && ($user["realm"] == $_POST["realm"])) {
+					raise_message(12);
+				}
+			}else{
+				raise_message(12);
+			}
+		}
+
 		/* password processing */
 		if ((empty($_POST["password"])) && (empty($_POST["password_confirm"]))) {
 			$user = api_user_info( array( "id" => $_POST["id"] ) );

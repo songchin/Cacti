@@ -1163,6 +1163,11 @@ $fields_user_user_edit_host = array(
 	"save_component_user" => array(
 		"method" => "hidden",
 		"value" => "1"
+		),
+	"realm" => array(
+		"method" => "hidden",
+		"default" => "0",
+		"value" => "|arg1:realm|"
 		)
 	);
 
