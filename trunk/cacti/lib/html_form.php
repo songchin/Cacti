@@ -435,7 +435,7 @@ function form_message($title_text, $body_text, $ok_url) { ?>
 						<?php	form_area($body_text); ?>
 						<tr>
 							<td bgcolor="#E1E1E1">
-								<a href="<?php print $ok_url;?>"><img src="images/button_ok.gif" border="0" alt="Ok" align="absmiddle"></a>
+								<a href="<?php print $ok_url;?>"><img src="<?php print html_get_theme_images_path('button_ok.gif');?>" border="0" alt="Ok" align="absmiddle"></a>
 							</td>
 						</tr>
 					</table>
@@ -452,8 +452,8 @@ function form_message($title_text, $body_text, $ok_url) { ?>
 function form_confirm_buttons($action_url, $cancel_url) { ?>
 	<tr>
 		<td bgcolor="#E1E1E1">
-			<a href="<?php print $cancel_url;?>"><img src="images/button_cancel.gif" border="0" alt="Cancel" align="absmiddle"></a>
-			<a href="<?php print $action_url . "&confirm=yes";?>"><img src="images/button_delete.gif" border="0" alt="Delete" align="absmiddle"></a>
+			<a href="<?php print $cancel_url;?>"><img src="<?php print html_get_theme_images_path('button_cancel.gif');?>" border="0" alt="Cancel" align="absmiddle"></a>
+			<a href="<?php print $action_url . "&confirm=yes";?>"><img src="<?php print html_get_theme_images_path('button_delete.gif');?>" border="0" alt="Delete" align="absmiddle"></a>
 		</td>
 	</tr>
 <?php }
@@ -484,8 +484,8 @@ function form_save_button($cancel_url, $force_type = "") {
 		<tr>
 			 <td bgcolor="#f5f5f5" align="right">
 				<input type='hidden' name='action' value='save'>
-				<a href='<?php print $cancel_url;?>'><img src='images/button_cancel2.gif' alt='Cancel' align='absmiddle' border='0'></a>
-				<input type='image' src='images/<?php print $img;?>' alt='<?php print $alt;?>' align='absmiddle'>
+				<a href='<?php print $cancel_url;?>'><img src='<?php print html_get_theme_images_path("button_cancel2.gif");?>' alt='Cancel' align='absmiddle' border='0'></a>
+				<input type='image' src='<?php print html_get_theme_images_path();?>/<?php print $img;?>' alt='<?php print $alt;?>' align='absmiddle'>
 			</td>
 		</tr>
 	</table>

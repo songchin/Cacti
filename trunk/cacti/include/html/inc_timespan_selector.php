@@ -75,14 +75,14 @@
 
 						<strong>&nbsp;From:&nbsp;</strong>
 						<input type='text' name='date1' id='date1' size='14' value='<?php print (isset($_SESSION["sess_current_date1"]) ? $_SESSION["sess_current_date1"] : "");?>'>
-						&nbsp;<input type='image' src='images/calendar.gif' alt='Start date selector' border='0' align='absmiddle' onclick="return showCalendar('date1');">&nbsp;
+						&nbsp;<input type='image' src='<?php print html_get_theme_images_path("calendar.gif");?>' alt='Start date selector' border='0' align='absmiddle' onclick="return showCalendar('date1');">&nbsp;
 
 						<strong>To:&nbsp;</strong>
 						<input type='text' name='date2' id='date2' size='14' value='<?php print (isset($_SESSION["sess_current_date2"]) ? $_SESSION["sess_current_date2"] : "");?>'>
-						&nbsp;<input type='image' src='images/calendar.gif' alt='End date selector' border='0' align='absmiddle' onclick="return showCalendar('date2');">
+						&nbsp;<input type='image' src='<?php print html_get_theme_images_path("calendar.gif");?>' alt='End date selector' border='0' align='absmiddle' onclick="return showCalendar('date2');">
 
-						&nbsp;&nbsp;<input type='image' name='button_refresh' src='images/button_refresh.gif' alt='Refresh selected time span' border='0' align='absmiddle' action='submit' value='refresh'>
-						<input type='image' name='button_clear' src='images/button_clear.gif' alt='Return to the default time span' border='0' align='absmiddle' action='submit'>
+						&nbsp;&nbsp;<input type='image' name='button_refresh' src='<?php print html_get_theme_images_path("button_refresh.gif");?>' alt='Refresh selected time span' border='0' align='absmiddle' action='submit' value='refresh'>
+						<input type='image' name='button_clear' src='<?php print html_get_theme_images_path("button_clear.gif");?>' alt='Return to the default time span' border='0' align='absmiddle' action='submit'>
 					</td>
 				</tr>
 			</table>

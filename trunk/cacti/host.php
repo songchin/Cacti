@@ -354,7 +354,7 @@ function form_actions() {
 		print "<tr><td bgcolor='#" . $colors["form_alternate1"]. "'><span class='textError'>You must select at least one device.</span></td></tr>\n";
 		$save_html = "";
 	}else{
-		$save_html = "<input type='image' src='images/button_yes.gif' alt='Save' align='absmiddle'>";
+		$save_html = "<input type='image' src='" . html_get_theme_images_path("button_yes.gif") . "' alt='Save' align='absmiddle'>";
 	}
 
 	print "	<tr>
@@ -362,7 +362,7 @@ function form_actions() {
 				<input type='hidden' name='action' value='actions'>
 				<input type='hidden' name='selected_items' value='" . (isset($host_array) ? serialize($host_array) : '') . "'>
 				<input type='hidden' name='drp_action' value='" . $_POST["drp_action"] . "'>
-				<a href='host.php'><img src='images/button_no.gif' alt='Cancel' align='absmiddle' border='0'></a>
+				<a href='host.php'><img src='" . html_get_theme_images_path("button_no.gif") . "' alt='Cancel' align='absmiddle' border='0'></a>
 				$save_html
 			</td>
 		</tr>
@@ -533,8 +533,8 @@ function host_edit() {
 					<?php print (($status == "success") ? "<span style='color: green;'>Success</span>" : "<span style='color: green;'>Fail</span>");?> [<?php print $num_dq_items;?> Item<?php print ($num_dq_items == 1 ? "" : "s");?>, <?php print $num_dq_rows;?> Row<?php print ($num_dq_rows == 1 ? "" : "s");?>]
 				</td>
 				<td align='right' nowrap>
-					<a href='host.php?action=query_reload&id=<?php print $item["id"];?>&host_id=<?php print $_GET["id"];?>'><img src='images/reload_icon_small.gif' alt='Reload Data Query' border='0' align='absmiddle'></a>&nbsp;
-					<a href='host.php?action=query_remove&id=<?php print $item["id"];?>&host_id=<?php print $_GET["id"];?>'><img src='images/delete_icon_large.gif' alt='Delete Data Query Association' border='0' align='absmiddle'></a>
+					<a href='host.php?action=query_reload&id=<?php print $item["id"];?>&host_id=<?php print $_GET["id"];?>'><img src='<?php print html_get_theme_images_path("reload_icon_small.gif");?>' alt='Reload Data Query' border='0' align='absmiddle'></a>&nbsp;
+					<a href='host.php?action=query_remove&id=<?php print $item["id"];?>&host_id=<?php print $_GET["id"];?>'><img src='<?php print html_get_theme_images_path("delete_icon_large.gif");?>' alt='Delete Data Query Association' border='0' align='absmiddle'></a>
 				</td>
 			</tr>
 			<?php
@@ -556,7 +556,7 @@ function host_edit() {
 						<?php form_dropdown("reindex_method",$reindex_types,"","","1","","");?>
 					</td>
 					<td align="right">
-						&nbsp;<input type="image" src="images/button_add.gif" alt="Add" name="add_dq" align="absmiddle">
+						&nbsp;<input type="image" src="<?php print html_get_theme_images_path('button_add.gif');?>" alt="Add" name="add_dq" align="absmiddle">
 					</td>
 				</table>
 			</td>
@@ -594,7 +594,7 @@ function host_edit() {
 					<?php print (($is_being_graphed == true) ? "<span style='color: green;'>Is Being Graphed</span> (<a href='graphs.php?action=graph_edit&id=" . db_fetch_cell("select id from graph_local where graph_template_id=" . $item["id"] . " and host_id=" . $_GET["id"] . " limit 0,1") . "'>Edit</a>)" : "<span style='color: #484848;'>Not Being Graphed</span>");?>
 				</td>
 				<td align='right' nowrap>
-					<a href='host.php?action=gt_remove&id=<?php print $item["id"];?>&host_id=<?php print $_GET["id"];?>'><img src='images/delete_icon_large.gif' alt='Delete Graph Template Association' border='0' align='absmiddle'></a>
+					<a href='host.php?action=gt_remove&id=<?php print $item["id"];?>&host_id=<?php print $_GET["id"];?>'><img src='<?php print html_get_theme_images_path("delete_icon_large.gif");?>' alt='Delete Graph Template Association' border='0' align='absmiddle'></a>
 				</td>
 			</tr>
 			<?php
@@ -615,7 +615,7 @@ function host_edit() {
 							order by graph_templates.name"),"name","id","","","");?>
 					</td>
 					<td align="right">
-						&nbsp;<input type="image" src="images/button_add.gif" alt="Add" name="add_gt" align="absmiddle">
+						&nbsp;<input type="image" src="<?php print html_get_theme_images_path('button_add.gif');?>" alt="Add" name="add_gt" align="absmiddle">
 					</td>
 				</table>
 			</td>

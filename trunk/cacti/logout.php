@@ -30,7 +30,7 @@ include("./include/config.php");
 setcookie(session_name(),"",time() - 3600,"/");
 
 /* Check to see if we are using Web Basic Auth */
-if (read_config_option("auth_method") == "2") { 
+if (read_config_option("auth_method") == "2") {
 
 		?>
 <html>
@@ -45,25 +45,23 @@ if (read_config_option("auth_method") == "2") {
 		A:visited {color: Blue;}
 	-->
 	</style>
-</head> 
+</head>
 <body>
 <table align="center">
 	<tr>
-		<td><img src="images/auth_logout.gif" border="0" alt=""></td>
+		<td><img src="<?php print html_get_theme_images_path('auth_logout.gif');?>" border="0" alt=""></td>
 	</tr><tr>
 		<td><br>To end your Cacti session please close your web browser.<br><br><a href="index.php">Return to Cacti</a></td>
 	</tr>
-</table> 
+</table>
 </body>
 </html>
 		<?php
 
 }else{
-        /* Default action */	
+        /* Default action */
 	header("Location: index.php");
 	exit;
 }
 
 ?>
-
-

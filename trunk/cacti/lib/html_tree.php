@@ -225,13 +225,13 @@ function grow_edit_graph_tree($tree_id, $user_id, $options) {
 			print "<td bgcolor='#$row_color' width='80'></td>\n";
 		}else{
 			print 	"<td bgcolor='#$row_color' width='80' align='center'>\n
-				<a href='tree.php?action=item_movedown&id=" . $leaf["id"] . "&tree_id=" . $_GET["id"] . "'><img src='images/move_down.gif' border='0' alt='Move Down'></a>\n
-				<a href='tree.php?action=item_moveup&id=" . $leaf["id"] . "&tree_id=" . $_GET["id"] . "'><img src='images/move_up.gif' border='0' alt='Move Up'></a>\n
+				<a href='tree.php?action=item_movedown&id=" . $leaf["id"] . "&tree_id=" . $_GET["id"] . "'><img src='" . html_get_theme_images_path("move_down.gif") . "' border='0' alt='Move Down'></a>\n
+				<a href='tree.php?action=item_moveup&id=" . $leaf["id"] . "&tree_id=" . $_GET["id"] . "'><img src='" . html_get_theme_images_path("move_up.gif") . "' border='0' alt='Move Up'></a>\n
 				</td>\n";
 		}
 
 		print 	"<td bgcolor='#$row_color' align='right'>\n
-			<a href='tree.php?action=item_remove&id=" . $leaf["id"] . "&tree_id=$tree_id'><img src='images/delete_icon.gif' width='10' height='10' border='0' alt='Delete'></a>\n
+			<a href='tree.php?action=item_remove&id=" . $leaf["id"] . "&tree_id=$tree_id'><img src='" . html_get_theme_images_path("delete_icon.gif") . "' width='10' height='10' border='0' alt='Delete'></a>\n
 			</td></tr>\n";
 	}
 	}else{ print "<tr><td><em>No Graph Tree Items</em></td></tr>";
@@ -653,7 +653,7 @@ function draw_tree_header_row($tree_id, $tree_item_id, $current_tier, $current_t
 
 		print "<td bgcolor='" . $colors["panel"] . "' align='center' width='1%'><a
 			href='graph_view.php?action=tree&tree_id=$tree_id&hide=$other_status&branch_id=$tree_item_id'>
-			<img src='images/$ec_icon.gif' border='0'></a></td>\n";
+			<img src='" . html_get_theme_images_path("$ec_icon.gif") . "' border='0'></a></td>\n";
 	}elseif (!($use_expand_contract) && (!empty($current_title))) {
 		print "<td bgcolor='" . $colors["panel"] . "' width='10'></td>\n";
 	}

@@ -40,7 +40,7 @@ if (!isset($_REQUEST["action"])) { $_REQUEST["action"] = ""; }
 switch ($_REQUEST["action"]) {
 	case 'save':
 		form_save();
-		
+
 		break;
 	case 'actions':
 		user_actions();
@@ -182,7 +182,7 @@ function form_save() {
 					}
 				}
 				api_user_realms_save($user_id,$realm_perms_list);
-	
+
 			/* graph settings */
 			}elseif (isset($_POST["save_component_graph_settings"])) {
 				while (list($tab_short_name, $tab_fields) = each($settings_graphs)) {
@@ -238,7 +238,7 @@ function graph_perms_edit() {
 		2 => "Deny");
 
 	if (!empty($_GET["id"])) {
-		$policy = api_user_info( array( "id" => $_GET["id"] ) ); 
+		$policy = api_user_info( array( "id" => $_GET["id"] ) );
 		$header_label = "[edit: " . $policy["username"] . "]";
 	}
 
@@ -286,7 +286,7 @@ function graph_perms_edit() {
 					$i++;
 					print "	<tr>
 							<td><span style='font-weight: bold; color: " . (($policy["policy_graphs"] == "1") ? "red" : "blue") . ";'>$i)</span> " . $item["title_cache"] . "</td>
-							<td align='right'><a href='user_admin.php?action=perm_remove&type=graph&id=" . $item["local_graph_id"] . "&user_id=" . $_GET["id"] . "'><img src='images/delete_icon.gif' width='10' height='10' border='0' alt='Delete'></a>&nbsp;</td>
+							<td align='right'><a href='user_admin.php?action=perm_remove&type=graph&id=" . $item["local_graph_id"] . "&user_id=" . $_GET["id"] . "'><img src='" . html_get_theme_images_path("delete_icon.gif") . "' width='10' height='10' border='0' alt='Delete'></a>&nbsp;</td>
 						</tr>\n";
 				}
 				}else{ print "<tr><td><em>No Graphs</em></td></tr>";
@@ -306,7 +306,7 @@ function graph_perms_edit() {
 				<?php form_dropdown("perm_graphs",db_fetch_assoc("select local_graph_id,title_cache from graph_templates_graph where local_graph_id>0 order by title_cache"),"title_cache","local_graph_id","","","");?>
 			</td>
 			<td align="right">
-				&nbsp;<input type="image" src="images/button_add.gif" alt="Add" name="add_graph" align="absmiddle">
+				&nbsp;<input type="image" src="<?php print html_get_theme_images_path('button_add.gif');?>" alt="Add" name="add_graph" align="absmiddle">
 			</td>
 		</tr>
 	</table>
@@ -344,7 +344,7 @@ function graph_perms_edit() {
 					$i++;
 					print "	<tr>
 							<td><span style='font-weight: bold; color: " . (($policy["policy_hosts"] == "1") ? "red" : "blue") . ";'>$i)</span> " . $item["name"] . "</td>
-							<td align='right'><a href='user_admin.php?action=perm_remove&type=host&id=" . $item["id"] . "&user_id=" . $_GET["id"] . "'><img src='images/delete_icon.gif' width='10' height='10' border='0' alt='Delete'></a>&nbsp;</td>
+							<td align='right'><a href='user_admin.php?action=perm_remove&type=host&id=" . $item["id"] . "&user_id=" . $_GET["id"] . "'><img src='" . html_get_theme_images_path("delete_icon.gif") . "' width='10' height='10' border='0' alt='Delete'></a>&nbsp;</td>
 						</tr>\n";
 				}
 				}else{ print "<tr><td><em>No Hosts</em></td></tr>";
@@ -365,7 +365,7 @@ function graph_perms_edit() {
 				<?php form_dropdown("perm_hosts",db_fetch_assoc("select id,CONCAT_WS('',description,' (',hostname,')') as name from host order by description,hostname"),"name","id","","","");?>
 			</td>
 			<td align="right">
-				&nbsp;<input type="image" src="images/button_add.gif" alt="Add" name="add_host" align="absmiddle">
+				&nbsp;<input type="image" src="<?php print html_get_theme_images_path('button_add.gif');?>" alt="Add" name="add_host" align="absmiddle">
 			</td>
 		</tr>
 	</table>
@@ -403,7 +403,7 @@ function graph_perms_edit() {
 					$i++;
 					print "	<tr>
 							<td><span style='font-weight: bold; color: " . (($policy["policy_graph_templates"] == "1") ? "red" : "blue") . ";'>$i)</span> " . $item["name"] . "</td>
-							<td align='right'><a href='user_admin.php?action=perm_remove&type=graph_template&id=" . $item["id"] . "&user_id=" . $_GET["id"] . "'><img src='images/delete_icon.gif' width='10' height='10' border='0' alt='Delete'></a>&nbsp;</td>
+							<td align='right'><a href='user_admin.php?action=perm_remove&type=graph_template&id=" . $item["id"] . "&user_id=" . $_GET["id"] . "'><img src='" . html_get_theme_images_path("delete_icon.gif") . "' width='10' height='10' border='0' alt='Delete'></a>&nbsp;</td>
 						</tr>\n";
 				}
 				}else{ print "<tr><td><em>No Graph Templates</em></td></tr>";
@@ -424,7 +424,7 @@ function graph_perms_edit() {
 				<?php form_dropdown("perm_graph_templates",db_fetch_assoc("select id,name from graph_templates order by name"),"name","id","","","");?>
 			</td>
 			<td align="right">
-				&nbsp;<input type="image" src="images/button_add.gif" alt="Add" name="add_graph_template" align="absmiddle">
+				&nbsp;<input type="image" src="<?php print html_get_theme_images_path('button_add.gif');?>" alt="Add" name="add_graph_template" align="absmiddle">
 			</td>
 		</tr>
 	</table>
@@ -462,7 +462,7 @@ function graph_perms_edit() {
 					$i++;
 					print "	<tr>
 							<td><span style='font-weight: bold; color: " . (($policy["policy_trees"] == "1") ? "red" : "blue") . ";'>$i)</span> " . $item["name"] . "</td>
-							<td align='right'><a href='user_admin.php?action=perm_remove&type=tree&id=" . $item["id"] . "&user_id=" . $_GET["id"] . "'><img src='images/delete_icon.gif' width='10' height='10' border='0' alt='Delete'></a>&nbsp;</td>
+							<td align='right'><a href='user_admin.php?action=perm_remove&type=tree&id=" . $item["id"] . "&user_id=" . $_GET["id"] . "'><img src='" . html_get_theme_images_path("delete_icon.gif") . "' width='10' height='10' border='0' alt='Delete'></a>&nbsp;</td>
 						</tr>\n";
 				}
 				}else{ print "<tr><td><em>No Trees</em></td></tr>";
@@ -483,7 +483,7 @@ function graph_perms_edit() {
 				<?php form_dropdown("perm_trees",db_fetch_assoc("select id,name from graph_tree order by name"),"name","id","","","");?>
 			</td>
 			<td align="right">
-				&nbsp;<input type="image" src="images/button_add.gif" alt="Add" name="add_tree" align="absmiddle">
+				&nbsp;<input type="image" src="<?php print html_get_theme_images_path('button_add.gif');?>" alt="Add" name="add_tree" align="absmiddle">
 			</td>
 		</tr>
 	</table>
@@ -734,7 +734,7 @@ function user() {
 	}
 	}
 	html_end_box(false);
-	
+
 	/* draw the dropdown containing a list of available actions for this form */
 	draw_actions_dropdown($user_actions);
 
@@ -753,23 +753,23 @@ function user_actions() {
 	if (isset($_POST["selected_items"])) {
 		$selected_items = unserialize(stripslashes($_POST["selected_items"]));
 
-		if ($_POST["drp_action"] == "3") { 
+		if ($_POST["drp_action"] == "3") {
 			/* Enable Selected Users */
 			for ($i=0;($i<count($selected_items));$i++) {
 				api_user_enable($selected_items[$i]);
 			}
-		}elseif ($_POST["drp_action"] == "4") { 
+		}elseif ($_POST["drp_action"] == "4") {
 			/* Disable Selected Users */
 			for ($i=0;($i<count($selected_items));$i++) {
 				api_user_disable($selected_items[$i]);
 			}
-		}elseif ($_POST["drp_action"] == "1") { 
+		}elseif ($_POST["drp_action"] == "1") {
 			/* Delete User */
 			for ($i=0; $i<count($selected_items); $i++) {
 				api_user_remove($selected_items[$i]);
 			}
 
-		}elseif ($_POST["drp_action"] == "2") { 
+		}elseif ($_POST["drp_action"] == "2") {
 			/* Copy User */
 			/* Check for new user name */
 			if ((!empty($_POST["user_new"])) && (!empty($_POST["user_name"]))) {
@@ -866,7 +866,7 @@ function user_actions() {
 		print "<tr><td bgcolor='#" . $colors["form_alternate1"]. "'><span class='textError'>You must select at least one user.</span></td></tr>\n";
 		$save_html = "";
 	}else{
-		$save_html = "<input type='image' src='images/button_yes.gif' alt='Save' align='absmiddle'>";
+		$save_html = "<input type='image' src='" . html_get_theme_images_path("button_yes.gif") . "' alt='Save' align='absmiddle'>";
 	}
 
 	print "	<tr>
@@ -874,7 +874,7 @@ function user_actions() {
 				<input type='hidden' name='action' value='actions'>
 				<input type='hidden' name='selected_items' value='" . (isset($user_array) ? serialize($user_array) : '') . "'>
 				<input type='hidden' name='drp_action' value='" . $_POST["drp_action"] . "'>
-				<a href='user_admin.php'><img src='images/button_no.gif' alt='Cancel' align='absmiddle' border='0'></a>
+				<a href='user_admin.php'><img src='" . html_get_theme_images_path("button_no.gif") . "' alt='Cancel' align='absmiddle' border='0'></a>
 				$save_html
 			</td>
 		</tr>

@@ -245,7 +245,7 @@ function data_edit() {
 					<?php print $field["name"];?>
 				</td>
 				<td align="right">
-					<a href="data_input.php?action=field_remove&id=<?php print $field["id"];?>&data_input_id=<?php print $_GET["id"];?>"><img src="images/delete_icon.gif" width="10" height="10" border="0" alt="Delete"></a>
+					<a href="data_input.php?action=field_remove&id=<?php print $field["id"];?>&data_input_id=<?php print $_GET["id"];?>"><img src="<?php print html_get_theme_images_path('delete_icon.gif');?>" width="10" height="10" border="0" alt="Delete"></a>
 				</td>
 			</tr>
 		<?php
@@ -279,7 +279,7 @@ function data_edit() {
 					<?php print html_boolean_friendly($field["update_rra"]);?>
 				</td>
 				<td align="right">
-					<a href="data_input.php?action=field_remove&id=<?php print $field["id"];?>&data_input_id=<?php print $_GET["id"];?>"><img src="images/delete_icon.gif" width="10" height="10" border="0" alt="Delete"></a>
+					<a href="data_input.php?action=field_remove&id=<?php print $field["id"];?>&data_input_id=<?php print $_GET["id"];?>"><img src="<?php print html_get_theme_images_path('delete_icon.gif');?>" width="10" height="10" border="0" alt="Delete"></a>
 				</td>
 			</tr>
 		<?php
@@ -318,7 +318,7 @@ function data() {
 				<?php print $input_types{$data_input["type_id"]};?>
 			</td>
 			<td align="right">
-				<a href="data_input.php?action=remove&id=<?php print $data_input["id"];?>"><img src="images/delete_icon.gif" width="10" height="10" border="0" alt="Delete"></a>
+				<a href="data_input.php?action=remove&id=<?php print $data_input["id"];?>"><img src="<?php print html_get_theme_images_path('delete_icon.gif');?>" width="10" height="10" border="0" alt="Delete"></a>
 			</td>
 		</tr>
 	<?php

@@ -104,7 +104,7 @@ function html_graph_area(&$graph_array, $no_graphs_message = "", $extra_url_args
 								<a href='graph.php?local_graph_id=<?php print $graph["local_graph_id"];?>&rra_id=all'><img src='graph_image.php?local_graph_id=<?php print $graph["local_graph_id"];?>&rra_id=0<?php print (($extra_url_args == "") ? "" : "&$extra_url_args");?>' border='0' alt='<?php print $graph["title_cache"];?>'></a>
 							</td>
 							<td valign='top' style='padding: 3px;' class='noprint'>
-								<a href='graph.php?action=zoom&local_graph_id=<?php print $graph["local_graph_id"];?>&rra_id=0&<?php print $extra_url_args;?>'><img src='images/graph_zoom.gif' border='0' alt='Zoom Graph' title='Zoom Graph' style='padding: 3px;'></a><br>
+								<a href='graph.php?action=zoom&local_graph_id=<?php print $graph["local_graph_id"];?>&rra_id=0&<?php print $extra_url_args;?>'><img src='<?php print html_get_theme_images_path("graph_zoom.gif");?>' border='0' alt='Zoom Graph' title='Zoom Graph' style='padding: 3px;'></a><br>
 							</td>
 						</tr>
 					</table>
@@ -147,7 +147,7 @@ function html_graph_thumbnail_area(&$graph_array, $no_graphs_message = "", $extr
 							<a href='graph.php?rra_id=all&local_graph_id=<?php print $graph["local_graph_id"];?>'><img src='graph_image.php?local_graph_id=<?php print $graph["local_graph_id"];?>&rra_id=0&graph_height=<?php print read_graph_config_option("default_height");?>&graph_width=<?php print read_graph_config_option("default_width");?>&graph_nolegend=true<?php print (($extra_url_args == "") ? "" : "&$extra_url_args");?>' border='0' alt='<?php print $graph["title_cache"];?>'></a>
 						</td>
 						<td valign='top' style='padding: 3px;'>
-							<a href='graph.php?action=zoom&local_graph_id=<?php print $graph["local_graph_id"];?>&rra_id=0&<?php print $extra_url_args;?>'><img src='images/graph_zoom.gif' border='0' alt='Zoom Graph' title='Zoom Graph' style='padding: 3px;'></a><br>
+							<a href='graph.php?action=zoom&local_graph_id=<?php print $graph["local_graph_id"];?>&rra_id=0&<?php print $extra_url_args;?>'><img src='<?php print html_get_theme_images_path("graph_zoom.gif");?>' border='0' alt='Zoom Graph' title='Zoom Graph' style='padding: 3px;'></a><br>
 						</td>
 					</tr>
 				</table>
@@ -241,6 +241,20 @@ function html_header_checkbox($header_items, $form_action = "") {
    */
 function html_get_theme_css() {
 	return "themes/" . read_config_option("current_theme") . "/" . read_config_option("current_theme") . ".css";
+}
+
+/* html_get_theme_image_path() - returns the Style sheet reference for the current theme
+   */
+function html_get_theme_images_path($image_file = "") {
+	if (file_exists("themes/" . read_config_option("current_theme") . "/images/" . $image_file)) {
+		return "themes/" . read_config_option("current_theme") . "/images/" . $image_file;
+	} else {
+		if ($image_file != "") {
+			return "images/" . $image_file;
+		} else {
+			return "images";
+		}
+	}
 }
 
 /* create_list - draws the items for an html dropdown given an array of data
@@ -370,9 +384,9 @@ function draw_graph_items_list($item_list, $filename, $url_data, $disable_contro
 		print "<td style='$this_row_style'>" . $item["hex"] . "</td>\n";
 
 		if ($disable_controls == false) {
-			print "<td><a href='$filename?action=item_movedown&id=" . $item["id"] . "&$url_data'><img src='images/move_down.gif' border='0' alt='Move Down'></a>
-					<a href='$filename?action=item_moveup&id=" . $item["id"] . "&$url_data'><img src='images/move_up.gif' border='0' alt='Move Up'></a></td>\n";
-			print "<td align='right'><a href='$filename?action=item_remove&id=" . $item["id"] . "&$url_data'><img src='images/delete_icon.gif' width='10' height='10' border='0' alt='Delete'></a></td>\n";
+			print "<td><a href='$filename?action=item_movedown&id=" . $item["id"] . "&$url_data'><img src='" . html_get_theme_images_path("move_down.gif") . "' border='0' alt='Move Down'></a>
+					<a href='$filename?action=item_moveup&id=" . $item["id"] . "&$url_data'><img src='" . html_get_theme_images_path("move_up.gif") . "' border='0' alt='Move Up'></a></td>\n";
+			print "<td align='right'><a href='$filename?action=item_remove&id=" . $item["id"] . "&$url_data'><img src='" . html_get_theme_images_path("delete_icon.gif") . "' width='10' height='10' border='0' alt='Delete'></a></td>\n";
 		}
 
 		print "</tr>";
@@ -445,7 +459,7 @@ function draw_menu() {
 
 						/* do not put a line between each sub-item */
 						if (($i == 0) || ($draw_sub_items == false)) {
-							$background = "images/menu_line.gif";
+							$background = "" . html_get_theme_images_path("menu_line.gif");
 						}else{
 							$background = "";
 						}
@@ -475,16 +489,16 @@ function draw_menu() {
 				if ((isset($user_realms[$current_realm_id])) || (!isset($user_auth_realm_filenames{basename($item_url)}))) {
 					/* draw normal (non sub-item) menu item */
 					if (basename($_SERVER["PHP_SELF"]) == basename($item_url)) {
-						print "<tr><td class='textMenuItemSelected' background='images/menu_line.gif'><strong><a href='$item_url'>$item_title</a></strong></td></tr>\n";
+						print "<tr><td class='textMenuItemSelected' background='" . html_get_theme_images_path("menu_line.gif") . "'><strong><a href='$item_url'>$item_title</a></strong></td></tr>\n";
 					}else{
-						print "<tr><td class='textMenuItem' background='images/menu_line.gif'><a href='$item_url'>$item_title</a></td></tr>\n";
+						print "<tr><td class='textMenuItem' background='" . html_get_theme_images_path("menu_line.gif") . "'><a href='$item_url'>$item_title</a></td></tr>\n";
 					}
 				}
 			}
 		}
 	}
 
-	print "<tr><td class='textMenuItem' background='images/menu_line.gif'></td></tr>\n";
+	print "<tr><td class='textMenuItem' background='" . html_get_theme_images_path("menu_line.gif") . "'></td></tr>\n";
 
 	print '</table></td></tr>';
 }
@@ -498,14 +512,14 @@ function draw_actions_dropdown($actions_array) {
 	<table align='center' width='98%'>
 		<tr>
 			<td width='1' valign='top'>
-				<img src='images/arrow.gif' alt='' align='absmiddle'>&nbsp;
+				<img src='<?php print html_get_theme_images_path("arrow.gif");?>' alt='' align='absmiddle'>&nbsp;
 			</td>
 			<td align='right'>
 				Choose an action:
 				<?php form_dropdown("drp_action",$actions_array,"","","1","","");?>
 			</td>
 			<td width='1' align='right'>
-				<input type='image' src='images/button_go.gif' alt='Go'>
+				<input type='image' src='<?php print html_get_theme_images_path("button_go.gif");?>' alt='Go'>
 			</td>
 		</tr>
 	</table>

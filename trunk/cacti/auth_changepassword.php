@@ -42,9 +42,9 @@ case 'changepassword':
 
 		/* update database */
 		db_execute("update user_auth set must_change_password='',password='" . md5($_POST["password"]) . "' where id=" . $_SESSION["sess_user_id"]);
-		
+
 		kill_session_var("sess_change_password");
-		
+
 		/* ok, at the point the user has been sucessfully authenticated; so we must
 		decide what to do next */
 		switch ($user["login_opts"]) {
@@ -55,12 +55,12 @@ case 'changepassword':
 			case '3': /* default graph page */
 				header("Location: graph_view.php"); break;
 		}
-		
+
 		exit;
 	}else{
 		$bad_password = true;
 	}
-	
+
 	break;
 }
 ?>
@@ -68,7 +68,7 @@ case 'changepassword':
 <head>
 	<title>Login to cacti</title>
 	<STYLE TYPE="text/css">
-	<!--	
+	<!--
 		BODY, TABLE, TR, TD {font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 12px;}
 		A {text-decoration: none;}
 		A:active { text-decoration: none;}
@@ -84,7 +84,7 @@ case 'changepassword':
 
 <table align="center">
 	<tr>
-		<td colspan="2"><img src="images/auth_login.gif" border="0" alt=""></td>
+		<td colspan="2"><img src="<?php print html_get_theme_images_path('auth_login.gif');?>" border="0" alt=""></td>
 	</tr>
 	<?php if ($bad_password == true) {?>
 	<tr height="10"><td></td></tr>

@@ -87,7 +87,7 @@ if (read_config_option("auth_method") != "0") {
 
 			<table width='450' align='center'>
 				<tr>
-					<td colspan='2'><img src='images/auth_deny.gif' border='0' alt='Access Denied'></td>
+					<td colspan='2'><img src='<?php print html_get_theme_images_path("auth_deny.gif");?>' border='0' alt='Access Denied'></td>
 				</tr>
 				<tr height='10'><td></td></tr>
 				<tr>

@@ -260,10 +260,10 @@ case 'list':
 		<table align='center' width='98%'>
 			<tr>
 				<td width='1'>
-					<img src='images/arrow.gif' alt='' align='absmiddle'>&nbsp;
+					<img src='" . html_get_theme_images_path("arrow.gif") . "' alt='' align='absmiddle'>&nbsp;
 				</td>
 				<td>
-					<input type='image' src='images/button_view.gif' alt='View'>
+					<input type='image' src='" . html_get_theme_images_path("button_view.gif") . "' alt='View'>
 				</td>
 			</tr>
 		</table><br><br>\n

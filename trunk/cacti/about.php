@@ -37,7 +37,7 @@ html_start_box("<strong>About Cacti</strong>", "98%", $colors["header"], "3", "c
 </tr>
 <tr>
 	<td valign="top" bgcolor="#<?php print $colors["light"];?>" class="textArea">
-		<a href="http://www.raxnet.net/"><img align="right" src="images/raxnet_logo.gif" border="0" alt="raXnet"></a>
+		<a href="http://www.raxnet.net/"><img align="right" src="<?php print html_get_theme_images_path('raxnet_logo.gif');?>" border="0" alt="raXnet"></a>
 
 		Cacti is designed to be a complete graphing solution for your network. Its goal is to make the
 		network administrator's job easier by taking care of all the necessary details necessary to create

@@ -574,7 +574,7 @@ function graphs() {
 									<strong>Data Query</strong> [" . $snmp_query["name"] . "]
 								</td>
 								<td align='right' nowrap>
-									<a href='graphs_new.php?action=query_reload&id=" . $snmp_query["id"] . "&host_id=" . $host["id"] . "'><img src='images/reload_icon_small.gif' alt='Reload Associated Query' border='0' align='absmiddle'></a>
+									<a href='graphs_new.php?action=query_reload&id=" . $snmp_query["id"] . "&host_id=" . $host["id"] . "'><img src='". html_get_theme_images_path("reload_icon_small.gif") . "' alt='Reload Associated Query' border='0' align='absmiddle'></a>
 								</td>
 							</tr>
 						</table>
@@ -676,7 +676,7 @@ function graphs() {
 			print "	<table align='center' width='98%'>
 					<tr>
 						<td width='1' valign='top'>
-							<img src='images/arrow.gif' alt='' align='absmiddle'>&nbsp;
+							<img src='" . html_get_theme_images_path("arrow.gif") . "' alt='' align='absmiddle'>&nbsp;
 						</td>
 						<td align='right'>
 							<span style='font-size: 12px; font-style: italic;'>Select a graph type:</span>&nbsp;

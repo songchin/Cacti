@@ -30,8 +30,8 @@
 						<input type="text" name="filter" size="20" value="<?php print $_REQUEST["filter"];?>">
 					</td>
 					<td>
-						&nbsp;<input type="image" src="images/button_go.gif" alt="Go" border="0" align="absmiddle">
-						<input type="image" src="images/button_clear.gif" name="clear" alt="Clear" border="0" align="absmiddle">
+						&nbsp;<input type="image" src="<?php print html_get_theme_images_path('button_go.gif');?>" alt="Go" border="0" align="absmiddle">
+						<input type="image" src="<?php print html_get_theme_images_path('button_clear.gif');?>" name="clear" alt="Clear" border="0" align="absmiddle">
 					</td>
 				</tr>
 			</table>

@@ -242,7 +242,7 @@ function form_actions() {
 		print "<tr><td bgcolor='#" . $colors["form_alternate1"]. "'><span class='textError'>You must select at least one graph template.</span></td></tr>\n";
 		$save_html = "";
 	}else{
-		$save_html = "<input type='image' src='images/button_yes.gif' alt='Save' align='absmiddle'>";
+		$save_html = "<input type='image' src='" . html_get_theme_images_path("button_yes.gif") . "' alt='Save' align='absmiddle'>";
 	}
 
 	print "	<tr>
@@ -250,7 +250,7 @@ function form_actions() {
 				<input type='hidden' name='action' value='actions'>
 				<input type='hidden' name='selected_items' value='" . (isset($graph_array) ? serialize($graph_array) : '') . "'>
 				<input type='hidden' name='drp_action' value='" . $_POST["drp_action"] . "'>
-				<a href='graph_templates.php'><img src='images/button_no.gif' alt='Cancel' align='absmiddle' border='0'></a>
+				<a href='graph_templates.php'><img src='" . html_get_theme_images_path("button_no.gif") . "' alt='Cancel' align='absmiddle' border='0'></a>
 				$save_html
 			</td>
 		</tr>
@@ -313,7 +313,7 @@ function item() {
 				<a class="linkEditMain" href="graph_templates_inputs.php?action=input_edit&id=<?php print $item["id"];?>&graph_template_id=<?php print $_GET["id"];?>"><?php print $item["name"];?></a>
 			</td>
 			<td align="right">
-				<a href="graph_templates_inputs.php?action=input_remove&id=<?php print $item["id"];?>&graph_template_id=<?php print $_GET["id"];?>"><img src="images/delete_icon.gif" width="10" height="10" border="0" alt="Delete"></a>
+				<a href="graph_templates_inputs.php?action=input_remove&id=<?php print $item["id"];?>&graph_template_id=<?php print $_GET["id"];?>"><img src="<?php print html_get_theme_images_path('delete_icon.gif');?>" width="10" height="10" border="0" alt="Delete"></a>
 			</td>
 		</tr>
 	<?php

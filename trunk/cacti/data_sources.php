@@ -454,7 +454,7 @@ function form_actions() {
 		print "<tr><td bgcolor='#" . $colors["form_alternate1"]. "'><span class='textError'>You must select at least one data source.</span></td></tr>\n";
 		$save_html = "";
 	}else{
-		$save_html = "<input type='image' src='images/button_yes.gif' alt='Save' align='absmiddle'>";
+		$save_html = "<input type='image' src='". html_get_theme_images_path("button_yes.gif") . "' alt='Save' align='absmiddle'>";
 	}
 
 	print "	<tr>
@@ -462,7 +462,7 @@ function form_actions() {
 				<input type='hidden' name='action' value='actions'>
 				<input type='hidden' name='selected_items' value='" . (isset($ds_array) ? serialize($ds_array) : '') . "'>
 				<input type='hidden' name='drp_action' value='" . $_POST["drp_action"] . "'>
-				<a href='data_sources.php'><img src='images/button_no.gif' alt='Cancel' align='absmiddle' border='0'></a>
+				<a href='data_sources.php'><img src='" . html_get_theme_images_path("button_no.gif") . "' alt='Cancel' align='absmiddle' border='0'></a>
 				$save_html
 			</td>
 		</tr>
@@ -754,7 +754,7 @@ function ds_edit() {
 					foreach ($template_data_rrds as $template_data_rrd) {
 						$i++;
 						print "	<td " . (($template_data_rrd["id"] == $_GET["view_rrd"]) ? "bgcolor='silver'" : "bgcolor='#DFDFDF'") . " nowrap='nowrap' width='" . ((strlen($template_data_rrd["data_source_name"]) * 9) + 50) . "' align='center' class='tab'>
-								<span class='textHeader'><a href='data_sources.php?action=ds_edit&id=" . $_GET["id"] . "&view_rrd=" . $template_data_rrd["id"] . "'>$i: " . $template_data_rrd["data_source_name"] . "</a>" . (($use_data_template == false) ? " <a href='data_sources.php?action=rrd_remove&id=" . $template_data_rrd["id"] . "&local_data_id=" . $_GET["id"] . "'><img src='images/delete_icon.gif' border='0' alt='Delete'></a>" : "") . "</span>
+								<span class='textHeader'><a href='data_sources.php?action=ds_edit&id=" . $_GET["id"] . "&view_rrd=" . $template_data_rrd["id"] . "'>$i: " . $template_data_rrd["data_source_name"] . "</a>" . (($use_data_template == false) ? " <a href='data_sources.php?action=rrd_remove&id=" . $template_data_rrd["id"] . "&local_data_id=" . $_GET["id"] . "'><img src='" . html_get_theme_images_path("delete_icon.gif") . "' border='0' alt='Delete'></a>" : "") . "</span>
 							</td>\n
 							<td width='1'></td>\n";
 					}

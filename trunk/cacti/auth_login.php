@@ -241,7 +241,7 @@ function auth_display_custom_error_message($message) {
 <form name="login" method="post" action="<?php print basename($_SERVER["PHP_SELF"]);?>">
 <table align="center">
 	<tr>
-		<td colspan="2"><img src="images/auth_login.gif" border="0" alt=""></td>
+		<td colspan="2"><img src="<?php print html_get_theme_images_path('auth_login.gif');?>" border="0" alt=""></td>
 	</tr>
 	<?php
 	if ($action == "login") {?>
