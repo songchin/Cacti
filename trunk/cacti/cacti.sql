@@ -1913,7 +1913,7 @@ CREATE TABLE host (
 -- Dumping data for table `host`
 --
 
-INSERT INTO host VALUES (1,0,8,'Localhost','127.0.0.1','',1,'','',NULL,NULL,NULL,161,500,1,0,'',3,0,'0000-00-00 00:00:00','0000-00-00 00:00:00','',"99999.9","0.00000","0.00000","0.00000",0,"100.00000");
+INSERT INTO host VALUES (1,0,8,'Localhost','127.0.0.1','',1,'','',NULL,NULL,NULL,161,500,1,0,'',3,0,'0000-00-00 00:00:00','0000-00-00 00:00:00','',"99999.9","0.00000","0.00000","0.00000",0,0,"100.00000");
 
 --
 -- Table structure for table `host_graph`
