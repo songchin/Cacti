@@ -2087,7 +2087,7 @@ CREATE TABLE poller (
 --
 -- Dumping data for table `poller`
 --
-INSERT INTO poller VALUES (1,'Waiting','On','locahost','Main Cacti System');
+INSERT INTO poller VALUES (1,'Waiting','On','locahost','Main Cacti System','0000-00-00 00:00:00','0','0000-00-00 00:00:00','0000-00-00 00:00:00','','9999.99','0.00','0.00','0.00','0','0','100.00');
 
 
 --
@@ -2658,8 +2658,8 @@ CREATE TABLE user_auth (
 -- Dumping data for table `user_auth`
 --
 
-INSERT INTO user_auth VALUES (1,'admin','21232f297a57a5a743894a0e4a801fc3',0,'Administrator','on','on','on','on','on',1,1,1,1,1,1,NOW(),0,'');
-INSERT INTO user_auth VALUES (3,'guest','43e9a4ab75570f5b',0,'Guest Account','on','on','on','on','on',3,1,1,1,1,0,NOW(),0,'');
+INSERT INTO user_auth VALUES (1,'admin','21232f297a57a5a743894a0e4a801fc3',0,'Administrator','on','on','on','on','on',1,1,1,1,1,1,NOW(),0,'0000-00-00 00:00:00','','','');
+INSERT INTO user_auth VALUES (3,'guest','43e9a4ab75570f5b',0,'Guest Account','on','on','on','on','on',3,1,1,1,1,0,NOW(),0,'0000-00-00 00:00:00','','','');
 
 --
 -- Table structure for table `user_auth_perms`
