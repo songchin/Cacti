@@ -77,14 +77,16 @@ function upgrade_to_0_8_7() {
 	/* Convert to new authentication system */
 	db_install_execute("0.8.7", "ALTER TABLE `user_auth` ADD `enabled` tinyint(1) unsigned NOT NULL default '1', ADD `created` datetime NOT NULL, ADD `password_expire_length` int(4) unsigned NOT NULL default '0', ADD `password_change_last` datetime NOT NULL;");
 	db_install_execute("0.8.7", "UPDATE `user_auth` SET `created` = NOW() WHERE `created` = '0000-00-00 00:00:00';");
-	if (db_fetch_cell("SELECT `value` FROM `settings` WHERE `name` = 'global_auth';") == "on") {
-		if (db_fetch_cell("SELECT `value` FROM `settings` WHERE `name` = 'ldap_enable';") == "on") {
-			db_install_execute("0.8.7", "INSERT INTO settings VALUES ('auth_method','3');");
+	if (!sizeof(db_fetch_cell("SELECT `value` FROM `settings` WHERE `name` = 'auth_method';"))) {
+		if (db_fetch_cell("SELECT `value` FROM `settings` WHERE `name` = 'global_auth';") == "on") {
+			if (db_fetch_cell("SELECT `value` FROM `settings` WHERE `name` = 'ldap_enable';") == "on") {
+				db_install_execute("0.8.7", "INSERT INTO settings VALUES ('auth_method','3');");
+			}else{
+				db_install_execute("0.8.7", "INSERT INTO settings VALUES ('auth_method','1');");
+			}
 		}else{
-			db_install_execute("0.8.7", "INSERT INTO settings VALUES ('auth_method','1');");
+			db_install_execute("0.8.7", "INSERT INTO settings VALUES ('auth_method','0');");
 		}
-	}else{
-		db_install_execute("0.8.7", "INSERT INTO settings VALUES ('auth_method','0');");
 	}
 	db_install_execute("0.8.7", "DELETE FROM `settings` WHERE name = 'global_auth';");
 	db_install_execute("0.8.7", "DELETE FROM `settings` WHERE name = 'ldap_enabled';");
