@@ -172,8 +172,8 @@ int main(int argc, char *argv[]) {
 
 	/* initialize threads and mutexes */
 	pthread_attr_init(&attr);
-
 	pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED);
+
 	init_mutexes();
 
 	if (set.verbose == POLLER_VERBOSITY_DEBUG) {

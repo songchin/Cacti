@@ -70,10 +70,10 @@ int db_connect(char *database, MYSQL *mysql) {
 	}
 
 	retries = 1;
-
+	mysql_init(mysql);
+	
 	while (1) {
 		thread_mutex_lock(LOCK_MYSQL);
-		mysql_init(mysql);
 
 		if (!mysql_real_connect(mysql, set.dbhost, set.dbuser, set.dbpass, database, 0, NULL, 0)) {
 			if (retries > 20) {

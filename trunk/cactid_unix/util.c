@@ -478,6 +478,7 @@ void cacti_log(char *logmessage) {
 	}
 
 	if (set.verbose >= POLLER_VERBOSITY_MEDIUM) {
+	    snprintf(flogmessage, BUFSIZE, "CACTID: %s", logmessage);
 		printf(flogmessage);
 	}
 }
