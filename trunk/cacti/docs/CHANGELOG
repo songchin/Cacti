@@ -15,6 +15,11 @@ raXnet - cacti
 -feature: Added ability to control MySQL memory footprint from UI
 -feature: Added graph timeout value to allow for gracious cancellation when a graph has errors in it.  Otherwise web server will hang.
 -feature: Documented ability to change default MySQL TCP port from within Cacti.
+-feature: Added lib/api_user.php for user related functions
+-feature: Added user password change utiltity
+-feature: Update authentication system to support Web Basic Auth
+-feature: Update user administration interface
+
 
 
 0.8.6
