@@ -257,6 +257,14 @@ function html_get_theme_images_path($image_file = "") {
 	}
 }
 
+function html_load_theme_color_scheme() {
+	if (file_exists("themes/" . read_config_option("current_theme") . "/" . read_config_option("current_theme") . ".php")) {
+		include("themes/" . read_config_option("current_theme") . "/" . read_config_option("current_theme") . ".php");
+	} else {
+		include("include/" . "config_colors.php");
+	}
+}
+
 /* create_list - draws the items for an html dropdown given an array of data
    @arg $form_data - an array containing data for this dropdown. it can be formatted
      in one of two ways:
