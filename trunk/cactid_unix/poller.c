@@ -495,7 +495,14 @@ char *exec_poll(host_t *current_host, char *command) {
 	timeout.tv_sec = set.max_script_runtime;
 	timeout.tv_usec = 0;
 
-	cmd_fd = nft_popen((char *)clean_string(command), "r");
+	/* nasty workaround to compensate for vbs WMI calling parameters not wanting backslashes bothered with */
+	#ifdef __CYGWIN__
+	win32_command = add_win32_slashes(command, 2);
+	cmd_fd = nft_popen((char *)win32_command, "r");
+	free(win32_command);
+	#else
+	cmd_fd = nft_popen((char *)command, "r");
+	#endif
 
 	if (set.verbose == POLLER_VERBOSITY_DEBUG) {
 		snprintf(logmessage, LOGSIZE, "The POPEN returned the following File Descriptor %i", cmd_fd);
@@ -538,7 +545,8 @@ char *exec_poll(host_t *current_host, char *command) {
 			/* get only one line of output, we will ignore the rest */
 			bytes_read = read(cmd_fd, result_string, BUFSIZE-1);
 			if (bytes_read > 0) {
-				snprintf(result_string, BUFSIZE, "%s\0", strip_string_crlf(result_string));
+				result_string[bytes_read] = '\0';
+				strip_string_crlf(result_string); 
 			} else {
 				snprintf(logmessage, LOGSIZE, "Empty result [%s]: '%s'", current_host->hostname, command);
 				cacti_log(logmessage, SEV_ERROR, current_host->id);
