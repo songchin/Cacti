@@ -1,3 +1,17 @@
+	<script type="text/javascript">
+	<!--
+	function applyFilterChange(objForm) {
+		strURL = '?action=view_syslog';
+		strURL = strURL + '&facility=' + objForm.facility[objForm.facility.selectedIndex].value;
+		strURL = strURL + '&severity=' + objForm.severity[objForm.severity.selectedIndex].value;
+		strURL = strURL + '&poller=' + objForm.poller[objForm.poller.selectedIndex].value;
+		strURL = strURL + '&host=' + objForm.host[objForm.host.selectedIndex].value;
+		strURL = strURL + '&filter=' + objForm.filter.value;
+		document.location = strURL;
+	}
+	-->
+	</script>
+
 	<tr bgcolor="<?php print $colors["filter_background"];?>">
 		<form name="form_syslog_id">
 		<input type="hidden" name="action" value="view_syslog">
@@ -8,46 +22,50 @@
 						Facility:&nbsp;
 					</td>
 					<td width="1">
-						<select name="cbo_facility" onChange="window.location=document.form_syslog_id.cbo_facility.options[document.form_syslog_id.cbo_facility.selectedIndex].value">
-							<option value="utilities.php?action=view_syslog&page=1&facility=ALL<?php print '&poller=' . $_REQUEST['poller'] . '&severity=' . $_REQUEST['severity'] . '&filter=' . $_REQUEST['filter'];?>"<?php if ($_REQUEST["facility"] == "ALL") {?> selected<?php }?>>All</option>
-							<option value="utilities.php?action=view_syslog&page=1&facility=POLLER<?php print '&poller=' . $_REQUEST['poller'] . '&severity=' . $_REQUEST['severity'] . '&filter=' . $_REQUEST['filter'];?>"<?php if ($_REQUEST["facility"] == "POLLER") {?> selected<?php }?>>Poller</option>
-							<option value="utilities.php?action=view_syslog&page=1&facility=CMDPHP<?php print '&poller=' . $_REQUEST['poller'] . '&severity=' . $_REQUEST['severity'] . '&filter=' . $_REQUEST['filter'];?>"<?php if ($_REQUEST["facility"] == "CMDPHP") {?> selected<?php }?>>Cmdphp</option>
-							<option value="utilities.php?action=view_syslog&page=1&facility=CACTID<?php print '&poller=' . $_REQUEST['poller'] . '&severity=' . $_REQUEST['severity'] . '&filter=' . $_REQUEST['filter'];?>"<?php if ($_REQUEST["facility"] == "CACTID") {?> selected<?php }?>>Cactid</option>
-							<option value="utilities.php?action=view_syslog&page=1&facility=SCPTSVR<?php print '&poller=' . $_REQUEST['poller'] . '&severity=' . $_REQUEST['severity'] . '&filter=' . $_REQUEST['filter'];?>"<?php if ($_REQUEST["facility"] == "SCPTSVR") {?> selected<?php }?>>Scptsvr</option>
-							<option value="utilities.php?action=view_syslog&page=1&facility=AUTH<?php print '&poller=' . $_REQUEST['poller'] . '&severity=' . $_REQUEST['severity'] . '&filter=' . $_REQUEST['filter'];?>"<?php if ($_REQUEST["facility"] == "AUTH") {?> selected<?php }?>>Auth</option>
-							<option value="utilities.php?action=view_syslog&page=1&facility=WEBUI<?php print '&poller=' . $_REQUEST['poller'] . '&severity=' . $_REQUEST['severity'] . '&filter=' . $_REQUEST['filter'];?>"<?php if ($_REQUEST["facility"] == "WEBUI") {?> selected<?php }?>>WebUI</option>
-							<option value="utilities.php?action=view_syslog&page=1&facility=EXPORT<?php print '&poller=' . $_REQUEST['poller'] . '&severity=' . $_REQUEST['severity'] . '&filter=' . $_REQUEST['filter'];?>"<?php if ($_REQUEST["facility"] == "EXPORT") {?> selected<?php }?>>Export</option>
+						<select name="facility" onChange="applyFilterChange(document.form_syslog_id)">
+							<option value="ALL"<?php if ($_REQUEST["facility"] == "ALL") {?> selected<?php }?>>All</option>
+							<option value="POLLER"<?php if ($_REQUEST["facility"] == "POLLER") {?> selected<?php }?>>Poller</option>
+							<option value="CMDPHP"<?php if ($_REQUEST["facility"] == "CMDPHP") {?> selected<?php }?>>Cmdphp</option>
+							<option value="CACTID"<?php if ($_REQUEST["facility"] == "CACTID") {?> selected<?php }?>>Cactid</option>
+							<option value="SCPTSVR"<?php if ($_REQUEST["facility"] == "SCPTSVR") {?> selected<?php }?>>Scptsvr</option>
+							<option value="AUTH"<?php if ($_REQUEST["facility"] == "AUTH") {?> selected<?php }?>>Auth</option>
+							<option value="WEBUI"<?php if ($_REQUEST["facility"] == "WEBUI") {?> selected<?php }?>>WebUI</option>
+							<option value="EXPORT"<?php if ($_REQUEST["facility"] == "EXPORT") {?> selected<?php }?>>Export</option>
 						</select>
 					</td>
 					<td width="1">
 						&nbsp;Severity:&nbsp;
 					</td>
 					<td width="1">
-						<select name="cbo_severity" onChange="window.location=document.form_syslog_id.cbo_severity.options[document.form_syslog_id.cbo_severity.selectedIndex].value">
-							<option value="utilities.php?action=view_syslog&page=1&severity=ALL<?php print '&poller=' . $_REQUEST['poller'] . '&facility=' . $_REQUEST['facility'] . '&filter=' . $_REQUEST['filter'];?>"<?php if ($_REQUEST["severity"] == "ALL") {?> selected<?php }?>>All</option>
-							<option value="utilities.php?action=view_syslog&page=1&severity=EMERGENCY<?php print '&poller=' . $_REQUEST['poller'] . '&facility=' . $_REQUEST['facility'] . '&filter=' . $_REQUEST['filter'];?>"<?php if ($_REQUEST["severity"] == "EMERGENCY") {?> selected<?php }?>>Emergency</option>
-							<option value="utilities.php?action=view_syslog&page=1&severity=ALERT<?php print '&poller=' . $_REQUEST['poller'] . '&facility=' . $_REQUEST['facility'] . '&filter=' . $_REQUEST['filter'];?>"<?php if ($_REQUEST["severity"] == "ALERT") {?> selected<?php }?>>Alert</option>
-							<option value="utilities.php?action=view_syslog&page=1&severity=CRITICAL<?php print '&poller=' . $_REQUEST['poller'] . '&facility=' . $_REQUEST['facility'] . '&filter=' . $_REQUEST['filter'];?>"<?php if ($_REQUEST["severity"] == "CRITICAL") {?> selected<?php }?>>Critical</option>
-							<option value="utilities.php?action=view_syslog&page=1&severity=ERROR<?php print '&poller=' . $_REQUEST['poller'] . '&facility=' . $_REQUEST['facility'] . '&filter=' . $_REQUEST['filter'];?>"<?php if ($_REQUEST["severity"] == "ERROR") {?> selected<?php }?>>Error</option>
-							<option value="utilities.php?action=view_syslog&page=1&severity=WARNING<?php print '&poller=' . $_REQUEST['poller'] . '&facility=' . $_REQUEST['facility'] . '&filter=' . $_REQUEST['filter'];?>"<?php if ($_REQUEST["severity"] == "WARNING") {?> selected<?php }?>>Warning</option>
-							<option value="utilities.php?action=view_syslog&page=1&severity=NOTICE<?php print '&poller=' . $_REQUEST['poller'] . '&facility=' . $_REQUEST['facility'] . '&filter=' . $_REQUEST['filter'];?>"<?php if ($_REQUEST["severity"] == "NOTICE") {?> selected<?php }?>>Notice</option>
-							<option value="utilities.php?action=view_syslog&page=1&severity=INFO<?php print '&poller=' . $_REQUEST['poller'] . '&facility=' . $_REQUEST['facility'] . '&filter=' . $_REQUEST['filter'];?>"<?php if ($_REQUEST["severity"] == "INFO") {?> selected<?php }?>>Info</option>
-							<option value="utilities.php?action=view_syslog&page=1&severity=DEBUG<?php print '&poller=' . $_REQUEST['poller'] . '&facility=' . $_REQUEST['facility'] . '&filter=' . $_REQUEST['filter'];?>"<?php if ($_REQUEST["severity"] == "DEBUG") {?> selected<?php }?>>Debug</option>
+						<select name="severity" onChange="applyFilterChange(document.form_syslog_id)">
+							<option value="ALL"<?php if ($_REQUEST["severity"] == "ALL") {?> selected<?php }?>>All</option>
+							<option value="EMERGENCY"<?php if ($_REQUEST["severity"] == "EMERGENCY") {?> selected<?php }?>>Emergency</option>
+							<option value="ALERT"<?php if ($_REQUEST["severity"] == "ALERT") {?> selected<?php }?>>Alert</option>
+							<option value="CRITICAL"<?php if ($_REQUEST["severity"] == "CRITICAL") {?> selected<?php }?>>Critical</option>
+							<option value="ERROR"<?php if ($_REQUEST["severity"] == "ERROR") {?> selected<?php }?>>Error</option>
+							<option value="WARNING"<?php if ($_REQUEST["severity"] == "WARNING") {?> selected<?php }?>>Warning</option>
+							<option value="NOTICE"<?php if ($_REQUEST["severity"] == "NOTICE") {?> selected<?php }?>>Notice</option>
+							<option value="INFO"<?php if ($_REQUEST["severity"] == "INFO") {?> selected<?php }?>>Info</option>
+							<option value="DEBUG"<?php if ($_REQUEST["severity"] == "DEBUG") {?> selected<?php }?>>Debug</option>
 						</select>
 					</td>
 					<td width="20">
 						&nbsp;Poller:&nbsp;
 					</td>
 					<td width="1">
-						<select name="cbo_poller" onChange="window.location=document.form_syslog_id.cbo_poller.options[document.form_syslog_id.cbo_poller.selectedIndex].value">
-							<option value="utilities.php?action=view_syslog&poller=ALL&severity=ALL<?php print '&facility=' . $_REQUEST['facility'] . '&filter=' . $_REQUEST['filter'];?>"<?php if ($_REQUEST["severity"] == "ALL") {?> selected<?php }?>>All</option>
+						<select name="poller" onChange="applyFilterChange(document.form_syslog_id)">
+							<option value="ALL"<?php if ($_REQUEST["severity"] == "ALL") {?> selected<?php }?>>All</option>
 							<?php
 							$pollers = db_fetch_assoc("select id,name from poller order by name");
 
-							if (sizeof($pollers) > 0) {
-							foreach ($pollers as $poller) {
-								print "<option value='utilities.php?action=view_syslog&poller=" . $poller['id'] . "&severity=ALL&facility=" . $_REQUEST['facility'] . "&filter=" . $_REQUEST['filter'] . "&page=1'"; if ($_REQUEST["poller"] == $poller["id"]) { print " selected"; } print ">" . $poller["name"] . "</option>\n";
-							}
+							if ($pollers) {
+								foreach ($pollers as $poller) {
+									print "<option value=\"" . $poller['id'] . "\"";
+									if ($_REQUEST["poller"] == $poller["id"]) { 
+										print " selected"; 
+									} 
+									print ">" . $poller["name"] . "</option>\n";
+								}
 							}
 							?>
 						</select>
@@ -56,15 +74,19 @@
 						&nbsp;Host:&nbsp;
 					</td>
 					<td width="1">
-						<select name="cbo_host" onChange="window.location=document.form_syslog_id.cbo_host.options[document.form_syslog_id.cbo_host.selectedIndex].value">
-							<option value="utilities.php?action=view_syslog&page=1&host=ALL<?php print '&poller=' . $_REQUEST['poller'] . '&severity=' . $_REQUEST['severity'] . '&facility=' . $_REQUEST['facility'] . '&filter=' . $_REQUEST['filter'];?>"<?php if ($_REQUEST["host"] == "ALL") {?> selected<?php }?>>All</option>
+						<select name="host" onChange="applyFilterChange(document.form_syslog_id)">
+							<option value="ALL"<?php if ($_REQUEST["host"] == "ALL") {?> selected<?php }?>>All</option>
 							<?php
 							$hosts = db_fetch_assoc("select id,description from host order by description");
 
-							if (sizeof($hosts) > 0) {
-							foreach ($hosts as $host) {
-								print "<option value='utilities.php?action=view_syslog&page=1&host=" . $host['id'] . "&poller=" . $_REQUEST['poller'] . "&severity=" . $_REQUEST['severity'] . "&facility=" . $_REQUEST['facility'] . "&filter=" . $_REQUEST['filter'] . "&page=1'"; if ($_REQUEST["host"] == $host["id"]) { print " selected"; } print ">" . $host["description"] . "</option>\n";
-							}
+							if ($hosts) {
+								foreach ($hosts as $host) {
+									print "<option value=\"" . $host['id'] . "\""; 
+									if ($_REQUEST["host"] == $host["id"]) { 
+										print " selected"; 
+									} 
+									print ">" . $host["description"] . "</option>\n";
+								}
 							}
 							?>
 						</select>
