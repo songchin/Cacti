@@ -864,8 +864,7 @@ $settings_graphs = array(
 	);
 
 $user_themes = $themes;
-$user_themes["default"] = "System Default";
-
+$user_themes["default"] = "System Default (Global Setting)";
 
 $settings_users = array(
 	"general" => array(
