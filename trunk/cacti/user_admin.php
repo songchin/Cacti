@@ -120,16 +120,24 @@ function form_save() {
 
 	/* user management save */
 	if (isset($_POST["save_component_user"])) {
-		if (($_POST["password"] == "") && ($_POST["password_confirm"] == "")) {
-			$password = db_fetch_cell("select password from user_auth where id=" . $_POST["id"]);
-		}else{
-			$password = md5($_POST["password"]);
-		}
 
 		/* check to make sure the passwords match; if not error */
 		if ($_POST["password"] != $_POST["password_confirm"]) {
 			raise_message(4);
 		}
+
+		/* password processing */
+		if ((empty($_POST["password"])) && (empty($_POST["password_confirm"]))) {
+			$user = api_user_info( array( "id" => $_POST["id"] ) );
+			if (sizeof($user)) {
+				$password = $user["password"];
+			}else{
+				$password = "";
+			}
+		}else{
+			$password = md5($_POST["password"]);
+		}
+
 
 		form_input_validate($_POST["password"], "password", "" . preg_quote($_POST["password_confirm"]) . "", true, 4);
 		form_input_validate($_POST["password_confirm"], "password_confirm", "" . preg_quote($_POST["password"]) . "", true, 4);
@@ -151,11 +159,13 @@ function form_save() {
 		$save["policy_graph_templates"] = form_input_validate((isset($_POST["policy_graph_templates"]) ? $_POST["policy_graph_templates"] : $_POST["_policy_graph_templates"]), "policy_graph_templates", "", true, 3);
 
 		if (!is_error_message()) {
-			$user_id = sql_save($save, "user_auth");
+			$user_id = api_user_save($save);
 
 			if ($user_id) {
+				/* user saved */
 				raise_message(1);
 			}else{
+				/* error saving */
 				raise_message(2);
 			}
 
@@ -195,12 +205,9 @@ function form_save() {
 		}
 	}
 
-	/* redirect to the appropriate page */
-	if (is_error_message()) {
-		header("Location: user_admin.php?action=user_edit&id=" . (empty($user_id) ? $_POST["id"] : $user_id));
-	}else{
-		header("Location: user_admin.php");
-	}
+	/* redirect page */
+	header("Location: user_admin.php?action=user_edit&id=" . (empty($user_id) ? $_POST["id"] : $user_id));
+
 }
 
 /* --------------------------
@@ -613,6 +620,18 @@ function graph_settings_edit() {
 	form_hidden_box("save_component_graph_settings","1","");
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
 /* --------------------------
     User Administration
    -------------------------- */
@@ -621,7 +640,7 @@ function user_edit() {
 	global $colors, $fields_user_user_edit_host;
 
 	if (!empty($_GET["id"])) {
-		$user = db_fetch_row("select * from user_auth where id=" . $_GET["id"]);
+		$user = api_user_info(array( "id" => $_GET["id"]));
 		$header_label = "[edit: " . $user["username"] . "]";
 	}else{
 		$header_label = "[new]";
@@ -679,11 +698,12 @@ function user() {
 
 	html_header_checkbox(array("User Name", "Full Name", "Status","Realm", "Default Graph Policy", "Last Login"));
 
-	$user_list = db_fetch_assoc("select id, user_auth.username, full_name, enabled, realm, policy_graphs, DATE_FORMAT(max(time),'%M %e %Y %H:%i:%s') as time from user_auth left join user_log on user_auth.id = user_log.user_id group by id");
+	$user_list = api_user_list( array( "1" => "username" ) );
 
 	$i = 0;
 	if (sizeof($user_list) > 0) {
-	foreach ($user_list as $user) {
+	foreach ($user_list as $user_list_values) {
+		$user = api_user_info( array( "id" => $user_list_values["id"] ) );
 		form_alternate_row_color($colors["alternate"],$colors["light"],$i);
 			?>
 			<td>
@@ -767,9 +787,9 @@ function user_actions() {
 	/* loop through each of the users selected on the previous page and get more info about them */
 	while (list($var,$val) = each($_POST)) {
 		if (ereg("^chk_([0-9]+)$", $var, $matches)) {
-			$username = db_fetch_cell("select username from user_auth where id=" . $matches[1]);
-			$user_list .= "<li>" . $username . "<br>";
-			$username_list[$username] = $username;
+			$user = api_user_info( array( "id" => $matches[1]) );
+			$user_list .= "<li>" . $user["username"] . "<br>";
+			$username_list[$user["username"]] = $user["username"];
 			$user_array[$i] = $matches[1];
 		}
 		$i++;

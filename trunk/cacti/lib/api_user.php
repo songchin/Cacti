@@ -32,13 +32,21 @@ include/config.php
 */
 
 /* coming soon */
-function api_user_add() {
+function api_user_save($array) {
+
+	$user_id = sql_save($array, "user_auth");
+
+	return $user_id;
 
 }
-/* coming soon */
-function api_user_edit() {
 
-}
+
+
+
+
+
+
+
 
 /* api_user_changepassword - changes users password, old password is optional
    @arg $user_id - User id to change password for
@@ -75,26 +83,64 @@ function api_user_changepassword($user_id, $password_new, $password_old="") {
 
 }
 
-/* api_user_info - returns an array of value based on request array
-   @arg $array  - Array of vales to query for example:
-		array( "username" => "admin")
-*/
-/* still not working */
-function api_user_info($array) {
+
+/* api_user_list - returns an array of users on the system
+   @arg $array  - Array of columns to sort by for example:
+		array( "1" => "username", "2" => "full_name")
+   @return - list of users id, username only */
+function api_user_list($array) {
 
 	/* build SQL query */
-	$sql_query = "SELECT * FROM auth_user WHERE ";
-	$sql_where = "";
-	if (sizeof($array) > 0) {
+	$sql_query = "SELECT id,username FROM user_auth ";
+	$sql_sort = "ORDER BY ";
+	if ((sizeof($array) > 0) && (is_array($array))) {
 		foreach ($array as $field => $value) {
-			$sql_where .= $field . " = '" . $value . "' AND ";
+			$sql_sort .= $value . ", ";
 		}
 		/* remove trailing AND */
-		
+		$sql_sort = preg_replace("/\,\ $/", "", $sql_sort);
+		$sql_query = $sql_query . $sql_sort;
 	}else{
 		/* error no array */
 		return "";
 	}
+
+	/* get the user list */
+	$user_list = db_fetch_assoc($sql_query);
+	return $user_list;
+
+}
+
+
+/* api_user_info - returns an array of value based on request array
+   @arg $array  - Array of values to query for example:
+		array( "username" => "admin")
+   @return - single users array of info */
+function api_user_info($array) {
+
+	/* build SQL query */
+	$sql_query = "SELECT * FROM user_auth WHERE ";
+	$sql_where = "";
+	if ((sizeof($array) > 0) && (is_array($array))) {
+		foreach ($array as $field => $value) {
+			$sql_where .= $field . " = '" . $value . "' AND ";
+		}
+		/* remove trailing AND */
+		$sql_where = preg_replace("/ AND\ $/", "", $sql_where);
+		$sql_query = $sql_query . $sql_where;
+	}else{
+		/* error no array */
+		return "";
+	}
+
+	/* get the user info */
+	$user = db_fetch_row($sql_query);
+	
+	/* get last login and append */
+	$last_login = db_fetch_row("select DATE_FORMAT(max(time),'%M %e %Y %H:%i:%s') as time from user_log where user_id = " . $user["id"] . " and result = 1");
+	$user["time"] = $last_login["time"];
+
+	return $user;
 
 }
 
@@ -116,9 +162,9 @@ function api_user_remove($user_id) {
 /* api_user_enable - enables  a user account
    @arg $user_id - user id */
 function api_user_enable($user_id) {
-        if (!empty($user_id)) {
-                if ($user_id != 1) {
-                        db_execute("update user_auth set enabled = 1 where id=" . $user_id);
+	if (!empty($user_id)) {
+		if ($user_id != 1) {
+			db_execute("update user_auth set enabled = 1 where id=" . $user_id);
 		}
 	}
 }
@@ -127,9 +173,9 @@ function api_user_enable($user_id) {
 /* api_user_disable - disables a user account
    @arg $user_id - user id */
 function api_user_disable($user_id) {
-        if (!empty($user_id)) {
-                if ($user_id != 1) {
-                        db_execute("update user_auth set enabled = 0 where id=" . $user_id);
+	if (!empty($user_id)) {
+		if ($user_id != 1) {
+			db_execute("update user_auth set enabled = 0 where id=" . $user_id);
 		}
 	}
 }
@@ -173,6 +219,7 @@ function api_user_copy($template_user, $new_user, $new_realm=-1) {
                 $row['user_id'] = $new_id;
                 sql_save($settings_tree, 'settings_tree', array('user_id', 'graph_tree_item_id'));
         }
+
 }
 
 
