@@ -92,6 +92,22 @@ if ($poller_id == 0) {
 	/* allow remote pollers to start */
 	db_execute("UPDATE poller SET run_state='Ready' where active='on'");
 } else {
+	/* wait for signal from main poller to begin polling */
+	while (1) {
+		$state = db_fetch_cell("SELECT run_state FROM poller where id=" . $poller_id);
+
+		if ($state == "Ready") {
+			break;
+		}
+
+		if (($start + MAX_POLLER_RUNTIME) < time()) {
+			cacti_log("Poller[$poller_id] ERROR: Maximum runtime of " . MAX_POLLER_RUNTIME . " seconds exceeded for Poller_ID " . $poller_id . " - Exiting.", true, "POLLER");
+	   	db_execute("update poller set run_state = 'Timeout' where poller_id=" . $poller_id);
+			exit;
+		}
+		sleep(2);
+	}
+
 	/* get total number of polling items from the database for the specified poller */
 	$num_polling_items = db_fetch_cell("SELECT count(*) FROM poller_item WHERE poller_id='" . $poller_id . "'");
 	$polling_hosts = db_fetch_assoc("SELECT id FROM host WHERE (disabled = '' and poller_id = '" . $poller_id . "') ORDER BY id");
@@ -211,6 +227,7 @@ if ((($num_polling_items > 0) || ($num_pollers > 1)) && (read_config_option("pol
 							/* close rrdtool if poller is 0 */
 							if ($poller_id == 0) { rrd_close($rrdtool_pipe); }
 							cacti_log("ERROR: Maximum runtime of " . MAX_POLLER_RUNTIME . " seconds exceeded for Poller_ID " . $poller_id . " - Exiting.", true, "POLLER");
+					   	db_execute("update poller set run_state = 'Timeout' where poller_id=" . $poller_id);
 							exit;
 						}
 					}
@@ -258,6 +275,7 @@ if ((($num_polling_items > 0) || ($num_pollers > 1)) && (read_config_option("pol
 				/* close rrdtool if poller is 0 */
 				if ($poller_id == 0) { rrd_close($rrdtool_pipe); }
 				cacti_log("Poller[$poller_id] ERROR: Maximum runtime of " . MAX_POLLER_RUNTIME . " seconds exceeded for Poller_ID " . $poller_id . " - Exiting.", true, "POLLER");
+		   	db_execute("update poller set run_state = 'Timeout' where poller_id=" . $poller_id);
 				exit;
 			}
 
@@ -331,6 +349,12 @@ if ((($num_polling_items > 0) || ($num_pollers > 1)) && (read_config_option("pol
 
 		/* i don't know why we are doing this */
 		db_execute("truncate table poller_output");
+
+		/* i don't know why we are doing this */
+		db_execute("truncate table poller_time");
+
+		/* idle the pollers till the next polling cycle */
+   	db_execute("update poller set run_state = 'Wait' where active='on'");
 	}
 
 	if ($method == "cactid") {
