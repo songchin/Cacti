@@ -36,12 +36,16 @@ $colors["light"] = "F5F5F5";
 $colors["alternate"] = "E7E9F2";
 $colors["panel_dark"] = "C5C5C5";
 
-$colors["header"] = "00438C";
-$colors["header_panel"] = "6d88ad";
+$colors["header"] = "00038C";
+$colors["header_panel"] = "000000";
 $colors["header_text"] = "ffffff";
 $colors["form_background_dark"] = "E1E1E1";
 
 $colors["form_alternate1"] = "2E3127";
 $colors["form_alternate2"] = "000000";
+
+$colors["rrd_canvas"] = "000000";
+$colors["rrd_font"] = "FFFFFF";
+$colors["rrd_back"] = "000000";
 
 ?>
