@@ -171,7 +171,7 @@ class Net_Ping
 		/* get start time */
 		$this->start_time();
 
-		/* poll ifDescription for status */
+		/* poll sysUptime for status */
 		$retry_count = 0;
 		$success_count = 0;
 		$total_time = 0;
@@ -191,7 +191,7 @@ class Net_Ping
 
 			$output = cacti_snmp_get($this->host["hostname"],
 				$this->host["snmp_community"],
-				".1.3.6.1.2.1.1.1.0" ,
+				".1.3.6.1.2.1.1.3.0" ,
 				$this->host["snmp_version"],
 				$this->host["snmpv3_auth_username"],
 				$this->host["snmpv3_auth_password"],
