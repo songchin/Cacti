@@ -129,7 +129,9 @@ void snmp_host_init(host_t *current_host) {
 			* As we want this extension to compile on both versions, we use the latter
 			* symbol on purpose, as it's defined to be the same as the former.
 			*/
-			|| ((!strcmp(current_host->snmpv3_priv_protocol, "AES"))
+			|| (!strcmp(current_host->snmpv3_priv_protocol, "AES")))
+				session.securityPrivProto = usmAESPrivProtocol;
+				session.securityPrivProtoLen = OIDSIZE(usmAESPrivProtocol);
 			#else
 			) {
 				session.securityPrivProto = usmAES128PrivProtocol;
@@ -167,7 +169,7 @@ void snmp_host_init(host_t *current_host) {
 	        cacti_log("ERROR: SNMP: Error generating SNMPv3 Ku from authentication pass phrase.\n");
 		}
 		/* set the privacy key to the correct hashed version */
-		if (strcmp(current_host->snmpv3_priv_protocol,"[None]")) {
+		if (!strcmp(current_host->snmpv3_priv_protocol,"[None]")) {
 		    if (generate_Ku(session.securityAuthProto, 
 							session.securityAuthProtoLen,
 							(u_char *) current_host->snmpv3_auth_password,
