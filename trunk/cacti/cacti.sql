@@ -1876,7 +1876,7 @@ INSERT INTO graph_tree_items VALUES (7,1,0,0,'',1,'00100000000000000000000000000
 
 CREATE TABLE host (
   id mediumint(8) unsigned NOT NULL auto_increment,
-  poller_id smallint(5) unsigned NOT NULL default '0',
+  poller_id smallint(5) unsigned NOT NULL default '1',
   host_template_id mediumint(8) unsigned NOT NULL default '0',
   description varchar(150) NOT NULL default '',
   hostname varchar(250) default NULL,
@@ -1913,7 +1913,7 @@ CREATE TABLE host (
 -- Dumping data for table `host`
 --
 
-INSERT INTO host VALUES (1,0,8,'Localhost','127.0.0.1','',1,'','',NULL,NULL,NULL,161,500,1,0,'',3,0,'0000-00-00 00:00:00','0000-00-00 00:00:00','',"99999.9","0.00000","0.00000","0.00000",0,0,"100.00000");
+INSERT INTO host VALUES (1,1,8,'Localhost','127.0.0.1','',1,'','',NULL,NULL,NULL,161,500,1,0,'',3,0,'0000-00-00 00:00:00','0000-00-00 00:00:00','',"99999.9","0.00000","0.00000","0.00000",0,0,"100.00000");
 
 --
 -- Table structure for table `host_graph`
