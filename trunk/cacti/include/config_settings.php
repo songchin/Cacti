@@ -863,36 +863,4 @@ $settings_graphs = array(
 		)
 	);
 
-$user_themes = $themes;
-$user_themes["default"] = "System Default (Global Setting)";
-
-$settings_users = array(
-	"general" => array(
-		"current_theme" => array(
-			"friendly_name" => "Visual Theme to Use",
-			"description" => "The Cacti theme to use.  Changes the look of Cacti.",
-			"method" => "drop_array",
-			"default" => "default",
-			"array" => $user_themes
-			),
-		"email_address_primary" => array(
-			"friendly_name" => "Primary E-Mail Address",
-			"description" => "The primary e-mail address for this user.",
-			"method" => "textbox",
-			"max_length" => "255",
-			"default" => ""
-			),
-		"email_address_secondary" => array(
-			"friendly_name" => "Secondary E-Mail Address",
-			"description" => "The Secondary E-Mail Address for User.  This would typically be an e-mail address to a handheld or portable device.",
-			"method" => "textbox",
-			"max_length" => "255",
-			"default" => ""
-			)
-		)
-	)
-
-
-
-
 ?>

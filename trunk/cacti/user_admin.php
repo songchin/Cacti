@@ -64,14 +64,6 @@ switch ($_REQUEST["action"]) {
 
 		include_once("include/bottom_footer.php");
 		break;
-	case 'user_settings_edit':
-		include_once("include/top_header.php");
-
-		user_edit();
-
-		include_once("include/bottom_footer.php");
-		break;
-
 	case 'graph_perms_edit':
 		include_once("include/top_header.php");
 
@@ -166,6 +158,8 @@ function form_save() {
 		$save["username"] = form_input_validate($_POST["username"], "username", "^[A-Za-z_0-9\.]+$", false, 3);
 		$save["full_name"] = form_input_validate($_POST["full_name"], "full_name", "", true, 3);
 		$save["password"] = $password;
+		$save["email_address_primary"] = form_input_validate($_POST["email_address_primary"], "email_address_primary", "", true, 3);
+		$save["email_address_secondary"] = form_input_validate($_POST["email_address_secondary"], "email_address_secondary", "", true, 3);
 		$save["must_change_password"] = form_input_validate((isset($_POST["must_change_password"]) ? $_POST["must_change_password"] : ""), "must_change_password", "", true, 3);
 		$save["show_tree"] = form_input_validate((isset($_POST["show_tree"]) ? $_POST["show_tree"] : ""), "show_tree", "", true, 3);
 		$save["show_list"] = form_input_validate((isset($_POST["show_list"]) ? $_POST["show_list"] : ""), "show_list", "", true, 3);
@@ -174,12 +168,16 @@ function form_save() {
 		$save["login_opts"] = form_input_validate($_POST["login_opts"], "login_opts", "", true, 3);
 		$save["enabled"] = form_input_validate($_POST["enabled"], "enabled", "", true, 3);
 		$save["password_expire_length"] = form_input_validate($_POST["password_expire_length"], "password_expire_length", "", true, 3);
+		$save["current_theme"] = form_input_validate($_POST["current_theme"], "current_theme", "", true, 3);
 		$save["policy_graphs"] = form_input_validate((isset($_POST["policy_graphs"]) ? $_POST["policy_graphs"] : $_POST["_policy_graphs"]), "policy_graphs", "", true, 3);
 		$save["policy_trees"] = form_input_validate((isset($_POST["policy_trees"]) ? $_POST["policy_trees"] : $_POST["_policy_trees"]), "policy_trees", "", true, 3);
 		$save["policy_hosts"] = form_input_validate((isset($_POST["policy_hosts"]) ? $_POST["policy_hosts"] : $_POST["_policy_hosts"]), "policy_hosts", "", true, 3);
 		$save["policy_graph_templates"] = form_input_validate((isset($_POST["policy_graph_templates"]) ? $_POST["policy_graph_templates"] : $_POST["_policy_graph_templates"]), "policy_graph_templates", "", true, 3);
 
-		$save["created"] = "now()";
+		/* New user, update created */
+		if (empty($_POST["id"])) {
+			$save["created"] = "now()";
+		}
 
 		if (!is_error_message()) {
 			$user_id = api_user_save($save);
@@ -190,6 +188,10 @@ function form_save() {
 			}else{
 				/* error saving */
 				raise_message(2);
+			}
+			if ($_SESSION["sess_user_id"] == $_POST["id"]) {
+				/* reset local settings cache so the user sees the new settings */
+				kill_session_var("sess_current_theme");
 			}
 
 			/* realms perms */
@@ -213,16 +215,6 @@ function form_save() {
 				if ($_SESSION["sess_user_id"] == $_POST["id"]) {
 					/* reset local settings cache so the user sees the new settings */
 					kill_session_var("sess_graph_config_array");
-				}
-			/* user settings */
-			}elseif (isset($_POST["save_component_user_settings"])) {
-				if (api_user_user_setting_save($_POST["id"],$_POST) == 1) {
-					raise_message(2);
-				}
-
-				if ($_SESSION["sess_user_id"] == $_POST["id"]) {
-					/* reset local settings cache so the user sees the new settings */
-					kill_session_var("sess_user_config_array");
 				}
 			/* graph perms - allow/deny */
 			}elseif (isset($_POST["save_component_graph_perms"])) {
@@ -627,72 +619,6 @@ function graph_settings_edit() {
 	form_hidden_box("save_component_graph_settings","1","");
 }
 
-/* ---------------------------------
-    user_settings_edit function
-   --------------------------------- */
-
-function user_settings_edit() {
-	global $settings_users, $tabs_graphs, $colors, $graph_views, $graph_tree_views;
-
-	?>
-	<table width='98%' align='center' cellpadding="5">
-		<tr>
-			<td>
-				<span style='font-size: 12px; font-weight: bold;'>User settings that the user can modify, if permitted.</span>
-			</td>
-		</tr>
-	</table>
-	<?php
-
-	html_start_box("<strong>User Settings</strong>", "98%", $colors["header_background"], "3", "center", "");
-
-	/* get user settings */
-	$user_settings = api_user_user_setting_list($_GET["id"]);
-
-	while (list($tab_short_name, $tab_fields) = each($settings_users)) {
-		?>
-		<tr bgcolor='<?php print $colors["header_panel_background"];?>'>
-			<td colspan='2' class='textSubHeaderDark' style='padding: 3px;'>
-				<?php print $tabs_graphs[$tab_short_name];?>
-			</td>
-		</tr>
-		<?php
-
-		$form_array = array();
-
-		while (list($field_name, $field_array) = each($tab_fields)) {
-			$form_array += array($field_name => $tab_fields[$field_name]);
-
-			if ((isset($field_array["items"])) && (is_array($field_array["items"]))) {
-				while (list($sub_field_name, $sub_field_array) = each($field_array["items"])) {
-					if (user_config_value_exists($sub_field_name, $_GET["id"])) {
-						$form_array[$field_name]["items"][$sub_field_name]["form_id"] = 1;
-					}
-					$form_array[$field_name]["items"][$sub_field_name]["value"] =  $user_settings[$sub_field_name];
-				}
-			}else{
-				if (user_config_value_exists($field_name, $_GET["id"])) {
-					$form_array[$field_name]["form_id"] = 1;
-				}
-				$form_array[$field_name]["value"] = $user_settings[$field_name];
-			}
-		}
-
-		draw_edit_form(
-			array(
-				"config" => array(
-					"no_form_tag" => true
-					),
-				"fields" => $form_array
-				)
-			);
-	}
-
-	html_end_box();
-
-	form_hidden_box("save_component_user_settings","1","");
-}
-
 
 
 /* --------------------------
@@ -735,11 +661,6 @@ function user_edit() {
 				<td <?php print (($_GET["action"] == "graph_settings_edit") ? "bgcolor='" . $colors["form_alternate1"] . "'" : "bgcolor='" . $colors["form_alternate2"] . "'");?> nowrap='nowrap' width='130' align='center' class='tab'>
 					<span class='textHeader'><a href='user_admin.php?action=graph_settings_edit&id=<?php print $_GET["id"];?>'>Graph Settings</a></span>
 				</td>
-				<td width='1'></td>
-				<td <?php print (($_GET["action"] == "user_settings_edit") ? "bgcolor='" . $colors["form_alternate1"] . "'" : "bgcolor='" . $colors["form_alternate2"] . "'");?> nowrap='nowrap' width='130' align='center' class='tab'>
-					<span class='textHeader'><a href='user_admin.php?action=user_settings_edit&id=<?php print $_GET["id"];?>'>User Settings</a></span>
-				</td>
-
 				<td></td>
 			</tr>
 		</table>
@@ -748,8 +669,6 @@ function user_edit() {
 
 	if ($_GET["action"] == "graph_settings_edit") {
 		graph_settings_edit();
-	}elseif ($_GET["action"] == "user_settings_edit") {
-		user_settings_edit();
 	}elseif ($_GET["action"] == "user_realms_edit") {
 		user_realms_edit();
 	}elseif ($_GET["action"] == "graph_perms_edit") {

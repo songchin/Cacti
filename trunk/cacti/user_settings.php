@@ -48,16 +48,25 @@ switch ($_REQUEST["action"]) {
    -------------------------- */
 
 function save() {
-	global $settings_users;
+	
+	$save = array();
 
-	if (api_user_user_setting_save($_SESSION["sess_user_id"],$_POST) == 1) {
-		raise_message(2);
-	}else{
-		raise_message(1);
+	$save["id"] = $_SESSION["sess_user_id"];
+	$save["current_theme"] = form_input_validate($_POST["current_theme"], "current_theme", "", true, 3);
+
+	if (!is_error_message()) {
+		$user_id = api_user_save($save);
+
+		if ($user_id) {
+			/* user saved */
+			raise_message(1);
+			/* reset local settings cache so the user sees the new settings */
+			kill_session_var("sess_current_theme");
+		}else{
+			/* error saving */
+			raise_message(2);
+		}
 	}
-
-	/* reset local settings cache so the user sees the new settings */
-	kill_session_var("sess_user_config_array");
 
 	header("Location: user_settings.php");
 
@@ -68,7 +77,7 @@ function save() {
    -------------------------- */
 
 function settings() {
-	global $colors, $tabs_graphs, $settings_users, $graph_views, $current_user, $graph_tree_views;
+	global $colors, $user_themes;
 
 	/* you cannot have per-user settings if cacti's user management is not turned on */
 	if (read_config_option("auth_method") == "0") {
@@ -77,57 +86,44 @@ function settings() {
 		return;
 	}
 
+	/* get user settings */
+	$user = api_user_info( array( "id" => $_SESSION["sess_user_id"] ) );
+
 	print "<form method='post'>\n";
 
 	html_start_box("<strong>User Settings</strong>", "98%", $colors["header_background"], "3", "center", "");
 
-	/* get user settings */
-	$user_settings = api_user_user_setting_list($_SESSION["sess_user_id"]);
-
-	while (list($tab_short_name, $tab_fields) = each($settings_users)) {
-		?>
-		<tr bgcolor='<?php print $colors["header_panel_background"];?>'>
-			<td colspan='2' class='textSubHeaderDark' style='padding: 3px;'>
-				<?php print $tabs_graphs[$tab_short_name];?>
-			</td>
-		</tr>
+	?>
+	<tr bgcolor='<?php print $colors["header_panel_background"];?>'>
+		<td colspan='2' class='textSubHeaderDark' style='padding: 3px;'>General</td>
+	</tr>
 		<?php
 
-		$form_array = array();
+	$form_array = array(
+		"current_theme" => array(
+			"friendly_name" => "Visual Theme",
+			"description" => "The Cacti theme to use. Changes the look of Cacti.",
+			"method" => "drop_array",
+			"array" => $user_themes,
+			"value" => api_user_theme($_SESSION["sess_user_id"]),
+			"default" => "default"
+			)
+		);
 
-		while (list($field_name, $field_array) = each($tab_fields)) {
-			$form_array += array($field_name => $tab_fields[$field_name]);
-
-			if ((isset($field_array["items"])) && (is_array($field_array["items"]))) {
-				while (list($sub_field_name, $sub_field_array) = each($field_array["items"])) {
-					if (user_config_value_exists($sub_field_name, $_SESSION["sess_user_id"])) {
-						$form_array[$field_name]["items"][$sub_field_name]["form_id"] = 1;
-					}
-					$form_array[$field_name]["items"][$sub_field_name]["value"] =  $user_settings[$sub_field_name];
-				}
-			}else{
-				if (user_config_value_exists($field_name, $_SESSION["sess_user_id"])) {
-					$form_array[$field_name]["form_id"] = 1;
-				}
-				$form_array[$field_name]["value"] = $user_settings[$field_name];
-			}
-		}
-
-		draw_edit_form(
-			array(
-				"config" => array(
-					"no_form_tag" => true
-					),
-				"fields" => $form_array
-				)
-			);
-	}
+	draw_edit_form(
+		array(
+			"config" => array(
+				"no_form_tag" => true
+				),
+			"fields" => $form_array
+			)
+		);
 
 	html_end_box();
 
 	print "<br>";
 
-	form_hidden_box("save_component_user_config","1","");
+	form_hidden_box("save_component_user","1","");
 	form_save_button((isset($_SERVER["HTTP_REFERER"]) ? $_SERVER["HTTP_REFERER"] : "index.php"), "save");
 
 }

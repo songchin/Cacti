@@ -1037,6 +1037,10 @@ $fields_tree_edit = array(
 	);
 
 /* file: user_admin.php, action: user_edit (host) */
+
+$user_themes = $themes;
+$user_themes["default"] = "System Default (Global Setting)";
+
 $fields_user_user_edit_host = array(
 	"username" => array(
 		"method" => "textbox",
@@ -1057,6 +1061,20 @@ $fields_user_user_edit_host = array(
 		"friendly_name" => "Password",
 		"description" => "Enter the password for this user twice. Remember that passwords are case sensitive!",
 		"value" => "",
+		"max_length" => "255"
+		),
+	"email_address_primary" => array(
+		"method" => "textbox",
+		"friendly_name" => "Primary Email Address",
+		"description" => "The primary e-mail address for this user.",
+		"value" => "|arg1:email_address_primary|",
+		"max_length" => "255"
+		),
+	"email_address_secondary" => array(
+		"method" => "textbox",
+		"friendly_name" => "Secondary Email Address",
+		"description" => "The secondary e-mail address for this user. This would typically be an e-mail address to a handheld or portable device.",
+		"value" => "|arg1:email_address_secondary|",
 		"max_length" => "255"
 		),
 	"grp1" => array(
@@ -1139,6 +1157,14 @@ $fields_user_user_edit_host = array(
 		"value" => "|arg1:password_expire_length|",
 		"array" => $user_password_expire_intervals,
 		"default" => read_config_option("password_expire_length")
+		),
+	"current_theme" => array(
+		"method" => "drop_array",
+		"friendly_name" => "Visual Theme",
+		"description" => "The Cacti theme to use. Changes the look of Cacti.",
+		"value" => "|arg1:current_theme|",
+		"array" => $user_themes,
+		"default" => "default"
 		),
 	"id" => array(
 		"method" => "hidden_zero",

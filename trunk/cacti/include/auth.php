@@ -24,8 +24,8 @@
  +-------------------------------------------------------------------------+
 */
 
+
 include("./include/config.php");
-include($config["library_path"] . "/api_user.php");
 
 /* check to see if this is a new installation */
 if (db_fetch_cell("select cacti from version") != $config["cacti_version"]) {
