@@ -28,6 +28,7 @@ function run_data_query($host_id, $snmp_query_id) {
 	global $config;
 
 	include_once($config["library_path"] . "/poller.php");
+	include_once($config["library_path"] . "/utility.php");
 
 	debug_log_insert("data_query", "Running data query [$snmp_query_id].");
 	$type_id = db_fetch_cell("select data_input.type_id from snmp_query,data_input where snmp_query.data_input_id=data_input.id and snmp_query.id=$snmp_query_id");
