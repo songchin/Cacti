@@ -829,7 +829,7 @@ $fields_host_edit = array(
 		"array" => $snmpv3_auth_protocol
 		),
 	"snmpv3_priv_passphrase" => array(
-		"method" => "textbox_password",
+		"method" => "textbox",
 		"friendly_name" => "Privacy Passphrase",
 		"description" => "The default SNMP v3 privacy passphrase.",
 		"value" => "|arg1:snmpv3_priv_passphrase|",

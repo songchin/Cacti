@@ -108,9 +108,13 @@ $settings = array(
 			"default" => 1,
 			"array" => $logfile_options
 			),
+		"ui_header" => array(
+			"friendly_name" => "User Interface Logging",
+			"method" => "spacer"
+			),
 		"web_log" => array(
 			"friendly_name" => "Web Events",
-			"description" => "What Cacti website messages should be placed in the log.",
+			"description" => "What Cacti website messages should be placed in the Cacti logfile.  These events will not be placed in the Syslog/Eventlog.",
 			"method" => "checkbox_group",
 			"tab" => "general",
 			"items" => array(
@@ -129,7 +133,7 @@ $settings = array(
 				),
 			),
 		"poller_header" => array(
-			"friendly_name" => "Poller Specific Logging",
+			"friendly_name" => "Poller Logging",
 			"method" => "spacer"
 			),
 		"log_verbosity" => array(
@@ -288,7 +292,7 @@ $settings = array(
 		"snmpv3_priv_passphrase" => array(
 			"friendly_name" => "Privacy Passphrase",
 			"description" => "The default SNMP v3 privacy passphrase.",
-			"method" => "textbox_password",
+			"method" => "textbox",
 			"default" => "",
 			"max_length" => "100"
 			),
@@ -679,10 +683,10 @@ $settings = array(
 			"array" => array( "0" => "Disabled", "1" => "Enable")
 			),
 		"ldap_mode" => array(
-			"friendly_name" => "Mode", 	 
+			"friendly_name" => "Mode",
 			"description" => "Mode which cacti will attempt to authenicate against the LDAP server.<ul><li><i>No Searching</i> - No Distinguished Name (DN) searching occurs, just attempt to bind with the provided Distinguished Name (DN) format.</li><li><i>Anonymous Searching</i> - Attempts to search for username against LDAP directory via anonymous binding to locate the users Distinguished Name (DN).</li><li><i>Specific Searching</i> - Attempts search for username against LDAP directory via Specific Distinguished Name (DN) and Specific Password for binding to locate the users Distinguished Name (DN).</li></ul>",
 			"method" => "drop_array",
-			"default" => "0",	 
+			"default" => "0",
 			"array" => $ldap_modes
 			),
 		"ldap_dn" => array(
