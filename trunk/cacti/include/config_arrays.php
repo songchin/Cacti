@@ -261,7 +261,6 @@ $graph_perms_type_array = array(
 	"host" => "3",
 	"graph_template" => "4"
 	);
-
 $ldap_versions = array(
 	2 => "Version 2",
 	3 => "Version 3"
@@ -281,7 +280,8 @@ $ldap_modes = array(
 
 $snmp_implimentations = array(
 	"ucd-snmp" => "UCD-SNMP 4.x",
-	"net-snmp" => "NET-SNMP 5.x");
+	"net-snmp" => "NET-SNMP < 5.2",
+   	"net-snmp-52" => "NET-SNMP >= 5.2");
 
 $cdef_item_types = array(
 	1 => "Function",

@@ -139,8 +139,24 @@ define("SNMPV3_PP_DES", 0);
 define("SNMPV3_PP_AES128", 1);
 define("SNMPV3_PP_AES192", 2);
 define("SNMPV3_PP_AES256", 3);
+define("SNMPV3_PP_AES", 4);
 
 define("SNMPV3_AP_MD5", 0);
 define("SNMPV3_AP_SHA", 1);
 
+define("SEV_EMERGENCY", 0);
+define("SEV_ALERT", 1);
+define("SEV_CRITICAL", 2);
+define("SEV_ERROR", 3);
+define("SEV_WARNING", 4);
+define("SEV_NOTICE", 5);
+define("SEV_INFO", 6);
+define("SEV_DEBUG", 7);
+
+define("FACIL_POLLER",0);
+define("FACIL_CMDPHP",1);
+define("FACIL_CACTID",2);
+define("FACIL_SCPTSVR",3);
+define("FACIL_AUTH",4);
+define("FACIL_WEBUI",5);
 ?>
