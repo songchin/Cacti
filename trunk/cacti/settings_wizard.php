@@ -114,9 +114,9 @@ function intro() {
 	while (list($field_name, $field_array) = each($wizard_array)) {
 		if (($field_name != "default") && ($field_name != "intro") && ($field_name != "title")) {
 			if ($wizard_array["default"] == $field_name) {
-				$html .= "\t\t\t\t\t\t\t<input type='radio' name='wizard' value='" . $field_name . "' checked onClick='applyDescription(this.value)'>" . $field_array["friendly_name"] . "<br>\n";
+				$html .= "\t\t\t\t\t\t\t<input type='radio' name='wizard' value='" . $field_name . "' checked onClick='applyDescription(this.value)'><i>" . $field_array["friendly_name"] . "</i><br>\n";
 			}else{
-				$html .= "\t\t\t\t\t\t\t<input type='radio' name='wizard' value='" . $field_name . "' onClick='applyDescription(this.value)'>" . $field_array["friendly_name"] . "<br>\n";
+				$html .= "\t\t\t\t\t\t\t<input type='radio' name='wizard' value='" . $field_name . "' onClick='applyDescription(this.value)'><i>" . $field_array["friendly_name"] . "</i><br>\n";
 			}
 			$javascript .= "  arrayValues['" . $field_name . "'] = '" . str_replace("'","\\'",$field_array["description"]) . "';\n";
 		}
@@ -168,7 +168,7 @@ function intro() {
 	print "\t</table>\n";
 	print "\t</form>\n";
 
-	/* javascript function to change description area to default */
+	/* javascript function to change description box to default */
 	print "<script type=\"text/javascript\">\n";
 	print "<!--\n";
 	print "applyDescription('" . $wizard_array["default"] . "');\n";
