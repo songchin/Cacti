@@ -53,7 +53,7 @@ function api_device_gt_remove($device_id, $graph_template_id) {
 	db_execute("delete from host_graph where graph_template_id=$graph_template_id and host_id=$device_id");
 }
 
-function api_device_save($id, $host_template_id, $description, $hostname, $snmp_community, $snmp_version,
+function api_device_save($id, $poller_id, $host_template_id, $description, $hostname, $snmp_community, $snmp_version,
 	$snmp_username, $snmp_password, $snmp_port, $snmp_timeout, $disabled) {
 	/* fetch some cache variables */
 	if (empty($id)) {
@@ -63,6 +63,7 @@ function api_device_save($id, $host_template_id, $description, $hostname, $snmp_
 	}
 
 	$save["id"] = $id;
+	$save["poller_id"] = $poller_id;
 	$save["host_template_id"] = $host_template_id;
 	$save["description"] = form_input_validate($description, "description", "", false, 3);
 	$save["hostname"] = form_input_validate($hostname, "hostname", "", false, 3);

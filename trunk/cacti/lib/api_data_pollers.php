@@ -26,9 +26,9 @@
 
 function api_data_poller_save($id, $active, $hostname, $description) {
 	$save["id"] = $id;
+	$save["name"] = form_input_validate($description, "name", "", true, 3);
 	$save["hostname"] = form_input_validate($hostname, "hostname", "", false, 3);
-	$save["description"] = form_input_validate($description, "description", "", true, 3);
-	$save["active"] = $active;
+	$save["active"] = form_input_validate($active, "active", "", true, 3);
 
 	$data_poller_id = 0;
 

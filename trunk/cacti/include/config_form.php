@@ -68,29 +68,28 @@ $fields_color_edit = array(
 
 /* file: data_pollers.php, action: edit */
 $fields_data_poller_edit = array(
-	"description" => array(
+	"name" => array(
 		"method" => "textbox",
-		"friendly_name" => "Description",
+		"friendly_name" => "Poller Name",
 		"description" => "Enter a meaningful name for this poller.",
-		"value" => "|arg1:description|",
-		"max_length" => "255",
+		"value" => "|arg1:name|",
+		"max_length" => "255"
 		),
 	"hostname" => array(
 		"method" => "textbox",
 		"friendly_name" => "Hostname",
 		"description" => "Enter the IP address or hostname of this poller.",
 		"value" => "|arg1:hostname|",
-		"max_length" => "255",
+		"max_length" => "255"
 		),
 	"active" => array(
 		"method" => "checkbox",
 		"friendly_name" => "Poller Active",
 		"description" => "Whether or not this data poller is to be used.",
+		"default" => "",
 		"value" => "|arg1:active|",
-		"default" => "on",
-		"form_id" => "|arg1:id|"
+		"form_id" => false
 		),
-
 	"id" => array(
 		"method" => "hidden_zero",
 		"value" => "|arg1:id|"
@@ -648,14 +647,14 @@ $fields_host_edit = array(
 		"friendly_name" => "Description",
 		"description" => "Give this host a meaningful description.",
 		"value" => "|arg1:description|",
-		"max_length" => "250",
+		"max_length" => "250"
 		),
 	"hostname" => array(
 		"method" => "textbox",
 		"friendly_name" => "Hostname",
 		"description" => "Fill in the fully qualified hostname for this device.",
 		"value" => "|arg1:hostname|",
-		"max_length" => "250",
+		"max_length" => "250"
 		),
 	"host_template_id" => array(
 		"method" => "drop_sql",
@@ -663,7 +662,15 @@ $fields_host_edit = array(
 		"description" => "Choose what type of host, host template this is. The host template will govern what kinds of data should be gathered from this type of host.",
 		"value" => "|arg1:host_template_id|",
 		"none_value" => "None",
-		"sql" => "select id,name from host_template",
+		"sql" => "select id,name from host_template"
+		),
+	"poller_id" => array(
+		"method" => "drop_sql",
+		"friendly_name" => "Host Poller",
+		"description" => "Choose the poller to handle this hosts request.",
+		"value" => "|arg1:poller_id|",
+		"none_value" => "Main Cacti System",
+		"sql" => "select id,name from poller"
 		),
 	"disabled" => array(
 		"method" => "checkbox",
@@ -684,7 +691,7 @@ $fields_host_edit = array(
 		"value" => "|arg1:snmp_community|",
 		"form_id" => "|arg1:id|",
 		"default" => read_config_option("snmp_community"),
-		"max_length" => "100",
+		"max_length" => "100"
 		),
 	"snmp_username" => array(
 		"method" => "hidden",
@@ -692,7 +699,7 @@ $fields_host_edit = array(
 		"description" => "Fill in the SNMP username for this device (v3).",
 		"value" => "|arg1:snmp_username|",
 		"default" => read_config_option("snmp_username"),
-		"max_length" => "50",
+		"max_length" => "50"
 		),
 	"snmp_password" => array(
 		"method" => "hidden",
@@ -700,7 +707,7 @@ $fields_host_edit = array(
 		"description" => "Fill in the SNMP password for this device (v3).",
 		"value" => "|arg1:snmp_password|",
 		"default" => read_config_option("snmp_password"),
-		"max_length" => "50",
+		"max_length" => "50"
 		),
 	"snmp_version" => array(
 		"method" => "drop_array",
@@ -708,7 +715,7 @@ $fields_host_edit = array(
 		"description" => "Choose the SNMP version for this host.",
 		"value" => "|arg1:snmp_version|",
 		"default" => read_config_option("snmp_ver"),
-		"array" => $snmp_versions,
+		"array" => $snmp_versions
 		),
 	"snmp_port" => array(
 		"method" => "textbox",
