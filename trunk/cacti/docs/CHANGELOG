@@ -32,6 +32,7 @@ results in some situations.
 -feature# 0000163: Link to login as guest
 -feature: Added new x and y grid settings and units length graph template options.
 -bug: Added unit value into RRD graph generation.  Was left off in previous versions.
+-bug#0000354: User Name field always displays "admin" in mozilla web browser
 
 0.8.6
 -bug#0000118: Data source screen UI enhancements (0.8.5).

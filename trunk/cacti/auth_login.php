@@ -49,8 +49,8 @@ if (read_config_option("auth_method") == "2") {
 	}
 }else{
 	/* LDAP and Builtin get username from Form */
-	if (isset($_POST["username"])) {
-		$username = $_POST["username"];
+	if (isset($_POST["login_username"])) {
+		$username = $_POST["login_username"];
 	}else{
 		$username = "";
 	}
@@ -78,14 +78,14 @@ if ($action == 'login') {
 		break;
 	case "3":
 		/* LDAP Auth */
- 		if (($_POST["realm"] == "ldap") && (strlen($_POST["password"]) > 0)) {
+ 		if (($_POST["realm"] == "ldap") && (strlen($_POST["login_password"]) > 0)) {
 			/* Connect to LDAP server */
 			$ldap_conn = ldap_connect(read_config_option("ldap_server"));
 			if ($ldap_conn) {
 				/* Create DN */
 				$ldap_dn = str_replace("<username>",$username,read_config_option("ldap_dn"));
 				/* Query LDAP directory */
-				$ldap_response = @ldap_bind($ldap_conn,$ldap_dn,$_POST["password"]);
+				$ldap_response = @ldap_bind($ldap_conn,$ldap_dn,$_POST["login_password"]);
 				$realm = 1;
 				if ($ldap_response) {
 					/* Auth ok */
@@ -113,7 +113,7 @@ if ($action == 'login') {
 		/* Builtin Auth */
 		if (!$user_auth) {
 			/* if auth has not occured process for builtin - AKA Ldap fall through */
-			$user = db_fetch_row("select * from user_auth where username='" . $username . "' and password = '" . md5($_POST["password"]) . "' and realm = 0");
+			$user = db_fetch_row("select * from user_auth where username='" . $username . "' and password = '" . md5($_POST["login_password"]) . "' and realm = 0");
 		}
 	}
 	/* Create user from template if requested */
@@ -268,11 +268,11 @@ function auth_display_custom_error_message($message) {
 	<tr height="10"><td></td></tr>
 	<tr>
 		<td>User Name:</td>
-		<td><input type="text" name="username" size="40" style="width: 295px;" value="<?php print $username; ?>"></td>
+		<td><input type="text" name="login_username" size="40" style="width: 295px;" value="<?php print $username; ?>"></td>
 	</tr>
 	<tr>
 		<td>Password:</td>
-		<td><input type="password" name="password" size="40" style="width: 295px;"></td>
+		<td><input type="password" name="login_password" size="40" style="width: 295px;"></td>
 	</tr>
 	<?php
 	if (read_config_option("auth_method") == "3") {?>
