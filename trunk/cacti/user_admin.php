@@ -711,10 +711,15 @@ function user() {
 				<?php print $user["ip"];?>
 			</td>
 			<td>
-				<?php if ($user["password_change_last"] == "0000-00-00 00:00:00") {
-					print "Never";
+				<?php 
+				if ($user["realm"] != "0") {
+					print "N/A";
 				}else{
-					print $user["password_change_last_formatted"];
+					if ($user["password_change_last"] == "0000-00-00 00:00:00") {
+						print "Never";
+					}else{
+						print $user["password_change_last_formatted"];
+					}
 				} ?>
 			</td>
 
