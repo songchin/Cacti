@@ -232,12 +232,16 @@ function variable_bandwidth_summation(&$regexp_match_array, &$graph_item, &$grap
 				$summation_cache{$graph_items[$t]["local_data_id"]} = bandwidth_summation($graph_items[$t]["local_data_id"], $summation_timespan_start, $graph_end, $rra_step, $ds_step);
 			}
 		}
+	}elseif ($regexp_match_array[2] == "atomic") {
+		if (!isset($summation_cache{$graph_item["local_data_id"]})) {
+			$summation_cache{$graph_item["local_data_id"]} = bandwidth_summation($graph_item["local_data_id"], $summation_timespan_start, $graph_end, $rra_step, 1);
+		}
 	}
 
 	$summation = 0;
 
 	/* format the output according to args passed to the variable */
-	if ($regexp_match_array[2] == "current") {
+	if (($regexp_match_array[2] == "current") || ($regexp_match_array[2] == "atomic")) {
 		$summation = $summation_cache{$graph_item["local_data_id"]}{$graph_item["data_source_name"]};
 	}elseif ($regexp_match_array[2] == "total") {
 		for ($t=0;($t<count($graph_items));$t++) {

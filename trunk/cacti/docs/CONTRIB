@@ -1,5 +1,16 @@
 Documentation of user-contributed code:
 
+2004-10-10: Neptune [mungerts@yahoo.com]
+  I made some cumulative Gigabyte graphs and noticed the 'sum' function multiplies the sum by
+  the Data Source step - which is great for interpolating a continuous function, but does not
+  add up single atomic values accurately.
+
+  I coded the following to add another option to the sum function. A tag like so will now sum
+  all the data points in a graph and provide a total of each, discrete point without
+  interpolation.
+
+  [source: http://forums.cacti.net/viewtopic.php?t=5153]
+
 2004-08-23: moonman [nitzan_tz@co.zahav.net.il] based on patch by SR [sbalukoff@cardomain.com]
   The attached patch against cacti 0.8.5a adds the 'SIMILAR_DATA_SOURCES_NODUPS' special
   data souce as a possible CDEF input for graph template items. This makes it possible to
