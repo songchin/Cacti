@@ -183,7 +183,7 @@ function query_snmp_host($host_id, $snmp_query_id) {
 		}elseif (($field_array["method"] == "walk") && ($field_array["direction"] == "input")) {
 			debug_log_insert("data_query", "Located input field '$field_name' [walk]");
 
-			$snmp_data = cacti_snmp_walk($host["hostname"], $host["snmp_community"], $field_array["oid"], $host["snmp_version"], $host["snmpv3_auth_username"], $host["snmp_v3auth_password"],
+			$snmp_data = cacti_snmp_walk($host["hostname"], $host["snmp_community"], $field_array["oid"], $host["snmp_version"], $host["snmpv3_auth_username"], $host["snmpv3_auth_password"],
 												$host["snmpv3_auth_protocol"], $host["snmpv3_priv_passphrase"], $host["snmpv3_priv_protocol"],
 												$host["snmp_port"], $host["snmp_timeout"], SNMP_WEBUI);
 
