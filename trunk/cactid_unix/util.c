@@ -259,6 +259,22 @@ int read_config_options(config_t *set) {
 		cacti_log(logmessage);
 	}
 
+	/* set max_script_runtime for script timeouts */
+	result = db_query(&mysql, "SELECT value FROM settings WHERE name='max_script_runtime'");
+	num_rows = (int)mysql_num_rows(result);
+
+	if (num_rows > 0) {
+		mysql_row = mysql_fetch_row(result);
+
+		set->max_script_runtime = atoi(mysql_row[0]);
+	}
+
+	/* log the max_script_runtime variable */
+	if (set->verbose == POLLER_VERBOSITY_DEBUG) {
+		snprintf(logmessage, LOGSIZE, "DEBUG: The max_script_runtime variable is %i\n" ,set->max_script_runtime);
+		cacti_log(logmessage);
+	}
+
 	/* set logging option for errors */
 	result = db_query(&mysql, "SELECT value FROM settings WHERE name='log_perror'");
 	num_rows = (int)mysql_num_rows(result);
@@ -493,6 +509,7 @@ int ping_host(host_t *host, ping_t *ping) {
 	int snmp_result;
 
 	/* initialize variables */
+	strncpy(ping->hostname, host->hostname, sizeof(ping->hostname));
 	strncpy(ping->ping_status, "down", sizeof(ping->ping_status));
 	strncpy(ping->ping_response, "Ping not performed due to setting.", sizeof(ping->ping_response));
 	strncpy(ping->snmp_status, "down", sizeof(ping->ping_status));
@@ -503,12 +520,14 @@ int ping_host(host_t *host, ping_t *ping) {
 	snmp_result = 0;
 
 	/* icmp/udp ping test */
-	if ((set.availability_method == AVAIL_SNMP_AND_PING) || (set.availability_method == AVAIL_PING)) {
+	if ((host->availability_method == AVAIL_SNMP_AND_PING) || (host->availability_method == AVAIL_PING)) {
 		if (!strstr(host->hostname, "localhost")) {
-			if (set.ping_method == PING_ICMP) {
+			if (host->ping_method == PING_ICMP) {
 				ping_result = ping_icmp(host, ping);
-			}else if (set.ping_method == PING_UDP) {
+			}else if (host->ping_method == PING_UDP) {
 				ping_result = ping_udp(host, ping);
+			}else if (host->ping_method == PING_NONE) {
+				ping_result = HOST_UP;
 			}
 		} else {
 			strncpy(ping->ping_status, "0.000", sizeof(ping->ping_status));
@@ -518,15 +537,15 @@ int ping_host(host_t *host, ping_t *ping) {
 	}
 
 	/* snmp test */
-	if ((set.availability_method == AVAIL_SNMP) || ((set.availability_method == AVAIL_SNMP_AND_PING) && (ping_result == HOST_UP))) {
+	if ((host->availability_method == AVAIL_SNMP) || ((host->availability_method == AVAIL_SNMP_AND_PING) && (ping_result == HOST_UP))) {
 		snmp_result = ping_snmp(host, ping);
 	}else {
-		if ((set.availability_method == AVAIL_SNMP_AND_PING) && (ping_result != HOST_UP)) {
+		if ((host->availability_method == AVAIL_SNMP_AND_PING) && (ping_result != HOST_UP)) {
 			snmp_result = HOST_DOWN;
 		}
 	}
 
-	switch (set.availability_method) {
+	switch (host->availability_method) {
 		case AVAIL_SNMP_AND_PING:
 			if (snmp_result == HOST_UP)
 				return HOST_UP;
@@ -544,6 +563,8 @@ int ping_host(host_t *host, ping_t *ping) {
 				return HOST_UP;
 			else
 				return HOST_DOWN;
+		case AVAIL_NONE:
+			return HOST_UP;
 		default:
 			return HOST_DOWN;
 	}
@@ -910,7 +931,10 @@ int update_host_status(int status, host_t *host, ping_t *ping, int availability_
 				snprintf(host->status_last_error, sizeof(host->status_last_error), "%s", ping->snmp_response);
 			}
 				break;
-		default:
+		case AVAIL_NONE:
+			snprintf(host->status_last_error, sizeof(host->status_last_error), "%s", "Availability Checking is Disabled for this Device");
+			break;
+		case AVAIL_PING:
 			snprintf(host->status_last_error, sizeof(host->status_last_error), "%s", ping->ping_response);
 		}
 
@@ -969,6 +993,8 @@ int update_host_status(int status, host_t *host, ping_t *ping, int availability_
 			}else {
 				ping_time = atof(ping->snmp_status);
 			}
+		}else if (availability_method == AVAIL_NONE) {
+			ping_time = 0.000;
 		}else {
 			ping_time = atof(ping->ping_status);
 		}
@@ -1042,7 +1068,10 @@ int update_host_status(int status, host_t *host, ping_t *ping, int availability_
 					snprintf(logmessage, LOGSIZE, "Host[%i] SNMP Result: %s\n", host->id, ping->snmp_response);
 					cacti_log(logmessage);
 				}
-			} else {
+			} else if (availability_method == AVAIL_NONE) {
+				snprintf(logmessage, LOGSIZE, "Host[%i] AVAIL Result: Availability Checking id Disabled for Host\n", host->id);
+				cacti_log(logmessage);
+			} else { /* availability_ping */
 				snprintf(logmessage, LOGSIZE, "Host[%i] PING: Result %s\n", host->id, ping->ping_response);
 				cacti_log(logmessage);
 			}
@@ -1055,7 +1084,10 @@ int update_host_status(int status, host_t *host, ping_t *ping, int availability_
 			} else if (availability_method == AVAIL_SNMP) {
 				snprintf(logmessage, LOGSIZE, "Host[%i] SNMP Result: %s\n", host->id, ping->snmp_response);
 				cacti_log(logmessage);
-			} else {
+			} else if (availability_method == AVAIL_NONE) {
+				snprintf(logmessage, LOGSIZE, "Host[%i] AVAIL Result: Availability Checking is Disabled for Host\n", host->id);
+				cacti_log(logmessage);
+			} else { /* availability_ping */
 				snprintf(logmessage, LOGSIZE, "Host[%i] PING Result: %s\n", host->id, ping->ping_response);
 				cacti_log(logmessage);
 			}

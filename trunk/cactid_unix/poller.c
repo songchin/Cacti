@@ -157,19 +157,20 @@ void poll_host(int host_id) {
 	/* perform a check to see if the host is alive by polling it's SysDesc
 	 * if the host down from an snmp perspective, don't poll it.
 	 * function sets the ignore_host bit */
-	if ((set.availability_method == AVAIL_SNMP) && (host->snmp_community == "")) {
-		update_host_status(HOST_UP, host, ping, set.availability_method);
+	if ((host->availability_method == AVAIL_SNMP) && (host->snmp_community == "") || 
+		(host->availability_method == AVAIL_NONE)) {
+		update_host_status(HOST_UP, host, ping, host->availability_method);
 
 		if (set.verbose >= POLLER_VERBOSITY_MEDIUM) {
-			snprintf(logmessage, LOGSIZE, "Host[%s] No host availability check possible for '%s'\n", host->id, host->hostname);
+			snprintf(logmessage, LOGSIZE, "Host[%i] Availability Checking Disabled for Host '%s'\n", host->id, host->hostname);
 			cacti_log(logmessage);
 		}
 	}else{
 		if (ping_host(host, ping) == HOST_UP) {
-			update_host_status(HOST_UP, host, ping, set.availability_method);
+			update_host_status(HOST_UP, host, ping, host->availability_method);
 		}else{
 			host->ignore_host = 1;
-			update_host_status(HOST_DOWN, host, ping, set.availability_method);
+			update_host_status(HOST_DOWN, host, ping, host->availability_method);
 		}
 	}
 
@@ -493,7 +494,7 @@ char *exec_poll(host_t *current_host, char *command) {
 	char *result_string = (char *) malloc(BUFSIZE);
 
     	/* establish timeout of 5 seconds for pipe response */
-    	timeout.tv_sec = 10;
+    	timeout.tv_sec = set.max_script_runtime;
     	timeout.tv_usec = 0;
 
 	cmd_fd = nft_popen((char *)clean_string(command), "r");

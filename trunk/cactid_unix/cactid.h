@@ -100,9 +100,11 @@
 #define AVAIL_SNMP_AND_PING 1
 #define AVAIL_SNMP 2
 #define AVAIL_PING 3
+#define AVAIL_NONE 4
 
 #define PING_ICMP 1
 #define PING_UDP 2
+#define PING_NONE 3
 
 #define HOST_UNKNOWN 0
 #define HOST_DOWN 1
@@ -151,6 +153,7 @@ typedef struct config_struct {
 	int ping_timeout;
 	int ping_failure_count;
 	int ping_recovery_count;
+	int max_script_runtime;
 	int verbose;
 	int dboff;
 	int snmp_ver;
