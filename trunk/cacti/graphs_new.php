@@ -395,7 +395,10 @@ function graphs() {
 
 	html_start_box("<strong>Graph Templates</strong>", "98%", $colors["header_background"], "3", "center", "");
 
-	html_header_checkbox(array("Name"));
+	print "	<tr bgcolor='#" . $colors["header_panel"] . "'>
+			<td class='textSubHeaderDark'>Name</td>
+			<td width='1%' align='center' bgcolor='#819bc0' style='" . get_checkbox_style() . "'><input type='checkbox' style='margin: 0px;' name='all_cg' title='Select All' onClick='SelectAll(\"cg\",this.checked);gt_update_selection_indicators();'></td>\n
+		</tr>\n";
 
 	$ht_graph_templates = db_fetch_assoc("select
 		graph_template.id,
