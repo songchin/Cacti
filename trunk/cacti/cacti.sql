@@ -1,6 +1,6 @@
 -- MySQL dump 9.09
 --
--- Host: localhost    Database: cacti_dev_MAIN
+-- Host: localhost    Database: cacti_rel_MAIN
 ---------------------------------------------------------
 -- Server version	4.0.15-standard
 
@@ -222,16 +222,13 @@ INSERT INTO data_template_field VALUES (3,'snmp_timeout',0,'500');
 INSERT INTO data_template_field VALUES (3,'snmp_port',0,'161');
 INSERT INTO data_template_field VALUES (3,'snmpv3_priv_passphrase',0,'');
 INSERT INTO data_template_field VALUES (3,'snmpv3_priv_protocol',0,'DES');
-INSERT INTO data_template_field VALUES (4,'snmpv3_auth_protocol',0,'MD5');
-INSERT INTO data_template_field VALUES (4,'snmpv3_auth_password_confirm',0,'');
 INSERT INTO data_template_field VALUES (4,'snmpv3_auth_password',0,'');
+INSERT INTO data_template_field VALUES (4,'snmpv3_auth_password_confirm',0,'');
 INSERT INTO data_template_field VALUES (4,'snmpv3_auth_username',0,'');
 INSERT INTO data_template_field VALUES (4,'snmp_community',0,'public');
-INSERT INTO data_template_field VALUES (4,'snmp_version',0,'1');
-INSERT INTO data_template_field VALUES (4,'snmp_timeout',0,'500');
 INSERT INTO data_template_field VALUES (4,'snmp_port',0,'161');
-INSERT INTO data_template_field VALUES (4,'snmpv3_priv_passphrase',0,'');
-INSERT INTO data_template_field VALUES (4,'snmpv3_priv_protocol',0,'DES');
+INSERT INTO data_template_field VALUES (4,'snmp_timeout',0,'500');
+INSERT INTO data_template_field VALUES (4,'snmp_version',0,'1');
 INSERT INTO data_template_field VALUES (5,'data_query_id',0,'1');
 INSERT INTO data_template_field VALUES (6,'data_query_id',0,'1');
 INSERT INTO data_template_field VALUES (7,'data_query_id',0,'1');
@@ -276,6 +273,9 @@ INSERT INTO data_template_field VALUES (15,'script_id',0,'5');
 INSERT INTO data_template_field VALUES (16,'script_id',0,'7');
 INSERT INTO data_template_field VALUES (17,'script_id',0,'10');
 INSERT INTO data_template_field VALUES (18,'data_query_id',0,'1');
+INSERT INTO data_template_field VALUES (4,'snmpv3_auth_protocol',0,'MD5');
+INSERT INTO data_template_field VALUES (4,'snmpv3_priv_passphrase',0,'');
+INSERT INTO data_template_field VALUES (4,'snmpv3_priv_protocol',0,'DES');
 
 --
 -- Table structure for table `data_template_item`
@@ -310,7 +310,7 @@ INSERT INTO data_template_item VALUES (1,'0c713174755b4b8e0ada1db724d05d25',1,0,
 INSERT INTO data_template_item VALUES (2,'2a4a31b6a7119ef22113ffbc92569d4f',2,0,'U',0,'0',0,600,0,1,0,'hdd_total','hrStorageSize');
 INSERT INTO data_template_item VALUES (3,'7edaa66dfc3d3fe50b46d716c46e9dc6',2,0,'U',0,'0',0,600,0,1,0,'hdd_used','hrStorageUsed');
 INSERT INTO data_template_item VALUES (4,'fb358a5a204bbcc6102b4658181b179e',3,0,'10000',0,'0',0,600,0,1,0,'users','.1.3.6.1.2.1.25.1.5.0');
-INSERT INTO data_template_item VALUES (5,'ee4ded417c2d5b24c8bab7b0d9644053',4,0,'10000',0,'0',0,600,1,1,0,'proc','.1.3.6.1.2.1.25.1.6');
+INSERT INTO data_template_item VALUES (5,'ee4ded417c2d5b24c8bab7b0d9644053',4,0,'10000',0,'0',0,600,0,1,0,'proc','.1.3.6.1.2.1.25.1.6');
 INSERT INTO data_template_item VALUES (6,'5dfa7deb6dbab32b61006a1b8cda8991',5,0,'U',0,'0',0,600,0,2,0,'discards_in','ifInDiscards');
 INSERT INTO data_template_item VALUES (7,'17447cc6f4f9e0f09963537306100df6',5,0,'U',0,'0',0,600,0,2,0,'discards_out','ifOutDiscards');
 INSERT INTO data_template_item VALUES (8,'49dd388e3de9a14285dbd66614a117df',5,0,'U',0,'0',0,600,0,2,0,'errors_in','ifInErrors');
@@ -1006,7 +1006,7 @@ CREATE TABLE host (
 -- Dumping data for table `host`
 --
 
-INSERT INTO host VALUES (1,1,3,'Localhost','localhost','public',1,'','','MD5','','DES',161,500,2,2,'',3,0,'0000-00-00 00:00:00','0000-00-00 00:00:00','',7.69000,7.77000,7.72000,7.72599,5,0,100.00000);
+INSERT INTO host VALUES (1,1,3,'Localhost','localhost','public',1,'','','MD5','','DES',161,500,2,2,'',3,0,'0000-00-00 00:00:00','0000-00-00 00:00:00','',7.69000,854.78000,854.78000,148.90165,6,0,100.00000);
 
 --
 -- Table structure for table `host_graph`
@@ -1045,16 +1045,6 @@ CREATE TABLE host_snmp_cache (
 -- Dumping data for table `host_snmp_cache`
 --
 
-INSERT INTO host_snmp_cache VALUES (1,6,'dskDevice','/dev/hda1','/dev/hda1','');
-INSERT INTO host_snmp_cache VALUES (1,6,'dskDevice','/dev/hda5','/dev/hda5','');
-INSERT INTO host_snmp_cache VALUES (1,6,'dskDevice','/dev/hda7','/dev/hda7','');
-INSERT INTO host_snmp_cache VALUES (1,6,'dskDevice','/dev/hdb1','/dev/hdb1','');
-INSERT INTO host_snmp_cache VALUES (1,6,'dskDevice','/dev/hdc1','/dev/hdc1','');
-INSERT INTO host_snmp_cache VALUES (1,6,'dskMount','/','/dev/hda1','');
-INSERT INTO host_snmp_cache VALUES (1,6,'dskMount','/home','/dev/hda5','');
-INSERT INTO host_snmp_cache VALUES (1,6,'dskMount','/var/fs/fs1','/dev/hda7','');
-INSERT INTO host_snmp_cache VALUES (1,6,'dskMount','/var/fs/fs2','/dev/hdb1','');
-INSERT INTO host_snmp_cache VALUES (1,6,'dskMount','/var/fs/fs3','/dev/hdc1','');
 
 --
 -- Table structure for table `host_snmp_query`
@@ -1170,7 +1160,7 @@ CREATE TABLE poller (
 -- Dumping data for table `poller`
 --
 
-INSERT INTO poller VALUES (1,'Wait','on','locahost','Main Cacti System','0000-00-00 00:00:00',0,'0000-00-00 00:00:00','0000-00-00 00:00:00','',"0.00000","0.00000","0.00000","0.00000",0,0,"0.00000");
+INSERT INTO poller VALUES (1,'Wait','on','locahost','Main Cacti System','0000-00-00 00:00:00',0,'0000-00-00 00:00:00','0000-00-00 00:00:00','',0.00000,0.00000,0.00000,0.00000,0,0,0.00000);
 
 --
 -- Table structure for table `poller_command`
@@ -1225,6 +1215,12 @@ CREATE TABLE poller_item (
 -- Dumping data for table `poller_item`
 --
 
+INSERT INTO poller_item VALUES (4,1,1,1,'localhost','public',1,'','','MD5','','DES',161,500,2,2,'hdd_free','/var/cvsexport/cacti/rra/localhost_hdd_free_4.rrd',2,'perl /var/cvsexport/cacti/scripts/query_unix_partitions.pl  get available /dev/hda2','','');
+INSERT INTO poller_item VALUES (4,1,1,1,'localhost','public',1,'','','MD5','','DES',161,500,2,2,'hdd_used','/var/cvsexport/cacti/rra/localhost_hdd_free_4.rrd',2,'perl /var/cvsexport/cacti/scripts/query_unix_partitions.pl  get used /dev/hda2','','');
+INSERT INTO poller_item VALUES (5,1,1,1,'localhost','public',1,'','','MD5','','DES',161,500,2,2,'hdd_free','/var/cvsexport/cacti/rra/localhost_hdd_free_5.rrd',2,'perl /var/cvsexport/cacti/scripts/query_unix_partitions.pl  get available /dev/hda3','','');
+INSERT INTO poller_item VALUES (5,1,1,1,'localhost','public',1,'','','MD5','','DES',161,500,2,2,'hdd_used','/var/cvsexport/cacti/rra/localhost_hdd_free_5.rrd',2,'perl /var/cvsexport/cacti/scripts/query_unix_partitions.pl  get used /dev/hda3','','');
+INSERT INTO poller_item VALUES (6,1,1,1,'localhost','public',1,'','','MD5','','DES',161,500,2,2,'hdd_free','/var/cvsexport/cacti/rra/localhost_hdd_free_6.rrd',2,'perl /var/cvsexport/cacti/scripts/query_unix_partitions.pl  get available /dev/hda5','','');
+INSERT INTO poller_item VALUES (6,1,1,1,'localhost','public',1,'','','MD5','','DES',161,500,2,2,'hdd_used','/var/cvsexport/cacti/rra/localhost_hdd_free_6.rrd',2,'perl /var/cvsexport/cacti/scripts/query_unix_partitions.pl  get used /dev/hda5','','');
 
 --
 -- Table structure for table `poller_output`
@@ -1261,6 +1257,7 @@ CREATE TABLE poller_reindex (
 -- Dumping data for table `poller_reindex`
 --
 
+INSERT INTO poller_reindex VALUES (1,6,0,'<','4566094','.1.3.6.1.2.1.1.3.0');
 
 --
 -- Table structure for table `poller_time`
@@ -1557,8 +1554,8 @@ INSERT INTO settings VALUES ('max_memory','32');
 INSERT INTO settings VALUES ('max_execution_time','10');
 INSERT INTO settings VALUES ('show_hidden','on');
 INSERT INTO settings VALUES ('default_theme','classic');
-INSERT INTO settings VALUES ('path_webroot','/var/cvsexport/cvs.querx.com/cacti/cacti_MAIN');
-INSERT INTO settings VALUES ('date','2005-04-02 17:12:35');
+INSERT INTO settings VALUES ('path_webroot','/var/cvsexport/cacti');
+INSERT INTO settings VALUES ('date','2005-04-02 23:29:07');
 INSERT INTO settings VALUES ('syslog_destination','1');
 INSERT INTO settings VALUES ('syslog_size','1024k');
 INSERT INTO settings VALUES ('syslog_control','1');
@@ -1654,8 +1651,8 @@ INSERT INTO snmp_query VALUES (2,'3c1b27d94ad208a0090f293deadde753','<path_cacti
 INSERT INTO snmp_query VALUES (4,'ad06f46e22e991cb47c95c7233cfaee8','<path_cacti>/resource/snmp_queries/netware_disk.xml','Netware - Get Available Volumes','Retrieves a list of volumes from a Netware server.',2);
 INSERT INTO snmp_query VALUES (6,'8ffa36c1864124b38bcda2ae9bd61f46','<path_cacti>/resource/script_queries/unix_disk.xml','Unix - Get Mounted Partitions','Queries a list of mounted partitions on a unix-based host with the',2);
 INSERT INTO snmp_query VALUES (7,'30ec734bc0ae81a3d995be82c73f46c1','<path_cacti>/resource/snmp_queries/netware_cpu.xml','Netware - Get Processor Information','Gets information about running processors in a Netware server',2);
-INSERT INTO snmp_query VALUES (8,'9343eab1f4d88b0e61ffc9d020f35414','<path_cacti>/resource/script_server/host_disk.xml','Host MIB - Get Mounted Partitions','Gets a list of partitions using SNMP',1);
-INSERT INTO snmp_query VALUES (9,'0d1ab53fe37487a5d0b9e1d3ee8c1d0d','<path_cacti>/resource/script_server/host_cpu.xml','Host MIB - Get Processor Information','Gets usage for each processor in the system using the host MIB.',1);
+INSERT INTO snmp_query VALUES (8,'9343eab1f4d88b0e61ffc9d020f35414','<path_cacti>/resource/script_server/host_disk.xml','Host MIB - Get Mounted Partitions','Gets a list of partitions using SNMP',3);
+INSERT INTO snmp_query VALUES (9,'0d1ab53fe37487a5d0b9e1d3ee8c1d0d','<path_cacti>/resource/script_server/host_cpu.xml','Host MIB - Get Processor Information','Gets usage for each processor in the system using the host MIB.',3);
 
 --
 -- Table structure for table `snmp_query_graph`
@@ -1914,99 +1911,6 @@ CREATE TABLE syslog (
 -- Dumping data for table `syslog`
 --
 
-INSERT INTO syslog VALUES (1,'2005-02-12 15:25:01','POLLER','DEBUG',0,0,0,'SYSTEM','SYSTEM','About to Spawn a Remote Process [CMD: /usr/bin/php, ARGS: -q /var/cvsexport/cvs.querx.com/cacti/cacti_MAIN/cmd.php -f=0 -l=3 -p=1]');
-INSERT INTO syslog VALUES (2,'2005-02-12 15:25:04','CMDPHP','NOTICE',1,0,0,'SYSTEM','SYSTEM','PHP version 4.3 or above is recommended for performance considerations.');
-INSERT INTO syslog VALUES (3,'2005-02-12 15:25:05','POLLER','INFO',1,3,0,'SYSTEM','SYSTEM','SNMP: Host responded to SNMP');
-INSERT INTO syslog VALUES (4,'2005-02-12 15:25:05','CMDPHP','DEBUG',1,3,0,'SYSTEM','SYSTEM','RECACHE: Processing 1 items in the auto reindex cache for \'172.16.100.1\'.');
-INSERT INTO syslog VALUES (5,'2005-02-12 15:25:05','CMDPHP','INFO',1,3,0,'SYSTEM','SYSTEM','SNMP: v1: 172.16.100.1, dsname: in, oid: .1.3.6.1.2.1.2.2.1.10.1, output: 727733077');
-INSERT INTO syslog VALUES (6,'2005-02-12 15:25:05','CMDPHP','INFO',1,3,0,'SYSTEM','SYSTEM','SNMP: v1: 172.16.100.1, dsname: out, oid: .1.3.6.1.2.1.2.2.1.16.1, output: 726127814');
-INSERT INTO syslog VALUES (7,'2005-02-12 15:25:05','CMDPHP','INFO',1,3,0,'SYSTEM','SYSTEM','SNMP: v1: 172.16.100.1, dsname: in, oid: .1.3.6.1.2.1.2.2.1.10.2, output: 0');
-INSERT INTO syslog VALUES (8,'2005-02-12 15:25:05','CMDPHP','INFO',1,3,0,'SYSTEM','SYSTEM','SNMP: v1: 172.16.100.1, dsname: out, oid: .1.3.6.1.2.1.2.2.1.16.2, output: 0');
-INSERT INTO syslog VALUES (9,'2005-02-12 15:25:06','POLLER','DEBUG',0,0,0,'SYSTEM','SYSTEM','CACTI2RRD: /usr/bin/rrdtool update /var/cvsexport/cvs.querx.com/cacti/cacti_MAIN/rra/6509_in_1.rrd --template out:in 1108239903:726127814:727733077');
-INSERT INTO syslog VALUES (10,'2005-02-12 15:25:06','POLLER','DEBUG',0,0,0,'SYSTEM','SYSTEM','CACTI2RRD: /usr/bin/rrdtool update /var/cvsexport/cvs.querx.com/cacti/cacti_MAIN/rra/6509_in_2.rrd --template in:out 1108239903:0:0');
-INSERT INTO syslog VALUES (11,'2005-02-12 15:25:05','CMDPHP','INFO',1,3,0,'SYSTEM','SYSTEM','SNMP: v1: 172.16.100.1, dsname: in, oid: .1.3.6.1.2.1.2.2.1.10.3, output: 0');
-INSERT INTO syslog VALUES (12,'2005-02-12 15:25:06','CMDPHP','INFO',1,3,0,'SYSTEM','SYSTEM','SNMP: v1: 172.16.100.1, dsname: out, oid: .1.3.6.1.2.1.2.2.1.16.3, output: 0');
-INSERT INTO syslog VALUES (13,'2005-02-12 15:25:06','CMDPHP','INFO',1,3,0,'SYSTEM','SYSTEM','SNMP: v1: 172.16.100.1, dsname: in, oid: .1.3.6.1.2.1.2.2.1.10.5, output: 0');
-INSERT INTO syslog VALUES (14,'2005-02-12 15:25:06','CMDPHP','INFO',1,3,0,'SYSTEM','SYSTEM','SNMP: v1: 172.16.100.1, dsname: out, oid: .1.3.6.1.2.1.2.2.1.16.5, output: 0');
-INSERT INTO syslog VALUES (15,'2005-02-12 15:25:06','CMDPHP','INFO',1,3,0,'SYSTEM','SYSTEM','SNMP: v1: 172.16.100.1, dsname: in, oid: .1.3.6.1.2.1.2.2.1.10.6, output: 0');
-INSERT INTO syslog VALUES (16,'2005-02-12 15:25:06','CMDPHP','INFO',1,3,0,'SYSTEM','SYSTEM','SNMP: v1: 172.16.100.1, dsname: out, oid: .1.3.6.1.2.1.2.2.1.16.6, output: 0');
-INSERT INTO syslog VALUES (17,'2005-02-12 15:25:06','CMDPHP','INFO',1,3,0,'SYSTEM','SYSTEM','SNMP: v1: 172.16.100.1, dsname: in, oid: .1.3.6.1.2.1.2.2.1.10.7, output: 0');
-INSERT INTO syslog VALUES (18,'2005-02-12 15:25:06','CMDPHP','INFO',1,3,0,'SYSTEM','SYSTEM','SNMP: v1: 172.16.100.1, dsname: out, oid: .1.3.6.1.2.1.2.2.1.16.7, output: 0');
-INSERT INTO syslog VALUES (19,'2005-02-12 15:25:07','CMDPHP','INFO',1,3,0,'SYSTEM','SYSTEM','SNMP: v1: 172.16.100.1, dsname: in, oid: .1.3.6.1.2.1.2.2.1.10.8, output: 0');
-INSERT INTO syslog VALUES (20,'2005-02-12 15:25:07','POLLER','DEBUG',0,0,0,'SYSTEM','SYSTEM','CACTI2RRD: /usr/bin/rrdtool update /var/cvsexport/cvs.querx.com/cacti/cacti_MAIN/rra/6509_in_3.rrd --template out:in 1108239903:0:0');
-INSERT INTO syslog VALUES (21,'2005-02-12 15:25:07','POLLER','DEBUG',0,0,0,'SYSTEM','SYSTEM','CACTI2RRD: /usr/bin/rrdtool update /var/cvsexport/cvs.querx.com/cacti/cacti_MAIN/rra/6509_in_4.rrd --template in:out 1108239903:0:0');
-INSERT INTO syslog VALUES (22,'2005-02-12 15:25:07','POLLER','DEBUG',0,0,0,'SYSTEM','SYSTEM','CACTI2RRD: /usr/bin/rrdtool update /var/cvsexport/cvs.querx.com/cacti/cacti_MAIN/rra/6509_in_5.rrd --template in:out 1108239903:0:0');
-INSERT INTO syslog VALUES (23,'2005-02-12 15:25:07','POLLER','DEBUG',0,0,0,'SYSTEM','SYSTEM','CACTI2RRD: /usr/bin/rrdtool update /var/cvsexport/cvs.querx.com/cacti/cacti_MAIN/rra/6509_in_6.rrd --template in:out 1108239903:0:0');
-INSERT INTO syslog VALUES (24,'2005-02-12 15:25:07','CMDPHP','INFO',1,3,0,'SYSTEM','SYSTEM','SNMP: v1: 172.16.100.1, dsname: out, oid: .1.3.6.1.2.1.2.2.1.16.8, output: 0');
-INSERT INTO syslog VALUES (25,'2005-02-12 15:25:07','CMDPHP','INFO',1,3,0,'SYSTEM','SYSTEM','SNMP: v1: 172.16.100.1, dsname: in, oid: .1.3.6.1.2.1.2.2.1.10.9, output: 0');
-INSERT INTO syslog VALUES (26,'2005-02-12 15:25:07','CMDPHP','INFO',1,3,0,'SYSTEM','SYSTEM','SNMP: v1: 172.16.100.1, dsname: out, oid: .1.3.6.1.2.1.2.2.1.16.9, output: 0');
-INSERT INTO syslog VALUES (27,'2005-02-12 15:25:07','CMDPHP','INFO',1,3,0,'SYSTEM','SYSTEM','SNMP: v1: 172.16.100.1, dsname: in, oid: .1.3.6.1.2.1.2.2.1.10.26, output: 836234351');
-INSERT INTO syslog VALUES (28,'2005-02-12 15:25:07','CMDPHP','INFO',1,3,0,'SYSTEM','SYSTEM','SNMP: v1: 172.16.100.1, dsname: out, oid: .1.3.6.1.2.1.2.2.1.16.26, output: 0');
-INSERT INTO syslog VALUES (29,'2005-02-12 15:25:07','CMDPHP','INFO',1,3,0,'SYSTEM','SYSTEM','SNMP: v1: 172.16.100.1, dsname: in, oid: .1.3.6.1.2.1.2.2.1.10.27, output: 0');
-INSERT INTO syslog VALUES (30,'2005-02-12 15:25:07','CMDPHP','INFO',1,3,0,'SYSTEM','SYSTEM','SNMP: v1: 172.16.100.1, dsname: out, oid: .1.3.6.1.2.1.2.2.1.16.27, output: 0');
-INSERT INTO syslog VALUES (31,'2005-02-12 15:25:08','CMDPHP','INFO',1,3,0,'SYSTEM','SYSTEM','SNMP: v1: 172.16.100.1, dsname: in, oid: .1.3.6.1.2.1.2.2.1.10.28, output: 792964838');
-INSERT INTO syslog VALUES (32,'2005-02-12 15:25:08','CMDPHP','INFO',1,3,0,'SYSTEM','SYSTEM','SNMP: v1: 172.16.100.1, dsname: out, oid: .1.3.6.1.2.1.2.2.1.16.28, output: 3193288664');
-INSERT INTO syslog VALUES (33,'2005-02-12 15:25:08','POLLER','DEBUG',0,0,0,'SYSTEM','SYSTEM','CACTI2RRD: /usr/bin/rrdtool update /var/cvsexport/cvs.querx.com/cacti/cacti_MAIN/rra/6509_in_11.rrd --template in:out 1108239903:792964838:3193288664');
-INSERT INTO syslog VALUES (34,'2005-02-12 15:25:08','POLLER','DEBUG',0,0,0,'SYSTEM','SYSTEM','CACTI2RRD: /usr/bin/rrdtool update /var/cvsexport/cvs.querx.com/cacti/cacti_MAIN/rra/6509_in_10.rrd --template out:in 1108239903:0:0');
-INSERT INTO syslog VALUES (35,'2005-02-12 15:25:08','POLLER','DEBUG',0,0,0,'SYSTEM','SYSTEM','CACTI2RRD: /usr/bin/rrdtool update /var/cvsexport/cvs.querx.com/cacti/cacti_MAIN/rra/6509_in_9.rrd --template out:in 1108239903:0:836234351');
-INSERT INTO syslog VALUES (36,'2005-02-12 15:25:08','POLLER','DEBUG',0,0,0,'SYSTEM','SYSTEM','CACTI2RRD: /usr/bin/rrdtool update /var/cvsexport/cvs.querx.com/cacti/cacti_MAIN/rra/6509_in_8.rrd --template out:in 1108239903:0:0');
-INSERT INTO syslog VALUES (37,'2005-02-12 15:25:08','POLLER','DEBUG',0,0,0,'SYSTEM','SYSTEM','CACTI2RRD: /usr/bin/rrdtool update /var/cvsexport/cvs.querx.com/cacti/cacti_MAIN/rra/6509_in_7.rrd --template in:out 1108239903:0:0');
-INSERT INTO syslog VALUES (38,'2005-02-12 15:25:08','CMDPHP','INFO',1,3,0,'SYSTEM','SYSTEM','SNMP: v1: 172.16.100.1, dsname: in, oid: .1.3.6.1.2.1.2.2.1.10.29, output: 143198691');
-INSERT INTO syslog VALUES (39,'2005-02-12 15:25:08','CMDPHP','INFO',1,3,0,'SYSTEM','SYSTEM','SNMP: v1: 172.16.100.1, dsname: out, oid: .1.3.6.1.2.1.2.2.1.16.29, output: 3218709866');
-INSERT INTO syslog VALUES (40,'2005-02-12 15:25:08','CMDPHP','INFO',1,3,0,'SYSTEM','SYSTEM','SNMP: v1: 172.16.100.1, dsname: in, oid: .1.3.6.1.2.1.2.2.1.10.46, output: 2093983728');
-INSERT INTO syslog VALUES (41,'2005-02-12 15:25:08','CMDPHP','INFO',1,3,0,'SYSTEM','SYSTEM','SNMP: v1: 172.16.100.1, dsname: out, oid: .1.3.6.1.2.1.2.2.1.16.46, output: 3058854154');
-INSERT INTO syslog VALUES (42,'2005-02-12 15:25:08','CMDPHP','INFO',1,3,0,'SYSTEM','SYSTEM','SNMP: v1: 172.16.100.1, dsname: in, oid: .1.3.6.1.2.1.2.2.1.10.47, output: 1698361016');
-INSERT INTO syslog VALUES (43,'2005-02-12 15:25:08','CMDPHP','INFO',1,3,0,'SYSTEM','SYSTEM','SNMP: v1: 172.16.100.1, dsname: out, oid: .1.3.6.1.2.1.2.2.1.16.47, output: 2427449790');
-INSERT INTO syslog VALUES (44,'2005-02-12 15:25:09','CMDPHP','INFO',1,3,0,'SYSTEM','SYSTEM','SNMP: v1: 172.16.100.1, dsname: in, oid: .1.3.6.1.2.1.2.2.1.10.48, output: 734913882');
-INSERT INTO syslog VALUES (45,'2005-02-12 15:25:09','CMDPHP','INFO',1,3,0,'SYSTEM','SYSTEM','SNMP: v1: 172.16.100.1, dsname: out, oid: .1.3.6.1.2.1.2.2.1.16.48, output: 896101972');
-INSERT INTO syslog VALUES (46,'2005-02-12 15:25:09','POLLER','DEBUG',0,0,0,'SYSTEM','SYSTEM','CACTI2RRD: /usr/bin/rrdtool update /var/cvsexport/cvs.querx.com/cacti/cacti_MAIN/rra/6509_in_15.rrd --template out:in 1108239903:896101972:734913882');
-INSERT INTO syslog VALUES (47,'2005-02-12 15:25:09','POLLER','DEBUG',0,0,0,'SYSTEM','SYSTEM','CACTI2RRD: /usr/bin/rrdtool update /var/cvsexport/cvs.querx.com/cacti/cacti_MAIN/rra/6509_in_12.rrd --template out:in 1108239903:3218709866:143198691');
-INSERT INTO syslog VALUES (48,'2005-02-12 15:25:09','POLLER','DEBUG',0,0,0,'SYSTEM','SYSTEM','CACTI2RRD: /usr/bin/rrdtool update /var/cvsexport/cvs.querx.com/cacti/cacti_MAIN/rra/6509_in_13.rrd --template in:out 1108239903:2093983728:3058854154');
-INSERT INTO syslog VALUES (49,'2005-02-12 15:25:09','POLLER','DEBUG',0,0,0,'SYSTEM','SYSTEM','CACTI2RRD: /usr/bin/rrdtool update /var/cvsexport/cvs.querx.com/cacti/cacti_MAIN/rra/6509_in_14.rrd --template in:out 1108239903:1698361016:2427449790');
-INSERT INTO syslog VALUES (50,'2005-02-12 15:25:09','CMDPHP','INFO',1,3,0,'SYSTEM','SYSTEM','SNMP: v1: 172.16.100.1, dsname: in, oid: .1.3.6.1.2.1.2.2.1.10.49, output: 3092116073');
-INSERT INTO syslog VALUES (51,'2005-02-12 15:25:09','CMDPHP','INFO',1,3,0,'SYSTEM','SYSTEM','SNMP: v1: 172.16.100.1, dsname: out, oid: .1.3.6.1.2.1.2.2.1.16.49, output: 1566320789');
-INSERT INTO syslog VALUES (52,'2005-02-12 15:25:09','CMDPHP','INFO',1,3,0,'SYSTEM','SYSTEM','SNMP: v1: 172.16.100.1, dsname: in, oid: .1.3.6.1.2.1.2.2.1.10.50, output: 605115247');
-INSERT INTO syslog VALUES (53,'2005-02-12 15:25:09','CMDPHP','INFO',1,3,0,'SYSTEM','SYSTEM','SNMP: v1: 172.16.100.1, dsname: out, oid: .1.3.6.1.2.1.2.2.1.16.50, output: 2084731942');
-INSERT INTO syslog VALUES (54,'2005-02-12 15:25:10','CMDPHP','INFO',1,3,0,'SYSTEM','SYSTEM','SNMP: v1: 172.16.100.1, dsname: in, oid: .1.3.6.1.2.1.2.2.1.10.51, output: 3717280288');
-INSERT INTO syslog VALUES (55,'2005-02-12 15:25:10','CMDPHP','INFO',1,3,0,'SYSTEM','SYSTEM','SNMP: v1: 172.16.100.1, dsname: out, oid: .1.3.6.1.2.1.2.2.1.16.51, output: 2216866217');
-INSERT INTO syslog VALUES (56,'2005-02-12 15:25:10','CMDPHP','INFO',1,3,0,'SYSTEM','SYSTEM','SNMP: v1: 172.16.100.1, dsname: in, oid: .1.3.6.1.2.1.2.2.1.10.52, output: 353736295');
-INSERT INTO syslog VALUES (57,'2005-02-12 15:25:10','CMDPHP','INFO',1,3,0,'SYSTEM','SYSTEM','SNMP: v1: 172.16.100.1, dsname: out, oid: .1.3.6.1.2.1.2.2.1.16.52, output: 867175405');
-INSERT INTO syslog VALUES (58,'2005-02-12 15:25:10','POLLER','DEBUG',0,0,0,'SYSTEM','SYSTEM','CACTI2RRD: /usr/bin/rrdtool update /var/cvsexport/cvs.querx.com/cacti/cacti_MAIN/rra/6509_in_19.rrd --template out:in 1108239903:867175405:353736295');
-INSERT INTO syslog VALUES (59,'2005-02-12 15:25:10','POLLER','DEBUG',0,0,0,'SYSTEM','SYSTEM','CACTI2RRD: /usr/bin/rrdtool update /var/cvsexport/cvs.querx.com/cacti/cacti_MAIN/rra/6509_in_18.rrd --template out:in 1108239903:2216866217:3717280288');
-INSERT INTO syslog VALUES (60,'2005-02-12 15:25:10','CMDPHP','INFO',1,3,0,'SYSTEM','SYSTEM','SNMP: v1: 172.16.100.1, dsname: in, oid: .1.3.6.1.2.1.2.2.1.10.53, output: 3838524671');
-INSERT INTO syslog VALUES (61,'2005-02-12 15:25:10','POLLER','DEBUG',0,0,0,'SYSTEM','SYSTEM','CACTI2RRD: /usr/bin/rrdtool update /var/cvsexport/cvs.querx.com/cacti/cacti_MAIN/rra/6509_in_17.rrd --template out:in 1108239903:2084731942:605115247');
-INSERT INTO syslog VALUES (62,'2005-02-12 15:25:10','POLLER','DEBUG',0,0,0,'SYSTEM','SYSTEM','CACTI2RRD: /usr/bin/rrdtool update /var/cvsexport/cvs.querx.com/cacti/cacti_MAIN/rra/6509_in_16.rrd --template out:in 1108239903:1566320789:3092116073');
-INSERT INTO syslog VALUES (63,'2005-02-12 15:25:11','CMDPHP','INFO',1,3,0,'SYSTEM','SYSTEM','SNMP: v1: 172.16.100.1, dsname: out, oid: .1.3.6.1.2.1.2.2.1.16.53, output: 3014650852');
-INSERT INTO syslog VALUES (64,'2005-02-12 15:25:11','CMDPHP','INFO',1,3,0,'SYSTEM','SYSTEM','SNMP: v1: 172.16.100.1, dsname: in, oid: .1.3.6.1.2.1.2.2.1.10.54, output: 66');
-INSERT INTO syslog VALUES (65,'2005-02-12 15:25:11','CMDPHP','INFO',1,3,0,'SYSTEM','SYSTEM','SNMP: v1: 172.16.100.1, dsname: out, oid: .1.3.6.1.2.1.2.2.1.16.54, output: 66');
-INSERT INTO syslog VALUES (66,'2005-02-12 15:25:11','CMDPHP','INFO',1,3,0,'SYSTEM','SYSTEM','SNMP: v1: 172.16.100.1, dsname: in, oid: .1.3.6.1.2.1.2.2.1.10.55, output: 66');
-INSERT INTO syslog VALUES (67,'2005-02-12 15:25:11','CMDPHP','INFO',1,3,0,'SYSTEM','SYSTEM','SNMP: v1: 172.16.100.1, dsname: out, oid: .1.3.6.1.2.1.2.2.1.16.55, output: 66');
-INSERT INTO syslog VALUES (68,'2005-02-12 15:25:11','CMDPHP','INFO',1,3,0,'SYSTEM','SYSTEM','SNMP: v1: 172.16.100.1, dsname: in, oid: .1.3.6.1.2.1.2.2.1.10.56, output: 66');
-INSERT INTO syslog VALUES (69,'2005-02-12 15:25:11','CMDPHP','INFO',1,3,0,'SYSTEM','SYSTEM','SNMP: v1: 172.16.100.1, dsname: out, oid: .1.3.6.1.2.1.2.2.1.16.56, output: 66');
-INSERT INTO syslog VALUES (70,'2005-02-12 15:25:11','CMDPHP','INFO',1,3,0,'SYSTEM','SYSTEM','SNMP: v1: 172.16.100.1, dsname: in, oid: .1.3.6.1.2.1.2.2.1.10.57, output: 66');
-INSERT INTO syslog VALUES (71,'2005-02-12 15:25:12','POLLER','DEBUG',0,0,0,'SYSTEM','SYSTEM','CACTI2RRD: /usr/bin/rrdtool update /var/cvsexport/cvs.querx.com/cacti/cacti_MAIN/rra/6509_in_23.rrd --template out:in 1108239903:66:66');
-INSERT INTO syslog VALUES (72,'2005-02-12 15:25:12','POLLER','DEBUG',0,0,0,'SYSTEM','SYSTEM','CACTI2RRD: /usr/bin/rrdtool update /var/cvsexport/cvs.querx.com/cacti/cacti_MAIN/rra/6509_in_22.rrd --template out:in 1108239903:66:66');
-INSERT INTO syslog VALUES (73,'2005-02-12 15:25:12','POLLER','DEBUG',0,0,0,'SYSTEM','SYSTEM','CACTI2RRD: /usr/bin/rrdtool update /var/cvsexport/cvs.querx.com/cacti/cacti_MAIN/rra/6509_in_21.rrd --template out:in 1108239903:66:66');
-INSERT INTO syslog VALUES (74,'2005-02-12 15:25:12','POLLER','DEBUG',0,0,0,'SYSTEM','SYSTEM','CACTI2RRD: /usr/bin/rrdtool update /var/cvsexport/cvs.querx.com/cacti/cacti_MAIN/rra/6509_in_20.rrd --template out:in 1108239903:3014650852:3838524671');
-INSERT INTO syslog VALUES (75,'2005-02-12 15:25:12','CMDPHP','INFO',1,3,0,'SYSTEM','SYSTEM','SNMP: v1: 172.16.100.1, dsname: out, oid: .1.3.6.1.2.1.2.2.1.16.57, output: 66');
-INSERT INTO syslog VALUES (76,'2005-02-12 15:25:12','CMDPHP','INFO',1,3,0,'SYSTEM','SYSTEM','SNMP: v1: 172.16.100.1, dsname: in, oid: .1.3.6.1.2.1.2.2.1.10.58, output: 66');
-INSERT INTO syslog VALUES (77,'2005-02-12 15:25:12','CMDPHP','INFO',1,3,0,'SYSTEM','SYSTEM','SNMP: v1: 172.16.100.1, dsname: out, oid: .1.3.6.1.2.1.2.2.1.16.58, output: 66');
-INSERT INTO syslog VALUES (78,'2005-02-12 15:25:12','CMDPHP','INFO',1,3,0,'SYSTEM','SYSTEM','SNMP: v1: 172.16.100.1, dsname: in, oid: .1.3.6.1.2.1.2.2.1.10.59, output: 2907172857');
-INSERT INTO syslog VALUES (79,'2005-02-12 15:25:12','CMDPHP','INFO',1,3,0,'SYSTEM','SYSTEM','SNMP: v1: 172.16.100.1, dsname: out, oid: .1.3.6.1.2.1.2.2.1.16.59, output: 1152049028');
-INSERT INTO syslog VALUES (80,'2005-02-12 15:25:12','CMDPHP','INFO',1,3,0,'SYSTEM','SYSTEM','SNMP: v1: 172.16.100.1, dsname: in, oid: .1.3.6.1.2.1.2.2.1.10.60, output: 4162470308');
-INSERT INTO syslog VALUES (81,'2005-02-12 15:25:12','CMDPHP','INFO',1,3,0,'SYSTEM','SYSTEM','SNMP: v1: 172.16.100.1, dsname: out, oid: .1.3.6.1.2.1.2.2.1.16.60, output: 2801751639');
-INSERT INTO syslog VALUES (82,'2005-02-12 15:25:13','CMDPHP','INFO',1,3,0,'SYSTEM','SYSTEM','SNMP: v1: 172.16.100.1, dsname: in, oid: .1.3.6.1.2.1.2.2.1.10.61, output: 2764947604');
-INSERT INTO syslog VALUES (83,'2005-02-12 15:25:13','POLLER','DEBUG',0,0,0,'SYSTEM','SYSTEM','CACTI2RRD: /usr/bin/rrdtool update /var/cvsexport/cvs.querx.com/cacti/cacti_MAIN/rra/6509_in_24.rrd --template in:out 1108239903:66:66');
-INSERT INTO syslog VALUES (84,'2005-02-12 15:25:13','POLLER','DEBUG',0,0,0,'SYSTEM','SYSTEM','CACTI2RRD: /usr/bin/rrdtool update /var/cvsexport/cvs.querx.com/cacti/cacti_MAIN/rra/6509_in_27.rrd --template out:in 1108239903:2801751639:4162470308');
-INSERT INTO syslog VALUES (85,'2005-02-12 15:25:13','POLLER','DEBUG',0,0,0,'SYSTEM','SYSTEM','CACTI2RRD: /usr/bin/rrdtool update /var/cvsexport/cvs.querx.com/cacti/cacti_MAIN/rra/6509_in_26.rrd --template out:in 1108239903:1152049028:2907172857');
-INSERT INTO syslog VALUES (86,'2005-02-12 15:25:13','POLLER','DEBUG',0,0,0,'SYSTEM','SYSTEM','CACTI2RRD: /usr/bin/rrdtool update /var/cvsexport/cvs.querx.com/cacti/cacti_MAIN/rra/6509_in_25.rrd --template out:in 1108239903:66:66');
-INSERT INTO syslog VALUES (87,'2005-02-12 15:25:13','CMDPHP','INFO',1,3,0,'SYSTEM','SYSTEM','SNMP: v1: 172.16.100.1, dsname: out, oid: .1.3.6.1.2.1.2.2.1.16.61, output: 2090609844');
-INSERT INTO syslog VALUES (88,'2005-02-12 15:25:13','CMDPHP','INFO',1,3,0,'SYSTEM','SYSTEM','SNMP: v1: 172.16.100.1, dsname: in, oid: .1.3.6.1.2.1.2.2.1.10.62, output: 0');
-INSERT INTO syslog VALUES (89,'2005-02-12 15:25:13','CMDPHP','INFO',1,3,0,'SYSTEM','SYSTEM','SNMP: v1: 172.16.100.1, dsname: out, oid: .1.3.6.1.2.1.2.2.1.16.62, output: 0');
-INSERT INTO syslog VALUES (90,'2005-02-12 15:25:13','CMDPHP','NOTICE',1,0,0,'SYSTEM','SYSTEM','Run Time: 8.7611 s, Theads: N/A, Hosts: 3');
-INSERT INTO syslog VALUES (91,'2005-02-12 15:25:14','POLLER','DEBUG',0,0,0,'SYSTEM','SYSTEM','CACTI2RRD: /usr/bin/rrdtool update /var/cvsexport/cvs.querx.com/cacti/cacti_MAIN/rra/6509_in_28.rrd --template in:out 1108239903:2764947604:2090609844');
-INSERT INTO syslog VALUES (92,'2005-02-12 15:25:14','POLLER','DEBUG',0,0,0,'SYSTEM','SYSTEM','CACTI2RRD: /usr/bin/rrdtool update /var/cvsexport/cvs.querx.com/cacti/cacti_MAIN/rra/6509_in_29.rrd --template out:in 1108239903:0:0');
-INSERT INTO syslog VALUES (93,'2005-02-12 15:25:14','POLLER','NOTICE',1,0,0,'SYSTEM','SYSTEM','System Time: 12.9692 s, Total Pollers: 1, Method: cmd.php, Processes: 1, Threads: N/A, Hosts: 4, Hosts/Process: 4');
 
 --
 -- Table structure for table `user_auth`
@@ -2044,7 +1948,7 @@ CREATE TABLE user_auth (
 -- Dumping data for table `user_auth`
 --
 
-INSERT INTO user_auth VALUES (1,'admin','21232f297a57a5a743894a0e4a801fc3',0,'Administrator','','on','on','on','on',1,1,1,1,1,1,0,'0000-00-00 00:00:00','2004-12-29 20:59:45','default','','','2005-04-02 16:06:21','192.168.1.101');
+INSERT INTO user_auth VALUES (1,'admin','21232f297a57a5a743894a0e4a801fc3',0,'Administrator','','on','on','on','on',1,1,1,1,1,1,0,'0000-00-00 00:00:00','2004-12-29 20:59:45','classic','','','2005-04-07 00:19:56','192.168.1.101');
 INSERT INTO user_auth VALUES (3,'guest','43e9a4ab75570f5b',0,'Guest Account','on','on','on','on','on',3,1,1,1,1,1,0,'0000-00-00 00:00:00','2004-12-29 20:59:45','default','','','0000-00-00 00:00:00','0.0.0.0');
 
 --
@@ -2099,24 +2003,6 @@ INSERT INTO user_auth_realm VALUES (16,1);
 INSERT INTO user_auth_realm VALUES (17,1);
 INSERT INTO user_auth_realm VALUES (18,1);
 INSERT INTO user_auth_realm VALUES (19,1);
-
---
--- Table structure for table `user_log`
---
-
-CREATE TABLE user_log (
-  username varchar(50) NOT NULL default '0',
-  user_id mediumint(8) NOT NULL default '0',
-  time datetime NOT NULL default '0000-00-00 00:00:00',
-  result tinyint(1) NOT NULL default '0',
-  ip varchar(15) NOT NULL default '',
-  PRIMARY KEY  (username,user_id,time)
-) TYPE=MyISAM;
-
---
--- Dumping data for table `user_log`
---
-
 
 --
 -- Table structure for table `version`
