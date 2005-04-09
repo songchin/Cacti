@@ -1,8 +1,8 @@
--- MySQL dump 9.09
+-- MySQL dump 9.11
 --
--- Host: localhost    Database: cacti_rel_MAIN
----------------------------------------------------------
--- Server version	4.0.15-standard
+-- Host: localhost    Database: cacti090
+-- ------------------------------------------------------
+-- Server version	4.0.22-nt-log
 
 --
 -- Table structure for table `data_input`
@@ -1006,7 +1006,7 @@ CREATE TABLE host (
 -- Dumping data for table `host`
 --
 
-INSERT INTO host VALUES (1,1,3,'Localhost','localhost','public',1,'','','MD5','','DES',161,500,2,2,'',3,0,'0000-00-00 00:00:00','0000-00-00 00:00:00','',7.69000,854.78000,854.78000,148.90165,6,0,100.00000);
+INSERT INTO host VALUES (1,1,3,'Localhost','localhost','public',1,'','','MD5','','DES',161,500,2,2,'',3,0,'0000-00-00 00:00:00','0000-00-00 00:00:00','','7.69000','854.78000','854.78000','148.90165',6,0,'100.00000');
 
 --
 -- Table structure for table `host_graph`
@@ -1132,6 +1132,23 @@ INSERT INTO host_template_snmp_query VALUES (2,9);
 INSERT INTO host_template_snmp_query VALUES (3,6);
 
 --
+-- Table structure for table `host_template_sysdesc`
+--
+
+CREATE TABLE host_template_sysdesc (
+  id bigint(20) unsigned NOT NULL auto_increment,
+  host_template_id mediumint(11) unsigned NOT NULL default '0',
+  snmp_sysdesc varchar(255) NOT NULL default '',
+  PRIMARY KEY  (id),
+  KEY host_template_id (host_template_id)
+) TYPE=MyISAM;
+
+--
+-- Dumping data for table `host_template_sysdesc`
+--
+
+
+--
 -- Table structure for table `poller`
 --
 
@@ -1160,7 +1177,7 @@ CREATE TABLE poller (
 -- Dumping data for table `poller`
 --
 
-INSERT INTO poller VALUES (1,'Wait','on','locahost','Main Cacti System','0000-00-00 00:00:00',0,'0000-00-00 00:00:00','0000-00-00 00:00:00','',0.00000,0.00000,0.00000,0.00000,0,0,0.00000);
+INSERT INTO poller VALUES (1,'Wait','on','locahost','Main Cacti System','0000-00-00 00:00:00',0,'0000-00-00 00:00:00','0000-00-00 00:00:00','','0.00000','0.00000','0.00000','0.00000',0,0,'0.00000');
 
 --
 -- Table structure for table `poller_command`
@@ -1480,6 +1497,44 @@ INSERT INTO rra_cf VALUES (3,1);
 INSERT INTO rra_cf VALUES (3,3);
 INSERT INTO rra_cf VALUES (4,1);
 INSERT INTO rra_cf VALUES (4,3);
+
+--
+-- Table structure for table `rra_template`
+--
+
+CREATE TABLE rra_template (
+  id int(11) NOT NULL default '0',
+  hash varchar(32) NOT NULL default '',
+  name varchar(100) NOT NULL default '',
+  PRIMARY KEY  (id)
+) TYPE=MyISAM;
+
+--
+-- Dumping data for table `rra_template`
+--
+
+
+--
+-- Table structure for table `rra_template_settings`
+--
+
+CREATE TABLE rra_template_settings (
+  id mediumint(8) unsigned NOT NULL auto_increment,
+  rra_template_id mediumint(9) NOT NULL default '0',
+  hash varchar(32) NOT NULL default '',
+  name varchar(100) NOT NULL default '',
+  x_files_factor double NOT NULL default '0.1',
+  steps mediumint(8) default '1',
+  rows int(12) NOT NULL default '600',
+  timespan int(12) unsigned NOT NULL default '0',
+  PRIMARY KEY  (id),
+  KEY rra_template_id (rra_template_id)
+) TYPE=MyISAM;
+
+--
+-- Dumping data for table `rra_template_settings`
+--
+
 
 --
 -- Table structure for table `settings`
@@ -1883,6 +1938,45 @@ INSERT INTO snmp_query_graph_sv VALUES (48,'993a87c04f550f1209d689d584aa8b45',22
 INSERT INTO snmp_query_graph_sv VALUES (49,'183bb486c92a566fddcb0585ede37865',22,3,'title','|host_description| - Traffic - |query_ifDescr|/|query_ifIndex|');
 
 --
+-- Table structure for table `snmp_template`
+--
+
+CREATE TABLE snmp_template (
+  id int(11) NOT NULL auto_increment,
+  hash varchar(32) NOT NULL default '',
+  name varchar(100) NOT NULL default '',
+  PRIMARY KEY  (id)
+) TYPE=MyISAM;
+
+--
+-- Dumping data for table `snmp_template`
+--
+
+
+--
+-- Table structure for table `snmp_template_auth`
+--
+
+CREATE TABLE snmp_template_auth (
+  id int(10) unsigned NOT NULL auto_increment,
+  snmp_id int(11) NOT NULL default '0',
+  snmp_version tinyint(4) unsigned NOT NULL default '0',
+  snmp_community varchar(100) NOT NULL default '',
+  snmpv3_auth_username varchar(50) NOT NULL default '',
+  snmpv3_auth_password varchar(50) NOT NULL default '',
+  snmpv3_authproto varchar(5) NOT NULL default '',
+  snmpv3_priv_passphrase varchar(200) NOT NULL default '',
+  snmpv3_priv_proto varchar(5) NOT NULL default '',
+  PRIMARY KEY  (id),
+  KEY snmp_id (snmp_id)
+) TYPE=MyISAM;
+
+--
+-- Dumping data for table `snmp_template_auth`
+--
+
+
+--
 -- Table structure for table `syslog`
 --
 
@@ -1896,7 +1990,7 @@ CREATE TABLE syslog (
   user_id mediumint(8) unsigned NOT NULL default '0',
   username varchar(50) NOT NULL default 'system',
   source varchar(50) NOT NULL default 'localhost',
-  message varchar(255) NOT NULL default '',
+  message text NOT NULL,
   PRIMARY KEY  (id),
   KEY facility (facility),
   KEY severity (severity),
@@ -1948,7 +2042,7 @@ CREATE TABLE user_auth (
 -- Dumping data for table `user_auth`
 --
 
-INSERT INTO user_auth VALUES (1,'admin','21232f297a57a5a743894a0e4a801fc3',0,'Administrator','','on','on','on','on',1,1,1,1,1,1,0,'0000-00-00 00:00:00','2004-12-29 20:59:45','classic','','','2005-04-07 00:19:56','192.168.1.101');
+INSERT INTO user_auth VALUES (1,'admin','21232f297a57a5a743894a0e4a801fc3',0,'Administrator','','on','on','on','on',1,1,1,1,1,1,0,'0000-00-00 00:00:00','2004-12-29 20:59:45','classic','','','2005-04-09 17:06:15','127.0.0.1');
 INSERT INTO user_auth VALUES (3,'guest','43e9a4ab75570f5b',0,'Guest Account','on','on','on','on','on',3,1,1,1,1,1,0,'0000-00-00 00:00:00','2004-12-29 20:59:45','default','','','0000-00-00 00:00:00','0.0.0.0');
 
 --
