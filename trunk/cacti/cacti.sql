@@ -1503,7 +1503,7 @@ INSERT INTO rra_cf VALUES (4,3);
 --
 
 CREATE TABLE rra_template (
-  id int(11) NOT NULL default '0',
+  id int(11) unsigned NOT NULL default '0',
   hash varchar(32) NOT NULL default '',
   name varchar(100) NOT NULL default '',
   PRIMARY KEY  (id)
@@ -1520,7 +1520,7 @@ CREATE TABLE rra_template (
 
 CREATE TABLE rra_template_settings (
   id mediumint(8) unsigned NOT NULL auto_increment,
-  rra_template_id mediumint(9) NOT NULL default '0',
+  rra_template_id mediumint(9) unsigned NOT NULL default '0',
   hash varchar(32) NOT NULL default '',
   name varchar(100) NOT NULL default '',
   x_files_factor double NOT NULL default '0.1',
@@ -1942,7 +1942,7 @@ INSERT INTO snmp_query_graph_sv VALUES (49,'183bb486c92a566fddcb0585ede37865',22
 --
 
 CREATE TABLE snmp_template (
-  id int(11) NOT NULL auto_increment,
+  id int(11) unsigned NOT NULL auto_increment,
   hash varchar(32) NOT NULL default '',
   name varchar(100) NOT NULL default '',
   PRIMARY KEY  (id)
@@ -1959,7 +1959,7 @@ CREATE TABLE snmp_template (
 
 CREATE TABLE snmp_template_auth (
   id int(10) unsigned NOT NULL auto_increment,
-  snmp_id int(11) NOT NULL default '0',
+  snmp_id int(11) unsigned NOT NULL default '0',
   snmp_version tinyint(4) unsigned NOT NULL default '0',
   snmp_community varchar(100) NOT NULL default '',
   snmpv3_auth_username varchar(50) NOT NULL default '',
