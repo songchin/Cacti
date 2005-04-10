@@ -510,11 +510,11 @@ CREATE TABLE graph (
   export tinyint(1) unsigned NOT NULL default '1',
   unit_value varchar(20) NOT NULL default '',
   unit_length tinyint(3) unsigned NOT NULL default '9',
-  unit_exponent_value char(3) NOT NULL default '',
+  unit_exponent_value tinyint(4) NOT NULL default '0',
   force_rules_legend tinyint(1) unsigned NOT NULL default '1',
   PRIMARY KEY  (id),
-  KEY host_id (host_id),
-  KEY graph_template_id (graph_template_id)
+  KEY graph_template_id (graph_template_id),
+  KEY host_id (host_id)
 ) TYPE=MyISAM;
 
 --
@@ -599,7 +599,7 @@ CREATE TABLE graph_template (
   t_unit_length tinyint(1) unsigned NOT NULL default '0',
   unit_length tinyint(3) unsigned NOT NULL default '9',
   t_unit_exponent_value tinyint(1) unsigned NOT NULL default '0',
-  unit_exponent_value char(3) NOT NULL default '',
+  unit_exponent_value tinyint(4) NOT NULL default '0',
   t_force_rules_legend tinyint(1) unsigned NOT NULL default '0',
   force_rules_legend tinyint(1) unsigned NOT NULL default '1',
   PRIMARY KEY  (id)
@@ -609,27 +609,27 @@ CREATE TABLE graph_template (
 -- Dumping data for table `graph_template`
 --
 
-INSERT INTO graph_template VALUES (1,'8396202bfa724498a57a7e22bd40f7f0','Host MIB - Disk Space',0,1,0,'',0,120,0,500,0,'',0,'',0,0,0,0,0,100,0,0,0,'bytes',0,1,0,2,0,0,0,0,0,1,0,1024,0,1,0,'',0,9,0,'0',0,0);
-INSERT INTO graph_template VALUES (2,'a42973098983b215a9d62047f323d4ad','Host MIB - CPU Utilization',0,1,0,'',0,120,0,500,0,'',0,'',0,0,0,0,0,100,0,0,0,'percent',0,1,0,2,0,0,0,0,0,1,0,1000,0,1,0,'',0,9,0,'0',0,0);
-INSERT INTO graph_template VALUES (3,'f2d7f5f843a2301252894ad369e05055','Host MIB - Logged in Users',0,1,0,'',0,120,0,500,0,'',0,'',0,0,0,0,0,100,0,0,0,'users',0,1,0,2,0,0,0,0,0,1,0,1000,0,1,0,'',0,9,0,'0',0,0);
-INSERT INTO graph_template VALUES (4,'879bad31e96010709cce2f5db36bf24f','Interface - Errors/Discards',0,1,0,'',0,120,0,500,0,'',0,'',0,0,0,0,0,100,0,0,0,'errors/sec',0,1,0,2,0,0,0,0,0,1,0,1000,0,1,0,'',0,9,0,'0',0,0);
-INSERT INTO graph_template VALUES (5,'5e51f9d2a0c77ee5fae12336e94ff220','Interface - Non-Unicast Packets',0,1,0,'',0,120,0,500,0,'',0,'',0,0,0,0,0,100,0,0,0,'packets/sec',0,1,0,2,0,0,0,0,0,1,0,1000,0,1,0,'',0,9,0,'0',0,0);
-INSERT INTO graph_template VALUES (6,'66caefa056e2d071c7b2c591037b9d47','Interface - Traffic (bits/sec)',0,1,0,'',0,120,0,500,0,'',0,'',0,0,0,0,0,100,0,0,0,'bits/sec',0,1,0,2,0,0,0,0,0,1,0,1000,0,1,0,'',0,9,0,'0',0,0);
-INSERT INTO graph_template VALUES (7,'567bc9646f3093393bb43fc2ba4d9eda','Interface - Traffic (bits/sec, 95th Percentile)',0,1,0,'',0,120,0,500,0,'',0,'',0,0,0,0,0,100,0,0,0,'bits/sec',0,1,0,2,0,0,0,0,0,1,0,1000,0,1,0,'',0,9,0,'0',0,0);
-INSERT INTO graph_template VALUES (8,'7682fbd3f059258292135a6fcf75c14b','Interface - Traffic (bytes/sec)',0,1,0,'',0,120,0,500,0,'',0,'',0,0,0,0,0,100,0,0,0,'bytes/sec',0,1,0,2,0,0,0,0,0,1,0,1000,0,1,0,'',0,9,0,'0',0,0);
-INSERT INTO graph_template VALUES (9,'f916a697a25b03f9483d881af39a94d7','Interface - Traffic (bytes/sec, Total Bandwidth)',0,1,0,'',0,120,0,500,0,'',0,'',0,0,0,0,0,100,0,0,0,'bytes/sec',0,1,0,2,0,0,0,0,0,1,0,1000,0,1,0,'',0,9,0,'0',0,0);
-INSERT INTO graph_template VALUES (10,'3f6e3af5a40f2cd0132d3c0f28a78019','Interface - Traffic (bits/sec, 64-bit counters)',0,1,0,'',0,120,0,500,0,'',0,'',0,0,0,0,0,100,0,0,0,'bits/sec',0,1,0,2,0,0,0,0,0,1,0,1000,0,1,0,'',0,9,0,'0',0,0);
-INSERT INTO graph_template VALUES (11,'47abb5e29927146f9e419cfa505f0fcf','Interface - Unicast Packets',0,1,0,'',0,120,0,500,0,'',0,'',0,0,0,0,0,100,0,0,0,'packets/sec',0,1,0,2,0,0,0,0,0,1,0,1000,0,1,0,'',0,9,0,'0',0,0);
-INSERT INTO graph_template VALUES (12,'6779afe50b735f09c1a42e6dea49da82','Net-SNMP - Disk Space',0,1,0,'',0,120,0,500,0,'',0,'',0,0,0,0,0,100,0,0,0,'bytes',0,1,0,2,0,0,0,0,0,1,0,1024,0,1,0,'',0,9,0,'0',0,0);
-INSERT INTO graph_template VALUES (13,'324ff1fdb007e4e70c6e0a7e15aaffb8','Net-SNMP - CPU Usage',0,1,0,'',0,120,0,500,0,'',0,'',0,0,0,0,0,100,0,0,0,'percent',0,1,0,2,0,0,0,0,0,1,0,1000,0,1,0,'',0,9,0,'0',0,0);
-INSERT INTO graph_template VALUES (14,'79f0776ec68ee57b60d317d20723c7b5','Net-SNMP - Load Average',0,1,0,'',0,120,0,500,0,'',0,'',0,0,0,0,0,100,0,0,0,'procs in the run queue',0,1,0,2,0,0,0,0,0,1,0,1000,0,1,0,'',0,9,0,'0',0,0);
-INSERT INTO graph_template VALUES (15,'8e6f66adfe14769dba1f8b3909676eb0','Net-SNMP - Memory Usage',0,1,0,'',0,120,0,500,0,'',0,'',0,0,0,0,0,100,0,0,0,'bytes',0,1,0,2,0,0,0,0,0,1,0,1024,0,1,0,'',0,9,0,'0',0,0);
-INSERT INTO graph_template VALUES (16,'cdcbdaeb736c784ae5ac41eee7d72789','Local Unix - Disk Space',0,1,0,'',0,120,0,500,0,'',0,'',0,0,0,0,0,100,0,0,0,'bytes',0,1,0,2,0,0,0,0,0,1,0,1024,0,1,0,'',0,9,0,'0',0,0);
-INSERT INTO graph_template VALUES (17,'75cd439feb02e74e11313df7da84364d','Local Unix - Load Average',0,1,0,'',0,120,0,500,0,'',0,'',0,0,0,0,0,100,0,0,0,'procs in the run queue',0,1,0,2,0,0,0,0,0,1,0,1000,0,1,0,'',0,9,0,'0',0,0);
-INSERT INTO graph_template VALUES (18,'17938161982ddbe819626b23780bd524','Local Unix - Logged in Users',0,1,0,'',0,120,0,500,0,'',0,'',0,0,0,0,0,100,0,0,0,'users',0,1,0,2,0,0,0,0,0,1,0,1000,0,1,0,'',0,9,0,'0',0,0);
-INSERT INTO graph_template VALUES (19,'7e0319c8000de2a2fe52df6879dfcdaa','Local Unix - Processes',0,1,0,'',0,120,0,500,0,'',0,'',0,0,0,0,0,100,0,0,0,'processes',0,1,0,2,0,0,0,0,0,1,0,1000,0,1,0,'',0,9,0,'0',0,0);
-INSERT INTO graph_template VALUES (20,'7b62b3c2d4e9b3c8f6a03ddeee8870cc','Local Unix - Ping Latency',0,1,0,'',0,120,0,500,0,'',0,'',0,0,0,0,0,100,0,0,0,'milliseconds',0,1,0,2,0,0,0,0,0,1,0,1000,0,1,0,'',0,9,0,'0',0,0);
-INSERT INTO graph_template VALUES (21,'9c25c63241e5605213921d4cc1774f1f','Host MIB - Processes',0,1,0,'',0,120,0,500,0,'',0,'',0,0,0,0,0,100,0,0,0,'processes',0,1,0,2,0,0,0,0,0,1,0,1000,0,1,0,'',0,9,0,'0',0,0);
+INSERT INTO graph_template VALUES (1,'98db4de7b4ea19761f9c1280d1a78ca7','Host MIB - Disk Space',0,1,0,'',0,120,0,500,0,'',0,'',0,0,0,0,0,1000,0,0,0,'bytes',0,1,0,2,0,0,0,0,0,1,0,1024,0,1,0,'',0,9,0,6,0,0);
+INSERT INTO graph_template VALUES (2,'a42973098983b215a9d62047f323d4ad','Host MIB - CPU Utilization',0,1,0,'',0,120,0,500,0,'',0,'',0,0,0,0,0,100,0,0,0,'percent',0,1,0,2,0,0,0,0,0,1,0,1000,0,1,0,'',0,9,0,0,0,0);
+INSERT INTO graph_template VALUES (3,'f2d7f5f843a2301252894ad369e05055','Host MIB - Logged in Users',0,1,0,'',0,120,0,500,0,'',0,'',0,0,0,0,0,100,0,0,0,'users',0,1,0,2,0,0,0,0,0,1,0,1000,0,1,0,'',0,9,0,0,0,0);
+INSERT INTO graph_template VALUES (4,'879bad31e96010709cce2f5db36bf24f','Interface - Errors/Discards',0,1,0,'',0,120,0,500,0,'',0,'',0,0,0,0,0,100,0,0,0,'errors/sec',0,1,0,2,0,0,0,0,0,1,0,1000,0,1,0,'',0,9,0,0,0,0);
+INSERT INTO graph_template VALUES (5,'5e51f9d2a0c77ee5fae12336e94ff220','Interface - Non-Unicast Packets',0,1,0,'',0,120,0,500,0,'',0,'',0,0,0,0,0,100,0,0,0,'packets/sec',0,1,0,2,0,0,0,0,0,1,0,1000,0,1,0,'',0,9,0,0,0,0);
+INSERT INTO graph_template VALUES (6,'66caefa056e2d071c7b2c591037b9d47','Interface - Traffic (bits/sec)',0,1,0,'',0,120,0,500,0,'',0,'',0,0,0,0,0,100,0,0,0,'bits/sec',0,1,0,2,0,0,0,0,0,1,0,1000,0,1,0,'',0,9,0,0,0,0);
+INSERT INTO graph_template VALUES (7,'567bc9646f3093393bb43fc2ba4d9eda','Interface - Traffic (bits/sec, 95th Percentile)',0,1,0,'',0,120,0,500,0,'',0,'',0,0,0,0,0,100,0,0,0,'bits/sec',0,1,0,2,0,0,0,0,0,1,0,1000,0,1,0,'',0,9,0,0,0,0);
+INSERT INTO graph_template VALUES (8,'7682fbd3f059258292135a6fcf75c14b','Interface - Traffic (bytes/sec)',0,1,0,'',0,120,0,500,0,'',0,'',0,0,0,0,0,100,0,0,0,'bytes/sec',0,1,0,2,0,0,0,0,0,1,0,1000,0,1,0,'',0,9,0,0,0,0);
+INSERT INTO graph_template VALUES (9,'f916a697a25b03f9483d881af39a94d7','Interface - Traffic (bytes/sec, Total Bandwidth)',0,1,0,'',0,120,0,500,0,'',0,'',0,0,0,0,0,100,0,0,0,'bytes/sec',0,1,0,2,0,0,0,0,0,1,0,1000,0,1,0,'',0,9,0,0,0,0);
+INSERT INTO graph_template VALUES (10,'3f6e3af5a40f2cd0132d3c0f28a78019','Interface - Traffic (bits/sec, 64-bit counters)',0,1,0,'',0,120,0,500,0,'',0,'',0,0,0,0,0,100,0,0,0,'bits/sec',0,1,0,2,0,0,0,0,0,1,0,1000,0,1,0,'',0,9,0,0,0,0);
+INSERT INTO graph_template VALUES (11,'47abb5e29927146f9e419cfa505f0fcf','Interface - Unicast Packets',0,1,0,'',0,120,0,500,0,'',0,'',0,0,0,0,0,100,0,0,0,'packets/sec',0,1,0,2,0,0,0,0,0,1,0,1000,0,1,0,'',0,9,0,0,0,0);
+INSERT INTO graph_template VALUES (12,'6779afe50b735f09c1a42e6dea49da82','Net-SNMP - Disk Space',0,1,0,'',0,120,0,500,0,'',0,'',0,0,0,0,0,100,0,0,0,'bytes',0,1,0,2,0,0,0,0,0,1,0,1024,0,1,0,'',0,9,0,0,0,0);
+INSERT INTO graph_template VALUES (13,'324ff1fdb007e4e70c6e0a7e15aaffb8','Net-SNMP - CPU Usage',0,1,0,'',0,120,0,500,0,'',0,'',0,0,0,0,0,100,0,0,0,'percent',0,1,0,2,0,0,0,0,0,1,0,1000,0,1,0,'',0,9,0,0,0,0);
+INSERT INTO graph_template VALUES (14,'79f0776ec68ee57b60d317d20723c7b5','Net-SNMP - Load Average',0,1,0,'',0,120,0,500,0,'',0,'',0,0,0,0,0,100,0,0,0,'procs in the run queue',0,1,0,2,0,0,0,0,0,1,0,1000,0,1,0,'',0,9,0,0,0,0);
+INSERT INTO graph_template VALUES (15,'8e6f66adfe14769dba1f8b3909676eb0','Net-SNMP - Memory Usage',0,1,0,'',0,120,0,500,0,'',0,'',0,0,0,0,0,100,0,0,0,'bytes',0,1,0,2,0,0,0,0,0,1,0,1024,0,1,0,'',0,9,0,0,0,0);
+INSERT INTO graph_template VALUES (16,'cdcbdaeb736c784ae5ac41eee7d72789','Local Unix - Disk Space',0,1,0,'',0,120,0,500,0,'',0,'',0,0,0,0,0,100,0,0,0,'bytes',0,1,0,2,0,0,0,0,0,1,0,1024,0,1,0,'',0,9,0,0,0,0);
+INSERT INTO graph_template VALUES (17,'75cd439feb02e74e11313df7da84364d','Local Unix - Load Average',0,1,0,'',0,120,0,500,0,'',0,'',0,0,0,0,0,100,0,0,0,'procs in the run queue',0,1,0,2,0,0,0,0,0,1,0,1000,0,1,0,'',0,9,0,0,0,0);
+INSERT INTO graph_template VALUES (18,'17938161982ddbe819626b23780bd524','Local Unix - Logged in Users',0,1,0,'',0,120,0,500,0,'',0,'',0,0,0,0,0,100,0,0,0,'users',0,1,0,2,0,0,0,0,0,1,0,1000,0,1,0,'',0,9,0,0,0,0);
+INSERT INTO graph_template VALUES (19,'7e0319c8000de2a2fe52df6879dfcdaa','Local Unix - Processes',0,1,0,'',0,120,0,500,0,'',0,'',0,0,0,0,0,100,0,0,0,'processes',0,1,0,2,0,0,0,0,0,1,0,1000,0,1,0,'',0,9,0,0,0,0);
+INSERT INTO graph_template VALUES (20,'7b62b3c2d4e9b3c8f6a03ddeee8870cc','Local Unix - Ping Latency',0,1,0,'',0,120,0,500,0,'',0,'',0,0,0,0,0,100,0,0,0,'milliseconds',0,1,0,2,0,0,0,0,0,1,0,1000,0,1,0,'',0,9,0,0,0,0);
+INSERT INTO graph_template VALUES (21,'9c25c63241e5605213921d4cc1774f1f','Host MIB - Processes',0,1,0,'',0,120,0,500,0,'',0,'',0,0,0,0,0,100,0,0,0,'processes',0,1,0,2,0,0,0,0,0,1,0,1000,0,1,0,'',0,9,0,0,0,0);
 
 --
 -- Table structure for table `graph_template_item`
@@ -1006,7 +1006,7 @@ CREATE TABLE host (
 -- Dumping data for table `host`
 --
 
-INSERT INTO host VALUES (1,1,3,'Localhost','localhost','public',1,'','','MD5','','DES',161,500,2,2,'',3,0,'0000-00-00 00:00:00','0000-00-00 00:00:00','','7.69000','854.78000','854.78000','148.90165',6,0,'100.00000');
+INSERT INTO host VALUES (1,1,3,'Localhost','localhost','public',1,'','','MD5','','DES',161,500,2,2,'on',3,0,'0000-00-00 00:00:00','0000-00-00 00:00:00','','7.46000','814.46000','7.85000','16.95157',156,0,'100.00000');
 
 --
 -- Table structure for table `host_graph`
@@ -1195,6 +1195,9 @@ CREATE TABLE poller_command (
 -- Dumping data for table `poller_command`
 --
 
+INSERT INTO poller_command VALUES (0,'2005-04-10 00:52:41',1,'2:1');
+INSERT INTO poller_command VALUES (0,'2005-04-10 00:52:41',1,'2:8');
+INSERT INTO poller_command VALUES (0,'2005-04-10 00:52:41',1,'2:9');
 
 --
 -- Table structure for table `poller_item`
@@ -1232,12 +1235,6 @@ CREATE TABLE poller_item (
 -- Dumping data for table `poller_item`
 --
 
-INSERT INTO poller_item VALUES (4,1,1,1,'localhost','public',1,'','','MD5','','DES',161,500,2,2,'hdd_free','/var/cvsexport/cacti/rra/localhost_hdd_free_4.rrd',2,'perl /var/cvsexport/cacti/scripts/query_unix_partitions.pl  get available /dev/hda2','','');
-INSERT INTO poller_item VALUES (4,1,1,1,'localhost','public',1,'','','MD5','','DES',161,500,2,2,'hdd_used','/var/cvsexport/cacti/rra/localhost_hdd_free_4.rrd',2,'perl /var/cvsexport/cacti/scripts/query_unix_partitions.pl  get used /dev/hda2','','');
-INSERT INTO poller_item VALUES (5,1,1,1,'localhost','public',1,'','','MD5','','DES',161,500,2,2,'hdd_free','/var/cvsexport/cacti/rra/localhost_hdd_free_5.rrd',2,'perl /var/cvsexport/cacti/scripts/query_unix_partitions.pl  get available /dev/hda3','','');
-INSERT INTO poller_item VALUES (5,1,1,1,'localhost','public',1,'','','MD5','','DES',161,500,2,2,'hdd_used','/var/cvsexport/cacti/rra/localhost_hdd_free_5.rrd',2,'perl /var/cvsexport/cacti/scripts/query_unix_partitions.pl  get used /dev/hda3','','');
-INSERT INTO poller_item VALUES (6,1,1,1,'localhost','public',1,'','','MD5','','DES',161,500,2,2,'hdd_free','/var/cvsexport/cacti/rra/localhost_hdd_free_6.rrd',2,'perl /var/cvsexport/cacti/scripts/query_unix_partitions.pl  get available /dev/hda5','','');
-INSERT INTO poller_item VALUES (6,1,1,1,'localhost','public',1,'','','MD5','','DES',161,500,2,2,'hdd_used','/var/cvsexport/cacti/rra/localhost_hdd_free_6.rrd',2,'perl /var/cvsexport/cacti/scripts/query_unix_partitions.pl  get used /dev/hda5','','');
 
 --
 -- Table structure for table `poller_output`
@@ -1275,6 +1272,9 @@ CREATE TABLE poller_reindex (
 --
 
 INSERT INTO poller_reindex VALUES (1,6,0,'<','4566094','.1.3.6.1.2.1.1.3.0');
+INSERT INTO poller_reindex VALUES (2,1,0,'<','712854','.1.3.6.1.2.1.1.3.0');
+INSERT INTO poller_reindex VALUES (2,8,0,'<','712854','.1.3.6.1.2.1.1.3.0');
+INSERT INTO poller_reindex VALUES (2,9,0,'<','712856','.1.3.6.1.2.1.1.3.0');
 
 --
 -- Table structure for table `poller_time`
@@ -1554,7 +1554,7 @@ INSERT INTO settings VALUES ('log_destination','1');
 INSERT INTO settings VALUES ('log_snmp','');
 INSERT INTO settings VALUES ('log_graph','');
 INSERT INTO settings VALUES ('log_export','');
-INSERT INTO settings VALUES ('log_verbosity','1');
+INSERT INTO settings VALUES ('log_verbosity','2');
 INSERT INTO settings VALUES ('log_pstats','on');
 INSERT INTO settings VALUES ('log_pwarn','on');
 INSERT INTO settings VALUES ('log_perror','on');
@@ -1562,12 +1562,12 @@ INSERT INTO settings VALUES ('snmp_version','net-snmp');
 INSERT INTO settings VALUES ('snmp_timeout','500');
 INSERT INTO settings VALUES ('snmp_retries','3');
 INSERT INTO settings VALUES ('remove_verification','on');
-INSERT INTO settings VALUES ('path_snmpwalk','/usr/bin/snmpwalk');
-INSERT INTO settings VALUES ('path_snmpget','/usr/bin/snmpget');
-INSERT INTO settings VALUES ('path_rrdtool','/usr/bin/rrdtool');
-INSERT INTO settings VALUES ('path_php_binary','/usr/bin/php');
+INSERT INTO settings VALUES ('path_snmpwalk','c:/net-snmp/bin/snmpwalk.exe');
+INSERT INTO settings VALUES ('path_snmpget','c:/net-snmp/bin/snmpget.exe');
+INSERT INTO settings VALUES ('path_rrdtool','c:/rrdtool/rrdtool.exe');
+INSERT INTO settings VALUES ('path_php_binary','c:/php/php-win.exe');
 INSERT INTO settings VALUES ('path_cactilog','/var/cvsexport/cvs.querx.com/cacti/cacti_MAIN/log/cacti.log');
-INSERT INTO settings VALUES ('path_cactid','');
+INSERT INTO settings VALUES ('path_cactid','c:/cactid/cactid.exe');
 INSERT INTO settings VALUES ('poller_enabled','on');
 INSERT INTO settings VALUES ('poller_type','1');
 INSERT INTO settings VALUES ('concurrent_processes','1');
@@ -1609,12 +1609,14 @@ INSERT INTO settings VALUES ('max_memory','32');
 INSERT INTO settings VALUES ('max_execution_time','10');
 INSERT INTO settings VALUES ('show_hidden','on');
 INSERT INTO settings VALUES ('default_theme','classic');
-INSERT INTO settings VALUES ('path_webroot','/var/cvsexport/cacti');
-INSERT INTO settings VALUES ('date','2005-04-02 23:29:07');
+INSERT INTO settings VALUES ('path_webroot','c:/wwwroot/cacti090');
+INSERT INTO settings VALUES ('date','2005-04-10 03:09:01');
 INSERT INTO settings VALUES ('syslog_destination','1');
 INSERT INTO settings VALUES ('syslog_size','1024k');
 INSERT INTO settings VALUES ('syslog_control','1');
 INSERT INTO settings VALUES ('syslog_maxdays','7');
+INSERT INTO settings VALUES ('path_rrdtool_default_font','c:/windows/fonts/veramono.ttf');
+INSERT INTO settings VALUES ('syslog_status','active');
 
 --
 -- Table structure for table `settings_graphs`
@@ -2042,7 +2044,7 @@ CREATE TABLE user_auth (
 -- Dumping data for table `user_auth`
 --
 
-INSERT INTO user_auth VALUES (1,'admin','21232f297a57a5a743894a0e4a801fc3',0,'Administrator','','on','on','on','on',1,1,1,1,1,1,0,'0000-00-00 00:00:00','2004-12-29 20:59:45','classic','','','2005-04-09 17:06:15','127.0.0.1');
+INSERT INTO user_auth VALUES (1,'admin','21232f297a57a5a743894a0e4a801fc3',0,'Administrator','','on','on','on','on',1,1,1,1,1,1,0,'0000-00-00 00:00:00','2004-12-29 20:59:45','classic','','','2005-04-10 01:41:25','127.0.0.1');
 INSERT INTO user_auth VALUES (3,'guest','43e9a4ab75570f5b',0,'Guest Account','on','on','on','on','on',3,1,1,1,1,1,0,'0000-00-00 00:00:00','2004-12-29 20:59:45','default','','','0000-00-00 00:00:00','0.0.0.0');
 
 --
