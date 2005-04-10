@@ -1,8 +1,8 @@
--- MySQL dump 9.11
+-- MySQL dump 9.09
 --
--- Host: localhost    Database: cacti090
--- ------------------------------------------------------
--- Server version	4.0.22-nt-log
+-- Host: localhost    Database: cacti_rel_MAIN
+---------------------------------------------------------
+-- Server version	4.0.15-standard
 
 --
 -- Table structure for table `data_input`
@@ -660,14 +660,14 @@ CREATE TABLE graph_template_item (
 INSERT INTO graph_template_item VALUES (27,'22a679c7612ed0ab191f0c16628a5f71',2,3,1,'',9,'',1,'%8.2lf %s','Average:','',0);
 INSERT INTO graph_template_item VALUES (26,'c7a4dc8c5b3100a70edc0b472eefdb39',2,2,1,'',9,'',4,'%8.2lf %s','Current:','',0);
 INSERT INTO graph_template_item VALUES (25,'afe1319147ad6b0e683e04d77ab5f6b7',2,1,1,'FF0000',7,'',1,'%8.2lf %s','CPU Utilization','',0);
-INSERT INTO graph_template_item VALUES (24,'26411857608cd3ebe5719bed5e393a88',1,8,3,'',9,'CURRENT_DATA_SOURCE,1024,*',3,'%8.2lf %s','Maximum:','',1);
-INSERT INTO graph_template_item VALUES (23,'c6d242ee3b9216a822c6e4c9d550100a',1,7,3,'',9,'CURRENT_DATA_SOURCE,1024,*',1,'%8.2lf %s','Average:','',0);
-INSERT INTO graph_template_item VALUES (22,'67229d563f1ce5adb65d4602d3160fe0',1,6,3,'',9,'CURRENT_DATA_SOURCE,1024,*',4,'%8.2lf %s','Current:','',0);
-INSERT INTO graph_template_item VALUES (21,'8b4001a0a8f84ce1bac72ebd876b03ce',1,5,3,'F51D30',7,'CURRENT_DATA_SOURCE,1024,*',1,'%8.2lf %s','Used','',0);
-INSERT INTO graph_template_item VALUES (20,'3c12d8c9986ede8828dad1538cfdf6fb',1,4,2,'',9,'CURRENT_DATA_SOURCE,1024,*',3,'%8.2lf %s','Maximum:','',1);
-INSERT INTO graph_template_item VALUES (19,'cd04d5be08f6be4111a89f4650f250a0',1,3,2,'',9,'CURRENT_DATA_SOURCE,1024,*',1,'%8.2lf %s','Average:','',0);
-INSERT INTO graph_template_item VALUES (18,'11498685ae526049ea5116441672c29d',1,2,2,'',9,'CURRENT_DATA_SOURCE,1024,*',4,'%8.2lf %s','Current:','',0);
-INSERT INTO graph_template_item VALUES (17,'3c06f9fc82a620492b85de63a1efe081',1,1,2,'002A97',7,'CURRENT_DATA_SOURCE,1024,*',1,'%8.2lf %s','Total','',0);
+INSERT INTO graph_template_item VALUES (24,'48b9750683b7fd8c083815ede6387813',1,8,3,'',9,'',3,'%8.2lf %s','Maximum:','',1);
+INSERT INTO graph_template_item VALUES (23,'c75ea3d777e18a65c099d4ccde73e3bb',1,7,3,'',9,'',1,'%8.2lf %s','Average:','',0);
+INSERT INTO graph_template_item VALUES (22,'0142b9de2983a920fac7313a6f5e4568',1,6,3,'',9,'',4,'%8.2lf %s','Current:','',0);
+INSERT INTO graph_template_item VALUES (21,'b1067a91e2629443c033f914173f99a0',1,5,3,'F51D30',7,'',1,'%8.2lf %s','Used','',0);
+INSERT INTO graph_template_item VALUES (20,'09f8bfb66e261fbee74667491f40b61d',1,4,2,'',9,'',3,'%8.2lf %s','Maximum:','',1);
+INSERT INTO graph_template_item VALUES (19,'e73c0f7d7cbf8a7c4a894bebb5ac4bfc',1,3,2,'',9,'',1,'%8.2lf %s','Average:','',0);
+INSERT INTO graph_template_item VALUES (18,'1b4af3e59b4f09ddf06094af05e1799f',1,2,2,'',9,'',4,'%8.2lf %s','Current:','',0);
+INSERT INTO graph_template_item VALUES (17,'7b7afa098172d8bdd28edc18c3e3bab1',1,1,2,'002A97',7,'',1,'%8.2lf %s','Total','',0);
 INSERT INTO graph_template_item VALUES (28,'b618de35d145df278041bc621afa7043',2,4,1,'',9,'',3,'%8.2lf %s','Maximum:','',1);
 INSERT INTO graph_template_item VALUES (29,'5524f2a7ba8a9943fca979ed45a72576',3,1,4,'4668E4',7,'',1,'%8.2lf %s','Users','',0);
 INSERT INTO graph_template_item VALUES (30,'6861222f6adcaee2ddf9c9c36b031510',3,2,4,'',9,'',4,'%8.0lf','Current:','',0);
@@ -1006,7 +1006,7 @@ CREATE TABLE host (
 -- Dumping data for table `host`
 --
 
-INSERT INTO host VALUES (1,1,3,'Localhost','localhost','public',1,'','','MD5','','DES',161,500,2,2,'on',3,0,'0000-00-00 00:00:00','0000-00-00 00:00:00','','7.46000','814.46000','7.85000','16.95157',156,0,'100.00000');
+INSERT INTO host VALUES (1,1,3,'Localhost','localhost','public',1,'','','MD5','','DES',161,500,2,2,'on',3,0,'0000-00-00 00:00:00','0000-00-00 00:00:00','',7.46000,814.46000,7.85000,16.95157,156,0,100.00000);
 
 --
 -- Table structure for table `host_graph`
@@ -1177,7 +1177,7 @@ CREATE TABLE poller (
 -- Dumping data for table `poller`
 --
 
-INSERT INTO poller VALUES (1,'Wait','on','locahost','Main Cacti System','0000-00-00 00:00:00',0,'0000-00-00 00:00:00','0000-00-00 00:00:00','','0.00000','0.00000','0.00000','0.00000',0,0,'0.00000');
+INSERT INTO poller VALUES (1,'Wait','on','locahost','Main Cacti System','0000-00-00 00:00:00',0,'0000-00-00 00:00:00','0000-00-00 00:00:00','',0.00000,0.00000,0.00000,0.00000,0,0,0.00000);
 
 --
 -- Table structure for table `poller_command`
