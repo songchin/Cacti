@@ -46,6 +46,24 @@ $tabs_graphs = array(
 /* setting information */
 $settings = array(
 	"path" => array(
+		"versions_header" => array(
+			"friendly_name" => "Required Tool Versions",
+			"method" => "spacer",
+			),
+		"snmp_version" => array(
+			"friendly_name" => "SNMP Utility Version",
+			"description" => "The type of SNMP you have installed.  Required if you are using SNMP v2c or don't have embedded SNMP support in PHP.",
+			"method" => "drop_array",
+			"default" => "net-snmp",
+			"array" => $snmp_implementations
+			),
+		"rrdtool_version" => array(
+			"friendly_name" => "RRDTool Utility Version",
+			"description" => "The version of RRDTool that you have installed.",
+			"method" => "drop_array",
+			"default" => "rrd-1.0.x",
+			"array" => $rrdtool_versions,
+			),
 		"dependent_header" => array(
 			"friendly_name" => "Required Tools",
 			"method" => "spacer"
@@ -65,6 +83,12 @@ $settings = array(
 		"path_rrdtool" => array(
 			"friendly_name" => "RRDTool Binary Path",
 			"description" => "The path to the rrdtool binary.",
+			"method" => "textbox",
+			"max_length" => "255"
+			),
+		"path_rrdtool_default_font" => array(
+			"friendly_name" => "RRDTool Default Font Path",
+			"description" => "The path to the rrdtool default font for version 1.2 and above.",
 			"method" => "textbox",
 			"max_length" => "255"
 			),
@@ -207,13 +231,6 @@ $settings = array(
 		"snmp_header" => array(
 			"friendly_name" => "General Defaults",
 			"method" => "spacer"
-			),
-		"snmp_version" => array(
-			"friendly_name" => "SNMP Utility Version",
-			"description" => "The type of SNMP you have installed.  Required if you are using SNMP v2c or don't have embedded SNMP support in PHP.",
-			"method" => "drop_array",
-			"default" => "net-snmp",
-			"array" => $snmp_implementations
 			),
 		"snmp_timeout" => array(
 			"friendly_name" => "Timeout",

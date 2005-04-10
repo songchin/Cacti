@@ -223,6 +223,10 @@ $snmp_implementations = array(
 	"ucd-snmp" => "UCD-SNMP 4.x",
 	"net-snmp" => "NET-SNMP");
 
+$rrdtool_versions = array(
+	"rrd-1.0.x" => "RRDTool 1.0.x",
+	"rrd-1.2.x" => "RRDTool 1.2.x");
+
 $cdef_item_types = array(
 	1 => "Function",
 	2 => "Operator",

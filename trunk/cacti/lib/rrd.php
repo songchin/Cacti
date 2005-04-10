@@ -24,11 +24,6 @@
 
 define("RRD_NL", " \\\n");
 
-/* set the rrdtool default font */
-//if (read_config_option("rrdtool_default_font")) {
-//	putenv("RRD_DEFAULT_FONT=" . read_config_option("rrdtool_default_font") . "\"");
-//}
-
 function escape_command($command) {
 	return ereg_replace("(\\\$|`)", "", $command);
 }
@@ -410,6 +405,11 @@ function rrdtool_function_graph($graph_id, $rra_id, $graph_data_array, $rrd_stru
 	include(CACTI_BASE_PATH . "/include/graph/graph_arrays.php");
 	include(CACTI_BASE_PATH . "/include/data_source/data_source_arrays.php");
 
+	/* set the rrdtool default font */
+	if (read_config_option("path_rrdtool_default_font")) {
+		putenv("RRD_DEFAULT_FONT=" . read_config_option("path_rrdtool_default_font"));
+	}
+
 	/* before we do anything; make sure the user has permission to view this graph,
 	if not then get out */
 	if ((read_config_option("auth_method") != "0") && (isset($_SESSION["sess_user_id"]))) {
@@ -672,13 +672,13 @@ function rrdtool_function_graph($graph_id, $rra_id, $graph_data_array, $rrd_stru
 	/* display the timespan for zoomed graphs */
 	if ((isset($graph_data_array["graph_start"])) && (isset($graph_data_array["graph_end"]))) {
 		if (($graph_data_array["graph_start"] < 0) && ($graph_data_array["graph_end"] < 0)) {
-			if (1) {
+			if (read_config_option("rrdtool_version") == "rrd-1.2.x") {
 				$graph_legend .= "COMMENT:\"From " . str_replace(":", "\:", date($graph_date, time()+$graph_data_array["graph_start"])) . " To " . str_replace(":", "\:", date($graph_date, time()+$graph_data_array["graph_end"])) . "\\c\"" . RRD_NL . "COMMENT:\"  \\n\"" . RRD_NL;
 			}else {
 				$graph_legend .= "COMMENT:\"From " . date($graph_date, time()+$graph_data_array["graph_start"]) . " To " . date($graph_date, time()+$graph_data_array["graph_end"]) . "\\c\"" . RRD_NL . "COMMENT:\"  \\n\"" . RRD_NL;
 			}
 		}else if (($graph_data_array["graph_start"] >= 0) && ($graph_data_array["graph_end"] >= 0)) {
-			if (1) {
+			if (read_config_option("rrdtool_version") == "rrd-1.2.x") {
 				$graph_legend .= "COMMENT:\"From " . str_replace(":", "\:", date($graph_date, $graph_data_array["graph_start"])) . " To " . str_replace(":", "\:", date($graph_date, $graph_data_array["graph_end"])) . "\\c\"" . RRD_NL . "COMMENT:\"  \\n\"" . RRD_NL;
 			}else {
 				$graph_legend .= "COMMENT:\"From " . date($graph_date, $graph_data_array["graph_start"]) . " To " . date($graph_date, $graph_data_array["graph_end"]) . "\\c\"" . RRD_NL . "COMMENT:\"  \\n\"" . RRD_NL;
@@ -703,8 +703,8 @@ function rrdtool_function_graph($graph_id, $rra_id, $graph_data_array, $rrd_stru
 		"$y_grid_alt" .
 		"$no_minor" .
 		"$unit_value" .
-		"$unit_length" .
-		"$unit_exponent_value" .
+//		"$unit_length" .
+//		"$unit_exponent_value" .
 		"$graph_legend" .
 		"--vertical-label=\"" . $graph["vertical_label"] . "\"" . RRD_NL;
 
