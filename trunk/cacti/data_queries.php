@@ -568,7 +568,7 @@ function data_query_edit() {
 				<?php
 			}
 			}else{
-				print "<tr><td><em>No Graph Templates Defined.</em></td></tr>";
+				print "<tr><td bgcolor='#" . $colors["form_alternate1"] . "' colspan=7><em>No Graph Templates</em></td></tr>";
 			}
 
 			html_end_box();

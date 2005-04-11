@@ -460,7 +460,7 @@ function template() {
 			$i++;
 		}
 	}else{
-		print "<tr><td><em>No Graph Templates</em></td></tr>\n";
+		print "<tr><td bgcolor='#" . $colors["form_alternate1"] . "' colspan=7><em>No Graph Templates</em></td></tr>";
 	}
 	html_end_box(false);
 

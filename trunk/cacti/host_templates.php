@@ -369,7 +369,7 @@ function template() {
 	<?php
 	}
 	}else{
-		print "<tr><td><em>No Host Templates</em></td></tr>\n";
+		print "<tr><td bgcolor='#" . $colors["form_alternate1"] . "' colspan=7><em>No Host Templates</em></td></tr>";
 	}
 	html_end_box(false);
 

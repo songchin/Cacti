@@ -638,7 +638,7 @@ function graph() {
 		/* put the nav bar on the bottom as well */
 		print $nav;
 	}else{
-		print "<tr><td><em>No Graphs Found</em></td></tr>";
+		print "<tr><td bgcolor='#" . $colors["form_alternate1"] . "' colspan=7><em>No Graphs Found</em></td></tr>";
 	}
 
 	html_end_box(false);

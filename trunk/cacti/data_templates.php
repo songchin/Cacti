@@ -647,7 +647,7 @@ function template() {
 			$i++;
 		}
 	}else{
-		print "<tr><td><em>No Data Templates</em></td></tr>\n";
+		print "<tr><td bgcolor='#" . $colors["form_alternate1"] . "' colspan=7><em>No Data Templates</em></td></tr>";
 	}
 
 	html_end_box(false);

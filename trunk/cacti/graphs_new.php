@@ -449,7 +449,7 @@ function graphs() {
 				</tr>";
 		}
 	}else{
-		print "<tr><td><em>No graph templates specified for this host template.</em></td></tr>\n";
+		print "<tr><td bgcolor='#" . $colors["form_alternate1"] . "' colspan=7><em>No graph templates specified for this host template.</em></td></tr>";
 	}
 
 	if ($use_javascript == true) {
