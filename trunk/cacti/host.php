@@ -211,25 +211,19 @@ function form_actions() {
 
 				switch ($_POST["delete_type"]) {
 					case '2': /* delete graphs/data sources tied to this device */
-						$data_sources = db_fetch_assoc("select
-							data_local.id as local_data_id
-							from data_local
-							where " . array_to_sql_or($selected_items, "data_local.host_id"));
+						$data_sources = db_fetch_assoc("select id from data_source where " . array_to_sql_or($selected_items, "host_id"));
 
 						if (sizeof($data_sources) > 0) {
 							foreach ($data_sources as $data_source) {
-								api_data_source_remove($data_source["local_data_id"]);
+								api_data_source_remove($data_source["id"]);
 							}
 						}
 
-						$graphs = db_fetch_assoc("select
-							graph_local.id as local_graph_id
-							from graph_local
-							where " . array_to_sql_or($selected_items, "graph_local.host_id"));
+						$graphs = db_fetch_assoc("select id from graph where " . array_to_sql_or($selected_items, "host_id"));
 
 						if (sizeof($graphs) > 0) {
 							foreach ($graphs as $graph) {
-								api_graph_remove($graph["local_graph_id"]);
+								api_graph_remove($graph["id"]);
 							}
 						}
 
