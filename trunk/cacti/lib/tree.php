@@ -148,10 +148,8 @@ function move_branch($dir, $order_key, $table, $field, $where) {
 	$arrow = $dir == 'up' ? '<' : '>';
 	$order = $dir == 'up' ? 'DESC' : 'ASC';
 
-	$sql = "SELECT * FROM $table WHERE $field $arrow $order_key AND $field LIKE '%" . substr($order_key, ($tier * CHARS_PER_TIER))."'
-		AND $field NOT LIKE '%" . str_repeat('0', CHARS_PER_TIER) . substr($order_key, ($tier * CHARS_PER_TIER)) . "' $where ORDER BY $field $order";
-
-	$displaced_row = db_fetch_row($sql);
+	$displaced_row = db_fetch_row("SELECT * FROM $table WHERE $field $arrow $order_key AND $field LIKE '%" . substr($order_key, ($tier * CHARS_PER_TIER))."'
+		AND $field NOT LIKE '%" . str_repeat('0', CHARS_PER_TIER) . substr($order_key, ($tier * CHARS_PER_TIER)) . "' $where ORDER BY $field $order");
 
 	if (sizeof($displaced_row) > 0) {
 		$old_root = substr($order_key, 0, ($tier * CHARS_PER_TIER));
@@ -161,7 +159,7 @@ function move_branch($dir, $order_key, $table, $field, $where) {
 		db_execute("UPDATE $table SET $field = CONCAT('" . str_pad('', ($tier * CHARS_PER_TIER), 'Z') . "',SUBSTRING($field," . (($tier * CHARS_PER_TIER) + 1).")) WHERE $field LIKE '$new_root%'$where");
 		db_execute("UPDATE $table SET $field = CONCAT('$new_root',SUBSTRING($field," . (($tier * CHARS_PER_TIER) + 1) . ")) WHERE $field LIKE '$old_root%' $where");
 		db_execute("UPDATE $table SET $field = CONCAT('$old_root',SUBSTRING($field," . (($tier * CHARS_PER_TIER) + 1) . ")) WHERE $field LIKE '".str_pad('', ($tier * CHARS_PER_TIER), 'Z') . "%' $where");
-		db_execute("UNLOCK TABLES $table");
+		db_execute("UNLOCK TABLES");
 	}
 }
 
@@ -244,6 +242,9 @@ function sort_tree($sort_type, $item_id, $sort_style) {
 	/* sort from most specific to least specific */
 	rsort($leaf_sort_array);
 
+	/* make sure this operation continues uninterrupted */
+	db_execute("LOCK TABLES graph_tree_items WRITE");
+
 	reset($leaf_sort_array);
 	while (list($_tier_key, $tier_array) = each($leaf_sort_array)) {
 		while (list($_search_key, $search_array) = each($tier_array)) {
@@ -263,6 +264,9 @@ function sort_tree($sort_type, $item_id, $sort_style) {
 			}
 		}
 	}
+
+	/* release the table lock */
+	db_execute("UNLOCK TABLES");
 }
 
 /* reparent_branch - places a branch and all of its children to a new root
@@ -293,6 +297,9 @@ function reparent_branch($new_parent_id, $tree_item_id) {
 	$new_base_tier = substr($new_order_key, 0, ($new_starting_tier * CHARS_PER_TIER));
 	$old_base_tier = substr($old_order_key, 0, ($old_starting_tier * CHARS_PER_TIER));
 
+	/* make sure this operation continues uninterrupted */
+	db_execute("LOCK TABLES graph_tree_items WRITE");
+
 	/* prevent possible collisions */
 	db_execute("update graph_tree_items set order_key = CONCAT('x',order_key) where order_key like '$old_base_tier%%' and graph_tree_id=$graph_tree_id");
 
@@ -303,6 +310,9 @@ function reparent_branch($new_parent_id, $tree_item_id) {
 	}else{
 		db_execute("update graph_tree_items set order_key = CONCAT(REPLACE(order_key, 'x$old_base_tier', '$new_base_tier'), '" . str_repeat('0', (strlen($old_base_tier) - strlen($new_base_tier))) . "') where order_key like 'x$old_base_tier%%' and graph_tree_id=$graph_tree_id");
 	}
+
+	/* release the table lock */
+	db_execute("UNLOCK TABLES");
 }
 
 /* delete_branch - deletes a branch and all of its children
@@ -333,10 +343,10 @@ function delete_branch($tree_item_id) {
 		order by graph_tree_items.order_key");
 
 	if (sizeof($tree) > 0) {
-	foreach ($tree as $item) {
-		/* delete the folder */
-		db_execute("delete from graph_tree_items where id=" . $item["id"]);
-	}
+		foreach ($tree as $item) {
+			/* delete the folder */
+			db_execute("delete from graph_tree_items where id=" . $item["id"]);
+		}
 	}
 
 	/* CLEANUP - reorder the tier that this branch lies in */
@@ -359,6 +369,9 @@ function delete_branch($tree_item_id) {
 			$i = 0;
 		}
 
+		/* make sure this operation continues uninterrupted */
+		db_execute("LOCK TABLES graph_tree_items WRITE");
+
 		foreach ($tree as $tree_item) {
 			/* this is the key column we are going to 'rekey' */
 			$new_key_part = substr($tree_item["order_key"], strlen($order_key), CHARS_PER_TIER);
@@ -375,6 +388,9 @@ function delete_branch($tree_item_id) {
 
 			$old_key_part = $new_key_part;
 		}
+
+		/* release the table lock */
+		db_execute("UNLOCK TABLES");
 	}
 }
 
