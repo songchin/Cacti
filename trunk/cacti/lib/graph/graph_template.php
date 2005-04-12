@@ -116,7 +116,7 @@ function set_graph_template($graph_id, $graph_template_id, $host_id, &$form_grap
 		}
 
 		/* get information about the graph template items */
-		$graph_template_items = array_rekey(db_fetch_assoc("select * from graph_template_item where graph_template_id = $graph_template_id"), "", array("id", "data_template_item_id", "color", "graph_item_type", "cdef", "consolidation_function", "gprint_format", "legend_format", "legend_value", "hard_return"));
+		$graph_template_items = array_rekey(db_fetch_assoc("select * from graph_template_item where graph_template_id = $graph_template_id order by sequence"), "", array("id", "data_template_item_id", "color", "graph_item_type", "cdef", "consolidation_function", "gprint_format", "legend_format", "legend_value", "hard_return"));
 
 		/* create an array of mappings between $graph_template_item_id and its numeric index equivelant */
 		$graph_template_item_id_to_index = array();
@@ -141,7 +141,7 @@ function set_graph_template($graph_id, $graph_template_id, $host_id, &$form_grap
 			}
 		}
 
-		$graph_items = array_merge_recursive_replace((empty($graph_id) ? array() : array_rekey(db_fetch_assoc("select * from graph_item where graph_id = $graph_id"), "", array("id", "data_source_item_id", "color", "graph_item_type", "cdef", "consolidation_function", "gprint_format", "legend_format", "legend_value", "hard_return"))), $form_graph_item_fields);
+		$graph_items = array_merge_recursive_replace((empty($graph_id) ? array() : array_rekey(db_fetch_assoc("select * from graph_item where graph_id = $graph_id order by sequence"), "", array("id", "data_source_item_id", "color", "graph_item_type", "cdef", "consolidation_function", "gprint_format", "legend_format", "legend_value", "hard_return"))), $form_graph_item_fields);
 
 		/* if there are more graph items then there are items in the template, delete the difference */
 		if (sizeof($graph_items) > sizeof($graph_template_items)) {
