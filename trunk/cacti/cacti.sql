@@ -1985,8 +1985,8 @@ CREATE TABLE snmp_template_auth (
 CREATE TABLE syslog (
   id bigint(20) unsigned NOT NULL auto_increment,
   logdate datetime NOT NULL default '0000-00-00 00:00:00',
-  facility enum('POLLER','CMDPHP','CACTID','SCPTSVR','AUTH','WEBUI','EXPORT','SMTP','UNKNOWN') NOT NULL default 'POLLER',
-  severity enum('EMERGENCY','ALERT','CRITICAL','ERROR','WARNING','NOTICE','INFO','DEBUG') NOT NULL default 'EMERGENCY',
+  facility tinyint(1) unsigned NOT NULL default 0,
+  severity tinyint(1) unsigned NOT NULL default 0,
   poller_id smallint(5) unsigned NOT NULL default '0',
   host_id mediumint(8) unsigned NOT NULL default '0',
   user_id mediumint(8) unsigned NOT NULL default '0',
