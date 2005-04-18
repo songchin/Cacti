@@ -98,7 +98,7 @@ function update_poller_cache($data_source_id, $truncate_performed = false) {
 
 			if (sizeof($data_source_items) > 0) {
 				foreach ($data_source_items as $item) {
-					api_poller_cache_item_add($data_source["host_id"], $data_source_id, POLLER_ACTION_SNMP, $item["data_source_item"], 1, $item["field_input_value"]);
+					api_poller_cache_item_add($data_source["host_id"], $data_source_id, POLLER_ACTION_SNMP, $item["data_source_name"], 1, $item["field_input_value"]);
 				}
 			}
 		}else if (($data_source["data_input_type"] == DATA_INPUT_TYPE_DATA_QUERY) && (isset($field_list["data_query_id"])) && (isset($field_list["data_query_index"]))) {
