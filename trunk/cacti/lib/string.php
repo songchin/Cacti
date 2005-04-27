@@ -41,12 +41,25 @@ function strip_newlines($string) {
 }
 
 /* strip_quotes - Strip single and double quotes from a string
-   @arg $result - (string) the result from the poll
-   @returns - (string) the string with quotes stripped */
+	in addition remove non-numeric data from strings.
+	@arg $result - (string) the result from the poll
+	@returns - (string) the string with quotes stripped */
 function strip_quotes($result) {
-	/* first strip all single and double quotes from the string */
+  	/* first strip all single and double quotes from the string */
 	$result = strtr($result,"'","");
 	$result = strtr($result,'"','');
+
+	/* clean off ugly non-numeric data */
+	if ((!is_numeric($result)) && ($result != "U")) {
+		$len = strlen($result);
+		for($a=$len-1; $a>=0; $a--){
+			$p = ord($result[$a]);
+			if (($p > 47) && ($p < 58)) {
+				$result = substr($result,0,$a+1);
+				break;
+			}
+		}
+	}
 
 	return($result);
 }
