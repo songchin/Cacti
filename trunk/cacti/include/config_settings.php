@@ -41,7 +41,8 @@ $tabs_graphs = array(
 	"thumbnail" => "Graph Thumbnails",
 	"tree" => "Tree View Mode",
 	"preview" => "Preview Mode",
-	"list" => "List View Mode");
+	"list" => "List View Mode",
+	"fonts" => "Graph Fonts (RRDtool 1.2.x and Above)");	
 
 /* setting information */
 $settings = array(
@@ -88,7 +89,7 @@ $settings = array(
 			),
 		"path_rrdtool_default_font" => array(
 			"friendly_name" => "RRDTool Default Font Path",
-			"description" => "The path to the rrdtool default font for version 1.2 and above.",
+			"description" => "The path to the rrdtool default true type font for version 1.2 and above.",
 			"method" => "textbox",
 			"max_length" => "255"
 			),
@@ -493,6 +494,62 @@ $settings = array(
 			"method" => "textbox",
 			"default" => "30",
 			"max_length" => "10"
+			),
+		"fonts_header" => array(
+			"friendly_name" => "Default RRDtool 1.2 Fonts",
+			"method" => "spacer",
+			),
+		"title_font" => array(
+			"friendly_name" => "Title Font File",
+			"description" => "The font file to use for Graph Titles",
+			"method" => "textbox",
+			"max_length" => "100"
+			),
+		"title_size" => array(
+			"friendly_name" => "Title Font Size",
+			"description" => "The size of the font used for Graph Titles",
+			"method" => "textbox",
+			"default" => "12",
+			"max_length" => "10"
+			),
+		"legend_font" => array(
+			"friendly_name" => "Legend Font File",
+			"description" => "The font file to be used for Graph Legend items",
+			"method" => "textbox",
+			"max_length" => "100"
+			),
+		"legend_size" => array(
+			"friendly_name" => "Legend Font Size",
+			"description" => "The size of the font used for Graph Legend items",
+			"method" => "textbox",
+			"default" => "10",
+			"max_length" => "10"
+			),
+		"axis_font" => array(
+			"friendly_name" => "Axis Font File",
+			"description" => "The font file to be used for Graph Axis items",
+			"method" => "textbox",
+			"max_length" => "100"
+			),
+		"axis_size" => array(
+			"friendly_name" => "Axis Font Size",
+			"description" => "The size of the font used for Graph Axis",
+			"method" => "textbox",
+			"default" => "8",
+			"max_length" => "10"
+			),
+		"unit_font" => array(
+			"friendly_name" => "Unit Font File",
+			"description" => "The size of the font used for Graph Unit items",
+			"method" => "textbox",
+			"max_length" => "100"
+			),
+		"unit_size" => array(
+			"friendly_name" => "Unit Font Size",
+			"description" => "The size of the font used for Graph Units",
+			"method" => "textbox",
+			"default" => "8",
+			"max_length" => "10"
 			)
 		),
 	"poller" => array(
@@ -865,7 +922,61 @@ $settings_graphs = array(
 			"default" => "10",
 			"max_length" => "10"
 			)
-		)
+		),
+	"fonts" => array(
+		"title_font" => array(
+			"friendly_name" => "Title Font File",
+			"description" => "The font file to use for Graph Titles",
+			"method" => "textbox",
+			"max_length" => "100"
+			),
+		"title_size" => array(
+			"friendly_name" => "Title Font Size",
+			"description" => "The size of the font used for Graph Titles",
+			"method" => "textbox",
+			"default" => "12",
+			"max_length" => "10"
+			),
+		"legend_font" => array(
+			"friendly_name" => "Legend Font File",
+			"description" => "The font file to be used for Graph Legend items",
+			"method" => "textbox",
+			"max_length" => "100"
+			),
+		"legend_size" => array(
+			"friendly_name" => "Legend Font Size",
+			"description" => "The size of the font used for Graph Legend items",
+			"method" => "textbox",
+			"default" => "10",
+			"max_length" => "10"
+			),
+		"axis_font" => array(
+			"friendly_name" => "Axis Font File",
+			"description" => "The font file to be used for Graph Axis items",
+			"method" => "textbox",
+			"max_length" => "100"
+			),
+		"axis_size" => array(
+			"friendly_name" => "Axis Font Size",
+			"description" => "The size of the font used for Graph Axis",
+			"method" => "textbox",
+			"default" => "8",
+			"max_length" => "10"
+			),
+		"unit_font" => array(
+			"friendly_name" => "Unit Font File",
+			"description" => "The size of the font used for Graph Unit items",
+			"method" => "textbox",
+			"max_length" => "100"
+			),
+		"unit_size" => array(
+			"friendly_name" => "Unit Font Size",
+			"description" => "The size of the font used for Graph Units",
+			"method" => "textbox",
+			"default" => "8",
+			"max_length" => "10"
+			),
+		),
 	);
 
 ?>

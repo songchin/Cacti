@@ -703,10 +703,41 @@ function rrdtool_function_graph($graph_id, $rra_id, $graph_data_array, $rrd_stru
 		"$y_grid_alt" .
 		"$no_minor" .
 		"$unit_value" .
-//		"$unit_length" .
-//		"$unit_exponent_value" .
+		"$unit_length" .
+		"$unit_exponent_value" .
 		"$graph_legend" .
 		"--vertical-label=\"" . $graph["vertical_label"] . "\"" . RRD_NL;
+
+	/* rrdtool 1.2 font options */
+	if (read_config_option("rrdtool_version") == "rrd-1.2.x") {
+		/* title fonts */
+		if (file_exists(read_graph_config_option("title_font"))) {
+			$graph_opts .= "--font TITLE:" . read_graph_config_option("title_size") . ":" . read_graph_config_option("title_font") . RRD_NL;
+        }elseif (file_exists(read_config_option("title_font"))) {
+			$graph_opts .= "--font TITLE:" . read_config_option("title_size") . ":" . read_config_option("title_font") . RRD_NL;
+		}
+
+		/* axis fonts */
+		if (file_exists(read_graph_config_option("axis_font"))) {
+			$graph_opts .= "--font AXIS:" . read_graph_config_option("axis_size") . ":" . read_graph_config_option("axis_font") . RRD_NL;
+        }elseif (file_exists(read_config_option("axis_font"))) {
+			$graph_opts .= "--font AXIS:" . read_config_option("axis_size") . ":" . read_config_option("axis_font") . RRD_NL;
+		}
+
+		/* legend fonts */
+		if (file_exists(read_graph_config_option("legend_font"))) {
+			$graph_opts .= "--font LEGEND:" . read_graph_config_option("legend_size") . ":" . read_graph_config_option("legend_font") . RRD_NL;
+        }elseif (file_exists(read_config_option("legend_font"))) {
+			$graph_opts .= "--font LEGEND:" . read_config_option("legend_size") . ":" . read_config_option("legend_font") . RRD_NL;
+        }
+
+		/* unit fonts */
+		if (file_exists(read_graph_config_option("unit_font"))) {
+			$graph_opts .= "--font UNIT:" . read_graph_config_option("unit_size") . ":" . read_graph_config_option("unit_font") . RRD_NL;
+        }elseif (file_exists(read_config_option("unit_font"))) {
+			$graph_opts .= "--font UNIT:" . read_config_option("unit_size") . ":" . read_config_option("unit_font") . RRD_NL;
+        }
+	}
 
 	$i = 0;
 	if (sizeof($graph_items > 0)) {
