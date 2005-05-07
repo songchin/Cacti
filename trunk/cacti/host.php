@@ -521,7 +521,7 @@ function host_edit() {
 	if ((isset($_GET["display_dq_details"])) && (isset($_SESSION["debug_log"]["data_query"]))) {
 		html_start_box("<strong>Data Query Debug Information</strong>", "98%", $colors["header_background"], "3", "center", "");
 
-		print "<tr><td><span style='font-family: monospace;'>" . debug_log_return("data_query") . "</span></td></tr>";
+		print "<tr><td bgcolor='#" . $colors["form_alternate1"] . "'><span style='font-family: monospace;'>" . debug_log_return("data_query") . "</span></td></tr>";
 
 		html_end_box();
 	}
