@@ -153,6 +153,9 @@ if ((sizeof($polling_items) > 0) && (read_config_option("poller_enabled") == "on
 		if ($current_host != $last_host) {
 			$new_host = true;
 			$host_down = false;
+
+			/* for this host, get it's current status for spike detection and set default spike value */
+            $set_spike_kill = FALSE;
 		}
 
 		$host_id = $item["host_id"];
@@ -178,9 +181,6 @@ if ((sizeof($polling_items) > 0) && (read_config_option("poller_enabled") == "on
 			}else{
 				$ping_availability = $item["availability_method"];
 			}
-
-			/* for this host, get it's current status for spike detection and set default spike value */
-            $set_spike_kill = FALSE;
 
 			/* if we are only allowed to use an snmp check and this host does not support snnp, we
 			must assume that this host is up */
@@ -255,7 +255,6 @@ if ((sizeof($polling_items) > 0) && (read_config_option("poller_enabled") == "on
 							/* spike kill logic */
 							if (($assert_fail) && ($index_item["arg1"] == ".1.3.6.1.2.1.1.3.0")) {
 								$set_spike_kill = true;
-								$set_spike_kill_time = date("Y-m-d H:i:s", strtotime($poller_update_time));
 
 								if (read_config_option("log_verbosity") == POLLER_VERBOSITY_DEBUG) {
 									cacti_log("Host[$host_id] NOTICE: Spike Kill in Effect for '" . $item["hostname"] . "'.", $print_data_to_stdout);
@@ -290,10 +289,6 @@ if ((sizeof($polling_items) > 0) && (read_config_option("poller_enabled") == "on
 					$output = "U";
 				}
 
-                if ($set_spike_kill) {
-                	$output = "nan";
-                }
-
 				if (read_config_option("log_verbosity") >= POLLER_VERBOSITY_MEDIUM) {
 					api_syslog_cacti_log("SNMP: v" . $item["snmp_version"] . ": " . $item["hostname"] . ", dsname: " . $item["rrd_name"] . ", oid: " . $item["arg1"] . ", output: $output", SEV_INFO, $poller_id, $host_id, 0, $print_data_to_stdout, FACIL_CMDPHP);
 				}
@@ -315,10 +310,6 @@ if ((sizeof($polling_items) > 0) && (read_config_option("poller_enabled") == "on
 					api_syslog_cacti_log("Result from CMD not valid.  Partial Result: " . substr($output, 0, $strout), SEV_NOTICE, $poller_id, $host_id, 0, $print_data_to_stdout, FACIL_CMDPHP);
 					$output = "U";
 				}
-
-                if ($set_spike_kill) {
-                	$output = "nan";
-                }
 
 				if (read_config_option("log_verbosity") >= POLLER_VERBOSITY_MEDIUM) {
 					api_syslog_cacti_log("CMD: " . $item["arg1"] . ", output: $output", SEV_INFO, $poller_id, $host_id, 0, $print_data_to_stdout, FACIL_CMDPHP);
@@ -343,10 +334,6 @@ if ((sizeof($polling_items) > 0) && (read_config_option("poller_enabled") == "on
 						$output = "U";
 					}
 
-	                if ($set_spike_kill) {
-    	            	$output = "nan";
-        	        }
-
 					if (read_config_option("log_verbosity") >= POLLER_VERBOSITY_MEDIUM) {
 						api_syslog_cacti_log("SERVER: " . $item["arg1"] . ", output: $output", SEV_INFO, $poller_id, $host_id, 0, $print_data_to_stdout, FACIL_CMDPHP);
 					}
@@ -364,7 +351,7 @@ if ((sizeof($polling_items) > 0) && (read_config_option("poller_enabled") == "on
 			if (isset($output)) {
 				/* insert a NaN in place of the actual value if the snmp agent restarts */
 				if (($set_spike_kill) && (!substr_count($output, ":"))) {
-					db_execute("insert into poller_output (local_data_id,rrd_name,time,output) values (" . $item["local_data_id"] . ",'" . $item["rrd_name"] . "','$set_spike_kill_time','" . addslashes("nan") . "')");
+					db_execute("insert into poller_output (local_data_id,rrd_name,time,output) values (" . $item["local_data_id"] . ",'" . $item["rrd_name"] . "','$poller_update_time','" . addslashes("nan") . "')");
 				/* otherwise, just insert the value received from the poller */
 				}else{
 					db_execute("insert into poller_output (local_data_id,rrd_name,time,output) values (" . $item["local_data_id"] . ",'" . $item["rrd_name"] . "','$poller_update_time','" . addslashes($output) . "')");
