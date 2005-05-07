@@ -328,33 +328,6 @@ function utilities() {
 		</td>
 	</tr>
 
-	<?php html_header(array("RRD File Utilities"), 2);?>
-
-	<tr bgcolor="#<?php print $colors["form_alternate2"];?>">
-		<td class="textArea">
-			<p><a href='utilities.php?action=rrd_resize'>RRD Resize Utility</a></p>
-		</td>
-		<td class="textArea">
-			<p>This action will allow for the resizing of RRD files.  This is helpful if you want additional or less data to be included in these files.</p>
-		</td>
-	</tr>
-	<tr bgcolor="#<?php print $colors["form_alternate1"];?>">
-		<td class="textArea">
-			<p><a href='utilities.php?action=rrd_rename'>RRD Rename Utility</a></p>
-		</td>
-		<td class="textArea">
-			<p>This action will allow for the renaming of RRD files based upon the current naming conventions set for for the data source.</p>
-		</td>
-	</tr>
-	<tr bgcolor="#<?php print $colors["form_alternate2"];?>">
-		<td class="textArea">
-			<p><a href='utilities.php?action=rrd_orphan_detection'>RRD Orphan Detection</a></p>
-		</td>
-		<td class="textArea">
-			<p>This action will search the RRA directory for orphaned RRD files and provide the option to delete them.</p>
-		</td>
-	</tr>
-
 	<?php html_header(array("General Utilities"), 2);?>
 
 	<tr bgcolor="#<?php print $colors["form_alternate2"];?>">
