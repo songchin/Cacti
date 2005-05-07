@@ -1,18 +1,23 @@
 raXnet – cactid
-0.8.7
+0.9
 -feature: implemented new calling parameters
 -feature: implemented multiple poller architecture
+-feature: implemented new logging facility
 
 0.8.6e
 -bug: removed code that was converting back slashes to forward slashes
 -bug: attempt to correct issues with WMI counters and calling using VBS in Windows
+-bug: stop Cactid from segfaulting when the database contains orphaned data source records.
 -bug: re-implemented thread safe operations for non-linux systems
--bug: reduced timeout for popen and script server back to 10 seconds
 -bug: allow cactid to poll from non-standard snmp port
 -bug: optimized some string handling routines
 -bug: removed thread locks around MySQL to optimize performance
 -bug: changed snmp availability polling to sysUptime from sysDesc
+-bug: limit the number of concurrent threads to 30
+-bug: remove legacy code from system for old cactid.conf file parameters
+-bug: add fault detection logic to mysql query calls to prevent segfaults
 -feature: added polling for non host specific data sources
+-feature: spike suppression feature
 
 0.8.6d
 -bug: increased timers for popen and script server to 20 seconds
