@@ -24,7 +24,7 @@
 */
 
 #ifndef _CACTID_H_
-#define _CACTID_H_ 1
+#define _CACTID_H_
 
 /* Defines */
 #ifndef FALSE
@@ -133,13 +133,13 @@
 
 /* syslog severities */
 #define SEV_DEBUG 7
-#define SEV_INFO 6
-#define SEV_NOTICE 5
-#define SEV_WARNING 4
+#define SEV_EMERGENCY 6
+#define SEV_ALERT 5
+#define SEV_CRITICAL 4
 #define SEV_ERROR 3
-#define SEV_CRITICAL 2
-#define SEV_ALERT 1
-#define SEV_EMERGENCY 0
+#define SEV_WARNING 2
+#define SEV_NOTICE 1
+#define SEV_INFO 0
 
 /* Typedefs */
 typedef struct config_struct {

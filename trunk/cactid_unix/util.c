@@ -452,7 +452,7 @@ void cacti_log(char *message, int severity, int host_id) {
 	if (((set.log_destination == 1) || (set.log_destination == 2)) && (set.verbose != POLLER_VERBOSITY_NONE)) {
 		/* connect to database */
 		db_connect(set.dbdb, &mysql);
-		snprintf(sqlstring, sizeof(sqlstring), "insert into syslog (logdate,facility,severity,poller_id,host_id,user_id,username,source,message) values	('%s', 'CACTID', '%s', %i, %i, 0, 'SYSTEM', 'SYSTEM', '%s')",
+		snprintf(sqlstring, sizeof(sqlstring), "insert into syslog (logdate,facility,severity,poller_id,host_id,user_id,username,source,message) values	('%s', 3, '%s', %i, %i, 0, 'SYSTEM', 'SYSTEM', '%s')",
 							logdate, 
 							get_severity(severity), 
 							set.poller_id, 

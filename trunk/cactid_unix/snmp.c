@@ -67,12 +67,15 @@ void snmp_host_init(host_t *current_host) {
 
 	char hostname[BUFSIZE];
 
+	/* assume snmp session is invalid */
+	current_host->snmp_session = NULL;
 	/* initialize SNMP */
 	snmp_init(current_host->id);
  	thread_mutex_lock(LOCK_SNMP);
   	snmp_sess_init(&session);
 	thread_mutex_unlock(LOCK_SNMP);
 
+	/* verify snmp version is accurate */
 	if (current_host->snmp_version == 2) {
 		session.version = SNMP_VERSION_2c;
 	}else if (current_host->snmp_version == 1) {
