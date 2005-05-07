@@ -815,7 +815,7 @@ function draw_navigation_text() {
 			),
 		"utilities.php:view_poller_cache" => array(
 			"title" => "View Poller Cache",
-			"url" => "utilities.php",
+			"mapping" => "index.php:,utilities.php:",
 			"level" => "2"
 			),
 		"utilities.php:view_snmp_cache" => array(
