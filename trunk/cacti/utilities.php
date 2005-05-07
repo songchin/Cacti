@@ -211,10 +211,10 @@ function utilities_view_syslog() {
 					<?php print $syslog_entry["logdate"];?>
 				</td>
 				<td width='10%'>
-					<?php print $syslog_entry["facility"];?>
+					<?php print api_syslog_get_facility($syslog_entry["facility"]);?>
 				</td>
 				<td width='10%'>
-					<?php print $syslog_entry["severity"];?>
+					<?php print api_syslog_get_severity($syslog_entry["severity"]);?>
 				</td>
 				<td width='10%' nowrap>
 					<?php if ($syslog_entry["poller_name"] != "") { print $syslog_entry["poller_name"]; } else { print "SYSTEM"; }?>
