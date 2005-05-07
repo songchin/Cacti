@@ -51,6 +51,15 @@ function api_poller_cache_item_add($host_id, $data_source_id, $poller_action_id,
 			host.disabled
 			from host
 			where host.id = $host_id");
+
+		/* accomodate for snmp variations */
+		$host["snmp_community"] = (($host["snmp_community"] == "") ? "<none>" : $host["snmp_community"]);
+		$host["snmpv3_auth_username"] = (($host["snmpv3_auth_username"] == "") ? "<none>" : $host["snmpv3_auth_username"]);
+		$host["snmpv3_auth_password"] = (($host["snmpv3_auth_password"] == "") ? "<none>" : $host["snmpv3_auth_password"]);
+		$host["snmpv3_auth_protocol"] = (($host["snmpv3_auth_protocol"] == "") ? "<none>" : $host["snmpv3_auth_protocol"]);
+		$host["snmpv3_priv_passphrase"] = (($host["snmpv3_priv_passphrase"] == "") ? "<none>" : $host["snmpv3_priv_passphrase"]);
+		$host["snmpv3_priv_protocol"] = (($host["snmpv3_priv_protocol"] == "") ? "<none>" : $host["snmpv3_priv_protocol"]);
+
 	}
 
 	/* return if the device is marked as disabled */
