@@ -103,7 +103,7 @@ function form_actions() {
 			}
 		}elseif ($_POST["drp_action"] == "2") { /* Disable Selected Pollers */
 			for ($i=0;($i<count($selected_items));$i++) {
-				db_execute("UPDATE poller SET active='' status='Disabled' WHERE id='" . $selected_items[$i] . "'");
+				db_execute("UPDATE poller SET active='', run_state='Disabled' WHERE id='" . $selected_items[$i] . "'");
 
 				/* update poller cache */
 				/* todo this yet */
