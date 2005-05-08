@@ -69,12 +69,12 @@ function api_data_poller_disable($poller_id) {
 		include("./include/top_header.php");
 		form_message("Can Not Delete Poller", $error_message, "data_pollers.php");
 		include("./include/bottom_footer.php");
-	}
-	
-	db_execute("UPDATE poller SET active='', run_state='Disabled' WHERE id='" . $poller_id . "'");
+	} else {
+		db_execute("UPDATE poller SET active='', run_state='Disabled' WHERE id='" . $poller_id . "'");
 
-	/* update poller cache */
-	/* todo this yet */
+		/* update poller cache */
+		/* todo this yet */
+	}
 }
 
 function api_data_poller_enable($poller_id) {
