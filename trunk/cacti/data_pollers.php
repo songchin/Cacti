@@ -26,12 +26,22 @@ include("./include/config.php");
 include("./include/auth.php");
 include_once('./lib/api_data_pollers.php');
 
+$poller_actions = array(
+	1 => "Enable",
+	2 => "Disable",
+	3 => "Delete"
+	);
+
 /* set default action */
 if (!isset($_REQUEST["action"])) { $_REQUEST["action"] = ""; }
 
 switch ($_REQUEST["action"]) {
 	case 'save':
 		form_save();
+
+		break;
+	case 'actions':
+		form_actions();
 
 		break;
 	case 'delete':
@@ -72,6 +82,105 @@ function form_save() {
 		}
 	}
 }
+
+/* ------------------------
+    The "actions" function
+   ------------------------ */
+
+function form_actions() {
+	global $colors, $poller_actions;
+
+	/* if we are to save this form, instead of display it */
+	if (isset($_POST["selected_items"])) {
+		$selected_items = unserialize(stripslashes($_POST["selected_items"]));
+
+		if ($_POST["drp_action"] == "1") { /* Enable Selected Pollers */
+			for ($i=0;($i<count($selected_items));$i++) {
+				db_execute("UPDATE poller SET active='on' WHERE id='" . $selected_items[$i] . "'");
+
+				/* update poller cache */
+				/* todo this yet */
+			}
+		}elseif ($_POST["drp_action"] == "2") { /* Disable Selected Pollers */
+			for ($i=0;($i<count($selected_items));$i++) {
+				db_execute("UPDATE poller SET active='' status='Disabled' WHERE id='" . $selected_items[$i] . "'");
+
+				/* update poller cache */
+				/* todo this yet */
+			}
+		}elseif ($_POST["drp_action"] == "3") { /* Delete Selected Pollers */
+			for ($i=0; $i<count($selected_items); $i++) {
+				poller_delete($selected_items[$i]);
+			}
+		}
+
+		header("Location: data_pollers.php");
+		exit;
+	}
+	/* setup some variables */
+	$poller_list = ""; $i = 0;
+
+	/* loop through each of the host templates selected on the previous page and get more info about them */
+	while (list($var,$val) = each($_POST)) {
+		if (ereg("^chk_([0-9]+)$", $var, $matches)) {
+			$poller_list .= "<li>" . db_fetch_cell("select name from poller where id=" . $matches[1]) . "<br>";
+			$poller_array[$i] = $matches[1];
+		}
+
+		$i++;
+	}
+
+	include_once("./include/top_header.php");
+
+	html_start_box("<strong>" . $poller_actions{$_POST["drp_action"]} . "</strong>", "60%", $colors["header_panel_background"], "3", "center", "");
+
+	print "<form action='data_pollers.php' method='post'>\n";
+
+	if ($_POST["drp_action"] == "1") { /* Enable Pollers */
+		print "	<tr>
+				<td colspan='2' class='textArea' bgcolor='#" . $colors["form_alternate1"]. "'>
+					<p>To enable the following pollers, press the \"yes\" button below.</p>
+					<p>$poller_list</p>
+				</td>
+				</tr>";
+	}elseif ($_POST["drp_action"] == "2") { /* Disable Pollers */
+		print "	<tr>
+				<td colspan='2' class='textArea' bgcolor='#" . $colors["form_alternate1"]. "'>
+					<p>To disable the following pollers, press the \"yes\" button below.</p>
+					<p>$poller_list</p>
+				</td>
+				</tr>";
+	}elseif ($_POST["drp_action"] == "3") { /* Delete Pollers */
+		print "	<tr>
+				<td colspan='2' class='textArea' bgcolor='#" . $colors["form_alternate1"]. "'>
+					<p>To delete the following pollers, press the \"yes\" button below.</p>
+					<p>$poller_list</p>
+				</td>
+				</tr>";
+	}
+
+	if (!isset($poller_array)) {
+		print "<tr><td bgcolor='#" . $colors["form_alternate1"]. "'><span class='textError'>You must select at least one poller.</span></td></tr>\n";
+		$save_html = "";
+	}else{
+		$save_html = "<input type='image' src='" . html_get_theme_images_path("button_yes.gif") . "' alt='Save' align='absmiddle'>";
+	}
+
+	print "	<tr>
+			<td colspan='2' align='right' bgcolor='#" . $colors["buttonbar_background"] . "'>
+				<input type='hidden' name='action' value='actions'>
+				<input type='hidden' name='selected_items' value='" . (isset($poller_array) ? serialize($poller_array) : '') . "'>
+				<input type='hidden' name='drp_action' value='" . $_POST["drp_action"] . "'>
+				<a href='data_pollers.php'><img src='" . html_get_theme_images_path("button_no.gif") . "' alt='Cancel' align='absmiddle' border='0'></a>
+				$save_html
+			</td>
+		</tr>
+		";
+
+	html_end_box();
+
+	include_once("./include/bottom_footer.php");
+ }
 
 /* -----------------------
     Data Input Functions
@@ -129,22 +238,11 @@ function poller_edit() {
 }
 
 function pollers() {
-	global $colors, $input_types;
+	global $colors, $poller_actions, $input_types;
 
 	html_start_box("<strong>Data Pollers</strong>", "98%", $colors["header_background"], "3", "center", "data_pollers.php?action=edit");
 
-	print "<tr bgcolor='#" . $colors["header_panel_background"] . "'>";
-		DrawMatrixHeaderItem("Name",$colors["header_text"],1);
-		DrawMatrixHeaderItem("Hostname",$colors["header_text"],1);
-		DrawMatrixHeaderItem("Status", $colors["header_text"],1);
-		DrawMatrixHeaderItem("Last Time", $colors["header_text"],1);
-		DrawMatrixHeaderItem("Min Time", $colors["header_text"],1);
-		DrawMatrixHeaderItem("Max Time", $colors["header_text"],1);
-		DrawMatrixHeaderItem("Avg Time", $colors["header_text"],1);
-		DrawMatrixHeaderItem("Active",$colors["header_text"],1);
-		DrawMatrixHeaderItem("Last Run Time",$colors["header_text"],1);
-		DrawMatrixHeaderItem("&nbsp;",$colors["header_text"],1);
-	print "</tr>";
+	html_header_checkbox(array("Name", "Hostname", "Status", "Last Time", "Min Time", "Max Time", "Avg Time", "Enabled", "Last Run Time"));
 
 	$data_pollers = db_fetch_assoc("select * from poller order by name");
 
@@ -157,38 +255,41 @@ function pollers() {
 				<a class="linkEditMain" href="data_pollers.php?action=edit&id=<?php print $data_poller["id"];?>"><?php print $data_poller["name"];?></a>
 			</td>
 			<td>
-				<?php print $data_poller["hostname"];?></a>
+				<?php print $data_poller["hostname"];?>
 			</td>
 			<td>
-				<?php print $data_poller["run_state"];?></a>
+				<?php print $data_poller["run_state"];?>
 			</td>
 			<td>
-				<?php print $data_poller["cur_time"];?></a>
+				<?php print $data_poller["cur_time"];?>
 			</td>
 			<td>
-				<?php print $data_poller["min_time"];?></a>
+				<?php print $data_poller["min_time"];?>
 			</td>
 			<td>
-				<?php print $data_poller["max_time"];?></a>
+				<?php print $data_poller["max_time"];?>
 			</td>
 			<td>
-				<?php print $data_poller["avg_time"];?></a>
+				<?php print $data_poller["avg_time"];?>
 			</td>
 			<td>
-				<?php print $data_poller["active"];?></a>
+				<?php print ($data_poller["active"] == "on" ? "Yes" : "No");?>
 			</td>
 			<td>
-				<?php print $data_poller["last_update"];?></a>
+				<?php print $data_poller["last_update"];?>
 			</td>
-			<td align="right">
-				<a href="data_pollers.php?action=delete&id=<?php print $data_poller["id"];?>"><img src="<?php print html_get_theme_images_path('delete_icon.gif');?>" width="10" height="10" border="0" alt="Delete"></a>
+			<td style="<?php print get_checkbox_style();?>" width="1%" align="right">
+				<input type='checkbox' style='margin: 0px;' name='chk_<?php print $data_poller["id"];?>' title="<?php print $data_poller["name"];?>">
 			</td>
 		</tr>
 	<?php
 	}
 	}else{
-		print "<tr><td><em>No Data Pollers</em></td></tr>";
+		print "<tr><td bgcolor='#" . $colors["form_alternate1"] . "' colspan=7><em>No Data Pollers</em></td></tr>";
 	}
-	html_end_box();
+	html_end_box(false);
+
+   	/* draw the dropdown containing a list of available actions for this form */
+	draw_actions_dropdown($poller_actions);
 }
 ?>
