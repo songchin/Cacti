@@ -64,14 +64,21 @@ function api_data_poller_delete($poller_id) {
 }
 
 function api_data_poller_disable($poller_id) {
-	db_execute("UPDATE poller SET active='', run_state='Disabled' WHERE id='" . $selected_items[$i] . "'");
+	if ($poller_id == 1) {
+		$error_message = "This poller is the main system poller.  It can not be deleted.";
+		include("./include/top_header.php");
+		form_message("Can Not Delete Poller", $error_message, "data_pollers.php");
+		include("./include/bottom_footer.php");
+	}
+	
+	db_execute("UPDATE poller SET active='', run_state='Disabled' WHERE id='" . $poller_id . "'");
 
 	/* update poller cache */
 	/* todo this yet */
 }
 
 function api_data_poller_enable($poller_id) {
-	db_execute("UPDATE poller SET active='on', run_state='Wait' WHERE id='" . $selected_items[$i] . "'");
+	db_execute("UPDATE poller SET active='on', run_state='Wait' WHERE id='" . $poller_id . "'");
 
 	/* update poller cache */
 	/* todo this yet */
