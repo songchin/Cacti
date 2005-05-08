@@ -142,7 +142,7 @@ function pollers() {
 		DrawMatrixHeaderItem("Max Time", $colors["header_text"],1);
 		DrawMatrixHeaderItem("Avg Time", $colors["header_text"],1);
 		DrawMatrixHeaderItem("Active",$colors["header_text"],1);
-		DrawMatrixHeaderItem("Last Update",$colors["header_text"],1);
+		DrawMatrixHeaderItem("Last Run Time",$colors["header_text"],1);
 		DrawMatrixHeaderItem("&nbsp;",$colors["header_text"],1);
 	print "</tr>";
 
