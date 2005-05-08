@@ -96,21 +96,15 @@ function form_actions() {
 
 		if ($_POST["drp_action"] == "1") { /* Enable Selected Pollers */
 			for ($i=0;($i<count($selected_items));$i++) {
-				db_execute("UPDATE poller SET active='on' WHERE id='" . $selected_items[$i] . "'");
-
-				/* update poller cache */
-				/* todo this yet */
+				api_data_poller_enable($selected_items[$i]);
 			}
 		}elseif ($_POST["drp_action"] == "2") { /* Disable Selected Pollers */
 			for ($i=0;($i<count($selected_items));$i++) {
-				db_execute("UPDATE poller SET active='', run_state='Disabled' WHERE id='" . $selected_items[$i] . "'");
-
-				/* update poller cache */
-				/* todo this yet */
+				api_data_poller_disable($selected_items[$i]);
 			}
 		}elseif ($_POST["drp_action"] == "3") { /* Delete Selected Pollers */
 			for ($i=0; $i<count($selected_items); $i++) {
-				poller_delete($selected_items[$i]);
+				api_data_poller_delete($selected_items[$i]);
 			}
 		}
 
@@ -185,35 +179,6 @@ function form_actions() {
 /* -----------------------
     Data Input Functions
    ----------------------- */
-
-function poller_delete() {
-	if ((read_config_option("remove_verification") == "on") && (!isset($_GET["confirm"]))) {
-		include("./include/top_header.php");
-		form_confirm("Are You Sure?", "Are you sure you want to delete the poller <strong>'" . db_fetch_cell("select hostname from poller where id=" . $_GET["id"]) . "'</strong>?", "data_pollers.php", "data_pollers.php?action=delete&id=" . $_GET["id"]);
-		include("./include/bottom_footer.php");
-		exit;
-	}
-
-	$hosts_polled = db_fetch_assoc("select poller_id from host where poller_id=" . $_GET["id"]);
-
-	if (sizeof($hosts_polled) == 0) {
-		if ($_GET["id"] == 1) {
-			$error_message = "This poller is the main system poller.  It can not be deleted.";
-			include("./include/top_header.php");
-			form_message("Can Not Delete Poller", $error_message, "data_pollers.php");
-			include("./include/bottom_footer.php");
-		}else {
-			if ((read_config_option("remove_verification") == "") || (isset($_GET["confirm"]))) {
-				api_data_poller_delete($_GET["id"]);
-			}
-		}
-	} else {
-		$error_message = "The poller selected is in use for " . sizeof($hosts_polled) . " hosts and can not be deleted.  You can not delete a poller when it has hosts associated with it.";
-		include("./include/top_header.php");
-		form_message("Can Not Delete Poller", $error_message, "data_pollers.php");
-		include("./include/bottom_footer.php");
-	}
-}
 
 function poller_edit() {
 	global $colors, $fields_data_poller_edit;

@@ -43,8 +43,38 @@ function api_data_poller_save($id, $active, $hostname, $description) {
 	return $data_poller_id;
 }
 
-function api_data_poller_delete($data_poller_id) {
-	db_execute("delete from poller where id='$data_poller_id'");
+function api_data_poller_delete($poller_id) {
+	$hosts_polled = db_fetch_assoc("select poller_id from host where poller_id=" . $poller_id);
+
+	if (sizeof($hosts_polled) == 0) {
+		if ($poller_id == 1) {
+			$error_message = "This poller is the main system poller.  It can not be deleted.";
+			include("./include/top_header.php");
+			form_message("Can Not Delete Poller", $error_message, "data_pollers.php");
+			include("./include/bottom_footer.php");
+		}else {
+			db_execute("DELETE FROM poller WHERE id=". $poller_id);
+		}
+	} else {
+		$error_message = "The poller selected is in use for " . sizeof($hosts_polled) . " hosts and can not be deleted.  You can not delete a poller when it has hosts associated with it.";
+		include("./include/top_header.php");
+		form_message("Can Not Delete Poller", $error_message, "data_pollers.php");
+		include("./include/bottom_footer.php");
+	}
+}
+
+function api_data_poller_disable($poller_id) {
+	db_execute("UPDATE poller SET active='', run_state='Disabled' WHERE id='" . $selected_items[$i] . "'");
+
+	/* update poller cache */
+	/* todo this yet */
+}
+
+function api_data_poller_enable($poller_id) {
+	db_execute("UPDATE poller SET active='on', run_state='Wait' WHERE id='" . $selected_items[$i] . "'");
+
+	/* update poller cache */
+	/* todo this yet */
 }
 
 ?>

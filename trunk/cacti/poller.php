@@ -72,7 +72,7 @@ if ($poller_id == 1) {
 
 	/* get the number of active pollers */
 	$pollers = db_fetch_assoc("SELECT * FROM poller WHERE active = 'on'");
-	$num_pollers = sizeof($pollers) + 1;
+	$num_pollers = sizeof($pollers);
 
 	/* update web paths for the poller */
 	db_execute("REPLACE INTO settings (name,value) VALUES ('path_webroot','" . addslashes(($config["cacti_server_os"] == "win32") ? strtolower(str_replace("\\","/",substr(dirname(__FILE__), 0, 1))) . str_replace("\\","/",substr(dirname(__FILE__), 1)) : dirname(__FILE__)) . "')");
