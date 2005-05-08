@@ -1160,6 +1160,8 @@ CREATE TABLE poller (
   active varchar(5) default 'On',
   hostname varchar(250) NOT NULL default '',
   name varchar(150) default NULL,
+  hosts smallint(5) unsigned NOT NULL default '0',
+  data_sources mediumint(8) unsigned NOT NULL default '0',
   last_update datetime NOT NULL default '0000-00-00 00:00:00',
   status_event_count mediumint(8) NOT NULL default '0',
   status_fail_date datetime NOT NULL default '0000-00-00 00:00:00',
