@@ -708,6 +708,11 @@ function rrdtool_function_graph($graph_id, $rra_id, $graph_data_array, $rrd_stru
 		"$graph_legend" .
 		"--vertical-label=\"" . $graph["vertical_label"] . "\"" . RRD_NL;
 
+	/* rrdtool 1.2.x does not provide smooth lines, let's force it */
+	if (read_config_option("rrdtool_version") == "rrd-1.2.x") {
+		$graph_opts .= "--slope-mode" . RRD_NL;
+	}
+
 	/* rrdtool 1.2 font options */
 	if (read_config_option("rrdtool_version") == "rrd-1.2.x") {
 		/* title fonts */
