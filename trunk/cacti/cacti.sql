@@ -1008,7 +1008,7 @@ CREATE TABLE host (
 -- Dumping data for table `host`
 --
 
-INSERT INTO host VALUES (1,1,3,'Localhost','localhost','public',1,'','','MD5','','DES',161,500,2,2,'on',3,0,'0000-00-00 00:00:00','0000-00-00 00:00:00','',7.46000,814.46000,7.85000,16.95157,156,0,100.00000);
+INSERT INTO host VALUES (1,1,3,'Localhost','localhost','',1,'','','MD5','','DES',161,500,2,2,'on',3,0,'0000-00-00 00:00:00','0000-00-00 00:00:00','',0,0,0,0,0,0,0,0,100.00000);
 
 --
 -- Table structure for table `host_graph`
@@ -1185,7 +1185,7 @@ CREATE TABLE poller (
 -- Dumping data for table `poller`
 --
 
-INSERT INTO poller VALUES (1,'Wait','on','locahost','Main Cacti System','0000-00-00 00:00:00',0,'0000-00-00 00:00:00','0000-00-00 00:00:00','',0.00000,0.00000,0.00000,0.00000,0,0,0.00000);
+INSERT INTO poller VALUES (1,'Wait','on','locahost','Main Cacti System',1,0,0,0,0,0,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','0000-00-00 00:00:00','',0.00000,0.00000,0.00000,0.00000,0,0,0.00000);
 
 --
 -- Table structure for table `poller_command`
