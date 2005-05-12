@@ -22,6 +22,11 @@
  +-------------------------------------------------------------------------+
 */
 
+if (file_exists("./include/config.php") == false) {
+	print "<html><body><font size=+1 color=red><b>Cacti Configuration Error: include/config.php file was not found.  Please make sure that you have renamed include/config.php.dist to include/config.php</b></font></body></html>\n";
+	exit;
+}
+
 include("./include/config.php");
 include("./include/auth.php");
 include("./include/top_header.php");
