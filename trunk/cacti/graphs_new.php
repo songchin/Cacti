@@ -28,6 +28,7 @@ include_once("./lib/data_query/data_query_info.php");
 include_once("./lib/data_query/data_query_execute.php");
 include_once("./lib/graph/graph_template.php");
 include_once("./lib/graph/graph_info.php");
+include_once("./lib/data_source/data_source_form.php");
 include_once("./include/data_source/data_source_constants.php");
 include_once("./lib/utility.php");
 include_once("./lib/sort.php");
@@ -107,106 +108,138 @@ function host_new_graphs_save() {
 			}else{ /* this is a data query field */
 				$values["sg"]{$matches[1]}{$matches[2]}["data_template"]{$matches[3]}{$matches[4]} = $val;
 			}
+
+			$validation_array["data_template"]{$matches[4]}[$var] = $val;
 		}elseif (preg_match("/^c_(\d+)_(\d+)_(\d+)_(\d+)/", $var, $matches)) { /* 1: data_query_id, 2: graph_template_id, 3: data_template_id, 4: data_input_field_name */
 			if (empty($matches[1])) { /* this is a new graph from template field */
 				$values["cg"]{$matches[2]}["custom_data"]{$matches[3]}{$matches[4]} = $val;
 			}else{ /* this is a data query field */
 				$values["sg"]{$matches[1]}{$matches[2]}["custom_data"]{$matches[3]}{$matches[4]} = $val;
 			}
-		}elseif (preg_match("/^di_(\d+)_(\d+)_(\d+)_(\d+)_(\w+)/", $var, $matches)) { /* 1: data_query_id, 2: graph_template_id, 3: data_template_id, 4: data_source_name, 5: field_name */
+
+			$validation_array["custom_data"]{$matches[4]}[$var] = $val;
+		}elseif (preg_match("/^di_(\d+)_(\d+)_(\d+)_(\d+)_(\w+)/", $var, $matches)) { /* 1: data_query_id, 2: graph_template_id, 3: data_template_id, 4: data_template_item_id, 5: field_name */
 			if (empty($matches[1])) { /* this is a new graph from template field */
 				$values["cg"]{$matches[2]}["data_template_item"]{$matches[4]}{$matches[5]} = $val;
 			}else{ /* this is a data query field */
 				$values["sg"]{$matches[1]}{$matches[2]}["data_template_item"]{$matches[4]}{$matches[5]} = $val;
 			}
+
+			$validation_array["data_template_item"]{$matches[5]}[$var] = $val;
 		}
 	}
 
-	debug_log_clear("new_graphs");
+	/* first pass: form validation */
+	while (list($type, $type_array) = each($validation_array)) {
+		while (list($field_name, $field_array) = each($type_array)) {
+			while (list($form_field_name, $value) = each($field_array)) {
+				$_v_arr = array($field_name => $value);
 
-	while (list($current_form_type, $form_array) = each($selected_graphs_array)) {
-		while (list($form_id1, $form_array2) = each($form_array)) {
-			/* enumerate information from the arrays stored in post variables */
-			if ($current_form_type == "cg") {
-				$graph_template_id = $form_id1;
-			}elseif ($current_form_type == "sg") {
-				$data_query_id = $form_id1;
+				if ($type == "data_template") {
+					$_sv_arr = array();
+					validate_data_source_fields($_v_arr, $_sv_arr, $form_field_name, "");
+				} else if ($type == "custom_data") {
+					validate_data_source_input_fields($_v_arr, $form_field_name);
+				} else if ($type == "data_template_item") {
+					$_v_arr["id"] = 0;
+					validate_data_source_item_fields($_v_arr, $form_field_name);
+				}
 			}
+		}
+	}
 
-			if ($current_form_type == "cg") {
-				$gt_form_graph = (isset($values["cg"][$graph_template_id]["graph_template"]) ? $values["cg"][$graph_template_id]["graph_template"] : array());
-				$gt_form_graph_item = (isset($values["cg"][$graph_template_id]["graph_template_item"]) ? $values["cg"][$graph_template_id]["graph_template_item"] : array());
-				$gt_form_data_source = (isset($values["cg"][$graph_template_id]["data_template"]) ? $values["cg"][$graph_template_id]["data_template"] : array());
-				$gt_form_data_source_item = (isset($values["cg"][$graph_template_id]["data_template_item"]) ? $values["cg"][$graph_template_id]["data_template_item"] : array());
-				$gt_form_data_source_field = (isset($values["cg"][$graph_template_id]["custom_data"]) ? $values["cg"][$graph_template_id]["custom_data"] : array());
+	/* form validation failed: redirect back */
+	if (is_error_message()) {
+		/* cache all post field values */
+		init_post_field_cache();
 
-				$graph_id = generate_complete_graph($graph_template_id, $_POST["host_id"], $gt_form_graph, $gt_form_graph_item, $gt_form_data_source, $gt_form_data_source_item, $gt_form_data_source_field);
+		host_new_graphs($selected_graphs_array);
+	/* form validation passed: save the data on the form */
+	}else{
+		debug_log_clear("new_graphs");
 
-				debug_log_insert("new_graphs", "Created graph: " . get_graph_title($graph_id));
-			}elseif ($current_form_type == "sg") {
-				while (list($form_id2, $form_array3) = each($form_array2)) {
-					$graph_template_id = $form_id2;
-					$data_query_index_array = $form_array3;
-					$data_query_field_name = get_best_data_query_index_type($_POST["host_id"], $data_query_id);
+		while (list($current_form_type, $form_array) = each($selected_graphs_array)) {
+			while (list($form_id1, $form_array2) = each($form_array)) {
+				/* enumerate information from the arrays stored in post variables */
+				if ($current_form_type == "cg") {
+					$graph_template_id = $form_id1;
 
-					$dq_data_templates = db_fetch_assoc("select distinct
-						data_template.id
-						from graph_template_item,data_template_item,data_template
-						where graph_template_item.data_template_item_id=data_template_item.id
-						and data_template_item.data_template_id=data_template.id
-						and data_template.data_input_type = " . DATA_INPUT_TYPE_DATA_QUERY . "
-						and graph_template_item.graph_template_id = $graph_template_id");
+					$gt_form_graph = (isset($values["cg"][$graph_template_id]["graph_template"]) ? $values["cg"][$graph_template_id]["graph_template"] : array());
+					$gt_form_graph_item = (isset($values["cg"][$graph_template_id]["graph_template_item"]) ? $values["cg"][$graph_template_id]["graph_template_item"] : array());
+					$gt_form_data_source = (isset($values["cg"][$graph_template_id]["data_template"]) ? $values["cg"][$graph_template_id]["data_template"] : array());
+					$gt_form_data_source_item = (isset($values["cg"][$graph_template_id]["data_template_item"]) ? $values["cg"][$graph_template_id]["data_template_item"] : array());
+					$gt_form_data_source_field = (isset($values["cg"][$graph_template_id]["custom_data"]) ? $values["cg"][$graph_template_id]["custom_data"] : array());
 
-					if (sizeof($dq_data_templates) > 0) {
-						foreach ($dq_data_templates as $data_template) {
-							/* set data query field values */
-							$values["sg"][$data_query_id][$graph_template_id]["custom_data"]{$data_template["id"]}["data_query_id"] = $data_query_id;
-							$values["sg"][$data_query_id][$graph_template_id]["custom_data"]{$data_template["id"]}["data_query_field_name"] = $data_query_field_name;
+					$graph_id = generate_complete_graph($graph_template_id, $_POST["host_id"], $gt_form_graph, $gt_form_graph_item, $gt_form_data_source, $gt_form_data_source_item, $gt_form_data_source_field);
 
-							/* for each index... */
-							reset($data_query_index_array);
-							while (list($encoded_data_query_index, $true) = each($data_query_index_array)) {
-								$data_query_index = decode_data_query_index($encoded_data_query_index, db_fetch_assoc("select snmp_index from host_snmp_cache where host_id = " . $_POST["host_id"] . " and snmp_query_id = $data_query_id group by snmp_index"));
+					debug_log_insert("new_graphs", "Created graph: " . get_graph_title($graph_id));
+				}elseif ($current_form_type == "sg") {
+					$data_query_id = $form_id1;
 
-								$values["sg"][$data_query_id][$graph_template_id]["custom_data"]{$data_template["id"]}["data_query_index"] = $data_query_index;
-								$values["sg"][$data_query_id][$graph_template_id]["custom_data"]{$data_template["id"]}["data_query_field_value"] = db_fetch_cell("select field_value from host_snmp_cache where host_id = " . $_POST["host_id"] . " and snmp_query_id = $data_query_id and field_name = '$data_query_field_name' and snmp_index = '$data_query_index'");
+					while (list($graph_template_id, $data_query_index_array) = each($form_array2)) {
+						$data_query_field_name = get_best_data_query_index_type($_POST["host_id"], $data_query_id);
 
-								$gt_form_graph = (isset($values["sg"][$data_query_id][$graph_template_id]["graph_template"]) ? $values["sg"][$data_query_id][$graph_template_id]["graph_template"] : array());
-								$gt_form_graph_item = (isset($values["sg"][$data_query_id][$graph_template_id]["graph_template_item"]) ? $values["sg"][$data_query_id][$graph_template_id]["graph_template_item"] : array());
-								$gt_form_data_source = (isset($values["sg"][$data_query_id][$graph_template_id]["data_template"]) ? $values["sg"][$data_query_id][$graph_template_id]["data_template"] : array());
-								$gt_form_data_source_item = (isset($values["sg"][$data_query_id][$graph_template_id]["data_template_item"]) ? $values["sg"][$data_query_id][$graph_template_id]["data_template_item"] : array());
-								$gt_form_data_source_field = (isset($values["sg"][$data_query_id][$graph_template_id]["custom_data"]) ? $values["sg"][$data_query_id][$graph_template_id]["custom_data"] : array());
+						$dq_data_templates = db_fetch_assoc("select distinct
+							data_template.id
+							from graph_template_item,data_template_item,data_template
+							where graph_template_item.data_template_item_id=data_template_item.id
+							and data_template_item.data_template_id=data_template.id
+							and data_template.data_input_type = " . DATA_INPUT_TYPE_DATA_QUERY . "
+							and graph_template_item.graph_template_id = $graph_template_id");
 
-								$graph_id = generate_complete_graph($graph_template_id, $_POST["host_id"], $gt_form_graph, $gt_form_graph_item, $gt_form_data_source, $gt_form_data_source_item, $gt_form_data_source_field);
+						if (sizeof($dq_data_templates) > 0) {
+							foreach ($dq_data_templates as $data_template) {
+								/* set data query field values */
+								$values["sg"][$data_query_id][$graph_template_id]["custom_data"]{$data_template["id"]}["data_query_id"] = $data_query_id;
+								$values["sg"][$data_query_id][$graph_template_id]["custom_data"]{$data_template["id"]}["data_query_field_name"] = $data_query_field_name;
 
-								debug_log_insert("new_graphs", "Created graph: " . get_graph_title($graph_id));
+								/* for each index... */
+								reset($data_query_index_array);
+								while (list($encoded_data_query_index, $true) = each($data_query_index_array)) {
+									$data_query_index = decode_data_query_index($encoded_data_query_index, db_fetch_assoc("select snmp_index from host_snmp_cache where host_id = " . $_POST["host_id"] . " and snmp_query_id = $data_query_id group by snmp_index"));
+
+									$values["sg"][$data_query_id][$graph_template_id]["custom_data"]{$data_template["id"]}["data_query_index"] = $data_query_index;
+									$values["sg"][$data_query_id][$graph_template_id]["custom_data"]{$data_template["id"]}["data_query_field_value"] = db_fetch_cell("select field_value from host_snmp_cache where host_id = " . $_POST["host_id"] . " and snmp_query_id = $data_query_id and field_name = '$data_query_field_name' and snmp_index = '$data_query_index'");
+
+									$gt_form_graph = (isset($values["sg"][$data_query_id][$graph_template_id]["graph_template"]) ? $values["sg"][$data_query_id][$graph_template_id]["graph_template"] : array());
+									$gt_form_graph_item = (isset($values["sg"][$data_query_id][$graph_template_id]["graph_template_item"]) ? $values["sg"][$data_query_id][$graph_template_id]["graph_template_item"] : array());
+									$gt_form_data_source = (isset($values["sg"][$data_query_id][$graph_template_id]["data_template"]) ? $values["sg"][$data_query_id][$graph_template_id]["data_template"] : array());
+									$gt_form_data_source_item = (isset($values["sg"][$data_query_id][$graph_template_id]["data_template_item"]) ? $values["sg"][$data_query_id][$graph_template_id]["data_template_item"] : array());
+									$gt_form_data_source_field = (isset($values["sg"][$data_query_id][$graph_template_id]["custom_data"]) ? $values["sg"][$data_query_id][$graph_template_id]["custom_data"] : array());
+
+									$graph_id = generate_complete_graph($graph_template_id, $_POST["host_id"], $gt_form_graph, $gt_form_graph_item, $gt_form_data_source, $gt_form_data_source_item, $gt_form_data_source_field);
+
+									debug_log_insert("new_graphs", "Created graph: " . get_graph_title($graph_id));
+								}
 							}
 						}
 					}
 				}
 			}
 		}
-	}
 
-	/* lastly push host-specific information to our data sources */
-	push_out_host($_POST["host_id"],0);
+		/* lastly push host-specific information to our data sources */
+		push_out_host($_POST["host_id"], 0);
+	}
 }
 
-function host_new_graphs() {
+function host_new_graphs($selected_graphs = "") {
 	global $colors;
 
-	$selected_graphs = array();
+	if (!is_array($selected_graphs)) {
+		$selected_graphs = array();
 
-	/* summarize the 'create graph from host template/snmp index' stuff into an array */
-	while (list($name, $value) = each($_POST)) {
-		if ((substr($name, 0, 3) == "cg_") && ($name != "cg_g")) {
-			$matches = explode("_", $name);
-			$selected_graphs["cg"]{$matches[1]}{$matches[1]} = true;
-		}else if (substr($name, 0, 3) == "sg_") {
-			$matches = explode("_", $name);
-			$selected_graphs["sg"]{$matches[1]}{$_POST{"sgg_" . $matches[1]}}{$matches[2]} = true;
-		}else if (($name == "cg_g") && (!empty($value))) {
-			$selected_graphs["cg"]{$_POST["cg_g"]}{$_POST["cg_g"]} = true;
+		/* summarize the 'create graph from host template/snmp index' stuff into an array */
+		while (list($name, $value) = each($_POST)) {
+			if ((substr($name, 0, 3) == "cg_") && ($name != "cg_g")) {
+				$matches = explode("_", $name);
+				$selected_graphs["cg"]{$matches[1]}{$matches[1]} = true;
+			}else if (substr($name, 0, 3) == "sg_") {
+				$matches = explode("_", $name);
+				$selected_graphs["sg"]{$matches[1]}{$_POST{"sgg_" . $matches[1]}}{$matches[2]} = true;
+			}else if (($name == "cg_g") && (!empty($value))) {
+				$selected_graphs["cg"]{$_POST["cg_g"]}{$_POST["cg_g"]} = true;
+			}
 		}
 	}
 
@@ -261,8 +294,8 @@ function host_new_graphs() {
 			/* DRAW: Data Sources */
 			if (sizeof($data_templates) > 0) {
 				foreach ($data_templates as $data_template) {
-					$num_output_fields += draw_nontemplated_fields_data_source($data_template["id"], $data_template, "d_" . $data_query_id . "_" . $graph_template_id . "_" . $data_template["id"] . "_|field|", "<strong>Data Source</strong> [Template: " . $data_template["template_name"] . "]", false, false);
-					$num_output_fields += draw_nontemplated_fields_data_source_item($data_template["id"], db_fetch_assoc("select * from data_template_item	where data_template_id = " . $data_template["id"]), "di_" . $data_query_id . "_" . $graph_template_id . "_" . $data_template["id"] . "_|name|_|field|", "", false);
+					$num_output_fields += draw_nontemplated_fields_data_source($data_template["id"], $data_template, "d_" . $data_query_id . "_" . $graph_template_id . "_" . $data_template["id"] . "_|field|", true);
+					$num_output_fields += draw_nontemplated_fields_data_source_item($data_template["id"], db_fetch_assoc("select * from data_template_item where data_template_id = " . $data_template["id"] . " order by data_source_name"), "di_" . $data_query_id . "_" . $graph_template_id . "_" . $data_template["id"] . "_|id|_|field|", true);
 					$num_output_fields += draw_nontemplated_fields_data_input($data_template["id"], array_rekey(db_fetch_assoc("select name,value from data_template_field where data_template_id = " . $data_template["id"]), "name", array("value")), "c_" . $data_query_id . "_" . $graph_template_id . "_" . $data_template["id"] . "_|field|", "<strong>Custom Data</strong> [Template: " . $data_template["template_name"] . "]", false);
 				}
 			}

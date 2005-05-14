@@ -22,41 +22,19 @@
  +-------------------------------------------------------------------------+
 */
 
-function api_data_template_save($id, $template_name, $suggested_values, $data_input_type, $data_input_fields, $t_name,
-	$t_active, $active, $t_rrd_step, $rrd_step, $t_rra_id, $rra_id) {
+function api_data_template_save($_fields_data_source, $_fields_suggested_values, $_fields_data_input, $_fields_rra_id) {
 	include_once(CACTI_BASE_PATH . "/lib/data_source/data_source_template.php");
 	include_once(CACTI_BASE_PATH . "/lib/sys/sequence.php");
 
-	$save["id"] = $id;
-	$save["hash"] = get_hash_data_template($id);
-	$save["template_name"] = form_input_validate($template_name, "template_name", "", false, 3);
-	$save["data_input_type"] = form_input_validate($data_input_type, "data_input_type", "", true, 3);
-	$save["t_name"] = form_input_validate(html_boolean($t_name), "t_name", "", true, 3);
-	//$save["name"] = form_input_validate($name, "name", "", false, 3);
-	$save["t_active"] = form_input_validate(html_boolean($t_active), "t_active", "", true, 3);
-	$save["active"] = form_input_validate(html_boolean($active), "active", "", true, 3);
-	$save["t_rrd_step"] = form_input_validate(html_boolean($t_rrd_step), "t_rrd_step", "", true, 3);
-	$save["rrd_step"] = form_input_validate($rrd_step, "rrd_step", "^[0-9]+$", false, 3);
-	$save["t_rra_id"] = form_input_validate(html_boolean($t_rra_id), "t_rra_id", "", true, 3);
+	/* keep the template hash fresh */
+	$_fields_data_source["hash"] = get_hash_data_template($_fields_data_source["id"]);
 
-	$data_template_id = 0;
+	$data_template_id = sql_save($_fields_data_source, "data_template");
 
-	if (!is_error_message()) {
-		$data_template_id = sql_save($save, "data_template");
-
-		if ($data_template_id) {
-			raise_message(1);
-		}else{
-			raise_message(2);
-		}
-	}
-
-	/* save all suggested value fields */
-	while (list($field_name, $field_array) = each($suggested_values)) {
-		while (list($id, $value) = each($field_array)) {
-			form_input_validate($value, "sv|$field_name|$id", "", false, 3);
-
-			if ((!is_error_message()) && ($data_template_id)) {
+	if ($data_template_id) {
+		/* save all suggested value fields */
+		while (list($field_name, $field_array) = each($_fields_suggested_values)) {
+			while (list($id, $value) = each($field_array)) {
 				if (empty($id)) {
 					db_execute("insert into data_template_suggested_value (hash,data_template_id,field_name,value,sequence) values ('',$data_template_id,'$field_name','$value'," . seq_get_current(0, "sequence", "data_template_suggested_value", "data_template_id = $data_template_id and field_name = '$field_name'") . ")");
 				}else{
@@ -64,35 +42,19 @@ function api_data_template_save($id, $template_name, $suggested_values, $data_in
 				}
 			}
 		}
-	}
 
-	if ((!is_error_message()) && ($data_template_id)) {
-		db_execute("delete from data_template_field where data_template_id=$data_template_id");
-	}
+		db_execute("delete from data_template_field where data_template_id = $data_template_id");
 
-	/* save all data input fields */
-	while (list($name, $field_array) = each($data_input_fields)) {
-		if (($data_input_type == DATA_INPUT_TYPE_SCRIPT) && (isset($data_input_fields["script_id"])) && ($name != "script_id")) {
-			$script_input_field = db_fetch_row("select id,regexp_match,allow_empty from data_input_fields where data_input_id = " . $data_input_fields["script_id"]["value"] . " and data_name = '$name' and input_output = 'in'");
-
-			if (isset($script_input_field["id"])) {
-				form_input_validate($field_array["value"], "dif_$name", $script_input_field["regexp_match"], $script_input_field["allow_empty"], 3);
-			}
-		}
-
-		if ((!is_error_message()) && ($data_template_id)) {
+		/* save all data input fields */
+		while (list($name, $field_array) = each($_fields_data_input)) {
 			db_execute("insert into data_template_field (data_template_id,name,t_value,value) values ($data_template_id,'$name'," . html_boolean($field_array["t_value"]) . ",'" . $field_array["value"] . "')");
 		}
-	}
 
-	if ((!is_error_message()) && ($data_template_id)) {
 		/* save entries in 'selected rras' field */
-		db_execute("delete from data_template_rra where data_template_id=$data_template_id");
+		db_execute("delete from data_template_rra where data_template_id = $data_template_id");
 
-		if (isset($rra_id)) {
-			for ($i=0; ($i < count($rra_id)); $i++) {
-				db_execute("insert into data_template_rra (rra_id,data_template_id) values (" . $rra_id[$i] . ",$data_template_id)");
-			}
+		for ($i=0; ($i < count($_fields_rra_id)); $i++) {
+			db_execute("insert into data_template_rra (rra_id,data_template_id) values (" . $_fields_rra_id[$i] . ",$data_template_id)");
 		}
 
 		/* push out data template fields */
@@ -102,39 +64,15 @@ function api_data_template_save($id, $template_name, $suggested_values, $data_in
 	return $data_template_id;
 }
 
-function api_data_template_item_save($id, $data_template_id, $t_rrd_maximum, $rrd_maximum, $t_rrd_minimum, $rrd_minimum,
-	$t_rrd_heartbeat, $rrd_heartbeat, $t_data_source_type, $data_source_type, $t_data_source_name, $data_source_name,
-	$field_input_value) {
+function api_data_template_item_save($_fields_data_source_item) {
 	include_once(CACTI_BASE_PATH . "/lib/data_source/data_source_template.php");
 
-	$save["id"] = $id;
-	$save["hash"] = get_hash_data_template($id, "data_template_item");
-	$save["data_template_id"] = $data_template_id;
-	$save["t_rrd_maximum"] = form_input_validate(html_boolean($t_rrd_maximum), "dsi|t_rrd_maximum|$id", "", true, 3);
-	$save["rrd_maximum"] = form_input_validate($rrd_maximum, "dsi|rrd_maximum|$id", "^(-?[0-9]+)|[uU]$", false, 3);
-	$save["t_rrd_minimum"] = form_input_validate(html_boolean($t_rrd_minimum), "dsi|t_rrd_minimum|$id", "", true, 3);
-	$save["rrd_minimum"] = form_input_validate($rrd_minimum, "dsi|rrd_minimum|$id", "^(-?[0-9]+)|[uU]$", false, 3);
-	$save["t_rrd_heartbeat"] = form_input_validate(html_boolean($t_rrd_heartbeat), "dsi|t_rrd_heartbeat|$id", "", true, 3);
-	$save["rrd_heartbeat"] = form_input_validate($rrd_heartbeat, "dsi|rrd_heartbeat|$id", "^[0-9]+$", false, 3);
-	$save["t_data_source_type"] = form_input_validate(html_boolean($t_data_source_type), "dsi|t_data_source_type|$id", "", true, 3);
-	$save["data_source_type"] = form_input_validate($data_source_type, "dsi|t_data_source_type|$id", "", true, 3);
-	$save["t_data_source_name"] = form_input_validate(html_boolean($t_data_source_name), "dsi|t_data_source_name|$id", "", true, 3);
-	$save["data_source_name"] = form_input_validate($data_source_name, "dsi|data_source_name|$id", "^[a-zA-Z0-9_]{1,19}$", false, 3);
-	$save["field_input_value"] = form_input_validate($field_input_value, "dsi|field_input_value|$id", "", false, 3);
+	/* keep the template hash fresh */
+	$_fields_data_source_item["hash"] = get_hash_data_template($_fields_data_source_item["id"], "data_template_item");
 
-	$data_template_item_id = 0;
+	$data_template_item_id = sql_save($_fields_data_source_item, "data_template_item");
 
-	if ((!is_error_message()) && (!empty($data_template_id))) {
-		$data_template_item_id = sql_save($save, "data_template_item");
-
-		if ($data_template_item_id) {
-			raise_message(1);
-		}else{
-			raise_message(2);
-		}
-	}
-
-	if ((!is_error_message()) && (!empty($data_template_item_id))) {
+	if ($data_template_item_id) {
 		/* push out data template item fields */
 		api_data_source_item_propagate($data_template_item_id);
 	}

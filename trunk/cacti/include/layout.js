@@ -199,41 +199,6 @@ function dq_reset_deps(snmp_query_id, num_columns) {
 
 /* generic selection functions */
 
-function gi_select_line(id) {
-	if (document.getElementById) {
-		line1 = document.getElementById('gi_1_' + id);
-		line2 = document.getElementById('gi_2_' + id);
-		line3 = document.getElementById('gi_3_' + id);
-		line4 = document.getElementById('gi_4_' + id);
-		line5 = document.getElementById('gi_5_' + id);
-		line6 = document.getElementById('gi_6_' + id);
-
-		val = document.getElementById('gi_value_' + id);
-		//val_above = document.getElementById('gi_value_' + (sequence-1));
-		//val_below = document.getElementById('gi_value_' + (sequence+1));
-
-		if (line1.className == 'jsRowSelect') {
-			line1.className = 'jsRowUnSelect';
-			line2.className = 'jsRowUnSelect';
-			line3.className = 'jsRowUnSelect';
-			line4.className = 'jsRowUnSelect';
-			line5.className = 'jsRowUnSelect';
-			line6.className = 'jsRowUnSelect';
-			val.value = '0';
-		}else{
-			//if ( ((val_below) && (val_below.value == '1')) || ((val_below) && (val_below.value == '1')) ) {
-				line1.className = 'jsRowSelect';
-				line2.className = 'jsRowSelect';
-				line3.className = 'jsRowSelect';
-				line4.className = 'jsRowSelect';
-				line5.className = 'jsRowSelect';
-				line6.className = 'jsRowSelect';
-				val.value = '1';
-			//}
-		}
-	}
-}
-
 function graph_item_rows_selection(checkbox_state) {
 	for (var i = 0; i < item_rows.length; i++) {
 		row_chk = document.getElementById('row_chk_' + item_rows[i]);
@@ -308,7 +273,9 @@ function submit_redirect(form_index, redirect_url, field_value) {
 	document.forms[form_index].submit();
 }
 
-function template_checkbox_status(field_name, t_field_name, field_method) {
+function template_checkbox_status(field_name, t_field_name) {
+	var field_method = '';
+
 	if ((field_method == 'drop_multi') || (field_method == 'drop_multi_rra')) {
 		if (document.getElementById(t_field_name).checked == true) {
 			document.getElementById(field_name + '[]').disabled = true;
@@ -321,5 +288,27 @@ function template_checkbox_status(field_name, t_field_name, field_method) {
 		}else{
 			document.getElementById(field_name).disabled = false;
 		}
+	}
+}
+
+function set_data_template_override_device_field(field_name) {
+	t_field = document.getElementById('t_' + field_name);
+	o_field = document.getElementById('o_' + field_name);
+	field = document.getElementById(field_name);
+	chk_caption = document.getElementById('chk_caption_t_' + field_name);
+
+	if (o_field.checked == true) {
+		t_field.disabled = false;
+		chk_caption.className = 'txtEnabledText';
+
+		if (t_field.checked == true) {
+			field.disabled = true;
+		}else{
+			field.disabled = false;
+		}
+	}else{
+		t_field.disabled = true;
+		field.disabled = true;
+		chk_caption.className = 'txtDisabledText';
 	}
 }

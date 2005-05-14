@@ -113,6 +113,14 @@ a:hover {
 	border: 2px solid #ff0000;
 }
 
+.txtEnabledText {
+	color: #000000;
+}
+
+.txtDisabledText {
+	color: #919191;
+}
+
 /* tabs */
 td.tab {
     border-top: 1px solid #999;

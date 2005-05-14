@@ -57,6 +57,40 @@ $struct_data_input = array(
 		)
 	);
 
+$fields_data_template = array(
+	"template_name" => array(
+		"default" => "",
+		"validate_regexp" => "",
+		"validate_empty" => false
+		)
+	);
+
+$fields_data_source = array(
+	"name" => array(
+		"default" => "",
+		"validate_regexp" => "",
+		"validate_empty" => false
+		),
+	"rrd_path" => array(
+		"default" => "",
+		"validate_regexp" => "",
+		"validate_empty" => true
+		),
+	"rra_id" => array(
+		"default" => ""
+		),
+	"rrd_step" => array(
+		"default" => "300",
+		"validate_regexp" => "^[0-9]+$",
+		"validate_empty" => false
+		),
+	"active" => array(
+		"default" => "on",
+		"validate_regexp" => "",
+		"validate_empty" => true
+		)
+	);
+
 /* file: (data_sources.php|data_templates.php), action: edit */
 $struct_data_source = array(
 	"name" => array(
@@ -109,6 +143,34 @@ $struct_data_source = array(
 		"default" => "on",
 		"description" => "Whether Cacti should gather data for this data source or not.",
 		"flags" => ""
+		)
+	);
+
+$fields_data_source_item = array(
+	"data_source_name" => array(
+		"default" => "",
+		"validate_regexp" => "^[a-zA-Z0-9_]{1,19}$",
+		"validate_empty" => false
+		),
+	"rrd_minimum" => array(
+		"default" => "0",
+		"validate_regexp" => "^(-?[0-9]+)|[uU]$",
+		"validate_empty" => false
+		),
+	"rrd_maximum" => array(
+		"default" => "0",
+		"validate_regexp" => "^(-?[0-9]+)|[uU]$",
+		"validate_empty" => false
+		),
+	"data_source_type" => array(
+		"default" => "",
+		"validate_regexp" => "^[0-9]+$",
+		"validate_empty" => true
+		),
+	"rrd_heartbeat" => array(
+		"default" => "600",
+		"validate_regexp" => "^[0-9]+$",
+		"validate_empty" => false
 		)
 	);
 

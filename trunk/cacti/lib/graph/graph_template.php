@@ -208,9 +208,6 @@ function generate_complete_graph($graph_template_id, $host_id, &$form_graph_fiel
 		return;
 	}
 
-	/* start an sql transaction is case things go sour */
-	$cnn_id->StartTrans();
-
 	/* initialize for set_graph_template() down below */
 	$dt_form_data_input_fields = array();
 
@@ -244,12 +241,6 @@ function generate_complete_graph($graph_template_id, $host_id, &$form_graph_fiel
 			 * as a primary key here because the graph was just created above and therefore must be accurate */
 			db_execute("update graph_item set data_source_item_id = " . db_fetch_cell("select id from data_source_item where data_source_name = '" . $item["data_source_name"] . "' and data_source_id = " . $dti_to_dsi{$item["data_template_id"]}) . " where id = " . db_fetch_cell("select id from graph_item where graph_id = $graph_id and sequence = " . $item["sequence"]));
 		}
-	}
-
-	if ((!$graph_id) || (is_error_message()) || ($cnn_id->HasFailedTrans())) {
-		$cnn_id->RollbackTrans();
-	}else{
-		$cnn_id->CommitTrans();
 	}
 
 	/* make sure the graph title is up to date */

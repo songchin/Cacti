@@ -22,6 +22,16 @@
  +-------------------------------------------------------------------------+
 */
 
+function template_form_header_precheck($num_draw_fields, $left_title, $right_title = "") {
+	global $colors;
+
+	if (($num_draw_fields == 0) && ($left_title != "")) {
+		echo "<tr bgcolor='#" . $colors["header_panel_background"] . "'><td style='font-size: 10px; color: white;'>$left_title</td><td style='font-size: 10px; color: white;' align='right'>$right_title</td></tr>\n";
+	}
+
+	return ++$num_draw_fields;
+}
+
 /* draw_nontemplated_fields_graph - draws a form that consists of all non-templated graph fields associated
      with a particular graph template
    @arg $graph_template_id - the id of the graph template to base the form after
@@ -161,57 +171,36 @@ function draw_nontemplated_fields_graph_item($graph_template_id, &$values_array,
        |field| - the current field name
    @arg $header_title - the title to use on the header for this form
    @arg $alternate_colors (bool) - whether to alternate colors for each row on the form or not */
-function draw_nontemplated_fields_data_source($data_template_id, &$values_array, $field_name_format = "|field|", $header_title = "", $alternate_colors = true, $include_hidden_fields = true) {
+function draw_nontemplated_fields_data_source($data_template_id, &$values_array, $field_name_format = "|field|", $display_template_name = true) {
 	global $colors;
 
-	include(CACTI_BASE_PATH . "/include/data_source/data_source_form.php");
+	include_once(CACTI_BASE_PATH . "/lib/data_source/data_source_form.php");
 
 	if (empty($data_template_id)) {
 		return;
 	}
 
-	$form_array = array();
+	$num_draw_fields = 0;
 
 	/* fetch information about the data template */
 	$data_template = db_fetch_row("select * from data_template where id = $data_template_id");
 
-	while (list($field_name, $field_array) = each($struct_data_source)) {
-		if (((isset($data_template{"t_" . $field_name}) ? $data_template{"t_" . $field_name} : "0") == "1")
-			|| ((!empty($values_array["id"])) && ($field_name == "rrd_path"))
-			&& !(($field_name == "rrd_path") && ($include_hidden_fields == false))
-			&& ((isset($field_array["flags"]) ? $field_array["flags"] : "") != "ALWAYSTEMPLATE")) {
-
-			/* find our field name */
-			$form_field_name = str_replace("|field|", $field_name, $field_name_format);
-
-			$form_array += array($form_field_name => $struct_data_source[$field_name]);
-
-			/* modifications to the default form array */
-			$form_array[$form_field_name]["value"] = (isset($values_array[$field_name]) ? $values_array[$field_name] : "");
-			$form_array[$form_field_name]["form_id"] = (isset($values_array["id"]) ? $values_array["id"] : "0");
-			unset($form_array[$form_field_name]["default"]);
-		}
+	if ($data_template["t_name"] == "1") {
+		$num_draw_fields = template_form_header_precheck($num_draw_fields, "<strong>Data Source</strong>", ($display_template_name == true ? $data_template["template_name"] : ""));
+		_data_source_field__name(str_replace("|field|", "name", $field_name_format), false, 0);
 	}
 
-	if ((sizeof($form_array) > 0) && ($header_title != "")) {
-		echo "<tr bgcolor='#" . $colors["header_panel_background"] . "'><td colspan='2' style='font-size: 10px; color: white;'>$header_title</td></tr>\n";
+	if ($data_template["t_rrd_step"] == "1") {
+		$num_draw_fields = template_form_header_precheck($num_draw_fields, "<strong>Data Source</strong>", ($display_template_name == true ? $data_template["template_name"] : ""));
+		_data_source_field__rrd_step(str_replace("|field|", "rrd_step", $field_name_format), false, $values_array["rrd_step"], 0);
 	}
 
-	/* setup form options */
-	if ($alternate_colors == true) {
-		$form_config_array = array("no_form_tag" => true);
-	}else{
-		$form_config_array = array("no_form_tag" => true, "force_row_color" => $colors["form_alternate1"]);
+	if ($data_template["t_active"] == "1") {
+		$num_draw_fields = template_form_header_precheck($num_draw_fields, "<strong>Data Source</strong>", ($display_template_name == true ? $data_template["template_name"] : ""));
+		_data_source_field__active(str_replace("|field|", "active", $field_name_format), false, $values_array["active"], 0);
 	}
 
-	draw_edit_form(
-		array(
-			"config" => $form_config_array,
-			"fields" => $form_array
-			)
-		);
-
-	return sizeof($form_array);
+	return $num_draw_fields;
 }
 
 /* draw_nontemplated_fields_data_source_item - draws a form that consists of all non-templated data source
@@ -227,70 +216,54 @@ function draw_nontemplated_fields_data_source($data_template_id, &$values_array,
    @arg $draw_title_for_each_item (bool) - should a separate header be drawn for each data source item, or
      should all data source items be drawn under one header?
    @arg $alternate_colors (bool) - whether to alternate colors for each row on the form or not */
-function draw_nontemplated_fields_data_source_item($data_template_id, &$values_array, $field_name_format = "|field_id|", $header_title = "", $draw_title_for_each_item = true, $alternate_colors = true) {
+function draw_nontemplated_fields_data_source_item($data_template_id, &$values_array, $field_name_format = "|field_id|", $display_template_name = true) {
 	global $colors;
 
-	include(CACTI_BASE_PATH . "/include/data_source/data_source_form.php");
+	include_once(CACTI_BASE_PATH . "/lib/data_source/data_source_form.php");
 
 	if (empty($data_template_id)) {
 		return;
 	}
 
-	$num_fields_drawn = 0;
+	$num_draw_fields = 0;
 
-	/* setup form options */
-	if ($alternate_colors == true) {
-		$form_config_array = array("no_form_tag" => true);
-	}else{
-		$form_config_array = array("no_form_tag" => true, "force_row_color" => $colors["form_alternate1"]);
+	if ($display_template_name == true) {
+		$data_template_name = db_fetch_cell("select template_name from data_template where id = $data_template_id");
 	}
 
 	if (sizeof($values_array) > 0) {
 		foreach ($values_array as $item) {
-			reset($struct_data_source_item);
-			$form_array = array();
+			$field_name = str_replace("|id|", $item["id"], $field_name_format);
+			$num_draw_item_fields = 0;
 
 			$data_template_item = db_fetch_row("select * from data_template_item where data_template_id = $data_template_id and data_source_name = '" . $item["data_source_name"] . "'");
 
-			while (list($field_name, $field_array) = each($struct_data_source_item)) {
-				if ($data_template_item{"t_" . $field_name} == "1") {
-					/* find our field name */
-					$form_field_name = str_replace("|field|", $field_name, $field_name_format);
-					$form_field_name = str_replace("|name|", $item["data_source_name"], $form_field_name);
-					$form_field_name = str_replace("|id|", $item["id"], $form_field_name);
-
-					$form_array += array($form_field_name => $struct_data_source_item[$field_name]);
-
-					/* modifications to the default form array */
-					$form_array[$form_field_name]["value"] = (isset($item[$field_name]) ? $item[$field_name] : "");
-					$form_array[$form_field_name]["form_id"] = (isset($item["id"]) ? $item["id"] : "0");
-					unset($form_array[$form_field_name]["default"]);
-
-					/* append the data source item name so the user will recognize it */
-					if ($draw_title_for_each_item == false) {
-						$form_array[$form_field_name]["friendly_name"] .= " [" . $item["data_source_name"] . "]";
-					}
-				}
+			if ($data_template_item["t_rrd_minimum"] == "1") {
+				$num_draw_item_fields = template_form_header_precheck($num_draw_item_fields, "<strong>Data Source Item</strong> [" . $item["data_source_name"] . "]", ($display_template_name == true ? $data_template_name : ""));
+				_data_source_item_field__rrd_minimum(str_replace("|field|", "rrd_minimum", $field_name), false, $item["rrd_minimum"], $field_id = 0);
 			}
 
-			if ((sizeof($form_array) > 0) && ($draw_title_for_each_item == false) && ($header_title != "")) {
-				echo "<tr bgcolor='#" . $colors["header_panel_background"] . "'><td colspan='2' style='font-size: 10px; color: white;'>$header_title</td></tr>\n";
-			}elseif ((sizeof($form_array) > 0) && ($draw_title_for_each_item == true) && ($header_title != "")) {
-				echo "<tr bgcolor='#" . $colors["header_panel_background"] . "'><td colspan='2' style='font-size: 10px; color: white;'>$header_title [" . $item["data_source_name"] . "]</td></tr>\n";
+			if ($data_template_item["t_rrd_maximum"] == "1") {
+				$num_draw_item_fields = template_form_header_precheck($num_draw_item_fields, "<strong>Data Source Item</strong> [" . $item["data_source_name"] . "]", ($display_template_name == true ? $data_template_name : ""));
+				_data_source_item_field__rrd_maximum(str_replace("|field|", "rrd_maximum", $field_name), false, $item["rrd_maximum"], $field_id = 0);
 			}
 
-			draw_edit_form(
-				array(
-					"config" => $form_config_array,
-					"fields" => $form_array
-					)
-				);
+			if ($data_template_item["t_data_source_type"] == "1") {
+				$num_draw_item_fields = template_form_header_precheck($num_draw_item_fields, "<strong>Data Source Item</strong> [" . $item["data_source_name"] . "]", ($display_template_name == true ? $data_template_name : ""));
+				_data_source_item_field__data_source_type(str_replace("|field|", "data_source_type", $field_name), false, $item["data_source_type"], 0);
+			}
 
-			$num_fields_drawn += sizeof($form_array);
+			if ($data_template_item["t_rrd_heartbeat"] == "1") {
+				$num_draw_item_fields = template_form_header_precheck($num_draw_item_fields, "<strong>Data Source Item</strong> [" . $item["data_source_name"] . "]", ($display_template_name == true ? $data_template_name : ""));
+				_data_source_item_field__rrd_heartbeat(str_replace("|field|", "rrd_heartbeat", $field_name), false, $item["rrd_heartbeat"], 0);
+			}
+
+			/* keep a global field draw count */
+			$num_draw_fields += $num_draw_item_fields;
 		}
 	}
 
-	return $num_fields_drawn;
+	return $num_draw_fields;
 }
 
 /* draw_nontemplated_fields_data_input - draws a form that consists of all non-templated data input
