@@ -86,6 +86,8 @@ function host_reload_query() {
    ------------------- */
 
 function host_new_graphs_save() {
+	$validation_array = array();
+
 	$selected_graphs_array = unserialize(stripslashes($_POST["selected_graphs_array"]));
 
 	/* form an array that contains all of the data on the previous form */
