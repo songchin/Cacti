@@ -161,9 +161,6 @@ function read_config_option($config_name) {
      $messages array in 'include/config_arrays.php'
    @returns - the original $field_value */
 function form_input_validate($field_value, $field_name, $regexp_match, $allow_nulls, $custom_message = 3) {
-	/* write current values to the "field_values" array so we can retain them */
-	$_SESSION["sess_field_values"][$field_name] = $field_value;
-
 	if (($allow_nulls == true) && ($field_value == "")) {
 		return $field_value;
 	}
@@ -175,8 +172,6 @@ function form_input_validate($field_value, $field_name, $regexp_match, $allow_nu
 		raise_message($custom_message);
 
 		$_SESSION["sess_error_fields"][$field_name] = $field_name;
-	}else{
-		$_SESSION["sess_field_values"][$field_name] = $field_value;
 	}
 
 	return $field_value;
@@ -223,9 +218,6 @@ function display_output_messages() {
 						print "<table align='center' width='98%' style='background-color: #" . $colors['messagebar_background'] . "; border: 1px solid #" . $colors['messagebar_border'] . ";'>";
 						print "<tr><td bgcolor='#" . $colors["messagebar_background"] . "'><p class='textInfo'>$message</p></td></tr>";
 						print "</table><br>";
-
-						/* we don't need these if there are no error messages */
-						kill_session_var("sess_field_values");
 					}
 					break;
 				case 'error':

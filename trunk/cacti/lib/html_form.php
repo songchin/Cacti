@@ -22,6 +22,43 @@
  +-------------------------------------------------------------------------+
 */
 
+$current_field_row_color = $colors["form_alternate1"];
+
+function field_reset_row_color() {
+	global $current_field_row_color, $colors;
+
+	$current_field_row_color = $colors["form_alternate1"];
+}
+
+function field_increment_row_color() {
+	global $current_field_row_color, $colors;
+
+	if ($current_field_row_color == $colors["form_alternate1"]) {
+		$current_field_row_color = $colors["form_alternate2"];
+		return $colors["form_alternate1"];
+	}else{
+		$current_field_row_color = $colors["form_alternate1"];
+		return $colors["form_alternate2"];
+	}
+}
+
+function field_get_row_color() {
+	global $field_increment_row_color, $colors;
+
+	return field_increment_row_color();
+}
+
+function field_row_header($text) {
+	global $colors;
+	?>
+	<tr bgcolor="<?php echo $colors["header_panel_background"];?>">
+		<td colspan="2" class="textSubHeaderDark">
+			<?php echo $text;?>
+		</td>
+	</tr>
+	<?php
+}
+
 /*
  * Standard HTML form elements
  */
@@ -243,10 +280,9 @@ function form_text_box($field_name, $form_previous_value, $form_default_value, $
 		}
 	}
 
-	if (isset($_SESSION["sess_field_values"])) {
-		if (!empty($_SESSION["sess_field_values"][$field_name])) {
-			$form_previous_value = $_SESSION["sess_field_values"][$field_name];
-		}
+	/* always use the cached value if it's available */
+	if (isset_post_cache_field($field_name)) {
+		$form_previous_value = get_post_cache_field($field_name);
 	}
 
 	print " name='$field_name' id='$field_name' size='$form_size'" . (!empty($form_max_length) ? " maxlength='$form_max_length'" : "") . " value='" . htmlspecialchars($form_previous_value, ENT_QUOTES) . "'>\n";
@@ -322,7 +358,7 @@ function form_hidden_box($field_name, $form_previous_value, $form_default_value)
 		$form_previous_value = $form_default_value;
 	}
 
-	print "<input type='hidden' name='$field_name' value='$form_previous_value'>\n";
+	print "<input type='hidden' name='$field_name' id='$field_name' value='$form_previous_value'>\n";
 }
 
 /* form_dropdown - draws a standard html dropdown box
@@ -347,10 +383,9 @@ function form_dropdown($field_name, $form_data, $column_display, $column_id, $fo
 		$form_previous_value = $form_default_value;
 	}
 
-	if (isset($_SESSION["sess_field_values"])) {
-		if (!empty($_SESSION["sess_field_values"][$field_name])) {
-			$form_previous_value = $_SESSION["sess_field_values"][$field_name];
-		}
+	/* always use the cached value if it's available */
+	if (isset_post_cache_field($field_name)) {
+		$form_previous_value = get_post_cache_field($field_name);
 	}
 
 	print "<select name='$field_name' id='$field_name' style='$css_style'" . ($js_onchange == "" ? "" : " onChange='$js_onchange'") . ">";
@@ -378,13 +413,12 @@ function form_checkbox($field_name, $form_previous_value, $form_caption, $form_d
 		$form_previous_value = $form_default_value;
 	}
 
-	if (isset($_SESSION["sess_field_values"])) {
-		if (!empty($_SESSION["sess_field_values"][$field_name])) {
-			$form_previous_value = $_SESSION["sess_field_values"][$field_name];
-		}
+	/* always use the cached value if it's available */
+	if (isset_post_cache_field($field_name)) {
+		$form_previous_value = get_post_cache_field($field_name);
 	}
 
-	print "<input type='checkbox' name='$field_name' id='$field_name'" . ($js_onclick == "" ? "" : " onClick='$js_onclick'") . ((($form_previous_value == "on") || ($form_previous_value == "1")) ? " checked" : "") . "> $form_caption\n";
+	print "<input type='checkbox' name='$field_name' id='$field_name'" . ($js_onclick == "" ? "" : " onClick='$js_onclick'") . ((($form_previous_value == "on") || ($form_previous_value == "1")) ? " checked" : "") . "> <span class='txtEnabledText' id='chk_caption_$field_name'>$form_caption</span>\n";
 }
 
 /* form_text_box - draws a standard html radio button
@@ -399,10 +433,9 @@ function form_radio_button($field_name, $form_previous_value, $form_current_valu
 		$form_previous_value = $form_default_value;
 	}
 
-	if (isset($_SESSION["sess_field_values"])) {
-		if (!empty($_SESSION["sess_field_values"][$field_name])) {
-			$form_previous_value = $_SESSION["sess_field_values"][$field_name];
-		}
+	/* always use the cached value if it's available */
+	if (isset_post_cache_field($field_name)) {
+		$form_previous_value = get_post_cache_field($field_name);
 	}
 
 	print "<input type='radio' name='$field_name' id='$field_name' value='$form_current_value'" . (($form_previous_value == $form_current_value) ? " checked" : "") . "> $form_caption\n";
@@ -420,10 +453,9 @@ function form_text_area($field_name, $form_previous_value, $form_rows, $form_col
 		$form_previous_value = $form_default_value;
 	}
 
-	if (isset($_SESSION["sess_field_values"])) {
-		if (!empty($_SESSION["sess_field_values"][$field_name])) {
-			$form_previous_value = $_SESSION["sess_field_values"][$field_name];
-		}
+	/* always use the cached value if it's available */
+	if (isset_post_cache_field($field_name)) {
+		$form_previous_value = get_post_cache_field($field_name);
 	}
 
 	print "<textarea cols='$form_columns' id='$field_name' rows='$form_rows' name='$field_name'>" . htmlspecialchars($form_previous_value, ENT_QUOTES) . "</textarea>\n";

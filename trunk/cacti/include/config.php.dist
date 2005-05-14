@@ -67,6 +67,8 @@ $colors["form_alternate1"] = "F5F5F5";
 $colors["form_alternate2"] = "E5E5E5";
 
 if ((isset($no_http_headers) ? $no_http_headers : false) != true) {
+	include($config["library_path"] . "/sys/form.php");
+
 	/* we don't want these pages cached */
 	header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
 	header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
@@ -104,9 +106,7 @@ if ((isset($no_http_headers) ? $no_http_headers : false) != true) {
 	/* this code handles dropdown boxes that automatically redirect the user upon select while
 	 * retaining all current form values */
 	if (isset($_REQUEST["cacti_js_dropdown_redirect"])) {
-		while(list($name, $value) = each($_REQUEST)) {
-			$_SESSION["sess_field_values"][$name] = $value;
-		}
+		init_post_field_cache();
 
 		header("Location: " . $_REQUEST["cacti_js_dropdown_redirect"]);
 		exit;
