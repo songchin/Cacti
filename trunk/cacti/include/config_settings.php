@@ -42,29 +42,11 @@ $tabs_graphs = array(
 	"tree" => "Tree View Mode",
 	"preview" => "Preview Mode",
 	"list" => "List View Mode",
-	"fonts" => "Graph Fonts (RRDtool 1.2.x and Above)");	
+	"fonts" => "Graph Fonts (RRDtool 1.2.x and Above)");
 
 /* setting information */
 $settings = array(
 	"path" => array(
-		"versions_header" => array(
-			"friendly_name" => "Required Tool Versions",
-			"method" => "spacer",
-			),
-		"snmp_version" => array(
-			"friendly_name" => "SNMP Utility Version",
-			"description" => "The type of SNMP you have installed.  Required if you are using SNMP v2c or don't have embedded SNMP support in PHP.",
-			"method" => "drop_array",
-			"default" => "net-snmp",
-			"array" => $snmp_implementations
-			),
-		"rrdtool_version" => array(
-			"friendly_name" => "RRDTool Utility Version",
-			"description" => "The version of RRDTool that you have installed.",
-			"method" => "drop_array",
-			"default" => "rrd-1.0.x",
-			"array" => $rrdtool_versions,
-			),
 		"dependent_header" => array(
 			"friendly_name" => "Required Tools",
 			"method" => "spacer"
@@ -193,6 +175,24 @@ $settings = array(
 			"default" => "20",
 			"max_length" => "3"
 			),
+		"versions_header" => array(
+			"friendly_name" => "Required Tool Versions",
+			"method" => "spacer",
+			),
+		"snmp_version" => array(
+			"friendly_name" => "SNMP Utility Version",
+			"description" => "The type of SNMP you have installed.  Required if you are using SNMP v2c or don't have embedded SNMP support in PHP.",
+			"method" => "drop_array",
+			"default" => "net-snmp",
+			"array" => $snmp_implementations,
+			),
+		"rrdtool_version" => array(
+			"friendly_name" => "RRDTool Utility Version",
+			"description" => "The version of RRDTool that you have installed.",
+			"method" => "drop_array",
+			"default" => "rrd-1.0.x",
+			"array" => $rrdtool_versions,
+			),
 		"php_header" => array(
 			"friendly_name" => "PHP Settings",
 			"method" => "spacer"
@@ -219,12 +219,6 @@ $settings = array(
 			"friendly_name" => "Remove Verification",
 			"description" => "Prompt user before item deletion.",
 			"default" => "on",
-			"method" => "checkbox"
-			),
-		"show_hidden" => array(
-			"friendly_name" => "Show Hidden Fields",
-			"description" => "Allow console operators to view and edit system/reserved table information.",
-			"default" => "",
 			"method" => "checkbox"
 			)
 		),
