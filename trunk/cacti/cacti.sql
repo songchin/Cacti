@@ -28,6 +28,7 @@ INSERT INTO data_input VALUES (7,'a637359e0a4287ba43048a5fdf202066','Unix - Get 
 INSERT INTO data_input VALUES (8,'47d6bfe8be57a45171afd678920bd399','Unix - Get TCP Connections','perl <path_cacti>/scripts/unix_tcp_connections.pl <grepstr>',1);
 INSERT INTO data_input VALUES (9,'cc948e4de13f32b6aea45abaadd287a3','Unix - Get Web Hits','perl <path_cacti>/scripts/webhits.pl <log_path>',1);
 INSERT INTO data_input VALUES (10,'8bd153aeb06e3ff89efc73f35849a7a0','Unix - Ping Host','perl <path_cacti>/scripts/ping.pl <ip>',1);
+INSERT INTO data_input VALUES (11,'97becbd2a33468a1e61a0bcf2ad39d7f','Unix - Get Load Average','perl <path_cacti>/scripts/loadavg_multi.pl',1);
 
 --
 -- Table structure for table `data_input_fields`
@@ -69,6 +70,9 @@ INSERT INTO data_input_fields VALUES (29,'5fbadb91ad66f203463c1187fe7bd9d5',10,1
 INSERT INTO data_input_fields VALUES (30,'6ac4330d123c69067d36a933d105e89a',10,0,'','Milliseconds','out_ms','out',1,'',0);
 INSERT INTO data_input_fields VALUES (50,'b5159c77608386cfa608fc99c2bd0430',6,1,'','BLAH','blah','in',0,'',0);
 INSERT INTO data_input_fields VALUES (52,'9d39f6c3a93abf8d9ab9526fb01daa92',10,0,'','sdf','sd','out',1,'',0);
+INSERT INTO data_input_fields VALUES (53,'57260bd55ea09df0f4d40cda38c7544f',11,0,'','1 Minute Average','1min','out',1,'',0);
+INSERT INTO data_input_fields VALUES (54,'8efb3511c85e33cbec5b43f4e5ddfb03',11,0,'','5 Minute Average','5min','out',1,'',0);
+INSERT INTO data_input_fields VALUES (55,'24188537860a5bd4b599e5e403006add',11,0,'','15 Minute Average','15min','out',1,'',0);
 
 --
 -- Table structure for table `data_source`
@@ -192,6 +196,7 @@ INSERT INTO data_template VALUES (15,'5f586b98218af4c08655beefffb21eca','Local U
 INSERT INTO data_template VALUES (16,'9ab46aa83ef47dae76141e4a2f0fae54','Local Unix - Processes',3,0,'',0,1,0,300,0);
 INSERT INTO data_template VALUES (17,'0c346ccdea06ecdf663f07a62ef69414','Local Unix - Ping Host',3,0,'',0,1,0,300,0);
 INSERT INTO data_template VALUES (18,'52bba296bef06e3da46ec54fb75bebf3','Interface - Non-Unicast Packets',2,0,'',0,1,0,300,0);
+INSERT INTO data_template VALUES (19,'d8930606fe406d2858a6625ef49e4bd9','Local Unix - Load Average',3,0,'',0,1,0,300,0);
 
 --
 -- Table structure for table `data_template_field`
@@ -276,6 +281,7 @@ INSERT INTO data_template_field VALUES (18,'data_query_id',0,'1');
 INSERT INTO data_template_field VALUES (4,'snmpv3_auth_protocol',0,'MD5');
 INSERT INTO data_template_field VALUES (4,'snmpv3_priv_passphrase',0,'');
 INSERT INTO data_template_field VALUES (4,'snmpv3_priv_protocol',0,'DES');
+INSERT INTO data_template_field VALUES (19,'script_id',0,'11');
 
 --
 -- Table structure for table `data_template_item`
@@ -339,6 +345,9 @@ INSERT INTO data_template_item VALUES (30,'ec57a538ba2c370490c13e8d01c95863',16,
 INSERT INTO data_template_item VALUES (31,'2abc77b95eb175be26fe319c984ce2c2',17,0,'5000',0,'0',0,600,0,1,0,'ping','out_ms');
 INSERT INTO data_template_item VALUES (32,'c44795808ddbd37eec97e16a52517234',18,0,'U',0,'0',0,600,0,2,0,'nonunicast_in','ifInNUcastPkts');
 INSERT INTO data_template_item VALUES (33,'13ca317296739b37c4a1f8da91c7eec7',18,0,'U',0,'0',0,600,0,2,0,'nonunicast_out','ifOutNUcastPkts');
+INSERT INTO data_template_item VALUES (34,'95fe3b2cafc02549cfa891987371f09a',19,0,'2000',0,'0',0,600,0,1,0,'1min','1min');
+INSERT INTO data_template_item VALUES (35,'05d29ae6a05cbe395512ec76f5f9a932',19,0,'2000',0,'0',0,600,0,1,0,'5min','5min');
+INSERT INTO data_template_item VALUES (36,'41e4f7c796b3c54382e5647156befba6',19,0,'2000',0,'0',0,600,0,1,0,'15min','15min');
 
 --
 -- Table structure for table `data_template_rra`
@@ -427,6 +436,10 @@ INSERT INTO data_template_rra VALUES (18,1);
 INSERT INTO data_template_rra VALUES (18,2);
 INSERT INTO data_template_rra VALUES (18,3);
 INSERT INTO data_template_rra VALUES (18,4);
+INSERT INTO data_template_rra VALUES (19,1);
+INSERT INTO data_template_rra VALUES (19,2);
+INSERT INTO data_template_rra VALUES (19,3);
+INSERT INTO data_template_rra VALUES (19,4);
 
 --
 -- Table structure for table `data_template_suggested_value`
@@ -480,6 +493,7 @@ INSERT INTO data_template_suggested_value VALUES (30,'',18,'name','|host_descrip
 INSERT INTO data_template_suggested_value VALUES (31,'',8,'name','|host_description| - Unicast Packets - |query_ifName|',2);
 INSERT INTO data_template_suggested_value VALUES (32,'',8,'name','|host_description| - Unicast Packets - |query_ifDescr| (|query_ifIP|)',3);
 INSERT INTO data_template_suggested_value VALUES (33,'',8,'name','|host_description| - Unicast Packets - |query_ifDescr|',4);
+INSERT INTO data_template_suggested_value VALUES (34,'',19,'name','|host_description| - Load Average',1);
 
 --
 -- Table structure for table `graph`
@@ -622,7 +636,7 @@ INSERT INTO graph_template VALUES (10,'3f6e3af5a40f2cd0132d3c0f28a78019','Interf
 INSERT INTO graph_template VALUES (11,'47abb5e29927146f9e419cfa505f0fcf','Interface - Unicast Packets',0,1,0,'',0,120,0,500,0,'',0,'',0,0,0,0,0,100,0,0,0,'packets/sec',0,1,0,2,0,0,0,0,0,1,0,1000,0,1,0,'',0,9,0,0,0,0);
 INSERT INTO graph_template VALUES (12,'6779afe50b735f09c1a42e6dea49da82','Net-SNMP - Disk Space',0,1,0,'',0,120,0,500,0,'',0,'',0,0,0,0,0,100,0,0,0,'bytes',0,1,0,2,0,0,0,0,0,1,0,1024,0,1,0,'',0,9,0,0,0,0);
 INSERT INTO graph_template VALUES (13,'324ff1fdb007e4e70c6e0a7e15aaffb8','Net-SNMP - CPU Usage',0,1,0,'',0,120,0,500,0,'',0,'',0,0,0,0,0,100,0,0,0,'percent',0,1,0,2,0,0,0,0,0,1,0,1000,0,1,0,'',0,9,0,0,0,0);
-INSERT INTO graph_template VALUES (14,'79f0776ec68ee57b60d317d20723c7b5','Net-SNMP - Load Average',0,1,0,'',0,120,0,500,0,'',0,'',0,0,0,0,0,100,0,0,0,'procs in the run queue',0,1,0,2,0,0,0,0,0,1,0,1000,0,1,0,'',0,9,0,0,0,0);
+INSERT INTO graph_template VALUES (14,'2baf18fd9f7b256eb9da6100fd2e3be7','Net-SNMP - Load Average',0,1,0,'',0,120,0,500,0,'',0,'',0,0,0,0,0,100,0,0,0,'procs in the run queue',0,1,0,2,0,0,0,0,0,1,0,1000,0,1,0,'',0,9,0,0,0,0);
 INSERT INTO graph_template VALUES (15,'8e6f66adfe14769dba1f8b3909676eb0','Net-SNMP - Memory Usage',0,1,0,'',0,120,0,500,0,'',0,'',0,0,0,0,0,100,0,0,0,'bytes',0,1,0,2,0,0,0,0,0,1,0,1024,0,1,0,'',0,9,0,0,0,0);
 INSERT INTO graph_template VALUES (16,'cdcbdaeb736c784ae5ac41eee7d72789','Local Unix - Disk Space',0,1,0,'',0,120,0,500,0,'',0,'',0,0,0,0,0,100,0,0,0,'bytes',0,1,0,2,0,0,0,0,0,1,0,1024,0,1,0,'',0,9,0,0,0,0);
 INSERT INTO graph_template VALUES (17,'75cd439feb02e74e11313df7da84364d','Local Unix - Load Average',0,1,0,'',0,120,0,500,0,'',0,'',0,0,0,0,0,100,0,0,0,'procs in the run queue',0,1,0,2,0,0,0,0,0,1,0,1000,0,1,0,'',0,9,0,0,0,0);
@@ -778,13 +792,12 @@ INSERT INTO graph_template_item VALUES (134,'5bba2fe767cfa99ab6e4d9ef0f0b30f1',1
 INSERT INTO graph_template_item VALUES (135,'b99edd3efe227908227f0e9685ea1e8c',13,14,0,'',9,'ALL_DATA_SOURCES_NODUPS',4,'%8.2lf %s','Current:','',0);
 INSERT INTO graph_template_item VALUES (136,'3d1050e5d86364cdbd96fb9387454443',13,15,0,'',9,'ALL_DATA_SOURCES_NODUPS',1,'%8.2lf %s','Average:','',0);
 INSERT INTO graph_template_item VALUES (137,'28df9d5e1c4ceca8b0109c2a76d351b1',13,16,0,'',9,'ALL_DATA_SOURCES_NODUPS',3,'%8.2lf %s','Maximum:','',1);
-INSERT INTO graph_template_item VALUES (138,'a6b81147b21170ee93fce6c49ccfcc73',14,1,22,'EACC00',7,'',1,'%8.2lf %s','1 Minute Average','',0);
+INSERT INTO graph_template_item VALUES (138,'39eb175c86c64d0f65e534e1d878b1ba',14,1,22,'EACC00',5,'',1,'%8.2lf %s','1 Minute Average','',0);
 INSERT INTO graph_template_item VALUES (139,'4f862b47c4f0b5db654a83bcf78c6ef3',14,2,22,'',9,'',4,'%8.2lf','Current:','',1);
-INSERT INTO graph_template_item VALUES (140,'c6a164fd230a0bb9f8776ea6ebf249a5',14,3,23,'EA8F00',8,'',1,'%8.2lf %s','5 Minute Average','',0);
+INSERT INTO graph_template_item VALUES (140,'a6a871938c517cf674d2a4d89d0f9ede',14,3,23,'EA8F00',5,'',1,'%8.2lf %s','5 Minute Average','',0);
 INSERT INTO graph_template_item VALUES (141,'e6dcfc4fd70dc7d29f008ee07144207c',14,4,23,'',9,'',4,'%8.2lf','Current:','',1);
-INSERT INTO graph_template_item VALUES (142,'2e5aef05fdafdb3ab8025ac3d6d31f77',14,5,24,'FF0000',8,'',1,'%8.2lf %s','15 Minute Average','',0);
+INSERT INTO graph_template_item VALUES (142,'cd3745a01264da5c6609ca2cea999ef9',14,5,24,'FF0000',5,'',1,'%8.2lf %s','15 Minute Average','',0);
 INSERT INTO graph_template_item VALUES (143,'dfe6b1c2ef1f176f5041bb1f0436450f',14,6,24,'',9,'',4,'%8.2lf','Current:','',1);
-INSERT INTO graph_template_item VALUES (144,'3a99569ef01cfc3fbc958d8d5d2d2269',14,7,0,'',4,'ALL_DATA_SOURCES_NODUPS',1,'%8.2lf %s','Total','',0);
 INSERT INTO graph_template_item VALUES (145,'00b382aa678fcf587d65d36cf18b9aa8',15,1,26,'8F005C',7,'CURRENT_DATA_SOURCE,1024,*',1,'%8.2lf %s','Memory Free','',0);
 INSERT INTO graph_template_item VALUES (146,'a96a9fc8002d1bff9ac176a803793b65',15,2,26,'',9,'CURRENT_DATA_SOURCE,1024,*',4,'%8.2lf %s','Current:','',0);
 INSERT INTO graph_template_item VALUES (147,'18382f2c27b575b2f8826ea2638fca92',15,3,26,'',9,'CURRENT_DATA_SOURCE,1024,*',1,'%8.2lf %s','Average:','',0);
@@ -821,6 +834,12 @@ INSERT INTO graph_template_item VALUES (177,'217e54ac3bf68d818d360f092ed8743f',2
 INSERT INTO graph_template_item VALUES (178,'3f227d5f1f5b2a5c88b74542521d271a',21,2,5,'',9,'',4,'%8.0lf','Current:','',0);
 INSERT INTO graph_template_item VALUES (179,'8f56dd5dd1ec84c0b84159f9784ddc15',21,3,5,'',9,'',1,'%8.0lf','Average:','',0);
 INSERT INTO graph_template_item VALUES (180,'9a5762424c623c00016f247192867ef1',21,4,5,'',9,'',3,'%8.0lf','Maximum:','',1);
+INSERT INTO graph_template_item VALUES (181,'62aaf9f9d2b9773b0f3fd96a22fd1a96',17,1,34,'EACC00',5,'',1,'%8.2lf %s','1 Minute Average','',0);
+INSERT INTO graph_template_item VALUES (182,'71157a3265e3c81a71e2cdd9e6934acd',17,2,34,'',9,'',1,'%8.2lf','Current:','',1);
+INSERT INTO graph_template_item VALUES (183,'ebd3678e9d907a8b76915e7199f3f37a',17,3,35,'EA8F00',5,'',1,'%8.2lf %s','5 Minute Average','',0);
+INSERT INTO graph_template_item VALUES (184,'5a7da362a2cead42d0a2c65930b19cab',17,4,35,'',9,'',1,'%8.2lf','Current:','',1);
+INSERT INTO graph_template_item VALUES (185,'2b51fa965ccb17f107397964da4b45f5',17,5,36,'FF0000',5,'',1,'%8.2lf %s','15 Minute Average','',0);
+INSERT INTO graph_template_item VALUES (186,'126aa1cc231da997c7f64d9e1bcd6a76',17,6,36,'',9,'',1,'%8.2lf','Current:','',1);
 
 --
 -- Table structure for table `graph_template_item_input`
@@ -1008,7 +1027,7 @@ CREATE TABLE host (
 -- Dumping data for table `host`
 --
 
-INSERT INTO host VALUES (1,1,3,'Localhost','localhost','',1,'','','MD5','','DES',161,500,2,2,'on',3,0,'0000-00-00 00:00:00','0000-00-00 00:00:00','',0,0,0,0,0,0,0,0,100.00000);
+INSERT INTO host VALUES (1,1,3,'Localhost','localhost','',1,'','','MD5','','DES',161,500,2,2,'on',3,0,'0000-00-00 00:00:00','0000-00-00 00:00:00','',0.00000,0.00000,0.00000,0.00000,0.00000,0.00000,0,0,100.00000);
 
 --
 -- Table structure for table `host_graph`
@@ -1993,8 +2012,8 @@ CREATE TABLE snmp_template_auth (
 CREATE TABLE syslog (
   id bigint(20) unsigned NOT NULL auto_increment,
   logdate datetime NOT NULL default '0000-00-00 00:00:00',
-  facility tinyint(1) unsigned NOT NULL default 0,
-  severity tinyint(1) unsigned NOT NULL default 0,
+  facility tinyint(1) unsigned NOT NULL default '0',
+  severity tinyint(1) unsigned NOT NULL default '0',
   poller_id smallint(5) unsigned NOT NULL default '0',
   host_id mediumint(8) unsigned NOT NULL default '0',
   user_id mediumint(8) unsigned NOT NULL default '0',
