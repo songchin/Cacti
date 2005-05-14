@@ -450,7 +450,7 @@ CREATE TABLE data_template_suggested_value (
 INSERT INTO data_template_suggested_value VALUES (1,'',1,'name','|host_description| - CPU Utilization - CPU|query_hrProcessorFrwID|',1);
 INSERT INTO data_template_suggested_value VALUES (2,'',2,'name','|host_description| - Disk Space - |query_hrStorageDescr|',1);
 INSERT INTO data_template_suggested_value VALUES (3,'',3,'name','|host_description| - Logged in Users',1);
-INSERT INTO data_template_suggested_value VALUES (4,'',4,'name','proc',1);
+INSERT INTO data_template_suggested_value VALUES (4,'',4,'name','|host_description| - Processes',1);
 INSERT INTO data_template_suggested_value VALUES (5,'',5,'name','|host_description| - Errors - |query_ifName| (|query_ifIP|)',1);
 INSERT INTO data_template_suggested_value VALUES (6,'',6,'name','|host_description| - Traffic - |query_ifName| (|query_ifIP|)',1);
 INSERT INTO data_template_suggested_value VALUES (7,'',7,'name','|host_description| - Traffic - |query_ifName| (|query_ifIP|)',1);
