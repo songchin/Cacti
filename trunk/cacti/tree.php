@@ -425,7 +425,7 @@ function tree_edit() {
 					</td></tr>\n";
 			}
 		}else{
-			print "<tr><td bgcolor='#" . $colors["form_alternate1"] . "' colspan=7><em>"._("No Graph Tree Items")."</em></td></tr>";
+			print "<tr><td bgcolor='#" . $colors["form_alternate1"] . "' colspan=7><em>" . _("No Graph Tree Items") . "</em></td></tr>";
 		}
 
 		html_end_box();
