@@ -28,43 +28,43 @@ include("./include/auth.php");
 /* settings */
 $wizard_array = array(
 	"general" => array(
-		"friendly_name" => "General",
-		"description" => "General wizard aids you in setting up Cacti's general settings for your enviroment.",
+		"friendly_name" => _("General"),
+		"description" => _("General wizard aids you in setting up Cacti's general settings for your enviroment."),
 		"include" => "include/wizards/settings_general.php"
 		),
 	"snmp" => array(
-		"friendly_name" => "SNMP",
-		"description" => "SNMP wizard aids in setting up the default SNMP settings of Cacti.",
+		"friendly_name" => _("SNMP"),
+		"description" => _("SNMP wizard aids in setting up the default SNMP settings of Cacti."),
 		"include" => "include/wizards/settings_snmp.php"
 		),
 	"paths" => array(
-		"friendly_name" => "Paths",
-		"description" => "Paths wizard aids in setting up the paths to required executables and logs for cacti.",
+		"friendly_name" => _("Paths"),
+		"description" => _("Paths wizard aids in setting up the paths to required executables and logs for cacti."),
 		"include" => "include/wizards/settings_paths.php"
 		),
 	"poller" => array(
-		"friendly_name" => "Poller",
-		"description" => "Poller wizard aids in setting up the Poller Type, Poller Execution, Default Host Availability and Default Host Up/Down Settings.",
+		"friendly_name" => _("Poller"),
+		"description" => _("Poller wizard aids in setting up the Poller Type, Poller Execution, Default Host Availability and Default Host Up/Down Settings."),
 		"include" => "include/wizards/settings_poller.php"
 		),
 	"visual" => array(
-		"friendly_name" => "Visual",
-		"description" => "Visual wizard aids in setting up the visual settings of Cacti, including the Default Theme, Rows per Page and other settings.",
+		"friendly_name" => _("Visual"),
+		"description" => _("Visual wizard aids in setting up the visual settings of Cacti, including the Default Theme, Rows per Page and other settings."),
 		"include" => "include/wizards/settings_visual.php"
 		),
 	"auth" => array(
-		"friendly_name" => "Authenication",
-		"description" => "Authenication wizard aids in setting up Cacti's Authenication system for your enviroment.  Be prepared to answer questions and have configuration settings that are appropriate to you enviroment.  If you plan on using LDAP, please have ready your LDAP server parameters, and if needed an authorzied binding for searching the LDAP server.",
+		"friendly_name" => _("Authenication"),
+		"description" => _("Authenication wizard aids in setting up Cacti's Authenication system for your enviroment.  Be prepared to answer questions and have configuration settings that are appropriate to you enviroment.  If you plan on using LDAP, please have ready your LDAP server parameters, and if needed an authorzied binding for searching the LDAP server."),
 		"include" => "include/wizards/settings_auth.php"
 		),
 	"graphexport" => array(
-		"friendly_name" => "Graph Export",
-		"description" => "Graph Export wizard aids in setting up exporting of graphs to static pages, either locally or FTP to a remote server.",
+		"friendly_name" => _("Graph Export"),
+		"description" => _("Graph Export wizard aids in setting up exporting of graphs to static pages, either locally or FTP to a remote server."),
 		"include" => "include/wizards/settings_graphexport.php"
 		),
 	"default" => "general",
-	"intro" => "<b>Welcome to the Settings Wizard</b><br><br>This wizard is designed to help you setup features in Cacti.  Please select the section you would like to setup.",
-	"title" => "Setup Wizard",
+	"intro" => "<b>"._("Welcome to the Settings Wizard")."</b><br><br>"._("This wizard is designed to help you setup features in Cacti.  Please select the section you would like to setup."),
+	"title" => _("Setup Wizard"),
 	"debug" => true
 	);
 
@@ -174,17 +174,17 @@ function wizard_intro() {
 	print $wizard_array["intro"];
 	print "</blockquote><br>\n";
 	wizard_end_area();
-	wizard_sub_header("Available Wizards");
+	wizard_sub_header(_("Available Wizards"));
 	wizard_start_area();
 	print "<table border='0' width='100%'>\n";
 	print "\t<tr>\n";
 	print "\t\t<td width='15' valign='top' bgcolor='" . $colors["form_alternate1"] . "' class='textArea'></td>\n";
-	print "\t\t<td width='25%' valign='top' bgcolor='" . $colors["form_alternate1"] . "' class='textArea'><b>Wizard</b><br><br>\n";
+	print "\t\t<td width='25%' valign='top' bgcolor='" . $colors["form_alternate1"] . "' class='textArea'><b>"._("Wizard")."</b><br><br>\n";
 	print $html;
 	print "\t\t</td>\n";
 	print "\t\t<td width='15' valign='top' bgcolor='" . $colors["form_alternate1"] . "' class='textArea'></td>\n";
-	print "\t\t<td valign='top' bgcolor='" . $colors["form_alternate1"] . "' class='textArea'><b>Description</b><br><br>\n";
-	print "\t\t\t<div id='wizardarea' style='height:150px; overflow:auto;'>None</div><br>\n";
+	print "\t\t<td valign='top' bgcolor='" . $colors["form_alternate1"] . "' class='textArea'><b>"._("Description")."</b><br><br>\n";
+	print "\t\t\t<div id='wizardarea' style='height:150px; overflow:auto;'>"._("None")."</div><br>\n";
 	print "\t\t</td>\n";
 	print "\t\t<td width='15' valign='top' bgcolor='" . $colors["form_alternate1"] . "' class='textArea'></td>\n";
 	print "\t</tr>\n";

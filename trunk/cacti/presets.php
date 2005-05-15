@@ -95,9 +95,9 @@ function draw_tabs() {
 function view_cdef() {
 	global $colors;
 
-	html_start_box("<strong>CDEFs</strong>", "98%", $colors["header_background"], "3", "center", "presets_cdef.php?action=edit");
+	html_start_box("<strong>"._("CDEFs")."</strong>", "98%", $colors["header_background"], "3", "center", "presets_cdef.php?action=edit");
 
-	html_header(array("Name"), 2);
+	html_header(array(_("Name")), 2);
 
 	$cdefs = db_fetch_assoc("select * from preset_cdef order by name");
 
@@ -129,9 +129,9 @@ function view_cdef() {
 function view_color() {
 	global $colors;
 
-	html_start_box("<strong>Colors</strong>", "98%", $colors["header_background"], "3", "center", "color.php?action=edit");
+	html_start_box("<strong>"._("Colors")."</strong>", "98%", $colors["header_background"], "3", "center", "color.php?action=edit");
 
-	html_header(array("Hex Value", "Color"), 2);
+	html_header(array(_("Hex Value"), _("Color")), 2);
 
 	$color_list = db_fetch_assoc("select * from preset_color order by hex");
 
@@ -153,7 +153,7 @@ function view_color() {
 	}else{
 		form_alternate_row_color($colors["form_alternate1"], $colors["form_alternate2"], 0); ?>
 			<td colspan="2">
-				<em>No Items Found</em>
+				<em>"._("No Items Found")."</em>
 			</td>
 		</tr>
 		<?php
@@ -164,9 +164,9 @@ function view_color() {
 function view_gprint() {
 	global $colors;
 
-	html_start_box("<strong>GPRINT Presets</strong>", "98%", $colors["header_background"], "3", "center", "presets_gprint.php?action=edit");
+	html_start_box("<strong>"._("GPRINT Presets")."</strong>", "98%", $colors["header_background"], "3", "center", "presets_gprint.php?action=edit");
 
-	html_header(array("Name", "Format String"), 2);
+	html_header(array(_("Name"), _("Format String")), 2);
 
 	$gprints = db_fetch_assoc("select id,name,gprint_text from preset_gprint order by name");
 
@@ -191,7 +191,7 @@ function view_gprint() {
 	}else{
 		form_alternate_row_color($colors["form_alternate1"], $colors["form_alternate2"], 0); ?>
 			<td colspan="2">
-				<em>No Items Found</em>
+				<em>"._("No Items Found")."</em>
 			</td>
 		</tr>
 		<?php

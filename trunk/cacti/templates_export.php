@@ -108,7 +108,7 @@ function export() {
 	<table width='98%' style='background-color: #<?php print $colors["messagebar_background"];?>; border: 1px solid #<?php print $colors["messagebar_border"];?>;' align='center'>
 		<tr bgcolor="<?php print $colors["form_alternate2"];?>">
 			<td class="textArea" style="padding: 3px;">
-				What would you like to export?&nbsp;
+				<?php echo _("What would you like to export?"); ?>&nbsp;
 
 				<select name="cbo_graph_id" onChange="window.location=document.form_graph_id.cbo_graph_id.options[document.form_graph_id.cbo_graph_id.selectedIndex].value">
 					<?php
@@ -129,7 +129,7 @@ function export() {
 	form_alternate_row_color($colors["form_alternate1"],$colors["form_alternate2"],0); ?>
 		<td width="50%">
 			<font class="textEditTitle"><?php print $export_types{$_REQUEST["export_type"]}["name"];?> to Export</font><br>
-			Choose the exact item to export to XML.
+			<?php echo _("Choose the exact item to export to XML."); ?>
 		</td>
 		<td>
 			<?php form_dropdown("export_item_id",db_fetch_assoc($export_types{$_REQUEST["export_type"]}["dropdown_sql"]),"name","id","","","0");?>
@@ -138,9 +138,9 @@ function export() {
 
 	<?php form_alternate_row_color($colors["form_alternate1"],$colors["form_alternate2"],1); ?>
 		<td width="50%">
-			<font class="textEditTitle">Include Dependencies</font><br>
-			Some templates rely on other items in Cacti to function properly. It is highly recommended that you select
-			this box or the resulting import may fail.
+			<font class="textEditTitle"><?php echo _("Include Dependencies"); ?></font><br>
+			<?php echo _("Some templates rely on other items in Cacti to function properly. It is highly recommended that you select
+			this box or the resulting import may fail."); ?>
 		</td>
 		<td>
 			<?php form_checkbox("include_deps", "on", "Include Dependencies", "on", "", true);?>
@@ -149,14 +149,14 @@ function export() {
 
 	<?php form_alternate_row_color($colors["form_alternate1"],$colors["form_alternate2"],0); ?>
 		<td width="50%">
-			<font class="textEditTitle">Output Format</font><br>
-			Choose the format to output the resulting XML file in.
+			<font class="textEditTitle"><?php echo _("Output Format"); ?></font><br>
+			<?php echo _("Choose the format to output the resulting XML file in."); ?>
 		</td>
 		<td>
 			<?php
-			form_radio_button("output_format", "3", "1", "Output to the Browser (within Cacti)","1",true); print "<br>";
-			form_radio_button("output_format", "3", "2", "Output to the Browser (raw XML)","1",true); print "<br>";
-			form_radio_button("output_format", "3", "3", "Save File Locally","1",true);
+			form_radio_button("output_format", "3", "1", _("Output to the Browser (within Cacti)"),"1",true); print "<br>";
+			form_radio_button("output_format", "3", "2", _("Output to the Browser (raw XML)"),"1",true); print "<br>";
+			form_radio_button("output_format", "3", "3", _("Save File Locally"),"1",true);
 			?>
 		</td>
 	</tr>

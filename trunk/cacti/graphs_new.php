@@ -87,7 +87,6 @@ function host_reload_query() {
 
 function host_new_graphs_save() {
 	$validation_array = array();
-
 	$selected_graphs_array = unserialize(stripslashes($_POST["selected_graphs_array"]));
 
 	/* form an array that contains all of the data on the previous form */
@@ -392,8 +391,8 @@ function graphs() {
 				Create new graphs for the following host:
 			</td>
 			<td class="textInfo" rowspan="2" valign="top">
-				<span style="color: #c16921;">*</span><a href="host.php?action=edit&id=<?php print $_REQUEST["host_id"];?>">Edit this Host</a><br>
-				<span style="color: #c16921;">*</span><a href="host.php?action=edit">Create New Host</a>
+				<span style="color: #c16921;">*</span><a href="host.php?action=edit&id=<?php print $_REQUEST["host_id"];?>"><?php echo _("Edit this Host"); ?></a><br>
+				<span style="color: #c16921;">*</span><a href="host.php?action=edit"><?php echo _("Create New Host"); ?></a>
 			</td>
 		</tr>
 			<td>
@@ -428,11 +427,11 @@ function graphs() {
 
 	/* ==================== Box: Graph Templates ==================== */
 
-	html_start_box("<strong>Graph Templates</strong>", "98%", $colors["header_background"], "3", "center", "");
+	html_start_box("<strong>"._("Graph Templates")."</strong>", "98%", $colors["header_background"], "3", "center", "");
 
 	print "	<tr bgcolor='#" . $colors["header_panel"] . "'>
-			<td class='textSubHeaderDark'>Name</td>
-			<td width='1%' align='center' bgcolor='#819bc0' style='" . get_checkbox_style() . "'><input type='checkbox' style='margin: 0px;' name='all_cg' title='Select All' onClick='SelectAll(\"cg\",this.checked);gt_update_selection_indicators();'></td>\n
+			<td class='textSubHeaderDark'>"._("Name")."</td>
+			<td width='1%' align='center' bgcolor='#819bc0' style='" . get_checkbox_style() . "'><input type='checkbox' style='margin: 0px;' name='all_cg' title='"._("Select All")."' onClick='SelectAll(\"cg\",this.checked);gt_update_selection_indicators();'></td>\n
 		</tr>\n";
 
 	$ht_graph_templates = db_fetch_assoc("select
@@ -484,7 +483,7 @@ function graphs() {
 				</tr>";
 		}
 	}else{
-		print "<tr><td bgcolor='#" . $colors["form_alternate1"] . "' colspan=7><em>No graph templates specified for this host template.</em></td></tr>";
+		print "<tr><td bgcolor='#" . $colors["form_alternate1"] . "' colspan=7><em>"._("No graph templates specified for this host template.")."</em></td></tr>";
 	}
 
 	if ($use_javascript == true) {
@@ -604,10 +603,10 @@ function graphs() {
 							<table  cellspacing='0' cellpadding='0' width='100%' >
 								<tr>
 									<td class='textHeaderDark'>
-										<strong>Data Query</strong> [" . $data_query["name"] . "]
+										<strong>"._("Data Query")."</strong> [" . $data_query["name"] . "]
 									</td>
 									<td align='right' nowrap>
-										<a href='graphs_new.php?action=query_reload&id=" . $data_query["id"] . "&host_id=" . $host["id"] . "'><img src='". html_get_theme_images_path("reload_icon_small.gif") . "' alt='Reload Associated Query' border='0' align='absmiddle'></a>
+										<a href='graphs_new.php?action=query_reload&id=" . $data_query["id"] . "&host_id=" . $host["id"] . "'><img src='". html_get_theme_images_path("reload_icon_small.gif") . "' alt='"._("Reload Associated Query")."' border='0' align='absmiddle'></a>
 									</td>
 								</tr>
 							</table>

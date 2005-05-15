@@ -35,13 +35,13 @@ include_once("./lib/api_device.php");
 define("MAX_DISPLAY_PAGES", 21);
 
 $device_actions = array(
-	1 => "Delete",
-	2 => "Enable",
-	3 => "Disable",
-	4 => "Change SNMP Options",
-	5 => "Clear Statistics",
-	6 => "Change Poller",
-	7 => "Change Availability Options"
+	1 => _("Delete"),
+	2 => _("Enable"),
+	3 => _("Disable"),
+	4 => _("Change SNMP Options"),
+	5 => _("Clear Statistics"),
+	6 => _("Change Poller"),
+	7 => _("Change Availability Options")
 	);
 
 /* set default action */
@@ -260,22 +260,22 @@ function form_actions() {
 	if ($_POST["drp_action"] == "2") { /* Enable Devices */
 		print "	<tr>
 				<td colspan='2' class='textArea' bgcolor='#" . $colors["form_alternate1"]. "'>
-					<p>To enable the following devices, press the \"yes\" button below.</p>
+					<p>"._("To enable the following devices, press the \"yes\" button below.")."</p>
 					<p>$host_list</p>
 				</td>
 				</tr>";
 	}elseif ($_POST["drp_action"] == "3") { /* Disable Devices */
 		print "	<tr>
 				<td colspan='2' class='textArea' bgcolor='#" . $colors["form_alternate1"]. "'>
-					<p>To disable the following devices, press the \"yes\" button below.</p>
+					<p>"._("To disable the following devices, press the \"yes\" button below.")."</p>
 					<p>$host_list</p>
 				</td>
 				</tr>";
 	}elseif ($_POST["drp_action"] == "4") { /* change snmp options */
 		print "	<tr>
 				<td colspan='2' class='textArea' bgcolor='#" . $colors["form_alternate1"]. "'>
-					<p>To change SNMP parameters for the following devices, check the box next to the fields
-					you want to update, fill in the new value, and click Save.</p>
+					<p>"._("To change SNMP parameters for the following devices, check the box next to the fields
+					you want to update, fill in the new value, and click Save.")."</p>
 					<p>$host_list</p>
 				</td>
 				</tr>";
@@ -304,8 +304,8 @@ function form_actions() {
 	}elseif ($_POST["drp_action"] == "6") { /* change poller */
 		print "	<tr>
 				<td colspan='2' class='textArea' bgcolor='#" . $colors["form_alternate1"]. "'>
-					<p>To change the poller that will, by default handle the processing for the selected host(s)
-					simply select the host from the list, toggle the checkbox and select yes.</p>
+					<p>"._("To change the poller that will, by default handle the processing for the selected host(s)
+					simply select the host from the list, toggle the checkbox and select yes.")."</p>
 					<p>$host_list</p>
 				</td>
 				</tr>";
@@ -319,7 +319,7 @@ function form_actions() {
 						$form_array[$field_name]["form_id"] = 0;
 						$form_array[$field_name]["sub_checkbox"] = array(
 							"name" => "t_" . $field_name,
-							"friendly_name" => "Update this Field",
+							"friendly_name" => _("Update this Field"),
 							"value" => ""
 							);
 					}
@@ -335,8 +335,8 @@ function form_actions() {
 	}elseif ($_POST["drp_action"] == "7") { /* change availability options */
 		print "	<tr>
 				<td colspan='2' class='textArea' bgcolor='#" . $colors["form_alternate1"]. "'>
-					<p>To change the availability detection for your hosts will use by default
-					simply select the host from the list, make the changes you require and select yes.</p>
+					<p>"._("To change the availability detection for your hosts will use by default
+					simply select the host from the list, make the changes you require and select yes.")."</p>
 					<p>$host_list</p>
 				</td>
 				</tr>";
@@ -366,7 +366,7 @@ function form_actions() {
 	}elseif ($_POST["drp_action"] == "5") { /* Clear Statisitics for Selected Devices */
 		print "	<tr>
 				<td colspan='2' class='textArea' bgcolor='#" . $colors["form_alternate1"]. "'>
-					<p>To clear the counters for the following devices, press the \"yes\" button below.</p>
+					<p>"._("To clear the counters for the following devices, press the \"yes\" button below.")."</p>
 					<p>$host_list</p>
 				</td>
 				</tr>";
@@ -375,8 +375,8 @@ function form_actions() {
 				<td class='textArea' bgcolor='#" . $colors["form_alternate1"]. "'>
 					<p>Are you sure you want to delete the following devices?</p>
 					<p>$host_list</p>";
-					form_radio_button("delete_type", "2", "1", "Leave all graphs and data sources untouched.", "1"); print "<br>";
-					form_radio_button("delete_type", "2", "2", "Delete all associated <strong>graphs</strong> and <strong>data sources</strong>.", "1"); print "<br>";
+					form_radio_button("delete_type", "2", "1", _("Leave all graphs and data sources untouched."), "1"); print "<br>";
+					form_radio_button("delete_type", "2", "2", _("Delete all associated <strong>graphs</strong> and <strong>data sources</strong>."), "1"); print "<br>";
 					print "</td></tr>
 				</td>
 			</tr>\n
@@ -384,10 +384,10 @@ function form_actions() {
 	}
 
 	if (!isset($host_array)) {
-		print "<tr><td bgcolor='#" . $colors["form_alternate1"]. "'><span class='textError'>You must select at least one device.</span></td></tr>\n";
+		print "<tr><td bgcolor='#" . $colors["form_alternate1"]. "'><span class='textError'>"._("You must select at least one device.")."</span></td></tr>\n";
 		$save_html = "";
 	}else{
-		$save_html = "<input type='image' src='" . html_get_theme_images_path("button_yes.gif") . "' alt='Save' align='absmiddle'>";
+		$save_html = "<input type='image' src='" . html_get_theme_images_path("button_yes.gif") . "' alt='"._("Save")."' align='absmiddle'>";
 	}
 
 	print "	<tr>
@@ -395,7 +395,7 @@ function form_actions() {
 				<input type='hidden' name='action' value='actions'>
 				<input type='hidden' name='selected_items' value='" . (isset($host_array) ? serialize($host_array) : '') . "'>
 				<input type='hidden' name='drp_action' value='" . $_POST["drp_action"] . "'>
-				<a href='host.php'><img src='" . html_get_theme_images_path("button_no.gif") . "' alt='Cancel' align='absmiddle' border='0'></a>
+				<a href='host.php'><img src='" . html_get_theme_images_path("button_no.gif") . "' alt='"._("Cancel")."' align='absmiddle' border='0'></a>
 				$save_html
 			</td>
 		</tr>
@@ -468,7 +468,7 @@ function host_edit() {
 					<span style="font-size: 10px; font-weight: normal; font-family: monospace;">
 					<?php
 					if (($host["snmp_community"] == "") && ($host["snmpv3_auth_username"] == "")) {
-						print "<span style='color: #ab3f1e; font-weight: bold;'>SNMP not in use</span>\n";
+						print "<span style='color: #ab3f1e; font-weight: bold;'>"._("SNMP not in use")."</span>\n";
 					}else{
 						$snmp_system = cacti_snmp_get($host["hostname"], $host["snmp_community"], ".1.3.6.1.2.1.1.1.0",
 											$host["snmp_version"], $host["snmpv3_auth_username"], $host["snmpv3_auth_password"],
@@ -496,7 +496,7 @@ function host_edit() {
 					</span>
 				</td>
 				<td class="textInfo" valign="top">
-					<span style="color: #c16921;">*</span><a href="graphs_new.php?host_id=<?php print $host["id"];?>">Create Graphs for this Host</a>
+					<span style="color: #c16921;">*</span><a href="graphs_new.php?host_id=<?php print $host["id"];?>"><?php echo _("Create Graphs for this Host"); ?></a>
 				</td>
 			</tr>
 		</table>
@@ -504,7 +504,7 @@ function host_edit() {
 		<?php
 	}
 
-	html_start_box("<strong>Devices</strong> $header_label", "98%", $colors["header_background"], "3", "center", "");
+	html_start_box("<strong>"._("Devices")."</strong> $header_label", "98%", $colors["header_background"], "3", "center", "");
 
 	/* preserve the host template id if passed in via a GET variable */
 	if (!empty($_GET["host_template_id"])) {
@@ -527,9 +527,9 @@ function host_edit() {
 	}
 
 	if (!empty($host["id"])) {
-		html_start_box("<strong>Associated Graph Templates</strong>", "98%", $colors["header_background"], "3", "center", "");
+		html_start_box("<strong>"._("Associated Graph Templates")."</strong>", "98%", $colors["header_background"], "3", "center", "");
 
-		html_header(array("Graph Template Name", "Status"), 2);
+		html_header(array(_("Graph Template Name"), _("Status")), 2);
 
 		$selected_graph_templates = db_fetch_assoc("select
 			graph_template.id,
@@ -588,9 +588,9 @@ function host_edit() {
 		<?php
 		html_end_box();
 
-		html_start_box("<strong>Associated Data Queries</strong>", "98%", $colors["header_background"], "3", "center", "");
+		html_start_box("<strong>"._("Associated Data Queries")."</strong>", "98%", $colors["header_background"], "3", "center", "");
 
-		html_header(array("Data Query Name", "Debugging", "Re-Index Method", "Status"), 2);
+		html_header(array(_("Data Query Name"), _("Debugging"), _("Re-Index Method"), _("Status")), 2);
 
 		$selected_data_queries = db_fetch_assoc("select
 			snmp_query.id,
@@ -745,13 +745,13 @@ function host() {
 				<table width='100%' cellspacing='0' cellpadding='0' border='0'>
 					<tr>
 						<td align='left' class='textHeaderDark'>
-							<strong>&lt;&lt; "; if ($_REQUEST["page"] > 1) { $nav .= "<a class='linkOverDark' href='host.php?filter=" . $_REQUEST["filter"] . "&host_template_id=" . $_REQUEST["host_template_id"] . "&page=" . ($_REQUEST["page"]-1) . "'>"; } $nav .= "Previous"; if ($_REQUEST["page"] > 1) { $nav .= "</a>"; } $nav .= "</strong>
+							<strong>&lt;&lt; "; if ($_REQUEST["page"] > 1) { $nav .= "<a class='linkOverDark' href='host.php?filter=" . $_REQUEST["filter"] . "&host_template_id=" . $_REQUEST["host_template_id"] . "&page=" . ($_REQUEST["page"]-1) . "'>"; } $nav .= _("Previous"); if ($_REQUEST["page"] > 1) { $nav .= "</a>"; } $nav .= "</strong>
 						</td>\n
 						<td align='center' class='textHeaderDark'>
 							Showing Rows " . ((read_config_option("num_rows_device")*($_REQUEST["page"]-1))+1) . " to " . ((($total_rows < read_config_option("num_rows_device")) || ($total_rows < (read_config_option("num_rows_device")*$_REQUEST["page"]))) ? $total_rows : (read_config_option("num_rows_device")*$_REQUEST["page"])) . " of $total_rows [$url_page_select]
 						</td>\n
 						<td align='right' class='textHeaderDark'>
-							<strong>"; if (($_REQUEST["page"] * read_config_option("num_rows_device")) < $total_rows) { $nav .= "<a class='linkOverDark' href='host.php?filter=" . $_REQUEST["filter"] . "&host_template_id=" . $_REQUEST["host_template_id"] . "&page=" . ($_REQUEST["page"]+1) . "'>"; } $nav .= "Next"; if (($_REQUEST["page"] * read_config_option("num_rows_device")) < $total_rows) { $nav .= "</a>"; } $nav .= " &gt;&gt;</strong>
+							<strong>"; if (($_REQUEST["page"] * read_config_option("num_rows_device")) < $total_rows) { $nav .= "<a class='linkOverDark' href='host.php?filter=" . $_REQUEST["filter"] . "&host_template_id=" . $_REQUEST["host_template_id"] . "&page=" . ($_REQUEST["page"]+1) . "'>"; } $nav .= _("Next"); if (($_REQUEST["page"] * read_config_option("num_rows_device")) < $total_rows) { $nav .= "</a>"; } $nav .= " &gt;&gt;</strong>
 						</td>\n
 					</tr>
 				</table>
@@ -760,7 +760,7 @@ function host() {
 
 	print $nav;
 
-	html_header_checkbox(array("Description", "Status", "Hostname", "Current (ms)", "Average (ms)", "Availability"));
+	html_header_checkbox(array(_("Description"), _("Status"), _("Hostname"), _("Current (ms)"), _("Average (ms)"), _("Availability")));
 
 	$i = 0;
 	if (sizeof($hosts) > 0) {
@@ -801,7 +801,7 @@ function host() {
 		/* put the nav bar on the bottom as well */
 		print $nav;
 	}else{
-		print "<tr><td bgcolor='#" . $colors["form_alternate1"] . "' colspan=7><em>No Hosts</em></td></tr>";
+		print "<tr><td bgcolor='#" . $colors["form_alternate1"] . "' colspan=7><em>"._("No Hosts")."</em></td></tr>";
 	}
 	html_end_box(false);
 

@@ -27,7 +27,7 @@ define("MAX_POLLER_RUNTIME", 296);
 
 /* do NOT run this script through a web browser */
 if (!isset($_SERVER["argv"][0])) {
-	die("<br><strong>This script is only meant to run at the command line.</strong>");
+	die("<br><strong>"._("This script is only meant to run at the command line.</strong>"));
 }
 
 /* We are not talking to the browser */

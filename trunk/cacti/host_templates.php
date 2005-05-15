@@ -27,8 +27,8 @@ include("./include/auth.php");
 include_once("./lib/utility.php");
 
 $host_actions = array(
-	1 => "Delete",
-	2 => "Duplicate"
+	1 => _("Delete"),
+	2 => _("Duplicate")
 	);
 
 /* set default action */

@@ -133,8 +133,8 @@ function import() {
 
 	form_alternate_row_color($colors["form_alternate1"],$colors["form_alternate2"],0); ?>
 		<td width="50%">
-			<font class="textEditTitle">Import Template from Local File</font><br>
-			If the XML file containing template data is located on your local machine, select it here.
+			<font class="textEditTitle"><?php echo _("Import Template from Local File"); ?></font><br>
+			<?php echo _("If the XML file containing template data is located on your local machine, select it here."); ?>
 		</td>
 		<td>
 			<input type="file" name="import_file">
@@ -143,9 +143,9 @@ function import() {
 
 	<?php form_alternate_row_color($colors["form_alternate1"],$colors["form_alternate2"],1); ?>
 		<td width="50%">
-			<font class="textEditTitle">Import Template from Text</font><br>
-			If you have the XML file containing template data as text, you can paste it into this box to
-			import it.
+			<font class="textEditTitle"><?php echo _("Import Template from Text"); ?></font><br>
+			<?php echo _("If you have the XML file containing template data as text, you can paste it into this box to
+			import it."); ?>
 		</td>
 		<td>
 			<?php form_text_area("import_text", "", "10	", "50", "");?>

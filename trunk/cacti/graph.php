@@ -39,7 +39,7 @@ if ($_GET["rra_id"] == "all") {
 
 /* make sure the graph requested exists (sanity) */
 if (!(db_fetch_cell("select id from graph where id = " . $_GET["graph_id"]))) {
-	print "<strong><font size='+1' color='FF0000'>GRAPH DOES NOT EXIST</font></strong>"; exit;
+	print "<strong><font size='+1' color='FF0000'>"._("GRAPH DOES NOT EXIST")."</font></strong>"; exit;
 }
 
 /* take graph permissions into account here, if the user does not have permission
@@ -48,7 +48,7 @@ if (read_config_option("auth_method") != "0") {
 	$access_denied = !(is_graph_allowed($_GET["graph_id"]));
 
 	if ($access_denied == true) {
-		print "<strong><font size='+1' color='FF0000'>ACCESS DENIED</font></strong>"; exit;
+		print "<strong><font size='+1' color='FF0000'>"._("ACCESS DENIED")."</font></strong>"; exit;
 	}
 }
 

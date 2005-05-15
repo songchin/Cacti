@@ -49,7 +49,7 @@ if (read_config_option("auth_method") == "2") {
 	<tr>
 		<td><img src="<?php print html_get_theme_images_path('auth_logout.gif');?>" border="0" alt=""></td>
 	</tr><tr>
-		<td><br>To end your Cacti session please close your web browser.<br><br><a href="index.php">Return to Cacti</a></td>
+		<td><br>"._("To end your Cacti session please close your web browser.")."<br><br><a href="index.php">"._("Return to Cacti")."</a></td>
 	</tr>
 </table>
 </body>
