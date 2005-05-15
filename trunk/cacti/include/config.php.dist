@@ -31,6 +31,7 @@ $database_hostname = "localhost";
 $database_username = "cactiuser";
 $database_password = "cactiuser";
 
+/* set the language for cacti */
 $cacti_lang = "en";
 
 /* ----- you probably do not need to change anything below this line ----- */
@@ -118,15 +119,56 @@ if ((isset($no_http_headers) ? $no_http_headers : false) != true) {
 /* display ALL errors */
 error_reporting(E_ALL);
 
+/* cacti language support */
 $lang2locale = array(
  "en"=>"us_EN.UTF-8",
  "ja"=>"ja_JP.UTF-8"
 );
 
-$locale = $lang2locale[ $cacti_lang];
-setlocale( LC_ALL, $locale);
-bindtextdomain( "cacti", dirname( __FILE__)."/../locales");
-textdomain( "cacti");
+$locale = $lang2locale[$cacti_lang];
+setlocale(LC_ALL, $locale);
+
+/* determine whether or not we need to emulate gettext */
+if (!function_exists("_")) {
+	include($config["include_path"] . "/gettext/streams.php");
+	include($config["include_path"] . "/gettext/gettext.php");
+
+	$locale_path = $config["base_path"] . "/locales/" . $cacti_lang . "/" . "cacti.mo";
+	if ((!file_exists($locale_path)) && ($cacti_lang != "en")) {
+		die("Cacti language locale file not found.  Please locate your language file and then you can continue.");
+	}
+
+	if ($cacti_lang != "en") {
+		$input = new FileReader($locale_path);
+		$l10n = new gettext_reader($input);
+
+		/* create standard wrapers, so gettext functions can work */
+		function _($text) {
+			global $l10n;
+			return $l10n->translate($text);
+		}
+
+		function _ngettext($single, $plural, $number) {
+			global $l10n;
+			return $l10n->ngettext($single, $plural, $number);
+		}
+	} else {
+		function _($text) {
+			return $text;
+		}
+
+		function _ngettext($single, $plural, $number) {
+			if ($number == 1) {
+				return $single;
+			} else {
+				return $plural;
+			}
+		}
+	}
+} else {
+	bindtextdomain("cacti", $config["base_path"] . "/locales");
+	textdomain("cacti");
+}
 
 /* includes for database operation */
 include($config["library_path"] . "/adodb/adodb.inc.php");
