@@ -256,8 +256,8 @@ function form_actions() {
 	if ($_POST["drp_action"] == "1") { /* delete */
 		print "	<tr>
 				<td class='textArea' bgcolor='#" . $colors["form_alternate1"]. "'>
-					<p>"._("Are you sure you want to delete the following data templates? Any data sources attached
-					to these templates will become individual data sources.")."</p>
+					<p>" . _("Are you sure you want to delete the following data templates? Any data sources attached
+					to these templates will become individual data sources.") . "</p>
 					<p>$ds_list</p>
 				</td>
 			</tr>\n
@@ -265,17 +265,17 @@ function form_actions() {
 	}elseif ($_POST["drp_action"] == "2") { /* duplicate */
 		print "	<tr>
 				<td class='textArea' bgcolor='#" . $colors["form_alternate1"]. "'>
-					<p>"._("When you click save, the following data templates will be duplicated. You can
-					optionally change the title format for the new data templates.")."</p>
+					<p>" . _("When you click save, the following data templates will be duplicated. You can
+					optionally change the title format for the new data templates.") . "</p>
 					<p>$ds_list</p>
-					<p><strong>"._("Title Format:")."</strong><br>"; form_text_box("title_format", "<template_title> (1)", "", "255", "30", "text"); print "</p>
+					<p><strong>" . _("Title Format:") . "</strong><br>"; form_text_box("title_format", "<template_title> (1)", "", "255", "30", "text"); print "</p>
 				</td>
 			</tr>\n
 			";
 	}
 
 	if (!isset($ds_array)) {
-		print "<tr><td bgcolor='#" . $colors["form_alternate1"]. "'><span class='textError'>You must select at least one data template.</span></td></tr>\n";
+		print "<tr><td bgcolor='#" . $colors["form_alternate1"]. "'><span class='textError'>" . _("You must select at least one data template.") . "</span></td></tr>\n";
 		$save_html = "";
 	}else{
 		$save_html = "<input type='image' src='" . html_get_theme_images_path("button_yes.gif") . "' alt='"._("Save")."' align='absmiddle'>";
@@ -286,7 +286,7 @@ function form_actions() {
 				<input type='hidden' name='action' value='actions'>
 				<input type='hidden' name='selected_items' value='" . (isset($ds_array) ? serialize($ds_array) : '') . "'>
 				<input type='hidden' name='drp_action' value='" . $_POST["drp_action"] . "'>
-				<a href='data_templates.php'><img src='" . html_get_theme_images_path("button_no.gif") . "' alt='Cancel' align='absmiddle' border='0'></a>
+				<a href='data_templates.php'><img src='" . html_get_theme_images_path("button_no.gif") . "' alt='" . _("Cancel") . "' align='absmiddle' border='0'></a>
 				$save_html
 			</td>
 		</tr>
@@ -328,9 +328,9 @@ function template_edit() {
 		$data_template = db_fetch_row("select * from data_template where id=" . $_GET["id"]);
 		$data_template_items = db_fetch_assoc("select * from data_template_item where data_template_id=" . $_GET["id"]);
 
-		$header_label = "[edit: " . $data_template["template_name"] . "]";
+		$header_label = _("[edit: ") . $data_template["template_name"] . "]";
 	}else{
-		$header_label = "[new]";
+		$header_label = _("[new]");
 	}
 
 	/* ==================== Box: Data Template ==================== */
@@ -365,7 +365,7 @@ function template_edit() {
 		$data_input_type_fields = array();
 	}
 
-	html_start_box("<strong>Data Input</strong>", "98%", $colors["header_background_template"], "3", "center", "");
+	html_start_box("<strong>" . _("Data Input") . "</strong>", "98%", $colors["header_background_template"], "3", "center", "");
 
 	_data_source_input_field__data_input_type("data_input_type", true, $_data_input_type, (empty($_GET["id"]) ? 0 : $_GET["id"]));
 
@@ -386,7 +386,7 @@ function template_edit() {
 				$_script_id = $scripts[0]["id"];
 			}
 
-			field_row_header("External Script");
+			field_row_header(_("External Script"));
 			_data_source_input_field__script_id("dif_script_id", "data_templates.php?action=edit" . (!empty($_GET["id"]) ? "&id=" . $_GET["id"] : "") . "&data_input_type=$_data_input_type&script_id=|dropdown_value|", $_script_id);
 
 			/* get each INPUT field for this script */
@@ -416,7 +416,7 @@ function template_edit() {
 				$_data_query_id = $data_queries[0]["id"];
 			}
 
-			field_row_header("Data Query");
+			field_row_header(_("Data Query"));
 			_data_source_input_field__data_query_id("dif_data_query_id", "data_templates.php?action=edit" . (!empty($_GET["id"]) ? "&id=" . $_GET["id"] : "") . "&data_input_type=$_data_input_type&data_query_id=|dropdown_value|", $_data_query_id);
 		}
 
@@ -456,7 +456,7 @@ function template_edit() {
 
 	/* ==================== Box: Data Source Item ==================== */
 
-	html_start_box("<strong>"._("Data Source Item")."</strong>", "98%", $colors["header_background"], "3", "center", (empty($_GET["id"]) ? "" : "javascript:document.forms[0].action.value='item_add';submit_redirect(0, '" . htmlspecialchars("data_templates.php?action=item_add&id=" . $_GET["id"]) . "', '')"));
+	html_start_box("<strong>" . _("Data Source Item") . "</strong>", "98%", $colors["header_background"], "3", "center", (empty($_GET["id"]) ? "" : "javascript:document.forms[0].action.value='item_add';submit_redirect(0, '" . htmlspecialchars("data_templates.php?action=item_add&id=" . $_GET["id"]) . "', '')"));
 
 	/* the user clicked the "add item" link. we need to make sure they get redirected back to
 	 * this page if an error occurs */
@@ -479,7 +479,7 @@ function template_edit() {
 	if (sizeof($data_template_items) > 0) {
 		if ($_data_input_type == DATA_INPUT_TYPE_SCRIPT) {
 			$script_output_fields = db_fetch_assoc("select * from data_input_fields where data_input_id = $_script_id and input_output='out' order by name");
-			$field_input_description = "Script Output Field";
+			$field_input_description = _("Script Output Field");
 		}else if ($_data_input_type == DATA_INPUT_TYPE_DATA_QUERY) {
 			$data_query_xml = get_data_query_array($_data_query_id);
 			$data_query_output_fields = array();
@@ -490,9 +490,9 @@ function template_edit() {
 				}
 			}
 
-			$field_input_description = "Data Query Output Field";
+			$field_input_description = _("Data Query Output Field");
 		}else if ($_data_input_type == DATA_INPUT_TYPE_SNMP) {
-			$field_input_description = "SNMP OID";
+			$field_input_description = _("SNMP OID");
 		}
 
 		foreach ($data_template_items as $item) {
@@ -500,7 +500,7 @@ function template_edit() {
 				?>
 				<tr bgcolor="<?php print $colors["header_panel_background"];?>">
 					<td class='textSubHeaderDark'>
-						<?php print (isset($item["data_source_name"]) ? $item["data_source_name"] : "(New Data Template Item)");?>
+						<?php print (isset($item["data_source_name"]) ? $item["data_source_name"] : "(" . _("New Data Template Item") . ")");?>
 					</td>
 					<td class='textSubHeaderDark' align='right'>
 						<?php
@@ -549,7 +549,7 @@ function template_edit() {
 function template() {
 	global $colors, $ds_actions, $data_input_types;
 
-	html_start_box("<strong>Data Templates</strong>", "98%", $colors["header_background"], "3", "center", "data_templates.php?action=edit");
+	html_start_box("<strong>" . _("Data Templates") . "</strong>", "98%", $colors["header_background"], "3", "center", "data_templates.php?action=edit");
 
 	html_header_checkbox(array(_("Template Name"), _("Data Input Type"), _("Status")));
 
@@ -573,7 +573,7 @@ function template() {
 					<?php print $data_input_types{$template["data_input_type"]};?>
 				</td>
 				<td>
-					<?php if ($template["active"] == "1") print "Active"; else print "Disabled";?>
+					<?php if ($template["active"] == "1") print _("Active"); else print _("Disabled");?>
 				</td>
 				<td style="<?php print get_checkbox_style();?>" width="1%" align="right">
 					<input type='checkbox' style='margin: 0px;' name='chk_<?php print $template["id"];?>' title="<?php print $template["template_name"];?>">

@@ -102,8 +102,8 @@ function _data_template_field__template_name($field_name, $template_flag = false
 	?>
 	<tr bgcolor="#<?php echo field_get_row_color();?>">
 		<td width="50%">
-			<span class="textEditTitle">Name</span><br>
-			The name given to this data template.
+			<span class="textEditTitle"><?php echo _("Name");?></span><br>
+			<?php echo _("The name given to this data template.");?>
 		</td>
 		<td>
 			<?php form_text_box($field_name, $field_value, "", 150, 30, "text", $field_id);?>
@@ -128,8 +128,8 @@ function _data_source_input_field__data_input_type($field_name, $template_flag =
 	?>
 	<tr bgcolor="#<?php echo field_get_row_color();?>">
 		<td width="50%">
-			<span class="textEditTitle">Data Input Type</span><br>
-			Where this data source should get its input data.
+			<span class="textEditTitle"><?php echo _("Data Input Type");?></span><br>
+			<?php echo _("Where this data source should get its input data.");?>
 		</td>
 		<td>
 			<?php form_dropdown($field_name, $data_input_types, "", "", $field_value, "", DATA_INPUT_TYPE_SCRIPT, "", 0, "submit_redirect(\"0\", \"" . htmlspecialchars($redirect_url) . "\", document.forms[0].$field_name.options[document.forms[0].$field_name.selectedIndex].value)");?>
@@ -146,8 +146,8 @@ function _data_source_input_field__script_id($field_name, $redirect_url, $field_
 	?>
 	<tr bgcolor="#<?php echo field_get_row_color();?>">
 		<td width="50%">
-			<span class="textEditTitle">Script</span><br>
-			The script/source used to gather data for this data source.
+			<span class="textEditTitle"><?php echo _("Script");?></span><br>
+			<?php echo _("The script/source used to gather data for this data source.");?>
 		</td>
 		<td>
 			<?php form_dropdown($field_name, db_fetch_assoc("select id,name from data_input order by name"), "name", "id", $field_value, "", "", "", 0, "submit_redirect(\"0\", \"" . htmlspecialchars($redirect_url) . "\", document.forms[0].$field_name.options[document.forms[0].$field_name.selectedIndex].value)");?>
@@ -164,8 +164,8 @@ function _data_source_input_field__data_query_id($field_name, $redirect_url, $fi
 	?>
 	<tr bgcolor="#<?php echo field_get_row_color();?>">
 		<td width="50%">
-			<span class="textEditTitle">Data Query</span><br>
-			Choose the data query to use for retrieving data for this data source.
+			<span class="textEditTitle"><?php echo _("Data Query");?></span><br>
+			<?php echo _("Choose the data query to use for retrieving data for this data source.");?>
 		</td>
 		<td>
 			<?php form_dropdown($field_name, db_fetch_assoc("select id,name from snmp_query order by name"), "name", "id", $field_value, "", "", "", 0, "submit_redirect(\"0\", \"" . htmlspecialchars($redirect_url) . "\", document.forms[0].$field_name.options[document.forms[0].$field_name.selectedIndex].value)");?>
@@ -187,7 +187,7 @@ function _data_source_input_field__script($field_name, $friendly_name, $template
 			<span class="textEditTitle"><?php echo $friendly_name;?></span><br>
 			<?php
 			if ($template_flag == true) {
-				form_checkbox($t_field_name, $t_field_value, "Do Not Template this Field", "", $field_id, "template_checkbox_status(\"$field_name\",\"$t_field_name\")");
+				form_checkbox($t_field_name, $t_field_value, _("Do Not Template this Field"), "", $field_id, "template_checkbox_status(\"$field_name\",\"$t_field_name\")");
 			}
 			?>
 		</td>
@@ -203,19 +203,19 @@ function _data_source_input_field__script($field_name, $friendly_name, $template
 function _data_source_input_field__device_hdr_generic() {
 	include_once(CACTI_BASE_PATH . "/lib/html_form.php");
 
-	field_row_header("SNMP (Generic Options)");
+	field_row_header(_("SNMP (Generic Options)"));
 }
 
 function _data_source_input_field__device_hdr_snmpv12() {
 	include_once(CACTI_BASE_PATH . "/lib/html_form.php");
 
-	field_row_header("SNMP (v1/v2c Options)");
+	field_row_header(_("SNMP (v1/v2c Options)"));
 }
 
 function _data_source_input_field__device_hdr_snmpv3() {
 	include_once(CACTI_BASE_PATH . "/lib/html_form.php");
 
-	field_row_header("SNMP (v3 Options)");
+	field_row_header(_("SNMP (v3 Options)"));
 }
 
 function _data_source_input_field__device_snmp_port($field_name, $template_flag = false, $field_value = "", $field_id = 0, $t_field_value, $o_field_value) {
@@ -224,13 +224,13 @@ function _data_source_input_field__device_snmp_port($field_name, $template_flag 
 	?>
 	<tr bgcolor="#<?php echo field_get_row_color();?>">
 		<td width="50%">
-			<span class="textEditTitle">SNMP Port</span><br>
+			<span class="textEditTitle"><?php echo _("SNMP Port");?></span><br>
 			<?php
 			if ($template_flag == true) {
-				form_checkbox("o_$field_name", $o_field_value, "Override Device Field", "", $field_id, "set_data_template_override_device_field(\"$field_name\")"); echo "<br>";
-				form_checkbox("t_$field_name", $t_field_value, "Do Not Template this Field", "", $field_id, "template_checkbox_status(\"$field_name\",\"t_$field_name\")");
+				form_checkbox("o_$field_name", $o_field_value, _("Override Device Field"), "", $field_id, "set_data_template_override_device_field(\"$field_name\")"); echo "<br>";
+				form_checkbox("t_$field_name", $t_field_value, _("Do Not Template this Field"), "", $field_id, "template_checkbox_status(\"$field_name\",\"t_$field_name\")");
 			}else{
-				echo "Enter the UDP port number to use for SNMP (default is 161).";
+				echo _("Enter the UDP port number to use for SNMP (default is 161).");
 			}
 			?>
 		</td>
@@ -252,13 +252,13 @@ function _data_source_input_field__device_snmp_timeout($field_name, $template_fl
 	?>
 	<tr bgcolor="#<?php echo field_get_row_color();?>">
 		<td width="50%">
-			<span class="textEditTitle">SNMP Timeout</span><br>
+			<span class="textEditTitle"><?php echo _("SNMP Timeout");?></span><br>
 			<?php
 			if ($template_flag == true) {
-				form_checkbox("o_$field_name", $o_field_value, "Override Device Field", "", $field_id, "set_data_template_override_device_field(\"$field_name\")"); echo "<br>";
-				form_checkbox("t_$field_name", $t_field_value, "Do Not Template this Field", "", $field_id, "template_checkbox_status(\"$field_name\",\"t_$field_name\")");
+				form_checkbox("o_$field_name", $o_field_value, _("Override Device Field"), "", $field_id, "set_data_template_override_device_field(\"$field_name\")"); echo "<br>";
+				form_checkbox("t_$field_name", $t_field_value, _("Do Not Template this Field"), "", $field_id, "template_checkbox_status(\"$field_name\",\"t_$field_name\")");
 			}else{
-				echo "The maximum number of milliseconds Cacti will wait for an SNMP response (does not work with php-snmp support).";
+				echo _("The maximum number of milliseconds Cacti will wait for an SNMP response (does not work with php-snmp support).");
 			}
 			?>
 		</td>
@@ -282,13 +282,13 @@ function _data_source_input_field__device_snmp_version($field_name, $template_fl
 	?>
 	<tr bgcolor="#<?php echo field_get_row_color();?>">
 		<td width="50%">
-			<span class="textEditTitle">SNMP Version</span><br>
+			<span class="textEditTitle"><?php echo _("SNMP Version");?></span><br>
 			<?php
 			if ($template_flag == true) {
-				form_checkbox("o_$field_name", $o_field_value, "Override Device Field", "", $field_id, "set_data_template_override_device_field(\"$field_name\")"); echo "<br>";
-				form_checkbox("t_$field_name", $t_field_value, "Do Not Template this Field", "", $field_id, "template_checkbox_status(\"$field_name\",\"t_$field_name\")");
+				form_checkbox("o_$field_name", $o_field_value, _("Override Device Field"), "", $field_id, "set_data_template_override_device_field(\"$field_name\")"); echo "<br>";
+				form_checkbox("t_$field_name", $t_field_value, _("Do Not Template this Field"), "", $field_id, "template_checkbox_status(\"$field_name\",\"t_$field_name\")");
 			}else{
-				echo "Choose the SNMP version for this host.";
+				echo _("Choose the SNMP version for this host.");
 			}
 			?>
 		</td>
@@ -310,13 +310,13 @@ function _data_source_input_field__device_snmp_community($field_name, $template_
 	?>
 	<tr bgcolor="#<?php echo field_get_row_color();?>">
 		<td width="50%">
-			<span class="textEditTitle">SNMP Community</span><br>
+			<span class="textEditTitle"><?php echo _("SNMP Community");?></span><br>
 			<?php
 			if ($template_flag == true) {
-				form_checkbox("o_$field_name", $o_field_value, "Override Device Field", "", $field_id, "set_data_template_override_device_field(\"$field_name\")"); echo "<br>";
-				form_checkbox("t_$field_name", $t_field_value, "Do Not Template this Field", "", $field_id, "template_checkbox_status(\"$field_name\",\"t_$field_name\")");
+				form_checkbox("o_$field_name", $o_field_value, _("Override Device Field"), "", $field_id, "set_data_template_override_device_field(\"$field_name\")"); echo "<br>";
+				form_checkbox("t_$field_name", $t_field_value, _("Do Not Template this Field"), "", $field_id, "template_checkbox_status(\"$field_name\",\"t_$field_name\")");
 			}else{
-				echo "Fill in the SNMP read community for this device.";
+				echo _("Fill in the SNMP read community for this device.");
 			}
 			?>
 		</td>
@@ -338,13 +338,13 @@ function _data_source_input_field__device_snmpv3_auth_username($field_name, $tem
 	?>
 	<tr bgcolor="#<?php echo field_get_row_color();?>">
 		<td width="50%">
-			<span class="textEditTitle">Username</span><br>
+			<span class="textEditTitle"><?php echo _("Username");?></span><br>
 			<?php
 			if ($template_flag == true) {
-				form_checkbox("o_$field_name", $o_field_value, "Override Device Field", "", $field_id, "set_data_template_override_device_field(\"$field_name\")"); echo "<br>";
-				form_checkbox("t_$field_name", $t_field_value, "Do Not Template this Field", "", $field_id, "template_checkbox_status(\"$field_name\",\"t_$field_name\")");
+				form_checkbox("o_$field_name", $o_field_value, _("Override Device Field"), "", $field_id, "set_data_template_override_device_field(\"$field_name\")"); echo "<br>";
+				form_checkbox("t_$field_name", $t_field_value, _("Do Not Template this Field"), "", $field_id, "template_checkbox_status(\"$field_name\",\"t_$field_name\")");
 			}else{
-				echo "The default SNMP v3 username.";
+				echo _("The default SNMP v3 username.");
 			}
 			?>
 		</td>
@@ -366,13 +366,13 @@ function _data_source_input_field__device_snmpv3_auth_password($field_name, $tem
 	?>
 	<tr bgcolor="#<?php echo field_get_row_color();?>">
 		<td width="50%">
-			<span class="textEditTitle">Password</span><br>
+			<span class="textEditTitle"><?php echo _("Password");?></span><br>
 			<?php
 			if ($template_flag == true) {
-				form_checkbox("o_$field_name", $o_field_value, "Override Device Field", "", $field_id, "set_data_template_override_device_field(\"$field_name\")"); echo "<br>";
-				form_checkbox("t_$field_name", $t_field_value, "Do Not Template this Field", "", $field_id, "template_checkbox_status(\"$field_name\",\"t_$field_name\")");
+				form_checkbox("o_$field_name", $o_field_value, _("Override Device Field"), "", $field_id, "set_data_template_override_device_field(\"$field_name\")"); echo "<br>";
+				form_checkbox("t_$field_name", $t_field_value, _("Do Not Template this Field"), "", $field_id, "template_checkbox_status(\"$field_name\",\"t_$field_name\")");
 			}else{
-				echo "The default SNMP v3 password.";
+				echo _("The default SNMP v3 password.");
 			}
 			?>
 		</td>
@@ -396,13 +396,13 @@ function _data_source_input_field__device_snmpv3_auth_protocol($field_name, $tem
 	?>
 	<tr bgcolor="#<?php echo field_get_row_color();?>">
 		<td width="50%">
-			<span class="textEditTitle">Authentication Protocol</span><br>
+			<span class="textEditTitle"><?php echo _("Authentication Protocol");?></span><br>
 			<?php
 			if ($template_flag == true) {
-				form_checkbox("o_$field_name", $o_field_value, "Override Device Field", "", $field_id, "set_data_template_override_device_field(\"$field_name\")"); echo "<br>";
-				form_checkbox("t_$field_name", $t_field_value, "Do Not Template this Field", "", $field_id, "template_checkbox_status(\"$field_name\",\"t_$field_name\")");
+				form_checkbox("o_$field_name", $o_field_value, _("Override Device Field"), "", $field_id, "set_data_template_override_device_field(\"$field_name\")"); echo "<br>";
+				form_checkbox("t_$field_name", $t_field_value, _("Do Not Template this Field"), "", $field_id, "template_checkbox_status(\"$field_name\",\"t_$field_name\")");
 			}else{
-				echo "Select the default SNMP v3 authentication protocol to use.";
+				echo _("Select the default SNMP v3 authentication protocol to use.");
 			}
 			?>
 		</td>
@@ -424,13 +424,13 @@ function _data_source_input_field__device_snmpv3_priv_passphrase($field_name, $t
 	?>
 	<tr bgcolor="#<?php echo field_get_row_color();?>">
 		<td width="50%">
-			<span class="textEditTitle">Privacy Passphrase</span><br>
+			<span class="textEditTitle"><?php echo _("Privacy Passphrase");?></span><br>
 			<?php
 			if ($template_flag == true) {
-				form_checkbox("o_$field_name", $o_field_value, "Override Device Field", "", $field_id, "set_data_template_override_device_field(\"$field_name\")"); echo "<br>";
-				form_checkbox("t_$field_name", $t_field_value, "Do Not Template this Field", "", $field_id, "template_checkbox_status(\"$field_name\",\"t_$field_name\")");
+				form_checkbox("o_$field_name", $o_field_value, _("Override Device Field"), "", $field_id, "set_data_template_override_device_field(\"$field_name\")"); echo "<br>";
+				form_checkbox("t_$field_name", $t_field_value, _("Do Not Template this Field"), "", $field_id, "template_checkbox_status(\"$field_name\",\"t_$field_name\")");
 			}else{
-				echo "The default SNMP v3 privacy passphrase.";
+				echo _("The default SNMP v3 privacy passphrase.");
 			}
 			?>
 		</td>
@@ -454,13 +454,13 @@ function _data_source_input_field__device_snmpv3_priv_protocol($field_name, $tem
 	?>
 	<tr bgcolor="#<?php echo field_get_row_color();?>">
 		<td width="50%">
-			<span class="textEditTitle">Privacy Protocol</span><br>
+			<span class="textEditTitle"><?php echo _("Privacy Protocol");?></span><br>
 			<?php
 			if ($template_flag == true) {
-				form_checkbox("o_$field_name", $o_field_value, "Override Device Field", "", $field_id, "set_data_template_override_device_field(\"$field_name\")"); echo "<br>";
-				form_checkbox("t_$field_name", $t_field_value, "Do Not Template this Field", "", $field_id, "template_checkbox_status(\"$field_name\",\"t_$field_name\")");
+				form_checkbox("o_$field_name", $o_field_value, _("Override Device Field"), "", $field_id, "set_data_template_override_device_field(\"$field_name\")"); echo "<br>";
+				form_checkbox("t_$field_name", $t_field_value, _("Do Not Template this Field"), "", $field_id, "template_checkbox_status(\"$field_name\",\"t_$field_name\")");
 			}else{
-				echo "Select the default SNMP v3 privacy protocol to use.";
+				echo _("Select the default SNMP v3 privacy protocol to use.");
 			}
 			?>
 		</td>
@@ -504,12 +504,12 @@ function _data_source_field__name($field_name, $template_flag = false, $field_id
 	?>
 	<tr bgcolor="#<?php echo field_get_row_color();?>">
 		<td width="50%">
-			<span class="textEditTitle">Name</span><br>
+			<span class="textEditTitle"><?php echo _("Name");?></span><br>
 			<?php
 			if ($template_flag == true) {
-				form_checkbox($t_field_name, $t_field_value, "Do Not Template this Field", "", $field_id, "template_checkbox_status(\"$field_name\",\"$t_field_name\")");
+				form_checkbox($t_field_name, $t_field_value, _("Do Not Template this Field"), "", $field_id, "template_checkbox_status(\"$field_name\",\"$t_field_name\")");
 			}else{
-				echo "Choose a name for this data source.";
+				echo _("Choose a name for this data source.");
 			}
 			?>
 		</td>
@@ -526,8 +526,8 @@ function _data_source_field__rrd_path($field_name, $template_flag = false, $fiel
 	?>
 	<tr bgcolor="#<?php echo field_get_row_color();?>">
 		<td width="50%">
-			<span class="textEditTitle">Data Source Path</span><br>
-			The full path to the RRD file.
+			<span class="textEditTitle"><?php echo _("Data Source Path");?></span><br>
+			<?php echo _("The full path to the RRD file.");?>
 		</td>
 		<td>
 			<?php form_text_box($field_name, $field_value, "", 255, 30, "text", $field_id);?>
@@ -542,10 +542,10 @@ function _data_source_field__rra_id($field_name, $template_flag = false, $field_
 	?>
 	<tr bgcolor="#<?php echo field_get_row_color();?>">
 		<td width="50%">
-			<span class="textEditTitle">Associated RRA's</span><br>
+			<span class="textEditTitle"><?php echo _("Associated RRA's");?></span><br>
 			<?php
 			if ($template_flag == false) {
-				echo "Which RRA's to use when entering data. (It is recommended that you select all of these values).";
+				echo _("Which RRA's to use when entering data. (It is recommended that you select all of these values).");
 			}
 			?>
 		</td>
@@ -562,12 +562,12 @@ function _data_source_field__rrd_step($field_name, $template_flag = false, $fiel
 	?>
 	<tr bgcolor="#<?php echo field_get_row_color();?>">
 		<td width="50%">
-			<span class="textEditTitle">Step</span><br>
+			<span class="textEditTitle"><?php echo _("Step");?></span><br>
 			<?php
 			if ($template_flag == true) {
-				form_checkbox($t_field_name, $t_field_value, "Do Not Template this Field", "", $field_id, "template_checkbox_status(\"$field_name\",\"$t_field_name\")");
+				form_checkbox($t_field_name, $t_field_value, _("Do Not Template this Field"), "", $field_id, "template_checkbox_status(\"$field_name\",\"$t_field_name\")");
 			}else{
-				echo "The amount of time in seconds between expected updates.";
+				echo _("The amount of time in seconds between expected updates.");
 			}
 			?>
 		</td>
@@ -584,17 +584,17 @@ function _data_source_field__active($field_name, $template_flag = false, $field_
 	?>
 	<tr bgcolor="#<?php echo field_get_row_color();?>">
 		<td width="50%">
-			<span class="textEditTitle">Active</span><br>
+			<span class="textEditTitle"><?php echo _("Active");?></span><br>
 			<?php
 			if ($template_flag == true) {
-				form_checkbox($t_field_name, $t_field_value, "Do Not Template this Field", "", $field_id, "template_checkbox_status(\"$field_name\",\"$t_field_name\")");
+				form_checkbox($t_field_name, $t_field_value, _("Do Not Template this Field"), "", $field_id, "template_checkbox_status(\"$field_name\",\"$t_field_name\")");
 			}else{
-				echo "Whether Cacti should gather data for this data source or not.";
+				echo _("Whether Cacti should gather data for this data source or not.");
 			}
 			?>
 		</td>
 		<td>
-			<?php form_checkbox($field_name, $field_value, "Data Source Active", "on", $field_id);?>
+			<?php form_checkbox($field_name, $field_value, _("Data Source Active"), "on", $field_id);?>
 		</td>
 	</tr>
 	<?php
@@ -608,10 +608,10 @@ function _data_source_item_field__data_source_name($field_name, $template_flag =
 	?>
 	<tr bgcolor="#<?php echo field_get_row_color();?>">
 		<td width="50%">
-			<span class="textEditTitle">Internal Data Source Name</span><br>
+			<span class="textEditTitle"><?php echo _("Internal Data Source Name");?></span><br>
 			<?php
 			if ($template_flag == false) {
-				echo "Choose unique name to represent this piece of data inside of the rrd file.";
+				echo _("Choose unique name to represent this piece of data inside of the rrd file.");
 			}
 			?>
 		</td>
@@ -628,12 +628,12 @@ function _data_source_item_field__rrd_minimum($field_name, $template_flag = fals
 	?>
 	<tr bgcolor="#<?php echo field_get_row_color();?>">
 		<td width="50%">
-			<span class="textEditTitle">Minimum Value</span><br>
+			<span class="textEditTitle"><?php echo _("Minimum Value");?></span><br>
 			<?php
 			if ($template_flag == true) {
-				form_checkbox($t_field_name, $t_field_value, "Do Not Template this Field", "", $field_id, "template_checkbox_status(\"$field_name\",\"$t_field_name\")");
+				form_checkbox($t_field_name, $t_field_value, _("Do Not Template this Field"), "", $field_id, "template_checkbox_status(\"$field_name\",\"$t_field_name\")");
 			}else{
-				echo "The minimum value of data that is allowed to be collected.";
+				echo _("The minimum value of data that is allowed to be collected.");
 			}
 			?>
 		</td>
@@ -650,12 +650,12 @@ function _data_source_item_field__rrd_maximum($field_name, $template_flag = fals
 	?>
 	<tr bgcolor="#<?php echo field_get_row_color();?>">
 		<td width="50%">
-			<span class="textEditTitle">Maximum Value</span><br>
+			<span class="textEditTitle"><?php echo _("Maximum Value");?></span><br>
 			<?php
 			if ($template_flag == true) {
-				form_checkbox($t_field_name, $t_field_value, "Do Not Template this Field", "", $field_id, "template_checkbox_status(\"$field_name\",\"$t_field_name\")");
+				form_checkbox($t_field_name, $t_field_value, _("Do Not Template this Field"), "", $field_id, "template_checkbox_status(\"$field_name\",\"$t_field_name\")");
 			}else{
-				echo "The maximum value of data that is allowed to be collected.";
+				echo _("The maximum value of data that is allowed to be collected.");
 			}
 			?>
 		</td>
@@ -673,12 +673,12 @@ function _data_source_item_field__data_source_type($field_name, $template_flag =
 	?>
 	<tr bgcolor="#<?php echo field_get_row_color();?>">
 		<td width="50%">
-			<span class="textEditTitle">Data Source Type</span><br>
+			<span class="textEditTitle"><?php echo _("Data Source Type");?></span><br>
 			<?php
 			if ($template_flag == true) {
-				form_checkbox($t_field_name, $t_field_value, "Do Not Template this Field", "", $field_id, "template_checkbox_status(\"$field_name\",\"$t_field_name\")");
+				form_checkbox($t_field_name, $t_field_value, _("Do Not Template this Field"), "", $field_id, "template_checkbox_status(\"$field_name\",\"$t_field_name\")");
 			}else{
-				echo "How data is represented in the RRA.";
+				echo _("How data is represented in the RRA.");
 			}
 			?>
 		</td>
@@ -695,12 +695,12 @@ function _data_source_item_field__rrd_heartbeat($field_name, $template_flag = fa
 	?>
 	<tr bgcolor="#<?php echo field_get_row_color();?>">
 		<td width="50%">
-			<span class="textEditTitle">Heartbeat</span><br>
+			<span class="textEditTitle"><?php echo _("Heartbeat");?></span><br>
 			<?php
 			if ($template_flag == true) {
-				form_checkbox($t_field_name, $t_field_value, "Do Not Template this Field", "", $field_id, "template_checkbox_status(\"$field_name\",\"$t_field_name\")");
+				form_checkbox($t_field_name, $t_field_value, _("Do Not Template this Field"), "", $field_id, "template_checkbox_status(\"$field_name\",\"$t_field_name\")");
 			}else{
-				echo "The maximum amount of time that can pass before data is entered as \"unknown\". (Usually 2x300=600)";
+				echo _("The maximum amount of time that can pass before data is entered as \"unknown\". (Usually 2x300=600)");
 			}
 			?>
 		</td>
