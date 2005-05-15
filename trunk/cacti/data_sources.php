@@ -252,7 +252,7 @@ function form_actions() {
 
 		print "	<tr>
 				<td class='textArea' bgcolor='#" . $colors["form_alternate1"]. "'>
-					<p>Are you sure you want to delete the following data sources?</p>
+					<p>" . _("Are you sure you want to delete the following data sources?") . "</p>
 					<p>$ds_list</p>
 					";
 					if (sizeof($graphs) > 0) {
@@ -263,9 +263,9 @@ function form_actions() {
 						}
 
 						print "<br>";
-						form_radio_button("delete_type", "3", "1", "Leave the graphs untouched.", "1"); print "<br>";
-						form_radio_button("delete_type", "3", "2", "Delete all <strong>graph items</strong> that reference these data sources.", "1"); print "<br>";
-						form_radio_button("delete_type", "3", "3", "Delete all <strong>graphs</strong> that reference these data sources.", "1"); print "<br>";
+						form_radio_button("delete_type", "3", "1", _("Leave the graphs untouched."), "1"); print "<br>";
+						form_radio_button("delete_type", "3", "2", _("Delete all <strong>graph items</strong> that reference these data sources."), "1"); print "<br>";
+						form_radio_button("delete_type", "3", "3", _("Delete all <strong>graphs</strong> that reference these data sources."), "1"); print "<br>";
 						print "</td></tr>";
 					}
 				print "
@@ -295,30 +295,30 @@ function form_actions() {
 	}elseif ($_POST["drp_action"] == "4") { /* duplicate */
 		print "	<tr>
 				<td class='textArea' bgcolor='#" . $colors["form_alternate1"]. "'>
-					<p>"._("When you click save, the following data sources will be duplicated. You can
-					optionally change the title format for the new data sources.")."</p>
+					<p>" . _("When you click save, the following data sources will be duplicated. You can
+					optionally change the title format for the new data sources.") . "</p>
 					<p>$ds_list</p>
-					<p><strong>"._("Title Format:")."</strong><br>"; form_text_box("title_format", "<ds_title> (1)", "", "255", "30", "text"); print "</p>
+					<p><strong>" . _("Title Format:") . "</strong><br>"; form_text_box("title_format", "<ds_title> (1)", "", "255", "30", "text"); print "</p>
 				</td>
 			</tr>\n
 			";
 	}elseif ($_POST["drp_action"] == "5") { /* graph -> graph template */
 		print "	<tr>
 				<td class='textArea' bgcolor='#" . $colors["form_alternate1"]. "'>
-					<p>"._("When you click save, the following data sources will be converted into data templates.
-					You can optionally change the title format for the new data templates.")."</p>
+					<p>" . _("When you click save, the following data sources will be converted into data templates.
+					You can optionally change the title format for the new data templates.") . "</p>
 					<p>$ds_list</p>
-					<p><strong>"._("Title Format:")."</strong><br>"; form_text_box("title_format", "<ds_title> Template", "", "255", "30", "text"); print "</p>
+					<p><strong>" . _("Title Format:") . "</strong><br>"; form_text_box("title_format", "<ds_title> " . _("Template"), "", "255", "30", "text"); print "</p>
 				</td>
 			</tr>\n
 			";
 	}
 
 	if (!isset($ds_array)) {
-		print "<tr><td bgcolor='#" . $colors["form_alternate1"]. "'><span class='textError'>You must select at least one data source.</span></td></tr>\n";
+		print "<tr><td bgcolor='#" . $colors["form_alternate1"]. "'><span class='textError'>" . _("You must select at least one data source.") . "</span></td></tr>\n";
 		$save_html = "";
 	}else{
-		$save_html = "<input type='image' src='". html_get_theme_images_path("button_yes.gif") . "' alt='Save' align='absmiddle'>";
+		$save_html = "<input type='image' src='". html_get_theme_images_path("button_yes.gif") . "' alt='" . _("Save") . "' align='absmiddle'>";
 	}
 
 	print "	<tr>
@@ -326,7 +326,7 @@ function form_actions() {
 				<input type='hidden' name='action' value='actions'>
 				<input type='hidden' name='selected_items' value='" . (isset($ds_array) ? serialize($ds_array) : '') . "'>
 				<input type='hidden' name='drp_action' value='" . $_POST["drp_action"] . "'>
-				<a href='data_sources.php'><img src='" . html_get_theme_images_path("button_no.gif") . "' alt='Cancel' align='absmiddle' border='0'></a>
+				<a href='data_sources.php'><img src='" . html_get_theme_images_path("button_no.gif") . "' alt='" . _("Cancel") . "' align='absmiddle' border='0'></a>
 				$save_html
 			</td>
 		</tr>
@@ -361,12 +361,12 @@ function ds_edit() {
 			$data_template = db_fetch_row("select id,name from data_template where id='" . $data_source["data_template_id"] . "'");
 		}
 
-		$header_label = "[edit: " . get_data_source_title($_GET["id"]) . "]";
+		$header_label = _("[edit: ") . get_data_source_title($_GET["id"]) . "]";
 
 		/* get a list of all data input type fields for this data template */
 		$data_input_type_fields = array_rekey(db_fetch_assoc("select name,value from data_source_field where data_source_id = " . $data_source["id"]), "name", array("value"));
 	}else{
-		$header_label = "[new]";
+		$header_label = _("[new]");
 
 		$data_input_type_fields = array();
 	}
@@ -412,7 +412,7 @@ function ds_edit() {
 			"friendly_name" => _("Device"),
 			"description" => _("Choose the device that this graph belongs to."),
 			"value" => (isset($_GET["host_id"]) ? $_GET["host_id"] : $data_source["host_id"]),
-			"none_value" => "None",
+			"none_value" => _("None"),
 			"sql" => "select id,CONCAT_WS('',description,' (',hostname,')') as name from host order by description,hostname"
 			),
 		"id" => array(
@@ -445,7 +445,7 @@ function ds_edit() {
 			)
 		);
 
-	html_start_box("<strong>Device/Template Selection</strong> $header_label", "98%", $colors["header_background"], "3", "center", "");
+	html_start_box("<strong>" . _("Device/Template Selection") . "</strong> $header_label", "98%", $colors["header_background"], "3", "center", "");
 
 	draw_edit_form(
 		array(
@@ -465,8 +465,8 @@ function ds_edit() {
 		html_start_box("<strong>"._("Supplemental Template Data")."</strong>", "98%", $colors["header_background"], "3", "center", "");
 
 		$num_output_fields =  draw_nontemplated_fields_data_input($data_source["data_template_id"], $data_input_type_fields, "dif_|field|", "<strong>"._("Data Input")."</strong>", true);
-		$num_output_fields += draw_nontemplated_fields_data_source($data_source["data_template_id"], $data_source, "ds||field|", "<strong>Data Source Fields</strong>", true, true);
-		$num_output_fields += draw_nontemplated_fields_data_source_item($data_source["data_template_id"], db_fetch_assoc("select * from data_source_item where data_source_id = " . $data_source["id"] . " order by data_source_name"), "dsi||field|||id|", "<strong>Data Source Item Fields</strong>", true, true);
+		$num_output_fields += draw_nontemplated_fields_data_source($data_source["data_template_id"], $data_source, "ds||field|", "<strong>" . _("Data Source Fields") . "</strong>", true, true);
+		$num_output_fields += draw_nontemplated_fields_data_source_item($data_source["data_template_id"], db_fetch_assoc("select * from data_source_item where data_source_id = " . $data_source["id"] . " order by data_source_name"), "dsi||field|||id|", "<strong>" . _("Data Source Item Fields") . "</strong>", true, true);
 
 		$form_data_query_fields["dif_data_query_field_name"]["sql"] = str_replace("|data_query_id|", $data_input_type_fields["data_query_id"]["value"], $form_data_query_fields["dif_data_query_field_name"]["sql"]);
 		draw_edit_form(array("config" => array("no_form_tag" => true), "fields" => $form_data_query_fields));
@@ -609,7 +609,7 @@ function ds_edit() {
 
 		/* ==================== Box: Data Source ==================== */
 
-		html_start_box("<strong>"._("Data Source")."</strong>", "98%", $colors["header_background"], "3", "center", "");
+		html_start_box("<strong>" . _("Data Source") . "</strong>", "98%", $colors["header_background"], "3", "center", "");
 
 		$form_array = array();
 
@@ -634,7 +634,7 @@ function ds_edit() {
 
 		/* ==================== Box: Data Source Item ==================== */
 
-		html_start_box("<strong>"._("Data Source Item")."</strong>", "98%", $colors["header_background"], "3", "center", (empty($_GET["id"]) ? "" : "javascript:document.forms[0].action.value='item_add';submit_redirect(0, '" . htmlspecialchars("data_sources.php?action=item_add&id=" . $_GET["id"]) . "', '')"));
+		html_start_box("<strong>" . _("Data Source Item") . "</strong>", "98%", $colors["header_background"], "3", "center", (empty($_GET["id"]) ? "" : "javascript:document.forms[0].action.value='item_add';submit_redirect(0, '" . htmlspecialchars("data_sources.php?action=item_add&id=" . $_GET["id"]) . "', '')"));
 
 		/* the user clicked the "add item" link. we need to make sure they get redirected back to
 		 * this page if an error occurs */
@@ -657,7 +657,7 @@ function ds_edit() {
 		if (sizeof($data_source_items) > 0) {
 			if ($_data_input_type == DATA_INPUT_TYPE_SCRIPT) {
 				$script_output_fields = db_fetch_assoc("select * from data_input_fields where data_input_id = $_script_id and input_output='out' order by name");
-				$field_input_description = "Script Output Field";
+				$field_input_description = _("Script Output Field");
 			}else if ($_data_input_type == DATA_INPUT_TYPE_DATA_QUERY) {
 				$data_query_xml = get_data_query_array($_data_query_id);
 				$data_query_output_fields = array();
@@ -668,9 +668,9 @@ function ds_edit() {
 					}
 				}
 
-				$field_input_description = "Data Query Output Field";
+				$field_input_description = _("Data Query Output Field");
 			}else if ($_data_input_type == DATA_INPUT_TYPE_SNMP) {
-				$field_input_description = "SNMP OID";
+				$field_input_description = _("SNMP OID");
 			}
 
 			foreach ($data_source_items as $item) {
@@ -678,7 +678,7 @@ function ds_edit() {
 					?>
 					<tr bgcolor="<?php print $colors["header_panel_background"];?>">
 						<td class='textSubHeaderDark'>
-							<?php print (isset($item["data_source_name"]) ? $item["data_source_name"] : "(New Data Source Item)");?>
+							<?php print (isset($item["data_source_name"]) ? $item["data_source_name"] : "(" . _("New Data Source Item") . ")");?>
 						</td>
 						<td class='textSubHeaderDark' align='right'>
 							<?php
@@ -769,7 +769,7 @@ function ds() {
 
 	$host = db_fetch_row("select hostname from host where id=" . $_REQUEST["host_id"]);
 
-	html_start_box("<strong>Data Sources</strong> [host: " . (empty($host["hostname"]) ? "No Host" : $host["hostname"]) . "]", "98%", $colors["header_background"], "3", "center", "data_sources.php?action=edit&host_id=" . $_REQUEST["host_id"]);
+	html_start_box("<strong>Data Sources</strong> " . _("[host: ") . (empty($host["hostname"]) ? _("No Host") : $host["hostname"]) . "]", "98%", $colors["header_background"], "3", "center", "data_sources.php?action=edit&host_id=" . $_REQUEST["host_id"]);
 
 	include("./include/html/inc_data_source_filter_table.php");
 
@@ -816,9 +816,9 @@ function ds() {
 						<td align='left' class='textHeaderDark'>
 							<strong>&lt;&lt; "; if ($_REQUEST["page"] > 1) { $nav .= "<a class='linkOverDark' href='data_sources.php?filter=" . $_REQUEST["filter"] . "&host_id=" . $_REQUEST["host_id"] . "&page=" . ($_REQUEST["page"]-1) . "'>"; } $nav .= _("Previous"); if ($_REQUEST["page"] > 1) { $nav .= "</a>"; } $nav .= "</strong>
 						</td>\n
-						<td align='center' class='textHeaderDark'>
-							Showing Rows " . ((read_config_option("num_rows_data_source")*($_REQUEST["page"]-1))+1) . " to " . ((($total_rows < read_config_option("num_rows_data_source")) || ($total_rows < (read_config_option("num_rows_data_source")*$_REQUEST["page"]))) ? $total_rows : (read_config_option("num_rows_data_source")*$_REQUEST["page"])) . " of $total_rows [$url_page_select]
-						</td>\n
+						<td align='center' class='textHeaderDark'>"
+							. _("Showing Rows") . " " . ((read_config_option("num_rows_data_source")*($_REQUEST["page"]-1))+1) . " to " . ((($total_rows < read_config_option("num_rows_data_source")) || ($total_rows < (read_config_option("num_rows_data_source")*$_REQUEST["page"]))) ? $total_rows : (read_config_option("num_rows_data_source")*$_REQUEST["page"])) . " " . _("of") . $total_rows [$url_page_select] .
+						"</td>\n
 						<td align='right' class='textHeaderDark'>
 							<strong>"; if (($_REQUEST["page"] * read_config_option("num_rows_data_source")) < $total_rows) { $nav .= "<a class='linkOverDark' href='data_sources.php?filter=" . $_REQUEST["filter"] . "&host_id=" . $_REQUEST["host_id"] . "&page=" . ($_REQUEST["page"]+1) . "'>"; } $nav .= _("Next"); if (($_REQUEST["page"] * read_config_option("num_rows_data_source")) < $total_rows) { $nav .= "</a>"; } $nav .= " &gt;&gt;</strong>
 						</td>\n
@@ -849,10 +849,10 @@ function ds() {
 					<?php print $data_input_types{$data_source["data_input_type"]};?>
 				</td>
 				<td>
-					<?php print (empty($data_source["active"]) ? "<span style='color: red;'>No</span>" : "Yes");?>
+					<?php print (empty($data_source["active"]) ? "<span style='color: red;'>" . _("No") . "</span>" : _("Yes"));?>
 				</td>
 				<td>
-					<?php print ((empty($data_source["data_template_name"])) ? "<em>"._("None")."</em>" : $data_source["data_template_name"]);?>
+					<?php print ((empty($data_source["data_template_name"])) ? "<em>" . _("None") . "</em>" : $data_source["data_template_name"]);?>
 				</td>
 				<td style="<?php print get_checkbox_style();?>" width="1%" align="right">
 					<input type='checkbox' style='margin: 0px;' name='chk_<?php print $data_source["id"];?>' title="<?php print $data_source["name_cache"];?>">

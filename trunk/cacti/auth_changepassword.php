@@ -59,7 +59,7 @@ if (!$access_denied) {
 			if (($_POST["password"] == $_POST["confirm"]) && ($_POST["password"] != "")) {
 
 				/* Log password change */
-				api_syslog_cacti_log("CHANGEPASSWORD: Password change successful", SEV_INFO, 0, 0, 0, false, FACIL_AUTH);
+				api_syslog_cacti_log(_("CHANGEPASSWORD: Password change successful"), SEV_INFO, 0, 0, 0, false, FACIL_AUTH);
 
 				/* change password */
 				api_user_changepassword($_SESSION["sess_user_id"], $_POST["password"]);
@@ -97,7 +97,7 @@ if (!$access_denied) {
 ?>
 <html>
 <head>
-	<title>Login to cacti</title>
+	<title><?php echo _("Login to cacti");?></title>
 	<STYLE TYPE="text/css">
 	<!--
 		BODY, TABLE, TR, TD {font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 12px;}
@@ -129,26 +129,26 @@ if (!$access_denied) {
 	<?php if ($bad_password == true) {?>
 	<tr height="10"><td></td></tr>
 	<tr>
-		<td colspan="2"><font color="#FF0000"><strong><?php echo _("Your passwords do not match, please retype:"); ?></strong></font></td>
+		<td colspan="2"><font color="#FF0000"><strong><?php echo _("Your passwords do not match, please retype:");?></strong></font></td>
 	</tr>
 	<?php }
 	if ($old_password == true) {?>
 	<tr height="10"><td></td></tr>
 	<tr>
-		<td colspan="2"><font color="#FF0000"><strong><?php echo _("You cannot reuse your old password, please retype:"); ?></strong></font></td>
+		<td colspan="2"><font color="#FF0000"><strong><?php echo _("You cannot reuse your old password, please retype:");?></strong></font></td>
 	</tr>
 	<?php }?>
 
 	<tr height="10"><td></td></tr>
 	<tr>
 		<td colspan="2">
-			<strong><font color="#FF0000"><?php echo _("*** Forced Password Change ***"); ?></font></strong><br><br>
-			<?php echo _("Please enter a new password for cacti:"); ?>
+			<strong><font color="#FF0000"><?php echo _("*** Forced Password Change ***");?></font></strong><br><br>
+			<?php echo _("Please enter a new password for cacti:");?>
 		</td>
 	</tr>
 	<tr height="10"><td></td></tr>
 	<tr>
-		<td><?php echo _("Password:)"; ?></td>
+		<td><?php echo _("Password:)";?></td>
 		<td><input type="password" name="password" size="40"></td>
 	</tr>
 	<tr>
@@ -157,7 +157,7 @@ if (!$access_denied) {
 	</tr>
 	<tr height="10"><td></td></tr>
 	<tr>
-		<td><input type="submit" value="<?php echo _("Save"); ?>"></td>
+		<td><input type="submit" value="<?php echo _("Save");?>"></td>
 	</tr>
 
 <?php } ?>
