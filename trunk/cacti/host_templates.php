@@ -157,8 +157,8 @@ function form_actions() {
 	if ($_POST["drp_action"] == "1") { /* delete */
 		print "	<tr>
 				<td class='textArea' bgcolor='#" . $colors["form_alternate1"]. "'>
-					<p>Are you sure you want to delete the following host templates? All devices currently attached
-					this these host templates will lose their template assocation.</p>
+					<p>" . _("Are you sure you want to delete the following host templates? All devices currently attached
+					this these host templates will lose their template assocation.") . "</p>
 					<p>$host_list</p>
 				</td>
 			</tr>\n
@@ -166,20 +166,20 @@ function form_actions() {
 	}elseif ($_POST["drp_action"] == "2") { /* duplicate */
 		print "	<tr>
 				<td class='textArea' bgcolor='#" . $colors["form_alternate1"]. "'>
-					<p>When you click save, the following host templates will be duplicated. You can
-					optionally change the title format for the new host templates.</p>
+					<p>" . _("When you click save, the following host templates will be duplicated. You can
+					optionally change the title format for the new host templates.") . "</p>
 					<p>$host_list</p>
-					<p><strong>Title Format:</strong><br>"; form_text_box("title_format", "<template_title> (1)", "", "255", "30", "text"); print "</p>
+					<p><strong>" . _("Title Format") . ":</strong><br>"; form_text_box("title_format", "<template_title> (1)", "", "255", "30", "text"); print "</p>
 				</td>
 			</tr>\n
 			";
 	}
 
 	if (!isset($host_array)) {
-		print "<tr><td bgcolor='#" . $colors["form_alternate1"]. "'><span class='textError'>You must select at least one host template.</span></td></tr>\n";
+		print "<tr><td bgcolor='#" . $colors["form_alternate1"]. "'><span class='textError'>" . _("You must select at least one host template.") . "</span></td></tr>\n";
 		$save_html = "";
 	}else{
-		$save_html = "<input type='image' src='" . html_get_theme_images_path("button_yes.gif") . "' alt='Save' align='absmiddle'>";
+		$save_html = "<input type='image' src='" . html_get_theme_images_path("button_yes.gif") . "' alt='" . _("Save") . "' align='absmiddle'>";
 	}
 
 	print "	<tr>
@@ -187,7 +187,7 @@ function form_actions() {
 				<input type='hidden' name='action' value='actions'>
 				<input type='hidden' name='selected_items' value='" . (isset($host_array) ? serialize($host_array) : '') . "'>
 				<input type='hidden' name='drp_action' value='" . $_POST["drp_action"] . "'>
-				<a href='host_templates.php'><img src='" . html_get_theme_images_path("button_no.gif") . "' alt='Cancel' align='absmiddle' border='0'></a>
+				<a href='host_templates.php'><img src='" . html_get_theme_images_path("button_no.gif") . "' alt='" . _("Cancel") . "' align='absmiddle' border='0'></a>
 				$save_html
 			</td>
 		</tr>
@@ -223,7 +223,7 @@ function template_edit() {
 		$_GET["id"] = 0;
 	}
 
-	html_start_box("<strong>Host Templates</strong> $header_label", "98%", $colors["header_background"], "3", "center", "");
+	html_start_box("<strong>" . _("Host Templates") . "</strong> $header_label", "98%", $colors["header_background"], "3", "center", "");
 
 	draw_edit_form(array(
 		"config" => array(),
@@ -233,7 +233,7 @@ function template_edit() {
 	html_end_box();
 
 	if (!empty($_GET["id"])) {
-		html_start_box("<strong>Associated Graph Templates</strong>", "98%", $colors["header_background"], "3", "center", "");
+		html_start_box("<strong>" . _("Associated Graph Templates") . "</strong>", "98%", $colors["header_background"], "3", "center", "");
 
 		$selected_graph_templates = db_fetch_assoc("select
 			graph_template.id,
@@ -267,14 +267,14 @@ function template_edit() {
 				<?php
 			}
 		}else{
-			print "<tr bgcolor='#" . $colors["form_alternate2"] . "'><td><em>No associated graph templates.</em></td></tr>";
+			print "<tr bgcolor='#" . $colors["form_alternate2"] . "'><td><em>" . _("No associated graph templates.") . "</em></td></tr>";
 		}
 
 		?>
 		<tr bgcolor="#<?php print $colors["form_alternate1"];?>">
 			<td colspan="2">
 				<table cellspacing="0" cellpadding="1" width="100%">
-					<td nowrap>Add Graph Template:&nbsp;
+					<td nowrap><?php echo _("Add Graph Template");?>:&nbsp;
 						<?php form_dropdown("graph_template_id",$available_graph_templates,"template_name","id","","","");?>
 					</td>
 					<td align="right">
@@ -287,7 +287,7 @@ function template_edit() {
 		<?php
 		html_end_box();
 
-		html_start_box("<strong>Associated Data Queries</strong>", "98%", $colors["header_background"], "3", "center", "");
+		html_start_box("<strong>" . _("Associated Data Queries") . "</strong>", "98%", $colors["header_background"], "3", "center", "");
 
 		$selected_data_queries = db_fetch_assoc("select
 			snmp_query.id,
@@ -313,14 +313,14 @@ function template_edit() {
 				<?php
 			}
 		}else{
-			print "<tr bgcolor='#" . $colors["form_alternate2"] . "'><td><em>No associated data queries.</em></td></tr>";
+			print "<tr bgcolor='#" . $colors["form_alternate2"] . "'><td><em>" . _("No associated data queries.") . "</em></td></tr>";
 		}
 
 		?>
 		<tr bgcolor="#<?php print $colors["form_alternate1"];?>">
 			<td colspan="2">
 				<table cellspacing="0" cellpadding="1" width="100%">
-					<td nowrap>Add Data Query:&nbsp;
+					<td nowrap><?php echo _("Add Data Query");?>:&nbsp;
 						<?php form_dropdown("snmp_query_id",db_fetch_assoc("select
 							snmp_query.id,
 							snmp_query.name
@@ -348,7 +348,7 @@ function template() {
 
 	display_output_messages();
 
-	html_start_box("<strong>Host Templates</strong>", "98%", $colors["header_background"], "3", "center", "host_templates.php?action=edit");
+	html_start_box("<strong>" . _("Host Templates") . "</strong>", "98%", $colors["header_background"], "3", "center", "host_templates.php?action=edit");
 
 	html_header_checkbox(array("Template Title"));
 
@@ -369,7 +369,7 @@ function template() {
 	<?php
 	}
 	}else{
-		print "<tr><td bgcolor='#" . $colors["form_alternate1"] . "' colspan=7><em>No Host Templates</em></td></tr>";
+		print "<tr><td bgcolor='#" . $colors["form_alternate1"] . "' colspan=7><em>" . _("No Host Templates") . "</em></td></tr>";
 	}
 	html_end_box(false);
 

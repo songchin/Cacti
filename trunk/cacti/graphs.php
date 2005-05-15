@@ -255,7 +255,7 @@ function form_actions() {
 					<p>$graph_list</p>
 					";
 					if (sizeof($data_sources) > 0) {
-						print "<tr bgcolor='#" . $colors["form_alternate1"] . "'><td class='textArea'><p class='textArea'>The following data sources are in use by these graphs:</p>\n";
+						print "<tr bgcolor='#" . $colors["form_alternate1"] . "'><td class='textArea'><p class='textArea'>" . _("The following data sources are in use by these graphs") . ":</p>\n";
 
 						foreach ($data_sources as $data_source) {
 							print "<strong>" . $data_source["name_cache"] . "</strong><br>\n";
@@ -272,39 +272,39 @@ function form_actions() {
 			";
 	}elseif ($_POST["drp_action"] == "2") { /* change graph template */
 		print "	<tr>
-				<td class='textArea' bgcolor='#" . $colors["form_alternate1"]. "'>
-					<p>"._("Choose a graph template and click save to change the graph template for
+				<td class='textArea' bgcolor='#" . $colors["form_alternate1"] . "'>
+					<p>" . _("Choose a graph template and click save to change the graph template for
 					the following graphs. Be aware that all warnings will be suppressed during the
-					conversion, so graph data loss is possible.")."</p>
+					conversion, so graph data loss is possible.") . "</p>
 					<p>$graph_list</p>
-					<p><strong>"._("New Graph Template:")."</strong><br>"; form_dropdown("graph_template_id",db_fetch_assoc("select graph_templates.id,graph_templates.name from graph_templates"),"name","id","","","0"); print "</p>
+					<p><strong>" . _("New Graph Template:") . "</strong><br>"; form_dropdown("graph_template_id",db_fetch_assoc("select graph_templates.id,graph_templates.name from graph_templates"),"name","id","","","0"); print "</p>
 				</td>
 			</tr>\n
 			";
 	}elseif ($_POST["drp_action"] == "3") { /* duplicate */
 		print "	<tr>
 				<td class='textArea' bgcolor='#" . $colors["form_alternate1"]. "'>
-					<p>"._("When you click save, the following graphs will be duplicated. You can
-					optionally change the title format for the new graphs.")."</p>
+					<p>" . _("When you click save, the following graphs will be duplicated. You can
+					optionally change the title format for the new graphs.") . "</p>
 					<p>$graph_list</p>
-					<p><strong>Title Format:</strong><br>"; form_text_box("title_format", "<graph_title> (1)", "", "255", "30", "text"); print "</p>
+					<p><strong>" . _("Title Format") . ":</strong><br>"; form_text_box("title_format", "<graph_title> (1)", "", "255", "30", "text"); print "</p>
 				</td>
 			</tr>\n
 			";
 	}elseif ($_POST["drp_action"] == "4") { /* graph -> graph template */
 		print "	<tr>
 				<td class='textArea' bgcolor='#" . $colors["form_alternate1"]. "'>
-					<p>"._("When you click save, the following graphs will be converted into graph templates.
-					You can optionally change the title format for the new graph templates.")."</p>
+					<p>" . _("When you click save, the following graphs will be converted into graph templates.
+					You can optionally change the title format for the new graph templates.") . "</p>
 					<p>$graph_list</p>
-					<p><strong>"._("Title Format:")."</strong><br>"; form_text_box("title_format", "<graph_title> Template", "", "255", "30", "text"); print "</p>
+					<p><strong>" . _("Title Format:") . "</strong><br>"; form_text_box("title_format", "<graph_title> " . _("Template"), "", "255", "30", "text"); print "</p>
 				</td>
 			</tr>\n
 			";
 	}elseif ($_POST["drp_action"] == "5") { /* change host */
 		print "	<tr>
-				<td class='textArea' bgcolor='#" . $colors["form_alternate1"]. "'>
-					<p>"._("Choose a new host for these graphs:")."</p>
+				<td class='textArea' bgcolor='#" . $colors["form_alternate1"] . "'>
+					<p>" . _("Choose a new host for these graphs:") . "</p>
 					<p>$graph_list</p>
 					<p><strong>"._("New Host:")."</strong><br>"; form_dropdown("host_id",db_fetch_assoc("select id,CONCAT_WS('',description,' (',hostname,')') as name from host order by description,hostname"),"name","id","","","0"); print "</p>
 				</td>
@@ -313,8 +313,8 @@ function form_actions() {
 	}elseif ($_POST["drp_action"] == "6") { /* reapply suggested naming to host */
 		print "	<tr>
 				<td class='textArea' bgcolor='#" . $colors["form_alternate1"]. "'>
-					<p>"._("When you click save, the following graphs will have thier suggested naming convensions
-					recalculated and applies to the graphs.")."</p>
+					<p>" . _("When you click save, the following graphs will have thier suggested naming convensions
+					recalculated and applies to the graphs.") . "</p>
 					<p>$graph_list</p>
 				</td>
 			</tr>\n
@@ -323,11 +323,11 @@ function form_actions() {
 		$trees = db_fetch_assoc("select id,name from graph_tree order by name");
 
 		print "	<tr>
-				<td class='textArea' bgcolor='#" . $colors["form_alternate1"]. "'>
-					<p>"._("When you click save, the following graphs will be placed under the branch selected
-					below.")."</p>
+				<td class='textArea' bgcolor='#" . $colors["form_alternate1"] . "'>
+					<p>" . _("When you click save, the following graphs will be placed under the branch selected
+					below.") . "</p>
 					<p>$graph_list</p>
-					<p><strong>Destination Branch:</strong><br>"; grow_dropdown_tree($matches[1], "tree_item_id", "0"); print "</p>
+					<p><strong>" . _("Destination Branch") . ":</strong><br>"; grow_dropdown_tree($matches[1], "tree_item_id", "0"); print "</p>
 				</td>
 			</tr>\n
 			<input type='hidden' name='tree_id' value='" . $matches[1] . "'>\n
@@ -335,10 +335,10 @@ function form_actions() {
 	}
 
 	if (!isset($graph_array)) {
-		print "<tr><td bgcolor='#" . $colors["form_alternate1"]. "'><span class='textError'>"._("You must select at least one graph.")."</span></td></tr>\n";
+		print "<tr><td bgcolor='#" . $colors["form_alternate1"] . "'><span class='textError'>" . _("You must select at least one graph.") . "</span></td></tr>\n";
 		$save_html = "";
 	}else{
-		$save_html = "<input type='image' src='" . html_get_theme_images_path("button_yes.gif") . "' alt='Save' align='absmiddle'>";
+		$save_html = "<input type='image' src='" . html_get_theme_images_path("button_yes.gif") . "' alt='" . _("Save") . "' align='absmiddle'>";
 	}
 
 	print "	<tr>
@@ -346,7 +346,7 @@ function form_actions() {
 				<input type='hidden' name='action' value='actions'>
 				<input type='hidden' name='selected_items' value='" . (isset($graph_array) ? serialize($graph_array) : '') . "'>
 				<input type='hidden' name='drp_action' value='" . $_POST["drp_action"] . "'>
-				<a href='graphs.php'><img src='" . html_get_theme_images_path("button_no.gif") . "' alt='Cancel' align='absmiddle' border='0'></a>
+				<a href='graphs.php'><img src='" . html_get_theme_images_path("button_no.gif") . "' alt='" . _("Cancel") . "' align='absmiddle' border='0'></a>
 				$save_html
 			</td>
 		</tr>
@@ -371,9 +371,9 @@ function graph_edit() {
 			$graph_template = db_fetch_row("select * from graph_template where id=" . $graph["graph_template_id"]);
 		}
 
-		$header_label = "[edit: " . $graph["title_cache"] . "]";
+		$header_label = _("[edit: ") . $graph["title_cache"] . "]";
 	}else{
-		$header_label = "[new]";
+		$header_label = _("[new]");
 	}
 
 	/* handle debug mode */
@@ -417,7 +417,7 @@ function graph_edit() {
 			"friendly_name" => _("Host"),
 			"description" => _("Choose the host that this graph belongs to."),
 			"value" => (isset($_GET["host_id"]) ? $_GET["host_id"] : $graph["host_id"]),
-			"none_value" => "None",
+			"none_value" => _("None"),
 			"sql" => "select id,CONCAT_WS('',description,' (',hostname,')') as name from host order by description,hostname"
 			),
 		"id" => array(
@@ -443,10 +443,10 @@ function graph_edit() {
 	if (!empty($graph["graph_template_id"])) {
 		ob_start();
 
-		html_start_box("<strong>"._("Supplemental Template Data")."</strong>", "98%", $colors["header_background"], "3", "center", "");
+		html_start_box("<strong>" . _("Supplemental Template Data") . "</strong>", "98%", $colors["header_background"], "3", "center", "");
 
-		$num_output_fields =  draw_nontemplated_fields_graph($graph["graph_template_id"], $graph, "g||field|", "<strong>Graph Fields</strong>", true);
-		$num_output_fields += draw_nontemplated_fields_graph_item($graph["graph_template_id"], array_rekey(db_fetch_assoc("select * from graph_item where graph_id = " . $graph["id"]), "", array("id", "data_source_item_id", "color", "graph_item_type", "cdef", "consolidation_function", "gprint_format", "legend_format", "legend_value", "hard_return")), "gip||field|||id|", "<strong>Graph Item Fields</strong>", true);
+		$num_output_fields =  draw_nontemplated_fields_graph($graph["graph_template_id"], $graph, "g||field|", "<strong>" . _("Graph Fields") . "</strong>", true);
+		$num_output_fields += draw_nontemplated_fields_graph_item($graph["graph_template_id"], array_rekey(db_fetch_assoc("select * from graph_item where graph_id = " . $graph["id"]), "", array("id", "data_source_item_id", "color", "graph_item_type", "cdef", "consolidation_function", "gprint_format", "legend_format", "legend_value", "hard_return")), "gip||field|||id|", "<strong>" . _("Graph Item Fields") . "</strong>", true);
 
 		html_end_box();
 
@@ -467,7 +467,7 @@ function graph_edit() {
 
 		/* ==================== Box: Graph Items ==================== */
 
-		html_start_box("<strong>Graph Items</strong>", "98%", $colors["header_background"], "3", "center", "graphs_items.php?action=edit&graph_id=" . $_GET["id"]);
+		html_start_box("<strong>" . _("Graph Items") . "</strong>", "98%", $colors["header_background"], "3", "center", "graphs_items.php?action=edit&graph_id=" . $_GET["id"]);
 		draw_graph_item_editor($_GET["id"], "graph", false);
 		html_end_box();
 	}
@@ -485,7 +485,7 @@ function graph_edit() {
 					$graph_data_array["output_flag"] = RRDTOOL_OUTPUT_STDERR;
 					?>
 					<td>
-						<span class="textInfo">"._("RRDTool Says:")."</span><br>
+						<span class="textInfo"><?php echo _("RRDTool Says:");?></span><br>
 						<pre><?php print rrdtool_function_graph($_GET["id"], 1, $graph_data_array);?></pre>
 					</td>
 					<?php
@@ -498,7 +498,7 @@ function graph_edit() {
 	}
 
 	if ( (empty($graph["graph_template_id"])) && ( ((isset($_GET["id"])) && (is_numeric($_GET["id"]))) || ((isset($_GET["host_id"])) && (isset($_GET["graph_template_id"]))) ) ) {
-		html_start_box("<strong>Graph</strong>", "98%", $colors["header_background"], "3", "center", "");
+		html_start_box("<strong>" . _("Graph") . "</strong>", "98%", $colors["header_background"], "3", "center", "");
 
 		$form_array = array();
 
@@ -593,8 +593,8 @@ function graph() {
 						<td align='left' class='textHeaderDark'>
 							<strong>&lt;&lt; "; if ($_REQUEST["page"] > 1) { $nav .= "<a class='linkOverDark' href='graphs.php?filter=" . $_REQUEST["filter"] . "&host_id=" . $_REQUEST["host_id"] . "&page=" . ($_REQUEST["page"]-1) . "'>"; } $nav .= _("Previous"); if ($_REQUEST["page"] > 1) { $nav .= "</a>"; } $nav .= "</strong>
 						</td>\n
-						<td align='center' class='textHeaderDark'>
-							Showing Rows " . ((read_config_option("num_rows_graph")*($_REQUEST["page"]-1))+1) . " to " . ((($total_rows < read_config_option("num_rows_graph")) || ($total_rows < (read_config_option("num_rows_graph")*$_REQUEST["page"]))) ? $total_rows : (read_config_option("num_rows_graph")*$_REQUEST["page"])) . " of $total_rows [$url_page_select]
+						<td align='center' class='textHeaderDark'>"
+							. _("Showing Rows") . " " . ((read_config_option("num_rows_graph")*($_REQUEST["page"]-1))+1) . " to " . ((($total_rows < read_config_option("num_rows_graph")) || ($total_rows < (read_config_option("num_rows_graph")*$_REQUEST["page"]))) ? $total_rows : (read_config_option("num_rows_graph")*$_REQUEST["page"])) . " of $total_rows [$url_page_select]
 						</td>\n
 						<td align='right' class='textHeaderDark'>
 							<strong>"; if (($_REQUEST["page"] * read_config_option("num_rows_graph")) < $total_rows) { $nav .= "<a class='linkOverDark' href='graphs.php?filter=" . $_REQUEST["filter"] . "&host_id=" . $_REQUEST["host_id"] . "&page=" . ($_REQUEST["page"]+1) . "'>"; } $nav .= _("Next"); if (($_REQUEST["page"] * read_config_option("num_rows_graph")) < $total_rows) { $nav .= "</a>"; } $nav .= " &gt;&gt;</strong>
