@@ -63,7 +63,7 @@ $wizard_array = array(
 		"include" => "include/wizards/settings_graphexport.php"
 		),
 	"default" => "general",
-	"intro" => "<b>"._("Welcome to the Settings Wizard")."</b><br><br>"._("This wizard is designed to help you setup features in Cacti.  Please select the section you would like to setup."),
+	"intro" => "<b>" . _("Welcome to the Settings Wizard")."</b><br><br>"._("This wizard is designed to help you setup features in Cacti.  Please select the section you would like to setup."),
 	"title" => _("Setup Wizard"),
 	"debug" => true
 	);
@@ -81,7 +81,7 @@ if (! is_null(wizard_read_var("wizard"))) {
 		if (function_exists("wizard_render")) {
 			wizard_render(wizard_read_var("wizard"));
 		}else{
-			display_custom_error_message("Invalid wizard \"" . $_REQUEST["wizard"] . "\" unable to execute wizard_render function.");
+			display_custom_error_message(_("Invalid wizard \"") . $_REQUEST["wizard"] . _("\" unable to execute wizard_render function."));
 			wizard_clear_vars();
 		}
 	}else{
@@ -94,11 +94,11 @@ if (! is_null(wizard_read_var("wizard"))) {
 	include_once("include/top_header.php");
 
 	wizard_intro();
-	
+
 	include_once("include/bottom_footer.php");
 }
 
-/* 
+/*
 #########################################
 # Wizard Functions
 #########################################
@@ -112,11 +112,11 @@ function wizard_include($wizard) {
 		if (file_exists($file)) {
 			include_once($file);
 		}else{
-			display_custom_error_message("Unable to include Wizard File for wizard \"" . $wizard . "\"");
+			display_custom_error_message(_("Unable to include Wizard File for wizard \"") . $wizard . "\"");
 			return false;
 		}
 	}else{
-		display_custom_error_message("Invalid wizard \"" . $wizard . "\"");
+		display_custom_error_message(_("Invalid wizard \"") . $wizard . "\"");
 		return false;
 	}
 
@@ -168,7 +168,7 @@ function wizard_intro() {
 	/* html output */
 	print "<form method='POST'>\n";
 	html_start_box("<strong>" . $wizard_array["title"] . "</strong>", "70%", $colors["header_background"], "3", "center", "");
-	wizard_sub_header("Introduction");
+	wizard_sub_header(_("Introduction"));
 	wizard_start_area();
 	print "<br><blockquote>";
 	print $wizard_array["intro"];
@@ -179,12 +179,12 @@ function wizard_intro() {
 	print "<table border='0' width='100%'>\n";
 	print "\t<tr>\n";
 	print "\t\t<td width='15' valign='top' bgcolor='" . $colors["form_alternate1"] . "' class='textArea'></td>\n";
-	print "\t\t<td width='25%' valign='top' bgcolor='" . $colors["form_alternate1"] . "' class='textArea'><b>"._("Wizard")."</b><br><br>\n";
+	print "\t\t<td width='25%' valign='top' bgcolor='" . $colors["form_alternate1"] . "' class='textArea'><b>" . _("Wizard") . "</b><br><br>\n";
 	print $html;
 	print "\t\t</td>\n";
 	print "\t\t<td width='15' valign='top' bgcolor='" . $colors["form_alternate1"] . "' class='textArea'></td>\n";
-	print "\t\t<td valign='top' bgcolor='" . $colors["form_alternate1"] . "' class='textArea'><b>"._("Description")."</b><br><br>\n";
-	print "\t\t\t<div id='wizardarea' style='height:150px; overflow:auto;'>"._("None")."</div><br>\n";
+	print "\t\t<td valign='top' bgcolor='" . $colors["form_alternate1"] . "' class='textArea'><b>" . _("Description") . "</b><br><br>\n";
+	print "\t\t\t<div id='wizardarea' style='height:150px; overflow:auto;'>" . _("None") . "</div><br>\n";
 	print "\t\t</td>\n";
 	print "\t\t<td width='15' valign='top' bgcolor='" . $colors["form_alternate1"] . "' class='textArea'></td>\n";
 	print "\t</tr>\n";
@@ -206,7 +206,7 @@ function wizard_header($wizard,$width = "70%") {
 
 	/* html output */
 	print "<form method='POST'>\n";
-	html_start_box("<strong>" . $wizard_array[$wizard]["friendly_name"] . " Wizard</strong>", $width, $colors["header_background"], "3", "center", "");
+	html_start_box("<strong>" . $wizard_array[$wizard]["friendly_name"] . " " . _("Wizard") . "</strong>", $width, $colors["header_background"], "3", "center", "");
 
 
 }
@@ -225,7 +225,7 @@ function wizard_footer($button_back = true,$button_cancel = false,$button_save =
 	}
 	if ($button_cancel) {
 		print "\t\t\t<input type='image' src='" . html_get_theme_images_path("button_cancel2.gif") . "' name='wizard_action' value='cancel' alt='Cancel' align='absmiddle'>\n";
-	}	
+	}
 	if ($button_save) {
 		print "\t\t\t<input type='image' src='" . html_get_theme_images_path("button_save.gif") . "' name='wizard_action' value='save' alt='Save' align='absmiddle'>\n";
 	}
@@ -262,7 +262,7 @@ function wizard_end_area() {
 	global $colors;
 
 	print "\t</td>\n";
-	print "</tr>\n"; 
+	print "</tr>\n";
 
 }
 
@@ -388,12 +388,12 @@ function wizard_process_action() {
 }
 
 function wizard_continue_prompt() {
-	global $colors;	
+	global $colors;
 
-	html_start_box("<strong>Wizard Continuation</strong>", "50%", $colors["header_background"], "3", "center", "");
+	html_start_box("<strong>" . _("Wizard Continuation") . "</strong>", "50%", $colors["header_background"], "3", "center", "");
 	print "<form method='POST'>\n";
 	wizard_start_area();
-	print "<br><blockquote>It has been detected that you have left the wizard and returned.<br><br>Would you like to continue where you left off?</blockquote><br>";
+	print "<br><blockquote>" . _("It has been detected that you have left the wizard and returned.<br><br>Would you like to continue where you left off?") . "</blockquote><br>";
 	wizard_end_area();
 	html_end_box();
 
@@ -417,12 +417,12 @@ function wizard_print_debug() {
 			print "<br><br><br>";
 			print "<hr noshade>";
 			print "<table border='1' cellpadding='4' cellspacing='0' align='center'>\n";
-			print "<tr><td align='center' colspan='2'><b>WIZARD DEBUG</b></td></tr>\n";
+			print "<tr><td align='center' colspan='2'><b>" . _("WIZARD DEBUG") . "</b></td></tr>\n";
 			print "<tr><td valign='top'><pre>";
-			print "Wizard Session Variables:\n";
+			print _("Wizard Session Variables:") . "\n";
 			print_r($_SESSION["wizard_vars"]);
 			print "</pre></td><td valign='top'><pre>";
-			print "\nForm Variables:\n";
+			print "\n" . _("Form Variables:") . "\n";
 			print_r($_REQUEST);
 			print "</pre></td></tr></table>\n";
 		}

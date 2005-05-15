@@ -33,7 +33,7 @@ if (read_config_option("auth_method") == "2") {
 		?>
 <html>
 <head>
-	<title>Logout of Cacti</title>
+	<title><?php echo _("Logout of Cacti");?></title>
 	<STYLE TYPE="text/css">
 	<!--
 		BODY, TABLE, TR, TD {font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 12px;}
@@ -49,7 +49,7 @@ if (read_config_option("auth_method") == "2") {
 	<tr>
 		<td><img src="<?php print html_get_theme_images_path('auth_logout.gif');?>" border="0" alt=""></td>
 	</tr><tr>
-		<td><br>"._("To end your Cacti session please close your web browser.")."<br><br><a href="index.php">"._("Return to Cacti")."</a></td>
+		<td><br><?php echo _("To end your Cacti session please close your web browser.");?><br><br><a href="index.php"><?php echo _("Return to Cacti");?></a></td>
 	</tr>
 </table>
 </body>
