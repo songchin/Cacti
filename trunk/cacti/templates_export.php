@@ -31,22 +31,22 @@ if (!isset($_REQUEST["action"])) { $_REQUEST["action"] = ""; }
 
 $export_types = array(
 	"graph_template" => array(
-		"name" => "Graph Template",
+		"name" => _("Graph Template"),
 		"title_sql" => "select name from graph_templates where id=|id|",
 		"dropdown_sql" => "select id,name from graph_templates order by name"
 		),
 	"data_template" => array(
-		"name" => "Data Template",
+		"name" => _("Data Template"),
 		"title_sql" => "select name from data_template where id=|id|",
 		"dropdown_sql" => "select id,name from data_template order by name"
 		),
 	"host_template" => array(
-		"name" => "Host Template",
+		"name" => _("Host Template"),
 		"title_sql" => "select name from host_template where id=|id|",
 		"dropdown_sql" => "select id,name from host_template order by name"
 		),
 	"data_query" => array(
-		"name" => "Data Query",
+		"name" => _("Data Query"),
 		"title_sql" => "select name from snmp_query where id=|id|",
 		"dropdown_sql" => "select id,name from snmp_query order by name"
 		)
@@ -124,11 +124,11 @@ function export() {
 	<form method="post" action="templates_export.php">
 	<?php
 
-	html_start_box("<strong>Export Template</strong> [" . $export_types{$_REQUEST["export_type"]}["name"] . "]", "98%", $colors["header_background"], "3", "center", "");
+	html_start_box("<strong>" . _("Export Template") . "</strong> [" . $export_types{$_REQUEST["export_type"]}["name"] . "]", "98%", $colors["header_background"], "3", "center", "");
 
 	form_alternate_row_color($colors["form_alternate1"],$colors["form_alternate2"],0); ?>
 		<td width="50%">
-			<font class="textEditTitle"><?php print $export_types{$_REQUEST["export_type"]}["name"];?> to Export</font><br>
+			<font class="textEditTitle"><?php print $export_types{$_REQUEST["export_type"]}["name"] . _(" to Export");?></font><br>
 			<?php echo _("Choose the exact item to export to XML."); ?>
 		</td>
 		<td>
@@ -143,7 +143,7 @@ function export() {
 			this box or the resulting import may fail."); ?>
 		</td>
 		<td>
-			<?php form_checkbox("include_deps", "on", "Include Dependencies", "on", "", true);?>
+			<?php form_checkbox("include_deps", "on", _("Include Dependencies"), "on", "", true);?>
 		</td>
 	</tr>
 

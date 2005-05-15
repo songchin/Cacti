@@ -79,24 +79,24 @@ function import() {
 	<?php
 
 	if ((isset($_SESSION["import_debug_info"])) && (is_array($_SESSION["import_debug_info"]))) {
-		html_start_box("<strong>Import Results</strong>", "98%", $colors["messagebar_border"], "3", "center", "");
+		html_start_box("<strong>" . _("Import Results") . "</strong>", "98%", $colors["messagebar_border"], "3", "center", "");
 
-		print "<tr bgcolor='#" . $colors["form_alternate1"] . "'><td><p class='textArea'>Cacti has imported the following items:</p>";
+		print "<tr bgcolor='#" . $colors["form_alternate1"] . "'><td><p class='textArea'>" . _("Cacti has imported the following items:") . "</p>";
 
 		while (list($type, $type_array) = each($_SESSION["import_debug_info"])) {
 			print "<p><strong>" . $hash_type_names[$type] . "</strong></p>";
 
 			while (list($index, $vals) = each($type_array)) {
 				if ($vals["result"] == "success") {
-					$result_text = "<span style='color: green;'>[success]</span>";
+					$result_text = "<span style='color: green;'>" . _("[success]") . "</span>";
 				}else{
-					$result_text = "<span style='color: red;'>[fail]</span>";
+					$result_text = "<span style='color: red;'>" . _("[fail]") . "</span>";
 				}
 
 				if ($vals["type"] == "update") {
-					$type_text = "<span style='color: gray;'>[update]</span>";
+					$type_text = "<span style='color: gray;'>" . _("[update]") . "</span>";
 				}else{
-					$type_text = "<span style='color: blue;'>[new]</span>";
+					$type_text = "<span style='color: blue;'>" . _("[new]") . "</span>";
 				}
 
 				print "<span style='font-family: monospace;'>$result_text " . $vals["title"] . " $type_text</span><br>\n";
@@ -105,9 +105,9 @@ function import() {
 				if ((isset($vals["dep"])) && (sizeof($vals["dep"]) > 0)) {
 					while (list($dep_hash, $dep_status) = each($vals["dep"])) {
 						if ($dep_status == "met") {
-							$dep_status_text = "<span style='color: navy;'>Found Dependency:</span>";
+							$dep_status_text = "<span style='color: navy;'>" . _("Found Dependency:") . "</span>";
 						}else{
-							$dep_status_text = "<span style='color: red;'>Unmet Dependency:</span>";
+							$dep_status_text = "<span style='color: red;'>" . _("Unmet Dependency:") . "</span>";
 							$there_are_dep_errors = true;
 						}
 
@@ -129,12 +129,12 @@ function import() {
 		kill_session_var("import_debug_info");
 	}
 
-	html_start_box("<strong>Import Templates</strong>", "98%", $colors["header_background"], "3", "center", "");
+	html_start_box("<strong>" . _("Import Templates") . "</strong>", "98%", $colors["header_background"], "3", "center", "");
 
-	form_alternate_row_color($colors["form_alternate1"],$colors["form_alternate2"],0); ?>
+	form_alternate_row_color($colors["form_alternate1"],$colors["form_alternate2"],0);?>
 		<td width="50%">
 			<font class="textEditTitle"><?php echo _("Import Template from Local File"); ?></font><br>
-			<?php echo _("If the XML file containing template data is located on your local machine, select it here."); ?>
+			<?php echo _("If the XML file containing template data is located on your local machine, select it here.");?>
 		</td>
 		<td>
 			<input type="file" name="import_file">
@@ -145,7 +145,7 @@ function import() {
 		<td width="50%">
 			<font class="textEditTitle"><?php echo _("Import Template from Text"); ?></font><br>
 			<?php echo _("If you have the XML file containing template data as text, you can paste it into this box to
-			import it."); ?>
+			import it.");?>
 		</td>
 		<td>
 			<?php form_text_area("import_text", "", "10	", "50", "");?>

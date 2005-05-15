@@ -62,15 +62,15 @@ function change_password() {
 					raise_message(11);
 					/* Log password change */
 					$username = db_fetch_cell("select username from user_auth where id=" . $_SESSION["sess_user_id"]);
-					api_syslog_cacti_log("CHANGEPASSWORD: Password change successful", SEV_INFO, 0, 0, 0, false, FACIL_AUTH);
+					api_syslog_cacti_log(_("CHANGEPASSWORD: Password change successful"), SEV_INFO, 0, 0, 0, false, FACIL_AUTH);
 				}elseif ($change_result == "2") {
 					/* Authentication failure for old password */
 					raise_message(8);
-					api_syslog_cacti_log("CHANGEPASSWORD: Authenication failure on old password", SEV_WARNING, 0, 0, 0, false, FACIL_AUTH);
+					api_syslog_cacti_log(_("CHANGEPASSWORD: Authenication failure on old password"), SEV_WARNING, 0, 0, 0, false, FACIL_AUTH);
 				}else{
 					/* General error changing password */
 					raise_message(9);
-					api_syslog_cacti_log("CHANGEPASSWORD: General Error unable to change password", SEV_ERROR, 0, 0, 0, false, FACIL_AUTH);
+					api_syslog_cacti_log(_("CHANGEPASSWORD: General Error unable to change password"), SEV_ERROR, 0, 0, 0, false, FACIL_AUTH);
 				}
 			}
 		}else{
@@ -122,7 +122,7 @@ function change_password_form() {
 	if ($user_realms["18"]["value"] == "1") {
 		if ((read_config_option("auth_method") == "1") || (($current_user["realm"] == "0") && (read_config_option("auth_method") == "3"))) {
 			/* Builtin auth method, password can be changed */
-			html_start_box("<strong>"._("Change Password")."</strong>", "98%", $colors["header_background"], "3", "center", "");
+			html_start_box("<strong>" . _("Change Password") . "</strong>", "98%", $colors["header_background"], "3", "center", "");
 			draw_edit_form(array(
 				"config" => array("form_name" => "chk"),
 				"fields" => inject_form_variables($form_fields, (isset($user) ? $user : array()))

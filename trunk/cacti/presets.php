@@ -95,7 +95,7 @@ function draw_tabs() {
 function view_cdef() {
 	global $colors;
 
-	html_start_box("<strong>"._("CDEFs")."</strong>", "98%", $colors["header_background"], "3", "center", "presets_cdef.php?action=edit");
+	html_start_box("<strong>" . _("CDEFs") . "</strong>", "98%", $colors["header_background"], "3", "center", "presets_cdef.php?action=edit");
 
 	html_header(array(_("Name")), 2);
 
@@ -118,7 +118,7 @@ function view_cdef() {
 	}else{
 		form_alternate_row_color($colors["form_alternate1"], $colors["form_alternate2"], 0); ?>
 			<td colspan="2">
-				<em>No Items Found</em>
+				<em><?php echo _("No Items Found");?></em>
 			</td>
 		</tr>
 		<?php
@@ -129,7 +129,7 @@ function view_cdef() {
 function view_color() {
 	global $colors;
 
-	html_start_box("<strong>"._("Colors")."</strong>", "98%", $colors["header_background"], "3", "center", "color.php?action=edit");
+	html_start_box("<strong>" . _("Colors") . "</strong>", "98%", $colors["header_background"], "3", "center", "color.php?action=edit");
 
 	html_header(array(_("Hex Value"), _("Color")), 2);
 
@@ -153,7 +153,7 @@ function view_color() {
 	}else{
 		form_alternate_row_color($colors["form_alternate1"], $colors["form_alternate2"], 0); ?>
 			<td colspan="2">
-				<em>"._("No Items Found")."</em>
+				<em><?php echo _("No Items Found");?></em>
 			</td>
 		</tr>
 		<?php
@@ -164,7 +164,7 @@ function view_color() {
 function view_gprint() {
 	global $colors;
 
-	html_start_box("<strong>"._("GPRINT Presets")."</strong>", "98%", $colors["header_background"], "3", "center", "presets_gprint.php?action=edit");
+	html_start_box("<strong>" . _("GPRINT Presets") . "</strong>", "98%", $colors["header_background"], "3", "center", "presets_gprint.php?action=edit");
 
 	html_header(array(_("Name"), _("Format String")), 2);
 
@@ -182,7 +182,7 @@ function view_gprint() {
 					<?php echo $gprint["gprint_text"];?>
 				</td>
 				<td align="right">
-					<a href="presets_gprint.php?action=remove&id=<?php echo $gprint["id"];?>"><img src="<?php echo html_get_theme_images_path('delete_icon.gif');?>" width="10" height="10" border="0" alt="Delete"></a>
+					<a href="presets_gprint.php?action=remove&id=<?php echo $gprint["id"];?>"><img src="<?php echo html_get_theme_images_path('delete_icon.gif');?>" width="10" height="10" border="0" alt=<?php echo _("Delete");?>></a>
 				</td>
 			</tr>
 			<?php
@@ -191,7 +191,7 @@ function view_gprint() {
 	}else{
 		form_alternate_row_color($colors["form_alternate1"], $colors["form_alternate2"], 0); ?>
 			<td colspan="2">
-				<em>"._("No Items Found")."</em>
+				<em><?php echo _("No Items Found");?></em>
 			</td>
 		</tr>
 		<?php

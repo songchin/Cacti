@@ -25,7 +25,7 @@
 
 /* do NOT run this script through a web browser */
 if (!isset($_SERVER["argv"][0])) {
-	die("<br><strong>This script is only meant to run at the command line.</strong>");
+	die("<br><strong>" . _("This script is only meant to run at the command line.") . "</strong>");
 }
 
 $start = date("Y-n-d H:i:s"); // for runtime measurement
@@ -74,7 +74,7 @@ if ( $_SERVER["argc"] == 1 ) {
 					$poller_id = substr($parameter,3);
 					break;
 				default:
-					api_syslog_cacti_log("Invalid Calling Parameter in CMD.PHP", SEV_ERROR, $poller_id, 0, 0, true, FACIL_CMDPHP);
+					api_syslog_cacti_log(_("Invalid Calling Parameter in CMD.PHP"), SEV_ERROR, $poller_id, 0, 0, true, FACIL_CMDPHP);
 			}
 		}
 
@@ -93,14 +93,14 @@ if ( $_SERVER["argc"] == 1 ) {
 					" and host_id <= " .
 					$last_host . " AND poller_id = " . $poller_id . ") ORDER by host_id");
 		}else{
-			print "ERROR: Invalid Arguments.  The first argument must be less than or equal to the first.\n";
-			print "USAGE: CMD.PHP [-f=first_host -l=last_host -p=poller_id]\n";
-			api_syslog_cacti_log("Invalid Arguments.  CMD.PHP calling parameters invalid.", SEV_ERROR, $poller_id, 0, 0, $print_data_to_stdout, FACIL_CMDPHP);
+			print _("ERROR: Invalid Arguments.  The first argument must be less than or equal to the first.") . "\n";
+			print _("USAGE: CMD.PHP [-f=first_host -l=last_host -p=poller_id]") . "\n";
+			api_syslog_cacti_log(_("Invalid Arguments.  CMD.PHP calling parameters invalid."), SEV_ERROR, $poller_id, 0, 0, $print_data_to_stdout, FACIL_CMDPHP);
 		}
 	}else{
-		print "ERROR: Invalid Arguments.  The first argument must be less than or equal to the first.\n";
-		print "USAGE: CMD.PHP [-f=first_host -l=last_host -p=poller_id]\n";
-		api_syslog_cacti_log("Invalid Arguments.  CMD.PHP calling parameters invalid.", SEV_ERROR, $poller_id, 0, 0, $print_data_to_stdout, FACIL_CMDPHP);
+		print _("ERROR: Invalid Arguments.  The first argument must be less than or equal to the first.") . "\n";
+		print _("USAGE: CMD.PHP [-f=first_host -l=last_host -p=poller_id]") . "\n";
+		api_syslog_cacti_log(_("Invalid Arguments.  CMD.PHP calling parameters invalid."), SEV_ERROR, $poller_id, 0, 0, $print_data_to_stdout, FACIL_CMDPHP);
 	}
 }
 
@@ -108,7 +108,7 @@ if ( $_SERVER["argc"] == 1 ) {
 if ($config["cacti_server_os"] == "win32") {
 	$guess = substr(__FILE__,0,2);
 	if ($guess == strtoupper($guess)) {
-		api_syslog_cacti_log("The PHP Script: CMD.PHP Must be started using the full path to the file and in lower case.  This is a PHP Bug!!!", SEV_ERROR, $poller_id, 0, 0, false, FACIL_CMDPHP);
+		api_syslog_cacti_log(_("The PHP Script: CMD.PHP Must be started using the full path to the file and in lower case.  This is a PHP Bug!!!"), SEV_ERROR, $poller_id, 0, 0, false, FACIL_CMDPHP);
 		exit(-1);
 	}
 }
@@ -138,9 +138,9 @@ if ((sizeof($polling_items) > 0) && (read_config_option("poller_enabled") == "on
 	if (function_exists("proc_open")) {
 		$cactiphp = proc_open(read_config_option("path_php_binary") . " " . $config["base_path"] . "/script_server.php cmd " . $poller_id, $cactides, $pipes);
 		$output = fgets($pipes[1], 1024);
-		if (substr_count($output, "Started") != 0) {
+		if (substr_count($output, _("Started")) != 0) {
 			if (read_config_option("log_verbosity") >= POLLER_VERBOSITY_HIGH) {
-				api_syslog_cacti_log("PHP Script Server Started Properly", SEV_INFO, $poller_id, 0, 0, $print_data_to_stdout, FACIL_CMDPHP);
+				api_syslog_cacti_log(_("PHP Script Server Started Properly"), SEV_INFO, $poller_id, 0, 0, $print_data_to_stdout, FACIL_CMDPHP);
 			}
 		}
 		$using_proc_function = true;
@@ -148,7 +148,7 @@ if ((sizeof($polling_items) > 0) && (read_config_option("poller_enabled") == "on
 	}else {
 		$using_proc_function = false;
 		if (read_config_option("log_verbosity") == POLLER_VERBOSITY_DEBUG) {
-			api_syslog_cacti_log("PHP version 4.3 or above is recommended for performance considerations.", SEV_NOTICE, $poller_id, 0, 0, $print_data_to_stdout, FACIL_CMDPHP);
+			api_syslog_cacti_log(_("PHP version 4.3 or above is recommended for performance considerations."), SEV_NOTICE, $poller_id, 0, 0, $print_data_to_stdout, FACIL_CMDPHP);
 		}
 	}
 
@@ -194,7 +194,7 @@ if ((sizeof($polling_items) > 0) && (read_config_option("poller_enabled") == "on
 				update_host_status($poller_id, HOST_UP, $host_id, $hosts, $ping, $ping_availability, $print_data_to_stdout);
 
 				if (read_config_option("log_verbosity") >= POLLER_VERBOSITY_MEDIUM) {
-					api_syslog_cacti_log("Availability Disabled for Host.", SEV_NOTICE, $poller_id, $host_id, 0, $print_data_to_stdout, FACIL_CMDPHP);
+					api_syslog_cacti_log(_("Availability Disabled for Host."), SEV_NOTICE, $poller_id, $host_id, 0, $print_data_to_stdout, FACIL_CMDPHP);
 				}
 			}else{
 				if ($ping->ping($ping_availability, $item["ping_method"], read_config_option("ping_timeout"), read_config_option("ping_retries"))) {
@@ -219,7 +219,7 @@ if ((sizeof($polling_items) > 0) && (read_config_option("poller_enabled") == "on
 
 				if ((sizeof($reindex) > 0) && (!$host_down)) {
 					if (read_config_option("log_verbosity") == POLLER_VERBOSITY_DEBUG) {
-						api_syslog_cacti_log("RECACHE: Processing " . sizeof($reindex) . " items in the auto reindex cache for '" . $item["hostname"] . "'.", SEV_DEBUG, $poller_id, $host_id, 0, $print_data_to_stdout, FACIL_CMDPHP);
+						api_syslog_cacti_log(_("RECACHE: Processing") . " " . sizeof($reindex) . " " . _("items in the auto reindex cache for") . " '" . $item["hostname"] . "'.", SEV_DEBUG, $poller_id, $host_id, 0, $print_data_to_stdout, FACIL_CMDPHP);
 					}
 
 					foreach ($reindex as $index_item) {
@@ -237,15 +237,15 @@ if ((sizeof($polling_items) > 0) && (read_config_option("poller_enabled") == "on
 
 						/* assert the result with the expected value in the db; recache if the assert fails */
 						if (($index_item["op"] == "=") && ($index_item["assert_value"] != trim($output))) {
-							api_syslog_cacti_log("ASSERT: '" . $index_item["assert_value"] . "=" . trim($output) . "' failed. Recaching host '" . $item["hostname"] . "', data query #" . $index_item["data_query_id"], SEV_DEBUG, $poller_id, $host_id, 0, $print_data_to_stdout, FACIL_CMDPHP);
+							api_syslog_cacti_log(_("ASSERT") . ": '" . $index_item["assert_value"] . "=" . trim($output) . "' " . _("failed. Recaching host") . " '" . $item["hostname"] . "', " . _("data query #") . $index_item["data_query_id"], SEV_DEBUG, $poller_id, $host_id, 0, $print_data_to_stdout, FACIL_CMDPHP);
 							db_execute("insert into poller_command (poller_id,time,action,command) values (0,NOW()," . POLLER_COMMAND_REINDEX . ",'" . $item["host_id"] . ":" . $index_item["data_query_id"] . "')");
 							$assert_fail = true;
 						}else if (($index_item["op"] == ">") && ($index_item["assert_value"] <= trim($output))) {
-							api_syslog_cacti_log("ASSERT: '" . $index_item["assert_value"] . ">" . trim($output) . "' failed. Recaching host '" . $item["hostname"] . "', data query #" . $index_item["data_query_id"], SEV_DEBUG, $poller_id, $host_id, 0, $print_data_to_stdout, FACIL_CMDPHP);
+							api_syslog_cacti_log(_("ASSERT") . ": '" . $index_item["assert_value"] . ">" . trim($output) . "' " . _("failed. Recaching host") . " '" . $item["hostname"] . "', " . _("data query #") . $index_item["data_query_id"], SEV_DEBUG, $poller_id, $host_id, 0, $print_data_to_stdout, FACIL_CMDPHP);
 							db_execute("insert into poller_command (poller_id,time,action,command) values (0,NOW()," . POLLER_COMMAND_REINDEX . ",'" . $item["host_id"] . ":" . $index_item["data_query_id"] . "')");
 							$assert_fail = true;
 						}else if (($index_item["op"] == "<") && ($index_item["assert_value"] >= trim($output))) {
-							api_syslog_cacti_log("ASSERT: '" . $index_item["assert_value"] . "<" . trim($output) . "' failed. Recaching host '" . $item["hostname"] . "', data query #" . $index_item["data_query_id"], SEV_DEBUG, $poller_id, $host_id, 0, $print_data_to_stdout, FACIL_CMDPHP);
+							api_syslog_cacti_log(_("ASSERT") . ": '" . $index_item["assert_value"] . "<" . trim($output) . "' " . _("failed. Recaching host") . " '" . $item["hostname"] . "', " . _("data query #") . $index_item["data_query_id"], SEV_DEBUG, $poller_id, $host_id, 0, $print_data_to_stdout, FACIL_CMDPHP);
 							db_execute("insert into poller_command (poller_id,time,action,command) values (0,NOW()," . POLLER_COMMAND_REINDEX . ",'" . $item["host_id"] . ":" . $index_item["data_query_id"] . "')");
 							$assert_fail = true;
 						}
@@ -262,7 +262,7 @@ if ((sizeof($polling_items) > 0) && (read_config_option("poller_enabled") == "on
 								$set_spike_kill = true;
 
 								if (read_config_option("log_verbosity") == POLLER_VERBOSITY_DEBUG) {
-									cacti_log("Host[$host_id] NOTICE: Spike Kill in Effect for '" . $item["hostname"] . "'.", $print_data_to_stdout);
+									cacti_log(_("Host") . "[$host_id] " . _("NOTICE: Spike Kill in Effect for") . " '" . $item["hostname"] . "'.", $print_data_to_stdout);
 								}
 							}
 						}
@@ -291,12 +291,12 @@ if ((sizeof($polling_items) > 0) && (read_config_option("poller_enabled") == "on
 						$strout = strlen($output);
 					}
 
-					api_syslog_cacti_log("Result from SNMP not valid.  Partial Result: " . substr($output, 0, $strout), SEV_NOTICE, $poller_id, $host_id, 0, $print_data_to_stdout, FACIL_CMDPHP);
+					api_syslog_cacti_log(_("Result from SNMP not valid.  Partial Result") . ": " . substr($output, 0, $strout), SEV_NOTICE, $poller_id, $host_id, 0, $print_data_to_stdout, FACIL_CMDPHP);
 					$output = "U";
 				}
 
 				if (read_config_option("log_verbosity") >= POLLER_VERBOSITY_MEDIUM) {
-					api_syslog_cacti_log("SNMP: v" . $item["snmp_version"] . ": " . $item["hostname"] . ", dsname: " . $item["rrd_name"] . ", oid: " . $item["arg1"] . ", output: $output", SEV_INFO, $poller_id, $host_id, 0, $print_data_to_stdout, FACIL_CMDPHP);
+					api_syslog_cacti_log(_("SNMP: v") . $item["snmp_version"] . ": " . $item["hostname"] . _(", dsname: ") . $item["rrd_name"] . _(", oid: ") . $item["arg1"] . _(", output: ") . $output, SEV_INFO, $poller_id, $host_id, 0, $print_data_to_stdout, FACIL_CMDPHP);
 				}
 
 				break;
@@ -314,12 +314,12 @@ if ((sizeof($polling_items) > 0) && (read_config_option("poller_enabled") == "on
 						$strout = strlen($output);
 					}
 
-					api_syslog_cacti_log("Result from CMD not valid.  Partial Result: " . substr($output, 0, $strout), SEV_NOTICE, $poller_id, $host_id, 0, $print_data_to_stdout, FACIL_CMDPHP);
+					api_syslog_cacti_log(_("Result from CMD not valid.  Partial Result:") . " " . substr($output, 0, $strout), SEV_NOTICE, $poller_id, $host_id, 0, $print_data_to_stdout, FACIL_CMDPHP);
 					$output = "U";
 				}
 
 				if (read_config_option("log_verbosity") >= POLLER_VERBOSITY_MEDIUM) {
-					api_syslog_cacti_log("CMD: " . $item["arg1"] . ", output: $output", SEV_INFO, $poller_id, $host_id, 0, $print_data_to_stdout, FACIL_CMDPHP);
+					api_syslog_cacti_log(_("CMD: ") . $item["arg1"] . _(", output: ") . $output, SEV_INFO, $poller_id, $host_id, 0, $print_data_to_stdout, FACIL_CMDPHP);
 				}
 
 				break;
@@ -338,16 +338,16 @@ if ((sizeof($polling_items) > 0) && (read_config_option("poller_enabled") == "on
 							$strout = strlen($output);
 						}
 
-						api_syslog_cacti_log("Result from SERVER not valid.  Partial Result: " . substr($output, 0, $strout), SEV_NOTICE, $poller_id, $host_id, 0, $print_data_to_stdout, FACIL_CMDPHP);
+						api_syslog_cacti_log(_("Result from SERVER not valid.  Partial Result:") . " " . substr($output, 0, $strout), SEV_NOTICE, $poller_id, $host_id, 0, $print_data_to_stdout, FACIL_CMDPHP);
 						$output = "U";
 					}
 
 					if (read_config_option("log_verbosity") >= POLLER_VERBOSITY_MEDIUM) {
-						api_syslog_cacti_log("SERVER: " . $item["arg1"] . ", output: $output", SEV_INFO, $poller_id, $host_id, 0, $print_data_to_stdout, FACIL_CMDPHP);
+						api_syslog_cacti_log(_("SERVER: ") . $item["arg1"] . _(", output: ") . $output, SEV_INFO, $poller_id, $host_id, 0, $print_data_to_stdout, FACIL_CMDPHP);
 					}
 				}else{
 					if (read_config_option("log_verbosity") >= POLLER_VERBOSITY_MEDIUM) {
-						api_syslog_cacti_log("*SKIPPING* SERVER: " . $item["arg1"] . " (PHP < 4.3)", SEV_NOTICE, $poller_id, $host_id, 0, $print_data_to_stdout, FACIL_CMDPHP);
+						api_syslog_cacti_log(_("*SKIPPING* SERVER: ") . $item["arg1"] . _(" (PHP < 4.3)"), SEV_NOTICE, $poller_id, $host_id, 0, $print_data_to_stdout, FACIL_CMDPHP);
 					}
 
 					$output = "U";
@@ -385,7 +385,7 @@ if ((sizeof($polling_items) > 0) && (read_config_option("poller_enabled") == "on
 		list($micro,$seconds) = split(" ", microtime());
 		$end = $seconds + $micro;
 
-		api_syslog_cacti_log(sprintf("Run Time: %01.4f s, Theads: N/A, Hosts: %s", round($end-$start,4), $host_count), SEV_NOTICE, $poller_id, 0, 0, $print_data_to_stdout, FACIL_CMDPHP);
+		api_syslog_cacti_log(sprintf(_("Run Time:") . " %01.4f " . _("s, Theads: N/A, Hosts:") . " %s", round($end-$start,4), $host_count), SEV_NOTICE, $poller_id, 0, 0, $print_data_to_stdout, FACIL_CMDPHP);
 	}
 
 }else{
@@ -393,7 +393,7 @@ if ((sizeof($polling_items) > 0) && (read_config_option("poller_enabled") == "on
 	list($micro,$seconds) = split(" ", microtime());
 	$end = $seconds + $micro;
 
-	api_syslog_cacti_log("Either there are no items in the cache or polling is disabled", SEV_ERROR, $poller_id, 0, 0, $print_data_to_stdout, FACIL_CMDPHP);
+	api_syslog_cacti_log(_("Either there are no items in the cache or polling is disabled"), SEV_ERROR, $poller_id, 0, 0, $print_data_to_stdout, FACIL_CMDPHP);
 }
 
 /* calculate poller statistics */

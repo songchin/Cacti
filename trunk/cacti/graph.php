@@ -39,7 +39,7 @@ if ($_GET["rra_id"] == "all") {
 
 /* make sure the graph requested exists (sanity) */
 if (!(db_fetch_cell("select id from graph where id = " . $_GET["graph_id"]))) {
-	print "<strong><font size='+1' color='FF0000'>"._("GRAPH DOES NOT EXIST")."</font></strong>"; exit;
+	print "<strong><font size='+1' color='FF0000'>" . _("GRAPH DOES NOT EXIST") . "</font></strong>"; exit;
 }
 
 /* take graph permissions into account here, if the user does not have permission
@@ -48,7 +48,7 @@ if (read_config_option("auth_method") != "0") {
 	$access_denied = !(is_graph_allowed($_GET["graph_id"]));
 
 	if ($access_denied == true) {
-		print "<strong><font size='+1' color='FF0000'>"._("ACCESS DENIED")."</font></strong>"; exit;
+		print "<strong><font size='+1' color='FF0000'>" . _("ACCESS DENIED") . "</font></strong>"; exit;
 	}
 }
 
@@ -67,7 +67,7 @@ case 'view':
 	?>
 	<tr bgcolor='#<?php print $colors["header_panel_background"];?>'>
 		<td colspan='3' class='textHeaderDark'>
-			<strong>Viewing Graph</strong> '<?php print $graph_title;?>'
+			<strong><?php echo _("Viewing Graph");?></strong> '<?php print $graph_title;?>'
 		</td>
 	</tr>
 	<?php
@@ -85,7 +85,7 @@ case 'view':
 						</td>
 						<td valign='top' style='padding: 3px;' class='noprint'>
 							<a href='graph.php?action=zoom&graph_id=<?php print $_GET["graph_id"];?>&rra_id=<?php print $rra["id"];?>&view_type=<?php print $_REQUEST["view_type"];?>'><img src='images/graph_zoom.gif' border='0' alt='Zoom Graph' title='Zoom Graph' style='padding: 3px;'></a><br>
-							<?php if (! $using_guest_account) { ?><a href='graph.php?action=properties&graph_id=<?php print $_GET["graph_id"];?>&rra_id=<?php print $rra["id"];?>&view_type=<?php print $_REQUEST["view_type"];?>'><img src='images/graph_properties.gif' border='0' alt='Graph Source/Properties' title='Graph Source/Properties' style='padding: 3px;'></a> <?php } ?>
+							<?php if (! $using_guest_account) { ?><a href='graph.php?action=properties&graph_id=<?php print $_GET["graph_id"];?>&rra_id=<?php print $rra["id"];?>&view_type=<?php print $_REQUEST["view_type"];?>'><img src='images/graph_properties.gif' border='0' alt='<?php echo _("Graph Source/Properties");?>' title='<?php echo _("Graph Source/Properties");?>' style='padding: 3px;'></a> <?php } ?>
 						</td>
 					</tr>
 					<tr>
@@ -165,7 +165,7 @@ case 'zoom':
 	?>
 	<tr bgcolor='#<?php print $colors["header_panel"];?>'>
 		<td colspan='3' class='textHeaderDark'>
-			<strong>Zooming Graph</strong> '<?php print $graph_title;?>'
+			<strong><?php echo _("Zooming Graph");?></strong> '<?php print $graph_title;?>'
 		</td>
 	</tr>
 	<div id='zoomBox' style='position:absolute; overflow:none; left:0px; top:0px; width:0px; height:0px; visibility:visible; background:red; filter:alpha(opacity=50); -moz-opacity:0.5; -khtml-opacity:.5'></div>
@@ -178,7 +178,7 @@ case 'zoom':
 						<img id='zoomGraphImage' src='graph_image.php?graph_id=<?php print $_GET["graph_id"];?>&rra_id=<?php print $_GET["rra_id"];?>&view_type=<?php print $_REQUEST["view_type"];?>&graph_start=<?php print $graph_start;?>&graph_end=<?php print $graph_end;?>&graph_height=<?php print $graph_height;?>&graph_width=<?php print $graph_width;?>' border='0' alt='<?php print $graph_title;?>'>
 					</td>
 					<td valign='top' style='padding: 3px;' class='noprint'>
-						<?php if (! $using_guest_account) { ?><a href='graph.php?action=properties&graph_id=<?php print $_GET["graph_id"];?>&rra_id=<?php print $_GET["rra_id"];?>&view_type=<?php print $_REQUEST["view_type"];?>&graph_start=<?php print $graph_start;?>&graph_end=<?php print $graph_end;?>'><img src='images/graph_properties.gif' border='0' alt='Graph Source/Properties' title='Graph Source/Properties' style='padding: 3px;'></a><?php } ?>
+						<?php if (! $using_guest_account) { ?><a href='graph.php?action=properties&graph_id=<?php print $_GET["graph_id"];?>&rra_id=<?php print $_GET["rra_id"];?>&view_type=<?php print $_REQUEST["view_type"];?>&graph_start=<?php print $graph_start;?>&graph_end=<?php print $graph_end;?>'><img src='images/graph_properties.gif' border='0' alt='<?php echo _("Graph Source/Properties");?>' title='<?php echo _("Graph Source/Properties");?>' style='padding: 3px;'></a><?php } ?>
 					</td>
 				</tr>
 				<tr>
@@ -198,7 +198,7 @@ case 'properties':
 	?>
 	<tr bgcolor='#<?php print $colors["header_panel"];?>'>
 		<td colspan='3' class='textHeaderDark'>
-			<strong>Viewing Graph Properties </strong> '<?php print $graph_title;?>'
+			<strong><?php echo _("Viewing Graph Properties");?></strong> '<?php print $graph_title;?>'
 		</td>
 	</tr>
 	<tr>
@@ -209,7 +209,7 @@ case 'properties':
 						<img src='graph_image.php?graph_id=<?php print $_GET["graph_id"];?>&rra_id=<?php print $_GET["rra_id"];?>&graph_start=<?php print (isset($_GET["graph_start"]) ? $_GET["graph_start"] : 0);?>&graph_end=<?php print (isset($_GET["graph_end"]) ? $_GET["graph_end"] : 0);?>' border='0' alt='<?php print $graph_title;?>'>
 					</td>
 					<td valign='top' style='padding: 3px;' class="noprint">
-						<a href='graph.php?action=zoom&graph_id=<?php print $_GET["graph_id"];?>&rra_id=<?php print $_GET["rra_id"];?>&view_type=<?php print $_REQUEST["view_type"];?><?php print (isset($_GET["graph_start"]) ? print "&graph_start=" . $_GET["graph_start"] : "");?><?php print (isset($_GET["graph_end"]) ? print "&graph_end=" . $_GET["graph_end"] : "");?>'><img src='images/graph_zoom.gif' border='0' alt='Zoom Graph' title='Zoom Graph' style='padding: 3px;'></a><br>
+						<a href='graph.php?action=zoom&graph_id=<?php print $_GET["graph_id"];?>&rra_id=<?php print $_GET["rra_id"];?>&view_type=<?php print $_REQUEST["view_type"];?><?php print (isset($_GET["graph_start"]) ? print "&graph_start=" . $_GET["graph_start"] : "");?><?php print (isset($_GET["graph_end"]) ? print "&graph_end=" . $_GET["graph_end"] : "");?>'><img src='images/graph_zoom.gif' border='0' alt='<?php echo _("Zoom Graph");?>' title='<?php echo _("Zoom Graph");?>' style='padding: 3px;'></a><br>
 					</td>
 				</tr>
 				<tr>
