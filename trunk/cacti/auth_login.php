@@ -44,7 +44,7 @@ if (read_config_option("auth_method") == "2") {
 	} else {
 		/* No user - Bad juju! */
 		$username = "";
-		auth_display_custom_error_message("Web Basic Authentication configured, but no username was passed from the web server.  Please make sure you have authentication enabled on the web server.");
+		auth_display_custom_error_message(_("Web Basic Authentication configured, but no username was passed from the web server.  Please make sure you have authentication enabled on the web server."));
 		api_syslog_cacti_log("No username passed with Web Basic Authentication enabled.", SEV_ERROR, 0, 0, 0, false, FACIL_AUTH);
 		exit;
 	}
@@ -231,7 +231,7 @@ if ($action == 'login') {
 	}else{
 		if ((!$guest_user) && ($user_auth)) {
 			/* No guest account defined */
-			auth_display_custom_error_message("Access Denied, please contact you Cacti Administrator.");
+			auth_display_custom_error_message(_("Access Denied, please contact you Cacti Administrator."));
 			api_syslog_cacti_log("LOGIN: Access Denied, No guest enabled or template user to copy", SEV_ERROR, 0, 0, 0, false, FACIL_AUTH);
 			exit;
 		}else{
@@ -265,7 +265,8 @@ function auth_display_custom_error_message($message) {
 <head>
 	<link rel='shortcut icon' href='<?php print html_get_theme_images_path("favicon.ico");?>' type='image/x-icon'>
 	<link href='<?php print html_get_theme_images_path("favicon.ico");?>' rel='image/x-icon'>
-	<title>Login to Cacti</title>
+    <meta http-equiv='Content-Type' content='text/html; charset=<?php echo _( "screen charset");?>'>
+	<title><?php echo _("Login to Cacti");?></title>
 	<STYLE TYPE="text/css">
 	<!--
 		BODY, TABLE, TR, TD {font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 12px;}
@@ -293,28 +294,28 @@ function auth_display_custom_error_message($message) {
 	if ($action == "login") {?>
 	<tr height="10"><td></td></tr>
 	<tr>
-		<td colspan="2"><font color="#FF0000"><strong>Invalid User Name/Password Please Retype:</strong></font></td>
+		<td colspan="2"><font color="#FF0000"><strong><?php echo _("Invalid User Name/Password Please Retype:"); ?></strong></font></td>
 	</tr>
 	<?php }
 	if ($user_enabled == "0") {?>
 	<tr height="10"><td></td></tr>
 	<tr>
-		<td colspan="2"><font color="#FF0000"><strong>User Account Disabled</strong></font></td>
+		<td colspan="2"><font color="#FF0000"><strong><?php echo _("User Account Disabled"); ?></strong></font></td>
 	</tr>
 	<?php } } ?>
 
 
 	<tr height="10"><td></td></tr>
 	<tr>
-		<td colspan="2">Please enter your Cacti user name and password below:</td>
+		<td colspan="2"><?php echo _("Please enter your Cacti user name and password below:"); ?></td>
 	</tr>
 	<tr height="10"><td></td></tr>
 	<tr>
-		<td>User Name:</td>
+		<td><?php echo _("User Name:"); ?></td>
 		<td><input type="text" name="login_username" size="40" style="width: 295px;" value="<?php print $username; ?>"></td>
 	</tr>
 	<tr>
-		<td>Password:</td>
+		<td><?php echo _("Password:"); ?></td>
 		<td><input type="password" name="login_password" size="40" style="width: 295px;"></td>
 	</tr>
 	<?php
@@ -323,15 +324,15 @@ function auth_display_custom_error_message($message) {
                 <td>Realm:</td>
                 <td>
 			<select name="realm" style="width: 295px;">
-				<option value="local">Local</option>
-				<option value="ldap" selected>LDAP</option>
+				<option value="local"><?php echo _("Local"); ?></option>
+				<option value="ldap" selected><?php echo _("LDAP"); ?></option>
 			</select>
 		</td>
         </tr>
 	<?php }?>
 	<tr height="10"><td></td></tr>
 	<tr>
-		<td><input type="submit" value="Login"></td>
+		<td><input type="submit" value="<?php echo _("Login");?>"></td>
 	</tr>
 </table>
 <input type="hidden" name="action" value="login">

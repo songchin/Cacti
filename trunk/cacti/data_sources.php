@@ -39,11 +39,11 @@ include_once("./lib/rrd.php");
 define("MAX_DISPLAY_PAGES", 21);
 
 $ds_actions = array(
-	1 => "Delete",
-	2 => "Change Data Template",
-	3 => "Change Host",
-	4 => "Duplicate",
-	5 => "Convert to Data Template"
+	1 => _("Delete"),
+	2 => _("Change Data Template"),
+	3 => _("Change Host"),
+	4 => _("Duplicate"),
+	5 => _("Convert to Data Template")
 	);
 
 /* set default action */
@@ -275,40 +275,40 @@ function form_actions() {
 	}elseif ($_POST["drp_action"] == "2") { /* change graph template */
 		print "	<tr>
 				<td class='textArea' bgcolor='#" . $colors["form_alternate1"]. "'>
-					<p>Choose a data template and click save to change the data template for
+					<p>"._("Choose a data template and click save to change the data template for
 					the following data souces. Be aware that all warnings will be suppressed during the
-					conversion, so graph data loss is possible.</p>
+					conversion, so graph data loss is possible.")."</p>
 					<p>$ds_list</p>
-					<p><strong>New Data Template:</strong><br>"; form_dropdown("data_template_id",db_fetch_assoc("select data_template.id,data_template.name from data_template order by data_template.name"),"name","id","","","0"); print "</p>
+					<p><strong>"._("New Data Template:")."</strong><br>"; form_dropdown("data_template_id",db_fetch_assoc("select data_template.id,data_template.name from data_template order by data_template.name"),"name","id","","","0"); print "</p>
 				</td>
 			</tr>\n
 			";
 	}elseif ($_POST["drp_action"] == "3") { /* change host */
 		print "	<tr>
 				<td class='textArea' bgcolor='#" . $colors["form_alternate1"]. "'>
-					<p>Choose a new host for these data sources:</p>
+					<p>"._("Choose a new host for these data sources:")."</p>
 					<p>$ds_list</p>
-					<p><strong>New Host:</strong><br>"; form_dropdown("host_id",db_fetch_assoc("select id,CONCAT_WS('',description,' (',hostname,')') as name from host order by description,hostname"),"name","id","","","0"); print "</p>
+					<p><strong>"._("New Host:")."</strong><br>"; form_dropdown("host_id",db_fetch_assoc("select id,CONCAT_WS('',description,' (',hostname,')') as name from host order by description,hostname"),"name","id","","","0"); print "</p>
 				</td>
 			</tr>\n
 			";
 	}elseif ($_POST["drp_action"] == "4") { /* duplicate */
 		print "	<tr>
 				<td class='textArea' bgcolor='#" . $colors["form_alternate1"]. "'>
-					<p>When you click save, the following data sources will be duplicated. You can
-					optionally change the title format for the new data sources.</p>
+					<p>"._("When you click save, the following data sources will be duplicated. You can
+					optionally change the title format for the new data sources.")."</p>
 					<p>$ds_list</p>
-					<p><strong>Title Format:</strong><br>"; form_text_box("title_format", "<ds_title> (1)", "", "255", "30", "text"); print "</p>
+					<p><strong>"._("Title Format:")."</strong><br>"; form_text_box("title_format", "<ds_title> (1)", "", "255", "30", "text"); print "</p>
 				</td>
 			</tr>\n
 			";
 	}elseif ($_POST["drp_action"] == "5") { /* graph -> graph template */
 		print "	<tr>
 				<td class='textArea' bgcolor='#" . $colors["form_alternate1"]. "'>
-					<p>When you click save, the following data sources will be converted into data templates.
-					You can optionally change the title format for the new data templates.</p>
+					<p>"._("When you click save, the following data sources will be converted into data templates.
+					You can optionally change the title format for the new data templates.")."</p>
 					<p>$ds_list</p>
-					<p><strong>Title Format:</strong><br>"; form_text_box("title_format", "<ds_title> Template", "", "255", "30", "text"); print "</p>
+					<p><strong>"._("Title Format:")."</strong><br>"; form_text_box("title_format", "<ds_title> Template", "", "255", "30", "text"); print "</p>
 				</td>
 			</tr>\n
 			";
@@ -401,16 +401,16 @@ function ds_edit() {
 	$form_array = array(
 		"data_template_id" => array(
 			"method" => "drop_sql",
-			"friendly_name" => "Selected Data Template",
-			"description" => "The name given to this data template.",
+			"friendly_name" => _("Selected Data Template"),
+			"description" => _("The name given to this data template."),
 			"value" => (isset($data_source) ? $data_source["data_template_id"] : "0"),
 			"none_value" => "None",
 			"sql" => "select id,template_name as name from data_template order by template_name"
 			),
 		"host_id" => array(
 			"method" => "drop_sql",
-			"friendly_name" => "Device",
-			"description" => "Choose the device that this graph belongs to.",
+			"friendly_name" => _("Device"),
+			"description" => _("Choose the device that this graph belongs to."),
 			"value" => (isset($_GET["host_id"]) ? $_GET["host_id"] : $data_source["host_id"]),
 			"none_value" => "None",
 			"sql" => "select id,CONCAT_WS('',description,' (',hostname,')') as name from host order by description,hostname"
@@ -424,21 +424,21 @@ function ds_edit() {
 	// get_data_query_array()
 	$form_data_query_fields = array(
 		"hdr_snmp_generic" => array(
-			"friendly_name" => "Data Query Parameters",
+			"friendly_name" => _("Data Query Parameters"),
 			"method" => "spacer"
 			),
 		"dif_data_query_field_name" => array(
 			"method" => "drop_sql",
-			"friendly_name" => "Field Name",
-			"description" => "Determines the field that Cacti will use when locating a unique row for this data query.",
+			"friendly_name" => _("Field Name"),
+			"description" => _("Determines the field that Cacti will use when locating a unique row for this dat)a query."),
 			"value" => (isset($data_input_type_fields["data_query_field_name"]["value"]) ? $data_input_type_fields["data_query_field_name"]["value"] : ""),
 			"none_value" => "",
 			"sql" => "select field_name as name,field_name as id from host_snmp_cache where snmp_query_id = '|data_query_id|' group by field_name"
 			),
 		"dif_data_query_field_value" => array(
 			"method" => "textbox",
-			"friendly_name" => "Field Value",
-			"description" => "When assigned to the field name above, produces a single data query row used by the poller to retrieve data.",
+			"friendly_name" => _("Field Value"),
+			"description" => _("When assigned to the field name above, produces a single data query row used by th)e poller to retrieve data."),
 			"value" => (isset($data_input_type_fields["data_query_field_value"]["value"]) ? $data_input_type_fields["data_query_field_value"]["value"] : ""),
 			"max_length" => "100",
 			"size" => "30"
@@ -462,9 +462,9 @@ function ds_edit() {
 	if (!empty($data_source["data_template_id"])) {
 		ob_start();
 
-		html_start_box("<strong>Supplemental Template Data</strong>", "98%", $colors["header_background"], "3", "center", "");
+		html_start_box("<strong>"._("Supplemental Template Data")."</strong>", "98%", $colors["header_background"], "3", "center", "");
 
-		$num_output_fields =  draw_nontemplated_fields_data_input($data_source["data_template_id"], $data_input_type_fields, "dif_|field|", "<strong>Data Input</strong>", true);
+		$num_output_fields =  draw_nontemplated_fields_data_input($data_source["data_template_id"], $data_input_type_fields, "dif_|field|", "<strong>"._("Data Input")."</strong>", true);
 		$num_output_fields += draw_nontemplated_fields_data_source($data_source["data_template_id"], $data_source, "ds||field|", "<strong>Data Source Fields</strong>", true, true);
 		$num_output_fields += draw_nontemplated_fields_data_source_item($data_source["data_template_id"], db_fetch_assoc("select * from data_source_item where data_source_id = " . $data_source["id"] . " order by data_source_name"), "dsi||field|||id|", "<strong>Data Source Item Fields</strong>", true, true);
 
@@ -534,7 +534,7 @@ function ds_edit() {
 				if (sizeof($script_input_fields) > 0) {
 					$_data_input_type_form += array(
 						"hdr_script_custom_fields" => array(
-							"friendly_name" => "Custom Input Fields",
+							"friendly_name" => _("Custom Input Fields"),
 							"method" => "spacer"
 							)
 						);
@@ -594,7 +594,7 @@ function ds_edit() {
 
 		$_data_input_form += $_data_input_type_form;
 
-		html_start_box("<strong>Data Input</strong>", "98%", $colors["header_background_template"], "3", "center", "");
+		html_start_box("<strong>"._("Data Input")."</strong>", "98%", $colors["header_background_template"], "3", "center", "");
 
 		draw_edit_form(
 			array(
@@ -609,7 +609,7 @@ function ds_edit() {
 
 		/* ==================== Box: Data Source ==================== */
 
-		html_start_box("<strong>Data Source</strong>", "98%", $colors["header_background"], "3", "center", "");
+		html_start_box("<strong>"._("Data Source")."</strong>", "98%", $colors["header_background"], "3", "center", "");
 
 		$form_array = array();
 
@@ -634,7 +634,7 @@ function ds_edit() {
 
 		/* ==================== Box: Data Source Item ==================== */
 
-		html_start_box("<strong>Data Source Item</strong>", "98%", $colors["header_background"], "3", "center", (empty($_GET["id"]) ? "" : "javascript:document.forms[0].action.value='item_add';submit_redirect(0, '" . htmlspecialchars("data_sources.php?action=item_add&id=" . $_GET["id"]) . "', '')"));
+		html_start_box("<strong>"._("Data Source Item")."</strong>", "98%", $colors["header_background"], "3", "center", (empty($_GET["id"]) ? "" : "javascript:document.forms[0].action.value='item_add';submit_redirect(0, '" . htmlspecialchars("data_sources.php?action=item_add&id=" . $_GET["id"]) . "', '')"));
 
 		/* the user clicked the "add item" link. we need to make sure they get redirected back to
 		 * this page if an error occurs */
@@ -814,13 +814,13 @@ function ds() {
 				<table width='100%' cellspacing='0' cellpadding='0' border='0'>
 					<tr>
 						<td align='left' class='textHeaderDark'>
-							<strong>&lt;&lt; "; if ($_REQUEST["page"] > 1) { $nav .= "<a class='linkOverDark' href='data_sources.php?filter=" . $_REQUEST["filter"] . "&host_id=" . $_REQUEST["host_id"] . "&page=" . ($_REQUEST["page"]-1) . "'>"; } $nav .= "Previous"; if ($_REQUEST["page"] > 1) { $nav .= "</a>"; } $nav .= "</strong>
+							<strong>&lt;&lt; "; if ($_REQUEST["page"] > 1) { $nav .= "<a class='linkOverDark' href='data_sources.php?filter=" . $_REQUEST["filter"] . "&host_id=" . $_REQUEST["host_id"] . "&page=" . ($_REQUEST["page"]-1) . "'>"; } $nav .= _("Previous"); if ($_REQUEST["page"] > 1) { $nav .= "</a>"; } $nav .= "</strong>
 						</td>\n
 						<td align='center' class='textHeaderDark'>
 							Showing Rows " . ((read_config_option("num_rows_data_source")*($_REQUEST["page"]-1))+1) . " to " . ((($total_rows < read_config_option("num_rows_data_source")) || ($total_rows < (read_config_option("num_rows_data_source")*$_REQUEST["page"]))) ? $total_rows : (read_config_option("num_rows_data_source")*$_REQUEST["page"])) . " of $total_rows [$url_page_select]
 						</td>\n
 						<td align='right' class='textHeaderDark'>
-							<strong>"; if (($_REQUEST["page"] * read_config_option("num_rows_data_source")) < $total_rows) { $nav .= "<a class='linkOverDark' href='data_sources.php?filter=" . $_REQUEST["filter"] . "&host_id=" . $_REQUEST["host_id"] . "&page=" . ($_REQUEST["page"]+1) . "'>"; } $nav .= "Next"; if (($_REQUEST["page"] * read_config_option("num_rows_data_source")) < $total_rows) { $nav .= "</a>"; } $nav .= " &gt;&gt;</strong>
+							<strong>"; if (($_REQUEST["page"] * read_config_option("num_rows_data_source")) < $total_rows) { $nav .= "<a class='linkOverDark' href='data_sources.php?filter=" . $_REQUEST["filter"] . "&host_id=" . $_REQUEST["host_id"] . "&page=" . ($_REQUEST["page"]+1) . "'>"; } $nav .= _("Next"); if (($_REQUEST["page"] * read_config_option("num_rows_data_source")) < $total_rows) { $nav .= "</a>"; } $nav .= " &gt;&gt;</strong>
 						</td>\n
 					</tr>
 				</table>
@@ -829,7 +829,7 @@ function ds() {
 
 	print $nav;
 
-	html_header_checkbox(array("Name", "Data Input Type", "Active", "Template Name"));
+	html_header_checkbox(array(_("Name"), _("Data Input Type"), _("Active"), _("Template Name")));
 
 	$i = 0;
 	if (sizeof($data_sources) > 0) {
@@ -852,7 +852,7 @@ function ds() {
 					<?php print (empty($data_source["active"]) ? "<span style='color: red;'>No</span>" : "Yes");?>
 				</td>
 				<td>
-					<?php print ((empty($data_source["data_template_name"])) ? "<em>None</em>" : $data_source["data_template_name"]);?>
+					<?php print ((empty($data_source["data_template_name"])) ? "<em>"._("None")."</em>" : $data_source["data_template_name"]);?>
 				</td>
 				<td style="<?php print get_checkbox_style();?>" width="1%" align="right">
 					<input type='checkbox' style='margin: 0px;' name='chk_<?php print $data_source["id"];?>' title="<?php print $data_source["name_cache"];?>">
@@ -864,7 +864,7 @@ function ds() {
 		/* put the nav bar on the bottom as well */
 		print $nav;
 	}else{
-		print "<tr><td bgcolor='#" . $colors["form_alternate1"] . "' colspan=7><em>No Data Sources</em></td></tr>";
+		print "<tr><td bgcolor='#" . $colors["form_alternate1"] . "' colspan=7><em>"._("No Data Sources")."</em></td></tr>";
 	}
 
 	html_end_box(false);

@@ -123,41 +123,41 @@ if (!$access_denied) {
 <?php if ($access_denied) { ?>
 	<tr height="10"><td></td></tr>
 	<tr>
-		<td colspan="2" align="center"><font color="#FF0000" size="+2"><strong>Access Denied</strong></font></td>
+		<td colspan="2" align="center"><font color="#FF0000" size="+2"><strong><?php echo _("Access Denied");?></strong></font></td>
 	</tr>
 <?php }else{ ?>
 	<?php if ($bad_password == true) {?>
 	<tr height="10"><td></td></tr>
 	<tr>
-		<td colspan="2"><font color="#FF0000"><strong>Your passwords do not match, please retype:</strong></font></td>
+		<td colspan="2"><font color="#FF0000"><strong><?php echo _("Your passwords do not match, please retype:"); ?></strong></font></td>
 	</tr>
 	<?php }
 	if ($old_password == true) {?>
 	<tr height="10"><td></td></tr>
 	<tr>
-		<td colspan="2"><font color="#FF0000"><strong>You cannot reuse your old password, please retype:</strong></font></td>
+		<td colspan="2"><font color="#FF0000"><strong><?php echo _("You cannot reuse your old password, please retype:"); ?></strong></font></td>
 	</tr>
 	<?php }?>
 
 	<tr height="10"><td></td></tr>
 	<tr>
 		<td colspan="2">
-			<strong><font color="#FF0000">*** Forced Password Change ***</font></strong><br><br>
-			Please enter a new password for cacti:
+			<strong><font color="#FF0000"><?php echo _("*** Forced Password Change ***"); ?></font></strong><br><br>
+			<?php echo _("Please enter a new password for cacti:"); ?>
 		</td>
 	</tr>
 	<tr height="10"><td></td></tr>
 	<tr>
-		<td>Password:</td>
+		<td><?php echo _("Password:)"; ?></td>
 		<td><input type="password" name="password" size="40"></td>
 	</tr>
 	<tr>
-		<td>Confirm:</td>
+		<td><?php echo _("Confirm:"); ?></td>
 		<td><input type="password" name="confirm" size="40"></td>
 	</tr>
 	<tr height="10"><td></td></tr>
 	<tr>
-		<td><input type="submit" value="Save"></td>
+		<td><input type="submit" value="<?php echo _("Save"); ?>"></td>
 	</tr>
 
 <?php } ?>

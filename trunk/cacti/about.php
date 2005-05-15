@@ -39,13 +39,13 @@ html_start_box("<strong>About Cacti</strong>", "98%", $colors["header_background
 		<br>
 		<a href="http://www.cacti.net/" target="_blank"><img align="right" src="<?php print html_get_theme_images_path('cacti_logo_about.gif');?>" border="0" alt="Cacti"></a>
 
-		Cacti is designed to be a complete graphing solution for your network. Its goal is to make the
+		<?php echo _("Cacti is designed to be a complete graphing solution for your network. Its goal is to make the
 		network administrator's job easier by taking care of all the necessary details necessary to create
-		meaningful network graphs.
+		meaningful network graphs."); ?>
 
-		<p>The design of Cacti took many hours of SQL and PHP coding, so I hope you find it very useful.</p>
+		<p><?php echo _("The design of Cacti took many hours of SQL and PHP coding, so I hope you find it very useful."); ?></p>
 
-		<p><strong>Developer Thanks</strong><br>
+		<p><strong><?php echo _("Developer Thanks"); ?></strong><br>
 		<ul type="disc">
 			<li><a href="http://blyler.cc">Andy Blyler</a>, for ideas, code, and that much needed overall support
 			during really lengthy coding sessions.</li>
@@ -56,11 +56,11 @@ html_start_box("<strong>About Cacti</strong>", "98%", $colors["header_background
 		</ul>
 		</p>
 
-		<p><strong>Thanks</a></strong><br>
+		<p><strong><?php echo _("Thanks"); ?></a></strong><br>
 		<ul type="disc">
 			<li>A very special thanks to <a href="http://ee-staff.ethz.ch/~oetiker/">Tobi Oetiker</a>,
 				the creator of <a href="http://www.mrtg.org/">RRDTool</a> and the very popular
-				<a href="http://www.mrtg.org">MRTG</a>.</li>
+				<a href="http://www.mrtg.org">MRTG</a></li>
 			<li>Brady Alleman, creator of NetMRG and
 				<a href="http://www.thtech.net">Treehouse Technolgies</a> for questions and ideas. Just
 				as a note, NetMRG is a complete Network Monitoring solution also written in PHP/MySQL. His
@@ -71,24 +71,24 @@ html_start_box("<strong>About Cacti</strong>", "98%", $colors["header_background
 		</ul>
 		</p>
 
-		<p><strong>License</strong><br>
+		<p><strong><?php echo _("License"); ?></strong><br>
 
-		<p>Cacti is licensed under the GNU GPL:</p>
+		<p><?php echo _("Cacti is licensed under the GNU GPL:"); ?></p>
 
-		<p><tt>This program is free software; you can redistribute it and/or
+		<p><tt><?php echo _("This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
-of the License, or (at your option) any later version.</tt></p>
+of the License, or (at your option) any later version."); ?></tt></p>
 
-<p><tt>This program is distributed in the hope that it will be useful,
+<p><tt><?php echo _("This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.</tt></p>
+GNU General Public License for more details."); ?></tt></p>
 
 		<p><strong>Cacti Variables</a></strong><span style="font-family: monospace; font-size: 10px;"><br>
-		<strong>Cacti OS:</strong> <?php print $config["cacti_server_os"];?><br>
-		<strong>PHP SNMP Support:</strong> <?php print $config["php_snmp_support"] ? "yes" : "no";?><br>
-		<strong>PHP OS:</strong> <?php print PHP_OS ?><br>
+		<strong><?php echo _("Cacti OS:"); ?></strong> <?php print $config["cacti_server_os"];?><br>
+		<strong><?php echo _("PHP SNMP Support:"); ?></strong> <?php print $config["php_snmp_support"] ? "yes" : "no";?><br>
+		<strong><?php echo _("PHP OS:"); ?></strong> <?php print PHP_OS ?><br>
 		<img src="<?php print html_get_php_os_icon();?>"><br>
 		</span></p>
 	</td>

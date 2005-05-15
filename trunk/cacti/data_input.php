@@ -100,7 +100,7 @@ function form_save() {
 function field_remove() {
 	if ((read_config_option("remove_verification") == "on") && (!isset($_GET["confirm"]))) {
 		include("./include/top_header.php");
-		form_confirm("Are You Sure?", "Are you sure you want to delete the field <strong>'" . db_fetch_cell("select name from data_input_fields where id=" . $_GET["id"]) . "'</strong>?", "data_input.php?action=edit&id=" . $_GET["data_input_id"], "data_input.php?action=field_remove&id=" . $_GET["id"] . "&data_input_id=" . $_GET["data_input_id"]);
+		form_confirm(_("Are You Sure?"), "Are you sure you want to delete the field <strong>'" . db_fetch_cell("select name from data_input_fields where id=" . $_GET["id"]) . "'</strong>?", "data_input.php?action=edit&id=" . $_GET["data_input_id"], "data_input.php?action=field_remove&id=" . $_GET["id"] . "&data_input_id=" . $_GET["data_input_id"]);
 		include("./include/bottom_footer.php");
 		exit;
 	}
@@ -178,7 +178,7 @@ function field_edit() {
 
 		/* ==================== Box: Field Input ==================== */
 
-		html_start_box("<strong>Field Input</strong>", "98%", $colors["header_background_template"], "3", "center", "");
+		html_start_box("<strong>"._("Field Input")."</strong>", "98%", $colors["header_background_template"], "3", "center", "");
 
 		draw_edit_form(
 			array(
@@ -204,7 +204,7 @@ function field_edit() {
 
 	/* if there are no input fields to choose from, complain */
 	if ((!isset($array_field_names)) && (isset($_GET["type"]) ? $_GET["type"] == "in" : false) && ($data_input["type_id"] == DATA_INPUT_TYPE_SCRIPT)) {
-		display_custom_error_message("This script appears to have no input values, therefore there is nothing to add.");
+		display_custom_error_message(_("This script appears to have no input values, therefore there is nothing to add."));
 		return;
 	}
 
@@ -240,7 +240,7 @@ function field_edit() {
 function data_remove() {
 	if ((read_config_option("remove_verification") == "on") && (!isset($_GET["confirm"]))) {
 		include("./include/top_header.php");
-		form_confirm("Are You Sure?", "Are you sure you want to delete the data input method <strong>'" . db_fetch_cell("select name from data_input where id=" . $_GET["id"]) . "'</strong>?", "data_input.php", "data_input.php?action=remove&id=" . $_GET["id"]);
+		form_confirm(_("Are You Sure?"), _("Are you sure you want to delete the data input method <strong>'") . db_fetch_cell("select name from data_input where id=" . $_GET["id"]) . "'</strong>?", "data_input.php", "data_input.php?action=remove&id=" . $_GET["id"]);
 		include("./include/bottom_footer.php");
 		exit;
 	}
@@ -275,9 +275,9 @@ function data_edit() {
 	if (!empty($_GET["id"])) {
 		/* ==================== Box: Input Fields ==================== */
 
-		html_start_box("<strong>Input Fields</strong>", "98%", $colors["header_background"], "3", "center", "data_input.php?action=field_edit&type=in&data_input_id=" . $_GET["id"]);
+		html_start_box("<strong>"._("Input Fields")."</strong>", "98%", $colors["header_background"], "3", "center", "data_input.php?action=field_edit&type=in&data_input_id=" . $_GET["id"]);
 
-		html_header(array("Name", "Found in Input String?", "Friendly Name"), 2);
+		html_header(array(_("Name"), _("Found in Input String?"), _("Friendly Name")), 2);
 
 		$fields = db_fetch_assoc("select id,data_name,name from data_input_fields where data_input_id=" . $_GET["id"] . " and input_output='in' order by data_name");
 
@@ -305,16 +305,16 @@ function data_edit() {
 			<?php
 			}
 		}else{
-			print "<tr><td><em>No Input Fields Defined</em></td></tr>";
+			print "<tr><td><em>"._("No Input Fields Defined")."</em></td></tr>";
 		}
 
 		html_end_box();
 
 		/* ==================== Box: Output Fields ==================== */
 
-		html_start_box("<strong>Output Fields</strong>", "98%", $colors["header_background"], "3", "center", "data_input.php?action=field_edit&type=out&data_input_id=" . $_GET["id"]);
+		html_start_box("<strong>"._("Output Fields")."</strong>", "98%", $colors["header_background"], "3", "center", "data_input.php?action=field_edit&type=out&data_input_id=" . $_GET["id"]);
 
-		html_header(array("Name", "Friendly Name", "Update RRD"), 2);
+		html_header(array(_("Name"), _("Friendly Name"), _("Update RRD")), 2);
 
 		$fields = db_fetch_assoc("select id,name,data_name,update_rrd from data_input_fields where data_input_id=" . $_GET["id"] . " and input_output='out'");
 
@@ -352,7 +352,7 @@ function data() {
 
 	html_start_box("<strong>Custom Scripts</strong>", "98%", $colors["header_background"], "3", "center", "data_input.php?action=edit");
 
-	html_header(array("Name"), 2);
+	html_header(array(_("Name")), 2);
 
 	$data_inputs = db_fetch_assoc("select * from data_input order by name");
 
@@ -371,7 +371,7 @@ function data() {
 		<?php
 		}
 	}else{
-		print "<tr><td><em>No Data Input Methods</em></td></tr>";
+		print "<tr><td><em>"._("No Data Input Methods")."</em></td></tr>";
 	}
 
 	html_end_box();

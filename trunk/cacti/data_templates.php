@@ -36,8 +36,8 @@ include_once("./lib/utility.php");
 include_once("./lib/template.php");
 
 $ds_actions = array(
-	1 => "Delete",
-	2 => "Duplicate"
+	1 => _("Delete"),
+	2 => _("Duplicate")
 	);
 
 /* set default action */
@@ -256,8 +256,8 @@ function form_actions() {
 	if ($_POST["drp_action"] == "1") { /* delete */
 		print "	<tr>
 				<td class='textArea' bgcolor='#" . $colors["form_alternate1"]. "'>
-					<p>Are you sure you want to delete the following data templates? Any data sources attached
-					to these templates will become individual data sources.</p>
+					<p>"._("Are you sure you want to delete the following data templates? Any data sources attached
+					to these templates will become individual data sources.")."</p>
 					<p>$ds_list</p>
 				</td>
 			</tr>\n
@@ -265,10 +265,10 @@ function form_actions() {
 	}elseif ($_POST["drp_action"] == "2") { /* duplicate */
 		print "	<tr>
 				<td class='textArea' bgcolor='#" . $colors["form_alternate1"]. "'>
-					<p>When you click save, the following data templates will be duplicated. You can
-					optionally change the title format for the new data templates.</p>
+					<p>"._("When you click save, the following data templates will be duplicated. You can
+					optionally change the title format for the new data templates.")."</p>
 					<p>$ds_list</p>
-					<p><strong>Title Format:</strong><br>"; form_text_box("title_format", "<template_title> (1)", "", "255", "30", "text"); print "</p>
+					<p><strong>"._("Title Format:")."</strong><br>"; form_text_box("title_format", "<template_title> (1)", "", "255", "30", "text"); print "</p>
 				</td>
 			</tr>\n
 			";
@@ -278,7 +278,7 @@ function form_actions() {
 		print "<tr><td bgcolor='#" . $colors["form_alternate1"]. "'><span class='textError'>You must select at least one data template.</span></td></tr>\n";
 		$save_html = "";
 	}else{
-		$save_html = "<input type='image' src='" . html_get_theme_images_path("button_yes.gif") . "' alt='Save' align='absmiddle'>";
+		$save_html = "<input type='image' src='" . html_get_theme_images_path("button_yes.gif") . "' alt='"._("Save")."' align='absmiddle'>";
 	}
 
 	print "	<tr>
@@ -335,7 +335,7 @@ function template_edit() {
 
 	/* ==================== Box: Data Template ==================== */
 
-	html_start_box("<strong>Data Template</strong> $header_label", "98%", $colors["header_background"], "3", "center", "");
+	html_start_box("<strong>"._("Data Template")."</strong> $header_label", "98%", $colors["header_background"], "3", "center", "");
 
 	draw_edit_form(array(
 			"config" => array(
@@ -393,7 +393,7 @@ function template_edit() {
 			$script_input_fields = db_fetch_assoc("select * from data_input_fields where data_input_id = $_script_id and input_output='in' order by name");
 
 			if (sizeof($script_input_fields) > 0) {
-				field_row_header("Custom Input Fields");
+				field_row_header(_("Custom Input Fields"));
 
 				foreach ($script_input_fields as $field) {
 					_data_source_input_field__script("dif_" . $field["data_name"], $field["name"], true, ((isset($data_input_type_fields{$field["data_name"]})) ? $data_input_type_fields{$field["data_name"]}["value"] : ""), "t_dif_" . $field["data_name"], ((isset($data_input_type_fields{$field["data_name"]})) ? $data_input_type_fields{$field["data_name"]}["t_value"] : ""), (isset($_GET["id"]) ? $_GET["id"] : 0));
@@ -445,7 +445,7 @@ function template_edit() {
 		form_hidden_box("redirect_sv_add", "x", "");
 	}
 
-	html_start_box("<strong>Data Source</strong>", "98%", $colors["header_background_template"], "3", "center", "");
+	html_start_box("<strong>"._("Data Source")."</strong>", "98%", $colors["header_background_template"], "3", "center", "");
 
 	_data_source_field__name("name", true, (empty($_GET["id"]) ? 0 : $_GET["id"]), "t_name", (isset($data_template["t_name"]) ? $data_template["t_name"] : ""));
 	_data_source_field__rra_id("rra_id", true, (empty($_GET["id"]) ? 0 : $_GET["id"]));
@@ -456,7 +456,7 @@ function template_edit() {
 
 	/* ==================== Box: Data Source Item ==================== */
 
-	html_start_box("<strong>Data Source Item</strong>", "98%", $colors["header_background"], "3", "center", (empty($_GET["id"]) ? "" : "javascript:document.forms[0].action.value='item_add';submit_redirect(0, '" . htmlspecialchars("data_templates.php?action=item_add&id=" . $_GET["id"]) . "', '')"));
+	html_start_box("<strong>"._("Data Source Item")."</strong>", "98%", $colors["header_background"], "3", "center", (empty($_GET["id"]) ? "" : "javascript:document.forms[0].action.value='item_add';submit_redirect(0, '" . htmlspecialchars("data_templates.php?action=item_add&id=" . $_GET["id"]) . "', '')"));
 
 	/* the user clicked the "add item" link. we need to make sure they get redirected back to
 	 * this page if an error occurs */
@@ -551,7 +551,7 @@ function template() {
 
 	html_start_box("<strong>Data Templates</strong>", "98%", $colors["header_background"], "3", "center", "data_templates.php?action=edit");
 
-	html_header_checkbox(array("Template Name", "Data Input Type", "Status"));
+	html_header_checkbox(array(_("Template Name"), _("Data Input Type"), _("Status")));
 
 	$template_list = db_fetch_assoc("select
 		data_template.id,
@@ -583,7 +583,7 @@ function template() {
 			$i++;
 		}
 	}else{
-		print "<tr><td><em>No Data Templates</em></td></tr>\n";
+		print "<tr><td><em>"._("No Data Templates")."</em></td></tr>\n";
 	}
 
 	html_end_box(false);
