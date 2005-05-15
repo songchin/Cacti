@@ -93,7 +93,7 @@ html_start_box("<strong>" . _("About Cacti") . "</strong>", "98%", $colors["head
 
 		<p><strong>Cacti Variables</a></strong><span style="font-family: monospace; font-size: 10px;"><br>
 		<strong><?php echo _("Cacti OS:"); ?></strong> <?php print $config["cacti_server_os"];?><br>
-		<strong><?php echo _("PHP SNMP Support:"); ?></strong> <?php print $config["php_snmp_support"] ? "yes" : "no";?><br>
+		<strong><?php echo _("PHP SNMP Support:"); ?></strong> <?php print $config["php_snmp_support"] ? _("yes") : _("no");?><br>
 		<strong><?php echo _("PHP OS:"); ?></strong> <?php print PHP_OS ?><br>
 		<img src="<?php print html_get_php_os_icon();?>"><br>
 		</span></p>
