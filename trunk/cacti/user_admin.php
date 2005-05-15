@@ -318,7 +318,7 @@ function graph_perms_edit() {
 							</tr>\n";
 					}
 				}else{
-					print "<tr><td><em>"._("No Graphs")."</em></td></tr>";
+					print "<tr><td><em>" . _("No Graphs") . "</em></td></tr>";
 				}
 				?>
 			</table>
@@ -331,7 +331,7 @@ function graph_perms_edit() {
 	?>
 	<table align='center' width='98%'>
 		<tr>
-			<td nowrap>Add Graph:&nbsp;
+			<td nowrap><?php echo _("Add Graph");?>:&nbsp;
 				<?php form_dropdown("perm_graphs",db_fetch_assoc("select id,title_cache from graph order by title_cache"),"title_cache","id","","","");?>
 			</td>
 			<td align="right">
@@ -391,7 +391,7 @@ function graph_perms_edit() {
 	?>
 	<table align='center' width='98%'>
 		<tr>
-			<td nowrap>Add Host:&nbsp;
+			<td nowrap><?php echo _("Add Host");?>:&nbsp;
 				<?php form_dropdown("perm_hosts",db_fetch_assoc("select id,CONCAT_WS('',description,' (',hostname,')') as name from host order by description,hostname"),"name","id","","","");?>
 			</td>
 			<td align="right">
@@ -403,7 +403,7 @@ function graph_perms_edit() {
 	<?php
 
 	/* box: graph template permissions */
-	html_start_box("<strong>"._("Graph Permissions (By Graph Template)")."</strong>", "98%", $colors["header_background"], "3", "center", "");
+	html_start_box("<strong>" . _("Graph Permissions (By Graph Template)") . "</strong>", "98%", $colors["header_background"], "3", "center", "");
 
 	$graph_templates = db_fetch_assoc("select
 		graph_template.id,
@@ -437,7 +437,7 @@ function graph_perms_edit() {
 							</tr>\n";
 					}
 				}else{
-					print "<tr><td bgcolor='#" . $colors["form_alternate1"] . "' colspan=7><em>"._("No Graph Templates")."</em></td></tr>";
+					print "<tr><td bgcolor='#" . $colors["form_alternate1"] . "' colspan=7><em>" . _("No Graph Templates") . "</em></td></tr>";
 				}
 				?>
 			</table>
@@ -455,7 +455,7 @@ function graph_perms_edit() {
 				<?php form_dropdown("perm_graph_templates",db_fetch_assoc("select id,template_name from graph_template order by template_name"),"template_name","id","","","");?>
 			</td>
 			<td align="right">
-				&nbsp;<input type="image" src="<?php print html_get_theme_images_path('button_add.gif');?>" alt="<?php echo _("Add"); ?>" name="add_graph_template" align="absmiddle">
+				&nbsp;<input type="image" src="<?php print html_get_theme_images_path('button_add.gif');?>" alt="<?php echo _('Add'); ?>" name="add_graph_template" align="absmiddle">
 			</td>
 		</tr>
 	</table>
@@ -476,8 +476,8 @@ function graph_perms_edit() {
 	?>
 	<tr bgcolor="#<?php print $colors["form_alternate1"];?>">
 		<td width="50%">
-			<font class="textEditTitle"><?php echo _("Default Policy"); ?></font><br>
-			<?php echo _("The default allow/deny graph policy for this user."); ?>
+			<font class="textEditTitle"><?php echo _("Default Policy");?></font><br>
+			<?php echo _("The default allow/deny graph policy for this user.");?>
 		</td>
 		<td align="right">
 			<?php form_dropdown("policy_trees",$graph_policy_array,"","",$policy["policy_trees"],"",""); ?>
@@ -497,7 +497,7 @@ function graph_perms_edit() {
 							</tr>\n";
 					}
 				}else{
-					print "<tr><td><em>"._("No Trees")."</em></td></tr>";
+					print "<tr><td><em>" . _("No Trees") . "</em></td></tr>";
 				}
 				?>
 			</table>
@@ -546,8 +546,8 @@ function user_realms_edit() {
 	html_start_box("", "98%", $colors["header_background"], "3", "center", "");
 
 	print "	<tr bgcolor='#" . $colors["header_background"] . "'>
-			<td class='textHeaderDark'><strong>Realm Permissions</strong></td>
-			<td width='1%' align='center' bgcolor='#819bc0' style='" . get_checkbox_style() . "'><input type='checkbox' style='margin: 0px;' name='all' title='Select All' onClick='SelectAll(\"section\",this.checked)'></td>\n
+			<td class='textHeaderDark'><strong>" . _("Realm Permissions") . "</strong></td>
+			<td width='1%' align='center' bgcolor='#819bc0' style='" . get_checkbox_style() . "'><input type='checkbox' style='margin: 0px;' name='all' title='" . _("Select All") . "' onClick='SelectAll(\"section\",this.checked)'></td>\n
 		</tr>\n";
 
 	?>
@@ -608,7 +608,7 @@ function graph_settings_edit() {
 	</table>
 	<?php
 
-	html_start_box("<strong>Graph Settings</strong>", "98%", $colors["header_background"], "3", "center", "");
+	html_start_box("<strong>" . _("Graph Settings") . "</strong>", "98%", $colors["header_background"], "3", "center", "");
 
 	/* get user graph settings */
 	$user_settings = api_user_graph_setting_list($_GET["id"]);
@@ -673,7 +673,7 @@ function user_edit() {
 		$header_label = _("[new]");
 	}
 
-	html_start_box("<strong>"._("User Management")."</strong> $header_label", "98%", $colors["header_background"], "3", "center", "");
+	html_start_box("<strong>" . _("User Management") . "</strong> $header_label", "98%", $colors["header_background"], "3", "center", "");
 	draw_edit_form(array(
 		"config" => array("form_name" => "chk"),
 		"fields" => inject_form_variables($fields_user_user_edit_host, (isset($user) ? $user : array()))
@@ -689,15 +689,15 @@ function user_edit() {
 			<tr>
 				<td width='1'></td>
 				<td <?php print ((($_GET["action"] == "user_realms_edit") || ($_GET["action"] == "user_edit")) ? "bgcolor='" . $colors["form_alternate1"] . "'" : "bgcolor='" . $colors["form_alternate2"] . "'");?> nowrap='nowrap' width='150' align='center' class='tab'>
-					<span class='textHeader'><a href='user_admin.php?action=user_realms_edit&id=<?php print $_GET["id"];?>'><?php echo _("Realm Permissions"); ?></a></span>
+					<span class='textHeader'><a href='user_admin.php?action=user_realms_edit&id=<?php print $_GET["id"];?>'><?php echo _("Realm Permissions");?></a></span>
 				</td>
 				<td width='1'></td>
 				<td <?php print (($_GET["action"] == "graph_perms_edit") ? "bgcolor='" . $colors["form_alternate1"] . "'" : "bgcolor='" . $colors["form_alternate2"] . "'");?> nowrap='nowrap' width='150' align='center' class='tab'>
-					<span class='textHeader'><a href='user_admin.php?action=graph_perms_edit&id=<?php print $_GET["id"];?>'><?php echo _("Graph Permissions"); ?></a></span>
+					<span class='textHeader'><a href='user_admin.php?action=graph_perms_edit&id=<?php print $_GET["id"];?>'><?php echo _("Graph Permissions");?></a></span>
 				</td>
 				<td width='1'></td>
 				<td <?php print (($_GET["action"] == "graph_settings_edit") ? "bgcolor='" . $colors["form_alternate1"] . "'" : "bgcolor='" . $colors["form_alternate2"] . "'");?> nowrap='nowrap' width='130' align='center' class='tab'>
-					<span class='textHeader'><a href='user_admin.php?action=graph_settings_edit&id=<?php print $_GET["id"];?>'><?php echo _("Graph Settings"); ?></a></span>
+					<span class='textHeader'><a href='user_admin.php?action=graph_settings_edit&id=<?php print $_GET["id"];?>'><?php echo _("Graph Settings");?></a></span>
 				</td>
 				<td></td>
 			</tr>
@@ -726,7 +726,7 @@ function user_edit() {
 function user() {
 	global $user_actions, $colors, $auth_realms;
 
-	html_start_box("<strong>"._("User Management")."</strong>", "98%", $colors["header_background"], "3", "center", "user_admin.php?action=user_edit");
+	html_start_box("<strong>" . _("User Management") . "</strong>", "98%", $colors["header_background"], "3", "center", "user_admin.php?action=user_edit");
 
 	html_header_checkbox(array(_("User Name"), _("Full Name"), _("Status"),_("Realm"), _("Default Graph Policy"), _("Last Login"), _("Last Login From"),_("Last Password Change")));
 
@@ -762,10 +762,10 @@ function user() {
 			<td>
 				<?php
 				if ($user["realm"] != "0") {
-					print "N/A";
+					print _("N/A");
 				}else{
 					if ($user["password_change_last"] == "0000-00-00 00:00:00") {
-						print "Never";
+						print _("Never");
 					}else{
 						print $user["password_change_last_formatted"];
 					}
@@ -785,8 +785,6 @@ function user() {
 
 	/* draw the dropdown containing a list of available actions for this form */
 	draw_actions_dropdown($user_actions);
-
-
 
 }
 
@@ -859,23 +857,23 @@ function user_actions() {
 
 	if ($_POST["drp_action"] == "3") { /* Enable Users */
 		print "	<tr>
-				<td colspan='2' class='textArea' bgcolor='#" . $colors["form_alternate1"]. "'>
-					<p>"._("To enable the following users, press the \"yes\" button below.")."</p>
+				<td colspan='2' class='textArea' bgcolor='#" . $colors["form_alternate1"] . "'>
+					<p>" . _("To enable the following users, press the \"yes\" button below.") . "</p>
 					<p>$user_list</p>
 				</td>
 				</tr>";
 	}elseif ($_POST["drp_action"] == "4") { /* Disable Users */
 		print "	<tr>
-				<td colspan='4' class='textArea' bgcolor='#" . $colors["form_alternate1"]. "'>
-					<p>"._("To disable the following users, press the \"yes\" button below.")."</p>
+				<td colspan='4' class='textArea' bgcolor='#" . $colors["form_alternate1"] . "'>
+					<p>". _("To disable the following users, press the \"yes\" button below.") . "</p>
 					<p>$user_list</p>
 				</td>
 				</tr>";
 
 	}elseif ($_POST["drp_action"] == "2") { /* copy user */
 		print "	<tr>
-				<td colspan='2' class='textArea' bgcolor='#" . $colors["form_alternate1"]. "'>
-					<p>"._("Would you like to copy a user to a new user?")."</p>
+				<td colspan='2' class='textArea' bgcolor='#" . $colors["form_alternate1"] . "'>
+					<p>" . _("Would you like to copy a user to a new user?") . "</p>
 				</td>
 				</tr>";
 
@@ -907,8 +905,8 @@ function user_actions() {
 
 	}elseif ($_POST["drp_action"] == "1") { /* delete */
 		print "	<tr>
-				<td class='textArea' bgcolor='#" . $colors["form_alternate1"]. "'>
-					<p>"._("Are you sure you want to delete the following users?")."</p>
+				<td class='textArea' bgcolor='#" . $colors["form_alternate1"] . "'>
+					<p>" . _("Are you sure you want to delete the following users?") . "</p>
 					<p>$user_list</p>
 					</td></tr>
 				</td>
@@ -917,8 +915,8 @@ function user_actions() {
 
 	}elseif ($_POST["drp_action"] == "5") { /* Password Expiration */
 		print "	<tr>
-				<td colspan='2' class='textArea' bgcolor='#" . $colors["form_alternate1"]. "'>
-					<p>"._("Would you like to set Password Expiration?")."</p>
+				<td colspan='2' class='textArea' bgcolor='#" . $colors["form_alternate1"] . "'>
+					<p>" . _("Would you like to set Password Expiration?") . "</p>
 					<p>$user_list</p>
 				</td>
 				</tr>";
@@ -942,10 +940,10 @@ function user_actions() {
 	}
 
 	if (!isset($user_array)) {
-		print "<tr><td colspan='2' bgcolor='#" . $colors["form_alternate1"]. "'><span class='textError'>"._("You must select at least one user.")."</span></td></tr>\n";
+		print "<tr><td colspan='2' bgcolor='#" . $colors["form_alternate1"]. "'><span class='textError'>" . _("You must select at least one user.") . "</span></td></tr>\n";
 		$save_html = "";
 	}else{
-		$save_html = "<input type='image' src='" . html_get_theme_images_path("button_yes.gif") . "' alt='"._("Save")."' align='absmiddle'>";
+		$save_html = "<input type='image' src='" . html_get_theme_images_path("button_yes.gif") . "' alt='" . _("Save") . "' align='absmiddle'>";
 	}
 
 	print "	<tr>
@@ -953,7 +951,7 @@ function user_actions() {
 				<input type='hidden' name='action' value='actions'>
 				<input type='hidden' name='selected_items' value='" . (isset($user_array) ? serialize($user_array) : '') . "'>
 				<input type='hidden' name='drp_action' value='" . $_POST["drp_action"] . "'>
-				<a href='user_admin.php'><img src='" . html_get_theme_images_path("button_no.gif") . "' alt='"._("Cancel")."' align='absmiddle' border='0'></a>
+				<a href='user_admin.php'><img src='" . html_get_theme_images_path("button_no.gif") . "' alt='" . _("Cancel") . "' align='absmiddle' border='0'></a>
 				$save_html
 			</td>
 		</tr>
