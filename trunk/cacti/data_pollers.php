@@ -27,9 +27,9 @@ include("./include/auth.php");
 include_once('./lib/api_data_pollers.php');
 
 $poller_actions = array(
-	1 => "Enable",
-	2 => "Disable",
-	3 => "Delete"
+	1 => _("Enable"),
+	2 => _("Disable"),
+	3 => _("Delete")
 	);
 
 /* set default action */
@@ -132,32 +132,32 @@ function form_actions() {
 
 	if ($_POST["drp_action"] == "1") { /* Enable Pollers */
 		print "	<tr>
-				<td colspan='2' class='textArea' bgcolor='#" . $colors["form_alternate1"]. "'>
-					<p>"._("To enable the following pollers, press the \"yes\" button below.")."</p>
+				<td colspan='2' class='textArea' bgcolor='#" . $colors["form_alternate1"] . "'>
+					<p>" . _("To enable the following pollers, press the \"yes\" button below.") . "</p>
 					<p>$poller_list</p>
 				</td>
 				</tr>";
 	}elseif ($_POST["drp_action"] == "2") { /* Disable Pollers */
 		print "	<tr>
-				<td colspan='2' class='textArea' bgcolor='#" . $colors["form_alternate1"]. "'>
-					<p>"._("To disable the following pollers, press the \"yes\" button below.")."</p>
+				<td colspan='2' class='textArea' bgcolor='#" . $colors["form_alternate1"] . "'>
+					<p>" . _("To disable the following pollers, press the \"yes\" button below.") . "</p>
 					<p>$poller_list</p>
 				</td>
 				</tr>";
 	}elseif ($_POST["drp_action"] == "3") { /* Delete Pollers */
 		print "	<tr>
-				<td colspan='2' class='textArea' bgcolor='#" . $colors["form_alternate1"]. "'>
-					<p>"._("To delete the following pollers, press the \"yes\" button below.")."</p>
+				<td colspan='2' class='textArea' bgcolor='#" . $colors["form_alternate1"] . "'>
+					<p>" . _("To delete the following pollers, press the \"yes\" button below.") . "</p>
 					<p>$poller_list</p>
 				</td>
 				</tr>";
 	}
 
 	if (!isset($poller_array)) {
-		print "<tr><td bgcolor='#" . $colors["form_alternate1"]. "'><span class='textError'>"._("You must select at least one poller.")."</span></td></tr>\n";
+		print "<tr><td bgcolor='#" . $colors["form_alternate1"]. "'><span class='textError'>" . _("You must select at least one poller.") . "</span></td></tr>\n";
 		$save_html = "";
 	}else{
-		$save_html = "<input type='image' src='" . html_get_theme_images_path("button_yes.gif") . "' alt='"._("Save")."' align='absmiddle'>";
+		$save_html = "<input type='image' src='" . html_get_theme_images_path("button_yes.gif") . "' alt='" . _("Save") . "' align='absmiddle'>";
 	}
 
 	print "	<tr>
@@ -165,7 +165,7 @@ function form_actions() {
 				<input type='hidden' name='action' value='actions'>
 				<input type='hidden' name='selected_items' value='" . (isset($poller_array) ? serialize($poller_array) : '') . "'>
 				<input type='hidden' name='drp_action' value='" . $_POST["drp_action"] . "'>
-				<a href='data_pollers.php'><img src='" . html_get_theme_images_path("button_no.gif") . "' alt='"._("Cancel")."' align='absmiddle' border='0'></a>
+				<a href='data_pollers.php'><img src='" . html_get_theme_images_path("button_no.gif") . "' alt='" . _("Cancel") . "' align='absmiddle' border='0'></a>
 				$save_html
 			</td>
 		</tr>
@@ -185,12 +185,12 @@ function poller_edit() {
 
 	if ((isset($_GET["id"])) && ($_GET["id"] >= 0)) {
 		$data_poller = db_fetch_row("select * from poller where id=" . $_GET["id"]);
-		$header_label = "[edit: " . $data_poller["name"] . "]";
+		$header_label = _("[edit: ") . $data_poller["name"] . "]";
 	}else{
-		$header_label = "[new]";
+		$header_label = _("[new]");
 	}
 
-	html_start_box("<strong>Data Pollers</strong> $header_label", "98%", $colors["header_background"], "3", "center", "");
+	html_start_box("<strong>" . _("Data Pollers") . "</strong> $header_label", "98%", $colors["header_background"], "3", "center", "");
 
 	draw_edit_form(array(
 		"config" => array(),
@@ -205,7 +205,7 @@ function poller_edit() {
 function pollers() {
 	global $colors, $poller_actions, $input_types;
 
-	html_start_box("<strong>"._("Data Pollers")."</strong>", "98%", $colors["header_background"], "3", "center", "data_pollers.php?action=edit");
+	html_start_box("<strong>" . _("Data Pollers") . "</strong>", "98%", $colors["header_background"], "3", "center", "data_pollers.php?action=edit");
 
 	html_header_checkbox(array(_("Name"), _("Hostname"), _("Status"), _("Last Time"), _("Min Time"), _("Max Time"), _("Avg Time"), _("Enabled"), _("Last Run Time")));
 
@@ -250,7 +250,7 @@ function pollers() {
 	<?php
 	}
 	}else{
-		print "<tr><td bgcolor='#" . $colors["form_alternate1"] . "' colspan=7><em>"._("No Data Pollers")."</em></td></tr>";
+		print "<tr><td bgcolor='#" . $colors["form_alternate1"] . "' colspan=7><em>" . _("No Data Pollers") . "</em></td></tr>";
 	}
 	html_end_box(false);
 
