@@ -1,0 +1,1131 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2005-05-05 21:19+0900\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../cacti/auth_login.php:252 ../cacti/auth_login.php:264
+#: ../cacti/include/top_header.php:36 ../cacti-20050127/auth_login.php:252
+#: ../cacti-20050127/auth_login.php:264
+#: ../cacti-20050127/include/top_header.php:37
+#: ../cacti-20050131/auth_login.php:252 ../cacti-20050131/auth_login.php:264
+#: ../cacti-20050131/include/top_header.php:37
+msgid "screen charset"
+msgstr ""
+
+#: ../cacti/auth_login.php:267 ../cacti-20050127/auth_login.php:267
+#: ../cacti-20050131/auth_login.php:267
+msgid "Login to Cacti"
+msgstr ""
+
+#: ../cacti/auth_login.php:308 ../cacti-20050127/auth_login.php:308
+#: ../cacti-20050131/auth_login.php:308
+msgid "Please enter your Cacti user name and password below"
+msgstr ""
+
+#: ../cacti/auth_login.php:312 ../cacti/user_admin.php:732
+#: ../cacti/user_admin.php:888 ../cacti-20050127/auth_login.php:312
+#: ../cacti-20050127/user_admin.php:704 ../cacti-20050127/user_admin.php:860
+#: ../cacti-20050131/auth_login.php:312 ../cacti-20050131/user_admin.php:704
+#: ../cacti-20050131/user_admin.php:860
+msgid "User Name"
+msgstr ""
+
+#: ../cacti/auth_login.php:316 ../cacti-20050127/auth_login.php:316
+#: ../cacti-20050131/auth_login.php:316
+msgid "Password"
+msgstr ""
+
+#: ../cacti/auth_login.php:333 ../cacti-20050127/auth_login.php:333
+#: ../cacti-20050131/auth_login.php:333
+msgid "Login"
+msgstr ""
+
+#: ../cacti/user_admin.php:40 ../cacti-20050127/user_admin.php:40
+#: ../cacti-20050131/user_admin.php:40
+msgid "Delete"
+msgstr ""
+
+#: ../cacti/user_admin.php:41 ../cacti-20050127/user_admin.php:41
+#: ../cacti-20050131/user_admin.php:41
+msgid "Copy"
+msgstr ""
+
+#: ../cacti/user_admin.php:42 ../cacti-20050127/user_admin.php:42
+#: ../cacti-20050131/user_admin.php:42
+msgid "Enable"
+msgstr ""
+
+#: ../cacti/user_admin.php:43 ../cacti-20050127/user_admin.php:43
+#: ../cacti-20050131/user_admin.php:43
+msgid "Disable"
+msgstr ""
+
+#: ../cacti/user_admin.php:44 ../cacti-20050127/user_admin.php:44
+#: ../cacti-20050131/user_admin.php:44
+msgid "Password Expiration"
+msgstr ""
+
+#: ../cacti/user_admin.php:676 ../cacti/user_admin.php:730
+#: ../cacti/include/config_arrays.php:284 ../cacti/lib/html.php:847
+#: ../cacti/lib/html.php:852 ../cacti-20050127/user_admin.php:648
+#: ../cacti-20050127/user_admin.php:702
+#: ../cacti-20050127/include/config_arrays.php:358
+#: ../cacti-20050127/lib/html.php:1023 ../cacti-20050127/lib/html.php:1029
+#: ../cacti-20050131/user_admin.php:648 ../cacti-20050131/user_admin.php:702
+#: ../cacti-20050131/include/config_arrays.php:358
+#: ../cacti-20050131/lib/html.php:1023 ../cacti-20050131/lib/html.php:1029
+msgid "User Management"
+msgstr ""
+
+#: ../cacti/user_admin.php:732 ../cacti-20050127/user_admin.php:704
+#: ../cacti-20050131/user_admin.php:704
+msgid "Full Name"
+msgstr ""
+
+#: ../cacti/user_admin.php:732 ../cacti-20050127/user_admin.php:704
+#: ../cacti-20050131/user_admin.php:704
+msgid "Status"
+msgstr ""
+
+#: ../cacti/user_admin.php:732 ../cacti-20050127/user_admin.php:704
+#: ../cacti-20050131/user_admin.php:704
+msgid "Realm"
+msgstr ""
+
+#: ../cacti/user_admin.php:732 ../cacti-20050127/user_admin.php:704
+#: ../cacti-20050131/user_admin.php:704
+msgid "Default Graph Policy"
+msgstr ""
+
+#: ../cacti/user_admin.php:732 ../cacti-20050127/user_admin.php:704
+#: ../cacti-20050131/user_admin.php:704
+msgid "Last Login"
+msgstr ""
+
+#: ../cacti/user_admin.php:732 ../cacti-20050127/user_admin.php:704
+#: ../cacti-20050131/user_admin.php:704
+msgid "Last Login From"
+msgstr ""
+
+#: ../cacti/user_admin.php:732 ../cacti-20050127/user_admin.php:704
+#: ../cacti-20050131/user_admin.php:704
+msgid "Last Password Change"
+msgstr ""
+
+#: ../cacti/user_admin.php:749 ../cacti-20050127/user_admin.php:721
+#: ../cacti-20050131/user_admin.php:721
+msgid "Enabled"
+msgstr ""
+
+#: ../cacti/user_admin.php:749 ../cacti-20050127/user_admin.php:721
+#: ../cacti-20050131/user_admin.php:721
+msgid "Disabled"
+msgstr ""
+
+#: ../cacti/user_admin.php:755 ../cacti-20050127/user_admin.php:727
+#: ../cacti-20050131/user_admin.php:727
+msgid "ALLOW"
+msgstr ""
+
+#: ../cacti/user_admin.php:755 ../cacti-20050127/user_admin.php:727
+#: ../cacti-20050131/user_admin.php:727
+msgid "DENY"
+msgstr ""
+
+#: ../cacti/user_admin.php:864 ../cacti-20050127/user_admin.php:836
+#: ../cacti-20050131/user_admin.php:836
+msgid "To enable the following users, press the \"yes\" button below."
+msgstr ""
+
+#: ../cacti/user_admin.php:871 ../cacti-20050127/user_admin.php:843
+#: ../cacti-20050131/user_admin.php:843
+msgid "To disable the following users, press the \"yes\" button below."
+msgstr ""
+
+#: ../cacti/user_admin.php:879 ../cacti-20050127/user_admin.php:851
+#: ../cacti-20050131/user_admin.php:851
+msgid "Would you like to copy a user to a new user?"
+msgstr ""
+
+#: ../cacti/user_admin.php:889 ../cacti-20050127/user_admin.php:861
+#: ../cacti-20050131/user_admin.php:861
+msgid "Select the user name you would like to copy from."
+msgstr ""
+
+#: ../cacti/user_admin.php:895 ../cacti-20050127/user_admin.php:867
+#: ../cacti-20050131/user_admin.php:867
+msgid "New User Name"
+msgstr ""
+
+#: ../cacti/user_admin.php:896 ../cacti-20050127/user_admin.php:868
+#: ../cacti-20050131/user_admin.php:868
+msgid "Type the user name of the new user."
+msgstr ""
+
+#: ../cacti/user_admin.php:912 ../cacti-20050127/user_admin.php:884
+#: ../cacti-20050131/user_admin.php:884
+msgid "Are you sure you want to delete the following users?"
+msgstr ""
+
+#: ../cacti/user_admin.php:922 ../cacti-20050127/user_admin.php:894
+#: ../cacti-20050131/user_admin.php:894
+msgid "Would you like to set Password Expiration?"
+msgstr ""
+
+#: ../cacti/user_admin.php:931 ../cacti-20050127/user_admin.php:903
+#: ../cacti-20050131/user_admin.php:903
+msgid "Password Expiration Interval"
+msgstr ""
+
+#: ../cacti/user_admin.php:932 ../cacti-20050127/user_admin.php:904
+#: ../cacti-20050131/user_admin.php:904
+msgid "Select the interval that you would like to apply to the selected users."
+msgstr ""
+
+#: ../cacti/user_admin.php:946 ../cacti-20050127/user_admin.php:918
+#: ../cacti-20050131/user_admin.php:918
+msgid "You must select at least one user."
+msgstr ""
+
+#: ../cacti/utilities.php:293 ../cacti-20050127/utilities.php:325
+#: ../cacti-20050131/utilities.php:325
+msgid "Cacti System Utilities"
+msgstr ""
+
+#: ../cacti/utilities.php:295
+msgid "Poller Cache Administration"
+msgstr ""
+
+#: ../cacti/utilities.php:320
+msgid "System Log Administration"
+msgstr ""
+
+#: ../cacti/utilities.php:331
+msgid "RRD File Utilities"
+msgstr ""
+
+#: ../cacti/utilities.php:358
+msgid "General Utilities"
+msgstr ""
+
+#: ../cacti/include/config_arrays.php:27
+#: ../cacti-20050127/include/config_arrays.php:27
+#: ../cacti-20050131/include/config_arrays.php:27
+msgid "Save Successful."
+msgstr ""
+
+#: ../cacti/include/config_arrays.php:30
+#: ../cacti-20050127/include/config_arrays.php:30
+#: ../cacti-20050131/include/config_arrays.php:30
+msgid "Save Failed."
+msgstr ""
+
+#: ../cacti/include/config_arrays.php:33
+#: ../cacti-20050127/include/config_arrays.php:33
+#: ../cacti-20050131/include/config_arrays.php:33
+msgid "Save Failed: Field Input Error (Check Red Fields)"
+msgstr ""
+
+#: ../cacti/include/config_arrays.php:36
+#: ../cacti-20050127/include/config_arrays.php:36
+#: ../cacti-20050131/include/config_arrays.php:36
+msgid "Passwords do not match, please retype."
+msgstr ""
+
+#: ../cacti/include/config_arrays.php:39
+#: ../cacti-20050127/include/config_arrays.php:39
+#: ../cacti-20050131/include/config_arrays.php:39
+msgid "You must select at least one field."
+msgstr ""
+
+#: ../cacti/include/config_arrays.php:42
+#: ../cacti-20050127/include/config_arrays.php:42
+#: ../cacti-20050131/include/config_arrays.php:42
+msgid "You must have authentication turned on to use this feature."
+msgstr ""
+
+#: ../cacti/include/config_arrays.php:45
+#: ../cacti-20050127/include/config_arrays.php:45
+#: ../cacti-20050131/include/config_arrays.php:45
+msgid "XML parse error."
+msgstr ""
+
+#: ../cacti/include/config_arrays.php:48
+#: ../cacti-20050127/include/config_arrays.php:48
+#: ../cacti-20050131/include/config_arrays.php:48
+msgid "Authentication Failure."
+msgstr ""
+
+#: ../cacti/include/config_arrays.php:51
+#: ../cacti-20050127/include/config_arrays.php:51
+#: ../cacti-20050131/include/config_arrays.php:51
+msgid "Unable to change password."
+msgstr ""
+
+#: ../cacti/include/config_arrays.php:54
+#: ../cacti-20050127/include/config_arrays.php:54
+#: ../cacti-20050131/include/config_arrays.php:54
+msgid "You must fill in required values."
+msgstr ""
+
+#: ../cacti/include/config_arrays.php:57
+#: ../cacti-20050127/include/config_arrays.php:57
+#: ../cacti-20050131/include/config_arrays.php:57
+msgid "Password changed successfully."
+msgstr ""
+
+#: ../cacti/include/config_arrays.php:60
+#: ../cacti-20050127/include/config_arrays.php:60
+#: ../cacti-20050131/include/config_arrays.php:60
+msgid "Username already in use."
+msgstr ""
+
+#: ../cacti/include/config_arrays.php:63
+#: ../cacti-20050127/include/config_arrays.php:63
+#: ../cacti-20050131/include/config_arrays.php:63
+msgid "SNMP v3 authentication passwords do not match."
+msgstr ""
+
+#: ../cacti/include/config_arrays.php:66
+#: ../cacti-20050127/include/config_arrays.php:66
+#: ../cacti-20050131/include/config_arrays.php:66
+msgid "SNMP v3 privacy passphrases do not match."
+msgstr ""
+
+#: ../cacti/include/config_arrays.php:69
+#: ../cacti-20050127/include/config_arrays.php:69
+#: ../cacti-20050131/include/config_arrays.php:69
+msgid "XML: Cacti version does not exist."
+msgstr ""
+
+#: ../cacti/include/config_arrays.php:72
+msgid "XML: Generated with an unknown (probably newer) version of Cacti."
+msgstr ""
+
+#: ../cacti/include/config_arrays.php:75
+#: ../cacti-20050127/include/config_arrays.php:75
+#: ../cacti-20050131/include/config_arrays.php:75
+msgid "XML: Generated with a newer version of Cacti."
+msgstr ""
+
+#: ../cacti/include/config_arrays.php:78
+#: ../cacti-20050127/include/config_arrays.php:78
+#: ../cacti-20050131/include/config_arrays.php:78
+msgid "XML: Cannot locate type code."
+msgstr ""
+
+#: ../cacti/include/config_arrays.php:83
+msgid "Custom Value"
+msgstr ""
+
+#: ../cacti/include/config_arrays.php:84
+msgid "Device Field Value"
+msgstr ""
+
+#: ../cacti/include/config_arrays.php:88
+#: ../cacti-20050127/include/config_arrays.php:120
+#: ../cacti-20050127/include/config_arrays.php:127
+#: ../cacti-20050131/include/config_arrays.php:120
+#: ../cacti-20050131/include/config_arrays.php:127
+msgid "Script/Command"
+msgstr ""
+
+#: ../cacti/include/config_arrays.php:89
+#: ../cacti-20050127/include/config_arrays.php:122
+#: ../cacti-20050127/include/config_arrays.php:128
+#: ../cacti-20050131/include/config_arrays.php:122
+#: ../cacti-20050131/include/config_arrays.php:128
+msgid "Script - Script Server (PHP)"
+msgstr ""
+
+#: ../cacti/include/config_arrays.php:93
+#: ../cacti-20050127/include/config_arrays.php:139
+#: ../cacti-20050131/include/config_arrays.php:139
+msgid "SNMP Field Name (Dropdown)"
+msgstr ""
+
+#: ../cacti/include/config_arrays.php:94
+#: ../cacti-20050127/include/config_arrays.php:140
+#: ../cacti-20050131/include/config_arrays.php:140
+msgid "SNMP Field Value (From User)"
+msgstr ""
+
+#: ../cacti/include/config_arrays.php:95
+#: ../cacti-20050127/include/config_arrays.php:141
+#: ../cacti-20050131/include/config_arrays.php:141
+msgid "SNMP Output Type (Dropdown)"
+msgstr ""
+
+#: ../cacti/include/config_arrays.php:99
+msgid "Version 1"
+msgstr ""
+
+#: ../cacti/include/config_arrays.php:100
+#: ../cacti-20050127/include/config_arrays.php:263
+#: ../cacti-20050131/include/config_arrays.php:263
+msgid "Version 2"
+msgstr ""
+
+#: ../cacti/include/config_arrays.php:101
+#: ../cacti-20050127/include/config_arrays.php:264
+#: ../cacti-20050131/include/config_arrays.php:264
+msgid "Version 3"
+msgstr ""
+
+#: ../cacti/include/config_arrays.php:105
+#: ../cacti-20050127/include/config_arrays.php:177
+#: ../cacti-20050131/include/config_arrays.php:177
+msgid "No Privacy Protocol"
+msgstr ""
+
+#: ../cacti/include/config_arrays.php:106
+#: ../cacti-20050127/include/config_arrays.php:178
+#: ../cacti-20050131/include/config_arrays.php:178
+msgid "Privacy Protocol"
+msgstr ""
+
+#: ../cacti/include/config_arrays.php:110
+#: ../cacti-20050127/include/config_arrays.php:181
+#: ../cacti-20050131/include/config_arrays.php:181
+msgid "MD5 (default)"
+msgstr ""
+
+#: ../cacti/include/config_arrays.php:111
+#: ../cacti-20050127/include/config_arrays.php:182
+#: ../cacti-20050131/include/config_arrays.php:182
+msgid "SHA"
+msgstr ""
+
+#: ../cacti/include/config_arrays.php:115
+#: ../cacti-20050127/include/config_arrays.php:192
+#: ../cacti-20050131/include/config_arrays.php:192
+msgid "Cacti Syslog Only"
+msgstr ""
+
+#: ../cacti/include/config_arrays.php:116
+#: ../cacti-20050127/include/config_arrays.php:193
+#: ../cacti-20050131/include/config_arrays.php:193
+msgid "Cacti Syslog and System Syslog/Eventlog"
+msgstr ""
+
+#: ../cacti/include/config_arrays.php:117
+#: ../cacti-20050127/include/config_arrays.php:194
+#: ../cacti-20050131/include/config_arrays.php:194
+msgid "System Syslog/Eventlog Only"
+msgstr ""
+
+#: ../cacti/include/config_arrays.php:120
+#: ../cacti-20050127/include/config_arrays.php:197
+#: ../cacti-20050131/include/config_arrays.php:197
+msgid "Ping and SNMP - Most Recommended"
+msgstr ""
+
+#: ../cacti/include/config_arrays.php:121
+#: ../cacti-20050127/include/config_arrays.php:198
+#: ../cacti-20050131/include/config_arrays.php:198
+msgid "SNMP - Reliable"
+msgstr ""
+
+#: ../cacti/include/config_arrays.php:122
+#: ../cacti-20050127/include/config_arrays.php:199
+#: ../cacti-20050131/include/config_arrays.php:199
+msgid "Ping - Faster Option with Risk"
+msgstr ""
+
+#: ../cacti/include/config_arrays.php:123
+#: ../cacti-20050127/include/config_arrays.php:200
+#: ../cacti-20050131/include/config_arrays.php:200
+msgid "None - Don't Precheck Device Status"
+msgstr ""
+
+#: ../cacti/include/config_arrays.php:127
+#: ../cacti-20050127/include/config_arrays.php:203
+#: ../cacti-20050131/include/config_arrays.php:203
+msgid "ICMP Ping"
+msgstr ""
+
+#: ../cacti/include/config_arrays.php:128
+#: ../cacti-20050127/include/config_arrays.php:204
+#: ../cacti-20050131/include/config_arrays.php:204
+msgid "UDP Ping"
+msgstr ""
+
+#: ../cacti/include/config_arrays.php:129
+#: ../cacti-20050127/include/config_arrays.php:205
+#: ../cacti-20050131/include/config_arrays.php:205
+msgid "Not Applicable"
+msgstr ""
+
+#: ../cacti/include/config_arrays.php:173
+#: ../cacti-20050127/include/config_arrays.php:241
+#: ../cacti-20050131/include/config_arrays.php:241
+msgid "Never"
+msgstr ""
+
+#: ../cacti/include/config_arrays.php:174
+#: ../cacti-20050127/include/config_arrays.php:242
+#: ../cacti-20050131/include/config_arrays.php:242
+msgid "30 Days"
+msgstr ""
+
+#: ../cacti/include/config_arrays.php:175
+#: ../cacti-20050127/include/config_arrays.php:243
+#: ../cacti-20050131/include/config_arrays.php:243
+msgid "60 Days"
+msgstr ""
+
+#: ../cacti/include/config_arrays.php:176
+#: ../cacti-20050127/include/config_arrays.php:244
+#: ../cacti-20050131/include/config_arrays.php:244
+msgid "90 Days"
+msgstr ""
+
+#: ../cacti/include/config_arrays.php:177
+#: ../cacti-20050127/include/config_arrays.php:245
+#: ../cacti-20050131/include/config_arrays.php:245
+msgid "120 Days"
+msgstr ""
+
+#: ../cacti/include/config_arrays.php:178
+#: ../cacti-20050127/include/config_arrays.php:246
+#: ../cacti-20050131/include/config_arrays.php:246
+msgid "150 Days"
+msgstr ""
+
+#: ../cacti/include/config_arrays.php:179
+#: ../cacti-20050127/include/config_arrays.php:247
+#: ../cacti-20050131/include/config_arrays.php:247
+msgid "180 Days"
+msgstr ""
+
+#: ../cacti/include/config_arrays.php:180
+#: ../cacti-20050127/include/config_arrays.php:248
+#: ../cacti-20050131/include/config_arrays.php:248
+msgid "210 Days"
+msgstr ""
+
+#: ../cacti/include/config_arrays.php:181
+#: ../cacti-20050127/include/config_arrays.php:249
+#: ../cacti-20050131/include/config_arrays.php:249
+msgid "240 Days"
+msgstr ""
+
+#: ../cacti/include/config_arrays.php:182
+#: ../cacti-20050127/include/config_arrays.php:250
+#: ../cacti-20050131/include/config_arrays.php:250
+msgid "270 Days"
+msgstr ""
+
+#: ../cacti/include/config_arrays.php:183
+#: ../cacti-20050127/include/config_arrays.php:251
+#: ../cacti-20050131/include/config_arrays.php:251
+msgid "300 Days"
+msgstr ""
+
+#: ../cacti/include/config_arrays.php:184
+#: ../cacti-20050127/include/config_arrays.php:252
+#: ../cacti-20050131/include/config_arrays.php:252
+msgid "330 Days"
+msgstr ""
+
+#: ../cacti/include/config_arrays.php:185
+#: ../cacti-20050127/include/config_arrays.php:253
+#: ../cacti-20050131/include/config_arrays.php:253
+msgid "360 Days"
+msgstr ""
+
+#: ../cacti/include/config_arrays.php:212
+#: ../cacti-20050127/include/config_arrays.php:280
+#: ../cacti-20050131/include/config_arrays.php:280
+msgid "Overwrite events as needed"
+msgstr ""
+
+#: ../cacti/include/config_arrays.php:213
+#: ../cacti-20050127/include/config_arrays.php:281
+#: ../cacti-20050131/include/config_arrays.php:281
+msgid "Overwrite events older than the maximum days"
+msgstr ""
+
+#: ../cacti/include/config_arrays.php:214
+#: ../cacti-20050127/include/config_arrays.php:282
+#: ../cacti-20050131/include/config_arrays.php:282
+msgid "Stop logging if maximum log size is exceeded"
+msgstr ""
+
+#: ../cacti/include/config_arrays.php:234
+#: ../cacti-20050127/include/config_arrays.php:298
+#: ../cacti-20050131/include/config_arrays.php:298
+msgid "Manual Ordering (No Sorting)"
+msgstr ""
+
+#: ../cacti/include/config_arrays.php:235
+#: ../cacti-20050127/include/config_arrays.php:299
+#: ../cacti-20050131/include/config_arrays.php:299
+msgid "Alphabetic Ordering"
+msgstr ""
+
+#: ../cacti/include/config_arrays.php:236
+#: ../cacti-20050127/include/config_arrays.php:300
+#: ../cacti-20050131/include/config_arrays.php:300
+msgid "Numeric Ordering"
+msgstr ""
+
+#: ../cacti/include/config_arrays.php:250
+#: ../cacti-20050127/include/config_arrays.php:314
+#: ../cacti-20050131/include/config_arrays.php:314
+msgid "Create"
+msgstr ""
+
+#: ../cacti/include/config_arrays.php:251
+#: ../cacti-20050127/include/config_arrays.php:315
+#: ../cacti-20050131/include/config_arrays.php:315
+msgid "New Graphs"
+msgstr ""
+
+#: ../cacti/include/config_arrays.php:253
+#: ../cacti-20050127/include/config_arrays.php:317
+#: ../cacti-20050131/include/config_arrays.php:317
+msgid "Management"
+msgstr ""
+
+#: ../cacti/include/config_arrays.php:254
+#: ../cacti-20050127/include/config_arrays.php:318
+#: ../cacti-20050131/include/config_arrays.php:318
+msgid "Trees"
+msgstr ""
+
+#: ../cacti/include/config_arrays.php:255
+#: ../cacti-20050127/include/config_arrays.php:320
+#: ../cacti-20050131/include/config_arrays.php:320
+msgid "Graphs"
+msgstr ""
+
+#: ../cacti/include/config_arrays.php:256
+#: ../cacti-20050127/include/config_arrays.php:325
+#: ../cacti-20050131/include/config_arrays.php:325
+msgid "Devices"
+msgstr ""
+
+#: ../cacti/include/config_arrays.php:258
+#: ../cacti-20050127/include/config_arrays.php:327
+#: ../cacti-20050131/include/config_arrays.php:327
+msgid "Data Sources"
+msgstr ""
+
+#: ../cacti/include/config_arrays.php:259
+#: ../cacti-20050127/include/config_arrays.php:328
+#: ../cacti-20050131/include/config_arrays.php:328
+msgid "RRAs"
+msgstr ""
+
+#: ../cacti/include/config_arrays.php:262
+#: ../cacti-20050127/include/config_arrays.php:331
+#: ../cacti-20050131/include/config_arrays.php:331
+msgid "Data Collection"
+msgstr ""
+
+#: ../cacti/include/config_arrays.php:263 ../cacti/lib/html.php:907
+#: ../cacti-20050127/include/config_arrays.php:332
+#: ../cacti-20050127/lib/html.php:1119
+#: ../cacti-20050131/include/config_arrays.php:332
+#: ../cacti-20050131/lib/html.php:1119
+msgid "Pollers"
+msgstr ""
+
+#: ../cacti/include/config_arrays.php:264
+#: ../cacti-20050127/include/config_arrays.php:333
+#: ../cacti-20050131/include/config_arrays.php:333
+msgid "Scripts"
+msgstr ""
+
+#: ../cacti/include/config_arrays.php:265
+#: ../cacti-20050127/include/config_arrays.php:334
+#: ../cacti-20050131/include/config_arrays.php:334
+msgid "Queries"
+msgstr ""
+
+#: ../cacti/include/config_arrays.php:267
+#: ../cacti-20050127/include/config_arrays.php:342
+#: ../cacti-20050131/include/config_arrays.php:342
+msgid "Templates"
+msgstr ""
+
+#: ../cacti/include/config_arrays.php:268
+#: ../cacti-20050127/include/config_arrays.php:343
+#: ../cacti-20050131/include/config_arrays.php:343
+msgid "Graph Templates"
+msgstr ""
+
+#: ../cacti/include/config_arrays.php:269
+#: ../cacti-20050127/include/config_arrays.php:344
+#: ../cacti-20050131/include/config_arrays.php:344
+msgid "Host Templates"
+msgstr ""
+
+#: ../cacti/include/config_arrays.php:270
+#: ../cacti-20050127/include/config_arrays.php:345
+#: ../cacti-20050131/include/config_arrays.php:345
+msgid "Data Templates"
+msgstr ""
+
+#: ../cacti/include/config_arrays.php:272
+#: ../cacti-20050127/include/config_arrays.php:347
+#: ../cacti-20050131/include/config_arrays.php:347
+msgid "Import/Export"
+msgstr ""
+
+#: ../cacti/include/config_arrays.php:273 ../cacti/lib/html.php:902
+#: ../cacti-20050127/include/config_arrays.php:348
+#: ../cacti-20050127/lib/html.php:1089
+#: ../cacti-20050131/include/config_arrays.php:348
+#: ../cacti-20050131/lib/html.php:1089
+msgid "Import Templates"
+msgstr ""
+
+#: ../cacti/include/config_arrays.php:274 ../cacti/lib/html.php:892
+#: ../cacti-20050127/include/config_arrays.php:349
+#: ../cacti-20050127/lib/html.php:1077
+#: ../cacti-20050131/include/config_arrays.php:349
+#: ../cacti-20050131/lib/html.php:1077
+msgid "Export Templates"
+msgstr ""
+
+#: ../cacti/include/config_arrays.php:276
+#: ../cacti-20050127/include/config_arrays.php:351
+#: ../cacti-20050131/include/config_arrays.php:351
+msgid "Configuration"
+msgstr ""
+
+#: ../cacti/include/config_arrays.php:277
+#: ../cacti-20050127/include/config_arrays.php:352
+#: ../cacti-20050131/include/config_arrays.php:352
+msgid "System Settings"
+msgstr ""
+
+#: ../cacti/include/config_arrays.php:278 ../cacti/lib/html.php:937
+#: ../cacti-20050127/include/config_arrays.php:353
+#: ../cacti-20050127/lib/html.php:1155
+#: ../cacti-20050131/include/config_arrays.php:353
+#: ../cacti-20050131/lib/html.php:1155
+msgid "User Settings"
+msgstr ""
+
+#: ../cacti/include/config_arrays.php:279
+#: ../cacti-20050127/include/config_arrays.php:354
+#: ../cacti-20050131/include/config_arrays.php:354
+msgid "Setup Wizard"
+msgstr ""
+
+#: ../cacti/include/config_arrays.php:280 ../cacti/lib/html.php:942
+msgid "Data Presets"
+msgstr ""
+
+#: ../cacti/include/config_arrays.php:282 ../cacti/lib/html.php:812
+#: ../cacti-20050127/include/config_arrays.php:356
+#: ../cacti-20050127/lib/html.php:981
+#: ../cacti-20050131/include/config_arrays.php:356
+#: ../cacti-20050131/lib/html.php:981
+msgid "Utilities"
+msgstr ""
+
+#: ../cacti/include/config_arrays.php:283
+#: ../cacti-20050127/include/config_arrays.php:357
+#: ../cacti-20050131/include/config_arrays.php:357
+msgid "System Utilities"
+msgstr ""
+
+#: ../cacti/include/config_arrays.php:285 ../cacti/lib/html.php:922
+#: ../cacti/lib/html.php:927 ../cacti/user_changepassword.php:125
+#: ../cacti-20050127/include/config_arrays.php:359
+#: ../cacti-20050127/lib/html.php:1137 ../cacti-20050127/lib/html.php:1143
+#: ../cacti-20050127/user_changepassword.php:125
+#: ../cacti-20050131/include/config_arrays.php:359
+#: ../cacti-20050131/lib/html.php:1137 ../cacti-20050131/lib/html.php:1143
+#: ../cacti-20050131/user_changepassword.php:125
+msgid "Change Password"
+msgstr ""
+
+#: ../cacti/include/config_arrays.php:286
+#: ../cacti-20050127/include/config_arrays.php:360
+#: ../cacti-20050131/include/config_arrays.php:360
+msgid "Logout User"
+msgstr ""
+
+#: ../cacti/lib/functions.php:233 ../cacti/lib/functions.php:251
+#: ../cacti-20050127/lib/functions.php:235
+#: ../cacti-20050127/lib/functions.php:253
+#: ../cacti-20050131/lib/functions.php:235
+#: ../cacti-20050131/lib/functions.php:253
+msgid "Error"
+msgstr ""
+
+#: ../cacti/lib/html.php:482 ../cacti-20050127/lib/html.php:569
+#: ../cacti-20050131/lib/html.php:569
+msgid "Choose an action"
+msgstr ""
+
+#: ../cacti/lib/html.php:797 ../cacti-20050131/lib/html.php:963
+msgid "Remove"
+msgstr ""
+
+#: ../cacti/lib/html.php:802 ../cacti-20050127/lib/html.php:969
+#: ../cacti-20050131/lib/html.php:969
+msgid "Associated Graph Templates"
+msgstr ""
+
+#: ../cacti/lib/html.php:807 ../cacti-20050131/lib/html.php:975
+msgid "Remove Item"
+msgstr ""
+
+#: ../cacti/lib/html.php:817 ../cacti-20050127/lib/html.php:987
+#: ../cacti-20050131/lib/html.php:987
+msgid "View Poller Cache"
+msgstr ""
+
+#: ../cacti/lib/html.php:822 ../cacti-20050127/lib/html.php:993
+#: ../cacti-20050131/lib/html.php:993
+msgid "View SNMP Cache"
+msgstr ""
+
+#: ../cacti/lib/html.php:827 ../cacti-20050127/lib/html.php:999
+#: ../cacti-20050131/lib/html.php:999
+msgid "Clear Poller Cache"
+msgstr ""
+
+#: ../cacti/lib/html.php:832 ../cacti-20050131/lib/html.php:1005
+msgid "View Cacti Syslog"
+msgstr ""
+
+#: ../cacti/lib/html.php:837 ../cacti-20050131/lib/html.php:1011
+msgid "Clear Cacti Syslog"
+msgstr ""
+
+#: ../cacti/lib/html.php:842 ../cacti-20050127/lib/html.php:1017
+#: ../cacti-20050131/lib/html.php:1017
+msgid "Cacti Settings"
+msgstr ""
+
+#: ../cacti/lib/html.php:857 ../cacti/lib/html.php:912
+#: ../cacti-20050127/lib/html.php:1035 ../cacti-20050127/lib/html.php:1125
+#: ../cacti-20050131/lib/html.php:1035 ../cacti-20050131/lib/html.php:1125
+msgid "(Edit)"
+msgstr ""
+
+#: ../cacti/lib/html.php:862 ../cacti-20050127/lib/html.php:963
+#: ../cacti-20050127/lib/html.php:1041 ../cacti-20050131/lib/html.php:1041
+msgid "(Remove)"
+msgstr ""
+
+#: ../cacti/lib/html.php:867 ../cacti-20050127/lib/html.php:1047
+#: ../cacti-20050131/lib/html.php:1047
+msgid "Edit (Graph Permissions)"
+msgstr ""
+
+#: ../cacti/lib/html.php:872 ../cacti-20050127/lib/html.php:1053
+#: ../cacti-20050131/lib/html.php:1053
+msgid "Edit (Realm Permissions)"
+msgstr ""
+
+#: ../cacti/lib/html.php:877 ../cacti-20050131/lib/html.php:1059
+msgid "Edit Graph Settings)"
+msgstr ""
+
+#: ../cacti/lib/html.php:882 ../cacti-20050127/lib/html.php:1065
+#: ../cacti-20050131/lib/html.php:1065
+msgid "Edit (User Settings)"
+msgstr ""
+
+#: ../cacti/lib/html.php:887 ../cacti-20050127/lib/html.php:1071
+#: ../cacti-20050131/lib/html.php:1071
+msgid "About Cacti"
+msgstr ""
+
+#: ../cacti/lib/html.php:897 ../cacti-20050127/lib/html.php:1083
+#: ../cacti-20050131/lib/html.php:1083
+msgid "Export Results"
+msgstr ""
+
+#: ../cacti/lib/html.php:917 ../cacti-20050127/lib/html.php:1131
+#: ../cacti-20050131/lib/html.php:1131
+msgid "Actions"
+msgstr ""
+
+#: ../cacti/lib/html.php:932 ../cacti-20050127/lib/html.php:1149
+#: ../cacti-20050131/lib/html.php:1149
+msgid "Settings Wizard"
+msgstr ""
+
+#: ../cacti/lib/html.php:948 ../cacti-20050127/include/config_arrays.php:321
+#: ../cacti-20050131/include/config_arrays.php:321
+msgid "CDEFs"
+msgstr ""
+
+#: ../cacti/lib/html.php:953 ../cacti-20050127/include/config_arrays.php:322
+#: ../cacti-20050131/include/config_arrays.php:322
+msgid "Colors"
+msgstr ""
+
+#: ../cacti/user_changepassword.php:103
+#: ../cacti-20050127/user_changepassword.php:103
+#: ../cacti-20050131/user_changepassword.php:103
+msgid "Current Password"
+msgstr ""
+
+#: ../cacti/user_changepassword.php:104
+#: ../cacti-20050127/user_changepassword.php:104
+#: ../cacti-20050131/user_changepassword.php:104
+msgid "Enter your current password validation."
+msgstr ""
+
+#: ../cacti/user_changepassword.php:110
+#: ../cacti-20050127/user_changepassword.php:110
+#: ../cacti-20050131/user_changepassword.php:110
+msgid "New Password"
+msgstr ""
+
+#: ../cacti/user_changepassword.php:111
+#: ../cacti-20050127/user_changepassword.php:111
+#: ../cacti-20050131/user_changepassword.php:111
+msgid ""
+"Enter your new password twice. Remember that passwords are case sensitive!"
+msgstr ""
+
+#: ../cacti-20050127/include/config_arrays.php:72
+#: ../cacti-20050131/include/config_arrays.php:72
+msgid "XML: Hash version does not exist."
+msgstr ""
+
+#: ../cacti-20050127/include/config_arrays.php:118
+#: ../cacti-20050131/include/config_arrays.php:118
+msgid "SNMP"
+msgstr ""
+
+#: ../cacti-20050127/include/config_arrays.php:119
+#: ../cacti-20050131/include/config_arrays.php:119
+msgid "SNMP Query"
+msgstr ""
+
+#: ../cacti-20050127/include/config_arrays.php:121
+#: ../cacti-20050131/include/config_arrays.php:121
+msgid "Script Query"
+msgstr ""
+
+#: ../cacti-20050127/include/config_arrays.php:123
+#: ../cacti-20050131/include/config_arrays.php:123
+msgid "Script Query - Script Server"
+msgstr ""
+
+#: ../cacti-20050127/include/config_arrays.php:132
+#: ../cacti-20050127/include/config_arrays.php:235
+#: ../cacti-20050127/include/config_arrays.php:268
+#: ../cacti-20050131/include/config_arrays.php:132
+#: ../cacti-20050131/include/config_arrays.php:235
+#: ../cacti-20050131/include/config_arrays.php:268
+msgid "None"
+msgstr ""
+
+#: ../cacti-20050127/include/config_arrays.php:133
+#: ../cacti-20050131/include/config_arrays.php:133
+msgid "Uptime Goes Backwards"
+msgstr ""
+
+#: ../cacti-20050127/include/config_arrays.php:134
+#: ../cacti-20050131/include/config_arrays.php:134
+msgid "Index Count Changed"
+msgstr ""
+
+#: ../cacti-20050127/include/config_arrays.php:135
+#: ../cacti-20050131/include/config_arrays.php:135
+msgid "Verify All Fields"
+msgstr ""
+
+#: ../cacti-20050127/include/config_arrays.php:185
+#: ../cacti-20050131/include/config_arrays.php:185
+msgid "[None]"
+msgstr ""
+
+#: ../cacti-20050127/include/config_arrays.php:186
+#: ../cacti-20050131/include/config_arrays.php:186
+msgid "DES (default)"
+msgstr ""
+
+#: ../cacti-20050127/include/config_arrays.php:187
+#: ../cacti-20050131/include/config_arrays.php:187
+msgid "AES128"
+msgstr ""
+
+#: ../cacti-20050127/include/config_arrays.php:188
+#: ../cacti-20050131/include/config_arrays.php:188
+msgid "AES192"
+msgstr ""
+
+#: ../cacti-20050127/include/config_arrays.php:189
+#: ../cacti-20050131/include/config_arrays.php:189
+msgid "AES256"
+msgstr ""
+
+#: ../cacti-20050127/include/config_arrays.php:208
+#: ../cacti-20050131/include/config_arrays.php:208
+msgid "NONE - Syslog Only if Selected"
+msgstr ""
+
+#: ../cacti-20050127/include/config_arrays.php:209
+#: ../cacti-20050131/include/config_arrays.php:209
+msgid "LOW - Statistics and Errors"
+msgstr ""
+
+#: ../cacti-20050127/include/config_arrays.php:210
+#: ../cacti-20050131/include/config_arrays.php:210
+msgid "MEDIUM - Statistics, Errors and Results"
+msgstr ""
+
+#: ../cacti-20050127/include/config_arrays.php:211
+#: ../cacti-20050131/include/config_arrays.php:211
+msgid "HIGH - Statistics, Errors, Results and Major I/O Events"
+msgstr ""
+
+#: ../cacti-20050127/include/config_arrays.php:212
+#: ../cacti-20050131/include/config_arrays.php:212
+msgid "DEBUG - Statistics, Errors, Results, I/O and Program Flow"
+msgstr ""
+
+#: ../cacti-20050127/include/config_arrays.php:222
+#: ../cacti-20050131/include/config_arrays.php:222
+msgid "Tree View"
+msgstr ""
+
+#: ../cacti-20050127/include/config_arrays.php:223
+#: ../cacti-20050131/include/config_arrays.php:223
+msgid "List View"
+msgstr ""
+
+#: ../cacti-20050127/include/config_arrays.php:224
+#: ../cacti-20050131/include/config_arrays.php:224
+msgid "Preview View"
+msgstr ""
+
+#: ../cacti-20050127/include/config_arrays.php:227
+#: ../cacti-20050131/include/config_arrays.php:227
+msgid "Single Pane"
+msgstr ""
+
+#: ../cacti-20050127/include/config_arrays.php:228
+#: ../cacti-20050131/include/config_arrays.php:228
+msgid "Dual Pane"
+msgstr ""
+
+#: ../cacti-20050127/include/config_arrays.php:231
+#: ../cacti-20050131/include/config_arrays.php:231
+msgid "Local"
+msgstr ""
+
+#: ../cacti-20050127/include/config_arrays.php:232
+#: ../cacti-20050131/include/config_arrays.php:232
+msgid "LDAP"
+msgstr ""
+
+#: ../cacti-20050127/include/config_arrays.php:236
+#: ../cacti-20050131/include/config_arrays.php:236
+msgid "Builtin Authentication"
+msgstr ""
+
+#: ../cacti-20050127/include/config_arrays.php:237
+#: ../cacti-20050131/include/config_arrays.php:237
+msgid "Web Basic Authentication"
+msgstr ""
+
+#: ../cacti-20050127/include/config_arrays.php:238
+#: ../cacti-20050131/include/config_arrays.php:238
+msgid "LDAP Authentication"
+msgstr ""
+
+#: ../cacti-20050127/include/config_arrays.php:269
+#: ../cacti-20050131/include/config_arrays.php:269
+msgid "SSL"
+msgstr ""
+
+#: ../cacti-20050127/include/config_arrays.php:270
+#: ../cacti-20050131/include/config_arrays.php:270
+msgid "TLS"
+msgstr ""
+
+#: ../cacti-20050127/include/config_arrays.php:274
+#: ../cacti-20050131/include/config_arrays.php:274
+msgid "No Searching"
+msgstr ""
+
+#: ../cacti-20050127/include/config_arrays.php:275
+#: ../cacti-20050131/include/config_arrays.php:275
+msgid "Anonymous Searching"
+msgstr ""
+
+#: ../cacti-20050127/include/config_arrays.php:276
+#: ../cacti-20050131/include/config_arrays.php:276
+msgid "Specific Searching"
+msgstr ""
+
+#: ../cacti-20050127/include/config_arrays.php:291
+#: ../cacti-20050131/include/config_arrays.php:291
+msgid "Function"
+msgstr ""
+
+#: ../cacti-20050127/include/config_arrays.php:292
+#: ../cacti-20050131/include/config_arrays.php:292
+msgid "Operator"
+msgstr ""
+
+#: ../cacti-20050127/include/config_arrays.php:293
+#: ../cacti-20050131/include/config_arrays.php:293
+msgid "Special Data Source"
+msgstr ""
+
+#: ../cacti-20050127/include/config_arrays.php:294
+#: ../cacti-20050131/include/config_arrays.php:294
+msgid "Another CDEF"
+msgstr ""
+
+#: ../cacti-20050127/include/config_arrays.php:295
+#: ../cacti-20050131/include/config_arrays.php:295
+msgid "Custom String"
+msgstr ""
+
+#: ../cacti-20050127/include/config_arrays.php:323
+#: ../cacti-20050131/include/config_arrays.php:323
+msgid "GPRINT Presets"
+msgstr ""
+
+#: ../cacti-20050127/lib/html.php:975
+msgid "(Remove Item)"
+msgstr ""
+
+#: ../cacti-20050127/lib/html.php:1005
+msgid "View Cacti Log File"
+msgstr ""
+
+#: ../cacti-20050127/lib/html.php:1011
+msgid "Clear Cacti Log File"
+msgstr ""
+
+#: ../cacti-20050127/lib/html.php:1059
+msgid "Edit (Graph Settings)"
+msgstr ""
+
+#: ../cacti-20050127/lib/html.php:1095 ../cacti-20050127/lib/html.php:1101
+#: ../cacti-20050127/lib/html.php:1107 ../cacti-20050127/lib/html.php:1113
+#: ../cacti-20050131/lib/html.php:1095 ../cacti-20050131/lib/html.php:1101
+#: ../cacti-20050131/lib/html.php:1107 ../cacti-20050131/lib/html.php:1113
+msgid "Coming Soon"
+msgstr ""
