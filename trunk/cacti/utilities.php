@@ -112,7 +112,7 @@ function utilities_view_syslog() {
 	load_current_session_value("host", "sess_syslog_host", "ALL");
 	load_current_session_value("username", "sess_syslog_username", "ALL");
 
-	html_start_box("<strong>Cacti Log Filters</strong>", "98%", $colors["header_background"], "3", "center", "");
+	html_start_box("<strong>"._("Cacti Log Filters")."</strong>", "98%", $colors["header_background"], "3", "center", "");
 
 	include("./include/html/inc_syslog_filter_table.php");
 
@@ -141,7 +141,7 @@ function utilities_view_syslog() {
 		$sql_where .= " and syslog.username='" . $_REQUEST["username"] . "'";
 	}
 
-	html_start_box("<strong>Cacti Log Operations</strong>", "98%", $colors["header_background"], "3", "center", "");
+	html_start_box("<strong>"._("Cacti Log Operations")."</strong>", "98%", $colors["header_background"], "3", "center", "");
 
 	print "<form name='syslog_actions'>";
 	print "<input type='hidden' name='action' value='view_syslog'>";
@@ -185,13 +185,13 @@ function utilities_view_syslog() {
 				<table width='100%' cellspacing='0' cellpadding='0' border='0'>
 					<tr>
 						<td align='left' class='textHeaderDark'>
-							<strong>&lt;&lt; "; if ($_REQUEST["page"] > 1) { $nav .= "<a class='linkOverDark' href='utilities.php?action=view_syslog&filter=" . $_REQUEST["filter"] . "&facility=" . $_REQUEST["facility"] . "&page=" . ($_REQUEST["page"]-1) . "'>"; } $nav .= "Previous"; if ($_REQUEST["page"] > 1) { $nav .= "</a>"; } $nav .= "</strong>
+							<strong>&lt;&lt; "; if ($_REQUEST["page"] > 1) { $nav .= "<a class='linkOverDark' href='utilities.php?action=view_syslog&filter=" . $_REQUEST["filter"] . "&facility=" . $_REQUEST["facility"] . "&page=" . ($_REQUEST["page"]-1) . "'>"; } $nav .= _("Previous"); if ($_REQUEST["page"] > 1) { $nav .= "</a>"; } $nav .= "</strong>
 						</td>\n
 						<td align='center' class='textHeaderDark'>
 							Showing Rows " . ((read_config_option("num_rows_device")*($_REQUEST["page"]-1))+1) . " to " . ((($total_rows < read_config_option("num_rows_device")) || ($total_rows < (read_config_option("num_rows_device")*$_REQUEST["page"]))) ? $total_rows : (read_config_option("num_rows_device")*$_REQUEST["page"])) . " of $total_rows [$url_page_select]
 						</td>\n
 						<td align='right' class='textHeaderDark'>
-							<strong>"; if (($_REQUEST["page"] * read_config_option("num_rows_device")) < $total_rows) { $nav .= "<a class='linkOverDark' href='utilities.php?action=view_syslog&filter=" . $_REQUEST["filter"] . "&facility=" . $_REQUEST["facility"] . "&page=" . ($_REQUEST["page"]+1) . "'>"; } $nav .= "Next"; if (($_REQUEST["page"] * read_config_option("num_rows_device")) < $total_rows) { $nav .= "</a>"; } $nav .= " &gt;&gt;</strong>
+							<strong>"; if (($_REQUEST["page"] * read_config_option("num_rows_device")) < $total_rows) { $nav .= "<a class='linkOverDark' href='utilities.php?action=view_syslog&filter=" . $_REQUEST["filter"] . "&facility=" . $_REQUEST["facility"] . "&page=" . ($_REQUEST["page"]+1) . "'>"; } $nav .= _("Next"); if (($_REQUEST["page"] * read_config_option("num_rows_device")) < $total_rows) { $nav .= "</a>"; } $nav .= " &gt;&gt;</strong>
 						</td>\n
 					</tr>
 				</table>
@@ -200,7 +200,7 @@ function utilities_view_syslog() {
 
 	print $nav;
 
-	html_header(array("Logdate", "Facility", "Severity", "Poller", "Host", "Log Message"));
+	html_header(array(_("Logdate"), _("Facility"), _("Severity"), _("Poller"), _("Host"), _("Log Message")));
 
 	$i = 0;
 	if (sizeof($syslog_entries) > 0) {
@@ -232,7 +232,7 @@ function utilities_view_syslog() {
 		/* put the nav bar on the bottom as well */
 		print $nav;
 	}else{
-		print "<tr><td bgcolor='#" . $colors["form_alternate1"] . "' colspan=7><em>No Entries</em></td></tr>";
+		print "<tr><td bgcolor='#" . $colors["form_alternate1"] . "' colspan=7><em>"._("No Entries")."</em></td></tr>";
 	}
 	html_end_box();
 }
@@ -292,7 +292,7 @@ function utilities() {
 
 	html_start_box("<strong>Cacti System Utilities</strong>", "98%", $colors["header_background"], "3", "center", "");
 
-	html_header(array("Poller Cache Administration"), 2);
+	html_header(array(_("Poller Cache Administration")), 2);
 
 	?>
 	<colgroup span="3">
@@ -302,40 +302,40 @@ function utilities() {
 
 	<tr bgcolor="#<?php print $colors["form_alternate1"];?>">
 		<td class="textArea">
-			<p><a href='utilities.php?action=view_poller_cache'>View Poller Cache</a></p>
+			<p><a href='utilities.php?action=view_poller_cache'><?php echo _("View Poller Cache"); ?></a></p>
 		</td>
 		<td class="textArea">
-			<p>This is the data that is being passed to the poller each time it runs. This data is then in turn executed/interpreted and the results are fed into the rrd files for graphing or the database for display.</p>
+			<p><?php echo _("This is the data that is being passed to the poller each time it runs. This data is then in turn executed/interpreted and the results are fed into the rrd files for graphing or the database for display."); ?></p>
 		</td>
 	</tr>
 	<tr bgcolor="#<?php print $colors["form_alternate1"];?>">
 		<td class="textArea">
-			<p><a href='utilities.php?action=clear_poller_cache'>Clear Poller Cache</a></p>
+			<p><a href='utilities.php?action=clear_poller_cache'><?php echo _("Clear Poller Cache"); ?></a></p>
 		</td>
 		<td class="textArea">
-			<p>The poller cache will be cleared and re-generated if you select this option. Sometimes host/data source data can get out of sync with the cache in which case it makes sense to clear the cache and start over.</p>
-		</td>
-	</tr>
-
-	<?php html_header(array("System Log Administration"), 2);?>
-
-	<tr bgcolor="#<?php print $colors["form_alternate2"];?>">
-		<td class="textArea">
-			<p><a href='utilities.php?action=view_syslog'>View Cacti Syslog</a></p>
-		</td>
-		<td class="textArea">
-			<p>The Cacti Syslog stores statistics, errors, warnings and other message depending on system settings.  This information can be used to identify problems with the poller and application.</p>
+			<p><?php echo _("The poller cache will be cleared and re-generated if you select this option. Sometimes host/data source data can get out of sync with the cache in which case it makes sense to clear the cache and start over."); ?></p>
 		</td>
 	</tr>
 
-	<?php html_header(array("General Utilities"), 2);?>
+	<?php html_header(array(_("System Log Administration")), 2);?>
 
 	<tr bgcolor="#<?php print $colors["form_alternate2"];?>">
 		<td class="textArea">
-			<p><a href='php_info.php' target="_blank">PHP Information</a></p>
+			<p><a href='utilities.php?action=view_syslog'><?php echo _("View Cacti Syslog"); ?></a></p>
 		</td>
 		<td class="textArea">
-			<p>This utility will retreive PHP version information to your browser.  This utility can aid in determining sources of problems and verification of your operating environment.</p>
+			<p><?php echo _("The Cacti Syslog stores statistics, errors, warnings and other message depending on system settings.  This information can be used to identify problems with the poller and application."); ?></p>
+		</td>
+	</tr>
+
+	<?php html_header(array(_("General Utilities")), 2);?>
+
+	<tr bgcolor="#<?php print $colors["form_alternate2"];?>">
+		<td class="textArea">
+			<p><a href='php_info.php' target="_blank"><?php echo _("PHP Information"); ?></a></p>
+		</td>
+		<td class="textArea">
+			<p><?php echo _("This utility will retreive PHP version information to your browser.  This utility can aid in determining sources of problems and verification of your operating environment."); ?></p>
 		</td>
 	</tr>
 

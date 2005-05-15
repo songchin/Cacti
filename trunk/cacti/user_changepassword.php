@@ -100,15 +100,15 @@ function change_password_form() {
 	$form_fields = array (
 		"password_old" => array(
 			"method" => "textbox_password_single",
-			"friendly_name" => "Current Password",
-			"description" => "Enter your current password validation.",
+			"friendly_name" => _("Current Password"),
+			"description" => _("Enter your current password validation."),
 			"value" => "",
 			"max_length" => "255"
 		),
 		"password_new" => array(
 			"method" => "textbox_password",
-			"friendly_name" => "New Password",
-			"description" => "Enter your new password twice. Remember that passwords are case sensitive!",
+			"friendly_name" => _("New Password"),
+			"description" => _("Enter your new password twice. Remember that passwords are case sensitive!"),
 			"value" => "",
 			"max_length" => "255"
 		),
@@ -122,7 +122,7 @@ function change_password_form() {
 	if ($user_realms["18"]["value"] == "1") {
 		if ((read_config_option("auth_method") == "1") || (($current_user["realm"] == "0") && (read_config_option("auth_method") == "3"))) {
 			/* Builtin auth method, password can be changed */
-			html_start_box("<strong>Change Password</strong>", "98%", $colors["header_background"], "3", "center", "");
+			html_start_box("<strong>"._("Change Password")."</strong>", "98%", $colors["header_background"], "3", "center", "");
 			draw_edit_form(array(
 				"config" => array("form_name" => "chk"),
 				"fields" => inject_form_variables($form_fields, (isset($user) ? $user : array()))
@@ -131,11 +131,11 @@ function change_password_form() {
 			form_save_button((isset($_SERVER["HTTP_REFERER"]) ? $_SERVER["HTTP_REFERER"] : "index.php"),"save");
 		}else{
 			/* Password changing not supported */
-			display_custom_error_message("Current selected Authentication Method does not support changing of passwords.");
+			display_custom_error_message(_("Current selected Authentication Method does not support changing of passwords."));
 		}
 	}else{
 		/* access denied */
-		display_custom_error_message("Access Denied.");
+		display_custom_error_message(_("Access Denied."));
 	}
 
 	include_once("include/bottom_footer.php");

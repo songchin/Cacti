@@ -33,6 +33,7 @@ if (isset($_SESSION["sess_user_id"])) {
 ?>
 <html>
 <head>
+	<meta http-equiv='Content-Type' content='text/html; charset=<?php echo _( "screen charset");?>'>
 	<link rel='shortcut icon' href='<?php print html_get_theme_images_path("favicon.ico");?>' type='image/x-icon'>
 	<script type="text/javascript" src="include/layout.js"></script>
 	<title>Cacti</title>
@@ -79,9 +80,10 @@ if (isset($_SESSION["sess_user_id"])) {
 					</td>
 						<?php } } ?>
 					<td align="right">
-						<?php if (read_config_option("auth_method") != "0") { ?>
-						Logged in as <strong><?php print $current_user["username"];?></strong> (<a href="logout.php">Logout</a>)&nbsp;
-						<?php } ?>
+						<?php if (read_config_option("auth_method") != "0") {
+						    printf( _( "Logged in as <strong>%s</strong>"), $current_user["username"]);
+                            print "(<a href='logout.php'>"._("Logout")."</a>)&nbsp;";
+                        } ?>
 					</td>
 				</tr>
 			</table>

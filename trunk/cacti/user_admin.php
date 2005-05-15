@@ -26,7 +26,7 @@ include("./include/config.php");
 include("./include/auth.php");
 include("./lib/user/user_action.php");
 
-$themes["default"] = "System Default (Global Setting)";
+$themes["default"] = _("System Default (Global Setting)");
 include("./include/user/user_form.php");
 
 
@@ -37,11 +37,11 @@ if (! isset($_SERVER["HTTP_REFERER"]) && ((strlen($_SERVER["QUERY_STRING"]) > 0)
 }
 
 $user_actions = array(
-	1 => "Delete",
-	2 => "Copy",
-	3 => "Enable",
-	4 => "Disable",
-	5 => "Password Expiration"
+	1 => _("Delete"),
+	2 => _("Copy"),
+	3 => _("Enable"),
+	4 => _("Disable"),
+	5 => _("Password Expiration")
 	);
 
 /* set default action */
@@ -268,21 +268,21 @@ function graph_perms_edit() {
 
 	if (!empty($_GET["id"])) {
 		$policy = api_user_info( array( "id" => $_GET["id"] ) );
-		$header_label = "[edit: " . $policy["username"] . "]";
+		$header_label = _("[edit: ") . $policy["username"] . "]";
 	}
 
 	?>
 	<table width='98%' align='center' cellpadding="5">
 		<tr>
 			<td>
-				<span style='font-size: 12px; font-weight: bold;'>Graph policies will be evaluated in the order shown until a match is found.</span>
+				<span style='font-size: 12px; font-weight: bold;'><?php echo _("Graph policies will be evaluated in the order shown until a match is found."); ?></span>
 			</td>
 		</tr>
 	</table>
 	<?php
 
 	/* box: graph permissions */
-	html_start_box("<strong>Graph Permissions (By Graph)</strong>", "98%", $colors["header_background"], "3", "center", "");
+	html_start_box("<strong>"._("Graph Permissions (By Graph)")."</strong>", "98%", $colors["header_background"], "3", "center", "");
 
 	$graphs = db_fetch_assoc("select
 		graph.id,
@@ -297,8 +297,8 @@ function graph_perms_edit() {
 
 	<tr bgcolor="#<?php print $colors["form_alternate1"];?>">
 		<td width="50%">
-			<font class="textEditTitle">Default Policy</font><br>
-			The default allow/deny graph policy for this user.
+			<font class="textEditTitle"><?php echo _("Default Policy"); ?></font><br>
+			<?php echo _("The default allow/deny graph policy for this user."); ?>
 		</td>
 		<td align="right">
 			<?php form_dropdown("policy_graphs",$graph_policy_array,"","",$policy["policy_graphs"],"",""); ?>
@@ -314,11 +314,11 @@ function graph_perms_edit() {
 						$i++;
 						print "	<tr>
 								<td><span style='font-weight: bold; color: " . (($policy["policy_graphs"] == "1") ? "red" : "blue") . ";'>$i)</span> " . $item["title_cache"] . "</td>
-								<td align='right'><a href='user_admin.php?action=perm_remove&type=graph&id=" . $item["id"] . "&user_id=" . $_GET["id"] . "'><img src='" . html_get_theme_images_path("delete_icon.gif") . "' width='10' height='10' border='0' alt='Delete'></a>&nbsp;</td>
+								<td align='right'><a href='user_admin.php?action=perm_remove&type=graph&id=" . $item["id"] . "&user_id=" . $_GET["id"] . "'><img src='" . html_get_theme_images_path("delete_icon.gif") . "' width='10' height='10' border='0' alt='"._("Delete")."'></a>&nbsp;</td>
 							</tr>\n";
 					}
 				}else{
-					print "<tr><td><em>No Graphs</em></td></tr>";
+					print "<tr><td><em>"._("No Graphs")."</em></td></tr>";
 				}
 				?>
 			</table>
@@ -335,7 +335,7 @@ function graph_perms_edit() {
 				<?php form_dropdown("perm_graphs",db_fetch_assoc("select id,title_cache from graph order by title_cache"),"title_cache","id","","","");?>
 			</td>
 			<td align="right">
-				&nbsp;<input type="image" src="<?php print html_get_theme_images_path('button_add.gif');?>" alt="Add" name="add_graph" align="absmiddle">
+				&nbsp;<input type="image" src="<?php print html_get_theme_images_path('button_add.gif');?>" alt="<?php echo _("Add"); ?>" name="add_graph" align="absmiddle">
 			</td>
 		</tr>
 	</table>
@@ -343,7 +343,7 @@ function graph_perms_edit() {
 	<?php
 
 	/* box: host permissions */
-	html_start_box("<strong>Graph Permissions (By Host)</strong>", "98%", $colors["header_background"], "3", "center", "");
+	html_start_box("<strong>"._("Graph Permissions (By Host)")."</strong>", "98%", $colors["header_background"], "3", "center", "");
 
 	$hosts = db_fetch_assoc("select
 		host.id,
@@ -356,8 +356,8 @@ function graph_perms_edit() {
 	?>
 	<tr bgcolor="#<?php print $colors["form_alternate1"];?>">
 		<td width="50%">
-			<font class="textEditTitle">Default Policy</font><br>
-			The default allow/deny graph policy for this user.
+			<font class="textEditTitle"><?php echo _("Default Policy"); ?></font><br>
+			<?php echo _("The default allow/deny graph policy for this user."); ?>
 		</td>
 		<td align="right">
 			<?php form_dropdown("policy_hosts",$graph_policy_array,"","",$policy["policy_hosts"],"",""); ?>
@@ -373,11 +373,11 @@ function graph_perms_edit() {
 						$i++;
 						print "	<tr>
 								<td><span style='font-weight: bold; color: " . (($policy["policy_hosts"] == "1") ? "red" : "blue") . ";'>$i)</span> " . $item["name"] . "</td>
-								<td align='right'><a href='user_admin.php?action=perm_remove&type=host&id=" . $item["id"] . "&user_id=" . $_GET["id"] . "'><img src='" . html_get_theme_images_path("delete_icon.gif") . "' width='10' height='10' border='0' alt='Delete'></a>&nbsp;</td>
+								<td align='right'><a href='user_admin.php?action=perm_remove&type=host&id=" . $item["id"] . "&user_id=" . $_GET["id"] . "'><img src='" . html_get_theme_images_path("delete_icon.gif") . "' width='10' height='10' border='0' alt='"._("Delete")."'></a>&nbsp;</td>
 							</tr>\n";
 					}
 				}else{
-					print "<tr><td bgcolor='#" . $colors["form_alternate1"] . "' colspan=7><em>No Hosts</em></td></tr>";
+					print "<tr><td bgcolor='#" . $colors["form_alternate1"] . "' colspan=7><em>"._("No Hosts")."</em></td></tr>";
 				}
 				?>
 			</table>
@@ -395,7 +395,7 @@ function graph_perms_edit() {
 				<?php form_dropdown("perm_hosts",db_fetch_assoc("select id,CONCAT_WS('',description,' (',hostname,')') as name from host order by description,hostname"),"name","id","","","");?>
 			</td>
 			<td align="right">
-				&nbsp;<input type="image" src="<?php print html_get_theme_images_path('button_add.gif');?>" alt="Add" name="add_host" align="absmiddle">
+				&nbsp;<input type="image" src="<?php print html_get_theme_images_path('button_add.gif');?>" alt="<?php echo _("Add"); ?>" name="add_host" align="absmiddle">
 			</td>
 		</tr>
 	</table>
@@ -403,7 +403,7 @@ function graph_perms_edit() {
 	<?php
 
 	/* box: graph template permissions */
-	html_start_box("<strong>Graph Permissions (By Graph Template)</strong>", "98%", $colors["header_background"], "3", "center", "");
+	html_start_box("<strong>"._("Graph Permissions (By Graph Template)")."</strong>", "98%", $colors["header_background"], "3", "center", "");
 
 	$graph_templates = db_fetch_assoc("select
 		graph_template.id,
@@ -416,8 +416,8 @@ function graph_perms_edit() {
 	?>
 	<tr bgcolor="#<?php print $colors["form_alternate1"];?>">
 		<td width="50%">
-			<font class="textEditTitle">Default Policy</font><br>
-			The default allow/deny graph policy for this user.
+			<font class="textEditTitle"><?php echo _("Default Policy"); ?></font><br>
+			<?php echo _("The default allow/deny graph policy for this user."); ?>
 		</td>
 		<td align="right">
 			<?php form_dropdown("policy_graph_templates",$graph_policy_array,"","",$policy["policy_graph_templates"],"",""); ?>
@@ -437,7 +437,7 @@ function graph_perms_edit() {
 							</tr>\n";
 					}
 				}else{
-					print "<tr><td bgcolor='#" . $colors["form_alternate1"] . "' colspan=7><em>No Graph Templates</em></td></tr>";
+					print "<tr><td bgcolor='#" . $colors["form_alternate1"] . "' colspan=7><em>"._("No Graph Templates")."</em></td></tr>";
 				}
 				?>
 			</table>
@@ -451,11 +451,11 @@ function graph_perms_edit() {
 	?>
 	<table align='center' width='98%'>
 		<tr>
-			<td nowrap>Add Graph Template:&nbsp;
+			<td nowrap><?php echo _("Add Graph Template:"); ?>&nbsp;
 				<?php form_dropdown("perm_graph_templates",db_fetch_assoc("select id,template_name from graph_template order by template_name"),"template_name","id","","","");?>
 			</td>
 			<td align="right">
-				&nbsp;<input type="image" src="<?php print html_get_theme_images_path('button_add.gif');?>" alt="Add" name="add_graph_template" align="absmiddle">
+				&nbsp;<input type="image" src="<?php print html_get_theme_images_path('button_add.gif');?>" alt="<?php echo _("Add"); ?>" name="add_graph_template" align="absmiddle">
 			</td>
 		</tr>
 	</table>
@@ -463,7 +463,7 @@ function graph_perms_edit() {
 	<?php
 
 	/* box: tree permissions */
-	html_start_box("<strong>Tree Permissions</strong>", "98%", $colors["header_background"], "3", "center", "");
+	html_start_box("<strong>"._("Tree Permissions")."</strong>", "98%", $colors["header_background"], "3", "center", "");
 
 	$trees = db_fetch_assoc("select
 		graph_tree.id,
@@ -476,8 +476,8 @@ function graph_perms_edit() {
 	?>
 	<tr bgcolor="#<?php print $colors["form_alternate1"];?>">
 		<td width="50%">
-			<font class="textEditTitle">Default Policy</font><br>
-			The default allow/deny graph policy for this user.
+			<font class="textEditTitle"><?php echo _("Default Policy"); ?></font><br>
+			<?php echo _("The default allow/deny graph policy for this user."); ?>
 		</td>
 		<td align="right">
 			<?php form_dropdown("policy_trees",$graph_policy_array,"","",$policy["policy_trees"],"",""); ?>
@@ -497,7 +497,7 @@ function graph_perms_edit() {
 							</tr>\n";
 					}
 				}else{
-					print "<tr><td><em>No Trees</em></td></tr>";
+					print "<tr><td><em>"._("No Trees")."</em></td></tr>";
 				}
 				?>
 			</table>
@@ -511,11 +511,11 @@ function graph_perms_edit() {
 	?>
 	<table align='center' width='98%'>
 		<tr>
-			<td nowrap>Add Tree:&nbsp;
+			<td nowrap><?php echo _("Add Tree:"); ?>&nbsp;
 				<?php form_dropdown("perm_trees",db_fetch_assoc("select id,name from graph_tree order by name"),"name","id","","","");?>
 			</td>
 			<td align="right">
-				&nbsp;<input type="image" src="<?php print html_get_theme_images_path('button_add.gif');?>" alt="Add" name="add_tree" align="absmiddle">
+				&nbsp;<input type="image" src="<?php print html_get_theme_images_path('button_add.gif');?>" alt="<?php echo _("Add"); ?>" name="add_tree" align="absmiddle">
 			</td>
 		</tr>
 	</table>
@@ -537,7 +537,7 @@ function user_realms_edit() {
 	<table width='98%' align='center' cellpadding="5">
 		<tr>
 			<td>
-				<span style='font-size: 12px; font-weight: bold;'>Realm permissions control which sections of Cacti this user will have access to.</span>
+				<span style='font-size: 12px; font-weight: bold;'><?php echo _("Realm permissions control which sections of Cacti this user will have access to."); ?></span>
 			</td>
 		</tr>
 	</table>
@@ -602,7 +602,7 @@ function graph_settings_edit() {
 	<table width='98%' align='center' cellpadding="5">
 		<tr>
 			<td>
-				<span style='font-size: 12px; font-weight: bold;'>Graph settings control how graphs are displayed for this user.</span>
+				<span style='font-size: 12px; font-weight: bold;'><?php echo _("Graph settings control how graphs are displayed for this user."); ?></span>
 			</td>
 		</tr>
 	</table>
@@ -668,13 +668,12 @@ function user_edit() {
 
 	if (!empty($_GET["id"])) {
 		$user = api_user_info(array( "id" => $_GET["id"]));
-		$header_label = "[edit: " . $user["username"] . "]";
+		$header_label = _("[edit: ") . $user["username"] . "]";
 	}else{
-		$header_label = "[new]";
+		$header_label = _("[new]");
 	}
 
-	html_start_box("<strong>User Management</strong> $header_label", "98%", $colors["header_background"], "3", "center", "");
-
+	html_start_box("<strong>"._("User Management")."</strong> $header_label", "98%", $colors["header_background"], "3", "center", "");
 	draw_edit_form(array(
 		"config" => array("form_name" => "chk"),
 		"fields" => inject_form_variables($fields_user_user_edit_host, (isset($user) ? $user : array()))
@@ -690,15 +689,15 @@ function user_edit() {
 			<tr>
 				<td width='1'></td>
 				<td <?php print ((($_GET["action"] == "user_realms_edit") || ($_GET["action"] == "user_edit")) ? "bgcolor='" . $colors["form_alternate1"] . "'" : "bgcolor='" . $colors["form_alternate2"] . "'");?> nowrap='nowrap' width='150' align='center' class='tab'>
-					<span class='textHeader'><a href='user_admin.php?action=user_realms_edit&id=<?php print $_GET["id"];?>'>Realm Permissions</a></span>
+					<span class='textHeader'><a href='user_admin.php?action=user_realms_edit&id=<?php print $_GET["id"];?>'><?php echo _("Realm Permissions"); ?></a></span>
 				</td>
 				<td width='1'></td>
 				<td <?php print (($_GET["action"] == "graph_perms_edit") ? "bgcolor='" . $colors["form_alternate1"] . "'" : "bgcolor='" . $colors["form_alternate2"] . "'");?> nowrap='nowrap' width='150' align='center' class='tab'>
-					<span class='textHeader'><a href='user_admin.php?action=graph_perms_edit&id=<?php print $_GET["id"];?>'>Graph Permissions</a></span>
+					<span class='textHeader'><a href='user_admin.php?action=graph_perms_edit&id=<?php print $_GET["id"];?>'><?php echo _("Graph Permissions"); ?></a></span>
 				</td>
 				<td width='1'></td>
 				<td <?php print (($_GET["action"] == "graph_settings_edit") ? "bgcolor='" . $colors["form_alternate1"] . "'" : "bgcolor='" . $colors["form_alternate2"] . "'");?> nowrap='nowrap' width='130' align='center' class='tab'>
-					<span class='textHeader'><a href='user_admin.php?action=graph_settings_edit&id=<?php print $_GET["id"];?>'>Graph Settings</a></span>
+					<span class='textHeader'><a href='user_admin.php?action=graph_settings_edit&id=<?php print $_GET["id"];?>'><?php echo _("Graph Settings"); ?></a></span>
 				</td>
 				<td></td>
 			</tr>
@@ -727,9 +726,9 @@ function user_edit() {
 function user() {
 	global $user_actions, $colors, $auth_realms;
 
-	html_start_box("<strong>User Management</strong>", "98%", $colors["header_background"], "3", "center", "user_admin.php?action=user_edit");
+	html_start_box("<strong>"._("User Management")."</strong>", "98%", $colors["header_background"], "3", "center", "user_admin.php?action=user_edit");
 
-	html_header_checkbox(array("User Name", "Full Name", "Status","Realm", "Default Graph Policy", "Last Login", "Last Login From","Last Password Change"));
+	html_header_checkbox(array(_("User Name"), _("Full Name"), _("Status"),_("Realm"), _("Default Graph Policy"), _("Last Login"), _("Last Login From"),_("Last Password Change")));
 
 	$user_list = api_user_list( array( "1" => "username" ) );
 
@@ -746,13 +745,13 @@ function user() {
 				<?php print $user["full_name"];?>
 			</td>
 			<td>
-				<?php if ($user["enabled"] == "1") { print "Enabled"; }else{ print "Disabled"; }?>
+				<?php if ($user["enabled"] == "1") { print _("Enabled"); }else{ print _("Disabled"); }?>
 			</td>
 			<td>
 				<?php print $auth_realms[$user["realm"]];?>
 			</td>
 			<td>
-				<?php if ($user["policy_graphs"] == "1") { print "ALLOW"; }else{ print "DENY"; }?>
+				<?php if ($user["policy_graphs"] == "1") { print _("ALLOW"); }else{ print _("DENY"); }?>
 			</td>
 			<td>
 				<?php print $user["last_login_formatted"];?>
@@ -861,14 +860,14 @@ function user_actions() {
 	if ($_POST["drp_action"] == "3") { /* Enable Users */
 		print "	<tr>
 				<td colspan='2' class='textArea' bgcolor='#" . $colors["form_alternate1"]. "'>
-					<p>To enable the following users, press the \"yes\" button below.</p>
+					<p>"._("To enable the following users, press the \"yes\" button below.")."</p>
 					<p>$user_list</p>
 				</td>
 				</tr>";
 	}elseif ($_POST["drp_action"] == "4") { /* Disable Users */
 		print "	<tr>
 				<td colspan='4' class='textArea' bgcolor='#" . $colors["form_alternate1"]. "'>
-					<p>To disable the following users, press the \"yes\" button below.</p>
+					<p>"._("To disable the following users, press the \"yes\" button below.")."</p>
 					<p>$user_list</p>
 				</td>
 				</tr>";
@@ -876,7 +875,7 @@ function user_actions() {
 	}elseif ($_POST["drp_action"] == "2") { /* copy user */
 		print "	<tr>
 				<td colspan='2' class='textArea' bgcolor='#" . $colors["form_alternate1"]. "'>
-					<p>Would you like to copy a user to a new user?</p>
+					<p>"._("Would you like to copy a user to a new user?")."</p>
 				</td>
 				</tr>";
 
@@ -885,15 +884,15 @@ function user_actions() {
 			$form_array = array(
 			"user_name" => array(
 				"method" => "drop_array",
-				"friendly_name" => "User Name",
-				"description" => "Select the user name you would like to copy from.",
+				"friendly_name" => _("User Name"),
+				"description" => _("Select the user name you would like to copy from."),
 				"value" => "",
 				"array" => $username_list
 				),
 			"user_new" => array(
 				"method" => "textbox",
-				"friendly_name" => "New User Name",
-				"description" => "Type the user name of the new user.",
+				"friendly_name" => _("New User Name"),
+				"description" => _("Type the user name of the new user."),
 				"value" => "",
 				"max_length" => "100"
 				)
@@ -909,7 +908,7 @@ function user_actions() {
 	}elseif ($_POST["drp_action"] == "1") { /* delete */
 		print "	<tr>
 				<td class='textArea' bgcolor='#" . $colors["form_alternate1"]. "'>
-					<p>Are you sure you want to delete the following users?</p>
+					<p>"._("Are you sure you want to delete the following users?")."</p>
 					<p>$user_list</p>
 					</td></tr>
 				</td>
@@ -919,7 +918,7 @@ function user_actions() {
 	}elseif ($_POST["drp_action"] == "5") { /* Password Expiration */
 		print "	<tr>
 				<td colspan='2' class='textArea' bgcolor='#" . $colors["form_alternate1"]. "'>
-					<p>Would you like to set Password Expiration?</p>
+					<p>"._("Would you like to set Password Expiration?")."</p>
 					<p>$user_list</p>
 				</td>
 				</tr>";
@@ -928,8 +927,8 @@ function user_actions() {
 		$form_array = array(
 		"expire_interval" => array(
 			"method" => "drop_array",
-			"friendly_name" => "Password Expiration Interval",
-			"description" => "Select the interval that you would like to apply to the selected users.",
+			"friendly_name" => _("Password Expiration Interval"),
+			"description" => _("Select the interval that you would like to apply to the selected users."),
 			"value" => "",
 			"array" => $user_password_expire_intervals
 			)
@@ -943,10 +942,10 @@ function user_actions() {
 	}
 
 	if (!isset($user_array)) {
-		print "<tr><td colspan='2' bgcolor='#" . $colors["form_alternate1"]. "'><span class='textError'>You must select at least one user.</span></td></tr>\n";
+		print "<tr><td colspan='2' bgcolor='#" . $colors["form_alternate1"]. "'><span class='textError'>"._("You must select at least one user.")."</span></td></tr>\n";
 		$save_html = "";
 	}else{
-		$save_html = "<input type='image' src='" . html_get_theme_images_path("button_yes.gif") . "' alt='Save' align='absmiddle'>";
+		$save_html = "<input type='image' src='" . html_get_theme_images_path("button_yes.gif") . "' alt='"._("Save")."' align='absmiddle'>";
 	}
 
 	print "	<tr>
@@ -954,7 +953,7 @@ function user_actions() {
 				<input type='hidden' name='action' value='actions'>
 				<input type='hidden' name='selected_items' value='" . (isset($user_array) ? serialize($user_array) : '') . "'>
 				<input type='hidden' name='drp_action' value='" . $_POST["drp_action"] . "'>
-				<a href='user_admin.php'><img src='" . html_get_theme_images_path("button_no.gif") . "' alt='Cancel' align='absmiddle' border='0'></a>
+				<a href='user_admin.php'><img src='" . html_get_theme_images_path("button_no.gif") . "' alt='"._("Cancel")."' align='absmiddle' border='0'></a>
 				$save_html
 			</td>
 		</tr>

@@ -34,11 +34,11 @@ function wizard_settings_array_merge($section) {
 			"page" => "1"
 			),
 		"db_pconnections" => array(
-			"helper_text" => "Enabling this setting will allow mysql and php to pool connections.  This typically will reduce the number of connections to the database.  If you are running Solaris, you should consider disabling this option.",
+			"helper_text" => _("Enabling this setting will allow mysql and php to pool connections.  This typically will reduce the number of connections to the database.  If you are running Solaris, you should consider disabling this option."),
 			"page" => "1"
 			),
 		"db_retries" => array(
-			"helper_text" => "Number of retries before a connection error is returned from mysql.  This setting typically should not exceed 100.", 
+			"helper_text" => _("Number of retries before a connection error is returned from mysql.  This setting typically should not exceed 100."), 
 			"page" => "1"
 			),
 		"php_header" => array(
@@ -46,11 +46,11 @@ function wizard_settings_array_merge($section) {
 			"page" => "2"
 			),
 		"max_memory" => array(
-			"helper_text" => "This is the number of Megabytes of RAM that PHP will use while executing Cacti related tasks.  If you are or are planning on monitoring devices with a large number of metrics, i.e. switch ports in excess of 300, then set this to 64.  Otherwise the default value of 32 will be more than enough.",
+			"helper_text" => _("This is the number of Megabytes of RAM that PHP will use while executing Cacti related tasks.  If you are or are planning on monitoring devices with a large number of metrics, i.e. switch ports in excess of 300, then set this to 64.  Otherwise the default value of 32 will be more than enough."),
 			"page" => "2"
 			),
 		"max_execution_time" => array(
-			"helper_text" => "PHP timeout used while executing Cacti related tasks.  If you are or are planning on monitoring devices with a large number of metrics, i.e. switch ports in excess of 300, then set this to 60 seconds.  Typically not change is needed, the default is 10 seconds.",
+			"helper_text" => _("PHP timeout used while executing Cacti related tasks.  If you are or are planning on monitoring devices with a large number of metrics, i.e. switch ports in excess of 300, then set this to 60 seconds.  Typically not change is needed, the default is 10 seconds."),
 			"page" => "2"
 			),
 		"other_header" => array(
@@ -58,11 +58,11 @@ function wizard_settings_array_merge($section) {
 			"page" => "3"
 			),
 		"remove_verification" => array(
-			"helper_text" => "Enabling this setting will turn on prompting throughout the user inferface for confirmation on delete actions.",
+			"helper_text" => _("Enabling this setting will turn on prompting throughout the user inferface for confirmation on delete actions."),
 			"page" => "3"
 			),
 		"show_hidden" => array(
-			"helper_text" => "Enabling this setting will allow you to see some interal cacti settings, mostly related to templates.",
+			"helper_text" => _("Enabling this setting will allow you to see some interal cacti settings, mostly related to templates."),
 			"page" => "3"
 		)
 	);

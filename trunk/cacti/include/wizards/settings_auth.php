@@ -31,7 +31,7 @@ function wizard_render($wizard) {
 
 	wizard_start_area();
 
-	print "<br><br><br><b>Previous Page:</b> " . wizard_history("prev") . "<br><b>Current Page:</b> " . wizard_history() . "<br><b>Next Page:</b> " . $next_page . "<br><br><br><br>";
+	print "<br><br><br><b>"._("Previous Page:")."</b> " . wizard_history("prev") . "<br><b>"._("Current Page:")."</b> " . wizard_history() . "<br><b>"._("Next Page:")."</b> " . $next_page . "<br><br><br><br>";
 
 	print "<input type='hidden' name='next_page' value='" . $next_page . "'>\n";
 
