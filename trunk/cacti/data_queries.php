@@ -221,7 +221,7 @@ function data_query_item_remove_dssv() {
 function data_query_item_remove() {
 	if ((read_config_option("remove_verification") == "on") && (!isset($_GET["confirm"]))) {
 		include("./include/top_header.php");
-		form_confirm("Are You Sure?", "Are you sure you want to delete the Data Query Graph <strong>'" . db_fetch_cell("select name from snmp_query_graph where id=" . $_GET["id"]) . "'</strong>?", "data_queries.php?action=edit&id=" . $_GET["snmp_query_id"], "data_queries.php?action=item_remove&id=" . $_GET["id"] . "&snmp_query_id=" . $_GET["snmp_query_id"]);
+		form_confirm(_("Are You Sure?"), _("Are you sure you want to delete the Data Query Graph") . "<strong>'" . db_fetch_cell("select name from snmp_query_graph where id=" . $_GET["id"]) . "'</strong>?", "data_queries.php?action=edit&id=" . $_GET["snmp_query_id"], "data_queries.php?action=item_remove&id=" . $_GET["id"] . "&snmp_query_id=" . $_GET["snmp_query_id"]);
 		include("./include/bottom_footer.php");
 		exit;
 	}
@@ -244,7 +244,7 @@ function data_query_item_edit() {
 	$snmp_query = db_fetch_row("select name,xml_path from snmp_query where id=" . $_GET["snmp_query_id"]);
 	$header_label = "[edit: " . $snmp_query["name"] . "]";
 
-	html_start_box("<strong>Associated Graph/Data Templates</strong> $header_label", "98%", $colors["header_background"], "3", "center", "");
+	html_start_box("<strong>" . _("Associated Graph/Data Templates") . "</strong> $header_label", "98%", $colors["header_background"], "3", "center", "");
 
 	draw_edit_form(array(
 		"config" => array(),
@@ -254,7 +254,7 @@ function data_query_item_edit() {
 	html_end_box();
 
 	if (!empty($snmp_query_item["id"])) {
-		html_start_box("<strong>Associated Data Templates</strong>", "98%", $colors["header_background"], "3", "center", "");
+		html_start_box("<strong>" . _("Associated Data Templates") . "</strong>", "98%", $colors["header_background"], "3", "center", "");
 
 		$data_templates = db_fetch_assoc("select
 			data_template.id,
@@ -301,7 +301,7 @@ function data_query_item_edit() {
 						<table cellspacing="0" cellpadding="0" border="0" width="100%">
 							<tr>
 								<td width="200">
-									<strong>Data Source:</strong>
+									<strong><?php echo _("Data Source:");?></strong>
 								</td>
 								<td width="200">
 									<?php print $data_template_rrd["data_source_name"];?>
@@ -334,7 +334,7 @@ function data_query_item_edit() {
 
 		html_end_box();
 
-		html_start_box("<strong>Suggested Values</strong>", "98%", $colors["header_background"], "0", "center", "");
+		html_start_box("<strong>" . _("Suggested Values") . "</strong>", "98%", $colors["header_background"], "0", "center", "");
 
 		reset($data_templates);
 
@@ -351,7 +351,7 @@ function data_query_item_edit() {
 				order by field_name,sequence");
 
 			print "	<tr bgcolor='#" . $colors["header_panel_background"] . "'>
-					<td style='padding: 3px;'><span style='color: white; font-weight: bold;'>Data Template - " . $data_template["name"] . "</span></td>
+					<td style='padding: 3px;'><span style='color: white; font-weight: bold;'>" . _("Data Template") . " - " . $data_template["name"] . "</span></td>
 				</tr>";
 
 			$i = 0;
@@ -390,7 +390,7 @@ function data_query_item_edit() {
 								<input type="text" name="svds_<?php print $data_template["id"];?>_text" size="30">
 							</td>
 							<td width="220" nowrap>
-								&nbsp;Field Name:&nbsp;<input type="text" name="svds_<?php print $data_template["id"];?>_field" size="15">
+								&nbsp;<?php echo _("Field Name:");?>&nbsp;<input type="text" name="svds_<?php print $data_template["id"];?>_field" size="15">
 							</td>
 							<td>
 								&nbsp;<input type="image" src="<?php print html_get_theme_images_path('button_add.gif');?>" name="svds_<?php print $data_template["id"];?>" alt="Add" align="absmiddle">
@@ -413,7 +413,7 @@ function data_query_item_edit() {
 			order by field_name,sequence");
 
 		print "	<tr bgcolor='#" . $colors["header_panel_background"] . "'>
-				<td style='padding: 3px;'><span style='color: white; font-weight: bold;'>Graph Template - " . db_fetch_cell("select name from graph_templates where id=" . $snmp_query_item["graph_template_id"]) . "</span></td>
+				<td style='padding: 3px;'><span style='color: white; font-weight: bold;'>" . _("Graph Template") . " - " . db_fetch_cell("select name from graph_templates where id=" . $snmp_query_item["graph_template_id"]) . "</span></td>
 			</tr>";
 
 		$i = 0;
@@ -452,7 +452,7 @@ function data_query_item_edit() {
 							<input type="text" name="svg_text" size="30">
 						</td>
 						<td width="220" nowrap>
-							&nbsp;Field Name:&nbsp;<input type="text" name="svg_field" size="15">
+							&nbsp;<?php echo _("Field Name:");?>&nbsp;<input type="text" name="svg_field" size="15">
 						</td>
 						<td>
 							&nbsp;<input type="image" src="<?php print html_get_theme_images_path('button_add.gif');?>" name="svg" alt="Add" align="absmiddle">
@@ -476,7 +476,7 @@ function data_query_item_edit() {
 function data_query_remove() {
 	if ((read_config_option("remove_verification") == "on") && (!isset($_GET["confirm"]))) {
 		include("./include/top_header.php");
-		form_confirm("Are You Sure?", "Are you sure you want to delete the Data Query <strong>'" . db_fetch_cell("select name from snmp_query where id=" . $_GET["id"]) . "'</strong>?", "data_queries.php", "data_queries.php?action=remove&id=" . $_GET["id"]);
+		form_confirm(_("Are You Sure?"), _("Are you sure you want to delete the Data Query") . " <strong>'" . db_fetch_cell("select name from snmp_query where id=" . $_GET["id"]) . "'</strong>?", "data_queries.php", "data_queries.php?action=remove&id=" . $_GET["id"]);
 		include("./include/bottom_footer.php");
 		exit;
 	}
@@ -508,7 +508,7 @@ function data_query_edit() {
 		$header_label = "[new]";
 	}
 
-	html_start_box("<strong>Data Queries</strong> $header_label", "98%", $colors["header_background"], "3", "center", "");
+	html_start_box("<strong>" . _("Data Queries") . "</strong> $header_label", "98%", $colors["header_background"], "3", "center", "");
 
 	draw_edit_form(array(
 		"config" => array(),
@@ -521,10 +521,10 @@ function data_query_edit() {
 		$xml_filename = str_replace("<path_cacti>", $config["base_path"], $snmp_query["xml_path"]);
 
 		if ((file_exists($xml_filename)) && (is_file($xml_filename))) {
-			$text = "<font color='#0d7c09'><strong>Successfully located XML file</strong></font>";
+			$text = "<font color='#0d7c09'><strong>" . _("Successfully located XML file") . "</strong></font>";
 			$xml_file_exists = true;
 		}else{
-			$text = "<font color='#ff0000'><strong>Could not locate XML file.</strong></font>";
+			$text = "<font color='#ff0000'><strong>" . _("Could not locate XML file.") . "</strong></font>";
 			$xml_file_exists = false;
 		}
 
@@ -533,11 +533,11 @@ function data_query_edit() {
 		html_end_box();
 
 		if ($xml_file_exists == true) {
-			html_start_box("<strong>Associated Graph Templates</strong>", "98%", $colors["header_background"], "3", "center", "data_queries.php?action=item_edit&snmp_query_id=" . $snmp_query["id"]);
+			html_start_box("<strong>" . _("Associated Graph Templates") . "</strong>", "98%", $colors["header_background"], "3", "center", "data_queries.php?action=item_edit&snmp_query_id=" . $snmp_query["id"]);
 
 			print "	<tr bgcolor='#" . $colors["header_panel_background"] . "'>
-					<td><span style='color: white; font-weight: bold;'>Name</span></td>
-					<td><span style='color: white; font-weight: bold;'>Graph Template Name</span></td>
+					<td><span style='color: white; font-weight: bold;'>" . _("Name") . "</span></td>
+					<td><span style='color: white; font-weight: bold;'>" . _("Graph Template Name") . "</span></td>
 					<td></td>
 				</tr>";
 
@@ -581,9 +581,9 @@ function data_query_edit() {
 function data_query() {
 	global $colors, $data_query_input_types;
 
-	html_start_box("<strong>Data Queries</strong>", "98%", $colors["header_background"], "3", "center", "data_queries.php?action=edit");
+	html_start_box("<strong>" . _("Data Queries") . "</strong>", "98%", $colors["header_background"], "3", "center", "data_queries.php?action=edit");
 
-	html_header(array("Name", "Input Type"), 2);
+	html_header(array(_("Name"), _("Input Type")), 2);
 
 	$snmp_queries = db_fetch_assoc("select
 		snmp_query.id,
