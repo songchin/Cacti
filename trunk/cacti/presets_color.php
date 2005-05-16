@@ -87,12 +87,12 @@ function color_edit() {
 
 	if (!empty($_GET["id"])) {
 		$color = db_fetch_row("select * from preset_color where id=" . $_GET["id"]);
-		$header_label = "[edit: " . $color["hex"] . "]";
+		$header_label = _("[edit: ") . $color["hex"] . "]";
 	}else{
-		$header_label = "[new]";
+		$header_label = _("[new]");
 	}
 
-	html_start_box("<strong>Colors</strong> $header_label", "98%", $colors["header_background"], "3", "center", "");
+	html_start_box("<strong>" . _("Colors") . "</strong> $header_label", "98%", $colors["header_background"], "3", "center", "");
 
 	draw_edit_form(array(
 		"config" => array(),

@@ -97,7 +97,7 @@ function form_save() {
 function cdef_remove() {
 	if ((read_config_option("remove_verification") == "on") && (!isset($_GET["confirm"]))) {
 		include("./include/top_header.php");
-		form_confirm("Are You Sure?", "Are you sure you want to delete the CDEF <strong>'" . db_fetch_cell("select name from preset_cdef where id=" . $_GET["id"]) . "'</strong>?", "presets.php?action=view_cdef", "presets_cdef.php?action=remove&id=" . $_GET["id"]);
+		form_confirm(_("Are You Sure?"), _("Are you sure you want to delete the CDEF") . " <strong>'" . db_fetch_cell("select name from preset_cdef where id=" . $_GET["id"]) . "'</strong>?", "presets.php?action=view_cdef", "presets_cdef.php?action=remove&id=" . $_GET["id"]);
 		include("./include/bottom_footer.php");
 		exit;
 	}
@@ -112,9 +112,9 @@ function cdef_edit() {
 
 	if (!empty($_GET["id"])) {
 		$cdef = db_fetch_row("select * from preset_cdef where id=" . $_GET["id"]);
-		$header_label = "[edit: " . $cdef["name"] . "]";
+		$header_label = _("[edit: ") . $cdef["name"] . "]";
 	}else{
-		$header_label = "[new]";
+		$header_label = _("[new]");
 	}
 
 	?>
@@ -147,12 +147,12 @@ function cdef_edit() {
 	<form method='post' action='presets_cdef.php'>
 	<?php
 
-	html_start_box("<strong>CDEF's</strong> $header_label", "98%", $colors["header_background"], "3", "center", "");
+	html_start_box("<strong>" . _("CDEF's") . "</strong> $header_label", "98%", $colors["header_background"], "3", "center", "");
 
 	form_alternate_row_color($colors["form_alternate1"],$colors["form_alternate2"],0); ?>
 		<td width="50%">
-			<font class="textEditTitle">Name</font><br>
-			A recognizable name for this CDEF.
+			<font class="textEditTitle"><?php echo _("Name");?></font><br>
+			<?php echo _("A recognizable name for this CDEF.");?>
 		</td>
 		<td colspan="2">
 			<?php form_text_box("name", (isset($cdef) ? $cdef["name"] : ""), "", "255", 40, "text");?>
@@ -180,14 +180,14 @@ function cdef_edit() {
 	?>
 	<tr bgcolor='<?php echo $colors["header_panel_background"];?>'>
 		<td colspan="3" class='textSubHeaderDark'>
-			CDEF String Variables (Not Saved)
+			<?php echo _("CDEF String Variables (Not Saved)");?>
 		</td>
 	</tr>
 	<?php
 	form_alternate_row_color($colors["form_alternate1"],$colors["form_alternate2"],0); ?>
 		<td width="50%">
-			<font class="textEditTitle">Function</font><br>
-			Builtin functions that can be applied to any value.
+			<font class="textEditTitle"><?php echo _("Function");?></font><br>
+			<?php echo _("Builtin functions that can be applied to any value.");?>
 		</td>
 		<td>
 			<?php form_dropdown("c_function", $cdef_functions, "", "", "", "", "");?>
@@ -199,27 +199,27 @@ function cdef_edit() {
 	<?php
 	form_alternate_row_color($colors["form_alternate1"],$colors["form_alternate2"],1); ?>
 		<td width="50%">
-			<font class="textEditTitle">Operator</font><br>
-			Mathematical operations that can be applied to any value.
+			<font class="textEditTitle"><?phpe echo _("Operator");?></font><br>
+			<?php echo _("Mathematical operations that can be applied to any value.");?>
 		</td>
 		<td>
 			<?php form_dropdown("c_operator", $cdef_operators, "", "", "", "", "");?>
 		</td>
 		<td align="right" style="font-size: 12px;">
-			[<strong><a href="javascript:insert_cdef_variable_name('c_operator')">INSERT</a></strong>]
+			[<strong><a href="javascript:insert_cdef_variable_name('c_operator')"><?php echo _("INSERT");?></a></strong>]
 		</td>
 	</tr>
 	<?php
 	form_alternate_row_color($colors["form_alternate1"],$colors["form_alternate2"],0); ?>
 		<td width="50%">
-			<font class="textEditTitle">Cacti Variables</font><br>
-			These values will be substituted by Cacti before being inserted into the final CDEF string.
+			<font class="textEditTitle"><?php echo _("Cacti Variables");?></font><br>
+			<?php echo _("These values will be substituted by Cacti before being inserted into the final CDEF string.");?>
 		</td>
 		<td>
 			<?php form_dropdown("c_special_ds", $custom_data_source_types, "", "", "", "", "", "", "40");?>
 		</td>
 		<td align="right" style="font-size: 12px;">
-			[<strong><a href="javascript:insert_cdef_variable_value('c_special_ds')">INSERT</a></strong>]
+			[<strong><a href="javascript:insert_cdef_variable_value('c_special_ds')"><?php echo _("INSERT");?></a></strong>]
 		</td>
 	</tr>
 	<?php

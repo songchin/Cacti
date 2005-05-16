@@ -82,7 +82,7 @@ function form_save() {
 function input_remove() {
 	if ((read_config_option("remove_verification") == "on") && (!isset($_GET["confirm"]))) {
 		include("./include/top_header.php");
-		form_confirm("Are You Sure?", "Are you sure you want to delete the input item <strong>'" . db_fetch_cell("select name from graph_template_item_input where id=" . $_GET["id"]) . "'</strong>? NOTE: Deleting this input will <strong>not</strong> affect graphs that use this template.", "graph_templates.php?action=edit&id=" . $_GET["graph_template_id"], "graph_templates_inputs.php?action=remove&id=" . $_GET["id"] . "&graph_template_id=" . $_GET["graph_template_id"]);
+		form_confirm(_("Are You Sure?"), _("Are you sure you want to delete the input item") . " <strong>'" . db_fetch_cell("select name from graph_template_item_input where id=" . $_GET["id"]) . "'</strong>? NOTE: Deleting this input will <strong>not</strong> affect graphs that use this template.", "graph_templates.php?action=edit&id=" . $_GET["graph_template_id"], "graph_templates_inputs.php?action=remove&id=" . $_GET["id"] . "&graph_template_id=" . $_GET["graph_template_id"]);
 		include("./include/bottom_footer.php");
 		exit;
 	}
@@ -95,7 +95,7 @@ function input_remove() {
 function input_edit() {
 	global $colors, $graph_item_types, $consolidation_functions, $fields_graph_template_input_edit;
 
-	$header_label = "[Graph Template: " . db_fetch_cell("select template_name from graph_template where id=" . $_GET["graph_template_id"]) . "]";
+	$header_label = "[" . _("Graph Template") . ": " . db_fetch_cell("select template_name from graph_template where id=" . $_GET["graph_template_id"]) . "]";
 
 	if (!empty($_GET["id"])) {
 		$graph_template_input = db_fetch_row("select * from graph_template_item_input where id=" . $_GET["id"]);
@@ -113,7 +113,7 @@ function input_edit() {
 
 	/* ==================== Box: Graph Item Input ==================== */
 
-	html_start_box("<strong>Graph Item Input</strong> $header_label", "98%", $colors["header_background"], "3", "center", "");
+	html_start_box("<strong>" . _("Graph Item Input") . "</strong> $header_label", "98%", $colors["header_background"], "3", "center", "");
 
 	draw_edit_form(array(
 		"config" => array(),
@@ -122,8 +122,8 @@ function input_edit() {
 
 	form_alternate_row_color($colors["form_alternate1"], $colors["form_alternate2"], 0); ?>
 		<td width="50%">
-			<font class="textEditTitle">Associated Graph Items</font><br>
-			Select the graph items to be non-templated for the field above.
+			<font class="textEditTitle"><?php echo _("Associated Graph Items");?></font><br>
+			<?php echo _("Select the graph items to be non-templated for the field above.");?>
 		</td>
 		<td>
 		<?php
@@ -149,7 +149,7 @@ function input_edit() {
 				$i++;
 			}
 		}else{
-			print "<em>No Items</em>";
+			print "<em>" . _("No Items") . "</em>";
 		}
 		?>
 		</td>

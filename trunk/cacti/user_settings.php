@@ -48,7 +48,7 @@ switch ($_REQUEST["action"]) {
    -------------------------- */
 
 function save() {
-	
+
 	$save = array();
 
 	$save["id"] = $_SESSION["sess_user_id"];
@@ -79,7 +79,7 @@ function save() {
 function settings() {
 	global $colors, $themes;
 
-	$themes["default"] = "System Default (Global Setting)";
+	$themes["default"] = _("System Default (Global Setting)");
 
 	/* you cannot have per-user settings if cacti's user management is not turned on */
 	if (read_config_option("auth_method") == "0") {
@@ -93,7 +93,7 @@ function settings() {
 
 	print "<form method='post'>\n";
 
-	html_start_box("<strong>User Settings</strong>", "98%", $colors["header_background"], "3", "center", "");
+	html_start_box("<strong>" . _("User Settings") . "</strong>", "98%", $colors["header_background"], "3", "center", "");
 
 	?>
 	<tr bgcolor='<?php print $colors["header_panel_background"];?>'>
@@ -103,8 +103,8 @@ function settings() {
 
 	$form_array = array(
 		"current_theme" => array(
-			"friendly_name" => "Visual Theme",
-			"description" => "The Cacti theme to use. Changes the look of Cacti.",
+			"friendly_name" => _("Visual Theme"),
+			"description" => _("The Cacti theme to use. Changes the look of Cacti."),
 			"method" => "drop_array",
 			"array" => $themes,
 			"value" => api_user_theme($_SESSION["sess_user_id"]),

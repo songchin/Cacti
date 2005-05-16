@@ -81,7 +81,7 @@ default:
 
 	print "<td></td>\n</tr></table>\n";
 
-	html_start_box("<strong>Cacti Settings (" . $tabs[$current_tab] . ")</strong>", "98%", $colors["header_background"], "3", "center", "");
+	html_start_box("<strong>" . _("Cacti Settings") . " (" . $tabs[$current_tab] . ")</strong>", "98%", $colors["header_background"], "3", "center", "");
 
 	$form_array = array();
 

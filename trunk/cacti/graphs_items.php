@@ -173,7 +173,7 @@ function item_edit() {
 
 	/* ==================== Box: Graph Item ==================== */
 
-	html_start_box("<strong>Graph Item</strong> [Graph: " . db_fetch_cell("select title_cache from graph where id=" . $_GET["graph_id"]) . "]", "98%", $colors["header_background"], "3", "center", "");
+	html_start_box("<strong>" . _("Graph Item") . "</strong> [Graph: " . db_fetch_cell("select title_cache from graph where id=" . $_GET["graph_id"]) . "]", "98%", $colors["header_background"], "3", "center", "");
 
 	draw_edit_form(
 		array(

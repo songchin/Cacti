@@ -85,7 +85,7 @@ function form_save() {
 function gprint_presets_remove() {
 	if ((read_config_option("remove_verification") == "on") && (!isset($_GET["confirm"]))) {
 		include_once("./include/top_header.php");
-		form_confirm("Are You Sure?", "Are you sure you want to delete the GPRINT preset <strong>'" . db_fetch_cell("select name from preset_gprint where id=" . $_GET["id"]) . "'</strong>? This could affect every graph that uses this preset, make sure you know what you are doing first!", "presets.php?action=view_gprint", "presets_gprint.php?action=remove&id=" . $_GET["id"]);
+		form_confirm(_("Are You Sure?"), _("Are you sure you want to delete the GPRINT preset") . " <strong>'" . db_fetch_cell("select name from preset_gprint where id=" . $_GET["id"]) . "'</strong>? This could affect every graph that uses this preset, make sure you know what you are doing first!", "presets.php?action=view_gprint", "presets_gprint.php?action=remove&id=" . $_GET["id"]);
 		exit;
 	}
 
@@ -99,12 +99,12 @@ function gprint_presets_edit() {
 
 	if (!empty($_GET["id"])) {
 		$gprint_preset = db_fetch_row("select * from preset_gprint where id=" . $_GET["id"]);
-		$header_label = "[edit: " . $gprint_preset["name"] . "]";
+		$header_label = _("[edit: ") . $gprint_preset["name"] . "]";
 	}else{
-		$header_label = "[new]";
+		$header_label = _("[new]");
 	}
 
-	html_start_box("<strong>GPRINT Presets</strong> $header_label", "98%", $colors["header_background"], "3", "center", "");
+	html_start_box("<strong>" . _("GPRINT Presets") . "</strong> $header_label", "98%", $colors["header_background"], "3", "center", "");
 
 	draw_edit_form(array(
 		"config" => array(),

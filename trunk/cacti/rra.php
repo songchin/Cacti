@@ -102,7 +102,7 @@ function form_save() {
 function rra_remove() {
 	if ((read_config_option("remove_verification") == "on") && (!isset($_GET["confirm"]))) {
 		include_once("./include/top_header.php");
-		form_confirm("Are You Sure?", "Are you sure you want to delete the round robin archive <strong>'" . db_fetch_cell("select name from rra where id=" . $_GET["id"]) . "'</strong>?", "rra.php", "rra.php?action=remove&id=" . $_GET["id"]);
+		form_confirm(_("Are You Sure?"), _("Are you sure you want to delete the round robin archive") . " <strong>'" . db_fetch_cell("select name from rra where id=" . $_GET["id"]) . "'</strong>?", "rra.php", "rra.php?action=remove&id=" . $_GET["id"]);
 		exit;
 	}
 
@@ -117,12 +117,12 @@ function rra_edit() {
 
 	if (!empty($_GET["id"])) {
 		$rra = db_fetch_row("select * from rra where id=" . $_GET["id"]);
-		$header_label = "[edit: " . $rra["name"] . "]";
+		$header_label = _("[edit: ") . $rra["name"] . "]";
 	}else{
-		$header_label = "[new]";
+		$header_label = _("[new]");
 	}
 
-	html_start_box("<strong>Round Robin Archives</strong> $header_label", "98%", $colors["header_background"], "3", "center", "");
+	html_start_box("<strong>" . _("Round Robin Archives") . "</strong> $header_label", "98%", $colors["header_background"], "3", "center", "");
 
 	draw_edit_form(array(
 		"config" => array(),
@@ -137,13 +137,13 @@ function rra_edit() {
 function rra() {
 	global $colors;
 
-	html_start_box("<strong>Round Robin Archives</strong>", "98%", $colors["header_background"], "3", "center", "rra.php?action=edit");
+	html_start_box("<strong>" . _("Round Robin Archives") . "</strong>", "98%", $colors["header_background"], "3", "center", "rra.php?action=edit");
 
 	print "<tr bgcolor='#" . $colors["header_panel_background"] . "'>";
-		DrawMatrixHeaderItem("Name",$colors["header_text"],1);
-		DrawMatrixHeaderItem("Steps",$colors["header_text"],1);
-		DrawMatrixHeaderItem("Rows",$colors["header_text"],1);
-		DrawMatrixHeaderItem("Timespan",$colors["header_text"],2);
+		DrawMatrixHeaderItem(_("Name"),$colors["header_text"],1);
+		DrawMatrixHeaderItem(_("Steps"),$colors["header_text"],1);
+		DrawMatrixHeaderItem(_("Rows"),$colors["header_text"],1);
+		DrawMatrixHeaderItem(_("Timespan"),$colors["header_text"],2);
 	print "</tr>";
 
 	$rras = db_fetch_assoc("select id,name,rows,steps,timespan from rra order by steps");

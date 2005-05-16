@@ -48,7 +48,7 @@ if (!isset($_REQUEST["action"])) { $_REQUEST["action"] = ""; }
 switch ($_REQUEST["action"]) {
 case 'tree':
 	if ((read_config_option("auth_method") != "0") && (empty($current_user["show_tree"]))) {
-		print "<strong><font size='+1' color='FF0000'>YOU DO NOT HAVE RIGHTS FOR TREE VIEW</font></strong>"; exit;
+		print "<strong><font size='+1' color='FF0000'>" . _("YOU DO NOT HAVE RIGHTS FOR TREE VIEW") . "</font></strong>"; exit;
 	}
 
 	/* if any authentication is turned on then make sure to take
@@ -79,7 +79,7 @@ case 'tree':
 			$access_denied = !(is_tree_allowed($_SESSION["sess_view_tree_id"]));
 
 			if ($access_denied == true) {
-				print "<strong><font size='+1' color='FF0000'>ACCESS DENIED</font></strong>"; exit;
+				print "<strong><font size='+1' color='FF0000'>" . _("ACCESS DENIED") . "</font></strong>"; exit;
 			}
 		}
 
@@ -99,7 +99,7 @@ case 'preview':
 	$sql_or = ""; $sql_where = ""; $sql_join = "";
 
 	if ((read_config_option("auth_method") != "0") && (empty($current_user["show_preview"]))) {
-		print "<strong><font size='+1' color='FF0000'>YOU DO NOT HAVE RIGHTS FOR PREVIEW VIEW</font></strong>"; exit;
+		print "<strong><font size='+1' color='FF0000'>" . _("YOU DO NOT HAVE RIGHTS FOR PREVIEW VIEW") . "</font></strong>"; exit;
 	}
 
 	/* reset the page counter to '1' if a search in initiated */
@@ -198,7 +198,7 @@ case 'preview':
 	break;
 case 'list':
 	if ((read_config_option("auth_method") != "0") && (empty($current_user["show_list"]))) {
-		print "<strong><font size='+1' color='FF0000'>YOU DO NOT HAVE RIGHTS FOR LIST VIEW</font></strong>"; exit;
+		print "<strong><font size='+1' color='FF0000'>" . _("YOU DO NOT HAVE RIGHTS FOR LIST VIEW") . "</font></strong>"; exit;
 	}
 
 	/* graph permissions */
@@ -228,7 +228,7 @@ case 'list':
 
 	html_graph_start_box(1, true);
 
-	print "<tr bgcolor='#" . $colors["header_panel_background"] . "'><td colspan='3'><table cellspacing='0' cellpadding='3' width='100%'><tr><td class='textHeaderDark'><strong>Displaying " . sizeof($graphs) . " Graph" . ((sizeof($graphs) == 1) ? "" : "s") . "</strong></td></tr></table></td></tr>";
+	print "<tr bgcolor='#" . $colors["header_panel_background"] . "'><td colspan='3'><table cellspacing='0' cellpadding='3' width='100%'><tr><td class='textHeaderDark'><strong>Displaying " . sizeof($graphs) . " " . _("Graph") . ((sizeof($graphs) == 1) ? "" : "s") . "</strong></td></tr></table></td></tr>";
 
 	$i = 0;
 	if (sizeof($graphs) > 0) {
