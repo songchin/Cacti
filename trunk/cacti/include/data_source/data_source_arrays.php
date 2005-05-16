@@ -25,24 +25,24 @@
 include_once(CACTI_BASE_PATH . "/include/data_source/data_source_constants.php");
 
 $consolidation_functions = array(
-	1 => "AVERAGE",
-	2 => "MIN",
-	3 => "MAX",
-	4 => "LAST"
+	1 => _("AVERAGE"),
+	2 => _("MIN"),
+	3 => _("MAX"),
+	4 => _("LAST")
 	);
 
 $data_source_types = array(
-	1 => "GAUGE",
-	2 => "COUNTER",
-	3 => "DERIVE",
-	4 => "ABSOLUTE"
+	1 => _("GAUGE"),
+	2 => _("COUNTER"),
+	3 => _("DERIVE"),
+	4 => _("ABSOLUTE")
 	);
 
 $data_input_types = array(
-	DATA_INPUT_TYPE_NONE => "None (External Source)",
-	DATA_INPUT_TYPE_DATA_QUERY => "Data Query",
-	DATA_INPUT_TYPE_SCRIPT => "Script",
-	DATA_INPUT_TYPE_SNMP => "SNMP"
+	DATA_INPUT_TYPE_NONE => _("None (External Source)"),
+	DATA_INPUT_TYPE_DATA_QUERY => _("Data Query"),
+	DATA_INPUT_TYPE_SCRIPT => _("Script"),
+	DATA_INPUT_TYPE_SNMP => _("SNMP")
 	);
 
 ?>

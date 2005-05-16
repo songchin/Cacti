@@ -79,12 +79,12 @@ $graph_image_types = array(
 	);
 
 $graph_base_values = array(
-	"1000" => "1000 - Traffic",
-	"1024" => "1024 - Memory"
+	"1000" => _("1000 - Traffic"),
+	"1024" => _("1024 - Memory")
 	);
 
 $graph_unit_exponent_values = array(
-	"none" => "None",
+	"none" => _("None"),
 	"-18" => "a - atto",
 	"-15" => "f - femto",
 	"-12" => "p - pico",
@@ -101,25 +101,25 @@ $graph_unit_exponent_values = array(
 	);
 
 $graph_timespans = array(
-	GT_LAST_HALF_HOUR => "Last Half Hour",
-	GT_LAST_HOUR => "Last Hour",
-	GT_LAST_2_HOURS => "Last 2 Hours",
-	GT_LAST_4_HOURS => "Last 4 Hours",
-	GT_LAST_6_HOURS =>"Last 6 Hours",
-	GT_LAST_12_HOURS =>"Last 12 Hours",
-	GT_LAST_DAY =>"Last Day",
-	GT_LAST_2_DAYS =>"Last 2 Days",
-	GT_LAST_3_DAYS =>"Last 3 Days",
-	GT_LAST_4_DAYS =>"Last 4 Days",
-	GT_LAST_WEEK =>"Last Week",
-	GT_LAST_2_WEEKS =>"Last 2 Weeks",
-	GT_LAST_MONTH =>"Last Month",
-	GT_LAST_2_MONTHS =>"Last 2 Months",
-	GT_LAST_3_MONTHS =>"Last 3 Months",
-	GT_LAST_4_MONTHS =>"Last 4 Months",
-	GT_LAST_6_MONTHS =>"Last 6 Months",
-	GT_LAST_YEAR =>"Last Year",
-	GT_LAST_2_YEARS =>"Last 2 Years"
+	GT_LAST_HALF_HOUR => _("Last Half Hour"),
+	GT_LAST_HOUR => _("Last Hour"),
+	GT_LAST_2_HOURS => _("Last 2 Hours"),
+	GT_LAST_4_HOURS => _("Last 4 Hours"),
+	GT_LAST_6_HOURS => _("Last 6 Hours"),
+	GT_LAST_12_HOURS => _("Last 12 Hours"),
+	GT_LAST_DAY => _("Last Day"),
+	GT_LAST_2_DAYS => _("Last 2 Days"),
+	GT_LAST_3_DAYS => _("Last 3 Days"),
+	GT_LAST_4_DAYS => _("Last 4 Days"),
+	GT_LAST_WEEK => _("Last Week"),
+	GT_LAST_2_WEEKS => _("Last 2 Weeks"),
+	GT_LAST_MONTH => _("Last Month"),
+	GT_LAST_2_MONTHS => _("Last 2 Months"),
+	GT_LAST_3_MONTHS => _("Last 3 Months"),
+	GT_LAST_4_MONTHS => _("Last 4 Months"),
+	GT_LAST_6_MONTHS => _("Last 6 Months"),
+	GT_LAST_YEAR => _("Last Year"),
+	GT_LAST_2_YEARS => _("Last 2 Years")
 	);
 
 ?>

@@ -4,12 +4,12 @@
 			<table width="100%" cellpadding="0" cellspacing="0">
 				<tr>
 					<td width="100">
-						Filter by host:&nbsp;
+						<?php echo _("Filter by host:");?>&nbsp;
 					</td>
 					<td width="1">
 						<select name="cbo_graph_id" onChange="window.location=document.form_graph_id.cbo_graph_id.options[document.form_graph_id.cbo_graph_id.selectedIndex].value">
-							<option value="graphs.php?host_id=-1&filter=<?php print $_REQUEST["filter"];?>"<?php if ($_REQUEST["host_id"] == "-1") {?> selected<?php }?>>Any</option>
-							<option value="graphs.php?host_id=0&filter=<?php print $_REQUEST["filter"];?>"<?php if ($_REQUEST["host_id"] == "0") {?> selected<?php }?>>None</option>
+							<option value="graphs.php?host_id=-1&filter=<?php print $_REQUEST["filter"];?>"<?php if ($_REQUEST["host_id"] == "-1") {?> selected<?php }?>><?php echo _('Any');?></option>
+							<option value="graphs.php?host_id=0&filter=<?php print $_REQUEST["filter"];?>"<?php if ($_REQUEST["host_id"] == "0") {?> selected<?php }?>><?php echo _('None');?></option>
 							<?php
 							$hosts = db_fetch_assoc("select id,CONCAT_WS('',description,' (',hostname,')') as name from host order by description,hostname");
 
@@ -23,14 +23,14 @@
 					</td>
 					<td width="30"></td>
 					<td width="60">
-						Search:&nbsp;
+						<?php echo _("Search:");?>&nbsp;
 					</td>
 					<td width="1">
 						<input type="text" name="filter" size="20" value="<?php print $_REQUEST["filter"];?>">
 					</td>
 					<td>
-						&nbsp;<input type="image" src="<?php print html_get_theme_images_path('button_go.gif');?>" alt="Go" border="0" align="absmiddle">
-						<input type="image" src="<?php print html_get_theme_images_path('button_clear.gif');?>" name="clear" alt="Clear" border="0" align="absmiddle">
+						&nbsp;<input type="image" src="<?php print html_get_theme_images_path('button_go.gif');?>" alt="<?php echo _('Go');?>" border="0" align="absmiddle">
+						<input type="image" src="<?php print html_get_theme_images_path('button_clear.gif');?>" name="clear" alt="<?php echo _('Clear');?>" border="0" align="absmiddle">
 					</td>
 				</tr>
 			</table>

@@ -20,7 +20,7 @@
 			<table cellpadding="1" cellspacing="1">
 				<tr>
 					<td width="45">
-						Facility:&nbsp;
+						<?php echo _("Facility:");?>&nbsp;
 					</td>
 					<td width="1">
 						<select name="facility" onChange="applyFilterChange(document.form_syslog_id)">

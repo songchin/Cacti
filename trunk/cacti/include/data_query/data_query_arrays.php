@@ -25,16 +25,16 @@
 include_once(CACTI_BASE_PATH . "/include/data_query/data_query_constants.php");
 
 $data_query_input_types = array(
-	DATA_QUERY_INPUT_TYPE_SNMP_QUERY => "SNMP Query",
-	DATA_QUERY_INPUT_TYPE_SCRIPT_QUERY => "Script Query",
-	DATA_QUERY_INPUT_TYPE_PHP_SCRIPT_SERVER_QUERY => "Script Query (Using PHP Script Server)"
+	DATA_QUERY_INPUT_TYPE_SNMP_QUERY => _("SNMP Query"),
+	DATA_QUERY_INPUT_TYPE_SCRIPT_QUERY => _("Script Query"),
+	DATA_QUERY_INPUT_TYPE_PHP_SCRIPT_SERVER_QUERY => _("Script Query (Using PHP Script Server)")
 	);
 
 $reindex_types = array(
-	DATA_QUERY_AUTOINDEX_NONE => "None",
-	DATA_QUERY_AUTOINDEX_BACKWARDS_UPTIME => "Uptime Goes Backwards",
-	DATA_QUERY_AUTOINDEX_INDEX_NUM_CHANGE => "Index Count Changed",
-	DATA_QUERY_AUTOINDEX_FIELD_VERIFICATION => "Verify All Fields"
+	DATA_QUERY_AUTOINDEX_NONE => _("None"),
+	DATA_QUERY_AUTOINDEX_BACKWARDS_UPTIME => _("Uptime Goes Backwards"),
+	DATA_QUERY_AUTOINDEX_INDEX_NUM_CHANGE => _("Index Count Changed"),
+	DATA_QUERY_AUTOINDEX_FIELD_VERIFICATION => _("Verify All Fields")
 	);
 
 ?>

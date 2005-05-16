@@ -132,7 +132,7 @@ $fields_user_user_edit_host = array(
 		"friendly_name" => _("Status"),
 		"description" => _("User status, enabled or disabled. Only enforced on login."),
 		"value" => "|arg1:enabled|",
-		"array" => array(1 => "Enabled", 0 => "Disabled"),
+		"array" => array(1 => _("Enabled"), 0 => _("Disabled")),
 		"default" => "1"
 		),
 	"password_expire_length" => array(

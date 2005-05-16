@@ -52,11 +52,11 @@ include(CACTI_BASE_PATH . "/include/graph/graph_arrays.php");
 			<table width="100%" cellpadding="0" cellspacing="0">
 				<tr>
 					<td class="textHeader" nowrap>
-						Presets:&nbsp;
+						<?php echo _("Presets:");?>&nbsp;
 						<select name='predefined_timespan' onChange="window.location=document.form_timespan_selector.predefined_timespan.options[document.form_timespan_selector.predefined_timespan.selectedIndex].value">
 							<?php
 							if ($_SESSION["custom"]) {
-								$graph_timespans[GT_CUSTOM] = "Custom";
+								$graph_timespans[GT_CUSTOM] = _("Custom");
 								$start_val = 0;
 								$end_val = sizeof($graph_timespans);
 							} else {
@@ -70,7 +70,7 @@ include(CACTI_BASE_PATH . "/include/graph/graph_arrays.php");
 
 							if (sizeof($graph_timespans) > 0) {
 								for ($value=$start_val; $value < $end_val; $value++) {
-									print "<option value='" . $_SESSION["urlval"] . "&predefined_timespan=" . $value . "'"; if ($_SESSION["sess_current_timespan"] == $value) { print " selected"; } print ">" . title_trim($graph_timespans[$value], 40) . "</option>\n";
+									print "<option value='" . $_SESSION["urlval"] . "&predefined_timespan=" . $value . "'"; if ($_SESSION["sess_current_timespan"] == $value) { print _(" selected"); } print ">" . title_trim($graph_timespans[$value], 40) . "</option>\n";
 								}
 							}
 							?>
@@ -78,14 +78,14 @@ include(CACTI_BASE_PATH . "/include/graph/graph_arrays.php");
 
 						<strong>&nbsp;From:&nbsp;</strong>
 						<input type='text' name='date1' id='date1' size='14' value='<?php print (isset($_SESSION["sess_current_date1"]) ? $_SESSION["sess_current_date1"] : "");?>'>
-						&nbsp;<input type='image' src='<?php print html_get_theme_images_path("calendar.gif");?>' alt='Start date selector' border='0' align='absmiddle' onclick="return showCalendar('date1');">&nbsp;
+						&nbsp;<input type='image' src='<?php print html_get_theme_images_path("calendar.gif");?>' alt='<?php echo _("Start Date Selector");?>' border='0' align='absmiddle' onclick="return showCalendar('date1');">&nbsp;
 
 						<strong>To:&nbsp;</strong>
 						<input type='text' name='date2' id='date2' size='14' value='<?php print (isset($_SESSION["sess_current_date2"]) ? $_SESSION["sess_current_date2"] : "");?>'>
-						&nbsp;<input type='image' src='<?php print html_get_theme_images_path("calendar.gif");?>' alt='End date selector' border='0' align='absmiddle' onclick="return showCalendar('date2');">
+						&nbsp;<input type='image' src='<?php print html_get_theme_images_path("calendar.gif");?>' alt='<?php echo _("End Date Selector");?>' border='0' align='absmiddle' onclick="return showCalendar('date2');">
 
-						&nbsp;&nbsp;<input type='image' name='button_refresh' src='<?php print html_get_theme_images_path("button_refresh.gif");?>' alt='Refresh selected time span' border='0' align='absmiddle' action='submit' value='refresh'>
-						<input type='image' name='button_clear' src='<?php print html_get_theme_images_path("button_clear.gif");?>' alt='Return to the default time span' border='0' align='absmiddle' action='submit'>
+						&nbsp;&nbsp;<input type='image' name='button_refresh' src='<?php print html_get_theme_images_path("button_refresh.gif");?>' alt='<?php echo _("Refresh Selected Time Span");?>' border='0' align='absmiddle' action='submit' value='refresh'>
+						<input type='image' name='button_clear' src='<?php print html_get_theme_images_path("button_clear.gif");?>' alt='<?php echo _("Return to the Default Time Span");?>' border='0' align='absmiddle' action='submit'>
 					</td>
 				</tr>
 			</table>
