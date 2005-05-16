@@ -603,7 +603,7 @@ function graphs() {
 							<table  cellspacing='0' cellpadding='0' width='100%' >
 								<tr>
 									<td class='textHeaderDark'>
-										<strong>"._("Data Query")."</strong> [" . $data_query["name"] . "]
+										<strong>"._("Data Query")." </strong> [" . $data_query["name"] . "]
 									</td>
 									<td align='right' nowrap>
 										<a href='graphs_new.php?action=query_reload&id=" . $data_query["id"] . "&host_id=" . $host["id"] . "'><img src='". html_get_theme_images_path("reload_icon_small.gif") . "' alt='"._("Reload Associated Query")."' border='0' align='absmiddle'></a>
@@ -697,7 +697,7 @@ function graphs() {
 				}
 			}
 		}else{
-			print "<tr bgcolor='#" . $colors["form_alternate1"] . "'><td colspan='2' style='color: red; font-size: 12px; font-weight: bold;'>" . _("Error in data query") . ".</td></tr>\n";
+			print "<tr bgcolor='#" . $colors["form_alternate1"] . "'><td colspan='2' style='color: red; font-size: 12px; font-weight: bold;'>" . _("Error in data query.") . "</td></tr>\n";
 		}
 
 		print "</table>";
