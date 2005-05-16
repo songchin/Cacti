@@ -50,7 +50,7 @@ if (isset($_SESSION["sess_user_id"])) {
 			<table width="100%" cellspacing="0" cellpadding="0">
 				<tr>
 					<td valign="bottom">
-						&nbsp;<a href="index.php"><img src="<?php print html_get_theme_images_path('tab_console.gif');?>" alt="Console" align="absmiddle" border="0"></a><a href="graph_view.php"><img src="<?php print html_get_theme_images_path('tab_graphs.gif');?>" alt="Console" align="absmiddle" border="0"></a>
+						&nbsp;<a href="index.php"><img src="<?php print html_get_theme_images_path('tab_console.gif');?>" alt="<?php echo _('Console');?>" align="absmiddle" border="0"></a><a href="graph_view.php"><img src="<?php print html_get_theme_images_path('tab_graphs.gif');?>" alt="<?php echo _('Console');?>" align="absmiddle" border="0"></a>
 					</td>
 					<td align="right">
 						<img src="<?php print html_get_theme_images_path('cacti_backdrop.gif');?>" align="absmiddle">
@@ -76,13 +76,13 @@ if (isset($_SESSION["sess_user_id"])) {
 							if (($expire_days != -1) && ($expire_days <= read_config_option("password_expire_warning"))) {
 						?>
 					<td align="right" class="textError">
-						Password expires in <?php print $expire_days; ?> days
+						<?php echo _("Password expires in ") . $expire_days . _(" days");?>
 					</td>
 						<?php } } ?>
 					<td align="right">
 						<?php if (read_config_option("auth_method") != "0") {
-						    printf( _( "Logged in as <strong>%s</strong>"), $current_user["username"]);
-                            print "(<a href='logout.php'>"._("Logout")."</a>)&nbsp;";
+						    printf( _("Logged in as") . " <strong>%s</strong>", $current_user["username"]);
+                            print "(<a href='logout.php'>" . _("Logout") . "</a>)&nbsp;";
                         } ?>
 					</td>
 				</tr>

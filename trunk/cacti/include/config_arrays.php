@@ -431,12 +431,12 @@ $host_struc = array(
 	);
 
 $graph_dateformats = array(
-	GD_MO_D_Y =>_("Month Number, Day, Year"),
-	GD_MN_D_Y =>_("Month Name, Day, Year"),
-	GD_D_MO_Y =>_("Day, Month Number, Year"),
-	GD_D_MN_Y =>_("Day, Month Name, Year"),
-	GD_Y_MO_D =>_("Year, Month Number, Day"),
-	GD_Y_MN_D =>_("Year, Month Name, Day")
+	GD_MO_D_Y => _("Month Number, Day, Year"),
+	GD_MN_D_Y => _("Month Name, Day, Year"),
+	GD_D_MO_Y => _("Day, Month Number, Year"),
+	GD_D_MN_Y => _("Day, Month Name, Year"),
+	GD_Y_MO_D => _("Year, Month Number, Day"),
+	GD_Y_MN_D => _("Year, Month Name, Day")
 	);
 
 $graph_datechar = array(

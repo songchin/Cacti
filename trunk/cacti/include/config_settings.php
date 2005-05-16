@@ -321,10 +321,10 @@ $settings = array(
 			"method" => "drop_array",
 			"default" => "disabled",
 			"array" => array(
-						"disabled" => "Disabled (no exporting)",
-						"local" => "Classic (local path)",
-						"ftp_php" => "Ftp (remote) - use php functions",
-						"ftp_ncftpput" => "Ftp (remote) - use ncftpput"
+						"disabled" => _("Disabled (no exporting)"),
+						"local" => _("Classic (local path)"),
+						"ftp_php" => _("Ftp (remote) - use php functions"),
+						"ftp_ncftpput" => _("Ftp (remote) - use ncftpput")
 						)
 			),
 		"export_hdr_paths" => array(
@@ -347,10 +347,10 @@ $settings = array(
 			"method" => "drop_array",
 			"default" => "disabled",
 			"array" => array(
-						"disabled" => "Disabled",
-						"classic" => "Classic (export every x times)",
-						"export_hourly" => "Hourly at specified minutes",
-						"export_daily" => "Daily at specified time"
+						"disabled" => _("Disabled"),
+						"classic" => _("Classic (export every x times)"),
+						"export_hourly" => _("Hourly at specified minutes"),
+						"export_daily" => _("Daily at specified time")
 						)
 			),
 		"path_html_export_skip" => array(
@@ -669,7 +669,7 @@ $settings = array(
 			"friendly_name" => _("Guest User"),
 			"description" => _("The name of the guest user for viewing graphs; is \"guest\" by default."),
 			"method" => "drop_sql",
-			"none_value" => "No User",
+			"none_value" => _("No User"),
 			"sql" => "select username as id, username as name from user_auth where realm = 0 order by username",
 			"default" => "0"
 			),
@@ -677,7 +677,7 @@ $settings = array(
 			"friendly_name" => _("User Template"),
 			"description" => _("The name of the user that cacti will use as a template for new Web Basic and LDAP users; is \"guest\" by default."),
 			"method" => "drop_sql",
-			"none_value" => "No User",
+			"none_value" => _("No User"),
 			"sql" => "select username as id, username as name from user_auth where realm = 0 order by username",
 			"default" => "0"
 			),
@@ -791,7 +791,7 @@ $settings_graphs = array(
 			"description" => _("The default RRA to use when thumbnail graphs are not being displayed or when 'Thumbnail Timespan' is set to '0'."),
 			"method" => "drop_sql",
 			"sql" => "select id,name from rra order by name",
-			"default" => "Default"
+			"default" => _("Default")
 			),
 		"default_view_mode" => array(
 			"friendly_name" => _("Default View Mode"),

@@ -535,7 +535,7 @@ $fields_tree_edit = array(
 /* file: user_admin.php, action: user_edit (host) */
 
 $user_themes = $themes;
-$user_themes["default"] = "System Default (Global Setting)";
+$user_themes["default"] = _("System Default (Global Setting)");
 
 $fields_user_user_edit_host = array(
 	"username" => array(

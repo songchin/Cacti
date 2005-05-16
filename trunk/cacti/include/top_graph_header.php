@@ -110,23 +110,23 @@ if ((read_graph_config_option("default_tree_view_mode") == "2") && ($_REQUEST["a
 			<table width="100%" cellspacing="0" cellpadding="0">
 				<tr>
 					<td nowrap>
-						&nbsp;<?php if ($show_console_tab == true) {?><a href="index.php"><img src="<?php print html_get_theme_images_path('tab_console.gif');?>" alt="Console" align="absmiddle" border="0"></a><?php }?><a href="graph_view.php"><img src="<?php print html_get_theme_images_path('tab_graphs.gif');?>" alt="Graphs" align="absmiddle" border="0"></a>&nbsp;
+						&nbsp;<?php if ($show_console_tab == true) {?><a href="index.php"><img src="<?php print html_get_theme_images_path('tab_console.gif');?>" alt="Console" align="absmiddle" border="0"></a><?php }?><a href="graph_view.php"><img src="<?php print html_get_theme_images_path('tab_graphs.gif');?>" alt="<?php echo _('Graphs');?>" align="absmiddle" border="0"></a>&nbsp;
 					</td>
 					<td>
 						<img src="<?php print html_get_theme_images_path('cacti_backdrop2.gif');?>" align="absmiddle">
 					</td>
 					<td align="right" nowrap>
 						<?php if ($current_user["graph_settings"] == "on") { ?>
-						<a href="graph_settings.php"><img src="<?php if (basename($_SERVER["PHP_SELF"]) == "graph_settings.php") print html_get_theme_images_path('tab_settings_down.gif'); else print html_get_theme_images_path('tab_settings.gif');?>" border="0" alt="Settings" align="absmiddle"></a>
+						<a href="graph_settings.php"><img src="<?php if (basename($_SERVER["PHP_SELF"]) == "graph_settings.php") print html_get_theme_images_path('tab_settings_down.gif'); else print html_get_theme_images_path('tab_settings.gif');?>" border="0" alt="<?php echo _('Settings');?>" align="absmiddle"></a>
 						<?php }else{ ?>
 						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 						<?php } ?>
 						&nbsp;&nbsp;<?php if ((!isset($_SESSION["sess_user_id"])) || ($current_user["show_tree"] == "on")) {?>
-						<a href="graph_view.php?action=tree"><img src="<?php if ($_REQUEST["action"] == "tree") print html_get_theme_images_path('tab_mode_tree_down.gif'); else print html_get_theme_images_path('tab_mode_tree.gif');?>" border="0" title="Tree View" alt="Tree View" align="absmiddle"></a>
+						<a href="graph_view.php?action=tree"><img src="<?php if ($_REQUEST["action"] == "tree") print html_get_theme_images_path('tab_mode_tree_down.gif'); else print html_get_theme_images_path('tab_mode_tree.gif');?>" border="0" title="<?php echo _('Tree View');?>" alt="<?php echo _('Tree View');?>" align="absmiddle"></a>
 						<?php }?><?php if ((!isset($_SESSION["sess_user_id"])) || ($current_user["show_list"] == "on")) {?>
-						<a href="graph_view.php?action=list"><img src="<?php if ($_REQUEST["action"] == "list") print html_get_theme_images_path('tab_mode_list_down.gif'); else print html_get_theme_images_path('tab_mode_list.gif');?>" border="0" title="List View" alt="List View" align="absmiddle"></a>
+						<a href="graph_view.php?action=list"><img src="<?php if ($_REQUEST["action"] == "list") print html_get_theme_images_path('tab_mode_list_down.gif'); else print html_get_theme_images_path('tab_mode_list.gif');?>" border="0" title="<?php echo _('List View');?>" alt="<?php echo _('List View');?>" align="absmiddle"></a>
 						<?php }?><?php if ((!isset($_SESSION["sess_user_id"])) || ($current_user["show_preview"] == "on")) {?>
-						<a href="graph_view.php?action=preview"><img src="<?php if ($_REQUEST["action"] == "preview") print html_get_theme_images_path('tab_mode_preview_down.gif'); else print html_get_theme_images_path('tab_mode_preview.gif')?>" border="0" title="Preview View" alt="Preview View" align="absmiddle"></a><?php }?>&nbsp;<br>
+						<a href="graph_view.php?action=preview"><img src="<?php if ($_REQUEST["action"] == "preview") print html_get_theme_images_path('tab_mode_preview_down.gif'); else print html_get_theme_images_path('tab_mode_preview.gif')?>" border="0" title="<?php echo _('Preview View');?>" alt="<?php echo _('Preview View');?>" align="absmiddle"></a><?php }?>&nbsp;<br>
 					</td>
 				</tr>
 			</table>
@@ -150,17 +150,17 @@ if ((read_graph_config_option("default_tree_view_mode") == "2") && ($_REQUEST["a
 							if (($expire_days != -1) && ($expire_days <= read_config_option("password_expire_warning"))) {
 						?>
 						<td align="right" class="textError">
-							Password expires in <?php print $expire_days; ?> days
+							<?php echo _("Password expires in") . " " . $expire_days . _("days");?>
 						</td>
 					<?php } } } ?>
 					<td align="right">
 						<?php if ((isset($_SESSION["sess_user_id"])) && ($using_guest_account == false) && (read_config_option("auth_method") != "0")) { ?>
-						Logged in as <strong><?php print $current_user["username"];?></strong> (<?php if ($current_user_realms["19"]["value"] == "1") { ?><a href="user_settings.php">User Settings</a>|<?php } if (((read_config_option("auth_method") == "1") || (($current_user["realm"] == "0") && (read_config_option("auth_method") == "3"))) && ($current_user_realms["18"]["value"] == "1")) { ?><a href="user_changepassword.php">Change Password</a>|<?php } ?><a href="logout.php">Logout</a>)&nbsp;
+						Logged in as <strong><?php print $current_user["username"];?></strong> (<?php if ($current_user_realms["19"]["value"] == "1") { ?><a href="user_settings.php">User Settings</a>|<?php } if (((read_config_option("auth_method") == "1") || (($current_user["realm"] == "0") && (read_config_option("auth_method") == "3"))) && ($current_user_realms["18"]["value"] == "1")) { ?><a href="user_changepassword.php"><?php echo _("Change Password");?></a>|<?php } ?><a href="logout.php"><?php echo _("Logout");?></a>)&nbsp;
 						<?php
 						}else{
 							if ((read_config_option("auth_method") != "0") && (read_config_option("auth_method") != "2")) {
 						?>
-						&nbsp;(<a href="logout.php">Login</a>)&nbsp;
+						&nbsp;(<a href="logout.php"><?php echo _("Login");?></a>)&nbsp;
 
 						<?php
 							}
