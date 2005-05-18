@@ -278,7 +278,7 @@ function form_actions() {
 		print "<tr><td bgcolor='#" . $colors["form_alternate1"]. "'><span class='textError'>" . _("You must select at least one data template.") . "</span></td></tr>\n";
 		$save_html = "";
 	}else{
-		$save_html = "<input type='image' src='" . html_get_theme_images_path("button_yes.gif") . "' alt='"._("Save")."' align='absmiddle'>";
+		$save_html = "<input type='image' src='" . html_get_theme_images_path("button_yes.gif") . "' alt='" . _("Save") . "' align='absmiddle'>";
 	}
 
 	print "	<tr>
@@ -335,7 +335,7 @@ function template_edit() {
 
 	/* ==================== Box: Data Template ==================== */
 
-	html_start_box("<strong>"._("Data Template")."</strong> $header_label", "98%", $colors["header_background"], "3", "center", "");
+	html_start_box("<strong>" . _("Data Template") . "</strong> $header_label", "98%", $colors["header_background"], "3", "center", "");
 
 	draw_edit_form(array(
 			"config" => array(
@@ -445,7 +445,7 @@ function template_edit() {
 		form_hidden_box("redirect_sv_add", "x", "");
 	}
 
-	html_start_box("<strong>"._("Data Source")."</strong>", "98%", $colors["header_background_template"], "3", "center", "");
+	html_start_box("<strong>" . _("Data Source") . "</strong>", "98%", $colors["header_background_template"], "3", "center", "");
 
 	_data_source_field__name("name", true, (empty($_GET["id"]) ? 0 : $_GET["id"]), "t_name", (isset($data_template["t_name"]) ? $data_template["t_name"] : ""));
 	_data_source_field__rra_id("rra_id", true, (empty($_GET["id"]) ? 0 : $_GET["id"]));
@@ -583,7 +583,7 @@ function template() {
 			$i++;
 		}
 	}else{
-		print "<tr><td><em>"._("No Data Templates")."</em></td></tr>\n";
+		print "<tr><td><em>" . _("No Data Templates") . "</em></td></tr>\n";
 	}
 
 	html_end_box(false);

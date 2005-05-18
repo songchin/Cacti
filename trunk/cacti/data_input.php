@@ -178,7 +178,7 @@ function field_edit() {
 
 		/* ==================== Box: Field Input ==================== */
 
-		html_start_box("<strong>"._("Field Input")."</strong>", "98%", $colors["header_background_template"], "3", "center", "");
+		html_start_box("<strong>" . _("Field Input") . "</strong>", "98%", $colors["header_background_template"], "3", "center", "");
 
 		draw_edit_form(
 			array(
@@ -240,7 +240,7 @@ function field_edit() {
 function data_remove() {
 	if ((read_config_option("remove_verification") == "on") && (!isset($_GET["confirm"]))) {
 		include("./include/top_header.php");
-		form_confirm(_("Are You Sure?"), _("Are you sure you want to delete the data input method") ." <strong>'" . db_fetch_cell("select name from data_input where id=" . $_GET["id"]) . "'</strong>?", "data_input.php", "data_input.php?action=remove&id=" . $_GET["id"]);
+		form_confirm(_("Are You Sure?"), _("Are you sure you want to delete the data input method") . " <strong>'" . db_fetch_cell("select name from data_input where id=" . $_GET["id"]) . "'</strong>?", "data_input.php", "data_input.php?action=remove&id=" . $_GET["id"]);
 		include("./include/bottom_footer.php");
 		exit;
 	}
@@ -275,7 +275,7 @@ function data_edit() {
 	if (!empty($_GET["id"])) {
 		/* ==================== Box: Input Fields ==================== */
 
-		html_start_box("<strong>"._("Input Fields")."</strong>", "98%", $colors["header_background"], "3", "center", "data_input.php?action=field_edit&type=in&data_input_id=" . $_GET["id"]);
+		html_start_box("<strong>" . _("Input Fields") . "</strong>", "98%", $colors["header_background"], "3", "center", "data_input.php?action=field_edit&type=in&data_input_id=" . $_GET["id"]);
 
 		html_header(array(_("Name"), _("Found in Input String?"), _("Friendly Name")), 2);
 

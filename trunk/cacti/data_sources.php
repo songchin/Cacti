@@ -279,16 +279,16 @@ function form_actions() {
 					the following data souces. Be aware that all warnings will be suppressed during the
 					conversion, so graph data loss is possible.")."</p>
 					<p>$ds_list</p>
-					<p><strong>"._("New Data Template:")."</strong><br>"; form_dropdown("data_template_id",db_fetch_assoc("select data_template.id,data_template.name from data_template order by data_template.name"),"name","id","","","0"); print "</p>
+					<p><strong>" . _("New Data Template:") . "</strong><br>"; form_dropdown("data_template_id",db_fetch_assoc("select data_template.id,data_template.name from data_template order by data_template.name"),"name","id","","","0"); print "</p>
 				</td>
 			</tr>\n
 			";
 	}elseif ($_POST["drp_action"] == "3") { /* change host */
 		print "	<tr>
 				<td class='textArea' bgcolor='#" . $colors["form_alternate1"]. "'>
-					<p>"._("Choose a new host for these data sources:")."</p>
+					<p>" . _("Choose a new host for these data sources:") . "</p>
 					<p>$ds_list</p>
-					<p><strong>"._("New Host:")."</strong><br>"; form_dropdown("host_id",db_fetch_assoc("select id,CONCAT_WS('',description,' (',hostname,')') as name from host order by description,hostname"),"name","id","","","0"); print "</p>
+					<p><strong>" . _("New Host:") . "</strong><br>"; form_dropdown("host_id",db_fetch_assoc("select id,CONCAT_WS('',description,' (',hostname,')') as name from host order by description,hostname"),"name","id","","","0"); print "</p>
 				</td>
 			</tr>\n
 			";
@@ -462,9 +462,9 @@ function ds_edit() {
 	if (!empty($data_source["data_template_id"])) {
 		ob_start();
 
-		html_start_box("<strong>"._("Supplemental Template Data")."</strong>", "98%", $colors["header_background"], "3", "center", "");
+		html_start_box("<strong>" . _("Supplemental Template Data") . "</strong>", "98%", $colors["header_background"], "3", "center", "");
 
-		$num_output_fields =  draw_nontemplated_fields_data_input($data_source["data_template_id"], $data_input_type_fields, "dif_|field|", "<strong>"._("Data Input")."</strong>", true);
+		$num_output_fields =  draw_nontemplated_fields_data_input($data_source["data_template_id"], $data_input_type_fields, "dif_|field|", "<strong>" . _("Data Input") . "</strong>", true);
 		$num_output_fields += draw_nontemplated_fields_data_source($data_source["data_template_id"], $data_source, "ds||field|", "<strong>" . _("Data Source Fields") . "</strong>", true, true);
 		$num_output_fields += draw_nontemplated_fields_data_source_item($data_source["data_template_id"], db_fetch_assoc("select * from data_source_item where data_source_id = " . $data_source["id"] . " order by data_source_name"), "dsi||field|||id|", "<strong>" . _("Data Source Item Fields") . "</strong>", true, true);
 
@@ -594,7 +594,7 @@ function ds_edit() {
 
 		$_data_input_form += $_data_input_type_form;
 
-		html_start_box("<strong>"._("Data Input")."</strong>", "98%", $colors["header_background_template"], "3", "center", "");
+		html_start_box("<strong>" . _("Data Input") . "</strong>", "98%", $colors["header_background_template"], "3", "center", "");
 
 		draw_edit_form(
 			array(
@@ -864,7 +864,7 @@ function ds() {
 		/* put the nav bar on the bottom as well */
 		print $nav;
 	}else{
-		print "<tr><td bgcolor='#" . $colors["form_alternate1"] . "' colspan=7><em>"._("No Data Sources")."</em></td></tr>";
+		print "<tr><td bgcolor='#" . $colors["form_alternate1"] . "' colspan=7><em>" . _("No Data Sources") . "</em></td></tr>";
 	}
 
 	html_end_box(false);

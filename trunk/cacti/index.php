@@ -23,7 +23,7 @@
 */
 
 if (file_exists("./include/config.php") == false) {
-	print "<html><body><font size=+1 color=red><b>" . _("Cacti Configuration Error") . ": include/config.php " . _("file was not found.  Please make sure that you have renamed") . " include/config.php.dist " . _("to") . " include/config.php</b></font></body></html>\n";
+	print "<html><body><font size=+1 color=red><b>" . _("Cacti Configuration Error: include/config.php file was not found.  Please make sure that you have renamed include/config.php.dist to include/config.php") . "</b></font></body></html>\n";
 	exit;
 }
 
@@ -35,8 +35,8 @@ include("./include/top_header.php");
 <table width="98%" align="center">
 	<tr>
 		<td class="textArea">
-			<strong><?php echo _("You are now logged into") . " <a href='about.php'>" . _("Cacti") . "</a>. " . _("You can follow these basic steps to get
-			started") . ".</strong>";?>
+			<strong><?php echo _("You are now logged into <a href='about.php'> Cacti") . "</a>. " . _("You can follow these basic steps to get
+			started.") . "</strong>";?>
 
 			<ul>
 				<li><a href="host.php"><?php echo _("Create devices</a> for network");?></li>

@@ -173,7 +173,7 @@ function host_new_graphs_save() {
 
 					$graph_id = generate_complete_graph($graph_template_id, $_POST["host_id"], $gt_form_graph, $gt_form_graph_item, $gt_form_data_source, $gt_form_data_source_item, $gt_form_data_source_field);
 
-					debug_log_insert("new_graphs", _("Created graph") . ": " . get_graph_title($graph_id));
+					debug_log_insert("new_graphs", _("Created graph: ") . get_graph_title($graph_id));
 				}elseif ($current_form_type == "sg") {
 					$data_query_id = $form_id1;
 
@@ -282,7 +282,7 @@ function host_new_graphs($selected_graphs = "") {
 			$graph_template = db_fetch_row("select * from graph_template where id = $graph_template_id");
 
 			$num_output_fields += draw_nontemplated_fields_graph($graph_template_id, $graph_template, "g_$data_query_id" . "_" . $graph_template_id . "_|field|", "<strong>Graph</strong> [Template: " . $graph_template["template_name"] . "]", false);
-			$num_output_fields += draw_nontemplated_fields_graph_item($graph_template_id, array_rekey(db_fetch_assoc("select * from graph_template_item where graph_template_id = $graph_template_id"), "", array("id", "data_template_item_id", "color", "graph_item_type", "cdef", "consolidation_function", "gprint_format", "legend_format", "legend_value", "hard_return")), "gi_" . $data_query_id . "_" . $graph_template_id . "_|id|_|field|", "<strong>" . _("Graph Items") . "</strong> [" . _("Template") . ": " . $graph_template["template_name"] . "]", false);
+			$num_output_fields += draw_nontemplated_fields_graph_item($graph_template_id, array_rekey(db_fetch_assoc("select * from graph_template_item where graph_template_id = $graph_template_id"), "", array("id", "data_template_item_id", "color", "graph_item_type", "cdef", "consolidation_function", "gprint_format", "legend_format", "legend_value", "hard_return")), "gi_" . $data_query_id . "_" . $graph_template_id . "_|id|_|field|", "<strong>" . _("Graph Items") . "</strong> [" . _("Template: ") . $graph_template["template_name"] . "]", false);
 
 			/* get information about each data template referenced by this graph template */
 			$data_templates = db_fetch_assoc("select distinct
@@ -297,7 +297,7 @@ function host_new_graphs($selected_graphs = "") {
 				foreach ($data_templates as $data_template) {
 					$num_output_fields += draw_nontemplated_fields_data_source($data_template["id"], $data_template, "d_" . $data_query_id . "_" . $graph_template_id . "_" . $data_template["id"] . "_|field|", true);
 					$num_output_fields += draw_nontemplated_fields_data_source_item($data_template["id"], db_fetch_assoc("select * from data_template_item where data_template_id = " . $data_template["id"] . " order by data_source_name"), "di_" . $data_query_id . "_" . $graph_template_id . "_" . $data_template["id"] . "_|id|_|field|", true);
-					$num_output_fields += draw_nontemplated_fields_data_input($data_template["id"], array_rekey(db_fetch_assoc("select name,value from data_template_field where data_template_id = " . $data_template["id"]), "name", array("value")), "c_" . $data_query_id . "_" . $graph_template_id . "_" . $data_template["id"] . "_|field|", "<strong>" . _("Custom Data") . "</strong> [" . _("Template") . ": " . $data_template["template_name"] . "]", false);
+					$num_output_fields += draw_nontemplated_fields_data_input($data_template["id"], array_rekey(db_fetch_assoc("select name,value from data_template_field where data_template_id = " . $data_template["id"]), "name", array("value")), "c_" . $data_query_id . "_" . $graph_template_id . "_" . $data_template["id"] . "_|field|", "<strong>" . _("Custom Data") . "</strong> [" . _("Template: ") . $data_template["template_name"] . "]", false);
 				}
 			}
 
@@ -388,11 +388,11 @@ function graphs() {
 
 		<tr>
 			<td class="textArea" style="padding: 3px;" width="300" nowrap>
-				<?php echo _("Create new graphs for the following host") . ":";?>
+				<?php echo _("Create new graphs for the following host:");?>
 			</td>
 			<td class="textInfo" rowspan="2" valign="top">
-				<span style="color: #c16921;">*</span><a href="host.php?action=edit&id=<?php print $_REQUEST["host_id"];?>"><?php echo _("Edit this Host"); ?></a><br>
-				<span style="color: #c16921;">*</span><a href="host.php?action=edit"><?php echo _("Create New Host"); ?></a>
+				<span style="color: #c16921;">*</span><a href="host.php?action=edit&id=<?php print $_REQUEST["host_id"];?>"><?php echo _("Edit this Host");?></a><br>
+				<span style="color: #c16921;">*</span><a href="host.php?action=edit"><?php echo _("Create New Host");?></a>
 			</td>
 		</tr>
 			<td>
@@ -427,11 +427,11 @@ function graphs() {
 
 	/* ==================== Box: Graph Templates ==================== */
 
-	html_start_box("<strong>"._("Graph Templates")."</strong>", "98%", $colors["header_background"], "3", "center", "");
+	html_start_box("<strong>" . _("Graph Templates") . "</strong>", "98%", $colors["header_background"], "3", "center", "");
 
 	print "	<tr bgcolor='#" . $colors["header_panel"] . "'>
-			<td class='textSubHeaderDark'>"._("Name")."</td>
-			<td width='1%' align='center' bgcolor='#819bc0' style='" . get_checkbox_style() . "'><input type='checkbox' style='margin: 0px;' name='all_cg' title='"._("Select All")."' onClick='SelectAll(\"cg\",this.checked);gt_update_selection_indicators();'></td>\n
+			<td class='textSubHeaderDark'>" . _("Name") . "</td>
+			<td width='1%' align='center' bgcolor='#819bc0' style='" . get_checkbox_style() . "'><input type='checkbox' style='margin: 0px;' name='all_cg' title='" . _("Select All") . "' onClick='SelectAll(\"cg\",this.checked);gt_update_selection_indicators();'></td>\n
 		</tr>\n";
 
 	$ht_graph_templates = db_fetch_assoc("select
@@ -475,7 +475,7 @@ function graphs() {
 			print "<tr id='gt_line$query_row' bgcolor='#" . (($i % 2 == 0) ? $colors["form_alternate1"] : $colors["form_alternate2"]) . "'>"; $i++;
 
 			print "		<td" . (($use_javascript == true) ? " onClick='gt_select_line(" . $item["id"] . ");'" : "") . "><span id='gt_text$query_row" . "_0'>
-						<span id='gt_text$query_row" . "_0'><strong>" . _("Create") . ":</strong> " . $item["template_name"] . "</span>
+						<span id='gt_text$query_row" . "_0'><strong>" . _("Create:") . "</strong> " . $item["template_name"] . "</span>
 					</td>
 					<td align='right'>
 						<input type='checkbox' name='cg_$query_row' id='cg_$query_row'" . (($use_javascript == true) ? " onClick='gt_update_selection_indicators();'" : "") . ">
@@ -603,10 +603,10 @@ function graphs() {
 							<table  cellspacing='0' cellpadding='0' width='100%' >
 								<tr>
 									<td class='textHeaderDark'>
-										<strong>"._("Data Query")." </strong> [" . $data_query["name"] . "]
+										<strong>" . _("Data Query") . " </strong> [" . $data_query["name"] . "]
 									</td>
 									<td align='right' nowrap>
-										<a href='graphs_new.php?action=query_reload&id=" . $data_query["id"] . "&host_id=" . $host["id"] . "'><img src='". html_get_theme_images_path("reload_icon_small.gif") . "' alt='"._("Reload Associated Query")."' border='0' align='absmiddle'></a>
+										<a href='graphs_new.php?action=query_reload&id=" . $data_query["id"] . "&host_id=" . $host["id"] . "'><img src='". html_get_theme_images_path("reload_icon_small.gif") . "' alt='" . _("Reload Associated Query") . "' border='0' align='absmiddle'></a>
 									</td>
 								</tr>
 							</table>
@@ -711,7 +711,7 @@ function graphs() {
 							<img src='" . html_get_theme_images_path("arrow.gif") . "' alt='' align='absmiddle'>&nbsp;
 						</td>
 						<td align='right'>
-							<span style='font-size: 12px; font-style: italic;'>" . _("Select a graph type") . ":</span>&nbsp;
+							<span style='font-size: 12px; font-style: italic;'>" . _("Select a graph type:") . "</span>&nbsp;
 							<select name='sgg_" . $data_query["id"] . "' id='sgg_" . $data_query["id"] . "' " . (($use_javascript == true) ? "onChange='dq_update_deps(" . $data_query["id"] . "," . $num_visible_fields . ");'" : "") . ">
 								"; html_create_list($data_query_graphs,"template_name","id","0"); print "
 							</select>

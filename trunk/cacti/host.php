@@ -468,7 +468,7 @@ function host_edit() {
 					<span style="font-size: 10px; font-weight: normal; font-family: monospace;">
 					<?php
 					if (($host["snmp_community"] == "") && ($host["snmpv3_auth_username"] == "")) {
-						print "<span style='color: #ab3f1e; font-weight: bold;'>"._("SNMP not in use")."</span>\n";
+						print "<span style='color: #ab3f1e; font-weight: bold;'>" . _("SNMP not in use") . "</span>\n";
 					}else{
 						$snmp_system = cacti_snmp_get($host["hostname"], $host["snmp_community"], ".1.3.6.1.2.1.1.1.0",
 											$host["snmp_version"], $host["snmpv3_auth_username"], $host["snmpv3_auth_password"],
@@ -487,9 +487,9 @@ function host_edit() {
 												$host["snmpv3_auth_protocol"], $host["snmpv3_priv_passphrase"], $host["snmpv3_priv_protocol"],
 												$host["snmp_port"], $host["snmp_timeout"], SNMP_WEBUI);
 
-							print "<strong>" . _("System") . ":</strong> $snmp_system<br>\n";
-							print "<strong>" . _("Uptime") . ":</strong> $snmp_uptime<br>\n";
-							print "<strong>" . _("Hostname") . ":</strong> $snmp_hostname<br>\n";
+							print "<strong>" . _("System:") . "</strong> $snmp_system<br>\n";
+							print "<strong>" . _("Uptime:") . "</strong> $snmp_uptime<br>\n";
+							print "<strong>" . _("Hostname:") . "</strong> $snmp_hostname<br>\n";
 						}
 					}
 					?>

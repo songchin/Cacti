@@ -169,7 +169,7 @@ function form_actions() {
 					<p>" . _("When you click save, the following host templates will be duplicated. You can
 					optionally change the title format for the new host templates.") . "</p>
 					<p>$host_list</p>
-					<p><strong>" . _("Title Format") . ":</strong><br>"; form_text_box("title_format", "<template_title> (1)", "", "255", "30", "text"); print "</p>
+					<p><strong>" . _("Title Format:") . "</strong><br>"; form_text_box("title_format", "<template_title> (1)", "", "255", "30", "text"); print "</p>
 				</td>
 			</tr>\n
 			";

@@ -95,7 +95,7 @@ function input_remove() {
 function input_edit() {
 	global $colors, $graph_item_types, $consolidation_functions, $fields_graph_template_input_edit;
 
-	$header_label = "[" . _("Graph Template") . ": " . db_fetch_cell("select template_name from graph_template where id=" . $_GET["graph_template_id"]) . "]";
+	$header_label = "[" . _("Graph Template: ") . db_fetch_cell("select template_name from graph_template where id=" . $_GET["graph_template_id"]) . "]";
 
 	if (!empty($_GET["id"])) {
 		$graph_template_input = db_fetch_row("select * from graph_template_item_input where id=" . $_GET["id"]);

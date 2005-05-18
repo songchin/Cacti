@@ -219,7 +219,7 @@ if ((sizeof($polling_items) > 0) && (read_config_option("poller_enabled") == "on
 
 				if ((sizeof($reindex) > 0) && (!$host_down)) {
 					if (read_config_option("log_verbosity") == POLLER_VERBOSITY_DEBUG) {
-						api_syslog_cacti_log(_("RECACHE: Processing") . " " . sizeof($reindex) . " " . _("items in the auto reindex cache for") . " '" . $item["hostname"] . "'.", SEV_DEBUG, $poller_id, $host_id, 0, $print_data_to_stdout, FACIL_CMDPHP);
+						api_syslog_cacti_log(sprintf(_("RECACHE: Processing '$i' items in the auto reindex cache for '%s'"), sizeof($reindex), $item["hostname"]), SEV_DEBUG, $poller_id, $host_id, 0, $print_data_to_stdout, FACIL_CMDPHP);
 					}
 
 					foreach ($reindex as $index_item) {

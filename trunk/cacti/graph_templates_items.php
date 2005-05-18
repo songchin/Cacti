@@ -238,7 +238,7 @@ function item_edit() {
 
 	/* ==================== Box: Graph Item ==================== */
 
-	html_start_box("<strong>" . _("Graph Item") . "</strong> [" . _("Graph Template") . ": " . db_fetch_cell("select template_name from graph_template where id=" . $_GET["graph_template_id"]) . "]", "98%", $colors["header_background"], "3", "center", "");
+	html_start_box("<strong>" . _("Graph Item") . "</strong> [" . _("Graph Template: ") . db_fetch_cell("select template_name from graph_template where id=" . $_GET["graph_template_id"]) . "]", "98%", $colors["header_background"], "3", "center", "");
 
 	draw_edit_form(
 		array(
