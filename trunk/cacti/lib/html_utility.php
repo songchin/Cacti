@@ -172,7 +172,7 @@ function get_colored_device_status($disabled, $status) {
 			case HOST_UP:
 				return "<span style='color: #" . $status_colors[HOST_UP] . "'>" . _("Up") . "</a>"; break;
 			default:
-				return "<span style='color: #0000ff'>" _("Unknown") . "</a>"; break;
+				return "<span style='color: #0000ff'>" . _("Unknown") . "</a>"; break;
 		}
 	}
 }
