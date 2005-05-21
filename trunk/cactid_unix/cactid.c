@@ -75,6 +75,12 @@ int main(int argc, char *argv[]) {
 	char logmessage[LOGSIZE];
 	char timetxt[20];
 
+	/* make sure we note that php script server is not running */
+	set.php_running = 0;
+
+	/* tell cactid that it is parent */
+	set.parent_fork = CACTID_PARENT;
+
 	/* set start time for cacti */
 	gettimeofday(&now, NULL);
 	begin_time = (double) now.tv_usec / 1000000 + now.tv_sec;
@@ -101,7 +107,7 @@ int main(int argc, char *argv[]) {
 	if ((argc != 1) && (argc != 2) && (argc != 4)) {
 		printf("ERROR: Cactid requires either 0 or 3 input parameters\n");
 		printf("USAGE: <cactidpath>/cactid [-f=first_host -l=last_host -p=poller_id] | [-p=poller_id]\n");
-		exit(-1);
+		exit_cactid();
 	}
 
 	/* return error if the first arg is greater than the second */
@@ -122,13 +128,13 @@ int main(int argc, char *argv[]) {
     		} else {
 				printf("ERROR: Invalid calling parameters.  First row must be less than the second row\n");
 				printf("USAGE: <cactidpath>/cactid [-f=first_host -l=last_host -p=poller_id] | [-p=poller_id]\n");
-				exit(-1);
+				exit_cactid();
 			}
 		}
 
 		if (first_host > last_host) {
 			printf("ERROR: Invalid row specifications.  First host_id must be less than the second host_id\n");
-			exit(-2);
+			exit_cactid();
 		}
 	}
 	
@@ -140,7 +146,7 @@ int main(int argc, char *argv[]) {
     	} else {
 			printf("ERROR: Invalid calling parameters.  First row must be less than the second row\n");
 			printf("USAGE: <cactidpath>/cactid [-f=first_host -l=last_host -p=poller_id] | [-p=poller_id]\n");
-			exit(-1);
+			exit_cactid();
 		}
 	}
 
@@ -148,14 +154,14 @@ int main(int argc, char *argv[]) {
 	if (conf_file) {
 		if ((read_cactid_config(conf_file, &set)) < 0) {
 			printf("ERROR: Could not read config file: %s\n", conf_file);
-			exit(-3);
+			exit_cactid();
 		}
 	}else{
 		conf_file = malloc(BUFSIZE);
 
 		if (!conf_file) {
 			printf("ERROR: Fatal malloc error!\n");
-			exit(-1);
+			exit_cactid();
 		}
 
 		for(i=0;i<CONFIG_PATHS;i++) {
@@ -190,8 +196,11 @@ int main(int argc, char *argv[]) {
 	/* initialize SNMP */
 	init_snmp("cactid");
 
-	/* initialize PHP */
-	php_init();
+	if (!php_init()) {
+		exit_cactid();
+	} else {
+		set.php_running = 1;
+	}
 
 	/* get the id's to poll */
 	switch (argc) {
@@ -228,6 +237,9 @@ int main(int argc, char *argv[]) {
 		cacti_log(logmessage, SEV_DEBUG, 0);
 	}
 
+	/* tell fork processes that they are now active */
+	set.parent_fork = CACTID_FORK;
+	
 	/* loop through devices until done */
 	while ((device_counter < num_rows) && (canexit == 0)) {
 		mutex_status = thread_mutex_trylock(LOCK_THREAD);
@@ -347,6 +359,9 @@ int main(int argc, char *argv[]) {
 		}
 	}
 
+	/* tell cactid that it is now parent */
+	set.parent_fork = CACTID_PARENT;
+	
 	/* print out stats */
 	gettimeofday(&now, NULL);
 

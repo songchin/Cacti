@@ -145,13 +145,13 @@ int php_init() {
 	/* create the output pipes from cactid to php*/
 	if (pipe(cacti2php_pdes) < 0) {
 		cacti_log("Could not allocate php server pipes", SEV_ERROR, 0);
-		return -1;
+		return FALSE;
 	}
 
 	/* create the input pipes from php to cactid */
 	if (pipe(php2cacti_pdes) < 0) {
 		cacti_log("Could not allocate php server pipes", SEV_ERROR, 0);
-		return -1;
+		return FALSE;
 	}
 
 	/* disable thread cancellation from this point forward. */
@@ -183,7 +183,7 @@ int php_init() {
 			cacti_log("Could not fork php script server", SEV_ERROR, 0);
 			pthread_setcancelstate(cancel_state, NULL);
 
-			return -1;
+			return FALSE;
 			/* NOTREACHED */
 		case 0:	/* SUCCESS: I am now the child */
 			/* set the standard input/output channels of the new process.  */
@@ -226,7 +226,7 @@ int php_init() {
 
 	free(result_string);
 
-	return 1;
+	return TRUE;
 }
 
 /******************************************************************************/
