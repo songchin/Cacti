@@ -91,7 +91,7 @@ function get_formatted_data_query_indexes($host_id, $data_query_id) {
 	include_once(CACTI_BASE_PATH . "/lib/sort.php");
 
 	if (empty($data_query_id)) {
-		return array("" => "Unknown Index");
+		return array("" => _("Unknown Index"));
 	}
 
 	/* from the xml; cached in 'host_snmp_query' */
@@ -233,11 +233,11 @@ function get_data_query_array($snmp_query_id) {
 	$xml_file_path = str_replace("<path_cacti>", $config["base_path"], $xml_file_path);
 
 	if (!file_exists($xml_file_path)) {
-		debug_log_insert("data_query", "Could not find data query XML file at '$xml_file_path'");
+		debug_log_insert("data_query", sprintf(_("Could not find data query XML file at '%s'"), $xml_file_path));
 		return false;
 	}
 
-	debug_log_insert("data_query", "Found data query XML file at '$xml_file_path'");
+	debug_log_insert("data_query", sprintf(_("Found data query XML file at '%s'"), $xml_file_path));
 
 	$data = implode("",file($xml_file_path));
 	return xml2array($data);

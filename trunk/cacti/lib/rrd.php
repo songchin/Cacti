@@ -68,7 +68,7 @@ function rrdtool_execute($command_line, $log_to_stdout, $output_flag, $rrd_struc
 
 	/* output information to the log file if appropriate */
 	if (read_config_option("log_verbosity") >= POLLER_VERBOSITY_DEBUG) {
-		api_syslog_cacti_log("CACTI2RRD: " . addslashes(read_config_option("path_rrdtool")) . " $command_line", SEV_DEBUG, 0, 0, 0, $log_to_stdout, FACIL_POLLER);
+		api_syslog_cacti_log(_("CACTI2RRD: ") . addslashes(read_config_option("path_rrdtool")) . " $command_line", SEV_DEBUG, 0, 0, 0, $log_to_stdout, FACIL_POLLER);
 	}
 
 	/* if we want to see the error output from rrdtool; make sure to specify this */
@@ -164,7 +164,7 @@ function rrdtool_function_create($data_source_id, $show_source, $rrd_struc) {
 
 	/* if we find that this DS has no RRA associated; get out */
 	if (sizeof($rras) <= 0) {
-		api_syslog_cacti_log("There are no RRA's assigned to data_source_id: $data_source_id.", SEV_ERROR, 0, 0, 0, false, FACIL_WEBUI);
+		api_syslog_cacti_log(_("There are no RRA's assigned to data_source_id: ") . $data_source_id . ".", SEV_ERROR, 0, 0, 0, false, FACIL_WEBUI);
 		return false;
 	}
 
@@ -293,7 +293,7 @@ function rrdtool_function_tune($rrd_tune_array) {
 			pclose($fp);
 
 			if (read_config_option("log_verbosity") >= POLLER_VERBOSITY_DEBUG) {
-				api_syslog_cacti_log("CACTI2RRD: " . addslashes(read_config_option("path_rrdtool")) . " tune $data_source_path $rrd_tune", SEV_DEBUG, 0, 0, 0, false, FACIL_WEBUI);
+				api_syslog_cacti_log(_("CACTI2RRD: ") . addslashes(read_config_option("path_rrdtool")) . " tune $data_source_path $rrd_tune", SEV_DEBUG, 0, 0, 0, false, FACIL_WEBUI);
 			}
 		}
 	}
@@ -416,7 +416,7 @@ function rrdtool_function_graph($graph_id, $rra_id, $graph_data_array, $rrd_stru
 		$access_denied = !(is_graph_allowed($graph_id));
 
 		if ($access_denied == true) {
-			return "GRAPH ACCESS DENIED";
+			return _("GRAPH ACCESS DENIED");
 		}
 	}
 
@@ -673,15 +673,15 @@ function rrdtool_function_graph($graph_id, $rra_id, $graph_data_array, $rrd_stru
 	if ((isset($graph_data_array["graph_start"])) && (isset($graph_data_array["graph_end"]))) {
 		if (($graph_data_array["graph_start"] < 0) && ($graph_data_array["graph_end"] < 0)) {
 			if (read_config_option("rrdtool_version") == "rrd-1.2.x") {
-				$graph_legend .= "COMMENT:\"From " . str_replace(":", "\:", date($graph_date, time()+$graph_data_array["graph_start"])) . " To " . str_replace(":", "\:", date($graph_date, time()+$graph_data_array["graph_end"])) . "\\c\"" . RRD_NL . "COMMENT:\"  \\n\"" . RRD_NL;
+				$graph_legend .= "COMMENT:\"" . _("From ") . str_replace(":", "\:", date($graph_date, time()+$graph_data_array["graph_start"])) . _(" To ") . str_replace(":", "\:", date($graph_date, time()+$graph_data_array["graph_end"])) . "\\c\"" . RRD_NL . "COMMENT:\"  \\n\"" . RRD_NL;
 			}else {
-				$graph_legend .= "COMMENT:\"From " . date($graph_date, time()+$graph_data_array["graph_start"]) . " To " . date($graph_date, time()+$graph_data_array["graph_end"]) . "\\c\"" . RRD_NL . "COMMENT:\"  \\n\"" . RRD_NL;
+				$graph_legend .= "COMMENT:\"" . _("From ") . date($graph_date, time()+$graph_data_array["graph_start"]) . _(" To ") . date($graph_date, time()+$graph_data_array["graph_end"]) . "\\c\"" . RRD_NL . "COMMENT:\"  \\n\"" . RRD_NL;
 			}
 		}else if (($graph_data_array["graph_start"] >= 0) && ($graph_data_array["graph_end"] >= 0)) {
 			if (read_config_option("rrdtool_version") == "rrd-1.2.x") {
-				$graph_legend .= "COMMENT:\"From " . str_replace(":", "\:", date($graph_date, $graph_data_array["graph_start"])) . " To " . str_replace(":", "\:", date($graph_date, $graph_data_array["graph_end"])) . "\\c\"" . RRD_NL . "COMMENT:\"  \\n\"" . RRD_NL;
+				$graph_legend .= "COMMENT:\"" . _("From ") . str_replace(":", "\:", date($graph_date, $graph_data_array["graph_start"])) . _(" To ") . str_replace(":", "\:", date($graph_date, $graph_data_array["graph_end"])) . "\\c\"" . RRD_NL . "COMMENT:\"  \\n\"" . RRD_NL;
 			}else {
-				$graph_legend .= "COMMENT:\"From " . date($graph_date, $graph_data_array["graph_start"]) . " To " . date($graph_date, $graph_data_array["graph_end"]) . "\\c\"" . RRD_NL . "COMMENT:\"  \\n\"" . RRD_NL;
+				$graph_legend .= "COMMENT:\"" . _("From ") . date($graph_date, $graph_data_array["graph_start"]) . _(" To ") . date($graph_date, $graph_data_array["graph_end"]) . "\\c\"" . RRD_NL . "COMMENT:\"  \\n\"" . RRD_NL;
 			}
 		}
 	}

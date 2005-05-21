@@ -31,8 +31,8 @@ function draw_graph_item_editor($graph_X_id, $form_type, $disable_controls) {
 	include(CACTI_BASE_PATH . "/include/data_source/data_source_arrays.php");
 
 	$graph_actions = array(
-		1 => "Delete Items",
-		2 => "Duplicate Items"
+		1 => _("Delete Items"),
+		2 => _("Duplicate Items")
 		);
 
 	if ($form_type == "graph_template") {
@@ -115,7 +115,7 @@ function draw_graph_item_editor($graph_X_id, $form_type, $disable_controls) {
 			&nbsp;
 		</td>
 		<td width='1%' align='right' bgcolor='#819bc0' style='<?php echo get_checkbox_style();?>'>
-			<input type='checkbox' style='margin: 0px;' name='all' title='Select All' onClick='graph_item_rows_selection(this.checked)'>
+			<input type='checkbox' style='margin: 0px;' name='all' title='<?php echo _("Select All");?>' onClick='graph_item_rows_selection(this.checked)'>
 		</td>
 	</tr>
 	<?php
@@ -166,10 +166,10 @@ function draw_graph_item_editor($graph_X_id, $form_type, $disable_controls) {
 				?>
 				<tr bgcolor="#<?php echo $colors["form_custom1"];?>">
 					<td width='12' style='border-bottom: 1px solid #b5b5b5;' align='center'>
-						<a href="javascript:graph_item_row_visibility(<?php echo $row_counter;?>)"><img id='img_<?php echo $row_counter;?>' src='<?php echo html_get_theme_images_path("hide.gif");?>' border='0' title='Collapse Row' alt='Collapse Row' align='absmiddle'></a>
+						<a href="javascript:graph_item_row_visibility(<?php echo $row_counter;?>)"><img id='img_<?php echo $row_counter;?>' src='<?php echo html_get_theme_images_path("hide.gif");?>' border='0' title='<?php echo _("Collapse Row");?>' alt='<?php echo _("Collapse Row");?>' align='absmiddle'></a>
 					</td>
 					<td style='border-right: 1px solid #b5b5b5; border-bottom: 1px solid #b5b5b5;' width='60'>
-						<strong>Row #<?php echo $row_counter;?></strong>
+						<strong><?php echo _("Row #") . $row_counter;?></strong>
 					</td>
 					<td colspan='5' style='font-family: monospace; color: #515151; cursor: pointer; border-bottom: 1px solid #b5b5b5;' onClick="graph_item_row_visibility(<?php echo $row_counter;?>)" nowrap>
 						<pre><?php
@@ -203,20 +203,20 @@ function draw_graph_item_editor($graph_X_id, $form_type, $disable_controls) {
 					</td>
 					<td align='center' width='15' style='border-bottom: 1px solid #b5b5b5;'>
 						<?php if ($row_counter < $total_num_rows) { ?>
-						<a href='<?php echo $url_filename;?>?action=row_movedown&row=<?php echo $row_counter;?><?php echo $url_data;?>'><img src='<?php echo html_get_theme_images_path("move_down.gif");?>' border='0' title='Move Item Down' alt='Move Item Down'></a>
+						<a href='<?php echo $url_filename;?>?action=row_movedown&row=<?php echo $row_counter;?><?php echo $url_data;?>'><img src='<?php echo html_get_theme_images_path("move_down.gif");?>' border='0' title='<?php echo _("Move Item Down");?>' alt='<?php echo _("Move Item Down");?>'></a>
 						<?php }else{ ?>
 						&nbsp;
 						<?php } ?>
 					</td>
 					<td align='left' width='25' style='border-bottom: 1px solid #b5b5b5;'>
 						<?php if ($i > 0) { ?>
-						<a href='<?php echo $url_filename;?>?action=row_moveup&row=<?php echo $row_counter;?><?php echo $url_data;?>'><img src='<?php echo html_get_theme_images_path("move_up.gif");?>' border='0' title='Move Item Up' alt='Move Item Up'></a>
+						<a href='<?php echo $url_filename;?>?action=row_moveup&row=<?php echo $row_counter;?><?php echo $url_data;?>'><img src='<?php echo html_get_theme_images_path("move_up.gif");?>' border='0' title='<?php echo _("Move Item Up");?>' alt='<?php echo _("Move Item Up");?>'></a>
 						<?php }else{ ?>
 						&nbsp;
 						<?php } ?>
 					</td>
 					<td style="<?php echo get_checkbox_style();?> border-bottom: 1px solid #b5b5b5;" width="1%" align="right">
-						<input type='checkbox' style='margin: 0px;' onClick="graph_item_row_selection(<?php echo $row_counter;?>)" name='row_chk_<?php echo $row_counter;?>' id='row_chk_<?php echo $row_counter;?>' title="Row #<?php echo $row_counter;?>">
+						<input type='checkbox' style='margin: 0px;' onClick="graph_item_row_selection(<?php echo $row_counter;?>)" name='row_chk_<?php echo $row_counter;?>' id='row_chk_<?php echo $row_counter;?>' title="<?php echo _('Row #' . $row_counter;?>">
 					</td>
 				</tr>
 				<?php
@@ -252,7 +252,7 @@ function draw_graph_item_editor($graph_X_id, $form_type, $disable_controls) {
 					&nbsp;
 				</td>
 				<td width='60' style='border-right: 1px solid #b5b5b5;'>
-					<a href='<?php echo $url_filename;?>?action=edit&id=<?php echo $item["id"];?>&<?php echo $url_data;?>'>Item #<?php echo ($i+1);?></a>
+					<a href='<?php echo $url_filename;?>?action=edit&id=<?php echo $item["id"];?>&<?php echo $url_data;?>'><?php echo _("Item #") . ($i+1);?></a>
 				</td>
 				<td>
 					<?php echo $graph_item_types{$item["graph_item_type"]};?>
@@ -271,16 +271,16 @@ function draw_graph_item_editor($graph_X_id, $form_type, $disable_controls) {
 				</td>
 				<td width='15' align='center'>
 					<?php if (($i+1) < sizeof($item_list)) { ?>
-					<a href='<?php echo $url_filename;?>?action=item_movedown&id=<?php echo $item["id"];?>&<?php echo $url_data;?>'><img src='<?php echo html_get_theme_images_path("move_down.gif");?>' border='0' title='Move Item Down' alt='Move Item Down'></a>
+					<a href='<?php echo $url_filename;?>?action=item_movedown&id=<?php echo $item["id"];?>&<?php echo $url_data;?>'><img src='<?php echo html_get_theme_images_path("move_down.gif");?>' border='0' title='<?php echo _("Move Item Down");?>' alt='<?php echo _("Move Item Down");?>'></a>
 					<?php } ?>
 				</td>
 				<td width='25' align='left'>
 					<?php if ($i > 0) { ?>
-					<a href='<?php echo $url_filename;?>?action=item_moveup&id=<?php echo $item["id"];?>&<?php echo $url_data;?>'><img src='<?php echo html_get_theme_images_path("move_up.gif");?>' border='0' title='Move Item Up' alt='Move Item Up'></a>
+					<a href='<?php echo $url_filename;?>?action=item_moveup&id=<?php echo $item["id"];?>&<?php echo $url_data;?>'><img src='<?php echo html_get_theme_images_path("move_up.gif");?>' border='0' title='<?php echo _("Move Item Up");?>' alt='<?php echo _("Move Item Up");?>'></a>
 					<?php } ?>
 				</td>
 				<td width='1' style="<?php echo get_checkbox_style();?>" align="right">
-					<input type='checkbox' style='margin: 0px;' name='chk_gi_<?php echo $item["id"];?>' id='chk_<?php echo $item["id"];?>' title="Item #<?php echo ($i + 1);?>">
+					<input type='checkbox' style='margin: 0px;' name='chk_gi_<?php echo $item["id"];?>' id='chk_<?php echo $item["id"];?>' title="<?php echo _('Item #') . ($i + 1);?>">
 				</td>
 			</tr>
 			<?php
@@ -305,7 +305,7 @@ function draw_graph_item_editor($graph_X_id, $form_type, $disable_controls) {
 		</tr>
 		<?php
 	}else{
-		echo "<tr><td><em>No graph items found.</em></td></tr>\n";
+		echo "<tr><td><em>" . _("No graph items found.") . "</em></td></tr>\n";
 	}
 }
 

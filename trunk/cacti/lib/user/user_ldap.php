@@ -69,7 +69,7 @@ function api_user_ldap_auth($username,$password = "",$ldap_dn = "",$ldap_host = 
 	/* validation */
 	if (empty($username)) {
 		$output["error_num"] = "2";
-		$output["error_text"] = "No username defined";
+		$output["error_text"] = _("No username defined");
 		return $output;
 	}
 
@@ -104,81 +104,81 @@ function api_user_ldap_auth($username,$password = "",$ldap_dn = "",$ldap_host = 
 	}
 
 	/* Connect to LDAP server */
-	api_syslog_cacti_log("LDAP: Setting up connection to " . $ldap_host . ":" . $ldap_port, SEV_DEBUG, 0, 0, 0, false, FACIL_AUTH);
+	api_syslog_cacti_log(sprintf(_("LDAP: Setting up connection to %s:%s"), $ldap_host, $ldap_port), SEV_DEBUG, 0, 0, 0, false, FACIL_AUTH);
 	$ldap_conn = @ldap_connect($ldap_host,$ldap_port);
 
 	if ($ldap_conn) {
 		/* Set protocol version */
-		api_syslog_cacti_log("LDAP: Setting protocol version to " . $ldap_version, SEV_DEBUG, 0, 0, 0, false, FACIL_AUTH);
+		api_syslog_cacti_log(_("LDAP: Setting protocol version to ") . $ldap_version, SEV_DEBUG, 0, 0, 0, false, FACIL_AUTH);
 		if (!@ldap_set_option($ldap_conn, LDAP_OPT_PROTOCOL_VERSION, $ldap_version)) {
 			$output["error_num"] = "3";
-			$output["error_text"] = "Protocol Error, Unable to set version";
-			api_syslog_cacti_log("LDAP: " . $output["error_text"], SEV_ERROR, 0, 0, 0, false, FACIL_AUTH);
+			$output["error_text"] = _("Protocol Error, Unable to set version");
+			api_syslog_cacti_log(_("LDAP: ") . $output["error_text"], SEV_ERROR, 0, 0, 0, false, FACIL_AUTH);
 			@ldap_close($ldap_conn);
 			return $output;
 		}
 		/* set referrals */
 		if ($ldap_referrals == "0") {
-			api_syslog_cacti_log("LDAP: Setting referral option to " . $ldap_referrals, SEV_DEBUG, 0, 0, 0, false, FACIL_AUTH);
+			api_syslog_cacti_log(_("LDAP: Setting referral option to ") . $ldap_referrals, SEV_DEBUG, 0, 0, 0, false, FACIL_AUTH);
 			if (!@ldap_set_option($ldap_conn, LDAP_OPT_REFERRALS, 0)) {
 				$output["error_num"] = "4";
-				$output["error_text"] = "Unable to set referrals option";
-				api_syslog_cacti_log("LDAP: " . $output["error_text"], SEV_ERROR, 0, 0, 0, false, FACIL_AUTH);
+				$output["error_text"] = _("Unable to set referrals option");
+				api_syslog_cacti_log(_("LDAP: ") . $output["error_text"], SEV_ERROR, 0, 0, 0, false, FACIL_AUTH);
 				@ldap_close($ldap_conn);
 				return $output;
 			}
 		}
 		/* start TLS if requested */
 		if ($ldap_encryption == "2") {
-			api_syslog_cacti_log("LDAP: Starting TLS encryption", SEV_DEBUG, 0, 0, 0, false, FACIL_AUTH);
+			api_syslog_cacti_log(_("LDAP: Starting TLS encryption"), SEV_DEBUG, 0, 0, 0, false, FACIL_AUTH);
 			if (!@ldap_start_tls($ldap_conn)) {
 				$output["error_num"] = "5";
-				$output["error_text"] = "Protocol error, unable to start TLS communications";
-				api_syslog_cacti_log("LDAP: " . $output["error_text"], SEV_ERROR, 0, 0, 0, false, FACIL_AUTH);
+				$output["error_text"] = _("Protocol error, unable to start TLS communications");
+				api_syslog_cacti_log(_("LDAP: ") . $output["error_text"], SEV_ERROR, 0, 0, 0, false, FACIL_AUTH);
 				@ldap_close($ldap_conn);
 				return $output;
 			}
 		}
 		/* Bind to the LDAP directory */
-		api_syslog_cacti_log("LDAP: Binding to LDAP server", SEV_DEBUG, 0, 0, 0, false, FACIL_AUTH);
+		api_syslog_cacti_log(_("LDAP: Binding to LDAP server"), SEV_DEBUG, 0, 0, 0, false, FACIL_AUTH);
 		$ldap_response = @ldap_bind($ldap_conn,$ldap_dn,$password);
 		if ($ldap_response) {
 			/* Auth ok */
 			$output["error_num"] = "0";
-			$output["error_text"] = "Authentication Success";
+			$output["error_text"] = _("Authentication Success");
 		}else{
 			/* unable to bind */
 			$ldap_error = ldap_errno($ldap_conn);
 			if ($ldap_error == 0x03) {
 				/* protocol error */
 				$output["error_num"] = "7";
-				$output["error_text"] = "Protocol error";
+				$output["error_text"] = _("Protocol error");
 			}elseif ($ldap_error == 0x31) {
 				/* invalid credentials */
 				$output["error_num"] = "1";
-				$output["error_text"] = "Authenication Failure";
+				$output["error_text"] = _("Authenication Failure");
 			}elseif ($ldap_error == 0x32) {
 				/* insuffient access */
 				$output["error_num"] = "8";
-				$output["error_text"] = "Insuffient access";
+				$output["error_text"] = _("Insuffient access");
 			}elseif ($ldap_error == 0x51) {
 				/* unable to connect to server */
 				$output["error_num"] = "9";
-				$output["error_text"] = "Unable to connect to server";
+				$output["error_text"] = _("Unable to connect to server");
 			}elseif ($ldap_error == 0x55) {
 				/* timeout */
 				$output["error_num"] = "10";
-				$output["error_text"] = "Timeout";
+				$output["error_text"] = _("Timeout");
 			}else{
 				/* general bind error */
 				$output["error_num"] = "11";
-				$output["error_text"] = "General bind error, LDAP result: " . ldap_error($ldap_conn);
+				$output["error_text"] = _("General bind error, LDAP result: ") . ldap_error($ldap_conn);
 			}
 		}
 	}else{
 		/* Error intializing LDAP */
 		$output["error_num"] = "6";
-		$output["error_text"] = "Unable to create LDAP object";
+		$output["error_text"] = _("Unable to create LDAP object");
 	}
 
 	/* Close LDAP connection */
@@ -241,8 +241,8 @@ function api_user_ldap_search_dn($username,$ldap_dn = "",$ldap_host = "",$ldap_p
 	if (empty($username)) {
 		$output["dn"] = "";
 		$output["error_num"] = "1";
-		$output["error_text"] = "No username defined";
-		api_syslog_cacti_log("LDAP_SEARCH: No username defined", SEV_DEBUG, 0, 0, 0, false, FACIL_AUTH);
+		$output["error_text"] = _("No username defined");
+		api_syslog_cacti_log(_("LDAP_SEARCH: No username defined"), SEV_DEBUG, 0, 0, 0, false, FACIL_AUTH);
 		return $output;
 	}
 
@@ -295,7 +295,7 @@ function api_user_ldap_search_dn($username,$ldap_dn = "",$ldap_host = "",$ldap_p
 		/* Just bind mode, make dn and return */
 		$output["dn"] = $ldap_dn;
 		$output["error_num"] = "0";
-		$output["error_text"] = "User found";
+		$output["error_text"] = _("User found");
 		return $output;
 	}elseif ($ldap_mode == "2") {
 		/* specific */
@@ -305,12 +305,12 @@ function api_user_ldap_search_dn($username,$ldap_dn = "",$ldap_host = "",$ldap_p
 		if (empty($ldap_specific_password)) {
 			$ldap_specific_password = read_config_option("ldap_specific_password");
 		}
-		api_syslog_cacti_log("LDAP_SEARCH: Using DN '" . $ldap_specific_dn . "' and password '" . $ldap_specific_password . "' for binding ", SEV_DEBUG, 0, 0, 0, false, FACIL_AUTH);
+		api_syslog_cacti_log(sprintf(_("LDAP_SEARCH: Using DN '%s' and password '%s' for binding"), $ldap_specific_dn, $ldap_specific_password), SEV_DEBUG, 0, 0, 0, false, FACIL_AUTH);
 	}elseif ($ldap_mode == "1"){
 		/* assume anonymous */
 		$ldap_specific_dn = "";
 		$ldap_specific_password = "";
-		api_syslog_cacti_log("LDAP_SEARCH: Using anonymous for binding", SEV_DEBUG, 0, 0, 0, false, FACIL_AUTH);
+		api_syslog_cacti_log(_("LDAP_SEARCH: Using anonymous for binding"), SEV_DEBUG, 0, 0, 0, false, FACIL_AUTH);
 	}
 
 	if (empty($ldap_search_base)) {
@@ -320,55 +320,55 @@ function api_user_ldap_search_dn($username,$ldap_dn = "",$ldap_host = "",$ldap_p
 		$ldap_search_filter = read_config_option("ldap_search_filter");
 	}
 	$ldap_search_filter = str_replace("<username>",$username,$ldap_search_filter);
-	api_syslog_cacti_log("LDAP_SEARCH: Search filter '" . $ldap_search_filter . "'", SEV_DEBUG, 0, 0, 0, false, FACIL_AUTH);
+	api_syslog_cacti_log(sprintf(_("LDAP_SEARCH: Search filter '%s'"), $ldap_search_filter), SEV_DEBUG, 0, 0, 0, false, FACIL_AUTH);
 
 
 	/* Searching mode */
         /* Setup connection to LDAP server */
-	api_syslog_cacti_log("LDAP: Setting up connection to " . $ldap_host . ":" . $ldap_port, SEV_DEBUG, 0, 0, 0, false, FACIL_AUTH);
+	api_syslog_cacti_log(sprintf(_("LDAP: Setting up connection to %s:%s"), $ldap_host, $ldap_port), SEV_DEBUG, 0, 0, 0, false, FACIL_AUTH);
         $ldap_conn = @ldap_connect($ldap_host,$ldap_port);
 
 	if ($ldap_conn) {
 		/* Set protocol version */
-		api_syslog_cacti_log("LDAP_SEARCH: Setting protocol version to " . $ldap_version, SEV_DEBUG, 0, 0, 0, false, FACIL_AUTH);
+		api_syslog_cacti_log(sprintf(_("LDAP_SEARCH: Setting protocol version to %s"), $ldap_version), SEV_DEBUG, 0, 0, 0, false, FACIL_AUTH);
 		if (!@ldap_set_option($ldap_conn, LDAP_OPT_PROTOCOL_VERSION, $ldap_version)) {
 			/* protocol error */
 			$output["dn"] = "";
 			$output["error_num"] = "4";
-			$output["error_text"] = "Protocol error, unable to set version";
-			api_syslog_cacti_log("LDAP_SEARCH: " . $output["error_text"], SEV_ERROR, 0, 0, 0, false, FACIL_AUTH);
+			$output["error_text"] = _("Protocol error, unable to set version");
+			api_syslog_cacti_log(sprintf(_("LDAP_SEARCH: %s"), $output["error_text"]), SEV_ERROR, 0, 0, 0, false, FACIL_AUTH);
 			@ldap_close($ldap_conn);
 			return $output;
 		}
 		/* set referrals */
 		if ($ldap_referrals == "0") {
-			api_syslog_cacti_log("LDAP_SEARCH: Setting referral option to " . $ldap_referrals, SEV_DEBUG, 0, 0, 0, false, FACIL_AUTH);
+			api_syslog_cacti_log(_("LDAP_SEARCH: Setting referral option to ") . $ldap_referrals, SEV_DEBUG, 0, 0, 0, false, FACIL_AUTH);
 			if (!@ldap_set_option($ldap_conn, LDAP_OPT_REFERRALS, 0)) {
 				/* referrals set error */
 				$output["dn"] = "";
 				$output["error_num"] = "13";
-				$output["error_text"] = "Unable to set referrals option";
-				api_syslog_cacti_log("LDAP_SEARCH: " . $output["error_text"], SEV_ERROR, 0, 0, 0, false, FACIL_AUTH);
+				$output["error_text"] = _("Unable to set referrals option");
+				api_syslog_cacti_log(_("LDAP_SEARCH: ") . $output["error_text"], SEV_ERROR, 0, 0, 0, false, FACIL_AUTH);
 				@ldap_close($ldap_conn);
 				return $output;
 			}
 		}
 		/* start TLS if requested */
 		if ($ldap_encryption == "2") {
-			api_syslog_cacti_log("LDAP_SEARCH: Starting TLS encryption", SEV_DEBUG, 0, 0, 0, false, FACIL_AUTH);
+			api_syslog_cacti_log(_("LDAP_SEARCH: Starting TLS encryption"), SEV_DEBUG, 0, 0, 0, false, FACIL_AUTH);
 			if (!@ldap_start_tls($ldap_conn)) {
 				/* TLS startup error */
 				$output["dn"] = "";
 				$output["error_num"] = "5";
-				$output["error_text"] = "Protocol error, unable to start TLS communications";
-				api_syslog_cacti_log("LDAP_SEARCH: " . $output["error_text"], SEV_ERROR, 0, 0, 0, false, FACIL_AUTH);
+				$output["error_text"] = _("Protocol error, unable to start TLS communications");
+				api_syslog_cacti_log(_("LDAP_SEARCH: ") . $output["error_text"], SEV_ERROR, 0, 0, 0, false, FACIL_AUTH);
 				@ldap_close($ldap_conn);
 				return $output;
 			}
 		}
 
 		/* bind to the directory */
-		api_syslog_cacti_log("LDAP_SEARCH: Binding to LDAP server", SEV_DEBUG, 0, 0, 0, false, FACIL_AUTH);
+		api_syslog_cacti_log(_("LDAP_SEARCH: Binding to LDAP server"), SEV_DEBUG, 0, 0, 0, false, FACIL_AUTH);
 		if (@ldap_bind($ldap_conn,$ldap_specific_dn,$ldap_specific_password)) {
 			/* Search */
 
@@ -380,24 +380,24 @@ function api_user_ldap_search_dn($username,$ldap_dn = "",$ldap_host = "",$ldap_p
 					/* single response return user dn */
 					$output["dn"] = $ldap_entries["0"]["dn"];
 					$output["error_num"] = "0";
-					$output["error_text"] = "User found";
-					api_syslog_cacti_log("LDAP_SEARCH: User found, DN '" . $output["dn"] . "'", SEV_DEBUG, 0, 0, 0, false, FACIL_AUTH);
+					$output["error_text"] = _("User found");
+					api_syslog_cacti_log(sprintf(_("LDAP_SEARCH: User found, DN '%s'"), $output["dn"]), SEV_DEBUG, 0, 0, 0, false, FACIL_AUTH);
 				}elseif ($ldap_entries["count"] > 1) {
 					/* more than 1 result */
 					$output["dn"] = "";
 					$output["error_num"] = "13";
-					$output["error_text"] = "More than one matching user found";
+					$output["error_text"] = _("More than one matching user found");
 				}else{
 					/* no search results */
 					$output["dn"] = "";
 					$output["error_num"] = "3";
-					$output["error_text"] = "Unable to find users DN";
+					$output["error_text"] = _("Unable to find users DN");
 				}
 			}else{
 				/* no search results, user not found*/
 				$output["dn"] = "";
 				$output["error_num"] = "3";
-				$output["error_text"] = "Unable to find users DN";
+				$output["error_text"] = _("Unable to find users DN");
 			}
 		}else{
 			/* unable to bind */
@@ -406,45 +406,45 @@ function api_user_ldap_search_dn($username,$ldap_dn = "",$ldap_host = "",$ldap_p
 				/* protocol error */
 				$output["dn"] = "";
 				$output["error_num"] = "6";
-				$output["error_text"] = "Protocol error";
+				$output["error_text"] = _("Protocol error");
 			}elseif ($ldap_error == 0x31) {
 				/* invalid credentials */
 				$output["dn"] = "";
 				$output["error_num"] = "7";
-				$output["error_text"] = "Invalid credentials";
+				$output["error_text"] = _("Invalid credentials");
 			}elseif ($ldap_error == 0x32) {
 				/* insuffient access */
 				$output["dn"] = "";
 				$output["error_num"] = "8";
-				$output["error_text"] = "Insuffient access";
+				$output["error_text"] = _("Insuffient access");
 			}elseif ($ldap_error == 0x51) {
 				/* unable to connect to server */
 				$output["dn"] = "";
 				$output["error_num"] = "9";
-				$output["error_text"] = "Unable to connect to server";
+				$output["error_text"] = _("Unable to connect to server");
 			}elseif ($ldap_error == 0x55) {
 				/* timeout */
 				$output["dn"] = "";
 				$output["error_num"] = "10";
-				$output["error_text"] = "Timeout";
+				$output["error_text"] = _("Timeout");
 			}else{
 				/* general bind error */
 				$output["dn"] = "";
 				$output["error_num"] = "11";
-				$output["error_text"] = "General bind error, LDAP result: " . ldap_error($ldap_conn);
+				$output["error_text"] = sprintf(_("General bind error, LDAP result: %s"), ldap_error($ldap_conn));
 			}
 		}
 	}else{
 		/* unable to setup connection */
 		$output["dn"] = "";
 		$output["error_num"] = "2";
-		$output["error_text"] = "Unable to create LDAP connection object";
+		$output["error_text"] = _("Unable to create LDAP connection object");
 	}
 
 	@ldap_close($ldap_conn);
 
 	if ($output["error_num"] > 0) {
-		api_syslog_cacti_log("LDAP_SEARCH: " . $output["error_text"], SEV_ERROR, 0, 0, 0, false, FACIL_AUTH);
+		api_syslog_cacti_log(_("LDAP_SEARCH: ") . $output["error_text"], SEV_ERROR, 0, 0, 0, false, FACIL_AUTH);
 	}
 
 	return $output;

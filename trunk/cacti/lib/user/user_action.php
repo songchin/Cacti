@@ -39,10 +39,10 @@ function api_user_save($array) {
 	/* logging */
 	if (empty($array["id"])) {
 		/* New user */
-		api_syslog_cacti_log("USER_ADMIN: User id '" . $user_id . "' added", SEV_NOTICE, 0, 0, 0, false, FACIL_AUTH);
+		api_syslog_cacti_log(sprintf(_("USER_ADMIN: User id '%s' added"), $user_id), SEV_NOTICE, 0, 0, 0, false, FACIL_AUTH);
 	}else{
 		/* existing user */
-		api_syslog_cacti_log("USER_ADMIN: User id '" . $array["id"] . "' updated", SEV_NOTICE, 0, 0, 0, false, FACIL_AUTH);
+		api_syslog_cacti_log(sprintf(_("USER_ADMIN: User id '%s' updated"), $array["id"]), SEV_NOTICE, 0, 0, 0, false, FACIL_AUTH);
 	}
 
 	return $user_id;
@@ -99,7 +99,7 @@ function api_user_remove($user_id) {
 			db_execute("delete from user_auth_realm where user_id = " . sql_sanitize($user_id));
 			db_execute("delete from user_auth_perms where user_id = " . sql_sanitize($user_id));
 			db_execute("delete from settings_graphs where user_id = " . sql_sanitize($user_id));
-			api_syslog_cacti_log("USER_ADMIN: User id '" . $user_id . "' deleted", SEV_NOTICE, 0, 0, 0, false, FACIL_AUTH);
+			api_syslog_cacti_log(sprintf(_("USER_ADMIN: User id '%s' deleted"), $user_id), SEV_NOTICE, 0, 0, 0, false, FACIL_AUTH);
 		}
 	}
 }
@@ -110,7 +110,7 @@ function api_user_enable($user_id) {
 	if (!empty($user_id)) {
 		if (($user_id != 1) && (is_numeric($user_id))) {
 			db_execute("update user_auth set enabled = 1 where id=" . sql_sanitize($user_id));
-			api_syslog_cacti_log("USER_ADMIN: User id '" . $user_id . "' enabled", SEV_NOTICE, 0, 0, 0, false, FACIL_AUTH);
+			api_syslog_cacti_log(sprintf(_("USER_ADMIN: User id '%s' enabled"), $user_id), SEV_NOTICE, 0, 0, 0, false, FACIL_AUTH);
 		}
 	}
 }
@@ -121,7 +121,7 @@ function api_user_disable($user_id) {
 	if (!empty($user_id)) {
 		if (($user_id != 1) && (is_numeric($user_id))) {
 			db_execute("update user_auth set enabled = 0 where id=" . sql_sanitize($user_id));
-			api_syslog_cacti_log("USER_ADMIN: User id '" . $user_id . "' disabled", SEV_NOTICE, 0, 0, 0, false, FACIL_AUTH);
+			api_syslog_cacti_log(sprintf(_("USER_ADMIN: User id '%s' disabled"), $user_id), SEV_NOTICE, 0, 0, 0, false, FACIL_AUTH);
 		}
 	}
 }
@@ -188,7 +188,7 @@ function api_user_copy($template_user, $new_user, $new_realm=-1) {
                 $row['user_id'] = $new_id;
                 sql_save($row, 'settings_tree', array('user_id', 'graph_tree_item_id'));
         }
-	api_syslog_cacti_log("USER_ADMIN: User '" . $template_user . "' copied to user '" . $new_user . "'", SEV_NOTICE, 0, 0, 0, false, FACIL_AUTH);
+	api_syslog_cacti_log(sprintf(_("USER_ADMIN: User '%s' copied to user '%s'"), $template_user, $new_user), SEV_NOTICE, 0, 0, 0, false, FACIL_AUTH);
 
 	return 0;
 }
@@ -215,7 +215,7 @@ function api_user_realms_save($user_id,$array) {
 			foreach($array as $realm_id) {
 				db_execute("replace into user_auth_realm (user_id,realm_id) values (" . sql_sanitize($user_id) . "," . $realm_id . ")");
 			}
-			api_syslog_cacti_log("USER_ADMIN: User id '" . $user_id . "' realms updated", SEV_NOTICE, 0, 0, 0, false, FACIL_AUTH);
+			api_syslog_cacti_log(sprintf(_("USER_ADMIN: User id '%s' realms updated"), $user_id), SEV_NOTICE, 0, 0, 0, false, FACIL_AUTH);
 		}
 	}
 
@@ -264,7 +264,7 @@ function api_user_graph_setting_save($user_id,$array) {
 			}
 		}
 	}
-	api_syslog_cacti_log("USER_ADMIN: User id '" . $user_id . "' graph settings updated", SEV_NOTICE, 0, 0, 0, false, FACIL_AUTH);
+	api_syslog_cacti_log(sprintf(_("USER_ADMIN: User id '%s' graph settings updated"), $user_id), SEV_NOTICE, 0, 0, 0, false, FACIL_AUTH);
 
 	return 0;
 
@@ -287,7 +287,7 @@ function api_user_graph_perms_add($type,$user_id,$item_id) {
 	/* validation */
 	if ((!empty($graph_perms_type_array[$type])) && (!empty($user_id)) && (!empty($item_id) && (is_numeric($user_id)) && (is_numeric($item_id)))) {
 		db_execute("replace into user_auth_perms (user_id,item_id,type) values (" . sql_sanitize($user_id) . "," . sql_sanitize($item_id) . ",'" . $graph_perms_type_array[$type] . "')");
-		api_syslog_cacti_log("USER_ADMIN: User id '" . $user_id . "' graph permissions added for type '" . $type . "' item id '" . $item_id . "'", SEV_NOTICE, 0, 0, 0, false, FACIL_AUTH);
+		api_syslog_cacti_log(sprintf(_("USER_ADMIN: User id '%s' graph permissions added for type '%s' item id '%s'"), $user_id, $type, $item_id), SEV_NOTICE, 0, 0, 0, false, FACIL_AUTH);
 	}
 
 }
@@ -302,7 +302,7 @@ function api_user_graph_perms_remove($type,$user_id,$item_id) {
 	/* validation */
 	if ((!empty($graph_perms_type_array[$type])) && (!empty($user_id)) && (!empty($item_id)  && (is_numeric($user_id)) && (is_numeric($item_id)))) {
 		db_execute("delete from user_auth_perms where type = '" . $graph_perms_type_array[$type] . "' and user_id = " . sql_sanitize($user_id) . " and item_id = " . sql_sanitize($item_id));
-		api_syslog_cacti_log("USER_ADMIN: User id '" . $user_id . "' graph permissions removed for type '" . $type . "' item id '" . $item_id . "'", SEV_NOTICE, 0, 0, 0, false, FACIL_AUTH);
+		api_syslog_cacti_log(sprintf(_("USER_ADMIN: User id '%s' graph permissions removed for type '%s' item id '%s'"), $user_id, $type, $item_id), SEV_NOTICE, 0, 0, 0, false, FACIL_AUTH);
 	}
 
 }

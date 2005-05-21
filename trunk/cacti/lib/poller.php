@@ -202,7 +202,7 @@ function exec_background($filename, $args = "") {
 	global $config;
 
 	if (read_config_option("log_verbosity") == POLLER_VERBOSITY_DEBUG) {
-		api_syslog_cacti_log("About to Spawn a Remote Process [CMD: $filename, ARGS: $args]", SEV_DEBUG, 0, 0, 0, true, FACIL_POLLER);
+		api_syslog_cacti_log(sprintf(_("About to Spawn a Remote Process [CMD: %s, ARGS: %s]"),$filename, $args), SEV_DEBUG, 0, 0, 0, true, FACIL_POLLER);
 	}
 
 	if (file_exists($filename)) {
@@ -388,7 +388,7 @@ function update_poller_status($status, $poller_id, $pollers, $poller_time) {
 		$pollers[$poller_id]["availability"] = 100 * ($pollers[$poller_id]["total_polls"] - $pollers[$poller_id]["failed_polls"]) / $pollers[$poller_id]["total_polls"];
 
 		/* set the error message */
-		$pollers[$poller_id]["status_last_error"] = "Poller is down for some reason";
+		$pollers[$poller_id]["status_last_error"] = _("Poller is down for some reason");
 
 		/* determine if to send an alert and update remainder of statistics */
 		if ($pollers[$poller_id]["status"] == POLLER_UP) {
@@ -487,9 +487,9 @@ function update_poller_status($status, $poller_id, $pollers, $poller_time) {
 	/* if there is supposed to be an event generated, do it */
 	if ($issue_log_message) {
 		if ($pollers[$poller_id]["status"] == HOST_DOWN) {
-			api_syslog_cacti_log("POLLER EVENT: Poller is DOWN Message: " . $pollers[$poller_id]["status_last_error"], SEV_ERROR, $poller_id, $host_id, 0, $print_data_to_stdout, FACIL_POLLER);
+			api_syslog_cacti_log(_("POLLER EVENT: Poller is DOWN Message: ") . $pollers[$poller_id]["status_last_error"], SEV_ERROR, $poller_id, $host_id, 0, $print_data_to_stdout, FACIL_POLLER);
 		} else {
-			api_syslog_cacti_log("POLLER EVENT: Poller Returned from DOWN State", SEV_NOTICE, $poller_id, $host_id, 0, $print_data_to_stdout, FACIL_POLLER);
+			api_syslog_cacti_log(_("POLLER EVENT: Poller Returned from DOWN State"), SEV_NOTICE, $poller_id, $host_id, 0, $print_data_to_stdout, FACIL_POLLER);
 		}
 	}
 
@@ -535,12 +535,12 @@ function update_host_status($poller_id, $status, $host_id, &$hosts, &$ping, $pin
 			}
 		}elseif ($ping_availability == AVAIL_SNMP) {
 			if ($hosts[$host_id]["snmp_community"] == "") {
-				$hosts[$host_id]["status_last_error"] = "Device does not require SNMP";
+				$hosts[$host_id]["status_last_error"] = _("Device does not require SNMP");
 			}else {
 				$hosts[$host_id]["status_last_error"] = $ping->snmp_response;
 			}
 		}elseif ($ping_availability == AVAIL_NONE) {
-			$hosts[$host_id]["status_last_error"] = "Availability disabled for host";
+			$hosts[$host_id]["status_last_error"] = _("Availability disabled for host");
 		}else {
 			$hosts[$host_id]["status_last_error"] = $ping->ping_response;
 		}
@@ -663,29 +663,29 @@ function update_host_status($poller_id, $status, $host_id, &$hosts, &$ping, $pin
 		if (($hosts[$host_id]["status"] == HOST_UP) || ($hosts[$host_id]["status"] == HOST_RECOVERING)) {
 			/* log ping result if we are to use a ping for reachability testing */
 			if ($ping_availability == AVAIL_SNMP_AND_PING) {
-				api_syslog_cacti_log("PING: " . $ping->ping_response, SEV_INFO, $poller_id, $host_id, 0, $print_data_to_stdout, FACIL_POLLER);
-				api_syslog_cacti_log("SNMP: " . $ping->snmp_response, SEV_INFO, $poller_id, $host_id, 0, $print_data_to_stdout, FACIL_POLLER);
+				api_syslog_cacti_log(_("PING: ") . $ping->ping_response, SEV_INFO, $poller_id, $host_id, 0, $print_data_to_stdout, FACIL_POLLER);
+				api_syslog_cacti_log(_("SNMP: ") . $ping->snmp_response, SEV_INFO, $poller_id, $host_id, 0, $print_data_to_stdout, FACIL_POLLER);
 			} elseif ($ping_availability == AVAIL_SNMP) {
 				if ($hosts[$host_id]["snmp_community"] == "") {
-					api_syslog_cacti_log("SNMP: Device does not require SNMP", SEV_INFO, $poller_id, $host_id, 0, $print_data_to_stdout, FACIL_POLLER);
+					api_syslog_cacti_log(_("SNMP: Device does not require SNMP"), SEV_INFO, $poller_id, $host_id, 0, $print_data_to_stdout, FACIL_POLLER);
 				}else{
-					api_syslog_cacti_log("SNMP: " . $ping->snmp_response, SEV_INFO, $poller_id, $host_id, 0, $print_data_to_stdout, FACIL_POLLER);
+					api_syslog_cacti_log(_("SNMP: ") . $ping->snmp_response, SEV_INFO, $poller_id, $host_id, 0, $print_data_to_stdout, FACIL_POLLER);
 				}
 			} elseif ($ping_availability == AVAIL_NONE) {
-				api_syslog_cacti_log("AVAIL: Availability cheking disabled for host", SEV_INFO, $poller_id, $host_id, 0, $print_data_to_stdout, FACIL_POLLER);
+				api_syslog_cacti_log(_("AVAIL: Availability cheking disabled for host"), SEV_INFO, $poller_id, $host_id, 0, $print_data_to_stdout, FACIL_POLLER);
 			} else {
-				api_syslog_cacti_log("PING: " . $ping->ping_response, SEV_INFO, $poller_id, $host_id, 0, $print_data_to_stdout, FACIL_POLLER);
+				api_syslog_cacti_log(_("PING: ") . $ping->ping_response, SEV_INFO, $poller_id, $host_id, 0, $print_data_to_stdout, FACIL_POLLER);
 			}
 		} else {
 			if ($ping_availability == AVAIL_SNMP_AND_PING) {
-				api_syslog_cacti_log("PING: " . $ping->ping_response, SEV_INFO, $poller_id, $host_id, 0, $print_data_to_stdout, FACIL_POLLER);
-				api_syslog_cacti_log("SNMP: " . $ping->snmp_response, SEV_INFO, $poller_id, $host_id, 0, $print_data_to_stdout, FACIL_POLLER);
+				api_syslog_cacti_log(_("PING: ") . $ping->ping_response, SEV_INFO, $poller_id, $host_id, 0, $print_data_to_stdout, FACIL_POLLER);
+				api_syslog_cacti_log(_("SNMP: ") . $ping->snmp_response, SEV_INFO, $poller_id, $host_id, 0, $print_data_to_stdout, FACIL_POLLER);
 			} elseif ($ping_availability == AVAIL_SNMP) {
-				api_syslog_cacti_log("SNMP: " . $ping->snmp_response, SEV_INFO, $poller_id, $host_id, 0, $print_data_to_stdout, FACIL_POLLER);
+				api_syslog_cacti_log(_("SNMP: ") . $ping->snmp_response, SEV_INFO, $poller_id, $host_id, 0, $print_data_to_stdout, FACIL_POLLER);
 			} elseif ($ping_availability == AVAIL_NONE) {
-				api_syslog_cacti_log("AVAIL: Availability cheking disabled for host", SEV_INFO, $poller_id, $host_id, 0, $print_data_to_stdout, FACIL_POLLER);
+				api_syslog_cacti_log(_("AVAIL: Availability cheking disabled for host"), SEV_INFO, $poller_id, $host_id, 0, $print_data_to_stdout, FACIL_POLLER);
 			} else {
-				api_syslog_cacti_log("PING: " . $ping->ping_response, SEV_INFO, $poller_id, $host_id, 0, $print_data_to_stdout, FACIL_POLLER);
+				api_syslog_cacti_log(_("PING: ") . $ping->ping_response, SEV_INFO, $poller_id, $host_id, 0, $print_data_to_stdout, FACIL_POLLER);
 			}
 		}
 	}
@@ -693,9 +693,9 @@ function update_host_status($poller_id, $status, $host_id, &$hosts, &$ping, $pin
 	/* if there is supposed to be an event generated, do it */
 	if ($issue_log_message) {
 		if ($hosts[$host_id]["status"] == HOST_DOWN) {
-			api_syslog_cacti_log("HOST EVENT: Host is DOWN Message: " . $hosts[$host_id]["status_last_error"], SEV_ERROR, $poller_id, $host_id, 0, $print_data_to_stdout, FACIL_POLLER);
+			api_syslog_cacti_log(_("HOST EVENT: Host is DOWN Message: ") . $hosts[$host_id]["status_last_error"], SEV_ERROR, $poller_id, $host_id, 0, $print_data_to_stdout, FACIL_POLLER);
 		} else {
-			api_syslog_cacti_log("HOST EVENT: Host Returned from DOWN State", SEV_NOTICE, $poller_id, $host_id, 0, $print_data_to_stdout, FACIL_POLLER);
+			api_syslog_cacti_log(_("HOST EVENT: Host Returned from DOWN State"), SEV_NOTICE, $poller_id, $host_id, 0, $print_data_to_stdout, FACIL_POLLER);
 		}
 	}
 
