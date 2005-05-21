@@ -186,17 +186,17 @@ function draw_nontemplated_fields_data_source($data_template_id, &$values_array,
 	$data_template = db_fetch_row("select * from data_template where id = $data_template_id");
 
 	if ($data_template["t_name"] == "1") {
-		$num_draw_fields = template_form_header_precheck($num_draw_fields, "<strong>Data Source</strong>", ($display_template_name == true ? $data_template["template_name"] : ""));
+		$num_draw_fields = template_form_header_precheck($num_draw_fields, "<strong>" . _("Data Source") . "</strong>", ($display_template_name == true ? $data_template["template_name"] : ""));
 		_data_source_field__name(str_replace("|field|", "name", $field_name_format), false, 0);
 	}
 
 	if ($data_template["t_rrd_step"] == "1") {
-		$num_draw_fields = template_form_header_precheck($num_draw_fields, "<strong>Data Source</strong>", ($display_template_name == true ? $data_template["template_name"] : ""));
+		$num_draw_fields = template_form_header_precheck($num_draw_fields, "<strong>" . _("Data Source") . "</strong>", ($display_template_name == true ? $data_template["template_name"] : ""));
 		_data_source_field__rrd_step(str_replace("|field|", "rrd_step", $field_name_format), false, $values_array["rrd_step"], 0);
 	}
 
 	if ($data_template["t_active"] == "1") {
-		$num_draw_fields = template_form_header_precheck($num_draw_fields, "<strong>Data Source</strong>", ($display_template_name == true ? $data_template["template_name"] : ""));
+		$num_draw_fields = template_form_header_precheck($num_draw_fields, "<strong>" . _("Data Source") . "</strong>", ($display_template_name == true ? $data_template["template_name"] : ""));
 		_data_source_field__active(str_replace("|field|", "active", $field_name_format), false, $values_array["active"], 0);
 	}
 
@@ -239,22 +239,22 @@ function draw_nontemplated_fields_data_source_item($data_template_id, &$values_a
 			$data_template_item = db_fetch_row("select * from data_template_item where data_template_id = $data_template_id and data_source_name = '" . $item["data_source_name"] . "'");
 
 			if ($data_template_item["t_rrd_minimum"] == "1") {
-				$num_draw_item_fields = template_form_header_precheck($num_draw_item_fields, "<strong>Data Source Item</strong> [" . $item["data_source_name"] . "]", ($display_template_name == true ? $data_template_name : ""));
+				$num_draw_item_fields = template_form_header_precheck($num_draw_item_fields, "<strong>" . _("Data Source Item") . "</strong> [" . $item["data_source_name"] . "]", ($display_template_name == true ? $data_template_name : ""));
 				_data_source_item_field__rrd_minimum(str_replace("|field|", "rrd_minimum", $field_name), false, $item["rrd_minimum"], $field_id = 0);
 			}
 
 			if ($data_template_item["t_rrd_maximum"] == "1") {
-				$num_draw_item_fields = template_form_header_precheck($num_draw_item_fields, "<strong>Data Source Item</strong> [" . $item["data_source_name"] . "]", ($display_template_name == true ? $data_template_name : ""));
+				$num_draw_item_fields = template_form_header_precheck($num_draw_item_fields, "<strong>" . _("Data Source Item" . "</strong> [" . $item["data_source_name"] . "]", ($display_template_name == true ? $data_template_name : ""));
 				_data_source_item_field__rrd_maximum(str_replace("|field|", "rrd_maximum", $field_name), false, $item["rrd_maximum"], $field_id = 0);
 			}
 
 			if ($data_template_item["t_data_source_type"] == "1") {
-				$num_draw_item_fields = template_form_header_precheck($num_draw_item_fields, "<strong>Data Source Item</strong> [" . $item["data_source_name"] . "]", ($display_template_name == true ? $data_template_name : ""));
+				$num_draw_item_fields = template_form_header_precheck($num_draw_item_fields, "<strong>" . _("Data Source Item") . "</strong> [" . $item["data_source_name"] . "]", ($display_template_name == true ? $data_template_name : ""));
 				_data_source_item_field__data_source_type(str_replace("|field|", "data_source_type", $field_name), false, $item["data_source_type"], 0);
 			}
 
 			if ($data_template_item["t_rrd_heartbeat"] == "1") {
-				$num_draw_item_fields = template_form_header_precheck($num_draw_item_fields, "<strong>Data Source Item</strong> [" . $item["data_source_name"] . "]", ($display_template_name == true ? $data_template_name : ""));
+				$num_draw_item_fields = template_form_header_precheck($num_draw_item_fields, "<strong>" . _("Data Source Item") . "</strong> [" . $item["data_source_name"] . "]", ($display_template_name == true ? $data_template_name : ""));
 				_data_source_item_field__rrd_heartbeat(str_replace("|field|", "rrd_heartbeat", $field_name), false, $item["rrd_heartbeat"], 0);
 			}
 
@@ -318,7 +318,7 @@ function draw_nontemplated_fields_data_input($data_template_id, &$values_array, 
 		if ($header_title != "") {
 			echo "<tr bgcolor='#" . $colors["header_panel_background"] . "'><td colspan='2' style='font-size: 10px; color: white;'>$header_title</td></tr>\n";
 		}else{
-			echo "<tr bgcolor='#" . $colors["header_panel_background"] . "'><td colspan='2' style='font-size: 10px; color: white;'>Data Input</td></tr>\n";
+			echo "<tr bgcolor='#" . $colors["header_panel_background"] . "'><td colspan='2' style='font-size: 10px; color: white;'>" . _("Data Input") . "</td></tr>\n";
 		}
 	}
 

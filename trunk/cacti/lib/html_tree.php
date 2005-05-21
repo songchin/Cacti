@@ -374,20 +374,20 @@ function grow_right_pane_tree($tree_id, $leaf_id, $host_group_data) {
 	$host_group_data_array = explode(":", $host_group_data);
 
 	if ($host_group_data_array[0] == "graph_template") {
-		$host_group_data_name = "<strong>Graph Template:</strong> " . db_fetch_cell("select template_name from graph_template where id=" . $host_group_data_array[1]);
+		$host_group_data_name = "<strong>" . _("Graph Template:") . "</strong> " . db_fetch_cell("select template_name from graph_template where id=" . $host_group_data_array[1]);
 		$graph_template_id = $host_group_data_array[1];
 	}elseif ($host_group_data_array[0] == "data_query") {
-		$host_group_data_name = "<strong>Data Query:</strong> " . (empty($host_group_data_array[1]) ? "(Non Indexed)" : db_fetch_cell("select name from snmp_query where id=" . $host_group_data_array[1]));
+		$host_group_data_name = "<strong>" . _("Data Query:") . "</strong> " . (empty($host_group_data_array[1]) ? _("(Non Indexed)") : db_fetch_cell("select name from snmp_query where id=" . $host_group_data_array[1]));
 		$data_query_id = $host_group_data_array[1];
 	}elseif ($host_group_data_array[0] == "data_query_index") {
-		$host_group_data_name = "<strong>Data Query:</strong> " . (empty($host_group_data_array[1]) ? "(Non Indexed) " : db_fetch_cell("select name from snmp_query where id=" . $host_group_data_array[1])) . "-> " . (empty($host_group_data_array[2]) ? "Unknown Index" : get_formatted_data_query_index($leaf["host_id"], $host_group_data_array[1], $host_group_data_array[2]));
+		$host_group_data_name = "<strong>" . _("Data Query:") . "</strong> " . (empty($host_group_data_array[1]) ? _("(Non Indexed)") : db_fetch_cell("select name from snmp_query where id=" . $host_group_data_array[1])) . "-> " . (empty($host_group_data_array[2]) ? "Unknown Index" : get_formatted_data_query_index($leaf["host_id"], $host_group_data_array[1], $host_group_data_array[2]));
 		$data_query_id = $host_group_data_array[1];
 		$data_query_index = $host_group_data_array[2];
 	}
 
-	if (!empty($tree_name)) { $title .= $title_delimeter . "<strong>Tree:</strong> $tree_name"; $title_delimeter = "-> "; }
-	if (!empty($leaf_name)) { $title .= $title_delimeter . "<strong>Leaf:</strong> $leaf_name"; $title_delimeter = "-> "; }
-	if (!empty($host_name)) { $title .= $title_delimeter . "<strong>Host:</strong> $host_name"; $title_delimeter = "-> "; }
+	if (!empty($tree_name)) { $title .= $title_delimeter . "<strong>" . _("Tree:") . "</strong> $tree_name"; $title_delimeter = "-> "; }
+	if (!empty($leaf_name)) { $title .= $title_delimeter . "<strong>" . _("Leaf:") . "</strong> $leaf_name"; $title_delimeter = "-> "; }
+	if (!empty($host_name)) { $title .= $title_delimeter . "<strong>" . _("Host:") . "</strong> $host_name"; $title_delimeter = "-> "; }
 	if (!empty($host_group_data_name)) { $title .= $title_delimeter . " $host_group_data_name"; $title_delimeter = "-> "; }
 
 	print "<table width='98%' align='center' cellpadding='3'>";
@@ -443,7 +443,7 @@ function grow_right_pane_tree($tree_id, $leaf_id, $host_group_data) {
 			/* for graphs without a template */
 			array_push($graph_templates, array(
 				"id" => "0",
-				"template_name" => "(No Graph Template)"
+				"template_name" => _("(No Graph Template)")
 				));
 
 			if (sizeof($graph_templates) > 0) {
@@ -459,9 +459,9 @@ function grow_right_pane_tree($tree_id, $leaf_id, $host_group_data) {
 						order by graph.title_cache");
 
 					if (read_graph_config_option("thumbnail_section_tree_2") == "on") {
-						html_graph_thumbnail_area($graphs, "", "view_type=tree&graph_start=" . get_current_graph_start() . "&graph_end=" . get_current_graph_end(), "<tr bgcolor='#" . $colors["graph_type_background"] . "'><td colspan='3' class='textHeaderDark'><strong>Graph Template:</strong> " . $item["template_name"] . "</td></tr>");
+						html_graph_thumbnail_area($graphs, "", "view_type=tree&graph_start=" . get_current_graph_start() . "&graph_end=" . get_current_graph_end(), "<tr bgcolor='#" . $colors["graph_type_background"] . "'><td colspan='3' class='textHeaderDark'><strong>" . _("Graph Template:") . "</strong> " . $item["template_name"] . "</td></tr>");
 					}else{
-						html_graph_area($graphs, "", "view_type=tree&graph_start=" . get_current_graph_start() . "&graph_end=" . get_current_graph_end(), "<tr bgcolor='#" . $colors["graph_type_background"] . "'><td colspan='3' class='textHeaderDark'><strong>Graph Template:</strong> " . $item["template_name"] . "</td></tr>");
+						html_graph_area($graphs, "", "view_type=tree&graph_start=" . get_current_graph_start() . "&graph_end=" . get_current_graph_end(), "<tr bgcolor='#" . $colors["graph_type_background"] . "'><td colspan='3' class='textHeaderDark'><strong>" . _("Graph Template:") . "</strong> " . $item["template_name"] . "</td></tr>");
 					}
 				}
 			}
@@ -498,7 +498,7 @@ function grow_right_pane_tree($tree_id, $leaf_id, $host_group_data) {
 
 			while (list($data_query_id, $graph_list) = each($index_list)) {
 				if (empty($data_query_id)) {
-					print "<tr bgcolor='#" . $colors["graph_type_background"] . "'><td colspan='3' class='textHeaderDark'><strong>(Non Indexed)</strong></td></tr>";
+					print "<tr bgcolor='#" . $colors["graph_type_background"] . "'><td colspan='3' class='textHeaderDark'><strong>" . _("(Non Indexed)") . "</strong></td></tr>";
 
 					$index_graph_list = array();
 
@@ -518,7 +518,7 @@ function grow_right_pane_tree($tree_id, $leaf_id, $host_group_data) {
 
 					/* re-key the results on data query index */
 					if (sizeof($graph_list) > 0) {
-						print "<tr bgcolor='#" . $colors["graph_type_background"] . "'><td colspan='3' class='textHeaderDark'><strong>Data Query:</strong> " . db_fetch_cell("select name from snmp_query where id = $data_query_id") . "</td></tr>";
+						print "<tr bgcolor='#" . $colors["graph_type_background"] . "'><td colspan='3' class='textHeaderDark'><strong>" . _("Data Query:") . "</strong> " . db_fetch_cell("select name from snmp_query where id = $data_query_id") . "</td></tr>";
 					}
 
 					/* using the sorted data as they key; grab each snmp index from the master list */

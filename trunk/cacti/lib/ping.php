@@ -92,7 +92,7 @@ class Net_Ping
 		if ($this->host["hostname"]) {
 			/* initialize variables */
 			$this->ping_status = "down";
-			$this->ping_response = "ICMP Ping timed out";
+			$this->ping_response = _("ICMP Ping timed out");
 			$this->packet_loss = 1;
 
 			/* initialize the socket */
@@ -111,7 +111,7 @@ class Net_Ping
 			if (@socket_connect($this->socket, $this->host["hostname"], NULL)) {
 				// do nothing
 			} else {
-				$this->ping_response = "Cannot connect to host";
+				$this->ping_response = _("Cannot connect to host");
 				$this->ping_status   = "down";
 				return false;
 			}
@@ -128,10 +128,10 @@ class Net_Ping
 
 					if ($this->packet_loss == 1) {
 						$this->ping_status = "down";
-						$this->ping_response = "ICMP ping Timed out";
+						$this->ping_response = _("ICMP ping Timed out");
 						return false;
 					} else {
-						$this->ping_response = "Host is alive";
+						$this->ping_response = _("Host is alive");
 						$this->ping_status = $total_time / $success_count;
 						return true;
 					}
@@ -156,7 +156,7 @@ class Net_Ping
 			$this->close_socket();
 		} else {
 			$this->ping_status = "down";
-			$this->ping_response = "Destination address not specified";
+			$this->ping_response = _("Destination address not specified");
 			return false;
 		}
 	}
@@ -164,7 +164,7 @@ class Net_Ping
 	function ping_snmp() {
 		/* initialize variables */
 		$this->snmp_status = "down";
-		$this->snmp_response = "Host did not respond to SNMP";
+		$this->snmp_response = _("Host did not respond to SNMP");
 		$this->packet_loss = 1;
 		$output = "";
 
@@ -180,10 +180,10 @@ class Net_Ping
 				$this->packet_loss = 1 - ($success_count / $retry_count);
 				if ($this->packet_loss == 1) {
 					$this->snmp_status   = "down";
-					$this->snmp_response = "Host did not respond to SNMP";
+					$this->snmp_response = _("Host did not respond to SNMP");
 					return false;
 				} else {
-					$this->snmp_response = "Host responded to SNMP";
+					$this->snmp_response = _("Host responded to SNMP");
 					$this->snmp_status = $total_time / $success_count;
 					return true;
 				}
@@ -241,7 +241,7 @@ class Net_Ping
 					// do nothing
 			} else {
 				$this->ping_status = "down";
-				$this->ping_response = "Cannot connect to host";
+				$this->ping_response = _("Cannot connect to host");
 				return false;
 			}
 
@@ -256,11 +256,11 @@ class Net_Ping
 					$this->packet_loss = 1 - ($success_count / $retry_count);
 
 					if ($this->packet_loss == 1) {
-						$this->ping_response = "UDP ping timed out";
+						$this->ping_response = _("UDP ping timed out");
 						$this->ping_status   = "down";
 						return false;
 					} else {
-						$this->ping_response = "Host is alive";
+						$this->ping_response = _("Host is alive");
 						$this->ping_status = $total_time / $success_count;
 						return true;
 					}
@@ -288,7 +288,7 @@ class Net_Ping
 			}
 			$this->close_socket();
 		} else {
-			$this->ping_response = "Destination address not specified";
+			$this->ping_response = _("Destination address not specified");
 			$this->ping_status   = "down";
 			return false;
 		}
@@ -301,9 +301,9 @@ class Net_Ping
 		$ping_snmp = true;
 
 		$this->ping_status   = "down";
-		$this->ping_response = "Ping not performed due to setting.";
+		$this->ping_response = _("Ping not performed due to setting.");
 		$this->snmp_status   = "down";
-		$this->snmp_response = "SNMP not performed due to setting or ping result.";
+		$this->snmp_response = _("SNMP not performed due to setting or ping result.");
 
 		/* do parameter checking before call */
 		/* apply defaults if parameters are spooky */

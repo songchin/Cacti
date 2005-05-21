@@ -302,8 +302,8 @@ function form_text_box_sv($field_name, $values_array, $url_moveup, $url_movedown
 					<?php
 					if (sizeof($values_array) > 1) {
 						?>
-						<a href="<?php echo str_replace("|id|", $id, $url_movedown);?>"><img src="<?php echo html_get_theme_images_path('move_down.gif');?>" border="0" alt="Move Down"></a>
-						<a href="<?php echo str_replace("|id|", $id, $url_moveup);?>"><img src="<?php echo html_get_theme_images_path('move_up.gif');?>" border="0" alt="Move Up"></a>
+						<a href="<?php echo str_replace("|id|", $id, $url_movedown);?>"><img src="<?php echo html_get_theme_images_path('move_down.gif');?>" border="0" alt="<?php echo _('Move Down');?>"></a>
+						<a href="<?php echo str_replace("|id|", $id, $url_moveup);?>"><img src="<?php echo html_get_theme_images_path('move_up.gif');?>" border="0" alt="<?php echo _('Move Up');?>"></a>
 						<?php
 					}
 					?>
@@ -312,7 +312,7 @@ function form_text_box_sv($field_name, $values_array, $url_moveup, $url_movedown
 					<?php
 					if (sizeof($values_array) > 1) {
 						?>
-						<a href="<?php echo str_replace("|id|", $id, $url_delete);?>"><img src="<?php echo html_get_theme_images_path('delete_icon.gif');?>" width="10" height="10" border="0" alt="Delete"></a>
+						<a href="<?php echo str_replace("|id|", $id, $url_delete);?>"><img src="<?php echo html_get_theme_images_path('delete_icon.gif');?>" width="10" height="10" border="0" alt="<?php echo _('Delete');?>"></a>
 						<?php
 					}
 					?>
@@ -565,7 +565,7 @@ function form_message($title_text, $body_text, $ok_url) { ?>
 						<?php	form_area($body_text); ?>
 						<tr>
 							<td bgcolor="#E1E1E1">
-								<a href="<?php print $ok_url;?>"><img src="<?php print html_get_theme_images_path('button_ok.gif');?>" border="0" alt="Ok" align="absmiddle"></a>
+								<a href="<?php print $ok_url;?>"><img src="<?php print html_get_theme_images_path('button_ok.gif');?>" border="0" alt="<?php echo _('Ok');?>" align="absmiddle"></a>
 							</td>
 						</tr>
 					</table>
@@ -616,7 +616,7 @@ function form_save_button($cancel_url, $force_type = "") {
 		<tr>
 			 <td bgcolor="#<?php print $colors['buttonbar_background'];?>" align="right">
 				<input type='hidden' name='action' value='save'>
-				<a href='<?php print $cancel_url;?>'><img src='<?php print html_get_theme_images_path("button_cancel2.gif");?>' alt='Cancel' align='absmiddle' border='0'></a>
+				<a href='<?php print $cancel_url;?>'><img src='<?php print html_get_theme_images_path("button_cancel2.gif");?>' alt='<?php echo _("Cancel");?>' align='absmiddle' border='0'></a>
 				<input type='image' src='<?php print html_get_theme_images_path($img);?>' alt='<?php print $alt;?>' align='absmiddle'>
 			</td>
 		</tr>

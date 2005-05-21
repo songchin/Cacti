@@ -42,7 +42,7 @@ function html_start_box($title, $width, $background_color, $cell_padding, $align
 							<table width="100%" cellpadding="0" cellspacing="0">
 								<tr>
 									<td bgcolor="#<?php print $background_color;?>" class="textHeaderDark"><?php print $title;?></td>
-										<?php if ($add_text != "") {?><td class="textHeaderDark" align="right" bgcolor="#<?php print $colors['header_background'];?>"><strong><a class="linkOverDark" href="<?php print $add_text;?>">Add</a>&nbsp;</strong></td><?php }?>
+										<?php if ($add_text != "") {?><td class="textHeaderDark" align="right" bgcolor="#<?php print $colors['header_background'];?>"><strong><a class="linkOverDark" href="<?php print $add_text;?>"><?php echo _("Add");?></a>&nbsp;</strong></td><?php }?>
 								</tr>
 							</table>
 						</td>
@@ -107,7 +107,7 @@ function html_graph_area(&$graph_array, $no_graphs_message = "", $extra_url_args
 								<a href='graph.php?graph_id=<?php print $graph["graph_id"];?>&rra_id=all'><img src='graph_image.php?graph_id=<?php print $graph["graph_id"];?>&rra_id=0<?php print (($extra_url_args == "") ? "" : "&$extra_url_args");?>' border='0' alt='<?php print $graph["title_cache"];?>'></a>
 							</td>
 							<td valign='top' style='padding: 3px;' class='noprint'>
-								<a href='graph.php?action=zoom&graph_id=<?php print $graph["graph_id"];?>&rra_id=0&<?php print $extra_url_args;?>'><img src='<?php print html_get_theme_images_path("graph_zoom.gif");?>' border='0' alt='Zoom Graph' title='Zoom Graph' style='padding: 3px;'></a><br>
+								<a href='graph.php?action=zoom&graph_id=<?php print $graph["graph_id"];?>&rra_id=0&<?php print $extra_url_args;?>'><img src='<?php print html_get_theme_images_path("graph_zoom.gif");?>' border='0' alt='<?php echo _("Zoom Graph");?>' title='<?php echo _("Zoom Graph");?>' style='padding: 3px;'></a><br>
 							</td>
 						</tr>
 					</table>
@@ -152,7 +152,7 @@ function html_graph_thumbnail_area(&$graph_array, $no_graphs_message = "", $extr
 							<a href='graph.php?rra_id=all&graph_id=<?php print $graph["graph_id"];?>'><img src='graph_image.php?graph_id=<?php print $graph["graph_id"];?>&rra_id=0&graph_height=<?php print read_graph_config_option("default_height");?>&graph_width=<?php print read_graph_config_option("default_width");?>&graph_nolegend=true<?php print (($extra_url_args == "") ? "" : "&$extra_url_args");?>' border='0' alt='<?php print $graph["title_cache"];?>'></a>
 						</td>
 						<td valign='top' style='padding: 3px;'>
-							<a href='graph.php?action=zoom&graph_id=<?php print $graph["graph_id"];?>&rra_id=0&<?php print $extra_url_args;?>'><img src='<?php print html_get_theme_images_path("graph_zoom.gif");?>' border='0' alt='Zoom Graph' title='Zoom Graph' style='padding: 3px;'></a><br>
+							<a href='graph.php?action=zoom&graph_id=<?php print $graph["graph_id"];?>&rra_id=0&<?php print $extra_url_args;?>'><img src='<?php print html_get_theme_images_path("graph_zoom.gif");?>' border='0' alt='<?php echo _("Zoom Graph");?>' title='<?php echo _("Zoom Graph");?>' style='padding: 3px;'></a><br>
 						</td>
 					</tr>
 				</table>
@@ -198,7 +198,7 @@ function html_nav_bar($background_color, $colspan, $current_page, $rows_per_page
 						Showing Rows <?php print (($rows_per_page*($current_page-1))+1);?> to <?php print ((($total_rows < $rows_per_page) || ($total_rows < ($rows_per_page*$current_page))) ? $total_rows : ($rows_per_page*$current_page));?> of <?php print $total_rows;?>
 					</td>
 					<td align='right' class='textHeaderDark'>
-						<strong><?php if (($current_page * $rows_per_page) < $total_rows) { print "<a class='linkOverDark' href='" . str_replace("<PAGE>", ($current_page+1), $nav_url) . "'>"; } print "Next"; if (($current_page * $rows_per_page) < $total_rows) { print "</a>"; } ?> &gt;&gt;</strong>
+						<strong><?php if (($current_page * $rows_per_page) < $total_rows) { print "<a class='linkOverDark' href='" . str_replace("<PAGE>", ($current_page+1), $nav_url) . "'>"; } print _("Next"); if (($current_page * $rows_per_page) < $total_rows) { print "</a>"; } ?> &gt;&gt;</strong>
 					</td>
 				</tr>
 			</table>
@@ -238,7 +238,7 @@ function html_header_checkbox($header_items, $form_action = "") {
 		print "<td class='textSubHeaderDark'>" . $header_items[$i] . "</td>\n";
 	}
 
-	print "<td width='1%' align='right' bgcolor='#819bc0' style='" . get_checkbox_style() . "'><input type='checkbox' style='margin: 0px;' name='all' title='Select All' onClick='SelectAll(\"chk_\",this.checked)'></td>\n<form name='chk' method='post' action='$form_action'>\n";
+	print "<td width='1%' align='right' bgcolor='#819bc0' style='" . get_checkbox_style() . "'><input type='checkbox' style='margin: 0px;' name='all' title='" . _("Select All") . "' onClick='SelectAll(\"chk_\",this.checked)'></td>\n<form name='chk' method='post' action='$form_action'>\n";
 	print "</tr>\n";
 }
 
@@ -519,25 +519,25 @@ function draw_navigation_text() {
 
 	$nav = array(
 		"graph_view.php:" => array(
-			"title" => "Graphs",
+			"title" => _("Graphs"),
 			"mapping" => "",
 			"url" => "graph_view.php",
 			"level" => "0"
 			),
 		"graph_view.php:tree" => array(
-			"title" => "Tree Mode",
+			"title" => _("Tree Mode"),
 			"mapping" => "graph_view.php:",
 			"url" => "graph_view.php?action=tree",
 			"level" => "1"
 			),
 		"graph_view.php:list" => array(
-			"title" => "List Mode",
+			"title" => _("List Mode"),
 			"mapping" => "graph_view.php:",
 			"url" => "graph_view.php?action=list",
 			"level" => "1"
 			),
 		"graph_view.php:preview" => array(
-			"title" => "Preview Mode",
+			"title" => _("Preview Mode"),
 			"mapping" => "graph_view.php:",
 			"url" => "graph_view.php?action=preview",
 			"level" => "1"
@@ -553,439 +553,439 @@ function draw_navigation_text() {
 			"level" => "2"
 			),
 		"graph.php:zoom" => array(
-			"title" => "Zoom",
+			"title" => _("Zoom"),
 			"mapping" => "graph_view.php:,?,graph.php:view",
 			"level" => "3"
 			),
 		"graph.php:properties" => array(
-			"title" => "Properties",
+			"title" => _("Properties"),
 			"mapping" => "graph_view.php:,?,graph.php:view",
 			"level" => "3"
 			),
 		"graph_settings.php:" => array(
-			"title" => "Settings",
+			"title" => _("Settings"),
 			"mapping" => "graph_view.php:",
 			"level" => "1"
 			),
 		"index.php:" => array(
-			"title" => "Console",
+			"title" => _("Console"),
 			"mapping" => "",
 			"url" => "index.php",
 			"level" => "0"
 			),
 		"graphs.php:" => array(
-			"title" => "Graph Management",
+			"title" => _("Graph Management"),
 			"mapping" => "index.php:",
 			"level" => "1"
 			),
 		"graphs.php:edit" => array(
-			"title" => "(Edit)",
+			"title" => _("(Edit)"),
 			"mapping" => "index.php:,graphs.php:",
 			"level" => "2"
 			),
 		"graphs.php:actions" => array(
-			"title" => "Actions",
+			"title" => _("Actions"),
 			"mapping" => "index.php:,graphs.php:",
 			"level" => "2"
 			),
 		"graphs_items.php:edit" => array(
-			"title" => "Graph Items",
+			"title" => _("Graph Items"),
 			"mapping" => "index.php:,graphs.php:,graphs.php:edit",
 			"level" => "3"
 			),
 		"graphs_new.php:" => array(
-			"title" => "Create New Graphs",
+			"title" => _("Create New Graphs"),
 			"mapping" => "index.php:",
 			"level" => "1"
 			),
 		"graphs_new.php:save" => array(
-			"title" => "Create Graphs from Data Query",
+			"title" => _("Create Graphs from Data Query"),
 			"mapping" => "index.php:,graphs_new.php:",
 			"level" => "2"
 			),
 		"tree.php:" => array(
-			"title" => "Graph Trees",
+			"title" => _("Graph Trees"),
 			"mapping" => "index.php:",
 			"level" => "1"
 			),
 		"tree.php:edit" => array(
-			"title" => "(Edit)",
+			"title" => _("(Edit)"),
 			"mapping" => "index.php:,tree.php:",
 			"level" => "2"
 			),
 		"tree.php:remove" => array(
-			"title" => "(Remove)",
+			"title" => _("(Remove)"),
 			"mapping" => "index.php:,tree.php:",
 			"level" => "2"
 			),
 		"tree.php:item_edit" => array(
-			"title" => "Graph Tree Items",
+			"title" => _("Graph Tree Items"),
 			"mapping" => "index.php:,tree.php:,tree.php:edit",
 			"level" => "3"
 			),
 		"tree.php:item_remove" => array(
-			"title" => "(Remove Item)",
+			"title" => _("(Remove Item)"),
 			"mapping" => "index.php:,tree.php:,tree.php:edit",
 			"level" => "3"
 			),
 		"graph_templates.php:" => array(
-			"title" => "Graph Templates",
+			"title" => _("Graph Templates"),
 			"mapping" => "index.php:",
 			"level" => "1"
 			),
 		"graph_templates.php:sv_add" => array(
-			"title" => "(Edit)",
+			"title" => _("(Edit)"),
 			"mapping" => "index.php:,graph_templates.php:",
 			"level" => "2"
 			),
 		"graph_templates.php:edit" => array(
-			"title" => "(Edit)",
+			"title" => _("(Edit)"),
 			"mapping" => "index.php:,graph_templates.php:",
 			"level" => "2"
 			),
 		"graph_templates.php:actions" => array(
-			"title" => "Actions",
+			"title" => _("Actions"),
 			"mapping" => "index.php:,graph_templates.php:",
 			"level" => "2"
 			),
 		"graph_templates_items.php:edit" => array(
-			"title" => "Graph Template Items",
+			"title" => _("Graph Template Items"),
 			"mapping" => "index.php:,graph_templates.php:,graph_templates.php:edit",
 			"level" => "3"
 			),
 		"graph_templates_inputs.php:edit" => array(
-			"title" => "Graph Item Inputs",
+			"title" => _("Graph Item Inputs"),
 			"mapping" => "index.php:,graph_templates.php:,graph_templates.php:edit",
 			"level" => "3"
 			),
 		"graph_templates_inputs.php:remove" => array(
-			"title" => "(Remove)",
+			"title" => _("(Remove)"),
 			"mapping" => "index.php:,graph_templates.php:,graph_templates.php:edit",
 			"level" => "3"
 			),
 		"host_templates.php:" => array(
-			"title" => "Host Templates",
+			"title" => _("Host Templates"),
 			"mapping" => "index.php:",
 			"level" => "1"
 			),
 		"host_templates.php:edit" => array(
-			"title" => "(Edit)",
+			"title" => _("(Edit)"),
 			"mapping" => "index.php:,host_templates.php:",
 			"level" => "2"
 			),
 		"host_templates.php:actions" => array(
-			"title" => "Actions",
+			"title" => _("Actions"),
 			"mapping" => "index.php:,host_templates.php:",
 			"level" => "2"
 			),
 		"graph_templates.php:actions" => array(
-			"title" => "Actions",
+			"title" => _("Actions"),
 			"mapping" => "index.php:,graph_templates.php:",
 			"level" => "2"
 			),
 		"data_templates.php:" => array(
-			"title" => "Data Templates",
+			"title" => _("Data Templates"),
 			"mapping" => "index.php:",
 			"level" => "1"
 			),
 		"data_templates.php:edit" => array(
-			"title" => "(Edit)",
+			"title" => _("(Edit)"),
 			"mapping" => "index.php:,data_templates.php:",
 			"level" => "2"
 			),
 		"data_templates.php:sv_add" => array(
-			"title" => "(Edit)",
+			"title" => _("(Edit)"),
 			"mapping" => "index.php:,data_templates.php:",
 			"level" => "2"
 			),
 		"data_templates.php:item_add" => array(
-			"title" => "(Edit)",
+			"title" => _("(Edit)"),
 			"mapping" => "index.php:,data_templates.php:",
 			"level" => "2"
 			),
 		"data_templates.php:actions" => array(
-			"title" => "Actions",
+			"title" => _("Actions"),
 			"mapping" => "index.php:,data_templates.php:",
 			"level" => "2"
 			),
 		"data_sources.php:" => array(
-			"title" => "Data Sources",
+			"title" => _("Data Sources"),
 			"mapping" => "index.php:",
 			"level" => "1"
 			),
 		"data_sources.php:edit" => array(
-			"title" => "(Edit)",
+			"title" => _("(Edit)"),
 			"mapping" => "index.php:,data_sources.php:",
 			"level" => "2"
 			),
 		"data_sources.php:item_add" => array(
-			"title" => "(Edit)",
+			"title" => _("(Edit)"),
 			"mapping" => "index.php:,data_sources.php:",
 			"level" => "2"
 			),
 		"data_sources.php:actions" => array(
-			"title" => "Actions",
+			"title" => _("Actions"),
 			"mapping" => "index.php:,data_sources.php:",
 			"level" => "2"
 			),
 		"host.php:" => array(
-			"title" => "Devices",
+			"title" => _("Devices"),
 			"mapping" => "index.php:",
 			"level" => "1"
 			),
 		"host.php:edit" => array(
-			"title" => "(Edit)",
+			"title" => _("(Edit)"),
 			"mapping" => "index.php:,host.php:",
 			"level" => "2"
 			),
 		"host.php:actions" => array(
-			"title" => "Actions",
+			"title" => _("Actions"),
 			"mapping" => "index.php:,host.php:",
 			"level" => "2"
 			),
 		"rra.php:" => array(
-			"title" => "Round Robin Archives",
+			"title" => _("Round Robin Archives"),
 			"mapping" => "index.php:",
 			"level" => "1"
 			),
 		"rra.php:edit" => array(
-			"title" => "(Edit)",
+			"title" => _("(Edit)"),
 			"mapping" => "index.php:,rra.php:",
 			"level" => "2"
 			),
 		"rra.php:remove" => array(
-			"title" => "(Remove)",
+			"title" => _("(Remove)"),
 			"mapping" => "index.php:,rra.php:",
 			"level" => "2"
 			),
 		"data_input.php:" => array(
-			"title" => "Data Input Methods",
+			"title" => _("Data Input Methods"),
 			"mapping" => "index.php:",
 			"level" => "1"
 			),
 		"data_input.php:edit" => array(
-			"title" => "(Edit)",
+			"title" => _("(Edit)"),
 			"mapping" => "index.php:,data_input.php:",
 			"level" => "2"
 			),
 		"data_input.php:remove" => array(
-			"title" => "(Remove)",
+			"title" => _("(Remove)"),
 			"mapping" => "index.php:,data_input.php:",
 			"level" => "2"
 			),
 		"data_input.php:field_edit" => array(
-			"title" => "Data Input Fields",
+			"title" => _("Data Input Fields"),
 			"mapping" => "index.php:,data_input.php:,data_input.php:edit",
 			"level" => "3"
 			),
 		"data_input.php:field_remove" => array(
-			"title" => "(Remove Item)",
+			"title" => _("(Remove Item)"),
 			"mapping" => "index.php:,data_input.php:,data_input.php:edit",
 			"level" => "3"
 			),
 		"data_queries.php:" => array(
-			"title" => "Data Queries",
+			"title" => _("Data Queries"),
 			"mapping" => "index.php:",
 			"level" => "1"
 			),
 		"data_queries.php:edit" => array(
-			"title" => "(Edit)",
+			"title" => _("(Edit)"),
 			"mapping" => "index.php:,data_queries.php:",
 			"level" => "2"
 			),
 		"data_queries.php:remove" => array(
-			"title" => "(Remove)",
+			"title" => _("(Remove)"),
 			"mapping" => "index.php:,data_queries.php:",
 			"level" => "2"
 			),
 		"data_queries.php:item_edit" => array(
-			"title" => "Associated Graph Templates",
+			"title" => _("Associated Graph Templates"),
 			"mapping" => "index.php:,data_queries.php:,data_queries.php:edit",
 			"level" => "3"
 			),
 		"data_queries.php:item_remove" => array(
-			"title" => "(Remove Item)",
+			"title" => _("(Remove Item)"),
 			"mapping" => "index.php:,data_queries.php:,data_queries.php:edit",
 			"level" => "3"
 			),
 		"utilities.php:" => array(
-			"title" => "Utilities",
+			"title" => _("Utilities"),
 			"mapping" => "index.php:",
 			"level" => "1"
 			),
 		"utilities.php:view_poller_cache" => array(
-			"title" => "View Poller Cache",
+			"title" => _("View Poller Cache"),
 			"mapping" => "index.php:,utilities.php:",
 			"level" => "2"
 			),
 		"utilities.php:view_snmp_cache" => array(
-			"title" => "View SNMP Cache",
+			"title" => _("View SNMP Cache"),
 			"mapping" => "index.php:,utilities.php:",
 			"level" => "2"
 			),
 		"utilities.php:clear_poller_cache" => array(
-			"title" => "Clear Poller Cache",
+			"title" => _("Clear Poller Cache"),
 			"mapping" => "index.php:,utilities.php:",
 			"level" => "2"
 			),
 		"utilities.php:view_syslog" => array(
-			"title" => "View Cacti Syslog",
+			"title" => _("View Cacti Syslog"),
 			"mapping" => "index.php:,utilities.php:",
 			"level" => "2"
 			),
 		"utilities.php:clear_syslog" => array(
-			"title" => "Clear Cacti Syslog",
+			"title" => _("Clear Cacti Syslog"),
 			"mapping" => "index.php:,utilities.php:",
 			"level" => "2"
 			),
 		"settings.php:" => array(
-			"title" => "Cacti Settings",
+			"title" => _("Cacti Settings"),
 			"mapping" => "index.php:",
 			"level" => "1"
 			),
 		"user_admin.php:" => array(
-			"title" => "User Management",
+			"title" => _("User Management"),
 			"mapping" => "index.php:",
 			"level" => "1"
 			),
 		"user_admin.php:actions" => array(
-			"title" => "User Management",
+			"title" => _("User Management"),
 			"mapping" => "index.php:",
 			"level" => "2"
 			),
 		"user_admin.php:user_edit" => array(
-			"title" => "(Edit)",
+			"title" => _("(Edit)"),
 			"mapping" => "index.php:,user_admin.php:",
 			"level" => "2"
 			),
 		"user_admin.php:user_remove" => array(
-			"title" => "(Remove)",
+			"title" => _("(Remove)"),
 			"mapping" => "index.php:,user_admin.php:",
 			"level" => "2"
 			),
 		"user_admin.php:graph_perms_edit" => array(
-			"title" => "Edit (Graph Permissions)",
+			"title" => _("Edit (Graph Permissions)"),
 			"mapping" => "index.php:,user_admin.php:",
 			"level" => "2"
 			),
 		"user_admin.php:user_realms_edit" => array(
-			"title" => "Edit (Realm Permissions)",
+			"title" => _("Edit (Realm Permissions)"),
 			"mapping" => "index.php:,user_admin.php:",
 			"level" => "2"
 			),
 		"user_admin.php:graph_settings_edit" => array(
-			"title" => "Edit (Graph Settings)",
+			"title" => _("Edit (Graph Settings)"),
 			"mapping" => "index.php:,user_admin.php:",
 			"level" => "2"
 			),
 		"user_admin.php:user_settings_edit" => array(
-			"title" => "Edit (User Settings)",
+			"title" => _("Edit (User Settings)"),
 			"mapping" => "index.php:,user_admin.php:",
 			"level" => "2"
 			),
 		"about.php:" => array(
-			"title" => "About Cacti",
+			"title" => _("About Cacti"),
 			"mapping" => "index.php:",
 			"level" => "1"
 			),
 		"templates_export.php:" => array(
-			"title" => "Export Templates",
+			"title" => _("Export Templates"),
 			"mapping" => "index.php:",
 			"level" => "1"
 			),
 		"templates_export.php:save" => array(
-			"title" => "Export Results",
+			"title" => _("Export Results"),
 			"mapping" => "index.php:,templates_export.php:",
 			"level" => "2"
 			),
 		"templates_import.php:" => array(
-			"title" => "Import Templates",
+			"title" => _("Import Templates"),
 			"mapping" => "index.php:",
 			"level" => "1"
 			),
 		"data_pollers.php:" => array(
-			"title" => "Pollers",
+			"title" => _("Pollers"),
 			"mapping" => "index.php:",
 			"level" => "1"
 			),
 		"data_pollers.php:edit" => array(
-			"title" => "(Edit)",
+			"title" => _("(Edit)"),
 			"mapping" => "index.php:,data_pollers.php:",
 			"level" => "2"
 			),
 		"data_pollers.php:actions" => array(
-			"title" => "Actions",
+			"title" => _("Actions"),
 			"mapping" => "index.php:,data_pollers.php:",
 			"level" => "2"
 			),
 		"user_changepassword.php:" => array(
-			"title" => "Change Password",
+			"title" => _("Change Password"),
 			"mapping" => "index.php:",
 			"level" => "1"
 			),
 		"user_changepassword.php:save" => array(
-			"title" => "Change Password",
+			"title" => _("Change Password"),
 			"mapping" => "index.php:",
 			"level" => "1"
 			),
 		"settings_wizard.php:" => array(
-			"title" => "Settings Wizard",
+			"title" => _("Settings Wizard"),
 			"mapping" => "index.php:",
 			"level" => "1"
 			),
 		"user_settings.php:" => array(
-			"title" => "User Settings",
+			"title" => _("User Settings"),
 			"mapping" => "index.php:",
 			"level" => "1"
 			),
 		"presets.php:" => array(
-			"title" => "Data Presets",
+			"title" => _("Data Presets"),
 			"mapping" => "index.php:",
 			"url" => "presets.php",
 			"level" => "1"
 			),
 		"presets.php:view_cdef" => array(
-			"title" => "CDEFs",
+			"title" => _("CDEFs"),
 			"mapping" => "index.php:,presets.php:",
 			"level" => "2"
 			),
 		"presets.php:view_color" => array(
-			"title" => "Colors",
+			"title" => _("Colors"),
 			"mapping" => "index.php:,presets.php:",
 			"level" => "2"
 			),
 		"presets.php:view_gprint" => array(
-			"title" => "GPRINTs",
+			"title" => _("GPRINTs"),
 			"mapping" => "index.php:,presets.php:",
 			"level" => "2"
 			),
 		"presets_cdef.php:edit" => array(
-			"title" => "(Edit)",
+			"title" => _("(Edit)"),
 			"mapping" => "index.php:,presets.php:,presets.php:view_cdef",
 			"level" => "3"
 			),
 		"presets_cdef.php:remove" => array(
-			"title" => "(Remove)",
+			"title" => _("(Remove)"),
 			"mapping" => "index.php:,presets.php:,presets.php:view_cdef",
 			"level" => "3"
 			),
 		"presets_cdef.php:item_edit" => array(
-			"title" => "CDEF Items",
+			"title" => _("CDEF Items"),
 			"mapping" => "index.php:,presets.php:,presets.php:view_cdef,presets_cdef.php:edit",
 			"level" => "4"
 			),
 		"presets_color.php:edit" => array(
-			"title" => "(Edit)",
+			"title" => _("(Edit)"),
 			"mapping" => "index.php:,presets.php:,presets.php:view_color",
 			"level" => "3"
 			),
 		"presets_gprint.php:edit" => array(
-			"title" => "(Edit)",
+			"title" => _("(Edit)"),
 			"mapping" => "index.php:,presets.php:,presets.php:view_gprint",
 			"level" => "3"
 			),
 		"presets_gprint.php:remove" => array(
-			"title" => "(Remove)",
+			"title" => _("(Remove)"),
 			"mapping" => "index.php:,presets.php:,presets.php:view_gprint",
 			"level" => "3"
 			)

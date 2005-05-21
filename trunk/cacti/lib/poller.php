@@ -181,7 +181,7 @@ function exec_poll_php($command, $using_proc_function, $pipes, $proc_fd) {
 			/* get result from server */
 			$output = fgets($pipes[1], 1024);
 
-			if (substr_count($output, "ERROR") > 0) {
+			if (substr_count($output, _("ERROR")) > 0) {
 				$output = "U";
 			}
 		}

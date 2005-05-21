@@ -46,8 +46,8 @@ function db_connect_real($host,$user,$pass,$db_name,$db_type, $retries = 20) {
 		usleep(100000);
 	}
 
-	api_syslog_cacti_log("Cannot connect to MySQL server on '$host'. Please make sure you have specified a valid MySQL database name in 'include/config.php'.", SEV_ERROR, 0, 0, 0, false, FACIL_WEBUI);
-	die("<br>Cannot connect to MySQL server on '$host'. Please make sure you have specified a valid MySQL database name in 'include/config.php'.");
+	api_syslog_cacti_log(sprintf(_("Cannot connect to MySQL server on '%s'. Please make sure you have specified a valid MySQL database name in 'include/config.php'."),$host), SEV_ERROR, 0, 0, 0, false, FACIL_WEBUI);
+	die("<br>" . sprintf(_("Cannot connect to MySQL server on '%s'. Please make sure you have specified a valid MySQL database name in 'include/config.php'."), $host));
 
 	return(0);
 }

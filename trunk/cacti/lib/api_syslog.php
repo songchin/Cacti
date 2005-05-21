@@ -54,7 +54,7 @@ function api_syslog_cacti_log($message, $severity = SEV_INFO, $poller_id = 1, $h
 			$user_id = $_SESSION["sess_user_id"];
 			$username = $user_info["username"];
 		}else{
-			$username = "SYSTEM";
+			$username = _("SYSTEM");
 		}
 	}
 
@@ -62,7 +62,7 @@ function api_syslog_cacti_log($message, $severity = SEV_INFO, $poller_id = 1, $h
 	if (isset($_SERVER["REMOTE_ADDR"])) {
 		$source = $_SERVER["REMOTE_ADDR"];
 	}else {
-		$source = "SYSTEM";
+		$source = _("SYSTEM");
 	}
 
 	/* Log to Cacti Syslog */
@@ -82,9 +82,9 @@ function api_syslog_cacti_log($message, $severity = SEV_INFO, $poller_id = 1, $h
 			define_syslog_variables();
 
 			if ($config["cacti_server_os"] == "win32")
-				openlog("Cacti Logging", LOG_NDELAY | LOG_PID, LOG_USER);
+				openlog(_("Cacti Logging"), LOG_NDELAY | LOG_PID, LOG_USER);
 			else
-				openlog("Cacti Logging", LOG_NDELAY | LOG_PID, LOG_SYSLOG);
+				openlog(_("Cacti Logging"), LOG_NDELAY | LOG_PID, LOG_SYSLOG);
 
 			if (($severity <= SEV_ERROR) && (read_config_option("log_perror"))) {
 				syslog(LOG_CRIT, $textmessage);
@@ -147,31 +147,31 @@ function api_syslog_get_facility($facility) {
 function api_syslog_get_severity($severity) {
 	switch ($severity) {
 		case SEV_EMERGENCY:
-			return "EMERGENCY";
+			return _("EMERGENCY");
 			break;
 		case SEV_ALERT:
-			return "ALERT";
+			return _("ALERT");
 			break;
 		case SEV_CRITICAL:
-			return "CRITICAL";
+			return _("CRITICAL");
 			break;
 		case SEV_ERROR:
-			return "ERROR";
+			return _("ERROR");
 			break;
 		case SEV_WARNING:
-			return "WARNING";
+			return _("WARNING");
 			break;
 		case SEV_NOTICE:
-			return "NOTICE";
+			return _("NOTICE");
 			break;
 		case SEV_INFO:
-			return "INFO";
+			return _("INFO");
 			break;
 		case SEV_DEBUG:
-			return "DEBUG";
+			return _("DEBUG");
 			break;
 		default:
-			return "UNKNOWN";
+			return _("UNKNOWN");
 			break;
 	}
 }
@@ -208,7 +208,7 @@ function api_syslog_manage_cacti_log($print_data_to_stdout) {
 			break;
 		case SYSLOG_MNG_STOPLOG:
 			if (read_config_option("syslog_status") != "suspended") {
-				api_syslog_cacti_log("The Cacti log is filled and can not receive additional records", SEV_CRITICAL, 0, 0, 0, $print_data_to_stdout, FACIL_POLLER);
+				api_syslog_cacti_log(_("The Cacti log is filled and can not receive additional records"), SEV_CRITICAL, 0, 0, 0, $print_data_to_stdout, FACIL_POLLER);
 				db_execute("REPLACE INTO settings (name,value) VALUES('syslog_status','suspended')");
 			}
 
