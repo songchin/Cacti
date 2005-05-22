@@ -216,7 +216,7 @@ function draw_graph_item_editor($graph_X_id, $form_type, $disable_controls) {
 						<?php } ?>
 					</td>
 					<td style="<?php echo get_checkbox_style();?> border-bottom: 1px solid #b5b5b5;" width="1%" align="right">
-						<input type='checkbox' style='margin: 0px;' onClick="graph_item_row_selection(<?php echo $row_counter;?>)" name='row_chk_<?php echo $row_counter;?>' id='row_chk_<?php echo $row_counter;?>' title="<?php echo _('Row #' . $row_counter;?>">
+						<input type='checkbox' style='margin: 0px;' onClick="graph_item_row_selection(<?php echo $row_counter;?>)" name='row_chk_<?php echo $row_counter;?>' id='row_chk_<?php echo $row_counter;?>' title="<?php echo _('Row #') . $row_counter;?>">
 					</td>
 				</tr>
 				<?php

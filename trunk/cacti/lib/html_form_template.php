@@ -244,7 +244,7 @@ function draw_nontemplated_fields_data_source_item($data_template_id, &$values_a
 			}
 
 			if ($data_template_item["t_rrd_maximum"] == "1") {
-				$num_draw_item_fields = template_form_header_precheck($num_draw_item_fields, "<strong>" . _("Data Source Item" . "</strong> [" . $item["data_source_name"] . "]", ($display_template_name == true ? $data_template_name : ""));
+				$num_draw_item_fields = template_form_header_precheck($num_draw_item_fields, "<strong>" . _("Data Source Item") . "</strong> [" . $item["data_source_name"] . "]", ($display_template_name == true ? $data_template_name : ""));
 				_data_source_item_field__rrd_maximum(str_replace("|field|", "rrd_maximum", $field_name), false, $item["rrd_maximum"], $field_id = 0);
 			}
 
