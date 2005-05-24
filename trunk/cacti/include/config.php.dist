@@ -125,6 +125,7 @@ $lang2locale = array(
 
 $locale = $lang2locale[$cacti_lang];
 setlocale(LC_ALL, $locale);
+putenv("LC_ALL=" . $locale);  
 
 /* determine whether or not we need to emulate gettext */
 if (!function_exists("_")) {
