@@ -265,7 +265,7 @@ function auth_display_custom_error_message($message) {
 <head>
 	<link rel='shortcut icon' href='<?php print html_get_theme_images_path("favicon.ico");?>' type='image/x-icon'>
 	<link href='<?php print html_get_theme_images_path("favicon.ico");?>' rel='image/x-icon'>
-    <meta http-equiv='Content-Type' content='text/html; charset=<?php echo _( "screen charset");?>'>
+    <meta http-equiv='Content-Type' content='text/html; charset=<?php echo _("screen charset");?>'>
 	<title><?php echo _("Login to Cacti");?></title>
 	<STYLE TYPE="text/css">
 	<!--

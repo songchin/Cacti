@@ -120,19 +120,20 @@ error_reporting(E_ALL);
 /* cacti language support */
 $lang2locale = array(
  "en"=>"us_EN.UTF-8",
- "ja"=>"ja_JP.UTF-8"
+ "ja"=>"ja_JP.UTF-8",
+ "fr"=>"fr_FR.UTF-8"
 );
 
 $locale = $lang2locale[$cacti_lang];
 setlocale(LC_ALL, $locale);
-putenv("LC_ALL=" . $locale);  
+putenv("LC_ALL=" . $locale);
 
 /* determine whether or not we need to emulate gettext */
 if (!function_exists("_")) {
 	include($config["include_path"] . "/gettext/streams.php");
 	include($config["include_path"] . "/gettext/gettext.php");
 
-	$locale_path = $config["base_path"] . "/locales/" . $cacti_lang . "/" . "cacti.mo";
+	$locale_path = $config["base_path"] . "/locales/" . $cacti_lang . "/LC_MESSAGES" . "cacti.mo";
 	if ((!file_exists($locale_path)) && ($cacti_lang != "en")) {
 		die("Cacti language locale file not found.  Please locate your language file and then you can continue.");
 	}
@@ -167,6 +168,7 @@ if (!function_exists("_")) {
 } else {
 	bindtextdomain("cacti", $config["base_path"] . "/locales");
 	textdomain("cacti");
+	bind_textdomain_codeset ("cactid", "UTF-8");
 }
 
 /* includes for database operation */
