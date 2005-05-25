@@ -35,6 +35,7 @@ include_once("./include/data_source/data_source_form.php");
 include_once("./lib/template.php");
 include_once("./lib/html_form_template.php");
 include_once("./lib/rrd.php");
+include_once("./lib/poller.php");
 
 define("MAX_DISPLAY_PAGES", 21);
 
@@ -43,7 +44,9 @@ $ds_actions = array(
 	2 => _("Change Data Template"),
 	3 => _("Change Host"),
 	4 => _("Duplicate"),
-	5 => _("Convert to Data Template")
+	5 => _("Convert to Data Template"),
+	6 => _("Enable"),
+	7 => _("Disable")
 	);
 
 /* set default action */
@@ -210,6 +213,14 @@ function form_actions() {
 			for ($i=0;($i<count($selected_items));$i++) {
 				data_source_to_data_template($selected_items[$i], $_POST["title_format"]);
 			}
+		}elseif ($_POST["drp_action"] == "6") { /* data source enable */
+			for ($i=0;($i<count($selected_items));$i++) {
+				api_data_source_enable($selected_items[$i]);
+			}
+		}elseif ($_POST["drp_action"] == "7") { /* data source disable */
+			for ($i=0;($i<count($selected_items));$i++) {
+				api_data_source_disable($selected_items[$i]);
+			}
 		}
 
 		header("Location: data_sources.php");
@@ -309,6 +320,22 @@ function form_actions() {
 					You can optionally change the title format for the new data templates.") . "</p>
 					<p>$ds_list</p>
 					<p><strong>" . _("Title Format:") . "</strong><br>"; form_text_box("title_format", "<ds_title> " . _("Template"), "", "255", "30", "text"); print "</p>
+				</td>
+			</tr>\n
+			";
+	}elseif ($_POST["drp_action"] == "6") { /* data source enable */
+		print "	<tr>
+				<td class='textArea' bgcolor='#" . $colors["form_alternate1"]. "'>
+					<p>When you click yes, the following data sources will be enabled.</p>
+					<p>$ds_list</p>
+				</td>
+			</tr>\n
+			";
+	}elseif ($_POST["drp_action"] == "7") { /* data source disable */
+		print "	<tr>
+				<td class='textArea' bgcolor='#" . $colors["form_alternate1"]. "'>
+					<p>When you click yes, the following data sources will be disabled.</p>
+					<p>$ds_list</p>
 				</td>
 			</tr>\n
 			";

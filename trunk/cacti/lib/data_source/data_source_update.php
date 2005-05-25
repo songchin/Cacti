@@ -99,6 +99,16 @@ function api_data_source_remove($data_source_id) {
 	db_execute("delete from data_source where id = $data_source_id");
 }
 
+function api_data_source_enable($data_source_id) {
+    db_execute("UPDATE data_source SET active=1 WHERE id=$data_source_id");
+	update_poller_cache($data_source_id, false);
+}
+
+function api_data_source_disable($data_source_id) {
+	db_execute("DELETE FROM poller_item WHERE local_data_id=$data_source_id");
+	db_execute("UPDATE data_source SET active='' WHERE id=$data_source_id");
+}
+
 function api_data_source_item_save($id, $data_source_id, $rrd_maximum, $rrd_minimum, $rrd_heartbeat, $data_source_type,
 	$data_source_name, $field_input_value, $data_source_item_field_name_format = "dsi||field|||id|") {
 	include_once(CACTI_BASE_PATH . "/include/data_source/data_source_constants.php");

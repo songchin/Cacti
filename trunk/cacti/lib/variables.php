@@ -54,29 +54,33 @@ function substitute_path_variables($path) {
    @arg $host_id - (int) the host ID to match
    @returns - the original string with all of the variable substitutions made */
 function substitute_host_variables($string, $host_id) {
+	$string = "";
+	
 	$host = db_fetch_row("select * from host where id = $host_id");
 
 	/* accomodate for snmp variations */
-	if (!strlen($host["snmp_community"])) $host["snmp_community"] = "[None]";
-	if (!strlen($host["snmpv3_auth_username"])) $host["snmpv3_auth_username"] = "[None]";
-	if (!strlen($host["snmpv3_auth_password"])) $host["snmpv3_auth_password"] = "[None]";
-	if (!strlen($host["snmpv3_auth_protocol"])) $host["snmpv3_auth_protocol"] = "[None]";
-	if (!strlen($host["snmpv3_priv_passphrase"])) $host["snmpv3_priv_passphrase"] = "[None]";
-	if (!strlen($host["snmpv3_priv_protocol"]))  $host["snmpv3_priv_protocol"] = "[None]";
+	if (isset($host)) {
+		if (!strlen($host["snmp_community"])) $host["snmp_community"] = "[None]";
+		if (!strlen($host["snmpv3_auth_username"])) $host["snmpv3_auth_username"] = "[None]";
+		if (!strlen($host["snmpv3_auth_password"])) $host["snmpv3_auth_password"] = "[None]";
+		if (!strlen($host["snmpv3_auth_protocol"])) $host["snmpv3_auth_protocol"] = "[None]";
+		if (!strlen($host["snmpv3_priv_passphrase"])) $host["snmpv3_priv_passphrase"] = "[None]";
+		if (!strlen($host["snmpv3_priv_protocol"]))  $host["snmpv3_priv_protocol"] = "[None]";
 
-	$string = str_replace("|host_management_ip|", $host["hostname"], $string); /* for compatability */
-	$string = str_replace("|host_hostname|", $host["hostname"], $string);
-	$string = str_replace("|host_description|", $host["description"], $string);
-	$string = str_replace("|host_snmp_version|", $host["snmp_version"], $string);
-	$string = str_replace("|host_snmp_community|", $host["snmp_community"], $string);
-	$string = str_replace("|host_snmpv3_auth_username|", $host["snmpv3_auth_username"], $string);
-	$string = str_replace("|host_snmpv3_auth_password|", $host["snmpv3_auth_password"], $string);
-	$string = str_replace("|host_snmpv3_auth_protocol|", $host["snmpv3_auth_protocol"], $string);
-	$string = str_replace("|host_snmpv3_priv_passphrase|", $host["snmpv3_priv_passphrase"], $string);
-	$string = str_replace("|host_snmpv3_priv_protocol|", $host["snmpv3_priv_protocol"], $string);
-	$string = str_replace("|host_snmp_port|", $host["snmp_port"], $string);
-	$string = str_replace("|host_snmp_timeout|", $host["snmp_timeout"], $string);
-	$string = str_replace("|host_id|", $host["id"], $string);
+		$string = str_replace("|host_management_ip|", $host["hostname"], $string); /* for compatability */
+		$string = str_replace("|host_hostname|", $host["hostname"], $string);
+		$string = str_replace("|host_description|", $host["description"], $string);
+		$string = str_replace("|host_snmp_version|", $host["snmp_version"], $string);
+		$string = str_replace("|host_snmp_community|", $host["snmp_community"], $string);
+		$string = str_replace("|host_snmpv3_auth_username|", $host["snmpv3_auth_username"], $string);
+		$string = str_replace("|host_snmpv3_auth_password|", $host["snmpv3_auth_password"], $string);
+		$string = str_replace("|host_snmpv3_auth_protocol|", $host["snmpv3_auth_protocol"], $string);
+		$string = str_replace("|host_snmpv3_priv_passphrase|", $host["snmpv3_priv_passphrase"], $string);
+		$string = str_replace("|host_snmpv3_priv_protocol|", $host["snmpv3_priv_protocol"], $string);
+		$string = str_replace("|host_snmp_port|", $host["snmp_port"], $string);
+		$string = str_replace("|host_snmp_timeout|", $host["snmp_timeout"], $string);
+		$string = str_replace("|host_id|", $host["id"], $string);
+	}
 
 	return $string;
 }
