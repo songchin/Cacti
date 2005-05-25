@@ -22,13 +22,13 @@
  +-------------------------------------------------------------------------+
 */
 
-/* get_data_source_title - returns the title of a data source without using the title cache
+/* get_data_source_title - returns the title of a data source without using the title cache unless the title ends up empty.
    @arg $data_source_id - (int) the ID of the data source to get a title for
    @returns - the data source title */
 function get_data_source_title($data_source_id, $remove_unsubstituted_variables = false) {
 	include_once(CACTI_BASE_PATH . "/lib/variables.php");
 
-	$data_source = db_fetch_row("select host_id,name from data_source where id = $data_source_id");
+	$data_source = db_fetch_row("select host_id,name,name_cache from data_source where id = $data_source_id");
 
 	$title = $data_source["name"];
 
@@ -50,10 +50,14 @@ function get_data_source_title($data_source_id, $remove_unsubstituted_variables 
 	}
 
 	if ($remove_unsubstituted_variables == true) {
-		return remove_variables($title);
-	}else{
-		return $title;
+		$title = remove_variables($title);
 	}
+
+    if (empty($title)) {
+    	$title = $data_source["name_cache"];
+    }
+
+	return $title;
 }
 
 /* get_data_source_path - returns the full path to the .rrd file associated with a given data source
