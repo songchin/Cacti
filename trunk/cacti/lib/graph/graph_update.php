@@ -69,6 +69,18 @@ function api_graph_save($id, $host_id, $graph_template_id, $image_format, $title
 	return $graph_id;
 }
 
+/* api_resize_graphs - resizes the selected graph, overriding the template value
+   @arg $graph_templates_graph_id - the id of the graph to resize
+   @arg $graph_width - the width of the resized graph
+   @arg $graph_height - the height of the resized graph
+  */
+function api_resize_graphs($local_graph_id, $graph_width, $graph_height) {
+	global $config;
+
+	/* get graphs template id */
+	db_execute("UPDATE graph SET width=" . $graph_width . ", height=" . $graph_height . " WHERE id=" . $local_graph_id);
+}
+
 function api_graph_remove($graph_id) {
 	if ((empty($graph_id)) || (!is_numeric($graph_id))) {
 		return;

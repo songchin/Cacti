@@ -46,7 +46,8 @@ $graph_actions = array(
 	4 => _("Convert to Graph Template"),
 	5 => _("Change Host"),
 	6 => _("Reapply Suggested Names"),
-	7 => _("Place on a Tree")
+	7 => _("Resize Selected Graphs"),
+	8 => _("Place on a Tree")
 	);
 
 /* set default action */
@@ -209,6 +210,10 @@ function form_actions() {
 				api_reapply_suggested_graph_title($selected_items[$i]);
 				update_graph_title_cache($selected_items[$i]);
 			}
+		}elseif ($_POST["drp_action"] == "7") { /* resize graphs */
+			for ($i=0;($i<count($selected_items));$i++) {
+				api_resize_graphs($selected_items[$i], $_POST["graph_width"], $_POST["graph_height"]);
+			}
 		}
 
 		header("Location: graphs.php");
@@ -319,7 +324,17 @@ function form_actions() {
 				</td>
 			</tr>\n
 			";
-	}elseif ($_POST["drp_action"] == "7") { /* place on tree */
+	}elseif ($_POST["drp_action"] == "7") { /* reapply suggested naming to host */
+		print "	<tr>
+				<td class='textArea' bgcolor='#" . $colors["form_alternate1"]. "'>
+					<p>When you click save, the following graphs will be resized per your specifications.</p>
+					<p>$graph_list</p>
+					<p><strong>Graph Height:</strong><br>"; form_text_box("graph_height", "", "", "255", "30", "text"); print "</p>
+					<p><strong>Graph Width:</strong><br>"; form_text_box("graph_width", "", "", "255", "30", "text"); print "</p>
+				</td>
+			</tr>\n
+			";
+	}elseif ($_POST["drp_action"] == "8") { /* place on tree */
 		$trees = db_fetch_assoc("select id,name from graph_tree order by name");
 
 		print "	<tr>
