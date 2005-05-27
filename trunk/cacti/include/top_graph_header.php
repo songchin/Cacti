@@ -25,9 +25,6 @@
 $using_guest_account = false;
 $show_console_tab = true;
 
-include_once($config["library_path"] . "/html_tree.php");
-include_once($config["library_path"] . "/rrd.php");
-
 if (read_config_option("auth_method") != "0") {
 	/* at this point this user is good to go... get user info */
 	$current_user = api_user_info( array( "id" => $_SESSION["sess_user_id"]) );

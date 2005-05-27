@@ -29,6 +29,7 @@ if (!isset($_REQUEST["view_type"])) { $_REQUEST["view_type"] = ""; }
 $guest_account = true;
 include("./include/config.php");
 include("./include/auth.php");
+include("./lib/rrd.php");
 include("./include/top_graph_header.php");
 
 if ($_GET["rra_id"] == "all") {

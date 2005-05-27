@@ -33,6 +33,7 @@ $database_password = "cactiuser";
 $cacti_lang = "en";
 
 /* ----- you probably do not need to change anything below this line ----- */
+$config = array();
 
 /* this should be auto-detected, set it manually if needed */
 $config["cacti_server_os"] = (strstr(PHP_OS, "WIN")) ? "win32" : "unix";
