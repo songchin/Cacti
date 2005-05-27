@@ -87,15 +87,15 @@ function api_syslog_cacti_log($message, $severity = SEV_INFO, $poller_id = 1, $h
 				openlog(_("Cacti Logging"), LOG_NDELAY | LOG_PID, LOG_SYSLOG);
 
 			if (($severity <= SEV_ERROR) && (read_config_option("log_perror"))) {
-				syslog(LOG_CRIT, $textmessage);
+				syslog(LOG_CRIT, api_syslog_get_severity($severity) . ": " . api_syslog_get_facility($facility) . ": " . $message);
 			}
 
 			if (($severity == SEV_WARNING) && (read_config_option("log_pwarn"))) {
-				syslog(LOG_WARNING, $textmessage);
+				syslog(LOG_WARNING, api_syslog_get_severity($severity) . ": " . api_syslog_get_facility($facility) . ": " . $message);
 			}
 
-			if ((($severity == SEV_NOTICE) || ($severity == SEV_INFO)) && (read_config_option("log_pstat"))) {
-				syslog(LOG_INFO, $textmessage);
+			if ((($severity == SEV_NOTICE) || ($severity == SEV_INFO)) && (read_config_option("log_pstats"))) {
+				syslog(LOG_INFO, api_syslog_get_severity($severity) . ": " . api_syslog_get_facility($facility) . ": " . $message);
 			}
 
 			closelog();
