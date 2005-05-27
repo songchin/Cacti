@@ -1,5 +1,9 @@
 raXnet - cacti
 
+0.9.0
+-bug#0000450: Fix a minimal bug for view all data queries index during a new graph
+
+
 0.8.7
 -bug#XXXXXXX: Correct problems applying user settings from User management
 -feature: Added ability to have multiple pollers
