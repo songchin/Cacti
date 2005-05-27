@@ -150,6 +150,12 @@ if ((($num_polling_items > 0) || ($num_pollers > 1)) && (read_config_option("pol
 	/* Determine the number of hosts to process per file */
 	$hosts_per_file = ceil(sizeof($polling_hosts) / $concurrent_processes );
 
+    /* Exit poller if cactid is selected and file does not exist */
+    if (($poller == "2") && (!file_exists(read_config_option("path_cactid")))) {
+		api_syslog_cacti_log(sprintf(_("ERROR: The path: %s is invalid.  Can not continue"),read_config_option("path_cactid")), SEV_ERROR, $poller_id, 0, 0, true, FACIL_POLLER);
+		exit;
+	}
+
 	/* Determine Command Name */
 	if (($config["cacti_server_os"] == "unix") and ($poller_type == "2")) {
 		$command_string = read_config_option("path_cactid");
