@@ -135,11 +135,6 @@ if ($config["cacti_server_os"] == "win32") {
 	}
 }
 
-/* gather some statistics */
-$snmp_queries = 0;
-$scripts = 0;
-$ss_scripts = 0;
-
 if ((sizeof($polling_items) > 0) && (read_config_option("poller_enabled") == "on")) {
 	$failure_type = "";
 	$host_down = false;
@@ -300,7 +295,6 @@ if ((sizeof($polling_items) > 0) && (read_config_option("poller_enabled") == "on
 		if (!$host_down) {
 			switch ($item["action"]) {
 			case POLLER_ACTION_SNMP: /* snmp */
-				$snmp_queries++;
 				$output = cacti_snmp_get($item["hostname"], $item["snmp_community"], $item["arg1"], $item["snmp_version"], $item["snmpv3_auth_username"], $item["snmpv3_auth_password"], $item["snmpv3_auth_protocol"], $item["snmpv3_priv_passphrase"], $item["snmpv3_priv_protocol"], $item["snmp_port"], $item["snmp_timeout"], SNMP_CMDPHP);
 
 				/* remove any quotes from string */
@@ -323,7 +317,6 @@ if ((sizeof($polling_items) > 0) && (read_config_option("poller_enabled") == "on
 
 				break;
 			case POLLER_ACTION_SCRIPT: /* script (popen) */
-				$scripts++;
 				$output = trim(exec_poll($item["arg1"]));
 
 				/* remove any quotes from string */
@@ -346,7 +339,6 @@ if ((sizeof($polling_items) > 0) && (read_config_option("poller_enabled") == "on
 
 				break;
 			case POLLER_ACTION_SCRIPT_PHP: /* script (php script server) */
-				$ss_scripts++;
 				if ($using_proc_function == true) {
 					$output = trim(str_replace("\n", "", exec_poll_php($item["arg1"], $using_proc_function, $pipes, $cactiphp)));
 
@@ -420,33 +412,7 @@ if ((sizeof($polling_items) > 0) && (read_config_option("poller_enabled") == "on
 	}
 }
 
-/* calculate poller statistics */
-$total_time = round($end-$start,4);
-$poller = db_fetch_row("select * from poller where id = $poller_id");
-
-if ($total_time > $poller["max_time"]) $poller["max_time"] = $total_time;
-if ($total_time < $poller["min_time"]) $poller["min_time"] = $total_time;
-$poller["cur_time"] = $total_time;
-$poller["avg_time"] = ($poller["avg_time"] * $poller["total_polls"] + $total_time) / ($poller["total_polls"] + 1);
-$poller["total_polls"]++;
-$poller["last_update"] = date("Y-m-d H:i:s");
-$poller["availability"] = round(1 - ($poller["failed_polls"]/$poller["total_polls"]),4) * 100;
-
 /* let poller.php know about cmd.php being finished */
 db_execute("insert into poller_time (poller_id, start_time, end_time) values (" . $poller_id . ", NOW(), NOW())");
-
-/* save statistics to the poller table */
-db_execute("UPDATE poller SET hosts=" . $host_count . ", " .
-							 "poller_items=" . sizeof($polling_items) . ", " .
-							 "snmp_queries=" . $snmp_queries . ", " .
-							 "scripts=" . $scripts . ", " .
-							 "ss_scripts=" . $ss_scripts . ", " .
-							 "cur_time=" . $poller["cur_time"] . ", " .
-							 "avg_time=" . $poller["avg_time"] . ", " .
-							 "max_time=" . $poller["max_time"] . ", " .
-							 "min_time=" . $poller["min_time"] . ", " .
-							 "total_polls=" . $poller["total_polls"] . ", " .
-							 "last_update='" . $poller["last_update"] ."', " .
-							 "availability=" . $poller["availability"] . " WHERE id=$poller_id");
 
 ?>

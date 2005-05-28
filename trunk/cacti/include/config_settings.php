@@ -564,6 +564,13 @@ $settings = array(
 			"default" => 1,
 			"array" => $poller_options
 			),
+		"poller_interval" => array(
+			"friendly_name" => _("Interval"),
+			"description" => _("The polling interval in use.  This setting will take effect how often rrd's are updated.  To change the actual polling interval, you must change the schedule in cron."),
+			"method" => "drop_array",
+			"default" => 300,
+			"array" => $poller_intervals,
+			),
 		"poller_stats" => array(
 			"friendly_name" => _("Save Poller Statistics"),
 			"description" => _("The statistical results of polling times will be saved to a special RRD file if selected."),

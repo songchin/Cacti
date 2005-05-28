@@ -135,11 +135,11 @@ $ping_methods = array(
 	);
 
 $syslog_verbosity = array(
-	POLLER_VERBOSITY_NONE => "NONE - Syslog Only if Selected",
-	POLLER_VERBOSITY_LOW => "LOW - Statistics and Errors",
-	POLLER_VERBOSITY_MEDIUM => "MEDIUM - Statistics, Errors and Results",
-	POLLER_VERBOSITY_HIGH => "HIGH - Statistics, Errors, Results and Major I/O Events",
-	POLLER_VERBOSITY_DEBUG => "DEBUG - Statistics, Errors, Results, I/O and Program Flow"
+	POLLER_VERBOSITY_NONE => _("NONE - Syslog Only if Selected"),
+	POLLER_VERBOSITY_LOW => _("LOW - Statistics and Errors"),
+	POLLER_VERBOSITY_MEDIUM => _("MEDIUM - Statistics, Errors and Results"),
+	POLLER_VERBOSITY_HIGH => _("HIGH - Statistics, Errors, Results and Major I/O Events"),
+	POLLER_VERBOSITY_DEBUG => _("DEBUG - Statistics, Errors, Results, I/O and Program Flow")
 	);
 
 $poller_options = array(
@@ -147,31 +147,35 @@ $poller_options = array(
 	2 => "cactid"
 	);
 
+$poller_intervals = array(
+	60 => _("Every Minute"),
+	300 => _("Every 5 Minutes"));
+
 $registered_cacti_names = array(
 	1 => "path_cacti"
 	);
 
 $graph_views = array(
-	1 => "Tree View",
-	2 => "List View",
-	3 => "Preview View"
+	1 => _("Tree View"),
+	2 => _("List View"),
+	3 => _("Preview View")
 	);
 
 $graph_tree_views = array(
-	1 => "Single Pane",
-	2 => "Dual Pane"
+	1 => _("Single Pane"),
+	2 => _("Dual Pane")
 	);
 
 $auth_realms = array(
-	0 => "Local",
-	1 => "LDAP"
+	0 => _("Local"),
+	1 => _("LDAP")
 	);
 
 $auth_methods = array(
-	0 => "None",
-	1 => "Builtin Authentication",
-	2 => "Web Basic Authentication",
-	3 => "LDAP Authentication"
+	0 => _("None"),
+	1 => _("Builtin Authentication"),
+	2 => _("Web Basic Authentication"),
+	3 => _("LDAP Authentication")
 	);
 
 $user_password_expire_intervals = array(
@@ -202,9 +206,9 @@ $ldap_versions = array(
 	);
 
 $ldap_encryption = array(
-	0 => "None",
-	1 => "SSL",
-	2 => "TLS",
+	0 => _("None"),
+	1 => _("SSL"),
+	2 => _("TLS"),
 	);
 
 $ldap_modes = array(
