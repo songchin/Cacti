@@ -53,7 +53,7 @@ function get_data_source_title($data_source_id, $remove_unsubstituted_variables 
 		$title = remove_variables($title);
 	}
 
-    if (empty($title)) {
+    if (((empty($title)) || (substr_count($title,"|"))) && (!empty($data_source["name_cache"]))) {
     	$title = $data_source["name_cache"];
     }
 
