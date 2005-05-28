@@ -1250,6 +1250,8 @@ CREATE TABLE poller_item (
   rrd_name varchar(19) NOT NULL default '',
   rrd_path varchar(255) NOT NULL default '',
   rrd_num tinyint(2) unsigned NOT NULL default '0',
+  rrd_step mediumint(8) unsigned NOT NULL default '0',
+  rrd_next_step mediumint(9) NOT NULL default '0',
   arg1 varchar(255) default NULL,
   arg2 varchar(255) default NULL,
   arg3 varchar(255) default NULL,
