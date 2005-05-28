@@ -104,7 +104,7 @@ int main(int argc, char *argv[]) {
 	config_defaults(&set);
 
 	/* scan arguments for errors */
-	if ((argc != 1) && (argc != 2) && (argc != 4)) {
+	if ((argc != 1) && (argc !=2) && (argc != 4)) {
 		printf("ERROR: Cactid requires either 0 or 3 input parameters\n");
 		printf("USAGE: <cactidpath>/cactid [-f=first_host -l=last_host -p=poller_id] | [-p=poller_id]\n");
 		exit_cactid();
@@ -143,6 +143,22 @@ int main(int argc, char *argv[]) {
 	    	poller_id_ptr = strtok(argv[1],"=");
 			poller_id_ptr = strtok(NULL, "=");
 			set.poller_id = atoi(poller_id_ptr);
+		}else if (argc == 2) { 
+			/* return version */ 
+			if ((strcmp(argv[1], "--version") == 0) || (strcmp(argv[1], "--help") == 0)){ 
+				printf("CACTID %s  Copyright 2002-2005 by The Cacti Group\n\n", VERSION); 
+				printf("Usage: cactid [start_host_id end_host_id]\n\n");
+				printf("If you do not specify [start_host_id end_host_id], Cactid will poll all hosts.\n\n");
+				printf("Cactid relies on the cactid.conf file that can exist in multiple locations.\n");
+				printf("The first location checked is the current directory.  Optionally, it can be\n");
+				printf("placed in the '/etc' directory.\n\n");
+				printf("Cactid is distributed under the Terms of the GNU General\n");
+				printf("Public License Version 2. (www.gnu.org/copyleft/gpl.html)\n\n");
+				printf("For more information, see http://www.cacti.net\n");
+				exit_cactid(); 
+			} 
+
+			exit_cactid();
     	} else {
 			printf("ERROR: Invalid calling parameters.  First row must be less than the second row\n");
 			printf("USAGE: <cactidpath>/cactid [-f=first_host -l=last_host -p=poller_id] | [-p=poller_id]\n");
@@ -194,7 +210,17 @@ int main(int argc, char *argv[]) {
 	db_connect(set.dbdb, &mysql);
 
 	/* initialize SNMP */
+	if (set.verbose == POLLER_VERBOSITY_DEBUG) {
+		snprintf(logmessage, LOGSIZE, "CACTID: Initializing Net-SNMP API\n", VERSION);
+		cacti_log(logmessage, SEV_DEBUG, 0);
+	}
 	init_snmp("cactid");
+
+	/* initialize PHP */
+	if (set.verbose == POLLER_VERBOSITY_DEBUG) {
+		snprintf(logmessage, LOGSIZE, "CACTID: Initializing PHP Script Server\n", VERSION);
+		cacti_log(logmessage, SEV_DEBUG, 0);
+	}
 
 	if (!php_init()) {
 		exit_cactid();
@@ -209,7 +235,7 @@ int main(int argc, char *argv[]) {
 
 			break;
 		case 2:
-			snprintf(result_string, sizeof(result_string), "SELECT id FROM host WHERE (disabled='' and poller_id = %s) ORDER BY id\0", poller_id_ptr);
+			snprintf(result_string, sizeof(result_string), "SELECT id FROM host WHERE (disabled='' and poller_id = %s) ORDER BY id", poller_id_ptr);
 			result = db_query(&mysql, result_string);
 
 			break;
@@ -391,10 +417,6 @@ int main(int argc, char *argv[]) {
 
 	if (set.verbose == POLLER_VERBOSITY_DEBUG) {
 		cacti_log("Allocated Variable Memory Freed", SEV_DEBUG, 0);
-	}
-
-	if (set.verbose == POLLER_VERBOSITY_DEBUG) {
-		cacti_log("MYSQL Free & Close Completed", SEV_DEBUG, 0);
 	}
 
 	/* finally add some statistics to the log and exit */

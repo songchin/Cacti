@@ -68,9 +68,11 @@ void poll_host(int host_id) {
 	char query2[BUFSIZE];
 	char *query3;
 	char query4[BUFSIZE];
+	char query5[BUFSIZE];
+	char query6[BUFSIZE];
+	char query7[BUFSIZE];
 	char errstr[512];
 	int num_rows;
-	int host_status;
 	int assert_fail = 0;
 	int spike_kill = 0;
 	char *poll_result = NULL;
@@ -97,6 +99,9 @@ void poll_host(int host_id) {
 	snprintf(query1, sizeof(query1), "select action,hostname,snmp_community,snmp_version,snmpv3_auth_username,snmpv3_auth_password,snmpv3_auth_protocol,snmpv3_priv_passphrase,snmpv3_priv_protocol,snmp_port,snmp_timeout,availability_method,ping_method,rrd_name,rrd_path,arg1,arg2,arg3,local_data_id,rrd_num from poller_item where host_id=%i order by rrd_path,rrd_name", host_id);
 	snprintf(query2, sizeof(query2), "select id,hostname,snmp_community,snmp_version,snmpv3_auth_username,snmpv3_auth_password,snmpv3_auth_protocol,snmpv3_priv_passphrase,snmpv3_priv_protocol,snmp_port,snmp_timeout,availability_method,ping_method,status,status_event_count,status_fail_date,status_rec_date,status_last_error,min_time,max_time,cur_time,avg_time,total_polls,failed_polls,availability from host where id=%i", host_id);
 	snprintf(query4, sizeof(query4), "select data_query_id,action,op,assert_value,arg1 from poller_reindex where host_id=%i", host_id);
+	snprintf(query5, sizeof(query6), "select action,hostname,snmp_community,snmp_version,snmpv3_auth_username,snmpv3_auth_password,snmpv3_auth_protocol,snmpv3_priv_passphrase,snmpv3_priv_protocol,snmp_port,snmp_timeout,availability_method,ping_method,rrd_name,rrd_path,arg1,arg2,arg3,local_data_id,rrd_num from poller_item where (host_id=%i and rrd_next_step <=0) order by rrd_path,rrd_name", host_id);
+	snprintf(query6, sizeof(query6), "update poller_item SET rrd_next_step=rrd_next_step-%i where host_id=%i", set.poller_interval, host_id);
+	snprintf(query7, sizeof(query7), "update poller_item SET rrd_next_step=rrd_step-%i where (rrd_next_step < 0 and host_id=%i)", set.poller_interval, host_id);
 
 	db_connect(set.dbdb, &mysql);
 
@@ -282,8 +287,17 @@ void poll_host(int host_id) {
 	/* retreive each hosts polling items from poller cache */
 	entry = (target_t *) malloc(sizeof(target_t));
 
-	result = db_query(&mysql, query1);
-	num_rows = (int)mysql_num_rows(result);
+	if (set.poller_interval == 0) {
+		result = db_query(&mysql, query1);
+		num_rows = (int)mysql_num_rows(result);
+	}else{
+		result = db_query(&mysql, query5);
+		num_rows = (int)mysql_num_rows(result);
+		
+		/* update poller_items table for next polling interval */
+		db_query(&mysql, query6);
+		db_query(&mysql, query7);
+	}
 
 	while ((row = mysql_fetch_row(result)) && (!host->ignore_host)) {
 		/* initialize monitored object */
@@ -443,6 +457,9 @@ int validate_result(char * result) {
 	/* remove control characters from string */
 	strncpy(result, strip_string_crlf(result), sizeof(result));
 
+	/* remove trailing white space from string */
+	strncpy(result, rtrim(result), sizeof(result));
+
 	/* check the easy cases first */
 	/* it has no delimiters, and no space, therefore, must be numeric */
 	if ((strstr(result, ":") == 0) && (strstr(result, "!") == 0) && (strstr(result, " ") == 0)) {
@@ -491,31 +508,25 @@ int validate_result(char * result) {
 /******************************************************************************/
 char *exec_poll(host_t *current_host, char *command) {
 	extern int errno;
-	FILE *cmd_stdout;
 	int cmd_fd;
-	int return_value;
 	int bytes_read;
 	char logmessage[LOGSIZE];
-	char *win32_command;
 
 	fd_set fds;
-	int rescode, numfds;
+	int numfds;
 	struct timeval timeout;
 
 	char *result_string = (char *) malloc(BUFSIZE);
+	char *proc_command = (char *) malloc(BUFSIZE);
 
 	/* establish timeout of x seconds for pipe response */
 	timeout.tv_sec = set.max_script_runtime;
 	timeout.tv_usec = 0;
 
-	/* nasty workaround to compensate for vbs WMI calling parameters not wanting backslashes bothered with */
-	#ifdef __CYGWIN__
-	win32_command = add_win32_slashes(command, 2);
-	cmd_fd = nft_popen((char *)win32_command, "r");
-	free(win32_command);
-	#else
-	cmd_fd = nft_popen((char *)command, "r");
-	#endif
+	/* compensate for back slashes in arguments */
+	proc_command = add_slashes(command, 2);
+	cmd_fd = nft_popen((char *)proc_command, "r");
+	free(proc_command);
 
 	if (set.verbose == POLLER_VERBOSITY_DEBUG) {
 		snprintf(logmessage, LOGSIZE, "The POPEN returned the following File Descriptor %i", cmd_fd);
