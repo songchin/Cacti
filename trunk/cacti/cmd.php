@@ -47,15 +47,29 @@ include_once($config["base_path"] . "/lib/ping.php");
 list($micro,$seconds) = split(" ", microtime());
 $start = $seconds + $micro;
 
+/* determine how often the poller runs from settings */
+$polling_interval = read_config_option("poller_interval");
+
 /* process command line arguments */
 if ( $_SERVER["argc"] == 1 ) {
-	$polling_items = db_fetch_assoc("SELECT * from poller_item ORDER by host_id");
+	if (isset($polling_interval)) {
+		$polling_items = db_fetch_assoc("SELECT * FROM poller_item WHERE rrd_next_step<=0 ORDER by host_id");
+	}else{
+		$polling_items = db_fetch_assoc("SELECT * FROM poller_item ORDER by host_id");
+	}
+
 	$print_data_to_stdout = true;
 	/* Get number of polling items from the database */
 	$hosts = db_fetch_assoc("select * from host where disabled = '' order by id");
 	$hosts = array_rekey($hosts,"id",$host_struc);
 	$host_count = sizeof($hosts);
 	$poller_id = 1;
+
+	/* setup next polling interval */
+	if (isset($polling_interval)) {
+		db_execute("UPDATE poller_item SET rrd_next_step=rrd_next_step-" . $polling_interval);
+		db_execute("UPDATE poller_item SET rrd_next_step=rrd_step-" . $polling_interval . " WHERE rrd_next_step < 0");
+	}
 }else{
 	if ($_SERVER["argc"] == "4") {
 		$print_data_to_stdout = true;
@@ -79,19 +93,27 @@ if ( $_SERVER["argc"] == 1 ) {
 		}
 
 		if ($first_host <= $last_host) {
-			$hosts = db_fetch_assoc("select * from host where (disabled = '' and " .
-					"id >= " .
-					$first_host .
-					" AND id <= " .
-					$last_host . " AND poller_id = " . $poller_id . ") ORDER by id");
+			$hosts = db_fetch_assoc("SELECT * FROM host WHERE (disabled = '' and id >= " .
+					$first_host . " AND id <= " . $last_host . " AND poller_id = " . $poller_id . ") ORDER by id");
 			$hosts = array_rekey($hosts,"id",$host_struc);
 			$host_count = sizeof($hosts);
 
-			$polling_items = db_fetch_assoc("SELECT * from poller_item " .
-					"WHERE (host_id >= " .
-					$first_host .
-					" and host_id <= " .
-					$last_host . " AND poller_id = " . $poller_id . ") ORDER by host_id");
+			if (isset($polling_interval)) {
+				$polling_items = db_fetch_assoc("SELECT * FROM poller_item" .
+						" WHERE (host_id >= " .	$first_host . " AND host_id <= " .
+						$last_host . " AND rrd_next_step<=0) ORDER BY host_id");
+
+				/* setup next polling interval */
+				db_execute("UPDATE poller_item SET rrd_next_step=rrd_next_step-" . $polling_interval .
+						" WHERE (host_id >= " .	$first_host . " and host_id <= " . $last_host . ")");
+				db_execute("UPDATE poller_item SET rrd_next_step=rrd_step-" . $polling_interval .
+						" WHERE (rrd_next_step < 0 and" . " host_id >= " . $first_host .
+						" and host_id <= " . $last_host . ")");
+			}else{
+				$polling_items = db_fetch_assoc("SELECT * from poller_item" .
+						" WHERE (host_id >= " .	$first_host . " and host_id <= " .
+						$last_host . ") ORDER by host_id");
+			}
 		}else{
 			print _("ERROR: Invalid Arguments.  The first argument must be less than or equal to the first.") . "\n";
 			print _("USAGE: CMD.PHP [-f=first_host -l=last_host -p=poller_id]") . "\n";
@@ -113,16 +135,16 @@ if ($config["cacti_server_os"] == "win32") {
 	}
 }
 
+/* gather some statistics */
+$snmp_queries = 0;
+$scripts = 0;
+$ss_scripts = 0;
+
 if ((sizeof($polling_items) > 0) && (read_config_option("poller_enabled") == "on")) {
 	$failure_type = "";
 	$host_down = false;
 	$new_host  = true;
 	$last_host = ""; $current_host = "";
-
-    /* gather some statistics */
-    $snmp_queries = 0;
-    $scripts = 0;
-    $ss_scripts = 0;
 
 	/* file descriptors for the script_server */
 	$cactides = array(
@@ -393,7 +415,9 @@ if ((sizeof($polling_items) > 0) && (read_config_option("poller_enabled") == "on
 	list($micro,$seconds) = split(" ", microtime());
 	$end = $seconds + $micro;
 
-	api_syslog_cacti_log(_("Either there are no items in the cache or polling is disabled"), SEV_ERROR, $poller_id, 0, 0, $print_data_to_stdout, FACIL_CMDPHP);
+	if (read_config_option("poller_enabled") != "on") {
+		cacti_log(_("NOTICE: The poller is disabled."), SEV_ERROR, $poller_id, 0, 0, $print_data_to_stdout, FACIL_CMDPHP);
+	}
 }
 
 /* calculate poller statistics */

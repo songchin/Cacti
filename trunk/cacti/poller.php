@@ -44,7 +44,7 @@ $poller_id = 1;
 if ( $_SERVER["argc"] == 2 ) {
 	$poller_id = $_SERVER["argv"][1];
 	if (!is_numeric($poller_id)) {
-		api_syslog_cacti_log(_("The Poller ID is not numeric"), SEV_ERROR, $poller_id, 0, 0, true, FACIL_POLLER);
+		api_syslog_cacti_log(_("The poller id is not numeric"), SEV_ERROR, $poller_id, 0, 0, true, FACIL_POLLER);
 		exit -1;
 	}
 }
@@ -59,11 +59,17 @@ $start = $seconds + $micro;
 /* default the number of pollers to 0 */
 $num_pollers = 0;
 
+/* determine the polling interval */
+$polling_interval = read_config_option("poller_interval");
+
 /* poller_id 1 tasks only */
 if ($poller_id == 1) {
 	/* get total number of polling items from the database for the specified poller */
-
-	$num_polling_items = db_fetch_cell("SELECT count(*) FROM poller_item WHERE poller_id=" . $poller_id);
+	if (isset($polling_interval)) {
+		$num_polling_items = db_fetch_cell("SELECT count(*) FROM poller_item WHERE (rrd_next_step<=0 AND poller_id=" . $poller_id . ")");
+	}else{
+		$num_polling_items = db_fetch_cell("SELECT count(*) FROM poller_item WHERE poller_id=" . $poller_id);
+	}
 	$polling_hosts = array_merge(array(0 => array("id" => "0")), db_fetch_assoc("SELECT id FROM host WHERE (disabled = '' AND poller_id=" . $poller_id . ") ORDER BY id"));
 
 	/* get total number of polling items from the database for all pollers */
@@ -121,7 +127,11 @@ if ($poller_id == 1) {
 	}
 
 	/* get total number of polling items from the database for the specified poller */
-	$num_polling_items = db_fetch_cell("SELECT count(*) FROM poller_item WHERE poller_id='" . $poller_id . "'");
+	if (isset($polling_interval)) {
+		$num_polling_items = db_fetch_cell("SELECT count(*) FROM poller_item WHERE (rrd_next_step<=0 AND poller_id=" . poller_id . ")");
+	}else{
+		$num_polling_items = db_fetch_cell("SELECT count(*) FROM poller_item WHERE poller_id=" . poller_id);
+	}
 	$polling_hosts = db_fetch_assoc("SELECT id FROM host WHERE (disabled != 'on' and poller_id = '" . $poller_id . "') ORDER BY id");
 
 	db_execute("UPDATE poller SET run_state='" . _("Running") . "' where id=" . $poller_id);
@@ -146,12 +156,12 @@ $poller_type = read_config_option("poller_type");
 $max_threads = read_config_option("max_threads");
 
 /* enter mainline processing */
-if ((($num_polling_items > 0) || ($num_pollers > 1)) && (read_config_option("poller_enabled") == "on")) {
+if (read_config_option("poller_enabled") == "on") {
 	/* Determine the number of hosts to process per file */
 	$hosts_per_file = ceil(sizeof($polling_hosts) / $concurrent_processes );
 
     /* Exit poller if cactid is selected and file does not exist */
-    if (($poller == "2") && (!file_exists(read_config_option("path_cactid")))) {
+    if (($poller_type == "2") && (!file_exists(read_config_option("path_cactid")))) {
 		api_syslog_cacti_log(sprintf(_("ERROR: The path: %s is invalid.  Can not continue"),read_config_option("path_cactid")), SEV_ERROR, $poller_id, 0, 0, true, FACIL_POLLER);
 		exit;
 	}
@@ -192,7 +202,6 @@ if ((($num_polling_items > 0) || ($num_pollers > 1)) && (read_config_option("pol
 
 		if ($change_files) {
 			exec_background($command_string, "$extra_args -f=$first_host -l=$last_host -p=$poller_id");
-
 			$host_count = 1;
 			$change_files = False;
 			$process_file_number++;
@@ -212,6 +221,9 @@ if ((($num_polling_items > 0) || ($num_pollers > 1)) && (read_config_option("pol
 		$max_threads = _("N/A");
 	}
 
+	/* lets count the number of rrds processed */
+	$rrds_processed = 0;
+
 	while (1) {
 		$polling_items = db_fetch_assoc("SELECT poller_id,end_time FROM poller_time WHERE poller_id = " . $poller_id);
 
@@ -223,7 +235,7 @@ if ((($num_polling_items > 0) || ($num_pollers > 1)) && (read_config_option("pol
 				break;
 			} else {
 				/* process RRD output if any exists */
-				process_poller_output($rrdtool_pipe);
+				$rrds_processed = $rrds_processed + process_poller_output($rrdtool_pipe);
 
 				/* wait for other pollers to finish */
 				$active_pollers = sizeof(db_fetch_assoc("SELECT * FROM poller WHERE active='on'"));
@@ -263,14 +275,18 @@ if ((($num_polling_items > 0) || ($num_pollers > 1)) && (read_config_option("pol
 					_("Processes:") . " %s, " .
 					_("Threads:") . " %s, " .
 					_("Hosts:") . " %s, " .
-					_("Hosts/Process:") . " %s",
+					_("Hosts/Process:") . " %s " .
+					_("Data Sources:") . " %s, " .
+					_("RRDs Processed:") . " %s",
 					round($end-$start,4),
 					$num_pollers,
 					$method,
 					$concurrent_processes,
 					$max_threads,
 					sizeof($all_polling_hosts),
-					$hosts_per_file),
+					$hosts_per_file,
+					$num_polling_items,
+					$rrds_processed),
 					SEV_NOTICE, $poller_id, 0, 0, true, FACIL_POLLER);
 
 				db_execute("UPDATE poller SET run_state='" . _("Idle") . "' WHERE active='on'");
@@ -284,7 +300,7 @@ if ((($num_polling_items > 0) || ($num_pollers > 1)) && (read_config_option("pol
 
 			/* process RRD output if any exists */
 			if ($poller_id == 1) {
-				process_poller_output($rrdtool_pipe);
+				$rrds_processed = $rrds_processed + process_poller_output($rrdtool_pipe);
 			}
 
 			/* end the process if the runtime exceeds MAX_POLLER_RUNTIME */

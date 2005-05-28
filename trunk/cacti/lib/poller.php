@@ -64,7 +64,7 @@ function update_poller_cache($data_source_id, $truncate_performed = false) {
 	}
 
 	/* fetch information about this data source */
-	$data_source = db_fetch_row("select host_id,data_input_type,active from data_source where id = $data_source_id");
+	$data_source = db_fetch_row("select host_id,data_input_type,active,rrd_step from data_source where id = $data_source_id");
 
 	/* device is marked as disabled */
 	if ((!empty($data_source["host_id"])) && (db_fetch_cell("select disabled from host where id = " . $data_source["host_id"]) == "on")) {
@@ -92,13 +92,13 @@ function update_poller_cache($data_source_id, $truncate_performed = false) {
 
 			$num_output_fields = db_fetch_cell("select count(*) from data_input_fields where data_input_id = " . $field_list["script_id"] . " and input_output = 'out' and update_rra = 1");
 
-			api_poller_cache_item_add($data_source["host_id"], $data_source_id, $action, (($num_output_fields == 1) ? db_fetch_cell("select data_source_name from data_source_item where data_source_id = $data_source_id") : ""), 1, addslashes($script_path));
+			api_poller_cache_item_add($data_source["host_id"], $data_source_id, $data_source["rrd_step"], $action, (($num_output_fields == 1) ? db_fetch_cell("select data_source_name from data_source_item where data_source_id = $data_source_id") : ""), 1, addslashes($script_path));
 		}else if ($data_source["data_input_type"] == DATA_INPUT_TYPE_SNMP) {
 			$data_source_items = db_fetch_assoc("select data_source_name,field_input_value from data_source_item where data_source_id = $data_source_id");
 
 			if (sizeof($data_source_items) > 0) {
 				foreach ($data_source_items as $item) {
-					api_poller_cache_item_add($data_source["host_id"], $data_source_id, POLLER_ACTION_SNMP, $item["data_source_name"], 1, $item["field_input_value"]);
+					api_poller_cache_item_add($data_source["host_id"], $data_source_id, $data_source["rrd_step"], POLLER_ACTION_SNMP, $item["data_source_name"], 1, $item["field_input_value"]);
 				}
 			}
 		}else if (($data_source["data_input_type"] == DATA_INPUT_TYPE_DATA_QUERY) && (isset($field_list["data_query_id"])) && (isset($field_list["data_query_index"]))) {
@@ -125,7 +125,7 @@ function update_poller_cache($data_source_id, $truncate_performed = false) {
 						}
 
 						if (isset($oid)) {
-							api_poller_cache_item_add($data_source["host_id"], $data_source_id, POLLER_ACTION_SNMP, $item["data_source_name"], sizeof($data_source_items), $oid);
+							api_poller_cache_item_add($data_source["host_id"], $data_source_id, $data_source["rrd_step"], POLLER_ACTION_SNMP, $item["data_source_name"], sizeof($data_source_items), $oid);
 						}
 					}else if (($data_query_input_type == DATA_QUERY_INPUT_TYPE_SCRIPT_QUERY) || ($data_query_input_type == DATA_QUERY_INPUT_TYPE_PHP_SCRIPT_SERVER_QUERY)) {
 						$identifier = $xml_data["fields"]{$item["field_input_value"]}["query_name"];
@@ -142,7 +142,7 @@ function update_poller_cache($data_source_id, $truncate_performed = false) {
 							$script_path = get_script_query_path((isset($xml_data["arg_prepend"]) ? $xml_data["arg_prepend"] : "") . " " . $xml_data["arg_get"] . " " . $identifier . " " . $field_list["data_query_index"], $xml_data["script_path"], $data_source["host_id"]);
 						}
 
-						api_poller_cache_item_add($data_source["host_id"], $data_source_id, $action, $item["data_source_name"], sizeof($data_source_items), addslashes($script_path));
+						api_poller_cache_item_add($data_source["host_id"], $data_source_id, $data_source["rrd_step"], $action, $item["data_source_name"], sizeof($data_source_items), addslashes($script_path));
 					}
 				}
 			}
@@ -154,7 +154,29 @@ function update_poller_cache($data_source_id, $truncate_performed = false) {
    @arg $command - the command to execute
    @returns - the output of $command after execution */
 function exec_poll($command) {
-	return `$command`;
+	if (function_exists("stream_set_timeout")) {
+		$fp = popen($command, "rb");
+
+		/* set script server timeout */
+		$script_timeout = read_config_option("script_timeout");
+ 		stream_set_timeout($fp, $script_timeout);
+
+		/* get output from command */
+		$output = fgets($fp, 1024);
+
+		/* determine if the script timedout */
+		$info = stream_get_meta_data($fp);
+
+		if ($info['timed_out']) {
+			cacti_log("ERROR: Script Timed Out\n", true);
+		}
+
+		pclose($fp);
+	}else{
+		$output = `$command`;
+	}
+
+	return $output;
 }
 
 /* exec_poll_php - sends a command to the php script server and returns the
@@ -175,20 +197,50 @@ function exec_poll_php($command, $using_proc_function, $pipes, $proc_fd) {
 			 * 1 => readable handle connected to child stdout
 			 * 2 => any error output will be sent to child stderr */
 
+			/* set script server timeout */
+			$script_timeout = read_config_option("script_timeout");
+		 	stream_set_timeout($pipes[0], $script_timeout);
+
 			/* send command to the php server */
 			fwrite($pipes[0], $command . "\r\n");
 
 			/* get result from server */
 			$output = fgets($pipes[1], 1024);
 
-			if (substr_count($output, _("ERROR")) > 0) {
+			/* determine if the script timedout */
+			$info = stream_get_meta_data($pipes[0]);
+
+			if ($info['timed_out']) {
+				cacti_log(_("ERROR: Script Server Timed Out"), true);
+				$output = "U";
+			}elseif (substr_count($output, _("ERROR")) > 0) {
 				$output = "U";
 			}
 		}
-	/* execute the old fashion way */
 	}else{
+		/* formulate command */
 		$command = read_config_option("path_php_binary") . " " . $command;
-		$output = `$command`;
+		if (function_exists("stream_set_timeout")) {
+			$fp = popen($command, "rb");
+
+			/* set script server timeout */
+			$script_timeout = read_config_option("script_timeout");
+			stream_set_timeout($fp, $script_timeout);
+
+			/* get output from command */
+			$output = fgets($fp, 1024);
+
+			/* determine if the script timedout */
+			$info = stream_get_meta_data($pipes[0]);
+
+			if ($info['timed_out']) {
+				cacti_log("ERROR: Script Timed Out\n", true);
+			}
+
+			$pclose($fp);
+		}else{
+			$output = `$command`;
+		}
 	}
 
 	return $output;
@@ -303,6 +355,9 @@ function update_reindex_cache($host_id, $data_query_id) {
 function process_poller_output($rrdtool_pipe) {
 	include_once(CACTI_BASE_PATH . "/lib/rrd.php");
 
+	/* let's count the number of rrd files we processed */
+	$rrds_processed = 0;
+
 	/* create/update the rrd files */
 	$results = db_fetch_assoc("select
 		poller_output.output,
@@ -366,8 +421,10 @@ function process_poller_output($rrdtool_pipe) {
 			}
 		}
 
-		rrdtool_function_update($rrd_update_array, $rrdtool_pipe);
+		$rrds_processed = rrdtool_function_update($rrd_update_array, $rrdtool_pipe);
 	}
+
+	return $rrds_processed;
 }
 
 /* update_poller_status - updates the poller table with informaton about each pollers status.
