@@ -67,10 +67,10 @@ if ($poller_id == 1) {
 	/* get total number of polling items from the database for the specified poller */
 	if (isset($polling_interval)) {
 		$num_polling_items = db_fetch_cell("SELECT count(*) FROM poller_item WHERE (rrd_next_step<=0 AND poller_id=" . $poller_id . ")");
-		$data_source_stats = db_fetch_assoc("SELECT action, count(action) AS total FROM poller_item WHERE (rrd_next_step<=0 AND poller_id=" . $poller_id . ") GROUP BY action");
+		$data_source_stats = array_rekey(db_fetch_assoc("SELECT action, count(action) AS total FROM poller_item WHERE (rrd_next_step<=0 AND poller_id=" . $poller_id . ") GROUP BY action"), "action", "total");
 	}else{
 		$num_polling_items = db_fetch_cell("SELECT count(*) FROM poller_item WHERE poller_id=" . $poller_id);
-		$data_source_stats = db_fetch_assoc("SELECT action, count(action) AS total FROM poller_item WHERE poller_id=" . $poller_id . " GROUP BY action");
+		$data_source_stats = array_rekey(db_fetch_assoc("SELECT action, count(action) AS total FROM poller_item WHERE poller_id=" . $poller_id . " GROUP BY action"), "action", "total");
 	}
 	$polling_hosts = array_merge(array(0 => array("id" => "0")), db_fetch_assoc("SELECT id FROM host WHERE (disabled = '' AND poller_id=" . $poller_id . ") ORDER BY id"));
 
@@ -131,38 +131,16 @@ if ($poller_id == 1) {
 	/* get total number of polling items from the database for the specified poller */
 	if (isset($polling_interval)) {
 		$num_polling_items = db_fetch_cell("SELECT count(*) FROM poller_item WHERE (rrd_next_step<=0 AND poller_id=" . poller_id . ")");
-		$data_source_stats = db_fetch_assoc("SELECT action, count(action) AS total FROM poller_item WHERE (rrd_next_step<=0 AND poller_id=" . $poller_id . ") GROUP BY action");
+		$data_source_stats = array_rekey(db_fetch_assoc("SELECT action, count(action) AS total FROM poller_item WHERE (rrd_next_step<=0 AND poller_id=" . $poller_id . ") GROUP BY action"), "action", "total");
 	}else{
 		$num_polling_items = db_fetch_cell("SELECT count(*) FROM poller_item WHERE poller_id=" . poller_id);
-		$data_source_stats = db_fetch_assoc("SELECT action, count(action) AS total FROM poller_item WHERE poller_id=" . $poller_id . " GROUP BY action");
+		$data_source_stats = array_rekey(db_fetch_assoc("SELECT action, count(action) AS total FROM poller_item WHERE poller_id=" . $poller_id . " GROUP BY action"), "action", "total");
 	}
 	$polling_hosts = db_fetch_assoc("SELECT id FROM host WHERE (disabled != 'on' and poller_id = '" . $poller_id . "') ORDER BY id");
 
 	db_execute("UPDATE poller SET run_state='" . _("Running") . "' where id=" . $poller_id);
 }
-
-/* gather some poller_item statistics */
-$snmp_queries = 0;
-$scripts = 0;
-$ss_scripts = 0;
-$internals = 0;
-foreach($data_source_stats as $data_source_stat) {
-	switch ($data_source_stat["action"]) {
-		case POLLER_ACTION_SNMP:
-			$snmp_queries = $data_source_stat["total"];
-			break;
-		case POLLER_ACTION_SCRIPT:
-			$scripts = $data_source_stat["total"];
-			break;
-		case POLLER_ACTION_SCRIPT_PHP:
-			$ss_scripts = $data_source_stat["total"];
-			break;
-		case POLLER_ACTION_INTERNAL:
-			$internals = $data_source_stat["total"];
-			break;
-	}
-}
-
+print_r($data_source_stats);
 /* retreive the number of concurrent process settings */
 $concurrent_processes = read_config_option("concurrent_processes");
 
@@ -170,7 +148,7 @@ $concurrent_processes = read_config_option("concurrent_processes");
 $host_count = 1;
 
 /* initialize file creation flags */
-$change_files = False;
+$change_files = false;
 
 /* initialize file and host count pointers */
 $process_file_number = 0;
@@ -186,8 +164,8 @@ if (read_config_option("poller_enabled") == "on") {
 	/* Determine the number of hosts to process per file */
 	$hosts_per_file = ceil(sizeof($polling_hosts) / $concurrent_processes );
 
-    /* Exit poller if cactid is selected and file does not exist */
-    if (($poller_type == "2") && (!file_exists(read_config_option("path_cactid")))) {
+	/* Exit poller if cactid is selected and file does not exist */
+	if (($poller_type == "2") && (!file_exists(read_config_option("path_cactid")))) {
 		api_syslog_cacti_log(sprintf(_("ERROR: The path: %s is invalid.  Can not continue"),read_config_option("path_cactid")), SEV_ERROR, $poller_id, 0, 0, true, FACIL_POLLER);
 		exit;
 	}
@@ -391,9 +369,6 @@ if (read_config_option("poller_enabled") == "on") {
 		graph_export();
 
 		/* i don't know why we are doing this */
-		//db_execute("truncate table poller_output");
-
-		/* i don't know why we are doing this */
 		db_execute("truncate table poller_time");
 
 		/* idle the pollers till the next polling cycle */
@@ -404,7 +379,7 @@ if (read_config_option("poller_enabled") == "on") {
 	list($micro,$seconds) = split(" ", microtime());
 	$end = $seconds + $micro;
 
-    /* record some statistics */
+	/* record some statistics */
 	api_syslog_cacti_log(sprintf(_("System Time:") . " %01.4f s, " .
 		_("Total Pollers:") . " %s, " .
 		_("Method:") . " %s, " .
@@ -439,11 +414,11 @@ if (read_config_option("poller_enabled") == "on") {
 
 	/* save additional statistics to the poller table */
 	db_execute("UPDATE poller SET hosts=" . $host_count . ", " .
-		 "poller_items=" . $num_polling_items . ", " .
-		 "snmp_queries=" . $snmp_queries . ", " .
-		 "scripts=" . $scripts . ", " .
-		 "ss_scripts=" . $ss_scripts . ", " .
-		 "cacti_internals=" . $internals . ", " .
+		 "num_total=" . $num_polling_items . ", " .
+		 "num_snmp=" . (isset($data_source_stats[POLLER_ACTION_SNMP]) ? $data_source_stats[POLLER_ACTION_SNMP] : "0") . ", " .
+		 "num_script=" . (isset($data_source_stats[POLLER_ACTION_SCRIPT]) ? $data_source_stats[POLLER_ACTION_SCRIPT] : "0") . ", " .
+		 "num_script_ss_php=" . (isset($data_source_stats[POLLER_ACTION_SCRIPT_PHP]) ? $data_source_stats[POLLER_ACTION_SCRIPT_PHP] : "0") . ", " .
+		 "num_internal=" . (isset($data_source_stats[POLLER_ACTION_INTERNAL]) ? $data_source_stats[POLLER_ACTION_INTERNAL] : "0") . ", " .
 		 "cur_time=" . $poller["cur_time"] . ", " .
 		 "avg_time=" . $poller["avg_time"] . ", " .
 		 "max_time=" . $poller["max_time"] . ", " .
