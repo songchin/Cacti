@@ -758,6 +758,16 @@ function draw_navigation_text() {
 			"mapping" => "index.php:,rra.php:",
 			"level" => "2"
 			),
+		"rra_templates.php:" => array(
+			"title" => _("Round Robin Archive Templates"),
+			"mapping" => "index.php:",
+			"level" => "1"
+			),
+		"rra_templates.php:edit" => array(
+			"title" => _("(Edit)"),
+			"mapping" => "index.php:,rra_templates.php:",
+			"level" => "2"
+			),
 		"data_input.php:" => array(
 			"title" => _("Data Input Methods"),
 			"mapping" => "index.php:",

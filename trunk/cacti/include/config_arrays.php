@@ -151,6 +151,30 @@ $poller_intervals = array(
 	60 => _("Every Minute"),
 	300 => _("Every 5 Minutes"));
 
+$rra_polling_frequency = array(
+	60 => _("Every Minute"),
+	120 => _("Every 2 Minutes"),
+	300 => _("Every 5 Minutes"),
+	900 => _("Every 15 Minutes"),
+	1200 => _("Every 30 Minutes"),
+	3600 => _("Every Hour"),
+	14400 => _("Every 4 Hours"),
+	86400 => _("Every Day")
+	);
+
+$rra_storage_durations = array(
+	86400 => _("1 Day"),
+	172800 => _("2 Days"),
+	604800 => _("1 Week"),
+	1209600 => _("2 Weeks"),
+	1814400 => _("3 Weeks"),
+	2678400 => _("1 Month"),
+	5356800 => _("2 Months"),
+	10713600 => _("4 Months"),
+	33053184 => _("1 Year"),
+	66106368 => _("2 Years")
+	);
+
 $registered_cacti_names = array(
 	1 => "path_cacti"
 	);
@@ -276,7 +300,8 @@ $menu = array(
 	_("Templates") => array(
 		"graph_templates.php" => _("Graph Templates"),
 		"host_templates.php" => _("Host Templates"),
-		"data_templates.php" => _("Data Templates")
+		"data_templates.php" => _("Data Templates"),
+		"rra_templates.php" => _("RRA Templates")
 		),
 	_("Import/Export") => array(
 		"templates_import.php" => _("Import Templates"),
@@ -341,6 +366,7 @@ $user_auth_realm_filenames = array(
 	"graphs_new.php" => 5,
 	"host.php" => 3,
 	"host_templates.php" => 12,
+	"rra_templates.php" => 12,
 	"index.php" => 8,
 	"rra.php" => 9,
 	"settings.php" => 15,
@@ -375,7 +401,8 @@ $hash_type_codes = array(
 	"data_query_graph" => "11",
 	"data_query_sv_graph" => "12",
 	"data_query_sv_data_source" => "13",
-	"host_template" => "02"
+	"host_template" => "02",
+	"rra_template" => "16"
 	);
 
 $hash_version_codes = array(
@@ -401,7 +428,8 @@ $hash_type_names = array(
 	"graph_template_input" => _("Graph Template Input"),
 	"data_query" => _("Data Query"),
 	"host_template" => _("Host Template"),
-	"round_robin_archive" => _("Round Robin Archive")
+	"round_robin_archive" => _("Round Robin Archive"),
+	"rra_template" => _("Round Robin Archive Template")
 	);
 
 $host_struc = array(

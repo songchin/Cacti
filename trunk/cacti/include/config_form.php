@@ -67,6 +67,44 @@ $fields_color_edit = array(
 		)
 	);
 
+/* file: rra_templates.php, action: edit */
+$fields_rra_template_edit = array(
+	"name" => array(
+		"method" => "textbox",
+		"friendly_name" => _("RRA Template Name"),
+		"description" => _("Enter a meaningful name for this Round Robin Archive Template."),
+		"value" => "|arg1:name|",
+		"max_length" => "100"
+		),
+	"description" => array(
+		"method" => "textbox",
+		"friendly_name" => _("Description"),
+		"description" => _("Detailed information relative to this RRA Template."),
+		"value" => "|arg1:description|",
+		"max_length" => "255"
+		),
+	"polling_frequency" => array(
+		"method" => "drop_array",
+		"friendly_name" => _("Polling Frequency"),
+		"description" => _("How often you want the device to be polled."),
+		"default" => 300,
+		"value" => "|arg1:polling_frequency|",
+		"array" => $rra_polling_frequency
+		),
+	"id" => array(
+		"method" => "hidden_zero",
+		"value" => "|arg1:id|"
+		),
+	"_rra_template_id" => array(
+		"method" => "hidden_zero",
+		"value" => "|arg1:rra_template_id|"
+		),
+	"save_component_rra_template" => array(
+		"method" => "hidden",
+		"value" => "1"
+		)
+	);
+
 /* file: data_pollers.php, action: edit */
 $fields_data_poller_edit = array(
 	"name" => array(
