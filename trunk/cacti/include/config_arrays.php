@@ -339,7 +339,8 @@ $user_auth_realms = array(
 	16 => _("Export Data"),
 	17 => _("Import Data"),
 	18 => _("Change Password"),
-	19 => _("User Settings")
+	19 => _("User Settings"),
+	20 => _("View Graph Properties")
 	);
 
 $user_auth_realm_filenames = array(

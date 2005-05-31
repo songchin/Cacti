@@ -49,7 +49,8 @@ if (read_config_option("auth_method") != "0") {
 	$access_denied = !(is_graph_allowed($_GET["graph_id"]));
 
 	if ($access_denied == true) {
-		print "<strong><font size='+1' color='FF0000'>" . _("ACCESS DENIED") . "</font></strong>"; exit;
+		print "<strong><font size='+1' color='FF0000'>" . _("ACCESS DENIED") . "</font></strong>"; 
+		exit;
 	}
 }
 
@@ -86,7 +87,8 @@ case 'view':
 						</td>
 						<td valign='top' style='padding: 3px;' class='noprint'>
 							<a href='graph.php?action=zoom&graph_id=<?php print $_GET["graph_id"];?>&rra_id=<?php print $rra["id"];?>&view_type=<?php print $_REQUEST["view_type"];?>'><img src='images/graph_zoom.gif' border='0' alt='Zoom Graph' title='Zoom Graph' style='padding: 3px;'></a><br>
-							<?php if (! $using_guest_account) { ?><a href='graph.php?action=properties&graph_id=<?php print $_GET["graph_id"];?>&rra_id=<?php print $rra["id"];?>&view_type=<?php print $_REQUEST["view_type"];?>'><img src='images/graph_properties.gif' border='0' alt='<?php echo _("Graph Source/Properties");?>' title='<?php echo _("Graph Source/Properties");?>' style='padding: 3px;'></a> <?php } ?>
+
+							<?php if ((! $using_guest_account) && ($current_user_realms["20"]["value"] == "1")) { ?><a href='graph.php?action=properties&graph_id=<?php print $_GET["graph_id"];?>&rra_id=<?php print $rra["id"];?>&view_type=<?php print $_REQUEST["view_type"];?>'><img src='images/graph_properties.gif' border='0' alt='<?php echo _("Graph Source/Properties");?>' title='<?php echo _("Graph Source/Properties");?>' style='padding: 3px;'></a> <?php } ?>
 						</td>
 					</tr>
 					<tr>
