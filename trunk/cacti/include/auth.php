@@ -101,9 +101,11 @@ if (read_config_option("auth_method") != "0") {
 				</tr>
 				<tr height='10'><td></td></tr>
 				<tr>
-					<td class='textArea' colspan='2'>" . _("You are not permitted to access this section of Cacti. If you feel that you
-					need access to this particular section, please contact the Cacti administrator.") . "</td>
+					<td class='textArea' colspan='2'><?php print _("You are not permitted to access this section of Cacti. If you feel that you need access to this particular section, please contact the Cacti administrator."); ?></td>
 				</tr>
+				<tr>
+                                        <td class='textArea' colspan='2' align='center'>( <a href='' onclick='javascript: history.back();'><?php print _("Return"); ?></a> | <a href='logout.php'><?php print _("Login"); ?></a> )</td>
+                                </tr>
 			</table>
 
 			</body>
