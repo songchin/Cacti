@@ -124,6 +124,7 @@ $lang2locale = array(
  "ja"=>"ja_JP.UTF-8",
  "fr"=>"fr_FR.iso-8859-1",
  "sv"=>"sv_SE.iso-8859-1",
+ "es"=>"es_ES.iso-8859-1",
  "bg"=>"bg_BG.cp1251"
 );
 
