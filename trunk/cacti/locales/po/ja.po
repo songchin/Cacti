@@ -1,14 +1,14 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# Tadashi Jokagi <elf2000@users.sourceforge.net>, 2005.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: cacti\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2005-05-14 16:40+0900\n"
-"PO-Revision-Date: 2005-05-14 16:41+0900\n"
+"PO-Revision-Date: 2005-06-20 11:12+0900\n"
 "Last-Translator: Tadashi Jokagi <elf2000@users.sourceforge.net>\n"
 "Language-Team: Japanese <ja@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -112,7 +112,7 @@ msgstr "フルネーム"
 
 #: ../data_input.php:308
 msgid "No Input Fields Defined"
-msgstr ""
+msgstr "入力項目が定義されていません。"
 
 #: ../data_input.php:315
 msgid "Output Fields"
@@ -124,7 +124,7 @@ msgstr "RRD 更新"
 
 #: ../data_input.php:374
 msgid "No Data Input Methods"
-msgstr ""
+msgstr "データの入力方法がありません。"
 
 #: ../data_pollers.php:136
 msgid "To enable the following pollers, press the \"yes\" button below."
@@ -140,7 +140,7 @@ msgstr ""
 
 #: ../data_pollers.php:157
 msgid "You must select at least one poller."
-msgstr ""
+msgstr "少なくともひとつ選ぶ必要があります。"
 
 #: ../data_pollers.php:160 ../data_templates.php:281 ../host.php:390
 #: ../user_admin.php:948
@@ -152,7 +152,6 @@ msgid "Cancel"
 msgstr "取り消し"
 
 #: ../data_pollers.php:208
-#, fuzzy
 msgid "Data Pollers"
 msgstr "データ収集"
 
@@ -200,9 +199,8 @@ msgid "No"
 msgstr "いいえ"
 
 #: ../data_pollers.php:253
-#, fuzzy
 msgid "No Data Pollers"
-msgstr "データ収集"
+msgstr "データ収集がありません。"
 
 #: ../data_sources.php:42 ../data_templates.php:39 ../graphs.php:43
 #: ../host.php:38 ../host_templates.php:30 ../tree.php:455
@@ -226,7 +224,7 @@ msgstr "複製"
 #: ../data_sources.php:46
 #, fuzzy
 msgid "Convert to Data Template"
-msgstr "データテンプレート"
+msgstr "データテンプレートに変換する"
 
 #: ../data_sources.php:278
 msgid ""
@@ -273,7 +271,7 @@ msgstr "選択されたデータテンプレート"
 
 #: ../data_sources.php:405 ../include/data_source/data_source_form.php:33
 msgid "The name given to this data template."
-msgstr ""
+msgstr "このデータテンプレートに名前を与えてください。"
 
 #: ../data_sources.php:412
 msgid "Device"
@@ -349,7 +347,6 @@ msgid "Data Input Type"
 msgstr "データ入力タイプ"
 
 #: ../data_sources.php:832
-#, fuzzy
 msgid "Active"
 msgstr "操作"
 
@@ -384,9 +381,8 @@ msgid "Data Template"
 msgstr "データのテンプレート"
 
 #: ../data_templates.php:586
-#, fuzzy
 msgid "No Data Templates"
-msgstr "データテンプレート"
+msgstr "データテンプレートがありません"
 
 #: ../graph.php:42
 msgid "GRAPH DOES NOT EXIST"
@@ -397,14 +393,12 @@ msgid "ACCESS DENIED"
 msgstr "アクセスが拒否されました"
 
 #: ../graphs.php:44
-#, fuzzy
 msgid "Change Graph Template"
-msgstr "新規グラフテンプレート:"
+msgstr "新規グラフテンプレートを変更する"
 
 #: ../graphs.php:46
-#, fuzzy
 msgid "Convert to Graph Template"
-msgstr "グラフテンプレートがありません"
+msgstr "グラフテンプレートに変換する"
 
 #: ../graphs.php:48
 msgid "Reapply Suggested Names"
@@ -415,9 +409,8 @@ msgid "Place on a Tree"
 msgstr ""
 
 #: ../graphs.php:254
-#, fuzzy
 msgid "Are you sure you want to delete the following graphs?"
-msgstr "次のユーザーを本当に削除しますか?"
+msgstr "次のグラフを本当に削除しますか?"
 
 #: ../graphs.php:265
 msgid "Leave the data sources untouched."
@@ -473,12 +466,11 @@ msgstr ""
 
 #: ../graphs.php:338
 msgid "You must select at least one graph."
-msgstr ""
+msgstr "すくなくとも 1 つグラフを選択しなければなりません。"
 
 #: ../graphs.php:409
-#, fuzzy
 msgid "Selected Graph Template"
-msgstr "関連グラフテンプレート"
+msgstr "選択済グラフテンプレート"
 
 #: ../graphs.php:410
 msgid ""
@@ -496,7 +488,7 @@ msgstr ""
 
 #: ../graphs.php:429
 msgid "Device/Template Selection"
-msgstr ""
+msgstr "デバイス/テンプレートセクション"
 
 #: ../graphs.php:550 ../include/config_arrays.php:255 ../lib/html.php:522
 msgid "Graphs"
@@ -511,9 +503,8 @@ msgid "Size"
 msgstr "サイズ"
 
 #: ../graphs.php:641
-#, fuzzy
 msgid "No Graphs Found"
-msgstr "グラフがありません"
+msgstr "グラフが見つかりません"
 
 #: ../graphs_new.php:393
 msgid "Edit this Host"
@@ -533,7 +524,7 @@ msgstr "すべて選択"
 
 #: ../graphs_new.php:485
 msgid "No graph templates specified for this host template."
-msgstr ""
+msgstr "このホストテンプレートにグラフテンプレートを指定していません。"
 
 #: ../graphs_new.php:605 ../include/config_arrays.php:393
 #: ../include/data_source/data_source_form.php:263
@@ -562,9 +553,8 @@ msgid "Clear Statistics"
 msgstr "統計を消去"
 
 #: ../host.php:43
-#, fuzzy
 msgid "Change Poller"
-msgstr "パスワード変更"
+msgstr "収集の変更"
 
 #: ../host.php:44
 msgid "Change Availability Options"
@@ -572,11 +562,11 @@ msgstr ""
 
 #: ../host.php:263
 msgid "To enable the following devices, press the \"yes\" button below."
-msgstr ""
+msgstr "次のデバイスを有効にする場合、下の「はい」ボタンを押します。"
 
 #: ../host.php:270
 msgid "To disable the following devices, press the \"yes\" button below."
-msgstr ""
+msgstr "次のデバイスを無効にする場合、下の「はい」ボタンを押します。"
 
 #: ../host.php:277
 msgid ""
@@ -622,7 +612,7 @@ msgstr ""
 
 #: ../host.php:387
 msgid "You must select at least one device."
-msgstr ""
+msgstr "すくなくとも 1 つデバイスを選ばなければなりません。"
 
 #: ../host.php:471
 msgid "SNMP not in use"
@@ -641,18 +631,16 @@ msgid "Associated Graph Templates"
 msgstr "関連グラフテンプレート"
 
 #: ../host.php:532
-#, fuzzy
 msgid "Graph Template Name"
-msgstr "グラフテンプレート"
+msgstr "グラフテンプレート名"
 
 #: ../host.php:591
-#, fuzzy
 msgid "Associated Data Queries"
-msgstr "データ問合せ"
+msgstr "連想データ照会"
 
 #: ../host.php:593
 msgid "Data Query Name"
-msgstr "データ問合せ名"
+msgstr "データ照会名"
 
 #: ../host.php:593
 msgid "Debugging"
@@ -877,7 +865,7 @@ msgstr "親の項目"
 
 #: ../tree.php:167
 msgid "Choose the parent for this header/graph."
-msgstr ""
+msgstr "このヘッダー/グラフの親を選択します。"
 
 #: ../tree.php:175
 msgid "Tree Item Type"
@@ -901,7 +889,7 @@ msgstr ""
 
 #: ../tree.php:217 ../include/config_form.php:520
 msgid "Sorting Type"
-msgstr ""
+msgstr "ソートの種類"
 
 #: ../tree.php:218
 msgid "Choose how children of this branch will be sorted."
@@ -918,7 +906,6 @@ msgid ""
 msgstr ""
 
 #: ../tree.php:243
-#, fuzzy
 msgid "Graph"
 msgstr "グラフ"
 
@@ -940,7 +927,7 @@ msgstr ""
 
 #: ../tree.php:273
 msgid "Graph Grouping Style"
-msgstr ""
+msgstr "グラフのグループスタイル"
 
 #: ../tree.php:274
 msgid ""
@@ -1100,7 +1087,7 @@ msgstr "MD5 (デフォルト)"
 
 #: ../include/config_arrays.php:111
 msgid "SHA"
-msgstr ""
+msgstr "SHA"
 
 #: ../include/config_arrays.php:115
 msgid "Cacti Syslog Only"
@@ -1132,15 +1119,15 @@ msgstr ""
 
 #: ../include/config_arrays.php:127
 msgid "ICMP Ping"
-msgstr ""
+msgstr "ICMP Ping"
 
 #: ../include/config_arrays.php:128
 msgid "UDP Ping"
-msgstr ""
+msgstr "UDP Ping"
 
 #: ../include/config_arrays.php:129
 msgid "Not Applicable"
-msgstr ""
+msgstr "利用できません"
 
 #: ../include/config_arrays.php:173
 msgid "Never"
@@ -1219,13 +1206,12 @@ msgid "Stop logging if maximum log size is exceeded"
 msgstr ""
 
 #: ../include/config_arrays.php:226
-#, fuzzy
 msgid "Function"
-msgstr "操作"
+msgstr "機能"
 
 #: ../include/config_arrays.php:227
 msgid "Operator"
-msgstr ""
+msgstr "操作"
 
 #: ../include/config_arrays.php:228
 #, fuzzy
@@ -1237,13 +1223,12 @@ msgid "Another CDEF"
 msgstr "別の CDEF"
 
 #: ../include/config_arrays.php:230
-#, fuzzy
 msgid "Custom String"
-msgstr "書式文字列"
+msgstr "カスタム文字列"
 
 #: ../include/config_arrays.php:234
 msgid "Manual Ordering (No Sorting)"
-msgstr ""
+msgstr "手動整列 (ソートしません)"
 
 #: ../include/config_arrays.php:235
 msgid "Alphabetic Ordering"
@@ -1255,19 +1240,19 @@ msgstr "数字順"
 
 #: ../include/config_arrays.php:240
 msgid "Current Graph Item Data Source"
-msgstr ""
+msgstr "現在のグラフ項目のデータソース"
 
 #: ../include/config_arrays.php:241
 msgid "All Data Sources (Don't Include Duplicates)"
-msgstr ""
+msgstr "すべてのデータソース(複製を含まない)"
 
 #: ../include/config_arrays.php:242
 msgid "All Data Sources (Include Duplicates)"
-msgstr ""
+msgstr "すべてのデータソース(複製を含む)"
 
 #: ../include/config_arrays.php:243
 msgid "Current Data Source Item: Minimum Value"
-msgstr ""
+msgstr "現在のデータソース項目: 最小値"
 
 #: ../include/config_arrays.php:244
 msgid "All Similar Data Sources (Don't Include Duplicates)"
@@ -1278,14 +1263,12 @@ msgid "Current Data Source Item: Maximum Value"
 msgstr ""
 
 #: ../include/config_arrays.php:246
-#, fuzzy
 msgid "Graph: Lower Limit"
-msgstr "下限"
+msgstr "グラフ: 下限"
 
 #: ../include/config_arrays.php:247
-#, fuzzy
 msgid "Graph: Upper Limit"
-msgstr "上限"
+msgstr "グラフ: 上限"
 
 #: ../include/config_arrays.php:250
 msgid "Create"
@@ -1318,7 +1301,7 @@ msgstr "データ収集"
 
 #: ../include/config_arrays.php:263 ../lib/html.php:907
 msgid "Pollers"
-msgstr ""
+msgstr "収集"
 
 #: ../include/config_arrays.php:264
 msgid "Scripts"
@@ -1392,53 +1375,44 @@ msgid "Logout User"
 msgstr "ユーザーログアウト"
 
 #: ../include/config_arrays.php:291
-#, fuzzy
 msgid "User Administration"
-msgstr "システムログ管理"
+msgstr "ユーザー管理"
 
 #: ../include/config_arrays.php:293
-#, fuzzy
 msgid "Update Data Sources"
-msgstr "データソース"
+msgstr "データソースを更新する"
 
 #: ../include/config_arrays.php:294
-#, fuzzy
 msgid "Update Graph Trees"
-msgstr "グラフツリー"
+msgstr "グラフツリーを更新する"
 
 #: ../include/config_arrays.php:295
-#, fuzzy
 msgid "Update Graphs"
-msgstr "新規グラフ"
+msgstr "グラフを更新する"
 
 #: ../include/config_arrays.php:296
-#, fuzzy
 msgid "View Graphs"
-msgstr "新規グラフ"
+msgstr "グラフを表示する"
 
 #: ../include/config_arrays.php:297
-#, fuzzy
 msgid "Console Access"
-msgstr "コンソール"
+msgstr "コンソールアクセス"
 
 #: ../include/config_arrays.php:298
 msgid "Update Round Robin Archives"
-msgstr ""
+msgstr "RRA を更新する"
 
 #: ../include/config_arrays.php:299
-#, fuzzy
 msgid "Update Graph Templates"
-msgstr "グラフテンプレート"
+msgstr "グラフテンプレートを更新する"
 
 #: ../include/config_arrays.php:300
-#, fuzzy
 msgid "Update Data Templates"
-msgstr "データテンプレート"
+msgstr "データテンプレートを更新する"
 
 #: ../include/config_arrays.php:301
-#, fuzzy
 msgid "Update Host Templates"
-msgstr "ホストテンプレート"
+msgstr "ホストテンプレートを更新する"
 
 #: ../include/config_arrays.php:302 ../include/config_settings.php:452
 #: ../lib/html.php:787
@@ -1446,49 +1420,40 @@ msgid "Data Queries"
 msgstr "データ問合せ"
 
 #: ../include/config_arrays.php:303
-#, fuzzy
 msgid "Update Data Presets"
-msgstr "データプリセット"
+msgstr "データプリセットを更新する"
 
 #: ../include/config_arrays.php:304
-#, fuzzy
 msgid "Global Settings"
 msgstr "グラフ設定"
 
 #: ../include/config_arrays.php:305
-#, fuzzy
 msgid "Export Data"
-msgstr "書式文字列"
+msgstr "データをエクスポートする"
 
 #: ../include/config_arrays.php:306
-#, fuzzy
 msgid "Import Data"
-msgstr "テンプレートインポート"
+msgstr "データをインポートする"
 
 #: ../include/config_arrays.php:383
-#, fuzzy
 msgid "CDEF"
 msgstr "CDEF"
 
 #: ../include/config_arrays.php:384
-#, fuzzy
 msgid "CDEF Item"
 msgstr "CDEF 項目"
 
 #: ../include/config_arrays.php:385
-#, fuzzy
 msgid "GPRINT Preset"
 msgstr "GPRINT プリセット"
 
 #: ../include/config_arrays.php:386
-#, fuzzy
 msgid "Data Input Method"
-msgstr "データ入力タイプ"
+msgstr "データの入力方法"
 
 #: ../include/config_arrays.php:387
-#, fuzzy
 msgid "Data Input Field"
-msgstr "データ入力タイプ"
+msgstr "データの入力項目"
 
 #: ../include/config_arrays.php:389 ../include/graph/graph_form.php:267
 msgid "Data Template Item"
@@ -1500,14 +1465,12 @@ msgid "Graph Template"
 msgstr "グラフのテンプレート"
 
 #: ../include/config_arrays.php:391
-#, fuzzy
 msgid "Graph Template Item"
-msgstr "グラフテンプレートの項目"
+msgstr "グラフのテンプレート項目"
 
 #: ../include/config_arrays.php:392
-#, fuzzy
 msgid "Graph Template Input"
-msgstr "グラフテンプレートの項目"
+msgstr "グラフのテンプレート項目"
 
 #: ../include/config_arrays.php:394 ../include/config_form.php:294
 msgid "Host Template"
@@ -1515,36 +1478,35 @@ msgstr "ホストのテンプレート"
 
 #: ../include/config_arrays.php:429
 msgid "Month Number, Day, Year"
-msgstr ""
+msgstr "月、日、年"
 
 #: ../include/config_arrays.php:430
 msgid "Month Name, Day, Year"
-msgstr ""
+msgstr "月名、日、年"
 
 #: ../include/config_arrays.php:431
 msgid "Day, Month Number, Year"
-msgstr ""
+msgstr "日、月名、年"
 
 #: ../include/config_arrays.php:432
 msgid "Day, Month Name, Year"
-msgstr ""
+msgstr "日、月名、年"
 
 #: ../include/config_arrays.php:433
 msgid "Year, Month Number, Day"
-msgstr ""
+msgstr "年、月、日"
 
 #: ../include/config_arrays.php:434
 msgid "Year, Month Name, Day"
-msgstr ""
+msgstr "年、月名、日"
 
 #: ../include/config_arrays.php:443
 msgid "Soft New Look"
 msgstr ""
 
 #: ../include/config_arrays.php:444
-#, fuzzy
 msgid "Traditional Cacti Theme"
-msgstr "Cacti テーマ"
+msgstr "伝統的な Cacti テーマ"
 
 #: ../include/config_arrays.php:445
 msgid "Dark and Distinguished"
@@ -1568,20 +1530,19 @@ msgstr ""
 
 #: ../include/config_arrays.php:450
 msgid "Windows XP Default"
-msgstr ""
+msgstr "Windows XP のデフォルト"
 
 #: ../include/config_form.php:37
 msgid "A useful name for this CDEF."
-msgstr ""
+msgstr "この CDEF の名前です。"
 
 #: ../include/config_form.php:56
 msgid "The hex value for this color; valid range: 000000-FFFFFF."
 msgstr ""
 
 #: ../include/config_form.php:74
-#, fuzzy
 msgid "Poller Name"
-msgstr "有効"
+msgstr "収集名"
 
 #: ../include/config_form.php:75
 msgid "Enter a meaningful name for this poller."
@@ -1589,12 +1550,11 @@ msgstr ""
 
 #: ../include/config_form.php:82
 msgid "Enter the IP address or hostname of this poller."
-msgstr ""
+msgstr "この収集の IP アドレス化ホスト名を入力します。"
 
 #: ../include/config_form.php:88
-#, fuzzy
 msgid "Poller Active"
-msgstr "操作"
+msgstr "収集操作"
 
 #: ../include/config_form.php:89
 msgid "Whether or not this data poller is to be used."
@@ -1605,9 +1565,8 @@ msgid "Enter a meaningful name for this script."
 msgstr ""
 
 #: ../include/config_form.php:115 ../include/data_query/data_query_form.php:53
-#, fuzzy
 msgid "Input Type"
-msgstr "データ入力タイプ"
+msgstr "入力タイプ"
 
 #: ../include/config_form.php:116
 msgid "Choose what type of script this is."
@@ -1625,27 +1584,24 @@ msgid ""
 msgstr ""
 
 #: ../include/config_form.php:140
-#, fuzzy
 msgid "Input Field Type"
-msgstr "入力項目"
+msgstr "入力項目の種類"
 
 #: ../include/config_form.php:147
 msgid "Select where this data input field will obtain its value."
 msgstr ""
 
 #: ../include/config_form.php:158
-#, fuzzy
 msgid "Default Value"
-msgstr "デフォルトグラフポリシ"
+msgstr "デフォルトの値"
 
 #: ../include/config_form.php:159
 msgid "Enter a default value for this input field."
-msgstr ""
+msgstr "この入力項目のデフォルト値を入力します。"
 
 #: ../include/config_form.php:171
-#, fuzzy
 msgid "Device Field"
-msgstr "デバイス項目値"
+msgstr "デバイスの項目"
 
 #: ../include/config_form.php:181
 msgid "Select the device field that will be used to populate this input field."
@@ -1653,20 +1609,19 @@ msgstr ""
 
 #: ../include/config_form.php:189
 msgid "Field [|arg2:|]"
-msgstr ""
+msgstr "項目 [|arg2:|]"
 
 #: ../include/config_form.php:190
 msgid "Enter a name for this |arg2:| field."
-msgstr ""
+msgstr "この項目 |arg2:| の名前を入力"
 
 #: ../include/config_form.php:197
 msgid "Enter a meaningful name for this data input field."
 msgstr ""
 
 #: ../include/config_form.php:203
-#, fuzzy
 msgid "Update RRD File"
-msgstr "RRD 更新"
+msgstr "RRD ファイルを更新する"
 
 #: ../include/config_form.php:204
 msgid ""
@@ -1687,7 +1642,7 @@ msgstr ""
 
 #: ../include/config_form.php:218
 msgid "Allow Empty Input"
-msgstr ""
+msgstr "空の値を許可する"
 
 #: ../include/config_form.php:219
 msgid "Check here if you want to allow empty input in this field."
@@ -1699,13 +1654,12 @@ msgid ""
 msgstr ""
 
 #: ../include/config_form.php:257
-#, fuzzy
 msgid "GPRINT Text"
-msgstr "GPRINT プリセット"
+msgstr "GPRINT テキスト"
 
 #: ../include/config_form.php:258
 msgid "Enter the custom GPRINT string here."
-msgstr ""
+msgstr "カスタム GRPINT 文字列をここに入力します。"
 
 #: ../include/config_form.php:276 ../include/graph/graph_form.php:31
 #, fuzzy
@@ -1727,9 +1681,8 @@ msgid ""
 msgstr ""
 
 #: ../include/config_form.php:302
-#, fuzzy
 msgid "Default Poller"
-msgstr "デフォルトグラフポリシ"
+msgstr "デフォルトの収集"
 
 #: ../include/config_form.php:303
 msgid "Choose the default poller to handle this hosts request."
@@ -1807,7 +1760,7 @@ msgstr "SNMP コミュニティ"
 
 #: ../include/config_form.php:372
 msgid "Fill in the SNMP read community for this device."
-msgstr ""
+msgstr "このデバイスの SNMP 読み込みコミュニティを埋めます。"
 
 #: ../include/config_form.php:380
 msgid "SNMP v3 Options"
@@ -1853,7 +1806,7 @@ msgstr ""
 
 #: ../include/config_form.php:441
 msgid "A useful name for this host template."
-msgstr ""
+msgstr "このホストテンプレートの名前です。"
 
 #: ../include/config_form.php:460 ../include/config_form.php:467
 msgid "How data is to be entered in RRA's."
@@ -1897,7 +1850,7 @@ msgstr ""
 
 #: ../include/config_form.php:514
 msgid "A useful name for this graph tree."
-msgstr ""
+msgstr "このグラフツリーの名前です。"
 
 #: ../include/config_form.php:521
 msgid "Choose how items in this tree will be sorted."
@@ -1910,7 +1863,7 @@ msgstr "ユーザー名"
 
 #: ../include/config_form.php:544 ../include/user/user_form.php:33
 msgid "The login name for this user."
-msgstr ""
+msgstr "このユーザーのログイン名です。"
 
 #: ../include/config_form.php:550 ../include/user/user_form.php:39
 #: ../user_admin.php:731
@@ -1938,11 +1891,11 @@ msgstr "主要な電子メールアドレス"
 
 #: ../include/config_form.php:565 ../include/user/user_form.php:54
 msgid "The primary e-mail address for this user."
-msgstr ""
+msgstr "このユーザーの 1 つ目の電子メールアドレスです。"
 
 #: ../include/config_form.php:571 ../include/user/user_form.php:60
 msgid "Secondary Email Address"
-msgstr "第 2 の電子メールアドレス"
+msgstr "2 つ目の電子メールアドレス"
 
 #: ../include/config_form.php:572 ../include/user/user_form.php:61
 msgid ""
@@ -2030,7 +1983,6 @@ msgid "The Cacti theme to use. Changes the look of Cacti."
 msgstr ""
 
 #: ../include/config_settings.php:31
-#, fuzzy
 msgid "Logging"
 msgstr "ログイン"
 
@@ -2057,11 +2009,11 @@ msgstr "一覧表示モード"
 
 #: ../include/config_settings.php:45
 msgid "Graph Fonts (RRDtool 1.2.x and Above)"
-msgstr ""
+msgstr "グラフフォント (RRDtool 1.2.x 以上)"
 
 #: ../include/config_settings.php:51
 msgid "Required Tool Versions"
-msgstr ""
+msgstr "要求するツールのバージョン"
 
 #: ../include/config_settings.php:55
 msgid "SNMP Utility Version"
@@ -2083,31 +2035,31 @@ msgstr ""
 
 #: ../include/config_settings.php:69
 msgid "Required Tools"
-msgstr ""
+msgstr "要求したツール"
 
 #: ../include/config_settings.php:73
 msgid "snmpwalk Binary Path"
-msgstr ""
+msgstr "snmpwalk バイナリパス"
 
 #: ../include/config_settings.php:74
 msgid "The path to your snmpwalk binary."
-msgstr ""
+msgstr "snmpwalk バイナリへのパスです。"
 
 #: ../include/config_settings.php:79
 msgid "snmpget Binary Path"
-msgstr ""
+msgstr "snmpget バイナリパス"
 
 #: ../include/config_settings.php:80
 msgid "The path to your snmpget binary."
-msgstr ""
+msgstr "snmpget バイナリへのパスです。"
 
 #: ../include/config_settings.php:85
 msgid "RRDTool Binary Path"
-msgstr "RRDTおおｌ バイナリパス"
+msgstr "RRDTool バイナリパス"
 
 #: ../include/config_settings.php:86
 msgid "The path to the rrdtool binary."
-msgstr ""
+msgstr "rrdtool バイナリへのパスです。"
 
 #: ../include/config_settings.php:91
 msgid "RRDTool Default Font Path"
@@ -2130,25 +2082,23 @@ msgstr ""
 
 #: ../include/config_settings.php:103
 msgid "Optional Tools"
-msgstr ""
+msgstr "オプションのツール"
 
 #: ../include/config_settings.php:107
-#, fuzzy
 msgid "Cactid Poller File Path"
-msgstr "Cacti システムユーティリティ"
+msgstr "Cactid 収集のファイルパス"
 
 #: ../include/config_settings.php:108
 msgid "The path to Cactid binary."
-msgstr ""
+msgstr "Cactid バイナリへのパスです。"
 
 #: ../include/config_settings.php:115
-#, fuzzy
 msgid "Event Logging"
-msgstr "最終ログイン"
+msgstr "イベントのログ記録"
 
 #: ../include/config_settings.php:119
 msgid "Log Destination(s)"
-msgstr ""
+msgstr "ログ先"
 
 #: ../include/config_settings.php:120
 msgid "How will Cacti handle event logging."
@@ -2175,13 +2125,12 @@ msgid ""
 msgstr ""
 
 #: ../include/config_settings.php:139
-#, fuzzy
 msgid "Poller Statsistics"
-msgstr "統計を消去"
+msgstr "収集の統計"
 
 #: ../include/config_settings.php:143
 msgid "Poller Warnings"
-msgstr ""
+msgstr "収集の警告"
 
 #: ../include/config_settings.php:147
 msgid "Poller Errors or Higher"
@@ -2189,11 +2138,11 @@ msgstr ""
 
 #: ../include/config_settings.php:153
 msgid "Log Size and Control"
-msgstr ""
+msgstr "ログサイズと制御"
 
 #: ../include/config_settings.php:157
 msgid "Maximum Log Size"
-msgstr ""
+msgstr "最大ログサイズ"
 
 #: ../include/config_settings.php:158
 msgid ""
@@ -2204,7 +2153,7 @@ msgstr ""
 
 #: ../include/config_settings.php:164
 msgid "Log Control Mechanism"
-msgstr ""
+msgstr "ログ制御メカニズム"
 
 #: ../include/config_settings.php:165
 msgid ""
@@ -2222,22 +2171,20 @@ msgid ""
 msgstr ""
 
 #: ../include/config_settings.php:180
-#, fuzzy
 msgid "Database Settings"
-msgstr "ユーザー設定"
+msgstr "データベース設定"
 
 #: ../include/config_settings.php:184
 msgid "Persistent Connections"
-msgstr ""
+msgstr "継続的接続"
 
 #: ../include/config_settings.php:185
 msgid "Utilize persistent connections to conserve database resources."
 msgstr ""
 
 #: ../include/config_settings.php:190
-#, fuzzy
 msgid "Database Retries"
-msgstr "データ問合せ"
+msgstr ""
 
 #: ../include/config_settings.php:191
 msgid ""
@@ -2246,13 +2193,12 @@ msgid ""
 msgstr ""
 
 #: ../include/config_settings.php:197
-#, fuzzy
 msgid "PHP Settings"
-msgstr "設定"
+msgstr "PHP 設定"
 
 #: ../include/config_settings.php:201
 msgid "PHP Maximum Memory"
-msgstr ""
+msgstr "PHP 最大メモリ"
 
 #: ../include/config_settings.php:202
 msgid "Maximum allowed memory for PHP processes in Megabytes"
@@ -2260,7 +2206,7 @@ msgstr ""
 
 #: ../include/config_settings.php:208
 msgid "PHP Graph Timeout"
-msgstr ""
+msgstr "PHP グラフタイムアウト"
 
 #: ../include/config_settings.php:209
 msgid ""
@@ -2282,7 +2228,7 @@ msgstr ""
 
 #: ../include/config_settings.php:225
 msgid "Show Hidden Fields"
-msgstr ""
+msgstr "隠し項目を表示する"
 
 #: ../include/config_settings.php:226
 msgid ""
@@ -2347,7 +2293,7 @@ msgstr "v3 認証のデフォルト"
 
 #: ../include/config_settings.php:301
 msgid "v3 Privacy Defaults"
-msgstr ""
+msgstr "v3 プライバシのデフォルト"
 
 #: ../include/config_settings.php:325
 msgid "Export Method"
@@ -2423,7 +2369,7 @@ msgstr "FTP オプション"
 
 #: ../include/config_settings.php:385
 msgid "Sanitize remote directory"
-msgstr ""
+msgstr "リモートディレクトリのサニタイズ"
 
 #: ../include/config_settings.php:386
 msgid ""
@@ -2474,7 +2420,7 @@ msgstr "FTP パスワード"
 
 #: ../include/config_settings.php:416
 msgid "Password for the remote ftp account (leave empty for blank)."
-msgstr ""
+msgstr "リモート ftp アカウントのパスワード(パスワードなしは空にします)"
 
 #: ../include/config_settings.php:423
 msgid "Cacti Theme"
@@ -2482,11 +2428,11 @@ msgstr "Cacti テーマ"
 
 #: ../include/config_settings.php:427
 msgid "Default Visual Theme to Use"
-msgstr ""
+msgstr "デフォルトのビジュアルテーマを使用する"
 
 #: ../include/config_settings.php:428
 msgid "The Cacti theme to use by default.  Changes the default look of Cacti."
-msgstr ""
+msgstr "Cacti テーマをデフォルトとして使用します。Cacti のデフォルトの外観を変更します。"
 
 #: ../include/config_settings.php:434 ../lib/html.php:577
 msgid "Graph Management"
@@ -2495,7 +2441,7 @@ msgstr "グラフ管理"
 #: ../include/config_settings.php:438 ../include/config_settings.php:474
 #: ../include/config_settings.php:492
 msgid "Rows Per Page"
-msgstr ""
+msgstr "ページ毎の行数"
 
 #: ../include/config_settings.php:439
 msgid "The number of rows to display on a single page for graph management."
@@ -2503,7 +2449,7 @@ msgstr ""
 
 #: ../include/config_settings.php:445 ../include/config_settings.php:481
 msgid "Maximum Title Length"
-msgstr ""
+msgstr "題名の最大長"
 
 #: ../include/config_settings.php:446
 msgid "The maximum number of characters to display for a graph title."
@@ -2511,7 +2457,7 @@ msgstr ""
 
 #: ../include/config_settings.php:456
 msgid "Maximum Field Length"
-msgstr ""
+msgstr "項目の最大長"
 
 #: ../include/config_settings.php:457
 msgid "The maximum number of characters to display for a data query field."
@@ -2519,7 +2465,7 @@ msgstr ""
 
 #: ../include/config_settings.php:463
 msgid "Maximum JavaScript Rows"
-msgstr ""
+msgstr "JavaScript の最大行"
 
 #: ../include/config_settings.php:464
 msgid ""
@@ -2529,20 +2475,19 @@ msgstr ""
 
 #: ../include/config_settings.php:475
 msgid "The number of rows to display on a single page for data sources."
-msgstr ""
+msgstr "データソース一覧の単一ページで表示する行数です。"
 
 #: ../include/config_settings.php:482
 msgid "The maximum number of characters to display for a data source title."
-msgstr ""
+msgstr "データソースタイトルの単一ページで表示する行数です。<"
 
 #: ../include/config_settings.php:488
-#, fuzzy
 msgid "Hosts"
 msgstr "ホスト"
 
 #: ../include/config_settings.php:493
 msgid "The number of rows to display on a single page for Hosts."
-msgstr ""
+msgstr "ホスト一覧の単一ページで表示する行数です。"
 
 #: ../include/config_settings.php:499
 msgid "Default RRDtool 1.2 Fonts"
@@ -2566,19 +2511,19 @@ msgstr ""
 
 #: ../include/config_settings.php:516 ../include/config_settings.php:941
 msgid "Legend Font File"
-msgstr ""
+msgstr "凡例のフォントファイル"
 
 #: ../include/config_settings.php:517 ../include/config_settings.php:942
 msgid "The font file to be used for Graph Legend items"
-msgstr ""
+msgstr "グラフの凡例項目で使用するフォントファイル"
 
 #: ../include/config_settings.php:522 ../include/config_settings.php:947
 msgid "Legend Font Size"
-msgstr ""
+msgstr "凡例のフォントサイズ"
 
 #: ../include/config_settings.php:523 ../include/config_settings.php:948
 msgid "The size of the font used for Graph Legend items"
-msgstr ""
+msgstr "グラフの凡例項目で使用するフォントサイズ"
 
 #: ../include/config_settings.php:529 ../include/config_settings.php:954
 msgid "Axis Font File"
@@ -2598,7 +2543,7 @@ msgstr ""
 
 #: ../include/config_settings.php:542 ../include/config_settings.php:967
 msgid "Unit Font File"
-msgstr ""
+msgstr "単位のフォントファイル"
 
 #: ../include/config_settings.php:543 ../include/config_settings.php:968
 msgid "The size of the font used for Graph Unit items"
@@ -2606,7 +2551,7 @@ msgstr ""
 
 #: ../include/config_settings.php:548 ../include/config_settings.php:973
 msgid "Unit Font Size"
-msgstr ""
+msgstr "単位のフォントサイズ"
 
 #: ../include/config_settings.php:549 ../include/config_settings.php:974
 msgid "The size of the font used for Graph Units"
@@ -2703,7 +2648,7 @@ msgstr ""
 
 #: ../include/config_settings.php:630
 msgid "Ping Timeout Value"
-msgstr ""
+msgstr "Ping のタイムアウト値"
 
 #: ../include/config_settings.php:631
 msgid ""
@@ -2713,7 +2658,7 @@ msgstr ""
 
 #: ../include/config_settings.php:637
 msgid "Ping Count"
-msgstr ""
+msgstr "Ping 回数"
 
 #: ../include/config_settings.php:638
 msgid ""
@@ -2722,13 +2667,12 @@ msgid ""
 msgstr ""
 
 #: ../include/config_settings.php:644
-#, fuzzy
 msgid "Host Up/Down Settings"
-msgstr "システムユーティリティ"
+msgstr "ホストアップ/ダウン設定"
 
 #: ../include/config_settings.php:648
 msgid "Failure Count"
-msgstr ""
+msgstr "失敗回数"
 
 #: ../include/config_settings.php:649
 msgid ""
@@ -2787,9 +2731,8 @@ msgid "Password Expiration"
 msgstr "パスワード有効期限"
 
 #: ../include/config_settings.php:695
-#, fuzzy
 msgid "Default Password Expiration"
-msgstr "パスワード有効期限"
+msgstr "デフォルトのパスワード有効期限"
 
 #: ../include/config_settings.php:696
 msgid ""
@@ -2833,7 +2776,7 @@ msgstr "SSL ポート"
 
 #: ../include/config_settings.php:727
 msgid "TCP/UDP port for SSL comminications."
-msgstr ""
+msgstr "SSL 通信の TCP/UDP ポート"
 
 #: ../include/config_settings.php:733
 msgid "Protocol Version"
@@ -2841,7 +2784,7 @@ msgstr "プロトコルバージョン"
 
 #: ../include/config_settings.php:734
 msgid "Protocol Version that the server supports."
-msgstr ""
+msgstr "サーバーがサポートするプロトコルのバージョンです。"
 
 #: ../include/config_settings.php:740
 msgid "Encryption"
@@ -2970,7 +2913,7 @@ msgstr ""
 
 #: ../include/config_settings.php:823
 msgid "Graph Date Display Format"
-msgstr ""
+msgstr "グラフの日付の表示形式"
 
 #: ../include/config_settings.php:824
 msgid "The date format to use for graphs"
@@ -3018,7 +2961,7 @@ msgstr ""
 
 #: ../include/config_settings.php:867
 msgid "Thumbnail Sections"
-msgstr ""
+msgstr "サムネイルセクション"
 
 #: ../include/config_settings.php:868
 msgid "Which sections of Cacti thumbnail graphs should be used for."
@@ -3062,7 +3005,7 @@ msgstr ""
 #: ../include/config_settings.php:910 ../include/config_settings.php:919
 #, fuzzy
 msgid "Graphs Per-Page"
-msgstr "グラフツリー"
+msgstr "ページ毎のグラフ数"
 
 #: ../include/config_settings.php:911
 msgid "The number of graphs to display on one page in preview mode."
@@ -3136,11 +3079,11 @@ msgstr ""
 
 #: ../include/data_query/data_query_form.php:32
 msgid "A name for this data query."
-msgstr ""
+msgstr "この問い合わせの名前です。"
 
 #: ../include/data_query/data_query_form.php:39
 msgid "A description for this data query."
-msgstr ""
+msgstr "この問い合わせの詳細です。"
 
 #: ../include/data_query/data_query_form.php:45
 #, fuzzy
@@ -3682,14 +3625,12 @@ msgid "Round Robin Archives"
 msgstr ""
 
 #: ../lib/html.php:762
-#, fuzzy
 msgid "Data Input Methods"
-msgstr "データ入力タイプ"
+msgstr "データの入力方法"
 
 #: ../lib/html.php:777
-#, fuzzy
 msgid "Data Input Fields"
-msgstr "データ入力タイプ"
+msgstr "データの入力項目"
 
 #: ../lib/html.php:817 ../utilities.php:305
 msgid "View Poller Cache"
@@ -3761,7 +3702,7 @@ msgstr "コピー"
 
 #: ../user_admin.php:271 ../user_admin.php:671
 msgid "[edit: "
-msgstr ""
+msgstr "[編集: "
 
 #: ../user_admin.php:278
 msgid ""
@@ -3774,9 +3715,8 @@ msgstr "グラフ権限 (グラフより)"
 
 #: ../user_admin.php:300 ../user_admin.php:359 ../user_admin.php:419
 #: ../user_admin.php:479
-#, fuzzy
 msgid "Default Policy"
-msgstr "デフォルトグラフポリシ"
+msgstr "デフォルトポリシ"
 
 #: ../user_admin.php:301 ../user_admin.php:360 ../user_admin.php:420
 #: ../user_admin.php:480
@@ -3802,11 +3742,11 @@ msgstr "グラフテンプレートがありません"
 #: ../user_admin.php:454
 #, fuzzy
 msgid "Add Graph Template:"
-msgstr "グラフテンプレート"
+msgstr "グラフテンプレートを追加する:"
 
 #: ../user_admin.php:466
 msgid "Tree Permissions"
-msgstr ""
+msgstr "ツリー権限"
 
 #: ../user_admin.php:500
 msgid "No Trees"
@@ -3827,9 +3767,8 @@ msgid "Graph settings control how graphs are displayed for this user."
 msgstr ""
 
 #: ../user_admin.php:673
-#, fuzzy
 msgid "[new]"
-msgstr "[なし]"
+msgstr "[新規]"
 
 #: ../user_admin.php:692
 msgid "Realm Permissions"
@@ -3946,14 +3885,12 @@ msgid "Access Denied."
 msgstr "アクセスを拒否されました。"
 
 #: ../utilities.php:115
-#, fuzzy
 msgid "Cacti Log Filters"
-msgstr "Cacti システムユーティリティ"
+msgstr "Cacti ログフィルター"
 
 #: ../utilities.php:144
-#, fuzzy
 msgid "Cacti Log Operations"
-msgstr "Cacti 設定"
+msgstr "Cacti ログ操作"
 
 #: ../utilities.php:203
 #, fuzzy
@@ -3977,9 +3914,8 @@ msgid "No Entries"
 msgstr "エントリがありません"
 
 #: ../utilities.php:295
-#, fuzzy
 msgid "Poller Cache Administration"
-msgstr "システムログ管理"
+msgstr "収集キャッシュ管理"
 
 #: ../utilities.php:308
 msgid ""

@@ -1,6 +1,5 @@
-# SOME DESCRIPTIVE TITLE.
 # Cacti locale source translation to Spanish
-# Copyright 2005 (C) YEAR Diego De Fuentes Ceballos
+# Copyright 2005 (C) Diego De Fuentes Ceballos
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -1674,6 +1673,8 @@ msgid ""
 "Visual wizard aids in setting up the visual settings of Cacti, including the "
 "Default Theme, Rows per Page and other settings."
 msgstr ""
+"El asistente visual le ayuda a configurar el aspecto visual de Cacti, "
+"incluyendo el Tema por defecto, las hileras por página y otros."
 
 #: ../settings_wizard.php:56
 msgid "Authenication"
@@ -5524,11 +5525,11 @@ msgstr "En que secciones de Cacti se debe utilizar el modo previo de gráficas."
 
 #: ../include/config_settings.php:877
 msgid "Tree View (Single Pane)"
-msgstr ""
+msgstr "Vista de Árbol (Recuadro sencillo)"
 
 #: ../include/config_settings.php:881
 msgid "Tree View (Dual Pane)"
-msgstr ""
+msgstr "Vista de Árbol (Recuadro doble)"
 
 #: ../include/config_settings.php:889
 msgid "Default Graph Tree"
@@ -5537,128 +5538,139 @@ msgstr "Árbol de gráficas por defecto"
 #: ../include/config_settings.php:890
 msgid "The default graph tree to use when displaying graphs in tree mode."
 msgstr ""
+"El árbol de gráficas por defecto a utilizar cuando se utilize el modo"
+"de vista de árbol."
 
 #: ../include/config_settings.php:896
 msgid "Default Tree View Mode"
-msgstr ""
+msgstr "Modo de vista de árbol por defecto"
 
 #: ../include/config_settings.php:897
 msgid "The default mode that will be used when viewing tree mode."
-msgstr ""
+msgstr "El modo por defecto que será utilizado cuando se esté en modo de árbol."
 
 #: ../include/config_settings.php:903
 msgid "Expand Hosts"
-msgstr ""
+msgstr "Expandir equipos"
 
 #: ../include/config_settings.php:904
 msgid ""
 "Choose whether to expand the graph templates used for a host on the dual "
 "pane tree."
 msgstr ""
+"Selecciones si se deben expandir las plantillas de gráficas utilzadas para"
+"un equipo en la vista de árbol con doble recuadro."
 
 #: ../include/config_settings.php:911 ../include/config_settings.php:920
 msgid "Graphs Per-Page"
-msgstr ""
+msgstr "Gráficas por página"
 
 #: ../include/config_settings.php:912
 msgid "The number of graphs to display on one page in preview mode."
-msgstr ""
+msgstr "El número de gráficas a desplegar en una pantalla en modo previo."
 
 #: ../include/config_settings.php:921
 msgid "The number of graphs to display on one page in list view mode."
-msgstr ""
+msgstr "El número de gráficas a desplegar en una pantalla en modo de lista."
 
 #: ../include/data_query/data_query_form.php:32
 msgid "A name for this data query."
-msgstr ""
+msgstr "Un nombre para esta consulta de información."
 
 #: ../include/data_query/data_query_form.php:39
 msgid "A description for this data query."
-msgstr ""
+msgstr "Una descripción para esta consulta de información."
 
 #: ../include/data_query/data_query_form.php:45
 msgid "XML Path"
-msgstr ""
+msgstr "Ruta XML"
 
 #: ../include/data_query/data_query_form.php:46
 msgid ""
 "The full path to the XML file containing definitions for this data query."
 msgstr ""
+"La ruta completa al archivo XML que contiene la definición para esta consulta"
+"de información."
 
 #: ../include/data_query/data_query_form.php:54
 msgid "How this data query gets its data whether from a script or using SNMP."
 msgstr ""
+"Como recaba informaicón esta consulta de información, de un script o "
+"utilizando SNMP."
 
 #: ../include/data_query/data_query_form.php:73
 msgid "A name for this associated graph."
-msgstr ""
+msgstr "Un nombre para esta gráfica asociada."
 
 #: ../include/data_query/data_query_form.php:80 ../include/config_form.php:333
 msgid ""
 "Choose what type of host, host template this is. The host template will "
 "govern what kinds of data should be gathered from this type of host."
 msgstr ""
+"Selecciones de que tipo de equipo o plantilla de equipo se trata. La plantilla"
+"determinará que tipo de información deberá se recaudada para este tipo de "
+"equipo."
 
 #: ../include/data_query/data_query_arrays.php:28
 msgid "SNMP Query"
-msgstr ""
+msgstr "Consulta SNMP"
 
 #: ../include/data_query/data_query_arrays.php:29
 msgid "Script Query"
-msgstr ""
+msgstr "Consulta por script"
 
 #: ../include/data_query/data_query_arrays.php:30
 msgid "Script Query (Using PHP Script Server)"
-msgstr ""
+msgstr "Consulta por script (Utilizando el servidor de scripts PHP)"
 
 #: ../include/data_query/data_query_arrays.php:35
 msgid "Uptime Goes Backwards"
-msgstr ""
+msgstr "El tiempo de disponibilidad va en cuenta regresiva"
 
 #: ../include/data_query/data_query_arrays.php:36
 msgid "Index Count Changed"
-msgstr ""
+msgstr "Índice de cuenta cambiado"
 
 #: ../include/data_query/data_query_arrays.php:37
 msgid "Verify All Fields"
-msgstr ""
+msgstr "Varificar todos los campos"
 
 #: ../include/top_graph_header.php:122 ../include/config_arrays.php:183
 msgid "Tree View"
-msgstr ""
+msgstr "Vista de Árbol"
 
 #: ../include/top_graph_header.php:124 ../include/config_arrays.php:184
 msgid "List View"
-msgstr ""
+msgstr "Vista en lista"
 
 #: ../include/top_graph_header.php:126 ../include/config_arrays.php:185
 msgid "Preview View"
-msgstr ""
+msgstr "Vista previa"
 
 #: ../include/top_graph_header.php:150
 msgid "Password expires in"
-msgstr ""
+msgstr "La contraseña expira en"
 
 #: ../include/top_graph_header.php:150
 msgid "days"
-msgstr ""
+msgstr "días"
 
 #: ../include/top_graph_header.php:155 ../include/top_header.php:85
 msgid "Logout"
-msgstr ""
+msgstr "Salir"
 
 #: ../include/top_header.php:79
 msgid "Password expires in "
-msgstr ""
+msgstr "La contraseña expira en"
 
 #: ../include/top_header.php:79
 msgid " days"
-msgstr ""
+msgstr "días"
 
 #: ../include/top_header.php:84
 #, php-format
 msgid "Logged in as"
-msgstr ""
+msgstr "Ingresó como"
 
 #: ../include/wizards/settings_general.php:37
 msgid ""
@@ -5666,12 +5678,18 @@ msgid ""
 "typically will reduce the number of connections to the database.  If you are "
 "running Solaris, you should consider disabling this option."
 msgstr ""
+"Habilitar esta configuración permitirá que mysql y php reúnan conecciones."
+"Esto normalmente reducirá el número de conecciones a la base de datos. Si "
+"esta corriendo Cacti sobre Solaris, debería considerar deshabilitar esta "
+"opción."
 
 #: ../include/wizards/settings_general.php:41
 msgid ""
 "Number of retries before a connection error is returned from mysql.  This "
 "setting typically should not exceed 100."
 msgstr ""
+"El número de reintentos antes de regresar un error de conección de mysql."
+"Normalmente este valor no debe exceder el número 100."
 
 #: ../include/wizards/settings_general.php:49
 msgid ""
@@ -5680,6 +5698,11 @@ msgid ""
 "a large number of metrics, i.e. switch ports in excess of 300, then set this "
 "to 64.  Otherwise the default value of 32 will be more than enough."
 msgstr ""
+"El número de Megabytes de memoria RAM que PHP utilizará al realizar tareas"
+"relacionadas con Cacti. Si planea monitorear dispositivos con un gran "
+"número de mediciones, por ejemplo más de 300 puertos de switch, asigne un"
+"valor de 64. En caso de no sobrepasar ese número un valor de 32 será "
+"suficiente."
 
 #: ../include/wizards/settings_general.php:53
 msgid ""
@@ -5688,748 +5711,766 @@ msgid ""
 "ports in excess of 300, then set this to 60 seconds.  Typically not change "
 "is needed, the default is 10 seconds."
 msgstr ""
+"El tiempo de espera para PHP al realizar tareas relacionadas con Cacti."
+"Si planea monitorear dispositivos con un gran número de mediciones, por "
+"ejemplo más de 300 puertos de switch, asigne un valor de 60 segundos. En "
+"caso de no sobrepasar ese número un valor de 10 segundos será suficiente."
 
 #: ../include/wizards/settings_general.php:61
 msgid ""
 "Enabling this setting will turn on prompting throughout the user inferface "
 "for confirmation on delete actions."
 msgstr ""
+"Habilitar esta opción ocasionará que se le solicite confirmación al usuario"
+"para las acciones de eliminación en todo el sistema."
 
 #: ../include/wizards/settings_general.php:65
 msgid ""
 "Enabling this setting will allow you to see some interal cacti settings, "
 "mostly related to templates."
 msgstr ""
+"Habilitar esta opción ocasionará que el administrador tenga acceso a ciertas"
+"configuraciones de Cacti, sobre todo lo relacionado con plantillas."
 
 #: ../include/wizards/settings_auth.php:33
 msgid "Previous Page:"
-msgstr ""
+msgstr "Página anterior:"
 
 #: ../include/wizards/settings_auth.php:33
 msgid "Current Page:"
-msgstr ""
+msgstr "Página actual:"
 
 #: ../include/wizards/settings_auth.php:33
 msgid "Next Page:"
-msgstr ""
+msgstr "Página siguiente:"
 
 #: ../include/config_arrays.php:27
 msgid "Save Successful."
-msgstr ""
+msgstr "Guardado exitoso."
 
 #: ../include/config_arrays.php:30
 msgid "Save Failed."
-msgstr ""
+msgstr "Guardado fallido."
 
 #: ../include/config_arrays.php:33
 msgid "Save Failed: Field Input Error (Check Red Fields)"
-msgstr ""
+msgstr "Guardado fallido: Error de ingreso de campo (Checar los campos en rojo)"
 
 #: ../include/config_arrays.php:36
 msgid "Passwords do not match, please retype."
-msgstr ""
+msgstr "Las contraseñas no coinciden, favor de recapturar."
 
 #: ../include/config_arrays.php:39
 msgid "You must select at least one field."
-msgstr ""
+msgstr "Se debe seleccionar por lo menos un campo."
 
 #: ../include/config_arrays.php:42
 msgid "You must have authentication turned on to use this feature."
 msgstr ""
+"Se debe terner la autenticación habilitada para usar esta funcionalidad."
 
 #: ../include/config_arrays.php:45
 msgid "XML parse error."
-msgstr ""
+msgstr "Error de transferencia de XML"
 
 #: ../include/config_arrays.php:48
 msgid "Authentication Failure."
-msgstr ""
+msgstr "Falla de autenticación."
 
 #: ../include/config_arrays.php:51
 msgid "Unable to change password."
-msgstr ""
+msgstr "No fue posible cambiar la contraseña."
 
 #: ../include/config_arrays.php:54
 msgid "You must fill in required values."
-msgstr ""
+msgstr "Se deben requisitrar los valores requeridos."
 
 #: ../include/config_arrays.php:57
 msgid "Password changed successfully."
-msgstr ""
+msgstr "Contraseña cambiada exitosamente."
 
 #: ../include/config_arrays.php:60
 msgid "Username already in use."
-msgstr ""
+msgstr "El nombre de usuario ya está siendo utilizado."
 
 #: ../include/config_arrays.php:63
 msgid "SNMP v3 authentication passwords do not match."
-msgstr ""
+msgstr "Las contraseña de autenticación para SNMP v3 no coinciden."
 
 #: ../include/config_arrays.php:66
 msgid "SNMP v3 privacy passphrases do not match."
-msgstr ""
+msgstr "Las frases de seguridad de privacidad para SNMP v3 no coinciden."
 
 #: ../include/config_arrays.php:69
 msgid "XML: Cacti version does not exist."
-msgstr ""
+msgstr "XML: La versión de Cacti no existe."
 
 #: ../include/config_arrays.php:72
 msgid "XML: Generated with an unknown (probably newer) version of Cacti."
 msgstr ""
+"XML: Fue generado con una versión desconocida (probablemente más reciente"
+"de Cacti."
 
 #: ../include/config_arrays.php:75
 msgid "XML: Generated with a newer version of Cacti."
-msgstr ""
+msgstr "XML: Fue generado con una versión más reciente de Cacti."
 
 #: ../include/config_arrays.php:78
 msgid "XML: Cannot locate type code."
-msgstr ""
+msgstr "XML: No es posible localizar el código de tipo."
 
 #: ../include/config_arrays.php:83 ../include/config_form.php:191
 msgid "Custom Value"
-msgstr ""
+msgstr "Valor personalizado"
 
 #: ../include/config_arrays.php:84 ../include/config_form.php:205
 msgid "Device Field Value"
-msgstr ""
+msgstr "Valor de campo de dispositivo"
 
 #: ../include/config_arrays.php:88
 msgid "Script/Command"
-msgstr ""
+msgstr "Script o comando"
 
 #: ../include/config_arrays.php:89
 msgid "Script - Script Server (PHP)"
-msgstr ""
+msgstr "Script - en servidor de scripts PHP"
 
 #: ../include/config_arrays.php:93
 msgid "SNMP Field Name (Dropdown)"
-msgstr ""
+msgstr "Nombre de campo SNMP (Menú de caída)"
 
 #: ../include/config_arrays.php:94
 msgid "SNMP Field Value (From User)"
-msgstr ""
+msgstr "Valor de campo SNMP (De usuario)"
 
 #: ../include/config_arrays.php:95
 msgid "SNMP Output Type (Dropdown)"
-msgstr ""
+msgstr "Tipo de salida de SNMO (Menú de caída)"
 
 #: ../include/config_arrays.php:99
 msgid "Version 1"
-msgstr ""
+msgstr "Versión 1"
 
 #: ../include/config_arrays.php:100 ../include/config_arrays.php:228
 msgid "Version 2"
-msgstr ""
+msgstr "Versión 2"
 
 #: ../include/config_arrays.php:101 ../include/config_arrays.php:229
 msgid "Version 3"
-msgstr ""
+msgstr "Versión 3"
 
 #: ../include/config_arrays.php:105
 msgid "No Privacy Protocol"
-msgstr ""
+msgstr "No hay protocolo de privacidad"
 
 #: ../include/config_arrays.php:110
 msgid "MD5 (default)"
-msgstr ""
+msgstr "Encripción MD5 (por defecto)"
 
 #: ../include/config_arrays.php:111
 msgid "SHA"
-msgstr ""
+msgstr "Encripción SHA"
 
 #: ../include/config_arrays.php:120
 msgid "Cacti Syslog Only"
-msgstr ""
+msgstr "Bitácora de sistema de Cacti únicamente"
 
 #: ../include/config_arrays.php:121
 msgid "Cacti Syslog and System Syslog/Eventlog"
 msgstr ""
+"Bitácora de sistema de Cacti y Bitácoras de eventos y de sistema del servidor"
 
 #: ../include/config_arrays.php:122
 msgid "System Syslog/Eventlog Only"
-msgstr ""
+msgstr "Bitácoras de eventos y de sistema del servidor"
 
 #: ../include/config_arrays.php:125
 msgid "Ping and SNMP - Most Recommended"
-msgstr ""
+msgstr "Ping y SNMP - Lo más recomendable"
 
 #: ../include/config_arrays.php:126
 msgid "SNMP - Reliable"
-msgstr ""
+msgstr "SNMP - Confiable"
 
 #: ../include/config_arrays.php:127
 msgid "Ping - Faster Option with Risk"
-msgstr ""
+msgstr "Ping - La opción más rápida con riesgo"
 
 #: ../include/config_arrays.php:128
 msgid "None - Don't Precheck Device Status"
-msgstr ""
+msgstr "Ninguna - No revisar por adelantado el estatus de los equipos"
 
 #: ../include/config_arrays.php:132
 msgid "ICMP Ping"
-msgstr ""
+msgstr "Ping por ICMP"
 
 #: ../include/config_arrays.php:133
 msgid "UDP Ping"
-msgstr ""
+msgstr "Ping por UDP"
 
 #: ../include/config_arrays.php:134
 msgid "Not Applicable"
-msgstr ""
+msgstr "No aplicable"
 
 #: ../include/config_arrays.php:138
 msgid "NONE - Syslog Only if Selected"
-msgstr ""
+msgstr "Ninguna - Únicamente bitácora de sistema"
 
 #: ../include/config_arrays.php:139
 msgid "LOW - Statistics and Errors"
-msgstr ""
+msgstr "BAJA - Estadísticas y Errores"
 
 #: ../include/config_arrays.php:140
 msgid "MEDIUM - Statistics, Errors and Results"
-msgstr ""
+msgstr "MEDIA - Estadísticas, Errores y Resultados"
 
 #: ../include/config_arrays.php:141
 msgid "HIGH - Statistics, Errors, Results and Major I/O Events"
-msgstr ""
+msgstr "ALTA - Estadísticas, Errores, Resultados y eventos importantes de E/S"
 
 #: ../include/config_arrays.php:142
 msgid "DEBUG - Statistics, Errors, Results, I/O and Program Flow"
-msgstr ""
+msgstr "DEBUG - Estadísticas, Errores, Resultados, E/S y flujo de programa."
 
 #: ../include/config_arrays.php:151 ../include/config_arrays.php:155
 msgid "Every Minute"
-msgstr ""
+msgstr "Cada Minuto"
 
 #: ../include/config_arrays.php:152 ../include/config_arrays.php:157
 msgid "Every 5 Minutes"
-msgstr ""
+msgstr "Cada 5 Minutos"
 
 #: ../include/config_arrays.php:156
 msgid "Every 2 Minutes"
-msgstr ""
+msgstr "Cada 2 Minutos"
 
 #: ../include/config_arrays.php:158
 msgid "Every 15 Minutes"
-msgstr ""
+msgstr "Cada 15 Minutos"
 
 #: ../include/config_arrays.php:159
 msgid "Every 30 Minutes"
-msgstr ""
+msgstr "Cada 30 Minutos"
 
 #: ../include/config_arrays.php:160
 msgid "Every Hour"
-msgstr ""
+msgstr "Cada Hora"
 
 #: ../include/config_arrays.php:161
 msgid "Every 4 Hours"
-msgstr ""
+msgstr "Cada 4 Horas"
 
 #: ../include/config_arrays.php:162
 msgid "Every Day"
-msgstr ""
+msgstr "Cada Día"
 
 #: ../include/config_arrays.php:166
 msgid "1 Day"
-msgstr ""
+msgstr "1 Día"
 
 #: ../include/config_arrays.php:167
 msgid "2 Days"
-msgstr ""
+msgstr "2 Días"
 
 #: ../include/config_arrays.php:168
 msgid "1 Week"
-msgstr ""
+msgstr "1 Semana"
 
 #: ../include/config_arrays.php:169
 msgid "2 Weeks"
-msgstr ""
+msgstr "2 Semanas"
 
 #: ../include/config_arrays.php:170
 msgid "3 Weeks"
-msgstr ""
+msgstr "3 Semanas"
 
 #: ../include/config_arrays.php:171
 msgid "1 Month"
-msgstr ""
+msgstr "1 Mes"
 
 #: ../include/config_arrays.php:172
 msgid "2 Months"
-msgstr ""
+msgstr "2 Meses"
 
 #: ../include/config_arrays.php:173
 msgid "4 Months"
-msgstr ""
+msgstr "4 Meses"
 
 #: ../include/config_arrays.php:174
 msgid "1 Year"
-msgstr ""
+msgstr "1 Año"
 
 #: ../include/config_arrays.php:175
 msgid "2 Years"
-msgstr ""
+msgstr "2 Año"
 
 #: ../include/config_arrays.php:189
 msgid "Single Pane"
-msgstr ""
+msgstr "Recuadro sencillo"
 
 #: ../include/config_arrays.php:190
 msgid "Dual Pane"
-msgstr ""
+msgstr "Recuadro doble"
 
 #: ../include/config_arrays.php:200
 msgid "Builtin Authentication"
-msgstr ""
+msgstr "Autenticación Interna"
 
 #: ../include/config_arrays.php:201
 msgid "Web Basic Authentication"
-msgstr ""
+msgstr "Autenticación básica via servidor web"
 
 #: ../include/config_arrays.php:202
 msgid "LDAP Authentication"
-msgstr ""
+msgstr "Autenticación vía LDAP"
 
 #: ../include/config_arrays.php:206 ../user_admin.php:768
 msgid "Never"
-msgstr ""
+msgstr "Nunca"
 
 #: ../include/config_arrays.php:207
 msgid "30 Days"
-msgstr ""
+msgstr "30 Días"
 
 #: ../include/config_arrays.php:208
 msgid "60 Days"
-msgstr ""
+msgstr "60 Días"
 
 #: ../include/config_arrays.php:209
 msgid "90 Days"
-msgstr ""
+msgstr "90 Días"
 
 #: ../include/config_arrays.php:210
 msgid "120 Days"
-msgstr ""
+msgstr "120 Días"
 
 #: ../include/config_arrays.php:211
 msgid "150 Days"
-msgstr ""
+msgstr "150 Días"
 
 #: ../include/config_arrays.php:212
 msgid "180 Days"
-msgstr ""
+msgstr "180 Días"
 
 #: ../include/config_arrays.php:213
 msgid "210 Days"
-msgstr ""
+msgstr "210 Días"
 
 #: ../include/config_arrays.php:214
 msgid "240 Days"
-msgstr ""
+msgstr "240 Días"
 
 #: ../include/config_arrays.php:215
 msgid "270 Days"
-msgstr ""
+msgstr "270 Días"
 
 #: ../include/config_arrays.php:216
 msgid "300 Days"
-msgstr ""
+msgstr "300 Días"
 
 #: ../include/config_arrays.php:217
 msgid "330 Days"
-msgstr ""
+msgstr "330 Días"
 
 #: ../include/config_arrays.php:218
 msgid "360 Days"
-msgstr ""
+msgstr "360 Días"
 
 #: ../include/config_arrays.php:234
 msgid "SSL"
-msgstr ""
+msgstr "SSL"
 
 #: ../include/config_arrays.php:235
 msgid "TLS"
-msgstr ""
+msgstr "TLS"
 
 #: ../include/config_arrays.php:239
 msgid "No Searching"
-msgstr ""
+msgstr "No buscar"
 
 #: ../include/config_arrays.php:240
 msgid "Anonymous Searching"
-msgstr ""
+msgstr "Búsqueda anónima"
 
 #: ../include/config_arrays.php:241
 msgid "Specific Searching"
-msgstr ""
+msgstr "Búsqueda específica"
 
 #: ../include/config_arrays.php:245
 msgid "Overwrite events as needed"
-msgstr ""
+msgstr "Sobreescribir eventos como sea necesario"
 
 #: ../include/config_arrays.php:246
 msgid "Overwrite events older than the maximum days"
-msgstr ""
+msgstr "Sobreescribir eventos mas antiguos que el máximo de días"
 
 #: ../include/config_arrays.php:247
 msgid "Stop logging if maximum log size is exceeded"
-msgstr ""
+msgstr "Detener la bitácora si el tamaño máximo es excedido"
 
 #: ../include/config_arrays.php:261
 msgid "Special Data Source"
-msgstr ""
+msgstr "Fuente de información especial"
 
 #: ../include/config_arrays.php:262
 msgid "Another CDEF"
-msgstr ""
+msgstr "Otro CDEF"
 
 #: ../include/config_arrays.php:263
 msgid "Custom String"
-msgstr ""
+msgstr "Texto Personalizado"
 
 #: ../include/config_arrays.php:267
 msgid "Manual Ordering (No Sorting)"
-msgstr ""
+msgstr "Ordenamiento manual"
 
 #: ../include/config_arrays.php:268
 msgid "Alphabetic Ordering"
-msgstr ""
+msgstr "Ordenamiento Alfabético"
 
 #: ../include/config_arrays.php:269
 msgid "Numeric Ordering"
-msgstr ""
+msgstr "Ordenamiento Numérico"
 
 #: ../include/config_arrays.php:273
 msgid "Current Graph Item Data Source"
-msgstr ""
+msgstr "Fuente de información de elemento de gráfica actual."
 
 #: ../include/config_arrays.php:274
 msgid "All Data Sources (Don't Include Duplicates)"
-msgstr ""
+msgstr "Todas las Fuentes de información (No incluir duplicadas)"
 
 #: ../include/config_arrays.php:275
 msgid "All Data Sources (Include Duplicates)"
-msgstr ""
+msgstr "Todas las Fuentes de información (Incluir duplicadas)"
 
 #: ../include/config_arrays.php:276
 msgid "Current Data Source Item: Minimum Value"
-msgstr ""
+msgstr "Elemento de Fuente de información actual: Valor Mínimo"
 
 #: ../include/config_arrays.php:277
 msgid "All Similar Data Sources (Don't Include Duplicates)"
-msgstr ""
+msgstr "Todas las Fuentes de información similares (No incluir duplicadas)"
 
 #: ../include/config_arrays.php:278
 msgid "Current Data Source Item: Maximum Value"
-msgstr ""
+msgstr "Elemento de Fuente de información actual: Valor Máximo"
 
 #: ../include/config_arrays.php:279
 msgid "Graph: Lower Limit"
-msgstr ""
+msgstr "Límite Inferior de Gráfica"
 
 #: ../include/config_arrays.php:280
 msgid "Graph: Upper Limit"
-msgstr ""
+msgstr "Límite Superior de Gráfica"
 
 #: ../include/config_arrays.php:284
 msgid "New Graphs"
-msgstr ""
+msgstr "Nuevas Gráficas"
 
 #: ../include/config_arrays.php:286
 msgid "Management"
-msgstr ""
+msgstr "Administración"
 
 #: ../include/config_arrays.php:287
 msgid "Trees"
-msgstr ""
+msgstr "Árboles"
 
 #: ../include/config_arrays.php:292
 msgid "RRAs"
-msgstr ""
+msgstr "RRAs"
 
 #: ../include/config_arrays.php:295
 msgid "Data Collection"
-msgstr ""
+msgstr "Recaudación de Información"
 
 #: ../include/config_arrays.php:297
 msgid "Scripts"
-msgstr ""
+msgstr "Scripts"
 
 #: ../include/config_arrays.php:298
 msgid "Queries"
-msgstr ""
+msgstr "Consultas"
 
 #: ../include/config_arrays.php:300
 msgid "Templates"
-msgstr ""
+msgstr "Plantillas"
 
 #: ../include/config_arrays.php:306
 msgid "Import/Export"
-msgstr ""
+msgstr "Importar/Exportar"
 
 #: ../include/config_arrays.php:310
 msgid "Configuration"
-msgstr ""
+msgstr "Configuración"
 
 #: ../include/config_arrays.php:311
 msgid "System Settings"
-msgstr ""
+msgstr "Opciones de Sistema"
 
 #: ../include/config_arrays.php:317
 msgid "System Utilities"
-msgstr ""
+msgstr "Utilerías de Sistema"
 
 #: ../include/config_arrays.php:320
 msgid "Logout User"
-msgstr ""
+msgstr "Salida de Usuario"
 
 #: ../include/config_arrays.php:325
 msgid "User Administration"
-msgstr ""
+msgstr "Administración de Usuarios"
 
 #: ../include/config_arrays.php:327
 msgid "Update Data Sources"
-msgstr ""
+msgstr "Actualizar Fuentes de información"
 
 #: ../include/config_arrays.php:328
 msgid "Update Graph Trees"
-msgstr ""
+msgstr "Actualizar Árboles de gráficas"
 
 #: ../include/config_arrays.php:329
 msgid "Update Graphs"
-msgstr ""
+msgstr "Actualizar gráficas"
 
 #: ../include/config_arrays.php:330
 msgid "View Graphs"
-msgstr ""
+msgstr "Ver gráficas"
 
 #: ../include/config_arrays.php:331
 msgid "Console Access"
-msgstr ""
+msgstr "Acceso de Consola"
 
 #: ../include/config_arrays.php:332
 msgid "Update Round Robin Archives"
-msgstr ""
+msgstr "Actualizar Archivos Round Robin"
 
 #: ../include/config_arrays.php:333
 msgid "Update Graph Templates"
-msgstr ""
+msgstr "Actualizar Plantillas de gráficas"
 
 #: ../include/config_arrays.php:334
 msgid "Update Data Templates"
-msgstr ""
+msgstr "Actualizar Plantillas de información"
 
 #: ../include/config_arrays.php:335
 msgid "Update Host Templates"
-msgstr ""
+msgstr "Actualizar Plantillas de equipo"
 
 #: ../include/config_arrays.php:337
 msgid "Update Data Presets"
-msgstr ""
+msgstr "Actualizar precongifuración de información"
 
 #: ../include/config_arrays.php:338
 msgid "Global Settings"
-msgstr ""
+msgstr "Configuración Global"
 
 #: ../include/config_arrays.php:339
 msgid "Export Data"
-msgstr ""
+msgstr "Exportar Información"
 
 #: ../include/config_arrays.php:340
 msgid "Import Data"
-msgstr ""
+msgstr "Importar Información"
 
 #: ../include/config_arrays.php:343
 msgid "View Graph Properties"
-msgstr ""
+msgstr "Ver propiedades de gráfica"
 
 #: ../include/config_arrays.php:420
 msgid "CDEF"
-msgstr ""
+msgstr "CDEF"
 
 #: ../include/config_arrays.php:421
 msgid "CDEF Item"
-msgstr ""
+msgstr "Elemento de CDEF"
 
 #: ../include/config_arrays.php:422
 msgid "GPRINT Preset"
-msgstr ""
+msgstr "Preconfiguración GPRINT"
 
 #: ../include/config_arrays.php:423
 msgid "Data Input Method"
-msgstr ""
+msgstr "Método de ingreso de información"
 
 #: ../include/config_arrays.php:424
 msgid "Data Input Field"
-msgstr ""
+msgstr "Campo de ingreso de información"
 
 #: ../include/config_arrays.php:428
 msgid "Graph Template Item"
-msgstr ""
+msgstr "Elemento de plantilla de gráfica"
 
 #: ../include/config_arrays.php:429
 msgid "Graph Template Input"
-msgstr ""
+msgstr "Ingreso de plantilla de gráfica"
 
 #: ../include/config_arrays.php:433
 msgid "Round Robin Archive Template"
-msgstr ""
+msgstr "Plantilla de Archivo Round Robin"
 
 #: ../include/config_arrays.php:467
 msgid "Month Number, Day, Year"
-msgstr ""
+msgstr "Número de Mes, Día, Año"
 
 #: ../include/config_arrays.php:468
 msgid "Month Name, Day, Year"
-msgstr ""
+msgstr "Nombre de Mes, Día, Año"
 
 #: ../include/config_arrays.php:469
 msgid "Day, Month Number, Year"
-msgstr ""
+msgstr "Día, Número de Mes, Año"
 
 #: ../include/config_arrays.php:470
 msgid "Day, Month Name, Year"
-msgstr ""
+msgstr "Día Nombre de Mex, Año"
 
 #: ../include/config_arrays.php:471
 msgid "Year, Month Number, Day"
-msgstr ""
+msgstr "Año, Número de Mes, Día"
 
 #: ../include/config_arrays.php:472
 msgid "Year, Month Name, Day"
-msgstr ""
+msgstr "Año, Nombre de Mes, Día"
 
 #: ../include/config_arrays.php:481
 msgid "Soft New Look"
-msgstr ""
+msgstr "Nueva Presentación Suave"
 
 #: ../include/config_arrays.php:482
 msgid "Traditional Cacti Theme"
-msgstr ""
+msgstr "Tema Tradicional de Cacti"
 
 #: ../include/config_arrays.php:483
 msgid "Dark and Distinguished"
-msgstr ""
+msgstr "Obscuro y Distinguido"
 
 #: ../include/config_arrays.php:484
 msgid "Don't Know Yet"
-msgstr ""
+msgstr "No se sabe todavía"
 
 #: ../include/config_arrays.php:485
 msgid "Nostalgic Look"
-msgstr ""
+msgstr "Presentación Nostágica"
 
 #: ../include/config_arrays.php:486
 msgid "Matches the KDE Desktop"
-msgstr ""
+msgstr "Hace juego con KDE"
 
 #: ../include/config_arrays.php:487
 msgid "Wrapped in Chains"
-msgstr ""
+msgstr "Envuelto en Cadenas"
 
 #: ../include/config_arrays.php:488
 msgid "Windows XP Default"
-msgstr ""
+msgstr "Por Defecto para Windows XP"
 
 #: ../include/config_form.php:37
 msgid "A useful name for this CDEF."
-msgstr ""
+msgstr "Un nombre útil para este CDEF."
 
 #: ../include/config_form.php:56
 msgid "The hex value for this color; valid range: 000000-FFFFFF."
-msgstr ""
+msgstr "El valor hexadecimal para este color; rango válido: 000000-FFFFFF."
 
 #: ../include/config_form.php:75
 msgid "Enter a meaningful name for this Round Robin Archive Template."
 msgstr ""
+"Capture un nombre reconocible para esta Plantilla de archivo Round Robin"
 
 #: ../include/config_form.php:82
 msgid "Detailed information relative to this RRA Template."
-msgstr ""
+msgstr "Información detallada relativa a esta platilla RRA."
 
 #: ../include/config_form.php:88
 msgid "Polling Frequency"
-msgstr ""
+msgstr "Frecuencia de colección"
 
 #: ../include/config_form.php:89
 msgid "How often you want the device to be polled."
-msgstr ""
+msgstr "Con que frecuencia desea que el dispositivo sea colectado."
 
 #: ../include/config_form.php:112
 msgid "Poller Name"
-msgstr ""
+msgstr "Nombre de Colector"
 
 #: ../include/config_form.php:113
 msgid "Enter a meaningful name for this poller."
-msgstr ""
+msgstr "Capture un nombre reconocible para este colector."
 
 #: ../include/config_form.php:120
 msgid "Enter the IP address or hostname of this poller."
-msgstr ""
+msgstr "Capture la dirección IP o hombre de equipo de este colector."
 
 #: ../include/config_form.php:126
 msgid "Poller Active"
-msgstr ""
+msgstr "Colector Activo"
 
 #: ../include/config_form.php:127
 msgid "Whether or not this data poller is to be used."
-msgstr ""
+msgstr "Si se desea o no que este colector sea utilizado."
 
 #: ../include/config_form.php:147
 msgid "Enter a meaningful name for this script."
-msgstr ""
+msgstr "Capture un nombre reconocible para este script."
 
 #: ../include/config_form.php:154
 msgid "Choose what type of script this is."
-msgstr ""
+msgstr "Eliga de que tipo es este script."
 
 #: ../include/config_form.php:160
 msgid "Input String"
-msgstr ""
+msgstr "Texto de Entrada"
 
 #: ../include/config_form.php:161
 msgid ""
 "The data that is sent to the script, which includes the complete path to the "
 "script and input fields in &lt;&gt; brackets."
 msgstr ""
+"La información que es enviada al script. se incluye la ruta completa al script"
+"y los campos de entrada en &lt;&gt; corchetes."
 
 #: ../include/config_form.php:178
 msgid "Input Field Type"
-msgstr ""
+msgstr "Tipo de campo de entrada"
 
 #: ../include/config_form.php:185
 msgid "Select where this data input field will obtain its value."
 msgstr ""
+"Seleccione de donde obtendrá su valor esta campo de ingreso de información."
 
 #: ../include/config_form.php:196
 msgid "Default Value"
-msgstr ""
+msgstr "Valor por defecto"
 
 #: ../include/config_form.php:197
 msgid "Enter a default value for this input field."
-msgstr ""
+msgstr "Capture un valor por defecto para este campo de ingreso."
 
 #: ../include/config_form.php:209
 msgid "Device Field"
-msgstr ""
+msgstr "Campo de dispositivo"
 
 #: ../include/config_form.php:219
 msgid "Select the device field that will be used to populate this input field."
 msgstr ""
+"Selecciones el campo de dispositivo que será utilizado para poblar este "
+"campo de entrada."
 
 #: ../include/config_form.php:227
 msgid "Field [|arg2:|]"
-msgstr ""
+msgstr "Campo [|arg2:|]"
 
 #: ../include/config_form.php:228
 msgid "Enter a name for this |arg2:| field."
-msgstr ""
+msgstr "Capture un nombre para este campo |arg2:|."
 
 #: ../include/config_form.php:235
 msgid "Enter a meaningful name for this data input field."
-msgstr ""
+msgstr "Capture un nombre reconocible para este campo de ingreso de información"
 
 #: ../include/config_form.php:241
 msgid "Update RRD File"
-msgstr ""
+msgstr "Actualizar este archivo RRD"
 
 #: ../include/config_form.php:242
 msgid ""
@@ -6437,165 +6478,184 @@ msgid ""
 "Fields values that are not entered into the RRD can still be used as "
 "variables on graphs."
 msgstr ""
+"Si la información de este campo de salida deberá ser almacenada en el archivo "
+"RRD. Los valores de campos que no sean guardados en el RRD pueden ser "
+"utilizados como variables en gráficas."
 
 #: ../include/config_form.php:249
 msgid "Regular Expression Match"
-msgstr ""
+msgstr "Coincidencia de Expresión Regular"
 
 #: ../include/config_form.php:250
 msgid ""
 "If you want to require a certain regular expression to be matched againt "
 "input data, enter it here (ereg format)."
 msgstr ""
+"Si desea requerir que una cierta cantidad de expresiones regulares coincidan"
+"con la información de entrada, captúrelas aqui (en formato ereg)."
 
 #: ../include/config_form.php:256
 msgid "Allow Empty Input"
-msgstr ""
+msgstr "Permitir entradas en blanco"
 
 #: ../include/config_form.php:257
 msgid "Check here if you want to allow empty input in this field."
 msgstr ""
+"Habilite esta opcion si desea permitir entradas en blanco en este campo."
 
 #: ../include/config_form.php:289
 msgid ""
 "Enter a name for this GPRINT preset, make sure it is something you recognize."
 msgstr ""
+"Capture un nombre para esta preconfiguración GPRINT, asegúrese de asignar"
+"algo que reconozca."
 
 #: ../include/config_form.php:295
 msgid "GPRINT Text"
-msgstr ""
+msgstr "Texto GPRINT"
 
 #: ../include/config_form.php:296
 msgid "Enter the custom GPRINT string here."
-msgstr ""
+msgstr "Capture el texto para GPRINT personalizado aqui."
 
 #: ../include/config_form.php:319
 msgid "Give this host a meaningful description."
-msgstr ""
+msgstr "Asigne a este equipo una descripción."
 
 #: ../include/config_form.php:326
 msgid "Fill in the fully qualified hostname for this device."
 msgstr ""
+"Capture el nombre de equipo totalmente calificado para este dispositivo."
 
 #: ../include/config_form.php:340
 msgid "Default Poller"
-msgstr ""
+msgstr "Colector por defecto"
 
 #: ../include/config_form.php:341
 msgid "Choose the default poller to handle this hosts request."
 msgstr ""
+"Seleccione el colector por defecto para encargarse de la esta solicitud de "
+"equipos."
 
 #: ../include/config_form.php:347
 msgid "Disable Host"
-msgstr ""
+msgstr "Deshabilitar equipo"
 
 #: ../include/config_form.php:348
 msgid "Check this box to disable all checks for this host."
 msgstr ""
+"Seleccione esta opción para deshabilitar todos los chequeos para este equipo."
 
 #: ../include/config_form.php:355
 msgid "Availability Detection"
-msgstr ""
+msgstr "Detección de disponibilidad"
 
 #: ../include/config_form.php:359
 msgid "Availability Method"
-msgstr ""
+msgstr "Método de disponibilidad"
 
 #: ../include/config_form.php:360
 msgid "Choose the availability method to use for this host."
-msgstr ""
+msgstr "Seleccione el método de disponibilidad a utilizar para este equipo."
 
 #: ../include/config_form.php:375
 msgid "SNMP Generic Options"
-msgstr ""
+msgstr "Opciones Generales de SNMP"
 
 #: ../include/config_form.php:405
 msgid "SNMP v1/v2c Options"
-msgstr ""
+msgstr "Opciones v1/v2c de SNMP"
 
 #: ../include/config_form.php:418
 msgid "SNMP v3 Options"
-msgstr ""
+msgstr "Opciones v3 de SNMP"
 
 #: ../include/config_form.php:479
 msgid "A useful name for this host template."
-msgstr ""
+msgstr "Un nombre útil para esta plantilla de equipo."
 
 #: ../include/config_form.php:498 ../include/config_form.php:505
 msgid "How data is to be entered in RRA's."
-msgstr ""
+msgstr "Como se agregará la información a los archivos RRA"
 
 #: ../include/config_form.php:504
 msgid "Consolidation Functions"
-msgstr ""
+msgstr "Funciones de consolidación"
 
 #: ../include/config_form.php:511
 msgid "X-Files Factor"
-msgstr ""
+msgstr "Factor Archivos X"
 
 #: ../include/config_form.php:512
 msgid "The amount of unknown data that can still be regarded as known."
 msgstr ""
+"La cantidad de información desconocida que pudiera ser considerada conocida."
 
 #: ../include/config_form.php:519
 msgid "How many data points are needed to put data into the RRA."
 msgstr ""
+"Cuántos puntos de información son necesarios para agregarse al archivo RRA."
 
 #: ../include/config_form.php:526
 msgid "How many generations data is kept in the RRA."
-msgstr ""
+msgstr "Cuántas generaciones de información son almacenadas en el archivo RRA."
 
 #: ../include/config_form.php:533
 msgid "How many seconds to display in graph for this RRA."
-msgstr ""
+msgstr "Cuántos segundos se deplegarpan en la gráfica para el archivo RRA."
 
 #: ../include/config_form.php:552
 msgid "A useful name for this graph tree."
 msgstr ""
+"Un nombre útil para este árbol de gráficas."
 
 #: ../include/config_form.php:559
 msgid "Choose how items in this tree will be sorted."
-msgstr ""
+msgstr "Seleccione cuántos elementos de éste árbol serán ordenados."
 
 #: ../include/config_form.php:576 ../user_settings.php:82 ../user_admin.php:29
 msgid "System Default (Global Setting)"
-msgstr ""
+msgstr "Sistema Por Defecto (COnfiguración Global)"
 
 #: ../graphs.php:44
 msgid "Change Graph Template"
-msgstr ""
+msgstr "Cambiar Plantilla de gráfica"
 
 #: ../graphs.php:46
 msgid "Convert to Graph Template"
-msgstr ""
+msgstr "Convertir a Plantilla de gráfica"
 
 #: ../graphs.php:48
 msgid "Reapply Suggested Names"
-msgstr ""
+msgstr "Volver a aplicar los nombres sugeridos"
 
 #: ../graphs.php:49
 msgid "Resize Selected Graphs"
-msgstr ""
+msgstr "Modificar el tamaño de las gráficas seleccionadas"
 
 #: ../graphs.php:50
 msgid "Place on a Tree"
-msgstr ""
+msgstr "Colocar en un árbol"
 
 #: ../graphs.php:259
 msgid "Are you sure you want to delete the following graphs?"
-msgstr ""
+msgstr "Esta seguro de querer eliminar las siguientes gráficas?"
 
 #: ../graphs.php:263
 msgid "The following data sources are in use by these graphs:"
 msgstr ""
+"Las siguientes fuentes de información están siendo utilizadas para estas "
+"gráficas:"
 
 #: ../graphs.php:270
 msgid "Leave the data sources untouched."
-msgstr ""
+msgstr "Dejar las fuentes de información sin modificar."
 
 #: ../graphs.php:271
 msgid "Delete all <strong>data sources</strong> referenced by these graphs."
 msgstr ""
+"Eliminar todas las <strong>fuentes de información</strong> referenciadas por"
+"estas gráficas."
 
 #: ../graphs.php:281
 msgid ""
@@ -6604,16 +6664,24 @@ msgid ""
 "suppressed during the\n"
 "\t\t\t\t\tconversion, so graph data loss is possible."
 msgstr ""
+"Selecciones una plantilla de gráficas y de Guardar para cambiar la plantilla "
+"de gráfica para \n"
+"\t\t\t\t\tlas gráficas siguientes. Note que todas las advertencias serán"
+"suprimidas durante la\n"
+"\t\t\t\t\tconversión, de tal modo que es posible perder información."
 
 #: ../graphs.php:285
 msgid "New Graph Template:"
-msgstr ""
+msgstr "Nueva Plantilla de gráfica:"
 
 #: ../graphs.php:292
 msgid ""
 "When you click save, the following graphs will be duplicated. You can\n"
 "\t\t\t\t\toptionally change the title format for the new graphs."
 msgstr ""
+"Cuando se selecciona Guardar, las siguientes gráficas serán duplicadas. Usted "
+"puede\n"
+"\t\t\t\t\topcionalmente cambiar el formato de título para las gráficas nuevas."
 
 #: ../graphs.php:302
 msgid ""
@@ -6622,10 +6690,14 @@ msgid ""
 "\t\t\t\t\tYou can optionally change the title format for the new graph "
 "templates."
 msgstr ""
+"Cuando se selecciona guardar, las siguientes gráficas serán convertidas en "
+"plantillas de gráficas.\n"
+"\t\t\t\t\tSe puede opcionalmente cambiar el formato de título para las "
+"nuevas plantillas."
 
 #: ../graphs.php:312
 msgid "Choose a new host for these graphs:"
-msgstr ""
+msgstr "Seleccione un nuevo equipo para estas gráficas:"
 
 #: ../graphs.php:321
 msgid ""
@@ -6633,6 +6705,9 @@ msgid ""
 "convensions\n"
 "\t\t\t\t\trecalculated and applies to the graphs."
 msgstr ""
+"Cuando seleccione guardar, las siguientes gráficas tendrán sus convenciones de"
+"nombre sugerido \n"
+"recalculadas."
 
 #: ../graphs.php:342
 msgid ""
@@ -6640,233 +6715,252 @@ msgid ""
 "selected\n"
 "\t\t\t\t\tbelow."
 msgstr ""
+"Cuando seleccione guardar, las siguientes gráficas serán ubicadas bajo la rama"
+"seleccionada\n"
+"\t\t\t\t\tabajo."
 
 #: ../graphs.php:345
 msgid "Destination Branch:"
-msgstr ""
+msgstr "Rama destino:"
 
 #: ../graphs.php:353
 msgid "You must select at least one graph."
-msgstr ""
+msgstr "Se debe seleccionar por lo menos una gráfica"
 
 #: ../graphs.php:424
 msgid "Selected Graph Template"
-msgstr ""
+msgstr "Plantilla de gráfica seleccionada"
 
 #: ../graphs.php:425
 msgid ""
 "Choose a graph template to apply to this graph. Please note that graph data "
 "may be lost if you change the graph template after one is already applied."
 msgstr ""
+"Seleccione una plantilla de gráfica para aplicar a esta gráfica. Note que "
+"la información de la gráfica puede perderse si se cambia la plantilla "
+"posteriormente a tener otra plantilla aplicada."
 
 #: ../graphs.php:433
 msgid "Choose the host that this graph belongs to."
-msgstr ""
+msgstr "Seleccione el equipo al cual pertenece esta gráfica."
 
 #: ../graphs.php:463
 msgid "Graph Fields"
-msgstr ""
+msgstr "Campos de gráfica"
 
 #: ../graphs.php:464
 msgid "Graph Item Fields"
-msgstr ""
+msgstr "Campos de elementos de gráfica"
 
 #: ../graphs.php:503
 msgid "RRDTool Says:"
-msgstr ""
+msgstr "RRDTool Reporta:"
 
 #: ../graphs.php:624
 msgid "Graph Title"
-msgstr ""
+msgstr "Título de gráfica"
 
 #: ../graphs.php:624
 msgid "Size"
-msgstr ""
+msgstr "Tamaño"
 
 #: ../graphs.php:656
 msgid "No Graphs Found"
-msgstr ""
+msgstr "No se encontraron gráficas"
 
 #: ../user_admin.php:41
 msgid "Copy"
-msgstr ""
+msgstr "Copiar"
 
 #: ../user_admin.php:278
 msgid ""
 "Graph policies will be evaluated in the order shown until a match is found."
 msgstr ""
+"Las políticas de gráficas serán evaluadas en el order mostrado hasta encontrar"
+"alguna incidencia."
 
 #: ../user_admin.php:285
 msgid "Graph Permissions (By Graph)"
-msgstr ""
+msgstr "Permisos de gráficas (por gráfica)"
 
 #: ../user_admin.php:300 ../user_admin.php:359 ../user_admin.php:419
 #: ../user_admin.php:479
 msgid "Default Policy"
-msgstr ""
+msgstr "Política por defecto"
 
 #: ../user_admin.php:301 ../user_admin.php:360 ../user_admin.php:420
 #: ../user_admin.php:480
 msgid "The default allow/deny graph policy for this user."
 msgstr ""
+"La política de permitir/denegar de gráficas por defecto para este usuario."
 
 #: ../user_admin.php:321
 msgid "No Graphs"
-msgstr ""
+msgstr "No hay gráficas"
 
 #: ../user_admin.php:334
 msgid "Add Graph"
-msgstr ""
+msgstr "Añadir gráfica"
 
 #: ../user_admin.php:346
 msgid "Graph Permissions (By Host)"
-msgstr ""
+msgstr "Permisos de gráficas (Por equipo)"
 
 #: ../user_admin.php:394
 msgid "Add Host"
-msgstr ""
+msgstr "Añadir equipo"
 
 #: ../user_admin.php:406
 msgid "Graph Permissions (By Graph Template)"
-msgstr ""
+msgstr "Permisos de gráficas (Por plantilla de gráfica)"
 
 #: ../user_admin.php:454
 msgid "Add Graph Template:"
-msgstr ""
+msgstr "Añadir plantilla de gráfica:"
 
 #: ../user_admin.php:466
 msgid "Tree Permissions"
-msgstr ""
+msgstr "Permisos de Árbol"
 
 #: ../user_admin.php:500
 msgid "No Trees"
-msgstr ""
+msgstr "No hay árboles"
 
 #: ../user_admin.php:514
 msgid "Add Tree:"
-msgstr ""
+msgstr "Añadir Árbol:"
 
 #: ../user_admin.php:540
 msgid ""
 "Realm permissions control which sections of Cacti this user will have access "
 "to."
 msgstr ""
+"Los permisos de acceso controlan las secciones de Cacti que tendrá acceso este"
+"usuario."
 
 #: ../user_admin.php:549 ../user_admin.php:692
 msgid "Realm Permissions"
-msgstr ""
+msgstr "Permisos de acceso"
 
 #: ../user_admin.php:605
 msgid "Graph settings control how graphs are displayed for this user."
 msgstr ""
+"Las opciones de gráficas controlan como serán desplegadas para este usuario."
 
 #: ../user_admin.php:696
 msgid "Graph Permissions"
-msgstr ""
+msgstr "Permisos de gráficas"
 
 #: ../user_admin.php:731
 msgid "Realm"
-msgstr ""
+msgstr "Permisos"
 
 #: ../user_admin.php:731
 msgid "Default Graph Policy"
-msgstr ""
+msgstr "Política de gráficas por defecto"
 
 #: ../user_admin.php:731
 msgid "Last Login"
-msgstr ""
+msgstr "Último ingreso"
 
 #: ../user_admin.php:731
 msgid "Last Login From"
-msgstr ""
+msgstr "El último ingreso fue de"
 
 #: ../user_admin.php:731
 msgid "Last Password Change"
-msgstr ""
+msgstr "Último cambio de contraseña"
 
 #: ../user_admin.php:754
 msgid "ALLOW"
-msgstr ""
+msgstr "PERMITIR"
 
 #: ../user_admin.php:754
 msgid "DENY"
-msgstr ""
+msgstr "DENEGAR"
 
 #: ../user_admin.php:861
 msgid "To enable the following users, press the \"yes\" button below."
 msgstr ""
+"Para habilitar los siguientes usuarios, seleccione el botón \"si\""
+"abajo."
 
 #: ../user_admin.php:868
 msgid "To disable the following users, press the \"yes\" button below."
 msgstr ""
+"Para dehabilitar los siguientes usuarios, seleccione el botón \"si\""
+"abajo."
 
 #: ../user_admin.php:876
 msgid "Would you like to copy a user to a new user?"
-msgstr ""
+msgstr "¿Desea copiar un usuario a un usuario nuevo?"
 
 #: ../user_admin.php:886
 msgid "Select the user name you would like to copy from."
-msgstr ""
+msgstr "Seleccione el nombre de usuario que desea copiar."
 
 #: ../user_admin.php:892
 msgid "New User Name"
-msgstr ""
+msgstr "Nuevo nombre de usuario"
 
 #: ../user_admin.php:893
 msgid "Type the user name of the new user."
-msgstr ""
+msgstr "Capture el nombre de usuario para el nuevo usuario."
 
 #: ../user_admin.php:909
 msgid "Are you sure you want to delete the following users?"
-msgstr ""
+msgstr "¿Esta seguro de querer eliminar lo siguientes usuarios?"
 
 #: ../user_admin.php:919
 msgid "Would you like to set Password Expiration?"
-msgstr ""
+msgstr "¿Desea asginar expiración de contraseña?"
 
 #: ../user_admin.php:929
 msgid "Select the interval that you would like to apply to the selected users."
 msgstr ""
+"Seleccione el intervalo que desea aplicar a los usuarios seleccionados."
 
 #: ../user_admin.php:943
 msgid "You must select at least one user."
-msgstr ""
+msgstr "Se debe seleccionar por lo menos un usuario."
 
 #: ../graph_templates_inputs.php:85
 msgid "Are you sure you want to delete the input item"
-msgstr ""
+msgstr "¿Esta seguro de querer eliminar el elemento de entrada?"
 
 #: ../graph_templates_inputs.php:116
 msgid "Graph Item Input"
-msgstr ""
+msgstr "Ingreso a elemento de gráfica"
 
 #: ../graph_templates_inputs.php:125
 msgid "Associated Graph Items"
-msgstr ""
+msgstr "Elementos de gráficas asociados"
 
 #: ../graph_templates_inputs.php:126
 msgid "Select the graph items to be non-templated for the field above."
 msgstr ""
+"Seleccione los elementos de gráficas que no serán contemplados en plantillas"
+"para el campo de arriba."
 
 #: ../graph_templates_inputs.php:152
 msgid "No Items"
-msgstr ""
+msgstr "No hay elementos"
 
 #: ../logout.php:36
 msgid "Logout of Cacti"
-msgstr ""
+msgstr "Salir de Cacti"
 
 #: ../logout.php:52
 msgid "To end your Cacti session please close your web browser."
-msgstr ""
+msgstr "Para finalizar su sesión de Cacti favor de cerrar su navegador web."
 
 #: ../logout.php:52
 msgid "Return to Cacti"
-msgstr ""
+msgstr "Regresar a Cacti"
 
 #: ../auth_changepassword.php:100
 msgid "Login to cacti"
-msgstr ""
+msgstr "Ingresar a Cacti"
 
 #: ../auth_changepassword.php:126
 msgid "Access Denied"
@@ -6874,138 +6968,146 @@ msgstr ""
 
 #: ../auth_changepassword.php:132
 msgid "Your passwords do not match, please retype:"
-msgstr ""
+msgstr "Sus contraseñas no coinciden, favor de recapturar:"
 
 #: ../auth_changepassword.php:138
 msgid "You cannot reuse your old password, please retype:"
-msgstr ""
+msgstr "No puede reutilizar su contraseña anterior, favor de recapturar:"
 
 #: ../auth_changepassword.php:145
 msgid "*** Forced Password Change ***"
-msgstr ""
+msgstr "*** Cambio de Contraseña Forzoso ***"
 
 #: ../auth_changepassword.php:146
 msgid "Please enter a new password for cacti:"
-msgstr ""
+msgstr "Favor de capturar una contraseña nueva para Cacti:"
 
 #: ../auth_changepassword.php:151
 msgid "Password:)"
-msgstr ""
+msgstr "Contraseña:"
 
 #: ../auth_changepassword.php:155
 msgid "Confirm:"
-msgstr ""
+msgstr "Confirmación:"
 
 #: ../auth_changepassword.php:169
 msgid "ref"
-msgstr ""
+msgstr "ref"
 
 #: ../cmd.php:91
 msgid "Invalid Calling Parameter in CMD.PHP"
-msgstr ""
+msgstr "Llamada a parámetros inválidos en CMD.PHP"
 
 #: ../cmd.php:118 ../cmd.php:123
 msgid ""
 "ERROR: Invalid Arguments.  The first argument must be less than or equal to "
 "the first."
 msgstr ""
+"ERROR: Argumentos Inválidos. El primer argumento debe ser menor o igual al "
+"primero."
 
 #: ../cmd.php:119 ../cmd.php:124
 msgid "USAGE: CMD.PHP [-f=first_host -l=last_host -p=poller_id]"
-msgstr ""
+msgstr "USO: CMD.PHP[-f=primer_equipo -l=ultimo_equipo -p=id_colector]"
 
 #: ../cmd.php:120 ../cmd.php:125
 msgid "Invalid Arguments.  CMD.PHP calling parameters invalid."
-msgstr ""
+msgstr "Argumentos inválidos. Los parámentros enviados a CMP.PHP son inválidos."
 
 #: ../cmd.php:133
 msgid ""
 "The PHP Script: CMD.PHP Must be started using the full path to the file and "
 "in lower case.  This is a PHP Bug!!!"
 msgstr ""
+"El script PHP: CMD.PHP Debe ser invocado utilizando la ruta completa al "
+"archivo y en minúsculas. Esto es un Bug de PHP!!!"
 
 #: ../cmd.php:158
 msgid "Started"
-msgstr ""
+msgstr "Iniciado"
 
 #: ../cmd.php:160
 msgid "PHP Script Server Started Properly"
-msgstr ""
+msgstr "El servidor de scripts PHP inició correctamente"
 
 #: ../cmd.php:168
 msgid "PHP version 4.3 or above is recommended for performance considerations."
 msgstr ""
+"La versión 4.3 o superior de PHP es recomendada para consideraciones de "
+"desempeño."
 
 #: ../cmd.php:214
 msgid "Availability Disabled for Host."
-msgstr ""
+msgstr "Disponibilidad deshabilitada para el Equipo."
 
 #: ../cmd.php:257 ../cmd.php:261 ../cmd.php:265
 msgid "ASSERT"
-msgstr ""
+msgstr "AFIRME"
 
 #: ../cmd.php:257 ../cmd.php:261 ../cmd.php:265
+#, fuzzy
 msgid "failed. Recaching host"
-msgstr ""
+msgstr "fallido. Recacheando equipo"
 
 #: ../cmd.php:257 ../cmd.php:261 ../cmd.php:265
 msgid "data query #"
-msgstr ""
+msgstr "consulta de información #"
 
 #: ../cmd.php:282
 msgid "NOTICE: Spike Kill in Effect for"
-msgstr ""
+msgstr "AVISO: Se mata el pico en efecto para"
 
 #: ../cmd.php:310
 msgid "Result from SNMP not valid.  Partial Result"
-msgstr ""
+msgstr "El resultado de SNMP no es válido. Resultado parcial:"
 
 #: ../cmd.php:315
 msgid "SNMP: v"
-msgstr ""
+msgstr "SNMP: v"
 
 #: ../cmd.php:315
 msgid ", dsname: "
-msgstr ""
+msgstr ", dsname: "
 
 #: ../cmd.php:315
 msgid ", oid: "
-msgstr ""
+msgstr ", oid: "
 
 #: ../cmd.php:315 ../cmd.php:337 ../cmd.php:360
 msgid ", output: "
-msgstr ""
+msgstr ", salida: "
 
 #: ../cmd.php:332
 msgid "Result from CMD not valid.  Partial Result:"
-msgstr ""
+msgstr "El resultado de CMD no es válido. Resultado parcial:"
 
 #: ../cmd.php:337
 msgid "CMD: "
-msgstr ""
+msgstr "CMD: "
 
 #: ../cmd.php:355
 msgid "Result from SERVER not valid.  Partial Result:"
-msgstr ""
+msgstr "El resultado de SERVIDOR no es válido. Resultado parcial:"
 
 #: ../cmd.php:364
+#, fuzzy
 msgid "*SKIPPING* SERVER: "
-msgstr ""
+msgstr "*NO PROCESANDO* SERVER: "
 
 #: ../cmd.php:364
 msgid " (PHP < 4.3)"
-msgstr ""
+msgstr " (PHP < 4.3)"
 
 #: ../cmd.php:402
 #, php-format
 msgid "Run Time:"
-msgstr ""
+msgstr "Tiempo de ejecución:"
 
 #: ../cmd.php:402
 #, php-format
-msgid "s, Theads: N/A, Hosts:"
-msgstr ""
+msgid "s, Threads: N/A, Hosts:"
+msgstr "s, Threads: N/A, Equipos:"
 
 #: ../cmd.php:411
 msgid "NOTICE: The poller is disabled."
-msgstr ""
+msgstr "AVISO: El colector está deshabilitado."
