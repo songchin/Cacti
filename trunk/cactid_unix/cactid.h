@@ -1,25 +1,32 @@
 /*
  +-------------------------------------------------------------------------+
- | Copyright (C) 2004 Ian Berry                                            |
+ | Copyright (C) 2002-2005 The Cacti Group                                 |
  |                                                                         |
  | This program is free software; you can redistribute it and/or           |
- | modify it under the terms of the GNU General Public License             |
- | as published by the Free Software Foundation; either version 2          |
- | of the License, or (at your option) any later version.                  |
+ | modify it under the terms of the GNU Lesser General Public              |
+ | License as published by the Free Software Foundation; either            |
+ | version 2.1 of the License, or (at your option) any later version. 	   |
  |                                                                         |
  | This program is distributed in the hope that it will be useful,         |
  | but WITHOUT ANY WARRANTY; without even the implied warranty of          |
  | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           |
- | GNU General Public License for more details.                            |
+ | GNU Lesser General Public License for more details.                     |
+ |                                                                         | 
+ | You should have received a copy of the GNU Lesser General Public        |
+ | License along with this library; if not, write to the Free Software     |
+ | Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA           |
+ | 02110-1301, USA                                                         |
+ |                                                                         |
  +-------------------------------------------------------------------------+
  | cactid: a backend data gatherer for cacti                               |
  +-------------------------------------------------------------------------+
  | This poller would not have been possible without:                       |
+ |   - Larry Adams (current development and enhancements)                  |
  |   - Rivo Nurges (rrd support, mysql poller cache, misc functions)       |
  |   - RTG (core poller code, pthreads, snmp, autoconf examples)           |
  |   - Brady Alleman/Doug Warner (threading ideas, implimentation details) |
  +-------------------------------------------------------------------------+
- | - raXnet - http://www.raxnet.net/                                       |
+ | - Cacti - http://www.cacti.net/                                         |
  +-------------------------------------------------------------------------+
 */
 
@@ -28,10 +35,10 @@
 
 /* Defines */
 #ifndef FALSE
-# define FALSE 0
+#define FALSE 0
 #endif
 #ifndef TRUE
-# define TRUE !FALSE
+#define TRUE !FALSE
 #endif
 
 /* general constants */
@@ -56,15 +63,12 @@
 /* config file defaults */
 #define DEFAULT_CONF_FILE "cactid.conf"
 #define DEFAULT_THREADS 5
-#define DEFAULT_INTERVAL 300
-#define DEFAULT_OUT_OF_RANGE 93750000000
 #define DEFAULT_DB_HOST "localhost"
 #define DEFAULT_DB_DB "cacti"
 #define DEFAULT_DB_USER "cactiuser"
 #define DEFAULT_DB_PASS "cactiuser"
 #define DEFAULT_DB_PORT 3306
 #define DEFAULT_LOGFILE "/wwwroot/cacti/log/rrd.log"
-#define DEFAULT_SNMP_VER 1
 #define DEFAULT_TIMEOUT 294000000
 
 /* threads constants */
@@ -145,13 +149,13 @@
 
 /* Typedefs */
 typedef struct config_struct {
-	int interval;
 	int poller_id;
-	long out_of_range;
+	int poller_interval;
 	char dbhost[80];
 	char dbdb[80];
 	char dbuser[80];
 	char dbpass[80];
+	int dboff;
     unsigned int dbport;
 	char path_logfile[250];
 	char path_php[250];
@@ -166,14 +170,16 @@ typedef struct config_struct {
 	int ping_timeout;
 	int ping_failure_count;
 	int ping_recovery_count;
-	int poller_interval;
-	int max_script_runtime;
 	int verbose;
-	int php_running;
+	pid_t php_sspid;
+	pid_t cactid_pid;
+	int php_required;
 	int parent_fork;
-	int dboff;
-	int snmp_ver;
+	int num_parent_processes;
+	int script_timeout;
 	int threads;
+	int start_host_id;
+	int end_host_id;
 } config_t;
 
 typedef struct target_struct {
@@ -225,7 +231,7 @@ typedef struct host_struct {
 	int status_event_count;
 	char status_fail_date[40];
 	char status_rec_date[40];
-	char status_last_error[50];
+	char status_last_error[100];
 	double min_time;
 	double max_time;
 	double cur_time;

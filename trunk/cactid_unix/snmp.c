@@ -1,25 +1,32 @@
 /*
  +-------------------------------------------------------------------------+
- | Copyright (C) 2004 Ian Berry                                            |
+ | Copyright (C) 2002-2005 The Cacti Group                                 |
  |                                                                         |
  | This program is free software; you can redistribute it and/or           |
- | modify it under the terms of the GNU General Public License             |
- | as published by the Free Software Foundation; either version 2          |
- | of the License, or (at your option) any later version.                  |
+ | modify it under the terms of the GNU Lesser General Public              |
+ | License as published by the Free Software Foundation; either            |
+ | version 2.1 of the License, or (at your option) any later version. 	   |
  |                                                                         |
  | This program is distributed in the hope that it will be useful,         |
  | but WITHOUT ANY WARRANTY; without even the implied warranty of          |
  | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           |
- | GNU General Public License for more details.                            |
+ | GNU Lesser General Public License for more details.                     |
+ |                                                                         | 
+ | You should have received a copy of the GNU Lesser General Public        |
+ | License along with this library; if not, write to the Free Software     |
+ | Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA           |
+ | 02110-1301, USA                                                         |
+ |                                                                         |
  +-------------------------------------------------------------------------+
  | cactid: a backend data gatherer for cacti                               |
  +-------------------------------------------------------------------------+
  | This poller would not have been possible without:                       |
+ |   - Larry Adams (current development and enhancements)                  |
  |   - Rivo Nurges (rrd support, mysql poller cache, misc functions)       |
  |   - RTG (core poller code, pthreads, snmp, autoconf examples)           |
  |   - Brady Alleman/Doug Warner (threading ideas, implimentation details) |
  +-------------------------------------------------------------------------+
- | - raXnet - http://www.raxnet.net/                                       |
+ | - Cacti - http://www.cacti.net/                                         |
  +-------------------------------------------------------------------------+
 */
 
@@ -29,35 +36,40 @@
 #include "util.h"
 #include "snmp.h"
 
-extern char **environ;
-
 #ifdef USE_NET_SNMP
+ #undef PACKAGE_NAME
+ #undef PACKAGE_VERSION
+ #undef PACKAGE_BUGREPORT
+ #undef PACKAGE_STRING
+ #undef PACKAGE_TARNAME
  #include <net-snmp-config.h>
  #include <net-snmp-includes.h>
+ #include <config_api.h>
+ #include <mib_api.h>
 #else
  #include <ucd-snmp/ucd-snmp-config.h>
  #include <ucd-snmp/ucd-snmp-includes.h>
- #include <ucd-snmp/transform_oids.h>
  #include <ucd-snmp/system.h>
  #include <mib.h>
 #endif
 
+/* resolve problems in debian */
+#ifndef NETSNMP_DS_LIB_DONT_PERSIST_STATE
+ #define NETSNMP_DS_LIB_DONT_PERSIST_STATE 32
+#endif
+
 #define OIDSIZE(p) (sizeof(p)/sizeof(oid))
 
-void snmp_init(int host_id) {
-	char cactid_session[10];
+/* do not load mibs, Cactid does not use them */
+#define DISABLE_MIB_LOADING
 
-	#ifdef USE_NET_SNMP
-	netsnmp_ds_set_boolean(NETSNMP_DS_LIBRARY_ID, NETSNMP_DS_LIB_PRINT_BARE_VALUE, 1);
-	netsnmp_ds_set_boolean(NETSNMP_DS_LIBRARY_ID, NETSNMP_DS_LIB_QUICK_PRINT, 1);
-	netsnmp_ds_set_boolean(NETSNMP_DS_LIBRARY_ID, NETSNMP_DS_LIB_NUMERIC_TIMETICKS, 1);
-	#else
-	ds_set_boolean(DS_LIBRARY_ID, DS_LIB_QUICK_PRINT, 1);
-	ds_set_boolean(DS_LIBRARY_ID, DS_LIB_PRINT_BARE_VALUE, 1);
-	ds_set_boolean(DS_LIBRARY_ID, DS_LIB_NUMERIC_TIMETICKS, 1);
-	#endif
+void snmp_cactid_init() {
+	init_snmp("cactid");
 }
 
+void snmp_cactid_close() {
+	snmp_shutdown("cactid");
+}
 void snmp_host_init(host_t *current_host) {
 	char logmessage[LOGSIZE];
 	void *sessp = NULL;
@@ -69,9 +81,20 @@ void snmp_host_init(host_t *current_host) {
 
 	/* assume snmp session is invalid */
 	current_host->snmp_session = NULL;
+
 	/* initialize SNMP */
-	snmp_init(current_host->id);
  	thread_mutex_lock(LOCK_SNMP);
+	#ifdef USE_NET_SNMP
+	netsnmp_ds_set_boolean(NETSNMP_DS_LIBRARY_ID, NETSNMP_DS_LIB_DONT_PERSIST_STATE, 1);
+	netsnmp_ds_set_int(NETSNMP_DS_LIBRARY_ID, NETSNMP_DS_LIB_OID_OUTPUT_FORMAT, NETSNMP_OID_OUTPUT_NUMERIC);
+	netsnmp_ds_set_boolean(NETSNMP_DS_LIBRARY_ID, NETSNMP_DS_LIB_PRINT_BARE_VALUE, 1);
+	netsnmp_ds_set_boolean(NETSNMP_DS_LIBRARY_ID, NETSNMP_DS_LIB_QUICK_PRINT, 1);
+	netsnmp_ds_set_boolean(NETSNMP_DS_LIBRARY_ID, NETSNMP_DS_LIB_NUMERIC_TIMETICKS, 1);
+	#else
+	ds_set_boolean(DS_LIBRARY_ID, DS_LIB_QUICK_PRINT, 1);
+	ds_set_boolean(DS_LIBRARY_ID, DS_LIB_PRINT_BARE_VALUE, 1);
+	ds_set_boolean(DS_LIBRARY_ID, DS_LIB_NUMERIC_TIMETICKS, 1);
+	#endif
   	snmp_sess_init(&session);
 	thread_mutex_unlock(LOCK_SNMP);
 
@@ -80,12 +103,17 @@ void snmp_host_init(host_t *current_host) {
 		session.version = SNMP_VERSION_2c;
 	}else if (current_host->snmp_version == 1) {
 		session.version = SNMP_VERSION_1;
-	}else {
+	}else if (current_host->snmp_version == 3) {
 		session.version = SNMP_VERSION_3;
-	}
+	}else {
+		snprintf(logmessage, LOGSIZE-1, "ERROR: SNMP Version Error for Host '%s'\n", current_host->hostname);
+		cacti_log(logmessage, SEV_ERROR, current_host->id);
+		return;
+	}		
+
 
 	/* net-snmp likes the hostname in 'host:port' format */
-	snprintf(hostname, BUFSIZE, "%s:%i", current_host->hostname, current_host->snmp_port);
+	snprintf(hostname, BUFSIZE-1, "%s:%i", current_host->hostname, current_host->snmp_port);
 
 	session.peername = hostname;
 	session.retries = 3;
@@ -186,16 +214,12 @@ void snmp_host_init(host_t *current_host) {
 
  	thread_mutex_lock(LOCK_SNMP);
 
-	/* windows socket call */
-	SOCK_STARTUP;
-
 	/* open SNMP Session */
 	sessp = snmp_sess_open(&session);
-
 	thread_mutex_unlock(LOCK_SNMP);
 
 	if (!sessp) {
-		snprintf(logmessage, LOGSIZE, "ERROR: Problem initializing SNMP session '%s'", current_host->hostname);
+		snprintf(logmessage, LOGSIZE-1, "ERROR: Problem initializing SNMP session '%s'", current_host->hostname);
 		cacti_log(logmessage, SEV_ERROR, current_host->id);
 		current_host->snmp_session = NULL;
 	}else{
@@ -205,53 +229,51 @@ void snmp_host_init(host_t *current_host) {
 
 void snmp_host_cleanup(host_t *current_host) {
 	snmp_sess_close(current_host->snmp_session);
-	SOCK_CLEANUP;
 }
 
 char *snmp_get(host_t *current_host, char *snmp_oid) {
 	struct snmp_pdu *pdu = NULL;
 	struct snmp_pdu *response = NULL;
-	oid anOID[MAX_OID_LEN];
-	size_t anOID_len = MAX_OID_LEN;
 	struct variable_list *vars = NULL;
 	char logmessage[LOGSIZE];
-
-	int status;
-
 	char storedoid[BUFSIZE];
-
+	oid anOID[MAX_OID_LEN];
+	size_t anOID_len = MAX_OID_LEN;
+	int status;
 	char *result_string = (char *) malloc(BUFSIZE);
 
-	anOID_len = MAX_OID_LEN;
-	pdu = snmp_pdu_create(SNMP_MSG_GET);
-	read_objid(snmp_oid, anOID, &anOID_len);
-
-	strncpy(storedoid, snmp_oid, sizeof(storedoid));
-
-	snmp_add_null_var(pdu, anOID, anOID_len);
-
 	if (current_host->snmp_session != NULL) {
-		status = snmp_sess_synch_response(current_host->snmp_session, pdu, &response);
+		anOID_len = MAX_OID_LEN;
+		pdu = snmp_pdu_create(SNMP_MSG_GET);
+		read_objid(snmp_oid, anOID, &anOID_len);
+		strncpy(storedoid, snmp_oid, sizeof(storedoid)-1);
+		snmp_add_null_var(pdu, anOID, anOID_len);
+
+		if (current_host->snmp_session != NULL) {
+			status = snmp_sess_synch_response(current_host->snmp_session, pdu, &response);
+		}else {
+			status = STAT_DESCRIP_ERROR;
+		}
+
+		/* liftoff, successful poll, process it!! */
+		if (status == STAT_SUCCESS && response->errstat == SNMP_ERR_NOERROR) {
+			vars = response->variables;
+
+			#ifdef USE_NET_SNMP
+			snprint_value(result_string, BUFSIZE, anOID, anOID_len, vars);
+			#else
+			sprint_value(result_string, anOID, anOID_len, vars);
+			#endif
+		}
 	}else {
 		status = STAT_DESCRIP_ERROR;
 	}
 
-	/* liftoff, successful poll, process it!! */
-	if (status == STAT_SUCCESS && response->errstat == SNMP_ERR_NOERROR) {
-		vars = response->variables;
-
-		#ifdef USE_NET_SNMP
-		snprint_value(result_string, BUFSIZE, anOID, anOID_len, vars);
-		#else
-		sprint_value(result_string, anOID, anOID_len, vars);
-		#endif
-	}
-
 	if ((status == STAT_TIMEOUT) || (status != STAT_SUCCESS)) {
 		current_host->ignore_host = 1;
-		strncpy(result_string, "SNMP ERROR", BUFSIZE);
+		strncpy(result_string, "SNMP ERROR", BUFSIZE-1);
 	}else if (!(status == STAT_SUCCESS && response->errstat == SNMP_ERR_NOERROR)) {
-		snprintf(result_string, BUFSIZE, "%s", "U");
+		snprintf(result_string, BUFSIZE-1, "%s", "U");
 	}
 
 	if (current_host->snmp_session != NULL) {

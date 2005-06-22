@@ -106,7 +106,7 @@ static void	close_cleanup(void *);
  *
  *------------------------------------------------------------------------------
  */
-int nft_popen(const char *command, const char *type) {
+int nft_popen(const char * command, const char * type) {
 	struct pid *cur;
 	struct pid *p;
     int    pdes[2];
@@ -158,6 +158,7 @@ int nft_popen(const char *command, const char *type) {
 		(void)close(pdes[1]);
 		pthread_mutex_unlock(&ListMutex);
 		pthread_setcancelstate(cancel_state, NULL);
+
 		return -1;
 		/* NOTREACHED */
 	case 0:			/* Child. */
