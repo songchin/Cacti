@@ -696,16 +696,19 @@ function host() {
 		kill_session_var("sess_device_current_page");
 		kill_session_var("sess_device_filter");
 		kill_session_var("sess_device_host_template_id");
+		kill_session_var("sess_host_status");
 
 		unset($_REQUEST["page"]);
 		unset($_REQUEST["filter"]);
 		unset($_REQUEST["host_template_id"]);
+		unset($_REQUEST["host_status"]);
 	}
 
 	/* remember these search fields in session vars so we don't have to keep passing them around */
 	load_current_session_value("page", "sess_device_current_page", "1");
 	load_current_session_value("filter", "sess_device_filter", "");
 	load_current_session_value("host_template_id", "sess_device_host_template_id", "-1");
+	load_current_session_value("host_status", "sess_host_status", "-1");
 
 	html_start_box("<strong>" . _("Devices") . "</strong>", "98%", $colors["header_background"], "3", "center", "host.php?action=edit&host_template_id=" . $_REQUEST["host_template_id"]);
 
@@ -714,7 +717,14 @@ function host() {
 	html_end_box();
 
 	/* form the 'where' clause for our main sql query */
-	$sql_where = "where host.description like '%%" . $_REQUEST["filter"] . "%%'";
+	$sql_where = "where (host.hostname like '%%" . $_REQUEST["filter"] . "%%' OR host.description like '%%" . $_REQUEST["filter"] . "%%')";
+	if ($_REQUEST["host_status"] == "-1") {
+		/* Show all items */
+	}elseif ($_REQUEST["host_status"] == "-2") {
+		$sql_where .= " and host.disabled='on'";
+	}else {
+		$sql_where .= " and (host.status=" . $_REQUEST["host_status"] . " AND host.disabled = '')";
+	}
 
 	if ($_REQUEST["host_template_id"] == "-1") {
 		/* Show all items */
@@ -775,32 +785,16 @@ function host() {
 	$i = 0;
 	if (sizeof($hosts) > 0) {
 		foreach ($hosts as $host) {
-			if (trim($_REQUEST["filter"]) == "") {
-				$highlight_text = $host["description"];
-			}else{
-				$highlight_text = eregi_replace("(" . preg_quote($_REQUEST["filter"]) . ")", "<span style='background-color: #F8D93D;'>\\1</span>", $host["description"]);
-			}
-
 			form_alternate_row_color($colors["form_alternate1"],$colors["form_alternate2"],$i); $i++;
 				?>
 				<td width=200>
-					<a class="linkEditMain" href="host.php?action=edit&id=<?php print $host["id"];?>"><?php print $highlight_text;?></a>
+					<a class="linkEditMain" href="host.php?action=edit&id=<?php print $host["id"];?>"><?php print eregi_replace("(" . preg_quote($_REQUEST["filter"]) . ")", "<span style='background-color: #F8D93D;'>\\1</span>", $host["description"]);?></a>
 				</td>
-				<td>
-					<?php print get_colored_device_status(($host["disabled"] == "on" ? true : false), $host["status"]);?>
-				</td>
-				<td>
-					<?php print $host["hostname"];?>
-				</td>
-				<td>
-					<?php print round(($host["cur_time"]), 2);?>
-				</td>
-				<td>
-					<?php print round(($host["avg_time"]), 2);?>
-				</td>
-				<td>
-					<?php print round($host["availability"], 2);?>%
-				</td>
+				<td><?php print get_colored_device_status(($host["disabled"] == "on" ? true : false), $host["status"]);?></td>
+				<td><?php print eregi_replace("(" . preg_quote($_REQUEST["filter"]) . ")", "<span style='background-color: #F8D93D;'>\\1</span>", $host["hostname"]);?></td>
+				<td><?php print round(($host["cur_time"]), 2);?></td>
+				<td><?php print round(($host["avg_time"]), 2);?></td>
+				<td><?php print round($host["availability"], 2);?>%</td>
 				<td style="<?php print get_checkbox_style();?>" width="1%" align="right">
 					<input type='checkbox' style='margin: 0px;' name='chk_<?php print $host["id"];?>' title="<?php print $host["description"];?>">
 				</td>
