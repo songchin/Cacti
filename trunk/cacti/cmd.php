@@ -276,10 +276,12 @@ if ((sizeof($polling_items) > 0) && (read_config_option("poller_enabled") == "on
 
 							/* spike kill logic */
 							if (($assert_fail) && ($index_item["arg1"] == ".1.3.6.1.2.1.1.3.0")) {
-								$set_spike_kill = true;
-
-								if (read_config_option("log_verbosity") == POLLER_VERBOSITY_DEBUG) {
-									cacti_log(_("Host") . "[$host_id] " . _("NOTICE: Spike Kill in Effect for") . " '" . $item["hostname"] . "'.", $print_data_to_stdout);
+								/* don't spike kill unless we are certain */
+								if (!empty($output)) {
+									$set_spike_kill = true;
+									if (read_config_option("log_verbosity") == POLLER_VERBOSITY_DEBUG) {
+										cacti_log(_("Host") . "[$host_id] " . _("NOTICE: Spike Kill in Effect for") . " '" . $item["hostname"] . "'.", $print_data_to_stdout);
+									}
 								}
 							}
 						}
@@ -371,9 +373,9 @@ if ((sizeof($polling_items) > 0) && (read_config_option("poller_enabled") == "on
 			} /* End Switch */
 
 			if (isset($output)) {
-				/* insert a NaN in place of the actual value if the snmp agent restarts */
+				/* insert a U in place of the actual value if the snmp agent restarts */
 				if (($set_spike_kill) && (!substr_count($output, ":"))) {
-					db_execute("insert into poller_output (local_data_id,rrd_name,time,output) values (" . $item["local_data_id"] . ",'" . $item["rrd_name"] . "','$poller_update_time','" . addslashes("nan") . "')");
+					db_execute("insert into poller_output (local_data_id,rrd_name,time,output) values (" . $item["local_data_id"] . ",'" . $item["rrd_name"] . "','$poller_update_time','" . addslashes("U") . "')");
 				/* otherwise, just insert the value received from the poller */
 				}else{
 					db_execute("insert into poller_output (local_data_id,rrd_name,time,output) values (" . $item["local_data_id"] . ",'" . $item["rrd_name"] . "','$poller_update_time','" . addslashes($output) . "')");
@@ -399,7 +401,11 @@ if ((sizeof($polling_items) > 0) && (read_config_option("poller_enabled") == "on
 		list($micro,$seconds) = split(" ", microtime());
 		$end = $seconds + $micro;
 
-		api_syslog_cacti_log(sprintf(_("Run Time:") . " %01.4f " . _("s, Theads: N/A, Hosts:") . " %s", round($end-$start,4), $host_count), SEV_NOTICE, $poller_id, 0, 0, $print_data_to_stdout, FACIL_CMDPHP);
+		api_syslog_cacti_log(sprintf(_("Run Time:") . " %01.4f " . 
+			_("s, Theads: N/A, Hosts:") . 
+			" %s", 
+			round($end-$start,4), $host_count), 
+			SEV_NOTICE, $poller_id, 0, 0, $print_data_to_stdout, FACIL_CMDPHP);
 	}
 
 }else{
