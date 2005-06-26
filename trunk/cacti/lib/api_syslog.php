@@ -54,7 +54,7 @@ function api_syslog_cacti_log($message, $severity = SEV_INFO, $poller_id = 1, $h
 			$user_id = $_SESSION["sess_user_id"];
 			$username = $user_info["username"];
 		}else{
-			$username = _("SYSTEM");
+			$username = _("System");
 		}
 	}
 
@@ -62,7 +62,7 @@ function api_syslog_cacti_log($message, $severity = SEV_INFO, $poller_id = 1, $h
 	if (isset($_SERVER["REMOTE_ADDR"])) {
 		$source = $_SERVER["REMOTE_ADDR"];
 	}else {
-		$source = _("SYSTEM");
+		$source = _("System");
 	}
 
 	/* Log to Cacti Syslog */
@@ -72,7 +72,7 @@ function api_syslog_cacti_log($message, $severity = SEV_INFO, $poller_id = 1, $h
 		/* echo the data to the log (append) */
 		db_execute("insert into syslog
 			(logdate,facility,severity,poller_id,host_id,user_id,username,source,message) values
-			('$logdate', '" . api_syslog_get_facility($facility) . "', '" . api_syslog_get_severity($severity) . "', '$poller_id', '$host_id', '$user_id', '$username', '$source', '". addslashes($message) . "');");
+			('$logdate', '" . $facility . "', '" . $severity . "', '$poller_id', '$host_id', '$user_id', '$username', '$source', '". addslashes($message) . "');");
 	}
 
 	/* Log to System Syslog/Eventlog */
