@@ -30,6 +30,7 @@ $guest_account = true;
 include("./include/config.php");
 include("./include/auth.php");
 include("./lib/rrd.php");
+include("./lib/html_tree.php");
 include("./include/top_graph_header.php");
 
 if ($_GET["rra_id"] == "all") {
@@ -49,7 +50,7 @@ if (read_config_option("auth_method") != "0") {
 	$access_denied = !(is_graph_allowed($_GET["graph_id"]));
 
 	if ($access_denied == true) {
-		print "<strong><font size='+1' color='FF0000'>" . _("ACCESS DENIED") . "</font></strong>"; 
+		print "<strong><font size='+1' color='FF0000'>" . _("ACCESS DENIED") . "</font></strong>";
 		exit;
 	}
 }
