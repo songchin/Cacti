@@ -84,7 +84,7 @@ function push_out_host($host_id, $local_data_id = 0, $data_template_id = 0) {
 		}
 
 		/* make sure to update the poller cache as well */
-		//update_poller_cache($data_source["local_data_id"], false);
+		update_poller_cache($data_source["local_data_id"], false);
 	}
 	}
 }
