@@ -170,6 +170,8 @@ while (1) {
 	}else {
 		api_syslog_cacti_log(_("Input Expected, Script Server Terminating"), SEV_ERROR, $poller_id, 0, 0, false, FACIL_SCPTSVR);
 		fputs(STDOUT, _("ERROR: Input Expected, Script Server Terminating") . "\n");
+		/* parent abended, let's show the parent as done  */
+		db_execute("insert into poller_time (poller_id, start_time, end_time) values (0, NOW(), NOW())");
 		exit (-1);
 	}
 }
