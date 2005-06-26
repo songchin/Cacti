@@ -595,7 +595,7 @@ $settings = array(
 			"default" => "1",
 			"max_length" => "10"
 			),
-		"max_script_runtime" => array(
+		"script_timeout" => array(
 			"friendly_name" => _("Maximum Script Runtime"),
 			"description" => _("The maximum time, in seconds, allowed for a script or script server object to run before forcing a timeout of the script process."),
 			"method" => "textbox",
