@@ -51,14 +51,6 @@ function api_poller_cache_item_add($host_id, $data_source_id, $rrd_step, $poller
 			host.disabled
 			from host
 			where host.id = $host_id");
-
-		/* accomodate for snmp variations */
-		if (!strlen($host["snmp_community"])) $host["snmp_community"] = "[None]";
-		if (!strlen($host["snmpv3_auth_username"])) $host["snmpv3_auth_username"] = "[None]";
-		if (!strlen($host["snmpv3_auth_password"])) $host["snmpv3_auth_password"] = "[None]";
-		if (!strlen($host["snmpv3_auth_protocol"])) $host["snmpv3_auth_protocol"] = "[None]";
-		if (!strlen($host["snmpv3_priv_passphrase"])) $host["snmpv3_priv_passphrase"] = "[None]";
-		if (!strlen($host["snmpv3_priv_protocol"]))  $host["snmpv3_priv_protocol"] = "[None]";
 	}
 
 	/* return if the device is marked as disabled */

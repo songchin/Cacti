@@ -58,13 +58,6 @@ function substitute_host_variables($string, $host_id) {
 
 	/* accomodate for snmp variations */
 	if (isset($host["hostname"])) {
-		if (!strlen($host["snmp_community"])) $host["snmp_community"] = "[None]";
-		if (!strlen($host["snmpv3_auth_username"])) $host["snmpv3_auth_username"] = "[None]";
-		if (!strlen($host["snmpv3_auth_password"])) $host["snmpv3_auth_password"] = "[None]";
-		if (!strlen($host["snmpv3_auth_protocol"])) $host["snmpv3_auth_protocol"] = "[None]";
-		if (!strlen($host["snmpv3_priv_passphrase"])) $host["snmpv3_priv_passphrase"] = "[None]";
-		if (!strlen($host["snmpv3_priv_protocol"]))  $host["snmpv3_priv_protocol"] = "[None]";
-
 		$string = str_replace("|host_management_ip|", $host["hostname"], $string); /* for compatability */
 		$string = str_replace("|host_hostname|", $host["hostname"], $string);
 		$string = str_replace("|host_description|", $host["description"], $string);

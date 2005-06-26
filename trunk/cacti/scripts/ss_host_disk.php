@@ -14,7 +14,22 @@ if (!isset($called_by_script_server)) {
 	print call_user_func_array("ss_host_disk", $_SERVER["argv"]);
 }
 
-function ss_host_disk($hostname, $host_id, $snmp_port = 161, $snmp_timeout = 500, $snmp_version, $snmp_community, $snmpv3_auth_username, $snmpv3_auth_password, $snmpv3_auth_protocol, $snmpv3_priv_passphrase, $snmpv3_priv_protocol, $cmd, $arg1 = "", $arg2 = "") {
+function ss_host_disk($hostname, $host_id, $snmp_auth, $cmd, $arg1 = "", $arg2 = "") {
+	$snmp = explode(":", $snmp_auth);
+	$snmp_version = $snmp[0];
+	$snmp_port = $snmp[1];
+	$snmp_timeout = $snmp[2];
+
+	if ($snmp_version == 3) {
+		$snmpv3_auth_username = $snmp[4];
+		$snmpv3_auth_password = $snmp[5];
+		$snmpv3_auth_protocol = $snmp[6];
+		$snmpv3_priv_passphrase = $snmp[7];
+		$snmpv3_priv_protocol = $snmp[8];
+	}else{
+		$snmp_community = $snmp[3];
+	}
+
 	$oids = array(
 		"total" => ".1.3.6.1.2.1.25.2.3.1.5",
 		"used" => ".1.3.6.1.2.1.25.2.3.1.6",
