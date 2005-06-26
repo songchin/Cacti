@@ -137,8 +137,36 @@ function item_remove() {
 function item_edit() {
 	global $colors, $struct_graph_item;
 
+	/* if the user pushed the 'clear' button */
+	if (isset($_REQUEST["clear_x"])) {
+		kill_session_var("sess_ds_host_id");
+
+		unset($_REQUEST["host_id"]);
+	}
+
+	/* remember these search fields in session vars so we don't have to keep passing them around */
+	load_current_session_value("filter", "sess_ds_filter", "");
+	load_current_session_value("host_id", "sess_ds_host_id", "-1");
+
+	$host = db_fetch_row("select hostname from host where id=" . $_REQUEST["host_id"]);
+
+	html_start_box("<strong>Data Source by Host</strong> [host: " . (empty($host["hostname"]) ? "No Host" : $host["hostname"]) . "]", "98%", $colors["header"], "3", "center", "");
+
+	include("./include/html/inc_graph_items_filter_table.php");
+
+	html_end_box();
+
+	if ($_REQUEST["host_id"] == "-1") {
+		$sql_where = "";
+	}elseif ($_REQUEST["host_id"] == "0") {
+		$sql_where = " and data_local.host_id=0";
+	}elseif (!empty($_REQUEST["host_id"])) {
+		$sql_where = " and data_local.host_id=" . $_REQUEST["host_id"];
+	}
+
 	if (!empty($_GET["id"])) {
 		$graph_item = db_fetch_row("select * from graph_item where id=" . $_GET["id"]);
+		$host_id = db_fetch_cell("select host_id from graph_local where id=" . $_GET["local_graph_id"]);
 	}
 
 	/* by default, select the LAST DS chosen to make everyone's lives easier */
