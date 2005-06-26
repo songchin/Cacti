@@ -155,7 +155,11 @@ function update_poller_cache($data_source_id, $truncate_performed = false) {
    @returns - the output of $command after execution */
 function exec_poll($command) {
 	if (function_exists("stream_set_timeout")) {
-		$fp = popen($command, "rb");
+		if ($config["cacti_server_os"] == "unix") {
+			$fp = popen($command, "r");
+		}else{
+			$fp = popen($command, "rb");
+		}
 
 		/* set script server timeout */
 		$script_timeout = read_config_option("script_timeout");
@@ -221,7 +225,11 @@ function exec_poll_php($command, $using_proc_function, $pipes, $proc_fd) {
 		/* formulate command */
 		$command = read_config_option("path_php_binary") . " " . $command;
 		if (function_exists("stream_set_timeout")) {
-			$fp = popen($command, "rb");
+			if ($config["cacti_server_os"] == "unix") {
+				$fp = popen($command, "r");
+			}else{
+				$fp = popen($command, "rb");
+			}
 
 			/* set script server timeout */
 			$script_timeout = read_config_option("script_timeout");
