@@ -148,7 +148,7 @@ if (!$access_denied) {
 	</tr>
 	<tr height="10"><td></td></tr>
 	<tr>
-		<td><?php echo _("Password:)";?></td>
+		<td><?php print _("Password:"); ?></td>
 		<td><input type="password" name="password" size="40"></td>
 	</tr>
 	<tr>
