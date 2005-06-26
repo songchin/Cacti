@@ -298,7 +298,7 @@ if ((sizeof($polling_items) > 0) && (read_config_option("poller_enabled") == "on
 			switch ($item["action"]) {
 			case POLLER_ACTION_SNMP: /* snmp */
 				if (($item["snmp_version"] == 0) || ($item["snmp_community"] == "")) {
-					api_syslog_cacti_log("Invalid SNMP Data Source.  Please either delete it from the database, or correct it.", SEV_ERROR, $poller_id, $host_id, 0, $print_data_to_stdout);
+					api_syslog_cacti_log(_("Invalid SNMP Data Source.  Please either delete it from the database, or correct it."), SEV_ERROR, $poller_id, $host_id, 0, $print_data_to_stdout);
 					$output = "U";
 				}else{
 					$output = cacti_snmp_get($item["hostname"], $item["snmp_community"], $item["arg1"], $item["snmp_version"], $item["snmpv3_auth_username"], $item["snmpv3_auth_password"], $item["snmpv3_auth_protocol"], $item["snmpv3_priv_passphrase"], $item["snmpv3_priv_protocol"], $item["snmp_port"], $item["snmp_timeout"], SNMP_CMDPHP);
