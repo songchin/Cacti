@@ -24,7 +24,7 @@
 					</td>
 					<td width="1">
 						<select name="facility" onChange="applyFilterChange(document.form_syslog_id)">
-							<option value="ALL"<?php if ($_REQUEST["facility"] == "ALL") {?> selected<?php }?>>All</option>
+							<option value="-1"<?php if ($_REQUEST["facility"] == -1) {?> selected<?php }?>>All</option>
 							<option value="<?php echo FACIL_POLLER;?>"<?php if ($_REQUEST["facility"] == FACIL_POLLER) {?> selected<?php }?>>Poller</option>
 							<option value="<?php echo FACIL_CMDPHP;?>"<?php if ($_REQUEST["facility"] == FACIL_CMDPHP) {?> selected<?php }?>>Cmdphp</option>
 							<option value="<?php echo FACIL_CACTID;?>"<?php if ($_REQUEST["facility"] == FACIL_CACTID) {?> selected<?php }?>>Cactid</option>
@@ -40,7 +40,7 @@
 					</td>
 					<td width="1">
 						<select name="severity" onChange="applyFilterChange(document.form_syslog_id)">
-							<option value="ALL"<?php if ($_REQUEST["severity"] == "ALL") {?> selected<?php }?>>All</option>
+							<option value="-1"<?php if ($_REQUEST["severity"] == -1) {?> selected<?php }?>>All</option>
 							<option value="<?php echo SEV_EMERGENCY;?>"<?php if ($_REQUEST["severity"] == SEV_EMERGENCY) {?> selected<?php }?>>Emergency</option>
 							<option value="<?php echo SEV_ALERT;?>"<?php if ($_REQUEST["severity"] == SEV_ALERT) {?> selected<?php }?>>Alert</option>
 							<option value="<?php echo SEV_CRITICAL;?>"<?php if ($_REQUEST["severity"] == SEV_CRITICAL) {?> selected<?php }?>>Critical</option>
@@ -56,7 +56,7 @@
 					</td>
 					<td width="1">
 						<select name="username" onChange="applyFilterChange(document.form_syslog_id)">
-							<option value="ALL"<?php if ($_REQUEST["username"] == "ALL") {?> selected<?php }?>>All</option>
+							<option value="-1"<?php if ($_REQUEST["username"] == -1) {?> selected<?php }?>>All</option>
 							<?php
 							$usernames = db_fetch_assoc("select distinct username from syslog order by username");
 
@@ -85,7 +85,7 @@
 					</td>
 					<td>
 						<select name="poller" onChange="applyFilterChange(document.form_syslog_id)">
-							<option value="ALL"<?php if ($_REQUEST["poller"] == "ALL") {?> selected<?php }?>>All</option>
+							<option value="-1"<?php if ($_REQUEST["poller"] == -1) {?> selected<?php }?>>All</option>
 							<option value="0"<?php if ($_REQUEST["poller"] == "0") {?> selected<?php }?>>System</option>
 							<?php
 							$pollers = db_fetch_assoc("select id,name from poller order by name");
@@ -107,7 +107,7 @@
 					</td>
 					<td>
 						<select name="host" onChange="applyFilterChange(document.form_syslog_id)">
-							<option value="ALL"<?php if ($_REQUEST["host"] == "ALL") {?> selected<?php }?>>All</option>
+							<option value="-1"<?php if ($_REQUEST["host"] == -1) {?> selected<?php }?>>All</option>
 							<option value="0"<?php if ($_REQUEST["host"] == "0") {?> selected<?php }?>>System</option>
 							<?php
 							$hosts = db_fetch_assoc("select id,description from host order by description");

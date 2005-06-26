@@ -106,11 +106,11 @@ function utilities_view_syslog() {
 	/* remember these search fields in session vars so we don't have to keep passing them around */
 	load_current_session_value("page", "sess_syslog_current_page", "1");
 	load_current_session_value("filter", "sess_syslog_filter", "");
-	load_current_session_value("facility", "sess_syslog_facility", "ALL");
-	load_current_session_value("severity", "sess_syslog_severity", "ALL");
-	load_current_session_value("poller", "sess_syslog_poller", "ALL");
-	load_current_session_value("host", "sess_syslog_host", "ALL");
-	load_current_session_value("username", "sess_syslog_username", "ALL");
+	load_current_session_value("facility", "sess_syslog_facility", "-1");
+	load_current_session_value("severity", "sess_syslog_severity", "-1");
+	load_current_session_value("poller", "sess_syslog_poller", "-1");
+	load_current_session_value("host", "sess_syslog_host", "-1");
+	load_current_session_value("username", "sess_syslog_username", "-1");
 
 	html_start_box("<strong>"._("Cacti Log Filters")."</strong>", "98%", $colors["header_background"], "3", "center", "");
 
@@ -121,23 +121,23 @@ function utilities_view_syslog() {
 	/* form the 'where' clause for our main sql query */
 	$sql_where = "where syslog.message like '%%" . $_REQUEST["filter"] . "%%'";
 
-	if ($_REQUEST["facility"] != "ALL") {
+	if ($_REQUEST["facility"] != -1) {
 		$sql_where .= " and syslog.facility='" . $_REQUEST["facility"] . "'";
 	}
 
-	if ($_REQUEST["severity"] != "ALL") {
+	if ($_REQUEST["severity"] != -1) {
 		$sql_where .= " and syslog.severity='" . $_REQUEST["severity"] . "'";
 	}
 
-	if ($_REQUEST["poller"] != "ALL") {
+	if ($_REQUEST["poller"] != -1) {
 		$sql_where .= " and syslog.poller_id='" . $_REQUEST["poller"] . "'";
 	}
 
-	if ($_REQUEST["host"] != "ALL") {
+	if ($_REQUEST["host"] != -1) {
 		$sql_where .= " and syslog.host_id='" . $_REQUEST["host"] . "'";
 	}
 
-	if ($_REQUEST["username"] != "ALL") {
+	if ($_REQUEST["username"] != -1) {
 		$sql_where .= " and syslog.username='" . $_REQUEST["username"] . "'";
 	}
 
