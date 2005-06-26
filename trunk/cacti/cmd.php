@@ -297,20 +297,25 @@ if ((sizeof($polling_items) > 0) && (read_config_option("poller_enabled") == "on
 		if (!$host_down) {
 			switch ($item["action"]) {
 			case POLLER_ACTION_SNMP: /* snmp */
-				$output = cacti_snmp_get($item["hostname"], $item["snmp_community"], $item["arg1"], $item["snmp_version"], $item["snmpv3_auth_username"], $item["snmpv3_auth_password"], $item["snmpv3_auth_protocol"], $item["snmpv3_priv_passphrase"], $item["snmpv3_priv_protocol"], $item["snmp_port"], $item["snmp_timeout"], SNMP_CMDPHP);
-
-				/* remove any quotes from string */
-				$output = strip_quotes($output);
-
-				if (!validate_result($output)) {
-					if (strlen($output) > 20) {
-						$strout = 20;
-					} else {
-						$strout = strlen($output);
-					}
-
-					api_syslog_cacti_log(_("Result from SNMP not valid.  Partial Result") . ": " . substr($output, 0, $strout), SEV_NOTICE, $poller_id, $host_id, 0, $print_data_to_stdout, FACIL_CMDPHP);
+				if (($item["snmp_version"] == 0) || ($item["snmp_community"] == "")) {
+					api_syslog_cacti_log("Invalid SNMP Data Source.  Please either delete it from the database, or correct it.", SEV_ERROR, $poller_id, $host_id, 0, $print_data_to_stdout);
 					$output = "U";
+				}else{
+					$output = cacti_snmp_get($item["hostname"], $item["snmp_community"], $item["arg1"], $item["snmp_version"], $item["snmpv3_auth_username"], $item["snmpv3_auth_password"], $item["snmpv3_auth_protocol"], $item["snmpv3_priv_passphrase"], $item["snmpv3_priv_protocol"], $item["snmp_port"], $item["snmp_timeout"], SNMP_CMDPHP);
+
+					/* remove any quotes from string */
+					$output = strip_quotes($output);
+
+					if (!validate_result($output)) {
+						if (strlen($output) > 20) {
+							$strout = 20;
+						} else {
+							$strout = strlen($output);
+						}
+
+						api_syslog_cacti_log(_("Result from SNMP not valid.  Partial Result") . ": " . substr($output, 0, $strout), SEV_NOTICE, $poller_id, $host_id, 0, $print_data_to_stdout, FACIL_CMDPHP);
+						$output = "U";
+					}
 				}
 
 				if (read_config_option("log_verbosity") >= POLLER_VERBOSITY_MEDIUM) {
@@ -401,10 +406,10 @@ if ((sizeof($polling_items) > 0) && (read_config_option("poller_enabled") == "on
 		list($micro,$seconds) = split(" ", microtime());
 		$end = $seconds + $micro;
 
-		api_syslog_cacti_log(sprintf(_("Run Time:") . " %01.4f " . 
-			_("s, Theads: N/A, Hosts:") . 
-			" %s", 
-			round($end-$start,4), $host_count), 
+		api_syslog_cacti_log(sprintf(_("Run Time:") . " %01.4f " .
+			_("s, Theads: N/A, Hosts:") .
+			" %s",
+			round($end-$start,4), $host_count),
 			SEV_NOTICE, $poller_id, 0, 0, $print_data_to_stdout, FACIL_CMDPHP);
 	}
 
