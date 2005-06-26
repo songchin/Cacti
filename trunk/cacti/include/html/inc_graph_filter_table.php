@@ -1,3 +1,13 @@
+	<script type="text/javascript">
+	<!--
+	function applyFilterChange(objForm) {
+		strURL = '?host_id=' + objForm.host_id[objForm.host_id.selectedIndex].value;
+		strURL = strURL + '&filter=' + objForm.filter.value;
+		document.location = strURL;
+	}
+	-->
+	</script>
+
 	<tr bgcolor="<?php print $colors["filter_background"];?>" class="noprint">
 		<form name="form_graph_id">
 		<td>
@@ -7,15 +17,15 @@
 						<?php echo _("Filter by host:");?>&nbsp;
 					</td>
 					<td width="1">
-						<select name="cbo_graph_id" onChange="window.location=document.form_graph_id.cbo_graph_id.options[document.form_graph_id.cbo_graph_id.selectedIndex].value">
-							<option value="graphs.php?host_id=-1&filter=<?php print $_REQUEST["filter"];?>"<?php if ($_REQUEST["host_id"] == "-1") {?> selected<?php }?>><?php echo _('Any');?></option>
-							<option value="graphs.php?host_id=0&filter=<?php print $_REQUEST["filter"];?>"<?php if ($_REQUEST["host_id"] == "0") {?> selected<?php }?>><?php echo _('None');?></option>
+						<select name="host_id" onChange="applyFilterChange(document.form_graph_id)">
+							<option value="-1"<?php if ($_REQUEST["host_id"] == "-1") {?> selected<?php }?>><?php echo _('Any');?></option>
+							<option value="0"<?php if ($_REQUEST["host_id"] == "0") {?> selected<?php }?>><?php echo _('None');?></option>
 							<?php
 							$hosts = db_fetch_assoc("select id,CONCAT_WS('',description,' (',hostname,')') as name from host order by description,hostname");
 
 							if (sizeof($hosts) > 0) {
 								foreach ($hosts as $host) {
-									print "<option value='graphs.php?host_id=" . $host["id"] . "&filter=" . $_REQUEST["filter"] . "&page=1'"; if ($_REQUEST["host_id"] == $host["id"]) { print " selected"; } print ">" . title_trim($host["name"], 40) . "</option>\n";
+									print "<option value=" . $host["id"]; if ($_REQUEST["host_id"] == $host["id"]) { print " selected"; } print ">" . title_trim($host["name"], 40) . "</option>\n";
 								}
 							}
 							?>
