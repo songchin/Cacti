@@ -82,7 +82,7 @@ function cacti_snmp_get($hostname, $community, $oid, $version, $v3username, $v3p
 		if (read_config_option("snmp_version") == "ucd-snmp") {
 			exec(read_config_option("path_snmpget") . " -O vt -v$version -t $timeout -r $retries $hostname:$port $snmp_auth $oid", $snmp_value);
 		}else {
-			exec(read_config_option("path_snmpget") . " -O fntUev $snmp_auth -v $version -t $timeout -r $retries $hostname:$port $oid", $snmp_value);
+			exec(read_config_option("path_snmpget") . " -O fntev $snmp_auth -v $version -t $timeout -r $retries $hostname:$port $oid", $snmp_value);
 		}
 	}
 	if (isset($snmp_value)) {
