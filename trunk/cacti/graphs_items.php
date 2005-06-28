@@ -181,14 +181,30 @@ function item_edit() {
 	/* modifications to the default graph items array */
 	unset($struct_graph_item["data_template_item_id"]);
 
-	$struct_graph_item["data_source_item_id"]["sql"] = "select
-		CONCAT_WS('',case when host.description is null then 'No Host' when host.description is not null then host.description end,' - ',data_source.name_cache,' (',data_source_item.data_source_name,')') as name,
-		data_source_item.id
-		from data_source,data_source_item
-		left join host on data_source.host_id=host.id
-		where data_source_item.data_source_id=data_source.id
-		" . (((!empty($host_id)) || (!empty($_GET["host_id"]))) ? (!empty($host_id) ? " and data_source.host_id=$host_id" : " and data_source.host_id=" . $_GET["host_id"]) : "") . "
-		order by name";
+	if ($_REQUEST["host_id"] > 0) {
+    	$struct_graph_item["data_source_item_id"]["sql"] = "select
+			CONCAT_WS('',data_source.name_cache,' (',data_template.template_name,'[',data_source_item.data_source_name,'])') AS name,
+			data_source_item.id,
+			data_template.template_name AS data_template_name
+			FROM host
+			RIGHT JOIN (data_template RIGHT JOIN (data_source LEFT JOIN data_source_item ON data_source.id = data_source_item.data_source_id) ON data_template.id = data_source.data_template_id) ON host.id = data_source.host_id
+			WHERE host.id=" . $_GET["host_id"] . "
+			ORDER BY name";
+    }elseif ($_REQUEST["host_id"] == -1) {
+		$struct_graph_item["data_source_item_id"]["sql"] = "select
+			CONCAT_WS('',case when host.description is null then 'No Host - ' end,data_source.name_cache,' (',case when data_template.template_name is null then 'No Template' when data_template.template_name is not null then data_template.template_name end,'[',data_source_item.data_source_name,'])') as name,
+			data_source_item.id
+			FROM host
+			RIGHT JOIN (data_template RIGHT JOIN (data_source LEFT JOIN data_source_item ON data_source.id = data_source_item.data_source_id) ON data_template.id = data_source.data_template_id) ON host.id = data_source.host_id
+			WHERE data_source_item.data_source_id=data_source.id and host.id is null ORDER BY name";
+	}else{
+		$struct_graph_item["data_source_item_id"]["sql"] = "select
+			CONCAT_WS('',case when host.description is null then 'No Host - ' end,data_source.name_cache,' (',case when data_template.template_name is null then 'No Template' when data_template.template_name is not null then data_template.template_name end,'[',data_source_item.data_source_name,'])') as name,
+			data_source_item.id
+			FROM host
+			RIGHT JOIN (data_template RIGHT JOIN (data_source LEFT JOIN data_source_item ON data_source.id = data_source_item.data_source_id) ON data_template.id = data_source.data_template_id) ON host.id = data_source.host_id
+			WHERE data_source_item.data_source_id=data_source.id ORDER BY name";
+	}
 
 	$form_array = array();
 
