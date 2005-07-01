@@ -383,7 +383,8 @@ $user_auth_realm_filenames = array(
 	"smtp_queue.php" => 8,
 	"user_changepassword.php" => "18",
 	"settings_wizard.php" => "15",
-	"user_settings.php" => "19"
+	"user_settings.php" => "19",
+	"php_info.php" => 15
 	);
 
 $hash_type_codes = array(
