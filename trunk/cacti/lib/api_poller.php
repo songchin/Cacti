@@ -78,7 +78,7 @@ function api_poller_cache_item_add($host_id, $data_source_id, $rrd_step, $poller
 	$save["rrd_path"] = addslashes(clean_up_path(get_data_source_path($data_source_id, true)));
 	$save["rrd_num"] = $num_rrd_items;
 	$save["rrd_step"] = $rrd_step;
-	$save["rrd_next_step"] = api_poller_get_rrd_next_step($rrd_step);
+	$save["rrd_next_step"] = api_poller_get_rrd_next_step($rrd_step, $num_rrd_items);
 	$save["arg1"] = $arg1;
 	$save["arg2"] = $arg2;
 	$save["arg3"] = $arg3;
@@ -89,7 +89,7 @@ function api_poller_cache_item_add($host_id, $data_source_id, $rrd_step, $poller
 	db_execute($cnn_id->GetInsertSQL($table_name, $save));
 }
 
-function api_poller_get_rrd_next_step($rrd_step=300) {
+function api_poller_get_rrd_next_step($rrd_step=300, $num_rrd_items=1) {
 	global $config;
 
 	$poller_interval = read_config_option("poller_interval");
@@ -107,7 +107,9 @@ function api_poller_get_rrd_next_step($rrd_step=300) {
 
 		$rrd_next_step = $poller_interval * ($rrd_step_counter % $modulus);
 
-		$rrd_step_counter++;
+		if ($num_rrd_items == 1) {
+			$rrd_step_counter++;
+		}
 
 		if ($rrd_step_counter >= $modulus) {
 			$rrd_step_counter = 0;
@@ -119,6 +121,20 @@ function api_poller_get_rrd_next_step($rrd_step=300) {
 	}
 
 	return $rrd_next_step;
+}
+
+function api_poller_increment_rrd_next_step() {
+	if(!isset($config["rrd_step_counter"])) {
+		$rrd_step_counter = read_config_option("rrd_step_counter");
+	}else{
+		$rrd_step_counter = $config["rrd_step_counter"];
+	}
+
+	$rrd_step_counter++;
+
+	/* save rrd_step_counter */
+	$config["rrd_step_counter"] = $rrd_step_counter;
+	db_execute("replace into settings (name, value) values ('rrd_step_counter','$rrd_step_counter')");
 }
 
 ?>
