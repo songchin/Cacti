@@ -107,7 +107,7 @@ function utilities_view_syslog() {
 	load_current_session_value("page", "sess_syslog_current_page", "1");
 	load_current_session_value("filter", "sess_syslog_filter", "");
 	load_current_session_value("facility", "sess_syslog_facility", "-1");
-	load_current_session_value("severity", "sess_syslog_severity", "-1");
+	load_current_session_value("severity", "sess_syslog_severity", "-10");
 	load_current_session_value("poller", "sess_syslog_poller", "-1");
 	load_current_session_value("host", "sess_syslog_host", "-1");
 	load_current_session_value("username", "sess_syslog_username", "-1");
@@ -125,7 +125,7 @@ function utilities_view_syslog() {
 		$sql_where .= " and syslog.facility='" . $_REQUEST["facility"] . "'";
 	}
 
-	if ($_REQUEST["severity"] != -1) {
+	if ($_REQUEST["severity"] != -10) {
 		$sql_where .= " and syslog.severity='" . $_REQUEST["severity"] . "'";
 	}
 
@@ -200,7 +200,7 @@ function utilities_view_syslog() {
 
 	print $nav;
 
-	html_header(array(_("Logdate"), _("Facility"), _("Severity"), _("Poller"), _("Host"), _("Log Message")));
+	html_header(array(_("Date"), _("Facility"), _("Severity"), _("Poller"), _("Host"), _("User"), _("Message")));
 
 	$i = 0;
 	if (sizeof($syslog_entries) > 0) {
@@ -221,6 +221,9 @@ function utilities_view_syslog() {
 				</td>
 				<td width='10%' nowrap>
 					<?php if ($syslog_entry["host"] != "") { print $syslog_entry["host"]; } else { print "SYSTEM"; }?>
+				</td>
+				<td width='10%' nowrap>
+					<?php if ($syslog_entry["username"] != "") { print $syslog_entry["username"]; } else { print "SYSTEM"; }?>
 				</td>
 				<td width='40%'>
 					<?php print $syslog_entry["message"];?>

@@ -40,15 +40,16 @@
 					</td>
 					<td width="1">
 						<select name="severity" onChange="applyFilterChange(document.form_syslog_id)">
-							<option value="-1"<?php if ($_REQUEST["severity"] == -1) {?> selected<?php }?>>All</option>
-							<option value="<?php echo SEV_EMERGENCY;?>"<?php if ($_REQUEST["severity"] == SEV_EMERGENCY) {?> selected<?php }?>>Emergency</option>
-							<option value="<?php echo SEV_ALERT;?>"<?php if ($_REQUEST["severity"] == SEV_ALERT) {?> selected<?php }?>>Alert</option>
-							<option value="<?php echo SEV_CRITICAL;?>"<?php if ($_REQUEST["severity"] == SEV_CRITICAL) {?> selected<?php }?>>Critical</option>
-							<option value="<?php echo SEV_ERROR;?>"<?php if ($_REQUEST["severity"] == SEV_ERROR) {?> selected<?php }?>>Error</option>
-							<option value="<?php echo SEV_WARNING;?>"<?php if ($_REQUEST["severity"] == SEV_WARNING) {?> selected<?php }?>>Warning</option>
-							<option value="<?php echo SEV_NOTICE;?>"<?php if ($_REQUEST["severity"] == SEV_NOTICE) {?> selected<?php }?>>Notice</option>
+							<option value="-10"<?php if ($_REQUEST["severity"] == -10) {?> selected<?php }?>>All</option>
 							<option value="<?php echo SEV_INFO;?>"<?php if ($_REQUEST["severity"] == SEV_INFO) {?> selected<?php }?>>Info</option>
+							<option value="<?php echo SEV_NOTICE;?>"<?php if ($_REQUEST["severity"] == SEV_NOTICE) {?> selected<?php }?>>Notice</option>
+							<option value="<?php echo SEV_WARNING;?>"<?php if ($_REQUEST["severity"] == SEV_WARNING) {?> selected<?php }?>>Warning</option>
+							<option value="<?php echo SEV_ERROR;?>"<?php if ($_REQUEST["severity"] == SEV_ERROR) {?> selected<?php }?>>Error</option>
+							<option value="<?php echo SEV_CRITICAL;?>"<?php if ($_REQUEST["severity"] == SEV_CRITICAL) {?> selected<?php }?>>Critical</option>
+							<option value="<?php echo SEV_ALERT;?>"<?php if ($_REQUEST["severity"] == SEV_ALERT) {?> selected<?php }?>>Alert</option>
+							<option value="<?php echo SEV_EMERGENCY;?>"<?php if ($_REQUEST["severity"] == SEV_EMERGENCY) {?> selected<?php }?>>Emergency</option>
 							<option value="<?php echo SEV_DEBUG;?>"<?php if ($_REQUEST["severity"] == SEV_DEBUG) {?> selected<?php }?>>Debug</option>
+							<option value="<?php echo SEV_DEV;?>"<?php if ($_REQUEST["severity"] == SEV_DEV) {?> selected<?php }?>>Developer Debug</option>
 						</select>
 					</td>
 					<td width="1">

@@ -126,14 +126,15 @@ define("SNMPV3_PP_AES", 4);
 define("SNMPV3_AP_MD5", 0);
 define("SNMPV3_AP_SHA", 1);
 
-define("SEV_DEBUG", 7);
-define("SEV_EMERGENCY", 6);
-define("SEV_ALERT", 5);
-define("SEV_CRITICAL", 4);
-define("SEV_ERROR", 3);
-define("SEV_WARNING", 2);
-define("SEV_NOTICE", 1);
-define("SEV_INFO", 0);
+define("SEV_EMERGENCY", 7);
+define("SEV_ALERT", 6);
+define("SEV_CRITICAL", 5);
+define("SEV_ERROR", 4);
+define("SEV_WARNING", 3);
+define("SEV_NOTICE", 2);
+define("SEV_INFO", 1);
+define("SEV_DEBUG", 0);
+define("SEV_DEV", -1);
 
 define("FACIL_UNKNOWN",0);
 define("FACIL_POLLER",1);
@@ -149,7 +150,12 @@ define("SYSLOG_CACTI",1);
 define("SYSLOG_BOTH",2);
 define("SYSLOG_SYSTEM",3);
 
+define("SYSLOG_MNG_NONE",0);
 define("SYSLOG_MNG_ASNEEDED",1);
 define("SYSLOG_MNG_DAYSOLD",2);
 define("SYSLOG_MNG_STOPLOG",3);
+
+/* Define syslog variables for php */
+define_syslog_variables();
+
 ?>

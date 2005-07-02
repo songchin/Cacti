@@ -28,9 +28,9 @@
    @arg $poller_id - integer value poller id, if applicable
    @arg $host_id - integer value host_id, if applicable
    @arg $user_id - integer value user_id, optional, if not passed, figured out.
-   @arg $output - (bool) whether to output the log line to the browser using pring() or not
+   @arg $output - (bool) whether to output the log line to the STDOUT using print()
    @arg $facility - integer value facility, if applicable, default FACIL_CMDPHP
-   Note: Constants are defined for Severity and Facility, please reference include/config_constants.php*/
+   Note: Constants are defined for Severity and Facility, please reference include/config_constants.php */
 function api_syslog_cacti_log($message, $severity = SEV_INFO, $poller_id = 1, $host_id = 0, $user_id = 0, $output = false, $facility = FACIL_CMDPHP) {
 	global $config;
 
@@ -38,23 +38,24 @@ function api_syslog_cacti_log($message, $severity = SEV_INFO, $poller_id = 1, $h
 	$logdate = date("Y-m-d H:i:s");
 
 	/* determine how to log data */
-	$syslog_destination = read_config_option("log_destination");
-
-	/* format the message */
-	$textmessage = "$logdate - " . api_syslog_get_severity($severity) . ": " . api_syslog_get_facility($facility) . ": " . $message . "\n";
+	$syslog_destination = read_config_option("syslog_destination");
+	$syslog_level = read_config_option("syslog_level");
 
 	/* get username */
 	if ($user_id) {
-	    $user_info = api_user_info(array("id" => $user_id));
-	    $username = $user_info["username"];
-	    //"select username from user_auth where user_id=$user_id");
+		$user_info = api_user_info(array("id" => $user_id));
+		if ($user_info) {
+	 		$username = $user_info["username"];
+		} else {
+			$usernmae = _("Unknown");
+		}
 	}else{
 		if (isset($_SESSION["sess_user_id"])) {
 			$user_info = api_user_info(array("id" => $_SESSION["sess_user_id"]));
 			$user_id = $_SESSION["sess_user_id"];
 			$username = $user_info["username"];
 		}else{
-			$username = _("System");
+			$username = "SYSTEM";
 		}
 	}
 
@@ -66,45 +67,70 @@ function api_syslog_cacti_log($message, $severity = SEV_INFO, $poller_id = 1, $h
 	}
 
 	/* Log to Cacti Syslog */
-	if (((read_config_option("syslog_destination") == SYSLOG_CACTI) || (read_config_option("syslog_destination") == SYSLOG_BOTH)) &&
-		(read_config_option("log_verbosity") != POLLER_VERBOSITY_NONE) &&
-		(read_config_option("syslog_status") != "suspended"))	{
+	if ((($syslog_destination == SYSLOG_CACTI) || ($syslog_destination == SYSLOG_BOTH)) 
+		&& (read_config_option("syslog_status") != "suspended") && ($severity >= $syslog_level)) {
 		/* echo the data to the log (append) */
-		db_execute("insert into syslog
+		db_execute("insert into syslog 
 			(logdate,facility,severity,poller_id,host_id,user_id,username,source,message) values
-			('$logdate', '" . $facility . "', '" . $severity . "', '$poller_id', '$host_id', '$user_id', '$username', '$source', '". addslashes($message) . "');");
+			(SYSDATE(), " . $facility . "," . $severity . "," . $poller_id . "," .$host_id . "," . $user_id . ",'" . $username . "','" . $source . "','". addslashes($message) . "');");
 	}
 
 	/* Log to System Syslog/Eventlog */
 	/* Syslog is currently Unstable in Win32 */
-	if ((read_config_option("syslog_destination") == SYSLOG_BOTH) || (read_config_option("syslog_destination") == SYSLOG_SYSTEM)) {
-		if ($severity <= SEV_WARNING) {
-			define_syslog_variables();
-
-			if ($config["cacti_server_os"] == "win32")
-				openlog(_("Cacti Logging"), LOG_NDELAY | LOG_PID, LOG_USER);
-			else
-				openlog(_("Cacti Logging"), LOG_NDELAY | LOG_PID, LOG_SYSLOG);
-
-			if (($severity <= SEV_ERROR) && (read_config_option("log_perror"))) {
-				syslog(LOG_CRIT, api_syslog_get_severity($severity) . ": " . api_syslog_get_facility($facility) . ": " . $message);
-			}
-
-			if (($severity == SEV_WARNING) && (read_config_option("log_pwarn"))) {
-				syslog(LOG_WARNING, api_syslog_get_severity($severity) . ": " . api_syslog_get_facility($facility) . ": " . $message);
-			}
-
-			if ((($severity == SEV_NOTICE) || ($severity == SEV_INFO)) && (read_config_option("log_pstats"))) {
-				syslog(LOG_INFO, api_syslog_get_severity($severity) . ": " . api_syslog_get_facility($facility) . ": " . $message);
-			}
-
-			closelog();
-		}
+	if ((($syslog_destination == SYSLOG_BOTH) || ($syslog_destination == SYSLOG_SYSTEM)) 
+		&& ($severity != SEV_DEV) && ($severity >= $syslog_level)) {
+		openlog("Cacti", LOG_NDELAY | LOG_PID, read_config_option("syslog_facility"));
+		syslog(api_syslog_get_syslog_severity($severity), api_syslog_get_severity($severity) . ": " . api_syslog_get_facility($facility) . ": " . $message);
+		closelog();
 	}
 
 	/* print output to standard out if required */
 	if ($output == true) {
-		print $textmessage;
+		print $logdate . " - " . api_syslog_get_severity($severity) . ": " . api_syslog_get_facility($facility) . ": " . $message . "\n";
+	}
+
+}
+
+/* api_syslog_get_syslog_severity - returns the syslog severity level
+   @arg $severity - the severity integer value */
+function api_syslog_get_syslog_severity($severity) {
+
+	if ($config["cacti_server_os"] == "win32") {
+		return LOG_WARNING;
+	} else {
+
+		switch ($severity) {
+			case SEV_EMERGENCY:
+				return LOG_EMERG;
+				break;
+			case SEV_ALERT:
+				return LOG_ALERT;
+				break;
+			case SEV_CRITICAL:
+				return LOG_CRIT;
+				break;
+			case SEV_ERROR:
+				return LOG_ERR;
+				break;
+			case SEV_WARNING:
+				return LOG_WARNING;
+				break;
+			case SEV_NOTICE:
+				return LOG_NOTICE;
+				break;
+			case SEV_INFO:
+				return LOG_INFO;
+				break;
+			case SEV_DEBUG:
+				return LOG_DEBUG;
+				break;
+			case SEV_DEV:
+				return LOG_DEBUG;
+				break;
+			default:
+				return LOG_INFO;
+				break;
+		}
 	}
 }
 
@@ -170,6 +196,9 @@ function api_syslog_get_severity($severity) {
 		case SEV_DEBUG:
 			return _("DEBUG");
 			break;
+		case SEV_DEV:
+			return _("DEV");
+			break;
 		default:
 			return _("UNKNOWN");
 			break;
@@ -186,14 +215,6 @@ function api_syslog_manage_cacti_log($print_data_to_stdout) {
 	$syslog_maxdays = read_config_option("syslog_maxdays");
 
 	$total_records = db_fetch_cell("SELECT count(*) FROM syslog");
-
-	if (eregi("k", $syslog_size)) {
-		$syslog_size = eregi_replace("k", "", $syslog_size);
-		$syslog_size = $syslog_size * 1024;
-	}else if (eregi("m", $syslog_size)) {
-		$syslog_size = eregi_replace("m", "", $syslog_size);
-		$syslog_size = $syslog_size * 1024 * 1024;
-	}
 
 	if ($total_records >= $syslog_size) {
 		switch ($syslog_control) {
@@ -244,6 +265,10 @@ function api_syslog_color($severity) {
 			break;
 		case "WARNING":
 			return print "<tr bgcolor='#" . $colors["syslog_warning_background"] . "'>\n";
+
+
+
+
 			break;
 		case "NOTICE":
 			return print "<tr bgcolor='#" . $colors["syslog_notice_background"] . "'>\n";
@@ -253,6 +278,9 @@ function api_syslog_color($severity) {
 			break;
 		case "DEBUG":
 			return print "<tr bgcolor='#" . $colors["syslog_debug_background"] . "'>\n";
+			break;
+		case "DEV":
+			return print "<tr bgcolor='#" . $colors["syslog_dev_background"] . "'>\n";
 			break;
 		default:
 			return print "<tr bgcolor='#" . $colors["syslog_info_background"] . "'>\n";
