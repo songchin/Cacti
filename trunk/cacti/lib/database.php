@@ -58,13 +58,17 @@ function db_connect_real($host,$user,$pass,$db_name,$db_type, $retries = 20) {
 function db_execute($sql) {
 	global $cnn_id;
 
-	$query = $cnn_id->Execute($sql);
+	api_syslog_cacti_log("Executing SQL: $sql", SEV_DEV, 0, 0, 0, false, FACIL_WEBUI);
 
-	if ($query) {
-		return(1);
+	$result = $cnn_id->Execute($sql);
+
+	if ($result === false) {
+		api_syslog_cacti_log("SQL error: " . $cnn_id->ErrorMsg(), SEV_DEV, 0, 0, 0, false, FACIL_WEBUI);
 	}else{
-		return(0);
+		return true;
 	}
+
+	return false;
 }
 
 /* db_fetch_cell - run a 'select' sql query and return the first column of the
@@ -72,26 +76,23 @@ function db_execute($sql) {
    @arg $sql - the sql query to execute
    @arg $col_name - use this column name instead of the first one
    @returns - (bool) the output of the sql query as a single variable */
-function db_fetch_cell($sql,$col_name = '') {
+function db_fetch_cell($sql) {
 	global $cnn_id;
 
-	if ($col_name != '') {
-		$cnn_id->SetFetchMode(ADODB_FETCH_ASSOC);
+	api_syslog_cacti_log("Executing SQL: $sql", SEV_DEV, 0, 0, 0, false, FACIL_WEBUI);
+
+	$cnn_id->SetFetchMode(ADODB_FETCH_NUM);
+	$result = $cnn_id->Execute($sql);
+
+	if ($result === false) {
+		api_syslog_cacti_log("SQL error: " . $cnn_id->ErrorMsg(), SEV_DEV, 0, 0, 0, false, FACIL_WEBUI);
 	}else{
-		$cnn_id->SetFetchMode(ADODB_FETCH_NUM);
-	}
-
-	$query = $cnn_id->Execute($sql);
-
-	if ($query) {
-		if (!$query->EOF) {
-			if ($col_name != '') {
-				return($query->fields[$col_name]);
-			}else{
-				return($query->fields[0]);
-			}
+		if (!$result->EOF) {
+			return $result->fields[0];
 		}
 	}
+
+	return false;
 }
 
 /* db_fetch_row - run a 'select' sql query and return the first row found
@@ -100,14 +101,20 @@ function db_fetch_cell($sql,$col_name = '') {
 function db_fetch_row($sql) {
 	global $cnn_id;
 
-	$cnn_id->SetFetchMode(ADODB_FETCH_ASSOC);
-	$query = $cnn_id->Execute($sql);
+	api_syslog_cacti_log("Executing SQL: $sql", SEV_DEV, 0, 0, 0, false, FACIL_WEBUI);
 
-	if ($query) {
-		if (!$query->EOF) {
-			return($query->fields);
+	$cnn_id->SetFetchMode(ADODB_FETCH_ASSOC);
+	$result = $cnn_id->Execute($sql);
+
+	if ($result === false) {
+		api_syslog_cacti_log("SQL error: " . $cnn_id->ErrorMsg(), SEV_DEV, 0, 0, 0, false, FACIL_WEBUI);
+	}else{
+		if (!$result->EOF) {
+			return $result->fields;
 		}
 	}
+
+	return false;
 }
 
 /* db_fetch_assoc - run a 'select' sql query and return all rows found
@@ -116,17 +123,25 @@ function db_fetch_row($sql) {
 function db_fetch_assoc($sql) {
 	global $cnn_id;
 
-	$data = array();
-	$cnn_id->SetFetchMode(ADODB_FETCH_ASSOC);
-	$query = $cnn_id->Execute($sql);
+	api_syslog_cacti_log("Executing SQL: $sql", SEV_DEV, 0, 0, 0, false, FACIL_WEBUI);
 
-	if ($query) {
-		while ((!$query->EOF) && ($query)) {
-			$data{sizeof($data)} = $query->fields;
-			$query->MoveNext();
+	$cnn_id->SetFetchMode(ADODB_FETCH_ASSOC);
+	$result = $cnn_id->Execute($sql);
+
+	if ($result === false) {
+		api_syslog_cacti_log("SQL error: " . $cnn_id->ErrorMsg(), SEV_DEV, 0, 0, 0, false, FACIL_WEBUI);
+	}else{
+		$data = array();
+
+		while (!$result->EOF) {
+			$data{sizeof($data)} = $result->fields;
+			$result->MoveNext();
 		}
-		return($data);
+
+		return $data;
 	}
+
+	return false;
 }
 
 /* db_fetch_insert_id - get the last insert_id or auto incriment
@@ -167,48 +182,99 @@ function array_to_sql_or($array, $sql_column) {
 	}
 }
 
-/* db_replace - replaces the data contained in a particular row
-   @arg $table_name - the name of the table to make the replacement in
-   @arg $array_items - an array containing each column -> value mapping in the row
-   @arg $keyCols - the name of the column containing the primary key
-   @arg $autoQuote - whether to use intelligent quoting or not
-   @returns - the auto incriment id column (if applicable) */
-function db_replace($table_name, $array_items, $keyCols) {
-	global $cnn_id;
-	$cnn_id->Replace($table_name, $array_items, $keyCols);
-
-	return $cnn_id->Insert_ID();
-}
-
 /* sql_save - saves data to an sql table
-   @arg $array_items - an array containing each column -> value mapping in the row
+   @arg $fields - an array containing each column -> value mapping in the row
    @arg $table_name - the name of the table to make the replacement in
-   @arg $key_cols - the primary key(s)
+   @arg $keys - the primary key(s)
    @returns - the auto incriment id column (if applicable) */
-function sql_save($array_items, $table_name, $key_cols='id') {
+function sql_save($fields, $table_name, $keys = "") {
 	global $cnn_id;
 
-	while (list ($key, $value) = each ($array_items)) {
-		if (preg_match("/^((password|md5|now)\(.*\)|null)$/i", $value)) {
-			$quote = "";
-		}else{
-			$quote = "\"";
-		}
-
-		$array_items[$key] = "$quote$value$quote";
+	/* default primary key */
+	if (!is_array($keys)) {
+		$keys = array("id");
 	}
 
-	if (!$cnn_id->Replace($table_name, $array_items, $key_cols, false)) { return 0; }
+	while (list($field_name, $field_value) = each($fields)) {
+		$new_fields[$field_name] = array("type" => DB_TYPE_STRING, "value" => $field_value);
+	}
 
-	/* get the last AUTO_ID and return it */
-	if ($cnn_id->Insert_ID() == "0") {
-		if (isset($array_items["id"])) {
-			return str_replace("\"", "", $array_items["id"]);
+	if (db_replace($table_name, $new_fields, $keys)) {
+		if (empty($fields["id"])) {
+			return $cnn_id->Insert_ID();
 		}else{
-			return 0;
+			return $fields["id"];
 		}
 	}else{
-		return $cnn_id->Insert_ID();
+		return false;
+	}
+}
+
+function db_replace($table_name, $fields, $keys = "") {
+	global $cnn_id;
+
+	/* default primary key */
+	if (!is_array($keys)) {
+		$keys = array("id");
+	}
+
+	/* generate a WHERE statement that reflects the list of keys */
+	$sql_key_where = "";
+	for ($i=0; $i<sizeof($keys); $i++) {
+		$sql_key_where .= ($i == 0 ? "WHERE " : " AND ") . $keys[$i]  . " = " . sql_get_quoted_string($fields{$keys[$i]});
+	}
+
+	/* no rows exist at this key; generate an INSERT statement */
+	if (db_fetch_cell("select count(*) from $table_name $sql_key_where") == 0) {
+		$sql_field_names = ""; $sql_field_values = ""; $i = 0;
+		while (list($db_field_name, $db_field_array) = each($fields)) {
+			if ($i == 0) {
+				$sql_field_names = "(";
+				$sql_field_values = "(";
+			}
+
+			$sql_field_names .= $db_field_name . ($i == (sizeof($fields) - 1) ? "" : ",");
+			$sql_field_values .= sql_get_quoted_string($db_field_array) . ($i == (sizeof($fields) - 1) ? "" : ",");
+
+			if ($i == (sizeof($fields) - 1)) {
+				$sql_field_names .= ")";
+				$sql_field_values .= ")";
+			}
+
+			$i++;
+		}
+
+		$sql = "insert into $table_name $sql_field_names values $sql_field_values";
+	/* more than one row exists at this key; generate an UPDATE statement */
+	}else{
+		$sql_set_fields = ""; $i = 0;
+		while (list($db_field_name, $db_field_array) = each($fields)) {
+			/* do not include the key fields in the SET string */
+			if (!in_array($db_field_name, $keys)) {
+				$sql_set_fields .= $db_field_name . " = " . sql_get_quoted_string($db_field_array) . (($i == (sizeof($fields) - sizeof($keys) - 1)) ? "" : ",");
+
+				$i++;
+			}
+		}
+
+		$sql = "update $table_name set $sql_set_fields $sql_key_where";
+	}
+
+	/* execute the sql statement and return the result */
+	if (db_execute($sql)) {
+		return true;
+	}else{
+		return false;
+	}
+}
+
+function sql_get_quoted_string($field) {
+	if ($field["type"] == DB_TYPE_STRING) {
+		return "'" . sql_sanitize($field["value"]) . "'";
+	} else if ($field["type"] == DB_TYPE_INTEGER) {
+		return sql_sanitize($field["value"]);
+	} else if ($field["type"] == DB_TYPE_NULL) {
+		return "NULL";
 	}
 }
 
@@ -216,7 +282,6 @@ function sql_save($array_items, $table_name, $key_cols='id') {
    @arg $value - value to sanitize
    @return - fixed value */
 function sql_sanitize($value) {
-
 	$value = str_replace("'", "''", $value);
 	$value = str_replace(";", "", $value);
 
