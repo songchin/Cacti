@@ -52,7 +52,7 @@ function rrd_get_fd(&$rrd_struc, $fd_type) {
 	}
 }
 
-function rrdtool_execute($command_line, $log_to_stdout, $output_flag, $rrd_struc = array(), $logopt = "WEBLOG") {
+function rrdtool_execute($command_line, $log_to_stdout, $output_flag, $rrd_struc = array(), $syslog_facility = FACIL_POLLER) {
 	global $config;
 
 	if (!is_numeric($output_flag)) {
@@ -67,8 +67,10 @@ function rrdtool_execute($command_line, $log_to_stdout, $output_flag, $rrd_struc
 	$command_line = str_replace("\\\n", " ", $command_line);
 
 	/* output information to the log file if appropriate */
-	if (read_config_option("log_verbosity") >= POLLER_VERBOSITY_DEBUG) {
-		api_syslog_cacti_log(_("CACTI2RRD: ") . addslashes(read_config_option("path_rrdtool")) . " $command_line", SEV_DEBUG, 0, 0, 0, $log_to_stdout, FACIL_POLLER);
+	if (($syslog_facility == FACIL_POLLER) || ($syslog_facility == FACIL_CMDPHP)) {
+		api_syslog_cacti_log("CACTI2RRD: " . addslashes(read_config_option("path_rrdtool")) . " $command_line", SEV_DEBUG, 0, 0, 0, $log_to_stdout,$syslog_facility);
+	} else {
+		api_syslog_cacti_log("RRD_EXECUTE: " . addslashes(read_config_option("path_rrdtool")) . " $command_line", SEV_DEBUG, 0, 0, 0, $log_to_stdout,$syslog_facility);
 	}
 
 	/* if we want to see the error output from rrdtool; make sure to specify this */
@@ -134,7 +136,7 @@ function rrdtool_execute($command_line, $log_to_stdout, $output_flag, $rrd_struc
 	}
 }
 
-function rrdtool_function_create($data_source_id, $show_source, $rrd_struc) {
+function rrdtool_function_create($data_source_id, $show_source, $rrd_struc, $syslog_facility = FACIL_POLLER) {
 	include(CACTI_BASE_PATH . "/include/data_source/data_source_arrays.php");
 	include_once(CACTI_BASE_PATH . "/lib/data_source/data_source_info.php");
 
@@ -164,7 +166,7 @@ function rrdtool_function_create($data_source_id, $show_source, $rrd_struc) {
 
 	/* if we find that this DS has no RRA associated; get out */
 	if (sizeof($rras) <= 0) {
-		api_syslog_cacti_log(_("There are no RRA's assigned to data_source_id: ") . $data_source_id . ".", SEV_ERROR, 0, 0, 0, false, FACIL_WEBUI);
+		api_syslog_cacti_log(_("There are no RRA's assigned to data_source_id: ") . $data_source_id . ".", SEV_ERROR, 0, 0, 0, false, FACIL_POLLER);
 		return false;
 	}
 
@@ -196,11 +198,11 @@ function rrdtool_function_create($data_source_id, $show_source, $rrd_struc) {
 	if ($show_source == true) {
 		return read_config_option("path_rrdtool") . " create" . RRD_NL . "$data_source_path$create_ds$create_rra";
 	}else{
-		rrdtool_execute("create $data_source_path $create_ds$create_rra", true, RRDTOOL_OUTPUT_STDOUT, $rrd_struc, "POLLER");
+		rrdtool_execute("create $data_source_path $create_ds$create_rra", true, RRDTOOL_OUTPUT_STDOUT, $rrd_struc, $syslog_facility);
 	}
 }
 
-function rrdtool_function_update($update_cache_array, $rrd_struc) {
+function rrdtool_function_update($update_cache_array, $rrd_struc, $syslog_facility = FACIL_POLLER) {
 	/* lets count the number of rrd files processed */
 	$rrds_processed = 0;
 
@@ -253,7 +255,7 @@ function rrdtool_function_update($update_cache_array, $rrd_struc) {
 					$i++;
 				}
 
-				rrdtool_execute("update $rrd_path --template $rrd_update_template $rrd_update_values", true, RRDTOOL_OUTPUT_STDOUT, $rrd_struc[$rrd_num], "POLLER");
+				rrdtool_execute("update $rrd_path --template $rrd_update_template $rrd_update_values", true, RRDTOOL_OUTPUT_STDOUT, $rrd_struc[$rrd_num], $syslog_facility);
 				$rrds_processed++;
 			}
 		}
@@ -298,9 +300,7 @@ function rrdtool_function_tune($rrd_tune_array) {
 			$fp = popen(read_config_option("path_rrdtool") . " tune $data_source_path $rrd_tune", "r");
 			pclose($fp);
 
-			if (read_config_option("log_verbosity") >= POLLER_VERBOSITY_DEBUG) {
-				api_syslog_cacti_log(_("CACTI2RRD: ") . addslashes(read_config_option("path_rrdtool")) . " tune $data_source_path $rrd_tune", SEV_DEBUG, 0, 0, 0, false, FACIL_WEBUI);
-			}
+			api_syslog_cacti_log("RRD_TUNE: " . addslashes(read_config_option("path_rrdtool")) . " tune $data_source_path $rrd_tune", SEV_DEBUG, 0, 0, 0, false, FACIL_POLLER);
 		}
 	}
 }
@@ -315,7 +315,7 @@ function rrdtool_function_tune($rrd_tune_array) {
    @returns - (array) an array containing all data in this data source broken down
 	 by each data source item. the maximum of all data source items is included in
 	 an item called 'ninety_fifth_percentile_maximum' */
-function &rrdtool_function_fetch($local_data_id, $start_time, $end_time, $resolution = 0) {
+function &rrdtool_function_fetch($local_data_id, $start_time, $end_time, $resolution = 0,$syslog_facility = FACIL_WEBUI) {
 	if (empty($local_data_id)) {
 		return;
 	}
@@ -330,7 +330,7 @@ function &rrdtool_function_fetch($local_data_id, $start_time, $end_time, $resolu
 	if ($resolution > 0) {
 		$cmd_line .= " -r $resolution";
 	}
-	$output = rrdtool_execute($cmd_line, false, RRDTOOL_OUTPUT_STDOUT);
+	$output = rrdtool_execute($cmd_line, false, RRDTOOL_OUTPUT_STDOUT, array(), $syslog_facility);
 
 	/* grab the first line of the output which contains a list of data sources
 	in this .rrd file */
@@ -401,7 +401,7 @@ function &rrdtool_function_fetch($local_data_id, $start_time, $end_time, $resolu
 	return $fetch_array;
 }
 
-function rrdtool_function_graph($graph_id, $rra_id, $graph_data_array, $rrd_struc = array()) {
+function rrdtool_function_graph($graph_id, $rra_id, $graph_data_array, $rrd_struc = array(),$syslog_facility = FACIL_WEBUI) {
 	global $colors;
 
 	include_once(CACTI_BASE_PATH . "/lib/graph/graph_info.php");
@@ -1050,7 +1050,7 @@ function rrdtool_function_graph($graph_id, $rra_id, $graph_data_array, $rrd_stru
 		print "<PRE>" . read_config_option("path_rrdtool") . " graph $graph_opts$graph_defs$txt_graph_items</PRE>";
 	}else{
 		if (isset($graph_data_array["export"])) {
-			rrdtool_execute("graph $graph_opts$graph_defs$txt_graph_items", false, RRDTOOL_OUTPUT_NULL, $rrd_struc);
+			rrdtool_execute("graph $graph_opts$graph_defs$txt_graph_items", false, RRDTOOL_OUTPUT_NULL, $rrd_struc, FACIL_POLLER);
 			return 0;
 		}else{
 			if (isset($graph_data_array["output_flag"])) {
@@ -1059,7 +1059,7 @@ function rrdtool_function_graph($graph_id, $rra_id, $graph_data_array, $rrd_stru
 				$output_flag = RRDTOOL_OUTPUT_GRAPH_DATA;
 			}
 
-			return rrdtool_execute("graph $graph_opts$graph_defs$txt_graph_items", false, $output_flag, $rrd_struc);
+			return rrdtool_execute("graph $graph_opts$graph_defs$txt_graph_items", false, $output_flag, $rrd_struc,$syslog_facility);
 		}
 	}
 }

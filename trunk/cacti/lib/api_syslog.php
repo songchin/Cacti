@@ -79,13 +79,13 @@ function api_syslog_cacti_log($message, $severity = SEV_INFO, $poller_id = 1, $h
 	/* Syslog is currently Unstable in Win32 */
 	if ((($syslog_destination == SYSLOG_BOTH) || ($syslog_destination == SYSLOG_SYSTEM)) 
 		&& ($severity != SEV_DEV) && ($severity >= $syslog_level)) {
-		openlog("Cacti", LOG_NDELAY | LOG_PID, read_config_option("syslog_facility"));
+		openlog("cacti", LOG_NDELAY | LOG_PID, read_config_option("syslog_facility"));
 		syslog(api_syslog_get_syslog_severity($severity), api_syslog_get_severity($severity) . ": " . api_syslog_get_facility($facility) . ": " . $message);
 		closelog();
 	}
 
 	/* print output to standard out if required */
-	if ($output == true) {
+	if (($output == true) &&($severity >= $syslog_level)) {
 		print $logdate . " - " . api_syslog_get_severity($severity) . ": " . api_syslog_get_facility($facility) . ": " . $message . "\n";
 	}
 
@@ -94,11 +94,11 @@ function api_syslog_cacti_log($message, $severity = SEV_INFO, $poller_id = 1, $h
 /* api_syslog_get_syslog_severity - returns the syslog severity level
    @arg $severity - the severity integer value */
 function api_syslog_get_syslog_severity($severity) {
+	global $config;
 
 	if ($config["cacti_server_os"] == "win32") {
 		return LOG_WARNING;
 	} else {
-
 		switch ($severity) {
 			case SEV_EMERGENCY:
 				return LOG_EMERG;
@@ -213,29 +213,41 @@ function api_syslog_manage_cacti_log($print_data_to_stdout) {
 	$syslog_size = read_config_option("syslog_size");
 	$syslog_control = read_config_option("syslog_control");
 	$syslog_maxdays = read_config_option("syslog_maxdays");
-
 	$total_records = db_fetch_cell("SELECT count(*) FROM syslog");
+
+	/* Input validation */
+	if (! is_numeric($syslog_maxdays)) {
+		$syslog_maxdays = 7;
+	}
+	if (! is_numeric($syslog_size)) {
+		$syslog_size = 1000000;
+	}
 
 	if ($total_records >= $syslog_size) {
 		switch ($syslog_control) {
 		case SYSLOG_MNG_ASNEEDED:
 			$records_to_delete = $total_records - $syslog_size;
 			db_execute("DELETE FROM syslog ORDER BY logdate LIMIT " . $records_to_delete);
-
+			api_syslog_cacti_log(_("Log control removed " . $records_to_delete . " log entires."), SEV_NOTICE, 0, 0, 0, $print_data_to_stdout, FACIL_POLLER);
 			break;
 		case SYSLOG_MNG_DAYSOLD:
 			db_execute("delete from syslog where logdate <= '" . date("Y-m-d H:i:s", strtotime("-" . $syslog_maxdays * 24 * 3600 . " Seconds"))."'");
+			api_syslog_cacti_log(_("Log control removed log entries older than " . $syslog_maxdays . " days."), SEV_NOTICE, 0, 0, 0, $print_data_to_stdout, FACIL_POLLER);
 
 			break;
 		case SYSLOG_MNG_STOPLOG:
 			if (read_config_option("syslog_status") != "suspended") {
-				api_syslog_cacti_log(_("The Cacti log is filled and can not receive additional records"), SEV_CRITICAL, 0, 0, 0, $print_data_to_stdout, FACIL_POLLER);
+				api_syslog_cacti_log(_("Log control suspended logging due to the log being full.  Please purge your logs manually."), SEV_CRITICAL, 0, 0, 0, $print_data_to_stdout, FACIL_POLLER);
 				db_execute("REPLACE INTO settings (name,value) VALUES('syslog_status','suspended')");
 			}
 
 			break;
+		case SYSLOG_MNG_NONE:
+			api_syslog_cacti_log(_("The cacti log control mechanism is set to None.  This is not recommended, please purge your logs on a manual basis."), SEV_WARNING, 0, 0, 0, $print_data_to_stdout, FACIL_POLLER);
+			break;
 		}
 	}
+
 }
 
 /* api_syslog_clear - empties the Cacti Syslog.
@@ -265,10 +277,6 @@ function api_syslog_color($severity) {
 			break;
 		case "WARNING":
 			return print "<tr bgcolor='#" . $colors["syslog_warning_background"] . "'>\n";
-
-
-
-
 			break;
 		case "NOTICE":
 			return print "<tr bgcolor='#" . $colors["syslog_notice_background"] . "'>\n";

@@ -148,9 +148,9 @@ function utilities_view_syslog() {
 	print "<td bgcolor='#" . $colors["console_menu_background"] . "'>";
 	print "<input type='image' src='" . html_get_theme_images_path('button_clear_log.gif') . "' name='clear_log' alt='Clear Log' border='0' align='absmiddle' action='submit'>";
 	print "&nbsp;<input type='image' src='" . html_get_theme_images_path('button_export.gif') . "' name='export' alt='Export Log' border='0' align='absmiddle' action='submit'>";
-    print "</td>";
+	print "</td>";
 	print "<input type='hidden' name='page' value='1'>";
-    print "</form>";
+	print "</form>";
 
   	html_end_box();
 
@@ -207,27 +207,13 @@ function utilities_view_syslog() {
 		foreach ($syslog_entries as $syslog_entry) {
 			api_syslog_color($syslog_entry["severity"]);
 				?>
-				<td width='10%'>
-					<?php print $syslog_entry["logdate"];?>
-				</td>
-				<td width='10%'>
-					<?php print api_syslog_get_facility($syslog_entry["facility"]);?>
-				</td>
-				<td width='10%'>
-					<?php print api_syslog_get_severity($syslog_entry["severity"]);?>
-				</td>
-				<td width='10%' nowrap>
-					<?php if ($syslog_entry["poller_name"] != "") { print $syslog_entry["poller_name"]; } else { print "SYSTEM"; }?>
-				</td>
-				<td width='10%' nowrap>
-					<?php if ($syslog_entry["host"] != "") { print $syslog_entry["host"]; } else { print "SYSTEM"; }?>
-				</td>
-				<td width='10%' nowrap>
-					<?php if ($syslog_entry["username"] != "") { print $syslog_entry["username"]; } else { print "SYSTEM"; }?>
-				</td>
-				<td width='40%'>
-					<?php print $syslog_entry["message"];?>
-				</td>
+				<td width='10%'><?php print $syslog_entry["logdate"];?></td>
+				<td width='10%'><?php print api_syslog_get_facility($syslog_entry["facility"]);?></td>
+				<td width='10%'><?php print api_syslog_get_severity($syslog_entry["severity"]);?></td>
+				<td width='10%' nowrap><?php if ($syslog_entry["poller_name"] != "") { print $syslog_entry["poller_name"]; } else { print "SYSTEM"; }?>	</td>
+				<td width='10%' nowrap><?php if ($syslog_entry["host"] != "") { print $syslog_entry["host"]; } else { print "SYSTEM"; }?></td>
+				<td width='10%' nowrap><?php if ($syslog_entry["username"] != "") { print $syslog_entry["username"]; } else { print "SYSTEM"; }?></td>
+				<td width='40%'><?php print $syslog_entry["message"];?></td>
 			</tr>
 			<?php
 		}

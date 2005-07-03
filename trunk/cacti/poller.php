@@ -44,7 +44,7 @@ $poller_id = 1;
 if ( $_SERVER["argc"] == 2 ) {
 	$poller_id = $_SERVER["argv"][1];
 	if (!is_numeric($poller_id)) {
-		api_syslog_cacti_log(_("The poller id is not numeric"), SEV_ERROR, $poller_id, 0, 0, true, FACIL_POLLER);
+		api_syslog_cacti_log(_("The poller id is not numeric"), SEV_ALERT, $poller_id, 0, 0, true, FACIL_POLLER);
 		exit -1;
 	}
 }
@@ -105,7 +105,7 @@ if ($poller_id == 1) {
 	/* verify I am a valid poller */
 	if (sizeof(db_fetch_assoc("SELECT id FROM poller WHERE id = " . $poller_id)) == 0) {
 		print sprintf(_("Poller '%i' does not exist in this system.\n"), $poller_id);
-		api_syslog_cacti_log(sprintf(_("Poller '%i' is attempting to run, but does not exist on this system."),$poller_id), SEV_ERROR, $poller_id, 0, 0, true, FACIL_POLLER);
+		api_syslog_cacti_log(sprintf(_("Poller '%i' is attempting to run, but does not exist on this system."),$poller_id), SEV_CRITICAL, $poller_id, 0, 0, true, FACIL_POLLER);
 		exit;
 	}
 
@@ -166,7 +166,7 @@ if (read_config_option("poller_enabled") == "on") {
 
 	/* Exit poller if cactid is selected and file does not exist */
 	if (($poller_type == "2") && (!file_exists(read_config_option("path_cactid")))) {
-		api_syslog_cacti_log(sprintf(_("ERROR: The path: %s is invalid.  Can not continue"),read_config_option("path_cactid")), SEV_ERROR, $poller_id, 0, 0, true, FACIL_POLLER);
+		api_syslog_cacti_log(sprintf(_("ERROR: The path: %s is invalid.  Can not continue"),read_config_option("path_cactid")), SEV_CRITICAL, $poller_id, 0, 0, true, FACIL_POLLER);
 		exit;
 	}
 
@@ -337,15 +337,11 @@ if (read_config_option("poller_enabled") == "on") {
 					api_syslog_cacti_log(_("Recache Event Detected for Host"), SEV_WARNING, $poller_id, 0, 0, true, FACIL_POLLER);
 				}
 
-				if (read_config_option("log_verbosity") == POLLER_VERBOSITY_DEBUG) {
-					api_syslog_cacti_log(_("RECACHE: Re-cache for Host, data query #") . $data_query_id, SEV_NOTICE, $poller_id, 0, 0, true, FACIL_POLLER);
-				}
+				api_syslog_cacti_log(_("RECACHE: Re-cache for Host, data query #") . $data_query_id, SEV_DEBUG, $poller_id, 0, 0, true, FACIL_POLLER);
 
 				run_data_query($host_id, $data_query_id);
 
-				if (read_config_option("log_verbosity") == POLLER_VERBOSITY_DEBUG) {
-					api_syslog_cacti_log(_("RECACHE: Re-cache successful."), SEV_NOTICE, $poller_id, 0, 0, true, FACIL_POLLER);
-				}
+				api_syslog_cacti_log(_("RECACHE: Re-cache successful."), SEV_DEBUG, $poller_id, 0, 0, true, FACIL_POLLER);
 			}
 		}
 
@@ -432,10 +428,10 @@ if (read_config_option("poller_enabled") == "on") {
 	}
 }else{
 	if ($poller_id == 1) {
-		api_syslog_cacti_log(_("Either there are no pollers enabled, no items in your poller cache or polling is disabled. Make sure you have at least one data source created, your poller is active. If both are true, go to 'Utilities', and select 'Clear Poller Cache'."), SEV_WARNING, $poller_id, 0, 0, true, FACIL_POLLER);
+		api_syslog_cacti_log(_("Either there are no pollers enabled, no items in your poller cache or polling is disabled. Make sure you have at least one data source created, your poller is active. If both are true, go to 'Utilities', and select 'Clear Poller Cache'."), SEV_CRITICAL, $poller_id, 0, 0, true, FACIL_POLLER);
 	} else {
 		db_execute("update poller set run_state = 'Complete' where id=" . $poller_id);
-		api_syslog_cacti_log(_("Poller had not items to process."), SEV_WARNING, $poller_id, 0, 0, true, FACIL_POLLER);
+		api_syslog_cacti_log(_("Poller had not items to process."), SEV_CRITICAL, $poller_id, 0, 0, true, FACIL_POLLER);
 	}
 }
 

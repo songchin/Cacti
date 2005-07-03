@@ -105,7 +105,7 @@ $snmpv3_security_level = array(
 	"authNoPriv" => _("No Privacy Protocol"),
 	"authPriv" => _("Privacy Protocol")
 	);
-
+	
 $snmpv3_auth_protocol = array(
 	"MD5" => _("MD5 (default)"),
 	"SHA" => _("SHA")
@@ -115,11 +115,6 @@ $snmpv3_priv_protocol = array(
 	"[None]" => "[None]",
 	"DES" => "DES (default)",
 	"AES128" => "AES");
-
-$syslog_options = array(
-	SYSLOG_CACTI => _("Cacti Syslog Only"),
-	SYSLOG_BOTH => _("Cacti Syslog and System Syslog/Eventlog"),
-	SYSLOG_SYSTEM => _("System Syslog/Eventlog Only"));
 
 $availability_options = array(
 	AVAIL_SNMP_AND_PING => _("Ping and SNMP - Most Recommended"),
@@ -134,6 +129,18 @@ $ping_methods = array(
 	PING_NONE => _("Not Applicable")
 	);
 
+$syslog_options = array(
+	SYSLOG_CACTI => _("Cacti Syslog Only"),
+	SYSLOG_BOTH => _("Cacti Syslog and System Syslog/Eventlog"),
+	SYSLOG_SYSTEM => _("System Syslog/Eventlog Only"));
+
+$syslog_control_options = array(
+	SYSLOG_MNG_ASNEEDED => _("Overwrite events as needed"),
+	SYSLOG_MNG_DAYSOLD => _("Overwrite events older than the maximum days"),
+	SYSLOG_MNG_STOPLOG => _("Stop logging if maximum log size is exceeded"),
+	SYSLOG_MNG_NONE => _("None (Not Recommended)")
+);
+
 $syslog_verbosity = array(
 	POLLER_VERBOSITY_NONE => _("NONE - Syslog Only if Selected"),
 	POLLER_VERBOSITY_LOW => _("LOW - Statistics and Errors"),
@@ -141,6 +148,30 @@ $syslog_verbosity = array(
 	POLLER_VERBOSITY_HIGH => _("HIGH - Statistics, Errors, Results and Major I/O Events"),
 	POLLER_VERBOSITY_DEBUG => _("DEBUG - Statistics, Errors, Results, I/O and Program Flow")
 	);
+
+$syslog_level = array(
+	SEV_DEV => _("(-1) Developer Debug"),
+	SEV_DEBUG => _("(0) Debug"),
+	SEV_INFO => _("(1) Informational"),
+	SEV_NOTICE => _("(2) Notice "),
+	SEV_WARNING => _("(3) Warning"),
+	SEV_ERROR => _("(4) Error"),
+	SEV_CRITICAL => _("(5) Critical"),
+	SEV_ALERT => _("(6) Alert"),
+	SEV_EMERGENCY => _("(7) Emergency")
+	);
+
+$syslog_facility = array(
+	LOG_LOCAL0 => "LOCAL0",
+	LOG_LOCAL1 => "LOCAL1",
+	LOG_LOCAL2 => "LOCAL2",
+	LOG_LOCAL3 => "LOCAL3",
+	LOG_LOCAL4 => "LOCAL4",
+	LOG_LOCAL5 => "LOCAL5",
+	LOG_LOCAL6 => "LOCAL6",
+	LOG_LOCAL7 => "LOCAL7",
+	LOG_USER => "USER"
+);
 
 $poller_options = array(
 	1 => "cmd.php",
@@ -240,12 +271,6 @@ $ldap_modes = array(
 	1 => _("Anonymous Searching"),
 	2 => _("Specific Searching")
 	);
-
-$syslog_control_options = array(
-	SYSLOG_MNG_ASNEEDED => _("Overwrite events as needed"),
-	SYSLOG_MNG_DAYSOLD => _("Overwrite events older than the maximum days"),
-	SYSLOG_MNG_STOPLOG => _("Stop logging if maximum log size is exceeded")
-);
 
 $snmp_implementations = array(
 	"ucd-snmp" => "UCD-SNMP 4.x",

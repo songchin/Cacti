@@ -154,11 +154,13 @@ function update_poller_cache($data_source_id, $truncate_performed = false) {
    @arg $command - the command to execute
    @returns - the output of $command after execution */
 function exec_poll($command) {
+	global $config;
+
 	if (function_exists("stream_set_timeout")) {
-		if ($config["cacti_server_os"] == "unix") {
-			$fp = popen($command, "r");
-		}else{
+		if ($config["cacti_server_os"] == "win32") {
 			$fp = popen($command, "rb");
+		}else{
+			$fp = popen($command, "r");
 		}
 
 		/* set script server timeout */
@@ -552,7 +554,7 @@ function update_poller_status($status, $poller_id, $pollers, $poller_time) {
 	/* if there is supposed to be an event generated, do it */
 	if ($issue_log_message) {
 		if ($pollers[$poller_id]["status"] == HOST_DOWN) {
-			api_syslog_cacti_log(_("POLLER EVENT: Poller is DOWN Message: ") . $pollers[$poller_id]["status_last_error"], SEV_ERROR, $poller_id, $host_id, 0, $print_data_to_stdout, FACIL_POLLER);
+			api_syslog_cacti_log(_("POLLER EVENT: Poller is DOWN Message: ") . $pollers[$poller_id]["status_last_error"], SEV_CRITICAL, $poller_id, $host_id, 0, $print_data_to_stdout, FACIL_POLLER);
 		} else {
 			api_syslog_cacti_log(_("POLLER EVENT: Poller Returned from DOWN State"), SEV_NOTICE, $poller_id, $host_id, 0, $print_data_to_stdout, FACIL_POLLER);
 		}
@@ -737,7 +739,7 @@ function update_host_status($poller_id, $status, $host_id, &$hosts, &$ping, $pin
 					api_syslog_cacti_log(_("SNMP: ") . $ping->snmp_response, SEV_INFO, $poller_id, $host_id, 0, $print_data_to_stdout, FACIL_POLLER);
 				}
 			} elseif ($ping_availability == AVAIL_NONE) {
-				api_syslog_cacti_log(_("AVAIL: Availability cheking disabled for host"), SEV_INFO, $poller_id, $host_id, 0, $print_data_to_stdout, FACIL_POLLER);
+				api_syslog_cacti_log(_("AVAIL: Availability checking disabled for host"), SEV_INFO, $poller_id, $host_id, 0, $print_data_to_stdout, FACIL_POLLER);
 			} else {
 				api_syslog_cacti_log(_("PING: ") . $ping->ping_response, SEV_INFO, $poller_id, $host_id, 0, $print_data_to_stdout, FACIL_POLLER);
 			}

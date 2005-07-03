@@ -69,16 +69,27 @@ function wizard_settings_array_merge($section) {
 
 	$output = array();
 
-	while (list($field_name, $field_array) = each($settings[$section])) {
+#	while (list($field_name, $field_array) = each($settings[$section])) {
+#		
+#		$output[$field_name] = $field_array;
+#		
+#		if (isset($helper_array[$field_name])) {
+#			$output[$field_name]["helper_text"] = $helper_array[$field_name]["helper_text"];
+#			$output[$field_name]["page"] = $helper_array[$field_name]["page"];
+#		}
+#
+#	}
+
+	while (list($field_name, $field_array) = each($helper_array)) {
 		
-		$output[$field_name] = $field_array;
+		#$output[$field_name] = $field_array;
 		
-		if (isset($helper_array[$field_name])) {
-			$output[$field_name]["helper_text"] = $helper_array[$field_name]["helper_text"];
-			$output[$field_name]["page"] = $helper_array[$field_name]["page"];
+		if (isset($settings[$section][$field_name])) {
+			$output[$field_name] = array_merge($settings[$section][$field_name],$field_array);
 		}
 
 	}
+
 
 	return $output;
 
@@ -87,9 +98,56 @@ function wizard_settings_array_merge($section) {
 /* Renders form and loads saved values from the session, database, default, in that order */
 function wizard_render_settings_section($wizard,$page) {
 
+	global $settings;
+
 	$wizard_settings = wizard_settings_array_merge($wizard);
 
+	$form_array = array();
 
+        while (list($field_name, $field_array) = each($wizard_settings)) {
+                $form_array += array($field_name => $field_array);
+
+#		print "<pre>";
+#		print_r($field_array);
+#		print "</pre>";
+		
+		if ($page = $field_array["page"]) {
+                if ((isset($field_array["items"])) && (is_array($field_array["items"]))) {
+                        while (list($sub_field_name, $sub_field_array) = each($field_array["items"])) {
+                                if (config_value_exists($sub_field_name)) {
+                                        $form_array[$field_name]["items"][$sub_field_name]["form_id"] = 1;
+                                }
+
+                                $form_array[$field_name]["items"][$sub_field_name]["value"] = db_fetch_cell("select value from settings where name='$sub_field_name'");
+                        }
+                }else{
+                        if (config_value_exists($field_name)) {
+                                $form_array[$field_name]["form_id"] = 1;
+                        }
+
+                        $form_array[$field_name]["value"] = db_fetch_cell("select value from settings where name='$field_name'");
+                }
+		}
+        }
+
+#        print "<pre>";
+#	print_r($settings["general"]);
+#	print "</pre>";
+
+
+
+#       print "<pre>";
+#	print_r($form_array);
+#	print "</pre>";
+
+
+
+
+        draw_edit_form(
+                array(
+                        "config" => array(),
+                        "fields" => $form_array)
+                        );
 
 
 
@@ -115,7 +173,18 @@ function wizard_render($wizard) {
 	
 	$page = wizard_history();
 
+	wizard_header($wizard,"80%");
+	wizard_start_area();
+
+
 	switch ($page) {
+
+		case "0":
+			/* page 0 */
+			wizard_render_settings_section($wizard,$page);
+
+
+
 		case "1":
 			break;
 
@@ -125,18 +194,10 @@ function wizard_render($wizard) {
 		case "3":
 			break;
 
-		default:
-			/* page 0 */
-			wizard_header($wizard,"80%");
-			wizard_start_area();
-
-			print "<input type='hidden' name='next_page' value='" . ($page + 1) . "'>";
-			wizard_end_area();
-			wizard_footer(true,false,false,true,"80%");
-
 	}
 
-
+	wizard_end_area();
+	wizard_footer(true,false,false,true,"80%");
 }
 
 ?>

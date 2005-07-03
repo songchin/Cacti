@@ -65,19 +65,15 @@ if ($_SERVER["argc"] >= 2) {
 if ($config["cacti_server_os"] == "win32") {
 	$guess = substr(__FILE__,0,2);
 	if ($guess == strtoupper($guess)) {
-		api_syslog_cacti_log(_("The PHP Script Server MUST be started using the full path to the file and in lower case.  This is a PHP Bug!!!"), SEV_ERROR, $poller_id, 0, 0, false, FACIL_SCPTSVR);
+		api_syslog_cacti_log(_("The PHP Script Server MUST be started using the full path to the file and in lower case.  This is a PHP Bug!!!"), SEV_CRITICAL, $poller_id, 0, 0, false, FACIL_SCPTSVR);
 		exit(-1);
 	}
 }
 
-if(read_config_option("log_verbosity") == POLLER_VERBOSITY_DEBUG) {
-	api_syslog_cacti_log(_("POLLER: ") . $environ . _(" CWD: ") . strtolower(strtr(getcwd(),"\\","/")) . _(" ROOT: ") . strtolower(strtr(dirname(__FILE__),"\\","/")) . _(" SERVER: ") . __FILE__, SEV_DEBUG, $poller_id, 0, 0, false, FACIL_SCPTSVR);
-}
+api_syslog_cacti_log(_("POLLER: ") . $environ . _(" CWD: ") . strtolower(strtr(getcwd(),"\\","/")) . _(" ROOT: ") . strtolower(strtr(dirname(__FILE__),"\\","/")) . _(" SERVER: ") . __FILE__, SEV_DEBUG, $poller_id, 0, 0, false, FACIL_SCPTSVR);
 
 /* send status back to the server */
-if (read_config_option("log_verbosity") >= POLLER_VERBOSITY_HIGH) {
-	api_syslog_cacti_log(_("PHP Script Server has Started - Parent is") . " " . $environ, SEV_DEBUG, $poller_id, 0, 0, false, FACIL_SCPTSVR);
-}
+api_syslog_cacti_log(_("PHP Script Server has Started - Parent is") . " " . $environ, SEV_DEBUG, $poller_id, 0, 0, false, FACIL_SCPTSVR);
 
 fputs(STDOUT, _("PHP Script Server has Started - Parent is") . " " . $environ . "\n");
 fflush(STDOUT);
@@ -106,9 +102,7 @@ while (1) {
 				$parm = explode(" ",$preparm);
 			}
 
-			if (read_config_option("log_verbosity") == POLLER_VERBOSITY_DEBUG) {
-				api_syslog_cacti_log(_("INCLUDE: '"). $inc . _("' SCRIPT: '") .$cmd . _("' CMD: '") . $preparm . "'", SEV_DEBUG, $poller_id, 0, 0, false, FACIL_SCPTSVR);
-			}
+			api_syslog_cacti_log(_("INCLUDE: '"). $inc . _("' SCRIPT: '") .$cmd . _("' CMD: '") . $preparm . "'", SEV_DEBUG, $poller_id, 0, 0, false, FACIL_SCPTSVR);
 
 			/* check for existance of function.  If exists call it */
 			if ($cmd != "") {
@@ -124,11 +118,11 @@ while (1) {
 
 						include_once($inc);
 					} else {
-						api_syslog_cacti_log(_("PHP Script File to be included, does not exist"), SEV_WARNING, $poller_id, 0, 0, false, FACIL_SCPTSVR);
+						api_syslog_cacti_log(_("PHP Script File to be included, does not exist"), SEV_CRITICAL, $poller_id, 0, 0, false, FACIL_SCPTSVR);
 					}
 				}
 			} else {
-				api_syslog_cacti_log(_("PHP Script Server encountered errors parsing the command"), SEV_WARNING, $poller_id, 0, 0, false, FACIL_SCPTSVR);
+				api_syslog_cacti_log(_("PHP Script Server encountered errors parsing the command"), SEV_ERROR, $poller_id, 0, 0, false, FACIL_SCPTSVR);
 			}
 
 			if (function_exists($cmd)) {
@@ -150,18 +144,14 @@ while (1) {
 					fflush(STDOUT);
 				}
 
-				if (read_config_option("log_verbosity") == POLLER_VERBOSITY_DEBUG) {
-					api_syslog_cacti_log(_("SERVER: ") . $in_string . _(" output ") . $result, SEV_DEBUG, $poller_id, 0, 0, false, FACIL_SCPTSVR);
-				}
+				api_syslog_cacti_log(_("SERVER: ") . $in_string . _(" output ") . $result, SEV_DEBUG, $poller_id, 0, 0, false, FACIL_SCPTSVR);
 			} else {
 				api_syslog_cacti_log(_("Function does not exist"), SEV_WARNING, $poller_id, 0, 0, false, FACIL_SCPTSVR);
 				fputs(STDOUT, _("WARNING: Function does not exist") . "\n");
 			}
 		}elseif ($in_string == "quit") {
 			fputs(STDOUT, _("PHP Script Server Shutdown request received, exiting") . "\n");
-			if (read_config_option("log_verbosity") == POLLER_VERBOSITY_DEBUG) {
-				api_syslog_cacti_log(_("PHP Script Server Shutdown request received, exiting"), SEV_DEBUG, $poller_id, 0, 0, false, FACIL_SCPTSVR);
-			}
+			api_syslog_cacti_log(_("PHP Script Server Shutdown request received, exiting"), SEV_DEBUG, $poller_id, 0, 0, false, FACIL_SCPTSVR);
 			break;
 		}else {
 			api_syslog_cacti_log(_("Problems with input, command ingnored"), SEV_WARNING, $poller_id, 0, 0, false, FACIL_SCPTSVR);

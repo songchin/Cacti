@@ -73,6 +73,7 @@ $colors["graph_alternate1"] = "F5F5F5";
 $colors["graph_alternate2"] = "E5E5E5";
 
 /* Cacti Syslog Colors */
+$colors["syslog_dev_background"] = "C0C0C0";
 $colors["syslog_debug_background"] = "F9FD4B";
 $colors["syslog_info_background"] = "FFFFFF";
 $colors["syslog_notice_background"] = "C4FD3D";

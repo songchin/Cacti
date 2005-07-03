@@ -108,35 +108,8 @@ $settings = array(
 			"friendly_name" => _("Cacti Syslog Severity Logging Level"),
 			"description" => _("Level of detail to send to log.  When selecting a severity level, every level above that will be logged as well."),
 			"method" => "drop_array",
-			"default" => "SEV_INFO",
+			"default" => SEV_NOTICE,
 			"array" => $syslog_level
-			),
-		"log_verbosity" => array(
-			"friendly_name" => _("Cacti Poller Syslog Detail Level"),
-			"description" => _("What level of detail do you want sent to the log."),
-			"method" => "drop_array",
-			"default" => POLLER_VERBOSITY_LOW,
-			"array" => $syslog_verbosity
-			),
-		"poller_log" => array(
-			"friendly_name" => _("Poller Syslog/Eventlog Logging Levels"),
-			"description" => _("If you are using the Poller Systems Syslog/Eventlog, What level of Cacti poller messages should be placed in the log."),
-			"method" => "checkbox_group",
-			"tab" => "poller",
-			"items" => array(
-				"log_pstats" => array(
-					"friendly_name" => _("Poller Statsistics"),
-					"default" => ""
-					),
-				"log_pwarn" => array(
-					"friendly_name" => _("Poller Warnings"),
-					"default" => ""
-					),
-				"log_perror" => array(
-					"friendly_name" => _("Poller Errors or Higher"),
-					"default" => "on"
-					)
-				)
 			),
 		"syslog_facility" => array(
 			"friendly_name" => _("Syslog Facility"),
