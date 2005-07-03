@@ -196,9 +196,9 @@ if ($action == 'login') {
 
 			/* Update ip and lastlogin information for the user*/
 			api_syslog_cacti_log(_("LOGIN: Updating user last login information"), SEV_DEBUG, 0, 0, 0, false, FACIL_AUTH);
-			$user_save["id"] = $user["id"];
-			$user_save["last_login"] = "now()";
-			$user_save["last_login_ip"] = $_SERVER["REMOTE_ADDR"];
+			$user_save["id"] = array("type" => DB_TYPE_INTEGER, "value" => $user["id"]);
+			$user_save["last_login"] = array("type" => DB_TYPE_INTEGER, "value" => "now()");
+			$user_save["last_login_ip"] = array("type" => DB_TYPE_STRING, "value" => $_SERVER["REMOTE_ADDR"]);
 			api_user_save($user_save);
 			unset($user_save);
 
@@ -237,7 +237,6 @@ if ($action == 'login') {
 		}else{
 			/* BAD username/password builtin and LDAP */
 			api_syslog_cacti_log(sprintf(_("LOGIN: Invalid username '%s' and password"), $username), SEV_WARNING, 0, 0, 0, false, FACIL_AUTH);
-			db_execute("insert into user_log (username,user_id,result,ip,time) values('" . $username . "',0,0,'" . $_SERVER["REMOTE_ADDR"] . "',NOW())");
 		}
 	}
 }

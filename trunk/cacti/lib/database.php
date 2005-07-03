@@ -269,6 +269,41 @@ function db_replace($table_name, $fields, $keys = "") {
 	}
 }
 
+function db_update($table_name, $fields, $keys = "") {
+	global $cnn_id;
+
+	/* default primary key */
+	if (!is_array($keys)) {
+		$keys = array("id");
+	}
+
+	/* generate a WHERE statement that reflects the list of keys */
+	$sql_key_where = "";
+	for ($i=0; $i<sizeof($keys); $i++) {
+		$sql_key_where .= ($i == 0 ? "WHERE " : " AND ") . $keys[$i]  . " = " . sql_get_quoted_string($fields{$keys[$i]});
+	}
+
+	$sql_set_fields = ""; $i = 0;
+	while (list($db_field_name, $db_field_array) = each($fields)) {
+		/* do not include the key fields in the SET string */
+		if (!in_array($db_field_name, $keys)) {
+			$sql_set_fields .= $db_field_name . " = " . sql_get_quoted_string($db_field_array) . (($i == (sizeof($fields) - sizeof($keys) - 1)) ? "" : ",");
+
+			$i++;
+		}
+	}
+
+	$sql = "update $table_name set $sql_set_fields $sql_key_where";
+
+	/* execute the sql statement and return the result */
+	api_syslog_cacti_log("Executing SQL: $sql", SEV_DEV, 0, 0, 0, false, FACIL_WEBUI);
+	if (db_execute($sql)) {
+		return true;
+	}else{
+		return false;
+	}
+}
+
 function sql_get_quoted_string($field) {
 	if ($field["type"] == DB_TYPE_STRING) {
 		return "'" . sql_sanitize($field["value"]) . "'";
