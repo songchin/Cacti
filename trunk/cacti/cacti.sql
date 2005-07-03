@@ -2015,7 +2015,7 @@ CREATE TABLE syslog (
   id bigint(20) unsigned NOT NULL auto_increment,
   logdate datetime NOT NULL default '0000-00-00 00:00:00',
   facility tinyint(1) unsigned NOT NULL default '0',
-  severity tinyint(1) unsigned NOT NULL default '0',
+  severity int(1) signed NOT NULL default '0',
   poller_id smallint(5) unsigned NOT NULL default '0',
   host_id mediumint(8) unsigned NOT NULL default '0',
   user_id mediumint(8) unsigned NOT NULL default '0',
