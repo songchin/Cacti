@@ -155,6 +155,14 @@ define("SYSLOG_MNG_ASNEEDED",1);
 define("SYSLOG_MNG_DAYSOLD",2);
 define("SYSLOG_MNG_STOPLOG",3);
 
+define("FORM_VALIDATE_CHECKBOX", chr(22));
+
+define("DB_TYPE_STRING", 1);
+define("DB_TYPE_INTEGER", 2);
+define("DB_TYPE_NULL", 3);
+define("DB_TYPE_FUNC_NOW", 4);
+define("DB_TYPE_FUNC_MD5", 5);
+
 /* Define syslog variables for php */
 define_syslog_variables();
 
