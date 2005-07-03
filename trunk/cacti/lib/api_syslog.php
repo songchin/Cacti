@@ -22,6 +22,8 @@
  +-------------------------------------------------------------------------+
 */
 
+#include_once(CACTI_BASE_PATH . "/lib/user/user_info.php");
+
 /* api_syslog_cacti_log - logs a string to Cacti's log file or optionally to the browser
    @arg $message - string value to log
    @arg $severity - integer value severity level
@@ -32,22 +34,25 @@
    @arg $facility - integer value facility, if applicable, default FACIL_CMDPHP
    Note: Constants are defined for Severity and Facility, please reference include/config_constants.php */
 function api_syslog_cacti_log($message, $severity = SEV_INFO, $poller_id = 1, $host_id = 0, $user_id = 0, $output = false, $facility = FACIL_CMDPHP) {
-	global $config;
+	global $config, $cnn_id;
 
 	/* fill in the current date for printing in the log */
 	$logdate = date("Y-m-d H:i:s");
 
 	/* determine how to log data */
-	$syslog_destination = read_config_option("syslog_destination");
-	$syslog_level = read_config_option("syslog_level");
+	$syslog_destination = syslog_read_config_option("syslog_destination");
+	$syslog_level = syslog_read_config_option("syslog_level");
 
 	/* get username */
-	if ($user_id) {
+	if ($severity == SEV_DEV) {
+		$user_id = 0;
+		$username = "DEV";
+	} elseif ($user_id) {
 		$user_info = api_user_info(array("id" => $user_id));
 		if ($user_info) {
 	 		$username = $user_info["username"];
 		} else {
-			$usernmae = _("Unknown");
+			$username = _("Unknown");
 		}
 	}else{
 		if (isset($_SESSION["sess_user_id"])) {
@@ -82,21 +87,21 @@ function api_syslog_cacti_log($message, $severity = SEV_INFO, $poller_id = 1, $h
 		$message = str_replace(CACTI_BASE_PATH, "", $filename) . ":$line_number in " . ($function_name == "" ? "main" : $function_name) . "(): $message";
 	}
 
-
 	/* Log to Cacti Syslog */
 	if ((($syslog_destination == SYSLOG_CACTI) || ($syslog_destination == SYSLOG_BOTH)) 
-		&& (read_config_option("syslog_status") != "suspended") && ($severity >= $syslog_level)) {
-		/* echo the data to the log (append) */
-		db_execute("insert into syslog 
+		&& (syslog_read_config_option("syslog_status") != "suspended") && ($severity >= $syslog_level)) {
+		$sql = "insert into syslog 
 			(logdate,facility,severity,poller_id,host_id,user_id,username,source,message) values
-			(SYSDATE(), " . $facility . "," . $severity . "," . $poller_id . "," .$host_id . "," . $user_id . ",'" . $username . "','" . $source . "','". addslashes($message) . "');");
+			(SYSDATE(), " . $facility . "," . $severity . "," . $poller_id . "," .$host_id . "," . $user_id . ",'" . $username . "','" . $source . "','". sql_sanitize($message) . "');";
+		/* DO NOT USE db_execute, function looping can occur when in SEV_DEV mode */
+		$cnn_id->Execute($sql);
 	}
 
 	/* Log to System Syslog/Eventlog */
 	/* Syslog is currently Unstable in Win32 */
 	if ((($syslog_destination == SYSLOG_BOTH) || ($syslog_destination == SYSLOG_SYSTEM)) 
-		&& ($severity != SEV_DEV) && ($severity >= $syslog_level)) {
-		openlog("cacti", LOG_NDELAY | LOG_PID, read_config_option("syslog_facility"));
+		&& ($severity >= $syslog_level)) {
+		openlog("cacti", LOG_NDELAY | LOG_PID, syslog_read_config_option("syslog_facility"));
 		syslog(api_syslog_get_syslog_severity($severity), api_syslog_get_severity($severity) . ": " . api_syslog_get_facility($facility) . ": " . $message);
 		closelog();
 	}
@@ -316,6 +321,29 @@ function api_syslog_color($severity) {
 /* api_syslog_export - exports the syslog to a file of the users choosing in CSV format.
    @arg none */
 function api_syslog_export() {
+}
+
+/* syslog_read_config_option - finds the current value of a Cacti configuration setting
+   @arg $config_name - the name of the configuration setting as specified $settings array
+     in 'include/config_settings.php'
+   @returns - the current value of the configuration option */
+function syslog_read_config_option($config_name) {
+	global $cnn_id;
+
+	$cnn_id->SetFetchMode(ADODB_FETCH_ASSOC);
+	$query = $cnn_id->Execute("select value from settings where name='" . $config_name . "'");
+	if ($query) {
+		if (! $query->EOF) {
+		        $db_setting = $query->fields;
+		}
+	}
+
+	if (isset($db_setting["value"])) {
+		return $db_setting["value"];
+	}else{
+		return read_default_config_option($config_name);
+	}
+
 }
 
 ?>
