@@ -190,9 +190,7 @@ function form_save() {
 		}
 
 		if (!is_error_message()) {
-			$user_id = api_user_save($save);
-
-			if ($user_id) {
+			if (api_user_save($save) != 0) {
 				/* user saved */
 				raise_message(1);
 			}else{
@@ -234,7 +232,9 @@ function form_save() {
 				$user["policy_hosts"] = array("type" => DB_TYPE_STRING, "value" => $_POST["policy_hosts"]);
 				$user["policy_graph_templates"] = array("type" => DB_TYPE_STRING, "value" => $_POST["policy_graph_templates"]);
 				$user["id"] = array("type" => DB_TYPE_INTEGER, "value" => $_POST["id"]);
-				api_user_save($user);
+				if (api_user_save($user) == 0) {
+					raise_message(2);
+				}
 			}
 		}
 	}
