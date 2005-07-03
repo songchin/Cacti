@@ -164,29 +164,29 @@ function form_save() {
 		form_input_validate($_POST["password"], "password", "" . preg_quote($_POST["password_confirm"]) . "", true, 4);
 		form_input_validate($_POST["password_confirm"], "password_confirm", "" . preg_quote($_POST["password"]) . "", true, 4);
 
-		$save["id"] = $_POST["id"];
-		$save["username"] = form_input_validate($_POST["username"], "username", "^[A-Za-z_0-9\.]+$", false, 3);
-		$save["full_name"] = form_input_validate($_POST["full_name"], "full_name", "", true, 3);
-		$save["password"] = $password;
-		$save["email_address_primary"] = form_input_validate($_POST["email_address_primary"], "email_address_primary", "", true, 3);
-		$save["email_address_secondary"] = form_input_validate($_POST["email_address_secondary"], "email_address_secondary", "", true, 3);
-		$save["must_change_password"] = form_input_validate((isset($_POST["must_change_password"]) ? $_POST["must_change_password"] : ""), "must_change_password", "", true, 3);
-		$save["show_tree"] = form_input_validate((isset($_POST["show_tree"]) ? $_POST["show_tree"] : ""), "show_tree", "", true, 3);
-		$save["show_list"] = form_input_validate((isset($_POST["show_list"]) ? $_POST["show_list"] : ""), "show_list", "", true, 3);
-		$save["show_preview"] = form_input_validate((isset($_POST["show_preview"]) ? $_POST["show_preview"] : ""), "show_preview", "", true, 3);
-		$save["graph_settings"] = form_input_validate((isset($_POST["graph_settings"]) ? $_POST["graph_settings"] : ""), "graph_settings", "", true, 3);
-		$save["login_opts"] = form_input_validate($_POST["login_opts"], "login_opts", "", true, 3);
-		$save["enabled"] = form_input_validate($_POST["enabled"], "enabled", "", true, 3);
-		$save["password_expire_length"] = form_input_validate($_POST["password_expire_length"], "password_expire_length", "", true, 3);
-		$save["current_theme"] = form_input_validate($_POST["current_theme"], "current_theme", "", true, 3);
-		$save["policy_graphs"] = form_input_validate((isset($_POST["policy_graphs"]) ? $_POST["policy_graphs"] : $_POST["_policy_graphs"]), "policy_graphs", "", true, 3);
-		$save["policy_trees"] = form_input_validate((isset($_POST["policy_trees"]) ? $_POST["policy_trees"] : $_POST["_policy_trees"]), "policy_trees", "", true, 3);
-		$save["policy_hosts"] = form_input_validate((isset($_POST["policy_hosts"]) ? $_POST["policy_hosts"] : $_POST["_policy_hosts"]), "policy_hosts", "", true, 3);
-		$save["policy_graph_templates"] = form_input_validate((isset($_POST["policy_graph_templates"]) ? $_POST["policy_graph_templates"] : $_POST["_policy_graph_templates"]), "policy_graph_templates", "", true, 3);
+		$save["id"] = array("type" => DB_TYPE_INTEGER, "value" => $_POST["id"]);
+		$save["username"] = array("type" => DB_TYPE_STRING, "value" => form_input_validate($_POST["username"], "username", "^[A-Za-z_0-9\.]+$", false, 3));
+		$save["full_name"] = array("type" => DB_TYPE_STRING, "value" => form_input_validate($_POST["full_name"], "full_name", "", true, 3));
+		$save["password"] = array("type" => DB_TYPE_STRING, "value" => $password);
+		$save["email_address_primary"] = array("type" => DB_TYPE_STRING, "value" => form_input_validate($_POST["email_address_primary"], "email_address_primary", "", true, 3));
+		$save["email_address_secondary"] = array("type" => DB_TYPE_STRING, "value" => form_input_validate($_POST["email_address_secondary"], "email_address_secondary", "", true, 3));
+		$save["must_change_password"] = array("type" => DB_TYPE_STRING, "value" => form_input_validate((isset($_POST["must_change_password"]) ? $_POST["must_change_password"] : ""), "must_change_password", "", true, 3));
+		$save["show_tree"] = array("type" => DB_TYPE_STRING, "value" => form_input_validate((isset($_POST["show_tree"]) ? $_POST["show_tree"] : ""), "show_tree", "", true, 3));
+		$save["show_list"] = array("type" => DB_TYPE_STRING, "value" => form_input_validate((isset($_POST["show_list"]) ? $_POST["show_list"] : ""), "show_list", "", true, 3));
+		$save["show_preview"] = array("type" => DB_TYPE_STRING, "value" => form_input_validate((isset($_POST["show_preview"]) ? $_POST["show_preview"] : ""), "show_preview", "", true, 3));
+		$save["graph_settings"] = array("type" => DB_TYPE_STRING, "value" => form_input_validate((isset($_POST["graph_settings"]) ? $_POST["graph_settings"] : ""), "graph_settings", "", true, 3));
+		$save["login_opts"] = array("type" => DB_TYPE_STRING, "value" => form_input_validate($_POST["login_opts"], "login_opts", "", true, 3));
+		$save["enabled"] = array("type" => DB_TYPE_INTEGER, "value" => form_input_validate($_POST["enabled"], "enabled", "", true, 3));
+		$save["password_expire_length"] = array("type" => DB_TYPE_INTEGER, "value" => form_input_validate($_POST["password_expire_length"], "password_expire_length", "", true, 3));
+		$save["current_theme"] = array("type" => DB_TYPE_STRING, "value" => form_input_validate($_POST["current_theme"], "current_theme", "", true, 3));
+		$save["policy_graphs"] = array("type" => DB_TYPE_STRING, "value" => form_input_validate((isset($_POST["policy_graphs"]) ? $_POST["policy_graphs"] : $_POST["_policy_graphs"]), "policy_graphs", "", true, 3));
+		$save["policy_trees"] = array("type" => DB_TYPE_STRING, "value" => form_input_validate((isset($_POST["policy_trees"]) ? $_POST["policy_trees"] : $_POST["_policy_trees"]), "policy_trees", "", true, 3));
+		$save["policy_hosts"] = array("type" => DB_TYPE_STRING, "value" => form_input_validate((isset($_POST["policy_hosts"]) ? $_POST["policy_hosts"] : $_POST["_policy_hosts"]), "policy_hosts", "", true, 3));
+		$save["policy_graph_templates"] = array("type" => DB_TYPE_STRING, "value" => form_input_validate((isset($_POST["policy_graph_templates"]) ? $_POST["policy_graph_templates"] : $_POST["_policy_graph_templates"]), "policy_graph_templates", "", true, 3));
 
 		/* New user, update created */
 		if (empty($_POST["id"])) {
-			$save["created"] = "now()";
+			$save["created"] = array("type" => DB_TYPE_INTEGER, "value" => "now()");
 		}
 
 		if (!is_error_message()) {
@@ -229,11 +229,11 @@ function form_save() {
 			/* graph perms - allow/deny */
 			}elseif (isset($_POST["save_component_graph_perms"])) {
 				$user = array();
-				$user["policy_graphs"] = $_POST["policy_graphs"];
-				$user["policy_tress"] = $_POST["policy_trees"];
-				$user["policy_hosts"] = $_POST["policy_hosts"];
-				$user["policy_graph_templates"] = $_POST["policy_graph_templates"];
-				$user["id"] = $_POST["id"];
+				$user["policy_graphs"] = array("type" => DB_TYPE_STRING, "value" => $_POST["policy_graphs"]);
+				$user["policy_tress"] = array("type" => DB_TYPE_STRING, "value" => $_POST["policy_trees"]);
+				$user["policy_hosts"] = array("type" => DB_TYPE_STRING, "value" => $_POST["policy_hosts"]);
+				$user["policy_graph_templates"] = array("type" => DB_TYPE_STRING, "value" => $_POST["policy_graph_templates"]);
+				$user["id"] = array("type" => DB_TYPE_INTEGER, "value" => $_POST["id"]);
 				api_user_save($user);
 			}
 		}

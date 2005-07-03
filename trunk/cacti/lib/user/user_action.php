@@ -34,18 +34,23 @@
    reference user_admin.php for examples */
 function api_user_save($array) {
 
-	$user_id = sql_save($array, "user_auth");
+	if (db_replace("user_auth", $array)) {
 
-	/* logging */
-	if (empty($array["id"])) {
-		/* New user */
-		api_syslog_cacti_log(sprintf(_("USER_ADMIN: User id '%s' added"), $user_id), SEV_NOTICE, 0, 0, 0, false, FACIL_AUTH);
-	}else{
-		/* existing user */
-		api_syslog_cacti_log(sprintf(_("USER_ADMIN: User id '%s' updated"), $array["id"]), SEV_NOTICE, 0, 0, 0, false, FACIL_AUTH);
+		/* logging */
+		if (empty($array["id"])) {
+			/* New user */
+			$user_id = db_fetch_insert_id();
+			api_syslog_cacti_log(sprintf(_("USER_ADMIN: User id '%s' added"), $user_id), SEV_NOTICE, 0, 0, 0, false, FACIL_AUTH);
+		}else{
+			/* existing user */
+			$user_id = $array["id"]["value"];
+			api_syslog_cacti_log(sprintf(_("USER_ADMIN: User id '%s' updated"), $user_id), SEV_NOTICE, 0, 0, 0, false, FACIL_AUTH);
+		}
+		return $user_id;
+	} else {
+		api_syslog_cacti_log(sprintf(_("USER_ADMIN: Error saving user id '%s' "), $user_id), SEV_ERROR, 0, 0, 0, false, FACIL_AUTH);
+		return 0;
 	}
-
-	return $user_id;
 
 }
 
@@ -100,6 +105,7 @@ function api_user_remove($user_id) {
 			db_execute("delete from user_auth_perms where user_id = " . sql_sanitize($user_id));
 			db_execute("delete from settings_graphs where user_id = " . sql_sanitize($user_id));
 			api_syslog_cacti_log(sprintf(_("USER_ADMIN: User id '%s' deleted"), $user_id), SEV_NOTICE, 0, 0, 0, false, FACIL_AUTH);
+			return true;
 		}
 	}
 }
@@ -108,9 +114,15 @@ function api_user_remove($user_id) {
    @arg $user_id - user id */
 function api_user_enable($user_id) {
 	if (!empty($user_id)) {
-		if (($user_id != 1) && (is_numeric($user_id))) {
-			db_execute("update user_auth set enabled = 1 where id=" . sql_sanitize($user_id));
+		$user = array();
+		$user["id"] = array("type" => DB_TYPE_INTEGER, "value" => $user_id);
+		$user["enabled"] = array("type" => DB_TYPE_INTEGER, "value" => 1);
+		if (db_update("user_auth",$user)) {
 			api_syslog_cacti_log(sprintf(_("USER_ADMIN: User id '%s' enabled"), $user_id), SEV_NOTICE, 0, 0, 0, false, FACIL_AUTH);
+			return true;
+		} else {
+			api_syslog_cacti_log(sprintf(_("USER_ADMIN: Failed to enable user id0 '%s'"), $user_id), SEV_ERROR, 0, 0, 0, false, FACIL_AUTH);
+			return false;
 		}
 	}
 }
@@ -119,9 +131,15 @@ function api_user_enable($user_id) {
    @arg $user_id - user id */
 function api_user_disable($user_id) {
 	if (!empty($user_id)) {
-		if (($user_id != 1) && (is_numeric($user_id))) {
-			db_execute("update user_auth set enabled = 0 where id=" . sql_sanitize($user_id));
+		$user = array();
+		$user["id"] = array("type" => DB_TYPE_INTEGER, "value" => $user_id);
+		$user["enabled"] = array("type" => DB_TYPE_INTEGER, "value" => 0);
+		if (db_update("user_auth",$user)) {
 			api_syslog_cacti_log(sprintf(_("USER_ADMIN: User id '%s' disabled"), $user_id), SEV_NOTICE, 0, 0, 0, false, FACIL_AUTH);
+			return true;
+		} else {
+			api_syslog_cacti_log(sprintf(_("USER_ADMIN: Failed disable user id '%s'"), $user_id), SEV_ERROR, 0, 0, 0, false, FACIL_AUTH);
+			return false;
 		}
 	}
 }
@@ -131,11 +149,15 @@ function api_user_disable($user_id) {
    @arg $interval - integer, the number of days */
 function api_user_expire_length_set($user_id, $interval) {
 	if (!empty($user_id)) {
-		if (is_numeric($user_id)) {
-			$user = array();
-			$user["id"] = sql_sanitize($user_id);
-			$user["password_expire_length"] = sql_sanitize($interval);
-			api_user_save($user);
+		$user = array();
+		$user["id"] = array("type" => DB_TYPE_INTEGER, "value" => sql_sanitize($user_id));
+		$user["password_expire_length"] = array("type" => DB_TYPE_INTEGER, "value" => sql_sanitize($interval));
+	 	if (db_update("user_auth",$user)) {
+			api_syslog_cacti_log(sprintf(_("USER_ADMIN: User id '%s' expiration length set to '%s'"), $user_id,$interval), SEV_ERROR, 0, 0, 0, false, FACIL_AUTH);
+			return true;
+		} else {
+			api_syslog_cacti_log(sprintf(_("USER_ADMIN: Failed to set user id '%s' expiration length set to '%s'"), $user_id,$interval), SEV_ERROR, 0, 0, 0, false, FACIL_AUTH);
+			return false;
 		}
 	}
 }
