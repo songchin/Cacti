@@ -66,6 +66,23 @@ function api_syslog_cacti_log($message, $severity = SEV_INFO, $poller_id = 1, $h
 		$source = _("System");
 	}
 
+	/* Format message for developer if SEV_DEV is allowed */
+	if (($severity >= $syslog_level) && ($severity == SEV_DEV)) {
+		/* get a backtrace so we can derive the current filename/line#/function */
+		$backtrace = debug_backtrace();
+		if (sizeof($backtrace) == 1) {
+			$function_name = $backtrace[0]["function"];
+			$filename = $backtrace[0]["file"];
+			$line_number = $backtrace[0]["line"];
+		} else {
+			$function_name = $backtrace[1]["function"];
+			$filename = $backtrace[0]["file"];
+			$line_number = $backtrace[0]["line"];
+		}
+		$message = str_replace(CACTI_BASE_PATH, "", $filename) . ":$line_number in " . ($function_name == "" ? "main" : $function_name) . "(): $message";
+	}
+
+
 	/* Log to Cacti Syslog */
 	if ((($syslog_destination == SYSLOG_CACTI) || ($syslog_destination == SYSLOG_BOTH)) 
 		&& (read_config_option("syslog_status") != "suspended") && ($severity >= $syslog_level)) {
