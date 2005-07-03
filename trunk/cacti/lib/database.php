@@ -261,6 +261,7 @@ function db_replace($table_name, $fields, $keys = "") {
 	}
 
 	/* execute the sql statement and return the result */
+	api_syslog_cacti_log("Executing SQL: $sql", SEV_DEV, 0, 0, 0, false, FACIL_WEBUI);
 	if (db_execute($sql)) {
 		return true;
 	}else{
