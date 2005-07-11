@@ -53,9 +53,9 @@ function get_data_source_title($data_source_id, $remove_unsubstituted_variables 
 		$title = remove_variables($title);
 	}
 
-    if (((empty($title)) || (substr_count($title,"|"))) && (!empty($data_source["name_cache"]))) {
-    	$title = $data_source["name_cache"];
-    }
+	if (((empty($title)) || (substr_count($title,"|"))) && (!empty($data_source["name_cache"]))) {
+		$title = $data_source["name_cache"];
+	}
 
 	return $title;
 }
@@ -80,6 +80,18 @@ function get_data_source_path($data_source_id, $expand_paths) {
 	}else{
 		return $current_path;
 	}
+}
+
+function &get_data_source_field_list() {
+	include(CACTI_BASE_PATH . "/include/data_source/data_source_form.php");
+
+	return $fields_data_source;
+}
+
+function &get_data_source_item_field_list() {
+	include(CACTI_BASE_PATH . "/include/data_source/data_source_form.php");
+
+	return $fields_data_source_item;
 }
 
 ?>

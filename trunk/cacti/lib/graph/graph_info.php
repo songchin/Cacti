@@ -78,4 +78,21 @@ function get_associated_rras($graph_id) {
 		order by rra.timespan");
 }
 
+function &get_graph_field_list() {
+	include(CACTI_BASE_PATH . "/include/graph/graph_form.php");
+
+	return $fields_graph;
+}
+
+function &get_graph_items_field_list() {
+	include(CACTI_BASE_PATH . "/include/graph/graph_form.php");
+
+	return array(
+			"data_source_item_id" => array(
+				"default" => "",
+				"data_type" => DB_TYPE_NUMBER
+			)
+		) + $fields_graph_item;
+}
+
 ?>
