@@ -22,32 +22,56 @@
  +-------------------------------------------------------------------------+
 */
 
+/* form validation functions */
+
 function validate_data_template_fields(&$_fields_data_template, $data_template_field_name_format) {
-	include(CACTI_BASE_PATH . "/include/data_source/data_source_form.php");
+	include_once(CACTI_BASE_PATH . "/lib/data_source/data_source_template_info.php");
 
 	if (sizeof($_fields_data_template) == 0) {
 		return;
 	}
 
+	/* array containing errored fields */
+	$error_fields = array();
+
+	/* get a complete field list */
+	$fields_data_template = get_data_template_field_list();
+
 	/* base fields */
 	while (list($_field_name, $_field_array) = each($fields_data_template)) {
+		$form_field_name = str_replace("|field|", $_field_name, $data_template_field_name_format);
+
 		if ((isset($_fields_data_template[$_field_name])) && (isset($_field_array["validate_regexp"])) && (isset($_field_array["validate_empty"]))) {
-			form_input_validate($_fields_data_template[$_field_name], str_replace("|field|", $_field_name, $data_template_field_name_format), $_field_array["validate_regexp"], $_field_array["validate_empty"], 3);
+			if (!form_input_validate($_fields_data_template[$_field_name], $form_field_name, $_field_array["validate_regexp"], $_field_array["validate_empty"])) {
+				$error_fields[] = $form_field_name;
+			}
 		}
 	}
+
+	return $error_fields;
 }
 
 function validate_data_source_fields(&$_fields_data_source, &$_fields_suggested_values, $data_source_field_name_format, $suggested_values_field_name_format) {
-	include(CACTI_BASE_PATH . "/include/data_source/data_source_form.php");
+	include_once(CACTI_BASE_PATH . "/lib/data_source/data_source_info.php");
 
 	if (sizeof($_fields_data_source) == 0) {
 		return;
 	}
 
+	/* array containing errored fields */
+	$error_fields = array();
+
+	/* get a complete field list */
+	$fields_data_source = get_data_source_field_list();
+
 	/* base fields */
 	while (list($_field_name, $_field_array) = each($fields_data_source)) {
 		if ((isset($_fields_data_source[$_field_name])) && (isset($_field_array["validate_regexp"])) && (isset($_field_array["validate_empty"]))) {
-			form_input_validate($_fields_data_source[$_field_name], str_replace("|field|", $_field_name, $data_source_field_name_format), $_field_array["validate_regexp"], $_field_array["validate_empty"], 3);
+			$form_field_name = str_replace("|field|", $_field_name, $data_source_field_name_format);
+
+			if (!form_input_validate($_fields_data_source[$_field_name], $form_field_name, $_field_array["validate_regexp"], $_field_array["validate_empty"])) {
+				$error_fields[] = $form_field_name;
+			}
 		}
 	}
 
@@ -55,48 +79,83 @@ function validate_data_source_fields(&$_fields_data_source, &$_fields_suggested_
 	while (list($_field_name, $_sv_array) = each($_fields_suggested_values)) {
 		if ((isset($fields_data_source[$_field_name])) && (isset($fields_data_source[$_field_name]["validate_regexp"])) && (isset($fields_data_source[$_field_name]["validate_empty"]))) {
 			while (list($_sv_id, $_sv_value) = each($_sv_array)) {
-				form_input_validate($_sv_value, str_replace("|field|", $_field_name, str_replace("|id|", $_sv_id, $suggested_values_field_name_format)), $fields_data_source[$_field_name]["validate_regexp"], $fields_data_source[$_field_name]["validate_empty"], 3);
+				$form_field_name = str_replace("|field|", $_field_name, str_replace("|id|", $_sv_id, $suggested_values_field_name_format));
+
+				if (!form_input_validate($_sv_value, $form_field_name, $fields_data_source[$_field_name]["validate_regexp"], $fields_data_source[$_field_name]["validate_empty"])) {
+					$error_fields[] = $form_field_name;
+				}
 			}
 		}
 	}
+
+	return $error_fields;
 }
 
 function validate_data_source_input_fields(&$_fields_data_input, $data_input_field_name_format) {
 	include_once(CACTI_BASE_PATH . "/include/data_source/data_source_constants.php");
 
+	/* array containing errored fields */
+	$error_fields = array();
+
 	/* data input fields */
 	if (isset($_fields_data_source["data_input_type"])) {
 		reset($_fields_data_input);
 		while (list($_field_name, $_field_array) = each($_fields_data_input)) {
+			$form_field_name =  str_replace("|field|", $_field_name, $data_input_field_name_format);
+
 			if (($_fields_data_source["data_input_type"] == DATA_INPUT_TYPE_SCRIPT) && (isset($_fields_data_input["script_id"])) && ($_field_name != "script_id")) {
 				$script_input_field = db_fetch_row("select id,regexp_match,allow_empty from data_input_fields where data_input_id = " . $_fields_data_input["script_id"]["value"] . " and data_name = '$_field_name' and input_output = 'in'");
 
 				if (isset($script_input_field["id"])) {
-					form_input_validate($_field_array["value"], str_replace("|field|", $_field_name, $data_input_field_name_format), $script_input_field["regexp_match"], $script_input_field["allow_empty"], 3);
+					if (!form_input_validate($_field_array["value"], $form_field_name, $script_input_field["regexp_match"], $script_input_field["allow_empty"])) {
+						$error_fields[] = $form_field_name;
+					}
+				}
+			}else if (($data_input_type == DATA_INPUT_TYPE_DATA_QUERY) && ($_field_name == "data_query_field_name")) {
+				if (!form_input_validate($value, $form_field_name, "", false)) {
+					$error_fields[] = $form_field_name;
+				}
+			}else if (($data_input_type == DATA_INPUT_TYPE_DATA_QUERY) && ($_field_name == "data_query_field_value")) {
+				if (!form_input_validate($value, $form_field_name, "", false)) {
+					$error_fields[] = $form_field_name;
 				}
 			}
 		}
 	}
+
+	return $error_fields;
 }
 
 function validate_data_source_item_fields(&$_fields_data_source_item, $data_source_item_field_name_format) {
-	include(CACTI_BASE_PATH . "/include/data_source/data_source_form.php");
+	include_once(CACTI_BASE_PATH . "/lib/data_source/data_source_info.php");
 
 	if (sizeof($_fields_data_source_item) == 0) {
 		return;
 	}
 
+	/* array containing errored fields */
+	$error_fields = array();
+
+	/* get a complete field list */
+	$fields_data_source_item = get_data_source_item_field_list();
+
 	/* base fields */
 	while (list($_field_name, $_field_array) = each($fields_data_source_item)) {
-		if ((isset($_fields_data_source_item[$_field_name])) && (isset($_field_array["validate_regexp"])) && (isset($_field_array["validate_empty"])) && (isset($_fields_data_source_item["id"]))) {
-			form_input_validate($_fields_data_source_item[$_field_name], str_replace("|field|", $_field_name, str_replace("|id|", $_fields_data_source_item["id"], $data_source_item_field_name_format)), $_field_array["validate_regexp"], $_field_array["validate_empty"], 3);
+		if ((isset($_fields_data_source_item[$_field_name])) && (isset($_field_array["validate_regexp"])) && (isset($_field_array["validate_empty"]))) {
+			$form_field_name = str_replace("|field|", $_field_name, $data_source_item_field_name_format);
+
+			if (!form_input_validate($_fields_data_source_item[$_field_name], $form_field_name, $_field_array["validate_regexp"], $_field_array["validate_empty"])) {
+				$error_fields[] = $form_field_name;
+			}
 		}
 	}
+
+	return $error_fields;
 }
 
 /* data template fields */
 
-function _data_template_field__template_name($field_name, $template_flag = false, $field_value = "", $field_id = 0) {
+function _data_template_field__template_name($field_name, $field_value = "", $field_id = 0) {
 	include_once(CACTI_BASE_PATH . "/lib/html_form.php");
 
 	?>
