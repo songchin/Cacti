@@ -158,10 +158,11 @@ define("SYSLOG_MNG_STOPLOG",3);
 define("FORM_VALIDATE_CHECKBOX", chr(22));
 
 define("DB_TYPE_STRING", 1);
-define("DB_TYPE_INTEGER", 2);
+define("DB_TYPE_NUMBER", 2);
 define("DB_TYPE_NULL", 3);
 define("DB_TYPE_FUNC_NOW", 4);
 define("DB_TYPE_FUNC_MD5", 5);
+define("DB_TYPE_HTML_CHECKBOX", 6);
 
 /* Define syslog variables for php */
 define_syslog_variables();

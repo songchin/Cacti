@@ -22,6 +22,8 @@
  +-------------------------------------------------------------------------+
 */
 
+$last_insert_id = 0;
+
 /* db_connect_real - makes a connection to the database server
    @arg $host - the hostname of the database server, 'localhost' if the database server is running
       on this machine
@@ -147,9 +149,9 @@ function db_fetch_assoc($sql) {
 /* db_fetch_insert_id - get the last insert_id or auto incriment
    @returns - the id of the last auto incriment row that was created */
 function db_fetch_insert_id() {
-	global $cnn_id;
+	global $last_insert_id;
 
-	return $cnn_id->Insert_ID();
+	return $last_insert_id;
 }
 
 /* array_to_sql_or - loops through a single dimentional array and converts each
@@ -211,7 +213,7 @@ function sql_save($fields, $table_name, $keys = "") {
 }
 
 function db_replace($table_name, $fields, $keys = "") {
-	global $cnn_id;
+	global $cnn_id, $last_insert_id;
 
 	/* default primary key */
 	if (!is_array($keys)) {
@@ -261,8 +263,14 @@ function db_replace($table_name, $fields, $keys = "") {
 	}
 
 	/* execute the sql statement and return the result */
-	api_syslog_cacti_log("Executing SQL: $sql", SEV_DEV, 0, 0, 0, false, FACIL_WEBUI);
 	if (db_execute($sql)) {
+		/* cache the inserted id for later use */
+		$_last_insert_id = $cnn_id->Insert_ID();
+
+		if (!empty($_last_insert_id)) {
+			$last_insert_id = $_last_insert_id;
+		}
+
 		return true;
 	}else{
 		return false;
@@ -296,7 +304,6 @@ function db_update($table_name, $fields, $keys = "") {
 	$sql = "update $table_name set $sql_set_fields $sql_key_where";
 
 	/* execute the sql statement and return the result */
-	api_syslog_cacti_log("Executing SQL: $sql", SEV_DEV, 0, 0, 0, false, FACIL_WEBUI);
 	if (db_execute($sql)) {
 		return true;
 	}else{
@@ -307,10 +314,27 @@ function db_update($table_name, $fields, $keys = "") {
 function sql_get_quoted_string($field) {
 	if ($field["type"] == DB_TYPE_STRING) {
 		return "'" . sql_sanitize($field["value"]) . "'";
-	} else if ($field["type"] == DB_TYPE_INTEGER) {
-		return sql_sanitize($field["value"]);
-	} else if ($field["type"] == DB_TYPE_NULL) {
+	}else if ($field["type"] == DB_TYPE_NUMBER) {
+		if (is_numeric($field["value"])) {
+			return $field["value"];
+		}else{
+			api_syslog_cacti_log("Invalid integer column value '$field'. Returning '0' instead", SEV_WARNING, 0, 0, 0, false, FACIL_WEBUI);
+			return 0;
+		}
+	}else if ($field["type"] == DB_TYPE_NULL) {
 		return "NULL";
+	}else if ($field["type"] == DB_TYPE_HTML_CHECKBOX) {
+		if ($field["value"] == "on") {
+			return 1;
+		}else if ($field["value"] == "") {
+			return 0;
+		}else if ($field["value"] == "0") {
+			return 0;
+		}else if ($field["value"] == "1") {
+			return 1;
+		}else{
+			return 0;
+		}
 	}
 }
 

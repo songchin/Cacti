@@ -61,7 +61,8 @@ $fields_data_template = array(
 	"template_name" => array(
 		"default" => "",
 		"validate_regexp" => "",
-		"validate_empty" => false
+		"validate_empty" => false,
+		"data_type" => DB_TYPE_STRING
 		)
 	);
 
@@ -69,25 +70,36 @@ $fields_data_source = array(
 	"name" => array(
 		"default" => "",
 		"validate_regexp" => "",
-		"validate_empty" => false
+		"validate_empty" => false,
+		"data_type" => DB_TYPE_STRING
+		),
+	"data_input_type" => array(
+		"default" => "3",
+		"validate_regexp" => "^[0-9]+$",
+		"validate_empty" => false,
+		"data_type" => DB_TYPE_NUMBER
 		),
 	"rrd_path" => array(
 		"default" => "",
 		"validate_regexp" => "",
-		"validate_empty" => true
+		"validate_empty" => true,
+		"data_type" => DB_TYPE_STRING
 		),
 	"rra_id" => array(
-		"default" => ""
+		"default" => "",
+		"data_type" => DB_TYPE_STRING
 		),
 	"rrd_step" => array(
 		"default" => "300",
 		"validate_regexp" => "^[0-9]+$",
-		"validate_empty" => false
+		"validate_empty" => false,
+		"data_type" => DB_TYPE_NUMBER
 		),
 	"active" => array(
 		"default" => "on",
 		"validate_regexp" => "",
-		"validate_empty" => true
+		"validate_empty" => true,
+		"data_type" => DB_TYPE_HTML_CHECKBOX
 		)
 	);
 
@@ -150,27 +162,32 @@ $fields_data_source_item = array(
 	"data_source_name" => array(
 		"default" => "",
 		"validate_regexp" => "^[a-zA-Z0-9_]{1,19}$",
-		"validate_empty" => false
+		"validate_empty" => false,
+		"data_type" => DB_TYPE_STRING
 		),
 	"rrd_minimum" => array(
 		"default" => "0",
-		"validate_regexp" => "^(-?[0-9]+)|[uU]$",
-		"validate_empty" => false
+		"validate_regexp" => "^(-?([0-9]+(\.[0-9]*)?|[0-9]*\.[0-9]+)([eE][+\-]?[0-9]+)?)|U$",
+		"validate_empty" => false,
+		"data_type" => DB_TYPE_STRING
 		),
 	"rrd_maximum" => array(
 		"default" => "0",
-		"validate_regexp" => "^(-?[0-9]+)|[uU]$",
-		"validate_empty" => false
+		"validate_regexp" => "^(-?([0-9]+(\.[0-9]*)?|[0-9]*\.[0-9]+)([eE][+\-]?[0-9]+)?)|U$",
+		"validate_empty" => false,
+		"data_type" => DB_TYPE_STRING
 		),
 	"data_source_type" => array(
 		"default" => "",
 		"validate_regexp" => "^[0-9]+$",
-		"validate_empty" => true
+		"validate_empty" => true,
+		"data_type" => DB_TYPE_NUMBER
 		),
 	"rrd_heartbeat" => array(
 		"default" => "600",
 		"validate_regexp" => "^[0-9]+$",
-		"validate_empty" => false
+		"validate_empty" => false,
+		"data_type" => DB_TYPE_NUMBER
 		)
 	);
 
