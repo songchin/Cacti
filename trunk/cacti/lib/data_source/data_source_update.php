@@ -22,70 +22,90 @@
  +-------------------------------------------------------------------------+
 */
 
-function api_data_source_save($id, $host_id, $data_template_id, $data_input_type, $data_input_fields, $name,
-	$active, $rrd_path, $rrd_step, $rra_id, $data_source_field_name_format = "ds||field|",
-	$data_input_field_name_format = "dif_|field|") {
+function api_data_source_save($data_source_id, &$_fields_data_source, &$_fields_data_source_rra, $skip_cache_update = false) {
+	include_once(CACTI_BASE_PATH . "/lib/data_source/data_source_info.php");
 
-	$save["id"] = $id;
-	$save["host_id"] = $host_id;
-	$save["data_template_id"] = $data_template_id;
-	$save["data_input_type"] = form_input_validate($data_input_type, str_replace("|field|", "data_input_type", $data_source_field_name_format), "", true, 3);
-	$save["name"] = form_input_validate($name, str_replace("|field|", "name", $data_source_field_name_format), "", false, 3);
-	$save["active"] = form_input_validate(html_boolean($active), str_replace("|field|", "active", $data_source_field_name_format), "", true, 3);
-	$save["rrd_path"] = form_input_validate($rrd_path, str_replace("|field|", "rrd_path", $data_source_field_name_format), "", true, 3);
-	$save["rrd_step"] = form_input_validate($rrd_step, str_replace("|field|", "rrd_step", $data_source_field_name_format), "^[0-9]+$", false, 3);
+	/* sanity check for $data_source_id */
+	if (!is_numeric($data_source_id)) {
+		return false;
+	}
 
-	$data_source_id = 0;
+	/* field: id */
+	$_fields["id"] = array("type" => DB_TYPE_NUMBER, "value" => $data_source_id);
 
-	if (!is_error_message()) {
-		$data_source_id = sql_save($save, "data_source");
+	/* field: data_template_id */
+	if (isset($_fields_data_source["data_template_id"])) {
+		$_fields["data_template_id"] = array("type" => DB_TYPE_NUMBER, "value" => $_fields_data_source["data_template_id"]);
+	}
 
-		if (!is_error_message()) {
-			raise_message(1);
-		}else{
-			raise_message(2);
+	/* field: host_id */
+	if (isset($_fields_data_source["host_id"])) {
+		$_fields["host_id"] = array("type" => DB_TYPE_NUMBER, "value" => $_fields_data_source["host_id"]);
+	}
+
+	/* fetch a list of all visible data source fields */
+	$fields_data_source = get_data_source_field_list();
+
+	foreach (array_keys($fields_data_source) as $field_name) {
+		if (isset($_fields_data_source[$field_name])) {
+			$_fields[$field_name] = array("type" => $fields_data_source[$field_name]["data_type"], "value" => $_fields_data_source[$field_name]);
 		}
 	}
 
-	if ((!is_error_message()) && ($data_source_id)) {
-		/* save entries in 'selected rras' field */
-		db_execute("delete from data_source_rra where data_source_id=$data_source_id");
+	if (db_replace("data_source", $_fields, array("id"))) {
+		$data_source_id = db_fetch_insert_id();
 
-		if (isset($rra_id)) {
-			for ($i=0; ($i < count($rra_id)); $i++) {
-				db_execute("insert into data_source_rra (rra_id,data_source_id) values (" . $rra_id[$i] . ",$data_source_id)");
+		if (sizeof($_fields_data_source_rra) > 0) {
+			/* save entries in 'selected rras' field */
+			db_execute("delete from data_source_rra where data_source_id = " . sql_sanitize($data_source_id));
+
+			foreach ($_fields_data_source_rra as $rra_id) {
+				db_replace("data_source_rra",
+					array(
+						"rra_id" => array("type" => DB_TYPE_NUMBER, "value" => $rra_id),
+						"data_source_id" => array("type" => DB_TYPE_NUMBER, "value" => $data_source_id)
+						),
+					array("rra_id", "data_source_id"));
 			}
 		}
 
-		/* save all data input fields */
-		db_execute("delete from data_source_field where data_source_id=$data_source_id");
-	}
-
-	while (list($name, $value) = each($data_input_fields)) {
-		if (($data_input_type == DATA_INPUT_TYPE_SCRIPT) && (isset($data_input_fields["script_id"])) && ($name != "script_id")) {
-			$script_input_field = db_fetch_row("select id,regexp_match,allow_empty from data_input_fields where data_input_id = " . $data_input_fields["script_id"] . " and data_name = '$name' and input_output = 'in'");
-
-			if (isset($script_input_field["id"])) {
-				form_input_validate($value, str_replace("|field|", $name, $data_input_field_name_format), $script_input_field["regexp_match"], $script_input_field["allow_empty"], 3);
-			}
-		}else if (($data_input_type == DATA_INPUT_TYPE_DATA_QUERY) && ($name == "data_query_field_name")) {
-			form_input_validate($value, "dif_data_query_field_name", "", false, 3);
-		}else if (($data_input_type == DATA_INPUT_TYPE_DATA_QUERY) && ($name == "data_query_field_value")) {
-			form_input_validate($value, "dif_data_query_field_value", "", false, 3);
+		if ($skip_cache_update == false) {
+			/* update data source title cache */
+			update_data_source_title_cache($data_source_id);
 		}
 
-		if ((!is_error_message()) && ($data_source_id)) {
-			db_execute("insert into data_source_field (data_source_id,name,value) values ($data_source_id,'$name','$value')");
-		}
+		return true;
+	}else{
+		return false;
+	}
+}
+
+function api_data_source_fields_save($data_source_id, &$_fields_data_input) {
+	include_once(CACTI_BASE_PATH . "/include/data_source/data_source_constants.php");
+
+	/* sanity check for $data_source_id */
+	if ((!is_numeric($data_source_id)) || (empty($data_source_id))) {
+		return false;
 	}
 
-	if ($data_source_id) {
-		/* update data source title cache */
-		update_data_source_title_cache($data_source_id);
+	/* flush old fields if the data input type is not a data query */
+	if (db_fetch_cell("select data_input_type from data_source where id = " . sql_sanitize($data_source_id)) != DATA_INPUT_TYPE_DATA_QUERY) {
+		db_execute("delete from data_source_field where data_source_id = " . sql_sanitize($data_source_id));
 	}
 
-	return $data_source_id;
+	/* save all data input fields */
+	reset($_fields_data_input);
+	foreach ($_fields_data_input as $field_name => $field_value) {
+		db_replace("data_source_field",
+			array(
+				"data_source_id" => array("type" => DB_TYPE_NUMBER, "value" => $data_source_id),
+				"name" => array("type" => DB_TYPE_STRING, "value" => $field_name),
+				"value" => array("type" => DB_TYPE_STRING, "value" => $field_value)
+				),
+			array("data_source_id", "name"));
+	}
 
+	return true;
 }
 
 function api_data_source_remove($data_source_id) {
@@ -100,7 +120,7 @@ function api_data_source_remove($data_source_id) {
 }
 
 function api_data_source_enable($data_source_id) {
-    db_execute("UPDATE data_source SET active=1 WHERE id=$data_source_id");
+	db_execute("UPDATE data_source SET active=1 WHERE id=$data_source_id");
 	update_poller_cache($data_source_id, false);
 }
 
@@ -109,42 +129,55 @@ function api_data_source_disable($data_source_id) {
 	db_execute("UPDATE data_source SET active='' WHERE id=$data_source_id");
 }
 
-function api_data_source_item_save($id, $data_source_id, $rrd_maximum, $rrd_minimum, $rrd_heartbeat, $data_source_type,
-	$data_source_name, $field_input_value, $data_source_item_field_name_format = "dsi||field|||id|") {
-	include_once(CACTI_BASE_PATH . "/include/data_source/data_source_constants.php");
+function api_data_source_item_save($data_source_item_id, &$_fields_data_source_item) {
+	include_once(CACTI_BASE_PATH . "/lib/data_source/data_source_info.php");
 
-	$save["id"] = $id;
-	$save["data_source_id"] = $data_source_id;
-	$save["rrd_maximum"] = form_input_validate($rrd_maximum, str_replace("|field|", "rrd_maximum", str_replace("|id|", $id, $data_source_item_field_name_format)), "^(-?[0-9]+)|[uU]$", false, 3);
-	$save["rrd_minimum"] = form_input_validate($rrd_minimum, str_replace("|field|", "rrd_minimum", str_replace("|id|", $id, $data_source_item_field_name_format)), "^(-?[0-9]+)|[uU]$", false, 3);
-	$save["rrd_heartbeat"] = form_input_validate($rrd_heartbeat, str_replace("|field|", "rrd_heartbeat", str_replace("|id|", $id, $data_source_item_field_name_format)), "^[0-9]+$", false, 3);
-	$save["data_source_type"] = form_input_validate($data_source_type, str_replace("|field|", "data_source_type", str_replace("|id|", $id, $data_source_item_field_name_format)), "", true, 3);
-	$save["data_source_name"] = form_input_validate($data_source_name, str_replace("|field|", "data_source_name", str_replace("|id|", $id, $data_source_item_field_name_format)), "^[a-zA-Z0-9_]{1,19}$", false, 3);
-
-	/* the 'none' data input type does not have a data source item field value */
-	if (db_fetch_cell("select data_input_type from data_source where id = $data_source_id") != DATA_INPUT_TYPE_NONE) {
-		$save["field_input_value"] = form_input_validate($field_input_value, str_replace("|field|", "field_input_value", str_replace("|id|", $id, $data_source_item_field_name_format)), "", false, 3);
+	/* sanity check for $data_source_item_id */
+	if (!is_numeric($data_source_item_id)) {
+		return false;
 	}
 
-	$data_source_item_id = 0;
+	/* sanity check for $data_source_id */
+	if ((empty($data_source_item_id)) && (empty($_fields_data_source_item["data_source_id"]))) {
+		api_syslog_cacti_log("Required data_source_id when data_source_item_id = 0", SEV_ERROR, 0, 0, 0, false, FACIL_WEBUI);
+		return false;
+	} else if ((isset($_fields_data_source_item["data_source_id"])) && (!is_numeric($_fields_data_source_item["data_source_id"]))) {
+		return false;
+	}
 
-	if ((!is_error_message()) && (!empty($data_source_id))) {
-		$data_source_item_id = sql_save($save, "data_source_item");
+	/* field: id */
+	$_fields["id"] = array("type" => DB_TYPE_NUMBER, "value" => $data_source_item_id);
 
-		if ($data_source_item_id) {
-			raise_message(1);
-		}else{
-			raise_message(2);
+	/* field: data_source_id */
+	if (!empty($_fields_data_source_item["data_source_id"])) {
+		$_fields["data_source_id"] = array("type" => DB_TYPE_NUMBER, "value" => $_fields_data_source_item["data_source_id"]);
+	}
+
+	/* field: field_input_value */
+	if (isset($_fields_data_source_item["field_input_value"])) {
+		$_fields["field_input_value"] = array("type" => DB_TYPE_STRING, "value" => $_fields_data_source_item["field_input_value"]);
+	}
+
+	/* fetch a list of all visible data source item fields */
+	$fields_data_source_item = get_data_source_item_field_list();
+
+	foreach (array_keys($fields_data_source_item) as $field_name) {
+		if (isset($_fields_data_source_item[$field_name])) {
+			$_fields[$field_name] = array("type" => $fields_data_source_item[$field_name]["data_type"], "value" => $_fields_data_source_item[$field_name]);
 		}
 	}
 
-	if ($data_source_item_id) {
-		/* since the data source path is based in part on the data source item name, it makes sense
-		 * to update it here */
-		update_data_source_path($data_source_id);
-	}
+	if (db_replace("data_source_item", $_fields, array("id"))) {
+		if (!empty($_fields_data_source_item["data_source_id"])) {
+			/* since the data source path is based in part on the data source item name, it makes sense
+			 * to update it here */
+			update_data_source_path($_fields_data_source_item["data_source_id"]);
+		}
 
-	return $data_source_item_id;
+		return true;
+	}else{
+		return false;
+	}
 }
 
 function api_data_source_item_remove($data_source_item_id) {

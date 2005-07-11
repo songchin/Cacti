@@ -22,51 +22,47 @@
  +-------------------------------------------------------------------------+
 */
 
-function api_graph_save($id, $host_id, $graph_template_id, $image_format, $title, $height, $width, $x_grid,
-	$y_grid, $y_grid_alt, $no_minor, $upper_limit, $lower_limit, $vertical_label, $auto_scale, $auto_scale_opts,
-	$auto_scale_log, $auto_scale_rigid, $auto_padding, $base_value, $export, $unit_value, $unit_length,
-	$unit_exponent_value, $force_rules_legend) {
-	$save["id"] = $id;
-	$save["host_id"] = $host_id;
-	$save["graph_template_id"] = $graph_template_id;
-	$save["image_format"] = form_input_validate($image_format, "image_format_", "", true, 3);
-	$save["title"] = form_input_validate($title, "title", "", false, 3);
-	$save["height"] = form_input_validate($height, "height", "^[0-9]+$", false, 3);
-	$save["width"] = form_input_validate($width, "width", "^[0-9]+$", false, 3);
-	$save["x_grid"] = form_input_validate($x_grid, "x_grid", "", true, 3);
-	$save["y_grid"] = form_input_validate($y_grid, "y_grid", "", true, 3);
-	$save["y_grid_alt"] = form_input_validate(html_boolean($y_grid_alt), "y_grid_alt", "", true, 3);
-	$save["no_minor"] = form_input_validate(html_boolean($no_minor), "no_minor", "", true, 3);
-	$save["upper_limit"] = form_input_validate($upper_limit, "upper_limit", "^-?[0-9]+$", false, 3);
-	$save["lower_limit"] = form_input_validate($lower_limit, "lower_limit", "^-?[0-9]+$", false, 3);
-	$save["vertical_label"] = form_input_validate($vertical_label, "vertical_label", "", true, 3);
-	$save["auto_scale"] = form_input_validate(html_boolean($auto_scale), "auto_scale", "", true, 3);
-	$save["auto_scale_opts"] = form_input_validate($auto_scale_opts, "auto_scale_opts", "", true, 3);
-	$save["auto_scale_log"] = form_input_validate(html_boolean($auto_scale_log), "auto_scale_log", "", true, 3);
-	$save["auto_scale_rigid"] = form_input_validate(html_boolean($auto_scale_rigid), "auto_scale_rigid", "", true, 3);
-	$save["auto_padding"] = form_input_validate(html_boolean($auto_padding), "auto_padding", "", true, 3);
-	$save["base_value"] = form_input_validate($base_value, "base_value", "", false, 3);
-	$save["export"] = form_input_validate(html_boolean($export), "export", "", true, 3);
-	$save["unit_value"] = form_input_validate($unit_value, "unit_value", "", true, 3);
-	$save["unit_length"] = form_input_validate($unit_length, "unit_length", "^[0-9]+$", true, 3);
-	$save["unit_exponent_value"] = form_input_validate((($unit_exponent_value == "none") ? "" : $unit_exponent_value), "unit_exponent_value", "", true, 3);
-	$save["force_rules_legend"] = form_input_validate(html_boolean($force_rules_legend), "force_rules_legend", "", true, 3);
+function api_graph_save($graph_id, &$_fields_graph, $skip_cache_update = false) {
+	include_once(CACTI_BASE_PATH . "/lib/graph/graph_info.php");
 
-	$graph_id = 0;
+	/* sanity check for $graph_id */
+	if (!is_numeric($graph_id)) {
+		return false;
+	}
 
-	if (!is_error_message()) {
-		$graph_id = sql_save($save, "graph");
+	/* field: id */
+	$_fields["id"] = array("type" => DB_TYPE_NUMBER, "value" => $graph_id);
 
-		if ($graph_id) {
-			update_graph_title_cache($graph_id);
+	/* field: graph_template_id */
+	if (isset($_fields_graph["graph_template_id"])) {
+		$_fields["graph_template_id"] = array("type" => DB_TYPE_NUMBER, "value" => $_fields_graph["graph_template_id"]);
+	}
 
-			raise_message(1);
-		}else{
-			raise_message(2);
+	/* field: host_id */
+	if (isset($_fields_graph["host_id"])) {
+		$_fields["host_id"] = array("type" => DB_TYPE_NUMBER, "value" => $_fields_graph["host_id"]);
+	}
+
+	/* fetch a list of all visible graph fields */
+	$fields_graph = get_graph_field_list();
+
+	foreach (array_keys($fields_graph) as $field_name) {
+		if (isset($_fields_graph[$field_name])) {
+			$_fields[$field_name] = array("type" => $fields_graph[$field_name]["data_type"], "value" => $_fields_graph[$field_name]);
 		}
 	}
 
-	return $graph_id;
+	if (db_replace("graph", $_fields, array("id"))) {
+		$graph_id = db_fetch_insert_id();
+
+		if ($skip_cache_update == false) {
+			update_graph_title_cache($graph_id);
+		}
+
+		return true;
+	}else{
+		return false;
+	}
 }
 
 /* api_resize_graphs - resizes the selected graph, overriding the template value
@@ -91,54 +87,55 @@ function api_graph_remove($graph_id) {
 	db_execute("delete from graph where id = $graph_id");
 }
 
-function api_graph_item_save($id, $graph_id, $data_source_item_id, $color, $graph_item_type, $cdef, $consolidation_function,
-	$gprint_format, $legend_format, $legend_value, $hard_return) {
-	include_once(CACTI_BASE_PATH . "/include/graph/graph_constants.php");
+function api_graph_item_save($graph_item_id, &$_fields_graph_item) {
 	include_once(CACTI_BASE_PATH . "/lib/sys/sequence.php");
+	include_once(CACTI_BASE_PATH . "/lib/graph/graph_info.php");
 
-	if (empty($graph_id)) {
-		return;
+	/* sanity check for $graph_item_id */
+	if (!is_numeric($graph_item_id)) {
+		return false;
 	}
 
-	$graph_template_id = db_fetch_cell("select graph_template_id from graph where id = $graph_id");
-
-	/* use the current sequence or generate a new one */
-	$sequence = seq_get_current($id, "sequence", "graph_item", "graph_id = $graph_id");
-
-	/* determine the parent graph_template_item if this graph is using a graph template */
-	if (empty($graph_template_id)) {
-		$graph_template_item_id = 0;
-	}else{
-		$graph_template_item_id = db_fetch_cell("select id from graph_template_item where graph_template_id = $graph_template_id order by sequence limit " . (seq_get_index("graph_item", $sequence, "graph_id = $graph_id") - 1) . ",1");
+	/* sanity check for $graph_id */
+	if ((empty($graph_id)) && (empty($_fields_graph_item["graph_id"]))) {
+		api_syslog_cacti_log("Required graph_id when graph_item_id = 0", SEV_ERROR, 0, 0, 0, false, FACIL_WEBUI);
+		return false;
+	} else if ((isset($_fields_graph_item["graph_id"])) && (!is_numeric($_fields_graph_item["graph_id"]))) {
+		return false;
 	}
 
-	$save["id"] = $id;
-	$save["graph_id"] = $graph_id;
-	$save["graph_template_item_id"] = $graph_template_item_id;
-	$save["sequence"] = $sequence;
-	$save["data_source_item_id"] = form_input_validate($data_source_item_id, "data_source_item_id", "", true, 3);
-	$save["color"] = form_input_validate($color, "color", "^[a-fA-F0-9]{6}$", true, 3);
-	$save["graph_item_type"] = form_input_validate($graph_item_type, "graph_item_type", "", true, 3);
-	$save["cdef"] = form_input_validate($cdef, "cdef", "", true, 3);
-	$save["consolidation_function"] = form_input_validate($consolidation_function, "consolidation_function", "", true, 3);
-	$save["gprint_format"] = form_input_validate($gprint_format, "gprint_format", "", (($graph_item_type == GRAPH_ITEM_TYPE_GPRINT) ? false : true), 3);
-	$save["legend_format"] = form_input_validate($legend_format, "legend_format", "", true, 3);
-	$save["legend_value"] = form_input_validate($legend_value, "legend_value", "", true, 3);
-	$save["hard_return"] = form_input_validate(html_boolean($hard_return), "hard_return", "", true, 3);
+	/* field: id */
+	$_fields["id"] = array("type" => DB_TYPE_NUMBER, "value" => $graph_item_id);
 
-	$graph_item_id = 0;
+	/* field: graph_id */
+	if (!empty($_fields_graph_item["graph_id"])) {
+		$_fields["graph_id"] = array("type" => DB_TYPE_NUMBER, "value" => $_fields_graph_item["graph_id"]);
+	}
 
-	if ((!is_error_message()) && (!empty($graph_id))) {
-		$graph_item_id = sql_save($save, "graph_item");
+	/* field: graph_template_item_id */
+	if (isset($_fields_graph_item["graph_template_item_id"])) {
+		$_fields["graph_template_item_id"] = array("type" => DB_TYPE_NUMBER, "value" => $_fields_graph_item["graph_template_item_id"]);
+	}
 
-		if ($graph_item_id) {
-			raise_message(1);
-		}else{
-			raise_message(2);
+	/* field: sequence */
+	if (empty($graph_item_id)) {
+		$_fields["sequence"] = array("type" => DB_TYPE_NUMBER, "value" => seq_get_current($_fields_graph_item["id"], "sequence", "graph_item", "graph_id = " . sql_sanitize($_fields_graph_item["graph_id"])));
+	}
+
+	/* fetch a list of all visible graph item fields */
+	$fields_graph_item = get_graph_items_field_list();
+
+	foreach (array_keys($fields_graph_item) as $field_name) {
+		if (isset($_fields_graph_item[$field_name])) {
+			$_fields[$field_name] = array("type" => $fields_graph_item[$field_name]["data_type"], "value" => $_fields_graph_item[$field_name]);
 		}
 	}
 
-	return $graph_item_id;
+	if (db_replace("graph_item", $_fields, array("id"))) {
+		return true;
+	}else{
+		return false;
+	}
 }
 
 function api_graph_item_remove($graph_item_id) {
