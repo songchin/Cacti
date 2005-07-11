@@ -68,6 +68,31 @@ switch ($_REQUEST["action"]) {
 
 function form_save() {
 	if (isset($_POST["save_component_item"])) {
+		/* cache all post field values */
+		init_post_field_cache();
+
+		/* step #1: field validation */
+		$form_graph_item["id"] = $_POST["graph_template_item_id"];
+		$form_graph_item["graph_template_id"] = $_POST["graph_template_id"];
+		$form_graph_item["data_template_item_id"] = $_POST["data_template_item_id"];
+		$form_graph_item["color"] = $_POST["color"];
+		$form_graph_item["graph_item_type"] = $_POST["graph_item_type"];
+		$form_graph_item["consolidation_function"] = $_POST["consolidation_function"];
+		$form_graph_item["cdef"] = $_POST["cdef"];
+		$form_graph_item["gprint_format"] = $_POST["gprint_format"];
+		$form_graph_item["legend_value"] = $_POST["legend_value"];
+		$form_graph_item["legend_format"] = $_POST["legend_format"];
+		$form_graph_item["hard_return"] = html_boolean(isset($_POST["hard_return"]) ? $_POST["hard_return"] : "");
+
+		validate_graph_item_fields($form_graph_item, "|field|");
+
+		/* step #2: field save */
+		if (!is_error_message()) {
+			$graph_template_item_id = api_graph_template_item_save($form_graph_item);
+		}
+
+
+
 		//$items[0] = array();
 
 		//if ($graph_item_types{$_POST["graph_type_id"]} == "LEGEND") {
@@ -96,6 +121,8 @@ function form_save() {
 		//			"hard_return" => "on"
 		//			));
 		//}
+
+
 
 		$graph_item_id = api_graph_item_save($_POST["graph_item_id"], $_POST["graph_id"],
 			$_POST["data_source_item_id"], $_POST["color"], $_POST["graph_item_type"], $_POST["cdef"], $_POST["consolidation_function"],
