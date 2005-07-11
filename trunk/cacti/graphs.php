@@ -102,47 +102,62 @@ function form_save() {
 		$_graph_template_id = db_fetch_cell("select graph_template_id from graph where id=" . $_POST["id"]);
 	}
 
-	$graph_fields = array();
-	$graph_item_input_fields = array();
-	//$suggested_value_fields = array();
+	/* cache all post field values */
+	init_post_field_cache();
+
+	$form_graph_fields = array();
+	$form_graph_item_fields = array();
 
 	/* parse out form values that we care about */
 	reset($_POST);
 	while (list($name, $value) = each($_POST)) {
 		if (substr($name, 0, 2) == "g|") {
 			$matches = explode("|", $name);
-			$graph_fields{$matches[1]} = $value;
+			$form_graph_fields{$matches[1]} = $value;
 		}else if (substr($name, 0, 4) == "gip|") {
 			$matches = explode("|", $name);
-			$graph_item_input_fields{$matches[1]}{$matches[2]} = $value;
-		//}else if (substr($name, 0, 3) == "sv|") {
-		//	$matches = explode("|", $name);
-		//	$suggested_value_fields{$matches[1]}{$matches[2]} = $value;
+			$form_graph_item_fields{$matches[2]} = $value;
 		}
 	}
 
-	/* save code for templated graphs */
-	if ((!empty($_graph_template_id)) || (!empty($_POST["graph_template_id"]))) {
-		//print "<pre>";print_r($graph_item_input_fields);print "</pre>";
-		$graph_id = set_graph_template($_POST["id"], $_POST["graph_template_id"], $_POST["host_id"], $graph_fields, $graph_item_input_fields);
+	/* make a list of fields to save */
+	while (list($_field_name, $_field_value) = each($form_graph_fields)) {
+		/* make sure that we know about this field */
+		if (isset($fields_graph[$_field_name])) {
+			$save_graph[$_field_name] = $_field_value;
+		}
 	}
 
-	/* save code for non-templated graphs */
-	if ((empty($_POST["graph_template_id"])) && (empty($_graph_template_id)) && (isset($_POST["save_component_graph"]))) {
-		$graph_id = api_graph_save($_POST["id"], $_POST["host_id"], $_POST["graph_template_id"], $graph_fields["image_format"],
-			$graph_fields["title"], $graph_fields["height"], $graph_fields["width"], $graph_fields["x_grid"],
-			$graph_fields["y_grid"], (isset($graph_fields["y_grid_alt"]) ? $graph_fields["y_grid_alt"] : ""),
-			(isset($graph_fields["no_minor"]) ? $graph_fields["no_minor"] : ""), $graph_fields["upper_limit"], $graph_fields["lower_limit"],
-			$graph_fields["vertical_label"], (isset($graph_fields["auto_scale"]) ? $graph_fields["auto_scale"] : ""),
-			$graph_fields["auto_scale_opts"], (isset($graph_fields["auto_scale_log"]) ? $graph_fields["auto_scale_log"] : ""),
-			(isset($graph_fields["auto_scale_rigid"]) ? $graph_fields["auto_scale_rigid"] : ""),
-			(isset($graph_fields["auto_padding"]) ? $graph_fields["auto_padding"] : ""), $graph_fields["base_value"],
-			(isset($graph_fields["export"]) ? $graph_fields["export"] : ""), $graph_fields["unit_value"], $graph_fields["unit_length"],
-			$graph_fields["unit_exponent_value"], (isset($graph_fields["force_rules_legend"]) ? $graph_fields["force_rules_legend"] : ""));
+	$form_graph_fields["host_id"] = $_POST["host_id"];
+	$form_graph_fields["graph_template_id"] = $_POST["graph_template_id"];
+
+	/* step #2: field validation */
+	$suggested_value_fields = array(); /* placeholder */
+	field_register_error(validate_graph_fields($form_graph_fields, $suggested_value_fields, "g||field|", ""));
+
+	/* step #3: field save */
+	if (is_error_message()) {
+		api_syslog_cacti_log("User input validation error for graph [ID#" . $_POST["id"] . "]", SEV_DEBUG, 0, 0, 0, false, FACIL_WEBUI);
+	}else{
+		/* save graph data */
+		if (!api_graph_save($_POST["id"], $form_graph_fields)) {
+			api_syslog_cacti_log("Save error for graph [ID#" . $_POST["id"] . "]", SEV_DEBUG, 0, 0, 0, false, FACIL_WEBUI);
+		}
+
+		/* save graph item data for templated graphs */
+		if (!empty($_graph_template_id)) {
+			if (sizeof($form_graph_item_fields) > 0) {
+				foreach ($form_graph_item_fields as $graph_template_item_input_id => $value) {
+					if (!api_graph_template_item_propagate($graph_template_item_input_id, $value)) {
+						api_syslog_cacti_log("Save error when propagating graph item input [ID#$graph_template_item_input_id] to graph [ID#" . $_POST["id"] . "]", SEV_ERROR, 0, 0, 0, false, FACIL_WEBUI);
+					}
+				}
+			}
+		}
 	}
 
-	if ((is_error_message()) || (empty($graph_id)) || ($_POST["graph_template_id"] != $_graph_template_id)) {
-		header("Location: graphs.php?action=edit" . (empty($graph_id) ? "" : "&id=$graph_id") . (!isset($_POST["host_id"]) ? "" : "&host_id=" . $_POST["host_id"]) . (!isset($_POST["graph_template_id"]) ? "" : "&graph_template_id=" . $_POST["graph_template_id"]));
+	if ((is_error_message()) || ($_POST["graph_template_id"] != $_graph_template_id)) {
+		header("Location: graphs.php?action=edit&id=" . $_POST["id"] . (!isset($_POST["host_id"]) ? "" : "&host_id=" . $_POST["host_id"]) . (!isset($_POST["graph_template_id"]) ? "" : "&graph_template_id=" . $_POST["graph_template_id"]));
 	}else{
 		header("Location: graphs.php");
 	}
@@ -461,7 +476,7 @@ function graph_edit() {
 		html_start_box("<strong>" . _("Supplemental Template Data") . "</strong>", "98%", $colors["header_background"], "3", "center", "");
 
 		$num_output_fields =  draw_nontemplated_fields_graph($graph["graph_template_id"], $graph, "g||field|", "<strong>" . _("Graph Fields") . "</strong>", true);
-		$num_output_fields += draw_nontemplated_fields_graph_item($graph["graph_template_id"], array_rekey(db_fetch_assoc("select * from graph_item where graph_id = " . $graph["id"]), "", array("id", "data_source_item_id", "color", "graph_item_type", "cdef", "consolidation_function", "gprint_format", "legend_format", "legend_value", "hard_return")), "gip||field|||id|", "<strong>" . _("Graph Item Fields") . "</strong>", true);
+		$num_output_fields += draw_nontemplated_fields_graph_item($graph["graph_template_id"], array_rekey(db_fetch_assoc("select * from graph_item where graph_id = " . $graph["id"]), "graph_template_item_id", array("id", "data_source_item_id", "color", "graph_item_type", "cdef", "consolidation_function", "gprint_format", "legend_format", "legend_value", "hard_return")), "gip||field|||id|", "<strong>" . _("Graph Item Fields") . "</strong>", true);
 
 		html_end_box();
 
@@ -513,22 +528,38 @@ function graph_edit() {
 	}
 
 	if ( (empty($graph["graph_template_id"])) && ( ((isset($_GET["id"])) && (is_numeric($_GET["id"]))) || ((isset($_GET["host_id"])) && (isset($_GET["graph_template_id"]))) ) ) {
+		/* ==================== Box: Graph ==================== */
+
 		html_start_box("<strong>" . _("Graph") . "</strong>", "98%", $colors["header_background"], "3", "center", "");
 
-		$form_array = array();
-
-		while (list($field_name, $field_array) = each($struct_graph)) {
-			$form_array += array("g|$field_name" => $struct_graph[$field_name]);
-		}
-
-		draw_edit_form(
-			array(
-				"config" => array(
-					"no_form_tag" => true
-				),
-				"fields" => inject_form_variables($form_array, (isset($graph) ? $graph : array()))
-				)
-			);
+		field_row_header("General Options");
+		_graph_field__title("g|title", false, (empty($_GET["id"]) ? 0 : $_GET["id"]));
+		_graph_field__vertical_label("g|vertical_label", false, (isset($graph["vertical_label"]) ? $graph["vertical_label"] : ""), (empty($_GET["id"]) ? 0 : $_GET["id"]));
+		_graph_field__image_format("g|image_format", false, (isset($graph["image_format"]) ? $graph["image_format"] : ""), (empty($_GET["id"]) ? 0 : $_GET["id"]));
+		_graph_field__export("g|export", false, (isset($graph["export"]) ? $graph["export"] : ""), (empty($_GET["id"]) ? 0 : $_GET["id"]));
+		_graph_field__force_rules_legend("g|force_rules_legend", false, (isset($graph["force_rules_legend"]) ? $graph["force_rules_legend"] : ""));
+		field_row_header("Image Size Options");
+		_graph_field__height("g|height", false, (isset($graph["height"]) ? $graph["height"] : ""), (empty($_GET["id"]) ? 0 : $_GET["id"]));
+		_graph_field__width("g|width", false, (isset($graph["width"]) ? $graph["width"] : ""), (empty($_GET["id"]) ? 0 : $_GET["id"]));
+		field_row_header("Grid Options");
+		_graph_field__x_grid("g|x_grid", false, (isset($graph["x_grid"]) ? $graph["x_grid"] : ""), (empty($_GET["id"]) ? 0 : $_GET["id"]));
+		_graph_field__y_grid("g|y_grid", false, (isset($graph["y_grid"]) ? $graph["y_grid"] : ""), (empty($_GET["id"]) ? 0 : $_GET["id"]));
+		_graph_field__y_grid_alt("g|y_grid_alt", false, (isset($graph["y_grid_alt"]) ? $graph["y_grid_alt"] : ""), (empty($_GET["id"]) ? 0 : $_GET["id"]));
+		_graph_field__no_minor("g|no_minor", false, (isset($graph["no_minor"]) ? $graph["no_minor"] : ""), (empty($_GET["id"]) ? 0 : $_GET["id"]));
+		field_row_header("Auto Scaling Options");
+		_graph_field__auto_scale("g|auto_scale", false, (isset($graph["auto_scale"]) ? $graph["auto_scale"] : ""), (empty($_GET["id"]) ? 0 : $_GET["id"]));
+		_graph_field__auto_scale_opts("g|auto_scale_opts", false, (isset($graph["auto_scale_opts"]) ? $graph["auto_scale_opts"] : ""), (empty($_GET["id"]) ? 0 : $_GET["id"]));
+		_graph_field__auto_scale_log("g|auto_scale_log", false, (isset($graph["auto_scale_log"]) ? $graph["auto_scale_log"] : ""), (empty($_GET["id"]) ? 0 : $_GET["id"]));
+		_graph_field__auto_scale_rigid("g|auto_scale_rigid", false, (isset($graph["auto_scale_rigid"]) ? $graph["auto_scale_rigid"] : ""), (empty($_GET["id"]) ? 0 : $_GET["id"]));
+		_graph_field__auto_padding("g|auto_padding", false, (isset($graph["auto_padding"]) ? $graph["auto_padding"] : ""), (empty($_GET["id"]) ? 0 : $_GET["id"]), "t_auto_padding");
+		field_row_header("Fixed Scaling Options");
+		_graph_field__upper_limit("g|upper_limit", false, (isset($graph["upper_limit"]) ? $graph["upper_limit"] : ""), (empty($_GET["id"]) ? 0 : $_GET["id"]), "t_upper_limit");
+		_graph_field__lower_limit("g|lower_limit", false, (isset($graph["lower_limit"]) ? $graph["lower_limit"] : ""), (empty($_GET["id"]) ? 0 : $_GET["id"]), "t_lower_limit");
+		_graph_field__base_value("g|base_value", false, (isset($graph["base_value"]) ? $graph["base_value"] : ""), (empty($_GET["id"]) ? 0 : $_GET["id"]), "t_base_value");
+		field_row_header("Units Display Options");
+		_graph_field__unit_value("g|unit_value", false, (isset($graph["unit_value"]) ? $graph["unit_value"] : ""), (empty($_GET["id"]) ? 0 : $_GET["id"]), "t_unit_value");
+		_graph_field__unit_length("g|unit_length", false, (isset($graph["unit_length"]) ? $graph["unit_length"] : ""), (empty($_GET["id"]) ? 0 : $_GET["id"]), "t_unit_length");
+		_graph_field__unit_exponent_value("g|unit_exponent_value", false, (isset($graph["unit_exponent_value"]) ? $graph["unit_exponent_value"] : ""), (empty($_GET["id"]) ? 0 : $_GET["id"]));
 
 		html_end_box();
 	}
