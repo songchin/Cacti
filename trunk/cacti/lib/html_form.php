@@ -59,6 +59,21 @@ function field_row_header($text) {
 	<?php
 }
 
+function field_register_error($field_name) {
+	if (is_array($field_name)) {
+		if (sizeof($field_name) > 0) {
+			foreach ($field_name as $_name) {
+				$_SESSION["sess_error_fields"][$_name] = 1;
+			}
+
+			raise_message(3);
+		}
+	}else{
+		$_SESSION["sess_error_fields"][$field_name] = 1;
+		raise_message(3);
+	}
+}
+
 /*
  * Standard HTML form elements
  */
@@ -623,6 +638,16 @@ function form_save_button($cancel_url, $force_type = "") {
 	</table>
 	</form>
 	<?php
+}
+
+function form_start($action, $name = "")
+{
+	echo "<form action='$action' method='post'" . ($name == "" ? "" : "name='$name'") . ">\n";
+}
+
+function form_end()
+{
+	echo "</form>\n";
 }
 
 ?>

@@ -160,21 +160,27 @@ function read_config_option($config_name) {
    @arg $custom_message - (int) the ID of the message to raise upon an error which is defined in the
      $messages array in 'include/config_arrays.php'
    @returns - the original $field_value */
-function form_input_validate($field_value, $field_name, $regexp_match, $allow_nulls, $custom_message = 3) {
+function form_input_validate($field_value, $field_name, $regexp_match, $allow_nulls, $custom_message = 0) {
 	if (($allow_nulls == true) && ($field_value == "")) {
-		return $field_value;
+		return true;
 	}
 
 	/* php 4.2+ complains about empty regexps */
 	if (empty($regexp_match)) { $regexp_match = ".*"; }
 
 	if ((!ereg($regexp_match, $field_value) || (($allow_nulls == false) && ($field_value == "")))) {
-		raise_message($custom_message);
-
-		$_SESSION["sess_error_fields"][$field_name] = $field_name;
+		if ($custom_message == 3) {
+			return $field_value;
+		}else{
+			return false;
+		}
+	}else{
+		if ($custom_message == 3) {
+			return $field_value;
+		}else{
+			return true;
+		}
 	}
-
-	return $field_value;
 }
 
 /* is_error_message - finds whether an error message has been raised and has not been outputted to the
@@ -652,6 +658,12 @@ function array_merge_recursive_replace($paArray1, $paArray2) {
 	}
 
 	return $paArray1;
+}
+
+function print_a($arr) {
+	echo "<pre>";
+	print_r($arr);
+	echo "</pre>";
 }
 
 ?>

@@ -38,4 +38,12 @@ function get_post_cache_field($field_name) {
 	return $_SESSION["sess_field_values"][$field_name];
 }
 
+function register_field_errors($error_fields) {
+	/* mark this field with an input error */
+	$_SESSION["sess_error_fields"][$field_name] = 1;
+
+	/* raise the error message */
+	raise_message(3);
+}
+
 ?>
