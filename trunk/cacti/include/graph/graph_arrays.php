@@ -74,8 +74,8 @@ $graph_item_types = array(
 	);
 
 $graph_image_types = array(
-	1 => "PNG",
-	2 => "GIF"
+	GRAPH_IMAGE_TYPE_PNG => "PNG",
+	GRAPH_IMAGE_TYPE_GIF => "GIF"
 	);
 
 $graph_base_values = array(
