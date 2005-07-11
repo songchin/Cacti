@@ -73,8 +73,8 @@ function encode_data_query_index($index) {
 function decode_data_query_index($encoded_index, &$decoded_index_list) {
 	if (sizeof($decoded_index_list) > 0) {
 		foreach ($decoded_index_list as $index) {
-			if (encode_data_query_index($index["snmp_index"]) == $encoded_index) {
-				return $index["snmp_index"];
+			if (encode_data_query_index($index) == $encoded_index) {
+				return $index;
 			}
 		}
 	}
@@ -250,14 +250,58 @@ function get_data_query_array($snmp_query_id) {
    @arg $host_id - (int) the host ID to match
    @arg $data_query_id - (int) the data query ID to match
    @returns - (array) the data query ID and index that matches the three arguments */
-function data_query_index($index_type, $index_value, $host_id, $data_query_id) {
+function get_data_query_row_index($index_type, $field_value, $host_id, $data_query_id) {
+	/* sanity check for $host_id */
+	if (!is_numeric($host_id)) {
+		return false;
+	}
+
+	/* sanity check for $data_query_id */
+	if ((!is_numeric($data_query_id)) || (empty($data_query_id))) {
+		return false;
+	}
+
 	return db_fetch_cell("select
 		host_snmp_cache.snmp_index
 		from host_snmp_cache
-		where host_snmp_cache.field_name='$index_type'
-		and host_snmp_cache.field_value='" . addslashes($index_value) . "'
-		and host_snmp_cache.host_id='$host_id'
-		and host_snmp_cache.snmp_query_id='$data_query_id'");
+		where host_snmp_cache.field_name = '" . sql_sanitize($index_type) . "'
+		and host_snmp_cache.field_value = '" . sql_sanitize($field_value) . "'
+		and host_snmp_cache.host_id = " . sql_sanitize($host_id) . "
+		and host_snmp_cache.snmp_query_id = " . sql_sanitize($data_query_id));
+}
+
+function get_data_query_row_value($index_type, $index_value, $host_id, $data_query_id) {
+	/* sanity check for $host_id */
+	if (!is_numeric($host_id)) {
+		return false;
+	}
+
+	/* sanity check for $data_query_id */
+	if ((!is_numeric($data_query_id)) || (empty($data_query_id))) {
+		return false;
+	}
+
+	return db_fetch_cell("select
+		host_snmp_cache.field_value
+		from host_snmp_cache
+		where host_snmp_cache.field_name = '" . sql_sanitize($index_type) . "'
+		and host_snmp_cache.snmp_index = '" . sql_sanitize($index_value) . "'
+		and host_snmp_cache.host_id = " . sql_sanitize($host_id) . "
+		and host_snmp_cache.snmp_query_id = " . sql_sanitize($data_query_id));
+}
+
+function get_data_query_indexes($host_id, $data_query_id) {
+	/* sanity check for $host_id */
+	if (!is_numeric($host_id)) {
+		return false;
+	}
+
+	/* sanity check for $data_query_id */
+	if ((!is_numeric($data_query_id)) || (empty($data_query_id))) {
+		return false;
+	}
+
+	return array_rekey(db_fetch_assoc("select distinct snmp_index from host_snmp_cache where host_id = " . sql_sanitize($host_id) . " and snmp_query_id = " . sql_sanitize($data_query_id)), "", "snmp_index");
 }
 
 ?>
