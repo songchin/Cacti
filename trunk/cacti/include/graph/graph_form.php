@@ -24,6 +24,171 @@
 
 include(CACTI_BASE_PATH . "/include/graph/graph_arrays.php");
 include(CACTI_BASE_PATH . "/include/data_source/data_source_arrays.php");
+include_once(CACTI_BASE_PATH . "/include/graph/graph_constants.php");
+
+$fields_graph = array(
+	"title" => array(
+		"default" => "",
+		"validate_regexp" => "",
+		"validate_empty" => false,
+		"data_type" => DB_TYPE_STRING
+		),
+	"vertical_label" => array(
+		"default" => "",
+		"validate_regexp" => "",
+		"validate_empty" => true,
+		"data_type" => DB_TYPE_STRING
+		),
+	"image_format" => array(
+		"default" => GRAPH_IMAGE_TYPE_PNG,
+		"data_type" => DB_TYPE_NUMBER
+		),
+	"export" => array(
+		"default" => "on",
+		"validate_regexp" => FORM_VALIDATE_CHECKBOX,
+		"data_type" => DB_TYPE_HTML_CHECKBOX
+		),
+	"force_rules_legend" => array(
+		"default" => "",
+		"validate_regexp" => FORM_VALIDATE_CHECKBOX,
+		"data_type" => DB_TYPE_HTML_CHECKBOX
+		),
+	"height" => array(
+		"default" => "120",
+		"validate_regexp" => "^[0-9]+$",
+		"validate_empty" => false,
+		"data_type" => DB_TYPE_NUMBER
+		),
+	"width" => array(
+		"default" => "500",
+		"validate_regexp" => "^[0-9]+$",
+		"validate_empty" => false,
+		"data_type" => DB_TYPE_NUMBER
+		),
+	"x_grid" => array(
+		"default" => "",
+		"validate_regexp" => "",
+		"validate_empty" => true,
+		"data_type" => DB_TYPE_STRING
+		),
+	"y_grid" => array(
+		"default" => "",
+		"validate_regexp" => "",
+		"validate_empty" => true,
+		"data_type" => DB_TYPE_STRING
+		),
+	"y_grid_alt" => array(
+		"default" => "",
+		"validate_regexp" => FORM_VALIDATE_CHECKBOX,
+		"data_type" => DB_TYPE_HTML_CHECKBOX
+		),
+	"no_minor" => array(
+		"default" => "",
+		"validate_regexp" => FORM_VALIDATE_CHECKBOX,
+		"data_type" => DB_TYPE_HTML_CHECKBOX
+		),
+	"auto_scale" => array(
+		"default" => "on",
+		"validate_regexp" => FORM_VALIDATE_CHECKBOX,
+		"data_type" => DB_TYPE_HTML_CHECKBOX
+		),
+	"auto_scale_opts" => array(
+		"default" => GRAPH_AUTOSCALE_OPT_AUTOSCALE_MAX,
+		"data_type" => DB_TYPE_NUMBER
+		),
+	"auto_scale_log" => array(
+		"default" => "",
+		"validate_regexp" => FORM_VALIDATE_CHECKBOX,
+		"data_type" => DB_TYPE_HTML_CHECKBOX
+		),
+	"auto_scale_rigid" => array(
+		"default" => "",
+		"validate_regexp" => FORM_VALIDATE_CHECKBOX,
+		"data_type" => DB_TYPE_HTML_CHECKBOX
+		),
+	"auto_padding" => array(
+		"default" => "on",
+		"validate_regexp" => FORM_VALIDATE_CHECKBOX,
+		"data_type" => DB_TYPE_HTML_CHECKBOX
+		),
+	"upper_limit" => array(
+		"default" => "100",
+		"validate_regexp" => "^-?[0-9]+$",
+		"validate_empty" => false,
+		"data_type" => DB_TYPE_NUMBER
+		),
+	"lower_limit" => array(
+		"default" => "0",
+		"validate_regexp" => "^-?[0-9]+$",
+		"validate_empty" => false,
+		"data_type" => DB_TYPE_NUMBER
+		),
+	"base_value" => array(
+		"default" => "1000",
+		"data_type" => DB_TYPE_NUMBER
+		),
+	"unit_value" => array(
+		"default" => "",
+		"validate_regexp" => "",
+		"validate_empty" => true,
+		"data_type" => DB_TYPE_STRING
+		),
+	"unit_length" => array(
+		"default" => "9",
+		"validate_regexp" => "^[0-9]+$",
+		"validate_empty" => false,
+		"data_type" => DB_TYPE_NUMBER
+		),
+	"unit_exponent_value" => array(
+		"default" => "0",
+		"data_type" => DB_TYPE_NUMBER
+		)
+	);
+
+$fields_graph_item = array(
+	"color" => array(
+		"default" => "",
+		"validate_regexp" => "^[a-fA-F0-9]{6}$",
+		"validate_empty" => true,
+		"data_type" => DB_TYPE_STRING
+		),
+	"graph_item_type" => array(
+		"default" => GRAPH_ITEM_TYPE_COMMENT,
+		"data_type" => DB_TYPE_NUMBER
+		),
+	"consolidation_function" => array(
+		"default" => 1,
+		"data_type" => DB_TYPE_NUMBER
+		),
+	"cdef" => array(
+		"default" => "",
+		"validate_regexp" => "",
+		"validate_empty" => true,
+		"data_type" => DB_TYPE_STRING
+		),
+	"gprint_format" => array(
+		"default" => "",
+		"validate_regexp" => "",
+		"validate_empty" => true,
+		"data_type" => DB_TYPE_STRING
+		),
+	"legend_value" => array(
+		"default" => "",
+		"validate_regexp" => "",
+		"validate_empty" => true,
+		"data_type" => DB_TYPE_STRING
+		),
+	"legend_format" => array(
+		"default" => "",
+		"validate_regexp" => "",
+		"validate_empty" => true,
+		"data_type" => DB_TYPE_STRING
+		),
+	"hard_return" => array(
+		"default" => "",
+		"data_type" => DB_TYPE_NUMBER
+		)
+	);
 
 /* file: (graphs.php|graph_templates.php), action: (graph|template)_edit */
 $struct_graph = array(

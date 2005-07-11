@@ -41,53 +41,146 @@ function template_form_header_precheck($num_draw_fields, $left_title, $right_tit
        |field| - the current field name
    @arg $header_title - the title to use on the header for this form
    @arg $alternate_colors (bool) - whether to alternate colors for each row on the form or not */
-function draw_nontemplated_fields_graph($graph_template_id, &$values_array, $field_name_format = "|field|", $header_title = "", $alternate_colors = true) {
+function draw_nontemplated_fields_graph($graph_template_id, &$values_array, $field_name_format = "|field|", $display_template_name = true) {
 	global $colors;
 
-	include(CACTI_BASE_PATH . "/include/graph/graph_form.php");
+	include_once(CACTI_BASE_PATH . "/lib/graph/graph_form.php");
 
 	if (empty($graph_template_id)) {
 		return;
 	}
 
-	$form_array = array();
+	$num_draw_fields = 0;
 
 	/* fetch information about the graph template */
 	$graph_template = db_fetch_row("select * from graph_template where id = $graph_template_id");
 
-	while (list($field_name, $field_array) = each($struct_graph)) {
-		if ((isset($graph_template{"t_" . $field_name}) ? $graph_template{"t_" . $field_name} : "0") == "1") {
-			/* find our field name */
-			$form_field_name = str_replace("|field|", $field_name, $field_name_format);
-
-			$form_array += array($form_field_name => $struct_graph[$field_name]);
-
-			/* modifications to the default form array */
-			$form_array[$form_field_name]["value"] = (isset($values_array[$field_name]) ? $values_array[$field_name] : "");
-			$form_array[$form_field_name]["form_id"] = (isset($values_array["id"]) ? $values_array["id"] : "0");
-			unset($form_array[$form_field_name]["default"]);
-		}
+	if ($graph_template["t_title"] == "1") {
+		$num_draw_fields = template_form_header_precheck($num_draw_fields, "<strong>" . _("Graph") . "</strong>", ($display_template_name == true ? $graph_template["template_name"] : ""));
+		_graph_field__title(str_replace("|field|", "title", $field_name_format), false, 0);
 	}
 
-	if ((sizeof($form_array) > 0) && ($header_title != "")) {
-		echo "<tr bgcolor='#" . $colors["header_panel_background"] . "'><td colspan='2' style='font-size: 10px; color: white;'>$header_title</td></tr>\n";
+	if ($graph_template["t_vertical_label"] == "1") {
+		$num_draw_fields = template_form_header_precheck($num_draw_fields, "<strong>" . _("Graph") . "</strong>", ($display_template_name == true ? $graph_template["template_name"] : ""));
+		_graph_field__vertical_label(str_replace("|field|", "vertical_label", $field_name_format), false, $values_array["vertical_label"], 0);
 	}
 
-	/* setup form options */
-	if ($alternate_colors == true) {
-		$form_config_array = array("no_form_tag" => true);
-	}else{
-		$form_config_array = array("no_form_tag" => true, "force_row_color" => $colors["form_alternate1"]);
+	if ($graph_template["t_image_format"] == "1") {
+		$num_draw_fields = template_form_header_precheck($num_draw_fields, "<strong>" . _("Graph") . "</strong>", ($display_template_name == true ? $graph_template["template_name"] : ""));
+		_graph_field__image_format(str_replace("|field|", "image_format", $field_name_format), false, $values_array["image_format"], 0);
 	}
 
-	draw_edit_form(
-		array(
-			"config" => $form_config_array,
-			"fields" => $form_array
-			)
-		);
+	if ($graph_template["t_vertical_label"] == "1") {
+		$num_draw_fields = template_form_header_precheck($num_draw_fields, "<strong>" . _("Graph") . "</strong>", ($display_template_name == true ? $graph_template["template_name"] : ""));
+		_graph_field__vertical_label(str_replace("|field|", "vertical_label", $field_name_format), false, $values_array["vertical_label"], 0);
+	}
 
-	return sizeof($form_array);
+	if ($graph_template["t_export"] == "1") {
+		$num_draw_fields = template_form_header_precheck($num_draw_fields, "<strong>" . _("Graph") . "</strong>", ($display_template_name == true ? $graph_template["template_name"] : ""));
+		_graph_field__export(str_replace("|field|", "export", $field_name_format), false, $values_array["export"], 0);
+	}
+
+	if ($graph_template["t_force_rules_legend"] == "1") {
+		$num_draw_fields = template_form_header_precheck($num_draw_fields, "<strong>" . _("Graph") . "</strong>", ($display_template_name == true ? $graph_template["template_name"] : ""));
+		_graph_field__force_rules_legend(str_replace("|field|", "force_rules_legend", $field_name_format), false, $values_array["force_rules_legend"], 0);
+	}
+
+	if ($graph_template["t_vertical_label"] == "1") {
+		$num_draw_fields = template_form_header_precheck($num_draw_fields, "<strong>" . _("Graph") . "</strong>", ($display_template_name == true ? $graph_template["template_name"] : ""));
+		_graph_field__vertical_label(str_replace("|field|", "vertical_label", $field_name_format), false, $values_array["vertical_label"], 0);
+	}
+
+	if ($graph_template["t_height"] == "1") {
+		$num_draw_fields = template_form_header_precheck($num_draw_fields, "<strong>" . _("Graph") . "</strong>", ($display_template_name == true ? $graph_template["template_name"] : ""));
+		_graph_field__height(str_replace("|field|", "height", $field_name_format), false, $values_array["height"], 0);
+	}
+
+	if ($graph_template["t_vertical_label"] == "1") {
+		$num_draw_fields = template_form_header_precheck($num_draw_fields, "<strong>" . _("Graph") . "</strong>", ($display_template_name == true ? $graph_template["template_name"] : ""));
+		_graph_field__vertical_label(str_replace("|field|", "vertical_label", $field_name_format), false, $values_array["vertical_label"], 0);
+	}
+
+	if ($graph_template["t_width"] == "1") {
+		$num_draw_fields = template_form_header_precheck($num_draw_fields, "<strong>" . _("Graph") . "</strong>", ($display_template_name == true ? $graph_template["template_name"] : ""));
+		_graph_field__width(str_replace("|field|", "width", $field_name_format), false, $values_array["width"], 0);
+	}
+
+	if ($graph_template["t_x_grid"] == "1") {
+		$num_draw_fields = template_form_header_precheck($num_draw_fields, "<strong>" . _("Graph") . "</strong>", ($display_template_name == true ? $graph_template["template_name"] : ""));
+		_graph_field__x_grid(str_replace("|field|", "x_grid", $field_name_format), false, $values_array["x_grid"], 0);
+	}
+
+	if ($graph_template["t_y_grid"] == "1") {
+		$num_draw_fields = template_form_header_precheck($num_draw_fields, "<strong>" . _("Graph") . "</strong>", ($display_template_name == true ? $graph_template["template_name"] : ""));
+		_graph_field__y_grid(str_replace("|field|", "y_grid", $field_name_format), false, $values_array["y_grid"], 0);
+	}
+
+	if ($graph_template["t_y_grid_alt"] == "1") {
+		$num_draw_fields = template_form_header_precheck($num_draw_fields, "<strong>" . _("Graph") . "</strong>", ($display_template_name == true ? $graph_template["template_name"] : ""));
+		_graph_field__y_grid_alt(str_replace("|field|", "y_grid_alt", $field_name_format), false, $values_array["y_grid_alt"], 0);
+	}
+
+	if ($graph_template["t_no_minor"] == "1") {
+		$num_draw_fields = template_form_header_precheck($num_draw_fields, "<strong>" . _("Graph") . "</strong>", ($display_template_name == true ? $graph_template["template_name"] : ""));
+		_graph_field__no_minor(str_replace("|field|", "no_minor", $field_name_format), false, $values_array["no_minor"], 0);
+	}
+
+	if ($graph_template["t_auto_scale"] == "1") {
+		$num_draw_fields = template_form_header_precheck($num_draw_fields, "<strong>" . _("Graph") . "</strong>", ($display_template_name == true ? $graph_template["template_name"] : ""));
+		_graph_field__auto_scale(str_replace("|field|", "auto_scale", $field_name_format), false, $values_array["auto_scale"], 0);
+	}
+
+	if ($graph_template["t_auto_scale_opts"] == "1") {
+		$num_draw_fields = template_form_header_precheck($num_draw_fields, "<strong>" . _("Graph") . "</strong>", ($display_template_name == true ? $graph_template["template_name"] : ""));
+		_graph_field__auto_scale_opts(str_replace("|field|", "auto_scale_opts", $field_name_format), false, $values_array["auto_scale_opts"], 0);
+	}
+
+	if ($graph_template["t_auto_scale_log"] == "1") {
+		$num_draw_fields = template_form_header_precheck($num_draw_fields, "<strong>" . _("Graph") . "</strong>", ($display_template_name == true ? $graph_template["template_name"] : ""));
+		_graph_field__auto_scale_log(str_replace("|field|", "auto_scale_log", $field_name_format), false, $values_array["auto_scale_log"], 0);
+	}
+
+	if ($graph_template["t_auto_scale_rigid"] == "1") {
+		$num_draw_fields = template_form_header_precheck($num_draw_fields, "<strong>" . _("Graph") . "</strong>", ($display_template_name == true ? $graph_template["template_name"] : ""));
+		_graph_field__auto_scale_rigid(str_replace("|field|", "auto_scale_rigid", $field_name_format), false, $values_array["auto_scale_rigid"], 0);
+	}
+
+	if ($graph_template["t_auto_padding"] == "1") {
+		$num_draw_fields = template_form_header_precheck($num_draw_fields, "<strong>" . _("Graph") . "</strong>", ($display_template_name == true ? $graph_template["template_name"] : ""));
+		_graph_field__auto_padding(str_replace("|field|", "auto_padding", $field_name_format), false, $values_array["auto_padding"], 0);
+	}
+
+	if ($graph_template["t_upper_limit"] == "1") {
+		$num_draw_fields = template_form_header_precheck($num_draw_fields, "<strong>" . _("Graph") . "</strong>", ($display_template_name == true ? $graph_template["template_name"] : ""));
+		_graph_field__upper_limit(str_replace("|field|", "upper_limit", $field_name_format), false, $values_array["upper_limit"], 0);
+	}
+
+	if ($graph_template["t_lower_limit"] == "1") {
+		$num_draw_fields = template_form_header_precheck($num_draw_fields, "<strong>" . _("Graph") . "</strong>", ($display_template_name == true ? $graph_template["template_name"] : ""));
+		_graph_field__lower_limit(str_replace("|field|", "lower_limit", $field_name_format), false, $values_array["lower_limit"], 0);
+	}
+
+	if ($graph_template["t_base_value"] == "1") {
+		$num_draw_fields = template_form_header_precheck($num_draw_fields, "<strong>" . _("Graph") . "</strong>", ($display_template_name == true ? $graph_template["template_name"] : ""));
+		_graph_field__base_value(str_replace("|field|", "base_value", $field_name_format), false, $values_array["base_value"], 0);
+	}
+
+	if ($graph_template["t_unit_value"] == "1") {
+		$num_draw_fields = template_form_header_precheck($num_draw_fields, "<strong>" . _("Graph") . "</strong>", ($display_template_name == true ? $graph_template["template_name"] : ""));
+		_graph_field__unit_value(str_replace("|field|", "unit_value", $field_name_format), false, $values_array["unit_value"], 0);
+	}
+
+	if ($graph_template["t_unit_length"] == "1") {
+		$num_draw_fields = template_form_header_precheck($num_draw_fields, "<strong>" . _("Graph") . "</strong>", ($display_template_name == true ? $graph_template["template_name"] : ""));
+		_graph_field__unit_length(str_replace("|field|", "unit_length", $field_name_format), false, $values_array["unit_length"], 0);
+	}
+
+	if ($graph_template["t_unit_exponent_value"] == "1") {
+		$num_draw_fields = template_form_header_precheck($num_draw_fields, "<strong>" . _("Graph") . "</strong>", ($display_template_name == true ? $graph_template["template_name"] : ""));
+		_graph_field__unit_exponent_value(str_replace("|field|", "unit_exponent_value", $field_name_format), false, $values_array["unit_exponent_value"], 0);
+	}
+
+	return $num_draw_fields;
 }
 
 /* draw_nontemplated_fields_graph_item - draws a form that consists of all non-templated graph item fields
@@ -100,66 +193,80 @@ function draw_nontemplated_fields_graph($graph_template_id, &$values_array, $fie
        |id| - the current graph input id
    @arg $header_title - the title to use on the header for this form
    @arg $alternate_colors (bool) - whether to alternate colors for each row on the form or not */
-function draw_nontemplated_fields_graph_item($graph_template_id, &$values_array, $field_name_format = "|field|_|id|", $header_title = "", $alternate_colors = true) {
+function draw_nontemplated_fields_graph_item($graph_template_id, &$values_array, $field_name_format = "|field|_|id|", $display_template_name = true) {
 	global $colors;
 
-	include(CACTI_BASE_PATH . "/include/graph/graph_form.php");
+	include_once(CACTI_BASE_PATH . "/lib/graph/graph_form.php");
 
 	if (empty($graph_template_id)) {
 		return;
 	}
 
-	$form_array = array();
+	$num_draw_fields = 0;
+
+	/* fetch information about the graph template (for the template name) */
+	$graph_template = db_fetch_row("select * from graph_template where id = $graph_template_id");
 
 	/* fetch a list of graph item inputs for this graph template */
 	$graph_template_item_inputs = db_fetch_assoc("select * from graph_template_item_input where graph_template_id = $graph_template_id order by field_name,name");
 
 	if (sizeof($graph_template_item_inputs) > 0) {
 		foreach ($graph_template_item_inputs as $item) {
+			/* substitute the graph item input id in the field name */
+			$_field_name_format = str_replace("|id|", $item["id"], $field_name_format);
+
 			/* grab the first graph template item referenced by this graph item input */
-			$first_graph_template_item = db_fetch_row("select graph_template_item_id from graph_template_item_input_item where graph_template_item_input_id = " . $item["id"]);
+			$first_graph_template_item_id = db_fetch_cell("select graph_template_item_id from graph_template_item_input_item where graph_template_item_input_id = " . $item["id"] . " limit 1");
 
-			if (sizeof($first_graph_template_item) > 0) {
-				/* get a complete list of graph template items for this graph template */
-				$ordered_graph_items_list = array_rekey(db_fetch_assoc("select id from graph_template_item where graph_template_id = $graph_template_id order by sequence"), "", "id");
+			if ((!empty($first_graph_template_item_id)) && (isset($values_array[$first_graph_template_item_id]))) {
+				/* find our field name */
+				$form_field_name = str_replace("|field|", $item["field_name"], $field_name_format);
+				$form_field_name = str_replace("|id|", $item["id"], $form_field_name);
 
-				/* find the sequential index for the graph template item that we want to retrieve a value for */
-				$graph_item_index = array_search($first_graph_template_item["graph_template_item_id"], $ordered_graph_items_list);
+				if ($item["field_name"] == "color") {
+					$num_draw_fields = template_form_header_precheck($num_draw_fields, "<strong>" . _("Graph Item") . "</strong>", ($display_template_name == true ? $graph_template["template_name"] : ""));
+					_graph_item_field__color(str_replace("|field|", "color", $_field_name_format), $values_array[$first_graph_template_item_id]{$item["field_name"]}, 1);
+				}
 
-				if ($graph_item_index !== false) {
-					/* find our field name */
-					$form_field_name = str_replace("|field|", $item["field_name"], $field_name_format);
-					$form_field_name = str_replace("|id|", $item["id"], $form_field_name);
+				if ($item["field_name"] == "graph_item_type") {
+					$num_draw_fields = template_form_header_precheck($num_draw_fields, "<strong>" . _("Graph Item") . "</strong>", ($display_template_name == true ? $graph_template["template_name"] : ""));
+					_graph_item_field__graph_item_type(str_replace("|field|", "graph_item_type", $_field_name_format), $values_array[$first_graph_template_item_id]{$item["field_name"]}, 1);
+				}
 
-					$form_array += array($form_field_name => $struct_graph_item{$item["field_name"]});
+				if ($item["field_name"] == "consolidation_function") {
+					$num_draw_fields = template_form_header_precheck($num_draw_fields, "<strong>" . _("Graph Item") . "</strong>", ($display_template_name == true ? $graph_template["template_name"] : ""));
+					_graph_item_field__consolidation_function(str_replace("|field|", "consolidation_function", $_field_name_format), $values_array[$first_graph_template_item_id]{$item["field_name"]}, 1);
+				}
 
-					/* modifications to the default form array */
-					$form_array[$form_field_name]["friendly_name"] = $item["name"];
-					$form_array[$form_field_name]["value"] = $values_array[$graph_item_index]{$item["field_name"]};
+				if ($item["field_name"] == "cdef") {
+					$num_draw_fields = template_form_header_precheck($num_draw_fields, "<strong>" . _("Graph Item") . "</strong>", ($display_template_name == true ? $graph_template["template_name"] : ""));
+					_graph_item_field__cdef(str_replace("|field|", "cdef", $_field_name_format), $values_array[$first_graph_template_item_id]{$item["field_name"]}, 1);
+				}
+
+				if ($item["field_name"] == "gprint_format") {
+					$num_draw_fields = template_form_header_precheck($num_draw_fields, "<strong>" . _("Graph Item") . "</strong>", ($display_template_name == true ? $graph_template["template_name"] : ""));
+					_graph_item_field__gprint_format(str_replace("|field|", "gprint_format", $_field_name_format), $values_array[$first_graph_template_item_id]{$item["field_name"]}, 1);
+				}
+
+				if ($item["field_name"] == "legend_value") {
+					$num_draw_fields = template_form_header_precheck($num_draw_fields, "<strong>" . _("Graph Item") . "</strong>", ($display_template_name == true ? $graph_template["template_name"] : ""));
+					_graph_item_field__legend_value(str_replace("|field|", "legend_value", $_field_name_format), $values_array[$first_graph_template_item_id]{$item["field_name"]}, 1);
+				}
+
+				if ($item["field_name"] == "legend_format") {
+					$num_draw_fields = template_form_header_precheck($num_draw_fields, "<strong>" . _("Graph Item") . "</strong>", ($display_template_name == true ? $graph_template["template_name"] : ""));
+					_graph_item_field__legend_format(str_replace("|field|", "legend_format", $_field_name_format), $values_array[$first_graph_template_item_id]{$item["field_name"]}, 1);
+				}
+
+				if ($item["field_name"] == "hard_return") {
+					$num_draw_fields = template_form_header_precheck($num_draw_fields, "<strong>" . _("Graph Item") . "</strong>", ($display_template_name == true ? $graph_template["template_name"] : ""));
+					_graph_item_field__hard_return(str_replace("|field|", "hard_return", $_field_name_format), $values_array[$first_graph_template_item_id]{$item["field_name"]}, 1);
 				}
 			}
 		}
 	}
 
-	if ((sizeof($form_array) > 0) && ($header_title != "")) {
-		echo "<tr bgcolor='#" . $colors["header_panel_background"] . "'><td colspan='2' style='font-size: 10px; color: white;'>$header_title</td></tr>\n";
-	}
-
-	/* setup form options */
-	if ($alternate_colors == true) {
-		$form_config_array = array("no_form_tag" => true);
-	}else{
-		$form_config_array = array("no_form_tag" => true, "force_row_color" => $colors["form_alternate1"]);
-	}
-
-	draw_edit_form(
-		array(
-			"config" => $form_config_array,
-			"fields" => $form_array
-			)
-		);
-
-	return sizeof($form_array);
+	return $num_draw_fields;
 }
 
 /* draw_nontemplated_fields_data_source - draws a form that consists of all non-templated data source fields
