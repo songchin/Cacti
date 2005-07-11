@@ -77,6 +77,7 @@ if ((isset($no_http_headers) ? $no_http_headers : false) != true) {
 	header("Cache-Control: no-store, no-cache, must-revalidate");
 	header("Cache-Control: post-check=0, pre-check=0", false);
 	header("Pragma: no-cache");
+	header("Content-type: text/html; charset=UTF-8");
 
 	/* initilize php session */
 	if(ini_get('session.auto_start') != 1) {
@@ -138,7 +139,7 @@ if (!function_exists("_")) {
 	include($config["include_path"] . "/gettext/streams.php");
 	include($config["include_path"] . "/gettext/gettext.php");
 
-	$locale_path = $config["base_path"] . "/locales/" . $cacti_lang . "/LC_MESSAGES" . "cacti.mo";
+	$locale_path = $config["base_path"] . "/locales/" . $cacti_lang . "/LC_MESSAGES/" . "cacti.mo";
 	if ((!file_exists($locale_path)) && ($cacti_lang != "en")) {
 		die("Cacti language locale file not found.  Please locate your language file and then you can continue.");
 	}
