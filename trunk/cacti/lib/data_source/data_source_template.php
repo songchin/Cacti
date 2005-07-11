@@ -22,136 +22,97 @@
  +-------------------------------------------------------------------------+
 */
 
-/* set_data_template - changes the data template for a particular data source to
-     $data_template_id
-   @arg $data_source_id - the id of the data source to change the data template for, '0'
-     means that the data source does not exist in which case a new data source will be
-     created from the data template
-   @arg $data_template_id - id the of the data template to change to. specify '0' for no
-     data template
-   @arg $host_id - the id of the device attached to this data source
-   @arg $form_data_source_fields - data source field data from the active form which will be used
-     override any any data source fields in the database.
-   @arg $form_data_source_item_fields - data source item field data from the active form which will
-     be used override any any data source item fields in the database.
-   @arg $form_data_input_fields - data input field data from the active form which will be
-     used override any any data input fields in the database.
-   @returns - the id of the data source created from this template */
-function set_data_template($data_source_id, $data_template_id, $host_id, &$form_data_source_fields, &$form_data_source_item_fields, &$form_data_input_fields) {
-	global $struct_data_source, $struct_data_source_item;
-
-	include_once(CACTI_BASE_PATH . "/lib/poller.php");
+function copy_data_template_to_data_source($data_template_id, $host_id = 0, $data_query_id = 0, $data_query_index = "") {
 	include_once(CACTI_BASE_PATH . "/lib/data_source/data_source_update.php");
+	include_once(CACTI_BASE_PATH . "/lib/data_source/data_source_info.php");
+	include_once(CACTI_BASE_PATH . "/lib/data_source/data_source_template_info.php");
 
-	if (empty($data_template_id)) {
-		if (!empty($data_source_id)) {
-			db_execute("update data_source set data_template_id = 0 where id = $data_source_id");
-		}
-
-		return;
+	/* sanity check for $data_template_id */
+	if ((!is_numeric($data_template_id)) || (empty($data_template_id))) {
+		return false;
 	}
 
-	/* get data about the template and the data source */
-	$data_source = array_merge((empty($data_source_id) ? array() : db_fetch_row("select * from data_source where id = $data_source_id")), $form_data_source_fields);
-	$data_template = db_fetch_row("select * from data_template where id = $data_template_id");
+	/* sanity check for $host_id */
+	if (!is_numeric($host_id)) {
+		return false;
+	}
 
-	/* make sure to copy down field data as well */
-	$data_template_fields = array_rekey(db_fetch_assoc("select name,t_value,value from data_template_field where data_template_id = $data_template_id"), "name", array("t_value", "value"));
-	$data_source_fields = array_merge_recursive_replace((empty($data_source_id) ? array() : array_rekey(db_fetch_assoc("select name,value from data_source_field where data_source_id = $data_source_id"), "name", "value")), $form_data_input_fields);
+	/* fetch field lists */
+	$fields_data_source = get_data_source_field_list();
+	$fields_data_source_item = get_data_source_item_field_list();
 
-	/* remove all orphaned field data */
-	db_execute("delete from data_source_field where data_source_id = $data_source_id");
+	/* fetch information from that data template */
+	$data_template = get_data_template($data_template_id);
+	$data_template_rras = get_data_template_rras($data_template_id);
+	$_data_template_input_fields = get_data_template_input_fields($data_template_id);
 
-	$data_input_fields = array();
+	if (sizeof($data_template) > 0) {
+		/* copy down per-data source only fields */
+		$_fields = array();
+		$_fields["id"] = "0";
+		$_fields["data_template_id"] = $data_template_id;
+		$_fields["host_id"] = $host_id;
 
-	/* handle input field data -- fields that exist in data template, but not data source */
-	reset($data_template_fields);
-	while (list($name, $value) = each($data_template_fields)) {
-		if ((isset($data_source_fields[$name])) && (!empty($data_template_fields[$name]["t_value"]))) {
-			$data_input_fields[$name] = $data_source_fields[$name]["value"];
+		/* evaluate suggested values: data query-based graphs */
+		if ((!empty($data_query_id)) && ($data_query_index != "")) {
+			$_fields["name"] = evaluate_data_query_suggested_values($host_id, $data_query_id, $data_query_index, "data_template_suggested_value", "data_template_id = " . sql_sanitize($data_template_id) . " and field_name = 'name'", 0);
+		/* evaluate suggested values: non-data query-based graphs */
 		}else{
-			$data_input_fields[$name] = $data_template_fields[$name]["value"];
+			$_fields["name"] = db_fetch_cell("select value from data_template_suggested_value where data_template_id = " . sql_sanitize($data_template_id) . " and field_name = 'name' order by sequence limit 1");
 		}
-	}
 
-	/* user form variables *always* take precidence */
-	$data_input_fields = array_merge_recursive_replace($form_data_input_fields, $data_input_fields);
-
-	/* make sure to update the 'data_source_rra' table for each data source */
-	$data_template_rra = db_fetch_assoc("select rra_id from data_template_rra where data_template_id = $data_template_id");
-
-	$rra_id = array();
-
-	if (sizeof($data_template_rra) > 0) {
-		foreach ($data_template_rra as $item) {
-			array_push($rra_id, $item["rra_id"]);
-		}
-	}
-
-	/* select an appropriate data source title using suggested values */
-	if ((isset($data_input_fields["data_query_id"])) && (isset($data_input_fields["data_query_index"])) && ((empty($data_template["t_name"])) || (empty($data_source_id)))) {
-		$data_template["name"] = evaluate_data_query_suggested_values($host_id, $data_input_fields["data_query_id"], $data_input_fields["data_query_index"], "data_template_suggested_value", "data_template_id = $data_template_id and field_name = 'name'", 0);
-	}else if ((empty($data_template["t_name"])) || (empty($data_source_id))) {
-		/* evaluation of host/other variables might go here */
-		$data_template["name"] = db_fetch_cell("select value from data_template_suggested_value where data_template_id = $data_template_id and field_name = 'name' order by sequence limit 1");
-	}
-
-	$data_source_id = api_data_source_save(
-		$data_source_id,
-		$host_id,
-		$data_template_id,
-		(empty($data_template_id) ? $data_source["data_input_type"] : $data_template["data_input_type"]),
-		$data_input_fields,
-		((((empty($data_source_id)) || (!empty($data_template["t_name"]))) && (isset($data_source["name"]))) ? $data_source["name"] : $data_template["name"]),
-		//(((empty($data_template["t_name"])) || (!isset($data_source["name"]))) ? $data_template["name"] : $data_source["name"]),
-		(((empty($data_template["t_active"])) || (!isset($data_source["active"]))) ? $data_template["active"] : $data_source["active"]),
-		(empty($data_source_id) ? "" : $data_source["rrd_path"]),
-		(((empty($data_template["t_rrd_step"])) || (!isset($data_source["rrd_step"]))) ? $data_template["rrd_step"] : $data_source["rrd_step"]),
-		$rra_id,
-		"ds||field|",
-		"dif_|field|");
-
-	if ($data_source_id) {
-		/* rekey $form_data_source_item_fields by data source item name */
-		$_form_data_source_item_fields = array();
-
-		reset($form_data_source_item_fields);
-		while (list($data_source_item_id, $field_array) = each($form_data_source_item_fields)) {
-			$data_source_name = db_fetch_cell("select data_source_name from data_source_item where id = $data_source_item_id");
-
-			if ($data_source_name != "") {
-				$_form_data_source_item_fields[$data_source_name] = $field_array;
+		/* copy down all visible fields */
+		foreach (array_keys($fields_data_source) as $field_name) {
+			if (isset($data_template[$field_name])) {
+				$_fields[$field_name] = $data_template[$field_name];
 			}
 		}
 
-		$data_source_items = array_merge_recursive_replace((empty($data_source_id) ? array() : array_rekey(db_fetch_assoc("select * from data_source_item where data_source_id = $data_source_id"), "data_source_name", array("id", "rrd_maximum", "rrd_minimum", "rrd_heartbeat", "data_source_type", "field_input_value"))), $_form_data_source_item_fields);
-		$data_template_items = array_rekey(db_fetch_assoc("select * from data_template_item where data_template_id = $data_template_id"), "data_source_name", array("id", "t_rrd_maximum", "rrd_maximum", "t_rrd_minimum", "rrd_minimum", "t_rrd_heartbeat", "rrd_heartbeat", "t_data_source_type", "data_source_type", "field_input_value"));
+		if (api_data_source_save(0, $_fields, $data_template_rras, true)) {
+			$data_source_id = db_fetch_insert_id();
 
-		/* remove any data source items that do not match the template */
-		while (list($name, $field_array) = each($data_source_items)) {
-			if (!isset($data_template_items[$name])) {
-				api_data_source_item_remove($field_array["id"]);
+			api_syslog_cacti_log("Cloning data source [ID#$data_source_id] from template [ID#$data_template_id]", SEV_DEBUG, 0, 0, 0, false, FACIL_WEBUI);
+
+			/* reformat the $_data_template_input_fields to be more compatible with api_data_source_save() */
+			$data_template_input_fields = array();
+			foreach (array_keys($_data_template_input_fields) as $field_name) {
+				$data_template_input_fields[$field_name] = $_data_template_input_fields[$field_name]["value"];
 			}
-		}
 
-		while (list($name, $field_array) = each($data_template_items)) {
-			api_data_source_item_save(
-				(isset($data_source_items[$name]) ? $data_source_items[$name]["id"] : "0"),
-				$data_source_id,
-				(((empty($data_template_items[$name]["t_rrd_maximum"])) || (!isset($data_source_items[$name]))) ? $data_template_items[$name]["rrd_maximum"] : $data_source_items[$name]["rrd_maximum"]),
-				(((empty($data_template_items[$name]["t_rrd_minimum"])) || (!isset($data_source_items[$name]))) ? $data_template_items[$name]["rrd_minimum"] : $data_source_items[$name]["rrd_minimum"]),
-				(((empty($data_template_items[$name]["t_rrd_heartbeat"])) || (!isset($data_source_items[$name]))) ? $data_template_items[$name]["rrd_heartbeat"] : $data_source_items[$name]["rrd_heartbeat"]),
-				(((empty($data_template_items[$name]["t_data_source_type"])) || (!isset($data_source_items[$name]))) ? $data_template_items[$name]["data_source_type"] : $data_source_items[$name]["data_source_type"]),
-				$name,
-				(((empty($data_template_items[$name]["t_field_input_value"])) || (!isset($data_source_items[$name]))) ? $data_template_items[$name]["field_input_value"] : $data_source_items[$name]["field_input_value"]),
-				"dsi||field|||id|");
-		}
+			/* handle data source custom fields */
+			api_data_source_fields_save($data_source_id, $data_template_input_fields);
 
-		/* updating the poller cache needs to happen last; after all of the data source items have been added */
-		update_poller_cache($data_source_id, false);
+			/* move onto the data source items */
+			$data_template_items = get_data_template_items($data_template_id);
+
+			if (sizeof($data_template_items) > 0) {
+				foreach ($data_template_items as $data_template_item) {
+					/* copy down per-data source only fields */
+					$_fields = array();
+					$_fields["id"] = "0";
+					$_fields["data_source_id"] = $data_source_id;
+					$_fields["field_input_value"] = $data_template_item["field_input_value"];
+
+					/* copy down all visible fields */
+					foreach (array_keys($fields_data_source_item) as $field_name) {
+						$_fields[$field_name] = $data_template_item[$field_name];
+					}
+
+					if (!api_data_source_item_save(0, $_fields)) {
+						api_syslog_cacti_log("Save error in api_data_source_item_save()", SEV_DEBUG, 0, 0, 0, false, FACIL_WEBUI);
+					}
+				}
+			}
+
+			return $data_source_id;
+		}else{
+			api_syslog_cacti_log("Save error in api_data_source_save()", SEV_DEBUG, 0, 0, 0, false, FACIL_WEBUI);
+
+			return false;
+		}
 	}
 
-	return $data_source_id;
+	return false;
 }
 
 /* api_data_template_push - pushes out templated data template fields to all matching child data sources

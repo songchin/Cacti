@@ -27,6 +27,7 @@ include("./include/auth.php");
 include_once("./lib/utility.php");
 include_once("./lib/graph/graph_update.php");
 include_once("./lib/data_source/data_source_update.php");
+include_once("./lib/data_source/data_source_form.php");
 include_once("./lib/data_source/data_source_info.php");
 include_once("./lib/data_source/data_source_template.php");
 include_once("./lib/data_query/data_query_info.php");
@@ -100,6 +101,9 @@ function form_save() {
 		$_data_template_id = db_fetch_cell("select data_template_id from data_source where id=" . $_POST["id"]);
 	}
 
+	/* cache all post field values */
+	init_post_field_cache();
+
 	$data_source_fields = array();
 	$data_source_item_fields = array();
 	$data_input_fields = array();
@@ -118,25 +122,52 @@ function form_save() {
 		}
 	}
 
-	/* save code for templated data sources */
-	if (!empty($_data_template_id)) {
-		$data_source_id = set_data_template($_POST["id"], $_POST["data_template_id"], $_POST["host_id"], $data_source_fields, $data_source_item_fields, $data_input_fields);
+	/* step #2: field validation */
+	$suggested_value_fields = array(); /* placeholder */
+	field_register_error(validate_data_source_fields($data_source_fields, $suggested_value_fields, "ds||field|", ""));
+	field_register_error(validate_data_source_input_fields($data_input_fields, "dif_|field|"));
+
+	foreach ($data_source_item_fields as $data_source_item_id => $data_source_item) {
+		field_register_error(validate_data_source_item_fields($data_source_item, "dsi||field||$data_source_item_id"));
 	}
 
-	/* save code for non-templated data sources */
-	if ((empty($_data_template_id)) && (isset($_POST["save_component_data_source"]))) {
-		$data_source_id = api_data_source_save($_POST["id"], $_POST["host_id"], $_POST["data_template_id"], $_POST["data_input_type"],
-			$data_input_fields, $data_source_fields["name"], (isset($data_source_fields["active"]) ? $data_source_fields["active"] : ""), $data_source_fields["rrd_path"],
-			$data_source_fields["rrd_step"], $data_source_fields["rra_id"], "ds||field|", "dif_|field|");
+	/* step #3: field save */
+	if (is_error_message()) {
+		api_syslog_cacti_log("User input validation error for data source [ID#" . $_POST["id"] . "]", SEV_DEBUG, 0, 0, 0, false, FACIL_WEBUI);
+	}else{
+		/* handle rra_id multi-select */
+		if (isset($data_source_fields["rra_id"])) {
+			unset($data_source_fields["rra_id"]);
+			$data_source_rra_fields = $data_source_fields["rra_id"];
+		}else{
+			$data_source_rra_fields = array();
+		}
 
-		while (list($data_source_item_id, $fields) = each($data_source_item_fields)) {
-			api_data_source_item_save($data_source_item_id, $data_source_id, $fields["rrd_maximum"],
-				$fields["rrd_minimum"], $fields["rrd_heartbeat"], $fields["data_source_type"], $fields["data_source_name"],
-				(isset($fields["field_input_value"]) ? $fields["field_input_value"] : ""), "dsi||field|||id|");
+		/* save data source data */
+		if (api_data_source_save($_POST["id"], $data_source_fields, $data_source_rra_fields)) {
+			$data_source_id = (empty($_POST["id"]) ? db_fetch_insert_id() : $_POST["id"]);
+
+			/* save data source input fields */
+			if (!api_data_source_fields_save($data_source_id, $data_input_fields)) {
+				api_syslog_cacti_log("Save error for data input fields, data source [ID#" . $_POST["id"] . "]", SEV_ERROR, 0, 0, 0, false, FACIL_WEBUI);
+			}
+
+			/* save data source item data */
+			foreach ($data_source_item_fields as $data_source_item_id => $data_source_item) {
+				/* required fields */
+				$data_source_item_fields[$data_source_item_id]["data_source_id"] = $data_source_id;
+
+				if (!api_data_source_item_save($data_source_item_id, $data_source_item)) {
+					api_syslog_cacti_log("Save error for data source item [ID#" . $data_source_item_id . "], data source [ID#" . $_POST["id"] . "]", SEV_ERROR, 0, 0, 0, false, FACIL_WEBUI);
+				}
+			}
+
+		}else{
+			api_syslog_cacti_log("Save error for data source [ID#" . $_POST["id"] . "]", SEV_ERROR, 0, 0, 0, false, FACIL_WEBUI);
 		}
 	}
 
-	if ((is_error_message()) || (empty($data_source_id)) || ($_POST["data_template_id"] != $_data_template_id)) {
+	if ((is_error_message()) || ($_POST["data_template_id"] != $_data_template_id)) {
 		if (isset($_POST["redirect_item_add"])) {
 			$action = "item_add";
 		}else{
