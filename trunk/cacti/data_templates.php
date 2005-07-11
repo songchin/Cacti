@@ -333,18 +333,12 @@ function template_edit() {
 		$header_label = _("[new]");
 	}
 
+	form_start("data_templates.php", "form_data_template");
+
 	/* ==================== Box: Data Template ==================== */
 
 	html_start_box("<strong>" . _("Data Template") . "</strong> $header_label", "98%", $colors["header_background"], "3", "center", "");
-
-	draw_edit_form(array(
-			"config" => array(
-				"form_name" => "form_data_template"
-			),
-			"fields" => inject_form_variables($fields_data_template_template_edit, (isset($data_template) ? $data_template : array()))
-			)
-		);
-
+	_data_template_field__template_name("template_name", (isset($data_template) ? $data_template["template_name"] : ""), (empty($_GET["id"]) ? 0 : $_GET["id"]));
 	html_end_box();
 
 	/* ==================== Box: Data Input ==================== */
@@ -542,6 +536,9 @@ function template_edit() {
 	}
 
 	html_end_box();
+
+	form_hidden_box("data_template_id", (empty($_GET["id"]) ? 0 : $_GET["id"]), "");
+	form_hidden_box("save_component_template", "1", "");
 
 	form_save_button("data_templates.php");
 }
