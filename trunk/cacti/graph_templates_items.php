@@ -26,6 +26,7 @@ include("./include/config.php");
 include("./include/auth.php");
 include_once("./lib/graph/graph_template_update.php");
 include_once("./include/graph/graph_form.php");
+include_once("./lib/graph/graph_form.php");
 include_once("./lib/template.php");
 
 /* set default action */
@@ -35,11 +36,6 @@ switch ($_REQUEST["action"]) {
 	case 'save':
 		form_save();
 
-		break;
-	case 'remove':
-		item_remove();
-
-		header("Location: graph_templates.php?action=edit&id=" . $_GET["graph_template_id"]);
 		break;
 	case 'item_movedown':
 		item_movedown();
@@ -92,10 +88,28 @@ switch ($_REQUEST["action"]) {
 
 function form_save() {
 	if (isset($_POST["save_component_item"])) {
-		$graph_template_item_id = api_graph_template_item_save($_POST["graph_template_item_id"], $_POST["graph_template_id"],
-			$_POST["data_template_item_id"], $_POST["color"], $_POST["graph_item_type"], $_POST["cdef"], $_POST["consolidation_function"],
-			$_POST["gprint_format"], $_POST["legend_format"], $_POST["legend_value"], (isset($_POST["hard_return"]) ?
-			$_POST["hard_return"] : ""));
+		/* cache all post field values */
+		init_post_field_cache();
+
+		/* step #1: field validation */
+		$form_graph_item["id"] = $_POST["graph_template_item_id"];
+		$form_graph_item["graph_template_id"] = $_POST["graph_template_id"];
+		$form_graph_item["data_template_item_id"] = $_POST["data_template_item_id"];
+		$form_graph_item["color"] = $_POST["color"];
+		$form_graph_item["graph_item_type"] = $_POST["graph_item_type"];
+		$form_graph_item["consolidation_function"] = $_POST["consolidation_function"];
+		$form_graph_item["cdef"] = $_POST["cdef"];
+		$form_graph_item["gprint_format"] = $_POST["gprint_format"];
+		$form_graph_item["legend_value"] = $_POST["legend_value"];
+		$form_graph_item["legend_format"] = $_POST["legend_format"];
+		$form_graph_item["hard_return"] = html_boolean(isset($_POST["hard_return"]) ? $_POST["hard_return"] : "");
+
+		validate_graph_item_fields($form_graph_item, "|field|");
+
+		/* step #2: field save */
+		if (!is_error_message()) {
+			$graph_template_item_id = api_graph_template_item_save($form_graph_item);
+		}
 
 		if (is_error_message()) {
 			header("Location: graph_templates_items.php?action=edit" . (empty($graph_template_item_id) ? "" : "&id=" . $graph_template_item_id) . "&graph_template_id=" . $_POST["graph_template_id"]);
@@ -183,32 +197,8 @@ function row_moveup() {
 	api_graph_template_item_row_moveup($_GET["row"], $_GET["graph_template_id"]);
 }
 
-function item_remove() {
-	db_execute("delete from graph_templates_item where id=" . $_GET["id"]);
-	db_execute("delete from graph_templates_item where local_graph_template_item_id=" . $_GET["id"]);
-
-	/* delete the graph item input if it is empty */
-	$graph_item_inputs = db_fetch_assoc("select
-		graph_template_input.id
-		from graph_template_input,graph_template_input_defs
-		where graph_template_input.id=graph_template_input_defs.graph_template_input_id
-		and graph_template_input.graph_template_id=" . $_GET["graph_template_id"] . "
-		and graph_template_input_defs.graph_template_item_id=" . $_GET["id"] . "
-		group by graph_template_input.id");
-
-	if (sizeof($graph_item_inputs) > 0) {
-		foreach ($graph_item_inputs as $graph_item_input) {
-			if (sizeof(db_fetch_assoc("select graph_template_input_id from graph_template_input_defs where graph_template_input_id=" . $graph_item_input["id"])) == 1) {
-				db_execute("delete from graph_template_input where id=" . $graph_item_input["id"]);
-			}
-		}
-	}
-
-	db_execute("delete from graph_template_input_defs where graph_template_item_id=" . $_GET["id"]);
-}
-
 function item_edit() {
-	global $colors, $struct_graph_item;
+	global $colors;
 
 	if (!empty($_GET["id"])) {
 		$graph_template_item = db_fetch_row("select * from graph_template_item where id=" . $_GET["id"]);
@@ -218,39 +208,30 @@ function item_edit() {
 	$default = db_fetch_row("select data_template_item_id from graph_template_item where graph_template_id=" . $_GET["graph_template_id"] . " order by sequence DESC");
 
 	if (sizeof($default) > 0) {
-		$struct_graph_item["data_template_item_id"]["default"] = $default["data_template_item_id"];
+		$graph_template_item["data_template_item_id"] = $default["data_template_item_id"];
 	}else{
-		$struct_graph_item["data_template_item_id"]["default"] = 0;
+		$graph_template_item["data_template_item_id"] = 0;
 	}
 
-	/* modifications to the default graph items array */
-	unset($struct_graph_item["data_source_item_id"]);
-
-	$form_array = array();
-
-	while (list($field_name, $field_array) = each($struct_graph_item)) {
-		$form_array += array($field_name => $struct_graph_item[$field_name]);
-
-		$form_array[$field_name]["value"] = (isset($graph_template_item) ? $graph_template_item[$field_name] : "");
-		$form_array[$field_name]["form_id"] = (isset($graph_template_item) ? $graph_template_item["id"] : "0");
-
-	}
+	form_start("graph_templates_items.php", "form_graph_template");
 
 	/* ==================== Box: Graph Item ==================== */
 
 	html_start_box("<strong>" . _("Graph Item") . "</strong> [" . _("Graph Template: ") . db_fetch_cell("select template_name from graph_template where id=" . $_GET["graph_template_id"]) . "]", "98%", $colors["header_background"], "3", "center", "");
 
-	draw_edit_form(
-		array(
-			"config" => array(
-				),
-			"fields" => $form_array
-			)
-		);
+	_graph_item_field__data_template_item_id("data_template_item_id", (isset($graph_template_item["data_template_item_id"]) ? $graph_template_item["data_template_item_id"] : ""), (empty($_GET["id"]) ? 0 : $_GET["id"]));
+	_graph_item_field__color("color", (isset($graph_template_item["color"]) ? $graph_template_item["color"] : ""), (empty($_GET["id"]) ? 0 : $_GET["id"]));
+	_graph_item_field__graph_item_type("graph_item_type", (isset($graph_template_item["graph_item_type"]) ? $graph_template_item["graph_item_type"] : ""), (empty($_GET["id"]) ? 0 : $_GET["id"]));
+	_graph_item_field__consolidation_function("consolidation_function", (isset($graph_template_item["consolidation_function"]) ? $graph_template_item["consolidation_function"] : ""), (empty($_GET["id"]) ? 0 : $_GET["id"]));
+	_graph_item_field__cdef("cdef", (isset($graph_template_item["cdef"]) ? $graph_template_item["cdef"] : ""), (empty($_GET["id"]) ? 0 : $_GET["id"]));
+	_graph_item_field__gprint_format("gprint_format", (isset($graph_template_item["gprint_format"]) ? $graph_template_item["gprint_format"] : ""), (empty($_GET["id"]) ? 0 : $_GET["id"]));
+	_graph_item_field__legend_value("legend_value", (isset($graph_template_item["legend_value"]) ? $graph_template_item["legend_value"] : ""), (empty($_GET["id"]) ? 0 : $_GET["id"]));
+	_graph_item_field__legend_format("legend_format", (isset($graph_template_item["legend_format"]) ? $graph_template_item["legend_format"] : ""), (empty($_GET["id"]) ? 0 : $_GET["id"]));
+	_graph_item_field__hard_return("hard_return", (isset($graph_template_item["hard_return"]) ? $graph_template_item["hard_return"] : ""), (empty($_GET["id"]) ? 0 : $_GET["id"]));
 
 	html_end_box();
 
-	form_hidden_box("graph_template_item_id", (isset($graph_template_item) ? $graph_template_item["id"] : "0"), "");
+	form_hidden_box("graph_template_item_id", (!empty($graph_template_item["id"]) ? $graph_template_item["id"] : "0"), "");
 	form_hidden_box("graph_template_id", $_GET["graph_template_id"], "0");
 	form_hidden_box("save_component_item", "1", "");
 
