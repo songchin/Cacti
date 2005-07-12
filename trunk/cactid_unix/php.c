@@ -146,26 +146,9 @@ int php_init() {
 	int  cancel_state;
 	char *result_string;
 
-	/* variable to set/get environment limitations */
-	struct rlimit ResourceLimits;
-    struct rusage Usage;
-
 	/* initialize the php process id */
 	set.php_sspid = 0;
 	
-    if (getrlimit(RLIMIT_STACK,&ResourceLimits) == 0) {
-		if (set.verbose == POLLER_VERBOSITY_DEBUG) {
-			printf("DEBUG: Current Max Memory Allocation is '%i' bytes\n", ResourceLimits.rlim_cur);
-	        printf("DEBUG: Maximum Max Memory Allocation is '%i' bytes\n", ResourceLimits.rlim_max);
-		}
-    }
-
-    if (getrlimit(RLIMIT_AS,&ResourceLimits) == 0) {
-		if (set.verbose == POLLER_VERBOSITY_DEBUG) {
-			printf("DEBUG: Current Address Space Allocation is '%i' bytes\n", ResourceLimits.rlim_cur);
-	        printf("DEBUG: Maximum Address Space Allocation is '%i' bytes\n", ResourceLimits.rlim_max);
-		}
-    }
 	if (set.verbose == POLLER_VERBOSITY_DEBUG) {
 		cacti_log("PHP Script Server Routine Started", SEV_DEBUG, 0);
 	}
