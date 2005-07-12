@@ -168,7 +168,7 @@ function exec_poll($command) {
  		stream_set_timeout($fp, $script_timeout);
 
 		/* get output from command */
-		$output = fgets($fp, 1024);
+		$output = fgets($fp, 4096);
 
 		/* determine if the script timedout */
 		$info = stream_get_meta_data($fp);
@@ -211,7 +211,7 @@ function exec_poll_php($command, $using_proc_function, $pipes, $proc_fd) {
 			fwrite($pipes[0], $command . "\r\n");
 
 			/* get result from server */
-			$output = fgets($pipes[1], 1024);
+			$output = fgets($pipes[1], 4096);
 
 			/* determine if the script timedout */
 			$info = stream_get_meta_data($pipes[0]);
@@ -238,7 +238,7 @@ function exec_poll_php($command, $using_proc_function, $pipes, $proc_fd) {
 			stream_set_timeout($fp, $script_timeout);
 
 			/* get output from command */
-			$output = fgets($fp, 1024);
+			$output = fgets($fp, 4096);
 
 			/* determine if the script timedout */
 			$info = stream_get_meta_data($pipes[0]);
