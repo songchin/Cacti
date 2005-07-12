@@ -220,9 +220,13 @@ if ($action == 'login') {
 					}
 					break;
 				case '2': /* default console page */
-					$url_location = "index.php"; break;
+					$url_location = "index.php";
+					break;
 				case '3': /* default graph page */
-					$url_location = "graph_view.php"; break;
+					$url_location = "graph_view.php";
+					break;
+				default:
+					$url_location  = "index.php";
 			}
 			api_syslog_cacti_log(_("LOGIN: URL: ") . $url_location, SEV_DEBUG, 0, 0, 0, false, FACIL_AUTH);
 			header("Location: " . $url_location);
