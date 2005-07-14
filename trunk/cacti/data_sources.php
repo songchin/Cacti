@@ -901,7 +901,7 @@ function ds() {
 			form_alternate_row_color($colors["form_alternate1"],$colors["form_alternate2"],$i); $i++;
 				?>
 				<td>
-					<a class='linkEditMain' href='data_sources.php?action=edit&id=<?php print $data_source["id"];?>'><?php print $highlight_text;?></a>
+					<a class='linkEditMain' title='<?php print $data_source["name_cache"];?>' href='data_sources.php?action=edit&id=<?php print $data_source["id"];?>'><?php print $highlight_text;?></a>
 				</td>
 				<td>
 					<?php print $data_input_types{$data_source["data_input_type"]};?>

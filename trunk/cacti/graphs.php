@@ -666,7 +666,7 @@ function graph() {
 			form_alternate_row_color($colors["form_alternate1"],$colors["form_alternate2"],$i); $i++;
 				?>
 				<td>
-					<a class="linkEditMain" href="graphs.php?action=edit&id=<?php print $graph["id"];?>"><?php print $highlight_text;?></a>
+					<a class="linkEditMain" title="<?php print $graph["title_cache"];?>" href="graphs.php?action=edit&id=<?php print $graph["id"];?>"><?php print $highlight_text;?></a>
 				</td>
 				<td>
 					<?php print ((empty($graph["template_name"])) ? "<em>" . _("None") . "</em>" : $graph["template_name"]); ?>
