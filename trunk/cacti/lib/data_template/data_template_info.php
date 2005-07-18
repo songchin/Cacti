@@ -28,7 +28,14 @@ function get_data_template($data_template_id) {
 		return false;
 	}
 
-	return db_fetch_row("select * from data_template where id = " . sql_sanitize($data_template_id));
+	$data_template = db_fetch_row("select * from data_template where id = " . sql_sanitize($data_template_id));
+
+	if (sizeof($data_template) == 0) {
+		api_syslog_cacti_log("Invalid data template [ID#$data_template_id] specified in get_data_template()", SEV_ERROR, 0, 0, 0, false, FACIL_WEBUI);
+		return false;
+	}else{
+		return $data_template;
+	}
 }
 
 function get_data_templates_from_graph_template($graph_template_id, $data_input_type = 0) {
@@ -51,6 +58,22 @@ function get_data_templates_from_graph_template($graph_template_id, $data_input_
 		and graph_template_item.graph_template_id = " . sql_sanitize($graph_template_id) . "
 		" . (empty($data_input_type) ? "" : "and data_template.data_input_type = " . sql_sanitize($data_input_type)) ."
 		group by data_template.id");
+}
+
+function get_data_template_item($data_template_item_id) {
+	/* sanity check for $data_template_item_id */
+	if ((!is_numeric($data_template_item_id)) || (empty($data_template_item_id))) {
+		return false;
+	}
+
+	$data_template_item = db_fetch_row("select * from data_template_item where id = " . sql_sanitize($data_template_item_id));
+
+	if (sizeof($data_template_item) == 0) {
+		api_syslog_cacti_log("Invalid data template item [ID#$data_template_item_id] specified in get_data_template_item()", SEV_ERROR, 0, 0, 0, false, FACIL_WEBUI);
+		return false;
+	}else{
+		return $data_template_item;
+	}
 }
 
 function get_data_template_items($data_template_id) {
@@ -98,7 +121,7 @@ function get_data_template_input_fields($data_template_id) {
 }
 
 function &get_data_template_field_list() {
-	include(CACTI_BASE_PATH . "/include/data_source/data_source_form.php");
+	require(CACTI_BASE_PATH . "/include/data_source/data_source_form.php");
 
 	return $fields_data_template;
 }

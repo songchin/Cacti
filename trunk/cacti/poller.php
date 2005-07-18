@@ -34,10 +34,10 @@ if (!isset($_SERVER["argv"][0])) {
 $no_http_headers = true;
 
 /* Start Initialization Section */
-include(dirname(__FILE__) . "/include/config.php");
-include_once($config["base_path"] . "/lib/poller.php");
-include_once($config["base_path"] . "/lib/graph_export.php");
-include_once($config["base_path"] . "/lib/rrd.php");
+require(dirname(__FILE__) . "/include/config.php");
+require_once(CACTI_BASE_PATH . "/lib/sys/rrd.php");
+require_once(CACTI_BASE_PATH . "/lib/poller.php");
+require_once(CACTI_BASE_PATH . "/lib/sys/graph_export.php");
 
 /* determine the poller_id if specified */
 $poller_id = 1;
@@ -178,7 +178,7 @@ if (read_config_option("poller_enabled") == "on") {
 		chdir(dirname(read_config_option("path_cactid")));
 	}else if ($config["cacti_server_os"] == "unix") {
 		$command_string = read_config_option("path_php_binary");
-		$extra_args = "-q " . $config["base_path"] . "/cmd.php";
+		$extra_args = "-q " . CACTI_BASE_PATH . "/cmd.php";
 		$method = "cmd.php";
 	}else if ($poller_type == "2") {
 		$command_string = read_config_option("path_cactid");
@@ -187,7 +187,7 @@ if (read_config_option("poller_enabled") == "on") {
 		chdir(dirname(read_config_option("path_cactid")));
 	}else{
 		$command_string = read_config_option("path_php_binary");
-		$extra_args = "-q " . strtolower($config["base_path"] . "/cmd.php");
+		$extra_args = "-q " . strtolower(CACTI_BASE_PATH . "/cmd.php");
 		$method = "cmd.php";
 	}
 

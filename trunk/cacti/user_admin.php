@@ -22,12 +22,12 @@
  +-------------------------------------------------------------------------+
 */
 
-include("./include/config.php");
-include("./include/auth.php");
-include("./lib/user/user_action.php");
+require(dirname(__FILE__) . "/include/config.php");
+require_once(CACTI_BASE_PATH . "/include/auth.php");
+require_once(CACTI_BASE_PATH . "/lib/user/user_action.php");
 
 $themes["default"] = _("System Default (Global Setting)");
-include("./include/user/user_form.php");
+require_once(CACTI_BASE_PATH . "/include/user/user_form.php");
 
 
 /* Detect deep linking the remove it */
@@ -61,39 +61,39 @@ switch ($_REQUEST["action"]) {
 
 		break;
 	case 'user_realms_edit':
-		include_once("include/top_header.php");
+		require_once(CACTI_BASE_PATH . "/include/top_header.php");
 
 		user_edit();
 
-		include_once("include/bottom_footer.php");
+		require_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
 		break;
 	case 'graph_settings_edit':
-		include_once("include/top_header.php");
+		require_once(CACTI_BASE_PATH . "/include/top_header.php");
 
 		user_edit();
 
-		include_once("include/bottom_footer.php");
+		require_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
 		break;
 	case 'graph_perms_edit':
-		include_once("include/top_header.php");
+		require_once(CACTI_BASE_PATH . "/include/top_header.php");
 
 		user_edit();
 
-		include_once("include/bottom_footer.php");
+		require_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
 		break;
 	case 'user_edit':
-		include_once("include/top_header.php");
+		require_once(CACTI_BASE_PATH . "/include/top_header.php");
 
 		user_edit();
 
-		include_once("include/bottom_footer.php");
+		require_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
 		break;
 	default:
-		include_once("include/top_header.php");
+		require_once(CACTI_BASE_PATH . "/include/top_header.php");
 
 		user();
 
-		include_once("include/bottom_footer.php");
+		require_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
 		break;
 }
 
@@ -849,7 +849,7 @@ function user_actions() {
 		$i++;
 	}
 
-	include_once("./include/top_header.php");
+	require_once(CACTI_BASE_PATH . "/include/top_header.php");
 
 	html_start_box("<strong>" . $user_actions{$_POST["drp_action"]} . "</strong>", "60%", $colors["header_panel_background"], "3", "center", "");
 
@@ -959,7 +959,7 @@ function user_actions() {
 
 	html_end_box();
 
-	include_once("./include/bottom_footer.php");
+	require_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
 }
 
 ?>

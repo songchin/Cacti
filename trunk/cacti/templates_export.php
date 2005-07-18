@@ -22,10 +22,10 @@
  +-------------------------------------------------------------------------+
 */
 
-include("./include/config.php");
-include("./include/auth.php");
-include_once("./lib/string.php");
-include_once("./lib/export.php");
+require(dirname(__FILE__) . "/include/config.php");
+require_once(CACTI_BASE_PATH . "/include/auth.php");
+require_once(CACTI_BASE_PATH . "/lib/sys/string.php");
+require_once(CACTI_BASE_PATH . "/lib/sys/template_export.php");
 
 /* set default action */
 if (!isset($_REQUEST["action"])) { $_REQUEST["action"] = ""; }
@@ -59,11 +59,11 @@ switch ($_REQUEST["action"]) {
 
 		break;
 	default:
-		include_once("./include/top_header.php");
+		require_once(CACTI_BASE_PATH . "/include/top_header.php");
 
 		export();
 
-		include_once("./include/bottom_footer.php");
+		require_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
 		break;
 }
 
@@ -78,9 +78,9 @@ function form_save() {
 		$xml_data = get_item_xml($_POST["export_type"], $_POST["export_item_id"], (((isset($_POST["include_deps"]) ? $_POST["include_deps"] : "") == "") ? false : true));
 
 		if ($_POST["output_format"] == "1") {
-			include_once("./include/top_header.php");
+			require_once(CACTI_BASE_PATH . "/include/top_header.php");
 			print "<table width='98%' align='center'><tr><td><pre>" . htmlspecialchars($xml_data) . "</pre></td></tr></table>";
-			include_once("./include/bottom_footer.php");
+			require_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
 		}elseif ($_POST["output_format"] == "2") {
 			header("Content-type: application/xml");
 			print $xml_data;

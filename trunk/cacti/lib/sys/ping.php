@@ -162,6 +162,8 @@ class Net_Ping
 	}
 
 	function ping_snmp() {
+		require_once(CACTI_BASE_PATH . "/lib/sys/snmp.php");
+
 		/* initialize variables */
 		$this->snmp_status = "down";
 		$this->snmp_response = _("Host did not respond to SNMP");

@@ -44,7 +44,7 @@ function template_form_header_precheck($num_draw_fields, $left_title, $right_tit
 function draw_nontemplated_fields_graph($graph_template_id, &$values_array, $field_name_format = "|field|", $display_template_name = true) {
 	global $colors;
 
-	include_once(CACTI_BASE_PATH . "/lib/graph/graph_form.php");
+	require_once(CACTI_BASE_PATH . "/lib/graph/graph_form.php");
 
 	if (empty($graph_template_id)) {
 		return;
@@ -196,7 +196,7 @@ function draw_nontemplated_fields_graph($graph_template_id, &$values_array, $fie
 function draw_nontemplated_fields_graph_item($graph_template_id, &$values_array, $field_name_format = "|field|_|id|", $display_template_name = true) {
 	global $colors;
 
-	include_once(CACTI_BASE_PATH . "/lib/graph/graph_form.php");
+	require_once(CACTI_BASE_PATH . "/lib/graph/graph_form.php");
 
 	if (empty($graph_template_id)) {
 		return;
@@ -281,7 +281,7 @@ function draw_nontemplated_fields_graph_item($graph_template_id, &$values_array,
 function draw_nontemplated_fields_data_source($data_template_id, &$values_array, $field_name_format = "|field|", $display_template_name = true) {
 	global $colors;
 
-	include_once(CACTI_BASE_PATH . "/lib/data_source/data_source_form.php");
+	require_once(CACTI_BASE_PATH . "/lib/data_source/data_source_form.php");
 
 	if (empty($data_template_id)) {
 		return;
@@ -326,7 +326,7 @@ function draw_nontemplated_fields_data_source($data_template_id, &$values_array,
 function draw_nontemplated_fields_data_source_item($data_template_id, &$values_array, $field_name_format = "|field_id|", $display_template_name = true) {
 	global $colors;
 
-	include_once(CACTI_BASE_PATH . "/lib/data_source/data_source_form.php");
+	require_once(CACTI_BASE_PATH . "/lib/data_source/data_source_form.php");
 
 	if (empty($data_template_id)) {
 		return;

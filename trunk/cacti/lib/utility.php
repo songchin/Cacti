@@ -286,7 +286,7 @@ function duplicate_data_source($_local_data_id, $_data_template_id, $data_source
 	}
 
 	if (!empty($_local_data_id)) {
-		update_data_source_title_cache($local_data_id);
+		api_data_source_title_cache_update($local_data_id);
 	}
 }
 

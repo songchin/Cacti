@@ -22,8 +22,8 @@
  +-------------------------------------------------------------------------+
 */
 
-include("./include/config.php");
-include("./include/auth.php");
+require(dirname(__FILE__) . "/include/config.php");
+require_once(CACTI_BASE_PATH . "/include/auth.php");
 
 /* set default action */
 if (!isset($_REQUEST["action"])) { $_REQUEST["action"] = ""; }
@@ -39,11 +39,11 @@ switch ($_REQUEST["action"]) {
 		header("Location: presets_gprint.php");
 		break;
 	case 'edit':
-		include_once("./include/top_header.php");
+		require_once(CACTI_BASE_PATH . "/include/top_header.php");
 
 		gprint_presets_edit();
 
-		include_once("./include/bottom_footer.php");
+		require_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
 		break;
 }
 
@@ -84,7 +84,7 @@ function form_save() {
 
 function gprint_presets_remove() {
 	if ((read_config_option("remove_verification") == "on") && (!isset($_GET["confirm"]))) {
-		include_once("./include/top_header.php");
+		require_once(CACTI_BASE_PATH . "/include/top_header.php");
 		form_confirm(_("Are You Sure?"), _("Are you sure you want to delete the GPRINT preset") . " <strong>'" . db_fetch_cell("select name from preset_gprint where id=" . $_GET["id"]) . "'</strong>? This could affect every graph that uses this preset, make sure you know what you are doing first!", "presets.php?action=view_gprint", "presets_gprint.php?action=remove&id=" . $_GET["id"]);
 		exit;
 	}

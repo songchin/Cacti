@@ -22,11 +22,11 @@
  +-------------------------------------------------------------------------+
 */
 
-include("./include/config.php");
-include("./include/auth.php");
-include_once('./lib/api_tree.php');
-include_once('./lib/tree.php');
-include_once('./lib/html_tree.php');
+require(dirname(__FILE__) . "/include/config.php");
+require_once(CACTI_BASE_PATH . "/include/auth.php");
+require_once(CACTI_BASE_PATH . "/lib/api_tree.php");
+require_once(CACTI_BASE_PATH . "/lib/sys/tree.php");
+require_once(CACTI_BASE_PATH . "/lib/sys/html_tree.php");
 
 /* set default action */
 if (!isset($_REQUEST["action"])) { $_REQUEST["action"] = ""; }
@@ -47,11 +47,11 @@ switch ($_REQUEST["action"]) {
 		header("Location: tree.php?action=edit&id=" . $_GET["tree_id"]);
 		break;
 	case 'item_edit':
-		include_once("./include/top_header.php");
+		require_once(CACTI_BASE_PATH . "/include/top_header.php");
 
 		item_edit();
 
-		include_once("./include/bottom_footer.php");
+		require_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
 		break;
 	case 'item_remove':
 		item_remove();
@@ -64,18 +64,18 @@ switch ($_REQUEST["action"]) {
 		header("Location: tree.php");
 		break;
 	case 'edit':
-		include_once("./include/top_header.php");
+		require_once(CACTI_BASE_PATH . "/include/top_header.php");
 
 		tree_edit();
 
-		include_once("./include/bottom_footer.php");
+		require_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
 		break;
 	default:
-		include_once("./include/top_header.php");
+		require_once(CACTI_BASE_PATH . "/include/top_header.php");
 
 		tree();
 
-		include_once("./include/bottom_footer.php");
+		require_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
 		break;
 }
 
@@ -316,9 +316,9 @@ function item_remove() {
 			$text = "Are you sure you want to delete the host item <strong>'" . db_fetch_cell("select CONCAT_WS('',description,' (',hostname,')') as hostname from host where id=" . $graph_tree_item["host_id"]) . "'</strong>?";
 		}
 
-		include("./include/top_header.php");
+		require_once(CACTI_BASE_PATH . "/include/top_header.php");
 		form_confirm("Are You Sure?", $text, "tree.php?action=edit&id=" . $_GET["tree_id"], "tree.php?action=item_remove&id=" . $_GET["id"] . "&tree_id=" . $_GET["tree_id"]);
-		include("./include/bottom_footer.php");
+		require_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
 		exit;
 	}
 
@@ -336,9 +336,9 @@ function item_remove() {
 
 function tree_remove() {
 	if ((read_config_option("remove_verification") == "on") && (!isset($_GET["confirm"]))) {
-		include("./include/top_header.php");
+		require_once(CACTI_BASE_PATH . "/include/top_header.php");
 		form_confirm(_("Are You Sure?"), "Are you sure you want to delete the tree <strong>'" . db_fetch_cell("select name from graph_tree where id=" . $_GET["id"]) . "'</strong>?", "tree.php", "tree.php?action=remove&id=" . $_GET["id"]);
-		include("./include/bottom_footer.php");
+		require_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
 		exit;
 	}
 

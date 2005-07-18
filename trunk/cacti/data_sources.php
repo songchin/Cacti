@@ -22,21 +22,21 @@
  +-------------------------------------------------------------------------+
 */
 
-include("./include/config.php");
-include("./include/auth.php");
-include_once("./lib/utility.php");
-include_once("./lib/graph/graph_update.php");
-include_once("./lib/data_source/data_source_update.php");
-include_once("./lib/data_source/data_source_form.php");
-include_once("./lib/data_source/data_source_info.php");
-include_once("./lib/data_source/data_source_template.php");
-include_once("./lib/data_query/data_query_info.php");
-include_once("./include/data_source/data_source_constants.php");
-include_once("./include/data_source/data_source_form.php");
-include_once("./lib/template.php");
-include_once("./lib/html_form_template.php");
-include_once("./lib/rrd.php");
-include_once("./lib/poller.php");
+require(dirname(__FILE__) . "/include/config.php");
+require_once(CACTI_BASE_PATH . "/include/auth.php");
+require_once(CACTI_BASE_PATH . "/lib/sys/rrd.php");
+require_once(CACTI_BASE_PATH . "/lib/utility.php");
+require_once(CACTI_BASE_PATH . "/lib/graph/graph_update.php");
+require_once(CACTI_BASE_PATH . "/lib/data_source/data_source_update.php");
+require_once(CACTI_BASE_PATH . "/lib/data_source/data_source_form.php");
+require_once(CACTI_BASE_PATH . "/lib/data_source/data_source_info.php");
+require_once(CACTI_BASE_PATH . "/lib/data_template/data_template_push.php");
+require_once(CACTI_BASE_PATH . "/lib/data_query/data_query_info.php");
+require_once(CACTI_BASE_PATH . "/include/data_source/data_source_constants.php");
+require_once(CACTI_BASE_PATH . "/include/data_source/data_source_form.php");
+require_once(CACTI_BASE_PATH . "/lib/template.php");
+require_once(CACTI_BASE_PATH . "/lib/sys/html_form_template.php");
+require_once(CACTI_BASE_PATH . "/lib/poller.php");
 
 define("MAX_DISPLAY_PAGES", 21);
 
@@ -63,7 +63,7 @@ switch ($_REQUEST["action"]) {
 
 		break;
 	case 'item_add':
-		include_once("./include/top_header.php");
+		require_once(CACTI_BASE_PATH . "/include/top_header.php");
 
 		ds_edit();
 
@@ -74,18 +74,18 @@ switch ($_REQUEST["action"]) {
 
 		break;
 	case 'edit':
-		include_once("./include/top_header.php");
+		require_once(CACTI_BASE_PATH . "/include/top_header.php");
 
 		ds_edit();
 
-		include_once("./include/bottom_footer.php");
+		require_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
 		break;
 	default:
-		include_once("./include/top_header.php");
+		require_once(CACTI_BASE_PATH . "/include/top_header.php");
 
 		ds();
 
-		include_once("./include/bottom_footer.php");
+		require_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
 		break;
 }
 
@@ -98,7 +98,7 @@ function form_save() {
 	if (empty($_POST["id"])) {
 		$_data_template_id = 0;
 	}else{
-		$_data_template_id = db_fetch_cell("select data_template_id from data_source where id=" . $_POST["id"]);
+		$_data_template_id = db_fetch_cell("select data_template_id from data_source where id = " . $_POST["id"]);
 	}
 
 	/* cache all post field values */
@@ -122,13 +122,16 @@ function form_save() {
 		}
 	}
 
+	/* add any unchecked checkbox fields */
+	$data_source_fields += field_register_html_checkboxes(api_data_source_field_list(), "ds||field|");
+
 	/* step #2: field validation */
 	$suggested_value_fields = array(); /* placeholder */
-	field_register_error(validate_data_source_fields($data_source_fields, $suggested_value_fields, "ds||field|", ""));
-	field_register_error(validate_data_source_input_fields($data_input_fields, "dif_|field|"));
+	field_register_error(api_data_source_validate_fields_base($data_source_fields, $suggested_value_fields, "ds||field|", ""));
+	field_register_error(api_data_source_validate_fields_input($data_input_fields, "dif_|field|"));
 
 	foreach ($data_source_item_fields as $data_source_item_id => $data_source_item) {
-		field_register_error(validate_data_source_item_fields($data_source_item, "dsi||field||$data_source_item_id"));
+		field_register_error(api_data_source_validate_fields_item($data_source_item, "dsi||field||$data_source_item_id"));
 	}
 
 	/* step #3: field save */
@@ -137,8 +140,8 @@ function form_save() {
 	}else{
 		/* handle rra_id multi-select */
 		if (isset($data_source_fields["rra_id"])) {
-			unset($data_source_fields["rra_id"]);
 			$data_source_rra_fields = $data_source_fields["rra_id"];
+			unset($data_source_fields["rra_id"]);
 		}else{
 			$data_source_rra_fields = array();
 		}
@@ -234,7 +237,7 @@ function form_actions() {
 			for ($i=0;($i<count($selected_items));$i++) {
 				db_execute("update data_local set host_id=" . $_POST["host_id"] . " where id=" . $selected_items[$i]);
 				push_out_host($_POST["host_id"], $selected_items[$i]);
-				update_data_source_title_cache($selected_items[$i]);
+				api_data_source_title_cache_update($selected_items[$i]);
 			}
 		}elseif ($_POST["drp_action"] == "4") { /* duplicate */
 			for ($i=0;($i<count($selected_items));$i++) {
@@ -264,14 +267,14 @@ function form_actions() {
 	/* loop through each of the graphs selected on the previous page and get more info about them */
 	while (list($var,$val) = each($_POST)) {
 		if (ereg("^chk_([0-9]+)$", $var, $matches)) {
-			$ds_list .= "<li>" . get_data_source_title($matches[1]) . "<br>";
+			$ds_list .= "<li>" . api_data_source_title($matches[1]) . "<br>";
 			$ds_array[$i] = $matches[1];
 		}
 
 		$i++;
 	}
 
-	include_once("./include/top_header.php");
+	require_once(CACTI_BASE_PATH . "/include/top_header.php");
 
 	html_start_box("<strong>" . $ds_actions{$_POST["drp_action"]} . "</strong>", "60%", $colors["header_panel_background"], "3", "center", "");
 
@@ -392,7 +395,7 @@ function form_actions() {
 
 	html_end_box();
 
-	include_once("./include/bottom_footer.php");
+	require_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
 }
 
 /* ------------------------
@@ -406,8 +409,7 @@ function ds_item_remove() {
 }
 
 function ds_edit() {
-	global $colors, $struct_data_source, $struct_data_source_item, $data_source_types;
-	global $struct_data_input, $struct_data_input_script, $struct_data_input_snmp, $struct_data_input_data_query;
+	global $colors, $data_source_types;
 
 	$host_id = 0;
 
@@ -419,7 +421,7 @@ function ds_edit() {
 			$data_template = db_fetch_row("select id,name from data_template where id='" . $data_source["data_template_id"] . "'");
 		}
 
-		$header_label = _("[edit: ") . get_data_source_title($_GET["id"]) . "]";
+		$header_label = _("[edit: ") . api_data_source_title($_GET["id"]) . "]";
 
 		/* get a list of all data input type fields for this data template */
 		$data_input_type_fields = array_rekey(db_fetch_assoc("select name,value from data_source_field where data_source_id = " . $data_source["id"]), "name", array("value"));
@@ -443,7 +445,7 @@ function ds_edit() {
 		<table width="98%" align="center">
 			<tr>
 				<td class="textInfo" colspan="2" valign="top">
-					<?php print get_data_source_title($_GET["id"]);?>
+					<?php print api_data_source_title($_GET["id"]);?>
 				</td>
 				<td class="textInfo" align="right" valign="top">
 					<span style="color: #c16921;">*<a href='data_sources.php?action=edit&id=<?php print (isset($_GET["id"]) ? $_GET["id"] : 0);?>&debug=<?php print (isset($_SESSION["ds_debug_mode"]) ? "0" : "1");?>'>Turn <strong><?php print (isset($_SESSION["ds_debug_mode"]) ? "Off" : "On");?></strong> Data Source Debug Mode.</a>
@@ -454,64 +456,13 @@ function ds_edit() {
 		<?php
 	}
 
+	form_start("data_sources.php", "form_data_source");
+
 	/* ==================== Box: Device/Template Selection ==================== */
 
-	$form_array = array(
-		"data_template_id" => array(
-			"method" => "drop_sql",
-			"friendly_name" => _("Selected Data Template"),
-			"description" => _("The name given to this data template."),
-			"value" => (isset($data_source) ? $data_source["data_template_id"] : "0"),
-			"none_value" => "None",
-			"sql" => "select id,template_name as name from data_template order by template_name"
-			),
-		"host_id" => array(
-			"method" => "drop_sql",
-			"friendly_name" => _("Device"),
-			"description" => _("Choose the device that this graph belongs to."),
-			"value" => (isset($_GET["host_id"]) ? $_GET["host_id"] : $data_source["host_id"]),
-			"none_value" => _("None"),
-			"sql" => "select id,CONCAT_WS('',description,' (',hostname,')') as name from host order by description,hostname"
-			),
-		"id" => array(
-			"method" => "hidden",
-			"value" => (isset($data_source) ? $data_source["id"] : "0")
-			)
-		);
-
-	// get_data_query_array()
-	$form_data_query_fields = array(
-		"hdr_snmp_generic" => array(
-			"friendly_name" => _("Data Query Parameters"),
-			"method" => "spacer"
-			),
-		"dif_data_query_field_name" => array(
-			"method" => "drop_sql",
-			"friendly_name" => _("Field Name"),
-			"description" => _("Determines the field that Cacti will use when locating a unique row for this dat)a query."),
-			"value" => (isset($data_input_type_fields["data_query_field_name"]["value"]) ? $data_input_type_fields["data_query_field_name"]["value"] : ""),
-			"none_value" => "",
-			"sql" => "select field_name as name,field_name as id from host_snmp_cache where snmp_query_id = '|data_query_id|' group by field_name"
-			),
-		"dif_data_query_field_value" => array(
-			"method" => "textbox",
-			"friendly_name" => _("Field Value"),
-			"description" => _("When assigned to the field name above, produces a single data query row used by th)e poller to retrieve data."),
-			"value" => (isset($data_input_type_fields["data_query_field_value"]["value"]) ? $data_input_type_fields["data_query_field_value"]["value"] : ""),
-			"max_length" => "100",
-			"size" => "30"
-			)
-		);
-
 	html_start_box("<strong>" . _("Device/Template Selection") . "</strong> $header_label", "98%", $colors["header_background"], "3", "center", "");
-
-	draw_edit_form(
-		array(
-			"config" => array(),
-			"fields" => $form_array
-			)
-		);
-
+	_data_source_field__data_template_id("data_template_id", (isset($data_source) ? $data_source["data_template_id"] : ""), (empty($_GET["id"]) ? 0 : $_GET["id"]));
+	_data_source_field__host_id("host_id", (isset($data_source) ? $data_source["host_id"] : ""), (empty($_GET["id"]) ? 0 : $_GET["id"]));
 	html_end_box();
 
 	/* ==================== Box: Supplemental Template Data ==================== */
@@ -523,11 +474,16 @@ function ds_edit() {
 		html_start_box("<strong>" . _("Supplemental Template Data") . "</strong>", "98%", $colors["header_background"], "3", "center", "");
 
 		$num_output_fields =  draw_nontemplated_fields_data_input($data_source["data_template_id"], $data_input_type_fields, "dif_|field|", "<strong>" . _("Data Input") . "</strong>", true);
+
+		if ($data_source["data_input_type"] == DATA_INPUT_TYPE_DATA_QUERY) {
+			_data_source_input_field__data_query_hdr();
+			_data_source_input_field__data_query_field_name("dif_data_query_field_name", $data_input_type_fields["data_query_id"]["value"], (isset($data_input_type_fields["data_query_field_name"]["value"]) ? $data_input_type_fields["data_query_field_name"]["value"] : ""), (empty($_GET["id"]) ? 0 : $_GET["id"]));
+			_data_source_input_field__data_query_field_value("dif_data_query_field_value", (isset($data_input_type_fields["data_query_field_name"]["value"]) ? $data_input_type_fields["data_query_field_value"]["value"] : ""), (empty($_GET["id"]) ? 0 : $_GET["id"]));
+			$num_output_fields += 2;
+		}
+
 		$num_output_fields += draw_nontemplated_fields_data_source($data_source["data_template_id"], $data_source, "ds||field|", "<strong>" . _("Data Source Fields") . "</strong>", true, true);
 		$num_output_fields += draw_nontemplated_fields_data_source_item($data_source["data_template_id"], db_fetch_assoc("select * from data_source_item where data_source_id = " . $data_source["id"] . " order by data_source_name"), "dsi||field|||id|", "<strong>" . _("Data Source Item Fields") . "</strong>", true, true);
-
-		$form_data_query_fields["dif_data_query_field_name"]["sql"] = str_replace("|data_query_id|", $data_input_type_fields["data_query_id"]["value"], $form_data_query_fields["dif_data_query_field_name"]["sql"]);
-		draw_edit_form(array("config" => array("no_form_tag" => true), "fields" => $form_data_query_fields));
 
 		html_end_box();
 
@@ -539,8 +495,6 @@ function ds_edit() {
 	}
 
 	if ( (empty($data_source["data_template_id"])) && ( ((isset($_GET["id"])) && (is_numeric($_GET["id"]))) || ((isset($_GET["host_id"])) && (isset($_GET["data_template_id"]))) ) ) {
-		/* ==================== Box: Data Input ==================== */
-
 		/* determine current value for 'data_input_type' */
 		if (isset($_GET["data_input_type"])) {
 			$_data_input_type = $_GET["data_input_type"];
@@ -550,18 +504,14 @@ function ds_edit() {
 			$_data_input_type = DATA_INPUT_TYPE_SCRIPT;
 		}
 
-		$_data_input_form = array("data_input_type" => $struct_data_input["data_input_type"]);
+		/* ==================== Box: Data Input ==================== */
 
-		/* fill in data source-specific information (data input type dropdown) */
-		$_data_input_form["data_input_type"]["redirect_url"] = "data_sources.php?action=edit" . (!empty($_GET["id"]) ? "&id=" . $_GET["id"] : "") . "&data_template_id=" . (isset($_GET["data_template_id"]) ? $_GET["data_template_id"] : (isset($data_source) ? $data_source["data_template_id"] : 0)) . "&host_id=" . (isset($_GET["host_id"]) ? $_GET["host_id"] : (isset($data_source) ? $data_source["host_id"] : 0)) . "&data_input_type=|dropdown_value|";
-		$_data_input_form["data_input_type"]["form_index"] = "0";
-		$_data_input_form["data_input_type"]["default"] = "script";
-		$_data_input_form["data_input_type"]["value"] = $_data_input_type;
+		html_start_box("<strong>" . _("Data Input") . "</strong>", "98%", $colors["header_background_template"], "3", "center", "");
+
+		_data_source_input_field__data_input_type("data_input_type", false, $_data_input_type, (empty($_GET["id"]) ? 0 : $_GET["id"]));
 
 		/* grab the appropriate data input type form array */
 		if ($_data_input_type == DATA_INPUT_TYPE_SCRIPT) {
-			$_data_input_type_form = $struct_data_input_script;
-
 			/* since the "sql" key is not executed until draw_edit_form(), we have fetch the list of
 			 * external scripts here as well */
 			$scripts = db_fetch_assoc($_data_input_type_form["dif_script_id"]["sql"]);
@@ -577,45 +527,21 @@ function ds_edit() {
 					$_script_id = $scripts[0]["id"];
 				}
 
-				/* fill in data template-specific information (external scripts dropdown) */
-				$_data_input_type_form["dif_script_id"]["redirect_url"] = "data_sources.php?action=edit" . (!empty($_GET["id"]) ? "&id=" . $_GET["id"] : "") . "&data_template_id=" . (isset($_GET["data_template_id"]) ? $_GET["data_template_id"] : (isset($data_source) ? $data_source["data_template_id"] : 0)) . "&host_id=" . (isset($_GET["host_id"]) ? $_GET["host_id"] : (isset($data_source) ? $data_source["host_id"] : 0)) . "&data_input_type=$_data_input_type&script_id=|dropdown_value|";
-				$_data_input_type_form["dif_script_id"]["form_index"] = "0";
-				$_data_input_type_form["dif_script_id"]["value"] = $_script_id;
-
-				foreach ($scripts as $item) {
-					$_data_input_type_form["dif_script_id"]["array"]{$item["id"]} = $item["name"];
-				}
+				field_row_header(_("External Script"));
+				_data_source_input_field__script_id("dif_script_id", "data_sources.php?action=edit" . (!empty($_GET["id"]) ? "&id=" . $_GET["id"] : "") . "&data_template_id=" . (isset($_GET["data_template_id"]) ? $_GET["data_template_id"] : (isset($data_source) ? $data_source["data_template_id"] : 0)) . "&host_id=" . (isset($_GET["host_id"]) ? $_GET["host_id"] : (isset($data_source) ? $data_source["host_id"] : 0)) . "&data_input_type=$_data_input_type&script_id=|dropdown_value|", $_script_id);
 
 				/* get each INPUT field for this script */
 				$script_input_fields = db_fetch_assoc("select * from data_input_fields where data_input_id = $_script_id and input_output='in' order by name");
 
 				if (sizeof($script_input_fields) > 0) {
-					$_data_input_type_form += array(
-						"hdr_script_custom_fields" => array(
-							"friendly_name" => _("Custom Input Fields"),
-							"method" => "spacer"
-							)
-						);
+					field_row_header(_("Custom Input Fields"));
 
 					foreach ($script_input_fields as $field) {
-						$_data_input_type_form += array(
-							"dif_" . $field["data_name"] => array(
-								"method" => "textbox",
-								"friendly_name" => $field["name"],
-								"value" => ((isset($data_input_type_fields{$field["data_name"]})) ? $data_input_type_fields{$field["data_name"]}["value"] : ""),
-								"max_length" => "255",
-								)
-							);
+						_data_source_input_field__script("dif_" . $field["data_name"], $field["name"], false, ((isset($data_input_type_fields{$field["data_name"]})) ? $data_input_type_fields{$field["data_name"]}["value"] : ""), "", "", (isset($_GET["id"]) ? $_GET["id"] : 0));
 					}
 				}
 			}
 		}else if ($_data_input_type == DATA_INPUT_TYPE_DATA_QUERY) {
-			$_data_input_type_form = $struct_data_input_data_query;
-
-			/* since the "sql" key is not executed until draw_edit_form(), we have fetch the list of
-			 * data queries here as well */
-			$data_queries = db_fetch_assoc($_data_input_type_form["dif_data_query_id"]["sql"]);
-
 			/* determine current value for 'data_query_id' */
 			if ((isset($_GET["data_query_id"])) && (is_numeric($_GET["data_query_id"]))) {
 				$_data_query_id = $_GET["data_query_id"];
@@ -626,68 +552,32 @@ function ds_edit() {
 				$_data_query_id = $data_queries[0]["id"];
 			}
 
-			/* fill in data template-specific information (data queries dropdown) */
-			$_data_input_type_form["dif_data_query_id"]["redirect_url"] = "data_sources.php?action=edit" . (!empty($_GET["id"]) ? "&id=" . $_GET["id"] : "") . "&data_template_id=" . (isset($_GET["data_template_id"]) ? $_GET["data_template_id"] : (isset($data_source) ? $data_source["data_template_id"] : 0)) . "&host_id=" . (isset($_GET["host_id"]) ? $_GET["host_id"] : (isset($data_source) ? $data_source["host_id"] : 0)) . "&data_input_type=$_data_input_type&data_query_id=|dropdown_value|";
-			$_data_input_type_form["dif_data_query_id"]["form_index"] = "0";
-			$_data_input_type_form["dif_data_query_id"]["value"] = $_data_query_id;
-
-			if (sizeof($data_queries) > 0) {
-				foreach ($data_queries as $item) {
-					$_data_input_type_form["dif_data_query_id"]["array"]{$item["id"]} = $item["name"];
-				}
-			}
-
-			/* per-data source data query parameters */
-			$_data_input_type_form += $form_data_query_fields;
-			$_data_input_type_form["dif_data_query_field_name"]["sql"] = str_replace("|data_query_id|", $_data_query_id, $_data_input_type_form["dif_data_query_field_name"]["sql"]);
+			field_row_header(_("Data Query"));
+			_data_source_input_field__data_query_id("dif_data_query_id", "data_sources.php?action=edit" . (!empty($_GET["id"]) ? "&id=" . $_GET["id"] : "") . "&data_template_id=" . (isset($_GET["data_template_id"]) ? $_GET["data_template_id"] : (isset($data_source) ? $data_source["data_template_id"] : 0)) . "&host_id=" . (isset($_GET["host_id"]) ? $_GET["host_id"] : (isset($data_source) ? $data_source["host_id"] : 0)) . "&data_input_type=$_data_input_type&data_query_id=|dropdown_value|", $_data_query_id);
 		}else if ($_data_input_type == DATA_INPUT_TYPE_SNMP) {
-			while (list($field_name, $field_array) = each($struct_data_input_snmp)) {
-				$struct_data_input_snmp[$field_name]["value"] =  (isset($data_input_type_fields{substr($field_name, 4)}) ? $data_input_type_fields{substr($field_name, 4)}["value"] : "");
-			}
-
-			$_data_input_type_form = $struct_data_input_snmp;
-		}else{
-			$_data_input_type_form = array();
+			_data_source_input_field__device_hdr_generic();
+			_data_source_input_field__device_snmp_port("dif_snmp_port", false, (isset($data_input_type_fields["snmp_port"]) ? $data_input_type_fields["snmp_port"]["value"] : ""), (isset($_GET["id"]) ? $_GET["id"] : 0));
+			_data_source_input_field__device_snmp_timeout("dif_snmp_timeout", false, (isset($data_input_type_fields["snmp_timeout"]) ? $data_input_type_fields["snmp_timeout"]["value"] : ""), (isset($_GET["id"]) ? $_GET["id"] : 0));
+			_data_source_input_field__device_snmp_version("dif_snmp_version", false, (isset($data_input_type_fields["snmp_version"]) ? $data_input_type_fields["snmp_version"]["value"] : ""), (isset($_GET["id"]) ? $_GET["id"] : 0));
+			_data_source_input_field__device_hdr_snmpv12();
+			_data_source_input_field__device_snmp_community("dif_snmp_community", false, (isset($data_input_type_fields["snmp_community"]) ? $data_input_type_fields["snmp_community"]["value"] : ""), (isset($_GET["id"]) ? $_GET["id"] : 0));
+			_data_source_input_field__device_hdr_snmpv3();
+			_data_source_input_field__device_snmpv3_auth_username("dif_snmpv3_auth_username", false, (isset($data_input_type_fields["snmpv3_auth_username"]) ? $data_input_type_fields["snmpv3_auth_username"]["value"] : ""), (isset($_GET["id"]) ? $_GET["id"] : 0));
+			_data_source_input_field__device_snmpv3_auth_password("dif_snmpv3_auth_password", false, (isset($data_input_type_fields["snmpv3_auth_password"]) ? $data_input_type_fields["snmpv3_auth_password"]["value"] : ""), (isset($_GET["id"]) ? $_GET["id"] : 0));
+			_data_source_input_field__device_snmpv3_auth_protocol("dif_snmpv3_auth_protocol", false, (isset($data_input_type_fields["snmpv3_auth_protocol"]) ? $data_input_type_fields["snmpv3_auth_protocol"]["value"] : ""), (isset($_GET["id"]) ? $_GET["id"] : 0));
+			_data_source_input_field__device_snmpv3_priv_passphrase("dif_snmpv3_priv_passphrase", false, (isset($data_input_type_fields["snmpv3_priv_passphrase"]) ? $data_input_type_fields["snmpv3_priv_passphrase"]["value"] : ""), (isset($_GET["id"]) ? $_GET["id"] : 0));
+			_data_source_input_field__device_snmpv3_priv_protocol("dif_snmpv3_priv_protocol", false, (isset($data_input_type_fields["snmpv3_priv_protocol"]) ? $data_input_type_fields["snmpv3_priv_protocol"]["value"] : ""), (isset($_GET["id"]) ? $_GET["id"] : 0));
 		}
-
-		$_data_input_form += $_data_input_type_form;
-
-		html_start_box("<strong>" . _("Data Input") . "</strong>", "98%", $colors["header_background_template"], "3", "center", "");
-
-		draw_edit_form(
-			array(
-				"config" => array(
-					"no_form_tag" => true
-				),
-				"fields" => inject_form_variables($_data_input_form, (isset($data_sources) ? $data_sources : array()), $data_input_type_fields)
-				)
-			);
 
 		html_end_box();
 
 		/* ==================== Box: Data Source ==================== */
 
 		html_start_box("<strong>" . _("Data Source") . "</strong>", "98%", $colors["header_background"], "3", "center", "");
-
-		$form_array = array();
-
-		while (list($field_name, $field_array) = each($struct_data_source)) {
-			$form_array += array("ds|$field_name" => $struct_data_source[$field_name]);
-		}
-
-		/* data source specific tables */
-		$form_array["ds|rra_id"]["sql"] = "select rra_id as id,data_source_id from data_source_rra where data_source_id=|arg1:id|";
-		$form_array["ds|rra_id"]["sql_print"] = "select rra.name from data_source_rra,rra where data_source_rra.rra_id=rra.id and data_source_rra.data_source_id=|arg1:id|";
-
-		draw_edit_form(
-			array(
-				"config" => array(
-					"no_form_tag" => true
-					),
-				"fields" => inject_form_variables($form_array, (isset($data_source) ? $data_source : array()))
-				)
-			);
-
+		_data_source_field__name("ds|name", false, (empty($_GET["id"]) ? 0 : $_GET["id"]));
+		_data_source_field__rra_id("ds|rra_id", false, (empty($_GET["id"]) ? 0 : $_GET["id"]));
+		_data_source_field__rrd_step("ds|rrd_step", false, (isset($data_source["rrd_step"]) ? $data_source["rrd_step"] : ""), (empty($_GET["id"]) ? 0 : $_GET["id"]));
+		_data_source_field__active("ds|active", false, (isset($data_source["active"]) ? $data_source["active"] : ""), (empty($_GET["id"]) ? 0 : $_GET["id"]));
 		html_end_box();
 
 		/* ==================== Box: Data Source Item ==================== */
@@ -765,25 +655,15 @@ function ds_edit() {
 					<?php
 				}
 
-				$form_array = array();
+				$_field_id = (isset($item["id"]) ? $item["id"] : 0);
 
-				reset($struct_data_source_item);
-				while (list($field_name, $field_array) = each($struct_data_source_item)) {
-					$_field_name = "dsi|$field_name|" . (isset($item["id"]) ? $item["id"] : "0");
-
-					$form_array += array($_field_name => $struct_data_source_item[$field_name]);
-
-					$form_array[$_field_name]["value"] = (isset($item[$field_name]) ? $item[$field_name] : "");
-				}
-
-				draw_edit_form(
-					array(
-						"config" => array(
-							"no_form_tag" => true
-							),
-						"fields" => $form_array
-						)
-					);
+				field_reset_row_color();
+				field_increment_row_color();
+				_data_source_item_field__data_source_name("dsi|data_source_name|$_field_id", false, (isset($item["data_source_name"]) ? $item["data_source_name"] : ""), $_field_id);
+				_data_source_item_field__rrd_minimum("dsi|rrd_minimum|$_field_id", false, (isset($item["rrd_minimum"]) ? $item["rrd_minimum"] : ""), $_field_id, "dsi|t_rrd_minimum|$_field_id");
+				_data_source_item_field__rrd_maximum("dsi|rrd_maximum|$_field_id", false, (isset($item["rrd_maximum"]) ? $item["rrd_maximum"] : ""), $_field_id, "dsi|t_rrd_maximum|$_field_id");
+				_data_source_item_field__data_source_type("dsi|data_source_type|$_field_id", false, (isset($item["data_source_type"]) ? $item["data_source_type"] : ""), $_field_id, "dsi|t_data_source_type|$_field_id");
+				_data_source_item_field__rrd_heartbeat("dsi|rrd_heartbeat|$_field_id", false, (isset($item["rrd_heartbeat"]) ? $item["rrd_heartbeat"] : ""), $_field_id, "dsi|t_rrd_heartbeat|$_field_id");
 			}
 		}
 
@@ -798,10 +678,12 @@ function ds_edit() {
 	}
 
 	if ((isset($_GET["id"])) || ((isset($_GET["host_id"])) && (isset($_GET["data_template_id"])))) {
-		form_hidden_box("save_component_data_source","1","");
+		form_hidden_box("save_component_data_source", "1", "");
 	}else{
-		form_hidden_box("save_component_data_source_new","1","");
+		form_hidden_box("save_component_data_source_new", "1", "");
 	}
+
+	form_hidden_box("id", (empty($_GET["id"]) ? 0 : $_GET["id"]), "");
 
 	form_save_button("data_sources.php");
 }

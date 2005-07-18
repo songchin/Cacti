@@ -65,7 +65,7 @@ function update_data_source_data_query_cache($local_data_id) {
 		db_execute("update data_local set snmp_query_id='$data_query_id',snmp_index='$index' where id='$local_data_id'");
 
 		/* update data source title cache */
-		update_data_source_title_cache($local_data_id);
+		api_data_source_title_cache_update($local_data_id);
 	}
 }
 

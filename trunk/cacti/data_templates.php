@@ -22,18 +22,19 @@
  +-------------------------------------------------------------------------+
 */
 
-include("./include/config.php");
-include("./include/auth.php");
-include_once("./lib/data_source/data_source_template_update.php");
-include_once("./lib/data_source/data_source_form.php");
-include_once("./lib/data_query/data_query_info.php");
-include_once("./lib/sys/sequence.php");
-include_once("./include/data_source/data_source_constants.php");
-include("./include/data_source/data_source_form.php");
-include_once("./lib/tree.php");
-include_once("./lib/html_tree.php");
-include_once("./lib/utility.php");
-include_once("./lib/template.php");
+require(dirname(__FILE__) . "/include/config.php");
+require_once(CACTI_BASE_PATH . "/include/auth.php");
+require_once(CACTI_BASE_PATH . "/lib/data_template/data_template_update.php");
+require_once(CACTI_BASE_PATH . "/lib/data_template/data_template_form.php");
+require_once(CACTI_BASE_PATH . "/lib/data_source/data_source_form.php");
+require_once(CACTI_BASE_PATH . "/lib/data_query/data_query_info.php");
+require_once(CACTI_BASE_PATH . "/lib/sys/sequence.php");
+require_once(CACTI_BASE_PATH . "/include/data_source/data_source_constants.php");
+require_once(CACTI_BASE_PATH . "/include/data_source/data_source_form.php");
+require_once(CACTI_BASE_PATH . "/lib/sys/tree.php");
+require_once(CACTI_BASE_PATH . "/lib/sys/html_tree.php");
+require_once(CACTI_BASE_PATH . "/lib/utility.php");
+require_once(CACTI_BASE_PATH . "/lib/template.php");
 
 $ds_actions = array(
 	1 => _("Delete"),
@@ -53,7 +54,7 @@ switch ($_REQUEST["action"]) {
 
 		break;
 	case 'item_add':
-		include_once("./include/top_header.php");
+		require_once(CACTI_BASE_PATH . "/include/top_header.php");
 
 		template_edit();
 
@@ -91,18 +92,18 @@ switch ($_REQUEST["action"]) {
 		header("Location: data_templates.php");
 		break;
 	case 'edit':
-		include_once("./include/top_header.php");
+		require_once(CACTI_BASE_PATH . "/include/top_header.php");
 
 		template_edit();
 
 		include_once ("./include/bottom_footer.php");
 		break;
 	default:
-		include_once("./include/top_header.php");
+		require_once(CACTI_BASE_PATH . "/include/top_header.php");
 
 		template();
 
-		include_once("./include/bottom_footer.php");
+		require_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
 		break;
 }
 
@@ -153,9 +154,9 @@ function form_save() {
 		$form_data_source["rrd_step"] = (isset($_POST["rrd_step"]) ? $_POST["rrd_step"] : $fields_data_source["rrd_step"]["default"]);
 		$form_data_source["t_rrd_step"] = html_boolean(isset($_POST["t_rrd_step"]) ? $_POST["t_rrd_step"] : "");
 
-		validate_data_source_fields($form_data_source, $suggested_value_fields, "|field|", "sv||field|||id|");
-		validate_data_source_input_fields($data_input_fields, "|field|");
-		validate_data_template_fields($form_data_source, "|field|");
+		field_register_error(api_data_source_validate_fields_base($form_data_source, $suggested_value_fields, "|field|", "sv||field|||id|"));
+		field_register_error(api_data_source_validate_fields_input($data_input_fields, "|field|"));
+		field_register_error(api_data_template_validate_fields_base($form_data_source, "|field|"));
 
 		while (list($data_template_item_id, $fields) = each($data_template_item_fields)) {
 			$form_data_source_item[$data_template_item_id]["id"] = $data_template_item_id;
@@ -170,7 +171,7 @@ function form_save() {
 			$form_data_source_item[$data_template_item_id]["data_source_name"] = $fields["data_source_name"];
 			$form_data_source_item[$data_template_item_id]["field_input_value"] = (isset($fields["field_input_value"]) ? $fields["field_input_value"] : "");
 
-			validate_data_source_item_fields($form_data_source_item[$data_template_item_id], "dsi||field|||id|");
+			api_data_source_validate_fields_item($form_data_source_item[$data_template_item_id], "dsi||field|||id|");
 		}
 
 		/* step #3: field save */
@@ -247,7 +248,7 @@ function form_actions() {
 		$i++;
 	}
 
-	include_once("./include/top_header.php");
+	require_once(CACTI_BASE_PATH . "/include/top_header.php");
 
 	html_start_box("<strong>" . $ds_actions{$_POST["drp_action"]} . "</strong>", "60%", $colors["header_panel_background"], "3", "center", "");
 
@@ -294,7 +295,7 @@ function form_actions() {
 
 	html_end_box();
 
-	include_once("./include/bottom_footer.php");
+	require_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
 }
 
 /* ----------------------------
@@ -320,9 +321,7 @@ function template_item_remove() {
 }
 
 function template_edit() {
-	global $colors, $struct_data_source, $struct_data_source_item, $data_source_types, $fields_data_template_template_edit;
-
-	global $struct_data_input, $struct_data_input_script, $struct_data_input_snmp, $struct_data_input_data_query;
+	global $colors, $data_source_types;
 
 	if (!empty($_GET["id"])) {
 		$data_template = db_fetch_row("select * from data_template where id=" . $_GET["id"]);

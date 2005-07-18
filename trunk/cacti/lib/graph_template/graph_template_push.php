@@ -23,9 +23,10 @@
 */
 
 function copy_graph_template_to_graph($graph_template_id, $host_id = 0, $data_query_id = 0, $data_query_index = "") {
-	include_once(CACTI_BASE_PATH . "/lib/graph/graph_update.php");
-	include_once(CACTI_BASE_PATH . "/lib/graph/graph_info.php");
-	include_once(CACTI_BASE_PATH . "/lib/graph/graph_template_info.php");
+	require_once(CACTI_BASE_PATH . "/lib/sys/variable.php");
+	require_once(CACTI_BASE_PATH . "/lib/graph/graph_update.php");
+	require_once(CACTI_BASE_PATH . "/lib/graph/graph_info.php");
+	require_once(CACTI_BASE_PATH . "/lib/graph_template/graph_template_info.php");
 
 	/* sanity check for $graph_template_id */
 	if ((!is_numeric($graph_template_id)) || (empty($graph_template_id))) {
@@ -88,14 +89,14 @@ function copy_graph_template_to_graph($graph_template_id, $host_id = 0, $data_qu
 					}
 
 					if (!api_graph_item_save(0, $_fields)) {
-						api_syslog_cacti_log("Save error in api_graph_item_save()", SEV_DEBUG, 0, 0, 0, false, FACIL_WEBUI);
+						api_syslog_cacti_log("Save error in api_graph_item_save()", SEV_ERROR, 0, 0, 0, false, FACIL_WEBUI);
 					}
 				}
 			}
 
 			return $graph_id;
 		}else{
-			api_syslog_cacti_log("Save error in api_graph_save()", SEV_DEBUG, 0, 0, 0, false, FACIL_WEBUI);
+			api_syslog_cacti_log("Save error in api_graph_save()", SEV_ERROR, 0, 0, 0, false, FACIL_WEBUI);
 
 			return false;
 		}
@@ -109,9 +110,9 @@ function copy_graph_to_graph_template($graph_id) {
 }
 
 function generate_complete_graph($graph_template_id, $host_id = 0, $data_query_id = 0, $data_query_index = "") {
-	include_once(CACTI_BASE_PATH . "/lib/graph/graph_update.php");
-	include_once(CACTI_BASE_PATH . "/lib/data_source/data_source_template.php");
-	include_once(CACTI_BASE_PATH . "/lib/data_source/data_source_template_info.php");
+	require_once(CACTI_BASE_PATH . "/lib/graph/graph_update.php");
+	require_once(CACTI_BASE_PATH . "/lib/data_template/data_template_push.php");
+	require_once(CACTI_BASE_PATH . "/lib/data_template/data_template_info.php");
 
 	/* sanity check for $graph_template_id */
 	if ((!is_numeric($graph_template_id)) || (empty($graph_template_id))) {
@@ -191,35 +192,44 @@ function generate_complete_graph($graph_template_id, $host_id = 0, $data_query_i
 /* api_graph_template_propagate - pushes out templated graph template fields to all matching graphs
    @arg $graph_template_id - the id of the graph template to push out values for */
 function api_graph_template_propagate($graph_template_id) {
-	global $struct_graph, $cnn_id;
+	require_once(CACTI_BASE_PATH . "/lib/graph/graph_info.php");
+	require_once(CACTI_BASE_PATH . "/lib/graph_template/graph_template_info.php");
+
+	if ((empty($graph_template_id)) || (!is_numeric($graph_template_id))) {
+		return false;
+	}
 
 	/* get information about this graph template */
-	$graph_template = db_fetch_row("select * from graph_template where id=$graph_template_id");
+	$graph_template = get_graph_template($graph_template_id);
 
-	/* must be a valid data template */
-	if (sizeof($graph_template) == 0) { return 0; }
+	/* must be a valid graph template */
+	if ($graph_template === false) {
+		return false;
+	}
 
-	/* get data sources list for ADODB */
-	$graphs = $cnn_id->Execute("select * from graph where graph_template_id = $graph_template_id");
+	/* retrieve a list of graph fields */
+	$graph_fields = get_graph_field_list();
 
+	$g_fields = array();
 	/* loop through each graph column name (from the above array) */
-	reset($struct_graph);
-	while (list($field_name, $field_array) = each($struct_graph)) {
+	foreach ($graph_fields as $field_name => $field_array) {
 		/* are we allowed to push out the column? */
 		if ((isset($graph_template["t_$field_name"])) && (isset($graph_template[$field_name])) && ($graph_template["t_$field_name"] == "0")) {
-			$g_fields[$field_name] = $graph_template[$field_name];
+			$g_fields[$field_name] = array("type" => $field_array["data_type"], "value" => $graph_template[$field_name]);
 		}
 	}
 
-	if (isset($g_fields["name"])) {
-		//update_data_source_title_cache_from_template($data_template_data["data_template_id"]);
+	if (sizeof($g_fields) > 0) {
+		$g_fields["graph_template_id"] = array("type" => DB_TYPE_NUMBER, "value" => $graph_template_id);
+
+		return db_update("graph", $g_fields, array("graph_template_id"));
 	}
 
-	db_execute($cnn_id->GetUpdateSQL($graphs, $g_fields));
+	return true;
 }
 
-function api_graph_template_item_propagate($graph_template_item_input_id, $value) {
-	include_once(CACTI_BASE_PATH . "/lib/graph/graph_info.php");
+function api_graph_template_item_input_propagate($graph_template_item_input_id, $value) {
+	require_once(CACTI_BASE_PATH . "/lib/graph/graph_info.php");
 
 	if ((empty($graph_template_item_input_id)) || (!is_numeric($graph_template_item_input_id))) {
 		return false;

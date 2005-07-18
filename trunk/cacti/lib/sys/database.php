@@ -259,6 +259,12 @@ function db_replace($table_name, $fields, $keys = "") {
 			}
 		}
 
+		/* if there are not any fields to update, log a warning */
+		if ($sql_set_fields == "") {
+			api_syslog_cacti_log("Invalid empty update field list for table '$table_name' in " . __FUNCTION__ . "()", SEV_WARNING, 0, 0, 0, false, FACIL_WEBUI);
+			return false;
+		}
+
 		$sql = "update $table_name set $sql_set_fields $sql_key_where";
 	}
 

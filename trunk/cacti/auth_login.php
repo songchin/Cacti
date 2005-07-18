@@ -22,8 +22,8 @@
  +-------------------------------------------------------------------------+
 */
 
-include("./lib/user/user_ldap.php");
-include("./lib/user/user_action.php");
+require("./lib/user/user_ldap.php");
+require("./lib/user/user_action.php");
 
 /* set default action */
 if (!isset($_REQUEST["action"])) {

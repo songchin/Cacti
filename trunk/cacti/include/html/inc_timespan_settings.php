@@ -222,6 +222,8 @@ function set_preset_timespan(&$timespan) {
 }
 
 function finalize_timespan(&$timespan) {
+	require_once(CACTI_BASE_PATH . "/lib/sys/http.php");
+
 	if (!isset($timespan["current_value_date1"])) {
 		/* Default end date is now default time span */
 		$timespan["current_value_date1"] = date("Y", $timespan["begin_now"]) . "-" . date("m", $timespan["begin_now"]) . "-" . date("d", $timespan["begin_now"]) . " " . date("H", $timespan["begin_now"]) . ":".date("i", $timespan["begin_now"]);

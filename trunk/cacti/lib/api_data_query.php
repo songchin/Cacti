@@ -23,13 +23,13 @@
 */
 
 /* Variable includes */
-include_once(CACTI_BASE_PATH . "/include/data_query/data_query_constants.php");
-include_once(CACTI_BASE_PATH . "/include/data_query/data_query_arrays.php");
-include_once(CACTI_BASE_PATH . "/include/data_query/data_query_form.php");
+require_once(CACTI_BASE_PATH . "/include/data_query/data_query_constants.php");
+require_once(CACTI_BASE_PATH . "/include/data_query/data_query_arrays.php");
+require_once(CACTI_BASE_PATH . "/include/data_query/data_query_form.php");
 
 /* Functions includes */
-include_once(CACTI_BASE_PATH . "/lib/data_query/data_query_update.php");
-include_once(CACTI_BASE_PATH . "/lib/data_query/data_query_info.php");
-include_once(CACTI_BASE_PATH . "/lib/data_query/data_query_execute.php");
+require_once(CACTI_BASE_PATH . "/lib/data_query/data_query_update.php");
+require_once(CACTI_BASE_PATH . "/lib/data_query/data_query_info.php");
+require_once(CACTI_BASE_PATH . "/lib/data_query/data_query_execute.php");
 
 ?>

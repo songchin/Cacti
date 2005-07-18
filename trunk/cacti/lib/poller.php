@@ -35,11 +35,18 @@ function repopulate_poller_cache() {
 }
 
 function update_poller_cache_from_query($host_id, $data_query_id) {
-	$poller_data = db_fetch_assoc("select id from data_local where host_id = '$host_id' and snmp_query_id = '$data_query_id'");
+	require_once(CACTI_BASE_PATH . "/include/data_source/data_source_constants.php");
 
-	if (sizeof($poller_data) > 0) {
-		foreach ($poller_data as $data) {
-			update_poller_cache($data["id"]);
+	$data_sources = db_fetch_assoc("select
+		data_source.id
+		from data_source,data_source_field
+		where data_source.id=data_source_field.data_source_id
+		and data_source.data_input_type = " . DATA_INPUT_TYPE_DATA_QUERY . "
+		and data_source_field.name = 'data_query_id'");
+
+	if (sizeof($data_sources) > 0) {
+		foreach ($data_sources as $data_source) {
+			update_poller_cache($data_source["id"]);
 		}
 	}
 }
@@ -49,10 +56,10 @@ $c_xml_data = array();
 function update_poller_cache($data_source_id, $truncate_performed = false) {
 	global $c_xml_data;
 
-	include_once(CACTI_BASE_PATH . "/include/data_query/data_query_constants.php");
-	include_once(CACTI_BASE_PATH . "/include/data_source/data_source_constants.php");
-	include_once(CACTI_BASE_PATH . "/lib/data_query/data_query_info.php");
-	include_once(CACTI_BASE_PATH . "/lib/api_poller.php");
+	require_once(CACTI_BASE_PATH . "/include/data_query/data_query_constants.php");
+	require_once(CACTI_BASE_PATH . "/include/data_source/data_source_constants.php");
+	require_once(CACTI_BASE_PATH . "/lib/data_query/data_query_info.php");
+	require_once(CACTI_BASE_PATH . "/lib/api_poller.php");
 
 	if (empty($data_source_id)) {
 		return;
@@ -281,9 +288,9 @@ function exec_background($filename, $args = "") {
    @arg $host_id - the id of the host to which the data query belongs
    @arg $data_query_id - the id of the data query to rebuild the reindex cache for */
 function update_reindex_cache($host_id, $data_query_id) {
-	include_once(CACTI_BASE_PATH . "/include/data_query/data_query_constants.php");
-	include_once(CACTI_BASE_PATH . "/lib/data_query/data_query_info.php");
-	include_once(CACTI_BASE_PATH . "/lib/snmp.php");
+	require_once(CACTI_BASE_PATH . "/lib/sys/snmp.php");
+	require_once(CACTI_BASE_PATH . "/include/data_query/data_query_constants.php");
+	require_once(CACTI_BASE_PATH . "/lib/data_query/data_query_info.php");
 
 	/* will be used to keep track of sql statements to execute later on */
 	$recache_stack = array();
@@ -363,7 +370,7 @@ function update_reindex_cache($host_id, $data_query_id) {
      results to RRDTool for processing
    @arg $rrdtool_pipe - the array of pipes containing the file descriptor for rrdtool */
 function process_poller_output($rrdtool_pipe) {
-	include_once(CACTI_BASE_PATH . "/lib/rrd.php");
+	require_once(CACTI_BASE_PATH . "/lib/sys/rrd.php");
 
 	/* let's count the number of rrd files we processed */
 	$rrds_processed = 0;

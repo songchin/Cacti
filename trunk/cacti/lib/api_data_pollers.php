@@ -49,26 +49,26 @@ function api_data_poller_delete($poller_id) {
 	if (sizeof($hosts_polled) == 0) {
 		if ($poller_id == 1) {
 			$error_message = _("This poller is the main system poller.  It can not be deleted.");
-			include("./include/top_header.php");
+			require_once(CACTI_BASE_PATH . "/include/top_header.php");
 			form_message(_("Can Not Delete Poller"), $error_message, "data_pollers.php");
-			include("./include/bottom_footer.php");
+			require_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
 		}else {
 			db_execute("DELETE FROM poller WHERE id=". $poller_id);
 		}
 	} else {
 		$error_message = sprintf(_("The poller selected is in use for '%s' hosts and can not be deleted.  You can not delete a poller when it has hosts associated with it."), sizeof($hosts_polled));
-		include("./include/top_header.php");
+		require_once(CACTI_BASE_PATH . "/include/top_header.php");
 		form_message(_("Can Not Delete Poller"), $error_message, "data_pollers.php");
-		include("./include/bottom_footer.php");
+		require_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
 	}
 }
 
 function api_data_poller_disable($poller_id) {
 	if ($poller_id == 1) {
 		$error_message = _("This poller is the main system poller.  It can not be disabled.");
-		include("./include/top_header.php");
+		require_once(CACTI_BASE_PATH . "/include/top_header.php");
 		form_message(_("Can Not Disable Poller"), $error_message, "data_pollers.php");
-		include("./include/bottom_footer.php");
+		require_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
 	} else {
 		db_execute("UPDATE poller SET active='', run_state='Disabled' WHERE id='" . $poller_id . "'");
 

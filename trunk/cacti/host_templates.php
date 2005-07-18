@@ -22,9 +22,9 @@
  +-------------------------------------------------------------------------+
 */
 
-include("./include/config.php");
-include("./include/auth.php");
-include_once("./lib/utility.php");
+require(dirname(__FILE__) . "/include/config.php");
+require_once(CACTI_BASE_PATH . "/include/auth.php");
+require_once(CACTI_BASE_PATH . "/lib/utility.php");
 
 $host_actions = array(
 	1 => _("Delete"),
@@ -54,18 +54,18 @@ switch ($_REQUEST["action"]) {
 		header("Location: host_templates.php?action=edit&id=" . $_GET["host_template_id"]);
 		break;
 	case 'edit':
-		include_once("./include/top_header.php");
+		require_once(CACTI_BASE_PATH . "/include/top_header.php");
 
 		template_edit();
 
-		include_once("./include/bottom_footer.php");
+		require_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
 		break;
 	default:
-		include_once("./include/top_header.php");
+		require_once(CACTI_BASE_PATH . "/include/top_header.php");
 
 		template();
 
-		include_once("./include/bottom_footer.php");
+		require_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
 		break;
 }
 
@@ -148,7 +148,7 @@ function form_actions() {
 		$i++;
 	}
 
-	include_once("./include/top_header.php");
+	require_once(CACTI_BASE_PATH . "/include/top_header.php");
 
 	html_start_box("<strong>" . $host_actions{$_POST["drp_action"]} . "</strong>", "60%", $colors["header_panel_background"], "3", "center", "");
 
@@ -195,7 +195,7 @@ function form_actions() {
 
 	html_end_box();
 
-	include_once("./include/bottom_footer.php");
+	require_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
 }
 
 /* ---------------------

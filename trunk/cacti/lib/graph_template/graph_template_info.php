@@ -28,7 +28,14 @@ function get_graph_template($graph_template_id) {
 		return false;
 	}
 
-	return db_fetch_row("select * from graph_template where id = " . sql_sanitize($graph_template_id));
+	$graph_template = db_fetch_row("select * from graph_template where id = " . sql_sanitize($graph_template_id));
+
+	if (sizeof($graph_template) == 0) {
+		api_syslog_cacti_log("Invalid graph template [ID#$graph_template_id] specified in get_graph_template()", SEV_ERROR, 0, 0, 0, false, FACIL_WEBUI);
+		return false;
+	}else{
+		return $graph_template;
+	}
 }
 
 function get_graph_template_items($graph_template_id) {
@@ -41,20 +48,22 @@ function get_graph_template_items($graph_template_id) {
 }
 
 function &get_graph_template_field_list() {
-	include(CACTI_BASE_PATH . "/include/graph/graph_form.php");
+	require(CACTI_BASE_PATH . "/include/graph/graph_form.php");
 
 	return $fields_graph;
 }
 
 function &get_graph_template_items_field_list() {
-	include(CACTI_BASE_PATH . "/include/graph/graph_form.php");
+	require(CACTI_BASE_PATH . "/include/graph/graph_form.php");
 
-	return array(
+	$field_list = array(
 			"data_template_item_id" => array(
 				"default" => "",
 				"data_type" => DB_TYPE_NUMBER
 			)
 		) + $fields_graph_item;
+
+	return $field_list;
 }
 
 ?>

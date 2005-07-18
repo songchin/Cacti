@@ -173,9 +173,7 @@ function move_branch($dir, $order_key, $table, $field, $where) {
      TREE_ORDERING_ALPHABETIC (2) - alphabetic sorting
      TREE_ORDERING_NUMERIC (3) - numeric sorting */
 function sort_tree($sort_type, $item_id, $sort_style) {
-	global $config;
-
-	include_once($config["library_path"] . "/sort.php");
+	require_once(CACTI_BASE_PATH . "/lib/sys/sort.php");
 
 	if (empty($item_id)) { return 0; }
 	if ($sort_style == TREE_ORDERING_NONE) { return 0; }

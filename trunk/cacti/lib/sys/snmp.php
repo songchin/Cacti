@@ -98,7 +98,7 @@ function cacti_snmp_get($hostname, $community, $oid, $version, $v3username, $v3p
 }
 
 function cacti_snmp_walk($hostname, $community, $oid, $version, $v3username, $v3password, $v3authproto = "", $v3privpassphrase = "", $v3privproto = "", $port = 161, $timeout = 500, $environ = SNMP_POLLER) {
-	global $config;
+	require_once(CACTI_BASE_PATH . "/lib/sys/exec.php");
 
 	$snmp_array = array();
 	$temp_array = array();

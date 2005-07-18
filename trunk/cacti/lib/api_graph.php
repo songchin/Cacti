@@ -23,14 +23,14 @@
 */
 
 /* Variable includes */
-include_once(CACTI_BASE_PATH . "/include/graph/user_constants.php");
-include_once(CACTI_BASE_PATH . "/include/graph/user_arrays.php");
+require_once(CACTI_BASE_PATH . "/include/graph/user_constants.php");
+require_once(CACTI_BASE_PATH . "/include/graph/user_arrays.php");
 
 /* Functions includes */
-include_once(CACTI_BASE_PATH . "/lib/graph/graph_update.php");
-include_once(CACTI_BASE_PATH . "/lib/graph/graph_info.php");
-include_once(CACTI_BASE_PATH . "/lib/graph/graph_template.php");
-include_once(CACTI_BASE_PATH . "/lib/graph/graph_template_update.php");
+require_once(CACTI_BASE_PATH . "/lib/graph/graph_update.php");
+require_once(CACTI_BASE_PATH . "/lib/graph/graph_info.php");
+require_once(CACTI_BASE_PATH . "/lib/graph_template/graph_template_push.php");
+require_once(CACTI_BASE_PATH . "/lib/graph_template/graph_template_update.php");
 
 /* api_resize_graphs - resizes the selected graph, overriding the template value
    @arg $graph_templates_graph_id - the id of the graph to resize
@@ -48,7 +48,7 @@ function api_resize_graphs($local_graph_id, $graph_width, $graph_height) {
    @arg $graph_templates_graph_id - the id of the graph to reapply the name to
 */
 function api_reapply_suggested_graph_title($local_graph_id) {
-	global $config;
+	require_once(CACTI_BASE_PATH . "/lib/sys/variable.php");
 
 	/* get graphs template id */
 	$graph_template_id = db_fetch_cell("select graph_template_id from graph_templates_graph where local_graph_id=" . $local_graph_id);

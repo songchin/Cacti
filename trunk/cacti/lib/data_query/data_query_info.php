@@ -88,7 +88,8 @@ function decode_data_query_index($encoded_index, &$decoded_index_list) {
    @returns - an array formatted like the following:
 	$arr[snmp_index] = "formatted data query index string" */
 function get_formatted_data_query_indexes($host_id, $data_query_id) {
-	include_once(CACTI_BASE_PATH . "/lib/sort.php");
+	require_once(CACTI_BASE_PATH . "/lib/sys/variable.php");
+	require_once(CACTI_BASE_PATH . "/lib/sys/sort.php");
 
 	if (empty($data_query_id)) {
 		return array("" => _("Unknown Index"));
@@ -127,6 +128,8 @@ function get_formatted_data_query_indexes($host_id, $data_query_id) {
    @arg $data_query_index - the index to retrieve the formatted name for
    @returns - a string containing the formatted name for the given data query index */
 function get_formatted_data_query_index($host_id, $data_query_id, $data_query_index) {
+	require_once(CACTI_BASE_PATH . "/lib/sys/variable.php");
+
 	/* from the xml; cached in 'host_snmp_query' */
 	$sort_cache = db_fetch_row("select sort_field,title_format from host_snmp_query where host_id='$host_id' and snmp_query_id='$data_query_id'");
 
@@ -209,9 +212,7 @@ function get_best_data_query_index_type($host_id, $data_query_id) {
    @arg $host_id - the id of the host that this script query belongs to
    @returns - a full path to the script query script containing all arguments */
 function get_script_query_path($args, $script_path, $host_id) {
-	global $config;
-
-	include_once($config["library_path"] . "/variables.php");
+	require_once(CACTI_BASE_PATH . "/lib/sys/variable.php");
 
 	/* get any extra arguments that need to be passed to the script */
 	if (!empty($args)) {
@@ -225,12 +226,10 @@ function get_script_query_path($args, $script_path, $host_id) {
 }
 
 function get_data_query_array($snmp_query_id) {
-	global $config;
-
-	include_once($config["library_path"] . "/xml.php");
+	require_once(CACTI_BASE_PATH . "/lib/sys/xml.php");
 
 	$xml_file_path = db_fetch_cell("select xml_path from snmp_query where id=$snmp_query_id");
-	$xml_file_path = str_replace("<path_cacti>", $config["base_path"], $xml_file_path);
+	$xml_file_path = str_replace("<path_cacti>", CACTI_BASE_PATH, $xml_file_path);
 
 	if (!file_exists($xml_file_path)) {
 		debug_log_insert("data_query", sprintf(_("Could not find data query XML file at '%s'"), $xml_file_path));

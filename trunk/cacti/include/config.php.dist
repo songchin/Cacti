@@ -42,13 +42,7 @@ $config["cacti_server_os"] = (strstr(PHP_OS, "WIN")) ? "win32" : "unix";
 $config["php_snmp_support"] = function_exists("snmpget");
 
 /* used for includes */
-$config["base_path"] = ereg_replace("(.*)[\/\\]include", "\\1", dirname(__FILE__));
-$config["library_path"] = ereg_replace("(.*[\/\\])include", "\\1lib", dirname(__FILE__));
-$config["images_path"] = ereg_replace("(.*[\/\\])include", "\\1images", dirname(__FILE__));
-$config["themes_path"] = ereg_replace("(.*[\/\\])include", "\\1themes", dirname(__FILE__));
-$config["include_path"] = dirname(__FILE__);
-
-define("CACTI_BASE_PATH", ereg_replace("(.*)[\/\\]include", "\\1", dirname(__FILE__)));
+define("CACTI_BASE_PATH", str_replace(DIRECTORY_SEPARATOR . "include", "", dirname(__FILE__)));
 
 /* colors */
 $colors["dark_outline"] = "454E53";
@@ -69,7 +63,7 @@ $colors["form_alternate1"] = "F5F5F5";
 $colors["form_alternate2"] = "E5E5E5";
 
 if ((isset($no_http_headers) ? $no_http_headers : false) != true) {
-	include($config["library_path"] . "/sys/form.php");
+	require(CACTI_BASE_PATH . "/lib/sys/form.php");
 
 	/* we don't want these pages cached */
 	header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
@@ -121,13 +115,13 @@ error_reporting(E_ALL);
 
 /* cacti language support */
 $lang2locale = array(
- "en"=>"us_EN.UTF-8",
- "ja"=>"ja_JP.UTF-8",
- "fr"=>"fr_FR.iso-8859-1",
- "sv"=>"sv_SE.iso-8859-1",
- "es"=>"es_ES.iso-8859-1",
- "bg"=>"bg_BG.cp1251"
-);
+	"en"=>"us_EN.UTF-8",
+	"ja"=>"ja_JP.UTF-8",
+	"fr"=>"fr_FR.iso-8859-1",
+	"sv"=>"sv_SE.iso-8859-1",
+	"es"=>"es_ES.iso-8859-1",
+	"bg"=>"bg_BG.cp1251"
+	);
 
 $locale = $lang2locale[$cacti_lang];
 setlocale(LC_ALL, $locale);
@@ -136,8 +130,8 @@ putenv("LANG=" . $cacti_lang);
 
 /* determine whether or not we need to emulate gettext */
 if (!function_exists("_")) {
-	include($config["include_path"] . "/gettext/streams.php");
-	include($config["include_path"] . "/gettext/gettext.php");
+	require(CACTI_BASE_PATH . "/include/gettext/streams.php");
+	require(CACTI_BASE_PATH . "/include/gettext/gettext.php");
 
 	$locale_path = $config["base_path"] . "/locales/" . $cacti_lang . "/LC_MESSAGES/" . "cacti.mo";
 	if ((!file_exists($locale_path)) && ($cacti_lang != "en")) {
@@ -172,39 +166,44 @@ if (!function_exists("_")) {
 		}
 	}
 } else {
-	bindtextdomain("cacti", $config["base_path"] . "/locales");
+	bindtextdomain("cacti", CACTI_BASE_PATH . "/locales");
 	textdomain("cacti");
 	bind_textdomain_codeset ("cactid", "UTF-8");
 }
 
 /* includes for database operation */
-include($config["library_path"] . "/adodb/adodb.inc.php");
-include($config["library_path"] . "/database.php");
+require(CACTI_BASE_PATH . "/lib/adodb/adodb.inc.php");
+require(CACTI_BASE_PATH . "/lib/sys/database.php");
 
 /* connect to the database server */
 db_connect_real($database_hostname, $database_username, $database_password, $database_default, $database_type);
 
 /* global functions include */
-include($config["library_path"] . "/functions.php");
-include($config["library_path"] . "/html.php");
-include($config["library_path"] . "/html_form.php");
-include($config["library_path"] . "/html_utility.php");
-include($config["library_path"] . "/variables.php");
-include($config["library_path"] . "/api_syslog.php");
+require(CACTI_BASE_PATH . "/lib/functions.php"); // deprecated
+require(CACTI_BASE_PATH . "/lib/sys/array.php");
+require(CACTI_BASE_PATH . "/lib/sys/config.php");
+require(CACTI_BASE_PATH . "/lib/sys/form.php");
+require(CACTI_BASE_PATH . "/lib/sys/message.php");
+require(CACTI_BASE_PATH . "/lib/sys/session.php");
+require(CACTI_BASE_PATH . "/lib/sys/string.php");
+
+require(CACTI_BASE_PATH . "/lib/sys/html.php");
+require(CACTI_BASE_PATH . "/lib/sys/html_form.php");
+require(CACTI_BASE_PATH . "/lib/sys/html_utility.php");
+require(CACTI_BASE_PATH . "/lib/api_syslog.php");
 
 /* Contants and Variable includes */
-include($config["include_path"] . "/config_constants.php");
-include($config["include_path"] . "/config_arrays.php");
-include($config["include_path"] . "/config_settings.php");
-include($config["include_path"] . "/config_form.php");
+require(CACTI_BASE_PATH . "/include/config_constants.php");
+require(CACTI_BASE_PATH . "/include/config_arrays.php");
+require(CACTI_BASE_PATH . "/include/config_settings.php");
+require(CACTI_BASE_PATH . "/include/config_form.php");
 
 /* User and auth include */
-include($config["library_path"] . "/auth.php");
-include($config["library_path"] . "/user/user_info.php");
+require(CACTI_BASE_PATH . "/lib/user/user_info.php");
 
 /* load color scheme from theme file.  Load the default first and then overwrite as required with theme */
-include($config["include_path"] . "/config_colors.php");
-include(html_theme_color_scheme());
+require(CACTI_BASE_PATH . "/include/config_colors.php");
+require(html_theme_color_scheme());
 
 /* current cacti version */
 $config["cacti_version"] = "0.9-dev";

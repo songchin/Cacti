@@ -26,7 +26,7 @@
    @arg $cdef_item_id - the id of the individual cdef item
    @returns - a text-based representation of the cdef item */
 function get_cdef_item_name($cdef_item_id) {
-	include(CACTI_BASE_PATH . "/include/graph/graph_arrays.php");
+	require(CACTI_BASE_PATH . "/include/graph/graph_arrays.php");
 
 	$cdef_item = db_fetch_row("select type,value from preset_cdef_item where id=$cdef_item_id");
 	$current_cdef_value = $cdef_item["value"];

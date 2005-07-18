@@ -74,6 +74,22 @@ function field_register_error($field_name) {
 	}
 }
 
+function field_register_html_checkboxes(&$field_list, $field_name_format = "|field|") {
+	$chk_fields = array();
+
+	if (sizeof($field_list) > 0) {
+		foreach (array_keys($field_list) as $field_name) {
+			$form_field_name = str_replace("|field|", $field_name, $field_name_format);
+
+			if ((!isset($_POST[$form_field_name])) && (isset($_POST{$form_field_name . "__chk"}))) {
+				$chk_fields[$field_name] = "";
+			}
+		}
+	}
+
+	return $chk_fields;
+}
+
 /*
  * Standard HTML form elements
  */
@@ -185,6 +201,8 @@ function draw_edit_form($array) {
    @arg $field_array - an array containing data for this control. see include/config_form.php
      for more specific syntax */
 function draw_edit_control($field_name, &$field_array) {
+	require_once(CACTI_BASE_PATH . "/lib/sys/html_tree.php");
+
 	switch ($field_array["method"]) {
 	case 'textbox':
 		form_text_box($field_name, $field_array["value"], ((isset($field_array["default"])) ? $field_array["default"] : ""), $field_array["max_length"], ((isset($field_array["size"])) ? $field_array["size"] : "40"), "text", ((isset($field_array["form_id"])) ? $field_array["form_id"] : ""));
@@ -434,6 +452,11 @@ function form_checkbox($field_name, $form_previous_value, $form_caption, $form_d
 	}
 
 	print "<input type='checkbox' name='$field_name' id='$field_name'" . ($js_onclick == "" ? "" : " onClick='$js_onclick'") . ((($form_previous_value == "on") || ($form_previous_value == "1")) ? " checked" : "") . "> <span class='txtEnabledText' id='chk_caption_$field_name'>$form_caption</span>\n";
+}
+
+function form_checkbox_marker($field_name) {
+	/* this is used to detect the presence of a checkbox when the user POST's an unchecked box */
+	form_hidden_box($field_name . "__chk", "1", "");
 }
 
 /* form_text_box - draws a standard html radio button

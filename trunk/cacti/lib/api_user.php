@@ -31,15 +31,17 @@ Check respective includes for functions definitions
 
 */
 
-$root_dir = ereg_replace("(.*)[\/\\]lib", "\\1", dirname(__FILE__));
+if (!defined("CACTI_BASE_PATH")) {
+	define("CACTI_BASE_PATH", str_replace(DIRECTORY_SEPARATOR . "lib", "", dirname(__FILE__)));
+}
 
 /* Variable includes */
-include_once($root_dir . "/include/user/user_constants.php");
-include_once($root_dir . "/include/user/user_arrays.php");
+require_once(CACTI_BASE_PATH . "/include/user/user_constants.php");
+require_once(CACTI_BASE_PATH . "/include/user/user_arrays.php");
 
 /* Functions includes */
-include_once($root_dir . "/lib/user/user_action.php");
-include_once($root_dir . "/lib/user/user_info.php");
-include_once($root_dir . "/lib/user/user_ldap.php");
+require_once(CACTI_BASE_PATH . "/lib/user/user_action.php");
+require_once(CACTI_BASE_PATH . "/lib/user/user_info.php");
+require_once(CACTI_BASE_PATH . "/lib/user/user_ldap.php");
 
 ?>

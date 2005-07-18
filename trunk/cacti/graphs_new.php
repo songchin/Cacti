@@ -22,23 +22,23 @@
  +-------------------------------------------------------------------------+
 */
 
-include("./include/config.php");
-include("./include/auth.php");
-include_once("./lib/data_query/data_query_info.php");
-include_once("./lib/data_query/data_query_execute.php");
-include_once("./lib/graph/graph_template.php");
-include_once("./lib/graph/graph_info.php");
-include_once("./lib/graph/graph_form.php");
-include_once("./lib/graph/graph_update.php");
-include_once("./lib/data_source/data_source_form.php");
-include_once("./lib/data_source/data_source_template_info.php");
-include_once("./lib/data_source/data_source_update.php");
-include_once("./include/data_source/data_source_constants.php");
-include_once("./lib/utility.php");
-include_once("./lib/poller.php");
-include_once("./lib/sort.php");
-include_once("./lib/html_form_template.php");
-include_once("./lib/template.php");
+require(dirname(__FILE__) . "/include/config.php");
+require_once(CACTI_BASE_PATH . "/include/auth.php");
+require_once(CACTI_BASE_PATH . "/lib/data_query/data_query_info.php");
+require_once(CACTI_BASE_PATH . "/lib/data_query/data_query_execute.php");
+require_once(CACTI_BASE_PATH . "/lib/graph_template/graph_template_push.php");
+require_once(CACTI_BASE_PATH . "/lib/graph/graph_info.php");
+require_once(CACTI_BASE_PATH . "/lib/graph/graph_form.php");
+require_once(CACTI_BASE_PATH . "/lib/graph/graph_update.php");
+require_once(CACTI_BASE_PATH . "/lib/data_source/data_source_form.php");
+require_once(CACTI_BASE_PATH . "/lib/data_template/data_template_info.php");
+require_once(CACTI_BASE_PATH . "/lib/data_source/data_source_update.php");
+require_once(CACTI_BASE_PATH . "/include/data_source/data_source_constants.php");
+require_once(CACTI_BASE_PATH . "/lib/utility.php");
+require_once(CACTI_BASE_PATH . "/lib/poller.php");
+require_once(CACTI_BASE_PATH . "/lib/sys/sort.php");
+require_once(CACTI_BASE_PATH . "/lib/sys/html_form_template.php");
+require_once(CACTI_BASE_PATH . "/lib/template.php");
 
 /* set default action */
 if (!isset($_REQUEST["action"])) { $_REQUEST["action"] = ""; }
@@ -54,11 +54,11 @@ switch ($_REQUEST["action"]) {
 		header("Location: graphs_new.php?host_id=" . $_GET["host_id"]);
 		break;
 	default:
-		include_once("./include/top_header.php");
+		require_once(CACTI_BASE_PATH . "/include/top_header.php");
 
 		graphs();
 
-		include_once("./include/bottom_footer.php");
+		require_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
 		break;
 }
 
@@ -138,12 +138,12 @@ function host_new_graphs_save() {
 
 				if ($type == "data_template") {
 					$_sv_arr = array();
-					field_register_error(validate_data_source_fields($_v_arr, $_sv_arr, $form_field_name, ""));
+					field_register_error(api_data_source_validate_fields_base($_v_arr, $_sv_arr, $form_field_name, ""));
 				} else if ($type == "custom_data") {
-					field_register_error(validate_data_source_input_fields($_v_arr, $form_field_name));
+					field_register_error(api_data_source_validate_fields_input($_v_arr, $form_field_name));
 				} else if ($type == "data_template_item") {
 					$_v_arr["id"] = 0;
-					field_register_error(validate_data_source_item_fields($_v_arr, $form_field_name));
+					field_register_error(api_data_source_validate_fields_item($_v_arr, $form_field_name));
 				} else if ($type == "graph_template") {
 					$_sv_arr = array();
 					field_register_error(validate_graph_fields($_v_arr, $_sv_arr, $form_field_name, ""));
@@ -221,7 +221,7 @@ function host_new_graphs_save() {
 				}
 
 				/* update the title cache */
-				update_data_source_title_cache($create_info["data_source"][$data_template_id]);
+				api_data_source_title_cache_update($create_info["data_source"][$data_template_id]);
 
 				/* update poller cache */
 				update_poller_cache($create_info["data_source"][$data_template_id]);
@@ -237,7 +237,7 @@ function host_new_graphs_save() {
 
 				if (isset($skel["graph_template_item"][$graph_template_id])) {
 					foreach ($skel["graph_template_item"][$graph_template_id] as $graph_template_item_input_id => $value) {
-						if (!api_graph_template_item_propagate($graph_template_item_input_id, $value)) {
+						if (!api_graph_template_item_input_propagate($graph_template_item_input_id, $value)) {
 							api_syslog_cacti_log("Problems updating new graph [item] [ID#" . $create_info["graph"][$graph_template_id] . "], graph template [ID#$graph_template_id] from user data", SEV_ERROR, 0, 0, 0, false, FACIL_WEBUI);
 						}
 					}
@@ -296,7 +296,7 @@ function host_new_graphs($selected_graphs = "", $map_id_to_index = "") {
 	fields are actually drawn */
 	ob_start();
 
-	include_once("./include/top_header.php");
+	require_once(CACTI_BASE_PATH . "/include/top_header.php");
 
 	print "<form method='post' action='graphs_new.php'>\n";
 
@@ -377,7 +377,7 @@ function host_new_graphs($selected_graphs = "", $map_id_to_index = "") {
 
 	form_save_button("graphs_new.php?host_id=" . $_POST["host_id"]);
 
-	include_once("./include/bottom_footer.php");
+	require_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
 }
 
 /* -------------------

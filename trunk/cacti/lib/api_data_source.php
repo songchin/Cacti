@@ -23,13 +23,13 @@
 */
 
 /* Variable includes */
-include_once(CACTI_BASE_PATH . "/include/data_source/data_source_constants.php");
-include_once(CACTI_BASE_PATH . "/include/data_source/data_source_arrays.php");
+require_once(CACTI_BASE_PATH . "/include/data_source/data_source_constants.php");
+require_once(CACTI_BASE_PATH . "/include/data_source/data_source_arrays.php");
 
 /* Functions includes */
-include_once(CACTI_BASE_PATH . "/lib/data_source/data_source_update.php");
-include_once(CACTI_BASE_PATH . "/lib/data_source/data_source_info.php");
-include_once(CACTI_BASE_PATH . "/lib/data_source/data_source_template.php");
-include_once(CACTI_BASE_PATH . "/lib/data_source/data_source_template_update.php");
+require_once(CACTI_BASE_PATH . "/lib/data_source/data_source_update.php");
+require_once(CACTI_BASE_PATH . "/lib/data_source/data_source_info.php");
+require_once(CACTI_BASE_PATH . "/lib/data_template/data_template_push.php");
+require_once(CACTI_BASE_PATH . "/lib/data_template/data_template_update.php");
 
 ?>

@@ -257,11 +257,11 @@ function export_post_ftp_upload ($stExportDir) {
 };
 
 function export() {
-	global $config;
+	require_once(CACTI_BASE_PATH . "/lib/sys/rrd.php");
 
 	export_log(_("Running graph export"));
 
-	$cacti_root_path = $config["base_path"];
+	$cacti_root_path = CACTI_BASE_PATH;
 	$cacti_export_path = read_config_option("path_html_export");
 
 	/* copy the css/images on the first time */

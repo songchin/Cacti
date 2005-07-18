@@ -122,6 +122,8 @@ function html_boolean_friendly($html_boolean) {
    @returns - a CSS style string which should be used with an HTML checkbox
      control */
 function get_checkbox_style() {
+	require_once(CACTI_BASE_PATH . "/lib/sys/http.php");
+
 	if (get_web_browser() == "moz") {
 		return "padding: 4px; margin: 4px;";
 	}elseif (get_web_browser() == "ie") {

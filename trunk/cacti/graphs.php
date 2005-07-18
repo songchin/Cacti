@@ -22,20 +22,20 @@
  +-------------------------------------------------------------------------+
 */
 
-include("./include/config.php");
-include("./include/auth.php");
-include_once("./lib/utility.php");
-include_once("./lib/graph/graph_update.php");
-include_once("./lib/graph/graph_info.php");
-include_once("./lib/graph/graph_form.php");
-include_once("./lib/graph/graph_template.php");
-include_once("./include/graph/graph_form.php");
-include_once("./lib/api_tree.php");
-include_once("./lib/data_source/data_source_update.php");
-include_once("./lib/template.php");
-//include_once("./lib/html_tree.php");
-include_once("./lib/html_form_template.php");
-include_once("./lib/rrd.php");
+require(dirname(__FILE__) . "/include/config.php");
+require_once(CACTI_BASE_PATH . "/include/auth.php");
+require_once(CACTI_BASE_PATH . "/lib/sys/rrd.php");
+require_once(CACTI_BASE_PATH . "/lib/utility.php");
+require_once(CACTI_BASE_PATH . "/lib/graph/graph_update.php");
+require_once(CACTI_BASE_PATH . "/lib/graph/graph_info.php");
+require_once(CACTI_BASE_PATH . "/lib/graph/graph_form.php");
+require_once(CACTI_BASE_PATH . "/lib/graph_template/graph_template_push.php");
+require_once(CACTI_BASE_PATH . "/include/graph/graph_form.php");
+require_once(CACTI_BASE_PATH . "/lib/api_tree.php");
+require_once(CACTI_BASE_PATH . "/lib/data_source/data_source_update.php");
+require_once(CACTI_BASE_PATH . "/lib/template.php");
+require_once(CACTI_BASE_PATH . "/lib/sys/html_tree.php");
+require_once(CACTI_BASE_PATH . "/lib/sys/html_form_template.php");
 
 define("MAX_DISPLAY_PAGES", 21);
 
@@ -63,11 +63,11 @@ switch ($_REQUEST["action"]) {
 
 		break;
 	case 'item':
-		include_once("./include/top_header.php");
+		require_once(CACTI_BASE_PATH . "/include/top_header.php");
 
 		item();
 
-		include_once("./include/bottom_footer.php");
+		require_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
 		break;
 	case 'graph_remove':
 		graph_remove();
@@ -75,18 +75,18 @@ switch ($_REQUEST["action"]) {
 		header("Location: graphs.php");
 		break;
 	case 'edit':
-		include_once("./include/top_header.php");
+		require_once(CACTI_BASE_PATH . "/include/top_header.php");
 
 		graph_edit();
 
-		include_once("./include/bottom_footer.php");
+		require_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
 		break;
 	default:
-		include_once("./include/top_header.php");
+		require_once(CACTI_BASE_PATH . "/include/top_header.php");
 
 		graph();
 
-		include_once("./include/bottom_footer.php");
+		require_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
 		break;
 }
 
@@ -128,6 +128,9 @@ function form_save() {
 		}
 	}
 
+	/* add any unchecked checkbox fields */
+	$form_graph_fields += field_register_html_checkboxes(get_graph_field_list(), "g||field|");
+
 	$form_graph_fields["host_id"] = $_POST["host_id"];
 	$form_graph_fields["graph_template_id"] = $_POST["graph_template_id"];
 
@@ -148,7 +151,7 @@ function form_save() {
 		if (!empty($_graph_template_id)) {
 			if (sizeof($form_graph_item_fields) > 0) {
 				foreach ($form_graph_item_fields as $graph_template_item_input_id => $value) {
-					if (!api_graph_template_item_propagate($graph_template_item_input_id, $value)) {
+					if (!api_graph_template_item_input_propagate($graph_template_item_input_id, $value)) {
 						api_syslog_cacti_log("Save error when propagating graph item input [ID#$graph_template_item_input_id] to graph [ID#" . $_POST["id"] . "]", SEV_ERROR, 0, 0, 0, false, FACIL_WEBUI);
 					}
 				}
@@ -248,7 +251,7 @@ function form_actions() {
 		$i++;
 	}
 
-	include_once("./include/top_header.php");
+	require_once(CACTI_BASE_PATH . "/include/top_header.php");
 
 	html_start_box("<strong>" . $graph_actions{$_POST["drp_action"]} . "</strong>", "60%", $colors["header_panel_background"], "3", "center", "");
 
@@ -384,7 +387,7 @@ function form_actions() {
 
 	html_end_box();
 
-	include_once("./include/bottom_footer.php");
+	require_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
 }
 
 /* ------------------------------------
@@ -392,7 +395,7 @@ function form_actions() {
    ------------------------------------ */
 
 function graph_edit() {
-	global $colors, $struct_graph, $struct_graph_item;
+	global $colors;
 
 	if (!empty($_GET["id"])) {
 		$graph = db_fetch_row("select * from graph where id=" . $_GET["id"]);

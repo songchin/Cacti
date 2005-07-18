@@ -23,7 +23,7 @@
 */
 
 function api_graph_template_save($_fields_graph, $_fields_suggested_values) {
-	include_once(CACTI_BASE_PATH . "/lib/sys/sequence.php");
+	require_once(CACTI_BASE_PATH . "/lib/sys/sequence.php");
 
 	/* keep the template hash fresh */
 	$_fields_graph["hash"] = get_hash_graph_template($_fields_graph["id"]);
@@ -77,20 +77,62 @@ function api_graph_template_remove($graph_template_id) {
 	db_execute("update graph set graph_template_id = 0 where graph_template_id = $graph_template_id");
 }
 
-function api_graph_template_item_save($_fields_graph_item) {
-	include_once(CACTI_BASE_PATH . "/lib/sys/sequence.php");
+function api_graph_template_item_save($graph_template_item_id, $_fields_graph_item) {
+	require_once(CACTI_BASE_PATH . "/lib/sys/sequence.php");
+	require_once(CACTI_BASE_PATH . "/lib/graph_template/graph_template_info.php");
+
+	/* sanity check for $graph_template_item_id */
+	if (!is_numeric($graph_template_item_id)) {
+		return false;
+	}
+
+	/* sanity check for $graph_template_id */
+	if ((empty($graph_template_item_id)) && (empty($_fields_graph_item["graph_template_id"]))) {
+		api_syslog_cacti_log("Required graph_template_id when graph_template_item_id = 0", SEV_ERROR, 0, 0, 0, false, FACIL_WEBUI);
+		return false;
+	} else if ((isset($_fields_graph_item["graph_template_id"])) && (!is_numeric($_fields_graph_item["graph_template_id"]))) {
+		return false;
+	}
+
+	/* field: id */
+	$_fields["id"] = array("type" => DB_TYPE_NUMBER, "value" => $graph_template_item_id);
+
+	/* field: graph_template_id */
+	if (!empty($_fields_graph_item["graph_template_id"])) {
+		$_fields["graph_template_id"] = array("type" => DB_TYPE_NUMBER, "value" => $_fields_graph_item["graph_template_id"]);
+	}
+
+	/* field: sequence */
+	if (empty($graph_template_item_id)) {
+		$_fields["sequence"] = array("type" => DB_TYPE_NUMBER, "value" => seq_get_current($_fields_graph_item["id"], "sequence", "graph_template_id", "graph_template_id = " . sql_sanitize($_fields_graph_item["graph_template_id"])));
+	}
 
 	/* keep the template hash fresh */
 	$_fields_graph_item["hash"] = get_hash_graph_template($_fields_graph_item["id"], "graph_template_item");
-	$_fields_graph_item["sequence"] = seq_get_current($_fields_graph_item["id"], "sequence", "graph_template_item", "graph_template_id = " . $_fields_graph_item["graph_template_id"]);
 
-	$graph_template_item_id = sql_save($_fields_graph_item, "graph_template_item");
+	/* fetch a list of all visible graph item fields */
+	$fields_graph_item = get_graph_template_items_field_list();
 
-	if ($graph_template_item_id) {
-		//push_out_graph_item($graph_template_item_id);
+	/* check for an empty field list */
+	if (sizeof($_fields) == 1) {
+		return true;
 	}
 
-	return $graph_template_item_id;
+	foreach (array_keys($fields_graph_item) as $field_name) {
+		if (isset($_fields_graph_item[$field_name])) {
+			$_fields[$field_name] = array("type" => $fields_graph_item[$field_name]["data_type"], "value" => $_fields_graph_item[$field_name]);
+		}
+	}
+
+	if (db_replace("graph_template_item", $_fields, array("id"))) {
+		$graph_template_item_id = db_fetch_insert_id();
+
+		//push_out_graph_item($graph_template_item_id);
+
+		return true;
+	}else{
+		return false;
+	}
 }
 
 function api_graph_template_item_remove($graph_template_item_id, $delete_attached = true) {
@@ -110,7 +152,7 @@ function api_graph_template_item_remove($graph_template_item_id, $delete_attache
 }
 
 function api_graph_template_item_movedown($graph_template_item_id) {
-	include_once(CACTI_BASE_PATH . "/lib/sys/sequence.php");
+	require_once(CACTI_BASE_PATH . "/lib/sys/sequence.php");
 
 	$graph_template_id = db_fetch_cell("select graph_template_id from graph_template_item where id = $graph_template_item_id");
 
@@ -123,7 +165,7 @@ function api_graph_template_item_movedown($graph_template_item_id) {
 }
 
 function api_graph_template_item_moveup($graph_template_item_id) {
-	include_once(CACTI_BASE_PATH . "/lib/sys/sequence.php");
+	require_once(CACTI_BASE_PATH . "/lib/sys/sequence.php");
 
 	$graph_template_id = db_fetch_cell("select graph_template_id from graph_template_item where id = $graph_template_item_id");
 
@@ -136,19 +178,19 @@ function api_graph_template_item_moveup($graph_template_item_id) {
 }
 
 function api_graph_template_item_row_movedown($row_num, $graph_template_id) {
-	include_once(CACTI_BASE_PATH . "/lib/sys/sequence.php");
+	require_once(CACTI_BASE_PATH . "/lib/sys/sequence.php");
 
 	seq_move_graph_item_row($row_num, "graph_template_item", "graph_template_id = $graph_template_id", true, "down");
 }
 
 function api_graph_template_item_row_moveup($row_num, $graph_template_id) {
-	include_once(CACTI_BASE_PATH . "/lib/sys/sequence.php");
+	require_once(CACTI_BASE_PATH . "/lib/sys/sequence.php");
 
 	seq_move_graph_item_row($row_num, "graph_template_item", "graph_template_id = $graph_template_id", true, "up");
 }
 
 function api_graph_template_item_duplicate($graph_template_item_id, $new_data_template_item_id) {
-	include_once(CACTI_BASE_PATH . "/lib/sys/sequence.php");
+	require_once(CACTI_BASE_PATH . "/lib/sys/sequence.php");
 
 	$item = db_fetch_row("select * from graph_template_item where id = $graph_template_item_id");
 

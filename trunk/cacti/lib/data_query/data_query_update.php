@@ -29,7 +29,7 @@
    @arg $host_id - the id of the host which contains the data query
    @arg $data_query_id - the id of the data query update the sort cache for */
 function update_data_query_sort_cache($host_id, $data_query_id) {
-	include_once(CACTI_BASE_PATH . "/lib/data_query/data_query_info.php");
+	require_once(CACTI_BASE_PATH . "/lib/data_query/data_query_info.php");
 
 	$raw_xml = get_data_query_array($data_query_id);
 

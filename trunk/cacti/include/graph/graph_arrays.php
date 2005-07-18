@@ -22,7 +22,7 @@
  +-------------------------------------------------------------------------+
 */
 
-include_once(CACTI_BASE_PATH . "/include/graph/graph_constants.php");
+require_once(CACTI_BASE_PATH . "/include/graph/graph_constants.php");
 
 $cdef_operators = array(
 	1 => "+",

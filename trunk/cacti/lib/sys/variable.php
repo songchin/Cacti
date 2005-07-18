@@ -32,7 +32,7 @@ function remove_variables($string) {
    @arg $path - the string to make path variable substitutions on
    @returns - the original string with all of the variable substitutions made */
 function substitute_path_variables($path) {
-	include_once(CACTI_BASE_PATH . "/lib/string.php");
+	require_once(CACTI_BASE_PATH . "/lib/sys/string.php");
 
 	/* script query */
 	$path = clean_up_path(str_replace("|path_cacti|", CACTI_BASE_PATH, $path));
@@ -84,7 +84,7 @@ function substitute_host_variables($string, $host_id) {
    @arg $max_chars - the maximum number of characters to substitute
    @returns - the original string with all of the variable substitutions made */
 function substitute_data_query_variables($string, $host_id, $data_query_id, $data_query_index, $max_chars = 0) {
-	include_once(CACTI_BASE_PATH . "/lib/string.php");
+	require_once(CACTI_BASE_PATH . "/lib/sys/string.php");
 
 	$data_query_cache = db_fetch_assoc("select field_name,field_value from host_snmp_cache where host_id = $host_id and snmp_query_id = $data_query_id and snmp_index = '$data_query_index'");
 

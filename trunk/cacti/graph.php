@@ -27,11 +27,12 @@ if (!isset($_REQUEST["action"])) { $_REQUEST["action"] = "view"; }
 if (!isset($_REQUEST["view_type"])) { $_REQUEST["view_type"] = ""; }
 
 $guest_account = true;
-include("./include/config.php");
-include("./include/auth.php");
-include("./lib/rrd.php");
-include("./lib/html_tree.php");
-include("./include/top_graph_header.php");
+require(dirname(__FILE__) . "/include/config.php");
+require_once(CACTI_BASE_PATH . "/include/auth.php");
+require_once(CACTI_BASE_PATH . "/lib/sys/auth.php");
+require_once(CACTI_BASE_PATH . "/lib/sys/rrd.php");
+require_once(CACTI_BASE_PATH . "/lib/sys/html_tree.php");
+require_once(CACTI_BASE_PATH . "/include/top_graph_header.php");
 
 if ($_GET["rra_id"] == "all") {
 	$sql_where = " where id is not null";
@@ -232,6 +233,6 @@ case 'properties':
 print "</table>";
 print "<br><br>";
 
-include_once("./include/bottom_footer.php");
+require_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
 
 ?>

@@ -23,46 +23,18 @@
 */
 
 /* form validation functions */
-
-function validate_data_template_fields(&$_fields_data_template, $data_template_field_name_format) {
-	include_once(CACTI_BASE_PATH . "/lib/data_source/data_source_template_info.php");
-
-	if (sizeof($_fields_data_template) == 0) {
-		return;
-	}
-
-	/* array containing errored fields */
-	$error_fields = array();
-
-	/* get a complete field list */
-	$fields_data_template = get_data_template_field_list();
-
-	/* base fields */
-	while (list($_field_name, $_field_array) = each($fields_data_template)) {
-		$form_field_name = str_replace("|field|", $_field_name, $data_template_field_name_format);
-
-		if ((isset($_fields_data_template[$_field_name])) && (isset($_field_array["validate_regexp"])) && (isset($_field_array["validate_empty"]))) {
-			if (!form_input_validate($_fields_data_template[$_field_name], $form_field_name, $_field_array["validate_regexp"], $_field_array["validate_empty"])) {
-				$error_fields[] = $form_field_name;
-			}
-		}
-	}
-
-	return $error_fields;
-}
-
-function validate_data_source_fields(&$_fields_data_source, &$_fields_suggested_values, $data_source_field_name_format, $suggested_values_field_name_format) {
-	include_once(CACTI_BASE_PATH . "/lib/data_source/data_source_info.php");
+function api_data_source_validate_fields_base(&$_fields_data_source, &$_fields_suggested_values, $data_source_field_name_format, $suggested_values_field_name_format) {
+	require_once(CACTI_BASE_PATH . "/lib/data_source/data_source_info.php");
 
 	if (sizeof($_fields_data_source) == 0) {
-		return;
+		return array();
 	}
 
 	/* array containing errored fields */
 	$error_fields = array();
 
 	/* get a complete field list */
-	$fields_data_source = get_data_source_field_list();
+	$fields_data_source = api_data_source_field_list();
 
 	/* base fields */
 	while (list($_field_name, $_field_array) = each($fields_data_source)) {
@@ -91,8 +63,8 @@ function validate_data_source_fields(&$_fields_data_source, &$_fields_suggested_
 	return $error_fields;
 }
 
-function validate_data_source_input_fields(&$_fields_data_input, $data_input_field_name_format) {
-	include_once(CACTI_BASE_PATH . "/include/data_source/data_source_constants.php");
+function api_data_source_validate_fields_input(&$_fields_data_input, $data_input_field_name_format) {
+	require_once(CACTI_BASE_PATH . "/include/data_source/data_source_constants.php");
 
 	/* array containing errored fields */
 	$error_fields = array();
@@ -126,18 +98,18 @@ function validate_data_source_input_fields(&$_fields_data_input, $data_input_fie
 	return $error_fields;
 }
 
-function validate_data_source_item_fields(&$_fields_data_source_item, $data_source_item_field_name_format) {
-	include_once(CACTI_BASE_PATH . "/lib/data_source/data_source_info.php");
+function api_data_source_validate_fields_item(&$_fields_data_source_item, $data_source_item_field_name_format) {
+	require_once(CACTI_BASE_PATH . "/lib/data_source/data_source_info.php");
 
 	if (sizeof($_fields_data_source_item) == 0) {
-		return;
+		return array();
 	}
 
 	/* array containing errored fields */
 	$error_fields = array();
 
 	/* get a complete field list */
-	$fields_data_source_item = get_data_source_item_field_list();
+	$fields_data_source_item = api_data_source_item_field_list();
 
 	/* base fields */
 	while (list($_field_name, $_field_array) = each($fields_data_source_item)) {
@@ -153,30 +125,12 @@ function validate_data_source_item_fields(&$_fields_data_source_item, $data_sour
 	return $error_fields;
 }
 
-/* data template fields */
-
-function _data_template_field__template_name($field_name, $field_value = "", $field_id = 0) {
-	include_once(CACTI_BASE_PATH . "/lib/html_form.php");
-
-	?>
-	<tr bgcolor="#<?php echo field_get_row_color();?>">
-		<td width="50%">
-			<span class="textEditTitle"><?php echo _("Name");?></span><br>
-			<?php echo _("The name given to this data template.");?>
-		</td>
-		<td>
-			<?php form_text_box($field_name, $field_value, "", 150, 30, "text", $field_id);?>
-		</td>
-	</tr>
-	<?php
-}
-
 /* data source input fields */
 
 function _data_source_input_field__data_input_type($field_name, $template_flag = false, $field_value = "", $field_id = 0) {
-	include(CACTI_BASE_PATH . "/include/data_source/data_source_arrays.php");
-	include_once(CACTI_BASE_PATH . "/include/data_source/data_source_constants.php");
-	include_once(CACTI_BASE_PATH . "/lib/html_form.php");
+	require(CACTI_BASE_PATH . "/include/data_source/data_source_arrays.php");
+	require_once(CACTI_BASE_PATH . "/include/data_source/data_source_constants.php");
+	require_once(CACTI_BASE_PATH . "/lib/sys/html_form.php");
 
 	if ($template_flag == true) {
 		$redirect_url = "data_templates.php?action=edit" . (!empty($field_id) ? "&id=" . $field_id : "") . "&data_input_type=|dropdown_value|";
@@ -200,7 +154,7 @@ function _data_source_input_field__data_input_type($field_name, $template_flag =
 }
 
 function _data_source_input_field__script_id($field_name, $redirect_url, $field_value = "") {
-	include_once(CACTI_BASE_PATH . "/lib/html_form.php");
+	require_once(CACTI_BASE_PATH . "/lib/sys/html_form.php");
 
 	?>
 	<tr bgcolor="#<?php echo field_get_row_color();?>">
@@ -218,7 +172,7 @@ function _data_source_input_field__script_id($field_name, $redirect_url, $field_
 }
 
 function _data_source_input_field__data_query_id($field_name, $redirect_url, $field_value = "") {
-	include_once(CACTI_BASE_PATH . "/lib/html_form.php");
+	require_once(CACTI_BASE_PATH . "/lib/sys/html_form.php");
 
 	?>
 	<tr bgcolor="#<?php echo field_get_row_color();?>">
@@ -235,10 +189,50 @@ function _data_source_input_field__data_query_id($field_name, $redirect_url, $fi
 	form_hidden_box("cacti_js_dropdown_redirect_x", "", "");
 }
 
+/* data source input fields (data query) */
+
+function _data_source_input_field__data_query_hdr() {
+	require_once(CACTI_BASE_PATH . "/lib/sys/html_form.php");
+
+	field_row_header(_("Data Query Parameters"));
+}
+
+function _data_source_input_field__data_query_field_name($field_name, $data_query_id, $field_value = "", $field_id = 0) {
+	require_once(CACTI_BASE_PATH . "/lib/sys/html_form.php");
+
+	?>
+	<tr bgcolor="#<?php echo field_get_row_color();?>">
+		<td width="50%">
+			<span class="textEditTitle"><?php echo _("Field Name");?></span><br>
+			<?php echo _("Determines the field that Cacti will use when locating a unique row for this dat)a query."); ?>
+		</td>
+		<td>
+			<?php form_dropdown($field_name, db_fetch_assoc("select field_name as name,field_name as id from host_snmp_cache where snmp_query_id = " . sql_sanitize($data_query_id) . " group by field_name"), "name", "id", $field_value, "", $field_id);?>
+		</td>
+	</tr>
+	<?php
+}
+
+function _data_source_input_field__data_query_field_value($field_name,  $field_value = "", $field_id = 0) {
+	require_once(CACTI_BASE_PATH . "/lib/sys/html_form.php");
+
+	?>
+	<tr bgcolor="#<?php echo field_get_row_color();?>">
+		<td width="50%">
+			<span class="textEditTitle"><?php echo _("Field Value");?></span><br>
+			<?php echo _("When assigned to the field name above, produces a single data query row used by th)e poller to retrieve data.");?>
+		</td>
+		<td>
+			<?php form_text_box($field_name, $field_value, 0, 100, 30, "text", $field_id);?>
+		</td>
+	</tr>
+	<?php
+}
+
 /* data source input fields (script) */
 
 function _data_source_input_field__script($field_name, $friendly_name, $template_flag = false, $field_value = "", $t_field_name = "", $t_field_value = "", $field_id = 0) {
-	include_once(CACTI_BASE_PATH . "/lib/html_form.php");
+	require_once(CACTI_BASE_PATH . "/lib/sys/html_form.php");
 
 	?>
 	<tr bgcolor="#<?php echo field_get_row_color();?>">
@@ -260,25 +254,25 @@ function _data_source_input_field__script($field_name, $friendly_name, $template
 /* data source input fields (device) */
 
 function _data_source_input_field__device_hdr_generic() {
-	include_once(CACTI_BASE_PATH . "/lib/html_form.php");
+	require_once(CACTI_BASE_PATH . "/lib/sys/html_form.php");
 
 	field_row_header(_("SNMP (Generic Options)"));
 }
 
 function _data_source_input_field__device_hdr_snmpv12() {
-	include_once(CACTI_BASE_PATH . "/lib/html_form.php");
+	require_once(CACTI_BASE_PATH . "/lib/sys/html_form.php");
 
 	field_row_header(_("SNMP (v1/v2c Options)"));
 }
 
 function _data_source_input_field__device_hdr_snmpv3() {
-	include_once(CACTI_BASE_PATH . "/lib/html_form.php");
+	require_once(CACTI_BASE_PATH . "/lib/sys/html_form.php");
 
 	field_row_header(_("SNMP (v3 Options)"));
 }
 
 function _data_source_input_field__device_snmp_port($field_name, $template_flag = false, $field_value = "", $field_id = 0, $t_field_value, $o_field_value) {
-	include_once(CACTI_BASE_PATH . "/lib/html_form.php");
+	require_once(CACTI_BASE_PATH . "/lib/sys/html_form.php");
 
 	?>
 	<tr bgcolor="#<?php echo field_get_row_color();?>">
@@ -306,7 +300,7 @@ function _data_source_input_field__device_snmp_port($field_name, $template_flag 
 }
 
 function _data_source_input_field__device_snmp_timeout($field_name, $template_flag = false, $field_value = "", $field_id = 0, $t_field_value, $o_field_value) {
-	include_once(CACTI_BASE_PATH . "/lib/html_form.php");
+	require_once(CACTI_BASE_PATH . "/lib/sys/html_form.php");
 
 	?>
 	<tr bgcolor="#<?php echo field_get_row_color();?>">
@@ -336,7 +330,7 @@ function _data_source_input_field__device_snmp_timeout($field_name, $template_fl
 function _data_source_input_field__device_snmp_version($field_name, $template_flag = false, $field_value = "", $field_id = 0, $t_field_value, $o_field_value) {
 	global $snmp_versions;
 
-	include_once(CACTI_BASE_PATH . "/lib/html_form.php");
+	require_once(CACTI_BASE_PATH . "/lib/sys/html_form.php");
 
 	?>
 	<tr bgcolor="#<?php echo field_get_row_color();?>">
@@ -364,7 +358,7 @@ function _data_source_input_field__device_snmp_version($field_name, $template_fl
 }
 
 function _data_source_input_field__device_snmp_community($field_name, $template_flag = false, $field_value = "", $field_id = 0, $t_field_value, $o_field_value) {
-	include_once(CACTI_BASE_PATH . "/lib/html_form.php");
+	require_once(CACTI_BASE_PATH . "/lib/sys/html_form.php");
 
 	?>
 	<tr bgcolor="#<?php echo field_get_row_color();?>">
@@ -392,7 +386,7 @@ function _data_source_input_field__device_snmp_community($field_name, $template_
 }
 
 function _data_source_input_field__device_snmpv3_auth_username($field_name, $template_flag = false, $field_value = "", $field_id = 0, $t_field_value, $o_field_value) {
-	include_once(CACTI_BASE_PATH . "/lib/html_form.php");
+	require_once(CACTI_BASE_PATH . "/lib/sys/html_form.php");
 
 	?>
 	<tr bgcolor="#<?php echo field_get_row_color();?>">
@@ -420,7 +414,7 @@ function _data_source_input_field__device_snmpv3_auth_username($field_name, $tem
 }
 
 function _data_source_input_field__device_snmpv3_auth_password($field_name, $template_flag = false, $field_value = "", $field_id = 0, $t_field_value, $o_field_value) {
-	include_once(CACTI_BASE_PATH . "/lib/html_form.php");
+	require_once(CACTI_BASE_PATH . "/lib/sys/html_form.php");
 
 	?>
 	<tr bgcolor="#<?php echo field_get_row_color();?>">
@@ -450,7 +444,7 @@ function _data_source_input_field__device_snmpv3_auth_password($field_name, $tem
 function _data_source_input_field__device_snmpv3_auth_protocol($field_name, $template_flag = false, $field_value = "", $field_id = 0, $t_field_value, $o_field_value) {
 	global $snmpv3_auth_protocol;
 
-	include_once(CACTI_BASE_PATH . "/lib/html_form.php");
+	require_once(CACTI_BASE_PATH . "/lib/sys/html_form.php");
 
 	?>
 	<tr bgcolor="#<?php echo field_get_row_color();?>">
@@ -478,7 +472,7 @@ function _data_source_input_field__device_snmpv3_auth_protocol($field_name, $tem
 }
 
 function _data_source_input_field__device_snmpv3_priv_passphrase($field_name, $template_flag = false, $field_value = "", $field_id = 0, $t_field_value, $o_field_value) {
-	include_once(CACTI_BASE_PATH . "/lib/html_form.php");
+	require_once(CACTI_BASE_PATH . "/lib/sys/html_form.php");
 
 	?>
 	<tr bgcolor="#<?php echo field_get_row_color();?>">
@@ -508,7 +502,7 @@ function _data_source_input_field__device_snmpv3_priv_passphrase($field_name, $t
 function _data_source_input_field__device_snmpv3_priv_protocol($field_name, $template_flag = false, $field_value = "", $field_id = 0, $t_field_value, $o_field_value) {
 	global $snmpv3_priv_protocol;
 
-	include_once(CACTI_BASE_PATH . "/lib/html_form.php");
+	require_once(CACTI_BASE_PATH . "/lib/sys/html_form.php");
 
 	?>
 	<tr bgcolor="#<?php echo field_get_row_color();?>">
@@ -537,10 +531,42 @@ function _data_source_input_field__device_snmpv3_priv_protocol($field_name, $tem
 
 /* data source fields */
 
+function _data_source_field__data_template_id($field_name, $field_value = "", $field_id = 0) {
+	require_once(CACTI_BASE_PATH . "/lib/sys/html_form.php");
+
+	?>
+	<tr bgcolor="#<?php echo field_get_row_color();?>">
+		<td width="50%">
+			<span class="textEditTitle"><?php echo _("Selected Data Template");?></span><br>
+			<?php echo _("The data template associated with this data source."); ?>
+		</td>
+		<td>
+			<?php form_dropdown($field_name, db_fetch_assoc("select id,template_name as name from data_template order by template_name"), "name", "id", $field_value, "None", $field_id);?>
+		</td>
+	</tr>
+	<?php
+}
+
+function _data_source_field__host_id($field_name, $field_value = "", $field_id = 0) {
+	require_once(CACTI_BASE_PATH . "/lib/sys/html_form.php");
+
+	?>
+	<tr bgcolor="#<?php echo field_get_row_color();?>">
+		<td width="50%">
+			<span class="textEditTitle"><?php echo _("Device");?></span><br>
+			<?php echo _("Choose the device that this data source belongs to."); ?>
+		</td>
+		<td>
+			<?php form_dropdown($field_name, db_fetch_assoc("select id,CONCAT_WS('',description,' (',hostname,')') as name from host order by description,hostname"), "name", "id", $field_value, "None", $field_id);?>
+		</td>
+	</tr>
+	<?php
+}
+
 function _data_source_field__name($field_name, $template_flag = false, $field_id = 0, $t_field_name = "", $t_field_value = "") {
 	global $colors;
 
-	include_once(CACTI_BASE_PATH . "/lib/html_form.php");
+	require_once(CACTI_BASE_PATH . "/lib/sys/html_form.php");
 
 	if (empty($field_id)) {
 		$values_array = array();
@@ -554,10 +580,11 @@ function _data_source_field__name($field_name, $template_flag = false, $field_id
 		$url_delete = "javascript:document.forms[0].action.value='sv_remove';submit_redirect(0, '" . htmlspecialchars("data_templates.php?action=sv_remove&id=|id|" . (empty($field_id) ? "" : "&data_template_id=" . $field_id)) . "', '')";
 		$url_add = "javascript:document.forms[0].action.value='sv_add';submit_redirect(0, '" . htmlspecialchars("data_templates.php?action=sv_add" . (empty($field_id) ? "" : "&id=" . $field_id)) . "', '')";
 	}else{
-		$url_moveup = "";
-		$url_movedown = "";
-		$url_delete = "";
-		$url_add = "";
+		if (empty($field_id)) {
+			$field_value = "";
+		}else{
+			$field_value = db_fetch_cell("select name from data_source where id = $field_id");
+		}
 	}
 
 	?>
@@ -573,14 +600,21 @@ function _data_source_field__name($field_name, $template_flag = false, $field_id
 			?>
 		</td>
 		<td>
-			<?php form_text_box_sv($field_name, $values_array, $url_moveup, "", $url_delete, $url_add, (($_GET["action"] == "sv_add") ? true : false), 255, 30);?>
+			<?php
+			if ($template_flag == true) {
+				form_text_box_sv($field_name, $values_array, $url_moveup, "", $url_delete, $url_add, (($_GET["action"] == "sv_add") ? true : false), 255, 30);
+			}else{
+				form_text_box($field_name, $field_value, "", 255, 40, "text", $field_id);
+			}
+			?>
+
 		</td>
 	</tr>
 	<?php
 }
 
 function _data_source_field__rrd_path($field_name, $template_flag = false, $field_value = "", $field_id = 0) {
-	include_once(CACTI_BASE_PATH . "/lib/html_form.php");
+	require_once(CACTI_BASE_PATH . "/lib/sys/html_form.php");
 
 	?>
 	<tr bgcolor="#<?php echo field_get_row_color();?>">
@@ -596,7 +630,7 @@ function _data_source_field__rrd_path($field_name, $template_flag = false, $fiel
 }
 
 function _data_source_field__rra_id($field_name, $template_flag = false, $field_id = 0) {
-	include_once(CACTI_BASE_PATH . "/lib/html_form.php");
+	require_once(CACTI_BASE_PATH . "/lib/sys/html_form.php");
 
 	?>
 	<tr bgcolor="#<?php echo field_get_row_color();?>">
@@ -609,14 +643,23 @@ function _data_source_field__rra_id($field_name, $template_flag = false, $field_
 			?>
 		</td>
 		<td>
-			<?php form_multi_dropdown($field_name, array_rekey(db_fetch_assoc("select id,name from rra order by name"), "id", "name"), (empty($field_id) ? db_fetch_assoc("select rra.id from rra order by id") : db_fetch_assoc("select rra_id as id,data_template_id from data_template_rra where data_template_id=$field_id")), "id");?>
+			<?php
+			if (empty($field_id)) {
+				$current_value = db_fetch_assoc("select rra.id from rra order by id");
+			}else if ($template_flag == true) {
+				$current_value = db_fetch_assoc("select rra_id as id,data_template_id from data_template_rra where data_template_id = " . sql_sanitize($field_id));
+			}else{
+				$current_value = db_fetch_assoc("select rra_id as id,data_source_id from data_source_rra where data_source_id = " . sql_sanitize($field_id));
+			}
+
+			form_multi_dropdown($field_name, array_rekey(db_fetch_assoc("select id,name from rra order by name"), "id", "name"), $current_value, "id");?>
 		</td>
 	</tr>
 	<?php
 }
 
 function _data_source_field__rrd_step($field_name, $template_flag = false, $field_value = "", $field_id = 0, $t_field_name = "", $t_field_value = "") {
-	include_once(CACTI_BASE_PATH . "/lib/html_form.php");
+	require_once(CACTI_BASE_PATH . "/lib/sys/html_form.php");
 
 	?>
 	<tr bgcolor="#<?php echo field_get_row_color();?>">
@@ -638,7 +681,7 @@ function _data_source_field__rrd_step($field_name, $template_flag = false, $fiel
 }
 
 function _data_source_field__active($field_name, $template_flag = false, $field_value = "", $field_id = 0, $t_field_name = "", $t_field_value = "") {
-	include_once(CACTI_BASE_PATH . "/lib/html_form.php");
+	require_once(CACTI_BASE_PATH . "/lib/sys/html_form.php");
 
 	?>
 	<tr bgcolor="#<?php echo field_get_row_color();?>">
@@ -657,12 +700,13 @@ function _data_source_field__active($field_name, $template_flag = false, $field_
 		</td>
 	</tr>
 	<?php
+	form_checkbox_marker($field_name);
 }
 
 /* data source item fields */
 
 function _data_source_item_field__data_source_name($field_name, $template_flag = false, $field_value = "", $field_id = 0) {
-	include_once(CACTI_BASE_PATH . "/lib/html_form.php");
+	require_once(CACTI_BASE_PATH . "/lib/sys/html_form.php");
 
 	?>
 	<tr bgcolor="#<?php echo field_get_row_color();?>">
@@ -682,7 +726,7 @@ function _data_source_item_field__data_source_name($field_name, $template_flag =
 }
 
 function _data_source_item_field__rrd_minimum($field_name, $template_flag = false, $field_value = "", $field_id = 0, $t_field_name = "", $t_field_value = "") {
-	include_once(CACTI_BASE_PATH . "/lib/html_form.php");
+	require_once(CACTI_BASE_PATH . "/lib/sys/html_form.php");
 
 	?>
 	<tr bgcolor="#<?php echo field_get_row_color();?>">
@@ -704,7 +748,7 @@ function _data_source_item_field__rrd_minimum($field_name, $template_flag = fals
 }
 
 function _data_source_item_field__rrd_maximum($field_name, $template_flag = false, $field_value = "", $field_id = 0, $t_field_name = "", $t_field_value = "") {
-	include_once(CACTI_BASE_PATH . "/lib/html_form.php");
+	require_once(CACTI_BASE_PATH . "/lib/sys/html_form.php");
 
 	?>
 	<tr bgcolor="#<?php echo field_get_row_color();?>">
@@ -726,8 +770,8 @@ function _data_source_item_field__rrd_maximum($field_name, $template_flag = fals
 }
 
 function _data_source_item_field__data_source_type($field_name, $template_flag = false, $field_value = "", $field_id = 0, $t_field_name = "", $t_field_value = "") {
-	include(CACTI_BASE_PATH . "/include/data_source/data_source_arrays.php");
-	include_once(CACTI_BASE_PATH . "/lib/html_form.php");
+	require(CACTI_BASE_PATH . "/include/data_source/data_source_arrays.php");
+	require_once(CACTI_BASE_PATH . "/lib/sys/html_form.php");
 
 	?>
 	<tr bgcolor="#<?php echo field_get_row_color();?>">
@@ -749,7 +793,7 @@ function _data_source_item_field__data_source_type($field_name, $template_flag =
 }
 
 function _data_source_item_field__rrd_heartbeat($field_name, $template_flag = false, $field_value = "", $field_id = 0, $t_field_name = "", $t_field_value = "") {
-	include_once(CACTI_BASE_PATH . "/lib/html_form.php");
+	require_once(CACTI_BASE_PATH . "/lib/sys/html_form.php");
 
 	?>
 	<tr bgcolor="#<?php echo field_get_row_color();?>">

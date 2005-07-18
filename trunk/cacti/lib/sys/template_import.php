@@ -23,9 +23,9 @@
 */
 
 function &import_xml_data(&$xml_data) {
-	global $config, $hash_type_codes, $hash_version_codes;
+	global $hash_type_codes, $hash_version_codes;
 
-	include_once($config["library_path"] . "/xml.php");
+	require_once(CACTI_BASE_PATH . "/lib/sys/xml.php");
 
 	$xml_array = xml2array($xml_data);
 

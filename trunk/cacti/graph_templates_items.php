@@ -22,12 +22,12 @@
  +-------------------------------------------------------------------------+
 */
 
-include("./include/config.php");
-include("./include/auth.php");
-include_once("./lib/graph/graph_template_update.php");
-include_once("./include/graph/graph_form.php");
-include_once("./lib/graph/graph_form.php");
-include_once("./lib/template.php");
+require(dirname(__FILE__) . "/include/config.php");
+require_once(CACTI_BASE_PATH . "/include/auth.php");
+require_once(CACTI_BASE_PATH . "/lib/graph_template/graph_template_update.php");
+require_once(CACTI_BASE_PATH . "/include/graph/graph_form.php");
+require_once(CACTI_BASE_PATH . "/lib/graph/graph_form.php");
+require_once(CACTI_BASE_PATH . "/lib/template.php");
 
 /* set default action */
 if (!isset($_REQUEST["action"])) { $_REQUEST["action"] = ""; }
@@ -67,14 +67,14 @@ switch ($_REQUEST["action"]) {
 
 		header("Location: graph_templates.php?action=edit&id=" . $_GET["graph_template_id"]);
 	case 'edit':
-		include_once("./include/top_header.php");
+		require_once(CACTI_BASE_PATH . "/include/top_header.php");
 
 		item_edit();
 
-		include_once("./include/bottom_footer.php");
+		require_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
 		break;
 	case 'item':
-		include_once("./include/top_header.php");
+		require_once(CACTI_BASE_PATH . "/include/top_header.php");
 
 		item();
 
@@ -104,11 +104,11 @@ function form_save() {
 		$form_graph_item["legend_format"] = $_POST["legend_format"];
 		$form_graph_item["hard_return"] = html_boolean(isset($_POST["hard_return"]) ? $_POST["hard_return"] : "");
 
-		validate_graph_item_fields($form_graph_item, "|field|");
+		field_register_error(validate_graph_item_fields($form_graph_item, "|field|"));
 
 		/* step #2: field save */
 		if (!is_error_message()) {
-			$graph_template_item_id = api_graph_template_item_save($form_graph_item);
+			$graph_template_item_id = api_graph_template_item_save($_POST["graph_template_item_id"], $form_graph_item);
 		}
 
 		if (is_error_message()) {

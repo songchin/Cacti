@@ -22,20 +22,19 @@
  +-------------------------------------------------------------------------+
 */
 
-include("./include/config.php");
-include("./include/auth.php");
-include_once("./lib/graph/graph_template_update.php");
-include_once("./lib/graph/graph_form.php");
-include_once("./lib/graph/graph_template.php"); // remove
-include_once("./lib/graph/graph_form.php");
-include_once("./lib/sys/sequence.php");
-include_once("./include/graph/graph_constants.php");
-include_once("./include/graph/graph_arrays.php");
-include_once("./include/graph/graph_form.php");
-include_once("./lib/utility.php");
-include_once("./lib/template.php");
-include_once("./lib/tree.php");
-include_once("./lib/html_tree.php");
+require(dirname(__FILE__) . "/include/config.php");
+require_once(CACTI_BASE_PATH . "/include/auth.php");
+require_once(CACTI_BASE_PATH . "/lib/graph_template/graph_template_update.php");
+require_once(CACTI_BASE_PATH . "/lib/graph/graph_form.php");
+require_once(CACTI_BASE_PATH . "/lib/graph_template/graph_template_push.php"); // remove
+require_once(CACTI_BASE_PATH . "/lib/sys/sequence.php");
+require_once(CACTI_BASE_PATH . "/include/graph/graph_constants.php");
+require_once(CACTI_BASE_PATH . "/include/graph/graph_arrays.php");
+require_once(CACTI_BASE_PATH . "/include/graph/graph_form.php");
+require_once(CACTI_BASE_PATH . "/lib/utility.php");
+require_once(CACTI_BASE_PATH . "/lib/template.php");
+require_once(CACTI_BASE_PATH . "/lib/sys/tree.php");
+require_once(CACTI_BASE_PATH . "/lib/sys/html_tree.php");
 
 $graph_actions = array(
 	1 => _("Delete"),
@@ -84,11 +83,11 @@ switch ($_REQUEST["action"]) {
 		include_once ("./include/bottom_footer.php");
 		break;
 	default:
-		include_once("./include/top_header.php");
+		require_once(CACTI_BASE_PATH . "/include/top_header.php");
 
 		template();
 
-		include_once("./include/bottom_footer.php");
+		require_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
 		break;
 }
 
@@ -125,7 +124,7 @@ function form_save() {
 			}
 		}
 
-		include_once("./include/top_header.php");
+		require_once(CACTI_BASE_PATH . "/include/top_header.php");
 
 		html_start_box("<strong>" . $graph_actions{$_POST["drp_action"]} . "</strong>", "60%", $colors["header_panel_background"], "3", "center", "");
 
@@ -163,7 +162,7 @@ function form_save() {
 
 		html_end_box();
 
-		include_once("./include/bottom_footer.php");
+		require_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
 	}
 
 	if (isset($_POST["save_component_template"])) {
@@ -176,40 +175,64 @@ function form_save() {
 
 		/* step #1: field parsing */
 		while(list($name, $value) = each($_POST)) {
-			if (substr($name, 0, 2) == "g|") {
-				$matches = explode("|", $name);
-				$form_graph_fields{$matches[1]} = $value;
-			}else if (substr($name, 0, 3) == "sv|") {
+			if (substr($name, 0, 3) == "sv|") {
 				$matches = explode("|", $name);
 				$suggested_value_fields{$matches[1]}{$matches[2]} = $value;
 			}
 		}
 
-		/* make a list of fields to save */
-		while (list($_field_name, $_field_value) = each($form_graph_fields)) {
-			/* make sure that we know about this field */
-			if (isset($fields_graph[$_field_name])) {
-				/* checkbox values must be converted into [0|1] format first */
-				if ((isset($fields_graph[$_field_name]["validate_regexp"])) && ($fields_graph[$_field_name]["validate_regexp"] == FORM_VALIDATE_CHECKBOX)) {
-					$save_graph[$_field_name] = html_boolean($_field_value);
-				/* non-checkbox values should be handled normally */
-				}else{
-					$save_graph[$_field_name] = $_field_value;
-				}
-			/* also handle the "template this field" checkboxes */
-			}else if (substr($_field_name, 0, 2) == "t_") {
-				$save_graph[$_field_name] = html_boolean($_field_value);
-			}
-		}
-
-		$save_graph["id"] = $_POST["graph_template_id"];
-
 		/* step #2: field validation */
-		validate_graph_fields($save_graph, $suggested_value_fields, "g||field|", "sv||field|||id|");
+		$form_graph["id"] = $_POST["graph_template_id"];
+		$form_graph["template_name"] = $_POST["template_name"];
+		$form_graph["t_title"] = html_boolean(isset($_POST["t_title"]) ? $_POST["t_title"] : "");
+		$form_graph["vertical_label"] = $_POST["vertical_label"];
+		$form_graph["t_vertical_label"] = html_boolean(isset($_POST["t_vertical_label"]) ? $_POST["t_vertical_label"] : "");
+		$form_graph["image_format"] = $_POST["image_format"];
+		$form_graph["t_image_format"] = html_boolean(isset($_POST["t_image_format"]) ? $_POST["t_image_format"] : "");
+		$form_graph["export"] = html_boolean(isset($_POST["export"]) ? $_POST["export"] : "");
+		$form_graph["t_export"] = html_boolean(isset($_POST["t_export"]) ? $_POST["t_export"] : "");
+		$form_graph["force_rules_legend"] = html_boolean(isset($_POST["force_rules_legend"]) ? $_POST["force_rules_legend"] : "");
+		$form_graph["t_force_rules_legend"] = html_boolean(isset($_POST["t_force_rules_legend"]) ? $_POST["t_force_rules_legend"] : "");
+		$form_graph["height"] = $_POST["height"];
+		$form_graph["t_height"] = html_boolean(isset($_POST["t_height"]) ? $_POST["t_height"] : "");
+		$form_graph["width"] = $_POST["width"];
+		$form_graph["t_width"] = html_boolean(isset($_POST["t_width"]) ? $_POST["t_width"] : "");
+		$form_graph["x_grid"] = $_POST["x_grid"];
+		$form_graph["t_x_grid"] = html_boolean(isset($_POST["t_x_grid"]) ? $_POST["t_x_grid"] : "");
+		$form_graph["y_grid"] = $_POST["y_grid"];
+		$form_graph["t_y_grid"] = html_boolean(isset($_POST["t_y_grid"]) ? $_POST["t_y_grid"] : "");
+		$form_graph["y_grid_alt"] = html_boolean(isset($_POST["y_grid_alt"]) ? $_POST["y_grid_alt"] : "");
+		$form_graph["t_y_grid_alt"] = html_boolean(isset($_POST["t_y_grid_alt"]) ? $_POST["t_y_grid_alt"] : "");
+		$form_graph["no_minor"] = html_boolean(isset($_POST["no_minor"]) ? $_POST["no_minor"] : "");
+		$form_graph["t_no_minor"] = html_boolean(isset($_POST["t_no_minor"]) ? $_POST["t_no_minor"] : "");
+		$form_graph["auto_scale"] = html_boolean(isset($_POST["auto_scale"]) ? $_POST["auto_scale"] : "");
+		$form_graph["t_auto_scale"] = html_boolean(isset($_POST["t_auto_scale"]) ? $_POST["t_auto_scale"] : "");
+		$form_graph["auto_scale_opts"] = $_POST["auto_scale_opts"];
+		$form_graph["t_auto_scale_opts"] = html_boolean(isset($_POST["t_auto_scale_opts"]) ? $_POST["t_auto_scale_opts"] : "");
+		$form_graph["auto_scale_log"] = html_boolean(isset($_POST["auto_scale_log"]) ? $_POST["auto_scale_log"] : "");
+		$form_graph["t_auto_scale_log"] = html_boolean(isset($_POST["t_auto_scale_log"]) ? $_POST["t_auto_scale_log"] : "");
+		$form_graph["auto_scale_rigid"] = html_boolean(isset($_POST["auto_scale_rigid"]) ? $_POST["auto_scale_rigid"] : "");
+		$form_graph["t_auto_scale_rigid"] = html_boolean(isset($_POST["t_auto_scale_rigid"]) ? $_POST["t_auto_scale_rigid"] : "");
+		$form_graph["auto_padding"] = html_boolean(isset($_POST["auto_padding"]) ? $_POST["auto_padding"] : "");
+		$form_graph["t_auto_padding"] = html_boolean(isset($_POST["t_auto_padding"]) ? $_POST["t_auto_padding"] : "");
+		$form_graph["upper_limit"] = $_POST["upper_limit"];
+		$form_graph["t_upper_limit"] = html_boolean(isset($_POST["t_upper_limit"]) ? $_POST["t_upper_limit"] : "");
+		$form_graph["lower_limit"] = $_POST["lower_limit"];
+		$form_graph["t_lower_limit"] = html_boolean(isset($_POST["t_lower_limit"]) ? $_POST["t_lower_limit"] : "");
+		$form_graph["base_value"] = $_POST["base_value"];
+		$form_graph["t_base_value"] = html_boolean(isset($_POST["t_base_value"]) ? $_POST["t_base_value"] : "");
+		$form_graph["unit_value"] = $_POST["unit_value"];
+		$form_graph["t_unit_value"] = html_boolean(isset($_POST["t_unit_value"]) ? $_POST["t_unit_value"] : "");
+		$form_graph["unit_length"] = $_POST["unit_length"];
+		$form_graph["t_unit_length"] = html_boolean(isset($_POST["t_unit_length"]) ? $_POST["t_unit_length"] : "");
+		$form_graph["unit_exponent_value"] = $_POST["unit_exponent_value"];
+		$form_graph["t_unit_exponent_value"] = html_boolean(isset($_POST["t_unit_exponent_value"]) ? $_POST["t_unit_exponent_value"] : "");
+
+		field_register_error(validate_graph_fields($form_graph, $suggested_value_fields, "|field|", "sv||field|||id|"));
 
 		/* step #3: field save */
 		if (!is_error_message()) {
-			$graph_template_id = api_graph_template_save($save_graph, $suggested_value_fields);
+			$graph_template_id = api_graph_template_save($form_graph, $suggested_value_fields);
 		}
 	}
 
@@ -264,7 +287,7 @@ function form_actions() {
 		$i++;
 	}
 
-	include_once("./include/top_header.php");
+	require_once(CACTI_BASE_PATH . "/include/top_header.php");
 
 	html_start_box("<strong>" . $graph_actions{$_POST["drp_action"]} . "</strong>", "60%", $colors["header_panel_background"], "3", "center", "");
 
@@ -311,7 +334,7 @@ function form_actions() {
 
 	html_end_box();
 
-	include_once("./include/bottom_footer.php");
+	require_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
 }
 
 /* ----------------------------
@@ -331,7 +354,7 @@ function sv_remove() {
 }
 
 function template_edit() {
-	global $colors, $struct_graph, $fields_graph_template_template_edit;
+	global $colors;
 
 	if (!empty($_GET["id"])) {
 		$graph_template = db_fetch_row("select * from graph_template where id=" . $_GET["id"]);
@@ -346,7 +369,7 @@ function template_edit() {
 	/* ==================== Box: Graph Template ==================== */
 
 	html_start_box("<strong>" . _("Graph Template") . "</strong> $header_label", "98%", $colors["header_background"], "3", "center", "");
-	_graph_template_field__template_name("g|template_name", (isset($graph_template) ? $graph_template["template_name"] : ""), (empty($_GET["id"]) ? 0 : $_GET["id"]));
+	_graph_template_field__template_name("template_name", (isset($graph_template) ? $graph_template["template_name"] : ""), (empty($_GET["id"]) ? 0 : $_GET["id"]));
 	html_end_box();
 
 	/* graph item list goes here */
@@ -397,33 +420,33 @@ function template_edit() {
 	html_start_box("<strong>" . _("Graph") . "</strong>", "98%", $colors["header_background"], "3", "center", "");
 
 	field_row_header("General Options");
-	_graph_field__title("g|title", true, (empty($_GET["id"]) ? 0 : $_GET["id"]), "g|t_title", (isset($graph_template["t_title"]) ? $graph_template["t_title"] : ""));
-	_graph_field__vertical_label("g|vertical_label", true, (isset($graph_template["vertical_label"]) ? $graph_template["vertical_label"] : ""), (empty($_GET["id"]) ? 0 : $_GET["id"]), "g|t_vertical_label", (isset($graph_template["t_vertical_label"]) ? $graph_template["t_vertical_label"] : ""));
-	_graph_field__image_format("g|image_format", (isset($graph_template["image_format"]) ? $graph_template["image_format"] : ""), true, (empty($_GET["id"]) ? 0 : $_GET["id"]), "g|t_image_format", (isset($graph_template["t_image_format"]) ? $graph_template["t_image_format"] : ""));
-	_graph_field__export("g|export", true, (isset($graph_template["export"]) ? $graph_template["export"] : ""), (empty($_GET["id"]) ? 0 : $_GET["id"]), "g|t_export", (isset($graph_template["t_export"]) ? $graph_template["t_export"] : ""));
-	_graph_field__force_rules_legend("g|force_rules_legend", true, (isset($graph_template["force_rules_legend"]) ? $graph_template["force_rules_legend"] : ""), (empty($_GET["id"]) ? 0 : $_GET["id"]), "g|t_force_rules_legend", (isset($graph_template["t_force_rules_legend"]) ? $graph_template["t_force_rules_legend"] : ""));
+	_graph_field__title("title", true, (empty($_GET["id"]) ? 0 : $_GET["id"]), "t_title", (isset($graph_template["t_title"]) ? $graph_template["t_title"] : ""));
+	_graph_field__vertical_label("vertical_label", true, (isset($graph_template["vertical_label"]) ? $graph_template["vertical_label"] : ""), (empty($_GET["id"]) ? 0 : $_GET["id"]), "t_vertical_label", (isset($graph_template["t_vertical_label"]) ? $graph_template["t_vertical_label"] : ""));
+	_graph_field__image_format("image_format", (isset($graph_template["image_format"]) ? $graph_template["image_format"] : ""), true, (empty($_GET["id"]) ? 0 : $_GET["id"]), "t_image_format", (isset($graph_template["t_image_format"]) ? $graph_template["t_image_format"] : ""));
+	_graph_field__export("export", true, (isset($graph_template["export"]) ? $graph_template["export"] : ""), (empty($_GET["id"]) ? 0 : $_GET["id"]), "t_export", (isset($graph_template["t_export"]) ? $graph_template["t_export"] : ""));
+	_graph_field__force_rules_legend("force_rules_legend", true, (isset($graph_template["force_rules_legend"]) ? $graph_template["force_rules_legend"] : ""), (empty($_GET["id"]) ? 0 : $_GET["id"]), "t_force_rules_legend", (isset($graph_template["t_force_rules_legend"]) ? $graph_template["t_force_rules_legend"] : ""));
 	field_row_header("Image Size Options");
-	_graph_field__height("g|height", true, (isset($graph_template["height"]) ? $graph_template["height"] : ""), (empty($_GET["id"]) ? 0 : $_GET["id"]), "g|t_height", (isset($graph_template["t_height"]) ? $graph_template["t_height"] : ""));
-	_graph_field__width("g|width", true, (isset($graph_template["width"]) ? $graph_template["width"] : ""), (empty($_GET["id"]) ? 0 : $_GET["id"]), "g|t_width", (isset($graph_template["t_width"]) ? $graph_template["t_width"] : ""));
+	_graph_field__height("height", true, (isset($graph_template["height"]) ? $graph_template["height"] : ""), (empty($_GET["id"]) ? 0 : $_GET["id"]), "t_height", (isset($graph_template["t_height"]) ? $graph_template["t_height"] : ""));
+	_graph_field__width("width", true, (isset($graph_template["width"]) ? $graph_template["width"] : ""), (empty($_GET["id"]) ? 0 : $_GET["id"]), "t_width", (isset($graph_template["t_width"]) ? $graph_template["t_width"] : ""));
 	field_row_header("Grid Options");
-	_graph_field__x_grid("g|x_grid", true, (isset($graph_template["x_grid"]) ? $graph_template["x_grid"] : ""), (empty($_GET["id"]) ? 0 : $_GET["id"]), "g|t_x_grid", (isset($graph_template["t_x_grid"]) ? $graph_template["t_x_grid"] : ""));
-	_graph_field__y_grid("g|y_grid", true, (isset($graph_template["y_grid"]) ? $graph_template["y_grid"] : ""), (empty($_GET["id"]) ? 0 : $_GET["id"]), "g|t_y_grid", (isset($graph_template["t_y_grid"]) ? $graph_template["t_y_grid"] : ""));
-	_graph_field__y_grid_alt("g|y_grid_alt", true, (isset($graph_template["y_grid_alt"]) ? $graph_template["y_grid_alt"] : ""), (empty($_GET["id"]) ? 0 : $_GET["id"]), "g|t_y_grid_alt", (isset($graph_template["t_y_grid_alt"]) ? $graph_template["t_y_grid_alt"] : ""));
-	_graph_field__no_minor("g|no_minor", true, (isset($graph_template["no_minor"]) ? $graph_template["no_minor"] : ""), (empty($_GET["id"]) ? 0 : $_GET["id"]), "g|t_no_minor", (isset($graph_template["t_no_minor"]) ? $graph_template["t_no_minor"] : ""));
+	_graph_field__x_grid("x_grid", true, (isset($graph_template["x_grid"]) ? $graph_template["x_grid"] : ""), (empty($_GET["id"]) ? 0 : $_GET["id"]), "t_x_grid", (isset($graph_template["t_x_grid"]) ? $graph_template["t_x_grid"] : ""));
+	_graph_field__y_grid("y_grid", true, (isset($graph_template["y_grid"]) ? $graph_template["y_grid"] : ""), (empty($_GET["id"]) ? 0 : $_GET["id"]), "t_y_grid", (isset($graph_template["t_y_grid"]) ? $graph_template["t_y_grid"] : ""));
+	_graph_field__y_grid_alt("y_grid_alt", true, (isset($graph_template["y_grid_alt"]) ? $graph_template["y_grid_alt"] : ""), (empty($_GET["id"]) ? 0 : $_GET["id"]), "t_y_grid_alt", (isset($graph_template["t_y_grid_alt"]) ? $graph_template["t_y_grid_alt"] : ""));
+	_graph_field__no_minor("no_minor", true, (isset($graph_template["no_minor"]) ? $graph_template["no_minor"] : ""), (empty($_GET["id"]) ? 0 : $_GET["id"]), "t_no_minor", (isset($graph_template["t_no_minor"]) ? $graph_template["t_no_minor"] : ""));
 	field_row_header("Auto Scaling Options");
-	_graph_field__auto_scale("g|auto_scale", true, (isset($graph_template["auto_scale"]) ? $graph_template["auto_scale"] : ""), (empty($_GET["id"]) ? 0 : $_GET["id"]), "g|t_auto_scale", (isset($graph_template["t_auto_scale"]) ? $graph_template["t_auto_scale"] : ""));
-	_graph_field__auto_scale_opts("g|auto_scale_opts", true, (isset($graph_template["auto_scale_opts"]) ? $graph_template["auto_scale_opts"] : ""), (empty($_GET["id"]) ? 0 : $_GET["id"]), "g|t_auto_scale_opts", (isset($graph_template["t_auto_scale_opts"]) ? $graph_template["t_auto_scale_opts"] : ""));
-	_graph_field__auto_scale_log("g|auto_scale_log", true, (isset($graph_template["auto_scale_log"]) ? $graph_template["auto_scale_log"] : ""), (empty($_GET["id"]) ? 0 : $_GET["id"]), "g|t_auto_scale_log", (isset($graph_template["t_auto_scale_log"]) ? $graph_template["t_auto_scale_log"] : ""));
-	_graph_field__auto_scale_rigid("g|auto_scale_rigid", true, (isset($graph_template["auto_scale_rigid"]) ? $graph_template["auto_scale_rigid"] : ""), (empty($_GET["id"]) ? 0 : $_GET["id"]), "g|t_auto_scale_rigid", (isset($graph_template["t_auto_scale_rigid"]) ? $graph_template["t_auto_scale_rigid"] : ""));
-	_graph_field__auto_padding("g|auto_padding", true, (isset($graph_template["auto_padding"]) ? $graph_template["auto_padding"] : ""), (empty($_GET["id"]) ? 0 : $_GET["id"]), "g|t_auto_padding", (isset($graph_template["t_auto_padding"]) ? $graph_template["t_auto_padding"] : ""));
+	_graph_field__auto_scale("auto_scale", true, (isset($graph_template["auto_scale"]) ? $graph_template["auto_scale"] : ""), (empty($_GET["id"]) ? 0 : $_GET["id"]), "t_auto_scale", (isset($graph_template["t_auto_scale"]) ? $graph_template["t_auto_scale"] : ""));
+	_graph_field__auto_scale_opts("auto_scale_opts", true, (isset($graph_template["auto_scale_opts"]) ? $graph_template["auto_scale_opts"] : ""), (empty($_GET["id"]) ? 0 : $_GET["id"]), "t_auto_scale_opts", (isset($graph_template["t_auto_scale_opts"]) ? $graph_template["t_auto_scale_opts"] : ""));
+	_graph_field__auto_scale_log("auto_scale_log", true, (isset($graph_template["auto_scale_log"]) ? $graph_template["auto_scale_log"] : ""), (empty($_GET["id"]) ? 0 : $_GET["id"]), "t_auto_scale_log", (isset($graph_template["t_auto_scale_log"]) ? $graph_template["t_auto_scale_log"] : ""));
+	_graph_field__auto_scale_rigid("auto_scale_rigid", true, (isset($graph_template["auto_scale_rigid"]) ? $graph_template["auto_scale_rigid"] : ""), (empty($_GET["id"]) ? 0 : $_GET["id"]), "t_auto_scale_rigid", (isset($graph_template["t_auto_scale_rigid"]) ? $graph_template["t_auto_scale_rigid"] : ""));
+	_graph_field__auto_padding("auto_padding", true, (isset($graph_template["auto_padding"]) ? $graph_template["auto_padding"] : ""), (empty($_GET["id"]) ? 0 : $_GET["id"]), "t_auto_padding", (isset($graph_template["t_auto_padding"]) ? $graph_template["t_auto_padding"] : ""));
 	field_row_header("Fixed Scaling Options");
-	_graph_field__upper_limit("g|upper_limit", true, (isset($graph_template["upper_limit"]) ? $graph_template["upper_limit"] : ""), (empty($_GET["id"]) ? 0 : $_GET["id"]), "g|t_upper_limit", (isset($graph_template["t_upper_limit"]) ? $graph_template["t_upper_limit"] : ""));
-	_graph_field__lower_limit("g|lower_limit", true, (isset($graph_template["lower_limit"]) ? $graph_template["lower_limit"] : ""), (empty($_GET["id"]) ? 0 : $_GET["id"]), "g|t_lower_limit", (isset($graph_template["t_lower_limit"]) ? $graph_template["t_lower_limit"] : ""));
-	_graph_field__base_value("g|base_value", true, (isset($graph_template["base_value"]) ? $graph_template["base_value"] : ""), (empty($_GET["id"]) ? 0 : $_GET["id"]), "g|t_base_value", (isset($graph_template["t_base_value"]) ? $graph_template["t_base_value"] : ""));
+	_graph_field__upper_limit("upper_limit", true, (isset($graph_template["upper_limit"]) ? $graph_template["upper_limit"] : ""), (empty($_GET["id"]) ? 0 : $_GET["id"]), "t_upper_limit", (isset($graph_template["t_upper_limit"]) ? $graph_template["t_upper_limit"] : ""));
+	_graph_field__lower_limit("lower_limit", true, (isset($graph_template["lower_limit"]) ? $graph_template["lower_limit"] : ""), (empty($_GET["id"]) ? 0 : $_GET["id"]), "t_lower_limit", (isset($graph_template["t_lower_limit"]) ? $graph_template["t_lower_limit"] : ""));
+	_graph_field__base_value("base_value", true, (isset($graph_template["base_value"]) ? $graph_template["base_value"] : ""), (empty($_GET["id"]) ? 0 : $_GET["id"]), "t_base_value", (isset($graph_template["t_base_value"]) ? $graph_template["t_base_value"] : ""));
 	field_row_header("Units Display Options");
-	_graph_field__unit_value("g|unit_value", true, (isset($graph_template["unit_value"]) ? $graph_template["unit_value"] : ""), (empty($_GET["id"]) ? 0 : $_GET["id"]), "g|t_unit_value", (isset($graph_template["t_unit_value"]) ? $graph_template["t_unit_value"] : ""));
-	_graph_field__unit_length("g|unit_length", true, (isset($graph_template["unit_length"]) ? $graph_template["unit_length"] : ""), (empty($_GET["id"]) ? 0 : $_GET["id"]), "g|t_unit_length", (isset($graph_template["t_unit_length"]) ? $graph_template["t_unit_length"] : ""));
-	_graph_field__unit_exponent_value("g|unit_exponent_value", true, (isset($graph_template["unit_exponent_value"]) ? $graph_template["unit_exponent_value"] : ""), (empty($_GET["id"]) ? 0 : $_GET["id"]), "g|t_unit_exponent_value", (isset($graph_template["t_unit_exponent_value"]) ? $graph_template["t_unit_exponent_value"] : ""));
+	_graph_field__unit_value("unit_value", true, (isset($graph_template["unit_value"]) ? $graph_template["unit_value"] : ""), (empty($_GET["id"]) ? 0 : $_GET["id"]), "t_unit_value", (isset($graph_template["t_unit_value"]) ? $graph_template["t_unit_value"] : ""));
+	_graph_field__unit_length("unit_length", true, (isset($graph_template["unit_length"]) ? $graph_template["unit_length"] : ""), (empty($_GET["id"]) ? 0 : $_GET["id"]), "t_unit_length", (isset($graph_template["t_unit_length"]) ? $graph_template["t_unit_length"] : ""));
+	_graph_field__unit_exponent_value("unit_exponent_value", true, (isset($graph_template["unit_exponent_value"]) ? $graph_template["unit_exponent_value"] : ""), (empty($_GET["id"]) ? 0 : $_GET["id"]), "t_unit_exponent_value", (isset($graph_template["t_unit_exponent_value"]) ? $graph_template["t_unit_exponent_value"] : ""));
 
 	html_end_box();
 

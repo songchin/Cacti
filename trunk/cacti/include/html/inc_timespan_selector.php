@@ -1,5 +1,5 @@
 <?php
-include(CACTI_BASE_PATH . "/include/graph/graph_arrays.php");
+require(CACTI_BASE_PATH . "/include/graph/graph_arrays.php");
 ?>
 	<script type='text/javascript'>
 	// Initialize the calendar

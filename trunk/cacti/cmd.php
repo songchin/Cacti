@@ -36,12 +36,12 @@ ini_set("memory_limit", "32M");
 
 $no_http_headers = true;
 
-include(dirname(__FILE__) . "/include/config.php");
-include_once($config["base_path"] . "/lib/string.php");
-include_once($config["base_path"] . "/lib/snmp.php");
-include_once($config["base_path"] . "/lib/poller.php");
-include_once($config["base_path"] . "/lib/rrd.php");
-include_once($config["base_path"] . "/lib/ping.php");
+require(dirname(__FILE__) . "/include/config.php");
+require_once(CACTI_BASE_PATH . "/lib/sys/string.php");
+require_once(CACTI_BASE_PATH . "/lib/sys/snmp.php");
+require_once(CACTI_BASE_PATH . "/lib/sys/ping.php");
+require_once(CACTI_BASE_PATH . "/lib/sys/rrd.php");
+require_once(CACTI_BASE_PATH . "/lib/poller.php");
 
 /* record start time */
 list($micro,$seconds) = split(" ", microtime());
@@ -154,7 +154,7 @@ if ((sizeof($polling_items) > 0) && (read_config_option("poller_enabled") == "on
 
 	/* start the script_server */
 	if (function_exists("proc_open")) {
-		$cactiphp = proc_open(read_config_option("path_php_binary") . " " . $config["base_path"] . "/script_server.php cmd " . $poller_id, $cactides, $pipes);
+		$cactiphp = proc_open(read_config_option("path_php_binary") . " " . CACTI_BASE_PATH . "/script_server.php cmd " . $poller_id, $cactides, $pipes);
 		$output = fgets($pipes[1], 1024);
 		if (substr_count($output, _("Started")) != 0) {
 			api_syslog_cacti_log(_("PHP Script Server Started Properly"), SEV_DEBUG, $poller_id, 0, 0, $print_data_to_stdout, FACIL_CMDPHP);

@@ -22,11 +22,11 @@
  +-------------------------------------------------------------------------+
 */
 
-include("./include/config.php");
-include("./include/auth.php");
-include_once("./lib/graph/graph_template_update.php");
-include_once("./include/graph/graph_form.php");
-include_once("./lib/template.php");
+require(dirname(__FILE__) . "/include/config.php");
+require_once(CACTI_BASE_PATH . "/include/auth.php");
+require_once(CACTI_BASE_PATH . "/lib/graph_template/graph_template_update.php");
+require_once(CACTI_BASE_PATH . "/include/graph/graph_form.php");
+require_once(CACTI_BASE_PATH . "/lib/template.php");
 
 /* set default action */
 if (!isset($_REQUEST["action"])) { $_REQUEST["action"] = ""; }
@@ -42,11 +42,11 @@ switch ($_REQUEST["action"]) {
 		header("Location: graph_templates.php?action=edit&id=" . $_GET["graph_template_id"]);
 		break;
 	case 'edit':
-		include_once("./include/top_header.php");
+		require_once(CACTI_BASE_PATH . "/include/top_header.php");
 
 		input_edit();
 
-		include_once("./include/bottom_footer.php");
+		require_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
 		break;
 }
 
@@ -81,9 +81,9 @@ function form_save() {
 
 function input_remove() {
 	if ((read_config_option("remove_verification") == "on") && (!isset($_GET["confirm"]))) {
-		include("./include/top_header.php");
+		require_once(CACTI_BASE_PATH . "/include/top_header.php");
 		form_confirm(_("Are You Sure?"), _("Are you sure you want to delete the input item") . " <strong>'" . db_fetch_cell("select name from graph_template_item_input where id=" . $_GET["id"]) . "'</strong>? NOTE: Deleting this input will <strong>not</strong> affect graphs that use this template.", "graph_templates.php?action=edit&id=" . $_GET["graph_template_id"], "graph_templates_inputs.php?action=remove&id=" . $_GET["id"] . "&graph_template_id=" . $_GET["graph_template_id"]);
-		include("./include/bottom_footer.php");
+		require_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
 		exit;
 	}
 

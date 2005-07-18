@@ -22,8 +22,8 @@
  +-------------------------------------------------------------------------+
 */
 
-include("./include/config.php");
-include("./lib/user/user_action.php");
+require("./include/config.php");
+require_once(CACTI_BASE_PATH . "/lib/user/user_action.php");
 
 $user = api_user_info( array( "id" => $_SESSION["sess_user_id"] ) );
 

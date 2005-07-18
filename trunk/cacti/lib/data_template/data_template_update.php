@@ -23,8 +23,8 @@
 */
 
 function api_data_template_save($_fields_data_source, $_fields_suggested_values, $_fields_data_input, $_fields_rra_id) {
-	include_once(CACTI_BASE_PATH . "/lib/data_source/data_source_template.php");
-	include_once(CACTI_BASE_PATH . "/lib/sys/sequence.php");
+	require_once(CACTI_BASE_PATH . "/lib/data_template/data_template_push.php");
+	require_once(CACTI_BASE_PATH . "/lib/sys/sequence.php");
 
 	/* keep the template hash fresh */
 	$_fields_data_source["hash"] = get_hash_data_template($_fields_data_source["id"]);
@@ -65,7 +65,7 @@ function api_data_template_save($_fields_data_source, $_fields_suggested_values,
 }
 
 function api_data_template_item_save($_fields_data_source_item) {
-	include_once(CACTI_BASE_PATH . "/lib/data_source/data_source_template.php");
+	require_once(CACTI_BASE_PATH . "/lib/data_template/data_template_push.php");
 
 	/* keep the template hash fresh */
 	$_fields_data_source_item["hash"] = get_hash_data_template($_fields_data_source_item["id"], "data_template_item");

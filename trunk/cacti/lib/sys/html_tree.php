@@ -23,9 +23,10 @@
 */
 
 function grow_graph_tree($tree_id, $start_branch, $user_id, $options) {
-	global $colors, $current_user, $config;
+	global $colors, $current_user;
 
-	include_once($config["library_path"] . "/tree.php");
+	require_once(CACTI_BASE_PATH . "/lib/sys/auth.php");
+	require_once(CACTI_BASE_PATH . "/lib/sys/tree.php");
 
 	$search_key = "";
 	$already_open = false;
@@ -54,7 +55,7 @@ function grow_graph_tree($tree_id, $start_branch, $user_id, $options) {
 	/* include time span selector */
 	if (read_graph_config_option("timespan_sel") == "on") {
 		html_graph_start_box(3, false);
-		include("./include/html/inc_timespan_selector.php");
+		require("./include/html/inc_timespan_selector.php");
 		html_graph_end_box();
 		print "<br>";
 	}
@@ -89,91 +90,91 @@ function grow_graph_tree($tree_id, $start_branch, $user_id, $options) {
 
 	/* loop through each tree item */
 	if (sizeof($heirarchy) > 0) {
-	foreach ($heirarchy as $leaf) {
-		/* find out how 'deep' this item is */
-		$tier = tree_tier($leaf["order_key"]);
+		foreach ($heirarchy as $leaf) {
+			/* find out how 'deep' this item is */
+			$tier = tree_tier($leaf["order_key"]);
 
-		/* find the type of the current branch */
-		if ($leaf["title"] != "") { $current_leaf_type = "heading"; }elseif (!empty($leaf["local_graph_id"])) { $current_leaf_type = "graph"; }else{ $current_leaf_type = "host"; }
+			/* find the type of the current branch */
+			if ($leaf["title"] != "") { $current_leaf_type = "heading"; }elseif (!empty($leaf["local_graph_id"])) { $current_leaf_type = "graph"; }else{ $current_leaf_type = "host"; }
 
-		/* find the type of the next branch. make sure the next item exists first */
-		if (isset($heirarchy{$i+1})) {
-			if ($heirarchy{$i+1}["title"] != "") { $next_leaf_type = "heading"; }elseif (!empty($heirarchy{$i+1}["local_graph_id"])) { $next_leaf_type = "graph"; }else{ $next_leaf_type = "host"; }
-		}else{
-			$next_leaf_type = "";
-		}
+			/* find the type of the next branch. make sure the next item exists first */
+			if (isset($heirarchy{$i+1})) {
+				if ($heirarchy{$i+1}["title"] != "") { $next_leaf_type = "heading"; }elseif (!empty($heirarchy{$i+1}["local_graph_id"])) { $next_leaf_type = "graph"; }else{ $next_leaf_type = "host"; }
+			}else{
+				$next_leaf_type = "";
+			}
 
-		if ((($current_leaf_type == 'heading') || ($current_leaf_type == 'host')) && (($tier <= $hide_until_tier) || ($hide_until_tier == false))) {
-			$current_title = (($current_leaf_type == "heading") ? $leaf["title"] : $leaf["hostname"]);
+			if ((($current_leaf_type == 'heading') || ($current_leaf_type == 'host')) && (($tier <= $hide_until_tier) || ($hide_until_tier == false))) {
+				$current_title = (($current_leaf_type == "heading") ? $leaf["title"] : $leaf["hostname"]);
 
-			/* draw heading */
-			draw_tree_header_row($tree_id, $leaf["id"], $tier, $current_title, true, $leaf["status"], true);
+				/* draw heading */
+				draw_tree_header_row($tree_id, $leaf["id"], $tier, $current_title, true, $leaf["status"], true);
 
-			/* this is an open host, lets expand a bit */
-			if (($current_leaf_type == "host") && (empty($leaf["status"]))) {
-				/* get a list of all graph templates in use by this host */
-				$graph_templates = db_fetch_assoc("select
-					graph_templates.id,
-					graph_templates.name
-					from graph_local,graph_templates,graph_templates_graph
-					where graph_local.id=graph_templates_graph.local_graph_id
-					and graph_templates_graph.graph_template_id=graph_templates.id
-					and graph_local.host_id=" . $leaf["host_id"] . "
-					group by graph_templates.id
-					order by graph_templates.name");
-
-				if (sizeof($graph_templates) > 0) {
-				foreach ($graph_templates as $graph_template) {
-					draw_tree_header_row($tree_id, $leaf["id"], ($tier+1), $graph_template["name"], false, $leaf["status"], false);
-
-					/* get a list of each graph using this graph template for this particular host */
-					$graphs = db_fetch_assoc("select
-						graph_templates_graph.title_cache,
-						graph_templates_graph.local_graph_id
+				/* this is an open host, lets expand a bit */
+				if (($current_leaf_type == "host") && (empty($leaf["status"]))) {
+					/* get a list of all graph templates in use by this host */
+					$graph_templates = db_fetch_assoc("select
+						graph_templates.id,
+						graph_templates.name
 						from graph_local,graph_templates,graph_templates_graph
 						where graph_local.id=graph_templates_graph.local_graph_id
 						and graph_templates_graph.graph_template_id=graph_templates.id
-						and graph_local.graph_template_id=" . $graph_template["id"] . "
 						and graph_local.host_id=" . $leaf["host_id"] . "
-						order by graph_templates_graph.title_cache");
+						group by graph_templates.id
+						order by graph_templates.name");
 
-					$graph_ct = 0;
-					if (sizeof($graphs) > 0) {
-					foreach ($graphs as $graph) {
-						/* incriment graph counter so we know when to start a new row or not */
-						$graph_ct++;
+					if (sizeof($graph_templates) > 0) {
+					foreach ($graph_templates as $graph_template) {
+						draw_tree_header_row($tree_id, $leaf["id"], ($tier+1), $graph_template["name"], false, $leaf["status"], false);
 
-						if (!isset($graphs[$graph_ct])) { $next_leaf_type = "heading"; }else{ $next_leaf_type = "graph"; }
+						/* get a list of each graph using this graph template for this particular host */
+						$graphs = db_fetch_assoc("select
+							graph_templates_graph.title_cache,
+							graph_templates_graph.local_graph_id
+							from graph_local,graph_templates,graph_templates_graph
+							where graph_local.id=graph_templates_graph.local_graph_id
+							and graph_templates_graph.graph_template_id=graph_templates.id
+							and graph_local.graph_template_id=" . $graph_template["id"] . "
+							and graph_local.host_id=" . $leaf["host_id"] . "
+							order by graph_templates_graph.title_cache");
 
-						/* draw graph */
-						$already_open = draw_tree_graph_row($already_open, $graph_ct, $next_leaf_type, ($tier+2), $graph["local_graph_id"], 1, $graph["title_cache"]);
+						$graph_ct = 0;
+						if (sizeof($graphs) > 0) {
+						foreach ($graphs as $graph) {
+							/* incriment graph counter so we know when to start a new row or not */
+							$graph_ct++;
+
+							if (!isset($graphs[$graph_ct])) { $next_leaf_type = "heading"; }else{ $next_leaf_type = "graph"; }
+
+							/* draw graph */
+							$already_open = draw_tree_graph_row($already_open, $graph_ct, $next_leaf_type, ($tier+2), $graph["local_graph_id"], 1, $graph["title_cache"]);
+						}
+						}
 					}
 					}
 				}
-				}
+
+				$graph_ct = 0;
+			}elseif (($current_leaf_type == 'graph') && (($tier <= $hide_until_tier) || ($hide_until_tier == false))) {
+				/* incriment graph counter so we know when to start a new row or not */
+				$graph_ct++;
+
+				/* draw graph */
+				$already_open = draw_tree_graph_row($already_open, $graph_ct, $next_leaf_type, $tier, $leaf["local_graph_id"], $leaf["rra_id"], $leaf["graph_title"]);
 			}
 
-			$graph_ct = 0;
-		}elseif (($current_leaf_type == 'graph') && (($tier <= $hide_until_tier) || ($hide_until_tier == false))) {
-			/* incriment graph counter so we know when to start a new row or not */
-			$graph_ct++;
+			/* if we have come back to the tier that was origionally flagged, then take away the flag */
+			if (($tier <= $hide_until_tier) && ($hide_until_tier != false)) {
+				$hide_until_tier = false;
+			}
 
-			/* draw graph */
-			$already_open = draw_tree_graph_row($already_open, $graph_ct, $next_leaf_type, $tier, $leaf["local_graph_id"], $leaf["rra_id"], $leaf["graph_title"]);
+			/* if we are supposed to hide this branch, flag it */
+			if (($leaf["status"] == "1") && ($hide_until_tier == false)) {
+				$hide_until_tier = $tier;
+			}
+
+			$i++;
 		}
-
-		/* if we have come back to the tier that was origionally flagged, then take away the flag */
-		if (($tier <= $hide_until_tier) && ($hide_until_tier != false)) {
-			$hide_until_tier = false;
-		}
-
-		/* if we are supposed to hide this branch, flag it */
-		if (($leaf["status"] == "1") && ($hide_until_tier == false)) {
-			$hide_until_tier = $tier;
-		}
-
-		$i++;
-	}
 	}
 
 	print "</tr></table></td></tr>";
@@ -182,9 +183,9 @@ function grow_graph_tree($tree_id, $start_branch, $user_id, $options) {
 }
 
 function grow_edit_graph_tree($tree_id, $user_id, $options) {
-	global $config, $colors;
+	global $colors;
 
-	include_once($config["library_path"] . "/tree.php");
+	require_once(CACTI_BASE_PATH . "/lib/sys/tree.php");
 
 	$tree_sorting_type = db_fetch_cell("select sort_type from graph_tree where id='$tree_id'");
 
@@ -209,45 +210,45 @@ function grow_edit_graph_tree($tree_id, $user_id, $options) {
 
 	$i = 0;
 	if (sizeof($tree) > 0) {
-	foreach ($tree as $leaf) {
-		$tier = tree_tier($leaf["order_key"]);
-		$transparent_indent = "<img width='" . (($tier-1) * 20) . "' height='1' align='middle' alt=''>&nbsp;";
-		$sort_cache[$tier] = $leaf["sort_children_type"];
+		foreach ($tree as $leaf) {
+			$tier = tree_tier($leaf["order_key"]);
+			$transparent_indent = "<img width='" . (($tier-1) * 20) . "' height='1' align='middle' alt=''>&nbsp;";
+			$sort_cache[$tier] = $leaf["sort_children_type"];
 
-		if ($i % 2 == 0) { $row_color = $colors["form_alternate1"]; }else{ $row_color = $colors["form_alternate2"]; } $i++;
+			if ($i % 2 == 0) { $row_color = $colors["form_alternate1"]; }else{ $row_color = $colors["form_alternate2"]; } $i++;
 
-		if ($leaf["local_graph_id"] > 0) {
-			print "<td bgcolor='#$row_color' bgcolor='#" . $colors["panel"] . "'>$transparent_indent<a href='tree.php?action=item_edit&tree_id=" . $_GET["id"] . "&id=" . $leaf["id"] . "'>" . $leaf["graph_title"] . "</a></td>\n";
-			print "<td bgcolor='#$row_color' bgcolor='#" . $colors["panel"] . "'>Graph</td>";
-		}elseif ($leaf["title"] != "") {
-			print "<td bgcolor='#$row_color' bgcolor='#" . $colors["panel"] . "'>$transparent_indent<a href='tree.php?action=item_edit&tree_id=" . $_GET["id"] . "&id=" . $leaf["id"] . "'><strong>" . $leaf["title"] . "</strong></a> (<a href='tree.php?action=item_edit&tree_id=" . $_GET["id"] . "&parent_id=" . $leaf["id"] . "'>Add</a>)</td>\n";
-			print "<td bgcolor='#$row_color' bgcolor='#" . $colors["panel"] . "'>Heading</td>";
-		}elseif ($leaf["host_id"] > 0) {
-			print "<td bgcolor='#$row_color' bgcolor='#" . $colors["panel"] . "'>$transparent_indent<a href='tree.php?action=item_edit&tree_id=" . $_GET["id"] . "&id=" . $leaf["id"] . "'><strong>Host:</strong> " . $leaf["hostname"] . "</a></td>\n";
-			print "<td bgcolor='#$row_color' bgcolor='#" . $colors["panel"] . "'>Host</td>";
+			if ($leaf["local_graph_id"] > 0) {
+				print "<td bgcolor='#$row_color' bgcolor='#" . $colors["panel"] . "'>$transparent_indent<a href='tree.php?action=item_edit&tree_id=" . $_GET["id"] . "&id=" . $leaf["id"] . "'>" . $leaf["graph_title"] . "</a></td>\n";
+				print "<td bgcolor='#$row_color' bgcolor='#" . $colors["panel"] . "'>Graph</td>";
+			}elseif ($leaf["title"] != "") {
+				print "<td bgcolor='#$row_color' bgcolor='#" . $colors["panel"] . "'>$transparent_indent<a href='tree.php?action=item_edit&tree_id=" . $_GET["id"] . "&id=" . $leaf["id"] . "'><strong>" . $leaf["title"] . "</strong></a> (<a href='tree.php?action=item_edit&tree_id=" . $_GET["id"] . "&parent_id=" . $leaf["id"] . "'>Add</a>)</td>\n";
+				print "<td bgcolor='#$row_color' bgcolor='#" . $colors["panel"] . "'>Heading</td>";
+			}elseif ($leaf["host_id"] > 0) {
+				print "<td bgcolor='#$row_color' bgcolor='#" . $colors["panel"] . "'>$transparent_indent<a href='tree.php?action=item_edit&tree_id=" . $_GET["id"] . "&id=" . $leaf["id"] . "'><strong>Host:</strong> " . $leaf["hostname"] . "</a></td>\n";
+				print "<td bgcolor='#$row_color' bgcolor='#" . $colors["panel"] . "'>Host</td>";
+			}
+
+			if ( ((isset($sort_cache{$tier-1})) && ($sort_cache{$tier-1} != TREE_ORDERING_NONE)) || ($tree_sorting_type != TREE_ORDERING_NONE) )  {
+				print "<td bgcolor='#$row_color' width='80'></td>\n";
+			}else{
+				print 	"<td bgcolor='#$row_color' width='80' align='center'>\n
+					<a href='tree.php?action=item_movedown&id=" . $leaf["id"] . "&tree_id=" . $_GET["id"] . "'><img src='images/move_down.gif' border='0' alt='Move Down'></a>\n
+					<a href='tree.php?action=item_moveup&id=" . $leaf["id"] . "&tree_id=" . $_GET["id"] . "'><img src='images/move_up.gif' border='0' alt='Move Up'></a>\n
+					</td>\n";
+			}
+
+			print 	"<td bgcolor='#$row_color' align='right'>\n
+				<a href='tree.php?action=item_remove&id=" . $leaf["id"] . "&tree_id=$tree_id'><img src='images/delete_icon.gif' width='10' height='10' border='0' alt='Delete'></a>\n
+				</td></tr>\n";
 		}
-
-		if ( ((isset($sort_cache{$tier-1})) && ($sort_cache{$tier-1} != TREE_ORDERING_NONE)) || ($tree_sorting_type != TREE_ORDERING_NONE) )  {
-			print "<td bgcolor='#$row_color' width='80'></td>\n";
-		}else{
-			print 	"<td bgcolor='#$row_color' width='80' align='center'>\n
-				<a href='tree.php?action=item_movedown&id=" . $leaf["id"] . "&tree_id=" . $_GET["id"] . "'><img src='images/move_down.gif' border='0' alt='Move Down'></a>\n
-				<a href='tree.php?action=item_moveup&id=" . $leaf["id"] . "&tree_id=" . $_GET["id"] . "'><img src='images/move_up.gif' border='0' alt='Move Up'></a>\n
-				</td>\n";
-		}
-
-		print 	"<td bgcolor='#$row_color' align='right'>\n
-			<a href='tree.php?action=item_remove&id=" . $leaf["id"] . "&tree_id=$tree_id'><img src='images/delete_icon.gif' width='10' height='10' border='0' alt='Delete'></a>\n
-			</td></tr>\n";
-	}
 	}else{ print "<tr><td><em>No Graph Tree Items</em></td></tr>";
 	}
 }
 
 function grow_dropdown_tree($tree_id, $form_name, $selected_tree_item_id) {
-	global $colors, $config;
+	global $colors;
 
-	include_once($config["library_path"] . "/tree.php");
+	require_once(CACTI_BASE_PATH . "/lib/sys/tree.php");
 
 	$tree = db_fetch_assoc("select
 		graph_tree_items.id,
@@ -262,28 +263,27 @@ function grow_dropdown_tree($tree_id, $form_name, $selected_tree_item_id) {
 	print "<option value='0'>[root]</option>\n";
 
 	if (sizeof($tree) > 0) {
-	foreach ($tree as $leaf) {
-	    	$tier = tree_tier($leaf["order_key"]);
-	    	$indent = str_repeat("---", ($tier));
+		foreach ($tree as $leaf) {
+			$tier = tree_tier($leaf["order_key"]);
+			$indent = str_repeat("---", ($tier));
 
-		if ($selected_tree_item_id == $leaf["id"]) {
-			$html_selected = " selected";
-		}else{
-			$html_selected = "";
+			if ($selected_tree_item_id == $leaf["id"]) {
+				$html_selected = " selected";
+			}else{
+				$html_selected = "";
+			}
+
+			print "<option value='" . $leaf["id"] . "'$html_selected>$indent " . $leaf["title"] . "</option>\n";
 		}
-
-	    	print "<option value='" . $leaf["id"] . "'$html_selected>$indent " . $leaf["title"] . "</option>\n";
-	}
 	}
 
 	print "</select>\n";
 }
 
 function grow_dhtml_trees() {
-	global $colors, $config;
+	global $colors;
 
-	include_once($config["library_path"] . "/tree.php");
-	include_once($config["library_path"] . "/data_query.php");
+	require_once(CACTI_BASE_PATH . "/lib/sys/tree.php");
 
 	?>
 	<script type="text/javascript">
@@ -296,10 +296,10 @@ function grow_dhtml_trees() {
 	PERSERVESTATE = 1
 	HIGHLIGHT = 1
 	<?php
-    /* get current time */
+	/* get current time */
 	list($micro,$seconds) = split(" ", microtime());
 	$current_time = $seconds + $micro;
-    $expand_hosts = read_graph_config_option("expand_hosts");
+	$expand_hosts = read_graph_config_option("expand_hosts");
 
 	if (!isset($_SESSION['dhtml_tree'])) {
 		$dhtml_tree = create_dhtml_tree();
@@ -327,7 +327,10 @@ function grow_dhtml_trees() {
 }
 
 function create_dhtml_tree() {
-    /* Record Start Time */
+	require_once(CACTI_BASE_PATH . "/lib/sys/tree.php");
+	require_once(CACTI_BASE_PATH . "/lib/data_query/data_query_info.php");
+
+	/* Record Start Time */
 	list($micro,$seconds) = split(" ", microtime());
 	$start = $seconds + $micro;
 
@@ -336,7 +339,7 @@ function create_dhtml_tree() {
 	$dhtml_tree[0] = $start;
 	$dhtml_tree[1] = read_graph_config_option("expand_hosts");
 	$dhtml_tree[2] = "foldersTree = gFld(\"\", \"\")\n";
-    $i = 2;
+	$i = 2;
 
 	$tree_list = get_graph_tree_array();
 
@@ -357,97 +360,97 @@ function create_dhtml_tree() {
 	}
 
 	if (sizeof($tree_list) > 0) {
-	foreach ($tree_list as $tree) {
-        $i++;
-		$heirarchy = db_fetch_assoc("select
-			graph_tree_items.id,
-			graph_tree_items.title,
-			graph_tree_items.order_key,
-			graph_tree_items.host_id,
-			graph_tree_items.host_grouping_type,
-			host.description as hostname
-			from graph_tree_items
-			left join host on host.id=graph_tree_items.host_id
-			$sql_join
-			where graph_tree_items.graph_tree_id=" . $tree["id"] . "
-			$sql_where
-			and graph_tree_items.local_graph_id = 0
-			order by graph_tree_items.order_key");
+		foreach ($tree_list as $tree) {
+			$i++;
+			$heirarchy = db_fetch_assoc("select
+				graph_tree_items.id,
+				graph_tree_items.title,
+				graph_tree_items.order_key,
+				graph_tree_items.host_id,
+				graph_tree_items.host_grouping_type,
+				host.description as hostname
+				from graph_tree_items
+				left join host on host.id=graph_tree_items.host_id
+				$sql_join
+				where graph_tree_items.graph_tree_id=" . $tree["id"] . "
+				$sql_where
+				and graph_tree_items.local_graph_id = 0
+				order by graph_tree_items.order_key");
 
-		$dhtml_tree[$i] = "ou0 = insFld(foldersTree, gFld(\"" . $tree["name"] . "\", \"graph_view.php?action=tree&tree_id=" . $tree["id"] . "\"))\n";
+			$dhtml_tree[$i] = "ou0 = insFld(foldersTree, gFld(\"" . $tree["name"] . "\", \"graph_view.php?action=tree&tree_id=" . $tree["id"] . "\"))\n";
 
-		if (sizeof($heirarchy) > 0) {
-		foreach ($heirarchy as $leaf) {
-            $i++;
-            $tier = tree_tier($leaf["order_key"]);
+			if (sizeof($heirarchy) > 0) {
+				foreach ($heirarchy as $leaf) {
+					$i++;
+					$tier = tree_tier($leaf["order_key"]);
 
-			if ($leaf["host_id"] > 0) {
-				$dhtml_tree[$i] = "ou" . ($tier) . " = insFld(ou" . ($tier-1) . ", gFld(\"<strong>Host:</strong> " . $leaf["hostname"] . "\", \"graph_view.php?action=tree&tree_id=" . $tree["id"] . "&leaf_id=" . $leaf["id"] . "\"))\n";
-				if (read_graph_config_option("expand_hosts") == "on") {
-					if ($leaf["host_grouping_type"] == HOST_GROUPING_GRAPH_TEMPLATE) {
-						$graph_templates = db_fetch_assoc("select
-							graph_templates.id,
-							graph_templates.name
-							from graph_local,graph_templates,graph_templates_graph
-							where graph_local.id=graph_templates_graph.local_graph_id
-							and graph_templates_graph.graph_template_id=graph_templates.id
-							and graph_local.host_id=" . $leaf["host_id"] . "
-							group by graph_templates.id
-							order by graph_templates.name");
+					if ($leaf["host_id"] > 0) {
+						$dhtml_tree[$i] = "ou" . ($tier) . " = insFld(ou" . ($tier-1) . ", gFld(\"<strong>Host:</strong> " . $leaf["hostname"] . "\", \"graph_view.php?action=tree&tree_id=" . $tree["id"] . "&leaf_id=" . $leaf["id"] . "\"))\n";
+						if (read_graph_config_option("expand_hosts") == "on") {
+							if ($leaf["host_grouping_type"] == HOST_GROUPING_GRAPH_TEMPLATE) {
+								$graph_templates = db_fetch_assoc("select
+									graph_template.id,
+									graph_template.template_name
+									from graph,graph_template
+									where graph.graph_template_id=graph_template.id
+									and graph.host_id = " . $leaf["host_id"] . "
+									group by graph_template.id
+									order by graph_template.template_name");
 
-						if (sizeof($graph_templates) > 0) {
-						foreach ($graph_templates as $graph_template) {
-                            $i++;
-							$dhtml_tree[$i] = "ou" . ($tier+1) . " = insFld(ou" . ($tier) . ", gFld(\" " . $graph_template["name"] . "\", \"graph_view.php?action=tree&tree_id=" . $tree["id"] . "&leaf_id=" . $leaf["id"] . "&host_group_data=graph_template:" . $graph_template["id"] . "\"))\n";
-						}
-						}
-					}else if ($leaf["host_grouping_type"] == HOST_GROUPING_DATA_QUERY_INDEX) {
-						$data_queries = db_fetch_assoc("select
-							snmp_query.id,
-							snmp_query.name
-							from graph_local,snmp_query
-							where graph_local.snmp_query_id=snmp_query.id
-							and graph_local.host_id=" . $leaf["host_id"] . "
-							group by snmp_query.id
-							order by snmp_query.name");
+								if (sizeof($graph_templates) > 0) {
+									foreach ($graph_templates as $graph_template) {
+										$i++;
+										$dhtml_tree[$i] = "ou" . ($tier+1) . " = insFld(ou" . ($tier) . ", gFld(\" " . $graph_template["template_name"] . "\", \"graph_view.php?action=tree&tree_id=" . $tree["id"] . "&leaf_id=" . $leaf["id"] . "&host_group_data=graph_template:" . $graph_template["id"] . "\"))\n";
+									}
+								}
+							}else if ($leaf["host_grouping_type"] == HOST_GROUPING_DATA_QUERY_INDEX) {
+								$data_queries = db_fetch_assoc("select
+									snmp_query.id,
+									snmp_query.name
+									from data_source,data_source_field,snmp_query
+									where data_source.id=data_source_field.data_source_id
+									and (data_source_field.value=snmp_query.id and data_source_field.name = 'data_query_id')
+									and data_source.host_id = " . $leaf["host_id"] . "
+									group by snmp_query.id
+									order by snmp_query.name");
 
-						array_push($data_queries, array(
-							"id" => "0",
-							"name" => "(Non Indexed)"
-							));
+								array_push($data_queries, array(
+									"id" => "0",
+									"name" => "(Non Indexed)"
+									));
 
-						if (sizeof($data_queries) > 0) {
-						foreach ($data_queries as $data_query) {
-                            $i++;
-							$dhtml_tree[$i] = "ou" . ($tier+1) . " = insFld(ou" . ($tier) . ", gFld(\" " . $data_query["name"] . "\", \"graph_view.php?action=tree&tree_id=" . $tree["id"] . "&leaf_id=" . $leaf["id"] . "&host_group_data=data_query:" . $data_query["id"] . "\"))\n";
+								if (sizeof($data_queries) > 0) {
+									foreach ($data_queries as $data_query) {
+										$i++;
+										$dhtml_tree[$i] = "ou" . ($tier+1) . " = insFld(ou" . ($tier) . ", gFld(\" " . $data_query["name"] . "\", \"graph_view.php?action=tree&tree_id=" . $tree["id"] . "&leaf_id=" . $leaf["id"] . "&host_group_data=data_query:" . $data_query["id"] . "\"))\n";
 
-							/* fetch a list of field names that are sorted by the preferred sort field */
-							$sort_field_data = get_formatted_data_query_indexes($leaf["host_id"], $data_query["id"]);
+										/* fetch a list of field names that are sorted by the preferred sort field */
+										$sort_field_data = get_formatted_data_query_indexes($leaf["host_id"], $data_query["id"]);
 
-							while (list($snmp_index, $sort_field_value) = each($sort_field_data)) {
-                                $i++;
-								$dhtml_tree[$i] = "ou" . ($tier+2) . " = insFld(ou" . ($tier+1) . ", gFld(\" " . $sort_field_value . "\", \"graph_view.php?action=tree&tree_id=" . $tree["id"] . "&leaf_id=" . $leaf["id"] . "&host_group_data=data_query_index:" . $data_query["id"] . ":" . urlencode($snmp_index) . "\"))\n";
+										while (list($snmp_index, $sort_field_value) = each($sort_field_data)) {
+											$i++;
+											$dhtml_tree[$i] = "ou" . ($tier+2) . " = insFld(ou" . ($tier+1) . ", gFld(\" " . $sort_field_value . "\", \"graph_view.php?action=tree&tree_id=" . $tree["id"] . "&leaf_id=" . $leaf["id"] . "&host_group_data=data_query_index:" . $data_query["id"] . ":" . urlencode($snmp_index) . "\"))\n";
+										}
+									}
+								}
 							}
 						}
-						}
+					}else{
+						$dhtml_tree[$i] = "ou" . ($tier) . " = insFld(ou" . ($tier-1) . ", gFld(\"" . $leaf["title"] . "\", \"graph_view.php?action=tree&tree_id=" . $tree["id"] . "&leaf_id=" . $leaf["id"] . "\"))\n";
 					}
 				}
-			}else{
-				$dhtml_tree[$i] = "ou" . ($tier) . " = insFld(ou" . ($tier-1) . ", gFld(\"" . $leaf["title"] . "\", \"graph_view.php?action=tree&tree_id=" . $tree["id"] . "&leaf_id=" . $leaf["id"] . "\"))\n";
 			}
 		}
-		}
-	}
 	}
 
 	return $dhtml_tree;
 }
 
 function grow_right_pane_tree($tree_id, $leaf_id, $host_group_data) {
-	global $current_user, $colors, $config;
+	global $current_user, $colors;
 
-	include_once(CACTI_BASE_PATH . "/lib/data_query/data_query_info.php");
-	include_once(CACTI_BASE_PATH . "/lib/tree.php");
+	require_once(CACTI_BASE_PATH . "/lib/data_query/data_query_info.php");
+	require_once(CACTI_BASE_PATH . "/lib/sys/tree.php");
 
 	if (empty($tree_id)) { return; }
 
@@ -505,7 +508,7 @@ function grow_right_pane_tree($tree_id, $leaf_id, $host_group_data) {
 	/* include time span selector */
 	if (read_graph_config_option("timespan_sel") == "on") {
 		html_graph_start_box(3, false);
-		include(CACTI_BASE_PATH . "/include/html/inc_timespan_selector.php");
+		require(CACTI_BASE_PATH . "/include/html/inc_timespan_selector.php");
 		html_graph_end_box();
 		print "<br>";
 	}

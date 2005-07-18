@@ -23,9 +23,9 @@
 */
 
 function run_data_query($host_id, $data_query_id) {
-	include_once(CACTI_BASE_PATH . "/include/data_query/data_query_constants.php");
-	include_once(CACTI_BASE_PATH . "/lib/data_query/data_query_update.php");
-	include_once(CACTI_BASE_PATH . "/lib/poller.php");
+	require_once(CACTI_BASE_PATH . "/include/data_query/data_query_constants.php");
+	require_once(CACTI_BASE_PATH . "/lib/data_query/data_query_update.php");
+	require_once(CACTI_BASE_PATH . "/lib/poller.php");
 
 	debug_log_insert("data_query", sprintf(_("Running data query [%i]."), $data_query_id));
 	$input_type = db_fetch_cell("select input_type from snmp_query where id = $data_query_id");
@@ -59,7 +59,8 @@ function run_data_query($host_id, $data_query_id) {
 }
 
 function query_script_host($host_id, $snmp_query_id) {
-	include_once(CACTI_BASE_PATH . "/lib/data_query/data_query_info.php");
+	require_once(CACTI_BASE_PATH . "/lib/sys/exec.php");
+	require_once(CACTI_BASE_PATH . "/lib/data_query/data_query_info.php");
 
 	$script_queries = get_data_query_array($snmp_query_id);
 
@@ -112,8 +113,8 @@ function query_script_host($host_id, $snmp_query_id) {
 function query_snmp_host($host_id, $data_query_id) {
 	global $config;
 
-	include_once(CACTI_BASE_PATH . "/lib/snmp.php");
-	include_once(CACTI_BASE_PATH . "/lib/data_query/data_query_info.php");
+	require_once(CACTI_BASE_PATH . "/lib/sys/snmp.php");
+	require_once(CACTI_BASE_PATH . "/lib/data_query/data_query_info.php");
 
 	$host = db_fetch_row("select hostname,snmp_community,snmp_version,snmpv3_auth_username,snmpv3_auth_password,snmpv3_auth_protocol,snmpv3_priv_passphrase,snmpv3_priv_protocol,snmp_port,snmp_timeout from host where id = $host_id");
 

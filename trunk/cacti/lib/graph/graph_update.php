@@ -23,7 +23,7 @@
 */
 
 function api_graph_save($graph_id, &$_fields_graph, $skip_cache_update = false) {
-	include_once(CACTI_BASE_PATH . "/lib/graph/graph_info.php");
+	require_once(CACTI_BASE_PATH . "/lib/graph/graph_info.php");
 
 	/* sanity check for $graph_id */
 	if (!is_numeric($graph_id)) {
@@ -50,6 +50,11 @@ function api_graph_save($graph_id, &$_fields_graph, $skip_cache_update = false) 
 		if (isset($_fields_graph[$field_name])) {
 			$_fields[$field_name] = array("type" => $fields_graph[$field_name]["data_type"], "value" => $_fields_graph[$field_name]);
 		}
+	}
+
+	/* check for an empty field list */
+	if (sizeof($_fields) == 1) {
+		return true;
 	}
 
 	if (db_replace("graph", $_fields, array("id"))) {
@@ -88,8 +93,8 @@ function api_graph_remove($graph_id) {
 }
 
 function api_graph_item_save($graph_item_id, &$_fields_graph_item) {
-	include_once(CACTI_BASE_PATH . "/lib/sys/sequence.php");
-	include_once(CACTI_BASE_PATH . "/lib/graph/graph_info.php");
+	require_once(CACTI_BASE_PATH . "/lib/sys/sequence.php");
+	require_once(CACTI_BASE_PATH . "/lib/graph/graph_info.php");
 
 	/* sanity check for $graph_item_id */
 	if (!is_numeric($graph_item_id)) {
@@ -97,7 +102,7 @@ function api_graph_item_save($graph_item_id, &$_fields_graph_item) {
 	}
 
 	/* sanity check for $graph_id */
-	if ((empty($graph_id)) && (empty($_fields_graph_item["graph_id"]))) {
+	if ((empty($graph_item_id)) && (empty($_fields_graph_item["graph_id"]))) {
 		api_syslog_cacti_log("Required graph_id when graph_item_id = 0", SEV_ERROR, 0, 0, 0, false, FACIL_WEBUI);
 		return false;
 	} else if ((isset($_fields_graph_item["graph_id"])) && (!is_numeric($_fields_graph_item["graph_id"]))) {
@@ -125,6 +130,11 @@ function api_graph_item_save($graph_item_id, &$_fields_graph_item) {
 	/* fetch a list of all visible graph item fields */
 	$fields_graph_item = get_graph_items_field_list();
 
+	/* check for an empty field list */
+	if (sizeof($_fields) == 1) {
+		return true;
+	}
+
 	foreach (array_keys($fields_graph_item) as $field_name) {
 		if (isset($_fields_graph_item[$field_name])) {
 			$_fields[$field_name] = array("type" => $fields_graph_item[$field_name]["data_type"], "value" => $_fields_graph_item[$field_name]);
@@ -147,7 +157,7 @@ function api_graph_item_remove($graph_item_id) {
 }
 
 function api_graph_item_movedown($graph_item_id) {
-	include_once(CACTI_BASE_PATH . "/lib/sys/sequence.php");
+	require_once(CACTI_BASE_PATH . "/lib/sys/sequence.php");
 
 	$graph_id = db_fetch_cell("select graph_id from graph_item where id = $graph_item_id");
 
@@ -160,7 +170,7 @@ function api_graph_item_movedown($graph_item_id) {
 }
 
 function api_graph_item_moveup($graph_item_id) {
-	include_once(CACTI_BASE_PATH . "/lib/sys/sequence.php");
+	require_once(CACTI_BASE_PATH . "/lib/sys/sequence.php");
 
 	$graph_id = db_fetch_cell("select graph_id from graph_item where id = $graph_item_id");
 
@@ -173,13 +183,13 @@ function api_graph_item_moveup($graph_item_id) {
 }
 
 function api_graph_item_row_movedown($row_num, $graph_id) {
-	include_once(CACTI_BASE_PATH . "/lib/sys/sequence.php");
+	require_once(CACTI_BASE_PATH . "/lib/sys/sequence.php");
 
 	seq_move_graph_item_row($row_num, "graph_item", "graph_id = $graph_id", true, "down");
 }
 
 function api_graph_item_row_moveup($row_num, $graph_id) {
-	include_once(CACTI_BASE_PATH . "/lib/sys/sequence.php");
+	require_once(CACTI_BASE_PATH . "/lib/sys/sequence.php");
 
 	seq_move_graph_item_row($row_num, "graph_item", "graph_id = $graph_id", true, "up");
 }
@@ -187,7 +197,7 @@ function api_graph_item_row_moveup($row_num, $graph_id) {
 /* update_graph_title_cache - updates the title cache for a single graph
    @arg $graph_id - (int) the ID of the graph to update the title cache for */
 function update_graph_title_cache($graph_id) {
-	include_once(CACTI_BASE_PATH . "/lib/graph/graph_info.php");
+	require_once(CACTI_BASE_PATH . "/lib/graph/graph_info.php");
 
 	if (empty($graph_id)) {
 		return;

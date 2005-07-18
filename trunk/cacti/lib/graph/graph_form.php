@@ -25,10 +25,10 @@
 /* form validation functions */
 
 function validate_graph_fields(&$_fields_graph, &$_fields_suggested_values, $graph_field_name_format, $suggested_values_field_name_format) {
-	include_once(CACTI_BASE_PATH . "/lib/graph/graph_info.php");
+	require_once(CACTI_BASE_PATH . "/lib/graph/graph_info.php");
 
 	if (sizeof($_fields_graph) == 0) {
-		return;
+		return array();
 	}
 
 	/* array containing errored fields */
@@ -65,11 +65,11 @@ function validate_graph_fields(&$_fields_graph, &$_fields_suggested_values, $gra
 }
 
 function validate_graph_item_fields(&$_fields_graph_item, $graph_item_field_name_format) {
-	include_once(CACTI_BASE_PATH . "/lib/graph/graph_info.php");
-	include_once(CACTI_BASE_PATH . "/include/graph/graph_constants.php");
+	require_once(CACTI_BASE_PATH . "/lib/graph/graph_info.php");
+	require_once(CACTI_BASE_PATH . "/include/graph/graph_constants.php");
 
 	if (sizeof($_fields_graph_item) == 0) {
-		return;
+		return array();
 	}
 
 	/* array containing errored fields */
@@ -100,7 +100,7 @@ function validate_graph_item_fields(&$_fields_graph_item, $graph_item_field_name
 /* graph template fields */
 
 function _graph_template_field__template_name($field_name, $field_value = "", $field_id = 0) {
-	include_once(CACTI_BASE_PATH . "/lib/html_form.php");
+	require_once(CACTI_BASE_PATH . "/lib/sys/html_form.php");
 
 	?>
 	<tr bgcolor="#<?php echo field_get_row_color();?>">
@@ -120,7 +120,7 @@ function _graph_template_field__template_name($field_name, $field_value = "", $f
 function _graph_field__title($field_name, $template_flag = false, $field_id = 0, $t_field_name = "", $t_field_value = "") {
 	global $colors;
 
-	include_once(CACTI_BASE_PATH . "/lib/html_form.php");
+	require_once(CACTI_BASE_PATH . "/lib/sys/html_form.php");
 
 	if ($template_flag == true) {
 		if (empty($field_id)) {
@@ -158,7 +158,7 @@ function _graph_field__title($field_name, $template_flag = false, $field_id = 0,
 			if ($template_flag == true) {
 				form_text_box_sv($field_name, $values_array, $url_moveup, "", $url_delete, $url_add, (($_GET["action"] == "sv_add") ? true : false), 255, 30);
 			}else{
-				form_text_box($field_name, $field_value, "", 255, 30, "text", $field_id);
+				form_text_box($field_name, $field_value, "", 255, 40, "text", $field_id);
 			}
 			?>
 		</td>
@@ -167,7 +167,7 @@ function _graph_field__title($field_name, $template_flag = false, $field_id = 0,
 }
 
 function _graph_field__vertical_label($field_name, $template_flag = false, $field_value = "", $field_id = 0, $t_field_name = "", $t_field_value = "") {
-	include_once(CACTI_BASE_PATH . "/lib/html_form.php");
+	require_once(CACTI_BASE_PATH . "/lib/sys/html_form.php");
 
 	?>
 	<tr bgcolor="#<?php echo field_get_row_color();?>">
@@ -182,16 +182,16 @@ function _graph_field__vertical_label($field_name, $template_flag = false, $fiel
 			?>
 		</td>
 		<td>
-			<?php form_text_box($field_name, $field_value, "", 10, 30, "text", $field_id);?>
+			<?php form_text_box($field_name, $field_value, "", 200, 30, "text", $field_id);?>
 		</td>
 	</tr>
 	<?php
 }
 
 function _graph_field__image_format($field_name, $template_flag = false, $field_value = "", $field_id = 0, $t_field_name = "", $t_field_value = "") {
-	include(CACTI_BASE_PATH . "/include/graph/graph_arrays.php");
-	include_once(CACTI_BASE_PATH . "/include/graph/graph_constants.php");
-	include_once(CACTI_BASE_PATH . "/lib/html_form.php");
+	require(CACTI_BASE_PATH . "/include/graph/graph_arrays.php");
+	require_once(CACTI_BASE_PATH . "/include/graph/graph_constants.php");
+	require_once(CACTI_BASE_PATH . "/lib/sys/html_form.php");
 
 	?>
 	<tr bgcolor="#<?php echo field_get_row_color();?>">
@@ -213,7 +213,7 @@ function _graph_field__image_format($field_name, $template_flag = false, $field_
 }
 
 function _graph_field__export($field_name, $template_flag = false, $field_value = "", $field_id = 0, $t_field_name = "", $t_field_value = "") {
-	include_once(CACTI_BASE_PATH . "/lib/html_form.php");
+	require_once(CACTI_BASE_PATH . "/lib/sys/html_form.php");
 
 	?>
 	<tr bgcolor="#<?php echo field_get_row_color();?>">
@@ -232,10 +232,11 @@ function _graph_field__export($field_name, $template_flag = false, $field_value 
 		</td>
 	</tr>
 	<?php
+	form_checkbox_marker($field_name);
 }
 
 function _graph_field__force_rules_legend($field_name, $template_flag = false, $field_value = "", $field_id = 0, $t_field_name = "", $t_field_value = "") {
-	include_once(CACTI_BASE_PATH . "/lib/html_form.php");
+	require_once(CACTI_BASE_PATH . "/lib/sys/html_form.php");
 
 	?>
 	<tr bgcolor="#<?php echo field_get_row_color();?>">
@@ -254,10 +255,11 @@ function _graph_field__force_rules_legend($field_name, $template_flag = false, $
 		</td>
 	</tr>
 	<?php
+	form_checkbox_marker($field_name);
 }
 
 function _graph_field__height($field_name, $template_flag = false, $field_value = "", $field_id = 0, $t_field_name = "", $t_field_value = "") {
-	include_once(CACTI_BASE_PATH . "/lib/html_form.php");
+	require_once(CACTI_BASE_PATH . "/lib/sys/html_form.php");
 
 	?>
 	<tr bgcolor="#<?php echo field_get_row_color();?>">
@@ -279,7 +281,7 @@ function _graph_field__height($field_name, $template_flag = false, $field_value 
 }
 
 function _graph_field__width($field_name, $template_flag = false, $field_value = "", $field_id = 0, $t_field_name = "", $t_field_value = "") {
-	include_once(CACTI_BASE_PATH . "/lib/html_form.php");
+	require_once(CACTI_BASE_PATH . "/lib/sys/html_form.php");
 
 	?>
 	<tr bgcolor="#<?php echo field_get_row_color();?>">
@@ -301,7 +303,7 @@ function _graph_field__width($field_name, $template_flag = false, $field_value =
 }
 
 function _graph_field__x_grid($field_name, $template_flag = false, $field_value = "", $field_id = 0, $t_field_name = "", $t_field_value = "") {
-	include_once(CACTI_BASE_PATH . "/lib/html_form.php");
+	require_once(CACTI_BASE_PATH . "/lib/sys/html_form.php");
 
 	?>
 	<tr bgcolor="#<?php echo field_get_row_color();?>">
@@ -323,7 +325,7 @@ function _graph_field__x_grid($field_name, $template_flag = false, $field_value 
 }
 
 function _graph_field__y_grid($field_name, $template_flag = false, $field_value = "", $field_id = 0, $t_field_name = "", $t_field_value = "") {
-	include_once(CACTI_BASE_PATH . "/lib/html_form.php");
+	require_once(CACTI_BASE_PATH . "/lib/sys/html_form.php");
 
 	?>
 	<tr bgcolor="#<?php echo field_get_row_color();?>">
@@ -345,7 +347,7 @@ function _graph_field__y_grid($field_name, $template_flag = false, $field_value 
 }
 
 function _graph_field__y_grid_alt($field_name, $template_flag = false, $field_value = "", $field_id = 0, $t_field_name = "", $t_field_value = "") {
-	include_once(CACTI_BASE_PATH . "/lib/html_form.php");
+	require_once(CACTI_BASE_PATH . "/lib/sys/html_form.php");
 
 	?>
 	<tr bgcolor="#<?php echo field_get_row_color();?>">
@@ -364,10 +366,11 @@ function _graph_field__y_grid_alt($field_name, $template_flag = false, $field_va
 		</td>
 	</tr>
 	<?php
+	form_checkbox_marker($field_name);
 }
 
 function _graph_field__no_minor($field_name, $template_flag = false, $field_value = "", $field_id = 0, $t_field_name = "", $t_field_value = "") {
-	include_once(CACTI_BASE_PATH . "/lib/html_form.php");
+	require_once(CACTI_BASE_PATH . "/lib/sys/html_form.php");
 
 	?>
 	<tr bgcolor="#<?php echo field_get_row_color();?>">
@@ -386,10 +389,11 @@ function _graph_field__no_minor($field_name, $template_flag = false, $field_valu
 		</td>
 	</tr>
 	<?php
+	form_checkbox_marker($field_name);
 }
 
 function _graph_field__auto_scale($field_name, $template_flag = false, $field_value = "", $field_id = 0, $t_field_name = "", $t_field_value = "") {
-	include_once(CACTI_BASE_PATH . "/lib/html_form.php");
+	require_once(CACTI_BASE_PATH . "/lib/sys/html_form.php");
 
 	?>
 	<tr bgcolor="#<?php echo field_get_row_color();?>">
@@ -408,11 +412,12 @@ function _graph_field__auto_scale($field_name, $template_flag = false, $field_va
 		</td>
 	</tr>
 	<?php
+	form_checkbox_marker($field_name);
 }
 
 function _graph_field__auto_scale_opts($field_name, $template_flag = false, $field_value = "", $field_id = 0, $t_field_name = "", $t_field_value = "") {
-	include_once(CACTI_BASE_PATH . "/lib/html_form.php");
-	include_once(CACTI_BASE_PATH . "/include/graph/graph_constants.php");
+	require_once(CACTI_BASE_PATH . "/lib/sys/html_form.php");
+	require_once(CACTI_BASE_PATH . "/include/graph/graph_constants.php");
 
 	?>
 	<tr bgcolor="#<?php echo field_get_row_color();?>">
@@ -437,7 +442,7 @@ function _graph_field__auto_scale_opts($field_name, $template_flag = false, $fie
 }
 
 function _graph_field__auto_scale_log($field_name, $template_flag = false, $field_value = "", $field_id = 0, $t_field_name = "", $t_field_value = "") {
-	include_once(CACTI_BASE_PATH . "/lib/html_form.php");
+	require_once(CACTI_BASE_PATH . "/lib/sys/html_form.php");
 
 	?>
 	<tr bgcolor="#<?php echo field_get_row_color();?>">
@@ -456,10 +461,11 @@ function _graph_field__auto_scale_log($field_name, $template_flag = false, $fiel
 		</td>
 	</tr>
 	<?php
+	form_checkbox_marker($field_name);
 }
 
 function _graph_field__auto_scale_rigid($field_name, $template_flag = false, $field_value = "", $field_id = 0, $t_field_name = "", $t_field_value = "") {
-	include_once(CACTI_BASE_PATH . "/lib/html_form.php");
+	require_once(CACTI_BASE_PATH . "/lib/sys/html_form.php");
 
 	?>
 	<tr bgcolor="#<?php echo field_get_row_color();?>">
@@ -478,10 +484,11 @@ function _graph_field__auto_scale_rigid($field_name, $template_flag = false, $fi
 		</td>
 	</tr>
 	<?php
+	form_checkbox_marker($field_name);
 }
 
 function _graph_field__auto_padding($field_name, $template_flag = false, $field_value = "", $field_id = 0, $t_field_name = "", $t_field_value = "") {
-	include_once(CACTI_BASE_PATH . "/lib/html_form.php");
+	require_once(CACTI_BASE_PATH . "/lib/sys/html_form.php");
 
 	?>
 	<tr bgcolor="#<?php echo field_get_row_color();?>">
@@ -500,10 +507,11 @@ function _graph_field__auto_padding($field_name, $template_flag = false, $field_
 		</td>
 	</tr>
 	<?php
+	form_checkbox_marker($field_name);
 }
 
 function _graph_field__upper_limit($field_name, $template_flag = false, $field_value = "", $field_id = 0, $t_field_name = "", $t_field_value = "") {
-	include_once(CACTI_BASE_PATH . "/lib/html_form.php");
+	require_once(CACTI_BASE_PATH . "/lib/sys/html_form.php");
 
 	?>
 	<tr bgcolor="#<?php echo field_get_row_color();?>">
@@ -525,7 +533,7 @@ function _graph_field__upper_limit($field_name, $template_flag = false, $field_v
 }
 
 function _graph_field__lower_limit($field_name, $template_flag = false, $field_value = "", $field_id = 0, $t_field_name = "", $t_field_value = "") {
-	include_once(CACTI_BASE_PATH . "/lib/html_form.php");
+	require_once(CACTI_BASE_PATH . "/lib/sys/html_form.php");
 
 	?>
 	<tr bgcolor="#<?php echo field_get_row_color();?>">
@@ -547,8 +555,8 @@ function _graph_field__lower_limit($field_name, $template_flag = false, $field_v
 }
 
 function _graph_field__base_value($field_name, $template_flag = false, $field_value = "", $field_id = 0, $t_field_name = "", $t_field_value = "") {
-	include(CACTI_BASE_PATH . "/include/graph/graph_arrays.php");
-	include_once(CACTI_BASE_PATH . "/lib/html_form.php");
+	require(CACTI_BASE_PATH . "/include/graph/graph_arrays.php");
+	require_once(CACTI_BASE_PATH . "/lib/sys/html_form.php");
 
 	?>
 	<tr bgcolor="#<?php echo field_get_row_color();?>">
@@ -570,7 +578,7 @@ function _graph_field__base_value($field_name, $template_flag = false, $field_va
 }
 
 function _graph_field__unit_value($field_name, $template_flag = false, $field_value = "", $field_id = 0, $t_field_name = "", $t_field_value = "") {
-	include_once(CACTI_BASE_PATH . "/lib/html_form.php");
+	require_once(CACTI_BASE_PATH . "/lib/sys/html_form.php");
 
 	?>
 	<tr bgcolor="#<?php echo field_get_row_color();?>">
@@ -592,7 +600,7 @@ function _graph_field__unit_value($field_name, $template_flag = false, $field_va
 }
 
 function _graph_field__unit_length($field_name, $template_flag = false, $field_value = "", $field_id = 0, $t_field_name = "", $t_field_value = "") {
-	include_once(CACTI_BASE_PATH . "/lib/html_form.php");
+	require_once(CACTI_BASE_PATH . "/lib/sys/html_form.php");
 
 	?>
 	<tr bgcolor="#<?php echo field_get_row_color();?>">
@@ -614,8 +622,8 @@ function _graph_field__unit_length($field_name, $template_flag = false, $field_v
 }
 
 function _graph_field__unit_exponent_value($field_name, $template_flag = false, $field_value = "", $field_id = 0, $t_field_name = "", $t_field_value = "") {
-	include(CACTI_BASE_PATH . "/include/graph/graph_arrays.php");
-	include_once(CACTI_BASE_PATH . "/lib/html_form.php");
+	require(CACTI_BASE_PATH . "/include/graph/graph_arrays.php");
+	require_once(CACTI_BASE_PATH . "/lib/sys/html_form.php");
 
 	?>
 	<tr bgcolor="#<?php echo field_get_row_color();?>">
@@ -639,7 +647,7 @@ function _graph_field__unit_exponent_value($field_name, $template_flag = false, 
 /* graph item fields */
 
 function _graph_item_field__data_template_item_id($field_name, $field_value = "", $field_id = 0) {
-	include_once(CACTI_BASE_PATH . "/lib/html_form.php");
+	require_once(CACTI_BASE_PATH . "/lib/sys/html_form.php");
 
 	?>
 	<tr bgcolor="#<?php echo field_get_row_color();?>">
@@ -672,7 +680,7 @@ function _graph_item_field__data_template_item_id($field_name, $field_value = ""
 }
 
 function _graph_item_field__data_source_item_id($field_name, $field_value = "", $field_id = 0, $host_id = 0) {
-	include_once(CACTI_BASE_PATH . "/lib/html_form.php");
+	require_once(CACTI_BASE_PATH . "/lib/sys/html_form.php");
 
 	?>
 	<tr bgcolor="#<?php echo field_get_row_color();?>">
@@ -708,7 +716,7 @@ function _graph_item_field__data_source_item_id($field_name, $field_value = "", 
 }
 
 function _graph_item_field__color($field_name, $field_value = "", $field_id = 0) {
-	include_once(CACTI_BASE_PATH . "/lib/html_form.php");
+	require_once(CACTI_BASE_PATH . "/lib/sys/html_form.php");
 
 	?>
 	<tr bgcolor="#<?php echo field_get_row_color();?>">
@@ -740,8 +748,8 @@ function _graph_item_field__color($field_name, $field_value = "", $field_id = 0)
 }
 
 function _graph_item_field__graph_item_type($field_name, $field_value = "", $field_id = 0) {
-	include(CACTI_BASE_PATH . "/include/graph/graph_arrays.php");
-	include_once(CACTI_BASE_PATH . "/lib/html_form.php");
+	require(CACTI_BASE_PATH . "/include/graph/graph_arrays.php");
+	require_once(CACTI_BASE_PATH . "/lib/sys/html_form.php");
 
 	?>
 	<tr bgcolor="#<?php echo field_get_row_color();?>">
@@ -757,8 +765,8 @@ function _graph_item_field__graph_item_type($field_name, $field_value = "", $fie
 }
 
 function _graph_item_field__consolidation_function($field_name, $field_value = "", $field_id = 0) {
-	include(CACTI_BASE_PATH . "/include/data_source/data_source_arrays.php");
-	include_once(CACTI_BASE_PATH . "/lib/html_form.php");
+	require(CACTI_BASE_PATH . "/include/data_source/data_source_arrays.php");
+	require_once(CACTI_BASE_PATH . "/lib/sys/html_form.php");
 
 	?>
 	<tr bgcolor="#<?php echo field_get_row_color();?>">
@@ -774,7 +782,7 @@ function _graph_item_field__consolidation_function($field_name, $field_value = "
 }
 
 function _graph_item_field__cdef($field_name, $field_value = "", $field_id = 0) {
-	include_once(CACTI_BASE_PATH . "/lib/html_form.php");
+	require_once(CACTI_BASE_PATH . "/lib/sys/html_form.php");
 
 	?>
 	<tr bgcolor="#<?php echo field_get_row_color();?>">
@@ -806,7 +814,7 @@ function _graph_item_field__cdef($field_name, $field_value = "", $field_id = 0) 
 }
 
 function _graph_item_field__gprint_format($field_name, $field_value = "", $field_id = 0) {
-	include_once(CACTI_BASE_PATH . "/lib/html_form.php");
+	require_once(CACTI_BASE_PATH . "/lib/sys/html_form.php");
 
 	?>
 	<tr bgcolor="#<?php echo field_get_row_color();?>">
@@ -838,7 +846,7 @@ function _graph_item_field__gprint_format($field_name, $field_value = "", $field
 }
 
 function _graph_item_field__legend_value($field_name, $field_value = "", $field_id = 0) {
-	include_once(CACTI_BASE_PATH . "/lib/html_form.php");
+	require_once(CACTI_BASE_PATH . "/lib/sys/html_form.php");
 
 	?>
 	<tr bgcolor="#<?php echo field_get_row_color();?>">
@@ -854,7 +862,7 @@ function _graph_item_field__legend_value($field_name, $field_value = "", $field_
 }
 
 function _graph_item_field__legend_format($field_name, $field_value = "", $field_id = 0) {
-	include_once(CACTI_BASE_PATH . "/lib/html_form.php");
+	require_once(CACTI_BASE_PATH . "/lib/sys/html_form.php");
 
 	?>
 	<tr bgcolor="#<?php echo field_get_row_color();?>">
@@ -870,7 +878,7 @@ function _graph_item_field__legend_format($field_name, $field_value = "", $field
 }
 
 function _graph_item_field__hard_return($field_name, $field_value = "", $field_id = 0) {
-	include_once(CACTI_BASE_PATH . "/lib/html_form.php");
+	require_once(CACTI_BASE_PATH . "/lib/sys/html_form.php");
 
 	?>
 	<tr bgcolor="#<?php echo field_get_row_color();?>">
@@ -883,15 +891,16 @@ function _graph_item_field__hard_return($field_name, $field_value = "", $field_i
 		</td>
 	</tr>
 	<?php
+	form_checkbox_marker($field_name);
 }
 
 function draw_graph_item_editor($graph_X_id, $form_type, $disable_controls) {
 	global $colors;
 
-	include_once(CACTI_BASE_PATH . "/lib/graph/graph_utility.php");
-	include_once(CACTI_BASE_PATH . "/include/graph/graph_constants.php");
-	include(CACTI_BASE_PATH . "/include/graph/graph_arrays.php");
-	include(CACTI_BASE_PATH . "/include/data_source/data_source_arrays.php");
+	require_once(CACTI_BASE_PATH . "/lib/graph/graph_utility.php");
+	require_once(CACTI_BASE_PATH . "/include/graph/graph_constants.php");
+	require(CACTI_BASE_PATH . "/include/graph/graph_arrays.php");
+	require(CACTI_BASE_PATH . "/include/data_source/data_source_arrays.php");
 
 	$graph_actions = array(
 		1 => _("Delete Items"),

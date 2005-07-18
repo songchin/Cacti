@@ -39,8 +39,8 @@ if (php_sapi_name() != "cli") {
 }
 
 /* used for includes */
-include_once(dirname(__FILE__) . "/include/config.php");
-include_once(dirname(__FILE__) . "/lib/poller.php");
+require(dirname(__FILE__) . "/include/config.php");
+require_once(CACTI_BASE_PATH . "/lib/poller.php");
 
 /* Record the calling environment */
 if ($_SERVER["argc"] >= 2) {
@@ -116,7 +116,7 @@ while (1) {
 						 * by the script server or stand-alone */
 						$called_by_script_server = true;
 
-						include_once($inc);
+						require_once($inc);
 					} else {
 						api_syslog_cacti_log(_("PHP Script File to be included, does not exist"), SEV_CRITICAL, $poller_id, 0, 0, false, FACIL_SCPTSVR);
 					}

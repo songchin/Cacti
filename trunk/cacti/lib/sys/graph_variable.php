@@ -32,6 +32,8 @@
    @arg $resolution - the accuracy of the data measured in seconds
    @returns - (array) an array containing each data source item, and its 95th percentile */
 function ninety_fifth_percentile($local_data_id, $start_time, $end_time) {
+	require_once(CACTI_BASE_PATH . "/lib/sys/rrd.php");
+
 	$fetch_array = rrdtool_function_fetch($local_data_id, $start_time, $end_time);
 
 	if ((!isset($fetch_array["data_source_names"])) || (count($fetch_array["data_source_names"]) == 0)) {
@@ -75,6 +77,8 @@ function ninety_fifth_percentile($local_data_id, $start_time, $end_time) {
    @arg $ds_steps - how many seconds each period represents
    @returns - (array) an array containing each data source item, and its sum */
 function bandwidth_summation($local_data_id, $start_time, $end_time, $rra_steps, $ds_steps) {
+	require_once(CACTI_BASE_PATH . "/lib/sys/rrd.php");
+
 	$fetch_array = rrdtool_function_fetch($local_data_id, $start_time, $end_time, $rra_steps * $ds_steps);
 
 	if ((!isset($fetch_array["data_source_names"])) || (count($fetch_array["data_source_names"]) == 0)) {
@@ -129,7 +133,7 @@ $ninety_fifth_cache = array();
 function variable_ninety_fifth_percentile($var_scale, $var_divisor, $var_type, $var_precision, &$graph_item, &$graph_items, $graph_start, $graph_end) {
 	global $ninety_fifth_cache;
 
-	include_once(CACTI_BASE_PATH . "/lib/graph/graph_utility.php");
+	require_once(CACTI_BASE_PATH . "/lib/graph/graph_utility.php");
 
 	if (($var_type == "current") || ($var_type == "max")) {
 		if (!isset($ninety_fifth_cache{$graph_item["local_data_id"]})) {
@@ -235,7 +239,7 @@ $summation_cache = array();
 function variable_bandwidth_summation($var_divisor, $var_type, $var_precision, $var_timespan, &$graph_item, &$graph_items, $graph_start, $graph_end, $rra_step, $ds_step) {
 	global $summation_cache;
 
-	include_once(CACTI_BASE_PATH . "/lib/graph/graph_utility.php");
+	require_once(CACTI_BASE_PATH . "/lib/graph/graph_utility.php");
 
 	if (is_numeric($var_timespan)) {
 		$summation_timespan_start = -$var_timespan;

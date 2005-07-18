@@ -26,7 +26,7 @@
    @arg $graph_id - (int) the ID of the graph to get a title for
    @returns - the graph title */
 function get_graph_title($graph_id, $remove_unsubstituted_variables = false) {
-	include_once(CACTI_BASE_PATH . "/lib/variables.php");
+	require_once(CACTI_BASE_PATH . "/lib/sys/variable.php");
 
 	$graph = db_fetch_row("select host_id,title from graph where id = $graph_id");
 
@@ -79,20 +79,22 @@ function get_associated_rras($graph_id) {
 }
 
 function &get_graph_field_list() {
-	include(CACTI_BASE_PATH . "/include/graph/graph_form.php");
+	require(CACTI_BASE_PATH . "/include/graph/graph_form.php");
 
 	return $fields_graph;
 }
 
 function &get_graph_items_field_list() {
-	include(CACTI_BASE_PATH . "/include/graph/graph_form.php");
+	require(CACTI_BASE_PATH . "/include/graph/graph_form.php");
 
-	return array(
+	$field_list = array(
 			"data_source_item_id" => array(
 				"default" => "",
 				"data_type" => DB_TYPE_NUMBER
 			)
 		) + $fields_graph_item;
+
+	return $field_list;
 }
 
 ?>

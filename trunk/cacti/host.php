@@ -22,15 +22,15 @@
  +-------------------------------------------------------------------------+
 */
 
-include("./include/config.php");
-include("./include/auth.php");
-include_once("./lib/poller.php");
-include_once("./lib/data_source/data_source_update.php");
-include_once("./lib/graph/graph_update.php");
-include_once("./lib/snmp.php");
-include_once("./include/data_query/data_query_arrays.php");
-include_once("./lib/data_query/data_query_execute.php");
-include_once("./lib/api_device.php");
+require(dirname(__FILE__) . "/include/config.php");
+require_once(CACTI_BASE_PATH . "/include/auth.php");
+require_once(CACTI_BASE_PATH . "/lib/poller.php");
+require_once(CACTI_BASE_PATH . "/lib/data_source/data_source_update.php");
+require_once(CACTI_BASE_PATH . "/lib/graph/graph_update.php");
+require_once(CACTI_BASE_PATH . "/lib/sys/snmp.php");
+require_once(CACTI_BASE_PATH . "/include/data_query/data_query_arrays.php");
+require_once(CACTI_BASE_PATH . "/lib/data_query/data_query_execute.php");
+require_once(CACTI_BASE_PATH . "/lib/api_device.php");
 
 define("MAX_DISPLAY_PAGES", 21);
 
@@ -77,18 +77,18 @@ switch ($_REQUEST["action"]) {
 		header("Location: host.php?action=edit&id=" . $_GET["host_id"] . "&display_dq_details=true");
 		break;
 	case 'edit':
-		include_once("./include/top_header.php");
+		require_once(CACTI_BASE_PATH . "/include/top_header.php");
 
 		host_edit();
 
-		include_once("./include/bottom_footer.php");
+		require_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
 		break;
 	default:
-		include_once("./include/top_header.php");
+		require_once(CACTI_BASE_PATH . "/include/top_header.php");
 
 		host();
 
-		include_once("./include/bottom_footer.php");
+		require_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
 		break;
 }
 
@@ -261,7 +261,7 @@ function form_actions() {
 		$i++;
 	}
 
-	include_once("./include/top_header.php");
+	require_once(CACTI_BASE_PATH . "/include/top_header.php");
 
 	html_start_box("<strong>" . $device_actions{$_POST["drp_action"]} . "</strong>", "60%", $colors["header_panel_background"], "3", "center", "");
 
@@ -413,7 +413,7 @@ function form_actions() {
 
 	html_end_box();
 
-	include_once("./include/bottom_footer.php");
+	require_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
 }
 
 /* -------------------
@@ -440,9 +440,9 @@ function host_remove() {
 	global $config;
 
 	if ((read_config_option("remove_verification") == "on") && (!isset($_GET["confirm"]))) {
-		include("./include/top_header.php");
+		require_once(CACTI_BASE_PATH . "/include/top_header.php");
 		form_confirm(_("Are You Sure?"), _("Are you sure you want to delete the host <strong>'") . db_fetch_cell("select description from host where id=" . $_GET["id"]) . "'</strong>?", "host.php", "host.php?action=remove&id=" . $_GET["id"]);
-		include("./include/bottom_footer.php");
+		require_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
 		exit;
 	}
 

@@ -22,8 +22,8 @@
  +-------------------------------------------------------------------------+
 */
 
-include("./include/config.php");
-include("./include/auth.php");
+require(dirname(__FILE__) . "/include/config.php");
+require_once(CACTI_BASE_PATH . "/include/auth.php");
 
 /* set default action */
 if (!isset($_REQUEST["action"])) { $_REQUEST["action"] = ""; }
@@ -50,7 +50,7 @@ case 'save':
 	header("Location: settings.php?tab=" . $_POST["tab"]);
 	break;
 default:
-	include("./include/top_header.php");
+	require_once(CACTI_BASE_PATH . "/include/top_header.php");
 
 	/* set the default settings category */
 	if (!isset($_GET["tab"])) {
@@ -117,7 +117,7 @@ default:
 
 	form_save_button("settings.php?tab=$current_tab", "save");
 
-	include("./include/bottom_footer.php");
+	require_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
 
 	break;
 }

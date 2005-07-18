@@ -23,7 +23,7 @@
 */
 
 function api_data_source_save($data_source_id, &$_fields_data_source, &$_fields_data_source_rra, $skip_cache_update = false) {
-	include_once(CACTI_BASE_PATH . "/lib/data_source/data_source_info.php");
+	require_once(CACTI_BASE_PATH . "/lib/data_source/data_source_info.php");
 
 	/* sanity check for $data_source_id */
 	if (!is_numeric($data_source_id)) {
@@ -44,12 +44,17 @@ function api_data_source_save($data_source_id, &$_fields_data_source, &$_fields_
 	}
 
 	/* fetch a list of all visible data source fields */
-	$fields_data_source = get_data_source_field_list();
+	$fields_data_source = api_data_source_field_list();
 
 	foreach (array_keys($fields_data_source) as $field_name) {
 		if (isset($_fields_data_source[$field_name])) {
 			$_fields[$field_name] = array("type" => $fields_data_source[$field_name]["data_type"], "value" => $_fields_data_source[$field_name]);
 		}
+	}
+
+	/* check for an empty field list */
+	if (sizeof($_fields) == 1) {
+		return true;
 	}
 
 	if (db_replace("data_source", $_fields, array("id"))) {
@@ -71,7 +76,7 @@ function api_data_source_save($data_source_id, &$_fields_data_source, &$_fields_
 
 		if ($skip_cache_update == false) {
 			/* update data source title cache */
-			update_data_source_title_cache($data_source_id);
+			api_data_source_title_cache_update($data_source_id);
 		}
 
 		return true;
@@ -81,7 +86,7 @@ function api_data_source_save($data_source_id, &$_fields_data_source, &$_fields_
 }
 
 function api_data_source_fields_save($data_source_id, &$_fields_data_input) {
-	include_once(CACTI_BASE_PATH . "/include/data_source/data_source_constants.php");
+	require_once(CACTI_BASE_PATH . "/include/data_source/data_source_constants.php");
 
 	/* sanity check for $data_source_id */
 	if ((!is_numeric($data_source_id)) || (empty($data_source_id))) {
@@ -130,7 +135,7 @@ function api_data_source_disable($data_source_id) {
 }
 
 function api_data_source_item_save($data_source_item_id, &$_fields_data_source_item) {
-	include_once(CACTI_BASE_PATH . "/lib/data_source/data_source_info.php");
+	require_once(CACTI_BASE_PATH . "/lib/data_source/data_source_info.php");
 
 	/* sanity check for $data_source_item_id */
 	if (!is_numeric($data_source_item_id)) {
@@ -153,13 +158,18 @@ function api_data_source_item_save($data_source_item_id, &$_fields_data_source_i
 		$_fields["data_source_id"] = array("type" => DB_TYPE_NUMBER, "value" => $_fields_data_source_item["data_source_id"]);
 	}
 
+	/* field: data_template_item_id */
+	if (!empty($_fields_data_source_item["data_template_item_id"])) {
+		$_fields["data_template_item_id"] = array("type" => DB_TYPE_NUMBER, "value" => $_fields_data_source_item["data_template_item_id"]);
+	}
+
 	/* field: field_input_value */
 	if (isset($_fields_data_source_item["field_input_value"])) {
 		$_fields["field_input_value"] = array("type" => DB_TYPE_STRING, "value" => $_fields_data_source_item["field_input_value"]);
 	}
 
 	/* fetch a list of all visible data source item fields */
-	$fields_data_source_item = get_data_source_item_field_list();
+	$fields_data_source_item = api_data_source_item_field_list();
 
 	foreach (array_keys($fields_data_source_item) as $field_name) {
 		if (isset($_fields_data_source_item[$field_name])) {
@@ -167,11 +177,16 @@ function api_data_source_item_save($data_source_item_id, &$_fields_data_source_i
 		}
 	}
 
+	/* check for an empty field list */
+	if (sizeof($_fields) == 1) {
+		return true;
+	}
+
 	if (db_replace("data_source_item", $_fields, array("id"))) {
 		if (!empty($_fields_data_source_item["data_source_id"])) {
 			/* since the data source path is based in part on the data source item name, it makes sense
 			 * to update it here */
-			update_data_source_path($_fields_data_source_item["data_source_id"]);
+			api_data_source_path_update($_fields_data_source_item["data_source_id"]);
 		}
 
 		return true;
@@ -190,61 +205,21 @@ function api_data_source_item_remove($data_source_item_id) {
 
 /* update_data_source_title_cache - updates the title cache for a single data source
    @arg $data_source_id - (int) the ID of the data source to update the title cache for */
-function update_data_source_title_cache($data_source_id) {
-	include_once(CACTI_BASE_PATH . "/lib/data_source/data_source_info.php");
+function api_data_source_title_cache_update($data_source_id) {
+	require_once(CACTI_BASE_PATH . "/lib/data_source/data_source_info.php");
 
 	if (empty($data_source_id)) {
 		return;
 	}
 
-	db_execute("update data_source set name_cache = '" . addslashes(get_data_source_title($data_source_id)) . "' where id = $data_source_id");
-}
-
-/* update_data_source_title_cache_from_template - updates the title cache for all data sources
-	that match a given data template
-   @arg $data_template_id - (int) the ID of the data template to match */
-function update_data_source_title_cache_from_template($data_template_id) {
-	$data = db_fetch_assoc("select local_data_id from data_template_data where data_template_id=$data_template_id and local_data_id>0");
-
-	if (sizeof($data) > 0) {
-	foreach ($data as $item) {
-		update_data_source_title_cache($item["local_data_id"]);
-	}
-	}
-}
-
-/* update_data_source_title_cache_from_query - updates the title cache for all data sources
-	that match a given data query/index combination
-   @arg $snmp_query_id - (int) the ID of the data query to match
-   @arg $snmp_index - the index within the data query to match */
-function update_data_source_title_cache_from_query($snmp_query_id, $snmp_index) {
-	$data = db_fetch_assoc("select id from data_local where snmp_query_id=$snmp_query_id and snmp_index='$snmp_index'");
-
-	if (sizeof($data) > 0) {
-	foreach ($data as $item) {
-		update_data_source_title_cache($item["id"]);
-	}
-	}
-}
-
-/* update_data_source_title_cache_from_host - updates the title cache for all data sources
-	that match a given host
-   @arg $host_id - (int) the ID of the host to match */
-function update_data_source_title_cache_from_host($host_id) {
-	$data = db_fetch_assoc("select id from data_local where host_id=$host_id");
-
-	if (sizeof($data) > 0) {
-	foreach ($data as $item) {
-		update_data_source_title_cache($item["id"]);
-	}
-	}
+	db_execute("update data_source set name_cache = '" . addslashes(api_data_source_title($data_source_id)) . "' where id = $data_source_id");
 }
 
 /* update_data_source_path - set the current data source path or generates a new one if a path
      does not already exist
    @arg $data_source_id - (int) the ID of the data source to set a path for */
-function update_data_source_path($data_source_id) {
-	include_once(CACTI_BASE_PATH . "/lib/string.php");
+function api_data_source_path_update($data_source_id) {
+	require_once(CACTI_BASE_PATH . "/lib/sys/string.php");
 
 	$host_part = ""; $ds_part = "";
 

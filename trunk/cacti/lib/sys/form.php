@@ -46,4 +46,36 @@ function register_field_errors($error_fields) {
 	raise_message(3);
 }
 
+/* form_input_validate - validates the value of a form field and takes the appropriate action if the input
+     is not valid
+   @arg $field_value - the value of the form field
+   @arg $field_name - the name of the $_POST field as specified in the HTML
+   @arg $regexp_match - (optionally) enter a regular expression to match the value against
+   @arg $allow_nulls - (bool) whether to allow an empty string as a value or not
+   @arg $custom_message - (int) the ID of the message to raise upon an error which is defined in the
+     $messages array in 'include/config_arrays.php'
+   @returns - the original $field_value */
+function form_input_validate($field_value, $field_name, $regexp_match, $allow_nulls, $custom_message = 0) {
+	if (($allow_nulls == true) && ($field_value == "")) {
+		return true;
+	}
+
+	/* php 4.2+ complains about empty regexps */
+	if (empty($regexp_match)) { $regexp_match = ".*"; }
+
+	if ((!ereg($regexp_match, $field_value) || (($allow_nulls == false) && ($field_value == "")))) {
+		if ($custom_message == 3) {
+			return $field_value;
+		}else{
+			return false;
+		}
+	}else{
+		if ($custom_message == 3) {
+			return $field_value;
+		}else{
+			return true;
+		}
+	}
+}
+
 ?>

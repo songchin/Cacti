@@ -24,9 +24,8 @@
 
 function api_tree_item_save($id, $tree_id, $type, $parent_tree_item_id, $title, $local_graph_id, $rra_id,
 	$host_id, $host_grouping_type, $sort_children_type, $propagate_changes) {
-	global $config;
 
-	include_once($config["library_path"] . "/tree.php");
+	require_once(CACTI_BASE_PATH . "/lib/sys/tree.php");
 
 	$parent_order_key = db_fetch_cell("select order_key from graph_tree_items where id=$parent_tree_item_id");
 

@@ -23,9 +23,10 @@
 */
 
 function copy_data_template_to_data_source($data_template_id, $host_id = 0, $data_query_id = 0, $data_query_index = "") {
-	include_once(CACTI_BASE_PATH . "/lib/data_source/data_source_update.php");
-	include_once(CACTI_BASE_PATH . "/lib/data_source/data_source_info.php");
-	include_once(CACTI_BASE_PATH . "/lib/data_source/data_source_template_info.php");
+	require_once(CACTI_BASE_PATH . "/lib/sys/variable.php");
+	require_once(CACTI_BASE_PATH . "/lib/data_source/data_source_update.php");
+	require_once(CACTI_BASE_PATH . "/lib/data_source/data_source_info.php");
+	require_once(CACTI_BASE_PATH . "/lib/data_template/data_template_info.php");
 
 	/* sanity check for $data_template_id */
 	if ((!is_numeric($data_template_id)) || (empty($data_template_id))) {
@@ -38,8 +39,8 @@ function copy_data_template_to_data_source($data_template_id, $host_id = 0, $dat
 	}
 
 	/* fetch field lists */
-	$fields_data_source = get_data_source_field_list();
-	$fields_data_source_item = get_data_source_item_field_list();
+	$fields_data_source = api_data_source_field_list();
+	$fields_data_source_item = api_data_source_item_field_list();
 
 	/* fetch information from that data template */
 	$data_template = get_data_template($data_template_id);
@@ -91,6 +92,7 @@ function copy_data_template_to_data_source($data_template_id, $host_id = 0, $dat
 					$_fields = array();
 					$_fields["id"] = "0";
 					$_fields["data_source_id"] = $data_source_id;
+					$_fields["data_template_item_id"] = $data_template_item["id"];
 					$_fields["field_input_value"] = $data_template_item["field_input_value"];
 
 					/* copy down all visible fields */
@@ -99,14 +101,14 @@ function copy_data_template_to_data_source($data_template_id, $host_id = 0, $dat
 					}
 
 					if (!api_data_source_item_save(0, $_fields)) {
-						api_syslog_cacti_log("Save error in api_data_source_item_save()", SEV_DEBUG, 0, 0, 0, false, FACIL_WEBUI);
+						api_syslog_cacti_log("Save error in api_data_source_item_save()", SEV_ERROR, 0, 0, 0, false, FACIL_WEBUI);
 					}
 				}
 			}
 
 			return $data_source_id;
 		}else{
-			api_syslog_cacti_log("Save error in api_data_source_save()", SEV_DEBUG, 0, 0, 0, false, FACIL_WEBUI);
+			api_syslog_cacti_log("Save error in api_data_source_save()", SEV_ERROR, 0, 0, 0, false, FACIL_WEBUI);
 
 			return false;
 		}
@@ -118,58 +120,72 @@ function copy_data_template_to_data_source($data_template_id, $host_id = 0, $dat
 /* api_data_template_push - pushes out templated data template fields to all matching child data sources
    @arg $data_template_id - the id of the data template to push out values for */
 function api_data_template_propagate($data_template_id) {
-	global $struct_data_source, $cnn_id;
+	require_once(CACTI_BASE_PATH . "/lib/data_source/data_source_info.php");
+	require_once(CACTI_BASE_PATH . "/lib/data_template/data_template_info.php");
 
 	/* get information about this data template */
-	$data_template = db_fetch_row("select * from data_template where id=$data_template_id");
+	$data_template = get_data_template($data_template_id);
 
 	/* must be a valid data template */
-	if (sizeof($data_template) == 0) { return 0; }
+	if ($data_template === false) {
+		return false;
+	}
 
-	/* get data sources list for ADODB */
-	$data_sources = $cnn_id->Execute("select * from data_source where data_template_id = $data_template_id");
+	/* retrieve a list of data source fields */
+	$data_source_fields = api_data_source_field_list();
 
+	$ds_fields = array();
 	/* loop through each data source column name (from the above array) */
-	reset($struct_data_source);
-	while (list($field_name, $field_array) = each($struct_data_source)) {
+	foreach ($data_source_fields as $field_name => $field_array) {
 		/* are we allowed to push out the column? */
 		if ((isset($data_template["t_$field_name"])) && (isset($data_template[$field_name])) && ($data_template["t_$field_name"] == "0")) {
-			$ds_fields[$field_name] = $data_template[$field_name];
+			$ds_fields[$field_name] = array("type" => $field_array["data_type"], "value" => $data_template[$field_name]);
 		}
 	}
 
-	if (isset($ds_fields["name"])) {
-		//update_data_source_title_cache_from_template($data_template_data["data_template_id"]);
+	if (sizeof($ds_fields) > 0) {
+		$ds_fields["data_template_id"] = array("type" => DB_TYPE_NUMBER, "value" => $data_template_id);
+
+		return db_update("data_source", $ds_fields, array("data_template_id"));
 	}
 
-	db_execute($cnn_id->GetUpdateSQL($data_sources, $ds_fields));
+	return true;
 }
 
 /* api_data_source_item_propagate - pushes out templated data template item fields to all matching
 	child data source items
    @arg $data_template_item_id - the id of the data template item to push out values for */
 function api_data_source_item_propagate($data_template_item_id) {
-	global $struct_data_source_item, $cnn_id;
+	require_once(CACTI_BASE_PATH . "/lib/data_source/data_source_info.php");
+	require_once(CACTI_BASE_PATH . "/lib/data_template/data_template_info.php");
 
 	/* get information about this data template */
-	$data_template_item = db_fetch_row("select * from data_template_item where id=$data_template_item_id");
+	$data_template_item = get_data_template_item($data_template_item_id);
 
-	/* must be a valid data template */
-	if (sizeof($data_template_item) == 0) { return 0; }
+	/* must be a valid data template item */
+	if ($data_template_item === false) {
+		return false;
+	}
 
-	/* get data source items list for ADODB */
-	$data_source_items = $cnn_id->Execute("select * from data_source_item where data_source_name = '" . db_fetch_cell("select data_source_name from data_template_item where id = $data_template_item_id") . "'");
+	/* retrieve a list of data source item fields */
+	$data_source_item_fields = api_data_source_item_field_list();
 
+	$dsi_fields = array();
 	/* loop through each data source column name (from the above array) */
-	reset($struct_data_source_item);
-	while (list($field_name, $field_array) = each($struct_data_source_item)) {
+	foreach ($data_source_item_fields as $field_name => $field_array) {
 		/* are we allowed to push out the column? */
 		if ((isset($data_template_item["t_$field_name"])) && (isset($data_template_item[$field_name])) && ($data_template_item["t_$field_name"] == "0")) {
-			$dsi_fields[$field_name] = $data_template_item[$field_name];
+			$dsi_fields[$field_name] = array("type" => $field_array["data_type"], "value" => $data_template_item[$field_name]);
 		}
 	}
 
-	db_execute($cnn_id->GetUpdateSQL($data_source_items, $dsi_fields));
+	if (sizeof($dsi_fields) > 0) {
+		$dsi_fields["data_template_item_id"] = array("type" => DB_TYPE_STRING, "value" => $data_template_item["id"]);
+
+		return db_update("data_source_item", $dsi_fields, array("data_template_item_id"));
+	}
+
+	return true;
 }
 
 ?>

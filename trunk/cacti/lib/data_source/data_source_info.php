@@ -25,8 +25,8 @@
 /* get_data_source_title - returns the title of a data source without using the title cache unless the title ends up empty.
    @arg $data_source_id - (int) the ID of the data source to get a title for
    @returns - the data source title */
-function get_data_source_title($data_source_id, $remove_unsubstituted_variables = false) {
-	include_once(CACTI_BASE_PATH . "/lib/variables.php");
+function api_data_source_title($data_source_id, $remove_unsubstituted_variables = false) {
+	require_once(CACTI_BASE_PATH . "/lib/sys/variable.php");
 
 	$data_source = db_fetch_row("select host_id,name,name_cache from data_source where id = $data_source_id");
 
@@ -64,15 +64,15 @@ function get_data_source_title($data_source_id, $remove_unsubstituted_variables 
    @arg $data_source_id - (int) the ID of the data source
    @arg $expand_paths - (bool) whether to expand the <path_rra> variable into its full path or not
    @returns - the full path to the data source or an empty string for an error */
-function get_data_source_path($data_source_id, $expand_paths) {
-	include_once(CACTI_BASE_PATH . "/lib/variables.php");
-	include_once(CACTI_BASE_PATH . "/lib/data_source/data_source_update.php");
+function api_data_source_path($data_source_id, $expand_paths) {
+	require_once(CACTI_BASE_PATH . "/lib/sys/variable.php");
+	require_once(CACTI_BASE_PATH . "/lib/data_source/data_source_update.php");
 
 	$current_path = db_fetch_cell("select rrd_path from data_source where id = $data_source_id");
 
 	/* generate a new path if needed */
 	if ($current_path == "") {
-		$current_path = update_data_source_path($data_source_id);
+		$current_path = api_data_source_path_update($data_source_id);
 	}
 
 	if ($expand_paths == true) {
@@ -82,14 +82,14 @@ function get_data_source_path($data_source_id, $expand_paths) {
 	}
 }
 
-function &get_data_source_field_list() {
-	include(CACTI_BASE_PATH . "/include/data_source/data_source_form.php");
+function &api_data_source_field_list() {
+	require(CACTI_BASE_PATH . "/include/data_source/data_source_form.php");
 
 	return $fields_data_source;
 }
 
-function &get_data_source_item_field_list() {
-	include(CACTI_BASE_PATH . "/include/data_source/data_source_form.php");
+function &api_data_source_item_field_list() {
+	require(CACTI_BASE_PATH . "/include/data_source/data_source_form.php");
 
 	return $fields_data_source_item;
 }

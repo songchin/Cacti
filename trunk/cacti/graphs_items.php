@@ -22,13 +22,14 @@
  +-------------------------------------------------------------------------+
 */
 
-include("./include/config.php");
-include("./include/auth.php");
-include_once("./lib/graph/graph_update.php");
-include_once("./include/graph/graph_constants.php");
-include_once("./include/graph/graph_arrays.php");
-include_once("./include/graph/graph_form.php");
-include_once("./lib/utility.php");
+require(dirname(__FILE__) . "/include/config.php");
+require_once(CACTI_BASE_PATH . "/include/auth.php");
+require_once(CACTI_BASE_PATH . "/lib/graph/graph_update.php");
+require_once(CACTI_BASE_PATH . "/lib/graph/graph_form.php");
+require_once(CACTI_BASE_PATH . "/include/graph/graph_constants.php");
+require_once(CACTI_BASE_PATH . "/include/graph/graph_arrays.php");
+require_once(CACTI_BASE_PATH . "/include/graph/graph_form.php");
+require_once(CACTI_BASE_PATH . "/lib/utility.php");
 
 /* set default action */
 if (!isset($_REQUEST["action"])) { $_REQUEST["action"] = ""; }
@@ -44,11 +45,11 @@ switch ($_REQUEST["action"]) {
 		header("Location: graphs.php?action=edit&id=" . $_GET["graph_id"]);
 		break;
 	case 'edit':
-		include_once("./include/top_header.php");
+		require_once(CACTI_BASE_PATH . "/include/top_header.php");
 
 		item_edit();
 
-		include_once("./include/bottom_footer.php");
+		require_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
 		break;
 	case 'item_movedown':
 		item_movedown();
@@ -72,9 +73,9 @@ function form_save() {
 		init_post_field_cache();
 
 		/* step #1: field validation */
-		$form_graph_item["id"] = $_POST["graph_template_item_id"];
-		$form_graph_item["graph_template_id"] = $_POST["graph_template_id"];
-		$form_graph_item["data_template_item_id"] = $_POST["data_template_item_id"];
+		$form_graph_item["id"] = $_POST["graph_item_id"];
+		$form_graph_item["graph_id"] = $_POST["graph_id"];
+		$form_graph_item["data_source_item_id"] = $_POST["data_source_item_id"];
 		$form_graph_item["color"] = $_POST["color"];
 		$form_graph_item["graph_item_type"] = $_POST["graph_item_type"];
 		$form_graph_item["consolidation_function"] = $_POST["consolidation_function"];
@@ -84,50 +85,12 @@ function form_save() {
 		$form_graph_item["legend_format"] = $_POST["legend_format"];
 		$form_graph_item["hard_return"] = html_boolean(isset($_POST["hard_return"]) ? $_POST["hard_return"] : "");
 
-		validate_graph_item_fields($form_graph_item, "|field|");
+		field_register_error(validate_graph_item_fields($form_graph_item, "|field|"));
 
 		/* step #2: field save */
 		if (!is_error_message()) {
-			$graph_template_item_id = api_graph_template_item_save($form_graph_item);
+			$graph_item_id = api_graph_item_save($_POST["graph_item_id"], $form_graph_item);
 		}
-
-
-
-		//$items[0] = array();
-
-		//if ($graph_item_types{$_POST["graph_type_id"]} == "LEGEND") {
-			/* this can be a major time saver when creating lots of graphs with the typical
-			GPRINT LAST/AVERAGE/MAX legends */
-		//	$items = array(
-		//		0 => array(
-		//			"color_id" => "0",
-		//			"graph_type_id" => "9",
-		//			"consolidation_function_id" => "4",
-		//			"text_format" => "Current:",
-		//			"hard_return" => ""
-		//			),
-		//		1 => array(
-		//			"color_id" => "0",
-		//			"graph_type_id" => "9",
-		//			"consolidation_function_id" => "1",
-		//			"text_format" => "Average:",
-		//			"hard_return" => ""
-		//			),
-		//		2 => array(
-		//			"color_id" => "0",
-		//			"graph_type_id" => "9",
-		//			"consolidation_function_id" => "3",
-		//			"text_format" => "Maximum:",
-		//			"hard_return" => "on"
-		//			));
-		//}
-
-
-
-		$graph_item_id = api_graph_item_save($_POST["graph_item_id"], $_POST["graph_id"],
-			$_POST["data_source_item_id"], $_POST["color"], $_POST["graph_item_type"], $_POST["cdef"], $_POST["consolidation_function"],
-			$_POST["gprint_format"], $_POST["legend_format"], $_POST["legend_value"], (isset($_POST["hard_return"]) ?
-			$_POST["hard_return"] : ""));
 
 		if (is_error_message()) {
 			header("Location: graph_items.php?action=edit" . (empty($graph_item_id) ? "" : "&id=" . $graph_item_id) . "&graph_id=" . $_POST["graph_id"]);
@@ -162,7 +125,7 @@ function item_remove() {
 }
 
 function item_edit() {
-	global $colors, $struct_graph_item;
+	global $colors;
 
 	/* if the user pushed the 'clear' button */
 	if (isset($_REQUEST["clear_x"])) {
@@ -175,7 +138,7 @@ function item_edit() {
 	load_current_session_value("filter", "sess_ds_filter", "");
 	load_current_session_value("host_id", "sess_ds_host_id", "-1");
 
-	$host = db_fetch_row("select hostname from host where id=" . $_REQUEST["host_id"]);
+	$host = db_fetch_row("select hostname from host where id = " . sql_sanitize($_REQUEST["host_id"]));
 
 	html_start_box("<strong>Data Source by Host</strong> [host: " . (empty($host["hostname"]) ? "No Host" : $host["hostname"]) . "]", "98%", $colors["header"], "3", "center", "");
 
@@ -186,72 +149,34 @@ function item_edit() {
 	if ($_REQUEST["host_id"] == "-1") {
 		$sql_where = "";
 	}elseif ($_REQUEST["host_id"] == "0") {
-		$sql_where = " and data_local.host_id=0";
+		$sql_where = " and data_local.host_id = 0";
 	}elseif (!empty($_REQUEST["host_id"])) {
-		$sql_where = " and data_local.host_id=" . $_REQUEST["host_id"];
+		$sql_where = " and data_local.host_id = " . sql_sanitize($_REQUEST["host_id"]);
 	}
 
 	if (!empty($_GET["id"])) {
-		$graph_item = db_fetch_row("select * from graph_item where id=" . $_GET["id"]);
-		$host_id = db_fetch_cell("select host_id from graph_local where id=" . $_GET["local_graph_id"]);
+		$graph_item = db_fetch_row("select * from graph_item where id = " . sql_sanitize($_GET["id"]));
+		$host_id = db_fetch_cell("select host_id from graph where id = " . sql_sanitize($_GET["graph_id"]));
 	}
 
 	/* by default, select the LAST DS chosen to make everyone's lives easier */
-	$default = db_fetch_row("select data_source_item_id from graph_item where graph_id=" . $_GET["graph_id"] . " order by sequence DESC");
+	$default = db_fetch_row("select data_source_item_id from graph_item where graph_id = " . sql_sanitize($_GET["graph_id"]) . " order by sequence DESC limit 1");
 
-	if (sizeof($default) > 0) {
-		$struct_graph_item["data_source_item_id"]["default"] = $default["data_source_item_id"];
-	}else{
-		$struct_graph_item["data_source_item_id"]["default"] = 0;
-	}
-
-	/* modifications to the default graph items array */
-	unset($struct_graph_item["data_template_item_id"]);
-
-	if ($_REQUEST["host_id"] > 0) {
-    	$struct_graph_item["data_source_item_id"]["sql"] = "select
-			CONCAT_WS('',data_source.name_cache,' (',data_template.template_name,'[',data_source_item.data_source_name,'])') AS name,
-			data_source_item.id,
-			data_template.template_name AS data_template_name
-			FROM host
-			RIGHT JOIN (data_template RIGHT JOIN (data_source LEFT JOIN data_source_item ON data_source.id = data_source_item.data_source_id) ON data_template.id = data_source.data_template_id) ON host.id = data_source.host_id
-			WHERE host.id=" . $_GET["host_id"] . "
-			ORDER BY name";
-    }elseif ($_REQUEST["host_id"] == -1) {
-		$struct_graph_item["data_source_item_id"]["sql"] = "select
-			CONCAT_WS('',case when host.description is null then 'No Host - ' end,data_source.name_cache,' (',case when data_template.template_name is null then 'No Template' when data_template.template_name is not null then data_template.template_name end,'[',data_source_item.data_source_name,'])') as name,
-			data_source_item.id
-			FROM host
-			RIGHT JOIN (data_template RIGHT JOIN (data_source LEFT JOIN data_source_item ON data_source.id = data_source_item.data_source_id) ON data_template.id = data_source.data_template_id) ON host.id = data_source.host_id
-			WHERE data_source_item.data_source_id=data_source.id and host.id is null ORDER BY name";
-	}else{
-		$struct_graph_item["data_source_item_id"]["sql"] = "select
-			CONCAT_WS('',case when host.description is null then 'No Host - ' end,data_source.name_cache,' (',case when data_template.template_name is null then 'No Template' when data_template.template_name is not null then data_template.template_name end,'[',data_source_item.data_source_name,'])') as name,
-			data_source_item.id
-			FROM host
-			RIGHT JOIN (data_template RIGHT JOIN (data_source LEFT JOIN data_source_item ON data_source.id = data_source_item.data_source_id) ON data_template.id = data_source.data_template_id) ON host.id = data_source.host_id
-			WHERE data_source_item.data_source_id=data_source.id ORDER BY name";
-	}
-
-	$form_array = array();
-
-	while (list($field_name, $field_array) = each($struct_graph_item)) {
-		$form_array += array($field_name => $struct_graph_item[$field_name]);
-
-		$form_array[$field_name]["value"] = (isset($graph_item) ? $graph_item[$field_name] : "");
-		$form_array[$field_name]["form_id"] = (isset($graph_item) ? $graph_item["id"] : "0");
-	}
+	form_start("graphs_items.php", "form_graph_item");
 
 	/* ==================== Box: Graph Item ==================== */
 
 	html_start_box("<strong>" . _("Graph Item") . "</strong> [Graph: " . db_fetch_cell("select title_cache from graph where id=" . $_GET["graph_id"]) . "]", "98%", $colors["header_background"], "3", "center", "");
 
-	draw_edit_form(
-		array(
-			"config" => array(),
-			"fields" => $form_array
-			)
-		);
+	_graph_item_field__data_source_item_id("data_source_item_id", (sizeof($default) == 1 ? $default["data_source_item_id"] : "0"), (empty($_GET["id"]) ? 0 : $_GET["id"]), $host_id);
+	_graph_item_field__color("color", (isset($graph_item["color"]) ? $graph_item["color"] : ""), (empty($_GET["id"]) ? 0 : $_GET["id"]));
+	_graph_item_field__graph_item_type("graph_item_type", (isset($graph_item["graph_item_type"]) ? $graph_item["graph_item_type"] : ""), (empty($_GET["id"]) ? 0 : $_GET["id"]));
+	_graph_item_field__consolidation_function("consolidation_function", (isset($graph_item["consolidation_function"]) ? $graph_item["consolidation_function"] : ""), (empty($_GET["id"]) ? 0 : $_GET["id"]));
+	_graph_item_field__cdef("cdef", (isset($graph_item["cdef"]) ? $graph_item["cdef"] : ""), (empty($_GET["id"]) ? 0 : $_GET["id"]));
+	_graph_item_field__gprint_format("gprint_format", (isset($graph_item["gprint_format"]) ? $graph_item["gprint_format"] : ""), (empty($_GET["id"]) ? 0 : $_GET["id"]));
+	_graph_item_field__legend_value("legend_value", (isset($graph_item["legend_value"]) ? $graph_item["legend_value"] : ""), (empty($_GET["id"]) ? 0 : $_GET["id"]));
+	_graph_item_field__legend_format("legend_format", (isset($graph_item["legend_format"]) ? $graph_item["legend_format"] : ""), (empty($_GET["id"]) ? 0 : $_GET["id"]));
+	_graph_item_field__hard_return("hard_return", (isset($graph_item["hard_return"]) ? $graph_item["hard_return"] : ""), (empty($_GET["id"]) ? 0 : $_GET["id"]));
 
 	form_hidden_box("graph_item_id", (isset($graph_item) ? $graph_item["id"] : "0"), "");
 	form_hidden_box("graph_id", $_GET["graph_id"], "0");

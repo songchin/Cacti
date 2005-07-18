@@ -23,13 +23,13 @@
 */
 
 /* Variable includes */
-include_once(CACTI_BASE_PATH . "/include/graph/user_constants.php");
-include_once(CACTI_BASE_PATH . "/include/graph/user_arrays.php");
+require_once(CACTI_BASE_PATH . "/include/graph/user_constants.php");
+require_once(CACTI_BASE_PATH . "/include/graph/user_arrays.php");
 
 /* Functions includes */
-include_once(CACTI_BASE_PATH . "/lib/graph/graph_update.php");
-include_once(CACTI_BASE_PATH . "/lib/graph/graph_info.php");
-include_once(CACTI_BASE_PATH . "/lib/graph/graph_template.php");
-include_once(CACTI_BASE_PATH . "/lib/graph/graph_template_update.php");
+require_once(CACTI_BASE_PATH . "/lib/graph/graph_update.php");
+require_once(CACTI_BASE_PATH . "/lib/graph/graph_info.php");
+require_once(CACTI_BASE_PATH . "/lib/graph_template/graph_template_push.php");
+require_once(CACTI_BASE_PATH . "/lib/graph_template/graph_template_update.php");
 
 ?>

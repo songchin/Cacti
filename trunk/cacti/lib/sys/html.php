@@ -275,18 +275,16 @@ function html_get_theme_images_path($image_file = "") {
 }
 
 function html_theme_color_scheme() {
-	global $config;
-
 	if ((isset($_SESSION["sess_user_id"])) && (api_user_theme($_SESSION["sess_user_id"]) != "default")) {
 		$theme = api_user_theme($_SESSION["sess_user_id"]);
 	}else{
 		$theme = read_config_option("default_theme");
 	}
 
-	if (file_exists($config["themes_path"] . "/" . $theme . "/" . $theme . ".php")) {
-		return $config["themes_path"] . "/" . $theme . "/" . $theme . ".php";
+	if (file_exists(CACTI_BASE_PATH . "/themes/" . $theme . "/" . $theme . ".php")) {
+		return CACTI_BASE_PATH . "/themes/" . $theme . "/" . $theme . ".php";
 	} else {
-		return $config["include_path"] . "/config_colors.php";
+		return CACTI_BASE_PATH . "/include/config_colors.php";
 	}
 }
 
@@ -303,6 +301,8 @@ function html_theme_color_scheme() {
 	is only applicable if the array is formatted using the second method above
    @arg $form_previous_value - the current value of this form element */
 function html_create_list($form_data, $column_display, $column_id, $form_previous_value, $trim_display_length = 0) {
+	require_once(CACTI_BASE_PATH . "/lib/sys/variable.php");
+
 	if (empty($column_display)) {
 		foreach (array_keys($form_data) as $id) {
 			if (empty($trim_display_length)) {
@@ -355,7 +355,7 @@ function html_get_php_os_icon() {
 		$os = PHP_OS;
 	}
 
-	if (file_exists($config["images_path"] . "/os_" . $os . ".gif")) {
+	if (file_exists(CACTI_BASE_PATH . "/images/os_" . $os . ".gif")) {
 		return "images/os_" . $os . ".gif";
 	} else {
 		return "images/os_cacti.gif";
@@ -364,9 +364,9 @@ function html_get_php_os_icon() {
 
 /* draw_menu - draws the cacti menu for display in the console */
 function draw_menu() {
-	global $colors, $config, $user_auth_realms, $user_auth_realm_filenames;
+	global $colors, $user_auth_realms, $user_auth_realm_filenames;
 
-	include($config["include_path"] . "/config_arrays.php");
+	require(CACTI_BASE_PATH . "/include/config_arrays.php");
 
 	/* list all realms that this user has access to */
 	if (read_config_option("auth_method") != "0") {
@@ -515,6 +515,8 @@ function form_area($text) { ?>
 /* draw_navigation_text - determines the top header navigation text for the current page and displays it to
 	the browser */
 function draw_navigation_text() {
+	require_once(CACTI_BASE_PATH . "/lib/sys/http.php");
+
 	$nav_level_cache = (isset($_SESSION["sess_nav_level_cache"]) ? $_SESSION["sess_nav_level_cache"] : array());
 
 	$nav = array(
@@ -1049,7 +1051,7 @@ function draw_navigation_text() {
    @arg $text - the text to substitute in
    @returns - the original navigation text with all substitutions made */
 function resolve_navigation_variables($text) {
-	include_once(CACTI_BASE_PATH . "/lib/graph/graph_info.php");
+	require_once(CACTI_BASE_PATH . "/lib/graph/graph_info.php");
 
 	if (preg_match_all("/\|([a-zA-Z0-9_]+)\|/", $text, $matches)) {
 		for ($i=0; $i<count($matches[1]); $i++) {

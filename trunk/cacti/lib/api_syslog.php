@@ -22,7 +22,7 @@
  +-------------------------------------------------------------------------+
 */
 
-#include_once(CACTI_BASE_PATH . "/lib/user/user_info.php");
+#require_once(CACTI_BASE_PATH . "/lib/user/user_info.php");
 
 /* api_syslog_cacti_log - logs a string to Cacti's log file or optionally to the browser
    @arg $message - string value to log
@@ -88,9 +88,9 @@ function api_syslog_cacti_log($message, $severity = SEV_INFO, $poller_id = 1, $h
 	}
 
 	/* Log to Cacti Syslog */
-	if ((($syslog_destination == SYSLOG_CACTI) || ($syslog_destination == SYSLOG_BOTH)) 
+	if ((($syslog_destination == SYSLOG_CACTI) || ($syslog_destination == SYSLOG_BOTH))
 		&& (syslog_read_config_option("syslog_status") != "suspended") && ($severity >= $syslog_level)) {
-		$sql = "insert into syslog 
+		$sql = "insert into syslog
 			(logdate,facility,severity,poller_id,host_id,user_id,username,source,message) values
 			(SYSDATE(), " . $facility . "," . $severity . "," . $poller_id . "," .$host_id . "," . $user_id . ",'" . $username . "','" . $source . "','". sql_sanitize($message) . "');";
 		/* DO NOT USE db_execute, function looping can occur when in SEV_DEV mode */
@@ -99,7 +99,7 @@ function api_syslog_cacti_log($message, $severity = SEV_INFO, $poller_id = 1, $h
 
 	/* Log to System Syslog/Eventlog */
 	/* Syslog is currently Unstable in Win32 */
-	if ((($syslog_destination == SYSLOG_BOTH) || ($syslog_destination == SYSLOG_SYSTEM)) 
+	if ((($syslog_destination == SYSLOG_BOTH) || ($syslog_destination == SYSLOG_SYSTEM))
 		&& ($severity >= $syslog_level)) {
 		openlog("cacti", LOG_NDELAY | LOG_PID, syslog_read_config_option("syslog_facility"));
 		syslog(api_syslog_get_syslog_severity($severity), api_syslog_get_severity($severity) . ": " . api_syslog_get_facility($facility) . ": " . $message);

@@ -22,10 +22,10 @@
  +-------------------------------------------------------------------------+
 */
 
-include("./include/config.php");
-include_once(CACTI_BASE_PATH . "/include/auth.php");
-include_once(CACTI_BASE_PATH . "/lib/sys/sequence.php");
-include_once(CACTI_BASE_PATH . "/lib/cdef.php");
+require(dirname(__FILE__) . "/include/config.php");
+require_once(CACTI_BASE_PATH . "/include/auth.php");
+require_once(CACTI_BASE_PATH . "/lib/sys/sequence.php");
+require_once(CACTI_BASE_PATH . "/lib/sys/cdef.php");
 
 /* set default action */
 if (!isset($_REQUEST["action"])) { $_REQUEST["action"] = ""; }
@@ -41,11 +41,11 @@ switch ($_REQUEST["action"]) {
 		header ("Location: presets.php?action=view_cdef");
 		break;
 	case 'edit':
-		include_once("./include/top_header.php");
+		require_once(CACTI_BASE_PATH . "/include/top_header.php");
 
 		cdef_edit();
 
-		include_once("./include/bottom_footer.php");
+		require_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
 		break;
 }
 
@@ -96,9 +96,9 @@ function form_save() {
 
 function cdef_remove() {
 	if ((read_config_option("remove_verification") == "on") && (!isset($_GET["confirm"]))) {
-		include("./include/top_header.php");
+		require_once(CACTI_BASE_PATH . "/include/top_header.php");
 		form_confirm(_("Are You Sure?"), _("Are you sure you want to delete the CDEF") . " <strong>'" . db_fetch_cell("select name from preset_cdef where id=" . $_GET["id"]) . "'</strong>?", "presets.php?action=view_cdef", "presets_cdef.php?action=remove&id=" . $_GET["id"]);
-		include("./include/bottom_footer.php");
+		require_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
 		exit;
 	}
 

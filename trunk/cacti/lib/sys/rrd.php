@@ -24,12 +24,7 @@
 
 define("RRD_NL", " \\\n");
 
-function escape_command($command) {
-	return ereg_replace("(\\\$|`)", "", $command);
-}
-
 function rrd_init($rrd_count = 1) {
-
 	for ($i = 0; $i < $rrd_count; $i++) {
 		$rrd_struc[$i]["fd"] = popen(read_config_option("path_rrdtool") . " -", "w");
 	}
@@ -54,6 +49,8 @@ function rrd_get_fd(&$rrd_struc, $fd_type) {
 
 function rrdtool_execute($command_line, $log_to_stdout, $output_flag, $rrd_struc = array(), $syslog_facility = FACIL_POLLER) {
 	global $config;
+
+	require_once(CACTI_BASE_PATH . "/lib/sys/exec.php");
 
 	if (!is_numeric($output_flag)) {
 		$output_flag = RRDTOOL_OUTPUT_STDOUT;
@@ -137,8 +134,8 @@ function rrdtool_execute($command_line, $log_to_stdout, $output_flag, $rrd_struc
 }
 
 function rrdtool_function_create($data_source_id, $show_source, $rrd_struc, $syslog_facility = FACIL_POLLER) {
-	include(CACTI_BASE_PATH . "/include/data_source/data_source_arrays.php");
-	include_once(CACTI_BASE_PATH . "/lib/data_source/data_source_info.php");
+	require(CACTI_BASE_PATH . "/include/data_source/data_source_arrays.php");
+	require_once(CACTI_BASE_PATH . "/lib/data_source/data_source_info.php");
 
 	$data_source_path = get_data_source_path($data_source_id, true);
 
@@ -267,9 +264,7 @@ function rrdtool_function_update($update_cache_array, $rrd_struc, $syslog_facili
 }
 
 function rrdtool_function_tune($rrd_tune_array) {
-	global $config;
-
-	include($config["include_path"] . "/config_arrays.php");
+	require(CACTI_BASE_PATH . "/include/config_arrays.php");
 
 	$data_source_name = get_data_source_item_name($rrd_tune_array["data_source_id"]);
 	$data_source_type = $data_source_types{$rrd_tune_array["data-source-type"]};
@@ -404,12 +399,14 @@ function &rrdtool_function_fetch($local_data_id, $start_time, $end_time, $resolu
 function rrdtool_function_graph($graph_id, $rra_id, $graph_data_array, $rrd_struc = array(),$syslog_facility = FACIL_WEBUI) {
 	global $colors;
 
-	include_once(CACTI_BASE_PATH . "/lib/graph/graph_info.php");
-	include_once(CACTI_BASE_PATH . "/lib/graph/graph_utility.php");
-	include_once(CACTI_BASE_PATH . "/lib/data_source/data_source_info.php");
-	include_once(CACTI_BASE_PATH . "/include/graph/graph_constants.php");
-	include(CACTI_BASE_PATH . "/include/graph/graph_arrays.php");
-	include(CACTI_BASE_PATH . "/include/data_source/data_source_arrays.php");
+	require_once(CACTI_BASE_PATH . "/lib/sys/auth.php");
+	require_once(CACTI_BASE_PATH . "/lib/sys/graph_variable.php");
+	require_once(CACTI_BASE_PATH . "/lib/graph/graph_info.php");
+	require_once(CACTI_BASE_PATH . "/lib/graph/graph_utility.php");
+	require_once(CACTI_BASE_PATH . "/lib/data_source/data_source_info.php");
+	require_once(CACTI_BASE_PATH . "/include/graph/graph_constants.php");
+	require(CACTI_BASE_PATH . "/include/graph/graph_arrays.php");
+	require(CACTI_BASE_PATH . "/include/data_source/data_source_arrays.php");
 
 	/* set the rrdtool default font */
 	if (read_config_option("path_rrdtool_default_font")) {

@@ -23,8 +23,8 @@
 */
 
 $guest_account = true;
-include("./include/config.php");
-include("./include/auth.php");
+require(dirname(__FILE__) . "/include/config.php");
+require_once(CACTI_BASE_PATH . "/include/auth.php");
 
 /* set default action */
 if (!isset($_REQUEST["action"])) { $_REQUEST["action"] = ""; }
@@ -35,11 +35,11 @@ switch ($_REQUEST["action"]) {
 
 		break;
 	default:
-		include_once("./include/top_graph_header.php");
+		require_once(CACTI_BASE_PATH . "/include/top_graph_header.php");
 
 		settings();
 
-		include_once("./include/bottom_footer.php");
+		require_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
 		break;
 }
 
@@ -85,7 +85,7 @@ function settings() {
 	/* Find out whether this user has right here */
 	if($current_user["graph_settings"] == "") {
 		print "<strong><font size='+1' color='#FF0000'>" . _("YOU DO NOT HAVE RIGHTS TO CHANGE GRAPH SETTINGS") . "</font></strong>";
-		include_once("./include/bottom_footer.php");
+		require_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
 		exit;
 	}
 

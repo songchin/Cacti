@@ -57,7 +57,7 @@ if (read_config_option("auth_method") != "0") {
 
 	if (empty($_SESSION["sess_user_id"])) {
 		/* User not authenticated, prompt for login */
-		include("./auth_login.php");
+		require("./auth_login.php");
 		exit;
 	}elseif (!empty($_SESSION["sess_user_id"])) {
 		/* User authenticated */

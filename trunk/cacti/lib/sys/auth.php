@@ -22,8 +22,6 @@
  +-------------------------------------------------------------------------+
 */
 
-
-
 /* get_graph_permissions_sql - creates SQL that reprents the current graph, host and graph
      template policies
    @arg $policy_graphs - (int) the current graph policy

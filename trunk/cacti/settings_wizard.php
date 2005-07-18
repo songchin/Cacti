@@ -22,8 +22,8 @@
  +-------------------------------------------------------------------------+
 */
 
-include("./include/config.php");
-include("./include/auth.php");
+require(dirname(__FILE__) . "/include/config.php");
+require_once(CACTI_BASE_PATH . "/include/auth.php");
 
 /* settings */
 $wizard_array = array(
@@ -74,7 +74,7 @@ wizard_process_action();
 
 if (! is_null(wizard_read_var("wizard"))) {
 
-	include_once("include/top_header.php");
+	require_once(CACTI_BASE_PATH . "/include/top_header.php");
 
 	if (wizard_include(wizard_read_var("wizard"))) {
 		/* wizard_render must exist in the included wizard file.  All actions should occur from there. */
@@ -88,14 +88,14 @@ if (! is_null(wizard_read_var("wizard"))) {
 		wizard_clear_vars();
 	}
 
-	include_once("include/bottom_footer.php");
+	require_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
 
 }else{
-	include_once("include/top_header.php");
+	require_once(CACTI_BASE_PATH . "/include/top_header.php");
 
 	wizard_intro();
 
-	include_once("include/bottom_footer.php");
+	require_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
 }
 
 /*
@@ -110,7 +110,7 @@ function wizard_include($wizard) {
 	if (isset($wizard_array[$wizard]["include"])) {
 		$file = $wizard_array[$wizard]["include"];
 		if (file_exists($file)) {
-			include_once($file);
+			require_once($file);
 		}else{
 			display_custom_error_message(_("Unable to include Wizard File for wizard \"") . $wizard . "\"");
 			return false;
@@ -347,9 +347,9 @@ function wizard_process_action() {
 	if (isset($_SERVER["HTTP_REFERER"])) {
 		if (basename($_SERVER["HTTP_REFERER"]) != basename(__FILE__)) {
 			if (wizard_history() != "intro") {
-				include_once("include/top_header.php");
+				require_once(CACTI_BASE_PATH . "/include/top_header.php");
 				wizard_continue_prompt();
-				include_once("include/bottom_footer.php");
+				require_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
 				exit;
 			}
 		}
