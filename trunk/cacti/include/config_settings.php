@@ -115,7 +115,7 @@ $settings = array(
 			"friendly_name" => _("Syslog Facility"),
 			"description" => _("Facility to utilize when using syslog. For Windows enviroments set to USER."),
 			"method" => "drop_array",
-			"default" => LOG_LOCAL0,
+			"default" => LOG_USER,
 			"array" => $syslog_facility
 			),
 		"syslog_header" => array(

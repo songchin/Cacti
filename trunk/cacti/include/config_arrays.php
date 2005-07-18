@@ -105,7 +105,7 @@ $snmpv3_security_level = array(
 	"authNoPriv" => _("No Privacy Protocol"),
 	"authPriv" => _("Privacy Protocol")
 	);
-	
+
 $snmpv3_auth_protocol = array(
 	"MD5" => _("MD5 (default)"),
 	"SHA" => _("SHA")
@@ -161,17 +161,23 @@ $syslog_level = array(
 	SEV_EMERGENCY => _("(7) Emergency")
 	);
 
-$syslog_facility = array(
-	LOG_LOCAL0 => "LOCAL0",
-	LOG_LOCAL1 => "LOCAL1",
-	LOG_LOCAL2 => "LOCAL2",
-	LOG_LOCAL3 => "LOCAL3",
-	LOG_LOCAL4 => "LOCAL4",
-	LOG_LOCAL5 => "LOCAL5",
-	LOG_LOCAL6 => "LOCAL6",
-	LOG_LOCAL7 => "LOCAL7",
-	LOG_USER => "USER"
-);
+if ($config["cacti_server_os"] == "unix") {
+	$syslog_facility = array(
+		LOG_LOCAL0 => "LOCAL0",
+		LOG_LOCAL1 => "LOCAL1",
+		LOG_LOCAL2 => "LOCAL2",
+		LOG_LOCAL3 => "LOCAL3",
+		LOG_LOCAL4 => "LOCAL4",
+		LOG_LOCAL5 => "LOCAL5",
+		LOG_LOCAL6 => "LOCAL6",
+		LOG_LOCAL7 => "LOCAL7",
+		LOG_USER => "USER"
+	);
+}else{
+	$syslog_facility = array(
+		LOG_USER => "USER"
+	);
+}
 
 $poller_options = array(
 	1 => "cmd.php",
@@ -460,6 +466,8 @@ $hash_type_names = array(
 	);
 
 $host_struc = array(
+	"id",
+	"poller_id",
 	"host_template_id",
 	"description",
 	"hostname",
@@ -484,6 +492,8 @@ $host_struc = array(
 	"max_time",
 	"cur_time",
 	"avg_time",
+	"cur_pkt_loss",
+	"avg_pkt_loss",
 	"total_polls",
 	"failed_polls",
 	"availability"
