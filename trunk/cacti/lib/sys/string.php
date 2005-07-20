@@ -102,11 +102,9 @@ function stri_replace($find, $replace, $string) {
    @arg $path - the path to modify
    @returns - the modified path */
 function clean_up_path($path) {
-	global $config;
-
-	if ($config["cacti_server_os"] == "unix" or read_config_option("using_cygwin") == "on") {
+	if (CACTI_SERVER_OS == "unix" or read_config_option("using_cygwin") == "on") {
 		$path = str_replace("\\", "/", $path);
-	}elseif ($config["cacti_server_os"] == "win32") {
+	}elseif (CACTI_SERVER_OS == "win32") {
 		$path = str_replace("/", "\\", $path);
 
 	}

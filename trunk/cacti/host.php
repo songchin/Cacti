@@ -437,8 +437,6 @@ function host_remove_gt() {
    --------------------- */
 
 function host_remove() {
-	global $config;
-
 	if ((read_config_option("remove_verification") == "on") && (!isset($_GET["confirm"]))) {
 		require_once(CACTI_BASE_PATH . "/include/top_header.php");
 		form_confirm(_("Are You Sure?"), _("Are you sure you want to delete the host <strong>'") . db_fetch_cell("select description from host where id=" . $_GET["id"]) . "'</strong>?", "host.php", "host.php?action=remove&id=" . $_GET["id"]);

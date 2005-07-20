@@ -83,7 +83,7 @@ if ($poller_id == 1) {
 	$num_pollers = sizeof($pollers);
 
 	/* update web paths for the poller */
-	db_execute("REPLACE INTO settings (name,value) VALUES ('path_webroot','" . addslashes(($config["cacti_server_os"] == "win32") ? strtolower(str_replace("\\","/",substr(dirname(__FILE__), 0, 1))) . str_replace("\\","/",substr(dirname(__FILE__), 1)) : dirname(__FILE__)) . "')");
+	db_execute("REPLACE INTO settings (name,value) VALUES ('path_webroot','" . addslashes((CACTI_SERVER_OS == "win32") ? strtolower(str_replace("\\","/",substr(dirname(__FILE__), 0, 1))) . str_replace("\\","/",substr(dirname(__FILE__), 1)) : dirname(__FILE__)) . "')");
 
 	/* initialize poller_time and poller_output tables */
 	db_execute("TRUNCATE TABLE poller_time");
@@ -171,12 +171,12 @@ if (read_config_option("poller_enabled") == "on") {
 	}
 
 	/* Determine Command Name */
-	if (($config["cacti_server_os"] == "unix") and ($poller_type == "2")) {
+	if ((CACTI_SERVER_OS == "unix") and ($poller_type == "2")) {
 		$command_string = read_config_option("path_cactid");
 		$extra_args = "";
 		$method = "cactid";
 		chdir(dirname(read_config_option("path_cactid")));
-	}else if ($config["cacti_server_os"] == "unix") {
+	}else if (CACTI_SERVER_OS == "unix") {
 		$command_string = read_config_option("path_php_binary");
 		$extra_args = "-q " . CACTI_BASE_PATH . "/cmd.php";
 		$method = "cmd.php";

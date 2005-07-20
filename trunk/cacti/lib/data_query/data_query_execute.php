@@ -111,8 +111,6 @@ function query_script_host($host_id, $snmp_query_id) {
 }
 
 function query_snmp_host($host_id, $data_query_id) {
-	global $config;
-
 	require_once(CACTI_BASE_PATH . "/lib/sys/snmp.php");
 	require_once(CACTI_BASE_PATH . "/lib/data_query/data_query_info.php");
 

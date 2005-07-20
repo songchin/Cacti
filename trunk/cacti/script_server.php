@@ -62,7 +62,7 @@ if ($_SERVER["argc"] >= 2) {
 }
 
 /* PHP Bug.  Not yet logged */
-if ($config["cacti_server_os"] == "win32") {
+if (CACTI_SERVER_OS == "win32") {
 	$guess = substr(__FILE__,0,2);
 	if ($guess == strtoupper($guess)) {
 		api_syslog_cacti_log(_("The PHP Script Server MUST be started using the full path to the file and in lower case.  This is a PHP Bug!!!"), SEV_CRITICAL, $poller_id, 0, 0, false, FACIL_SCPTSVR);

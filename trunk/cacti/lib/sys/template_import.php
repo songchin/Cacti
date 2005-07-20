@@ -822,13 +822,13 @@ function check_hash_type($hash_type) {
 }
 
 function check_hash_version($hash_version) {
-	global $hash_version_codes, $config;
+	global $hash_version_codes;
 
 	$i = 0;
 
 	reset($hash_version_codes);
 	while (list($version, $code) = each($hash_version_codes)) {
-		if ($version == $config["cacti_version"]) {
+		if ($version == CACTI_VERSION) {
 			$current_version_index = $i;
 		}
 

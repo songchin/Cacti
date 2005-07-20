@@ -89,6 +89,7 @@ function api_poller_cache_item_add($host_id, $data_source_id, $rrd_step, $poller
 	db_execute($cnn_id->GetInsertSQL($table_name, $save));
 }
 
+$config = array();
 function api_poller_get_rrd_next_step($rrd_step=300, $num_rrd_items=1) {
 	global $config;
 

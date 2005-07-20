@@ -33,16 +33,16 @@ $database_password = "cactiuser";
 $cacti_lang = "en";
 
 /* ----- you probably do not need to change anything below this line ----- */
-$config = array();
+$colors = array();
 
 /* this should be auto-detected, set it manually if needed */
-$config["cacti_server_os"] = (strstr(PHP_OS, "WIN")) ? "win32" : "unix";
-
-/* built-in snmp support */
-$config["php_snmp_support"] = function_exists("snmpget");
+define("CACTI_SERVER_OS", (strstr(PHP_OS, "WIN")) ? "win32" : "unix");
 
 /* used for includes */
 define("CACTI_BASE_PATH", str_replace(DIRECTORY_SEPARATOR . "include", "", dirname(__FILE__)));
+
+/* current cacti version */
+define("CACTI_VERSION", "0.9-dev");
 
 /* colors */
 $colors["dark_outline"] = "454E53";
@@ -62,8 +62,52 @@ $colors["form_background_dark"] = "E1E1E1";
 $colors["form_alternate1"] = "F5F5F5";
 $colors["form_alternate2"] = "E5E5E5";
 
-if ((isset($no_http_headers) ? $no_http_headers : false) != true) {
+/* includes for database operation */
+require(CACTI_BASE_PATH . "/lib/adodb/adodb.inc.php");
+require(CACTI_BASE_PATH . "/lib/sys/database.php");
+
+/* connect to the database server */
+db_connect_real($database_hostname, $database_username, $database_password, $database_default, $database_type);
+
+/* global functions include */
+require(CACTI_BASE_PATH . "/lib/functions.php"); // deprecated
+require(CACTI_BASE_PATH . "/lib/sys/array.php");
+require(CACTI_BASE_PATH . "/lib/sys/config.php");
+require(CACTI_BASE_PATH . "/lib/sys/message.php");
+require(CACTI_BASE_PATH . "/lib/sys/session.php");
+require(CACTI_BASE_PATH . "/lib/sys/string.php");
+require(CACTI_BASE_PATH . "/lib/api_syslog.php");
+
+/* Contants and Variable includes */
+require(CACTI_BASE_PATH . "/include/config_constants.php");
+require(CACTI_BASE_PATH . "/include/config_arrays.php");
+require(CACTI_BASE_PATH . "/include/config_settings.php");
+require(CACTI_BASE_PATH . "/include/config_form.php");
+
+/* User and auth include */
+require(CACTI_BASE_PATH . "/lib/user/user_info.php");
+
+/* Files that do not need http header information - Command line scripts */
+$no_http_header_files = array(
+	"poller.php",
+	"cmd.php",
+	"query_host_cpu.php",
+	"query_host_partitions.php",
+	"sql.php",
+	"ss_host_cpu.php",
+	"ss_host_disk.php",
+	"ss_sql.php"
+	);
+
+if ((!in_array(basename($_SERVER["PHP_SELF"]), $no_http_header_files, true)) && ($_SERVER["PHP_SELF"] != "")) {
 	require(CACTI_BASE_PATH . "/lib/sys/form.php");
+	require(CACTI_BASE_PATH . "/lib/sys/html.php");
+	require(CACTI_BASE_PATH . "/lib/sys/html_form.php");
+	require(CACTI_BASE_PATH . "/lib/sys/html_utility.php");
+
+	/* load color scheme from theme file.  Load the default first and then overwrite as required with theme */
+	require(CACTI_BASE_PATH . "/include/config_colors.php");
+	require(html_theme_color_scheme());
 
 	/* we don't want these pages cached */
 	header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
@@ -108,6 +152,31 @@ if ((isset($no_http_headers) ? $no_http_headers : false) != true) {
 		header("Location: " . $_REQUEST["cacti_js_dropdown_redirect"]);
 		exit;
 	}
+}
+
+/* emulate 'register_globals' = 'off' if turned on */
+if ((bool)ini_get("register_globals")) {
+	$not_unset = array("_GET", "_POST", "_COOKIE", "_SERVER", "_SESSION", "_ENV", "_FILES", "database_type", "database_default", "database_hostname", "database_username", "database_password", "config", "colors");
+
+	/* Not only will array_merge give a warning if a parameter is not an array, it will
+	* actually fail. So we check if HTTP_SESSION_VARS has been initialised. */
+	if (!isset($_SESSION)) {
+		$_SESSION = array();
+	}
+
+	/* Merge all into one extremely huge array; unset this later */
+	$input = array_merge($_GET, $_POST, $_COOKIE, $_SERVER, $_SESSION, $_ENV, $_FILES);
+
+	unset($input["input"]);
+	unset($input["not_unset"]);
+
+	while (list($var,) = @each($input)) {
+		if (!in_array($var, $not_unset)) {
+			unset($$var);
+		}
+	}
+
+	unset($input);
 }
 
 /* display ALL errors */
@@ -170,42 +239,5 @@ if (!function_exists("_")) {
 	textdomain("cacti");
 	bind_textdomain_codeset ("cactid", "UTF-8");
 }
-
-/* includes for database operation */
-require(CACTI_BASE_PATH . "/lib/adodb/adodb.inc.php");
-require(CACTI_BASE_PATH . "/lib/sys/database.php");
-
-/* connect to the database server */
-db_connect_real($database_hostname, $database_username, $database_password, $database_default, $database_type);
-
-/* global functions include */
-require(CACTI_BASE_PATH . "/lib/functions.php"); // deprecated
-require(CACTI_BASE_PATH . "/lib/sys/array.php");
-require(CACTI_BASE_PATH . "/lib/sys/config.php");
-require(CACTI_BASE_PATH . "/lib/sys/form.php");
-require(CACTI_BASE_PATH . "/lib/sys/message.php");
-require(CACTI_BASE_PATH . "/lib/sys/session.php");
-require(CACTI_BASE_PATH . "/lib/sys/string.php");
-
-require(CACTI_BASE_PATH . "/lib/sys/html.php");
-require(CACTI_BASE_PATH . "/lib/sys/html_form.php");
-require(CACTI_BASE_PATH . "/lib/sys/html_utility.php");
-require(CACTI_BASE_PATH . "/lib/api_syslog.php");
-
-/* Contants and Variable includes */
-require(CACTI_BASE_PATH . "/include/config_constants.php");
-require(CACTI_BASE_PATH . "/include/config_arrays.php");
-require(CACTI_BASE_PATH . "/include/config_settings.php");
-require(CACTI_BASE_PATH . "/include/config_form.php");
-
-/* User and auth include */
-require(CACTI_BASE_PATH . "/lib/user/user_info.php");
-
-/* load color scheme from theme file.  Load the default first and then overwrite as required with theme */
-require(CACTI_BASE_PATH . "/include/config_colors.php");
-require(html_theme_color_scheme());
-
-/* current cacti version */
-$config["cacti_version"] = "0.9-dev";
 
 ?>

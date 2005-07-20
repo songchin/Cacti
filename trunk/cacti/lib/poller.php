@@ -161,10 +161,8 @@ function update_poller_cache($data_source_id, $truncate_performed = false) {
    @arg $command - the command to execute
    @returns - the output of $command after execution */
 function exec_poll($command) {
-	global $config;
-
 	if (function_exists("stream_set_timeout")) {
-		if ($config["cacti_server_os"] == "win32") {
+		if (CACTI_SERVER_OS == "win32") {
 			$fp = popen($command, "rb");
 		}else{
 			$fp = popen($command, "r");
@@ -234,7 +232,7 @@ function exec_poll_php($command, $using_proc_function, $pipes, $proc_fd) {
 		/* formulate command */
 		$command = read_config_option("path_php_binary") . " " . $command;
 		if (function_exists("stream_set_timeout")) {
-			if ($config["cacti_server_os"] == "unix") {
+			if (CACTI_SERVER_OS == "unix") {
 				$fp = popen($command, "r");
 			}else{
 				$fp = popen($command, "rb");
@@ -268,14 +266,12 @@ function exec_poll_php($command, $using_proc_function, $pipes, $proc_fd) {
    @arg $filename - the full pathname to the script to execute
    @arg $args - any additional arguments that must be passed onto the executable */
 function exec_background($filename, $args = "") {
-	global $config;
-
 	if (read_config_option("log_verbosity") == POLLER_VERBOSITY_DEBUG) {
 		api_syslog_cacti_log(sprintf(_("About to Spawn a Remote Process [CMD: %s, ARGS: %s]"),$filename, $args), SEV_DEBUG, 0, 0, 0, true, FACIL_POLLER);
 	}
 
 	if (file_exists($filename)) {
-		if ($config["cacti_server_os"] == "win32") {
+		if (CACTI_SERVER_OS == "win32") {
 			pclose(popen("start \"Cactiplus\" /I /B \"" . $filename . "\" " . $args, "rb"));
 		}else{
 			exec($filename . " " . $args . " > /dev/null &");

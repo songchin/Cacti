@@ -277,16 +277,14 @@ function get_hash_round_robin_archive($rra_id) {
      'data_input_method','cdef','gprint_preset','data_query','host_template')
    @returns - a 24-bit hexadecimal hash (8-bits for type, 16-bits for version) */
 function get_hash_version($type) {
-	global $hash_type_codes, $hash_version_codes, $config;
+	global $hash_type_codes, $hash_version_codes;
 
-	return $hash_type_codes[$type] . $hash_version_codes{$config["cacti_version"]};
+	return $hash_type_codes[$type] . $hash_version_codes{CACTI_VERSION};
 }
 
 /* generate_hash - generates a new unique hash
    @returns - a 128-bit, hexadecimal hash */
 function generate_hash() {
-	global $config;
-
 	return md5(session_id() . microtime() . rand(0,1000));
 }
 

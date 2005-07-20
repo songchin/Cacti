@@ -34,7 +34,7 @@
    @arg $facility - integer value facility, if applicable, default FACIL_CMDPHP
    Note: Constants are defined for Severity and Facility, please reference include/config_constants.php */
 function api_syslog_cacti_log($message, $severity = SEV_INFO, $poller_id = 1, $host_id = 0, $user_id = 0, $output = false, $facility = FACIL_CMDPHP) {
-	global $config, $cnn_id;
+	global $cnn_id;
 
 	/* fill in the current date for printing in the log */
 	$logdate = date("Y-m-d H:i:s");
@@ -116,9 +116,7 @@ function api_syslog_cacti_log($message, $severity = SEV_INFO, $poller_id = 1, $h
 /* api_syslog_get_syslog_severity - returns the syslog severity level
    @arg $severity - the severity integer value */
 function api_syslog_get_syslog_severity($severity) {
-	global $config;
-
-	if ($config["cacti_server_os"] == "win32") {
+	if (CACTI_SERVER_OS == "win32") {
 		return LOG_WARNING;
 	} else {
 		switch ($severity) {

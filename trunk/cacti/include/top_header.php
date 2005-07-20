@@ -22,7 +22,6 @@
  +-------------------------------------------------------------------------+
 */
 global $colors;
-global $config;
 
 if (isset($_SESSION["sess_user_id"])) {
 	$current_user = api_user_info( array("id" => $_SESSION["sess_user_id"]) );

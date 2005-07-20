@@ -48,7 +48,7 @@ function raise_message($message_id) {
 /* display_output_messages - displays all of the cached messages from the raise_message() function and clears
      the message cache */
 function display_output_messages() {
-	global $config, $messages, $colors;
+	global $messages, $colors;
 
 	if (isset($_SESSION["sess_messages"])) {
 		$error_message = is_error_message();

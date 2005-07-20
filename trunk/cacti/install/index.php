@@ -35,13 +35,13 @@ $old_cacti_version = db_fetch_cell("select cacti from version");
 $old_version_index = array_search($old_cacti_version, $cacti_versions);
 
 /* do a version check */
-if ($old_cacti_version == $config["cacti_version"]) {
+if ($old_cacti_version == CACTI_VERSION) {
 	print "	<p style='font-family: Verdana, Arial; font-size: 16px; font-weight: bold; color: red;'>Error</p>
 		upgrades, this installation is already up-to-date. Click <a href='../index.php'>here</a> to use cacti.</p>";
 	exit;
 }elseif (ereg("^0\.6", $old_cacti_version)) {
 	print "	<p style='font-family: Verdana, Arial; font-size: 16px; font-weight: bold; color: red;'>Error</p>
-		<p style='font-family: Verdana, Arial; font-size: 12px;'>You are attempting to install cacti " . $config["cacti_version"] . "
+		<p style='font-family: Verdana, Arial; font-size: 12px;'>You are attempting to install cacti " . CACTI_VERSION . "
 		onto a 0.6.x database. To continue, you must create a new database, import 'cacti.sql' into it, and
 		update 'include/config.php' to point to the new database.</p>";
 	exit;
@@ -83,7 +83,7 @@ running on. */
 /* RRDTool Binary Path */
 $input["path_rrdtool"] = $settings["path"]["path_rrdtool"];
 
-if ($config["cacti_server_os"] == "unix") {
+if (CACTI_SERVER_OS == "unix") {
 	$which_rrdtool = find_best_path("rrdtool");
 
 	if (!empty($which_rrdtool)) {
@@ -93,14 +93,14 @@ if ($config["cacti_server_os"] == "unix") {
 	}else{
 		$input["path_rrdtool"]["default"] = "/usr/local/bin/rrdtool";
 	}
-}elseif ($config["cacti_server_os"] == "win32") {
+}elseif (CACTI_SERVER_OS == "win32") {
 	$input["path_rrdtool"]["default"] = "c:/rrdtool/rrdtool.exe";
 }
 
 /* PHP Binary Path */
 $input["path_php_binary"] = $settings["path"]["path_php_binary"];
 
-if ($config["cacti_server_os"] == "unix") {
+if (CACTI_SERVER_OS == "unix") {
 	$which_php = find_best_path("php");
 
 	if (!empty($which_php)) {
@@ -110,7 +110,7 @@ if ($config["cacti_server_os"] == "unix") {
 	}else{
 		$input["path_php_binary"]["default"] = "/usr/bin/php";
 	}
-}elseif ($config["cacti_server_os"] == "win32") {
+}elseif (CACTI_SERVER_OS == "win32") {
 	if (strlen(read_config_option("path_php_binary"))) {
 		$input["path_php_binary"]["default"] = read_config_option("path_php_binary");
 	} else {
@@ -119,7 +119,7 @@ if ($config["cacti_server_os"] == "unix") {
 }
 
 /* snmpwalk Binary Path */
-if ($config["cacti_server_os"] == "unix") {
+if (CACTI_SERVER_OS == "unix") {
 	$input["path_snmpwalk"] = $settings["path"]["path_snmpwalk"];
 
 	$which_snmpwalk = find_best_path("snmpwalk");
@@ -131,12 +131,12 @@ if ($config["cacti_server_os"] == "unix") {
 	}else{
 		$input["path_snmpwalk"]["default"] = "/usr/local/bin/snmpwalk";
 	}
-}elseif ($config["cacti_server_os"] == "win32") {
+}elseif (CACTI_SERVER_OS == "win32") {
 	$input["path_snmpwalk"]["default"] = "c:/net-snmp/bin/snmpwalk.exe";
 }
 
 /* snmpget Binary Path */
-if ($config["cacti_server_os"] == "unix") {
+if (CACTI_SERVER_OS == "unix") {
 	$input["path_snmpget"] = $settings["path"]["path_snmpget"];
 
 	$which_snmpget = find_best_path("snmpget");
@@ -148,12 +148,12 @@ if ($config["cacti_server_os"] == "unix") {
 	}else{
 		$input["path_snmpget"]["default"] = "/usr/local/bin/snmpget";
 	}
-}elseif ($config["cacti_server_os"] == "win32") {
+}elseif (CACTI_SERVER_OS == "win32") {
 	$input["path_snmpget"]["default"] = "c:/net-snmp/bin/snmpget.exe";
 }
 
 /* SNMP Version */
-if ($config["cacti_server_os"] == "unix") {
+if (CACTI_SERVER_OS == "unix") {
 	$input["snmp_version"] = $settings["snmp"]["snmp_version"];
 	$input["snmp_version"]["default"] = "net-snmp";
 }
@@ -217,7 +217,7 @@ if ($_REQUEST["step"] == "4") {
 	repopulate_poller_cache();
 
 	db_execute("delete from version");
-	db_execute("insert into version (cacti) values ('" . $config["cacti_version"] . "')");
+	db_execute("insert into version (cacti) values ('" . CACTI_VERSION . "')");
 
 	header ("Location: ../index.php");
 	exit;
@@ -226,7 +226,7 @@ if ($_REQUEST["step"] == "4") {
 	if (!is_int($old_version_index)) {
 		print "	<p style='font-family: Verdana, Arial; font-size: 16px; font-weight: bold; color: red;'>Error</p>
 			<p style='font-family: Verdana, Arial; font-size: 12px;'>Invalid Cacti version
-			<strong>$old_cacti_version</strong>, cannot upgrade to <strong>" . $config["cacti_version"] . "
+			<strong>$old_cacti_version</strong>, cannot upgrade to <strong>" . CACTI_VERSION . "
 			</strong></p>";
 		exit;
 	}
@@ -364,7 +364,7 @@ if ($_REQUEST["step"] == "4") {
 						<?php	print "Database User: $database_username<br>";
 							print "Database Hostname: $database_hostname<br>";
 							print "Database: $database_default<br>";
-							print "Server Operating System Type: " . $config["cacti_server_os"] . "<br>"; ?>
+							print "Server Operating System Type: " . CACTI_SERVER_OS . "<br>"; ?>
 						</p>
 
 						<?php }elseif ($_REQUEST["step"] == "3") { ?>

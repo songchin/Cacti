@@ -30,15 +30,13 @@ define("SNMP_METHOD_BINARY", 2);
 /* we must use an apostrophe to escape community names under Unix in case the user uses
 characters that the shell might interpret. the ucd-snmp binaries on Windows flip out when
 you do this, but are perfectly happy with a quotation mark. */
-if ($config["cacti_server_os"] == "unix") {
+if (CACTI_SERVER_OS == "unix") {
 	define("SNMP_ESCAPE_CHARACTER", "'");
 }else{
 	define("SNMP_ESCAPE_CHARACTER", "\"");
 }
 
 function cacti_snmp_get($hostname, $community, $oid, $version, $v3username, $v3password, $v3authproto = "", $v3privpassphrase = "", $v3privproto = "", $port = 161, $timeout = 500, $environ = SNMP_POLLER) {
-	global $config;
-
 	/* determine default retries */
 	$retries = read_config_option("snmp_retries");
 	if ($retries == "") $retries = 3;

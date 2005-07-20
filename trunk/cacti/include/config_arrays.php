@@ -161,7 +161,7 @@ $syslog_level = array(
 	SEV_EMERGENCY => _("(7) Emergency")
 	);
 
-if ($config["cacti_server_os"] == "unix") {
+if (CACTI_SERVER_OS == "unix") {
 	$syslog_facility = array(
 		LOG_LOCAL0 => "LOCAL0",
 		LOG_LOCAL1 => "LOCAL1",

@@ -48,8 +48,6 @@ function rrd_get_fd(&$rrd_struc, $fd_type) {
 }
 
 function rrdtool_execute($command_line, $log_to_stdout, $output_flag, $rrd_struc = array(), $syslog_facility = FACIL_POLLER) {
-	global $config;
-
 	require_once(CACTI_BASE_PATH . "/lib/sys/exec.php");
 
 	if (!is_numeric($output_flag)) {
@@ -76,7 +74,7 @@ function rrdtool_execute($command_line, $log_to_stdout, $output_flag, $rrd_struc
 	}
 
 	/* use popen to eliminate the zombie issue */
-	if ($config["cacti_server_os"] == "unix") {
+	if (CACTI_SERVER_OS == "unix") {
 		/* an empty $rrd_struc array means no fp is available */
 		if (sizeof($rrd_struc) == 0) {
 			$fp = popen(read_config_option("path_rrdtool") . escape_command(" $command_line"), "r");
@@ -84,7 +82,7 @@ function rrdtool_execute($command_line, $log_to_stdout, $output_flag, $rrd_struc
 			fwrite(rrd_get_fd($rrd_struc, RRDTOOL_PIPE_CHILD_READ), escape_command(" $command_line") . "\r\n");
 			fflush(rrd_get_fd($rrd_struc, RRDTOOL_PIPE_CHILD_READ));
 		}
-	}elseif ($config["cacti_server_os"] == "win32") {
+	}elseif (CACTI_SERVER_OS == "win32") {
 		/* an empty $rrd_struc array means no fp is available */
 		if (sizeof($rrd_struc) == 0) {
 			$fp = popen(read_config_option("path_rrdtool") . escape_command(" $command_line"), "rb");

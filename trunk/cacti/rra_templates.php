@@ -182,8 +182,6 @@ function form_actions() {
    --------------------- */
 
 function rra_template_remove() {
-	global $config;
-
 	if ((read_config_option("remove_verification") == "on") && (!isset($_GET["confirm"]))) {
 		require_once(CACTI_BASE_PATH . "/include/top_header.php");
 		form_confirm(_("Are You Sure?"), _("Are you sure you want to delete the rra template?<strong>'") . db_fetch_cell("select description from rra_template where id=" . $_GET["id"]) . "'</strong>?", "rra_templates.php", "rra_templates.php?action=remove&id=" . $_GET["id"]);

@@ -76,8 +76,6 @@ function api_graph_save($graph_id, &$_fields_graph, $skip_cache_update = false) 
    @arg $graph_height - the height of the resized graph
   */
 function api_resize_graphs($local_graph_id, $graph_width, $graph_height) {
-	global $config;
-
 	/* get graphs template id */
 	db_execute("UPDATE graph SET width=" . $graph_width . ", height=" . $graph_height . " WHERE id=" . $local_graph_id);
 }

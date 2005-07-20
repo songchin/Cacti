@@ -347,8 +347,6 @@ function html_create_list($form_data, $column_display, $column_id, $form_previou
 /* html_get_php_os_icon - returns the name of the os Icon for output processing in Cacti
  */
 function html_get_php_os_icon() {
-	global $config;
-
 	if (PHP_OS == "WINNT") {
 		$os = "xp";
 	} else {
