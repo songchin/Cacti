@@ -89,26 +89,24 @@ function api_poller_cache_item_add($host_id, $data_source_id, $rrd_step, $poller
 	db_execute($cnn_id->GetInsertSQL($table_name, $save));
 }
 
-$config = array();
 function api_poller_get_rrd_next_step($rrd_step=300, $num_rrd_items=1) {
-	global $config;
+	static $rrd_step_counter;
+	static $rrd_num_counter;
 
 	$poller_interval = read_config_option("poller_interval");
 	$rrd_next_step = 0;
 	if (($rrd_step != $poller_interval) && (isset($poller_interval))){
-		if (!isset($config["rrd_step_counter"])) {
+		if (!isset($rrd_step_counter)) {
 			$rrd_step_counter = read_config_option("rrd_step_counter");
-		}else{
-			$rrd_step_counter = $config["rrd_step_counter"];
 		}
 
 		if ($num_rrd_items == 1) {
-			$config["rrd_num_counter"] = 0;
+			$rrd_num_counter = 0;
 		}else{
-			if (!isset($config["rrd_num_counter"])) {
-				$config["rrd_num_counter"] = 1;
+			if (!isset($rrd_num_counter)) {
+				$rrd_num_counter = 1;
 			}else{
-				$config["rrd_num_counter"]++;
+				$rrd_num_counter++;
 			}
 		}
 
@@ -119,9 +117,9 @@ function api_poller_get_rrd_next_step($rrd_step=300, $num_rrd_items=1) {
 		if ($num_rrd_items == 1) {
 			$rrd_step_counter++;
 		}else{
-			if ($num_rrd_items == $config["rrd_num_counter"]) {
+			if ($num_rrd_items == $rrd_num_counter) {
 				$rrd_step_counter++;
-				$config["rrd_num_counter"] = 0;
+				$rrd_num_counter = 0;
 			}
 		}
 
@@ -130,7 +128,6 @@ function api_poller_get_rrd_next_step($rrd_step=300, $num_rrd_items=1) {
 		}
 
 		/* save rrd_step_counter */
-		$config["rrd_step_counter"] = $rrd_step_counter;
 		db_execute("replace into settings (name, value) values ('rrd_step_counter','$rrd_step_counter')");
 	}
 
