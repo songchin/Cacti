@@ -43,7 +43,7 @@ function &graph_template_to_xml($graph_template_id) {
 	reset($struct_graph);
 	while (list($field_name, $field_array) = each($struct_graph)) {
 		$xml_text .= "\t\t<t_$field_name>" . $graph_template_graph{"t_" . $field_name} . "</t_$field_name>\n";
-		$xml_text .= "\t\t<$field_name>" . $graph_template_graph{$field_name} . "</$field_name>\n";
+		$xml_text .= "\t\t<$field_name>" . xml_character_encode($graph_template_graph{$field_name}) . "</$field_name>\n";
 	}
 
 	$xml_text .= "\t</graph>\n";
@@ -70,7 +70,7 @@ function &graph_template_to_xml($graph_template_id) {
 			}elseif (($field_name == "color_id") && (!empty($item{$field_name}))) {
 				$xml_text .= "\t\t\t<$field_name>" . db_fetch_cell("select hex from colors where id=" . $item{$field_name}) . "</$field_name>\n";
 			}else{
-				$xml_text .= "\t\t\t<$field_name>" . $item{$field_name} . "</$field_name>\n";
+				$xml_text .= "\t\t\t<$field_name>" . xml_character_encode($item{$field_name}) . "</$field_name>\n";
 			}
 		}
 
@@ -96,7 +96,7 @@ function &graph_template_to_xml($graph_template_id) {
 		reset($fields_graph_template_input_edit);
 		while (list($field_name, $field_array) = each($fields_graph_template_input_edit)) {
 			if (($field_array["method"] != "hidden_zero") && ($field_array["method"] != "hidden")) {
-				$xml_text .= "\t\t\t<$field_name>" . $item{$field_name} . "</$field_name>\n";
+				$xml_text .= "\t\t\t<$field_name>" . xml_character_encode($item{$field_name}) . "</$field_name>\n";
 			}
 		}
 
@@ -159,7 +159,7 @@ function &data_template_to_xml($data_template_id) {
 			$xml_text .= "\t\t<$field_name>hash_" . get_hash_version("data_input_method") . get_hash_data_input($data_template_data{$field_name}) . "</$field_name>\n";
 		}else{
 			if (isset($data_template_data{$field_name})) {
-				$xml_text .= "\t\t<$field_name>" . $data_template_data{$field_name} . "</$field_name>\n";
+				$xml_text .= "\t\t<$field_name>" . xml_character_encode($data_template_data{$field_name}) . "</$field_name>\n";
 			}
 		}
 	}
@@ -203,7 +203,7 @@ function &data_template_to_xml($data_template_id) {
 				$xml_text .= "\t\t\t<$field_name>hash_" . get_hash_version("data_input_field") . get_hash_data_input($item{$field_name}, "data_input_field") . "</$field_name>\n";
 			}else{
 				if (isset($item{$field_name})) {
-					$xml_text .= "\t\t\t<$field_name>" . $item{$field_name} . "</$field_name>\n";
+					$xml_text .= "\t\t\t<$field_name>" . xml_character_encode($item{$field_name}) . "</$field_name>\n";
 				}
 			}
 		}
@@ -227,7 +227,7 @@ function &data_template_to_xml($data_template_id) {
 
 		$xml_text .= "\t\t\t<data_input_field_id>hash_" . get_hash_version("data_input_field") . get_hash_data_input($item{"data_input_field_id"}, "data_input_field") . "</data_input_field_id>\n";
 		$xml_text .= "\t\t\t<t_value>" . $item{"t_value"} . "</t_value>\n";
-		$xml_text .= "\t\t\t<value>" . $item{"value"} . "</value>\n";
+		$xml_text .= "\t\t\t<value>" . xml_character_encode($item{"value"}) . "</value>\n";
 
 		$xml_text .= "\t\t</item_" . str_pad(strval($i), 3, "0", STR_PAD_LEFT) . ">\n";
 
@@ -281,10 +281,10 @@ function &data_input_method_to_xml($data_input_id) {
 		reset($fields_data_input_field_edit);
 		while (list($field_name, $field_array) = each($fields_data_input_field_edit)) {
 			if (($field_name == "input_output") && (!empty($item{$field_name}))) {
-				$xml_text .= "\t\t\t<$field_name>" . $item{$field_name} . "</$field_name>\n";
+				$xml_text .= "\t\t\t<$field_name>" . xml_character_encode($item{$field_name}) . "</$field_name>\n";
 			}else{
 				if (($field_array["method"] != "hidden_zero") && ($field_array["method"] != "hidden")) {
-					$xml_text .= "\t\t\t<$field_name>" . $item{$field_name} . "</$field_name>\n";
+					$xml_text .= "\t\t\t<$field_name>" . xml_character_encode($item{$field_name}) . "</$field_name>\n";
 				}
 			}
 		}
@@ -325,7 +325,7 @@ function &cdef_to_xml($cdef_id) {
 	reset($fields_cdef_edit);
 	while (list($field_name, $field_array) = each($fields_cdef_edit)) {
 		if (($field_array["method"] != "hidden_zero") && ($field_array["method"] != "hidden")) {
-			$xml_text .= "\t<$field_name>" . $cdef{$field_name} . "</$field_name>\n";
+			$xml_text .= "\t<$field_name>" . xml_character_encode($cdef{$field_name}) . "</$field_name>\n";
 		}
 	}
 
@@ -343,7 +343,7 @@ function &cdef_to_xml($cdef_id) {
 		reset($fields_cdef_item_edit);
 		while (list($field_name, $field_array) = each($fields_cdef_item_edit)) {
 			if (($field_array["method"] != "hidden_zero") && ($field_array["method"] != "hidden")) {
-				$xml_text .= "\t\t\t<$field_name>" . $item{$field_name} . "</$field_name>\n";
+				$xml_text .= "\t\t\t<$field_name>" . xml_character_encode($item{$field_name}) . "</$field_name>\n";
 			}
 		}
 
@@ -377,7 +377,7 @@ function &gprint_preset_to_xml($gprint_preset_id) {
 	reset($fields_grprint_presets_edit);
 	while (list($field_name, $field_array) = each($fields_grprint_presets_edit)) {
 		if (($field_array["method"] != "hidden_zero") && ($field_array["method"] != "hidden")) {
-			$xml_text .= "\t<$field_name>" . $graph_templates_gprint{$field_name} . "</$field_name>\n";
+			$xml_text .= "\t<$field_name>" . xml_character_encode($graph_templates_gprint{$field_name}) . "</$field_name>\n";
 		}
 	}
 
@@ -406,7 +406,7 @@ function &round_robin_archive_to_xml($round_robin_archive_id) {
 	while (list($field_name, $field_array) = each($fields_rra_edit)) {
 		if (($field_array["method"] != "hidden_zero") && ($field_array["method"] != "hidden")) {
 			if (isset($rra{$field_name})) {
-				$xml_text .= "\t<$field_name>" . $rra{$field_name} . "</$field_name>\n";
+				$xml_text .= "\t<$field_name>" . xml_character_encode($rra{$field_name}) . "</$field_name>\n";
 			}
 		}
 	}
@@ -454,7 +454,7 @@ function &host_template_to_xml($host_template_id) {
 	reset($fields_host_template_edit);
 	while (list($field_name, $field_array) = each($fields_host_template_edit)) {
 		if (($field_array["method"] != "hidden_zero") && ($field_array["method"] != "hidden")) {
-			$xml_text .= "\t<$field_name>" . $host_template{$field_name} . "</$field_name>\n";
+			$xml_text .= "\t<$field_name>" . xml_character_encode($host_template{$field_name}) . "</$field_name>\n";
 		}
 	}
 
@@ -543,7 +543,7 @@ function &data_query_to_xml($data_query_id) {
 				$xml_text .= "\t\t\t<$field_name>hash_" . get_hash_version("graph_template") . get_hash_graph_template($item{$field_name}) . "</$field_name>\n";
 			}else{
 				if (($field_array["method"] != "hidden_zero") && ($field_array["method"] != "hidden")) {
-					$xml_text .= "\t\t\t<$field_name>" . $item{$field_name} . "</$field_name>\n";
+					$xml_text .= "\t\t\t<$field_name>" . xml_character_encode($item{$field_name}) . "</$field_name>\n";
 				}
 			}
 		}
@@ -586,7 +586,7 @@ function &data_query_to_xml($data_query_id) {
 
 			$xml_text .= "\t\t\t\t\t<field_name>" . $item2{"field_name"} . "</field_name>\n";
 			$xml_text .= "\t\t\t\t\t<sequence>" . $item2{"sequence"} . "</sequence>\n";
-			$xml_text .= "\t\t\t\t\t<text>" . $item2{"text"} . "</text>\n";
+			$xml_text .= "\t\t\t\t\t<text>" . xml_character_encode($item2{"text"}) . "</text>\n";
 
 			$xml_text .= "\t\t\t\t</hash_" . $hash["data_query_sv_graph"] . ">\n";
 
@@ -610,7 +610,7 @@ function &data_query_to_xml($data_query_id) {
 			$xml_text .= "\t\t\t\t\t<field_name>" . $item2{"field_name"} . "</field_name>\n";
 			$xml_text .= "\t\t\t\t\t<data_template_id>hash_" . get_hash_version("data_template") . get_hash_data_template($item2{"data_template_id"}) . "</data_template_id>\n";
 			$xml_text .= "\t\t\t\t\t<sequence>" . $item2{"sequence"} . "</sequence>\n";
-			$xml_text .= "\t\t\t\t\t<text>" . $item2{"text"} . "</text>\n";
+			$xml_text .= "\t\t\t\t\t<text>" . xml_character_encode($item2{"text"}) . "</text>\n";
 
 			$xml_text .= "\t\t\t\t</hash_" . $hash["data_query_sv_data_source"] . ">\n";
 

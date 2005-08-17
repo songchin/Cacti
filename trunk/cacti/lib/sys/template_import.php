@@ -130,7 +130,7 @@ function &xml_to_graph_template($hash, &$xml_array, &$hash_cache) {
 			if (($field_name == "unit_exponent_value") && (get_version_index($parsed_hash["version"]) < get_version_index("0.8.5")) && ($xml_array["graph"][$field_name] == "0")) { /* backwards compatability */
 				$save[$field_name] = "";
 			}else{
-				$save[$field_name] = addslashes($xml_array["graph"][$field_name]);
+				$save[$field_name] = addslashes(xml_character_decode($xml_array["graph"][$field_name]));
 			}
 		}
 	}
@@ -169,7 +169,7 @@ function &xml_to_graph_template($hash, &$xml_array, &$hash_cache) {
 
 						$save[$field_name] = $color_id;
 					}else{
-						$save[$field_name] = addslashes($item_array[$field_name]);
+						$save[$field_name] = addslashes(xml_character_decode($item_array[$field_name]));
 					}
 				}
 			}
@@ -199,7 +199,7 @@ function &xml_to_graph_template($hash, &$xml_array, &$hash_cache) {
 			while (list($field_name, $field_array) = each($fields_graph_template_input_edit)) {
 				/* make sure this field exists in the xml array first */
 				if (isset($item_array[$field_name])) {
-					$save[$field_name] = addslashes($item_array[$field_name]);
+					$save[$field_name] = addslashes(xml_character_decode($item_array[$field_name]));
 				}
 			}
 
@@ -265,7 +265,7 @@ function &xml_to_data_template($hash, &$xml_array, &$hash_cache) {
 			if (ereg("hash_([a-f0-9]{2})([a-f0-9]{4})([a-f0-9]{32})", $xml_array["ds"][$field_name])) {
 				$save[$field_name] = resolve_hash_to_id($xml_array["ds"][$field_name], $hash_cache);
 			}else{
-				$save[$field_name] = addslashes($xml_array["ds"][$field_name]);
+				$save[$field_name] = addslashes(xml_character_decode($xml_array["ds"][$field_name]));
 			}
 		}
 	}
@@ -317,7 +317,7 @@ function &xml_to_data_template($hash, &$xml_array, &$hash_cache) {
 					if (ereg("hash_([a-f0-9]{2})([a-f0-9]{4})([a-f0-9]{32})", $item_array[$field_name])) {
 						$save[$field_name] = resolve_hash_to_id($item_array[$field_name], $hash_cache);
 					}else{
-						$save[$field_name] = addslashes($item_array[$field_name]);
+						$save[$field_name] = addslashes(xml_character_decode($item_array[$field_name]));
 					}
 				}
 			}
@@ -335,7 +335,7 @@ function &xml_to_data_template($hash, &$xml_array, &$hash_cache) {
 			$save["data_template_data_id"] = $data_template_data_id;
 			$save["data_input_field_id"] = resolve_hash_to_id($item_array["data_input_field_id"], $hash_cache);
 			$save["t_value"] = $item_array["t_value"];
-			$save["value"] = $item_array["value"];
+			$save["value"] = addslashes(xml_character_decode($item_array["value"]));
 
 			sql_save($save, "data_input_data", array("data_template_data_id", "data_input_field_id"));
 		}
@@ -397,7 +397,7 @@ function &xml_to_data_query($hash, &$xml_array, &$hash_cache) {
 					if (ereg("hash_([a-f0-9]{2})([a-f0-9]{4})([a-f0-9]{32})", $item_array[$field_name])) {
 						$save[$field_name] = resolve_hash_to_id($item_array[$field_name], $hash_cache);
 					}else{
-						$save[$field_name] = addslashes($item_array[$field_name]);
+						$save[$field_name] = addslashes(xml_character_decode($item_array[$field_name]));
 					}
 				}
 			}
@@ -435,7 +435,7 @@ function &xml_to_data_query($hash, &$xml_array, &$hash_cache) {
 					$save["snmp_query_graph_id"] = $data_query_graph_id;
 					$save["sequence"] = $sub_item_array["sequence"];
 					$save["field_name"] = $sub_item_array["field_name"];
-					$save["text"] = $sub_item_array["text"];
+					$save["text"] = xml_character_decode($sub_item_array["text"]);
 
 					$data_query_graph_sv_id = sql_save($save, "snmp_query_graph_sv");
 
@@ -460,7 +460,7 @@ function &xml_to_data_query($hash, &$xml_array, &$hash_cache) {
 					$save["data_template_id"] = resolve_hash_to_id($sub_item_array["data_template_id"], $hash_cache);
 					$save["sequence"] = $sub_item_array["sequence"];
 					$save["field_name"] = $sub_item_array["field_name"];
-					$save["text"] = $sub_item_array["text"];
+					$save["text"] = xml_character_decode($sub_item_array["text"]);
 
 					$data_query_graph_rrd_sv_id = sql_save($save, "snmp_query_graph_rrd_sv");
 
@@ -490,7 +490,7 @@ function &xml_to_gprint_preset($hash, &$xml_array, &$hash_cache) {
 	while (list($field_name, $field_array) = each($fields_grprint_presets_edit)) {
 		/* make sure this field exists in the xml array first */
 		if (isset($xml_array[$field_name])) {
-			$save[$field_name] = addslashes($xml_array[$field_name]);
+			$save[$field_name] = addslashes(xml_character_decode($xml_array[$field_name]));
 		}
 	}
 
@@ -518,7 +518,7 @@ function &xml_to_round_robin_archive($hash, &$xml_array, &$hash_cache) {
 	while (list($field_name, $field_array) = each($fields_rra_edit)) {
 		/* make sure this field exists in the xml array first */
 		if (isset($xml_array[$field_name])) {
-			$save[$field_name] = addslashes($xml_array[$field_name]);
+			$save[$field_name] = addslashes(xml_character_decode($xml_array[$field_name]));
 		}
 	}
 
@@ -555,7 +555,7 @@ function &xml_to_host_template($hash, &$xml_array, &$hash_cache) {
 	while (list($field_name, $field_array) = each($fields_host_template_edit)) {
 		/* make sure this field exists in the xml array first */
 		if (isset($xml_array[$field_name])) {
-			$save[$field_name] = addslashes($xml_array[$field_name]);
+			$save[$field_name] = addslashes(xml_character_decode($xml_array[$field_name]));
 		}
 	}
 
@@ -623,7 +623,7 @@ function &xml_to_cdef($hash, &$xml_array, &$hash_cache) {
 	while (list($field_name, $field_array) = each($fields_cdef_edit)) {
 		/* make sure this field exists in the xml array first */
 		if (isset($xml_array[$field_name])) {
-			$save[$field_name] = addslashes($xml_array[$field_name]);
+			$save[$field_name] = addslashes(xml_character_decode($xml_array[$field_name]));
 		}
 	}
 
@@ -650,7 +650,7 @@ function &xml_to_cdef($hash, &$xml_array, &$hash_cache) {
 			while (list($field_name, $field_array) = each($fields_cdef_item_edit)) {
 				/* make sure this field exists in the xml array first */
 				if (isset($item_array[$field_name])) {
-					$save[$field_name] = addslashes($item_array[$field_name]);
+					$save[$field_name] = addslashes(xml_character_decode($item_array[$field_name]));
 				}
 			}
 
@@ -710,7 +710,7 @@ function &xml_to_data_input_method($hash, &$xml_array, &$hash_cache) {
 			while (list($field_name, $field_array) = each($fields_data_input_field_edit)) {
 				/* make sure this field exists in the xml array first */
 				if (isset($item_array[$field_name])) {
-					$save[$field_name] = addslashes($item_array[$field_name]);
+					$save[$field_name] = addslashes(xml_character_decode($item_array[$field_name]));
 				}
 			}
 
