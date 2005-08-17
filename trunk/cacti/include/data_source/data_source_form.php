@@ -132,7 +132,7 @@ $struct_data_source = array(
 		"description" => _("Which RRA's to use when entering data. (It is recommended that you select all of these values)."),
 		"form_id" => "|arg1:id|",
 		"sql" => "",
-		"sql_all" => "select rra.id from rra order by id",
+		"sql_all" => "select rra.id from rra order by timespan",
 		"sql_print" => "",
 		"flags" => "ALWAYSTEMPLATE"
 		),
