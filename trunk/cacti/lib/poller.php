@@ -272,7 +272,7 @@ function exec_background($filename, $args = "") {
 
 	if (file_exists($filename)) {
 		if (CACTI_SERVER_OS == "win32") {
-			pclose(popen("start \"Cactiplus\" /I /B \"" . $filename . "\" " . $args, "rb"));
+			pclose(popen("start \"Cactiplus\" /I \"" . $filename . "\" " . $args, "rb"));
 		}else{
 			exec($filename . " " . $args . " > /dev/null &");
 		}

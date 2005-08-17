@@ -52,6 +52,9 @@ if ( $_SERVER["argc"] == 2 ) {
 /* let PHP run just as long as it has to */
 ini_set("max_execution_time", "0");
 
+/* Disable Mib File Loading */
+putenv("MIBS=NONE");
+
 /* record start time */
 list($micro,$seconds) = split(" ", microtime());
 $start = $seconds + $micro;
@@ -309,60 +312,15 @@ if (read_config_option("poller_enabled") == "on") {
 	if ($poller_id == 1) { rrd_close($rrdtool_pipe, $rrd_processes); }
 
 	/* process poller commands */
-	$poller_commands = db_fetch_assoc("select
-		poller_command.action,
-		poller_command.command
-		from poller_command
-		where poller_command.poller_id=" . $poller_id);
-
-	$last_host_id = 0;
-	$first_host = true;
-	$recached_hosts = 0;
-
-	if (sizeof($poller_commands) > 0) {
-		foreach ($poller_commands as $command) {
-			switch ($command["action"]) {
-			case POLLER_COMMAND_REINDEX:
-				list($host_id, $data_query_id) = explode(":", $command["command"]);
-
-				if ($last_host_id != $host_id) {
-					$last_host_id = $host_id;
-					$first_host = true;
-					$recached_hosts = $recached_hosts + 1;
-				} else {
-					$first_host = false;
-				}
-
-				if ($first_host) {
-					api_syslog_cacti_log(_("Recache Event Detected for Host"), SEV_WARNING, $poller_id, 0, 0, true, FACIL_POLLER);
-				}
-
-				api_syslog_cacti_log(_("RECACHE: Re-cache for Host, data query #") . $data_query_id, SEV_DEBUG, $poller_id, 0, 0, true, FACIL_POLLER);
-
-				run_data_query($host_id, $data_query_id);
-
-				api_syslog_cacti_log(_("RECACHE: Re-cache successful."), SEV_DEBUG, $poller_id, 0, 0, true, FACIL_POLLER);
-			}
-		}
-
-		db_execute("delete from poller_command where poller_id=" . $poller_id);
-
-		/* take time and log performance data */
-		list($micro,$seconds) = split(" ", microtime());
-		$recache = $seconds + $micro;
-
-		api_syslog_cacti_log(sprintf(_("Recache Runtime:") . " %01.4f s, " .
-			_("Poller:") . " %s",
-			_("Hosts Recached:") . " %s",
-			round($recache - $end,4),
-			$poller_id,
-			$recached_hosts),
-			SEV_NOTICE, $poller_id, 0, 0, true, FACIL_POLLER);
-	}
+	$command_string = read_config_option("path_php_binary");
+	$extra_args = "-q " . $config["base_path"] . "/poller_commands.php";
+	exec_background($command_string, "$extra_args");
 
 	if ($poller_id == 1) {
 		/* graph export */
-		graph_export();
+		$command_string = read_config_option("path_php_binary");
+		$extra_args = "-q " . $config["base_path"] . "/poller_export.php";
+		exec_background($command_string, "$extra_args");
 
 		/* i don't know why we are doing this */
 		db_execute("truncate table poller_time");
@@ -376,15 +334,15 @@ if (read_config_option("poller_enabled") == "on") {
 	$end = $seconds + $micro;
 
 	/* record some statistics */
-	api_syslog_cacti_log(sprintf(_("System Time:") . " %01.4f s, " .
-		_("Total Pollers:") . " %s, " .
-		_("Method:") . " %s, " .
-		_("Processes:") . " %s, " .
-		_("Threads:") . " %s, " .
-		_("Hosts:") . " %s, " .
-		_("Hosts/Process:") . " %s " .
-		_("Poller Items:") . " %s, " .
-		_("RRDs Processed:") . " %s",
+	api_syslog_cacti_log(sprintf(_("SystemTime:") . "%01.4f " .
+		_("TotalPollers:") . "%s " .
+		_("Method:") . "%s " .
+		_("Processes:") . "%s " .
+		_("Threads:") . "%s " .
+		_("Hosts:") . "%s " .
+		_("HostsPerProcess:") . "%s " .
+		_("DataSources:") . "%s " .
+		_("RRDsProcessed:") . "%s",
 		round($end-$start,4),
 		$num_pollers,
 		$method,

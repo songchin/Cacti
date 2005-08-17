@@ -25,6 +25,11 @@
 define("RRD_NL", " \\\n");
 
 function rrd_init($rrd_count = 1) {
+	/* set the rrdtool default font */
+	if (read_config_option("path_rrdtool_default_font")) {
+		putenv("RRD_DEFAULT_FONT=" . read_config_option("path_rrdtool_default_font"));
+	}
+
 	for ($i = 0; $i < $rrd_count; $i++) {
 		$rrd_struc[$i]["fd"] = popen(read_config_option("path_rrdtool") . " -", "w");
 	}
