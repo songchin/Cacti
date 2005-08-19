@@ -20,6 +20,13 @@ function ss_host_disk($hostname, $host_id, $snmp_auth, $cmd, $arg1 = "", $arg2 =
 	$snmp_port = $snmp[1];
 	$snmp_timeout = $snmp[2];
 
+	$snmpv3_auth_username = "";
+	$snmpv3_auth_password = "";
+	$snmpv3_auth_protocol = "";
+	$snmpv3_priv_passphrase = "";
+	$snmpv3_priv_protocol = "";
+	$snmp_community = "";
+
 	if ($snmp_version == 3) {
 		$snmpv3_auth_username = $snmp[4];
 		$snmpv3_auth_password = $snmp[5];
