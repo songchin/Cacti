@@ -476,6 +476,17 @@ $settings = array(
 			"default" => "30",
 			"max_length" => "10"
 			),
+		"logging_header" => array(
+			"friendly_name" => _("Logging"),
+			"method" => "spacer"
+			),
+		"num_rows_log" => array(
+			"friendly_name" => _("Rows Per Page"),
+			"description" => _("The number of rows to display on a single page for Logs."),
+			"method" => "textbox",
+			"default" => "100",
+			"max_length" => "10"
+			),
 		"fonts_header" => array(
 			"friendly_name" => _("Default RRDtool 1.2 Fonts"),
 			"method" => "spacer",

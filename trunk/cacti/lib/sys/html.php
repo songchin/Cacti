@@ -833,13 +833,13 @@ function draw_navigation_text() {
 			"mapping" => "index.php:,utilities.php:",
 			"level" => "2"
 			),
-		"utilities.php:clear_poller_cache" => array(
-			"title" => _("Clear Poller Cache"),
+		"utilities.php:rebuild_poller_cache" => array(
+			"title" => _("Rebuild Poller Cache"),
 			"mapping" => "index.php:,utilities.php:",
 			"level" => "2"
 			),
-		"utilities.php:view_syslog" => array(
-			"title" => _("View Cacti Syslog"),
+		"utilities.php:view_logs" => array(
+			"title" => _("View Cacti Logs"),
 			"mapping" => "index.php:,utilities.php:",
 			"level" => "2"
 			),

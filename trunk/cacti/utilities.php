@@ -30,7 +30,7 @@ require_once(CACTI_BASE_PATH . "/lib/poller.php");
 if (!isset($_REQUEST["action"])) { $_REQUEST["action"] = ""; }
 
 switch ($_REQUEST["action"]) {
-	case 'clear_poller_cache':
+	case 'rebuild_poller_cache':
 		require_once(CACTI_BASE_PATH . "/include/top_header.php");
 
 		repopulate_poller_cache();
@@ -48,14 +48,14 @@ switch ($_REQUEST["action"]) {
 
 		require_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
 		break;
-	case 'view_syslog':
+	case 'view_logs':
 		require_once(CACTI_BASE_PATH . "/include/top_header.php");
 
-		utilities_view_syslog();
+		utilities_view_logs();
 
 		require_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
 		break;
-	case 'clear_syslog':
+	case 'clear_logs':
 		require_once(CACTI_BASE_PATH . "/include/top_header.php");
 
 		api_syslog_clear();
@@ -75,7 +75,7 @@ switch ($_REQUEST["action"]) {
 /* -----------------------
     Utilities Functions
    ----------------------- */
-function utilities_view_syslog() {
+function utilities_view_logs() {
 	global $colors, $device_actions;
 
     define("MAX_DISPLAY_PAGES", 21);
@@ -114,13 +114,144 @@ function utilities_view_syslog() {
 
 	html_start_box("<strong>"._("Cacti Log Filters")."</strong>", "98%", $colors["header_background"], "3", "center", "");
 
-	include("./include/html/inc_syslog_filter_table.php");
+	?>
+	<tr bgcolor="<?php print $colors["filter_background"];?>">
+		<form name="form_syslog_id">
+		<input type="hidden" name="action" value="view_syslog">
+		<td>
+			<table cellpadding="1" cellspacing="1">
+				<tr>
+					<td width="45">
+						<?php echo _("Facility:");?>&nbsp;
+					</td>
+					<td width="1">
+						<select name="facility">
+							<option value="-1"<?php if ($_REQUEST["facility"] == -1) {?> selected<?php }?>>All</option>
+							<option value="<?php echo FACIL_POLLER;?>"<?php if ($_REQUEST["facility"] == FACIL_POLLER) {?> selected<?php }?>>Poller</option>
+							<option value="<?php echo FACIL_CMDPHP;?>"<?php if ($_REQUEST["facility"] == FACIL_CMDPHP) {?> selected<?php }?>>Cmdphp</option>
+							<option value="<?php echo FACIL_CACTID;?>"<?php if ($_REQUEST["facility"] == FACIL_CACTID) {?> selected<?php }?>>Cactid</option>
+							<option value="<?php echo FACIL_SCPTSVR;?>"<?php if ($_REQUEST["facility"] == FACIL_SCPTSVR) {?> selected<?php }?>>Scptsvr</option>
+							<option value="<?php echo FACIL_AUTH;?>"<?php if ($_REQUEST["facility"] == FACIL_AUTH) {?> selected<?php }?>>Auth</option>
+							<option value="<?php echo FACIL_WEBUI;?>"<?php if ($_REQUEST["facility"] == FACIL_WEBUI) {?> selected<?php }?>>WebUI</option>
+							<option value="<?php echo FACIL_EXPORT;?>"<?php if ($_REQUEST["facility"] == FACIL_EXPORT) {?> selected<?php }?>>Export</option>
+							<option value="<?php echo FACIL_UNKNOWN;?>"<?php if ($_REQUEST["facility"] == FACIL_UNKNOWN) {?> selected<?php }?>>Unknown</option>
+						</select>
+					</td>
+					<td width="1">
+						&nbsp;Severity:&nbsp;
+					</td>
+					<td width="1">
+						<select name="severity">
+							<option value="-10"<?php if ($_REQUEST["severity"] == -10) {?> selected<?php }?>>All</option>
+							<option value="<?php echo SEV_INFO;?>"<?php if ($_REQUEST["severity"] == SEV_INFO) {?> selected<?php }?>>Info</option>
+							<option value="<?php echo SEV_NOTICE;?>"<?php if ($_REQUEST["severity"] == SEV_NOTICE) {?> selected<?php }?>>Notice</option>
+							<option value="<?php echo SEV_WARNING;?>"<?php if ($_REQUEST["severity"] == SEV_WARNING) {?> selected<?php }?>>Warning</option>
+							<option value="<?php echo SEV_ERROR;?>"<?php if ($_REQUEST["severity"] == SEV_ERROR) {?> selected<?php }?>>Error</option>
+							<option value="<?php echo SEV_CRITICAL;?>"<?php if ($_REQUEST["severity"] == SEV_CRITICAL) {?> selected<?php }?>>Critical</option>
+							<option value="<?php echo SEV_ALERT;?>"<?php if ($_REQUEST["severity"] == SEV_ALERT) {?> selected<?php }?>>Alert</option>
+							<option value="<?php echo SEV_EMERGENCY;?>"<?php if ($_REQUEST["severity"] == SEV_EMERGENCY) {?> selected<?php }?>>Emergency</option>
+							<option value="<?php echo SEV_DEBUG;?>"<?php if ($_REQUEST["severity"] == SEV_DEBUG) {?> selected<?php }?>>Debug</option>
+							<option value="<?php echo SEV_DEV;?>"<?php if ($_REQUEST["severity"] == SEV_DEV) {?> selected<?php }?>>Developer Debug</option>
+						</select>
+					</td>
+					<td width="1">
+						&nbsp;Username:&nbsp;
+					</td>
+					<td width="1">
+						<select name="username">
+							<option value="-1"<?php if ($_REQUEST["username"] == -1) {?> selected<?php }?>>All</option>
+							<?php
+							$usernames = db_fetch_assoc("select distinct username from syslog order by username");
+
+							if ($usernames) {
+								foreach ($usernames as $username) {
+									print "<option value=\"" . $username['username'] . "\"";
+									if ($_REQUEST["username"] == $username["username"]) {
+										print " selected";
+									}
+									print ">" . $username["username"] . "</option>\n";
+								}
+							}
+							?>
+						</select>
+					</td>
+					<td nowrap>
+						&nbsp;<input type="image" src="<?php print html_get_theme_images_path('button_go.gif');?>" alt="Go" border="0" align="absmiddle" action="submit">
+						&nbsp;<input type="image" src="<?php print html_get_theme_images_path('button_clear.gif');?>" name="clear" alt="Clear" border="0" align="absmiddle" action="submit">
+					</td>
+				</tr>
+			</table>
+			<table cellpadding="1" cellspacing="1">
+				<tr>
+					<td width="45">
+						Poller:&nbsp;
+					</td>
+					<td>
+						<select name="poller">
+							<option value="-1"<?php if ($_REQUEST["poller"] == -1) {?> selected<?php }?>>All</option>
+							<option value="0"<?php if ($_REQUEST["poller"] == "0") {?> selected<?php }?>>System</option>
+							<?php
+							$pollers = db_fetch_assoc("select id,name from poller order by name");
+
+							if ($pollers) {
+								foreach ($pollers as $poller) {
+									print "<option value=\"" . $poller['id'] . "\"";
+									if ($_REQUEST["poller"] == $poller["id"]) {
+										print " selected";
+									}
+									print ">" . $poller["name"] . "</option>\n";
+								}
+							}
+							?>
+						</select>
+					</td>
+					<td>
+						&nbsp;Host:&nbsp;
+					</td>
+					<td>
+						<select name="host">
+							<option value="-1"<?php if ($_REQUEST["host"] == -1) {?> selected<?php }?>>All</option>
+							<option value="0"<?php if ($_REQUEST["host"] == "0") {?> selected<?php }?>>System</option>
+							<?php
+							$hosts = db_fetch_assoc("select id,description from host order by description");
+
+							if ($hosts) {
+								foreach ($hosts as $host) {
+									print "<option value=\"" . $host['id'] . "\"";
+									if ($_REQUEST["host"] == $host["id"]) {
+										print " selected";
+									}
+									print ">" . $host["description"] . "</option>\n";
+								}
+							}
+							?>
+						</select>
+					</td>
+				</tr>
+			</table>
+			<table cellpadding="1" cellspacing="1">
+				<tr>
+					<td width="45">
+						Search:&nbsp;
+					</td>
+					<td colspan="2">
+						<input type="text" name="filter" size="50" value="<?php print $_REQUEST["filter"];?>">
+					</td>
+				</tr>
+			</table>
+		</td>
+		<input type='hidden' name='page' value='1'>
+		</form>
+	</tr>
+	<?
 
 	html_end_box();
 
 	/* form the 'where' clause for our main sql query */
-	$sql_where = "where syslog.message like '%%" . $_REQUEST["filter"] . "%%'";
-
+        $sql_where = "";
+        if ($_REQUEST["filter"] != "") {
+		$sql_where .= "where syslog.message like '%" . $_REQUEST["filter"] . "%'";
+	}
 	if ($_REQUEST["facility"] != -1) {
 		$sql_where .= " and syslog.facility='" . $_REQUEST["facility"] . "'";
 	}
@@ -175,10 +306,10 @@ function utilities_view_syslog() {
 		LEFT JOIN poller ON syslog.poller_id = poller.id
 		$sql_where
 		order by syslog.logdate
-		limit " . (read_config_option("num_rows_device")*($_REQUEST["page"]-1)) . "," . read_config_option("num_rows_device"));
+		limit " . (read_config_option("num_rows_log")*($_REQUEST["page"]-1)) . "," . read_config_option("num_rows_log"));
 
 	/* generate page list */
-	$url_page_select = get_page_list($_REQUEST["page"], MAX_DISPLAY_PAGES, read_config_option("num_rows_device"), $total_rows, "utilities.php?action=view_syslog&filter=" . $_REQUEST["filter"] . "&facility=" . $_REQUEST["facility"] . "&severity=" . $_REQUEST["severity"]);
+	$url_page_select = get_page_list($_REQUEST["page"], MAX_DISPLAY_PAGES, read_config_option("num_rows_log"), $total_rows, "utilities.php?action=view_syslog&filter=" . $_REQUEST["filter"] . "&facility=" . $_REQUEST["facility"] . "&severity=" . $_REQUEST["severity"]);
 
 	$nav = "<tr bgcolor='#" . $colors["header_background"] . "'>
 			<td colspan='7'>
@@ -191,7 +322,7 @@ function utilities_view_syslog() {
 							Showing Rows " . ((read_config_option("num_rows_device")*($_REQUEST["page"]-1))+1) . " to " . ((($total_rows < read_config_option("num_rows_device")) || ($total_rows < (read_config_option("num_rows_device")*$_REQUEST["page"]))) ? $total_rows : (read_config_option("num_rows_device")*$_REQUEST["page"])) . " of $total_rows [$url_page_select]
 						</td>\n
 						<td align='right' class='textHeaderDark'>
-							<strong>"; if (($_REQUEST["page"] * read_config_option("num_rows_device")) < $total_rows) { $nav .= "<a class='linkOverDark' href='utilities.php?action=view_syslog&filter=" . $_REQUEST["filter"] . "&facility=" . $_REQUEST["facility"] . "&page=" . ($_REQUEST["page"]+1) . "'>"; } $nav .= _("Next"); if (($_REQUEST["page"] * read_config_option("num_rows_device")) < $total_rows) { $nav .= "</a>"; } $nav .= " &gt;&gt;</strong>
+							<strong>"; if (($_REQUEST["page"] * read_config_option("num_rows_log")) < $total_rows) { $nav .= "<a class='linkOverDark' href='utilities.php?action=view_syslog&filter=" . $_REQUEST["filter"] . "&facility=" . $_REQUEST["facility"] . "&page=" . ($_REQUEST["page"]+1) . "'>"; } $nav .= _("Next"); if (($_REQUEST["page"] * read_config_option("num_rows_log")) < $total_rows) { $nav .= "</a>"; } $nav .= " &gt;&gt;</strong>
 						</td>\n
 					</tr>
 				</table>
@@ -205,15 +336,15 @@ function utilities_view_syslog() {
 	$i = 0;
 	if (sizeof($syslog_entries) > 0) {
 		foreach ($syslog_entries as $syslog_entry) {
-			api_syslog_color($syslog_entry["severity"]);
+			api_syslog_color(api_syslog_get_severity($syslog_entry["severity"]));
 				?>
-				<td width='10%'><?php print $syslog_entry["logdate"];?></td>
-				<td width='10%'><?php print api_syslog_get_facility($syslog_entry["facility"]);?></td>
-				<td width='10%'><?php print api_syslog_get_severity($syslog_entry["severity"]);?></td>
-				<td width='10%' nowrap><?php if ($syslog_entry["poller_name"] != "") { print $syslog_entry["poller_name"]; } else { print "SYSTEM"; }?>	</td>
-				<td width='10%' nowrap><?php if ($syslog_entry["host"] != "") { print $syslog_entry["host"]; } else { print "SYSTEM"; }?></td>
-				<td width='10%' nowrap><?php if ($syslog_entry["username"] != "") { print $syslog_entry["username"]; } else { print "SYSTEM"; }?></td>
-				<td width='40%'><?php print $syslog_entry["message"];?></td>
+				<td><?php print $syslog_entry["logdate"];?></td>
+				<td><?php print api_syslog_get_facility($syslog_entry["facility"]);?></td>
+				<td><?php print api_syslog_get_severity($syslog_entry["severity"]);?></td>
+				<td nowrap><?php if ($syslog_entry["poller_name"] != "") { print $syslog_entry["poller_name"]; } else { print "SYSTEM"; }?>	</td>
+				<td nowrap><?php if ($syslog_entry["host"] != "") { print $syslog_entry["host"]; } else { print "SYSTEM"; }?></td>
+				<td nowrap><?php if ($syslog_entry["username"] != "") { print $syslog_entry["username"]; } else { print "SYSTEM"; }?></td>
+				<td><?php print $syslog_entry["message"];?></td>
 			</tr>
 			<?php
 		}
@@ -299,7 +430,7 @@ function utilities() {
 	</tr>
 	<tr bgcolor="#<?php print $colors["form_alternate1"];?>">
 		<td class="textArea">
-			<p><a href='utilities.php?action=clear_poller_cache'><?php echo _("Clear Poller Cache"); ?></a></p>
+			<p><a href='utilities.php?action=rebuild_poller_cache'><?php echo _("Rebuild Poller Cache"); ?></a></p>
 		</td>
 		<td class="textArea">
 			<p><?php echo _("The poller cache will be cleared and re-generated if you select this option. Sometimes host/data source data can get out of sync with the cache in which case it makes sense to clear the cache and start over."); ?></p>
@@ -310,7 +441,7 @@ function utilities() {
 
 	<tr bgcolor="#<?php print $colors["form_alternate2"];?>">
 		<td class="textArea">
-			<p><a href='utilities.php?action=view_syslog'><?php echo _("View Cacti Syslog"); ?></a></p>
+			<p><a href='utilities.php?action=view_logs'><?php echo _("View Cacti Logs"); ?></a></p>
 		</td>
 		<td class="textArea">
 			<p><?php echo _("The Cacti Syslog stores statistics, errors, warnings and other message depending on system settings.  This information can be used to identify problems with the poller and application."); ?></p>
