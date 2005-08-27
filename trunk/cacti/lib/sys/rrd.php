@@ -140,7 +140,7 @@ function rrdtool_function_create($data_source_id, $show_source, $rrd_struc, $sys
 	require(CACTI_BASE_PATH . "/include/data_source/data_source_arrays.php");
 	require_once(CACTI_BASE_PATH . "/lib/data_source/data_source_info.php");
 
-	$data_source_path = api_get_data_source_path($data_source_id, true);
+	$data_source_path = api_data_source_path($data_source_id, true);
 
 	/* make sure the RRD file does not already exist */
 	if (($show_source != true) && (file_exists($data_source_path) == true)) {
@@ -272,7 +272,7 @@ function rrdtool_function_tune($rrd_tune_array) {
 
 	$data_source_name = get_data_source_item_name($rrd_tune_array["data_source_id"]);
 	$data_source_type = $data_source_types{$rrd_tune_array["data-source-type"]};
-	$data_source_path = api_get_data_source_path($rrd_tune_array["data_source_id"], true);
+	$data_source_path = api_data_source_path($rrd_tune_array["data_source_id"], true);
 
 	if ($rrd_tune_array["heartbeat"] != "") {
 		$rrd_tune .= " --heartbeat $data_source_name:" . $rrd_tune_array["heartbeat"];
@@ -324,7 +324,7 @@ function &rrdtool_function_fetch($local_data_id, $start_time, $end_time, $resolu
 	$regexps = array();
 	$fetch_array = array();
 
-	$data_source_path = api_get_data_source_path($local_data_id, true);
+	$data_source_path = api_data_source_path($local_data_id, true);
 
 	/* build and run the rrdtool fetch command with all of our data */
 	$cmd_line = "fetch $data_source_path AVERAGE -s $start_time -e $end_time";
@@ -758,7 +758,7 @@ function rrdtool_function_graph($graph_id, $rra_id, $graph_data_array, $rrd_stru
 		foreach ($graph_items as $graph_item) {
 			if ((is_graph_item_type_primary($graph_item["graph_item_type"])) && ($graph_item["data_source_name"] != "")) {
 				/* use a user-specified ds path if one is entered */
-				$data_source_path = api_get_data_source_path($graph_item["data_source_id"], true);
+				$data_source_path = api_data_source_path($graph_item["data_source_id"], true);
 
 				/* FOR WIN32: Escape all colon for drive letters (ex. D\:/path/to/rra) */
 				$data_source_path = str_replace(":", "\:", $data_source_path);

@@ -60,11 +60,11 @@ function api_data_source_title($data_source_id, $remove_unsubstituted_variables 
 	return $title;
 }
 
-/* api_get_data_source_path - returns the full path to the .rrd file associated with a given data source
+/* api_data_source_path - returns the full path to the .rrd file associated with a given data source
    @arg $data_source_id - (int) the ID of the data source
    @arg $expand_paths - (bool) whether to expand the <path_rra> variable into its full path or not
    @returns - the full path to the data source or an empty string for an error */
-function api_get_data_source_path($data_source_id, $expand_paths) {
+function api_data_source_path($data_source_id, $expand_paths) {
 	require_once(CACTI_BASE_PATH . "/lib/sys/variable.php");
 	require_once(CACTI_BASE_PATH . "/lib/data_source/data_source_update.php");
 

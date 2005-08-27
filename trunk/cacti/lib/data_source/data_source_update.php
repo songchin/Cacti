@@ -215,7 +215,7 @@ function api_data_source_title_cache_update($data_source_id) {
 	db_execute("update data_source set name_cache = '" . addslashes(api_data_source_title($data_source_id)) . "' where id = $data_source_id");
 }
 
-/* update_data_source_path - set the current data source path or generates a new one if a path
+/* api_data_source_path_update - set the current data source path or generates a new one if a path
      does not already exist
    @arg $data_source_id - (int) the ID of the data source to set a path for */
 function api_data_source_path_update($data_source_id) {
