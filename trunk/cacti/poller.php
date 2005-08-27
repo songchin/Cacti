@@ -143,7 +143,7 @@ if ($poller_id == 1) {
 
 	db_execute("UPDATE poller SET run_state='" . _("Running") . "' where id=" . $poller_id);
 }
-print_r($data_source_stats);
+
 /* retreive the number of concurrent process settings */
 $concurrent_processes = read_config_option("concurrent_processes");
 
@@ -313,13 +313,13 @@ if (read_config_option("poller_enabled") == "on") {
 
 	/* process poller commands */
 	$command_string = read_config_option("path_php_binary");
-	$extra_args = "-q " . $config["base_path"] . "/poller_commands.php";
+	$extra_args = "-q " . CACTI_BASE_PATH . "/poller_commands.php";
 	exec_background($command_string, "$extra_args");
 
 	if ($poller_id == 1) {
 		/* graph export */
 		$command_string = read_config_option("path_php_binary");
-		$extra_args = "-q " . $config["base_path"] . "/poller_export.php";
+		$extra_args = "-q " . CACTI_BASE_PATH . "/poller_export.php";
 		exec_background($command_string, "$extra_args");
 
 		/* i don't know why we are doing this */
