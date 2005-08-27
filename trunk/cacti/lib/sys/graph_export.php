@@ -414,7 +414,7 @@ function check_remove($filename) {
 
 define("HTML_GRAPH_HEADER_ONE", "
 	<table width='98%' style='background-color: #f5f5f5; border: 1px solid #bbbbbb;' align='center'>
-		<tr bgcolor='#" . $colors["header_panel_background"] . "'>
+		<tr bgcolor='#" . $colors["header_panel"] . "'>
 			<td colspan='2'>
 				<table width='100%' cellspacing='0' cellpadding='3' border='0'>
 					<tr>
