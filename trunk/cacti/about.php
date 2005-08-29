@@ -23,7 +23,7 @@
 */
 
 require(dirname(__FILE__) . "/include/config.php");
-require_once(CACTI_BASE_PATH . "/include/auth.php");
+require_once(CACTI_BASE_PATH . "/include/auth/validate.php");
 require_once(CACTI_BASE_PATH . "/include/top_header.php");
 
 html_start_box("<strong>" . _("About Cacti") . "</strong>", "98%", $colors["header_background"], "3", "center", "");

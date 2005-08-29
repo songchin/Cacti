@@ -23,7 +23,7 @@
 */
 
 require(dirname(__FILE__) . "/include/config.php");
-require_once(CACTI_BASE_PATH . "/include/auth.php");
+require_once(CACTI_BASE_PATH . "/include/auth/validate.php");
 require_once(CACTI_BASE_PATH . "/lib/api_rra_templates.php");
 
 define("MAX_DISPLAY_PAGES", 21);

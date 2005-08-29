@@ -23,7 +23,7 @@
 */
 
 require(dirname(__FILE__) . "/include/config.php");
-require_once(CACTI_BASE_PATH . "/include/auth.php");
+require_once(CACTI_BASE_PATH . "/include/auth/validate.php");
 require_once(CACTI_BASE_PATH . "/include/data_query/data_query_constants.php");
 require_once(CACTI_BASE_PATH . "/include/data_query/data_query_arrays.php");
 require_once(CACTI_BASE_PATH . "/include/data_query/data_query_form.php");

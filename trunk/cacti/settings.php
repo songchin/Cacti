@@ -23,7 +23,7 @@
 */
 
 require(dirname(__FILE__) . "/include/config.php");
-require_once(CACTI_BASE_PATH . "/include/auth.php");
+require_once(CACTI_BASE_PATH . "/include/auth/validate.php");
 
 /* set default action */
 if (!isset($_REQUEST["action"])) { $_REQUEST["action"] = ""; }

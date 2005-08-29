@@ -23,7 +23,7 @@
 */
 
 require(dirname(__FILE__) . "/include/config.php");
-require_once(CACTI_BASE_PATH . "/include/auth.php");
+require_once(CACTI_BASE_PATH . "/include/auth/validate.php");
 
 /* settings */
 $wizard_array = array(

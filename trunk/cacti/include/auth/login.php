@@ -22,8 +22,8 @@
  +-------------------------------------------------------------------------+
 */
 
-require("./lib/user/user_ldap.php");
-require("./lib/user/user_action.php");
+require_once(CACTI_BASE_PATH . "/lib/user/user_ldap.php");
+require_once(CACTI_BASE_PATH . "/lib/user/user_action.php");
 
 /* set default action */
 if (!isset($_REQUEST["action"])) {
