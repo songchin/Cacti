@@ -117,7 +117,7 @@ function utilities_view_logs() {
 	?>
 	<tr bgcolor="<?php print $colors["filter_background"];?>">
 		<form name="form_syslog_id">
-		<input type="hidden" name="action" value="view_syslog">
+		<input type="hidden" name="action" value="view_logs">
 		<td>
 			<table cellpadding="1" cellspacing="1">
 				<tr>
@@ -275,7 +275,7 @@ function utilities_view_logs() {
 	html_start_box("<strong>"._("Cacti Log Operations")."</strong>", "98%", $colors["header_background"], "3", "center", "");
 
 	print "<form name='syslog_actions'>";
-	print "<input type='hidden' name='action' value='view_syslog'>";
+	print "<input type='hidden' name='action' value='view_logs'>";
 	print "<td bgcolor='#" . $colors["console_menu_background"] . "'>";
 	print "<input type='image' src='" . html_get_theme_images_path('button_clear_log.gif') . "' name='clear_log' alt='Clear Log' border='0' align='absmiddle' action='submit'>";
 	print "&nbsp;<input type='image' src='" . html_get_theme_images_path('button_export.gif') . "' name='export' alt='Export Log' border='0' align='absmiddle' action='submit'>";
@@ -309,20 +309,20 @@ function utilities_view_logs() {
 		limit " . (read_config_option("num_rows_log")*($_REQUEST["page"]-1)) . "," . read_config_option("num_rows_log"));
 
 	/* generate page list */
-	$url_page_select = get_page_list($_REQUEST["page"], MAX_DISPLAY_PAGES, read_config_option("num_rows_log"), $total_rows, "utilities.php?action=view_syslog&filter=" . $_REQUEST["filter"] . "&facility=" . $_REQUEST["facility"] . "&severity=" . $_REQUEST["severity"]);
+	$url_page_select = get_page_list($_REQUEST["page"], MAX_DISPLAY_PAGES, read_config_option("num_rows_log"), $total_rows, "utilities.php?action=view_logs&filter=" . $_REQUEST["filter"] . "&facility=" . $_REQUEST["facility"] . "&severity=" . $_REQUEST["severity"]);
 
 	$nav = "<tr bgcolor='#" . $colors["header_background"] . "'>
 			<td colspan='7'>
 				<table width='100%' cellspacing='0' cellpadding='0' border='0'>
 					<tr>
 						<td align='left' class='textHeaderDark'>
-							<strong>&lt;&lt; "; if ($_REQUEST["page"] > 1) { $nav .= "<a class='linkOverDark' href='utilities.php?action=view_syslog&filter=" . $_REQUEST["filter"] . "&facility=" . $_REQUEST["facility"] . "&page=" . ($_REQUEST["page"]-1) . "'>"; } $nav .= _("Previous"); if ($_REQUEST["page"] > 1) { $nav .= "</a>"; } $nav .= "</strong>
+							<strong>&lt;&lt; "; if ($_REQUEST["page"] > 1) { $nav .= "<a class='linkOverDark' href='utilities.php?action=view_logs&filter=" . $_REQUEST["filter"] . "&facility=" . $_REQUEST["facility"] . "&page=" . ($_REQUEST["page"]-1) . "'>"; } $nav .= _("Previous"); if ($_REQUEST["page"] > 1) { $nav .= "</a>"; } $nav .= "</strong>
 						</td>\n
 						<td align='center' class='textHeaderDark'>
 							Showing Rows " . ((read_config_option("num_rows_device")*($_REQUEST["page"]-1))+1) . " to " . ((($total_rows < read_config_option("num_rows_device")) || ($total_rows < (read_config_option("num_rows_device")*$_REQUEST["page"]))) ? $total_rows : (read_config_option("num_rows_device")*$_REQUEST["page"])) . " of $total_rows [$url_page_select]
 						</td>\n
 						<td align='right' class='textHeaderDark'>
-							<strong>"; if (($_REQUEST["page"] * read_config_option("num_rows_log")) < $total_rows) { $nav .= "<a class='linkOverDark' href='utilities.php?action=view_syslog&filter=" . $_REQUEST["filter"] . "&facility=" . $_REQUEST["facility"] . "&page=" . ($_REQUEST["page"]+1) . "'>"; } $nav .= _("Next"); if (($_REQUEST["page"] * read_config_option("num_rows_log")) < $total_rows) { $nav .= "</a>"; } $nav .= " &gt;&gt;</strong>
+							<strong>"; if (($_REQUEST["page"] * read_config_option("num_rows_log")) < $total_rows) { $nav .= "<a class='linkOverDark' href='utilities.php?action=view_logs&filter=" . $_REQUEST["filter"] . "&facility=" . $_REQUEST["facility"] . "&page=" . ($_REQUEST["page"]+1) . "'>"; } $nav .= _("Next"); if (($_REQUEST["page"] * read_config_option("num_rows_log")) < $total_rows) { $nav .= "</a>"; } $nav .= " &gt;&gt;</strong>
 						</td>\n
 					</tr>
 				</table>
