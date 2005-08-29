@@ -35,8 +35,7 @@ require_once(CACTI_BASE_PATH . "/include/top_header.php");
 <table width="98%" align="center">
 	<tr>
 		<td class="textArea">
-			<strong><?php echo _("You are now logged into <a href='about.php'> Cacti") . "</a>. " . _("You can follow these basic steps to get
-			started.") . "</strong>";?>
+			<strong><?php echo _("You are now logged into ") . "<a href='about.php'> " . _("Cacti") . "</a>. " . _("You can follow these basic steps to get started.") . "</strong>";?>
 
 			<ul>
 				<li><a href="host.php"><?php echo _("Create devices</a> for network");?></li>
