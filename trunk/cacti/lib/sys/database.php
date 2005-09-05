@@ -341,7 +341,14 @@ function sql_get_quoted_string($field) {
 		}else{
 			return 0;
 		}
+	}else if ($field["type"] == DB_TYPE_FUNC_NOW) {
+		return "NOW()";
+	}else if ($field["type"] == DB_TYPE_FUNC_MD5) {
+		return "MD5('" . $field["value"] . "')";
+	}else{
+		api_syslog_cacti_log("Invalid column type for '" . $field . "' value '" . $field["value"] . "' in " . __FUNCTION__ . "()", SEV_WARNING, 0, 0, 0, false, FACIL_WEBUI);
 	}
+	
 }
 
 /* sql_sanitize - removes and quotes unwanted chars in values passed for use in SQL statements
