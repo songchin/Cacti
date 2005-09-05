@@ -324,7 +324,7 @@ function sql_get_quoted_string($field) {
 		if (is_numeric($field["value"])) {
 			return $field["value"];
 		}else{
-			api_syslog_cacti_log("Invalid integer column value '$field' in " . __FUNCTION__ . "()", SEV_WARNING, 0, 0, 0, false, FACIL_WEBUI);
+			api_syslog_cacti_log("Invalid integer column '$field' value '$field["value"]' in " . __FUNCTION__ . "()", SEV_WARNING, 0, 0, 0, false, FACIL_WEBUI);
 			die("Invalid integer column value '$field' in " . __FUNCTION__ . "()");
 		}
 	}else if ($field["type"] == DB_TYPE_NULL) {
