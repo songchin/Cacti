@@ -46,18 +46,23 @@ function api_user_list($array) {
 		$sql_query = $sql_query . $sql_sort;
 	}else{
 		/* error no array */
-		return "";
+		return NULL;
 	}
 
 	/* get the user list */
-	return db_fetch_assoc($sql_query);
+	$user_list = db_fetch_assoc($sql_query);
+	if ((count($user_list) > 0) && (is_array($user_list))) {
+		return $user_list;
+	}else{
+		return NULL;
+	}
 
 }
 
 /* api_user_info - returns an array of value based on request array
    @arg $array  - Array of values to query for example:
 		array( "username" => "admin")
-   @return - single users array of info */
+   @return - single users array of info, NULL if no user found */
 function api_user_info($array) {
 
 	/* build SQL query */
@@ -77,8 +82,11 @@ function api_user_info($array) {
 
 	/* get the user info */
 	$user = db_fetch_row($sql_query);
-
-	return $user;
+	if ((is_array($user)) && (sizeof($user) > 0)) {
+		return $user;
+	}else{
+		return NULL;
+	}
 
 }
 

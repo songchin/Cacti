@@ -34,13 +34,13 @@ if (!isset($_REQUEST["action"])) {
 
 
 /* Get the username */
-api_syslog_cacti_log(_("LOGIN: Figuring out username"), SEV_DEBUG, 0, 0, 0, false, FACIL_AUTH);
 if (read_config_option("auth_method") == "2") {
 	/* Get the Web Basic Auth username and set action so we login right away */
 	api_syslog_cacti_log(_("LOGIN: Web Basic Authenication enabled, getting username from webserver"), SEV_DEBUG, 0, 0, 0, false, FACIL_AUTH);
 	$action = "login";
 	if (isset($_SERVER["PHP_AUTH_USER"])) {
 		$username = $_SERVER["PHP_AUTH_USER"];
+		api_syslog_cacti_log(sprintf(_("LOGIN: Username set to '%s'"), $username), SEV_DEBUG, 0, 0, 0, false, FACIL_AUTH);
 	} else {
 		/* No user - Bad juju! */
 		$username = "";
@@ -49,15 +49,19 @@ if (read_config_option("auth_method") == "2") {
 		exit;
 	}
 }else{
-	/* LDAP and Builtin get username from Form */
-	api_syslog_cacti_log(_("LOGIN: Builtin or LDAP Authenication, getting username from form post"), SEV_DEBUG, 0, 0, 0, false, FACIL_AUTH);
-	if (isset($_POST["login_username"])) {
-		$username = $_POST["login_username"];
+	if ($action == "login") {
+		/* LDAP and Builtin get username from Form */
+		api_syslog_cacti_log(_("LOGIN: Builtin or LDAP Authenication, getting username from form post"), SEV_DEBUG, 0, 0, 0, false, FACIL_AUTH);
+		if (isset($_POST["login_username"])) {
+			$username = $_POST["login_username"];
+		}else{
+			$username = "";
+		}
+		api_syslog_cacti_log(sprintf(_("LOGIN: Username set to '%s'"), $username), SEV_DEBUG, 0, 0, 0, false, FACIL_AUTH);
 	}else{
 		$username = "";
 	}
 }
-api_syslog_cacti_log(sprintf(_("LOGIN: Username set to '%s'"), $username), SEV_DEBUG, 0, 0, 0, false, FACIL_AUTH);
 
 
 /* process login */
@@ -81,7 +85,8 @@ if ($action == 'login') {
 		$user_auth = true;
 		$realm = 0;
 		/* Locate user in database */
-		$user = db_fetch_row("select * from user_auth where username='" . $username . "' and realm = 0");
+		$user = api_user_info(array( "username" => $username, "realm" => 0) );
+		#$user = db_fetch_row("select * from user_auth where username='" . $username . "' and realm = 0");
 		break;
 	case "3":
 		/* LDAP Auth */
@@ -115,7 +120,8 @@ if ($action == 'login') {
 					$copy_user = true;
 					/* Locate user in database */
 					api_syslog_cacti_log(sprintf(_("LOGIN: LDAP User '%s' Authenticated"),$username), SEV_DEBUG, 0, 0, 0, false, FACIL_AUTH);
-					$user = db_fetch_row("select * from user_auth where username='" . $username . "' and realm = 1");
+					$user = api_user_info( array( "username" => $username, "realm" => 1) );
+					#$user = db_fetch_row("select * from user_auth where username='" . $username . "' and realm = 1");
 				}else{
 					/* error */
 					api_syslog_cacti_log(_("LOGIN: LDAP Error: ") . $ldap_auth_response["error_text"], SEV_ERROR, 0, 0, 0, false, FACIL_AUTH);
@@ -133,21 +139,24 @@ if ($action == 'login') {
 		if ((!$user_auth) && (!$ldap_error)) {
 			/* if auth has not occured process for builtin - AKA Ldap fall through */
 			api_syslog_cacti_log(_("LOGIN: Builtin Authenication enabled"), SEV_DEBUG, 0, 0, 0, false, FACIL_AUTH);
-			$user = db_fetch_row("select * from user_auth where username='" . $username . "' and password = '" . md5($_POST["login_password"]) . "' and realm = 0");
+			$user = api_user_info( array( "username" => $username, "password" => md5($_POST["login_password"]), "realm" => 0) );
+			#$user = db_fetch_row("select * from user_auth where username='" . $username . "' and password = '" . md5($_POST["login_password"]) . "' and realm = 0");
 		}
 	}
 	/* end of switch */
 
 	/* Create user from template if requested */
-	if ((!sizeof($user)) && ($copy_user) && (read_config_option("user_template") != "0") && (strlen($username) > 0)) {
+	if ((! sizeof($user)) && ($copy_user) && (read_config_option("user_template") != "0") && (strlen($username) > 0)) {
 		api_syslog_cacti_log(sprintf(_("LOGIN: User '%s' does not exist, copying template user"), $username), SEV_WARNING, 0, 0, 0, false, FACIL_AUTH);
 		/* check that template user exists */
-		if (db_fetch_row("select * from user_auth where username='" . read_config_option("user_template") . "' and realm = 0")) {
+		if (api_user_info(array( "username" => read_config_option("user_template"), "realm" => 0) )) {
+		#if (db_fetch_row("select * from user_auth where username='" . read_config_option("user_template") . "' and realm = 0")) {
 			api_syslog_cacti_log(sprintf(_("LOGIN: Coping Template user '%s' to user '%s'"), read_config_option("user_template"), $username), SEV_DEBUG, 0, 0, 0, false, FACIL_AUTH);
 			/* template user found */
 			api_user_copy(read_config_option("user_template"), $username, $realm);
 			/* requery newly created user */
-			$user = db_fetch_row("select * from user_auth where username='" . $username . "' and realm = " . $realm);
+			$user = api_user_info( array( "username" => $username, "realm" => $realm ) );
+			#$user = db_fetch_row("select * from user_auth where username='" . $username . "' and realm = " . $realm);
 		}else{
 			/* error */
 			auth_display_custom_error_message(sprintf(_("Template user '%s' does not exist."), read_config_option("user_template")));
@@ -158,10 +167,11 @@ if ($action == 'login') {
 
 	/* Guest account checking - Not for builtin */
 	$guest_user = false;
-	if ((! $user) && ($user_auth) && (read_config_option("guest_user") != "0")) {
+	if ((sizeof($user) < 1) && ($user_auth) && (read_config_option("guest_user") != "0")) {
 		api_syslog_cacti_log(_("LOGIN: Authenicated user, but no cacti user record, loading guest account"), SEV_DEBUG, 0, 0, 0, false, FACIL_AUTH);
 		/* Locate guest user record */
-		$user = db_fetch_row("select * from user_auth where username='" . read_config_option("guest_user") . "'");
+		$user = api_user_info(array( "username" => read_config_option("guest_user") ));
+		#$user = db_fetch_row("select * from user_auth where username='" . read_config_option("guest_user") . "'");
 		if ($user) {
 			api_syslog_cacti_log(sprintf(_("LOGIN: Authenicated user '%s' using guest account '%s'"), $username, $user["username"]), SEV_INFO, 0, 0, 0, false, FACIL_AUTH);
 			$guest_user = true;
@@ -174,8 +184,8 @@ if ($action == 'login') {
 	}
 
 	/* Process the user  */
-	if (sizeof($user)) {
-		api_syslog_cacti_log(sprintf(_("LOGIN: User '%s' Authenticated"), $user["username"]), SEV_NOTICE, 0, 0, 0, false, FACIL_AUTH);
+	if (sizeof($user) > 0) {
+		api_syslog_cacti_log(sprintf(_("LOGIN: User '%s' Authenticated") , $user["username"]), SEV_NOTICE, 0, 0, 0, false, FACIL_AUTH);
 
 		/* is user enabled */
 		$user_enabled = $user["enabled"];
@@ -193,11 +203,11 @@ if ($action == 'login') {
 			$_SESSION["sess_user_id"] = $user["id"];
 			api_syslog_cacti_log(_("LOGIN: Setting up session variables"), SEV_DEBUG, 0, 0, 0, false, FACIL_AUTH);
 
-
 			/* Update ip and lastlogin information for the user*/
 			api_syslog_cacti_log(_("LOGIN: Updating user last login information"), SEV_DEBUG, 0, 0, 0, false, FACIL_AUTH);
+			$user_save = array();	
 			$user_save["id"] = array("type" => DB_TYPE_NUMBER, "value" => $user["id"]);
-			$user_save["last_login"] = array("type" => DB_TYPE_NUMBER, "value" => "now()");
+			$user_save["last_login"] = array("type" => DB_TYPE_FUNC_NOW, "value" => "");
 			$user_save["last_login_ip"] = array("type" => DB_TYPE_STRING, "value" => $_SERVER["REMOTE_ADDR"]);
 			api_user_save($user_save);
 			unset($user_save);
@@ -263,12 +273,11 @@ function auth_display_custom_error_message($message) {
 
 ?>
 
-
 <html>
 <head>
 	<link rel='shortcut icon' href='<?php print html_get_theme_images_path("favicon.ico");?>' type='image/x-icon'>
 	<link href='<?php print html_get_theme_images_path("favicon.ico");?>' rel='image/x-icon'>
-    <meta http-equiv='Content-Type' content='text/html; charset=<?php echo _("screen charset");?>'>
+	<meta http-equiv='Content-Type' content='text/html; charset=<?php echo _("screen charset");?>'>
 	<title><?php echo _("Login to Cacti");?></title>
 	<STYLE TYPE="text/css">
 	<!--
@@ -281,64 +290,63 @@ function auth_display_custom_error_message($message) {
 	</style>
 </head>
 <body onload="document.login.login_username.focus()">
-<form name="login" method="post" action="<?php print basename($_SERVER["PHP_SELF"]);?>">
-<table align="center">
-	<tr>
-		<td colspan="2"><img src="<?php print html_get_theme_images_path('auth_login.gif');?>" border="0" alt=""></td>
-	</tr>
-	<?php
+	<form name="login" method="post" action="<?php print basename($_SERVER["PHP_SELF"]);?>">
+	<input type="hidden" name="action" value="login">
+	<table align="center">
+		<tr>
+			<td colspan="2"><img src="<?php print html_get_theme_images_path('auth_login.gif');?>" border="0" alt=""></td>
+		</tr>
+		<?php
 
-	if ($ldap_error) {?>
-	<tr height="10"><td></td></tr>
-	<tr>
-		<td colspan="2"><font color="#FF0000"><strong><?php print $ldap_error_message; ?></strong></font></td>
-	</tr>
-	<?php }else {
-	if ($action == "login") {?>
-	<tr height="10"><td></td></tr>
-	<tr>
-		<td colspan="2"><font color="#FF0000"><strong><?php echo _("Invalid User Name/Password Please Retype:"); ?></strong></font></td>
-	</tr>
-	<?php }
-	if ($user_enabled == "0") {?>
-	<tr height="10"><td></td></tr>
-	<tr>
-		<td colspan="2"><font color="#FF0000"><strong><?php echo _("User Account Disabled"); ?></strong></font></td>
-	</tr>
-	<?php } } ?>
-
-
-	<tr height="10"><td></td></tr>
-	<tr>
-		<td colspan="2"><?php echo _("Please enter your Cacti user name and password below:"); ?></td>
-	</tr>
-	<tr height="10"><td></td></tr>
-	<tr>
-		<td><?php echo _("User Name:"); ?></td>
-		<td><input type="text" name="login_username" size="40" style="width: 295px;" value="<?php print $username; ?>"></td>
-	</tr>
-	<tr>
-		<td><?php echo _("Password:"); ?></td>
-		<td><input type="password" name="login_password" size="40" style="width: 295px;"></td>
-	</tr>
-	<?php
-	if (read_config_option("auth_method") == "3") {?>
-        <tr>
-                <td>Realm:</td>
-                <td>
-			<select name="realm" style="width: 295px;">
-				<option value="local"><?php echo _("Local"); ?></option>
-				<option value="ldap" selected><?php echo _("LDAP"); ?></option>
-			</select>
-		</td>
-        </tr>
-	<?php }?>
-	<tr height="10"><td></td></tr>
-	<tr>
-		<td><input type="submit" value="<?php echo _("Login");?>"></td>
-	</tr>
-</table>
-<input type="hidden" name="action" value="login">
-</form>
+		if ($ldap_error) {?>
+		<tr height="10"><td></td></tr>
+		<tr>
+			<td colspan="2"><font color="#FF0000"><strong><?php print $ldap_error_message; ?></strong></font></td>
+		</tr>
+		<?php }else{
+		if ($action == "login") {?>
+		<tr height="10"><td></td></tr>
+		<tr>
+			<td colspan="2"><font color="#FF0000"><strong><?php echo _("Invalid User Name/Password Please Retype:"); ?></strong></font></td>
+		</tr>
+		<?php }
+		if ($user_enabled == "0") {?>
+		<tr height="10"><td></td></tr>
+		<tr>
+			<td colspan="2"><font color="#FF0000"><strong><?php echo _("User Account Disabled"); ?></strong></font></td>
+		</tr>
+		<?php } } ?>
+	
+		<tr height="10"><td></td></tr>
+		<tr>
+			<td colspan="2"><?php echo _("Please enter your Cacti user name and password below:"); ?></td>
+		</tr>
+		<tr height="10"><td></td></tr>
+		<tr>
+			<td><?php echo _("User Name:"); ?></td>
+			<td><input type="text" name="login_username" size="40" style="width: 295px;" value="<?php print $username; ?>"></td>
+		</tr>
+		<tr>
+			<td><?php echo _("Password:"); ?></td>
+			<td><input type="password" name="login_password" size="40" style="width: 295px;"></td>
+		</tr>
+		<?php
+		if (read_config_option("auth_method") == "3") {?>
+        	<tr>
+	                <td>Realm:</td>
+	                <td>
+				<select name="realm" style="width: 295px;">
+					<option value="local"><?php echo _("Local"); ?></option>
+					<option value="ldap" selected>LDAP</option>
+				</select>
+			</td>
+        	</tr>
+		<?php }?>
+		<tr height="10"><td></td></tr>
+		<tr>
+			<td><input type="submit" value="<?php echo _("Login");?>"></td>
+		</tr>
+	</table>
+	</form>
 </body>
 </html>
