@@ -31,29 +31,39 @@
    @arg $align - the HTML alignment to use for the box (center, left, or right)
    @arg $add_text - the url to use when the user clicks 'Add' in the upper-right
 	corner of the box ("" for no 'Add' link) */
-function html_start_box($title, $width, $background_color, $cell_padding, $align, $add_text) {
-	global $colors; ?>
-	<table align="<?php print $align;?>" width="<?php print $width;?>" cellpadding=1 cellspacing=0 border=0 bgcolor="#<?php print $background_color;?>">
+function html_start_box($title, $add_url = "") {
+	?>
+	<table width="98%" cellspacing="1" cellpadding="0" align="center" class="content">
+		<?php if ($title != "") {?>
 		<tr>
 			<td>
-				<table cellpadding=<?php print $cell_padding;?> cellspacing=0 border=0 bgcolor="#<?php print $background_color;?>" width="100%">
-					<?php if ($title != "") {?><tr>
-						<td bgcolor="#<?php print $background_color;?>" style="padding: 3px;" colspan="10">
-							<table width="100%" cellpadding="0" cellspacing="0">
-								<tr>
-									<td bgcolor="#<?php print $background_color;?>" class="textHeaderDark"><?php print $title;?></td>
-										<?php if ($add_text != "") {?><td class="textHeaderDark" align="right" bgcolor="#<?php print $colors['header_background'];?>"><strong><a class="linkOverDark" href="<?php print $add_text;?>"><?php echo _("Add");?></a>&nbsp;</strong></td><?php }?>
-								</tr>
-							</table>
+				<table width="100%" cellpadding="0" cellspacing="0">
+					<tr>
+						<td class="content-header">
+							<?php echo $title;?>
 						</td>
-					</tr><?php }?>
-
-<?php }
+						<?php if ($add_url != "") {?>
+						<td class="content-header" align="right" style="padding-right: 5px; font-weight: bold;">
+							<a class="linkOverDark" href="<?php echo $add_url;?>">Add</a>
+						</td>
+						<?php }?>
+					</tr>
+				</table>
+			</td>
+		</tr>
+		<?php }?>
+		<tr>
+			<td>
+				<table width="100%" cellpadding="3" cellspacing="0">
+					<tr>
+					<?php
+}
 
 /* html_end_box - draws the end of an HTML box
    @arg $trailing_br (bool) - whether to draw a trailing <br> tag after ending
 	the box */
 function html_end_box($trailing_br = true) { ?>
+					</tr>
 				</table>
 			</td>
 		</tr>
@@ -213,10 +223,10 @@ function html_nav_bar($background_color, $colspan, $current_page, $rows_per_page
 function html_header($header_items, $last_item_colspan = 1) {
 	global $colors;
 
-	print "<tr bgcolor='#" . $colors["header_panel_background"] . "'>\n";
+	print "<tr>\n";
 
 	for ($i=0; $i<count($header_items); $i++) {
-		print "<td " . ((($i+1) == count($header_items)) ? "colspan='$last_item_colspan' " : "") . "class='textSubHeaderDark'>" . $header_items[$i] . "</td>\n";
+		print "<td " . ((($i+1) == count($header_items)) ? "colspan='$last_item_colspan' " : "") . "class='content-header-sub'>" . $header_items[$i] . "</td>\n";
 	}
 
 	print "</tr>\n";
@@ -232,10 +242,10 @@ function html_header_checkbox($header_items, $form_action = "") {
 	/* default to the 'current' file */
 	if ($form_action == "") { $form_action = basename($_SERVER["PHP_SELF"]); }
 
-	print "<tr bgcolor='#" . $colors["header_panel_background"] . "'>\n";
+	print "<tr>\n";
 
 	for ($i=0; $i<count($header_items); $i++) {
-		print "<td class='textSubHeaderDark'>" . $header_items[$i] . "</td>\n";
+		print "<td class='content-header-sub'>" . $header_items[$i] . "</td>\n";
 	}
 
 	print "<td width='1%' align='right' bgcolor='#819bc0' style='" . get_checkbox_style() . "'><input type='checkbox' style='margin: 0px;' name='all' title='" . _("Select All") . "' onClick='SelectAll(\"chk_\",this.checked)'></td>\n<form name='chk' method='post' action='$form_action'>\n";

@@ -252,11 +252,13 @@ function get_data_query_array($snmp_query_id) {
 function get_data_query_row_index($index_type, $field_value, $host_id, $data_query_id) {
 	/* sanity check for $host_id */
 	if (!is_numeric($host_id)) {
+		api_syslog_cacti_log("Invalid input '$host_id' for 'host_id' in " . __FUNCTION__ . "()", SEV_ERROR, 0, 0, 0, false, FACIL_WEBUI);
 		return false;
 	}
 
 	/* sanity check for $data_query_id */
 	if ((!is_numeric($data_query_id)) || (empty($data_query_id))) {
+		api_syslog_cacti_log("Invalid input '$data_query_id' for 'data_query_id' in " . __FUNCTION__ . "()", SEV_ERROR, 0, 0, 0, false, FACIL_WEBUI);
 		return false;
 	}
 
@@ -272,11 +274,13 @@ function get_data_query_row_index($index_type, $field_value, $host_id, $data_que
 function get_data_query_row_value($index_type, $index_value, $host_id, $data_query_id) {
 	/* sanity check for $host_id */
 	if (!is_numeric($host_id)) {
+		api_syslog_cacti_log("Invalid input '$host_id' for 'host_id' in " . __FUNCTION__ . "()", SEV_ERROR, 0, 0, 0, false, FACIL_WEBUI);
 		return false;
 	}
 
 	/* sanity check for $data_query_id */
 	if ((!is_numeric($data_query_id)) || (empty($data_query_id))) {
+		api_syslog_cacti_log("Invalid input '$data_query_id' for 'data_query_id' in " . __FUNCTION__ . "()", SEV_ERROR, 0, 0, 0, false, FACIL_WEBUI);
 		return false;
 	}
 
@@ -292,15 +296,53 @@ function get_data_query_row_value($index_type, $index_value, $host_id, $data_que
 function get_data_query_indexes($host_id, $data_query_id) {
 	/* sanity check for $host_id */
 	if (!is_numeric($host_id)) {
+		api_syslog_cacti_log("Invalid input '$host_id' for 'host_id' in " . __FUNCTION__ . "()", SEV_ERROR, 0, 0, 0, false, FACIL_WEBUI);
 		return false;
 	}
 
 	/* sanity check for $data_query_id */
 	if ((!is_numeric($data_query_id)) || (empty($data_query_id))) {
+		api_syslog_cacti_log("Invalid input '$data_query_id' for 'data_query_id' in " . __FUNCTION__ . "()", SEV_ERROR, 0, 0, 0, false, FACIL_WEBUI);
 		return false;
 	}
 
 	return array_rekey(db_fetch_assoc("select distinct snmp_index from host_snmp_cache where host_id = " . sql_sanitize($host_id) . " and snmp_query_id = " . sql_sanitize($data_query_id)), "", "snmp_index");
+}
+
+function api_data_query_get($data_query_id) {
+	/* sanity check for $data_query_id */
+	if ((!is_numeric($data_query_id)) || (empty($data_query_id))) {
+		api_syslog_cacti_log("Invalid input '$data_query_id' for 'data_query_id' in " . __FUNCTION__ . "()", SEV_ERROR, 0, 0, 0, false, FACIL_WEBUI);
+		return false;
+	}
+
+	return db_fetch_row("select * from data_query where id = " . sql_sanitize($data_query_id));
+}
+
+function api_data_query_list() {
+	return db_fetch_assoc("select * from data_query order by name");
+}
+
+function api_data_query_fields_list($data_query_id, $input_type = "") {
+	require_once(CACTI_BASE_PATH . "/include/data_query/data_query_constants.php");
+
+	/* sanity check for $data_query_id */
+	if ((!is_numeric($data_query_id)) || (empty($data_query_id))) {
+		api_syslog_cacti_log("Invalid input '$data_query_id' for 'data_query_id' in " . __FUNCTION__ . "()", SEV_ERROR, 0, 0, 0, false, FACIL_WEBUI);
+		return false;
+	}
+
+	return db_fetch_assoc("select * from data_query_field where data_query_id = " . sql_sanitize($data_query_id) . ((($input_type == DATA_QUERY_FIELD_TYPE_INPUT) || ($input_type == DATA_QUERY_FIELD_TYPE_OUTPUT)) ? " and type = $input_type" : "") . " order by name");
+}
+
+function api_data_query_field_get($data_query_field_id) {
+	/* sanity check for $data_query_field_id */
+	if ((!is_numeric($data_query_field_id)) || (empty($data_query_field_id))) {
+		api_syslog_cacti_log("Invalid input '$data_query_field_id' for 'data_query_field_id' in " . __FUNCTION__ . "()", SEV_ERROR, 0, 0, 0, false, FACIL_WEBUI);
+		return false;
+	}
+
+	return db_fetch_row("select * from data_query_field where id = " . sql_sanitize($data_query_field_id));
 }
 
 ?>

@@ -92,6 +92,7 @@ if ((read_graph_config_option("default_tree_view_mode") == "2") && ($_REQUEST["a
 	}
 	?>
 	<link href='<?php print html_get_theme_css();?>' rel='stylesheet'>
+	<link href='include/calendar.css' rel='stylesheet'>
 	<script type="text/javascript" src="include/treeview/ua.js"></script>
 	<script type="text/javascript" src="include/treeview/ftiens4.js"></script>
 	<script type="text/javascript" src="include/jscalendar/calendar.js"></script>

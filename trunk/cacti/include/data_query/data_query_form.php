@@ -22,9 +22,78 @@
  +-------------------------------------------------------------------------+
 */
 
-include(CACTI_BASE_PATH . "/include/data_query/data_query_arrays.php");
+//include(CACTI_BASE_PATH . "/include/data_query/data_query_arrays.php");
+
+$fields_data_query = array(
+	"input_type" => array(
+		"default" => "",
+		"data_type" => DB_TYPE_NUMBER
+		),
+	"name" => array(
+		"default" => "",
+		"validate_regexp" => "",
+		"validate_empty" => false,
+		"data_type" => DB_TYPE_STRING
+		),
+	"index_order_type" => array(
+		"default" => "",
+		"data_type" => DB_TYPE_NUMBER
+		),
+	"index_title_format" => array(
+		"default" => "",
+		"validate_regexp" => "",
+		"validate_empty" => true,
+		"data_type" => DB_TYPE_STRING
+		),
+	"index_order" => array(
+		"default" => "",
+		"validate_regexp" => "",
+		"validate_empty" => true,
+		"data_type" => DB_TYPE_STRING
+		),
+	"index_field_id" => array(
+		"default" => "",
+		"data_type" => DB_TYPE_NUMBER
+		)
+	);
+
+$fields_data_query_fields = array(
+	"type" => array(
+		"default" => "",
+		"data_type" => DB_TYPE_NUMBER
+		),
+	"name" => array(
+		"default" => "",
+		"validate_regexp" => "^[a-zA-Z0-9_-]+$",
+		"validate_empty" => false,
+		"data_type" => DB_TYPE_STRING
+		),
+	"name_desc" => array(
+		"default" => "",
+		"validate_regexp" => "",
+		"validate_empty" => false,
+		"data_type" => DB_TYPE_STRING
+		),
+	"source" => array(
+		"default" => "",
+		"validate_regexp" => "",
+		"validate_empty" => false,
+		"data_type" => DB_TYPE_STRING
+		),
+	"method_type" => array(
+		"default" => "",
+		"data_type" => DB_TYPE_NUMBER
+		),
+	"method_value" => array(
+		"default" => "",
+		"validate_regexp" => "",
+		"validate_empty" => true,
+		"data_type" => DB_TYPE_STRING
+		)
+	);
 
 /* file: data_queries.php, action: edit */
+/*
 $fields_data_query_edit = array(
 	"name" => array(
 		"method" => "textbox",
@@ -64,8 +133,9 @@ $fields_data_query_edit = array(
 		"value" => "1"
 		)
 	);
-
+*/
 /* file: data_queries.php, action: item_edit */
+/*
 $fields_data_query_item_edit = array(
 	"name" => array(
 		"method" => "textbox",
@@ -98,5 +168,5 @@ $fields_data_query_item_edit = array(
 		"value" => "1"
 		)
 	);
-
+*/
 ?>

@@ -385,3 +385,26 @@ div.calendar { position: relative; }
 @media print {
   .noprint { display:none }
 }
+
+/* test */
+table.content {
+	border-width: 1px;
+	border-style: solid;
+	border-color: #b5b5b5;
+}
+
+td.contentheader {
+	background-color: #5a9f35;
+	color: white;
+	font-weight: bold;
+}
+
+td.contentsubheader {
+	color: gray;
+	font-size: 10px;
+	font-weight: bold;
+	border-bottom: 1px dashed #a1a1a1;
+	border-top: 1px dashed #a1a1a1;
+	padding: 2px;
+	background-color: #e9e9e9;
+}

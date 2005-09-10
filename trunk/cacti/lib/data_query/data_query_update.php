@@ -22,6 +22,91 @@
  +-------------------------------------------------------------------------+
 */
 
+function api_data_query_save($data_query_id, &$_fields_data_query) {
+	require_once(CACTI_BASE_PATH . "/lib/data_query/data_query_list.php");
+
+	/* sanity check for $data_query_id */
+	if (!is_numeric($data_query_id)) {
+		return false;
+	}
+
+	/* field: id */
+	$_fields["id"] = array("type" => DB_TYPE_NUMBER, "value" => $data_query_id);
+
+	/* fetch a list of all visible data query fields */
+	$fields_data_query = api_data_query_list_fields();
+
+	foreach (array_keys($fields_data_query) as $field_name) {
+		if (isset($_fields_data_query[$field_name])) {
+			$_fields[$field_name] = array("type" => $fields_data_query[$field_name]["data_type"], "value" => $_fields_data_query[$field_name]);
+		}
+	}
+
+	/* check for an empty field list */
+	if (sizeof($_fields) == 1) {
+		return true;
+	}
+
+	if (db_replace("data_query", $_fields, array("id"))) {
+		if (empty($data_query_id)) {
+			return db_fetch_insert_id();
+		}else{
+			return $data_query_id;
+		}
+	}else{
+		return false;
+	}
+}
+
+function api_data_query_field_save($data_query_field_id, &$_fields_data_query_fields) {
+	require_once(CACTI_BASE_PATH . "/lib/data_query/data_query_list.php");
+
+	/* sanity check for $data_query_field_id */
+	if (!is_numeric($data_query_field_id)) {
+		return false;
+	}
+
+	/* sanity check for $data_query_id */
+	if ((empty($data_query_field_id)) && (empty($_fields_data_query_fields["data_query_id"]))) {
+		api_syslog_cacti_log("Required data_query_id when data_query_field_id = 0", SEV_ERROR, 0, 0, 0, false, FACIL_WEBUI);
+		return false;
+	} else if ((isset($_fields_data_query_fields["data_query_id"])) && (!is_numeric($_fields_data_query_fields["data_query_id"]))) {
+		return false;
+	}
+
+	/* field: id */
+	$_fields["id"] = array("type" => DB_TYPE_NUMBER, "value" => $data_query_field_id);
+
+	/* field: graph_id */
+	if (!empty($_fields_data_query_fields["data_query_id"])) {
+		$_fields["data_query_id"] = array("type" => DB_TYPE_NUMBER, "value" => $_fields_data_query_fields["data_query_id"]);
+	}
+
+	/* fetch a list of all visible data query fields */
+	$fields_data_query_fields = api_data_query_fields_list_fields();
+
+	foreach (array_keys($fields_data_query_fields) as $field_name) {
+		if (isset($_fields_data_query_fields[$field_name])) {
+			$_fields[$field_name] = array("type" => $fields_data_query_fields[$field_name]["data_type"], "value" => $_fields_data_query_fields[$field_name]);
+		}
+	}
+
+	/* check for an empty field list */
+	if (sizeof($_fields) == 1) {
+		return true;
+	}
+
+	if (db_replace("data_query_field", $_fields, array("id"))) {
+		if (empty($data_query_field_id)) {
+			return db_fetch_insert_id();
+		}else{
+			return $data_query_field_id;
+		}
+	}else{
+		return false;
+	}
+}
+
 /* update_data_query_sort_cache - updates the sort cache for a particular host/data query
 	combination. this works by fetching a list of valid data query index types and choosing
 	the first one in the list. the user can optionally override how the cache is updated

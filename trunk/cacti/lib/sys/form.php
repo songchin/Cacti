@@ -78,4 +78,24 @@ function form_input_validate($field_value, $field_name, $regexp_match, $allow_nu
 	}
 }
 
+function get_get_var_number($name) {
+	if (isset($_GET[$name])) {
+		if (is_numeric($_GET[$name])) {
+			return $_GET[$name];
+		}else{
+			return "0";
+		}
+	}else{
+		return "0";
+	}
+}
+
+function get_get_var($name) {
+	if (isset($_GET[$name])) {
+		return $_GET[$name];
+	}else{
+		return "";
+	}
+}
+
 ?>

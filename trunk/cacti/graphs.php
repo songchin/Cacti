@@ -144,7 +144,7 @@ function form_save() {
 	}else{
 		/* save graph data */
 		if (!api_graph_save($_POST["id"], $form_graph_fields)) {
-			api_syslog_cacti_log("Save error for graph [ID#" . $_POST["id"] . "]", SEV_DEBUG, 0, 0, 0, false, FACIL_WEBUI);
+			api_syslog_cacti_log("Save error for graph [ID#" . $_POST["id"] . "]", SEV_ERROR, 0, 0, 0, false, FACIL_WEBUI);
 		}
 
 		/* save graph item data for templated graphs */

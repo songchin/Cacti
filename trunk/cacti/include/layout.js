@@ -312,3 +312,104 @@ function set_data_template_override_device_field(field_name) {
 		chk_caption.className = 'txtDisabledText';
 	}
 }
+
+function display_row_hover(id) {
+	if (document.getElementById(id).className == 'content-row') {
+		document.getElementById(id).className = 'content-row-hover';
+	}
+}
+
+function display_row_clear(id) {
+	if (document.getElementById(id).className == 'content-row-hover') {
+		document.getElementById(id).className = 'content-row';
+	}
+}
+
+var _block_row = '';
+function display_row_select(id, chk_id) {
+	if (_block_row == id) {
+		_block_row = '';
+	}else if (document.getElementById(id).className == 'content-row-select') {
+		document.getElementById(id).className = 'content-row';
+		document.getElementById(chk_id).checked = false;
+	}else{
+		document.getElementById(id).className = 'content-row-select';
+		document.getElementById(chk_id).checked = true;
+	}
+}
+
+function display_row_block(id) {
+	_block_row = id;
+}
+
+function get_radio_value(radioObj) {
+	if (!radioObj) {
+		return "";
+	}
+
+	var radioLength = radioObj.length;
+	if (radioLength == undefined) {
+		if (radioObj.checked) {
+			return radioObj.value;
+		}else{
+			return "";
+		}
+	}
+
+	for (var i = 0; i < radioLength; i++) {
+		if (radioObj[i].checked) {
+			return radioObj[i].value;
+		}
+	}
+
+	return "";
+}
+
+function action_bar_mouseover(object_name) {
+	document.getElementById(object_name).className = 'action-bar-button-hover';
+}
+
+function action_bar_mouseout(object_name) {
+	document.getElementById(object_name).className = 'action-bar-button-out';
+}
+
+function action_menu_mouseover(object_name) {
+	document.getElementById(object_name).className = 'action-bar-menu-hover';
+}
+
+function action_menu_mouseout(object_name) {
+	document.getElementById(object_name).className = 'action-bar-menu-out';
+}
+
+function toggle_visibility(object_name) {
+	if (document.getElementById(object_name).style.visibility == 'visible') {
+		document.getElementById(object_name).style.visibility = 'hidden';
+	}else{
+		document.getElementById(object_name).style.visibility = 'visible';
+	}
+}
+
+function loadXMLFile(url) {
+	if (window.XMLHttpRequest) { // code for Mozilla, Safari, etc
+		xmlhttp=new XMLHttpRequest();
+		xmlhttp.onreadystatechange=xmlhttpReady;
+		xmlhttp.open("GET",url,true);
+		xmlhttp.send(null);
+	}else if (window.ActiveXObject) { //IE
+		xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+
+		if (xmlhttp) {
+			xmlhttp.onreadystatechange=xmlhttpReady;
+			xmlhttp.open("GET",url,true);
+			xmlhttp.send();
+		}
+	}
+}
+
+function xmlhttpReady() {
+	if (xmlhttp.readyState==4) {
+		if (xmlhttp.status==200) {
+			alert("got: " + xmlhttp.responseText);
+		}
+	}
+}

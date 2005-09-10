@@ -22,30 +22,48 @@
  +-------------------------------------------------------------------------+
 */
 
-$current_field_row_color = $colors["form_alternate1"];
+$current_field_row_index = 1;
 
 function field_reset_row_color() {
-	global $current_field_row_color, $colors;
+	global $current_field_row_index, $colors;
 
-	$current_field_row_color = $colors["form_alternate1"];
+	$current_field_row_index = 1;
 }
 
 function field_increment_row_color() {
-	global $current_field_row_color, $colors;
+	global $current_field_row_index, $colors;
 
-	if ($current_field_row_color == $colors["form_alternate1"]) {
-		$current_field_row_color = $colors["form_alternate2"];
+	if ($current_field_row_index == 1) {
+		$current_field_row_index = 2;
 		return $colors["form_alternate1"];
 	}else{
-		$current_field_row_color = $colors["form_alternate1"];
+		$current_field_row_index = 1;
 		return $colors["form_alternate2"];
 	}
 }
 
 function field_get_row_color() {
-	global $field_increment_row_color, $colors;
+	global $current_field_row_index, $colors;
 
 	return field_increment_row_color();
+}
+
+function field_increment_row_style() {
+	global $current_field_row_index;
+
+	if ($current_field_row_index == 1) {
+		$current_field_row_index = 2;
+		return "field-row-alt1";
+	}else{
+		$current_field_row_index = 1;
+		return "field-row-alt2";
+	}
+}
+
+function field_get_row_style() {
+	global $current_field_row_index;
+
+	return field_increment_row_style();
 }
 
 function field_row_header($text) {
@@ -299,16 +317,16 @@ function draw_edit_control($field_name, &$field_array) {
    @arg $current_id - used to determine if a current value for this form element
      exists or not. a $current_id of '0' indicates that no current value exists,
      a non-zero value indicates that a current value does exist */
-function form_text_box($field_name, $form_previous_value, $form_default_value, $form_max_length, $form_size = 30, $type = "text", $current_id = 0) {
+function form_text_box($field_name, $form_previous_value, $form_default_value, $form_max_length, $form_size = 30, $type = "text", $current_id = 0, $css_class = "") {
 	if (($form_previous_value == "") && (empty($current_id))) {
 		$form_previous_value = $form_default_value;
 	}
 
-	print "<input type='$type'";
+	echo "<input type='$type'";
 
 	if (isset($_SESSION["sess_error_fields"])) {
 		if (!empty($_SESSION["sess_error_fields"][$field_name])) {
-			print "class='txtErrorTextBox'";
+			echo " style='border: 2px solid red;'";
 			unset($_SESSION["sess_error_fields"][$field_name]);
 		}
 	}
@@ -318,7 +336,7 @@ function form_text_box($field_name, $form_previous_value, $form_default_value, $
 		$form_previous_value = get_post_cache_field($field_name);
 	}
 
-	print " name='$field_name' id='$field_name' size='$form_size'" . (!empty($form_max_length) ? " maxlength='$form_max_length'" : "") . " value='" . htmlspecialchars($form_previous_value, ENT_QUOTES) . "'>\n";
+	echo " name='$field_name' id='$field_name' size='$form_size'" . (!empty($form_max_length) ? " maxlength='$form_max_length'" : "") . (!empty($css_class) ? " class='$css_class'" : "") . " value='" . htmlspecialchars($form_previous_value, ENT_QUOTES) . "'>\n";
 }
 
 function form_text_box_sv($field_name, $values_array, $url_moveup, $url_movedown, $url_delete, $url_add, $force_blank_field = false, $form_max_length, $form_size = 30) {
@@ -386,7 +404,7 @@ function form_text_box_sv($field_name, $values_array, $url_moveup, $url_movedown
    @arg $form_previous_value - the current value of this form element
    @arg $form_default_value - the value of this form element to use if there is
      no current value available */
-function form_hidden_box($field_name, $form_previous_value, $form_default_value) {
+function form_hidden_box($field_name, $form_previous_value, $form_default_value = "") {
 	if ($form_previous_value == "") {
 		$form_previous_value = $form_default_value;
 	}
@@ -466,7 +484,7 @@ function form_checkbox_marker($field_name) {
    @arg $form_caption - the text to display to the right of the checkbox
    @arg $form_default_value - the value of this form element to use if there is
      no current value available */
-function form_radio_button($field_name, $form_previous_value, $form_current_value, $form_caption, $form_default_value) {
+function form_radio_button($field_name, $form_previous_value, $form_current_value, $form_caption, $form_default_value, $js_onclick = "") {
 	if ($form_previous_value == "") {
 		$form_previous_value = $form_default_value;
 	}
@@ -476,7 +494,7 @@ function form_radio_button($field_name, $form_previous_value, $form_current_valu
 		$form_previous_value = get_post_cache_field($field_name);
 	}
 
-	print "<input type='radio' name='$field_name' id='$field_name' value='$form_current_value'" . (($form_previous_value == $form_current_value) ? " checked" : "") . "> $form_caption\n";
+	print "<input type='radio' name='$field_name' id='$field_name" . "_$form_current_value' value='$form_current_value'" . ($js_onclick == "" ? "" : " onClick='$js_onclick'") . (($form_previous_value == $form_current_value) ? " checked" : "") . "> $form_caption\n";
 }
 
 /* form_text_box - draws a standard html text area box
@@ -631,7 +649,7 @@ function form_confirm_buttons($action_url, $cancel_url) { global $colors; ?>
    @arg $cancel_url - the url to go to when the user clicks 'cancel'
    @arg $force_type - if specified, will force the 'action' button to be either
      'save' or 'create'. otherwise this field should be properly auto-detected */
-function form_save_button($cancel_url, $force_type = "") {
+function form_save_button($cancel_url, $button_name = "", $force_type = "") {
 	global $colors;
 
 	if (empty($force_type)) {
@@ -650,15 +668,15 @@ function form_save_button($cancel_url, $force_type = "") {
 		$alt = "Create";
 	}
 	?>
-	<table align='center' width='98%' style='background-color: #<?php print $colors["buttonbar_background"];?>; border: 1px solid #<?php print $colors["buttonbar_border"];?>;'>
+	<table align='center' width='98%' cellpadding="3">
 		<tr>
-			 <td bgcolor="#<?php print $colors['buttonbar_background'];?>" align="right">
-				<input type='hidden' name='action' value='save'>
-				<a href='<?php print $cancel_url;?>'><img src='<?php print html_get_theme_images_path("button_cancel2.gif");?>' alt='<?php echo _("Cancel");?>' align='absmiddle' border='0'></a>
-				<input type='image' src='<?php print html_get_theme_images_path($img);?>' alt='<?php print $alt;?>' align='absmiddle'>
+			<td style="border: 1px solid gray; background-color: #ffffff;" align="right">
+				<a href='<?php echo $cancel_url;?>'><img src='<?php echo html_get_theme_images_path("button_cancel2.gif");?>' alt='<?php echo _("Cancel");?>' align='absmiddle' border='0'></a>
+				<input type='image'<?php echo ($button_name == "" ? "" : " name='$button_name'");?> src='<?php echo html_get_theme_images_path($img);?>' alt='<?php echo $alt;?>' align='absmiddle'>
 			</td>
 		</tr>
 	</table>
+	<input type='hidden' name='action' value='save'>
 	</form>
 	<?php
 }
