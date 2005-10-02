@@ -31,6 +31,9 @@ require_once(CACTI_BASE_PATH . "/lib/data_query/data_query_update.php");
 require_once(CACTI_BASE_PATH . "/lib/data_query/data_query_form.php");
 require_once(CACTI_BASE_PATH . "/lib/data_query/data_query_info.php");
 
+define("LIST_ACTION_REMOVE", 1);
+define("LIST_ACTION_DUPLICATE", 2);
+
 /* set default action */
 if (!isset($_REQUEST["action"])) { $_REQUEST["action"] = ""; }
 
@@ -67,8 +70,6 @@ switch ($_REQUEST["action"]) {
 		require_once(CACTI_BASE_PATH . "/include/top_header.php");
 
 		data_query();
-
-		require_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
 		break;
 }
 
@@ -77,6 +78,7 @@ switch ($_REQUEST["action"]) {
    -------------------------- */
 
 function form_save() {
+	print_a($_POST);
 	if (isset($_POST["save_data_query_x"])) {
 		/* cache all post field values */
 		init_post_field_cache();
@@ -172,6 +174,12 @@ function form_save() {
 			header("Location: data_queries.php?action=field_edit" . (empty($_POST["data_query_field_id"]) ? "" : "&id=" . $_POST["data_query_field_id"]) . "&data_query_id=" . $_POST["data_query_id"]);
 		}else{
 			header("Location: data_queries.php?action=edit&id=" . $_POST["data_query_id"]);
+		}
+	}else if (isset($_POST["box-1-action-area-button"])) {
+		$selected_rows = explode(":", $_POST["box-1-action-area-selected-rows"]);
+
+		if ($_POST["box-1-action-area-type"] == "remove") {
+			print_a($selected_rows);
 		}
 	}
 }
@@ -364,32 +372,38 @@ function data_query_edit() {
 function data_query() {
 	global $colors, $data_query_input_types;
 
-	html_start_box("<strong>" . _("Data Queries") . "</strong>", "data_queries.php?action=edit");
-
-	form_start("data_queries.php", "form_data_query");
-
-	html_header(array(_("Name"), _("Input Type")), 2);
-
 	$data_queries = api_data_query_list();
 
-	$box_id = "dq00";
+	form_start("data_queries.php");
+
+	html_start_box("<strong>" . _("Data Queries") . "</strong>", "data_queries.php?action=edit");
+	html_header(array(_("Name"), _("Input Type")), 2);
 
 	if (sizeof($data_queries) > 0) {
+		$box_id = "1";
+
+		$menu_items = array(
+			"remove" => "Remove",
+			"duplicate" => "Duplicate"
+			);
+
 		foreach ($data_queries as $data_query) {
 			?>
-			<tr class="content-row" id="row_<?php echo $data_query["id"];?>" onClick="display_row_select('row_<?php echo $data_query["id"];?>', 'box_<?php echo $box_id;?>_chk_<?php echo $data_query["id"];?>')" onMouseOver="display_row_hover('row_<?php echo $data_query["id"];?>')" onMouseOut="display_row_clear('row_<?php echo $data_query["id"];?>')">
+			<tr class="content-row" id="box-<?php echo $box_id;?>-row-<?php echo $data_query["id"];?>" onClick="display_row_select('<?php echo $box_id;?>',document.forms[0],'box-<?php echo $box_id;?>-row-<?php echo $data_query["id"];?>', 'box-<?php echo $box_id;?>-chk-<?php echo $data_query["id"];?>')" onMouseOver="display_row_hover('box-<?php echo $box_id;?>-row-<?php echo $data_query["id"];?>')" onMouseOut="display_row_clear('box-<?php echo $box_id;?>-row-<?php echo $data_query["id"];?>')">
 				<td class="content-row">
-					<a class="linkEditMain" onClick="display_row_block('row_<?php echo $data_query["id"];?>')" href="data_queries.php?action=edit&id=<?php echo $data_query["id"];?>"><span id="box_<?php echo $box_id;?>_text_<?php echo $data_query["id"];?>"><?php echo $data_query["name"];?></span></a>
+					<a class="linkEditMain" onClick="display_row_block('box-<?php echo $box_id;?>-row-<?php echo $data_query["id"];?>')" href="data_queries.php?action=edit&id=<?php echo $data_query["id"];?>"><span id="box-<?php echo $box_id;?>-text-<?php echo $data_query["id"];?>"><?php echo $data_query["name"];?></span></a>
 				</td>
 				<td class="content-row">
 					<?php echo $data_query_input_types{$data_query["input_type"]}; ?>
 				</td>
-				<td class="content-row" width="16" align="middle" style="border-left: 1px solid #b5b5b5; border-top: 1px solid #b5b5b5; background-color: #e9e9e9;">
-					<input type='checkbox' style='margin: 0px;' name='box_<?php echo $box_id;?>_chk_<?php echo $data_query["id"];?>' id='box_<?php echo $box_id;?>_chk_<?php echo $data_query["id"];?>' title="<?php echo $data_query["name"];?>">
+				<td class="content-row" width="1%" align="middle" style="border-left: 1px solid #b5b5b5; border-top: 1px solid #b5b5b5; background-color: #e9e9e9; <?php echo get_checkbox_style();?>">
+					<input type='checkbox' style='margin: 0px;' name='box-<?php echo $box_id;?>-chk-<?php echo $data_query["id"];?>' id='box-<?php echo $box_id;?>-chk-<?php echo $data_query["id"];?>' title="<?php echo $data_query["name"];?>">
 				</td>
 			</tr>
-		<?php
+			<?php
 		}
+
+		html_box_toolbar_draw($box_id, "0");
 	}else{
 		?>
 		<tr>
@@ -400,112 +414,39 @@ function data_query() {
 		<?php
 	}
 
-	?>
-		<tr>
-			<td colspan="2" style="border-top: 1px solid #b5b5b5; padding: 1px;">
-				<table width="100%" cellpadding="3" cellspacing="0">
-					<tr>
-						<td>
-							&nbsp;
-						</td>
-						<td width="16" id="button_duplicate" class="action-bar-button-out">
-							<a href="ddd"><img src="<?php echo html_get_theme_images_path('action_copy.gif');?>" width="16" height="16" border="0" alt="Duplicate" onMouseOver="action_bar_mouseover('button_duplicate')" onMouseOut="action_bar_mouseout('button_duplicate')"></a>
-						</td>
-						<td width="16" id="button_delete" class="action-bar-button-out">
-							<a href="sds"><img src="<?php echo html_get_theme_images_path('action_delete.gif');?>" width="16" height="16" border="0" alt="Delete" onMouseOver="action_bar_mouseover('button_delete')" onMouseOut="action_bar_mouseout('button_delete')"></a>
-						</td>
-					</tr>
-				</table>
-			</td>
-			<td width="1%" style="border-top: 1px solid #b5b5b5; border-left: 1px solid #b5b5b5; padding: 1px;">
-				<table width="100%" cellpadding="3" cellspacing="0">
-					<tr>
-						<td id="button_menu" class="action-bar-button-out">
-							<a href="javascript:toggle_visibility('action-bar-menu')"><img src="<?php echo html_get_theme_images_path('action_menu.gif');?>" width="16" height="16" border="0" alt="Choose..." onMouseOver="action_bar_mouseover('button_menu')" onMouseOut="action_bar_mouseout('button_menu')" align="absmiddle"></a>
-						</td>
-					</tr>
-				</table>
-			</td>
-		</tr>
-	<?php
 	html_end_box(false);
-	?>
-	<div id="action-bar-frame">
-		<div id="action-bar-menu" style="visibility: hidden;">
-			<div id="action-bar-header">
-				Actions
-			</div>
-			<div id="action-bar-items">
-				<div id="action-bar-item-1" class="action-bar-menu-out" onMouseOver="action_menu_mouseover('action-bar-item-1')" onMouseOut="action_menu_mouseout('action-bar-item-1')" onClick="show_action_area('<?php echo $box_id;?>','remove')">
-					Remove
-				</div>
-				<div id="action-bar-item-2" class="action-bar-menu-out" onMouseOver="action_menu_mouseover('action-bar-item-2')" onMouseOut="action_menu_mouseout('action-bar-item-2')" style="border-top: 1px solid #aab;">
-					Duplicate
-				</div>
-			</div>
-		</div>
-	</div>
 
-	<div id="action-area-menu" style="visibility: hidden;">
-		<div id="action-area-header">
-			Actions
-		</div>
-		<div id="action-area-items" style="font-size: 12px; padding: 4px;">
-		</div>
-	</div>
+	html_box_actions_menu_draw($box_id, "0", $menu_items);
+	html_box_actions_area_draw($box_id, "0");
+
+	form_end();
+	?>
 
 	<script language="JavaScript">
 	<!--
-	function show_action_area(box_id, type) {
-		/* parent div container for all action box items */
-		parent_div = document.getElementById('action-area-items');
-
-		/* clear the box */
-		parent_div.innerHTML = '';
-
-		//loadXMLFile("http://cacti-dev/cacti-tree/trunk/cacti/dhtml_test.php");
-
+	function action_area_handle_type(box_id, type, parent_div, parent_form) {
 		if (type == 'remove') {
-			parent_div.appendChild(document.createElement('span')).innerHTML = 'Are you sure you want to remove these data queries?';
+			parent_div.appendChild(document.createTextNode('Are you sure you want to remove these data queries?'));
+			parent_div.appendChild(action_area_generate_selected_rows(box_id));
 
-			/* container for items list */
-			selected_items_container = parent_div.appendChild(document.createElement('p'));
-			html_insert_selected_items(box_id, selected_items_container);
-		}
+			action_area_update_header_caption(box_id, 'Remove Data Queries');
+			action_area_update_submit_caption(box_id, 'Remove');
+			action_area_update_selected_rows(box_id, parent_form);
+		}else if (type == 'duplicate') {
+			parent_div.appendChild(document.createTextNode('Are you sure you want to duplicate these data queries?'));
+			parent_div.appendChild(action_area_generate_selected_rows(box_id));
+			parent_div.appendChild(action_area_generate_input('text', 'box-' + box_id + '-action-area-txt1', ''));
 
-		/* re-adjust div heights and display it */
-		document.getElementById('action-area-items').style.height = 'auto';
-		document.getElementById('action-area-menu').style.height = 'auto';
-		document.getElementById('action-area-menu').style.visibility = 'visible';
-	}
-
-	function html_insert_selected_items(box_id, parent_div) {
-		var actions_area = document.getElementById('action-area-items');
-
-		for (var i = 0; i < document.forms[0].elements.length; i++) {
-			if ((document.forms[0].elements[i].name.substr(0, box_id.length + 8) == 'box_' + box_id + '_chk') && (document.forms[0].elements[i].checked == true)) {
-				parent_div.appendChild(document.createElement('li')).innerHTML = document.getElementById('box_' + box_id + '_text' + document.forms[0].elements[i].name.substr(box_id.length + 8)).innerHTML;
-			}
+			action_area_update_header_caption(box_id, 'Duplicate Data Queries');
+			action_area_update_submit_caption(box_id, 'Duplicate');
+			action_area_update_selected_rows(box_id, parent_form);
 		}
 	}
-
-
-	SET_DHTML("action-bar-menu", "action-bar-items", "action-area-menu", "action-area-items");
-//dd.elements['action-bar-header'].setDraggable(true);
-dd.elements['action-bar-menu'].setCursor(CURSOR_MOVE);
-dd.elements['action-bar-menu'].moveBy(1, 1);
-dd.elements['action-bar-items'].setDraggable(false);
-
-dd.elements['action-area-menu'].setCursor(CURSOR_MOVE);
-dd.elements['action-area-items'].setDraggable(false);
-	//SET_DHTML("action-bar-items"+NO_DRAG);
-	//SET_DHTML(CURSOR_MOVE, "action-bar-header");
-
 	-->
 	</script>
 
 	<?php
-	form_end();
 
+	require_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
 }
 ?>

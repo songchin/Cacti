@@ -93,11 +93,11 @@ if ((read_graph_config_option("default_tree_view_mode") == "2") && ($_REQUEST["a
 	?>
 	<link href='<?php print html_get_theme_css();?>' rel='stylesheet'>
 	<link href='include/calendar.css' rel='stylesheet'>
-	<script type="text/javascript" src="include/treeview/ua.js"></script>
-	<script type="text/javascript" src="include/treeview/ftiens4.js"></script>
-	<script type="text/javascript" src="include/jscalendar/calendar.js"></script>
-	<script type="text/javascript" src="include/jscalendar/lang/calendar-en.js"></script>
-	<script type="text/javascript" src="include/jscalendar/calendar-setup.js"></script>
+	<script type="text/javascript" src="include/js/treeview/ua.js"></script>
+	<script type="text/javascript" src="include/js/treeview/ftiens4.js"></script>
+	<script type="text/javascript" src="include/js/jscalendar/calendar.js"></script>
+	<script type="text/javascript" src="include/js/jscalendar/lang/calendar-en.js"></script>
+	<script type="text/javascript" src="include/js/jscalendar/calendar-setup.js"></script>
 </head>
 
 <body leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">

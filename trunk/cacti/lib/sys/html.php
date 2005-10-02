@@ -55,7 +55,6 @@ function html_start_box($title, $add_url = "") {
 		<tr>
 			<td>
 				<table width="100%" cellpadding="3" cellspacing="0">
-					<tr>
 					<?php
 }
 
@@ -63,7 +62,6 @@ function html_start_box($title, $add_url = "") {
    @arg $trailing_br (bool) - whether to draw a trailing <br> tag after ending
 	the box */
 function html_end_box($trailing_br = true) { ?>
-					</tr>
 				</table>
 			</td>
 		</tr>

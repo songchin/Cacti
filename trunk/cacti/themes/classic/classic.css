@@ -135,19 +135,19 @@ a.link-dark-small:hover {
 
 /* tabs */
 td.tab {
-    border-top: 1px solid #999;
-    border-right: 1px solid #666;
-    border-left: 1px solid #999;
-    border-bottom: none;
-    border-radius: 2px;
-    -moz-border-radius: 2px;
+	border-top: 1px solid #999;
+	border-right: 1px solid #666;
+	border-left: 1px solid #999;
+	border-bottom: none;
+	border-radius: 2px;
+	-moz-border-radius: 2px;
 }
 
-table.tabs      {
-    border-top: none;
-    border-right: none;
-    border-left: none;
-    border-bottom: 1px solid #666;
+table.tabs {
+	border-top: none;
+	border-right: none;
+	border-left: none;
+	border-bottom: 1px solid #666;
 }
 
 /* Begin - Java Script Row Selection Logic for Layout.js */
@@ -170,7 +170,7 @@ table.tabs      {
 }
 /* End - Java Script Row Selection Logic for Layout.js */
 
-/* test */
+/* new box code */
 table.content {
 	border-width: 1px;
 	border-style: solid;
@@ -245,7 +245,7 @@ span.enabled {
 }
 
 td.action-bar-button-hover {
-	background-color: #cad7f1;
+	background-color: #e0e0ff;
 	border: 1px solid #7886a6;
 }
 
@@ -254,53 +254,65 @@ td.action-bar-button-out {
 	border: 1px solid #ffffff;
 }
 
-#action-bar-frame {
-	width: 98%;
-	left: 1%;
-	position: relative;
+td.action-bar-button-click {
+	border: 1px solid #e0e0ff;
+	background-color: #e0e0ff;
 }
 
-#action-bar-menu {
+div.action-bar-menu {
 	padding: 0px;
-	border: 2px solid #556;
+	border-top: 1px solid #889;
+	border-left: 2px solid #889;
+	border-right: 2px solid #889;
+	border-bottom: 2px solid #889;
 	width: 150px;
-	position: absolute;
-	right: 0px;
 }
 
-#action-bar-header {
+div.action-bar-header {
 	padding: 2px;
 	background-color: #556;
 	font-family: tahoma,verdana,sans-serif;
 	font-size: 10px;
 	font-weight: bold;
 	color: white;
+	cursor: move;
 }
 
-#action-bar-items {
-
-}
-
-#action-area-menu {
+div.action-area-menu {
 	padding: 0px;
-	border: 2px solid #556;
-	width: 400px;
-	position: absolute;
-	left: 30%;
-	top: 150px;
+	border-left: 2px solid #556;
 }
 
-#action-area-header {
-	padding: 2px;
+div.action-area-buttons {
+	background-color: white;
+	border-top: 1px solid #d1d1d1;
+	text-align: right;
+	padding: 5px;
+}
+
+input.action-area-buttons {
+	background-color: #efefef;
+	border: 1px solid #d1d1d1;
+	font-weight: bold;
+}
+
+div.action-area-header {
+	padding: 4px;
 	background-color: #556;
+	cursor: move;
+}
+
+td.action-area-header {
 	font-family: tahoma,verdana,sans-serif;
-	font-size: 10px;
+	font-size: 12px;
 	font-weight: bold;
 	color: white;
 }
 
-#action-area-items {
+div.action-area-items {
 	background-color: white;
+	font-size: 12px;
+	padding: 4px;
 }
 
 .action-bar-menu-hover {
@@ -318,3 +330,13 @@ td.action-bar-button-out {
 	font-size: 10px;
 	cursor: pointer;
 }
+
+/* drop shadow boxes */
+
+.shadowedBox table, .shadowedBox td.bdr { padding: 0; margin: 0; border: none; }
+.shadowedBox .bdr.topleft { background-image: url(images/bdr-tl.png); }
+.shadowedBox .bdr.top { background-image: url(images/bdr-t.png); }
+.shadowedBox .bdr.topright { background-image: url(images/bdr-tr.png); }
+.shadowedBox .bdr.right { background-image: url(images/bdr-r.png); }
+.shadowedBox .bdr.bottom { background-image: url(images/bdr-b.png); background-repeat: repeat-x; }
+.shadowedBox .bdr.bottomright { background-image: url(images/bdr-br.png); }

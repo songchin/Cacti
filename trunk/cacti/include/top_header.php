@@ -34,8 +34,8 @@ if (isset($_SESSION["sess_user_id"])) {
 <head>
 	<meta http-equiv='Content-Type' content='text/html; charset=<?php echo _("screen charset");?>'>
 	<link rel='shortcut icon' href='<?php print html_get_theme_images_path("favicon.ico");?>' type='image/x-icon'>
-	<script type="text/javascript" src="include/layout.js"></script>
-	<script type="text/javascript" src="include/wz_dragdrop.js"></script>
+	<script type="text/javascript" src="include/js/layout.js"></script>
+	<script type="text/javascript" src="include/js/box.js"></script>
 	<title>Cacti</title>
 	<link href='<?php print html_get_theme_css();?>' rel='stylesheet'>
 	<link href='<?php print html_get_theme_images_path("favicon.ico");?>' rel='image/x-icon'>
@@ -43,6 +43,9 @@ if (isset($_SESSION["sess_user_id"])) {
 </head>
 
 <body leftmargin="0" topmargin="0" marginwidth="0" marginheight="0" background="<?php print html_get_theme_images_path('left_border.gif');?>">
+
+<!-- must come after the <body> tag for IE compatibility -->
+<script type="text/javascript" src="include/js/dragdrop.js"></script>
 
 <table width="100%" cellspacing="0" cellpadding="0">
 	<tr height="37" bgcolor="#<?php print $colors['main_background'];?>">

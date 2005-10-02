@@ -313,35 +313,6 @@ function set_data_template_override_device_field(field_name) {
 	}
 }
 
-function display_row_hover(id) {
-	if (document.getElementById(id).className == 'content-row') {
-		document.getElementById(id).className = 'content-row-hover';
-	}
-}
-
-function display_row_clear(id) {
-	if (document.getElementById(id).className == 'content-row-hover') {
-		document.getElementById(id).className = 'content-row';
-	}
-}
-
-var _block_row = '';
-function display_row_select(id, chk_id) {
-	if (_block_row == id) {
-		_block_row = '';
-	}else if (document.getElementById(id).className == 'content-row-select') {
-		document.getElementById(id).className = 'content-row';
-		document.getElementById(chk_id).checked = false;
-	}else{
-		document.getElementById(id).className = 'content-row-select';
-		document.getElementById(chk_id).checked = true;
-	}
-}
-
-function display_row_block(id) {
-	_block_row = id;
-}
-
 function get_radio_value(radioObj) {
 	if (!radioObj) {
 		return "";
@@ -363,22 +334,6 @@ function get_radio_value(radioObj) {
 	}
 
 	return "";
-}
-
-function action_bar_mouseover(object_name) {
-	document.getElementById(object_name).className = 'action-bar-button-hover';
-}
-
-function action_bar_mouseout(object_name) {
-	document.getElementById(object_name).className = 'action-bar-button-out';
-}
-
-function action_menu_mouseover(object_name) {
-	document.getElementById(object_name).className = 'action-bar-menu-hover';
-}
-
-function action_menu_mouseout(object_name) {
-	document.getElementById(object_name).className = 'action-bar-menu-out';
 }
 
 function toggle_visibility(object_name) {
@@ -411,5 +366,48 @@ function xmlhttpReady() {
 		if (xmlhttp.status==200) {
 			alert("got: " + xmlhttp.responseText);
 		}
+	}
+}
+
+if ((get_browser_type() == "ie") && (window.attachEvent)) {
+	window.attachEvent("onload", alphaBackgrounds);
+}
+
+function alphaBackgrounds(){
+	var rslt = navigator.appVersion.match(/MSIE (\d+\.\d+)/, '');
+	var itsAllGood = (rslt != null && Number(rslt[1]) >= 5.5);
+	for (i=0; i<document.all.length; i++){
+		var bg = document.all[i].currentStyle.backgroundImage;
+		if (itsAllGood && bg){
+			if (bg.match(/\.png/i) != null){
+				var mypng = bg.substring(5,bg.length-2);
+				document.all[i].style.filter = "progid:DXImageTransform.Microsoft.AlphaImageLoader(src='"+mypng+"', sizingMethod='scale')";
+				document.all[i].style.backgroundImage = "url('themes/classic/images/pixel.gif')";
+			}
+		}
+	}
+}
+
+function get_browser_type() {
+	if (navigator.platform == "Win32" && navigator.appName == "Microsoft Internet Explorer" && window.attachEvent) {
+		return "ie";
+	}else{
+		return "ns";
+	}
+}
+
+function get_browser_width() {
+	if (get_browser_type() == "ie") {
+		return document.body.offsetWidth;
+	}else{
+		return window.innerWidth;
+	}
+}
+
+function get_browser_height() {
+	if (get_browser_type() == "ie") {
+		return document.body.offsetHeight;
+	}else{
+		return window.innerHeight;
 	}
 }
