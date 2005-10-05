@@ -1,8 +1,8 @@
 -- MySQL dump 9.11
 --
--- Host: localhost    Database: cacti_dev_MAIN
+-- Host: localhost    Database: cacti_rel_MAIN
 -- ------------------------------------------------------
--- Server version	4.0.24
+-- Server version	4.0.25
 
 --
 -- Table structure for table `data_input`
@@ -73,6 +73,49 @@ INSERT INTO data_input_fields VALUES (52,'9d39f6c3a93abf8d9ab9526fb01daa92',10,0
 INSERT INTO data_input_fields VALUES (53,'57260bd55ea09df0f4d40cda38c7544f',11,0,'','1 Minute Average','1min','out',1,'',0);
 INSERT INTO data_input_fields VALUES (54,'8efb3511c85e33cbec5b43f4e5ddfb03',11,0,'','5 Minute Average','5min','out',1,'',0);
 INSERT INTO data_input_fields VALUES (55,'24188537860a5bd4b599e5e403006add',11,0,'','15 Minute Average','15min','out',1,'',0);
+
+--
+-- Table structure for table `data_query`
+--
+
+CREATE TABLE data_query (
+  id mediumint(8) unsigned NOT NULL auto_increment,
+  input_type tinyint(3) unsigned NOT NULL default '0',
+  name varchar(100) NOT NULL default '',
+  index_order varchar(255) NOT NULL default '',
+  index_order_type tinyint(3) unsigned NOT NULL default '0',
+  index_title_format varchar(100) NOT NULL default '',
+  index_field_id mediumint(8) unsigned NOT NULL default '0',
+  PRIMARY KEY  (id)
+) TYPE=MyISAM;
+
+--
+-- Dumping data for table `data_query`
+--
+
+
+--
+-- Table structure for table `data_query_field`
+--
+
+CREATE TABLE data_query_field (
+  id mediumint(8) unsigned NOT NULL auto_increment,
+  data_query_id mediumint(8) unsigned NOT NULL default '0',
+  type tinyint(3) unsigned NOT NULL default '0',
+  name varchar(50) NOT NULL default '',
+  name_desc varchar(100) NOT NULL default '',
+  source varchar(100) NOT NULL default '',
+  method_type tinyint(3) unsigned NOT NULL default '0',
+  method_value varchar(150) NOT NULL default '',
+  PRIMARY KEY  (id),
+  UNIQUE KEY unq_name (name,data_query_id),
+  KEY data_query_id (data_query_id)
+) TYPE=MyISAM;
+
+--
+-- Dumping data for table `data_query_field`
+--
+
 
 --
 -- Table structure for table `data_source`
