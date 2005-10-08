@@ -695,7 +695,7 @@ function _graph_item_field__data_source_item_id($field_name, $field_value = "", 
 				data_source.id,
 				host.description,
 				data_source_item.data_source_name
-				from data_source,data_source_item
+				from (data_source,data_source_item)
 				left join host on data_source.host_id = host.id
 				where data_source_item.data_source_id = data_source.id
 				and data_source.host_id = $host_id
@@ -920,7 +920,7 @@ function draw_graph_item_editor($graph_X_id, $form_type, $disable_controls) {
 			graph_template_item.sequence,
 			graph_template.auto_padding,
 			data_template_item.data_source_name
-			from graph_template_item,graph_template
+			from (graph_template_item,graph_template)
 			left join data_template_item on graph_template_item.data_template_item_id=data_template_item.id
 			where graph_template_item.graph_template_id=graph_template.id
 			and graph_template_item.graph_template_id = $graph_X_id
@@ -941,7 +941,7 @@ function draw_graph_item_editor($graph_X_id, $form_type, $disable_controls) {
 			graph_item.sequence,
 			graph.auto_padding,
 			data_source_item.data_source_name
-			from graph_item,graph
+			from (graph_item,graph)
 			left join data_source_item on graph_item.data_source_item_id=data_source_item.id
 			where graph_item.graph_id=graph.id
 			and graph_item.graph_id = $graph_X_id

@@ -482,7 +482,7 @@ function grow_right_pane_tree($tree_id, $leaf_id, $host_group_data) {
 	/* get information for the headers */
 	if (!empty($tree_id)) { $tree_name = db_fetch_cell("select name from graph_tree where id=$tree_id"); }
 	if (!empty($leaf_id)) { $leaf_name = $leaf["title"]; }
-	if (!empty($leaf_id)) { $host_name = db_fetch_cell("select host.description from graph_tree_items,host where graph_tree_items.host_id=host.id and graph_tree_items.id=$leaf_id"); }
+	if (!empty($leaf_id)) { $host_name = db_fetch_cell("select host.description from (graph_tree_items,host) where graph_tree_items.host_id=host.id and graph_tree_items.id=$leaf_id"); }
 
 	$host_group_data_array = explode(":", $host_group_data);
 
@@ -525,7 +525,7 @@ function grow_right_pane_tree($tree_id, $leaf_id, $host_group_data) {
 			graph_tree_items.rra_id,
 			graph_tree_items.order_key,
 			graph.title_cache
-			from graph_tree_items,graph
+			from (graph_tree_items,graph)
 			left join graph on (graph_tree_items.local_graph_id=graph.id)
 			$sql_join
 			where graph_tree_items.graph_tree_id=$tree_id
