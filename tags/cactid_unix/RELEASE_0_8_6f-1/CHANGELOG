@@ -1,0 +1,67 @@
+The Cacti Group – cactid
+
+0.8.6f-1
+-bug: Two memory leak fixes in poller.c
+-bug: Typo in the README-WINDOWS install file
+
+0.8.6f
+-bug: allow a host to have more than 1 SNMP port defined for those odd devices that have them
+-bug: corrected an issue that caused infrequent segfaults when a host refused a ping request
+-bug: increased max_threads from 30 to 100
+-bug: delayed killing php script server process by .5 seconds to allow MySQL connections to close
+-bug: place thread locks around unsafe functions to prevent possible segfaults
+-feature: implemented snmpv3 AuthNoPriv to align with Cacti 0.8.6 user interface
+-feature: improved performance of poller by the reduction of MySQL insert calls
+-feature: improved poller performance by grouping snmp get requests in a single call
+
+0.8.6e
+-bug:#0000470: added -v, --version, -h, --help to command line options to make more GNU friendly
+-bug:#0000425: added ability to specify a socket file in *nix environments
+-bug: correct issues converting back slashes to forward slashes in arguments
+-bug: stop cactid from segfaulting when the database contains orphaned data source records
+-bug: re-implemented thread safe operations for non-linux systems
+-bug: allow cactid to poll from non-standard snmp port
+-bug: optimized some string handling routines
+-bug: changed snmp availability check to sysUptime from sysDesc
+-bug: limit the number of concurrent threads to 30
+-bug: remove legacy cactid.conf file processing code
+-bug: add fault detection logic to mysql query calls to prevent segfaults
+-bug: cleaned up some unused variables
+-bug: add ability to detect errors and gracefully shut down php script_server
+-bug: remove trailing blanks and alpha characters from results
+-bug: clean up some string handling on script server results
+-bug: stop DEADLOCKS by not prematurely releasing mutex locks
+-bug: changed licensing to LGPL to accomodate linked libraries such as OpenSSL
+-bug: corrected issues where snprintf was taking 1 too many characters
+-bug: remove unneccessary Windows MACRO's from net-snmp initialization
+-feature: added seteuid functionality for unix and ICMP ping
+-feature: restart the script server after a timeout to prevent unexpected results
+-feature: only run the php script server if you have script server elements to process
+-feature: disable MIB loading to speed the launch of the net-snmp api
+-feature: change TREAD_SLEEP duration depending on number of processes to reduce CPU load
+-feature: allow the user to specify a script and script server timeout value from the user interface
+-feature: added polling for non-host specific data sources
+-feature: added data source logging to provide easier problem resolution
+-feature: added cmd.php like spike suppression
+-feature: added support for experimental multiple poller interval handling
+
+0.8.6d
+-bug: increased timers for popen and script server to 20 seconds
+-bug: corrected segfault when polling a device with a null community string
+-bug: re-included ifdef for mysql thread protection for mysql 3.x
+
+0.8.6c
+-bug: fixed integer/float conversion problem.
+-bug: increased the default script timeout from 5 to 10 seconds
+-bug: changed stdout format to reduce clutter on screen
+-bug: removed cygwin workaround that was causing SNMP instability
+-bug: increased both BUFSIZE and LOGSIZE to allow for larger output corner cases
+-bug: added mutex locking around MySQL calls and eliminated one unlock without a lock
+-feature: added connection timeout and retry logic
+-feature: added database port option in cactid.conf file.  New parameter is DB_Port
+-feature: added some compiler directives for better compatibility with cygwin
+
+0.8.6b
+-bug: fixed issue that prevented multi ds item RRD’s from updating
+-bug: fixed invalid string length calculation that was truncating output over 4 characters
+-bug: small log file reformatting
