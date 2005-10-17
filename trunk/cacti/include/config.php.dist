@@ -76,6 +76,7 @@ require(CACTI_BASE_PATH . "/lib/sys/config.php");
 require(CACTI_BASE_PATH . "/lib/sys/message.php");
 require(CACTI_BASE_PATH . "/lib/sys/session.php");
 require(CACTI_BASE_PATH . "/lib/sys/string.php");
+require(CACTI_BASE_PATH . "/lib/sys/validate.php");
 require(CACTI_BASE_PATH . "/lib/api_syslog.php");
 
 /* Contants and Variable includes */
