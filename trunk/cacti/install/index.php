@@ -210,7 +210,7 @@ if ($_REQUEST["step"] == "4") {
 	kill_session_var("sess_host_cache_array");
 
 	/* just in case we have hard drive graphs to deal with */
-	run_data_query(db_fetch_cell("select id from host where hostname='127.0.0.1'"), 6);
+	api_data_query_execute(db_fetch_cell("select id from host where hostname='127.0.0.1'"), 6);
 
 	/* it's always a good idea to re-populate the poller cache to make sure everything is refreshed and
 	up-to-date */

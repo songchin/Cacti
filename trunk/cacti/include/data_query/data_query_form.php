@@ -54,6 +54,24 @@ $fields_data_query = array(
 	"index_field_id" => array(
 		"default" => "",
 		"data_type" => DB_TYPE_NUMBER
+		),
+	"snmp_oid_num_rows" => array(
+		"default" => "",
+		"validate_regexp" => "^\.?([0-9]+\.?)+$",
+		"validate_empty" => true,
+		"data_type" => DB_TYPE_STRING
+		),
+	"script_path" => array(
+		"default" => "",
+		"validate_regexp" => "",
+		"validate_empty" => false,
+		"data_type" => DB_TYPE_STRING
+		),
+	"script_server_function" => array(
+		"default" => "",
+		"validate_regexp" => "^[a-zA-Z0-9_-]+$",
+		"validate_empty" => false,
+		"data_type" => DB_TYPE_STRING
 		)
 	);
 

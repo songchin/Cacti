@@ -24,13 +24,14 @@
 
 require(dirname(__FILE__) . "/include/config.php");
 require_once(CACTI_BASE_PATH . "/include/auth/validate.php");
-require_once(CACTI_BASE_PATH . "/lib/poller.php");
-require_once(CACTI_BASE_PATH . "/lib/data_source/data_source_update.php");
-require_once(CACTI_BASE_PATH . "/lib/graph/graph_update.php");
-require_once(CACTI_BASE_PATH . "/lib/sys/snmp.php");
 require_once(CACTI_BASE_PATH . "/include/data_query/data_query_arrays.php");
+require_once(CACTI_BASE_PATH . "/lib/poller.php");
+require_once(CACTI_BASE_PATH . "/lib/sys/snmp.php");
+require_once(CACTI_BASE_PATH . "/lib/device/device_update.php");
+require_once(CACTI_BASE_PATH . "/lib/data_source/data_source_update.php");
 require_once(CACTI_BASE_PATH . "/lib/data_query/data_query_execute.php");
-require_once(CACTI_BASE_PATH . "/lib/api_device.php");
+require_once(CACTI_BASE_PATH . "/lib/data_query/data_query_info.php");
+require_once(CACTI_BASE_PATH . "/lib/graph/graph_update.php");
 
 define("MAX_DISPLAY_PAGES", 21);
 
@@ -102,11 +103,11 @@ function form_save() {
 		raise_message(13);
 	}
 
-	if ((!empty($_POST["add_dq_y"])) && (!empty($_POST["snmp_query_id"]))) {
-		db_execute("replace into host_snmp_query (host_id,snmp_query_id,reindex_method) values (" . $_POST["id"] . "," . $_POST["snmp_query_id"] . "," . $_POST["reindex_method"] . ")");
+	if ((!empty($_POST["add_dq_y"])) && (!empty($_POST["data_query_id"]))) {
+		db_execute("replace into host_data_query (host_id,data_query_id,reindex_method) values (" . $_POST["id"] . "," . $_POST["data_query_id"] . "," . $_POST["reindex_method"] . ")");
 
 		/* recache snmp data */
-		run_data_query($_POST["id"], $_POST["snmp_query_id"]);
+		api_data_query_execute($_POST["id"], $_POST["data_query_id"]);
 
 		header("Location: host.php?action=edit&id=" . $_POST["id"]);
 		exit;
@@ -421,7 +422,7 @@ function form_actions() {
    ------------------- */
 
 function host_reload_query() {
-	run_data_query($_GET["host_id"], $_GET["id"]);
+	api_data_query_execute($_GET["host_id"], $_GET["id"]);
 }
 
 function host_remove_query() {
@@ -600,80 +601,56 @@ function host_edit() {
 
 		html_header(array(_("Data Query Name"), _("Debugging"), _("Re-Index Method"), _("Status")), 2);
 
-		$selected_data_queries = db_fetch_assoc("select
-			snmp_query.id,
-			snmp_query.name,
-			host_snmp_query.reindex_method
-			from snmp_query,host_snmp_query
-			where snmp_query.id=host_snmp_query.snmp_query_id
-			and host_snmp_query.host_id=" . $_GET["id"] . "
-			order by snmp_query.name");
-
-		$available_data_queries = db_fetch_assoc("select
-							snmp_query.id,
-							snmp_query.name
-							from snmp_query
-							order by snmp_query.name");
-
-		$keeper = array();
-		foreach ($available_data_queries as $item) {
-			if (sizeof(db_fetch_assoc("SELECT snmp_query_id FROM host_snmp_query " .
-					" WHERE ((host_id=" . $_GET["id"] . ")" .
-					" and (snmp_query_id=" . $item["id"] ."))")) > 0) {
-				/* do nothing */
-			} else {
-				array_push($keeper, $item);
-			}
-		}
-
-		$available_data_queries = $keeper;
+		$assigned_data_queries = api_data_query_device_assigned_list($_GET["id"]);
 
 		$i = 0;
-		if (sizeof($selected_data_queries) > 0) {
-		foreach ($selected_data_queries as $item) {
-			$i++;
+		if (sizeof($assigned_data_queries) > 0) {
+			foreach ($assigned_data_queries as $item) {
+				$i++;
 
-			/* get status information for this data query */
-			$num_dq_items = sizeof(db_fetch_assoc("select snmp_index from host_snmp_cache where host_id=" . $_GET["id"] . " and snmp_query_id=" . $item["id"]));
-			$num_dq_rows = sizeof(db_fetch_assoc("select snmp_index from host_snmp_cache where host_id=" . $_GET["id"] . " and snmp_query_id=" . $item["id"] . " group by snmp_index"));
+				/* get status information for this data query */
+				$num_dq_items = api_data_query_cache_num_items_get($item["id"], $_GET["id"]);
+				$num_dq_rows = api_data_query_cache_num_rows_get($item["id"], $_GET["id"]);
 
-			$status = "success";
+				$status = "success";
 
-			?>
-			<tr bgcolor='#<?php print $colors["form_alternate1"];?>'>
-				<td style="padding: 4px;">
-					<strong><?php print $i;?>)</strong> <?php print $item["name"];?>
-				</td>
-				<td>
-					(<a href="host.php?action=query_verbose&id=<?php print $item["id"];?>&host_id=<?php print $_GET["id"];?>"><?php echo _("Verbose Query");?></a>)
-				</td>
-				<td>
-					<?php print $reindex_types{$item["reindex_method"]};?>
-				</td>
-				<td>
-					<?php print (($status == "success") ? "<span style='color: green;'>" . _("Success") . "</span>" : "<span style='color: green;'>" . _("Fail") . "</span>");?> [<?php print $num_dq_items;?> Item<?php print ($num_dq_items == 1 ? "" : "s");?>, <?php print $num_dq_rows;?> Row<?php print ($num_dq_rows == 1 ? "" : "s");?>]
-				</td>
-				<td align='right' nowrap>
-					<a href='host.php?action=query_reload&id=<?php print $item["id"];?>&host_id=<?php print $_GET["id"];?>'><img src='<?php print html_get_theme_images_path("reload_icon_small.gif");?>' alt='<?php echo _("Reload Data Query");?>' border='0' align='absmiddle'></a>&nbsp;
-					<a href='host.php?action=query_remove&id=<?php print $item["id"];?>&host_id=<?php print $_GET["id"];?>'><img src='<?php print html_get_theme_images_path("delete_icon_large.gif");?>' alt='<?php echo _("Delete Data Query Association");?>' border='0' align='absmiddle'></a>
-				</td>
-			</tr>
-			<?php
+				?>
+				<tr bgcolor='#<?php echo $colors["form_alternate1"];?>'>
+					<td style="padding: 4px;">
+						<strong><?php echo $i;?>)</strong> <?php echo $item["name"];?>
+					</td>
+					<td>
+						(<a href="host.php?action=query_verbose&id=<?php echo $item["id"];?>&host_id=<?php echo $_GET["id"];?>"><?php echo _("Verbose Query");?></a>)
+					</td>
+					<td>
+						<?php echo $reindex_types{$item["reindex_method"]};?>
+					</td>
+					<td>
+						<?php echo (($status == "success") ? "<span style='color: green;'>" . _("Success") . "</span>" : "<span style='color: green;'>" . _("Fail") . "</span>");?> [<?php echo $num_dq_items;?> Item<?php echo ($num_dq_items == 1 ? "" : "s");?>, <?php echo $num_dq_rows;?> Row<?php echo ($num_dq_rows == 1 ? "" : "s");?>]
+					</td>
+					<td align='right' nowrap>
+						<a href='host.php?action=query_reload&id=<?php echo $item["id"];?>&host_id=<?php echo $_GET["id"];?>'><img src='<?php echo html_get_theme_images_path("reload_icon_small.gif");?>' alt='<?php echo _("Reload Data Query");?>' border='0' align='absmiddle'></a>&nbsp;
+						<a href='host.php?action=query_remove&id=<?php echo $item["id"];?>&host_id=<?php echo $_GET["id"];?>'><img src='<?php echo html_get_theme_images_path("delete_icon_large.gif");?>' alt='<?php echo _("Delete Data Query Association");?>' border='0' align='absmiddle'></a>
+					</td>
+				</tr>
+				<?php
+			}
+		}else{
+			print "<tr><td bgcolor='#" . $colors["form_alternate1"] . "' colspan=7><em>" . _("No associated data queries.") . "</em></td></tr>";
 		}
-		}else{ print "<tr><td bgcolor='#" . $colors["form_alternate1"] . "' colspan=7><em>" . _("No associated data queries.") . "</em></td></tr>"; }
 
 		?>
-		<tr bgcolor="#<?php print $colors["buttonbar_background"];?>">
+		<tr bgcolor="#<?php echo $colors["buttonbar_background"];?>">
 			<td colspan="5">
 				<table cellspacing="0" cellpadding="1" width="100%">
 					<td nowrap><?php echo _("Add Data Query");?>:&nbsp;
-						<?php form_dropdown("snmp_query_id",$available_data_queries,"name","id","","","");?>
+						<?php form_dropdown("data_query_id", api_data_query_device_unassigned_list($_GET["id"]), "name", "id", "", "None", "");?>
 					</td>
 					<td nowrap><?php echo _("Re-Index Method");?>:&nbsp;
-						<?php form_dropdown("reindex_method",$reindex_types,"","","1","","");?>
+						<?php form_dropdown("reindex_method", $reindex_types, "", "", "1", "", "");?>
 					</td>
 					<td align="right">
-						&nbsp;<input type="image" src="<?php print html_get_theme_images_path('button_add.gif');?>" alt="<?php echo _('Add');?>" name="add_dq" align="absmiddle">
+						&nbsp;<input type="image" src="<?php echo html_get_theme_images_path('button_add.gif');?>" alt="<?php echo _('Add');?>" name="add_dq" align="absmiddle">
 					</td>
 				</table>
 			</td>

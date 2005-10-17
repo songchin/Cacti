@@ -111,23 +111,53 @@ function _data_query_field__name($field_name, $field_value = "", $field_id = 0) 
 }
 
 function _data_query_field__input_type($field_name, $field_value = "", $field_id = 0) {
+	require_once(CACTI_BASE_PATH . "/include/data_query/data_query_constants.php");
 	require_once(CACTI_BASE_PATH . "/lib/sys/html_form.php");
 	require_once(CACTI_BASE_PATH . "/lib/data_query/data_query_list.php");
 
 	?>
+	<script language="JavaScript">
+	<!--
+	function update_data_query_type_fields(value) {
+		document.getElementById('row_field_snmp_header').style.display = 'none';
+		document.getElementById('row_field_snmp_oid_num_rows').style.display = 'none';
+		document.getElementById('row_field_script_header').style.display = 'none';
+		document.getElementById('row_field_script_path').style.display = 'none';
+		document.getElementById('row_field_script_server_header').style.display = 'none';
+		document.getElementById('row_field_script_server_function').style.display = 'none';
+
+		if (value == <?php echo DATA_QUERY_INPUT_TYPE_SNMP_QUERY;?>) {
+			document.getElementById('row_field_snmp_header').style.display = 'table-row';
+			document.getElementById('row_field_snmp_oid_num_rows').style.display = 'table-row';
+		}
+
+		if ((value == <?php echo DATA_QUERY_INPUT_TYPE_SCRIPT_QUERY;?>) || (value == <?php echo DATA_QUERY_INPUT_TYPE_PHP_SCRIPT_SERVER_QUERY;?>)) {
+			document.getElementById('row_field_script_header').style.display = 'table-row';
+			document.getElementById('row_field_script_path').style.display = 'table-row';
+		}
+
+		if (value == <?php echo DATA_QUERY_INPUT_TYPE_PHP_SCRIPT_SERVER_QUERY;?>) {
+			document.getElementById('row_field_script_server_header').style.display = 'table-row';
+			document.getElementById('row_field_script_server_function').style.display = 'table-row';
+		}
+	}
+	-->
+	</script>
+
 	<tr class="<?php echo field_get_row_style();?>">
 		<td width="50%" class="field-row">
 			<span class="textEditTitle"><?php echo _("Input Type");?></span><br>
 			<?php echo _("Specifies how data is to be retrieved for this data query.");?>
 		</td>
 		<td class="field-row" colspan="2">
-			<?php form_dropdown($field_name, api_data_query_list_input_types(), "", "", $field_value, "", $field_id);?>
+			<?php form_dropdown($field_name, api_data_query_list_input_types(), "", "", $field_value, "", DATA_QUERY_INPUT_TYPE_SNMP_QUERY, "", "", "update_data_query_type_fields(this.value)");?>
 		</td>
 	</tr>
 	<?php
 }
 
 function _data_query_field__index_order_type($field_name, $field_value = "", $field_id = 0) {
+	require_once(CACTI_BASE_PATH . "/include/data_query/data_query_constants.php");
 	require_once(CACTI_BASE_PATH . "/lib/sys/html_form.php");
 	require_once(CACTI_BASE_PATH . "/lib/data_query/data_query_list.php");
 
@@ -138,7 +168,7 @@ function _data_query_field__index_order_type($field_name, $field_value = "", $fi
 			<?php echo _("Specifies how data is to be retrieved for this data query.");?>
 		</td>
 		<td class="field-row" colspan="2">
-			<?php form_dropdown($field_name, api_data_query_list_index_sort_types(), "", "", $field_value, "", $field_id);?>
+			<?php form_dropdown($field_name, api_data_query_list_index_sort_types(), "", "", $field_value, "", DATA_QUERY_INDEX_SORT_TYPE_ALPHABETIC);?>
 		</td>
 	</tr>
 	<?php
@@ -196,10 +226,88 @@ function _data_query_field__index_field_id($field_name, $data_query_id, $field_v
 			<?php echo _("Select if the values from this input field are to be used as unique indexes for this data query.");?>
 		</td>
 		<td class="field-row">
-			<?php form_dropdown($field_name, api_data_query_fields_list($data_query_id, DATA_QUERY_FIELD_TYPE_INPUT), "name", "id", $field_value, "(None Selected)", $field_id);?>
+			<?php form_dropdown($field_name, api_data_query_fields_list($data_query_id, DATA_QUERY_FIELD_TYPE_INPUT), "name", "id", $field_value, "(None Selected)", "");?>
 		</td>
 		<td class="field-row" align="right">
 			<span class="field-required">(required)</span>
+		</td>
+	</tr>
+	<?php
+}
+
+function _data_query_field__snmp_specific_hdr() {
+	?>
+	<tr id="row_field_snmp_header" style="display: none;">
+		<td class="content-header-sub" colspan="3">
+			SNMP Specific
+		</td>
+	</tr>
+	<?php
+}
+
+function _data_query_field__snmp_oid_num_rows($field_name, $field_value = "", $field_id = 0) {
+	require_once(CACTI_BASE_PATH . "/lib/sys/html_form.php");
+
+	?>
+	<tr id="row_field_snmp_oid_num_rows" class="<?php echo field_get_row_style();?>" style="display: none;">
+		<td width="50%" class="field-row">
+			<span class="textEditTitle"><?php echo _("Number of Rows OID");?></span><br>
+			<?php echo _("The value of this OID must return the actual number of rows for the data query. This field is required when using the 'Index Count Changed' data query reindex method.");?>
+		</td>
+		<td class="field-row" colspan="2">
+			<?php form_text_box($field_name, $field_value, "", 100, 30, "text", $field_id);?>
+		</td>
+	</tr>
+	<?php
+}
+
+function _data_query_field__script_specific_hdr() {
+	?>
+	<tr id="row_field_script_header" style="display: none;">
+		<td class="content-header-sub" colspan="3">
+			Script Specific
+		</td>
+	</tr>
+	<?php
+}
+
+function _data_query_field__script_path($field_name, $field_value = "", $field_id = 0) {
+	require_once(CACTI_BASE_PATH . "/lib/sys/html_form.php");
+
+	?>
+	<tr id="row_field_script_path" class="<?php echo field_get_row_style();?>" style="display: none;">
+		<td width="50%" class="field-row">
+			<span class="textEditTitle"><?php echo _("Script Path");?></span><br>
+			<?php echo _("The path to the script that is to be used for this data query. If you are making use of the script server, do not include any additional commands or arguments here.");?>
+		</td>
+		<td class="field-row" colspan="2">
+			<?php form_text_box($field_name, $field_value, "", 100, 40, "text", $field_id);?>
+		</td>
+	</tr>
+	<?php
+}
+
+function _data_query_field__script_server_specific_hdr() {
+	?>
+	<tr id="row_field_script_server_header" style="display: none;">
+		<td class="content-header-sub" colspan="3">
+			Script Server Specific
+		</td>
+	</tr>
+	<?php
+}
+
+function _data_query_field__script_server_function($field_name, $field_value = "", $field_id = 0) {
+	require_once(CACTI_BASE_PATH . "/lib/sys/html_form.php");
+
+	?>
+	<tr id="row_field_script_server_function" class="<?php echo field_get_row_style();?>" style="display: none;">
+		<td width="50%" class="field-row">
+			<span class="textEditTitle"><?php echo _("Script Server Function Name");?></span><br>
+			<?php echo _("The function name in your script server script that will be called by Cacti. See the documentation for information about how this function should be setup.");?>
+		</td>
+		<td class="field-row" colspan="2">
+			<?php form_text_box($field_name, $field_value, "", 100, 40, "text", $field_id);?>
 		</td>
 	</tr>
 	<?php

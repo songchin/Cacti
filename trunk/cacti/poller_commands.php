@@ -83,7 +83,7 @@ if (sizeof($poller_commands) > 0) {
 				api_syslog_cacti_log(_("Host[$host_id] RECACHE: Re-cache for Host, data query #$data_query_id"), SEV_NOTICE, $poller_id, 0, 0, true, FACIL_POLLER);
 			}
 
-			run_data_query($host_id, $data_query_id);
+			api_data_query_execute($host_id, $data_query_id);
 
 			if (read_config_option("log_verbosity") == POLLER_VERBOSITY_DEBUG) {
 				api_syslog_cacti_log(_("Host[$host_id] RECACHE: Re-cache successful."), SEV_NOTICE, $poller_id, 0, 0, true, FACIL_POLLER);

@@ -78,7 +78,6 @@ switch ($_REQUEST["action"]) {
    -------------------------- */
 
 function form_save() {
-	print_a($_POST);
 	if (isset($_POST["save_data_query_x"])) {
 		/* cache all post field values */
 		init_post_field_cache();
@@ -87,10 +86,26 @@ function form_save() {
 		$form_data_query["id"] = $_POST["data_query_id"];
 		$form_data_query["input_type"] = $_POST["input_type"];
 		$form_data_query["name"] = $_POST["name"];
-		$form_data_query["index_order"] = $_POST["index_order"];
 		$form_data_query["index_order_type"] = $_POST["index_order_type"];
 		$form_data_query["index_title_format"] = $_POST["index_title_format"];
-		$form_data_query["index_field_id"] = $_POST["index_field_id"];
+
+		/* these fields are only displayed when editing a data query field */
+		if (!empty($_POST["data_query_id"])) {
+			$form_data_query["index_order"] = $_POST["index_order"];
+			$form_data_query["index_field_id"] = $_POST["index_field_id"];
+		}
+
+		if ($form_data_query["input_type"] == DATA_QUERY_INPUT_TYPE_SNMP_QUERY) {
+			$form_data_query["snmp_oid_num_rows"] = $_POST["snmp_oid_num_rows"];
+		}
+
+		if (($form_data_query["input_type"] == DATA_QUERY_INPUT_TYPE_SCRIPT_QUERY) || ($form_data_query["input_type"] == DATA_QUERY_INPUT_TYPE_PHP_SCRIPT_SERVER_QUERY)) {
+			$form_data_query["script_path"] = $_POST["script_path"];
+		}
+
+		if ($form_data_query["input_type"] == DATA_QUERY_INPUT_TYPE_PHP_SCRIPT_SERVER_QUERY) {
+			$form_data_query["script_server_function"] = $_POST["script_server_function"];
+		}
 
 		field_register_error(validate_data_query_fields($form_data_query, "|field|"));
 
@@ -179,8 +194,12 @@ function form_save() {
 		$selected_rows = explode(":", $_POST["box-1-action-area-selected-rows"]);
 
 		if ($_POST["box-1-action-area-type"] == "remove") {
-			print_a($selected_rows);
+			foreach ($selected_rows as $data_query_id) {
+				api_data_query_remove($data_query_id);
+			}
 		}
+
+		header("Location: data_queries.php");
 	}
 }
 
@@ -232,31 +251,6 @@ function data_query_field_edit() {
     Data Query Functions
    --------------------- */
 
-function data_query_remove() {
-	if ((read_config_option("remove_verification") == "on") && (!isset($_GET["confirm"]))) {
-		require_once(CACTI_BASE_PATH . "/include/top_header.php");
-		form_confirm(_("Are You Sure?"), _("Are you sure you want to delete the Data Query") . " <strong>'" . db_fetch_cell("select name from snmp_query where id=" . $_GET["id"]) . "'</strong>?", "data_queries.php", "data_queries.php?action=remove&id=" . $_GET["id"]);
-		require_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
-		exit;
-	}
-
-	if ((read_config_option("remove_verification") == "") || (isset($_GET["confirm"]))) {
-		$snmp_query_graph = db_fetch_assoc("select id from snmp_query_graph where snmp_query_id=" . $_GET["id"]);
-
-		if (sizeof($snmp_query_graph) > 0) {
-		foreach ($snmp_query_graph as $item) {
-			db_execute("delete from snmp_query_graph_rrd where snmp_query_graph_id=" . $item["id"]);
-		}
-		}
-
-		db_execute("delete from snmp_query where id=" . $_GET["id"]);
-		db_execute("delete from snmp_query_graph where snmp_query_id=" . $_GET["id"]);
-		db_execute("delete from host_template_snmp_query where snmp_query_id=" . $_GET["id"]);
-		db_execute("delete from host_snmp_query where snmp_query_id=" . $_GET["id"]);
-		db_execute("delete from host_snmp_cache where snmp_query_id=" . $_GET["id"]);
-	}
-}
-
 function data_query_edit() {
 	$_data_query_id = get_get_var_number("id");
 
@@ -275,10 +269,30 @@ function data_query_edit() {
 	_data_query_field__name("name", (isset($data_query["name"]) ? $data_query["name"] : ""), (isset($data_query["id"]) ? $data_query["id"] : "0"));
 	_data_query_field__input_type("input_type", (isset($data_query["input_type"]) ? $data_query["input_type"] : ""), (isset($data_query["id"]) ? $data_query["id"] : "0"));
 	_data_query_field__index_order_type("index_order_type", (isset($data_query["index_order_type"]) ? $data_query["index_order_type"] : ""), (isset($data_query["id"]) ? $data_query["id"] : "0"));
-	_data_query_field__index_title_format("index_title_format", (isset($data_query["index_title_format"]) ? $data_query["index_title_format"] : ""), (isset($data_query["id"]) ? $data_query["id"] : "0"));
-	_data_query_field__field_specific_hdr();
-	_data_query_field__index_order("index_order", (isset($data_query["index_order"]) ? $data_query["index_order"] : ""), (isset($data_query["id"]) ? $data_query["id"] : "0"));
-	_data_query_field__index_field_id("index_field_id", $_data_query_id, (isset($data_query["index_field_id"]) ? $data_query["index_field_id"] : ""), (isset($data_query["id"]) ? $data_query["id"] : "0"));
+	_data_query_field__index_title_format("index_title_format", (isset($data_query["index_title_format"]) ? $data_query["index_title_format"] : "|chosen_order_field|"), (isset($data_query["id"]) ? $data_query["id"] : "0"));
+
+	if (!empty($_data_query_id)) {
+		_data_query_field__field_specific_hdr();
+		_data_query_field__index_order("index_order", (isset($data_query["index_order"]) ? $data_query["index_order"] : ""), (isset($data_query["id"]) ? $data_query["id"] : "0"));
+		_data_query_field__index_field_id("index_field_id", $_data_query_id, (isset($data_query["index_field_id"]) ? $data_query["index_field_id"] : ""), (isset($data_query["id"]) ? $data_query["id"] : "0"));
+	}
+
+	/* input type specific fields */
+	_data_query_field__snmp_specific_hdr();
+	_data_query_field__snmp_oid_num_rows("snmp_oid_num_rows", (isset($data_query["snmp_oid_num_rows"]) ? $data_query["snmp_oid_num_rows"] : ""), (isset($data_query["id"]) ? $data_query["id"] : "0"));
+	_data_query_field__script_specific_hdr();
+	_data_query_field__script_path("script_path", (isset($data_query["script_path"]) ? $data_query["script_path"] : ""), (isset($data_query["id"]) ? $data_query["id"] : "0"));
+	_data_query_field__script_server_specific_hdr();
+	_data_query_field__script_server_function("script_server_function", (isset($data_query["script_server_function"]) ? $data_query["script_server_function"] : ""), (isset($data_query["id"]) ? $data_query["id"] : "0"));
+
+	/* be sure that we have the correct input type value show we display the correct form rows */
+	if (isset_post_cache_field("input_type")) {
+		$_input_type = get_post_cache_field("input_type");
+	}else{
+		$_input_type = (isset($data_query["input_type"]) ? $data_query["input_type"] : "");
+	}
+
+	echo "<script language=\"JavaScript\">\n<!--\nupdate_data_query_type_fields('$_input_type');\n-->\n</script>\n";
 
 	html_end_box();
 

@@ -25,13 +25,13 @@
 /* get_data_query_field_list_from_graph - returns an array containing data query information for a given graph
    @arg $graph_id - the ID of the graph to retrieve information for
    @returns - (array) an array that looks like:
-     Array
-     (
-        [data_query_index] = 3
-        [data_query_field_name] => ifDescr
-        [data_query_field_value] => eth0
-        [data_query_id] => 42
-     ) */
+	Array
+	(
+	   [data_query_index] = 3
+	   [data_query_field_name] => ifDescr
+	   [data_query_field_value] => eth0
+	   [data_query_id] => 42
+	) */
 function get_data_query_field_list_from_graph($graph_id) {
 	/* pick the FIRST data query data source referenced by the graph. if there is more than one, things
 	 * might act unexpectedly */
@@ -63,10 +63,10 @@ function encode_data_query_index($index) {
 }
 
 /* decode_data_query_index - decodes a data query index value so that it can be read from
-     a form
+	a form
    @arg $encoded_index - the index that was encoded with encode_data_query_index()
    @arg $decoded_index_list - in order to cut down on unnecessary sql queries, the a list of data query indexes
-     should be passed into the function for lookup
+	should be passed into the function for lookup
    @arg $data_query_id - the id of the data query that this index belongs to
    @arg $encoded_index - the id of the host that this index belongs to
    @returns - the decoded data query index */
@@ -91,23 +91,25 @@ function get_formatted_data_query_indexes($host_id, $data_query_id) {
 	require_once(CACTI_BASE_PATH . "/lib/sys/variable.php");
 	require_once(CACTI_BASE_PATH . "/lib/sys/sort.php");
 
+	/* sanity checks */
+	validate_id_die($host_id, "host_id");
+
 	if (empty($data_query_id)) {
 		return array("" => _("Unknown Index"));
 	}
 
-	/* from the xml; cached in 'host_snmp_query' */
-	$sort_cache = db_fetch_row("select sort_field,title_format from host_snmp_query where host_id='$host_id' and snmp_query_id='$data_query_id'");
+	$sort_cache = db_fetch_row("select sort_field,title_format from host_data_query where host_id = " . sql_sanitize($host_id) . " and data_query_id = " . sql_sanitize($data_query_id));
 
 	/* get a list of data query indexes and the field value that we are supposed
 	to sort */
 	$sort_field_data = array_rekey(db_fetch_assoc("select
-		host_snmp_cache.snmp_index,
-		host_snmp_cache.field_value
-		from host_snmp_cache
-		where host_snmp_cache.snmp_query_id=$data_query_id
-		and host_snmp_cache.host_id=$host_id
-		and host_snmp_cache.field_name='" . $sort_cache["sort_field"] . "'
-		group by host_snmp_cache.snmp_index"), "snmp_index", "field_value");
+		host_data_query_cache.index_value,
+		host_data_query_cache.field_value
+		from host_data_query_cache
+		where host_data_query_cache.data_query_id = " . sql_sanitize($data_query_id) . "
+		and host_data_query_cache.host_id = " . sql_sanitize($host_id) . "
+		and host_data_query_cache.field_name='" . sql_sanitize($sort_cache["sort_field"]) . "'
+		group by host_data_query_cache.index_value"), "index_value", "field_value");
 
 	/* sort the data using the "data query index" sort algorithm */
 	uasort($sort_field_data, "usort_data_query_index");
@@ -130,8 +132,11 @@ function get_formatted_data_query_indexes($host_id, $data_query_id) {
 function get_formatted_data_query_index($host_id, $data_query_id, $data_query_index) {
 	require_once(CACTI_BASE_PATH . "/lib/sys/variable.php");
 
-	/* from the xml; cached in 'host_snmp_query' */
-	$sort_cache = db_fetch_row("select sort_field,title_format from host_snmp_query where host_id='$host_id' and snmp_query_id='$data_query_id'");
+	/* sanity checks */
+	validate_id_die($host_id, "host_id");
+	validate_id_die($data_query_id, "data_query_id");
+
+	$sort_cache = db_fetch_row("select sort_field,title_format from host_data_query where host_id = " . sql_sanitize($host_id) . " and data_query_id = " . sql_sanitize($data_query_id));
 
 	return substitute_data_query_variables($sort_cache["title_format"], $host_id, $data_query_id, $data_query_index);
 }
@@ -146,30 +151,31 @@ function get_formatted_data_query_index($host_id, $data_query_id, $data_query_in
 	values for each row in the cache that matches one of the $data_query_index_array
    @returns - an array of data query types either ordered or unordered depending on whether
 	the xml file has a manual ordering preference specified */
-function get_ordered_index_type_list($host_id, $data_query_id, $data_query_index_array = array()) {
-	$raw_xml = get_data_query_array($data_query_id);
+function get_ordered_index_type_list($data_query_id, $host_id) {
+	require_once(CACTI_BASE_PATH . "/include/data_query/data_query_constants.php");
 
-	$xml_outputs = array();
+	/* sanity checks */
+	validate_id_die($data_query_id, "data_query_id");
+	validate_id_die($host_id, "host_id");
 
-	/* create an SQL string that contains each index in this snmp_index_id */
-	$sql_or = array_to_sql_or($data_query_index_array, "snmp_index");
+	/* retrieve information about this data query */
+	$data_query = api_data_query_get($data_query_id);
 
-	/* list each of the input fields for this snmp query */
-	while (list($field_name, $field_array) = each($raw_xml["fields"])) {
-		if ($field_array["direction"] == "input") {
+	/* get a list of all input fields for this data query */
+	$data_query_fields = array_rekey(api_data_query_fields_list($data_query_id, DATA_QUERY_FIELD_TYPE_INPUT), "name", "name_desc");
+
+	$valid_index_fields = array();
+	if (sizeof($data_query_fields) > 0) {
+		foreach ($data_query_fields as $data_query_field_name => $data_query_field_description) {
 			/* create a list of all values for this index */
-			if (sizeof($data_query_index_array) == 0) {
-				$field_values = db_fetch_assoc("select field_value from host_snmp_cache where host_id=$host_id and snmp_query_id=$data_query_id and field_name='$field_name'");
-			}else{
-				$field_values = db_fetch_assoc("select field_value from host_snmp_cache where host_id=$host_id and snmp_query_id=$data_query_id and field_name='$field_name' and $sql_or");
-			}
+			$field_values = db_fetch_assoc("select field_value from host_data_query_cache where host_id = " . sql_sanitize($host_id) . " and data_query_id = " . sql_sanitize($data_query_id) . " and field_name = '" . sql_sanitize($data_query_field_name) . "'");
 
-			/* aggregate the above list so there is no duplicates */
-			$aggregate_field_values = array_rekey($field_values, "field_value", "field_value");
+			/* aggregate the above list so there are no duplicates */
+			$field_values_nodups = array_rekey($field_values, "field_value", "field_value");
 
 			/* fields that contain duplicate or empty values are not suitable to index off of */
-			if (!((sizeof($aggregate_field_values) < sizeof($field_values)) || (in_array("", $aggregate_field_values) == true) || (sizeof($aggregate_field_values) == 0))) {
-				array_push($xml_outputs, $field_name);
+			if (!((sizeof($field_values_nodups) < sizeof($field_values)) || (in_array("", $field_values_nodups) == true) || (sizeof($field_values_nodups) == 0))) {
+				array_push($valid_index_fields, $data_query_field_name);
 			}
 		}
 	}
@@ -177,18 +183,18 @@ function get_ordered_index_type_list($host_id, $data_query_id, $data_query_index
 	$return_array = array();
 
 	/* the xml file contains an ordered list of "indexable" fields */
-	if (isset($raw_xml["index_order"])) {
-		$index_order_array = explode(":", $raw_xml["index_order"]);
+	if (ereg("^([a-zA-Z0-9_-]:?)+$", $data_query["index_order"])) {
+		$index_order_array = explode(":", $data_query["index_order"]);
 
 		for ($i=0; $i<count($index_order_array); $i++) {
-			if (in_array($index_order_array[$i], $xml_outputs)) {
-				$return_array{$index_order_array[$i]} = $index_order_array[$i] . " (" . $raw_xml["fields"]{$index_order_array[$i]}["name"] . ")";
+			if (in_array($index_order_array[$i], $valid_index_fields)) {
+				$return_array{$index_order_array[$i]} = $index_order_array[$i] . " (" . $data_query_fields{$index_order_array[$i]} . ")";
 			}
 		}
 	/* the xml file does not contain a field list, ignore the order */
 	}else{
-		for ($i=0; $i<count($xml_outputs); $i++) {
-			$return_array{$xml_outputs[$i]} = $xml_outputs[$i] . " (" . $raw_xml["fields"]{$xml_outputs[$i]}["name"] . ")";
+		for ($i=0; $i<count($valid_index_fields); $i++) {
+			$return_array{$valid_index_fields[$i]} = $valid_index_fields[$i] . " (" . $data_query_fields{$index_order_array[$i]} . ")";
 		}
 	}
 
@@ -202,7 +208,11 @@ function get_ordered_index_type_list($host_id, $data_query_id, $data_query_index
    @returns - a string containing containing best data query index type. this will be one of the
 	valid input field names as specified in the data query xml file */
 function get_best_data_query_index_type($host_id, $data_query_id) {
-	return db_fetch_cell("select sort_field from host_snmp_query where host_id = '$host_id' and snmp_query_id = '$data_query_id'");
+	/* sanity checks */
+	validate_id_die($host_id, "host_id");
+	validate_id_die($data_query_id, "data_query_id");
+
+	return db_fetch_cell("select sort_field from host_data_query where host_id = " . sql_sanitize($host_id) . " and data_query_id = " . sql_sanitize($data_query_id));
 }
 
 /* get_script_query_path - builds the complete script query executable path
@@ -215,31 +225,14 @@ function get_script_query_path($args, $script_path, $host_id) {
 	require_once(CACTI_BASE_PATH . "/lib/sys/variable.php");
 
 	/* get any extra arguments that need to be passed to the script */
-	if (!empty($args)) {
-		$extra_arguments = substitute_host_variables($args, $host_id);
-	}else{
-		$extra_arguments = "";
-	}
+	//if (!empty($args)) {
+	//	$extra_arguments = substitute_host_variables($args, $host_id);
+	///}else{
+	//	$extra_arguments = "";
+	//}
 
 	/* get a complete path for out target script */
 	return substitute_path_variables($script_path) . " $extra_arguments";
-}
-
-function get_data_query_array($snmp_query_id) {
-	require_once(CACTI_BASE_PATH . "/lib/sys/xml.php");
-
-	$xml_file_path = db_fetch_cell("select xml_path from snmp_query where id=$snmp_query_id");
-	$xml_file_path = str_replace("<path_cacti>", CACTI_BASE_PATH, $xml_file_path);
-
-	if (!file_exists($xml_file_path)) {
-		debug_log_insert("data_query", sprintf(_("Could not find data query XML file at '%s'"), $xml_file_path));
-		return false;
-	}
-
-	debug_log_insert("data_query", sprintf(_("Found data query XML file at '%s'"), $xml_file_path));
-
-	$data = implode("",file($xml_file_path));
-	return xml2array($data);
 }
 
 /* data_query_index - returns an array containing the data query ID and index value given
@@ -249,74 +242,54 @@ function get_data_query_array($snmp_query_id) {
    @arg $host_id - (int) the host ID to match
    @arg $data_query_id - (int) the data query ID to match
    @returns - (array) the data query ID and index that matches the three arguments */
-function get_data_query_row_index($index_type, $field_value, $host_id, $data_query_id) {
-	/* sanity check for $host_id */
-	if (!is_numeric($host_id)) {
-		api_syslog_cacti_log("Invalid input '$host_id' for 'host_id' in " . __FUNCTION__ . "()", SEV_ERROR, 0, 0, 0, false, FACIL_WEBUI);
-		return false;
-	}
-
-	/* sanity check for $data_query_id */
-	if ((!is_numeric($data_query_id)) || (empty($data_query_id))) {
-		api_syslog_cacti_log("Invalid input '$data_query_id' for 'data_query_id' in " . __FUNCTION__ . "()", SEV_ERROR, 0, 0, 0, false, FACIL_WEBUI);
-		return false;
-	}
+function get_data_query_row_index($data_query_id, $host_id, $index_type, $field_value) {
+	/* sanity checks */
+	validate_id_die($data_query_id, "data_query_id");
+	validate_id_die($host_id, "host_id");
 
 	return db_fetch_cell("select
-		host_snmp_cache.snmp_index
-		from host_snmp_cache
-		where host_snmp_cache.field_name = '" . sql_sanitize($index_type) . "'
-		and host_snmp_cache.field_value = '" . sql_sanitize($field_value) . "'
-		and host_snmp_cache.host_id = " . sql_sanitize($host_id) . "
-		and host_snmp_cache.snmp_query_id = " . sql_sanitize($data_query_id));
+		host_data_query_cache.index_value
+		from host_data_query_cache
+		where host_data_query_cache.field_name = '" . sql_sanitize($index_type) . "'
+		and host_data_query_cache.field_value = '" . sql_sanitize($field_value) . "'
+		and host_data_query_cache.host_id = " . sql_sanitize($host_id) . "
+		and host_data_query_cache.data_query_id = " . sql_sanitize($data_query_id));
 }
 
-function get_data_query_row_value($index_type, $index_value, $host_id, $data_query_id) {
-	/* sanity check for $host_id */
-	if (!is_numeric($host_id)) {
-		api_syslog_cacti_log("Invalid input '$host_id' for 'host_id' in " . __FUNCTION__ . "()", SEV_ERROR, 0, 0, 0, false, FACIL_WEBUI);
-		return false;
-	}
-
-	/* sanity check for $data_query_id */
-	if ((!is_numeric($data_query_id)) || (empty($data_query_id))) {
-		api_syslog_cacti_log("Invalid input '$data_query_id' for 'data_query_id' in " . __FUNCTION__ . "()", SEV_ERROR, 0, 0, 0, false, FACIL_WEBUI);
-		return false;
-	}
+function get_data_query_row_value($data_query_id, $host_id, $index_type, $index_value) {
+	/* sanity checks */
+	validate_id_die($data_query_id, "data_query_id");
+	validate_id_die($host_id, "host_id");
 
 	return db_fetch_cell("select
-		host_snmp_cache.field_value
-		from host_snmp_cache
-		where host_snmp_cache.field_name = '" . sql_sanitize($index_type) . "'
-		and host_snmp_cache.snmp_index = '" . sql_sanitize($index_value) . "'
-		and host_snmp_cache.host_id = " . sql_sanitize($host_id) . "
-		and host_snmp_cache.snmp_query_id = " . sql_sanitize($data_query_id));
+		host_data_query_cache.field_value
+		from host_data_query_cache
+		where host_data_query_cache.field_name = '" . sql_sanitize($index_type) . "'
+		and host_data_query_cache.index_value = '" . sql_sanitize($index_value) . "'
+		and host_data_query_cache.host_id = " . sql_sanitize($host_id) . "
+		and host_data_query_cache.data_query_id = " . sql_sanitize($data_query_id));
 }
 
-function get_data_query_indexes($host_id, $data_query_id) {
-	/* sanity check for $host_id */
-	if (!is_numeric($host_id)) {
-		api_syslog_cacti_log("Invalid input '$host_id' for 'host_id' in " . __FUNCTION__ . "()", SEV_ERROR, 0, 0, 0, false, FACIL_WEBUI);
-		return false;
-	}
+function get_data_query_indexes($data_query_id, $host_id) {
+	/* sanity checks */
+	validate_id_die($data_query_id, "data_query_id");
+	validate_id_die($host_id, "host_id");
 
-	/* sanity check for $data_query_id */
-	if ((!is_numeric($data_query_id)) || (empty($data_query_id))) {
-		api_syslog_cacti_log("Invalid input '$data_query_id' for 'data_query_id' in " . __FUNCTION__ . "()", SEV_ERROR, 0, 0, 0, false, FACIL_WEBUI);
-		return false;
-	}
-
-	return array_rekey(db_fetch_assoc("select distinct snmp_index from host_snmp_cache where host_id = " . sql_sanitize($host_id) . " and snmp_query_id = " . sql_sanitize($data_query_id)), "", "snmp_index");
+	return array_rekey(db_fetch_assoc("select distinct index_value from host_data_query_cache where host_id = " . sql_sanitize($host_id) . " and data_query_id = " . sql_sanitize($data_query_id)), "", "index_value");
 }
 
 function api_data_query_get($data_query_id) {
-	/* sanity check for $data_query_id */
-	if ((!is_numeric($data_query_id)) || (empty($data_query_id))) {
-		api_syslog_cacti_log("Invalid input '$data_query_id' for 'data_query_id' in " . __FUNCTION__ . "()", SEV_ERROR, 0, 0, 0, false, FACIL_WEBUI);
-		return false;
-	}
+	/* sanity checks */
+	validate_id_die($data_query_id, "data_query_id");
 
 	return db_fetch_row("select * from data_query where id = " . sql_sanitize($data_query_id));
+}
+
+function api_data_query_name_get($data_query_id) {
+	/* sanity checks */
+	validate_id_die($data_query_id, "data_query_id");
+
+	return db_fetch_cell("select name from data_query where id = " . sql_sanitize($data_query_id));
 }
 
 function api_data_query_list() {
@@ -326,23 +299,120 @@ function api_data_query_list() {
 function api_data_query_fields_list($data_query_id, $input_type = "") {
 	require_once(CACTI_BASE_PATH . "/include/data_query/data_query_constants.php");
 
-	/* sanity check for $data_query_id */
-	if ((!is_numeric($data_query_id)) || (empty($data_query_id))) {
-		api_syslog_cacti_log("Invalid input '$data_query_id' for 'data_query_id' in " . __FUNCTION__ . "()", SEV_ERROR, 0, 0, 0, false, FACIL_WEBUI);
-		return false;
-	}
+	/* sanity checks */
+	validate_id_die($data_query_id, "data_query_id");
 
 	return db_fetch_assoc("select * from data_query_field where data_query_id = " . sql_sanitize($data_query_id) . ((($input_type == DATA_QUERY_FIELD_TYPE_INPUT) || ($input_type == DATA_QUERY_FIELD_TYPE_OUTPUT)) ? " and type = $input_type" : "") . " order by name");
 }
 
 function api_data_query_field_get($data_query_field_id) {
-	/* sanity check for $data_query_field_id */
-	if ((!is_numeric($data_query_field_id)) || (empty($data_query_field_id))) {
-		api_syslog_cacti_log("Invalid input '$data_query_field_id' for 'data_query_field_id' in " . __FUNCTION__ . "()", SEV_ERROR, 0, 0, 0, false, FACIL_WEBUI);
-		return false;
-	}
+	/* sanity checks */
+	validate_id_die($data_query_field_id, "data_query_field_id");
 
 	return db_fetch_row("select * from data_query_field where id = " . sql_sanitize($data_query_field_id));
+}
+
+function api_data_query_field_get_by_name($data_query_id, $field_name) {
+	/* sanity checks */
+	validate_id_die($data_query_id, "data_query_id");
+
+	return db_fetch_row("select * from data_query_field where data_query_id = " . sql_sanitize($data_query_id) . " and name = '" . sql_sanitize($field_name) . "'");
+}
+
+function api_data_query_device_unassigned_list($host_id) {
+	/* sanity checks */
+	validate_id_die($host_id, "host_id");
+
+	return db_fetch_assoc("select
+		data_query.id,
+		data_query.name,
+		data_query.index_order_type,
+		data_query.index_field_id,
+		host_data_query.sort_field,
+		host_data_query.title_format,
+		host_data_query.reindex_method
+		from data_query left join host_data_query
+		on (data_query.id = host_data_query.data_query_id and host_data_query.host_id = " . sql_sanitize($host_id) . ")
+		where host_data_query.data_query_id is null");
+}
+
+function api_data_query_device_assigned_list($host_id) {
+	/* sanity checks */
+	validate_id_die($host_id, "host_id");
+
+	return db_fetch_assoc("select
+		data_query.id,
+		data_query.name,
+		data_query.index_order_type,
+		data_query.index_field_id,
+		host_data_query.sort_field,
+		host_data_query.title_format,
+		host_data_query.reindex_method
+		from data_query,host_data_query
+		where data_query.id = host_data_query.data_query_id
+		and host_data_query.host_id = " . sql_sanitize($host_id));
+}
+
+function api_data_query_cache_field_get($data_query_id, $host_id, $field_name) {
+	/* sanity checks */
+	validate_id_die($data_query_id, "data_query_id");
+	validate_id_die($host_id, "host_id");
+
+	return db_fetch_assoc("select index_value,field_value,oid from host_data_query_cache where host_id = " . sql_sanitize($host_id) . " and data_query_id = " . sql_sanitize($data_query_id) . " and field_name = '" . sql_sanitize($field_name) . "'");
+}
+
+function api_data_query_cache_num_items_get($data_query_id, $host_id) {
+	/* sanity checks */
+	validate_id_die($data_query_id, "data_query_id");
+	validate_id_die($host_id, "host_id");
+
+	return db_fetch_cell("select count(*) from host_data_query_cache where host_id = " . sql_sanitize($host_id) . " and data_query_id = " . sql_sanitize($data_query_id));
+}
+
+function api_data_query_cache_num_rows_get($data_query_id, $host_id) {
+	/* sanity checks */
+	validate_id_die($data_query_id, "data_query_id");
+	validate_id_die($host_id, "host_id");
+
+	return sizeof(db_fetch_assoc("select distinct index_value from host_data_query_cache where host_id = " . sql_sanitize($host_id) . " and data_query_id = " . sql_sanitize($data_query_id)));
+}
+
+function api_data_query_attached_graphs_list($data_query_id) {
+	require_once(CACTI_BASE_PATH . "/include/data_source/data_source_constants.php");
+
+	/* sanity checks */
+	validate_id_die($data_query_id, "data_query_id");
+
+	return db_fetch_assoc("select distinct
+		graph_template.id,
+		graph_template.template_name
+		from graph_template,graph_template_item,data_template_item,data_template,data_template_field
+		where graph_template.id=graph_template_item.graph_template_id
+		and graph_template_item.data_template_item_id=data_template_item.id
+		and data_template_item.data_template_id=data_template.id
+		and data_template.id=data_template_field.data_template_id
+		and data_template.data_input_type = " . DATA_INPUT_TYPE_DATA_QUERY . "
+		and (data_template_field.name = 'data_query_id' and data_template_field.value = '" . sql_sanitize($data_query_id) . "')");
+}
+
+function api_data_query_graphed_indexes_list($graph_template_id, $host_id) {
+	require_once(CACTI_BASE_PATH . "/include/data_source/data_source_constants.php");
+
+	/* sanity checks */
+	validate_id_die($graph_template_id, "graph_template_id");
+	validate_id_die($host_id, "host_id");
+
+	return db_fetch_assoc("select distinct
+		data_source_field.value as data_query_index
+		from graph,graph_item,data_source_item,data_source,data_source_field
+		where graph.id=graph_item.graph_id
+		and graph_item.data_source_item_id=data_source_item.id
+		and data_source_item.data_source_id=data_source.id
+		and data_source.id=data_source_field.data_source_id
+		and graph.graph_template_id = " . sql_sanitize($graph_template_id) . "
+		and graph.host_id = " . sql_sanitize($host_id) . "
+		and data_source.data_input_type = " . DATA_INPUT_TYPE_DATA_QUERY . "
+		and data_source_field.name = 'data_query_index'");
 }
 
 ?>

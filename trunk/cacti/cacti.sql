@@ -1,6 +1,6 @@
 -- MySQL dump 9.11
 --
--- Host: localhost    Database: cacti_rel_MAIN
+-- Host: localhost    Database: cacti_dev_MAIN
 -- ------------------------------------------------------
 -- Server version	4.0.25
 
@@ -86,6 +86,9 @@ CREATE TABLE data_query (
   index_order_type tinyint(3) unsigned NOT NULL default '0',
   index_title_format varchar(100) NOT NULL default '',
   index_field_id mediumint(8) unsigned NOT NULL default '0',
+  snmp_oid_num_rows varchar(100) NOT NULL default '',
+  script_path varchar(255) NOT NULL default '',
+  script_server_function varchar(50) NOT NULL default '',
   PRIMARY KEY  (id)
 ) TYPE=MyISAM;
 
@@ -93,6 +96,11 @@ CREATE TABLE data_query (
 -- Dumping data for table `data_query`
 --
 
+INSERT INTO data_query VALUES (1,1,'SNMP - Interfaces','ifDescr:ifName:ifHwAddr:ifIndex',2,'|chosen_order_field|',4,'.1.3.6.1.2.1.2.1.0','','');
+INSERT INTO data_query VALUES (2,3,'Host-MIB - Disk Partitions','hrStorageDescr:hrStorageIndex',2,'|chosen_order_field|',25,'','|path_cacti|/scripts/ss_host_disk.php','ss_host_disk');
+INSERT INTO data_query VALUES (3,3,'Host-MIB - Processor Information','hrProcessorFrwID',2,'CPU#|chosen_order_field|',31,'','|path_cacti|/scripts/ss_host_cpu.php','ss_host_cpu');
+INSERT INTO data_query VALUES (4,1,'Net-SNMP - Disk Partitions','hrStorageDescr:hrStorageIndex',2,'|chosen_order_field|',33,'','','');
+INSERT INTO data_query VALUES (5,2,'Unix - Disk Partitions','dskDevice',2,'|chosen_order_field|',40,'','perl |path_cacti|/scripts/query_unix_partitions.pl','');
 
 --
 -- Table structure for table `data_query_field`
@@ -116,6 +124,48 @@ CREATE TABLE data_query_field (
 -- Dumping data for table `data_query_field`
 --
 
+INSERT INTO data_query_field VALUES (4,1,1,'ifIndex','Index','.1.3.6.1.2.1.2.2.1.1',1,'');
+INSERT INTO data_query_field VALUES (5,1,1,'ifOperStatus','Status','.1.3.6.1.2.1.2.2.1.8',1,'');
+INSERT INTO data_query_field VALUES (6,1,1,'ifDescr','Description','.1.3.6.1.2.1.2.2.1.2',1,'');
+INSERT INTO data_query_field VALUES (7,1,1,'ifName','Name (IF-MIB)','.1.3.6.1.2.1.31.1.1.1.1',1,'');
+INSERT INTO data_query_field VALUES (8,1,1,'ifAlias','Alias (IF-MIB)','.1.3.6.1.2.1.31.1.1.1.18',1,'');
+INSERT INTO data_query_field VALUES (9,1,1,'ifType','Type','.1.3.6.1.2.1.2.2.1.3',1,'');
+INSERT INTO data_query_field VALUES (10,1,1,'ifSpeed','Speed','.1.3.6.1.2.1.2.2.1.5',1,'');
+INSERT INTO data_query_field VALUES (11,1,1,'ifHwAddr','Hardware Address','.1.3.6.1.2.1.2.2.1.6',1,'');
+INSERT INTO data_query_field VALUES (12,1,2,'ifInOctets','Bytes In','.1.3.6.1.2.1.2.2.1.10',1,'');
+INSERT INTO data_query_field VALUES (13,1,2,'ifOutOctets','Bytes Out','.1.3.6.1.2.1.2.2.1.16',1,'');
+INSERT INTO data_query_field VALUES (14,1,2,'ifHCInOctets','Bytes In (64-bit Counters)','.1.3.6.1.2.1.31.1.1.1.6',1,'');
+INSERT INTO data_query_field VALUES (15,1,2,'ifHCOutOctets','Bytes Out (64-bit Counters)','.1.3.6.1.2.1.31.1.1.1.10',1,'');
+INSERT INTO data_query_field VALUES (16,1,2,'ifInDiscards','Discarded Packets In','.1.3.6.1.2.1.2.2.1.13',1,'');
+INSERT INTO data_query_field VALUES (17,1,2,'ifOutDiscards','Discarded Packets Out','.1.3.6.1.2.1.2.2.1.19',1,'');
+INSERT INTO data_query_field VALUES (18,1,2,'ifInNUcastPkts','Non-Unicast Packets In','.1.3.6.1.2.1.2.2.1.12',1,'');
+INSERT INTO data_query_field VALUES (19,1,2,'ifOutNUcastPkts','Non-Unicast Packets Out','.1.3.6.1.2.1.2.2.1.18',1,'');
+INSERT INTO data_query_field VALUES (20,1,2,'ifInUcastPkts','Unicast Packets In','.1.3.6.1.2.1.2.2.1.11',1,'');
+INSERT INTO data_query_field VALUES (21,1,2,'ifOutUcastPkts','Unicast Packets Out','.1.3.6.1.2.1.2.2.1.17',1,'');
+INSERT INTO data_query_field VALUES (22,1,2,'ifInErrors','Errors In','.1.3.6.1.2.1.2.2.1.14',1,'');
+INSERT INTO data_query_field VALUES (23,1,2,'ifOutErrors','Errors Out','.1.3.6.1.2.1.2.2.1.20',1,'');
+INSERT INTO data_query_field VALUES (24,1,1,'ifIP','IP Address','.1.3.6.1.2.1.4.20.1.2',1,'4');
+INSERT INTO data_query_field VALUES (25,2,1,'hrStorageIndex','Index','index',0,'');
+INSERT INTO data_query_field VALUES (26,2,1,'hrStorageDescr','Description','description',0,'');
+INSERT INTO data_query_field VALUES (27,2,1,'hrStorageAllocationUnits','Storage Allocation Units','sau',0,'');
+INSERT INTO data_query_field VALUES (28,2,2,'hrStorageSize','Total Size','total',0,'');
+INSERT INTO data_query_field VALUES (29,2,2,'hrStorageUsed','Total Used','used',0,'');
+INSERT INTO data_query_field VALUES (30,2,2,'hrStorageAllocationFailures','Allocation Failures','failures',0,'');
+INSERT INTO data_query_field VALUES (31,3,1,'hrProcessorFrwID','Processor Index Number','index',0,'');
+INSERT INTO data_query_field VALUES (32,3,2,'hrProcessorLoad','Processor Usage','usage',0,'');
+INSERT INTO data_query_field VALUES (33,4,1,'dskIndex','Index','.1.3.6.1.4.1.2021.9.1.1',1,'');
+INSERT INTO data_query_field VALUES (34,4,1,'dskPath','Mount Point','.1.3.6.1.4.1.2021.9.1.2',1,'');
+INSERT INTO data_query_field VALUES (35,4,1,'dskDevice','Device Name','.1.3.6.1.4.1.2021.9.1.3',1,'');
+INSERT INTO data_query_field VALUES (36,4,2,'dskTotal','Total Space','.1.3.6.1.4.1.2021.9.1.6',1,'');
+INSERT INTO data_query_field VALUES (37,4,2,'dskAvail','Available Space','.1.3.6.1.4.1.2021.9.1.7',1,'');
+INSERT INTO data_query_field VALUES (38,4,2,'dskUsed','Used Space','.1.3.6.1.4.1.2021.9.1.8',1,'');
+INSERT INTO data_query_field VALUES (39,4,2,'dskPercent','Percent Available','.1.3.6.1.4.1.2021.9.1.9',1,'');
+INSERT INTO data_query_field VALUES (40,5,1,'dskDevice','Device Name','device',0,'');
+INSERT INTO data_query_field VALUES (41,5,1,'dskMount','Mount Point','mount',0,'');
+INSERT INTO data_query_field VALUES (42,5,2,'dskTotal','Total Blocks','total',0,'');
+INSERT INTO data_query_field VALUES (43,5,2,'dskUsed','Used Blocks','used',0,'');
+INSERT INTO data_query_field VALUES (44,5,2,'dskAvailable','Available Blocks','available',0,'');
+INSERT INTO data_query_field VALUES (45,5,2,'dskPercentUsed','Percent Used','percent',0,'');
 
 --
 -- Table structure for table `data_source`
@@ -1072,6 +1122,45 @@ CREATE TABLE host (
 INSERT INTO host VALUES (1,1,3,'Localhost','localhost','',1,'','','MD5','','DES',161,500,2,2,'on',3,0,'0000-00-00 00:00:00','0000-00-00 00:00:00','','0.00000','0.00000','0.00000','0.00000','0.00000','0.00000',0,0,'100.00000');
 
 --
+-- Table structure for table `host_data_query`
+--
+
+CREATE TABLE host_data_query (
+  host_id mediumint(8) unsigned NOT NULL default '0',
+  data_query_id mediumint(8) unsigned NOT NULL default '0',
+  sort_field varchar(50) NOT NULL default '',
+  title_format varchar(50) NOT NULL default '',
+  reindex_method tinyint(3) unsigned NOT NULL default '0',
+  PRIMARY KEY  (host_id,data_query_id),
+  KEY host_id (host_id)
+) TYPE=MyISAM;
+
+--
+-- Dumping data for table `host_data_query`
+--
+
+
+--
+-- Table structure for table `host_data_query_cache`
+--
+
+CREATE TABLE host_data_query_cache (
+  host_id mediumint(8) unsigned NOT NULL default '0',
+  data_query_id mediumint(8) unsigned NOT NULL default '0',
+  field_name varchar(50) NOT NULL default '',
+  field_value varchar(255) default NULL,
+  index_value varchar(60) NOT NULL default '',
+  oid varchar(255) NOT NULL default '',
+  PRIMARY KEY  (host_id,data_query_id,field_name,index_value),
+  KEY host_id (host_id,field_name)
+) TYPE=MyISAM;
+
+--
+-- Dumping data for table `host_data_query_cache`
+--
+
+
+--
 -- Table structure for table `host_graph`
 --
 
@@ -1088,46 +1177,6 @@ CREATE TABLE host_graph (
 INSERT INTO host_graph VALUES (1,17);
 INSERT INTO host_graph VALUES (1,18);
 INSERT INTO host_graph VALUES (1,19);
-
---
--- Table structure for table `host_snmp_cache`
---
-
-CREATE TABLE host_snmp_cache (
-  host_id mediumint(8) unsigned NOT NULL default '0',
-  snmp_query_id mediumint(8) unsigned NOT NULL default '0',
-  field_name varchar(50) NOT NULL default '',
-  field_value varchar(255) default NULL,
-  snmp_index varchar(60) NOT NULL default '',
-  oid varchar(255) NOT NULL default '',
-  PRIMARY KEY  (host_id,snmp_query_id,field_name,snmp_index),
-  KEY host_id (host_id,field_name)
-) TYPE=MyISAM;
-
---
--- Dumping data for table `host_snmp_cache`
---
-
-
---
--- Table structure for table `host_snmp_query`
---
-
-CREATE TABLE host_snmp_query (
-  host_id mediumint(8) unsigned NOT NULL default '0',
-  snmp_query_id mediumint(8) unsigned NOT NULL default '0',
-  sort_field varchar(50) NOT NULL default '',
-  title_format varchar(50) NOT NULL default '',
-  reindex_method tinyint(3) unsigned NOT NULL default '0',
-  PRIMARY KEY  (host_id,snmp_query_id),
-  KEY host_id (host_id)
-) TYPE=MyISAM;
-
---
--- Dumping data for table `host_snmp_query`
---
-
-INSERT INTO host_snmp_query VALUES (1,6,'dskDevice','|query_dskDevice|',1);
 
 --
 -- Table structure for table `host_template`
@@ -1147,6 +1196,28 @@ CREATE TABLE host_template (
 INSERT INTO host_template VALUES (1,'c15ea28c3db9d0c2fb4fa93f91cc9e50','Net-SNMP Enabled Host');
 INSERT INTO host_template VALUES (2,'4051a939aad7eef6617666c0742a803a','Windows 2000/XP Host');
 INSERT INTO host_template VALUES (3,'7a81401ab9621da368914acc536d3e3b','Local Linux Machine');
+
+--
+-- Table structure for table `host_template_data_query`
+--
+
+CREATE TABLE host_template_data_query (
+  host_template_id mediumint(8) unsigned NOT NULL default '0',
+  data_query_id mediumint(8) unsigned NOT NULL default '0',
+  PRIMARY KEY  (host_template_id,data_query_id),
+  KEY host_template_id (host_template_id)
+) TYPE=MyISAM;
+
+--
+-- Dumping data for table `host_template_data_query`
+--
+
+INSERT INTO host_template_data_query VALUES (1,1);
+INSERT INTO host_template_data_query VALUES (1,2);
+INSERT INTO host_template_data_query VALUES (2,1);
+INSERT INTO host_template_data_query VALUES (2,8);
+INSERT INTO host_template_data_query VALUES (2,9);
+INSERT INTO host_template_data_query VALUES (3,6);
 
 --
 -- Table structure for table `host_template_graph`
@@ -1171,28 +1242,6 @@ INSERT INTO host_template_graph VALUES (2,21);
 INSERT INTO host_template_graph VALUES (3,17);
 INSERT INTO host_template_graph VALUES (3,18);
 INSERT INTO host_template_graph VALUES (3,19);
-
---
--- Table structure for table `host_template_snmp_query`
---
-
-CREATE TABLE host_template_snmp_query (
-  host_template_id mediumint(8) unsigned NOT NULL default '0',
-  snmp_query_id mediumint(8) unsigned NOT NULL default '0',
-  PRIMARY KEY  (host_template_id,snmp_query_id),
-  KEY host_template_id (host_template_id)
-) TYPE=MyISAM;
-
---
--- Dumping data for table `host_template_snmp_query`
---
-
-INSERT INTO host_template_snmp_query VALUES (1,1);
-INSERT INTO host_template_snmp_query VALUES (1,2);
-INSERT INTO host_template_snmp_query VALUES (2,1);
-INSERT INTO host_template_snmp_query VALUES (2,8);
-INSERT INTO host_template_snmp_query VALUES (2,9);
-INSERT INTO host_template_snmp_query VALUES (3,6);
 
 --
 -- Table structure for table `host_template_sysdesc`
@@ -1757,260 +1806,6 @@ INSERT INTO settings_tree VALUES (3,83,0);
 INSERT INTO settings_tree VALUES (3,82,0);
 
 --
--- Table structure for table `snmp_query`
---
-
-CREATE TABLE snmp_query (
-  id mediumint(8) unsigned NOT NULL auto_increment,
-  hash varchar(32) NOT NULL default '',
-  xml_path varchar(255) NOT NULL default '',
-  name varchar(100) NOT NULL default '',
-  description varchar(255) default NULL,
-  input_type tinyint(3) unsigned NOT NULL default '1',
-  PRIMARY KEY  (id)
-) TYPE=MyISAM;
-
---
--- Dumping data for table `snmp_query`
---
-
-INSERT INTO snmp_query VALUES (1,'d75e406fdeca4fcef45b8be3a9a63cbc','<path_cacti>/resource/snmp_queries/interface.xml','SNMP - Interface Statistics','Queries a host for a list of monitorable interfaces',1);
-INSERT INTO snmp_query VALUES (2,'3c1b27d94ad208a0090f293deadde753','<path_cacti>/resource/snmp_queries/net-snmp_disk.xml','ucd/net -  Get Monitored Partitions','Retrieves a list of monitored partitions/disks from a net-snmp enabled host.',2);
-INSERT INTO snmp_query VALUES (4,'ad06f46e22e991cb47c95c7233cfaee8','<path_cacti>/resource/snmp_queries/netware_disk.xml','Netware - Get Available Volumes','Retrieves a list of volumes from a Netware server.',2);
-INSERT INTO snmp_query VALUES (6,'8ffa36c1864124b38bcda2ae9bd61f46','<path_cacti>/resource/script_queries/unix_disk.xml','Unix - Get Mounted Partitions','Queries a list of mounted partitions on a unix-based host with the',2);
-INSERT INTO snmp_query VALUES (7,'30ec734bc0ae81a3d995be82c73f46c1','<path_cacti>/resource/snmp_queries/netware_cpu.xml','Netware - Get Processor Information','Gets information about running processors in a Netware server',2);
-INSERT INTO snmp_query VALUES (8,'9343eab1f4d88b0e61ffc9d020f35414','<path_cacti>/resource/script_server/host_disk.xml','Host MIB - Get Mounted Partitions','Gets a list of partitions using SNMP',3);
-INSERT INTO snmp_query VALUES (9,'0d1ab53fe37487a5d0b9e1d3ee8c1d0d','<path_cacti>/resource/script_server/host_cpu.xml','Host MIB - Get Processor Information','Gets usage for each processor in the system using the host MIB.',3);
-
---
--- Table structure for table `snmp_query_graph`
---
-
-CREATE TABLE snmp_query_graph (
-  id mediumint(8) unsigned NOT NULL auto_increment,
-  hash varchar(32) NOT NULL default '',
-  snmp_query_id mediumint(8) unsigned NOT NULL default '0',
-  name varchar(100) NOT NULL default '',
-  graph_template_id mediumint(8) unsigned NOT NULL default '0',
-  PRIMARY KEY  (id)
-) TYPE=MyISAM;
-
---
--- Dumping data for table `snmp_query_graph`
---
-
-INSERT INTO snmp_query_graph VALUES (2,'a4b829746fb45e35e10474c36c69c0cf',1,'In/Out Errors/Discarded Packets',22);
-INSERT INTO snmp_query_graph VALUES (3,'01e33224f8b15997d3d09d6b1bf83e18',1,'In/Out Non-Unicast Packets',24);
-INSERT INTO snmp_query_graph VALUES (4,'1e6edee3115c42d644dbd014f0577066',1,'In/Out Unicast Packets',23);
-INSERT INTO snmp_query_graph VALUES (15,'a0b3e7b63c2e66f9e1ea24a16ff245fc',6,'Available Disk Space',21);
-INSERT INTO snmp_query_graph VALUES (6,'da43655bf1f641b07579256227806977',2,'Available/Used Disk Space',3);
-INSERT INTO snmp_query_graph VALUES (9,'ab93b588c29731ab15db601ca0bc9dec',1,'In/Out Bytes (64-bit Counters)',25);
-INSERT INTO snmp_query_graph VALUES (10,'5a5ce35edb4b195cbde99fd0161dfb4e',4,'Volume Information (free, freeable space)',19);
-INSERT INTO snmp_query_graph VALUES (11,'c1c2cfd33eaf5064300e92e26e20bc56',4,'Directory Information (total/available entries)',20);
-INSERT INTO snmp_query_graph VALUES (13,'ae34f5f385bed8c81a158bf3030f1089',1,'In/Out Bits',2);
-INSERT INTO snmp_query_graph VALUES (14,'1e16a505ddefb40356221d7a50619d91',1,'In/Out Bits (64-bit Counters)',2);
-INSERT INTO snmp_query_graph VALUES (16,'d1e0d9b8efd4af98d28ce2aad81a87e7',1,'In/Out Bytes',25);
-INSERT INTO snmp_query_graph VALUES (17,'f6db4151aa07efa401a0af6c9b871844',7,'Get Processor Utilization',15);
-INSERT INTO snmp_query_graph VALUES (18,'46c4ee688932cf6370459527eceb8ef3',8,'Available Disk Space',26);
-INSERT INTO snmp_query_graph VALUES (19,'4a515b61441ea5f27ab7dee6c3cb7818',9,'Get Processor Utilization',27);
-INSERT INTO snmp_query_graph VALUES (20,'ed7f68175d7bb83db8ead332fc945720',1,'In/Out Bits with 95th Percentile',31);
-INSERT INTO snmp_query_graph VALUES (21,'f85386cd2fc94634ef167c7f1e5fbcd0',1,'In/Out Bits with Total Bandwidth',32);
-INSERT INTO snmp_query_graph VALUES (22,'7d309bf200b6e3cdb59a33493c2e58e0',1,'In/Out Bytes with Total Bandwidth',33);
-
---
--- Table structure for table `snmp_query_graph_rrd`
---
-
-CREATE TABLE snmp_query_graph_rrd (
-  snmp_query_graph_id mediumint(8) unsigned NOT NULL default '0',
-  data_template_id mediumint(8) unsigned NOT NULL default '0',
-  data_template_rrd_id mediumint(8) unsigned NOT NULL default '0',
-  snmp_field_name varchar(50) NOT NULL default '0',
-  PRIMARY KEY  (snmp_query_graph_id,data_template_id,data_template_rrd_id),
-  KEY snmp_query_graph_id (snmp_query_graph_id)
-) TYPE=MyISAM;
-
---
--- Dumping data for table `snmp_query_graph_rrd`
---
-
-INSERT INTO snmp_query_graph_rrd VALUES (2,38,47,'ifInDiscards');
-INSERT INTO snmp_query_graph_rrd VALUES (3,40,52,'ifOutNUcastPkts');
-INSERT INTO snmp_query_graph_rrd VALUES (3,40,53,'ifInNUcastPkts');
-INSERT INTO snmp_query_graph_rrd VALUES (4,39,48,'ifInUcastPkts');
-INSERT INTO snmp_query_graph_rrd VALUES (2,38,51,'ifOutErrors');
-INSERT INTO snmp_query_graph_rrd VALUES (6,3,3,'dskAvail');
-INSERT INTO snmp_query_graph_rrd VALUES (6,3,4,'dskUsed');
-INSERT INTO snmp_query_graph_rrd VALUES (9,41,55,'ifHCOutOctets');
-INSERT INTO snmp_query_graph_rrd VALUES (9,41,54,'ifHCInOctets');
-INSERT INTO snmp_query_graph_rrd VALUES (10,35,38,'nwVolSize');
-INSERT INTO snmp_query_graph_rrd VALUES (10,35,40,'nwVolFreeable');
-INSERT INTO snmp_query_graph_rrd VALUES (10,35,39,'nwVolFree');
-INSERT INTO snmp_query_graph_rrd VALUES (11,36,42,'nwVolTotalDirEntries');
-INSERT INTO snmp_query_graph_rrd VALUES (11,36,43,'nwVolUsedDirEntries');
-INSERT INTO snmp_query_graph_rrd VALUES (2,38,50,'ifOutDiscards');
-INSERT INTO snmp_query_graph_rrd VALUES (2,38,46,'ifInErrors');
-INSERT INTO snmp_query_graph_rrd VALUES (13,41,54,'ifInOctets');
-INSERT INTO snmp_query_graph_rrd VALUES (14,41,54,'ifHCInOctets');
-INSERT INTO snmp_query_graph_rrd VALUES (14,41,55,'ifHCOutOctets');
-INSERT INTO snmp_query_graph_rrd VALUES (13,41,55,'ifOutOctets');
-INSERT INTO snmp_query_graph_rrd VALUES (4,39,49,'ifOutUcastPkts');
-INSERT INTO snmp_query_graph_rrd VALUES (15,37,44,'dskAvailable');
-INSERT INTO snmp_query_graph_rrd VALUES (16,41,54,'ifInOctets');
-INSERT INTO snmp_query_graph_rrd VALUES (16,41,55,'ifOutOctets');
-INSERT INTO snmp_query_graph_rrd VALUES (15,37,56,'dskUsed');
-INSERT INTO snmp_query_graph_rrd VALUES (17,42,76,'nwhrProcessorUtilization');
-INSERT INTO snmp_query_graph_rrd VALUES (18,43,78,'hrStorageUsed');
-INSERT INTO snmp_query_graph_rrd VALUES (18,43,92,'hrStorageSize');
-INSERT INTO snmp_query_graph_rrd VALUES (19,44,79,'hrProcessorLoad');
-INSERT INTO snmp_query_graph_rrd VALUES (20,41,55,'ifOutOctets');
-INSERT INTO snmp_query_graph_rrd VALUES (20,41,54,'ifInOctets');
-INSERT INTO snmp_query_graph_rrd VALUES (21,41,55,'ifOutOctets');
-INSERT INTO snmp_query_graph_rrd VALUES (21,41,54,'ifInOctets');
-INSERT INTO snmp_query_graph_rrd VALUES (22,41,55,'ifOutOctets');
-INSERT INTO snmp_query_graph_rrd VALUES (22,41,54,'ifInOctets');
-
---
--- Table structure for table `snmp_query_graph_rrd_sv`
---
-
-CREATE TABLE snmp_query_graph_rrd_sv (
-  id mediumint(8) unsigned NOT NULL auto_increment,
-  hash varchar(32) NOT NULL default '',
-  snmp_query_graph_id mediumint(8) unsigned NOT NULL default '0',
-  data_template_id mediumint(8) unsigned NOT NULL default '0',
-  sequence mediumint(8) unsigned NOT NULL default '0',
-  field_name varchar(100) NOT NULL default '',
-  text varchar(255) NOT NULL default '',
-  PRIMARY KEY  (id),
-  KEY snmp_query_graph_id (snmp_query_graph_id)
-) TYPE=MyISAM;
-
---
--- Dumping data for table `snmp_query_graph_rrd_sv`
---
-
-INSERT INTO snmp_query_graph_rrd_sv VALUES (10,'5d3a8b2f4a454e5b0a1494e00fe7d424',6,3,1,'name','|host_description| - Partition - |query_dskDevice|');
-INSERT INTO snmp_query_graph_rrd_sv VALUES (11,'d0b49af67a83c258ef1eab3780f7b3dc',7,7,1,'name','|host_description| - Wireless Noise Level - |query_kbWirelessStationName|');
-INSERT INTO snmp_query_graph_rrd_sv VALUES (12,'bf6b966dc369f3df2ea640a90845e94c',7,8,1,'name','|host_description| - Wireless Signal Level - |query_kbWirelessStationName|');
-INSERT INTO snmp_query_graph_rrd_sv VALUES (13,'5c3616603a7ac9d0c1cb9556b377a74f',8,10,1,'name','|host_description| - Wireless Re-Transmissions - |query_kbWirelessStationName|');
-INSERT INTO snmp_query_graph_rrd_sv VALUES (14,'080f0022f77044a512b083e3a8304e8b',8,9,1,'name','|host_description| - Wireless Transmissions - |query_kbWirelessStationName|');
-INSERT INTO snmp_query_graph_rrd_sv VALUES (88,'e1be83d708ed3c0b8715ccb6517a0365',9,41,2,'name','|host_description| - Traffic - |query_ifName|');
-INSERT INTO snmp_query_graph_rrd_sv VALUES (86,'c582d3b37f19e4a703d9bf4908dc6548',9,41,1,'name','|host_description| - Traffic - |query_ifIP| - |query_ifName|');
-INSERT INTO snmp_query_graph_rrd_sv VALUES (82,'8d820d091ec1a9683cfa74a462f239ee',14,41,2,'name','|host_description| - Traffic - |query_ifName|');
-INSERT INTO snmp_query_graph_rrd_sv VALUES (81,'2e8b27c63d98249096ad5bc320787f43',14,41,1,'name','|host_description| - Traffic - |query_ifIP| - |query_ifName|');
-INSERT INTO snmp_query_graph_rrd_sv VALUES (79,'2347e9f53564a54d43f3c00d4b60040d',16,41,4,'name','|host_description| - Traffic - |query_ifDescr|');
-INSERT INTO snmp_query_graph_rrd_sv VALUES (30,'8132fa9c446e199732f0102733cb1714',11,36,1,'name','|host_description| - Directories - |query_nwVolPhysicalName|');
-INSERT INTO snmp_query_graph_rrd_sv VALUES (29,'8fc9a94a5f6ef902a3de0fa7549e7476',10,35,1,'name','|host_description| - Volumes - |query_nwVolPhysicalName|');
-INSERT INTO snmp_query_graph_rrd_sv VALUES (80,'27eb220995925e1a5e0e41b2582a2af6',16,41,1,'rrd_maximum','|query_ifSpeed|');
-INSERT INTO snmp_query_graph_rrd_sv VALUES (85,'e85ddc56efa677b70448f9e931360b77',14,41,1,'rrd_maximum','|query_ifSpeed|');
-INSERT INTO snmp_query_graph_rrd_sv VALUES (84,'37bb8c5b38bb7e89ec88ea7ccacf44d4',14,41,4,'name','|host_description| - Traffic - |query_ifDescr|');
-INSERT INTO snmp_query_graph_rrd_sv VALUES (83,'62a47c18be10f273a5f5a13a76b76f54',14,41,3,'name','|host_description| - Traffic - |query_ifIP|/|query_ifDescr|');
-INSERT INTO snmp_query_graph_rrd_sv VALUES (32,'',12,37,1,'name','|host_description| - Partition - |query_dskDevice|');
-INSERT INTO snmp_query_graph_rrd_sv VALUES (78,'3a0f707d1c8fd0e061b70241541c7e2e',16,41,3,'name','|host_description| - Traffic - |query_ifIP|/|query_ifDescr|');
-INSERT INTO snmp_query_graph_rrd_sv VALUES (77,'8ef8ae2ef548892ab95bb6c9f0b3170e',16,41,2,'name','|host_description| - Traffic - |query_ifName|');
-INSERT INTO snmp_query_graph_rrd_sv VALUES (76,'c7ee2110bf81639086d2da03d9d88286',16,41,1,'name','|host_description| - Traffic - |query_ifIP| - |query_ifName|');
-INSERT INTO snmp_query_graph_rrd_sv VALUES (75,'7e093c535fa3d810fa76fc3d8c80c94b',13,41,1,'rrd_maximum','|query_ifSpeed|');
-INSERT INTO snmp_query_graph_rrd_sv VALUES (74,'084efd82bbddb69fb2ac9bd0b0f16ac6',13,41,4,'name','|host_description| - Traffic - |query_ifDescr|');
-INSERT INTO snmp_query_graph_rrd_sv VALUES (72,'14aa2dead86bbad0f992f1514722c95e',13,41,2,'name','|host_description| - Traffic - |query_ifName|');
-INSERT INTO snmp_query_graph_rrd_sv VALUES (73,'70390712158c3c5052a7d830fb456489',13,41,3,'name','|host_description| - Traffic - |query_ifIP|/|query_ifDescr|');
-INSERT INTO snmp_query_graph_rrd_sv VALUES (49,'6537b3209e0697fbec278e94e7317b52',2,38,1,'name','|host_description| - Errors - |query_ifIP| - |query_ifName|');
-INSERT INTO snmp_query_graph_rrd_sv VALUES (50,'6d3f612051016f48c951af8901720a1c',2,38,2,'name','|host_description| - Errors - |query_ifName|');
-INSERT INTO snmp_query_graph_rrd_sv VALUES (51,'62bc981690576d0b2bd0041ec2e4aa6f',2,38,3,'name','|host_description| - Errors - |query_ifIP|/|query_ifDescr|');
-INSERT INTO snmp_query_graph_rrd_sv VALUES (52,'adb270d55ba521d205eac6a21478804a',2,38,4,'name','|host_description| - Errors - |query_ifDescr|');
-INSERT INTO snmp_query_graph_rrd_sv VALUES (54,'77065435f3bbb2ff99bc3b43b81de8fe',3,40,1,'name','|host_description| - Non-Unicast Packets - |query_ifIP| - |query_ifName|');
-INSERT INTO snmp_query_graph_rrd_sv VALUES (55,'240d8893092619c97a54265e8d0b86a1',3,40,2,'name','|host_description| - Non-Unicast Packets - |query_ifName|');
-INSERT INTO snmp_query_graph_rrd_sv VALUES (56,'4b200ecf445bdeb4c84975b74991df34',3,40,3,'name','|host_description| - Non-Unicast Packets - |query_ifIP|/|query_ifDescr|');
-INSERT INTO snmp_query_graph_rrd_sv VALUES (57,'d6da3887646078e4d01fe60a123c2179',3,40,4,'name','|host_description| - Non-Unicast Packets - |query_ifDescr|');
-INSERT INTO snmp_query_graph_rrd_sv VALUES (59,'ce7769b97d80ca31d21f83dc18ba93c2',4,39,1,'name','|host_description| - Unicast Packets - |query_ifIP| - |query_ifName|');
-INSERT INTO snmp_query_graph_rrd_sv VALUES (60,'1ee1f9717f3f4771f7f823ca5a8b83dd',4,39,2,'name','|host_description| - Unicast Packets - |query_ifName|');
-INSERT INTO snmp_query_graph_rrd_sv VALUES (61,'a7dbd54604533b592d4fae6e67587e32',4,39,3,'name','|host_description| - Unicast Packets - |query_ifIP|/|query_ifDescr|');
-INSERT INTO snmp_query_graph_rrd_sv VALUES (62,'b148fa7199edcf06cd71c89e5c5d7b63',4,39,4,'name','|host_description| - Unicast Packets - |query_ifDescr|');
-INSERT INTO snmp_query_graph_rrd_sv VALUES (70,'87a659326af8c75158e5142874fd74b0',13,41,1,'name','|host_description| - Traffic - |query_ifIP| - |query_ifName|');
-INSERT INTO snmp_query_graph_rrd_sv VALUES (69,'cb09784ba05e401a3f1450126ed1e395',15,37,1,'name','|host_description| - Free Space - |query_dskDevice|');
-INSERT INTO snmp_query_graph_rrd_sv VALUES (89,'57a9ae1f197498ca8dcde90194f61cbc',9,41,3,'name','|host_description| - Traffic - |query_ifIP|/|query_ifDescr|');
-INSERT INTO snmp_query_graph_rrd_sv VALUES (90,'0110e120981c7ff15304e4a85cb42cbe',9,41,4,'name','|host_description| - Traffic - |query_ifDescr|');
-INSERT INTO snmp_query_graph_rrd_sv VALUES (91,'ce0b9c92a15759d3ddbd7161d26a98b7',9,41,1,'rrd_maximum','|query_ifSpeed|');
-INSERT INTO snmp_query_graph_rrd_sv VALUES (92,'42277993a025f1bfd85374d6b4deeb60',17,42,1,'name','|host_description| - CPU Utilization - CPU|query_nwhrProcessorNum|');
-INSERT INTO snmp_query_graph_rrd_sv VALUES (93,'a3f280327b1592a1a948e256380b544f',18,43,1,'name','|host_description| - Used Space - |query_hrStorageDescr|');
-INSERT INTO snmp_query_graph_rrd_sv VALUES (94,'b5a724edc36c10891fa2a5c370d55b6f',19,44,1,'name','|host_description| - CPU Utilization - CPU|query_hrProcessorFrwID|');
-INSERT INTO snmp_query_graph_rrd_sv VALUES (95,'7e87efd0075caba9908e2e6e569b25b0',20,41,1,'name','|host_description| - Traffic - |query_ifIP| - |query_ifName|');
-INSERT INTO snmp_query_graph_rrd_sv VALUES (96,'dd28d96a253ab86846aedb25d1cca712',20,41,2,'name','|host_description| - Traffic - |query_ifName|');
-INSERT INTO snmp_query_graph_rrd_sv VALUES (97,'ce425fed4eb3174e4f1cde9713eeafa0',20,41,3,'name','|host_description| - Traffic - |query_ifIP|/|query_ifDescr|');
-INSERT INTO snmp_query_graph_rrd_sv VALUES (98,'d0d05156ddb2c65181588db4b64d3907',20,41,4,'name','|host_description| - Traffic - |query_ifDescr|');
-INSERT INTO snmp_query_graph_rrd_sv VALUES (99,'3b018f789ff72cc5693ef79e3a794370',20,41,1,'rrd_maximum','|query_ifSpeed|');
-INSERT INTO snmp_query_graph_rrd_sv VALUES (100,'b225229dbbb48c1766cf90298674ceed',21,41,1,'name','|host_description| - Traffic - |query_ifIP| - |query_ifName|');
-INSERT INTO snmp_query_graph_rrd_sv VALUES (101,'c79248ddbbd195907260887b021a055d',21,41,2,'name','|host_description| - Traffic - |query_ifName|');
-INSERT INTO snmp_query_graph_rrd_sv VALUES (102,'12a6750d973b7f14783f205d86220082',21,41,3,'name','|host_description| - Traffic - |query_ifIP|/|query_ifDescr|');
-INSERT INTO snmp_query_graph_rrd_sv VALUES (103,'25b151fcfe093812cb5c208e36dd697e',21,41,4,'name','|host_description| - Traffic - |query_ifDescr|');
-INSERT INTO snmp_query_graph_rrd_sv VALUES (104,'e9ab404a294e406c20fdd30df766161f',21,41,1,'rrd_maximum','|query_ifSpeed|');
-INSERT INTO snmp_query_graph_rrd_sv VALUES (105,'119578a4f01ab47e820b0e894e5e5bb3',22,41,1,'name','|host_description| - Traffic - |query_ifIP| - |query_ifName|');
-INSERT INTO snmp_query_graph_rrd_sv VALUES (106,'940e57d24b2623849c77b59ed05931b9',22,41,2,'name','|host_description| - Traffic - |query_ifName|');
-INSERT INTO snmp_query_graph_rrd_sv VALUES (107,'0f045eab01bbc4437b30da568ed5cb03',22,41,3,'name','|host_description| - Traffic - |query_ifIP|/|query_ifDescr|');
-INSERT INTO snmp_query_graph_rrd_sv VALUES (108,'bd70bf71108d32f0bf91b24c85b87ff0',22,41,4,'name','|host_description| - Traffic - |query_ifDescr|');
-INSERT INTO snmp_query_graph_rrd_sv VALUES (109,'fdc4cb976c4b9053bfa2af791a21c5b5',22,41,1,'rrd_maximum','|query_ifSpeed|');
-
---
--- Table structure for table `snmp_query_graph_sv`
---
-
-CREATE TABLE snmp_query_graph_sv (
-  id mediumint(8) unsigned NOT NULL auto_increment,
-  hash varchar(32) NOT NULL default '',
-  snmp_query_graph_id mediumint(8) unsigned NOT NULL default '0',
-  sequence mediumint(8) unsigned NOT NULL default '0',
-  field_name varchar(100) NOT NULL default '',
-  text varchar(255) NOT NULL default '',
-  PRIMARY KEY  (id),
-  KEY snmp_query_graph_id (snmp_query_graph_id)
-) TYPE=MyISAM;
-
---
--- Dumping data for table `snmp_query_graph_sv`
---
-
-INSERT INTO snmp_query_graph_sv VALUES (7,'437918b8dcd66a64625c6cee481fff61',6,1,'title','|host_description| - Disk Space - |query_dskPath|');
-INSERT INTO snmp_query_graph_sv VALUES (5,'2ddc61ff4bd9634f33aedce9524b7690',7,1,'title','|host_description| - Wireless Levels (|query_kbWirelessStationName|)');
-INSERT INTO snmp_query_graph_sv VALUES (6,'c72e2da7af2cdbd6b44a5eb42c5b4758',8,1,'title','|host_description| - Wireless Transmissions (|query_kbWirelessStationName|)');
-INSERT INTO snmp_query_graph_sv VALUES (33,'809c2e80552d56b65ca496c1c2fff398',16,3,'title','|host_description| - Traffic - |query_ifDescr|/|query_ifIndex|');
-INSERT INTO snmp_query_graph_sv VALUES (32,'e403f5a733bf5c8401a110609683deb3',16,2,'title','|host_description| - Traffic - |query_ifIP| (|query_ifDescr|)');
-INSERT INTO snmp_query_graph_sv VALUES (31,'7fb4a267065f960df81c15f9022cd3a4',16,1,'title','|host_description| - Traffic - |query_ifName|');
-INSERT INTO snmp_query_graph_sv VALUES (11,'a412c5dfa484b599ec0f570979fdbc9e',10,1,'title','|host_description| - Volume Information - |query_nwVolPhysicalName|');
-INSERT INTO snmp_query_graph_sv VALUES (12,'48f4792dd49fefd7d640ec46b1d7bdb3',11,1,'title','|host_description| - Directory Information - |query_nwVolPhysicalName|');
-INSERT INTO snmp_query_graph_sv VALUES (14,'',12,1,'title','|host_description| - Disk Space - |query_dskDevice|');
-INSERT INTO snmp_query_graph_sv VALUES (15,'49dca5592ac26ff149a4fbd18d690644',13,1,'title','|host_description| - Traffic - |query_ifName|');
-INSERT INTO snmp_query_graph_sv VALUES (16,'bda15298139ad22bdc8a3b0952d4e3ab',13,2,'title','|host_description| - Traffic - |query_ifIP| (|query_ifDescr|)');
-INSERT INTO snmp_query_graph_sv VALUES (17,'29e48483d0471fcd996bfb702a5960aa',13,3,'title','|host_description| - Traffic - |query_ifDescr|/|query_ifIndex|');
-INSERT INTO snmp_query_graph_sv VALUES (18,'3f42d358965cb94ce4f708b59e04f82b',14,1,'title','|host_description| - Traffic - |query_ifName|');
-INSERT INTO snmp_query_graph_sv VALUES (19,'45f44b2f811ea8a8ace1cbed8ef906f1',14,2,'title','|host_description| - Traffic - |query_ifIP| (|query_ifDescr|)');
-INSERT INTO snmp_query_graph_sv VALUES (20,'69c14fbcc23aecb9920b3cdad7f89901',14,3,'title','|host_description| - Traffic - |query_ifDescr|/|query_ifIndex|');
-INSERT INTO snmp_query_graph_sv VALUES (21,'299d3434851fc0d5c0e105429069709d',2,1,'title','|host_description| - Errors - |query_ifName|');
-INSERT INTO snmp_query_graph_sv VALUES (22,'8c8860b17fd67a9a500b4cb8b5e19d4b',2,2,'title','|host_description| - Errors - |query_ifIP| (|query_ifDescr|)');
-INSERT INTO snmp_query_graph_sv VALUES (23,'d96360ae5094e5732e7e7496ceceb636',2,3,'title','|host_description| - Errors - |query_ifDescr|/|query_ifIndex|');
-INSERT INTO snmp_query_graph_sv VALUES (24,'750a290cadc3dc60bb682a5c5f47df16',3,1,'title','|host_description| - Non-Unicast Packets - |query_ifName|');
-INSERT INTO snmp_query_graph_sv VALUES (25,'bde195eecc256c42ca9725f1f22c1dc0',3,2,'title','|host_description| - Non-Unicast Packets - |query_ifIP| (|query_ifDescr|)');
-INSERT INTO snmp_query_graph_sv VALUES (26,'d9e97d22689e4ffddaca23b46f2aa306',3,3,'title','|host_description| - Non-Unicast Packets - |query_ifDescr|/|query_ifIndex|');
-INSERT INTO snmp_query_graph_sv VALUES (27,'48ceaba62e0c2671a810a7f1adc5f751',4,1,'title','|host_description| - Unicast Packets - |query_ifName|');
-INSERT INTO snmp_query_graph_sv VALUES (28,'d6258884bed44abe46d264198adc7c5d',4,2,'title','|host_description| - Unicast Packets - |query_ifIP| (|query_ifDescr|)');
-INSERT INTO snmp_query_graph_sv VALUES (29,'6eb58d9835b2b86222306d6ced9961d9',4,3,'title','|host_description| - Unicast Packets - |query_ifDescr|/|query_ifIndex|');
-INSERT INTO snmp_query_graph_sv VALUES (30,'f21b23df740bc4a2d691d2d7b1b18dba',15,1,'title','|host_description| - Disk Space - |query_dskDevice|');
-INSERT INTO snmp_query_graph_sv VALUES (34,'0a5eb36e98c04ad6be8e1ef66caeed3c',9,1,'title','|host_description| - Traffic - |query_ifName|');
-INSERT INTO snmp_query_graph_sv VALUES (35,'4c4386a96e6057b7bd0b78095209ddfa',9,2,'title','|host_description| - Traffic - |query_ifIP| (|query_ifDescr|)');
-INSERT INTO snmp_query_graph_sv VALUES (36,'fd3a384768b0388fa64119fe2f0cc113',9,3,'title','|host_description| - Traffic - |query_ifDescr|/|query_ifIndex|');
-INSERT INTO snmp_query_graph_sv VALUES (40,'d99f8db04fd07bcd2260d246916e03da',17,1,'title','|host_description| - CPU Utilization - CPU|query_nwhrProcessorNum|');
-INSERT INTO snmp_query_graph_sv VALUES (38,'9852782792ede7c0805990e506ac9618',18,1,'title','|host_description| - Used Space - |query_hrStorageDescr|');
-INSERT INTO snmp_query_graph_sv VALUES (39,'fa2f07ab54fce72eea684ba893dd9c95',19,1,'title','|host_description| - CPU Utilization - CPU|query_hrProcessorFrwID|');
-INSERT INTO snmp_query_graph_sv VALUES (41,'f434ec853c479d424276f367e9806a75',20,1,'title','|host_description| - Traffic - |query_ifName|');
-INSERT INTO snmp_query_graph_sv VALUES (42,'9b085245847444c5fb90ebbf4448e265',20,2,'title','|host_description| - Traffic - |query_ifIP| (|query_ifDescr|)');
-INSERT INTO snmp_query_graph_sv VALUES (43,'5977863f28629bd8eb93a2a9cbc3e306',20,3,'title','|host_description| - Traffic - |query_ifDescr|/|query_ifIndex|');
-INSERT INTO snmp_query_graph_sv VALUES (44,'37b6711af3930c56309cf8956d8bbf14',21,1,'title','|host_description| - Traffic - |query_ifName|');
-INSERT INTO snmp_query_graph_sv VALUES (45,'cc435c5884a75421329a9b08207c1c90',21,2,'title','|host_description| - Traffic - |query_ifIP| (|query_ifDescr|)');
-INSERT INTO snmp_query_graph_sv VALUES (46,'82edeea1ec249c9818773e3145836492',21,3,'title','|host_description| - Traffic - |query_ifDescr|/|query_ifIndex|');
-INSERT INTO snmp_query_graph_sv VALUES (47,'87522150ee8a601b4d6a1f6b9e919c47',22,1,'title','|host_description| - Traffic - |query_ifName|');
-INSERT INTO snmp_query_graph_sv VALUES (48,'993a87c04f550f1209d689d584aa8b45',22,2,'title','|host_description| - Traffic - |query_ifIP| (|query_ifDescr|)');
-INSERT INTO snmp_query_graph_sv VALUES (49,'183bb486c92a566fddcb0585ede37865',22,3,'title','|host_description| - Traffic - |query_ifDescr|/|query_ifIndex|');
-
---
 -- Table structure for table `snmp_template`
 --
 
@@ -2115,7 +1910,7 @@ CREATE TABLE user_auth (
 -- Dumping data for table `user_auth`
 --
 
-INSERT INTO user_auth VALUES (1,'admin','21232f297a57a5a743894a0e4a801fc3',0,'Administrator','','on','on','on','on',1,1,1,1,1,1,0,'0000-00-00 00:00:00','2004-12-29 20:59:45','classic','','','2005-04-10 01:41:25','127.0.0.1');
+INSERT INTO user_auth VALUES (1,'admin','21232f297a57a5a743894a0e4a801fc3',0,'Administrator','','on','on','on','on',1,1,1,1,1,1,0,'0000-00-00 00:00:00','2004-12-29 20:59:45','classic','','','2005-10-16 19:52:38','192.168.1.101');
 INSERT INTO user_auth VALUES (3,'guest','43e9a4ab75570f5b',0,'Guest Account','on','on','on','on','on',3,1,1,1,1,1,0,'0000-00-00 00:00:00','2004-12-29 20:59:45','default','','','0000-00-00 00:00:00','0.0.0.0');
 
 --

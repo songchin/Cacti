@@ -295,7 +295,7 @@ function duplicate_host_template($_host_template_id, $host_template_title) {
 
 	$host_template = db_fetch_row("select * from host_template where id=$_host_template_id");
 	$host_template_graphs = db_fetch_assoc("select * from host_template_graph where host_template_id=$_host_template_id");
-	$host_template_data_queries = db_fetch_assoc("select * from host_template_snmp_query where host_template_id=$_host_template_id");
+	$host_template_data_queries = db_fetch_assoc("select * from host_template_data_query where host_template_id=$_host_template_id");
 
 	/* substitute the title variable */
 	$host_template["name"] = str_replace("<template_title>", $host_template["name"], $host_template_title);
@@ -320,10 +320,10 @@ function duplicate_host_template($_host_template_id, $host_template_title) {
 	}
 	}
 
-	/* create new entry(s): host_template_snmp_query */
+	/* create new entry(s): host_template_data_query */
 	if (sizeof($host_template_data_queries) > 0) {
 	foreach ($host_template_data_queries as $host_template_data_query) {
-		db_execute("insert into host_template_snmp_query (host_template_id,snmp_query_id) values ($host_template_id," . $host_template_data_query["snmp_query_id"] . ")");
+		db_execute("insert into host_template_data_query (host_template_id,data_query_id) values ($host_template_id," . $host_template_data_query["data_query_id"] . ")");
 	}
 	}
 }

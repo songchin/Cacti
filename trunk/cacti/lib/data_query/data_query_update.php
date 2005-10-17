@@ -107,6 +107,18 @@ function api_data_query_field_save($data_query_field_id, &$_fields_data_query_fi
 	}
 }
 
+function api_data_query_remove($data_query_id) {
+	/* sanity checks */
+	validate_id_die($data_query_id, "data_query_id");
+
+	db_execute("delete from data_query_field where data_query_id = " . sql_sanitize($data_query_id));
+	db_execute("delete from data_query where id = " . sql_sanitize($data_query_id));
+
+	db_execute("delete from host_data_query where data_query_id = " . sql_sanitize($data_query_id));
+	db_execute("delete from host_template_data_query where data_query_id = " . sql_sanitize($data_query_id));
+	db_execute("delete from host_data_query_cache where data_query_id = " . sql_sanitize($data_query_id));
+}
+
 /* update_data_query_sort_cache - updates the sort cache for a particular host/data query
 	combination. this works by fetching a list of valid data query index types and choosing
 	the first one in the list. the user can optionally override how the cache is updated
@@ -116,10 +128,23 @@ function api_data_query_field_save($data_query_field_id, &$_fields_data_query_fi
 function update_data_query_sort_cache($host_id, $data_query_id) {
 	require_once(CACTI_BASE_PATH . "/lib/data_query/data_query_info.php");
 
-	$raw_xml = get_data_query_array($data_query_id);
+	/* sanity check for $host_id */
+	if ((!is_numeric($host_id)) || (empty($host_id))) {
+		api_syslog_cacti_log("Invalid input '$host_id' for 'host_id' in " . __FUNCTION__ . "()", SEV_ERROR, 0, 0, 0, false, FACIL_WEBUI);
+		return false;
+	}
+
+	/* sanity check for $data_query_id */
+	if ((!is_numeric($data_query_id)) || (empty($data_query_id))) {
+		api_syslog_cacti_log("Invalid input '$data_query_id' for 'data_query_id' in " . __FUNCTION__ . "()", SEV_ERROR, 0, 0, 0, false, FACIL_WEBUI);
+		return false;
+	}
+
+	/* retrieve information about this data query */
+	$data_query = api_data_query_get($data_query_id);
 
 	/* get a list of valid data query types */
-	$valid_index_types = get_ordered_index_type_list($host_id, $data_query_id);
+	$valid_index_types = get_ordered_index_type_list($data_query_id, $host_id);
 
 	/* something is probably wrong with the data query */
 	if (sizeof($valid_index_types) == 0) {
@@ -131,20 +156,27 @@ function update_data_query_sort_cache($host_id, $data_query_id) {
 
 	/* substitute variables */
 	if (isset($raw_xml["index_title_format"])) {
-		$title_format = str_replace("|chosen_order_field|", "|query_$sort_field|", $raw_xml["index_title_format"]);
+		$title_format = str_replace("|chosen_order_field|", "|query_$sort_field|", $data_query["index_title_format"]);
 	}else{
 		$title_format = "|query_$sort_field|";
 	}
 
 	/* update the cache */
-	db_execute("update host_snmp_query set sort_field = '$sort_field', title_format = '$title_format' where host_id = '$host_id' and snmp_query_id = '$data_query_id'");
+	db_update("host_data_query",
+		array(
+			"sort_field" => array("type" => DB_TYPE_STRING, "value" => $sort_field),
+			"title_format" => array("type" => DB_TYPE_STRING, "value" => $title_format),
+			"host_id" => array("type" => DB_TYPE_NUMBER, "value" => $host_id),
+			"data_query_id" => array("type" => DB_TYPE_NUMBER, "value" => $data_query_id)
+			),
+		array("host_id", "data_query_id"));
 }
 
 /* update_data_query_sort_cache_by_host - updates the sort cache for all data queries associated
 	with a particular host. see update_data_query_sort_cache() for details about updating the cache
    @arg $host_id - the id of the host to update the cache for */
 function update_data_query_sort_cache_by_host($host_id) {
-	$data_queries = db_fetch_assoc("select snmp_query_id from host_snmp_query where host_id = '$host_id'");
+	$data_queries = db_fetch_assoc("select data_query_id from host_data_query where host_id = " . sql_sanitize($host_id));
 
 	if (sizeof($data_queries) > 0) {
 		foreach ($data_queries as $data_query) {

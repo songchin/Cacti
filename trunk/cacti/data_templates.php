@@ -396,7 +396,7 @@ function template_edit() {
 	}else if ($_data_input_type == DATA_INPUT_TYPE_DATA_QUERY) {
 		/* since the "sql" key is not executed until draw_edit_form(), we have fetch the list of
 		 * data queries here as well */
-		$data_queries = db_fetch_assoc("select id,name from snmp_query order by name");
+		$data_queries = api_data_query_list();
 
 		if (sizeof($data_queries) > 0) {
 			/* determine current value for 'data_query_id' */
@@ -474,12 +474,12 @@ function template_edit() {
 			$script_output_fields = db_fetch_assoc("select * from data_input_fields where data_input_id = $_script_id and input_output='out' order by name");
 			$field_input_description = _("Script Output Field");
 		}else if ($_data_input_type == DATA_INPUT_TYPE_DATA_QUERY) {
-			$data_query_xml = get_data_query_array($_data_query_id);
-			$data_query_output_fields = array();
+			$field_list = api_data_query_fields_list($_data_query_id, DATA_QUERY_FIELD_TYPE_OUTPUT);
 
-			while (list($field_name, $field_array) = each($data_query_xml["fields"])) {
-				if ($field_array["direction"] == "output") {
-					$data_query_output_fields[$field_name] = $field_name . " (" . $field_array["name"] . ")";
+			$data_query_output_fields = array();
+			if (sizeof($field_list) > 0) {
+				foreach ($field_list as $field) {
+					$data_query_output_fields{$field["name"]} = $field["name"] . " (" . $field["name_desc"] . ")";
 				}
 			}
 

@@ -204,10 +204,10 @@ function _data_source_input_field__data_query_field_name($field_name, $data_quer
 	<tr bgcolor="#<?php echo field_get_row_color();?>">
 		<td width="50%">
 			<span class="textEditTitle"><?php echo _("Field Name");?></span><br>
-			<?php echo _("Determines the field that Cacti will use when locating a unique row for this dat)a query."); ?>
+			<?php echo _("Determines the field that Cacti will use when locating a unique row for this data query."); ?>
 		</td>
 		<td>
-			<?php form_dropdown($field_name, db_fetch_assoc("select field_name as name,field_name as id from host_snmp_cache where snmp_query_id = " . sql_sanitize($data_query_id) . " group by field_name"), "name", "id", $field_value, "", $field_id);?>
+			<?php form_dropdown($field_name, db_fetch_assoc("select field_name as name,field_name as id from host_data_query_cache where data_query_id = " . sql_sanitize($data_query_id) . " group by field_name"), "name", "id", $field_value, "", $field_id);?>
 		</td>
 	</tr>
 	<?php

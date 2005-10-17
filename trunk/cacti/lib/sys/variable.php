@@ -86,7 +86,7 @@ function substitute_host_variables($string, $host_id) {
 function substitute_data_query_variables($string, $host_id, $data_query_id, $data_query_index, $max_chars = 0) {
 	require_once(CACTI_BASE_PATH . "/lib/sys/string.php");
 
-	$data_query_cache = db_fetch_assoc("select field_name,field_value from host_snmp_cache where host_id = $host_id and snmp_query_id = $data_query_id and snmp_index = '$data_query_index'");
+	$data_query_cache = db_fetch_assoc("select field_name,field_value from host_data_query_cache where host_id = " . sql_sanitize($host_id) . " and data_query_id = " . sql_sanitize($data_query_id) . " and index_value = '" . sql_sanitize($data_query_index) . "'");
 
 	if (sizeof($data_query_cache) > 0) {
 		foreach ($data_query_cache as $item) {
@@ -105,7 +105,7 @@ function substitute_data_query_variables($string, $host_id, $data_query_id, $dat
 
 function evaluate_data_query_suggested_values($host_id, $data_query_id, $data_query_index, $sql_table, $sql_where) {
 	/* see which data query cache variables are available */
-	$data_query_cache = array_rekey(db_fetch_assoc("select field_name,field_value from host_snmp_cache where host_id = $host_id and snmp_query_id = $data_query_id and snmp_index = '$data_query_index'"), "field_name", "field_value");
+	$data_query_cache = array_rekey(db_fetch_assoc("select field_name,field_value from host_data_query_cache where host_id = " . sql_sanitize($host_id) . " and data_query_id = " . sql_sanitize($data_query_id) . " and index_value = '" . sql_sanitize($data_query_index) . "'"), "field_name", "field_value");
 
 	/* get a list of suggested values */
 	$suggested_values = db_fetch_assoc("select value from $sql_table where $sql_where order by sequence");

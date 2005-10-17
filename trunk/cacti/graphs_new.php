@@ -34,6 +34,7 @@ require_once(CACTI_BASE_PATH . "/lib/data_source/data_source_form.php");
 require_once(CACTI_BASE_PATH . "/lib/data_template/data_template_info.php");
 require_once(CACTI_BASE_PATH . "/lib/data_source/data_source_update.php");
 require_once(CACTI_BASE_PATH . "/include/data_source/data_source_constants.php");
+require_once(CACTI_BASE_PATH . "/include/data_query/data_query_constants.php");
 require_once(CACTI_BASE_PATH . "/lib/utility.php");
 require_once(CACTI_BASE_PATH . "/lib/poller.php");
 require_once(CACTI_BASE_PATH . "/lib/sys/sort.php");
@@ -83,7 +84,7 @@ function form_save() {
    ------------------- */
 
 function host_reload_query() {
-	run_data_query($_GET["host_id"], $_GET["id"]);
+	api_data_query_execute($_GET["host_id"], $_GET["id"]);
 }
 
 /* -------------------
@@ -170,7 +171,7 @@ function host_new_graphs_save() {
 				$data_query_id = (isset($skel["custom_data"]["all_dq"]["data_query_id"]) ? $skel["custom_data"]["all_dq"]["data_query_id"] : 0);
 
 				/* decode the data query index into its literal form */
-				$data_query_index = decode_data_query_index((isset($skel["custom_data"]["all_dq"]["data_query_index"]) ? $skel["custom_data"]["all_dq"]["data_query_index"] : 0), get_data_query_indexes($_POST["host_id"], $data_query_id));
+				$data_query_index = decode_data_query_index((isset($skel["custom_data"]["all_dq"]["data_query_index"]) ? $skel["custom_data"]["all_dq"]["data_query_index"] : 0), get_data_query_indexes($data_query_id, $_POST["host_id"]));
 			}else{
 				$is_data_query_graph = false;
 				$data_query_id = 0;
@@ -192,7 +193,7 @@ function host_new_graphs_save() {
 						$skel["custom_data"]{$data_template["id"]}["data_query_id"] = $data_query_id;
 						$skel["custom_data"]{$data_template["id"]}["data_query_index"] = $data_query_index;
 						$skel["custom_data"]{$data_template["id"]}["data_query_field_name"] = $data_query_field_name;
-						$skel["custom_data"]{$data_template["id"]}["data_query_field_value"] = get_data_query_row_value($data_query_field_name, $data_query_index, $_POST["host_id"], $data_query_id);
+						$skel["custom_data"]{$data_template["id"]}["data_query_field_value"] = get_data_query_row_value($data_query_id, $_POST["host_id"], $data_query_field_name, $data_query_index);
 					}
 				}
 			}
@@ -320,7 +321,7 @@ function host_new_graphs($selected_graphs = "", $map_id_to_index = "") {
 				$num_graphs = sizeof($form_type_index_array);
 
 				/* DRAW: Data Query */
-				html_start_box("<strong>" . _("Create") . " $num_graphs " . _("Graph") . (($num_graphs > 1) ? "s" : "") . " from '" . db_fetch_cell("select name from snmp_query where id = $data_query_id") . "'", "98%", $colors["header_background"], "3", "center", "");
+				html_start_box("<strong>" . _("Create") . " $num_graphs " . _("Graph") . (($num_graphs > 1) ? "s" : "") . " from '" . api_data_query_name_get($data_query_id) . "'", "98%", $colors["header_background"], "3", "center", "");
 			}
 
 			/* get information about this graph template */
@@ -555,224 +556,173 @@ function graphs() {
 
 	html_end_box();
 
-	$data_queries = db_fetch_assoc("select
-		snmp_query.id,
-		snmp_query.name,
-		snmp_query.xml_path
-		from snmp_query,host_snmp_query
-		where host_snmp_query.snmp_query_id=snmp_query.id
-		and host_snmp_query.host_id = " . $host["id"] . "
-		order by snmp_query.name");
+	/* get a list of all data queries that are assigned to this device */
+	$data_queries = api_data_query_device_assigned_list($host["id"]);
 
-	print "<script type='text/javascript'>\nvar created_graphs = new Array()\n</script>\n";
+	echo "<script type='text/javascript'>\nvar created_graphs = new Array()\n</script>\n";
 
 	if (sizeof($data_queries) > 0) {
 		foreach ($data_queries as $data_query) {
-			unset($total_rows);
-
-			$xml_array = get_data_query_array($data_query["id"]);
-
-			$num_input_fields = 0;
-			$num_visible_fields = 0;
-
-			if ($xml_array != false) {
-				/* loop through once so we can find out how many input fields there are */
-				reset($xml_array["fields"]);
-				while (list($field_name, $field_array) = each($xml_array["fields"])) {
-					if ($field_array["direction"] == "input") {
-						$num_input_fields++;
-
-						if (!isset($total_rows)) {
-							$total_rows = db_fetch_cell("select count(*) from host_snmp_cache where host_id = " . $host["id"] . " and snmp_query_id = " . $data_query["id"] . " and field_name = '$field_name'");
-						}
-					}
-				}
-			}
-
-			if (!isset($total_rows)) {
-				$total_rows = 0;
-			}
-
 			/* we give users the option to turn off the javascript features for data queries with lots of rows */
-			if (read_config_option("max_data_query_javascript_rows") >= $total_rows) {
+			if (read_config_option("max_data_query_javascript_rows") >= api_data_query_cache_num_rows_get($data_query["id"], $host["id"])) {
 				$use_javascript = true;
 			}else{
 				$use_javascript = false;
 			}
 
-			$data_query_graphs = db_fetch_assoc("select distinct
-				graph_template.id,
-				graph_template.template_name
-				from graph_template,graph_template_item,data_template_item,data_template,data_template_field
-				where graph_template.id=graph_template_item.graph_template_id
-				and graph_template_item.data_template_item_id=data_template_item.id
-				and data_template_item.data_template_id=data_template.id
-				and data_template.id=data_template_field.data_template_id
-				and data_template.data_input_type = " . DATA_INPUT_TYPE_DATA_QUERY . "
-				and (data_template_field.name = 'data_query_id' and data_template_field.value = '" . $data_query["id"] . "')");
+			/* get a list of all graph templates that reference this data query */
+			$attached_graph_templates = api_data_query_attached_graphs_list($data_query["id"]);
 
-			if ((sizeof($data_query_graphs) > 0) && ($use_javascript == true)) {
-				print "<script type='text/javascript'>\n<!--\n";
+			/* build a javascript array that keeps tracks of which graphs have already been created */
+			if ((sizeof($attached_graph_templates) > 0) && ($use_javascript == true)) {
+				echo "<script type='text/javascript'>\n<!--\n";
 
-				foreach ($data_query_graphs as $data_query_graph) {
-					$created_graphs = db_fetch_assoc("select distinct
-						data_source_field.value as data_query_index
-						from graph,graph_item,data_source_item,data_source,data_source_field
-						where graph.id=graph_item.graph_id
-						and graph_item.data_source_item_id=data_source_item.id
-						and data_source_item.data_source_id=data_source.id
-						and data_source.id=data_source_field.data_source_id
-						and graph.graph_template_id = " . $data_query_graph["id"] . "
-						and graph.host_id = " . $host["id"] . "
-						and data_source.data_input_type = " . DATA_INPUT_TYPE_DATA_QUERY . "
-						and data_source_field.name = 'data_query_index'");
+				foreach ($attached_graph_templates as $graph_template) {
+					/* get a list of all data query indexes that have been created as graphs using this graph template */
+					$created_graphs = api_data_query_graphed_indexes_list($graph_template["id"], $host["id"]);
 
-					print "created_graphs[" . $data_query_graph["id"] . "] = new Array(";
+					echo "created_graphs[" . $graph_template["id"] . "] = new Array(";
 
 					$cg_ctr = 0;
 					if (sizeof($created_graphs) > 0) {
 						foreach ($created_graphs as $created_graph) {
-							print (($cg_ctr > 0) ? "," : "") . "'" . encode_data_query_index($created_graph["data_query_index"]) . "'";
+							echo (($cg_ctr > 0) ? "," : "") . "'" . encode_data_query_index($created_graph["data_query_index"]) . "'";
 
 							$cg_ctr++;
 						}
 					}
 
-					print ")\n";
+					echo ")\n";
 				}
 
-				print "//-->\n</script>\n";
+				echo "//-->\n</script>\n";
 			}
 
-			print "	<table width='98%' style='background-color: #" . $colors["form_alternate2"] . "; border: 1px solid #" . $colors["header_background"] . ";' align='center' cellpadding='3' cellspacing='0'>\n
-					<tr>
-						<td bgcolor='#" . $colors["header_background"] . "' colspan='" . ($num_input_fields+1) . "'>
-							<table  cellspacing='0' cellpadding='0' width='100%' >
-								<tr>
-									<td class='textHeaderDark'>
-										<strong>" . _("Data Query") . " </strong> [" . $data_query["name"] . "]
-									</td>
-									<td align='right' nowrap>
-										<a href='graphs_new.php?action=query_reload&id=" . $data_query["id"] . "&host_id=" . $host["id"] . "'><img src='". html_get_theme_images_path("reload_icon_small.gif") . "' alt='" . _("Reload Associated Query") . "' border='0' align='absmiddle'></a>
-									</td>
-								</tr>
-							</table>
-						</td>
-					</tr>";
-
-		if ($xml_array != false) {
-			$html_dq_header = "";
 			$data_query_indexes = array();
+			$data_query_field_names = array();
+			$data_query_field_desc = array();
+			$num_visible_columns = 0;
 
-			reset($xml_array["fields"]);
-			while (list($field_name, $field_array) = each($xml_array["fields"])) {
-				if ($field_array["direction"] == "input") {
-					$raw_data = db_fetch_assoc("select field_value,snmp_index from host_snmp_cache where host_id = " . $host["id"] . " and field_name = '$field_name' and snmp_query_id = " . $data_query["id"]);
+			$data_query_fields = api_data_query_fields_list($data_query["id"], DATA_QUERY_FIELD_TYPE_INPUT);
 
-					/* don't even both to display the column if it has no data */
-					if (sizeof($raw_data) > 0) {
-						/* draw each header item <TD> */
-						$html_dq_header .= "<td height='1'><strong><font color='#" . $colors["header_text"] . "'>" . $field_array["name"] . "</font></strong></td>\n";
+			/* retrieve a list of values for each data query field from the cache */
+			if (sizeof($data_query_fields) > 0) {
+				foreach ($data_query_fields as $field) {
+					$cache_data = api_data_query_cache_field_get($data_query["id"], $host["id"], $field["name"]);
 
-						foreach ($raw_data as $data) {
-							$data_query_data[$field_name]{$data["snmp_index"]} = $data["field_value"];
+					/* be sure to ignore the fields which contain no data */
+					if (sizeof($cache_data) > 0) {
+						foreach ($cache_data as $row) {
+							$data_query_data{$row["index_value"]}{$field["name"]} = $row["field_value"];
 
-							if (!in_array($data["snmp_index"], $data_query_indexes, true)) {
-								array_push($data_query_indexes, $data["snmp_index"]);
+							if (!in_array($row["index_value"], $data_query_indexes, true)) {
+								$data_query_indexes[] = $row["index_value"];
 							}
 						}
 
-						$num_visible_fields++;
-					}elseif (sizeof($raw_data) == 0) {
-						/* we are choosing to not display this column, so unset the associated
-						field in the xml array so it is not drawn */
-						unset($xml_array["fields"][$field_name]);
+						/* always make sure that the index field is the first column */
+						if (($data_query["index_field_id"] == $field["id"]) && (sizeof($data_query_field_names) > 0)) {
+							$data_query_field_names[] = $data_query_field_names[0];
+							$data_query_field_names[0] = $field["name"];
+						}else{
+							$data_query_field_names[] = $field["name"];
+						}
+
+						/* keep a hash of field name->desc mappings for the row headings */
+						$data_query_field_desc{$field["name"]} = $field["name_desc"];
+
+						$num_visible_columns++;
 					}
 				}
 			}
 
 			/* if the user specified a prefered sort order; sort the list of indexes before displaying them */
-			if (isset($xml_array["index_order_type"])) {
-				if ($xml_array["index_order_type"] == "numeric") {
-					usort($data_query_indexes, "usort_numeric");
-				}else if ($xml_array["index_order_type"] == "alphabetic") {
-					usort($data_query_indexes, "usort_alphabetic");
-				}
+			if ($data_query["index_order_type"] == DATA_QUERY_INDEX_SORT_TYPE_ALPHABETIC) {
+				usort($data_query_indexes, "usort_alphabetic");
+			}else if ($data_query["index_order_type"] == DATA_QUERY_INDEX_SORT_TYPE_NUMERIC) {
+				usort($data_query_indexes, "usort_numeric");
 			}
 
-			if (sizeof($data_query_graphs) == 0) {
-				print "<tr bgcolor='#" . $colors["form_alternate1"] . "'><td>" . _("This data query is not being used by any graph templates. You must create at
-					least one graph template that references to a data template using this data query.") . "</td></tr>\n";
-			}else if ($num_visible_fields == 0) {
-				print "<tr bgcolor='#" . $colors["form_alternate1"] . "'><td>" . _("This data query returned 0 rows, perhaps there was a problem executing this
-					data query. You can") . " <a href='host.php?action=query_verbose&id=" . $data_query["id"] . "&host_id=" . $host["id"] . "'>" . _("run this data
-					query in debug mode</a> to get more information.") . "</td></tr>\n";
+			?>
+			<table width='98%' style='background-color: #<?php echo $colors["form_alternate2"];?>; border: 1px solid #<?php echo $colors["header_background"];?>;' align='center' cellpadding='3' cellspacing='0'>
+				<tr>
+					<td bgcolor='#<?php echo $colors["header_background"];?>' colspan='<?php echo (sizeof($data_query_field_names)+1);?>'>
+						<table  cellspacing='0' cellpadding='0' width='100%' >
+							<tr>
+								<td class='textHeaderDark'>
+									<strong><?php echo _("Data Query");?></strong> [<?php echo $data_query["name"];?>]
+								</td>
+								<td align='right' nowrap>
+									<a href='graphs_new.php?action=query_reload&id=<?php echo $data_query["id"];?>&host_id=<?php echo $host["id"];?>'><img src='<?php echo html_get_theme_images_path("reload_icon_small.gif");?>' alt='<?php echo _("Reload Associated Query");?>' border='0' align='absmiddle'></a>
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+				<?php
+
+			if (sizeof($attached_graph_templates) == 0) {
+				echo "<tr bgcolor='#" . $colors["form_alternate1"] . "'><td>" . _("This data query is not being used by any graph templates. You must create at least one graph template that references to a data template using this data query.") . "</td></tr>\n";
+			}else if (sizeof($data_query_field_names) == 0) {
+				echo "<tr bgcolor='#" . $colors["form_alternate1"] . "'><td>" . _("This data query returned 0 rows, perhaps there was a problem executing this data query. You can") . " <a href='host.php?action=query_verbose&id=" . $data_query["id"] . "&host_id=" . $host["id"] . "'>" . _("run this data query in debug mode</a> to get more information.") . "</td></tr>\n";
 			}else{
-				print "	<tr bgcolor='#" . $colors["header_panel_background"] . "'>
-						$html_dq_header
-						<td width='1%' align='center' bgcolor='#" . $colors["header_panel_background"] . "' style='" . get_checkbox_style() . "'><input type='checkbox' style='margin: 0px;' name='all_" . $data_query["id"] . "' title='Select All' onClick='" . _("SelectAll") . "(\"sg_" . $data_query["id"] . "\",this.checked);" . (($use_javascript == true) ? "dq_update_selection_indicators();" : "") . "'></td>\n
-					</tr>\n";
+
+				echo "<tr bgcolor='#" . $colors["header_panel_background"] . "'>\n";
+
+				foreach ($data_query_field_names as $field_name) {
+					echo "<td height='1'><strong><font color='#" . $colors["header_text"] . "'>" . $data_query_field_desc[$field_name] . "</font></strong></td>\n";
+				}
+
+				echo "<td width='1%' align='center' bgcolor='#" . $colors["header_panel_background"] . "' style='" . get_checkbox_style() . "'><input type='checkbox' style='margin: 0px;' name='all_" . $data_query["id"] . "' title='Select All' onClick='" . _("SelectAll") . "(\"sg_" . $data_query["id"] . "\",this.checked);" . (($use_javascript == true) ? "dq_update_selection_indicators();" : "") . "'></td>\n</tr>\n";
 			}
 
 			$row_counter = 0;
-			if ((sizeof($data_query_indexes) > 0) && (sizeof($data_query_graphs) > 0)) {
-				while (list($id, $data_query_index) = each($data_query_indexes)) {
-					$query_row = $data_query["id"] . "_" . encode_data_query_index($data_query_index);
+			foreach ($data_query_indexes as $index_value) {
+				$query_row = $data_query["id"] . "_" . encode_data_query_index($index_value);
 
-					print "<tr id='line$query_row' bgcolor='#" . (($row_counter % 2 == 0) ? $colors["form_alternate1"] : $colors["form_alternate2"]) . "'>"; $i++;
+				echo "<tr id='line$query_row' bgcolor='#" . (($row_counter % 2 == 0) ? $colors["form_alternate1"] : $colors["form_alternate2"]) . "'>"; $i++;
 
-					$column_counter = 0;
-					reset($xml_array["fields"]);
-					while (list($field_name, $field_array) = each($xml_array["fields"])) {
-						if ($field_array["direction"] == "input") {
-							if (isset($data_query_data[$field_name][$data_query_index])) {
-								print "<td " . (($use_javascript == true) ? "onClick='dq_select_line(" . $data_query["id"] . ",\"" . encode_data_query_index($data_query_index) . "\");'" : "")  ."><span id='text$query_row" . "_" . $column_counter . "'>" . $data_query_data[$field_name][$data_query_index] . "</span></td>";
-							}else{
-								print "<td " . (($use_javascript == true) ? "onClick='dq_select_line(" . $data_query["id"] . ",\"" . encode_data_query_index($data_query_index) . "\");'" : "") . "><span id='text$query_row" . "_" . $column_counter . "'></span></td>";
-							}
+				$column_counter = 0;
+				foreach ($data_query_field_names as $field_name) {
+					echo "<td " . (($use_javascript == true) ? "onClick='dq_select_line(" . $data_query["id"] . ",\"" . encode_data_query_index($index_value) . "\");'" : "")  ."><span id='text$query_row" . "_" . $column_counter . "'>" . (isset($data_query_data[$index_value][$field_name]) ? $data_query_data[$index_value][$field_name] : "") . "</span></td>";
 
-							$column_counter++;
-						}
-					}
-
-					print "<td align='right'>";
-					print "<input type='checkbox' name='sg_$query_row' id='sg_$query_row' " . (($use_javascript == true) ? "onClick='dq_update_selection_indicators();'" : "") . ">";
-					print "</td>";
-					print "</tr>\n";
-
-					$row_counter++;
+					$column_counter++;
 				}
+
+				echo "<td align='right'>";
+				echo "<input type='checkbox' name='sg_$query_row' id='sg_$query_row' " . (($use_javascript == true) ? "onClick='dq_update_selection_indicators();'" : "") . ">";
+				echo "</td>";
+				echo "</tr>\n";
+
+				$row_counter++;
 			}
-		}else{
-			print "<tr bgcolor='#" . $colors["form_alternate1"] . "'><td colspan='2' style='color: red; font-size: 12px; font-weight: bold;'>" . _("Error in data query.") . "</td></tr>\n";
+
+			echo "</table>";
+
+			if (sizeof($attached_graph_templates) == 1) {
+				form_hidden_box("sgg_" . $data_query["id"] . "' id='sgg_" . $data_query["id"], $attached_graph_templates[0]["id"], "");
+			}elseif (sizeof($attached_graph_templates) > 1) {
+				print "	<table align='center' width='98%'>
+						<tr>
+							<td width='1' valign='top'>
+								<img src='" . html_get_theme_images_path("arrow.gif") . "' alt='' align='absmiddle'>&nbsp;
+							</td>
+							<td align='right'>
+								<span style='font-size: 12px; font-style: italic;'>" . _("Select a graph type:") . "</span>&nbsp;
+								<select name='sgg_" . $data_query["id"] . "' id='sgg_" . $data_query["id"] . "' " . (($use_javascript == true) ? "onChange='dq_update_deps(" . $data_query["id"] . "," . $num_visible_columns . ");'" : "") . ">
+									"; html_create_list($attached_graph_templates,"template_name","id","0"); print "
+								</select>
+							</td>
+						</tr>
+					</table>";
+			}
+
+			print "<br>";
+
+			if ($use_javascript == true) {
+				print "<script type='text/javascript'>dq_update_deps(" . $data_query["id"] . "," . ($num_visible_columns) . ");</script>\n";
+			}
 		}
-
-		print "</table>";
-
-		if (sizeof($data_query_graphs) == 1) {
-			form_hidden_box("sgg_" . $data_query["id"] . "' id='sgg_" . $data_query["id"], $data_query_graphs[0]["id"], "");
-		}elseif (sizeof($data_query_graphs) > 1) {
-			print "	<table align='center' width='98%'>
-					<tr>
-						<td width='1' valign='top'>
-							<img src='" . html_get_theme_images_path("arrow.gif") . "' alt='' align='absmiddle'>&nbsp;
-						</td>
-						<td align='right'>
-							<span style='font-size: 12px; font-style: italic;'>" . _("Select a graph type:") . "</span>&nbsp;
-							<select name='sgg_" . $data_query["id"] . "' id='sgg_" . $data_query["id"] . "' " . (($use_javascript == true) ? "onChange='dq_update_deps(" . $data_query["id"] . "," . $num_visible_fields . ");'" : "") . ">
-								"; html_create_list($data_query_graphs,"template_name","id","0"); print "
-							</select>
-						</td>
-					</tr>
-				</table>";
-		}
-
-		print "<br>";
-
-		if ($use_javascript == true) {
-			print "<script type='text/javascript'>dq_update_deps(" . $data_query["id"] . "," . ($num_visible_fields) . ");</script>\n";
-		}
-	}
 	}
 
 	form_hidden_box("save_component_graph", "1", "");

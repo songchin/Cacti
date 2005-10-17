@@ -25,6 +25,7 @@
 require(dirname(__FILE__) . "/include/config.php");
 require_once(CACTI_BASE_PATH . "/include/auth/validate.php");
 require_once(CACTI_BASE_PATH . "/lib/utility.php");
+require_once(CACTI_BASE_PATH . "/lib/data_query/data_query_info.php");
 
 $host_actions = array(
 	1 => _("Delete"),
@@ -91,7 +92,7 @@ function form_save() {
 					db_execute("replace into host_template_graph (host_template_id,graph_template_id) values($host_template_id," . $_POST["graph_template_id"] . ")");
 					$redirect_back = true;
 				}elseif (isset($_POST["add_dq_x"])) {
-					db_execute("replace into host_template_snmp_query (host_template_id,snmp_query_id) values($host_template_id," . $_POST["snmp_query_id"] . ")");
+					db_execute("replace into host_template_data_query (host_template_id,data_query_id) values($host_template_id," . $_POST["snmp_query_id"] . ")");
 					$redirect_back = true;
 				}
 			}else{
@@ -120,7 +121,7 @@ function form_actions() {
 
 		if ($_POST["drp_action"] == "1") { /* delete */
 			db_execute("delete from host_template where " . array_to_sql_or($selected_items, "id"));
-			db_execute("delete from host_template_snmp_query where " . array_to_sql_or($selected_items, "host_template_id"));
+			db_execute("delete from host_template_data_query where " . array_to_sql_or($selected_items, "host_template_id"));
 			db_execute("delete from host_template_graph where " . array_to_sql_or($selected_items, "host_template_id"));
 
 			/* "undo" any device that is currently using this template */
@@ -207,7 +208,7 @@ function template_item_remove_gt() {
 }
 
 function template_item_remove_dq() {
-	db_execute("delete from host_template_snmp_query where snmp_query_id=" . $_GET["id"] . " and host_template_id=" . $_GET["host_template_id"]);
+	db_execute("delete from host_template_data_query where data_query_id=" . $_GET["id"] . " and host_template_id=" . $_GET["host_template_id"]);
 }
 
 function template_edit() {
@@ -290,12 +291,12 @@ function template_edit() {
 		html_start_box("<strong>" . _("Associated Data Queries") . "</strong>", "98%", $colors["header_background"], "3", "center", "");
 
 		$selected_data_queries = db_fetch_assoc("select
-			snmp_query.id,
-			snmp_query.name
-			from snmp_query,host_template_snmp_query
-			where snmp_query.id=host_template_snmp_query.snmp_query_id
-			and host_template_snmp_query.host_template_id=" . $_GET["id"] . "
-			order by snmp_query.name");
+			data_query.id,
+			data_query.name
+			from data_query,host_template_data_query
+			where data_query.id=host_template_data_query.data_query_id
+			and host_template_data_query.host_template_id=" . $_GET["id"] . "
+			order by data_query.name");
 
 		$i = 0;
 		if (sizeof($selected_data_queries) > 0) {
@@ -321,13 +322,7 @@ function template_edit() {
 			<td colspan="2">
 				<table cellspacing="0" cellpadding="1" width="100%">
 					<td nowrap><?php echo _("Add Data Query");?>:&nbsp;
-						<?php form_dropdown("snmp_query_id",db_fetch_assoc("select
-							snmp_query.id,
-							snmp_query.name
-							from snmp_query left join host_template_snmp_query
-							on (snmp_query.id=host_template_snmp_query.snmp_query_id and host_template_snmp_query.host_template_id=" . $_GET["id"] . ")
-							where host_template_snmp_query.host_template_id is null
-							order by snmp_query.name"),"name","id","","","");?>
+						<?php form_dropdown("snmp_query_id", api_data_query_list(),"name","id","","","");?>
 					</td>
 					<td align="right">
 						&nbsp;<input type="image" src="<?php print html_get_theme_images_path('button_add.gif');?>" alt="Add" name="add_dq" align="absmiddle">
