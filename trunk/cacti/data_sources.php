@@ -32,6 +32,7 @@ require_once(CACTI_BASE_PATH . "/lib/data_source/data_source_form.php");
 require_once(CACTI_BASE_PATH . "/lib/data_source/data_source_info.php");
 require_once(CACTI_BASE_PATH . "/lib/data_template/data_template_push.php");
 require_once(CACTI_BASE_PATH . "/lib/data_query/data_query_info.php");
+require_once(CACTI_BASE_PATH . "/include/data_query/data_query_constants.php");
 require_once(CACTI_BASE_PATH . "/include/data_source/data_source_constants.php");
 require_once(CACTI_BASE_PATH . "/include/data_source/data_source_form.php");
 require_once(CACTI_BASE_PATH . "/lib/template.php");
@@ -607,12 +608,12 @@ function ds_edit() {
 				$script_output_fields = db_fetch_assoc("select * from data_input_fields where data_input_id = $_script_id and input_output='out' order by name");
 				$field_input_description = _("Script Output Field");
 			}else if ($_data_input_type == DATA_INPUT_TYPE_DATA_QUERY) {
-				$data_query_xml = get_data_query_array($_data_query_id);
-				$data_query_output_fields = array();
+				$field_list = api_data_query_fields_list($_data_query_id, DATA_QUERY_FIELD_TYPE_OUTPUT);
 
-				while (list($field_name, $field_array) = each($data_query_xml["fields"])) {
-					if ($field_array["direction"] == "output") {
-						$data_query_output_fields[$field_name] = $field_name . " (" . $field_array["name"] . ")";
+				$data_query_output_fields = array();
+				if (sizeof($field_list) > 0) {
+					foreach ($field_list as $field) {
+						$data_query_output_fields{$field["name"]} = $field["name"] . " (" . $field["name_desc"] . ")";
 					}
 				}
 
