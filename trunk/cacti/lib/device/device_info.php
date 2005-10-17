@@ -22,8 +22,30 @@
  +-------------------------------------------------------------------------+
 */
 
-/* Functions includes */
-require_once(CACTI_BASE_PATH . "/lib/device/device_update.php");
-require_once(CACTI_BASE_PATH . "/lib/device/device_info.php");
+function api_device_get($device_id) {
+	/* sanity check for $device_id */
+	if ((!is_numeric($device_id)) || (empty($device_id))) {
+		api_syslog_cacti_log("Invalid input '$device_id' for 'device_id' in " . __FUNCTION__ . "()", SEV_ERROR, 0, 0, 0, false, FACIL_WEBUI);
+		return false;
+	}
+
+	return db_fetch_row("select * from host where id = " . sql_sanitize($device_id));
+}
+
+function api_device_data_query_get($device_id, $data_query_id) {
+	/* sanity check for $data_query_id */
+	if ((!is_numeric($data_query_id)) || (empty($data_query_id))) {
+		api_syslog_cacti_log("Invalid input '$data_query_id' for 'data_query_id' in " . __FUNCTION__ . "()", SEV_ERROR, 0, 0, 0, false, FACIL_WEBUI);
+		return false;
+	}
+
+	/* sanity check for $device_id */
+	if ((!is_numeric($device_id)) || (empty($device_id))) {
+		api_syslog_cacti_log("Invalid input '$device_id' for 'host_id' in " . __FUNCTION__ . "()", SEV_ERROR, 0, 0, 0, false, FACIL_WEBUI);
+		return false;
+	}
+
+	return db_fetch_row("select * from host_data_query where host_id = " . sql_sanitize($device_id) . " and data_query_id = " . sql_sanitize($data_query_id));
+}
 
 ?>
