@@ -21,25 +21,37 @@
  +-------------------------------------------------------------------------+
 */
 
+/* box state variables */
 var _block_row = '';
 var _init_drag_drop = new Array();
 var _current_action_type = new Array();
 var _elm_selected_rows = new Array();
 
-/* display row functions */
+/* ======== display row functions ======== */
 
+/* display_row_hover - called when a user hovers their mouse over a row
+   @arg row - (object) the object representing the row that the user's mouse is
+     hovering over */
 function display_row_hover(row) {
 	if (document.getElementById(row).className == 'content-row') {
 		document.getElementById(row).className = 'content-row-hover';
 	}
 }
 
+/* display_row_clear - called when a user moves their mouse out of a row
+   @arg row - (object) the object representing the row that the user's mouse moved
+     from */
 function display_row_clear(row) {
 	if (document.getElementById(row).className == 'content-row-hover') {
 		document.getElementById(row).className = 'content-row';
 	}
 }
 
+/* display_row_select - called when a user clicks a row with the mouse
+   @arg box_id - (string) the unique identifier for the container box
+   @arg parent_form - (object) a reference to the container form object
+   @arg row - (object) the object representing the row that has been clicked
+   @arg checkbox (string) the name of the checkbox field corresponding to the row */
 function display_row_select(box_id, parent_form, row, checkbox) {
 	if (_block_row == row) {
 		_block_row = '';
@@ -59,40 +71,72 @@ function display_row_select(box_id, parent_form, row, checkbox) {
 	}
 }
 
+/* display_row_block - blocks all display_row_select() operations. this is often used
+     when the user performs a mousedown on a link inside of a row so a row click
+     event is not registered
+   @arg id - (string) the name of the row object to block mousedown events for */
 function display_row_block(id) {
 	_block_row = id;
 }
 
-/* action bar functions */
+/* ======== action bar functions ======== */
 
+/* action_bar_button_mouseover - called when a user hovers their mouse over a button
+     in the actions toolbar
+   @arg object_name - (object) the object representing the button that the user's mouse
+     is hovering over */
 function action_bar_button_mouseover(object_name) {
 	document.getElementById(object_name).className = 'action-bar-button-hover';
 }
 
+/* action_bar_button_mouseout - called when a user moves their mouse out of an actions
+     toolbar button
+   @arg object_name - (object) the object representing the button that the user's mouse
+     moved from */
 function action_bar_button_mouseout(object_name) {
 	document.getElementById(object_name).className = 'action-bar-button-out';
 }
 
+/* action_bar_menu_mouseover - called when a user hovers their mouse over a row in the
+     actions dropdown menu
+   @arg object_name - (object) the object representing the row that the user's mouse
+     is hovering over */
 function action_bar_menu_mouseover(object_name) {
 	document.getElementById(object_name).className = 'action-bar-menu-hover';
 }
 
+/* action_bar_menu_mouseout - called when a user moves their mouse out of a row in the
+     actions dropdown menu
+   @arg object_name - (object) the object representing the row that the user's mouse
+     moved from */
 function action_bar_menu_mouseout(object_name) {
 	document.getElementById(object_name).className = 'action-bar-menu-out';
 }
 
+/* action_bar_button_menu_mouseover - called when a user hovers their mouse over the
+     menu dropdown button in the actions toolbar. this is used to prevent events from
+     firing on this button when the actions area box is displayed
+   @arg box_id - (string) the unique identifier for the container box */
 function action_bar_button_menu_mouseover(box_id) {
 	if (document.getElementById('box-' + box_id + '-action-bar-menu').style.visibility == 'hidden') {
 		action_bar_button_mouseover('box-' + box_id + '-button-menu');
 	}
 }
 
+/* action_bar_button_menu_mouseout - called when a user moves their mouse out of the
+     menu dropdown button in the actions toolbar. this is used to prevent events from
+     firing on this button when the actions area box is displayed
+   @arg box_id - (string) the unique identifier for the container box */
 function action_bar_button_menu_mouseout(box_id) {
 	if (document.getElementById('box-' + box_id + '-action-bar-menu').style.visibility == 'hidden') {
 		action_bar_button_mouseout('box-' + box_id + '-button-menu');
 	}
 }
 
+/* action_bar_button_menu_click - called when a user clicks the menu dropdown
+     button in the actions toolbar. this takes care of hiding or showing the actions menu
+     dropdown as well as changing the appearance of the button
+   @arg box_id - (string) the unique identifier for the container box */
 function action_bar_button_menu_click(box_id) {
 	action_bar_menu = document.getElementById('box-' + box_id + '-action-bar-menu');
 	action_bar_button_container = document.getElementById('box-' + box_id + '-button-menu-container');
@@ -106,26 +150,20 @@ function action_bar_button_menu_click(box_id) {
 		action_bar_menu.style.visibility = 'visible';
 		action_bar_button_menu.className = 'action-bar-button-click';
 		action_bar_button_container.style.backgroundColor = '#e0e0ff';
-
 	}
 }
 
-/* action area functions */
+/* ======== action area box functions ======== */
 
+/* action_area_show - called when a user performs a defined action (remove, duplicate, etc).
+     this function takes care of rendering objects in the actions are box, hiding the actions
+     menu dropdown, and adjusting the dimensions/position of the actions area box
+   @arg box_id - (string) the unique identifier for the container box
+   @arg parent_form - (object) a reference to the container form object
+   @arg type - (string) the unique identifier for the selected action type */
 function action_area_show(box_id, parent_form, type) {
 	/* parent div container for all action box items */
 	parent_div = document.getElementById('box-' + box_id + '-action-area-items');
-
-	/* make sure that the drag and drop code is initialized */
-	//if (!_init_drag_drop[box_id]) {
-	//	_init_drag_drop[box_id] = true;
-
-		//SET_DHTML("box-" + box_id + "-action-area-frame", "box-" + box_id + "-action-area-header"+DRAG, "box-" + box_id + "-action-area-items");
-		//SET_DHTML("box-1-action-area-frame", "box-1-action-area-header"+DRAG, "box-1-action-area-items");
-
-		/* force position because of ie weirdness */
-		//dd.elements["box-" + box_id + "-action-area-frame"].moveTo((get_browser_width() / 2) - 200, '150');
-	//}
 
 	/* clear the box */
 	parent_div.innerHTML = '';
@@ -155,10 +193,15 @@ function action_area_show(box_id, parent_form, type) {
 	_current_action_type[box_id] = type;
 }
 
+/* action_bar_button_menu_click - hides the actions area box
+   @arg box_id - (string) the unique identifier for the container box */
 function action_area_hide(box_id) {
 	document.getElementById('box-' + box_id + '-action-area-frame').style.visibility = 'hidden';
 }
 
+/* action_area_generate_selected_rows - creates the container object that is used to hold
+     the selected rows list
+   @arg box_id - (string) the unique identifier for the container box */
 function action_area_generate_selected_rows(box_id) {
 	if (!_elm_selected_rows[box_id]) {
 		_elm_selected_rows[box_id] = document.createElement('p');
@@ -167,6 +210,11 @@ function action_area_generate_selected_rows(box_id) {
 	return _elm_selected_rows[box_id];
 }
 
+/* action_area_update_selected_rows - updates the list of selected row by iterating through
+     each row in the current box. requires that action_area_generate_selected_rows() has been
+     called first to initialize the container object
+   @arg box_id - (string) the unique identifier for the container box
+   @arg parent_form - (object) a reference to the container form object */
 function action_area_update_selected_rows(box_id, parent_form) {
 	if (_elm_selected_rows[box_id]) {
 		_elm_selected_rows[box_id].innerHTML = '';
@@ -183,14 +231,26 @@ function action_area_update_selected_rows(box_id, parent_form) {
 	}
 }
 
+/* action_area_update_submit_caption - updates the caption of the submit button in the actions
+     area box
+   @arg box_id - (string) the unique identifier for the container box
+   @arg value - (string) the caption to set */
 function action_area_update_submit_caption(box_id, value) {
 	document.getElementById('box-' + box_id + '-action-area-button').value = value;
 }
 
+/* action_area_update_header_caption - updates the caption of the box header in the actions
+     area box
+   @arg box_id - (string) the unique identifier for the container box
+   @arg value - (string) the caption to set */
 function action_area_update_header_caption(box_id, value) {
 	document.getElementById('box-' + box_id + '-action-area-header-caption').innerHTML = value;
 }
 
+/* action_area_generate_input - generates a form element for the actions area box
+   @arg type - (string) the html input type of the object
+   @arg name - (string) the name of the object
+   @arg value - (string) the initial value of the object */
 function action_area_generate_input(type, name, value) {
 	_elm_object = document.createElement('input');
 	_elm_object.type = type;
@@ -200,6 +260,11 @@ function action_area_generate_input(type, name, value) {
 	return _elm_object;
 }
 
+/* action_area_update_input - called whenever the user clicks on the actions are box submit
+     button. takes care of updating the parent form with each input element contained within
+     the actions area box
+   @arg box_id - (string) the unique identifier for the container box
+   @arg parent_form - (object) a reference to the container form object */
 function action_area_update_input(box_id, parent_form) {
 	_elm_form_container = document.getElementById('box-' + box_id + '-action-area-items');
 
