@@ -120,6 +120,12 @@ function cacti_snmp_walk($hostname, $community, $oid, $version, $v3username, $v3
 		if (function_exists("snmp_set_valueretrieval")) {
 			snmp_set_valueretrieval(SNMP_VALUE_PLAIN);
 		}
+
+		/* force php to return numeric oid's */
+		if (function_exists("snmp_set_oid_numeric_print")) {
+			snmp_set_oid_numeric_print(1);
+		}
+
 		if ($version == "1") {
 			$temp_array = @snmprealwalk("$hostname:$port", $community, trim($oid), ($timeout * 1000), $retries);
 		} else if ($version == "2") {
