@@ -117,10 +117,6 @@ function cacti_snmp_walk($hostname, $community, $oid, $version, $v3username, $v3
 		we are getting back */
 		snmp_set_quick_print(0);
 
-		if (function_exists("snmp_set_valueretrieval")) {
-			snmp_set_valueretrieval(SNMP_VALUE_PLAIN);
-		}
-
 		/* force php to return numeric oid's */
 		if (function_exists("snmp_set_oid_numeric_print")) {
 			snmp_set_oid_numeric_print(1);
