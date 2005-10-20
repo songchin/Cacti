@@ -390,12 +390,11 @@ function data_query() {
 
 	form_start("data_queries.php");
 
+	$box_id = "1";
 	html_start_box("<strong>" . _("Data Queries") . "</strong>", "data_queries.php?action=edit");
-	html_header(array(_("Name"), _("Input Type")), 2);
+	html_header_checkbox(array(_("Name"), _("Input Type")), $box_id);
 
 	if (sizeof($data_queries) > 0) {
-		$box_id = "1";
-
 		$menu_items = array(
 			"remove" => "Remove",
 			"duplicate" => "Duplicate"
@@ -410,7 +409,7 @@ function data_query() {
 				<td class="content-row">
 					<?php echo $data_query_input_types{$data_query["input_type"]}; ?>
 				</td>
-				<td class="content-row" width="1%" align="middle" style="border-left: 1px solid #b5b5b5; border-top: 1px solid #b5b5b5; background-color: #e9e9e9; <?php echo get_checkbox_style();?>">
+				<td class="content-row" width="1%" align="center" style="border-left: 1px solid #b5b5b5; border-top: 1px solid #b5b5b5; background-color: #e9e9e9; <?php echo get_checkbox_style();?>">
 					<input type='checkbox' style='margin: 0px;' name='box-<?php echo $box_id;?>-chk-<?php echo $data_query["id"];?>' id='box-<?php echo $box_id;?>-chk-<?php echo $data_query["id"];?>' title="<?php echo $data_query["name"];?>">
 				</td>
 			</tr>

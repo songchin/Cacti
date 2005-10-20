@@ -31,7 +31,7 @@ var _elm_selected_rows = new Array();
 
 /* display_row_hover - called when a user hovers their mouse over a row
    @arg row - (object) the object representing the row that the user's mouse is
-     hovering over */
+	hovering over */
 function display_row_hover(row) {
 	if (document.getElementById(row).className == 'content-row') {
 		document.getElementById(row).className = 'content-row-hover';
@@ -40,10 +40,29 @@ function display_row_hover(row) {
 
 /* display_row_clear - called when a user moves their mouse out of a row
    @arg row - (object) the object representing the row that the user's mouse moved
-     from */
+	from */
 function display_row_clear(row) {
 	if (document.getElementById(row).className == 'content-row-hover') {
 		document.getElementById(row).className = 'content-row';
+	}
+}
+
+/* display_row_select_all - called when a user clicks the "select all" checkbox
+   @arg box_id - (string) the unique identifier for the container box
+   @arg parent_form - (object) a reference to the container form object */
+function display_row_select_all(box_id, parent_form) {
+	checkbox_state = document.getElementById('box-' + box_id + '-allchk').checked;
+
+	for (var i = 0; i < parent_form.elements.length; i++) {
+		if (parent_form.elements[i].name.substr(0, box_id.length + 8) == 'box-' + box_id + '-chk') {
+			row_name = 'box-' + box_id + '-row' + parent_form.elements[i].name.substr(box_id.length + 8);
+
+			/* update the row class so display_row_select() knows whether to select or deselect the box */
+			document.getElementById(row_name).className = (checkbox_state ? 'content-row' : 'content-row-select');
+
+			/* update the row selection */
+			display_row_select(box_id, parent_form, row_name, parent_form.elements[i].name);
+		}
 	}
 }
 
@@ -72,8 +91,8 @@ function display_row_select(box_id, parent_form, row, checkbox) {
 }
 
 /* display_row_block - blocks all display_row_select() operations. this is often used
-     when the user performs a mousedown on a link inside of a row so a row click
-     event is not registered
+	when the user performs a mousedown on a link inside of a row so a row click
+	event is not registered
    @arg id - (string) the name of the row object to block mousedown events for */
 function display_row_block(id) {
 	_block_row = id;
@@ -82,40 +101,40 @@ function display_row_block(id) {
 /* ======== action bar functions ======== */
 
 /* action_bar_button_mouseover - called when a user hovers their mouse over a button
-     in the actions toolbar
+	in the actions toolbar
    @arg object_name - (object) the object representing the button that the user's mouse
-     is hovering over */
+	is hovering over */
 function action_bar_button_mouseover(object_name) {
 	document.getElementById(object_name).className = 'action-bar-button-hover';
 }
 
 /* action_bar_button_mouseout - called when a user moves their mouse out of an actions
-     toolbar button
+	toolbar button
    @arg object_name - (object) the object representing the button that the user's mouse
-     moved from */
+	moved from */
 function action_bar_button_mouseout(object_name) {
 	document.getElementById(object_name).className = 'action-bar-button-out';
 }
 
 /* action_bar_menu_mouseover - called when a user hovers their mouse over a row in the
-     actions dropdown menu
+	actions dropdown menu
    @arg object_name - (object) the object representing the row that the user's mouse
-     is hovering over */
+	is hovering over */
 function action_bar_menu_mouseover(object_name) {
 	document.getElementById(object_name).className = 'action-bar-menu-hover';
 }
 
 /* action_bar_menu_mouseout - called when a user moves their mouse out of a row in the
-     actions dropdown menu
+	actions dropdown menu
    @arg object_name - (object) the object representing the row that the user's mouse
-     moved from */
+	moved from */
 function action_bar_menu_mouseout(object_name) {
 	document.getElementById(object_name).className = 'action-bar-menu-out';
 }
 
 /* action_bar_button_menu_mouseover - called when a user hovers their mouse over the
-     menu dropdown button in the actions toolbar. this is used to prevent events from
-     firing on this button when the actions area box is displayed
+	menu dropdown button in the actions toolbar. this is used to prevent events from
+	firing on this button when the actions area box is displayed
    @arg box_id - (string) the unique identifier for the container box */
 function action_bar_button_menu_mouseover(box_id) {
 	if (document.getElementById('box-' + box_id + '-action-bar-menu').style.visibility == 'hidden') {
@@ -124,8 +143,8 @@ function action_bar_button_menu_mouseover(box_id) {
 }
 
 /* action_bar_button_menu_mouseout - called when a user moves their mouse out of the
-     menu dropdown button in the actions toolbar. this is used to prevent events from
-     firing on this button when the actions area box is displayed
+	menu dropdown button in the actions toolbar. this is used to prevent events from
+	firing on this button when the actions area box is displayed
    @arg box_id - (string) the unique identifier for the container box */
 function action_bar_button_menu_mouseout(box_id) {
 	if (document.getElementById('box-' + box_id + '-action-bar-menu').style.visibility == 'hidden') {
@@ -134,8 +153,8 @@ function action_bar_button_menu_mouseout(box_id) {
 }
 
 /* action_bar_button_menu_click - called when a user clicks the menu dropdown
-     button in the actions toolbar. this takes care of hiding or showing the actions menu
-     dropdown as well as changing the appearance of the button
+	button in the actions toolbar. this takes care of hiding or showing the actions menu
+	dropdown as well as changing the appearance of the button
    @arg box_id - (string) the unique identifier for the container box */
 function action_bar_button_menu_click(box_id) {
 	action_bar_menu = document.getElementById('box-' + box_id + '-action-bar-menu');
@@ -156,8 +175,8 @@ function action_bar_button_menu_click(box_id) {
 /* ======== action area box functions ======== */
 
 /* action_area_show - called when a user performs a defined action (remove, duplicate, etc).
-     this function takes care of rendering objects in the actions are box, hiding the actions
-     menu dropdown, and adjusting the dimensions/position of the actions area box
+	this function takes care of rendering objects in the actions are box, hiding the actions
+	menu dropdown, and adjusting the dimensions/position of the actions area box
    @arg box_id - (string) the unique identifier for the container box
    @arg parent_form - (object) a reference to the container form object
    @arg type - (string) the unique identifier for the selected action type */
@@ -200,7 +219,7 @@ function action_area_hide(box_id) {
 }
 
 /* action_area_generate_selected_rows - creates the container object that is used to hold
-     the selected rows list
+	the selected rows list
    @arg box_id - (string) the unique identifier for the container box */
 function action_area_generate_selected_rows(box_id) {
 	if (!_elm_selected_rows[box_id]) {
@@ -211,8 +230,8 @@ function action_area_generate_selected_rows(box_id) {
 }
 
 /* action_area_update_selected_rows - updates the list of selected row by iterating through
-     each row in the current box. requires that action_area_generate_selected_rows() has been
-     called first to initialize the container object
+	each row in the current box. requires that action_area_generate_selected_rows() has been
+	called first to initialize the container object
    @arg box_id - (string) the unique identifier for the container box
    @arg parent_form - (object) a reference to the container form object */
 function action_area_update_selected_rows(box_id, parent_form) {
@@ -232,7 +251,7 @@ function action_area_update_selected_rows(box_id, parent_form) {
 }
 
 /* action_area_update_submit_caption - updates the caption of the submit button in the actions
-     area box
+	area box
    @arg box_id - (string) the unique identifier for the container box
    @arg value - (string) the caption to set */
 function action_area_update_submit_caption(box_id, value) {
@@ -240,7 +259,7 @@ function action_area_update_submit_caption(box_id, value) {
 }
 
 /* action_area_update_header_caption - updates the caption of the box header in the actions
-     area box
+	area box
    @arg box_id - (string) the unique identifier for the container box
    @arg value - (string) the caption to set */
 function action_area_update_header_caption(box_id, value) {
@@ -261,8 +280,8 @@ function action_area_generate_input(type, name, value) {
 }
 
 /* action_area_update_input - called whenever the user clicks on the actions are box submit
-     button. takes care of updating the parent form with each input element contained within
-     the actions area box
+	button. takes care of updating the parent form with each input element contained within
+	the actions area box
    @arg box_id - (string) the unique identifier for the container box
    @arg parent_form - (object) a reference to the container form object */
 function action_area_update_input(box_id, parent_form) {

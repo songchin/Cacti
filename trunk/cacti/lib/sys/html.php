@@ -219,35 +219,28 @@ function html_nav_bar($background_color, $colspan, $current_page, $rows_per_page
    @arg $header_items - an array containing a list of items to be included in the header
    @arg $last_item_colspan - the TD 'colspan' to apply to the last cell in the row */
 function html_header($header_items, $last_item_colspan = 1) {
-	global $colors;
-
-	print "<tr>\n";
+	echo "<tr>\n";
 
 	for ($i=0; $i<count($header_items); $i++) {
-		print "<td " . ((($i+1) == count($header_items)) ? "colspan='$last_item_colspan' " : "") . "class='content-header-sub'>" . $header_items[$i] . "</td>\n";
+		echo "<td " . ((($i+1) == count($header_items)) ? "colspan='$last_item_colspan' " : "") . "class='content-header-sub'>" . $header_items[$i] . "</td>\n";
 	}
 
-	print "</tr>\n";
+	echo "</tr>\n";
 }
 
 /* html_header_checkbox - draws a header row with a 'select all' checkbox in the last cell
 	suitable for display inside of a box element
    @arg $header_items - an array containing a list of items to be included in the header
    @arg $form_action - the url to post the 'select all' form to */
-function html_header_checkbox($header_items, $form_action = "") {
-	global $colors;
-
-	/* default to the 'current' file */
-	if ($form_action == "") { $form_action = basename($_SERVER["PHP_SELF"]); }
-
-	print "<tr>\n";
+function html_header_checkbox($header_items, $box_id) {
+	echo "<tr>\n";
 
 	for ($i=0; $i<count($header_items); $i++) {
-		print "<td class='content-header-sub'>" . $header_items[$i] . "</td>\n";
+		echo "<td class='content-header-sub'>" . $header_items[$i] . "</td>\n";
 	}
 
-	print "<td width='1%' align='right' bgcolor='#819bc0' style='" . get_checkbox_style() . "'><input type='checkbox' style='margin: 0px;' name='all' title='" . _("Select All") . "' onClick='SelectAll(\"chk_\",this.checked)'></td>\n<form name='chk' method='post' action='$form_action'>\n";
-	print "</tr>\n";
+	echo "<td width='1%' align='center' bgcolor='#819bc0' style='" . get_checkbox_style() . "'><input type='checkbox' style='margin: 0px;' name='box-$box_id-allchk' id='box-$box_id-allchk' title='" . _("Select All") . "' onClick='display_row_select_all(\"$box_id\",document.forms[0])'></td>\n";
+	echo "</tr>\n";
 }
 
 /* html_get_theme_css() - returns the Style sheet reference for the current theme
