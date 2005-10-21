@@ -243,7 +243,7 @@ function utilities_view_logs() {
 		<input type='hidden' name='page' value='1'>
 		</form>
 	</tr>
-	<?
+	<?php
 
 	html_end_box();
 
@@ -338,13 +338,13 @@ function utilities_view_logs() {
 		foreach ($syslog_entries as $syslog_entry) {
 			api_syslog_color(api_syslog_get_severity($syslog_entry["severity"]));
 				?>
-				<td><?php print $syslog_entry["logdate"];?></td>
-				<td><?php print api_syslog_get_facility($syslog_entry["facility"]);?></td>
-				<td><?php print api_syslog_get_severity($syslog_entry["severity"]);?></td>
-				<td nowrap><?php if ($syslog_entry["poller_name"] != "") { print $syslog_entry["poller_name"]; } else { print "SYSTEM"; }?>	</td>
-				<td nowrap><?php if ($syslog_entry["host"] != "") { print $syslog_entry["host"]; } else { print "SYSTEM"; }?></td>
-				<td nowrap><?php if ($syslog_entry["username"] != "") { print $syslog_entry["username"]; } else { print "SYSTEM"; }?></td>
-				<td><?php print $syslog_entry["message"];?></td>
+				<td><?php print $syslog_entry["logdate"]; ?></td>
+				<td><?php print api_syslog_get_facility($syslog_entry["facility"]); ?></td>
+				<td><?php print api_syslog_get_severity($syslog_entry["severity"]); ?></td>
+				<td nowrap><?php if ($syslog_entry["poller_name"] != "") { print $syslog_entry["poller_name"]; } else { print "SYSTEM"; } ?>	</td>
+				<td nowrap><?php if ($syslog_entry["host"] != "") { print $syslog_entry["host"]; } else { print "SYSTEM"; } ?></td>
+				<td nowrap><?php if ($syslog_entry["username"] != "") { print $syslog_entry["username"]; } else { print "SYSTEM"; } ?></td>
+				<td><?php print $syslog_entry["message"]; ?></td>
 			</tr>
 			<?php
 		}
