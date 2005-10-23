@@ -63,6 +63,12 @@ $settings = array(
 			"method" => "textbox",
 			"max_length" => "255"
 			),
+		"path_snmpbulkwalk" => array(
+			"friendly_name" => "snmpbulkwalk Binary Path",
+			"description" => "The path to your snmpbulkwalk binary.",
+			"method" => "textbox",
+			"max_length" => "255"
+			),
 		"path_rrdtool" => array(
 			"friendly_name" => _("RRDTool Binary Path"),
 			"description" => _("The path to the rrdtool binary."),

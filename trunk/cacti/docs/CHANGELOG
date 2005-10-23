@@ -4,6 +4,7 @@ raXnet - cacti
 -bug#0000450: Fix a minimal bug for view all data queries index during a new graph
 -bug#0000428: Unable to try login again after Access Denied
 -bug#0000536: Printing of Zoomed Graph in IE causes white box over graph
+-feature: added bulk operations for snmpv2/v3 data queries
 
 
 
