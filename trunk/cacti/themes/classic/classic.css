@@ -231,6 +231,21 @@ td.content-list-empty {
 	font-style: italic;
 }
 
+td.content-navigation {
+	color: white;
+	font-size: 10px;
+}
+
+td.content-navigation a, td.content-navigation a:active, td.content-navigation a:visited {
+	color: white;
+	text-decoration: underline;
+}
+
+td.content-navigation a:hover {
+	color: #d8e6ff;
+	text-decoration: underline;
+}
+
 input.small {
 	border: 1px solid #c1c1c1;
 	font-size: 10px;

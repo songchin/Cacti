@@ -22,17 +22,94 @@
  +-------------------------------------------------------------------------+
 */
 
-function html_box_toolbar_draw($box_id, $form_id) {
+/* html_start_box - draws the start of an HTML box with an optional title
+   @arg $title - the title of this box ("" for no title)
+   @arg $width - the width of the box in pixels or percent
+   @arg $background_color - the color of the box border and title row background
+	color
+   @arg $cell_padding - the amount of cell padding to use inside of the box
+   @arg $align - the HTML alignment to use for the box (center, left, or right)
+   @arg $add_text - the url to use when the user clicks 'Add' in the upper-right
+	corner of the box ("" for no 'Add' link) */
+function html_start_box($title, $add_url = "", $search_url = "") {
+	?>
+	<table width="98%" cellspacing="1" cellpadding="0" align="center" class="content">
+		<?php if ($title != "") {?>
+		<tr>
+			<td>
+				<table width="100%" cellpadding="0" cellspacing="0">
+					<tr>
+						<td class="content-header" width="200">
+							<?php echo $title;?>
+						</td>
+						<?php if ($search_url != ""): ?>
+						<td class="content-header content-navigation" align="center" style="padding-right: 5px; font-weight: bold;" nowrap>
+							[ <?php echo $search_url;?> ]
+						</td>
+						<?php endif; ?>
+						<?php if ($add_url != ""): ?>
+						<td class="content-header" width="200" align="right" style="padding-right: 5px; font-weight: bold;">
+							<a class="linkOverDark" href="<?php echo $add_url;?>">Add</a>
+						</td>
+						<?php endif; ?>
+					</tr>
+				</table>
+			</td>
+		</tr>
+		<?php }?>
+		<tr>
+			<td>
+				<table width="100%" cellpadding="3" cellspacing="0">
+					<?php
+}
+
+/* html_end_box - draws the end of an HTML box
+   @arg $trailing_br (bool) - whether to draw a trailing <br> tag after ending
+	the box */
+function html_end_box($trailing_br = true) { ?>
+				</table>
+			</td>
+		</tr>
+	</table>
+	<?php if ($trailing_br == true) { print "<br>"; } ?>
+<?php }
+
+function html_box_toolbar_draw($box_id, $form_id, $colspan, $search_url = "") {
 	?>
 	<tr>
-		<td colspan="2" style="border-top: 1px solid #b5b5b5; padding: 1px;">
+		<td style="border-top: 1px solid #b5b5b5; padding: 1px;" colspan="<?php echo $colspan;?>" >
 			<table width="100%" cellpadding="3" cellspacing="0">
 				<tr>
-					<td>
-						&nbsp;
+					<td width="200" style="padding: 0px;">
+						<table width="100%" cellpadding="3" cellspacing="0">
+							<tr>
+								<td width="16" id="box-<?php echo $box_id;?>-button-search" class="action-bar-button-out">
+									<a href="javascript:action_area_show('<?php echo $box_id;?>',document.forms[<?php echo $form_id;?>],'search')"><img src="<?php echo html_get_theme_images_path('action_search.gif');?>" width="16" height="16" border="0" alt="Search" onMouseOver="action_bar_button_mouseover('box-<?php echo $box_id;?>-button-search')" onMouseOut="action_bar_button_mouseout('box-<?php echo $box_id;?>-button-search')" align="absmiddle"></a>
+								</td>
+								<td width="3">
+									<img src="<?php echo html_get_theme_images_path('vertical_spacer.gif');?>" alt="" align="absmiddle">
+								</td>
+								<td nowrap>
+									<?php form_text_box("filter", "", "", 100, 15, "text", 0, "small"); ?>
+									<input type="submit" value="Filter" class="small">
+								</td>
+							</tr>
+						</table>
 					</td>
-					<td width="16" id="box-<?php echo $box_id;?>-button-duplicate" class="action-bar-button-out">
-						<a href="javascript:action_area_show('<?php echo $box_id;?>',document.forms[<?php echo $form_id;?>],'duplicate')"><img src="<?php echo html_get_theme_images_path('action_copy.gif');?>" width="16" height="16" border="0" alt="Duplicate" onMouseOver="action_bar_button_mouseover('box-<?php echo $box_id;?>-button-duplicate')" onMouseOut="action_bar_button_mouseout('box-<?php echo $box_id;?>-button-duplicate')" align="absmiddle"></a>
+					<td align="center" nowrap>
+						[ <?php echo $search_url;?> ]
+					</td>
+					<td width="165" style="padding: 0px;">
+						<table width="100%" cellpadding="3" cellspacing="0">
+							<tr>
+								<td>
+									&nbsp;
+								</td>
+								<td width="16" id="box-<?php echo $box_id;?>-button-duplicate" class="action-bar-button-out">
+									<a href="javascript:action_area_show('<?php echo $box_id;?>',document.forms[<?php echo $form_id;?>],'duplicate')"><img src="<?php echo html_get_theme_images_path('action_copy.gif');?>" width="16" height="16" border="0" alt="Duplicate" onMouseOver="action_bar_button_mouseover('box-<?php echo $box_id;?>-button-duplicate')" onMouseOut="action_bar_button_mouseout('box-<?php echo $box_id;?>-button-duplicate')" align="absmiddle"></a>
+								</td>
+							</tr>
+						</table>
 					</td>
 					<td width="16" id="box-<?php echo $box_id;?>-button-delete" class="action-bar-button-out">
 						<a href="javascript:action_area_show('<?php echo $box_id;?>',document.forms[<?php echo $form_id;?>],'remove')"><img src="<?php echo html_get_theme_images_path('action_delete.gif');?>" width="16" height="16" border="0" alt="Delete" onMouseOver="action_bar_button_mouseover('box-<?php echo $box_id;?>-button-delete')" onMouseOut="action_bar_button_mouseout('box-<?php echo $box_id;?>-button-delete')" align="absmiddle"></a>

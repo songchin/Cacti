@@ -218,6 +218,9 @@ function get_page_list($current_page, $pages_per_screen, $rows_per_page, $total_
 	$start_page = max(1, ($current_page - floor(($pages_per_screen - 1) / 2)));
 	$end_page = min($total_pages, ($current_page + floor(($pages_per_screen - 1) / 2)));
 
+	$url_page_select .= ($current_page == "1" ? "" : "<a href='$url&page=1'>") . "First" . ($current_page == "1" ? "" : "</a>");
+	$url_page_select .= ($current_page == "1" ? " " : " <a href='$url&page=" . ($current_page - 1) . "'>") . "Prev" . ($current_page == "1" ? " " : "</a> ");
+
 	/* adjust if we are close to the beginning of the page list */
 	if ($current_page <= ceil(($pages_per_screen) / 2)) {
 		$end_page += ($pages_per_screen - $end_page);
@@ -239,20 +242,23 @@ function get_page_list($current_page, $pages_per_screen, $rows_per_page, $total_
 	for ($page_number=0; (($page_number+$start_page) <= $end_page); $page_number++) {
 		if ($page_number < $pages_per_screen) {
 			if ($current_page == ($page_number + $start_page)) {
-				$url_page_select .= "<strong><a class='linkOverDark' href='$url&page=" . ($page_number + $start_page) . "'>" . ($page_number + $start_page) . "</a></strong>";
+				$url_page_select .= "<strong>" . ($page_number + $start_page) . "</strong>";
 			}else{
-				$url_page_select .= "<a class='linkOverDark' href='$url&page=" . ($page_number + $start_page) . "'>" . ($page_number + $start_page) . "</a>";
+				$url_page_select .= "<a href='$url&page=" . ($page_number + $start_page) . "'>" . ($page_number + $start_page) . "</a>";
 			}
 		}
 
 		if (($page_number+$start_page) < $end_page) {
-			$url_page_select .= ",";
+			$url_page_select .= " ";
 		}
 	}
 
 	if (($total_pages - $current_page) >= ceil(($pages_per_screen) / 2)) {
 		$url_page_select .= "...";
 	}
+
+	$url_page_select .= ($current_page == $total_pages ? " " : " <a href='$url&page=" . ($current_page + 1) . "'>") . "Next" . ($current_page == $total_pages ? "" : "</a>");
+	$url_page_select .= ($current_page == $total_pages ? " " : " <a href='$url&page=$total_pages'>") . "Last" . ($current_page == $total_pages ? "" : "</a>");
 
 	return $url_page_select;
 }

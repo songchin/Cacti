@@ -22,53 +22,6 @@
  +-------------------------------------------------------------------------+
 */
 
-/* html_start_box - draws the start of an HTML box with an optional title
-   @arg $title - the title of this box ("" for no title)
-   @arg $width - the width of the box in pixels or percent
-   @arg $background_color - the color of the box border and title row background
-	color
-   @arg $cell_padding - the amount of cell padding to use inside of the box
-   @arg $align - the HTML alignment to use for the box (center, left, or right)
-   @arg $add_text - the url to use when the user clicks 'Add' in the upper-right
-	corner of the box ("" for no 'Add' link) */
-function html_start_box($title, $add_url = "") {
-	?>
-	<table width="98%" cellspacing="1" cellpadding="0" align="center" class="content">
-		<?php if ($title != "") {?>
-		<tr>
-			<td>
-				<table width="100%" cellpadding="0" cellspacing="0">
-					<tr>
-						<td class="content-header">
-							<?php echo $title;?>
-						</td>
-						<?php if ($add_url != "") {?>
-						<td class="content-header" align="right" style="padding-right: 5px; font-weight: bold;">
-							<a class="linkOverDark" href="<?php echo $add_url;?>">Add</a>
-						</td>
-						<?php }?>
-					</tr>
-				</table>
-			</td>
-		</tr>
-		<?php }?>
-		<tr>
-			<td>
-				<table width="100%" cellpadding="3" cellspacing="0">
-					<?php
-}
-
-/* html_end_box - draws the end of an HTML box
-   @arg $trailing_br (bool) - whether to draw a trailing <br> tag after ending
-	the box */
-function html_end_box($trailing_br = true) { ?>
-				</table>
-			</td>
-		</tr>
-	</table>
-	<?php if ($trailing_br == true) { print "<br>"; } ?>
-<?php }
-
 /* html_graph_start_box - draws the start of an HTML graph view box
    @arg $cellpadding - the table cell padding for the box
    @arg $leading_br (bool) - whether to draw a leader <br> tag before the start of the table */

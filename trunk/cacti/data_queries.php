@@ -384,7 +384,12 @@ function data_query_edit() {
 }
 
 function data_query() {
-	global $colors, $data_query_input_types;
+	global $data_query_input_types;
+
+	$menu_items = array(
+		"remove" => "Remove",
+		"duplicate" => "Duplicate"
+		);
 
 	$data_queries = api_data_query_list();
 
@@ -395,11 +400,6 @@ function data_query() {
 	html_header_checkbox(array(_("Name"), _("Input Type")), $box_id);
 
 	if (sizeof($data_queries) > 0) {
-		$menu_items = array(
-			"remove" => "Remove",
-			"duplicate" => "Duplicate"
-			);
-
 		foreach ($data_queries as $data_query) {
 			?>
 			<tr class="content-row" id="box-<?php echo $box_id;?>-row-<?php echo $data_query["id"];?>" onClick="display_row_select('<?php echo $box_id;?>',document.forms[0],'box-<?php echo $box_id;?>-row-<?php echo $data_query["id"];?>', 'box-<?php echo $box_id;?>-chk-<?php echo $data_query["id"];?>')" onMouseOver="display_row_hover('box-<?php echo $box_id;?>-row-<?php echo $data_query["id"];?>')" onMouseOut="display_row_clear('box-<?php echo $box_id;?>-row-<?php echo $data_query["id"];?>')">
@@ -416,7 +416,7 @@ function data_query() {
 			<?php
 		}
 
-		html_box_toolbar_draw($box_id, "0");
+		html_box_toolbar_draw($box_id, "0", "2");
 	}else{
 		?>
 		<tr>

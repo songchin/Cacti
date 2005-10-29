@@ -664,52 +664,17 @@ function host_edit() {
 }
 
 function host() {
-	global $colors, $device_actions;
+	global $device_actions;
 
-	/* if the user pushed the 'clear' button */
-	if (isset($_REQUEST["clear_x"])) {
-		kill_session_var("sess_device_current_page");
-		kill_session_var("sess_device_filter");
-		kill_session_var("sess_device_host_template_id");
-		kill_session_var("sess_host_status");
+$sql_where = "";
+$_REQUEST["page"] = "1";
+$_REQUEST["filter"] = "";
+$_REQUEST["host_template_id"] = "";
 
-		unset($_REQUEST["page"]);
-		unset($_REQUEST["filter"]);
-		unset($_REQUEST["host_template_id"]);
-		unset($_REQUEST["host_status"]);
-	}
-
-	/* remember these search fields in session vars so we don't have to keep passing them around */
-	load_current_session_value("page", "sess_device_current_page", "1");
-	load_current_session_value("filter", "sess_device_filter", "");
-	load_current_session_value("host_template_id", "sess_device_host_template_id", "-1");
-	load_current_session_value("host_status", "sess_host_status", "-1");
-
-	html_start_box("<strong>" . _("Devices") . "</strong>", "98%", $colors["header_background"], "3", "center", "host.php?action=edit&host_template_id=" . $_REQUEST["host_template_id"]);
-
-	include("./include/html/inc_device_filter_table.php");
-
-	html_end_box();
-
-	/* form the 'where' clause for our main sql query */
-	$sql_where = "where (host.hostname like '%%" . $_REQUEST["filter"] . "%%' OR host.description like '%%" . $_REQUEST["filter"] . "%%')";
-	if ($_REQUEST["host_status"] == "-1") {
-		/* Show all items */
-	}elseif ($_REQUEST["host_status"] == "-2") {
-		$sql_where .= " and host.disabled='on'";
-	}else {
-		$sql_where .= " and (host.status=" . $_REQUEST["host_status"] . " AND host.disabled = '')";
-	}
-
-	if ($_REQUEST["host_template_id"] == "-1") {
-		/* Show all items */
-	}elseif ($_REQUEST["host_template_id"] == "0") {
-		$sql_where .= " and host.host_template_id=0";
-	}elseif (!empty($_REQUEST["host_template_id"])) {
-		$sql_where .= " and host.host_template_id=" . $_REQUEST["host_template_id"];
-	}
-
-	html_start_box("", "98%", $colors["header_background"], "3", "center", "");
+	$menu_items = array(
+		"remove" => "Remove",
+		"duplicate" => "Duplicate"
+		);
 
 	$total_rows = db_fetch_cell("select
 		COUNT(host.id)
@@ -735,57 +700,92 @@ function host() {
 	/* generate page list */
 	$url_page_select = get_page_list($_REQUEST["page"], MAX_DISPLAY_PAGES, read_config_option("num_rows_device"), $total_rows, "host.php?filter=" . $_REQUEST["filter"] . "&host_template_id=" . $_REQUEST["host_template_id"]);
 
-	$nav = "<tr bgcolor='#" . $colors["header_background"] . "'>
-			<td colspan='7'>
-				<table width='100%' cellspacing='0' cellpadding='0' border='0'>
-					<tr>
-						<td align='left' class='textHeaderDark'>
-							<strong>&lt;&lt; "; if ($_REQUEST["page"] > 1) { $nav .= "<a class='linkOverDark' href='host.php?filter=" . $_REQUEST["filter"] . "&host_template_id=" . $_REQUEST["host_template_id"] . "&page=" . ($_REQUEST["page"]-1) . "'>"; } $nav .= _("Previous"); if ($_REQUEST["page"] > 1) { $nav .= "</a>"; } $nav .= "</strong>
-						</td>\n
-						<td align='center' class='textHeaderDark'>" .
-							_("Showing Rows") . " " . ((read_config_option("num_rows_device")*($_REQUEST["page"]-1))+1) . " to " . ((($total_rows < read_config_option("num_rows_device")) || ($total_rows < (read_config_option("num_rows_device")*$_REQUEST["page"]))) ? $total_rows : (read_config_option("num_rows_device")*$_REQUEST["page"])) . " of $total_rows [$url_page_select]
-						</td>\n
-						<td align='right' class='textHeaderDark'>
-							<strong>"; if (($_REQUEST["page"] * read_config_option("num_rows_device")) < $total_rows) { $nav .= "<a class='linkOverDark' href='host.php?filter=" . $_REQUEST["filter"] . "&host_template_id=" . $_REQUEST["host_template_id"] . "&page=" . ($_REQUEST["page"]+1) . "'>"; } $nav .= _("Next"); if (($_REQUEST["page"] * read_config_option("num_rows_device")) < $total_rows) { $nav .= "</a>"; } $nav .= " &gt;&gt;</strong>
-						</td>\n
-					</tr>
-				</table>
-			</td>
-		</tr>\n";
+	form_start("host.php");
 
-	print $nav;
+	$box_id = "1";
+	html_start_box("<strong>" . _("Devices") . "</strong>", "host.php?action=edit", $url_page_select);
+	html_header_checkbox(array(_("Description"), _("Status"), _("Hostname"), _("Current (ms)"), _("Average (ms)"), _("Availability")), $box_id);
 
-	html_header_checkbox(array(_("Description"), _("Status"), _("Hostname"), _("Current (ms)"), _("Average (ms)"), _("Availability")));
+
+
+
+
+
+
+
 
 	$i = 0;
 	if (sizeof($hosts) > 0) {
 		foreach ($hosts as $host) {
-			form_alternate_row_color($colors["form_alternate1"],$colors["form_alternate2"],$i); $i++;
-				?>
-				<td width=200>
-					<a class="linkEditMain" href="host.php?action=edit&id=<?php print $host["id"];?>"><?php print eregi_replace("(" . preg_quote($_REQUEST["filter"]) . ")", "<span style='background-color: #F8D93D;'>\\1</span>", $host["description"]);?></a>
+			?>
+			<tr class="content-row" id="box-<?php echo $box_id;?>-row-<?php echo $host["id"];?>" onClick="display_row_select('<?php echo $box_id;?>',document.forms[0],'box-<?php echo $box_id;?>-row-<?php echo $host["id"];?>', 'box-<?php echo $box_id;?>-chk-<?php echo $host["id"];?>')" onMouseOver="display_row_hover('box-<?php echo $box_id;?>-row-<?php echo $host["id"];?>')" onMouseOut="display_row_clear('box-<?php echo $box_id;?>-row-<?php echo $host["id"];?>')">
+				<td class="content-row">
+					<a class="linkEditMain" onClick="display_row_block('box-<?php echo $box_id;?>-row-<?php echo $host["id"];?>')" href="host.php?action=edit&id=<?php echo $host["id"];?>"><span id="box-<?php echo $box_id;?>-text-<?php echo $host["id"];?>"><?php echo $host["description"];?></span></a>
 				</td>
-				<td><?php print get_colored_device_status(($host["disabled"] == "on" ? true : false), $host["status"]);?></td>
-				<td><?php print eregi_replace("(" . preg_quote($_REQUEST["filter"]) . ")", "<span style='background-color: #F8D93D;'>\\1</span>", $host["hostname"]);?></td>
-				<td><?php print round(($host["cur_time"]), 2);?></td>
-				<td><?php print round(($host["avg_time"]), 2);?></td>
-				<td><?php print round($host["availability"], 2);?>%</td>
-				<td style="<?php print get_checkbox_style();?>" width="1%" align="right">
-					<input type='checkbox' style='margin: 0px;' name='chk_<?php print $host["id"];?>' title="<?php print $host["description"];?>">
+				<td class="content-row">
+					<?php echo get_colored_device_status(($host["disabled"] == "on" ? true : false), $host["status"]);;?>
+				</td>
+				<td class="content-row">
+					<?php echo $host["hostname"];?>
+				</td>
+				<td class="content-row">
+					<?php echo round($host["cur_time"], 2);?>
+				</td>
+				<td class="content-row">
+					<?php echo round($host["avg_time"], 2);?>
+				</td>
+				<td class="content-row">
+					<?php echo round($host["availability"], 2);?>%
+				</td>
+				<td class="content-row" width="1%" align="center" style="border-left: 1px solid #b5b5b5; border-top: 1px solid #b5b5b5; background-color: #e9e9e9; <?php echo get_checkbox_style();?>">
+					<input type='checkbox' style='margin: 0px;' name='box-<?php echo $box_id;?>-chk-<?php echo $host["id"];?>' id='box-<?php echo $box_id;?>-chk-<?php echo $host["id"];?>' title="<?php echo $host["description"];?>">
 				</td>
 			</tr>
 			<?php
 		}
 
-		/* put the nav bar on the bottom as well */
-		print $nav;
+		html_box_toolbar_draw($box_id, "0", "6", $url_page_select);
 	}else{
-		print "<tr><td bgcolor='#" . $colors["form_alternate1"] . "' colspan=7><em>" . _("No Hosts") . "</em></td></tr>";
+		?>
+		<tr>
+			<td class="content-list-empty" colspan="6">
+				No devices queries found.
+			</td>
+		</tr>
+		<?php
 	}
 	html_end_box(false);
 
-	/* draw the dropdown containing a list of available actions for this form */
-	draw_actions_dropdown($device_actions);
+	html_box_actions_menu_draw($box_id, "0", $menu_items);
+	html_box_actions_area_draw($box_id, "0");
+
+	form_end();
+	?>
+
+	<script language="JavaScript">
+	<!--
+	function action_area_handle_type(box_id, type, parent_div, parent_form) {
+		if (type == 'remove') {
+			parent_div.appendChild(document.createTextNode('Are you sure you want to remove these devices?'));
+			parent_div.appendChild(action_area_generate_selected_rows(box_id));
+
+			action_area_update_header_caption(box_id, 'Remove Device');
+			action_area_update_submit_caption(box_id, 'Remove');
+			action_area_update_selected_rows(box_id, parent_form);
+		}else if (type == 'duplicate') {
+			parent_div.appendChild(document.createTextNode('Are you sure you want to duplicate these devices?'));
+			parent_div.appendChild(action_area_generate_selected_rows(box_id));
+			parent_div.appendChild(action_area_generate_input('text', 'box-' + box_id + '-action-area-txt1', ''));
+
+			action_area_update_header_caption(box_id, 'Duplicate Devices');
+			action_area_update_submit_caption(box_id, 'Duplicate');
+			action_area_update_selected_rows(box_id, parent_form);
+		}
+	}
+	-->
+	</script>
+
+	<?php
 }
 
 ?>
