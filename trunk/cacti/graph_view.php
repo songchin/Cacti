@@ -138,8 +138,8 @@ case 'preview':
 	if (read_config_option("auth_method") != "0") {
 		$sql_where = "where " . get_graph_permissions_sql($current_user["policy_graphs"], $current_user["policy_hosts"], $current_user["policy_graph_templates"]);
 
-		$sql_join = "left join host on host.id=graph.host_id
-			left join graph_template on graph_template.id=graph.graph_template_id
+		$sql_join = "left join host on (host.id=graph.host_id)
+			left join graph_template on (graph_template.id=graph.graph_template_id)
 			left join user_auth_perms on ((graph.id=user_auth_perms.item_id and user_auth_perms.type=1 and user_auth_perms.user_id=" . $_SESSION["sess_user_id"] . ") OR (host.id=user_auth_perms.item_id and user_auth_perms.type=3 and user_auth_perms.user_id=" . $_SESSION["sess_user_id"] . ") OR (graph_template.id=user_auth_perms.item_id and user_auth_perms.type=4 and user_auth_perms.user_id=" . $_SESSION["sess_user_id"] . "))";
 	}
 
@@ -362,8 +362,8 @@ case 'list':
 	/* display graph view filter selector */
 	html_graph_start_box(3, true);
 
-	if (empty($_REQUEST["host_id"])) { $_REQUEST["host_id"] = 0; } 
-	if (empty($_REQUEST["filter"])) { $_REQUEST["filter"] = ""; } 
+	if (empty($_REQUEST["host_id"])) { $_REQUEST["host_id"] = 0; }
+	if (empty($_REQUEST["filter"])) { $_REQUEST["filter"] = ""; }
 	?>
 	<script type="text/javascript">
 	<!--
@@ -396,10 +396,10 @@ case 'list':
 
 							if (sizeof($hosts) > 0) {
 								foreach ($hosts as $host) {
-									print "<option value=\"" . $host["id"] . "\""; 
-									if ($_REQUEST["host_id"] == $host["id"]) { 
-										print " selected"; 
-									} 
+									print "<option value=\"" . $host["id"] . "\"";
+									if ($_REQUEST["host_id"] == $host["id"]) {
+										print " selected";
+									}
 									print ">" . $host["name"] . "</option>\n";
 								}
 							}
@@ -424,15 +424,15 @@ case 'list':
 
 	/* create filter for sql */
 	$sql_filter = "";
-	$sql_filter .= (empty($_REQUEST["filter"]) ? "" : " graph.title_cache like '%" . $_REQUEST["filter"] . "%'"); 
+	$sql_filter .= (empty($_REQUEST["filter"]) ? "" : " graph.title_cache like '%" . $_REQUEST["filter"] . "%'");
 	$sql_filter .= (empty($_REQUEST["host_id"]) ? "" : (empty($sql_filter) ? "" : " and") . " graph.host_id=" . $_REQUEST["host_id"]);
-       
+
 	/* graph permissions */
 	if (read_config_option("auth_method") != "0") {
 		/* get policy information for the sql where clause */
 		$sql_where = "where " . get_graph_permissions_sql($current_user["policy_graphs"], $current_user["policy_hosts"], $current_user["policy_graph_templates"]);
-		$sql_join = "left join host on host.id=graph.host_id
-			left join graph_template on graph_template.id=graph.graph_template_id
+		$sql_join = "left join host on (host.id=graph.host_id)
+			left join graph_template on (graph_template.id=graph.graph_template_id)
 			left join user_auth_perms on ((graph.id=user_auth_perms.item_id and user_auth_perms.type=1 and user_auth_perms.user_id=" . $_SESSION["sess_user_id"] . ") OR (host.id=user_auth_perms.item_id and user_auth_perms.type=3 and user_auth_perms.user_id=" . $_SESSION["sess_user_id"] . ") OR (graph_template.id=user_auth_perms.item_id and user_auth_perms.type=4 and user_auth_perms.user_id=" . $_SESSION["sess_user_id"] . "))";
 
 	}else{
@@ -541,7 +541,7 @@ case 'list':
 	if (sizeof($graphs) > 0) {
 		foreach ($graphs as $graph) {
 			form_alternate_row_color("f5f5f5", "ffffff", $i);
-	
+
 			print "<td width='1%'>";
 			print "<input type='checkbox' name='graph_" . $graph["id"] . "' id='graph_" . $graph["id"] . "' value='" . $graph["id"] . "'";
 			if (isset($graph_list[$graph["id"]])) {
@@ -549,17 +549,17 @@ case 'list':
 			}
 			print ">\n";
 			print "</td>\n";
-	
+
 			print "<td><strong><a href='graph.php?graph_id=" . $graph["id"] . "&rra_id=all'>" . $graph["title_cache"] . "</a></strong></td>\n";
 			print "<td>" . $graph["height"] . "x" . $graph["width"] . "</td>\n";
 			print "</tr>";
-	
+
 			$i++;
 		}
 	}
 
 	?>
-	
+
 	</table>
 		<table align='center' width='98%'>
 			<tr>
@@ -587,4 +587,3 @@ case 'list':
 require_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
 
 ?>
-

@@ -627,7 +627,7 @@ function graph() {
 		graph.host_id,
 		graph_template.template_name
 		from graph
-		left join graph_template on graph.graph_template_id=graph_template.id
+		left join graph_template on (graph.graph_template_id=graph_template.id)
 		$sql_where
 		order by graph.title_cache,graph.host_id
 		limit " . (read_config_option("num_rows_graph")*($_REQUEST["page"]-1)) . "," . read_config_option("num_rows_graph"));

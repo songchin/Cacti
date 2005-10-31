@@ -383,7 +383,7 @@ function tree_edit() {
 			CONCAT_WS('',description,' (',hostname,')') as hostname
 			from graph_tree_items
 			left join graph on (graph_tree_items.local_graph_id=graph.id)
-			left join host on host.id=graph_tree_items.host_id
+			left join host on (host.id=graph_tree_items.host_id)
 			where graph_tree_items.graph_tree_id=" . $_GET["id"] . "
 			order by graph_tree_items.order_key");
 

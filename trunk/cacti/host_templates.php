@@ -248,7 +248,7 @@ function template_edit() {
 			graph_template.id,
 			graph_template.template_name
 			from graph_template left join host_template_graph
-			on host_template_graph.graph_template_id = graph_template.id
+			on (host_template_graph.graph_template_id = graph_template.id)
 			where host_template_graph.graph_template_id is  null
 			order by graph_template.template_name");
 

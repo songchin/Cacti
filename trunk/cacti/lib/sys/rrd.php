@@ -157,9 +157,9 @@ function rrdtool_function_create($data_source_id, $show_source, $rrd_struc, $sys
 		rra_cf.consolidation_function_id,
 		(rra.rows*rra.steps) as rra_order
 		from data_source
-		left join data_source_rra on data_source.id=data_source_rra.data_source_id
-		left join rra on data_source_rra.rra_id=rra.id
-		left join rra_cf on rra.id=rra_cf.rra_id
+		left join data_source_rra on (data_source.id=data_source_rra.data_source_id)
+		left join rra on (data_source_rra.rra_id=rra.id)
+		left join rra_cf on (rra.id=rra_cf.rra_id)
 		where data_source_rra.data_source_id = $data_source_id
 		and (rra.steps is not null or rra.rows is not null)
 		order by rra_cf.consolidation_function_id,rra_order");
@@ -521,7 +521,7 @@ function rrdtool_function_graph($graph_id, $rra_id, $graph_data_array, $rrd_stru
 		data_source_item.rrd_maximum,
 		data_source_item.data_source_name
 		from graph_item
-		left join data_source_item on graph_item.data_source_item_id=data_source_item.id
+		left join data_source_item on (graph_item.data_source_item_id=data_source_item.id)
 		where graph_item.graph_id = $graph_id
 		order by graph_item.sequence");
 

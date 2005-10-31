@@ -91,8 +91,8 @@ function is_graph_allowed($graph_id) {
 	$graphs = db_fetch_assoc("select distinct
 		graph.id
 		from graph
-		left join host on host.id=graph.host_id
-		left join graph_template on graph_template.id=graph.graph_template_id
+		left join host on (host.id=graph.host_id)
+		left join graph_template on (graph_template.id=graph.graph_template_id)
 		left join user_auth_perms on ((graph.id=user_auth_perms.item_id and user_auth_perms.type=1 and user_auth_perms.user_id=" . $_SESSION["sess_user_id"] . ") OR (host.id=user_auth_perms.item_id and user_auth_perms.type=3 and user_auth_perms.user_id=" . $_SESSION["sess_user_id"] . ") OR (graph_template.id=user_auth_perms.item_id and user_auth_perms.type=4 and user_auth_perms.user_id=" . $_SESSION["sess_user_id"] . "))
 		where graph.id = $graph_id");
 

@@ -302,8 +302,8 @@ function utilities_view_logs() {
 		host.description as host,
 		syslog.username,
 		syslog.message
-		FROM (syslog LEFT JOIN host ON syslog.host_id = host.id)
-		LEFT JOIN poller ON syslog.poller_id = poller.id
+		FROM (syslog LEFT JOIN host ON (syslog.host_id = host.id))
+		LEFT JOIN poller ON (syslog.poller_id = poller.id)
 		$sql_where
 		order by syslog.logdate
 		limit " . (read_config_option("num_rows_log")*($_REQUEST["page"]-1)) . "," . read_config_option("num_rows_log"));

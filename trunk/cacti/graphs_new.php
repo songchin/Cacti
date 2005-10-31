@@ -542,7 +542,7 @@ function graphs() {
 		graph_template.id,
 		graph_template.template_name as name
 		FROM snmp_query_graph RIGHT JOIN graph_template
-		ON snmp_query_graph.graph_template_id = graph_template.id
+		ON (snmp_query_graph.graph_template_id = graph_template.id)
 		WHERE (((snmp_query_graph.name) Is Null))
 		ORDER BY graph_template.template_name");
 

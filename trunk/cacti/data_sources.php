@@ -740,7 +740,7 @@ function ds() {
 		data_source.host_id
 		from data_source
 		left join data_template
-		on data_source.data_template_id=data_template.id
+		on (data_source.data_template_id=data_template.id)
 		$sql_where
 		order by data_source.name_cache,data_source.host_id
 		limit " . (read_config_option("num_rows_data_source")*($_REQUEST["page"]-1)) . "," . read_config_option("num_rows_data_source"));
