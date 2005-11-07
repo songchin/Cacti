@@ -108,8 +108,6 @@ if (isset($_SESSION["sess_user_id"])) {
 
 			<img src="<?php print html_get_theme_images_path('transparent_line.gif');?>" width="135" height="5" border="0"><br>
 			<p align="center"><a href='about.php'><img src="<?php print html_get_theme_images_path('cacti_logo.gif');?>" border="0"></a></p>
-			<img src="<?php print html_get_theme_images_path('transparent_line.gif');?>" width="135" height="5" border="0"><br>
-			<p align="left">Version: <? print CACTI_VERSION ?></p>
 		</td>
 		<td></td>
 	</tr>
