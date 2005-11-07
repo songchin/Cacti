@@ -341,7 +341,6 @@ $menu = array(
 	_("Configuration")  => array(
 		"settings.php" => _("System Settings"),
 		"user_settings.php" => _("User Settings"),
-		"settings_wizard.php" => _("Setup Wizard"),
 		"presets.php?action=view_cdef" => _("Data Presets")
 		),
 	_("Utilities") => array(
