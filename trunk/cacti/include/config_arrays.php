@@ -345,6 +345,7 @@ $menu = array(
 		),
 	_("Utilities") => array(
 		"utilities.php" => _("System Utilities"),
+		"logs.php" => _("Log Management"),
 		"user_admin.php" => _("User Management"),
 		"user_changepassword.php" => _("Change Password"),
 		"logout.php" => _("Logout User")
@@ -414,7 +415,8 @@ $user_auth_realm_filenames = array(
 	"user_changepassword.php" => "18",
 	"settings_wizard.php" => "15",
 	"user_settings.php" => "19",
-	"php_info.php" => 15
+	"php_info.php" => 15,
+	"logs.php" => "15"
 	);
 
 $hash_type_codes = array(

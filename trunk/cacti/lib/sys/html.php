@@ -947,6 +947,16 @@ function draw_navigation_text() {
 			"title" => _("(Remove)"),
 			"mapping" => "index.php:,presets.php:,presets.php:view_gprint",
 			"level" => "3"
+			),
+		"logs.php:" => array(
+			"title" => _("Log Management"),
+			"mapping" => "index.php:",
+			"level" => "1"
+			),
+		"logs.php:view" => array(
+			"title" => _("View"),
+			"mapping" => "index.php:,logs.php:",
+			"level" => "2"
 			)
 		);
 
