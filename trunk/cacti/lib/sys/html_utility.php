@@ -201,6 +201,29 @@ function get_current_graph_end() {
 	}
 }
 
+/* get_js_dropdown_code - generates javascript code suitable to populating an HTML select
+     box via javascript DOM functions
+   @arg $field_name - the name of the select box object in javascript
+   @arg $list_items - an array of the items to populate the select box with
+   @returns - the javascript code */
+function get_js_dropdown_code($field_name, $list_items) {
+	$js_code = "";
+
+	if (sizeof($list_items) > 0) {
+		$i = 0;
+		foreach ($list_items as $name => $value) {
+			$js_code .= $field_name . "_opt_$i = document.createElement('option');\n";
+			$js_code .= $field_name . "_opt_$i.text = '" . addslashes($value) . "';\n";
+			$js_code .= $field_name . "_opt_$i.value = '" . addslashes($name) . "';\n";
+			$js_code .= "$field_name.add($field_name" . "_opt_$i, null);\n";
+
+			$i++;
+		}
+	}
+
+	return $js_code;
+}
+
 /* get_page_list - generates the html necessary to present the user with a list of pages limited
      in length and number of rows per page
    @arg $current_page - the current page number

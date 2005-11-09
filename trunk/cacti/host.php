@@ -31,6 +31,7 @@ require_once(CACTI_BASE_PATH . "/lib/device/device_update.php");
 require_once(CACTI_BASE_PATH . "/lib/data_source/data_source_update.php");
 require_once(CACTI_BASE_PATH . "/lib/data_query/data_query_execute.php");
 require_once(CACTI_BASE_PATH . "/lib/data_query/data_query_info.php");
+require_once(CACTI_BASE_PATH . "/lib/device_template/device_template_info.php");
 require_once(CACTI_BASE_PATH . "/lib/graph/graph_update.php");
 
 define("MAX_DISPLAY_PAGES", 21);
@@ -706,14 +707,6 @@ $_REQUEST["host_template_id"] = "";
 	html_start_box("<strong>" . _("Devices") . "</strong>", "host.php?action=edit", $url_page_select);
 	html_header_checkbox(array(_("Description"), _("Status"), _("Hostname"), _("Current (ms)"), _("Average (ms)"), _("Availability")), $box_id);
 
-
-
-
-
-
-
-
-
 	$i = 0;
 	if (sizeof($hosts) > 0) {
 		foreach ($hosts as $host) {
@@ -760,6 +753,19 @@ $_REQUEST["host_template_id"] = "";
 	html_box_actions_area_draw($box_id, "0");
 
 	form_end();
+
+	$dt_list = api_device_template_list();
+
+	$list = array();
+	$list["-1"] = "Any";
+	$list["0"] = "None";
+
+	if (sizeof($dt_list) > 0) {
+		foreach ($dt_list as $item) {
+			$list{$item["id"]} = $item["name"];
+		}
+	}
+
 	?>
 
 	<script language="JavaScript">
@@ -780,6 +786,18 @@ $_REQUEST["host_template_id"] = "";
 			action_area_update_header_caption(box_id, 'Duplicate Devices');
 			action_area_update_submit_caption(box_id, 'Duplicate');
 			action_area_update_selected_rows(box_id, parent_form);
+		}else if (type == 'search') {
+			_elm_dt_input = action_area_generate_select('search_host_template', '');
+			<?php echo get_js_dropdown_code('_elm_dt_input', $list);?>
+
+			_elm_ds_input = action_area_generate_select('search_host_status', '');
+			<?php echo get_js_dropdown_code('_elm_ds_input', $list);?>
+
+			parent_div.appendChild(action_area_generate_search_field(_elm_dt_input, 'Device Template', true, false));
+			parent_div.appendChild(action_area_generate_search_field(_elm_ds_input, 'Device Status', false, true));
+
+			action_area_update_header_caption(box_id, 'Search');
+			action_area_update_submit_caption(box_id, 'Search');
 		}
 	}
 	-->
