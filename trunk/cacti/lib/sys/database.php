@@ -33,14 +33,16 @@ $last_insert_id = 0;
    @arg $db_type - the type of database server to connect to, only 'mysql' is currently supported
    @arg $retries - the number a time the server should attempt to connect before failing
    @returns - (bool) '1' for success, '0' for error */
-function db_connect_real($host,$user,$pass,$db_name,$db_type, $retries = 20) {
+function db_connect_real($host,$user,$pass,$db_name,$db_type, $port = "3306", $retries = 20) {
 	global $cnn_id;
 
 	$i = 1;
 	$cnn_id = NewADOConnection($db_type);
 
+	$hostport = $host . ":" . $port;
+
 	while ($i <= $retries) {
-		if ($cnn_id->PConnect($host,$user,$pass,$db_name)) {
+		if ($cnn_id->PConnect($hostport,$user,$pass,$db_name)) {
 			return(1);
 		}
 

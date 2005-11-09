@@ -28,6 +28,7 @@ $database_default = "cacti";
 $database_hostname = "localhost";
 $database_username = "cactiuser";
 $database_password = "cactiuser";
+$database_port = "3306";
 
 /* set the language for cacti */
 $cacti_lang = "en";
