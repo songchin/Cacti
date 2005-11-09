@@ -154,16 +154,16 @@ function html_box_actions_menu_draw($box_id, $form_id, $menu_items) {
 	<?php
 }
 
-function html_box_actions_area_draw($box_id, $form_id) {
+function html_box_actions_area_draw($box_id, $form_id, $width = 400) {
 	?>
-	<div id="box-<?php echo $box_id;?>-action-area-frame" class="shadowedBox" style="width: 400px; position: absolute; left: 30%; top: 150px; visibility: hidden;" width="400">
-		<table cellpadding="0" cellspacing="0" border="0" width="400">
+	<div id="box-<?php echo $box_id;?>-action-area-frame" class="shadowedBox" style="width: <?php echo $width;?>px; position: absolute; left: 30%; top: 150px; visibility: hidden;" width="<?php echo $width;?>">
+		<table cellpadding="0" cellspacing="0" border="0" width="<?php echo $width;?>">
 			<tr valign="top">
 				<td class="bdr left" width="7"></td>
-				<td width="387">
+				<td width="<?php echo ($width - 13);?>">
 					<div id="box-<?php echo $box_id;?>-action-area-menu" class="action-area-menu">
 						<div id="box-<?php echo $box_id;?>-action-area-header" class="action-area-header">
-							<table width="376" cellspacing="0" cellpadding="0" border="0">
+							<table width="<?php echo ($width - 24);?>" cellspacing="0" cellpadding="0" border="0">
 								<tr>
 									<td id="box-<?php echo $box_id;?>-action-area-header-caption" class="action-area-header">
 										&nbsp;
@@ -185,10 +185,10 @@ function html_box_actions_area_draw($box_id, $form_id) {
 				<td class="bdr right" width="7"></td>
 			</tr>
 		</table>
-		<table cellpadding="0" cellspacing="0" border="0" width="400">
+		<table cellpadding="0" cellspacing="0" border="0" width="<?php echo $width;?>">
 			<tr valign="top">
 				<td class="bdr bottomleft" width="7" height="7"></td>
-				<td class="bdr bottom" width="386" height="7"></td>
+				<td class="bdr bottom" width="<?php echo ($width - 14);?>" height="7"></td>
 				<td class="bdr bottomright" width="7" height="7"></td>
 			</tr>
 		</table>
