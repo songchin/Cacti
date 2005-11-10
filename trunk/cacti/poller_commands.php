@@ -88,6 +88,19 @@ if (sizeof($poller_commands) > 0) {
 			if (read_config_option("log_verbosity") == POLLER_VERBOSITY_DEBUG) {
 				api_syslog_cacti_log(_("Host[$host_id] RECACHE: Re-cache successful."), SEV_NOTICE, $poller_id, 0, 0, true, FACIL_POLLER);
 			}
+			break;
+		case POLLER_COMMAND_RRDPURGE:
+			if (read_config_option("log_verbosity") == POLLER_VERBOSITY_DEBUG) {
+				cacti_log(sprintf("_(Host[$i] PURGE: Unused RRDfile removed from system '%s')", $host_id, $command), true, "PCOMMAND");
+			}
+
+			if (file_exists($command)) {
+				@unlink($command);
+			}
+
+			break;
+		default:
+			cacti_log("Unknown poller command issued", SEV_ERROR, $poller_id, 0, 0, true, FACIL_POLLER);
 		}
 
 		/* record current_time */
@@ -96,7 +109,7 @@ if (sizeof($poller_commands) > 0) {
 
 		/* end if runtime has been exceeded */
 		if (($current-$start) > MAX_RECACHE_RUNTIME) {
-			api_syslog_cacti_log(sprintf(_("Host Recaching Timed Out While Processing '%s'"),$command), SEV_ERROR, $poller_id, 0, 0, true, FACIL_POLLER);
+			api_syslog_cacti_log(sprintf(_("Poller Command processing timed out after processing '%s'"), $command, SEV_ERROR, $poller_id, 0, 0, true, FACIL_POLLER);
 			break;
 		}
 	}
