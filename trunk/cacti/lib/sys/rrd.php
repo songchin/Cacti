@@ -701,7 +701,7 @@ function rrdtool_function_graph($graph_id, $rra_id, $graph_data_array, $rrd_stru
 		"--start=$graph_start" . RRD_NL .
 		"--end=$graph_end" . RRD_NL .
 		"-c CANVAS#" . $colors["rrd_canvas"] . " -c FONT#" . $colors["rrd_font"] . " -c BACK#" . $colors["rrd_back"] . " " .
-		"--title=\"" . str_replace("\"", "\\\"",($graph["title_cache"]) . "\"" . RRD_NL .
+		"--title=\"" . str_replace("\"", "\\\"", $graph["title_cache"]) . "\"" . RRD_NL .
 		"$rigid" .
 		"--base=" . $graph["base_value"] . RRD_NL .
 		"--height=$graph_height" . RRD_NL .
