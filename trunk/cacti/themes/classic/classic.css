@@ -299,7 +299,7 @@ div.action-area-menu {
 }
 
 div.action-area-buttons {
-	background-color: white;
+	background-color: #efefef;
 	border-top: 1px solid #d1d1d1;
 	text-align: right;
 	padding: 5px;
@@ -307,7 +307,7 @@ div.action-area-buttons {
 
 input.action-area-buttons {
 	background-color: #efefef;
-	border: 1px solid #d1d1d1;
+	border: 1px solid #c1c1c1;
 	font-weight: bold;
 }
 

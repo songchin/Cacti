@@ -328,8 +328,7 @@ function _data_source_input_field__device_snmp_timeout($field_name, $template_fl
 }
 
 function _data_source_input_field__device_snmp_version($field_name, $template_flag = false, $field_value = "", $field_id = 0, $t_field_value, $o_field_value) {
-	global $snmp_versions;
-
+	require(CACTI_BASE_PATH . "/include/device/device_arrays.php");
 	require_once(CACTI_BASE_PATH . "/lib/sys/html_form.php");
 
 	?>
@@ -442,8 +441,7 @@ function _data_source_input_field__device_snmpv3_auth_password($field_name, $tem
 }
 
 function _data_source_input_field__device_snmpv3_auth_protocol($field_name, $template_flag = false, $field_value = "", $field_id = 0, $t_field_value, $o_field_value) {
-	global $snmpv3_auth_protocol;
-
+	require(CACTI_BASE_PATH . "/include/device/device_arrays.php");
 	require_once(CACTI_BASE_PATH . "/lib/sys/html_form.php");
 
 	?>
@@ -500,8 +498,7 @@ function _data_source_input_field__device_snmpv3_priv_passphrase($field_name, $t
 }
 
 function _data_source_input_field__device_snmpv3_priv_protocol($field_name, $template_flag = false, $field_value = "", $field_id = 0, $t_field_value, $o_field_value) {
-	global $snmpv3_priv_protocol;
-
+	require(CACTI_BASE_PATH . "/include/device/device_arrays.php");
 	require_once(CACTI_BASE_PATH . "/lib/sys/html_form.php");
 
 	?>

@@ -48,4 +48,10 @@ function api_device_data_query_get($device_id, $data_query_id) {
 	return db_fetch_row("select * from host_data_query where host_id = " . sql_sanitize($device_id) . " and data_query_id = " . sql_sanitize($data_query_id));
 }
 
+function &api_device_status_types_list() {
+	require(CACTI_BASE_PATH . "/include/device/device_arrays.php");
+
+	return $host_status_types;
+}
+
 ?>

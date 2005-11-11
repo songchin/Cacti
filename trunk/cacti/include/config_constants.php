@@ -76,11 +76,6 @@ define("PING_ICMP", 1);
 define("PING_UDP", 2);
 define("PING_NONE", 3);
 
-define("HOST_UNKNOWN", 0);
-define("HOST_DOWN", 1);
-define("HOST_RECOVERING", 2);
-define("HOST_UP", 3);
-
 define("GT_CUSTOM", 0);
 define("GT_LAST_HALF_HOUR", 1);
 define("GT_LAST_HOUR", 2);

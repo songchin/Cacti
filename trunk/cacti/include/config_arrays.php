@@ -95,27 +95,6 @@ $snmp_query_field_actions = array(
 	3 => _("SNMP Output Type (Dropdown)")
 	);
 
-$snmp_versions = array(
-	1 => _("Version 1"),
-	2 => _("Version 2"),
-	3 => _("Version 3")
-	);
-
-$snmpv3_security_level = array(
-	"authNoPriv" => _("No Privacy Protocol"),
-	"authPriv" => _("Privacy Protocol")
-	);
-
-$snmpv3_auth_protocol = array(
-	"MD5" => _("MD5 (default)"),
-	"SHA" => _("SHA")
-	);
-
-$snmpv3_priv_protocol = array(
-	"[None]" => "[None]",
-	"DES" => "DES (default)",
-	"AES128" => "AES");
-
 $availability_options = array(
 	AVAIL_SNMP_AND_PING => _("Ping and SNMP - Most Recommended"),
 	AVAIL_SNMP => _("SNMP - Reliable"),
@@ -261,6 +240,7 @@ $graph_perms_type_array = array(
 	"host" => "3",
 	"graph_template" => "4"
 	);
+
 $ldap_versions = array(
 	2 => _("Version 2"),
 	3 => _("Version 3")

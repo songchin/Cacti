@@ -28,6 +28,7 @@ require_once(CACTI_BASE_PATH . "/include/data_query/data_query_arrays.php");
 require_once(CACTI_BASE_PATH . "/lib/poller.php");
 require_once(CACTI_BASE_PATH . "/lib/sys/snmp.php");
 require_once(CACTI_BASE_PATH . "/lib/device/device_update.php");
+require_once(CACTI_BASE_PATH . "/lib/device/device_info.php");
 require_once(CACTI_BASE_PATH . "/lib/data_source/data_source_update.php");
 require_once(CACTI_BASE_PATH . "/lib/data_query/data_query_execute.php");
 require_once(CACTI_BASE_PATH . "/lib/data_query/data_query_info.php");
@@ -52,10 +53,6 @@ if (!isset($_REQUEST["action"])) { $_REQUEST["action"] = ""; }
 switch ($_REQUEST["action"]) {
 	case 'save':
 		form_save();
-
-		break;
-	case 'actions':
-		form_actions();
 
 		break;
 	case 'gt_remove':
@@ -99,39 +96,61 @@ switch ($_REQUEST["action"]) {
    -------------------------- */
 
 function form_save() {
-	/* verify that the snmpv3 passwords and passphrases match */
-	if ($_POST["snmpv3_auth_password"] != $_POST["snmpv3_auth_password_confirm"]) {
-		raise_message(13);
-	}
+	if (isset($_POST["save_device_x"])) {
+		/* verify that the snmpv3 passwords and passphrases match */
+		if ($_POST["snmpv3_auth_password"] != $_POST["snmpv3_auth_password_confirm"]) {
+			raise_message(13);
+		}
 
-	if ((!empty($_POST["add_dq_y"])) && (!empty($_POST["data_query_id"]))) {
-		db_execute("replace into host_data_query (host_id,data_query_id,reindex_method) values (" . $_POST["id"] . "," . $_POST["data_query_id"] . "," . $_POST["reindex_method"] . ")");
+		if ((!empty($_POST["add_dq_y"])) && (!empty($_POST["data_query_id"]))) {
+			db_execute("replace into host_data_query (host_id,data_query_id,reindex_method) values (" . $_POST["id"] . "," . $_POST["data_query_id"] . "," . $_POST["reindex_method"] . ")");
 
-		/* recache snmp data */
-		api_data_query_execute($_POST["id"], $_POST["data_query_id"]);
+			/* recache snmp data */
+			api_data_query_execute($_POST["id"], $_POST["data_query_id"]);
 
-		header("Location: host.php?action=edit&id=" . $_POST["id"]);
-		exit;
-	}
+			header("Location: host.php?action=edit&id=" . $_POST["id"]);
+			exit;
+		}
 
-	if ((!empty($_POST["add_gt_y"])) && (!empty($_POST["graph_template_id"]))) {
-		db_execute("replace into host_graph (host_id,graph_template_id) values (" . $_POST["id"] . "," . $_POST["graph_template_id"] . ")");
+		if ((!empty($_POST["add_gt_y"])) && (!empty($_POST["graph_template_id"]))) {
+			db_execute("replace into host_graph (host_id,graph_template_id) values (" . $_POST["id"] . "," . $_POST["graph_template_id"] . ")");
 
-		header("Location: host.php?action=edit&id=" . $_POST["id"]);
-		exit;
-	}
+			header("Location: host.php?action=edit&id=" . $_POST["id"]);
+			exit;
+		}
 
-	if ((isset($_POST["save_component_host"])) && (empty($_POST["add_dq_y"]))) {
-		$host_id = api_device_save($_POST["id"], $_POST["poller_id"], $_POST["host_template_id"], $_POST["description"], $_POST["hostname"],
-			$_POST["snmp_community"], $_POST["snmp_version"], $_POST["snmpv3_auth_username"], $_POST["snmpv3_auth_password"],
-			$_POST["snmpv3_auth_protocol"], $_POST["snmpv3_priv_passphrase"], $_POST["snmpv3_priv_protocol"],
-			$_POST["snmp_port"], $_POST["snmp_timeout"], $_POST["availability_method"], $_POST["ping_method"],
-			(isset($_POST["disabled"]) ? $_POST["disabled"] : ""));
+		if ((isset($_POST["save_component_host"])) && (empty($_POST["add_dq_y"]))) {
+			$host_id = api_device_save($_POST["id"], $_POST["poller_id"], $_POST["host_template_id"], $_POST["description"], $_POST["hostname"],
+				$_POST["snmp_community"], $_POST["snmp_version"], $_POST["snmpv3_auth_username"], $_POST["snmpv3_auth_password"],
+				$_POST["snmpv3_auth_protocol"], $_POST["snmpv3_priv_passphrase"], $_POST["snmpv3_priv_protocol"],
+				$_POST["snmp_port"], $_POST["snmp_timeout"], $_POST["availability_method"], $_POST["ping_method"],
+				(isset($_POST["disabled"]) ? $_POST["disabled"] : ""));
 
-		if ((is_error_message()) || ($_POST["host_template_id"] != $_POST["_host_template_id"])) {
-			header("Location: host.php?action=edit&id=" . (empty($host_id) ? $_POST["id"] : $host_id));
-		}else{
-			header("Location: host.php");
+			if ((is_error_message()) || ($_POST["host_template_id"] != $_POST["_host_template_id"])) {
+				header("Location: host.php?action=edit&id=" . (empty($host_id) ? $_POST["id"] : $host_id));
+			}else{
+				header("Location: host.php");
+			}
+		}
+	}else if (isset($_POST["box-1-action-area-button"])) {
+		$selected_rows = explode(":", $_POST["box-1-action-area-selected-rows"]);
+
+		if ($_POST["box-1-action-area-type"] == "search") {
+			$get_string = "";
+
+			if ($_POST["box-1-search_device_template"] != "-1") {
+				$get_string .= ($get_string == "" ? "?" : "&") . "search_device_template=" . urlencode($_POST["box-1-search_device_template"]);
+			}
+
+			if ($_POST["box-1-search_status"] != "-1") {
+				$get_string .= ($get_string == "" ? "?" : "&") . "search_status=" . urlencode($_POST["box-1-search_status"]);
+			}
+
+			if (trim($_POST["box-1-search_filter"]) != "") {
+				$get_string .= ($get_string == "" ? "?" : "&") . "search_filter=" . urlencode($_POST["box-1-search_filter"]);
+			}
+
+			header("Location: host.php$get_string");
 		}
 	}
 }
@@ -661,7 +680,7 @@ function host_edit() {
 		html_end_box();
 	}
 
-	form_save_button("host.php");
+	form_save_button("host.php", "save_device");
 }
 
 function host() {
@@ -754,17 +773,17 @@ $_REQUEST["host_template_id"] = "";
 
 	form_end();
 
-	$dt_list = api_device_template_list();
+	/* fill in the list of available device templates for the search dropdown */
+	$search_device_templates = array();
+	$search_device_templates["-1"] = "Any";
+	$search_device_templates["0"] = "None";
+	$search_device_templates += array_rekey(api_device_template_list(), "id", "name");
 
-	$list = array();
-	$list["-1"] = "Any";
-	$list["0"] = "None";
-
-	if (sizeof($dt_list) > 0) {
-		foreach ($dt_list as $item) {
-			$list{$item["id"]} = $item["name"];
-		}
-	}
+	/* fill in the list of available host status types for the search dropdown */
+	$search_host_status_types = array();
+	$search_host_status_types["-1"] = "Any";
+	$search_host_status_types["-2"] = "Disabled";
+	$search_host_status_types += api_device_status_types_list();
 
 	?>
 
@@ -787,14 +806,18 @@ $_REQUEST["host_template_id"] = "";
 			action_area_update_submit_caption(box_id, 'Duplicate');
 			action_area_update_selected_rows(box_id, parent_form);
 		}else if (type == 'search') {
-			_elm_dt_input = action_area_generate_select('search_host_template', '');
-			<?php echo get_js_dropdown_code('_elm_dt_input', $list);?>
+			_elm_dt_input = action_area_generate_select('box-' + box_id + '-search_device_template', '');
+			<?php echo get_js_dropdown_code('_elm_dt_input', $search_device_templates);?>
 
-			_elm_ds_input = action_area_generate_select('search_host_status', '');
-			<?php echo get_js_dropdown_code('_elm_ds_input', $list);?>
+			_elm_ds_input = action_area_generate_select('box-' + box_id + '-search_status', '');
+			<?php echo get_js_dropdown_code('_elm_ds_input', $search_host_status_types);?>
+
+			_elm_ht_input = action_area_generate_input('text', 'box-' + box_id + '-search_filter', '');
+			_elm_ht_input.size = '30';
 
 			parent_div.appendChild(action_area_generate_search_field(_elm_dt_input, 'Device Template', true, false));
-			parent_div.appendChild(action_area_generate_search_field(_elm_ds_input, 'Device Status', false, true));
+			parent_div.appendChild(action_area_generate_search_field(_elm_ds_input, 'Device Status', false, false));
+			parent_div.appendChild(action_area_generate_search_field(_elm_ht_input, 'Filter', false, true));
 
 			action_area_update_header_caption(box_id, 'Search');
 			action_area_update_submit_caption(box_id, 'Search');

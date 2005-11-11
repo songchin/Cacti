@@ -24,6 +24,7 @@
 
 require(CACTI_BASE_PATH . "/include/graph/graph_arrays.php");
 require(CACTI_BASE_PATH . "/include/config_arrays.php");
+require(CACTI_BASE_PATH . "/include/device/device_arrays.php");
 
 /* tab information */
 $tabs = array(

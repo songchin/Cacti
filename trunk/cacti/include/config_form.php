@@ -24,6 +24,7 @@
 
 require(CACTI_BASE_PATH . "/include/config_arrays.php");
 require(CACTI_BASE_PATH . "/include/data_source/data_source_arrays.php");
+require(CACTI_BASE_PATH . "/include/device/device_arrays.php");
 
 if (!defined("VALID_HOST_FIELDS")) {
 	define("VALID_HOST_FIELDS", "(hostname|snmp_community|snmpv3_auth_username|snmpv3_auth_password|snmpv3_auth_protocol|snmpv3_priv_passphrase|snmpv3_priv_protocol|snmp_version|snmp_port|snmp_timeout)");
