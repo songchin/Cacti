@@ -819,7 +819,7 @@ function rrdtool_function_graph($graph_id, $rra_id, $graph_data_array, $rrd_stru
 				}
 
 				/* 95th percentile */
-				if (preg_match_all("/\|95:(bits|bytes):(\d):(current|total|max|total_peak|all_max_current|all_max_peak)(:(\d))?\|/", $graph_variables[$field_name][$graph_item_id], $matches, PREG_SET_ORDER)) {
+				if (preg_match_all("/\|95:(bits|bytes):(\d):(current|total|max|total_peak|all_max_current|all_max_peak|aggregate_max|aggregate_sum|aggregate)(:(\d))?\|/", $graph_variables[$field_name][$graph_item_id], $matches, PREG_SET_ORDER)) {
 					foreach ($matches as $match) {
 						$graph_variables[$field_name][$graph_item_id] = str_replace($match[0], variable_ninety_fifth_percentile($match[1], $match[2], $match[3], (isset($match[5]) ? $match[5] : 2), $graph_item, $graph_items, $graph_start, $graph_end), $graph_variables[$field_name][$graph_item_id]);
 					}

@@ -31,37 +31,170 @@
      either be absolute (unix timestamp) or relative (to now)
    @arg $resolution - the accuracy of the data measured in seconds
    @returns - (array) an array containing each data source item, and its 95th percentile */
-function ninety_fifth_percentile($local_data_id, $start_time, $end_time) {
+function ninety_fifth_percentile($local_data_id, $start_seconds, $end_seconds, $resolution = 0) {
 	require_once(CACTI_BASE_PATH . "/lib/sys/rrd.php");
 
-	$fetch_array = rrdtool_function_fetch($local_data_id, $start_time, $end_time);
+	$values_array = array();
 
-	if ((!isset($fetch_array["data_source_names"])) || (count($fetch_array["data_source_names"]) == 0)) {
-		return;
-	}
+	/* Check to see if we have array, if array, we are doing complex 95th calculations */
+	if (is_array($local_data_id)) {
+		$sum_array = array();
+		$fetch_array = array();
+		$percentile_array = array();
+		$num_ds = 0;
 
-	$return_array = array();
-
-	/* loop through each regexp determined above (or each data source) */
-	for ($i=0;$i<count($fetch_array["data_source_names"]);$i++) {
-		if (isset($fetch_array["values"][$i])) {
-			$values_array = $fetch_array["values"][$i];
-
-			/* sort the array in descending order */
-			rsort($values_array);
-
-			/* grab the 95% row (or 5% in reverse) and use that as our 95th percentile
-			value */
-			$target = (int)(count($values_array) / 20);
+		$i = 0;
+		/* do a fetch for each data source */
+		while (list($ldi, $ldi_value) = each($local_data_id)) {
+			$fetch_array[$i] = rrdtool_function_fetch($ldi, $start_seconds, $end_seconds, $resolution);
+			/* clean up unwanted data source items */
+			if (! empty($fetch_array[$i])) {
+				while (list($id, $name) = each($fetch_array[$i]["data_source_names"])) {
+					/* get rid of the 95th max for now since we'll need to re-calculate it later */
+					if ($name == "ninety_fifth_percentile_maximum") {
+						unset($fetch_array[$i]["data_source_names"][$id]);
+						unset($fetch_array[$i]["values"][$id]);
+					}
+					/* clean up DS items that aren't defined on the graph */
+					if (! in_array($name, $local_data_id[$ldi])) {
+						unset($fetch_array[$i]["data_source_names"][$id]);
+						unset($fetch_array[$i]["values"][$id]);
+					}
+				}
+				$i++;
+			}
 		}
 
-		if (empty($values_array[$target])) { $values_array[$target] = 0; }
+		/* Create our array for working  */
+		if (empty($fetch_array[0]["data_source_names"])) {
+			/* here to avoid warning on non-exist file */
+			$fetch_array = array();
+		}else{
+			$sum_array["data_source_names"] = $fetch_array[0]["data_source_names"];
+		}
 
-		/* collect 95th percentile values in this array so we can return them */
-		$return_array{$fetch_array["data_source_names"][$i]} = $values_array[$target];
+		if (sizeof($fetch_array) > 0) {
+			/* Create hash of ds_item_name => array or fetch_array indexes */
+			/* this is used to later sum, max and total the data sources used on the graph */
+			/* Loop fetch array index  */
+			$dsi_name_to_id = array();
+			reset($fetch_array);
+			for ($i=0; $i<count($fetch_array); $i++) {
+				/* Go through data souce names */
+				reset($fetch_array[$i]["data_source_names"]);
+				foreach ( $fetch_array[$i]["data_source_names"] as $ds_name ) {
+					$dsi_name_to_id[$ds_name][] = $i; 
+				}
+			}
+
+			/* Sum up the like data sources */
+			$sum_array = array();
+			$i = 0;
+			foreach ( $dsi_name_to_id as $ds_name => $id_array ) {
+				$sum_array["data_source_names"][$i] = $ds_name;
+				foreach ($id_array as $id) {
+					$fetch_id = array_search($ds_name,$fetch_array[$id]["data_source_names"]);
+						/* Sum up like ds names */	
+						for ($j=0; $j<count($fetch_array[$id]["values"][$fetch_id]); $j++) {
+							if (isset($fetch_array[$id]["values"][$fetch_id][$j])) {
+								$value = $fetch_array[$id]["values"][$fetch_id][$j];
+							}else{
+								$value = 0;
+							}
+							if (isset($sum_array["values"][$i][$j])) {
+								$sum_array["values"][$i][$j] += $value;
+							}else{
+								$sum_array["values"][$i][$j] = $value;
+							}
+						}
+				}
+				$i++;	
+			}
+		}
+
+		/* calculate extra data, max, sum */
+		if (isset($sum_array["values"])) {
+			$num_ds = count($sum_array["values"]);
+			$total_ds = count($sum_array["values"]);
+			for ($j=0; $j<$total_ds; $j++) { /* each data source item */
+				for ($k=0; $k<count($sum_array["values"][$j]); $k++) { /* each rrd row */
+					/* now we must re-calculate the 95th max */
+					$value = 0;
+					if (isset($sum_array["values"][$j][$k])) {
+						$value = $sum_array["values"][$j][$k];
+					}
+					if (isset($sum_array["values"][$num_ds][$k])) {
+						$sum_array["values"][$num_ds][$k] = max($value, $sum_array["values"][$num_ds][$k]);
+					}else{
+						$sum_array["values"][$num_ds][$k] = max($value, 0);
+					}
+					/* sum of all ds rows */
+					$value = 0;
+					if (isset($sum_array["values"][$j][$k])) {
+						$value = $sum_array["values"][$j][$k];
+					}
+
+					if (isset($sum_array["values"][$num_ds + 1][$k])) {
+						$sum_array["values"][$num_ds + 1][$k] += $value;
+					}else{
+						$sum_array["values"][$num_ds + 1][$k] = $value;
+					}
+
+				}
+			}
+
+			$sum_array["data_source_names"][$num_ds] = "ninety_fifth_percentile_aggregate_max";
+			$sum_array["data_source_names"][$num_ds + 1] = "ninety_fifth_percentile_aggregate_sum";
+
+		}
+
+		$fetch_array = $sum_array;
+	}else{
+		/* No array, just calculate the 95th for the data source */
+		$fetch_array = rrdtool_function_fetch($local_data_id, $start_seconds, $end_seconds, $resolution);
 	}
 
-	return $return_array;
+	/* loop through each data source */
+	if (empty($fetch_array["data_source_names"])) {
+		$return_array = array();
+	}else{
+		for ($i=0; $i<count($fetch_array["data_source_names"]); $i++) {
+			if (isset($fetch_array["values"][$i])) {
+				$values_array = $fetch_array["values"][$i];
+	
+				/* sort the array in descending order */
+				rsort($values_array, SORT_NUMERIC);
+			}
+	
+			/* grab the 95% row (or 5% in reverse) and use that as our 95th percentile
+			value */
+			$target = ((count($values_array) + 1) * .05);
+			$target = sprintf("%d", $target);
+	
+			if (empty($values_array[$target])) { $values_array[$target] = 0; }
+	
+			/* collect 95th percentile values in this array so we can return them */
+			$return_array{$fetch_array["data_source_names"][$i]} = $values_array[$target];
+
+			/* get max 95th calculation for aggregate */
+			if (($fetch_array["data_source_names"][$i] != "ninety_fifth_percentile_aggregate_max") && 
+				($fetch_array["data_source_names"][$i] != "ninety_fifth_percentile_aggregate_sum") && 
+				($fetch_array["data_source_names"][$i] != "ninety_fifth_percentile_maximum")) {
+				if (isset($return_array{"ninety_fifth_percentile_aggregate_total"})) {
+					if (($return_array{"ninety_fifth_percentile_aggregate_total"} < $values_array[$target])) {
+						$return_array{"ninety_fifth_percentile_aggregate_total"} = $values_array[$target];
+					}
+				}else{
+					$return_array{"ninety_fifth_percentile_aggregate_total"} = $values_array[$target];
+				}
+			}
+		}
+	}
+
+	if (isset($return_array)) {
+		return $return_array;
+	}
+
 }
 
 /* bandwidth_summation - given a data source, sums all data in the rrd for a given
@@ -145,6 +278,14 @@ function variable_ninety_fifth_percentile($var_scale, $var_divisor, $var_type, $
 				$ninety_fifth_cache{$graph_items[$t]["local_data_id"]} = ninety_fifth_percentile($graph_items[$t]["local_data_id"], $graph_start, $graph_end);
 			}
 		}
+	}elseif (($var_type == "aggregate") || ($var_type == "aggregate_sum") || ($var_type == "aggregate_max")) {
+		$local_data_array = array();
+		for ($t=0;($t<count($graph_items));$t++) {
+			if ((is_graph_item_type_primary($graph_items[$t]["graph_type_id"])) && (!empty($graph_items[$t]["data_template_rrd_id"]))) {
+				$local_data_array[$graph_items[$t]["local_data_id"]][] = $graph_items[$t]["data_source_name"];
+			}
+		}
+                $ninety_fifth_cache{0} = ninety_fifth_percentile($local_data_array, $graph_start, $graph_end);
 	}
 
 	$ninety_fifth = 0;
@@ -201,6 +342,33 @@ function variable_ninety_fifth_percentile($var_scale, $var_divisor, $var_type, $
 					$ninety_fifth = $local_ninety_fifth;
 				}
 			}
+		}
+	}elseif ($var_type == "aggregate") {
+		if (empty($ninety_fifth_cache{0}["ninety_fifth_percentile_aggregate_total"])) {
+			$ninety_fifth = 0;
+		}else{
+			$local_ninety_fifth = $ninety_fifth_cache{0}["ninety_fifth_percentile_aggregate_total"];
+			$local_ninety_fifth = ($regexp_match_array[1] == "bits") ? $local_ninety_fifth * 8 : $local_ninety_fifth;
+			$local_ninety_fifth /= pow(10,intval($var_divisor));
+			$ninety_fifth = $local_ninety_fifth;
+		}
+	}elseif ($var_type == "aggregate_max") {
+		if (empty($ninety_fifth_cache{0}["ninety_fifth_percentile_aggregate_max"])) {
+			$ninety_fifth = 0;
+		}else{
+			$local_ninety_fifth = $ninety_fifth_cache{0}["ninety_fifth_percentile_aggregate_max"];
+			$local_ninety_fifth = ($regexp_match_array[1] == "bits") ? $local_ninety_fifth * 8 : $local_ninety_fifth;
+			$local_ninety_fifth /= pow(10,intval($var_divisor));
+			$ninety_fifth = $local_ninety_fifth;
+		}
+	}elseif ($var_type == "aggregate_sum") {
+		if (empty($ninety_fifth_cache{0}["ninety_fifth_percentile_aggregate_sum"])) {
+			$ninety_fifth = 0;
+		}else{
+			$local_ninety_fifth = $ninety_fifth_cache{0}["ninety_fifth_percentile_aggregate_sum"];
+			$local_ninety_fifth = ($regexp_match_array[1] == "bits") ? $local_ninety_fifth * 8 : $local_ninety_fifth;
+			$local_ninety_fifth /= pow(10,intval($var_divisor));
+			$ninety_fifth = $local_ninety_fifth;
 		}
 	}
 
