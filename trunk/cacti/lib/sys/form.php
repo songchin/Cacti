@@ -78,15 +78,15 @@ function form_input_validate($field_value, $field_name, $regexp_match, $allow_nu
 	}
 }
 
-function get_get_var_number($name) {
+function get_get_var_number($name, $default_value = "0") {
 	if (isset($_GET[$name])) {
 		if (is_numeric($_GET[$name])) {
 			return $_GET[$name];
 		}else{
-			return "0";
+			return $default_value;
 		}
 	}else{
-		return "0";
+		return $default_value;
 	}
 }
 
@@ -96,6 +96,24 @@ function get_get_var($name) {
 	}else{
 		return "";
 	}
+}
+
+function isset_get_var($name) {
+	return isset($_GET[$name]);
+}
+
+function build_get_url_string($name_list) {
+	$url_string = "";
+
+	if (sizeof($name_list) > 0) {
+		foreach ($name_list as $get_field_name) {
+			if (isset_get_var($get_field_name)) {
+				$url_string .= ($url_string == "" ? "?" : "&") . "$get_field_name=" . urlencode(get_get_var($get_field_name));
+			}
+		}
+	}
+
+	return $url_string;
 }
 
 ?>

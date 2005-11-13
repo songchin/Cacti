@@ -319,10 +319,9 @@ function action_area_generate_input(type, name, value) {
 /* action_area_generate_select - generates a select form element for the actions area box
    @arg name - (string) the name of the object
    @arg value - (string) the initial value of the object */
-function action_area_generate_select(name, value) {
+function action_area_generate_select(name) {
 	_elm_object = document.createElement('select');
 	_elm_object.name = name;
-	_elm_object.value = value;
 
 	return _elm_object;
 }

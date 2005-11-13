@@ -66,6 +66,7 @@ $colors["form_alternate2"] = "E5E5E5";
 /* includes for database operation */
 require(CACTI_BASE_PATH . "/lib/adodb/adodb.inc.php");
 require(CACTI_BASE_PATH . "/lib/sys/database.php");
+require(CACTI_BASE_PATH . "/lib/sys/database_utility.php");
 
 /* connect to the database server */
 db_connect_real($database_hostname, $database_username, $database_password, $database_default, $database_type);

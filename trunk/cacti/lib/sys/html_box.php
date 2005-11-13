@@ -74,30 +74,37 @@ function html_end_box($trailing_br = true) { ?>
 	<?php if ($trailing_br == true) { print "<br>"; } ?>
 <?php }
 
-function html_box_toolbar_draw($box_id, $form_id, $colspan, $search_url = "") {
+function html_box_toolbar_draw($box_id, $form_id, $colspan, $search_type = HTML_BOX_SEARCH_NONE, $search_url = "") {
 	?>
 	<tr>
 		<td style="border-top: 1px solid #b5b5b5; padding: 1px;" colspan="<?php echo $colspan;?>" >
 			<table width="100%" cellpadding="3" cellspacing="0">
 				<tr>
 					<td width="200" style="padding: 0px;">
+						<?php if (($search_type == HTML_BOX_SEARCH_ACTIVE) || ($search_type == HTML_BOX_SEARCH_INACTIVE)): ?>
 						<table width="100%" cellpadding="3" cellspacing="0">
 							<tr>
 								<td width="16" id="box-<?php echo $box_id;?>-button-search" class="action-bar-button-out">
-									<a href="javascript:action_area_show('<?php echo $box_id;?>',document.forms[<?php echo $form_id;?>],'search')"><img src="<?php echo html_get_theme_images_path('action_search.gif');?>" width="16" height="16" border="0" alt="Search" onMouseOver="action_bar_button_mouseover('box-<?php echo $box_id;?>-button-search')" onMouseOut="action_bar_button_mouseout('box-<?php echo $box_id;?>-button-search')" align="absmiddle"></a>
+									<a href="javascript:action_area_show('<?php echo $box_id;?>',document.forms[<?php echo $form_id;?>],'search')"><img src="<?php echo html_get_theme_images_path($search_type == HTML_BOX_SEARCH_ACTIVE ? 'action_search_active.gif' : 'action_search.gif');?>" width="16" height="16" border="0" alt="Search" onMouseOver="action_bar_button_mouseover('box-<?php echo $box_id;?>-button-search')" onMouseOut="action_bar_button_mouseout('box-<?php echo $box_id;?>-button-search')" align="absmiddle"></a>
 								</td>
 								<td width="3">
 									<img src="<?php echo html_get_theme_images_path('vertical_spacer.gif');?>" alt="" align="absmiddle">
 								</td>
 								<td nowrap>
-									<?php form_text_box("filter", "", "", 100, 15, "text", 0, "small"); ?>
-									<input type="submit" value="Filter" class="small">
+									<?php
+									form_text_box("box-$box_id-search_filter", get_get_var("search_filter"), "", 100, 15, "text", 0, "small");
+									form_hidden_box("action", "save");
+									?>
+									<input type="submit" name="box-<?php echo $box_id;?>-action-filter-button" value="Filter" class="small">
 								</td>
 							</tr>
 						</table>
+						<?php endif; ?>
 					</td>
 					<td align="center" nowrap>
+						<?php if (($search_type == HTML_BOX_SEARCH_ACTIVE) || ($search_type == HTML_BOX_SEARCH_INACTIVE)): ?>
 						[ <?php echo $search_url;?> ]
+						<?php endif; ?>
 					</td>
 					<td width="165" style="padding: 0px;">
 						<table width="100%" cellpadding="3" cellspacing="0">
@@ -178,6 +185,7 @@ function html_box_actions_area_draw($box_id, $form_id, $width = 400) {
 							&nbsp;
 						</div>
 						<div class="action-area-buttons">
+							<input type="button" value="Cancel" class="action-area-buttons" name="box-<?php echo $box_id;?>-action-area-button-cancel" id="box-<?php echo $box_id;?>-action-area-button-cancel" onClick="action_area_hide('<?php echo $box_id;?>')">
 							<input type="submit" value="X" class="action-area-buttons" name="box-<?php echo $box_id;?>-action-area-button" id="box-<?php echo $box_id;?>-action-area-button" onClick="action_area_update_input('<?php echo $box_id;?>',document.forms[<?php echo $form_id;?>])">
 						</div>
 					</div>

@@ -151,6 +151,10 @@ define("SYSLOG_MNG_ASNEEDED",1);
 define("SYSLOG_MNG_DAYSOLD",2);
 define("SYSLOG_MNG_STOPLOG",3);
 
+define("HTML_BOX_SEARCH_NONE", 1);
+define("HTML_BOX_SEARCH_ACTIVE", 2);
+define("HTML_BOX_SEARCH_INACTIVE", 3);
+
 define("FORM_VALIDATE_CHECKBOX", chr(22));
 
 define("DB_TYPE_STRING", 1);

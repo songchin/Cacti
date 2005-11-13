@@ -206,7 +206,7 @@ function get_current_graph_end() {
    @arg $field_name - the name of the select box object in javascript
    @arg $list_items - an array of the items to populate the select box with
    @returns - the javascript code */
-function get_js_dropdown_code($field_name, $list_items) {
+function get_js_dropdown_code($field_name, $list_items, $current_value) {
 	$js_code = "";
 
 	if (sizeof($list_items) > 0) {
@@ -215,6 +215,11 @@ function get_js_dropdown_code($field_name, $list_items) {
 			$js_code .= $field_name . "_opt_$i = document.createElement('option');\n";
 			$js_code .= $field_name . "_opt_$i.text = '" . addslashes($value) . "';\n";
 			$js_code .= $field_name . "_opt_$i.value = '" . addslashes($name) . "';\n";
+
+			if ($current_value == $name) {
+				$js_code .= $field_name . "_opt_$i.selected = true;\n";
+			}
+
 			$js_code .= "$field_name.add($field_name" . "_opt_$i, null);\n";
 
 			$i++;
@@ -222,6 +227,14 @@ function get_js_dropdown_code($field_name, $list_items) {
 	}
 
 	return $js_code;
+}
+
+function html_highlight_words($needle, $haystack) {
+	if (trim($needle) == "") {
+		return $haystack;
+	}
+
+	return preg_replace("/(" . preg_quote($needle) . ")/i", "<span class='text-highlight'>\\1</span>", $haystack);
 }
 
 /* get_page_list - generates the html necessary to present the user with a list of pages limited
@@ -236,13 +249,15 @@ function get_js_dropdown_code($field_name, $list_items) {
 function get_page_list($current_page, $pages_per_screen, $rows_per_page, $total_rows, $url) {
 	$url_page_select = "";
 
+	/* the total number of pages */
 	$total_pages = ceil($total_rows / $rows_per_page);
 
+	/* the starting and ending pages on this screen */
 	$start_page = max(1, ($current_page - floor(($pages_per_screen - 1) / 2)));
 	$end_page = min($total_pages, ($current_page + floor(($pages_per_screen - 1) / 2)));
 
-	$url_page_select .= ($current_page == "1" ? "" : "<a href='$url&page=1'>") . "First" . ($current_page == "1" ? "" : "</a>");
-	$url_page_select .= ($current_page == "1" ? " " : " <a href='$url&page=" . ($current_page - 1) . "'>") . "Prev" . ($current_page == "1" ? " " : "</a> ");
+	$url_page_select .= ($current_page <= "1" ? "" : str_replace("|PAGE_NUM|", "1", "<a href='$url'>")) . "First" . ($current_page == "1" ? "" : "</a>");
+	$url_page_select .= ($current_page <= "1" ? " " : str_replace("|PAGE_NUM|", ($current_page - 1), " <a href='$url'>")) . "Prev" . ($current_page == "1" ? " " : "</a> ");
 
 	/* adjust if we are close to the beginning of the page list */
 	if ($current_page <= ceil(($pages_per_screen) / 2)) {
@@ -267,7 +282,7 @@ function get_page_list($current_page, $pages_per_screen, $rows_per_page, $total_
 			if ($current_page == ($page_number + $start_page)) {
 				$url_page_select .= "<strong>" . ($page_number + $start_page) . "</strong>";
 			}else{
-				$url_page_select .= "<a href='$url&page=" . ($page_number + $start_page) . "'>" . ($page_number + $start_page) . "</a>";
+				$url_page_select .= "<a href='" . str_replace("|PAGE_NUM|", ($page_number + $start_page), $url) . "'>" . ($page_number + $start_page) . "</a>";
 			}
 		}
 
@@ -280,8 +295,8 @@ function get_page_list($current_page, $pages_per_screen, $rows_per_page, $total_
 		$url_page_select .= "...";
 	}
 
-	$url_page_select .= ($current_page == $total_pages ? " " : " <a href='$url&page=" . ($current_page + 1) . "'>") . "Next" . ($current_page == $total_pages ? "" : "</a>");
-	$url_page_select .= ($current_page == $total_pages ? " " : " <a href='$url&page=$total_pages'>") . "Last" . ($current_page == $total_pages ? "" : "</a>");
+	$url_page_select .= ($current_page * $rows_per_page >= $total_rows ? " " : str_replace("|PAGE_NUM|", ($current_page + 1), " <a href='$url'>")) . "Next" . ($current_page * $rows_per_page >= $total_rows ? "" : "</a>");
+	$url_page_select .= ($current_page * $rows_per_page >= $total_rows ? " " : str_replace("|PAGE_NUM|", $total_pages, " <a href='$url'>")) . "Last" . ($current_page * $rows_per_page >= $total_rows ? "" : "</a>");
 
 	return $url_page_select;
 }

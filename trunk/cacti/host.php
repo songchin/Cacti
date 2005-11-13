@@ -132,6 +132,7 @@ function form_save() {
 				header("Location: host.php");
 			}
 		}
+	/* submit button on the actions area page */
 	}else if (isset($_POST["box-1-action-area-button"])) {
 		$selected_rows = explode(":", $_POST["box-1-action-area-selected-rows"]);
 
@@ -152,6 +153,15 @@ function form_save() {
 
 			header("Location: host.php$get_string");
 		}
+	/* 'filter' button at the bottom of the box */
+	}else if (isset($_POST["box-1-action-filter-button"])) {
+		$get_string = "";
+
+		if (trim($_POST["box-1-search_filter"]) != "") {
+			$get_string .= ($get_string == "" ? "?" : "&") . "search_filter=" . urlencode($_POST["box-1-search_filter"]);
+		}
+
+		header("Location: host.php$get_string");
 	}
 }
 
@@ -686,39 +696,39 @@ function host_edit() {
 function host() {
 	global $device_actions;
 
-$sql_where = "";
-$_REQUEST["page"] = "1";
-$_REQUEST["filter"] = "";
-$_REQUEST["host_template_id"] = "";
+	$current_page = get_get_var_number("page", "1");
 
 	$menu_items = array(
 		"remove" => "Remove",
 		"duplicate" => "Duplicate"
 		);
 
-	$total_rows = db_fetch_cell("select
-		COUNT(host.id)
-		from host
-		$sql_where");
+	$filter_array = array();
 
-	$hosts = db_fetch_assoc("select
-		host.id,
-		host.disabled,
-		host.status,
-		host.hostname,
-		host.description,
-		host.min_time,
-		host.max_time,
-		host.cur_time,
-		host.avg_time,
-		host.availability
-		from host
-		$sql_where
-		order by host.description
-		limit " . (read_config_option("num_rows_device")*($_REQUEST["page"]-1)) . "," . read_config_option("num_rows_device"));
+	/* search field: device template */
+	if (isset_get_var("search_device_template")) {
+		$filter_array["host_template_id"] = get_get_var("search_device_template");
+	}
+
+	/* search field: device status */
+	if (isset_get_var("search_status")) {
+		$filter_array["status"] = get_get_var("search_status");
+	}
+
+	/* search field: filter (searchs device description and hostname) */
+	if (isset_get_var("search_filter")) {
+		$filter_array["filter"] = array("hostname" => get_get_var("search_filter"), "description" => get_get_var("search_filter"));
+	}
+
+	/* get a list of all devices on this page */
+	$devices = api_device_list($filter_array, $current_page, read_config_option("num_rows_device"));
+
+	/* get the total number of devices on all pages */
+	$total_rows = api_device_total_num($filter_array);
 
 	/* generate page list */
-	$url_page_select = get_page_list($_REQUEST["page"], MAX_DISPLAY_PAGES, read_config_option("num_rows_device"), $total_rows, "host.php?filter=" . $_REQUEST["filter"] . "&host_template_id=" . $_REQUEST["host_template_id"]);
+	$url_string = build_get_url_string(array("search_device_template", "search_status", "search_filter"));
+	$url_page_select = get_page_list($current_page, MAX_DISPLAY_PAGES, read_config_option("num_rows_device"), $total_rows, "host.php" . $url_string . ($url_string == "" ? "?" : "&") . "page=|PAGE_NUM|");
 
 	form_start("host.php");
 
@@ -727,18 +737,18 @@ $_REQUEST["host_template_id"] = "";
 	html_header_checkbox(array(_("Description"), _("Status"), _("Hostname"), _("Current (ms)"), _("Average (ms)"), _("Availability")), $box_id);
 
 	$i = 0;
-	if (sizeof($hosts) > 0) {
-		foreach ($hosts as $host) {
+	if (sizeof($devices) > 0) {
+		foreach ($devices as $host) {
 			?>
 			<tr class="content-row" id="box-<?php echo $box_id;?>-row-<?php echo $host["id"];?>" onClick="display_row_select('<?php echo $box_id;?>',document.forms[0],'box-<?php echo $box_id;?>-row-<?php echo $host["id"];?>', 'box-<?php echo $box_id;?>-chk-<?php echo $host["id"];?>')" onMouseOver="display_row_hover('box-<?php echo $box_id;?>-row-<?php echo $host["id"];?>')" onMouseOut="display_row_clear('box-<?php echo $box_id;?>-row-<?php echo $host["id"];?>')">
 				<td class="content-row">
-					<a class="linkEditMain" onClick="display_row_block('box-<?php echo $box_id;?>-row-<?php echo $host["id"];?>')" href="host.php?action=edit&id=<?php echo $host["id"];?>"><span id="box-<?php echo $box_id;?>-text-<?php echo $host["id"];?>"><?php echo $host["description"];?></span></a>
+					<a class="linkEditMain" onClick="display_row_block('box-<?php echo $box_id;?>-row-<?php echo $host["id"];?>')" href="host.php?action=edit&id=<?php echo $host["id"];?>"><span id="box-<?php echo $box_id;?>-text-<?php echo $host["id"];?>"><?php echo html_highlight_words(get_get_var("search_filter"), $host["description"]);?></span></a>
 				</td>
 				<td class="content-row">
-					<?php echo get_colored_device_status(($host["disabled"] == "on" ? true : false), $host["status"]);;?>
+					<?php echo get_colored_device_status(($host["disabled"] == "on" ? true : false), $host["status"]);?>
 				</td>
 				<td class="content-row">
-					<?php echo $host["hostname"];?>
+					<?php echo html_highlight_words(get_get_var("search_filter"), $host["hostname"]);?>
 				</td>
 				<td class="content-row">
 					<?php echo round($host["cur_time"], 2);?>
@@ -755,17 +765,16 @@ $_REQUEST["host_template_id"] = "";
 			</tr>
 			<?php
 		}
-
-		html_box_toolbar_draw($box_id, "0", "6", $url_page_select);
 	}else{
 		?>
 		<tr>
 			<td class="content-list-empty" colspan="6">
-				No devices queries found.
+				No devices found.
 			</td>
 		</tr>
 		<?php
 	}
+	html_box_toolbar_draw($box_id, "0", "6", (sizeof($filter_array) == 0 ? HTML_BOX_SEARCH_INACTIVE : HTML_BOX_SEARCH_ACTIVE), $url_page_select);
 	html_end_box(false);
 
 	html_box_actions_menu_draw($box_id, "0", $menu_items);
@@ -806,13 +815,13 @@ $_REQUEST["host_template_id"] = "";
 			action_area_update_submit_caption(box_id, 'Duplicate');
 			action_area_update_selected_rows(box_id, parent_form);
 		}else if (type == 'search') {
-			_elm_dt_input = action_area_generate_select('box-' + box_id + '-search_device_template', '');
-			<?php echo get_js_dropdown_code('_elm_dt_input', $search_device_templates);?>
+			_elm_dt_input = action_area_generate_select('box-' + box_id + '-search_device_template');
+			<?php echo get_js_dropdown_code('_elm_dt_input', $search_device_templates, (isset_get_var("search_device_template") ? get_get_var("search_device_template") : "-1"));?>
 
-			_elm_ds_input = action_area_generate_select('box-' + box_id + '-search_status', '');
-			<?php echo get_js_dropdown_code('_elm_ds_input', $search_host_status_types);?>
+			_elm_ds_input = action_area_generate_select('box-' + box_id + '-search_status');
+			<?php echo get_js_dropdown_code('_elm_ds_input', $search_host_status_types, (isset_get_var("search_status") ? get_get_var("search_status") : "-1"));?>
 
-			_elm_ht_input = action_area_generate_input('text', 'box-' + box_id + '-search_filter', '');
+			_elm_ht_input = action_area_generate_input('text', 'box-' + box_id + '-search_filter', '<?php echo get_get_var("search_filter");?>');
 			_elm_ht_input.size = '30';
 
 			parent_div.appendChild(action_area_generate_search_field(_elm_dt_input, 'Device Template', true, false));

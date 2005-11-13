@@ -133,6 +133,10 @@ a.link-dark-small:hover {
 	color: #919191;
 }
 
+span.text-highlight {
+	background-color: #7be54b;
+}
+
 /* tabs */
 td.tab {
 	border-top: 1px solid #999;
