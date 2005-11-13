@@ -33,14 +33,8 @@ function api_data_query_save($data_query_id, &$_fields_data_query) {
 	/* field: id */
 	$_fields["id"] = array("type" => DB_TYPE_NUMBER, "value" => $data_query_id);
 
-	/* fetch a list of all visible data query fields */
-	$fields_data_query = api_data_query_list_fields();
-
-	foreach (array_keys($fields_data_query) as $field_name) {
-		if (isset($_fields_data_query[$field_name])) {
-			$_fields[$field_name] = array("type" => $fields_data_query[$field_name]["data_type"], "value" => $_fields_data_query[$field_name]);
-		}
-	}
+	/* convert the input array into something that is compatible with db_replace() */
+	$_fields += sql_get_database_field_array($_fields_data_query, api_data_query_list_fields());
 
 	/* check for an empty field list */
 	if (sizeof($_fields) == 1) {
@@ -82,14 +76,8 @@ function api_data_query_field_save($data_query_field_id, &$_fields_data_query_fi
 		$_fields["data_query_id"] = array("type" => DB_TYPE_NUMBER, "value" => $_fields_data_query_fields["data_query_id"]);
 	}
 
-	/* fetch a list of all visible data query fields */
-	$fields_data_query_fields = api_data_query_fields_list_fields();
-
-	foreach (array_keys($fields_data_query_fields) as $field_name) {
-		if (isset($_fields_data_query_fields[$field_name])) {
-			$_fields[$field_name] = array("type" => $fields_data_query_fields[$field_name]["data_type"], "value" => $_fields_data_query_fields[$field_name]);
-		}
-	}
+	/* convert the input array into something that is compatible with db_replace() */
+	$_fields += sql_get_database_field_array($_fields_data_query_fields, api_data_query_fields_list_fields());
 
 	/* check for an empty field list */
 	if (sizeof($_fields) == 1) {

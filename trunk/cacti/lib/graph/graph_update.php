@@ -43,14 +43,8 @@ function api_graph_save($graph_id, &$_fields_graph, $skip_cache_update = false) 
 		$_fields["host_id"] = array("type" => DB_TYPE_NUMBER, "value" => $_fields_graph["host_id"]);
 	}
 
-	/* fetch a list of all visible graph fields */
-	$fields_graph = get_graph_field_list();
-
-	foreach (array_keys($fields_graph) as $field_name) {
-		if (isset($_fields_graph[$field_name])) {
-			$_fields[$field_name] = array("type" => $fields_graph[$field_name]["data_type"], "value" => $_fields_graph[$field_name]);
-		}
-	}
+	/* convert the input array into something that is compatible with db_replace() */
+	$_fields += sql_get_database_field_array($_fields_graph, get_graph_field_list());
 
 	/* check for an empty field list */
 	if (sizeof($_fields) == 1) {
@@ -125,19 +119,13 @@ function api_graph_item_save($graph_item_id, &$_fields_graph_item) {
 		$_fields["sequence"] = array("type" => DB_TYPE_NUMBER, "value" => seq_get_current($_fields_graph_item["id"], "sequence", "graph_item", "graph_id = " . sql_sanitize($_fields_graph_item["graph_id"])));
 	}
 
-	/* fetch a list of all visible graph item fields */
-	$fields_graph_item = get_graph_items_field_list();
-
 	/* check for an empty field list */
 	if (sizeof($_fields) == 1) {
 		return true;
 	}
 
-	foreach (array_keys($fields_graph_item) as $field_name) {
-		if (isset($_fields_graph_item[$field_name])) {
-			$_fields[$field_name] = array("type" => $fields_graph_item[$field_name]["data_type"], "value" => $_fields_graph_item[$field_name]);
-		}
-	}
+	/* convert the input array into something that is compatible with db_replace() */
+	$_fields += sql_get_database_field_array($_fields_graph_item, get_graph_items_field_list());
 
 	if (db_replace("graph_item", $_fields, array("id"))) {
 		return true;

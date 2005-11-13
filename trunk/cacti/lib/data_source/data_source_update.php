@@ -43,14 +43,8 @@ function api_data_source_save($data_source_id, &$_fields_data_source, &$_fields_
 		$_fields["host_id"] = array("type" => DB_TYPE_NUMBER, "value" => $_fields_data_source["host_id"]);
 	}
 
-	/* fetch a list of all visible data source fields */
-	$fields_data_source = api_data_source_field_list();
-
-	foreach (array_keys($fields_data_source) as $field_name) {
-		if (isset($_fields_data_source[$field_name])) {
-			$_fields[$field_name] = array("type" => $fields_data_source[$field_name]["data_type"], "value" => $_fields_data_source[$field_name]);
-		}
-	}
+	/* convert the input array into something that is compatible with db_replace() */
+	$_fields += sql_get_database_field_array($_fields_data_source, api_data_source_field_list());
 
 	/* check for an empty field list */
 	if (sizeof($_fields) == 1) {
@@ -168,14 +162,8 @@ function api_data_source_item_save($data_source_item_id, &$_fields_data_source_i
 		$_fields["field_input_value"] = array("type" => DB_TYPE_STRING, "value" => $_fields_data_source_item["field_input_value"]);
 	}
 
-	/* fetch a list of all visible data source item fields */
-	$fields_data_source_item = api_data_source_item_field_list();
-
-	foreach (array_keys($fields_data_source_item) as $field_name) {
-		if (isset($_fields_data_source_item[$field_name])) {
-			$_fields[$field_name] = array("type" => $fields_data_source_item[$field_name]["data_type"], "value" => $_fields_data_source_item[$field_name]);
-		}
-	}
+	/* convert the input array into something that is compatible with db_replace() */
+	$_fields += sql_get_database_field_array($_fields_data_source_item, api_data_source_item_field_list());
 
 	/* check for an empty field list */
 	if (sizeof($_fields) == 1) {
