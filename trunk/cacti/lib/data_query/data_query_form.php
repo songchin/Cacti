@@ -25,7 +25,6 @@
 /* form validation functions */
 
 function validate_data_query_fields(&$_fields_data_query, $data_query_field_name_format) {
-	require_once(CACTI_BASE_PATH . "/include/data_query/data_query_constants.php");
 	require_once(CACTI_BASE_PATH . "/lib/data_query/data_query_list.php");
 
 	if (sizeof($_fields_data_query) == 0) {
