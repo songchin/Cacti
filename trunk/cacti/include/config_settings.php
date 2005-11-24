@@ -904,6 +904,13 @@ $settings_graphs = array(
 			"array" => $graph_tree_views,
 			"default" => "2"
 			),
+		"default_dual_pane_width" => array(
+			"friendly_name" => _("Dual Pane Tree Width"),
+			"description" => _("When choosing dual pane Tree View, what width should the tree occupy in pixels."),
+			"method" => "textbox",
+			"max_length" => "5",
+			"default" => "200"
+			),
 		"expand_hosts" => array(
 			"friendly_name" => _("Expand Hosts"),
 			"description" => _("Choose whether to expand the graph templates used for a host on the dual pane tree."),
