@@ -39,7 +39,7 @@ if (php_sapi_name() != "cli") {
 }
 
 /* used for includes */
-require(dirname(__FILE__) . "/include/config.php");
+require(dirname(__FILE__) . "/include/global.php");
 require_once(CACTI_BASE_PATH . "/lib/poller.php");
 
 /* Record the calling environment */

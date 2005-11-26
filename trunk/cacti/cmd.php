@@ -36,7 +36,7 @@ ini_set("memory_limit", "32M");
 
 $no_http_headers = true;
 
-require(dirname(__FILE__) . "/include/config.php");
+require(dirname(__FILE__) . "/include/global.php");
 require_once(CACTI_BASE_PATH . "/lib/sys/string.php");
 require_once(CACTI_BASE_PATH . "/lib/sys/snmp.php");
 require_once(CACTI_BASE_PATH . "/lib/sys/ping.php");

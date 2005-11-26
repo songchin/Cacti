@@ -6,7 +6,7 @@ $no_http_headers = true;
 error_reporting(E_ALL);
 
 if (!isset($called_by_script_server)) {
-	include_once(dirname(__FILE__) . "/../include/config.php");
+	include_once(dirname(__FILE__) . "/../include/global.php");
 
 	print call_user_func("ss_sql");
 }

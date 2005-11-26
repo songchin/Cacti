@@ -1,7 +1,7 @@
 <?php
 
 $no_http_headers = true;
-include(dirname(__FILE__) . "/../include/config.php");
+include(dirname(__FILE__) . "/../include/global.php");
 include(dirname(__FILE__) . "/../lib/snmp.php");
 
 $oids = array(

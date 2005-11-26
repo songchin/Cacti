@@ -25,7 +25,7 @@
 /*
 To use this api file you must include
 
-include/config.php
+include/global.php
 
 Check respective includes for functions definitions
 

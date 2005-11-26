@@ -34,7 +34,7 @@ if (!isset($_SERVER["argv"][0])) {
 $no_http_headers = true;
 
 /* Start Initialization Section */
-require(dirname(__FILE__) . "/include/config.php");
+require(dirname(__FILE__) . "/include/global.php");
 require_once(CACTI_BASE_PATH . "/lib/sys/rrd.php");
 require_once(CACTI_BASE_PATH . "/lib/poller.php");
 require_once(CACTI_BASE_PATH . "/lib/sys/graph_export.php");

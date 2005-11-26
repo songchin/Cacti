@@ -32,7 +32,7 @@
    @arg $user_id - integer value user_id, optional, if not passed, figured out.
    @arg $output - (bool) whether to output the log line to the STDOUT using print()
    @arg $facility - integer value facility, if applicable, default FACIL_CMDPHP
-   Note: Constants are defined for Severity and Facility, please reference include/config_constants.php */
+   Note: Constants are defined for Severity and Facility, please reference include/global_constants.php */
 function api_syslog_cacti_log($message, $severity = SEV_INFO, $poller_id = 1, $host_id = 0, $user_id = 0, $output = false, $facility = FACIL_CMDPHP) {
 	global $cnn_id;
 
@@ -323,7 +323,7 @@ function api_syslog_export() {
 
 /* syslog_read_config_option - finds the current value of a Cacti configuration setting
    @arg $config_name - the name of the configuration setting as specified $settings array
-     in 'include/config_settings.php'
+     in 'include/global_settings.php'
    @returns - the current value of the configuration option */
 function syslog_read_config_option($config_name) {
 	global $cnn_id;

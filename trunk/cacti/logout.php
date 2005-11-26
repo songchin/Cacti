@@ -22,7 +22,7 @@
  +-------------------------------------------------------------------------+
 */
 
-require(dirname(__FILE__) . "/include/config.php");
+require(dirname(__FILE__) . "/include/global.php");
 
 /* Clear session */
 setcookie(session_name(),"",time() - 3600,"/");

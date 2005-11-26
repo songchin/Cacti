@@ -53,7 +53,7 @@ function register_field_errors($error_fields) {
    @arg $regexp_match - (optionally) enter a regular expression to match the value against
    @arg $allow_nulls - (bool) whether to allow an empty string as a value or not
    @arg $custom_message - (int) the ID of the message to raise upon an error which is defined in the
-     $messages array in 'include/config_arrays.php'
+     $messages array in 'include/global_arrays.php'
    @returns - the original $field_value */
 function form_input_validate($field_value, $field_name, $regexp_match, $allow_nulls, $custom_message = 0) {
 	if (($allow_nulls == true) && ($field_value == "")) {

@@ -22,12 +22,7 @@
  +-------------------------------------------------------------------------+
 */
 
-if (file_exists("./include/config.php") == false) {
-	print "<html><body><font size=+1 color=red><b>" . _("Cacti Configuration Error: include/config.php file was not found.  Please make sure that you have renamed include/config.php.dist to include/config.php") . "</b></font></body></html>\n";
-	exit;
-}
-
-require(dirname(__FILE__) . "/include/config.php");
+require(dirname(__FILE__) . "/include/global.php");
 require_once(CACTI_BASE_PATH . "/include/auth/validate.php");
 require_once(CACTI_BASE_PATH . "/include/top_header.php");
 

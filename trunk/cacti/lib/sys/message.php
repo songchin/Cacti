@@ -40,7 +40,7 @@ function is_error_message() {
 }
 
 /* raise_message - mark a message to be displayed to the user once display_output_messages() is called
-   @arg $message_id - the ID of the message to raise as defined in $messages in 'include/config_arrays.php' */
+   @arg $message_id - the ID of the message to raise as defined in $messages in 'include/global_arrays.php' */
 function raise_message($message_id) {
 	$_SESSION["sess_messages"][$message_id] = $message_id;
 }

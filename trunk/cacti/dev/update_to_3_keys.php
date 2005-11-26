@@ -1,6 +1,6 @@
 <?php
 $no_http_headers = true;
-include("../include/config.php");
+include("../include/global.php");
 include("../lib/tree.php");
 
 $trees = db_fetch_assoc("select id from graph_tree");

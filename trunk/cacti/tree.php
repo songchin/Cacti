@@ -22,7 +22,7 @@
  +-------------------------------------------------------------------------+
 */
 
-require(dirname(__FILE__) . "/include/config.php");
+require(dirname(__FILE__) . "/include/global.php");
 require_once(CACTI_BASE_PATH . "/include/auth/validate.php");
 require_once(CACTI_BASE_PATH . "/lib/api_tree.php");
 require_once(CACTI_BASE_PATH . "/lib/sys/tree.php");

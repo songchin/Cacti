@@ -22,7 +22,7 @@
  +-------------------------------------------------------------------------+
 */
 
-require("./include/config.php");
+require("./include/global.php");
 require_once(CACTI_BASE_PATH . "/lib/user/user_action.php");
 
 $user = api_user_info( array( "id" => $_SESSION["sess_user_id"] ) );

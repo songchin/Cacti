@@ -27,7 +27,7 @@ if (!isset($_REQUEST["action"])) { $_REQUEST["action"] = "view"; }
 if (!isset($_REQUEST["view_type"])) { $_REQUEST["view_type"] = ""; }
 
 $guest_account = true;
-require(dirname(__FILE__) . "/include/config.php");
+require(dirname(__FILE__) . "/include/global.php");
 require_once(CACTI_BASE_PATH . "/include/auth/validate.php");
 require_once(CACTI_BASE_PATH . "/lib/sys/auth.php");
 require_once(CACTI_BASE_PATH . "/lib/sys/rrd.php");

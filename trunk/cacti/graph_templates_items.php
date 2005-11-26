@@ -22,7 +22,7 @@
  +-------------------------------------------------------------------------+
 */
 
-require(dirname(__FILE__) . "/include/config.php");
+require(dirname(__FILE__) . "/include/global.php");
 require_once(CACTI_BASE_PATH . "/include/auth/validate.php");
 require_once(CACTI_BASE_PATH . "/lib/graph_template/graph_template_update.php");
 require_once(CACTI_BASE_PATH . "/include/graph/graph_form.php");

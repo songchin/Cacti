@@ -25,16 +25,16 @@
 /* inject_form_variables - replaces all variables contained in $form_array with
      their actual values
    @arg $form_array - an array that contains all of the information needed to draw
-     the html form. see the arrays contained in include/config_settings.php
+     the html form. see the arrays contained in include/global_settings.php
      for the extact syntax of this array
    @arg $arg1 - an array that represents the |arg1:| variable (see
-     include/config_form.php for more details)
+     include/global_form.php for more details)
    @arg $arg2 - an array that represents the |arg2:| variable (see
-     include/config_form.php for more details)
+     include/global_form.php for more details)
    @arg $arg3 - an array that represents the |arg3:| variable (see
-     include/config_form.php for more details)
+     include/global_form.php for more details)
    @arg $arg4 - an array that represents the |arg4:| variable (see
-     include/config_form.php for more details)
+     include/global_form.php for more details)
    @returns - $form_array with all available variables substituted with their
      proper values */
 function inject_form_variables(&$form_array, $arg1 = array(), $arg2 = array(), $arg3 = array(), $arg4 = array()) {

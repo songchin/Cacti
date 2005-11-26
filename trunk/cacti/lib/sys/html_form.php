@@ -114,7 +114,7 @@ function field_register_html_checkboxes(&$field_list, $field_name_format = "|fie
 
 /* draw_edit_form - draws an html edit form
    @arg $array - an array that contains all of the information needed to draw
-     the html form. see the arrays contained in include/config_settings.php
+     the html form. see the arrays contained in include/global_settings.php
      for the extact syntax of this array */
 function draw_edit_form($array) {
 	global $colors;
@@ -216,7 +216,7 @@ function draw_edit_form($array) {
 
 /* draw_edit_control - draws a single control to be used on an html edit form
    @arg $field_name - the name of the control
-   @arg $field_array - an array containing data for this control. see include/config_form.php
+   @arg $field_array - an array containing data for this control. see include/global_form.php
      for more specific syntax */
 function draw_edit_control($field_name, &$field_array) {
 	require_once(CACTI_BASE_PATH . "/lib/sys/html_tree.php");

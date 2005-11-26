@@ -267,7 +267,7 @@ function rrdtool_function_update($update_cache_array, $rrd_struc, $syslog_facili
 }
 
 function rrdtool_function_tune($rrd_tune_array) {
-	require(CACTI_BASE_PATH . "/include/config_arrays.php");
+	require(CACTI_BASE_PATH . "/include/global_arrays.php");
 	require_once(CACTI_BASE_PATH . "/lib/data_source/data_source_info.php");
 
 	$data_source_name = get_data_source_item_name($rrd_tune_array["data_source_id"]);

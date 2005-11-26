@@ -238,7 +238,7 @@ function html_theme_color_scheme() {
 	if (file_exists(CACTI_BASE_PATH . "/themes/" . $theme . "/" . $theme . ".php")) {
 		return CACTI_BASE_PATH . "/themes/" . $theme . "/" . $theme . ".php";
 	} else {
-		return CACTI_BASE_PATH . "/include/config_colors.php";
+		return CACTI_BASE_PATH . "/include/global_colors.php";
 	}
 }
 
@@ -318,7 +318,7 @@ function html_get_php_os_icon() {
 function draw_menu() {
 	global $colors, $user_auth_realms, $user_auth_realm_filenames;
 
-	require(CACTI_BASE_PATH . "/include/config_arrays.php");
+	require(CACTI_BASE_PATH . "/include/global_arrays.php");
 
 	/* list all realms that this user has access to */
 	if (read_config_option("auth_method") != "0") {
