@@ -212,15 +212,20 @@ function get_js_dropdown_code($field_name, $list_items, $current_value) {
 	if (sizeof($list_items) > 0) {
 		$i = 0;
 		foreach ($list_items as $name => $value) {
+			/* create the 'option' object */
 			$js_code .= $field_name . "_opt_$i = document.createElement('option');\n";
+
+			/* add it to the 'select' collection */
+			$js_code .= "$field_name.appendChild($field_name" . "_opt_$i);\n";
+
+			/* set the properties for the 'option' object. this must come after the previous
+			 * step to work properly with IE */
 			$js_code .= $field_name . "_opt_$i.text = '" . addslashes($value) . "';\n";
 			$js_code .= $field_name . "_opt_$i.value = '" . addslashes($name) . "';\n";
 
 			if ($current_value == $name) {
 				$js_code .= $field_name . "_opt_$i.selected = true;\n";
 			}
-
-			$js_code .= "$field_name.add($field_name" . "_opt_$i, null);\n";
 
 			$i++;
 		}
