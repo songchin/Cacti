@@ -168,7 +168,7 @@ function html_box_actions_area_draw($box_id, $form_id, $width = 400) {
 			<tr valign="bottom">
 				<td class="bdr topleftcorner" width="7" height="7"></td>
 				<td class="bdr topleft" width="7" height="7"></td>
-				<td class="bdr top" width="<?php echo ($width - 14);?>" height="7">&nbsp;</td>
+				<td class="bdr top" width="<?php echo ($width - 14);?>" height="7"><img src"images/trans.gif" width="1" height="1"></td>
 				<td class="bdr topright" width="7" height="7"></td>
 				<td class="bdr toprightcorner" width="7" height="7"></td>
 			</tr>
@@ -176,7 +176,7 @@ function html_box_actions_area_draw($box_id, $form_id, $width = 400) {
 				<td height="100%">
 					<table border="0" cellpadding="0" cellspacing="0" height="100%">
 						<tr><td class="bdr lefttop" width="7" height="7"></td></td>
-						<tr><td class="bdr left" width="7">&nbsp;</td></tr>
+						<tr><td class="bdr left" width="7"><img src"images/trans.gif" width="7" height="1"></td></tr>
 						<tr><td class="bdr leftbottom" width="7" height="7"></td></tr>
 					</table>
 				</td>
@@ -213,7 +213,7 @@ function html_box_actions_area_draw($box_id, $form_id, $width = 400) {
 				<td height="100%">
 					<table border="0" cellpadding="0" cellspacing="0" height="100%">
 						<tr><td class="bdr righttop" width="7" height="7"></td></tr>
-						<tr><td class="bdr right" width="7">&nbsp;</td></tr>
+						<tr><td class="bdr right" width="7"><img src"images/trans.gif" width="7" height="1"></td></tr>
 						<tr><td class="bdr rightbottom" width="7" height="7"></td></tr>
 					</table>
 				</td>
@@ -221,7 +221,7 @@ function html_box_actions_area_draw($box_id, $form_id, $width = 400) {
 			<tr valign="top">
 				<td class="bdr bottomleftcorner" width="7" height="7"></td>
 				<td class="bdr bottomleft" width="7" height="7"></td>
-				<td class="bdr bottom" width="<?php echo ($width - 14);?>" height="7">&nbsp;</td>
+				<td class="bdr bottom" width="<?php echo ($width - 14);?>" height="7"><img src"images/trans.gif" width="1" height="1"></td>
 				<td class="bdr bottomright" width="7" height="7"></td>
 				<td class="bdr bottomrightcorner" width="7" height="7"></td>
 			</tr>
