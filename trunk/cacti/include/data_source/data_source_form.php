@@ -23,7 +23,7 @@
 */
 
 include(CACTI_BASE_PATH . "/include/data_source/data_source_arrays.php");
-include(CACTI_BASE_PATH . "/include/config_form.php");
+include(CACTI_BASE_PATH . "/include/global_form.php");
 
 $fields_data_template = array(
 	"template_name" => array(

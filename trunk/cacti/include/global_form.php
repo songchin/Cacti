@@ -22,7 +22,7 @@
  +-------------------------------------------------------------------------+
 */
 
-require(CACTI_BASE_PATH . "/include/config_arrays.php");
+require(CACTI_BASE_PATH . "/include/global_arrays.php");
 require(CACTI_BASE_PATH . "/include/data_source/data_source_arrays.php");
 require(CACTI_BASE_PATH . "/include/device/device_arrays.php");
 
