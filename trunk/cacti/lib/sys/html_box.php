@@ -98,6 +98,7 @@ function html_box_toolbar_draw($box_id, $form_id, $colspan, $search_type = HTML_
 									form_hidden_box("action", "save");
 									?>
 									<input type="submit" name="box-<?php echo $box_id;?>-action-filter-button" value="Filter" class="small">
+									<input type="submit" name="box-<?php echo $box_id;?>-action-clear-button" value="Clear" class="small">
 								</td>
 							</tr>
 						</table>
@@ -185,7 +186,7 @@ function html_box_actions_area_draw($box_id, $form_id, $width = 400) {
 				<td class="action-box-border" colspan="3">
 					<table border="0" cellpadding="0" cellspacing="0" width="<?php echo $width; ?>"
 						<tr align="top">
-							
+
 							<td>
 								<div id="box-<?php echo $box_id;?>-action-area-menu" class="action-area-menu">
 									<div id="box-<?php echo $box_id;?>-action-area-header" class="action-area-header">

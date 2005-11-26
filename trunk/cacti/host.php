@@ -153,12 +153,15 @@ function form_save() {
 
 			header("Location: host.php$get_string");
 		}
-	/* 'filter' button at the bottom of the box */
-	}else if (isset($_POST["box-1-action-filter-button"])) {
+	/* 'filter' area at the bottom of the box */
+	}else if (isset($_POST["box-1-search_filter"])) {
 		$get_string = "";
 
-		if (trim($_POST["box-1-search_filter"]) != "") {
-			$get_string .= ($get_string == "" ? "?" : "&") . "search_filter=" . urlencode($_POST["box-1-search_filter"]);
+		/* the 'clear' button wasn't pressed, so we should filter */
+		if (!isset($_POST["box-1-action-clear-button"])) {
+			if (trim($_POST["box-1-search_filter"]) != "") {
+				$get_string = ($get_string == "" ? "?" : "&") . "search_filter=" . urlencode($_POST["box-1-search_filter"]);
+			}
 		}
 
 		header("Location: host.php$get_string");
