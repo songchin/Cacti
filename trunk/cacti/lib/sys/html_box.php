@@ -42,16 +42,18 @@ function html_start_box($title, $add_url = "", $search_url = "") {
 						<td class="content-header" width="200">
 							<?php echo $title;?>
 						</td>
-						<?php if ($search_url != ""): ?>
+						<?php if ($search_url != "") { ?>
 						<td class="content-header content-navigation" align="center" style="padding-right: 5px; font-weight: bold;" nowrap>
 							[ <?php echo $search_url;?> ]
 						</td>
-						<?php endif; ?>
-						<?php if ($add_url != ""): ?>
+						<?php } ?>
+						<?php if ($add_url == "") { ?>
+						<td class="content-header" width="200" align="right" style="padding-right: 5px; font-weight: bold;">&nbsp;</td>
+						<?php }else{ ?>
 						<td class="content-header" width="200" align="right" style="padding-right: 5px; font-weight: bold;">
 							<a class="linkOverDark" href="<?php echo $add_url;?>">Add</a>
 						</td>
-						<?php endif; ?>
+						<?php } ?>
 					</tr>
 				</table>
 			</td>
@@ -81,7 +83,7 @@ function html_box_toolbar_draw($box_id, $form_id, $colspan, $search_type = HTML_
 			<table width="100%" cellpadding="3" cellspacing="0">
 				<tr>
 					<td width="200" style="padding: 0px;">
-						<?php if (($search_type == HTML_BOX_SEARCH_ACTIVE) || ($search_type == HTML_BOX_SEARCH_INACTIVE)): ?>
+						<?php if (($search_type == HTML_BOX_SEARCH_ACTIVE) || ($search_type == HTML_BOX_SEARCH_INACTIVE)) { ?>
 						<table width="100%" cellpadding="3" cellspacing="0">
 							<tr>
 								<td width="16" id="box-<?php echo $box_id;?>-button-search" class="action-bar-button-out">
@@ -99,12 +101,12 @@ function html_box_toolbar_draw($box_id, $form_id, $colspan, $search_type = HTML_
 								</td>
 							</tr>
 						</table>
-						<?php endif; ?>
+						<?php } ?>
 					</td>
 					<td align="center" nowrap>
-						<?php if (($search_type == HTML_BOX_SEARCH_ACTIVE) || ($search_type == HTML_BOX_SEARCH_INACTIVE)): ?>
+						<?php if (($search_type == HTML_BOX_SEARCH_ACTIVE) || ($search_type == HTML_BOX_SEARCH_INACTIVE)) { ?>
 						[ <?php echo $search_url;?> ]
-						<?php endif; ?>
+						<?php } ?>
 					</td>
 					<td width="165" style="padding: 0px;">
 						<table width="100%" cellpadding="3" cellspacing="0">
