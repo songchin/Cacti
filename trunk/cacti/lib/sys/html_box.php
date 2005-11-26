@@ -76,7 +76,7 @@ function html_end_box($trailing_br = true) { ?>
 	<?php if ($trailing_br == true) { print "<br>"; } ?>
 <?php }
 
-function html_box_toolbar_draw($box_id, $form_id, $colspan, $search_type = HTML_BOX_SEARCH_NONE, $search_url = "") {
+function html_box_toolbar_draw($box_id, $form_id, $colspan, $search_type = HTML_BOX_SEARCH_NONE, $search_url = "", $show_default_actions = 1) {
 	?>
 	<tr>
 		<td style="border-top: 1px solid #b5b5b5; padding: 1px;" colspan="<?php echo $colspan;?>" >
@@ -115,15 +115,23 @@ function html_box_toolbar_draw($box_id, $form_id, $colspan, $search_type = HTML_
 								<td>
 									&nbsp;
 								</td>
+								<?php if ($show_default_actions == 1) { ?>
 								<td width="16" id="box-<?php echo $box_id;?>-button-duplicate" class="action-bar-button-out">
 									<a href="javascript:action_area_show('<?php echo $box_id;?>',document.forms[<?php echo $form_id;?>],'duplicate')"><img src="<?php echo html_get_theme_images_path('action_copy.gif');?>" width="16" height="16" border="0" alt="Duplicate" onMouseOver="action_bar_button_mouseover('box-<?php echo $box_id;?>-button-duplicate')" onMouseOut="action_bar_button_mouseout('box-<?php echo $box_id;?>-button-duplicate')" align="absmiddle"></a>
 								</td>
+								<?php }else{ ?>
+								<td width="16">&nbsp;</td>
+								<?php } ?>
 							</tr>
 						</table>
 					</td>
+					<?php if ($show_default_actions == 1) { ?>
 					<td width="16" id="box-<?php echo $box_id;?>-button-delete" class="action-bar-button-out">
 						<a href="javascript:action_area_show('<?php echo $box_id;?>',document.forms[<?php echo $form_id;?>],'remove')"><img src="<?php echo html_get_theme_images_path('action_delete.gif');?>" width="16" height="16" border="0" alt="Delete" onMouseOver="action_bar_button_mouseover('box-<?php echo $box_id;?>-button-delete')" onMouseOut="action_bar_button_mouseout('box-<?php echo $box_id;?>-button-delete')" align="absmiddle"></a>
 					</td>
+					<?php }else{ ?>
+						<td width="16"></td>
+					<?php } ?>
 				</tr>
 			</table>
 		</td>
