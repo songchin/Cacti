@@ -299,7 +299,6 @@ div.action-bar-header {
 
 div.action-area-menu {
 	padding: 0px;
-	border-left: 2px solid #556;
 }
 
 div.action-area-buttons {
@@ -350,12 +349,27 @@ div.action-area-items {
 	cursor: pointer;
 }
 
+td.action-box-border {
+	border: 1px solid #556;
+}
+
 /* drop shadow boxes */
 
 .shadowedBox table, .shadowedBox td.bdr { padding: 0; margin: 0; border: none; }
-.shadowedBox .bdr.topleft { background-image: url(images/bdr-tl.png); }
-.shadowedBox .bdr.top { background-image: url(images/bdr-t.png); }
-.shadowedBox .bdr.topright { background-image: url(images/bdr-tr.png); }
+.shadowedBox .bdr.topleftcorner { }
+.shadowedBox .bdr.topleft { }
+.shadowedBox .bdr.top { }
+.shadowedBox .bdr.topright { }
+.shadowedBox .bdr.toprightcorner { }
+.shadowedBox .bdr.righttop { }
 .shadowedBox .bdr.right { background-image: url(images/bdr-r.png); }
+.shadowedBox .bdr.rightbottom { background-image: url(images/bdr-r.png); }
+.shadowedBox .bdr.lefttop { }
+.shadowedBox .bdr.left { }
+.shadowedBox .bdr.leftbottom { }
+.shadowedBox .bdr.bottomleftcorner { }
+.shadowedBox .bdr.bottomleft { }
 .shadowedBox .bdr.bottom { background-image: url(images/bdr-b.png); background-repeat: repeat-x; }
-.shadowedBox .bdr.bottomright { background-image: url(images/bdr-br.png); }
+.shadowedBox .bdr.bottomright { background-image: url(images/bdr-b.png); background-repeat: repeat-x; }
+.shadowedBox .bdr.bottomrightcorner { background-image: url(images/bdr-br.png); background-repeat: no-repeat; }
+

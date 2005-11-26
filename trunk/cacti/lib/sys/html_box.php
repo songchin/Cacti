@@ -163,41 +163,67 @@ function html_box_actions_menu_draw($box_id, $form_id, $menu_items) {
 
 function html_box_actions_area_draw($box_id, $form_id, $width = 400) {
 	?>
-	<div id="box-<?php echo $box_id;?>-action-area-frame" class="shadowedBox" style="width: <?php echo $width;?>px; position: absolute; left: 30%; top: 150px; visibility: hidden;" width="<?php echo $width;?>">
+	<div id="box-<?php echo $box_id;?>-action-area-frame" class="shadowedBox" style="width: <?php echo $width + 14;?>px; position: absolute; left: 30%; top: 150px; visibility: hidden;" width="<?php echo $width + 14;?>">
 		<table cellpadding="0" cellspacing="0" border="0" width="<?php echo $width;?>">
-			<tr valign="top">
-				<td class="bdr left" width="7"></td>
-				<td width="<?php echo ($width - 13);?>">
-					<div id="box-<?php echo $box_id;?>-action-area-menu" class="action-area-menu">
-						<div id="box-<?php echo $box_id;?>-action-area-header" class="action-area-header">
-							<table width="<?php echo ($width - 24);?>" cellspacing="0" cellpadding="0" border="0">
-								<tr>
-									<td id="box-<?php echo $box_id;?>-action-area-header-caption" class="action-area-header">
-										&nbsp;
-									</td>
-									<td align="right">
-										<a href="javascript:action_area_hide('<?php echo $box_id;?>')"><img src="<?php echo html_get_theme_images_path('action_area_close.gif');?>" border="0" alt="Close Dialog"></a>
-									</td>
-								</tr>
-							</table>
-						</div>
-						<div id="box-<?php echo $box_id;?>-action-area-items" class="action-area-items">
-							&nbsp;
-						</div>
-						<div class="action-area-buttons">
-							<input type="button" value="Cancel" class="action-area-buttons" name="box-<?php echo $box_id;?>-action-area-button-cancel" id="box-<?php echo $box_id;?>-action-area-button-cancel" onClick="action_area_hide('<?php echo $box_id;?>')">
-							<input type="submit" value="X" class="action-area-buttons" name="box-<?php echo $box_id;?>-action-area-button" id="box-<?php echo $box_id;?>-action-area-button" onClick="action_area_update_input('<?php echo $box_id;?>',document.forms[<?php echo $form_id;?>])">
-						</div>
-					</div>
-				</td>
-				<td class="bdr right" width="7"></td>
+			<tr valign="bottom">
+				<td class="bdr topleftcorner" width="7" height="7"></td>
+				<td class="bdr topleft" width="7" height="7"></td>
+				<td class="bdr top" width="<?php echo ($width - 14);?>" height="7">&nbsp;</td>
+				<td class="bdr topright" width="7" height="7"></td>
+				<td class="bdr toprightcorner" width="7" height="7"></td>
 			</tr>
-		</table>
-		<table cellpadding="0" cellspacing="0" border="0" width="<?php echo $width;?>">
 			<tr valign="top">
+				<td height="100%">
+					<table border="0" cellpadding="0" cellspacing="0" height="100%">
+						<tr><td class="bdr lefttop" width="7" height="7"></td></td>
+						<tr><td class="bdr left" width="7">&nbsp;</td></tr>
+						<tr><td class="bdr leftbottom" width="7" height="7"></td></tr>
+					</table>
+				</td>
+				<td class="action-box-border" colspan="3">
+					<table border="0" cellpadding="0" cellspacing="0" width="<?php echo $width; ?>"
+						<tr align="top">
+							
+							<td>
+								<div id="box-<?php echo $box_id;?>-action-area-menu" class="action-area-menu">
+									<div id="box-<?php echo $box_id;?>-action-area-header" class="action-area-header">
+										<table width="<?php echo ($width);?>" cellspacing="0" cellpadding="0" border="0">
+											<tr>
+												<td id="box-<?php echo $box_id;?>-action-area-header-caption" class="action-area-header">
+													&nbsp;
+												</td>
+												<td align="right">
+													<a href="javascript:action_area_hide('<?php echo $box_id;?>')"><img src="<?php echo html_get_theme_images_path('action_area_close.gif');?>" border="0" alt="Close Dialog"></a>
+												</td>
+											</tr>
+										</table>
+									</div>
+									<div id="box-<?php echo $box_id;?>-action-area-items" class="action-area-items">
+										&nbsp;
+									</div>
+									<div class="action-area-buttons">
+										<input type="button" value="Cancel" class="action-area-buttons" name="box-<?php echo $box_id;?>-action-area-button-cancel" id="box-<?php echo $box_id;?>-action-area-button-cancel" onClick="action_area_hide('<?php echo $box_id;?>')">
+										<input type="submit" value="X" class="action-area-buttons" name="box-<?php echo $box_id;?>-action-area-button" id="box-<?php echo $box_id;?>-action-area-button" onClick="action_area_update_input('<?php echo $box_id;?>',document.forms[<?php echo $form_id;?>])">
+									</div>
+								</div>
+							</td>
+						</tr>
+					</table>
+				</td>
+				<td height="100%">
+					<table border="0" cellpadding="0" cellspacing="0" height="100%">
+						<tr><td class="bdr righttop" width="7" height="7"></td></tr>
+						<tr><td class="bdr right" width="7">&nbsp;</td></tr>
+						<tr><td class="bdr rightbottom" width="7" height="7"></td></tr>
+					</table>
+				</td>
+			</tr>
+			<tr valign="top">
+				<td class="bdr bottomleftcorner" width="7" height="7"></td>
 				<td class="bdr bottomleft" width="7" height="7"></td>
-				<td class="bdr bottom" width="<?php echo ($width - 14);?>" height="7"></td>
+				<td class="bdr bottom" width="<?php echo ($width - 14);?>" height="7">&nbsp;</td>
 				<td class="bdr bottomright" width="7" height="7"></td>
+				<td class="bdr bottomrightcorner" width="7" height="7"></td>
 			</tr>
 		</table>
 	</div>
