@@ -22,7 +22,9 @@
  +-------------------------------------------------------------------------+
 */
 
-#require_once(CACTI_BASE_PATH . "/lib/user/user_info.php");
+/* 
+ * Logging Actions
+ */
 
 /* api_syslog_cacti_log - logs a string to Cacti's log file or optionally to the browser
    @arg $message - string value to log
@@ -33,7 +35,7 @@
    @arg $output - (bool) whether to output the log line to the STDOUT using print()
    @arg $facility - integer value facility, if applicable, default FACIL_CMDPHP
    Note: Constants are defined for Severity and Facility, please reference include/global_constants.php */
-function api_syslog_cacti_log($message, $severity = SEV_INFO, $poller_id = 1, $host_id = 0, $user_id = 0, $output = false, $facility = FACIL_CMDPHP) {
+function api_syslog_cacti_log($message, $severity = SEV_INFO, $poller_id = 1, $host_id = 0, $user_id = 0, $output = false, $facility = FACIL_CMDPHP, $plugin = "") {
 	global $cnn_id;
 
 	/* fill in the current date for printing in the log */
@@ -102,133 +104,22 @@ function api_syslog_cacti_log($message, $severity = SEV_INFO, $poller_id = 1, $h
 	if ((($syslog_destination == SYSLOG_BOTH) || ($syslog_destination == SYSLOG_SYSTEM))
 		&& ($severity >= $syslog_level)) {
 		openlog("cacti", LOG_NDELAY | LOG_PID, syslog_read_config_option("syslog_facility"));
-		syslog(api_syslog_get_syslog_severity($severity), api_syslog_get_severity($severity) . ": " . api_syslog_get_facility($facility) . ": " . $message);
+		syslog(api_log_syslog_severity_get($severity), api_log_severity_get($severity) . ": " . api_log_facility_get($facility) . ": " . $message);
 		closelog();
 	}
 
 	/* print output to standard out if required */
 	if (($output == true) &&($severity >= $syslog_level)) {
-		print $logdate . " - " . api_syslog_get_severity($severity) . ": " . api_syslog_get_facility($facility) . ": " . $message . "\n";
+		print $logdate . " - " . api_log_severity_get($severity) . ": " . api_log_facility_get($facility) . ": " . $message . "\n";
 	}
 
 }
 
-/* api_syslog_get_syslog_severity - returns the syslog severity level
-   @arg $severity - the severity integer value */
-function api_syslog_get_syslog_severity($severity) {
-	if (CACTI_SERVER_OS == "win32") {
-		return LOG_WARNING;
-	} else {
-		switch ($severity) {
-			case SEV_EMERGENCY:
-				return LOG_EMERG;
-				break;
-			case SEV_ALERT:
-				return LOG_ALERT;
-				break;
-			case SEV_CRITICAL:
-				return LOG_CRIT;
-				break;
-			case SEV_ERROR:
-				return LOG_ERR;
-				break;
-			case SEV_WARNING:
-				return LOG_WARNING;
-				break;
-			case SEV_NOTICE:
-				return LOG_NOTICE;
-				break;
-			case SEV_INFO:
-				return LOG_INFO;
-				break;
-			case SEV_DEBUG:
-				return LOG_DEBUG;
-				break;
-			case SEV_DEV:
-				return LOG_DEBUG;
-				break;
-			default:
-				return LOG_INFO;
-				break;
-		}
-	}
-}
 
-/* api_syslog_get_facility - returns the text version of the facility name
-   @arg $facility - the facility integer value */
-function api_syslog_get_facility($facility) {
-	switch ($facility) {
-		case FACIL_CMDPHP:
-			return "CMDPHP";
-			break;
-		case FACIL_CACTID:
-			return "CACTID";
-			break;
-		case FACIL_POLLER:
-			return "POLLER";
-			break;
-		case FACIL_SCPTSVR:
-			return "SCPTSVR";
-			break;
-		case FACIL_WEBUI:
-			return "WEBUI";
-			break;
-		case FACIL_EXPORT:
-			return "EXPORT";
-			break;
-		case FACIL_AUTH:
-			return "AUTH";
-			break;
-		case FACIL_SMTP:
-			return "SMTP";
-			break;
-		default:
-			return "UNKNOWN";
-			break;
-	}
-}
-
-/* api_syslog_get_severity - returns the text version of the message severity
-   @arg $severity - the severity integer value */
-function api_syslog_get_severity($severity) {
-	switch ($severity) {
-		case SEV_EMERGENCY:
-			return _("EMERGENCY");
-			break;
-		case SEV_ALERT:
-			return _("ALERT");
-			break;
-		case SEV_CRITICAL:
-			return _("CRITICAL");
-			break;
-		case SEV_ERROR:
-			return _("ERROR");
-			break;
-		case SEV_WARNING:
-			return _("WARNING");
-			break;
-		case SEV_NOTICE:
-			return _("NOTICE");
-			break;
-		case SEV_INFO:
-			return _("INFO");
-			break;
-		case SEV_DEBUG:
-			return _("DEBUG");
-			break;
-		case SEV_DEV:
-			return _("DEV");
-			break;
-		default:
-			return _("UNKNOWN");
-			break;
-	}
-}
-
-/* api_syslog_manage_cacti_log - determines if any action is required on the
+/* api_log_maintain - determines if any action is required on the
    Cacti Syslog due to size constraints.  Clear or set a bit based upon status.
    @arg $print_data_to_stdout = wether or not to output log output to standard output. */
-function api_syslog_manage_cacti_log($print_data_to_stdout) {
+function api_log_maintain($print_data_to_stdout) {
 	/* read current configuration options */
 	$syslog_size = read_config_option("syslog_size");
 	$syslog_control = read_config_option("syslog_control");
@@ -270,56 +161,19 @@ function api_syslog_manage_cacti_log($print_data_to_stdout) {
 
 }
 
-/* api_syslog_clear - empties the Cacti Syslog.
+
+/* api_syslog_clear - empties the log.
    @arg none */
-function api_syslog_clear() {
+function api_log_truncate() {
 	db_execute("TRUNCATE TABLE syslog");
 	db_execute("REPLACE INTO settings (name,value) VALUES('syslog_status','active')");
 }
 
-/* api_syslog_color - Set's the foreground and background color of the syslog entries.
-   @arg $severity - The log item severity. */
-function api_syslog_color($severity) {
-	global $colors	;
 
-	switch ($severity) {
-		case "EMERGENCY":
-			return print "<tr bgcolor='#" . $colors["syslog_emergency_background"] . "'>\n";
-			break;
-		case "ALERT":
-			return print "<tr bgcolor='#" . $colors["syslog_alert_background"] . "'>\n";
-			break;
-		case "CRITICAL":
-			return print "<tr bgcolor='#" . $colors["syslog_critical_background"] . "'>\n";
-			break;
-		case "ERROR":
-			return print "<tr bgcolor='#" . $colors["syslog_error_background"] . "'>\n";
-			break;
-		case "WARNING":
-			return print "<tr bgcolor='#" . $colors["syslog_warning_background"] . "'>\n";
-			break;
-		case "NOTICE":
-			return print "<tr bgcolor='#" . $colors["syslog_notice_background"] . "'>\n";
-			break;
-		case "INFO":
-			return print "<tr bgcolor='#" . $colors["syslog_info_background"] . "'>\n";
-			break;
-		case "DEBUG":
-			return print "<tr bgcolor='#" . $colors["syslog_debug_background"] . "'>\n";
-			break;
-		case "DEV":
-			return print "<tr bgcolor='#" . $colors["syslog_dev_background"] . "'>\n";
-			break;
-		default:
-			return print "<tr bgcolor='#" . $colors["syslog_info_background"] . "'>\n";
-			break;
-	}
-}
 
-/* api_syslog_export - exports the syslog to a file of the users choosing in CSV format.
-   @arg none */
-function api_syslog_export() {
-}
+/*
+ * Log Translation Functions
+ */
 
 /* syslog_read_config_option - finds the current value of a Cacti configuration setting
    @arg $config_name - the name of the configuration setting as specified $settings array
@@ -342,6 +196,157 @@ function syslog_read_config_option($config_name) {
 		return read_default_config_option($config_name);
 	}
 
+}
+
+
+/* api_log_html_css_class - Set's the CSS class for the log entry.
+   @arg $severity - The log item severity. */
+function api_log_html_css_class($severity) {
+
+	switch ($severity) {
+		case "EMERGENCY":
+			return "log_row_emergency";
+			break;
+		case "ALERT":
+			return "log_row_alert";
+			break;
+		case "CRITICAL":
+			return "log_row_crit";
+			break;
+		case "ERROR":
+			return "log_row_error";
+			break;
+		case "WARNING":
+			return "log_row_warning";
+			break;
+		case "NOTICE":
+			return "log_row_notice";
+			break;
+		case "DEBUG":
+			return "log_row_debug";
+			break;
+		case "DEV":
+			return "log_row_dev";
+			break;
+		default: /* Also INFO */
+			return "log_row_info";
+			break;
+	}
+}
+
+
+/* api_log_syslog_severity_get - returns the syslog severity level
+   @arg $severity - the severity integer value */
+function api_log_syslog_severity_get($severity) {
+	if (CACTI_SERVER_OS == "win32") {
+		return LOG_WARNING;
+	} else {
+		switch ($severity) {
+			case SEV_EMERGENCY:
+				return LOG_EMERG;
+				break;
+			case SEV_ALERT:
+				return LOG_ALERT;
+				break;
+			case SEV_CRITICAL:
+				return LOG_CRIT;
+				break;
+			case SEV_ERROR:
+				return LOG_ERR;
+				break;
+			case SEV_WARNING:
+				return LOG_WARNING;
+				break;
+			case SEV_NOTICE:
+				return LOG_NOTICE;
+				break;
+			case SEV_INFO:
+				return LOG_INFO;
+				break;
+			case SEV_DEBUG:
+				return LOG_DEBUG;
+				break;
+			case SEV_DEV:
+				return LOG_DEBUG;
+				break;
+			default:
+				return LOG_INFO;
+				break;
+		}
+	}
+}
+
+
+/* api_log_facility_get - returns the text version of the facility name
+   @arg $facility - the facility integer value */
+function api_log_facility_get($facility) {
+	switch ($facility) {
+		case FACIL_CMDPHP:
+			return "CMDPHP";
+			break;
+		case FACIL_CACTID:
+			return "CACTID";
+			break;
+		case FACIL_POLLER:
+			return "POLLER";
+			break;
+		case FACIL_SCPTSVR:
+			return "SCPTSVR";
+			break;
+		case FACIL_WEBUI:
+			return "WEBUI";
+			break;
+		case FACIL_EXPORT:
+			return "EXPORT";
+			break;
+		case FACIL_AUTH:
+			return "AUTH";
+			break;
+		case FACIL_SMTP:
+			return "SMTP";
+			break;
+		default:
+			return "UNKNOWN";
+			break;
+	}
+}
+
+
+/* api_severity_get - returns the text version of the message severity
+   @arg $severity - the severity integer value */
+function api_log_severity_get($severity) {
+	switch ($severity) {
+		case SEV_EMERGENCY:
+			return _("EMERGENCY");
+			break;
+		case SEV_ALERT:
+			return _("ALERT");
+			break;
+		case SEV_CRITICAL:
+			return _("CRITICAL");
+			break;
+		case SEV_ERROR:
+			return _("ERROR");
+			break;
+		case SEV_WARNING:
+			return _("WARNING");
+			break;
+		case SEV_NOTICE:
+			return _("NOTICE");
+			break;
+		case SEV_INFO:
+			return _("INFO");
+			break;
+		case SEV_DEBUG:
+			return _("DEBUG");
+			break;
+		case SEV_DEV:
+			return _("DEV");
+			break;
+		default:
+			return _("UNKNOWN");
+			break;
+	}
 }
 
 ?>

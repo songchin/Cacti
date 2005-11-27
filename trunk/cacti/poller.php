@@ -394,6 +394,6 @@ if (read_config_option("poller_enabled") == "on") {
 }
 
 /* manage size of cacti log */
-api_log_maintain();
+api_log_maintain(true);
 
 ?>
