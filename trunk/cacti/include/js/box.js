@@ -189,6 +189,9 @@ function action_area_show(box_id, parent_form, type) {
 
 	action_area_handle_type(box_id, type, parent_div, parent_form);
 
+	/* this can be used by the post handler to determine which box submitted the form */
+	parent_div.appendChild(action_area_generate_input('hidden', 'action_post', 'box-' + box_id));
+
 	/* hide the action bar menu */
 	document.getElementById('box-' + box_id + '-action-bar-menu').style.visibility = 'hidden';
 	document.getElementById('box-' + box_id + '-button-menu-container').style.backgroundColor = '#ffffff';
