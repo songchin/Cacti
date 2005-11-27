@@ -373,3 +373,18 @@ td.action-box-border {
 .shadowedBox .bdr.bottomright { background-image: url(images/bdr-b.png); background-repeat: repeat-x; }
 .shadowedBox .bdr.bottomrightcorner { background-image: url(images/bdr-br.png); background-repeat: no-repeat; }
 
+
+
+/* Log highlighting */
+
+tr.log_row_emergency { background-color: #FF00FF; }
+tr.log_row_alert { background-color: #FF0000; }
+tr.log_row_crit { background-color: #F51D30; }
+tr.log_row_error { background-color: #EE5019; }
+tr.log_row_warning { background-color: #EAAF00; }
+tr.log_row_notice { background-color: #C4FD3D; }
+tr.log_row_debug { background-color: #F9FD4B; }
+tr.log_row_dev { background-color: #C0C0C0; }
+tr.log_row_info { background-color: #FFFFFF; }
+
+
