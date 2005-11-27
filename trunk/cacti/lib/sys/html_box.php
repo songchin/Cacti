@@ -95,7 +95,7 @@ function html_box_toolbar_draw($box_id, $form_id, $colspan, $search_type = HTML_
 								<td nowrap>
 									<?php
 									form_text_box("box-$box_id-search_filter", get_get_var("search_filter"), "", 100, 15, "text", 0, "small");
-									form_hidden_box("action", "filter");
+									form_hidden_box("action", "save");
 									?>
 									<input type="submit" name="box-<?php echo $box_id;?>-action-filter-button" value="Filter" class="small">
 									<input type="submit" name="box-<?php echo $box_id;?>-action-clear-button" value="Clear" class="small">

@@ -958,6 +958,11 @@ function draw_navigation_text() {
 			"mapping" => "index.php:,logs.php:",
 			"level" => "2"
 			),
+		"logs.php:filter" => array(
+			"title" => _("View"),
+			"mapping" => "index.php:,logs.php:",
+			"level" => "2"
+			),
 		"plugins.php:" => array(
 			"title" => _("Plugins"),
 			"mapping" => "index.php:",
