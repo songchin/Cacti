@@ -393,7 +393,7 @@ if (read_config_option("poller_enabled") == "on") {
 	}
 }
 
-/* manage size of cacti syslog */
-api_syslog_manage_cacti_log(true);
+/* manage size of cacti log */
+api_log_maintain();
 
 ?>
