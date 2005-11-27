@@ -285,6 +285,10 @@ function action_area_update_selected_rows(box_id, parent_form) {
 			}
 		}
 	}
+
+	/* force browser to re-adjust div heights */
+	document.getElementById('box-' + box_id + '-action-area-items').style.height = 'auto';
+	document.getElementById('box-' + box_id + '-action-area-menu').style.height = 'auto';
 }
 
 /* action_area_update_submit_caption - updates the caption of the submit button in the actions
