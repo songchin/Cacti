@@ -124,14 +124,20 @@ function db_fetch_row($sql) {
 
 /* db_fetch_assoc - run a 'select' sql query and return all rows found
    @arg $sql - the sql query to execute
+   @arg $limit - limit number of returned row, may not work with union queries
+   @arg $offset - offset to start returning rows from
    @returns - the entire result set as a multi-dimensional hash */
-function db_fetch_assoc($sql) {
+function db_fetch_assoc($sql,$limit = -1, $offset = -1) {
 	global $cnn_id;
 
 	api_syslog_cacti_log("Executing SQL: $sql", SEV_DEV, 0, 0, 0, false, FACIL_WEBUI);
 
 	$cnn_id->SetFetchMode(ADODB_FETCH_ASSOC);
-	$result = $cnn_id->Execute($sql);
+	if ($limit != -1) {
+		$result = $cnn_id->SelectLimit($sql,$limit,$offset);
+	}else{
+		$result = $cnn_id->Execute($sql);
+	}
 
 	if ($result === false) {
 		api_syslog_cacti_log("SQL error: " . $cnn_id->ErrorMsg(), SEV_DEV, 0, 0, 0, false, FACIL_WEBUI);
