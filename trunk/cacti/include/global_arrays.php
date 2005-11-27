@@ -22,8 +22,6 @@
  +-------------------------------------------------------------------------+
 */
 
-require_once(CACTI_BASE_PATH . "/include/log/log_arrays.php");
-
 $messages = array(
 	1  => array(
 		"message" => _('Save Successful.'),

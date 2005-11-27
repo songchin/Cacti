@@ -22,110 +22,8 @@
  +-------------------------------------------------------------------------+
 */
 
-/* 
- * Log viewing actions
- */
-
-
-function api_log_total_get ($filter_array = "") {
-
-	$sql_where = "";
-	/* validation and setup for the WHERE clause */
-	if ((is_array($filter_array)) && (sizeof($filter_array) > 0)) {
-		/* validate each field against the known master field list */
-		$field_errors = validate_log_fields(sql_filter_array_to_field_array($filter_array), "|field|");
-
-		/* if a field input error has occured, register the error in the session and return */
-		if (sizeof($field_errors) > 0) {
-			field_register_error($field_errors);
-			return false;
-		/* otherwise, form an SQL WHERE string using the filter fields */
-		}else{
-			$sql_where = sql_filter_array_to_where_string($filter_array, api_log_fields_list(), true);
-		}
-	}
-
-	return db_fetch_cell("select count(*) from syslog $sql_where");
-
-}
-
-
-function api_log_list ($filter_array,$limit = -1,$offset = -1) {
-	
-	$sql_where = "";
-	/* validation and setup for the WHERE clause */
-	if ((is_array($filter_array)) && (sizeof($filter_array) > 0)) {
-		/* validate each field against the known master field list */
-		$field_errors = validate_log_fields(sql_filter_array_to_field_array($filter_array), "|field|");
-
-		/* if a field input error has occured, register the error in the session and return */
-		if (sizeof($field_errors) > 0) {
-			field_register_error($field_errors);
-			return false;
-		/* otherwise, form an SQL WHERE string using the filter fields */
-		}else{
-			$sql_where = sql_filter_array_to_where_string($filter_array, api_log_fields_list(), true);
-		}
-	}
-
-	$sql_limit = "";
-
-        return db_fetch_assoc("SELECT
-                syslog.id,
-                syslog.logdate,
-                syslog.facility,
-                syslog.severity,
-                poller.name as poller_name,
-                poller.id as poller_id,
-                host.description as host,
-                syslog.username,
-                syslog.message
-                FROM (syslog LEFT JOIN host ON syslog.host_id = host.id)
-                LEFT JOIN poller ON syslog.poller_id = poller.id
-                $sql_where
-                order by syslog.logdate",$limit,$offset);
-
-}
-
-
-function api_log_fields_list() {
-	require(CACTI_BASE_PATH . "/include/log/log_form.php");
-
-	return $fields_log;
-
-}
-
-function validate_log_fields(&$_fields_log, $log_field_name_format = "|field|") {
-
-	if (sizeof($_fields_log) == 0) {
-
-		return array();
-	}
-
-	/* array containing errored fields */
-	$error_fields = array();
-
-	/* get a complete field list */
-	$fields_device = api_log_fields_list();
-
-	/* base fields */
-	while (list($_field_name, $_field_array) = each($fields_device)) {
-		if ((isset($_fields_log[$_field_name])) && (isset($_field_array["validate_regexp"])) && (isset($_field_array["validate_empty"]))) {
-			$form_field_name = str_replace("|field|", $_field_name, $log_field_name_format);
-
-			if (!form_input_validate($_fields_log[$_field_name], $form_field_name, $_field_array["validate_regexp"], $_field_array["validate_empty"])) {
-				$error_fields[] = $form_field_name;
-			}
-		}
-	}
-
-	return $error_fields;
-}
-
-
-
-
-
+require_once(CACTI_BASE_PATH . "/include/log/log_arrays.php");
+require_once(CACTI_BASE_PATH . "/include/log/log_constants.php");
 
 /* 
  * Logging Actions
@@ -147,8 +45,8 @@ function api_syslog_cacti_log($message, $severity = SEV_INFO, $poller_id = 1, $h
 	$logdate = date("Y-m-d H:i:s");
 
 	/* determine how to log data */
-	$syslog_destination = syslog_read_config_option("syslog_destination");
-	$syslog_level = syslog_read_config_option("syslog_level");
+	$syslog_destination = log_read_config_option("syslog_destination");
+	$syslog_level = log_read_config_option("syslog_level");
 
 	/* get username */
 	if ($severity == SEV_DEV) {
@@ -195,8 +93,8 @@ function api_syslog_cacti_log($message, $severity = SEV_INFO, $poller_id = 1, $h
 	}
 
 	/* Log to Cacti Syslog */
-	if ((($syslog_destination == SYSLOG_CACTI) || ($syslog_destination == SYSLOG_BOTH))
-		&& (syslog_read_config_option("syslog_status") != "suspended") && ($severity >= $syslog_level)) {
+	if ((($syslog_destination == LOG_CACTI) || ($syslog_destination == LOG_BOTH))
+		&& (log_read_config_option("syslog_status") != "suspended") && ($severity >= $syslog_level)) {
 		$sql = "insert into syslog
 			(logdate,facility,severity,poller_id,host_id,user_id,username,source,message) values
 			(SYSDATE(), " . $facility . "," . $severity . "," . $poller_id . "," .$host_id . "," . $user_id . ",'" . $username . "','" . $source . "','". sql_sanitize($message) . "');";
@@ -206,9 +104,9 @@ function api_syslog_cacti_log($message, $severity = SEV_INFO, $poller_id = 1, $h
 
 	/* Log to System Syslog/Eventlog */
 	/* Syslog is currently Unstable in Win32 */
-	if ((($syslog_destination == SYSLOG_BOTH) || ($syslog_destination == SYSLOG_SYSTEM))
+	if ((($syslog_destination == LOG_BOTH) || ($syslog_destination == LOG_SYSTEM))
 		&& ($severity >= $syslog_level)) {
-		openlog("cacti", LOG_NDELAY | LOG_PID, syslog_read_config_option("syslog_facility"));
+		openlog("cacti", LOG_NDELAY | LOG_PID, log_read_config_option("syslog_facility"));
 		syslog(api_log_syslog_severity_get($severity), api_log_severity_get($severity) . ": " . api_log_facility_get($facility) . ": " . $message);
 		closelog();
 	}
@@ -284,7 +182,7 @@ function api_log_truncate() {
    @arg $config_name - the name of the configuration setting as specified $settings array
      in 'include/global_settings.php'
    @returns - the current value of the configuration option */
-function syslog_read_config_option($config_name) {
+function log_read_config_option($config_name) {
 	global $cnn_id;
 
 	$cnn_id->SetFetchMode(ADODB_FETCH_ASSOC);

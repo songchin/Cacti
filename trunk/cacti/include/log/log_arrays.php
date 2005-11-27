@@ -24,19 +24,19 @@
 
 include_once(CACTI_BASE_PATH . "/include/log/log_constants.php");
 
-$syslog_options = array(
-	SYSLOG_CACTI => _("Cacti Syslog Only"),
-	SYSLOG_BOTH => _("Cacti Syslog and System Syslog/Eventlog"),
-	SYSLOG_SYSTEM => _("System Syslog/Eventlog Only"));
+$log_options = array(
+	LOG_CACTI => _("Cacti Log Only"),
+	LOG_BOTH => _("Cacti Log and System Syslog/Eventlog"),
+	LOG_SYSTEM => _("System Syslog/Eventlog Only"));
 
-$syslog_control_options = array(
-	SYSLOG_MNG_ASNEEDED => _("Overwrite events as needed"),
-	SYSLOG_MNG_DAYSOLD => _("Overwrite events older than the maximum days"),
-	SYSLOG_MNG_STOPLOG => _("Stop logging if maximum log size is exceeded"),
-	SYSLOG_MNG_NONE => _("None (Not Recommended)")
+$log_control_options = array(
+	LOG_MNG_ASNEEDED => _("Overwrite events as needed"),
+	LOG_MNG_DAYSOLD => _("Overwrite events older than the maximum days"),
+	LOG_MNG_STOPLOG => _("Stop logging if maximum log size is exceeded"),
+	LOG_MNG_NONE => _("None (Not Recommended)")
 );
 
-$syslog_level = array(
+$log_level = array(
 	SEV_DEV => _("(-1) Developer Debug"),
 	SEV_DEBUG => _("(0) Debug"),
 	SEV_INFO => _("(1) Informational"),
@@ -49,7 +49,7 @@ $syslog_level = array(
 	);
 
 if (CACTI_SERVER_OS == "unix") {
-	$syslog_facility = array(
+	$log_facility = array(
 		LOG_LOCAL0 => "LOCAL0",
 		LOG_LOCAL1 => "LOCAL1",
 		LOG_LOCAL2 => "LOCAL2",
@@ -61,7 +61,7 @@ if (CACTI_SERVER_OS == "unix") {
 		LOG_USER => "USER"
 	);
 }else{
-	$syslog_facility = array(
+	$log_facility = array(
 		LOG_USER => "USER"
 	);
 }

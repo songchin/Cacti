@@ -22,8 +22,6 @@
  +-------------------------------------------------------------------------+
 */
 
-require(CACTI_BASE_PATH . "/include/log/log_constants.php");
-
 define("HOST_GROUPING_GRAPH_TEMPLATE", 1);
 define("HOST_GROUPING_DATA_QUERY_INDEX", 2);
 

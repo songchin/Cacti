@@ -22,54 +22,27 @@
  +-------------------------------------------------------------------------+
 */
 
-/* Classic Theme Color Scheme */
 
-/* colors */
-$colors["panel"] = "E5E5E5";
+/* To use this api file you must include
 
-/* Form Colors */
-$colors["header_background"] = "00438C";
-$colors["header_background_template"] = "00438C";
-$colors["header_text"] = "FFFFFF";
-$colors["header_panel_background"] = "6D88AD";
-$colors["header_panel_text"] = "FFFFFF";
-$colors["form_alternate1"] = "F5F5F5";
-$colors["form_alternate2"] = "E5E5E5";
-$colors["form_custom1"] = "D5D5D5";
-$colors["form_custom2"] = "D2D6E7";
+include/global.php
 
-/* Filter Colors */
-$colors["filter_background"] = "E5E5E5";
+Check respective includes for functions definitions
+*/
 
-/* Messagebar Colors */
-$colors["messagebar_background"] = "FFFFFF";
-$colors["messagebar_border"] = "AAAAAA";
+if (!defined("CACTI_BASE_PATH")) {
+        define("CACTI_BASE_PATH", str_replace(DIRECTORY_SEPARATOR . "lib", "", dirname(__FILE__)));
+}
 
-/* Buttonbar Colors */
-$colors["buttonbar_background"] = "E5E5E5";
-$colors["buttonbar_border"] = "AAAAAA";
+/* Variable includes */
+require_once(CACTI_BASE_PATH . "/include/log/log_constants.php");
+require_once(CACTI_BASE_PATH . "/include/log/log_arrays.php");
+require_once(CACTI_BASE_PATH . "/include/log/log_form.php");
 
-/* RRDTool Graph Colors */
-$colors["rrd_canvas"] = "000000";
-$colors["rrd_font"] = "FFFFFF";
-$colors["rrd_back"] = "000000";
+/* Functions includes */
+require_once(CACTI_BASE_PATH . "/lib/log/log_action.php");
+require_once(CACTI_BASE_PATH . "/lib/log/log_info.php");
 
-/* Main Header Colors */
-$colors["main_background"] = "A9A9A9";
-$colors["main_border"] = "183C8F";
 
-/* Navbar Colors */
-$colors["navbar_background"] = "E9E9E9";
 
-/* Console Colors */
-$colors["console_menu_background"] = "F5F5F5";
-$colors["console_menu_border"] = "AAAAAA";
-
-/* Graph Menu Colors */
-$colors["graph_menu_background"] = "EFEFEF";
-$colors["graph_menu_border"] = "BBBBBB";
-$colors["graph_type_background"] = "A9B7CB";
-$colors["graph_alternate1"] = "F5F5F5";
-$colors["graph_alternate2"] = "E5E5E5";
-
-?>
+/*?>

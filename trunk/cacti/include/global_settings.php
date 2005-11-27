@@ -101,55 +101,73 @@ $settings = array(
 			)
 		),
 	"logging" => array(
-		"logging_header" => array(
+		"log_header" => array(
 			"friendly_name" => _("Event Logging"),
 			"method" => "spacer"
 			),
-		"syslog_destination" => array(
+		"log_destination" => array(
 			"friendly_name" => _("Log Destination(s)"),
 			"description" => _("How will Cacti handle event logging."),
 			"method" => "drop_array",
 			"default" => 1,
-			"array" => $syslog_options
+			"array" => $log_options
 			),
-		"syslog_level" => array(
-			"friendly_name" => _("Cacti Syslog Severity Logging Level"),
+		"log_level" => array(
+			"friendly_name" => _("Cacti Log Severity Logging Level"),
 			"description" => _("Level of detail to send to log.  When selecting a severity level, every level above that will be logged as well."),
 			"method" => "drop_array",
 			"default" => SEV_NOTICE,
-			"array" => $syslog_level
+			"array" => $log_level
 			),
-		"syslog_facility" => array(
+		"log_facility" => array(
 			"friendly_name" => _("Syslog Facility"),
 			"description" => _("Facility to utilize when using syslog. For Windows enviroments set to USER."),
 			"method" => "drop_array",
 			"default" => LOG_USER,
-			"array" => $syslog_facility
+			"array" => $log_facility
 			),
-		"syslog_header" => array(
-			"friendly_name" => _("Cacti Log Size and Control"),
+		"log_control_header" => array(
+			"friendly_name" => _("Log Size and Control"),
 			"method" => "spacer"
 			),
-		"syslog_size" => array(
+		"log_size" => array(
 			"friendly_name" => _("Maximum Log Size"),
-			"description" => _("The maximum number of records to store in the Cacti Syslog.  The log will be pruned after each polling cycle.  The maximum number of records is an approximate value due to the nature of the record count check."),
+			"description" => _("The maximum number of records to store in the Cacti log.  The log will be pruned after each polling cycle.  The maximum number of records is an approximate value due to the nature of the record count check."),
 			"default" => "1000000",
 			"method" => "textbox",
 			"max_length" => "10"
 			),
-		"syslog_control" => array(
+		"log_control" => array(
 			"friendly_name" => _("Log Control Mechanism"),
 			"description" => _("How Cacti controls the log size.  The default is to overwrite as needed."),
 			"method" => "drop_array",
 			"default" => 1,
-			"array" => $syslog_control_options
+			"array" => $log_control_options
 			),
-		"syslog_maxdays" => array(
+		"log_maxdays" => array(
 			"friendly_name" => _("Maximum Retention Period"),
 			"description" => _("All events older than the specified number of days will be discarded if the maximum number of recrods in the Cacti Syslog is reached."),
 			"method" => "textbox",
 			"default" => "7",
 			"max_length" => "3"
+			),
+		"log_email_header" => array(
+			"friendly_name" => _("Event Log Emailing"),
+			"method" => "spacer"
+			),
+		"log_email_level" => array(
+			"friendly_name" => _("Log Email Level"),
+			"description" => _("Level of detail to send in email.  When selecting a severity level, every level above that will be logged as well."),
+			"method" => "drop_array",
+			"default" => SEV_CRITICAL,
+			"array" => $log_level
+			),
+		"log_email_address" => array(
+			"friendly_name" => _("Email address"),
+			"description" => _("Events will be emailed in batches to the assigned email address."),
+			"default" => "",
+			"method" => "textbox",
+			"max_length" => "255"
 			)
 		),
 	"general" => array(

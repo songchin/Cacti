@@ -26,6 +26,9 @@ require(dirname(__FILE__) . "/include/global.php");
 require_once(CACTI_BASE_PATH . "/include/auth/validate.php");
 require_once(CACTI_BASE_PATH . "/lib/poller.php");
 
+require(CACTI_BASE_PATH . "/include/log/log_form.php");
+require(CACTI_BASE_PATH . "/lib/log/log_info.php");
+
 define("MAX_DISPLAY_PAGES", 21);
 
 /* set default action */

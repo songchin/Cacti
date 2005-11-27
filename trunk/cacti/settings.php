@@ -81,7 +81,7 @@ default:
 
 	print "<td></td>\n</tr></table>\n";
 
-	html_start_box("<strong>" . _("Cacti Settings") . " (" . $tabs[$current_tab] . ")</strong>", "98%", $colors["header_background"], "3", "center", "");
+	html_start_box("<strong>" . _("Cacti Settings") . " (" . $tabs[$current_tab] . ")</strong>");
 
 	$form_array = array();
 
@@ -111,11 +111,11 @@ default:
 			"fields" => $form_array)
 			);
 
-	html_end_box();
+	html_end_box(true);
 
 	form_hidden_box("tab", $current_tab, "");
 
-	form_save_button("settings.php?tab=$current_tab", "save");
+	form_save_button("settings.php?tab=$current_tab", "save", "save");
 
 	require_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
 

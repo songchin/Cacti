@@ -42,14 +42,14 @@ define("FACIL_WEBUI",6);
 define("FACIL_EXPORT",7);
 define("FACIL_SMTP",8);
 
-define("SYSLOG_CACTI",1);
-define("SYSLOG_BOTH",2);
-define("SYSLOG_SYSTEM",3);
+define("LOG_CACTI",1);
+define("LOG_BOTH",2);
+define("LOG_SYSTEM",3);
 
-define("SYSLOG_MNG_NONE",0);
-define("SYSLOG_MNG_ASNEEDED",1);
-define("SYSLOG_MNG_DAYSOLD",2);
-define("SYSLOG_MNG_STOPLOG",3);
+define("LOG_MNG_NONE",0);
+define("LOG_MNG_ASNEEDED",1);
+define("LOG_MNG_DAYSOLD",2);
+define("LOG_MNG_STOPLOG",3);
 
 /* Define syslog variables for php */
 define_syslog_variables();

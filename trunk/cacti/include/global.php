@@ -63,6 +63,9 @@ require(CACTI_BASE_PATH . "/lib/adodb/adodb.inc.php");
 require(CACTI_BASE_PATH . "/lib/sys/database.php");
 require(CACTI_BASE_PATH . "/lib/sys/database_utility.php");
 
+/* Logging include */
+require(CACTI_BASE_PATH . "/lib/log/log_action.php");
+
 /* connect to the database server */
 db_connect_real($database_hostname, $database_username, $database_password, $database_default, $database_type);
 
@@ -74,7 +77,6 @@ require(CACTI_BASE_PATH . "/lib/sys/message.php");
 require(CACTI_BASE_PATH . "/lib/sys/session.php");
 require(CACTI_BASE_PATH . "/lib/sys/string.php");
 require(CACTI_BASE_PATH . "/lib/sys/validate.php");
-require(CACTI_BASE_PATH . "/lib/api_syslog.php");
 
 /* Contants and Variable includes */
 require(CACTI_BASE_PATH . "/include/global_constants.php");
