@@ -27,6 +27,7 @@ require_once(CACTI_BASE_PATH . "/include/auth/validate.php");
 require_once(CACTI_BASE_PATH . "/lib/sys/rrd.php");
 require_once(CACTI_BASE_PATH . "/lib/utility.php");
 require_once(CACTI_BASE_PATH . "/lib/graph/graph_update.php");
+require_once(CACTI_BASE_PATH . "/lib/device/device_info.php");
 require_once(CACTI_BASE_PATH . "/lib/data_source/data_source_update.php");
 require_once(CACTI_BASE_PATH . "/lib/data_source/data_source_form.php");
 require_once(CACTI_BASE_PATH . "/lib/data_source/data_source_info.php");
@@ -56,7 +57,7 @@ if (!isset($_REQUEST["action"])) { $_REQUEST["action"] = ""; }
 
 switch ($_REQUEST["action"]) {
 	case 'save':
-		form_save();
+		form_post();
 
 		break;
 	case 'actions':
@@ -91,96 +92,127 @@ switch ($_REQUEST["action"]) {
 }
 
 /* --------------------------
-    The Save Function
+    Form Post Handler
    -------------------------- */
 
-function form_save() {
-	/* fetch some cache variables */
-	if (empty($_POST["id"])) {
-		$_data_template_id = 0;
-	}else{
-		$_data_template_id = db_fetch_cell("select data_template_id from data_source where id = " . $_POST["id"]);
-	}
-
-	/* cache all post field values */
-	init_post_field_cache();
-
-	$data_source_fields = array();
-	$data_source_item_fields = array();
-	$data_input_fields = array();
-
-	/* parse out form values that we care about (data source / data source item fields) */
-	reset($_POST);
-	while (list($name, $value) = each($_POST)) {
-		if (substr($name, 0, 4) == "dsi|") {
-			$matches = explode("|", $name);
-			$data_source_item_fields{$matches[2]}{$matches[1]} = $value;
-		}else if (substr($name, 0, 4) == "dif_") {
-			$data_input_fields{substr($name, 4)} = $value;
-		}else if (substr($name, 0, 3) == "ds|") {
-			$matches = explode("|", $name);
-			$data_source_fields{$matches[1]} = $value;
-		}
-	}
-
-	/* add any unchecked checkbox fields */
-	$data_source_fields += field_register_html_checkboxes(api_data_source_field_list(), "ds||field|");
-
-	/* step #2: field validation */
-	$suggested_value_fields = array(); /* placeholder */
-	field_register_error(api_data_source_validate_fields_base($data_source_fields, $suggested_value_fields, "ds||field|", ""));
-	field_register_error(api_data_source_validate_fields_input($data_input_fields, "dif_|field|"));
-
-	foreach ($data_source_item_fields as $data_source_item_id => $data_source_item) {
-		field_register_error(api_data_source_validate_fields_item($data_source_item, "dsi||field||$data_source_item_id"));
-	}
-
-	/* step #3: field save */
-	if (is_error_message()) {
-		api_syslog_cacti_log("User input validation error for data source [ID#" . $_POST["id"] . "]", SEV_DEBUG, 0, 0, 0, false, FACIL_WEBUI);
-	}else{
-		/* handle rra_id multi-select */
-		if (isset($data_source_fields["rra_id"])) {
-			$data_source_rra_fields = $data_source_fields["rra_id"];
-			unset($data_source_fields["rra_id"]);
+function form_post() {
+	if ($_POST["action_post"] == "data_source_edit") {
+		/* fetch some cache variables */
+		if (empty($_POST["id"])) {
+			$_data_template_id = 0;
 		}else{
-			$data_source_rra_fields = array();
+			$_data_template_id = db_fetch_cell("select data_template_id from data_source where id = " . $_POST["id"]);
 		}
 
-		/* save data source data */
-		if (api_data_source_save($_POST["id"], $data_source_fields, $data_source_rra_fields)) {
-			$data_source_id = (empty($_POST["id"]) ? db_fetch_insert_id() : $_POST["id"]);
+		/* cache all post field values */
+		init_post_field_cache();
 
-			/* save data source input fields */
-			if (!api_data_source_fields_save($data_source_id, $data_input_fields)) {
-				api_syslog_cacti_log("Save error for data input fields, data source [ID#" . $_POST["id"] . "]", SEV_ERROR, 0, 0, 0, false, FACIL_WEBUI);
+		$data_source_fields = array();
+		$data_source_item_fields = array();
+		$data_input_fields = array();
+
+		/* parse out form values that we care about (data source / data source item fields) */
+		reset($_POST);
+		while (list($name, $value) = each($_POST)) {
+			if (substr($name, 0, 4) == "dsi|") {
+				$matches = explode("|", $name);
+				$data_source_item_fields{$matches[2]}{$matches[1]} = $value;
+			}else if (substr($name, 0, 4) == "dif_") {
+				$data_input_fields{substr($name, 4)} = $value;
+			}else if (substr($name, 0, 3) == "ds|") {
+				$matches = explode("|", $name);
+				$data_source_fields{$matches[1]} = $value;
+			}
+		}
+
+		/* add any unchecked checkbox fields */
+		$data_source_fields += field_register_html_checkboxes(api_data_source_fields_list(), "ds||field|");
+
+		/* step #2: field validation */
+		$suggested_value_fields = array(); /* placeholder */
+		field_register_error(api_data_source_validate_fields_base($data_source_fields, $suggested_value_fields, "ds||field|", ""));
+		field_register_error(api_data_source_validate_fields_input($data_input_fields, "dif_|field|"));
+
+		foreach ($data_source_item_fields as $data_source_item_id => $data_source_item) {
+			field_register_error(api_data_source_validate_fields_item($data_source_item, "dsi||field||$data_source_item_id"));
+		}
+
+		/* step #3: field save */
+		if (is_error_message()) {
+			api_syslog_cacti_log("User input validation error for data source [ID#" . $_POST["id"] . "]", SEV_DEBUG, 0, 0, 0, false, FACIL_WEBUI);
+		}else{
+			/* handle rra_id multi-select */
+			if (isset($data_source_fields["rra_id"])) {
+				$data_source_rra_fields = $data_source_fields["rra_id"];
+				unset($data_source_fields["rra_id"]);
+			}else{
+				$data_source_rra_fields = array();
 			}
 
-			/* save data source item data */
-			foreach ($data_source_item_fields as $data_source_item_id => $data_source_item) {
-				/* required fields */
-				$data_source_item_fields[$data_source_item_id]["data_source_id"] = $data_source_id;
+			/* save data source data */
+			if (api_data_source_save($_POST["id"], $data_source_fields, $data_source_rra_fields)) {
+				$data_source_id = (empty($_POST["id"]) ? db_fetch_insert_id() : $_POST["id"]);
 
-				if (!api_data_source_item_save($data_source_item_id, $data_source_item)) {
-					api_syslog_cacti_log("Save error for data source item [ID#" . $data_source_item_id . "], data source [ID#" . $_POST["id"] . "]", SEV_ERROR, 0, 0, 0, false, FACIL_WEBUI);
+				/* save data source input fields */
+				if (!api_data_source_fields_save($data_source_id, $data_input_fields)) {
+					api_syslog_cacti_log("Save error for data input fields, data source [ID#" . $_POST["id"] . "]", SEV_ERROR, 0, 0, 0, false, FACIL_WEBUI);
 				}
+
+				/* save data source item data */
+				foreach ($data_source_item_fields as $data_source_item_id => $data_source_item) {
+					/* required fields */
+					$data_source_item_fields[$data_source_item_id]["data_source_id"] = $data_source_id;
+
+					if (!api_data_source_item_save($data_source_item_id, $data_source_item)) {
+						api_syslog_cacti_log("Save error for data source item [ID#" . $data_source_item_id . "], data source [ID#" . $_POST["id"] . "]", SEV_ERROR, 0, 0, 0, false, FACIL_WEBUI);
+					}
+				}
+
+			}else{
+				api_syslog_cacti_log("Save error for data source [ID#" . $_POST["id"] . "]", SEV_ERROR, 0, 0, 0, false, FACIL_WEBUI);
+			}
+		}
+
+		if ((is_error_message()) || ($_POST["data_template_id"] != $_data_template_id)) {
+			if (isset($_POST["redirect_item_add"])) {
+				$action = "item_add";
+			}else{
+				$action = "edit";
 			}
 
+			header("Location: data_sources.php?action=$action" . (empty($_POST["id"]) ? "" : "&id=" . $_POST["id"]) . (!isset($_POST["host_id"]) ? "" : "&host_id=" . $_POST["host_id"]) . (!isset($_POST["data_template_id"]) ? "" : "&data_template_id=" . $_POST["data_template_id"]) . (isset($_POST["data_input_type"]) ? "&data_input_type=" . $_POST["data_input_type"] : "") . (isset($_POST["dif_script_id"]) ? "&script_id=" . $_POST["dif_script_id"] : "") . (isset($_POST["dif_data_query_id"]) ? "&data_query_id=" . $_POST["dif_data_query_id"] : ""));
 		}else{
-			api_syslog_cacti_log("Save error for data source [ID#" . $_POST["id"] . "]", SEV_ERROR, 0, 0, 0, false, FACIL_WEBUI);
+			header("Location: data_sources.php");
 		}
-	}
+	/* submit button on the actions area page */
+	}else if ($_POST["action_post"] == "box-1") {
+		$selected_rows = explode(":", $_POST["box-1-action-area-selected-rows"]);
 
-	if ((is_error_message()) || ($_POST["data_template_id"] != $_data_template_id)) {
-		if (isset($_POST["redirect_item_add"])) {
-			$action = "item_add";
-		}else{
-			$action = "edit";
+		if ($_POST["box-1-action-area-type"] == "search") {
+			$get_string = "";
+
+			if ($_POST["box-1-search_device"] != "-1") {
+				$get_string .= ($get_string == "" ? "?" : "&") . "search_device=" . urlencode($_POST["box-1-search_device"]);
+			}
+
+			if (trim($_POST["box-1-search_filter"]) != "") {
+				$get_string .= ($get_string == "" ? "?" : "&") . "search_filter=" . urlencode($_POST["box-1-search_filter"]);
+			}
+
+			header("Location: data_sources.php$get_string");
+		}
+	/* 'filter' area at the bottom of the box */
+	}else if ($_POST["action_post"] == "data_source_list") {
+		$get_string = "";
+
+		/* the 'clear' button wasn't pressed, so we should filter */
+		if (!isset($_POST["box-1-action-clear-button"])) {
+			if (trim($_POST["box-1-search_filter"]) != "") {
+				$get_string = ($get_string == "" ? "?" : "&") . "search_filter=" . urlencode($_POST["box-1-search_filter"]);
+			}
 		}
 
-		header("Location: data_sources.php?action=$action" . (empty($_POST["id"]) ? "" : "&id=" . $_POST["id"]) . (!isset($_POST["host_id"]) ? "" : "&host_id=" . $_POST["host_id"]) . (!isset($_POST["data_template_id"]) ? "" : "&data_template_id=" . $_POST["data_template_id"]) . (isset($_POST["data_input_type"]) ? "&data_input_type=" . $_POST["data_input_type"] : "") . (isset($_POST["dif_script_id"]) ? "&script_id=" . $_POST["dif_script_id"] : "") . (isset($_POST["dif_data_query_id"]) ? "&data_query_id=" . $_POST["dif_data_query_id"] : ""));
-	}else{
-		header("Location: data_sources.php");
+		header("Location: data_sources.php$get_string");
 	}
 }
 
@@ -685,134 +717,138 @@ function ds_edit() {
 	}
 
 	form_hidden_box("id", (empty($_GET["id"]) ? 0 : $_GET["id"]), "");
-
+	form_hidden_box("action_post", "data_source_edit");
 	form_save_button("data_sources.php");
 }
 
 function ds() {
-	global $colors, $ds_actions, $data_input_types;
+	$current_page = get_get_var_number("page", "1");
 
-	/* if the user pushed the 'clear' button */
-	if (isset($_REQUEST["clear_x"])) {
-		kill_session_var("sess_ds_current_page");
-		kill_session_var("sess_ds_filter");
-		kill_session_var("sess_ds_host_id");
+	$menu_items = array(
+		"remove" => "Remove",
+		"duplicate" => "Duplicate",
+		"enable" => "Enable",
+		"disable" => "Disable",
+		"change_data_template" => "Change Data Template",
+		"change_host" => "Change Host",
+		"convert_data_template" => "Convert to Data Template"
+		);
 
-		unset($_REQUEST["page"]);
-		unset($_REQUEST["filter"]);
-		unset($_REQUEST["host_id"]);
+	$filter_array = array();
+
+	/* search field: device template */
+	if (isset_get_var("search_device")) {
+		$filter_array["host_id"] = get_get_var("search_device");
 	}
 
-	/* remember these search fields in session vars so we don't have to keep passing them around */
-	load_current_session_value("page", "sess_ds_current_page", "1");
-	load_current_session_value("filter", "sess_ds_filter", "");
-	load_current_session_value("host_id", "sess_ds_host_id", "-1");
-
-	$host = db_fetch_row("select hostname from host where id=" . $_REQUEST["host_id"]);
-
-	html_start_box("<strong>Data Sources</strong> " . _("[host: ") . (empty($host["hostname"]) ? _("No Host") : $host["hostname"]) . "]", "98%", $colors["header_background"], "3", "center", "data_sources.php?action=edit&host_id=" . $_REQUEST["host_id"]);
-
-	include("./include/html/inc_data_source_filter_table.php");
-
-	html_end_box();
-
-	/* form the 'where' clause for our main sql query */
-	$sql_where = "where data_source.name_cache like '%%" . $_REQUEST["filter"] . "%%'";
-
-	if ($_REQUEST["host_id"] == "-1") {
-		/* Show all items */
-	}elseif ($_REQUEST["host_id"] == "0") {
-		$sql_where .= " and data_source.host_id=0";
-	}elseif (!empty($_REQUEST["host_id"])) {
-		$sql_where .= " and data_source.host_id=" . $_REQUEST["host_id"];
+	/* search field: filter (searches data source name) */
+	if (isset_get_var("search_filter")) {
+		$filter_array["filter"] = array("name_cache" => get_get_var("search_filter"));
 	}
 
-	$total_rows = db_fetch_cell("select
-		count(*) from data_source
-		$sql_where");
+	/* get a list of all data sources on this page */
+	$data_sources = api_data_source_list($filter_array, $current_page, read_config_option("num_rows_data_source"));
 
-	$data_sources = db_fetch_assoc("select
-		data_source.id,
-		data_source.name_cache,
-		data_source.active,
-		data_source.data_input_type,
-		data_template.template_name as data_template_name,
-		data_source.host_id
-		from data_source
-		left join data_template
-		on (data_source.data_template_id=data_template.id)
-		$sql_where
-		order by data_source.name_cache,data_source.host_id
-		limit " . (read_config_option("num_rows_data_source")*($_REQUEST["page"]-1)) . "," . read_config_option("num_rows_data_source"));
+	/* get the total number of data sources on all pages */
+	$total_rows = api_data_source_total_get($filter_array);
 
-	html_start_box("", "98%", $colors["header_background"], "3", "center", "");
+	/* get a list of data input types for display in the data sources list */
+	$data_input_types = api_data_source_input_types_list();
 
 	/* generate page list */
-	$url_page_select = get_page_list($_REQUEST["page"], MAX_DISPLAY_PAGES, read_config_option("num_rows_data_source"), $total_rows, "data_sources.php?filter=" . $_REQUEST["filter"] . "&host_id=" . $_REQUEST["host_id"]);
+	$url_string = build_get_url_string(array("search_device", "search_filter"));
+	$url_page_select = get_page_list($current_page, MAX_DISPLAY_PAGES, read_config_option("num_rows_data_source"), $total_rows, "data_sources.php" . $url_string . ($url_string == "" ? "?" : "&") . "page=|PAGE_NUM|");
 
-	$nav = "<tr bgcolor='#" . $colors["header_background"] . "'>
-			<td colspan='5'>
-				<table width='100%' cellspacing='0' cellpadding='0' border='0'>
-					<tr>
-						<td align='left' class='textHeaderDark'>
-							<strong>&lt;&lt; "; if ($_REQUEST["page"] > 1) { $nav .= "<a class='linkOverDark' href='data_sources.php?filter=" . $_REQUEST["filter"] . "&host_id=" . $_REQUEST["host_id"] . "&page=" . ($_REQUEST["page"]-1) . "'>"; } $nav .= _("Previous"); if ($_REQUEST["page"] > 1) { $nav .= "</a>"; } $nav .= "</strong>
-						</td>\n
-						<td align='center' class='textHeaderDark'>"
-							. _("Showing Rows") . " " . ((read_config_option("num_rows_data_source")*($_REQUEST["page"]-1))+1) . " to " . ((($total_rows < read_config_option("num_rows_data_source")) || ($total_rows < (read_config_option("num_rows_data_source")*$_REQUEST["page"]))) ? $total_rows : (read_config_option("num_rows_data_source")*$_REQUEST["page"])) . " " . _("of") . $total_rows [$url_page_select] .
-						"</td>\n
-						<td align='right' class='textHeaderDark'>
-							<strong>"; if (($_REQUEST["page"] * read_config_option("num_rows_data_source")) < $total_rows) { $nav .= "<a class='linkOverDark' href='data_sources.php?filter=" . $_REQUEST["filter"] . "&host_id=" . $_REQUEST["host_id"] . "&page=" . ($_REQUEST["page"]+1) . "'>"; } $nav .= _("Next"); if (($_REQUEST["page"] * read_config_option("num_rows_data_source")) < $total_rows) { $nav .= "</a>"; } $nav .= " &gt;&gt;</strong>
-						</td>\n
-					</tr>
-				</table>
-			</td>
-		</tr>\n";
+	form_start("data_sources.php");
 
-	print $nav;
-
-	html_header_checkbox(array(_("Name"), _("Data Input Type"), _("Active"), _("Template Name")));
+	$box_id = "1";
+	html_start_box("<strong>" . _("Data Sources") . "</strong>", "data_sources.php?action=edit", $url_page_select);
+	html_header_checkbox(array(_("Name"), _("Data Input Type"), _("Active"), _("Template Name")), $box_id);
 
 	$i = 0;
 	if (sizeof($data_sources) > 0) {
 		foreach ($data_sources as $data_source) {
-			if (trim($_REQUEST["filter"]) == "") {
-				$highlight_text = title_trim($data_source["name_cache"], read_config_option("max_title_data_source"));
-			}else{
-				$highlight_text = eregi_replace("(" . preg_quote($_REQUEST["filter"]) . ")", "<span style='background-color: #F8D93D;'>\\1</span>", title_trim($data_source["name_cache"], read_config_option("max_title_data_source")));
-			}
-
-			form_alternate_row_color($colors["form_alternate1"],$colors["form_alternate2"],$i); $i++;
-				?>
-				<td>
-					<a class='linkEditMain' title='<?php print $data_source["name_cache"];?>' href='data_sources.php?action=edit&id=<?php print $data_source["id"];?>'><?php print $highlight_text;?></a>
+			?>
+			<tr class="content-row" id="box-<?php echo $box_id;?>-row-<?php echo $data_source["id"];?>" onClick="display_row_select('<?php echo $box_id;?>',document.forms[0],'box-<?php echo $box_id;?>-row-<?php echo $data_source["id"];?>', 'box-<?php echo $box_id;?>-chk-<?php echo $data_source["id"];?>')" onMouseOver="display_row_hover('box-<?php echo $box_id;?>-row-<?php echo $data_source["id"];?>')" onMouseOut="display_row_clear('box-<?php echo $box_id;?>-row-<?php echo $data_source["id"];?>')">
+				<td class="content-row">
+					<a class="linkEditMain" onClick="display_row_block('box-<?php echo $box_id;?>-row-<?php echo $data_source["id"];?>')" href="data_sources.php?action=edit&id=<?php echo $data_source["id"];?>"><span id="box-<?php echo $box_id;?>-text-<?php echo $data_source["id"];?>"><?php echo html_highlight_words(get_get_var("search_filter"), $data_source["name_cache"]);?></span></a>
 				</td>
-				<td>
-					<?php print $data_input_types{$data_source["data_input_type"]};?>
+				<td class="content-row">
+					<?php echo $data_input_types{$data_source["data_input_type"]};?>
 				</td>
-				<td>
-					<?php print (empty($data_source["active"]) ? "<span style='color: red;'>" . _("No") . "</span>" : _("Yes"));?>
+				<td class="content-row">
+					<?php echo (empty($data_source["active"]) ? "<span style='color: red;'>" . _("No") . "</span>" : _("Yes"));?>
 				</td>
-				<td>
-					<?php print ((empty($data_source["data_template_name"])) ? "<em>" . _("None") . "</em>" : $data_source["data_template_name"]);?>
+				<td class="content-row">
+					<?php echo ((empty($data_source["data_template_name"])) ? "<em>" . _("None") . "</em>" : $data_source["data_template_name"]);?>
 				</td>
-				<td style="<?php print get_checkbox_style();?>" width="1%" align="right">
-					<input type='checkbox' style='margin: 0px;' name='chk_<?php print $data_source["id"];?>' title="<?php print $data_source["name_cache"];?>">
+				<td class="content-row" width="1%" align="center" style="border-left: 1px solid #b5b5b5; border-top: 1px solid #b5b5b5; background-color: #e9e9e9; <?php echo get_checkbox_style();?>">
+					<input type='checkbox' style='margin: 0px;' name='box-<?php echo $box_id;?>-chk-<?php echo $data_source["id"];?>' id='box-<?php echo $box_id;?>-chk-<?php echo $data_source["id"];?>' title="<?php echo $data_source["name_cache"];?>">
 				</td>
 			</tr>
 			<?php
 		}
-
-		/* put the nav bar on the bottom as well */
-		print $nav;
 	}else{
-		print "<tr><td bgcolor='#" . $colors["form_alternate1"] . "' colspan=7><em>" . _("No Data Sources") . "</em></td></tr>";
+		?>
+		<tr>
+			<td class="content-list-empty" colspan="6">
+				No data sources found.
+			</td>
+		</tr>
+		<?php
 	}
-
+	html_box_toolbar_draw($box_id, "0", "4", (sizeof($filter_array) == 0 ? HTML_BOX_SEARCH_INACTIVE : HTML_BOX_SEARCH_ACTIVE), $url_page_select);
 	html_end_box(false);
 
-	/* draw the dropdown containing a list of available actions for this form */
-	draw_actions_dropdown($ds_actions);
+	html_box_actions_menu_draw($box_id, "0", $menu_items);
+	html_box_actions_area_draw($box_id, "0");
 
-	print "</form>\n";
+	form_hidden_box("action_post", "data_source_list");
+	form_end();
+
+	/* fill in the list of available devices for the search dropdown */
+	$search_devices = array();
+	$search_devices["-1"] = "Any";
+	$search_devices["0"] = "None";
+	$search_devices += array_rekey(api_device_list(), "id", "description");
+
+	?>
+
+	<script language="JavaScript">
+	<!--
+	function action_area_handle_type(box_id, type, parent_div, parent_form) {
+		if (type == 'remove') {
+			parent_div.appendChild(document.createTextNode('Are you sure you want to remove these data sources?'));
+			parent_div.appendChild(action_area_generate_selected_rows(box_id));
+
+			action_area_update_header_caption(box_id, 'Remove Data Source');
+			action_area_update_submit_caption(box_id, 'Remove');
+			action_area_update_selected_rows(box_id, parent_form);
+		}else if (type == 'duplicate') {
+			parent_div.appendChild(document.createTextNode('Are you sure you want to duplicate these data sources?'));
+			parent_div.appendChild(action_area_generate_selected_rows(box_id));
+			parent_div.appendChild(action_area_generate_input('text', 'box-' + box_id + '-action-area-txt1', ''));
+
+			action_area_update_header_caption(box_id, 'Duplicate Data Source');
+			action_area_update_submit_caption(box_id, 'Duplicate');
+			action_area_update_selected_rows(box_id, parent_form);
+		}else if (type == 'search') {
+			_elm_dt_input = action_area_generate_select('box-' + box_id + '-search_device');
+			<?php echo get_js_dropdown_code('_elm_dt_input', $search_devices, (isset_get_var("search_devices") ? get_get_var("search_devices") : "-1"));?>
+
+			_elm_ht_input = action_area_generate_input('text', 'box-' + box_id + '-search_filter', '<?php echo get_get_var("search_filter");?>');
+			_elm_ht_input.size = '30';
+
+			parent_div.appendChild(action_area_generate_search_field(_elm_dt_input, 'Device', true, false));
+			parent_div.appendChild(action_area_generate_search_field(_elm_ht_input, 'Filter', false, true));
+
+			action_area_update_header_caption(box_id, 'Search');
+			action_area_update_submit_caption(box_id, 'Search');
+		}
+	}
+	-->
+	</script>
+
+	<?php
 }
 ?>

@@ -22,6 +22,70 @@
  +-------------------------------------------------------------------------+
 */
 
+function api_data_source_list($filter_array = "", $current_page = 0, $rows_per_page = 0) {
+	require_once(CACTI_BASE_PATH . "/lib/data_source/data_source_form.php");
+
+	$sql_where = "";
+	/* validation and setup for the WHERE clause */
+	if ((is_array($filter_array)) && (sizeof($filter_array) > 0)) {
+		/* validate each field against the known master field list */
+		$_sv_arr = array();
+		$field_errors = api_data_source_validate_fields_base(sql_filter_array_to_field_array($filter_array), $_sv_arr);
+
+		/* if a field input error has occured, register the error in the session and return */
+		if (sizeof($field_errors) > 0) {
+			field_register_error($field_errors);
+			return false;
+		/* otherwise, form an SQL WHERE string using the filter fields */
+		}else{
+			$sql_where = sql_filter_array_to_where_string($filter_array, api_data_source_fields_list(), true);
+		}
+	}
+
+	$sql_limit = "";
+	/* validation and setup for the LIMIT clause */
+	if ((is_numeric($current_page)) && (is_numeric($rows_per_page)) && (!empty($current_page)) && (!empty($rows_per_page))) {
+		$sql_limit = "limit " . ($rows_per_page * ($current_page - 1)) . ",$rows_per_page";
+	}
+
+	return db_fetch_assoc("select
+		data_source.id,
+		data_source.name_cache,
+		data_source.active,
+		data_source.data_input_type,
+		data_template.template_name as data_template_name,
+		data_source.host_id
+		from data_source
+		left join data_template
+		on (data_source.data_template_id=data_template.id)
+		$sql_where
+		order by data_source.name_cache,data_source.host_id
+		$sql_limit");
+}
+
+function api_data_source_total_get($filter_array = "") {
+	require_once(CACTI_BASE_PATH . "/lib/device/device_form.php");
+
+	$sql_where = "";
+	/* validation and setup for the WHERE clause */
+	if ((is_array($filter_array)) && (sizeof($filter_array) > 0)) {
+		/* validate each field against the known master field list */
+		$_sv_arr = array();
+		$field_errors = api_data_source_validate_fields_base(sql_filter_array_to_field_array($filter_array), $_sv_arr);
+
+		/* if a field input error has occured, register the error in the session and return */
+		if (sizeof($field_errors) > 0) {
+			field_register_error($field_errors);
+			return false;
+		/* otherwise, form an SQL WHERE string using the filter fields */
+		}else{
+			$sql_where = sql_filter_array_to_where_string($filter_array, api_data_source_fields_list(), true);
+		}
+	}
+
+	return db_fetch_cell("select count(*) from data_source $sql_where");
+}
+
 /* get_data_source_title - returns the title of a data source without using the title cache unless the title ends up empty.
    @arg $data_source_id - (int) the ID of the data source to get a title for
    @returns - the data source title */
@@ -82,16 +146,22 @@ function api_data_source_path($data_source_id, $expand_paths) {
 	}
 }
 
-function &api_data_source_field_list() {
+function &api_data_source_fields_list() {
 	require(CACTI_BASE_PATH . "/include/data_source/data_source_form.php");
 
 	return $fields_data_source;
 }
 
-function &api_data_source_item_field_list() {
+function &api_data_source_item_fields_list() {
 	require(CACTI_BASE_PATH . "/include/data_source/data_source_form.php");
 
 	return $fields_data_source_item;
+}
+
+function &api_data_source_input_types_list() {
+	require(CACTI_BASE_PATH . "/include/data_source/data_source_arrays.php");
+
+	return $data_input_types;
 }
 
 ?>
