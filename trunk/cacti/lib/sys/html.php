@@ -958,7 +958,7 @@ function draw_navigation_text() {
 			"mapping" => "index.php:,logs.php:",
 			"level" => "2"
 			),
-		"logs.php:filter" => array(
+		"logs.php:save" => array(
 			"title" => _("View"),
 			"mapping" => "index.php:,logs.php:",
 			"level" => "2"
