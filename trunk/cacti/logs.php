@@ -26,297 +26,140 @@ require(dirname(__FILE__) . "/include/global.php");
 require_once(CACTI_BASE_PATH . "/include/auth/validate.php");
 require_once(CACTI_BASE_PATH . "/lib/poller.php");
 
+define("MAX_DISPLAY_PAGES", 21);
+
 /* set default action */
 if (!isset($_REQUEST["action"])) { $_REQUEST["action"] = ""; }
 
+switch ($_REQUEST["action"]) {
+        case 'save':
+                form_save();
+
+	default:
 		require_once(CACTI_BASE_PATH . "/include/top_header.php");
-
 		view_logs();
-
 		require_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
+}
+
 
 /* -----------------------
     Utilities Functions
    ----------------------- */
+function form_save() {
+
+	if (isset($_POST["box-1-search_filter"])) {
+	        $get_string = "";
+
+	        /* the 'clear' button wasn't pressed, so we should filter */
+	        if (!isset($_POST["box-1-action-clear-button"])) {
+	                if (trim($_POST["box-1-search_filter"]) != "") {
+	                        $get_string = ($get_string == "" ? "?" : "&") . "search_filter=" . urlencode($_POST["box-1-search_filter"]);
+	                }
+	        }
+
+	        header("Location: logs.php$get_string");
+	}
+
+
+}
+
+
 function view_logs() {
-	global $colors, $device_actions;
+	global $device_actions;
 
-	define("MAX_DISPLAY_PAGES", 21);
-
-	/* if the user pushed the 'clear' button */
-	if (isset($_REQUEST["clear_x"])) {
-		kill_session_var("sess_syslog_current_page");
-		kill_session_var("sess_syslog_filter");
-		kill_session_var("sess_syslog_facility");
-		kill_session_var("sess_syslog_severity");
-		kill_session_var("sess_syslog_poller");
-		kill_session_var("sess_syslog_host");
-		kill_session_var("sess_syslog_username");
-
-		unset($_REQUEST["page"]);
-		unset($_REQUEST["filter"]);
-		unset($_REQUEST["facility"]);
-		unset($_REQUEST["severity"]);
-		unset($_REQUEST["poller"]);
-		unset($_REQUEST["host"]);
-		unset($_REQUEST["username"]);
-	}
-
-	if (isset($_REQUEST["clear_log_x"])) {
-		api_syslog_clear();
-	}
-
-	/* remember these search fields in session vars so we don't have to keep passing them around */
-	load_current_session_value("page", "sess_syslog_current_page", "1");
-	load_current_session_value("filter", "sess_syslog_filter", "");
-	load_current_session_value("facility", "sess_syslog_facility", "-1");
-	load_current_session_value("severity", "sess_syslog_severity", "-10");
-	load_current_session_value("poller", "sess_syslog_poller", "-1");
-	load_current_session_value("host", "sess_syslog_host", "-1");
-	load_current_session_value("username", "sess_syslog_username", "-1");
-
-	html_start_box("<strong>"._("Cacti Log Filters")."</strong>", "98%", $colors["header_background"], "3", "center", "");
-
-	?>
-	<tr bgcolor="<?php print $colors["filter_background"];?>">
-		<form name="form_syslog_id">
-		<input type="hidden" name="action" value="view_logs">
-		<td>
-			<table cellpadding="1" cellspacing="1">
-				<tr>
-					<td width="45">
-						<?php echo _("Facility:");?>&nbsp;
-					</td>
-					<td width="1">
-						<select name="facility">
-							<option value="-1"<?php if ($_REQUEST["facility"] == -1) {?> selected<?php }?>>All</option>
-							<option value="<?php echo FACIL_POLLER;?>"<?php if ($_REQUEST["facility"] == FACIL_POLLER) {?> selected<?php }?>>Poller</option>
-							<option value="<?php echo FACIL_CMDPHP;?>"<?php if ($_REQUEST["facility"] == FACIL_CMDPHP) {?> selected<?php }?>>Cmdphp</option>
-							<option value="<?php echo FACIL_CACTID;?>"<?php if ($_REQUEST["facility"] == FACIL_CACTID) {?> selected<?php }?>>Cactid</option>
-							<option value="<?php echo FACIL_SCPTSVR;?>"<?php if ($_REQUEST["facility"] == FACIL_SCPTSVR) {?> selected<?php }?>>Scptsvr</option>
-							<option value="<?php echo FACIL_AUTH;?>"<?php if ($_REQUEST["facility"] == FACIL_AUTH) {?> selected<?php }?>>Auth</option>
-							<option value="<?php echo FACIL_WEBUI;?>"<?php if ($_REQUEST["facility"] == FACIL_WEBUI) {?> selected<?php }?>>WebUI</option>
-							<option value="<?php echo FACIL_EXPORT;?>"<?php if ($_REQUEST["facility"] == FACIL_EXPORT) {?> selected<?php }?>>Export</option>
-							<option value="<?php echo FACIL_UNKNOWN;?>"<?php if ($_REQUEST["facility"] == FACIL_UNKNOWN) {?> selected<?php }?>>Unknown</option>
-						</select>
-					</td>
-					<td width="1">
-						&nbsp;Severity:&nbsp;
-					</td>
-					<td width="1">
-						<select name="severity">
-							<option value="-10"<?php if ($_REQUEST["severity"] == -10) {?> selected<?php }?>>All</option>
-							<option value="<?php echo SEV_INFO;?>"<?php if ($_REQUEST["severity"] == SEV_INFO) {?> selected<?php }?>>Info</option>
-							<option value="<?php echo SEV_NOTICE;?>"<?php if ($_REQUEST["severity"] == SEV_NOTICE) {?> selected<?php }?>>Notice</option>
-							<option value="<?php echo SEV_WARNING;?>"<?php if ($_REQUEST["severity"] == SEV_WARNING) {?> selected<?php }?>>Warning</option>
-							<option value="<?php echo SEV_ERROR;?>"<?php if ($_REQUEST["severity"] == SEV_ERROR) {?> selected<?php }?>>Error</option>
-							<option value="<?php echo SEV_CRITICAL;?>"<?php if ($_REQUEST["severity"] == SEV_CRITICAL) {?> selected<?php }?>>Critical</option>
-							<option value="<?php echo SEV_ALERT;?>"<?php if ($_REQUEST["severity"] == SEV_ALERT) {?> selected<?php }?>>Alert</option>
-							<option value="<?php echo SEV_EMERGENCY;?>"<?php if ($_REQUEST["severity"] == SEV_EMERGENCY) {?> selected<?php }?>>Emergency</option>
-							<option value="<?php echo SEV_DEBUG;?>"<?php if ($_REQUEST["severity"] == SEV_DEBUG) {?> selected<?php }?>>Debug</option>
-							<option value="<?php echo SEV_DEV;?>"<?php if ($_REQUEST["severity"] == SEV_DEV) {?> selected<?php }?>>Developer Debug</option>
-						</select>
-					</td>
-					<td width="1">
-						&nbsp;Username:&nbsp;
-					</td>
-					<td width="1">
-						<select name="username">
-							<option value="-1"<?php if ($_REQUEST["username"] == -1) {?> selected<?php }?>>All</option>
-							<?php
-							$usernames = db_fetch_assoc("select distinct username from syslog order by username");
-
-							if ($usernames) {
-								foreach ($usernames as $username) {
-									print "<option value=\"" . $username['username'] . "\"";
-									if ($_REQUEST["username"] == $username["username"]) {
-										print " selected";
-									}
-									print ">" . $username["username"] . "</option>\n";
-								}
-							}
-							?>
-						</select>
-					</td>
-					<td nowrap>
-						&nbsp;<input type="image" src="<?php print html_get_theme_images_path('button_go.gif');?>" alt="Go" border="0" align="absmiddle" action="submit">
-						&nbsp;<input type="image" src="<?php print html_get_theme_images_path('button_clear.gif');?>" name="clear" alt="Clear" border="0" align="absmiddle" action="submit">
-					</td>
-				</tr>
-			</table>
-			<table cellpadding="1" cellspacing="1">
-				<tr>
-					<td width="45">
-						Poller:&nbsp;
-					</td>
-					<td>
-						<select name="poller">
-							<option value="-1"<?php if ($_REQUEST["poller"] == -1) {?> selected<?php }?>>All</option>
-							<option value="0"<?php if ($_REQUEST["poller"] == "0") {?> selected<?php }?>>System</option>
-							<?php
-							$pollers = db_fetch_assoc("select id,name from poller order by name");
-
-							if ($pollers) {
-								foreach ($pollers as $poller) {
-									print "<option value=\"" . $poller['id'] . "\"";
-									if ($_REQUEST["poller"] == $poller["id"]) {
-										print " selected";
-									}
-									print ">" . $poller["name"] . "</option>\n";
-								}
-							}
-							?>
-						</select>
-					</td>
-					<td>
-						&nbsp;Host:&nbsp;
-					</td>
-					<td>
-						<select name="host">
-							<option value="-1"<?php if ($_REQUEST["host"] == -1) {?> selected<?php }?>>All</option>
-							<option value="0"<?php if ($_REQUEST["host"] == "0") {?> selected<?php }?>>System</option>
-							<?php
-							$hosts = db_fetch_assoc("select id,description from host order by description");
-
-							if ($hosts) {
-								foreach ($hosts as $host) {
-									print "<option value=\"" . $host['id'] . "\"";
-									if ($_REQUEST["host"] == $host["id"]) {
-										print " selected";
-									}
-									print ">" . $host["description"] . "</option>\n";
-								}
-							}
-							?>
-						</select>
-					</td>
-				</tr>
-			</table>
-			<table cellpadding="1" cellspacing="1">
-				<tr>
-					<td width="45">
-						Search:&nbsp;
-					</td>
-					<td colspan="2">
-						<input type="text" name="filter" size="50" value="<?php print $_REQUEST["filter"];?>">
-					</td>
-				</tr>
-			</table>
-		</td>
-		<input type='hidden' name='page' value='1'>
-		</form>
-	</tr>
-	<?php
-
-	html_end_box();
-
-	/* form the 'where' clause for our main sql query */
-        $sql_where = "";
-        if ($_REQUEST["filter"] != "") {
-		$sql_where .= "where syslog.message like '%" . $_REQUEST["filter"] . "%'";
-	}
-	if ($_REQUEST["facility"] != -1) {
-		$sql_where .= " and syslog.facility='" . $_REQUEST["facility"] . "'";
-	}
-
-	if ($_REQUEST["severity"] != -10) {
-		$sql_where .= " and syslog.severity='" . $_REQUEST["severity"] . "'";
-	}
-
-	if ($_REQUEST["poller"] != -1) {
-		$sql_where .= " and syslog.poller_id='" . $_REQUEST["poller"] . "'";
-	}
-
-	if ($_REQUEST["host"] != -1) {
-		$sql_where .= " and syslog.host_id='" . $_REQUEST["host"] . "'";
-	}
-
-	if ($_REQUEST["username"] != -1) {
-		$sql_where .= " and syslog.username='" . $_REQUEST["username"] . "'";
-	}
-
-	html_start_box("<strong>"._("Cacti Log Operations")."</strong>", "98%", $colors["header_background"], "3", "center", "");
-
-	print "<form name='syslog_actions'>";
-	print "<td bgcolor='#" . $colors["console_menu_background"] . "'>";
-	print "<input type='image' src='" . html_get_theme_images_path('button_clear_log.gif') . "' name='clear_log' alt='Clear Log' border='0' align='absmiddle' action='submit'>";
-	print "&nbsp;<input type='image' src='" . html_get_theme_images_path('button_export.gif') . "' name='export' alt='Export Log' border='0' align='absmiddle' action='submit'>";
-	print "</td>";
-	print "<input type='hidden' name='page' value='1'>";
-	print "</form>";
-
-  	html_end_box();
-
-	html_start_box("", "98%", $colors["header_background"], "3", "center", "");
+	$current_page = get_get_var_number("page", "1");
+	$sql_where = "";
 
 	$total_rows = db_fetch_cell("select
 		COUNT(syslog.id)
 		from syslog
 		$sql_where");
 
-	$syslog_entries = db_fetch_assoc("SELECT
-		syslog.id,
-		syslog.logdate,
-		syslog.facility,
-		syslog.severity,
-		poller.name as poller_name,
-		poller.id as poller_id,
-		host.description as host,
-		syslog.username,
-		syslog.message
-		FROM (syslog LEFT JOIN host ON syslog.host_id = host.id)
-		LEFT JOIN poller ON syslog.poller_id = poller.id
-		$sql_where
-		order by syslog.logdate
-		limit " . (read_config_option("num_rows_log")*($_REQUEST["page"]-1)) . "," . read_config_option("num_rows_log"));
+
+
+
+
+
+
+	/* setup action menu */
+	$menu_items = array(
+		"purge" => "Purge All",
+		"export" => "Export All"
+	);
+
+
+	/* search field: filter (searchs device description and hostname) */
+	$filter_array = array();
+	if (isset_get_var("search_filter")) {
+		$filter_array["message"] = get_get_var("search_filter");
+	}
+
+	/* get log entires */
+	$logs = api_log_list($filter_array,read_config_option("num_rows_log"),read_config_option("num_rows_log")*($current_page-1));
 
 	/* generate page list */
-	$url_page_select = get_page_list($_REQUEST["page"], MAX_DISPLAY_PAGES, read_config_option("num_rows_log"), $total_rows, "utilities.php?action=view_logs&filter=" . $_REQUEST["filter"] . "&facility=" . $_REQUEST["facility"] . "&severity=" . $_REQUEST["severity"]);
+	$url_string = build_get_url_string(array("search_filter"));
+	$url_page_select = get_page_list($current_page, MAX_DISPLAY_PAGES, read_config_option("num_rows_device"), $total_rows, "logs.php" . $url_string . ($url_string == "" ? "?" : "&") . "page=|PAGE_NUM|");
 
-	$nav = "<tr bgcolor='#" . $colors["header_background"] . "'>
-			<td colspan='7'>
-				<table width='100%' cellspacing='0' cellpadding='0' border='0'>
-					<tr>
-						<td align='left' class='textHeaderDark'>
-							<strong>&lt;&lt; "; if ($_REQUEST["page"] > 1) { $nav .= "<a class='linkOverDark' href='utilities.php?action=view_logs&filter=" . $_REQUEST["filter"] . "&facility=" . $_REQUEST["facility"] . "&page=" . ($_REQUEST["page"]-1) . "'>"; } $nav .= _("Previous"); if ($_REQUEST["page"] > 1) { $nav .= "</a>"; } $nav .= "</strong>
-						</td>\n
-						<td align='center' class='textHeaderDark'>
-							Showing Rows " . ((read_config_option("num_rows_device")*($_REQUEST["page"]-1))+1) . " to " . ((($total_rows < read_config_option("num_rows_device")) || ($total_rows < (read_config_option("num_rows_device")*$_REQUEST["page"]))) ? $total_rows : (read_config_option("num_rows_device")*$_REQUEST["page"])) . " of $total_rows [$url_page_select]
-						</td>\n
-						<td align='right' class='textHeaderDark'>
-							<strong>"; if (($_REQUEST["page"] * read_config_option("num_rows_log")) < $total_rows) { $nav .= "<a class='linkOverDark' href='utilities.php?action=view_logs&filter=" . $_REQUEST["filter"] . "&facility=" . $_REQUEST["facility"] . "&page=" . ($_REQUEST["page"]+1) . "'>"; } $nav .= _("Next"); if (($_REQUEST["page"] * read_config_option("num_rows_log")) < $total_rows) { $nav .= "</a>"; } $nav .= " &gt;&gt;</strong>
-						</td>\n
-					</tr>
-				</table>
-			</td>
-		</tr>\n";
+	/* Output html */
+	$box_id = 1;
+	form_start("logs.php");
 
-	print $nav;
-
-	html_header(array(_("Date"), _("Facility"), _("Severity"), _("Poller"), _("Host"), _("User"), _("Message")));
+	html_start_box("<strong>" . _("Log Management") . "</strong>", "", $url_page_select);
+	html_header(array(_("Date"), _("Facility"), _("Severity"), _("Poller"), _("Host"), _("Plugin"), _("User"), _("Message"),""));
 
 	$i = 0;
-	if (sizeof($syslog_entries) > 0) {
-		foreach ($syslog_entries as $syslog_entry) {
-			api_syslog_color(api_syslog_get_severity($syslog_entry["severity"]));
-				?>
-				<td><?php print $syslog_entry["logdate"]; ?></td>
-				<td><?php print api_syslog_get_facility($syslog_entry["facility"]); ?></td>
-				<td><?php print api_syslog_get_severity($syslog_entry["severity"]); ?></td>
-				<td nowrap><?php if ($syslog_entry["poller_name"] != "") { print $syslog_entry["poller_name"]; } else { print "SYSTEM"; } ?>	</td>
-				<td nowrap><?php if ($syslog_entry["host"] != "") { print $syslog_entry["host"]; } else { print "SYSTEM"; } ?></td>
-				<td nowrap><?php if ($syslog_entry["username"] != "") { print $syslog_entry["username"]; } else { print "SYSTEM"; } ?></td>
-				<td><?php print $syslog_entry["message"]; ?></td>
+	if ((is_array($logs)) && (sizeof($logs) > 0)) {
+		foreach ($logs as $log) {
+			?>
+			<tr class="<?php echo api_log_html_css_class(api_log_severity_get($log["severity"])); ?>" id="box-<?php echo $box_id;?>-row-<?php echo $log["id"];?>">
+				<td class="content-row">
+					<?php echo $log["logdate"]; ?>
+				</td>
+				<td class="content-row">
+					<?php echo api_log_facility_get($log["facility"]); ?>
+				</td>
+				<td class="content-row">
+					<?php echo api_log_severity_get($log["severity"]); ?>
+				</td>
+				<td class="content-row">
+					<?php if ($log["poller_name"] == "") { echo "SYSTEM"; }else{ echo $log["poller_name"]; } ?>
+				</td>
+				<td class="content-row">
+					<?php if ($log["host"] == "") { echo "SYSTEM"; }else{ echo $log["host"]; } ?>
+				</td>
+				<td class="content-row">
+					<?php #if ($log["plugin"] == "") { echo "N/A"; }else{ #echo $log["plugin"]; } ?>
+				</td>
+				<td class="content-row">
+					<?php if ($log["username"] == "") { echo "SYSTEM"; }else{ echo $log["username"]; } ?>
+				</td>
+				<td colspan="2" class="content-row">
+					<?php if (strlen($log["message"]) > 40) { echo substr($log["message"],0,37) . "..."; }else{ echo $log["message"]; } ?>
+				</td>
+				<div id="box-<?php echo $box_id; ?>-row-<?php echo $log["id"]; ?>-message" style="position: absolute; visibility: hidden;"><?php echo $log["message"]; ?></div>
 			</tr>
 			<?php
 		}
 
-		/* put the nav bar on the bottom as well */
-		print $nav;
 	}else{
-		print "<tr><td bgcolor='#" . $colors["form_alternate1"] . "' colspan=7><em>"._("No Entries")."</em></td></tr>";
+                ?>
+                <tr>
+                        <td class="content-list-empty" colspan="8">
+                                No Log Entries Found.
+                        </td>
+                </tr>
+                <?php
 	}
-	html_end_box();
+
+
+        html_box_toolbar_draw($box_id, "0", "8", (sizeof($filter_array) == 0 ? HTML_BOX_SEARCH_INACTIVE : HTML_BOX_SEARCH_ACTIVE), $url_page_select, 0);
+        html_end_box(false);
+
+        html_box_actions_menu_draw($box_id, "0", $menu_items);
+        html_box_actions_area_draw($box_id, "0");
+
+
 }
 
 ?>

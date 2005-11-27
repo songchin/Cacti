@@ -22,6 +22,8 @@
  +-------------------------------------------------------------------------+
 */
 
+require(CACTI_BASE_PATH . "/include/log/log_constants.php");
+
 define("HOST_GROUPING_GRAPH_TEMPLATE", 1);
 define("HOST_GROUPING_DATA_QUERY_INDEX", 2);
 
@@ -122,35 +124,6 @@ define("SNMPV3_PP_AES", 4);
 define("SNMPV3_AP_MD5", 0);
 define("SNMPV3_AP_SHA", 1);
 
-define("SEV_EMERGENCY", 7);
-define("SEV_ALERT", 6);
-define("SEV_CRITICAL", 5);
-define("SEV_ERROR", 4);
-define("SEV_WARNING", 3);
-define("SEV_NOTICE", 2);
-define("SEV_INFO", 1);
-define("SEV_DEBUG", 0);
-define("SEV_DEV", -1);
-
-define("FACIL_UNKNOWN",0);
-define("FACIL_POLLER",1);
-define("FACIL_CMDPHP",2);
-define("FACIL_CACTID",3);
-define("FACIL_SCPTSVR",4);
-define("FACIL_AUTH",5);
-define("FACIL_WEBUI",6);
-define("FACIL_EXPORT",7);
-define("FACIL_SMTP",8);
-
-define("SYSLOG_CACTI",1);
-define("SYSLOG_BOTH",2);
-define("SYSLOG_SYSTEM",3);
-
-define("SYSLOG_MNG_NONE",0);
-define("SYSLOG_MNG_ASNEEDED",1);
-define("SYSLOG_MNG_DAYSOLD",2);
-define("SYSLOG_MNG_STOPLOG",3);
-
 define("HTML_BOX_SEARCH_NONE", 1);
 define("HTML_BOX_SEARCH_ACTIVE", 2);
 define("HTML_BOX_SEARCH_INACTIVE", 3);
@@ -164,7 +137,5 @@ define("DB_TYPE_FUNC_NOW", 4);
 define("DB_TYPE_FUNC_MD5", 5);
 define("DB_TYPE_HTML_CHECKBOX", 6);
 
-/* Define syslog variables for php */
-define_syslog_variables();
 
 ?>
