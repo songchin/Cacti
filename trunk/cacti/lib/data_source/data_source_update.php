@@ -44,7 +44,7 @@ function api_data_source_save($data_source_id, &$_fields_data_source, &$_fields_
 	}
 
 	/* convert the input array into something that is compatible with db_replace() */
-	$_fields += sql_get_database_field_array($_fields_data_source, api_data_source_field_list());
+	$_fields += sql_get_database_field_array($_fields_data_source, api_data_source_fields_list());
 
 	/* check for an empty field list */
 	if (sizeof($_fields) == 1) {
@@ -163,7 +163,7 @@ function api_data_source_item_save($data_source_item_id, &$_fields_data_source_i
 	}
 
 	/* convert the input array into something that is compatible with db_replace() */
-	$_fields += sql_get_database_field_array($_fields_data_source_item, api_data_source_item_field_list());
+	$_fields += sql_get_database_field_array($_fields_data_source_item, api_data_source_item_fields_list());
 
 	/* check for an empty field list */
 	if (sizeof($_fields) == 1) {
