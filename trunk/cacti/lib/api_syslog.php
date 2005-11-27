@@ -27,9 +27,25 @@
  */
 
 
-function api_log_total_num ($filter_array) {
+function api_log_total_get ($filter_array = "") {
 
+	$sql_where = "";
+	/* validation and setup for the WHERE clause */
+	if ((is_array($filter_array)) && (sizeof($filter_array) > 0)) {
+		/* validate each field against the known master field list */
+		$field_errors = validate_log_fields(sql_filter_array_to_field_array($filter_array), "|field|");
 
+		/* if a field input error has occured, register the error in the session and return */
+		if (sizeof($field_errors) > 0) {
+			field_register_error($field_errors);
+			return false;
+		/* otherwise, form an SQL WHERE string using the filter fields */
+		}else{
+			$sql_where = sql_filter_array_to_where_string($filter_array, api_log_fields_list(), true);
+		}
+	}
+
+	return db_fetch_cell("select count(*) from syslog $sql_where");
 
 }
 
@@ -49,7 +65,6 @@ function api_log_list ($filter_array,$limit = -1,$offset = -1) {
 		/* otherwise, form an SQL WHERE string using the filter fields */
 		}else{
 			$sql_where = sql_filter_array_to_where_string($filter_array, api_log_fields_list(), true);
-print_a($sql_where);
 		}
 	}
 

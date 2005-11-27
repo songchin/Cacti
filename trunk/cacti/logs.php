@@ -1,24 +1,24 @@
 <?php
 /*
  +-------------------------------------------------------------------------+
- | Copyright (C) 2005 The Cacti Group                                      |
- |                                                                         |
- | This program is free software; you can redistribute it and/or           |
- | modify it under the terms of the GNU General Public License             |
- | as published by the Free Software Foundation; either version 2          |
- | of the License, or (at your option) any later version.                  |
- |                                                                         |
- | This program is distributed in the hope that it will be useful,         |
- | but WITHOUT ANY WARRANTY; without even the implied warranty of          |
- | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           |
- | GNU General Public License for more details.                            |
+ | Copyright (C) 2005 The Cacti Group				      |
+ |									 |
+ | This program is free software; you can redistribute it and/or	   |
+ | modify it under the terms of the GNU General Public License	     |
+ | as published by the Free Software Foundation; either version 2	  |
+ | of the License, or (at your option) any later version.		  |
+ |									 |
+ | This program is distributed in the hope that it will be useful,	 |
+ | but WITHOUT ANY WARRANTY; without even the implied warranty of	  |
+ | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the	   |
+ | GNU General Public License for more details.			    |
  +-------------------------------------------------------------------------+
- | Cacti: The Complete RRDTool-based Graphing Solution                     |
+ | Cacti: The Complete RRDTool-based Graphing Solution		     |
  +-------------------------------------------------------------------------+
  | This code is designed, written, and maintained by the Cacti Group. See  |
  | about.php and/or the AUTHORS file for specific developer information.   |
  +-------------------------------------------------------------------------+
- | http://www.cacti.net/                                                   |
+ | http://www.cacti.net/						   |
  +-------------------------------------------------------------------------+
 */
 
@@ -32,8 +32,8 @@ define("MAX_DISPLAY_PAGES", 21);
 if (!isset($_REQUEST["action"])) { $_REQUEST["action"] = ""; }
 
 switch ($_REQUEST["action"]) {
-        case 'save':
-                form_save();
+	case 'save':
+		form_save();
 
 	default:
 		require_once(CACTI_BASE_PATH . "/include/top_header.php");
@@ -48,19 +48,17 @@ switch ($_REQUEST["action"]) {
 function form_save() {
 
 	if (isset($_POST["box-1-search_filter"])) {
-	        $get_string = "";
+		$get_string = "";
 
-	        /* the 'clear' button wasn't pressed, so we should filter */
-	        if (!isset($_POST["box-1-action-clear-button"])) {
-	                if (trim($_POST["box-1-search_filter"]) != "") {
-	                        $get_string = ($get_string == "" ? "?" : "&") . "search_filter=" . urlencode($_POST["box-1-search_filter"]);
-	                }
-	        }
+		/* the 'clear' button wasn't pressed, so we should filter */
+		if (!isset($_POST["box-1-action-clear-button"])) {
+			if (trim($_POST["box-1-search_filter"]) != "") {
+				$get_string = ($get_string == "" ? "?" : "&") . "search_filter=" . urlencode($_POST["box-1-search_filter"]);
+			}
+		}
 
-	        header("Location: logs.php$get_string");
+		header("Location: logs.php$get_string");
 	}
-
-
 }
 
 
@@ -68,18 +66,6 @@ function view_logs() {
 	global $device_actions;
 
 	$current_page = get_get_var_number("page", "1");
-	$sql_where = "";
-
-	$total_rows = db_fetch_cell("select
-		COUNT(syslog.id)
-		from syslog
-		$sql_where");
-
-
-
-
-
-
 
 	/* setup action menu */
 	$menu_items = array(
@@ -96,10 +82,11 @@ function view_logs() {
 
 	/* get log entires */
 	$logs = api_log_list($filter_array,read_config_option("num_rows_log"),read_config_option("num_rows_log")*($current_page-1));
+	$total_rows = api_log_total_get($filter_array);
 
 	/* generate page list */
 	$url_string = build_get_url_string(array("search_filter"));
-	$url_page_select = get_page_list($current_page, MAX_DISPLAY_PAGES, read_config_option("num_rows_device"), $total_rows, "logs.php" . $url_string . ($url_string == "" ? "?" : "&") . "page=|PAGE_NUM|");
+	$url_page_select = get_page_list($current_page, MAX_DISPLAY_PAGES, read_config_option("num_rows_log"), $total_rows, "logs.php" . $url_string . ($url_string == "" ? "?" : "&") . "page=|PAGE_NUM|");
 
 	/* Output html */
 	$box_id = 1;
@@ -143,21 +130,21 @@ function view_logs() {
 		}
 
 	}else{
-                ?>
-                <tr>
-                        <td class="content-list-empty" colspan="8">
-                                No Log Entries Found.
-                        </td>
-                </tr>
-                <?php
+		?>
+		<tr>
+			<td class="content-list-empty" colspan="8">
+				No Log Entries Found.
+			</td>
+		</tr>
+		<?php
 	}
 
 
-        html_box_toolbar_draw($box_id, "0", "8", (sizeof($filter_array) == 0 ? HTML_BOX_SEARCH_INACTIVE : HTML_BOX_SEARCH_ACTIVE), $url_page_select, 0);
-        html_end_box(false);
+	html_box_toolbar_draw($box_id, "0", "8", (sizeof($filter_array) == 0 ? HTML_BOX_SEARCH_INACTIVE : HTML_BOX_SEARCH_ACTIVE), $url_page_select, 0);
+	html_end_box(false);
 
-        html_box_actions_menu_draw($box_id, "0", $menu_items);
-        html_box_actions_area_draw($box_id, "0");
+	html_box_actions_menu_draw($box_id, "0", $menu_items);
+	html_box_actions_area_draw($box_id, "0");
 
 
 }
