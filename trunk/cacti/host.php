@@ -52,7 +52,7 @@ if (!isset($_REQUEST["action"])) { $_REQUEST["action"] = ""; }
 
 switch ($_REQUEST["action"]) {
 	case 'save':
-		form_save();
+		form_post();
 
 		break;
 	case 'gt_remove':
@@ -95,8 +95,8 @@ switch ($_REQUEST["action"]) {
     The Save Function
    -------------------------- */
 
-function form_save() {
-	if (isset($_POST["save_device_x"])) {
+function form_post() {
+	if ($_POST["action_post"] == "device_edit") {
 		/* verify that the snmpv3 passwords and passphrases match */
 		if ($_POST["snmpv3_auth_password"] != $_POST["snmpv3_auth_password_confirm"]) {
 			raise_message(13);
@@ -133,7 +133,7 @@ function form_save() {
 			}
 		}
 	/* submit button on the actions area page */
-	}else if (isset($_POST["box-1-action-area-button"])) {
+	}else if ($_POST["action_post"] == "box-1") {
 		$selected_rows = explode(":", $_POST["box-1-action-area-selected-rows"]);
 
 		if ($_POST["box-1-action-area-type"] == "search") {
@@ -154,7 +154,7 @@ function form_save() {
 			header("Location: host.php$get_string");
 		}
 	/* 'filter' area at the bottom of the box */
-	}else if (isset($_POST["box-1-search_filter"])) {
+	}else if ($_POST["action_post"] == "device_list") {
 		$get_string = "";
 
 		/* the 'clear' button wasn't pressed, so we should filter */
@@ -693,17 +693,19 @@ function host_edit() {
 		html_end_box();
 	}
 
+	form_hidden_box("action_post", "device_edit");
 	form_save_button("host.php", "save_device");
 }
 
 function host() {
-	global $device_actions;
-
 	$current_page = get_get_var_number("page", "1");
 
 	$menu_items = array(
 		"remove" => "Remove",
-		"duplicate" => "Duplicate"
+		"duplicate" => "Duplicate",
+		"enable" => "Enable",
+		"disable" => "Disable",
+		"clear_stats" => "Clear Statistics"
 		);
 
 	$filter_array = array();
@@ -718,7 +720,7 @@ function host() {
 		$filter_array["status"] = get_get_var("search_status");
 	}
 
-	/* search field: filter (searchs device description and hostname) */
+	/* search field: filter (searches device description and hostname) */
 	if (isset_get_var("search_filter")) {
 		$filter_array["filter"] = array("hostname" => get_get_var("search_filter"), "description" => get_get_var("search_filter"));
 	}
@@ -727,7 +729,7 @@ function host() {
 	$devices = api_device_list($filter_array, $current_page, read_config_option("num_rows_device"));
 
 	/* get the total number of devices on all pages */
-	$total_rows = api_device_total_num($filter_array);
+	$total_rows = api_device_total_get($filter_array);
 
 	/* generate page list */
 	$url_string = build_get_url_string(array("search_device_template", "search_status", "search_filter"));
@@ -783,6 +785,7 @@ function host() {
 	html_box_actions_menu_draw($box_id, "0", $menu_items);
 	html_box_actions_area_draw($box_id, "0");
 
+	form_hidden_box("action_post", "device_list");
 	form_end();
 
 	/* fill in the list of available device templates for the search dropdown */
