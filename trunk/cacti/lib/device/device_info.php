@@ -29,7 +29,7 @@ function api_device_list($filter_array = "", $current_page = 0, $rows_per_page =
 	/* validation and setup for the WHERE clause */
 	if ((is_array($filter_array)) && (sizeof($filter_array) > 0)) {
 		/* validate each field against the known master field list */
-		$field_errors = validate_device_fields(sql_filter_array_to_field_array($filter_array), "|field|");
+		$field_errors = validate_device_fields(sql_filter_array_to_field_array($filter_array));
 
 		/* if a field input error has occured, register the error in the session and return */
 		if (sizeof($field_errors) > 0) {
@@ -64,7 +64,7 @@ function api_device_list($filter_array = "", $current_page = 0, $rows_per_page =
 		$sql_limit");
 }
 
-function api_device_total_num($filter_array = "") {
+function api_device_total_get($filter_array = "") {
 	require_once(CACTI_BASE_PATH . "/lib/device/device_form.php");
 
 	$sql_where = "";
