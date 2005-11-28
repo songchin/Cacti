@@ -106,5 +106,5 @@ GNU General Public License for more details.</tt></p>
 html_end_box();
 
 require_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
-?>
 
+?>
