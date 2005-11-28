@@ -191,7 +191,7 @@ if ($action == 'login') {
 		if ($user_enabled == "0") {
 			if (read_config_option("auth_method") == "2") {
 				/* Display error */
-				api_log_log(sprintf(_("LOGIN: User '%s' is disabled"), $user["username"]), SEV_WARNING FACIL_AUTH);
+				api_log_log(sprintf(_("LOGIN: User '%s' is disabled"), $user["username"]), SEV_WARNING, FACIL_AUTH);
 				auth_display_custom_error_message(_("Access Denied, user account disabled."));
 				exit;
 			}
