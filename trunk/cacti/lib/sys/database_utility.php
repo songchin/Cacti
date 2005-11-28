@@ -56,20 +56,25 @@ function sql_filter_array_to_where_string($array, &$master_field_list, $first_wh
 	$field_array = array();
 	$sql_and = ($first_where == true ? "WHERE" : "AND");
 	$sql_where = "";
+
 	if (sizeof($array) > 0) {
 		/* loop through each field => value in the field array */
 		foreach ($array as $field_name => $field_value) {
 			/* if the 'value' is an array itself, traverse it one level down and treat it as an OR group */
 			if ((is_array($field_value)) && (sizeof($field_value) > 0)) {
 				$sql_or = "";
-				$i = 0;
+				$i = 1;
 				foreach ($field_value as $or_field_name => $or_field_value) {
-					$i++;
+					/* translate field names for situations where the database and validation field names differ */
+					$db_or_field_name = sql_filter_array_get_database_field_name($or_field_name);
+					$vl_or_field_name = sql_filter_array_get_validation_field_name($or_field_name);
 
 					/* make sure that the field exists in the $master_field_list array */
-					if (isset($master_field_list[$or_field_name])) {
-						$sql_or .= ($sql_or == "" ? "(" : " OR") . " $or_field_name " . ($master_field_list[$or_field_name]["data_type"] == DB_TYPE_STRING ? " like '%%" . sql_sanitize($or_field_value) . "%%'" : "= " . sql_get_quoted_string(array("type" => $master_field_list[$or_field_name]["data_type"], "value" => $or_field_value))) . ($i == sizeof($field_value) && $sql_or != "" ? ")" : "");
+					if (isset($master_field_list[$vl_or_field_name])) {
+						$sql_or .= ($sql_or == "" ? "(" : " OR") . " $db_or_field_name " . ($master_field_list[$vl_or_field_name]["data_type"] == DB_TYPE_STRING ? " like '%%" . sql_sanitize($or_field_value) . "%%'" : "= " . sql_get_quoted_string(array("type" => $master_field_list[$vl_or_field_name]["data_type"], "value" => $or_field_value))) . (($i == sizeof($field_value) && $sql_or != "") || (sizeof($field_value) == 1) ? ")" : "");
 					}
+
+					$i++;
 				}
 
 				/* update the final $sql_where string */
@@ -79,9 +84,13 @@ function sql_filter_array_to_where_string($array, &$master_field_list, $first_wh
 				}
 			/* if the 'value' is not an array, simply handle it as a standalone AND */
 			}else{
+				/* translate field names for situations where the database and validation field names differ */
+				$db_field_name = sql_filter_array_get_database_field_name($field_name);
+				$vl_field_name = sql_filter_array_get_validation_field_name($field_name);
+
 				/* make sure that the field exists in the $master_field_list array */
-				if (isset($master_field_list[$field_name])) {
-					$sql_where .= " $sql_and $field_name " . ($master_field_list[$field_name]["data_type"] == DB_TYPE_STRING ? " like '%%" . sql_sanitize($field_value) . "%%'" : "= " . sql_get_quoted_string(array("type" => $master_field_list[$field_name]["data_type"], "value" => $field_value)));
+				if (isset($master_field_list[$vl_field_name])) {
+					$sql_where .= " $sql_and $db_field_name" . ($master_field_list[$vl_field_name]["data_type"] == DB_TYPE_STRING ? " like '%%" . sql_sanitize($field_value) . "%%'" : "= " . sql_get_quoted_string(array("type" => $master_field_list[$vl_field_name]["data_type"], "value" => $field_value)));
 					$sql_and = "AND";
 				}
 			}
@@ -99,32 +108,56 @@ function sql_filter_array_to_field_array($array) {
 			/* if the 'value' is an array itself, traverse it one level down */
 			if ((is_array($field_value)) && (sizeof($field_value) > 0)) {
 				foreach ($field_value as $or_field_name => $or_field_value) {
-					if (isset($field_array[$or_field_name])) {
+					/* translate field names for situations where the database and validation field names differ */
+					$vl_or_field_name = sql_filter_array_get_validation_field_name($or_field_name);
+
+					if (isset($field_array[$vl_or_field_name])) {
 						/* there is a potential security issue here if we allow key collisions since an
 						 * attacker could effectivly bypass validation by faking multiple duplicate field
 						 * names */
-						api_log_log("Key collision found at '$or_field_name' in " . __FUNCTION__ . "()", SEV_WARNING);
-						die("Key collision found at '$or_field_name' in " . __FUNCTION__ . "()");
+						api_log_log("Key collision found at '$vl_or_field_name' in " . __FUNCTION__ . "()", SEV_WARNING);
+						die("Key collision found at '$vl_or_field_name' in " . __FUNCTION__ . "()");
 					}else{
-						$field_array[$or_field_name] = $or_field_value;
+						$field_array[$vl_or_field_name] = $or_field_value;
 					}
 				}
 			/* if the 'value' is not an array, simply handle it as a standalone value */
 			}else{
-				if (isset($field_array[$field_name])) {
+				/* translate field names for situations where the database and validation field names differ */
+				$vl_field_name = sql_filter_array_get_validation_field_name($field_name);
+
+				if (isset($field_array[$vl_field_name])) {
 					/* there is a potential security issue here if we allow key collisions since an
 					 * attacker could effectivly bypass validation by faking multiple duplicate field
 					 * names */
-					api_log_log("Key collision found at '$field_name' in " . __FUNCTION__ . "()", SEV_WARNING);
-					die("Key collision found at '$field_name' in " . __FUNCTION__ . "()");
+					api_log_log("Key collision found at '$vl_field_name' in " . __FUNCTION__ . "()", SEV_WARNING);
+					die("Key collision found at '$vl_field_name' in " . __FUNCTION__ . "()");
 				}else{
-					$field_array[$field_name] = $field_value;
+					$field_array[$vl_field_name] = $field_value;
 				}
 			}
 		}
 	}
 
 	return $field_array;
+}
+
+function sql_filter_array_get_database_field_name($name) {
+	if (strpos($name, "|")) {
+		list($db_field, $validation_field) = explode("|", $name);
+		return $db_field;
+	}else{
+		return $name;
+	}
+}
+
+function sql_filter_array_get_validation_field_name($name) {
+	if (strpos($name, "|")) {
+		list($db_field, $validation_field) = explode("|", $name);
+		return $validation_field;
+	}else{
+		return $name;
+	}
 }
 
 function sql_get_database_field_array($field_list, &$master_field_list) {

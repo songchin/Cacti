@@ -42,16 +42,6 @@ require_once(CACTI_BASE_PATH . "/lib/poller.php");
 
 define("MAX_DISPLAY_PAGES", 21);
 
-$ds_actions = array(
-	1 => _("Delete"),
-	2 => _("Change Data Template"),
-	3 => _("Change Host"),
-	4 => _("Duplicate"),
-	5 => _("Convert to Data Template"),
-	6 => _("Enable"),
-	7 => _("Disable")
-	);
-
 /* set default action */
 if (!isset($_REQUEST["action"])) { $_REQUEST["action"] = ""; }
 
@@ -743,7 +733,7 @@ function ds() {
 
 	/* search field: filter (searches data source name) */
 	if (isset_get_var("search_filter")) {
-		$filter_array["filter"] = array("name_cache" => get_get_var("search_filter"));
+		$filter_array["filter"] = array("name_cache|name" => get_get_var("search_filter"));
 	}
 
 	/* get a list of all data sources on this page */
