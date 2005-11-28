@@ -123,4 +123,74 @@ function validate_log_fields(&$_fields_log, $log_field_name_format = "|field|") 
 	return $error_fields;
 }
 
+
+function api_log_facility_list() {
+	
+	$facility = array();
+	$facility[FACIL_CMDPHP] = "CMDPHP";
+	$facility[FACIL_CACTID] = "CACTID";
+	$facility[FACIL_POLLER] = "POLLER";
+	$facility[FACIL_SCPTSVR] = "SCPTSVR";
+	$facility[FACIL_WEBUI] = "WEBUI";
+	$facility[FACIL_EXPORT] = "EXPORT";
+	$facility[FACIL_AUTH] = "AUTH";
+	$facility[FACIL_EMAIL] = "EMAIL";
+	
+	return $facility;	
+}
+
+
+function api_log_severity_list() {
+	
+	$severity = array();
+	$severity[SEV_EMERGENCY] = "EMERGENCY";
+	$severity[SEV_ALERT] = "ALERT";
+	$severity[SEV_CRITICAL] = "CRITICAL";
+	$severity[SEV_ERROR] = "ERROR";
+	$severity[SEV_WARNING] = "WARNING";
+	$severity[SEV_NOTICE] = "NOTICE";
+	$severity[SEV_INFO] = "INFO";
+	$severity[SEV_DEBUG] = "DEBUG";
+	$severity[SEV_DEV] = "DEV";
+	
+	return $severity;	
+}
+
+
+/* api_log_html_css_class - Set's the CSS class for the log entry.
+   @arg $severity - The log item severity. */
+function api_log_html_css_class($severity) {
+
+	switch ($severity) {
+		case "EMERGENCY":
+			return "log_row_emergency";
+			break;
+		case "ALERT":
+			return "log_row_alert";
+			break;
+		case "CRITICAL":
+			return "log_row_crit";
+			break;
+		case "ERROR":
+			return "log_row_error";
+			break;
+		case "WARNING":
+			return "log_row_warning";
+			break;
+		case "NOTICE":
+			return "log_row_notice";
+			break;
+		case "DEBUG":
+			return "log_row_debug";
+			break;
+		case "DEV":
+			return "log_row_dev";
+			break;
+		default: /* Also INFO */
+			return "log_row_info";
+			break;
+	}
+}
+
+
 ?>

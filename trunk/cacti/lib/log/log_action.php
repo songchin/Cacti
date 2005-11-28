@@ -203,42 +203,6 @@ function log_read_config_option($config_name) {
 }
 
 
-/* api_log_html_css_class - Set's the CSS class for the log entry.
-   @arg $severity - The log item severity. */
-function api_log_html_css_class($severity) {
-
-	switch ($severity) {
-		case "EMERGENCY":
-			return "log_row_emergency";
-			break;
-		case "ALERT":
-			return "log_row_alert";
-			break;
-		case "CRITICAL":
-			return "log_row_crit";
-			break;
-		case "ERROR":
-			return "log_row_error";
-			break;
-		case "WARNING":
-			return "log_row_warning";
-			break;
-		case "NOTICE":
-			return "log_row_notice";
-			break;
-		case "DEBUG":
-			return "log_row_debug";
-			break;
-		case "DEV":
-			return "log_row_dev";
-			break;
-		default: /* Also INFO */
-			return "log_row_info";
-			break;
-	}
-}
-
-
 /* api_log_syslog_severity_get - returns the syslog severity level
    @arg $severity - the severity integer value */
 function api_log_syslog_severity_get($severity) {
@@ -306,8 +270,8 @@ function api_log_facility_get($facility) {
 		case FACIL_AUTH:
 			return "AUTH";
 			break;
-		case FACIL_SMTP:
-			return "SMTP";
+		case FACIL_EMAIL:
+			return "EMAIL";
 			break;
 		default:
 			return "UNKNOWN";

@@ -40,7 +40,7 @@ define("FACIL_SCPTSVR",4);
 define("FACIL_AUTH",5);
 define("FACIL_WEBUI",6);
 define("FACIL_EXPORT",7);
-define("FACIL_SMTP",8);
+define("FACIL_EMAIL",8);
 
 define("LOG_CACTI",1);
 define("LOG_BOTH",2);

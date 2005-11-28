@@ -31,6 +31,42 @@ $fields_log = array(
 		"validate_empty" => false,
 		"data_type" => DB_TYPE_STRING
 		),
+	"facility" => array(
+		"default" => "",
+		"validate_regexp" => "",
+		"validate_empty" => false,
+		"data_type" => DB_TYPE_NUMBER
+		),
+	"severity" => array(
+		"default" => "",
+		"validate_regexp" => "",
+		"validate_empty" => false,
+		"data_type" => DB_TYPE_NUMBER
+		),
+	"poller" => array(
+		"default" => "",
+		"validate_regexp" => "",
+		"validate_empty" => false,
+		"data_type" => DB_TYPE_NUMBER
+		),
+	"host" => array(
+		"default" => "",
+		"validate_regexp" => "",
+		"validate_empty" => false,
+		"data_type" => DB_TYPE_NUMBER
+		),
+	"username" => array(
+		"default" => "",
+		"validate_regexp" => "",
+		"validate_empty" => false,
+		"data_type" => DB_TYPE_STRING
+		),
+	"plugin" => array(
+		"default" => "",
+		"validate_regexp" => "",
+		"validate_empty" => false,
+		"data_type" => DB_TYPE_STRING
+		),
 	"message" => array(
 		"default" => "",
 		"validate_regexp" => "",
