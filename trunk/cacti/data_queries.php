@@ -112,12 +112,12 @@ function form_save() {
 		/* step #3: field save */
 		$data_query_id = false;
 		if (is_error_message()) {
-			api_syslog_cacti_log("User input validation error for data query [ID#" . $_POST["data_query_id"] . "]", SEV_DEBUG, 0, 0, 0, false, FACIL_WEBUI);
+			api_log_log("User input validation error for data query [ID#" . $_POST["data_query_id"] . "]", SEV_DEBUG);
 		}else{
 			$data_query_id = api_data_query_save($_POST["data_query_id"], $form_data_query);
 
 			if ($data_query_id === false) {
-				api_syslog_cacti_log("Save error for data query [ID#" . $_POST["data_query_id"] . "]", SEV_ERROR, 0, 0, 0, false, FACIL_WEBUI);
+				api_log_log("Save error for data query [ID#" . $_POST["data_query_id"] . "]", SEV_ERROR);
 			}
 		}
 
@@ -176,12 +176,12 @@ function form_save() {
 		/* step #3: field save */
 		$data_query_field_id = false;
 		if (is_error_message()) {
-			api_syslog_cacti_log("User input validation error for data query field [ID#" . $_POST["data_query_field_id"] . "], data query [ID#" . $_POST["data_query_id"] . "]", SEV_DEBUG, 0, 0, 0, false, FACIL_WEBUI);
+			api_log_log("User input validation error for data query field [ID#" . $_POST["data_query_field_id"] . "], data query [ID#" . $_POST["data_query_id"] . "]", SEV_DEBUG);
 		}else{
 			$data_query_field_id = api_data_query_field_save($_POST["data_query_field_id"], $form_data_query);
 
 			if ($data_query_field_id === false) {
-				api_syslog_cacti_log("Save error for data query field [ID#" . $_POST["data_query_field_id"] . "], data query [ID#" . $_POST["data_query_id"] . "]", SEV_ERROR, 0, 0, 0, false, FACIL_WEBUI);
+				api_log_log("Save error for data query field [ID#" . $_POST["data_query_field_id"] . "], data query [ID#" . $_POST["data_query_id"] . "]", SEV_ERROR);
 			}
 		}
 

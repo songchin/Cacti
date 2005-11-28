@@ -36,28 +36,28 @@ if (!isset($_REQUEST["action"])) {
 /* Get the username */
 if (read_config_option("auth_method") == "2") {
 	/* Get the Web Basic Auth username and set action so we login right away */
-	api_syslog_cacti_log(_("LOGIN: Web Basic Authenication enabled, getting username from webserver"), SEV_DEBUG, 0, 0, 0, false, FACIL_AUTH);
+	api_log_log(_("LOGIN: Web Basic Authenication enabled, getting username from webserver"), SEV_DEBUG, FACIL_AUTH);
 	$action = "login";
 	if (isset($_SERVER["PHP_AUTH_USER"])) {
 		$username = $_SERVER["PHP_AUTH_USER"];
-		api_syslog_cacti_log(sprintf(_("LOGIN: Username set to '%s'"), $username), SEV_DEBUG, 0, 0, 0, false, FACIL_AUTH);
+		api_log_log(sprintf(_("LOGIN: Username set to '%s'"), $username), SEV_DEBUG, FACIL_AUTH);
 	} else {
 		/* No user - Bad juju! */
 		$username = "";
 		auth_display_custom_error_message(_("Web Basic Authentication configured, but no username was passed from the web server.  Please make sure you have authentication enabled on the web server."));
-		api_syslog_cacti_log(_("No username passed with Web Basic Authentication enabled."), SEV_ERROR, 0, 0, 0, false, FACIL_AUTH);
+		api_log_log(_("No username passed with Web Basic Authentication enabled."), SEV_ERROR, FACIL_AUTH);
 		exit;
 	}
 }else{
 	if ($action == "login") {
 		/* LDAP and Builtin get username from Form */
-		api_syslog_cacti_log(_("LOGIN: Builtin or LDAP Authenication, getting username from form post"), SEV_DEBUG, 0, 0, 0, false, FACIL_AUTH);
+		api_log_log(_("LOGIN: Builtin or LDAP Authenication, getting username from form post"), SEV_DEBUG, FACIL_AUTH);
 		if (isset($_POST["login_username"])) {
 			$username = $_POST["login_username"];
 		}else{
 			$username = "";
 		}
-		api_syslog_cacti_log(sprintf(_("LOGIN: Username set to '%s'"), $username), SEV_DEBUG, 0, 0, 0, false, FACIL_AUTH);
+		api_log_log(sprintf(_("LOGIN: Username set to '%s'"), $username), SEV_DEBUG, FACIL_AUTH);
 	}else{
 		$username = "";
 	}
@@ -74,13 +74,13 @@ if ($action == 'login') {
 
 	switch (read_config_option("auth_method")) {
 	case "0":
-		api_syslog_cacti_log(_("LOGIN: No Authenication enabled"), SEV_DEBUG, 0, 0, 0, false, FACIL_AUTH);
+		api_log_log(_("LOGIN: No Authenication enabled"), SEV_DEBUG, FACIL_AUTH);
 		/* No auth, no action, also shouldn't get here */
 		exit;
 		break;
 	case "2":
 		/* Web Basic Auth */
-		api_syslog_cacti_log(_("LOGIN: Web Basic Authenication enabled"), SEV_DEBUG, 0, 0, 0, false, FACIL_AUTH);
+		api_log_log(_("LOGIN: Web Basic Authenication enabled"), SEV_DEBUG, FACIL_AUTH);
 		$copy_user = true;
 		$user_auth = true;
 		$realm = 0;
@@ -90,19 +90,19 @@ if ($action == 'login') {
 		break;
 	case "3":
 		/* LDAP Auth */
-		api_syslog_cacti_log(_("LOGIN: LDAP Authentication enabled"), SEV_DEBUG, 0, 0, 0, false, FACIL_AUTH);
+		api_log_log(_("LOGIN: LDAP Authentication enabled"), SEV_DEBUG, FACIL_AUTH);
  		if (($_POST["realm"] == "ldap") && (strlen($_POST["login_password"]) > 0)) {
-			api_syslog_cacti_log(_("LOGIN: LDAP realm selected"), SEV_DEBUG, 0, 0, 0, false, FACIL_AUTH);
+			api_log_log(_("LOGIN: LDAP realm selected"), SEV_DEBUG, FACIL_AUTH);
 
 			/* get user DN */
-			api_syslog_cacti_log(_("LOGIN: LDAP Generating DN"), SEV_DEBUG, 0, 0, 0, false, FACIL_AUTH);
+			api_log_log(_("LOGIN: LDAP Generating DN"), SEV_DEBUG, FACIL_AUTH);
 			$ldap_dn_search_response = api_user_ldap_search_dn($username);
 			if ($ldap_dn_search_response["error_num"] == "0") {
 				$ldap_dn = $ldap_dn_search_response["dn"];
-				api_syslog_cacti_log(_("LOGIN: LDAP DN: ") . $ldap_dn, SEV_DEBUG, 0, 0, 0, false, FACIL_AUTH);
+				api_log_log(_("LOGIN: LDAP DN: ") . $ldap_dn, SEV_DEBUG, FACIL_AUTH);
 			}else{
 				/* Error searching */
-				api_syslog_cacti_log(_("LOGIN: LDAP Error: ") . $ldap_dn_search_response["error_text"], SEV_ERROR, 0, 0, 0, false, FACIL_AUTH);
+				api_log_log(_("LOGIN: LDAP Error: ") . $ldap_dn_search_response["error_text"], SEV_ERROR, FACIL_AUTH);
 				$ldap_error = true;
 				$ldap_error_message = _("LDAP Search Error: ") . $ldap_dn_search_response["error_text"];
 				$user_auth = false;
@@ -111,7 +111,7 @@ if ($action == 'login') {
 
 			if (!$ldap_error) {
 				/* auth user with LDAP */
-				api_syslog_cacti_log(_("LOGIN: LDAP Authenication processing"), SEV_DEBUG, 0, 0, 0, false, FACIL_AUTH);
+				api_log_log(_("LOGIN: LDAP Authenication processing"), SEV_DEBUG, FACIL_AUTH);
 				$ldap_auth_response = api_user_ldap_auth($username,$_POST["login_password"],$ldap_dn);
 
 				if ($ldap_auth_response["error_num"] == "0") {
@@ -119,12 +119,12 @@ if ($action == 'login') {
 					$user_auth = true;
 					$copy_user = true;
 					/* Locate user in database */
-					api_syslog_cacti_log(sprintf(_("LOGIN: LDAP User '%s' Authenticated"),$username), SEV_DEBUG, 0, 0, 0, false, FACIL_AUTH);
+					api_log_log(sprintf(_("LOGIN: LDAP User '%s' Authenticated"),$username), SEV_DEBUG, FACIL_AUTH);
 					$user = api_user_info( array( "username" => $username, "realm" => 1) );
 					#$user = db_fetch_row("select * from user_auth where username='" . $username . "' and realm = 1");
 				}else{
 					/* error */
-					api_syslog_cacti_log(_("LOGIN: LDAP Error: ") . $ldap_auth_response["error_text"], SEV_ERROR, 0, 0, 0, false, FACIL_AUTH);
+					api_log_log(_("LOGIN: LDAP Error: ") . $ldap_auth_response["error_text"], SEV_ERROR, FACIL_AUTH);
 					$ldap_error = true;
 					$ldap_error_message = _("LDAP Error: ") . $ldap_auth_response["error_text"];
 					$user_auth = false;
@@ -138,20 +138,19 @@ if ($action == 'login') {
 		/* Builtin Auth */
 		if ((!$user_auth) && (!$ldap_error)) {
 			/* if auth has not occured process for builtin - AKA Ldap fall through */
-			api_syslog_cacti_log(_("LOGIN: Builtin Authenication enabled"), SEV_DEBUG, 0, 0, 0, false, FACIL_AUTH);
+			api_log_log(_("LOGIN: Builtin Authenication enabled"), SEV_DEBUG, FACIL_AUTH);
 			$user = api_user_info( array( "username" => $username, "password" => md5($_POST["login_password"]), "realm" => 0) );
-			#$user = db_fetch_row("select * from user_auth where username='" . $username . "' and password = '" . md5($_POST["login_password"]) . "' and realm = 0");
 		}
 	}
 	/* end of switch */
 
 	/* Create user from template if requested */
 	if ((! sizeof($user)) && ($copy_user) && (read_config_option("user_template") != "0") && (strlen($username) > 0)) {
-		api_syslog_cacti_log(sprintf(_("LOGIN: User '%s' does not exist, copying template user"), $username), SEV_WARNING, 0, 0, 0, false, FACIL_AUTH);
+		api_log_log(sprintf(_("LOGIN: User '%s' does not exist, copying template user"), $username), SEV_WARNING, FACIL_AUTH);
 		/* check that template user exists */
 		if (api_user_info(array( "username" => read_config_option("user_template"), "realm" => 0) )) {
 		#if (db_fetch_row("select * from user_auth where username='" . read_config_option("user_template") . "' and realm = 0")) {
-			api_syslog_cacti_log(sprintf(_("LOGIN: Coping Template user '%s' to user '%s'"), read_config_option("user_template"), $username), SEV_DEBUG, 0, 0, 0, false, FACIL_AUTH);
+			api_log_log(sprintf(_("LOGIN: Coping Template user '%s' to user '%s'"), read_config_option("user_template"), $username), SEV_DEBUG, FACIL_AUTH);
 			/* template user found */
 			api_user_copy(read_config_option("user_template"), $username, $realm);
 			/* requery newly created user */
@@ -160,7 +159,7 @@ if ($action == 'login') {
 		}else{
 			/* error */
 			auth_display_custom_error_message(sprintf(_("Template user '%s' does not exist."), read_config_option("user_template")));
-			api_syslog_cacti_log(sprintf(_("LOGIN: Unable to locate template user '%s'"), read_config_option("user_template")), SEV_ERROR, 0, 0, 0, false, FACIL_AUTH);
+			api_log_log(sprintf(_("LOGIN: Unable to locate template user '%s'"), read_config_option("user_template")), SEV_ERROR, FACIL_AUTH);
 			exit;
 		}
 	}
@@ -168,31 +167,31 @@ if ($action == 'login') {
 	/* Guest account checking - Not for builtin */
 	$guest_user = false;
 	if ((sizeof($user) < 1) && ($user_auth) && (read_config_option("guest_user") != "0")) {
-		api_syslog_cacti_log(_("LOGIN: Authenicated user, but no cacti user record, loading guest account"), SEV_DEBUG, 0, 0, 0, false, FACIL_AUTH);
+		api_log_log(_("LOGIN: Authenicated user, but no cacti user record, loading guest account"), SEV_DEBUG, FACIL_AUTH);
 		/* Locate guest user record */
 		$user = api_user_info(array( "username" => read_config_option("guest_user") ));
 		#$user = db_fetch_row("select * from user_auth where username='" . read_config_option("guest_user") . "'");
 		if ($user) {
-			api_syslog_cacti_log(sprintf(_("LOGIN: Authenicated user '%s' using guest account '%s'"), $username, $user["username"]), SEV_INFO, 0, 0, 0, false, FACIL_AUTH);
+			api_log_log(sprintf(_("LOGIN: Authenicated user '%s' using guest account '%s'"), $username, $user["username"]), SEV_INFO, FACIL_AUTH);
 			$guest_user = true;
 		}else{
 			/* error */
 			auth_display_custom_error_message("Guest user \"" . read_config_option("guest_user") . "\" does not exist.");
-			api_syslog_cacti_log(sprintf(_("LOGIN: Unable to locate guest user '%s'"), read_config_option("guest_user")), SEV_ERROR, 0, 0, 0, false, FACIL_AUTH);
+			api_log_log(sprintf(_("LOGIN: Unable to locate guest user '%s'"), read_config_option("guest_user")), SEV_ERROR, FACIL_AUTH);
 			exit;
 		}
 	}
 
 	/* Process the user  */
 	if (sizeof($user) > 0) {
-		api_syslog_cacti_log(sprintf(_("LOGIN: User '%s' Authenticated") , $user["username"]), SEV_NOTICE, 0, 0, 0, false, FACIL_AUTH);
+		api_log_log(sprintf(_("LOGIN: User '%s' Authenticated") , $user["username"]), SEV_NOTICE, FACIL_AUTH);
 
 		/* is user enabled */
 		$user_enabled = $user["enabled"];
 		if ($user_enabled == "0") {
 			if (read_config_option("auth_method") == "2") {
 				/* Display error */
-				api_syslog_cacti_log(sprintf(_("LOGIN: User '%s' is disabled"), $user["username"]), SEV_WARNING, 0, 0, 0, false, FACIL_AUTH);
+				api_log_log(sprintf(_("LOGIN: User '%s' is disabled"), $user["username"]), SEV_WARNING FACIL_AUTH);
 				auth_display_custom_error_message(_("Access Denied, user account disabled."));
 				exit;
 			}
@@ -201,10 +200,10 @@ if ($action == 'login') {
 
 			/* set the php session */
 			$_SESSION["sess_user_id"] = $user["id"];
-			api_syslog_cacti_log(_("LOGIN: Setting up session variables"), SEV_DEBUG, 0, 0, 0, false, FACIL_AUTH);
+			api_log_log(_("LOGIN: Setting up session variables"), SEV_DEBUG, FACIL_AUTH);
 
 			/* Update ip and lastlogin information for the user*/
-			api_syslog_cacti_log(_("LOGIN: Updating user last login information"), SEV_DEBUG, 0, 0, 0, false, FACIL_AUTH);
+			api_log_log(_("LOGIN: Updating user last login information"), SEV_DEBUG, FACIL_AUTH);
 			$user_save = array();	
 			$user_save["id"] = array("type" => DB_TYPE_NUMBER, "value" => $user["id"]);
 			$user_save["last_login"] = array("type" => DB_TYPE_FUNC_NOW, "value" => "");
@@ -214,13 +213,13 @@ if ($action == 'login') {
 
 			/* handle "force change password" */
 			if ($user["must_change_password"] == "on") {
-				api_syslog_cacti_log(_("LOGIN: Setting user force change password"), SEV_DEBUG, 0, 0, 0, false, FACIL_AUTH);
+				api_log_log(_("LOGIN: Setting user force change password"), SEV_DEBUG, FACIL_AUTH);
 				$_SESSION["sess_change_password"] = true;
 			}
 
 			/* ok, at the point the user has been sucessfully authenticated; so we must
 			decide what to do next */
-			api_syslog_cacti_log(_("LOGIN: Figuring out URL to send user to"), SEV_DEBUG, 0, 0, 0, false, FACIL_AUTH);
+			api_log_log(_("LOGIN: Figuring out URL to send user to"), SEV_DEBUG, FACIL_AUTH);
 			switch ($user["login_opts"]) {
 				case '1': /* referer */
 					if (sizeof(db_fetch_assoc("select realm_id from user_auth_realm where realm_id=8 and user_id=" . $_SESSION["sess_user_id"])) == 0) {
@@ -238,7 +237,7 @@ if ($action == 'login') {
 				default:
 					$url_location  = "index.php";
 			}
-			api_syslog_cacti_log(_("LOGIN: URL: ") . $url_location, SEV_DEBUG, 0, 0, 0, false, FACIL_AUTH);
+			api_log_log(_("LOGIN: URL: ") . $url_location, SEV_DEBUG, FACIL_AUTH);
 			header("Location: " . $url_location);
 			exit;
 		}
@@ -246,11 +245,11 @@ if ($action == 'login') {
 		if ((!$guest_user) && ($user_auth)) {
 			/* No guest account defined */
 			auth_display_custom_error_message(_("Access Denied, please contact you Cacti Administrator."));
-			api_syslog_cacti_log(_("LOGIN: Access Denied, No guest enabled or template user to copy"), SEV_ERROR, 0, 0, 0, false, FACIL_AUTH);
+			api_log_log(_("LOGIN: Access Denied, No guest enabled or template user to copy"), SEV_CRITICAL, FACIL_AUTH);
 			exit;
 		}else{
 			/* BAD username/password builtin and LDAP */
-			api_syslog_cacti_log(sprintf(_("LOGIN: Invalid username '%s' and password"), $username), SEV_WARNING, 0, 0, 0, false, FACIL_AUTH);
+			api_log_log(sprintf(_("LOGIN: Invalid username '%s' and password"), $username), SEV_WARNING, 0, 0, 0, false, FACIL_AUTH);
 		}
 	}
 }

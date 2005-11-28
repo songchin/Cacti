@@ -139,7 +139,7 @@ function form_post() {
 
 		/* step #3: field save */
 		if (is_error_message()) {
-			api_syslog_cacti_log("User input validation error for data source [ID#" . $_POST["id"] . "]", SEV_DEBUG, 0, 0, 0, false, FACIL_WEBUI);
+			api_log_log("User input validation error for data source [ID#" . $_POST["id"] . "]", SEV_DEBUG);
 		}else{
 			/* handle rra_id multi-select */
 			if (isset($data_source_fields["rra_id"])) {
@@ -155,7 +155,7 @@ function form_post() {
 
 				/* save data source input fields */
 				if (!api_data_source_fields_save($data_source_id, $data_input_fields)) {
-					api_syslog_cacti_log("Save error for data input fields, data source [ID#" . $_POST["id"] . "]", SEV_ERROR, 0, 0, 0, false, FACIL_WEBUI);
+					api_log_log("Save error for data input fields, data source [ID#" . $_POST["id"] . "]", SEV_ERROR);
 				}
 
 				/* save data source item data */
@@ -164,12 +164,12 @@ function form_post() {
 					$data_source_item_fields[$data_source_item_id]["data_source_id"] = $data_source_id;
 
 					if (!api_data_source_item_save($data_source_item_id, $data_source_item)) {
-						api_syslog_cacti_log("Save error for data source item [ID#" . $data_source_item_id . "], data source [ID#" . $_POST["id"] . "]", SEV_ERROR, 0, 0, 0, false, FACIL_WEBUI);
+						api_log_log("Save error for data source item [ID#" . $data_source_item_id . "], data source [ID#" . $_POST["id"] . "]", SEV_ERROR);
 					}
 				}
 
 			}else{
-				api_syslog_cacti_log("Save error for data source [ID#" . $_POST["id"] . "]", SEV_ERROR, 0, 0, 0, false, FACIL_WEBUI);
+				api_log_log("Save error for data source [ID#" . $_POST["id"] . "]", SEV_ERROR);
 			}
 		}
 

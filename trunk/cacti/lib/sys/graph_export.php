@@ -84,7 +84,7 @@ function config_export_stats($start, $total_graphs_created) {
 		"ExportTime:%01.4f TotalGraphs:%s",
 		round($end - $start,4), $total_graphs_created);
 
-	api_syslog_cacti_log("STATS: " . $export_stats, SEV_NOTICE, 0, 0, 0, true, FACIL_EXPORT);
+	api_log_log("STATS: " . $export_stats, SEV_NOTICE, FACIL_EXPORT);
 
 	/* insert poller stats into the settings table */
 	db_execute("replace into settings (name,value) values ('stats_export','$export_stats')");
@@ -121,13 +121,13 @@ function config_graph_export() {
 }
 
 function export_fatal($stMessage) {
-	api_syslog_cacti_log($stMessage, SEV_CRITICAL, 0, 0, 0, true, FACIL_EXPORT);
+	api_log_log($stMessage, SEV_CRITICAL, FACIL_EXPORT);
 	exit;
 }
 
 function export_log($stMessage) {
 	if (read_config_option("log_export") == "on") {
-		api_syslog_cacti_log($stMessage, SEV_INFO, 0, 0, 0, true, FACIL_EXPORT);
+		api_log_log($stMessage, SEV_INFO, FACIL_EXPORT);
 	}
 }
 

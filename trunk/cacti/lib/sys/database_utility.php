@@ -103,7 +103,7 @@ function sql_filter_array_to_field_array($array) {
 						/* there is a potential security issue here if we allow key collisions since an
 						 * attacker could effectivly bypass validation by faking multiple duplicate field
 						 * names */
-						api_syslog_cacti_log("Key collision found at '$or_field_name' in " . __FUNCTION__ . "()", SEV_WARNING, 0, 0, 0, false, FACIL_WEBUI);
+						api_log_log("Key collision found at '$or_field_name' in " . __FUNCTION__ . "()", SEV_WARNING);
 						die("Key collision found at '$or_field_name' in " . __FUNCTION__ . "()");
 					}else{
 						$field_array[$or_field_name] = $or_field_value;
@@ -115,7 +115,7 @@ function sql_filter_array_to_field_array($array) {
 					/* there is a potential security issue here if we allow key collisions since an
 					 * attacker could effectivly bypass validation by faking multiple duplicate field
 					 * names */
-					api_syslog_cacti_log("Key collision found at '$field_name' in " . __FUNCTION__ . "()", SEV_WARNING, 0, 0, 0, false, FACIL_WEBUI);
+					api_log_log("Key collision found at '$field_name' in " . __FUNCTION__ . "()", SEV_WARNING);
 					die("Key collision found at '$field_name' in " . __FUNCTION__ . "()");
 				}else{
 					$field_array[$field_name] = $field_value;
@@ -145,7 +145,7 @@ function sql_get_quoted_string($field) {
 		if (is_numeric($field["value"])) {
 			return $field["value"];
 		}else{
-			api_syslog_cacti_log("Invalid integer column '" . $field . "' value '" . $field["value"] . "' in " . __FUNCTION__ . "()", SEV_WARNING, 0, 0, 0, false, FACIL_WEBUI);
+			api_log_log("Invalid integer column '" . $field . "' value '" . $field["value"] . "' in " . __FUNCTION__ . "()", SEV_WARNING);
 			die("Invalid integer column value '$field' in " . __FUNCTION__ . "()");
 		}
 	}else if ($field["type"] == DB_TYPE_NULL) {
@@ -167,7 +167,7 @@ function sql_get_quoted_string($field) {
 	}else if ($field["type"] == DB_TYPE_FUNC_MD5) {
 		return "'" . md5($field["value"]) . "'";
 	}else{
-		api_syslog_cacti_log("Invalid column type for '" . $field . "' value '" . $field["value"] . "' in " . __FUNCTION__ . "()", SEV_WARNING, 0, 0, 0, false, FACIL_WEBUI);
+		api_log_log("Invalid column type for '" . $field . "' value '" . $field["value"] . "' in " . __FUNCTION__ . "()", SEV_WARNING);
 	}
 
 }

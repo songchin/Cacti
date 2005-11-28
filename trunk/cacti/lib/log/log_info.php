@@ -45,7 +45,7 @@ function api_log_total_get ($filter_array = "") {
 		}
 	}
 
-	return db_fetch_cell("select count(*) from syslog $sql_where");
+	return db_fetch_cell("select count(*) from log $sql_where");
 
 }
 
@@ -71,19 +71,20 @@ function api_log_list ($filter_array,$limit = -1,$offset = -1) {
 	$sql_limit = "";
 
         return db_fetch_assoc("SELECT
-                syslog.id,
-                syslog.logdate,
-                syslog.facility,
-                syslog.severity,
+                log.id,
+                log.logdate,
+                log.facility,
+                log.severity,
                 poller.name as poller_name,
                 poller.id as poller_id,
                 host.description as host,
-                syslog.username,
-                syslog.message
-                FROM (syslog LEFT JOIN host ON syslog.host_id = host.id)
-                LEFT JOIN poller ON syslog.poller_id = poller.id
+                log.username,
+		log.plugin,
+                log.message
+                FROM (log LEFT JOIN host ON log.host_id = host.id)
+                LEFT JOIN poller ON log.poller_id = poller.id
                 $sql_where
-                order by syslog.logdate",$limit,$offset);
+                order by log.logdate",$limit,$offset);
 
 }
 

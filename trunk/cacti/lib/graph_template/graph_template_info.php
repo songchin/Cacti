@@ -31,7 +31,7 @@ function get_graph_template($graph_template_id) {
 	$graph_template = db_fetch_row("select * from graph_template where id = " . sql_sanitize($graph_template_id));
 
 	if (sizeof($graph_template) == 0) {
-		api_syslog_cacti_log("Invalid graph template [ID#$graph_template_id] specified in get_graph_template()", SEV_ERROR, 0, 0, 0, false, FACIL_WEBUI);
+		api_log_log("Invalid graph template [ID#$graph_template_id] specified in get_graph_template()", SEV_ERROR);
 		return false;
 	}else{
 		return $graph_template;

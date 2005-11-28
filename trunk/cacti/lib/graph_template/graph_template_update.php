@@ -88,7 +88,7 @@ function api_graph_template_item_save($graph_template_item_id, $_fields_graph_it
 
 	/* sanity check for $graph_template_id */
 	if ((empty($graph_template_item_id)) && (empty($_fields_graph_item["graph_template_id"]))) {
-		api_syslog_cacti_log("Required graph_template_id when graph_template_item_id = 0", SEV_ERROR, 0, 0, 0, false, FACIL_WEBUI);
+		api_log_log("Required graph_template_id when graph_template_item_id = 0", SEV_ERROR);
 		return false;
 	} else if ((isset($_fields_graph_item["graph_template_id"])) && (!is_numeric($_fields_graph_item["graph_template_id"]))) {
 		return false;

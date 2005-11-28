@@ -68,9 +68,9 @@ function rrdtool_execute($command_line, $log_to_stdout, $output_flag, $rrd_struc
 
 	/* output information to the log file if appropriate */
 	if (($syslog_facility == FACIL_POLLER) || ($syslog_facility == FACIL_CMDPHP)) {
-		api_syslog_cacti_log("CACTI2RRD: " . addslashes(read_config_option("path_rrdtool")) . " $command_line", SEV_DEBUG, 0, 0, 0, $log_to_stdout,$syslog_facility);
+		api_log_log("RRD: " . addslashes(read_config_option("path_rrdtool")) . " $command_line", SEV_DEBUG, $syslog_facility, "", 0, 0, 0, $log_to_stdout);
 	} else {
-		api_syslog_cacti_log("RRD_EXECUTE: " . addslashes(read_config_option("path_rrdtool")) . " $command_line", SEV_DEBUG, 0, 0, 0, $log_to_stdout,$syslog_facility);
+		api_log_log("RRD: " . addslashes(read_config_option("path_rrdtool")) . " $command_line", SEV_DEBUG, $syslog_facility);
 	}
 
 	/* if we want to see the error output from rrdtool; make sure to specify this */
@@ -166,7 +166,7 @@ function rrdtool_function_create($data_source_id, $show_source, $rrd_struc, $sys
 
 	/* if we find that this DS has no RRA associated; get out */
 	if (sizeof($rras) <= 0) {
-		api_syslog_cacti_log(_("There are no RRA's assigned to data_source_id: ") . $data_source_id . ".", SEV_ERROR, 0, 0, 0, false, FACIL_POLLER);
+		api_log_log(_("There are no RRA's assigned to data_source_id: ") . $data_source_id . ".", SEV_ERROR, FACIL_POLLER);
 		return false;
 	}
 
@@ -299,7 +299,7 @@ function rrdtool_function_tune($rrd_tune_array) {
 			$fp = popen(read_config_option("path_rrdtool") . " tune $data_source_path $rrd_tune", "r");
 			pclose($fp);
 
-			api_syslog_cacti_log("RRD_TUNE: " . addslashes(read_config_option("path_rrdtool")) . " tune $data_source_path $rrd_tune", SEV_DEBUG, 0, 0, 0, false, FACIL_POLLER);
+			api_log_log("RRD_TUNE: " . addslashes(read_config_option("path_rrdtool")) . " tune $data_source_path $rrd_tune", SEV_DEBUG, FACIL_POLLER);
 		}
 	}
 }

@@ -44,7 +44,7 @@ $poller_id = 1;
 if ( $_SERVER["argc"] == 2 ) {
 	$poller_id = $_SERVER["argv"][1];
 	if (!is_numeric($poller_id)) {
-		api_syslog_cacti_log(_("The poller id is not numeric"), SEV_ALERT, $poller_id, 0, 0, true, FACIL_POLLER);
+		api_log_log(_("The poller id is not numeric"), SEV_ALERT, FACIL_POLLER, "", $poller_id, 0, 0, true);
 		exit -1;
 	}
 }
@@ -108,7 +108,7 @@ if ($poller_id == 1) {
 	/* verify I am a valid poller */
 	if (sizeof(db_fetch_assoc("SELECT id FROM poller WHERE id = " . $poller_id)) == 0) {
 		print sprintf(_("Poller '%i' does not exist in this system.\n"), $poller_id);
-		api_syslog_cacti_log(sprintf(_("Poller '%i' is attempting to run, but does not exist on this system."),$poller_id), SEV_CRITICAL, $poller_id, 0, 0, true, FACIL_POLLER);
+		api_log_log(sprintf(_("Poller '%i' is attempting to run, but does not exist on this system."),$poller_id), SEV_CRITICAL, FACIL_POLLER, "", $poller_id, 0, 0, true);
 		exit;
 	}
 
@@ -124,7 +124,7 @@ if ($poller_id == 1) {
 		}
 
 		if (($start + MAX_POLLER_RUNTIME) < time()) {
-			api_syslog_cacti_log("Maximum runtime of " . MAX_POLLER_RUNTIME . " seconds exceeded for Poller_ID " . $poller_id . " - Exiting.", SEV_ERROR, $poller_id, 0, 0, true, FACIL_POLLER);
+			api_log_log("Maximum runtime of " . MAX_POLLER_RUNTIME . " seconds exceeded for Poller_ID " . $poller_id . " - Exiting.", SEV_ERROR, FACIL_POLLER, "", $poller_id, 0, 0, true);
 			db_execute("update poller set run_state = '" . _("Timeout") . "' where poller_id=" . $poller_id);
 			exit;
 		}
@@ -169,7 +169,7 @@ if (read_config_option("poller_enabled") == "on") {
 
 	/* Exit poller if cactid is selected and file does not exist */
 	if (($poller_type == "2") && (!file_exists(read_config_option("path_cactid")))) {
-		api_syslog_cacti_log(sprintf(_("ERROR: The path: %s is invalid.  Can not continue"),read_config_option("path_cactid")), SEV_CRITICAL, $poller_id, 0, 0, true, FACIL_POLLER);
+		api_log_log(sprintf(_("ERROR: The path: %s is invalid.  Can not continue"),read_config_option("path_cactid")), SEV_CRITICAL, FACIL_POLLER, "", $poller_id, 0, 0, true);
 		exit;
 	}
 
@@ -262,7 +262,7 @@ if (read_config_option("poller_enabled") == "on") {
 						if (($start + MAX_POLLER_RUNTIME) < time()) {
 							/* close rrdtool if poller is 0 */
 							rrd_close($rrdtool_pipe);
-							api_syslog_cacti_log(sprintf(_("Maximum Runtime of %i Seconds Exceeded for Poller id=%i - Exiting"), MAX_POLLER_RUNTIME, $poller_id), SEV_ERROR, $poller_id, 0, 0, true, FACIL_POLLER);
+							api_log_log(sprintf(_("Maximum Runtime of %i Seconds Exceeded for Poller id=%i - Exiting"), MAX_POLLER_RUNTIME, $poller_id), SEV_ERROR, FACIL_POLLER, "", $poller_id, 0, 0, true);
 							db_execute("update poller set run_state = '" . _("Timeout") . "' WHERE (active='on' AND run_state != '" . _("Complete") . "')");
 							exit;
 						}
@@ -295,11 +295,11 @@ if (read_config_option("poller_enabled") == "on") {
 				/* close RRDTool */
 				if ($poller_id == 1) { rrd_close($rrdtool_pipe); }
 
-				api_syslog_cacti_log(sprintf(_("Maximum Runtime of %i Seconds Exceeded for Poller id=%i - Exiting"), MAX_POLLER_RUNTIME, $poller_id), SEV_ERROR, $poller_id, 0, 0, true, FACIL_POLLER);
+				api_log_log(sprintf(_("Maximum Runtime of %i Seconds Exceeded for Poller id=%i - Exiting"), MAX_POLLER_RUNTIME, $poller_id), SEV_ERROR, FACIL_POLLER, "", $poller_id, 0, 0, true);
 				db_execute("update poller set run_state = 'Timeout' where poller_id=" . $poller_id);
 
 				/* manage cacti syslog size */
-				api_syslog_manage_cacti_log(true);
+				api_log_maintain(true);
 
 				exit;
 			}

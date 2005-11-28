@@ -63,12 +63,12 @@ function db_connect_real($host,$user,$pass,$db_name,$db_type, $port = "3306", $r
 function db_execute($sql) {
 	global $cnn_id;
 
-	api_syslog_cacti_log("Executing SQL: $sql", SEV_DEV, 0, 0, 0, false, FACIL_WEBUI);
+	api_log_log("Executing SQL: $sql", SEV_DEV);
 
 	$result = $cnn_id->Execute($sql);
 
 	if ($result === false) {
-		api_syslog_cacti_log("SQL error: " . $cnn_id->ErrorMsg(), SEV_DEV, 0, 0, 0, false, FACIL_WEBUI);
+		api_log_log("SQL error: " . $cnn_id->ErrorMsg(), SEV_DEV);
 	}else{
 		return true;
 	}
@@ -84,13 +84,13 @@ function db_execute($sql) {
 function db_fetch_cell($sql) {
 	global $cnn_id;
 
-	api_syslog_cacti_log("Executing SQL: $sql", SEV_DEV, 0, 0, 0, false, FACIL_WEBUI);
+	api_log_log("Executing SQL: $sql", SEV_DEV);
 
 	$cnn_id->SetFetchMode(ADODB_FETCH_NUM);
 	$result = $cnn_id->Execute($sql);
 
 	if ($result === false) {
-		api_syslog_cacti_log("SQL error: " . $cnn_id->ErrorMsg(), SEV_DEV, 0, 0, 0, false, FACIL_WEBUI);
+		api_log_log("SQL error: " . $cnn_id->ErrorMsg(), SEV_DEV, 0, 0, 0, FACIL_WEBUI);
 	}else{
 		if (!$result->EOF) {
 			return $result->fields[0];
@@ -106,13 +106,13 @@ function db_fetch_cell($sql) {
 function db_fetch_row($sql) {
 	global $cnn_id;
 
-	api_syslog_cacti_log("Executing SQL: $sql", SEV_DEV, 0, 0, 0, false, FACIL_WEBUI);
+	api_log_log("Executing SQL: $sql", SEV_DEV);
 
 	$cnn_id->SetFetchMode(ADODB_FETCH_ASSOC);
 	$result = $cnn_id->Execute($sql);
 
 	if ($result === false) {
-		api_syslog_cacti_log("SQL error: " . $cnn_id->ErrorMsg(), SEV_DEV, 0, 0, 0, false, FACIL_WEBUI);
+		api_log_log("SQL error: " . $cnn_id->ErrorMsg(), SEV_DEV, 0, 0, 0, false, FACIL_WEBUI);
 	}else{
 		if (!$result->EOF) {
 			return $result->fields;
@@ -130,7 +130,7 @@ function db_fetch_row($sql) {
 function db_fetch_assoc($sql,$limit = -1, $offset = -1) {
 	global $cnn_id;
 
-	api_syslog_cacti_log("Executing SQL: $sql", SEV_DEV, 0, 0, 0, false, FACIL_WEBUI);
+	api_log_log("Executing SQL: $sql", SEV_DEV);
 
 	$cnn_id->SetFetchMode(ADODB_FETCH_ASSOC);
 	if ($limit != -1) {
@@ -140,7 +140,7 @@ function db_fetch_assoc($sql,$limit = -1, $offset = -1) {
 	}
 
 	if ($result === false) {
-		api_syslog_cacti_log("SQL error: " . $cnn_id->ErrorMsg(), SEV_DEV, 0, 0, 0, false, FACIL_WEBUI);
+		api_log_log("SQL error: " . $cnn_id->ErrorMsg(), SEV_DEV);
 	}else{
 		$data = array();
 
@@ -240,7 +240,7 @@ function db_replace($table_name, $fields, $keys = "") {
 
 		/* if there are not any fields to update, log a warning */
 		if ($sql_set_fields == "") {
-			api_syslog_cacti_log("Invalid empty update field list for table '$table_name' in " . __FUNCTION__ . "()", SEV_WARNING, 0, 0, 0, false, FACIL_WEBUI);
+			api_log_log("Invalid empty update field list for table '$table_name' in " . __FUNCTION__ . "()", SEV_WARNING);
 			return false;
 		}
 
@@ -248,6 +248,9 @@ function db_replace($table_name, $fields, $keys = "") {
 	}
 
 	/* execute the sql statement and return the result */
+
+	api_log_log("Executing SQL: $sql", SEV_DEV);
+
 	if (db_execute($sql)) {
 		/* cache the inserted id for later use */
 		$_last_insert_id = $cnn_id->Insert_ID();
@@ -297,6 +300,9 @@ function db_insert($table_name, $fields, $keys = "") {
 	$sql = "insert into $table_name $sql_field_names values $sql_field_values";
 
 	/* execute the sql statement and return the result */
+
+	api_log_log("Executing SQL: $sql", SEV_DEV);
+
 	if (db_execute($sql)) {
 		/* cache the inserted id for later use */
 		$_last_insert_id = $cnn_id->Insert_ID();
@@ -338,6 +344,9 @@ function db_update($table_name, $fields, $keys = "") {
 	$sql = "update $table_name set $sql_set_fields $sql_key_where";
 
 	/* execute the sql statement and return the result */
+
+	api_log_log("Executing SQL: $sql", SEV_DEV);
+
 	if (db_execute($sql)) {
 		return true;
 	}else{

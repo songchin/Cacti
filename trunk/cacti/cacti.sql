@@ -1670,74 +1670,6 @@ CREATE TABLE settings (
 -- Dumping data for table `settings`
 --
 
-INSERT INTO settings VALUES ('log_destination','1');
-INSERT INTO settings VALUES ('log_snmp','');
-INSERT INTO settings VALUES ('log_graph','');
-INSERT INTO settings VALUES ('log_export','');
-INSERT INTO settings VALUES ('log_verbosity','2');
-INSERT INTO settings VALUES ('log_pstats','on');
-INSERT INTO settings VALUES ('log_pwarn','on');
-INSERT INTO settings VALUES ('log_perror','on');
-INSERT INTO settings VALUES ('snmp_version','net-snmp');
-INSERT INTO settings VALUES ('snmp_timeout','500');
-INSERT INTO settings VALUES ('snmp_retries','3');
-INSERT INTO settings VALUES ('remove_verification','on');
-INSERT INTO settings VALUES ('path_snmpwalk','');
-INSERT INTO settings VALUES ('path_snmpget','');
-INSERT INTO settings VALUES ('path_rrdtool','');
-INSERT INTO settings VALUES ('path_php_binary','');
-INSERT INTO settings VALUES ('path_cactilog','');
-INSERT INTO settings VALUES ('path_cactid','');
-INSERT INTO settings VALUES ('poller_enabled','on');
-INSERT INTO settings VALUES ('poller_type','1');
-INSERT INTO settings VALUES ('concurrent_processes','1');
-INSERT INTO settings VALUES ('max_threads','1');
-INSERT INTO settings VALUES ('availability_method','2');
-INSERT INTO settings VALUES ('ping_method','2');
-INSERT INTO settings VALUES ('ping_timeout','400');
-INSERT INTO settings VALUES ('ping_retries','1');
-INSERT INTO settings VALUES ('ping_failure_count','2');
-INSERT INTO settings VALUES ('ping_recovery_count','3');
-INSERT INTO settings VALUES ('export_type','disabled');
-INSERT INTO settings VALUES ('path_html_export','');
-INSERT INTO settings VALUES ('export_timing','disabled');
-INSERT INTO settings VALUES ('path_html_export_skip','');
-INSERT INTO settings VALUES ('export_hourly','');
-INSERT INTO settings VALUES ('export_daily','');
-INSERT INTO settings VALUES ('export_ftp_sanitize','');
-INSERT INTO settings VALUES ('export_ftp_host','');
-INSERT INTO settings VALUES ('export_ftp_port','');
-INSERT INTO settings VALUES ('export_ftp_passive','');
-INSERT INTO settings VALUES ('export_ftp_user','');
-INSERT INTO settings VALUES ('export_ftp_password','');
-INSERT INTO settings VALUES ('num_rows_graph','30');
-INSERT INTO settings VALUES ('max_title_graph','80');
-INSERT INTO settings VALUES ('max_data_query_field_length','15');
-INSERT INTO settings VALUES ('max_data_query_javascript_rows','96');
-INSERT INTO settings VALUES ('num_rows_data_source','30');
-INSERT INTO settings VALUES ('max_title_data_source','45');
-INSERT INTO settings VALUES ('num_rows_device','30');
-INSERT INTO settings VALUES ('global_auth','on');
-INSERT INTO settings VALUES ('ldap_enabled','');
-INSERT INTO settings VALUES ('guest_user','guest');
-INSERT INTO settings VALUES ('ldap_server','');
-INSERT INTO settings VALUES ('ldap_dn','');
-INSERT INTO settings VALUES ('ldap_template','');
-INSERT INTO settings VALUES ('db_pconnections','on');
-INSERT INTO settings VALUES ('db_retries','20');
-INSERT INTO settings VALUES ('max_memory','32');
-INSERT INTO settings VALUES ('max_execution_time','10');
-INSERT INTO settings VALUES ('show_hidden','on');
-INSERT INTO settings VALUES ('default_theme','classic');
-INSERT INTO settings VALUES ('path_webroot','');
-INSERT INTO settings VALUES ('date','2005-04-10 03:09:01');
-INSERT INTO settings VALUES ('syslog_destination','1');
-INSERT INTO settings VALUES ('syslog_size','1024k');
-INSERT INTO settings VALUES ('syslog_control','1');
-INSERT INTO settings VALUES ('syslog_maxdays','7');
-INSERT INTO settings VALUES ('path_rrdtool_default_font','');
-INSERT INTO settings VALUES ('syslog_status','active');
-
 --
 -- Table structure for table `settings_graphs`
 --
@@ -1848,25 +1780,27 @@ CREATE TABLE snmp_template_auth (
 -- Table structure for table `syslog`
 --
 
-CREATE TABLE syslog (
-  id bigint(20) unsigned NOT NULL auto_increment,
-  logdate datetime NOT NULL default '0000-00-00 00:00:00',
-  facility tinyint(1) unsigned NOT NULL default '0',
-  severity int(1) NOT NULL default '0',
-  poller_id smallint(5) unsigned NOT NULL default '0',
-  host_id mediumint(8) unsigned NOT NULL default '0',
-  user_id mediumint(8) unsigned NOT NULL default '0',
-  username varchar(50) NOT NULL default 'system',
-  source varchar(50) NOT NULL default 'localhost',
-  message text NOT NULL,
-  PRIMARY KEY  (id),
-  KEY facility (facility),
-  KEY severity (severity),
-  KEY host_id (host_id),
-  KEY poller_id (poller_id),
-  KEY user_id (user_id),
-  KEY username (username),
-  KEY logdate (logdate)
+CREATE TABLE `log` (
+  `id` bigint(20) unsigned NOT NULL auto_increment,
+  `logdate` datetime NOT NULL default '0000-00-00 00:00:00',
+  `facility` tinyint(1) unsigned NOT NULL default '0',
+  `severity` int(1) NOT NULL default '0',
+  `poller_id` smallint(5) unsigned NOT NULL default '0',
+  `host_id` mediumint(8) unsigned NOT NULL default '0',
+  `user_id` mediumint(8) unsigned NOT NULL default '0',
+  `username` varchar(50) NOT NULL default 'system',
+  `source` varchar(50) NOT NULL default 'localhost',
+  `plugin` varchar(30) NOT NULL default 'N/A',
+  `message` text NOT NULL,
+  PRIMARY KEY  (`id`),
+  KEY `facility` (`facility`),
+  KEY `severity` (`severity`),
+  KEY `host_id` (`host_id`),
+  KEY `poller_id` (`poller_id`),
+  KEY `user_id` (`user_id`),
+  KEY `username` (`username`),
+  KEY `logdate` (`logdate`),
+  KEY `plugin` (`plugin`)
 ) TYPE=MyISAM;
 
 --

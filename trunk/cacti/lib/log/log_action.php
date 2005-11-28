@@ -29,7 +29,7 @@ require_once(CACTI_BASE_PATH . "/include/log/log_constants.php");
  * Logging Actions
  */
 
-/* api_syslog_cacti_log - logs a string to Cacti's log file or optionally to the browser
+/* api_log_log - logs a string to Cacti's log database, syslog, both, or stdout
    @arg $message - string value to log
    @arg $severity - integer value severity level
    @arg $poller_id - integer value poller id, if applicable
@@ -38,7 +38,8 @@ require_once(CACTI_BASE_PATH . "/include/log/log_constants.php");
    @arg $output - (bool) whether to output the log line to the STDOUT using print()
    @arg $facility - integer value facility, if applicable, default FACIL_CMDPHP
    Note: Constants are defined for Severity and Facility, please reference include/global_constants.php */
-function api_syslog_cacti_log($message, $severity = SEV_INFO, $poller_id = 1, $host_id = 0, $user_id = 0, $output = false, $facility = FACIL_CMDPHP, $plugin = "") {
+#function api_log_log($message, $severity = SEV_INFO, $poller_id = 1, $host_id = 0, $user_id = 0, $facility = FACIL_CMDPHP, $plugin = "", $output = false) {
+function api_log_log($message, $severity = SEV_INFO, $facility = FACIL_WEBUI, $plugin = "", $poller_id = 0, $host_id = 0, $user_id = 0, $output = false) {
 	global $cnn_id;
 
 	/* fill in the current date for printing in the log */
@@ -95,9 +96,9 @@ function api_syslog_cacti_log($message, $severity = SEV_INFO, $poller_id = 1, $h
 	/* Log to Cacti Syslog */
 	if ((($syslog_destination == LOG_CACTI) || ($syslog_destination == LOG_BOTH))
 		&& (log_read_config_option("syslog_status") != "suspended") && ($severity >= $syslog_level)) {
-		$sql = "insert into syslog
-			(logdate,facility,severity,poller_id,host_id,user_id,username,source,message) values
-			(SYSDATE(), " . $facility . "," . $severity . "," . $poller_id . "," .$host_id . "," . $user_id . ",'" . $username . "','" . $source . "','". sql_sanitize($message) . "');";
+		$sql = "insert into log
+			(logdate,facility,severity,poller_id,host_id,user_id,username,source,plugin,message) values
+			(SYSDATE(), " . $facility . "," . $severity . "," . $poller_id . "," .$host_id . "," . $user_id . ",'" . $username . "','" . $source . "','" . $plugin . "','". sql_sanitize($message) . "');";
 		/* DO NOT USE db_execute, function looping can occur when in SEV_DEV mode */
 		$cnn_id->Execute($sql);
 	}
@@ -124,10 +125,10 @@ function api_syslog_cacti_log($message, $severity = SEV_INFO, $poller_id = 1, $h
    @arg $print_data_to_stdout = wether or not to output log output to standard output. */
 function api_log_maintain($print_data_to_stdout) {
 	/* read current configuration options */
-	$syslog_size = read_config_option("syslog_size");
-	$syslog_control = read_config_option("syslog_control");
-	$syslog_maxdays = read_config_option("syslog_maxdays");
-	$total_records = db_fetch_cell("SELECT count(*) FROM syslog");
+	$syslog_size = read_config_option("log_size");
+	$syslog_control = read_config_option("log_control");
+	$syslog_maxdays = read_config_option("log_maxdays");
+	$total_records = db_fetch_cell("SELECT count(*) FROM log");
 
 	/* Input validation */
 	if (! is_numeric($syslog_maxdays)) {
@@ -141,23 +142,23 @@ function api_log_maintain($print_data_to_stdout) {
 		switch ($syslog_control) {
 		case SYSLOG_MNG_ASNEEDED:
 			$records_to_delete = $total_records - $syslog_size;
-			db_execute("DELETE FROM syslog ORDER BY logdate LIMIT " . $records_to_delete);
-			api_syslog_cacti_log(_("Log control removed " . $records_to_delete . " log entires."), SEV_NOTICE, 0, 0, 0, $print_data_to_stdout, FACIL_POLLER);
+			db_execute("DELETE FROM log ORDER BY logdate LIMIT " . $records_to_delete);
+			api_log_log(_("Log control removed " . $records_to_delete . " log entires."), SEV_NOTICE, FACIL_POLLER, "", 0, 0, 0, $print_data_to_stdout);
 			break;
 		case SYSLOG_MNG_DAYSOLD:
-			db_execute("delete from syslog where logdate <= '" . date("Y-m-d H:i:s", strtotime("-" . $syslog_maxdays * 24 * 3600 . " Seconds"))."'");
-			api_syslog_cacti_log(_("Log control removed log entries older than " . $syslog_maxdays . " days."), SEV_NOTICE, 0, 0, 0, $print_data_to_stdout, FACIL_POLLER);
+			db_execute("delete from log where logdate <= '" . date("Y-m-d H:i:s", strtotime("-" . $syslog_maxdays * 24 * 3600 . " Seconds"))."'");
+			api_log_log(_("Log control removed log entries older than " . $syslog_maxdays . " days."), SEV_NOTICE, FACIL_POLLER, "", 0, 0, 0, $print_data_to_stdout);
 
 			break;
 		case SYSLOG_MNG_STOPLOG:
-			if (read_config_option("syslog_status") != "suspended") {
-				api_syslog_cacti_log(_("Log control suspended logging due to the log being full.  Please purge your logs manually."), SEV_CRITICAL, 0, 0, 0, $print_data_to_stdout, FACIL_POLLER);
-				db_execute("REPLACE INTO settings (name,value) VALUES('syslog_status','suspended')");
+			if (read_config_option("log_status") != "suspended") {
+				api_log__log(_("Log control suspended logging due to the log being full.  Please purge your logs manually."), SEV_CRITICAL,FACIL_POLLER, "", 0, 0, 0, $print_data_to_stdout);
+				db_execute("REPLACE INTO settings (name,value) VALUES('log_status','suspended')");
 			}
 
 			break;
 		case SYSLOG_MNG_NONE:
-			api_syslog_cacti_log(_("The cacti log control mechanism is set to None.  This is not recommended, please purge your logs on a manual basis."), SEV_WARNING, 0, 0, 0, $print_data_to_stdout, FACIL_POLLER);
+			api_log_log(_("The cacti log control mechanism is set to None.  This is not recommended, please purge your logs on a manual basis."), SEV_WARNING, FACIL_POLLER, "", 0, 0, 0, $print_data_to_stdout);
 			break;
 		}
 	}
@@ -165,11 +166,11 @@ function api_log_maintain($print_data_to_stdout) {
 }
 
 
-/* api_syslog_clear - empties the log.
+/* api_log_truncate - empties the log.
    @arg none */
 function api_log_truncate() {
-	db_execute("TRUNCATE TABLE syslog");
-	db_execute("REPLACE INTO settings (name,value) VALUES('syslog_status','active')");
+	db_execute("TRUNCATE TABLE log");
+	db_execute("REPLACE INTO settings (name,value) VALUES('log_status','active')");
 }
 
 
