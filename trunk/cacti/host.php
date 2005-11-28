@@ -37,16 +37,6 @@ require_once(CACTI_BASE_PATH . "/lib/graph/graph_update.php");
 
 define("MAX_DISPLAY_PAGES", 21);
 
-$device_actions = array(
-	1 => _("Delete"),
-	2 => _("Enable"),
-	3 => _("Disable"),
-	4 => _("Change SNMP Options"),
-	5 => _("Clear Statistics"),
-	6 => _("Change Poller"),
-	7 => _("Change Availability Options")
-	);
-
 /* set default action */
 if (!isset($_REQUEST["action"])) { $_REQUEST["action"] = ""; }
 
@@ -705,7 +695,10 @@ function host() {
 		"duplicate" => "Duplicate",
 		"enable" => "Enable",
 		"disable" => "Disable",
-		"clear_stats" => "Clear Statistics"
+		"clear_stats" => "Clear Statistics",
+		"change_snmp_opts" => "Change SNMP Options",
+		"change_avail_opts" => "Change Availability Options",
+		"change_poller" => "Change Poller"
 		);
 
 	$filter_array = array();
