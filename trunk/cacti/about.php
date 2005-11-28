@@ -26,7 +26,7 @@ require(dirname(__FILE__) . "/include/global.php");
 require_once(CACTI_BASE_PATH . "/include/auth/validate.php");
 require_once(CACTI_BASE_PATH . "/include/top_header.php");
 
-html_start_box("<strong>" . _("About Cacti") . "</strong>", "98%", $colors["header_background"], "3", "center", "");
+html_start_box("<strong>" . _("About Cacti") . "</strong>") ;
 ?>
 
 <tr>
@@ -34,62 +34,64 @@ html_start_box("<strong>" . _("About Cacti") . "</strong>", "98%", $colors["head
 		<strong><font color="#<?php print $colors["header_text"];?>">Version <?php print CACTI_VERSION;?></font></strong>
 	</td>
 </tr>
+
+
+
 <tr>
 	<td valign="top" bgcolor="#<?php print $colors["form_alternate2"];?>" class="textArea">
-		<br>
-		<a href="http://www.cacti.net/" target="_blank"><img align="right" src="<?php print html_get_theme_images_path('cacti_logo_about.gif');?>" border="0" alt="Cacti"></a>
+		<a href="http://www.cacti.net/"><img align="right" src="<?php print html_get_theme_images_path('cacti_logo_about.gif'); ?>" border="0" alt="Cacti"></a>
 
-		<?php echo _("Cacti is designed to be a complete graphing solution for your network. Its goal is to make the
+		Cacti is designed to be a complete graphing solution based on the RRDTool's framework. Its goal is to make a
 		network administrator's job easier by taking care of all the necessary details necessary to create
-		meaningful network graphs."); ?>
+		meaningful graphs.
 
-		<p><?php echo _("The design of Cacti took many hours of SQL and PHP coding, so I hope you find it very useful."); ?></p>
+		<p>Please see the <a href="http://www.cacti.net/">official Cacti website</a> for information, support, and updates.</p>
 
-		<p><strong><?php echo _("Developer Thanks"); ?></strong><br>
+		<p><strong>Current Cacti Developers</strong><br>
 		<ul type="disc">
-			<li><a href="http://blyler.cc"><?php echo _("Andy Blyler</a>, for ideas, code, and that much needed overall support
-				during really lengthy coding sessions.");?>
-			</li>
-			<li><?php echo _("Rivo Nurges, for that c-based poller that was talked so long about. This <em>really</em> fast poller
-				is what will enable Cacti to make its way into larger and larger networks.");?>
-			</li>
-			<li><?php echo _("Larry Adams, for providing insight, time, superb support, and personal sanity. I could not have pulled
-				off a release of this magnitude without your help.");?>
-			</li>
+			<li><strong>Ian Berry</strong> (raX) is original creator of Cacti which was first released to the world in 2001. He remained the sole
+				developer for over two years, writing code, supporting users, and keeping the project active. Today, Ian continues
+				to actively develop Cacti, focusing on backend components such as templates, data queries, and graph management.</li>
+			<li><strong>Larry Adams</strong> (TheWitness) joined the Cacti team in June of 2004 right before the major 0.8.6 release. He helped bring the new poller
+				architecture to life by providing ideas, writing code, and managing an active group of beta testers. Larry continues
+				to focus on the poller as well as RRDTool integration and SNMP in a Windows environment.</li>
+			<li><strong>Tony Roman</strong> (rony) joined the Cacti team in October of 2004 offering years of programming and system administration
+				experience to the project. He is contributing a great deal to the upcoming 0.9 release of Cacti by providing many usability
+				and documentation changes in addition to revamping Cacti's user management component.</li>
 		</ul>
 		</p>
 
-		<p><strong><?php echo _("Thanks");?></a></strong><br>
+		<p><strong>Thanks</a></strong><br>
 		<ul type="disc">
-			<li><?php echo _("A very special thanks to <a href='http://ee-staff.ethz.ch/~oetiker/'>Tobi Oetiker</a>,
-				the creator of <a href='http://www.mrtg.org/'>RRDTool</a> and the very popular
-				<a href='http://www.mrtg.org'>MRTG</a>");?>
-			</li>
-			<li><?php echo _("Brady Alleman, creator of NetMRG and
-				<a href='http://www.thtech.net'>Treehouse Technolgies</a> for questions and ideas. Just
+			<li>A very special thanks to <a href="http://ee-staff.ethz.ch/~oetiker/"><strong>Tobi Oetiker</strong></a>,
+				the creator of <a href="http://www.mrtg.org/">RRDTool</a> and the very popular
+				<a href="http://www.mrtg.org">MRTG</a>.</li>
+			<li><strong>Brady Alleman</strong>, creator of NetMRG and
+				<a href="http://www.thtech.net">Treehouse Technologies</a> for questions and ideas. Just
 				as a note, NetMRG is a complete Network Monitoring solution also written in PHP/MySQL. His
-				product also makes use of RRDTool's graphing capabilities, I encourage you to check it out.");?>
-			</li>
-			<li><?php echo _("The users of Cacti! Especially anyone who has taken the time to create a bug report,
-				or otherwise help me fix a Cacti-related problem. Also to anyone who has purchased an item from my
-				amazon.com wishlist or donated money via Paypal.");?>
-			</li>
+				product also makes use of RRDTool's graphing capabilities, I encourage you to check it out.</li>
+			<li><strong>Andy Blyler</strong>, for ideas, code, and that much needed overall support
+				during really lengthy coding sessions.</li>
+			<li><strong>The users of Cacti</strong>! Especially anyone who has taken the time to create a bug report, or otherwise
+				help me fix a Cacti-related problem. Also to anyone who has purchased an item from my amazon.com
+				wishlist or donated money to the project.</li>
+
 		</ul>
 		</p>
 
-		<p><strong><?php echo _("License");?></strong><br>
+		<p><strong>License</strong><br>
 
-		<p><?php echo _("Cacti is licensed under the GNU GPL:");?></p>
+		<p>Cacti is licensed under the GNU GPL:</p>
 
-		<p><tt><?php echo _("This program is free software; you can redistribute it and/or modify it under the terms of the
-			GNU General	Public License as published by the Free Software Foundation; either version 2 of the License, or
-			(at your option) any later version.");?>
-		</tt></p>
+		<p><tt>This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.</tt></p>
 
-		<p><tt><?php echo _("This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
-			without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-			GNU General Public License for more details.");?>
-		</tt></p>
+<p><tt>This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.</tt></p>
 
 		<p><strong>Cacti Variables</a></strong><span style="font-family: monospace; font-size: 10px;"><br>
 		<strong><?php echo _("Cacti OS:"); ?></strong> <?php print CACTI_SERVER_OS;?><br>
@@ -105,3 +107,4 @@ html_end_box();
 
 require_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
 ?>
+
