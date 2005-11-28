@@ -24,7 +24,6 @@
 
 require(dirname(__FILE__) . "/include/global.php");
 require_once(CACTI_BASE_PATH . "/include/auth/validate.php");
-require_once(CACTI_BASE_PATH . "/lib/poller.php");
 
 require(CACTI_BASE_PATH . "/include/log/log_form.php");
 require(CACTI_BASE_PATH . "/lib/log/log_info.php");
@@ -61,6 +60,7 @@ function form_save() {
 		}
 
 		header("Location: logs.php$get_string");
+		exit;
 	}
 }
 
