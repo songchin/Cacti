@@ -22,6 +22,69 @@
  +-------------------------------------------------------------------------+
 */
 
+function api_graph_list($filter_array = "", $current_page = 0, $rows_per_page = 0) {
+	require_once(CACTI_BASE_PATH . "/lib/graph/graph_form.php");
+
+	$sql_where = "";
+	/* validation and setup for the WHERE clause */
+	if ((is_array($filter_array)) && (sizeof($filter_array) > 0)) {
+		/* validate each field against the known master field list */
+		$_sv_arr = array();
+		$field_errors = validate_graph_fields(sql_filter_array_to_field_array($filter_array), $_sv_arr);
+
+		/* if a field input error has occured, register the error in the session and return */
+		if (sizeof($field_errors) > 0) {
+			field_register_error($field_errors);
+			return false;
+		/* otherwise, form an SQL WHERE string using the filter fields */
+		}else{
+			$sql_where = sql_filter_array_to_where_string($filter_array, get_graph_field_list(), true);
+		}
+	}
+
+	$sql_limit = "";
+	/* validation and setup for the LIMIT clause */
+	if ((is_numeric($current_page)) && (is_numeric($rows_per_page)) && (!empty($current_page)) && (!empty($rows_per_page))) {
+		$sql_limit = "limit " . ($rows_per_page * ($current_page - 1)) . ",$rows_per_page";
+	}
+
+	return db_fetch_assoc("select
+		graph.id,
+		graph.height,
+		graph.width,
+		graph.title_cache,
+		graph.host_id,
+		graph_template.template_name
+		from graph
+		left join graph_template on (graph.graph_template_id=graph_template.id)
+		$sql_where
+		order by graph.title_cache,graph.host_id
+		$sql_limit");
+}
+
+function api_graph_total_get($filter_array = "") {
+	require_once(CACTI_BASE_PATH . "/lib/graph/graph_form.php");
+
+	$sql_where = "";
+	/* validation and setup for the WHERE clause */
+	if ((is_array($filter_array)) && (sizeof($filter_array) > 0)) {
+		/* validate each field against the known master field list */
+		$_sv_arr = array();
+		$field_errors = validate_graph_fields(sql_filter_array_to_field_array($filter_array), $_sv_arr);
+
+		/* if a field input error has occured, register the error in the session and return */
+		if (sizeof($field_errors) > 0) {
+			field_register_error($field_errors);
+			return false;
+		/* otherwise, form an SQL WHERE string using the filter fields */
+		}else{
+			$sql_where = sql_filter_array_to_where_string($filter_array, get_graph_field_list(), true);
+		}
+	}
+
+	return db_fetch_cell("select count(*) from graph $sql_where");
+}
+
 /* get_graph_title - returns the title of a graph without using the title cache
    @arg $graph_id - (int) the ID of the graph to get a title for
    @returns - the graph title */

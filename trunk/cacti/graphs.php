@@ -30,6 +30,7 @@ require_once(CACTI_BASE_PATH . "/lib/graph/graph_update.php");
 require_once(CACTI_BASE_PATH . "/lib/graph/graph_info.php");
 require_once(CACTI_BASE_PATH . "/lib/graph/graph_form.php");
 require_once(CACTI_BASE_PATH . "/lib/graph_template/graph_template_push.php");
+require_once(CACTI_BASE_PATH . "/lib/device/device_info.php");
 require_once(CACTI_BASE_PATH . "/include/graph/graph_form.php");
 require_once(CACTI_BASE_PATH . "/lib/api_tree.php");
 require_once(CACTI_BASE_PATH . "/lib/data_source/data_source_update.php");
@@ -38,17 +39,6 @@ require_once(CACTI_BASE_PATH . "/lib/sys/html_tree.php");
 require_once(CACTI_BASE_PATH . "/lib/sys/html_form_template.php");
 
 define("MAX_DISPLAY_PAGES", 21);
-
-$graph_actions = array(
-	1 => _("Delete"),
-	2 => _("Change Graph Template"),
-	3 => _("Duplicate"),
-	4 => _("Convert to Graph Template"),
-	5 => _("Change Host"),
-	6 => _("Reapply Suggested Names"),
-	7 => _("Resize Selected Graphs"),
-	8 => _("Place on a Tree")
-	);
 
 /* set default action */
 if (!isset($_REQUEST["action"])) { $_REQUEST["action"] = ""; }
@@ -95,74 +85,105 @@ switch ($_REQUEST["action"]) {
    -------------------------- */
 
 function form_save() {
-	/* fetch some cache variables */
-	if (empty($_POST["id"])) {
-		$_graph_template_id = 0;
-	}else{
-		$_graph_template_id = db_fetch_cell("select graph_template_id from graph where id=" . $_POST["id"]);
-	}
-
-	/* cache all post field values */
-	init_post_field_cache();
-
-	$form_graph_fields = array();
-	$form_graph_item_fields = array();
-
-	/* parse out form values that we care about */
-	reset($_POST);
-	while (list($name, $value) = each($_POST)) {
-		if (substr($name, 0, 2) == "g|") {
-			$matches = explode("|", $name);
-			$form_graph_fields{$matches[1]} = $value;
-		}else if (substr($name, 0, 4) == "gip|") {
-			$matches = explode("|", $name);
-			$form_graph_item_fields{$matches[2]} = $value;
-		}
-	}
-
-	/* make a list of fields to save */
-	while (list($_field_name, $_field_value) = each($form_graph_fields)) {
-		/* make sure that we know about this field */
-		if (isset($fields_graph[$_field_name])) {
-			$save_graph[$_field_name] = $_field_value;
-		}
-	}
-
-	/* add any unchecked checkbox fields */
-	$form_graph_fields += field_register_html_checkboxes(get_graph_field_list(), "g||field|");
-
-	$form_graph_fields["host_id"] = $_POST["host_id"];
-	$form_graph_fields["graph_template_id"] = $_POST["graph_template_id"];
-
-	/* step #2: field validation */
-	$suggested_value_fields = array(); /* placeholder */
-	field_register_error(validate_graph_fields($form_graph_fields, $suggested_value_fields, "g||field|", ""));
-
-	/* step #3: field save */
-	if (is_error_message()) {
-		api_log_log("User input validation error for graph [ID#" . $_POST["id"] . "]", SEV_DEBUG);
-	}else{
-		/* save graph data */
-		if (!api_graph_save($_POST["id"], $form_graph_fields)) {
-			api_log_log("Save error for graph [ID#" . $_POST["id"] . "]", SEV_ERROR);
+	if ($_POST["action_post"] == "graph_edit") {
+		/* fetch some cache variables */
+		if (empty($_POST["id"])) {
+			$_graph_template_id = 0;
+		}else{
+			$_graph_template_id = db_fetch_cell("select graph_template_id from graph where id=" . $_POST["id"]);
 		}
 
-		/* save graph item data for templated graphs */
-		if (!empty($_graph_template_id)) {
-			if (sizeof($form_graph_item_fields) > 0) {
-				foreach ($form_graph_item_fields as $graph_template_item_input_id => $value) {
-					if (!api_graph_template_item_input_propagate($graph_template_item_input_id, $value)) {
-						api_log_log("Save error when propagating graph item input [ID#$graph_template_item_input_id] to graph [ID#" . $_POST["id"] . "]", SEV_ERROR);
+		/* cache all post field values */
+		init_post_field_cache();
+
+		$form_graph_fields = array();
+		$form_graph_item_fields = array();
+
+		/* parse out form values that we care about */
+		reset($_POST);
+		while (list($name, $value) = each($_POST)) {
+			if (substr($name, 0, 2) == "g|") {
+				$matches = explode("|", $name);
+				$form_graph_fields{$matches[1]} = $value;
+			}else if (substr($name, 0, 4) == "gip|") {
+				$matches = explode("|", $name);
+				$form_graph_item_fields{$matches[2]} = $value;
+			}
+		}
+
+		/* make a list of fields to save */
+		while (list($_field_name, $_field_value) = each($form_graph_fields)) {
+			/* make sure that we know about this field */
+			if (isset($fields_graph[$_field_name])) {
+				$save_graph[$_field_name] = $_field_value;
+			}
+		}
+
+		/* add any unchecked checkbox fields */
+		$form_graph_fields += field_register_html_checkboxes(get_graph_field_list(), "g||field|");
+
+		$form_graph_fields["host_id"] = $_POST["host_id"];
+		$form_graph_fields["graph_template_id"] = $_POST["graph_template_id"];
+
+		/* step #2: field validation */
+		$suggested_value_fields = array(); /* placeholder */
+		field_register_error(validate_graph_fields($form_graph_fields, $suggested_value_fields, "g||field|", ""));
+
+		/* step #3: field save */
+		if (is_error_message()) {
+			api_log_log("User input validation error for graph [ID#" . $_POST["id"] . "]", SEV_DEBUG);
+		}else{
+			/* save graph data */
+			if (!api_graph_save($_POST["id"], $form_graph_fields)) {
+				api_log_log("Save error for graph [ID#" . $_POST["id"] . "]", SEV_ERROR);
+			}
+
+			/* save graph item data for templated graphs */
+			if (!empty($_graph_template_id)) {
+				if (sizeof($form_graph_item_fields) > 0) {
+					foreach ($form_graph_item_fields as $graph_template_item_input_id => $value) {
+						if (!api_graph_template_item_input_propagate($graph_template_item_input_id, $value)) {
+							api_log_log("Save error when propagating graph item input [ID#$graph_template_item_input_id] to graph [ID#" . $_POST["id"] . "]", SEV_ERROR);
+						}
 					}
 				}
 			}
 		}
-	}
 
-	if ((is_error_message()) || ($_POST["graph_template_id"] != $_graph_template_id)) {
-		header("Location: graphs.php?action=edit&id=" . $_POST["id"] . (!isset($_POST["host_id"]) ? "" : "&host_id=" . $_POST["host_id"]) . (!isset($_POST["graph_template_id"]) ? "" : "&graph_template_id=" . $_POST["graph_template_id"]));
-	}else{
-		header("Location: graphs.php");
+		if ((is_error_message()) || ($_POST["graph_template_id"] != $_graph_template_id)) {
+			header("Location: graphs.php?action=edit&id=" . $_POST["id"] . (!isset($_POST["host_id"]) ? "" : "&host_id=" . $_POST["host_id"]) . (!isset($_POST["graph_template_id"]) ? "" : "&graph_template_id=" . $_POST["graph_template_id"]));
+		}else{
+			header("Location: graphs.php");
+		}
+	/* submit button on the actions area page */
+	}else if ($_POST["action_post"] == "box-1") {
+		$selected_rows = explode(":", $_POST["box-1-action-area-selected-rows"]);
+
+		if ($_POST["box-1-action-area-type"] == "search") {
+			$get_string = "";
+
+			if ($_POST["box-1-search_device"] != "-1") {
+				$get_string .= ($get_string == "" ? "?" : "&") . "search_device=" . urlencode($_POST["box-1-search_device"]);
+			}
+
+			if (trim($_POST["box-1-search_filter"]) != "") {
+				$get_string .= ($get_string == "" ? "?" : "&") . "search_filter=" . urlencode($_POST["box-1-search_filter"]);
+			}
+
+			header("Location: graphs.php$get_string");
+		}
+	/* 'filter' area at the bottom of the box */
+	}else if ($_POST["action_post"] == "graph_list") {
+		$get_string = "";
+
+		/* the 'clear' button wasn't pressed, so we should filter */
+		if (!isset($_POST["box-1-action-clear-button"])) {
+			if (trim($_POST["box-1-search_filter"]) != "") {
+				$get_string = ($get_string == "" ? "?" : "&") . "search_filter=" . urlencode($_POST["box-1-search_filter"]);
+			}
+		}
+
+		header("Location: graphs.php$get_string");
 	}
 }
 
@@ -578,124 +599,129 @@ function graph_edit() {
 }
 
 function graph() {
-	global $colors, $graph_actions;
+	$current_page = get_get_var_number("page", "1");
 
-	/* if the user pushed the 'clear' button */
-	if (isset($_REQUEST["clear_x"])) {
-		kill_session_var("sess_graph_current_page");
-		kill_session_var("sess_graph_filter");
-		kill_session_var("sess_graph_host_id");
+	$menu_items = array(
+		"remove" => "Remove",
+		"duplicate" => "Duplicate",
+		"enable" => "Enable",
+		"disable" => "Disable",
+		"change_data_template" => "Change Graph Template",
+		"change_host" => "Change Host",
+		"convert_data_template" => "Convert to Graph Template",
+		"place_tree" => "Place on Tree"
+		);
 
-		unset($_REQUEST["page"]);
-		unset($_REQUEST["filter"]);
-		unset($_REQUEST["host_id"]);
+	$filter_array = array();
+
+	/* search field: device template */
+	if (isset_get_var("search_device")) {
+		$filter_array["host_id"] = get_get_var("search_device");
 	}
 
-	/* remember these search fields in session vars so we don't have to keep passing them around */
-	load_current_session_value("page", "sess_graph_current_page", "1");
-	load_current_session_value("filter", "sess_graph_filter", "");
-	load_current_session_value("host_id", "sess_graph_host_id", "-1");
-
-	html_start_box("<strong>" . _("Graphs") . "</strong>", "98%", $colors["header_background"], "3", "center", "graphs.php?action=edit&host_id=" . $_REQUEST["host_id"]);
-
-	include("./include/html/inc_graph_filter_table.php");
-
-	html_end_box();
-
-	/* form the 'where' clause for our main sql query */
-	$sql_where = "where graph.title_cache like '%%" . $_REQUEST["filter"] . "%%'";
-
-	if ($_REQUEST["host_id"] == "-1") {
-		/* Show all items */
-	}elseif ($_REQUEST["host_id"] == "0") {
-		$sql_where .= " and graph.host_id=0";
-	}elseif (!empty($_REQUEST["host_id"])) {
-		$sql_where .= " and graph.host_id=" . $_REQUEST["host_id"];
+	/* search field: filter (searches data source name) */
+	if (isset_get_var("search_filter")) {
+		$filter_array["filter"] = array("title_cache|title" => get_get_var("search_filter"));
 	}
 
-	html_start_box("", "98%", $colors["header_background"], "3", "center", "");
+	/* get a list of all graphs on this page */
+	$graphs = api_graph_list($filter_array, $current_page, read_config_option("num_rows_data_source"));
 
-	$total_rows = db_fetch_cell("select
-		count(*) from graph
-		$sql_where");
-
-	$graphs = db_fetch_assoc("select
-		graph.id,
-		graph.height,
-		graph.width,
-		graph.title_cache,
-		graph.host_id,
-		graph_template.template_name
-		from graph
-		left join graph_template on (graph.graph_template_id=graph_template.id)
-		$sql_where
-		order by graph.title_cache,graph.host_id
-		limit " . (read_config_option("num_rows_graph")*($_REQUEST["page"]-1)) . "," . read_config_option("num_rows_graph"));
+	/* get the total number of graphs on all pages */
+	$total_rows = api_graph_total_get($filter_array);
 
 	/* generate page list */
-	$url_page_select = get_page_list($_REQUEST["page"], MAX_DISPLAY_PAGES, read_config_option("num_rows_graph"), $total_rows, "graphs.php?filter=" . $_REQUEST["filter"] . "&host_id=" . $_REQUEST["host_id"]);
+	$url_string = build_get_url_string(array("search_device", "search_filter"));
+	$url_page_select = get_page_list($current_page, MAX_DISPLAY_PAGES, read_config_option("num_rows_graph"), $total_rows, "graphs.php" . $url_string . ($url_string == "" ? "?" : "&") . "page=|PAGE_NUM|");
 
-	$nav = "<tr bgcolor='#" . $colors["header_background"] . "'>
-			<td colspan='4'>
-				<table width='100%' cellspacing='0' cellpadding='0' border='0'>
-					<tr>
-						<td align='left' class='textHeaderDark'>
-							<strong>&lt;&lt; "; if ($_REQUEST["page"] > 1) { $nav .= "<a class='linkOverDark' href='graphs.php?filter=" . $_REQUEST["filter"] . "&host_id=" . $_REQUEST["host_id"] . "&page=" . ($_REQUEST["page"]-1) . "'>"; } $nav .= _("Previous"); if ($_REQUEST["page"] > 1) { $nav .= "</a>"; } $nav .= "</strong>
-						</td>\n
-						<td align='center' class='textHeaderDark'>"
-							. _("Showing Rows") . " " . ((read_config_option("num_rows_graph")*($_REQUEST["page"]-1))+1) . " to " . ((($total_rows < read_config_option("num_rows_graph")) || ($total_rows < (read_config_option("num_rows_graph")*$_REQUEST["page"]))) ? $total_rows : (read_config_option("num_rows_graph")*$_REQUEST["page"])) . " " . _("of") . " $total_rows [$url_page_select]
-						</td>\n
-						<td align='right' class='textHeaderDark'>
-							<strong>"; if (($_REQUEST["page"] * read_config_option("num_rows_graph")) < $total_rows) { $nav .= "<a class='linkOverDark' href='graphs.php?filter=" . $_REQUEST["filter"] . "&host_id=" . $_REQUEST["host_id"] . "&page=" . ($_REQUEST["page"]+1) . "'>"; } $nav .= _("Next"); if (($_REQUEST["page"] * read_config_option("num_rows_graph")) < $total_rows) { $nav .= "</a>"; } $nav .= " &gt;&gt;</strong>
-						</td>\n
-					</tr>
-				</table>
-			</td>
-		</tr>\n";
+	form_start("graphs.php");
 
-	print $nav;
-
-	html_header_checkbox(array(_("Graph Title"), _("Template Name"), _("Size")));
+	$box_id = "1";
+	html_start_box("<strong>" . _("Graphs") . "</strong>", "graphs.php?action=edit", $url_page_select);
+	html_header_checkbox(array(_("Graph Title"), _("Template Name"), _("Size")), $box_id);
 
 	$i = 0;
 	if (sizeof($graphs) > 0) {
 		foreach ($graphs as $graph) {
-			if (trim($_REQUEST["filter"]) == "") {
-				$highlight_text = title_trim($graph["title_cache"], read_config_option("max_title_graph"));
-			}else{
-				$highlight_text = eregi_replace("(" . preg_quote($_REQUEST["filter"]) . ")", "<span style='background-color: #F8D93D;'>\\1</span>", title_trim($graph["title_cache"], read_config_option("max_title_graph")));
-			}
-
-			form_alternate_row_color($colors["form_alternate1"],$colors["form_alternate2"],$i); $i++;
-				?>
-				<td>
-					<a class="linkEditMain" title="<?php print $graph["title_cache"];?>" href="graphs.php?action=edit&id=<?php print $graph["id"];?>"><?php print $highlight_text;?></a>
+			?>
+			<tr class="content-row" id="box-<?php echo $box_id;?>-row-<?php echo $graph["id"];?>" onClick="display_row_select('<?php echo $box_id;?>',document.forms[0],'box-<?php echo $box_id;?>-row-<?php echo $graph["id"];?>', 'box-<?php echo $box_id;?>-chk-<?php echo $graph["id"];?>')" onMouseOver="display_row_hover('box-<?php echo $box_id;?>-row-<?php echo $graph["id"];?>')" onMouseOut="display_row_clear('box-<?php echo $box_id;?>-row-<?php echo $graph["id"];?>')">
+				<td class="content-row">
+					<a class="linkEditMain" onClick="display_row_block('box-<?php echo $box_id;?>-row-<?php echo $graph["id"];?>')" href="data_sources.php?action=edit&id=<?php echo $graph["id"];?>"><span id="box-<?php echo $box_id;?>-text-<?php echo $graph["id"];?>"><?php echo html_highlight_words(get_get_var("search_filter"), $graph["title_cache"]);?></span></a>
 				</td>
-				<td>
-					<?php print ((empty($graph["template_name"])) ? "<em>" . _("None") . "</em>" : $graph["template_name"]); ?>
+				<td class="content-row">
+					<?php echo ((empty($graph["template_name"])) ? "<em>" . _("None") . "</em>" : $graph["template_name"]); ?>
 				</td>
-				<td>
-					<?php print $graph["height"];?>x<?php print $graph["width"];?>
+				<td class="content-row">
+					<?php echo $graph["height"];?>x<?php echo $graph["width"];?>
 				</td>
-				<td style="<?php print get_checkbox_style();?>" width="1%" align="right">
-					<input type='checkbox' style='margin: 0px;' name='chk_<?php print $graph["id"];?>' title="<?php print $graph["title_cache"];?>">
+				<td class="content-row" width="1%" align="center" style="border-left: 1px solid #b5b5b5; border-top: 1px solid #b5b5b5; background-color: #e9e9e9; <?php echo get_checkbox_style();?>">
+					<input type='checkbox' style='margin: 0px;' name='box-<?php echo $box_id;?>-chk-<?php echo $graph["id"];?>' id='box-<?php echo $box_id;?>-chk-<?php echo $graph["id"];?>' title="<?php echo $graph["title_cache"];?>">
 				</td>
 			</tr>
 			<?php
 		}
-
-		/* put the nav bar on the bottom as well */
-		print $nav;
 	}else{
-		print "<tr><td bgcolor='#" . $colors["form_alternate1"] . "' colspan=7><em>" . _("No Graphs Found") . "</em></td></tr>";
+		?>
+		<tr>
+			<td class="content-list-empty" colspan="6">
+				No graphs found.
+			</td>
+		</tr>
+		<?php
 	}
-
+	html_box_toolbar_draw($box_id, "0", "3", (sizeof($filter_array) == 0 ? HTML_BOX_SEARCH_INACTIVE : HTML_BOX_SEARCH_ACTIVE), $url_page_select);
 	html_end_box(false);
 
-	/* draw the dropdown containing a list of available actions for this form */
-	draw_actions_dropdown($graph_actions);
+	html_box_actions_menu_draw($box_id, "0", $menu_items);
+	html_box_actions_area_draw($box_id, "0");
 
-	print "</form>\n";
+	form_hidden_box("action_post", "graph_list");
+	form_end();
+
+	/* fill in the list of available devices for the search dropdown */
+	$search_devices = array();
+	$search_devices["-1"] = "Any";
+	$search_devices["0"] = "None";
+	$search_devices += array_rekey(api_device_list(), "id", "description");
+
+	?>
+
+	<script language="JavaScript">
+	<!--
+	function action_area_handle_type(box_id, type, parent_div, parent_form) {
+		if (type == 'remove') {
+			parent_div.appendChild(document.createTextNode('Are you sure you want to remove these graphs?'));
+			parent_div.appendChild(action_area_generate_selected_rows(box_id));
+
+			action_area_update_header_caption(box_id, 'Remove Graph');
+			action_area_update_submit_caption(box_id, 'Remove');
+			action_area_update_selected_rows(box_id, parent_form);
+		}else if (type == 'duplicate') {
+			parent_div.appendChild(document.createTextNode('Are you sure you want to duplicate these graphs?'));
+			parent_div.appendChild(action_area_generate_selected_rows(box_id));
+			parent_div.appendChild(action_area_generate_input('text', 'box-' + box_id + '-action-area-txt1', ''));
+
+			action_area_update_header_caption(box_id, 'Duplicate Graph');
+			action_area_update_submit_caption(box_id, 'Duplicate');
+			action_area_update_selected_rows(box_id, parent_form);
+		}else if (type == 'search') {
+			_elm_dt_input = action_area_generate_select('box-' + box_id + '-search_device');
+			<?php echo get_js_dropdown_code('_elm_dt_input', $search_devices, (isset_get_var("search_device") ? get_get_var("search_device") : "-1"));?>
+
+			_elm_ht_input = action_area_generate_input('text', 'box-' + box_id + '-search_filter', '<?php echo get_get_var("search_filter");?>');
+			_elm_ht_input.size = '30';
+
+			parent_div.appendChild(action_area_generate_search_field(_elm_dt_input, 'Device', true, false));
+			parent_div.appendChild(action_area_generate_search_field(_elm_ht_input, 'Filter', false, true));
+
+			action_area_update_header_caption(box_id, 'Search');
+			action_area_update_submit_caption(box_id, 'Search');
+		}
+	}
+	-->
+	</script>
+
+	<?php
 }
 
 ?>

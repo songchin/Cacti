@@ -24,7 +24,7 @@
 
 /* form validation functions */
 
-function validate_graph_fields(&$_fields_graph, &$_fields_suggested_values, $graph_field_name_format, $suggested_values_field_name_format) {
+function validate_graph_fields(&$_fields_graph, &$_fields_suggested_values, $graph_field_name_format = "|field|", $suggested_values_field_name_format = "") {
 	require_once(CACTI_BASE_PATH . "/lib/graph/graph_info.php");
 
 	if (sizeof($_fields_graph) == 0) {
