@@ -32,12 +32,12 @@ require_once(CACTI_BASE_PATH . "/lib/graph/graph_info.php");
 require_once(CACTI_BASE_PATH . "/lib/graph_template/graph_template_push.php");
 require_once(CACTI_BASE_PATH . "/lib/graph_template/graph_template_update.php");
 
-/* api_resize_graphs - resizes the selected graph, overriding the template value
+/* api_graph_resize - resizes the selected graph, overriding the template value
    @arg $graph_templates_graph_id - the id of the graph to resize
    @arg $graph_width - the width of the resized graph
    @arg $graph_height - the height of the resized graph
   */
-function api_resize_graphs($local_graph_id, $graph_width, $graph_height) {
+function api_graph_resize($local_graph_id, $graph_width, $graph_height) {
 	/* get graphs template id */
 	db_execute("UPDATE graph SET width=" . $graph_width . ", height=" . $graph_height . " WHERE id=" . $local_graph_id);
 }

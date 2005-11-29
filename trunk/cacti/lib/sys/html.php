@@ -1024,7 +1024,7 @@ function resolve_navigation_variables($text) {
 		for ($i=0; $i<count($matches[1]); $i++) {
 			switch ($matches[1][$i]) {
 			case 'current_graph_title':
-				$text = str_replace("|" . $matches[1][$i] . "|", get_graph_title($_GET["graph_id"]), $text);
+				$text = str_replace("|" . $matches[1][$i] . "|", api_graph_title_get($_GET["graph_id"]), $text);
 				break;
 			}
 		}

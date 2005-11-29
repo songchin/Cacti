@@ -75,7 +75,7 @@ function api_poller_cache_item_add($host_id, $data_source_id, $rrd_step, $poller
 	$save["availability_method"] = (isset($host) ? $host["availability_method"] : "");
 	$save["ping_method"] = (isset($host) ? $host["ping_method"] : "");
 	$save["rrd_name"] = $data_source_item_name;
-	$save["rrd_path"] = addslashes(clean_up_path(api_data_source_path($data_source_id, true)));
+	$save["rrd_path"] = addslashes(clean_up_path(api_data_source_path_get($data_source_id, true)));
 	$save["rrd_num"] = $num_rrd_items;
 	$save["rrd_step"] = $rrd_step;
 	$save["rrd_next_step"] = api_poller_get_rrd_next_step($rrd_step, $num_rrd_items);

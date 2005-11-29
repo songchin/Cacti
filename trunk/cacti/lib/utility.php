@@ -186,7 +186,7 @@ function duplicate_graph($_local_graph_id, $_graph_template_id, $graph_title) {
 	}
 
 	if (!empty($_local_graph_id)) {
-		update_graph_title_cache($local_graph_id);
+		api_graph_title_cache_update($local_graph_id);
 	}
 }
 
@@ -286,7 +286,7 @@ function duplicate_data_source($_local_data_id, $_data_template_id, $data_source
 	}
 
 	if (!empty($_local_data_id)) {
-		api_data_source_title_cache_update($local_data_id);
+		api_data_source_title_get_cache_update($local_data_id);
 	}
 }
 

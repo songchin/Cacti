@@ -66,7 +66,7 @@ function api_device_save($id, $poller_id, $host_template_id, $description, $host
 
 			/* update title cache for graph and data source */
 			//update_data_source_title_cache_from_host($host_id);
-			//update_graph_title_cache_from_host($host_id);
+			//api_graph_title_cache_host_update($host_id);
 		}else{
 			raise_message(2);
 		}

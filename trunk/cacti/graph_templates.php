@@ -228,7 +228,7 @@ function form_save() {
 		$form_graph["unit_exponent_value"] = $_POST["unit_exponent_value"];
 		$form_graph["t_unit_exponent_value"] = html_boolean(isset($_POST["t_unit_exponent_value"]) ? $_POST["t_unit_exponent_value"] : "");
 
-		field_register_error(validate_graph_fields($form_graph, $suggested_value_fields, "|field|", "sv||field|||id|"));
+		field_register_error(api_graph_fields_validate($form_graph, $suggested_value_fields, "|field|", "sv||field|||id|"));
 
 		/* step #3: field save */
 		if (!is_error_message()) {

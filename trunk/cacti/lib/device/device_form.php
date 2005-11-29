@@ -24,7 +24,7 @@
 
 /* form validation functions */
 
-function validate_device_fields(&$_fields_device, $device_field_name_format = "|field|") {
+function api_device_fields_validate(&$_fields_device, $device_field_name_format = "|field|") {
 	require_once(CACTI_BASE_PATH . "/lib/device/device_info.php");
 
 	if (sizeof($_fields_device) == 0) {

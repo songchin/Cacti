@@ -30,7 +30,7 @@ function api_data_source_list($filter_array = "", $current_page = 0, $rows_per_p
 	if ((is_array($filter_array)) && (sizeof($filter_array) > 0)) {
 		/* validate each field against the known master field list */
 		$_sv_arr = array();
-		$field_errors = api_data_source_validate_fields_base(sql_filter_array_to_field_array($filter_array), $_sv_arr);
+		$field_errors = api_data_source_fields_validate(sql_filter_array_to_field_array($filter_array), $_sv_arr);
 
 		/* if a field input error has occured, register the error in the session and return */
 		if (sizeof($field_errors) > 0) {
@@ -71,7 +71,7 @@ function api_data_source_total_get($filter_array = "") {
 	if ((is_array($filter_array)) && (sizeof($filter_array) > 0)) {
 		/* validate each field against the known master field list */
 		$_sv_arr = array();
-		$field_errors = api_data_source_validate_fields_base(sql_filter_array_to_field_array($filter_array), $_sv_arr);
+		$field_errors = api_data_source_fields_validate(sql_filter_array_to_field_array($filter_array), $_sv_arr);
 
 		/* if a field input error has occured, register the error in the session and return */
 		if (sizeof($field_errors) > 0) {
@@ -89,7 +89,7 @@ function api_data_source_total_get($filter_array = "") {
 /* get_data_source_title - returns the title of a data source without using the title cache unless the title ends up empty.
    @arg $data_source_id - (int) the ID of the data source to get a title for
    @returns - the data source title */
-function api_data_source_title($data_source_id, $remove_unsubstituted_variables = false) {
+function api_data_source_title_get($data_source_id, $remove_unsubstituted_variables = false) {
 	require_once(CACTI_BASE_PATH . "/lib/sys/variable.php");
 
 	$data_source = db_fetch_row("select host_id,name,name_cache from data_source where id = $data_source_id");
@@ -124,11 +124,11 @@ function api_data_source_title($data_source_id, $remove_unsubstituted_variables 
 	return $title;
 }
 
-/* api_data_source_path - returns the full path to the .rrd file associated with a given data source
+/* api_data_source_path_get - returns the full path to the .rrd file associated with a given data source
    @arg $data_source_id - (int) the ID of the data source
    @arg $expand_paths - (bool) whether to expand the <path_rra> variable into its full path or not
    @returns - the full path to the data source or an empty string for an error */
-function api_data_source_path($data_source_id, $expand_paths) {
+function api_data_source_path_get($data_source_id, $expand_paths) {
 	require_once(CACTI_BASE_PATH . "/lib/sys/variable.php");
 	require_once(CACTI_BASE_PATH . "/lib/data_source/data_source_update.php");
 
@@ -136,7 +136,7 @@ function api_data_source_path($data_source_id, $expand_paths) {
 
 	/* generate a new path if needed */
 	if ($current_path == "") {
-		$current_path = api_data_source_path_update($data_source_id);
+		$current_path = api_data_source_path_get_update($data_source_id);
 	}
 
 	if ($expand_paths == true) {

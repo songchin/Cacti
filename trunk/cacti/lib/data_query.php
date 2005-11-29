@@ -65,7 +65,7 @@ function update_data_source_data_query_cache($local_data_id) {
 		db_execute("update data_local set snmp_query_id='$data_query_id',snmp_index='$index' where id='$local_data_id'");
 
 		/* update data source title cache */
-		api_data_source_title_cache_update($local_data_id);
+		api_data_source_title_get_cache_update($local_data_id);
 	}
 }
 
@@ -93,7 +93,7 @@ function update_graph_data_query_cache($local_graph_id) {
 		db_execute("update graph_local set snmp_query_id='$data_query_id',snmp_index='$index' where id=$local_graph_id");
 
 		/* update graph title cache */
-		update_graph_title_cache($local_graph_id);
+		api_graph_title_cache_update($local_graph_id);
 	}
 }
 

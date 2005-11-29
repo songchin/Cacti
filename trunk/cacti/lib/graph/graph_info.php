@@ -30,7 +30,7 @@ function api_graph_list($filter_array = "", $current_page = 0, $rows_per_page = 
 	if ((is_array($filter_array)) && (sizeof($filter_array) > 0)) {
 		/* validate each field against the known master field list */
 		$_sv_arr = array();
-		$field_errors = validate_graph_fields(sql_filter_array_to_field_array($filter_array), $_sv_arr);
+		$field_errors = api_graph_fields_validate(sql_filter_array_to_field_array($filter_array), $_sv_arr);
 
 		/* if a field input error has occured, register the error in the session and return */
 		if (sizeof($field_errors) > 0) {
@@ -70,7 +70,7 @@ function api_graph_total_get($filter_array = "") {
 	if ((is_array($filter_array)) && (sizeof($filter_array) > 0)) {
 		/* validate each field against the known master field list */
 		$_sv_arr = array();
-		$field_errors = validate_graph_fields(sql_filter_array_to_field_array($filter_array), $_sv_arr);
+		$field_errors = api_graph_fields_validate(sql_filter_array_to_field_array($filter_array), $_sv_arr);
 
 		/* if a field input error has occured, register the error in the session and return */
 		if (sizeof($field_errors) > 0) {
@@ -85,10 +85,10 @@ function api_graph_total_get($filter_array = "") {
 	return db_fetch_cell("select count(*) from graph $sql_where");
 }
 
-/* get_graph_title - returns the title of a graph without using the title cache
+/* api_graph_title_get - returns the title of a graph without using the title cache
    @arg $graph_id - (int) the ID of the graph to get a title for
    @returns - the graph title */
-function get_graph_title($graph_id, $remove_unsubstituted_variables = false) {
+function api_graph_title_get($graph_id, $remove_unsubstituted_variables = false) {
 	require_once(CACTI_BASE_PATH . "/lib/sys/variable.php");
 
 	$graph = db_fetch_row("select host_id,title from graph where id = $graph_id");
@@ -120,10 +120,10 @@ function get_graph_title($graph_id, $remove_unsubstituted_variables = false) {
 	}
 }
 
-/* get_associated_rras - returns a list of all RRAs referenced by a particular graph
+/* api_graph_associated_rras_list - returns a list of all RRAs referenced by a particular graph
    @arg $graph_id - (int) the ID of the graph to retrieve a list of RRAs for
    @returns - (array) an array containing the name and id of each RRA found */
-function get_associated_rras($graph_id) {
+function api_graph_associated_rras_list($graph_id) {
 	return db_fetch_assoc("select
 		rra.id,
 		rra.steps,

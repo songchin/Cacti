@@ -154,8 +154,8 @@ function form_save() {
 		$form_data_source["rrd_step"] = (isset($_POST["rrd_step"]) ? $_POST["rrd_step"] : $fields_data_source["rrd_step"]["default"]);
 		$form_data_source["t_rrd_step"] = html_boolean(isset($_POST["t_rrd_step"]) ? $_POST["t_rrd_step"] : "");
 
-		field_register_error(api_data_source_validate_fields_base($form_data_source, $suggested_value_fields, "|field|", "sv||field|||id|"));
-		field_register_error(api_data_source_validate_fields_input($data_input_fields, "|field|"));
+		field_register_error(api_data_source_fields_validate($form_data_source, $suggested_value_fields, "|field|", "sv||field|||id|"));
+		field_register_error(api_data_source_input_fields_validate($data_input_fields, "|field|"));
 		field_register_error(api_data_template_validate_fields_base($form_data_source, "|field|"));
 
 		while (list($data_template_item_id, $fields) = each($data_template_item_fields)) {
@@ -171,7 +171,7 @@ function form_save() {
 			$form_data_source_item[$data_template_item_id]["data_source_name"] = $fields["data_source_name"];
 			$form_data_source_item[$data_template_item_id]["field_input_value"] = (isset($fields["field_input_value"]) ? $fields["field_input_value"] : "");
 
-			api_data_source_validate_fields_item($form_data_source_item[$data_template_item_id], "dsi||field|||id|");
+			api_data_source_item_fields_validate($form_data_source_item[$data_template_item_id], "dsi||field|||id|");
 		}
 
 		/* step #3: field save */

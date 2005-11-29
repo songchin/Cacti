@@ -23,7 +23,7 @@
 */
 
 /* form validation functions */
-function api_data_source_validate_fields_base(&$_fields_data_source, &$_fields_suggested_values, $data_source_field_name_format = "|field|", $suggested_values_field_name_format = "") {
+function api_data_source_fields_validate(&$_fields_data_source, &$_fields_suggested_values, $data_source_field_name_format = "|field|", $suggested_values_field_name_format = "") {
 	require_once(CACTI_BASE_PATH . "/lib/data_source/data_source_info.php");
 
 	if (sizeof($_fields_data_source) == 0) {
@@ -63,7 +63,7 @@ function api_data_source_validate_fields_base(&$_fields_data_source, &$_fields_s
 	return $error_fields;
 }
 
-function api_data_source_validate_fields_input(&$_fields_data_input, $data_input_field_name_format) {
+function api_data_source_input_fields_validate(&$_fields_data_input, $data_input_field_name_format) {
 	require_once(CACTI_BASE_PATH . "/include/data_source/data_source_constants.php");
 
 	/* array containing errored fields */
@@ -98,7 +98,7 @@ function api_data_source_validate_fields_input(&$_fields_data_input, $data_input
 	return $error_fields;
 }
 
-function api_data_source_validate_fields_item(&$_fields_data_source_item, $data_source_item_field_name_format) {
+function api_data_source_item_fields_validate(&$_fields_data_source_item, $data_source_item_field_name_format) {
 	require_once(CACTI_BASE_PATH . "/lib/data_source/data_source_info.php");
 
 	if (sizeof($_fields_data_source_item) == 0) {

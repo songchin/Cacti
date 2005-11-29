@@ -181,7 +181,7 @@ function generate_complete_graph($graph_template_id, $host_id = 0, $data_query_i
 		}
 
 		/* make sure the graph title is up to date */
-		update_graph_title_cache($graph_id);
+		api_graph_title_cache_update($graph_id);
 
 		return array("graph" => array($graph_template_id => $graph_id), "data_source" => $dti_to_dsi);
 	}

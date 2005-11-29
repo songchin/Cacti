@@ -127,7 +127,7 @@ function form_save() {
 
 		/* step #2: field validation */
 		$suggested_value_fields = array(); /* placeholder */
-		field_register_error(validate_graph_fields($form_graph_fields, $suggested_value_fields, "g||field|", ""));
+		field_register_error(api_graph_fields_validate($form_graph_fields, $suggested_value_fields, "g||field|", ""));
 
 		/* step #3: field save */
 		if (is_error_message()) {
@@ -242,16 +242,16 @@ function form_actions() {
 		}elseif ($_POST["drp_action"] == "5") { /* change host */
 			for ($i=0;($i<count($selected_items));$i++) {
 				db_execute("update graph set host_id = " . $_POST["host_id"] . " where id = " . $selected_items[$i]);
-				update_graph_title_cache($selected_items[$i]);
+				api_graph_title_cache_update($selected_items[$i]);
 			}
 		}elseif ($_POST["drp_action"] == "6") { /* reapply suggested naming */
 			for ($i=0;($i<count($selected_items));$i++) {
 				api_reapply_suggested_graph_title($selected_items[$i]);
-				update_graph_title_cache($selected_items[$i]);
+				api_graph_title_cache_update($selected_items[$i]);
 			}
 		}elseif ($_POST["drp_action"] == "7") { /* resize graphs */
 			for ($i=0;($i<count($selected_items));$i++) {
-				api_resize_graphs($selected_items[$i], $_POST["graph_width"], $_POST["graph_height"]);
+				api_graph_resize($selected_items[$i], $_POST["graph_width"], $_POST["graph_height"]);
 			}
 		}
 

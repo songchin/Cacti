@@ -55,7 +55,7 @@ function api_graph_save($graph_id, &$_fields_graph, $skip_cache_update = false) 
 		$graph_id = db_fetch_insert_id();
 
 		if ($skip_cache_update == false) {
-			update_graph_title_cache($graph_id);
+			api_graph_title_cache_update($graph_id);
 		}
 
 		return true;
@@ -64,12 +64,12 @@ function api_graph_save($graph_id, &$_fields_graph, $skip_cache_update = false) 
 	}
 }
 
-/* api_resize_graphs - resizes the selected graph, overriding the template value
+/* api_graph_resize - resizes the selected graph, overriding the template value
    @arg $graph_templates_graph_id - the id of the graph to resize
    @arg $graph_width - the width of the resized graph
    @arg $graph_height - the height of the resized graph
   */
-function api_resize_graphs($local_graph_id, $graph_width, $graph_height) {
+function api_graph_resize($local_graph_id, $graph_width, $graph_height) {
 	/* get graphs template id */
 	db_execute("UPDATE graph SET width=" . $graph_width . ", height=" . $graph_height . " WHERE id=" . $local_graph_id);
 }
@@ -180,55 +180,57 @@ function api_graph_item_row_moveup($row_num, $graph_id) {
 	seq_move_graph_item_row($row_num, "graph_item", "graph_id = $graph_id", true, "up");
 }
 
-/* update_graph_title_cache - updates the title cache for a single graph
+/* api_graph_title_cache_update - updates the title cache for a single graph
    @arg $graph_id - (int) the ID of the graph to update the title cache for */
-function update_graph_title_cache($graph_id) {
+function api_graph_title_cache_update($graph_id) {
 	require_once(CACTI_BASE_PATH . "/lib/graph/graph_info.php");
 
 	if (empty($graph_id)) {
 		return;
 	}
 
-	db_execute("update graph set title_cache = '" . addslashes(get_graph_title($graph_id)) . "' where id = $graph_id");
+	db_execute("update graph set title_cache = '" . addslashes(api_graph_title_get($graph_id)) . "' where id = $graph_id");
 }
 
-/* update_graph_title_cache_from_template - updates the title cache for all graphs
-	that match a given graph template
-   @arg $graph_template_id - (int) the ID of the graph template to match */
-function update_graph_title_cache_from_template($graph_template_id) {
-	$graphs = db_fetch_assoc("select local_graph_id from graph_templates_graph where graph_template_id=$graph_template_id and local_graph_id>0");
-
-	if (sizeof($graphs) > 0) {
-	foreach ($graphs as $item) {
-		update_graph_title_cache($item["local_graph_id"]);
-	}
-	}
-}
-
-/* update_graph_title_cache_from_query - updates the title cache for all graphs
-	that match a given data query/index combination
-   @arg $snmp_query_id - (int) the ID of the data query to match
-   @arg $snmp_index - the index within the data query to match */
-function update_graph_title_cache_from_query($snmp_query_id, $snmp_index) {
-	$graphs = db_fetch_assoc("select id from graph_local where snmp_query_id=$snmp_query_id and snmp_index='$snmp_index'");
-
-	if (sizeof($graphs) > 0) {
-	foreach ($graphs as $item) {
-		update_graph_title_cache($item["id"]);
-	}
-	}
-}
-
-/* update_graph_title_cache_from_host - updates the title cache for all graphs
+/* api_graph_title_cache_host_update - updates the title cache for all graphs
 	that match a given host
    @arg $host_id - (int) the ID of the host to match */
-function update_graph_title_cache_from_host($host_id) {
+function api_graph_title_cache_host_update($host_id) {
 	$graphs = db_fetch_assoc("select id from graph where host_id = $host_id");
 
 	if (sizeof($graphs) > 0) {
 		foreach ($graphs as $item) {
-			update_graph_title_cache($item["id"]);
+			api_graph_title_cache_update($item["id"]);
 		}
+	}
+}
+
+/* === unfinished === */
+
+/* api_graph_title_cache_update_from_template - updates the title cache for all graphs
+	that match a given graph template
+   @arg $graph_template_id - (int) the ID of the graph template to match */
+function api_graph_title_cache_update_from_template($graph_template_id) {
+	$graphs = db_fetch_assoc("select local_graph_id from graph_templates_graph where graph_template_id=$graph_template_id and local_graph_id>0");
+
+	if (sizeof($graphs) > 0) {
+	foreach ($graphs as $item) {
+		api_graph_title_cache_update($item["local_graph_id"]);
+	}
+	}
+}
+
+/* api_graph_title_cache_update_from_query - updates the title cache for all graphs
+	that match a given data query/index combination
+   @arg $snmp_query_id - (int) the ID of the data query to match
+   @arg $snmp_index - the index within the data query to match */
+function api_graph_title_cache_update_from_query($snmp_query_id, $snmp_index) {
+	$graphs = db_fetch_assoc("select id from graph_local where snmp_query_id=$snmp_query_id and snmp_index='$snmp_index'");
+
+	if (sizeof($graphs) > 0) {
+	foreach ($graphs as $item) {
+		api_graph_title_cache_update($item["id"]);
+	}
 	}
 }
 

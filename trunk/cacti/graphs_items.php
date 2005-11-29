@@ -85,7 +85,7 @@ function form_save() {
 		$form_graph_item["legend_format"] = $_POST["legend_format"];
 		$form_graph_item["hard_return"] = html_boolean(isset($_POST["hard_return"]) ? $_POST["hard_return"] : "");
 
-		field_register_error(validate_graph_item_fields($form_graph_item, "|field|"));
+		field_register_error(api_graph_item_fields_validate($form_graph_item, "|field|"));
 
 		/* step #2: field save */
 		if (!is_error_message()) {

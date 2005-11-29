@@ -70,7 +70,7 @@ function api_data_source_save($data_source_id, &$_fields_data_source, &$_fields_
 
 		if ($skip_cache_update == false) {
 			/* update data source title cache */
-			api_data_source_title_cache_update($data_source_id);
+			api_data_source_title_get_cache_update($data_source_id);
 		}
 
 		return true;
@@ -174,7 +174,7 @@ function api_data_source_item_save($data_source_item_id, &$_fields_data_source_i
 		if (!empty($_fields_data_source_item["data_source_id"])) {
 			/* since the data source path is based in part on the data source item name, it makes sense
 			 * to update it here */
-			api_data_source_path_update($_fields_data_source_item["data_source_id"]);
+			api_data_source_path_get_update($_fields_data_source_item["data_source_id"]);
 		}
 
 		return true;
@@ -193,20 +193,20 @@ function api_data_source_item_remove($data_source_item_id) {
 
 /* update_data_source_title_cache - updates the title cache for a single data source
    @arg $data_source_id - (int) the ID of the data source to update the title cache for */
-function api_data_source_title_cache_update($data_source_id) {
+function api_data_source_title_get_cache_update($data_source_id) {
 	require_once(CACTI_BASE_PATH . "/lib/data_source/data_source_info.php");
 
 	if (empty($data_source_id)) {
 		return;
 	}
 
-	db_execute("update data_source set name_cache = '" . addslashes(api_data_source_title($data_source_id)) . "' where id = $data_source_id");
+	db_execute("update data_source set name_cache = '" . addslashes(api_data_source_title_get($data_source_id)) . "' where id = $data_source_id");
 }
 
-/* api_data_source_path_update - set the current data source path or generates a new one if a path
+/* api_data_source_path_get_update - set the current data source path or generates a new one if a path
      does not already exist
    @arg $data_source_id - (int) the ID of the data source to set a path for */
-function api_data_source_path_update($data_source_id) {
+function api_data_source_path_get_update($data_source_id) {
 	require_once(CACTI_BASE_PATH . "/lib/sys/string.php");
 
 	$host_part = ""; $ds_part = "";

@@ -56,7 +56,7 @@ if (read_config_option("auth_method") != "0") {
 	}
 }
 
-$graph_title = get_graph_title($_GET["graph_id"]);
+$graph_title = api_graph_title_get($_GET["graph_id"]);
 
 if ($_REQUEST["view_type"] == "tree") {
 	print "<table width='98%' style='background-color: #" . $colors["graph_menu_background"] . "; border: 1px solid #" . $colors["graph_menu_border"] . ";' align='center' cellpadding='3'>";
@@ -64,7 +64,7 @@ if ($_REQUEST["view_type"] == "tree") {
 	print "<br><table width='98%' style='background-color: #" . $colors["console_menu_background"] . "; border: 1px solid #" . $colors["console_menu_border"] . ";' align='center' cellpadding='3'>";
 }
 
-$rras = get_associated_rras($_GET["graph_id"]);
+$rras = api_graph_associated_rras_list($_GET["graph_id"]);
 
 switch ($_REQUEST["action"]) {
 case 'view':
@@ -180,7 +180,7 @@ case 'zoom':
 	div#zoomBox, div#zoomSensitiveZone {display: none}
 	/*This keeps IE from cutting things off*/
 	#why {position: static; width: auto}
-	</STYLE>	
+	</STYLE>
 	<tr>
 		<td align='center'>
 			<table width='1' cellpadding='0'>

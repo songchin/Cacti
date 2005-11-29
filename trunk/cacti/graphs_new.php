@@ -139,17 +139,17 @@ function host_new_graphs_save() {
 
 				if ($type == "data_template") {
 					$_sv_arr = array();
-					field_register_error(api_data_source_validate_fields_base($_v_arr, $_sv_arr, $form_field_name, ""));
+					field_register_error(api_data_source_fields_validate($_v_arr, $_sv_arr, $form_field_name, ""));
 				} else if ($type == "custom_data") {
-					field_register_error(api_data_source_validate_fields_input($_v_arr, $form_field_name));
+					field_register_error(api_data_source_input_fields_validate($_v_arr, $form_field_name));
 				} else if ($type == "data_template_item") {
 					$_v_arr["id"] = 0;
-					field_register_error(api_data_source_validate_fields_item($_v_arr, $form_field_name));
+					field_register_error(api_data_source_item_fields_validate($_v_arr, $form_field_name));
 				} else if ($type == "graph_template") {
 					$_sv_arr = array();
-					field_register_error(validate_graph_fields($_v_arr, $_sv_arr, $form_field_name, ""));
+					field_register_error(api_graph_fields_validate($_v_arr, $_sv_arr, $form_field_name, ""));
 				} else if ($type == "graph_template_item") {
-					field_register_error(validate_graph_item_fields($_v_arr, $form_field_name));
+					field_register_error(api_graph_item_fields_validate($_v_arr, $form_field_name));
 				}
 			}
 		}
@@ -222,7 +222,7 @@ function host_new_graphs_save() {
 				}
 
 				/* update the title cache */
-				api_data_source_title_cache_update($create_info["data_source"][$data_template_id]);
+				api_data_source_title_get_cache_update($create_info["data_source"][$data_template_id]);
 
 				/* update poller cache */
 				update_poller_cache($create_info["data_source"][$data_template_id]);
@@ -245,10 +245,10 @@ function host_new_graphs_save() {
 				}
 
 				/* update the title cache */
-				update_graph_title_cache($create_info["graph"][$graph_template_id]);
+				api_graph_title_cache_update($create_info["graph"][$graph_template_id]);
 			}
 
-			debug_log_insert("new_graphs", _("Created graph: ") . get_graph_title($create_info["graph"]{$skel["graph_template_id"]}));
+			debug_log_insert("new_graphs", _("Created graph: ") . api_graph_title_get($create_info["graph"]{$skel["graph_template_id"]}));
 		}
 
 		/* lastly push host-specific information to our data sources */

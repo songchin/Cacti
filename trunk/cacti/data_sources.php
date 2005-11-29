@@ -120,11 +120,11 @@ function form_post() {
 
 		/* step #2: field validation */
 		$suggested_value_fields = array(); /* placeholder */
-		field_register_error(api_data_source_validate_fields_base($data_source_fields, $suggested_value_fields, "ds||field|", ""));
-		field_register_error(api_data_source_validate_fields_input($data_input_fields, "dif_|field|"));
+		field_register_error(api_data_source_fields_validate($data_source_fields, $suggested_value_fields, "ds||field|", ""));
+		field_register_error(api_data_source_input_fields_validate($data_input_fields, "dif_|field|"));
 
 		foreach ($data_source_item_fields as $data_source_item_id => $data_source_item) {
-			field_register_error(api_data_source_validate_fields_item($data_source_item, "dsi||field||$data_source_item_id"));
+			field_register_error(api_data_source_item_fields_validate($data_source_item, "dsi||field||$data_source_item_id"));
 		}
 
 		/* step #3: field save */
@@ -260,7 +260,7 @@ function form_actions() {
 			for ($i=0;($i<count($selected_items));$i++) {
 				db_execute("update data_local set host_id=" . $_POST["host_id"] . " where id=" . $selected_items[$i]);
 				push_out_host($_POST["host_id"], $selected_items[$i]);
-				api_data_source_title_cache_update($selected_items[$i]);
+				api_data_source_title_get_cache_update($selected_items[$i]);
 			}
 		}elseif ($_POST["drp_action"] == "4") { /* duplicate */
 			for ($i=0;($i<count($selected_items));$i++) {
@@ -290,7 +290,7 @@ function form_actions() {
 	/* loop through each of the graphs selected on the previous page and get more info about them */
 	while (list($var,$val) = each($_POST)) {
 		if (ereg("^chk_([0-9]+)$", $var, $matches)) {
-			$ds_list .= "<li>" . api_data_source_title($matches[1]) . "<br>";
+			$ds_list .= "<li>" . api_data_source_title_get($matches[1]) . "<br>";
 			$ds_array[$i] = $matches[1];
 		}
 
@@ -444,7 +444,7 @@ function ds_edit() {
 			$data_template = db_fetch_row("select id,name from data_template where id='" . $data_source["data_template_id"] . "'");
 		}
 
-		$header_label = _("[edit: ") . api_data_source_title($_GET["id"]) . "]";
+		$header_label = _("[edit: ") . api_data_source_title_get($_GET["id"]) . "]";
 
 		/* get a list of all data input type fields for this data template */
 		$data_input_type_fields = array_rekey(db_fetch_assoc("select name,value from data_source_field where data_source_id = " . $data_source["id"]), "name", array("value"));
@@ -468,7 +468,7 @@ function ds_edit() {
 		<table width="98%" align="center">
 			<tr>
 				<td class="textInfo" colspan="2" valign="top">
-					<?php print api_data_source_title($_GET["id"]);?>
+					<?php print api_data_source_title_get($_GET["id"]);?>
 				</td>
 				<td class="textInfo" align="right" valign="top">
 					<span style="color: #c16921;">*<a href='data_sources.php?action=edit&id=<?php print (isset($_GET["id"]) ? $_GET["id"] : 0);?>&debug=<?php print (isset($_SESSION["ds_debug_mode"]) ? "0" : "1");?>'>Turn <strong><?php print (isset($_SESSION["ds_debug_mode"]) ? "Off" : "On");?></strong> Data Source Debug Mode.</a>
