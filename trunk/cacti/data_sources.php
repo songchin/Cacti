@@ -824,7 +824,7 @@ function ds() {
 			action_area_update_selected_rows(box_id, parent_form);
 		}else if (type == 'search') {
 			_elm_dt_input = action_area_generate_select('box-' + box_id + '-search_device');
-			<?php echo get_js_dropdown_code('_elm_dt_input', $search_devices, (isset_get_var("search_devices") ? get_get_var("search_devices") : "-1"));?>
+			<?php echo get_js_dropdown_code('_elm_dt_input', $search_devices, (isset_get_var("search_device") ? get_get_var("search_device") : "-1"));?>
 
 			_elm_ht_input = action_area_generate_input('text', 'box-' + box_id + '-search_filter', '<?php echo get_get_var("search_filter");?>');
 			_elm_ht_input.size = '30';
