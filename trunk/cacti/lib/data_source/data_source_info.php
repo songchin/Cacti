@@ -64,7 +64,7 @@ function api_data_source_list($filter_array = "", $current_page = 0, $rows_per_p
 }
 
 function api_data_source_total_get($filter_array = "") {
-	require_once(CACTI_BASE_PATH . "/lib/device/device_form.php");
+	require_once(CACTI_BASE_PATH . "/lib/data_source/data_source_form.php");
 
 	$sql_where = "";
 	/* validation and setup for the WHERE clause */
