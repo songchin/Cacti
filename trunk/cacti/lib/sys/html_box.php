@@ -173,10 +173,8 @@ function html_box_actions_menu_draw($box_id, $form_id, $menu_items) {
 }
 
 function html_box_actions_area_draw($box_id, $form_id, $width = 400) {
-	$center = round($width * .075) . "%";
-        $center = "900px";
 	?>
-	<div id="box-<?php echo $box_id;?>-action-area-frame" class="shadowedBox" style="width: <?php echo $width + 14;?>px; position: absolute; left: <?php echo $center; ?>; top: 150px; visibility: hidden;" width="<?php echo $width + 14;?>">
+	<div id="box-<?php echo $box_id;?>-action-area-frame" class="shadowedBox" style="width: <?php echo $width + 14;?>px; position: absolute; left: 50%; top: 150px; visibility: hidden;" width="<?php echo $width + 14;?>">
 		<table cellpadding="0" cellspacing="0" border="0" width="<?php echo $width;?>">
 			<tr valign="bottom">
 				<td class="bdr topleftcorner" width="7" height="7"></td>
@@ -245,7 +243,7 @@ function html_box_actions_area_draw($box_id, $form_id, $width = 400) {
 	SET_DHTML("box-<?php echo $box_id;?>-action-area-frame", "box-<?php echo $box_id;?>-action-area-header"+DRAG, "box-<?php echo $box_id;?>-action-area-items");
 
 	/* force position because of ie weirdness */
-	dd.elements["box-<?php echo $box_id;?>-action-area-frame"].moveTo((get_browser_width() / 2) - 200, '150');
+	dd.elements["box-<?php echo $box_id;?>-action-area-frame"].moveTo((get_browser_width() / 2) - <?php echo $width; ?> / 2, '150');
 	-->
 	</script>
 	<?php

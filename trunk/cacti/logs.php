@@ -68,22 +68,22 @@ function form_post() {
 				}
 			}
 			if (isset($_POST["box-1-search_poller"])) {
-				if ($_POST["box-1-search_poller"] != "-2") {
+				if ($_POST["box-1-search_poller"] != "-1") {
 					$get_string .= ($get_string == "" ? "?" : "&") . "search_poller=" . urlencode($_POST["box-1-search_poller"]);
 				}
 			}
 			if (isset($_POST["box-1-search_host"])) {
-				if ($_POST["box-1-search_host"] != "-2") {
+				if ($_POST["box-1-search_host"] != "-1") {
 					$get_string .= ($get_string == "" ? "?" : "&") . "search_host=" . urlencode($_POST["box-1-search_host"]);
 				}
 			}
 			if (isset($_POST["box-1-search_plugin"])) {
-				if ($_POST["box-1-search_plugin"] != "-2") {
+				if ($_POST["box-1-search_plugin"] != "-1") {
 					$get_string .= ($get_string == "" ? "?" : "&") . "search_plugin=" . urlencode($_POST["box-1-search_plugin"]);
 				}
 			}
 			if (isset($_POST["box-1-search_username"])) {
-				if ($_POST["box-1-search_username"] != "-2") {
+				if ($_POST["box-1-search_username"] != "-1") {
 					$get_string .= ($get_string == "" ? "?" : "&") . "search_username=" . urlencode($_POST["box-1-search_username"]);
 				}
 			}
@@ -197,7 +197,7 @@ function view_logs() {
 	html_end_box(false);
 
 	html_box_actions_menu_draw($box_id, "0", $menu_items);
-	html_box_actions_area_draw($box_id, "0", 400);
+	html_box_actions_area_draw($box_id, "0", 250);
 
 	form_hidden_box("action_post", "log_list");
 	form_end();
@@ -258,7 +258,7 @@ function view_logs() {
 			_elm_pol_input = action_area_generate_select('box-' + box_id + '-search_poller');
 			<?php echo get_js_dropdown_code('_elm_pol_input', $search_poller, (isset_get_var("search_poller") ? get_get_var("search_poller") : "-1"));?>
 
-			_elm_hostinput = action_area_generate_select('box-' + box_id + '-search_host');
+			_elm_host_input = action_area_generate_select('box-' + box_id + '-search_host');
 			<?php echo get_js_dropdown_code('_elm_host_input', $search_host, (isset_get_var("search_host") ? get_get_var("search_host") : "-1"));?>
 
 			_elm_plug_input = action_area_generate_select('box-' + box_id + '-search_plugin');
