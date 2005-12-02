@@ -203,9 +203,9 @@ function action_area_show(box_id, parent_form, type) {
 
 	/* ie requires this because of the drag & drop control */
 	if (get_browser_type() == "ie") {
-		document.getElementById('box-' + box_id + '-action-area-menu').style.width = '386';
-		document.getElementById('box-' + box_id + '-action-area-header').style.width = '386';
-		document.getElementById('box-' + box_id + '-action-area-items').style.width = '386';
+		document.getElementById('box-' + box_id + '-action-area-menu').style.width = '400';
+		document.getElementById('box-' + box_id + '-action-area-header').style.width = '400';
+		document.getElementById('box-' + box_id + '-action-area-items').style.width = '400';
 	}
 
 	/* show the area box */

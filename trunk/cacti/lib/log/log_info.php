@@ -123,6 +123,67 @@ function validate_log_fields(&$_fields_log, $log_field_name_format = "|field|") 
 	return $error_fields;
 }
 
+function api_log_username_list() {
+
+	$user = array();
+	$users = db_fetch_assoc("select username from user_auth order by username");
+	
+	$user["SYSTEM"] = "SYSTEM";
+	while (list($id,$user_record) = each($users)) {
+		$user[$user_record["username"]] = $user_record["username"];
+	}
+
+	return $user;
+
+}
+
+function api_log_plugin_list() {
+
+	$plugin = array();
+
+	$plugins = db_fetch_assoc("select distinct plugin,plugin from log where plugin != 'N/A' order by plugin");
+
+	if (sizeof($plugins) > 0) {
+		while (list($id,$plugin_record) = each($plugins)) {
+			$plugin[$plugin_record["plugin"]] = $plugin_record["plugin"];
+		}
+	}
+
+	return $plugin;
+
+}
+
+
+function api_log_poller_list() {
+
+	$poller = array();
+
+	$pollers = db_fetch_assoc("select id, hostname from poller order by hostname");
+	
+	$poller["0"] = "SYSTEM";
+	while (list($id,$poller_record) = each($pollers)) {
+		$poller[$poller_record["id"]] = $poller_record["hostname"];
+	}
+
+	return $poller;
+
+}
+
+function api_log_host_list() {
+
+	$host = array();
+
+	$hosts = db_fetch_assoc("select id, hostname from host order by hostname");
+	
+	$host["0"] = "SYSTEM";
+	while (list($id,$hostname) = each($hosts)) {
+		$host[$hostname["id"]] = $hostname["hostname"];
+	}
+
+	return $host;
+
+}
+
 
 function api_log_facility_list() {
 	

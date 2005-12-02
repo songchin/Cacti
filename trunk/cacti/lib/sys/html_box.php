@@ -173,8 +173,10 @@ function html_box_actions_menu_draw($box_id, $form_id, $menu_items) {
 }
 
 function html_box_actions_area_draw($box_id, $form_id, $width = 400) {
+	$center = round($width * .075) . "%";
+        $center = "900px";
 	?>
-	<div id="box-<?php echo $box_id;?>-action-area-frame" class="shadowedBox" style="width: <?php echo $width + 14;?>px; position: absolute; left: 30%; top: 150px; visibility: hidden;" width="<?php echo $width + 14;?>">
+	<div id="box-<?php echo $box_id;?>-action-area-frame" class="shadowedBox" style="width: <?php echo $width + 14;?>px; position: absolute; left: <?php echo $center; ?>; top: 150px; visibility: hidden;" width="<?php echo $width + 14;?>">
 		<table cellpadding="0" cellspacing="0" border="0" width="<?php echo $width;?>">
 			<tr valign="bottom">
 				<td class="bdr topleftcorner" width="7" height="7"></td>

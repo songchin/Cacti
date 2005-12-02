@@ -67,14 +67,32 @@ function form_post() {
 					$get_string .= ($get_string == "" ? "?" : "&") . "search_severity=" . urlencode($_POST["box-1-search_severity"]);
 				}
 			}
-
+			if (isset($_POST["box-1-search_poller"])) {
+				if ($_POST["box-1-search_poller"] != "-2") {
+					$get_string .= ($get_string == "" ? "?" : "&") . "search_poller=" . urlencode($_POST["box-1-search_poller"]);
+				}
+			}
+			if (isset($_POST["box-1-search_host"])) {
+				if ($_POST["box-1-search_host"] != "-2") {
+					$get_string .= ($get_string == "" ? "?" : "&") . "search_host=" . urlencode($_POST["box-1-search_host"]);
+				}
+			}
+			if (isset($_POST["box-1-search_plugin"])) {
+				if ($_POST["box-1-search_plugin"] != "-2") {
+					$get_string .= ($get_string == "" ? "?" : "&") . "search_plugin=" . urlencode($_POST["box-1-search_plugin"]);
+				}
+			}
+			if (isset($_POST["box-1-search_username"])) {
+				if ($_POST["box-1-search_username"] != "-2") {
+					$get_string .= ($get_string == "" ? "?" : "&") . "search_username=" . urlencode($_POST["box-1-search_username"]);
+				}
+			}
 		}
 
 		header("Location: logs.php$get_string");
 		exit;
 
 	}
-
 
 }
 
@@ -102,13 +120,25 @@ function view_logs() {
 	if (isset_get_var("search_severity")) {
 		$filter_array["severity"] = get_get_var("search_severity");
 	}
+	if (isset_get_var("search_poller")) {
+		$filter_array["poller_id"] = get_get_var("search_poller");
+	}
+	if (isset_get_var("search_host")) {
+		$filter_array["host_id"] = get_get_var("search_host");
+	}
+	if (isset_get_var("search_plugin")) {
+		$filter_array["plugin"] = get_get_var("search_plugin");
+	}
+	if (isset_get_var("search_username")) {
+		$filter_array["username"] = get_get_var("search_username");
+	}
 
 	/* get log entires */
 	$logs = api_log_list($filter_array,read_config_option("num_rows_log"),read_config_option("num_rows_log")*($current_page-1));
 	$total_rows = api_log_total_get($filter_array);
 
 	/* generate page list */
-	$url_string = build_get_url_string(array("search_filter","search_facility","search_severity"));
+	$url_string = build_get_url_string(array("search_filter","search_facility","search_severity","search_poller","search_host","search_plugin","search_user"));
 	$url_page_select = get_page_list($current_page, MAX_DISPLAY_PAGES, read_config_option("num_rows_log"), $total_rows, "logs.php" . $url_string . ($url_string == "" ? "?" : "&") . "page=|PAGE_NUM|");
 
 	/* Output html */
@@ -167,7 +197,7 @@ function view_logs() {
 	html_end_box(false);
 
 	html_box_actions_menu_draw($box_id, "0", $menu_items);
-	html_box_actions_area_draw($box_id, "0");
+	html_box_actions_area_draw($box_id, "0", 400);
 
 	form_hidden_box("action_post", "log_list");
 	form_end();
@@ -181,6 +211,23 @@ function view_logs() {
 	$search_severity = array();
 	$search_severity["-2"] = "Any";
 	$search_severity += api_log_severity_list();
+
+	$search_poller = array();
+	$search_poller["-1"] = "Any";
+	$search_poller += api_log_poller_list();
+
+	$search_host = array();
+	$search_host["-1"] = "Any";
+	$search_host += api_log_host_list();
+
+	$search_plugin = array();
+	$search_plugin["-1"] = "Any";
+	$search_plugin["N/A"] = "N/A";
+	$search_plugin += api_log_plugin_list();
+
+	$search_username = array();
+	$search_username["-1"] = "Any";
+	$search_username += api_log_username_list();
 
 	/* fill in the list of available host status types for the search dropdown */
 
@@ -208,11 +255,28 @@ function view_logs() {
 			_elm_sev_input = action_area_generate_select('box-' + box_id + '-search_severity');
 			<?php echo get_js_dropdown_code('_elm_sev_input', $search_severity, (isset_get_var("search_severity") ? get_get_var("search_severity") : "-2"));?>
 
+			_elm_pol_input = action_area_generate_select('box-' + box_id + '-search_poller');
+			<?php echo get_js_dropdown_code('_elm_pol_input', $search_poller, (isset_get_var("search_poller") ? get_get_var("search_poller") : "-1"));?>
+
+			_elm_hostinput = action_area_generate_select('box-' + box_id + '-search_host');
+			<?php echo get_js_dropdown_code('_elm_host_input', $search_host, (isset_get_var("search_host") ? get_get_var("search_host") : "-1"));?>
+
+			_elm_plug_input = action_area_generate_select('box-' + box_id + '-search_plugin');
+			<?php echo get_js_dropdown_code('_elm_plug_input', $search_plugin, (isset_get_var("search_plugin") ? get_get_var("search_plugin") : "-1"));?>
+
+			_elm_user_input = action_area_generate_select('box-' + box_id + '-search_username');
+			<?php echo get_js_dropdown_code('_elm_user_input', $search_username, (isset_get_var("search_username") ? get_get_var("search_username") : "-1"));?>
+
 			_elm_ht_input = action_area_generate_input('text', 'box-' + box_id + '-search_filter', '<?php echo get_get_var("search_filter");?>');
 			_elm_ht_input.size = '30';
 
 			parent_div.appendChild(action_area_generate_search_field(_elm_fac_input, 'Facility', true, false));
 			parent_div.appendChild(action_area_generate_search_field(_elm_sev_input, 'Severity', true, false));
+			parent_div.appendChild(action_area_generate_search_field(_elm_pol_input, 'Poller', true, false));
+			parent_div.appendChild(action_area_generate_search_field(_elm_host_input, 'Host', true, false));
+			parent_div.appendChild(action_area_generate_search_field(_elm_plug_input, 'Plugin', true, false));
+			parent_div.appendChild(action_area_generate_search_field(_elm_user_input, 'User', true, false));
+
 			parent_div.appendChild(action_area_generate_search_field(_elm_ht_input, 'Filter', false, true));
 
 			action_area_update_header_caption(box_id, 'Search');
