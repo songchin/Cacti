@@ -334,7 +334,7 @@ if (read_config_option("poller_enabled") == "on") {
 	$end = $seconds + $micro;
 
 	/* record some statistics */
-	api_syslog_cacti_log(sprintf(_("SystemTime:") . "%01.4f " .
+	api_log__log(sprintf(_("SystemTime:") . "%01.4f " .
 		_("TotalPollers:") . "%s " .
 		_("Method:") . "%s " .
 		_("Processes:") . "%s " .
@@ -352,7 +352,7 @@ if (read_config_option("poller_enabled") == "on") {
 		$hosts_per_file,
 		$num_polling_items,
 		$rrds_processed),
-		SEV_NOTICE, $poller_id, 0, 0, true, FACIL_POLLER);
+		SEV_NOTICE, FACIL_POLLER, "", $poller_id, 0, 0, true);
 
 	/* calculate additional poller statistics */
 	$total_time = round($end-$start,4);
@@ -386,10 +386,10 @@ if (read_config_option("poller_enabled") == "on") {
 	}
 }else{
 	if ($poller_id == 1) {
-		api_syslog_cacti_log(_("Either there are no pollers enabled, no items in your poller cache or polling is disabled. Make sure you have at least one data source created, your poller is active. If both are true, go to 'Utilities', and select 'Clear Poller Cache'."), SEV_CRITICAL, $poller_id, 0, 0, true, FACIL_POLLER);
+		api_log_log(_("Either there are no pollers enabled, no items in your poller cache or polling is disabled. Make sure you have at least one data source created, your poller is active. If both are true, go to 'Utilities', and select 'Clear Poller Cache'."), SEV_CRITICAL, FACIL_POLLER, "", $poller_id, 0, 0, true);
 	} else {
 		db_execute("update poller set run_state = 'Complete' where id=" . $poller_id);
-		api_syslog_cacti_log(_("Poller had not items to process."), SEV_CRITICAL, $poller_id, 0, 0, true, FACIL_POLLER);
+		api_log_log(_("Poller had not items to process."), SEV_CRITICAL, FACIL_POLLER, "", $poller_id, 0, 0, true);
 	}
 }
 
