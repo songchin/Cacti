@@ -104,8 +104,9 @@ function view_logs() {
 
 	/* setup action menu */
 	$menu_items = array(
-		"purge" => "Purge All",
-		"export" => "Export All"
+		"purge" => "Purge",
+		"export" => "Export",
+		"print" => "Print"
 	);
 
 
@@ -142,7 +143,8 @@ function view_logs() {
 	$url_page_select = get_page_list($current_page, MAX_DISPLAY_PAGES, read_config_option("num_rows_log"), $total_rows, "logs.php" . $url_string . ($url_string == "" ? "?" : "&") . "page=|PAGE_NUM|");
 
 	/* Output html */
-	$box_id = 1;
+	$action_box_id = 1;
+	$view_box_id  = 2;
 	form_start("logs.php");
 
 	html_start_box("<strong>" . _("Log Management") . "</strong>", "", $url_page_select);
@@ -152,32 +154,32 @@ function view_logs() {
 	if ((is_array($logs)) && (sizeof($logs) > 0)) {
 		foreach ($logs as $log) {
 			?>
-			<tr class="<?php echo api_log_html_css_class(api_log_severity_get($log["severity"])); ?>" id="box-<?php echo $box_id;?>-row-<?php echo $log["id"];?>">
-				<td class="content-row" id="box-<?php echo $box_id; ?>-row-<?php echo $log["id"]; ?>-logdate">
+			<tr class="<?php echo api_log_html_css_class(api_log_severity_get($log["severity"])); ?>" id="box-<?php echo $view_box_id;?>-row-<?php echo $log["id"];?>" ondblclick="action_area_show('<?php echo $view_box_id; ?>', <?php echo $log["id"]; ?>, 'view_record');">
+				<td class="content-row" id="box-<?php echo $view_box_id; ?>-row-<?php echo $log["id"]; ?>-logdate">
 					<?php echo $log["logdate"]; ?>
 				</td>
-				<td class="content-row" id="box-<?php echo $box_id; ?>-row-<?php echo $log["id"]; ?>-facility">
+				<td class="content-row" id="box-<?php echo $view_box_id; ?>-row-<?php echo $log["id"]; ?>-facility">
 					<?php echo api_log_facility_get($log["facility"]); ?>
 				</td>
-				<td class="content-row" id="box-<?php echo $box_id; ?>-row-<?php echo $log["id"]; ?>-severity">
+				<td class="content-row" id="box-<?php echo $view_box_id; ?>-row-<?php echo $log["id"]; ?>-severity">
 					<?php echo api_log_severity_get($log["severity"]); ?>
 				</td>
-				<td class="content-row" id="box-<?php echo $box_id; ?>-row-<?php echo $log["id"]; ?>-poller_name">
+				<td class="content-row" id="box-<?php echo $view_box_id; ?>-row-<?php echo $log["id"]; ?>-poller_name">
 					<?php if ($log["poller_name"] == "") { echo "SYSTEM"; }else{ echo $log["poller_name"]; } ?>
 				</td>
-				<td class="content-row" id="box-<?php echo $box_id; ?>-row-<?php echo $log["id"]; ?>-host">
+				<td class="content-row" id="box-<?php echo $view_box_id; ?>-row-<?php echo $log["id"]; ?>-host">
 					<?php if ($log["host"] == "") { echo "SYSTEM"; }else{ echo $log["host"]; } ?>
 				</td>
-				<td class="content-row" id="box-<?php echo $box_id; ?>-row-<?php echo $log["id"]; ?>-plugin">
+				<td class="content-row" id="box-<?php echo $view_box_id; ?>-row-<?php echo $log["id"]; ?>-plugin">
 					<?php if ($log["plugin"] == "") { echo "N/A"; }else{ echo $log["plugin"]; } ?>
 				</td>
-				<td class="content-row" id="box-<?php echo $box_id; ?>-row-<?php echo $log["id"]; ?>-username">
+				<td class="content-row" id="box-<?php echo $view_box_id; ?>-row-<?php echo $log["id"]; ?>-username">
 					<?php if ($log["username"] == "") { echo "SYSTEM"; }else{ echo $log["username"]; } ?>
 				</td>
 				<td colspan="2" class="content-row">
 					<?php if (strlen($log["message"]) > 40) { echo substr($log["message"],0,37) . "..."; }else{ echo $log["message"]; } ?>
 				</td>
-				<div id="box-<?php echo $box_id; ?>-row-<?php echo $log["id"]; ?>-message" style="position: absolute; visibility: hidden;"><?php echo $log["message"]; ?></div>
+				<div id="box-<?php echo $view_box_id; ?>-row-<?php echo $log["id"]; ?>-message" style="position: absolute; visibility: hidden;"><?php echo $log["message"]; ?></div>
 			</tr>
 			<?php
 		}
@@ -192,16 +194,15 @@ function view_logs() {
 		<?php
 	}
 
-
-	html_box_toolbar_draw($box_id, "0", "8", (sizeof($filter_array) == 0 ? HTML_BOX_SEARCH_INACTIVE : HTML_BOX_SEARCH_ACTIVE), $url_page_select, 0);
+	html_box_toolbar_draw($action_box_id, "0", "8", (sizeof($filter_array) == 0 ? HTML_BOX_SEARCH_INACTIVE : HTML_BOX_SEARCH_ACTIVE), $url_page_select, 0);
 	html_end_box(false);
 
-	html_box_actions_menu_draw($box_id, "0", $menu_items);
-	html_box_actions_area_draw($box_id, "0", 250);
+	html_box_actions_menu_draw($action_box_id, "0", $menu_items);
+	html_box_actions_area_draw($action_box_id, "0", 250);
+	html_box_actions_area_draw($view_box_id, "0", 500);
 
 	form_hidden_box("action_post", "log_list");
 	form_end();
-
 
 	/* fill in the list of available search dropdown */
 	$search_facility = array();
@@ -229,14 +230,25 @@ function view_logs() {
 	$search_username["-1"] = "Any";
 	$search_username += api_log_username_list();
 
-	/* fill in the list of available host status types for the search dropdown */
-
 	?>
 
 	<script language="JavaScript">
 	<!--
 	function action_area_handle_type(box_id, type, parent_div, parent_form) {
-		if (type == 'purge') {
+		if (type == 'view_record') {
+			parent_div.appendChild(document.createTextNode('Date: ' + document.getElementById('box-' + box_id + '-row-' + parent_form + '-logdate').innerHTML));
+			parent_div.appendChild(document.createTextNode('Facility: ' + document.getElementById('box-' + box_id + '-row-' + parent_form + '-facility').innerHTML));
+			parent_div.appendChild(document.createTextNode('Severity: ' + document.getElementById('box-' + box_id + '-row-' + parent_form + '-severity').innerHTML));
+			parent_div.appendChild(document.createTextNode('Poller: ' + document.getElementById('box-' + box_id + '-row-' + parent_form + '-poller_name').innerHTML));
+			parent_div.appendChild(document.createTextNode('Host: ' + document.getElementById('box-' + box_id + '-row-' + parent_form + '-host').innerHTML));
+			parent_div.appendChild(document.createTextNode('Plugin: ' + document.getElementById('box-' + box_id + '-row-' + parent_form + '-plugin').innerHTML));
+			parent_div.appendChild(document.createTextNode('User: ' + document.getElementById('box-' + box_id + '-row-' + parent_form + '-username').innerHTML));
+			parent_div.appendChild(document.createTextNode('Message: ' + document.getElementById('box-' + box_id + '-row-' + parent_form + '-message').innerHTML));
+			
+			action_area_update_header_caption(box_id, 'View Record');
+			action_area_update_submit_caption(box_id, 'OK');
+		
+		}else if (type == 'purge') {
 			parent_div.appendChild(document.createTextNode('Are you sure you want to purge the log?  All logs will be cleared!'));
 
 			action_area_update_header_caption(box_id, 'Purge Logs');
@@ -287,7 +299,6 @@ function view_logs() {
 	</script>
 
 	<?php
-
 
 }
 

@@ -193,9 +193,11 @@ function action_area_show(box_id, parent_form, type) {
 	parent_div.appendChild(action_area_generate_input('hidden', 'action_post', 'box-' + box_id));
 
 	/* hide the action bar menu */
-	document.getElementById('box-' + box_id + '-action-bar-menu').style.visibility = 'hidden';
-	document.getElementById('box-' + box_id + '-button-menu-container').style.backgroundColor = '#ffffff';
-	document.getElementById('box-' + box_id + '-button-menu').className = 'action-bar-button-out';
+	if (document.getElementById('box-' + box_id + '-action-bar-menu') != null) {
+		document.getElementById('box-' + box_id + '-action-bar-menu').style.visibility = 'hidden';
+		document.getElementById('box-' + box_id + '-button-menu-container').style.backgroundColor = '#ffffff';
+		document.getElementById('box-' + box_id + '-button-menu').className = 'action-bar-button-out';
+	}
 
 	/* re-adjust div heights and display it */
 	document.getElementById('box-' + box_id + '-action-area-items').style.height = 'auto';

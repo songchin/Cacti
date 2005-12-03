@@ -243,7 +243,7 @@ function html_box_actions_area_draw($box_id, $form_id, $width = 400) {
 	SET_DHTML("box-<?php echo $box_id;?>-action-area-frame", "box-<?php echo $box_id;?>-action-area-header"+DRAG, "box-<?php echo $box_id;?>-action-area-items");
 
 	/* force position because of ie weirdness */
-	dd.elements["box-<?php echo $box_id;?>-action-area-frame"].moveTo((get_browser_width() / 2) - <?php echo $width; ?> / 2, '150');
+	dd.elements["box-<?php echo $box_id;?>-action-area-frame"].moveTo((get_browser_width() / 2) - <?php echo $width; ?> / 2, '100');
 	-->
 	</script>
 	<?php
