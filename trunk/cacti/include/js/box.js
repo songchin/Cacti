@@ -260,6 +260,47 @@ function action_area_generate_search_field(field, caption, is_first, is_last) {
 	return _elm_dt_container;
 }
 
+/* action_area_generate_text_field - creates an complete text field container
+   @arg field - (string) the text to appear
+   @arg caption - (string) the text to print with the field for the user
+   @arg is_first - (boolean) whether this field comes first
+   @arg is_last - (boolean) whether this field comes last */
+function action_area_generate_text_field(field, caption, is_first, is_last, is_split) {
+	_elm_dt_container = document.createElement('div');
+
+	if (is_first == true) {
+		_elm_dt_container.style.paddingTop = '1px';
+	}else{
+		_elm_dt_container.style.paddingTop = '3px';
+	}
+
+	_elm_dt_container.style.paddingBottom = '3px';
+	if (is_split) {
+		/* container for the caption */
+		_elm_dt_container_txt = document.createElement('div');
+		_elm_dt_container_txt.style.paddingBottom = '5px';
+		_elm_dt_container_txt.appendChild(document.createTextNode(caption));
+		_elm_dt_container.appendChild(_elm_dt_container_txt);
+
+		/* container for the actual field */
+		_elm_dt_container_fld = document.createElement('div');
+		_elm_dt_container_fld.style.paddingLeft = '10px';
+		_elm_dt_container_fld.appendChild(document.createTextNode(field));
+		_elm_dt_container.appendChild(_elm_dt_container_fld);
+	}else{
+		_elm_dt_container_txt = document.createElement('div');
+		_elm_dt_container_txt.style.paddingBottom = '5px';
+		_elm_dt_container_txt.appendChild(document.createTextNode(caption + ' ' + field));
+		_elm_dt_container.appendChild(_elm_dt_container_txt);
+	}
+
+	if (is_last == false) {
+		_elm_dt_container.style.borderBottom = '1px solid #f1f1f1';
+	}
+
+	return _elm_dt_container;
+}
+
 /* action_area_generate_selected_rows - creates the container object that is used to hold
 	the selected rows list
    @arg box_id - (string) the unique identifier for the container box */

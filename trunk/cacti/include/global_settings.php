@@ -513,6 +513,13 @@ $settings = array(
 			"default" => "100",
 			"max_length" => "10"
 			),
+		"log_max_message_length" => array(
+			"friendly_name" => _("Max Message Field Length"),
+			"description" => _("The number of chars to show on each message field of the log."),
+			"method" => "textbox",
+			"default" => "135",
+			"max_length" => "5"
+			),
 		"fonts_header" => array(
 			"friendly_name" => _("Default RRDtool 1.2 Fonts"),
 			"method" => "spacer",

@@ -148,36 +148,50 @@ function view_logs() {
 	form_start("logs.php");
 
 	html_start_box("<strong>" . _("Log Management") . "</strong>", "", $url_page_select);
-	html_header(array(_("Date"), _("Facility"), _("Severity"), _("Poller"), _("Host"), _("Plugin"), _("User"), _("Message"),""));
+
+	print "<tr>\n";
+	print "<td class='log-content-header-sub-div'>" . _("Date") . "</td>\n";
+	print "<td class='log-content-header-sub-div'>" . _("Facility") . "</td>\n";
+	print "<td class='log-content-header-sub-div'>" . _("Severity") . "</td>\n";
+	print "<td class='log-content-header-sub-div'>" . _("Poller") . "</td>\n";
+	print "<td class='log-content-header-sub-div'>" . _("Host") . "</td>\n";
+	print "<td class='log-content-header-sub-div'>" . _("Plugin") . "</td>\n";
+	print "<td colspan=\"3\" class='log-content-header-sub-div'>" . _("User") . "</td>\n";
+	print "</tr>\n<tr>\n";
+	print "<td colspan=\"9\" class='log-content-header-sub'>" . _("Message") . "</td>\n";
+	print "</tr>";
+
+
 
 	$i = 0;
 	if ((is_array($logs)) && (sizeof($logs) > 0)) {
 		foreach ($logs as $log) {
 			?>
-			<tr class="<?php echo api_log_html_css_class(api_log_severity_get($log["severity"])); ?>" id="box-<?php echo $view_box_id;?>-row-<?php echo $log["id"];?>" ondblclick="action_area_show('<?php echo $view_box_id; ?>', <?php echo $log["id"]; ?>, 'view_record');">
-				<td class="content-row" id="box-<?php echo $view_box_id; ?>-row-<?php echo $log["id"]; ?>-logdate">
+			<tr class="<?php echo api_log_html_css_class(api_log_severity_get($log["severity"])); ?>" id="box-<?php echo $view_box_id;?>-row-<?php echo $log["id"];?>" ondblclick="action_area_show('<?php echo $view_box_id; ?>', <?php echo $log["id"]; ?>, 'view_record');" alt="Double Click for more detail">
+				<td class="log-content-row" id="box-<?php echo $view_box_id; ?>-row-<?php echo $log["id"]; ?>-logdate">
 					<?php echo $log["logdate"]; ?>
 				</td>
-				<td class="content-row" id="box-<?php echo $view_box_id; ?>-row-<?php echo $log["id"]; ?>-facility">
+				<td class="log-content-row" id="box-<?php echo $view_box_id; ?>-row-<?php echo $log["id"]; ?>-facility">
 					<?php echo api_log_facility_get($log["facility"]); ?>
 				</td>
-				<td class="content-row" id="box-<?php echo $view_box_id; ?>-row-<?php echo $log["id"]; ?>-severity">
+				<td class="log-content-row" id="box-<?php echo $view_box_id; ?>-row-<?php echo $log["id"]; ?>-severity">
 					<?php echo api_log_severity_get($log["severity"]); ?>
 				</td>
-				<td class="content-row" id="box-<?php echo $view_box_id; ?>-row-<?php echo $log["id"]; ?>-poller_name">
+				<td class="log-content-row" id="box-<?php echo $view_box_id; ?>-row-<?php echo $log["id"]; ?>-poller_name">
 					<?php if ($log["poller_name"] == "") { echo "SYSTEM"; }else{ echo $log["poller_name"]; } ?>
 				</td>
-				<td class="content-row" id="box-<?php echo $view_box_id; ?>-row-<?php echo $log["id"]; ?>-host">
+				<td class="log-content-row" id="box-<?php echo $view_box_id; ?>-row-<?php echo $log["id"]; ?>-host">
 					<?php if ($log["host"] == "") { echo "SYSTEM"; }else{ echo $log["host"]; } ?>
 				</td>
-				<td class="content-row" id="box-<?php echo $view_box_id; ?>-row-<?php echo $log["id"]; ?>-plugin">
+				<td class="log-content-row" id="box-<?php echo $view_box_id; ?>-row-<?php echo $log["id"]; ?>-plugin">
 					<?php if ($log["plugin"] == "") { echo "N/A"; }else{ echo $log["plugin"]; } ?>
 				</td>
-				<td class="content-row" id="box-<?php echo $view_box_id; ?>-row-<?php echo $log["id"]; ?>-username">
+				<td colspan="3" class="log-content-row" id="box-<?php echo $view_box_id; ?>-row-<?php echo $log["id"]; ?>-username">
 					<?php if ($log["username"] == "") { echo "SYSTEM"; }else{ echo $log["username"]; } ?>
 				</td>
-				<td colspan="2" class="content-row">
-					<?php if (strlen($log["message"]) > 40) { echo substr($log["message"],0,37) . "..."; }else{ echo $log["message"]; } ?>
+			</tr><tr class="<?php echo api_log_html_css_class(api_log_severity_get($log["severity"])); ?>">
+				<td colspan="9" class="log-content-row-div">
+					<?php if (strlen($log["message"]) > read_config_option("log_max_message_length")) { echo substr($log["message"], 0, read_config_option("log_max_message_length") - 3) . "..."; }else{ echo $log["message"]; } ?>
 				</td>
 				<div id="box-<?php echo $view_box_id; ?>-row-<?php echo $log["id"]; ?>-message" style="position: absolute; visibility: hidden;"><?php echo $log["message"]; ?></div>
 			</tr>
@@ -199,7 +213,7 @@ function view_logs() {
 
 	html_box_actions_menu_draw($action_box_id, "0", $menu_items);
 	html_box_actions_area_draw($action_box_id, "0", 250);
-	html_box_actions_area_draw($view_box_id, "0", 500);
+	html_box_actions_area_draw($view_box_id, "0", 500, 0);
 
 	form_hidden_box("action_post", "log_list");
 	form_end();
@@ -236,17 +250,17 @@ function view_logs() {
 	<!--
 	function action_area_handle_type(box_id, type, parent_div, parent_form) {
 		if (type == 'view_record') {
-			parent_div.appendChild(document.createTextNode('Date: ' + document.getElementById('box-' + box_id + '-row-' + parent_form + '-logdate').innerHTML));
-			parent_div.appendChild(document.createTextNode('Facility: ' + document.getElementById('box-' + box_id + '-row-' + parent_form + '-facility').innerHTML));
-			parent_div.appendChild(document.createTextNode('Severity: ' + document.getElementById('box-' + box_id + '-row-' + parent_form + '-severity').innerHTML));
-			parent_div.appendChild(document.createTextNode('Poller: ' + document.getElementById('box-' + box_id + '-row-' + parent_form + '-poller_name').innerHTML));
-			parent_div.appendChild(document.createTextNode('Host: ' + document.getElementById('box-' + box_id + '-row-' + parent_form + '-host').innerHTML));
-			parent_div.appendChild(document.createTextNode('Plugin: ' + document.getElementById('box-' + box_id + '-row-' + parent_form + '-plugin').innerHTML));
-			parent_div.appendChild(document.createTextNode('User: ' + document.getElementById('box-' + box_id + '-row-' + parent_form + '-username').innerHTML));
-			parent_div.appendChild(document.createTextNode('Message: ' + document.getElementById('box-' + box_id + '-row-' + parent_form + '-message').innerHTML));
-			
-			action_area_update_header_caption(box_id, 'View Record');
-			action_area_update_submit_caption(box_id, 'OK');
+
+			parent_div.appendChild(action_area_generate_text_field(document.getElementById('box-' + box_id + '-row-' + parent_form + '-logdate').innerHTML, 'Date:', true, false,false));
+			parent_div.appendChild(action_area_generate_text_field(document.getElementById('box-' + box_id + '-row-' + parent_form + '-facility').innerHTML, 'Facility:', false, false, false));
+			parent_div.appendChild(action_area_generate_text_field(document.getElementById('box-' + box_id + '-row-' + parent_form + '-severity').innerHTML, 'Severity:', false, false, false));
+			parent_div.appendChild(action_area_generate_text_field(document.getElementById('box-' + box_id + '-row-' + parent_form + '-poller_name').innerHTML, 'Poller:', false, false, false));
+			parent_div.appendChild(action_area_generate_text_field(document.getElementById('box-' + box_id + '-row-' + parent_form + '-host').innerHTML, 'Host:', false, false, false));
+			parent_div.appendChild(action_area_generate_text_field(document.getElementById('box-' + box_id + '-row-' + parent_form + '-plugin').innerHTML, 'Plugin:', false, false, false));
+			parent_div.appendChild(action_area_generate_text_field(document.getElementById('box-' + box_id + '-row-' + parent_form + '-username').innerHTML, 'User:', false, false, false));
+			parent_div.appendChild(action_area_generate_text_field(document.getElementById('box-' + box_id + '-row-' + parent_form + '-message').innerHTML, 'Message:', false, true, true));
+
+			action_area_update_header_caption(box_id, 'View Log Entry');
 		
 		}else if (type == 'purge') {
 			parent_div.appendChild(document.createTextNode('Are you sure you want to purge the log?  All logs will be cleared!'));
@@ -283,11 +297,11 @@ function view_logs() {
 			_elm_ht_input.size = '30';
 
 			parent_div.appendChild(action_area_generate_search_field(_elm_fac_input, 'Facility', true, false));
-			parent_div.appendChild(action_area_generate_search_field(_elm_sev_input, 'Severity', true, false));
-			parent_div.appendChild(action_area_generate_search_field(_elm_pol_input, 'Poller', true, false));
-			parent_div.appendChild(action_area_generate_search_field(_elm_host_input, 'Host', true, false));
-			parent_div.appendChild(action_area_generate_search_field(_elm_plug_input, 'Plugin', true, false));
-			parent_div.appendChild(action_area_generate_search_field(_elm_user_input, 'User', true, false));
+			parent_div.appendChild(action_area_generate_search_field(_elm_sev_input, 'Severity', false, false));
+			parent_div.appendChild(action_area_generate_search_field(_elm_pol_input, 'Poller', false, false));
+			parent_div.appendChild(action_area_generate_search_field(_elm_host_input, 'Host', false, false));
+			parent_div.appendChild(action_area_generate_search_field(_elm_plug_input, 'Plugin', false, false));
+			parent_div.appendChild(action_area_generate_search_field(_elm_user_input, 'User', false, false));
 
 			parent_div.appendChild(action_area_generate_search_field(_elm_ht_input, 'Filter', false, true));
 

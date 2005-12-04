@@ -47,6 +47,11 @@ if (isset($_SESSION["sess_user_id"])) {
 <!-- must come after the <body> tag for IE compatibility -->
 <script type="text/javascript" src="include/js/dragdrop.js"></script>
 
+<!-- setup DHTML drag -->
+<script type="text/javascript">
+	SET_DHTML();
+</script>
+
 <table width="100%" cellspacing="0" cellpadding="0">
 	<tr height="37" bgcolor="#<?php print $colors['main_background'];?>">
 		<td valign="bottom" colspan="3" nowrap>

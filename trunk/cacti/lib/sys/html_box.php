@@ -172,7 +172,7 @@ function html_box_actions_menu_draw($box_id, $form_id, $menu_items) {
 	<?php
 }
 
-function html_box_actions_area_draw($box_id, $form_id, $width = 400) {
+function html_box_actions_area_draw($box_id, $form_id, $width = 400, $submit = 1) {
 	?>
 	<div id="box-<?php echo $box_id;?>-action-area-frame" class="shadowedBox" style="width: <?php echo $width + 14;?>px; position: absolute; left: 50%; top: 150px; visibility: hidden;" width="<?php echo $width + 14;?>">
 		<table cellpadding="0" cellspacing="0" border="0" width="<?php echo $width;?>">
@@ -214,7 +214,9 @@ function html_box_actions_area_draw($box_id, $form_id, $width = 400) {
 									</div>
 									<div class="action-area-buttons">
 										<input type="button" value="Cancel" class="action-area-buttons" name="box-<?php echo $box_id;?>-action-area-button-cancel" id="box-<?php echo $box_id;?>-action-area-button-cancel" onClick="action_area_hide('<?php echo $box_id;?>')">
+										<?php if ($submit == 1) { ?>
 										<input type="submit" value="X" class="action-area-buttons" name="box-<?php echo $box_id;?>-action-area-button" id="box-<?php echo $box_id;?>-action-area-button" onClick="action_area_update_input('<?php echo $box_id;?>',document.forms[<?php echo $form_id;?>])">
+										<?php } ?>
 									</div>
 								</div>
 							</td>
@@ -240,7 +242,8 @@ function html_box_actions_area_draw($box_id, $form_id, $width = 400) {
 	</div>
 	<script language="JavaScript">
 	<!--
-	SET_DHTML("box-<?php echo $box_id;?>-action-area-frame", "box-<?php echo $box_id;?>-action-area-header"+DRAG, "box-<?php echo $box_id;?>-action-area-items");
+	/* add this div to the drag DHTML */
+	ADD_DHTML("box-<?php echo $box_id;?>-action-area-frame", "box-<?php echo $box_id;?>-action-area-header"+DRAG, "box-<?php echo $box_id;?>-action-area-items");
 
 	/* force position because of ie weirdness */
 	dd.elements["box-<?php echo $box_id;?>-action-area-frame"].moveTo((get_browser_width() / 2) - <?php echo $width; ?> / 2, '100');
