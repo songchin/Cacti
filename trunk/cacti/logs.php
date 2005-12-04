@@ -156,9 +156,9 @@ function view_logs() {
 	print "<td class='log-content-header-sub-div'>" . _("Poller") . "</td>\n";
 	print "<td class='log-content-header-sub-div'>" . _("Host") . "</td>\n";
 	print "<td class='log-content-header-sub-div'>" . _("Plugin") . "</td>\n";
-	print "<td colspan=\"3\" class='log-content-header-sub-div'>" . _("User") . "</td>\n";
+	print "<td colspan= '2' class='log-content-header-sub-div'>" . _("User") . "</td>\n";
 	print "</tr>\n<tr>\n";
-	print "<td colspan=\"9\" class='log-content-header-sub'>" . _("Message") . "</td>\n";
+	print "<td colspan=\"8\" class='log-content-header-sub'>" . _("Message") . "</td>\n";
 	print "</tr>";
 
 
@@ -167,7 +167,7 @@ function view_logs() {
 	if ((is_array($logs)) && (sizeof($logs) > 0)) {
 		foreach ($logs as $log) {
 			?>
-			<tr class="<?php echo api_log_html_css_class(api_log_severity_get($log["severity"])); ?>" id="box-<?php echo $view_box_id;?>-row-<?php echo $log["id"];?>" ondblclick="action_area_show('<?php echo $view_box_id; ?>', <?php echo $log["id"]; ?>, 'view_record');" alt="Double Click for more detail">
+			<tr class="<?php echo api_log_html_css_class(api_log_severity_get($log["severity"])); ?>" id="box-<?php echo $view_box_id;?>-row-<?php echo $log["id"];?>" onclick="action_area_show('<?php echo $view_box_id; ?>', <?php echo $log["id"]; ?>, 'view_record');">
 				<td class="log-content-row" id="box-<?php echo $view_box_id; ?>-row-<?php echo $log["id"]; ?>-logdate">
 					<?php echo $log["logdate"]; ?>
 				</td>
@@ -186,14 +186,17 @@ function view_logs() {
 				<td class="log-content-row" id="box-<?php echo $view_box_id; ?>-row-<?php echo $log["id"]; ?>-plugin">
 					<?php if ($log["plugin"] == "") { echo "N/A"; }else{ echo $log["plugin"]; } ?>
 				</td>
-				<td colspan="3" class="log-content-row" id="box-<?php echo $view_box_id; ?>-row-<?php echo $log["id"]; ?>-username">
+				<td class="log-content-row" id="box-<?php echo $view_box_id; ?>-row-<?php echo $log["id"]; ?>-username">
 					<?php if ($log["username"] == "") { echo "SYSTEM"; }else{ echo $log["username"]; } ?>
 				</td>
-			</tr><tr class="<?php echo api_log_html_css_class(api_log_severity_get($log["severity"])); ?>">
-				<td colspan="9" class="log-content-row-div">
-					<?php if (strlen($log["message"]) > read_config_option("log_max_message_length")) { echo substr($log["message"], 0, read_config_option("log_max_message_length") - 3) . "..."; }else{ echo $log["message"]; } ?>
+				<td width="1%" class="log-content-row">
+					&nbsp;
 				</td>
-				<div id="box-<?php echo $view_box_id; ?>-row-<?php echo $log["id"]; ?>-message" style="position: absolute; visibility: hidden;"><?php echo $log["message"]; ?></div>
+			</tr><tr class="<?php echo api_log_html_css_class(api_log_severity_get($log["severity"])); ?>" onclick="action_area_show('<?php echo $view_box_id; ?>', <?php echo $log["id"]; ?>, 'view_record');">
+				<td colspan="8" class="log-content-row-div">
+					<?php if (strlen($log["message"]) > read_config_option("log_max_message_length")) { echo substr($log["message"], 0, read_config_option("log_max_message_length") - 3) . "..."; }else{ echo $log["message"]; } ?>
+					<div id="box-<?php echo $view_box_id; ?>-row-<?php echo $log["id"]; ?>-message" style="position: absolute; visibility: hidden;"><?php echo $log["message"]; ?></div>
+				</td>
 			</tr>
 			<?php
 		}
@@ -208,7 +211,7 @@ function view_logs() {
 		<?php
 	}
 
-	html_box_toolbar_draw($action_box_id, "0", "8", (sizeof($filter_array) == 0 ? HTML_BOX_SEARCH_INACTIVE : HTML_BOX_SEARCH_ACTIVE), $url_page_select, 0);
+	html_box_toolbar_draw($action_box_id, "0", "7", (sizeof($filter_array) == 0 ? HTML_BOX_SEARCH_INACTIVE : HTML_BOX_SEARCH_ACTIVE), $url_page_select, 0);
 	html_end_box(false);
 
 	html_box_actions_menu_draw($action_box_id, "0", $menu_items);
