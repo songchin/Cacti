@@ -213,7 +213,7 @@ function html_box_actions_area_draw($box_id, $form_id, $width = 400, $submit = 1
 										&nbsp;
 									</div>
 									<div class="action-area-buttons">
-										<input type="button" value="Cancel" class="action-area-buttons" name="box-<?php echo $box_id;?>-action-area-button-cancel" id="box-<?php echo $box_id;?>-action-area-button-cancel" onClick="action_area_hide('<?php echo $box_id;?>')">
+										<input type="reset" value="Cancel" class="action-area-buttons" name="box-<?php echo $box_id;?>-action-area-button-cancel" id="box-<?php echo $box_id;?>-action-area-button-cancel" onClick="action_area_hide('<?php echo $box_id;?>')">
 										<?php if ($submit == 1) { ?>
 										<input type="submit" value="X" class="action-area-buttons" name="box-<?php echo $box_id;?>-action-area-button" id="box-<?php echo $box_id;?>-action-area-button" onClick="action_area_update_input('<?php echo $box_id;?>',document.forms[<?php echo $form_id;?>])">
 										<?php } ?>

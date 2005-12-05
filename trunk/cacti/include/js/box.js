@@ -180,7 +180,13 @@ function action_bar_button_menu_click(box_id) {
    @arg box_id - (string) the unique identifier for the container box
    @arg parent_form - (object) a reference to the container form object
    @arg type - (string) the unique identifier for the selected action type */
-function action_area_show(box_id, parent_form, type) {
+function action_area_show(box_id, parent_form, type, width) {
+
+	/* set width */
+	if (! width) {
+		width = 400;
+	}
+
 	/* parent div container for all action box items */
 	parent_div = document.getElementById('box-' + box_id + '-action-area-items');
 
@@ -215,6 +221,10 @@ function action_area_show(box_id, parent_form, type) {
 
 	/* keep a cache of the active actions box type */
 	_current_action_type[box_id] = type;
+
+	/* move div into place depending on where the scroll bar is */
+	dd.elements['box-' + box_id + '-action-area-frame'].moveTo(get_browser_width() / 2 - width / 2, getScrollY() + 100);
+
 }
 
 /* action_bar_button_menu_click - hides the actions area box
@@ -410,4 +420,20 @@ function action_area_update_input(box_id, parent_form) {
 	}else{
 		document.getElementById('action').value = 'save';
 	}
+}
+
+
+function getScrollY() {
+	var scrOfY = 0;
+	if( typeof( window.pageYOffset ) == 'number' ) {
+		//Netscape compliant
+		scrOfY = window.pageYOffset;
+	} else if( document.body && ( document.body.scrollLeft || document.body.scrollTop ) ) {
+		//DOM compliant
+		scrOfY = document.body.scrollTop;
+	} else if( document.documentElement && ( document.documentElement.scrollLeft || document.documentElement.scrollTop ) ) {
+		//IE6 standards compliant mode
+		scrOfY = document.documentElement.scrollTop;
+	}
+	return scrOfY;
 }
