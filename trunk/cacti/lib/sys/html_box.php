@@ -148,7 +148,7 @@ function html_box_toolbar_draw($box_id, $form_id, $colspan, $search_type = HTML_
 	<?php
 }
 
-function html_box_actions_menu_draw($box_id, $form_id, $menu_items) {
+function html_box_actions_menu_draw($box_id, $form_id, $menu_items, $width = 400) {
 	?>
 	<div id="box-<?php echo $box_id;?>-action-bar-frame" style="width: 98%; left: 1%; position: relative;">
 		<div id="box-<?php echo $box_id;?>-action-bar-menu" class="action-bar-menu" style="visibility: hidden; position: absolute; right: 0px;">
@@ -158,7 +158,7 @@ function html_box_actions_menu_draw($box_id, $form_id, $menu_items) {
 					$i = 1;
 					foreach ($menu_items as $action_name => $action_description) {
 						?>
-						<div id="box-<?php echo $box_id;?>-action-bar-item-<?php echo $i;?>" class="action-bar-menu-out" <?php echo ($i > 1 ? "style=\"border-top: 1px solid #aab;\"" : "");?> onMouseOver="action_bar_menu_mouseover('box-<?php echo $box_id;?>-action-bar-item-<?php echo $i;?>')" onMouseOut="action_bar_menu_mouseout('box-<?php echo $box_id;?>-action-bar-item-<?php echo $i;?>')" onClick="action_area_show('<?php echo $box_id;?>',document.forms[<?php echo $form_id;?>],'<?php echo $action_name;?>')">
+						<div id="box-<?php echo $box_id;?>-action-bar-item-<?php echo $i;?>" class="action-bar-menu-out" <?php echo ($i > 1 ? "style=\"border-top: 1px solid #aab;\"" : "");?> onMouseOver="action_bar_menu_mouseover('box-<?php echo $box_id;?>-action-bar-item-<?php echo $i;?>')" onMouseOut="action_bar_menu_mouseout('box-<?php echo $box_id;?>-action-bar-item-<?php echo $i;?>')" onClick="action_area_show('<?php echo $box_id;?>',document.forms[<?php echo $form_id;?>],'<?php echo $action_name;?>', '<?php echo $width; ?>')">
 							<?php echo $action_description;?>
 						</div>
 						<?php

@@ -167,7 +167,7 @@ function view_logs() {
 	if ((is_array($logs)) && (sizeof($logs) > 0)) {
 		foreach ($logs as $log) {
 			?>
-			<tr class="<?php echo api_log_html_css_class(api_log_severity_get($log["severity"])); ?>" id="box-<?php echo $view_box_id;?>-row-<?php echo $log["id"];?>" onclick="action_area_show('<?php echo $view_box_id; ?>', <?php echo $log["id"]; ?>, 'view_record');">
+			<tr class="<?php echo api_log_html_css_class(api_log_severity_get($log["severity"])); ?>" id="box-<?php echo $view_box_id;?>-row-<?php echo $log["id"];?>" onclick="action_area_show('<?php echo $view_box_id; ?>', <?php echo $log["id"]; ?>, 'view_record', '500');">
 				<td class="log-content-row" id="box-<?php echo $view_box_id; ?>-row-<?php echo $log["id"]; ?>-logdate">
 					<?php echo $log["logdate"]; ?>
 				</td>
@@ -192,7 +192,7 @@ function view_logs() {
 				<td width="1%" class="log-content-row">
 					&nbsp;
 				</td>
-			</tr><tr class="<?php echo api_log_html_css_class(api_log_severity_get($log["severity"])); ?>" onclick="action_area_show('<?php echo $view_box_id; ?>', <?php echo $log["id"]; ?>, 'view_record');">
+			</tr><tr class="<?php echo api_log_html_css_class(api_log_severity_get($log["severity"])); ?>" onclick="action_area_show('<?php echo $view_box_id; ?>', <?php echo $log["id"]; ?>, 'view_record', '500');">
 				<td colspan="8" class="log-content-row-div">
 					<?php if (strlen($log["message"]) > read_config_option("log_max_message_length")) { echo substr($log["message"], 0, read_config_option("log_max_message_length") - 3) . "..."; }else{ echo $log["message"]; } ?>
 					<div id="box-<?php echo $view_box_id; ?>-row-<?php echo $log["id"]; ?>-message" style="position: absolute; visibility: hidden;"><?php echo $log["message"]; ?></div>
@@ -214,7 +214,7 @@ function view_logs() {
 	html_box_toolbar_draw($action_box_id, "0", "7", (sizeof($filter_array) == 0 ? HTML_BOX_SEARCH_INACTIVE : HTML_BOX_SEARCH_ACTIVE), $url_page_select, 0);
 	html_end_box(false);
 
-	html_box_actions_menu_draw($action_box_id, "0", $menu_items);
+	html_box_actions_menu_draw($action_box_id, "0", $menu_items, 250);
 	html_box_actions_area_draw($action_box_id, "0", 250);
 	html_box_actions_area_draw($view_box_id, "0", 500, 0);
 
