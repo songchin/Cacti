@@ -46,8 +46,8 @@ function api_log_log($message, $severity = SEV_INFO, $facility = FACIL_WEBUI, $p
 	$logdate = date("Y-m-d H:i:s");
 
 	/* determine how to log data */
-	$syslog_destination = log_read_config_option("syslog_destination");
-	$syslog_level = log_read_config_option("syslog_level");
+	$syslog_destination = log_read_config_option("log_destination");
+	$syslog_level = log_read_config_option("log_level");
 
 	/* get username */
 	if ($severity == SEV_DEV) {
