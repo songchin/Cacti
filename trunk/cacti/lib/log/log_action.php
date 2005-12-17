@@ -25,7 +25,7 @@
 require_once(CACTI_BASE_PATH . "/include/log/log_arrays.php");
 require_once(CACTI_BASE_PATH . "/include/log/log_constants.php");
 
-/* 
+/*
  * Logging Actions
  */
 
@@ -56,7 +56,7 @@ function api_log_log($message, $severity = SEV_INFO, $facility = FACIL_WEBUI, $p
 	} elseif ($user_id) {
 		$user_info = api_user_info(array("id" => $user_id));
 		if ($user_info) {
-	 		$username = $user_info["username"];
+			$username = $user_info["username"];
 		} else {
 			$username = _("Unknown");
 		}
@@ -95,7 +95,7 @@ function api_log_log($message, $severity = SEV_INFO, $facility = FACIL_WEBUI, $p
 
 	/* Log to Cacti Syslog */
 	if ((($syslog_destination == LOG_CACTI) || ($syslog_destination == LOG_BOTH))
-		&& (log_read_config_option("syslog_status") != "suspended") && ($severity >= $syslog_level)) {
+		&& (log_read_config_option("log_status") != "suspended") && ($severity >= $syslog_level)) {
 		$sql = "insert into log
 			(logdate,facility,severity,poller_id,host_id,user_id,username,source,plugin,message) values
 			(SYSDATE(), " . $facility . "," . $severity . "," . $poller_id . "," .$host_id . "," . $user_id . ",'" . $username . "','" . $source . "','" . $plugin . "','". sql_sanitize($message) . "');";
@@ -107,7 +107,7 @@ function api_log_log($message, $severity = SEV_INFO, $facility = FACIL_WEBUI, $p
 	/* Syslog is currently Unstable in Win32 */
 	if ((($syslog_destination == LOG_BOTH) || ($syslog_destination == LOG_SYSTEM))
 		&& ($severity >= $syslog_level)) {
-		openlog("cacti", LOG_NDELAY | LOG_PID, log_read_config_option("syslog_facility"));
+		openlog("cacti", LOG_NDELAY | LOG_PID, log_read_config_option("log_facility"));
 		syslog(api_log_syslog_severity_get($severity), api_log_severity_get($severity) . ": " . api_log_facility_get($facility) . ": " . $message);
 		closelog();
 	}
@@ -190,7 +190,7 @@ function log_read_config_option($config_name) {
 	$query = $cnn_id->Execute("select value from settings where name='" . $config_name . "'");
 	if ($query) {
 		if (! $query->EOF) {
-		        $db_setting = $query->fields;
+			$db_setting = $query->fields;
 		}
 	}
 
