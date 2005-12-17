@@ -25,10 +25,8 @@
 function api_data_source_save($data_source_id, &$_fields_data_source, &$_fields_data_source_rra, $skip_cache_update = false) {
 	require_once(CACTI_BASE_PATH . "/lib/data_source/data_source_info.php");
 
-	/* sanity check for $data_source_id */
-	if (!is_numeric($data_source_id)) {
-		return false;
-	}
+	/* sanity checks */
+	validate_id_die($data_source_id, "data_source_id");
 
 	/* field: id */
 	$_fields["id"] = array("type" => DB_TYPE_NUMBER, "value" => $data_source_id);
@@ -70,7 +68,7 @@ function api_data_source_save($data_source_id, &$_fields_data_source, &$_fields_
 
 		if ($skip_cache_update == false) {
 			/* update data source title cache */
-			api_data_source_title_get_cache_update($data_source_id);
+			api_data_source_title_cache_update($data_source_id);
 		}
 
 		return true;
@@ -82,10 +80,8 @@ function api_data_source_save($data_source_id, &$_fields_data_source, &$_fields_
 function api_data_source_fields_save($data_source_id, &$_fields_data_input) {
 	require_once(CACTI_BASE_PATH . "/include/data_source/data_source_constants.php");
 
-	/* sanity check for $data_source_id */
-	if ((!is_numeric($data_source_id)) || (empty($data_source_id))) {
-		return false;
-	}
+	/* sanity checks */
+	validate_id_die($data_source_id, "data_source_id");
 
 	/* flush old fields if the data input type is not a data query */
 	if (db_fetch_cell("select data_input_type from data_source where id = " . sql_sanitize($data_source_id)) != DATA_INPUT_TYPE_DATA_QUERY) {
@@ -108,33 +104,47 @@ function api_data_source_fields_save($data_source_id, &$_fields_data_input) {
 }
 
 function api_data_source_remove($data_source_id) {
-	if ((empty($data_source_id)) || (!is_numeric($data_source_id))) {
-		return;
-	}
+	/* sanity checks */
+	validate_id_die($data_source_id, "data_source_id");
 
-	db_execute("delete from data_source_field where data_source_id = $data_source_id");
-	db_execute("delete from data_source_item where data_source_id = $data_source_id");
-	db_execute("delete from data_source_rra where data_source_id = $data_source_id");
-	db_execute("delete from data_source where id = $data_source_id");
+	db_execute("DELETE FROM data_source_field WHERE data_source_id = " . sql_sanitize($data_source_id));
+	db_execute("DELETE FROM data_source_item WHERE data_source_id = " . sql_sanitize($data_source_id));
+	db_execute("DELETE FROM data_source_rra WHERE data_source_id = " . sql_sanitize($data_source_id));
+	db_execute("DELETE FROM data_source WHERE id " . sql_sanitize($data_source_id));
 }
 
 function api_data_source_enable($data_source_id) {
-	db_execute("UPDATE data_source SET active=1 WHERE id=$data_source_id");
+	/* sanity checks */
+	validate_id_die($data_source_id, "data_source_id");
+
+	db_execute("UPDATE data_source SET active = 1 WHERE id = " . sql_sanitize($data_source_id));
 	update_poller_cache($data_source_id, false);
 }
 
 function api_data_source_disable($data_source_id) {
-	db_execute("DELETE FROM poller_item WHERE local_data_id=$data_source_id");
-	db_execute("UPDATE data_source SET active='' WHERE id=$data_source_id");
+	/* sanity checks */
+	validate_id_die($data_source_id, "data_source_id");
+
+	db_execute("DELETE FROM poller_item WHERE local_data_id = " . sql_sanitize($data_source_id));
+	db_execute("UPDATE data_source SET active='' WHERE id = " . sql_sanitize($data_source_id));
+}
+
+function api_data_source_host_update($data_source_id, $host_id) {
+	/* sanity checks */
+	validate_id_die($data_source_id, "data_source_id");
+	validate_id_die($host_id, "host_id", true);
+
+	db_execute("UPDATE data_source SET host_id = " . sql_sanitize($host_id) . " WHERE id = " . sql_sanitize($data_source_id));
+
+	/* make sure that host variables in the title stay up to date */
+	api_data_source_title_cache_update($data_source_id);
 }
 
 function api_data_source_item_save($data_source_item_id, &$_fields_data_source_item) {
 	require_once(CACTI_BASE_PATH . "/lib/data_source/data_source_info.php");
 
-	/* sanity check for $data_source_item_id */
-	if (!is_numeric($data_source_item_id)) {
-		return false;
-	}
+	/* sanity checks */
+	validate_id_die($data_source_item_id, "data_source_item_id");
 
 	/* sanity check for $data_source_id */
 	if ((empty($data_source_item_id)) && (empty($_fields_data_source_item["data_source_id"]))) {
@@ -184,23 +194,21 @@ function api_data_source_item_save($data_source_item_id, &$_fields_data_source_i
 }
 
 function api_data_source_item_remove($data_source_item_id) {
-	if ((empty($data_source_item_id)) || (!is_numeric($data_source_item_id))) {
-		return;
-	}
+	/* sanity checks */
+	validate_id_die($data_source_item_id, "data_source_item_id");
 
-	db_execute("delete from data_source_item where id = $data_source_item_id");
+	db_execute("DELETE FROM data_source_item WHERE id = " . sql_sanitize($data_source_item_id));
 }
 
 /* update_data_source_title_cache - updates the title cache for a single data source
    @arg $data_source_id - (int) the ID of the data source to update the title cache for */
-function api_data_source_title_get_cache_update($data_source_id) {
+function api_data_source_title_cache_update($data_source_id) {
 	require_once(CACTI_BASE_PATH . "/lib/data_source/data_source_info.php");
 
-	if (empty($data_source_id)) {
-		return;
-	}
+	/* sanity checks */
+	validate_id_die($data_source_id, "data_source_id");
 
-	db_execute("update data_source set name_cache = '" . addslashes(api_data_source_title_get($data_source_id)) . "' where id = $data_source_id");
+	db_execute("UPDATE data_source SET name_cache = '" . sql_sanitize(addslashes(api_data_source_title_get($data_source_id))) . "' WHERE id = " . sql_sanitize($data_source_id));
 }
 
 /* api_data_source_path_get_update - set the current data source path or generates a new one if a path

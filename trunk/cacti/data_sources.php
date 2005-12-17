@@ -190,7 +190,32 @@ function form_post() {
 			}
 
 			header("Location: data_sources.php$get_string");
+			exit;
+		}else if ($_POST["box-1-action-area-type"] == "remove") {
+			foreach ($selected_rows as $data_source_id) {
+				api_data_source_remove($data_source_id);
+			}
+		}else if ($_POST["box-1-action-area-type"] == "duplicate") {
+			// not yet coded
+		}else if ($_POST["box-1-action-area-type"] == "enable") {
+			foreach ($selected_rows as $data_source_id) {
+				api_data_source_enable($data_source_id);
+			}
+		}else if ($_POST["box-1-action-area-type"] == "disable") {
+			foreach ($selected_rows as $data_source_id) {
+				api_data_source_disable($data_source_id);
+			}
+		}else if ($_POST["box-1-action-area-type"] == "change_data_template") {
+			// note yet coded
+		}else if ($_POST["box-1-action-area-type"] == "change_host") {
+			foreach ($selected_rows as $data_source_id) {
+				api_data_source_host_update($data_source_id, $_POST["box-1-change_device"]);
+			}
+		}else if ($_POST["box-1-action-area-type"] == "convert_data_template") {
+			// note yet coded
 		}
+
+		header("Location: data_sources.php");
 	/* 'filter' area at the bottom of the box */
 	}else if ($_POST["action_post"] == "data_source_list") {
 		$get_string = "";
@@ -260,7 +285,7 @@ function form_actions() {
 			for ($i=0;($i<count($selected_items));$i++) {
 				db_execute("update data_local set host_id=" . $_POST["host_id"] . " where id=" . $selected_items[$i]);
 				push_out_host($_POST["host_id"], $selected_items[$i]);
-				api_data_source_title_get_cache_update($selected_items[$i]);
+				api_data_source_title_cache_update($selected_items[$i]);
 			}
 		}elseif ($_POST["drp_action"] == "4") { /* duplicate */
 			for ($i=0;($i<count($selected_items));$i++) {
@@ -796,11 +821,19 @@ function ds() {
 	form_hidden_box("action_post", "data_source_list");
 	form_end();
 
+	/* pre-cache the device list since we need it in more than one place below */
+	$device_list = array_rekey(api_device_list(), "id", "description");
+
 	/* fill in the list of available devices for the search dropdown */
 	$search_devices = array();
 	$search_devices["-1"] = "Any";
 	$search_devices["0"] = "None";
-	$search_devices += array_rekey(api_device_list(), "id", "description");
+	$search_devices += $device_list;
+
+	/* fill in the list of available devices for the search dropdown */
+	$change_host_list = array();
+	$change_host_list["0"] = "None";
+	$change_host_list += $device_list;
 
 	?>
 
@@ -834,6 +867,32 @@ function ds() {
 
 			action_area_update_header_caption(box_id, 'Search');
 			action_area_update_submit_caption(box_id, 'Search');
+		}else if (type == 'enable') {
+			parent_div.appendChild(document.createTextNode('Are you sure you want to enable these data sources?'));
+			parent_div.appendChild(action_area_generate_selected_rows(box_id));
+
+			action_area_update_header_caption(box_id, 'Enable Data Source');
+			action_area_update_submit_caption(box_id, 'Enable');
+			action_area_update_selected_rows(box_id, parent_form);
+		}else if (type == 'disable') {
+			parent_div.appendChild(document.createTextNode('Are you sure you want to disable these data sources? If disabled, these data sources will no longer be polled.'));
+			parent_div.appendChild(action_area_generate_selected_rows(box_id));
+
+			action_area_update_header_caption(box_id, 'Disable Data Source');
+			action_area_update_submit_caption(box_id, 'Disable');
+			action_area_update_selected_rows(box_id, parent_form);
+		}else if (type == 'change_host') {
+			parent_div.appendChild(document.createTextNode('Are you sure you want to change the host for these data sources?'));
+			parent_div.appendChild(action_area_generate_selected_rows(box_id));
+
+			_elm_dt_input = action_area_generate_select('box-' + box_id + '-change_device');
+			<?php echo get_js_dropdown_code('_elm_dt_input', $change_host_list, "0");?>
+
+			parent_div.appendChild(action_area_generate_search_field(_elm_dt_input, 'New Device', true, true));
+
+			action_area_update_header_caption(box_id, 'Change Host');
+			action_area_update_submit_caption(box_id, 'Change');
+			action_area_update_selected_rows(box_id, parent_form);
 		}
 	}
 	-->

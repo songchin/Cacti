@@ -222,7 +222,7 @@ function host_new_graphs_save() {
 				}
 
 				/* update the title cache */
-				api_data_source_title_get_cache_update($create_info["data_source"][$data_template_id]);
+				api_data_source_title_cache_update($create_info["data_source"][$data_template_id]);
 
 				/* update poller cache */
 				update_poller_cache($create_info["data_source"][$data_template_id]);
