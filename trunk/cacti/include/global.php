@@ -78,12 +78,6 @@ require(CACTI_BASE_PATH . "/lib/sys/session.php");
 require(CACTI_BASE_PATH . "/lib/sys/string.php");
 require(CACTI_BASE_PATH . "/lib/sys/validate.php");
 
-/* Contants and Variable includes */
-require(CACTI_BASE_PATH . "/include/global_constants.php");
-require(CACTI_BASE_PATH . "/include/global_arrays.php");
-require(CACTI_BASE_PATH . "/include/global_settings.php");
-require(CACTI_BASE_PATH . "/include/global_form.php");
-
 /* User and auth include */
 require(CACTI_BASE_PATH . "/lib/user/user_info.php");
 
@@ -154,6 +148,13 @@ if ((!in_array(basename($_SERVER["PHP_SELF"]), $no_http_header_files, true)) && 
 		exit;
 	}
 }
+
+/* Contants and Variable includes -- note that the includes must fall below the session_start() call
+ * for now because they rely on read_config_option() */
+require(CACTI_BASE_PATH . "/include/global_constants.php");
+require(CACTI_BASE_PATH . "/include/global_arrays.php");
+require(CACTI_BASE_PATH . "/include/global_settings.php");
+require(CACTI_BASE_PATH . "/include/global_form.php");
 
 /* emulate 'register_globals' = 'off' if turned on */
 if ((bool)ini_get("register_globals")) {

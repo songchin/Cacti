@@ -52,23 +52,17 @@ function read_graph_config_option($config_name) {
 		return read_default_graph_config_option($config_name);
 	}
 
-	if (isset($_SESSION["sess_graph_config_array"])) {
-		$graph_config_array = $_SESSION["sess_graph_config_array"];
-	}
-
-	if (!isset($graph_config_array[$config_name])) {
+	if (!isset($_SESSION["sess_graph_config_array"][$config_name])) {
 		$db_setting = db_fetch_row("select value from settings_graphs where name='$config_name' and user_id=" . $_SESSION["sess_user_id"]);
 
 		if (isset($db_setting["value"])) {
-			$graph_config_array[$config_name] = $db_setting["value"];
+			$_SESSION["sess_graph_config_array"][$config_name] = $db_setting["value"];
 		}else{
-			$graph_config_array[$config_name] = read_default_graph_config_option($config_name);
+			$_SESSION["sess_graph_config_array"][$config_name] = read_default_graph_config_option($config_name);
 		}
-
-		$_SESSION["sess_graph_config_array"] = $graph_config_array;
 	}
 
-	return $graph_config_array[$config_name];
+	return $_SESSION["sess_graph_config_array"][$config_name];
 }
 
 /* config_value_exists - determines if a value exists for the current user/setting specified
@@ -113,23 +107,17 @@ function read_default_config_option($config_name) {
      in 'include/global_settings.php'
    @returns - the current value of the configuration option */
 function read_config_option($config_name) {
-	if (isset($_SESSION["sess_config_array"])) {
-		$config_array = $_SESSION["sess_config_array"];
-	}
-
-	if (!isset($config_array[$config_name])) {
+	if (!isset($_SESSION["sess_config_array"][$config_name])) {
 		$db_setting = db_fetch_row("select value from settings where name='$config_name'");
 
 		if (isset($db_setting["value"])) {
-			$config_array[$config_name] = $db_setting["value"];
+			$_SESSION["sess_config_array"][$config_name] = $db_setting["value"];
 		}else{
-			$config_array[$config_name] = read_default_config_option($config_name);
+			$_SESSION["sess_config_array"][$config_name] = read_default_config_option($config_name);
 		}
-
-		$_SESSION["sess_config_array"] = $config_array;
 	}
 
-	return $config_array[$config_name];
+	return $_SESSION["sess_config_array"][$config_name];
 }
 
 ?>
