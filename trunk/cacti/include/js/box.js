@@ -322,6 +322,13 @@ function action_area_generate_selected_rows(box_id) {
 	return _elm_selected_rows[box_id];
 }
 
+/* action_area_generate_selected_rows - creates the container object that is used to hold
+	the selected rows list
+   @arg box_id - (string) the unique identifier for the container box */
+function action_area_generate_break() {
+	return document.createElement('div');
+}
+
 /* action_area_update_selected_rows - updates the list of selected row by iterating through
 	each row in the current box. requires that action_area_generate_selected_rows() has been
 	called first to initialize the container object
@@ -397,7 +404,12 @@ function action_area_update_input(box_id, parent_form) {
 	fields = _elm_form_container.getElementsByTagName('input');
 
 	for (var i=0; i<fields.length; i++) {
-		parent_form.appendChild(action_area_generate_input('hidden', fields[i].name, fields[i].value));
+		/* radio buttons deserve special handling since they operate in a group */
+		if ((fields[i].type == 'radio') && (fields[i].checked == true)) {
+			parent_form.appendChild(action_area_generate_input('hidden', fields[i].name, fields[i].value));
+		}else if (fields[i].type != 'radio') {
+			parent_form.appendChild(action_area_generate_input('hidden', fields[i].name, fields[i].value));
+		}
 	}
 
 	/* store the current action type in a form variable for later access */
