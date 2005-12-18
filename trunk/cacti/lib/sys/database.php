@@ -176,8 +176,10 @@ function sql_save($fields, $table_name, $keys = "") {
 		$keys = array("id");
 	}
 
-	while (list($field_name, $field_value) = each($fields)) {
-		$new_fields[$field_name] = array("type" => DB_TYPE_STRING, "value" => $field_value);
+	if (sizeof($fields) > 0) {
+		foreach ($fields as $db_field_name => $db_field_value) {
+			$new_fields[$db_field_name] = array("type" => DB_TYPE_STRING, "value" => $db_field_value);
+		}
 	}
 
 	if (db_replace($table_name, $new_fields, $keys)) {
@@ -206,35 +208,39 @@ function db_replace($table_name, $fields, $keys = "") {
 	}
 
 	/* no rows exist at this key; generate an INSERT statement */
-	if (db_fetch_cell("select count(*) from $table_name $sql_key_where") == 0) {
+	if (db_fetch_cell("SELECT count(*) FROM $table_name $sql_key_where") == 0) {
 		$sql_field_names = ""; $sql_field_values = ""; $i = 0;
-		while (list($db_field_name, $db_field_array) = each($fields)) {
-			if ($i == 0) {
-				$sql_field_names = "(";
-				$sql_field_values = "(";
+		if (sizeof($fields) > 0) {
+			foreach ($fields as $db_field_name => $db_field_array) {
+				if ($i == 0) {
+					$sql_field_names = "(";
+					$sql_field_values = "(";
+				}
+
+				$sql_field_names .= $db_field_name . ($i == (sizeof($fields) - 1) ? "" : ",");
+				$sql_field_values .= sql_get_quoted_string($db_field_array) . ($i == (sizeof($fields) - 1) ? "" : ",");
+
+				if ($i == (sizeof($fields) - 1)) {
+					$sql_field_names .= ")";
+					$sql_field_values .= ")";
+				}
+
+				$i++;
 			}
-
-			$sql_field_names .= $db_field_name . ($i == (sizeof($fields) - 1) ? "" : ",");
-			$sql_field_values .= sql_get_quoted_string($db_field_array) . ($i == (sizeof($fields) - 1) ? "" : ",");
-
-			if ($i == (sizeof($fields) - 1)) {
-				$sql_field_names .= ")";
-				$sql_field_values .= ")";
-			}
-
-			$i++;
 		}
 
-		$sql = "insert into $table_name $sql_field_names values $sql_field_values";
+		$sql = "INSERT INTO $table_name $sql_field_names VAUES $sql_field_values";
 	/* more than one row exists at this key; generate an UPDATE statement */
 	}else{
 		$sql_set_fields = ""; $i = 0;
-		while (list($db_field_name, $db_field_array) = each($fields)) {
-			/* do not include the key fields in the SET string */
-			if (!in_array($db_field_name, $keys)) {
-				$sql_set_fields .= $db_field_name . " = " . sql_get_quoted_string($db_field_array) . (($i == (sizeof($fields) - sizeof($keys) - 1)) ? "" : ",");
+		if (sizeof($fields) > 0) {
+			foreach ($fields as $db_field_name => $db_field_array) {
+				/* do not include the key fields in the SET string */
+				if (!in_array($db_field_name, $keys)) {
+					$sql_set_fields .= $db_field_name . " = " . sql_get_quoted_string($db_field_array) . (($i == (sizeof($fields) - sizeof($keys) - 1)) ? "" : ",");
 
-				$i++;
+					$i++;
+				}
 			}
 		}
 
@@ -244,13 +250,10 @@ function db_replace($table_name, $fields, $keys = "") {
 			return false;
 		}
 
-		$sql = "update $table_name set $sql_set_fields $sql_key_where";
+		$sql = "UPDATE $table_name SET $sql_set_fields $sql_key_where";
 	}
 
 	/* execute the sql statement and return the result */
-
-	api_log_log("Executing SQL: $sql", SEV_DEV);
-
 	if (db_execute($sql)) {
 		/* cache the inserted id for later use */
 		$_last_insert_id = $cnn_id->Insert_ID();
@@ -280,29 +283,28 @@ function db_insert($table_name, $fields, $keys = "") {
 	}
 
 	$sql_field_names = ""; $sql_field_values = ""; $i = 0;
-	while (list($db_field_name, $db_field_array) = each($fields)) {
-		if ($i == 0) {
-			$sql_field_names = "(";
-			$sql_field_values = "(";
+	if (sizeof($fields) > 0) {
+		foreach ($fields as $db_field_name => $db_field_array) {
+			if ($i == 0) {
+				$sql_field_names = "(";
+				$sql_field_values = "(";
+			}
+
+			$sql_field_names .= $db_field_name . ($i == (sizeof($fields) - 1) ? "" : ",");
+			$sql_field_values .= sql_get_quoted_string($db_field_array) . ($i == (sizeof($fields) - 1) ? "" : ",");
+
+			if ($i == (sizeof($fields) - 1)) {
+				$sql_field_names .= ")";
+				$sql_field_values .= ")";
+			}
+
+			$i++;
 		}
-
-		$sql_field_names .= $db_field_name . ($i == (sizeof($fields) - 1) ? "" : ",");
-		$sql_field_values .= sql_get_quoted_string($db_field_array) . ($i == (sizeof($fields) - 1) ? "" : ",");
-
-		if ($i == (sizeof($fields) - 1)) {
-			$sql_field_names .= ")";
-			$sql_field_values .= ")";
-		}
-
-		$i++;
 	}
 
-	$sql = "insert into $table_name $sql_field_names values $sql_field_values";
+	$sql = "INSERT INTO $table_name $sql_field_names VALUES $sql_field_values";
 
 	/* execute the sql statement and return the result */
-
-	api_log_log("Executing SQL: $sql", SEV_DEV);
-
 	if (db_execute($sql)) {
 		/* cache the inserted id for later use */
 		$_last_insert_id = $cnn_id->Insert_ID();
@@ -328,25 +330,44 @@ function db_update($table_name, $fields, $keys = "") {
 	/* generate a WHERE statement that reflects the list of keys */
 	$sql_key_where = "";
 	for ($i=0; $i<sizeof($keys); $i++) {
-		$sql_key_where .= ($i == 0 ? "WHERE " : " AND ") . $keys[$i]  . " = " . sql_get_quoted_string($fields{$keys[$i]});
+		$sql_key_where .= ($i == 0 ? "WHERE " : " AND ") . $keys[$i] . " = " . sql_get_quoted_string($fields{$keys[$i]});
 	}
 
 	$sql_set_fields = ""; $i = 0;
-	while (list($db_field_name, $db_field_array) = each($fields)) {
-		/* do not include the key fields in the SET string */
-		if (!in_array($db_field_name, $keys)) {
-			$sql_set_fields .= $db_field_name . " = " . sql_get_quoted_string($db_field_array) . (($i == (sizeof($fields) - sizeof($keys) - 1)) ? "" : ",");
+	if (sizeof($fields) > 0) {
+		foreach ($fields as $db_field_name => $db_field_array) {
+			/* do not include the key fields in the SET string */
+			if (!in_array($db_field_name, $keys)) {
+				$sql_set_fields .= $db_field_name . " = " . sql_get_quoted_string($db_field_array) . (($i == (sizeof($fields) - sizeof($keys) - 1)) ? "" : ",");
 
+				$i++;
+			}
+		}
+	}
+
+	$sql = "UPDATE $table_name SET $sql_set_fields $sql_key_where";
+
+	/* execute the sql statement and return the result */
+	if (db_execute($sql)) {
+		return true;
+	}else{
+		return false;
+	}
+}
+
+function db_delete($table_name, $fields) {
+	/* generate a WHERE statement that reflects the list of keys */
+	$sql_key_where = ""; $i = 0;
+	if (sizeof($fields) > 0) {
+		foreach ($fields as $db_field_name => $db_field_array) {
+			$sql_key_where .= ($i == 0 ? "WHERE " : " AND ") . $db_field_name  . " = " . sql_get_quoted_string($db_field_array);
 			$i++;
 		}
 	}
 
-	$sql = "update $table_name set $sql_set_fields $sql_key_where";
+	$sql = "DELETE FROM $table_name $sql_key_where";
 
 	/* execute the sql statement and return the result */
-
-	api_log_log("Executing SQL: $sql", SEV_DEV);
-
 	if (db_execute($sql)) {
 		return true;
 	}else{
