@@ -142,7 +142,32 @@ function form_post() {
 			}
 
 			header("Location: host.php$get_string");
+			exit;
+		}else if ($_POST["box-1-action-area-type"] == "remove") {
+			foreach ($selected_rows as $host_id) {
+				api_device_remove($host_id, ($_POST["box-1-remove_type"] == "2" ? true : false));
+			}
+		}else if ($_POST["box-1-action-area-type"] == "enable") {
+			foreach ($selected_rows as $host_id) {
+				api_device_enable($host_id);
+			}
+		}else if ($_POST["box-1-action-area-type"] == "disable") {
+			foreach ($selected_rows as $host_id) {
+				api_device_disable($host_id);
+			}
+		}else if ($_POST["box-1-action-area-type"] == "clear_stats") {
+			foreach ($selected_rows as $host_id) {
+				api_device_statistics_clear($host_id);
+			}
+		}else if ($_POST["box-1-action-area-type"] == "change_snmp_opts") {
+			// not yet implemented
+		}else if ($_POST["box-1-action-area-type"] == "change_avail_opts") {
+			// not yet implemented
+		}else if ($_POST["box-1-action-area-type"] == "change_poller") {
+			// not yet implemented
 		}
+
+		header("Location: host.php");
 	/* 'filter' area at the bottom of the box */
 	}else if ($_POST["action_post"] == "device_list") {
 		$get_string = "";
@@ -802,6 +827,15 @@ function host() {
 			parent_div.appendChild(document.createTextNode('Are you sure you want to remove these devices?'));
 			parent_div.appendChild(action_area_generate_selected_rows(box_id));
 
+			parent_div.appendChild(action_area_generate_input('radio', 'box-' + box_id + '-remove_type', '1'));
+			parent_div.appendChild(document.createTextNode('Leave all graphs and data sources untouched. Data sources will be disabled however.'));
+			parent_div.appendChild(action_area_generate_break());
+
+			_elm_rt_input = action_area_generate_input('radio', 'box-' + box_id + '-remove_type', '2');
+			_elm_rt_input.checked = true;
+			parent_div.appendChild(_elm_rt_input);
+			parent_div.appendChild(document.createTextNode("Delete all associated graphs and data sources."));
+
 			action_area_update_header_caption(box_id, 'Remove Device');
 			action_area_update_submit_caption(box_id, 'Remove');
 			action_area_update_selected_rows(box_id, parent_form);
@@ -812,6 +846,27 @@ function host() {
 
 			action_area_update_header_caption(box_id, 'Duplicate Devices');
 			action_area_update_submit_caption(box_id, 'Duplicate');
+			action_area_update_selected_rows(box_id, parent_form);
+		}else if (type == 'enable') {
+			parent_div.appendChild(document.createTextNode('Are you sure you want to enable these devices?'));
+			parent_div.appendChild(action_area_generate_selected_rows(box_id));
+
+			action_area_update_header_caption(box_id, 'Enable Devices');
+			action_area_update_submit_caption(box_id, 'Enable');
+			action_area_update_selected_rows(box_id, parent_form);
+		}else if (type == 'disable') {
+			parent_div.appendChild(document.createTextNode('Are you sure you want to disable these devices?'));
+			parent_div.appendChild(action_area_generate_selected_rows(box_id));
+
+			action_area_update_header_caption(box_id, 'Disable Devices');
+			action_area_update_submit_caption(box_id, 'Disable');
+			action_area_update_selected_rows(box_id, parent_form);
+		}else if (type == 'clear_stats') {
+			parent_div.appendChild(document.createTextNode('Are you sure you want to clear polling statistics for these devices?'));
+			parent_div.appendChild(action_area_generate_selected_rows(box_id));
+
+			action_area_update_header_caption(box_id, 'Clear Polling Statistics');
+			action_area_update_submit_caption(box_id, 'Clear');
 			action_area_update_selected_rows(box_id, parent_form);
 		}else if (type == 'search') {
 			_elm_dt_input = action_area_generate_select('box-' + box_id + '-search_device_template');

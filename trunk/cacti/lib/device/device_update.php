@@ -99,7 +99,11 @@ function api_device_save($id, $poller_id, $host_template_id, $description, $host
 
 /* api_device_remove - removes a device
    @arg $device_id - the id of the device to remove */
-function api_device_remove($device_id) {
+function api_device_remove($device_id, $remove_dependencies = false) {
+	require_once(CACTI_BASE_PATH . "/lib/data_source/data_source_info.php");
+	require_once(CACTI_BASE_PATH . "/lib/data_source/data_source_update.php");
+	require_once(CACTI_BASE_PATH . "/lib/graph/graph_update.php");
+
 	/* sanity checks */
 	validate_id_die($device_id, "device_id");
 
@@ -109,6 +113,92 @@ function api_device_remove($device_id) {
 	db_execute("delete from host_data_query_cache where host_id = " . sql_sanitize($device_id));
 	db_execute("delete from poller_item where host_id = " . sql_sanitize($device_id));
 	db_execute("delete from graph_tree_items where host_id = " . sql_sanitize($device_id));
+
+	if ($remove_dependencies == true) {
+		/* obtain a list of all data sources associated with this device */
+		$data_sources = api_data_source_list(array("host_id" => $device_id));
+
+		/* delete each data source associated with this device */
+		if (sizeof($data_sources) > 0) {
+			foreach ($data_sources as $data_source) {
+				api_data_source_remove($data_source["id"]);
+			}
+		}
+
+		/* obtain a list of all graphs associated with this device */
+		$graphs = api_graph_list(array("host_id" => $device_id));
+
+		/* delete each graph associated with this device */
+		if (sizeof($graphs) > 0) {
+			foreach ($graphs as $graph) {
+				api_graph_remove($graph["id"]);
+			}
+		}
+	}else{
+		/* obtain a list of all data sources associated with this device */
+		$data_sources = api_data_source_list(array("host_id" => $device_id));
+
+		/* disable each data source associated with this device */
+		if (sizeof($data_sources) > 0) {
+			foreach ($data_sources as $data_source) {
+				api_data_source_disable($data_source["id"]);
+			}
+		}
+	}
+}
+
+function api_device_enable($device_id) {
+	require_once(CACTI_BASE_PATH . "/lib/data_source/data_source_info.php");
+
+	db_update("host",
+		array(
+			"disabled" => array("type" => DB_TYPE_STRING, "value" => ""),
+			"id" => array("type" => DB_TYPE_NUMBER, "value" => $device_id)
+			),
+		array("id"));
+
+	/* obtain a list of all data sources associated with this device */
+	$data_sources = api_data_source_list(array("host_id" => $device_id));
+
+	if (sizeof($data_sources) > 0) {
+		foreach ($data_sources as $data_source) {
+			update_poller_cache($data_source["id"], false);
+		}
+	}
+}
+
+function api_device_disable($device_id) {
+	db_update("host",
+		array(
+			"disabled" => array("type" => DB_TYPE_STRING, "value" => "on"),
+			"id" => array("type" => DB_TYPE_NUMBER, "value" => $device_id)
+			),
+		array("id"));
+
+	/* update poller cache */
+	db_delete("poller_item",
+		array(
+			"host_id" => array("type" => DB_TYPE_NUMBER, "value" => $device_id)
+			));
+	db_delete("poller_reindex",
+		array(
+			"host_id" => array("type" => DB_TYPE_NUMBER, "value" => $device_id)
+			));
+}
+
+function api_device_statistics_clear($device_id) {
+	db_update("host",
+		array(
+			"min_time" => array("type" => DB_TYPE_NUMBER, "value" => "9.99999"),
+			"max_time" => array("type" => DB_TYPE_NUMBER, "value" => "0"),
+			"cur_time" => array("type" => DB_TYPE_NUMBER, "value" => "0"),
+			"avg_time" => array("type" => DB_TYPE_NUMBER, "value" => "0"),
+			"total_polls" => array("type" => DB_TYPE_NUMBER, "value" => "0"),
+			"failed_polls" => array("type" => DB_TYPE_NUMBER, "value" => "0"),
+			"availability" => array("type" => DB_TYPE_NUMBER, "value" => "100.00"),
+			"id" => array("type" => DB_TYPE_NUMBER, "value" => $device_id)
+			),
+		array("id"));
 }
 
 /* api_device_dq_remove - removes a device->data query mapping
