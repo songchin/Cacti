@@ -84,6 +84,22 @@ function api_graph_remove($graph_id) {
 	db_execute("delete from graph where id = $graph_id");
 }
 
+function api_graph_host_update($graph_id, $host_id) {
+	/* sanity checks */
+	validate_id_die($graph_id, "graph_id");
+	validate_id_die($host_id, "host_id", true);
+
+	db_update("graph",
+		array(
+			"host_id" => array("type" => DB_TYPE_STRING, "value" => $host_id),
+			"id" => array("type" => DB_TYPE_NUMBER, "value" => $graph_id)
+			),
+		array("id"));
+
+	/* make sure that host variables in the title stay up to date */
+	api_graph_title_cache_update($graph_id);
+}
+
 function api_graph_item_save($graph_item_id, &$_fields_graph_item) {
 	require_once(CACTI_BASE_PATH . "/lib/sys/sequence.php");
 	require_once(CACTI_BASE_PATH . "/lib/graph/graph_info.php");

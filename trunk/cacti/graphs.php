@@ -171,7 +171,25 @@ function form_save() {
 			}
 
 			header("Location: graphs.php$get_string");
+		}else if ($_POST["box-1-action-area-type"] == "remove") {
+			foreach ($selected_rows as $graph_id) {
+				api_graph_remove($graph_id);
+			}
+		}else if ($_POST["box-1-action-area-type"] == "duplicate") {
+			// not yet coded
+		}else if ($_POST["box-1-action-area-type"] == "change_graph_template") {
+			// note yet coded
+		}else if ($_POST["box-1-action-area-type"] == "change_host") {
+			foreach ($selected_rows as $graph_id) {
+				api_graph_host_update($graph_id, $_POST["box-1-change_device"]);
+			}
+		}else if ($_POST["box-1-action-area-type"] == "convert_graph_template") {
+			// note yet coded
+		}else if ($_POST["box-1-action-area-type"] == "place_tree") {
+			// note yet coded
 		}
+
+		header("Location: graphs.php");
 	/* 'filter' area at the bottom of the box */
 	}else if ($_POST["action_post"] == "graph_list") {
 		$get_string = "";
@@ -604,11 +622,9 @@ function graph() {
 	$menu_items = array(
 		"remove" => "Remove",
 		"duplicate" => "Duplicate",
-		"enable" => "Enable",
-		"disable" => "Disable",
-		"change_data_template" => "Change Graph Template",
+		"change_graph_template" => "Change Graph Template",
 		"change_host" => "Change Host",
-		"convert_data_template" => "Convert to Graph Template",
+		"convert_graph_template" => "Convert to Graph Template",
 		"place_tree" => "Place on Tree"
 		);
 
@@ -646,7 +662,7 @@ function graph() {
 			?>
 			<tr class="content-row" id="box-<?php echo $box_id;?>-row-<?php echo $graph["id"];?>" onClick="display_row_select('<?php echo $box_id;?>',document.forms[0],'box-<?php echo $box_id;?>-row-<?php echo $graph["id"];?>', 'box-<?php echo $box_id;?>-chk-<?php echo $graph["id"];?>')" onMouseOver="display_row_hover('box-<?php echo $box_id;?>-row-<?php echo $graph["id"];?>')" onMouseOut="display_row_clear('box-<?php echo $box_id;?>-row-<?php echo $graph["id"];?>')">
 				<td class="content-row">
-					<a class="linkEditMain" onClick="display_row_block('box-<?php echo $box_id;?>-row-<?php echo $graph["id"];?>')" href="data_sources.php?action=edit&id=<?php echo $graph["id"];?>"><span id="box-<?php echo $box_id;?>-text-<?php echo $graph["id"];?>"><?php echo html_highlight_words(get_get_var("search_filter"), $graph["title_cache"]);?></span></a>
+					<a class="linkEditMain" onClick="display_row_block('box-<?php echo $box_id;?>-row-<?php echo $graph["id"];?>')" href="graphs.php?action=edit&id=<?php echo $graph["id"];?>"><span id="box-<?php echo $box_id;?>-text-<?php echo $graph["id"];?>"><?php echo html_highlight_words(get_get_var("search_filter"), $graph["title_cache"]);?></span></a>
 				</td>
 				<td class="content-row">
 					<?php echo ((empty($graph["template_name"])) ? "<em>" . _("None") . "</em>" : $graph["template_name"]); ?>
@@ -678,11 +694,19 @@ function graph() {
 	form_hidden_box("action_post", "graph_list");
 	form_end();
 
+	/* pre-cache the device list since we need it in more than one place below */
+	$device_list = array_rekey(api_device_list(), "id", "description");
+
 	/* fill in the list of available devices for the search dropdown */
 	$search_devices = array();
 	$search_devices["-1"] = "Any";
 	$search_devices["0"] = "None";
-	$search_devices += array_rekey(api_device_list(), "id", "description");
+	$search_devices += $device_list;
+
+	/* fill in the list of available devices for the change host dropdown */
+	$change_host_list = array();
+	$change_host_list["0"] = "None";
+	$change_host_list += $device_list;
 
 	?>
 
@@ -716,6 +740,18 @@ function graph() {
 
 			action_area_update_header_caption(box_id, 'Search');
 			action_area_update_submit_caption(box_id, 'Search');
+		}else if (type == 'change_host') {
+			parent_div.appendChild(document.createTextNode('Are you sure you want to change the host for these graphs?'));
+			parent_div.appendChild(action_area_generate_selected_rows(box_id));
+
+			_elm_dt_input = action_area_generate_select('box-' + box_id + '-change_device');
+			<?php echo get_js_dropdown_code('_elm_dt_input', $change_host_list, "0");?>
+
+			parent_div.appendChild(action_area_generate_search_field(_elm_dt_input, 'New Device', true, true));
+
+			action_area_update_header_caption(box_id, 'Change Host');
+			action_area_update_submit_caption(box_id, 'Change');
+			action_area_update_selected_rows(box_id, parent_form);
 		}
 	}
 	-->

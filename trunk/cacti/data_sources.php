@@ -830,7 +830,7 @@ function ds() {
 	$search_devices["0"] = "None";
 	$search_devices += $device_list;
 
-	/* fill in the list of available devices for the search dropdown */
+	/* fill in the list of available devices for the change host dropdown */
 	$change_host_list = array();
 	$change_host_list["0"] = "None";
 	$change_host_list += $device_list;
