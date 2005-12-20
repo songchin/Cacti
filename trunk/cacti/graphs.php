@@ -606,12 +606,7 @@ function graph_edit() {
 		html_end_box();
 	}
 
-	if ((isset($_GET["id"])) || ((isset($_GET["host_id"])) && (isset($_GET["graph_template_id"])))) {
-		form_hidden_box("save_component_graph","1","");
-		form_hidden_box("save_component_input","1","");
-	}else{
-		form_hidden_box("save_component_graph_new","1","");
-	}
+	form_hidden_box("action_post", "graph_edit");
 
 	form_save_button("graphs.php");
 }
