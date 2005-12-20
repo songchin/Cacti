@@ -125,6 +125,7 @@ define("SNMPV3_AP_SHA", 1);
 define("HTML_BOX_SEARCH_NONE", 1);
 define("HTML_BOX_SEARCH_ACTIVE", 2);
 define("HTML_BOX_SEARCH_INACTIVE", 3);
+define("HTML_BOX_SEARCH_NO_ICON", 4);
 
 define("FORM_VALIDATE_CHECKBOX", chr(22));
 

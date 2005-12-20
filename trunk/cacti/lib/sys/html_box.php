@@ -83,15 +83,17 @@ function html_box_toolbar_draw($box_id, $form_id, $colspan, $search_type = HTML_
 			<table width="100%" cellpadding="3" cellspacing="0">
 				<tr>
 					<td width="200" style="padding: 0px;">
-						<?php if (($search_type == HTML_BOX_SEARCH_ACTIVE) || ($search_type == HTML_BOX_SEARCH_INACTIVE)) { ?>
+						<?php if (($search_type == HTML_BOX_SEARCH_ACTIVE) || ($search_type == HTML_BOX_SEARCH_INACTIVE) || ($search_type == HTML_BOX_SEARCH_NO_ICON)) { ?>
 						<table width="100%" cellpadding="3" cellspacing="0">
 							<tr>
+								<?php if (($search_type == HTML_BOX_SEARCH_ACTIVE) || ($search_type == HTML_BOX_SEARCH_INACTIVE)) { ?>
 								<td width="16" id="box-<?php echo $box_id;?>-button-search" class="action-bar-button-out">
 									<a href="javascript:action_area_show('<?php echo $box_id;?>',document.forms[<?php echo $form_id;?>],'search')"><img src="<?php echo html_get_theme_images_path($search_type == HTML_BOX_SEARCH_ACTIVE ? 'action_search_active.gif' : 'action_search.gif');?>" width="16" height="16" border="0" alt="Search" onMouseOver="action_bar_button_mouseover('box-<?php echo $box_id;?>-button-search')" onMouseOut="action_bar_button_mouseout('box-<?php echo $box_id;?>-button-search')" align="absmiddle"></a>
 								</td>
 								<td width="3">
 									<img src="<?php echo html_get_theme_images_path('vertical_spacer.gif');?>" alt="" align="absmiddle">
 								</td>
+								<?php } ?>
 								<td nowrap>
 									<?php
 									form_text_box("box-$box_id-search_filter", get_get_var("search_filter"), "", 100, 15, "text", 0, "small");

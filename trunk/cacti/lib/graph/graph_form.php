@@ -97,24 +97,6 @@ function api_graph_item_fields_validate(&$_fields_graph_item, $graph_item_field_
 	return $error_fields;
 }
 
-/* graph template fields */
-
-function _graph_template_field__template_name($field_name, $field_value = "", $field_id = 0) {
-	require_once(CACTI_BASE_PATH . "/lib/sys/html_form.php");
-
-	?>
-	<tr bgcolor="#<?php echo field_get_row_color();?>">
-		<td width="50%">
-			<span class="textEditTitle"><?php echo _("Name");?></span><br>
-			<?php echo _("The name given to this graph template.");?>
-		</td>
-		<td>
-			<?php form_text_box($field_name, $field_value, "", 150, 30, "text", $field_id);?>
-		</td>
-	</tr>
-	<?php
-}
-
 /* graph fields */
 
 function _graph_field__title($field_name, $template_flag = false, $field_id = 0, $t_field_name = "", $t_field_value = "") {

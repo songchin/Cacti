@@ -27,6 +27,8 @@ require_once(CACTI_BASE_PATH . "/include/auth/validate.php");
 require_once(CACTI_BASE_PATH . "/lib/graph_template/graph_template_update.php");
 require_once(CACTI_BASE_PATH . "/lib/graph/graph_form.php");
 require_once(CACTI_BASE_PATH . "/lib/graph_template/graph_template_push.php"); // remove
+require_once(CACTI_BASE_PATH . "/lib/graph_template/graph_template_info.php");
+require_once(CACTI_BASE_PATH . "/lib/graph_template/graph_template_form.php");
 require_once(CACTI_BASE_PATH . "/lib/sys/sequence.php");
 require_once(CACTI_BASE_PATH . "/include/graph/graph_constants.php");
 require_once(CACTI_BASE_PATH . "/include/graph/graph_arrays.php");
@@ -36,21 +38,12 @@ require_once(CACTI_BASE_PATH . "/lib/template.php");
 require_once(CACTI_BASE_PATH . "/lib/sys/tree.php");
 require_once(CACTI_BASE_PATH . "/lib/sys/html_tree.php");
 
-$graph_actions = array(
-	1 => _("Delete"),
-	2 => _("Duplicate")
-	);
-
 /* set default action */
 if (!isset($_REQUEST["action"])) { $_REQUEST["action"] = ""; }
 
 switch ($_REQUEST["action"]) {
 	case 'save':
 		form_save();
-
-		break;
-	case 'actions':
-		form_actions();
 
 		break;
 	case 'sv_remove':
@@ -96,76 +89,7 @@ switch ($_REQUEST["action"]) {
    -------------------------- */
 
 function form_save() {
-	global $graph_actions, $fields_graph;
-
-	/* the 'go' button was click in the graph items box */
-	if (isset($_POST["action_button_y"])) {
-		if (isset($_POST["selected_items"])) {
-			$selected_items = unserialize(stripslashes($_POST["selected_items"]));
-
-			if ($_POST["drp_action"] == "1") { /* delete */
-				for ($i=0;($i<count($selected_items));$i++) {
-					api_graph_template_item_remove($selected_items[$i]);
-				}
-			}elseif ($_POST["drp_action"] == "2") { /* duplicate */
-				for ($i=0;($i<count($selected_items));$i++) {
-					api_graph_template_item_duplicate($selected_items[$i], $_POST["new_dti"]);
-				}
-			}
-
-			header("Location: graph_templates.php?action=edit&id=" . $_POST["graph_template_id"]);
-			exit;
-		}
-
-		/* loop through each of the graphs selected on the previous page and get more info about them */
-		while (list($var,$val) = each($_POST)) {
-			if (ereg("^chk_gi_([0-9]+)$", $var, $matches)) {
-				$graph_array[] = $matches[1];
-			}
-		}
-
-		require_once(CACTI_BASE_PATH . "/include/top_header.php");
-
-		html_start_box("<strong>" . $graph_actions{$_POST["drp_action"]} . "</strong>", "60%", $colors["header_panel_background"], "3", "center", "");
-
-		print "<form action='graph_templates.php' method='post'>\n";
-
-		if ($_POST["drp_action"] == "1") { /* delete */
-			print "	<tr>
-					<td class='textArea' bgcolor='#" . $colors["form_alternate1"]. "'>
-						<p>" . _("Are you sure you want to delete these graph items?") . "</p>
-					</td>
-				</tr>\n
-				";
-		}else if ($_POST["drp_action"] == "2") { /* duplicate */
-			print "	<tr>
-					<td class='textArea' bgcolor='#" . $colors["form_alternate1"]. "'>
-						<p>" . _("Please choose a new data template item to assign to these graph items.") . "</p>
-						<p><strong>" . _("Data Template Item:") . "</strong><br>"; form_dropdown("new_dti", db_fetch_assoc("select CONCAT_WS('',data_template.template_name,' - ',' (',data_template_item.data_source_name,')') as name,data_template_item.id from data_template,data_template_item where data_template.id=data_template_item.data_template_id order by data_template.template_name,data_template_item.data_source_name"), "name", "id", "", "", ""); print "</p>
-					</td>
-				</tr>\n
-				";
-		}
-
-		print "	<tr>
-				<td align='right' bgcolor='#" . $colors["buttonbar_background"] . "'>
-					<input type='hidden' name='action' value='save'>
-					<input type='hidden' name='graph_template_id' value='" . $_POST["graph_template_id"] . "'>
-					<input type='hidden' name='action_button_y' value='X'>
-					<input type='hidden' name='selected_items' value='" . (isset($graph_array) ? serialize($graph_array) : '') . "'>
-					<input type='hidden' name='drp_action' value='" . $_POST["drp_action"] . "'>
-					<a href='graph_templates.php?action=edit&id=" . $_POST["graph_template_id"] . "'><img src='" . html_get_theme_images_path("button_no.gif") . "' alt='Cancel' align='absmiddle' border='0'></a>
-					<input type='image' src='" . html_get_theme_images_path("button_yes.gif") . "' alt='Save' align='absmiddle'>
-				</td>
-			</tr>
-			";
-
-		html_end_box();
-
-		require_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
-	}
-
-	if (isset($_POST["save_component_template"])) {
+	if ($_POST["action_post"] == "graph_template_edit") {
 		$suggested_value_fields = array();
 
 		/* cache all post field values */
@@ -182,8 +106,8 @@ function form_save() {
 		}
 
 		/* step #2: field validation */
-		$form_graph["id"] = $_POST["graph_template_id"];
-		$form_graph["template_name"] = $_POST["template_name"];
+		$form_graph_template["id"] = $_POST["graph_template_id"];
+		$form_graph_template["template_name"] = $_POST["template_name"];
 		$form_graph["t_title"] = html_boolean(isset($_POST["t_title"]) ? $_POST["t_title"] : "");
 		$form_graph["vertical_label"] = $_POST["vertical_label"];
 		$form_graph["t_vertical_label"] = html_boolean(isset($_POST["t_vertical_label"]) ? $_POST["t_vertical_label"] : "");
@@ -228,113 +152,49 @@ function form_save() {
 		$form_graph["unit_exponent_value"] = $_POST["unit_exponent_value"];
 		$form_graph["t_unit_exponent_value"] = html_boolean(isset($_POST["t_unit_exponent_value"]) ? $_POST["t_unit_exponent_value"] : "");
 
+		field_register_error(api_graph_template_fields_validate($form_graph_template, "|field|"));
 		field_register_error(api_graph_fields_validate($form_graph, $suggested_value_fields, "|field|", "sv||field|||id|"));
 
 		/* step #3: field save */
 		if (!is_error_message()) {
-			$graph_template_id = api_graph_template_save($form_graph, $suggested_value_fields);
-		}
-	}
-
-	if ((is_error_message()) || (empty($graph_template_id)) || (empty($_POST["graph_template_id"]))) {
-		if (isset($_POST["redirect_sv_add"])) {
-			$action = "sv_add";
-		}else{
-			$action = "edit";
+			$graph_template_id = api_graph_template_save($form_graph_template + $form_graph, $suggested_value_fields);
 		}
 
-		header("Location: graph_templates.php?action=$action" . (empty($graph_template_id) ? "" : "&id=$graph_template_id"));
-	}else{
-		header("Location: graph_templates.php");
-	}
-}
-
-/* ------------------------
-    The "actions" function
-   ------------------------ */
-
-function form_actions() {
-	global $colors, $graph_actions;
-
-	/* if we are to save this form, instead of display it */
-	if (isset($_POST["selected_items"])) {
-		$selected_items = unserialize(stripslashes($_POST["selected_items"]));
-
-		if ($_POST["drp_action"] == "1") { /* delete */
-			for ($i=0;($i<count($selected_items));$i++) {
-				api_graph_template_remove($selected_items[$i]);
+		if ((is_error_message()) || (empty($graph_template_id)) || (empty($_POST["graph_template_id"]))) {
+			if (isset($_POST["redirect_sv_add"])) {
+				$action = "sv_add";
+			}else{
+				$action = "edit";
 			}
-		}elseif ($_POST["drp_action"] == "2") { /* duplicate */
-			for ($i=0;($i<count($selected_items));$i++) {
-				duplicate_graph(0, $selected_items[$i], $_POST["title_format"]);
+
+			header("Location: graph_templates.php?action=$action" . (empty($graph_template_id) ? "" : "&id=$graph_template_id"));
+		}
+	/* submit button on the actions area page */
+	}else if ($_POST["action_post"] == "box-1") {
+		$selected_rows = explode(":", $_POST["box-1-action-area-selected-rows"]);
+
+		if ($_POST["box-1-action-area-type"] == "remove") {
+			foreach ($selected_rows as $graph_template_id) {
+				api_graph_template_remove($graph_template_id);
 			}
+		}else if ($_POST["box-1-action-area-type"] == "duplicate") {
+			// yet yet coded
 		}
 
 		header("Location: graph_templates.php");
-		exit;
-	}
+	/* 'filter' area at the bottom of the box */
+	}else if ($_POST["action_post"] == "graph_template_list") {
+		$get_string = "";
 
-	/* setup some variables */
-	$graph_list = ""; $i = 0;
-
-	/* loop through each of the graphs selected on the previous page and get more info about them */
-	while (list($var,$val) = each($_POST)) {
-		if (ereg("^chk_([0-9]+)$", $var, $matches)) {
-			$graph_list .= "<li>" . db_fetch_cell("select template_name from graph_template where id=" . $matches[1]) . "<br>";
-			$graph_array[$i] = $matches[1];
+		/* the 'clear' button wasn't pressed, so we should filter */
+		if (!isset($_POST["box-1-action-clear-button"])) {
+			if (trim($_POST["box-1-search_filter"]) != "") {
+				$get_string = ($get_string == "" ? "?" : "&") . "search_filter=" . urlencode($_POST["box-1-search_filter"]);
+			}
 		}
 
-		$i++;
+		header("Location: graph_templates.php$get_string");
 	}
-
-	require_once(CACTI_BASE_PATH . "/include/top_header.php");
-
-	html_start_box("<strong>" . $graph_actions{$_POST["drp_action"]} . "</strong>", "60%", $colors["header_panel_background"], "3", "center", "");
-
-	print "<form action='graph_templates.php' method='post'>\n";
-
-	if ($_POST["drp_action"] == "1") { /* delete */
-		print "	<tr>
-				<td class='textArea' bgcolor='#" . $colors["form_alternate1"]. "'>
-					<p>" . _("Are you sure you want to delete the following graph templates? Any graphs attached
-					to these templates will become individual graphs.") . "</p>
-					<p>$graph_list</p>
-				</td>
-			</tr>\n
-			";
-	}elseif ($_POST["drp_action"] == "2") { /* duplicate */
-		print "	<tr>
-				<td class='textArea' bgcolor='#" . $colors["form_alternate1"]. "'>
-					<p>" . _("When you click save, the following graph templates will be duplicated. You can
-					optionally change the title format for the new graph templates.") . "</p>
-					<p>$graph_list</p>
-					<p><strong>" . _("Title Format:") . "</strong><br>"; form_text_box("title_format", "<template_title> (1)", "", "255", "30", "text"); print "</p>
-				</td>
-			</tr>\n
-			";
-	}
-
-	if (!isset($graph_array)) {
-		print "<tr><td bgcolor='#" . $colors["form_alternate1"]. "'><span class='textError'>" . _("You must select at least one graph template.") . "</span></td></tr>\n";
-		$save_html = "";
-	}else{
-		$save_html = "<input type='image' src='" . html_get_theme_images_path("button_yes.gif") . "' alt='" . _("Save") . "' align='absmiddle'>";
-	}
-
-	print "	<tr>
-			<td align='right' bgcolor='#" . $colors["buttonbar_background"] . "'>
-				<input type='hidden' name='action' value='actions'>
-				<input type='hidden' name='selected_items' value='" . (isset($graph_array) ? serialize($graph_array) : '') . "'>
-				<input type='hidden' name='drp_action' value='" . $_POST["drp_action"] . "'>
-				<a href='graph_templates.php'><img src='" . html_get_theme_images_path("button_no.gif") . "' alt='Cancel' align='absmiddle' border='0'></a>
-				$save_html
-			</td>
-		</tr>
-		";
-
-	html_end_box();
-
-	require_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
 }
 
 /* ----------------------------
@@ -451,48 +311,91 @@ function template_edit() {
 	html_end_box();
 
 	form_hidden_box("graph_template_id", (empty($_GET["id"]) ? 0 : $_GET["id"]), "");
-	form_hidden_box("save_component_template", "1", "");
+	form_hidden_box("action_post", "graph_template_edit");
 
 	form_save_button("graph_templates.php");
 }
 
 function template() {
-	global $colors, $graph_actions;
+	$menu_items = array(
+		"remove" => "Remove",
+		"duplicate" => "Duplicate"
+		);
 
-	html_start_box("<strong>" . _("Graph Templates") . "</strong>", "98%", $colors["header_background"], "3", "center", "graph_templates.php?action=edit");
+	$filter_array = array();
 
-	html_header_checkbox(array(_("Template Title")));
+	/* search field: filter (searches template name) */
+	if (isset_get_var("search_filter")) {
+		$filter_array["template_name"] = get_get_var("search_filter");
+	}
 
-	$template_list = db_fetch_assoc("select
-		graph_template.id,
-		graph_template.template_name
-		from graph_template
-		order by template_name");
+	/* get a list of all devices on this page */
+	$graph_templates = api_graph_template_list($filter_array);
+
+	form_start("graph_templates.php");
+
+	$box_id = "1";
+	html_start_box("<strong>" . _("Graph Templates") . "</strong>", "graph_templates.php?action=edit");
+	html_header_checkbox(array(_("Template Title")), $box_id);
 
 	$i = 0;
-	if (sizeof($template_list) > 0) {
-		foreach ($template_list as $template) {
-			form_alternate_row_color($colors["form_alternate1"],$colors["form_alternate2"],$i);
-				?>
-				<td>
-					<a class="linkEditMain" href="graph_templates.php?action=edit&id=<?php print $template["id"];?>"><?php print $template["template_name"];?></a>
+	if (sizeof($graph_templates) > 0) {
+		foreach ($graph_templates as $graph_template) {
+			?>
+			<tr class="content-row" id="box-<?php echo $box_id;?>-row-<?php echo $graph_template["id"];?>" onClick="display_row_select('<?php echo $box_id;?>',document.forms[0],'box-<?php echo $box_id;?>-row-<?php echo $graph_template["id"];?>', 'box-<?php echo $box_id;?>-chk-<?php echo $graph_template["id"];?>')" onMouseOver="display_row_hover('box-<?php echo $box_id;?>-row-<?php echo $graph_template["id"];?>')" onMouseOut="display_row_clear('box-<?php echo $box_id;?>-row-<?php echo $graph_template["id"];?>')">
+				<td class="content-row">
+					<a class="linkEditMain" onClick="display_row_block('box-<?php echo $box_id;?>-row-<?php echo $graph_template["id"];?>')" href="graph_templates.php?action=edit&id=<?php echo $graph_template["id"];?>"><span id="box-<?php echo $box_id;?>-text-<?php echo $graph_template["id"];?>"><?php echo html_highlight_words(get_get_var("search_filter"), $graph_template["template_name"]);?></span></a>
 				</td>
-				<td style="<?php print get_checkbox_style();?>" width="1%" align="right">
-					<input type='checkbox' style='margin: 0px;' name='chk_<?php print $template["id"];?>' title="<?php print $template["template_name"];?>">
+				<td class="content-row" width="1%" align="center" style="border-left: 1px solid #b5b5b5; border-top: 1px solid #b5b5b5; background-color: #e9e9e9; <?php echo get_checkbox_style();?>">
+					<input type='checkbox' style='margin: 0px;' name='box-<?php echo $box_id;?>-chk-<?php echo $graph_template["id"];?>' id='box-<?php echo $box_id;?>-chk-<?php echo $graph_template["id"];?>' title="<?php echo $graph_template["template_name"];?>">
 				</td>
 			</tr>
 			<?php
-			$i++;
 		}
 	}else{
-		print "<tr><td bgcolor='#" . $colors["form_alternate1"] . "' colspan=7><em>" . _("No Graph Templates") . "</em></td></tr>";
+		?>
+		<tr>
+			<td class="content-list-empty" colspan="6">
+				No graph templates found.
+			</td>
+		</tr>
+		<?php
 	}
+	html_box_toolbar_draw($box_id, "0", "1", HTML_BOX_SEARCH_NO_ICON);
 	html_end_box(false);
 
-	/* draw the dropdown containing a list of available actions for this form */
-	draw_actions_dropdown($graph_actions);
+	html_box_actions_menu_draw($box_id, "0", $menu_items);
+	html_box_actions_area_draw($box_id, "0");
 
-	print "</form>\n";
+	form_hidden_box("action_post", "graph_template_list");
+	form_end();
+
+	?>
+
+	<script language="JavaScript">
+	<!--
+	function action_area_handle_type(box_id, type, parent_div, parent_form) {
+		if (type == 'remove') {
+			parent_div.appendChild(document.createTextNode('Are you sure you want to remove these graph templates?'));
+			parent_div.appendChild(action_area_generate_selected_rows(box_id));
+
+			action_area_update_header_caption(box_id, 'Remove Graph Template');
+			action_area_update_submit_caption(box_id, 'Remove');
+			action_area_update_selected_rows(box_id, parent_form);
+		}else if (type == 'duplicate') {
+			parent_div.appendChild(document.createTextNode('Are you sure you want to duplicate these graph templates?'));
+			parent_div.appendChild(action_area_generate_selected_rows(box_id));
+			parent_div.appendChild(action_area_generate_input('text', 'box-' + box_id + '-action-area-txt1', ''));
+
+			action_area_update_header_caption(box_id, 'Duplicate Graph Templates');
+			action_area_update_submit_caption(box_id, 'Duplicate');
+			action_area_update_selected_rows(box_id, parent_form);
+		}
+	}
+	-->
+	</script>
+
+	<?php
 }
 
 ?>
