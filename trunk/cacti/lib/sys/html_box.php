@@ -76,7 +76,7 @@ function html_end_box($trailing_br = true) { ?>
 	<?php if ($trailing_br == true) { print "<br>"; } ?>
 <?php }
 
-function html_box_toolbar_draw($box_id, $form_id, $colspan, $search_type = HTML_BOX_SEARCH_NONE, $search_url = "", $show_default_actions = 1) {
+function html_box_toolbar_draw($box_id, $form_id, $colspan, $search_type = HTML_BOX_SEARCH_NONE, $search_url = "", $show_default_actions = 1, $action_area_width = 400) {
 	?>
 	<tr>
 		<td style="border-top: 1px solid #b5b5b5; padding: 1px;" colspan="<?php echo $colspan;?>" >
@@ -88,7 +88,7 @@ function html_box_toolbar_draw($box_id, $form_id, $colspan, $search_type = HTML_
 							<tr>
 								<?php if (($search_type == HTML_BOX_SEARCH_ACTIVE) || ($search_type == HTML_BOX_SEARCH_INACTIVE)) { ?>
 								<td width="16" id="box-<?php echo $box_id;?>-button-search" class="action-bar-button-out">
-									<a href="javascript:action_area_show('<?php echo $box_id;?>',document.forms[<?php echo $form_id;?>],'search')"><img src="<?php echo html_get_theme_images_path($search_type == HTML_BOX_SEARCH_ACTIVE ? 'action_search_active.gif' : 'action_search.gif');?>" width="16" height="16" border="0" alt="Search" onMouseOver="action_bar_button_mouseover('box-<?php echo $box_id;?>-button-search')" onMouseOut="action_bar_button_mouseout('box-<?php echo $box_id;?>-button-search')" align="absmiddle"></a>
+									<a href="javascript:action_area_show('<?php echo $box_id;?>',document.forms[<?php echo $form_id;?>],'search',<?php echo $action_area_width; ?>)"><img src="<?php echo html_get_theme_images_path($search_type == HTML_BOX_SEARCH_ACTIVE ? 'action_search_active.gif' : 'action_search.gif');?>" width="16" height="16" border="0" alt="Search" onMouseOver="action_bar_button_mouseover('box-<?php echo $box_id;?>-button-search')" onMouseOut="action_bar_button_mouseout('box-<?php echo $box_id;?>-button-search')" align="absmiddle"></a>
 								</td>
 								<td width="3">
 									<img src="<?php echo html_get_theme_images_path('vertical_spacer.gif');?>" alt="" align="absmiddle">
@@ -176,12 +176,12 @@ function html_box_actions_menu_draw($box_id, $form_id, $menu_items, $width = 400
 
 function html_box_actions_area_draw($box_id, $form_id, $width = 400, $submit = 1) {
 	?>
-	<div id="box-<?php echo $box_id;?>-action-area-frame" class="shadowedBox" style="width: <?php echo $width + 14;?>px; position: absolute; left: 50%; top: 150px; visibility: hidden;" width="<?php echo $width + 14;?>">
-		<table cellpadding="0" cellspacing="0" border="0" width="<?php echo $width;?>">
+	<div id="box-<?php echo $box_id;?>-action-area-frame" class="shadowedBox" style="width: <?php echo $width + 14;?>px; position: absolute; left: 10px; top: 10px; visibility: hidden;" width="<?php echo $width + 14;?>">
+		<table cellpadding="0" cellspacing="0" border="0" width="<?php echo $width + 14;?>">
 			<tr valign="bottom">
 				<td class="bdr topleftcorner" width="7" height="7"></td>
 				<td class="bdr topleft" width="7" height="7"></td>
-				<td class="bdr top" width="<?php echo ($width - 14);?>" height="7"><img src"images/trans.gif" width="1" height="1"></td>
+				<td class="bdr top" width="<?php echo $width;?>" height="7"><img src"images/trans.gif" width="1" height="1"></td>
 				<td class="bdr topright" width="7" height="7"></td>
 				<td class="bdr toprightcorner" width="7" height="7"></td>
 			</tr>
@@ -194,10 +194,9 @@ function html_box_actions_area_draw($box_id, $form_id, $width = 400, $submit = 1
 					</table>
 				</td>
 				<td class="action-box-border" colspan="3">
-					<table border="0" cellpadding="0" cellspacing="0" width="<?php echo $width; ?>"
+					<table border="0" cellpadding="0" cellspacing="0" width="<?php echo $width; ?>">
 						<tr align="top">
-
-							<td>
+							<td width="<?php echo $width;?>">
 								<div id="box-<?php echo $box_id;?>-action-area-menu" class="action-area-menu">
 									<div id="box-<?php echo $box_id;?>-action-area-header" class="action-area-header">
 										<table width="<?php echo ($width);?>" cellspacing="0" cellpadding="0" border="0">
@@ -214,7 +213,7 @@ function html_box_actions_area_draw($box_id, $form_id, $width = 400, $submit = 1
 									<div id="box-<?php echo $box_id;?>-action-area-items" class="action-area-items">
 										&nbsp;
 									</div>
-									<div class="action-area-buttons">
+									<div class="action-area-buttons" width="<?php echo $width; ?>">
 										<input type="reset" value="Cancel" class="action-area-buttons" name="box-<?php echo $box_id;?>-action-area-button-cancel" id="box-<?php echo $box_id;?>-action-area-button-cancel" onClick="action_area_hide('<?php echo $box_id;?>')">
 										<?php if ($submit == 1) { ?>
 										<input type="submit" value="X" class="action-area-buttons" name="box-<?php echo $box_id;?>-action-area-button" id="box-<?php echo $box_id;?>-action-area-button" onClick="action_area_update_input('<?php echo $box_id;?>',document.forms[<?php echo $form_id;?>])">
@@ -236,7 +235,7 @@ function html_box_actions_area_draw($box_id, $form_id, $width = 400, $submit = 1
 			<tr valign="top">
 				<td class="bdr bottomleftcorner" width="7" height="7"></td>
 				<td class="bdr bottomleft" width="7" height="7"></td>
-				<td class="bdr bottom" width="<?php echo ($width - 14);?>" height="7"><img src"images/trans.gif" width="1" height="1"></td>
+				<td class="bdr bottom" width="<?php echo $width;?>" height="7"><img src"images/trans.gif" width="1" height="1"></td>
 				<td class="bdr bottomright" width="7" height="7"></td>
 				<td class="bdr bottomrightcorner" width="7" height="7"></td>
 			</tr>

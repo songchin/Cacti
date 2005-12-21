@@ -238,7 +238,7 @@ function action_area_hide(box_id) {
    @arg caption - (string) the text to print with the field for the user
    @arg is_first - (boolean) whether this field comes first
    @arg is_last - (boolean) whether this field comes last */
-function action_area_generate_search_field(field, caption, is_first, is_last) {
+function action_area_generate_search_field(field, caption, is_first, is_last, width) {
 	_elm_dt_container = document.createElement('div');
 
 	if (is_first == true) {
@@ -247,7 +247,12 @@ function action_area_generate_search_field(field, caption, is_first, is_last) {
 		_elm_dt_container.style.paddingTop = '3px';
 	}
 
+	if (! width) {
+		width = 400;
+	}
+
 	_elm_dt_container.style.paddingBottom = '3px';
+	_elm_dt_container.style.width = width;
 
 		/* container for the caption */
 		_elm_dt_container_txt = document.createElement('div');
@@ -275,8 +280,12 @@ function action_area_generate_search_field(field, caption, is_first, is_last) {
    @arg caption - (string) the text to print with the field for the user
    @arg is_first - (boolean) whether this field comes first
    @arg is_last - (boolean) whether this field comes last */
-function action_area_generate_text_field(field, caption, is_first, is_last, is_split) {
+function action_area_generate_text_field(field, caption, is_first, is_last, is_split, width) {
 	_elm_dt_container = document.createElement('div');
+
+	if (! width) {
+		width = 400;
+	}
 
 	if (is_first == true) {
 		_elm_dt_container.style.paddingTop = '1px';
@@ -285,6 +294,7 @@ function action_area_generate_text_field(field, caption, is_first, is_last, is_s
 	}
 
 	_elm_dt_container.style.paddingBottom = '3px';
+	_elm_dt_container.style.width = width;
 	if (is_split) {
 		/* container for the caption */
 		_elm_dt_container_txt = document.createElement('div');

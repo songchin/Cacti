@@ -215,7 +215,7 @@ function view_logs() {
 	html_end_box(false);
 
 	html_box_actions_menu_draw($action_box_id, "0", $menu_items, 250);
-	html_box_actions_area_draw($action_box_id, "0", 250);
+	html_box_actions_area_draw($action_box_id, "0", 400);
 	html_box_actions_area_draw($view_box_id, "0", 500, 0);
 
 	form_hidden_box("action_post", "log_list");
@@ -254,14 +254,14 @@ function view_logs() {
 	function action_area_handle_type(box_id, type, parent_div, parent_form) {
 		if (type == 'view_record') {
 
-			parent_div.appendChild(action_area_generate_text_field(document.getElementById('box-' + box_id + '-row-' + parent_form + '-logdate').innerHTML, 'Date:', true, false,false));
-			parent_div.appendChild(action_area_generate_text_field(document.getElementById('box-' + box_id + '-row-' + parent_form + '-facility').innerHTML, 'Facility:', false, false, false));
-			parent_div.appendChild(action_area_generate_text_field(document.getElementById('box-' + box_id + '-row-' + parent_form + '-severity').innerHTML, 'Severity:', false, false, false));
-			parent_div.appendChild(action_area_generate_text_field(document.getElementById('box-' + box_id + '-row-' + parent_form + '-poller_name').innerHTML, 'Poller:', false, false, false));
-			parent_div.appendChild(action_area_generate_text_field(document.getElementById('box-' + box_id + '-row-' + parent_form + '-host').innerHTML, 'Host:', false, false, false));
-			parent_div.appendChild(action_area_generate_text_field(document.getElementById('box-' + box_id + '-row-' + parent_form + '-plugin').innerHTML, 'Plugin:', false, false, false));
-			parent_div.appendChild(action_area_generate_text_field(document.getElementById('box-' + box_id + '-row-' + parent_form + '-username').innerHTML, 'User:', false, false, false));
-			parent_div.appendChild(action_area_generate_text_field(document.getElementById('box-' + box_id + '-row-' + parent_form + '-message').innerHTML, 'Message:', false, true, true));
+			parent_div.appendChild(action_area_generate_text_field(document.getElementById('box-' + box_id + '-row-' + parent_form + '-logdate').innerHTML, 'Date:', true, false,false, 500));
+			parent_div.appendChild(action_area_generate_text_field(document.getElementById('box-' + box_id + '-row-' + parent_form + '-facility').innerHTML, 'Facility:', false, false, false, 500));
+			parent_div.appendChild(action_area_generate_text_field(document.getElementById('box-' + box_id + '-row-' + parent_form + '-severity').innerHTML, 'Severity:', false, false, false, 500));
+			parent_div.appendChild(action_area_generate_text_field(document.getElementById('box-' + box_id + '-row-' + parent_form + '-poller_name').innerHTML, 'Poller:', false, false, false, 500));
+			parent_div.appendChild(action_area_generate_text_field(document.getElementById('box-' + box_id + '-row-' + parent_form + '-host').innerHTML, 'Host:', false, false, false, 500));
+			parent_div.appendChild(action_area_generate_text_field(document.getElementById('box-' + box_id + '-row-' + parent_form + '-plugin').innerHTML, 'Plugin:', false, false, false, 500));
+			parent_div.appendChild(action_area_generate_text_field(document.getElementById('box-' + box_id + '-row-' + parent_form + '-username').innerHTML, 'User:', false, false, false, 500));
+			parent_div.appendChild(action_area_generate_text_field(document.getElementById('box-' + box_id + '-row-' + parent_form + '-message').innerHTML, 'Message:', false, true, true, 500));
 
 			action_area_update_header_caption(box_id, 'View Log Entry');
 		
