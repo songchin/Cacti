@@ -22,6 +22,42 @@
  +-------------------------------------------------------------------------+
 */
 
+function api_data_template_list($filter_array = "", $current_page = 0, $rows_per_page = 0) {
+	require_once(CACTI_BASE_PATH . "/lib/data_template/data_template_form.php");
+
+	$sql_where = "";
+	/* validation and setup for the WHERE clause */
+	if ((is_array($filter_array)) && (sizeof($filter_array) > 0)) {
+		/* validate each field against the known master field list */
+		$field_errors = api_data_template_fields_validate(sql_filter_array_to_field_array($filter_array));
+
+		/* if a field input error has occured, register the error in the session and return */
+		if (sizeof($field_errors) > 0) {
+			field_register_error($field_errors);
+			return false;
+		/* otherwise, form an SQL WHERE string using the filter fields */
+		}else{
+			$sql_where = sql_filter_array_to_where_string($filter_array, api_data_template_fields_list(), true);
+		}
+	}
+
+	$sql_limit = "";
+	/* validation and setup for the LIMIT clause */
+	if ((is_numeric($current_page)) && (is_numeric($rows_per_page)) && (!empty($current_page)) && (!empty($rows_per_page))) {
+		$sql_limit = "limit " . ($rows_per_page * ($current_page - 1)) . ",$rows_per_page";
+	}
+
+	return db_fetch_assoc("select
+		data_template.id,
+		data_template.template_name,
+		data_template.data_input_type,
+		data_template.active
+		from data_template
+		$sql_where
+		order by template_name
+		$sql_limit");
+}
+
 function get_data_template($data_template_id) {
 	/* sanity check for $data_template_id */
 	if ((!is_numeric($data_template_id)) || (empty($data_template_id))) {
@@ -120,8 +156,8 @@ function get_data_template_input_fields($data_template_id) {
 
 }
 
-function &get_data_template_field_list() {
-	require(CACTI_BASE_PATH . "/include/data_source/data_source_form.php");
+function &api_data_template_fields_list() {
+	require(CACTI_BASE_PATH . "/include/data_template/data_template_form.php");
 
 	return $fields_data_template;
 }

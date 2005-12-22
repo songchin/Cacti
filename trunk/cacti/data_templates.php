@@ -25,8 +25,10 @@
 require(dirname(__FILE__) . "/include/global.php");
 require_once(CACTI_BASE_PATH . "/include/auth/validate.php");
 require_once(CACTI_BASE_PATH . "/lib/data_template/data_template_update.php");
+require_once(CACTI_BASE_PATH . "/lib/data_template/data_template_info.php");
 require_once(CACTI_BASE_PATH . "/lib/data_template/data_template_form.php");
 require_once(CACTI_BASE_PATH . "/lib/data_source/data_source_form.php");
+require_once(CACTI_BASE_PATH . "/lib/data_source/data_source_info.php");
 require_once(CACTI_BASE_PATH . "/lib/data_query/data_query_info.php");
 require_once(CACTI_BASE_PATH . "/lib/sys/sequence.php");
 require_once(CACTI_BASE_PATH . "/include/data_source/data_source_constants.php");
@@ -36,21 +38,12 @@ require_once(CACTI_BASE_PATH . "/lib/sys/html_tree.php");
 require_once(CACTI_BASE_PATH . "/lib/utility.php");
 require_once(CACTI_BASE_PATH . "/lib/template.php");
 
-$ds_actions = array(
-	1 => _("Delete"),
-	2 => _("Duplicate")
-	);
-
 /* set default action */
 if (!isset($_REQUEST["action"])) { $_REQUEST["action"] = ""; }
 
 switch ($_REQUEST["action"]) {
 	case 'save':
 		form_save();
-
-		break;
-	case 'actions':
-		form_actions();
 
 		break;
 	case 'item_add':
@@ -112,9 +105,7 @@ switch ($_REQUEST["action"]) {
    -------------------------- */
 
 function form_save() {
-	global $fields_data_source;
-
-	if (isset($_POST["save_component_template"])) {
+	if ($_POST["action_post"] == "data_template_edit") {
 		$data_input_fields = array();
 		$suggested_value_fields = array();
 
@@ -145,27 +136,27 @@ function form_save() {
 		}
 
 		/* step #2: field validation */
-		$form_data_source["id"] = $_POST["data_template_id"];
-		$form_data_source["template_name"] = $_POST["template_name"];
+		$form_data_template["id"] = $_POST["data_template_id"];
+		$form_data_template["template_name"] = $_POST["template_name"];
 		$form_data_source["data_input_type"] = $_POST["data_input_type"];
 		$form_data_source["t_name"] = html_boolean(isset($_POST["t_name"]) ? $_POST["t_name"] : "");
-		$form_data_source["active"] = html_boolean(isset($_POST["active"]) ? $_POST["active"] : (empty($_POST["data_template_id"]) ? $fields_data_source["active"]["default"] : "") );
+		$form_data_source["active"] = html_boolean(isset($_POST["active"]) ? $_POST["active"] : "");
 		$form_data_source["t_active"] = html_boolean(isset($_POST["t_active"]) ? $_POST["t_active"] : "");
-		$form_data_source["rrd_step"] = (isset($_POST["rrd_step"]) ? $_POST["rrd_step"] : $fields_data_source["rrd_step"]["default"]);
+		$form_data_source["rrd_step"] = (isset($_POST["rrd_step"]) ? $_POST["rrd_step"] : "");
 		$form_data_source["t_rrd_step"] = html_boolean(isset($_POST["t_rrd_step"]) ? $_POST["t_rrd_step"] : "");
 
 		field_register_error(api_data_source_fields_validate($form_data_source, $suggested_value_fields, "|field|", "sv||field|||id|"));
 		field_register_error(api_data_source_input_fields_validate($data_input_fields, "|field|"));
-		field_register_error(api_data_template_validate_fields_base($form_data_source, "|field|"));
+		field_register_error(api_data_template_fields_validate($form_data_template, "|field|"));
 
 		while (list($data_template_item_id, $fields) = each($data_template_item_fields)) {
 			$form_data_source_item[$data_template_item_id]["id"] = $data_template_item_id;
 			$form_data_source_item[$data_template_item_id]["t_rrd_maximum"] = html_boolean(isset($fields["t_rrd_maximum"]) ? $fields["t_rrd_maximum"] : "");
-			$form_data_source_item[$data_template_item_id]["rrd_maximum"] = (isset($fields["rrd_maximum"]) ? $fields["rrd_maximum"] : $fields_data_source["rrd_maximum"]["default"]);
+			$form_data_source_item[$data_template_item_id]["rrd_maximum"] = (isset($fields["rrd_maximum"]) ? $fields["rrd_maximum"] : "");
 			$form_data_source_item[$data_template_item_id]["t_rrd_minimum"] = html_boolean(isset($fields["t_rrd_minimum"]) ? $fields["t_rrd_minimum"] : "");
-			$form_data_source_item[$data_template_item_id]["rrd_minimum"] = (isset($fields["rrd_minimum"]) ? $fields["rrd_minimum"] : $fields_data_source["rrd_minimum"]["default"]);
+			$form_data_source_item[$data_template_item_id]["rrd_minimum"] = (isset($fields["rrd_minimum"]) ? $fields["rrd_minimum"] : "");
 			$form_data_source_item[$data_template_item_id]["t_rrd_heartbeat"] = html_boolean(isset($fields["t_rrd_heartbeat"]) ? $fields["t_rrd_heartbeat"] : "");
-			$form_data_source_item[$data_template_item_id]["rrd_heartbeat"] = (isset($fields["rrd_heartbeat"]) ? $fields["rrd_heartbeat"] : $fields_data_source["rrd_heartbeat"]["default"]);
+			$form_data_source_item[$data_template_item_id]["rrd_heartbeat"] = (isset($fields["rrd_heartbeat"]) ? $fields["rrd_heartbeat"] : "");
 			$form_data_source_item[$data_template_item_id]["t_data_source_type"] = html_boolean(isset($fields["t_data_source_type"]) ? $fields["t_data_source_type"] : "");
 			$form_data_source_item[$data_template_item_id]["data_source_type"] = $fields["data_source_type"];
 			$form_data_source_item[$data_template_item_id]["data_source_name"] = $fields["data_source_name"];
@@ -176,7 +167,7 @@ function form_save() {
 
 		/* step #3: field save */
 		if (!is_error_message()) {
-			$data_template_id = api_data_template_save($form_data_source, $suggested_value_fields, $data_input_fields, (isset($_POST["rra_id"]) ? $_POST["rra_id"] : array()));
+			$data_template_id = api_data_template_save($form_data_template + $form_data_source, $suggested_value_fields, $data_input_fields, (isset($_POST["rra_id"]) ? $_POST["rra_id"] : array()));
 
 			if ($data_template_id) {
 				reset($data_template_item_fields);
@@ -207,95 +198,32 @@ function form_save() {
 
 			header("Location: data_templates.php");
 		}
-	}
-}
+	/* submit button on the actions area page */
+	}else if ($_POST["action_post"] == "box-1") {
+		$selected_rows = explode(":", $_POST["box-1-action-area-selected-rows"]);
 
-/* ------------------------
-    The "actions" function
-   ------------------------ */
-
-function form_actions() {
-	global $colors, $ds_actions;
-
-	/* if we are to save this form, instead of display it */
-	if (isset($_POST["selected_items"])) {
-		$selected_items = unserialize(stripslashes($_POST["selected_items"]));
-
-		if ($_POST["drp_action"] == "1") { /* delete */
-			for ($i=0;($i<count($selected_items));$i++) {
-				api_data_template_remove($selected_items[$i]);
+		if ($_POST["box-1-action-area-type"] == "remove") {
+			foreach ($selected_rows as $data_template_id) {
+				api_data_template_remove($data_template_id);
 			}
-		}elseif ($_POST["drp_action"] == "2") { /* duplicate */
-			for ($i=0;($i<count($selected_items));$i++) {
-				duplicate_data_source(0, $selected_items[$i], $_POST["title_format"]);
-			}
+		}else if ($_POST["box-1-action-area-type"] == "duplicate") {
+			// yet yet coded
 		}
 
 		header("Location: data_templates.php");
-		exit;
-	}
+	/* 'filter' area at the bottom of the box */
+	}else if ($_POST["action_post"] == "data_template_list") {
+		$get_string = "";
 
-	/* setup some variables */
-	$ds_list = ""; $i = 0;
-
-	/* loop through each of the graphs selected on the previous page and get more info about them */
-	while (list($var,$val) = each($_POST)) {
-		if (ereg("^chk_([0-9]+)$", $var, $matches)) {
-			$ds_list .= "<li>" . db_fetch_cell("select template_name from data_template where id=" . $matches[1]) . "<br>";
-			$ds_array[$i] = $matches[1];
+		/* the 'clear' button wasn't pressed, so we should filter */
+		if (!isset($_POST["box-1-action-clear-button"])) {
+			if (trim($_POST["box-1-search_filter"]) != "") {
+				$get_string = ($get_string == "" ? "?" : "&") . "search_filter=" . urlencode($_POST["box-1-search_filter"]);
+			}
 		}
 
-		$i++;
+		header("Location: data_templates.php$get_string");
 	}
-
-	require_once(CACTI_BASE_PATH . "/include/top_header.php");
-
-	html_start_box("<strong>" . $ds_actions{$_POST["drp_action"]} . "</strong>", "60%", $colors["header_panel_background"], "3", "center", "");
-
-	print "<form action='data_templates.php' method='post'>\n";
-
-	if ($_POST["drp_action"] == "1") { /* delete */
-		print "	<tr>
-				<td class='textArea' bgcolor='#" . $colors["form_alternate1"]. "'>
-					<p>" . _("Are you sure you want to delete the following data templates? Any data sources attached
-					to these templates will become individual data sources.") . "</p>
-					<p>$ds_list</p>
-				</td>
-			</tr>\n
-			";
-	}elseif ($_POST["drp_action"] == "2") { /* duplicate */
-		print "	<tr>
-				<td class='textArea' bgcolor='#" . $colors["form_alternate1"]. "'>
-					<p>" . _("When you click save, the following data templates will be duplicated. You can
-					optionally change the title format for the new data templates.") . "</p>
-					<p>$ds_list</p>
-					<p><strong>" . _("Title Format:") . "</strong><br>"; form_text_box("title_format", "<template_title> (1)", "", "255", "30", "text"); print "</p>
-				</td>
-			</tr>\n
-			";
-	}
-
-	if (!isset($ds_array)) {
-		print "<tr><td bgcolor='#" . $colors["form_alternate1"]. "'><span class='textError'>" . _("You must select at least one data template.") . "</span></td></tr>\n";
-		$save_html = "";
-	}else{
-		$save_html = "<input type='image' src='" . html_get_theme_images_path("button_yes.gif") . "' alt='" . _("Save") . "' align='absmiddle'>";
-	}
-
-	print "	<tr>
-			<td align='right' bgcolor='#" . $colors["buttonbar_background"] . "'>
-				<input type='hidden' name='action' value='actions'>
-				<input type='hidden' name='selected_items' value='" . (isset($ds_array) ? serialize($ds_array) : '') . "'>
-				<input type='hidden' name='drp_action' value='" . $_POST["drp_action"] . "'>
-				<a href='data_templates.php'><img src='" . html_get_theme_images_path("button_no.gif") . "' alt='" . _("Cancel") . "' align='absmiddle' border='0'></a>
-				$save_html
-			</td>
-		</tr>
-		";
-
-	html_end_box();
-
-	require_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
 }
 
 /* ----------------------------
@@ -537,57 +465,100 @@ function template_edit() {
 	html_end_box();
 
 	form_hidden_box("data_template_id", (empty($_GET["id"]) ? 0 : $_GET["id"]), "");
-	form_hidden_box("save_component_template", "1", "");
+	form_hidden_box("action_post", "data_template_edit");
 
 	form_save_button("data_templates.php");
 }
 
 function template() {
-	global $colors, $ds_actions, $data_input_types;
+	$menu_items = array(
+		"remove" => "Remove",
+		"duplicate" => "Duplicate"
+		);
 
-	html_start_box("<strong>" . _("Data Templates") . "</strong>", "98%", $colors["header_background"], "3", "center", "data_templates.php?action=edit");
+	$filter_array = array();
 
-	html_header_checkbox(array(_("Template Name"), _("Data Input Type"), _("Status")));
+	/* search field: filter (searches template name) */
+	if (isset_get_var("search_filter")) {
+		$filter_array["template_name"] = get_get_var("search_filter");
+	}
 
-	$template_list = db_fetch_assoc("select
-		data_template.id,
-		data_template.template_name,
-		data_template.data_input_type,
-		data_template.active
-		from data_template
-		order by data_template.template_name");
+	/* get a list of all data templates on this page */
+	$data_templates = api_data_template_list($filter_array);
+
+	/* get a list of data input types for display in the data sources list */
+	$data_input_types = api_data_source_input_types_list();
+
+	form_start("data_templates.php");
+
+	$box_id = "1";
+	html_start_box("<strong>" . _("Data Templates") . "</strong>", "data_templates.php?action=edit");
+	html_header_checkbox(array(_("Template Name"), _("Data Input Type"), _("Status")), $box_id);
 
 	$i = 0;
-	if (sizeof($template_list) > 0) {
-		foreach ($template_list as $template) {
-			form_alternate_row_color($colors["form_alternate1"],$colors["form_alternate2"],$i);
-				?>
-				<td>
-					<a class="linkEditMain" href="data_templates.php?action=edit&id=<?php print $template["id"];?>"><?php print $template["template_name"];?></a>
+	if (sizeof($data_templates) > 0) {
+		foreach ($data_templates as $data_template) {
+			?>
+			<tr class="content-row" id="box-<?php echo $box_id;?>-row-<?php echo $data_template["id"];?>" onClick="display_row_select('<?php echo $box_id;?>',document.forms[0],'box-<?php echo $box_id;?>-row-<?php echo $data_template["id"];?>', 'box-<?php echo $box_id;?>-chk-<?php echo $data_template["id"];?>')" onMouseOver="display_row_hover('box-<?php echo $box_id;?>-row-<?php echo $data_template["id"];?>')" onMouseOut="display_row_clear('box-<?php echo $box_id;?>-row-<?php echo $data_template["id"];?>')">
+				<td class="content-row">
+					<a class="linkEditMain" onClick="display_row_block('box-<?php echo $box_id;?>-row-<?php echo $data_template["id"];?>')" href="data_templates.php?action=edit&id=<?php echo $data_template["id"];?>"><span id="box-<?php echo $box_id;?>-text-<?php echo $data_template["id"];?>"><?php echo html_highlight_words(get_get_var("search_filter"), $data_template["template_name"]);?></span></a>
 				</td>
-				<td>
-					<?php print $data_input_types{$template["data_input_type"]};?>
+				<td class="content-row">
+					<?php echo $data_input_types{$data_template["data_input_type"]};?>
 				</td>
-				<td>
-					<?php if ($template["active"] == "1") print _("Active"); else print _("Disabled");?>
+				<td class="content-row">
+					<?php if ($data_template["active"] == "1") echo _("Active"); else echo _("Disabled");?>
 				</td>
-				<td style="<?php print get_checkbox_style();?>" width="1%" align="right">
-					<input type='checkbox' style='margin: 0px;' name='chk_<?php print $template["id"];?>' title="<?php print $template["template_name"];?>">
+				<td class="content-row" width="1%" align="center" style="border-left: 1px solid #b5b5b5; border-top: 1px solid #b5b5b5; background-color: #e9e9e9; <?php echo get_checkbox_style();?>">
+					<input type='checkbox' style='margin: 0px;' name='box-<?php echo $box_id;?>-chk-<?php echo $data_template["id"];?>' id='box-<?php echo $box_id;?>-chk-<?php echo $data_template["id"];?>' title="<?php echo $data_template["template_name"];?>">
 				</td>
 			</tr>
 			<?php
-			$i++;
 		}
 	}else{
-		print "<tr><td><em>" . _("No Data Templates") . "</em></td></tr>\n";
+		?>
+		<tr>
+			<td class="content-list-empty" colspan="6">
+				No data templates found.
+			</td>
+		</tr>
+		<?php
 	}
-
+	html_box_toolbar_draw($box_id, "0", "3", HTML_BOX_SEARCH_NO_ICON);
 	html_end_box(false);
 
-	/* draw the dropdown containing a list of available actions for this form */
-	draw_actions_dropdown($ds_actions);
+	html_box_actions_menu_draw($box_id, "0", $menu_items);
+	html_box_actions_area_draw($box_id, "0");
 
-	print "</form>\n";
+	form_hidden_box("action_post", "data_template_list");
+	form_end();
+
+	?>
+
+	<script language="JavaScript">
+	<!--
+	function action_area_handle_type(box_id, type, parent_div, parent_form) {
+		if (type == 'remove') {
+			parent_div.appendChild(document.createTextNode('Are you sure you want to remove these data templates?'));
+			parent_div.appendChild(action_area_generate_selected_rows(box_id));
+
+			action_area_update_header_caption(box_id, 'Remove Data Template');
+			action_area_update_submit_caption(box_id, 'Remove');
+			action_area_update_selected_rows(box_id, parent_form);
+		}else if (type == 'duplicate') {
+			parent_div.appendChild(document.createTextNode('Are you sure you want to duplicate these data templates?'));
+			parent_div.appendChild(action_area_generate_selected_rows(box_id));
+			parent_div.appendChild(action_area_generate_input('text', 'box-' + box_id + '-action-area-txt1', ''));
+
+			action_area_update_header_caption(box_id, 'Duplicate Data Templates');
+			action_area_update_submit_caption(box_id, 'Duplicate');
+			action_area_update_selected_rows(box_id, parent_form);
+		}
+	}
+	-->
+	</script>
+
+	<?php
 }
 
 ?>
