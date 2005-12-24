@@ -193,8 +193,6 @@ function action_area_show(box_id, parent_form, type, width) {
 	/* clear the box */
 	parent_div.innerHTML = '';
 
-	action_area_handle_type(box_id, type, parent_div, parent_form);
-
 	/* this can be used by the post handler to determine which box submitted the form */
 	parent_div.appendChild(action_area_generate_input('hidden', 'action_post', 'box-' + box_id));
 
@@ -218,6 +216,7 @@ function action_area_show(box_id, parent_form, type, width) {
 
 	/* show the area box */
 	document.getElementById('box-' + box_id + '-action-area-frame').style.visibility = 'visible';
+	action_area_handle_type(box_id, type, parent_div, parent_form);
 
 	/* keep a cache of the active actions box type */
 	_current_action_type[box_id] = type;
