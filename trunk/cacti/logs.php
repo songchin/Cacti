@@ -58,15 +58,14 @@ switch ($_REQUEST["action"]) {
 function form_post() {
 
 
+	$get_string = "";
+
 	/* Process clear request and get out */
 	if (isset($_POST["box-1-action-clear-button"])) {
 		header("logs.php");
 	}
 
-
-	$get_string = "";
 	if (($_POST["action_post"] == "box-1") && (isset($_POST["box-1-action-area-type"]))) { 
-
 		if (($_POST["box-1-action-area-type"] == "search") || ($_POST["box-1-action-area-type"] == "export")) {
 			if (trim($_POST["box-1-search_filter"]) != "") {
 				$get_string = ($get_string == "" ? "?" : "&") . "search_filter=" . urlencode($_POST["box-1-search_filter"]);
@@ -101,6 +100,11 @@ function form_post() {
 					$get_string .= ($get_string == "" ? "?" : "&") . "search_username=" . urlencode($_POST["box-1-search_username"]);
 				}
 			}
+			if (isset($_POST["box-1-search_source"])) {
+				if ($_POST["box-1-search_source"] != "-1") {
+					$get_string .= ($get_string == "" ? "?" : "&") . "search_source=" . urlencode($_POST["box-1-search_source"]);
+				}
+			}
 		}
 
 	} elseif ((isset($_POST["box-1-search_filter"]))) { 
@@ -113,13 +117,13 @@ function form_post() {
 	if (isset($_POST["box-1-action-area-type"])) {
 		if ($_POST["box-1-action-area-type"] == "export") {
 			$get_string .= ($get_string == "" ? "?" : "&") . "action=export";
+		}elseif ($_POST["box-1-action-area-type"] == "purge") {
+			api_log_truncate();
+			$get_string="";
 		}
 	}
 
-
-
 	header("Location: logs.php" . $get_string);
-	
 
 	exit;
 
@@ -169,13 +173,17 @@ function view_logs() {
 		$filter_array["username"] = get_get_var("search_username");
 		$filter_url = ($filter_url == "" ? "" : "&") . "search_username=" . urlencode(get_get_var("search_username"));
 	}
+	if (isset_get_var("search_source")) {
+		$filter_array["source"] = get_get_var("search_source");
+		$filter_url = ($filter_url == "" ? "" : "&") . "search_source=" . urlencode(get_get_var("search_source"));
+	}
 
 	/* get log entires */
 	$logs = api_log_list($filter_array,read_config_option("num_rows_log"),read_config_option("num_rows_log")*($current_page-1));
 	$total_rows = api_log_total_get($filter_array);
 
 	/* generate page list */
-	$url_string = build_get_url_string(array("search_filter","search_facility","search_severity","search_poller","search_host","search_plugin","search_user"));
+	$url_string = build_get_url_string(array("search_filter","search_facility","search_severity","search_poller","search_host","search_plugin","search_user","search_source"));
 	$url_page_select = get_page_list($current_page, MAX_DISPLAY_PAGES, read_config_option("num_rows_log"), $total_rows, "logs.php" . $url_string . ($url_string == "" ? "?" : "&") . "page=|PAGE_NUM|");
 
 	/* Output html */
@@ -191,9 +199,10 @@ function view_logs() {
 	print "<td class='log-content-header-sub-div'>" . _("Poller") . "</td>\n";
 	print "<td class='log-content-header-sub-div'>" . _("Host") . "</td>\n";
 	print "<td class='log-content-header-sub-div'>" . _("Plugin") . "</td>\n";
-	print "<td colspan= '2' class='log-content-header-sub-div'>" . _("User") . "</td>\n";
+	print "<td class='log-content-header-sub-div'>" . _("User") . "</td>\n";
+	print "<td colspan='2' class='log-content-header-sub-div'>" . _("Source") . "</td>\n";
 	print "</tr>\n<tr>\n";
-	print "<td colspan=\"8\" class='log-content-header-sub'>" . _("Message") . "</td>\n";
+	print "<td colspan=\"9\" class='log-content-header-sub'>" . _("Message") . "</td>\n";
 	print "</tr>";
 
 
@@ -224,11 +233,14 @@ function view_logs() {
 				<td class="log-content-row">
 					<?php if ($log["username"] == "") { echo "SYSTEM"; }else{ echo $log["username"]; } ?>
 				</td>
+				<td class="log-content-row">
+					<?php if ($log["source"] == "") { echo "SYSTEM"; }else{ echo $log["source"]; } ?>
+				</td>
 				<td width="1%" class="log-content-row">
 					&nbsp;
 				</td>
 			</tr><tr class="<?php echo api_log_html_css_class(api_log_severity_get($log["severity"])); ?>">
-				<td colspan="8" class="log-content-row-div">
+				<td colspan="9" class="log-content-row-div">
 					<?php echo $log["message"]; ?>
 				</td>
 			</tr>
@@ -238,14 +250,14 @@ function view_logs() {
 	}else{
 		?>
 		<tr>
-			<td class="content-list-empty" colspan="8">
+			<td class="content-list-empty" colspan="9">
 				No Log Entries Found.
 			</td>
 		</tr>
 		<?php
 	}
 
-	html_box_toolbar_draw($action_box_id, "0", "7", (sizeof($filter_array) == 0 ? HTML_BOX_SEARCH_INACTIVE : HTML_BOX_SEARCH_ACTIVE), $url_page_select, 0);
+	html_box_toolbar_draw($action_box_id, "0", "8", (sizeof($filter_array) == 0 ? HTML_BOX_SEARCH_INACTIVE : HTML_BOX_SEARCH_ACTIVE), $url_page_select, 0);
 	html_end_box(false);
 
 	html_box_actions_menu_draw($action_box_id, "0", $menu_items, 250);
@@ -317,6 +329,9 @@ function view_logs() {
 			_elm_user_input = action_area_generate_select('box-' + box_id + '-search_username');
 			<?php echo get_js_dropdown_code('_elm_user_input', $search_username, (isset_get_var("search_username") ? get_get_var("search_username") : "-1"));?>
 
+			_elm_source_input = action_area_generate_input('text', 'box-' + box_id + '-search_source', '<?php echo get_get_var("search_source");?>');
+			_elm_source_input.size = '30';
+
 			_elm_ht_input = action_area_generate_input('text', 'box-' + box_id + '-search_filter', '<?php echo get_get_var("search_filter");?>');
 			_elm_ht_input.size = '30';
 
@@ -326,6 +341,7 @@ function view_logs() {
 			parent_div.appendChild(action_area_generate_search_field(_elm_host_input, 'Host', false, false));
 			parent_div.appendChild(action_area_generate_search_field(_elm_plug_input, 'Plugin', false, false));
 			parent_div.appendChild(action_area_generate_search_field(_elm_user_input, 'User', false, false));
+			parent_div.appendChild(action_area_generate_search_field(_elm_source_input, 'Source', false, false));
 
 			parent_div.appendChild(action_area_generate_search_field(_elm_ht_input, 'Filter', false, true));
 
@@ -354,6 +370,9 @@ function view_logs() {
 			_elm_user_input = action_area_generate_select('box-' + box_id + '-search_username');
 			<?php echo get_js_dropdown_code('_elm_user_input', $search_username, (isset_get_var("search_username") ? get_get_var("search_username") : "-1"));?>
 
+			_elm_source_input = action_area_generate_input('text', 'box-' + box_id + '-search_source', '<?php echo get_get_var("search_source");?>');
+			_elm_source_input.size = '30';
+
 			_elm_ht_input = action_area_generate_input('text', 'box-' + box_id + '-search_filter', '<?php echo get_get_var("search_filter");?>');
 			_elm_ht_input.size = '30';
 
@@ -363,6 +382,7 @@ function view_logs() {
 			parent_div.appendChild(action_area_generate_search_field(_elm_host_input, 'Host', false, false));
 			parent_div.appendChild(action_area_generate_search_field(_elm_plug_input, 'Plugin', false, false));
 			parent_div.appendChild(action_area_generate_search_field(_elm_user_input, 'User', false, false));
+			parent_div.appendChild(action_area_generate_search_field(_elm_source_input, 'Source', false, false));
 
 			parent_div.appendChild(action_area_generate_search_field(_elm_ht_input, 'Filter', false, true));
 
@@ -406,7 +426,9 @@ function print_logs() {
 	if (isset_get_var("search_username")) {
 		$filter_array["username"] = get_get_var("search_username");
 	}
-
+	if (isset_get_var("search_source")) {
+		$filter_array["source"] = get_get_var("search_source");
+	}
 	/* get log entires */
 	$logs = api_log_list($filter_array);
 	$total_rows = api_log_total_get($filter_array);
@@ -427,7 +449,8 @@ function print_logs() {
 	print "<td bgcolor='black'><font color='#FFFFFF'>" . _("Poller") . "</font></td>\n";
 	print "<td bgcolor='black'><font color='#FFFFFF'>" . _("Host") . "</font></td>\n";
 	print "<td bgcolor='black'><font color='#FFFFFF'>" . _("Plugin") . "</font></td>\n";
-	print "<td colspan= '2' bgcolor='black'><font color='#FFFFFF'>" . _("User") . "</font></td>\n";
+	print "<td bgcolor='black'><font color='#FFFFFF'>" . _("User") . "</font></td>\n";
+	print "<td bgcolor='black'><font color='#FFFFFF'>" . _("Source") . "</font></td>\n";
 	print "</tr>\n<tr>\n";
 	print "<td colspan=\"8\" bgcolor='black'><font color='#FFFFFF'>" . _("Message") . "</font></td>\n";
 	print "</tr>";
@@ -455,8 +478,11 @@ function print_logs() {
 				<td>
 					<?php if ($log["plugin"] == "") { echo "N/A"; }else{ echo $log["plugin"]; } ?>
 				</td>
-				<td colspan="2">
+				<td>
 					<?php if ($log["username"] == "") { echo "SYSTEM"; }else{ echo $log["username"]; } ?>
+				</td>
+				<td>
+					<?php if ($log["source"] == "") { echo "SYSTEM"; }else{ echo $log["source"]; } ?>
 				</td>
 			</tr><tr>
 				<td colspan="8">
@@ -515,6 +541,10 @@ function export_logs() {
 	if (isset_get_var("search_username")) {
 		$filter_array["username"] = get_get_var("search_username");
 	}
+	if (isset_get_var("search_source")) {
+		$filter_array["source"] = get_get_var("search_source");
+	}
+
 
 	/* get log entires */
 	$logs = api_log_list($filter_array);
@@ -531,6 +561,7 @@ function export_logs() {
 	print "\"" . _("Host") . "\",";
 	print "\"" . _("Plugin") . "\",";
 	print "\"" . _("User") . "\",";
+	print "\"" . _("Source") . "\",";
 	print "\"" . _("Message") . "\"\n";
 
 	$i = 0;
@@ -563,6 +594,13 @@ function export_logs() {
 			}else{ 
 				print $log["username"]; 
 			}
+			print "\",\"";
+			if ($log["source"] == "") { 
+				print "SYSTEM"; 
+			}else{ 
+				print $log["source"]; 
+			}
+
 			print "\",\"" . $log["message"] . "\"\n";
 		}
 	}

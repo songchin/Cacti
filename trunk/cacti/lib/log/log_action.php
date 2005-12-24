@@ -171,6 +171,7 @@ function api_log_maintain($print_data_to_stdout) {
 function api_log_truncate() {
 	db_execute("TRUNCATE TABLE log");
 	db_execute("REPLACE INTO settings (name,value) VALUES('log_status','active')");
+	api_log_log("Log truncated", SEV_NOTICE, FACIL_WEBUI);
 }
 
 

@@ -80,6 +80,7 @@ function api_log_list ($filter_array,$limit = -1,$offset = -1) {
                 host.description as host,
                 log.username,
 		log.plugin,
+		log.source,
                 log.message
                 FROM (log LEFT JOIN host ON log.host_id = host.id)
                 LEFT JOIN poller ON log.poller_id = poller.id
