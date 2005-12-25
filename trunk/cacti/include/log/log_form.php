@@ -73,7 +73,19 @@ $fields_log = array(
 		"validate_empty" => false,
 		"data_type" => DB_TYPE_STRING
 		),
-	"plugin" => array(
+	"source" => array(
+		"default" => "",
+		"validate_regexp" => "",
+		"validate_empty" => false,
+		"data_type" => DB_TYPE_STRING
+		),
+	"start_date" => array(
+		"default" => "",
+		"validate_regexp" => "",
+		"validate_empty" => false,
+		"data_type" => DB_TYPE_STRING
+		),
+	"end_date" => array(
 		"default" => "",
 		"validate_regexp" => "",
 		"validate_empty" => false,

@@ -62,10 +62,33 @@ function api_log_list ($filter_array,$limit = -1,$offset = -1) {
 		if (sizeof($field_errors) > 0) {
 			field_register_error($field_errors);
 			return false;
+
 		/* otherwise, form an SQL WHERE string using the filter fields */
 		}else{
-			$sql_where = sql_filter_array_to_where_string($filter_array, api_log_fields_list(), true);
+			$sql_where = "";
+			$sql_start = true;
+			/* check for start_date and end_date fields */
+			if (isset($filter_array["start_date"])) {
+				$sql_where .= "logdate >= '" . $filter_array["start_date"] . "'";
+				unset($filter_array["start_date"]);
+				$sql_start = false;
+			}
+			if (isset($filter_array["end_date"])) {
+				if ($sql_where != "") {
+					$sql_where .= " AND ";
+				}
+				$sql_where .= "logdate <= '" . $filter_array["end_date"] . "'";
+				unset($filter_array["end_date"]);
+				$sql_start = false;
+			}
+			if ($sql_start == false) {
+				$sql_where = " WHERE " . $sql_where;
+			}
+
+			$sql_where .= sql_filter_array_to_where_string($filter_array, api_log_fields_list(), $sql_start);
+
 		}
+
 	}
 
 	$sql_limit = "";
