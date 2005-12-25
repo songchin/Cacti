@@ -356,8 +356,8 @@ function view_logs() {
 			_elm_ht_input = action_area_generate_input('text', 'box-' + box_id + '-search_filter', '<?php echo get_get_var("search_filter");?>');
 			_elm_ht_input.size = '30';
 
-			parent_div.appendChild(action_area_generate_search_field(_elm_start_date_input, 'Start Date Range', true, false));
-			parent_div.appendChild(action_area_generate_search_field(_elm_end_date_input, 'End Date Range', false, false));
+			parent_div.appendChild(action_area_generate_search_field(_elm_start_date_input, 'Start Date Range (YYYY-MM-DD HH:MM:SS)', true, false));
+			parent_div.appendChild(action_area_generate_search_field(_elm_end_date_input, 'End Date Range (YYYY-MM-DD HH:MM:SS)', false, false));
 			parent_div.appendChild(action_area_generate_search_field(_elm_fac_input, 'Facility', false, false));
 			parent_div.appendChild(action_area_generate_search_field(_elm_sev_input, 'Severity', false, false));
 			parent_div.appendChild(action_area_generate_search_field(_elm_pol_input, 'Poller', false, false));
