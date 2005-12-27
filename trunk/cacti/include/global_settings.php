@@ -106,28 +106,33 @@ $settings = array(
 			"method" => "spacer"
 			),
 		"log_destination" => array(
-			"friendly_name" => _("Log Destination(s)"),
-			"description" => _("How will Cacti handle event logging."),
-			"method" => "drop_array",
-			"default" => 1,
-			"array" => $log_options
+			"friendly_name" => _("Log Destination"),
+					"description" => _("<blockquote><i>Cacti System Log</i> - Internal cacti system log utilizing the database.<br><br><i>Localhost System Log</i> - Utilizing PHP syslog to log to the localhosts logs.<br><br><i>Syslog Server</i> - Syslog to local or remote syslog server</blockquote>"),
+			"method" => "checkbox_group",
+			"items" => array(
+				"log_dest_cacti" => array(
+					"friendly_name" => _("Cacti System Log"),
+					"default" => "on"
+				),
+				"log_dest_system" => array(
+					"friendly_name" => _("Localhost System Log"),
+					"default" => ""
+					),
+				"log_dest_syslog" => array(
+					"friendly_name" => _("Syslog Server"),
+					"default" => ""
+					)
+				)
 			),
-		"log_level" => array(
-			"friendly_name" => _("Cacti Log Severity Logging Level"),
+		"log_severity" => array(
+			"friendly_name" => _("Severity Logging Level"),
 			"description" => _("Level of detail to send to log.  When selecting a severity level, every level above that will be logged as well."),
 			"method" => "drop_array",
 			"default" => SEV_NOTICE,
 			"array" => $log_level
 			),
-		"log_facility" => array(
-			"friendly_name" => _("Syslog Facility"),
-			"description" => _("Facility to utilize when using syslog. For Windows enviroments set to USER."),
-			"method" => "drop_array",
-			"default" => LOG_USER,
-			"array" => $log_facility
-			),
 		"log_control_header" => array(
-			"friendly_name" => _("Log Size and Control"),
+			"friendly_name" => _("Cacti System Log Size and Control"),
 			"method" => "spacer"
 			),
 		"log_size" => array(
@@ -146,10 +151,46 @@ $settings = array(
 			),
 		"log_maxdays" => array(
 			"friendly_name" => _("Maximum Retention Period"),
-			"description" => _("All events older than the specified number of days will be discarded if the maximum number of recrods in the Cacti Syslog is reached."),
+			"description" => _("All events older than the specified number of days will be discarded if the maximum number of recrods in the Cacti System Log is reached."),
 			"method" => "textbox",
 			"default" => "7",
 			"max_length" => "3"
+			),
+		"log_system_header" => array(
+			"friendly_name" => _("System Log Settings"),
+			"method" => "spacer"
+			),
+		"log_system_facility" => array(
+			"friendly_name" => _("System Syslog Facility"),
+			"description" => _("Facility to utilize when using syslog. For Windows enviroments set to USER."),
+			"method" => "drop_array",
+			"default" => LOG_USER,
+			"array" => $log_system_facility
+			),
+		"log_syslog_header" => array(
+			"friendly_name" => _("Syslog Server Settings"),
+			"method" => "spacer"
+			),
+		"log_syslog_server" => array(
+			"friendly_name" => _("Syslog Server"),
+			"description" => _("Syslog Server to send syslog message to. To use TCP port, proceed server with \"tcp://\"."),
+			"method" => "textbox",
+			"default" => "localhost",
+			"max_length" => "255"
+			),
+		"log_syslog_port" => array(
+			"friendly_name" => _("Syslog Server Port"),
+			"description" => _("Syslog Server port to send syslog message to."),
+			"method" => "textbox",
+			"default" => "514",
+			"max_length" => "5"
+			),
+		"log_syslog_facility" => array(
+			"friendly_name" => _("Syslog Facility"),
+			"description" => _("Facility to utilize when using syslog. For Windows enviroments set to USER."),
+			"method" => "drop_array",
+			"default" => LOG_USER,
+			"array" => $log_syslog_facility
 			),
 		"log_email_header" => array(
 			"friendly_name" => _("Event Log Emailing"),
@@ -691,7 +732,7 @@ $settings = array(
 			),
 		"auth_method" => array(
 			"friendly_name" => _("Authentication Method"),
-			"description" => _("<ul><li><i>None</i> - No authentication will be used, all users will have full access.</li><li><i>Builtin Authentication</i> - Cacti handles user authentication, which allows you to create users and give them rights to different areas within Cacti.</li><li><i>Web Basic Authentication</i> - Authentication is handled by the web server. Users can be added or created automatically on first login if the Template User is defined, otherwise the defined guest permissions will be used.</li><li><i>LDAP Authentication</i> - Allows for authentication against a LDAP server. Users will be created automatically on first login if the Template User is defined, otherwise the defined guest permissions will be used.</li><ul>"),
+			"description" => _("<blockquote><i>None</i> - No authentication will be used, all users will have full access.<br><br><i>Builtin Authentication</i> - Cacti handles user authentication, which allows you to create users and give them rights to different areas within Cacti.<br><br><i>Web Basic Authentication</i> - Authentication is handled by the web server. Users can be added or created automatically on first login if the Template User is defined, otherwise the defined guest permissions will be used.<br><br><i>LDAP Authentication</i> - Allows for authentication against a LDAP server. Users will be created automatically on first login if the Template User is defined, otherwise the defined guest permissions will be used.</blockquote>"),
 			"method" => "drop_array",
 			"default" => 1,
 			"array" => $auth_methods

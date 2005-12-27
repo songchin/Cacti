@@ -49,7 +49,7 @@ $log_level = array(
 	);
 
 if (CACTI_SERVER_OS == "unix") {
-	$log_facility = array(
+	$log_system_facility = array(
 		LOG_LOCAL0 => "LOCAL0",
 		LOG_LOCAL1 => "LOCAL1",
 		LOG_LOCAL2 => "LOCAL2",
@@ -61,10 +61,22 @@ if (CACTI_SERVER_OS == "unix") {
 		LOG_USER => "USER"
 	);
 }else{
-	$log_facility = array(
+	$log_system_facility = array(
 		LOG_USER => "USER"
 	);
 }
+
+$log_syslog_facility = array(
+	SYSLOG_LOCAL0 => "LOCAL0",
+	SYSLOG_LOCAL1 => "LOCAL1",
+	SYSLOG_LOCAL2 => "LOCAL2",
+	SYSLOG_LOCAL3 => "LOCAL3",
+	SYSLOG_LOCAL4 => "LOCAL4",
+	SYSLOG_LOCAL5 => "LOCAL5",
+	SYSLOG_LOCAL6 => "LOCAL6",
+	SYSLOG_LOCAL7 => "LOCAL7",
+	SYSLOG_USER => "USER"
+);
 
 
 ?>

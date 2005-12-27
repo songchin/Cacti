@@ -45,9 +45,8 @@ function api_log_log($message, $severity = SEV_INFO, $facility = FACIL_WEBUI, $p
 	/* fill in the current date for printing in the log */
 	$logdate = date("Y-m-d H:i:s");
 
-	/* determine how to log data */
-	$syslog_destination = log_read_config_option("log_destination");
-	$syslog_level = log_read_config_option("log_level");
+	/* Get variables */
+	$log_severity = log_read_config_option("log_severity");
 
 	/* get username */
 	if ($severity == SEV_DEV) {
@@ -78,7 +77,7 @@ function api_log_log($message, $severity = SEV_INFO, $facility = FACIL_WEBUI, $p
 	}
 
 	/* Format message for developer if SEV_DEV is allowed */
-	if (($severity >= $syslog_level) && ($severity == SEV_DEV)) {
+	if (($severity >= $log_severity) && ($severity == SEV_DEV)) {
 		/* get a backtrace so we can derive the current filename/line#/function */
 		$backtrace = debug_backtrace();
 		if (sizeof($backtrace) == 1) {
@@ -93,9 +92,8 @@ function api_log_log($message, $severity = SEV_INFO, $facility = FACIL_WEBUI, $p
 		$message = str_replace(CACTI_BASE_PATH, "", $filename) . ":$line_number in " . ($function_name == "" ? "main" : $function_name) . "(): $message";
 	}
 
-	/* Log to Cacti Syslog */
-	if ((($syslog_destination == LOG_CACTI) || ($syslog_destination == LOG_BOTH))
-		&& (log_read_config_option("log_status") != "suspended") && ($severity >= $syslog_level)) {
+	/* Log to Cacti System Log */
+	if ((log_read_config_option("log_dest_cacti") == "on") && (log_read_config_option("log_status") != "suspended") && ($severity >= $log_severity)) {
 		$sql = "insert into log
 			(logdate,facility,severity,poller_id,host_id,user_id,username,source,plugin,message) values
 			(SYSDATE(), " . $facility . "," . $severity . "," . $poller_id . "," .$host_id . "," . $user_id . ",'" . $username . "','" . $source . "','" . $plugin . "','". sql_sanitize($message) . "');";
@@ -105,15 +103,20 @@ function api_log_log($message, $severity = SEV_INFO, $facility = FACIL_WEBUI, $p
 
 	/* Log to System Syslog/Eventlog */
 	/* Syslog is currently Unstable in Win32 */
-	if ((($syslog_destination == LOG_BOTH) || ($syslog_destination == LOG_SYSTEM))
-		&& ($severity >= $syslog_level)) {
-		openlog("cacti", LOG_NDELAY | LOG_PID, log_read_config_option("log_facility"));
+	if ((log_read_config_option("log_dest_system") == "on") && ($severity >= $log_severity)) {
+		openlog("cacti", LOG_NDELAY | LOG_PID, log_read_config_option("log_system_facility"));
 		syslog(api_log_syslog_severity_get($severity), api_log_severity_get($severity) . ": " . api_log_facility_get($facility) . ": " . $message);
 		closelog();
 	}
 
-	/* print output to standard out if required */
-	if (($output == true) &&($severity >= $syslog_level)) {
+	/* Log to Syslog Server */
+	if ((log_read_config_option("log_dest_system") == "on") && ($severity >= $log_severity)) {
+		api_log_syslog();
+	}
+
+
+	/* print output to standard out if required, only for use in command line scripts */
+	if (($output == true) && ($severity >= $syslog_level)) {
 		print $logdate . " - " . api_log_severity_get($severity) . ": " . api_log_facility_get($facility) . ": " . $message . "\n";
 	}
 
@@ -317,5 +320,13 @@ function api_log_severity_get($severity) {
 			break;
 	}
 }
+
+
+function api_log_syslog() {
+
+	return;
+
+}
+
 
 ?>

@@ -130,7 +130,7 @@ function api_log_list ($filter_array,$limit = -1,$offset = -1) {
                 FROM (log LEFT JOIN host ON log.host_id = host.id)
                 LEFT JOIN poller ON log.poller_id = poller.id
                 $sql_where
-                order by log.logdate",$limit,$offset);
+                order by log.logdate desc",$limit,$offset);
 
 }
 

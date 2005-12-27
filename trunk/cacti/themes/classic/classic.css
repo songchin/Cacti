@@ -400,6 +400,7 @@ td.log-content-header-sub {
 	font-size: 10px;
 	font-weight: bold;
 	padding: 3px;
+	padding-left: 15px;
 	background-color: #6d88ad;
 }
 td.log-content-header-sub-div {

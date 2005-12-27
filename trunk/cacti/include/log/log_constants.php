@@ -45,13 +45,26 @@ define("FACIL_EMAIL",8);
 define("LOG_CACTI",1);
 define("LOG_BOTH",2);
 define("LOG_SYSTEM",3);
+define("LOG_SYSLOG",4);
 
 define("LOG_MNG_NONE",0);
 define("LOG_MNG_ASNEEDED",1);
 define("LOG_MNG_DAYSOLD",2);
 define("LOG_MNG_STOPLOG",3);
 
-/* Define syslog variables for php */
+/* RFC3164 spec constants */
+define("SYSLOG_LOCAL0", 16);
+define("SYSLOG_LOCAL1", 17);
+define("SYSLOG_LOCAL2", 18);
+define("SYSLOG_LOCAL3", 19);
+define("SYSLOG_LOCAL4", 20);
+define("SYSLOG_LOCAL5", 21);
+define("SYSLOG_LOCAL6", 22);
+define("SYSLOG_LOCAL7", 23);
+define("SYSLOG_LOCAL0", 24);
+define("SYSLOG_USER", 1);
+
+/* Define syslog variables from php */
 define_syslog_variables();
 
 ?>
