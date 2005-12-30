@@ -105,13 +105,13 @@ function api_log_log($message, $severity = SEV_INFO, $facility = FACIL_WEBUI, $p
 	/* Syslog is currently Unstable in Win32 */
 	if ((log_read_config_option("log_dest_system") == "on") && ($severity >= $log_severity)) {
 		openlog("cacti", LOG_NDELAY | LOG_PID, log_read_config_option("log_system_facility"));
-		syslog(api_log_syslog_severity_get($severity), api_log_severity_get($severity) . ": " . api_log_facility_get($facility) . ": " . $message);
+		syslog(api_log_system_severity_get($severity), api_log_severity_get($severity) . ": " . api_log_facility_get($facility) . ": " . $message);
 		closelog();
 	}
 
 	/* Log to Syslog Server */
-	if ((log_read_config_option("log_dest_system") == "on") && ($severity >= $log_severity)) {
-		api_log_syslog();
+	if ((log_read_config_option("log_dest_syslog") == "on") && ($severity >= $log_severity)) {
+		api_log_syslog(log_read_config_option("log_syslog_server"), log_read_config_option("log_syslog_port"), log_read_config_option("log_syslog_facility"), api_log_severity_translate_syslog($severity), api_log_severity_get($severity) . ": " . api_log_facility_get($facility) . ": " . $message); 
 	}
 
 
@@ -207,9 +207,9 @@ function log_read_config_option($config_name) {
 }
 
 
-/* api_log_syslog_severity_get - returns the syslog severity level
+/* api_log_system_severity_get - returns the syslog severity level
    @arg $severity - the severity integer value */
-function api_log_syslog_severity_get($severity) {
+function api_log_system_severity_get($severity) {
 	if (CACTI_SERVER_OS == "win32") {
 		return LOG_WARNING;
 	} else {
@@ -274,8 +274,8 @@ function api_log_facility_get($facility) {
 		case FACIL_AUTH:
 			return "AUTH";
 			break;
-		case FACIL_EMAIL:
-			return "EMAIL";
+		case FACIL_EVENT:
+			return "EVENT";
 			break;
 		default:
 			return "UNKNOWN";
@@ -321,10 +321,110 @@ function api_log_severity_get($severity) {
 	}
 }
 
+function api_log_syslog_severity_get($severity) {
 
-function api_log_syslog() {
+	switch ($severity) {
+		case SEV_EMERGENCY:
+			return SYSLOG_EMERGENCY;
+			break;
+		case SEV_ALERT:
+			return SYSLOG_ALERT;
+			break;
+		case SEV_CRITICAL:
+			return SYSLOG_CRITICAL;
+			break;
+		case SEV_ERROR:
+			return SYSLOG_ERROR;
+			break;
+		case SEV_WARNING:
+			return SYSLOG_WARNING;
+			break;
+		case SEV_NOTICE:
+			return SYSLOG_NOTICE;
+			break;
+		case SEV_INFO:
+			return SYSLOG_INFO;
+			break;
+		case SEV_DEBUG:
+			return SYSLOG_DEBUG;
+			break;
+		case SEV_DEV:
+			return SYSLOG_DEBUG;
+			break;
+		default:
+			return SYSLOG_INFO;
+			break;
+	}
 
-	return;
+}
+
+
+function api_log_syslog($syslog_server, $syslog_server_port, $syslog_facility, $syslog_severity, $syslog_message) {
+	global $cnn_id;
+	
+	/* Set syslog tag */
+	$syslog_tag = "cacti";
+	
+	/* Get the pid */
+	$pid = getmypid();
+
+	/* Set syslog server */
+	if (strtolower(substr($syslog_server, 0, 5)) == "udp://") {
+		$syslog_server = strtolower($syslog_server);
+	} elseif (strtolower(substr($syslog_server, 0, 5)) == "udp://") {
+		$syslog_server = strtolower($syslog_server);
+	}else{
+		$syslog_server = "udp://" . $syslog_server;
+	}
+
+	/* Check facility */
+	if (empty($syslog_facility)) {
+		$syslog_facility = SYSLOG_LOCAL0;
+	}
+	if (($syslog_facility > 23) || ($syslog_facility < 0)) {
+		$syslog_facility = SYSLOG_LOCAL0;
+	}
+
+	/* Check severity */
+	if (empty($syslog_severity)) {
+		$syslog_severity = SYSLOG_INFO;
+	}
+	if (($syslog_severity > 7) || ($syslog_severity < 0)) {
+		$syslog_severity = SYSLOG_INFO;
+	}
+	
+	/* Make syslog packet */
+	$host = $_SERVER["SERVER_NAME"];
+	$time = time();
+	if (strlen(date("j", $time)) < 2) {
+		$time = date("M  j H H:i:s", $time);
+	}else{
+		$time = date("M j H H:i:s", $time);
+	}
+	$priority = ($syslog_facility * 8) + $syslog_severity;
+	#$packet = "<" . $priority . ">" . $time . " " . $host . " " . $syslog_tag . "[" . $pid  . "]:" . $syslog_message;
+	$packet = "<" . $priority . ">" . $syslog_tag . "[" . $pid  . "]:" . $syslog_message;
+	if (strlen($packet) > 1024) {
+		$packet = substr($packet, 0, 1024);
+	}
+
+	/* Send the syslog message */
+	$socket = @fsockopen($syslog_server, $syslog_server_port, $error_number, $error_string);
+	if ($socket) {
+		@fwrite($socket, $packet);
+		@fclose($socket);
+		return true;
+	}else{
+		/* socket error - log to database */
+		$sql = "insert into log
+			(logdate,facility,severity,poller_id,host_id,user_id,username,source,plugin,message) values
+			(SYSDATE(), " . FACIL_WEBUI . "," . SEV_ERROR . ",0,0,0,'SYSTEM','SYSLOG','N/A','". sql_sanitize("Syslog error[" . $error_number ."]: " . $error_string) . "');";
+		/* DO NOT USE db_execute, function looping can occur when in SEV_DEV mode */
+		$cnn_id->Execute($sql);
+		return false;
+	}
+	
+	return false;
 
 }
 

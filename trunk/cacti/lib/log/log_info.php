@@ -241,7 +241,7 @@ function api_log_facility_list() {
 	$facility[FACIL_WEBUI] = "WEBUI";
 	$facility[FACIL_EXPORT] = "EXPORT";
 	$facility[FACIL_AUTH] = "AUTH";
-	$facility[FACIL_EMAIL] = "EMAIL";
+	$facility[FACIL_EVENT] = "EVENT";
 	
 	return $facility;	
 }

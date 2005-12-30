@@ -22,8 +22,6 @@
  +-------------------------------------------------------------------------+
 */
 
-include_once(CACTI_BASE_PATH . "/include/log/log_constants.php");
-
 $fields_log = array(
 	"user" => array(
 		"default" => "",

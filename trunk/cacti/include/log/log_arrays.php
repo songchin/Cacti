@@ -22,8 +22,6 @@
  +-------------------------------------------------------------------------+
 */
 
-include_once(CACTI_BASE_PATH . "/include/log/log_constants.php");
-
 $log_options = array(
 	LOG_CACTI => _("Cacti Log Only"),
 	LOG_BOTH => _("Cacti Log and System Syslog/Eventlog"),

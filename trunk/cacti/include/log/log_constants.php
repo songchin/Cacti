@@ -40,12 +40,7 @@ define("FACIL_SCPTSVR",4);
 define("FACIL_AUTH",5);
 define("FACIL_WEBUI",6);
 define("FACIL_EXPORT",7);
-define("FACIL_EMAIL",8);
-
-define("LOG_CACTI",1);
-define("LOG_BOTH",2);
-define("LOG_SYSTEM",3);
-define("LOG_SYSLOG",4);
+define("FACIL_EVENT",8);
 
 define("LOG_MNG_NONE",0);
 define("LOG_MNG_ASNEEDED",1);
@@ -63,6 +58,16 @@ define("SYSLOG_LOCAL6", 22);
 define("SYSLOG_LOCAL7", 23);
 define("SYSLOG_LOCAL0", 24);
 define("SYSLOG_USER", 1);
+
+define("SYSLOG_EMERGENCY", 7);
+define("SYSLOG_ALERT", 6);
+define("SYSLOG_CRITICAL", 5);
+define("SYSLOG_ERROR", 4);
+define("SYSLOG_WARNING", 3);
+define("SYSLOG_NOTICE", 2);
+define("SYSLOG_INFO", 1);
+define("SYSLOG_DEBUG", 0);
+
 
 /* Define syslog variables from php */
 define_syslog_variables();

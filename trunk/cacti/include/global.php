@@ -58,13 +58,14 @@ $colors["form_background_dark"] = "E1E1E1";
 $colors["form_alternate1"] = "F5F5F5";
 $colors["form_alternate2"] = "E5E5E5";
 
+
+/* Logging include */
+require(CACTI_BASE_PATH . "/lib/log/log_action.php");
+
 /* includes for database operation */
 require(CACTI_BASE_PATH . "/lib/adodb/adodb.inc.php");
 require(CACTI_BASE_PATH . "/lib/sys/database.php");
 require(CACTI_BASE_PATH . "/lib/sys/database_utility.php");
-
-/* Logging include */
-require(CACTI_BASE_PATH . "/lib/log/log_action.php");
 
 /* connect to the database server */
 db_connect_real($database_hostname, $database_username, $database_password, $database_default, $database_type);
