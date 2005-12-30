@@ -111,7 +111,7 @@ function api_log_log($message, $severity = SEV_INFO, $facility = FACIL_WEBUI, $p
 
 	/* Log to Syslog Server */
 	if ((log_read_config_option("log_dest_syslog") == "on") && ($severity >= $log_severity)) {
-		api_log_syslog(log_read_config_option("log_syslog_server"), log_read_config_option("log_syslog_port"), log_read_config_option("log_syslog_facility"), api_log_severity_translate_syslog($severity), api_log_severity_get($severity) . ": " . api_log_facility_get($facility) . ": " . $message); 
+		api_log_syslog(log_read_config_option("log_syslog_server"), log_read_config_option("log_syslog_port"), log_read_config_option("log_syslog_facility"), api_log_syslog_severity_get($severity), api_log_severity_get($severity) . ": " . api_log_facility_get($facility) . ": " . $message); 
 	}
 
 
@@ -403,7 +403,7 @@ function api_log_syslog($syslog_server, $syslog_server_port, $syslog_facility, $
 	}
 	$priority = ($syslog_facility * 8) + $syslog_severity;
 	#$packet = "<" . $priority . ">" . $time . " " . $host . " " . $syslog_tag . "[" . $pid  . "]:" . $syslog_message;
-	$packet = "<" . $priority . ">" . $syslog_tag . "[" . $pid  . "]:" . $syslog_message;
+	$packet = "<" . $priority . ">" . $syslog_tag . "[" . $pid  . "]: " . $syslog_message;
 	if (strlen($packet) > 1024) {
 		$packet = substr($packet, 0, 1024);
 	}
