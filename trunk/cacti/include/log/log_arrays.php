@@ -22,11 +22,6 @@
  +-------------------------------------------------------------------------+
 */
 
-$log_options = array(
-	LOG_CACTI => _("Cacti Log Only"),
-	LOG_BOTH => _("Cacti Log and System Syslog/Eventlog"),
-	LOG_SYSTEM => _("System Syslog/Eventlog Only"));
-
 $log_control_options = array(
 	LOG_MNG_ASNEEDED => _("Overwrite events as needed"),
 	LOG_MNG_DAYSOLD => _("Overwrite events older than the maximum days"),

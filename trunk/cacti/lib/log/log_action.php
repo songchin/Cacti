@@ -22,8 +22,8 @@
  +-------------------------------------------------------------------------+
 */
 
-require_once(CACTI_BASE_PATH . "/include/log/log_arrays.php");
 require_once(CACTI_BASE_PATH . "/include/log/log_constants.php");
+require_once(CACTI_BASE_PATH . "/include/log/log_arrays.php");
 
 /*
  * Logging Actions

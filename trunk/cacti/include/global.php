@@ -132,9 +132,9 @@ if ((!in_array(basename($_SERVER["PHP_SELF"]), $no_http_header_files, true)) && 
 
 	/* make sure to start only only Cacti session at a time */
 	if (!isset($_SESSION["cacti_cwd"])) {
-		$_SESSION["cacti_cwd"] = $config["base_path"];
+		$_SESSION["cacti_cwd"] = CACTI_BASE_PATH;
 	}else{
-		if ($_SESSION["cacti_cwd"] != $config["base_path"]) {
+		if ($_SESSION["cacti_cwd"] != CACTI_BASE_PATH) {
 			session_unset();
 			session_destroy();
 		}

@@ -56,7 +56,6 @@ define("SYSLOG_LOCAL4", 20);
 define("SYSLOG_LOCAL5", 21);
 define("SYSLOG_LOCAL6", 22);
 define("SYSLOG_LOCAL7", 23);
-define("SYSLOG_LOCAL0", 24);
 define("SYSLOG_USER", 1);
 
 define("SYSLOG_EMERGENCY", 7);
