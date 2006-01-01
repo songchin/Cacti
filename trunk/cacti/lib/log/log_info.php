@@ -26,7 +26,14 @@
  * Log viewing actions
  */
 
-
+/**
+ * Get total number of log records
+ *
+ * Given filter array, return the number of records
+ *
+ * @param array $filter_array filter array, field => value elements
+ * @return int total number of records
+ */
 function api_log_total_get ($filter_array = "") {
 
 	$sql_where = "";
@@ -71,7 +78,14 @@ function api_log_total_get ($filter_array = "") {
 
 }
 
-
+/**
+ * List log records
+ *
+ * Given filter array, return list of log records
+ *
+ * @param array $filter_array filter array, field => value elements
+ * @return array log records
+ */
 function api_log_list ($filter_array,$limit = -1,$offset = -1) {
 	
 	$sql_where = "";
@@ -135,6 +149,13 @@ function api_log_list ($filter_array,$limit = -1,$offset = -1) {
 }
 
 
+/**
+ * Returns list of fields in the log form
+ *
+ * Returns list of fields in the log form for validation
+ *
+ * @return array log fields
+ */
 function api_log_fields_list() {
 	require(CACTI_BASE_PATH . "/include/log/log_form.php");
 
@@ -142,6 +163,16 @@ function api_log_fields_list() {
 
 }
 
+
+/**
+ * Validates log field values
+ *
+ * Validates log field values against the log form definitions
+ *
+ * @param $_fields_log field array 
+ * @param $log_field_name_format replacement variable
+ * @return array error array if any
+ */
 function validate_log_fields(&$_fields_log, $log_field_name_format = "|field|") {
 
 	if (sizeof($_fields_log) == 0) {
@@ -169,6 +200,13 @@ function validate_log_fields(&$_fields_log, $log_field_name_format = "|field|") 
 	return $error_fields;
 }
 
+/**
+ * List of usernames 
+ *
+ * Returns list of id, usernames on the system for use by log viewer
+ *
+ * @return array record array
+ */
 function api_log_username_list() {
 
 	$user = array();
@@ -183,6 +221,14 @@ function api_log_username_list() {
 
 }
 
+
+/**
+ * List of plugins 
+ *
+ * Returns list of plugins on the system for use by log viewer
+ *
+ * @return array record array
+ */
 function api_log_plugin_list() {
 
 	$plugin = array();
@@ -200,6 +246,13 @@ function api_log_plugin_list() {
 }
 
 
+/**
+ * List of pollers 
+ *
+ * Returns list of pollers on the system for use by log viewer
+ *
+ * @return array record array
+ */
 function api_log_poller_list() {
 
 	$poller = array();
@@ -215,6 +268,14 @@ function api_log_poller_list() {
 
 }
 
+
+/**
+ * List of hosts 
+ *
+ * Returns list of hosts on the system for use by log viewer
+ *
+ * @return array record array
+ */
 function api_log_host_list() {
 
 	$host = array();
@@ -231,6 +292,13 @@ function api_log_host_list() {
 }
 
 
+/**
+ * List of facilities 
+ *
+ * Returns list of facility on the system for use by log viewer
+ *
+ * @return array record array
+ */
 function api_log_facility_list() {
 	
 	$facility = array();
@@ -247,6 +315,13 @@ function api_log_facility_list() {
 }
 
 
+/**
+ * List of severity 
+ *
+ * Returns list of severity on the system for use by log viewer
+ *
+ * @return array record array
+ */
 function api_log_severity_list() {
 	
 	$severity = array();
@@ -264,8 +339,14 @@ function api_log_severity_list() {
 }
 
 
-/* api_log_html_css_class - Set's the CSS class for the log entry.
-   @arg $severity - The log item severity. */
+/**
+ * Returns HTML CSS class for log viewer row highlighting
+ *
+ * Returns HTML CSS class for log viewer row highlighting
+ *
+ * @param int Cacti system severity
+ * @return string HTML CSS class
+ */
 function api_log_html_css_class($severity) {
 
 	switch ($severity) {
