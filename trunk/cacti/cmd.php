@@ -89,7 +89,7 @@ if ( $_SERVER["argc"] == 1 ) {
 					$poller_id = substr($parameter,3);
 					break;
 				default:
-					api_log_log(_("Invalid Calling Parameter in CMD.PHP"), SEV_CRITICAL, FACIL_CMDPHP, "", $poller_id, 0, 0, $print_data_to_stdout);
+					api_log_log(_("Invalid Calling Parameter in CMD.PHP"), SEV_CRITICAL, FACIL_CMDPHP, "", $poller_id, 0, $print_data_to_stdout);
 			}
 		}
 
@@ -118,12 +118,12 @@ if ( $_SERVER["argc"] == 1 ) {
 		}else{
 			print _("ERROR: Invalid Arguments.  The first argument must be less than or equal to the first.") . "\n";
 			print _("USAGE: CMD.PHP [-f=first_host -l=last_host -p=poller_id]") . "\n";
-			api_log_log(_("Invalid Arguments.  CMD.PHP calling parameters invalid."), SEV_ERROR, FACIL_CMDPHP, "", $poller_id, 0, 0, $print_data_to_stdout);
+			api_log_log(_("Invalid Arguments.  CMD.PHP calling parameters invalid."), SEV_ERROR, FACIL_CMDPHP, "", $poller_id, 0, $print_data_to_stdout);
 		}
 	}else{
 		print _("ERROR: Invalid Arguments.  The first argument must be less than or equal to the first.") . "\n";
 		print _("USAGE: CMD.PHP [-f=first_host -l=last_host -p=poller_id]") . "\n";
-		api_log_log(_("Invalid Arguments.  CMD.PHP calling parameters invalid."), SEV_ERROR, FACIL_CMDPHP, "", $poller_id, 0, 0, $print_data_to_stdout);
+		api_log_log(_("Invalid Arguments.  CMD.PHP calling parameters invalid."), SEV_ERROR, FACIL_CMDPHP, "", $poller_id, 0, $print_data_to_stdout);
 	}
 }
 
@@ -131,7 +131,7 @@ if ( $_SERVER["argc"] == 1 ) {
 if (CACTI_SERVER_OS == "win32") {
 	$guess = substr(__FILE__,0,2);
 	if ($guess == strtoupper($guess)) {
-		api_log_log(_("The PHP Script: CMD.PHP Must be started using the full path to the file and in lower case.  This is a PHP Bug!!!"), SEV_CRITICAL, FACIL_CMDPHP, "", $poller_id, 0, 0, $print_data_to_stdout);
+		api_log_log(_("The PHP Script: CMD.PHP Must be started using the full path to the file and in lower case.  This is a PHP Bug!!!"), SEV_CRITICAL, FACIL_CMDPHP, "", $poller_id, 0, $print_data_to_stdout);
 		exit(-1);
 	}
 }
@@ -157,13 +157,13 @@ if ((sizeof($polling_items) > 0) && (read_config_option("poller_enabled") == "on
 		$cactiphp = proc_open(read_config_option("path_php_binary") . " " . CACTI_BASE_PATH . "/script_server.php cmd " . $poller_id, $cactides, $pipes);
 		$output = fgets($pipes[1], 1024);
 		if (substr_count($output, _("Started")) != 0) {
-			api_log_log(_("PHP Script Server Started Properly"), SEV_DEBUG, FACIL_CMDPHP, "", $poller_id, 0, 0, $print_data_to_stdout);
+			api_log_log(_("PHP Script Server Started Properly"), SEV_DEBUG, FACIL_CMDPHP, "", $poller_id, 0, $print_data_to_stdout);
 		}
 		$using_proc_function = true;
 
 	}else {
 		$using_proc_function = false;
-		api_log_log(_("PHP version 4.3 or above is recommended for performance considerations."), SEV_WARNING, FACIL_CMDPHP, "", $poller_id, 0, 0, $print_data_to_stdout);
+		api_log_log(_("PHP version 4.3 or above is recommended for performance considerations."), SEV_WARNING, FACIL_CMDPHP, "", $poller_id, 0, $print_data_to_stdout);
 	}
 
 	foreach ($polling_items as $item) {

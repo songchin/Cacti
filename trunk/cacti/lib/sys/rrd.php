@@ -68,7 +68,7 @@ function rrdtool_execute($command_line, $log_to_stdout, $output_flag, $rrd_struc
 
 	/* output information to the log file if appropriate */
 	if (($syslog_facility == FACIL_POLLER) || ($syslog_facility == FACIL_CMDPHP)) {
-		api_log_log("RRD: " . addslashes(read_config_option("path_rrdtool")) . " $command_line", SEV_DEBUG, $syslog_facility, "", 0, 0, 0, $log_to_stdout);
+		api_log_log("RRD: " . addslashes(read_config_option("path_rrdtool")) . " $command_line", SEV_DEBUG, $syslog_facility, "", 0, 0, $log_to_stdout);
 	} else {
 		api_log_log("RRD: " . addslashes(read_config_option("path_rrdtool")) . " $command_line", SEV_DEBUG, $syslog_facility);
 	}

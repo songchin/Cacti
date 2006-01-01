@@ -1777,7 +1777,7 @@ CREATE TABLE snmp_template_auth (
 
 
 --
--- Table structure for table `syslog`
+-- Table structure for table `log`
 --
 
 CREATE TABLE `log` (
@@ -1787,7 +1787,6 @@ CREATE TABLE `log` (
   `severity` int(1) NOT NULL default '0',
   `poller_id` smallint(5) unsigned NOT NULL default '0',
   `host_id` mediumint(8) unsigned NOT NULL default '0',
-  `user_id` mediumint(8) unsigned NOT NULL default '0',
   `username` varchar(50) NOT NULL default 'system',
   `source` varchar(50) NOT NULL default 'localhost',
   `plugin` varchar(30) NOT NULL default 'N/A',
@@ -1797,14 +1796,13 @@ CREATE TABLE `log` (
   KEY `severity` (`severity`),
   KEY `host_id` (`host_id`),
   KEY `poller_id` (`poller_id`),
-  KEY `user_id` (`user_id`),
   KEY `username` (`username`),
   KEY `logdate` (`logdate`),
   KEY `plugin` (`plugin`)
 ) TYPE=MyISAM;
 
 --
--- Dumping data for table `syslog`
+-- Dumping data for table `log`
 --
 
 

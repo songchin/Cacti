@@ -392,7 +392,7 @@ function process_poller_output($rrdtool_pipe, $print_to_stdout = false) {
 				for ($i=0; $i<count($values); $i++) {
 					if (preg_match("/^([a-zA-Z0-9_.-]+):([+-0-9Ee.]+)$/", $values[$i], $matches)) {
 						if (isset($rrd_field_names{$matches[1]})) {
-							api_log_log("Parsed MULTI output field '" . $matches[0] . "' [map " . $matches[1] . "->" . $rrd_field_names{$matches[1]} . "]", SEV_DEBUG, FACIL_POLLER, "", $poller_id, $host_id, 0, $print_to_stdout);
+							api_log_log("Parsed MULTI output field '" . $matches[0] . "' [map " . $matches[1] . "->" . $rrd_field_names{$matches[1]} . "]", SEV_DEBUG, FACIL_POLLER, "", $poller_id, $host_id, $print_to_stdout);
 
 							$rrd_update_array{$item["rrd_path"]}["times"][$unix_time]{$rrd_field_names{$matches[1]}} = $matches[2];
 						}
@@ -545,9 +545,9 @@ function update_poller_status($status, $poller_id, $pollers, $poller_time) {
 	/* if there is supposed to be an event generated, do it */
 	if ($issue_log_message) {
 		if ($pollers[$poller_id]["status"] == HOST_DOWN) {
-			api_log_log(_("POLLER EVENT: Poller is DOWN Message: ") . $pollers[$poller_id]["status_last_error"], SEV_CRITICAL, FACIL_POLLER, "", $poller_id, $host_id, 0, $print_data_to_stdout);
+			api_log_log(_("POLLER EVENT: Poller is DOWN Message: ") . $pollers[$poller_id]["status_last_error"], SEV_CRITICAL, FACIL_POLLER, "", $poller_id, $host_id, $print_data_to_stdout);
 		} else {
-			api_log_log(_("POLLER EVENT: Poller Returned from DOWN State"), SEV_NOTICE, FACIL_POLLER, "", $poller_id, $host_id, 0, $print_data_to_stdout);
+			api_log_log(_("POLLER EVENT: Poller Returned from DOWN State"), SEV_NOTICE, FACIL_POLLER, "", $poller_id, $host_id, $print_data_to_stdout);
 		}
 	}
 
@@ -721,29 +721,29 @@ function update_host_status($poller_id, $status, $host_id, &$hosts, &$ping, $pin
 		if (($hosts[$host_id]["status"] == HOST_UP) || ($hosts[$host_id]["status"] == HOST_RECOVERING)) {
 			/* log ping result if we are to use a ping for reachability testing */
 			if ($ping_availability == AVAIL_SNMP_AND_PING) {
-				api_log_log(_("PING: ") . $ping->ping_response, SEV_INFO, FACIL_POLLER, "", $poller_id, $host_id, 0, $print_data_to_stdout);
-				api_log_log(_("SNMP: ") . $ping->snmp_response, SEV_INFO, FACIL_POLLER, "", $poller_id, $host_id, 0, $print_data_to_stdout);
+				api_log_log(_("PING: ") . $ping->ping_response, SEV_INFO, FACIL_POLLER, "", $poller_id, $host_id, $print_data_to_stdout);
+				api_log_log(_("SNMP: ") . $ping->snmp_response, SEV_INFO, FACIL_POLLER, "", $poller_id, $host_id, $print_data_to_stdout);
 			} elseif ($ping_availability == AVAIL_SNMP) {
 				if ($hosts[$host_id]["snmp_community"] == "") {
-					api_log_log(_("SNMP: Device does not require SNMP"), SEV_INFO, FACIL_POLLER, "", $poller_id, $host_id, 0, $print_data_to_stdout);
+					api_log_log(_("SNMP: Device does not require SNMP"), SEV_INFO, FACIL_POLLER, "", $poller_id, $host_id, $print_data_to_stdout);
 				}else{
-					api_log_log(_("SNMP: ") . $ping->snmp_response, SEV_INFO, FACIL_POLLER, "", $poller_id, $host_id, 0, $print_data_to_stdout);
+					api_log_log(_("SNMP: ") . $ping->snmp_response, SEV_INFO, FACIL_POLLER, "", $poller_id, $host_id, $print_data_to_stdout);
 				}
 			} elseif ($ping_availability == AVAIL_NONE) {
-				api_log_log(_("AVAIL: Availability checking disabled for host"), SEV_INFO, FACIL_POLLER, "", $poller_id, $host_id, 0, $print_data_to_stdout);
+				api_log_log(_("AVAIL: Availability checking disabled for host"), SEV_INFO, FACIL_POLLER, "", $poller_id, $host_id, $print_data_to_stdout);
 			} else {
-				api_log_log(_("PING: ") . $ping->ping_response, SEV_INFO, FACIL_POLLER, "", $poller_id, $host_id, 0, $print_data_to_stdout);
+				api_log_log(_("PING: ") . $ping->ping_response, SEV_INFO, FACIL_POLLER, "", $poller_id, $host_id, $print_data_to_stdout);
 			}
 		} else {
 			if ($ping_availability == AVAIL_SNMP_AND_PING) {
-				api_log_log(_("PING: ") . $ping->ping_response, SEV_INFO, FACIL_POLLER, "", $poller_id, $host_id, 0, $print_data_to_stdout);
-				api_log_log(_("SNMP: ") . $ping->snmp_response, SEV_INFO, FACIL_POLLER, "", $poller_id, $host_id, 0, $print_data_to_stdout);
+				api_log_log(_("PING: ") . $ping->ping_response, SEV_INFO, FACIL_POLLER, "", $poller_id, $host_id, $print_data_to_stdout);
+				api_log_log(_("SNMP: ") . $ping->snmp_response, SEV_INFO, FACIL_POLLER, "", $poller_id, $host_id, $print_data_to_stdout);
 			} elseif ($ping_availability == AVAIL_SNMP) {
-				api_log_log(_("SNMP: ") . $ping->snmp_response, SEV_INFO, FACIL_POLLER, "", $poller_id, $host_id, 0, $print_data_to_stdout);
+				api_log_log(_("SNMP: ") . $ping->snmp_response, SEV_INFO, FACIL_POLLER, "", $poller_id, $host_id, $print_data_to_stdout);
 			} elseif ($ping_availability == AVAIL_NONE) {
-				api_log_log(_("AVAIL: Availability cheking disabled for host"), SEV_INFO,  FACIL_POLLER, "", $poller_id, $host_id, 0, $print_data_to_stdout);
+				api_log_log(_("AVAIL: Availability cheking disabled for host"), SEV_INFO,  FACIL_POLLER, "", $poller_id, $host_id, $print_data_to_stdout);
 			} else {
-				api_log_log(_("PING: ") . $ping->ping_response, SEV_INFO,  FACIL_POLLER, "", $poller_id, $host_id, 0, $print_data_to_stdout);
+				api_log_log(_("PING: ") . $ping->ping_response, SEV_INFO,  FACIL_POLLER, "", $poller_id, $host_id, $print_data_to_stdout);
 			}
 		}
 	}
@@ -751,9 +751,9 @@ function update_host_status($poller_id, $status, $host_id, &$hosts, &$ping, $pin
 	/* if there is supposed to be an event generated, do it */
 	if ($issue_log_message) {
 		if ($hosts[$host_id]["status"] == HOST_DOWN) {
-			api_log_log(_("HOST EVENT: Host is DOWN Message: ") . $hosts[$host_id]["status_last_error"], SEV_ERROR, FACIL_POLLER, "", $poller_id, $host_id, 0, $print_data_to_stdout);
+			api_log_log(_("HOST EVENT: Host is DOWN Message: ") . $hosts[$host_id]["status_last_error"], SEV_ERROR, FACIL_POLLER, "", $poller_id, $host_id, $print_data_to_stdout);
 		} else {
-			api_log_log(_("HOST EVENT: Host Returned from DOWN State"), SEV_NOTICE, FACIL_POLLER, "", $poller_id, $host_id, 0, $print_data_to_stdout);
+			api_log_log(_("HOST EVENT: Host Returned from DOWN State"), SEV_NOTICE, FACIL_POLLER, "", $poller_id, $host_id, $print_data_to_stdout);
 		}
 	}
 

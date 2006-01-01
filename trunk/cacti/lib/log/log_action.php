@@ -29,17 +29,22 @@ require_once(CACTI_BASE_PATH . "/include/log/log_arrays.php");
  * Logging Actions
  */
 
-/* api_log_log - logs a string to Cacti's log database, syslog, both, or stdout
-   @arg $message - string value to log
-   @arg $severity - integer value severity level
-   @arg $poller_id - integer value poller id, if applicable
-   @arg $host_id - integer value host_id, if applicable
-   @arg $user_id - integer value user_id, optional, if not passed, figured out.
-   @arg $output - (bool) whether to output the log line to the STDOUT using print()
-   @arg $facility - integer value facility, if applicable, default FACIL_CMDPHP
-   Note: Constants are defined for Severity and Facility, please reference include/global_constants.php */
-#function api_log_log($message, $severity = SEV_INFO, $poller_id = 1, $host_id = 0, $user_id = 0, $facility = FACIL_CMDPHP, $plugin = "", $output = false) {
-function api_log_log($message, $severity = SEV_INFO, $facility = FACIL_WEBUI, $plugin = "", $poller_id = 0, $host_id = 0, $user_id = 0, $output = false) {
+
+/**
+ * Logs a message to the configured logging system 
+ *
+ * This function is designed to handle logging for the cacti system.  
+ * 
+ * @param string $message the message your would like to log
+ * @param int $severity the severity you would like to log at, check logging constants for values, Default = SEV_INFO
+ * @param int $facility the facility you would like to log in, check logging constants for values. Default = FACIL_WEBUI
+ * @param string $plugin the plugin generating the log message
+ * @param int $poller_id the poller id generating the log message
+ * @param int $host_id the poller id generating the log message
+ * @param bool $output output messages to stdout
+ * @return bool true 
+ */
+function api_log_log($message, $severity = SEV_INFO, $facility = FACIL_WEBUI, $plugin = "", $poller_id = 0, $host_id = 0, $output = false) {
 	global $cnn_id;
 
 	/* fill in the current date for printing in the log */
@@ -95,8 +100,8 @@ function api_log_log($message, $severity = SEV_INFO, $facility = FACIL_WEBUI, $p
 	/* Log to Cacti System Log */
 	if ((log_read_config_option("log_dest_cacti") == "on") && (log_read_config_option("log_status") != "suspended") && ($severity >= $log_severity)) {
 		$sql = "insert into log
-			(logdate,facility,severity,poller_id,host_id,user_id,username,source,plugin,message) values
-			(SYSDATE(), " . $facility . "," . $severity . "," . $poller_id . "," .$host_id . "," . $user_id . ",'" . $username . "','" . $source . "','" . $plugin . "','". sql_sanitize($message) . "');";
+			(logdate,facility,severity,poller_id,host_id,username,source,plugin,message) values
+			(SYSDATE(), " . $facility . "," . $severity . "," . $poller_id . "," .$host_id . ",'" . $username . "','" . $source . "','" . $plugin . "','". sql_sanitize($message) . "');";
 		/* DO NOT USE db_execute, function looping can occur when in SEV_DEV mode */
 		$cnn_id->Execute($sql);
 	}
@@ -120,12 +125,19 @@ function api_log_log($message, $severity = SEV_INFO, $facility = FACIL_WEBUI, $p
 		print $logdate . " - " . api_log_severity_get($severity) . ": " . api_log_facility_get($facility) . ": " . $message . "\n";
 	}
 
+	return true;
+
 }
 
 
-/* api_log_maintain - determines if any action is required on the
-   Cacti Syslog due to size constraints.  Clear or set a bit based upon status.
-   @arg $print_data_to_stdout = wether or not to output log output to standard output. */
+/**
+ * Manages the cacti system log 
+ *
+ * Maintains the cacti system log based on system settings  
+ * 
+ * @param bool $print_data_to_stdout display log message to stdout
+ * @return bool true 
+ */
 function api_log_maintain($print_data_to_stdout) {
 	/* read current configuration options */
 	$syslog_size = read_config_option("log_size");
@@ -146,11 +158,11 @@ function api_log_maintain($print_data_to_stdout) {
 		case SYSLOG_MNG_ASNEEDED:
 			$records_to_delete = $total_records - $syslog_size;
 			db_execute("DELETE FROM log ORDER BY logdate LIMIT " . $records_to_delete);
-			api_log_log(_("Log control removed " . $records_to_delete . " log entires."), SEV_NOTICE, FACIL_POLLER, "", 0, 0, 0, $print_data_to_stdout);
+			api_log_log(_("Log control removed " . $records_to_delete . " log entires."), SEV_NOTICE, FACIL_POLLER, "", 0, 0, $print_data_to_stdout);
 			break;
 		case SYSLOG_MNG_DAYSOLD:
 			db_execute("delete from log where logdate <= '" . date("Y-m-d H:i:s", strtotime("-" . $syslog_maxdays * 24 * 3600 . " Seconds"))."'");
-			api_log_log(_("Log control removed log entries older than " . $syslog_maxdays . " days."), SEV_NOTICE, FACIL_POLLER, "", 0, 0, 0, $print_data_to_stdout);
+			api_log_log(_("Log control removed log entries older than " . $syslog_maxdays . " days."), SEV_NOTICE, FACIL_POLLER, "", 0, 0, $print_data_to_stdout);
 
 			break;
 		case SYSLOG_MNG_STOPLOG:
@@ -161,20 +173,30 @@ function api_log_maintain($print_data_to_stdout) {
 
 			break;
 		case SYSLOG_MNG_NONE:
-			api_log_log(_("The cacti log control mechanism is set to None.  This is not recommended, please purge your logs on a manual basis."), SEV_WARNING, FACIL_POLLER, "", 0, 0, 0, $print_data_to_stdout);
+			api_log_log(_("The cacti log control mechanism is set to None.  This is not recommended, please purge your logs on a manual basis."), SEV_WARNING, FACIL_POLLER, "", 0, 0, $print_data_to_stdout);
 			break;
 		}
 	}
 
+	return true;
+
 }
 
 
-/* api_log_truncate - empties the log.
-   @arg none */
+/**
+ * Truncates the cacti system log 
+ *
+ * Truncates the cacti system log and logs that it occured  
+ * 
+ * @return bool true 
+ */
 function api_log_truncate() {
 	db_execute("TRUNCATE TABLE log");
 	db_execute("REPLACE INTO settings (name,value) VALUES('log_status','active')");
 	api_log_log("Log truncated", SEV_NOTICE, FACIL_WEBUI);
+
+	return true;
+
 }
 
 
@@ -183,10 +205,14 @@ function api_log_truncate() {
  * Log Translation Functions
  */
 
-/* syslog_read_config_option - finds the current value of a Cacti configuration setting
-   @arg $config_name - the name of the configuration setting as specified $settings array
-     in 'include/global_settings.php'
-   @returns - the current value of the configuration option */
+/**
+ * Reads cacti configuration settings 
+ *
+ * Finds the current value of a cacti configuration setting
+ * 
+ * @param string $config_name configuration variable to retrieve value
+ * @return bool true 
+ */
 function log_read_config_option($config_name) {
 	global $cnn_id;
 
@@ -207,8 +233,14 @@ function log_read_config_option($config_name) {
 }
 
 
-/* api_log_system_severity_get - returns the syslog severity level
-   @arg $severity - the severity integer value */
+/**
+ * Returns the system (syslog/eventlog) severity level 
+ *
+ * Given a Severity Level constant, return the php syslog constant 
+ * 
+ * @param int $severity cacti severity level
+ * @return int php syslog severity level
+ */
 function api_log_system_severity_get($severity) {
 	if (CACTI_SERVER_OS == "win32") {
 		return LOG_WARNING;
@@ -249,8 +281,14 @@ function api_log_system_severity_get($severity) {
 }
 
 
-/* api_log_facility_get - returns the text version of the facility name
-   @arg $facility - the facility integer value */
+/**
+ * Returns human readable facility text
+ *
+ * Given a facility constant, return human readable text
+ * 
+ * @param int $facility cacti facility constant
+ * @return string cacti facility in human readable text
+ */
 function api_log_facility_get($facility) {
 	switch ($facility) {
 		case FACIL_CMDPHP:
@@ -284,8 +322,14 @@ function api_log_facility_get($facility) {
 }
 
 
-/* api_severity_get - returns the text version of the message severity
-   @arg $severity - the severity integer value */
+/**
+ * Returns human readable severity text
+ *
+ * Given a severity constant, return human readable text
+ * 
+ * @param int $severity cacti severity constant
+ * @return string cacti severity in human readable text
+ */
 function api_log_severity_get($severity) {
 	switch ($severity) {
 		case SEV_EMERGENCY:
@@ -321,6 +365,15 @@ function api_log_severity_get($severity) {
 	}
 }
 
+
+/**
+ * Returns syslog severity value
+ *
+ * Given a severity constant, return syslog severity value
+ * 
+ * @param int $severity cacti severity constant
+ * @return int syslog severity value
+ */
 function api_log_syslog_severity_get($severity) {
 
 	switch ($severity) {
@@ -359,6 +412,18 @@ function api_log_syslog_severity_get($severity) {
 }
 
 
+/**
+ * Send syslog message to a syslog server
+ *
+ * Generates and sends a syslog packet to a syslog server
+ * 
+ * @param string $syslog_server Server to send syslog messages to
+ * @param int $syslog_server_port Port to send to on syslog server
+ * @param int $syslog_facility Syslog facility value, refer to syslog log constants
+ * @param int $syslog_severity Syslog severity value, refer to syslog log constants
+ * @param string $syslog_message message to send to syslog server
+ * @return bool true on sent, false on error
+ */
 function api_log_syslog($syslog_server, $syslog_server_port, $syslog_facility, $syslog_severity, $syslog_message) {
 	global $cnn_id;
 	
@@ -417,14 +482,14 @@ function api_log_syslog($syslog_server, $syslog_server_port, $syslog_facility, $
 	}else{
 		/* socket error - log to database */
 		$sql = "insert into log
-			(logdate,facility,severity,poller_id,host_id,user_id,username,source,plugin,message) values
-			(SYSDATE(), " . FACIL_WEBUI . "," . SEV_ERROR . ",0,0,0,'SYSTEM','SYSLOG','N/A','". sql_sanitize("Syslog error[" . $error_number ."]: " . $error_string) . "');";
+			(logdate,facility,severity,poller_id,host_id,username,source,plugin,message) values
+			(SYSDATE(), " . FACIL_WEBUI . "," . SEV_ERROR . ",0,0,'SYSTEM','SYSLOG','N/A','". sql_sanitize("Syslog error[" . $error_number ."]: " . $error_string) . "');";
 		/* DO NOT USE db_execute, function looping can occur when in SEV_DEV mode */
 		$cnn_id->Execute($sql);
 		return false;
 	}
 	
-	return false;
+	return true;
 
 }
 

@@ -90,7 +90,7 @@ function db_fetch_cell($sql) {
 	$result = $cnn_id->Execute($sql);
 
 	if ($result === false) {
-		api_log_log("SQL error: " . $cnn_id->ErrorMsg(), SEV_DEV, 0, 0, 0, FACIL_WEBUI);
+		api_log_log("SQL error: " . $cnn_id->ErrorMsg(), SEV_DEV);
 	}else{
 		if (!$result->EOF) {
 			return $result->fields[0];
@@ -112,7 +112,7 @@ function db_fetch_row($sql) {
 	$result = $cnn_id->Execute($sql);
 
 	if ($result === false) {
-		api_log_log("SQL error: " . $cnn_id->ErrorMsg(), SEV_DEV, 0, 0, 0, false, FACIL_WEBUI);
+		api_log_log("SQL error: " . $cnn_id->ErrorMsg(), SEV_DEV);
 	}else{
 		if (!$result->EOF) {
 			return $result->fields;
