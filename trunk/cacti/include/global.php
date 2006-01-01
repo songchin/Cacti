@@ -60,7 +60,7 @@ $colors["form_alternate2"] = "E5E5E5";
 
 
 /* Logging include */
-require(CACTI_BASE_PATH . "/lib/log/log_action.php");
+require(CACTI_BASE_PATH . "/lib/log/log_update.php");
 
 /* includes for database operation */
 require(CACTI_BASE_PATH . "/lib/adodb/adodb.inc.php");

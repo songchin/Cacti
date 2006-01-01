@@ -40,7 +40,7 @@ require_once(CACTI_BASE_PATH . "/include/log/log_arrays.php");
 require_once(CACTI_BASE_PATH . "/include/log/log_form.php");
 
 /* Functions includes */
-require_once(CACTI_BASE_PATH . "/lib/log/log_action.php");
+require_once(CACTI_BASE_PATH . "/lib/log/log_update.php");
 require_once(CACTI_BASE_PATH . "/lib/log/log_info.php");
 
 
