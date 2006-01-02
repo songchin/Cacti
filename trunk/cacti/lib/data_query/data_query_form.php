@@ -25,7 +25,7 @@
 /* form validation functions */
 
 function validate_data_query_fields(&$_fields_data_query, $data_query_field_name_format) {
-	require_once(CACTI_BASE_PATH . "/lib/data_query/data_query_list.php");
+	require_once(CACTI_BASE_PATH . "/lib/data_query/data_query_info.php");
 
 	if (sizeof($_fields_data_query) == 0) {
 		return array();
@@ -35,7 +35,7 @@ function validate_data_query_fields(&$_fields_data_query, $data_query_field_name
 	$error_fields = array();
 
 	/* get a complete field list */
-	$fields_data_query = api_data_query_list_fields();
+	$fields_data_query = api_data_query_field_list();
 
 	/* base fields */
 	while (list($_field_name, $_field_array) = each($fields_data_query)) {
@@ -52,7 +52,7 @@ function validate_data_query_fields(&$_fields_data_query, $data_query_field_name
 }
 
 function validate_data_query_field_fields(&$_fields_data_query_field, $data_query_field_field_name_format) {
-	require_once(CACTI_BASE_PATH . "/lib/data_query/data_query_list.php");
+	require_once(CACTI_BASE_PATH . "/lib/data_query/data_query_info.php");
 
 	if (sizeof($_fields_data_query_field) == 0) {
 		return array();
@@ -62,7 +62,7 @@ function validate_data_query_field_fields(&$_fields_data_query_field, $data_quer
 	$error_fields = array();
 
 	/* get a complete field list */
-	$fields_data_query_fields = api_data_query_fields_list_fields();
+	$fields_data_query_fields = api_data_query_field_field_list();
 
 	/* if enough field values are available, additional validation checks can be made */
 	if ((isset($_fields_data_query_field["method_type"])) && (isset($_fields_data_query_field["method_value"])) && ($_fields_data_query_field["method_type"] == DATA_QUERY_FIELD_METHOD_VALUE_PARSE)) {
@@ -112,7 +112,7 @@ function _data_query_field__name($field_name, $field_value = "", $field_id = 0) 
 function _data_query_field__input_type($field_name, $field_value = "", $field_id = 0) {
 	require_once(CACTI_BASE_PATH . "/include/data_query/data_query_constants.php");
 	require_once(CACTI_BASE_PATH . "/lib/sys/html_form.php");
-	require_once(CACTI_BASE_PATH . "/lib/data_query/data_query_list.php");
+	require_once(CACTI_BASE_PATH . "/lib/data_query/data_query_info.php");
 
 	?>
 	<script language="JavaScript">
@@ -149,7 +149,7 @@ function _data_query_field__input_type($field_name, $field_value = "", $field_id
 			<?php echo _("Specifies how data is to be retrieved for this data query.");?>
 		</td>
 		<td class="field-row" colspan="2">
-			<?php form_dropdown($field_name, api_data_query_list_input_types(), "", "", $field_value, "", DATA_QUERY_INPUT_TYPE_SNMP_QUERY, "", "", "update_data_query_type_fields(this.value)");?>
+			<?php form_dropdown($field_name, api_data_query_input_type_list(), "", "", $field_value, "", DATA_QUERY_INPUT_TYPE_SNMP_QUERY, "", "", "update_data_query_type_fields(this.value)");?>
 		</td>
 	</tr>
 	<?php
@@ -158,7 +158,7 @@ function _data_query_field__input_type($field_name, $field_value = "", $field_id
 function _data_query_field__index_order_type($field_name, $field_value = "", $field_id = 0) {
 	require_once(CACTI_BASE_PATH . "/include/data_query/data_query_constants.php");
 	require_once(CACTI_BASE_PATH . "/lib/sys/html_form.php");
-	require_once(CACTI_BASE_PATH . "/lib/data_query/data_query_list.php");
+	require_once(CACTI_BASE_PATH . "/lib/data_query/data_query_info.php");
 
 	?>
 	<tr class="<?php echo field_get_row_style();?>">
@@ -167,7 +167,7 @@ function _data_query_field__index_order_type($field_name, $field_value = "", $fi
 			<?php echo _("Specifies how data is to be retrieved for this data query.");?>
 		</td>
 		<td class="field-row" colspan="2">
-			<?php form_dropdown($field_name, api_data_query_list_index_sort_types(), "", "", $field_value, "", DATA_QUERY_INDEX_SORT_TYPE_ALPHABETIC);?>
+			<?php form_dropdown($field_name, api_data_query_index_sort_type_list(), "", "", $field_value, "", DATA_QUERY_INDEX_SORT_TYPE_ALPHABETIC);?>
 		</td>
 	</tr>
 	<?php

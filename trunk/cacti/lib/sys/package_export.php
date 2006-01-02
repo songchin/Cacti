@@ -414,6 +414,64 @@ function &package_data_template_export($data_template_id, $indent = 2) {
 	return $xml;
 }
 
+function &package_data_query_export($data_query_id, $indent = 2) {
+	require_once(CACTI_BASE_PATH . "/lib/data_query/data_query_info.php");
+
+	$xml = "";
+
+	/*
+	 * XML Tag: <data_query>
+	 */
+
+	/* obtain a list of all data query specific fields */
+	$data_query_fields = api_data_query_field_list();
+	/* obtain a copy of this specfic data template */
+	$data_query = api_data_query_get($data_query_id);
+
+	$_xml = "";
+	foreach (array_keys($data_query_fields) as $field_name) {
+		/* create an XML key for each data source field */
+		$_xml .= package_xml_tag_get($field_name, xml_character_encode($data_query[$field_name]), $indent + 2);
+	}
+
+	/* append the result onto the final XML string */
+	$xml .= package_xml_tag_get("data_query", $_xml, $indent + 1, true);
+
+	/*
+	 * XML Tag: <fields>
+	 */
+
+	/* obtain a list of all data query field specific fields */
+	$data_query_field_fields = api_data_query_field_field_list();
+	/* obtain a list of all data query fields associated with this data query */
+	$data_query_fields = api_data_query_fields_list($data_query_id);
+
+	$_xml = "";
+	if (sizeof($data_query_fields) > 0) {
+		$i = 0;
+		foreach ($data_query_fields as $data_query_field) {
+			$__xml = "";
+			foreach (array_keys($data_query_field_fields) as $field_name) {
+				/* create an XML key for each data template item field */
+				$__xml .= package_xml_tag_get($field_name, xml_character_encode($data_query_field[$field_name]), $indent + 3);
+			}
+
+			/* append the result onto a temporary XML string */
+			$_xml .= package_xml_tag_get("item_" . str_pad($i, 5, "0", STR_PAD_LEFT), $__xml, $indent + 2, true);
+
+			$i++;
+		}
+	}
+
+	/* append the result onto the final XML string */
+	$xml .= package_xml_tag_get("fields", $_xml, $indent + 1, true);
+
+	/* wrap the whole XML string into a 'data_query' tag and return it */
+	$xml = package_xml_tag_get(package_hash_get($data_query_id, "data_query"), $xml, $indent, true);
+
+	return $xml;
+}
+
 function &package_xml_tag_get($name, $value, $indent_num, $prepend_nl = false) {
 	/* the variable assignment is to make php happy */
 	$hash = str_repeat("\t", $indent_num) . "<$name>" . ($prepend_nl === true ? "\n" : "") . $value . ($prepend_nl === true ? str_repeat("\t", $indent_num) : "") . "</$name>\n";

@@ -415,4 +415,28 @@ function api_data_query_graphed_indexes_list($graph_template_id, $host_id) {
 		and data_source_field.name = 'data_query_index'");
 }
 
+function &api_data_query_input_type_list() {
+	require(CACTI_BASE_PATH . "/include/data_query/data_query_arrays.php");
+
+	return $data_query_input_types;
+}
+
+function &api_data_query_index_sort_type_list() {
+	require(CACTI_BASE_PATH . "/include/data_query/data_query_arrays.php");
+
+	return $data_query_index_sort_types;
+}
+
+function &api_data_query_field_list() {
+	require(CACTI_BASE_PATH . "/include/data_query/data_query_form.php");
+
+	return $fields_data_query;
+}
+
+function &api_data_query_field_field_list() {
+	require(CACTI_BASE_PATH . "/include/data_query/data_query_form.php");
+
+	return $fields_data_query_fields;
+}
+
 ?>
