@@ -263,11 +263,8 @@ $menu = array(
 		"graph_templates.php" => _("Graph Templates"),
 		"host_templates.php" => _("Host Templates"),
 		"data_templates.php" => _("Data Templates"),
-		"rra_templates.php" => _("RRA Templates")
-		),
-	_("Import/Export") => array(
-		"templates_import.php" => _("Import Templates"),
-		"templates_export.php" => _("Export Templates")
+		"rra_templates.php" => _("RRA Templates"),
+		"packages.php" => _("Packages")
 		),
 	_("Configuration")  => array(
 		"settings.php" => _("System Settings"),
@@ -335,8 +332,7 @@ $user_auth_realm_filenames = array(
 	"rra.php" => 9,
 	"settings.php" => 15,
 	"data_queries.php" => 13,
-	"templates_export.php" => 16,
-	"templates_import.php" => 17,
+	"packages.php" => 17,
 	"tree.php" => 4,
 	"user_admin.php" => 1,
 	"utilities.php" => 15,

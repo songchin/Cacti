@@ -31,4 +31,19 @@ $fields_graph_template = array(
 		)
 	);
 
+$fields_graph_template_input = array(
+	"name" => array(
+		"default" => "",
+		"validate_regexp" => "",
+		"validate_empty" => false,
+		"data_type" => DB_TYPE_STRING
+		),
+	"field_name" => array(
+		"default" => "",
+		"validate_regexp" => "",
+		"validate_empty" => false,
+		"data_type" => DB_TYPE_STRING
+		)
+	);
+
 ?>

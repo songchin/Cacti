@@ -37,7 +37,7 @@ function api_graph_template_list($filter_array = "", $current_page = 0, $rows_pe
 			return false;
 		/* otherwise, form an SQL WHERE string using the filter fields */
 		}else{
-			$sql_where = sql_filter_array_to_where_string($filter_array, api_graph_template_fields_list(), true);
+			$sql_where = sql_filter_array_to_where_string($filter_array, api_graph_template_field_list(), true);
 		}
 	}
 
@@ -56,38 +56,54 @@ function api_graph_template_list($filter_array = "", $current_page = 0, $rows_pe
 		$sql_limit");
 }
 
-function get_graph_template($graph_template_id) {
-	/* sanity check */
-	if ((!is_numeric($graph_template_id)) || (empty($graph_template_id))) {
-		return false;
-	}
+function api_graph_template_get($graph_template_id) {
+	/* sanity checks */
+	validate_id_die($graph_template_id, "graph_template_id");
 
 	$graph_template = db_fetch_row("select * from graph_template where id = " . sql_sanitize($graph_template_id));
 
 	if (sizeof($graph_template) == 0) {
-		api_log_log("Invalid graph template [ID#$graph_template_id] specified in get_graph_template()", SEV_ERROR);
+		api_log_log("Invalid graph template [ID#$graph_template_id] specified in api_graph_template_get()", SEV_ERROR);
 		return false;
 	}else{
 		return $graph_template;
 	}
 }
 
-function get_graph_template_items($graph_template_id) {
-	/* sanity check */
-	if ((!is_numeric($graph_template_id)) || (empty($graph_template_id))) {
-		return false;
-	}
+function api_graph_template_item_list($graph_template_id) {
+	/* sanity checks */
+	validate_id_die($graph_template_id, "graph_template_id");
 
 	return db_fetch_assoc("select * from graph_template_item where graph_template_id = " . sql_sanitize($graph_template_id));
 }
 
-function &api_graph_template_fields_list() {
+function api_graph_template_item_input_list($graph_template_id) {
+	/* sanity checks */
+	validate_id_die($graph_template_id, "graph_template_id");
+
+	return db_fetch_assoc("select * from graph_template_item_input where graph_template_id = " . sql_sanitize($graph_template_id));
+}
+
+function api_graph_template_data_template_list($graph_template_id) {
+	/* sanity checks */
+	validate_id_die($graph_template_id, "graph_template_id");
+
+	return array_rekey(
+		db_fetch_assoc("select distinct
+			data_template_item.data_template_id
+			from graph_template_item,data_template_item
+			where graph_template_item.data_template_item_id=data_template_item.id
+			and graph_template_item.graph_template_id = " . sql_sanitize($graph_template_id)),
+			"", "data_template_id");
+}
+
+function &api_graph_template_field_list() {
 	require(CACTI_BASE_PATH . "/include/graph_template/graph_template_form.php");
 
 	return $fields_graph_template;
 }
 
-function &get_graph_template_items_field_list() {
+function &api_graph_template_item_field_list() {
 	require(CACTI_BASE_PATH . "/include/graph/graph_form.php");
 
 	$field_list = array(
@@ -98,6 +114,12 @@ function &get_graph_template_items_field_list() {
 		) + $fields_graph_item;
 
 	return $field_list;
+}
+
+function &api_graph_template_item_input_field_list() {
+	require(CACTI_BASE_PATH . "/include/graph_template/graph_template_form.php");
+
+	return $fields_graph_template_input;
 }
 
 ?>

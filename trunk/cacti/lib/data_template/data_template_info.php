@@ -74,6 +74,19 @@ function get_data_template($data_template_id) {
 	}
 }
 
+function api_data_template_input_field_value_get($data_template_id, $field_name) {
+	/* sanity checks */
+	validate_id_die($data_template_id, "data_template_id");
+
+	$value = db_fetch_row("select value from data_template_field where data_template_id = " . sql_sanitize($data_template_id) . " and name = '" . sql_sanitize($field_name) . "'");
+
+	if (sizeof($value) == 1) {
+		return $value["value"];
+	}else{
+		return false;
+	}
+}
+
 function get_data_templates_from_graph_template($graph_template_id, $data_input_type = 0) {
 	/* sanity check for $graph_template_id */
 	if ((!is_numeric($graph_template_id)) || (empty($graph_template_id))) {
@@ -137,7 +150,7 @@ function get_data_template_items_from_graph_template($graph_template_id) {
 		and graph_template_item.graph_template_id = " . sql_sanitize($graph_template_id));
 }
 
-function get_data_template_rras($data_template_id) {
+function api_data_template_rras_list($data_template_id) {
 	/* sanity check for $graph_template_id */
 	if ((!is_numeric($data_template_id)) || (empty($data_template_id))) {
 		return false;

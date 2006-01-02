@@ -116,7 +116,7 @@ function api_graph_template_item_save($graph_template_item_id, $_fields_graph_it
 	}
 
 	/* convert the input array into something that is compatible with db_replace() */
-	$_fields += sql_get_database_field_array($_fields_graph_item, get_graph_template_items_field_list());
+	$_fields += sql_get_database_field_array($_fields_graph_item, api_graph_template_item_field_list());
 
 	if (db_replace("graph_template_item", $_fields, array("id"))) {
 		$graph_template_item_id = db_fetch_insert_id();

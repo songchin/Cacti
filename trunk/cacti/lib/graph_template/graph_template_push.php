@@ -42,7 +42,7 @@ function copy_graph_template_to_graph($graph_template_id, $host_id = 0, $data_qu
 	$fields_graph = get_graph_field_list();
 	$fields_graph_item = get_graph_items_field_list();
 
-	$graph_template = get_graph_template($graph_template_id);
+	$graph_template = api_graph_template_get($graph_template_id);
 
 	if (sizeof($graph_template) > 0) {
 		/* copy down per-graph only fields */
@@ -72,7 +72,7 @@ function copy_graph_template_to_graph($graph_template_id, $host_id = 0, $data_qu
 			api_log_log("Cloning graph [ID#$graph_id] from template [ID#$graph_template_id]", SEV_DEBUG);
 
 			/* move onto the graph items */
-			$graph_template_items = get_graph_template_items($graph_template_id);
+			$graph_template_items = api_graph_template_items_list($graph_template_id);
 
 			if (sizeof($graph_template_items) > 0) {
 				foreach ($graph_template_items as $graph_template_item) {
@@ -200,7 +200,7 @@ function api_graph_template_propagate($graph_template_id) {
 	}
 
 	/* get information about this graph template */
-	$graph_template = get_graph_template($graph_template_id);
+	$graph_template = api_graph_template_get($graph_template_id);
 
 	/* must be a valid graph template */
 	if ($graph_template === false) {

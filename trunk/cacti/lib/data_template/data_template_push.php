@@ -44,7 +44,7 @@ function copy_data_template_to_data_source($data_template_id, $host_id = 0, $dat
 
 	/* fetch information from that data template */
 	$data_template = get_data_template($data_template_id);
-	$data_template_rras = get_data_template_rras($data_template_id);
+	$data_template_rras = api_data_template_rras_list($data_template_id);
 	$_data_template_input_fields = get_data_template_input_fields($data_template_id);
 
 	if (sizeof($data_template) > 0) {

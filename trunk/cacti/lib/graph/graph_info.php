@@ -85,6 +85,20 @@ function api_graph_total_get($filter_array = "") {
 	return db_fetch_cell("select count(*) from graph $sql_where");
 }
 
+function api_graph_get($graph_id) {
+	/* sanity checks */
+	validate_id_die($graph_id, "graph_id");
+
+	$graph = db_fetch_row("select * from graph where id = " . sql_sanitize($graph_id));
+
+	if (sizeof($graph) == 0) {
+		api_log_log("Invalid graph [ID#$graph] specified in api_graph_get()", SEV_ERROR);
+		return false;
+	}else{
+		return $graph;
+	}
+}
+
 /* api_graph_title_get - returns the title of a graph without using the title cache
    @arg $graph_id - (int) the ID of the graph to get a title for
    @returns - the graph title */

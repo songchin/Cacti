@@ -852,18 +852,8 @@ function draw_navigation_text() {
 			"mapping" => "index.php:",
 			"level" => "1"
 			),
-		"templates_export.php:" => array(
-			"title" => _("Export Templates"),
-			"mapping" => "index.php:",
-			"level" => "1"
-			),
-		"templates_export.php:save" => array(
-			"title" => _("Export Results"),
-			"mapping" => "index.php:,templates_export.php:",
-			"level" => "2"
-			),
-		"templates_import.php:" => array(
-			"title" => _("Import Templates"),
+		"packages.php:" => array(
+			"title" => _("Template Packages"),
 			"mapping" => "index.php:",
 			"level" => "1"
 			),

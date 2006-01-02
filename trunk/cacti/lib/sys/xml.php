@@ -22,34 +22,38 @@
  +-------------------------------------------------------------------------+
 */
 
-function xml2array($data) {
+function xml_array_get($data) {
 	/* mvo voncken@mailandnews.com
 	original ripped from  on the php-manual:gdemartini@bol.com.br
-	to be used for data retrieval(result-structure is Data oriented) */  
+	to be used for data retrieval(result-structure is Data oriented) */
 	$p = xml_parser_create();
 	xml_parser_set_option($p, XML_OPTION_SKIP_WHITE, 1);
 	xml_parser_set_option($p, XML_OPTION_CASE_FOLDING, 0);
 	xml_parse_into_struct($p, $data, $vals, $index);
 	xml_parser_free($p);
-	
+
 	$tree = array();
 	$i = 0;
-	$tree = get_children($vals, $i);
-	
+	$tree = _xml_array_children_get($vals, $i);
+
 	return $tree;
 }
 
-function get_children($vals, &$i) {
+function xml_character_encode($text) {
+	return str_replace("&", "&amp;", htmlentities($text, ENT_NOQUOTES));
+}
+
+function _xml_array_children_get($vals, &$i) {
 	$children = array();
-	
+
 	if (isset($vals[$i]['value'])) {
 		if ($vals[$i]['value']) array_push($children, $vals[$i]['value']);
 	}
-	
+
 	$prevtag = ""; $j = 0;
-	
-	while (++$i < count($vals)) {      
-		switch ($vals[$i]['type']) {      
+
+	while (++$i < count($vals)) {
+		switch ($vals[$i]['type']) {
 		case 'cdata':
 			array_push($children, $vals[$i]['value']);
 			break;
@@ -61,17 +65,17 @@ function get_children($vals, &$i) {
 			}else{
 				$children{($vals[$i]['tag'])} = "";
 			}
-			
+
 			break;
 		case 'open':
 			$j++;
-			
+
 			if ($prevtag <> $vals[$i]['tag']) {
 				$j = 0;
 				$prevtag = $vals[$i]['tag'];
 			}
-			
-			$children{($vals[$i]['tag'])} = get_children($vals,$i);
+
+			$children{($vals[$i]['tag'])} = _xml_array_children_get($vals,$i);
 			break;
 		case 'close':
 			return $children;
