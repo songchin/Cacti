@@ -37,7 +37,7 @@ function api_data_template_list($filter_array = "", $current_page = 0, $rows_per
 			return false;
 		/* otherwise, form an SQL WHERE string using the filter fields */
 		}else{
-			$sql_where = sql_filter_array_to_where_string($filter_array, api_data_template_fields_list(), true);
+			$sql_where = sql_filter_array_to_where_string($filter_array, api_data_template_field_list(), true);
 		}
 	}
 
@@ -58,7 +58,7 @@ function api_data_template_list($filter_array = "", $current_page = 0, $rows_per
 		$sql_limit");
 }
 
-function get_data_template($data_template_id) {
+function api_data_template_get($data_template_id) {
 	/* sanity check for $data_template_id */
 	if ((!is_numeric($data_template_id)) || (empty($data_template_id))) {
 		return false;
@@ -67,7 +67,7 @@ function get_data_template($data_template_id) {
 	$data_template = db_fetch_row("select * from data_template where id = " . sql_sanitize($data_template_id));
 
 	if (sizeof($data_template) == 0) {
-		api_log_log("Invalid data template [ID#$data_template_id] specified in get_data_template()", SEV_ERROR);
+		api_log_log("Invalid data template [ID#$data_template_id] specified in api_data_template_get()", SEV_ERROR);
 		return false;
 	}else{
 		return $data_template;
@@ -125,7 +125,7 @@ function get_data_template_item($data_template_item_id) {
 	}
 }
 
-function get_data_template_items($data_template_id) {
+function api_data_template_item_list($data_template_id) {
 	/* sanity check for $data_template_id */
 	if ((!is_numeric($data_template_id)) || (empty($data_template_id))) {
 		return false;
@@ -159,7 +159,14 @@ function api_data_template_rras_list($data_template_id) {
 	return array_rekey(db_fetch_assoc("select rra_id from data_template_rra where data_template_id = " . sql_sanitize($data_template_id)), "", "rra_id");
 }
 
-function get_data_template_input_fields($data_template_id) {
+function api_data_template_suggested_values_list($data_template_id, $field_name = "") {
+	/* sanity checks */
+	validate_id_die($data_template_id, "data_template_id");
+
+	return db_fetch_assoc("select * from data_template_suggested_value where data_template_id = " . sql_sanitize($data_template_id) . ($field_name == "" ? "" : " and field_name = '" . sql_sanitize($field_name) . "'") . " order by field_name,sequence");
+}
+
+function api_data_template_input_field_list($data_template_id) {
 	/* sanity check for $data_template_id */
 	if ((!is_numeric($data_template_id)) || (empty($data_template_id))) {
 		return false;
@@ -169,7 +176,7 @@ function get_data_template_input_fields($data_template_id) {
 
 }
 
-function &api_data_template_fields_list() {
+function &api_data_template_field_list() {
 	require(CACTI_BASE_PATH . "/include/data_template/data_template_form.php");
 
 	return $fields_data_template;

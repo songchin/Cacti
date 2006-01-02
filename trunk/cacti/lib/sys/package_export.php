@@ -267,7 +267,151 @@ function &package_graph_template_export($graph_template_id, $indent = 2) {
 	$xml = package_xml_tag_get(package_hash_get($graph_template_id, "graph_template"), $xml, $indent, true);
 
 	return $xml;
+}
 
+function &package_data_template_export($data_template_id, $indent = 2) {
+	require_once(CACTI_BASE_PATH . "/lib/data_template/data_template_info.php");
+	require_once(CACTI_BASE_PATH . "/lib/data_source/data_source_info.php");
+
+	$xml = "";
+
+	/*
+	 * XML Tag: <template>
+	 */
+
+	/* obtain a list of all data template specific fields */
+	$data_template_fields = api_data_template_field_list();
+	/* obtain a copy of this specfic data template */
+	$data_template = api_data_template_get($data_template_id);
+
+	$_xml = "";
+	foreach (array_keys($data_template_fields) as $field_name) {
+		/* create an XML key for each data template field */
+		$_xml .= package_xml_tag_get($field_name, xml_character_encode($data_template[$field_name]), $indent + 2);
+	}
+
+	/* append the result onto the final XML string */
+	$xml .= package_xml_tag_get("template", $_xml, $indent + 1, true);
+
+	/*
+	 * XML Tag: <data_source>
+	 */
+
+	/* obtain a list of all data source specific fields */
+	$data_source_fields = api_data_source_field_list();
+
+	$_xml = "";
+	foreach (array_keys($data_source_fields) as $field_name) {
+		/* check because the 'name' column does not exist */
+		if (isset($data_template[$field_name])) {
+			/* create an XML key for each data source field */
+			$_xml .= package_xml_tag_get($field_name, xml_character_encode($data_template[$field_name]), $indent + 2);
+		}
+
+		/* check because the 't_data_input_type' and 't_rrd_path' columns do not exist */
+		if (isset($data_template{"t_" . $field_name})) {
+			/* create an XML key for each "template" data source field */
+			$_xml .= package_xml_tag_get("t_" . $field_name, xml_character_encode($data_template{"t_" . $field_name}), $indent + 2);
+		}
+	}
+
+	/* append the result onto the final XML string */
+	$xml .= package_xml_tag_get("data_source", $_xml, $indent + 1, true);
+
+	/*
+	 * XML Tag: <items>
+	 */
+
+	/* obtain a list of all data source item specific fields */
+	$data_source_items_fields = api_data_source_item_field_list();
+	/* obtain a list of all data template items associated with this data template */
+	$data_template_items = api_data_template_item_list($data_template_id);
+
+	$_xml = "";
+	if (sizeof($data_template_items) > 0) {
+		foreach ($data_template_items as $data_template_item) {
+			$__xml = "";
+			foreach (array_keys($data_source_items_fields) as $field_name) {
+				/* create an XML key for each data template item field */
+				$__xml .= package_xml_tag_get($field_name, xml_character_encode($data_template_item[$field_name]), $indent + 3);
+			}
+
+			/* append the result onto a temporary XML string */
+			$_xml .= package_xml_tag_get(package_hash_get($data_template_item["id"], "data_template_item"), $__xml, $indent + 2, true);
+		}
+	}
+
+	/* append the result onto the final XML string */
+	$xml .= package_xml_tag_get("items", $_xml, $indent + 1, true);
+
+	/*
+	 * XML Tag: <fields>
+	 */
+
+	/* obtain a list of all data template input fields associated with this data template */
+	$data_template_input_fields = api_data_template_input_field_list($data_template_id);
+
+	$_xml = "";
+	if (sizeof($data_template_input_fields) > 0) {
+		$i = 0;
+		foreach ($data_template_input_fields as $data_template_input_field_name => $data_template_input_field) {
+			$__xml = "";
+
+			/* create an XML key for each suggested value field */
+			$__xml .= package_xml_tag_get("name", xml_character_encode($data_template_input_field_name), $indent + 3);
+			$__xml .= package_xml_tag_get("t_value", xml_character_encode($data_template_input_field["t_value"]), $indent + 3);
+
+			/* make sure to resolve internal ID's for specific fields */
+			if ($data_template_input_field_name == "data_query_id") {
+				$__xml .= package_xml_tag_get("value", xml_character_encode(package_hash_get($data_template_input_field["value"], "data_query")), $indent + 3);
+			}else if ($data_template_input_field_name == "script_id") {
+				$__xml .= package_xml_tag_get("value", xml_character_encode(package_hash_get($data_template_input_field["value"], "script")), $indent + 3);
+			}else{
+				$__xml .= package_xml_tag_get("value", xml_character_encode($data_template_input_field["value"]), $indent + 3);
+			}
+
+			/* break out each row into its own key */
+			$_xml .= package_xml_tag_get("item_" . str_pad($i, 5, "0", STR_PAD_LEFT), $__xml, $indent + 2, true);
+
+			$i++;
+		}
+	}
+
+	/* append the result onto the final XML string */
+	$xml .= package_xml_tag_get("fields", $_xml, $indent + 1, true);
+
+	/*
+	 * XML Tag: <suggested_values>
+	 */
+
+	/* obtain a list of all suggested values associated with this data template */
+	$data_template_suggested_values = api_data_template_suggested_values_list($data_template_id);
+
+	$_xml = "";
+	if (sizeof($data_template_suggested_values) > 0) {
+		$i = 0;
+		foreach ($data_template_suggested_values as $data_template_suggested_value) {
+			$__xml = "";
+
+			/* create an XML key for each suggested value field */
+			$__xml .= package_xml_tag_get("field_name", xml_character_encode($data_template_suggested_value["field_name"]), $indent + 3);
+			$__xml .= package_xml_tag_get("sequence", xml_character_encode($data_template_suggested_value["sequence"]), $indent + 3);
+			$__xml .= package_xml_tag_get("value", xml_character_encode($data_template_suggested_value["value"]), $indent + 3);
+
+			/* break out each row into its own key */
+			$_xml .= package_xml_tag_get("item_" . str_pad($i, 5, "0", STR_PAD_LEFT), $__xml, $indent + 2, true);
+
+			$i++;
+		}
+	}
+
+	/* append the result onto the final XML string */
+	$xml .= package_xml_tag_get("suggested_values", $_xml, $indent + 1, true);
+
+	/* wrap the whole XML string into a 'data_template' tag and return it */
+	$xml = package_xml_tag_get(package_hash_get($data_template_id, "data_template"), $xml, $indent, true);
+
+	return $xml;
 }
 
 function &package_xml_tag_get($name, $value, $indent_num, $prepend_nl = false) {
