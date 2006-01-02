@@ -74,7 +74,7 @@ function api_graph_template_item_list($graph_template_id) {
 	/* sanity checks */
 	validate_id_die($graph_template_id, "graph_template_id");
 
-	return db_fetch_assoc("select * from graph_template_item where graph_template_id = " . sql_sanitize($graph_template_id));
+	return db_fetch_assoc("select * from graph_template_item where graph_template_id = " . sql_sanitize($graph_template_id) . " order by sequence");
 }
 
 function api_graph_template_item_input_list($graph_template_id) {
@@ -82,6 +82,20 @@ function api_graph_template_item_input_list($graph_template_id) {
 	validate_id_die($graph_template_id, "graph_template_id");
 
 	return db_fetch_assoc("select * from graph_template_item_input where graph_template_id = " . sql_sanitize($graph_template_id));
+}
+
+function api_graph_template_item_input_item_list($graph_template_item_input_id) {
+	/* sanity checks */
+	validate_id_die($graph_template_item_input_id, "graph_template_item_input_id");
+
+	return array_rekey(db_fetch_assoc("select * from graph_template_item_input_item where graph_template_item_input_id = " . sql_sanitize($graph_template_item_input_id)), "", "graph_template_item_id");
+}
+
+function api_graph_template_suggested_values_list($graph_template_id, $field_name = "") {
+	/* sanity checks */
+	validate_id_die($graph_template_id, "graph_template_id");
+
+	return db_fetch_assoc("select * from graph_template_suggested_value where graph_template_id = " . sql_sanitize($graph_template_id) . ($field_name == "" ? "" : " and field_name = '" . sql_sanitize($field_name) . "'") . " order by field_name,sequence");
 }
 
 function api_graph_template_data_template_list($graph_template_id) {

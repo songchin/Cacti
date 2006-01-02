@@ -126,39 +126,49 @@ function &package_graph_template_export($graph_template_id, $indent = 2) {
 	 * XML Tag: <template>
 	 */
 
+	/* obtain a list of all graph template specific fields */
 	$graph_template_fields = api_graph_template_field_list();
+	/* obtain a copy of this specfic graph template */
 	$graph_template = api_graph_template_get($graph_template_id);
 
 	$_xml = "";
 	foreach (array_keys($graph_template_fields) as $field_name) {
+		/* create an XML key for each graph template field */
 		$_xml .= package_xml_tag_get($field_name, xml_character_encode($graph_template[$field_name]), $indent + 2);
 	}
 
+	/* append the result onto the final XML string */
 	$xml .= package_xml_tag_get("template", $_xml, $indent + 1, true);
 
 	/*
 	 * XML Tag: <graph>
 	 */
 
+	/* obtain a list of all graph specific fields */
 	$graph_fields = get_graph_field_list();
 
 	$_xml = "";
 	foreach (array_keys($graph_fields) as $field_name) {
 		/* check because the 'title' column does not exist */
 		if (isset($graph_template[$field_name])) {
+			/* create an XML key for each graph field */
 			$_xml .= package_xml_tag_get($field_name, xml_character_encode($graph_template[$field_name]), $indent + 2);
 		}
 
+		/* create an XML key for each "template" graph field */
 		$_xml .= package_xml_tag_get("t_" . $field_name, xml_character_encode($graph_template{"t_" . $field_name}), $indent + 2);
 	}
 
+	/* append the result onto the final XML string */
 	$xml .= package_xml_tag_get("graph", $_xml, $indent + 1, true);
 
 	/*
 	 * XML Tag: <items>
 	 */
 
+	/* obtain a list of all graph template item specific fields */
 	$graph_template_items_fields = api_graph_template_item_field_list();
+	/* obtain a list of all graph template items associated with this graph template */
 	$graph_template_items = api_graph_template_item_list($graph_template_id);
 
 	$_xml = "";
@@ -167,23 +177,29 @@ function &package_graph_template_export($graph_template_id, $indent = 2) {
 			$__xml = "";
 			foreach (array_keys($graph_template_items_fields) as $field_name) {
 				if ($field_name == "data_template_item_id") {
+					/* create an XML key for the 'data_template_item_id' field, making sure to resolve internal  ID's */
 					$__xml .= package_xml_tag_get($field_name, xml_character_encode(package_hash_get($graph_template_item[$field_name], "data_template_item")), $indent + 3);
 				}else{
+					/* create an XML key for each graph template item field */
 					$__xml .= package_xml_tag_get($field_name, xml_character_encode($graph_template_item[$field_name]), $indent + 3);
 				}
 			}
 
+			/* append the result onto a temporary XML string */
 			$_xml .= package_xml_tag_get(package_hash_get($graph_template_item["id"], "graph_template_item"), $__xml, $indent + 2, true);
 		}
 	}
 
+	/* append the result onto the final XML string */
 	$xml .= package_xml_tag_get("items", $_xml, $indent + 1, true);
 
 	/*
 	 * XML Tag: <inputs>
 	 */
 
+	/* obtain a list of all graph template item input specific fields */
 	$graph_template_inputs_fields = api_graph_template_item_input_field_list();
+	/* obtain a list of all graph template item inputs associated with this graph template */
 	$graph_template_inputs = api_graph_template_item_input_list($graph_template_id);
 
 	$_xml = "";
@@ -191,15 +207,63 @@ function &package_graph_template_export($graph_template_id, $indent = 2) {
 		foreach ($graph_template_inputs as $graph_template_input) {
 			$__xml = "";
 			foreach (array_keys($graph_template_inputs_fields) as $field_name) {
+				/* create an XML key for each graph template item input field */
 				$__xml .= package_xml_tag_get($field_name, xml_character_encode($graph_template_input[$field_name]), $indent + 3);
 			}
 
+			/* obtain a list of each item associated with this graph template item input */
+			$graph_template_input_items = api_graph_template_item_input_item_list($graph_template_id);
+
+			if (sizeof($graph_template_input_items) > 0) {
+				$i = 0; $items_list = "";
+				foreach ($graph_template_input_items as $graph_template_item_id) {
+					/* create a delimited list of each item, making sure to resolve internal ID's */
+					$items_list .= package_hash_get($graph_template_item_id, "graph_template_item") . (($i + 1) < sizeof($graph_template_input_items) ? "|" : "");
+
+					$i++;
+				}
+			}
+
+			/* add the items list that we created above */
+			$__xml .= package_xml_tag_get("items", $items_list, $indent + 3);
+
+			/* append the result onto a temporary XML string */
 			$_xml .= package_xml_tag_get(package_hash_get($graph_template_input["id"], "graph_template_input"), $__xml, $indent + 2, true);
 		}
 	}
 
+	/* append the result onto the final XML string */
 	$xml .= package_xml_tag_get("inputs", $_xml, $indent + 1, true);
 
+	/*
+	 * XML Tag: <suggested_values>
+	 */
+
+	/* obtain a list of all suggested values associated with this graph template */
+	$graph_template_suggested_values = api_graph_template_suggested_values_list($graph_template_id);
+
+	$_xml = "";
+	if (sizeof($graph_template_suggested_values) > 0) {
+		$i = 0;
+		foreach ($graph_template_suggested_values as $graph_template_suggested_value) {
+			$__xml = "";
+
+			/* create an XML key for each suggested value field */
+			$__xml .= package_xml_tag_get("field_name", xml_character_encode($graph_template_suggested_value["field_name"]), $indent + 3);
+			$__xml .= package_xml_tag_get("sequence", xml_character_encode($graph_template_suggested_value["sequence"]), $indent + 3);
+			$__xml .= package_xml_tag_get("value", xml_character_encode($graph_template_suggested_value["value"]), $indent + 3);
+
+			/* break out each row into its own key */
+			$_xml .= package_xml_tag_get("item_" . str_pad($i, 5, "0", STR_PAD_LEFT), $__xml, $indent + 2, true);
+
+			$i++;
+		}
+	}
+
+	/* append the result onto the final XML string */
+	$xml .= package_xml_tag_get("suggested_values", $_xml, $indent + 1, true);
+
+	/* wrap the whole XML string into a 'graph_template' tag and return it */
 	$xml = package_xml_tag_get(package_hash_get($graph_template_id, "graph_template"), $xml, $indent, true);
 
 	return $xml;
