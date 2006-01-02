@@ -39,13 +39,13 @@ function copy_data_template_to_data_source($data_template_id, $host_id = 0, $dat
 	}
 
 	/* fetch field lists */
-	$fields_data_source = api_data_source_fields_list();
-	$fields_data_source_item = api_data_source_item_fields_list();
+	$fields_data_source = api_data_source_field_list();
+	$fields_data_source_item = api_data_source_item_field_list();
 
 	/* fetch information from that data template */
-	$data_template = get_data_template($data_template_id);
+	$data_template = api_data_template_get($data_template_id);
 	$data_template_rras = api_data_template_rras_list($data_template_id);
-	$_data_template_input_fields = get_data_template_input_fields($data_template_id);
+	$_data_template_input_fields = api_data_template_input_field_list($data_template_id);
 
 	if (sizeof($data_template) > 0) {
 		/* copy down per-data source only fields */
@@ -84,7 +84,7 @@ function copy_data_template_to_data_source($data_template_id, $host_id = 0, $dat
 			api_data_source_fields_save($data_source_id, $data_template_input_fields);
 
 			/* move onto the data source items */
-			$data_template_items = get_data_template_items($data_template_id);
+			$data_template_items = api_data_template_item_list($data_template_id);
 
 			if (sizeof($data_template_items) > 0) {
 				foreach ($data_template_items as $data_template_item) {
@@ -124,7 +124,7 @@ function api_data_template_propagate($data_template_id) {
 	require_once(CACTI_BASE_PATH . "/lib/data_template/data_template_info.php");
 
 	/* get information about this data template */
-	$data_template = get_data_template($data_template_id);
+	$data_template = api_data_template_get($data_template_id);
 
 	/* must be a valid data template */
 	if ($data_template === false) {
@@ -132,7 +132,7 @@ function api_data_template_propagate($data_template_id) {
 	}
 
 	/* retrieve a list of data source fields */
-	$data_source_fields = api_data_source_fields_list();
+	$data_source_fields = api_data_source_field_list();
 
 	$ds_fields = array();
 	/* loop through each data source column name (from the above array) */
@@ -168,7 +168,7 @@ function api_data_source_item_propagate($data_template_item_id) {
 	}
 
 	/* retrieve a list of data source item fields */
-	$data_source_item_fields = api_data_source_item_fields_list();
+	$data_source_item_fields = api_data_source_item_field_list();
 
 	$dsi_fields = array();
 	/* loop through each data source column name (from the above array) */

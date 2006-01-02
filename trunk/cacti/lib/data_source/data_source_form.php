@@ -34,7 +34,7 @@ function api_data_source_fields_validate(&$_fields_data_source, &$_fields_sugges
 	$error_fields = array();
 
 	/* get a complete field list */
-	$fields_data_source = api_data_source_fields_list();
+	$fields_data_source = api_data_source_field_list();
 
 	/* base fields */
 	while (list($_field_name, $_field_array) = each($fields_data_source)) {
@@ -109,7 +109,7 @@ function api_data_source_item_fields_validate(&$_fields_data_source_item, $data_
 	$error_fields = array();
 
 	/* get a complete field list */
-	$fields_data_source_item = api_data_source_item_fields_list();
+	$fields_data_source_item = api_data_source_item_field_list();
 
 	/* base fields */
 	while (list($_field_name, $_field_array) = each($fields_data_source_item)) {

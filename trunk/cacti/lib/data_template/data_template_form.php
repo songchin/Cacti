@@ -34,7 +34,7 @@ function api_data_template_fields_validate(&$_fields_data_template, $data_templa
 	$error_fields = array();
 
 	/* get a complete field list */
-	$fields_data_template = api_data_template_fields_list();
+	$fields_data_template = api_data_template_field_list();
 
 	/* base fields */
 	while (list($_field_name, $_field_array) = each($fields_data_template)) {

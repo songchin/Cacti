@@ -487,7 +487,7 @@ function template() {
 	$data_templates = api_data_template_list($filter_array);
 
 	/* get a list of data input types for display in the data sources list */
-	$data_input_types = api_data_source_input_types_list();
+	$data_input_types = api_data_source_input_type_list();
 
 	form_start("data_templates.php");
 

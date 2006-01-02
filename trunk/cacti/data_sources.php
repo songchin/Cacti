@@ -116,7 +116,7 @@ function form_post() {
 		}
 
 		/* add any unchecked checkbox fields */
-		$data_source_fields += field_register_html_checkboxes(api_data_source_fields_list(), "ds||field|");
+		$data_source_fields += field_register_html_checkboxes(api_data_source_field_list(), "ds||field|");
 
 		/* step #2: field validation */
 		$suggested_value_fields = array(); /* placeholder */
@@ -768,7 +768,7 @@ function ds() {
 	$total_rows = api_data_source_total_get($filter_array);
 
 	/* get a list of data input types for display in the data sources list */
-	$data_input_types = api_data_source_input_types_list();
+	$data_input_types = api_data_source_input_type_list();
 
 	/* generate page list */
 	$url_string = build_get_url_string(array("search_device", "search_filter"));
