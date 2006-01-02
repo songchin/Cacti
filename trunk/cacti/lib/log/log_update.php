@@ -55,19 +55,10 @@ function api_log_log($message, $severity = SEV_INFO, $facility = FACIL_WEBUI, $p
 
 	/* get username */
 	if ($severity == SEV_DEV) {
-		$user_id = 0;
 		$username = "DEV";
-	} elseif ($user_id) {
-		$user_info = api_user_info(array("id" => $user_id));
-		if ($user_info) {
-			$username = $user_info["username"];
-		} else {
-			$username = _("Unknown");
-		}
 	}else{
 		if (isset($_SESSION["sess_user_id"])) {
 			$user_info = api_user_info(array("id" => $_SESSION["sess_user_id"]));
-			$user_id = $_SESSION["sess_user_id"];
 			$username = $user_info["username"];
 		}else{
 			$username = "SYSTEM";

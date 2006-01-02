@@ -59,8 +59,12 @@ $colors["form_alternate1"] = "F5F5F5";
 $colors["form_alternate2"] = "E5E5E5";
 
 
+/* Contants includes */
+require(CACTI_BASE_PATH . "/include/global_constants.php");
+
 /* Logging include */
 require(CACTI_BASE_PATH . "/lib/log/log_update.php");
+
 
 /* includes for database operation */
 require(CACTI_BASE_PATH . "/lib/adodb/adodb.inc.php");
@@ -150,9 +154,8 @@ if ((!in_array(basename($_SERVER["PHP_SELF"]), $no_http_header_files, true)) && 
 	}
 }
 
-/* Contants and Variable includes -- note that the includes must fall below the session_start() call
+/* Variable includes -- note that the includes must fall below the session_start() call
  * for now because they rely on read_config_option() */
-require(CACTI_BASE_PATH . "/include/global_constants.php");
 require(CACTI_BASE_PATH . "/include/global_arrays.php");
 require(CACTI_BASE_PATH . "/include/global_settings.php");
 require(CACTI_BASE_PATH . "/include/global_form.php");
