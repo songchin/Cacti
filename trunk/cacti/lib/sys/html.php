@@ -957,6 +957,16 @@ function draw_navigation_text() {
 			"title" => _("Plugins"),
 			"mapping" => "index.php:",
 			"level" => "1"
+			),
+		"auth_user.php:" => array(
+			"title" => _("Users"),
+			"mapping" => "index.php:",
+			"level" => "1"
+			),
+		"auth_group.php:" => array(
+			"title" => _("Users"),
+			"mapping" => "index.php:",
+			"level" => "1"
 			)
 		);
 

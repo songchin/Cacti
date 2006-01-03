@@ -467,16 +467,23 @@ $settings = array(
 			)
 		),
 	"visual" => array(
-		"themes_header" => array(
-			"friendly_name" => _("Cacti Theme"),
+		"general_header" => array(
+			"friendly_name" => _("General"),
 			"method" => "spacer"
 			),
 		"default_theme" => array(
-			"friendly_name" => _("Default Visual Theme to Use"),
-			"description" => _("The Cacti theme to use by default.  Changes the default look of Cacti."),
+			"friendly_name" => _("Default Visual Theme"),
+			"description" => _("The theme to use by default.  Changes the default look of Cacti."),
 			"method" => "drop_array",
 			"default" => "classic",
 			"array" => $themes
+			),
+		"num_rows_page" => array(
+			"friendly_name" => _("Rows Per Page"),
+			"description" => _("The number of rows to display on a single page."),
+			"method" => "textbox",
+			"default" => "30",
+			"max_length" => "10"
 			),
 		"graphmgmt_header" => array(
 			"friendly_name" => _("Graph Management"),

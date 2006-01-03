@@ -201,7 +201,7 @@ function view_logs() {
 	$total_rows = api_log_total_get($filter_array);
 
 	/* generate page list */
-	$url_string = build_get_url_string(array("search_filter","search_facility","search_severity","search_poller","search_host","search_plugin","search_user","search_source","search_start_date","search_end_date"));
+	$url_string = build_get_url_string(array("search_filter","search_facility","search_severity","search_poller","search_host","search_plugin","search_username","search_source","search_start_date","search_end_date"));
 	$url_page_select = get_page_list($current_page, MAX_DISPLAY_PAGES, read_config_option("num_rows_log"), $total_rows, "logs.php" . $url_string . ($url_string == "" ? "?" : "&") . "page=|PAGE_NUM|");
 
 	/* Output html */
@@ -219,8 +219,6 @@ function view_logs() {
 	print "<td class='log-content-header-sub-div'>" . _("Plugin") . "</td>\n";
 	print "<td class='log-content-header-sub-div'>" . _("User") . "</td>\n";
 	print "<td colspan='2' class='log-content-header-sub-div'>" . _("Source") . "</td>\n";
-	print "</tr>\n<tr>\n";
-	print "<td colspan=\"9\" class='log-content-header-sub'>" . _("Message") . "</td>\n";
 	print "</tr>";
 
 	$i = 0;
@@ -494,8 +492,6 @@ function print_logs() {
 	print "		<td bgcolor='black'><font color='#FFFFFF'>" . _("Plugin") . "</font></td>\n";
 	print "		<td bgcolor='black'><font color='#FFFFFF'>" . _("User") . "</font></td>\n";
 	print "		<td bgcolor='black'><font color='#FFFFFF'>" . _("Source") . "</font></td>\n";
-	print "	</tr>\n	<tr>\n";
-	print "		<td colspan=\"8\" bgcolor='black'><font color='#FFFFFF'>" . _("Message") . "</font></td>\n";
 	print "	</tr>";
 
 	$i = 0;

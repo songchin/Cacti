@@ -272,6 +272,10 @@ $menu = array(
 		"user_settings.php" => _("User Settings"),
 		"presets.php?action=view_cdef" => _("Data Presets")
 		),
+	_("Access Controls") => array(
+		"auth_user.php" => _("Users"),
+		"auth_group.php" => _("Groups")
+		),
 	_("Utilities") => array(
 		"utilities.php" => _("System Utilities"),
 		"logs.php" => _("Log Management"),
