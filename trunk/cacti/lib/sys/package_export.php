@@ -425,12 +425,12 @@ function &package_data_query_export($data_query_id, $indent = 2) {
 
 	/* obtain a list of all data query specific fields */
 	$data_query_fields = api_data_query_field_list();
-	/* obtain a copy of this specfic data template */
+	/* obtain a copy of this specfic data query */
 	$data_query = api_data_query_get($data_query_id);
 
 	$_xml = "";
 	foreach (array_keys($data_query_fields) as $field_name) {
-		/* create an XML key for each data source field */
+		/* create an XML key for each data query field */
 		$_xml .= package_xml_tag_get($field_name, xml_character_encode($data_query[$field_name]), $indent + 2);
 	}
 
@@ -452,7 +452,7 @@ function &package_data_query_export($data_query_id, $indent = 2) {
 		foreach ($data_query_fields as $data_query_field) {
 			$__xml = "";
 			foreach (array_keys($data_query_field_fields) as $field_name) {
-				/* create an XML key for each data template item field */
+				/* create an XML key for each data query item field */
 				$__xml .= package_xml_tag_get($field_name, xml_character_encode($data_query_field[$field_name]), $indent + 3);
 			}
 
@@ -468,6 +468,109 @@ function &package_data_query_export($data_query_id, $indent = 2) {
 
 	/* wrap the whole XML string into a 'data_query' tag and return it */
 	$xml = package_xml_tag_get(package_hash_get($data_query_id, "data_query"), $xml, $indent, true);
+
+	return $xml;
+}
+
+function &package_script_export($script_id, $indent = 2) {
+	require_once(CACTI_BASE_PATH . "/lib/script/script_info.php");
+
+	$xml = "";
+
+	/*
+	 * XML Tag: <script>
+	 */
+
+	/* obtain a list of all script specific fields */
+	$script_fields = api_script_field_list();
+	/* obtain a copy of this specfic script */
+	$script = api_script_get($script_id);
+
+	$_xml = "";
+	foreach (array_keys($script_fields) as $field_name) {
+		/* create an XML key for each script field */
+		$_xml .= package_xml_tag_get($field_name, xml_character_encode($script[$field_name]), $indent + 2);
+	}
+
+	/* append the result onto the final XML string */
+	$xml .= package_xml_tag_get("script", $_xml, $indent + 1, true);
+
+	/*
+	 * XML Tag: <fields>
+	 */
+
+	/* obtain a list of all script field specific fields */
+	$script_field_fields = api_script_field_field_list();
+	/* obtain a list of all script fields associated with this script */
+	$script_fields = api_script_Xfield_list($script_id);
+
+	$_xml = "";
+	if (sizeof($script_fields) > 0) {
+		$i = 0;
+		foreach ($script_fields as $script_field) {
+			$__xml = "";
+			foreach (array_keys($script_field_fields) as $field_name) {
+				/* create an XML key for each script field field */
+				$__xml .= package_xml_tag_get($field_name, xml_character_encode($script_field[$field_name]), $indent + 3);
+			}
+
+			/* append the result onto a temporary XML string */
+			$_xml .= package_xml_tag_get("item_" . str_pad($i, 5, "0", STR_PAD_LEFT), $__xml, $indent + 2, true);
+
+			$i++;
+		}
+	}
+
+	/* append the result onto the final XML string */
+	$xml .= package_xml_tag_get("fields", $_xml, $indent + 1, true);
+
+	/* wrap the whole XML string into a 'script' tag and return it */
+	$xml = package_xml_tag_get(package_hash_get($script_id, "script"), $xml, $indent, true);
+
+	return $xml;
+}
+
+function &package_rra_export($rra_id, $indent = 2) {
+	require_once(CACTI_BASE_PATH . "/lib/rra/rra_info.php");
+
+	$xml = "";
+
+	/*
+	 * XML Tag: <rra>
+	 */
+
+	/* obtain a list of all rra specific fields */
+	$rra_fields = api_rra_field_list();
+	/* obtain a copy of this specfic rra */
+	$rra = api_rra_get($rra_id);
+
+	$_xml = "";
+	foreach (array_keys($rra_fields) as $field_name) {
+		/* create an XML key for each rra field */
+		$_xml .= package_xml_tag_get($field_name, xml_character_encode($rra[$field_name]), $indent + 2);
+	}
+
+	/* obtain a list of each consolidation function associated with this rra */
+	$consolidation_functions = api_rra_consolidation_function_list($rra_id);
+
+	if (sizeof($consolidation_functions) > 0) {
+		$i = 0; $items_list = "";
+		foreach ($consolidation_functions as $consolidation_function_id) {
+			/* create a delimited list of each item */
+			$items_list .= $consolidation_function_id . (($i + 1) < sizeof($consolidation_functions) ? "|" : "");
+
+			$i++;
+		}
+	}
+
+	/* add the items list that we created above */
+	$_xml .= package_xml_tag_get("cf_items", $items_list, $indent + 2);
+
+	/* append the result onto the final XML string */
+	$xml .= package_xml_tag_get("rra", $_xml, $indent + 1, true);
+
+	/* wrap the whole XML string into a 'rra' tag and return it */
+	$xml = package_xml_tag_get(package_hash_get($rra_id, "rra"), $xml, $indent, true);
 
 	return $xml;
 }
