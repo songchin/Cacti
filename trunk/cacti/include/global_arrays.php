@@ -345,7 +345,9 @@ $user_auth_realm_filenames = array(
 	"user_settings.php" => "19",
 	"php_info.php" => 15,
 	"logs.php" => "15",
-	"plugins.php" => "15"
+	"plugins.php" => "15",
+	"auth_user.php" => "15",
+	"auth_group.php" => "15"
 	);
 
 $hash_type_codes = array(
