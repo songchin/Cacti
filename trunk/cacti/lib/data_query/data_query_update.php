@@ -34,7 +34,7 @@ function api_data_query_save($data_query_id, &$_fields_data_query) {
 	$_fields["id"] = array("type" => DB_TYPE_NUMBER, "value" => $data_query_id);
 
 	/* convert the input array into something that is compatible with db_replace() */
-	$_fields += sql_get_database_field_array($_fields_data_query, api_data_query_field_list());
+	$_fields += sql_get_database_field_array($_fields_data_query, api_data_query_form_list());
 
 	/* check for an empty field list */
 	if (sizeof($_fields) == 1) {
@@ -77,7 +77,7 @@ function api_data_query_field_save($data_query_field_id, &$_fields_data_query_fi
 	}
 
 	/* convert the input array into something that is compatible with db_replace() */
-	$_fields += sql_get_database_field_array($_fields_data_query_fields, api_data_query_field_field_list());
+	$_fields += sql_get_database_field_array($_fields_data_query_fields, api_data_query_field_form_list());
 
 	/* check for an empty field list */
 	if (sizeof($_fields) == 1) {

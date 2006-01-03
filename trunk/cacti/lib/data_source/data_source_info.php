@@ -38,7 +38,7 @@ function api_data_source_list($filter_array = "", $current_page = 0, $rows_per_p
 			return false;
 		/* otherwise, form an SQL WHERE string using the filter fields */
 		}else{
-			$sql_where = sql_filter_array_to_where_string($filter_array, api_data_source_field_list(), true);
+			$sql_where = sql_filter_array_to_where_string($filter_array, api_data_source_form_list(), true);
 		}
 	}
 
@@ -79,7 +79,7 @@ function api_data_source_total_get($filter_array = "") {
 			return false;
 		/* otherwise, form an SQL WHERE string using the filter fields */
 		}else{
-			$sql_where = sql_filter_array_to_where_string($filter_array, api_data_source_field_list(), true);
+			$sql_where = sql_filter_array_to_where_string($filter_array, api_data_source_form_list(), true);
 		}
 	}
 
@@ -146,13 +146,13 @@ function api_data_source_path_get($data_source_id, $expand_paths) {
 	}
 }
 
-function &api_data_source_field_list() {
+function &api_data_source_form_list() {
 	require(CACTI_BASE_PATH . "/include/data_source/data_source_form.php");
 
 	return $fields_data_source;
 }
 
-function &api_data_source_item_field_list() {
+function &api_data_source_item_form_list() {
 	require(CACTI_BASE_PATH . "/include/data_source/data_source_form.php");
 
 	return $fields_data_source_item;

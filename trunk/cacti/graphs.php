@@ -120,7 +120,7 @@ function form_save() {
 		}
 
 		/* add any unchecked checkbox fields */
-		$form_graph_fields += field_register_html_checkboxes(get_graph_field_list(), "g||field|");
+		$form_graph_fields += field_register_html_checkboxes(api_graph_form_list(), "g||field|");
 
 		$form_graph_fields["host_id"] = $_POST["host_id"];
 		$form_graph_fields["graph_template_id"] = $_POST["graph_template_id"];

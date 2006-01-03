@@ -44,7 +44,7 @@ function api_graph_save($graph_id, &$_fields_graph, $skip_cache_update = false) 
 	}
 
 	/* convert the input array into something that is compatible with db_replace() */
-	$_fields += sql_get_database_field_array($_fields_graph, get_graph_field_list());
+	$_fields += sql_get_database_field_array($_fields_graph, api_graph_form_list());
 
 	/* check for an empty field list */
 	if (sizeof($_fields) == 1) {
@@ -141,7 +141,7 @@ function api_graph_item_save($graph_item_id, &$_fields_graph_item) {
 	}
 
 	/* convert the input array into something that is compatible with db_replace() */
-	$_fields += sql_get_database_field_array($_fields_graph_item, get_graph_items_field_list());
+	$_fields += sql_get_database_field_array($_fields_graph_item, api_graph_item_form_list());
 
 	if (db_replace("graph_item", $_fields, array("id"))) {
 		return true;

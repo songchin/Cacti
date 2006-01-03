@@ -816,7 +816,7 @@ function host() {
 	$search_host_status_types = array();
 	$search_host_status_types["-1"] = "Any";
 	$search_host_status_types["-2"] = "Disabled";
-	$search_host_status_types += api_device_status_types_list();
+	$search_host_status_types += api_device_status_type_list();
 
 	?>
 

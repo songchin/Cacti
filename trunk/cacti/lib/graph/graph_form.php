@@ -35,7 +35,7 @@ function api_graph_fields_validate(&$_fields_graph, &$_fields_suggested_values, 
 	$error_fields = array();
 
 	/* get a complete field list */
-	$fields_graph = get_graph_field_list();
+	$fields_graph = api_graph_form_list();
 
 	/* base fields */
 	while (list($_field_name, $_field_array) = each($fields_graph)) {
@@ -76,7 +76,7 @@ function api_graph_item_fields_validate(&$_fields_graph_item, $graph_item_field_
 	$error_fields = array();
 
 	/* get a complete field list */
-	$fields_graph_item = get_graph_items_field_list();
+	$fields_graph_item = api_graph_item_form_list();
 
 	/* do not allow empty gprint format when the item type is GPRINT */
 	if ((isset($_fields_graph_item["graph_item_type"])) && ($_fields_graph_item["graph_item_type"] == GRAPH_ITEM_TYPE_GPRINT)) {

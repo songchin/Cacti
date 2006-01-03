@@ -39,8 +39,8 @@ function copy_data_template_to_data_source($data_template_id, $host_id = 0, $dat
 	}
 
 	/* fetch field lists */
-	$fields_data_source = api_data_source_field_list();
-	$fields_data_source_item = api_data_source_item_field_list();
+	$fields_data_source = api_data_source_form_list();
+	$fields_data_source_item = api_data_source_item_form_list();
 
 	/* fetch information from that data template */
 	$data_template = api_data_template_get($data_template_id);
@@ -132,7 +132,7 @@ function api_data_template_propagate($data_template_id) {
 	}
 
 	/* retrieve a list of data source fields */
-	$data_source_fields = api_data_source_field_list();
+	$data_source_fields = api_data_source_form_list();
 
 	$ds_fields = array();
 	/* loop through each data source column name (from the above array) */
@@ -168,7 +168,7 @@ function api_data_source_item_propagate($data_template_item_id) {
 	}
 
 	/* retrieve a list of data source item fields */
-	$data_source_item_fields = api_data_source_item_field_list();
+	$data_source_item_fields = api_data_source_item_form_list();
 
 	$dsi_fields = array();
 	/* loop through each data source column name (from the above array) */

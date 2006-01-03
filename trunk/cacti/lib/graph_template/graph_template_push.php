@@ -39,8 +39,8 @@ function copy_graph_template_to_graph($graph_template_id, $host_id = 0, $data_qu
 	}
 
 	/* fetch field lists */
-	$fields_graph = get_graph_field_list();
-	$fields_graph_item = get_graph_items_field_list();
+	$fields_graph = api_graph_form_list();
+	$fields_graph_item = api_graph_item_form_list();
 
 	$graph_template = api_graph_template_get($graph_template_id);
 
@@ -208,7 +208,7 @@ function api_graph_template_propagate($graph_template_id) {
 	}
 
 	/* retrieve a list of graph fields */
-	$graph_fields = get_graph_field_list();
+	$graph_fields = api_graph_form_list();
 
 	$g_fields = array();
 	/* loop through each graph column name (from the above array) */
@@ -236,7 +236,7 @@ function api_graph_template_item_input_propagate($graph_template_item_input_id, 
 	}
 
 	/* retrieve a list of graph item fields */
-	$graph_item_fields = get_graph_items_field_list();
+	$graph_item_fields = api_graph_item_form_list();
 
 	/* get the db field name for this graph item input */
 	$input_field_name = db_fetch_cell("select field_name from graph_template_item_input where id = " . sql_sanitize($graph_template_item_input_id));

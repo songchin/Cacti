@@ -35,7 +35,7 @@ function api_device_fields_validate(&$_fields_device, $device_field_name_format 
 	$error_fields = array();
 
 	/* get a complete field list */
-	$fields_device = api_device_fields_list();
+	$fields_device = api_device_form_list();
 
 	/* base fields */
 	while (list($_field_name, $_field_array) = each($fields_device)) {

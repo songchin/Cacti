@@ -127,7 +127,7 @@ function &package_graph_template_export($graph_template_id, $indent = 2) {
 	 */
 
 	/* obtain a list of all graph template specific fields */
-	$graph_template_fields = api_graph_template_field_list();
+	$graph_template_fields = api_graph_template_form_list();
 	/* obtain a copy of this specfic graph template */
 	$graph_template = api_graph_template_get($graph_template_id);
 
@@ -145,7 +145,7 @@ function &package_graph_template_export($graph_template_id, $indent = 2) {
 	 */
 
 	/* obtain a list of all graph specific fields */
-	$graph_fields = get_graph_field_list();
+	$graph_fields = api_graph_form_list();
 
 	$_xml = "";
 	foreach (array_keys($graph_fields) as $field_name) {
@@ -167,7 +167,7 @@ function &package_graph_template_export($graph_template_id, $indent = 2) {
 	 */
 
 	/* obtain a list of all graph template item specific fields */
-	$graph_template_items_fields = api_graph_template_item_field_list();
+	$graph_template_items_fields = api_graph_template_item_form_list();
 	/* obtain a list of all graph template items associated with this graph template */
 	$graph_template_items = api_graph_template_item_list($graph_template_id);
 
@@ -198,7 +198,7 @@ function &package_graph_template_export($graph_template_id, $indent = 2) {
 	 */
 
 	/* obtain a list of all graph template item input specific fields */
-	$graph_template_inputs_fields = api_graph_template_item_input_field_list();
+	$graph_template_inputs_fields = api_graph_template_item_input_form_list();
 	/* obtain a list of all graph template item inputs associated with this graph template */
 	$graph_template_inputs = api_graph_template_item_input_list($graph_template_id);
 
@@ -280,7 +280,7 @@ function &package_data_template_export($data_template_id, $indent = 2) {
 	 */
 
 	/* obtain a list of all data template specific fields */
-	$data_template_fields = api_data_template_field_list();
+	$data_template_fields = api_data_template_form_list();
 	/* obtain a copy of this specfic data template */
 	$data_template = api_data_template_get($data_template_id);
 
@@ -298,7 +298,7 @@ function &package_data_template_export($data_template_id, $indent = 2) {
 	 */
 
 	/* obtain a list of all data source specific fields */
-	$data_source_fields = api_data_source_field_list();
+	$data_source_fields = api_data_source_form_list();
 
 	$_xml = "";
 	foreach (array_keys($data_source_fields) as $field_name) {
@@ -323,7 +323,7 @@ function &package_data_template_export($data_template_id, $indent = 2) {
 	 */
 
 	/* obtain a list of all data source item specific fields */
-	$data_source_items_fields = api_data_source_item_field_list();
+	$data_source_items_fields = api_data_source_item_form_list();
 	/* obtain a list of all data template items associated with this data template */
 	$data_template_items = api_data_template_item_list($data_template_id);
 
@@ -424,7 +424,7 @@ function &package_data_query_export($data_query_id, $indent = 2) {
 	 */
 
 	/* obtain a list of all data query specific fields */
-	$data_query_fields = api_data_query_field_list();
+	$data_query_fields = api_data_query_form_list();
 	/* obtain a copy of this specfic data query */
 	$data_query = api_data_query_get($data_query_id);
 
@@ -442,9 +442,9 @@ function &package_data_query_export($data_query_id, $indent = 2) {
 	 */
 
 	/* obtain a list of all data query field specific fields */
-	$data_query_field_fields = api_data_query_field_field_list();
+	$data_query_field_fields = api_data_query_field_form_list();
 	/* obtain a list of all data query fields associated with this data query */
-	$data_query_fields = api_data_query_fields_list($data_query_id);
+	$data_query_fields = api_data_query_field_list($data_query_id);
 
 	$_xml = "";
 	if (sizeof($data_query_fields) > 0) {
@@ -482,7 +482,7 @@ function &package_script_export($script_id, $indent = 2) {
 	 */
 
 	/* obtain a list of all script specific fields */
-	$script_fields = api_script_field_list();
+	$script_fields = api_script_form_list();
 	/* obtain a copy of this specfic script */
 	$script = api_script_get($script_id);
 
@@ -500,9 +500,9 @@ function &package_script_export($script_id, $indent = 2) {
 	 */
 
 	/* obtain a list of all script field specific fields */
-	$script_field_fields = api_script_field_field_list();
+	$script_field_fields = api_script_field_form_list();
 	/* obtain a list of all script fields associated with this script */
-	$script_fields = api_script_Xfield_list($script_id);
+	$script_fields = api_script_field_list($script_id);
 
 	$_xml = "";
 	if (sizeof($script_fields) > 0) {
@@ -540,7 +540,7 @@ function &package_rra_export($rra_id, $indent = 2) {
 	 */
 
 	/* obtain a list of all rra specific fields */
-	$rra_fields = api_rra_field_list();
+	$rra_fields = api_rra_form_list();
 	/* obtain a copy of this specfic rra */
 	$rra = api_rra_get($rra_id);
 

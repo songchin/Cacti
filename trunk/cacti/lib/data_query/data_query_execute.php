@@ -119,7 +119,7 @@ function api_data_query_snmp_execute($host_id, $data_query_id) {
 	$data_query = api_data_query_get($data_query_id);
 
 	/* get a list of all input fields defined for this data query */
-	$data_query_fields = api_data_query_fields_list($data_query_id, DATA_QUERY_FIELD_TYPE_INPUT);
+	$data_query_fields = api_data_query_field_list($data_query_id, DATA_QUERY_FIELD_TYPE_INPUT);
 
 	/* fetch a list of indexes for this data query */
 	$field_values{$data_query["index_field_id"]} = api_data_query_snmp_execute_field($host_id, $data_query["index_field_id"]);

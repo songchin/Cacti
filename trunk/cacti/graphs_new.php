@@ -603,7 +603,7 @@ function graphs() {
 			$data_query_field_desc = array();
 			$num_visible_columns = 0;
 
-			$data_query_fields = api_data_query_fields_list($data_query["id"], DATA_QUERY_FIELD_TYPE_INPUT);
+			$data_query_fields = api_data_query_field_list($data_query["id"], DATA_QUERY_FIELD_TYPE_INPUT);
 
 			/* retrieve a list of values for each data query field from the cache */
 			if (sizeof($data_query_fields) > 0) {

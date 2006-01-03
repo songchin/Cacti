@@ -35,7 +35,7 @@ function api_graph_template_fields_validate(&$_fields_graph_template, $graph_tem
 	$error_fields = array();
 
 	/* get a complete field list */
-	$fields_graph_template = api_graph_template_field_list();
+	$fields_graph_template = api_graph_template_form_list();
 
 	/* base fields */
 	while (list($_field_name, $_field_array) = each($fields_graph_template)) {

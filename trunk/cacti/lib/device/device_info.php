@@ -37,7 +37,7 @@ function api_device_list($filter_array = "", $current_page = 0, $rows_per_page =
 			return false;
 		/* otherwise, form an SQL WHERE string using the filter fields */
 		}else{
-			$sql_where = sql_filter_array_to_where_string($filter_array, api_device_fields_list(), true);
+			$sql_where = sql_filter_array_to_where_string($filter_array, api_device_form_list(), true);
 		}
 	}
 
@@ -79,7 +79,7 @@ function api_device_total_get($filter_array = "") {
 			return false;
 		/* otherwise, form an SQL WHERE string using the filter fields */
 		}else{
-			$sql_where = sql_filter_array_to_where_string($filter_array, api_device_fields_list(), true);
+			$sql_where = sql_filter_array_to_where_string($filter_array, api_device_form_list(), true);
 		}
 	}
 
@@ -112,13 +112,13 @@ function api_device_data_query_get($device_id, $data_query_id) {
 	return db_fetch_row("select * from host_data_query where host_id = " . sql_sanitize($device_id) . " and data_query_id = " . sql_sanitize($data_query_id));
 }
 
-function &api_device_fields_list() {
+function &api_device_form_list() {
 	require(CACTI_BASE_PATH . "/include/device/device_form.php");
 
 	return $fields_device;
 }
 
-function &api_device_status_types_list() {
+function &api_device_status_type_list() {
 	require(CACTI_BASE_PATH . "/include/device/device_arrays.php");
 
 	return $host_status_types;

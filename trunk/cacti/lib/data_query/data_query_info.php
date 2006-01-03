@@ -162,7 +162,7 @@ function get_ordered_index_type_list($data_query_id, $host_id) {
 	$data_query = api_data_query_get($data_query_id);
 
 	/* get a list of all input fields for this data query */
-	$data_query_fields = array_rekey(api_data_query_fields_list($data_query_id, DATA_QUERY_FIELD_TYPE_INPUT), "name", "name_desc");
+	$data_query_fields = array_rekey(api_data_query_field_list($data_query_id, DATA_QUERY_FIELD_TYPE_INPUT), "name", "name_desc");
 
 	$valid_index_fields = array();
 	if (sizeof($data_query_fields) > 0) {
@@ -296,7 +296,7 @@ function api_data_query_list() {
 	return db_fetch_assoc("select * from data_query order by name");
 }
 
-function api_data_query_fields_list($data_query_id, $input_type = "") {
+function api_data_query_field_list($data_query_id, $input_type = "") {
 	require_once(CACTI_BASE_PATH . "/include/data_query/data_query_constants.php");
 
 	/* sanity checks */
@@ -427,13 +427,13 @@ function &api_data_query_index_sort_type_list() {
 	return $data_query_index_sort_types;
 }
 
-function &api_data_query_field_list() {
+function &api_data_query_form_list() {
 	require(CACTI_BASE_PATH . "/include/data_query/data_query_form.php");
 
 	return $fields_data_query;
 }
 
-function &api_data_query_field_field_list() {
+function &api_data_query_field_form_list() {
 	require(CACTI_BASE_PATH . "/include/data_query/data_query_form.php");
 
 	return $fields_data_query_fields;

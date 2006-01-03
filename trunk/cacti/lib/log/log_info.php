@@ -22,7 +22,7 @@
  +-------------------------------------------------------------------------+
 */
 
-/* 
+/*
  * Log viewing actions
  */
 
@@ -69,7 +69,7 @@ function api_log_total_get ($filter_array = "") {
 				$sql_where = " WHERE " . $sql_where;
 			}
 
-			$sql_where .= sql_filter_array_to_where_string($filter_array, api_log_fields_list(), $sql_start);
+			$sql_where .= sql_filter_array_to_where_string($filter_array, api_log_form_list(), $sql_start);
 
 		}
 	}
@@ -87,7 +87,7 @@ function api_log_total_get ($filter_array = "") {
  * @return array log records
  */
 function api_log_list ($filter_array,$limit = -1,$offset = -1) {
-	
+
 	$sql_where = "";
 	/* validation and setup for the WHERE clause */
 	if ((is_array($filter_array)) && (sizeof($filter_array) > 0)) {
@@ -121,7 +121,7 @@ function api_log_list ($filter_array,$limit = -1,$offset = -1) {
 				$sql_where = " WHERE " . $sql_where;
 			}
 
-			$sql_where .= sql_filter_array_to_where_string($filter_array, api_log_fields_list(), $sql_start);
+			$sql_where .= sql_filter_array_to_where_string($filter_array, api_log_form_list(), $sql_start);
 
 		}
 
@@ -156,7 +156,7 @@ function api_log_list ($filter_array,$limit = -1,$offset = -1) {
  *
  * @return array log fields
  */
-function api_log_fields_list() {
+function api_log_form_list() {
 	require(CACTI_BASE_PATH . "/include/log/log_form.php");
 
 	return $fields_log;
@@ -169,7 +169,7 @@ function api_log_fields_list() {
  *
  * Validates log field values against the log form definitions
  *
- * @param $_fields_log field array 
+ * @param $_fields_log field array
  * @param $log_field_name_format replacement variable
  * @return array error array if any
  */
@@ -184,7 +184,7 @@ function validate_log_fields(&$_fields_log, $log_field_name_format = "|field|") 
 	$error_fields = array();
 
 	/* get a complete field list */
-	$fields_device = api_log_fields_list();
+	$fields_device = api_log_form_list();
 
 	/* base fields */
 	while (list($_field_name, $_field_array) = each($fields_device)) {
@@ -201,7 +201,7 @@ function validate_log_fields(&$_fields_log, $log_field_name_format = "|field|") 
 }
 
 /**
- * List of usernames 
+ * List of usernames
  *
  * Returns list of id, usernames on the system for use by log viewer
  *
@@ -211,7 +211,7 @@ function api_log_username_list() {
 
 	$user = array();
 	$users = db_fetch_assoc("select username from user_auth order by username");
-	
+
 	$user["SYSTEM"] = "SYSTEM";
 	while (list($id,$user_record) = each($users)) {
 		$user[$user_record["username"]] = $user_record["username"];
@@ -223,7 +223,7 @@ function api_log_username_list() {
 
 
 /**
- * List of plugins 
+ * List of plugins
  *
  * Returns list of plugins on the system for use by log viewer
  *
@@ -247,7 +247,7 @@ function api_log_plugin_list() {
 
 
 /**
- * List of pollers 
+ * List of pollers
  *
  * Returns list of pollers on the system for use by log viewer
  *
@@ -258,7 +258,7 @@ function api_log_poller_list() {
 	$poller = array();
 
 	$pollers = db_fetch_assoc("select id, hostname from poller order by hostname");
-	
+
 	$poller["0"] = "SYSTEM";
 	while (list($id,$poller_record) = each($pollers)) {
 		$poller[$poller_record["id"]] = $poller_record["hostname"];
@@ -270,7 +270,7 @@ function api_log_poller_list() {
 
 
 /**
- * List of hosts 
+ * List of hosts
  *
  * Returns list of hosts on the system for use by log viewer
  *
@@ -281,7 +281,7 @@ function api_log_host_list() {
 	$host = array();
 
 	$hosts = db_fetch_assoc("select id, hostname from host order by hostname");
-	
+
 	$host["0"] = "SYSTEM";
 	while (list($id,$hostname) = each($hosts)) {
 		$host[$hostname["id"]] = $hostname["hostname"];
@@ -293,14 +293,14 @@ function api_log_host_list() {
 
 
 /**
- * List of facilities 
+ * List of facilities
  *
  * Returns list of facility on the system for use by log viewer
  *
  * @return array record array
  */
 function api_log_facility_list() {
-	
+
 	$facility = array();
 	$facility[FACIL_CMDPHP] = "CMDPHP";
 	$facility[FACIL_CACTID] = "CACTID";
@@ -310,20 +310,20 @@ function api_log_facility_list() {
 	$facility[FACIL_EXPORT] = "EXPORT";
 	$facility[FACIL_AUTH] = "AUTH";
 	$facility[FACIL_EVENT] = "EVENT";
-	
-	return $facility;	
+
+	return $facility;
 }
 
 
 /**
- * List of severity 
+ * List of severity
  *
  * Returns list of severity on the system for use by log viewer
  *
  * @return array record array
  */
 function api_log_severity_list() {
-	
+
 	$severity = array();
 	$severity[SEV_EMERGENCY] = "EMERGENCY";
 	$severity[SEV_ALERT] = "ALERT";
@@ -334,8 +334,8 @@ function api_log_severity_list() {
 	$severity[SEV_INFO] = "INFO";
 	$severity[SEV_DEBUG] = "DEBUG";
 	$severity[SEV_DEV] = "DEV";
-	
-	return $severity;	
+
+	return $severity;
 }
 
 

@@ -37,7 +37,7 @@ function api_graph_template_list($filter_array = "", $current_page = 0, $rows_pe
 			return false;
 		/* otherwise, form an SQL WHERE string using the filter fields */
 		}else{
-			$sql_where = sql_filter_array_to_where_string($filter_array, api_graph_template_field_list(), true);
+			$sql_where = sql_filter_array_to_where_string($filter_array, api_graph_template_form_list(), true);
 		}
 	}
 
@@ -111,13 +111,13 @@ function api_graph_template_data_template_list($graph_template_id) {
 			"", "data_template_id");
 }
 
-function &api_graph_template_field_list() {
+function &api_graph_template_form_list() {
 	require(CACTI_BASE_PATH . "/include/graph_template/graph_template_form.php");
 
 	return $fields_graph_template;
 }
 
-function &api_graph_template_item_field_list() {
+function &api_graph_template_item_form_list() {
 	require(CACTI_BASE_PATH . "/include/graph/graph_form.php");
 
 	$field_list = array(
@@ -130,7 +130,7 @@ function &api_graph_template_item_field_list() {
 	return $field_list;
 }
 
-function &api_graph_template_item_input_field_list() {
+function &api_graph_template_item_input_form_list() {
 	require(CACTI_BASE_PATH . "/include/graph_template/graph_template_form.php");
 
 	return $fields_graph_template_input;

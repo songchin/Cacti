@@ -37,7 +37,7 @@ function api_data_template_list($filter_array = "", $current_page = 0, $rows_per
 			return false;
 		/* otherwise, form an SQL WHERE string using the filter fields */
 		}else{
-			$sql_where = sql_filter_array_to_where_string($filter_array, api_data_template_field_list(), true);
+			$sql_where = sql_filter_array_to_where_string($filter_array, api_data_template_form_list(), true);
 		}
 	}
 
@@ -176,7 +176,7 @@ function api_data_template_input_field_list($data_template_id) {
 
 }
 
-function &api_data_template_field_list() {
+function &api_data_template_form_list() {
 	require(CACTI_BASE_PATH . "/include/data_template/data_template_form.php");
 
 	return $fields_data_template;

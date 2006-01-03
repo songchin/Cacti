@@ -402,7 +402,7 @@ function template_edit() {
 			$script_output_fields = db_fetch_assoc("select * from data_input_fields where data_input_id = $_script_id and input_output='out' order by name");
 			$field_input_description = _("Script Output Field");
 		}else if ($_data_input_type == DATA_INPUT_TYPE_DATA_QUERY) {
-			$field_list = api_data_query_fields_list($_data_query_id, DATA_QUERY_FIELD_TYPE_OUTPUT);
+			$field_list = api_data_query_field_list($_data_query_id, DATA_QUERY_FIELD_TYPE_OUTPUT);
 
 			$data_query_output_fields = array();
 			if (sizeof($field_list) > 0) {

@@ -309,7 +309,7 @@ function data_query_edit() {
 			</td>
 		</tr>
 		<?php
-		$input_fields = api_data_query_fields_list($_data_query_id, DATA_QUERY_FIELD_TYPE_INPUT);
+		$input_fields = api_data_query_field_list($_data_query_id, DATA_QUERY_FIELD_TYPE_INPUT);
 
 		if (sizeof($input_fields) > 0) {
 			foreach ($input_fields as $field) {
@@ -347,7 +347,7 @@ function data_query_edit() {
 			</td>
 		</tr>
 		<?php
-		$output_fields = api_data_query_fields_list($_data_query_id, DATA_QUERY_FIELD_TYPE_OUTPUT);
+		$output_fields = api_data_query_field_list($_data_query_id, DATA_QUERY_FIELD_TYPE_OUTPUT);
 
 		if (sizeof($output_fields) > 0) {
 			foreach ($output_fields as $field) {

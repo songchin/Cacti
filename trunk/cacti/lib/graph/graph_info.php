@@ -38,7 +38,7 @@ function api_graph_list($filter_array = "", $current_page = 0, $rows_per_page = 
 			return false;
 		/* otherwise, form an SQL WHERE string using the filter fields */
 		}else{
-			$sql_where = sql_filter_array_to_where_string($filter_array, get_graph_field_list(), true);
+			$sql_where = sql_filter_array_to_where_string($filter_array, api_graph_form_list(), true);
 		}
 	}
 
@@ -78,7 +78,7 @@ function api_graph_total_get($filter_array = "") {
 			return false;
 		/* otherwise, form an SQL WHERE string using the filter fields */
 		}else{
-			$sql_where = sql_filter_array_to_where_string($filter_array, get_graph_field_list(), true);
+			$sql_where = sql_filter_array_to_where_string($filter_array, api_graph_form_list(), true);
 		}
 	}
 
@@ -155,13 +155,13 @@ function api_graph_associated_rras_list($graph_id) {
 		order by rra.timespan");
 }
 
-function &get_graph_field_list() {
+function &api_graph_form_list() {
 	require(CACTI_BASE_PATH . "/include/graph/graph_form.php");
 
 	return $fields_graph;
 }
 
-function &get_graph_items_field_list() {
+function &api_graph_item_form_list() {
 	require(CACTI_BASE_PATH . "/include/graph/graph_form.php");
 
 	$field_list = array(

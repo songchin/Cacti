@@ -29,21 +29,20 @@ function api_script_get($script_id) {
 	return db_fetch_row("select * from data_input where id = " . sql_sanitize($script_id));
 }
 
-// namespace issue -- needs to be resolved
-function api_script_Xfield_list($script_id) {
+function api_script_field_list($script_id) {
 	/* sanity checks */
 	validate_id_die($script_id, "script_id");
 
 	return db_fetch_assoc("select * from data_input_fields where data_input_id = " . sql_sanitize($script_id));
 }
 
-function &api_script_field_list() {
+function &api_script_form_list() {
 	require(CACTI_BASE_PATH . "/include/script/script_form.php");
 
 	return $fields_script;
 }
 
-function &api_script_field_field_list() {
+function &api_script_field_form_list() {
 	require(CACTI_BASE_PATH . "/include/script/script_form.php");
 
 	return $fields_script_fields;

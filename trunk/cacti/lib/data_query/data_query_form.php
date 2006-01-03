@@ -35,7 +35,7 @@ function validate_data_query_fields(&$_fields_data_query, $data_query_field_name
 	$error_fields = array();
 
 	/* get a complete field list */
-	$fields_data_query = api_data_query_field_list();
+	$fields_data_query = api_data_query_form_list();
 
 	/* base fields */
 	while (list($_field_name, $_field_array) = each($fields_data_query)) {
@@ -62,7 +62,7 @@ function validate_data_query_field_fields(&$_fields_data_query_field, $data_quer
 	$error_fields = array();
 
 	/* get a complete field list */
-	$fields_data_query_fields = api_data_query_field_field_list();
+	$fields_data_query_fields = api_data_query_field_form_list();
 
 	/* if enough field values are available, additional validation checks can be made */
 	if ((isset($_fields_data_query_field["method_type"])) && (isset($_fields_data_query_field["method_value"])) && ($_fields_data_query_field["method_type"] == DATA_QUERY_FIELD_METHOD_VALUE_PARSE)) {
@@ -225,7 +225,7 @@ function _data_query_field__index_field_id($field_name, $data_query_id, $field_v
 			<?php echo _("Select if the values from this input field are to be used as unique indexes for this data query.");?>
 		</td>
 		<td class="field-row">
-			<?php form_dropdown($field_name, api_data_query_fields_list($data_query_id, DATA_QUERY_FIELD_TYPE_INPUT), "name", "id", $field_value, "(None Selected)", "");?>
+			<?php form_dropdown($field_name, api_data_query_field_list($data_query_id, DATA_QUERY_FIELD_TYPE_INPUT), "name", "id", $field_value, "(None Selected)", "");?>
 		</td>
 		<td class="field-row" align="right">
 			<span class="field-required">(required)</span>

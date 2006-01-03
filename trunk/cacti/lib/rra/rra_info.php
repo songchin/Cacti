@@ -36,7 +36,7 @@ function api_rra_consolidation_function_list($rra_id) {
 	return array_rekey(db_fetch_assoc("select * from rra_cf where rra_id = " . sql_sanitize($rra_id)), "", "consolidation_function_id");
 }
 
-function &api_rra_field_list() {
+function &api_rra_form_list() {
 	require(CACTI_BASE_PATH . "/include/rra/rra_form.php");
 
 	return $fields_rra;
