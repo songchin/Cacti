@@ -617,19 +617,19 @@ function draw_navigation_text() {
 			"mapping" => "index.php:,graph_templates.php:,graph_templates.php:edit",
 			"level" => "3"
 			),
-		"host_templates.php:" => array(
+		"device_templates.php:" => array(
 			"title" => _("Host Templates"),
 			"mapping" => "index.php:",
 			"level" => "1"
 			),
-		"host_templates.php:edit" => array(
+		"device_templates.php:edit" => array(
 			"title" => _("(Edit)"),
-			"mapping" => "index.php:,host_templates.php:",
+			"mapping" => "index.php:,device_templates.php:",
 			"level" => "2"
 			),
-		"host_templates.php:actions" => array(
+		"device_templates.php:actions" => array(
 			"title" => _("Actions"),
-			"mapping" => "index.php:,host_templates.php:",
+			"mapping" => "index.php:,device_templates.php:",
 			"level" => "2"
 			),
 		"graph_templates.php:actions" => array(
@@ -682,19 +682,19 @@ function draw_navigation_text() {
 			"mapping" => "index.php:,data_sources.php:",
 			"level" => "2"
 			),
-		"host.php:" => array(
+		"devices.php:" => array(
 			"title" => _("Devices"),
 			"mapping" => "index.php:",
 			"level" => "1"
 			),
-		"host.php:edit" => array(
+		"devices.php:edit" => array(
 			"title" => _("(Edit)"),
-			"mapping" => "index.php:,host.php:",
+			"mapping" => "index.php:,devices.php:",
 			"level" => "2"
 			),
-		"host.php:actions" => array(
+		"devices.php:actions" => array(
 			"title" => _("Actions"),
-			"mapping" => "index.php:,host.php:",
+			"mapping" => "index.php:,devices.php:",
 			"level" => "2"
 			),
 		"rra.php:" => array(

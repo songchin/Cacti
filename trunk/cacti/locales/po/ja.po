@@ -142,12 +142,12 @@ msgstr ""
 msgid "You must select at least one poller."
 msgstr "少なくともひとつ選ぶ必要があります。"
 
-#: ../data_pollers.php:160 ../data_templates.php:281 ../host.php:390
+#: ../data_pollers.php:160 ../data_templates.php:281 ../devices.php:390
 #: ../user_admin.php:948
 msgid "Save"
 msgstr "保存"
 
-#: ../data_pollers.php:168 ../host.php:398 ../user_admin.php:956
+#: ../data_pollers.php:168 ../devices.php:398 ../user_admin.php:956
 msgid "Cancel"
 msgstr "取り消し"
 
@@ -155,13 +155,13 @@ msgstr "取り消し"
 msgid "Data Pollers"
 msgstr "データ収集"
 
-#: ../data_pollers.php:210 ../host.php:763 ../include/config_form.php:81
+#: ../data_pollers.php:210 ../devices.php:763 ../include/config_form.php:81
 #: ../include/config_form.php:287
 msgid "Hostname"
 msgstr "ホスト名"
 
-#: ../data_pollers.php:210 ../data_templates.php:554 ../host.php:532
-#: ../host.php:593 ../host.php:763 ../include/config_form.php:643
+#: ../data_pollers.php:210 ../data_templates.php:554 ../devices.php:532
+#: ../devices.php:593 ../devices.php:763 ../include/config_form.php:643
 #: ../include/user/user_form.php:132 ../user_admin.php:731
 msgid "Status"
 msgstr "状態"
@@ -203,7 +203,7 @@ msgid "No Data Pollers"
 msgstr "データ収集がありません。"
 
 #: ../data_sources.php:42 ../data_templates.php:39 ../graphs.php:43
-#: ../host.php:38 ../host_templates.php:30 ../tree.php:455
+#: ../devices.php:38 ../device_templates.php:30 ../tree.php:455
 #: ../user_admin.php:40 ../user_admin.php:317 ../user_admin.php:376
 msgid "Delete"
 msgstr "削除"
@@ -217,7 +217,7 @@ msgid "Change Host"
 msgstr "ホストを変更"
 
 #: ../data_sources.php:45 ../data_templates.php:40 ../graphs.php:45
-#: ../host_templates.php:31
+#: ../device_templates.php:31
 msgid "Duplicate"
 msgstr "複製"
 
@@ -331,12 +331,12 @@ msgstr "データソース"
 msgid "Data Source Item"
 msgstr "データソース項目"
 
-#: ../data_sources.php:817 ../graphs.php:594 ../host.php:748
+#: ../data_sources.php:817 ../graphs.php:594 ../devices.php:748
 #: ../lib/html.php:195 ../utilities.php:188
 msgid "Previous"
 msgstr "前に"
 
-#: ../data_sources.php:823 ../graphs.php:600 ../host.php:754
+#: ../data_sources.php:823 ../graphs.php:600 ../devices.php:754
 #: ../lib/html.php:201 ../utilities.php:194
 msgid "Next"
 msgstr "次に"
@@ -536,46 +536,46 @@ msgstr "データ問合せ"
 msgid "Reload Associated Query"
 msgstr ""
 
-#: ../host.php:39 ../user_admin.php:42
+#: ../devices.php:39 ../user_admin.php:42
 msgid "Enable"
 msgstr "有効"
 
-#: ../host.php:40 ../user_admin.php:43
+#: ../devices.php:40 ../user_admin.php:43
 msgid "Disable"
 msgstr "無効"
 
-#: ../host.php:41
+#: ../devices.php:41
 msgid "Change SNMP Options"
 msgstr "SNMP オプションを変更"
 
-#: ../host.php:42
+#: ../devices.php:42
 msgid "Clear Statistics"
 msgstr "統計を消去"
 
-#: ../host.php:43
+#: ../devices.php:43
 msgid "Change Poller"
 msgstr "収集の変更"
 
-#: ../host.php:44
+#: ../devices.php:44
 msgid "Change Availability Options"
 msgstr ""
 
-#: ../host.php:263
+#: ../devices.php:263
 msgid "To enable the following devices, press the \"yes\" button below."
 msgstr "次のデバイスを有効にする場合、下の「はい」ボタンを押します。"
 
-#: ../host.php:270
+#: ../devices.php:270
 msgid "To disable the following devices, press the \"yes\" button below."
 msgstr "次のデバイスを無効にする場合、下の「はい」ボタンを押します。"
 
-#: ../host.php:277
+#: ../devices.php:277
 msgid ""
 "To change SNMP parameters for the following devices, check the box next to "
 "the fields\n"
 "\t\t\t\t\tyou want to update, fill in the new value, and click Save."
 msgstr ""
 
-#: ../host.php:307
+#: ../devices.php:307
 msgid ""
 "To change the poller that will, by default handle the processing for the "
 "selected host(s)\n"
@@ -583,91 +583,91 @@ msgid ""
 "select yes."
 msgstr ""
 
-#: ../host.php:322
+#: ../devices.php:322
 msgid "Update this Field"
 msgstr ""
 
-#: ../host.php:338
+#: ../devices.php:338
 msgid ""
 "To change the availability detection for your hosts will use by default\n"
 "\t\t\t\t\tsimply select the host from the list, make the changes you require "
 "and select yes."
 msgstr ""
 
-#: ../host.php:369
+#: ../devices.php:369
 msgid ""
 "To clear the counters for the following devices, press the \"yes\" button "
 "below."
 msgstr ""
 
-#: ../host.php:378
+#: ../devices.php:378
 msgid "Leave all graphs and data sources untouched."
 msgstr ""
 
-#: ../host.php:379
+#: ../devices.php:379
 msgid ""
 "Delete all associated <strong>graphs</strong> and <strong>data sources</"
 "strong>."
 msgstr ""
 
-#: ../host.php:387
+#: ../devices.php:387
 msgid "You must select at least one device."
 msgstr "すくなくとも 1 つデバイスを選ばなければなりません。"
 
-#: ../host.php:471
+#: ../devices.php:471
 msgid "SNMP not in use"
 msgstr "SNMP を使用しない"
 
-#: ../host.php:499
+#: ../devices.php:499
 msgid "Create Graphs for this Host"
 msgstr "このホストのグラフを作成する"
 
-#: ../host.php:507 ../include/config_arrays.php:256 ../lib/html.php:732
+#: ../devices.php:507 ../include/config_arrays.php:256 ../lib/html.php:732
 msgid "Devices"
 msgstr "デバイス"
 
-#: ../host.php:530 ../lib/html.php:802
+#: ../devices.php:530 ../lib/html.php:802
 msgid "Associated Graph Templates"
 msgstr "関連グラフテンプレート"
 
-#: ../host.php:532
+#: ../devices.php:532
 msgid "Graph Template Name"
 msgstr "グラフテンプレート名"
 
-#: ../host.php:591
+#: ../devices.php:591
 msgid "Associated Data Queries"
 msgstr "連想データ照会"
 
-#: ../host.php:593
+#: ../devices.php:593
 msgid "Data Query Name"
 msgstr "データ照会名"
 
-#: ../host.php:593
+#: ../devices.php:593
 msgid "Debugging"
 msgstr ""
 
-#: ../host.php:593
+#: ../devices.php:593
 msgid "Re-Index Method"
 msgstr "再索引方法"
 
-#: ../host.php:763 ../settings_wizard.php:186 ../include/config_form.php:177
+#: ../devices.php:763 ../settings_wizard.php:186 ../include/config_form.php:177
 #: ../include/config_form.php:280 ../include/data_query/data_query_form.php:38
 msgid "Description"
 msgstr "説明"
 
-#: ../host.php:763
+#: ../devices.php:763
 msgid "Current (ms)"
 msgstr "現在 (ミリ秒)"
 
-#: ../host.php:763
+#: ../devices.php:763
 msgid "Average (ms)"
 msgstr "平均 (ミリ秒)"
 
-#: ../host.php:763
+#: ../devices.php:763
 msgid "Availability"
 msgstr ""
 
-#: ../host.php:804 ../user_admin.php:380
+#: ../devices.php:804 ../user_admin.php:380
 msgid "No Hosts"
 msgstr "ホストがありません"
 

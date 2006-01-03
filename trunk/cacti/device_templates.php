@@ -47,12 +47,12 @@ switch ($_REQUEST["action"]) {
 	case 'item_remove_gt':
 		template_item_remove_gt();
 
-		header("Location: host_templates.php?action=edit&id=" . $_GET["host_template_id"]);
+		header("Location: device_templates.php?action=edit&id=" . $_GET["host_template_id"]);
 		break;
 	case 'item_remove_dq':
 		template_item_remove_dq();
 
-		header("Location: host_templates.php?action=edit&id=" . $_GET["host_template_id"]);
+		header("Location: device_templates.php?action=edit&id=" . $_GET["host_template_id"]);
 		break;
 	case 'edit':
 		require_once(CACTI_BASE_PATH . "/include/top_header.php");
@@ -101,9 +101,9 @@ function form_save() {
 		}
 
 		if ((is_error_message()) || (empty($_POST["id"])) || ($redirect_back == true)) {
-			header("Location: host_templates.php?action=edit&id=" . (empty($host_template_id) ? $_POST["id"] : $host_template_id));
+			header("Location: device_templates.php?action=edit&id=" . (empty($host_template_id) ? $_POST["id"] : $host_template_id));
 		}else{
-			header("Location: host_templates.php");
+			header("Location: device_templates.php");
 		}
 	}
 }
@@ -132,7 +132,7 @@ function form_actions() {
 			}
 		}
 
-		header("Location: host_templates.php");
+		header("Location: device_templates.php");
 		exit;
 	}
 
@@ -153,7 +153,7 @@ function form_actions() {
 
 	html_start_box("<strong>" . $host_actions{$_POST["drp_action"]} . "</strong>", "60%", $colors["header_panel_background"], "3", "center", "");
 
-	print "<form action='host_templates.php' method='post'>\n";
+	print "<form action='device_templates.php' method='post'>\n";
 
 	if ($_POST["drp_action"] == "1") { /* delete */
 		print "	<tr>
@@ -188,7 +188,7 @@ function form_actions() {
 				<input type='hidden' name='action' value='actions'>
 				<input type='hidden' name='selected_items' value='" . (isset($host_array) ? serialize($host_array) : '') . "'>
 				<input type='hidden' name='drp_action' value='" . $_POST["drp_action"] . "'>
-				<a href='host_templates.php'><img src='" . html_get_theme_images_path("button_no.gif") . "' alt='" . _("Cancel") . "' align='absmiddle' border='0'></a>
+				<a href='device_templates.php'><img src='" . html_get_theme_images_path("button_no.gif") . "' alt='" . _("Cancel") . "' align='absmiddle' border='0'></a>
 				$save_html
 			</td>
 		</tr>
@@ -262,7 +262,7 @@ function template_edit() {
 						<strong><?php print $i;?>)</strong> <?php print $item["template_name"];?>
 					</td>
 					<td align="right">
-						<a href='host_templates.php?action=item_remove_gt&id=<?php print $item["id"];?>&host_template_id=<?php print $_GET["id"];?>'><img src='<?php print html_get_theme_images_path("delete_icon.gif");?>' width='10' height='10' border='0' alt='Delete'></a>
+						<a href='device_templates.php?action=item_remove_gt&id=<?php print $item["id"];?>&host_template_id=<?php print $_GET["id"];?>'><img src='<?php print html_get_theme_images_path("delete_icon.gif");?>' width='10' height='10' border='0' alt='Delete'></a>
 					</td>
 				</tr>
 				<?php
@@ -308,7 +308,7 @@ function template_edit() {
 						<strong><?php print $i;?>)</strong> <?php print $item["name"];?>
 					</td>
 					<td align='right'>
-						<a href='host_templates.php?action=item_remove_dq&id=<?php print $item["id"];?>&host_template_id=<?php print $_GET["id"];?>'><img src='<?php print html_get_theme_images_path("delete_icon.gif");?>' width='10' height='10' border='0' alt='Delete'></a>
+						<a href='device_templates.php?action=item_remove_dq&id=<?php print $item["id"];?>&host_template_id=<?php print $_GET["id"];?>'><img src='<?php print html_get_theme_images_path("delete_icon.gif");?>' width='10' height='10' border='0' alt='Delete'></a>
 					</td>
 				</tr>
 				<?php
@@ -335,7 +335,7 @@ function template_edit() {
 		html_end_box();
 	}
 
-	form_save_button("host_templates.php");
+	form_save_button("device_templates.php");
 }
 
 function template() {
@@ -343,7 +343,7 @@ function template() {
 
 	display_output_messages();
 
-	html_start_box("<strong>" . _("Host Templates") . "</strong>", "98%", $colors["header_background"], "3", "center", "host_templates.php?action=edit");
+	html_start_box("<strong>" . _("Host Templates") . "</strong>", "98%", $colors["header_background"], "3", "center", "device_templates.php?action=edit");
 
 	html_header_checkbox(array("Template Title"));
 
@@ -355,7 +355,7 @@ function template() {
 		form_alternate_row_color($colors["form_alternate1"],$colors["form_alternate2"],$i); $i++;
 			?>
 			<td>
-				<a class="linkEditMain" href="host_templates.php?action=edit&id=<?php print $host_template["id"];?>"><?php print $host_template["name"];?></a>
+				<a class="linkEditMain" href="device_templates.php?action=edit&id=<?php print $host_template["id"];?>"><?php print $host_template["name"];?></a>
 			</td>
 			<td style="<?php print get_checkbox_style();?>" width="1%" align="right">
 				<input type='checkbox' style='margin: 0px;' name='chk_<?php print $host_template["id"];?>' title="<?php print $host_template["name"];?>">

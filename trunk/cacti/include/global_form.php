@@ -308,7 +308,7 @@ $fields_grprint_presets_edit = array(
 		)
 	);
 
-/* file: host.php, action: edit */
+/* file: devices.php, action: edit */
 $fields_host_edit = array(
 	"spacer0" => array(
 		"method" => "spacer",
@@ -472,7 +472,7 @@ $fields_host_edit = array(
 		)
 	);
 
-/* file: host_templates.php, action: edit */
+/* file: device_templates.php, action: edit */
 $fields_host_template_edit = array(
 	"name" => array(
 		"method" => "textbox",

@@ -439,8 +439,8 @@ function graphs() {
 				<?php echo _("Create new graphs for the following host:");?>
 			</td>
 			<td class="textInfo" rowspan="2" valign="top">
-				<span style="color: #c16921;">*</span><a href="host.php?action=edit&id=<?php print $_REQUEST["host_id"];?>"><?php echo _("Edit this Host");?></a><br>
-				<span style="color: #c16921;">*</span><a href="host.php?action=edit"><?php echo _("Create New Host");?></a>
+				<span style="color: #c16921;">*</span><a href="devices.php?action=edit&id=<?php print $_REQUEST["host_id"];?>"><?php echo _("Edit this Host");?></a><br>
+				<span style="color: #c16921;">*</span><a href="devices.php?action=edit"><?php echo _("Create New Host");?></a>
 			</td>
 		</tr>
 			<td>
@@ -664,7 +664,7 @@ function graphs() {
 			if (sizeof($attached_graph_templates) == 0) {
 				echo "<tr bgcolor='#" . $colors["form_alternate1"] . "'><td>" . _("This data query is not being used by any graph templates. You must create at least one graph template that references to a data template using this data query.") . "</td></tr>\n";
 			}else if (sizeof($data_query_field_names) == 0) {
-				echo "<tr bgcolor='#" . $colors["form_alternate1"] . "'><td>" . _("This data query returned 0 rows, perhaps there was a problem executing this data query. You can") . " <a href='host.php?action=query_verbose&id=" . $data_query["id"] . "&host_id=" . $host["id"] . "'>" . _("run this data query in debug mode</a> to get more information.") . "</td></tr>\n";
+				echo "<tr bgcolor='#" . $colors["form_alternate1"] . "'><td>" . _("This data query returned 0 rows, perhaps there was a problem executing this data query. You can") . " <a href='devices.php?action=query_verbose&id=" . $data_query["id"] . "&host_id=" . $host["id"] . "'>" . _("run this data query in debug mode</a> to get more information.") . "</td></tr>\n";
 			}else{
 
 				echo "<tr bgcolor='#" . $colors["header_panel_background"] . "'>\n";

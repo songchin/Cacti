@@ -33,7 +33,7 @@ require_once(CACTI_BASE_PATH . "/include/top_header.php");
 			<strong><?php echo _("You are now logged into ") . "<a href='about.php'> " . _("Cacti") . "</a>. " . _("You can follow these basic steps to get started.") . "</strong>";?>
 
 			<ul>
-				<li><a href="host.php"><?php echo _("Create devices") . "</a> " . _("for network");?></li>
+				<li><a href="devices.php"><?php echo _("Create devices") . "</a> " . _("for network");?></li>
 				<li><a href="graphs_new.php"><?php echo _("Create graphs") . "</a> " . _("for your new devices");?></li>
 				<li><a href="graph_view.php"><?php echo _("View") . "</a> " . _("your new graphs");?></li>
 			</ul>

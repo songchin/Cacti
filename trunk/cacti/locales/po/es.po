@@ -792,7 +792,7 @@ msgstr "Elemento #"
 msgid "No graph items found."
 msgstr "No se encontraron gráficas."
 
-#: ../lib/html.php:45 ../host.php:592 ../host.php:678 ../user_admin.php:338
+#: ../lib/html.php:45 ../devices.php:592 ../devices.php:678 ../user_admin.php:338
 #: ../user_admin.php:398 ../user_admin.php:458 ../user_admin.php:518
 msgid "Add"
 msgstr "Agregar"
@@ -801,7 +801,7 @@ msgstr "Agregar"
 msgid "Zoom Graph"
 msgstr "Hacer zoom en gráfica"
 
-#: ../lib/html.php:201 ../host.php:764 ../utilities.php:194
+#: ../lib/html.php:201 ../devices.php:764 ../utilities.php:194
 #: ../data_sources.php:850 ../graphs.php:615
 msgid "Next"
 msgstr "Siguiente"
@@ -904,7 +904,7 @@ msgstr "Elementos de plantillas de gráficas"
 msgid "Graph Item Inputs"
 msgstr "Entradas de elementos de gráficas"
 
-#: ../lib/html.php:667 ../host_templates.php:226 ../host_templates.php:351
+#: ../lib/html.php:667 ../device_templates.php:226 ../device_templates.php:351
 #: ../include/config_arrays.php:302
 msgid "Host Templates"
 msgstr "Plantillas de equipos"
@@ -919,7 +919,7 @@ msgstr "Plantillas de información"
 msgid "Data Sources"
 msgstr "Fuentes de información"
 
-#: ../lib/html.php:732 ../host.php:517 ../host.php:710
+#: ../lib/html.php:732 ../devices.php:517 ../devices.php:710
 #: ../include/config_arrays.php:289
 msgid "Devices"
 msgstr "Dispositivos"
@@ -945,8 +945,8 @@ msgstr "Campos de entrada de información"
 msgid "Data Queries"
 msgstr "Consultas de información"
 
-#: ../lib/html.php:812 ../host_templates.php:236 ../data_queries.php:536
-#: ../host.php:540
+#: ../lib/html.php:812 ../device_templates.php:236 ../data_queries.php:536
+#: ../devices.php:540
 msgid "Associated Graph Templates"
 msgstr "Plantillas de gráfica asociadas"
 
@@ -1064,8 +1064,8 @@ msgid "Move Up"
 msgstr "Nover hacia arriba"
 
 #: ../lib/html_form.php:315 ../data_pollers.php:32 ../tree.php:455
-#: ../rra_templates.php:32 ../presets.php:185 ../host_templates.php:30
-#: ../data_templates.php:39 ../graph_templates.php:40 ../host.php:38
+#: ../rra_templates.php:32 ../presets.php:185 ../device_templates.php:30
+#: ../data_templates.php:39 ../graph_templates.php:40 ../devices.php:38
 #: ../data_sources.php:43 ../graphs.php:43 ../user_admin.php:40
 #: ../user_admin.php:317 ../user_admin.php:376
 msgid "Delete"
@@ -1076,7 +1076,7 @@ msgid "Ok"
 msgstr "Aceptar"
 
 #: ../lib/html_form.php:619 ../data_pollers.php:168 ../rra_templates.php:169
-#: ../host_templates.php:190 ../data_templates.php:289 ../host.php:408
+#: ../device_templates.php:190 ../data_templates.php:289 ../devices.php:408
 #: ../data_sources.php:356 ../graphs.php:364 ../user_admin.php:954
 msgid "Cancel"
 msgstr "Cancelar"
@@ -1441,12 +1441,12 @@ msgstr "Equipo:"
 msgid "(No Graph Template)"
 msgstr "(Plantilla de gráfica faltante)"
 
-#: ../data_pollers.php:30 ../host.php:39 ../data_sources.php:48
+#: ../data_pollers.php:30 ../devices.php:39 ../data_sources.php:48
 #: ../user_admin.php:42
 msgid "Enable"
 msgstr "Habilitar"
 
-#: ../data_pollers.php:31 ../host.php:40 ../data_sources.php:49
+#: ../data_pollers.php:31 ../devices.php:40 ../data_sources.php:49
 #: ../user_admin.php:43
 msgid "Disable"
 msgstr "Deshabilitar"
@@ -1467,8 +1467,8 @@ msgstr "Para eliminar los siguientes colectores, oprima el boton \"si\"."
 msgid "You must select at least one poller."
 msgstr "Se debe seleccionar por lo menos un colector."
 
-#: ../data_pollers.php:160 ../rra_templates.php:161 ../host_templates.php:182
-#: ../data_templates.php:281 ../graph_templates.php:283 ../host.php:400
+#: ../data_pollers.php:160 ../rra_templates.php:161 ../device_templates.php:182
+#: ../data_templates.php:281 ../graph_templates.php:283 ../devices.php:400
 #: ../data_sources.php:348 ../graphs.php:356 ../user_admin.php:946
 #: ../auth_changepassword.php:160
 msgid "Save"
@@ -1477,7 +1477,7 @@ msgstr "Salvar"
 #: ../data_pollers.php:188 ../data_input.php:119 ../data_input.php:259
 #: ../rra_templates.php:206 ../rra.php:120 ../data_templates.php:331
 #: ../presets_color.php:90 ../presets_cdef.php:115 ../graph_templates.php:324
-#: ../host.php:461 ../data_sources.php:391 ../presets_gprint.php:102
+#: ../devices.php:461 ../data_sources.php:391 ../presets_gprint.php:102
 #: ../graphs.php:389 ../user_admin.php:271 ../user_admin.php:671
 msgid "[edit: "
 msgstr "[editar: "
@@ -1485,7 +1485,7 @@ msgstr "[editar: "
 #: ../data_pollers.php:190 ../data_input.php:121 ../data_input.php:261
 #: ../rra_templates.php:208 ../rra.php:122 ../data_templates.php:333
 #: ../templates_import.php:99 ../presets_color.php:92 ../presets_cdef.php:117
-#: ../graph_templates.php:326 ../host.php:463 ../data_sources.php:396
+#: ../graph_templates.php:326 ../devices.php:463 ../data_sources.php:396
 #: ../presets_gprint.php:104 ../graphs.php:391 ../user_admin.php:673
 msgid "[new]"
 msgstr "[nuevo]"
@@ -1494,13 +1494,13 @@ msgstr "[nuevo]"
 msgid "Data Pollers"
 msgstr "Colectores de Información"
 
-#: ../data_pollers.php:210 ../host.php:773 ../include/config_form.php:119
+#: ../data_pollers.php:210 ../devices.php:773 ../include/config_form.php:119
 #: ../include/config_form.php:325
 msgid "Hostname"
 msgstr "Nombre de equipo"
 
-#: ../data_pollers.php:210 ../data_templates.php:554 ../host.php:542
-#: ../host.php:603 ../host.php:773 ../include/user/user_form.php:132
+#: ../data_pollers.php:210 ../data_templates.php:554 ../devices.php:542
+#: ../devices.php:603 ../devices.php:773 ../include/user/user_form.php:132
 #: ../include/config_form.php:681 ../user_admin.php:731
 msgid "Status"
 msgstr "Estatus"
@@ -1544,7 +1544,7 @@ msgstr "Colectores de información no encontrados"
 
 #: ../data_input.php:103 ../data_input.php:243 ../tree.php:340
 #: ../rra_templates.php:189 ../rra.php:105 ../presets_cdef.php:100
-#: ../data_queries.php:224 ../data_queries.php:479 ../host.php:444
+#: ../data_queries.php:224 ../data_queries.php:479 ../devices.php:444
 #: ../presets_gprint.php:88 ../graph_templates_inputs.php:85
 msgid "Are You Sure?"
 msgstr "¿Esta seguro?"
@@ -1750,7 +1750,7 @@ msgstr "Asistentes disponibles"
 msgid "Wizard"
 msgstr "Asistente"
 
-#: ../settings_wizard.php:186 ../rra_templates.php:342 ../host.php:773
+#: ../settings_wizard.php:186 ../rra_templates.php:342 ../devices.php:773
 #: ../include/data_query/data_query_form.php:38 ../include/config_form.php:81
 #: ../include/config_form.php:215 ../include/config_form.php:318
 msgid "Description"
@@ -1941,7 +1941,7 @@ msgstr "Acceso denegado"
 msgid "Graph Item"
 msgstr "Elemento de gráfica"
 
-#: ../rra_templates.php:33 ../host_templates.php:31 ../data_templates.php:40
+#: ../rra_templates.php:33 ../device_templates.php:31 ../data_templates.php:40
 #: ../graph_templates.php:41 ../data_sources.php:46 ../graphs.php:45
 msgid "Duplicate"
 msgstr "Duplicar"
@@ -2115,7 +2115,7 @@ msgstr "Preconfiguración GPRINT"
 msgid "Format String"
 msgstr "Texto de formato"
 
-#: ../host_templates.php:160
+#: ../device_templates.php:160
 msgid ""
 "Are you sure you want to delete the following host templates? All devices \n"
 "currently attached\n"
@@ -2125,7 +2125,7 @@ msgstr ""
 "Todos los equipos actualmente asociados \n"
 "\t\t\t\t\ta estas plantillas perderán su asociación de plantilla.\n"
 
-#: ../host_templates.php:169
+#: ../device_templates.php:169
 msgid ""
 "When you click save, the following host templates will be duplicated. You "
 "can\n"
@@ -2136,37 +2136,37 @@ msgstr ""
 "\t\t\t\t\tocionalmente cambiar el formato de título para las nuevas \n"
 "plantillas de equipos"
 
-#: ../host_templates.php:172 ../data_templates.php:271
+#: ../device_templates.php:172 ../data_templates.php:271
 #: ../graph_templates.php:273 ../data_sources.php:312 ../data_sources.php:322
 #: ../graphs.php:295 ../graphs.php:305
 msgid "Title Format:"
 msgstr "Formato de título:"
 
-#: ../host_templates.php:179
+#: ../device_templates.php:179
 msgid "You must select at least one host template."
 msgstr "Se debe elegir por lo menos una plantilla de equipo."
 
-#: ../host_templates.php:270 ../host.php:582
+#: ../device_templates.php:270 ../devices.php:582
 msgid "No associated graph templates."
 msgstr "No se tienen plantillas de gráficas asociadas."
 
-#: ../host_templates.php:277 ../host.php:588
+#: ../device_templates.php:277 ../devices.php:588
 msgid "Add Graph Template"
 msgstr "Añadir plantilla de gráfica"
 
-#: ../host_templates.php:290 ../host.php:601
+#: ../device_templates.php:290 ../devices.php:601
 msgid "Associated Data Queries"
 msgstr "Consultas de información asociadas"
 
-#: ../host_templates.php:316 ../host.php:665
+#: ../device_templates.php:316 ../devices.php:665
 msgid "No associated data queries."
 msgstr "No hay consultas de información asociadas."
 
-#: ../host_templates.php:323 ../host.php:671
+#: ../device_templates.php:323 ../devices.php:671
 msgid "Add Data Query"
 msgstr "Añadir consulta de información"
 
-#: ../host_templates.php:372
+#: ../device_templates.php:372
 msgid "No Host Templates"
 msgstr "No hay plantillas de equipo"
 
@@ -2591,7 +2591,7 @@ msgstr "Archivo XML localizado exitosamente"
 msgid "Could not locate XML file."
 msgstr "No fue posible localizar el archivo XML"
 
-#: ../data_queries.php:540 ../host.php:542
+#: ../data_queries.php:540 ../devices.php:542
 msgid "Graph Template Name"
 msgstr "Nombre de plantilla de gráfica"
 
@@ -2600,35 +2600,35 @@ msgstr "Nombre de plantilla de gráfica"
 msgid "Input Type"
 msgstr "Tipo de entrada"
 
-#: ../host.php:41
+#: ../devices.php:41
 msgid "Change SNMP Options"
 msgstr "Cambiar opciones SNMP"
 
-#: ../host.php:42
+#: ../devices.php:42
 msgid "Clear Statistics"
 msgstr "Borrar estadísticas"
 
-#: ../host.php:43
+#: ../devices.php:43
 msgid "Change Poller"
 msgstr "Cambiar colector"
 
-#: ../host.php:44
+#: ../devices.php:44
 msgid "Change Availability Options"
 msgstr "Cambiar opciones de disponibilidad"
 
-#: ../host.php:273
+#: ../devices.php:273
 msgid "To enable the following devices, press the \"yes\" button below.\n"
 msgstr ""
 "Para habilitar los siguientes dispositivos, oprima el botón \"si\" \n"
 "abajo.\n"
 
-#: ../host.php:280
+#: ../devices.php:280
 msgid "To disable the following devices, press the \"yes\" button below.\n"
 msgstr ""
 "Para deshabilitar los siguientes dispositivos, oprima el botón \"si\" \n"
 "abajo.\n"
 
-#: ../host.php:287
+#: ../devices.php:287
 msgid ""
 "To change SNMP parameters for the following devices, check the box next to \n"
 "the fields\n"
@@ -2638,11 +2638,11 @@ msgstr ""
 "seleccione la caja junto a los campos\n"
 "\t\t\t\t\tque desea modificar, capture el nuevo valor y de click en Guardar\n"
 
-#: ../host.php:302 ../host.php:332 ../host.php:363
+#: ../devices.php:302 ../devices.php:332 ../devices.php:363
 msgid "Update this Field"
 msgstr "Actualizar este campo"
 
-#: ../host.php:317
+#: ../devices.php:317
 msgid ""
 "To change the poller that will, by default handle the processing for the "
 "selected host(s)\n"
@@ -2654,7 +2654,7 @@ msgstr ""
 "\t\t\t\t\tsimplemente seleccione el equipo de la lista, cambie el colector\n"
 "en el diálogo y seleccione si."
 
-#: ../host.php:348
+#: ../devices.php:348
 msgid ""
 "To change the availability detection for your hosts will use by default\n"
 "\t\t\t\t\tsimply select the host from the list, make the changes you require "
@@ -2666,7 +2666,7 @@ msgstr ""
 "que requiera y seleccione si."
 
 
-#: ../host.php:379
+#: ../devices.php:379
 msgid ""
 "To clear the counters for the following devices, press the \"yes\" button "
 "below."
@@ -2674,18 +2674,18 @@ msgstr ""
 "Para limpiar los contadores para los siguientes dispositivos, oprima el botón"
 "\"si\" abajo."
 
-#: ../host.php:386
+#: ../devices.php:386
 msgid "Are you sure you want to delete the following devices?"
 msgstr "¿Esta seguro de querer eliminar los siguientes dispositivos?"
 
-#: ../host.php:388
+#: ../devices.php:388
 msgid ""
 "Leave all graphs and data sources untouched.  Data sources will be disabled "
 "however."
 msgstr ""
 "Dejar todas las gráficas y fuentes de información sin modificar. Sin embargo\n""se deshabilitarán las fuentes de información."
 
-#: ../host.php:389
+#: ../devices.php:389
 msgid ""
 "Delete all associated <strong>graphs</strong> and <strong>data sources</\n"
 "strong>.\n"
@@ -2693,116 +2693,116 @@ msgstr ""
 "Eliminar todas las <strong>gráficas</strong> y <strong>fuentes de \n"
 "información</strong>\n"
 
-#: ../host.php:397
+#: ../devices.php:397
 msgid "You must select at least one device."
 msgstr "Se debe seleccionar por lo menos un dispositivo."
 
-#: ../host.php:444
+#: ../devices.php:444
 msgid "Are you sure you want to delete the host <strong>'"
 msgstr "Esta seguro de querer eliminar el equipo <strong>'"
 
-#: ../host.php:476
+#: ../devices.php:476
 msgid "SNMP Information"
 msgstr "Información SNMP"
 
-#: ../host.php:481
+#: ../devices.php:481
 msgid "SNMP not in use"
 msgstr "No se utiliza SNMP"
 
-#: ../host.php:489
+#: ../devices.php:489
 msgid "SNMP error"
 msgstr "Error de SNMP"
 
-#: ../host.php:500
+#: ../devices.php:500
 msgid "System:"
 msgstr "Sistema:"
 
-#: ../host.php:501
+#: ../devices.php:501
 msgid "Uptime:"
 msgstr "Tiempo de operacion:"
 
-#: ../host.php:502
+#: ../devices.php:502
 msgid "Hostname:"
 msgstr "Nombre de equipo:"
 
-#: ../host.php:509
+#: ../devices.php:509
 msgid "Create Graphs for this Host"
 msgstr "Crear gráficas para este equipo"
 
-#: ../host.php:532
+#: ../devices.php:532
 msgid "Data Query Debug Information"
 msgstr "Información de debug de consulta de información"
 
-#: ../host.php:574
+#: ../devices.php:574
 msgid "Is Being Graphed"
 msgstr "Está siendo graficado"
 
-#: ../host.php:574
+#: ../devices.php:574
 msgid "Edit"
 msgstr "Editar"
 
-#: ../host.php:574
+#: ../devices.php:574
 msgid "Not Being Graphed"
 msgstr "No está siendo graficado"
 
-#: ../host.php:577
+#: ../devices.php:577
 msgid "Delete Graph Template Association"
 msgstr "Eliminar asociación de plantilla de gráfica"
 
-#: ../host.php:603
+#: ../devices.php:603
 msgid "Data Query Name"
 msgstr "Nombre de consulta de información"
 
-#: ../host.php:603
+#: ../devices.php:603
 msgid "Debugging"
 msgstr "Debuggeando"
 
-#: ../host.php:603 ../host.php:674
+#: ../devices.php:603 ../devices.php:674
 msgid "Re-Index Method"
 msgstr "Método de re ordenación"
 
-#: ../host.php:650
+#: ../devices.php:650
 msgid "Verbose Query"
 msgstr "Consulta explícita"
 
-#: ../host.php:656
+#: ../devices.php:656
 msgid "Success"
 msgstr "Éxito"
 
-#: ../host.php:656
+#: ../devices.php:656
 msgid "Fail"
 msgstr "Fallo"
 
-#: ../host.php:659
+#: ../devices.php:659
 msgid "Reload Data Query"
 msgstr "Recargar consulta de información"
 
-#: ../host.php:660
+#: ../devices.php:660
 msgid "Delete Data Query Association"
 msgstr "Eliminar asociación de consulta de información"
 
-#: ../host.php:758 ../utilities.php:188 ../data_sources.php:844
+#: ../devices.php:758 ../utilities.php:188 ../data_sources.php:844
 #: ../graphs.php:609
 msgid "Previous"
 msgstr "Anterior"
 
-#: ../host.php:761 ../data_sources.php:847 ../graphs.php:612
+#: ../devices.php:761 ../data_sources.php:847 ../graphs.php:612
 msgid "Showing Rows"
 msgstr "Desplegando hileras"
 
-#: ../host.php:773
+#: ../devices.php:773
 msgid "Current (ms)"
 msgstr "Tiempo actual (ms)"
 
-#: ../host.php:773
+#: ../devices.php:773
 msgid "Average (ms)"
 msgstr "Tiempo promedio (ms)"
 
-#: ../host.php:773
+#: ../devices.php:773
 msgid "Availability"
 msgstr "Disponibilidad"
 
-#: ../host.php:814 ../user_admin.php:380
+#: ../devices.php:814 ../user_admin.php:380
 msgid "No Hosts"
 msgstr "No hay equipos asociados"
 

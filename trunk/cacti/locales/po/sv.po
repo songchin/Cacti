@@ -198,8 +198,8 @@ msgstr "Bekräfta:"
 
 #: ../auth_changepassword.php:160 ../data_pollers.php:160
 #: ../data_sources.php:348 ../data_templates.php:281
-#: ../graph_templates.php:283 ../graphs.php:356 ../host.php:400
-#: ../host_templates.php:182 ../user_admin.php:946 ../rra_templates.php:161
+#: ../graph_templates.php:283 ../graphs.php:356 ../devices.php:400
+#: ../device_templates.php:182 ../user_admin.php:946 ../rra_templates.php:161
 msgid "Save"
 msgstr "Spara"
 
@@ -536,7 +536,7 @@ msgid "NOTICE: The poller is disabled."
 msgstr "NOTIS: Pollern är avstängd."
 
 #: ../data_input.php:103 ../data_input.php:243 ../data_queries.php:224
-#: ../data_queries.php:479 ../graph_templates_inputs.php:85 ../host.php:444
+#: ../data_queries.php:479 ../graph_templates_inputs.php:85 ../devices.php:444
 #: ../presets_cdef.php:100 ../presets_gprint.php:88 ../rra.php:105
 #: ../tree.php:340 ../rra_templates.php:189
 msgid "Are You Sure?"
@@ -548,7 +548,7 @@ msgstr "Är du säker på att du vill ta bort fältet?"
 
 #: ../data_input.php:119 ../data_input.php:259 ../data_pollers.php:188
 #: ../data_sources.php:391 ../data_templates.php:331
-#: ../graph_templates.php:324 ../graphs.php:389 ../host.php:461
+#: ../graph_templates.php:324 ../graphs.php:389 ../devices.php:461
 #: ../presets_cdef.php:115 ../presets_color.php:90 ../presets_gprint.php:102
 #: ../rra.php:120 ../user_admin.php:271 ../user_admin.php:671
 #: ../rra_templates.php:206
@@ -557,7 +557,7 @@ msgstr "[redigera: "
 
 #: ../data_input.php:121 ../data_input.php:261 ../data_pollers.php:190
 #: ../data_sources.php:396 ../data_templates.php:333
-#: ../graph_templates.php:326 ../graphs.php:391 ../host.php:463
+#: ../graph_templates.php:326 ../graphs.php:391 ../devices.php:463
 #: ../presets_cdef.php:117 ../presets_color.php:92 ../presets_gprint.php:104
 #: ../rra.php:122 ../templates_import.php:99 ../user_admin.php:673
 #: ../rra_templates.php:208
@@ -641,19 +641,19 @@ msgstr ""
 msgid "No Data Input Methods"
 msgstr ""
 
-#: ../data_pollers.php:30 ../data_sources.php:48 ../host.php:39
+#: ../data_pollers.php:30 ../data_sources.php:48 ../devices.php:39
 #: ../user_admin.php:42
 msgid "Enable"
 msgstr ""
 
-#: ../data_pollers.php:31 ../data_sources.php:49 ../host.php:40
+#: ../data_pollers.php:31 ../data_sources.php:49 ../devices.php:40
 #: ../user_admin.php:43
 msgid "Disable"
 msgstr ""
 
 #: ../data_pollers.php:32 ../data_sources.php:43 ../data_templates.php:39
-#: ../graph_templates.php:40 ../graphs.php:43 ../host.php:38
-#: ../host_templates.php:30 ../presets.php:185 ../tree.php:455
+#: ../graph_templates.php:40 ../graphs.php:43 ../devices.php:38
+#: ../device_templates.php:30 ../presets.php:185 ../tree.php:455
 #: ../user_admin.php:40 ../user_admin.php:317 ../user_admin.php:376
 #: ../lib/html_form.php:315 ../rra_templates.php:32
 msgid "Delete"
@@ -676,7 +676,7 @@ msgid "You must select at least one poller."
 msgstr ""
 
 #: ../data_pollers.php:168 ../data_sources.php:356 ../data_templates.php:289
-#: ../graphs.php:364 ../host.php:408 ../host_templates.php:190
+#: ../graphs.php:364 ../devices.php:408 ../device_templates.php:190
 #: ../user_admin.php:954 ../lib/html_form.php:619 ../rra_templates.php:169
 msgid "Cancel"
 msgstr ""
@@ -685,13 +685,13 @@ msgstr ""
 msgid "Data Pollers"
 msgstr "Datainsamlare"
 
-#: ../data_pollers.php:210 ../host.php:773 ../include/config_form.php:119
+#: ../data_pollers.php:210 ../devices.php:773 ../include/config_form.php:119
 #: ../include/config_form.php:325
 msgid "Hostname"
 msgstr "Värdnamn"
 
-#: ../data_pollers.php:210 ../data_templates.php:554 ../host.php:542
-#: ../host.php:603 ../host.php:773 ../user_admin.php:731
+#: ../data_pollers.php:210 ../data_templates.php:554 ../devices.php:542
+#: ../devices.php:603 ../devices.php:773 ../user_admin.php:731
 #: ../include/config_form.php:681 ../include/user/user_form.php:132
 msgid "Status"
 msgstr ""
@@ -786,12 +786,12 @@ msgstr ""
 msgid "Could not locate XML file."
 msgstr ""
 
-#: ../data_queries.php:536 ../host.php:540 ../host_templates.php:236
+#: ../data_queries.php:536 ../devices.php:540 ../device_templates.php:236
 #: ../lib/html.php:812
 msgid "Associated Graph Templates"
 msgstr ""
 
-#: ../data_queries.php:540 ../host.php:542
+#: ../data_queries.php:540 ../devices.php:542
 msgid "Graph Template Name"
 msgstr ""
 
@@ -809,7 +809,7 @@ msgid "Change Host"
 msgstr ""
 
 #: ../data_sources.php:46 ../data_templates.php:40 ../graph_templates.php:41
-#: ../graphs.php:45 ../host_templates.php:31 ../rra_templates.php:33
+#: ../graphs.php:45 ../device_templates.php:31 ../rra_templates.php:33
 msgid "Duplicate"
 msgstr "Duplicera"
 
@@ -862,7 +862,7 @@ msgstr ""
 
 #: ../data_sources.php:312 ../data_sources.php:322 ../data_templates.php:271
 #: ../graph_templates.php:273 ../graphs.php:295 ../graphs.php:305
-#: ../host_templates.php:172
+#: ../device_templates.php:172
 msgid "Title Format:"
 msgstr ""
 
@@ -997,12 +997,12 @@ msgstr "[värd: "
 msgid "No Host"
 msgstr "Ingen värd"
 
-#: ../data_sources.php:844 ../graphs.php:609 ../host.php:758
+#: ../data_sources.php:844 ../graphs.php:609 ../devices.php:758
 #: ../utilities.php:188
 msgid "Previous"
 msgstr "Föregående"
 
-#: ../data_sources.php:847 ../graphs.php:612 ../host.php:761
+#: ../data_sources.php:847 ../graphs.php:612 ../devices.php:761
 msgid "Showing Rows"
 msgstr "Visar rader"
 
@@ -1010,7 +1010,7 @@ msgstr "Visar rader"
 msgid "of"
 msgstr "av"
 
-#: ../data_sources.php:850 ../graphs.php:615 ../host.php:764
+#: ../data_sources.php:850 ../graphs.php:615 ../devices.php:764
 #: ../utilities.php:194 ../lib/html.php:201
 msgid "Next"
 msgstr "Nästa"
@@ -1433,42 +1433,42 @@ msgstr ""
 msgid "Select a graph type:"
 msgstr ""
 
-#: ../host.php:41
+#: ../devices.php:41
 msgid "Change SNMP Options"
 msgstr ""
 
-#: ../host.php:42
+#: ../devices.php:42
 msgid "Clear Statistics"
 msgstr ""
 
-#: ../host.php:43
+#: ../devices.php:43
 msgid "Change Poller"
 msgstr ""
 
-#: ../host.php:44
+#: ../devices.php:44
 msgid "Change Availability Options"
 msgstr ""
 
-#: ../host.php:273
+#: ../devices.php:273
 msgid "To enable the following devices, press the \"yes\" button below."
 msgstr ""
 
-#: ../host.php:280
+#: ../devices.php:280
 msgid "To disable the following devices, press the \"yes\" button below."
 msgstr ""
 
-#: ../host.php:287
+#: ../devices.php:287
 msgid ""
 "To change SNMP parameters for the following devices, check the box next to "
 "the fields\n"
 "\t\t\t\t\tyou want to update, fill in the new value, and click Save."
 msgstr ""
 
-#: ../host.php:302 ../host.php:332 ../host.php:363
+#: ../devices.php:302 ../devices.php:332 ../devices.php:363
 msgid "Update this Field"
 msgstr "Uppdatera det här fältet"
 
-#: ../host.php:317
+#: ../devices.php:317
 msgid ""
 "To change the poller that will, by default handle the processing for the "
 "selected host(s)\n"
@@ -1476,200 +1476,200 @@ msgid ""
 "select yes."
 msgstr ""
 
-#: ../host.php:348
+#: ../devices.php:348
 msgid ""
 "To change the availability detection for your hosts will use by default\n"
 "\t\t\t\t\tsimply select the host from the list, make the changes you require "
 "and select yes."
 msgstr ""
 
-#: ../host.php:379
+#: ../devices.php:379
 msgid ""
 "To clear the counters for the following devices, press the \"yes\" button "
 "below."
 msgstr ""
 
-#: ../host.php:386
+#: ../devices.php:386
 msgid "Are you sure you want to delete the following devices?"
 msgstr ""
 
-#: ../host.php:388
+#: ../devices.php:388
 msgid ""
 "Leave all graphs and data sources untouched.  Data sources will be disabled "
 "however."
 msgstr ""
 
-#: ../host.php:389
+#: ../devices.php:389
 msgid ""
 "Delete all associated <strong>graphs</strong> and <strong>data sources</"
 "strong>."
 msgstr ""
 
-#: ../host.php:397
+#: ../devices.php:397
 msgid "You must select at least one device."
 msgstr ""
 
-#: ../host.php:444
+#: ../devices.php:444
 msgid "Are you sure you want to delete the host <strong>'"
 msgstr ""
 
-#: ../host.php:476
+#: ../devices.php:476
 msgid "SNMP Information"
 msgstr ""
 
-#: ../host.php:481
+#: ../devices.php:481
 msgid "SNMP not in use"
 msgstr ""
 
-#: ../host.php:489
+#: ../devices.php:489
 msgid "SNMP error"
 msgstr ""
 
-#: ../host.php:500
+#: ../devices.php:500
 msgid "System:"
 msgstr ""
 
-#: ../host.php:501
+#: ../devices.php:501
 msgid "Uptime:"
 msgstr ""
 
-#: ../host.php:502
+#: ../devices.php:502
 msgid "Hostname:"
 msgstr ""
 
-#: ../host.php:509
+#: ../devices.php:509
 msgid "Create Graphs for this Host"
 msgstr ""
 
-#: ../host.php:517 ../host.php:710 ../include/config_arrays.php:289
+#: ../devices.php:517 ../devices.php:710 ../include/config_arrays.php:289
 #: ../lib/html.php:732
 msgid "Devices"
 msgstr "Enheter"
 
-#: ../host.php:532
+#: ../devices.php:532
 msgid "Data Query Debug Information"
 msgstr ""
 
-#: ../host.php:574
+#: ../devices.php:574
 msgid "Is Being Graphed"
 msgstr ""
 
-#: ../host.php:574
+#: ../devices.php:574
 msgid "Edit"
 msgstr ""
 
-#: ../host.php:574
+#: ../devices.php:574
 msgid "Not Being Graphed"
 msgstr ""
 
-#: ../host.php:577
+#: ../devices.php:577
 msgid "Delete Graph Template Association"
 msgstr ""
 
-#: ../host.php:582 ../host_templates.php:270
+#: ../devices.php:582 ../device_templates.php:270
 msgid "No associated graph templates."
 msgstr ""
 
-#: ../host.php:588 ../host_templates.php:277
+#: ../devices.php:588 ../device_templates.php:277
 msgid "Add Graph Template"
 msgstr ""
 
-#: ../host.php:592 ../host.php:678 ../user_admin.php:338 ../user_admin.php:398
+#: ../devices.php:592 ../devices.php:678 ../user_admin.php:338 ../user_admin.php:398
 #: ../user_admin.php:458 ../user_admin.php:518 ../lib/html.php:45
 msgid "Add"
 msgstr "Lägg till"
 
-#: ../host.php:601 ../host_templates.php:290
+#: ../devices.php:601 ../device_templates.php:290
 msgid "Associated Data Queries"
 msgstr ""
 
-#: ../host.php:603
+#: ../devices.php:603
 msgid "Data Query Name"
 msgstr ""
 
-#: ../host.php:603
+#: ../devices.php:603
 msgid "Debugging"
 msgstr ""
 
-#: ../host.php:603 ../host.php:674
+#: ../devices.php:603 ../devices.php:674
 msgid "Re-Index Method"
 msgstr ""
 
-#: ../host.php:650
+#: ../devices.php:650
 msgid "Verbose Query"
 msgstr ""
 
-#: ../host.php:656
+#: ../devices.php:656
 msgid "Success"
 msgstr ""
 
-#: ../host.php:656
+#: ../devices.php:656
 msgid "Fail"
 msgstr ""
 
-#: ../host.php:659
+#: ../devices.php:659
 msgid "Reload Data Query"
 msgstr ""
 
-#: ../host.php:660
+#: ../devices.php:660
 msgid "Delete Data Query Association"
 msgstr ""
 
-#: ../host.php:665 ../host_templates.php:316
+#: ../devices.php:665 ../device_templates.php:316
 msgid "No associated data queries."
 msgstr ""
 
-#: ../host.php:671 ../host_templates.php:323
+#: ../devices.php:671 ../device_templates.php:323
 msgid "Add Data Query"
 msgstr ""
 
-#: ../host.php:773 ../settings_wizard.php:186
+#: ../devices.php:773 ../settings_wizard.php:186
 #: ../include/data_query/data_query_form.php:38 ../include/config_form.php:81
 #: ../include/config_form.php:215 ../include/config_form.php:318
 #: ../rra_templates.php:342
 msgid "Description"
 msgstr "Beskrivning"
 
-#: ../host.php:773
+#: ../devices.php:773
 msgid "Current (ms)"
 msgstr "Nuvarande"
 
-#: ../host.php:773
+#: ../devices.php:773
 msgid "Average (ms)"
 msgstr "Genomsnitt"
 
-#: ../host.php:773
+#: ../devices.php:773
 msgid "Availability"
 msgstr "Åtkomstbarhet"
 
-#: ../host.php:814 ../user_admin.php:380
+#: ../devices.php:814 ../user_admin.php:380
 msgid "No Hosts"
 msgstr "Inga värdar"
 
-#: ../host_templates.php:160
+#: ../device_templates.php:160
 msgid ""
 "Are you sure you want to delete the following host templates? All devices "
 "currently attached\n"
 "\t\t\t\t\tthis these host templates will lose their template assocation."
 msgstr ""
 
-#: ../host_templates.php:169
+#: ../device_templates.php:169
 msgid ""
 "When you click save, the following host templates will be duplicated. You "
 "can\n"
 "\t\t\t\t\toptionally change the title format for the new host templates."
 msgstr ""
 
-#: ../host_templates.php:179
+#: ../device_templates.php:179
 msgid "You must select at least one host template."
 msgstr ""
 
-#: ../host_templates.php:226 ../host_templates.php:351
+#: ../device_templates.php:226 ../device_templates.php:351
 #: ../include/config_arrays.php:302 ../lib/html.php:667
 msgid "Host Templates"
 msgstr "Värdmallar"
 
-#: ../host_templates.php:372
+#: ../device_templates.php:372
 msgid "No Host Templates"
 msgstr "Inga värdmallar"
 

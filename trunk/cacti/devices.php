@@ -48,22 +48,22 @@ switch ($_REQUEST["action"]) {
 	case 'gt_remove':
 		host_remove_gt();
 
-		header("Location: host.php?action=edit&id=" . $_GET["host_id"]);
+		header("Location: devices.php?action=edit&id=" . $_GET["host_id"]);
 		break;
 	case 'query_remove':
 		host_remove_query();
 
-		header("Location: host.php?action=edit&id=" . $_GET["host_id"]);
+		header("Location: devices.php?action=edit&id=" . $_GET["host_id"]);
 		break;
 	case 'query_reload':
 		host_reload_query();
 
-		header("Location: host.php?action=edit&id=" . $_GET["host_id"]);
+		header("Location: devices.php?action=edit&id=" . $_GET["host_id"]);
 		break;
 	case 'query_verbose':
 		host_reload_query();
 
-		header("Location: host.php?action=edit&id=" . $_GET["host_id"] . "&display_dq_details=true");
+		header("Location: devices.php?action=edit&id=" . $_GET["host_id"] . "&display_dq_details=true");
 		break;
 	case 'edit':
 		require_once(CACTI_BASE_PATH . "/include/top_header.php");
@@ -98,14 +98,14 @@ function form_post() {
 			/* recache snmp data */
 			api_data_query_execute($_POST["id"], $_POST["data_query_id"]);
 
-			header("Location: host.php?action=edit&id=" . $_POST["id"]);
+			header("Location: devices.php?action=edit&id=" . $_POST["id"]);
 			exit;
 		}
 
 		if ((!empty($_POST["add_gt_y"])) && (!empty($_POST["graph_template_id"]))) {
 			db_execute("replace into host_graph (host_id,graph_template_id) values (" . $_POST["id"] . "," . $_POST["graph_template_id"] . ")");
 
-			header("Location: host.php?action=edit&id=" . $_POST["id"]);
+			header("Location: devices.php?action=edit&id=" . $_POST["id"]);
 			exit;
 		}
 
@@ -117,9 +117,9 @@ function form_post() {
 				(isset($_POST["disabled"]) ? $_POST["disabled"] : ""));
 
 			if ((is_error_message()) || ($_POST["host_template_id"] != $_POST["_host_template_id"])) {
-				header("Location: host.php?action=edit&id=" . (empty($host_id) ? $_POST["id"] : $host_id));
+				header("Location: devices.php?action=edit&id=" . (empty($host_id) ? $_POST["id"] : $host_id));
 			}else{
-				header("Location: host.php");
+				header("Location: devices.php");
 			}
 		}
 	/* submit button on the actions area page */
@@ -141,7 +141,7 @@ function form_post() {
 				$get_string .= ($get_string == "" ? "?" : "&") . "search_filter=" . urlencode($_POST["box-1-search_filter"]);
 			}
 
-			header("Location: host.php$get_string");
+			header("Location: devices.php$get_string");
 			exit;
 		}else if ($_POST["box-1-action-area-type"] == "remove") {
 			foreach ($selected_rows as $host_id) {
@@ -167,7 +167,7 @@ function form_post() {
 			// not yet implemented
 		}
 
-		header("Location: host.php");
+		header("Location: devices.php");
 	/* 'filter' area at the bottom of the box */
 	}else if ($_POST["action_post"] == "device_list") {
 		$get_string = "";
@@ -179,7 +179,7 @@ function form_post() {
 			}
 		}
 
-		header("Location: host.php$get_string");
+		header("Location: devices.php$get_string");
 	}
 }
 
@@ -293,7 +293,7 @@ function form_actions() {
 			}
 		}
 
-		header("Location: host.php");
+		header("Location: devices.php");
 		exit;
 	}
 
@@ -314,7 +314,7 @@ function form_actions() {
 
 	html_start_box("<strong>" . $device_actions{$_POST["drp_action"]} . "</strong>", "60%", $colors["header_panel_background"], "3", "center", "");
 
-	print "<form action='host.php' method='post'>\n";
+	print "<form action='devices.php' method='post'>\n";
 
 	if ($_POST["drp_action"] == "2") { /* Enable Devices */
 		print "	<tr>
@@ -454,7 +454,7 @@ function form_actions() {
 				<input type='hidden' name='action' value='actions'>
 				<input type='hidden' name='selected_items' value='" . (isset($host_array) ? serialize($host_array) : '') . "'>
 				<input type='hidden' name='drp_action' value='" . $_POST["drp_action"] . "'>
-				<a href='host.php'><img src='" . html_get_theme_images_path("button_no.gif") . "' alt='" . _("Cancel") . "' align='absmiddle' border='0'></a>
+				<a href='devices.php'><img src='" . html_get_theme_images_path("button_no.gif") . "' alt='" . _("Cancel") . "' align='absmiddle' border='0'></a>
 				$save_html
 			</td>
 		</tr>
@@ -488,7 +488,7 @@ function host_remove_gt() {
 function host_remove() {
 	if ((read_config_option("remove_verification") == "on") && (!isset($_GET["confirm"]))) {
 		require_once(CACTI_BASE_PATH . "/include/top_header.php");
-		form_confirm(_("Are You Sure?"), _("Are you sure you want to delete the host <strong>'") . db_fetch_cell("select description from host where id=" . $_GET["id"]) . "'</strong>?", "host.php", "host.php?action=remove&id=" . $_GET["id"]);
+		form_confirm(_("Are You Sure?"), _("Are you sure you want to delete the host <strong>'") . db_fetch_cell("select description from host where id=" . $_GET["id"]) . "'</strong>?", "devices.php", "devices.php?action=remove&id=" . $_GET["id"]);
 		require_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
 		exit;
 	}
@@ -621,7 +621,7 @@ function host_edit() {
 						<?php print (($is_being_graphed == true) ? "<span style='color: green;'>" . _("Is Being Graphed") . "</span> (<a href='graphs.php?action=graph_edit&id=" . db_fetch_cell("select id from graph_local where graph_template_id=" . $item["id"] . " and host_id=" . $_GET["id"] . " limit 0,1") . "'>" . _("Edit") . "</a>)" : "<span style='color: #484848;'>" . _("Not Being Graphed") . "</span>");?>
 					</td>
 					<td align='right' nowrap>
-						<a href='host.php?action=gt_remove&id=<?php print $item["id"];?>&host_id=<?php print $_GET["id"];?>'><img src='<?php print html_get_theme_images_path("delete_icon_large.gif");?>' alt='<?php echo _("Delete Graph Template Association");?>' border='0' align='absmiddle'></a>
+						<a href='devices.php?action=gt_remove&id=<?php print $item["id"];?>&host_id=<?php print $_GET["id"];?>'><img src='<?php print html_get_theme_images_path("delete_icon_large.gif");?>' alt='<?php echo _("Delete Graph Template Association");?>' border='0' align='absmiddle'></a>
 					</td>
 				</tr>
 				<?php
@@ -668,7 +668,7 @@ function host_edit() {
 						<strong><?php echo $i;?>)</strong> <?php echo $item["name"];?>
 					</td>
 					<td>
-						(<a href="host.php?action=query_verbose&id=<?php echo $item["id"];?>&host_id=<?php echo $_GET["id"];?>"><?php echo _("Verbose Query");?></a>)
+						(<a href="devices.php?action=query_verbose&id=<?php echo $item["id"];?>&host_id=<?php echo $_GET["id"];?>"><?php echo _("Verbose Query");?></a>)
 					</td>
 					<td>
 						<?php echo $reindex_types{$item["reindex_method"]};?>
@@ -677,8 +677,8 @@ function host_edit() {
 						<?php echo (($status == "success") ? "<span style='color: green;'>" . _("Success") . "</span>" : "<span style='color: green;'>" . _("Fail") . "</span>");?> [<?php echo $num_dq_items;?> Item<?php echo ($num_dq_items == 1 ? "" : "s");?>, <?php echo $num_dq_rows;?> Row<?php echo ($num_dq_rows == 1 ? "" : "s");?>]
 					</td>
 					<td align='right' nowrap>
-						<a href='host.php?action=query_reload&id=<?php echo $item["id"];?>&host_id=<?php echo $_GET["id"];?>'><img src='<?php echo html_get_theme_images_path("reload_icon_small.gif");?>' alt='<?php echo _("Reload Data Query");?>' border='0' align='absmiddle'></a>&nbsp;
-						<a href='host.php?action=query_remove&id=<?php echo $item["id"];?>&host_id=<?php echo $_GET["id"];?>'><img src='<?php echo html_get_theme_images_path("delete_icon_large.gif");?>' alt='<?php echo _("Delete Data Query Association");?>' border='0' align='absmiddle'></a>
+						<a href='devices.php?action=query_reload&id=<?php echo $item["id"];?>&host_id=<?php echo $_GET["id"];?>'><img src='<?php echo html_get_theme_images_path("reload_icon_small.gif");?>' alt='<?php echo _("Reload Data Query");?>' border='0' align='absmiddle'></a>&nbsp;
+						<a href='devices.php?action=query_remove&id=<?php echo $item["id"];?>&host_id=<?php echo $_GET["id"];?>'><img src='<?php echo html_get_theme_images_path("delete_icon_large.gif");?>' alt='<?php echo _("Delete Data Query Association");?>' border='0' align='absmiddle'></a>
 					</td>
 				</tr>
 				<?php
@@ -709,7 +709,7 @@ function host_edit() {
 	}
 
 	form_hidden_box("action_post", "device_edit");
-	form_save_button("host.php", "save_device");
+	form_save_button("devices.php", "save_device");
 }
 
 function host() {
@@ -751,12 +751,12 @@ function host() {
 
 	/* generate page list */
 	$url_string = build_get_url_string(array("search_device_template", "search_status", "search_filter"));
-	$url_page_select = get_page_list($current_page, MAX_DISPLAY_PAGES, read_config_option("num_rows_device"), $total_rows, "host.php" . $url_string . ($url_string == "" ? "?" : "&") . "page=|PAGE_NUM|");
+	$url_page_select = get_page_list($current_page, MAX_DISPLAY_PAGES, read_config_option("num_rows_device"), $total_rows, "devices.php" . $url_string . ($url_string == "" ? "?" : "&") . "page=|PAGE_NUM|");
 
-	form_start("host.php");
+	form_start("devices.php");
 
 	$box_id = "1";
-	html_start_box("<strong>" . _("Devices") . "</strong>", "host.php?action=edit", $url_page_select);
+	html_start_box("<strong>" . _("Devices") . "</strong>", "devices.php?action=edit", $url_page_select);
 	html_header_checkbox(array(_("Description"), _("Status"), _("Hostname"), _("Current (ms)"), _("Average (ms)"), _("Availability")), $box_id);
 
 	$i = 0;
@@ -765,7 +765,7 @@ function host() {
 			?>
 			<tr class="content-row" id="box-<?php echo $box_id;?>-row-<?php echo $host["id"];?>" onClick="display_row_select('<?php echo $box_id;?>',document.forms[0],'box-<?php echo $box_id;?>-row-<?php echo $host["id"];?>', 'box-<?php echo $box_id;?>-chk-<?php echo $host["id"];?>')" onMouseOver="display_row_hover('box-<?php echo $box_id;?>-row-<?php echo $host["id"];?>')" onMouseOut="display_row_clear('box-<?php echo $box_id;?>-row-<?php echo $host["id"];?>')">
 				<td class="content-row">
-					<a class="linkEditMain" onClick="display_row_block('box-<?php echo $box_id;?>-row-<?php echo $host["id"];?>')" href="host.php?action=edit&id=<?php echo $host["id"];?>"><span id="box-<?php echo $box_id;?>-text-<?php echo $host["id"];?>"><?php echo html_highlight_words(get_get_var("search_filter"), $host["description"]);?></span></a>
+					<a class="linkEditMain" onClick="display_row_block('box-<?php echo $box_id;?>-row-<?php echo $host["id"];?>')" href="devices.php?action=edit&id=<?php echo $host["id"];?>"><span id="box-<?php echo $box_id;?>-text-<?php echo $host["id"];?>"><?php echo html_highlight_words(get_get_var("search_filter"), $host["description"]);?></span></a>
 				</td>
 				<td class="content-row">
 					<?php echo get_colored_device_status(($host["disabled"] == "on" ? true : false), $host["status"]);?>
