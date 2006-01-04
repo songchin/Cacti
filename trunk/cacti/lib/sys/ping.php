@@ -130,7 +130,7 @@ class Net_Ping
 						$this->ping_response = _("ICMP ping Timed out");
 						return false;
 					} else {
-						$this->ping_response = _("Host is alive");
+						$this->ping_response = _("Device is alive");
 						$this->ping_status = $total_time / $success_count;
 						return true;
 					}
@@ -165,7 +165,7 @@ class Net_Ping
 
 		/* initialize variables */
 		$this->snmp_status = "down";
-		$this->snmp_response = _("Host did not respond to SNMP");
+		$this->snmp_response = _("Device did not respond to SNMP");
 		$this->packet_loss = 1;
 		$output = "";
 
@@ -181,10 +181,10 @@ class Net_Ping
 				$this->packet_loss = 1 - ($success_count / $retry_count);
 				if ($this->packet_loss == 1) {
 					$this->snmp_status   = "down";
-					$this->snmp_response = _("Host did not respond to SNMP");
+					$this->snmp_response = _("Device did not respond to SNMP");
 					return false;
 				} else {
-					$this->snmp_response = _("Host responded to SNMP");
+					$this->snmp_response = _("Device responded to SNMP");
 					$this->snmp_status = $total_time / $success_count;
 					return true;
 				}
@@ -218,7 +218,7 @@ class Net_Ping
 	} /* ping_snmp */
 
 	function ping_udp() {
-		/* Host must be nonblank */
+		/* Device must be nonblank */
 		if ($this->host["hostname"]) {
 			/* initialize variables */
 			$this->ping_status   = "down";
@@ -261,7 +261,7 @@ class Net_Ping
 						$this->ping_status   = "down";
 						return false;
 					} else {
-						$this->ping_response = _("Host is alive");
+						$this->ping_response = _("Device is alive");
 						$this->ping_status = $total_time / $success_count;
 						return true;
 					}

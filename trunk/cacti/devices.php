@@ -482,7 +482,7 @@ function host_remove_gt() {
 }
 
 /* ---------------------
-    Host Functions
+    Device Functions
    --------------------- */
 
 function host_remove() {

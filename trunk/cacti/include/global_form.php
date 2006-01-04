@@ -330,7 +330,7 @@ $fields_host_edit = array(
 		),
 	"host_template_id" => array(
 		"method" => "drop_sql",
-		"friendly_name" => _("Host Template"),
+		"friendly_name" => _("Device Template"),
 		"description" => _("Choose what type of host, host template this is. The host template will govern what kinds of data should be gathered from this type of host."),
 		"value" => "|arg1:host_template_id|",
 		"none_value" => "None",

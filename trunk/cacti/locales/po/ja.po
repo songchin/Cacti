@@ -738,7 +738,7 @@ msgstr ""
 #: ../settings_wizard.php:47
 msgid ""
 "Poller wizard aids in setting up the Poller Type, Poller Execution, Default "
-"Host Availability and Default Host Up/Down Settings."
+"Device Availability and Default Device Up/Down Settings."
 msgstr ""
 
 #: ../settings_wizard.php:51 ../include/config_settings.php:35
@@ -1316,7 +1316,7 @@ msgid "Templates"
 msgstr "テンプレート"
 
 #: ../include/config_arrays.php:269 ../lib/html.php:667
-msgid "Host Templates"
+msgid "Device Templates"
 msgstr "ホストテンプレート"
 
 #: ../include/config_arrays.php:270 ../lib/html.php:687
@@ -1411,7 +1411,7 @@ msgid "Update Data Templates"
 msgstr "データテンプレートを更新する"
 
 #: ../include/config_arrays.php:301
-msgid "Update Host Templates"
+msgid "Update Device Templates"
 msgstr "ホストテンプレートを更新する"
 
 #: ../include/config_arrays.php:302 ../include/config_settings.php:452
@@ -1473,7 +1473,7 @@ msgid "Graph Template Input"
 msgstr "グラフのテンプレート項目"
 
 #: ../include/config_arrays.php:394 ../include/config_form.php:294
-msgid "Host Template"
+msgid "Device Template"
 msgstr "ホストのテンプレート"
 
 #: ../include/config_arrays.php:429
@@ -2633,11 +2633,11 @@ msgid ""
 msgstr ""
 
 #: ../include/config_settings.php:612
-msgid "Poller Host Availability Settings"
+msgid "Poller Device Availability Settings"
 msgstr ""
 
 #: ../include/config_settings.php:616
-msgid "Downed Host Detection"
+msgid "Downed Device Detection"
 msgstr ""
 
 #: ../include/config_settings.php:617
@@ -2667,7 +2667,7 @@ msgid ""
 msgstr ""
 
 #: ../include/config_settings.php:644
-msgid "Host Up/Down Settings"
+msgid "Device Up/Down Settings"
 msgstr "ホストアップ/ダウン設定"
 
 #: ../include/config_settings.php:648

@@ -224,7 +224,7 @@ function template_edit() {
 		$_GET["id"] = 0;
 	}
 
-	html_start_box("<strong>" . _("Host Templates") . "</strong> $header_label", "98%", $colors["header_background"], "3", "center", "");
+	html_start_box("<strong>" . _("Device Templates") . "</strong> $header_label", "98%", $colors["header_background"], "3", "center", "");
 
 	draw_edit_form(array(
 		"config" => array(),
@@ -343,7 +343,7 @@ function template() {
 
 	display_output_messages();
 
-	html_start_box("<strong>" . _("Host Templates") . "</strong>", "98%", $colors["header_background"], "3", "center", "device_templates.php?action=edit");
+	html_start_box("<strong>" . _("Device Templates") . "</strong>", "98%", $colors["header_background"], "3", "center", "device_templates.php?action=edit");
 
 	html_header_checkbox(array("Template Title"));
 
@@ -364,7 +364,7 @@ function template() {
 	<?php
 	}
 	}else{
-		print "<tr><td bgcolor='#" . $colors["form_alternate1"] . "' colspan=7><em>" . _("No Host Templates") . "</em></td></tr>";
+		print "<tr><td bgcolor='#" . $colors["form_alternate1"] . "' colspan=7><em>" . _("No Device Templates") . "</em></td></tr>";
 	}
 	html_end_box(false);
 

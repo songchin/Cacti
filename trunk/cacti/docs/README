@@ -97,5 +97,5 @@ Templating
 Lastly, cacti is able to scale to a large number of data sources and graphs 
 through the use of templates. This allows the creation of a single graph or 
 data source template which defines any graph or data source associated with it. 
-Host templates enable you to define the capabilities of a host so cacti can 
+Device templates enable you to define the capabilities of a host so cacti can 
 poll it for information upon the addition of a new host.

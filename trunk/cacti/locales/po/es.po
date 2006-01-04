@@ -906,7 +906,7 @@ msgstr "Entradas de elementos de gráficas"
 
 #: ../lib/html.php:667 ../device_templates.php:226 ../device_templates.php:351
 #: ../include/config_arrays.php:302
-msgid "Host Templates"
+msgid "Device Templates"
 msgstr "Plantillas de equipos"
 
 #: ../lib/html.php:687 ../data_templates.php:552
@@ -1175,11 +1175,11 @@ msgid "AVAIL: Availability cheking disabled for host"
 msgstr "DISP: Checado de disponibilidad deshabilitada para el equipo"
 
 #: ../lib/poller.php:753
-msgid "HOST EVENT: Host is DOWN Message: "
+msgid "HOST EVENT: Device is DOWN Message: "
 msgstr "EVENTO DE EQUIPO: El equipo NO RESPONDE Mensaje:"
 
 #: ../lib/poller.php:755
-msgid "HOST EVENT: Host Returned from DOWN State"
+msgid "HOST EVENT: Device Returned from DOWN State"
 msgstr "EVENTO DE EQUIPO: El equipo se Recupero de NO RESPONDER"
 
 #: ../lib/ping.php:95
@@ -1195,7 +1195,7 @@ msgid "ICMP ping Timed out"
 msgstr "Tiempo de espera agotado para Ping via ICMP"
 
 #: ../lib/ping.php:134 ../lib/ping.php:263
-msgid "Host is alive"
+msgid "Device is alive"
 msgstr "El equipo responde"
 
 #: ../lib/ping.php:159 ../lib/ping.php:291
@@ -1203,11 +1203,11 @@ msgid "Destination address not specified"
 msgstr "Direccion destino no especificada"
 
 #: ../lib/ping.php:167 ../lib/ping.php:183
-msgid "Host did not respond to SNMP"
+msgid "Device did not respond to SNMP"
 msgstr "El equipo no responde a SNMP"
 
 #: ../lib/ping.php:186
-msgid "Host responded to SNMP"
+msgid "Device responded to SNMP"
 msgstr "El equipo responde a SNMP"
 
 #: ../lib/ping.php:259
@@ -1657,7 +1657,7 @@ msgstr "Colector"
 #: ../settings_wizard.php:47
 msgid ""
 "Poller wizard aids in setting up the Poller Type, Poller Execution, Default "
-"Host Availability and Default Host Up/Down Settings."
+"Device Availability and Default Device Up/Down Settings."
 msgstr ""
 "El asistente de colector le ayuda a configurar el tipo de colector, \n"
 "su ejecucion, la disponibilidad por defecto de equipo y la configuración \n"
@@ -2167,7 +2167,7 @@ msgid "Add Data Query"
 msgstr "Añadir consulta de información"
 
 #: ../device_templates.php:372
-msgid "No Host Templates"
+msgid "No Device Templates"
 msgstr "No hay plantillas de equipo"
 
 #: ../data_templates.php:259
@@ -2952,7 +2952,7 @@ msgstr "Visualizando propiedades de gráfica"
 
 #: ../templates_export.php:44 ../include/config_arrays.php:431
 #: ../include/config_form.php:332
-msgid "Host Template"
+msgid "Device Template"
 msgstr "Plantilla de equipo"
 
 #: ../templates_export.php:111
@@ -5104,11 +5104,11 @@ msgstr ""
 "opción mejorará el desempeño hasta cierto punto.\n"
 
 #: ../include/config_settings.php:613
-msgid "Poller Host Availability Settings"
+msgid "Poller Device Availability Settings"
 msgstr "Configuración de disponibilidad para equipo por colector"
 
 #: ../include/config_settings.php:617
-msgid "Downed Host Detection"
+msgid "Downed Device Detection"
 msgstr "Detección de equipo caído"
 
 #: ../include/config_settings.php:618
@@ -5158,7 +5158,7 @@ msgstr ""
 "perdidos se almacenará según sea aplicable.\n"
 
 #: ../include/config_settings.php:645
-msgid "Host Up/Down Settings\n"
+msgid "Device Up/Down Settings\n"
 msgstr "Configuración de Operando o Caído de los equipos.\n"
 
 #: ../include/config_settings.php:649
@@ -6253,7 +6253,7 @@ msgid "Update Data Templates"
 msgstr "Actualizar Plantillas de información"
 
 #: ../include/config_arrays.php:335
-msgid "Update Host Templates"
+msgid "Update Device Templates"
 msgstr "Actualizar Plantillas de equipo"
 
 #: ../include/config_arrays.php:337

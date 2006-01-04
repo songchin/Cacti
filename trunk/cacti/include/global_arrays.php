@@ -261,7 +261,7 @@ $menu = array(
 		),
 	_("Templates") => array(
 		"graph_templates.php" => _("Graph Templates"),
-		"device_templates.php" => _("Host Templates"),
+		"device_templates.php" => _("Device Templates"),
 		"data_templates.php" => _("Data Templates"),
 		"rra_templates.php" => _("RRA Templates"),
 		"packages.php" => _("Packages")
@@ -296,7 +296,7 @@ $user_auth_realms = array(
 	9 => _("Update Round Robin Archives"),
 	10 => _("Update Graph Templates"),
 	11 => _("Update Data Templates"),
-	12 => _("Update Host Templates"),
+	12 => _("Update Device Templates"),
 	13 => _("Data Queries"),
 	14 => _("Update Data Presets"),
 	15 => _("Global Settings"),
@@ -396,7 +396,7 @@ $hash_type_names = array(
 	"graph_template_item" => _("Graph Template Item"),
 	"graph_template_input" => _("Graph Template Input"),
 	"data_query" => _("Data Query"),
-	"host_template" => _("Host Template"),
+	"host_template" => _("Device Template"),
 	"round_robin_archive" => _("Round Robin Archive"),
 	"rra_template" => _("Round Robin Archive Template")
 	);

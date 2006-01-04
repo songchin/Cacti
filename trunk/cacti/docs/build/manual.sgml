@@ -1925,17 +1925,17 @@ $database_password = "cacti";</userinput></screen>
 			</sect2>
 		</sect1>
 		<sect1 id="host_templates">
-			<title>Host Templates</title>
+			<title>Device Templates</title>
 			<para>
-				Host templates in Cacti serve a different purpose then data and graph templates. Instead of
+				Device templates in Cacti serve a different purpose then data and graph templates. Instead of
 				abstracting the fields of a host, a host template allows you to associate graph templates and
 				data queries with a given host type. This way when you assign a host template to a host, all
 				of the relevant graphs to that host type are only one click away from the user.
 			</para>
 			<sect2 id="host_template_new">
-				<title>Adding a Host Template</title>
+				<title>Adding a Device Template</title>
 				<para>
-					To create a new host template in Cacti, select the <guilabel>Host Templates</guilabel>
+					To create a new host template in Cacti, select the <guilabel>Device Templates</guilabel>
 					option under the <guilabel>Templates</guilabel> heading. Once on that screen, click
 					<guilabel>Add</guilabel> on the right. Type a unique name for the host template and
 					click the <guilabel>Create</guilabel> button. You will be redirected back to the edit
@@ -1945,7 +1945,7 @@ $database_password = "cacti";</userinput></screen>
 					dropdown menu and click <guilabel>Add</guilabel> to associate it with your host template.
 				</para>
 				<figure id="img_host_template_new">
-					<title>Adding a Host Template</title>
+					<title>Adding a Device Template</title>
 
 					<mediaobject>
 						<imageobject>
@@ -2722,7 +2722,7 @@ print int(rand(10));</programlisting>
 						</listitem>
 						<listitem>
 							<para>
-								Data Source: (from list) No Host - random2ds (random_number)
+								Data Source: (from list) No Device - random2ds (random_number)
 							</para>
 						</listitem>
 						<listitem>
@@ -2782,7 +2782,7 @@ print int(rand(10));</programlisting>
 						</listitem>
 						<listitem>
 							<para>
-								Data Source: No Host - random2ds (random_number)
+								Data Source: No Device - random2ds (random_number)
 							</para>
 						</listitem>
 						<listitem>
@@ -2988,7 +2988,7 @@ print int(rand(10));</programlisting>
 								<para>Click <guilabel>Add</guilabel> to add a new device.</para>
 							</listitem>
 							<listitem>
-								<para>Type a description, hostname, management IP, and SNMP community. Make sure to select "Generic SNMP-enabled Host" under <guilabel>Host Template</guilabel> and click <guilabel>Create</guilabel>.</para>
+								<para>Type a description, hostname, management IP, and SNMP community. Make sure to select "Generic SNMP-enabled Host" under <guilabel>Device Template</guilabel> and click <guilabel>Create</guilabel>.</para>
 							</listitem>
 							<listitem>
 								<para>Click <guilabel>Create Graphs for this Host</guilabel> at the top of the page.</para>
@@ -3375,13 +3375,13 @@ disk /</userinput></screen>
 			</sect2>
 		</sect1>
 		<sect1 id="host_variables">
-			<title>Host Variables</title>
+			<title>Device Variables</title>
 			<para>
-				Host variables represent host data and can be placed in graph or data source titles. The following
+				Device variables represent host data and can be placed in graph or data source titles. The following
 				table describes which host variables can be used and which host fields the correspond to.
 			</para>
 			<table frame='all'>
-				<title>Host Variables</title>
+				<title>Device Variables</title>
 				<tgroup cols='2' align='left' colsep='1' rowsep='1'>
 					<colspec colnum="1">
 					<colspec colwidth="3*" colnum="2">

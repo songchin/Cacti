@@ -42,7 +42,7 @@ $export_types = array(
 		"dropdown_sql" => "select id,name from data_template order by name"
 		),
 	"host_template" => array(
-		"name" => _("Host Template"),
+		"name" => _("Device Template"),
 		"title_sql" => "select name from host_template where id=|id|",
 		"dropdown_sql" => "select id,name from host_template order by name"
 		),

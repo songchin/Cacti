@@ -618,7 +618,7 @@ function draw_navigation_text() {
 			"level" => "3"
 			),
 		"device_templates.php:" => array(
-			"title" => _("Host Templates"),
+			"title" => _("Device Templates"),
 			"mapping" => "index.php:",
 			"level" => "1"
 			),

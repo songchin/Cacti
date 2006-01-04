@@ -682,11 +682,11 @@ $settings = array(
 			"max_length" => "10"
 			),
 		"availability_header" => array(
-			"friendly_name" => _("Poller Host Availability Settings"),
+			"friendly_name" => _("Poller Device Availability Settings"),
 			"method" => "spacer"
 			),
 		"availability_method" => array(
-			"friendly_name" => _("Downed Host Detection"),
+			"friendly_name" => _("Downed Device Detection"),
 			"description" => _("The method Cacti will use to determine if a host is available for polling.  NOTE: It is recommended that, at a minimum, SNMP always be selected."),
 			"method" => "drop_array",
 			"default" => AVAIL_SNMP,
@@ -714,7 +714,7 @@ $settings = array(
 			"max_length" => "10"
 			),
 		"updown_header" => array(
-			"friendly_name" => _("Host Up/Down Settings"),
+			"friendly_name" => _("Device Up/Down Settings"),
 			"method" => "spacer"
 			),
 		"ping_failure_count" => array(
