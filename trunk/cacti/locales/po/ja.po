@@ -243,7 +243,7 @@ msgid "Choose a new host for these data sources:"
 msgstr ""
 
 #: ../data_sources.php:291 ../graphs.php:309
-msgid "New Host:"
+msgid "New Device:"
 msgstr "新規ホスト:"
 
 #: ../data_sources.php:298

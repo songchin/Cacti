@@ -224,8 +224,8 @@ function grow_edit_graph_tree($tree_id, $user_id, $options) {
 				print "<td bgcolor='#$row_color' bgcolor='#" . $colors["panel"] . "'>$transparent_indent<a href='tree.php?action=item_edit&tree_id=" . $_GET["id"] . "&id=" . $leaf["id"] . "'><strong>" . $leaf["title"] . "</strong></a> (<a href='tree.php?action=item_edit&tree_id=" . $_GET["id"] . "&parent_id=" . $leaf["id"] . "'>Add</a>)</td>\n";
 				print "<td bgcolor='#$row_color' bgcolor='#" . $colors["panel"] . "'>Heading</td>";
 			}elseif ($leaf["host_id"] > 0) {
-				print "<td bgcolor='#$row_color' bgcolor='#" . $colors["panel"] . "'>$transparent_indent<a href='tree.php?action=item_edit&tree_id=" . $_GET["id"] . "&id=" . $leaf["id"] . "'><strong>Host:</strong> " . $leaf["hostname"] . "</a></td>\n";
-				print "<td bgcolor='#$row_color' bgcolor='#" . $colors["panel"] . "'>Host</td>";
+				print "<td bgcolor='#$row_color' bgcolor='#" . $colors["panel"] . "'>$transparent_indent<a href='tree.php?action=item_edit&tree_id=" . $_GET["id"] . "&id=" . $leaf["id"] . "'><strong>Device:</strong> " . $leaf["hostname"] . "</a></td>\n";
+				print "<td bgcolor='#$row_color' bgcolor='#" . $colors["panel"] . "'>Device</td>";
 			}
 
 			if ( ((isset($sort_cache{$tier-1})) && ($sort_cache{$tier-1} != TREE_ORDERING_NONE)) || ($tree_sorting_type != TREE_ORDERING_NONE) )  {
@@ -385,7 +385,7 @@ function create_dhtml_tree() {
 					$tier = tree_tier($leaf["order_key"]);
 
 					if ($leaf["host_id"] > 0) {
-						$dhtml_tree[$i] = "ou" . ($tier) . " = insFld(ou" . ($tier-1) . ", gFld(\"<strong>Host:</strong> " . addslashes($leaf["hostname"]) . "\", \"graph_view.php?action=tree&tree_id=" . $tree["id"] . "&leaf_id=" . $leaf["id"] . "\"))\n";
+						$dhtml_tree[$i] = "ou" . ($tier) . " = insFld(ou" . ($tier-1) . ", gFld(\"<strong>Device:</strong> " . addslashes($leaf["hostname"]) . "\", \"graph_view.php?action=tree&tree_id=" . $tree["id"] . "&leaf_id=" . $leaf["id"] . "\"))\n";
 						if (read_graph_config_option("expand_hosts") == "on") {
 							if ($leaf["host_grouping_type"] == HOST_GROUPING_GRAPH_TEMPLATE) {
 								$graph_templates = db_fetch_assoc("select
@@ -500,7 +500,7 @@ function grow_right_pane_tree($tree_id, $leaf_id, $host_group_data) {
 
 	if (!empty($tree_name)) { $title .= $title_delimeter . "<strong>" . _("Tree:") . "</strong> $tree_name"; $title_delimeter = "-> "; }
 	if (!empty($leaf_name)) { $title .= $title_delimeter . "<strong>" . _("Leaf:") . "</strong> $leaf_name"; $title_delimeter = "-> "; }
-	if (!empty($host_name)) { $title .= $title_delimeter . "<strong>" . _("Host:") . "</strong> $host_name"; $title_delimeter = "-> "; }
+	if (!empty($host_name)) { $title .= $title_delimeter . "<strong>" . _("Device:") . "</strong> $host_name"; $title_delimeter = "-> "; }
 	if (!empty($host_group_data_name)) { $title .= $title_delimeter . " $host_group_data_name"; $title_delimeter = "-> "; }
 
 	print "<table width='98%' align='center' cellpadding='3'>";

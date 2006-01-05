@@ -261,7 +261,7 @@ function item_edit() {
 	case TREE_ITEM_TYPE_HOST:
 		form_alternate_row_color($colors["form_alternate1"],$colors["form_alternate2"],0); ?>
 			<td width="50%">
-				<font class="textEditTitle"><?php echo _("Host"); ?></font><br>
+				<font class="textEditTitle"><?php echo _("Device"); ?></font><br>
 				<?php echo _("Choose a host here to add it to the tree."); ?>
 			</td>
 			<td>
@@ -407,8 +407,8 @@ function tree_edit() {
 					print "<td bgcolor='#$row_color'>$transparent_indent<a href='tree.php?action=item_edit&tree_id=" . $_GET["id"] . "&id=" . $leaf["id"] . "'><strong>" . $leaf["title"] . "</strong></a> (<a href='tree.php?action=item_edit&tree_id=" . $_GET["id"] . "&parent_id=" . $leaf["id"] . "'>Add</a>)</td>\n";
 					print "<td bgcolor='#$row_color'>Heading</td>";
 				}elseif ($leaf["host_id"] > 0) {
-					print "<td bgcolor='#$row_color'>$transparent_indent<a href='tree.php?action=item_edit&tree_id=" . $_GET["id"] . "&id=" . $leaf["id"] . "'><strong>Host:</strong> " . $leaf["hostname"] . "</a></td>\n";
-					print "<td bgcolor='#$row_color'>Host</td>";
+					print "<td bgcolor='#$row_color'>$transparent_indent<a href='tree.php?action=item_edit&tree_id=" . $_GET["id"] . "&id=" . $leaf["id"] . "'><strong>Device:</strong> " . $leaf["hostname"] . "</a></td>\n";
+					print "<td bgcolor='#$row_color'>Device</td>";
 				}
 
 				if ( ((isset($sort_cache{$tier-1})) && ($sort_cache{$tier-1} != TREE_ORDERING_NONE)) || ($tree["sort_type"] != TREE_ORDERING_NONE) )  {

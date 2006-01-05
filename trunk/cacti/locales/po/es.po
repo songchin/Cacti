@@ -1175,11 +1175,11 @@ msgid "AVAIL: Availability cheking disabled for host"
 msgstr "DISP: Checado de disponibilidad deshabilitada para el equipo"
 
 #: ../lib/poller.php:753
-msgid "HOST EVENT: Device is DOWN Message: "
+msgid "DEVICE EVENT: Device is DOWN Message: "
 msgstr "EVENTO DE EQUIPO: El equipo NO RESPONDE Mensaje:"
 
 #: ../lib/poller.php:755
-msgid "HOST EVENT: Device Returned from DOWN State"
+msgid "DEVICE EVENT: Device Returned from DOWN State"
 msgstr "EVENTO DE EQUIPO: El equipo se Recupero de NO RESPONDER"
 
 #: ../lib/ping.php:95
@@ -1434,7 +1434,7 @@ msgid "Leaf:"
 msgstr "Rama:"
 
 #: ../lib/html_tree.php:390
-msgid "Host:"
+msgid "Device:"
 msgstr "Equipo:"
 
 #: ../lib/html_tree.php:446
@@ -3062,7 +3062,7 @@ msgid "Choose a new host for these data sources:"
 msgstr "Seleccione un nuevo equipo para estas fuentes de información:"
 
 #: ../data_sources.php:302 ../graphs.php:314
-msgid "New Host:"
+msgid "New Device:"
 msgstr "Nuevo equipo:"
 
 #: ../data_sources.php:309

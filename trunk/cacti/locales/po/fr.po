@@ -855,7 +855,7 @@ msgid "Choose a new host for these data sources:"
 msgstr "Choisissez une nouvelle machine pour ces sources de donnée :"
 
 #: ../data_sources.php:302 ../graphs.php:314
-msgid "New Host:"
+msgid "New Device:"
 msgstr "Nouvelle machine :"
 
 #: ../data_sources.php:309
@@ -6101,7 +6101,7 @@ msgid "Leaf:"
 msgstr "Feuille :"
 
 #: ../lib/html_tree.php:390
-msgid "Host:"
+msgid "Device:"
 msgstr "Machine :"
 
 #: ../lib/html_tree.php:446
@@ -6221,11 +6221,11 @@ msgid "AVAIL: Availability cheking disabled for host"
 msgstr "Détection de la disponibilité désactivée pour la machine."
 
 #: ../lib/poller.php:753
-msgid "HOST EVENT: Device is DOWN Message: "
+msgid "DEVICE EVENT: Device is DOWN Message: "
 msgstr ""
 
 #: ../lib/poller.php:755
-msgid "HOST EVENT: Device Returned from DOWN State"
+msgid "DEVICE EVENT: Device Returned from DOWN State"
 msgstr ""
 
 #: ../lib/rrd.php:71 ../lib/rrd.php:302

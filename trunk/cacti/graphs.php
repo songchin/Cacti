@@ -363,12 +363,12 @@ function form_actions() {
 				</td>
 			</tr>\n
 			";
-	}elseif ($_POST["drp_action"] == "5") { /* change host */
+	}elseif ($_POST["drp_action"] == "5") { /* change device */
 		print "	<tr>
 				<td class='textArea' bgcolor='#" . $colors["form_alternate1"] . "'>
 					<p>" . _("Choose a new host for these graphs:") . "</p>
 					<p>$graph_list</p>
-					<p><strong>" . _("New Host:") . "</strong><br>"; form_dropdown("host_id",db_fetch_assoc("select id,CONCAT_WS('',description,' (',hostname,')') as name from host order by description,hostname"),"name","id","","","0"); print "</p>
+					<p><strong>" . _("New Device:") . "</strong><br>"; form_dropdown("host_id",db_fetch_assoc("select id,CONCAT_WS('',description,' (',hostname,')') as name from host order by description,hostname"),"name","id","","","0"); print "</p>
 				</td>
 			</tr>\n
 			";

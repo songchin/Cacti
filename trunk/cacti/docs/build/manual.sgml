@@ -2612,7 +2612,7 @@ print int(rand(10));</programlisting>
 						</listitem>
 						<listitem>
 							<para>
-								Host: None
+								Device: None
 							</para>
 						</listitem>
 						<listitem>

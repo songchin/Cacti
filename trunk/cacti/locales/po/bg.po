@@ -1146,11 +1146,11 @@ msgid "AVAIL: Availability cheking disabled for host"
 msgstr ""
 
 #: ../lib/poller.php:753
-msgid "HOST EVENT: Device is DOWN Message: "
+msgid "DEVICE EVENT: Device is DOWN Message: "
 msgstr ""
 
 #: ../lib/poller.php:755
-msgid "HOST EVENT: Device Returned from DOWN State"
+msgid "DEVICE EVENT: Device Returned from DOWN State"
 msgstr ""
 
 #: ../lib/ping.php:95
@@ -1398,7 +1398,7 @@ msgid "Leaf:"
 msgstr ""
 
 #: ../lib/html_tree.php:390
-msgid "Host:"
+msgid "Device:"
 msgstr ""
 
 #: ../lib/html_tree.php:446
@@ -2880,7 +2880,7 @@ msgid "Choose a new host for these data sources:"
 msgstr ""
 
 #: ../data_sources.php:302 ../graphs.php:314
-msgid "New Host:"
+msgid "New Device:"
 msgstr ""
 
 #: ../data_sources.php:309

@@ -751,9 +751,9 @@ function update_host_status($poller_id, $status, $host_id, &$hosts, &$ping, $pin
 	/* if there is supposed to be an event generated, do it */
 	if ($issue_log_message) {
 		if ($hosts[$host_id]["status"] == HOST_DOWN) {
-			api_log_log(_("HOST EVENT: Device is DOWN Message: ") . $hosts[$host_id]["status_last_error"], SEV_ERROR, FACIL_POLLER, "", $poller_id, $host_id, $print_data_to_stdout);
+			api_log_log(_("DEVICE EVENT: Device is DOWN Message: ") . $hosts[$host_id]["status_last_error"], SEV_ERROR, FACIL_POLLER, "", $poller_id, $host_id, $print_data_to_stdout);
 		} else {
-			api_log_log(_("HOST EVENT: Device Returned from DOWN State"), SEV_NOTICE, FACIL_POLLER, "", $poller_id, $host_id, $print_data_to_stdout);
+			api_log_log(_("DEVICE EVENT: Device Returned from DOWN State"), SEV_NOTICE, FACIL_POLLER, "", $poller_id, $host_id, $print_data_to_stdout);
 		}
 	}
 
