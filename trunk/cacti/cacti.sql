@@ -4,59 +4,94 @@
 -- ------------------------------------------------------
 -- Server version	4.0.25
 
+
 --
--- Table structure for table `auth_group`
+-- Table structure for table `auth_control`
 --
 
-CREATE TABLE auth_group (
+CREATE TABLE auth_control (
   id mediumint(8) unsigned NOT NULL auto_increment,
-  group_name varchar(100) NOT NULL default '',
-  description text,
-  updated_by varchar(50) NOT NULL default '',
+  name varchar(100) NOT NULL default '',
+  object_type int(8) unsigned NOT NULL default '0',
+  enabled int(1) unsigned NOT NULL default '1',
   updated_when datetime NOT NULL default '0000-00-00 00:00:00',
-  created_by varchar(50) NOT NULL default '',
+  updated_by varchar(100) NOT NULL default '',
   created_when datetime NOT NULL default '0000-00-00 00:00:00',
+  created_by varchar(100) NOT NULL default '',
   PRIMARY KEY  (id),
-  KEY group_name (group_name)
+  KEY name (name),
+  KEY enabled (enabled),
+  KEY object_type (object_type)
 ) TYPE=MyISAM;
 
 --
--- Dumping data for table `auth_group`
+-- Dumping data for table `auth_control`
 --
 
 
 --
--- Table structure for table `auth_group_graph_perms`
+-- Table structure for table `auth_data`
 --
 
-CREATE TABLE auth_group_graph_perms (
+CREATE TABLE auth_data (
   id mediumint(8) unsigned NOT NULL auto_increment,
-  group_id mediumint(8) unsigned NOT NULL default '0',
+  control_id mediumint(8) unsigned NOT NULL default '0',
+  name varchar(100) NOT NULL default '',
+  enable_user_edit int(1) unsigned NOT NULL default '0',
+  plugin_id mediumint(8) unsigned NOT NULL default '0',
+  category mediumint(8) unsigned NOT NULL default '0',
+  value varchar(255) default NULL,
+  updated_when datetime NOT NULL default '0000-00-00 00:00:00',
+  updated_by varchar(100) NOT NULL default '',
+  created_when datetime NOT NULL default '0000-00-00 00:00:00',
+  created_by varchar(100) NOT NULL default '',
+  PRIMARY KEY  (id),
+  KEY control_id (control_id),
+  KEY name (name),
+  KEY plugin_id (plugin_id),
+  KEY category (category)
+) TYPE=MyISAM;
+
+--
+-- Dumping data for table `auth_data`
+--
+
+
+--
+-- Table structure for table `auth_graph_perms`
+--
+
+CREATE TABLE auth_graph_perms (
+  id mediumint(8) unsigned NOT NULL auto_increment,
   item_id mediumint(8) unsigned NOT NULL default '0',
   type mediumint(8) unsigned NOT NULL default '0',
+  control_id mediumint(8) unsigned NOT NULL default '0',
   PRIMARY KEY  (id),
-  KEY group_id (group_id,item_id,type)
+  KEY item_id (item_id),
+  KEY type (type),
+  KEY control_id (control_id)
 ) TYPE=MyISAM;
 
 --
--- Dumping data for table `auth_group_graph_perms`
+-- Dumping data for table `auth_graph_perms`
 --
 
 
 --
--- Table structure for table `auth_group_perm`
+-- Table structure for table `auth_link`
 --
 
-CREATE TABLE auth_group_perm (
+CREATE TABLE auth_link (
   id mediumint(8) unsigned NOT NULL auto_increment,
-  group_id mediumint(8) unsigned NOT NULL default '0',
-  perm_id mediumint(8) unsigned NOT NULL default '0',
+  control_id mediumint(8) unsigned NOT NULL default '0',
+  parent_id mediumint(8) unsigned NOT NULL default '0',
   PRIMARY KEY  (id),
-  KEY group_id (group_id,perm_id)
+  KEY control_id (control_id),
+  KEY parent_id (parent_id)
 ) TYPE=MyISAM;
 
 --
--- Dumping data for table `auth_group_perm`
+-- Dumping data for table `auth_link`
 --
 
 
@@ -66,12 +101,14 @@ CREATE TABLE auth_group_perm (
 
 CREATE TABLE auth_perm (
   id mediumint(8) unsigned NOT NULL auto_increment,
-  perm_name varchar(100) NOT NULL default '',
-  description text,
+  name varchar(100) NOT NULL default '',
+  description text NOT NULL,
   category varchar(100) default NULL,
   plugin_id mediumint(8) unsigned NOT NULL default '0',
   PRIMARY KEY  (id),
-  KEY perm_name (perm_name,category,plugin_id)
+  KEY name (name),
+  KEY plugin_id (plugin_id),
+  KEY category (category)
 ) TYPE=MyISAM;
 
 --
@@ -80,122 +117,23 @@ CREATE TABLE auth_perm (
 
 
 --
--- Table structure for table `auth_user`
+-- Table structure for table `auth_perm_link`
 --
 
-CREATE TABLE auth_user (
+CREATE TABLE auth_perm_link (
   id mediumint(8) unsigned NOT NULL auto_increment,
-  username varchar(50) NOT NULL default '',
-  password varchar(50) NOT NULL default '',
-  full_name varchar(100) NOT NULL default '',
-  enabled int(1) unsigned NOT NULL default '1',
-  password_expire_length mediumint(9) unsigned NOT NULL default '0',
-  password_expire_change datetime NOT NULL default '0000-00-00 00:00:00',
-  last_login datetime default '0000-00-00 00:00:00',
-  last_login_ip varchar(40) default NULL,
-  force_password_change int(1) NOT NULL default '0',
-  updated_when datetime NOT NULL default '0000-00-00 00:00:00',
-  updated_by varchar(50) NOT NULL default '',
-  created_when datetime NOT NULL default '0000-00-00 00:00:00',
-  created_by varchar(50) NOT NULL default '',
-  PRIMARY KEY  (id),
-  KEY username (username,enabled)
-) TYPE=MyISAM;
-
---
--- Dumping data for table `auth_user`
---
-
-
---
--- Table structure for table `auth_user_contacts`
---
-
-CREATE TABLE auth_user_contacts (
-  id mediumint(8) unsigned NOT NULL auto_increment,
-  user_id mediumint(8) unsigned NOT NULL default '0',
-  name varchar(100) NOT NULL default '',
-  value varchar(255) NOT NULL default '',
-  PRIMARY KEY  (id),
-  KEY user_id (user_id,name)
-) TYPE=MyISAM;
-
---
--- Dumping data for table `auth_user_contacts`
---
-
-
---
--- Table structure for table `auth_user_graph_perms`
---
-
-CREATE TABLE auth_user_graph_perms (
-  id mediumint(8) unsigned NOT NULL auto_increment,
-  item_id mediumint(8) unsigned NOT NULL default '0',
-  type mediumint(8) unsigned NOT NULL default '0',
-  user_id mediumint(8) unsigned NOT NULL default '0',
-  PRIMARY KEY  (id),
-  KEY item_id (item_id,type,user_id)
-) TYPE=MyISAM;
-
---
--- Dumping data for table `auth_user_graph_perms`
---
-
-
---
--- Table structure for table `auth_user_group`
---
-
-CREATE TABLE auth_user_group (
-  id mediumint(8) unsigned NOT NULL auto_increment,
-  user_id mediumint(8) unsigned NOT NULL default '0',
-  group_id mediumint(8) unsigned NOT NULL default '0',
-  PRIMARY KEY  (id),
-  KEY user_id (user_id,group_id)
-) TYPE=MyISAM;
-
---
--- Dumping data for table `auth_user_group`
---
-
-
---
--- Table structure for table `auth_user_perms`
---
-
-CREATE TABLE auth_user_perms (
-  id mediumint(8) unsigned NOT NULL auto_increment,
-  user_id mediumint(8) unsigned NOT NULL default '0',
+  control_id mediumint(8) unsigned NOT NULL default '0',
   perm_id mediumint(8) unsigned NOT NULL default '0',
   PRIMARY KEY  (id),
-  KEY user_id (user_id,perm_id)
+  KEY control_id (control_id),
+  KEY perm_id (perm_id)
 ) TYPE=MyISAM;
 
 --
--- Dumping data for table `auth_user_perms`
+-- Dumping data for table `auth_perm_link`
 --
 
 
---
--- Table structure for table `auth_user_settings`
---
-
-CREATE TABLE auth_user_settings (
-  id mediumint(8) unsigned NOT NULL auto_increment,
-  user_id mediumint(8) unsigned NOT NULL default '0',
-  name varchar(50) NOT NULL default '',
-  value varchar(100) NOT NULL default '',
-  enable_user_edit int(1) unsigned NOT NULL default '0',
-  plugin_id mediumint(8) unsigned NOT NULL default '0',
-  PRIMARY KEY  (id),
-  KEY user_id (user_id,name),
-  KEY plugin_id (plugin_id)
-) TYPE=MyISAM;
-
---
--- Dumping data for table `auth_user_settings`
---
 
 --
 -- Table structure for table `data_input`
