@@ -23,7 +23,7 @@
 */
 
 /* Check for config.php error otherwise */
-if (file_exists("./include/config.php") == false) {
+if (!file_exists(dirname(__FILE__) . "/config.php")) {
 	print "<html><body><font size=+1 color=red><b>" . _("Cacti Configuration Error: include/config.php file was not found.  Please make sure that you have renamed include/config.php.dist to include/config.php") . "</b></font></body></html>\n";
 	exit;
 }
