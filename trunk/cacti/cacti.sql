@@ -1242,7 +1242,7 @@ CREATE TABLE host (
   avg_pkt_loss decimal(9,5) default '0.00000',
   total_polls int(12) unsigned default '0',
   failed_polls int(12) unsigned default '0',
-  availability decimal(7,5) NOT NULL default '100.00000',
+  availability decimal(8,5) NOT NULL default '100.00000',
   PRIMARY KEY  (id)
 ) TYPE=MyISAM;
 
