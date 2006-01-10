@@ -33,13 +33,35 @@ $package_hash_counter = 0;
 function &package_payload_export($package_id) {
 	require_once(CACTI_BASE_PATH . "/lib/package/package_info.php");
 
-	$_xml = "";
+	$xml = "";
 
+	/* fetch an array that represents the complete dependencies of this package's contents */
 	$dep_array = package_dependencies_list("package", $package_id, array());
 
-	print_a($dep_array);
-	//echo "<pre>" . htmlspecialchars($_xml) . "</pre>";
-	return $_xml;
+	if (sizeof($dep_array) > 0) {
+		foreach ($dep_array as $dep_category_name => $dep_category) {
+			if (sizeof($dep_category) > 0) {
+				foreach ($dep_category as $dep_item_id) {
+					/* convert the item into xml based on the its type */
+					if ($dep_category_name == "graph_template") {
+						$xml .= package_graph_template_export($dep_item_id);
+					}else if ($dep_category_name == "data_template") {
+						$xml .= package_data_template_export($dep_item_id);
+					}else if ($dep_category_name == "script") {
+						$xml .= package_script_export($dep_item_id);
+					}else if ($dep_category_name == "data_query") {
+						$xml .= package_data_query_export($dep_item_id);
+					}else if ($dep_category_name == "round_robin_archive") {
+						$xml .= package_rra_export($dep_item_id);
+					}
+				}
+			}
+		}
+	}
+
+	$xml = package_xml_tag_get("payload", $xml, 1, true);
+
+	return $xml;
 }
 
 function &package_dependencies_list($type, $id, $dep_array) {
@@ -88,14 +110,14 @@ function &package_dependencies_list($type, $id, $dep_array) {
 			/* dependency: script */
 			$script_id = api_data_template_input_field_value_get($id, "script_id");
 
-			if (($script_id !== false) && (!in_array($script_id, $dep_array["script"]))) {
+			if (($script_id != false) && (db_number_validate($script_id)) && (!in_array($script_id, $dep_array["script"]))) {
 				$dep_array["script"][] = $script_id;
 			}
 
 			/* dependency: data query */
 			$data_query_id = api_data_template_input_field_value_get($id, "data_query_id");
 
-			if (($data_query_id !== false) && (!in_array($data_query_id, $dep_array["data_query"]))) {
+			if (($data_query_id !== false) && (db_number_validate($data_query_id)) && (!in_array($data_query_id, $dep_array["data_query"]))) {
 				$dep_array["data_query"][] = $data_query_id;
 			}
 
@@ -575,7 +597,7 @@ function &package_rra_export($rra_id, $indent = 2) {
 	return $xml;
 }
 
-function &package_xml_tag_get($name, $value, $indent_num, $prepend_nl = false) {
+function &package_xml_tag_get($name, &$value, $indent_num, $prepend_nl = false) {
 	/* the variable assignment is to make php happy */
 	$hash = str_repeat("\t", $indent_num) . "<$name>" . ($prepend_nl === true ? "\n" : "") . $value . ($prepend_nl === true ? str_repeat("\t", $indent_num) : "") . "</$name>\n";
 

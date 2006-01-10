@@ -31,10 +31,10 @@ require_once(CACTI_BASE_PATH . "/include/log/log_arrays.php");
 
 
 /**
- * Logs a message to the configured logging system 
+ * Logs a message to the configured logging system
  *
- * This function is designed to handle logging for the cacti system.  
- * 
+ * This function is designed to handle logging for the cacti system.
+ *
  * @param string $message the message your would like to log
  * @param int $severity the severity you would like to log at, check logging constants for values, Default = SEV_INFO
  * @param int $facility the facility you would like to log in, check logging constants for values. Default = FACIL_WEBUI
@@ -42,7 +42,7 @@ require_once(CACTI_BASE_PATH . "/include/log/log_arrays.php");
  * @param int $poller_id the poller id generating the log message
  * @param int $host_id the poller id generating the log message
  * @param bool $output output messages to stdout
- * @return bool true 
+ * @return bool true
  */
 function api_log_log($message, $severity = SEV_INFO, $facility = FACIL_WEBUI, $plugin = "", $poller_id = 0, $host_id = 0, $output = false) {
 	global $cnn_id;
@@ -107,7 +107,7 @@ function api_log_log($message, $severity = SEV_INFO, $facility = FACIL_WEBUI, $p
 
 	/* Log to Syslog Server */
 	if ((log_read_config_option("log_dest_syslog") == "on") && ($severity >= $log_severity)) {
-		api_log_syslog(log_read_config_option("log_syslog_server"), log_read_config_option("log_syslog_port"), log_read_config_option("log_syslog_facility"), api_log_syslog_severity_get($severity), api_log_severity_get($severity) . ": " . api_log_facility_get($facility) . ": " . $message); 
+		api_log_syslog(log_read_config_option("log_syslog_server"), log_read_config_option("log_syslog_port"), log_read_config_option("log_syslog_facility"), api_log_syslog_severity_get($severity), api_log_severity_get($severity) . ": " . api_log_facility_get($facility) . ": " . $message);
 	}
 
 
@@ -122,12 +122,12 @@ function api_log_log($message, $severity = SEV_INFO, $facility = FACIL_WEBUI, $p
 
 
 /**
- * Manages the cacti system log 
+ * Manages the cacti system log
  *
- * Maintains the cacti system log based on system settings  
- * 
+ * Maintains the cacti system log based on system settings
+ *
  * @param bool $print_data_to_stdout display log message to stdout
- * @return bool true 
+ * @return bool true
  */
 function api_log_maintain($print_data_to_stdout) {
 	/* read current configuration options */
@@ -175,11 +175,11 @@ function api_log_maintain($print_data_to_stdout) {
 
 
 /**
- * Truncates the cacti system log 
+ * Truncates the cacti system log
  *
- * Truncates the cacti system log and logs that it occured  
- * 
- * @return bool true 
+ * Truncates the cacti system log and logs that it occured
+ *
+ * @return bool true
  */
 function api_log_truncate() {
 	db_execute("TRUNCATE TABLE log");
@@ -197,12 +197,12 @@ function api_log_truncate() {
  */
 
 /**
- * Reads cacti configuration settings 
+ * Reads cacti configuration settings
  *
  * Finds the current value of a cacti configuration setting
- * 
+ *
  * @param string $config_name configuration variable to retrieve value
- * @return bool true 
+ * @return bool true
  */
 function log_read_config_option($config_name) {
 	global $cnn_id;
@@ -225,10 +225,10 @@ function log_read_config_option($config_name) {
 
 
 /**
- * Returns the system (syslog/eventlog) severity level 
+ * Returns the system (syslog/eventlog) severity level
  *
- * Given a Severity Level constant, return the php syslog constant 
- * 
+ * Given a Severity Level constant, return the php syslog constant
+ *
  * @param int $severity cacti severity level
  * @return int php syslog severity level
  */
@@ -276,7 +276,7 @@ function api_log_system_severity_get($severity) {
  * Returns human readable facility text
  *
  * Given a facility constant, return human readable text
- * 
+ *
  * @param int $facility cacti facility constant
  * @return string cacti facility in human readable text
  */
@@ -317,7 +317,7 @@ function api_log_facility_get($facility) {
  * Returns human readable severity text
  *
  * Given a severity constant, return human readable text
- * 
+ *
  * @param int $severity cacti severity constant
  * @return string cacti severity in human readable text
  */
@@ -361,7 +361,7 @@ function api_log_severity_get($severity) {
  * Returns syslog severity value
  *
  * Given a severity constant, return syslog severity value
- * 
+ *
  * @param int $severity cacti severity constant
  * @return int syslog severity value
  */
@@ -407,7 +407,7 @@ function api_log_syslog_severity_get($severity) {
  * Send syslog message to a syslog server
  *
  * Generates and sends a syslog packet to a syslog server
- * 
+ *
  * @param string $syslog_server Server to send syslog messages to
  * @param int $syslog_server_port Port to send to on syslog server
  * @param int $syslog_facility Syslog facility value, refer to syslog log constants
@@ -417,10 +417,10 @@ function api_log_syslog_severity_get($severity) {
  */
 function api_log_syslog($syslog_server, $syslog_server_port, $syslog_facility, $syslog_severity, $syslog_message) {
 	global $cnn_id;
-	
+
 	/* Set syslog tag */
 	$syslog_tag = "cacti";
-	
+
 	/* Get the pid */
 	$pid = getmypid();
 
@@ -448,7 +448,7 @@ function api_log_syslog($syslog_server, $syslog_server_port, $syslog_facility, $
 	if (($syslog_severity > 7) || ($syslog_severity < 0)) {
 		$syslog_severity = SYSLOG_INFO;
 	}
-	
+
 	/* Make syslog packet */
 	$host = $_SERVER["SERVER_NAME"];
 	$time = time();
@@ -479,10 +479,28 @@ function api_log_syslog($syslog_server, $syslog_server_port, $syslog_facility, $
 		$cnn_id->Execute($sql);
 		return false;
 	}
-	
+
 	return true;
 
 }
 
+
+/**
+ * Returns the name of the function *before* the calling function
+ *
+ * Returns the name of the function *before* the calling function. This is useful in
+ * situations where you have a generic library and want to log the name of the function
+ * that called it.
+ *
+ * @return string the function name from the call stack
+ */
+function api_log_last_function_get() {
+	$backtrace = debug_backtrace();
+	if (sizeof($backtrace) < 3) {
+		return $backtrace[1]["function"];
+	}else{
+		return $backtrace[2]["function"];
+	}
+}
 
 ?>

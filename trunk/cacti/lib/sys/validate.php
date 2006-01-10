@@ -28,4 +28,41 @@ function validate_id_die($argument_value, $argument_name, $allow_empty = false) 
 	}
 }
 
+function db_number_validate($number, $allow_empty = false) {
+	$number_str = strval($number);
+
+	/* only allow whole digit numbers */
+	for ($i=0; $i<strlen($number_str); $i++) {
+		if ((ord(substr($number_str, $i, 1)) < 48) || (ord(substr($number_str, $i, 1)) > 57)) {
+			api_log_log("Invalid number '$number' in " . api_log_last_function_get() . "()", SEV_WARNING);
+			return false;
+		}
+	}
+
+	if (($allow_empty === false) && (empty($number))) {
+		api_log_log("Invalid (empty) number '$number' in " . api_log_last_function_get() . "()", SEV_WARNING);
+		return false;
+	}else{
+		return true;
+	}
+}
+
+function db_order_column_validate($column_name) {
+	if (preg_match("/^[a-z_]+$/", $column_name)) {
+		return true;
+	}else{
+		api_log_log("Invalid order column name '$column_name' in " . api_log_last_function_get() . "()", SEV_WARNING);
+		return false;
+	}
+}
+
+function db_order_direction_validate($direction) {
+	if (($direction == "asc") || ($direction == "desc")) {
+		return true;
+	}else{
+		api_log_log("Invalid order direction '$direction' in " . api_log_last_function_get() . "()", SEV_WARNING);
+		return false;
+	}
+}
+
 ?>

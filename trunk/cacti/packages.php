@@ -99,12 +99,7 @@ function package() {
 	form_hidden_box("action_post", "package_list");
 	form_end();
 
-	package_payload_export("1");
-	echo "<pre>" . htmlspecialchars(package_graph_template_export("1")) . "</pre>";
-	echo "<pre>" . htmlspecialchars(package_data_template_export("6")) . "</pre>";
-	echo "<pre>" . htmlspecialchars(package_data_query_export("1")) . "</pre>";
-	echo "<pre>" . htmlspecialchars(package_script_export("10")) . "</pre>";
-	echo "<pre>" . htmlspecialchars(package_rra_export("1")) . "</pre>";
+	echo "<pre>" . htmlspecialchars(package_payload_export("1")) . "</pre>";
 
 	?>
 
