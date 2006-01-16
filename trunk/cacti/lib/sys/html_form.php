@@ -114,8 +114,8 @@ function field_register_html_checkboxes(&$field_list, $field_name_format = "|fie
 
 /* draw_edit_form - draws an html edit form
    @arg $array - an array that contains all of the information needed to draw
-     the html form. see the arrays contained in include/global_settings.php
-     for the extact syntax of this array */
+	the html form. see the arrays contained in include/global_settings.php
+	for the extact syntax of this array */
 function draw_edit_form($array) {
 	global $colors;
 
@@ -217,7 +217,7 @@ function draw_edit_form($array) {
 /* draw_edit_control - draws a single control to be used on an html edit form
    @arg $field_name - the name of the control
    @arg $field_array - an array containing data for this control. see include/global_form.php
-     for more specific syntax */
+	for more specific syntax */
 function draw_edit_control($field_name, &$field_array) {
 	require_once(CACTI_BASE_PATH . "/lib/sys/html_tree.php");
 
@@ -309,14 +309,14 @@ function draw_edit_control($field_name, &$field_array) {
    @arg $field_name - the name of this form element
    @arg $form_previous_value - the current value of this form element
    @arg $form_default_value - the value of this form element to use if there is
-     no current value available
+	no current value available
    @arg $form_max_length - the maximum number of characters that can be entered
-     into this textbox
+	into this textbox
    @arg $form_size - the size (width) of the textbox
    @arg $type - the type of textbox, either 'text' or 'password'
    @arg $current_id - used to determine if a current value for this form element
-     exists or not. a $current_id of '0' indicates that no current value exists,
-     a non-zero value indicates that a current value does exist */
+	exists or not. a $current_id of '0' indicates that no current value exists,
+	a non-zero value indicates that a current value does exist */
 function form_text_box($field_name, $form_previous_value, $form_default_value, $form_max_length, $form_size = 30, $type = "text", $current_id = 0, $css_class = "") {
 	if (($form_previous_value == "") && (empty($current_id))) {
 		$form_previous_value = $form_default_value;
@@ -403,7 +403,7 @@ function form_text_box_sv($field_name, $values_array, $url_moveup, $url_movedown
    @arg $field_name - the name of this form element
    @arg $form_previous_value - the current value of this form element
    @arg $form_default_value - the value of this form element to use if there is
-     no current value available */
+	no current value available */
 function form_hidden_box($field_name, $form_previous_value, $form_default_value = "") {
 	if ($form_previous_value == "") {
 		$form_previous_value = $form_default_value;
@@ -415,19 +415,19 @@ function form_hidden_box($field_name, $form_previous_value, $form_default_value 
 /* form_dropdown - draws a standard html dropdown box
    @arg $field_name - the name of this form element
    @arg $form_data - an array containing data for this dropdown. it can be formatted
-     in one of two ways:
-     $array["id"] = "value";
-     -- or --
-     $array[0]["id"] = 43;
-     $array[0]["name"] = "Red";
+	in one of two ways:
+	$array["id"] = "value";
+	-- or --
+	$array[0]["id"] = 43;
+	$array[0]["name"] = "Red";
    @arg $column_display - used to indentify the key to be used for display data. this
-     is only applicable if the array is formatted using the second method above
+	is only applicable if the array is formatted using the second method above
    @arg $column_id - used to indentify the key to be used for id data. this
-     is only applicable if the array is formatted using the second method above
+	is only applicable if the array is formatted using the second method above
    @arg $form_previous_value - the current value of this form element
    @arg $form_none_entry - the name to use for a default 'none' element in the dropdown
    @arg $form_default_value - the value of this form element to use if there is
-     no current value available
+	no current value available
    @arg $css_style - any css that needs to be applied to this form element */
 function form_dropdown($field_name, $form_data, $column_display, $column_id, $form_previous_value, $form_none_entry, $form_default_value, $css_style = "", $trim_display_length = 0, $js_onchange = "") {
 	if ($form_previous_value == "") {
@@ -455,10 +455,10 @@ function form_dropdown($field_name, $form_data, $column_display, $column_id, $fo
    @arg $form_previous_value - the current value of this form element
    @arg $form_caption - the text to display to the right of the checkbox
    @arg $form_default_value - the value of this form element to use if there is
-     no current value available
+	no current value available
    @arg $current_id - used to determine if a current value for this form element
-     exists or not. a $current_id of '0' indicates that no current value exists,
-     a non-zero value indicates that a current value does exist */
+	exists or not. a $current_id of '0' indicates that no current value exists,
+	a non-zero value indicates that a current value does exist */
 function form_checkbox($field_name, $form_previous_value, $form_caption, $form_default_value, $current_id = 0, $js_onclick = "") {
 	if (($form_previous_value == "") && (empty($current_id))) {
 		$form_previous_value = $form_default_value;
@@ -483,7 +483,7 @@ function form_checkbox_marker($field_name) {
    @arg $form_current_value - the current value of this form element (element id)
    @arg $form_caption - the text to display to the right of the checkbox
    @arg $form_default_value - the value of this form element to use if there is
-     no current value available */
+	no current value available */
 function form_radio_button($field_name, $form_previous_value, $form_current_value, $form_caption, $form_default_value, $js_onclick = "") {
 	if ($form_previous_value == "") {
 		$form_previous_value = $form_default_value;
@@ -503,7 +503,7 @@ function form_radio_button($field_name, $form_previous_value, $form_current_valu
    @arg $form_rows - the number of rows in the text area box
    @arg $form_columns - the number of columns in the text area box
    @arg $form_default_value - the value of this form element to use if there is
-     no current value available */
+	no current value available */
 function form_text_area($field_name, $form_previous_value, $form_rows, $form_columns, $form_default_value) {
 	if ($form_previous_value == "") {
 		$form_previous_value = $form_default_value;
@@ -520,11 +520,11 @@ function form_text_area($field_name, $form_previous_value, $form_rows, $form_col
 /* form_multi_dropdown - draws a standard html multiple select dropdown
    @arg $field_name - the name of this form element
    @arg $array_display - an array containing display values for this dropdown. it must
-     be formatted like:
-     $array[id] = display;
+	be formatted like:
+	$array[id] = display;
    @arg $sql_previous_values - an array containing keys that should be marked as selected.
-     it must be formatted like:
-     $array[0][$column_id] = key
+	it must be formatted like:
+	$array[0][$column_id] = key
    @arg $column_id - the name of the key used to reference the keys above */
 function form_multi_dropdown($field_name, $array_display, $sql_previous_values, $column_id) {
 	print "<select name='$field_name" . "[]' id='$field_name" . "[]' multiple>\n";
@@ -550,13 +550,13 @@ function form_multi_dropdown($field_name, $array_display, $sql_previous_values, 
  */
 
 /* form_color_dropdown - draws a dropdown containing a list of colors that uses a bit
-     of css magic to make the dropdown item background color represent each color in
-     the list
+	of css magic to make the dropdown item background color represent each color in
+	the list
    @arg $field_name - the name of this form element
    @arg $form_previous_value - the current value of this form element
    @arg $form_none_entry - the name to use for a default 'none' element in the dropdown
    @arg $form_default_value - the value of this form element to use if there is
-     no current value available */
+	no current value available */
 function form_color_dropdown($field_name, $form_data, $form_previous_value, $form_none_entry, $form_default_value, $js_onchange = "") {
 	if ($form_previous_value == "") {
 		$form_previous_value = $form_default_value;
@@ -582,7 +582,7 @@ function form_color_dropdown($field_name, $form_data, $form_previous_value, $for
 }
 
 /* form_confirm - draws a table presenting the user with some choice and allowing
-     them to either proceed (delete) or cancel
+	them to either proceed (delete) or cancel
    @arg $body_text - the text to prompt the user with on this form
    @arg $cancel_url - the url to go to when the user clicks 'cancel'
    @arg $action_url - the url to go to when the user clicks 'delete' */
@@ -632,7 +632,7 @@ function form_message($title_text, $body_text, $ok_url) { ?>
 <?php }
 
 /* form_confirm_buttons - draws a cancel and delete button suitable for display
-     on a confirmation form
+	on a confirmation form
    @arg $cancel_url - the url to go to when the user clicks 'cancel'
    @arg $action_url - the url to go to when the user clicks 'delete' */
 function form_confirm_buttons($action_url, $cancel_url) { global $colors; ?>
@@ -645,10 +645,10 @@ function form_confirm_buttons($action_url, $cancel_url) { global $colors; ?>
 <?php }
 
 /* form_save_button - draws a (save|create) and cancel button at the bottom of
-     an html edit form
+	an html edit form
    @arg $cancel_url - the url to go to when the user clicks 'cancel'
    @arg $force_type - if specified, will force the 'action' button to be either
-     'save' or 'create'. otherwise this field should be properly auto-detected */
+	'save' or 'create'. otherwise this field should be properly auto-detected */
 function form_save_button($cancel_url, $button_name = "", $force_type = "") {
 	global $colors;
 
@@ -681,9 +681,9 @@ function form_save_button($cancel_url, $button_name = "", $force_type = "") {
 	<?php
 }
 
-function form_start($action, $name = "")
+function form_start($action, $name = "", $enc_multipart = false)
 {
-	echo "<form action='$action' method='post'" . ($name == "" ? "" : "name='$name'") . ">\n";
+	echo "<form action='$action' method='post'" . ($name == "" ? "" : " name='$name'") . ($enc_multipart == true ? " enctype='multipart/form-data'" : "") . ">\n";
 }
 
 function form_end()

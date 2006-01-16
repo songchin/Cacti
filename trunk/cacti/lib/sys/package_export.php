@@ -80,13 +80,13 @@ function &package_dependencies_list($type, $id, $dep_array) {
 	switch ($type) {
 		case 'package':
 			/* dependency: graph template */
-			$graph_templates = api_package_graph_templates_list($id);
+			$graph_templates = api_package_graph_template_list($id);
 
 			if (sizeof($graph_templates) > 0) {
-				foreach ($graph_templates as $graph_template_id) {
-					if (!in_array($graph_template_id, $dep_array["graph_template"])) {
-						$dep_array["graph_template"][] = $graph_template_id;
-						$dep_array = package_dependencies_list("graph_template", $graph_template_id, $dep_array);
+				foreach ($graph_templates as $graph_template) {
+					if (!in_array($graph_template["id"], $dep_array["graph_template"])) {
+						$dep_array["graph_template"][] = $graph_template["id"];
+						$dep_array = package_dependencies_list("graph_template", $graph_template["id"], $dep_array);
 					}
 				}
 			}
@@ -97,10 +97,10 @@ function &package_dependencies_list($type, $id, $dep_array) {
 			$data_templates = api_graph_template_data_template_list($id);
 
 			if (sizeof($data_templates) > 0) {
-				foreach ($data_templates as $data_template_id) {
-					if (!in_array($data_template_id, $dep_array["data_template"])) {
-						$dep_array["data_template"][] = $data_template_id;
-						$dep_array = package_dependencies_list("data_template", $data_template_id, $dep_array);
+				foreach ($data_templates as $data_template) {
+					if (!in_array($data_template["id"], $dep_array["data_template"])) {
+						$dep_array["data_template"][] = $data_template["id"];
+						$dep_array = package_dependencies_list("data_template", $data_template["id"], $dep_array);
 					}
 				}
 			}

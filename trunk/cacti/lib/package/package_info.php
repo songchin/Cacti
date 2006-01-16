@@ -60,11 +60,34 @@ function api_package_list($filter_array = "", $current_page = 0, $rows_per_page 
 		$sql_limit");
 }
 
-function api_package_graph_templates_list($package_id) {
+function api_package_get($package_id) {
 	/* sanity checks */
 	validate_id_die($package_id, "package_id");
 
-	return array_rekey(db_fetch_assoc("select graph_template_id from package_graph_template where package_id = " . sql_sanitize($package_id)), "", "graph_template_id");
+	return db_fetch_row("select * from package where id = " . sql_sanitize($package_id));
+}
+
+function api_package_graph_template_list($package_id) {
+	/* sanity checks */
+	validate_id_die($package_id, "package_id");
+
+	return db_fetch_assoc("select
+		graph_template.id,
+		graph_template.template_name
+		from graph_template,package_graph_template
+		where graph_template.id=package_graph_template.graph_template_id
+		and package_graph_template.package_id = " . sql_sanitize($package_id) . "
+		order by graph_template.template_name");
+}
+
+function api_package_author_list() {
+	return db_fetch_assoc("select * from package_author order by name");
+}
+
+function &api_package_metadata_type_list() {
+	require(CACTI_BASE_PATH . "/include/package/package_arrays.php");
+
+	return $package_metadata_types;
 }
 
 ?>

@@ -24,12 +24,32 @@
 
 require(dirname(__FILE__) . "/include/global.php");
 require_once(CACTI_BASE_PATH . "/lib/package/package_info.php");
+require_once(CACTI_BASE_PATH . "/lib/package/package_form.php");
+require_once(CACTI_BASE_PATH . "/lib/graph_template/graph_template_info.php");
 require_once(CACTI_BASE_PATH . "/lib/sys/package_export.php");
 
 /* set default action */
 if (!isset($_REQUEST["action"])) { $_REQUEST["action"] = ""; }
 
 switch ($_REQUEST["action"]) {
+	case 'save':
+		form_save();
+
+		break;
+	case 'new':
+		require_once(CACTI_BASE_PATH . "/include/top_header.php");
+
+		package_new();
+
+		require_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
+		break;
+	case 'edit':
+		require_once(CACTI_BASE_PATH . "/include/top_header.php");
+
+		package_edit();
+
+		require_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
+		break;
 	default:
 		require_once(CACTI_BASE_PATH . "/include/top_header.php");
 
@@ -37,6 +57,150 @@ switch ($_REQUEST["action"]) {
 
 		require_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
 		break;
+}
+
+function form_save() {
+	if ($_POST["action_post"] == "package_new") {
+		header("Location: packages.php?action=edit");
+	}
+}
+
+function package_new() {
+	form_start("packages.php", "form_package");
+
+	html_start_box("<strong>" . _("Template Packages") . "</strong> [new]");
+
+	_package_field__create_type("create_type", "new");
+
+	html_end_box();
+
+	form_hidden_box("action_post", "package_new");
+
+	form_save_button("packages.php", "save_package");
+}
+
+function package_edit() {
+	$_package_id = get_get_var_number("id");
+
+	if (empty($_package_id)) {
+		$header_label = "[new]";
+	}else{
+		$package = api_package_get($_package_id);
+
+		$header_label = "[new, from: " . $package["name"] . "]";
+	}
+
+	form_start("packages.php", "form_package", true);
+
+	/* ==================== Box: Template Packages ==================== */
+
+	html_start_box("<strong>" . _("Template Packages") . "</strong> $header_label");
+
+	_package_field__name("name", "", "0");
+	_package_field__description("description", "", "0");
+	_package_field__description_install("description_install", "", "0");
+	_package_field__category("category", "", "0");
+	_package_field__subcategory("subcategory", "", "0");
+	_package_field__vendor("vendor", "", "0");
+	_package_field__model("model", "", "0");
+	_package_field__author_hdr();
+	_package_field__author_type("author_type", "new", "0");
+	_package_author_field__name("author_name", "", "0");
+	_package_author_field__email("author_email", "", "0");
+	_package_author_field__user_forum("author_user_forum", "", "0");
+	_package_author_field__user_repository("author_user_repository", "", "0");
+	_package_author_type_js();
+
+	html_end_box();
+
+	/* ==================== Box: Associated Graph Templates ==================== */
+
+	html_start_box("<strong>" . _("Associated Graph Templates") . "</strong>");
+	html_header(array(_("Template Title")), 2);
+
+	?>
+	<tr class="content-row">
+		<td class="content-row" style="padding: 4px;">
+			Some Template
+		</td>
+		<td class="content-row" align="right" style="padding: 4px;">
+			<a href="dd"><img src="<?php echo html_get_theme_images_path("delete_icon_large.gif");?>" alt="<?php echo _("Delete Graph Template Association");?>" border="0" align="absmiddle"></a>
+		</td>
+	</tr>
+	<tr class="content-row">
+		<td class="content-row" style="padding: 4px;">
+			dffddsf
+		</td>
+		<td class="content-row" align="right" style="padding: 4px;">
+			<a href="dd"><img src="<?php echo html_get_theme_images_path("delete_icon_large.gif");?>" alt="<?php echo _("Delete Graph Template Association");?>" border="0" align="absmiddle"></a>
+		</td>
+	</tr>
+	<tr>
+		<td style="border-top: 1px solid #b5b5b5; padding: 1px;" colspan="2">
+			<table width="100%" cellpadding="2" cellspacing="0">
+				<tr>
+					<td>
+						Add graph template:
+						<?php form_dropdown("assoc_graph_template_id", api_graph_template_list(), "template_name", "id", "", "", "");?>
+					</td>
+					<td align="right">
+						&nbsp;<input type="image" src="<?php echo html_get_theme_images_path('button_add.gif');?>" alt="<?php echo _('Add');?>" name="assoc_graph_template_add" align="absmiddle">
+					</td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+
+	<?php
+
+	html_end_box();
+
+	/* ==================== Box: Associated Meta Data ==================== */
+
+	html_start_box("<strong>" . _("Associated Meta Data") . "</strong>");
+	html_header(array(_("Name"), _("Type")), 2);
+
+	?>
+	<tr class="content-row">
+		<td class="content-row" style="padding: 4px;">
+			Traffic Sample #1
+		</td>
+		<td class="content-row" style="padding: 4px;">
+			Screenshot
+		</td>
+		<td class="content-row" align="right" style="padding: 4px;">
+			<a href="dd"><img src="<?php echo html_get_theme_images_path("delete_icon_large.gif");?>" alt="<?php echo _("Delete Graph Template Association");?>" border="0" align="absmiddle"></a>
+		</td>
+	</tr>
+	<tr class="content-row">
+		<td class="content-row" style="padding: 4px;">
+			Fetch Octets Script
+		</td>
+		<td class="content-row" style="padding: 4px;">
+			Script
+		</td>
+		<td class="content-row" align="right" style="padding: 4px;">
+			<a href="dd"><img src="<?php echo html_get_theme_images_path("delete_icon_large.gif");?>" alt="<?php echo _("Delete Graph Template Association");?>" border="0" align="absmiddle"></a>
+		</td>
+	</tr>
+	<?php
+
+	html_header(array(_("Attach New Meta Data")), 3);
+
+	_package_metadata_field__type("metadata_type", "", "0");
+	_package_metadata_field__name("metadata_name", "", "0");
+	_package_metadata_field__description("metadata_description", "", "0");
+	_package_metadata_field__description_install("metadata_description_install", "", "0");
+	_package_metadata_field__required("metadata_required", "", "0");
+	_package_metadata_field__payload("metadata_payload", "", "0");
+	_package_metadata_field__add_button();
+	_package_metadata_field__type_js();
+
+	html_end_box();
+
+	form_hidden_box("action_post", "package_edit");
+
+	form_save_button("packages.php", "save_package");
 }
 
 function package() {
@@ -58,7 +222,7 @@ function package() {
 	form_start("packages.php");
 
 	$box_id = "1";
-	html_start_box("<strong>" . _("Template Packages") . "</strong>", "packages.php?action=edit");
+	html_start_box("<strong>" . _("Template Packages") . "</strong>", "packages.php?action=new");
 	html_header_checkbox(array(_("Name"), _("Author"), _("Category")), $box_id);
 
 	$i = 0;

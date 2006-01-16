@@ -102,13 +102,14 @@ function api_graph_template_data_template_list($graph_template_id) {
 	/* sanity checks */
 	validate_id_die($graph_template_id, "graph_template_id");
 
-	return array_rekey(
-		db_fetch_assoc("select distinct
-			data_template_item.data_template_id
-			from graph_template_item,data_template_item
-			where graph_template_item.data_template_item_id=data_template_item.id
-			and graph_template_item.graph_template_id = " . sql_sanitize($graph_template_id)),
-			"", "data_template_id");
+	return db_fetch_assoc("select distinct
+		data_template_item.data_template_id as id,
+		data_template.template_name
+		from graph_template_item,data_template_item,data_template
+		where graph_template_item.data_template_item_id=data_template_item.id
+		and data_template_item.data_template_id=data_template.id
+		and graph_template_item.graph_template_id = " . sql_sanitize($graph_template_id) . "
+		order by data_template.template_name");
 }
 
 function &api_graph_template_form_list() {
