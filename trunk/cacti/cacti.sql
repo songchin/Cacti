@@ -12,6 +12,7 @@
 CREATE TABLE auth_control (
   id mediumint(8) unsigned NOT NULL auto_increment,
   name varchar(100) NOT NULL default '',
+  description varchar(255) default NULL,
   object_type int(8) unsigned NOT NULL default '0',
   enabled int(1) unsigned NOT NULL default '1',
   updated_when datetime NOT NULL default '0000-00-00 00:00:00',
@@ -39,7 +40,6 @@ CREATE TABLE auth_data (
   name varchar(100) NOT NULL default '',
   enable_user_edit int(1) unsigned NOT NULL default '0',
   plugin_id mediumint(8) unsigned NOT NULL default '0',
-  category mediumint(8) unsigned NOT NULL default '0',
   value varchar(255) default NULL,
   updated_when datetime NOT NULL default '0000-00-00 00:00:00',
   updated_by varchar(100) NOT NULL default '',
