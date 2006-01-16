@@ -105,20 +105,24 @@ function view_users() {
 	$filter_array = array();
 	$filter_url = "";
 	if (isset_get_var("search_filter")) {
-		$filter_array["message"] = get_get_var("search_filter");
+		$filter_array["name"] = get_get_var("search_filter");
 		$filter_url .= ($filter_url == "" ? "" : "&") . "search_filter=" . urlencode(get_get_var("search_filter"));
 	}
-	if (isset_get_var("search_username")) {
-		$filter_array["username"] = get_get_var("search_username");
-		$filter_url .= ($filter_url == "" ? "" : "&") . "search_username=" . urlencode(get_get_var("search_username"));
+	if (isset_get_var("search_name")) {
+		$filter_array["name"] = get_get_var("search_name");
+		$filter_url .= ($filter_url == "" ? "" : "&") . "search_name=" . urlencode(get_get_var("search_name"));
+	}
+	if (isset_get_var("search_description")) {
+		$filter_array["description"] = get_get_var("search_description");
+		$filter_url .= ($filter_url == "" ? "" : "&") . "search_description=" . urlencode(get_get_var("search_description"));
 	}
 
 	/* get log entires */
-	$users = api_auth_user_list($filter_array,read_config_option("num_rows_page"),read_config_option("num_rows_page")*($current_page-1));
-	$total_rows = api_auth_user_total_get($filter_array);
+	$users = api_auth_control_list($filter_array,read_config_option("num_rows_page"),read_config_option("num_rows_page")*($current_page-1));
+	$total_rows = api_auth_control_total_get($filter_array);
 
 	/* generate page list */
-	$url_string = build_get_url_string(array("search_filter","search_username"));
+	$url_string = build_get_url_string(array("search_filter","search_name","search_description"));
 	$url_page_select = get_page_list($current_page, MAX_DISPLAY_PAGES, read_config_option("num_rows_page"), $total_rows, "auth_user.php" . $url_string . ($url_string == "" ? "?" : "&") . "page=|PAGE_NUM|");
 
 	/* Output html */
@@ -131,25 +135,26 @@ function view_users() {
 	$i = 0;
 	if ((is_array($users)) && (sizeof($users) > 0)) {
 		foreach ($users as $user) {
+			$user_info = api_auth_control_get(AUTH_CONTROL_OBJECT_TYPE_USER,$user["id"]);
 			?>
 			<tr class="content-row" id="box-<?php echo $box_id;?>-row-<?php echo $user["id"];?>" onClick="display_row_select('<?php echo $box_id;?>',document.forms[0],'box-<?php echo $box_id;?>-row-<?php echo $user["id"];?>', 'box-<?php echo $box_id;?>-chk-<?php echo $user["id"];?>')" onMouseOver="display_row_hover('box-<?php echo $box_id;?>-row-<?php echo $user["id"];?>')" onMouseOut="display_row_clear('box-<?php echo $box_id;?>-row-<?php echo $user["id"];?>')">
 				<td class="content-row">
-					<a class="linkEditMain" onClick="display_row_block('box-<?php echo $box_id;?>-row-<?php echo $user["id"];?>')" href="auth_user.php?action=edit&id=<?php echo $user["id"];?>"><span id="box-<?php echo $box_id;?>-text-<?php echo $user["id"];?>"><?php echo html_highlight_words(get_get_var("search_filter"), $user["username"]);?></span></a>
+					<a class="linkEditMain" onClick="display_row_block('box-<?php echo $box_id;?>-row-<?php echo $user["id"];?>')" href="auth_user.php?action=edit&id=<?php echo $user["id"];?>"><span id="box-<?php echo $box_id;?>-text-<?php echo $user["id"];?>"><?php echo html_highlight_words(get_get_var("search_filter"), $user["name"]);?></span></a>
 				</td>
 				<td class="content-row">
-					<?php echo $user["full_name"];?>
+					<?php echo $user["description"];?>
 				</td>
 				<td class="content-row">
-					<?php if ($user["enabled"] == 1) { echo "Yes"; }else{ echo "No"; }?>
+					<?php if ($user_info["enabled"] == 1) { echo "Yes"; }else{ echo "No"; }?>
 				</td>
 				<td class="content-row">
-					<?php if ($user["last_login"] == "0000-00-00 00:00:00") { echo "N/A"; }else{ echo $user["last_login"]; }?>
+					<?php if (($user_info["last_login"] == "0000-00-00 00:00:00") || ($user_info["last_login"] == "")) { echo "N/A"; }else{ echo $user["last_login"]; }?>
 				</td>
 				<td class="content-row">
-					<?php echo $user["last_login_ip"];?>
+					<?php if ($user_info["last_login_ip"] == "") { echo "N/A"; }else{ echo $user_info["last_login_ip"]; } ?>
 				</td>
 				<td class="content-row" width="1%" align="center" style="border-left: 1px solid #b5b5b5; border-top: 1px solid #b5b5b5; background-color: #e9e9e9; <?php echo get_checkbox_style();?>">
-					<input type='checkbox' style='margin: 0px;' name='box-<?php echo $box_id;?>-chk-<?php echo $user["id"];?>' id='box-<?php echo $box_id;?>-chk-<?php echo $user["id"];?>' title="<?php echo $user["username"];?>">
+					<input type='checkbox' style='margin: 0px;' name='box-<?php echo $box_id;?>-chk-<?php echo $user["id"];?>' id='box-<?php echo $box_id;?>-chk-<?php echo $user["id"];?>' title="<?php echo $user["name"];?>">
 				</td>
 			</tr>
 
@@ -159,7 +164,7 @@ function view_users() {
 	}else{
 		?>
 		<tr>
-			<td class="content-list-empty" colspan="9">
+			<td class="content-list-empty" colspan="6">
 				No Users Found.
 			</td>
 		</tr>
