@@ -22,6 +22,35 @@
  +-------------------------------------------------------------------------+
 */
 
+/* form validation functions */
+
+function api_package_field_validate(&$_fields_package, $package_field_name_format = "|field|") {
+	require_once(CACTI_BASE_PATH . "/lib/package/package_info.php");
+
+	if (sizeof($_fields_package) == 0) {
+		return array();
+	}
+
+	/* array containing errored fields */
+	$error_fields = array();
+
+	/* get a complete field list */
+	$fields_package = api_package_form_list();
+
+	/* base fields */
+	while (list($_field_name, $_field_array) = each($fields_package)) {
+		if ((isset($_fields_package[$_field_name])) && (isset($_field_array["validate_regexp"])) && (isset($_field_array["validate_empty"]))) {
+			$form_field_name = str_replace("|field|", $_field_name, $package_field_name_format);
+
+			if (!form_input_validate($_fields_package[$_field_name], $form_field_name, $_field_array["validate_regexp"], $_field_array["validate_empty"])) {
+				$error_fields[] = $form_field_name;
+			}
+		}
+	}
+
+	return $error_fields;
+}
+
 /* new package fields */
 
 function _package_field__create_type($field_name, $field_value = "", $field_id = 0) {
@@ -458,7 +487,7 @@ function _package_field__author_type($field_name, $field_value = "", $field_id =
 					<td>
 					</td>
 					<td>
-						<?php form_dropdown($field_name . "_drp", $author_list, "name", "name", "", "", "");?>
+						<?php form_dropdown($field_name . "_drp", $author_list, "name", "id", "", "", "");?>
 					</td>
 				</tr>
 				<tr>

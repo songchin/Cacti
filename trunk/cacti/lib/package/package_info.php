@@ -84,10 +84,23 @@ function api_package_author_list() {
 	return db_fetch_assoc("select * from package_author order by name");
 }
 
+function api_package_author_get($package_author_id) {
+	/* sanity checks */
+	validate_id_die($package_author_id, "package_author_id");
+
+	return db_fetch_row("select * from package_author where id = " . sql_sanitize($package_author_id));
+}
+
 function &api_package_metadata_type_list() {
 	require(CACTI_BASE_PATH . "/include/package/package_arrays.php");
 
 	return $package_metadata_types;
+}
+
+function &api_package_form_list() {
+	require(CACTI_BASE_PATH . "/include/package/package_form.php");
+
+	return $fields_package;
 }
 
 ?>

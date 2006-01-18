@@ -92,6 +92,10 @@ function field_register_error($field_name) {
 	}
 }
 
+function field_error_isset($field_name) {
+	return isset($_SESSION["sess_error_fields"][$field_name]);
+}
+
 function field_register_html_checkboxes(&$field_list, $field_name_format = "|field|") {
 	$chk_fields = array();
 
