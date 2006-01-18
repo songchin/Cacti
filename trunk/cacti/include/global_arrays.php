@@ -255,7 +255,7 @@ $menu = array(
 			)
 		),
 	_("Data Collection") => array(
-		"data_pollers.php" => _("Pollers"),
+		"pollers.php" => _("Pollers"),
 		"data_input.php" => _("Scripts"),
 		"data_queries.php" => _("Queries")
 		),
@@ -315,7 +315,7 @@ $user_auth_realm_filenames = array(
 	"presets_gprint.php" => 14,
 	"color.php" => 5,
 	"data_input.php" => 2,
-	"data_pollers.php" => 2,
+	"pollers.php" => 2,
 	"data_sources.php" => 3,
 	"data_templates.php" => 11,
 	"gprint_presets.php" => 5,

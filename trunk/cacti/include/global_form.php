@@ -106,40 +106,6 @@ $fields_rra_template_edit = array(
 		)
 	);
 
-/* file: data_pollers.php, action: edit */
-$fields_data_poller_edit = array(
-	"name" => array(
-		"method" => "textbox",
-		"friendly_name" => _("Poller Name"),
-		"description" => _("Enter a meaningful name for this poller."),
-		"value" => "|arg1:name|",
-		"max_length" => "255"
-		),
-	"hostname" => array(
-		"method" => "textbox",
-		"friendly_name" => _("Hostname"),
-		"description" => _("Enter the IP address or hostname of this poller."),
-		"value" => "|arg1:hostname|",
-		"max_length" => "255"
-		),
-	"active" => array(
-		"method" => "checkbox",
-		"friendly_name" => _("Poller Active"),
-		"description" => _("Whether or not this data poller is to be used."),
-		"default" => "",
-		"value" => "|arg1:active|",
-		"form_id" => false
-		),
-	"id" => array(
-		"method" => "hidden_zero",
-		"value" => "|arg1:id|"
-		),
-	"save_component_data_poller" => array(
-		"method" => "hidden",
-		"value" => "1"
-		)
-	);
-
 /* file: data_input.php, action: edit */
 $fields_data_input_edit = array(
 	"name" => array(

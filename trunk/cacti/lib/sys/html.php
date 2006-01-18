@@ -857,19 +857,19 @@ function draw_navigation_text() {
 			"mapping" => "index.php:",
 			"level" => "1"
 			),
-		"data_pollers.php:" => array(
+		"pollers.php:" => array(
 			"title" => _("Pollers"),
 			"mapping" => "index.php:",
 			"level" => "1"
 			),
-		"data_pollers.php:edit" => array(
+		"pollers.php:edit" => array(
 			"title" => _("(Edit)"),
-			"mapping" => "index.php:,data_pollers.php:",
+			"mapping" => "index.php:,pollers.php:",
 			"level" => "2"
 			),
-		"data_pollers.php:actions" => array(
+		"pollers.php:actions" => array(
 			"title" => _("Actions"),
-			"mapping" => "index.php:,data_pollers.php:",
+			"mapping" => "index.php:,pollers.php:",
 			"level" => "2"
 			),
 		"user_changepassword.php:" => array(
