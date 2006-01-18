@@ -68,7 +68,7 @@ function db_execute($sql) {
 	$result = $cnn_id->Execute($sql);
 
 	if ($result === false) {
-		api_log_log("SQL error: " . $cnn_id->ErrorMsg(), SEV_DEV);
+		api_log_log("SQL error: " . $cnn_id->ErrorMsg(), SEV_ERROR);
 	}else{
 		return true;
 	}
@@ -90,7 +90,7 @@ function db_fetch_cell($sql) {
 	$result = $cnn_id->Execute($sql);
 
 	if ($result === false) {
-		api_log_log("SQL error: " . $cnn_id->ErrorMsg(), SEV_DEV);
+		api_log_log("SQL error: " . $cnn_id->ErrorMsg(), SEV_ERROR);
 	}else{
 		if (!$result->EOF) {
 			return $result->fields[0];
@@ -112,7 +112,7 @@ function db_fetch_row($sql) {
 	$result = $cnn_id->Execute($sql);
 
 	if ($result === false) {
-		api_log_log("SQL error: " . $cnn_id->ErrorMsg(), SEV_DEV);
+		api_log_log("SQL error: " . $cnn_id->ErrorMsg(), SEV_ERROR);
 	}else{
 		if (!$result->EOF) {
 			return $result->fields;
@@ -140,7 +140,7 @@ function db_fetch_assoc($sql,$limit = -1, $offset = -1) {
 	}
 
 	if ($result === false) {
-		api_log_log("SQL error: " . $cnn_id->ErrorMsg(), SEV_DEV);
+		api_log_log("SQL error: " . $cnn_id->ErrorMsg(), SEV_ERROR);
 	}else{
 		$data = array();
 
@@ -229,7 +229,7 @@ function db_replace($table_name, $fields, $keys = "") {
 			}
 		}
 
-		$sql = "INSERT INTO $table_name $sql_field_names VAUES $sql_field_values";
+		$sql = "INSERT INTO $table_name $sql_field_names VALUES $sql_field_values";
 	/* more than one row exists at this key; generate an UPDATE statement */
 	}else{
 		$sql_set_fields = ""; $i = 0;
