@@ -857,6 +857,16 @@ function draw_navigation_text() {
 			"mapping" => "index.php:",
 			"level" => "1"
 			),
+		"packages.php:edit" => array(
+			"title" => _("(Edit)"),
+			"mapping" => "index.php:,packages.php:",
+			"level" => "2"
+			),
+		"packages.php:edit_metadata" => array(
+			"title" => _("Metadata"),
+			"mapping" => "index.php:,packages.php:,packages.php:edit",
+			"level" => "3"
+			),
 		"pollers.php:" => array(
 			"title" => _("Pollers"),
 			"mapping" => "index.php:",

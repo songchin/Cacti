@@ -183,6 +183,9 @@ function sql_get_quoted_string($field) {
 		}
 	}else if ($field["type"] == DB_TYPE_NULL) {
 		return "NULL";
+	}else if ($field["type"] == DB_TYPE_BLOB) {
+		// i think the addslashes() may cause problems for non-mysql dbs, but it wasn't working for me otherwise
+		return "'" . addslashes($field["value"]) . "'";
 	}else if ($field["type"] == DB_TYPE_HTML_CHECKBOX) {
 		if ($field["value"] == "on") {
 			return 1;

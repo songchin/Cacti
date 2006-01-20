@@ -204,7 +204,7 @@ function _package_field__category($field_name, $field_value = "", $field_id = ""
 					<td>
 					</td>
 					<td>
-						<?php form_dropdown($field_name . "_drp", $category_list, "name", "name", "", "", "");?>
+						<?php form_dropdown($field_name . "_drp", $category_list, "", "", array_search($field_value, $category_list), "", "");?>
 					</td>
 				</tr>
 				<tr>
@@ -290,7 +290,7 @@ function _package_field__subcategory($field_name, $field_value = "", $field_id =
 					<td>
 					</td>
 					<td>
-						<?php form_dropdown($field_name . "_drp", $subcategory_list, "name", "name", "", "", "");?>
+						<?php form_dropdown($field_name . "_drp", $subcategory_list, "", "", array_search($field_value, $subcategory_list), "", "");?>
 					</td>
 				</tr>
 				<tr>
@@ -376,7 +376,7 @@ function _package_field__vendor($field_name, $field_value = "", $field_id = "") 
 					<td>
 					</td>
 					<td>
-						<?php form_dropdown($field_name . "_drp", $vendor_list, "name", "name", "", "", "");?>
+						<?php form_dropdown($field_name . "_drp", $vendor_list, "", "", array_search($field_value, $vendor_list), "", "");?>
 					</td>
 				</tr>
 				<tr>
@@ -624,7 +624,7 @@ function _package_metadata_field__type($field_name, $field_value = "", $field_id
 			<?php echo _("Used to categorize the type of metadata that is being attached with this package");?>
 		</td>
 		<td class="field-row" colspan="2">
-			<?php form_dropdown($field_name, api_package_metadata_type_list(), "", "", "", "", "", "", "0", "select_metadata_type_dropdown()");?>
+			<?php form_dropdown($field_name, api_package_metadata_type_list(), "", "", $field_value, "", "", "", "0", "select_metadata_type_dropdown()");?>
 		</td>
 	</tr>
 	<?php
@@ -754,7 +754,7 @@ function _package_metadata_field__payload($field_name, $field_value = "", $field
 			<?php echo _("Select a screenshot to attach to this package. Only GIF, PNG, and JPEG images are currently supported. The image can be no larger than 600x600.");?>
 		</td>
 		<td class="field-row" colspan="2">
-			<input type="file" size="40" name="<?php echo $field_name;?>">
+			<input type="file" size="40" name="<?php echo $field_name;?>_upl">
 		</td>
 	</tr>
 	<tr class="<?php echo $row_style;?>" id="row_field_package_payload_paste">
@@ -763,44 +763,7 @@ function _package_metadata_field__payload($field_name, $field_value = "", $field
 			<?php echo _("Paste the contents of your script in this box. If this script has any external dependencies, be sure they are explained in the installation instructions.");?>
 		</td>
 		<td class="field-row" colspan="2">
-			<?php form_text_area($field_name, $field_value, "7", "40", "");?>
-		</td>
-	</tr>
-
-	<script language="JavaScript">
-	<!--
-	function click_category_radio() {
-		if (get_radio_value(document.forms[0].<?php echo $field_name;?>) == 'new') {
-			select_radio_category_new();
-		}else{
-			select_radio_category_existing();
-		}
-	}
-
-	function select_radio_category_new() {
-		document.getElementById('<?php echo $field_name;?>_tr_txt').style.display = 'table-row';
-		document.getElementById('<?php echo $field_name;?>_tr_drp').style.display = 'none';
-	}
-
-	function select_radio_category_existing() {
-		document.getElementById('<?php echo $field_name;?>_tr_txt').style.display = 'none';
-		document.getElementById('<?php echo $field_name;?>_tr_drp').style.display = 'table-row';
-	}
-
-	click_category_radio();
-	-->
-	</script>
-
-	<?php
-}
-
-function _package_metadata_field__add_button() {
-	require_once(CACTI_BASE_PATH . "/lib/sys/html_form.php");
-
-	?>
-	<tr class="<?php echo field_get_row_style();?>" id="row_field_package_metadata_required">
-		<td colspan="3" align="right" class="field-row">
-			&nbsp;<input type="image" src="<?php echo html_get_theme_images_path('button_add.gif');?>" alt="<?php echo _('Add');?>" name="assoc_metadata_add" align="absmiddle">
+			<?php form_text_area($field_name . "_txt", $field_value, "7", "40", "");?>
 		</td>
 	</tr>
 	<?php

@@ -23,9 +23,11 @@
 */
 
 require(dirname(__FILE__) . "/include/global.php");
+require_once(CACTI_BASE_PATH . "/include/package/package_constants.php");
 require_once(CACTI_BASE_PATH . "/lib/package/package_info.php");
 require_once(CACTI_BASE_PATH . "/lib/package/package_form.php");
 require_once(CACTI_BASE_PATH . "/lib/package/package_update.php");
+require_once(CACTI_BASE_PATH . "/lib/data_preset/data_preset_info.php");
 require_once(CACTI_BASE_PATH . "/lib/graph_template/graph_template_info.php");
 require_once(CACTI_BASE_PATH . "/lib/sys/package_export.php");
 
@@ -51,6 +53,21 @@ switch ($_REQUEST["action"]) {
 
 		require_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
 		break;
+	case 'edit_metadata':
+		require_once(CACTI_BASE_PATH . "/include/top_header.php");
+
+		package_edit_metadata();
+
+		require_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
+		break;
+	case 'remove_graph_template':
+		package_remove_graph_template();
+
+		break;
+	case 'remove_metadata':
+		package_remove_metadata();
+
+		break;
 	default:
 		require_once(CACTI_BASE_PATH . "/include/top_header.php");
 
@@ -64,6 +81,13 @@ function form_save() {
 	if ($_POST["action_post"] == "package_new") {
 		header("Location: packages.php?action=edit");
 	}else if ($_POST["action_post"] == "package_edit") {
+		/* the "Add" associated graph template button was pressed */
+		if (isset($_POST["assoc_graph_template_add_y"])) {
+			api_package_package_template_add($_POST["package_id"], $_POST["assoc_graph_template_id"]);
+			header("Location: packages.php?action=edit&id=" . $_POST["package_id"]);
+			exit;
+		}
+
 		/* cache all post field values */
 		init_post_field_cache();
 
@@ -72,9 +96,9 @@ function form_save() {
 		$form_package["name"] = $_POST["name"];
 		$form_package["description"] = $_POST["description"];
 		$form_package["description_install"] = $_POST["description_install"];
-		$form_package["category"] = ($_POST["category"] == "new" ? $_POST["category_txt"] : $_POST["category_drp"]);
-		$form_package["subcategory"] = ($_POST["subcategory"] == "new" ? $_POST["subcategory_txt"] : $_POST["subcategory_drp"]);
-		$form_package["vendor"] = ($_POST["vendor"] == "new" ? $_POST["vendor_txt"] : $_POST["vendor_drp"]);
+		$form_package["category"] = ($_POST["category"] == "new" ? $_POST["category_txt"] : api_data_preset_package_category_get($_POST["category_drp"]));
+		$form_package["subcategory"] = ($_POST["subcategory"] == "new" ? $_POST["subcategory_txt"] : api_data_preset_package_subcategory_get($_POST["subcategory_drp"]));
+		$form_package["vendor"] = ($_POST["vendor"] == "new" ? $_POST["vendor_txt"] : api_data_preset_package_vendor_get($_POST["vendor_drp"]));
 		$form_package["model"] = $_POST["model"];
 
 		/* the author field values may either come from the form or from the database */
@@ -121,7 +145,67 @@ function form_save() {
 		}else{
 			header("Location: packages.php");
 		}
+	}else if ($_POST["action_post"] == "package_edit_metadata") {
+		/* cache all post field values */
+		init_post_field_cache();
+
+		/* step #2: field validation */
+		$form_package_metadata["id"] = $_POST["package_metadata_id"];
+		$form_package_metadata["package_id"] = $_POST["package_id"];
+		$form_package_metadata["type"] = $_POST["type"];
+		$form_package_metadata["name"] = $_POST["name"];
+		$form_package_metadata["description"] = $_POST["description"];
+
+		if ($_POST["type"] == PACKAGE_METADATA_TYPE_SCREENSHOT) {
+			/* make sure there is a valid file that was uploaded via an HTTP POST */
+			if ((isset($_FILES["payload_upl"])) && (is_uploaded_file($_FILES["payload_upl"]["tmp_name"]))) {
+				$fp = fopen($_FILES["payload_upl"]["tmp_name"], "r");
+				$raw_data = fread($fp, $_FILES["payload_upl"]["size"]);
+				fclose($fp);
+
+				$form_package_metadata["payload"] = $raw_data;
+			}
+		}else if ($_POST["type"] == PACKAGE_METADATA_TYPE_SCRIPT) {
+			$form_package_metadata["description_install"] = $_POST["description_install"];
+			$form_package_metadata["required"] = html_boolean(isset($_POST["required"]) ? $_POST["required"] : "");
+			$form_package_metadata["payload"] = $_POST["payload_txt"];
+		}
+
+		field_register_error(api_package_field_validate($form_package_metadata, "|field|"));
+
+		/* step #3: field save */
+		$package_metadata_id = false;
+		if (is_error_message()) {
+			api_log_log("User input validation error for package metadata [ID#" . $_POST["package_metadata_id"] . "], package [ID#" . $_POST["package_id"] . "]", SEV_DEBUG);
+		}else{
+			$package_metadata_id = api_package_metadata_save($_POST["package_metadata_id"], $form_package_metadata);
+
+			if ($package_metadata_id === false) {
+				api_log_log("Save error for package metadata [ID#" . $_POST["package_metadata_id"] . "], package [ID#" . $_POST["package_id"] . "]", SEV_ERROR);
+			}
+		}
+
+		if ($package_metadata_id === false) {
+			header("Location: packages.php?action=edit_metadata&package_id=" . $_POST["package_id"] . (empty($_POST["package_metadata_id"]) ? "" : "&id=" . $_POST["package_metadata_id"]));
+		}else{
+			/* the cache will not be purged in time unless to do it here */
+			kill_post_field_cache();
+
+			header("Location: packages.php?action=edit&id=" . $_POST["package_id"]);
+		}
 	}
+}
+
+function package_remove_graph_template() {
+	api_package_graph_template_remove($_GET["id"], $_GET["graph_template_id"]);
+
+	header("Location: packages.php?action=edit&id=" . $_GET["id"]);
+}
+
+function package_remove_metadata() {
+	api_package_metadata_remove($_GET["package_metadata_id"]);
+
+	header("Location: packages.php?action=edit&id=" . $_GET["id"]);
 }
 
 function package_new() {
@@ -138,6 +222,41 @@ function package_new() {
 	form_save_button("packages.php", "save_package");
 }
 
+function package_edit_metadata() {
+	$_package_id = get_get_var_number("package_id");
+	$_package_metadata_id = get_get_var_number("id");
+
+	if (empty($_package_metadata_id)) {
+		$header_label = "[new]";
+	}else{
+		$package_metadata = api_package_metadata_get($_package_metadata_id);
+
+		$header_label = "[edit: " . $package_metadata["name"] . "]";
+	}
+
+	form_start("packages.php", "form_package", true);
+
+	/* ==================== Box: Template Package Metadata ==================== */
+
+	html_start_box("<strong>" . _("Template Package Metadata") . "</strong> $header_label");
+
+	_package_metadata_field__type("type", (isset($package_metadata["type"]) ? $package_metadata["type"] : ""), "0");
+	_package_metadata_field__name("name", (isset($package_metadata["name"]) ? $package_metadata["name"] : ""), "0");
+	_package_metadata_field__description("description", (isset($package_metadata["description"]) ? $package_metadata["description"] : ""), "0");
+	_package_metadata_field__description_install("description_install", (isset($package_metadata["description_install"]) ? $package_metadata["description_install"] : ""), "0");
+	_package_metadata_field__required("required", (isset($package_metadata["required"]) ? $package_metadata["required"] : ""), "0");
+	_package_metadata_field__payload("payload", "", "0"); // FIXME
+	_package_metadata_field__type_js();
+
+	html_end_box();
+
+	form_hidden_box("action_post", "package_edit_metadata");
+	form_hidden_box("package_id", $_package_id);
+	form_hidden_box("package_metadata_id", $_package_metadata_id);
+
+	form_save_button("packages.php?action=edit&id=" . $_GET["package_id"], "save_package");
+}
+
 function package_edit() {
 	$_package_id = get_get_var_number("id");
 
@@ -146,28 +265,34 @@ function package_edit() {
 	}else{
 		$package = api_package_get($_package_id);
 
-		$header_label = "[new, from: " . $package["name"] . "]";
+		/* get a list of each graph template that is associated with this package */
+		$graph_templates = api_package_graph_template_list($_package_id);
+
+		/* get a list of all of the metadata associated with a particular package */
+		$metadata_items = api_package_metadata_list($_package_id);
+
+		$header_label = "[edit: " . $package["name"] . "]";
 	}
 
-	form_start("packages.php", "form_package", true);
+	form_start("packages.php", "form_package");
 
 	/* ==================== Box: Template Packages ==================== */
 
 	html_start_box("<strong>" . _("Template Packages") . "</strong> $header_label");
 
-	_package_field__name("name", "", "0");
-	_package_field__description("description", "", "0");
-	_package_field__description_install("description_install", "", "0");
-	_package_field__category("category", "", "0");
-	_package_field__subcategory("subcategory", "", "0");
-	_package_field__vendor("vendor", "", "0");
-	_package_field__model("model", "", "0");
+	_package_field__name("name", (isset($package["name"]) ? $package["name"] : ""), "0");
+	_package_field__description("description", (isset($package["description"]) ? $package["description"] : ""), "0");
+	_package_field__description_install("description_install", (isset($package["description_install"]) ? $package["description_install"] : ""), "0");
+	_package_field__category("category", (isset($package["category"]) ? $package["category"] : ""), "0");
+	_package_field__subcategory("subcategory", (isset($package["subcategory"]) ? $package["subcategory"] : ""), "0");
+	_package_field__vendor("vendor", (isset($package["vendor"]) ? $package["vendor"] : ""), "0");
+	_package_field__model("model", (isset($package["model"]) ? $package["model"] : ""), "0");
 	_package_field__author_hdr();
-	_package_field__author_type("author_type", "new", "0");
-	_package_author_field__name("author_name", "", "0");
-	_package_author_field__email("author_email", "", "0");
-	_package_author_field__user_forum("author_user_forum", "", "0");
-	_package_author_field__user_repository("author_user_repository", "", "0");
+	_package_field__author_type("author_type", (isset($package) ? "existing" : "new"), "0");
+	_package_author_field__name("author_name", (isset($package["author_name"]) ? $package["author_name"] : ""), "0");
+	_package_author_field__email("author_email", (isset($package["author_email"]) ? $package["author_email"] : ""), "0");
+	_package_author_field__user_forum("author_user_forum", (isset($package["author_user_forum"]) ? $package["author_user_forum"] : ""), "0");
+	_package_author_field__user_repository("author_user_repository", (isset($package["author_user_repository"]) ? $package["author_user_repository"] : ""), "0");
 	_package_author_type_js();
 
 	html_end_box();
@@ -178,23 +303,30 @@ function package_edit() {
 		html_start_box("<strong>" . _("Associated Graph Templates") . "</strong>");
 		html_header(array(_("Template Title")), 2);
 
+		if (sizeof($graph_templates) > 0) {
+			foreach ($graph_templates as $graph_template) {
+				?>
+				<tr class="content-row">
+					<td class="content-row" style="padding: 4px;">
+						<?php echo $graph_template["template_name"];?>
+					</td>
+					<td class="content-row" align="right" style="padding: 4px;">
+						<a href="packages.php?action=remove_graph_template&id=<?php echo $_package_id;?>&graph_template_id=<?php echo $graph_template["id"];?>"><img src="<?php echo html_get_theme_images_path("delete_icon_large.gif");?>" alt="<?php echo _("Delete Graph Template Association");?>" border="0" align="absmiddle"></a>
+					</td>
+				</tr>
+				<?php
+			}
+		}else{
+			?>
+			<tr>
+				<td class="content-list-empty" colspan="2">
+					No graph templates have been associated with this package.
+				</td>
+			</tr>
+			<?php
+		}
+
 		?>
-		<tr class="content-row">
-			<td class="content-row" style="padding: 4px;">
-				Some Template
-			</td>
-			<td class="content-row" align="right" style="padding: 4px;">
-				<a href="dd"><img src="<?php echo html_get_theme_images_path("delete_icon_large.gif");?>" alt="<?php echo _("Delete Graph Template Association");?>" border="0" align="absmiddle"></a>
-			</td>
-		</tr>
-		<tr class="content-row">
-			<td class="content-row" style="padding: 4px;">
-				dffddsf
-			</td>
-			<td class="content-row" align="right" style="padding: 4px;">
-				<a href="dd"><img src="<?php echo html_get_theme_images_path("delete_icon_large.gif");?>" alt="<?php echo _("Delete Graph Template Association");?>" border="0" align="absmiddle"></a>
-			</td>
-		</tr>
 		<tr>
 			<td style="border-top: 1px solid #b5b5b5; padding: 1px;" colspan="2">
 				<table width="100%" cellpadding="2" cellspacing="0">
@@ -217,44 +349,36 @@ function package_edit() {
 
 		/* ==================== Box: Associated Meta Data ==================== */
 
-		html_start_box("<strong>" . _("Associated Meta Data") . "</strong>");
+		html_start_box("<strong>" . _("Associated Meta Data") . "</strong>", "packages.php?action=edit_metadata&package_id=$_package_id");
 		html_header(array(_("Name"), _("Type")), 2);
 
-		?>
-		<tr class="content-row">
-			<td class="content-row" style="padding: 4px;">
-				Traffic Sample #1
-			</td>
-			<td class="content-row" style="padding: 4px;">
-				Screenshot
-			</td>
-			<td class="content-row" align="right" style="padding: 4px;">
-				<a href="dd"><img src="<?php echo html_get_theme_images_path("delete_icon_large.gif");?>" alt="<?php echo _("Delete Graph Template Association");?>" border="0" align="absmiddle"></a>
-			</td>
-		</tr>
-		<tr class="content-row">
-			<td class="content-row" style="padding: 4px;">
-				Fetch Octets Script
-			</td>
-			<td class="content-row" style="padding: 4px;">
-				Script
-			</td>
-			<td class="content-row" align="right" style="padding: 4px;">
-				<a href="dd"><img src="<?php echo html_get_theme_images_path("delete_icon_large.gif");?>" alt="<?php echo _("Delete Graph Template Association");?>" border="0" align="absmiddle"></a>
-			</td>
-		</tr>
-		<?php
+		if (sizeof($metadata_items) > 0) {
+			$metadata_types = api_package_metadata_type_list();
 
-		html_header(array(_("Attach New Meta Data")), 3);
-
-		_package_metadata_field__type("metadata_type", "", "0");
-		_package_metadata_field__name("metadata_name", "", "0");
-		_package_metadata_field__description("metadata_description", "", "0");
-		_package_metadata_field__description_install("metadata_description_install", "", "0");
-		_package_metadata_field__required("metadata_required", "", "0");
-		_package_metadata_field__payload("metadata_payload", "", "0");
-		_package_metadata_field__add_button();
-		_package_metadata_field__type_js();
+			foreach ($metadata_items as $metadata_item) {
+				?>
+				<tr class="content-row">
+					<td class="content-row" style="padding: 4px;">
+						<a class="linkEditMain" href="packages.php?action=edit_metadata&id=<?php echo $metadata_item["id"];?>&package_id=<?php echo $_package_id;?>"><?php echo $metadata_item["name"];?></a>
+					</td>
+					<td class="content-row" style="padding: 4px;">
+						<?php echo $metadata_types{$metadata_item["type"]};?>
+					</td>
+					<td class="content-row" align="right" style="padding: 4px;">
+						<a href="packages.php?action=remove_metadata&id=<?php echo $_package_id;?>&package_metadata_id=<?php echo $metadata_item["id"];?>"><img src="<?php echo html_get_theme_images_path("delete_icon_large.gif");?>" alt="<?php echo _("Delete Package Metadata Item");?>" border="0" align="absmiddle"></a>
+					</td>
+				</tr>
+				<?php
+			}
+		}else{
+			?>
+			<tr>
+				<td class="content-list-empty" colspan="2">
+					No metadata items have been associated with this package.
+				</td>
+			</tr>
+			<?php
+		}
 
 		html_end_box();
 	}

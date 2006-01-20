@@ -42,11 +42,11 @@ function html_start_box($title, $add_url = "", $search_url = "") {
 						<td class="content-header" width="200">
 							<?php echo $title;?>
 						</td>
+						<?php if ($search_url != "") { ?>
 						<td class="content-header content-navigation" align="center" style="padding-right: 5px; font-weight: bold;" nowrap>
-							<?php if ($search_url != "") { ?>
 							[ <?php echo $search_url;?> ]
-							<?php } ?>
 						</td>
+						<?php } ?>
 						<?php if ($add_url == "") { ?>
 						<td class="content-header" width="200" align="right" style="padding-right: 5px; font-weight: bold;">&nbsp;</td>
 						<?php }else{ ?>

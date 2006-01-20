@@ -23,15 +23,36 @@
 */
 
 function api_data_preset_package_category_list() {
-	return db_fetch_assoc("select * from preset_package_category order by name");
+	return array_rekey(db_fetch_assoc("select * from preset_package_category order by name"), "id", "name");
 }
 
 function api_data_preset_package_subcategory_list() {
-	return db_fetch_assoc("select * from preset_package_subcategory order by name");
+	return array_rekey(db_fetch_assoc("select * from preset_package_subcategory order by name"), "id", "name");
 }
 
 function api_data_preset_package_vendor_list() {
-	return db_fetch_assoc("select * from preset_package_vendor order by name");
+	return array_rekey(db_fetch_assoc("select * from preset_package_vendor order by name"), "id", "name");
+}
+
+function api_data_preset_package_category_get($preset_id) {
+	/* sanity checks */
+	validate_id_die($preset_id, "preset_id");
+
+	return db_fetch_cell("select name from preset_package_category where id = " . sql_sanitize($preset_id));
+}
+
+function api_data_preset_package_subcategory_get($preset_id) {
+	/* sanity checks */
+	validate_id_die($preset_id, "preset_id");
+
+	return db_fetch_cell("select name from preset_package_subcategory where id = " . sql_sanitize($preset_id));
+}
+
+function api_data_preset_package_vendor_get($preset_id) {
+	/* sanity checks */
+	validate_id_die($preset_id, "preset_id");
+
+	return db_fetch_cell("select name from preset_package_vendor where id = " . sql_sanitize($preset_id));
 }
 
 ?>

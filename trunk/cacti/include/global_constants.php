@@ -135,6 +135,7 @@ define("DB_TYPE_NULL", 3);
 define("DB_TYPE_FUNC_NOW", 4);
 define("DB_TYPE_FUNC_MD5", 5);
 define("DB_TYPE_HTML_CHECKBOX", 6);
+define("DB_TYPE_BLOB", 7);
 
 
 ?>

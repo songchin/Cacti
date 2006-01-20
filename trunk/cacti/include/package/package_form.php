@@ -91,4 +91,39 @@ $fields_package = array(
 		)
 	);
 
+$fields_package_metadata = array(
+	"type" => array(
+		"default" => "",
+		"data_type" => DB_TYPE_NUMBER
+		),
+	"name" => array(
+		"default" => "",
+		"validate_regexp" => "",
+		"validate_empty" => false,
+		"data_type" => DB_TYPE_STRING
+		),
+	"description" => array(
+		"default" => "",
+		"validate_regexp" => "",
+		"validate_empty" => true,
+		"data_type" => DB_TYPE_STRING
+		),
+	"description_install" => array(
+		"default" => "",
+		"validate_regexp" => "",
+		"validate_empty" => true,
+		"data_type" => DB_TYPE_STRING
+		),
+	"required" => array(
+		"default" => "1",
+		"data_type" => DB_TYPE_NUMBER
+		),
+	"payload" => array(
+		"default" => "",
+		"validate_regexp" => "",
+		"validate_empty" => false,
+		"data_type" => DB_TYPE_BLOB
+		)
+	);
+
 ?>
