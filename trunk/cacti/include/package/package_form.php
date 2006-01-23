@@ -118,6 +118,12 @@ $fields_package_metadata = array(
 		"default" => "1",
 		"data_type" => DB_TYPE_NUMBER
 		),
+	"mime_type" => array(
+		"default" => "",
+		"validate_regexp" => "",
+		"validate_empty" => true,
+		"data_type" => DB_TYPE_STRING
+		),
 	"payload" => array(
 		"default" => "",
 		"validate_regexp" => "",

@@ -738,13 +738,6 @@ function _package_metadata_field__required($field_name, $field_value = "", $fiel
 function _package_metadata_field__payload($field_name, $field_value = "", $field_id = "") {
 	require_once(CACTI_BASE_PATH . "/lib/sys/html_form.php");
 
-	/* try to be smart about whether to select the "new" or "existing" radio box */
-	if (($field_value == "") || (in_array($field_value, $category_list))) {
-		$radio_value = "attach";
-	}else{
-		$radio_value = "paste";
-	}
-
 	$row_style = field_get_row_style();
 
 	?>

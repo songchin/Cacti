@@ -53,6 +53,21 @@ switch ($_REQUEST["action"]) {
 
 		require_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
 		break;
+	case 'view':
+		require_once(CACTI_BASE_PATH . "/include/top_header.php");
+
+		package_view();
+
+		require_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
+		break;
+	case 'view_metadata_screenshot':
+		package_view_metadata_screenshot();
+
+		break;
+	case 'view_metadata_script':
+		package_view_metadata_script();
+
+		break;
 	case 'edit_metadata':
 		require_once(CACTI_BASE_PATH . "/include/top_header.php");
 
@@ -163,11 +178,13 @@ function form_save() {
 				$raw_data = fread($fp, $_FILES["payload_upl"]["size"]);
 				fclose($fp);
 
+				$form_package_metadata["mime_type"] = $_FILES["payload_upl"]["type"];
 				$form_package_metadata["payload"] = $raw_data;
 			}
 		}else if ($_POST["type"] == PACKAGE_METADATA_TYPE_SCRIPT) {
 			$form_package_metadata["description_install"] = $_POST["description_install"];
 			$form_package_metadata["required"] = html_boolean(isset($_POST["required"]) ? $_POST["required"] : "");
+			$form_package_metadata["mime_type"] = "text/plain";
 			$form_package_metadata["payload"] = $_POST["payload_txt"];
 		}
 
@@ -245,7 +262,7 @@ function package_edit_metadata() {
 	_package_metadata_field__description("description", (isset($package_metadata["description"]) ? $package_metadata["description"] : ""), "0");
 	_package_metadata_field__description_install("description_install", (isset($package_metadata["description_install"]) ? $package_metadata["description_install"] : ""), "0");
 	_package_metadata_field__required("required", (isset($package_metadata["required"]) ? $package_metadata["required"] : ""), "0");
-	_package_metadata_field__payload("payload", "", "0"); // FIXME
+	_package_metadata_field__payload("payload", (isset($package_metadata["payload"]) ? $package_metadata["payload"] : ""), "0");
 	_package_metadata_field__type_js();
 
 	html_end_box();
@@ -387,6 +404,297 @@ function package_edit() {
 	form_hidden_box("package_id", $_package_id);
 
 	form_save_button("packages.php", "save_package");
+}
+
+function package_view_metadata_screenshot() {
+	$_package_metadata_id = get_get_var_number("id");
+
+	if (!empty($_package_metadata_id)) {
+		$metadata = api_package_metadata_get($_package_metadata_id);
+
+		header("Content-type: " . $metadata["mime_type"]);
+		header("Content-size: " . strlen($metadata["payload"]));
+		echo $metadata["payload"];
+	}
+}
+
+function package_view_metadata_script() {
+	$_package_metadata_id = get_get_var_number("id");
+
+	if (!empty($_package_metadata_id)) {
+		$metadata = api_package_metadata_get($_package_metadata_id);
+
+		header("Content-type: text/plain");
+		header("Content-size: " . strlen($metadata["payload"]));
+		echo $metadata["payload"];
+	}
+}
+
+function package_view() {
+	$_package_id = get_get_var_number("id");
+
+	if (!empty($_package_id)) {
+		/* get information about this package */
+		$package = api_package_get($_package_id);
+
+		/* get a list of scripts associated with this package */
+		$package_scripts = api_package_metadata_list($_package_id, PACKAGE_METADATA_TYPE_SCRIPT);
+
+		/* get a list of screenshots associated with this package */
+		$package_screenshots = api_package_metadata_list($_package_id, PACKAGE_METADATA_TYPE_SCREENSHOT);
+
+		/* get a list of all graph templates associated with this package */
+		$package_templates = api_package_graph_template_list($_package_id);
+
+		?>
+		<table width="98%" align="center" cellspacing="0" cellpadding="3">
+			<tr>
+				<td valign="top">
+					<span class="textInfo"><?php echo htmlspecialchars($package["name"]);?></span><br>
+					<span class="textArea"><?php echo nl2br(htmlspecialchars($package["description"]));?></a>
+				</td>
+			</tr>
+		</table>
+		<br>
+		<table width="98%" align="center" cellspacing="1" cellpadding="3">
+			<tr>
+				<td style="background-color: #9C9C9C; color: white;" colspan="2">
+					<strong>Basic Information</strong>
+				</td>
+			</tr>
+			<tr>
+				<td width="200" style="background-color: #f5f5f5; border-right: 1px dashed #d1d1d1;">
+					<strong>Category</strong>
+				</td>
+				<td style="border-bottom: 1px solid #f7f7f7;">
+					<?php echo $package["category"];?>
+				</td>
+			</tr>
+			<tr>
+				<td style="background-color: #f5f5f5; border-right: 1px dashed #d1d1d1;">
+					<strong>Sub Category</strong>
+				</td>
+				<td style="border-bottom: 1px solid #f7f7f7;">
+					<?php echo $package["subcategory"];?>
+				</td>
+			</tr>
+			<tr>
+				<td style="background-color: #f5f5f5; border-right: 1px dashed #d1d1d1;">
+					<strong>Vendor</strong>
+				</td>
+				<td style="border-bottom: 1px solid #f7f7f7;">
+					<?php echo $package["vendor"];?>
+				</td>
+			</tr>
+			<tr>
+				<td style="background-color: #f5f5f5; border-right: 1px dashed #d1d1d1;">
+					<strong>Model/Version</strong>
+				</td>
+				<td>
+					<?php echo $package["model"];?>
+				</td>
+			</tr>
+			<tr>
+				<td style="background-color: #9C9C9C; color: white;" colspan="2">
+					<strong>Author Information</strong>
+				</td>
+			</tr>
+			<tr>
+				<td width="200" style="background-color: #f5f5f5; border-right: 1px dashed #d1d1d1;">
+					<strong>Author Name</strong>
+				</td>
+				<td style="border-bottom: 1px solid #f7f7f7;">
+					<?php echo $package["author_name"];?>
+				</td>
+			</tr>
+			<tr>
+				<td style="background-color: #f5f5f5; border-right: 1px dashed #d1d1d1;">
+					<strong>Author Email</strong>
+				</td>
+				<td style="border-bottom: 1px solid #f7f7f7;">
+					<?php echo $package["author_email"];?>
+				</td>
+			</tr>
+			<tr>
+				<td style="background-color: #f5f5f5; border-right: 1px dashed #d1d1d1;">
+					<strong>Forum User</strong>
+				</td>
+				<td style="border-bottom: 1px solid #f7f7f7;">
+					<?php echo $package["author_user_forum"];?>
+				</td>
+			</tr>
+			<tr>
+				<td style="background-color: #f5f5f5; border-right: 1px dashed #d1d1d1;">
+					<strong>Template Repository User</strong>
+				</td>
+				<td style="border-bottom: 1px solid #f7f7f7;">
+					<?php echo $package["author_user_repository"];?>
+				</td>
+			</tr>
+		</table>
+		<?php
+		if (sizeof($package_templates) > 0) {
+			?>
+			<br>
+			<table width="98%" align="center" cellspacing="0" cellpadding="3">
+				<tr>
+					<td>
+						<p class="textInfo">Associated Graph Templates</p>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<ul style="list-style-type: disc; font-size: 12px;">
+						<?php
+						foreach ($package_templates as $template) {
+							echo "<li><a href=\"graph_templates.php?action=edit&id=" . $template["id"] . "\">" . $template["template_name"] . "</a></li>\n";
+						}
+						?>
+						</ul>
+					</td>
+				</tr>
+			</table>
+			<?php
+		}
+		?>
+		<br>
+		<table width="98%" align="center" cellspacing="0" cellpadding="3">
+			<tr>
+				<td valign="top">
+					<p class="textInfo">Installation Instructions</p>
+					<p style="font-family: monospace;"><?php echo nl2br(htmlspecialchars($package["description_install"]));?>
+				</td>
+			</tr>
+		</table>
+		<?php
+		if (sizeof($package_scripts) > 0) {
+			?>
+			<br>
+			<table width="98%" align="center" cellspacing="0" cellpadding="3">
+				<tr>
+					<td>
+						<p class="textInfo">Scripts</p>
+					</td>
+				</tr>
+			</table>
+			<br>
+			<table width="98%" align="center" cellspacing="1" cellpadding="3">
+				<?php
+				foreach ($package_scripts as $script) {
+					?>
+					<tr>
+						<td style="background-color: #9C9C9C; color: white;" colspan="2">
+							<strong><?php echo $script["name"];?></strong>
+						</td>
+					</tr>
+					<tr>
+						<td width="200" style="background-color: #f5f5f5; border-right: 1px dashed #d1d1d1;">
+							<strong>Description</strong>
+						</td>
+						<td style="border-bottom: 1px solid #f7f7f7;">
+							<?php echo nl2br(htmlspecialchars($script["description"]));?>
+						</td>
+					</tr>
+					<tr>
+						<td width="200" style="background-color: #f5f5f5; border-right: 1px dashed #d1d1d1;">
+							<strong>Required</strong>
+						</td>
+						<td style="border-bottom: 1px solid #f7f7f7;">
+							<?php echo (empty($script["required"]) ? "No" : "Yes");?>
+						</td>
+					</tr>
+					<tr>
+						<td width="200" style="background-color: #f5f5f5; border-right: 1px dashed #d1d1d1;">
+							<strong>Installation Instructions</strong>
+						</td>
+						<td style="border-bottom: 1px solid #f7f7f7;">
+							<?php echo nl2br(htmlspecialchars($script["description_install"]));?>
+						</td>
+					</tr>
+					<tr>
+						<td width="200" style="background-color: #f5f5f5; border-right: 1px dashed #d1d1d1;">
+							<strong>Payload</strong>
+						</td>
+						<td style="border-bottom: 1px solid #f7f7f7;">
+							<a href="packages.php?action=view_metadata_script&id=<?php echo $script["id"];?>" target="_new">Download Script</a>
+						</td>
+					</tr>
+					<?php
+				}
+				?>
+			</table>
+		<?php
+		}
+
+		if (sizeof($package_screenshots) > 0) {
+			?>
+			<br>
+			<table width="98%" align="center" cellspacing="0" cellpadding="3">
+				<tr>
+					<td>
+						<p class="textInfo">Screenshots</p>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<ul style="list-style-type: disc; font-size: 12px;">
+						<?php
+						$js_id_list = "";
+						$js_title_list = "";
+						$js_description_list = "";
+						$i = 0;
+						foreach ($package_screenshots as $screenshot) {
+							echo "<li><a href=\"javascript:view_screenshot($i)\">" . $screenshot["name"] . "</a></li>\n";
+
+							$js_id_list .= "\"" . $screenshot["id"] . "\"" . ($i < sizeof($package_screenshots) - 1 ? "," : "");
+							$js_title_list .= "\"" . addslashes(htmlspecialchars($screenshot["name"])) . "\"" . ($i < sizeof($package_screenshots) - 1 ? "," : "");
+							$js_description_list .= "\"" . addslashes(htmlspecialchars($screenshot["description"])) . "\"" . ($i < sizeof($package_screenshots) - 1 ? "," : "");
+
+							$i++;
+						}
+						?>
+						</ul>
+					</td>
+				</tr>
+				<tr>
+					<td>
+					</td>
+				</tr>
+				<tr>
+					<td style="background-color: #9C9C9C; color: white;" colspan="2">
+						<strong><span id="screenshot_title"></span></strong>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<span id="screenshot_description"></span>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<img id="screenshot_image" src="" alt="">
+					</td>
+				</tr>
+			</table>
+
+			<script language="JavaScript">
+			<!--
+			var screenshot_ids = new Array(<?php echo $js_id_list;?>);
+			var screenshot_titles = new Array(<?php echo $js_title_list;?>);
+			var screenshot_descriptions = new Array(<?php echo $js_description_list;?>);
+
+			function view_screenshot(id) {
+				document.getElementById('screenshot_title').innerHTML = screenshot_titles[id];
+				document.getElementById('screenshot_description').innerHTML = screenshot_descriptions[id];
+				document.getElementById('screenshot_image').src = 'packages.php?action=view_metadata_screenshot&id=' + screenshot_ids[id];
+			}
+
+			view_screenshot(0);
+			-->
+			</script>
+			<?php
+		}
+	}
 }
 
 function package() {

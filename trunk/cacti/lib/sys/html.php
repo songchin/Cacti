@@ -857,6 +857,11 @@ function draw_navigation_text() {
 			"mapping" => "index.php:",
 			"level" => "1"
 			),
+		"packages.php:view" => array(
+			"title" => _("(View)"),
+			"mapping" => "index.php:,packages.php:",
+			"level" => "2"
+			),
 		"packages.php:edit" => array(
 			"title" => _("(Edit)"),
 			"mapping" => "index.php:,packages.php:",
