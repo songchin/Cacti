@@ -30,6 +30,92 @@ $package_hash_cache = array();
 /* keep track of the last numeric hash that was generated */
 $package_hash_counter = 0;
 
+function &package_export($package_id) {
+	$_xml = package_header_export($package_id) . package_payload_export($package_id);
+
+	$xml = package_xml_tag_get("cacti_template_package", $_xml, 0, true);
+
+	return $xml;
+}
+
+function &package_header_export($package_id, $indent = 1) {
+	require_once(CACTI_BASE_PATH . "/lib/package/package_info.php");
+
+	$xml = "";
+
+	/*
+	 * XML Tag: <package>
+	 */
+
+	/* obtain a list of all package specific fields */
+	$package_fields = api_package_form_list();
+	/* obtain a copy of this specfic package */
+	$package = api_package_get($package_id);
+
+	$_xml = "";
+	foreach (array_keys($package_fields) as $field_name) {
+		/* create an XML key for each graph template field */
+		$_xml .= package_xml_tag_get($field_name, xml_character_encode($package[$field_name]), $indent + 2);
+	}
+
+	/* obtain a list of graph template associated with this particular package */
+	$package_graph_templates = api_package_graph_template_list($package_id);
+
+	if (sizeof($package_graph_templates) > 0) {
+		$i = 0; $items_list = "";
+		foreach ($package_graph_templates as $graph_template) {
+			/* create a delimited list of each item, making sure to resolve internal ID's */
+			$items_list .= package_hash_get($graph_template["id"], "graph_template") . (($i + 1) < sizeof($package_graph_templates) ? "|" : "");
+
+			$i++;
+		}
+	}
+
+	/* add the items list that we created above */
+	$_xml .= package_xml_tag_get("items", $items_list, $indent + 2);
+
+	/* append the result onto the final XML string */
+	$xml .= package_xml_tag_get("package", $_xml, $indent + 1, true);
+
+	/*
+	 * XML Tag: <metadata>
+	 */
+
+	/* obtain a list of all package metadata specific fields */
+	$package_metadata_fields = api_package_metadata_form_list();
+	/* obtain a list of all package metadata items  */
+	$package_metadata_items = api_package_metadata_list($package_id, 0, true);
+
+	$_xml = "";
+	if (sizeof($package_metadata_items) > 0) {
+		$i = 0;
+		foreach ($package_metadata_items as $package_metadata_item) {
+			$__xml = "";
+			foreach (array_keys($package_metadata_fields) as $field_name) {
+				if ($field_name = "payload") {
+					/* since the payload might contain binary data, we need to base64 encode it first */
+					$__xml .= package_xml_tag_get($field_name, xml_character_encode(wordwrap(base64_encode($package_metadata_item[$field_name]), 100, "\n", true)), $indent + 3);
+				}else{
+					/* create an XML key for each graph template item field */
+					$__xml .= package_xml_tag_get($field_name, xml_character_encode($package_metadata_item[$field_name]), $indent + 3);
+				}
+			}
+
+			/* append the result onto a temporary XML string */
+			$_xml .= package_xml_tag_get("item_" . str_pad($i, 5, "0", STR_PAD_LEFT), $__xml, $indent + 2, true);
+
+			$i++;
+		}
+	}
+
+	/* append the result onto the final XML string */
+	$xml .= package_xml_tag_get("metadata", $_xml, $indent + 1, true);
+
+	$xml = package_xml_tag_get("header", $xml, $indent, true);
+
+	return $xml;
+}
+
 function &package_payload_export($package_id) {
 	require_once(CACTI_BASE_PATH . "/lib/package/package_info.php");
 

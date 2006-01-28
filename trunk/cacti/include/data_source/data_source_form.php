@@ -101,6 +101,12 @@ $fields_data_source_item = array(
 		"validate_regexp" => "^[0-9]+$",
 		"validate_empty" => false,
 		"data_type" => DB_TYPE_NUMBER
+		),
+	"field_input_value" => array(
+		"default" => "",
+		"validate_regexp" => "",
+		"validate_empty" => false,
+		"data_type" => DB_TYPE_NUMBER
 		)
 	);
 

@@ -210,6 +210,18 @@ function form_save() {
 
 			header("Location: packages.php?action=edit&id=" . $_POST["package_id"]);
 		}
+	}else if ($_POST["action_post"] == "package_import") {
+		/* first, see if there is any XML in the textbox */
+		if (trim($_POST["import_package_text"] != "")) {
+			$xml_data = $_POST["import_package_text"];
+		/* next, check if the user uploaded a file */
+		}else if ((isset($_FILES["import_package_file"])) && (is_uploaded_file($_FILES["import_package_file"]["tmp_name"]))) {
+			$fp = fopen($_FILES["import_package_file"]["tmp_name"], "r");
+			$xml_data = fread($fp, $_FILES["import_package_file"]["size"]);
+			fclose($fp);
+		}
+
+		package_import($xml_data);
 	}
 }
 
@@ -450,7 +462,7 @@ function package_view() {
 		<table width="98%" align="center" cellspacing="0" cellpadding="3">
 			<tr>
 				<td valign="top">
-					<span class="textInfo"><?php echo htmlspecialchars($package["name"]);?></span><br>
+					<span class="textInfo"><?php echo htmlspecialchars($package["name"]);?></span> [<a href="packages.php?action=edit&id=<?php echo $package["id"];?>">edit</a>]<br>
 					<span class="textArea"><?php echo nl2br(htmlspecialchars($package["description"]));?></a>
 				</td>
 			</tr>
@@ -749,7 +761,7 @@ function package() {
 		<?php
 	}
 	html_box_toolbar_draw($box_id, "0", "3", HTML_BOX_SEARCH_NONE);
-	html_end_box(false);
+	html_end_box();
 
 	html_box_actions_menu_draw($box_id, "0", $menu_items);
 	html_box_actions_area_draw($box_id, "0");
@@ -757,7 +769,34 @@ function package() {
 	form_hidden_box("action_post", "package_list");
 	form_end();
 
-	echo "<pre>" . htmlspecialchars(package_payload_export("1")) . "</pre>";
+	form_start("packages.php", "import_package", true);
+
+	html_start_box("<strong>" . _("Import Package") . "</strong>");
+
+	_package_import_field__file("import_package_file");
+	_package_import_field__text("import_package_text");
+
+	?>
+	<tr>
+		<td style="border-top: 1px solid #b5b5b5; padding: 1px;" colspan="2">
+			<table width="100%" cellpadding="2" cellspacing="0">
+				<tr>
+					<td align="right">
+						&nbsp;<input type="image" src="<?php echo html_get_theme_images_path('button_import.gif');?>" alt="<?php echo _('Import');?>" name="package_import" align="absmiddle">
+					</td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+	<?php
+
+	html_end_box(false);
+
+	form_hidden_box("action", "save");
+	form_hidden_box("action_post", "package_import");
+	form_end();
+
+	print_a(htmlspecialchars(package_export("1")));
 
 	?>
 

@@ -762,4 +762,38 @@ function _package_metadata_field__payload($field_name, $field_value = "", $field
 	<?php
 }
 
+/* import package fields */
+
+function _package_import_field__file($field_name, $field_value = "") {
+	require_once(CACTI_BASE_PATH . "/lib/sys/html_form.php");
+
+	?>
+	<tr class="<?php echo field_get_row_style();?>">
+		<td width="50%" class="field-row">
+			<span class="textEditTitle"><?php echo _("Import Package from File");?></span><br>
+			<?php echo _("Browse to the package XML file to import it into Cacti");?>
+		</td>
+		<td class="field-row" colspan="2">
+			<input type="file" size="40" name="<?php echo $field_name;?>">
+		</td>
+	</tr>
+	<?php
+}
+
+function _package_import_field__text($field_name, $field_value = "") {
+	require_once(CACTI_BASE_PATH . "/lib/sys/html_form.php");
+
+	?>
+	<tr class="<?php echo field_get_row_style();?>">
+		<td width="50%" class="field-row">
+			<span class="textEditTitle"><?php echo _("Import Package from File");?></span><br>
+			<?php echo _("Browse to the package XML file to import it into Cacti");?>
+		</td>
+		<td class="field-row" colspan="2">
+			<?php form_text_area($field_name, $field_value, "10", "50", "");?>
+		</td>
+	</tr>
+	<?php
+}
+
 ?>

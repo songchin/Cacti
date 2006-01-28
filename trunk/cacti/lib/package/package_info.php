@@ -80,12 +80,12 @@ function api_package_graph_template_list($package_id) {
 		order by graph_template.template_name");
 }
 
-function api_package_metadata_list($package_id, $type = 0) {
+function api_package_metadata_list($package_id, $type = 0, $include_payload = false) {
 	/* sanity checks */
 	validate_id_die($package_id, "package_id");
 	validate_id_die($type, "type", true);
 
-	return db_fetch_assoc("select id,package_id,type,name,description,description_install,required from package_metadata where package_id = " . sql_sanitize($package_id) . (empty($type) ? "" : " and type = " . sql_sanitize($type)));
+	return db_fetch_assoc("select id,package_id,type,name,description,description_install,required,mime_type" . ($include_payload === true ? ",payload" : "") . " from package_metadata where package_id = " . sql_sanitize($package_id) . (empty($type) ? "" : " and type = " . sql_sanitize($type)));
 }
 
 function api_package_metadata_get($package_metadata_id) {
