@@ -117,21 +117,21 @@ if ((!in_array(basename($_SERVER["PHP_SELF"]), $no_http_header_files, true)) && 
 	header("Pragma: no-cache");
 	header("Content-type: text/html; charset=UTF-8");
 
-	/* initilize php session */
-	if(ini_get('session.auto_start') != 1) {
+	/* initialize php session */
+	if (ini_get('session.auto_start') != 1) {
 		session_start();
 	}
 
 	/* detect and handle get_magic_quotes */
-	if (!get_magic_quotes_gpc()) {
-		function addslashes_deep($value) {
-			$value = is_array($value) ? array_map('addslashes_deep', $value) : addslashes($value);
+	if (get_magic_quotes_gpc()) {
+		function stripslashes_deep($value) {
+			$value = is_array($value) ? array_map('stripslashes_deep', $value) : stripslashes($value);
 			return $value;
 		}
 
-		$_POST = array_map('addslashes_deep', $_POST);
-		$_GET = array_map('addslashes_deep', $_GET);
-		$_COOKIE = array_map('addslashes_deep', $_COOKIE);
+		$_POST = array_map('stripslashes_deep', $_POST);
+		$_GET = array_map('stripslashes_deep', $_GET);
+		$_COOKIE = array_map('stripslashes_deep', $_COOKIE);
 	}
 
 	/* make sure to start only only Cacti session at a time */
