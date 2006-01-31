@@ -257,11 +257,11 @@ function api_log_poller_list() {
 
 	$poller = array();
 
-	$pollers = db_fetch_assoc("select poller_id, hostname from poller order by hostname");
+	$pollers = db_fetch_assoc("select id, hostname from poller order by hostname");
 
 	$poller["0"] = "SYSTEM";
 	while (list($poller_id,$poller_record) = each($pollers)) {
-		$poller[$poller_record["poller_id"]] = $poller_record["hostname"];
+		$poller[$poller_record["id"]] = $poller_record["hostname"];
 	}
 
 	return $poller;
