@@ -193,9 +193,8 @@ function poller_edit() {
 	global $colors, $fields_poller_edit;
 
 	display_output_messages();
-
 	if ((isset($_GET["poller_id"])) && ($_GET["poller_id"] >= 0)) {
-		$poller = db_fetch_row("SELECT * FROM poller WHERE poller_id=" . $_GET["poller_id"]);
+		$poller = db_fetch_row("SELECT * FROM poller WHERE id=" . $_GET["poller_id"]);
 		$header_label = _("[edit: ") . $poller["name"] . "]";
 	}else{
 		$header_label = _("[new]");
@@ -248,12 +247,13 @@ function pollers() {
 	html_header_checkbox(array(_("Name"), _("Hostname"), _("Status"), _("Last Time"), _("Min Time"), _("Max Time"), _("Avg Time"), _("Enabled"), _("Last Run Time")), $box_id);
 
 	$i = 0;
+
 	if (sizeof($pollers) > 0) {
 	foreach ($pollers as $poller) {
 		?>
 		<tr class="content-row" id="box-<?php echo $box_id;?>-row-<?php echo $poller["poller_id"];?>" onClick="display_row_select('<?php echo $box_id;?>',document.forms[0],'box-<?php echo $box_id;?>-row-<?php echo $poller["poller_id"];?>', 'box-<?php echo $box_id;?>-chk-<?php echo $poller["poller_id"];?>')" onMouseOver="display_row_hover('box-<?php echo $box_id;?>-row-<?php echo $poller["poller_id"];?>')" onMouseOut="display_row_clear('box-<?php echo $box_id;?>-row-<?php echo $poller["poller_id"];?>')">
 			<td class="content-row">
-				<a class="linkEditMain" href="pollers.php?action=edit&poller_id=<?php print $poller["poller_id"];?>"><?php print $poller["name"];?></a>
+				<a class="linkEditMain" href="pollers.php?action=edit&poller_id=<?php print $poller["id"];?>"><?php print $poller["name"];?></a>
 			</td>
 			<td class="content-row">
 				<?php echo $poller["hostname"];?>

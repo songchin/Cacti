@@ -23,7 +23,7 @@
 */
 
 function api_poller_save($poller_id, $active, $hostname, $description) {
-	$save["poller_id"] = $poller_id;
+	$save["id"] = $poller_id;
 	$save["name"] = form_input_validate($description, "name", "", true, 3);
 	$save["hostname"] = form_input_validate($hostname, "hostname", "", true, 3);
 	$save["active"] = form_input_validate($active, "active", "", true, 3);
@@ -31,7 +31,7 @@ function api_poller_save($poller_id, $active, $hostname, $description) {
 	$poller_id = 0;
 
 	if (!is_error_message()) {
-		$poller_id = sql_save($save, "poller", array("poller_id"), true);
+		$poller_id = sql_save($save, "poller");
 
 		if ($poller_id) {
 			raise_message(1);

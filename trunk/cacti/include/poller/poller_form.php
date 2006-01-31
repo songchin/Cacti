@@ -50,7 +50,7 @@ $fields_poller_edit = array(
 		),
 	"poller_id" => array(
 		"method" => "hidden_zero",
-		"value" => "|arg1:poller_id|"
+		"value" => "|arg1:id|"
 		),
 	"save_component_data_poller" => array(
 		"method" => "hidden",
