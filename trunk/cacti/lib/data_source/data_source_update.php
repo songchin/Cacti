@@ -110,7 +110,7 @@ function api_data_source_remove($data_source_id) {
 	db_execute("DELETE FROM data_source_field WHERE data_source_id = " . sql_sanitize($data_source_id));
 	db_execute("DELETE FROM data_source_item WHERE data_source_id = " . sql_sanitize($data_source_id));
 	db_execute("DELETE FROM data_source_rra WHERE data_source_id = " . sql_sanitize($data_source_id));
-	db_execute("DELETE FROM data_source WHERE id " . sql_sanitize($data_source_id));
+	db_execute("DELETE FROM data_source WHERE id = " . sql_sanitize($data_source_id));
 }
 
 function api_data_source_enable($data_source_id) {
