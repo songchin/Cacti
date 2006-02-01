@@ -72,7 +72,7 @@ function copy_graph_template_to_graph($graph_template_id, $host_id = 0, $data_qu
 			api_log_log("Cloning graph [ID#$graph_id] from template [ID#$graph_template_id]", SEV_DEBUG);
 
 			/* move onto the graph items */
-			$graph_template_items = api_graph_template_items_list($graph_template_id);
+			$graph_template_items = api_graph_template_item_list($graph_template_id);
 
 			if (sizeof($graph_template_items) > 0) {
 				foreach ($graph_template_items as $graph_template_item) {

@@ -26,7 +26,7 @@ function api_data_source_save($data_source_id, &$_fields_data_source, &$_fields_
 	require_once(CACTI_BASE_PATH . "/lib/data_source/data_source_info.php");
 
 	/* sanity checks */
-	validate_id_die($data_source_id, "data_source_id");
+	validate_id_die($data_source_id, "data_source_id", true);
 
 	/* field: id */
 	$_fields["id"] = array("type" => DB_TYPE_NUMBER, "value" => $data_source_id);
@@ -144,7 +144,7 @@ function api_data_source_item_save($data_source_item_id, &$_fields_data_source_i
 	require_once(CACTI_BASE_PATH . "/lib/data_source/data_source_info.php");
 
 	/* sanity checks */
-	validate_id_die($data_source_item_id, "data_source_item_id");
+	validate_id_die($data_source_item_id, "data_source_item_id", true);
 
 	/* sanity check for $data_source_id */
 	if ((empty($data_source_item_id)) && (empty($_fields_data_source_item["data_source_id"]))) {
