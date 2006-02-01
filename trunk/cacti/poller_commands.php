@@ -87,7 +87,7 @@ if (sizeof($poller_commands) > 0) {
 
 			break;
 		case POLLER_COMMAND_RRDPURGE:
-			api_log_log(sprintf("_(Host[$i] PURGE: Unused RRDfile removed from system '%s')", $host_id, $command),SEV_NOTICE,  FACIL_POLLER, "", $poller_id, 0, 0, true);
+			api_log_log(sprintf("_(Host[%i] PURGE: Unused RRDfile removed from system '%s')", $host_id, $command),SEV_NOTICE,  FACIL_POLLER, "", $poller_id, 0, 0, true);
 
 			if (file_exists($command)) {
 				@unlink($command);
@@ -104,7 +104,7 @@ if (sizeof($poller_commands) > 0) {
 
 		/* end if runtime has been exceeded */
 		if (($current-$start) > MAX_RECACHE_RUNTIME) {
-			api_log_log(sprintf(_("Poller Command processing timed out after processing '%s'"), $command, SEV_ERROR, FACIL_POLLER, "", $poller_id, 0, true);
+			api_log_log(sprintf(_("Poller Command processing timed out after processing '%s'"), $command), SEV_ERROR, FACIL_POLLER, "", $poller_id, 0, true);
 			break;
 		}
 	}

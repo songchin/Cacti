@@ -334,7 +334,7 @@ if (read_config_option("poller_enabled") == "on") {
 	$end = $seconds + $micro;
 
 	/* record some statistics */
-	api_log__log(sprintf(_("SystemTime:") . "%01.4f " .
+	api_log_log(sprintf(_("SystemTime:") . "%01.4f " .
 		_("TotalPollers:") . "%s " .
 		_("Method:") . "%s " .
 		_("Processes:") . "%s " .
