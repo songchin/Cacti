@@ -58,7 +58,7 @@ if (isset($_SESSION["sess_user_id"])) {
 			<table width="100%" cellspacing="0" cellpadding="0">
 				<tr>
 					<td valign="bottom">
-						&nbsp;<a href="index.php"><img src="<?php print html_get_theme_images_path('tab_console.gif');?>" alt="<?php echo _('Console');?>" align="absmiddle" border="0"></a><a href="graph_view.php"><img src="<?php print html_get_theme_images_path('tab_graphs.gif');?>" alt="<?php echo _('Console');?>" align="absmiddle" border="0"></a>
+						&nbsp;<a href="index.php"><img src="<?php print html_get_theme_images_path('tab_console.gif');?>" alt="<?php echo _('Console');?>" align="absmiddle" border="0"></a><a href="graph_view.php"><img src="<?php print html_get_theme_images_path('tab_graphs.gif');?>" alt="<?php echo _('Graphs');?>" align="absmiddle" border="0"></a>
 					</td>
 					<td align="right">
 						<img src="<?php print html_get_theme_images_path('cacti_backdrop.gif');?>" align="absmiddle">
