@@ -23,7 +23,7 @@
 */
 
 function validate_id_die($argument_value, $argument_name, $allow_empty = false) {
-	if ((!is_numeric($argument_value)) || ((empty($argument_value) && ($allow_empty == false)))) {
+	if (!db_number_validate($argument_value, $allow_empty)) {
 		die("Invalid input '$argument_value' for '$argument_name' in " . __FUNCTION__ . "()");
 	}
 }

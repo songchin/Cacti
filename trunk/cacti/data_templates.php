@@ -31,6 +31,7 @@ require_once(CACTI_BASE_PATH . "/lib/data_source/data_source_form.php");
 require_once(CACTI_BASE_PATH . "/lib/data_source/data_source_info.php");
 require_once(CACTI_BASE_PATH . "/lib/data_query/data_query_info.php");
 require_once(CACTI_BASE_PATH . "/lib/sys/sequence.php");
+require_once(CACTI_BASE_PATH . "/include/data_query/data_query_constants.php");
 require_once(CACTI_BASE_PATH . "/include/data_source/data_source_constants.php");
 require_once(CACTI_BASE_PATH . "/include/data_source/data_source_form.php");
 require_once(CACTI_BASE_PATH . "/lib/sys/tree.php");
@@ -107,6 +108,7 @@ switch ($_REQUEST["action"]) {
 function form_save() {
 	if ($_POST["action_post"] == "data_template_edit") {
 		$data_input_fields = array();
+		$data_template_item_fields = array();
 		$suggested_value_fields = array();
 
 		/* cache all post field values */
@@ -136,7 +138,6 @@ function form_save() {
 		}
 
 		/* step #2: field validation */
-		$form_data_template["id"] = $_POST["data_template_id"];
 		$form_data_template["template_name"] = $_POST["template_name"];
 		$form_data_source["data_input_type"] = $_POST["data_input_type"];
 		$form_data_source["t_name"] = html_boolean(isset($_POST["t_name"]) ? $_POST["t_name"] : "");
@@ -149,8 +150,7 @@ function form_save() {
 		field_register_error(api_data_source_input_fields_validate($data_input_fields, "|field|"));
 		field_register_error(api_data_template_fields_validate($form_data_template, "|field|"));
 
-		while (list($data_template_item_id, $fields) = each($data_template_item_fields)) {
-			$form_data_source_item[$data_template_item_id]["id"] = $data_template_item_id;
+		foreach ($data_template_item_fields as $data_template_item_id => $fields) {
 			$form_data_source_item[$data_template_item_id]["t_rrd_maximum"] = html_boolean(isset($fields["t_rrd_maximum"]) ? $fields["t_rrd_maximum"] : "");
 			$form_data_source_item[$data_template_item_id]["rrd_maximum"] = (isset($fields["rrd_maximum"]) ? $fields["rrd_maximum"] : "");
 			$form_data_source_item[$data_template_item_id]["t_rrd_minimum"] = html_boolean(isset($fields["t_rrd_minimum"]) ? $fields["t_rrd_minimum"] : "");
@@ -167,14 +167,20 @@ function form_save() {
 
 		/* step #3: field save */
 		if (!is_error_message()) {
-			$data_template_id = api_data_template_save($form_data_template + $form_data_source, $suggested_value_fields, $data_input_fields, (isset($_POST["rra_id"]) ? $_POST["rra_id"] : array()));
+			$data_template_id = api_data_template_save($_POST["data_template_id"], $form_data_template + $form_data_source, (isset($_POST["rra_id"]) ? $_POST["rra_id"] : array()));
 
 			if ($data_template_id) {
-				reset($data_template_item_fields);
-				while (list($data_template_item_id, $fields) = each($data_template_item_fields)) {
+				/* save suggested values (for the 'name' field) */
+				api_data_template_suggested_values_save($data_template_id, $suggested_value_fields);
+
+				/* save custom data input data */
+				api_data_template_input_fields_save($data_template_id, $data_input_fields);
+
+				/* save each data template item on the form */
+				foreach (array_keys($data_template_item_fields) as $data_template_item_id) {
 					$form_data_source_item[$data_template_item_id]["data_template_id"] = $data_template_id;
 
-					$data_template_item_id = api_data_template_item_save($form_data_source_item[$data_template_item_id]);
+					$data_template_item_id = api_data_template_item_save($data_template_item_id, $form_data_source_item[$data_template_item_id]);
 
 					if (!$data_template_item_id) {
 						raise_message(2);

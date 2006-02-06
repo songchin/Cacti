@@ -181,7 +181,7 @@ function _data_source_input_field__data_query_id($field_name, $redirect_url, $fi
 			<?php echo _("Choose the data query to use for retrieving data for this data source.");?>
 		</td>
 		<td>
-			<?php form_dropdown($field_name, db_fetch_assoc("select id,name from snmp_query order by name"), "name", "id", $field_value, "", "", "", 0, "submit_redirect(\"0\", \"" . htmlspecialchars($redirect_url) . "\", document.forms[0].$field_name.options[document.forms[0].$field_name.selectedIndex].value)");?>
+			<?php form_dropdown($field_name, db_fetch_assoc("select id,name from data_query order by name"), "name", "id", $field_value, "", "", "", 0, "submit_redirect(\"0\", \"" . htmlspecialchars($redirect_url) . "\", document.forms[0].$field_name.options[document.forms[0].$field_name.selectedIndex].value)");?>
 		</td>
 	</tr>
 	<?php

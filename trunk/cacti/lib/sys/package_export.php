@@ -58,6 +58,15 @@ function &package_header_export($package_id, $indent = 1) {
 		$_xml .= package_xml_tag_get($field_name, xml_character_encode($package[$field_name]), $indent + 2);
 	}
 
+	/* add a few extra fields that are not part of the form */
+	$_package_version = $package["version"] + 1;
+	$_package_version_cacti = CACTI_VERSION;
+	$_package_date_create = date('Y-m-d H:i:s');
+
+	$_xml .= package_xml_tag_get("version", $_package_version, $indent + 2);
+	$_xml .= package_xml_tag_get("version_cacti", $_package_version_cacti, $indent + 2);
+	$_xml .= package_xml_tag_get("date_create", $_package_date_create, $indent + 2);
+
 	/* obtain a list of graph template associated with this particular package */
 	$package_graph_templates = api_package_graph_template_list($package_id);
 
@@ -92,7 +101,7 @@ function &package_header_export($package_id, $indent = 1) {
 		foreach ($package_metadata_items as $package_metadata_item) {
 			$__xml = "";
 			foreach (array_keys($package_metadata_fields) as $field_name) {
-				if ($field_name = "payload") {
+				if ($field_name == "payload") {
 					/* since the payload might contain binary data, we need to base64 encode it first */
 					$__xml .= package_xml_tag_get($field_name, xml_character_encode(wordwrap(base64_encode($package_metadata_item[$field_name]), 100, "\n", true)), $indent + 3);
 				}else{
@@ -127,20 +136,24 @@ function &package_payload_export($package_id) {
 	if (sizeof($dep_array) > 0) {
 		foreach ($dep_array as $dep_category_name => $dep_category) {
 			if (sizeof($dep_category) > 0) {
+				$_xml = "";
+
 				foreach ($dep_category as $dep_item_id) {
 					/* convert the item into xml based on the its type */
 					if ($dep_category_name == "graph_template") {
-						$xml .= package_graph_template_export($dep_item_id);
+						$_xml .= package_graph_template_export($dep_item_id);
 					}else if ($dep_category_name == "data_template") {
-						$xml .= package_data_template_export($dep_item_id);
+						$_xml .= package_data_template_export($dep_item_id);
 					}else if ($dep_category_name == "script") {
-						$xml .= package_script_export($dep_item_id);
+						$_xml .= package_script_export($dep_item_id);
 					}else if ($dep_category_name == "data_query") {
-						$xml .= package_data_query_export($dep_item_id);
+						$_xml .= package_data_query_export($dep_item_id);
 					}else if ($dep_category_name == "round_robin_archive") {
-						$xml .= package_rra_export($dep_item_id);
+						$_xml .= package_rra_export($dep_item_id);
 					}
 				}
+
+				$xml .= package_xml_tag_get($dep_category_name, $_xml, 2, true);
 			}
 		}
 	}
@@ -224,7 +237,7 @@ function &package_dependencies_list($type, $id, $dep_array) {
 	return $dep_array;
 }
 
-function &package_graph_template_export($graph_template_id, $indent = 2) {
+function &package_graph_template_export($graph_template_id, $indent = 3) {
 	require_once(CACTI_BASE_PATH . "/lib/graph_template/graph_template_info.php");
 	require_once(CACTI_BASE_PATH . "/lib/graph/graph_info.php");
 
@@ -377,7 +390,7 @@ function &package_graph_template_export($graph_template_id, $indent = 2) {
 	return $xml;
 }
 
-function &package_data_template_export($data_template_id, $indent = 2) {
+function &package_data_template_export($data_template_id, $indent = 3) {
 	require_once(CACTI_BASE_PATH . "/lib/data_template/data_template_info.php");
 	require_once(CACTI_BASE_PATH . "/lib/data_source/data_source_info.php");
 
@@ -522,7 +535,7 @@ function &package_data_template_export($data_template_id, $indent = 2) {
 	return $xml;
 }
 
-function &package_data_query_export($data_query_id, $indent = 2) {
+function &package_data_query_export($data_query_id, $indent = 3) {
 	require_once(CACTI_BASE_PATH . "/lib/data_query/data_query_info.php");
 
 	$xml = "";
@@ -580,7 +593,7 @@ function &package_data_query_export($data_query_id, $indent = 2) {
 	return $xml;
 }
 
-function &package_script_export($script_id, $indent = 2) {
+function &package_script_export($script_id, $indent = 3) {
 	require_once(CACTI_BASE_PATH . "/lib/script/script_info.php");
 
 	$xml = "";
@@ -638,7 +651,7 @@ function &package_script_export($script_id, $indent = 2) {
 	return $xml;
 }
 
-function &package_rra_export($rra_id, $indent = 2) {
+function &package_rra_export($rra_id, $indent = 3) {
 	require_once(CACTI_BASE_PATH . "/lib/rra/rra_info.php");
 
 	$xml = "";

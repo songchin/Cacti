@@ -106,7 +106,7 @@ $fields_data_source_item = array(
 		"default" => "",
 		"validate_regexp" => "",
 		"validate_empty" => false,
-		"data_type" => DB_TYPE_NUMBER
+		"data_type" => DB_TYPE_STRING
 		)
 	);
 
