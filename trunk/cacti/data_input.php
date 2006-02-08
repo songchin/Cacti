@@ -24,7 +24,8 @@
 
 require(dirname(__FILE__) . "/include/global.php");
 require_once(CACTI_BASE_PATH . "/include/auth/validate.php");
-require_once(CACTI_BASE_PATH . "/lib/api_data_input.php");
+require_once(CACTI_BASE_PATH . "/lib/script/script_form.php");
+require_once(CACTI_BASE_PATH . "/lib/script/script_update.php");
 
 /* set default action */
 if (!isset($_REQUEST["action"])) { $_REQUEST["action"] = ""; }
@@ -73,20 +74,53 @@ switch ($_REQUEST["action"]) {
 
 function form_save() {
 	if (isset($_POST["save_component_data_input"])) {
-		$data_input_id = api_data_input_save($_POST["id"], $_POST["name"], $_POST["input_string"], $_POST["type_id"]);
+		/* cache all post field values */
+		init_post_field_cache();
+
+		$form_script["name"] = $_POST["name"];
+		$form_script["input_string"] = $_POST["input_string"];
+		$form_script["type_id"] = $_POST["type_id"];
+
+		field_register_error(api_script_field_validate($form_script, "|field|"));
+
+		/* if the validation passes, save the row to the database */
+		if (!is_error_message()) {
+			$script_id = api_script_save($_POST["id"], $form_script);
+		}
 
 		if ((is_error_message()) || (empty($_POST["id"]))) {
-			header("Location: data_input.php?action=edit&id=" . (empty($data_input_id) ? $_POST["id"] : $data_input_id));
+			header("Location: data_input.php?action=edit&id=" . (empty($script_id) ? $_POST["id"] : $script_id));
 		}else{
 			header("Location: data_input.php");
 		}
-	}elseif (isset($_POST["save_component_field"])) {
-		$data_input_field_id = api_data_input_field_save($_POST["id"], $_POST["data_input_id"], (isset($_POST["field_input_type"]) ? $_POST["field_input_type"] : ""),
-			(isset($_POST["field_input_value"]) ? $_POST["field_input_value"] : ""), $_POST["name"], $_POST["data_name"], $_POST["input_output"], (isset($_POST["update_rrd"]) ?
-			$_POST["update_rrd"] : ""), (isset($_POST["regexp_match"]) ? $_POST["regexp_match"] : ""), (isset($_POST["allow_empty"]) ?
-			$_POST["allow_empty"] : ""));
+	}else if (isset($_POST["save_component_field"])) {
+		/* cache all post field values */
+		init_post_field_cache();
+
+		$form_script_field["script_id"] = $_POST["data_input_id"];
+		$form_script_field["name"] = $_POST["name"];
+		$form_script_field["data_name"] = $_POST["data_name"];
+		$form_script_field["input_output"] = $_POST["input_output"];
+
+		/* some form fields are specific to input or output field types */
+		if ($_POST["input_output"] == "in") {
+			$form_script_field["field_input_type"] = $_POST["field_input_type"];
+			$form_script_field["field_input_value"] = $_POST["field_input_value"];
+			$form_script_field["regexp_match"] = $_POST["regexp_match"];
+			$form_script_field["allow_empty"] = html_boolean(isset($_POST["allow_empty"]) ? $_POST["allow_empty"] : "");
+		}else if ($_POST["input_output"] == "out") {
+			$form_script_field["update_rrd"] = html_boolean(isset($_POST["update_rrd"]) ? $_POST["update_rrd"] : "");
+		}
+
+		field_register_error(api_script_field_field_validate($form_script_field, "|field|"));
+
+		/* if the validation passes, save the row to the database */
+		if (!is_error_message()) {
+			$script_field_id = api_script_field_save($_POST["id"], $form_script_field);
+		}
+
 		if (is_error_message()) {
-			header("Location: data_input.php?action=field_edit&data_input_id=" . $_POST["data_input_id"] . "&id=" . (empty($data_input_field_id) ? $_POST["id"] : $data_input_field_id) . (!empty($_POST["input_output"]) ? "&type=" . $_POST["input_output"] : ""));
+			header("Location: data_input.php?action=field_edit&data_input_id=" . $_POST["data_input_id"] . "&id=" . (empty($script_field_id) ? $_POST["id"] : $script_field_id) . (!empty($_POST["input_output"]) ? "&type=" . $_POST["input_output"] : ""));
 		}else{
 			header("Location: data_input.php?action=edit&id=" . $_POST["data_input_id"]);
 		}

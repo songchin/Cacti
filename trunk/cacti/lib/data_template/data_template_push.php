@@ -160,7 +160,7 @@ function api_data_source_item_propagate($data_template_item_id) {
 	require_once(CACTI_BASE_PATH . "/lib/data_template/data_template_info.php");
 
 	/* get information about this data template */
-	$data_template_item = get_data_template_item($data_template_item_id);
+	$data_template_item = api_data_template_item_get($data_template_item_id);
 
 	/* must be a valid data template item */
 	if ($data_template_item === false) {

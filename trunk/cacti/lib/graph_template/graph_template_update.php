@@ -22,67 +22,124 @@
  +-------------------------------------------------------------------------+
 */
 
-function api_graph_template_save($_fields_graph, $_fields_suggested_values) {
-	require_once(CACTI_BASE_PATH . "/lib/sys/sequence.php");
+function api_graph_template_save($graph_template_id, $_fields_graph) {
+	require_once(CACTI_BASE_PATH . "/lib/graph/graph_info.php");
+	require_once(CACTI_BASE_PATH . "/lib/graph_template/graph_template_info.php");
+	require_once(CACTI_BASE_PATH . "/lib/graph_template/graph_template_push.php");
 
-	/* keep the template hash fresh */
-	$_fields_graph["hash"] = get_hash_graph_template($_fields_graph["id"]);
+	/* sanity checks */
+	validate_id_die($graph_template_id, "graph_template_id", true);
 
-	$graph_template_id = sql_save($_fields_graph, "graph_template", array("id"));
+	/* make sure that there is at least one field to save */
+	if (sizeof($_fields_graph) == 0) {
+		return false;
+	}
 
-	if ($graph_template_id) {
-		/* save all suggested value fields */
-		while (list($field_name, $field_array) = each($_fields_suggested_values)) {
-			while (list($id, $value) = each($field_array)) {
-				form_input_validate($value, "sv|$field_name|$id", "", false, 3);
+	/* field: id */
+	$_fields["id"] = array("type" => DB_TYPE_NUMBER, "value" => $graph_template_id);
 
-				if (empty($id)) {
-					db_execute("insert into graph_template_suggested_value (hash,graph_template_id,field_name,value,sequence) values ('',$graph_template_id,'$field_name','$value'," . seq_get_current(0, "sequence", "graph_template_suggested_value", "graph_template_id = $graph_template_id and field_name = '$field_name'") . ")");
-				}else{
-					db_execute("update graph_template_suggested_value set value = '$value' where id = $id");
-				}
-			}
+	/* convert the input array into something that is compatible with db_replace() */
+	$_fields += sql_get_database_field_array($_fields_graph, api_graph_template_form_list());
+	$_fields += sql_get_database_field_array($_fields_graph, api_graph_form_list());
+
+	if (db_replace("graph_template", $_fields, array("id"))) {
+		if (empty($graph_template_id)) {
+			$graph_template_id = db_fetch_insert_id();
 		}
 
 		/* push out graph template fields */
 		api_graph_template_propagate($graph_template_id);
-	}
 
-	return $graph_template_id;
+		return $graph_template_id;
+	}else{
+		return false;
+	}
+}
+
+function api_graph_template_suggested_values_save($graph_template_id, $_fields_suggested_values) {
+	require_once(CACTI_BASE_PATH . "/lib/sys/sequence.php");
+
+	/* sanity checks */
+	validate_id_die($graph_template_id, "graph_template_id");
+
+	/* insert the new custom field values */
+	if (is_array($_fields_suggested_values) > 0) {
+		foreach ($_fields_suggested_values as $field_name => $field_array) {
+			foreach ($field_array as $id => $value) {
+				if (empty($id)) {
+					db_insert("graph_template_suggested_value",
+						array(
+							"graph_template_id" => array("type" => DB_TYPE_NUMBER, "value" => $graph_template_id),
+							"field_name" => array("type" => DB_TYPE_STRING, "value" => $field_name),
+							"value" => array("type" => DB_TYPE_STRING, "value" => $value),
+							"sequence" => array("type" => DB_TYPE_NUMBER, "value" => seq_get_current(0, "sequence", "graph_template_suggested_value", "graph_template_id = " . sql_sanitize($graph_template_id) . " and field_name = '" . sql_sanitize($field_name) . "'"))
+							),
+						array("id"));
+				}else{
+					db_update("graph_template_suggested_value",
+						array(
+							"id" => array("type" => DB_TYPE_NUMBER, "value" => $id),
+							"value" => array("type" => DB_TYPE_STRING, "value" => $value)
+							),
+						array("id"));
+				}
+			}
+		}
+	}
 }
 
 function api_graph_template_remove($graph_template_id) {
-	if ((empty($graph_template_id)) || (!is_numeric($graph_template_id))) {
-		return;
-	}
+	require_once(CACTI_BASE_PATH . "/lib/graph_template/graph_template_info.php");
+
+	/* sanity checks */
+	validate_id_die($graph_template_id, "graph_template_id");
 
 	/* delete all graph template items */
-	$graph_template_items = db_fetch_assoc("select id from graph_template_item where graph_template_id = $graph_template_id");
+	$graph_template_items = api_graph_template_item_list($graph_template_id);
 
-	if (sizeof($graph_template_items) > 0) {
+	if (is_array($graph_template_items) > 0) {
 		foreach ($graph_template_items as $item) {
 			api_graph_template_item_remove($item["id"], false);
 		}
 	}
 
-	db_execute("delete from graph_template_suggested_value where graph_template_id = $graph_template_id");
-	db_execute("delete from graph_template_item_input where graph_template_id = $graph_template_id");
-	db_execute("delete from graph_template_item where graph_template_id = $graph_template_id");
-	db_execute("delete from graph_template where id = $graph_template_id");
+	/* base tables */
+	db_delete("graph_template_suggested_value",
+		array(
+			"graph_template_id" => array("type" => DB_TYPE_NUMBER, "value" => $graph_template_id)
+			));
+	db_delete("graph_template_item_input",
+		array(
+			"graph_template_id" => array("type" => DB_TYPE_NUMBER, "value" => $graph_template_id)
+			));
+	db_delete("graph_template_item",
+		array(
+			"graph_template_id" => array("type" => DB_TYPE_NUMBER, "value" => $graph_template_id)
+			));
+	db_delete("graph_template",
+		array(
+			"graph_template_id" => array("type" => DB_TYPE_NUMBER, "value" => $graph_template_id)
+			));
 
 	/* host templates */
-	db_execute("delete from host_template_graph where graph_template_id = $graph_template_id");
+	db_delete("host_template_graph",
+		array(
+			"graph_template_id" => array("type" => DB_TYPE_NUMBER, "value" => $graph_template_id)
+			));
 
 	/* attached graphs */
-	db_execute("update graph set graph_template_id = 0 where graph_template_id = $graph_template_id");
+	db_execute("UPDATE graph SET graph_template_id = 0 WHERE graph_template_id = " . sql_sanitize($graph_template_id));
 }
 
 function api_graph_template_item_save($graph_template_item_id, $_fields_graph_item) {
 	require_once(CACTI_BASE_PATH . "/lib/sys/sequence.php");
 	require_once(CACTI_BASE_PATH . "/lib/graph_template/graph_template_info.php");
 
-	/* sanity check for $graph_template_item_id */
-	if (!is_numeric($graph_template_item_id)) {
+	/* sanity checks */
+	validate_id_die($graph_template_item_id, "graph_template_item_id");
+
+	/* make sure that there is at least one field to save */
+	if (sizeof($_fields_graph_item) == 0) {
 		return false;
 	}
 
@@ -90,7 +147,7 @@ function api_graph_template_item_save($graph_template_item_id, $_fields_graph_it
 	if ((empty($graph_template_item_id)) && (empty($_fields_graph_item["graph_template_id"]))) {
 		api_log_log("Required graph_template_id when graph_template_item_id = 0", SEV_ERROR);
 		return false;
-	} else if ((isset($_fields_graph_item["graph_template_id"])) && (!is_numeric($_fields_graph_item["graph_template_id"]))) {
+	} else if ((isset($_fields_graph_item["graph_template_id"])) && (!db_number_validate($_fields_graph_item["graph_template_id"]))) {
 		return false;
 	}
 
@@ -107,41 +164,42 @@ function api_graph_template_item_save($graph_template_item_id, $_fields_graph_it
 		$_fields["sequence"] = array("type" => DB_TYPE_NUMBER, "value" => seq_get_current($_fields_graph_item["id"], "sequence", "graph_template_id", "graph_template_id = " . sql_sanitize($_fields_graph_item["graph_template_id"])));
 	}
 
-	/* keep the template hash fresh */
-	$_fields_graph_item["hash"] = get_hash_graph_template($_fields_graph_item["id"], "graph_template_item");
-
-	/* check for an empty field list */
-	if (sizeof($_fields) == 1) {
-		return true;
-	}
-
 	/* convert the input array into something that is compatible with db_replace() */
 	$_fields += sql_get_database_field_array($_fields_graph_item, api_graph_template_item_form_list());
 
 	if (db_replace("graph_template_item", $_fields, array("id"))) {
-		$graph_template_item_id = db_fetch_insert_id();
+		if (empty($graph_template_item_id)) {
+			$graph_template_item_id = db_fetch_insert_id();
+		}
 
-		//push_out_graph_item($graph_template_item_id);
-
-		return true;
+		return $data_template_item_id;
 	}else{
 		return false;
 	}
 }
 
 function api_graph_template_item_remove($graph_template_item_id, $delete_attached = true) {
-	if ((empty($graph_template_item_id)) || (!is_numeric($graph_template_item_id))) {
-		return;
-	}
+	/* sanity checks */
+	validate_id_die($graph_template_item_id, "graph_template_item_id");
 
-	db_execute("delete from graph_template_item where id = $graph_template_item_id");
-	db_execute("delete from graph_template_item_input_item where graph_template_item_id = $graph_template_item_id");
+	/* base tables */
+	db_delete("graph_template_item",
+		array(
+			"id" => array("type" => DB_TYPE_NUMBER, "value" => $graph_template_item_id)
+			));
+	db_delete("graph_template_item_input_item",
+		array(
+			"graph_template_item_id" => array("type" => DB_TYPE_NUMBER, "value" => $graph_template_item_id)
+			));
 
 	/* attached graph items */
-	if ($delete_attached == true) {
-		db_execute("delete from graph_item where graph_template_item_id = $graph_template_item_id");
+	if ($delete_attached === true) {
+		db_delete("graph_item",
+			array(
+				"graph_template_item_id" => array("type" => DB_TYPE_NUMBER, "value" => $graph_template_item_id)
+				));
 	}else{
-		db_execute("update graph_item set graph_template_item_id = 0 where graph_template_item_id = $graph_template_item_id");
+		db_execute("UPDATE graph_item SET graph_template_item_id = 0 WHERE graph_template_item_id = " . sql_sanitize($graph_template_item_id));
 	}
 }
 

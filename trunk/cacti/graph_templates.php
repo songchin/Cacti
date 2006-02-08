@@ -106,7 +106,6 @@ function form_save() {
 		}
 
 		/* step #2: field validation */
-		$form_graph_template["id"] = $_POST["graph_template_id"];
 		$form_graph_template["template_name"] = $_POST["template_name"];
 		$form_graph["t_title"] = html_boolean(isset($_POST["t_title"]) ? $_POST["t_title"] : "");
 		$form_graph["vertical_label"] = $_POST["vertical_label"];
@@ -157,7 +156,11 @@ function form_save() {
 
 		/* step #3: field save */
 		if (!is_error_message()) {
-			$graph_template_id = api_graph_template_save($form_graph_template + $form_graph, $suggested_value_fields);
+			$graph_template_id = api_graph_template_save($_POST["graph_template_id"], $form_graph_template + $form_graph);
+
+			if ($graph_template_id) {
+				api_graph_template_suggested_values_save($graph_template_id, $suggested_value_fields);
+			}
 		}
 
 		if ((is_error_message()) || (empty($graph_template_id)) || (empty($_POST["graph_template_id"]))) {

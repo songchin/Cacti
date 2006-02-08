@@ -109,7 +109,7 @@ function get_data_templates_from_graph_template($graph_template_id, $data_input_
 		group by data_template.id");
 }
 
-function get_data_template_item($data_template_item_id) {
+function api_data_template_item_get($data_template_item_id) {
 	/* sanity check for $data_template_item_id */
 	if ((!is_numeric($data_template_item_id)) || (empty($data_template_item_id))) {
 		return false;
@@ -118,7 +118,7 @@ function get_data_template_item($data_template_item_id) {
 	$data_template_item = db_fetch_row("select * from data_template_item where id = " . sql_sanitize($data_template_item_id));
 
 	if (sizeof($data_template_item) == 0) {
-		api_log_log("Invalid data template item [ID#$data_template_item_id] specified in get_data_template_item()", SEV_ERROR);
+		api_log_log("Invalid data template item [ID#$data_template_item_id] specified in api_data_template_item_get()", SEV_ERROR);
 		return false;
 	}else{
 		return $data_template_item;

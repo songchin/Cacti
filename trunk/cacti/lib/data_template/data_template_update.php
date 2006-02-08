@@ -26,7 +26,6 @@ function api_data_template_save($data_template_id, $_fields_data_source, $_field
 	require_once(CACTI_BASE_PATH . "/lib/data_source/data_source_info.php");
 	require_once(CACTI_BASE_PATH . "/lib/data_template/data_template_info.php");
 	require_once(CACTI_BASE_PATH . "/lib/data_template/data_template_push.php");
-	require_once(CACTI_BASE_PATH . "/lib/sys/sequence.php");
 
 	/* sanity checks */
 	validate_id_die($data_template_id, "data_template_id", true);
@@ -76,6 +75,8 @@ function api_data_template_save($data_template_id, $_fields_data_source, $_field
 }
 
 function api_data_template_suggested_values_save($data_template_id, $_fields_suggested_values) {
+	require_once(CACTI_BASE_PATH . "/lib/sys/sequence.php");
+
 	/* sanity checks */
 	validate_id_die($data_template_id, "data_template_id");
 
@@ -153,6 +154,11 @@ function api_data_template_item_save($data_template_item_id, $_fields_data_sourc
 	/* field: id */
 	$_fields["id"] = array("type" => DB_TYPE_NUMBER, "value" => $data_template_item_id);
 
+	/* field: data_template_id */
+	if (!empty($_fields_graph_item["data_template_id"])) {
+		$_fields["data_template_id"] = array("type" => DB_TYPE_NUMBER, "value" => $_fields_data_source_item["data_template_id"]);
+	}
+
 	/* convert the input array into something that is compatible with db_replace() */
 	$_fields += sql_get_database_field_array($_fields_data_source_item, api_data_source_item_form_list());
 
@@ -171,36 +177,57 @@ function api_data_template_item_save($data_template_item_id, $_fields_data_sourc
 }
 
 function api_data_template_remove($data_template_id) {
-	if ((empty($data_template_id)) || (!is_numeric($data_template_id))) {
-		return;
-	}
+	/* sanity checks */
+	validate_id_die($data_template_id, "data_template_id");
+
+	/* base tables */
+	db_delete("data_template_rra",
+		array(
+			"data_template_id" => array("type" => DB_TYPE_NUMBER, "value" => $data_template_id)
+			));
+	db_delete("data_template_field",
+		array(
+			"data_template_id" => array("type" => DB_TYPE_NUMBER, "value" => $data_template_id)
+			));
+	db_delete("data_template_item",
+		array(
+			"data_template_id" => array("type" => DB_TYPE_NUMBER, "value" => $data_template_id)
+			));
+	db_delete("data_template",
+		array(
+			"id" => array("type" => DB_TYPE_NUMBER, "value" => $data_template_id)
+			));
 
 	/* detach this template from all data sources */
-	db_execute("update data_source set data_template_id = 0 where data_template_id = $data_template_id");
-
-	db_execute("delete from data_template_rra where data_template_id = $data_template_id");
-	db_execute("delete from data_template_field where data_template_id = $data_template_id");
-	db_execute("delete from data_template_item where data_template_id = $data_template_id");
-	db_execute("delete from data_template where id = $data_template_id");
+	db_execute("UPDATE data_source SET data_template_id = 0 WHERE data_template_id = " . sql_sanitize($data_template_id));
 }
 
 function api_data_template_item_remove($data_template_item_id) {
-	if ((empty($data_template_item_id)) || (!is_numeric($data_template_item_id))) {
-		return;
-	}
+	require_once(CACTI_BASE_PATH . "/lib/data_template/data_template_info.php");
 
-	$data_template_item = db_fetch_row("select data_template_id,data_source_name from data_template_item where id = $data_template_item_id");
+	/* sanity checks */
+	validate_id_die($data_template_item_id, "data_template_item_id");
+
+	/* retrieve information about this data template */
+	$data_template_item = api_data_template_item_get($data_template_item_id);
 
 	$data_sources = db_fetch_assoc("select id from data_source where data_template_id = " . $data_template_item["data_template_id"]);
 
 	/* delete all attached data source items */
-	if (sizeof($data_sources) > 0) {
+	if (is_array($data_sources) > 0) {
 		foreach ($data_sources as $item) {
-			db_execute("delete from data_source_item where data_source_id = " . $item["id"] . " and data_source_name = '" . $data_template_item["data_source_name"] . "'");
+			db_delete("data_source_item",
+				array(
+					"data_source_id" => array("type" => DB_TYPE_NUMBER, "value" => $item["id"]),
+					"data_source_name" => array("type" => DB_TYPE_STRING, "value" => $data_template_item["data_source_name"])
+					));
 		}
 	}
 
-	db_execute("delete from data_template_item where id = $data_template_item_id");
+	db_delete("data_template_item",
+		array(
+			"id" => array("type" => DB_TYPE_NUMBER, "value" => $data_template_item_id)
+			));
 }
 
 ?>

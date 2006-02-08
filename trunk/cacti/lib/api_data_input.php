@@ -22,66 +22,12 @@
  +-------------------------------------------------------------------------+
 */
 
-function api_data_input_save($id, $name, $input_string, $type_id) {
-	$save["id"] = $id;
-	$save["hash"] = get_hash_data_input($id);
-	$save["name"] = form_input_validate($name, "name", "", false, 3);
-	$save["input_string"] = form_input_validate($input_string, "input_string", "", true, 3);
-	$save["type_id"] = form_input_validate($type_id, "type_id", "", true, 3);
+/* Variable includes */
+require_once(CACTI_BASE_PATH . "/include/script/script_form.php");
 
-	$data_input_id = 0;
-
-	if (!is_error_message()) {
-		$data_input_id = sql_save($save, "data_input");
-
-		if ($data_input_id) {
-			raise_message(1);
-		}else{
-			raise_message(2);
-		}
-	}
-
-	return $data_input_id;
-}
-
-function api_data_input_field_save($id, $data_input_id, $field_input_type, $field_input_value, $name, $data_name, $input_output,
-	$update_rrd, $regexp_match, $allow_empty) {
-	$save["id"] = $id;
-	$save["hash"] = get_hash_data_input($id, "data_input_field");
-	$save["data_input_id"] = $data_input_id;
-	$save["field_input_type"] = form_input_validate($field_input_type, "field_input_type", "", true, 3);
-	$save["field_input_value"] = form_input_validate($field_input_value, "field_input_value", "", true, 3);
-	$save["name"] = form_input_validate($name, "name", "", false, 3);
-	$save["data_name"] = form_input_validate($data_name, "data_name", "", false, 3);
-	$save["input_output"] = $input_output;
-	$save["update_rrd"] = form_input_validate(html_boolean($update_rrd), "update_rrd", "", true, 3);
-	$save["regexp_match"] = form_input_validate($regexp_match, "regexp_match", "", true, 3);
-	$save["allow_empty"] = form_input_validate(html_boolean($allow_empty), "allow_empty", "", true, 3);
-
-	$data_input_field_id = 0;
-
-	if (!is_error_message()) {
-		$data_input_field_id = sql_save($save, "data_input_fields");
-
-		if ($data_input_field_id) {
-			raise_message(1);
-		}else{
-			raise_message(2);
-		}
-	}
-
-	return $data_input_field_id;
-}
-
-function api_data_input_remove($data_input_id) {
-	db_execute("delete from data_input where id='$data_input_id'");
-	db_execute("delete from data_input_fields where data_input_id='$data_input_id'");
-	db_execute("delete from data_input_data where data_input_id='$data_input_id'");
-}
-
-function api_data_input_field_remove($data_input_field_id) {
-	db_execute("delete from data_input_fields where id='$data_input_field_id'");
-	db_execute("delete from data_input_data where data_input_field_id='$data_input_field_id'");
-}
+/* Functions includes */
+require_once(CACTI_BASE_PATH . "/lib/script/script_form.php");
+require_once(CACTI_BASE_PATH . "/lib/script/script_info.php");
+require_once(CACTI_BASE_PATH . "/lib/script/script_update.php");
 
 ?>
