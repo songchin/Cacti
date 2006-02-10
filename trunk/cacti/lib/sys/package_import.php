@@ -70,7 +70,7 @@ function package_header_import(&$xml_array) {
 
 function package_payload_import(&$xml_array, $package_id) {
 	print_a($xml_array);
-exit;
+
 	if (isset($xml_array["round_robin_archive"])) {
 		if (sizeof($xml_array["round_robin_archive"]) > 0) {
 			foreach (array_keys($xml_array["round_robin_archive"]) as $object_hash) {
@@ -110,10 +110,13 @@ exit;
 			}
 		}
 	}
+
+	global $package_hash_cache;
+	print_a($package_hash_cache);
 }
 
 function package_graph_template_import(&$xml_array, $package_id, $object_hash) {
-	require_once(CACTI_BASE_PATH . "/lib/graph/graph_source_info.php");
+	require_once(CACTI_BASE_PATH . "/lib/graph/graph_info.php");
 	require_once(CACTI_BASE_PATH . "/lib/graph_template/graph_template_info.php");
 	require_once(CACTI_BASE_PATH . "/lib/graph_template/graph_template_update.php");
 
@@ -143,7 +146,7 @@ function package_graph_template_import(&$xml_array, $package_id, $object_hash) {
 	 */
 
 	/* obtain a list of all graph specific fields */
-	$graph_fields = api_data_source_form_list();
+	$graph_fields = api_graph_form_list();
 
 	if (isset($xml_array["graph"])) {
 		/* get the base fields from the xml */
@@ -161,7 +164,7 @@ function package_graph_template_import(&$xml_array, $package_id, $object_hash) {
 	}
 
 	/* make sure the save completed successfully */
-	if (empty($graph_template_id)) {
+	if ($graph_template_id === false) {
 		return;
 	}
 
@@ -209,7 +212,7 @@ function package_graph_template_import(&$xml_array, $package_id, $object_hash) {
 		foreach ($xml_array["suggested_values"] as $field_array) {
 			if ((isset($field_array["field_name"])) && (isset($field_array["sequence"])) && (isset($field_array["value"]))) {
 				/* build an array containing each data input field */
-				$save_fields{$field_array["field_name"]} = array("sequence" => $field_array["sequence"], "value" => $field_array["value"]);
+				$save_fields{$field_array["field_name"]}[] = array("id" => "0", "value" => $field_array["value"]);
 			}
 		}
 
@@ -263,11 +266,11 @@ function package_data_template_import(&$xml_array, $package_id, $object_hash) {
 	/* make sure we got the required information before trying to save */
 	if ((isset($xml_array["template"])) && (isset($xml_array["data_source"]))) {
 		/* save the data template field to the database and register its new id */
-		$data_template_id = package_hash_update($object_hash, api_data_template_save(0, $save_fields, array()));
+		$data_template_id = package_hash_update($object_hash, api_data_template_save(0, $save_fields));
 	}
 
 	/* make sure the save completed successfully */
-	if (empty($data_template_id)) {
+	if ($data_template_id === false) {
 		return;
 	}
 
@@ -276,7 +279,7 @@ function package_data_template_import(&$xml_array, $package_id, $object_hash) {
 	 */
 
 	/* obtain a list of all data source item specific fields */
-	$data_source_item_fields = api_data_source_form_list();
+	$data_source_item_fields = api_data_source_item_form_list();
 
 	if ((isset($xml_array["items"])) && (is_array($xml_array["items"]))) {
 		$save_fields = array();
@@ -338,7 +341,7 @@ function package_data_template_import(&$xml_array, $package_id, $object_hash) {
 		foreach ($xml_array["suggested_values"] as $field_array) {
 			if ((isset($field_array["field_name"])) && (isset($field_array["sequence"])) && (isset($field_array["value"]))) {
 				/* build an array containing each data input field */
-				$save_fields{$field_array["field_name"]} = array("sequence" => $field_array["sequence"], "value" => $field_array["value"]);
+				$save_fields{$field_array["field_name"]}[] = array("id" => "0", "value" => $field_array["value"]);
 			}
 		}
 
@@ -403,7 +406,7 @@ function package_script_import(&$xml_array, $package_id, $object_hash) {
 				}
 
 				/* save the script field to the database and register its new id */
-				package_hash_update($script_field_hash, api_script_field_save(0, $save_fields));
+				api_script_field_save(0, $save_fields);
 			}
 		}
 	}
@@ -464,13 +467,14 @@ function package_data_query_import(&$xml_array, $package_id, $object_hash) {
 			}
 
 			/* save the data query field to the database and register its new id */
-			package_hash_update($data_query_field_hash, api_data_query_field_save(0, $save_fields));
+			api_data_query_field_save(0, $save_fields);
 		}
 	}
 }
 
 function package_rra_import(&$xml_array, $package_id, $object_hash) {
 	require_once(CACTI_BASE_PATH . "/lib/rra/rra_info.php");
+	require_once(CACTI_BASE_PATH . "/lib/rra/rra_update.php");
 
 	$save_fields = array();
 
@@ -492,11 +496,19 @@ function package_rra_import(&$xml_array, $package_id, $object_hash) {
 			}
 		}
 
+		/* save the round robin archive to the database and register its new id */
+		$rra_id = package_hash_update($object_hash, api_rra_save(0, $save_fields));
+
+		if ($rra_id === false) {
+			return;
+		}
+
 		if (isset($xml_array["rra"]["cf_items"])) {
 			$cf_list = explode("|", $xml_array["rra"]["cf_items"]);
 		}
 
-		// save
+		/* save the rra->cf mappings to the database */
+		api_rra_consolidation_function_id_save($rra_id, $cf_list);
 	}
 }
 

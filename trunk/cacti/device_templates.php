@@ -79,7 +79,6 @@ function form_save() {
 		$redirect_back = false;
 
 		$save["id"] = $_POST["id"];
-		$save["hash"] = get_hash_host_template($_POST["id"]);
 		$save["name"] = form_input_validate($_POST["name"], "name", "", false, 3);
 
 		if (!is_error_message()) {

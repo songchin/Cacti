@@ -101,7 +101,8 @@ function form_save() {
 		while(list($name, $value) = each($_POST)) {
 			if (substr($name, 0, 3) == "sv|") {
 				$matches = explode("|", $name);
-				$suggested_value_fields{$matches[1]}{$matches[2]} = $value;
+
+				$suggested_value_fields{$matches[1]}[] = array("id" => $matches[2], "value" => $value);
 			}
 		}
 

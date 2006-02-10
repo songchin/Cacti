@@ -24,6 +24,8 @@
 
 require(dirname(__FILE__) . "/include/global.php");
 require_once(CACTI_BASE_PATH . "/include/auth/validate.php");
+require_once(CACTI_BASE_PATH . "/lib/rra/rra_form.php");
+require_once(CACTI_BASE_PATH . "/lib/rra/rra_update.php");
 
 /* set default action */
 if (!isset($_REQUEST["action"])) { $_REQUEST["action"] = ""; }
@@ -60,30 +62,24 @@ switch ($_REQUEST["action"]) {
 
 function form_save() {
 	if (isset($_POST["save_component_rra"])) {
-		$save["id"] = $_POST["id"];
-		$save["hash"] = get_hash_round_robin_archive($_POST["id"]);
-		$save["name"] = form_input_validate($_POST["name"], "name", "", false, 3);
-		$save["x_files_factor"] = form_input_validate($_POST["x_files_factor"], "x_files_factor", "^[0-9]+(\.[0-9])?$", false, 3);
-		$save["steps"] = form_input_validate($_POST["steps"], "steps", "^[0-9]*$", false, 3);
-		$save["rows"] = form_input_validate($_POST["rows"], "rows", "^[0-9]*$", false, 3);
-		$save["timespan"] = form_input_validate($_POST["timespan"], "timespan", "^[0-9]*$", false, 3);
+		/* cache all post field values */
+		init_post_field_cache();
 
+		$form_rra["name"] = $_POST["name"];
+		$form_rra["x_files_factor"] = $_POST["x_files_factor"];
+		$form_rra["steps"] = $_POST["steps"];
+		$form_rra["rows"] = $_POST["rows"];
+		$form_rra["timespan"] = $_POST["timespan"];
+
+		field_register_error(api_rra_field_validate($form_rra, "|field|"));
+
+		/* if the validation passes, save the row to the database */
 		if (!is_error_message()) {
-			$rra_id = sql_save($save, "rra");
+			$rra_id = api_rra_save($_POST["id"], $form_rra);
 
 			if ($rra_id) {
-				raise_message(1);
-
-				db_execute("delete from rra_cf where rra_id=$rra_id");
-
-				if (isset($_POST["consolidation_function_id"])) {
-					for ($i=0; ($i < count($_POST["consolidation_function_id"])); $i++) {
-						db_execute("insert into rra_cf (rra_id,consolidation_function_id)
-							values ($rra_id," . $_POST["consolidation_function_id"][$i] . ")");
-					}
-				}
-			}else{
-				raise_message(2);
+				/* save consolidation function mappings (for the 'consolidation_function_id' field) */
+				api_rra_consolidation_function_id_save($rra_id, $_POST["consolidation_function_id"]);
 			}
 		}
 

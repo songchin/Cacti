@@ -127,13 +127,13 @@ function form_save() {
 				$data_input_fields[$field_name]["value"] = $value;
 
 				if (isset($_POST["t_dif_$field_name"])) {
-					$data_input_fields[$field_name]["t_value"] = $_POST["t_dif_$field_name"];
+					$data_input_fields[$field_name]["t_value"] = html_boolean($_POST["t_dif_$field_name"]);
 				}else{
-					$data_input_fields[$field_name]["t_value"] = "";
+					$data_input_fields[$field_name]["t_value"] = "0";
 				}
 			}else if (substr($name, 0, 3) == "sv|") {
 				$matches = explode("|", $name);
-				$suggested_value_fields{$matches[1]}{$matches[2]} = $value;
+				$suggested_value_fields{$matches[1]}[] = array("id" => $matches[2], "value" => $value);
 			}
 		}
 
@@ -167,9 +167,12 @@ function form_save() {
 
 		/* step #3: field save */
 		if (!is_error_message()) {
-			$data_template_id = api_data_template_save($_POST["data_template_id"], $form_data_template + $form_data_source, (isset($_POST["rra_id"]) ? $_POST["rra_id"] : array()));
+			$data_template_id = api_data_template_save($_POST["data_template_id"], $form_data_template + $form_data_source);
 
 			if ($data_template_id) {
+				/* save rra mappings (for the 'rra_id' field) */
+				api_data_template_rra_id_save($data_template_id, (isset($_POST["rra_id"]) ? $_POST["rra_id"] : array()));
+
 				/* save suggested values (for the 'name' field) */
 				api_data_template_suggested_values_save($data_template_id, $suggested_value_fields);
 

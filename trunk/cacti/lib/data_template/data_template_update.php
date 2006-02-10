@@ -22,7 +22,7 @@
  +-------------------------------------------------------------------------+
 */
 
-function api_data_template_save($data_template_id, $_fields_data_source, $_fields_rra_id) {
+function api_data_template_save($data_template_id, $_fields_data_source) {
 	require_once(CACTI_BASE_PATH . "/lib/data_source/data_source_info.php");
 	require_once(CACTI_BASE_PATH . "/lib/data_template/data_template_info.php");
 	require_once(CACTI_BASE_PATH . "/lib/data_template/data_template_push.php");
@@ -45,32 +45,37 @@ function api_data_template_save($data_template_id, $_fields_data_source, $_field
 	if (db_replace("data_template", $_fields, array("id"))) {
 		if (empty($data_template_id)) {
 			$data_template_id = db_fetch_insert_id();
+		}else{
+			/* push out data template fields */
+			api_data_template_propagate($data_template_id);
 		}
-
-		/* clear out the existing template -> RRA mappings */
-		db_delete("data_template_rra",
-			array(
-				"data_template_id" => array("type" => DB_TYPE_NUMBER, "value" => $data_template_id)
-				));
-
-		/* insert new data template -> RRA mappings */
-		if (is_array($_fields_rra_id) > 0) {
-			foreach ($_fields_rra_id as $rra_id) {
-				db_insert("data_template_rra",
-					array(
-						"data_template_id" => array("type" => DB_TYPE_NUMBER, "value" => $data_template_id),
-						"rra_id" => array("type" => DB_TYPE_NUMBER, "value" => $rra_id)
-						),
-					array("data_template_id", "rra_id"));
-			}
-		}
-
-		/* push out data template fields */
-		api_data_template_propagate($data_template_id);
 
 		return $data_template_id;
 	}else{
 		return false;
+	}
+}
+
+function api_data_template_rra_id_save($data_template_id, $_fields_rra_id) {
+	/* sanity checks */
+	validate_id_die($data_template_id, "data_template_id", true);
+
+	/* clear out the existing template -> RRA mappings */
+	db_delete("data_template_rra",
+		array(
+			"data_template_id" => array("type" => DB_TYPE_NUMBER, "value" => $data_template_id)
+			));
+
+	/* insert new data template -> RRA mappings */
+	if (is_array($_fields_rra_id) > 0) {
+		foreach ($_fields_rra_id as $rra_id) {
+			db_insert("data_template_rra",
+				array(
+					"data_template_id" => array("type" => DB_TYPE_NUMBER, "value" => $data_template_id),
+					"rra_id" => array("type" => DB_TYPE_NUMBER, "value" => $rra_id)
+					),
+				array("data_template_id", "rra_id"));
+		}
 	}
 }
 
@@ -83,21 +88,22 @@ function api_data_template_suggested_values_save($data_template_id, $_fields_sug
 	/* insert the new custom field values */
 	if (is_array($_fields_suggested_values) > 0) {
 		foreach ($_fields_suggested_values as $field_name => $field_array) {
-			foreach ($field_array as $id => $value) {
-				if (empty($id)) {
+			foreach ($field_array as $field_item) {
+				if (empty($field_item["id"])) {
 					db_insert("data_template_suggested_value",
 						array(
+							"id" => array("type" => DB_TYPE_NUMBER, "value" => "0"),
 							"data_template_id" => array("type" => DB_TYPE_NUMBER, "value" => $data_template_id),
 							"field_name" => array("type" => DB_TYPE_STRING, "value" => $field_name),
-							"value" => array("type" => DB_TYPE_STRING, "value" => $value),
+							"value" => array("type" => DB_TYPE_STRING, "value" => $field_item["value"]),
 							"sequence" => array("type" => DB_TYPE_NUMBER, "value" => seq_get_current(0, "sequence", "data_template_suggested_value", "data_template_id = " . sql_sanitize($data_template_id) . " and field_name = '" . sql_sanitize($field_name) . "'"))
 							),
 						array("id"));
 				}else{
 					db_update("data_template_suggested_value",
 						array(
-							"id" => array("type" => DB_TYPE_NUMBER, "value" => $id),
-							"value" => array("type" => DB_TYPE_STRING, "value" => $value)
+							"id" => array("type" => DB_TYPE_NUMBER, "value" => $field_item["id"]),
+							"value" => array("type" => DB_TYPE_STRING, "value" => $field_item["value"])
 							),
 						array("id"));
 				}
@@ -136,7 +142,7 @@ function api_data_template_item_save($data_template_item_id, $_fields_data_sourc
 	require_once(CACTI_BASE_PATH . "/lib/data_template/data_template_push.php");
 
 	/* sanity checks */
-	validate_id_die($data_template_item_id, "data_template_item_id");
+	validate_id_die($data_template_item_id, "data_template_item_id", true);
 
 	/* make sure that there is at least one field to save */
 	if (sizeof($_fields_data_source_item) == 0) {

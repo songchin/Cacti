@@ -45,10 +45,10 @@ function api_graph_template_save($graph_template_id, $_fields_graph) {
 	if (db_replace("graph_template", $_fields, array("id"))) {
 		if (empty($graph_template_id)) {
 			$graph_template_id = db_fetch_insert_id();
+		}else{
+			/* push out graph template fields */
+			api_graph_template_propagate($graph_template_id);
 		}
-
-		/* push out graph template fields */
-		api_graph_template_propagate($graph_template_id);
 
 		return $graph_template_id;
 	}else{
@@ -65,21 +65,22 @@ function api_graph_template_suggested_values_save($graph_template_id, $_fields_s
 	/* insert the new custom field values */
 	if (is_array($_fields_suggested_values) > 0) {
 		foreach ($_fields_suggested_values as $field_name => $field_array) {
-			foreach ($field_array as $id => $value) {
-				if (empty($id)) {
+			foreach ($field_array as $field_item) {
+				if (empty($field_item["id"])) {
 					db_insert("graph_template_suggested_value",
 						array(
+							"id" => array("type" => DB_TYPE_NUMBER, "value" => "0"),
 							"graph_template_id" => array("type" => DB_TYPE_NUMBER, "value" => $graph_template_id),
 							"field_name" => array("type" => DB_TYPE_STRING, "value" => $field_name),
-							"value" => array("type" => DB_TYPE_STRING, "value" => $value),
+							"value" => array("type" => DB_TYPE_STRING, "value" => $field_item["value"]),
 							"sequence" => array("type" => DB_TYPE_NUMBER, "value" => seq_get_current(0, "sequence", "graph_template_suggested_value", "graph_template_id = " . sql_sanitize($graph_template_id) . " and field_name = '" . sql_sanitize($field_name) . "'"))
 							),
 						array("id"));
 				}else{
 					db_update("graph_template_suggested_value",
 						array(
-							"id" => array("type" => DB_TYPE_NUMBER, "value" => $id),
-							"value" => array("type" => DB_TYPE_STRING, "value" => $value)
+							"id" => array("type" => DB_TYPE_NUMBER, "value" => $field_item["id"]),
+							"value" => array("type" => DB_TYPE_STRING, "value" => $field_item["value"])
 							),
 						array("id"));
 				}
@@ -136,7 +137,7 @@ function api_graph_template_item_save($graph_template_item_id, $_fields_graph_it
 	require_once(CACTI_BASE_PATH . "/lib/graph_template/graph_template_info.php");
 
 	/* sanity checks */
-	validate_id_die($graph_template_item_id, "graph_template_item_id");
+	validate_id_die($graph_template_item_id, "graph_template_item_id", true);
 
 	/* make sure that there is at least one field to save */
 	if (sizeof($_fields_graph_item) == 0) {
@@ -161,7 +162,7 @@ function api_graph_template_item_save($graph_template_item_id, $_fields_graph_it
 
 	/* field: sequence */
 	if (empty($graph_template_item_id)) {
-		$_fields["sequence"] = array("type" => DB_TYPE_NUMBER, "value" => seq_get_current($_fields_graph_item["id"], "sequence", "graph_template_id", "graph_template_id = " . sql_sanitize($_fields_graph_item["graph_template_id"])));
+		$_fields["sequence"] = array("type" => DB_TYPE_NUMBER, "value" => seq_get_current($graph_template_item_id, "sequence", "graph_template_id", "graph_template_id = " . sql_sanitize($_fields_graph_item["graph_template_id"])));
 	}
 
 	/* convert the input array into something that is compatible with db_replace() */
@@ -172,7 +173,7 @@ function api_graph_template_item_save($graph_template_item_id, $_fields_graph_it
 			$graph_template_item_id = db_fetch_insert_id();
 		}
 
-		return $data_template_item_id;
+		return $graph_template_item_id;
 	}else{
 		return false;
 	}
@@ -254,7 +255,6 @@ function api_graph_template_item_duplicate($graph_template_item_id, $new_data_te
 
 function api_graph_template_item_input_save($id, $items_array, $graph_template_id, $field_name, $name) {
 	$save["id"] = $id;
-	$save["hash"] = get_hash_graph_template($id, "graph_template_input");
 	$save["graph_template_id"] = $graph_template_id;
 	$save["name"] = form_input_validate($name, "name", "", false, 3);
 	$save["field_name"] = form_input_validate($field_name, "field_name", "", true, 3);

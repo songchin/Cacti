@@ -22,37 +22,33 @@
  +-------------------------------------------------------------------------+
 */
 
-$fields_rra = array(
-	"name" => array(
-		"default" => "",
-		"validate_regexp" => "",
-		"validate_empty" => false,
-		"data_type" => DB_TYPE_STRING
-		),
-	"x_files_factor" => array(
-		"default" => "0.5",
-		"validate_regexp" => "^[0-9]+(\.[0-9])?$",
-		"validate_empty" => false,
-		"data_type" => DB_TYPE_NUMBER
-		),
-	"steps" => array(
-		"default" => "0",
-		"validate_regexp" => "^[0-9]+$",
-		"validate_empty" => false,
-		"data_type" => DB_TYPE_NUMBER
-		),
-	"rows" => array(
-		"default" => "0",
-		"validate_regexp" => "^[0-9]+$",
-		"validate_empty" => false,
-		"data_type" => DB_TYPE_NUMBER
-		),
-	"timespan" => array(
-		"default" => "0",
-		"validate_regexp" => "^[0-9]+$",
-		"validate_empty" => false,
-		"data_type" => DB_TYPE_NUMBER
-		)
-	);
+/* form validation functions */
+
+function api_rra_field_validate(&$_fields_rra, $rra_field_name_format) {
+	require_once(CACTI_BASE_PATH . "/lib/rra/rra_info.php");
+
+	if (sizeof($_fields_rra) == 0) {
+		return array();
+	}
+
+	/* array containing errored fields */
+	$error_fields = array();
+
+	/* get a complete field list */
+	$fields_rra = api_rra_form_list();
+
+	/* base fields */
+	while (list($_field_name, $_field_array) = each($fields_rra)) {
+		if ((isset($_fields_rra[$_field_name])) && (isset($_field_array["validate_regexp"])) && (isset($_field_array["validate_empty"]))) {
+			$form_field_name = str_replace("|field|", $_field_name, $rra_field_name_format);
+
+			if (!form_input_validate($_fields_rra[$_field_name], $form_field_name, $_field_array["validate_regexp"], $_field_array["validate_empty"])) {
+				$error_fields[] = $form_field_name;
+			}
+		}
+	}
+
+	return $error_fields;
+}
 
 ?>

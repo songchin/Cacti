@@ -51,10 +51,10 @@ function api_graph_fields_validate(&$_fields_graph, &$_fields_suggested_values, 
 	/* suggested values */
 	while (list($_field_name, $_sv_array) = each($_fields_suggested_values)) {
 		if ((isset($fields_graph[$_field_name])) && (isset($fields_graph[$_field_name]["validate_regexp"])) && (isset($fields_graph[$_field_name]["validate_empty"]))) {
-			while (list($_sv_id, $_sv_value) = each($_sv_array)) {
-				$form_field_name = str_replace("|field|", $_field_name, str_replace("|id|", $_sv_id, $suggested_values_field_name_format));
+				while (list($_sv_seq, $_sv_arr) = each($_sv_array)) {
+				$form_field_name = str_replace("|field|", $_field_name, str_replace("|id|", $_sv_arr["id"], $suggested_values_field_name_format));
 
-				if (!form_input_validate($_sv_value, $form_field_name, $fields_graph[$_field_name]["validate_regexp"], $fields_graph[$_field_name]["validate_empty"])) {
+				if (!form_input_validate($_sv_arr["value"], $form_field_name, $fields_graph[$_field_name]["validate_regexp"], $fields_graph[$_field_name]["validate_empty"])) {
 					$error_fields[] = $form_field_name;
 				}
 			}
