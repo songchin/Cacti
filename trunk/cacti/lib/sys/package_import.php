@@ -62,7 +62,7 @@ function package_header_import(&$xml_array) {
 		/* get the base fields from the xml */
 		foreach (array_keys($package_fields) as $field_name) {
 			if (isset($xml_array["package"][$field_name])) {
-				$save_fields[$field_name] = $xml_array["package"][$field_name];
+				$save_fields[$field_name] = xml_character_decode($xml_array["package"][$field_name]);
 			}
 		}
 
@@ -96,7 +96,7 @@ function package_header_import(&$xml_array) {
 						/* decode any binary payload data */
 						$save_fields[$field_name] = base64_decode(str_replace("\n", "", $package_metadata[$field_name]));
 					}else{
-						$save_fields[$field_name] = $package_metadata[$field_name];
+						$save_fields[$field_name] = xml_character_decode($package_metadata[$field_name]);
 					}
 				}
 			}
@@ -190,7 +190,7 @@ function package_graph_template_import(&$xml_array, $package_id, $object_hash) {
 		/* get the base fields from the xml */
 		foreach (array_keys($graph_template_fields) as $field_name) {
 			if (isset($xml_array["template"][$field_name])) {
-				$save_fields[$field_name] = $xml_array["template"][$field_name];
+				$save_fields[$field_name] = xml_character_decode($xml_array["template"][$field_name]);
 			}
 		}
 	}
@@ -206,7 +206,7 @@ function package_graph_template_import(&$xml_array, $package_id, $object_hash) {
 		/* get the base fields from the xml */
 		foreach (array_keys($graph_fields) as $field_name) {
 			if (isset($xml_array["graph"][$field_name])) {
-				$save_fields[$field_name] = $xml_array["graph"][$field_name];
+				$save_fields[$field_name] = xml_character_decode($xml_array["graph"][$field_name]);
 			}
 		}
 	}
@@ -245,7 +245,7 @@ function package_graph_template_import(&$xml_array, $package_id, $object_hash) {
 					if ($field_name == "data_template_item_id") {
 						$save_fields[$field_name] = package_hash_resolve($graph_template_item[$field_name]);
 					}else{
-						$save_fields[$field_name] = $graph_template_item[$field_name];
+						$save_fields[$field_name] = xml_character_decode($graph_template_item[$field_name]);
 					}
 				}
 			}
@@ -266,7 +266,7 @@ function package_graph_template_import(&$xml_array, $package_id, $object_hash) {
 		foreach ($xml_array["suggested_values"] as $field_array) {
 			if ((isset($field_array["field_name"])) && (isset($field_array["sequence"])) && (isset($field_array["value"]))) {
 				/* build an array containing each data input field */
-				$save_fields{$field_array["field_name"]}[] = array("id" => "0", "value" => $field_array["value"]);
+				$save_fields{$field_array["field_name"]}[] = array("id" => "0", "value" => xml_character_decode($field_array["value"]));
 			}
 		}
 
@@ -296,7 +296,7 @@ function package_data_template_import(&$xml_array, $package_id, $object_hash) {
 		/* get the base fields from the xml */
 		foreach (array_keys($data_template_fields) as $field_name) {
 			if (isset($xml_array["template"][$field_name])) {
-				$save_fields[$field_name] = $xml_array["template"][$field_name];
+				$save_fields[$field_name] = xml_character_decode($xml_array["template"][$field_name]);
 			}
 		}
 	}
@@ -312,7 +312,7 @@ function package_data_template_import(&$xml_array, $package_id, $object_hash) {
 		/* get the base fields from the xml */
 		foreach (array_keys($data_source_fields) as $field_name) {
 			if (isset($xml_array["data_source"][$field_name])) {
-				$save_fields[$field_name] = $xml_array["data_source"][$field_name];
+				$save_fields[$field_name] = xml_character_decode($xml_array["data_source"][$field_name]);
 			}
 		}
 	}
@@ -348,7 +348,7 @@ function package_data_template_import(&$xml_array, $package_id, $object_hash) {
 			/* get the base fields from the xml */
 			foreach (array_keys($data_source_item_fields) as $field_name) {
 				if (isset($data_template_item[$field_name])) {
-					$save_fields[$field_name] = $data_template_item[$field_name];
+					$save_fields[$field_name] = xml_character_decode($data_template_item[$field_name]);
 				}
 			}
 
@@ -373,7 +373,7 @@ function package_data_template_import(&$xml_array, $package_id, $object_hash) {
 				}else if ($field_array["name"] == "script_id") {
 					$field_value = package_hash_resolve($field_array["value"]);
 				}else{
-					$field_value = $field_array["value"];
+					$field_value = xml_character_decode($field_array["value"]);
 				}
 
 				$save_fields{$field_array["name"]} = array("t_value" => $field_array["t_value"], "value" => $field_value);
@@ -395,7 +395,7 @@ function package_data_template_import(&$xml_array, $package_id, $object_hash) {
 		foreach ($xml_array["suggested_values"] as $field_array) {
 			if ((isset($field_array["field_name"])) && (isset($field_array["sequence"])) && (isset($field_array["value"]))) {
 				/* build an array containing each data input field */
-				$save_fields{$field_array["field_name"]}[] = array("id" => "0", "value" => $field_array["value"]);
+				$save_fields{$field_array["field_name"]}[] = array("id" => "0", "value" => xml_character_decode($field_array["value"]));
 			}
 		}
 
@@ -424,7 +424,7 @@ function package_script_import(&$xml_array, $package_id, $object_hash) {
 		/* get the base fields from the xml */
 		foreach (array_keys($script_fields) as $field_name) {
 			if (isset($xml_array["script"][$field_name])) {
-				$save_fields[$field_name] = $xml_array["script"][$field_name];
+				$save_fields[$field_name] = xml_character_decode($xml_array["script"][$field_name]);
 			}
 		}
 
@@ -454,7 +454,7 @@ function package_script_import(&$xml_array, $package_id, $object_hash) {
 			/* get the base fields from the xml */
 			foreach (array_keys($script_field_fields) as $field_name) {
 				if (isset($script_field[$field_name])) {
-					$save_fields[$field_name] = $script_field[$field_name];
+					$save_fields[$field_name] = xml_character_decode($script_field[$field_name]);
 				}
 			}
 
@@ -484,7 +484,7 @@ function package_data_query_import(&$xml_array, $package_id, $object_hash) {
 		/* get the base fields from the xml */
 		foreach (array_keys($data_query_fields) as $field_name) {
 			if (isset($xml_array["data_query"][$field_name])) {
-				$save_fields[$field_name] = $xml_array["data_query"][$field_name];
+				$save_fields[$field_name] = xml_character_decode($xml_array["data_query"][$field_name]);
 			}
 		}
 
@@ -514,7 +514,7 @@ function package_data_query_import(&$xml_array, $package_id, $object_hash) {
 			/* get the base fields from the xml */
 			foreach (array_keys($data_query_field_fields) as $field_name) {
 				if (isset($data_query_field[$field_name])) {
-					$save_fields[$field_name] = $data_query_field[$field_name];
+					$save_fields[$field_name] = xml_character_decode($data_query_field[$field_name]);
 				}
 			}
 
@@ -544,7 +544,7 @@ function package_rra_import(&$xml_array, $package_id, $object_hash) {
 		/* get the base fields from the xml */
 		foreach (array_keys($rra_fields) as $field_name) {
 			if (isset($xml_array["rra"][$field_name])) {
-				$save_fields[$field_name] = $xml_array["rra"][$field_name];
+				$save_fields[$field_name] = xml_character_decode($xml_array["rra"][$field_name]);
 			}
 		}
 

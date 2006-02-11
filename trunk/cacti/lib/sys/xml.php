@@ -24,8 +24,8 @@
 
 function xml_array_get($data) {
 	/* mvo voncken@mailandnews.com
-	original ripped from  on the php-manual:gdemartini@bol.com.br
-	to be used for data retrieval(result-structure is Data oriented) */
+	 * original ripped from  on the gdemartini@bol.com.br
+	 * to be used for data retrieval(result-structure is Data oriented) */
 	$p = xml_parser_create();
 	xml_parser_set_option($p, XML_OPTION_SKIP_WHITE, 1);
 	xml_parser_set_option($p, XML_OPTION_CASE_FOLDING, 0);
@@ -40,7 +40,18 @@ function xml_array_get($data) {
 }
 
 function xml_character_encode($text) {
-	return str_replace("&", "&amp;", htmlentities($text, ENT_NOQUOTES));
+	return htmlentities($text, ENT_QUOTES);
+}
+
+/* borrowed from html_entity_decode() manual page */
+function xml_character_decode($text) {
+	/* replace numeric entities */
+	$text = preg_replace('~&#x([0-9a-f]+);~ei', 'chr(hexdec("\\1"))', $text);
+	$text = preg_replace('~&#([0-9]+);~e', 'chr("\\1")', $text);
+	/* replace literal entities */
+	$trans_tbl = get_html_translation_table(HTML_ENTITIES);
+	$trans_tbl = array_flip($trans_tbl);
+	return strtr($text, $trans_tbl);
 }
 
 function _xml_array_children_get($vals, &$i) {
@@ -59,7 +70,7 @@ function _xml_array_children_get($vals, &$i) {
 			break;
 		case 'complete':
 			/* if the value is an empty string, php doesn't include the 'value' key
-			in its array, so we need to check for this first */
+			 * in its array, so we need to check for this first */
 			if (isset($vals[$i]['value'])) {
 				$children{($vals[$i]['tag'])} = $vals[$i]['value'];
 			}else{

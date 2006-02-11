@@ -54,6 +54,7 @@ function api_data_template_list($filter_array = "", $current_page = 0, $rows_per
 		data_template.active
 		from data_template
 		$sql_where
+		" . ($sql_where == "" ? "where" : "and") . " data_template.package_id = 0
 		order by template_name
 		$sql_limit");
 }

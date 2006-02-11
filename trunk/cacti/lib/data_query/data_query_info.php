@@ -293,7 +293,7 @@ function api_data_query_name_get($data_query_id) {
 }
 
 function api_data_query_list() {
-	return db_fetch_assoc("select * from data_query order by name");
+	return db_fetch_assoc("select * from data_query where package_id = 0 order by name");
 }
 
 function api_data_query_field_list($data_query_id, $input_type = "") {
