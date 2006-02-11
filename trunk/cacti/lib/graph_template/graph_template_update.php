@@ -162,7 +162,7 @@ function api_graph_template_item_save($graph_template_item_id, $_fields_graph_it
 
 	/* field: sequence */
 	if (empty($graph_template_item_id)) {
-		$_fields["sequence"] = array("type" => DB_TYPE_NUMBER, "value" => seq_get_current($graph_template_item_id, "sequence", "graph_template_id", "graph_template_id = " . sql_sanitize($_fields_graph_item["graph_template_id"])));
+		$_fields["sequence"] = array("type" => DB_TYPE_NUMBER, "value" => seq_get_current($graph_template_item_id, "sequence", "graph_template_item", "graph_template_id = " . sql_sanitize($_fields_graph_item["graph_template_id"])));
 	}
 
 	/* convert the input array into something that is compatible with db_replace() */

@@ -35,16 +35,19 @@ function package_import(&$xml) {
 		return;
 	}
 
-	//$package_id = package_header_import($xml_array["header"]);
+	/* first, import the header which consists of the actual package data */
+	$package_id = package_header_import($xml_array["header"]);
 
+	/* next, import the full payload of the package including all of the templates */
 	package_payload_import($xml_array["payload"], $package_id);
+
+	/* last, tie the knot by adding the completed graph template references to the package */
+	package_header_items_import($xml_array["header"], $package_id);
 }
 
 function package_header_import(&$xml_array) {
 	require_once(CACTI_BASE_PATH . "/lib/package/package_info.php");
 	require_once(CACTI_BASE_PATH . "/lib/package/package_update.php");
-
-	print_a($xml_array);
 
 	/*
 	 * XML Tag: <package>
@@ -63,14 +66,68 @@ function package_header_import(&$xml_array) {
 			}
 		}
 
-		//api_package_save(0, $save_fields);
+		/* save the package to the database */
+		$package_id = api_package_save(0, $save_fields);
+
+		if ($package_id === false) {
+			return false;
+		}
 	}
 
+	/*
+	 * XML Tag: <metadata>
+	 */
+
+	/* obtain a list of all package metadata specific fields */
+	$package_metadata_fields = api_package_metadata_form_list();
+
+	if ((isset($xml_array["metadata"])) && (is_array($xml_array["metadata"]))) {
+		/* loop through each available package metadata field */
+		foreach ($xml_array["metadata"] as $package_metadata_hash => $package_metadata) {
+			$save_fields = array();
+
+			/* make sure that each metadata item is associated with the new package */
+			$save_fields["package_id"] = $package_id;
+
+			/* get the base fields from the xml */
+			foreach (array_keys($package_metadata_fields) as $field_name) {
+				if (isset($package_metadata[$field_name])) {
+					if ($field_name == "payload") {
+						/* decode any binary payload data */
+						$save_fields[$field_name] = base64_decode(str_replace("\n", "", $package_metadata[$field_name]));
+					}else{
+						$save_fields[$field_name] = $package_metadata[$field_name];
+					}
+				}
+			}
+
+			/* save the package metadata item to the database */
+			api_package_metadata_save(0, $save_fields);
+		}
+	}
+
+	return $package_id;
+}
+
+function package_header_items_import(&$xml_array, $package_id) {
+	require_once(CACTI_BASE_PATH . "/lib/package/package_update.php");
+
+	if ((isset($xml_array["package"])) && (isset($xml_array["package"]["items"]))) {
+		$graph_templates = explode("|", $xml_array["package"]["items"]);
+
+		foreach ($graph_templates as $graph_template_hash) {
+			/* convert the hash in the xml to an actual graph template id in the database */
+			$graph_template_id = package_hash_resolve($graph_template_hash);
+
+			if ($graph_template_id) {
+				/* add the graph template reference to the package */
+				api_package_package_template_add($package_id, $graph_template_id);
+			}
+		}
+	}
 }
 
 function package_payload_import(&$xml_array, $package_id) {
-	print_a($xml_array);
-
 	if (isset($xml_array["round_robin_archive"])) {
 		if (sizeof($xml_array["round_robin_archive"]) > 0) {
 			foreach (array_keys($xml_array["round_robin_archive"]) as $object_hash) {
@@ -110,9 +167,6 @@ function package_payload_import(&$xml_array, $package_id) {
 			}
 		}
 	}
-
-	global $package_hash_cache;
-	print_a($package_hash_cache);
 }
 
 function package_graph_template_import(&$xml_array, $package_id, $object_hash) {
@@ -389,25 +443,23 @@ function package_script_import(&$xml_array, $package_id, $object_hash) {
 	/* obtain a list of all data query field specific fields */
 	$script_field_fields = api_script_field_form_list();
 
-	if (isset($xml_array["fields"])) {
-		if (sizeof($xml_array["fields"]) > 0) {
-			/* loop through each available script field */
-			foreach ($xml_array["fields"] as $script_field_hash => $script_field) {
-				$save_fields = array();
+	if ((isset($xml_array["fields"])) && (is_array($xml_array["fields"]))) {
+		/* loop through each available script field */
+		foreach ($xml_array["fields"] as $script_field_hash => $script_field) {
+			$save_fields = array();
 
-				/* make sure that each field is associated with the new script */
-				$save_fields["data_input_id"] = $script_id;
+			/* make sure that each field is associated with the new script */
+			$save_fields["data_input_id"] = $script_id;
 
-				/* get the base fields from the xml */
-				foreach (array_keys($script_field_fields) as $field_name) {
-					if (isset($script_field[$field_name])) {
-						$save_fields[$field_name] = $script_field[$field_name];
-					}
+			/* get the base fields from the xml */
+			foreach (array_keys($script_field_fields) as $field_name) {
+				if (isset($script_field[$field_name])) {
+					$save_fields[$field_name] = $script_field[$field_name];
 				}
-
-				/* save the script field to the database and register its new id */
-				api_script_field_save(0, $save_fields);
 			}
+
+			/* save the script field to the database and register its new id */
+			api_script_field_save(0, $save_fields);
 		}
 	}
 }

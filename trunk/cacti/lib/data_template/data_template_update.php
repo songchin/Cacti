@@ -161,7 +161,7 @@ function api_data_template_item_save($data_template_item_id, $_fields_data_sourc
 	$_fields["id"] = array("type" => DB_TYPE_NUMBER, "value" => $data_template_item_id);
 
 	/* field: data_template_id */
-	if (!empty($_fields_graph_item["data_template_id"])) {
+	if (!empty($_fields_data_source_item["data_template_id"])) {
 		$_fields["data_template_id"] = array("type" => DB_TYPE_NUMBER, "value" => $_fields_data_source_item["data_template_id"]);
 	}
 
