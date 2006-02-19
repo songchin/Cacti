@@ -1,7 +1,7 @@
 <?php
 /*
  +-------------------------------------------------------------------------+
- | Copyright (C) 2005 The Cacti Group                                      |
+ | Copyright (C) 2006 The Cacti Group                                      |
  |                                                                         |
  | This program is free software; you can redistribute it and/or           |
  | modify it under the terms of the GNU General Public License             |
@@ -37,7 +37,7 @@ switch ($_REQUEST["action"]) {
 	case 'print';
 		print_logs();
 		break;
-	
+
 	case 'export';
 		export_logs();
 		break;
@@ -65,7 +65,7 @@ function form_post() {
 		header("logs.php");
 	}
 
-	if (($_POST["action_post"] == "box-1") && (isset($_POST["box-1-action-area-type"]))) { 
+	if (($_POST["action_post"] == "box-1") && (isset($_POST["box-1-action-area-type"]))) {
 		if (($_POST["box-1-action-area-type"] == "search") || ($_POST["box-1-action-area-type"] == "export")) {
 			if (trim($_POST["box-1-search_filter"]) != "") {
 				$get_string = ($get_string == "" ? "?" : "&") . "search_filter=" . urlencode($_POST["box-1-search_filter"]);
@@ -117,7 +117,7 @@ function form_post() {
 			}
 		}
 
-	} elseif ((isset($_POST["box-1-search_filter"]))) { 
+	} elseif ((isset($_POST["box-1-search_filter"]))) {
 		if (!isset($_POST["box-1-action-clear-button"])) {
 			if (trim($_POST["box-1-search_filter"]) != "") {
 				$get_string = ($get_string == "" ? "?" : "&") . "search_filter=" . urlencode($_POST["box-1-search_filter"]);
@@ -595,34 +595,34 @@ function export_logs() {
 			print "\"" . api_log_facility_get($log["facility"]) . "\",";
 			print "\"" . api_log_severity_get($log["severity"]) . "\",";
 			print "\"";
-			if ($log["poller_name"] == "") { 
-				print "SYSTEM"; 
-			}else{ 
-				print $log["poller_name"]; 
+			if ($log["poller_name"] == "") {
+				print "SYSTEM";
+			}else{
+				print $log["poller_name"];
 			}
 			print "\",\"";
-			if ($log["host"] == "") { 
-				print "SYSTEM"; 
-			}else{ 
-				print $log["host"]; 
+			if ($log["host"] == "") {
+				print "SYSTEM";
+			}else{
+				print $log["host"];
 			}
 			print "\",\"";
-			if ($log["plugin"] == "") { 
-				print "N/A"; 
-			}else{ 
+			if ($log["plugin"] == "") {
+				print "N/A";
+			}else{
 				print $log["plugin"];
 			}
 			print "\",\"";
-			if ($log["username"] == "") { 
-				print "SYSTEM"; 
-			}else{ 
-				print $log["username"]; 
+			if ($log["username"] == "") {
+				print "SYSTEM";
+			}else{
+				print $log["username"];
 			}
 			print "\",\"";
-			if ($log["source"] == "") { 
-				print "SYSTEM"; 
-			}else{ 
-				print $log["source"]; 
+			if ($log["source"] == "") {
+				print "SYSTEM";
+			}else{
+				print $log["source"];
 			}
 
 			print "\",\"" . str_replace($search,$replace,$log["message"]) . "\"\n";

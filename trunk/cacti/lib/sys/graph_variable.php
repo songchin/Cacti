@@ -1,7 +1,7 @@
 <?php
 /*
  +-------------------------------------------------------------------------+
- | Copyright (C) 2005 The Cacti Group                                      |
+ | Copyright (C) 2006 The Cacti Group                                      |
  |                                                                         |
  | This program is free software; you can redistribute it and/or           |
  | modify it under the terms of the GNU General Public License             |
@@ -83,7 +83,7 @@ function ninety_fifth_percentile($local_data_id, $start_seconds, $end_seconds, $
 				/* Go through data souce names */
 				reset($fetch_array[$i]["data_source_names"]);
 				foreach ( $fetch_array[$i]["data_source_names"] as $ds_name ) {
-					$dsi_name_to_id[$ds_name][] = $i; 
+					$dsi_name_to_id[$ds_name][] = $i;
 				}
 			}
 
@@ -94,7 +94,7 @@ function ninety_fifth_percentile($local_data_id, $start_seconds, $end_seconds, $
 				$sum_array["data_source_names"][$i] = $ds_name;
 				foreach ($id_array as $id) {
 					$fetch_id = array_search($ds_name,$fetch_array[$id]["data_source_names"]);
-						/* Sum up like ds names */	
+						/* Sum up like ds names */
 						for ($j=0; $j<count($fetch_array[$id]["values"][$fetch_id]); $j++) {
 							if (isset($fetch_array[$id]["values"][$fetch_id][$j])) {
 								$value = $fetch_array[$id]["values"][$fetch_id][$j];
@@ -108,7 +108,7 @@ function ninety_fifth_percentile($local_data_id, $start_seconds, $end_seconds, $
 							}
 						}
 				}
-				$i++;	
+				$i++;
 			}
 		}
 
@@ -161,24 +161,24 @@ function ninety_fifth_percentile($local_data_id, $start_seconds, $end_seconds, $
 		for ($i=0; $i<count($fetch_array["data_source_names"]); $i++) {
 			if (isset($fetch_array["values"][$i])) {
 				$values_array = $fetch_array["values"][$i];
-	
+
 				/* sort the array in descending order */
 				rsort($values_array, SORT_NUMERIC);
 			}
-	
+
 			/* grab the 95% row (or 5% in reverse) and use that as our 95th percentile
 			value */
 			$target = ((count($values_array) + 1) * .05);
 			$target = sprintf("%d", $target);
-	
+
 			if (empty($values_array[$target])) { $values_array[$target] = 0; }
-	
+
 			/* collect 95th percentile values in this array so we can return them */
 			$return_array{$fetch_array["data_source_names"][$i]} = $values_array[$target];
 
 			/* get max 95th calculation for aggregate */
-			if (($fetch_array["data_source_names"][$i] != "ninety_fifth_percentile_aggregate_max") && 
-				($fetch_array["data_source_names"][$i] != "ninety_fifth_percentile_aggregate_sum") && 
+			if (($fetch_array["data_source_names"][$i] != "ninety_fifth_percentile_aggregate_max") &&
+				($fetch_array["data_source_names"][$i] != "ninety_fifth_percentile_aggregate_sum") &&
 				($fetch_array["data_source_names"][$i] != "ninety_fifth_percentile_maximum")) {
 				if (isset($return_array{"ninety_fifth_percentile_aggregate_total"})) {
 					if (($return_array{"ninety_fifth_percentile_aggregate_total"} < $values_array[$target])) {

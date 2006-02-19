@@ -1,7 +1,7 @@
 <?php
 /*
  +-------------------------------------------------------------------------+
- | Copyright (C) 2005 The Cacti Group                                      |
+ | Copyright (C) 2006 The Cacti Group                                      |
  |                                                                         |
  | This program is free software; you can redistribute it and/or           |
  | modify it under the terms of the GNU General Public License             |
@@ -204,7 +204,7 @@ if ($action == 'login') {
 
 			/* Update ip and lastlogin information for the user*/
 			api_log_log(_("LOGIN: Updating user last login information"), SEV_DEBUG, FACIL_AUTH);
-			$user_save = array();	
+			$user_save = array();
 			$user_save["id"] = array("type" => DB_TYPE_NUMBER, "value" => $user["id"]);
 			$user_save["last_login"] = array("type" => DB_TYPE_FUNC_NOW, "value" => "");
 			$user_save["last_login_ip"] = array("type" => DB_TYPE_STRING, "value" => $_SERVER["REMOTE_ADDR"]);
@@ -315,7 +315,7 @@ function auth_display_custom_error_message($message) {
 			<td colspan="2"><font color="#FF0000"><strong><?php echo _("User Account Disabled"); ?></strong></font></td>
 		</tr>
 		<?php } } ?>
-	
+
 		<tr height="10"><td></td></tr>
 		<tr>
 			<td colspan="2"><?php echo _("Please enter your Cacti user name and password below:"); ?></td>

@@ -1,7 +1,7 @@
 <?php
 /*
  +-------------------------------------------------------------------------+
- | Copyright (C) 2005 The Cacti Group                                      |
+ | Copyright (C) 2006 The Cacti Group                                      |
  |                                                                         |
  | This program is free software; you can redistribute it and/or           |
  | modify it under the terms of the GNU General Public License             |
@@ -60,7 +60,7 @@ function form_post() {
 		header("auth_user.php");
 	}
 
-	if (($_POST["action_post"] == "box-1") && (isset($_POST["box-1-action-area-type"]))) { 
+	if (($_POST["action_post"] == "box-1") && (isset($_POST["box-1-action-area-type"]))) {
 		if (($_POST["box-1-action-area-type"] == "search") || ($_POST["box-1-action-area-type"] == "export")) {
 			if (trim($_POST["box-1-search_filter"]) != "") {
 				$get_string = ($get_string == "" ? "?" : "&") . "search_filter=" . urlencode($_POST["box-1-search_filter"]);
@@ -72,7 +72,7 @@ function form_post() {
 			}
 		}
 
-	} elseif ((isset($_POST["box-1-search_filter"]))) { 
+	} elseif ((isset($_POST["box-1-search_filter"]))) {
 		if (!isset($_POST["box-1-action-clear-button"])) {
 			if (trim($_POST["box-1-search_filter"]) != "") {
 				$get_string = ($get_string == "" ? "?" : "&") . "search_filter=" . urlencode($_POST["box-1-search_filter"]);

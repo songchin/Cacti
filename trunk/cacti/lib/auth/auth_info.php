@@ -1,7 +1,7 @@
 <?php
 /*
  +-------------------------------------------------------------------------+
- | Copyright (C) 2005 The Cacti Group                                      |
+ | Copyright (C) 2006 The Cacti Group                                      |
  |                                                                         |
  | This program is free software; you can redistribute it and/or           |
  | modify it under the terms of the GNU General Public License             |
@@ -29,7 +29,7 @@
 require_once(CACTI_BASE_PATH . "/include/auth/auth_constants.php");
 
 /**
- * Get total number of users 
+ * Get total number of users
  *
  * Given filter array, return the number of records
  *
@@ -177,7 +177,7 @@ function api_auth_control_get($control_type, $control_id, $data_field = "") {
 				$_SESSION["auth_data"][$data_field] = $value;
 			}
 		}
-	
+
 	}else{
 		/* multi value return */
 
@@ -214,8 +214,8 @@ function api_auth_control_get($control_type, $control_id, $data_field = "") {
 				if (array_key_exists($key, $db_values)) {
 					$value[$key] = $db_values[$key];
 				}else{
-					$value[$key] = $data_fields[$key];	
-				}	
+					$value[$key] = $data_fields[$key];
+				}
 			}
 		}
 
