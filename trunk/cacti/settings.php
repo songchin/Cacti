@@ -61,25 +61,16 @@ default:
 		$current_tab = $_GET["tab"];
 	}
 
-	/* draw the categories tabs on the top of the page */
-	print "<table class='tabs' width='98%' cellspacing='0' cellpadding='3' align='center'><tr>\n";
+	/* start the tab group for the settings page */
+	html_tab_start();
 
 	if (sizeof($tabs) > 0) {
-	foreach (array_keys($tabs) as $tab_short_name) {
-		if ($tab_short_name == $current_tab) {
-			$background = $colors["form_alternate1"];
-		} else {
-			$background = $colors["form_alternate2"];
+		foreach (array_keys($tabs) as $tab_short_name) {
+			html_tab_draw($tabs[$tab_short_name], "settings.php?tab=$tab_short_name", ($tab_short_name == $current_tab));
 		}
-
-		print "<td bgcolor='" . $background . "' nowrap='nowrap' width='" . (strlen($tabs[$tab_short_name]) * 9) . "' align='center' class='tab'>
-				<span class='textHeader'><a href='settings.php?tab=$tab_short_name'>$tabs[$tab_short_name]</a></span>
-				</td>\n
-				<td width='1'></td>\n";
-	}
 	}
 
-	print "<td></td>\n</tr></table>\n";
+	html_tab_end();
 
 	html_start_box("<strong>" . _("Cacti Settings") . " (" . $tabs[$current_tab] . ")</strong>");
 

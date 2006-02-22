@@ -31,9 +31,9 @@
    @arg $align - the HTML alignment to use for the box (center, left, or right)
    @arg $add_text - the url to use when the user clicks 'Add' in the upper-right
 	corner of the box ("" for no 'Add' link) */
-function html_start_box($title, $add_url = "", $search_url = "") {
+function html_start_box($title, $add_url = "", $search_url = "", $include_top_border = true) {
 	?>
-	<table width="98%" cellspacing="1" cellpadding="0" align="center" class="content">
+	<table width="98%" cellspacing="1" cellpadding="0" align="center" class="content"<?php echo ($include_top_border == true ? "" : " style=\"border-top: none;\"");?>>
 		<?php if ($title != "") {?>
 		<tr>
 			<td>

@@ -138,21 +138,34 @@ span.text-highlight {
 }
 
 /* tabs */
-td.tab {
-	border-top: 1px solid #999;
-	border-right: 1px solid #666;
-	border-left: 1px solid #999;
-	border-bottom: none;
-	border-radius: 2px;
-	-moz-border-radius: 2px;
+table.tab-container { }
+table.tab-container table.tab {
+	margin-left: 1px;
+	cursor: pointer;
 }
-
-table.tabs {
-	border-top: none;
-	border-right: none;
-	border-left: none;
-	border-bottom: 1px solid #666;
+table.tab-container table.tab td.left {
+	width: 6px;
+	height: 22px;
 }
+table.tab-container table.tab td.middle {
+	height: 22px;
+	color: white;
+	font-weight: bold;
+	text-align: center;
+}
+table.tab-container table.tab td.right {
+	width: 6px;
+	height: 22px;
+}
+table.tab-container .selected { background-color: #00438c; }
+table.tab-container .selected td.left { background: url(images/tab_shell_left_down.gif) left top no-repeat; }
+table.tab-container .selected td.right { background: url(images/tab_shell_right_down.gif) left top no-repeat; }
+table.tab-container .selected td.middle { border-top: 1px solid #6d88ad; }
+table.tab-container .unselected { background-color: #9c9c9c; }
+table.tab-container .unselected td.left { background: url(images/tab_shell_left_up.gif) left top no-repeat; }
+table.tab-container .unselected td.right { background: url(images/tab_shell_right_up.gif) left top no-repeat; }
+table.tab-container .unselected td.middle { border-top: 1px solid #606060; }
+table.tab-container .unselected a { color: white; }
 
 /* Begin - Java Script Row Selection Logic for Layout.js */
 .jsRowSelect {
@@ -176,9 +189,7 @@ table.tabs {
 
 /* new box code */
 table.content {
-	border-width: 1px;
-	border-style: solid;
-	border-color: #b5b5b5;
+	border: 1px solid #b5b5b5;
 }
 
 td.content-header {

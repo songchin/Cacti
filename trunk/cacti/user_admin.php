@@ -683,26 +683,11 @@ function user_edit() {
 
 	if (!empty($_GET["id"])) {
 		/* draw user admin nav tabs */
-		?>
-		<input type='hidden' name='last_action' value='<?php print $_GET["action"] ?>'>
-		<table class='tabs' width='98%' cellspacing='0' cellpadding='3' align='center'>
-			<tr>
-				<td width='1'></td>
-				<td <?php print ((($_GET["action"] == "user_realms_edit") || ($_GET["action"] == "user_edit")) ? "bgcolor='" . $colors["form_alternate1"] . "'" : "bgcolor='" . $colors["form_alternate2"] . "'");?> nowrap='nowrap' width='150' align='center' class='tab'>
-					<span class='textHeader'><a href='user_admin.php?action=user_realms_edit&id=<?php print $_GET["id"];?>'><?php echo _("Realm Permissions");?></a></span>
-				</td>
-				<td width='1'></td>
-				<td <?php print (($_GET["action"] == "graph_perms_edit") ? "bgcolor='" . $colors["form_alternate1"] . "'" : "bgcolor='" . $colors["form_alternate2"] . "'");?> nowrap='nowrap' width='150' align='center' class='tab'>
-					<span class='textHeader'><a href='user_admin.php?action=graph_perms_edit&id=<?php print $_GET["id"];?>'><?php echo _("Graph Permissions");?></a></span>
-				</td>
-				<td width='1'></td>
-				<td <?php print (($_GET["action"] == "graph_settings_edit") ? "bgcolor='" . $colors["form_alternate1"] . "'" : "bgcolor='" . $colors["form_alternate2"] . "'");?> nowrap='nowrap' width='130' align='center' class='tab'>
-					<span class='textHeader'><a href='user_admin.php?action=graph_settings_edit&id=<?php print $_GET["id"];?>'><?php echo _("Graph Settings");?></a></span>
-				</td>
-				<td></td>
-			</tr>
-		</table>
-		<?php
+		html_tab_start();
+		html_tab_draw(_("Realm Permissions"), "user_admin.php?action=user_realms_edit&id=" . $_GET["id"], ((($_REQUEST["action"] == "user_realms_edit") || ($_REQUEST["action"] == "user_edit")) ? true : false));
+		html_tab_draw(_("Graph Permissions"), "user_admin.php?action=graph_perms_edit&id=" . $_GET["id"], (($_REQUEST["action"] == "graph_perms_edit") ? true : false));
+		html_tab_draw(_("Graph Settings"), "user_admin.php?action=graph_settings_edit&id=" . $_GET["id"], (($_REQUEST["action"] == "graph_settings_edit") ? true : false));
+		html_tab_end();
 	}
 
 	if ($_GET["action"] == "graph_settings_edit") {
@@ -715,6 +700,7 @@ function user_edit() {
 		user_realms_edit();
 	}
 
+	form_hidden_box("last_action", $_GET["action"], "");
 	form_save_button("user_admin.php");
 }
 

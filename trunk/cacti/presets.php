@@ -67,25 +67,11 @@ switch ($_REQUEST["action"]) {
     Global Functions
    ------------------------ */
 function draw_tabs() {
-	global $colors;
-	?>
-	<table class='tabs' width='98%' cellspacing='0' cellpadding='3' align='center'>
-		<tr>
-			<td <?php echo ((($_REQUEST["action"] == "") || ($_REQUEST["action"] == "view_cdef")) ? "bgcolor='" . $colors["form_alternate1"] . "'" : "bgcolor='" . $colors["form_alternate2"] . "'");?> nowrap='nowrap' width='70' align='center' class='tab'>
-				<span class='textHeader'><a href='presets.php?action=view_cdef'>CDEFs</a></span>
-			</td>
-			<td width='1'></td>
-			<td <?php echo (($_REQUEST["action"] == "view_color") ? "bgcolor='" . $colors["form_alternate1"] . "'" : "bgcolor='" . $colors["form_alternate2"] . "'");?> nowrap='nowrap' width='70' align='center' class='tab'>
-				<span class='textHeader'><a href='presets.php?action=view_color'>Colors</a></span>
-			</td>
-			<td width='1'></td>
-			<td <?php echo (($_REQUEST["action"] == "view_gprint") ? "bgcolor='" . $colors["form_alternate1"] . "'" : "bgcolor='" . $colors["form_alternate2"] . "'");?> nowrap='nowrap' width='80' align='center' class='tab'>
-				<span class='textHeader'><a href='presets.php?action=view_gprint'>GPRINTs</a></span>
-			</td>
-			<td></td>
-		</tr>
-	</table>
-	<?php
+	html_tab_start();
+	html_tab_draw("CDEFs", "presets.php?action=view_cdef", ((($_REQUEST["action"] == "") || ($_REQUEST["action"] == "view_cdef")) ? true : false));
+	html_tab_draw("Colors", "presets.php?action=view_color", (($_REQUEST["action"] == "view_color") ? true : false));
+	html_tab_draw("GPRINTs", "presets.php?action=view_gprint", (($_REQUEST["action"] == "view_gprint") ? true : false));
+	html_tab_end();
 }
 
 /* ------------------------

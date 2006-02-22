@@ -137,6 +137,47 @@ function html_graph_thumbnail_area(&$graph_array, $no_graphs_message = "", $extr
 	}
 }
 
+/* html_tab_start - starts a new tab group */
+function html_tab_start() {
+	?>
+	<table width='98%' cellspacing='0' cellpadding='0' align='center'>
+		<tr>
+			<td>
+				<table class="tab-container" width="100%" cellpadding="0" cellspacing="0">
+					<tr>
+					<?php
+}
+
+/* html_tab_end - ends an existing tab group */
+function html_tab_end() {
+	?>
+						<td>&nbsp;</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+	</table>
+	<?php
+}
+
+/* html_tab_draw - draws a single tab
+   @arg $title - the title to display for the text of the tab
+   @arg $url - the url to link to when the tab is selected
+   @arg $selected - whether the tab should be selected or not */
+function html_tab_draw($title, $url, $selected = false) {
+	?>
+	<td width="<?php echo (strlen($title) * 8) + 15;?>">
+		<table class="tab <?php echo ($selected == false ? "unselected" : "selected");?>" width="100%" cellpadding="0" cellspacing="0">
+			<tr>
+				<td class="left"></td>
+				<td class="middle"><?php echo ($selected == false ? "<a href=\"$url\">" : "");?><?php echo $title;?><?php echo ($selected == false ? "</a>" : "");?></td>
+				<td class="right"></td>
+			</tr>
+		</table>
+	</td>
+	<?php
+}
+
 /* html_nav_bar - draws a navigation bar which includes previous/next links as well as current
 	page information
    @arg $background_color - the background color of this navigation bar row
