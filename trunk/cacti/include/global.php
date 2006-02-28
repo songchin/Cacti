@@ -62,6 +62,9 @@ $colors["form_alternate2"] = "E5E5E5";
 /* Contants includes */
 require(CACTI_BASE_PATH . "/include/global_constants.php");
 
+/* Event Management include */
+require(CACTI_BASE_PATH . "/lib/api_event.php");
+
 /* Logging include */
 require(CACTI_BASE_PATH . "/lib/log/log_update.php");
 
