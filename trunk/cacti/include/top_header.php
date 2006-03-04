@@ -39,7 +39,7 @@ if (isset($_SESSION["sess_user_id"])) {
 	<title>Cacti</title>
 	<link href='<?php print html_get_theme_css();?>' rel='stylesheet'>
 	<link href='<?php print html_get_theme_images_path("favicon.ico");?>' rel='image/x-icon'>
-	<?php $xajax->printJavascript("lib/xajax/");?>
+	<?php echo (isset($xajax) ? $xajax->getJavascript("lib/xajax/") : "");?>
 </style>
 </head>
 
