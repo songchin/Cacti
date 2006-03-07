@@ -34,7 +34,7 @@ see http://www.gnu.org/copyleft/lesser.html
 
 
 // PATH TO THE TRANSPARENT 1*1 PX IMAGE (required by NS 4 as spacer)
-var spacer = 'transparentpixel.gif';
+var spacer = 'themes/classic/images/transparent_pixel.gif';
 
 
 

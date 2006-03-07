@@ -382,7 +382,7 @@ function alphaBackgrounds(){
 			if (bg.match(/\.png/i) != null){
 				var mypng = bg.substring(5,bg.length-2);
 				document.all[i].style.filter = "progid:DXImageTransform.Microsoft.AlphaImageLoader(src='"+mypng+"', sizingMethod='scale')";
-				document.all[i].style.backgroundImage = "url('themes/classic/images/pixel.gif')";
+				document.all[i].style.backgroundImage = "url('themes/classic/images/transparent_pixel.gif')";
 			}
 		}
 	}
