@@ -29,7 +29,6 @@ if (!isset($_SERVER["argv"][0])) {
 }
 
 $start = date("Y-n-d H:i:s"); // for runtime measurement
-$poller_update_time = date("Y-m-d H:i:s"); // for poller update time
 
 ini_set("max_execution_time", "0");
 ini_set("memory_limit", "32M");
@@ -172,6 +171,8 @@ if ((sizeof($polling_items) > 0) && (read_config_option("poller_enabled") == "on
 		if ($current_host != $last_host) {
 			$new_host = true;
 			$host_down = false;
+
+			$host_update_time = date("Y-m-d H:i:s"); // for poller host output
 
 			/* for this host, get it's current status for spike detection and set default spike value */
 			$set_spike_kill = FALSE;
@@ -365,10 +366,10 @@ if ((sizeof($polling_items) > 0) && (read_config_option("poller_enabled") == "on
 			if (isset($output)) {
 				/* insert a U in place of the actual value if the snmp agent restarts */
 				if (($set_spike_kill) && (!substr_count($output, ":"))) {
-					db_execute("insert into poller_output (local_data_id,rrd_name,time,output) values (" . $item["local_data_id"] . ",'" . $item["rrd_name"] . "','$poller_update_time','" . addslashes("U") . "')");
+					db_execute("insert into poller_output (local_data_id,rrd_name,time,output) values (" . $item["local_data_id"] . ",'" . $item["rrd_name"] . "','$host_update_time','" . addslashes("U") . "')");
 				/* otherwise, just insert the value received from the poller */
 				}else{
-					db_execute("insert into poller_output (local_data_id,rrd_name,time,output) values (" . $item["local_data_id"] . ",'" . $item["rrd_name"] . "','$poller_update_time','" . addslashes($output) . "')");
+					db_execute("insert into poller_output (local_data_id,rrd_name,time,output) values (" . $item["local_data_id"] . ",'" . $item["rrd_name"] . "','$host_update_time','" . addslashes($output) . "')");
 				}
 			}
 		} /* Next Cache Item */
