@@ -89,7 +89,7 @@ function api_auth_control_list ($filter_array, $limit = -1, $offset = -1) {
 
 	}
 
-        return db_fetch_assoc("SELECT * FROM (auth_control) $sql_where ORDER BY auth_control.name DESC",$limit,$offset);
+        return db_fetch_assoc("SELECT * FROM (auth_control) $sql_where ORDER BY auth_control.name ASC",$limit,$offset);
 
 }
 
@@ -104,7 +104,7 @@ function api_auth_control_list ($filter_array, $limit = -1, $offset = -1) {
 function api_auth_control_get($control_type, $control_id, $data_field = "") {
 
 	/* include required arrays */
-	require_once(CACTI_BASE_PATH . "/include/auth/auth_arrays.php");
+	require(CACTI_BASE_PATH . "/include/auth/auth_arrays.php");
 
 	/* Validate input */
 	if (!is_numeric($control_id)) {

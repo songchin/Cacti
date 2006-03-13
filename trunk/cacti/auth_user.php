@@ -93,7 +93,7 @@ function view_users() {
 
 	/* setup action menu */
 	$menu_items = array(
-		"delete" => "Delete",
+		"remove" => "Remove",
 		"duplicate" => "Duplicate",
 		"enable" => "Enable",
 		"disable" => "Disable",
@@ -116,6 +116,11 @@ function view_users() {
 		$filter_array["description"] = get_get_var("search_description");
 		$filter_url .= ($filter_url == "" ? "" : "&") . "search_description=" . urlencode(get_get_var("search_description"));
 	}
+	if (isset_get_var("search_enabled")) {
+		$filter_array["enabled"] = get_get_var("search_enabled");
+		$filter_url .= ($filter_url == "" ? "" : "&") . "search_enabled=" . urlencode(get_get_var("search_enabled"));
+	}
+
 
 	/* get log entires */
 	$users = api_auth_control_list($filter_array,read_config_option("num_rows_page"),read_config_option("num_rows_page")*($current_page-1));
@@ -171,7 +176,7 @@ function view_users() {
 		<?php
 	}
 
-	html_box_toolbar_draw($box_id, "0", "8", (sizeof($filter_array) == 0 ? HTML_BOX_SEARCH_INACTIVE : HTML_BOX_SEARCH_ACTIVE), $url_page_select, 0);
+	html_box_toolbar_draw($box_id, "0", "5", (sizeof($filter_array) == 0 ? HTML_BOX_SEARCH_INACTIVE : HTML_BOX_SEARCH_ACTIVE), $url_page_select, 1);
 	html_end_box(false);
 
 	html_box_actions_menu_draw($box_id, "0", $menu_items, 250);
@@ -180,11 +185,75 @@ function view_users() {
 	form_hidden_box("action_post", "auth_user_list");
 	form_end();
 
+
+
+	/* fill in the list of available host status types for the search dropdown */
+	$search_auth_enabled = array();
+	$search_auth_enabled["-1"] = "Any";
+	$search_auth_enabled["1"] = "Enabled";
+	$search_auth_enabled["0"] = "Disabled";
+
 	?>
 
 	<script language="JavaScript">
 	<!--
 	function action_area_handle_type(box_id, type, parent_div, parent_form) {
+		if (type == 'remove') {
+			parent_div.appendChild(document.createTextNode('Are you sure you want to remove these users?'));
+			parent_div.appendChild(action_area_generate_selected_rows(box_id));
+
+			parent_div.appendChild(action_area_generate_break());
+
+			action_area_update_header_caption(box_id, 'Remove User');
+			action_area_update_submit_caption(box_id, 'Remove');
+			action_area_update_selected_rows(box_id, parent_form);
+		}else if (type == 'duplicate') {
+			parent_div.appendChild(document.createTextNode('Are you sure you want to duplicate these users?'));
+			parent_div.appendChild(action_area_generate_selected_rows(box_id));
+			parent_div.appendChild(action_area_generate_input('text', 'box-' + box_id + '-action-area-txt1', ''));
+
+			action_area_update_header_caption(box_id, 'Duplicate User');
+			action_area_update_submit_caption(box_id, 'Duplicate');
+			action_area_update_selected_rows(box_id, parent_form);
+		}else if (type == 'enable') {
+			parent_div.appendChild(document.createTextNode('Are you sure you want to enable these users?'));
+			parent_div.appendChild(action_area_generate_selected_rows(box_id));
+
+			action_area_update_header_caption(box_id, 'Enable Users');
+			action_area_update_submit_caption(box_id, 'Enable');
+			action_area_update_selected_rows(box_id, parent_form);
+		}else if (type == 'disable') {
+			parent_div.appendChild(document.createTextNode('Are you sure you want to disable these users?'));
+			parent_div.appendChild(action_area_generate_selected_rows(box_id));
+
+			action_area_update_header_caption(box_id, 'Disable Users');
+			action_area_update_submit_caption(box_id, 'Disable');
+			action_area_update_selected_rows(box_id, parent_form);
+		}else if (type == 'passwdexpire') {
+			parent_div.appendChild(document.createTextNode('Are you sure you want to set the password expire interval for these users?'));
+			parent_div.appendChild(action_area_generate_selected_rows(box_id));
+
+
+
+
+			action_area_update_header_caption(box_id, 'Set');
+			action_area_update_submit_caption(box_id, 'Clear');
+			action_area_update_selected_rows(box_id, parent_form);
+		}else if (type == 'search') {
+
+                        _elm_ds_input = action_area_generate_select('box-' + box_id + '-search_status');
+                        <?php echo get_js_dropdown_code('_elm_ds_input', $search_auth_enabled, (isset_get_var("search_enabled") ? get_get_var("search_enabled") : "-1"));?>
+
+                        _elm_ht_input = action_area_generate_input('text', 'box-' + box_id + '-search_filter', '<?php echo get_get_var("search_filter");?>');
+                        _elm_ht_input.size = '30';
+
+                        parent_div.appendChild(action_area_generate_search_field(_elm_ds_input, 'Enabled', false, false));
+                        parent_div.appendChild(action_area_generate_search_field(_elm_ht_input, 'Filter', false, true));
+
+                        action_area_update_header_caption(box_id, 'Search');
+                        action_area_update_submit_caption(box_id, 'Search');
+
+		}
 
 	}
 	-->
@@ -193,7 +262,6 @@ function view_users() {
 	<?php
 
 }
-
 
 
 ?>
