@@ -55,4 +55,34 @@ function api_data_preset_package_vendor_get($preset_id) {
 	return db_fetch_cell("select name from preset_package_vendor where id = " . sql_sanitize($preset_id));
 }
 
+function api_data_preset_rra_list() {
+	return db_fetch_assoc("select * from preset_rra order by name");
+}
+
+function api_data_preset_rra_get($preset_id) {
+	/* sanity checks */
+	validate_id_die($preset_id, "preset_id");
+
+	return db_fetch_row("select * from preset_rra where id = " . sql_sanitize($preset_id));
+}
+
+function api_data_preset_rra_item_list($preset_id) {
+	/* sanity checks */
+	validate_id_die($preset_id, "preset_id");
+
+	return db_fetch_assoc("select * from preset_rra_item where preset_rra_id = " . sql_sanitize($preset_id));
+}
+
+function &api_data_preset_rra_row_type_list() {
+	require(CACTI_BASE_PATH . "/include/data_preset/data_preset_arrays.php");
+
+	return $rra_preset_row_types;
+}
+
+function &api_data_preset_rra_cf_type_list() {
+	require(CACTI_BASE_PATH . "/include/data_preset/data_preset_arrays.php");
+
+	return $rra_preset_cf_types;
+}
+
 ?>

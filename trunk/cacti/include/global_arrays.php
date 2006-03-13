@@ -313,6 +313,7 @@ $user_auth_realm_filenames = array(
 	"presets_cdef.php" => 14,
 	"presets_color.php" => 14,
 	"presets_gprint.php" => 14,
+	"presets_rra.php" => 14,
 	"color.php" => 5,
 	"data_input.php" => 2,
 	"pollers.php" => 2,

@@ -24,6 +24,7 @@
 
 require(dirname(__FILE__) . "/include/global.php");
 require_once(CACTI_BASE_PATH . "/include/auth/validate.php");
+require_once(CACTI_BASE_PATH . "/lib/data_preset/data_preset_info.php");
 
 /* set default action */
 if (!isset($_REQUEST["action"])) { $_REQUEST["action"] = ""; }
@@ -53,6 +54,14 @@ switch ($_REQUEST["action"]) {
 
 		require_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
 		break;
+	case 'view_rra':
+		require_once(CACTI_BASE_PATH . "/include/top_header.php");
+
+		draw_tabs();
+		view_rra();
+
+		require_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
+		break;
 	default:
 		require_once(CACTI_BASE_PATH . "/include/top_header.php");
 
@@ -71,6 +80,7 @@ function draw_tabs() {
 	html_tab_draw("CDEFs", "presets.php?action=view_cdef", ((($_REQUEST["action"] == "") || ($_REQUEST["action"] == "view_cdef")) ? true : false));
 	html_tab_draw("Colors", "presets.php?action=view_color", (($_REQUEST["action"] == "view_color") ? true : false));
 	html_tab_draw("GPRINTs", "presets.php?action=view_gprint", (($_REQUEST["action"] == "view_gprint") ? true : false));
+	html_tab_draw("RRAs", "presets.php?action=view_rra", (($_REQUEST["action"] == "view_rra") ? true : false));
 	html_tab_end();
 }
 
@@ -183,6 +193,77 @@ function view_gprint() {
 		<?php
 	}
 	html_end_box();
+}
+
+function view_rra() {
+	$menu_items = array(
+		"remove" => "Remove",
+		"duplicate" => "Duplicate"
+		);
+
+	$rras = api_data_preset_rra_list();
+
+	$box_id = "1";
+	html_start_box("<strong>" . _("RRA Presets") . "</strong>", "presets_rra.php?action=edit", "", "", false);
+	html_header_checkbox(array(_("Name")), $box_id);
+
+	if (sizeof($rras) > 0) {
+		foreach ($rras as $rra) {
+			?>
+			<tr class="content-row" id="box-<?php echo $box_id;?>-row-<?php echo $rra["id"];?>" onClick="display_row_select('<?php echo $box_id;?>',document.forms[0],'box-<?php echo $box_id;?>-row-<?php echo $rra["id"];?>', 'box-<?php echo $box_id;?>-chk-<?php echo $rra["id"];?>')" onMouseOver="display_row_hover('box-<?php echo $box_id;?>-row-<?php echo $rra["id"];?>')" onMouseOut="display_row_clear('box-<?php echo $box_id;?>-row-<?php echo $rra["id"];?>')">
+				<td class="content-row">
+					<a class="linkEditMain" onClick="display_row_block('box-<?php echo $box_id;?>-row-<?php echo $rra["id"];?>')" href="presets_rra.php?action=edit&id=<?php echo $rra["id"];?>"><span id="box-<?php echo $box_id;?>-text-<?php echo $rra["id"];?>"><?php echo $rra["name"];?></span></a>
+				</td>
+				<td class="content-row" width="1%" align="center" style="border-left: 1px solid #b5b5b5; border-top: 1px solid #b5b5b5; background-color: #e9e9e9; <?php echo get_checkbox_style();?>">
+					<input type='checkbox' style='margin: 0px;' name='box-<?php echo $box_id;?>-chk-<?php echo $rra["id"];?>' id='box-<?php echo $box_id;?>-chk-<?php echo $rra["id"];?>' title="<?php echo $rra["name"];?>">
+				</td>
+			</tr>
+			<?php
+		}
+
+		html_box_toolbar_draw($box_id, "0", "1");
+	}else{
+		?>
+		<tr>
+			<td class="content-list-empty" colspan="1">
+				No RRA presets found.
+			</td>
+		</tr>
+		<?php
+	}
+
+	html_end_box(false);
+
+	html_box_actions_menu_draw($box_id, "0", $menu_items);
+	html_box_actions_area_draw($box_id, "0");
+
+	form_end();
+	?>
+
+	<script language="JavaScript">
+	<!--
+	function action_area_handle_type(box_id, type, parent_div, parent_form) {
+		if (type == 'remove') {
+			parent_div.appendChild(document.createTextNode('Are you sure you want to remove these RRA presets?'));
+			parent_div.appendChild(action_area_generate_selected_rows(box_id));
+
+			action_area_update_header_caption(box_id, 'Remove RRA Presets');
+			action_area_update_submit_caption(box_id, 'Remove');
+			action_area_update_selected_rows(box_id, parent_form);
+		}else if (type == 'duplicate') {
+			parent_div.appendChild(document.createTextNode('Are you sure you want to duplicate these RRA Presets?'));
+			parent_div.appendChild(action_area_generate_selected_rows(box_id));
+			parent_div.appendChild(action_area_generate_input('text', 'box-' + box_id + '-action-area-txt1', ''));
+
+			action_area_update_header_caption(box_id, 'Duplicate RRA Presets');
+			action_area_update_submit_caption(box_id, 'Duplicate');
+			action_area_update_selected_rows(box_id, parent_form);
+		}
+	}
+	-->
+	</script>
+
+	<?php
 }
 
 ?>
