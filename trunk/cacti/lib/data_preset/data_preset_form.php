@@ -24,6 +24,92 @@
 
 /* form validation functions */
 
+function validate_data_preset_rra_fields(&$_fields_data_preset_rra, $data_preset_rra_field_name_format) {
+	require_once(CACTI_BASE_PATH . "/lib/data_preset/data_preset_info.php");
+
+	if (sizeof($_fields_data_preset_rra) == 0) {
+		return array();
+	}
+
+	/* array containing errored fields */
+	$error_fields = array();
+
+	/* get a complete field list */
+	$fields_data_preset_rra = api_data_preset_rra_form_list();
+
+	/* base fields */
+	while (list($_field_name, $_field_array) = each($fields_data_preset_rra)) {
+		if ((isset($_fields_data_preset_rra[$_field_name])) && (isset($_field_array["validate_regexp"])) && (isset($_field_array["validate_empty"]))) {
+			$form_field_name = str_replace("|field|", $_field_name, $data_preset_rra_field_name_format);
+
+			if (!form_input_validate($_fields_data_preset_rra[$_field_name], $form_field_name, $_field_array["validate_regexp"], $_field_array["validate_empty"])) {
+				$error_fields[] = $form_field_name;
+			}
+		}
+	}
+
+	return $error_fields;
+}
+
+function validate_data_preset_rra_item_fields(&$_fields_data_preset_rra_item, $data_preset_rra_item_field_name_format) {
+	require_once(CACTI_BASE_PATH . "/include/data_preset/data_preset_constants.php");
+	require_once(CACTI_BASE_PATH . "/lib/data_preset/data_preset_info.php");
+
+	if (sizeof($_fields_data_preset_rra_item) == 0) {
+		return array();
+	}
+
+	/* array containing errored fields */
+	$error_fields = array();
+
+	/* get a complete field list */
+	$fields_data_preset_rra_item = api_data_preset_rra_item_form_list();
+
+	/* only certain fields are displayed on the form depending on the selected consolidation function */
+	if ((isset($_fields_data_preset_rra_item["consolidation_function"])) && (($_fields_data_preset_rra_item["consolidation_function"] == RRA_CF_TYPE_AVERAGE) || ($_fields_data_preset_rra_item["consolidation_function"] == RRA_CF_TYPE_MIN) || ($_fields_data_preset_rra_item["consolidation_function"] == RRA_CF_TYPE_MAX) || ($_fields_data_preset_rra_item["consolidation_function"] == RRA_CF_TYPE_LAST)) ) {
+		$fields_data_preset_rra_item["hw_alpha"]["validate_empty"] = true;
+		$fields_data_preset_rra_item["hw_beta"]["validate_empty"] = true;
+		$fields_data_preset_rra_item["hw_gamma"]["validate_empty"] = true;
+		$fields_data_preset_rra_item["hw_seasonal_period"]["validate_empty"] = true;
+		$fields_data_preset_rra_item["hw_rra_num"]["validate_empty"] = true;
+		$fields_data_preset_rra_item["hw_threshold"]["validate_empty"] = true;
+		$fields_data_preset_rra_item["hw_window_length"]["validate_empty"] = true;
+	}else if ((isset($_fields_data_preset_rra_item["consolidation_function"])) && ($_fields_data_preset_rra_item["consolidation_function"] == RRA_CF_TYPE_HWPREDICT)) {
+		$fields_data_preset_rra_item["hw_gamma"]["validate_empty"] = true;
+		$fields_data_preset_rra_item["hw_threshold"]["validate_empty"] = true;
+		$fields_data_preset_rra_item["hw_window_length"]["validate_empty"] = true;
+	}else if ((isset($_fields_data_preset_rra_item["consolidation_function"])) && (($_fields_data_preset_rra_item["consolidation_function"] == RRA_CF_TYPE_SEASONAL) || ($_fields_data_preset_rra_item["consolidation_function"] == RRA_CF_TYPE_DEVSEASONAL)) ) {
+		$fields_data_preset_rra_item["hw_alpha"]["validate_empty"] = true;
+		$fields_data_preset_rra_item["hw_beta"]["validate_empty"] = true;
+		$fields_data_preset_rra_item["hw_threshold"]["validate_empty"] = true;
+		$fields_data_preset_rra_item["hw_window_length"]["validate_empty"] = true;
+	}else if ((isset($_fields_data_preset_rra_item["consolidation_function"])) && ($_fields_data_preset_rra_item["consolidation_function"] == RRA_CF_TYPE_DEVPREDICT)) {
+		$fields_data_preset_rra_item["hw_alpha"]["validate_empty"] = true;
+		$fields_data_preset_rra_item["hw_beta"]["validate_empty"] = true;
+		$fields_data_preset_rra_item["hw_gamma"]["validate_empty"] = true;
+		$fields_data_preset_rra_item["hw_seasonal_period"]["validate_empty"] = true;
+		$fields_data_preset_rra_item["hw_threshold"]["validate_empty"] = true;
+		$fields_data_preset_rra_item["hw_window_length"]["validate_empty"] = true;
+	}else if ((isset($_fields_data_preset_rra_item["consolidation_function"])) && ($_fields_data_preset_rra_item["consolidation_function"] == RRA_CF_TYPE_FAILURES)) {
+		$fields_data_preset_rra_item["hw_alpha"]["validate_empty"] = true;
+		$fields_data_preset_rra_item["hw_beta"]["validate_empty"] = true;
+		$fields_data_preset_rra_item["hw_gamma"]["validate_empty"] = true;
+		$fields_data_preset_rra_item["hw_seasonal_period"]["validate_empty"] = true;
+	}
+
+	/* base fields */
+	while (list($_field_name, $_field_array) = each($fields_data_preset_rra_item)) {
+		if ((isset($_fields_data_preset_rra_item[$_field_name])) && (isset($_field_array["validate_regexp"])) && (isset($_field_array["validate_empty"]))) {
+			$form_field_name = str_replace("|field|", $_field_name, $data_preset_rra_item_field_name_format);
+
+			if (!form_input_validate($_fields_data_preset_rra_item[$_field_name], $form_field_name, $_field_array["validate_regexp"], $_field_array["validate_empty"])) {
+				$error_fields[] = $form_field_name;
+			}
+		}
+	}
+
+	return $error_fields;
+}
 
 /* rra preset fields */
 
@@ -32,14 +118,14 @@ function _data_preset_rra__name($field_name, $field_value = "", $field_id = 0) {
 
 	?>
 	<tr class="<?php echo field_get_row_style();?>">
-		<td width="50%">
+		<td width="50%" class="field-row">
 			<span class="textEditTitle"><?php echo _("Name");?></span><br>
 			<?php echo _("A name for this RRA preset.");?>
 		</td>
-		<td>
+		<td class="field-row">
 			<?php form_text_box($field_name, $field_value, "", 100, 30, "text", $field_id);?>
 		</td>
-		<td align="right">
+		<td align="right" class="field-row">
 			<span class="field-required">(required)</span>
 		</td>
 	</tr>
@@ -48,12 +134,13 @@ function _data_preset_rra__name($field_name, $field_value = "", $field_id = 0) {
 
 /* rra item preset fields */
 
-function _data_preset_rra_item_js() {
+function _data_preset_rra_item_js($form_name) {
 	require_once(CACTI_BASE_PATH . "/include/data_preset/data_preset_constants.php");
 	?>
 	<script language="JavaScript">
 	<!--
 	var new_rra_form_displayed = false;
+	var html_form_name = '<?php echo $form_name;?>';
 
 	function new_rra_item(box_id) {
 		if (new_rra_form_displayed == false) {
@@ -75,7 +162,7 @@ function _data_preset_rra_item_js() {
 
 		row.id = "row0";
 		row_container[0].childNodes[1].childNodes[0].nodeValue = "(new)";
-		row_container[0].childNodes[3].innerHTML = "<a class='linkOverDark' href='javascript:discard_new_row(\"" + box_id + "\")'>Discard</a>, <a class='linkOverDark' href='#'>Save</a>";
+		row_container[0].childNodes[3].innerHTML = "<a class='linkOverDark' href='javascript:discard_new_row(\"" + box_id + "\")'>Discard</a>, <a class='linkOverDark' href='#' onClick='javascript:xajax_xajax_save_rra_item(xajax.getFormValues(\"" + html_form_name + "\"))'>Save</a>";
 
 		/* start at index 1 to skip the header */
 		for (var i = 1; i < row_container.length; i++) {
@@ -167,11 +254,11 @@ function _data_preset_rra_item__consolidation_function($field_name_base, $field_
 
 	?>
 	<tr class="<?php echo field_get_row_style();?>">
-		<td width="50%">
+		<td width="50%" class="field-row">
 			<span class="textEditTitle"><?php echo _("Consolidation Function");?></span><br>
 			<?php echo _("This function will be applied to a group of data points before they are entered into the RRA.");?>
 		</td>
-		<td colspan="2">
+		<td colspan="2" class="field-row">
 			<?php form_dropdown($field_name_base, api_data_preset_rra_cf_type_list(), "", "", $field_value, "", "86400", "", "", "update_consolidation_function(this.value, \"$field_id\")");?>
 		</td>
 	</tr>
@@ -183,14 +270,14 @@ function _data_preset_rra_item__steps($field_name, $field_value = "", $field_id 
 
 	?>
 	<tr class="<?php echo field_get_row_style();?>">
-		<td width="50%">
+		<td width="50%" class="field-row">
 			<span class="textEditTitle"><?php echo _("Update Interval (steps)");?></span><br>
 			<?php echo _("How many data points are required before the data is entered into the RRA.");?>
 		</td>
-		<td>
+		<td class="field-row">
 			<?php form_text_box($field_name, $field_value, "1", 5, 10, "text", $field_id);?>
 		</td>
-		<td align="right">
+		<td align="right" class="field-row">
 			<span class="field-required">(required)</span>
 		</td>
 	</tr>
@@ -203,11 +290,11 @@ function _data_preset_rra_item__rows($field_name, $field_value = "", $field_id =
 
 	?>
 	<tr class="<?php echo field_get_row_style();?>">
-		<td width="50%">
+		<td width="50%" class="field-row">
 			<span class="textEditTitle"><?php echo _("Data Retention Length (rows)");?></span><br>
 			<?php echo _("How many values are kept in the RRA at one time.");?>
 		</td>
-		<td colspan="2">
+		<td colspan="2" class="field-row">
 			<?php form_dropdown($field_name, api_data_preset_rra_row_type_list(), "", "", $field_value, "", "86400");?>
 		</td>
 	</tr>
@@ -219,14 +306,14 @@ function _data_preset_rra_item__x_files_factor($field_name, $field_value = "", $
 
 	?>
 	<tr class="<?php echo field_get_row_style();?>">
-		<td width="50%">
+		<td width="50%" class="field-row">
 			<span class="textEditTitle"><?php echo _("X-Files Factor");?></span><br>
 			<?php echo _("The percentage of data points that can be missing before the data is entered into the RRA as \"Unknown\" (must be between 0 and 1).");?>
 		</td>
-		<td>
+		<td class="field-row">
 			<?php form_text_box($field_name, $field_value, "0.5", 6, 10, "text", $field_id);?>
 		</td>
-		<td align="right">
+		<td align="right" class="field-row">
 			<span class="field-required">(required)</span>
 		</td>
 	</tr>
@@ -238,14 +325,14 @@ function _data_preset_rra_item__hw_alpha($field_name, $field_value = "", $field_
 
 	?>
 	<tr class="<?php echo field_get_row_style();?>" id="row_field_hw_alpha_<?php echo $field_id;?>">
-		<td width="50%">
+		<td width="50%" class="field-row">
 			<span class="textEditTitle"><?php echo _("Alpha (Holt-Winters)");?></span><br>
 			<?php echo _("Controls how much weight historic (0) or current (1) data has on the prediction (must be between 0 and 1).");?>
 		</td>
-		<td>
+		<td class="field-row">
 			<?php form_text_box($field_name, $field_value, "0.1", 6, 10, "text", $field_id);?>
 		</td>
-		<td align="right">
+		<td align="right" class="field-row">
 			<span class="field-required">(required)</span>
 		</td>
 	</tr>
@@ -257,14 +344,14 @@ function _data_preset_rra_item__hw_beta($field_name, $field_value = "", $field_i
 
 	?>
 	<tr class="<?php echo field_get_row_style();?>" id="row_field_hw_beta_<?php echo $field_id;?>">
-		<td width="50%">
+		<td width="50%" class="field-row">
 			<span class="textEditTitle"><?php echo _("Beta (Holt-Winters)");?></span><br>
 			<?php echo _("Controls how much weight the slope of the line has on the prediction (must be between 0 and 1).");?>
 		</td>
-		<td>
+		<td class="field-row">
 			<?php form_text_box($field_name, $field_value, "0.0035", 6, 10, "text", $field_id);?>
 		</td>
-		<td align="right">
+		<td align="right" class="field-row">
 			<span class="field-required">(required)</span>
 		</td>
 	</tr>
@@ -276,14 +363,14 @@ function _data_preset_rra_item__hw_gamma($field_name, $field_value = "", $field_
 
 	?>
 	<tr class="<?php echo field_get_row_style();?>" id="row_field_hw_gamma_<?php echo $field_id;?>">
-		<td width="50%">
+		<td width="50%" class="field-row">
 			<span class="textEditTitle"><?php echo _("Gamma (Holt-Winters)");?></span><br>
 			<?php echo _("Controls how much weight the seasonal properties of line data has on the prediction (must be between 0 and 1).");?>
 		</td>
-		<td>
+		<td class="field-row">
 			<?php form_text_box($field_name, $field_value, "0.1", 6, 10, "text", $field_id);?>
 		</td>
-		<td align="right">
+		<td align="right" class="field-row">
 			<span class="field-required">(required)</span>
 		</td>
 	</tr>
@@ -296,11 +383,11 @@ function _data_preset_rra_item__hw_seasonal_period($field_name, $field_value = "
 
 	?>
 	<tr class="<?php echo field_get_row_style();?>" id="row_field_hw_seasonal_period_<?php echo $field_id;?>">
-		<td width="50%">
+		<td width="50%" class="field-row">
 			<span class="textEditTitle"><?php echo _("Seasonal Period (Holt-Winters)");?></span><br>
 			<?php echo _("The amount of time for each seasonal period.");?>
 		</td>
-		<td colspan="2">
+		<td colspan="2" class="field-row">
 			<?php form_dropdown($field_name, api_data_preset_rra_row_type_list(), "", "", $field_value, "", "86400");?>
 		</td>
 	</tr>
@@ -313,11 +400,11 @@ function _data_preset_rra_item__hw_rra_num($field_name, $field_value = "", $fiel
 
 	?>
 	<tr class="<?php echo field_get_row_style();?>" id="row_field_hw_rra_num_<?php echo $field_id;?>">
-		<td width="50%">
+		<td width="50%" class="field-row">
 			<span class="textEditTitle"><?php echo _("Dependent RRA (Holt-Winters)");?></span><br>
 			<?php echo _("The amount of time for each seasonal period.");?>
 		</td>
-		<td colspan="2">
+		<td colspan="2" class="field-row">
 			<?php form_dropdown($field_name, api_data_preset_rra_row_type_list(), "", "", $field_value, "", "86400");?>
 		</td>
 	</tr>
@@ -329,14 +416,14 @@ function _data_preset_rra_item__hw_threshold($field_name, $field_value = "", $fi
 
 	?>
 	<tr class="<?php echo field_get_row_style();?>" id="row_field_hw_threshold_<?php echo $field_id;?>">
-		<td width="50%">
+		<td width="50%" class="field-row">
 			<span class="textEditTitle"><?php echo _("Threshold (Holt-Winters)");?></span><br>
 			<?php echo _("The minimum number of violations that occur within a window that constitutes a failure.");?>
 		</td>
-		<td>
+		<td class="field-row">
 			<?php form_text_box($field_name, $field_value, "7", 6, 10, "text", $field_id);?>
 		</td>
-		<td align="right">
+		<td align="right" class="field-row">
 			<span class="field-required">(required)</span>
 		</td>
 	</tr>
@@ -348,14 +435,14 @@ function _data_preset_rra_item__hw_window_length($field_name, $field_value = "",
 
 	?>
 	<tr class="<?php echo field_get_row_style();?>" id="row_field_hw_window_length_<?php echo $field_id;?>">
-		<td width="50%">
+		<td width="50%" class="field-row">
 			<span class="textEditTitle"><?php echo _("Window Length (Holt-Winters)");?></span><br>
 			<?php echo _("The number of points contained within a window. Must be greater than or equal to the threshold and less than 28.");?>
 		</td>
-		<td>
+		<td class="field-row">
 			<?php form_text_box($field_name, $field_value, "9", 6, 10, "text", $field_id);?>
 		</td>
-		<td align="right">
+		<td align="right" class="field-row">
 			<span class="field-required">(required)</span>
 		</td>
 	</tr>

@@ -32,7 +32,8 @@ if (!isset($_REQUEST["action"])) { $_REQUEST["action"] = ""; }
 
 require_once(CACTI_BASE_PATH . "/lib/xajax/xajax.inc.php");
 $xajax = new xajax();
-$xajax->registerExternalFunction("testXajax", CACTI_BASE_PATH . "/lib/sys/html_xajax.php");
+$xajax->registerFunction("xajax_save_rra_item");
+$xajax->debugOn();
 $xajax->processRequests();
 
 switch ($_REQUEST["action"]) {
@@ -57,6 +58,37 @@ switch ($_REQUEST["action"]) {
 /* --------------------------
     The Save Function
    -------------------------- */
+
+function xajax_save_rra_item($post_args) {
+	$objResponse = new xajaxResponse();
+
+	$form_data_query["consolidation_function"] = $_POST["consolidation_function_0"];
+	$form_data_query["steps"] = $_POST["steps_0"];
+	$form_data_query["rows"] = $_POST["rows_0"];
+	$form_data_query["x_files_factor"] = $_POST["x_files_factor_0"];
+	$form_data_query["hw_alpha"] = $_POST["hw_alpha_0"];
+	$form_data_query["hw_beta"] = $_POST["hw_beta_0"];
+	$form_data_query["hw_gamma"] = $_POST["hw_gamma_0"];
+	$form_data_query["hw_seasonal_period"] = $_POST["hw_seasonal_period_0"];
+	$form_data_query["hw_rra_num"] = $_POST["hw_rra_num_0"];
+	$form_data_query["hw_threshold"] = $_POST["hw_threshold_0"];
+	$form_data_query["hw_window_length"] = $_POST["hw_window_length_0"];
+
+	field_register_error(validate_data_query_fields($validate_data_preset_rra_item_fields, "|field|_0"));
+
+	$rra_preset_item_id = false;
+	if (is_error_message()) {
+		$objResponse->addAlert("Form validation error!");
+	}else{
+		//$rra_preset_item_id = api_data_query_save($_POST["data_query_id"], $form_data_query);
+
+		if ($rra_preset_item_id === false) {
+			$objResponse->addAlert("Save error!");
+		}
+	}
+
+	return $objResponse->getXML();
+}
 
 function form_save() {
 	if (isset($_POST["save_component_gprint_presets"])) {
@@ -125,7 +157,7 @@ function rra_presets_edit() {
 
 	$rra_items = api_data_preset_rra_item_list($_rra_preset_id);
 
-	_data_preset_rra_item_js();
+	_data_preset_rra_item_js("form_rra");
 
 	$box_id = "1";
 	html_start_box("<strong>" . _("RRA Items") . "</strong>", "javascript:new_rra_item('$box_id')", "", $box_id, true, 0);
@@ -178,15 +210,11 @@ function rra_presets_edit() {
 	html_end_box();
 
 	?>
-	<a href="#" onClick="javascript:xajax_testXajax()">do ajax</a>
-	<div id="testDiv">sdsd</div>
 	<?php
-
-
 
 	form_hidden_box("rra_preset_id", $_rra_preset_id);
 
-	//form_save_button("presets_rra.php", "save_rra");
+	form_save_button("presets_rra.php", "save_rra");
 }
 
 ?>

@@ -85,4 +85,16 @@ function &api_data_preset_rra_cf_type_list() {
 	return $rra_preset_cf_types;
 }
 
+function &api_data_preset_rra_form_list() {
+	require(CACTI_BASE_PATH . "/include/data_preset/data_preset_form.php");
+
+	return $fields_data_preset_rra;
+}
+
+function &api_data_preset_rra_item_form_list() {
+	require(CACTI_BASE_PATH . "/include/data_preset/data_preset_form.php");
+
+	return $fields_data_preset_rra_item;
+}
+
 ?>

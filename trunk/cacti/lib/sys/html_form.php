@@ -687,7 +687,7 @@ function form_save_button($cancel_url, $button_name = "", $force_type = "") {
 
 function form_start($action, $name = "", $enc_multipart = false)
 {
-	echo "<form action='$action' method='post'" . ($name == "" ? "" : " name='$name'") . ($enc_multipart == true ? " enctype='multipart/form-data'" : "") . ">\n";
+	echo "<form action='$action' method='post'" . ($name == "" ? "" : " name='$name' id='$name'") . ($enc_multipart == true ? " enctype='multipart/form-data'" : "") . ">\n";
 }
 
 function form_end()
