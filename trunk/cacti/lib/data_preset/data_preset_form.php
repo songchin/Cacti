@@ -67,34 +67,34 @@ function validate_data_preset_rra_item_fields(&$_fields_data_preset_rra_item, $d
 
 	/* only certain fields are displayed on the form depending on the selected consolidation function */
 	if ((isset($_fields_data_preset_rra_item["consolidation_function"])) && (($_fields_data_preset_rra_item["consolidation_function"] == RRA_CF_TYPE_AVERAGE) || ($_fields_data_preset_rra_item["consolidation_function"] == RRA_CF_TYPE_MIN) || ($_fields_data_preset_rra_item["consolidation_function"] == RRA_CF_TYPE_MAX) || ($_fields_data_preset_rra_item["consolidation_function"] == RRA_CF_TYPE_LAST)) ) {
-		$fields_data_preset_rra_item["hw_alpha"]["validate_empty"] = true;
-		$fields_data_preset_rra_item["hw_beta"]["validate_empty"] = true;
-		$fields_data_preset_rra_item["hw_gamma"]["validate_empty"] = true;
-		$fields_data_preset_rra_item["hw_seasonal_period"]["validate_empty"] = true;
-		$fields_data_preset_rra_item["hw_rra_num"]["validate_empty"] = true;
-		$fields_data_preset_rra_item["hw_threshold"]["validate_empty"] = true;
-		$fields_data_preset_rra_item["hw_window_length"]["validate_empty"] = true;
+		if (isset($_fields_data_preset_rra_item["hw_alpha"])) unset($_fields_data_preset_rra_item["hw_alpha"]);
+		if (isset($_fields_data_preset_rra_item["hw_beta"])) unset($_fields_data_preset_rra_item["hw_beta"]);
+		if (isset($_fields_data_preset_rra_item["hw_gamma"])) unset($_fields_data_preset_rra_item["hw_gamma"]);
+		if (isset($_fields_data_preset_rra_item["hw_seasonal_period"])) unset($_fields_data_preset_rra_item["hw_seasonal_period"]);
+		if (isset($_fields_data_preset_rra_item["hw_rra_num"])) unset($_fields_data_preset_rra_item["hw_rra_num"]);
+		if (isset($_fields_data_preset_rra_item["hw_threshold"])) unset($_fields_data_preset_rra_item["hw_threshold"]);
+		if (isset($_fields_data_preset_rra_item["hw_window_length"])) unset($_fields_data_preset_rra_item["hw_window_length"]);
 	}else if ((isset($_fields_data_preset_rra_item["consolidation_function"])) && ($_fields_data_preset_rra_item["consolidation_function"] == RRA_CF_TYPE_HWPREDICT)) {
-		$fields_data_preset_rra_item["hw_gamma"]["validate_empty"] = true;
-		$fields_data_preset_rra_item["hw_threshold"]["validate_empty"] = true;
-		$fields_data_preset_rra_item["hw_window_length"]["validate_empty"] = true;
+		if (isset($_fields_data_preset_rra_item["hw_gamma"])) unset($_fields_data_preset_rra_item["hw_gamma"]);
+		if (isset($_fields_data_preset_rra_item["hw_threshold"])) unset($_fields_data_preset_rra_item["hw_threshold"]);
+		if (isset($_fields_data_preset_rra_item["hw_window_length"])) unset($_fields_data_preset_rra_item["hw_window_length"]);
 	}else if ((isset($_fields_data_preset_rra_item["consolidation_function"])) && (($_fields_data_preset_rra_item["consolidation_function"] == RRA_CF_TYPE_SEASONAL) || ($_fields_data_preset_rra_item["consolidation_function"] == RRA_CF_TYPE_DEVSEASONAL)) ) {
-		$fields_data_preset_rra_item["hw_alpha"]["validate_empty"] = true;
-		$fields_data_preset_rra_item["hw_beta"]["validate_empty"] = true;
-		$fields_data_preset_rra_item["hw_threshold"]["validate_empty"] = true;
-		$fields_data_preset_rra_item["hw_window_length"]["validate_empty"] = true;
+		if (isset($_fields_data_preset_rra_item["hw_alpha"])) unset($_fields_data_preset_rra_item["hw_alpha"]);
+		if (isset($_fields_data_preset_rra_item["hw_beta"])) unset($_fields_data_preset_rra_item["hw_beta"]);
+		if (isset($_fields_data_preset_rra_item["hw_threshold"])) unset($_fields_data_preset_rra_item["hw_threshold"]);
+		if (isset($_fields_data_preset_rra_item["hw_window_length"])) unset($_fields_data_preset_rra_item["hw_window_length"]);
 	}else if ((isset($_fields_data_preset_rra_item["consolidation_function"])) && ($_fields_data_preset_rra_item["consolidation_function"] == RRA_CF_TYPE_DEVPREDICT)) {
-		$fields_data_preset_rra_item["hw_alpha"]["validate_empty"] = true;
-		$fields_data_preset_rra_item["hw_beta"]["validate_empty"] = true;
-		$fields_data_preset_rra_item["hw_gamma"]["validate_empty"] = true;
-		$fields_data_preset_rra_item["hw_seasonal_period"]["validate_empty"] = true;
-		$fields_data_preset_rra_item["hw_threshold"]["validate_empty"] = true;
-		$fields_data_preset_rra_item["hw_window_length"]["validate_empty"] = true;
+		if (isset($_fields_data_preset_rra_item["hw_alpha"])) unset($_fields_data_preset_rra_item["hw_alpha"]);
+		if (isset($_fields_data_preset_rra_item["hw_beta"])) unset($_fields_data_preset_rra_item["hw_beta"]);
+		if (isset($_fields_data_preset_rra_item["hw_gamma"])) unset($_fields_data_preset_rra_item["hw_gamma"]);
+		if (isset($_fields_data_preset_rra_item["hw_seasonal_period"])) unset($_fields_data_preset_rra_item["hw_seasonal_period"]);
+		if (isset($_fields_data_preset_rra_item["hw_threshold"])) unset($_fields_data_preset_rra_item["hw_threshold"]);
+		if (isset($_fields_data_preset_rra_item["hw_window_length"])) unset($_fields_data_preset_rra_item["hw_window_length"]);
 	}else if ((isset($_fields_data_preset_rra_item["consolidation_function"])) && ($_fields_data_preset_rra_item["consolidation_function"] == RRA_CF_TYPE_FAILURES)) {
-		$fields_data_preset_rra_item["hw_alpha"]["validate_empty"] = true;
-		$fields_data_preset_rra_item["hw_beta"]["validate_empty"] = true;
-		$fields_data_preset_rra_item["hw_gamma"]["validate_empty"] = true;
-		$fields_data_preset_rra_item["hw_seasonal_period"]["validate_empty"] = true;
+		if (isset($_fields_data_preset_rra_item["hw_alpha"])) unset($_fields_data_preset_rra_item["hw_alpha"]);
+		if (isset($_fields_data_preset_rra_item["hw_beta"])) unset($_fields_data_preset_rra_item["hw_beta"]);
+		if (isset($_fields_data_preset_rra_item["hw_gamma"])) unset($_fields_data_preset_rra_item["hw_gamma"]);
+		if (isset($_fields_data_preset_rra_item["hw_seasonal_period"])) unset($_fields_data_preset_rra_item["hw_seasonal_period"]);
 	}
 
 	/* base fields */
@@ -160,9 +160,10 @@ function _data_preset_rra_item_js($form_name) {
 		var row_id = row.id.replace("row", "");
 		var row_container = row.childNodes[1].childNodes[1].childNodes[1].childNodes;
 
+		var blah = true ? false : 1;
 		row.id = "row0";
 		row_container[0].childNodes[1].childNodes[0].nodeValue = "(new)";
-		row_container[0].childNodes[3].innerHTML = "<a class='linkOverDark' href='javascript:discard_new_row(\"" + box_id + "\")'>Discard</a>, <a class='linkOverDark' href='#' onClick='javascript:xajax_xajax_save_rra_item(xajax.getFormValues(\"" + html_form_name + "\"))'>Save</a>";
+		row_container[0].childNodes[3].innerHTML = (row_id == "0" ? "" : "<a class='linkOverDark' href='javascript:remove_rra_item_row(\"" + box_id + "\", \"0\")'>Discard</a>, ") + "<a class='linkOverDark' href='#' onClick='javascript:xajax_xajax_save_rra_item(xajax.getFormValues(\"" + html_form_name + "\"))'>Save</a>";
 
 		/* start at index 1 to skip the header */
 		for (var i = 1; i < row_container.length; i++) {
@@ -178,13 +179,33 @@ function _data_preset_rra_item_js($form_name) {
 		}
 	}
 
-	function make_row_old(row, rra_item_id) {
+	function make_row_old(rra_item_id) {
+		var row = document.getElementById("row0");
+		var row_container = row.childNodes[1].childNodes[1].childNodes[1].childNodes;
+		var row_id = "0";
 
+		row_container[0].childNodes[1].childNodes[0].nodeValue = "(old)";
+		row_container[0].childNodes[3].innerHTML = "<a class='linkOverDark' href='#' onClick='javascript:xajax_xajax_remove_rra_item(\"rra_item_id\")'>Remove</a>";
+
+		/* start at index 1 to skip the header */
+		for (var i = 1; i < row_container.length; i++) {
+			if ((row_container[i].tagName == "TR") || (row_container[i].tagName == "tr")) {
+				row_container[i].style.color = "black";
+
+				/* make sure each form element gets unique name */
+				if (row_container[i].childNodes[3]) {
+					row_container[i].childNodes[3].childNodes[1].id = row_container[i].childNodes[3].childNodes[1].id.replace(row_id, rra_item_id);
+					row_container[i].childNodes[3].childNodes[1].name = row_container[i].childNodes[3].childNodes[1].name.replace(row_id, rra_item_id);
+				}
+			}
+		}
+
+		new_rra_form_displayed = false;
 	}
 
-	function discard_new_row(box_id) {
+	function remove_rra_item_row(box_id, rra_item_id) {
 		var table = document.getElementById("box-" + box_id + "-content");
-		var row = document.getElementById("row0");
+		var row = document.getElementById("row" + rra_item_id);
 		var newRow = table.tBodies[0].removeChild(row);
 
 		new_rra_form_displayed = false;

@@ -26,6 +26,7 @@ require(dirname(__FILE__) . "/include/global.php");
 require_once(CACTI_BASE_PATH . "/include/auth/validate.php");
 require_once(CACTI_BASE_PATH . "/lib/data_preset/data_preset_info.php");
 require_once(CACTI_BASE_PATH . "/lib/data_preset/data_preset_form.php");
+require_once(CACTI_BASE_PATH . "/lib/data_preset/data_preset_update.php");
 
 /* set default action */
 if (!isset($_REQUEST["action"])) { $_REQUEST["action"] = ""; }
@@ -33,7 +34,7 @@ if (!isset($_REQUEST["action"])) { $_REQUEST["action"] = ""; }
 require_once(CACTI_BASE_PATH . "/lib/xajax/xajax.inc.php");
 $xajax = new xajax();
 $xajax->registerFunction("xajax_save_rra_item");
-$xajax->debugOn();
+$xajax->registerFunction("xajax_remove_rra_item");
 $xajax->processRequests();
 
 switch ($_REQUEST["action"]) {
@@ -62,29 +63,56 @@ switch ($_REQUEST["action"]) {
 function xajax_save_rra_item($post_args) {
 	$objResponse = new xajaxResponse();
 
-	$form_data_query["consolidation_function"] = $_POST["consolidation_function_0"];
-	$form_data_query["steps"] = $_POST["steps_0"];
-	$form_data_query["rows"] = $_POST["rows_0"];
-	$form_data_query["x_files_factor"] = $_POST["x_files_factor_0"];
-	$form_data_query["hw_alpha"] = $_POST["hw_alpha_0"];
-	$form_data_query["hw_beta"] = $_POST["hw_beta_0"];
-	$form_data_query["hw_gamma"] = $_POST["hw_gamma_0"];
-	$form_data_query["hw_seasonal_period"] = $_POST["hw_seasonal_period_0"];
-	$form_data_query["hw_rra_num"] = $_POST["hw_rra_num_0"];
-	$form_data_query["hw_threshold"] = $_POST["hw_threshold_0"];
-	$form_data_query["hw_window_length"] = $_POST["hw_window_length_0"];
+	$form_rra_item["preset_rra_id"] = $post_args["rra_preset_id"];
+	$form_rra_item["consolidation_function"] = $post_args["consolidation_function_0"];
+	$form_rra_item["steps"] = $post_args["steps_0"];
+	$form_rra_item["rows"] = $post_args["rows_0"];
+	$form_rra_item["x_files_factor"] = $post_args["x_files_factor_0"];
+	$form_rra_item["hw_alpha"] = $post_args["hw_alpha_0"];
+	$form_rra_item["hw_beta"] = $post_args["hw_beta_0"];
+	$form_rra_item["hw_gamma"] = $post_args["hw_gamma_0"];
+	$form_rra_item["hw_seasonal_period"] = $post_args["hw_seasonal_period_0"];
+	$form_rra_item["hw_rra_num"] = $post_args["hw_rra_num_0"];
+	$form_rra_item["hw_threshold"] = $post_args["hw_threshold_0"];
+	$form_rra_item["hw_window_length"] = $post_args["hw_window_length_0"];
 
-	field_register_error(validate_data_query_fields($validate_data_preset_rra_item_fields, "|field|_0"));
+	$field_errors = validate_data_preset_rra_item_fields($form_rra_item, "|field|_0");
+
+	foreach (array_keys($form_rra_item) as $field_name) {
+		if (isset($post_args{$field_name . "_0"})) {
+			/* make a red border around the fields which have validation errors */
+			if (in_array($field_name . "_0", $field_errors)) {
+				$objResponse->addAssign($field_name . "_0", "style.border", "2px solid red");
+			/* clear the border for all of the fields without validation errors */
+			}else{
+				$objResponse->addClear($field_name . "_0", "style.border");
+			}
+		}
+	}
 
 	$rra_preset_item_id = false;
-	if (is_error_message()) {
+	if (sizeof($field_errors) > 0) {
 		$objResponse->addAlert("Form validation error!");
 	}else{
-		//$rra_preset_item_id = api_data_query_save($_POST["data_query_id"], $form_data_query);
+		$rra_preset_item_id = api_data_preset_rra_item_save(0, $form_rra_item);
 
 		if ($rra_preset_item_id === false) {
 			$objResponse->addAlert("Save error!");
+		}else{
+			$objResponse->addScript("make_row_old(\"$rra_preset_item_id\");");
 		}
+	}
+
+	return $objResponse->getXML();
+}
+
+function xajax_remove_rra_item($preset_rra_id) {
+	$objResponse = new xajaxResponse();
+
+	if (api_data_preset_rra_item_remove($preset_rra_id)) {
+		$objResponse->addScript("remove_rra_item_row(\"1\", \"$preset_rra_id\");");
+	}else{
+		$objResponse->addAlert("Error removing RRA preset item!");
 	}
 
 	return $objResponse->getXML();
@@ -162,7 +190,31 @@ function rra_presets_edit() {
 	$box_id = "1";
 	html_start_box("<strong>" . _("RRA Items") . "</strong>", "javascript:new_rra_item('$box_id')", "", $box_id, true, 0);
 
-	if (is_array($rra_items) && sizeof($rra_items) > 0) {
+	$empty_rra_item_list = false;
+	if (is_array($rra_items)) {
+		/* if there are no rra items to display, we need to create a "fake" item which we will then turn
+		 * into a "new" row using JS */
+		if (sizeof($rra_items) == 0) {
+			$empty_rra_item_list = true;
+
+			$rra_items = array(
+				array(
+					"id" => "0",
+					"consolidation_function" => "1",
+					"steps" => "",
+					"rows" => "",
+					"x_files_factor" => "",
+					"hw_alpha" => "",
+					"hw_beta" => "",
+					"hw_gamma" => "",
+					"hw_seasonal_period" => "",
+					"hw_rra_num" => "",
+					"hw_threshold" => "",
+					"hw_window_length" => ""
+					)
+				);
+		}
+
 		$rra_cf_types = api_data_preset_rra_cf_type_list();
 
 		foreach ($rra_items as $rra_item) {
@@ -175,7 +227,7 @@ function rra_presets_edit() {
 								<?php echo $rra_cf_types{$rra_item["consolidation_function"]};?>
 							</td>
 							<td align="right" class="textSubHeaderDark">
-								<a class="linkOverDark" href="#">Remove</a>
+								<a class="linkOverDark" href="#" onClick="javascript:xajax_xajax_remove_rra_item('<?php echo $rra_item["id"];?>')">Remove</a>
 							</td>
 						</tr>
 						<?php
@@ -197,17 +249,19 @@ function rra_presets_edit() {
 			</tr>
 			<?php
 		}
-	}else{
-		?>
-		<tr>
-			<td class="content-list-empty" colspan="1">
-				No RRA presets found.
-			</td>
-		</tr>
-		<?php
 	}
 
 	html_end_box();
+
+	if ($empty_rra_item_list == true) {
+		?>
+		<script language="JavaScript">
+		<!--
+		make_row_new("1", document.getElementById("row0"));
+		-->
+		</script>
+		<?php
+	}
 
 	?>
 	<?php
