@@ -160,7 +160,6 @@ function _data_preset_rra_item_js($form_name) {
 		var row_id = row.id.replace("row", "");
 		var row_container = row.childNodes[1].childNodes[1].childNodes[1].childNodes;
 
-		var blah = true ? false : 1;
 		row.id = "row0";
 		row_container[0].childNodes[1].childNodes[0].nodeValue = "(new)";
 		row_container[0].childNodes[3].innerHTML = (row_id == "0" ? "" : "<a class='linkOverDark' href='javascript:remove_rra_item_row(\"" + box_id + "\", \"0\")'>Discard</a>, ") + "<a class='linkOverDark' href='#' onClick='javascript:xajax_xajax_save_rra_item(xajax.getFormValues(\"" + html_form_name + "\"))'>Save</a>";
@@ -169,6 +168,7 @@ function _data_preset_rra_item_js($form_name) {
 		for (var i = 1; i < row_container.length; i++) {
 			if ((row_container[i].tagName == "TR") || (row_container[i].tagName == "tr")) {
 				row_container[i].style.color = "gray";
+				row_container[i].id = row_container[i].id.replace(row_id, "0");
 
 				/* make sure each form element gets unique name */
 				if (row_container[i].childNodes[3]) {
@@ -274,13 +274,13 @@ function _data_preset_rra_item__consolidation_function($field_name_base, $field_
 	require_once(CACTI_BASE_PATH . "/lib/data_preset/data_preset_info.php");
 
 	?>
-	<tr class="<?php echo field_get_row_style();?>">
+	<tr class="<?php echo field_get_row_style();?>" id="row_field_consolidation_function_<?php echo $field_id;?>">
 		<td width="50%" class="field-row">
 			<span class="textEditTitle"><?php echo _("Consolidation Function");?></span><br>
 			<?php echo _("This function will be applied to a group of data points before they are entered into the RRA.");?>
 		</td>
 		<td colspan="2" class="field-row">
-			<?php form_dropdown($field_name_base, api_data_preset_rra_cf_type_list(), "", "", $field_value, "", "86400", "", "", "update_consolidation_function(this.value, \"$field_id\")");?>
+			<?php form_dropdown($field_name_base, api_data_preset_rra_cf_type_list(), "", "", $field_value, "", "86400", "", "", "update_consolidation_function(this.value, this.parentNode.parentNode.id.replace(\"row_field_consolidation_function_\", \"\"))");?>
 		</td>
 	</tr>
 	<?php
@@ -290,7 +290,7 @@ function _data_preset_rra_item__steps($field_name, $field_value = "", $field_id 
 	require_once(CACTI_BASE_PATH . "/lib/sys/html_form.php");
 
 	?>
-	<tr class="<?php echo field_get_row_style();?>">
+	<tr class="<?php echo field_get_row_style();?>" id="row_field_steps_<?php echo $field_id;?>">
 		<td width="50%" class="field-row">
 			<span class="textEditTitle"><?php echo _("Update Interval (steps)");?></span><br>
 			<?php echo _("How many data points are required before the data is entered into the RRA.");?>
@@ -310,7 +310,7 @@ function _data_preset_rra_item__rows($field_name, $field_value = "", $field_id =
 	require_once(CACTI_BASE_PATH . "/lib/data_preset/data_preset_info.php");
 
 	?>
-	<tr class="<?php echo field_get_row_style();?>">
+	<tr class="<?php echo field_get_row_style();?>" id="row_field_rows_<?php echo $field_id;?>">
 		<td width="50%" class="field-row">
 			<span class="textEditTitle"><?php echo _("Data Retention Length (rows)");?></span><br>
 			<?php echo _("How many values are kept in the RRA at one time.");?>
@@ -326,7 +326,7 @@ function _data_preset_rra_item__x_files_factor($field_name, $field_value = "", $
 	require_once(CACTI_BASE_PATH . "/lib/sys/html_form.php");
 
 	?>
-	<tr class="<?php echo field_get_row_style();?>">
+	<tr class="<?php echo field_get_row_style();?>" id="row_field_x_files_factor_<?php echo $field_id;?>">
 		<td width="50%" class="field-row">
 			<span class="textEditTitle"><?php echo _("X-Files Factor");?></span><br>
 			<?php echo _("The percentage of data points that can be missing before the data is entered into the RRA as \"Unknown\" (must be between 0 and 1).");?>
