@@ -27,6 +27,7 @@ require_once(CACTI_BASE_PATH . "/include/auth/validate.php");
 require_once(CACTI_BASE_PATH . "/lib/data_preset/data_preset_info.php");
 require_once(CACTI_BASE_PATH . "/lib/data_preset/data_preset_form.php");
 require_once(CACTI_BASE_PATH . "/lib/data_preset/data_preset_update.php");
+require_once(CACTI_BASE_PATH . "/lib/data_preset/data_preset_utility.php");
 
 /* set default action */
 if (!isset($_REQUEST["action"])) { $_REQUEST["action"] = ""; }
@@ -99,6 +100,9 @@ function xajax_save_rra_item($post_args) {
 		if ($rra_preset_item_id === false) {
 			$objResponse->addAlert("Save error!");
 		}else{
+			/* update the rra item header text */
+			$objResponse->addAssign("row_rra_item_header_0", "innerHTML", api_data_preset_rra_item_friendly_name_get($post_args["consolidation_function_0"], $post_args["steps_0"], $post_args["rows_0"]));
+
 			$objResponse->addScript("make_row_old(\"$rra_preset_item_id\");");
 		}
 	}
@@ -109,8 +113,16 @@ function xajax_save_rra_item($post_args) {
 function xajax_remove_rra_item($preset_rra_id) {
 	$objResponse = new xajaxResponse();
 
+	$preset_rra_item = api_data_preset_rra_item_get($preset_rra_id);
+
 	if (api_data_preset_rra_item_remove($preset_rra_id)) {
-		$objResponse->addScript("remove_rra_item_row(\"1\", \"$preset_rra_id\");");
+		/* if there are no rra items left, do not remove the row from the form but instead mark it as "new" */
+		if (sizeof(api_data_preset_rra_item_list($preset_rra_item["preset_rra_id"])) == 0) {
+			$objResponse->addScript("remove_rra_item_last_row(\"$preset_rra_id\");");
+		/* if there is at least one rra item left, visibly remove the row from the page */
+		}else{
+			$objResponse->addScript("remove_rra_item_row(\"$preset_rra_id\");");
+		}
 	}else{
 		$objResponse->addAlert("Error removing RRA preset item!");
 	}
@@ -143,10 +155,6 @@ function form_save() {
 		}
 	}
 }
-
-/* -----------------------------------
-    gprint_presets - GPRINT Presets
-   ----------------------------------- */
 
 function gprint_presets_remove() {
 	if ((read_config_option("remove_verification") == "on") && (!isset($_GET["confirm"]))) {
@@ -183,92 +191,92 @@ function rra_presets_edit() {
 
 	/* ==================== Box: RRA Items ==================== */
 
-	$rra_items = api_data_preset_rra_item_list($_rra_preset_id);
+	if (!empty($_rra_preset_id)) {
+		$rra_items = api_data_preset_rra_item_list($_rra_preset_id);
 
-	_data_preset_rra_item_js("form_rra");
+		_data_preset_rra_item_js("form_rra");
 
-	$box_id = "1";
-	html_start_box("<strong>" . _("RRA Items") . "</strong>", "javascript:new_rra_item('$box_id')", "", $box_id, true, 0);
+		$box_id = "1";
+		html_start_box("<strong>" . _("RRA Items") . "</strong>", "javascript:new_rra_item('$box_id')", "", $box_id, true, 0);
 
-	$empty_rra_item_list = false;
-	if (is_array($rra_items)) {
-		/* if there are no rra items to display, we need to create a "fake" item which we will then turn
-		 * into a "new" row using JS */
-		if (sizeof($rra_items) == 0) {
-			$empty_rra_item_list = true;
+		$empty_rra_item_list = false;
+		if (is_array($rra_items)) {
+			/* if there are no rra items to display, we need to create a "fake" item which we will then turn
+			 * into a "new" row using JS */
+			if (sizeof($rra_items) == 0) {
+				$empty_rra_item_list = true;
 
-			$rra_items = array(
-				array(
-					"id" => "0",
-					"consolidation_function" => "1",
-					"steps" => "",
-					"rows" => "",
-					"x_files_factor" => "",
-					"hw_alpha" => "",
-					"hw_beta" => "",
-					"hw_gamma" => "",
-					"hw_seasonal_period" => "",
-					"hw_rra_num" => "",
-					"hw_threshold" => "",
-					"hw_window_length" => ""
-					)
-				);
+				$rra_items = array(
+					array(
+						"id" => "0",
+						"consolidation_function" => "1",
+						"steps" => "",
+						"rows" => "",
+						"x_files_factor" => "",
+						"hw_alpha" => "",
+						"hw_beta" => "",
+						"hw_gamma" => "",
+						"hw_seasonal_period" => "",
+						"hw_rra_num" => "",
+						"hw_threshold" => "",
+						"hw_window_length" => ""
+						)
+					);
+			}
+
+			foreach ($rra_items as $rra_item) {
+				?>
+				<tr id="row<?php echo $rra_item["id"];?>">
+					<td>
+						<table width="100%" cellpadding="3" cellspacing="0">
+							<tr bgcolor="<?php echo $colors["header_panel_background"];?>">
+								<td colspan="2" class="textSubHeaderDark" id="row_rra_item_header_<?php echo $rra_item["id"];?>">
+									<?php echo (empty($rra_item["id"]) ? "(new)" : api_data_preset_rra_item_friendly_name_get($rra_item["consolidation_function"], $rra_item["steps"], $rra_item["rows"]));?>
+								</td>
+								<td align="right" class="textSubHeaderDark">
+									<a class="linkOverDark" href="#" onClick="javascript:xajax_xajax_remove_rra_item('<?php echo $rra_item["id"];?>')">Remove</a>
+								</td>
+							</tr>
+							<?php
+							_data_preset_rra_item__consolidation_function("consolidation_function_" . $rra_item["id"], $rra_item["consolidation_function"], $rra_item["id"]);
+							_data_preset_rra_item__steps("steps_" . $rra_item["id"], $rra_item["steps"], $rra_item["id"]);
+							_data_preset_rra_item__rows("rows_" . $rra_item["id"], $rra_item["rows"], $rra_item["id"]);
+							_data_preset_rra_item__x_files_factor("x_files_factor_" . $rra_item["id"], $rra_item["x_files_factor"], $rra_item["id"]);
+							_data_preset_rra_item__hw_alpha("hw_alpha_" . $rra_item["id"], $rra_item["hw_alpha"], $rra_item["id"]);
+							_data_preset_rra_item__hw_beta("hw_beta_" . $rra_item["id"], $rra_item["hw_beta"], $rra_item["id"]);
+							_data_preset_rra_item__hw_gamma("hw_gamma_" . $rra_item["id"], $rra_item["hw_gamma"], $rra_item["id"]);
+							_data_preset_rra_item__hw_seasonal_period("hw_seasonal_period_" . $rra_item["id"], $rra_item["hw_seasonal_period"], $rra_item["id"]);
+							_data_preset_rra_item__hw_rra_num("hw_rra_num_" . $rra_item["id"], $rra_item["hw_rra_num"], $rra_item["id"]);
+							_data_preset_rra_item__hw_threshold("hw_threshold_" . $rra_item["id"], $rra_item["hw_threshold"], $rra_item["id"]);
+							_data_preset_rra_item__hw_window_length("hw_window_length_" . $rra_item["id"], $rra_item["hw_window_length"], $rra_item["id"]);
+							_data_preset_rra_item__consolidation_function_js_update($rra_item["consolidation_function"], $rra_item["id"]);
+							?>
+						</table>
+					</td>
+				</tr>
+				<?php
+			}
 		}
 
-		$rra_cf_types = api_data_preset_rra_cf_type_list();
+		html_end_box();
 
-		foreach ($rra_items as $rra_item) {
+		if ($empty_rra_item_list == true) {
 			?>
-			<tr id="row<?php echo $rra_item["id"];?>">
-				<td>
-					<table width="100%" cellpadding="3" cellspacing="0">
-						<tr bgcolor="<?php echo $colors["header_panel_background"];?>">
-							<td colspan="2" class="textSubHeaderDark">
-								<?php echo $rra_cf_types{$rra_item["consolidation_function"]};?>
-							</td>
-							<td align="right" class="textSubHeaderDark">
-								<a class="linkOverDark" href="#" onClick="javascript:xajax_xajax_remove_rra_item('<?php echo $rra_item["id"];?>')">Remove</a>
-							</td>
-						</tr>
-						<?php
-						_data_preset_rra_item__consolidation_function("consolidation_function_" . $rra_item["id"], $rra_item["consolidation_function"], $rra_item["id"]);
-						_data_preset_rra_item__steps("steps_" . $rra_item["id"], $rra_item["steps"], $rra_item["id"]);
-						_data_preset_rra_item__rows("rows_" . $rra_item["id"], $rra_item["rows"], $rra_item["id"]);
-						_data_preset_rra_item__x_files_factor("x_files_factor_" . $rra_item["id"], $rra_item["x_files_factor"], $rra_item["id"]);
-						_data_preset_rra_item__hw_alpha("hw_alpha_" . $rra_item["id"], $rra_item["hw_alpha"], $rra_item["id"]);
-						_data_preset_rra_item__hw_beta("hw_beta_" . $rra_item["id"], $rra_item["hw_beta"], $rra_item["id"]);
-						_data_preset_rra_item__hw_gamma("hw_gamma_" . $rra_item["id"], $rra_item["hw_gamma"], $rra_item["id"]);
-						_data_preset_rra_item__hw_seasonal_period("hw_seasonal_period_" . $rra_item["id"], $rra_item["hw_seasonal_period"], $rra_item["id"]);
-						_data_preset_rra_item__hw_rra_num("hw_rra_num_" . $rra_item["id"], $rra_item["hw_rra_num"], $rra_item["id"]);
-						_data_preset_rra_item__hw_threshold("hw_threshold_" . $rra_item["id"], $rra_item["hw_threshold"], $rra_item["id"]);
-						_data_preset_rra_item__hw_window_length("hw_window_length_" . $rra_item["id"], $rra_item["hw_window_length"], $rra_item["id"]);
-						_data_preset_rra_item__consolidation_function_js_update($rra_item["consolidation_function"], $rra_item["id"]);
-						?>
-					</table>
-				</td>
-			</tr>
+			<script language="JavaScript">
+			<!--
+			make_row_new(document.getElementById("row0"), true);
+			-->
+			</script>
 			<?php
 		}
-	}
 
-	html_end_box();
-
-	if ($empty_rra_item_list == true) {
 		?>
-		<script language="JavaScript">
-		<!--
-		make_row_new("1", document.getElementById("row0"));
-		-->
-		</script>
 		<?php
 	}
 
-	?>
-	<?php
-
 	form_hidden_box("rra_preset_id", $_rra_preset_id);
 
-	form_save_button("presets_rra.php", "save_rra");
+	form_save_button("presets.php?action=view_rra", "save_rra");
 }
 
 ?>

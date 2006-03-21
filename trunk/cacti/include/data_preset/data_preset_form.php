@@ -76,7 +76,7 @@ $fields_data_preset_rra_item = array(
 		),
 	"hw_seasonal_period" => array(
 		"default" => "",
-		"validate_regexp" => "^[0-9]+(\.[0-9]+)$",
+		"validate_regexp" => "^[0-9]+$",
 		"validate_empty" => false,
 		"data_type" => DB_TYPE_NUMBER
 		),

@@ -148,21 +148,20 @@ function _data_preset_rra_item_js($form_name) {
 			table = document.getElementById("box-" + box_id + "-content");
 			var newRow = table.tBodies[0].rows[0].cloneNode(true);
 
-			make_row_new(box_id, newRow);
+			make_row_new(newRow, false);
 
 			table.tBodies[0].appendChild(newRow);
-
-			new_rra_form_displayed = true;
 		}
 	}
 
-	function make_row_new(box_id, row) {
+	function make_row_new(row, last_row) {
 		var row_id = row.id.replace("row", "");
 		var row_container = row.childNodes[1].childNodes[1].childNodes[1].childNodes;
 
 		row.id = "row0";
+		row_container[0].childNodes[1].id = "row_rra_item_header_0";
 		row_container[0].childNodes[1].childNodes[0].nodeValue = "(new)";
-		row_container[0].childNodes[3].innerHTML = (row_id == "0" ? "" : "<a class='linkOverDark' href='javascript:remove_rra_item_row(\"" + box_id + "\", \"0\")'>Discard</a>, ") + "<a class='linkOverDark' href='#' onClick='javascript:xajax_xajax_save_rra_item(xajax.getFormValues(\"" + html_form_name + "\"))'>Save</a>";
+		row_container[0].childNodes[3].innerHTML = (last_row == true ? "" : "<a class='linkOverDark' href='javascript:remove_rra_item_row(\"0\")'>Discard</a>, ") + "<a class='linkOverDark' href='#' onClick='javascript:xajax_xajax_save_rra_item(xajax.getFormValues(\"" + html_form_name + "\"))'>Save</a>";
 
 		/* start at index 1 to skip the header */
 		for (var i = 1; i < row_container.length; i++) {
@@ -177,6 +176,8 @@ function _data_preset_rra_item_js($form_name) {
 				}
 			}
 		}
+
+		new_rra_form_displayed = true;
 	}
 
 	function make_row_old(rra_item_id) {
@@ -184,8 +185,9 @@ function _data_preset_rra_item_js($form_name) {
 		var row_container = row.childNodes[1].childNodes[1].childNodes[1].childNodes;
 		var row_id = "0";
 
-		row_container[0].childNodes[1].childNodes[0].nodeValue = "(old)";
-		row_container[0].childNodes[3].innerHTML = "<a class='linkOverDark' href='#' onClick='javascript:xajax_xajax_remove_rra_item(\"rra_item_id\")'>Remove</a>";
+		row.id = "row" + rra_item_id;
+		row_container[0].childNodes[1].id = "row_rra_item_header_" + rra_item_id;
+		row_container[0].childNodes[3].innerHTML = "<a class='linkOverDark' href='#' onClick='javascript:xajax_xajax_remove_rra_item(\"" + rra_item_id  + "\")'>Remove</a>";
 
 		/* start at index 1 to skip the header */
 		for (var i = 1; i < row_container.length; i++) {
@@ -203,16 +205,23 @@ function _data_preset_rra_item_js($form_name) {
 		new_rra_form_displayed = false;
 	}
 
-	function remove_rra_item_row(box_id, rra_item_id) {
-		var table = document.getElementById("box-" + box_id + "-content");
+	function remove_rra_item_last_row(rra_item_id) {
 		var row = document.getElementById("row" + rra_item_id);
-		var newRow = table.tBodies[0].removeChild(row);
+		make_row_new(row, true);
+	}
+
+	function remove_rra_item_row(rra_item_id) {
+		var row = document.getElementById("row" + rra_item_id);
+		row.parentNode.removeChild(row);
 
 		new_rra_form_displayed = false;
 	}
 
 	function update_consolidation_function(consolidation_function, row_id) {
 		if (consolidation_function == <?php echo RRA_CF_TYPE_AVERAGE;?> || consolidation_function == <?php echo RRA_CF_TYPE_MIN;?> || consolidation_function == <?php echo RRA_CF_TYPE_MAX;?> || consolidation_function == <?php echo RRA_CF_TYPE_LAST;?>) {
+			document.getElementById('row_field_steps_' + row_id).style.display = 'table-row';
+			document.getElementById('row_field_rows_' + row_id).style.display = 'table-row';
+			document.getElementById('row_field_x_files_factor_' + row_id).style.display = 'table-row';
 			document.getElementById('row_field_hw_alpha_' + row_id).style.display = 'none';
 			document.getElementById('row_field_hw_beta_' + row_id).style.display = 'none';
 			document.getElementById('row_field_hw_gamma_' + row_id).style.display = 'none';
@@ -221,6 +230,9 @@ function _data_preset_rra_item_js($form_name) {
 			document.getElementById('row_field_hw_threshold_' + row_id).style.display = 'none';
 			document.getElementById('row_field_hw_window_length_' + row_id).style.display = 'none';
 		}else if (consolidation_function == <?php echo RRA_CF_TYPE_HWPREDICT;?>) {
+			document.getElementById('row_field_steps_' + row_id).style.display = 'none';
+			document.getElementById('row_field_rows_' + row_id).style.display = 'table-row';
+			document.getElementById('row_field_x_files_factor_' + row_id).style.display = 'none';
 			document.getElementById('row_field_hw_alpha_' + row_id).style.display = 'table-row';
 			document.getElementById('row_field_hw_beta_' + row_id).style.display = 'table-row';
 			document.getElementById('row_field_hw_gamma_' + row_id).style.display = 'none';
@@ -229,6 +241,9 @@ function _data_preset_rra_item_js($form_name) {
 			document.getElementById('row_field_hw_threshold_' + row_id).style.display = 'none';
 			document.getElementById('row_field_hw_window_length_' + row_id).style.display = 'none';
 		}else if (consolidation_function == <?php echo RRA_CF_TYPE_SEASONAL;?> || consolidation_function == <?php echo RRA_CF_TYPE_DEVSEASONAL;?>) {
+			document.getElementById('row_field_steps_' + row_id).style.display = 'none';
+			document.getElementById('row_field_rows_' + row_id).style.display = 'none';
+			document.getElementById('row_field_x_files_factor_' + row_id).style.display = 'none';
 			document.getElementById('row_field_hw_alpha_' + row_id).style.display = 'none';
 			document.getElementById('row_field_hw_beta_' + row_id).style.display = 'none';
 			document.getElementById('row_field_hw_gamma_' + row_id).style.display = 'table-row';
@@ -237,6 +252,9 @@ function _data_preset_rra_item_js($form_name) {
 			document.getElementById('row_field_hw_threshold_' + row_id).style.display = 'none';
 			document.getElementById('row_field_hw_window_length_' + row_id).style.display = 'none';
 		}else if (consolidation_function == <?php echo RRA_CF_TYPE_DEVPREDICT;?>) {
+			document.getElementById('row_field_steps_' + row_id).style.display = 'none';
+			document.getElementById('row_field_rows_' + row_id).style.display = 'table-row';
+			document.getElementById('row_field_x_files_factor_' + row_id).style.display = 'none';
 			document.getElementById('row_field_hw_alpha_' + row_id).style.display = 'none';
 			document.getElementById('row_field_hw_beta_' + row_id).style.display = 'none';
 			document.getElementById('row_field_hw_gamma_' + row_id).style.display = 'none';
@@ -245,6 +263,9 @@ function _data_preset_rra_item_js($form_name) {
 			document.getElementById('row_field_hw_threshold_' + row_id).style.display = 'none';
 			document.getElementById('row_field_hw_window_length_' + row_id).style.display = 'none';
 		}else if (consolidation_function == <?php echo RRA_CF_TYPE_FAILURES;?>) {
+			document.getElementById('row_field_steps_' + row_id).style.display = 'none';
+			document.getElementById('row_field_rows_' + row_id).style.display = 'table-row';
+			document.getElementById('row_field_x_files_factor_' + row_id).style.display = 'none';
 			document.getElementById('row_field_hw_alpha_' + row_id).style.display = 'none';
 			document.getElementById('row_field_hw_beta_' + row_id).style.display = 'none';
 			document.getElementById('row_field_hw_gamma_' + row_id).style.display = 'none';

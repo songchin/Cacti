@@ -59,18 +59,25 @@ function api_data_preset_rra_list() {
 	return db_fetch_assoc("select * from preset_rra order by name");
 }
 
-function api_data_preset_rra_get($preset_id) {
+function api_data_preset_rra_get($preset_rra_id) {
 	/* sanity checks */
-	validate_id_die($preset_id, "preset_id");
+	validate_id_die($preset_rra_id, "preset_rra_id");
 
-	return db_fetch_row("select * from preset_rra where id = " . sql_sanitize($preset_id));
+	return db_fetch_row("select * from preset_rra where id = " . sql_sanitize($preset_rra_id));
 }
 
-function api_data_preset_rra_item_list($preset_id) {
+function api_data_preset_rra_item_list($preset_rra_id) {
 	/* sanity checks */
-	validate_id_die($preset_id, "preset_id");
+	validate_id_die($preset_rra_id, "preset_rra_id");
 
-	return db_fetch_assoc("select * from preset_rra_item where preset_rra_id = " . sql_sanitize($preset_id));
+	return db_fetch_assoc("select * from preset_rra_item where preset_rra_id = " . sql_sanitize($preset_rra_id));
+}
+
+function api_data_preset_rra_item_get($preset_rra_item_id) {
+	/* sanity checks */
+	validate_id_die($preset_rra_item_id, "preset_rra_item_id");
+
+	return db_fetch_row("select * from preset_rra_item where id = " . sql_sanitize($preset_rra_item_id));
 }
 
 function &api_data_preset_rra_row_type_list() {
