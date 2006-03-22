@@ -64,29 +64,26 @@ switch ($_REQUEST["action"]) {
 function xajax_save_rra_item($post_args) {
 	$objResponse = new xajaxResponse();
 
-	$form_rra_item["preset_rra_id"] = $post_args["rra_preset_id"];
-	$form_rra_item["consolidation_function"] = $post_args["consolidation_function_0"];
-	$form_rra_item["steps"] = $post_args["steps_0"];
-	$form_rra_item["rows"] = $post_args["rows_0"];
-	$form_rra_item["x_files_factor"] = $post_args["x_files_factor_0"];
-	$form_rra_item["hw_alpha"] = $post_args["hw_alpha_0"];
-	$form_rra_item["hw_beta"] = $post_args["hw_beta_0"];
-	$form_rra_item["hw_gamma"] = $post_args["hw_gamma_0"];
-	$form_rra_item["hw_seasonal_period"] = $post_args["hw_seasonal_period_0"];
-	$form_rra_item["hw_rra_num"] = $post_args["hw_rra_num_0"];
-	$form_rra_item["hw_threshold"] = $post_args["hw_threshold_0"];
-	$form_rra_item["hw_window_length"] = $post_args["hw_window_length_0"];
+	$form_rra_item["preset_rra_id"] = $post_args["preset_rra_id"];
 
-	$field_errors = validate_data_preset_rra_item_fields($form_rra_item, "|field|_0");
+	/* obtain a list of visible rra item fields on the form */
+	$visible_fields = api_data_preset_rra_item_visible_field_list($post_args["rrai|consolidation_function|0"]);
+
+	/* all non-visible fields on the form should be discarded */
+	foreach ($visible_fields as $field_name) {
+		$form_rra_item[$field_name] = $post_args["rrai|$field_name|0"];
+	}
+
+	$field_errors = api_data_preset_rra_item_field_validate($form_rra_item, "rrai||field||0");
 
 	foreach (array_keys($form_rra_item) as $field_name) {
-		if (isset($post_args{$field_name . "_0"})) {
+		if (isset($post_args{"rrai|" . $field_name . "|0"})) {
 			/* make a red border around the fields which have validation errors */
-			if (in_array($field_name . "_0", $field_errors)) {
-				$objResponse->addAssign($field_name . "_0", "style.border", "2px solid red");
+			if (in_array("rrai|" . $field_name . "|0", $field_errors)) {
+				$objResponse->addAssign("rrai|" . $field_name . "|0", "style.border", "2px solid red");
 			/* clear the border for all of the fields without validation errors */
 			}else{
-				$objResponse->addClear($field_name . "_0", "style.border");
+				$objResponse->addClear("rrai|" . $field_name . "|0", "style.border");
 			}
 		}
 	}
@@ -101,7 +98,7 @@ function xajax_save_rra_item($post_args) {
 			$objResponse->addAlert("Save error!");
 		}else{
 			/* update the rra item header text */
-			$objResponse->addAssign("row_rra_item_header_0", "innerHTML", api_data_preset_rra_item_friendly_name_get($post_args["consolidation_function_0"], $post_args["steps_0"], $post_args["rows_0"]));
+			$objResponse->addAssign("row_rra_item_header_0", "innerHTML", api_data_preset_rra_item_friendly_name_get($post_args["rrai|consolidation_function|0"], $post_args["rrai|steps|0"], $post_args["rrai|rows|0"]));
 
 			$objResponse->addScript("make_row_old(\"$rra_preset_item_id\");");
 		}
@@ -131,27 +128,61 @@ function xajax_remove_rra_item($preset_rra_id) {
 }
 
 function form_save() {
-	if (isset($_POST["save_component_gprint_presets"])) {
-		$save["id"] = $_POST["id"];
-		$save["name"] = form_input_validate($_POST["name"], "name", "", false, 3);
-		$save["gprint_text"] = form_input_validate($_POST["gprint_text"], "gprint_text", "", false, 3);
+	if ($_POST["action_post"] == "rra_preset_edit") {
+		$rra_item_fields = array();
+
+		/* cache all post field values */
+		init_post_field_cache();
+
+		/* parse form fields into manageable arrays */
+		foreach ($_POST as $name => $value) {
+			if (substr($name, 0, 5) == "rrai|") {
+				$matches = explode("|", $name);
+				$rra_item_fields{$matches[2]}{$matches[1]} = $value;
+			}
+		}
+
+		$form_rra["name"] = $_POST["name"];
+
+		/* validate base rra preset fields */
+		field_register_error(api_data_preset_rra_field_validate($form_rra, "|field|"));
+
+		foreach ($rra_item_fields as $rra_item_id => $fields) {
+			/* obtain a list of visible rra item fields on the form */
+			$visible_fields = api_data_preset_rra_item_visible_field_list($fields["consolidation_function"]);
+
+			/* all non-visible fields on the form should be discarded */
+			foreach ($visible_fields as $field_name) {
+				$form_rra_item[$rra_item_id][$field_name] = $fields[$field_name];
+			}
+
+			/* validate rra item preset fields */
+			field_register_error(api_data_preset_rra_item_field_validate($form_rra_item[$rra_item_id], "rrai||field||$rra_item_id"));
+		}
 
 		if (!is_error_message()) {
-			$gprint_preset_id = sql_save($save, "graph_template_gprint");
+			$preset_rra_id = api_data_preset_rra_save($_POST["preset_rra_id"], $form_rra);
 
-			if ($gprint_preset_id) {
-				raise_message(1);
+			if ($preset_rra_id) {
+				/* save each rra item on the form */
+				foreach (array_keys($rra_item_fields) as $rra_item_id) {
+					$form_rra_item[$rra_item_id]["data_template_id"] = $_POST["preset_rra_id"];
+
+					$preset_rra_item_id = api_data_preset_rra_item_save($rra_item_id, $form_rra_item[$rra_item_id]);
+
+					if (!$preset_rra_item_id) {
+						raise_message(2);
+					}
+				}
 			}else{
 				raise_message(2);
 			}
 		}
 
-		if (is_error_message()) {
-			header("Location: presets_gprint.php?action=edit&id=" . (empty($gprint_preset_id) ? $_POST["id"] : $gprint_preset_id));
-			exit;
+		if ((is_error_message()) || (empty($_POST["preset_rra_id"]))) {
+			header("Location: presets_rra.php?action=edit" . (empty($preset_rra_id) ? "" : "&id=$preset_rra_id"));
 		}else{
-			header("Location: presets_gprint.php");
-			exit;
+			header("Location: presets.php?action=view_rra");
 		}
 	}
 }
@@ -238,17 +269,17 @@ function rra_presets_edit() {
 								</td>
 							</tr>
 							<?php
-							_data_preset_rra_item__consolidation_function("consolidation_function_" . $rra_item["id"], $rra_item["consolidation_function"], $rra_item["id"]);
-							_data_preset_rra_item__steps("steps_" . $rra_item["id"], $rra_item["steps"], $rra_item["id"]);
-							_data_preset_rra_item__rows("rows_" . $rra_item["id"], $rra_item["rows"], $rra_item["id"]);
-							_data_preset_rra_item__x_files_factor("x_files_factor_" . $rra_item["id"], $rra_item["x_files_factor"], $rra_item["id"]);
-							_data_preset_rra_item__hw_alpha("hw_alpha_" . $rra_item["id"], $rra_item["hw_alpha"], $rra_item["id"]);
-							_data_preset_rra_item__hw_beta("hw_beta_" . $rra_item["id"], $rra_item["hw_beta"], $rra_item["id"]);
-							_data_preset_rra_item__hw_gamma("hw_gamma_" . $rra_item["id"], $rra_item["hw_gamma"], $rra_item["id"]);
-							_data_preset_rra_item__hw_seasonal_period("hw_seasonal_period_" . $rra_item["id"], $rra_item["hw_seasonal_period"], $rra_item["id"]);
-							_data_preset_rra_item__hw_rra_num("hw_rra_num_" . $rra_item["id"], $rra_item["hw_rra_num"], $rra_item["id"]);
-							_data_preset_rra_item__hw_threshold("hw_threshold_" . $rra_item["id"], $rra_item["hw_threshold"], $rra_item["id"]);
-							_data_preset_rra_item__hw_window_length("hw_window_length_" . $rra_item["id"], $rra_item["hw_window_length"], $rra_item["id"]);
+							_data_preset_rra_item__consolidation_function("rrai|consolidation_function|" . $rra_item["id"], $rra_item["consolidation_function"], $rra_item["id"]);
+							_data_preset_rra_item__steps("rrai|steps|" . $rra_item["id"], $rra_item["steps"], $rra_item["id"]);
+							_data_preset_rra_item__rows("rrai|rows|" . $rra_item["id"], $rra_item["rows"], $rra_item["id"]);
+							_data_preset_rra_item__x_files_factor("rrai|x_files_factor|" . $rra_item["id"], $rra_item["x_files_factor"], $rra_item["id"]);
+							_data_preset_rra_item__hw_alpha("rrai|hw_alpha|" . $rra_item["id"], $rra_item["hw_alpha"], $rra_item["id"]);
+							_data_preset_rra_item__hw_beta("rrai|hw_beta|" . $rra_item["id"], $rra_item["hw_beta"], $rra_item["id"]);
+							_data_preset_rra_item__hw_gamma("rrai|hw_gamma|" . $rra_item["id"], $rra_item["hw_gamma"], $rra_item["id"]);
+							_data_preset_rra_item__hw_seasonal_period("rrai|hw_seasonal_period|" . $rra_item["id"], $rra_item["hw_seasonal_period"], $rra_item["id"]);
+							_data_preset_rra_item__hw_rra_num("rrai|hw_rra_num|" . $rra_item["id"], $rra_item["hw_rra_num"], $rra_item["id"]);
+							_data_preset_rra_item__hw_threshold("rrai|hw_threshold|" . $rra_item["id"], $rra_item["hw_threshold"], $rra_item["id"]);
+							_data_preset_rra_item__hw_window_length("rrai|hw_window_length|" . $rra_item["id"], $rra_item["hw_window_length"], $rra_item["id"]);
 							_data_preset_rra_item__consolidation_function_js_update($rra_item["consolidation_function"], $rra_item["id"]);
 							?>
 						</table>
@@ -274,7 +305,8 @@ function rra_presets_edit() {
 		<?php
 	}
 
-	form_hidden_box("rra_preset_id", $_rra_preset_id);
+	form_hidden_box("preset_rra_id", $_rra_preset_id);
+	form_hidden_box("action_post", "rra_preset_edit");
 
 	form_save_button("presets.php?action=view_rra", "save_rra");
 }

@@ -24,7 +24,7 @@
 
 /* form validation functions */
 
-function validate_data_preset_rra_fields(&$_fields_data_preset_rra, $data_preset_rra_field_name_format) {
+function api_data_preset_rra_field_validate(&$_fields_data_preset_rra, $data_preset_rra_field_name_format) {
 	require_once(CACTI_BASE_PATH . "/lib/data_preset/data_preset_info.php");
 
 	if (sizeof($_fields_data_preset_rra) == 0) {
@@ -51,7 +51,7 @@ function validate_data_preset_rra_fields(&$_fields_data_preset_rra, $data_preset
 	return $error_fields;
 }
 
-function validate_data_preset_rra_item_fields(&$_fields_data_preset_rra_item, $data_preset_rra_item_field_name_format) {
+function api_data_preset_rra_item_field_validate(&$_fields_data_preset_rra_item, $data_preset_rra_item_field_name_format) {
 	require_once(CACTI_BASE_PATH . "/include/data_preset/data_preset_constants.php");
 	require_once(CACTI_BASE_PATH . "/lib/data_preset/data_preset_info.php");
 
@@ -66,35 +66,12 @@ function validate_data_preset_rra_item_fields(&$_fields_data_preset_rra_item, $d
 	$fields_data_preset_rra_item = api_data_preset_rra_item_form_list();
 
 	/* only certain fields are displayed on the form depending on the selected consolidation function */
-	if ((isset($_fields_data_preset_rra_item["consolidation_function"])) && (($_fields_data_preset_rra_item["consolidation_function"] == RRA_CF_TYPE_AVERAGE) || ($_fields_data_preset_rra_item["consolidation_function"] == RRA_CF_TYPE_MIN) || ($_fields_data_preset_rra_item["consolidation_function"] == RRA_CF_TYPE_MAX) || ($_fields_data_preset_rra_item["consolidation_function"] == RRA_CF_TYPE_LAST)) ) {
-		if (isset($_fields_data_preset_rra_item["hw_alpha"])) unset($_fields_data_preset_rra_item["hw_alpha"]);
-		if (isset($_fields_data_preset_rra_item["hw_beta"])) unset($_fields_data_preset_rra_item["hw_beta"]);
-		if (isset($_fields_data_preset_rra_item["hw_gamma"])) unset($_fields_data_preset_rra_item["hw_gamma"]);
-		if (isset($_fields_data_preset_rra_item["hw_seasonal_period"])) unset($_fields_data_preset_rra_item["hw_seasonal_period"]);
-		if (isset($_fields_data_preset_rra_item["hw_rra_num"])) unset($_fields_data_preset_rra_item["hw_rra_num"]);
-		if (isset($_fields_data_preset_rra_item["hw_threshold"])) unset($_fields_data_preset_rra_item["hw_threshold"]);
-		if (isset($_fields_data_preset_rra_item["hw_window_length"])) unset($_fields_data_preset_rra_item["hw_window_length"]);
-	}else if ((isset($_fields_data_preset_rra_item["consolidation_function"])) && ($_fields_data_preset_rra_item["consolidation_function"] == RRA_CF_TYPE_HWPREDICT)) {
-		if (isset($_fields_data_preset_rra_item["hw_gamma"])) unset($_fields_data_preset_rra_item["hw_gamma"]);
-		if (isset($_fields_data_preset_rra_item["hw_threshold"])) unset($_fields_data_preset_rra_item["hw_threshold"]);
-		if (isset($_fields_data_preset_rra_item["hw_window_length"])) unset($_fields_data_preset_rra_item["hw_window_length"]);
-	}else if ((isset($_fields_data_preset_rra_item["consolidation_function"])) && (($_fields_data_preset_rra_item["consolidation_function"] == RRA_CF_TYPE_SEASONAL) || ($_fields_data_preset_rra_item["consolidation_function"] == RRA_CF_TYPE_DEVSEASONAL)) ) {
-		if (isset($_fields_data_preset_rra_item["hw_alpha"])) unset($_fields_data_preset_rra_item["hw_alpha"]);
-		if (isset($_fields_data_preset_rra_item["hw_beta"])) unset($_fields_data_preset_rra_item["hw_beta"]);
-		if (isset($_fields_data_preset_rra_item["hw_threshold"])) unset($_fields_data_preset_rra_item["hw_threshold"]);
-		if (isset($_fields_data_preset_rra_item["hw_window_length"])) unset($_fields_data_preset_rra_item["hw_window_length"]);
-	}else if ((isset($_fields_data_preset_rra_item["consolidation_function"])) && ($_fields_data_preset_rra_item["consolidation_function"] == RRA_CF_TYPE_DEVPREDICT)) {
-		if (isset($_fields_data_preset_rra_item["hw_alpha"])) unset($_fields_data_preset_rra_item["hw_alpha"]);
-		if (isset($_fields_data_preset_rra_item["hw_beta"])) unset($_fields_data_preset_rra_item["hw_beta"]);
-		if (isset($_fields_data_preset_rra_item["hw_gamma"])) unset($_fields_data_preset_rra_item["hw_gamma"]);
-		if (isset($_fields_data_preset_rra_item["hw_seasonal_period"])) unset($_fields_data_preset_rra_item["hw_seasonal_period"]);
-		if (isset($_fields_data_preset_rra_item["hw_threshold"])) unset($_fields_data_preset_rra_item["hw_threshold"]);
-		if (isset($_fields_data_preset_rra_item["hw_window_length"])) unset($_fields_data_preset_rra_item["hw_window_length"]);
-	}else if ((isset($_fields_data_preset_rra_item["consolidation_function"])) && ($_fields_data_preset_rra_item["consolidation_function"] == RRA_CF_TYPE_FAILURES)) {
-		if (isset($_fields_data_preset_rra_item["hw_alpha"])) unset($_fields_data_preset_rra_item["hw_alpha"]);
-		if (isset($_fields_data_preset_rra_item["hw_beta"])) unset($_fields_data_preset_rra_item["hw_beta"]);
-		if (isset($_fields_data_preset_rra_item["hw_gamma"])) unset($_fields_data_preset_rra_item["hw_gamma"]);
-		if (isset($_fields_data_preset_rra_item["hw_seasonal_period"])) unset($_fields_data_preset_rra_item["hw_seasonal_period"]);
+	if (isset($_fields_data_preset_rra_item["consolidation_function"])) {
+		$invisible_fields = array_diff(array_keys($fields_data_preset_rra_item), api_data_preset_rra_item_visible_field_list($_fields_data_preset_rra_item["consolidation_function"]));
+
+		foreach ($invisible_fields as $field_name) {
+			unset($_fields_data_preset_rra_item[$field_name]);
+		}
 	}
 
 	/* base fields */
@@ -109,6 +86,25 @@ function validate_data_preset_rra_item_fields(&$_fields_data_preset_rra_item, $d
 	}
 
 	return $error_fields;
+}
+
+function api_data_preset_rra_item_visible_field_list($consolidation_function) {
+	require_once(CACTI_BASE_PATH . "/include/data_preset/data_preset_constants.php");
+
+	$visible_fields = array();
+	if (($consolidation_function == RRA_CF_TYPE_AVERAGE) || ($consolidation_function == RRA_CF_TYPE_MIN) || ($consolidation_function == RRA_CF_TYPE_MAX) || ($consolidation_function == RRA_CF_TYPE_LAST)) {
+		$visible_fields = array("consolidation_function", "steps", "rows", "x_files_factor");
+	}else if ($consolidation_function == RRA_CF_TYPE_HWPREDICT) {
+		$visible_fields = array("consolidation_function", "rows", "hw_alpha", "hw_beta", "hw_seasonal_period", "hw_rra_num");
+	}else if (($consolidation_function == RRA_CF_TYPE_SEASONAL) || ($consolidation_function == RRA_CF_TYPE_DEVSEASONAL)) {
+		$visible_fields = array("consolidation_function", "hw_gamma", "hw_seasonal_period", "hw_rra_num");
+	}else if ($consolidation_function == RRA_CF_TYPE_DEVPREDICT) {
+		$visible_fields = array("consolidation_function", "rows", "hw_rra_num");
+	}else if ($consolidation_function == RRA_CF_TYPE_FAILURES) {
+		$visible_fields = array("consolidation_function", "rows", "hw_rra_num", "hw_threshold", "hw_window_length");
+	}
+
+	return $visible_fields;
 }
 
 /* rra preset fields */
@@ -193,6 +189,7 @@ function _data_preset_rra_item_js($form_name) {
 		for (var i = 1; i < row_container.length; i++) {
 			if ((row_container[i].tagName == "TR") || (row_container[i].tagName == "tr")) {
 				row_container[i].style.color = "black";
+				row_container[i].id = row_container[i].id.replace(row_id, rra_item_id);
 
 				/* make sure each form element gets unique name */
 				if (row_container[i].childNodes[3]) {
