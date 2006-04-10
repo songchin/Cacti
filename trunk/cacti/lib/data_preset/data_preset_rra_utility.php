@@ -22,47 +22,20 @@
  +-------------------------------------------------------------------------+
 */
 
-function validate_id_die($argument_value, $argument_name, $allow_empty = false) {
-	if (!db_number_validate($argument_value, $allow_empty)) {
-		die("Invalid input '$argument_value' for '$argument_name' in " . log_last_function_get() . "()");
-	}
-}
+function api_data_preset_rra_item_friendly_name_get($consolidation_function, $steps, $rows) {
+	require_once(CACTI_BASE_PATH . "/include/data_preset/data_preset_constants.php");
+	require_once(CACTI_BASE_PATH . "/lib/data_preset/data_preset_rra_info.php");
 
-function db_number_validate($number, $allow_empty = false) {
-	$number_str = strval($number);
+	$cf_types = api_data_preset_rra_cf_type_list();
+	$row_types = api_data_preset_rra_row_type_list();
 
-	/* only allow whole digit numbers */
-	for ($i=0; $i<strlen($number_str); $i++) {
-		if ((ord(substr($number_str, $i, 1)) < 48) || (ord(substr($number_str, $i, 1)) > 57)) {
-			api_log_log("Invalid number '$number' in " . api_log_last_function_get() . "()", SEV_WARNING);
-			return false;
-		}
+	$friendly_name = $cf_types[$consolidation_function] . ": ";
+
+	if (($consolidation_function == RRA_CF_TYPE_AVERAGE) || ($consolidation_function == RRA_CF_TYPE_MIN) || ($consolidation_function == RRA_CF_TYPE_MAX) || ($consolidation_function == RRA_CF_TYPE_LAST)) {
+		$friendly_name .= "Update every " . ($steps > 1 ? $steps : "") . " interval for " . $row_types[$rows];
 	}
 
-	if (($allow_empty === false) && (empty($number))) {
-		api_log_log("Invalid (empty) number '$number' in " . api_log_last_function_get() . "()", SEV_WARNING);
-		return false;
-	}else{
-		return true;
-	}
-}
-
-function db_order_column_validate($column_name) {
-	if (preg_match("/^[a-z_]+$/", $column_name)) {
-		return true;
-	}else{
-		api_log_log("Invalid order column name '$column_name' in " . api_log_last_function_get() . "()", SEV_WARNING);
-		return false;
-	}
-}
-
-function db_order_direction_validate($direction) {
-	if (($direction == "asc") || ($direction == "desc")) {
-		return true;
-	}else{
-		api_log_log("Invalid order direction '$direction' in " . api_log_last_function_get() . "()", SEV_WARNING);
-		return false;
-	}
+	return $friendly_name;
 }
 
 ?>

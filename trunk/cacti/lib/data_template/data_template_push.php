@@ -44,7 +44,6 @@ function copy_data_template_to_data_source($data_template_id, $host_id = 0, $dat
 
 	/* fetch information from that data template */
 	$data_template = api_data_template_get($data_template_id);
-	$data_template_rras = api_data_template_rras_list($data_template_id);
 	$_data_template_input_fields = api_data_template_input_field_list($data_template_id);
 
 	if (sizeof($data_template) > 0) {
@@ -69,7 +68,7 @@ function copy_data_template_to_data_source($data_template_id, $host_id = 0, $dat
 			}
 		}
 
-		if (api_data_source_save(0, $_fields, $data_template_rras, true)) {
+		if (api_data_source_save(0, $_fields, true)) {
 			$data_source_id = db_fetch_insert_id();
 
 			api_log_log("Cloning data source [ID#$data_source_id] from template [ID#$data_template_id]", SEV_DEBUG);

@@ -321,6 +321,7 @@ CREATE TABLE `data_source` (
   `data_input_type` tinyint(1) unsigned NOT NULL default '3',
   `name` varchar(255) NOT NULL default '',
   `name_cache` varchar(255) NOT NULL default '',
+  `preset_rra_id` mediumint(8) unsigned NOT NULL default '0',
   `active` tinyint(1) unsigned NOT NULL default '1',
   `rrd_path` varchar(255) NOT NULL default '',
   `rrd_step` smallint(5) unsigned NOT NULL default '300',
@@ -383,18 +384,28 @@ CREATE TABLE `data_source_item` (
 -- --------------------------------------------------------
 
 -- 
--- Table structure for table `data_source_rra`
+-- Table structure for table `data_source_rra_item`
 -- 
 
-CREATE TABLE `data_source_rra` (
+CREATE TABLE `data_source_rra_item` (
+  `id` mediumint(8) unsigned NOT NULL auto_increment,
   `data_source_id` mediumint(8) unsigned NOT NULL default '0',
-  `rra_id` mediumint(8) unsigned NOT NULL default '0',
-  PRIMARY KEY  (`data_source_id`,`rra_id`),
-  KEY `data_source_id` (`data_source_id`)
+  `consolidation_function` tinyint(3) unsigned NOT NULL default '0',
+  `steps` smallint(5) unsigned NOT NULL default '0',
+  `rows` int(11) unsigned NOT NULL default '0',
+  `x_files_factor` decimal(5,4) NOT NULL default '0.0000',
+  `hw_alpha` decimal(5,4) NOT NULL default '0.0000',
+  `hw_beta` decimal(5,4) NOT NULL default '0.0000',
+  `hw_gamma` decimal(5,4) NOT NULL default '0.0000',
+  `hw_seasonal_period` int(11) unsigned NOT NULL default '0',
+  `hw_rra_num` tinyint(3) unsigned NOT NULL default '0',
+  `hw_threshold` tinyint(3) unsigned NOT NULL default '0',
+  `hw_window_length` tinyint(3) unsigned NOT NULL default '0',
+  PRIMARY KEY  (`id`)
 ) TYPE=MyISAM;
 
 -- 
--- Dumping data for table `data_source_rra`
+-- Dumping data for table `data_source_rra_item`
 -- 
 
 
@@ -410,11 +421,11 @@ CREATE TABLE `data_template` (
   `template_name` varchar(150) NOT NULL default '',
   `data_input_type` tinyint(1) unsigned NOT NULL default '3',
   `t_name` tinyint(1) unsigned NOT NULL default '0',
+  `preset_rra_id` mediumint(8) unsigned NOT NULL default '0',
   `t_active` tinyint(1) unsigned NOT NULL default '0',
   `active` tinyint(1) unsigned NOT NULL default '1',
   `t_rrd_step` tinyint(1) unsigned NOT NULL default '0',
   `rrd_step` smallint(5) unsigned NOT NULL default '300',
-  `t_rra_id` tinyint(1) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`)
 ) TYPE=MyISAM;
 
@@ -422,25 +433,25 @@ CREATE TABLE `data_template` (
 -- Dumping data for table `data_template`
 -- 
 
-INSERT INTO `data_template` VALUES (1, 870, 'Host MIB - CPU Utilization', 2, 0, 0, 1, 0, 300, 0);
-INSERT INTO `data_template` VALUES (2, 93, 'Host MIB - Disk Space', 2, 0, 0, 1, 0, 300, 0);
-INSERT INTO `data_template` VALUES (3, 0, 'Host MIB - Logged in Users', 4, 0, 0, 1, 0, 300, 0);
-INSERT INTO `data_template` VALUES (4, 141, 'Host MIB - Processes', 4, 0, 0, 1, 0, 300, 0);
-INSERT INTO `data_template` VALUES (5, 0, 'Interface - Errors/Discards', 2, 0, 0, 1, 0, 300, 0);
-INSERT INTO `data_template` VALUES (6, 0, 'Interface - Traffic (32-bit)', 2, 0, 0, 1, 0, 300, 0);
-INSERT INTO `data_template` VALUES (7, 0, 'Interface - Traffic (64-bit)', 2, 0, 0, 1, 0, 300, 0);
-INSERT INTO `data_template` VALUES (8, 0, 'Interface - Unicast Packets', 2, 0, 0, 1, 0, 300, 0);
-INSERT INTO `data_template` VALUES (9, 0, 'Local Linux - Memory', 3, 0, 0, 1, 0, 300, 0);
-INSERT INTO `data_template` VALUES (10, 0, 'Net-SNMP - CPU Usage', 4, 0, 0, 1, 0, 300, 0);
-INSERT INTO `data_template` VALUES (11, 1, 'Net-SNMP - Disk Space', 2, 0, 0, 1, 0, 300, 0);
-INSERT INTO `data_template` VALUES (12, 0, 'Net-SNMP - Load Average', 4, 0, 0, 1, 0, 300, 0);
-INSERT INTO `data_template` VALUES (13, 59, 'Net-SNMP - Memory', 4, 0, 0, 1, 0, 300, 0);
-INSERT INTO `data_template` VALUES (14, 67, 'Local Unix - Disk Space', 2, 0, 0, 1, 0, 300, 0);
-INSERT INTO `data_template` VALUES (15, 5, 'Local Unix - Logged In Users', 3, 0, 0, 1, 0, 300, 0);
-INSERT INTO `data_template` VALUES (16, 9, 'Local Unix - Processes', 3, 0, 0, 1, 0, 300, 0);
-INSERT INTO `data_template` VALUES (17, 0, 'Local Unix - Ping Host', 3, 0, 0, 1, 0, 300, 0);
-INSERT INTO `data_template` VALUES (18, 52, 'Interface - Non-Unicast Packets', 2, 0, 0, 1, 0, 300, 0);
-INSERT INTO `data_template` VALUES (19, 0, 'Local Unix - Load Average', 3, 0, 0, 1, 0, 300, 0);
+INSERT INTO `data_template` VALUES (1, 870, 'Host MIB - CPU Utilization', 2, 0, 1, 0, 1, 0, 300);
+INSERT INTO `data_template` VALUES (2, 93, 'Host MIB - Disk Space', 2, 0, 1, 0, 1, 0, 300);
+INSERT INTO `data_template` VALUES (3, 0, 'Host MIB - Logged in Users', 4, 0, 1, 0, 1, 0, 300);
+INSERT INTO `data_template` VALUES (4, 141, 'Host MIB - Processes', 4, 0, 1, 0, 1, 0, 300);
+INSERT INTO `data_template` VALUES (5, 0, 'Interface - Errors/Discards', 2, 0, 1, 0, 1, 0, 300);
+INSERT INTO `data_template` VALUES (6, 0, 'Interface - Traffic (32-bit)', 2, 0, 1, 0, 1, 0, 300);
+INSERT INTO `data_template` VALUES (7, 0, 'Interface - Traffic (64-bit)', 2, 0, 1, 0, 1, 0, 300);
+INSERT INTO `data_template` VALUES (8, 0, 'Interface - Unicast Packets', 2, 0, 1, 0, 1, 0, 300);
+INSERT INTO `data_template` VALUES (9, 0, 'Local Linux - Memory', 3, 0, 1, 0, 1, 0, 300);
+INSERT INTO `data_template` VALUES (10, 0, 'Net-SNMP - CPU Usage', 4, 0, 1, 0, 1, 0, 300);
+INSERT INTO `data_template` VALUES (11, 1, 'Net-SNMP - Disk Space', 2, 0, 1, 0, 1, 0, 300);
+INSERT INTO `data_template` VALUES (12, 0, 'Net-SNMP - Load Average', 4, 0, 1, 0, 1, 0, 300);
+INSERT INTO `data_template` VALUES (13, 59, 'Net-SNMP - Memory', 4, 0, 1, 0, 1, 0, 300);
+INSERT INTO `data_template` VALUES (14, 67, 'Local Unix - Disk Space', 2, 0, 1, 0, 1, 0, 300);
+INSERT INTO `data_template` VALUES (15, 5, 'Local Unix - Logged In Users', 3, 0, 1, 0, 1, 0, 300);
+INSERT INTO `data_template` VALUES (16, 9, 'Local Unix - Processes', 3, 0, 1, 0, 1, 0, 300);
+INSERT INTO `data_template` VALUES (17, 0, 'Local Unix - Ping Host', 3, 0, 1, 0, 1, 0, 300);
+INSERT INTO `data_template` VALUES (18, 52, 'Interface - Non-Unicast Packets', 2, 0, 1, 0, 1, 0, 300);
+INSERT INTO `data_template` VALUES (19, 0, 'Local Unix - Load Average', 3, 0, 1, 0, 1, 0, 300);
 
 -- --------------------------------------------------------
 
@@ -595,100 +606,6 @@ INSERT INTO `data_template_item` VALUES (33, 18, 0, 'U', 0, '0', 0, 600, 0, 2, 0
 INSERT INTO `data_template_item` VALUES (34, 19, 0, '2000', 0, '0', 0, 600, 0, 1, 0, '1min', '1min');
 INSERT INTO `data_template_item` VALUES (35, 19, 0, '2000', 0, '0', 0, 600, 0, 1, 0, '5min', '5min');
 INSERT INTO `data_template_item` VALUES (36, 19, 0, '2000', 0, '0', 0, 600, 0, 1, 0, '15min', '15min');
-
--- --------------------------------------------------------
-
--- 
--- Table structure for table `data_template_rra`
--- 
-
-CREATE TABLE `data_template_rra` (
-  `data_template_id` mediumint(8) unsigned NOT NULL default '0',
-  `rra_id` mediumint(8) unsigned NOT NULL default '0',
-  PRIMARY KEY  (`data_template_id`,`rra_id`),
-  KEY `data_template_id` (`data_template_id`)
-) TYPE=MyISAM;
-
--- 
--- Dumping data for table `data_template_rra`
--- 
-
-INSERT INTO `data_template_rra` VALUES (1, 1);
-INSERT INTO `data_template_rra` VALUES (1, 2);
-INSERT INTO `data_template_rra` VALUES (1, 3);
-INSERT INTO `data_template_rra` VALUES (1, 4);
-INSERT INTO `data_template_rra` VALUES (2, 1);
-INSERT INTO `data_template_rra` VALUES (2, 2);
-INSERT INTO `data_template_rra` VALUES (2, 3);
-INSERT INTO `data_template_rra` VALUES (2, 4);
-INSERT INTO `data_template_rra` VALUES (3, 1);
-INSERT INTO `data_template_rra` VALUES (3, 2);
-INSERT INTO `data_template_rra` VALUES (3, 3);
-INSERT INTO `data_template_rra` VALUES (3, 4);
-INSERT INTO `data_template_rra` VALUES (4, 1);
-INSERT INTO `data_template_rra` VALUES (4, 2);
-INSERT INTO `data_template_rra` VALUES (4, 3);
-INSERT INTO `data_template_rra` VALUES (4, 4);
-INSERT INTO `data_template_rra` VALUES (5, 1);
-INSERT INTO `data_template_rra` VALUES (5, 2);
-INSERT INTO `data_template_rra` VALUES (5, 3);
-INSERT INTO `data_template_rra` VALUES (5, 4);
-INSERT INTO `data_template_rra` VALUES (6, 1);
-INSERT INTO `data_template_rra` VALUES (6, 2);
-INSERT INTO `data_template_rra` VALUES (6, 3);
-INSERT INTO `data_template_rra` VALUES (6, 4);
-INSERT INTO `data_template_rra` VALUES (7, 1);
-INSERT INTO `data_template_rra` VALUES (7, 2);
-INSERT INTO `data_template_rra` VALUES (7, 3);
-INSERT INTO `data_template_rra` VALUES (7, 4);
-INSERT INTO `data_template_rra` VALUES (8, 1);
-INSERT INTO `data_template_rra` VALUES (8, 2);
-INSERT INTO `data_template_rra` VALUES (8, 3);
-INSERT INTO `data_template_rra` VALUES (8, 4);
-INSERT INTO `data_template_rra` VALUES (9, 1);
-INSERT INTO `data_template_rra` VALUES (9, 2);
-INSERT INTO `data_template_rra` VALUES (9, 3);
-INSERT INTO `data_template_rra` VALUES (9, 4);
-INSERT INTO `data_template_rra` VALUES (10, 1);
-INSERT INTO `data_template_rra` VALUES (10, 2);
-INSERT INTO `data_template_rra` VALUES (10, 3);
-INSERT INTO `data_template_rra` VALUES (10, 4);
-INSERT INTO `data_template_rra` VALUES (11, 1);
-INSERT INTO `data_template_rra` VALUES (11, 2);
-INSERT INTO `data_template_rra` VALUES (11, 3);
-INSERT INTO `data_template_rra` VALUES (11, 4);
-INSERT INTO `data_template_rra` VALUES (12, 1);
-INSERT INTO `data_template_rra` VALUES (12, 2);
-INSERT INTO `data_template_rra` VALUES (12, 3);
-INSERT INTO `data_template_rra` VALUES (12, 4);
-INSERT INTO `data_template_rra` VALUES (13, 1);
-INSERT INTO `data_template_rra` VALUES (13, 2);
-INSERT INTO `data_template_rra` VALUES (13, 3);
-INSERT INTO `data_template_rra` VALUES (13, 4);
-INSERT INTO `data_template_rra` VALUES (14, 1);
-INSERT INTO `data_template_rra` VALUES (14, 2);
-INSERT INTO `data_template_rra` VALUES (14, 3);
-INSERT INTO `data_template_rra` VALUES (14, 4);
-INSERT INTO `data_template_rra` VALUES (15, 1);
-INSERT INTO `data_template_rra` VALUES (15, 2);
-INSERT INTO `data_template_rra` VALUES (15, 3);
-INSERT INTO `data_template_rra` VALUES (15, 4);
-INSERT INTO `data_template_rra` VALUES (16, 1);
-INSERT INTO `data_template_rra` VALUES (16, 2);
-INSERT INTO `data_template_rra` VALUES (16, 3);
-INSERT INTO `data_template_rra` VALUES (16, 4);
-INSERT INTO `data_template_rra` VALUES (17, 1);
-INSERT INTO `data_template_rra` VALUES (17, 2);
-INSERT INTO `data_template_rra` VALUES (17, 3);
-INSERT INTO `data_template_rra` VALUES (17, 4);
-INSERT INTO `data_template_rra` VALUES (18, 1);
-INSERT INTO `data_template_rra` VALUES (18, 2);
-INSERT INTO `data_template_rra` VALUES (18, 3);
-INSERT INTO `data_template_rra` VALUES (18, 4);
-INSERT INTO `data_template_rra` VALUES (19, 1);
-INSERT INTO `data_template_rra` VALUES (19, 2);
-INSERT INTO `data_template_rra` VALUES (19, 3);
-INSERT INTO `data_template_rra` VALUES (19, 4);
 
 -- --------------------------------------------------------
 
@@ -1977,6 +1894,51 @@ INSERT INTO `preset_package_vendor` VALUES (7, '3Com');
 -- --------------------------------------------------------
 
 -- 
+-- Table structure for table `preset_rra`
+-- 
+
+CREATE TABLE `preset_rra` (
+  `id` mediumint(8) NOT NULL auto_increment,
+  `name` varchar(100) NOT NULL default '',
+  PRIMARY KEY  (`id`)
+) TYPE=MyISAM;
+
+-- 
+-- Dumping data for table `preset_rra`
+-- 
+
+
+-- --------------------------------------------------------
+
+-- 
+-- Table structure for table `preset_rra_item`
+-- 
+
+CREATE TABLE `preset_rra_item` (
+  `id` mediumint(8) unsigned NOT NULL auto_increment,
+  `preset_rra_id` mediumint(8) unsigned NOT NULL default '0',
+  `consolidation_function` tinyint(3) unsigned NOT NULL default '0',
+  `steps` smallint(5) unsigned NOT NULL default '0',
+  `rows` int(11) unsigned NOT NULL default '0',
+  `x_files_factor` decimal(5,4) NOT NULL default '0.0000',
+  `hw_alpha` decimal(5,4) NOT NULL default '0.0000',
+  `hw_beta` decimal(5,4) NOT NULL default '0.0000',
+  `hw_gamma` decimal(5,4) NOT NULL default '0.0000',
+  `hw_seasonal_period` int(11) unsigned NOT NULL default '0',
+  `hw_rra_num` tinyint(3) unsigned NOT NULL default '0',
+  `hw_threshold` tinyint(3) unsigned NOT NULL default '0',
+  `hw_window_length` tinyint(3) unsigned NOT NULL default '0',
+  PRIMARY KEY  (`id`)
+) TYPE=MyISAM;
+
+-- 
+-- Dumping data for table `preset_rra_item`
+-- 
+
+
+-- --------------------------------------------------------
+
+-- 
 -- Table structure for table `rra`
 -- 
 
@@ -2025,46 +1987,6 @@ INSERT INTO `rra_cf` VALUES (3, 1);
 INSERT INTO `rra_cf` VALUES (3, 3);
 INSERT INTO `rra_cf` VALUES (4, 1);
 INSERT INTO `rra_cf` VALUES (4, 3);
-
--- --------------------------------------------------------
-
--- 
--- Table structure for table `rra_template`
--- 
-
-CREATE TABLE `rra_template` (
-  `id` int(11) unsigned NOT NULL default '0',
-  `name` varchar(100) NOT NULL default '',
-  PRIMARY KEY  (`id`)
-) TYPE=MyISAM;
-
--- 
--- Dumping data for table `rra_template`
--- 
-
-
--- --------------------------------------------------------
-
--- 
--- Table structure for table `rra_template_settings`
--- 
-
-CREATE TABLE `rra_template_settings` (
-  `id` mediumint(8) unsigned NOT NULL auto_increment,
-  `rra_template_id` mediumint(9) unsigned NOT NULL default '0',
-  `name` varchar(100) NOT NULL default '',
-  `x_files_factor` double NOT NULL default '0.1',
-  `steps` mediumint(8) default '1',
-  `rows` int(12) NOT NULL default '600',
-  `timespan` int(12) unsigned NOT NULL default '0',
-  PRIMARY KEY  (`id`),
-  KEY `rra_template_id` (`rra_template_id`)
-) TYPE=MyISAM;
-
--- 
--- Dumping data for table `rra_template_settings`
--- 
-
 
 -- --------------------------------------------------------
 

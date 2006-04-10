@@ -24,10 +24,10 @@
 
 require(dirname(__FILE__) . "/include/global.php");
 require_once(CACTI_BASE_PATH . "/include/auth/validate.php");
-require_once(CACTI_BASE_PATH . "/lib/data_preset/data_preset_info.php");
-require_once(CACTI_BASE_PATH . "/lib/data_preset/data_preset_form.php");
-require_once(CACTI_BASE_PATH . "/lib/data_preset/data_preset_update.php");
-require_once(CACTI_BASE_PATH . "/lib/data_preset/data_preset_utility.php");
+require_once(CACTI_BASE_PATH . "/lib/data_preset/data_preset_rra_info.php");
+require_once(CACTI_BASE_PATH . "/lib/data_preset/data_preset_rra_form.php");
+require_once(CACTI_BASE_PATH . "/lib/data_preset/data_preset_rra_update.php");
+require_once(CACTI_BASE_PATH . "/lib/data_preset/data_preset_rra_utility.php");
 
 /* set default action */
 if (!isset($_REQUEST["action"])) { $_REQUEST["action"] = ""; }
@@ -184,6 +184,16 @@ function form_save() {
 		}else{
 			header("Location: presets.php?action=view_rra");
 		}
+	}else if (isset($_POST["box-1-action-area-button"])) {
+		$selected_rows = explode(":", $_POST["box-1-action-area-selected-rows"]);
+
+		if ($_POST["box-1-action-area-type"] == "remove") {
+			foreach ($selected_rows as $preset_rra_id) {
+				api_data_preset_rra_remove($preset_rra_id);
+			}
+		}
+
+		header("Location: presets.php?action=view_rra");
 	}
 }
 

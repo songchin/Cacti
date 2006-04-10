@@ -23,7 +23,7 @@
 */
 
 function api_data_preset_rra_save($data_preset_rra_id, $_fields_data_preset_rra) {
-	require_once(CACTI_BASE_PATH . "/lib/data_preset/data_preset_info.php");
+	require_once(CACTI_BASE_PATH . "/lib/data_preset/data_preset_rra_info.php");
 
 	/* sanity checks */
 	validate_id_die($data_preset_rra_id, "data_preset_rra_id", true);
@@ -51,7 +51,7 @@ function api_data_preset_rra_save($data_preset_rra_id, $_fields_data_preset_rra)
 }
 
 function api_data_preset_rra_item_save($data_preset_rra_item_id, $_fields_data_preset_rra_item) {
-	require_once(CACTI_BASE_PATH . "/lib/data_preset/data_preset_info.php");
+	require_once(CACTI_BASE_PATH . "/lib/data_preset/data_preset_rra_info.php");
 
 	/* sanity checks */
 	validate_id_die($data_preset_rra_item_id, "data_preset_rra_item_id", true);
@@ -89,6 +89,21 @@ function api_data_preset_rra_item_save($data_preset_rra_item_id, $_fields_data_p
 	}else{
 		return false;
 	}
+}
+
+function api_data_preset_rra_remove($data_preset_id) {
+	/* sanity checks */
+	validate_id_die($data_preset_id, "data_preset_id");
+
+	db_delete("preset_rra_item",
+		array(
+			"preset_rra_id" => array("type" => DB_TYPE_NUMBER, "value" => $data_preset_id)
+			));
+
+	db_delete("preset_rra",
+		array(
+			"id" => array("type" => DB_TYPE_NUMBER, "value" => $data_preset_id)
+			));
 }
 
 function api_data_preset_rra_item_remove($data_preset_rra_item_id) {

@@ -22,20 +22,37 @@
  +-------------------------------------------------------------------------+
 */
 
-function api_data_preset_rra_item_friendly_name_get($consolidation_function, $steps, $rows) {
-	require_once(CACTI_BASE_PATH . "/include/data_preset/data_preset_constants.php");
-	require_once(CACTI_BASE_PATH . "/lib/data_preset/data_preset_info.php");
+function api_data_preset_package_category_list() {
+	return array_rekey(db_fetch_assoc("select * from preset_package_category order by name"), "id", "name");
+}
 
-	$cf_types = api_data_preset_rra_cf_type_list();
-	$row_types = api_data_preset_rra_row_type_list();
+function api_data_preset_package_subcategory_list() {
+	return array_rekey(db_fetch_assoc("select * from preset_package_subcategory order by name"), "id", "name");
+}
 
-	$friendly_name = $cf_types[$consolidation_function] . ": ";
+function api_data_preset_package_vendor_list() {
+	return array_rekey(db_fetch_assoc("select * from preset_package_vendor order by name"), "id", "name");
+}
 
-	if (($consolidation_function == RRA_CF_TYPE_AVERAGE) || ($consolidation_function == RRA_CF_TYPE_MIN) || ($consolidation_function == RRA_CF_TYPE_MAX) || ($consolidation_function == RRA_CF_TYPE_LAST)) {
-		$friendly_name .= "Update every " . ($steps > 1 ? $steps : "") . " interval for " . $row_types[$rows];
-	}
+function api_data_preset_package_category_get($preset_id) {
+	/* sanity checks */
+	validate_id_die($preset_id, "preset_id");
 
-	return $friendly_name;
+	return db_fetch_cell("select name from preset_package_category where id = " . sql_sanitize($preset_id));
+}
+
+function api_data_preset_package_subcategory_get($preset_id) {
+	/* sanity checks */
+	validate_id_die($preset_id, "preset_id");
+
+	return db_fetch_cell("select name from preset_package_subcategory where id = " . sql_sanitize($preset_id));
+}
+
+function api_data_preset_package_vendor_get($preset_id) {
+	/* sanity checks */
+	validate_id_die($preset_id, "preset_id");
+
+	return db_fetch_cell("select name from preset_package_vendor where id = " . sql_sanitize($preset_id));
 }
 
 ?>

@@ -172,7 +172,7 @@ function _package_field__description_install($field_name, $field_value = "", $fi
 
 function _package_field__category($field_name, $field_value = "", $field_id = "") {
 	require_once(CACTI_BASE_PATH . "/lib/sys/html_form.php");
-	require_once(CACTI_BASE_PATH . "/lib/data_preset/data_preset_info.php");
+	require_once(CACTI_BASE_PATH . "/lib/data_preset/data_preset_package_info.php");
 
 	/* obtain a list of preset categories for the dropdown */
 	$category_list = api_data_preset_package_category_list();
@@ -258,7 +258,7 @@ function _package_field__category($field_name, $field_value = "", $field_id = ""
 
 function _package_field__subcategory($field_name, $field_value = "", $field_id = "") {
 	require_once(CACTI_BASE_PATH . "/lib/sys/html_form.php");
-	require_once(CACTI_BASE_PATH . "/lib/data_preset/data_preset_info.php");
+	require_once(CACTI_BASE_PATH . "/lib/data_preset/data_preset_package_info.php");
 
 	/* obtain a list of preset subcategories for the dropdown */
 	$subcategory_list = api_data_preset_package_subcategory_list();
@@ -344,7 +344,7 @@ function _package_field__subcategory($field_name, $field_value = "", $field_id =
 
 function _package_field__vendor($field_name, $field_value = "", $field_id = "") {
 	require_once(CACTI_BASE_PATH . "/lib/sys/html_form.php");
-	require_once(CACTI_BASE_PATH . "/lib/data_preset/data_preset_info.php");
+	require_once(CACTI_BASE_PATH . "/lib/data_preset/data_preset_package_info.php");
 
 	/* obtain a list of preset vendors for the dropdown */
 	$vendor_list = api_data_preset_package_vendor_list();

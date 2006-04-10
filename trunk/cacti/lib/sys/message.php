@@ -133,4 +133,14 @@ function debug_log_return($type) {
 	return $log_text;
 }
 
+function log_last_function_get() {
+	$backtrace = debug_backtrace();
+
+	if (sizeof($backtrace) < 3) {
+		return $backtrace[1]["function"];
+	}else{
+		return $backtrace[2]["function"];
+	}
+}
+
 ?>

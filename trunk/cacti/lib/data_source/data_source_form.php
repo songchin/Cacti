@@ -626,30 +626,22 @@ function _data_source_field__rrd_path($field_name, $template_flag = false, $fiel
 	<?php
 }
 
-function _data_source_field__rra_id($field_name, $template_flag = false, $field_id = 0) {
+function _data_source_field__preset_rra_id($field_name, $template_flag = false, $field_value = "", $field_id = 0, $t_field_name = "", $t_field_value = "") {
 	require_once(CACTI_BASE_PATH . "/lib/sys/html_form.php");
+	require_once(CACTI_BASE_PATH . "/lib/data_preset/data_preset_rra_info.php");
 
 	?>
 	<tr bgcolor="#<?php echo field_get_row_color();?>">
 		<td width="50%">
-			<span class="textEditTitle"><?php echo _("Associated RRA's");?></span><br>
+			<span class="textEditTitle"><?php echo _("RRA Preset");?></span><br>
 			<?php
 			if ($template_flag == false) {
-				echo _("Which RRA's to use when entering data. (It is recommended that you select all of these values).");
+				echo _("Represents the type and length of data that is to be stored in the RRA for this data source.");
 			}
 			?>
 		</td>
 		<td>
-			<?php
-			if (empty($field_id)) {
-				$current_value = db_fetch_assoc("select rra.id from rra order by id");
-			}else if ($template_flag == true) {
-				$current_value = db_fetch_assoc("select rra_id as id,data_template_id from data_template_rra where data_template_id = " . sql_sanitize($field_id));
-			}else{
-				$current_value = db_fetch_assoc("select rra_id as id,data_source_id from data_source_rra where data_source_id = " . sql_sanitize($field_id));
-			}
-
-			form_multi_dropdown($field_name, array_rekey(db_fetch_assoc("select id,name from rra order by name"), "id", "name"), $current_value, "id");?>
+			<?php form_dropdown($field_name, api_data_preset_rra_list(), "name", "id", $field_value, "", 1);?>
 		</td>
 	</tr>
 	<?php

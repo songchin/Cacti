@@ -86,7 +86,9 @@ switch ($_REQUEST["action"]) {
    -------------------------- */
 
 function form_post() {
-	if ($_POST["action_post"] == "data_source_edit") {
+	if ($_POST["action_post"] == "data_source_add") {
+		// todo
+	}else if ($_POST["action_post"] == "data_source_edit") {
 		/* fetch some cache variables */
 		if (empty($_POST["id"])) {
 			$_data_template_id = 0;
@@ -131,16 +133,8 @@ function form_post() {
 		if (is_error_message()) {
 			api_log_log("User input validation error for data source [ID#" . $_POST["id"] . "]", SEV_DEBUG);
 		}else{
-			/* handle rra_id multi-select */
-			if (isset($data_source_fields["rra_id"])) {
-				$data_source_rra_fields = $data_source_fields["rra_id"];
-				unset($data_source_fields["rra_id"]);
-			}else{
-				$data_source_rra_fields = array();
-			}
-
 			/* save data source data */
-			if (api_data_source_save($_POST["id"], $data_source_fields, $data_source_rra_fields)) {
+			if (api_data_source_save($_POST["id"], $data_source_fields)) {
 				$data_source_id = (empty($_POST["id"]) ? db_fetch_insert_id() : $_POST["id"]);
 
 				/* save data source input fields */
@@ -623,7 +617,7 @@ function ds_edit() {
 
 		html_start_box("<strong>" . _("Data Source") . "</strong>", "98%", $colors["header_background"], "3", "center", "");
 		_data_source_field__name("ds|name", false, (empty($_GET["id"]) ? 0 : $_GET["id"]));
-		_data_source_field__rra_id("ds|rra_id", false, (empty($_GET["id"]) ? 0 : $_GET["id"]));
+		_data_source_field__preset_rra_id("ds|preset_rra_id", false, (empty($_GET["id"]) ? 0 : $_GET["id"]));
 		_data_source_field__rrd_step("ds|rrd_step", false, (isset($data_source["rrd_step"]) ? $data_source["rrd_step"] : ""), (empty($_GET["id"]) ? 0 : $_GET["id"]));
 		_data_source_field__active("ds|active", false, (isset($data_source["active"]) ? $data_source["active"] : ""), (empty($_GET["id"]) ? 0 : $_GET["id"]));
 		html_end_box();
@@ -726,13 +720,12 @@ function ds_edit() {
 	}
 
 	if ((isset($_GET["id"])) || ((isset($_GET["host_id"])) && (isset($_GET["data_template_id"])))) {
-		form_hidden_box("save_component_data_source", "1", "");
+		form_hidden_box("action_post", "data_source_edit");
 	}else{
-		form_hidden_box("save_component_data_source_new", "1", "");
+		form_hidden_box("action_post", "data_source_add");
 	}
 
 	form_hidden_box("id", (empty($_GET["id"]) ? 0 : $_GET["id"]), "");
-	form_hidden_box("action_post", "data_source_edit");
 	form_save_button("data_sources.php");
 }
 

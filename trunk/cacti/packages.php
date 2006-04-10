@@ -27,7 +27,7 @@ require_once(CACTI_BASE_PATH . "/include/package/package_constants.php");
 require_once(CACTI_BASE_PATH . "/lib/package/package_info.php");
 require_once(CACTI_BASE_PATH . "/lib/package/package_form.php");
 require_once(CACTI_BASE_PATH . "/lib/package/package_update.php");
-require_once(CACTI_BASE_PATH . "/lib/data_preset/data_preset_info.php");
+require_once(CACTI_BASE_PATH . "/lib/data_preset/data_preset_package_info.php");
 require_once(CACTI_BASE_PATH . "/lib/graph_template/graph_template_info.php");
 require_once(CACTI_BASE_PATH . "/lib/sys/package_export.php");
 

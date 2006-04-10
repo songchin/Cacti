@@ -201,8 +201,7 @@ function host_new_graphs_save() {
 			/* update user specified data: data source-specific fields */
 			foreach (array_keys($create_info["data_source"]) as $data_template_id) {
 				if (isset($skel["data_template"][$data_template_id])) {
-					$_arr_rra = array(); /* placeholder */
-					if (!api_data_source_save($create_info["data_source"][$data_template_id], $skel["data_template"][$data_template_id], $_arr_rra)) {
+					if (!api_data_source_save($create_info["data_source"][$data_template_id], $skel["data_template"][$data_template_id])) {
 						api_log_log("Problems updating new data source [ID#" . $create_info["data_source"][$data_template_id] . "], data template [ID#$data_template_id] from user data", SEV_ERROR);
 					}
 				}

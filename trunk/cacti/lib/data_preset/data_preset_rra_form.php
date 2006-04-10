@@ -25,7 +25,7 @@
 /* form validation functions */
 
 function api_data_preset_rra_field_validate(&$_fields_data_preset_rra, $data_preset_rra_field_name_format) {
-	require_once(CACTI_BASE_PATH . "/lib/data_preset/data_preset_info.php");
+	require_once(CACTI_BASE_PATH . "/lib/data_preset/data_preset_rra_info.php");
 
 	if (sizeof($_fields_data_preset_rra) == 0) {
 		return array();
@@ -53,7 +53,7 @@ function api_data_preset_rra_field_validate(&$_fields_data_preset_rra, $data_pre
 
 function api_data_preset_rra_item_field_validate(&$_fields_data_preset_rra_item, $data_preset_rra_item_field_name_format) {
 	require_once(CACTI_BASE_PATH . "/include/data_preset/data_preset_constants.php");
-	require_once(CACTI_BASE_PATH . "/lib/data_preset/data_preset_info.php");
+	require_once(CACTI_BASE_PATH . "/lib/data_preset/data_preset_rra_info.php");
 
 	if (sizeof($_fields_data_preset_rra_item) == 0) {
 		return array();
@@ -289,7 +289,7 @@ function _data_preset_rra_item__consolidation_function_js_update($field_value, $
 
 function _data_preset_rra_item__consolidation_function($field_name_base, $field_value = "", $field_id = 0) {
 	require_once(CACTI_BASE_PATH . "/lib/sys/html_form.php");
-	require_once(CACTI_BASE_PATH . "/lib/data_preset/data_preset_info.php");
+	require_once(CACTI_BASE_PATH . "/lib/data_preset/data_preset_rra_info.php");
 
 	?>
 	<tr class="<?php echo field_get_row_style();?>" id="row_field_consolidation_function_<?php echo $field_id;?>">
@@ -325,7 +325,7 @@ function _data_preset_rra_item__steps($field_name, $field_value = "", $field_id 
 
 function _data_preset_rra_item__rows($field_name, $field_value = "", $field_id = 0) {
 	require_once(CACTI_BASE_PATH . "/lib/sys/html_form.php");
-	require_once(CACTI_BASE_PATH . "/lib/data_preset/data_preset_info.php");
+	require_once(CACTI_BASE_PATH . "/lib/data_preset/data_preset_rra_info.php");
 
 	?>
 	<tr class="<?php echo field_get_row_style();?>" id="row_field_rows_<?php echo $field_id;?>">
@@ -418,7 +418,7 @@ function _data_preset_rra_item__hw_gamma($field_name, $field_value = "", $field_
 
 function _data_preset_rra_item__hw_seasonal_period($field_name, $field_value = "", $field_id = 0) {
 	require_once(CACTI_BASE_PATH . "/lib/sys/html_form.php");
-	require_once(CACTI_BASE_PATH . "/lib/data_preset/data_preset_info.php");
+	require_once(CACTI_BASE_PATH . "/lib/data_preset/data_preset_rra_info.php");
 
 	?>
 	<tr class="<?php echo field_get_row_style();?>" id="row_field_hw_seasonal_period_<?php echo $field_id;?>">
@@ -435,7 +435,7 @@ function _data_preset_rra_item__hw_seasonal_period($field_name, $field_value = "
 
 function _data_preset_rra_item__hw_rra_num($field_name, $field_value = "", $field_id = 0) {
 	require_once(CACTI_BASE_PATH . "/lib/sys/html_form.php");
-	require_once(CACTI_BASE_PATH . "/lib/data_preset/data_preset_info.php");
+	require_once(CACTI_BASE_PATH . "/lib/data_preset/data_preset_rra_info.php");
 
 	?>
 	<tr class="<?php echo field_get_row_style();?>" id="row_field_hw_rra_num_<?php echo $field_id;?>">

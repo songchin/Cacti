@@ -141,6 +141,7 @@ function form_save() {
 		$form_data_template["template_name"] = $_POST["template_name"];
 		$form_data_source["data_input_type"] = $_POST["data_input_type"];
 		$form_data_source["t_name"] = html_boolean(isset($_POST["t_name"]) ? $_POST["t_name"] : "");
+		$form_data_source["preset_rra_id"] = $_POST["preset_rra_id"];
 		$form_data_source["active"] = html_boolean(isset($_POST["active"]) ? $_POST["active"] : "");
 		$form_data_source["t_active"] = html_boolean(isset($_POST["t_active"]) ? $_POST["t_active"] : "");
 		$form_data_source["rrd_step"] = (isset($_POST["rrd_step"]) ? $_POST["rrd_step"] : "");
@@ -171,7 +172,7 @@ function form_save() {
 
 			if ($data_template_id) {
 				/* save rra mappings (for the 'rra_id' field) */
-				api_data_template_rra_id_save($data_template_id, (isset($_POST["rra_id"]) ? $_POST["rra_id"] : array()));
+				//api_data_template_rra_id_save($data_template_id, (isset($_POST["rra_id"]) ? $_POST["rra_id"] : array()));
 
 				/* save suggested values (for the 'name' field) */
 				api_data_template_suggested_values_save($data_template_id, $suggested_value_fields);
@@ -378,7 +379,7 @@ function template_edit() {
 	html_start_box("<strong>" . _("Data Source") . "</strong>", "98%", $colors["header_background_template"], "3", "center", "");
 
 	_data_source_field__name("name", true, (empty($_GET["id"]) ? 0 : $_GET["id"]), "t_name", (isset($data_template["t_name"]) ? $data_template["t_name"] : ""));
-	_data_source_field__rra_id("rra_id", true, (empty($_GET["id"]) ? 0 : $_GET["id"]));
+	_data_source_field__preset_rra_id("preset_rra_id", true, (empty($_GET["id"]) ? 0 : $_GET["id"]));
 	_data_source_field__rrd_step("rrd_step", true, (isset($data_template["rrd_step"]) ? $data_template["rrd_step"] : ""), (empty($_GET["id"]) ? 0 : $_GET["id"]), "t_rrd_step", (isset($data_template["t_rrd_step"]) ? $data_template["t_rrd_step"] : ""));
 	_data_source_field__active("active", true, (isset($data_template["active"]) ? $data_template["active"] : ""), (empty($_GET["id"]) ? 0 : $_GET["id"]), "t_active", (isset($data_template["t_active"]) ? $data_template["t_active"] : ""));
 

@@ -22,8 +22,9 @@
  +-------------------------------------------------------------------------+
 */
 
-function api_data_source_save($data_source_id, &$_fields_data_source, &$_fields_data_source_rra, $skip_cache_update = false) {
+function api_data_source_save($data_source_id, &$_fields_data_source, $skip_cache_update = false) {
 	require_once(CACTI_BASE_PATH . "/lib/data_source/data_source_info.php");
+	require_once(CACTI_BASE_PATH . "/lib/data_preset/data_preset_rra_info.php");
 
 	/* sanity checks */
 	validate_id_die($data_source_id, "data_source_id", true);
@@ -50,19 +51,26 @@ function api_data_source_save($data_source_id, &$_fields_data_source, &$_fields_
 	}
 
 	if (db_replace("data_source", $_fields, array("id"))) {
-		$data_source_id = db_fetch_insert_id();
+		if (empty($data_source_id)) {
+			$data_source_id = db_fetch_insert_id();
+		}
 
-		if (sizeof($_fields_data_source_rra) > 0) {
-			/* save entries in 'selected rras' field */
-			db_execute("delete from data_source_rra where data_source_id = " . sql_sanitize($data_source_id));
+		if ((empty($_fields["id"]["value"])) && (isset($_fields_data_source["preset_rra_id"]))) {
+			/* fetch the selected rra preset */
+			$rra_preset_items = api_data_preset_rra_item_list($_fields_data_source["preset_rra_id"]);
 
-			foreach ($_fields_data_source_rra as $rra_id) {
-				db_replace("data_source_rra",
-					array(
-						"rra_id" => array("type" => DB_TYPE_NUMBER, "value" => $rra_id),
-						"data_source_id" => array("type" => DB_TYPE_NUMBER, "value" => $data_source_id)
-						),
-					array("rra_id", "data_source_id"));
+			/* copy down each item in the selected rra preset */
+			if (is_array($rra_preset_items)) {
+				foreach ($rra_preset_items as $rra_preset_item) {
+					/* these fields are not needed */
+					unset($rra_preset_item["id"]);
+					unset($rra_preset_item["preset_rra_id"]);
+
+					/* associate the rra preset with the current data source */
+					$rra_preset_item["data_source_id"] = $data_source_id;
+
+					api_data_source_rra_item_save(0, $rra_preset_item);
+				}
 			}
 		}
 
@@ -72,6 +80,47 @@ function api_data_source_save($data_source_id, &$_fields_data_source, &$_fields_
 		}
 
 		return true;
+	}else{
+		return false;
+	}
+}
+
+function api_data_source_rra_item_save($data_source_rra_item_id, $_fields_data_source_rra_item) {
+	require_once(CACTI_BASE_PATH . "/lib/data_preset/data_preset_rra_info.php");
+
+	/* sanity checks */
+	validate_id_die($data_source_rra_item_id, "data_source_rra_item_id", true);
+
+	/* make sure that there is at least one field to save */
+	if (sizeof($_fields_data_source_rra_item) == 0) {
+		return false;
+	}
+
+	/* sanity check for $preset_rra_id */
+	if ((empty($data_source_rra_item_id)) && (empty($_fields_data_source_rra_item["data_source_id"]))) {
+		api_log_log("Required data_source_id when data_source_rra_item_id = 0", SEV_ERROR);
+		return false;
+	} else if ((isset($_fields_data_source_rra_item["data_source_id"])) && (!db_number_validate($_fields_data_source_rra_item["data_source_id"]))) {
+		return false;
+	}
+
+	/* field: id */
+	$_fields["id"] = array("type" => DB_TYPE_NUMBER, "value" => $data_source_rra_item_id);
+
+	/* field: preset_rra_id */
+	if (!empty($_fields_data_source_rra_item["data_source_id"])) {
+		$_fields["data_source_id"] = array("type" => DB_TYPE_NUMBER, "value" => $_fields_data_source_rra_item["data_source_id"]);
+	}
+
+	/* convert the input array into something that is compatible with db_replace() */
+	$_fields += sql_get_database_field_array($_fields_data_source_rra_item, api_data_preset_rra_item_form_list());
+
+	if (db_replace("data_source_rra_item", $_fields, array("id"))) {
+		if (empty($data_source_rra_item_id)) {
+			$data_source_rra_item_id = db_fetch_insert_id();
+		}
+
+		return $data_source_rra_item_id;
 	}else{
 		return false;
 	}
@@ -107,10 +156,25 @@ function api_data_source_remove($data_source_id) {
 	/* sanity checks */
 	validate_id_die($data_source_id, "data_source_id");
 
-	db_execute("DELETE FROM data_source_field WHERE data_source_id = " . sql_sanitize($data_source_id));
-	db_execute("DELETE FROM data_source_item WHERE data_source_id = " . sql_sanitize($data_source_id));
-	db_execute("DELETE FROM data_source_rra WHERE data_source_id = " . sql_sanitize($data_source_id));
-	db_execute("DELETE FROM data_source WHERE id = " . sql_sanitize($data_source_id));
+	db_delete("data_source_field",
+		array(
+			"data_source_id" => array("type" => DB_TYPE_NUMBER, "value" => $data_source_id)
+			));
+
+	db_delete("data_source_item",
+		array(
+			"data_source_id" => array("type" => DB_TYPE_NUMBER, "value" => $data_source_id)
+			));
+
+	db_delete("data_source_rra_item",
+		array(
+			"data_source_id" => array("type" => DB_TYPE_NUMBER, "value" => $data_source_id)
+			));
+
+	db_delete("data_source",
+		array(
+			"id" => array("type" => DB_TYPE_NUMBER, "value" => $data_source_id)
+			));
 }
 
 function api_data_source_enable($data_source_id) {

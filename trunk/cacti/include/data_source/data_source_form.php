@@ -53,9 +53,11 @@ $fields_data_source = array(
 		"validate_empty" => true,
 		"data_type" => DB_TYPE_STRING
 		),
-	"rra_id" => array(
+	"preset_rra_id" => array(
 		"default" => "",
-		"data_type" => DB_TYPE_STRING
+		"validate_regexp" => "^[0-9]+$",
+		"validate_empty" => false,
+		"data_type" => DB_TYPE_NUMBER
 		),
 	"rrd_step" => array(
 		"default" => "300",

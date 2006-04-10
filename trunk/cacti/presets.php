@@ -24,7 +24,7 @@
 
 require(dirname(__FILE__) . "/include/global.php");
 require_once(CACTI_BASE_PATH . "/include/auth/validate.php");
-require_once(CACTI_BASE_PATH . "/lib/data_preset/data_preset_info.php");
+require_once(CACTI_BASE_PATH . "/lib/data_preset/data_preset_rra_info.php");
 
 /* set default action */
 if (!isset($_REQUEST["action"])) { $_REQUEST["action"] = ""; }
@@ -202,6 +202,8 @@ function view_rra() {
 		);
 
 	$rras = api_data_preset_rra_list();
+
+	form_start("presets_rra.php");
 
 	$box_id = "1";
 	html_start_box("<strong>" . _("RRA Presets") . "</strong>", "presets_rra.php?action=edit", "", "", false);
