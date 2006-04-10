@@ -1907,6 +1907,7 @@ CREATE TABLE `preset_rra` (
 -- Dumping data for table `preset_rra`
 -- 
 
+INSERT INTO `preset_rra` VALUES (1, 'Default');
 
 -- --------------------------------------------------------
 
@@ -1935,6 +1936,14 @@ CREATE TABLE `preset_rra_item` (
 -- Dumping data for table `preset_rra_item`
 -- 
 
+INSERT INTO `preset_rra_item` VALUES (1, 1, 3, 1, 86400, 0.5000, 0.0000, 0.0000, 0.0000, 0, 0, 0, 0);
+INSERT INTO `preset_rra_item` VALUES (2, 1, 1, 1, 86400, 0.5000, 0.0000, 0.0000, 0.0000, 0, 0, 0, 0);
+INSERT INTO `preset_rra_item` VALUES (6, 1, 3, 24, 2592000, 0.5000, 0.0000, 0.0000, 0.0000, 0, 0, 0, 0);
+INSERT INTO `preset_rra_item` VALUES (5, 1, 1, 24, 2592000, 0.5000, 0.0000, 0.0000, 0.0000, 0, 0, 0, 0);
+INSERT INTO `preset_rra_item` VALUES (3, 1, 1, 6, 604800, 0.5000, 0.0000, 0.0000, 0.0000, 0, 0, 0, 0);
+INSERT INTO `preset_rra_item` VALUES (4, 1, 3, 6, 604800, 0.5000, 0.0000, 0.0000, 0.0000, 0, 0, 0, 0);
+INSERT INTO `preset_rra_item` VALUES (7, 1, 1, 288, 31536000, 0.5000, 0.0000, 0.0000, 0.0000, 0, 0, 0, 0);
+INSERT INTO `preset_rra_item` VALUES (8, 1, 3, 288, 31536000, 0.5000, 0.0000, 0.0000, 0.0000, 0, 0, 0, 0);
 
 -- --------------------------------------------------------
 

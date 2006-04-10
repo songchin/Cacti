@@ -86,6 +86,27 @@ function api_data_source_total_get($filter_array = "") {
 	return db_fetch_cell("select count(*) from data_source $sql_where");
 }
 
+function api_data_source_rra_item_list($data_source_id) {
+	/* sanity checks */
+	validate_id_die($data_source_id, "data_source_id");
+
+	return db_fetch_assoc("select * from data_source_rra_item where data_source_id = " . sql_sanitize($data_source_id) . " order by consolidation_function,steps");
+}
+
+function api_data_source_item_list($data_source_id) {
+	/* sanity checks */
+	validate_id_die($data_source_id, "data_source_id");
+
+	return db_fetch_assoc("select
+		data_source_item.rrd_heartbeat,
+		data_source_item.rrd_minimum,
+		data_source_item.rrd_maximum,
+		data_source_item.data_source_name,
+		data_source_item.data_source_type
+		from data_source_item
+		where data_source_item.data_source_id = " . sql_sanitize($data_source_id));
+}
+
 /* get_data_source_title - returns the title of a data source without using the title cache unless the title ends up empty.
    @arg $data_source_id - (int) the ID of the data source to get a title for
    @returns - the data source title */
@@ -162,6 +183,12 @@ function &api_data_source_input_type_list() {
 	require(CACTI_BASE_PATH . "/include/data_source/data_source_arrays.php");
 
 	return $data_input_types;
+}
+
+function &api_data_source_type_list() {
+	require(CACTI_BASE_PATH . "/include/data_source/data_source_arrays.php");
+
+	return $data_source_types;
 }
 
 ?>

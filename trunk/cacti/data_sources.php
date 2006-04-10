@@ -142,6 +142,11 @@ function form_post() {
 					api_log_log("Save error for data input fields, data source [ID#" . $_POST["id"] . "]", SEV_ERROR);
 				}
 
+				/* copy down associated rra items from the preset */
+				if (!api_data_source_rra_item_copy($data_source_id, $data_source_fields["preset_rra_id"])) {
+					api_log_log("Copy error for RRA preset [ID#" . $data_source_fields["preset_rra_id"] . "], data source [ID#" . $_POST["id"] . "]", SEV_ERROR);
+				}
+
 				/* save data source item data */
 				foreach ($data_source_item_fields as $data_source_item_id => $data_source_item) {
 					/* required fields */

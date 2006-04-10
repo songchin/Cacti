@@ -48,25 +48,25 @@ function api_data_preset_rra_item_get($preset_rra_item_id) {
 }
 
 function &api_data_preset_rra_row_type_list() {
-	require(CACTI_BASE_PATH . "/include/data_preset/data_preset_arrays.php");
+	require(CACTI_BASE_PATH . "/include/data_preset/data_preset_rra_arrays.php");
 
 	return $rra_preset_row_types;
 }
 
 function &api_data_preset_rra_cf_type_list() {
-	require(CACTI_BASE_PATH . "/include/data_preset/data_preset_arrays.php");
+	require(CACTI_BASE_PATH . "/include/data_preset/data_preset_rra_arrays.php");
 
 	return $rra_preset_cf_types;
 }
 
 function &api_data_preset_rra_form_list() {
-	require(CACTI_BASE_PATH . "/include/data_preset/data_preset_form.php");
+	require(CACTI_BASE_PATH . "/include/data_preset/data_preset_rra_form.php");
 
 	return $fields_data_preset_rra;
 }
 
 function &api_data_preset_rra_item_form_list() {
-	require(CACTI_BASE_PATH . "/include/data_preset/data_preset_form.php");
+	require(CACTI_BASE_PATH . "/include/data_preset/data_preset_rra_form.php");
 
 	return $fields_data_preset_rra_item;
 }

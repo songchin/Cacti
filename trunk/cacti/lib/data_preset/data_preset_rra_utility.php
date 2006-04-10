@@ -23,7 +23,7 @@
 */
 
 function api_data_preset_rra_item_friendly_name_get($consolidation_function, $steps, $rows) {
-	require_once(CACTI_BASE_PATH . "/include/data_preset/data_preset_constants.php");
+	require_once(CACTI_BASE_PATH . "/include/data_preset/data_preset_rra_constants.php");
 	require_once(CACTI_BASE_PATH . "/lib/data_preset/data_preset_rra_info.php");
 
 	$cf_types = api_data_preset_rra_cf_type_list();

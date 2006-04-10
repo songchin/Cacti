@@ -249,10 +249,7 @@ $menu = array(
 		"tree.php" => _("Trees"),
 		"graphs.php" => _("Graphs"),
 		"devices.php" => _("Devices"),
-		"data_sources.php" => array(
-			"data_sources.php" => _("Data Sources"),
-			"rra.php" => _("RRAs")
-			)
+		"data_sources.php" => _("Data Sources")
 		),
 	_("Data Collection") => array(
 		"pollers.php" => _("Pollers"),
@@ -263,7 +260,6 @@ $menu = array(
 		"graph_templates.php" => _("Graph Templates"),
 		"device_templates.php" => _("Device Templates"),
 		"data_templates.php" => _("Data Templates"),
-		"rra_templates.php" => _("RRA Templates"),
 		"packages.php" => _("Packages")
 		),
 	_("Configuration")  => array(
@@ -332,9 +328,7 @@ $user_auth_realm_filenames = array(
 	"graphs_new.php" => 5,
 	"devices.php" => 3,
 	"device_templates.php" => 12,
-	"rra_templates.php" => 12,
 	"index.php" => 8,
-	"rra.php" => 9,
 	"settings.php" => 15,
 	"data_queries.php" => 13,
 	"packages.php" => 17,

@@ -51,28 +51,7 @@ function api_data_source_save($data_source_id, &$_fields_data_source, $skip_cach
 	}
 
 	if (db_replace("data_source", $_fields, array("id"))) {
-		if (empty($data_source_id)) {
-			$data_source_id = db_fetch_insert_id();
-		}
-
-		if ((empty($_fields["id"]["value"])) && (isset($_fields_data_source["preset_rra_id"]))) {
-			/* fetch the selected rra preset */
-			$rra_preset_items = api_data_preset_rra_item_list($_fields_data_source["preset_rra_id"]);
-
-			/* copy down each item in the selected rra preset */
-			if (is_array($rra_preset_items)) {
-				foreach ($rra_preset_items as $rra_preset_item) {
-					/* these fields are not needed */
-					unset($rra_preset_item["id"]);
-					unset($rra_preset_item["preset_rra_id"]);
-
-					/* associate the rra preset with the current data source */
-					$rra_preset_item["data_source_id"] = $data_source_id;
-
-					api_data_source_rra_item_save(0, $rra_preset_item);
-				}
-			}
-		}
+		$data_source_id = db_fetch_insert_id();
 
 		if ($skip_cache_update == false) {
 			/* update data source title cache */
@@ -83,6 +62,34 @@ function api_data_source_save($data_source_id, &$_fields_data_source, $skip_cach
 	}else{
 		return false;
 	}
+}
+
+function api_data_source_rra_item_copy($data_source_id, $preset_rra_id) {
+	/* sanity checks */
+	validate_id_die($data_source_id, "data_source_id");
+	validate_id_die($preset_rra_id, "preset_rra_id");
+
+	/* fetch the selected rra preset */
+	$rra_preset_items = api_data_preset_rra_item_list($preset_rra_id);
+
+	$success = true;
+	/* copy down each item in the selected rra preset */
+	if (is_array($rra_preset_items)) {
+		foreach ($rra_preset_items as $rra_preset_item) {
+			/* these fields are not needed */
+			unset($rra_preset_item["id"]);
+			unset($rra_preset_item["preset_rra_id"]);
+
+			/* associate the rra preset with the current data source */
+			$rra_preset_item["data_source_id"] = $data_source_id;
+
+			if (!api_data_source_rra_item_save(0, $rra_preset_item)) {
+				$success = false;
+			}
+		}
+	}
+
+	return $success;
 }
 
 function api_data_source_rra_item_save($data_source_rra_item_id, $_fields_data_source_rra_item) {

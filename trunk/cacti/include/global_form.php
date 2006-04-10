@@ -68,44 +68,6 @@ $fields_color_edit = array(
 		)
 	);
 
-/* file: rra_templates.php, action: edit */
-$fields_rra_template_edit = array(
-	"name" => array(
-		"method" => "textbox",
-		"friendly_name" => _("RRA Template Name"),
-		"description" => _("Enter a meaningful name for this Round Robin Archive Template."),
-		"value" => "|arg1:name|",
-		"max_length" => "100"
-		),
-	"description" => array(
-		"method" => "textbox",
-		"friendly_name" => _("Description"),
-		"description" => _("Detailed information relative to this RRA Template."),
-		"value" => "|arg1:description|",
-		"max_length" => "255"
-		),
-	"polling_frequency" => array(
-		"method" => "drop_array",
-		"friendly_name" => _("Polling Frequency"),
-		"description" => _("How often you want the device to be polled."),
-		"default" => 300,
-		"value" => "|arg1:polling_frequency|",
-		"array" => $rra_polling_frequency
-		),
-	"id" => array(
-		"method" => "hidden_zero",
-		"value" => "|arg1:id|"
-		),
-	"_rra_template_id" => array(
-		"method" => "hidden_zero",
-		"value" => "|arg1:rra_template_id|"
-		),
-	"save_component_rra_template" => array(
-		"method" => "hidden",
-		"value" => "1"
-		)
-	);
-
 /* file: data_input.php, action: edit */
 $fields_data_input_edit = array(
 	"name" => array(
@@ -452,60 +414,6 @@ $fields_host_template_edit = array(
 		"value" => "|arg1:id|"
 		),
 	"save_component_template" => array(
-		"method" => "hidden",
-		"value" => "1"
-		)
-	);
-
-/* file: rra.php, action: edit */
-$fields_rra_edit = array(
-	"name" => array(
-		"method" => "textbox",
-		"friendly_name" => _("Name"),
-		"description" => _("How data is to be entered in RRA's."),
-		"value" => "|arg1:name|",
-		"max_length" => "100",
-		),
-	"consolidation_function_id" => array(
-		"method" => "drop_multi",
-		"friendly_name" => _("Consolidation Functions"),
-		"description" => _("How data is to be entered in RRA's."),
-		"array" => $consolidation_functions,
-		"sql" => "select consolidation_function_id as id,rra_id from rra_cf where rra_id=|arg1:id|",
-		),
-	"x_files_factor" => array(
-		"method" => "textbox",
-		"friendly_name" => _("X-Files Factor"),
-		"description" => _("The amount of unknown data that can still be regarded as known."),
-		"value" => "|arg1:x_files_factor|",
-		"max_length" => "10",
-		),
-	"steps" => array(
-		"method" => "textbox",
-		"friendly_name" => _("Steps"),
-		"description" => _("How many data points are needed to put data into the RRA."),
-		"value" => "|arg1:steps|",
-		"max_length" => "8",
-		),
-	"rows" => array(
-		"method" => "textbox",
-		"friendly_name" => _("Rows"),
-		"description" => _("How many generations data is kept in the RRA."),
-		"value" => "|arg1:rows|",
-		"max_length" => "8",
-		),
-	"timespan" => array(
-		"method" => "textbox",
-		"friendly_name" => _("Timespan"),
-		"description" => _("How many seconds to display in graph for this RRA."),
-		"value" => "|arg1:timespan|",
-		"max_length" => "8",
-		),
-	"id" => array(
-		"method" => "hidden_zero",
-		"value" => "|arg1:id|"
-		),
-	"save_component_rra" => array(
 		"method" => "hidden",
 		"value" => "1"
 		)

@@ -137,8 +137,9 @@ function rrdtool_execute($command_line, $log_to_stdout, $output_flag, $rrd_struc
 }
 
 function rrdtool_function_create($data_source_id, $show_source, $rrd_struc, $syslog_facility = FACIL_POLLER) {
-	require(CACTI_BASE_PATH . "/include/data_source/data_source_arrays.php");
+	require_once(CACTI_BASE_PATH . "/include/data_preset/data_preset_rra_constants.php");
 	require_once(CACTI_BASE_PATH . "/lib/data_source/data_source_info.php");
+	require_once(CACTI_BASE_PATH . "/lib/data_preset/data_preset_rra_info.php");
 
 	$data_source_path = api_data_source_path_get($data_source_id, true);
 
@@ -147,52 +148,47 @@ function rrdtool_function_create($data_source_id, $show_source, $rrd_struc, $sys
 		return;
 	}
 
-	/* fetch a list of RRAs based on the consolidation functions selected for each
-	 * data source and each RRA */
-	$rras = db_fetch_assoc("select
-		data_source.rrd_step,
-		rra.x_files_factor,
-		rra.steps,
-		rra.rows,
-		rra_cf.consolidation_function_id,
-		(rra.rows*rra.steps) as rra_order
-		from data_source
-		left join data_source_rra on (data_source.id=data_source_rra.data_source_id)
-		left join rra on (data_source_rra.rra_id=rra.id)
-		left join rra_cf on (rra.id=rra_cf.rra_id)
-		where data_source_rra.data_source_id = $data_source_id
-		and (rra.steps is not null or rra.rows is not null)
-		order by rra_cf.consolidation_function_id,rra_order");
-
-	/* if we find that this DS has no RRA associated; get out */
-	if (sizeof($rras) <= 0) {
-		api_log_log(_("There are no RRA's assigned to data_source_id: ") . $data_source_id . ".", SEV_ERROR, FACIL_POLLER);
-		return false;
-	}
-
 	/* create the "--step" line */
-	$create_ds = RRD_NL . "--step ". $rras[0]["rrd_step"] . " " . RRD_NL;
+	$create_ds = RRD_NL . "--step ". 300 . " " . RRD_NL;
+
+	/* get a list of valid data source types (COUNTER, GAUGE, etc) */
+	$data_source_types = api_data_source_type_list();
 
 	/* query the data sources to be used in this .rrd file */
-	$data_source_items = db_fetch_assoc("select
-		data_source_item.rrd_heartbeat,
-		data_source_item.rrd_minimum,
-		data_source_item.rrd_maximum,
-		data_source_item.data_source_name,
-		data_source_item.data_source_type
-		from data_source_item
-		where data_source_item.data_source_id = $data_source_id");
+	$data_source_items = api_data_source_item_list($data_source_id);
 
-	if (sizeof($data_source_items) > 0) {
+	if (is_array($data_source_items) > 0) {
 		foreach ($data_source_items as $data_source_item) {
 			$create_ds .= "DS:" . $data_source_item["data_source_name"] . ":" . $data_source_types{$data_source_item["data_source_type"]} . ":" . $data_source_item["rrd_heartbeat"] . ":" . $data_source_item["rrd_minimum"] . ":" . (empty($data_source_item["rrd_maximum"]) ? "U" : $data_source_item["rrd_maximum"]) . RRD_NL;
 		}
 	}
 
+	/* get a list of valid consolidation functions (AVERAGE, MAX, etc) */
+	$rra_cf_types = api_data_preset_rra_cf_type_list();
+
+	/* get a list of RRA's that have been associated with this data source */
+	$rra_items = api_data_source_rra_item_list($data_source_id);
+
+	/* if we find that this data source has no RRA associated; get out */
+	if ((!is_array($rra_items)) && (sizeof($rra_items) == 0)) {
+		api_log_log(_("There are no RRA's assigned to data_source_id: ") . $data_source_id . ".", SEV_ERROR, FACIL_POLLER);
+		return false;
+	}
+
 	$create_rra = "";
-	/* loop through each available RRA for this DS */
-	foreach ($rras as $rra) {
-		$create_rra .= "RRA:" . $consolidation_functions{$rra["consolidation_function_id"]} . ":" . $rra["x_files_factor"] . ":" . $rra["steps"] . ":" . $rra["rows"] . RRD_NL;
+	/* loop through each available RRA for this data source */
+	foreach ($rra_items as $rra_item) {
+		if (($rra_item["consolidation_function"] == RRA_CF_TYPE_AVERAGE) || ($rra_item["consolidation_function"] == RRA_CF_TYPE_MIN) || ($rra_item["consolidation_function"] == RRA_CF_TYPE_MAX) || ($rra_item["consolidation_function"] == RRA_CF_TYPE_LAST)) {
+			$create_rra .= "RRA:" . $rra_cf_types{$rra_item["consolidation_function"]} . ":" . $rra_item["x_files_factor"] . ":" . $rra_item["steps"] . ":" . $rra_item["rows"] . RRD_NL;
+		}else if ($rra_item["consolidation_function"] == RRA_CF_TYPE_HWPREDICT) {
+			$create_rra .= "RRA:" . $rra_cf_types{$rra_item["consolidation_function"]} . ":" . $rra_item["rows"] . ":" . $rra_item["hw_alpha"] . ":" . $rra_item["hw_beta"] . ":" . $rra_item["hw_seasonal_period"] . (empty($rra_item["hw_rra_num"]) ? "" : ":" . $rra_item["hw_rra_num"]) . RRD_NL;
+		}else if (($rra_item["consolidation_function"] == RRA_CF_TYPE_SEASONAL) || ($rra_item["consolidation_function"] == RRA_CF_TYPE_DEVSEASONAL)) {
+			$create_rra .= "RRA:" . $rra_cf_types{$rra_item["consolidation_function"]} . ":" . $rra_item["hw_seasonal_period"] . ":" . $rra_item["hw_gamma"] . ":" . $rra_item["hw_rra_num"] . RRD_NL;
+		}else if ($rra_item["consolidation_function"] == RRA_CF_TYPE_DEVPREDICT) {
+			$create_rra .= "RRA:" . $rra_cf_types{$rra_item["consolidation_function"]} . ":" . $rra_item["rows"] . ":" . $rra_item["hw_rra_num"] . RRD_NL;
+		}else if ($rra_item["consolidation_function"] == RRA_CF_TYPE_FAILURES) {
+			$create_rra .= "RRA:" . $rra_cf_types{$rra_item["consolidation_function"]} . ":" . $rra_item["rows"] . ":" . $rra_item["hw_threshold"] . ":" . $rra_item["hw_window_length"] . ":" . $rra_item["hw_rra_num"] . RRD_NL;
+		}
 	}
 
 	if ($show_source == true) {

@@ -22,7 +22,7 @@
  +-------------------------------------------------------------------------+
 */
 
-include_once(CACTI_BASE_PATH . "/include/data_preset/data_preset_constants.php");
+include_once(CACTI_BASE_PATH . "/include/data_preset/data_preset_rra_constants.php");
 
 $rra_preset_row_types = array(
 	1800 => "30 Minutes",

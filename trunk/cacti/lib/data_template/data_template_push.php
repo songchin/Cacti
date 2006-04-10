@@ -82,6 +82,9 @@ function copy_data_template_to_data_source($data_template_id, $host_id = 0, $dat
 			/* handle data source custom fields */
 			api_data_source_fields_save($data_source_id, $data_template_input_fields);
 
+			/* handle associated rra items */
+			api_data_source_rra_item_copy($data_source_id, $_fields["preset_rra_id"]);
+
 			/* move onto the data source items */
 			$data_template_items = api_data_template_item_list($data_template_id);
 

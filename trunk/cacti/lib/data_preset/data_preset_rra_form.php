@@ -52,7 +52,7 @@ function api_data_preset_rra_field_validate(&$_fields_data_preset_rra, $data_pre
 }
 
 function api_data_preset_rra_item_field_validate(&$_fields_data_preset_rra_item, $data_preset_rra_item_field_name_format) {
-	require_once(CACTI_BASE_PATH . "/include/data_preset/data_preset_constants.php");
+	require_once(CACTI_BASE_PATH . "/include/data_preset/data_preset_rra_constants.php");
 	require_once(CACTI_BASE_PATH . "/lib/data_preset/data_preset_rra_info.php");
 
 	if (sizeof($_fields_data_preset_rra_item) == 0) {
@@ -89,7 +89,7 @@ function api_data_preset_rra_item_field_validate(&$_fields_data_preset_rra_item,
 }
 
 function api_data_preset_rra_item_visible_field_list($consolidation_function) {
-	require_once(CACTI_BASE_PATH . "/include/data_preset/data_preset_constants.php");
+	require_once(CACTI_BASE_PATH . "/include/data_preset/data_preset_rra_constants.php");
 
 	$visible_fields = array();
 	if (($consolidation_function == RRA_CF_TYPE_AVERAGE) || ($consolidation_function == RRA_CF_TYPE_MIN) || ($consolidation_function == RRA_CF_TYPE_MAX) || ($consolidation_function == RRA_CF_TYPE_LAST)) {
@@ -131,7 +131,7 @@ function _data_preset_rra__name($field_name, $field_value = "", $field_id = 0) {
 /* rra item preset fields */
 
 function _data_preset_rra_item_js($form_name) {
-	require_once(CACTI_BASE_PATH . "/include/data_preset/data_preset_constants.php");
+	require_once(CACTI_BASE_PATH . "/include/data_preset/data_preset_rra_constants.php");
 	?>
 	<script language="JavaScript">
 	<!--
