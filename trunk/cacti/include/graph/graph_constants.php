@@ -38,4 +38,13 @@ define("GRAPH_IMAGE_TYPE_GIF", 2);
 define("GRAPH_AUTOSCALE_OPT_AUTOSCALE", 1);
 define("GRAPH_AUTOSCALE_OPT_AUTOSCALE_MAX", 2);
 
+/* weekdays according to date("w") builtin function */
+define("WD_SUNDAY", date("w",strtotime("sunday")));
+define("WD_MONDAY", date("w",strtotime("monday")));
+define("WD_TUESDAY", date("w",strtotime("tuesday")));
+define("WD_WEDNESDAY", date("w",strtotime("wednesday")));
+define("WD_THURSDAY", date("w",strtotime("thursday")));
+define("WD_FRIDAY", date("w",strtotime("friday")));
+define("WD_SATURDAY", date("w",strtotime("saturday")));
+
 ?>

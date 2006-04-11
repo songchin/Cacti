@@ -119,7 +119,48 @@ $graph_timespans = array(
 	GT_LAST_4_MONTHS => _("Last 4 Months"),
 	GT_LAST_6_MONTHS => _("Last 6 Months"),
 	GT_LAST_YEAR => _("Last Year"),
-	GT_LAST_2_YEARS => _("Last 2 Years")
+	GT_LAST_2_YEARS => _("Last 2 Years"),
+	GT_DAY_SHIFT => _("Day Shift"),
+	GT_THIS_DAY => _("This Day"),
+	GT_THIS_WEEK => _("This Week"),
+	GT_THIS_MONTH => _("This Month"),
+	GT_THIS_YEAR => _("This Year"),
+	GT_PREV_DAY => _("Previous Day"),
+	GT_PREV_WEEK => _("Previous Week"),
+	GT_PREV_MONTH => _("Previous Month"),
+	GT_PREV_YEAR => _("Previous Year")
+	);
+
+$graph_timeshifts = array(
+	GTS_HALF_HOUR => _("Half Hour"),
+	GTS_1_HOUR => _("1 Hour"),
+	GTS_2_HOURS => _("2 Hours"),
+	GTS_4_HOURS => _("4 Hours"),
+	GTS_6_HOURS => _("6 Hours"),
+	GTS_12_HOURS => _("12 Hours"),
+	GTS_1_DAY => _("1 Day"),
+	GTS_2_DAYS => _("2 Days"),
+	GTS_3_DAYS => _("3 Days"),
+	GTS_4_DAYS => _("4 Days"),
+	GTS_1_WEEK => _("1 Week"),
+	GTS_2_WEEKS => _("2 Weeks"),
+	GTS_1_MONTH => _("1 Month"),
+	GTS_2_MONTHS => _("2 Months"),
+	GTS_3_MONTHS => _("3 Months"),
+	GTS_4_MONTHS => _("4 Months"),
+	GTS_6_MONTHS => _("6 Months"),
+	GTS_1_YEAR => _("1 Year"),
+	GTS_2_YEARS => _("2 Years")
+	);
+
+$graph_weekdays = array(
+	WD_SUNDAY => date("l", strtotime("Sunday")),
+	WD_MONDAY => date("l", strtotime("Monday")),
+	WD_TUESDAY => date("l", strtotime("Tuesday")),
+	WD_WEDNESDAY => date("l", strtotime("Wednesday")),
+	WD_THURSDAY => date("l", strtotime("Thursday")),
+	WD_FRIDAY => date("l", strtotime("Friday")),
+	WD_SATURDAY => date("l", strtotime("Saturday"))
 	);
 
 ?>
