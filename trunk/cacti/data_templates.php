@@ -27,6 +27,9 @@ require_once(CACTI_BASE_PATH . "/include/auth/validate.php");
 require_once(CACTI_BASE_PATH . "/lib/data_template/data_template_update.php");
 require_once(CACTI_BASE_PATH . "/lib/data_template/data_template_info.php");
 require_once(CACTI_BASE_PATH . "/lib/data_template/data_template_form.php");
+require_once(CACTI_BASE_PATH . "/lib/data_preset/data_preset_rra_info.php");
+require_once(CACTI_BASE_PATH . "/lib/data_preset/data_preset_rra_form.php");
+require_once(CACTI_BASE_PATH . "/lib/data_preset/data_preset_rra_utility.php");
 require_once(CACTI_BASE_PATH . "/lib/data_source/data_source_form.php");
 require_once(CACTI_BASE_PATH . "/lib/data_source/data_source_info.php");
 require_once(CACTI_BASE_PATH . "/lib/data_query/data_query_info.php");
@@ -41,6 +44,12 @@ require_once(CACTI_BASE_PATH . "/lib/template.php");
 
 /* set default action */
 if (!isset($_REQUEST["action"])) { $_REQUEST["action"] = ""; }
+
+require_once(CACTI_BASE_PATH . "/lib/xajax/xajax.inc.php");
+$xajax = new xajax();
+$xajax->registerFunction("_data_preset_rra_item_xajax_save");
+$xajax->registerFunction("_data_preset_rra_item_xajax_remove");
+$xajax->processRequests();
 
 switch ($_REQUEST["action"]) {
 	case 'save':
@@ -141,7 +150,7 @@ function form_save() {
 		$form_data_template["template_name"] = $_POST["template_name"];
 		$form_data_source["data_input_type"] = $_POST["data_input_type"];
 		$form_data_source["t_name"] = html_boolean(isset($_POST["t_name"]) ? $_POST["t_name"] : "");
-		$form_data_source["preset_rra_id"] = $_POST["preset_rra_id"];
+		$form_data_source["preset_rra_id"] = $_POST["preset_rra_id_drp"];
 		$form_data_source["active"] = html_boolean(isset($_POST["active"]) ? $_POST["active"] : "");
 		$form_data_source["t_active"] = html_boolean(isset($_POST["t_active"]) ? $_POST["t_active"] : "");
 		$form_data_source["rrd_step"] = (isset($_POST["rrd_step"]) ? $_POST["rrd_step"] : "");
@@ -171,8 +180,9 @@ function form_save() {
 			$data_template_id = api_data_template_save($_POST["data_template_id"], $form_data_template + $form_data_source);
 
 			if ($data_template_id) {
-				/* save rra mappings (for the 'rra_id' field) */
-				//api_data_template_rra_id_save($data_template_id, (isset($_POST["rra_id"]) ? $_POST["rra_id"] : array()));
+				/* copy down the selected rra preset into the data template */
+				api_data_template_rra_item_clear($_POST["data_template_id"]);
+				api_data_template_rra_item_copy($_POST["data_template_id"], $_POST["preset_rra_id_drp"]);
 
 				/* save suggested values (for the 'name' field) */
 				api_data_template_suggested_values_save($data_template_id, $suggested_value_fields);
@@ -274,7 +284,7 @@ function template_edit() {
 
 	/* ==================== Box: Data Template ==================== */
 
-	html_start_box("<strong>" . _("Data Template") . "</strong> $header_label", "98%", $colors["header_background"], "3", "center", "");
+	html_start_box("<strong>" . _("Data Template") . "</strong> $header_label");
 	_data_template_field__template_name("template_name", (isset($data_template) ? $data_template["template_name"] : ""), (empty($_GET["id"]) ? 0 : $_GET["id"]));
 	html_end_box();
 
@@ -296,7 +306,7 @@ function template_edit() {
 		$data_input_type_fields = array();
 	}
 
-	html_start_box("<strong>" . _("Data Input") . "</strong>", "98%", $colors["header_background_template"], "3", "center", "");
+	html_start_box("<strong>" . _("Data Input") . "</strong>");
 
 	_data_source_input_field__data_input_type("data_input_type", true, $_data_input_type, (empty($_GET["id"]) ? 0 : $_GET["id"]));
 
@@ -376,18 +386,88 @@ function template_edit() {
 		form_hidden_box("redirect_sv_add", "x", "");
 	}
 
-	html_start_box("<strong>" . _("Data Source") . "</strong>", "98%", $colors["header_background_template"], "3", "center", "");
+	html_start_box("<strong>" . _("Data Source") . "</strong>");
 
 	_data_source_field__name("name", true, (empty($_GET["id"]) ? 0 : $_GET["id"]), "t_name", (isset($data_template["t_name"]) ? $data_template["t_name"] : ""));
-	_data_source_field__preset_rra_id("preset_rra_id", true, (empty($_GET["id"]) ? 0 : $_GET["id"]));
+	_data_source_field__rra("preset_rra_id", true, (isset($data_template["preset_rra_id"]) ? $data_template["preset_rra_id"] : ""), (empty($_GET["id"]) ? 0 : $_GET["id"]));
 	_data_source_field__rrd_step("rrd_step", true, (isset($data_template["rrd_step"]) ? $data_template["rrd_step"] : ""), (empty($_GET["id"]) ? 0 : $_GET["id"]), "t_rrd_step", (isset($data_template["t_rrd_step"]) ? $data_template["t_rrd_step"] : ""));
 	_data_source_field__active("active", true, (isset($data_template["active"]) ? $data_template["active"] : ""), (empty($_GET["id"]) ? 0 : $_GET["id"]), "t_active", (isset($data_template["t_active"]) ? $data_template["t_active"] : ""));
 
 	html_end_box();
 
+	/* ==================== Box: RRA Items ==================== */
+
+	_data_preset_rra_item_js("form_data_template");
+
+	$box_id = "1";
+	html_start_box("<strong>" . _("RRA Items") . "</strong>", "javascript:new_rra_item('$box_id')", "", $box_id, true, 0);
+
+	$rra_items = api_data_template_rra_item_list($data_template["id"]);
+
+	$empty_rra_item_list = false;
+	if (is_array($rra_items)) {
+		/* if there are no rra items to display, we need to create a "fake" item which we will then turn
+		 * into a "new" row using JS */
+		if (sizeof($rra_items) == 0) {
+			$empty_rra_item_list = true;
+
+			$rra_items = array(
+				array(
+					"id" => "0",
+					"consolidation_function" => "1",
+					"steps" => "",
+					"rows" => "",
+					"x_files_factor" => "",
+					"hw_alpha" => "",
+					"hw_beta" => "",
+					"hw_gamma" => "",
+					"hw_seasonal_period" => "",
+					"hw_rra_num" => "",
+					"hw_threshold" => "",
+					"hw_window_length" => ""
+					)
+				);
+		}
+
+		foreach ($rra_items as $rra_item) {
+			?>
+			<tr id="row<?php echo $rra_item["id"];?>">
+				<td>
+					<table width="100%" cellpadding="3" cellspacing="0">
+						<tr bgcolor="<?php echo $colors["header_panel_background"];?>">
+							<td colspan="2" class="textSubHeaderDark" id="row_rra_item_header_<?php echo $rra_item["id"];?>">
+								<?php echo (empty($rra_item["id"]) ? "(new)" : api_data_preset_rra_item_friendly_name_get($rra_item["consolidation_function"], $rra_item["steps"], $rra_item["rows"]));?>
+							</td>
+							<td align="right" class="textSubHeaderDark">
+								<a class="linkOverDark" href="#" onClick="javascript:xajax__data_preset_rra_item_xajax_remove('<?php echo $rra_item["id"];?>')">Remove</a>
+							</td>
+						</tr>
+						<?php
+						_data_preset_rra_item__consolidation_function("rrai|consolidation_function|" . $rra_item["id"], $rra_item["consolidation_function"], $rra_item["id"]);
+						_data_preset_rra_item__steps("rrai|steps|" . $rra_item["id"], $rra_item["steps"], $rra_item["id"]);
+						_data_preset_rra_item__rows("rrai|rows|" . $rra_item["id"], $rra_item["rows"], $rra_item["id"]);
+						_data_preset_rra_item__x_files_factor("rrai|x_files_factor|" . $rra_item["id"], $rra_item["x_files_factor"], $rra_item["id"]);
+						_data_preset_rra_item__hw_alpha("rrai|hw_alpha|" . $rra_item["id"], $rra_item["hw_alpha"], $rra_item["id"]);
+						_data_preset_rra_item__hw_beta("rrai|hw_beta|" . $rra_item["id"], $rra_item["hw_beta"], $rra_item["id"]);
+						_data_preset_rra_item__hw_gamma("rrai|hw_gamma|" . $rra_item["id"], $rra_item["hw_gamma"], $rra_item["id"]);
+						_data_preset_rra_item__hw_seasonal_period("rrai|hw_seasonal_period|" . $rra_item["id"], $rra_item["hw_seasonal_period"], $rra_item["id"]);
+						_data_preset_rra_item__hw_rra_num("rrai|hw_rra_num|" . $rra_item["id"], $rra_item["hw_rra_num"], $rra_item["id"]);
+						_data_preset_rra_item__hw_threshold("rrai|hw_threshold|" . $rra_item["id"], $rra_item["hw_threshold"], $rra_item["id"]);
+						_data_preset_rra_item__hw_window_length("rrai|hw_window_length|" . $rra_item["id"], $rra_item["hw_window_length"], $rra_item["id"]);
+						_data_preset_rra_item__consolidation_function_js_update($rra_item["consolidation_function"], $rra_item["id"]);
+						?>
+					</table>
+				</td>
+			</tr>
+			<?php
+		}
+	}
+
+	html_end_box();
+
 	/* ==================== Box: Data Source Item ==================== */
 
-	html_start_box("<strong>" . _("Data Source Item") . "</strong>", "98%", $colors["header_background"], "3", "center", (empty($_GET["id"]) ? "" : "javascript:document.forms[0].action.value='item_add';submit_redirect(0, '" . htmlspecialchars("data_templates.php?action=item_add&id=" . $_GET["id"]) . "', '')"));
+	html_start_box("<strong>" . _("Data Source Item") . "</strong>", (empty($_GET["id"]) ? "" : "javascript:document.forms[0].action.value='item_add';submit_redirect(0, '" . htmlspecialchars("data_templates.php?action=item_add&id=" . $_GET["id"]) . "', '')"));
 
 	/* the user clicked the "add item" link. we need to make sure they get redirected back to
 	 * this page if an error occurs */
@@ -430,7 +510,7 @@ function template_edit() {
 			if ($_data_input_type != DATA_INPUT_TYPE_NONE) {
 				?>
 				<tr bgcolor="<?php print $colors["header_panel_background"];?>">
-					<td class='textSubHeaderDark'>
+					<td class='textSubHeaderDark' colspan="2">
 						<?php print (isset($item["data_source_name"]) ? $item["data_source_name"] : "(" . _("New Data Template Item") . ")");?>
 					</td>
 					<td class='textSubHeaderDark' align='right'>
@@ -441,11 +521,11 @@ function template_edit() {
 						?>
 					</td>
 				</tr>
-				<tr bgcolor="#<?php print $colors["form_alternate1"];?>">
-					<td width="50%" style="border-bottom: 1px dashed gray;">
+				<tr bgcolor="#e1e1e1">
+					<td width="50%" style="border-bottom: 1px solid #a1a1a1;">
 						<font class='textEditTitle'>Field Input: <?php print $field_input_description;?></font><br>
 					</td>
-					<td style="border-bottom: 1px dashed gray;">
+					<td style="border-bottom: 1px solid #a1a1a1;" colspan="2">
 						<?php
 						if ($_data_input_type == DATA_INPUT_TYPE_SCRIPT) {
 							form_dropdown("dsi|field_input_value|" . (isset($item["id"]) ? $item["id"] : "0"), $script_output_fields, "name", "data_name", (isset($item["field_input_value"]) ? $item["field_input_value"] : ""), "", "");

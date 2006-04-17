@@ -22,7 +22,9 @@
  +-------------------------------------------------------------------------+
 */
 
-/* form validation functions */
+/*
+ * FORM VALIDATION
+ */
 
 function api_data_preset_rra_field_validate(&$_fields_data_preset_rra, $data_preset_rra_field_name_format) {
 	require_once(CACTI_BASE_PATH . "/lib/data_preset/data_preset_rra_info.php");
@@ -107,7 +109,123 @@ function api_data_preset_rra_item_visible_field_list($consolidation_function) {
 	return $visible_fields;
 }
 
-/* rra preset fields */
+/*
+ * XAJAX HANDLERS
+ */
+
+function _data_preset_rra_item_xajax_save($post_args) {
+	require_once(CACTI_BASE_PATH . "/lib/data_preset/data_preset_rra_update.php");
+	require_once(CACTI_BASE_PATH . "/lib/data_template/data_template_update.php");
+	require_once(CACTI_BASE_PATH . "/lib/data_source/data_source_update.php");
+
+	$objResponse = new xajaxResponse();
+
+	if (basename($_SERVER["PHP_SELF"]) == "presets_rra.php") {
+		$form_rra_item["preset_rra_id"] = $post_args["preset_rra_id"];
+	}else if (basename($_SERVER["PHP_SELF"]) == "data_templates.php") {
+		$form_rra_item["data_template_id"] = $post_args["data_template_id"];
+	}else if (basename($_SERVER["PHP_SELF"]) == "data_sources.php") {
+		$form_rra_item["data_source_id"] = $post_args["data_source_id"];
+	}
+
+	/* obtain a list of visible rra item fields on the form */
+	$visible_fields = api_data_preset_rra_item_visible_field_list($post_args["rrai|consolidation_function|0"]);
+
+	/* all non-visible fields on the form should be discarded */
+	foreach ($visible_fields as $field_name) {
+		$form_rra_item[$field_name] = $post_args["rrai|$field_name|0"];
+	}
+
+	$field_errors = api_data_preset_rra_item_field_validate($form_rra_item, "rrai||field||0");
+
+	foreach (array_keys($form_rra_item) as $field_name) {
+		if (isset($post_args{"rrai|" . $field_name . "|0"})) {
+			/* make a red border around the fields which have validation errors */
+			if (in_array("rrai|" . $field_name . "|0", $field_errors)) {
+				$objResponse->addAssign("rrai|" . $field_name . "|0", "style.border", "2px solid red");
+			/* clear the border for all of the fields without validation errors */
+			}else{
+				$objResponse->addClear("rrai|" . $field_name . "|0", "style.border");
+			}
+		}
+	}
+
+	$rra_preset_item_id = false;
+	if (sizeof($field_errors) > 0) {
+		$objResponse->addAlert("Form validation error!");
+	}else{
+		if (basename($_SERVER["PHP_SELF"]) == "presets_rra.php") {
+			$rra_preset_item_id = api_data_preset_rra_item_save(0, $form_rra_item);
+		}else if (basename($_SERVER["PHP_SELF"]) == "data_templates.php") {
+			$rra_preset_item_id = api_data_template_rra_item_save(0, $form_rra_item);
+		}else if (basename($_SERVER["PHP_SELF"]) == "data_sources.php") {
+			//$rra_preset_item_id = api_data_source_rra_item_save(0, $form_rra_item);
+		}else{
+			$rra_preset_item_id = false;
+		}
+
+		if ($rra_preset_item_id === false) {
+			$objResponse->addAlert("Save error!");
+		}else{
+			/* update the rra item header text */
+			$objResponse->addAssign("row_rra_item_header_0", "innerHTML", api_data_preset_rra_item_friendly_name_get($post_args["rrai|consolidation_function|0"], $post_args["rrai|steps|0"], $post_args["rrai|rows|0"]));
+
+			$objResponse->addScript("make_row_old(\"$rra_preset_item_id\");");
+		}
+	}
+
+	return $objResponse->getXML();
+}
+
+function _data_preset_rra_item_xajax_remove($preset_rra_id) {
+	require_once(CACTI_BASE_PATH . "/lib/data_preset/data_preset_rra_update.php");
+	require_once(CACTI_BASE_PATH . "/lib/data_preset/data_preset_rra_info.php");
+	require_once(CACTI_BASE_PATH . "/lib/data_template/data_template_update.php");
+	require_once(CACTI_BASE_PATH . "/lib/data_template/data_template_info.php");
+	require_once(CACTI_BASE_PATH . "/lib/data_source/data_source_update.php");
+	require_once(CACTI_BASE_PATH . "/lib/data_source/data_source_info.php");
+
+	$objResponse = new xajaxResponse();
+
+	if (basename($_SERVER["PHP_SELF"]) == "presets_rra.php") {
+		$preset_rra_item = api_data_preset_rra_item_get($preset_rra_id);
+		$result = api_data_preset_rra_item_remove($preset_rra_id);
+	}else if (basename($_SERVER["PHP_SELF"]) == "data_templates.php") {
+		$preset_rra_item = api_data_template_rra_item_get($preset_rra_id);
+		$result = api_data_template_rra_item_remove($preset_rra_id);
+	}else if (basename($_SERVER["PHP_SELF"]) == "data_sources.php") {
+		//$preset_rra_item = api_data_source_rra_item_get($preset_rra_id);
+		//$result = api_data_source_rra_item_remove($preset_rra_id);
+	}else{
+		return false;
+	}
+
+	if ($result) {
+		if (basename($_SERVER["PHP_SELF"]) == "presets_rra.php") {
+			$num_items = sizeof(api_data_preset_rra_item_list($preset_rra_item["preset_rra_id"]));
+		}else if (basename($_SERVER["PHP_SELF"]) == "data_templates.php") {
+			$num_items = sizeof(api_data_template_rra_item_list($preset_rra_item["data_template_id"]));
+		}else if (basename($_SERVER["PHP_SELF"]) == "data_sources.php") {
+			//$num_items = sizeof(api_data_source_rra_item_list($preset_rra_item["data_source_id"]));
+		}
+
+		/* if there are no rra items left, do not remove the row from the form but instead mark it as "new" */
+		if ($num_items == 0) {
+			$objResponse->addScript("remove_rra_item_last_row(\"$preset_rra_id\");");
+		/* if there is at least one rra item left, visibly remove the row from the page */
+		}else{
+			$objResponse->addScript("remove_rra_item_row(\"$preset_rra_id\");");
+		}
+	}else{
+		$objResponse->addAlert("Error removing RRA preset item!");
+	}
+
+	return $objResponse->getXML();
+}
+
+/*
+ * RRA PRESET FIELDS
+ */
 
 function _data_preset_rra__name($field_name, $field_value = "", $field_id = 0) {
 	require_once(CACTI_BASE_PATH . "/lib/sys/html_form.php");
@@ -128,7 +246,9 @@ function _data_preset_rra__name($field_name, $field_value = "", $field_id = 0) {
 	<?php
 }
 
-/* rra item preset fields */
+/*
+ * RRA ITEM PRESET FIELDS
+ */
 
 function _data_preset_rra_item_js($form_name) {
 	require_once(CACTI_BASE_PATH . "/include/data_preset/data_preset_rra_constants.php");
@@ -157,7 +277,7 @@ function _data_preset_rra_item_js($form_name) {
 		row.id = "row0";
 		row_container[0].childNodes[1].id = "row_rra_item_header_0";
 		row_container[0].childNodes[1].childNodes[0].nodeValue = "(new)";
-		row_container[0].childNodes[3].innerHTML = (last_row == true ? "" : "<a class='linkOverDark' href='javascript:remove_rra_item_row(\"0\")'>Discard</a>, ") + "<a class='linkOverDark' href='#' onClick='javascript:xajax_xajax_save_rra_item(xajax.getFormValues(\"" + html_form_name + "\"))'>Save</a>";
+		row_container[0].childNodes[3].innerHTML = (last_row == true ? "" : "<a class='linkOverDark' href='javascript:remove_rra_item_row(\"0\")'>Discard</a>, ") + "<a class='linkOverDark' href='#' onClick='javascript:xajax__data_preset_rra_item_xajax_save(xajax.getFormValues(\"" + html_form_name + "\"))'>Save</a>";
 
 		/* start at index 1 to skip the header */
 		for (var i = 1; i < row_container.length; i++) {
@@ -183,7 +303,7 @@ function _data_preset_rra_item_js($form_name) {
 
 		row.id = "row" + rra_item_id;
 		row_container[0].childNodes[1].id = "row_rra_item_header_" + rra_item_id;
-		row_container[0].childNodes[3].innerHTML = "<a class='linkOverDark' href='#' onClick='javascript:xajax_xajax_remove_rra_item(\"" + rra_item_id  + "\")'>Remove</a>";
+		row_container[0].childNodes[3].innerHTML = "<a class='linkOverDark' href='#' onClick='javascript:xajax__data_preset_rra_item_xajax_remove(\"" + rra_item_id  + "\")'>Remove</a>";
 
 		/* start at index 1 to skip the header */
 		for (var i = 1; i < row_container.length; i++) {

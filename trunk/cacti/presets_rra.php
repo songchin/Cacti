@@ -34,8 +34,8 @@ if (!isset($_REQUEST["action"])) { $_REQUEST["action"] = ""; }
 
 require_once(CACTI_BASE_PATH . "/lib/xajax/xajax.inc.php");
 $xajax = new xajax();
-$xajax->registerFunction("xajax_save_rra_item");
-$xajax->registerFunction("xajax_remove_rra_item");
+$xajax->registerFunction("_data_preset_rra_item_xajax_save");
+$xajax->registerFunction("_data_preset_rra_item_xajax_remove");
 $xajax->processRequests();
 
 switch ($_REQUEST["action"]) {
@@ -60,72 +60,6 @@ switch ($_REQUEST["action"]) {
 /* --------------------------
     The Save Function
    -------------------------- */
-
-function xajax_save_rra_item($post_args) {
-	$objResponse = new xajaxResponse();
-
-	$form_rra_item["preset_rra_id"] = $post_args["preset_rra_id"];
-
-	/* obtain a list of visible rra item fields on the form */
-	$visible_fields = api_data_preset_rra_item_visible_field_list($post_args["rrai|consolidation_function|0"]);
-
-	/* all non-visible fields on the form should be discarded */
-	foreach ($visible_fields as $field_name) {
-		$form_rra_item[$field_name] = $post_args["rrai|$field_name|0"];
-	}
-
-	$field_errors = api_data_preset_rra_item_field_validate($form_rra_item, "rrai||field||0");
-
-	foreach (array_keys($form_rra_item) as $field_name) {
-		if (isset($post_args{"rrai|" . $field_name . "|0"})) {
-			/* make a red border around the fields which have validation errors */
-			if (in_array("rrai|" . $field_name . "|0", $field_errors)) {
-				$objResponse->addAssign("rrai|" . $field_name . "|0", "style.border", "2px solid red");
-			/* clear the border for all of the fields without validation errors */
-			}else{
-				$objResponse->addClear("rrai|" . $field_name . "|0", "style.border");
-			}
-		}
-	}
-
-	$rra_preset_item_id = false;
-	if (sizeof($field_errors) > 0) {
-		$objResponse->addAlert("Form validation error!");
-	}else{
-		$rra_preset_item_id = api_data_preset_rra_item_save(0, $form_rra_item);
-
-		if ($rra_preset_item_id === false) {
-			$objResponse->addAlert("Save error!");
-		}else{
-			/* update the rra item header text */
-			$objResponse->addAssign("row_rra_item_header_0", "innerHTML", api_data_preset_rra_item_friendly_name_get($post_args["rrai|consolidation_function|0"], $post_args["rrai|steps|0"], $post_args["rrai|rows|0"]));
-
-			$objResponse->addScript("make_row_old(\"$rra_preset_item_id\");");
-		}
-	}
-
-	return $objResponse->getXML();
-}
-
-function xajax_remove_rra_item($preset_rra_id) {
-	$objResponse = new xajaxResponse();
-
-	$preset_rra_item = api_data_preset_rra_item_get($preset_rra_id);
-
-	if (api_data_preset_rra_item_remove($preset_rra_id)) {
-		/* if there are no rra items left, do not remove the row from the form but instead mark it as "new" */
-		if (sizeof(api_data_preset_rra_item_list($preset_rra_item["preset_rra_id"])) == 0) {
-			$objResponse->addScript("remove_rra_item_last_row(\"$preset_rra_id\");");
-		/* if there is at least one rra item left, visibly remove the row from the page */
-		}else{
-			$objResponse->addScript("remove_rra_item_row(\"$preset_rra_id\");");
-		}
-	}else{
-		$objResponse->addAlert("Error removing RRA preset item!");
-	}
-
-	return $objResponse->getXML();
-}
 
 function form_save() {
 	if ($_POST["action_post"] == "rra_preset_edit") {

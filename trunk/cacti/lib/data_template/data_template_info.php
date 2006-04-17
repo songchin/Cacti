@@ -75,6 +75,20 @@ function api_data_template_get($data_template_id) {
 	}
 }
 
+function api_data_template_rra_item_list($data_template_id) {
+	/* sanity checks */
+	validate_id_die($data_template_id, "data_template_id");
+
+	return db_fetch_assoc("select * from data_template_rra_item where data_template_id = " . sql_sanitize($data_template_id) . " order by consolidation_function,steps");
+}
+
+function api_data_template_rra_item_get($data_template_rra_item_id) {
+	/* sanity checks */
+	validate_id_die($data_template_rra_item_id, "data_template_rra_item_id");
+
+	return db_fetch_row("select * from data_template_rra_item where id = " . sql_sanitize($data_template_rra_item_id));
+}
+
 function api_data_template_input_field_value_get($data_template_id, $field_name) {
 	/* sanity checks */
 	validate_id_die($data_template_id, "data_template_id");

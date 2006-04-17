@@ -56,6 +56,85 @@ function api_data_template_save($data_template_id, $_fields_data_source) {
 	}
 }
 
+function api_data_template_rra_item_save($data_template_rra_item_id, $_fields_data_template_rra_item) {
+	require_once(CACTI_BASE_PATH . "/lib/data_preset/data_preset_rra_info.php");
+
+	/* sanity checks */
+	validate_id_die($data_template_rra_item_id, "data_template_rra_item_id", true);
+
+	/* make sure that there is at least one field to save */
+	if (sizeof($_fields_data_template_rra_item) == 0) {
+		return false;
+	}
+
+	/* sanity check for $preset_rra_id */
+	if ((empty($data_template_rra_item_id)) && (empty($_fields_data_template_rra_item["data_template_id"]))) {
+		api_log_log("Required data_template_id when data_template_rra_item_id = 0", SEV_ERROR);
+		return false;
+	} else if ((isset($_fields_data_template_rra_item["data_template_id"])) && (!db_number_validate($_fields_data_template_rra_item["data_template_id"]))) {
+		return false;
+	}
+
+	/* field: id */
+	$_fields["id"] = array("type" => DB_TYPE_NUMBER, "value" => $data_template_rra_item_id);
+
+	/* field: preset_rra_id */
+	if (!empty($_fields_data_template_rra_item["data_template_id"])) {
+		$_fields["data_template_id"] = array("type" => DB_TYPE_NUMBER, "value" => $_fields_data_template_rra_item["data_template_id"]);
+	}
+
+	/* convert the input array into something that is compatible with db_replace() */
+	$_fields += sql_get_database_field_array($_fields_data_template_rra_item, api_data_preset_rra_item_form_list());
+
+	if (db_replace("data_template_rra_item", $_fields, array("id"))) {
+		if (empty($data_template_rra_item_id)) {
+			$data_template_rra_item_id = db_fetch_insert_id();
+		}
+
+		return $data_template_rra_item_id;
+	}else{
+		return false;
+	}
+}
+
+function api_data_template_rra_item_copy($data_template_id, $preset_rra_id) {
+	/* sanity checks */
+	validate_id_die($data_template_id, "data_template_id");
+	validate_id_die($preset_rra_id, "preset_rra_id");
+
+	/* fetch the selected rra preset */
+	$rra_preset_items = api_data_preset_rra_item_list($preset_rra_id);
+
+	$success = true;
+	/* copy down each item in the selected rra preset */
+	if (is_array($rra_preset_items)) {
+		foreach ($rra_preset_items as $rra_preset_item) {
+			/* these fields are not needed */
+			unset($rra_preset_item["id"]);
+			unset($rra_preset_item["preset_rra_id"]);
+
+			/* associate the rra preset with the current data source */
+			$rra_preset_item["data_template_id"] = $data_template_id;
+
+			if (!api_data_template_rra_item_save(0, $rra_preset_item)) {
+				$success = false;
+			}
+		}
+	}
+
+	return $success;
+}
+
+function api_data_template_rra_item_clear($data_template_id) {
+	/* sanity checks */
+	validate_id_die($data_template_id, "data_template_id");
+
+	return db_delete("data_template_rra_item",
+		array(
+			"data_template_id" => array("type" => DB_TYPE_NUMBER, "value" => $data_template_id)
+			));
+}
+
 function api_data_template_rra_id_save($data_template_id, $_fields_rra_id) {
 	/* sanity checks */
 	validate_id_die($data_template_id, "data_template_id", true);
@@ -206,6 +285,16 @@ function api_data_template_remove($data_template_id) {
 
 	/* detach this template from all data sources */
 	db_execute("UPDATE data_source SET data_template_id = 0 WHERE data_template_id = " . sql_sanitize($data_template_id));
+}
+
+function api_data_template_rra_item_remove($data_template_rra_item_id) {
+	/* sanity checks */
+	validate_id_die($data_template_rra_item_id, "data_template_rra_item_id");
+
+	return db_delete("data_template_rra_item",
+		array(
+			"id" => array("type" => DB_TYPE_NUMBER, "value" => $data_template_rra_item_id)
+			));
 }
 
 function api_data_template_item_remove($data_template_item_id) {
