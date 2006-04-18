@@ -38,4 +38,31 @@ function api_data_preset_rra_item_friendly_name_get($consolidation_function, $st
 	return $friendly_name;
 }
 
+function api_data_preset_rra_fingerprint_generate($data_preset_rra_items) {
+	$fingerprint = "";
+	if (is_array($data_preset_rra_items)) {
+		$i = 0;
+		foreach ($data_preset_rra_items as $data_preset_rra_item) {
+			$fingerprint .= api_data_preset_rra_item_fingerprint_generate($data_preset_rra_item) . (sizeof($data_preset_rra_item) > $i ? "|" : "");
+			$i++;
+		}
+	}
+
+	return $fingerprint;
+}
+
+function api_data_preset_rra_item_fingerprint_generate($data_preset_rra_item) {
+	/* generate a separate 4 character fingerprint for each rra item so it is easy to update
+	 * one item at a time */
+	$_fingerprint = "";
+	if (is_array($data_preset_rra_item)) {
+		foreach ($data_preset_rra_item as $value) {
+			$_fingerprint .= md5($value);
+		}
+	}
+
+	/* the first 4 characters of the md5 sum is *good enough* */
+	return str_pad($data_preset_rra_item["id"], 4, "0", STR_PAD_LEFT) . ":" . substr(md5($_fingerprint), 0, 4);
+}
+
 ?>

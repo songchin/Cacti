@@ -50,6 +50,61 @@ function api_data_preset_rra_save($data_preset_rra_id, $_fields_data_preset_rra)
 	}
 }
 
+function api_data_preset_rra_fingerprint_update($data_preset_rra_item_id, $remove_item = false) {
+	require_once(CACTI_BASE_PATH . "/lib/data_preset/data_preset_rra_info.php");
+
+	$data_preset_rra_item = api_data_preset_rra_item_get($data_preset_rra_item_id);
+
+	if (is_array($data_preset_rra_item)) {
+		/* we need a copy of the actual rra preset to get the existing fingerprint */
+		$data_preset_rra = api_data_preset_rra_get($data_preset_rra_item["preset_rra_id"]);
+
+		/* break the fingerprint into its individual components */
+		$hash_parts = explode("|", $data_preset_rra["fingerprint"]);
+
+		$updated_hash = false;
+		/* loop through each fingerprint component */
+		for ($i = 0; $i < sizeof($hash_parts); $i++) {
+			/* see if we can find the current rra item id in the fingerprint */
+			if (substr($hash_parts[$i], 0, 4) == str_pad($data_preset_rra_item_id, 4, "0", STR_PAD_LEFT)) {
+				/* if we are to remove the component, simply unset it from the array */
+				if ($remove_item === true) {
+					unset($hash_parts[$i]);
+				/* otherwise, generate an updated hash for this component of the fingerprint */
+				}else{
+					$hash_parts[$i] = api_data_preset_rra_item_fingerprint_generate($data_preset_rra_item);
+				}
+
+				$updated_hash = true;
+			}
+		}
+
+		/* if no match was found above, generate a new component for the current rra item */
+		if (($updated_hash === false) && ($remove_item === false)) {
+			$hash_parts[] = api_data_preset_rra_item_fingerprint_generate($data_preset_rra_item);
+		}
+
+		/* splice the fingerprint back together from the array */
+		$new_fingerprint = implode("|", $hash_parts);
+
+		/* only update the database if the fingerprint has changed */
+		if ($new_fingerprint != $data_preset_rra["fingerprint"]) {
+			$_fields = array(
+				"id" => array("type" => DB_TYPE_NUMBER, "value" => $data_preset_rra_item["preset_rra_id"]),
+				"fingerprint" => array("type" => DB_TYPE_STRING, "value" => $new_fingerprint)
+				);
+
+			if (db_update("preset_rra", $_fields, array("id"))) {
+				return true;
+			}
+		}else{
+			return true;
+		}
+	}
+
+	return false;
+}
+
 function api_data_preset_rra_item_save($data_preset_rra_item_id, $_fields_data_preset_rra_item) {
 	require_once(CACTI_BASE_PATH . "/lib/data_preset/data_preset_rra_info.php");
 
@@ -85,6 +140,8 @@ function api_data_preset_rra_item_save($data_preset_rra_item_id, $_fields_data_p
 			$data_preset_rra_item_id = db_fetch_insert_id();
 		}
 
+		api_data_preset_rra_fingerprint_update($data_preset_rra_item_id);
+
 		return $data_preset_rra_item_id;
 	}else{
 		return false;
@@ -109,6 +166,8 @@ function api_data_preset_rra_remove($data_preset_id) {
 function api_data_preset_rra_item_remove($data_preset_rra_item_id) {
 	/* sanity checks */
 	validate_id_die($data_preset_rra_item_id, "data_preset_rra_item_id");
+
+	api_data_preset_rra_fingerprint_update($data_preset_rra_item_id, true);
 
 	return db_delete("preset_rra_item",
 		array(
