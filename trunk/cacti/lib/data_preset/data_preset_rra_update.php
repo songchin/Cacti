@@ -60,7 +60,11 @@ function api_data_preset_rra_fingerprint_update($data_preset_rra_item_id, $remov
 		$data_preset_rra = api_data_preset_rra_get($data_preset_rra_item["preset_rra_id"]);
 
 		/* break the fingerprint into its individual components */
-		$hash_parts = explode("|", $data_preset_rra["fingerprint"]);
+		if ($data_preset_rra["fingerprint"] == "") {
+			$hash_parts = array();
+		}else{
+			$hash_parts = explode("|", $data_preset_rra["fingerprint"]);
+		}
 
 		$updated_hash = false;
 		/* loop through each fingerprint component */

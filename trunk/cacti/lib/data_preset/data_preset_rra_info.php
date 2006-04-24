@@ -37,7 +37,7 @@ function api_data_preset_rra_item_list($preset_rra_id) {
 	/* sanity checks */
 	validate_id_die($preset_rra_id, "preset_rra_id");
 
-	return db_fetch_assoc("select * from preset_rra_item where preset_rra_id = " . sql_sanitize($preset_rra_id));
+	return db_fetch_assoc("select * from preset_rra_item where preset_rra_id = " . sql_sanitize($preset_rra_id) . " order by consolidation_function,steps");
 }
 
 function api_data_preset_rra_item_get($preset_rra_item_id) {

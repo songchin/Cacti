@@ -100,7 +100,7 @@ function form_save() {
 			if ($preset_rra_id) {
 				/* save each rra item on the form */
 				foreach (array_keys($rra_item_fields) as $rra_item_id) {
-					$form_rra_item[$rra_item_id]["data_template_id"] = $_POST["preset_rra_id"];
+					$form_rra_item[$rra_item_id]["preset_rra_id"] = $_POST["preset_rra_id"];
 
 					$preset_rra_item_id = api_data_preset_rra_item_save($rra_item_id, $form_rra_item[$rra_item_id]);
 

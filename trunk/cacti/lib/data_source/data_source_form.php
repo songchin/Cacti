@@ -625,45 +625,33 @@ function _data_source_field__rrd_path($field_name, $template_flag = false, $fiel
 	<?php
 }
 
-/*
-function _data_source_field__preset_rra_id($field_name, $template_flag = false, $field_value = "", $field_id = 0, $t_field_name = "", $t_field_value = "") {
+function _data_source_field__rra($field_name, $template_flag = false, $field_id = 0, $fingerprint = "", $t_field_name = "", $t_field_value = "") {
 	require_once(CACTI_BASE_PATH . "/lib/sys/html_form.php");
 	require_once(CACTI_BASE_PATH . "/lib/data_preset/data_preset_rra_info.php");
 
-	?>
-	<tr class="<?php echo field_get_row_style();?>">
-		<td class="field-row" width="50%">
-			<span class="textEditTitle"><?php echo _("RRA Preset");?></span><br>
-			<?php
-			if ($template_flag == false) {
-				echo _("Represents the type and length of data that is to be stored in the RRA for this data source.");
+	$rra_presets = api_data_preset_rra_list();
+
+	$field_value = "0";
+	/* default to allowing the user to select an rra preset */
+	if (empty($field_id)) {
+		$radio_value = "existing";
+	/* try to determine if we should prompt the user for an existing preset or allow them to
+	 * specify their own rra items */
+	}else{
+		/* grab a sorted version of the fingerprint for the rra items stored with this data template */
+		$data_template_fingerprint = api_data_preset_rra_fingerprint_strip($fingerprint);
+
+		$radio_value = "new";
+		if (is_array($rra_presets)) {
+			foreach ($rra_presets as $rra_preset) {
+				/* if the fingerprints match, we should select the rra preset in the dropdown */
+				if ($data_template_fingerprint == api_data_preset_rra_fingerprint_strip($rra_preset["fingerprint"])) {
+					$radio_value = "existing";
+					$field_value = $rra_preset["id"];
+				}
 			}
-			?>
-		</td>
-		<td class="field-row" colspan="2">
-			<?php form_dropdown($field_name, api_data_preset_rra_list(), "name", "id", $field_value, "", 1);?>
-		</td>
-	</tr>
-	<?php
-}
-*/
-
-function _data_source_field__rra($field_name, $template_flag = false, $field_value = "", $field_id = 0, $t_field_name = "", $t_field_value = "") {
-	require_once(CACTI_BASE_PATH . "/lib/sys/html_form.php");
-	require_once(CACTI_BASE_PATH . "/lib/data_preset/data_preset_rra_info.php");
-
-	/* obtain a list of preset vendors for the dropdown */
-	//$vendor_list = api_data_preset_package_vendor_list();
-
-	/* try to be smart about whether to select the "new" or "existing" radio box */
-	//if (($field_value == "") || (in_array($field_value, $vendor_list))) {
-	//	$radio_value = "existing";
-	//}else{
-	//	$radio_value = "new";
-	//}
-	$vendor_list = array();
-
-	$radio_value = "existing";
+		}
+	}
 
 	?>
 	<tr class="<?php echo field_get_row_style();?>">
@@ -689,7 +677,7 @@ function _data_source_field__rra($field_name, $template_flag = false, $field_val
 					<td>
 					</td>
 					<td>
-						<?php form_dropdown($field_name . "_drp", api_data_preset_rra_list(), "name", "id", array_search($field_value, $vendor_list), "", "");?>
+						<?php form_dropdown($field_name . "_drp", $rra_presets, "name", "id", $field_value, "", "");?>
 					</td>
 				</tr>
 				<tr>
@@ -715,18 +703,18 @@ function _data_source_field__rra($field_name, $template_flag = false, $field_val
 	}
 
 	function select_radio_rra_new() {
-		//document.getElementById('<?php echo $field_name;?>_tr_txt').style.display = 'table-row';
 		document.getElementById('box-1').style.display = 'table';
+		document.getElementById('box-extra-space').style.display = 'inline'; // vertical space between the "Data Source" and "RRA Items" boxes
 		document.getElementById('<?php echo $field_name;?>_tr_drp').style.display = 'none';
 	}
 
 	function select_radio_rra_existing() {
-		//document.getElementById('<?php echo $field_name;?>_tr_txt').style.display = 'none';
 		document.getElementById('box-1').style.display = 'none';
+		document.getElementById('box-extra-space').style.display = 'none'; // vertical space between the "Data Source" and "RRA Items" boxes
 		document.getElementById('<?php echo $field_name;?>_tr_drp').style.display = 'table-row';
 	}
 
-	click_vendor_rra();
+	click_rra_radio();
 	-->
 	</script>
 

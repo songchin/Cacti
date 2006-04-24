@@ -143,6 +143,9 @@ function form_save() {
 			}else if (substr($name, 0, 3) == "sv|") {
 				$matches = explode("|", $name);
 				$suggested_value_fields{$matches[1]}[] = array("id" => $matches[2], "value" => $value);
+			}else if (substr($name, 0, 5) == "rrai|") {
+				$matches = explode("|", $name);
+				$rra_item_fields{$matches[2]}{$matches[1]} = $value;
 			}
 		}
 
@@ -150,7 +153,6 @@ function form_save() {
 		$form_data_template["template_name"] = $_POST["template_name"];
 		$form_data_source["data_input_type"] = $_POST["data_input_type"];
 		$form_data_source["t_name"] = html_boolean(isset($_POST["t_name"]) ? $_POST["t_name"] : "");
-		$form_data_source["preset_rra_id"] = $_POST["preset_rra_id_drp"];
 		$form_data_source["active"] = html_boolean(isset($_POST["active"]) ? $_POST["active"] : "");
 		$form_data_source["t_active"] = html_boolean(isset($_POST["t_active"]) ? $_POST["t_active"] : "");
 		$form_data_source["rrd_step"] = (isset($_POST["rrd_step"]) ? $_POST["rrd_step"] : "");
@@ -175,14 +177,43 @@ function form_save() {
 			api_data_source_item_fields_validate($form_data_source_item[$data_template_item_id], "dsi||field|||id|");
 		}
 
+		/* only worry about rra item field validation if the user is NOT using a preset */
+		if ($_POST["preset_rra_id"] == "new") {
+			foreach ($rra_item_fields as $rra_item_id => $fields) {
+				/* obtain a list of visible rra item fields on the form */
+				$visible_fields = api_data_preset_rra_item_visible_field_list($fields["consolidation_function"]);
+
+				/* all non-visible fields on the form should be discarded */
+				foreach ($visible_fields as $field_name) {
+					$form_rra_item[$rra_item_id][$field_name] = $fields[$field_name];
+				}
+
+				/* validate rra item preset fields */
+				field_register_error(api_data_preset_rra_item_field_validate($form_rra_item[$rra_item_id], "rrai||field||$rra_item_id"));
+			}
+		}
+
 		/* step #3: field save */
 		if (!is_error_message()) {
 			$data_template_id = api_data_template_save($_POST["data_template_id"], $form_data_template + $form_data_source);
 
 			if ($data_template_id) {
-				/* copy down the selected rra preset into the data template */
-				api_data_template_rra_item_clear($_POST["data_template_id"]);
-				api_data_template_rra_item_copy($_POST["data_template_id"], $_POST["preset_rra_id_drp"]);
+				/* copy down the selected rra preset into the data template if a preset is selected */
+				if ($_POST["preset_rra_id"] == "existing") {
+					api_data_template_rra_item_clear($_POST["data_template_id"]);
+					api_data_template_rra_item_copy($_POST["data_template_id"], $_POST["preset_rra_id_drp"]);
+				/* if no preset is selected, just save what is on the form */
+				}else if ($_POST["preset_rra_id"] == "new") {
+					foreach (array_keys($rra_item_fields) as $rra_item_id) {
+						$form_rra_item[$rra_item_id]["data_template_id"] = $_POST["data_template_id"];
+
+						$preset_rra_item_id = api_data_template_rra_item_save($rra_item_id, $form_rra_item[$rra_item_id]);
+
+						if (!$preset_rra_item_id) {
+							raise_message(2);
+						}
+					}
+				}
 
 				/* save suggested values (for the 'name' field) */
 				api_data_template_suggested_values_save($data_template_id, $suggested_value_fields);
@@ -380,6 +411,8 @@ function template_edit() {
 
 	/* ==================== Box: Data Source ==================== */
 
+	$rra_items = api_data_template_rra_item_list($data_template["id"]);
+
 	/* the user clicked the "add item" link. we need to make sure they get redirected back to
 	 * this page if an error occurs */
 	if ($_GET["action"] == "sv_add") {
@@ -389,11 +422,15 @@ function template_edit() {
 	html_start_box("<strong>" . _("Data Source") . "</strong>");
 
 	_data_source_field__name("name", true, (empty($_GET["id"]) ? 0 : $_GET["id"]), "t_name", (isset($data_template["t_name"]) ? $data_template["t_name"] : ""));
-	_data_source_field__rra("preset_rra_id", true, (isset($data_template["preset_rra_id"]) ? $data_template["preset_rra_id"] : ""), (empty($_GET["id"]) ? 0 : $_GET["id"]));
+	_data_source_field__rra("preset_rra_id", true, (empty($_GET["id"]) ? 0 : $_GET["id"]), api_data_preset_rra_fingerprint_generate($rra_items));
 	_data_source_field__rrd_step("rrd_step", true, (isset($data_template["rrd_step"]) ? $data_template["rrd_step"] : ""), (empty($_GET["id"]) ? 0 : $_GET["id"]), "t_rrd_step", (isset($data_template["t_rrd_step"]) ? $data_template["t_rrd_step"] : ""));
 	_data_source_field__active("active", true, (isset($data_template["active"]) ? $data_template["active"] : ""), (empty($_GET["id"]) ? 0 : $_GET["id"]), "t_active", (isset($data_template["t_active"]) ? $data_template["t_active"] : ""));
 
-	html_end_box();
+	html_end_box(false);
+
+	/* always make sure that there is the right amount of vertical space between the "Data Source" and the
+	 * "RRA Items" box */
+	echo "<br id=\"box-extra-space\" style=\"display: none;\" />";
 
 	/* ==================== Box: RRA Items ==================== */
 
@@ -401,8 +438,6 @@ function template_edit() {
 
 	$box_id = "1";
 	html_start_box("<strong>" . _("RRA Items") . "</strong>", "javascript:new_rra_item('$box_id')", "", $box_id, true, 0);
-
-	$rra_items = api_data_template_rra_item_list($data_template["id"]);
 
 	$empty_rra_item_list = false;
 	if (is_array($rra_items)) {
@@ -464,6 +499,14 @@ function template_edit() {
 	}
 
 	html_end_box();
+
+	?>
+	<script language="JavaScript">
+	<!--
+	click_rra_radio();
+	-->
+	</script>
+	<?php
 
 	/* ==================== Box: Data Source Item ==================== */
 

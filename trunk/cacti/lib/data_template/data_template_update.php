@@ -135,29 +135,6 @@ function api_data_template_rra_item_clear($data_template_id) {
 			));
 }
 
-function api_data_template_rra_id_save($data_template_id, $_fields_rra_id) {
-	/* sanity checks */
-	validate_id_die($data_template_id, "data_template_id", true);
-
-	/* clear out the existing template -> RRA mappings */
-	db_delete("data_template_rra",
-		array(
-			"data_template_id" => array("type" => DB_TYPE_NUMBER, "value" => $data_template_id)
-			));
-
-	/* insert new data template -> RRA mappings */
-	if (is_array($_fields_rra_id) > 0) {
-		foreach ($_fields_rra_id as $rra_id) {
-			db_insert("data_template_rra",
-				array(
-					"data_template_id" => array("type" => DB_TYPE_NUMBER, "value" => $data_template_id),
-					"rra_id" => array("type" => DB_TYPE_NUMBER, "value" => $rra_id)
-					),
-				array("data_template_id", "rra_id"));
-		}
-	}
-}
-
 function api_data_template_suggested_values_save($data_template_id, $_fields_suggested_values) {
 	require_once(CACTI_BASE_PATH . "/lib/sys/sequence.php");
 

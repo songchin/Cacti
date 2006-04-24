@@ -43,7 +43,7 @@ function api_data_preset_rra_fingerprint_generate($data_preset_rra_items) {
 	if (is_array($data_preset_rra_items)) {
 		$i = 0;
 		foreach ($data_preset_rra_items as $data_preset_rra_item) {
-			$fingerprint .= api_data_preset_rra_item_fingerprint_generate($data_preset_rra_item) . (sizeof($data_preset_rra_item) > $i ? "|" : "");
+			$fingerprint .= api_data_preset_rra_item_fingerprint_generate($data_preset_rra_item) . (sizeof($data_preset_rra_items) > $i + 1 ? "|" : "");
 			$i++;
 		}
 	}
@@ -56,13 +56,22 @@ function api_data_preset_rra_item_fingerprint_generate($data_preset_rra_item) {
 	 * one item at a time */
 	$_fingerprint = "";
 	if (is_array($data_preset_rra_item)) {
-		foreach ($data_preset_rra_item as $value) {
-			$_fingerprint .= md5($value);
+		foreach ($data_preset_rra_item as $name => $value) {
+			/* ignore any non-visible form fields */
+			if (($name != "id") && ($name != "preset_rra_id") && ($name != "data_template_id") && ($name != "data_source_id")) {
+				$_fingerprint .= md5($value);
+			}
 		}
 	}
 
 	/* the first 4 characters of the md5 sum is *good enough* */
 	return str_pad($data_preset_rra_item["id"], 4, "0", STR_PAD_LEFT) . ":" . substr(md5($_fingerprint), 0, 4);
+}
+
+function api_data_preset_rra_fingerprint_strip($fingerprint) {
+	$parts = explode("|", ereg_replace("[0-9]{4}:", "", $fingerprint));
+	sort($parts);
+	return implode("|", $parts);
 }
 
 ?>
