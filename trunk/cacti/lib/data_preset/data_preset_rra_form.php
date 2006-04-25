@@ -268,6 +268,8 @@ function _data_preset_rra_item_js($form_name) {
 
 			table.tBodies[0].appendChild(newRow);
 		}
+
+		window.location = '#rra_preset_bottom';
 	}
 
 	function make_row_new(row, last_row) {
@@ -276,8 +278,10 @@ function _data_preset_rra_item_js($form_name) {
 
 		row.id = "row0";
 		row_container[0].childNodes[1].id = "row_rra_item_header_0";
+		row_container[0].childNodes[1].style.backgroundColor = "#883e61";
 		row_container[0].childNodes[1].childNodes[0].nodeValue = "(new)";
-		row_container[0].childNodes[3].innerHTML = (last_row == true ? "" : "<a class='linkOverDark' href='javascript:remove_rra_item_row(\"0\")'>Discard</a>, ") + "<a class='linkOverDark' href='#' onClick='javascript:xajax__data_preset_rra_item_xajax_save(xajax.getFormValues(\"" + html_form_name + "\"))'>Save</a>";
+		row_container[0].childNodes[3].innerHTML = (last_row == true ? "" : "<a class='linkOverDark' href='javascript:remove_rra_item_row(\"0\")'>Discard</a>, ") + "<a class='linkOverDark' href='#rra_preset_bottom' onClick='javascript:xajax__data_preset_rra_item_xajax_save(xajax.getFormValues(\"" + html_form_name + "\"))'>Save</a>";
+		row_container[0].childNodes[3].style.backgroundColor = "#883e61";
 
 		/* start at index 1 to skip the header */
 		for (var i = 1; i < row_container.length; i++) {
@@ -303,7 +307,9 @@ function _data_preset_rra_item_js($form_name) {
 
 		row.id = "row" + rra_item_id;
 		row_container[0].childNodes[1].id = "row_rra_item_header_" + rra_item_id;
+		row_container[0].childNodes[1].style.backgroundColor = "#6d88ad";
 		row_container[0].childNodes[3].innerHTML = "<a class='linkOverDark' href='#' onClick='javascript:xajax__data_preset_rra_item_xajax_remove(\"" + rra_item_id  + "\")'>Remove</a>";
+		row_container[0].childNodes[3].style.backgroundColor = "#6d88ad";
 
 		/* start at index 1 to skip the header */
 		for (var i = 1; i < row_container.length; i++) {
@@ -320,6 +326,8 @@ function _data_preset_rra_item_js($form_name) {
 		}
 
 		new_rra_form_displayed = false;
+
+		//window.location = '#rra_preset_bottom';
 	}
 
 	function remove_rra_item_last_row(rra_item_id) {

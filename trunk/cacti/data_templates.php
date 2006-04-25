@@ -501,12 +501,24 @@ function template_edit() {
 	html_end_box();
 
 	?>
+	<a name="rra_preset_bottom" />
+
 	<script language="JavaScript">
 	<!--
 	click_rra_radio();
 	-->
 	</script>
+
 	<?php
+	if ($empty_rra_item_list == true) {
+		?>
+		<script language="JavaScript">
+		<!--
+		make_row_new(document.getElementById("row0"), true);
+		-->
+		</script>
+		<?php
+	}
 
 	/* ==================== Box: Data Source Item ==================== */
 

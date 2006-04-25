@@ -235,6 +235,8 @@ function rra_presets_edit() {
 
 		html_end_box();
 
+		echo "<a name='rra_preset_bottom' />\n";
+
 		if ($empty_rra_item_list == true) {
 			?>
 			<script language="JavaScript">

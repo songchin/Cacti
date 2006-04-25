@@ -607,6 +607,34 @@ INSERT INTO `data_template_item` VALUES (36, 19, 0, '2000', 0, '0', 0, 600, 0, 1
 
 -- --------------------------------------------------------
 
+--
+-- Table structure for table `data_template_rra_item`
+--
+
+CREATE TABLE `data_template_rra_item` (
+  `id` mediumint(8) unsigned NOT NULL auto_increment,
+  `data_template_id` mediumint(8) unsigned NOT NULL default '0',
+  `consolidation_function` tinyint(3) unsigned NOT NULL default '0',
+  `steps` smallint(5) unsigned NOT NULL default '0',
+  `rows` int(11) unsigned NOT NULL default '0',
+  `x_files_factor` decimal(5,4) NOT NULL default '0.0000',
+  `hw_alpha` decimal(5,4) NOT NULL default '0.0000',
+  `hw_beta` decimal(5,4) NOT NULL default '0.0000',
+  `hw_gamma` decimal(5,4) NOT NULL default '0.0000',
+  `hw_seasonal_period` int(11) unsigned NOT NULL default '0',
+  `hw_rra_num` tinyint(3) unsigned NOT NULL default '0',
+  `hw_threshold` tinyint(3) unsigned NOT NULL default '0',
+  `hw_window_length` tinyint(3) unsigned NOT NULL default '0',
+  PRIMARY KEY  (`id`)
+);
+
+--
+-- Dumping data for table `data_template_rra_item`
+--
+
+
+-- --------------------------------------------------------
+
 -- 
 -- Table structure for table `data_template_suggested_value`
 -- 
