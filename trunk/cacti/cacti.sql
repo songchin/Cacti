@@ -321,7 +321,6 @@ CREATE TABLE `data_source` (
   `data_input_type` tinyint(1) unsigned NOT NULL default '3',
   `name` varchar(255) NOT NULL default '',
   `name_cache` varchar(255) NOT NULL default '',
-  `preset_rra_id` mediumint(8) unsigned NOT NULL default '0',
   `active` tinyint(1) unsigned NOT NULL default '1',
   `rrd_path` varchar(255) NOT NULL default '',
   `rrd_step` smallint(5) unsigned NOT NULL default '300',
@@ -421,7 +420,6 @@ CREATE TABLE `data_template` (
   `template_name` varchar(150) NOT NULL default '',
   `data_input_type` tinyint(1) unsigned NOT NULL default '3',
   `t_name` tinyint(1) unsigned NOT NULL default '0',
-  `preset_rra_id` mediumint(8) unsigned NOT NULL default '0',
   `t_active` tinyint(1) unsigned NOT NULL default '0',
   `active` tinyint(1) unsigned NOT NULL default '1',
   `t_rrd_step` tinyint(1) unsigned NOT NULL default '0',
@@ -433,25 +431,25 @@ CREATE TABLE `data_template` (
 -- Dumping data for table `data_template`
 -- 
 
-INSERT INTO `data_template` VALUES (1, 870, 'Host MIB - CPU Utilization', 2, 0, 1, 0, 1, 0, 300);
-INSERT INTO `data_template` VALUES (2, 93, 'Host MIB - Disk Space', 2, 0, 1, 0, 1, 0, 300);
-INSERT INTO `data_template` VALUES (3, 0, 'Host MIB - Logged in Users', 4, 0, 1, 0, 1, 0, 300);
-INSERT INTO `data_template` VALUES (4, 141, 'Host MIB - Processes', 4, 0, 1, 0, 1, 0, 300);
-INSERT INTO `data_template` VALUES (5, 0, 'Interface - Errors/Discards', 2, 0, 1, 0, 1, 0, 300);
-INSERT INTO `data_template` VALUES (6, 0, 'Interface - Traffic (32-bit)', 2, 0, 1, 0, 1, 0, 300);
-INSERT INTO `data_template` VALUES (7, 0, 'Interface - Traffic (64-bit)', 2, 0, 1, 0, 1, 0, 300);
-INSERT INTO `data_template` VALUES (8, 0, 'Interface - Unicast Packets', 2, 0, 1, 0, 1, 0, 300);
-INSERT INTO `data_template` VALUES (9, 0, 'Local Linux - Memory', 3, 0, 1, 0, 1, 0, 300);
-INSERT INTO `data_template` VALUES (10, 0, 'Net-SNMP - CPU Usage', 4, 0, 1, 0, 1, 0, 300);
-INSERT INTO `data_template` VALUES (11, 1, 'Net-SNMP - Disk Space', 2, 0, 1, 0, 1, 0, 300);
-INSERT INTO `data_template` VALUES (12, 0, 'Net-SNMP - Load Average', 4, 0, 1, 0, 1, 0, 300);
-INSERT INTO `data_template` VALUES (13, 59, 'Net-SNMP - Memory', 4, 0, 1, 0, 1, 0, 300);
-INSERT INTO `data_template` VALUES (14, 67, 'Local Unix - Disk Space', 2, 0, 1, 0, 1, 0, 300);
-INSERT INTO `data_template` VALUES (15, 5, 'Local Unix - Logged In Users', 3, 0, 1, 0, 1, 0, 300);
-INSERT INTO `data_template` VALUES (16, 9, 'Local Unix - Processes', 3, 0, 1, 0, 1, 0, 300);
-INSERT INTO `data_template` VALUES (17, 0, 'Local Unix - Ping Host', 3, 0, 1, 0, 1, 0, 300);
-INSERT INTO `data_template` VALUES (18, 52, 'Interface - Non-Unicast Packets', 2, 0, 1, 0, 1, 0, 300);
-INSERT INTO `data_template` VALUES (19, 0, 'Local Unix - Load Average', 3, 0, 1, 0, 1, 0, 300);
+INSERT INTO `data_template` VALUES (1, 870, 'Host MIB - CPU Utilization', 2, 0, 0, 1, 0, 300);
+INSERT INTO `data_template` VALUES (2, 93, 'Host MIB - Disk Space', 2, 0, 0, 1, 0, 300);
+INSERT INTO `data_template` VALUES (3, 0, 'Host MIB - Logged in Users', 4, 0, 0, 1, 0, 300);
+INSERT INTO `data_template` VALUES (4, 141, 'Host MIB - Processes', 4, 0, 0, 1, 0, 300);
+INSERT INTO `data_template` VALUES (5, 0, 'Interface - Errors/Discards', 2, 0, 0, 1, 0, 300);
+INSERT INTO `data_template` VALUES (6, 0, 'Interface - Traffic (32-bit)', 2, 0, 0, 1, 0, 300);
+INSERT INTO `data_template` VALUES (7, 0, 'Interface - Traffic (64-bit)', 2, 0, 0, 1, 0, 300);
+INSERT INTO `data_template` VALUES (8, 0, 'Interface - Unicast Packets', 2, 0, 0, 1, 0, 300);
+INSERT INTO `data_template` VALUES (9, 0, 'Local Linux - Memory', 3, 0, 0, 1, 0, 300);
+INSERT INTO `data_template` VALUES (10, 0, 'Net-SNMP - CPU Usage', 4, 0, 0, 1, 0, 300);
+INSERT INTO `data_template` VALUES (11, 1, 'Net-SNMP - Disk Space', 2, 0, 0, 1, 0, 300);
+INSERT INTO `data_template` VALUES (12, 0, 'Net-SNMP - Load Average', 4, 0, 0, 1, 0, 300);
+INSERT INTO `data_template` VALUES (13, 59, 'Net-SNMP - Memory', 4, 0, 0, 1, 0, 300);
+INSERT INTO `data_template` VALUES (14, 67, 'Local Unix - Disk Space', 2, 0, 0, 1, 0, 300);
+INSERT INTO `data_template` VALUES (15, 5, 'Local Unix - Logged In Users', 3, 0, 0, 1, 0, 300);
+INSERT INTO `data_template` VALUES (16, 9, 'Local Unix - Processes', 3, 0, 0, 1, 0, 300);
+INSERT INTO `data_template` VALUES (17, 0, 'Local Unix - Ping Host', 3, 0, 0, 1, 0, 300);
+INSERT INTO `data_template` VALUES (18, 52, 'Interface - Non-Unicast Packets', 2, 0, 0, 1, 0, 300);
+INSERT INTO `data_template` VALUES (19, 0, 'Local Unix - Load Average', 3, 0, 0, 1, 0, 300);
 
 -- --------------------------------------------------------
 
@@ -1900,6 +1898,7 @@ INSERT INTO `preset_package_vendor` VALUES (7, '3Com');
 CREATE TABLE `preset_rra` (
   `id` mediumint(8) NOT NULL auto_increment,
   `name` varchar(100) NOT NULL default '',
+  `fingerprint` varchar(255) NOT NULL default '',
   PRIMARY KEY  (`id`)
 ) TYPE=MyISAM;
 
@@ -1907,7 +1906,7 @@ CREATE TABLE `preset_rra` (
 -- Dumping data for table `preset_rra`
 -- 
 
-INSERT INTO `preset_rra` VALUES (1, 'Default');
+INSERT INTO `preset_rra` VALUES (1, 'Default', '0002:20e8|0003:8ead|0005:728e|0007:382b|0001:56f8|0004:6c2c|0006:1ac7|0008:a5ec');
 
 -- --------------------------------------------------------
 
@@ -2165,7 +2164,7 @@ CREATE TABLE `user_auth` (
 -- Dumping data for table `user_auth`
 -- 
 
-INSERT INTO `user_auth` VALUES (1, 'admin', '21232f297a57a5a743894a0e4a801fc3', 0, 'Administrator', '', 'on', 'on', 'on', 'on', 1, 1, 1, 1, 1, 1, 0, '0000-00-00 00:00:00', '2004-12-29 20:59:45', 'classic', '', '', '2005-10-16 19:52:38', '192.168.1.101');
+INSERT INTO `user_auth` VALUES (1, 'admin', '21232f297a57a5a743894a0e4a801fc3', 0, 'Administrator', '', 'on', 'on', 'on', 'on', 1, 1, 1, 1, 1, 1, 0, '0000-00-00 00:00:00', '2004-12-29 20:59:45', 'classic', '', '', '2006-04-24 21:40:02', '192.168.1.101');
 INSERT INTO `user_auth` VALUES (3, 'guest', '43e9a4ab75570f5b', 0, 'Guest Account', 'on', 'on', 'on', 'on', 'on', 3, 1, 1, 1, 1, 1, 0, '0000-00-00 00:00:00', '2004-12-29 20:59:45', 'default', '', '', '0000-00-00 00:00:00', '0.0.0.0');
 
 -- --------------------------------------------------------
