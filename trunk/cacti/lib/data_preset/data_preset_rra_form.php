@@ -159,7 +159,7 @@ function _data_preset_rra_item_xajax_save($post_args) {
 		}else if (basename($_SERVER["PHP_SELF"]) == "data_templates.php") {
 			$rra_preset_item_id = api_data_template_rra_item_save(0, $form_rra_item);
 		}else if (basename($_SERVER["PHP_SELF"]) == "data_sources.php") {
-			//$rra_preset_item_id = api_data_source_rra_item_save(0, $form_rra_item);
+			$rra_preset_item_id = api_data_source_rra_item_save(0, $form_rra_item);
 		}else{
 			$rra_preset_item_id = false;
 		}
@@ -194,8 +194,8 @@ function _data_preset_rra_item_xajax_remove($preset_rra_id) {
 		$preset_rra_item = api_data_template_rra_item_get($preset_rra_id);
 		$result = api_data_template_rra_item_remove($preset_rra_id);
 	}else if (basename($_SERVER["PHP_SELF"]) == "data_sources.php") {
-		//$preset_rra_item = api_data_source_rra_item_get($preset_rra_id);
-		//$result = api_data_source_rra_item_remove($preset_rra_id);
+		$preset_rra_item = api_data_source_rra_item_get($preset_rra_id);
+		$result = api_data_source_rra_item_remove($preset_rra_id);
 	}else{
 		return false;
 	}
@@ -206,7 +206,7 @@ function _data_preset_rra_item_xajax_remove($preset_rra_id) {
 		}else if (basename($_SERVER["PHP_SELF"]) == "data_templates.php") {
 			$num_items = sizeof(api_data_template_rra_item_list($preset_rra_item["data_template_id"]));
 		}else if (basename($_SERVER["PHP_SELF"]) == "data_sources.php") {
-			//$num_items = sizeof(api_data_source_rra_item_list($preset_rra_item["data_source_id"]));
+			$num_items = sizeof(api_data_source_rra_item_list($preset_rra_item["data_source_id"]));
 		}
 
 		/* if there are no rra items left, do not remove the row from the form but instead mark it as "new" */
@@ -326,8 +326,6 @@ function _data_preset_rra_item_js($form_name) {
 		}
 
 		new_rra_form_displayed = false;
-
-		//window.location = '#rra_preset_bottom';
 	}
 
 	function remove_rra_item_last_row(rra_item_id) {

@@ -24,7 +24,6 @@
 
 function api_data_source_save($data_source_id, &$_fields_data_source, $skip_cache_update = false) {
 	require_once(CACTI_BASE_PATH . "/lib/data_source/data_source_info.php");
-	require_once(CACTI_BASE_PATH . "/lib/data_preset/data_preset_rra_info.php");
 
 	/* sanity checks */
 	validate_id_die($data_source_id, "data_source_id", true);
@@ -51,20 +50,24 @@ function api_data_source_save($data_source_id, &$_fields_data_source, $skip_cach
 	}
 
 	if (db_replace("data_source", $_fields, array("id"))) {
-		$data_source_id = db_fetch_insert_id();
+		if (empty($data_source_id)) {
+			$data_source_id = db_fetch_insert_id();
+		}
 
 		if ($skip_cache_update == false) {
 			/* update data source title cache */
 			api_data_source_title_cache_update($data_source_id);
 		}
 
-		return true;
+		return $data_source_id;
 	}else{
 		return false;
 	}
 }
 
-function api_data_source_rra_item_copy($data_source_id, $preset_rra_id) {
+function api_data_source_preset_rra_item_copy($data_source_id, $preset_rra_id) {
+	require_once(CACTI_BASE_PATH . "/lib/data_preset/data_preset_rra_info.php");
+
 	/* sanity checks */
 	validate_id_die($data_source_id, "data_source_id");
 	validate_id_die($preset_rra_id, "preset_rra_id");
@@ -90,6 +93,46 @@ function api_data_source_rra_item_copy($data_source_id, $preset_rra_id) {
 	}
 
 	return $success;
+}
+
+function api_data_source_data_template_rra_item_copy($data_source_id, $data_template_id) {
+	require_once(CACTI_BASE_PATH . "/lib/data_template/data_template_info.php");
+
+	/* sanity checks */
+	validate_id_die($data_source_id, "data_source_id");
+	validate_id_die($data_template_id, "data_template_id");
+
+	/* fetch the selected rra preset */
+	$rra_items = api_data_template_rra_item_list($data_template_id);
+
+	$success = true;
+	/* copy down each item in the selected rra preset */
+	if (is_array($rra_items)) {
+		foreach ($rra_items as $rra_item) {
+			/* these fields are not needed */
+			unset($rra_item["id"]);
+			unset($rra_item["data_template_id"]);
+
+			/* associate the rra preset with the current data source */
+			$rra_item["data_source_id"] = $data_source_id;
+
+			if (!api_data_source_rra_item_save(0, $rra_item)) {
+				$success = false;
+			}
+		}
+	}
+
+	return $success;
+}
+
+function api_data_source_rra_item_clear($data_source_id) {
+	/* sanity checks */
+	validate_id_die($data_source_id, "data_source_id");
+
+	return db_delete("data_source_rra_item",
+		array(
+			"data_source_id" => array("type" => DB_TYPE_NUMBER, "value" => $data_source_id)
+			));
 }
 
 function api_data_source_rra_item_save($data_source_rra_item_id, $_fields_data_source_rra_item) {
@@ -181,6 +224,16 @@ function api_data_source_remove($data_source_id) {
 	db_delete("data_source",
 		array(
 			"id" => array("type" => DB_TYPE_NUMBER, "value" => $data_source_id)
+			));
+}
+
+function api_data_source_rra_item_remove($data_source_rra_item_id) {
+	/* sanity checks */
+	validate_id_die($data_source_rra_item_id, "data_source_rra_item_id");
+
+	return db_delete("data_source_rra_item",
+		array(
+			"id" => array("type" => DB_TYPE_NUMBER, "value" => $data_source_rra_item_id)
 			));
 }
 

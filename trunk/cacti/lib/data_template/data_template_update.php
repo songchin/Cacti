@@ -97,7 +97,7 @@ function api_data_template_rra_item_save($data_template_rra_item_id, $_fields_da
 	}
 }
 
-function api_data_template_rra_item_copy($data_template_id, $preset_rra_id) {
+function api_data_template_preset_rra_item_copy($data_template_id, $preset_rra_id) {
 	/* sanity checks */
 	validate_id_die($data_template_id, "data_template_id");
 	validate_id_die($preset_rra_id, "preset_rra_id");
@@ -252,6 +252,10 @@ function api_data_template_remove($data_template_id) {
 			"data_template_id" => array("type" => DB_TYPE_NUMBER, "value" => $data_template_id)
 			));
 	db_delete("data_template_item",
+		array(
+			"data_template_id" => array("type" => DB_TYPE_NUMBER, "value" => $data_template_id)
+			));
+	db_delete("data_template_rra_item",
 		array(
 			"data_template_id" => array("type" => DB_TYPE_NUMBER, "value" => $data_template_id)
 			));

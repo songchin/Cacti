@@ -93,6 +93,13 @@ function api_data_source_rra_item_list($data_source_id) {
 	return db_fetch_assoc("select * from data_source_rra_item where data_source_id = " . sql_sanitize($data_source_id) . " order by consolidation_function,steps");
 }
 
+function api_data_source_rra_item_get($data_source_rra_item_id) {
+	/* sanity checks */
+	validate_id_die($data_source_rra_item_id, "data_source_rra_item_id");
+
+	return db_fetch_row("select * from data_source_rra_item where id = " . sql_sanitize($data_source_rra_item_id));
+}
+
 function api_data_source_item_list($data_source_id) {
 	/* sanity checks */
 	validate_id_die($data_source_id, "data_source_id");

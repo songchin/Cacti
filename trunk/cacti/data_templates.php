@@ -33,6 +33,7 @@ require_once(CACTI_BASE_PATH . "/lib/data_preset/data_preset_rra_utility.php");
 require_once(CACTI_BASE_PATH . "/lib/data_source/data_source_form.php");
 require_once(CACTI_BASE_PATH . "/lib/data_source/data_source_info.php");
 require_once(CACTI_BASE_PATH . "/lib/data_query/data_query_info.php");
+require_once(CACTI_BASE_PATH . "/lib/script/script_info.php");
 require_once(CACTI_BASE_PATH . "/lib/sys/sequence.php");
 require_once(CACTI_BASE_PATH . "/include/data_query/data_query_constants.php");
 require_once(CACTI_BASE_PATH . "/include/data_source/data_source_constants.php");
@@ -119,6 +120,7 @@ function form_save() {
 		$data_input_fields = array();
 		$data_template_item_fields = array();
 		$suggested_value_fields = array();
+		$rra_item_fields = array();
 
 		/* cache all post field values */
 		init_post_field_cache();
@@ -200,12 +202,12 @@ function form_save() {
 			if ($data_template_id) {
 				/* copy down the selected rra preset into the data template if a preset is selected */
 				if ($_POST["preset_rra_id"] == "existing") {
-					api_data_template_rra_item_clear($_POST["data_template_id"]);
-					api_data_template_rra_item_copy($_POST["data_template_id"], $_POST["preset_rra_id_drp"]);
+					api_data_template_rra_item_clear($data_template_id);
+					api_data_template_preset_rra_item_copy($data_template_id, $_POST["preset_rra_id_drp"]);
 				/* if no preset is selected, just save what is on the form */
 				}else if ($_POST["preset_rra_id"] == "new") {
 					foreach (array_keys($rra_item_fields) as $rra_item_id) {
-						$form_rra_item[$rra_item_id]["data_template_id"] = $_POST["data_template_id"];
+						$form_rra_item[$rra_item_id]["data_template_id"] = $data_template_id;
 
 						$preset_rra_item_id = api_data_template_rra_item_save($rra_item_id, $form_rra_item[$rra_item_id]);
 
@@ -343,9 +345,7 @@ function template_edit() {
 
 	/* grab the appropriate data input type form array */
 	if ($_data_input_type == DATA_INPUT_TYPE_SCRIPT) {
-		/* since the "sql" key is not executed until draw_edit_form(), we have fetch the list of
-		 * external scripts here as well */
-		$scripts = db_fetch_assoc("select id,name from data_input order by name");
+		$scripts = api_script_list();
 
 		if (sizeof($scripts) > 0) {
 			/* determine current value for 'script_id' */
@@ -422,7 +422,7 @@ function template_edit() {
 	html_start_box("<strong>" . _("Data Source") . "</strong>");
 
 	_data_source_field__name("name", true, (empty($_GET["id"]) ? 0 : $_GET["id"]), "t_name", (isset($data_template["t_name"]) ? $data_template["t_name"] : ""));
-	_data_source_field__rra("preset_rra_id", true, (empty($_GET["id"]) ? 0 : $_GET["id"]), api_data_preset_rra_fingerprint_generate($rra_items));
+	$rra_rv = _data_source_field__rra("preset_rra_id", true, (empty($_GET["id"]) ? 0 : $_GET["id"]), api_data_preset_rra_fingerprint_generate($rra_items));
 	_data_source_field__rrd_step("rrd_step", true, (isset($data_template["rrd_step"]) ? $data_template["rrd_step"] : ""), (empty($_GET["id"]) ? 0 : $_GET["id"]), "t_rrd_step", (isset($data_template["t_rrd_step"]) ? $data_template["t_rrd_step"] : ""));
 	_data_source_field__active("active", true, (isset($data_template["active"]) ? $data_template["active"] : ""), (empty($_GET["id"]) ? 0 : $_GET["id"]), "t_active", (isset($data_template["t_active"]) ? $data_template["t_active"] : ""));
 
@@ -430,14 +430,14 @@ function template_edit() {
 
 	/* always make sure that there is the right amount of vertical space between the "Data Source" and the
 	 * "RRA Items" box */
-	echo "<br id=\"box-extra-space\" style=\"display: none;\" />";
+	echo "<br id=\"box-extra-space\" style=\"display:" . ($rra_rv == "new" ? "none" : "inline") . "\" />";
 
 	/* ==================== Box: RRA Items ==================== */
 
 	_data_preset_rra_item_js("form_data_template");
 
 	$box_id = "1";
-	html_start_box("<strong>" . _("RRA Items") . "</strong>", "javascript:new_rra_item('$box_id')", "", $box_id, true, 0);
+	html_start_box("<strong>" . _("RRA Items") . "</strong>", "javascript:new_rra_item('$box_id')", "", $box_id, true, 0, ($rra_rv == "new" ? false : true));
 
 	$empty_rra_item_list = false;
 	if (is_array($rra_items)) {

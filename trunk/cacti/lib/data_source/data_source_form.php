@@ -635,6 +635,10 @@ function _data_source_field__rra($field_name, $template_flag = false, $field_id 
 	/* default to allowing the user to select an rra preset */
 	if (empty($field_id)) {
 		$radio_value = "existing";
+	/* no rra items typically mean that this is a new data source which means we should allow
+	 * the user to select a preset */
+	}else if ($fingerprint == "") {
+		$radio_value = "existing";
 	/* try to determine if we should prompt the user for an existing preset or allow them to
 	 * specify their own rra items */
 	}else{
@@ -719,6 +723,7 @@ function _data_source_field__rra($field_name, $template_flag = false, $field_id 
 	</script>
 
 	<?php
+	return $radio_value;
 }
 
 function _data_source_field__rrd_step($field_name, $template_flag = false, $field_value = "", $field_id = 0, $t_field_name = "", $t_field_value = "") {

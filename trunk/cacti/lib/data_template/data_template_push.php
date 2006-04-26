@@ -68,9 +68,9 @@ function copy_data_template_to_data_source($data_template_id, $host_id = 0, $dat
 			}
 		}
 
-		if (api_data_source_save(0, $_fields, true)) {
-			$data_source_id = db_fetch_insert_id();
+		$data_source_id = api_data_source_save(0, $_fields, true);
 
+		if ($data_source_id) {
 			api_log_log("Cloning data source [ID#$data_source_id] from template [ID#$data_template_id]", SEV_DEBUG);
 
 			/* reformat the $_data_template_input_fields to be more compatible with api_data_source_save() */
@@ -83,7 +83,7 @@ function copy_data_template_to_data_source($data_template_id, $host_id = 0, $dat
 			api_data_source_fields_save($data_source_id, $data_template_input_fields);
 
 			/* handle associated rra items */
-			api_data_source_rra_item_copy($data_source_id, $_fields["preset_rra_id"]);
+			api_data_source_data_template_rra_item_copy($data_source_id, $data_template_id);
 
 			/* move onto the data source items */
 			$data_template_items = api_data_template_item_list($data_template_id);

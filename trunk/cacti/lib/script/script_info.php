@@ -22,6 +22,10 @@
  +-------------------------------------------------------------------------+
 */
 
+function api_script_list() {
+	return db_fetch_assoc("select * from data_input order by name");
+}
+
 function api_script_get($script_id) {
 	/* sanity checks */
 	validate_id_die($script_id, "script_id");
