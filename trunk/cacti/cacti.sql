@@ -1499,10 +1499,12 @@ CREATE TABLE `package_graph_template` (
 CREATE TABLE `package_metadata` (
   `id` mediumint(8) unsigned NOT NULL auto_increment,
   `package_id` mediumint(8) unsigned NOT NULL default '0',
+  `type` smallint(5) unsigned NOT NULL default '0',
   `name` varchar(100) NOT NULL default '',
   `description` varchar(255) NOT NULL default '',
   `description_install` text NOT NULL,
   `required` tinyint(1) NOT NULL default '0',
+  `mime_type` varchar(100) NOT NULL default '',
   `payload` blob NOT NULL,
   PRIMARY KEY  (`id`)
 ) TYPE=MyISAM;

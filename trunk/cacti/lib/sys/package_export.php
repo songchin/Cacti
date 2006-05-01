@@ -148,8 +148,6 @@ function &package_payload_export($package_id) {
 						$_xml .= package_script_export($dep_item_id);
 					}else if ($dep_category_name == "data_query") {
 						$_xml .= package_data_query_export($dep_item_id);
-					}else if ($dep_category_name == "round_robin_archive") {
-						$_xml .= package_rra_export($dep_item_id);
 					}
 				}
 
@@ -173,7 +171,6 @@ function &package_dependencies_list($type, $id, $dep_array) {
 		$dep_array["data_template"] = array();
 		$dep_array["script"] = array();
 		$dep_array["data_query"] = array();
-		$dep_array["round_robin_archive"] = array();
 	}
 
 	switch ($type) {
@@ -218,17 +215,6 @@ function &package_dependencies_list($type, $id, $dep_array) {
 
 			if (($data_query_id !== false) && (db_number_validate($data_query_id)) && (!in_array($data_query_id, $dep_array["data_query"]))) {
 				$dep_array["data_query"][] = $data_query_id;
-			}
-
-			/* dependency: round robin archive */
-			$rras = api_data_template_rras_list($id);
-
-			if (sizeof($rras) > 0) {
-				foreach ($rras as $rra_id) {
-					if (!in_array($rra_id, $dep_array["round_robin_archive"])) {
-						$dep_array["round_robin_archive"][] = $rra_id;
-					}
-				}
 			}
 
 			break;
@@ -391,6 +377,7 @@ function &package_graph_template_export($graph_template_id, $indent = 3) {
 }
 
 function &package_data_template_export($data_template_id, $indent = 3) {
+	require_once(CACTI_BASE_PATH . "/lib/data_preset/data_preset_rra_info.php");
 	require_once(CACTI_BASE_PATH . "/lib/data_template/data_template_info.php");
 	require_once(CACTI_BASE_PATH . "/lib/data_source/data_source_info.php");
 
@@ -498,8 +485,34 @@ function &package_data_template_export($data_template_id, $indent = 3) {
 		}
 	}
 
+	/*
+	 * XML Tag: <rra_items>
+	 */
+
+	/* obtain a list of all rra item preset specific fields */
+	$rra_items_fields = api_data_preset_rra_item_form_list();
+	/* obtain a list of all rra items associated with this data template */
+	$rra_items = api_data_template_rra_item_list($data_template_id);
+
+	$_xml = "";
+	if (is_array($rra_items)) {
+		$i = 0;
+		foreach ($rra_items as $rra_item) {
+			$__xml = "";
+			foreach (array_keys($rra_items_fields) as $field_name) {
+				/* create an XML key for each rra item field */
+				$__xml .= package_xml_tag_get($field_name, xml_character_encode($rra_item[$field_name]), $indent + 3);
+			}
+
+			/* break out each row into its own key */
+			$_xml .= package_xml_tag_get("item_" . str_pad($i, 5, "0", STR_PAD_LEFT), $__xml, $indent + 2, true);
+
+			$i++;
+		}
+	}
+
 	/* append the result onto the final XML string */
-	$xml .= package_xml_tag_get("fields", $_xml, $indent + 1, true);
+	$xml .= package_xml_tag_get("rra_items", $_xml, $indent + 1, true);
 
 	/*
 	 * XML Tag: <suggested_values>
@@ -647,51 +660,6 @@ function &package_script_export($script_id, $indent = 3) {
 
 	/* wrap the whole XML string into a 'script' tag and return it */
 	$xml = package_xml_tag_get(package_hash_get($script_id, "script"), $xml, $indent, true);
-
-	return $xml;
-}
-
-function &package_rra_export($rra_id, $indent = 3) {
-	require_once(CACTI_BASE_PATH . "/lib/rra/rra_info.php");
-
-	$xml = "";
-
-	/*
-	 * XML Tag: <rra>
-	 */
-
-	/* obtain a list of all rra specific fields */
-	$rra_fields = api_rra_form_list();
-	/* obtain a copy of this specfic rra */
-	$rra = api_rra_get($rra_id);
-
-	$_xml = "";
-	foreach (array_keys($rra_fields) as $field_name) {
-		/* create an XML key for each rra field */
-		$_xml .= package_xml_tag_get($field_name, xml_character_encode($rra[$field_name]), $indent + 2);
-	}
-
-	/* obtain a list of each consolidation function associated with this rra */
-	$consolidation_functions = api_rra_consolidation_function_list($rra_id);
-
-	if (sizeof($consolidation_functions) > 0) {
-		$i = 0; $items_list = "";
-		foreach ($consolidation_functions as $consolidation_function_id) {
-			/* create a delimited list of each item */
-			$items_list .= $consolidation_function_id . (($i + 1) < sizeof($consolidation_functions) ? "|" : "");
-
-			$i++;
-		}
-	}
-
-	/* add the items list that we created above */
-	$_xml .= package_xml_tag_get("cf_items", $items_list, $indent + 2);
-
-	/* append the result onto the final XML string */
-	$xml .= package_xml_tag_get("rra", $_xml, $indent + 1, true);
-
-	/* wrap the whole XML string into a 'rra' tag and return it */
-	$xml = package_xml_tag_get(package_hash_get($rra_id, "rra"), $xml, $indent, true);
 
 	return $xml;
 }

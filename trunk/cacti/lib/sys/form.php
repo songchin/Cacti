@@ -57,7 +57,11 @@ function register_field_errors($error_fields) {
    @returns - the original $field_value */
 function form_input_validate($field_value, $field_name, $regexp_match, $allow_nulls, $custom_message = 0) {
 	if (($allow_nulls == true) && ($field_value == "")) {
-		return $field_value;
+		if ($custom_message == 3) {
+			return $field_value;
+		}else{
+			return true;
+		}
 	}
 
 	/* php 4.2+ complains about empty regexps */
