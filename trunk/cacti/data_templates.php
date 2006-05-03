@@ -157,8 +157,8 @@ function form_save() {
 		$form_data_source["t_name"] = html_boolean(isset($_POST["t_name"]) ? $_POST["t_name"] : "");
 		$form_data_source["active"] = html_boolean(isset($_POST["active"]) ? $_POST["active"] : "");
 		$form_data_source["t_active"] = html_boolean(isset($_POST["t_active"]) ? $_POST["t_active"] : "");
-		$form_data_source["rrd_step"] = (isset($_POST["rrd_step"]) ? $_POST["rrd_step"] : "");
-		$form_data_source["t_rrd_step"] = html_boolean(isset($_POST["t_rrd_step"]) ? $_POST["t_rrd_step"] : "");
+		$form_data_source["polling_interval"] = (isset($_POST["polling_interval"]) ? $_POST["polling_interval"] : "");
+		$form_data_source["t_polling_interval"] = html_boolean(isset($_POST["t_polling_interval"]) ? $_POST["t_polling_interval"] : "");
 
 		field_register_error(api_data_source_fields_validate($form_data_source, $suggested_value_fields, "|field|", "sv||field|||id|"));
 		field_register_error(api_data_source_input_fields_validate($data_input_fields, "|field|"));
@@ -423,7 +423,7 @@ function template_edit() {
 
 	_data_source_field__name("name", true, (empty($_GET["id"]) ? 0 : $_GET["id"]), "t_name", (isset($data_template["t_name"]) ? $data_template["t_name"] : ""));
 	$rra_rv = _data_source_field__rra("preset_rra_id", true, (empty($_GET["id"]) ? 0 : $_GET["id"]), api_data_preset_rra_fingerprint_generate($rra_items));
-	_data_source_field__rrd_step("rrd_step", true, (isset($data_template["rrd_step"]) ? $data_template["rrd_step"] : ""), (empty($_GET["id"]) ? 0 : $_GET["id"]), "t_rrd_step", (isset($data_template["t_rrd_step"]) ? $data_template["t_rrd_step"] : ""));
+	_data_source_field__polling_interval("polling_interval", true, (isset($data_template["polling_interval"]) ? $data_template["polling_interval"] : ""), (empty($_GET["id"]) ? 0 : $_GET["id"]), "t_polling_interval", (isset($data_template["t_polling_interval"]) ? $data_template["t_polling_interval"] : ""));
 	_data_source_field__active("active", true, (isset($data_template["active"]) ? $data_template["active"] : ""), (empty($_GET["id"]) ? 0 : $_GET["id"]), "t_active", (isset($data_template["t_active"]) ? $data_template["t_active"] : ""));
 
 	html_end_box(false);

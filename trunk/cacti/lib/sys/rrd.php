@@ -148,8 +148,11 @@ function rrdtool_function_create($data_source_id, $show_source, $rrd_struc, $sys
 		return;
 	}
 
+	/* get the current data source */
+	$data_source = api_data_source_get($data_source_id);
+
 	/* create the "--step" line */
-	$create_ds = RRD_NL . "--step ". 300 . " " . RRD_NL;
+	$create_ds = RRD_NL . "--step ". $data_source["polling_interval"] . " " . RRD_NL;
 
 	/* get a list of valid data source types (COUNTER, GAUGE, etc) */
 	$data_source_types = api_data_source_type_list();
@@ -170,7 +173,7 @@ function rrdtool_function_create($data_source_id, $show_source, $rrd_struc, $sys
 	$rra_items = api_data_source_rra_item_list($data_source_id);
 
 	/* if we find that this data source has no RRA associated; get out */
-	if ((!is_array($rra_items)) && (sizeof($rra_items) == 0)) {
+	if ((!is_array($rra_items)) || (sizeof($rra_items) == 0)) {
 		api_log_log(_("There are no RRA's assigned to data_source_id: ") . $data_source_id . ".", SEV_ERROR, FACIL_POLLER);
 		return false;
 	}
@@ -178,8 +181,12 @@ function rrdtool_function_create($data_source_id, $show_source, $rrd_struc, $sys
 	$create_rra = "";
 	/* loop through each available RRA for this data source */
 	foreach ($rra_items as $rra_item) {
+		/* calculate the correct number of RRA rows based on the polling interval and the RRA
+		 * retention interval */
+		$rra_rows = ceil($rra_item["rows"] / ($data_source["polling_interval"] * $rra_item["steps"]));
+
 		if (($rra_item["consolidation_function"] == RRA_CF_TYPE_AVERAGE) || ($rra_item["consolidation_function"] == RRA_CF_TYPE_MIN) || ($rra_item["consolidation_function"] == RRA_CF_TYPE_MAX) || ($rra_item["consolidation_function"] == RRA_CF_TYPE_LAST)) {
-			$create_rra .= "RRA:" . $rra_cf_types{$rra_item["consolidation_function"]} . ":" . $rra_item["x_files_factor"] . ":" . $rra_item["steps"] . ":" . $rra_item["rows"] . RRD_NL;
+			$create_rra .= "RRA:" . $rra_cf_types{$rra_item["consolidation_function"]} . ":" . $rra_item["x_files_factor"] . ":" . $rra_item["steps"] . ":" . $rra_rows . RRD_NL;
 		}else if ($rra_item["consolidation_function"] == RRA_CF_TYPE_HWPREDICT) {
 			$create_rra .= "RRA:" . $rra_cf_types{$rra_item["consolidation_function"]} . ":" . $rra_item["rows"] . ":" . $rra_item["hw_alpha"] . ":" . $rra_item["hw_beta"] . ":" . $rra_item["hw_seasonal_period"] . (empty($rra_item["hw_rra_num"]) ? "" : ":" . $rra_item["hw_rra_num"]) . RRD_NL;
 		}else if (($rra_item["consolidation_function"] == RRA_CF_TYPE_SEASONAL) || ($rra_item["consolidation_function"] == RRA_CF_TYPE_DEVSEASONAL)) {

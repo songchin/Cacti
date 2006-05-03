@@ -45,4 +45,20 @@ $data_input_types = array(
 	DATA_INPUT_TYPE_SNMP => _("SNMP")
 	);
 
+$data_source_polling_intervals = array(
+	60 => "1 Minute",
+	120 => "2 Minutes",
+	180 => "3 Minutes",
+	240 => "4 Minutes",
+	300 => "5 Minutes",
+	600 => "10 Minutes",
+	900 => "15 Minutes",
+	1800 => "30 Minutes",
+	3600 => "1 Hour",
+	7200 => "2 Hours",
+	21600 => "6 Hours",
+	43200 => "12 Hours",
+	86400 => "1 Day"
+	);
+
 ?>

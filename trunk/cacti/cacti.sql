@@ -323,7 +323,7 @@ CREATE TABLE `data_source` (
   `name_cache` varchar(255) NOT NULL default '',
   `active` tinyint(1) unsigned NOT NULL default '1',
   `rrd_path` varchar(255) NOT NULL default '',
-  `rrd_step` smallint(5) unsigned NOT NULL default '300',
+  `polling_interval` mediumint(8) unsigned NOT NULL default '300',
   PRIMARY KEY  (`id`),
   KEY `host_id` (`host_id`),
   KEY `data_template_id` (`data_template_id`)
@@ -422,8 +422,8 @@ CREATE TABLE `data_template` (
   `t_name` tinyint(1) unsigned NOT NULL default '0',
   `t_active` tinyint(1) unsigned NOT NULL default '0',
   `active` tinyint(1) unsigned NOT NULL default '1',
-  `t_rrd_step` tinyint(1) unsigned NOT NULL default '0',
-  `rrd_step` smallint(5) unsigned NOT NULL default '300',
+  `t_polling_interval` tinyint(1) unsigned NOT NULL default '0',
+  `polling_interval` mediumint(8) unsigned NOT NULL default '300',
   PRIMARY KEY  (`id`)
 ) TYPE=MyISAM;
 
@@ -607,9 +607,9 @@ INSERT INTO `data_template_item` VALUES (36, 19, 0, '2000', 0, '0', 0, 600, 0, 1
 
 -- --------------------------------------------------------
 
---
+-- 
 -- Table structure for table `data_template_rra_item`
---
+-- 
 
 CREATE TABLE `data_template_rra_item` (
   `id` mediumint(8) unsigned NOT NULL auto_increment,
@@ -626,11 +626,11 @@ CREATE TABLE `data_template_rra_item` (
   `hw_threshold` tinyint(3) unsigned NOT NULL default '0',
   `hw_window_length` tinyint(3) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`)
-);
+) TYPE=MyISAM;
 
---
+-- 
 -- Dumping data for table `data_template_rra_item`
---
+-- 
 
 
 -- --------------------------------------------------------

@@ -692,7 +692,7 @@ function ds_edit() {
 
 		_data_source_field__name("ds|name", false, (empty($_GET["id"]) ? 0 : $_GET["id"]));
 		$rra_rv = _data_source_field__rra("preset_rra_id", false, (empty($_GET["id"]) ? 0 : $_GET["id"]), api_data_preset_rra_fingerprint_generate($rra_items));
-		_data_source_field__rrd_step("ds|rrd_step", false, (isset($data_source["rrd_step"]) ? $data_source["rrd_step"] : ""), (empty($_GET["id"]) ? 0 : $_GET["id"]));
+		_data_source_field__polling_interval("ds|polling_interval", false, (isset($data_source["polling_interval"]) ? $data_source["polling_interval"] : ""), (empty($_GET["id"]) ? 0 : $_GET["id"]));
 		_data_source_field__active("ds|active", false, (isset($data_source["active"]) ? $data_source["active"] : ""), (empty($_GET["id"]) ? 0 : $_GET["id"]));
 
 		html_end_box(false);

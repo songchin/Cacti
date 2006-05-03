@@ -58,6 +58,7 @@ function update_poller_cache($data_source_id, $truncate_performed = false) {
 
 	require_once(CACTI_BASE_PATH . "/include/data_query/data_query_constants.php");
 	require_once(CACTI_BASE_PATH . "/include/data_source/data_source_constants.php");
+	require_once(CACTI_BASE_PATH . "/lib/data_source/data_source_info.php");
 	require_once(CACTI_BASE_PATH . "/lib/data_query/data_query_info.php");
 	require_once(CACTI_BASE_PATH . "/lib/api_poller.php");
 
@@ -71,7 +72,7 @@ function update_poller_cache($data_source_id, $truncate_performed = false) {
 	}
 
 	/* fetch information about this data source */
-	$data_source = db_fetch_row("select host_id,data_input_type,active,rrd_step from data_source where id = $data_source_id");
+	$data_source = api_data_source_get($data_source_id);
 
 	/* device is marked as disabled */
 	if ((!empty($data_source["host_id"])) && (db_fetch_cell("select disabled from host where id = " . $data_source["host_id"]) == "on")) {
@@ -99,13 +100,13 @@ function update_poller_cache($data_source_id, $truncate_performed = false) {
 
 			$num_output_fields = db_fetch_cell("select count(*) from data_input_fields where data_input_id = " . $field_list["script_id"] . " and input_output = 'out' and update_rra = 1");
 
-			api_poller_cache_item_add($data_source["host_id"], $data_source_id, $data_source["rrd_step"], $action, (($num_output_fields == 1) ? db_fetch_cell("select data_source_name from data_source_item where data_source_id = $data_source_id") : ""), 1, addslashes($script_path));
+			api_poller_cache_item_add($data_source["host_id"], $data_source_id, $data_source["polling_interval"], $action, (($num_output_fields == 1) ? db_fetch_cell("select data_source_name from data_source_item where data_source_id = $data_source_id") : ""), 1, addslashes($script_path));
 		}else if ($data_source["data_input_type"] == DATA_INPUT_TYPE_SNMP) {
 			$data_source_items = db_fetch_assoc("select data_source_name,field_input_value from data_source_item where data_source_id = $data_source_id");
 
 			if (sizeof($data_source_items) > 0) {
 				foreach ($data_source_items as $item) {
-					api_poller_cache_item_add($data_source["host_id"], $data_source_id, $data_source["rrd_step"], POLLER_ACTION_SNMP, $item["data_source_name"], 1, $item["field_input_value"]);
+					api_poller_cache_item_add($data_source["host_id"], $data_source_id, $data_source["polling_interval"], POLLER_ACTION_SNMP, $item["data_source_name"], 1, $item["field_input_value"]);
 				}
 			}
 		}else if (($data_source["data_input_type"] == DATA_INPUT_TYPE_DATA_QUERY) && (isset($field_list["data_query_id"])) && (isset($field_list["data_query_index"]))) {
@@ -122,7 +123,7 @@ function update_poller_cache($data_source_id, $truncate_performed = false) {
 					$data_query_field = api_data_query_field_get_by_name($field_list["data_query_id"], $item["field_input_value"]);
 
 					if ($data_query["input_type"] == DATA_QUERY_INPUT_TYPE_SNMP_QUERY) {
-						api_poller_cache_item_add($data_source["host_id"], $data_source_id, $data_source["rrd_step"], POLLER_ACTION_SNMP, $item["data_source_name"], sizeof($data_source_items), $data_query_field["source"] . "." . $field_list["data_query_index"]);
+						api_poller_cache_item_add($data_source["host_id"], $data_source_id, $data_source["polling_interval"], POLLER_ACTION_SNMP, $item["data_source_name"], sizeof($data_source_items), $data_query_field["source"] . "." . $field_list["data_query_index"]);
 					}else if (($data_query["input_type"] == DATA_QUERY_INPUT_TYPE_SCRIPT_QUERY) || ($data_query["input_type"] == DATA_QUERY_INPUT_TYPE_PHP_SCRIPT_SERVER_QUERY)) {
 						/* fall back to non-script server actions if the user is running a version of php older than 4.3 */
 						if (($data_query["input_type"] == DATA_QUERY_INPUT_TYPE_PHP_SCRIPT_SERVER_QUERY) && (function_exists("proc_open"))) {
@@ -136,7 +137,7 @@ function update_poller_cache($data_source_id, $truncate_performed = false) {
 							$script_path = $data_query["script_path"] . " " . DATA_QUERY_SCRIPT_ARG_GET . " " . $data_query_field["source"] . " " . $field_list["data_query_index"];
 						}
 
-						api_poller_cache_item_add($data_source["host_id"], $data_source_id, $data_source["rrd_step"], $action, $item["data_source_name"], sizeof($data_source_items), addslashes($script_path));
+						api_poller_cache_item_add($data_source["host_id"], $data_source_id, $data_source["polling_interval"], $action, $item["data_source_name"], sizeof($data_source_items), addslashes($script_path));
 					}
 				}
 			}

@@ -59,6 +59,9 @@ function api_data_source_save($data_source_id, &$_fields_data_source, $skip_cach
 			api_data_source_title_cache_update($data_source_id);
 		}
 
+		/* keep the poller cache up to date */
+		update_poller_cache($data_source_id, true);
+
 		return $data_source_id;
 	}else{
 		return false;

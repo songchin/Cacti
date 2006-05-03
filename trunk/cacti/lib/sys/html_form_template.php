@@ -297,9 +297,9 @@ function draw_nontemplated_fields_data_source($data_template_id, &$values_array,
 		_data_source_field__name(str_replace("|field|", "name", $field_name_format), false, 0);
 	}
 
-	if ($data_template["t_rrd_step"] == "1") {
+	if ($data_template["t_polling_interval"] == "1") {
 		$num_draw_fields = template_form_header_precheck($num_draw_fields, "<strong>" . _("Data Source") . "</strong>", ($display_template_name == true ? $data_template["template_name"] : ""));
-		_data_source_field__rrd_step(str_replace("|field|", "rrd_step", $field_name_format), false, $values_array["rrd_step"], 0);
+		_data_source_field__polling_interval(str_replace("|field|", "polling_interval", $field_name_format), false, $values_array["polling_interval"], 0);
 	}
 
 	if ($data_template["t_active"] == "1") {

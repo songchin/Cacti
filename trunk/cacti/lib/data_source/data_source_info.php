@@ -86,6 +86,13 @@ function api_data_source_total_get($filter_array = "") {
 	return db_fetch_cell("select count(*) from data_source $sql_where");
 }
 
+function api_data_source_get($data_source_id) {
+	/* sanity checks */
+	validate_id_die($data_source_id, "data_source_id");
+
+	return db_fetch_row("select * from data_source where id = " . sql_sanitize($data_source_id));
+}
+
 function api_data_source_rra_item_list($data_source_id) {
 	/* sanity checks */
 	validate_id_die($data_source_id, "data_source_id");
@@ -196,6 +203,12 @@ function &api_data_source_type_list() {
 	require(CACTI_BASE_PATH . "/include/data_source/data_source_arrays.php");
 
 	return $data_source_types;
+}
+
+function &api_data_source_polling_interval_list() {
+	require(CACTI_BASE_PATH . "/include/data_source/data_source_arrays.php");
+
+	return $data_source_polling_intervals;
 }
 
 ?>

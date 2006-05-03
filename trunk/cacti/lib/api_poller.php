@@ -22,7 +22,7 @@
  +-------------------------------------------------------------------------+
 */
 
-function api_poller_cache_item_add($host_id, $data_source_id, $rrd_step, $poller_action_id, $data_source_item_name, $num_rrd_items, $arg1 = "", $arg2 = "", $arg3 = "") {
+function api_poller_cache_item_add($host_id, $data_source_id, $polling_interval, $poller_action_id, $data_source_item_name, $num_rrd_items, $arg1 = "", $arg2 = "", $arg3 = "") {
 	global $cnn_id;
 
 	require_once(CACTI_BASE_PATH . "/lib/sys/string.php");
@@ -77,8 +77,8 @@ function api_poller_cache_item_add($host_id, $data_source_id, $rrd_step, $poller
 	$save["rrd_name"] = $data_source_item_name;
 	$save["rrd_path"] = addslashes(clean_up_path(api_data_source_path_get($data_source_id, true)));
 	$save["rrd_num"] = $num_rrd_items;
-	$save["rrd_step"] = $rrd_step;
-	$save["rrd_next_step"] = api_poller_get_rrd_next_step($rrd_step, $num_rrd_items);
+	$save["rrd_step"] = $polling_interval;
+	$save["rrd_next_step"] = api_poller_get_rrd_next_step($polling_interval, $num_rrd_items); // FIX ME
 	$save["arg1"] = $arg1;
 	$save["arg2"] = $arg2;
 	$save["arg3"] = $arg3;

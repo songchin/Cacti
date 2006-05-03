@@ -726,26 +726,24 @@ function _data_source_field__rra($field_name, $template_flag = false, $field_id 
 	return $radio_value;
 }
 
-function _data_source_field__rrd_step($field_name, $template_flag = false, $field_value = "", $field_id = 0, $t_field_name = "", $t_field_value = "") {
+function _data_source_field__polling_interval($field_name, $template_flag = false, $field_value = "", $field_id = 0, $t_field_name = "", $t_field_value = "") {
 	require_once(CACTI_BASE_PATH . "/lib/sys/html_form.php");
+	require_once(CACTI_BASE_PATH . "/lib/data_source/data_source_info.php");
 
 	?>
 	<tr class="<?php echo field_get_row_style();?>">
 		<td class="field-row" width="50%">
-			<span class="textEditTitle"><?php echo _("Step");?></span><br>
+			<span class="textEditTitle"><?php echo _("Polling Interval");?></span><br>
 			<?php
 			if ($template_flag == true) {
 				form_checkbox($t_field_name, $t_field_value, _("Do Not Template this Field"), "", $field_id, "template_checkbox_status(\"$field_name\",\"$t_field_name\")");
 			}else{
-				echo _("The amount of time in seconds between expected updates.");
+				echo _("The frequency at which the poller updates this data source.");
 			}
 			?>
 		</td>
-		<td class="field-row">
-			<?php form_text_box($field_name, $field_value, 300, 10, 20, "text", $field_id);?>
-		</td>
-		<td class="field-row" align="right">
-			<span class="field-required">(required)</span>
+		<td class="field-row" colspan="2">
+			<?php form_dropdown($field_name, api_data_source_polling_interval_list(), "", "", $field_value, "", 1);?>
 		</td>
 	</tr>
 	<?php

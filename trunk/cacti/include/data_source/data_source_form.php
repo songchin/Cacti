@@ -59,7 +59,7 @@ $fields_data_source = array(
 		"validate_empty" => false,
 		"data_type" => DB_TYPE_NUMBER
 		),
-	"rrd_step" => array(
+	"polling_interval" => array(
 		"default" => "300",
 		"validate_regexp" => "^[0-9]+$",
 		"validate_empty" => false,
