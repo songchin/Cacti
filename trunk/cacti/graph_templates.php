@@ -248,7 +248,10 @@ function template_edit() {
 
 		html_start_box("<strong>" . _("Graph Item Inputs") . "</strong>", "98%", $colors["header_background"], "3", "center", "graph_templates_inputs.php?action=edit&graph_template_id=" . $_GET["id"]);
 
-		html_header(array(_("Name")), 2);
+		$display_text = array(
+			"name" => array(_("Name"), "ASC"));
+
+		html_header_sort($display_text, $sort_column, $sort_direction, 2);
 
 		$template_item_list = db_fetch_assoc("select id,name from graph_template_item_input where graph_template_id=" . $_GET["id"] . " order by name");
 
@@ -333,6 +336,20 @@ function template() {
 		$filter_array["template_name"] = get_get_var("search_filter");
 	}
 
+	/* clean up sort_column string */
+	if (isset_get_var("sort_column")) {
+		$filter_array["sort_column"] = get_get_var("sort_column");
+	}else{
+		$filter_array["sort_column"] = "template_name";
+	}
+
+	/* clean up sort_direction string */
+	if (isset_get_var("sort_direction")) {
+		$filter_array["sort_direction"] = get_get_var("sort_direction");
+	}else{
+		$filter_array["sort_direction"] = "ASC";
+	}
+
 	/* get a list of all devices on this page */
 	$graph_templates = api_graph_template_list($filter_array);
 
@@ -340,7 +357,11 @@ function template() {
 
 	$box_id = "1";
 	html_start_box("<strong>" . _("Graph Templates") . "</strong>", "graph_templates.php?action=edit");
-	html_header_checkbox(array(_("Template Title")), $box_id);
+
+	$display_text = array(
+		"template_name" => array(_("Template Name"), "ASC"));
+
+	html_header_sort_checkbox($display_text, $filter_array["sort_column"], $filter_array["sort_direction"], $box_id);
 
 	$i = 0;
 	if (sizeof($graph_templates) > 0) {
