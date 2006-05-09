@@ -230,6 +230,20 @@ function pollers() {
 		$filter_array["filter"] = array("name" => get_get_var("search_filter"), "hostname" => get_get_var("search_filter"));
 	}
 
+	/* clean up sort_column string */
+	if (isset_get_var("sort_column")) {
+		$filter_array["sort_column"] = get_get_var("sort_column");
+	}else{
+		$filter_array["sort_column"] = "name";
+	}
+
+	/* clean up sort_direction string */
+	if (isset_get_var("sort_direction")) {
+		$filter_array["sort_direction"] = get_get_var("sort_direction");
+	}else{
+		$filter_array["sort_direction"] = "ASC";
+	}
+
 	/* get a list of all devices on this page */
 	$pollers = api_poller_list($filter_array, $current_page, read_config_option("num_rows_device"));
 
@@ -244,7 +258,19 @@ function pollers() {
 
 	$box_id = "1";
 	html_start_box("<strong>" . _("Pollers") . "</strong>", "pollers.php?action=edit", $url_page_select);
-	html_header_checkbox(array(_("Name"), _("Hostname"), _("Status"), _("Last Time"), _("Min Time"), _("Max Time"), _("Avg Time"), _("Enabled"), _("Last Run Time")), $box_id);
+
+	$display_text = array(
+		"name"        => array(_("Name"),          "ASC"),
+		"hostname"    => array(_("Hostname"),      "ASC"),
+		"run_state"   => array(_("Status"),        "ASC"),
+		"cur_time"    => array(_("Last Time"),     "DESC"),
+		"min_time"    => array(_("Min Time"),      "DESC"),
+		"max_time"    => array(_("Max Time"),      "DESC"),
+		"avg_time"    => array(_("Avg Time"),      "DESC"),
+		"active"      => array(_("Enabled"),       "ASC"),
+		"last_update" => array(_("Last Run Date"), "ASC"));
+
+	html_header_sort_checkbox($display_text, $filter_array["sort_column"], $filter_array["sort_direction"], $box_id);
 
 	$i = 0;
 
