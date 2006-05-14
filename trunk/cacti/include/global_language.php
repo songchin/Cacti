@@ -42,7 +42,7 @@ if (!function_exists("_")) {
 	require(CACTI_BASE_PATH . "/include/gettext/streams.php");
 	require(CACTI_BASE_PATH . "/include/gettext/gettext.php");
 
-	$locale_path = $config["base_path"] . "/locales/" . $cacti_lang . "/LC_MESSAGES/" . "cacti.mo";
+	$locale_path = CACTI_BASE_PATH . "/locales/" . $cacti_lang . "/LC_MESSAGES/" . "cacti.mo";
 	if ((!file_exists($locale_path)) && ($cacti_lang != "en")) {
 		die("Cacti language locale file not found.  Please locate your language file and then you can continue.");
 	}
