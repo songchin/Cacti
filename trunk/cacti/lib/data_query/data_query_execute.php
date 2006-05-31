@@ -156,7 +156,7 @@ function api_data_query_snmp_execute($host_id, $data_query_id) {
 						$expected_index = $result["value"];
 					/* find the index at the end of the oid */
 					}else{
-						$expected_index = substr($oid, strlen($field["source"]));
+						$expected_index = substr($oid, strlen($field["source"])+1);
 					}
 
 					/* a match for this index has been located */

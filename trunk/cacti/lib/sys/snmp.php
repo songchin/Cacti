@@ -60,9 +60,9 @@ function cacti_snmp_get($hostname, $community, $oid, $version, $v3username, $v3p
 
 		if ($version == "1") {
 			$snmp_value = @snmpget("$hostname:$port", $community, trim($oid), ($timeout * 1000), $retries);
-		} elseif ($version == "2") {
+		}elseif ($version == "2") {
 			$snmp_value = @snmp2_get("$hostname:$port", $community, $oid, ($timeout * 1000), $retries);
-		} else {
+		}else{
 			$snmp_value = @snmp3_get("$hostname:$port", $v3username, snmp_get_v3authpriv($v3privproto), $v3authproto,
 				$v3password, $v3privproto, $v3privpassphrase, trim($oid), ($timeout * 1000), $retries);
 		}
@@ -121,7 +121,9 @@ function cacti_snmp_walk($hostname, $community, $oid, $version, $v3username, $v3
 	$path_snmpbulkwalk = read_config_option("path_snmpbulkwalk");
 
 	if ((snmp_get_method($version) == SNMP_METHOD_PHP) &&
-		(($version == 1) || (strlen(trim($path_snmpbulkwalk)) == 0))) {
+		(($version == 1) ||
+		(version_compare(phpversion(), "5.1") >= 0) ||
+		(!file_exists($path_snmpbulkwalk)))) {
 		/* make sure snmp* is verbose so we can see what types of data
 		we are getting back */
 		snmp_set_quick_print(0);
@@ -169,7 +171,9 @@ function cacti_snmp_walk($hostname, $community, $oid, $version, $v3username, $v3
 			}
 		}
 
-		if ((sizeof($temp_array) == 0) || (substr_count($temp_array[0], "No Such Object"))) {
+		if ((sizeof($temp_array) == 0) ||
+			(substr_count($temp_array[0], "No Such Object")) ||
+			(substr_count($temp_array[0], "No more variables"))) {
 			return array();
 		}
 
@@ -234,16 +238,16 @@ function format_snmp_string($string) {
 function snmp_get_method($version = 1) {
 	if ((function_exists("snmp3_get")) && ($version == 3)) {
 		return SNMP_METHOD_PHP;
-	}elseif ((function_exists("snmpget")) && ($version == 1)) {
+	}else if ((function_exists("snmpget")) && ($version == 1)) {
 		return SNMP_METHOD_PHP;
-	}elseif ((function_exists("snmp2_get")) && ($version == 2)) {
+	}else if ((function_exists("snmp2_get")) && ($version == 2)) {
 		return SNMP_METHOD_PHP;
-	}elseif (($version == 2) && (file_exists(read_config_option("path_snmpget")))) {
+	}else if (($version == 2) && (file_exists(read_config_option("path_snmpget")))) {
 		return SNMP_METHOD_BINARY;
-	}elseif (function_exists("snmpget")) {
+	}else if (function_exists("snmpget")) {
 		/* last resort (hopefully it isn't a 64-bit result) */
 		return SNMP_METHOD_PHP;
-	}elseif (file_exists(read_config_option("path_snmpget"))) {
+	}else if (file_exists(read_config_option("path_snmpget"))) {
 		return SNMP_METHOD_BINARY;
 	}else{
 		/* looks like snmp is broken */
