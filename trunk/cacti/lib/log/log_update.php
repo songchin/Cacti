@@ -112,7 +112,7 @@ function api_log_log($message, $severity = SEV_INFO, $facility = FACIL_WEBUI, $p
 
 
 	/* print output to standard out if required, only for use in command line scripts */
-	if (($output == true) && ($severity >= $syslog_level)) {
+	if (($output == true) && ($severity >= $log_severity)) {
 		print $logdate . " - " . api_log_severity_get($severity) . ": " . api_log_facility_get($facility) . ": " . $message . "\n";
 	}
 
