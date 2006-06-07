@@ -1174,13 +1174,11 @@ INSERT INTO `graph_tree` VALUES (1, 1, 'Default Tree');
 CREATE TABLE `graph_tree_items` (
   `id` smallint(5) unsigned NOT NULL auto_increment,
   `graph_tree_id` smallint(5) unsigned NOT NULL default '0',
-  `local_graph_id` mediumint(8) unsigned NOT NULL default '0',
-  `rra_id` smallint(8) unsigned NOT NULL default '0',
-  `title` varchar(255) default NULL,
-  `host_id` mediumint(8) unsigned NOT NULL default '0',
   `order_key` varchar(100) NOT NULL default '0',
-  `host_grouping_type` tinyint(3) unsigned NOT NULL default '1',
+  `device_grouping_type` tinyint(3) unsigned NOT NULL default '1',
   `sort_children_type` tinyint(3) unsigned NOT NULL default '1',
+  `item_type` tinyint(3) unsigned NOT NULL default '0',
+  `item_value` varchar(255) NOT NULL default '',
   PRIMARY KEY  (`id`),
   KEY `graph_tree_id` (`graph_tree_id`)
 ) TYPE=MyISAM;
@@ -1189,7 +1187,7 @@ CREATE TABLE `graph_tree_items` (
 -- Dumping data for table `graph_tree_items`
 -- 
 
-INSERT INTO `graph_tree_items` VALUES (1, 1, 0, 0, '', 1, '001000000000000000000000000000000000000000000000000000000000000000000000000000000000000000', 1, 1);
+INSERT INTO `graph_tree_items` VALUES (1, 1, '001000000000000000000000000000000000000000000000000000000000000000000000000000000000000000', 1, 1, 3, '1');
 
 -- --------------------------------------------------------
 
