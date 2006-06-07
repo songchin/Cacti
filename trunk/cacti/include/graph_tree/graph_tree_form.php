@@ -22,59 +22,46 @@
  +-------------------------------------------------------------------------+
 */
 
-function validate_id_die($argument_value, $argument_name, $allow_empty = false) {
-	if (!db_number_validate($argument_value, $allow_empty)) {
-		die("Invalid input '$argument_value' for '$argument_name' in " . log_last_function_get() . "()");
-	}
-}
+$fields_graph_tree = array(
+	"name" => array(
+		"default" => "",
+		"validate_regexp" => "",
+		"validate_empty" => false,
+		"data_type" => DB_TYPE_STRING
+		),
+	"sort_type" => array(
+		"default" => "",
+		"validate_regexp" => "^[0-9]+$",
+		"validate_empty" => false,
+		"data_type" => DB_TYPE_NUMBER
+		)
+	);
 
-function db_number_validate($number, $allow_empty = false, $log_errors = true) {
-	$number_str = strval($number);
-
-	/* only allow whole digit numbers */
-	for ($i=0; $i<strlen($number_str); $i++) {
-		if ((ord(substr($number_str, $i, 1)) < 48) || (ord(substr($number_str, $i, 1)) > 57)) {
-			if ($log_errors == true) {
-				api_log_log("Invalid number '$number' in " . api_log_last_function_get() . "()", SEV_WARNING);
-			}
-
-			return false;
-		}
-	}
-
-	if (($allow_empty === false) && (empty($number))) {
-		if ($log_errors == true) {
-			api_log_log("Invalid (empty) number '$number' in " . api_log_last_function_get() . "()", SEV_WARNING);
-		}
-
-		return false;
-	}else{
-		return true;
-	}
-}
-
-function db_order_column_validate($column_name, $log_errors = true) {
-	if (preg_match("/^[a-z_]+$/", $column_name)) {
-		return true;
-	}else{
-		if ($log_errors == true) {
-			api_log_log("Invalid order column name '$column_name' in " . api_log_last_function_get() . "()", SEV_WARNING);
-		}
-
-		return false;
-	}
-}
-
-function db_order_direction_validate($direction, $log_errors = true) {
-	if (($direction == "asc") || ($direction == "desc")) {
-		return true;
-	}else{
-		if ($log_errors == true) {
-			api_log_log("Invalid order direction '$direction' in " . api_log_last_function_get() . "()", SEV_WARNING);
-		}
-
-		return false;
-	}
-}
+$fields_graph_tree_item = array(
+	"device_grouping_type" => array(
+		"default" => "",
+		"validate_regexp" => "^[0-9]+$",
+		"validate_empty" => false,
+		"data_type" => DB_TYPE_NUMBER
+		),
+	"sort_children_type" => array(
+		"default" => "",
+		"validate_regexp" => "^[0-9]+$",
+		"validate_empty" => false,
+		"data_type" => DB_TYPE_NUMBER
+		),
+	"item_type" => array(
+		"default" => "",
+		"validate_regexp" => "",
+		"validate_empty" => false,
+		"data_type" => DB_TYPE_NUMBER
+		),
+	"item_value" => array(
+		"default" => "",
+		"validate_regexp" => "^[0-9]+$",
+		"validate_empty" => false,
+		"data_type" => DB_TYPE_STRING
+		)
+	);
 
 ?>

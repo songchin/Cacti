@@ -55,8 +55,8 @@ function register_field_errors($error_fields) {
    @arg $custom_message - (int) the ID of the message to raise upon an error which is defined in the
      $messages array in 'include/global_arrays.php'
    @returns - the original $field_value */
-function form_input_validate($field_value, $field_name, $regexp_match, $allow_nulls, $custom_message = 0) {
-	if (($allow_nulls == true) && ($field_value == "")) {
+function form_input_validate($field_value, $field_name, $regexp_match, $allow_empty, $custom_message = 0) {
+	if (($allow_empty == true) && ($field_value == "")) {
 		if ($custom_message == 3) {
 			return $field_value;
 		}else{
@@ -67,10 +67,12 @@ function form_input_validate($field_value, $field_name, $regexp_match, $allow_nu
 	/* php 4.2+ complains about empty regexps */
 	if (empty($regexp_match)) { $regexp_match = ".*"; }
 
-	if ((!ereg($regexp_match, $field_value) || (($allow_nulls == false) && ($field_value == "")))) {
+	if ((!ereg($regexp_match, $field_value) || (($allow_empty == false) && ($field_value == "")))) {
 		if ($custom_message == 3) {
 			return $field_value;
 		}else{
+			api_log_log("Field validation error occured for field '$field_name' value '$field_value' pattern '$regexp_match' allow empty '" . ($allow_empty == false ? "no" : "yes") . "' in ". __FUNCTION__ . "()", SEV_NOTICE);
+
 			return false;
 		}
 	}else{

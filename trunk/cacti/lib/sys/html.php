@@ -313,14 +313,14 @@ function html_header($header_items, $last_item_colspan = 1) {
 	suitable for display inside of a box element
    @arg $header_items - an array containing a list of items to be included in the header
    @arg $form_action - the url to post the 'select all' form to */
-function html_header_checkbox($header_items, $box_id) {
+function html_header_checkbox($header_items, $box_id, $form_id = "0") {
 	echo "<tr>\n";
 
 	for ($i=0; $i<count($header_items); $i++) {
 		echo "<td class='content-header-sub'>" . $header_items[$i] . "</td>\n";
 	}
 
-	echo "<td width='1%' align='center' bgcolor='#819bc0' style='" . get_checkbox_style() . "'><input type='checkbox' style='margin: 0px;' name='box-$box_id-allchk' id='box-$box_id-allchk' title='" . _("Select All") . "' onClick='display_row_select_all(\"$box_id\",document.forms[0])'></td>\n";
+	echo "<td width='1%' align='center' bgcolor='#819bc0' style='" . get_checkbox_style() . "'><input type='checkbox' style='margin: 0px;' name='box-$box_id-allchk' id='box-$box_id-allchk' title='" . _("Select All") . "' onClick='display_row_select_all(\"$box_id\",document.forms[$form_id])'></td>\n";
 	echo "</tr>\n";
 }
 
@@ -685,29 +685,29 @@ function draw_navigation_text() {
 			"mapping" => "index.php:,graphs_new.php:",
 			"level" => "2"
 			),
-		"tree.php:" => array(
+		"graph_trees.php:" => array(
 			"title" => _("Graph Trees"),
 			"mapping" => "index.php:",
 			"level" => "1"
 			),
-		"tree.php:edit" => array(
+		"graph_trees.php:edit" => array(
 			"title" => _("(Edit)"),
-			"mapping" => "index.php:,tree.php:",
+			"mapping" => "index.php:,graph_trees.php:",
 			"level" => "2"
 			),
-		"tree.php:remove" => array(
+		"graph_trees.php:remove" => array(
 			"title" => _("(Remove)"),
-			"mapping" => "index.php:,tree.php:",
+			"mapping" => "index.php:,graph_trees.php:",
 			"level" => "2"
 			),
-		"tree.php:item_edit" => array(
+		"graph_trees.php:item_edit" => array(
 			"title" => _("Graph Tree Items"),
-			"mapping" => "index.php:,tree.php:,tree.php:edit",
+			"mapping" => "index.php:,graph_trees.php:,graph_trees.php:edit",
 			"level" => "3"
 			),
-		"tree.php:item_remove" => array(
+		"graph_trees.php:item_remove" => array(
 			"title" => _("(Remove Item)"),
-			"mapping" => "index.php:,tree.php:,tree.php:edit",
+			"mapping" => "index.php:,graph_trees.php:,graph_trees.php:edit",
 			"level" => "3"
 			),
 		"graph_templates.php:" => array(

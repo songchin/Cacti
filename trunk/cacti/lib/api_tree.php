@@ -25,21 +25,21 @@
 function api_tree_item_save($id, $tree_id, $type, $parent_tree_item_id, $title, $local_graph_id, $rra_id,
 	$host_id, $host_grouping_type, $sort_children_type, $propagate_changes) {
 
-	require_once(CACTI_BASE_PATH . "/lib/sys/tree.php");
+	require_once(CACTI_BASE_PATH . "/lib/graph_tree/graph_tree_utility.php");
 
 	$parent_order_key = db_fetch_cell("select order_key from graph_tree_items where id=$parent_tree_item_id");
 
 	/* fetch some cache variables */
 	if (empty($id)) {
 		/* new/save - generate new order key */
-		$order_key = get_next_tree_id($parent_order_key, "graph_tree_items", "order_key", "graph_tree_id=$tree_id");
+		$order_key = api_graph_tree_item_available_order_key_get($parent_order_key, "graph_tree_items", "order_key", "graph_tree_id=$tree_id");
 	}else{
 		/* edit/save - use old order_key */
 		$order_key = db_fetch_cell("select order_key from graph_tree_items where id=$id");
 	}
 
 	/* duplicate graph check */
-	$search_key = substr($parent_order_key, 0, (tree_tier($parent_order_key) * CHARS_PER_TIER));
+	$search_key = substr($parent_order_key, 0, (api_graph_tree_item_depth_get($parent_order_key) * CHARS_PER_TIER));
 	if (($type == TREE_ITEM_TYPE_GRAPH) && (sizeof(db_fetch_assoc("select id from graph_tree_items where local_graph_id='$local_graph_id' and graph_tree_id='$tree_id' and order_key like '$search_key" . str_repeat('_', CHARS_PER_TIER) . str_repeat('0', (MAX_TREE_DEPTH * CHARS_PER_TIER) - (strlen($search_key) + CHARS_PER_TIER)) . "'")) > 0)) {
 		return 0;
 	}
@@ -64,7 +64,7 @@ function api_tree_item_save($id, $tree_id, $type, $parent_tree_item_id, $title, 
 
 			/* re-parent the branch if the parent item has changed */
 			if ($parent_tree_item_id != $tree_item_id) {
-				reparent_branch($parent_tree_item_id, $tree_item_id);
+				reparent_branch($tree_item_id, $parent_tree_item_id);
 			}
 
 			$tree_sort_type = db_fetch_cell("select sort_type from graph_tree where id='$tree_id'");
@@ -84,7 +84,7 @@ function api_tree_item_save($id, $tree_id, $type, $parent_tree_item_id, $title, 
 			/* tree ordering */
 			}else{
 				/* potential speed savings for large trees */
-				if (tree_tier($save["order_key"]) == 1) {
+				if (api_graph_tree_item_depth_get($save["order_key"]) == 1) {
 					sort_tree(SORT_TYPE_TREE, $tree_id, $tree_sort_type);
 				}else{
 					sort_tree(SORT_TYPE_TREE_ITEM, $parent_tree_item_id, $tree_sort_type);

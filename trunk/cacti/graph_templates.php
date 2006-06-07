@@ -35,7 +35,7 @@ require_once(CACTI_BASE_PATH . "/include/graph/graph_arrays.php");
 require_once(CACTI_BASE_PATH . "/include/graph/graph_form.php");
 require_once(CACTI_BASE_PATH . "/lib/utility.php");
 require_once(CACTI_BASE_PATH . "/lib/template.php");
-require_once(CACTI_BASE_PATH . "/lib/sys/tree.php");
+require_once(CACTI_BASE_PATH . "/lib/graph_tree/graph_tree_utility.php");
 require_once(CACTI_BASE_PATH . "/lib/sys/html_tree.php");
 
 /* set default action */

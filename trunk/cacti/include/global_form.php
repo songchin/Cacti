@@ -419,32 +419,6 @@ $fields_host_template_edit = array(
 		)
 	);
 
-/* file: tree.php, action: edit */
-$fields_tree_edit = array(
-	"name" => array(
-		"method" => "textbox",
-		"friendly_name" => _("Name"),
-		"description" => _("A useful name for this graph tree."),
-		"value" => "|arg1:name|",
-		"max_length" => "255",
-		),
-	"sort_type" => array(
-		"method" => "drop_array",
-		"friendly_name" => _("Sorting Type"),
-		"description" => _("Choose how items in this tree will be sorted."),
-		"value" => "|arg1:sort_type|",
-		"array" => $tree_sort_types,
-		),
-	"id" => array(
-		"method" => "hidden_zero",
-		"value" => "|arg1:id|"
-		),
-	"save_component_tree" => array(
-		"method" => "hidden",
-		"value" => "1"
-		)
-	);
-
 /* file: user_admin.php, action: user_edit (host) */
 
 $user_themes = $themes;

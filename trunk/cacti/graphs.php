@@ -399,7 +399,7 @@ function form_actions() {
 					<p>" . _("When you click save, the following graphs will be placed under the branch selected
 					below.") . "</p>
 					<p>$graph_list</p>
-					<p><strong>" . _("Destination Branch:") . "</strong><br>"; grow_dropdown_tree($matches[1], "tree_item_id", "0"); print "</p>
+					<p><strong>" . _("Destination Branch:") . "</strong><br>"; html_tree_dropdown_draw($matches[1], "tree_item_id", "0"); print "</p>
 				</td>
 			</tr>\n
 			<input type='hidden' name='tree_id' value='" . $matches[1] . "'>\n

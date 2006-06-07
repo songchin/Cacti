@@ -22,17 +22,6 @@
  +-------------------------------------------------------------------------+
 */
 
-define("HOST_GROUPING_GRAPH_TEMPLATE", 1);
-define("HOST_GROUPING_DATA_QUERY_INDEX", 2);
-
-define("TREE_ORDERING_NONE", 1);
-define("TREE_ORDERING_ALPHABETIC", 2);
-define("TREE_ORDERING_NUMERIC", 3);
-
-define("TREE_ITEM_TYPE_HEADER", 1);
-define("TREE_ITEM_TYPE_GRAPH", 2);
-define("TREE_ITEM_TYPE_HOST", 3);
-
 define("RRDTOOL_PIPE_CHILD_READ", 0);
 define("RRDTOOL_PIPE_CHILD_WRITE", 1);
 define("RRDTOOL_PIPE_STDERR_WRITE", 2);

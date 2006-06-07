@@ -22,34 +22,36 @@
  +-------------------------------------------------------------------------+
 */
 
-function grow_graph_tree($tree_id, $start_branch, $user_id, $options) {
+function grow_graph_tree($graph_tree_id, $start_branch, $user_id, $options) {
 	global $colors, $current_user;
 
 	require_once(CACTI_BASE_PATH . "/lib/sys/auth.php");
-	require_once(CACTI_BASE_PATH . "/lib/sys/tree.php");
+	require_once(CACTI_BASE_PATH . "/include/graph_tree/graph_tree_constants.php");
+	require_once(CACTI_BASE_PATH . "/lib/graph_tree/graph_tree_info.php");
+	require_once(CACTI_BASE_PATH . "/lib/graph_tree/graph_tree_utility.php");
 
 	$search_key = "";
 	$already_open = false;
-	$hide_until_tier = false;
+	$hide_until_depth = false;
 	$graph_ct = 0;
 	$sql_where = "";
 	$sql_join = "";
 
 	/* get the "starting leaf" if the user clicked on a specific branch */
 	if (($start_branch != "") && ($start_branch != "0")) {
-		$order_key = db_fetch_cell("select order_key from graph_tree_items where id=$start_branch");
+		$graph_tree = api_graph_tree_get($start_branch);
 
-		$search_key = substr($order_key, 0, (tree_tier($order_key) * CHARS_PER_TIER));
+		$search_key = substr($graph_tree["order_key"], 0, (api_graph_tree_item_depth_get($graph_tree["order_key"]) * CHARS_PER_TIER));
 	}
 
 	/* graph permissions */
 	if (read_config_option("auth_method") != "0") {
 		/* get policy information for the sql where clause */
-		$sql_where = get_graph_permissions_sql($current_user["policy_graphs"], $current_user["policy_hosts"], $current_user["policy_graph_templates"]);
-		$sql_where = (empty($sql_where) ? "" : "and (" . $sql_where . " OR graph_tree_items.local_graph_id=0)");
-		$sql_join = "left join graph_local on (graph_templates_graph.local_graph_id=graph_local.id)
-			left join graph_templates on (graph_templates.id=graph_local.graph_template_id)
-			left join user_auth_perms on ((graph_templates_graph.local_graph_id=user_auth_perms.item_id and user_auth_perms.type=1 and user_auth_perms.user_id=" . $_SESSION["sess_user_id"] . ") OR (host.id=user_auth_perms.item_id and user_auth_perms.type=3 and user_auth_perms.user_id=" . $_SESSION["sess_user_id"] . ") OR (graph_templates.id=user_auth_perms.item_id and user_auth_perms.type=4 and user_auth_perms.user_id=" . $_SESSION["sess_user_id"] . "))";
+		//$sql_where = get_graph_permissions_sql($current_user["policy_graphs"], $current_user["policy_hosts"], $current_user["policy_graph_templates"]);
+		//$sql_where = (empty($sql_where) ? "" : "and (" . $sql_where . " OR graph_tree_items.local_graph_id=0)");
+		//$sql_join = "left join graph_local on (graph_templates_graph.local_graph_id=graph_local.id)
+		//	left join graph_templates on (graph_templates.id=graph_local.graph_template_id)
+		//	left join user_auth_perms on ((graph_templates_graph.local_graph_id=user_auth_perms.item_id and user_auth_perms.type=1 and user_auth_perms.user_id=" . $_SESSION["sess_user_id"] . ") OR (host.id=user_auth_perms.item_id and user_auth_perms.type=3 and user_auth_perms.user_id=" . $_SESSION["sess_user_id"] . ") OR (graph_templates.id=user_auth_perms.item_id and user_auth_perms.type=4 and user_auth_perms.user_id=" . $_SESSION["sess_user_id"] . "))";
 	}
 
 	/* include time span selector */
@@ -60,6 +62,10 @@ function grow_graph_tree($tree_id, $start_branch, $user_id, $options) {
 		print "<br>";
 	}
 
+	/* NOTE: GRAPH PERMISSIONS HAVE NOT BEEN IMPLEMENTED */
+	$graph_tree_items = api_graph_tree_item_list($graph_tree_id, "", $start_branch, true, true);
+
+	/*
 	$heirarchy = db_fetch_assoc("select
 		graph_tree_items.id,
 		graph_tree_items.title,
@@ -79,8 +85,7 @@ function grow_graph_tree($tree_id, $start_branch, $user_id, $options) {
 		and graph_tree_items.order_key like '$search_key%'
 		$sql_where
 		order by graph_tree_items.order_key");
-
-	print "<!-- <P>Building Heirarchy w/ " . sizeof($heirarchy) . " leaves</P>  -->\n";
+	*/
 
 	html_graph_start_box(0, true);
 
@@ -89,29 +94,29 @@ function grow_graph_tree($tree_id, $start_branch, $user_id, $options) {
 	$i = 0;
 
 	/* loop through each tree item */
-	if (sizeof($heirarchy) > 0) {
-		foreach ($heirarchy as $leaf) {
+	if (sizeof($graph_tree_items) > 0) {
+		foreach ($graph_tree_items as $graph_tree_item) {
 			/* find out how 'deep' this item is */
-			$tier = tree_tier($leaf["order_key"]);
+			$current_depth = api_graph_tree_item_depth_get($graph_tree_item["order_key"]);
 
 			/* find the type of the current branch */
-			if ($leaf["title"] != "") { $current_leaf_type = "heading"; }elseif (!empty($leaf["local_graph_id"])) { $current_leaf_type = "graph"; }else{ $current_leaf_type = "host"; }
+			//if ($leaf["title"] != "") { $current_leaf_type = "heading"; }elseif (!empty($leaf["local_graph_id"])) { $current_leaf_type = "graph"; }else{ $current_leaf_type = "host"; }
 
 			/* find the type of the next branch. make sure the next item exists first */
-			if (isset($heirarchy{$i+1})) {
-				if ($heirarchy{$i+1}["title"] != "") { $next_leaf_type = "heading"; }elseif (!empty($heirarchy{$i+1}["local_graph_id"])) { $next_leaf_type = "graph"; }else{ $next_leaf_type = "host"; }
+			if (isset($graph_tree_items{$i+1})) {
+				$next_leaf_type = $graph_tree_items{$i+1}["item_type"];
 			}else{
 				$next_leaf_type = "";
 			}
 
-			if ((($current_leaf_type == 'heading') || ($current_leaf_type == 'host')) && (($tier <= $hide_until_tier) || ($hide_until_tier == false))) {
-				$current_title = (($current_leaf_type == "heading") ? $leaf["title"] : $leaf["hostname"]);
+			if ((($current_leaf_type == TREE_ITEM_TYPE_HEADER) || ($current_leaf_type == TREE_ITEM_TYPE_HOST)) && (($current_depth <= $hide_until_depth) || ($hide_until_depth == false))) {
+				$current_title = (($current_leaf_type == TREE_ITEM_TYPE_HEADER) ? $graph_tree_item["item_value"] : $graph_tree_item["host_hostname"]);
 
 				/* draw heading */
-				draw_tree_header_row($tree_id, $leaf["id"], $tier, $current_title, true, $leaf["status"], true);
+				draw_tree_header_row($graph_tree_id, $graph_tree_item["id"], $current_depth, $current_title, true, "0", true);
 
 				/* this is an open host, lets expand a bit */
-				if (($current_leaf_type == "host") && (empty($leaf["status"]))) {
+				if ($current_leaf_type == TREE_ITEM_TYPE_HOST) {
 					/* get a list of all graph templates in use by this host */
 					$graph_templates = db_fetch_assoc("select
 						graph_templates.id,
@@ -182,108 +187,37 @@ function grow_graph_tree($tree_id, $start_branch, $user_id, $options) {
 	html_graph_end_box();
 }
 
-function grow_edit_graph_tree($tree_id, $user_id, $options) {
-	global $colors;
+function html_tree_dropdown_draw($graph_tree_id, $field_name, $field_value) {
+	require_once(CACTI_BASE_PATH . "/include/graph_tree/graph_tree_constants.php");
+	require_once(CACTI_BASE_PATH . "/lib/graph_tree/graph_tree_utility.php");
+	require_once(CACTI_BASE_PATH . "/lib/graph_tree/graph_tree_info.php");
 
-	require_once(CACTI_BASE_PATH . "/lib/sys/tree.php");
+	$tree_items = api_graph_tree_item_list($graph_tree_id, array("item_type" => TREE_ITEM_TYPE_HEADER));
 
-	$tree_sorting_type = db_fetch_cell("select sort_type from graph_tree where id='$tree_id'");
+	echo "<select name='$field_name'>\n<option value='0'>[root]</option>\n";
 
-	$tree = db_fetch_assoc("select
-		graph_tree_items.id,
-		graph_tree_items.title,
-		graph_tree_items.local_graph_id,
-		graph_tree_items.host_id,
-		graph_tree_items.order_key,
-		graph_tree_items.sort_children_type,
-		graph_templates_graph.title_cache as graph_title,
-		CONCAT_WS('',description,' (',hostname,')') as hostname
-		from graph_tree_items
-		left join graph_templates_graph on (graph_tree_items.local_graph_id=graph_templates_graph.local_graph_id and graph_tree_items.local_graph_id>0)
-		left join host on (host.id=graph_tree_items.host_id)
-		where graph_tree_items.graph_tree_id=$tree_id
-		order by graph_tree_items.order_key");
+	if ((is_array($tree_items)) && (sizeof($tree_items) > 0)) {
+		foreach ($tree_items as $tree_item) {
+			$current_depth = api_graph_tree_item_depth_get($tree_item["order_key"]);
+			$indent = str_repeat("---", ($current_depth));
 
-	print "<!-- <P>Building Heirarchy w/ " . sizeof($tree) . " leaves</P>  -->\n";
-
-	##  Here we go.  Starting the main tree drawing loop.
-
-	$i = 0;
-	if (sizeof($tree) > 0) {
-		foreach ($tree as $leaf) {
-			$tier = tree_tier($leaf["order_key"]);
-			$transparent_indent = "<img width='" . (($tier-1) * 20) . "' height='1' align='middle' alt=''>&nbsp;";
-			$sort_cache[$tier] = $leaf["sort_children_type"];
-
-			if ($i % 2 == 0) { $row_color = $colors["form_alternate1"]; }else{ $row_color = $colors["form_alternate2"]; } $i++;
-
-			if ($leaf["local_graph_id"] > 0) {
-				print "<td bgcolor='#$row_color' bgcolor='#" . $colors["panel"] . "'>$transparent_indent<a href='tree.php?action=item_edit&tree_id=" . $_GET["id"] . "&id=" . $leaf["id"] . "'>" . $leaf["graph_title"] . "</a></td>\n";
-				print "<td bgcolor='#$row_color' bgcolor='#" . $colors["panel"] . "'>Graph</td>";
-			}elseif ($leaf["title"] != "") {
-				print "<td bgcolor='#$row_color' bgcolor='#" . $colors["panel"] . "'>$transparent_indent<a href='tree.php?action=item_edit&tree_id=" . $_GET["id"] . "&id=" . $leaf["id"] . "'><strong>" . $leaf["title"] . "</strong></a> (<a href='tree.php?action=item_edit&tree_id=" . $_GET["id"] . "&parent_id=" . $leaf["id"] . "'>Add</a>)</td>\n";
-				print "<td bgcolor='#$row_color' bgcolor='#" . $colors["panel"] . "'>Heading</td>";
-			}elseif ($leaf["host_id"] > 0) {
-				print "<td bgcolor='#$row_color' bgcolor='#" . $colors["panel"] . "'>$transparent_indent<a href='tree.php?action=item_edit&tree_id=" . $_GET["id"] . "&id=" . $leaf["id"] . "'><strong>Device:</strong> " . $leaf["hostname"] . "</a></td>\n";
-				print "<td bgcolor='#$row_color' bgcolor='#" . $colors["panel"] . "'>Device</td>";
-			}
-
-			if ( ((isset($sort_cache{$tier-1})) && ($sort_cache{$tier-1} != TREE_ORDERING_NONE)) || ($tree_sorting_type != TREE_ORDERING_NONE) )  {
-				print "<td bgcolor='#$row_color' width='80'></td>\n";
-			}else{
-				print 	"<td bgcolor='#$row_color' width='80' align='center'>\n
-					<a href='tree.php?action=item_movedown&id=" . $leaf["id"] . "&tree_id=" . $_GET["id"] . "'><img src='images/move_down.gif' border='0' alt='Move Down'></a>\n
-					<a href='tree.php?action=item_moveup&id=" . $leaf["id"] . "&tree_id=" . $_GET["id"] . "'><img src='images/move_up.gif' border='0' alt='Move Up'></a>\n
-					</td>\n";
-			}
-
-			print 	"<td bgcolor='#$row_color' align='right'>\n
-				<a href='tree.php?action=item_remove&id=" . $leaf["id"] . "&tree_id=$tree_id'><img src='images/delete_icon.gif' width='10' height='10' border='0' alt='Delete'></a>\n
-				</td></tr>\n";
-		}
-	}else{ print "<tr><td><em>No Graph Tree Items</em></td></tr>";
-	}
-}
-
-function grow_dropdown_tree($tree_id, $form_name, $selected_tree_item_id) {
-	global $colors;
-
-	require_once(CACTI_BASE_PATH . "/lib/sys/tree.php");
-
-	$tree = db_fetch_assoc("select
-		graph_tree_items.id,
-		graph_tree_items.title,
-		graph_tree_items.order_key
-		from graph_tree_items
-		where graph_tree_items.graph_tree_id=$tree_id
-		and graph_tree_items.title != ''
-		order by graph_tree_items.order_key");
-
-	print "<select name='$form_name'>\n";
-	print "<option value='0'>[root]</option>\n";
-
-	if (sizeof($tree) > 0) {
-		foreach ($tree as $leaf) {
-			$tier = tree_tier($leaf["order_key"]);
-			$indent = str_repeat("---", ($tier));
-
-			if ($selected_tree_item_id == $leaf["id"]) {
+			if ($field_value == $tree_item["id"]) {
 				$html_selected = " selected";
 			}else{
 				$html_selected = "";
 			}
 
-			print "<option value='" . $leaf["id"] . "'$html_selected>$indent " . $leaf["title"] . "</option>\n";
+			echo "<option value='" . $tree_item["id"] . "'$html_selected>$indent " . $tree_item["item_value"] . "</option>\n";
 		}
 	}
 
-	print "</select>\n";
+	echo "</select>\n";
 }
 
 function grow_dhtml_trees() {
 	global $colors;
 
-	require_once(CACTI_BASE_PATH . "/lib/sys/tree.php");
+	require_once(CACTI_BASE_PATH . "/lib/graph_tree/graph_tree_utility.php");
 
 	?>
 	<script type="text/javascript">
@@ -327,7 +261,7 @@ function grow_dhtml_trees() {
 }
 
 function create_dhtml_tree() {
-	require_once(CACTI_BASE_PATH . "/lib/sys/tree.php");
+	require_once(CACTI_BASE_PATH . "/lib/graph_tree/graph_tree_utility.php");
 	require_once(CACTI_BASE_PATH . "/lib/data_query/data_query_info.php");
 
 	/* Record Start Time */
@@ -382,7 +316,7 @@ function create_dhtml_tree() {
 			if (sizeof($heirarchy) > 0) {
 				foreach ($heirarchy as $leaf) {
 					$i++;
-					$tier = tree_tier($leaf["order_key"]);
+					$tier = api_graph_tree_item_depth_get($leaf["order_key"]);
 
 					if ($leaf["host_id"] > 0) {
 						$dhtml_tree[$i] = "ou" . ($tier) . " = insFld(ou" . ($tier-1) . ", gFld(\"<strong>Device:</strong> " . addslashes($leaf["hostname"]) . "\", \"graph_view.php?action=tree&tree_id=" . $tree["id"] . "&leaf_id=" . $leaf["id"] . "\"))\n";
@@ -450,7 +384,7 @@ function grow_right_pane_tree($tree_id, $leaf_id, $host_group_data) {
 	global $current_user, $colors;
 
 	require_once(CACTI_BASE_PATH . "/lib/data_query/data_query_info.php");
-	require_once(CACTI_BASE_PATH . "/lib/sys/tree.php");
+	require_once(CACTI_BASE_PATH . "/lib/graph_tree/graph_tree_utility.php");
 
 	if (empty($tree_id)) { return; }
 
@@ -465,7 +399,7 @@ function grow_right_pane_tree($tree_id, $leaf_id, $host_group_data) {
 
 	/* get the "starting leaf" if the user clicked on a specific branch */
 	if (!empty($leaf_id)) {
-		$search_key = substr($leaf["order_key"], 0, (tree_tier($leaf["order_key"]) * CHARS_PER_TIER));
+		$search_key = substr($leaf["order_key"], 0, (api_graph_tree_item_depth_get($leaf["order_key"]) * CHARS_PER_TIER));
 	}
 
 	/* graph permissions */

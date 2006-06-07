@@ -22,59 +22,23 @@
  +-------------------------------------------------------------------------+
 */
 
-function validate_id_die($argument_value, $argument_name, $allow_empty = false) {
-	if (!db_number_validate($argument_value, $allow_empty)) {
-		die("Invalid input '$argument_value' for '$argument_name' in " . log_last_function_get() . "()");
-	}
-}
+require_once(CACTI_BASE_PATH . "/include/graph_tree/graph_tree_constants.php");
 
-function db_number_validate($number, $allow_empty = false, $log_errors = true) {
-	$number_str = strval($number);
+$graph_tree_sort_types = array(
+	TREE_ORDERING_NONE => _("Manual Ordering (No Sorting)"),
+	TREE_ORDERING_ALPHABETIC => _("Alphabetic Ordering"),
+	TREE_ORDERING_NUMERIC => _("Numeric Ordering")
+	);
 
-	/* only allow whole digit numbers */
-	for ($i=0; $i<strlen($number_str); $i++) {
-		if ((ord(substr($number_str, $i, 1)) < 48) || (ord(substr($number_str, $i, 1)) > 57)) {
-			if ($log_errors == true) {
-				api_log_log("Invalid number '$number' in " . api_log_last_function_get() . "()", SEV_WARNING);
-			}
+$graph_tree_item_types = array(
+	TREE_ITEM_TYPE_HEADER => "Header",
+	TREE_ITEM_TYPE_GRAPH => "Graph",
+	TREE_ITEM_TYPE_HOST => "Host"
+	);
 
-			return false;
-		}
-	}
-
-	if (($allow_empty === false) && (empty($number))) {
-		if ($log_errors == true) {
-			api_log_log("Invalid (empty) number '$number' in " . api_log_last_function_get() . "()", SEV_WARNING);
-		}
-
-		return false;
-	}else{
-		return true;
-	}
-}
-
-function db_order_column_validate($column_name, $log_errors = true) {
-	if (preg_match("/^[a-z_]+$/", $column_name)) {
-		return true;
-	}else{
-		if ($log_errors == true) {
-			api_log_log("Invalid order column name '$column_name' in " . api_log_last_function_get() . "()", SEV_WARNING);
-		}
-
-		return false;
-	}
-}
-
-function db_order_direction_validate($direction, $log_errors = true) {
-	if (($direction == "asc") || ($direction == "desc")) {
-		return true;
-	}else{
-		if ($log_errors == true) {
-			api_log_log("Invalid order direction '$direction' in " . api_log_last_function_get() . "()", SEV_WARNING);
-		}
-
-		return false;
-	}
-}
+$graph_tree_item_device_grouping_types = array(
+	TREE_DEVICE_GROUPING_GRAPH_TEMPLATE => "Graph Template",
+	TREE_DEVICE_GROUPING_DATA_QUERY_INDEX => "Data Query Index"
+	);
 
 ?>

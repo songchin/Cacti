@@ -411,3 +411,7 @@ function get_browser_height() {
 		return window.innerHeight;
 	}
 }
+
+function strip_html_tags(string) {
+	return string.replace(/(<([^>]+)>)/ig, "");
+}

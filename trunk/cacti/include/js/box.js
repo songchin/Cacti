@@ -350,7 +350,7 @@ function action_area_update_selected_rows(box_id, parent_form) {
 		for (var i = 0; i < parent_form.elements.length; i++) {
 			if ((parent_form.elements[i].name.substr(0, box_id.length + 8) == 'box-' + box_id + '-chk') && (parent_form.elements[i].checked == true)) {
 				_elm_list_item = document.createElement('li');
-				_txt_list_text = document.createTextNode(document.getElementById('box-' + box_id + '-text' + parent_form.elements[i].name.substr(box_id.length + 8)).innerHTML);
+				_txt_list_text = document.createTextNode(strip_html_tags(document.getElementById('box-' + box_id + '-text' + parent_form.elements[i].name.substr(box_id.length + 8)).innerHTML));
 
 				_elm_list_item.appendChild(_txt_list_text);
 				_elm_selected_rows[box_id].appendChild(_elm_list_item);

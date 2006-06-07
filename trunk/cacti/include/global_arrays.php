@@ -225,12 +225,6 @@ $cdef_item_types = array(
 	6 => _("Custom String")
 	);
 
-$tree_sort_types = array(
-	TREE_ORDERING_NONE => _("Manual Ordering (No Sorting)"),
-	TREE_ORDERING_ALPHABETIC => _("Alphabetic Ordering"),
-	TREE_ORDERING_NUMERIC => _("Numeric Ordering")
-	);
-
 $custom_data_source_types = array(
 	"CURRENT_DATA_SOURCE" => _("Current Graph Item Data Source"),
 	"ALL_DATA_SOURCES_NODUPS" => _("All Data Sources (Don't Include Duplicates)"),
@@ -246,7 +240,7 @@ $menu = array(
 		"graphs_new.php" => _("New Graphs")
 		),
 	_("Management") => array(
-		"tree.php" => _("Trees"),
+		"graph_trees.php" => _("Trees"),
 		"graphs.php" => _("Graphs"),
 		"devices.php" => _("Devices"),
 		"data_sources.php" => _("Data Sources")
@@ -332,7 +326,7 @@ $user_auth_realm_filenames = array(
 	"settings.php" => 15,
 	"data_queries.php" => 13,
 	"packages.php" => 17,
-	"tree.php" => 4,
+	"graph_trees.php" => 4,
 	"user_admin.php" => 1,
 	"utilities.php" => 15,
 	"smtp_servers.php" => 8,

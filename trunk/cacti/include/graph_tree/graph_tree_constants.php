@@ -22,59 +22,15 @@
  +-------------------------------------------------------------------------+
 */
 
-function validate_id_die($argument_value, $argument_name, $allow_empty = false) {
-	if (!db_number_validate($argument_value, $allow_empty)) {
-		die("Invalid input '$argument_value' for '$argument_name' in " . log_last_function_get() . "()");
-	}
-}
+define("TREE_ORDERING_NONE", 1);
+define("TREE_ORDERING_ALPHABETIC", 2);
+define("TREE_ORDERING_NUMERIC", 3);
 
-function db_number_validate($number, $allow_empty = false, $log_errors = true) {
-	$number_str = strval($number);
+define("TREE_DEVICE_GROUPING_GRAPH_TEMPLATE", 1);
+define("TREE_DEVICE_GROUPING_DATA_QUERY_INDEX", 2);
 
-	/* only allow whole digit numbers */
-	for ($i=0; $i<strlen($number_str); $i++) {
-		if ((ord(substr($number_str, $i, 1)) < 48) || (ord(substr($number_str, $i, 1)) > 57)) {
-			if ($log_errors == true) {
-				api_log_log("Invalid number '$number' in " . api_log_last_function_get() . "()", SEV_WARNING);
-			}
-
-			return false;
-		}
-	}
-
-	if (($allow_empty === false) && (empty($number))) {
-		if ($log_errors == true) {
-			api_log_log("Invalid (empty) number '$number' in " . api_log_last_function_get() . "()", SEV_WARNING);
-		}
-
-		return false;
-	}else{
-		return true;
-	}
-}
-
-function db_order_column_validate($column_name, $log_errors = true) {
-	if (preg_match("/^[a-z_]+$/", $column_name)) {
-		return true;
-	}else{
-		if ($log_errors == true) {
-			api_log_log("Invalid order column name '$column_name' in " . api_log_last_function_get() . "()", SEV_WARNING);
-		}
-
-		return false;
-	}
-}
-
-function db_order_direction_validate($direction, $log_errors = true) {
-	if (($direction == "asc") || ($direction == "desc")) {
-		return true;
-	}else{
-		if ($log_errors == true) {
-			api_log_log("Invalid order direction '$direction' in " . api_log_last_function_get() . "()", SEV_WARNING);
-		}
-
-		return false;
-	}
-}
+define("TREE_ITEM_TYPE_HEADER", 1);
+define("TREE_ITEM_TYPE_GRAPH", 2);
+define("TREE_ITEM_TYPE_HOST", 3);
 
 ?>
