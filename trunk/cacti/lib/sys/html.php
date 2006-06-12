@@ -825,29 +825,29 @@ function draw_navigation_text() {
 			"mapping" => "index.php:,devices.php:",
 			"level" => "2"
 			),
-		"data_input.php:" => array(
+		"scripts.php:" => array(
 			"title" => _("Data Input Methods"),
 			"mapping" => "index.php:",
 			"level" => "1"
 			),
-		"data_input.php:edit" => array(
+		"scripts.php:edit" => array(
 			"title" => _("(Edit)"),
-			"mapping" => "index.php:,data_input.php:",
+			"mapping" => "index.php:,scripts.php:",
 			"level" => "2"
 			),
-		"data_input.php:remove" => array(
+		"scripts.php:remove" => array(
 			"title" => _("(Remove)"),
-			"mapping" => "index.php:,data_input.php:",
+			"mapping" => "index.php:,scripts.php:",
 			"level" => "2"
 			),
-		"data_input.php:field_edit" => array(
+		"scripts.php:field_edit" => array(
 			"title" => _("Data Input Fields"),
-			"mapping" => "index.php:,data_input.php:,data_input.php:edit",
+			"mapping" => "index.php:,scripts.php:,scripts.php:edit",
 			"level" => "3"
 			),
-		"data_input.php:field_remove" => array(
+		"scripts.php:field_remove" => array(
 			"title" => _("(Remove Item)"),
-			"mapping" => "index.php:,data_input.php:,data_input.php:edit",
+			"mapping" => "index.php:,scripts.php:,scripts.php:edit",
 			"level" => "3"
 			),
 		"data_queries.php:" => array(

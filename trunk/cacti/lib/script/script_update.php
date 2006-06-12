@@ -81,15 +81,20 @@ function api_script_field_save($script_field_id, $_fields_script_field) {
 	}
 
 	/* sanity check for $script_id */
-	if ((empty($script_field_id)) && (empty($_fields_script_field["script_id"]))) {
+	if ((empty($script_field_id)) && (empty($_fields_script_field["data_input_id"]))) {
 		api_log_log("Required script_id when script_field_id = 0", SEV_ERROR);
 		return false;
-	} else if ((isset($_fields_script_field["script_id"])) && (!db_number_validate($_fields_script_field["script_id"]))) {
+	} else if ((isset($_fields_script_field["data_input_id"])) && (!db_number_validate($_fields_script_field["data_input_id"]))) {
 		return false;
 	}
 
 	/* field: id */
 	$_fields["id"] = array("type" => DB_TYPE_NUMBER, "value" => $script_field_id);
+
+	/* field: graph_tree_id */
+	if (isset($_fields_script_field["data_input_id"])) {
+		$_fields["data_input_id"] = array("type" => DB_TYPE_NUMBER, "value" => $_fields_script_field["data_input_id"]);
+	}
 
 	/* convert the input array into something that is compatible with db_replace() */
 	$_fields += sql_get_database_field_array($_fields_script_field, api_script_field_form_list());

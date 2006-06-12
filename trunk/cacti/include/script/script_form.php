@@ -22,6 +22,8 @@
  +-------------------------------------------------------------------------+
 */
 
+include_once(CACTI_BASE_PATH . "/include/script/script_constants.php");
+
 $fields_script = array(
 	"name" => array(
 		"default" => "",
@@ -49,7 +51,7 @@ $fields_script_fields = array(
 	"field_input_value" => array(
 		"default" => "",
 		"validate_regexp" => "",
-		"validate_empty" => false,
+		"validate_empty" => true,
 		"data_type" => DB_TYPE_STRING
 		),
 	"name" => array(

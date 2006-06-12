@@ -154,9 +154,9 @@ function tree_edit() {
 
 	form_save_button("graph_trees.php");
 
-	form_start("graph_trees_items.php", "form_graph_tree_item");
-
 	if (!empty($_graph_tree_id)) {
+		form_start("graph_trees_items.php", "form_graph_tree_item");
+
 		$box_id = "1";
 		html_start_box("<strong>" . _("Tree Items") . "</strong>", "graph_trees_items.php?action=edit&tree_id=" . $_graph_tree_id . "&parent_id=0");
 		html_header_checkbox(array(_("Item"), _("Type"), ""), $box_id, "1");
@@ -225,30 +225,30 @@ function tree_edit() {
 
 		html_box_actions_menu_draw($box_id, "1", $menu_items);
 		html_box_actions_area_draw($box_id, "1");
-	}
 
-	form_hidden_box("graph_tree_id", $_graph_tree_id);
-	form_hidden_box("action", "save");
-	form_hidden_box("action_post", "graph_tree_item_list");
+		form_hidden_box("graph_tree_id", $_graph_tree_id);
+		form_hidden_box("action", "save");
+		form_hidden_box("action_post", "graph_tree_item_list");
 
-	form_end();
+		form_end();
 
-	?>
-	<script language="JavaScript">
-	<!--
-	function action_area_handle_type(box_id, type, parent_div, parent_form) {
-		if (type == 'remove') {
-			parent_div.appendChild(document.createTextNode('Are you sure you want to remove these graph tree items?'));
-			parent_div.appendChild(action_area_generate_selected_rows(box_id));
+		?>
+		<script language="JavaScript">
+		<!--
+		function action_area_handle_type(box_id, type, parent_div, parent_form) {
+			if (type == 'remove') {
+				parent_div.appendChild(document.createTextNode('Are you sure you want to remove these graph tree items?'));
+				parent_div.appendChild(action_area_generate_selected_rows(box_id));
 
-			action_area_update_header_caption(box_id, 'Remove Graph Tree Item');
-			action_area_update_submit_caption(box_id, 'Remove');
-			action_area_update_selected_rows(box_id, parent_form);
+				action_area_update_header_caption(box_id, 'Remove Graph Tree Item');
+				action_area_update_submit_caption(box_id, 'Remove');
+				action_area_update_selected_rows(box_id, parent_form);
+			}
 		}
+		-->
+		</script>
+		<?php
 	}
-	-->
-	</script>
-	<?php
 }
 
 function tree() {

@@ -22,55 +22,13 @@
  +-------------------------------------------------------------------------+
 */
 
-function api_script_list() {
-	return db_fetch_assoc("select * from data_input order by name");
-}
+define("SCRIPT_INPUT_TYPE_SCRIPT", 1);
+define("SCRIPT_INPUT_TYPE_PHP_SCRIPT_SERVER", 2);
 
-function api_script_get($script_id) {
-	/* sanity checks */
-	validate_id_die($script_id, "script_id");
+define("SCRIPT_FIELD_INPUT_CUSTOM", 1);
+define("SCRIPT_FIELD_INPUT_DEVICE", 2);
 
-	return db_fetch_row("select * from data_input where id = " . sql_sanitize($script_id));
-}
-
-function api_script_field_list($script_id, $input_type = "") {
-	require_once(CACTI_BASE_PATH . "/include/script/script_constants.php");
-
-	/* sanity checks */
-	validate_id_die($script_id, "script_id");
-
-	return db_fetch_assoc("select * from data_input_fields where data_input_id = " . sql_sanitize($script_id) . (($input_type == SCRIPT_FIELD_TYPE_INPUT) ? " and input_output = 'in'" : " and input_output = 'out'") . " order by name");
-}
-
-function api_script_field_get($script_field_id) {
-	/* sanity checks */
-	validate_id_die($script_field_id, "script_field_id");
-
-	return db_fetch_row("select * from data_input_fields where id = " . sql_sanitize($script_field_id));
-}
-
-function &api_script_input_type_list() {
-	require(CACTI_BASE_PATH . "/include/script/script_arrays.php");
-
-	return $script_input_types;
-}
-
-function &api_script_field_input_type_list() {
-	require(CACTI_BASE_PATH . "/include/script/script_arrays.php");
-
-	return $script_field_input_types;
-}
-
-function &api_script_form_list() {
-	require(CACTI_BASE_PATH . "/include/script/script_form.php");
-
-	return $fields_script;
-}
-
-function &api_script_field_form_list() {
-	require(CACTI_BASE_PATH . "/include/script/script_form.php");
-
-	return $fields_script_fields;
-}
+define("SCRIPT_FIELD_TYPE_INPUT", 1);
+define("SCRIPT_FIELD_TYPE_OUTPUT", 2);
 
 ?>

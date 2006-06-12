@@ -79,16 +79,6 @@ $messages = array(
 		"type" => "error")
 		);
 
-$data_input_field_inputs = array(
-	1 => _("Custom Value"),
-	2 => _("Device Field Value")
-	);
-
-$script_types = array(
-	SCRIPT_INPUT_TYPE_SCRIPT => _("Script/Command"),
-	SCRIPT_INPUT_TYPE_PHP_SCRIPT_SERVER => _("Script - Script Server (PHP)")
-	);
-
 $snmp_query_field_actions = array(
 	1 => _("SNMP Field Name (Dropdown)"),
 	2 => _("SNMP Field Value (From User)"),
@@ -107,7 +97,6 @@ $ping_methods = array(
 	PING_UDP => _("UDP Ping"),
 	PING_NONE => _("Not Applicable")
 	);
-
 
 $poller_options = array(
 	1 => "cmd.php",
@@ -247,7 +236,7 @@ $menu = array(
 		),
 	_("Data Collection") => array(
 		"pollers.php" => _("Pollers"),
-		"data_input.php" => _("Scripts"),
+		"scripts.php" => _("Scripts"),
 		"data_queries.php" => _("Queries")
 		),
 	_("Templates") => array(
@@ -305,7 +294,8 @@ $user_auth_realm_filenames = array(
 	"presets_gprint.php" => 14,
 	"presets_rra.php" => 14,
 	"color.php" => 5,
-	"data_input.php" => 2,
+	"scripts.php" => 2,
+	"scripts_fields.php" => 2,
 	"pollers.php" => 2,
 	"data_sources.php" => 3,
 	"data_templates.php" => 11,

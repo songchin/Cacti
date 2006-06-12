@@ -305,7 +305,7 @@ function data_query_edit() {
 				Input Fields
 			</td>
 			<td class="content-header-sub" align="right">
-				<a class="link-dark-small" href="data_queries.php?action=field_edit&field_type=1&data_query_id=<?php echo $_data_query_id;?>">Add</a>
+				<a class="link-dark-small" href="data_queries.php?action=field_edit&field_type=<?php echo DATA_QUERY_FIELD_TYPE_INPUT;?>&data_query_id=<?php echo $_data_query_id;?>">Add</a>
 			</td>
 		</tr>
 		<?php
@@ -343,7 +343,7 @@ function data_query_edit() {
 				Output Fields
 			</td>
 			<td class="content-header-sub" align="right">
-				<a class="link-dark-small" href="data_queries.php?action=field_edit&field_type=2&data_query_id=<?php echo $_data_query_id;?>">Add</a>
+				<a class="link-dark-small" href="data_queries.php?action=field_edit&field_type=<?php echo DATA_QUERY_FIELD_TYPE_OUTPUT;?>&data_query_id=<?php echo $_data_query_id;?>">Add</a>
 			</td>
 		</tr>
 		<?php
