@@ -25,6 +25,9 @@
 require(dirname(__FILE__) . "/include/global.php");
 require_once(CACTI_BASE_PATH . "/include/auth/validate.php");
 require_once(CACTI_BASE_PATH . "/lib/data_preset/data_preset_rra_info.php");
+require_once(CACTI_BASE_PATH . "/lib/data_preset/data_preset_gprint_info.php");
+require_once(CACTI_BASE_PATH . "/lib/data_preset/data_preset_color_info.php");
+require_once(CACTI_BASE_PATH . "/lib/data_preset/data_preset_cdef_info.php");
 
 /* set default action */
 if (!isset($_REQUEST["action"])) { $_REQUEST["action"] = ""; }
@@ -89,110 +92,231 @@ function draw_tabs() {
    ------------------------ */
 
 function view_cdef() {
-	global $colors;
+	$menu_items = array(
+		"remove" => "Remove",
+		"duplicate" => "Duplicate"
+		);
 
-	html_start_box("<strong>" . _("CDEFs") . "</strong>", "98%", $colors["header_background"], "3", "center", "presets_cdef.php?action=edit");
+	$cdefs = api_data_preset_cdef_list();
 
-	html_header(array(_("Name")), 2);
+	form_start("presets_cdef.php");
 
-	$cdefs = db_fetch_assoc("select * from preset_cdef order by name");
+	$box_id = "1";
+	html_start_box("<strong>" . _("CDEF Presets") . "</strong>", "presets_cdef.php?action=edit", "", "", false);
+	html_header_checkbox(array(_("Name")), $box_id);
 
 	if (sizeof($cdefs) > 0) {
-		$i = 0;
 		foreach ($cdefs as $cdef) {
-			form_alternate_row_color($colors["form_alternate1"],$colors["form_alternate2"],$i); $i++;
-				?>
-				<td>
-					<a class="linkEditMain" href="presets_cdef.php?action=edit&id=<?php echo $cdef["id"];?>"><?php echo $cdef["name"];?></a>
+			?>
+			<tr class="content-row" id="box-<?php echo $box_id;?>-row-<?php echo $cdef["id"];?>" onClick="display_row_select('<?php echo $box_id;?>',document.forms[0],'box-<?php echo $box_id;?>-row-<?php echo $cdef["id"];?>', 'box-<?php echo $box_id;?>-chk-<?php echo $cdef["id"];?>')" onMouseOver="display_row_hover('box-<?php echo $box_id;?>-row-<?php echo $cdef["id"];?>')" onMouseOut="display_row_clear('box-<?php echo $box_id;?>-row-<?php echo $cdef["id"];?>')">
+				<td class="content-row">
+					<a class="linkEditMain" onClick="display_row_block('box-<?php echo $box_id;?>-row-<?php echo $cdef["id"];?>')" href="presets_cdef.php?action=edit&id=<?php echo $cdef["id"];?>"><span id="box-<?php echo $box_id;?>-text-<?php echo $cdef["id"];?>"><?php echo $cdef["name"];?></span></a>
 				</td>
-				<td align="right">
-					<a href="presets_cdef.php?action=remove&id=<?php echo $cdef["id"];?>"><img src="<?php echo html_get_theme_images_path('delete_icon.gif');?>" width="10" height="10" border="0" alt="Delete"></a>
+				<td class="content-row" width="1%" align="center" style="border-left: 1px solid #b5b5b5; border-top: 1px solid #b5b5b5; background-color: #e9e9e9; <?php echo get_checkbox_style();?>">
+					<input type='checkbox' style='margin: 0px;' name='box-<?php echo $box_id;?>-chk-<?php echo $cdef["id"];?>' id='box-<?php echo $box_id;?>-chk-<?php echo $cdef["id"];?>' title="<?php echo $cdef["name"];?>">
 				</td>
 			</tr>
-		<?php
+			<?php
 		}
+
+		html_box_toolbar_draw($box_id, "0", "1");
 	}else{
-		form_alternate_row_color($colors["form_alternate1"], $colors["form_alternate2"], 0); ?>
-			<td colspan="2">
-				<em><?php echo _("No Items Found");?></em>
+		?>
+		<tr>
+			<td class="content-list-empty" colspan="1">
+				No CDEF presets found.
 			</td>
 		</tr>
 		<?php
 	}
-	html_end_box();
+
+	html_end_box(false);
+
+	html_box_actions_menu_draw($box_id, "0", $menu_items);
+	html_box_actions_area_draw($box_id, "0");
+
+	form_end();
+	?>
+
+	<script language="JavaScript">
+	<!--
+	function action_area_handle_type(box_id, type, parent_div, parent_form) {
+		if (type == 'remove') {
+			parent_div.appendChild(document.createTextNode('Are you sure you want to remove these CDEF presets?'));
+			parent_div.appendChild(action_area_generate_selected_rows(box_id));
+
+			action_area_update_header_caption(box_id, 'Remove CDEF Presets');
+			action_area_update_submit_caption(box_id, 'Remove');
+			action_area_update_selected_rows(box_id, parent_form);
+		}else if (type == 'duplicate') {
+			parent_div.appendChild(document.createTextNode('Are you sure you want to duplicate these CDEF presets?'));
+			parent_div.appendChild(action_area_generate_selected_rows(box_id));
+			parent_div.appendChild(action_area_generate_input('text', 'box-' + box_id + '-action-area-txt1', ''));
+
+			action_area_update_header_caption(box_id, 'Duplicate CDEF Presets');
+			action_area_update_submit_caption(box_id, 'Duplicate');
+			action_area_update_selected_rows(box_id, parent_form);
+		}
+	}
+	-->
+	</script>
+
+	<?php
 }
 
 function view_color() {
-	global $colors;
+	$menu_items = array(
+		"remove" => "Remove",
+		"duplicate" => "Duplicate"
+		);
 
-	html_start_box("<strong>" . _("Colors") . "</strong>", "98%", $colors["header_background"], "3", "center", "color.php?action=edit");
+	$colors = api_data_preset_color_list();
 
-	html_header(array(_("Hex Value"), _("Color")), 2);
+	form_start("presets_color.php");
 
-	$color_list = db_fetch_assoc("select * from preset_color order by hex");
+	$box_id = "1";
+	html_start_box("<strong>" . _("Color Presets") . "</strong>", "presets_color.php?action=edit", "", "", false);
+	html_header_checkbox(array(_("Hex Value"), _("Color"), ""), $box_id);
 
-	if (sizeof($color_list) > 0) {
-		$i = 0;
-		foreach ($color_list as $color) {
-			form_alternate_row_color($colors["form_alternate1"],$colors["form_alternate2"],$i); $i++;
-				?>
-				<td>
-					<a class="linkEditMain" href="presets_color.php?action=edit&id=<?php echo $color["id"];?>"><?php echo $color["hex"];?></a>
+	if (sizeof($colors) > 0) {
+		foreach ($colors as $color) {
+			?>
+			<tr class="content-row" id="box-<?php echo $box_id;?>-row-<?php echo $color["id"];?>" onClick="display_row_select('<?php echo $box_id;?>',document.forms[0],'box-<?php echo $box_id;?>-row-<?php echo $color["id"];?>', 'box-<?php echo $box_id;?>-chk-<?php echo $color["id"];?>')" onMouseOver="display_row_hover('box-<?php echo $box_id;?>-row-<?php echo $color["id"];?>')" onMouseOut="display_row_clear('box-<?php echo $box_id;?>-row-<?php echo $color["id"];?>')">
+				<td class="content-row">
+					<a class="linkEditMain" onClick="display_row_block('box-<?php echo $box_id;?>-row-<?php echo $color["id"];?>')" href="presets_color.php?action=edit&id=<?php echo $color["id"];?>"><span id="box-<?php echo $box_id;?>-text-<?php echo $color["id"];?>"><?php echo $color["hex"];?></span></a>
 				</td>
-				<td bgcolor="#<?php echo $color["hex"];?>" width="40">&nbsp;</td>
-				<td align="right">
-					<a href="presets_color.php?action=remove&id=<?php echo $color["id"];?>"><img src="<?php echo html_get_theme_images_path('delete_icon.gif');?>" width="10" height="10" border="0" alt="Delete"></a>
+				<td class="content-row" bgcolor="#<?php echo $color["hex"];?>" width="40">
+					&nbsp;
+				</td>
+				<td class="content-row">
+					&nbsp;
+				</td>
+				<td class="content-row" width="1%" align="center" style="border-left: 1px solid #b5b5b5; border-top: 1px solid #b5b5b5; background-color: #e9e9e9; <?php echo get_checkbox_style();?>">
+					<input type='checkbox' style='margin: 0px;' name='box-<?php echo $box_id;?>-chk-<?php echo $color["id"];?>' id='box-<?php echo $box_id;?>-chk-<?php echo $color["id"];?>' title="<?php echo $color["hex"];?>">
 				</td>
 			</tr>
 			<?php
 		}
+
+		html_box_toolbar_draw($box_id, "0", "3");
 	}else{
-		form_alternate_row_color($colors["form_alternate1"], $colors["form_alternate2"], 0); ?>
-			<td colspan="2">
-				<em><?php echo _("No Items Found");?></em>
+		?>
+		<tr>
+			<td class="content-list-empty" colspan="1">
+				No color presets found.
 			</td>
 		</tr>
 		<?php
 	}
-	html_end_box();
+
+	html_end_box(false);
+
+	html_box_actions_menu_draw($box_id, "0", $menu_items);
+	html_box_actions_area_draw($box_id, "0");
+
+	form_end();
+	?>
+
+	<script language="JavaScript">
+	<!--
+	function action_area_handle_type(box_id, type, parent_div, parent_form) {
+		if (type == 'remove') {
+			parent_div.appendChild(document.createTextNode('Are you sure you want to remove these color presets?'));
+			parent_div.appendChild(action_area_generate_selected_rows(box_id));
+
+			action_area_update_header_caption(box_id, 'Remove Color Presets');
+			action_area_update_submit_caption(box_id, 'Remove');
+			action_area_update_selected_rows(box_id, parent_form);
+		}else if (type == 'duplicate') {
+			parent_div.appendChild(document.createTextNode('Are you sure you want to duplicate these color presets?'));
+			parent_div.appendChild(action_area_generate_selected_rows(box_id));
+			parent_div.appendChild(action_area_generate_input('text', 'box-' + box_id + '-action-area-txt1', ''));
+
+			action_area_update_header_caption(box_id, 'Duplicate Color Presets');
+			action_area_update_submit_caption(box_id, 'Duplicate');
+			action_area_update_selected_rows(box_id, parent_form);
+		}
+	}
+	-->
+	</script>
+
+	<?php
 }
 
 function view_gprint() {
-	global $colors;
+	$menu_items = array(
+		"remove" => "Remove",
+		"duplicate" => "Duplicate"
+		);
 
-	html_start_box("<strong>" . _("GPRINT Presets") . "</strong>", "98%", $colors["header_background"], "3", "center", "presets_gprint.php?action=edit");
+	$gprints = api_data_preset_gprint_list();
 
-	html_header(array(_("Name"), _("Format String")), 2);
+	form_start("presets_gprint.php");
 
-	$gprints = db_fetch_assoc("select id,name,gprint_text from preset_gprint order by name");
+	$box_id = "1";
+	html_start_box("<strong>" . _("GPRINT Presets") . "</strong>", "presets_gprint.php?action=edit", "", "", false);
+	html_header_checkbox(array(_("Name"), _("Format String")), $box_id);
 
 	if (sizeof($gprints) > 0) {
-		$i = 0;
 		foreach ($gprints as $gprint) {
-			form_alternate_row_color($colors["form_alternate1"], $colors["form_alternate2"], $i);
-				?>
-				<td>
-					<a class="linkEditMain" href="presets_gprint.php?action=edit&id=<?php echo $gprint["id"];?>"><?php echo $gprint["name"];?></a>
+			?>
+			<tr class="content-row" id="box-<?php echo $box_id;?>-row-<?php echo $gprint["id"];?>" onClick="display_row_select('<?php echo $box_id;?>',document.forms[0],'box-<?php echo $box_id;?>-row-<?php echo $gprint["id"];?>', 'box-<?php echo $box_id;?>-chk-<?php echo $gprint["id"];?>')" onMouseOver="display_row_hover('box-<?php echo $box_id;?>-row-<?php echo $gprint["id"];?>')" onMouseOut="display_row_clear('box-<?php echo $box_id;?>-row-<?php echo $gprint["id"];?>')">
+				<td class="content-row">
+					<a class="linkEditMain" onClick="display_row_block('box-<?php echo $box_id;?>-row-<?php echo $gprint["id"];?>')" href="presets_gprint.php?action=edit&id=<?php echo $gprint["id"];?>"><span id="box-<?php echo $box_id;?>-text-<?php echo $gprint["id"];?>"><?php echo $gprint["name"];?></span></a>
 				</td>
-				<td>
+				<td class="content-row">
 					<?php echo $gprint["gprint_text"];?>
 				</td>
-				<td align="right">
-					<a href="presets_gprint.php?action=remove&id=<?php echo $gprint["id"];?>"><img src="<?php echo html_get_theme_images_path('delete_icon.gif');?>" width="10" height="10" border="0" alt=<?php echo _("Delete");?>></a>
+				<td class="content-row" width="1%" align="center" style="border-left: 1px solid #b5b5b5; border-top: 1px solid #b5b5b5; background-color: #e9e9e9; <?php echo get_checkbox_style();?>">
+					<input type='checkbox' style='margin: 0px;' name='box-<?php echo $box_id;?>-chk-<?php echo $gprint["id"];?>' id='box-<?php echo $box_id;?>-chk-<?php echo $gprint["id"];?>' title="<?php echo $gprint["name"];?>">
 				</td>
 			</tr>
 			<?php
-			$i++;
 		}
+
+		html_box_toolbar_draw($box_id, "0", "2");
 	}else{
-		form_alternate_row_color($colors["form_alternate1"], $colors["form_alternate2"], 0); ?>
-			<td colspan="2">
-				<em><?php echo _("No Items Found");?></em>
+		?>
+		<tr>
+			<td class="content-list-empty" colspan="1">
+				No GPRINT presets found.
 			</td>
 		</tr>
 		<?php
 	}
-	html_end_box();
+
+	html_end_box(false);
+
+	html_box_actions_menu_draw($box_id, "0", $menu_items);
+	html_box_actions_area_draw($box_id, "0");
+
+	form_end();
+	?>
+
+	<script language="JavaScript">
+	<!--
+	function action_area_handle_type(box_id, type, parent_div, parent_form) {
+		if (type == 'remove') {
+			parent_div.appendChild(document.createTextNode('Are you sure you want to remove these GPRINT presets?'));
+			parent_div.appendChild(action_area_generate_selected_rows(box_id));
+
+			action_area_update_header_caption(box_id, 'Remove GPRINT Presets');
+			action_area_update_submit_caption(box_id, 'Remove');
+			action_area_update_selected_rows(box_id, parent_form);
+		}else if (type == 'duplicate') {
+			parent_div.appendChild(document.createTextNode('Are you sure you want to duplicate these GPRINT presets?'));
+			parent_div.appendChild(action_area_generate_selected_rows(box_id));
+			parent_div.appendChild(action_area_generate_input('text', 'box-' + box_id + '-action-area-txt1', ''));
+
+			action_area_update_header_caption(box_id, 'Duplicate GPRINT Presets');
+			action_area_update_submit_caption(box_id, 'Duplicate');
+			action_area_update_selected_rows(box_id, parent_form);
+		}
+	}
+	-->
+	</script>
+
+	<?php
 }
 
 function view_rra() {
@@ -253,7 +377,7 @@ function view_rra() {
 			action_area_update_submit_caption(box_id, 'Remove');
 			action_area_update_selected_rows(box_id, parent_form);
 		}else if (type == 'duplicate') {
-			parent_div.appendChild(document.createTextNode('Are you sure you want to duplicate these RRA Presets?'));
+			parent_div.appendChild(document.createTextNode('Are you sure you want to duplicate these RRA presets?'));
 			parent_div.appendChild(action_area_generate_selected_rows(box_id));
 			parent_div.appendChild(action_area_generate_input('text', 'box-' + box_id + '-action-area-txt1', ''));
 
