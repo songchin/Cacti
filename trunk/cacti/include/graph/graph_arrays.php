@@ -24,43 +24,6 @@
 
 require_once(CACTI_BASE_PATH . "/include/graph/graph_constants.php");
 
-$cdef_operators = array(
-	1 => "+",
-	2 => "-",
-	3 => "*",
-	4 => "/",
-	5 => "%"
-	);
-
-$cdef_functions = array(
-	1 => "SIN",
-	2 => "COS",
-	3 => "LOG",
-	4 => "EXP",
-	5 => "FLOOR",
-	6 => "CEIL",
-	7 => "LT",
-	8 => "LE",
-	9 => "GT",
-	10 => "GE",
-	11 => "EQ",
-	12 => "IF",
-	13 => "MIN",
-	14 => "MAX",
-	15 => "LIMIT",
-	16 => "DUP",
-	17 => "EXC",
-	18 => "POP",
-	19 => "UN",
-	20 => "UNKN",
-	21 => "PREV",
-	22 => "INF",
-	23 => "NEGINF",
-	24 => "NOW",
-	25 => "TIME",
-	26 => "LTIME"
-	);
-
 $graph_item_types = array(
 	GRAPH_ITEM_TYPE_COMMENT => "COMMENT",
 	GRAPH_ITEM_TYPE_HRULE => "HRULE",

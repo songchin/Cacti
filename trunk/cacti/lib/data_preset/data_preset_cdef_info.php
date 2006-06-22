@@ -26,4 +26,35 @@ function api_data_preset_cdef_list() {
 	return db_fetch_assoc("select * from preset_cdef order by name");
 }
 
+function api_data_preset_cdef_get($preset_cdef_id) {
+	/* sanity checks */
+	validate_id_die($preset_cdef_id, "preset_cdef_id");
+
+	return db_fetch_row("select * from preset_cdef where id = " . sql_sanitize($preset_cdef_id));
+}
+
+function &api_data_preset_cdef_operator_list() {
+	require(CACTI_BASE_PATH . "/include/data_preset/data_preset_cdef_arrays.php");
+
+	return $cdef_preset_operators;
+}
+
+function &api_data_preset_cdef_function_list() {
+	require(CACTI_BASE_PATH . "/include/data_preset/data_preset_cdef_arrays.php");
+
+	return $cdef_preset_functions;
+}
+
+function &api_data_preset_cdef_variable_list() {
+	require(CACTI_BASE_PATH . "/include/data_preset/data_preset_cdef_arrays.php");
+
+	return $cdef_preset_variables;
+}
+
+function &api_data_preset_cdef_form_list() {
+	require(CACTI_BASE_PATH . "/include/data_preset/data_preset_cdef_form.php");
+
+	return $fields_data_preset_cdef;
+}
+
 ?>

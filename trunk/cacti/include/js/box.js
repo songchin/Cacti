@@ -397,6 +397,7 @@ function action_area_generate_input(type, name, value) {
    @arg value - (string) the initial value of the object */
 function action_area_generate_select(name) {
 	_elm_object = document.createElement('select');
+	_elm_object.id = name;
 	_elm_object.name = name;
 
 	return _elm_object;

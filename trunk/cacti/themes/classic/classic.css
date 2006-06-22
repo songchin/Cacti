@@ -167,6 +167,71 @@ table.tab-container .unselected td.right { background: url(images/tab_shell_righ
 table.tab-container .unselected td.middle { border-top: 1px solid #606060; }
 table.tab-container .unselected a { color: white; }
 
+/* mozilla.org tabs */
+
+#navigation {
+	margin: 0;
+	padding: 0;
+	/* background: #1e4176 url(images/navigation-background.gif) repeat-x bottom right; */
+	height: 2.7em;
+}
+#navigation div#bar {
+	padding: 0;
+	margin: 0;
+	background: #1e4176 url(images/navigation-top-right.gif) no-repeat top right;
+	height: 2.7em;
+	white-space: nowrap;
+}
+#navigation div#bar div {
+	position: relative;
+	padding: 0;
+	margin: 0;
+	background: url(images/navigation-top-left.gif) no-repeat top left;
+	height: 2.7em;
+}
+
+#navigation #contenttypes {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	margin: 0;
+	padding: 0 0.7em 0 0.7em;
+	list-style-type: none;
+	background: url(images/navigation-bottom-left.gif) no-repeat bottom left;
+}
+#navigation #contenttypes li {
+	margin: 0 2px 0 0; padding: 0;
+	float: left;
+	background-image: url(images/tab-right.gif);
+	background-position: top right;
+	background-repeat: no-repeat;
+	height: 1.7em;
+}
+#navigation #contenttypes li.selected {
+	background-image: url(images/tab-right-selected.gif);
+}
+#navigation #contenttypes li a {
+	display: block;
+	float: left;
+	font-family: verdana, arial, sans-serif;
+	text-decoration: none;
+	font-size: 85%;
+	font-weight: bold;
+	color: #fff;
+	height: 2em;
+	line-height: 2em;
+	background-image: url(images/tab-left.gif);
+	background-position: top left;
+	background-repeat: no-repeat;
+	padding: 0px 6px;
+	_width: 1%;
+}
+
+#navigation #contenttypes li.selected a {
+	color: #003366;
+	background-image: url(images/tab-left-selected.gif);
+}
+
 /* Begin - Java Script Row Selection Logic for Layout.js */
 .jsRowSelect {
 	background-color: gold;
@@ -339,6 +404,12 @@ td.action-area-header {
 }
 
 div.action-area-items {
+	background-color: white;
+	font-size: 12px;
+	padding: 4px;
+}
+
+div.action-area-items table tr td {
 	background-color: white;
 	font-size: 12px;
 	padding: 4px;

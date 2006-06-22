@@ -206,24 +206,6 @@ $rrdtool_versions = array(
 	"rrd-1.0.x" => "RRDTool 1.0.x",
 	"rrd-1.2.x" => "RRDTool 1.2.x");
 
-$cdef_item_types = array(
-	1 => _("Function"),
-	2 => _("Operator"),
-	4 => _("Special Data Source"),
-	5 => _("Another CDEF"),
-	6 => _("Custom String")
-	);
-
-$custom_data_source_types = array(
-	"CURRENT_DATA_SOURCE" => _("Current Graph Item Data Source"),
-	"ALL_DATA_SOURCES_NODUPS" => _("All Data Sources (Don't Include Duplicates)"),
-	"ALL_DATA_SOURCES_DUPS" => _("All Data Sources (Include Duplicates)"),
-	"CURRENT_DS_MINIMUM_VALUE" => _("Current Data Source Item: Minimum Value"),
-	"SIMILAR_DATA_SOURCES_NODUPS" => _("All Similar Data Sources (Don't Include Duplicates)"),
-	"CURRENT_DS_MAXIMUM_VALUE" => _("Current Data Source Item: Maximum Value"),
-	"CURRENT_GRAPH_MINIMUM_VALUE" => _("Graph: Lower Limit"),
-	"CURRENT_GRAPH_MAXIMUM_VALUE" => _("Graph: Upper Limit"));
-
 $menu = array(
 	_("Create") => array(
 		"graphs_new.php" => _("New Graphs")

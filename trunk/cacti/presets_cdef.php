@@ -24,8 +24,9 @@
 
 require(dirname(__FILE__) . "/include/global.php");
 require_once(CACTI_BASE_PATH . "/include/auth/validate.php");
-require_once(CACTI_BASE_PATH . "/lib/sys/sequence.php");
-require_once(CACTI_BASE_PATH . "/lib/sys/cdef.php");
+require_once(CACTI_BASE_PATH . "/lib/data_preset/data_preset_cdef_info.php");
+require_once(CACTI_BASE_PATH . "/lib/data_preset/data_preset_cdef_form.php");
+require_once(CACTI_BASE_PATH . "/lib/data_preset/data_preset_cdef_update.php");
 
 /* set default action */
 if (!isset($_REQUEST["action"])) { $_REQUEST["action"] = ""; }
@@ -50,76 +51,136 @@ switch ($_REQUEST["action"]) {
 }
 
 /* --------------------------
-    Global Form Functions
-   -------------------------- */
-
-function draw_cdef_preview($cdef_id) {
-	global $colors; ?>
-	<tr bgcolor="#<?php echo $colors["messagebar_background"];?>">
-		<td>
-			<pre>cdef=<?php echo get_cdef($cdef_id, true);?></pre>
-		</td>
-	</tr>
-<?php }
-
-/* --------------------------
     The Save Function
    -------------------------- */
 
 function form_save() {
-	if (isset($_POST["save_component_cdef"])) {
-		$save["id"] = $_POST["id"];
-		$save["name"] = form_input_validate($_POST["name"], "name", "", false, 3);
-		$save["cdef_string"] = form_input_validate($_POST["cdef_string"], "cdef_string", "", false, 3);
+	if ($_POST["action_post"] == "cdef_preset_edit") {
+		/* cache all post field values */
+		init_post_field_cache();
+
+		$form_cdef["name"] = $_POST["name"];
+		$form_cdef["cdef_string"] = $_POST["cdef_string"];
+
+		/* validate base cdef preset fields */
+		field_register_error(api_data_preset_cdef_field_validate($form_cdef, "|field|"));
 
 		if (!is_error_message()) {
-			$cdef_id = sql_save($save, "preset_cdef");
+			$preset_cdef_id = api_data_preset_cdef_save($_POST["preset_cdef_id"], $form_cdef);
 
-			if ($cdef_id) {
-				raise_message(1);
-			}else{
+			if (empty($preset_cdef_id)) {
 				raise_message(2);
 			}
 		}
 
-		if ((is_error_message()) || (empty($_POST["id"]))) {
-			header("Location: presets_cdef.php?action=edit&id=" . (empty($cdef_id) ? $_POST["id"] : $cdef_id));
+		if (is_error_message()) {
+			header("Location: presets_cdef.php?action=edit" . (empty($preset_cdef_id) ? "" : "&id=$preset_cdef_id"));
 		}else{
 			header("Location: presets.php?action=view_cdef");
 		}
-	}
-}
+	}else if (isset($_POST["box-1-action-area-button"])) {
+		$selected_rows = explode(":", $_POST["box-1-action-area-selected-rows"]);
 
-/* ---------------------
-    CDEF Functions
-   --------------------- */
+		if ($_POST["box-1-action-area-type"] == "remove") {
+			foreach ($selected_rows as $preset_cdef_id) {
+				api_data_preset_cdef_remove($preset_cdef_id);
+			}
+		}
 
-function cdef_remove() {
-	if ((read_config_option("remove_verification") == "on") && (!isset($_GET["confirm"]))) {
-		require_once(CACTI_BASE_PATH . "/include/top_header.php");
-		form_confirm(_("Are You Sure?"), _("Are you sure you want to delete the CDEF") . " <strong>'" . db_fetch_cell("select name from preset_cdef where id=" . $_GET["id"]) . "'</strong>?", "presets.php?action=view_cdef", "presets_cdef.php?action=remove&id=" . $_GET["id"]);
-		require_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
-		exit;
-	}
-
-	if ((read_config_option("remove_verification") == "") || (isset($_GET["confirm"]))) {
-		db_execute("delete from preset_cdef where id=" . $_GET["id"]);
+		header("Location: presets.php?action=view_cdef");
 	}
 }
 
 function cdef_edit() {
-	global $colors, $cdef_item_types, $cdef_functions, $cdef_operators, $custom_data_source_types;
+	$_cdef_preset_id = get_get_var_number("id");
 
-	if (!empty($_GET["id"])) {
-		$cdef = db_fetch_row("select * from preset_cdef where id=" . $_GET["id"]);
-		$header_label = _("[edit: ") . $cdef["name"] . "]";
+	if (empty($_cdef_preset_id)) {
+		$header_label = "[new]";
 	}else{
-		$header_label = _("[new]");
+		$cdef = api_data_preset_cdef_get($_cdef_preset_id);
+
+		$header_label = "[edit: " . $cdef["name"] . "]";
 	}
 
+	form_start("presets_cdef.php", "form_cdef");
+
+	/* ==================== Box: RRAs ==================== */
+
+	html_start_box("<strong>" . _("CDEFs") . "</strong> $header_label");
+	_data_preset_cdef__name("name", (isset($cdef["name"]) ? $cdef["name"] : ""), (isset($cdef["id"]) ? $cdef["id"] : "0"));
+	_data_preset_cdef__cdef_string("cdef_string", (isset($cdef["cdef_string"]) ? $cdef["cdef_string"] : ""), (isset($cdef["id"]) ? $cdef["id"] : "0"));
+	html_end_box();
+
+	html_box_actions_area_draw("1", "0", 550, false);
+
+	form_hidden_box("preset_cdef_id", $_cdef_preset_id);
+	form_hidden_box("action_post", "cdef_preset_edit");
+
+	form_save_button("presets.php?action=view_cdef", "save_cdef");
+
 	?>
-	<script type="text/javascript">
+
+	<script language="JavaScript">
 	<!--
+	function action_area_handle_type(box_id, type, parent_div, parent_form) {
+		if (type == 'editor') {
+			parent_div.appendChild(document.createTextNode('The dropdown boxes below provide quick access to the variables, mathematical operators, and functions that can be used in CDEF strings.'));
+
+			action_area_update_header_caption(box_id, 'CDEF String Editor');
+
+			_elm_function_input = action_area_generate_select('box-' + box_id + '-cdef_function');
+			<?php echo get_js_dropdown_code('_elm_function_input', api_data_preset_cdef_function_list(), "");?>
+
+			_elm_operator_input = action_area_generate_select('box-' + box_id + '-cdef_operator');
+			<?php echo get_js_dropdown_code('_elm_operator_input', api_data_preset_cdef_operator_list(), "");?>
+
+			_elm_variable_input = action_area_generate_select('box-' + box_id + '-cdef_variable');
+			<?php echo get_js_dropdown_code('_elm_variable_input', api_data_preset_cdef_variable_list(), "");?>
+
+			_elm_dt_container = document.createElement('div');
+			_elm_dt_container.style.paddingTop = '8px';
+			_elm_dt_container.style.paddingBottom = '3px';
+			_elm_dt_container.style.marginLeft = '1px';
+			_elm_dt_container.style.width = '550px';
+
+			_elm_dt_table_fld = document.createElement('table');
+
+			_elm_dt_table_fld.appendChild(action_area_generate_insert_row('Functions', _elm_function_input, 'javascript:insert_cdef_variable_name(\'box-' + box_id + '-cdef_function\')'));
+			_elm_dt_table_fld.appendChild(action_area_generate_insert_row('Operators', _elm_operator_input, 'javascript:insert_cdef_variable_name(\'box-' + box_id + '-cdef_operator\')'));
+			_elm_dt_table_fld.appendChild(action_area_generate_insert_row('Variables', _elm_variable_input, 'javascript:insert_cdef_variable_value(\'box-' + box_id + '-cdef_variable\')'));
+
+			_elm_dt_container.appendChild(_elm_dt_table_fld);
+
+			parent_div.appendChild(_elm_dt_container);
+		}
+	}
+
+	function action_area_generate_insert_row(field_caption, input, href) {
+		_elm_dt_tablerow_fld = document.createElement('tr');
+
+		_elm_dt_tablecell_txt = document.createElement('td');
+		_elm_dt_tablecell_txt.style.width = '90px';
+		_elm_dt_tablecell_txt.appendChild(document.createTextNode(field_caption));
+
+		_elm_dt_tablecell_inp = document.createElement('td');
+		_elm_dt_tablecell_inp.style.width = '400px';
+		_elm_dt_tablecell_inp.appendChild(input);
+
+		_elm_dt_tablecell_ins = document.createElement('td');
+		_elm_dt_tablecell_ins.style.textAlign = 'right';
+		_elm_dt_href_insert = document.createElement('a');
+		_elm_dt_href_insert.style.fontWeight = 'bold';
+		_elm_dt_href_insert.href = href;
+		_elm_dt_href_insert.textContent = 'insert';
+		_elm_dt_tablecell_ins.appendChild(_elm_dt_href_insert);
+
+		_elm_dt_tablerow_fld.appendChild(_elm_dt_tablecell_txt);
+		_elm_dt_tablerow_fld.appendChild(_elm_dt_tablecell_inp);
+		_elm_dt_tablerow_fld.appendChild(_elm_dt_tablecell_ins);
+
+		return _elm_dt_tablerow_fld;
+	}
+
 	function insert_cdef_variable_name(dropdown_name) {
 		cdef_string = document.getElementById('cdef_string');
 		dropdown = document.getElementById(dropdown_name);
@@ -141,94 +202,10 @@ function cdef_edit() {
 
 		cdef_string.value += dropdown.options[dropdown.selectedIndex].value;
 	}
-	//-->
+	-->
 	</script>
 
-	<form method='post' action='presets_cdef.php'>
 	<?php
-
-	html_start_box("<strong>" . _("CDEF's") . "</strong> $header_label", "98%", $colors["header_background"], "3", "center", "");
-
-	form_alternate_row_color($colors["form_alternate1"],$colors["form_alternate2"],0); ?>
-		<td width="50%">
-			<font class="textEditTitle"><?php echo _("Name");?></font><br>
-			<?php echo _("A recognizable name for this CDEF.");?>
-		</td>
-		<td colspan="2">
-			<?php form_text_box("name", (isset($cdef) ? $cdef["name"] : ""), "", "255", 40, "text");?>
-		</td>
-	</tr>
-	<?php
-	html_end_box();
-
-	html_start_box("", "98%", "a1a1a1", "3", "center", "");
-	?>
-	<tr bgcolor="#<?php echo $colors["form_alternate2"];?>">
-		<td style="font-size: 12px; font-weight: bold;">
-			CDEF String:
-		</td>
-	</tr>
-	<tr bgcolor="#<?php echo $colors["form_alternate2"];?>">
-		<td>
-			<input style="border: 2px solid #27942e; width: 100%;" type="text" name="cdef_string" id="cdef_string" value="<?php echo (isset($cdef) ? $cdef["cdef_string"] : "");?>" maxlength="255">
-		</td>
-	</tr>
-	<?php
-	html_end_box();
-
-	html_start_box("", "98%", $colors["header_panel_background"], "3", "center", "");
-	?>
-	<tr bgcolor='<?php echo $colors["header_panel_background"];?>'>
-		<td colspan="3" class='textSubHeaderDark'>
-			<?php echo _("CDEF String Variables (Not Saved)");?>
-		</td>
-	</tr>
-	<?php
-	form_alternate_row_color($colors["form_alternate1"],$colors["form_alternate2"],0); ?>
-		<td width="50%">
-			<font class="textEditTitle"><?php echo _("Function");?></font><br>
-			<?php echo _("Builtin functions that can be applied to any value.");?>
-		</td>
-		<td>
-			<?php form_dropdown("c_function", $cdef_functions, "", "", "", "", "");?>
-		</td>
-		<td align="right" style="font-size: 12px;">
-			[<strong><a href="javascript:insert_cdef_variable_name('c_function')">INSERT</a></strong>]
-		</td>
-	</tr>
-	<?php
-	form_alternate_row_color($colors["form_alternate1"],$colors["form_alternate2"],1); ?>
-		<td width="50%">
-			<font class="textEditTitle"><?phpe echo _("Operator");?></font><br>
-			<?php echo _("Mathematical operations that can be applied to any value.");?>
-		</td>
-		<td>
-			<?php form_dropdown("c_operator", $cdef_operators, "", "", "", "", "");?>
-		</td>
-		<td align="right" style="font-size: 12px;">
-			[<strong><a href="javascript:insert_cdef_variable_name('c_operator')"><?php echo _("INSERT");?></a></strong>]
-		</td>
-	</tr>
-	<?php
-	form_alternate_row_color($colors["form_alternate1"],$colors["form_alternate2"],0); ?>
-		<td width="50%">
-			<font class="textEditTitle"><?php echo _("Cacti Variables");?></font><br>
-			<?php echo _("These values will be substituted by Cacti before being inserted into the final CDEF string.");?>
-		</td>
-		<td>
-			<?php form_dropdown("c_special_ds", $custom_data_source_types, "", "", "", "", "", "", "40");?>
-		</td>
-		<td align="right" style="font-size: 12px;">
-			[<strong><a href="javascript:insert_cdef_variable_value('c_special_ds')"><?php echo _("INSERT");?></a></strong>]
-		</td>
-	</tr>
-	<?php
-
-	html_end_box();
-
-	form_hidden_box("id",(isset($cdef) ? $cdef["id"] : "0"),"");
-	form_hidden_box("save_component_cdef","1","");
-	form_save_button("presets.php?action=view_cdef");
 }
 
 ?>
