@@ -22,21 +22,19 @@
  +-------------------------------------------------------------------------+
 */
 
-function api_data_preset_color_list() {
-	return db_fetch_assoc("select * from preset_color order by hex");
-}
-
-function api_data_preset_color_get($preset_color_id) {
-	/* sanity checks */
-	validate_id_die($preset_color_id, "preset_color_id");
-
-	return db_fetch_row("select * from preset_color where id = " . sql_sanitize($preset_color_id));
-}
-
-function &api_data_preset_color_form_list() {
-	require(CACTI_BASE_PATH . "/include/data_preset/data_preset_color_form.php");
-
-	return $fields_data_preset_color;
-}
+$fields_data_preset_cdef = array(
+	"name" => array(
+		"default" => "",
+		"validate_regexp" => "",
+		"validate_empty" => false,
+		"data_type" => DB_TYPE_STRING
+		),
+	"cdef_string" => array(
+		"default" => "",
+		"validate_regexp" => "",
+		"validate_empty" => false,
+		"data_type" => DB_TYPE_STRING
+		)
+	);
 
 ?>

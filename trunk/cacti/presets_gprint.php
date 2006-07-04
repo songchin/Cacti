@@ -24,6 +24,9 @@
 
 require(dirname(__FILE__) . "/include/global.php");
 require_once(CACTI_BASE_PATH . "/include/auth/validate.php");
+require_once(CACTI_BASE_PATH . "/lib/data_preset/data_preset_gprint_info.php");
+require_once(CACTI_BASE_PATH . "/lib/data_preset/data_preset_gprint_form.php");
+require_once(CACTI_BASE_PATH . "/lib/data_preset/data_preset_gprint_update.php");
 
 /* set default action */
 if (!isset($_REQUEST["action"])) { $_REQUEST["action"] = ""; }
@@ -33,15 +36,10 @@ switch ($_REQUEST["action"]) {
 		form_save();
 
 		break;
-	case 'remove':
-		gprint_presets_remove();
-
-		header("Location: presets_gprint.php");
-		break;
 	case 'edit':
 		require_once(CACTI_BASE_PATH . "/include/top_header.php");
 
-		gprint_presets_edit();
+		gprint_edit();
 
 		require_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
 		break;
@@ -52,67 +50,66 @@ switch ($_REQUEST["action"]) {
    -------------------------- */
 
 function form_save() {
-	if (isset($_POST["save_component_gprint_presets"])) {
-		$save["id"] = $_POST["id"];
-		$save["name"] = form_input_validate($_POST["name"], "name", "", false, 3);
-		$save["gprint_text"] = form_input_validate($_POST["gprint_text"], "gprint_text", "", false, 3);
+	if ($_POST["action_post"] == "gprint_preset_edit") {
+		/* cache all post field values */
+		init_post_field_cache();
+
+		$form_gprint["name"] = $_POST["name"];
+		$form_gprint["gprint_text"] = $_POST["gprint_text"];
+
+		/* validate base gprint preset fields */
+		field_register_error(api_data_preset_gprint_field_validate($form_gprint, "|field|"));
 
 		if (!is_error_message()) {
-			$gprint_preset_id = sql_save($save, "graph_template_gprint");
+			$preset_gprint_id = api_data_preset_gprint_save($_POST["preset_gprint_id"], $form_gprint);
 
-			if ($gprint_preset_id) {
-				raise_message(1);
-			}else{
+			if (empty($preset_gprint_id)) {
 				raise_message(2);
 			}
 		}
 
 		if (is_error_message()) {
-			header("Location: presets_gprint.php?action=edit&id=" . (empty($gprint_preset_id) ? $_POST["id"] : $gprint_preset_id));
-			exit;
+			header("Location: presets_gprint.php?action=edit" . (empty($preset_gprint_id) ? "" : "&id=$preset_gprint_id"));
 		}else{
-			header("Location: presets_gprint.php");
-			exit;
+			header("Location: presets.php?action=view_gprint");
 		}
+	}else if (isset($_POST["box-1-action-area-button"])) {
+		$selected_rows = explode(":", $_POST["box-1-action-area-selected-rows"]);
+
+		if ($_POST["box-1-action-area-type"] == "remove") {
+			foreach ($selected_rows as $preset_gprint_id) {
+				api_data_preset_gprint_remove($preset_gprint_id);
+			}
+		}
+
+		header("Location: presets.php?action=view_gprint");
 	}
 }
 
-/* -----------------------------------
-    gprint_presets - GPRINT Presets
-   ----------------------------------- */
+function gprint_edit() {
+	$_gprint_preset_id = get_get_var_number("id");
 
-function gprint_presets_remove() {
-	if ((read_config_option("remove_verification") == "on") && (!isset($_GET["confirm"]))) {
-		require_once(CACTI_BASE_PATH . "/include/top_header.php");
-		form_confirm(_("Are You Sure?"), _("Are you sure you want to delete the GPRINT preset") . " <strong>'" . db_fetch_cell("select name from preset_gprint where id=" . $_GET["id"]) . "'</strong>? This could affect every graph that uses this preset, make sure you know what you are doing first!", "presets.php?action=view_gprint", "presets_gprint.php?action=remove&id=" . $_GET["id"]);
-		exit;
-	}
-
-	if ((read_config_option("remove_verification") == "") || (isset($_GET["confirm"]))) {
-		db_execute("delete from preset_gprint where id=" . $_GET["id"]);
-	}
-}
-
-function gprint_presets_edit() {
-	global $colors, $fields_grprint_presets_edit;
-
-	if (!empty($_GET["id"])) {
-		$gprint_preset = db_fetch_row("select * from preset_gprint where id=" . $_GET["id"]);
-		$header_label = _("[edit: ") . $gprint_preset["name"] . "]";
+	if (empty($_gprint_preset_id)) {
+		$header_label = "[new]";
 	}else{
-		$header_label = _("[new]");
+		$gprint = api_data_preset_gprint_get($_gprint_preset_id);
+
+		$header_label = "[edit: " . $gprint["name"] . "]";
 	}
 
-	html_start_box("<strong>" . _("GPRINT Presets") . "</strong> $header_label", "98%", $colors["header_background"], "3", "center", "");
+	form_start("presets_gprint.php", "form_gprint");
 
-	draw_edit_form(array(
-		"config" => array(),
-		"fields" => inject_form_variables($fields_grprint_presets_edit, (isset($gprint_preset) ? $gprint_preset : array()))
-		));
+	/* ==================== Box: Colors ==================== */
 
+	html_start_box("<strong>" . _("GPRINT Presets") . "</strong> $header_label");
+	_data_preset_gprint__name("name", (isset($gprint["name"]) ? $gprint["name"] : ""), (isset($gprint["id"]) ? $gprint["id"] : "0"));
+	_data_preset_gprint__gprint_text("gprint_text", (isset($gprint["gprint_text"]) ? $gprint["gprint_text"] : ""), (isset($gprint["id"]) ? $gprint["id"] : "0"));
 	html_end_box();
 
-	form_save_button("presets.php?action=view_gprint");
+	form_hidden_box("preset_gprint_id", $_gprint_preset_id);
+	form_hidden_box("action_post", "gprint_preset_edit");
+
+	form_save_button("presets.php?action=view_gprint", "save_gprint");
 }
 
 ?>

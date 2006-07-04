@@ -24,6 +24,9 @@
 
 require(dirname(__FILE__) . "/include/global.php");
 require_once(CACTI_BASE_PATH . "/include/auth/validate.php");
+require_once(CACTI_BASE_PATH . "/lib/data_preset/data_preset_color_info.php");
+require_once(CACTI_BASE_PATH . "/lib/data_preset/data_preset_color_form.php");
+require_once(CACTI_BASE_PATH . "/lib/data_preset/data_preset_color_update.php");
 
 /* set default action */
 if (!isset($_REQUEST["action"])) { $_REQUEST["action"] = ""; }
@@ -32,11 +35,6 @@ switch ($_REQUEST["action"]) {
 	case 'save':
 		form_save();
 
-		break;
-	case 'remove':
-		color_remove();
-
-		header ("Location: presets.php?action=view_color");
 		break;
 	case 'edit':
 		require_once(CACTI_BASE_PATH . "/include/top_header.php");
@@ -52,56 +50,64 @@ switch ($_REQUEST["action"]) {
    -------------------------- */
 
 function form_save() {
-	if (isset($_POST["save_component_color"])) {
-		$save["id"] = $_POST["id"];
-		$save["hex"] = form_input_validate($_POST["hex"], "hex", "^[a-fA-F0-9]+$", false, 3);
+	if ($_POST["action_post"] == "color_preset_edit") {
+		/* cache all post field values */
+		init_post_field_cache();
+
+		$form_color["hex"] = $_POST["hex"];
+
+		/* validate base color preset fields */
+		field_register_error(api_data_preset_color_field_validate($form_color, "|field|"));
 
 		if (!is_error_message()) {
-			$color_id = sql_save($save, "colors");
+			$preset_color_id = api_data_preset_color_save($_POST["preset_color_id"], $form_color);
 
-			if ($color_id) {
-				raise_message(1);
-			}else{
+			if (empty($preset_color_id)) {
 				raise_message(2);
 			}
 		}
 
 		if (is_error_message()) {
-			header("Location: presets_color.php?action=edit&id=" . (empty($color_id) ? $_POST["id"] : $color_id));
+			header("Location: presets_color.php?action=edit" . (empty($preset_color_id) ? "" : "&id=$preset_color_id"));
 		}else{
-			header("Location: presets_color.php");
+			header("Location: presets.php?action=view_color");
 		}
+	}else if (isset($_POST["box-1-action-area-button"])) {
+		$selected_rows = explode(":", $_POST["box-1-action-area-selected-rows"]);
+
+		if ($_POST["box-1-action-area-type"] == "remove") {
+			foreach ($selected_rows as $preset_color_id) {
+				api_data_preset_color_remove($preset_color_id);
+			}
+		}
+
+		header("Location: presets.php?action=view_color");
 	}
-}
-
-/* -----------------------
-    Color Functions
-   ----------------------- */
-
-function color_remove() {
-	db_execute("delete from preset_color where id=" . $_GET["id"]);
 }
 
 function color_edit() {
-	global $colors, $fields_color_edit;
+	$_color_preset_id = get_get_var_number("id");
 
-	if (!empty($_GET["id"])) {
-		$color = db_fetch_row("select * from preset_color where id=" . $_GET["id"]);
-		$header_label = _("[edit: ") . $color["hex"] . "]";
+	if (empty($_color_preset_id)) {
+		$header_label = "[new]";
 	}else{
-		$header_label = _("[new]");
+		$color = api_data_preset_color_get($_color_preset_id);
+
+		$header_label = "[edit: " . $color["hex"] . "]";
 	}
 
-	html_start_box("<strong>" . _("Colors") . "</strong> $header_label", "98%", $colors["header_background"], "3", "center", "");
+	form_start("presets_color.php", "form_color");
 
-	draw_edit_form(array(
-		"config" => array(),
-		"fields" => inject_form_variables($fields_color_edit, (isset($color) ? $color : array()))
-		));
+	/* ==================== Box: Colors ==================== */
 
+	html_start_box("<strong>" . _("Color Presets") . "</strong> $header_label");
+	_data_preset_color__hex("hex", (isset($color["hex"]) ? $color["hex"] : ""), (isset($color["id"]) ? $color["id"] : "0"));
 	html_end_box();
 
-	form_save_button("presets.php?action=view_color");
+	form_hidden_box("preset_color_id", $_color_preset_id);
+	form_hidden_box("action_post", "color_preset_edit");
+
+	form_save_button("presets.php?action=view_color", "save_color");
 }
 
 ?>

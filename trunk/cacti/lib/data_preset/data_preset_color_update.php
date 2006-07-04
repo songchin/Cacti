@@ -22,21 +22,42 @@
  +-------------------------------------------------------------------------+
 */
 
-function api_data_preset_color_list() {
-	return db_fetch_assoc("select * from preset_color order by hex");
-}
+function api_data_preset_color_save($data_preset_color_id, $_fields_data_preset_color) {
+	require_once(CACTI_BASE_PATH . "/lib/data_preset/data_preset_color_info.php");
 
-function api_data_preset_color_get($preset_color_id) {
 	/* sanity checks */
-	validate_id_die($preset_color_id, "preset_color_id");
+	validate_id_die($data_preset_color_id, "data_preset_color_id", true);
 
-	return db_fetch_row("select * from preset_color where id = " . sql_sanitize($preset_color_id));
+	/* make sure that there is at least one field to save */
+	if (sizeof($_fields_data_preset_color) == 0) {
+		return false;
+	}
+
+	/* field: id */
+	$_fields["id"] = array("type" => DB_TYPE_NUMBER, "value" => $data_preset_color_id);
+
+	/* convert the input array into something that is compatible with db_replace() */
+	$_fields += sql_get_database_field_array($_fields_data_preset_color, api_data_preset_color_form_list());
+
+	if (db_replace("preset_color", $_fields, array("id"))) {
+		if (empty($data_preset_color_id)) {
+			$data_preset_color_id = db_fetch_insert_id();
+		}
+
+		return $data_preset_color_id;
+	}else{
+		return false;
+	}
 }
 
-function &api_data_preset_color_form_list() {
-	require(CACTI_BASE_PATH . "/include/data_preset/data_preset_color_form.php");
+function api_data_preset_color_remove($data_preset_color_id) {
+	/* sanity checks */
+	validate_id_die($data_preset_color_id, "data_preset_color_id");
 
-	return $fields_data_preset_color;
+	db_delete("preset_color",
+		array(
+			"id" => array("type" => DB_TYPE_NUMBER, "value" => $data_preset_color_id)
+			));
 }
 
 ?>

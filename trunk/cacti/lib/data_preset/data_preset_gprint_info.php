@@ -26,4 +26,17 @@ function api_data_preset_gprint_list() {
 	return db_fetch_assoc("select * from preset_gprint order by name");
 }
 
+function api_data_preset_gprint_get($preset_gprint_id) {
+	/* sanity checks */
+	validate_id_die($preset_gprint_id, "preset_gprint_id");
+
+	return db_fetch_row("select * from preset_gprint where id = " . sql_sanitize($preset_gprint_id));
+}
+
+function &api_data_preset_gprint_form_list() {
+	require(CACTI_BASE_PATH . "/include/data_preset/data_preset_gprint_form.php");
+
+	return $fields_data_preset_gprint;
+}
+
 ?>

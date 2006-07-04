@@ -160,7 +160,7 @@ function rra_presets_edit() {
 
 	/* ==================== Box: RRAs ==================== */
 
-	html_start_box("<strong>" . _("RRAs") . "</strong> $header_label");
+	html_start_box("<strong>" . _("RRA Presets") . "</strong> $header_label");
 	_data_preset_rra__name("name", (isset($rra["name"]) ? $rra["name"] : ""), (isset($rra["id"]) ? $rra["id"] : "0"));
 	html_end_box();
 

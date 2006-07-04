@@ -106,7 +106,7 @@ function cdef_edit() {
 
 	/* ==================== Box: RRAs ==================== */
 
-	html_start_box("<strong>" . _("CDEFs") . "</strong> $header_label");
+	html_start_box("<strong>" . _("CDEF Presets") . "</strong> $header_label");
 	_data_preset_cdef__name("name", (isset($cdef["name"]) ? $cdef["name"] : ""), (isset($cdef["id"]) ? $cdef["id"] : "0"));
 	_data_preset_cdef__cdef_string("cdef_string", (isset($cdef["cdef_string"]) ? $cdef["cdef_string"] : ""), (isset($cdef["id"]) ? $cdef["id"] : "0"));
 	html_end_box();
