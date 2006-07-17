@@ -1269,7 +1269,7 @@ CREATE TABLE `host_data_query_cache` (
   `field_name` varchar(50) NOT NULL default '',
   `field_value` varchar(255) default NULL,
   `index_value` varchar(60) NOT NULL default '',
-  `oid` varchar(255) NOT NULL default '',
+  `oid` text NOT NULL default '',
   PRIMARY KEY  (`host_id`,`data_query_id`,`field_name`,`index_value`),
   KEY `host_id` (`host_id`,`field_name`)
 ) TYPE=MyISAM;
@@ -1601,7 +1601,7 @@ CREATE TABLE `poller_item` (
   `rrd_num` tinyint(2) unsigned NOT NULL default '0',
   `rrd_step` mediumint(8) unsigned NOT NULL default '0',
   `rrd_next_step` mediumint(9) NOT NULL default '0',
-  `arg1` varchar(255) default NULL,
+  `arg1` text default NULL,
   `arg2` varchar(255) default NULL,
   `arg3` varchar(255) default NULL,
   PRIMARY KEY  (`local_data_id`,`rrd_name`),
@@ -1645,7 +1645,7 @@ CREATE TABLE `poller_reindex` (
   `action` tinyint(3) unsigned NOT NULL default '0',
   `op` char(1) NOT NULL default '',
   `assert_value` varchar(100) NOT NULL default '',
-  `arg1` varchar(100) NOT NULL default '',
+  `arg1` varchar(255) NOT NULL default '',
   PRIMARY KEY  (`host_id`,`data_query_id`,`arg1`)
 ) TYPE=MyISAM;
 
