@@ -24,6 +24,7 @@
 
 
 /* Functions includes */
+require_once(CACTI_BASE_PATH . "/lib/event/event_form.php");
 require_once(CACTI_BASE_PATH . "/lib/event/event_info.php");
 require_once(CACTI_BASE_PATH . "/lib/event/event_update.php");
 

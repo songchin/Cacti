@@ -691,6 +691,55 @@ INSERT INTO `data_template_suggested_value` VALUES (34, 19, 'name', '|host_descr
 -- --------------------------------------------------------
 
 -- 
+-- Table structure for table `event_queue_control`
+-- 
+
+CREATE TABLE `event_queue_control` (
+  `id` int(8) NOT NULL auto_increment,
+  `plugin_id` int(8) NOT NULL default '0',
+  `handler` varchar(50) NOT NULL default '',
+  `status` int(8) NOT NULL default '1',
+  `created` int(18) NOT NULL default '0',
+  `message` text NOT NULL,
+  PRIMARY KEY  (`id`)
+) TYPE=MyISAM;
+
+
+-- 
+-- Table structure for table `event_queue_param`
+-- 
+
+CREATE TABLE `event_queue_param` (
+  `id` int(8) NOT NULL auto_increment,
+  `control_id` int(8) NOT NULL default '0',
+  `plugin_id` int(8) NOT NULL default '0',
+  `name` varchar(50) NOT NULL default '',
+  `value` varchar(255) NOT NULL default '',
+  PRIMARY KEY  (`id`)
+) TYPE=MyISAM;
+
+
+-- 
+-- Table structure for table `event_handler`
+-- 
+
+CREATE TABLE `event_handler` (
+  `id` int(8) NOT NULL auto_increment,
+  `plugin_id` int(8) NOT NULL default '0',
+  `function_name` varchar(50) NOT NULL default '',
+  `handler_name` varchar(50) NOT NULL default '',
+  PRIMARY KEY  (`id`)
+) TYPE=MyISAM;
+
+-- 
+-- Dumping data for table `event_handler`
+-- 
+
+INSERT INTO `event_handler` VALUES (1, 0, 'api_log_log_event', 'cacti_log');
+
+-- --------------------------------------------------------
+
+-- 
 -- Table structure for table `graph`
 -- 
 

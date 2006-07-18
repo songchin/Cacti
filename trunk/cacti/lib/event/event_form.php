@@ -22,31 +22,33 @@
  +-------------------------------------------------------------------------+
 */
 
-$no_http_headers = true;
 
-require(dirname(__FILE__) . "/include/global.php");
+/* form validation functions */
 
-print "Contruct a sample log message and insert it into the queue<br>";
-api_event_insert("cacti_log", array("severity" => SEV_EMERGENCY, "facility"=>FACIL_WEBUI, "message"=>"testing"));
+function api_event_fields_validate(&$_fields_event, $event_field_name_format = "|field|") {
+	if (sizeof($_fields_event) == 0) {
+		return array();
+	}
 
+	/* array containing errored fields */
+	$error_fields = array();
 
-print "Set the status on Event Items to allow processing<br>";
-/* Set the status to show which events are being processed */
-api_event_set_status();
+	/* get a complete field list */
+	$fields_event = api_event_form_list();
 
-print "Checking the Event Queue for items<br>";
-/* Get all events so we can begin processing */
-$events = api_event_list(array('status'=>1));
+	/* base fields */
+	while (list($_field_name, $_field_array) = each($fields_event)) {
+		if ((isset($_fields_event[$_field_name])) && (isset($_field_array["validate_regexp"])) && (isset($_field_array["validate_empty"]))) {
+			$form_field_name = str_replace("|field|", $_field_name, $event_field_name_format);
 
-print "Processing all items<br>";
-foreach ($events as $event) {
-	api_event_process ($event['id']);
-	print "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Processed event " . $event['id'] . '<br>';
+			if (!form_input_validate($_fields_event[$_field_name], $form_field_name, $_field_array["validate_regexp"], $_field_array["validate_empty"])) {
+				$error_fields[] = $form_field_name;
+			}
+		}
+	}
+
+	return $error_fields;
 }
-
-print "Remove all processed events from the queue<br>";
-/* Remove all events that were set to be processed */
-api_event_removed_processed();
 
 
 ?>

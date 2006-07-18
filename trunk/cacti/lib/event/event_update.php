@@ -22,6 +22,18 @@
  +-------------------------------------------------------------------------+
 */
 
+
+/**
+ * Insert an event including all parameters
+ *
+ * This function if used by plugins to insert events to be processed
+ *
+ * @param string $handler Handler Name
+ * @param array $params array of parameters, field => value elements
+ * @param string $message Event Message
+ * @param int $plugin_id ID of plugin that is inserting the event
+ * @return int row number of insert (false if unsuccessful)
+ */
 function api_event_insert($handler, $params, $message = '', $plugin_id = 0) {
 	$save['id'] = '';
 	$save["handler"] = $handler;
@@ -51,22 +63,54 @@ function api_event_insert($handler, $params, $message = '', $plugin_id = 0) {
 	return $control_id;
 }
 
+
+/**
+ * Remove an event including all parameters
+ *
+ * This function if used by the event handler to remove an event
+ *
+ * @param int $id ID of event to be removed
+ */
 function api_event_remove($id) {
 	db_execute("DELETE FROM event_queue_control WHERE id=". $id);
 	db_execute("DELETE FROM event_queue_param WHERE control_id=". $id);
 }
 
 
+/**
+ * Processes events in the queue
+ *
+ * This function if used by the Event Handler to process a specific event
+ *
+ * @param int $id ID of event to be processed
+ */
+function api_event_process ($id) {
+	$event = api_event_get($id);
+
+	$function_names = api_event_handler_function_name ($event['handler']);
+	foreach ($function_names as $function_name) {
+		$function_name ($event);
+	}
+}
 
 
-
-
-
-
+/**
+ * Update event status
+ *
+ * This function sets the status of all events to 1 to allow them to be processed
+ *
+ */
 function api_event_set_status() {
 	db_execute("UPDATE event_queue_control set status = 1");
 }
 
+
+/**
+ * Remove all processed events
+ *
+ * This function removes all events from the queue that have a status showing that they have been processed.
+ *
+ */
 function api_event_removed_processed() {
 	$events = db_fetch_assoc("SELECT id FROM event_queue_control where status = 1");
 	db_execute("DELETE FROM event_queue_control WHERE status=1");

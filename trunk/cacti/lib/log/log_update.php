@@ -122,6 +122,28 @@ function api_log_log($message, $severity = SEV_INFO, $facility = FACIL_WEBUI, $p
 
 
 /**
+ * Event Handler for Loggings a message to the configured logging system
+ *
+ * This function is designed to be used by the Event Manager for logging to the cacti system
+ *
+ * @param array $params This is an array of values from the Event Manager that may or may not include all necessary parameters for the Cacti logging function
+ */
+function api_log_log_event ($params) {
+	/* read in the passed values, and set defaults if they do not exist */
+	$message   = ((isset($params['message']))   ? $params['message']   : '');
+	$severity  = ((isset($params['severity']))  ? $params['severity']  : FACIL_WEBUI);
+	$facility  = ((isset($params['facility']))  ? $params['facility']  : SEV_INFO);
+	$plugin    = ((isset($params['plugin']))    ? $params['plugin']    : '');
+	$poller_id = ((isset($params['poller_id'])) ? $params['poller_id'] : 0);
+	$host_id   = ((isset($params['host_id']))   ? $params['host_id']   : 0);
+	$output    = ((isset($params['output']))    ? $params['output']    : false);
+
+	/* Log the event to the Cacti Logger, which will decide where to actually place it from here */
+	api_log_log($message, $severity, $facility, $plugin, $poller_id, $host_id, $output);
+}
+
+
+/**
  * Manages the cacti system log
  *
  * Maintains the cacti system log based on system settings

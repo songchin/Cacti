@@ -22,11 +22,16 @@
  +-------------------------------------------------------------------------+
 */
 
-/* Returns an array of "name => value" pairs of items just in the event_control_queue table.
-   $filters is an array of "name => value" to query on using the "and" clause. */
 
+/**
+ * List Event records
+ *
+ * Given filter array, return list of event records
+ *
+ * @param array $filter_array filter array, field => value elements
+ * @return array event records
+ */
 function api_event_list($filter_array) {
-
 	$sql_where = "";
 	/* validation and setup for the WHERE clause */
 	if ((is_array($filter_array)) && (sizeof($filter_array) > 0)) {
@@ -39,15 +44,41 @@ function api_event_list($filter_array) {
 			return false;
 		/* otherwise, form an SQL WHERE string using the filter fields */
 		}else{
-			$sql_where = sql_filter_array_to_where_string($filter_array, api_poller_form_list(), true);
+			$sql_where = sql_filter_array_to_where_string($filter_array, api_event_form_list(), true);
 		}
 	}
-
 	return db_fetch_assoc("SELECT * FROM event_queue_control $sql_where");
 }
 
-/* Returns an array of name => value pairs containing all the data for an event. */
 
+/**
+ * Retreive the function name for a given Event Hander
+ *
+ * Given a handler name, return list of function names to be called
+ *
+ * @param string $handler_name Handler name
+ * @return array list of function names
+ */
+function api_event_handler_function_name ($handler_name) {
+	$handler_name = sql_sanitize($handler_name);
+	$handlers = db_fetch_assoc("select function_name from event_handler where handler_name = '$handler_name'");
+
+	$function_name = array();
+	foreach ($handlers as $handler) {
+		$function_name[] = $handler['function_name'];
+	}
+	return $function_name;
+}
+
+
+/**
+ * Retreive an event and all associated parameters
+ *
+ * Given an event id, return all name => value pairs containing all the data for an event
+ *
+ * @param int $event_id Event ID
+ * @return array event parameters
+ */
 function api_event_get($event_id) {
 	/* sanity check for $event_id */
 	if ((!is_numeric($event_id)) || (empty($event_id))) {
@@ -64,9 +95,18 @@ function api_event_get($event_id) {
 	return $event;
 }
 
+
+/**
+ * Returns list of fields in the event form
+ *
+ * Returns list of fields in the event form for validation
+ *
+ * @return array event fields
+ */
 function &api_event_form_list() {
 	require(CACTI_BASE_PATH . "/include/event/event_form.php");
 	return $fields_event_control;
 }
+
 
 ?>
