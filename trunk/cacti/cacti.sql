@@ -1221,7 +1221,7 @@ INSERT INTO `graph_tree` VALUES (1, 1, 'Default Tree');
 -- 
 
 CREATE TABLE `graph_tree_items` (
-  `id` smallint(5) unsigned NOT NULL auto_increment,
+  `id` mediumint(8) unsigned NOT NULL auto_increment,
   `graph_tree_id` smallint(5) unsigned NOT NULL default '0',
   `order_key` varchar(100) NOT NULL default '0',
   `device_grouping_type` tinyint(3) unsigned NOT NULL default '1',
