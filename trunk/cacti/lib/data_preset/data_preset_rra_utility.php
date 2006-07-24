@@ -27,51 +27,16 @@ function api_data_preset_rra_item_friendly_name_get($consolidation_function, $st
 	require_once(CACTI_BASE_PATH . "/lib/data_preset/data_preset_rra_info.php");
 
 	$cf_types = api_data_preset_rra_cf_type_list();
+	$step_types = api_data_preset_rra_step_type_list();
 	$row_types = api_data_preset_rra_row_type_list();
 
 	$friendly_name = $cf_types[$consolidation_function] . ": ";
 
 	if (($consolidation_function == RRA_CF_TYPE_AVERAGE) || ($consolidation_function == RRA_CF_TYPE_MIN) || ($consolidation_function == RRA_CF_TYPE_MAX) || ($consolidation_function == RRA_CF_TYPE_LAST)) {
-		$friendly_name .= "Update every " . ($steps > 1 ? $steps : "") . " interval for " . $row_types[$rows];
+		$friendly_name .= "Update every " . strtolower($step_types[$steps]) . " for " . strtolower($row_types[$rows]);
 	}
 
 	return $friendly_name;
-}
-
-function api_data_preset_rra_fingerprint_generate($data_preset_rra_items) {
-	$fingerprint = "";
-	if (is_array($data_preset_rra_items)) {
-		$i = 0;
-		foreach ($data_preset_rra_items as $data_preset_rra_item) {
-			$fingerprint .= api_data_preset_rra_item_fingerprint_generate($data_preset_rra_item) . (sizeof($data_preset_rra_items) > $i + 1 ? "|" : "");
-			$i++;
-		}
-	}
-
-	return $fingerprint;
-}
-
-function api_data_preset_rra_item_fingerprint_generate($data_preset_rra_item) {
-	/* generate a separate 4 character fingerprint for each rra item so it is easy to update
-	 * one item at a time */
-	$_fingerprint = "";
-	if (is_array($data_preset_rra_item)) {
-		foreach ($data_preset_rra_item as $name => $value) {
-			/* ignore any non-visible form fields */
-			if (($name != "id") && ($name != "preset_rra_id") && ($name != "data_template_id") && ($name != "data_source_id")) {
-				$_fingerprint .= md5($value);
-			}
-		}
-	}
-
-	/* the first 4 characters of the md5 sum is *good enough* */
-	return str_pad($data_preset_rra_item["id"], 4, "0", STR_PAD_LEFT) . ":" . substr(md5($_fingerprint), 0, 4);
-}
-
-function api_data_preset_rra_fingerprint_strip($fingerprint) {
-	$parts = explode("|", ereg_replace("[0-9]{4}:", "", $fingerprint));
-	sort($parts);
-	return implode("|", $parts);
 }
 
 ?>

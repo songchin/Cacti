@@ -439,11 +439,8 @@ function _data_preset_rra_item__steps($field_name, $field_value = "", $field_id 
 			<span class="textEditTitle"><?php echo _("Update Interval (steps)");?></span><br>
 			<?php echo _("How many data points are required before the data is entered into the RRA.");?>
 		</td>
-		<td class="field-row">
-			<?php form_text_box($field_name, $field_value, "1", 5, 10, "text", $field_id);?>
-		</td>
-		<td align="right" class="field-row">
-			<span class="field-required">(required)</span>
+		<td colspan="2" class="field-row">
+			<?php form_dropdown($field_name, api_data_preset_rra_step_type_list(), "", "", $field_value, "", "300");?>
 		</td>
 	</tr>
 	<?php

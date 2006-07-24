@@ -24,6 +24,22 @@
 
 include_once(CACTI_BASE_PATH . "/include/data_preset/data_preset_rra_constants.php");
 
+$rra_preset_step_types = array(
+	60 => "1 Minute",
+	120 => "2 Minutes",
+	180 => "3 Minutes",
+	240 => "4 Minutes",
+	300 => "5 Minutes",
+	600 => "10 Minutes",
+	900 => "15 Minutes",
+	1800 => "30 Minutes",
+	3600 => "1 Hour",
+	7200 => "2 Hours",
+	21600 => "6 Hours",
+	43200 => "12 Hours",
+	86400 => "1 Day"
+	);
+
 $rra_preset_row_types = array(
 	1800 => "30 Minutes",
 	3600 => "1 Hour",

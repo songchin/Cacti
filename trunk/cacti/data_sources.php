@@ -31,8 +31,6 @@ require_once(CACTI_BASE_PATH . "/lib/device/device_info.php");
 require_once(CACTI_BASE_PATH . "/lib/data_source/data_source_update.php");
 require_once(CACTI_BASE_PATH . "/lib/data_source/data_source_form.php");
 require_once(CACTI_BASE_PATH . "/lib/data_source/data_source_info.php");
-require_once(CACTI_BASE_PATH . "/lib/data_preset/data_preset_rra_utility.php");
-require_once(CACTI_BASE_PATH . "/lib/data_preset/data_preset_rra_form.php");
 require_once(CACTI_BASE_PATH . "/lib/data_template/data_template_push.php");
 require_once(CACTI_BASE_PATH . "/lib/data_query/data_query_info.php");
 require_once(CACTI_BASE_PATH . "/lib/script/script_info.php");
@@ -152,22 +150,6 @@ function form_post() {
 			field_register_error(api_data_source_item_fields_validate($data_source_item, "dsi||field||$data_source_item_id"));
 		}
 
-		/* only worry about rra item field validation if the user is NOT using a preset */
-		if ((empty($_POST["data_template_id"])) && ($_POST["preset_rra_id"] == "new")) {
-			foreach ($rra_item_fields as $rra_item_id => $fields) {
-				/* obtain a list of visible rra item fields on the form */
-				$visible_fields = api_data_preset_rra_item_visible_field_list($fields["consolidation_function"]);
-
-				/* all non-visible fields on the form should be discarded */
-				foreach ($visible_fields as $field_name) {
-					$form_rra_item[$rra_item_id][$field_name] = $fields[$field_name];
-				}
-
-				/* validate rra item preset fields */
-				field_register_error(api_data_preset_rra_item_field_validate($form_rra_item[$rra_item_id], "rrai||field||$rra_item_id"));
-			}
-		}
-
 		/* step #3: field save */
 		if (is_error_message()) {
 			api_log_log("User input validation error for data source [ID#" . $_POST["data_source_id"] . "]", SEV_DEBUG);
@@ -178,23 +160,12 @@ function form_post() {
 			if ($data_source_id) {
 				/* treat this as a regular form with rra presets if there is no template selected */
 				if (empty($_data_template_id)) {
-					/* copy down the selected rra preset into the data template if a preset is selected */
-					if ($_POST["preset_rra_id"] == "existing") {
+					if (isset($_POST["preset_rra_id"])) {
+						/* copy down the selected rra preset into the data template if a preset is selected */
 						api_data_source_rra_item_clear($data_source_id);
 
 						/* copy down associated rra items from the preset */
-						api_data_source_preset_rra_item_copy($data_source_id, $_POST["preset_rra_id_drp"]);
-					/* if no preset is selected, just save what is on the form */
-					}else if ($_POST["preset_rra_id"] == "new") {
-						foreach (array_keys($rra_item_fields) as $rra_item_id) {
-							$form_rra_item[$rra_item_id]["data_source_id"] = $data_source_id;
-
-							$preset_rra_item_id = api_data_source_rra_item_save($rra_item_id, $form_rra_item[$rra_item_id]);
-
-							if (!$preset_rra_item_id) {
-								raise_message(2);
-							}
-						}
+						api_data_source_preset_rra_item_copy($data_source_id, $_POST["preset_rra_id"]);
 					}
 				/* rra items for templated forms ALWAYS come from the template */
 				}else{
@@ -691,103 +662,11 @@ function ds_edit() {
 		html_start_box("<strong>" . _("Data Source") . "</strong>");
 
 		_data_source_field__name("ds|name", false, (empty($_GET["id"]) ? 0 : $_GET["id"]));
-		$rra_rv = _data_source_field__rra("preset_rra_id", false, (empty($_GET["id"]) ? 0 : $_GET["id"]), api_data_preset_rra_fingerprint_generate($rra_items));
+		_data_source_field__rra("preset_rra_id", false, (isset($data_source["preset_rra_id"]) ? $data_source["preset_rra_id"] : ""), (empty($_GET["id"]) ? 0 : $_GET["id"]));
 		_data_source_field__polling_interval("ds|polling_interval", false, (isset($data_source["polling_interval"]) ? $data_source["polling_interval"] : ""), (empty($_GET["id"]) ? 0 : $_GET["id"]));
 		_data_source_field__active("ds|active", false, (isset($data_source["active"]) ? $data_source["active"] : ""), (empty($_GET["id"]) ? 0 : $_GET["id"]));
 
-		html_end_box(false);
-
-		/* always make sure that there is the right amount of vertical space between the "Data Source" and the
-		 * "RRA Items" box */
-		echo "<br id=\"box-extra-space\" style=\"display:" . ($rra_rv == "new" ? "none" : "inline") . "\" />";
-
-		/* ==================== Box: RRA Items ==================== */
-
-		_data_preset_rra_item_js("form_data_source");
-
-		$box_id = "1";
-		html_start_box("<strong>" . _("RRA Items") . "</strong>", "javascript:new_rra_item('$box_id')", "", $box_id, true, 0, ($rra_rv == "new" ? false : true));
-
-		$empty_rra_item_list = false;
-		if (is_array($rra_items)) {
-			/* if there are no rra items to display, we need to create a "fake" item which we will then turn
-			 * into a "new" row using JS */
-			if (sizeof($rra_items) == 0) {
-				$empty_rra_item_list = true;
-
-				$rra_items = array(
-					array(
-						"id" => "0",
-						"consolidation_function" => "1",
-						"steps" => "",
-						"rows" => "",
-						"x_files_factor" => "",
-						"hw_alpha" => "",
-						"hw_beta" => "",
-						"hw_gamma" => "",
-						"hw_seasonal_period" => "",
-						"hw_rra_num" => "",
-						"hw_threshold" => "",
-						"hw_window_length" => ""
-						)
-					);
-			}
-
-			foreach ($rra_items as $rra_item) {
-				?>
-				<tr id="row<?php echo $rra_item["id"];?>">
-					<td>
-						<table width="100%" cellpadding="3" cellspacing="0">
-							<tr bgcolor="<?php echo $colors["header_panel_background"];?>">
-								<td colspan="2" class="textSubHeaderDark" id="row_rra_item_header_<?php echo $rra_item["id"];?>">
-									<?php echo (empty($rra_item["id"]) ? "(new)" : api_data_preset_rra_item_friendly_name_get($rra_item["consolidation_function"], $rra_item["steps"], $rra_item["rows"]));?>
-								</td>
-								<td align="right" class="textSubHeaderDark">
-									<a class="linkOverDark" href="#" onClick="javascript:xajax__data_preset_rra_item_xajax_remove('<?php echo $rra_item["id"];?>')">Remove</a>
-								</td>
-							</tr>
-							<?php
-							_data_preset_rra_item__consolidation_function("rrai|consolidation_function|" . $rra_item["id"], $rra_item["consolidation_function"], $rra_item["id"]);
-							_data_preset_rra_item__steps("rrai|steps|" . $rra_item["id"], $rra_item["steps"], $rra_item["id"]);
-							_data_preset_rra_item__rows("rrai|rows|" . $rra_item["id"], $rra_item["rows"], $rra_item["id"]);
-							_data_preset_rra_item__x_files_factor("rrai|x_files_factor|" . $rra_item["id"], $rra_item["x_files_factor"], $rra_item["id"]);
-							_data_preset_rra_item__hw_alpha("rrai|hw_alpha|" . $rra_item["id"], $rra_item["hw_alpha"], $rra_item["id"]);
-							_data_preset_rra_item__hw_beta("rrai|hw_beta|" . $rra_item["id"], $rra_item["hw_beta"], $rra_item["id"]);
-							_data_preset_rra_item__hw_gamma("rrai|hw_gamma|" . $rra_item["id"], $rra_item["hw_gamma"], $rra_item["id"]);
-							_data_preset_rra_item__hw_seasonal_period("rrai|hw_seasonal_period|" . $rra_item["id"], $rra_item["hw_seasonal_period"], $rra_item["id"]);
-							_data_preset_rra_item__hw_rra_num("rrai|hw_rra_num|" . $rra_item["id"], $rra_item["hw_rra_num"], $rra_item["id"]);
-							_data_preset_rra_item__hw_threshold("rrai|hw_threshold|" . $rra_item["id"], $rra_item["hw_threshold"], $rra_item["id"]);
-							_data_preset_rra_item__hw_window_length("rrai|hw_window_length|" . $rra_item["id"], $rra_item["hw_window_length"], $rra_item["id"]);
-							_data_preset_rra_item__consolidation_function_js_update($rra_item["consolidation_function"], $rra_item["id"]);
-							?>
-						</table>
-					</td>
-				</tr>
-				<?php
-			}
-		}
-
 		html_end_box();
-
-		?>
-		<a name="rra_preset_bottom" />
-
-		<script language="JavaScript">
-		<!--
-		click_rra_radio();
-		-->
-		</script>
-
-		<?php
-		if ($empty_rra_item_list == true) {
-			?>
-			<script language="JavaScript">
-			<!--
-			make_row_new(document.getElementById("row0"), true);
-			-->
-			</script>
-			<?php
-		}
 
 		/* ==================== Box: Data Source Item ==================== */
 

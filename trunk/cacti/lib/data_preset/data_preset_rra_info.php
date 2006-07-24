@@ -47,6 +47,12 @@ function api_data_preset_rra_item_get($preset_rra_item_id) {
 	return db_fetch_row("select * from preset_rra_item where id = " . sql_sanitize($preset_rra_item_id));
 }
 
+function &api_data_preset_rra_step_type_list() {
+	require(CACTI_BASE_PATH . "/include/data_preset/data_preset_rra_arrays.php");
+
+	return $rra_preset_step_types;
+}
+
 function &api_data_preset_rra_row_type_list() {
 	require(CACTI_BASE_PATH . "/include/data_preset/data_preset_rra_arrays.php");
 

@@ -625,105 +625,30 @@ function _data_source_field__rrd_path($field_name, $template_flag = false, $fiel
 	<?php
 }
 
-function _data_source_field__rra($field_name, $template_flag = false, $field_id = 0, $fingerprint = "", $t_field_name = "", $t_field_value = "") {
+function _data_source_field__rra($field_name, $template_flag = false, $field_value = "", $field_id = 0, $rrd_exists = false) {
 	require_once(CACTI_BASE_PATH . "/lib/sys/html_form.php");
 	require_once(CACTI_BASE_PATH . "/lib/data_preset/data_preset_rra_info.php");
 
 	$rra_presets = api_data_preset_rra_list();
 
-	$field_value = "0";
-	/* default to allowing the user to select an rra preset */
-	if (empty($field_id)) {
-		$radio_value = "existing";
-	/* no rra items typically mean that this is a new data source which means we should allow
-	 * the user to select a preset */
-	}else if ($fingerprint == "") {
-		$radio_value = "existing";
-	/* try to determine if we should prompt the user for an existing preset or allow them to
-	 * specify their own rra items */
-	}else{
-		/* grab a sorted version of the fingerprint for the rra items stored with this data template */
-		$data_template_fingerprint = api_data_preset_rra_fingerprint_strip($fingerprint);
-
-		$radio_value = "new";
-		if (is_array($rra_presets)) {
-			foreach ($rra_presets as $rra_preset) {
-				/* if the fingerprints match, we should select the rra preset in the dropdown */
-				if ($data_template_fingerprint == api_data_preset_rra_fingerprint_strip($rra_preset["fingerprint"])) {
-					$radio_value = "existing";
-					$field_value = $rra_preset["id"];
-				}
-			}
-		}
-	}
-
 	?>
 	<tr class="<?php echo field_get_row_style();?>">
 		<td width="50%" class="field-row">
-			<span class="textEditTitle"><?php echo _("RRA");?></span><br>
-			<?php
-			//if ($template_flag == false) {
-				echo _("Represents the type and length of data that is to be stored in the RRA for this data source.");
-			//}
-			?>
+			<span class="textEditTitle"><?php echo _("Data Collection Profile");?></span><br>
+			<?php echo _("Represents the type and length of data that is to be stored in the RRA for this data source.");?>
 		</td>
 		<td class="field-row" colspan="2">
-			<table width="100%" cellspacing="0" cellpadding="2">
-				<tr>
-					<td width="1%">
-						<?php form_radio_button($field_name, $radio_value, "existing", "", "new", "click_rra_radio()");?>
-					</td>
-					<td>
-						Use existing RRA
-					</td>
-				</tr>
-				<tr id="<?php echo $field_name . "_tr_drp";?>">
-					<td>
-					</td>
-					<td>
-						<?php form_dropdown($field_name . "_drp", $rra_presets, "name", "id", $field_value, "", "");?>
-					</td>
-				</tr>
-				<tr>
-					<td width="1%">
-						<?php form_radio_button($field_name, $radio_value, "new", "", "new", "click_rra_radio()");?>
-					</td>
-					<td>
-						Specify new RRA (See below)
-					</td>
-				</tr>
-			</table>
+			<?php
+			if ($rrd_exists == true) {
+				echo _("You cannot change the data collection profile once the RRD file has been created.");
+			}else{
+				form_dropdown($field_name, $rra_presets, "name", "id", $field_value, "", "");
+			}
+			?>
 		</td>
 	</tr>
 
-	<script language="JavaScript">
-	<!--
-	function click_rra_radio() {
-		if (get_radio_value(document.forms[0].<?php echo $field_name;?>) == 'new') {
-			select_radio_rra_new();
-		}else{
-			select_radio_rra_existing();
-		}
-	}
-
-	function select_radio_rra_new() {
-		document.getElementById('box-1').style.display = 'table';
-		document.getElementById('box-extra-space').style.display = 'inline'; // vertical space between the "Data Source" and "RRA Items" boxes
-		document.getElementById('<?php echo $field_name;?>_tr_drp').style.display = 'none';
-	}
-
-	function select_radio_rra_existing() {
-		document.getElementById('box-1').style.display = 'none';
-		document.getElementById('box-extra-space').style.display = 'none'; // vertical space between the "Data Source" and "RRA Items" boxes
-		document.getElementById('<?php echo $field_name;?>_tr_drp').style.display = 'table-row';
-	}
-
-	click_rra_radio();
-	-->
-	</script>
-
 	<?php
-	return $radio_value;
 }
 
 function _data_source_field__polling_interval($field_name, $template_flag = false, $field_value = "", $field_id = 0, $t_field_name = "", $t_field_value = "") {
