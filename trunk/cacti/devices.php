@@ -543,10 +543,26 @@ function host_edit() {
 												$host["snmp_version"], $host["snmpv3_auth_username"], $host["snmpv3_auth_password"],
 												$host["snmpv3_auth_protocol"], $host["snmpv3_priv_passphrase"], $host["snmpv3_priv_protocol"],
 												$host["snmp_port"], $host["snmp_timeout"], SNMP_WEBUI);
+							$snmp_location = cacti_snmp_get($host["hostname"], $host["snmp_community"], ".1.3.6.1.2.1.1.6.0",
+												$host["snmp_version"], $host["snmpv3_auth_username"], $host["snmpv3_auth_password"],
+												$host["snmpv3_auth_protocol"], $host["snmpv3_priv_passphrase"], $host["snmpv3_priv_protocol"],
+												$host["snmp_port"], $host["snmp_timeout"], SNMP_WEBUI);
+							$snmp_contact = cacti_snmp_get($host["hostname"], $host["snmp_community"], ".1.3.6.1.2.1.1.4.0",
+												$host["snmp_version"], $host["snmpv3_auth_username"], $host["snmpv3_auth_password"],
+												$host["snmpv3_auth_protocol"], $host["snmpv3_priv_passphrase"], $host["snmpv3_priv_protocol"],
+												$host["snmp_port"], $host["snmp_timeout"], SNMP_WEBUI);
 
-							print "<strong>" . _("System:") . "</strong> $snmp_system<br>\n";
-							print "<strong>" . _("Uptime:") . "</strong> $snmp_uptime<br>\n";
+							print "<strong>System:</strong> $snmp_system<br>\n";
+							$days = intval($snmp_uptime / (60*60*24*100));
+							$remainder = $snmp_uptime % (60*60*24*100);
+							$hours = intval($remainder / (60*60*100));
+							$remainder = $remainder % (60*60*100);
+							$minutes = intval($remainder / (60*100));
+							print "<strong>" . _("Uptime:") . "</strong> $snmp_uptime";
+							print "&nbsp;($days days, $hours hours, $minutes minutes)<br>\n";
 							print "<strong>" . _("Hostname:") . "</strong> $snmp_hostname<br>\n";
+							print "<strong>" . _("Location:") . "</strong> $snmp_location<br>\n";
+							print "<strong>" . _("Contact:") . "</strong> $snmp_contact<br>\n";
 						}
 					}
 					?>
