@@ -38,10 +38,10 @@ function api_data_query_execute($host_id, $data_query_id) {
 		$result = api_data_query_snmp_execute($host_id, $data_query_id);
 	}elseif ($data_query["input_type"] == DATA_QUERY_INPUT_TYPE_SCRIPT_QUERY) {
 		debug_log_insert("data_query", _("Found type = '2 '[script query]."));
-		$result = query_script_host($host_id, $data_query_id);
+		$result = api_data_query_script_execute($host_id, $data_query_id);
 	}elseif ($data_query["input_type"] == DATA_QUERY_INPUT_TYPE_PHP_SCRIPT_SERVER_QUERY) {
 		debug_log_insert("data_query", _("Found type = '3 '[php script server query]."));
-		$result = query_script_host($host_id, $data_query_id);
+		$result = api_data_query_script_execute($host_id, $data_query_id);
 	}else{
 		debug_log_insert("data_query", sprintf(_("Unknown type = '%i'"), $data_query["input_type"]));
 	}
@@ -58,7 +58,7 @@ function api_data_query_execute($host_id, $data_query_id) {
 	return (isset($result) ? $result : true);
 }
 
-function query_script_host($host_id, $data_query_id) {
+function api_data_query_script_execute($host_id, $data_query_id) {
 	require_once(CACTI_BASE_PATH . "/include/data_query/data_query_constants.php");
 	require_once(CACTI_BASE_PATH . "/lib/data_query/data_query_info.php");
 	require_once(CACTI_BASE_PATH . "/lib/sys/exec.php");
