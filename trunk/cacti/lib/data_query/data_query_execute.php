@@ -58,56 +58,104 @@ function api_data_query_execute($host_id, $data_query_id) {
 	return (isset($result) ? $result : true);
 }
 
-function query_script_host($host_id, $snmp_query_id) {
-	require_once(CACTI_BASE_PATH . "/lib/sys/exec.php");
+function query_script_host($host_id, $data_query_id) {
+	require_once(CACTI_BASE_PATH . "/include/data_query/data_query_constants.php");
 	require_once(CACTI_BASE_PATH . "/lib/data_query/data_query_info.php");
+	require_once(CACTI_BASE_PATH . "/lib/sys/exec.php");
 
-	//$script_queries = get_data_query_array($snmp_query_id);
+	/* get information about the data query */
+	$data_query = api_data_query_get($data_query_id);
 
-	//if ($script_queries == false) {
-	//	debug_log_insert("data_query", _("Error parsing XML file into an array."));
-	//	return false;
-	//}
+	/* get a list of all input fields defined for this data query */
+	$data_query_fields = api_data_query_field_list($data_query_id, DATA_QUERY_FIELD_TYPE_INPUT);
 
-	//debug_log_insert("data_query", _("XML file parsed ok."));
-
-	if (isset($script_queries["script_server"])) {
-		$script_queries["script_path"] = "|path_php_binary| -q " . $script_queries["script_path"];
+	if ($data_query["input_type"] == DATA_QUERY_INPUT_TYPE_PHP_SCRIPT_SERVER_QUERY) {
+		$script_path = api_data_query_script_path_format("|path_php_binary| -q " . $data_query["script_path"]);
+	}else{
+		$script_path = api_data_query_script_path_format($data_query["script_path"]);
 	}
 
-	$script_path = get_script_query_path((isset($script_queries["arg_prepend"]) ? $script_queries["arg_prepend"] . " ": "") . DATA_QUERY_SCRIPT_ARG_INDEX, $script_queries["script_path"], $host_id);
+	/* fetch a list of indexes for this data query */
+	$field_values{$data_query["index_field_id"]} = api_data_query_script_execute_field($host_id, $data_query["index_field_id"], $script_path);
 
-	/* fetch specified index at specified OID */
-	$script_index_array = exec_into_array($script_path);
+	if (($field_values{$data_query["index_field_id"]} === false) || (sizeof($field_values{$data_query["index_field_id"]}) == 0)) {
+		debug_log_insert("data_query", _("No indexes returned, cannot continue."));
+		return false;
+	}
 
-	debug_log_insert("data_query", sprintf(_("Executing script for list of indexes '%s'"), $script_path));
+	/* reindex the parsed index values as a hash (value->oid) for quicker access. DUPLICATE INDEX VALUES
+	 * WILL CAUSE PROBLEMS HERE */
+	foreach ($field_values{$data_query["index_field_id"]} as $result) {
+		$index_field_values{$result["value"]} = true;
+	}
 
-	db_execute("delete from host_snmp_cache where host_id=$host_id and snmp_query_id=$snmp_query_id");
+	/* clear old data from the data query cache */
+	db_execute("delete from host_data_query_cache where host_id = " . sql_sanitize($host_id) . " and data_query_id = " . sql_sanitize($data_query_id));
 
-	while (list($field_name, $field_array) = each($script_queries["fields"])) {
-		if ($field_array["direction"] == "input") {
-			$script_path = get_script_query_path((isset($script_queries["arg_prepend"]) ? $script_queries["arg_prepend"] . " ": "") . DATA_QUERY_SCRIPT_ARG_QUERY . " " . $field_array["query_name"], $script_queries["script_path"], $host_id);
+	if (is_array($data_query_fields)) {
+		foreach ($data_query_fields as $data_query_field) {
+			/* fetch a list of values for this field (assuming that we haven't already seen it */
+			if (!isset($field_values{$data_query_field["id"]})) {
+				$field_values{$data_query_field["id"]} = api_data_query_script_execute_field($host_id, $data_query_field["id"], $script_path);
+			}else{
+				debug_log_insert("data_query", sprintf(_("Executing script for list of values '%s' (cached)"), $script_path . " " . DATA_QUERY_SCRIPT_ARG_QUERY . " " . $data_query_field["source"]));
+			}
 
-			$script_data_array = exec_into_array($script_path);
+			/* see if we have some output to play with */
+			if (($field_values{$data_query_field["id"]} !== false) && (sizeof($field_values{$data_query_field["id"]}) > 0)) {
+				foreach ($field_values{$data_query_field["id"]} as $found_index => $result) {
+					/* a match for this index has been located */
+					if (isset($index_field_values[$found_index])) {
+						debug_log_insert("data_query", sprintf(_("Found value [%s = '%s'] for index [%s]"), $data_query_field["name"], $result["value"], $found_index));
 
-			debug_log_insert("data_query", sprintf(_("Executing script query '%s'"), $script_path));
-
-			for ($i=0;($i<sizeof($script_data_array));$i++) {
-				if (preg_match("/(.*)" . preg_quote($script_queries["output_delimeter"]) . "(.*)/", $script_data_array[$i], $matches)) {
-					$script_index = $matches[1];
-					$field_value = $matches[2];
-
-					db_execute("replace into host_snmp_cache
-						(host_id,snmp_query_id,field_name,field_value,snmp_index,oid)
-						values ($host_id,$snmp_query_id,'$field_name','$field_value','$script_index','')");
-
-					debug_log_insert("data_query", sprintf(_("Found item [%s='%s'] index: %s"), $field_name, $field_value, $script_index));
+						db_insert("host_data_query_cache",
+							array(
+								"host_id" => array("type" => DB_TYPE_NUMBER, "value" => $host_id),
+								"data_query_id" => array("type" => DB_TYPE_NUMBER, "value" => $data_query_id),
+								"field_name" => array("type" => DB_TYPE_STRING, "value" => $data_query_field["name"]),
+								"field_value" => array("type" => DB_TYPE_STRING, "value" => $result["value"]),
+								"index_value" => array("type" => DB_TYPE_STRING, "value" => $found_index)
+								),
+							array("host_id", "data_query_id", "field_name", "index_value"));
+					/* a match for this index has not been located */
+					}else{
+						debug_log_insert("data_query", _("Ignoring unknown index '$found_index'."));
+					}
 				}
+			}else{
+				debug_log_insert("data_query", _("No values returned from the field '" . $data_query_field["name"] . "', ignoring."));
 			}
 		}
 	}
 
 	return true;
+}
+
+function api_data_query_script_execute_field($host_id, $data_query_field_id, $script_path) {
+	require_once(CACTI_BASE_PATH . "/include/data_query/data_query_constants.php");
+	require_once(CACTI_BASE_PATH . "/lib/data_query/data_query_info.php");
+	require_once(CACTI_BASE_PATH . "/lib/device/device_info.php");
+
+	/* fetch information about the data query field */
+	$data_query_field = api_data_query_field_get($data_query_field_id);
+
+	/* query a list of values for the script query field */
+	$script_field_path = $script_path . " " . DATA_QUERY_SCRIPT_ARG_QUERY . " " . $data_query_field["source"];
+	debug_log_insert("data_query", sprintf(_("Executing script for list of values '%s'"), $script_field_path));
+	$script_field_array = exec_into_array($script_field_path);
+
+	$values_array = array();
+	for ($i = 0; $i < sizeof($script_field_array); $i++) {
+		/* parse each row into an index -> value pair */
+		if (preg_match("/(.*):(.*)/", $script_field_array[$i], $matches)) {
+			$data_query_index = $matches[1];
+			$field_value = $matches[2];
+
+			$values_array[$data_query_index] = array("value" => $field_value);
+		}
+	}
+
+	return $values_array;
 }
 
 function api_data_query_snmp_execute($host_id, $data_query_id) {
@@ -138,7 +186,7 @@ function api_data_query_snmp_execute($host_id, $data_query_id) {
 	/* clear old data from the data query cache */
 	db_execute("delete from host_data_query_cache where host_id = " . sql_sanitize($host_id) . " and data_query_id = " . sql_sanitize($data_query_id));
 
-	if (sizeof($data_query_fields) > 0) {
+	if (is_array($data_query_fields)) {
 		foreach ($data_query_fields as $field) {
 			/* fetch a list of values for this field (assuming that we haven't already seen it */
 			if (!isset($field_values{$field["id"]})) {
@@ -161,7 +209,7 @@ function api_data_query_snmp_execute($host_id, $data_query_id) {
 
 					/* a match for this index has been located */
 					if (isset($index_field_values[$expected_index])) {
-						debug_log_insert("data_query", "Found value [" . $field["name"] . " = '" . $result["value_parsed"] . "'] for index [$expected_index]");
+						debug_log_insert("data_query", sprintf(_("Found value [%s = '%s'] for index [%s]"), $field["name"], $result["value_parsed"], $expected_index));
 
 						db_insert("host_data_query_cache",
 							array(

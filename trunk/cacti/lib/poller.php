@@ -323,7 +323,7 @@ function update_reindex_cache($host_id, $data_query_id) {
 					array_push($recache_stack, "insert into poller_reindex (host_id,data_query_id,action,op,assert_value,arg1) values (" . sql_sanitize($host_id) . "," . sql_sanitize($data_query_id) . ",0,'=','" . sql_sanitize($assert_value) . "','" . sql_sanitize($data_query["snmp_oid_num_rows"]) . "')");
 				}
 			}else if ($data_query_type == DATA_QUERY_INPUT_TYPE_SCRIPT_QUERY) {
-				array_push($recache_stack, "insert into poller_reindex (host_id,data_query_id,action,op,assert_value,arg1) values (" . sql_sanitize($host_id) . "," . sql_sanitize($data_query_id) . ",1,'=','" . sql_sanitize($assert_value) . "','" . sql_sanitize(get_script_query_path((isset($data_query_xml["arg_prepend"]) ? $data_query_xml["arg_prepend"] . " ": "") . DATA_QUERY_SCRIPT_ARG_NUM_INDEXES, $data_query_xml["script_path"], $host_id)) . "')");
+				array_push($recache_stack, "insert into poller_reindex (host_id,data_query_id,action,op,assert_value,arg1) values (" . sql_sanitize($host_id) . "," . sql_sanitize($data_query_id) . ",1,'=','" . sql_sanitize($assert_value) . "','" . sql_sanitize(api_data_query_script_path_format($data_query_xml["script_path"]) . DATA_QUERY_SCRIPT_ARG_NUM_INDEXES) . "')");
 			}
 
 			break;
@@ -337,7 +337,7 @@ function update_reindex_cache($host_id, $data_query_id) {
 					if ($data_query_type == DATA_QUERY_INPUT_TYPE_SNMP_QUERY) {
 						array_push($recache_stack, "insert into poller_reindex (host_id,data_query_id,action,op,assert_value,arg1) values (" . sql_sanitize($host_id) . "," . sql_sanitize($data_query_id) . ",0,'=','" . sql_sanitize($assert_value) . "','" . sql_sanitize($index["oid"]) . "')");
 					}else if ($data_query_type == DATA_QUERY_INPUT_TYPE_SCRIPT_QUERY) {
-						array_push($recache_stack, "insert into poller_reindex (host_id,data_query_id,action,op,assert_value,arg1) values (" . sql_sanitize($host_id) . "," . sql_sanitize($data_query_id) . ",1,'=','" . sql_sanitize($assert_value) . "','" . sql_sanitize(get_script_query_path((isset($data_query_xml["arg_prepend"]) ? $data_query_xml["arg_prepend"] . " ": "") . DATA_QUERY_SCRIPT_ARG_GET . " " . $data_query_xml["fields"]{$data_query["sort_field"]}["query_name"] . " " . $index["snmp_index"], $data_query_xml["script_path"], $host_id)) . "')");
+						array_push($recache_stack, "insert into poller_reindex (host_id,data_query_id,action,op,assert_value,arg1) values (" . sql_sanitize($host_id) . "," . sql_sanitize($data_query_id) . ",1,'=','" . sql_sanitize($assert_value) . "','" . sql_sanitize(api_data_query_script_path_format($data_query_xml["script_path"]) . DATA_QUERY_SCRIPT_ARG_GET . " " . $data_query_xml["fields"]{$data_query["sort_field"]}["query_name"] . " " . $index["snmp_index"]) . "')");
 					}
 				}
 			}

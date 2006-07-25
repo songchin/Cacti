@@ -3,7 +3,7 @@
 -- 
 
 CREATE TABLE `auth_control` (
-  `id` mediumint(8) unsigned NOT NULL,
+  `id` mediumint(8) unsigned NOT NULL default '0',
   `name` varchar(100) NOT NULL default '',
   `description` varchar(255) default NULL,
   `object_type` int(8) unsigned NOT NULL default '0',
@@ -30,7 +30,7 @@ CREATE TABLE `auth_control` (
 -- 
 
 CREATE TABLE `auth_data` (
-  `id` mediumint(8) unsigned NOT NULL,
+  `id` mediumint(8) unsigned NOT NULL default '0',
   `control_id` mediumint(8) unsigned NOT NULL default '0',
   `name` varchar(100) NOT NULL default '',
   `enable_user_edit` int(1) unsigned NOT NULL default '0',
@@ -58,7 +58,7 @@ CREATE TABLE `auth_data` (
 -- 
 
 CREATE TABLE `auth_graph_perms` (
-  `id` mediumint(8) unsigned NOT NULL,
+  `id` mediumint(8) unsigned NOT NULL default '0',
   `item_id` mediumint(8) unsigned NOT NULL default '0',
   `type` mediumint(8) unsigned NOT NULL default '0',
   `control_id` mediumint(8) unsigned NOT NULL default '0',
@@ -80,7 +80,7 @@ CREATE TABLE `auth_graph_perms` (
 -- 
 
 CREATE TABLE `auth_link` (
-  `id` mediumint(8) unsigned NOT NULL,
+  `id` mediumint(8) unsigned NOT NULL default '0',
   `control_id` mediumint(8) unsigned NOT NULL default '0',
   `parent_id` mediumint(8) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`),
@@ -100,7 +100,7 @@ CREATE TABLE `auth_link` (
 -- 
 
 CREATE TABLE `auth_perm` (
-  `id` mediumint(8) unsigned NOT NULL,
+  `id` mediumint(8) unsigned NOT NULL default '0',
   `name` varchar(100) NOT NULL default '',
   `description` text NOT NULL,
   `category` varchar(100) default NULL,
@@ -123,7 +123,7 @@ CREATE TABLE `auth_perm` (
 -- 
 
 CREATE TABLE `auth_perm_link` (
-  `id` mediumint(8) unsigned NOT NULL,
+  `id` mediumint(8) unsigned NOT NULL default '0',
   `control_id` mediumint(8) unsigned NOT NULL default '0',
   `perm_id` mediumint(8) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`),
@@ -143,7 +143,7 @@ CREATE TABLE `auth_perm_link` (
 -- 
 
 CREATE TABLE `data_input` (
-  `id` mediumint(8) unsigned NOT NULL,
+  `id` mediumint(8) unsigned NOT NULL default '0',
   `package_id` mediumint(8) unsigned NOT NULL default '0',
   `name` varchar(200) NOT NULL default '',
   `input_string` varchar(255) default NULL,
@@ -171,7 +171,7 @@ INSERT INTO `data_input` VALUES (11, 97, 'Unix - Get Load Average', 'perl <path_
 -- 
 
 CREATE TABLE `data_input_fields` (
-  `id` mediumint(8) unsigned NOT NULL,
+  `id` mediumint(8) unsigned NOT NULL default '0',
   `hash` varchar(32) NOT NULL default '',
   `data_input_id` mediumint(8) unsigned NOT NULL default '0',
   `field_input_type` tinyint(1) unsigned NOT NULL default '1',
@@ -217,7 +217,7 @@ INSERT INTO `data_input_fields` VALUES (55, '24188537860a5bd4b599e5e403006add', 
 -- 
 
 CREATE TABLE `data_query` (
-  `id` mediumint(8) unsigned NOT NULL,
+  `id` mediumint(8) unsigned NOT NULL default '0',
   `package_id` mediumint(8) unsigned NOT NULL default '0',
   `input_type` tinyint(3) unsigned NOT NULL default '0',
   `name` varchar(100) NOT NULL default '',
@@ -248,7 +248,7 @@ INSERT INTO `data_query` VALUES (5, 0, 2, 'Unix - Disk Partitions', 'dskDevice',
 -- 
 
 CREATE TABLE `data_query_field` (
-  `id` mediumint(8) unsigned NOT NULL,
+  `id` mediumint(8) unsigned NOT NULL default '0',
   `data_query_id` mediumint(8) unsigned NOT NULL default '0',
   `type` tinyint(3) unsigned NOT NULL default '0',
   `name` varchar(50) NOT NULL default '',
@@ -315,7 +315,7 @@ INSERT INTO `data_query_field` VALUES (45, 5, 2, 'dskPercentUsed', 'Percent Used
 -- 
 
 CREATE TABLE `data_source` (
-  `id` mediumint(8) unsigned NOT NULL,
+  `id` mediumint(8) unsigned NOT NULL default '0',
   `host_id` mediumint(8) unsigned NOT NULL default '0',
   `data_template_id` mediumint(8) unsigned NOT NULL default '0',
   `data_input_type` tinyint(1) unsigned NOT NULL default '3',
@@ -361,7 +361,7 @@ CREATE TABLE `data_source_field` (
 -- 
 
 CREATE TABLE `data_source_item` (
-  `id` mediumint(8) unsigned NOT NULL,
+  `id` mediumint(8) unsigned NOT NULL default '0',
   `data_source_id` mediumint(8) unsigned NOT NULL default '0',
   `data_template_item_id` mediumint(8) unsigned NOT NULL default '0',
   `rrd_maximum` varchar(20) NOT NULL default '0',
@@ -388,7 +388,7 @@ CREATE TABLE `data_source_item` (
 -- 
 
 CREATE TABLE `data_source_rra_item` (
-  `id` mediumint(8) unsigned NOT NULL,
+  `id` mediumint(8) unsigned NOT NULL default '0',
   `data_source_id` mediumint(8) unsigned NOT NULL default '0',
   `consolidation_function` tinyint(3) unsigned NOT NULL default '0',
   `steps` smallint(5) unsigned NOT NULL default '0',
@@ -416,7 +416,7 @@ CREATE TABLE `data_source_rra_item` (
 -- 
 
 CREATE TABLE `data_template` (
-  `id` mediumint(8) unsigned NOT NULL,
+  `id` mediumint(8) unsigned NOT NULL default '0',
   `package_id` mediumint(8) unsigned NOT NULL default '0',
   `template_name` varchar(150) NOT NULL default '',
   `data_input_type` tinyint(1) unsigned NOT NULL default '3',
@@ -547,7 +547,7 @@ INSERT INTO `data_template_field` VALUES (19, 'script_id', 0, '11');
 -- 
 
 CREATE TABLE `data_template_item` (
-  `id` mediumint(8) unsigned NOT NULL,
+  `id` mediumint(8) unsigned NOT NULL default '0',
   `data_template_id` mediumint(8) unsigned NOT NULL default '0',
   `t_rrd_maximum` tinyint(1) unsigned NOT NULL default '0',
   `rrd_maximum` varchar(20) NOT NULL default '0',
@@ -614,7 +614,7 @@ INSERT INTO `data_template_item` VALUES (36, 19, 0, '2000', 0, '0', 0, 600, 0, 1
 -- 
 
 CREATE TABLE `data_template_rra_item` (
-  `id` mediumint(8) unsigned NOT NULL,
+  `id` mediumint(8) unsigned NOT NULL default '0',
   `data_template_id` mediumint(8) unsigned NOT NULL default '0',
   `consolidation_function` tinyint(3) unsigned NOT NULL default '0',
   `steps` smallint(5) unsigned NOT NULL default '0',
@@ -642,7 +642,7 @@ CREATE TABLE `data_template_rra_item` (
 -- 
 
 CREATE TABLE `data_template_suggested_value` (
-  `id` mediumint(8) unsigned NOT NULL,
+  `id` mediumint(8) unsigned NOT NULL default '0',
   `data_template_id` mediumint(8) unsigned NOT NULL default '0',
   `field_name` varchar(30) NOT NULL default '',
   `value` varchar(255) NOT NULL default '',
@@ -697,7 +697,7 @@ INSERT INTO `data_template_suggested_value` VALUES (34, 19, 'name', '|host_descr
 -- 
 
 CREATE TABLE `event_handler` (
-  `id` int(8) NOT NULL,
+  `id` int(8) NOT NULL default '0',
   `plugin_id` int(8) NOT NULL default '0',
   `function_name` varchar(50) NOT NULL default '',
   `handler_name` varchar(50) NOT NULL default '',
@@ -717,7 +717,7 @@ INSERT INTO `event_handler` VALUES (1, 0, 'api_log_log_event', 'cacti_log');
 -- 
 
 CREATE TABLE `event_queue_control` (
-  `id` int(8) NOT NULL,
+  `id` int(8) NOT NULL default '0',
   `plugin_id` int(8) NOT NULL default '0',
   `handler` varchar(50) NOT NULL default '',
   `status` int(8) NOT NULL default '1',
@@ -738,7 +738,7 @@ CREATE TABLE `event_queue_control` (
 -- 
 
 CREATE TABLE `event_queue_param` (
-  `id` int(8) NOT NULL,
+  `id` int(8) NOT NULL default '0',
   `control_id` int(8) NOT NULL default '0',
   `plugin_id` int(8) NOT NULL default '0',
   `name` varchar(50) NOT NULL default '',
@@ -758,7 +758,7 @@ CREATE TABLE `event_queue_param` (
 -- 
 
 CREATE TABLE `graph` (
-  `id` mediumint(8) unsigned NOT NULL,
+  `id` mediumint(8) unsigned NOT NULL default '0',
   `host_id` mediumint(8) unsigned NOT NULL default '0',
   `graph_template_id` mediumint(8) unsigned NOT NULL default '0',
   `image_format` tinyint(1) unsigned NOT NULL default '0',
@@ -801,7 +801,7 @@ CREATE TABLE `graph` (
 -- 
 
 CREATE TABLE `graph_item` (
-  `id` mediumint(8) unsigned NOT NULL,
+  `id` mediumint(8) unsigned NOT NULL default '0',
   `graph_id` mediumint(8) unsigned NOT NULL default '0',
   `graph_template_item_id` mediumint(8) unsigned NOT NULL default '0',
   `sequence` smallint(5) unsigned NOT NULL default '0',
@@ -831,7 +831,7 @@ CREATE TABLE `graph_item` (
 -- 
 
 CREATE TABLE `graph_template` (
-  `id` mediumint(8) unsigned NOT NULL,
+  `id` mediumint(8) unsigned NOT NULL default '0',
   `package_id` mediumint(8) unsigned NOT NULL default '0',
   `template_name` varchar(150) NOT NULL default '',
   `t_image_format` tinyint(1) unsigned NOT NULL default '0',
@@ -913,7 +913,7 @@ INSERT INTO `graph_template` VALUES (21, 9, 'Host MIB - Processes', 0, 1, 0, 0, 
 -- 
 
 CREATE TABLE `graph_template_item` (
-  `id` mediumint(8) unsigned NOT NULL,
+  `id` mediumint(8) unsigned NOT NULL default '0',
   `graph_template_id` mediumint(8) unsigned NOT NULL default '0',
   `sequence` smallint(5) unsigned NOT NULL default '0',
   `data_template_item_id` mediumint(8) unsigned NOT NULL default '0',
@@ -1110,7 +1110,7 @@ INSERT INTO `graph_template_item` VALUES (186, 17, 6, 36, '', 9, '', 1, '%8.2lf'
 -- 
 
 CREATE TABLE `graph_template_item_input` (
-  `id` mediumint(8) unsigned NOT NULL,
+  `id` mediumint(8) unsigned NOT NULL default '0',
   `graph_template_id` mediumint(8) unsigned NOT NULL default '0',
   `name` varchar(255) NOT NULL default '',
   `field_name` varchar(30) NOT NULL default '',
@@ -1150,7 +1150,7 @@ INSERT INTO `graph_template_item_input_item` VALUES (1, 173);
 -- 
 
 CREATE TABLE `graph_template_suggested_value` (
-  `id` mediumint(8) unsigned NOT NULL,
+  `id` mediumint(8) unsigned NOT NULL default '0',
   `graph_template_id` mediumint(8) unsigned NOT NULL default '0',
   `field_name` varchar(30) NOT NULL default '',
   `value` varchar(255) NOT NULL default '',
@@ -1216,7 +1216,7 @@ INSERT INTO `graph_template_suggested_value` VALUES (46, 11, 'title', '|host_des
 -- 
 
 CREATE TABLE `graph_tree` (
-  `id` smallint(5) unsigned NOT NULL,
+  `id` smallint(5) unsigned NOT NULL default '0',
   `sort_type` tinyint(3) unsigned NOT NULL default '1',
   `name` varchar(255) NOT NULL default '',
   PRIMARY KEY  (`id`)
@@ -1235,7 +1235,7 @@ INSERT INTO `graph_tree` VALUES (1, 1, 'Default Tree');
 -- 
 
 CREATE TABLE `graph_tree_items` (
-  `id` mediumint(8) unsigned NOT NULL,
+  `id` mediumint(8) unsigned NOT NULL default '0',
   `graph_tree_id` smallint(5) unsigned NOT NULL default '0',
   `order_key` varchar(100) NOT NULL default '0',
   `device_grouping_type` tinyint(3) unsigned NOT NULL default '1',
@@ -1259,7 +1259,7 @@ INSERT INTO `graph_tree_items` VALUES (1, 1, '0010000000000000000000000000000000
 -- 
 
 CREATE TABLE `host` (
-  `id` mediumint(8) unsigned NOT NULL,
+  `id` mediumint(8) unsigned NOT NULL default '0',
   `poller_id` smallint(5) unsigned NOT NULL default '0',
   `host_template_id` mediumint(8) unsigned NOT NULL default '0',
   `description` varchar(150) NOT NULL default '',
@@ -1332,7 +1332,7 @@ CREATE TABLE `host_data_query_cache` (
   `field_name` varchar(50) NOT NULL default '',
   `field_value` varchar(255) default NULL,
   `index_value` varchar(60) NOT NULL default '',
-  `oid` text NOT NULL,
+  `oid` text,
   PRIMARY KEY  (`host_id`,`data_query_id`,`field_name`,`index_value`),
   KEY `host_id` (`host_id`,`field_name`)
 ) TYPE=MyISAM;
@@ -1369,7 +1369,7 @@ INSERT INTO `host_graph` VALUES (1, 19);
 -- 
 
 CREATE TABLE `host_template` (
-  `id` mediumint(8) unsigned NOT NULL,
+  `id` mediumint(8) unsigned NOT NULL default '0',
   `name` varchar(100) NOT NULL default '',
   PRIMARY KEY  (`id`)
 ) TYPE=MyISAM;
@@ -1439,7 +1439,7 @@ INSERT INTO `host_template_graph` VALUES (3, 19);
 -- 
 
 CREATE TABLE `host_template_sysdesc` (
-  `id` bigint(20) unsigned NOT NULL,
+  `id` bigint(20) unsigned NOT NULL default '0',
   `host_template_id` mediumint(11) unsigned NOT NULL default '0',
   `snmp_sysdesc` varchar(255) NOT NULL default '',
   PRIMARY KEY  (`id`),
@@ -1458,7 +1458,7 @@ CREATE TABLE `host_template_sysdesc` (
 -- 
 
 CREATE TABLE `log` (
-  `id` bigint(20) unsigned NOT NULL,
+  `id` bigint(20) unsigned NOT NULL default '0',
   `logdate` datetime NOT NULL default '0000-00-00 00:00:00',
   `facility` tinyint(1) unsigned NOT NULL default '0',
   `severity` int(1) NOT NULL default '0',
@@ -1490,7 +1490,7 @@ CREATE TABLE `log` (
 -- 
 
 CREATE TABLE `package` (
-  `id` mediumint(8) unsigned NOT NULL,
+  `id` mediumint(8) unsigned NOT NULL default '0',
   `hash_package` varchar(32) NOT NULL default '',
   `author_name` varchar(50) NOT NULL default '',
   `author_email` varchar(100) NOT NULL default '',
@@ -1558,7 +1558,7 @@ CREATE TABLE `package_graph_template` (
 -- 
 
 CREATE TABLE `package_metadata` (
-  `id` mediumint(8) unsigned NOT NULL,
+  `id` mediumint(8) unsigned NOT NULL default '0',
   `package_id` mediumint(8) unsigned NOT NULL default '0',
   `type` smallint(5) unsigned NOT NULL default '0',
   `name` varchar(100) NOT NULL default '',
@@ -1582,7 +1582,7 @@ CREATE TABLE `package_metadata` (
 -- 
 
 CREATE TABLE `poller` (
-  `id` smallint(5) unsigned NOT NULL,
+  `id` smallint(5) unsigned NOT NULL default '0',
   `run_state` varchar(20) default 'Wait',
   `active` varchar(5) default 'On',
   `hostname` varchar(250) NOT NULL default '',
@@ -1728,7 +1728,7 @@ INSERT INTO `poller_reindex` VALUES (2, 9, 0, '<', '712856', '.1.3.6.1.2.1.1.3.0
 -- 
 
 CREATE TABLE `poller_time` (
-  `id` mediumint(8) unsigned NOT NULL,
+  `id` mediumint(8) unsigned NOT NULL default '0',
   `poller_id` smallint(5) unsigned NOT NULL default '0',
   `start_time` datetime NOT NULL default '0000-00-00 00:00:00',
   `end_time` datetime NOT NULL default '0000-00-00 00:00:00',
@@ -1747,7 +1747,7 @@ CREATE TABLE `poller_time` (
 -- 
 
 CREATE TABLE `preset_cdef` (
-  `id` mediumint(8) unsigned NOT NULL,
+  `id` mediumint(8) unsigned NOT NULL default '0',
   `name` varchar(255) NOT NULL default '',
   `cdef_string` varchar(255) NOT NULL default '',
   PRIMARY KEY  (`id`),
@@ -1771,7 +1771,7 @@ INSERT INTO `preset_cdef` VALUES (5, 'Turn Bytes into Bits', 'CURRENT_DATA_SOURC
 -- 
 
 CREATE TABLE `preset_color` (
-  `id` mediumint(8) unsigned NOT NULL,
+  `id` mediumint(8) unsigned NOT NULL default '0',
   `hex` char(6) NOT NULL default '',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `hex` (`hex`)
@@ -1888,7 +1888,7 @@ INSERT INTO `preset_color` VALUES (104, '2E3127');
 -- 
 
 CREATE TABLE `preset_gprint` (
-  `id` mediumint(8) unsigned NOT NULL,
+  `id` mediumint(8) unsigned NOT NULL default '0',
   `name` varchar(100) NOT NULL default '',
   `gprint_text` varchar(255) default NULL,
   PRIMARY KEY  (`id`),
@@ -1910,7 +1910,7 @@ INSERT INTO `preset_gprint` VALUES (4, 'Load Average', '%8.2lf');
 -- 
 
 CREATE TABLE `preset_package_category` (
-  `id` mediumint(8) unsigned NOT NULL,
+  `id` mediumint(8) unsigned NOT NULL default '0',
   `name` varchar(100) NOT NULL default '',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `name` (`name`)
@@ -1932,7 +1932,7 @@ INSERT INTO `preset_package_category` VALUES (4, 'Sensor Equipment');
 -- 
 
 CREATE TABLE `preset_package_subcategory` (
-  `id` mediumint(8) unsigned NOT NULL,
+  `id` mediumint(8) unsigned NOT NULL default '0',
   `name` varchar(100) NOT NULL default '',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `name` (`name`)
@@ -1962,7 +1962,7 @@ INSERT INTO `preset_package_subcategory` VALUES (12, 'Traffic');
 -- 
 
 CREATE TABLE `preset_package_vendor` (
-  `id` mediumint(8) unsigned NOT NULL,
+  `id` mediumint(8) unsigned NOT NULL default '0',
   `name` varchar(100) NOT NULL default '',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `name` (`name`)
@@ -1987,7 +1987,7 @@ INSERT INTO `preset_package_vendor` VALUES (7, '3Com');
 -- 
 
 CREATE TABLE `preset_rra` (
-  `id` mediumint(8) NOT NULL,
+  `id` mediumint(8) NOT NULL default '0',
   `name` varchar(100) NOT NULL default '',
   PRIMARY KEY  (`id`)
 ) TYPE=MyISAM;
@@ -2005,7 +2005,7 @@ INSERT INTO `preset_rra` VALUES (1, 'Default');
 -- 
 
 CREATE TABLE `preset_rra_item` (
-  `id` mediumint(8) unsigned NOT NULL,
+  `id` mediumint(8) unsigned NOT NULL default '0',
   `preset_rra_id` mediumint(8) unsigned NOT NULL default '0',
   `consolidation_function` tinyint(3) unsigned NOT NULL default '0',
   `steps` int(11) unsigned NOT NULL default '0',
@@ -2041,7 +2041,7 @@ INSERT INTO `preset_rra_item` VALUES (8, 1, 3, 288, 31536000, 0.5000, 0.0000, 0.
 -- 
 
 CREATE TABLE `rra` (
-  `id` mediumint(8) unsigned NOT NULL,
+  `id` mediumint(8) unsigned NOT NULL default '0',
   `package_id` mediumint(8) unsigned NOT NULL default '0',
   `name` varchar(100) NOT NULL default '',
   `x_files_factor` double NOT NULL default '0.1',
@@ -2181,7 +2181,7 @@ INSERT INTO `settings_tree` VALUES (3, 82, 0);
 -- 
 
 CREATE TABLE `snmp_template` (
-  `id` int(11) unsigned NOT NULL,
+  `id` int(11) unsigned NOT NULL default '0',
   `name` varchar(100) NOT NULL default '',
   PRIMARY KEY  (`id`)
 ) TYPE=MyISAM;
@@ -2198,7 +2198,7 @@ CREATE TABLE `snmp_template` (
 -- 
 
 CREATE TABLE `snmp_template_auth` (
-  `id` int(10) unsigned NOT NULL,
+  `id` int(10) unsigned NOT NULL default '0',
   `snmp_id` int(11) unsigned NOT NULL default '0',
   `snmp_version` tinyint(4) unsigned NOT NULL default '0',
   `snmp_community` varchar(100) NOT NULL default '',
@@ -2223,7 +2223,7 @@ CREATE TABLE `snmp_template_auth` (
 -- 
 
 CREATE TABLE `user_auth` (
-  `id` mediumint(8) unsigned NOT NULL,
+  `id` mediumint(8) unsigned NOT NULL default '0',
   `username` varchar(50) NOT NULL default '0',
   `password` varchar(50) NOT NULL default '0',
   `realm` mediumint(8) NOT NULL default '0',

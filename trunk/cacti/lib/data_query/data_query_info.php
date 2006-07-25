@@ -221,18 +221,11 @@ function get_best_data_query_index_type($host_id, $data_query_id) {
    @arg $script_path - the path on the disk to the script file
    @arg $host_id - the id of the host that this script query belongs to
    @returns - a full path to the script query script containing all arguments */
-function get_script_query_path($args, $script_path, $host_id) {
+function api_data_query_script_path_format($script_path) {
 	require_once(CACTI_BASE_PATH . "/lib/sys/variable.php");
 
-	/* get any extra arguments that need to be passed to the script */
-	//if (!empty($args)) {
-	//	$extra_arguments = substitute_host_variables($args, $host_id);
-	///}else{
-	//	$extra_arguments = "";
-	//}
-
 	/* get a complete path for out target script */
-	return substitute_path_variables($script_path) . " $extra_arguments";
+	return substitute_path_variables($script_path);
 }
 
 /* data_query_index - returns an array containing the data query ID and index value given
