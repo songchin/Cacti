@@ -634,13 +634,13 @@ function _data_source_field__rra($field_name, $template_flag = false, $field_val
 	?>
 	<tr class="<?php echo field_get_row_style();?>">
 		<td width="50%" class="field-row">
-			<span class="textEditTitle"><?php echo _("Data Collection Profile");?></span><br>
-			<?php echo _("Represents the type and length of data that is to be stored in the RRA for this data source.");?>
+			<span class="textEditTitle"><?php echo _("Data Retention Profile");?></span><br>
+			<?php echo _("Represents the type and length of data that is to be stored in the RRD file for this data source.");?>
 		</td>
 		<td class="field-row" colspan="2">
 			<?php
 			if ($rrd_exists == true) {
-				echo _("You cannot change the data collection profile once the RRD file has been created.");
+				echo _("You cannot change the data retention profile once the RRD file has been created.");
 			}else{
 				form_dropdown($field_name, $rra_presets, "name", "id", $field_value, "", "");
 			}
