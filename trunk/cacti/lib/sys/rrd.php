@@ -787,7 +787,15 @@ function rrdtool_function_graph($graph_id, $rra_id, $graph_data_array, $rrd_stru
 	$i = 0;
 	if (sizeof($graph_items > 0)) {
 		foreach ($graph_items as $graph_item) {
-			if ((is_graph_item_type_primary($graph_item["graph_item_type"])) && ($graph_item["data_source_name"] != "")) {
+			/* mimic the old behavior: LINE[123], AREA, and STACK items use the CF specified in the graph item */
+			if (is_graph_item_type_primary($graph_item["graph_item_type"])) {
+				$graph_cf = $graph_item["consolidation_function"];
+			/* all other types are based on the AVERAGE CF */
+			}else{
+				$graph_cf = 1;
+			}
+
+			if ((!empty($graph_item["data_source_id"])) && (!isset($cf_ds_cache{$graph_item["data_source_item_id"]}[$graph_cf]))) {
 				/* use a user-specified ds path if one is entered */
 				$data_source_path = api_data_source_path_get($graph_item["data_source_id"], true);
 
@@ -799,9 +807,9 @@ function rrdtool_function_graph($graph_id, $rra_id, $graph_data_array, $rrd_stru
 					to a function that matches the digits with letters. rrdtool likes letters instead
 					of numbers in DEF names; especially with CDEF's. cdef's are created
 					the same way, except a 'cdef' is put on the beginning of the hash */
-					$graph_defs .= "DEF:" . generate_graph_def_name(strval($i)) . "=\"$data_source_path\":" . $graph_item["data_source_name"] . ":" . $consolidation_functions{$graph_item["consolidation_function"]} . RRD_NL;
+					$graph_defs .= "DEF:" . generate_graph_def_name(strval($i)) . "=\"$data_source_path\":" . $graph_item["data_source_name"] . ":" . $consolidation_functions[$graph_cf] . RRD_NL;
 
-					$cf_ds_cache{$graph_item["data_source_item_id"]}{$graph_item["consolidation_function"]} = "$i";
+					$cf_ds_cache{$graph_item["data_source_item_id"]}[$graph_cf] = "$i";
 
 					$i++;
 				}
