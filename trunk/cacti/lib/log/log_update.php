@@ -227,21 +227,41 @@ function api_log_truncate() {
  * @return bool true
  */
 function log_read_config_option($config_name) {
-	global $cnn_id;
+	global $cnn_id, $log_config_options;
 
-	$cnn_id->SetFetchMode(ADODB_FETCH_ASSOC);
-	$query = $cnn_id->Execute("select value from settings where name='" . $config_name . "'");
-	if ($query) {
-		if (! $query->EOF) {
-			$db_setting = $query->fields;
+	if (isset($log_config_options[$config_name])) {
+		/* Prefer global var for speed */
+		$value = $log_config_options[$config_name];
+	}else{
+		if (isset($_SESSION["sess_config_array"][$config_name])) {
+			/* Use session if exists */
+			$value = $_SESSION["sess_config_array"][$config_name];
+		}else{
+			/* Go to the database */
+			$cnn_id->SetFetchMode(ADODB_FETCH_ASSOC);
+			$query = $cnn_id->Execute("select value from settings where name='" . $config_name . "'");
+			if ($query) {
+				if (! $query->EOF) {
+					$db_setting = $query->fields;
+				}
+			}
+			if (isset($db_settings[$config_name])) {
+				$value = $db_settings[$config_name];
+			}else{
+				/* Read default if nothing else set */
+				$value = read_default_config_option($config_name);
+			}
 		}
 	}
 
-	if (isset($db_setting["value"])) {
-		return $db_setting["value"];
-	}else{
-		return read_default_config_option($config_name);
+	/* Set session config if sessions active */
+	if (isset($_SESSION["sess_config_array"])) {
+		$_SESSION["sess_config_array"][$config_name] = $value;
 	}
+	/* Set value in global array */
+	$log_config_options[$config_name] = $value;
+
+	return $value;
 
 }
 
