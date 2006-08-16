@@ -27,6 +27,7 @@ require_once(CACTI_BASE_PATH . "/include/graph_tree/graph_tree_constants.php");
 $graph_tree_sort_types = array(
 	TREE_ORDERING_NONE => _("Manual Ordering (No Sorting)"),
 	TREE_ORDERING_ALPHABETIC => _("Alphabetic Ordering"),
+	TREE_ORDERING_NATURAL => _("Natural Ordering"),
 	TREE_ORDERING_NUMERIC => _("Numeric Ordering")
 	);
 

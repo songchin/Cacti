@@ -638,6 +638,8 @@ function graphs() {
 			/* if the user specified a prefered sort order; sort the list of indexes before displaying them */
 			if ($data_query["index_order_type"] == DATA_QUERY_INDEX_SORT_TYPE_ALPHABETIC) {
 				usort($data_query_indexes, "usort_alphabetic");
+			}else if ($data_query["index_order_type"] == DATA_QUERY_INDEX_SORT_TYPE_NATURAL) {
+				usort($data_query_indexes, "usort_natural");
 			}else if ($data_query["index_order_type"] == DATA_QUERY_INDEX_SORT_TYPE_NUMERIC) {
 				usort($data_query_indexes, "usort_numeric");
 			}

@@ -214,6 +214,7 @@ function api_graph_tree_item_save($graph_tree_item_id, &$_fields_graph_tree_item
    @arg $sort_style - the type of sorting to perform. available options are:
      TREE_ORDERING_NONE (1) - no sorting
      TREE_ORDERING_ALPHABETIC (2) - alphabetic sorting
+     TREE_ORDERING_NATURAL (4) - natural sorting
      TREE_ORDERING_NUMERIC (3) - numeric sorting */
 function api_graph_tree_item_sort($sort_type, $item_id, $sort_style) {
 	require_once(CACTI_BASE_PATH . "/include/graph_tree/graph_tree_constants.php");
@@ -268,6 +269,8 @@ function api_graph_tree_item_sort($sort_type, $item_id, $sort_style) {
 				uasort($leaf_sort_array[$_tier_key][$_search_key], "usort_numeric");
 			}elseif ($sort_style == TREE_ORDERING_ALPHABETIC) {
 				uasort($leaf_sort_array[$_tier_key][$_search_key], "usort_alphabetic");
+			}elseif ($sort_style == TREE_ORDERING_NATURAL) {
+				uasort($leaf_sort_array[$_tier_key][$_search_key], "usort_natural");
 			}
 		}
 	}
