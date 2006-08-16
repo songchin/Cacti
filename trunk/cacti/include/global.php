@@ -70,6 +70,8 @@ require(CACTI_BASE_PATH . "/lib/api_event.php");
 /* Logging include */
 require(CACTI_BASE_PATH . "/lib/log/log_update.php");
 
+/* Logging Global Options Array */
+$log_config_options = array();
 
 /* includes for database operation */
 require(CACTI_BASE_PATH . "/lib/adodb/adodb.inc.php");
