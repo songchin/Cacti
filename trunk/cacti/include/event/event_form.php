@@ -23,12 +23,12 @@
 */
 
 $fields_event_control = array(
-	'id',
-	'plugin_id',
-	'handler',
-	'status',
-	'created',
-	'message'
+	'id' => array('data_type' => DB_TYPE_NUMBER),
+	'plugin_id' => array('data_type' => DB_TYPE_NUMBER),
+	'handler' => array('data_type' => DB_TYPE_NUMBER),
+	'status' => array('data_type' => DB_TYPE_NUMBER),
+	'created' => array('data_type' => DB_TYPE_NUMBER),
+	'message' => array('data_type' => DB_TYPE_STRING)
 	);
 
 ?>

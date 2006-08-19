@@ -730,7 +730,18 @@ $settings = array(
 			"method" => "textbox",
 			"default" => "3",
 			"max_length" => "10"
-			)
+			),
+		"event_manager_header" => array(
+			"friendly_name" => _("Event Manager"),
+			"method" => "spacer"
+			),
+		"event_manager_interval" => array(
+			"friendly_name" => _("Processing Interval"),
+			"description" => _("The processing interval is the number of settings between processing of all events in the Event Queue."),
+			"method" => "drop_array",
+			"default" => 10,
+			"array" => $event_manager_intervals,
+			),
 		),
 	"authentication" => array(
 		"general_header" => array(

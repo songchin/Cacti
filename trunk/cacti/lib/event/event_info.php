@@ -32,7 +32,7 @@
  * @return array event records
  */
 function api_event_list($filter_array) {
-	$sql_where = "";
+	$sql_where = '';
 	/* validation and setup for the WHERE clause */
 	if ((is_array($filter_array)) && (sizeof($filter_array) > 0)) {
 		/* validate each field against the known master field list */
@@ -47,7 +47,7 @@ function api_event_list($filter_array) {
 			$sql_where = sql_filter_array_to_where_string($filter_array, api_event_form_list(), true);
 		}
 	}
-	return db_fetch_assoc("SELECT * FROM event_queue_control $sql_where");
+	return db_fetch_assoc("SELECT * FROM event_queue_control $sql_where ORDER BY id");
 }
 
 

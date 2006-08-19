@@ -39,6 +39,14 @@ require_once(CACTI_BASE_PATH . "/lib/sys/rrd.php");
 require_once(CACTI_BASE_PATH . "/lib/poller.php");
 require_once(CACTI_BASE_PATH . "/lib/sys/graph_export.php");
 
+$event_manager_interval = read_config_option('event_manager_interval');
+$event_last_ran = db_fetch_cell("SELECT created FROM event_queue_control ORDER BY created");
+
+if ($event_last_ran != '' && (time() - ($event_manager_interval + 5) > $event_last_ran)) {
+	$command_string = read_config_option("path_php_binary");
+	exec_background($command_string, (CACTI_SERVER_OS == "unix" ? '-q ' : '') . CACTI_BASE_PATH . "/event_manager.php");
+}
+
 /* determine the poller_id if specified */
 $poller_id = 1;
 if ( $_SERVER["argc"] == 2 ) {

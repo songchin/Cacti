@@ -107,6 +107,17 @@ $poller_intervals = array(
 	60 => _("Every Minute"),
 	300 => _("Every 5 Minutes"));
 
+$event_manager_intervals = array(
+	1 => _("Every 1 Second"),
+	2 => _("Every 2 Seconds"),
+	5 => _("Every 5 Seconds"),
+	10 => _("Every 10 Seconds"),
+	15 => _("Every 15 Seconds"),
+	30 => _("Every 30 Seconds"),
+	60 => _("Every 1 Minute"),
+	300 => _("Every 5 Minutes")
+	);
+
 $rra_polling_frequency = array(
 	60 => _("Every Minute"),
 	120 => _("Every 2 Minutes"),

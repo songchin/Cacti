@@ -101,7 +101,9 @@ function api_event_process ($id) {
  *
  */
 function api_event_set_status() {
-	db_execute("UPDATE event_queue_control set status = 1");
+	$id = rand(1, 99999);
+	db_execute("UPDATE event_queue_control set status = $id");
+	return $id;
 }
 
 
@@ -111,9 +113,9 @@ function api_event_set_status() {
  * This function removes all events from the queue that have a status showing that they have been processed.
  *
  */
-function api_event_removed_processed() {
-	$events = db_fetch_assoc("SELECT id FROM event_queue_control where status = 1");
-	db_execute("DELETE FROM event_queue_control WHERE status=1");
+function api_event_removed_processed($status_id) {
+	$events = db_fetch_assoc("SELECT id FROM event_queue_control where status = $status_id");
+	db_execute("DELETE FROM event_queue_control WHERE status=$status_id");
 
 	foreach($events as $event) {
 		db_execute("DELETE FROM event_queue_param WHERE control_id = " . $event['id']);

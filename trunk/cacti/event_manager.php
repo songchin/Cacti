@@ -22,31 +22,53 @@
  +-------------------------------------------------------------------------+
 */
 
-$no_http_headers = true;
-
-require(dirname(__FILE__) . "/include/global.php");
-
-print "Contruct a sample log message and insert it into the queue<br>";
-api_event_insert("cacti_log", array("severity" => SEV_EMERGENCY, "facility"=>FACIL_WEBUI, "message"=>"testing"));
-
-
-print "Set the status on Event Items to allow processing<br>";
-/* Set the status to show which events are being processed */
-api_event_set_status();
-
-print "Checking the Event Queue for items<br>";
-/* Get all events so we can begin processing */
-$events = api_event_list(array('status'=>1));
-
-print "Processing all items<br>";
-foreach ($events as $event) {
-	api_event_process ($event['id']);
-	print "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Processed event " . $event['id'] . '<br>';
+/* do NOT run this script through a web browser */
+if (!isset($_SERVER['argv'][0])) {
+	die("<br><strong>". _("This script is only meant to run at the command line.") . '</strong>');
 }
 
-print "Remove all processed events from the queue<br>";
-/* Remove all events that were set to be processed */
-api_event_removed_processed();
+/* let PHP run just as long as it has to */
+ini_set('max_execution_time', '0');
 
+$no_http_headers = true;
+
+require(dirname(__FILE__) . '/include/global.php');
+
+$event_manager_interval = read_config_option('event_manager_interval');
+
+api_log_log('Event Manager Starting', SEV_INFO, FACIL_POLLER, '', 0, 0, 0, true);
+
+$counter = time() - $event_manager_interval;
+while (true) {
+
+	/* We want to have the event manager process every XX seconds, so sleep until its processing time */
+	while ($counter > time() - $event_manager_interval) {
+		Sleep(1);
+	}
+
+	/* Start our timer now, so it includes the actual processing time in the processing interval */
+	$counter = time();
+
+	/* Set the status to show which events are being processed */
+	$status_id = api_event_set_status();
+
+	/* Get all events so we can begin processing */
+	$events = api_event_list(array('status'=>$status_id));
+
+	/* Loop through each event for processing */
+	foreach ($events as $event) {
+		api_log_log('Processing Event ' . $event['id'], SEV_INFO, FACIL_POLLER, '', 0, 0, 0, true);
+		api_event_process ($event['id']);
+	}
+
+	/* Remove all events that were set to be processed */
+	api_event_removed_processed($status_id);
+	if (date('s', time()) < $event_manager_interval) {
+		unset($_SESSION['sess_config_array']['event_manager_interval']);
+		$event_manager_interval = read_config_option('event_manager_interval');
+	}
+}
+
+api_log_log('Event Manager exitting', SEV_INFO, FACIL_POLLER, '', 0, 0, 0, true);
 
 ?>
