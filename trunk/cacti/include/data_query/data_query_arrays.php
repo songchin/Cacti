@@ -39,7 +39,7 @@ $reindex_types = array(
 
 $data_query_index_sort_types = array(
 	DATA_QUERY_INDEX_SORT_TYPE_ALPHABETIC => _("Alphabetic"),
-	DATA_QUERY_INDEX_SORT_TYPE_NATURAL => _("Natural")
+	DATA_QUERY_INDEX_SORT_TYPE_NATURAL => _("Natural"),
 	DATA_QUERY_INDEX_SORT_TYPE_NUMERIC => _("Numeric")
 	);
 
