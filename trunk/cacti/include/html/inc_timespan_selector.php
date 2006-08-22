@@ -98,8 +98,8 @@ require(CACTI_BASE_PATH . "/include/graph/graph_arrays.php");
 						</select>
 						<input type='image' name='move_right' src='<?php print html_get_theme_images_path("move_right.gif");?>' alt='Right' border='0' align='absmiddle' title='Shift Right'>
 
-						&nbsp;&nbsp;<input type='image' name='button_refresh' src='<?php print html_get_theme_images_path("button_refresh.gif");?>' alt='<?php echo _("Refresh Selected Time Span");?>' border='0' align='absmiddle' action='submit' value='refresh'>
-						<input type='image' name='button_clear' src='<?php print html_get_theme_images_path("button_clear.gif");?>' alt='<?php echo _("Return to the Default Time Span");?>' border='0' align='absmiddle' action='submit'>
+						&nbsp;&nbsp;<input type='image' name='button_refresh' src='<?php print html_get_theme_images_path("button_refresh.gif");?>' alt='<?php echo _("Refresh Selected Time Span");?>' border='0' align='absmiddle' value='refresh'>
+						<input type='image' name='button_clear' src='<?php print html_get_theme_images_path("button_clear.gif");?>' alt='<?php echo _("Return to the Default Time Span");?>' border='0' align='absmiddle'>
 					</td>
 				</tr>
 			</table>
