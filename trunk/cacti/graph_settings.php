@@ -35,7 +35,9 @@ switch ($_REQUEST["action"]) {
 
 		break;
 	default:
+		$_SESSION['custom'] = 1;
 		require_once(CACTI_BASE_PATH . "/include/top_graph_header.php");
+		$_SESSION['custom'] = 0;
 
 		settings();
 
