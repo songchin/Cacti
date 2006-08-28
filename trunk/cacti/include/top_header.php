@@ -50,55 +50,19 @@ if (isset($_SESSION["sess_user_id"])) {
 <div id="header">
 	<div id="tabs">
 		<ul>
-			<li id="tab_graphs" class="notselected"><a href="javascript:navigation_select('graphs')" title="Graphs">Graphs</a></li>
-			<li id="tab_collection" class="notselected"><a href="javascript:navigation_select('collection')" title="Collection">Collection</a></li>
-			<li id="tab_templates" class="notselected"><a href="javascript:navigation_select('templates')" title="Templates">Templates</a></li>
-			<li id="tab_configuration" class="notselected"><a href="javascript:navigation_select('configuration')" title="Configuration">Configuration</a></li>
-			<li id="tab_users" class="notselected"><a href="javascript:navigation_select('users')" title="Users">Users</a></li>
+			<?php echo ui_html_header_tab_make("graphs", "Graphs");?>
+			<?php echo ui_html_header_tab_make("collection", "Collection");?>
+			<?php echo ui_html_header_tab_make("templates", "Templates");?>
+			<?php echo ui_html_header_tab_make("configuration", "Configuration");?>
+			<?php echo ui_html_header_tab_make("users", "Users");?>
 		</ul>
 	</div>
 	<div id="navigation">
-		<div id="nav_graphs">
-			<ul>
-				<li><a href="#">View</a></li>
-				<li><a href="#">Create</a></li>
-				<li><a href="#">Manage</a></li>
-				<li><a href="#">Trees</a></li>
-			</ul>
-		</div>
-		<div id="nav_collection">
-			<ul>
-				<li><a href="#">Devices</a></li>
-				<li><a href="#">Data Sources</a></li>
-				<li><a href="#">Pollers</a></li>
-				<li><a href="#">Scripts</a></li>
-				<li><a href="#">Queries</a></li>
-			</ul>
-		</div>
-		<div id="nav_templates">
-			<ul>
-				<li><a href="#">Packages</a></li>
-				<li><a href="#">Graph Templates</a></li>
-				<li><a href="#">Data Templates</a></li>
-				<li><a href="#">Device Templates</a></li>
-			</ul>
-		</div>
-		<div id="nav_configuration">
-			<ul>
-				<li><a href="#">System Settings</a></li>
-				<li><a href="#">User Settings</a></li>
-				<li><a href="#">Data Presets</a></li>
-				<li><a href="#">Plugins</a></li>
-				<li><a href="#">System Utilities</a></li>
-				<li><a href="#">Log Management</a></li>
-			</ul>
-		</div>
-		<div id="nav_users">
-			<ul>
-				<li><a href="#">Manage</a></li>
-				<li><a href="#">Groups</a></li>
-			</ul>
-		</div>
+		<?php echo ui_html_header_navigation_group_make("graphs", array("View" => "#", "Create" => "#", "Manage" => "#", "Trees" => "#"));?>
+		<?php echo ui_html_header_navigation_group_make("collection", array("Devices" => "#", "Data Sources" => "#", "Pollers" => "#", "Scripts" => "#", "Queries" => "#"));?>
+		<?php echo ui_html_header_navigation_group_make("templates", array("Packages" => "#", "Graph Templates" => "#", "Data Templates" => "#", "Device Templates" => "#"));?>
+		<?php echo ui_html_header_navigation_group_make("configuration", array("System Settings" => "#", "User Settings" => "#", "Data Presets" => "#", "Plugins" => "#", "System Utilities" => "#", "Log Management" => "#"));?>
+		<?php echo ui_html_header_navigation_group_make("users", array("Manage" => "#", "Groups" => "#"));?>
 	</div>
 </div>
 
