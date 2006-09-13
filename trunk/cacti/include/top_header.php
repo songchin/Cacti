@@ -58,80 +58,30 @@ if (isset($_SESSION["sess_user_id"])) {
 		</ul>
 	</div>
 	<div id="navigation">
-		<?php echo ui_html_header_navigation_group_make("graphs", array("View" => "#", "Create" => "#", "Manage" => "#", "Trees" => "#"));?>
-		<?php echo ui_html_header_navigation_group_make("collection", array("Devices" => "#", "Data Sources" => "#", "Pollers" => "#", "Scripts" => "#", "Queries" => "#"));?>
-		<?php echo ui_html_header_navigation_group_make("templates", array("Packages" => "#", "Graph Templates" => "#", "Data Templates" => "#", "Device Templates" => "#"));?>
-		<?php echo ui_html_header_navigation_group_make("configuration", array("System Settings" => "#", "User Settings" => "#", "Data Presets" => "#", "Plugins" => "#", "System Utilities" => "#", "Log Management" => "#"));?>
-		<?php echo ui_html_header_navigation_group_make("users", array("Manage" => "#", "Groups" => "#"));?>
+		<?php echo ui_html_header_navigation_group_make("graphs", array("View" => "graph_view.php", "Create" => "graphs_new.php", "Manage" => "graphs.php", "Trees" => "graph_trees.php"));?>
+		<?php echo ui_html_header_navigation_group_make("collection", array("Devices" => "devices.php", "Data Sources" => "data_sources.php", "Pollers" => "pollers.php", "Scripts" => "scripts.php", "Queries" => "data_queries.php"));?>
+		<?php echo ui_html_header_navigation_group_make("templates", array("Packages" => "packages.php", "Graph Templates" => "graph_templates.php", "Data Templates" => "data_templates.php", "Device Templates" => "device_templates.php"));?>
+		<?php echo ui_html_header_navigation_group_make("configuration", array("System Settings" => "settings.php", "User Settings" => "user_settings.php", "Data Presets" => "presets.php", "Plugins" => "plugins.php", "System Utilities" => "utilities.php", "Log Management" => "logs.php"));?>
+		<?php echo ui_html_header_navigation_group_make("users", array("Manage" => "auth_user.php", "Groups" => "auth_group.php"));?>
+	</div>
+	<div id="login">
+		<?php
+		if (read_config_option("auth_method") == "1") {
+			$expire_days = api_user_expire_info($current_user["id"]);
+
+			if (($expire_days != -1) && ($expire_days <= read_config_option("password_expire_warning"))) {
+				echo "<span class=\"textError\">" . _("Password expires in ") . $expire_days . _(" days") . "<span>\n";
+			}
+		}
+
+		if (read_config_option("auth_method") != "0") {
+			echo sprintf(_("Logged in as") . " <strong>%s</strong>", $current_user["username"]);
+			echo " (<a href='logout.php'>" . _("Logout") . "</a>)&nbsp;";
+		}
+		?>
 	</div>
 </div>
 
-<br>
+<br />
 
-<table width="100%" cellspacing="0" cellpadding="0">
-	<tr height="37" bgcolor="#<?php print $colors['main_background'];?>">
-		<td valign="bottom" colspan="3" nowrap>
-			<table width="100%" cellspacing="0" cellpadding="0">
-				<tr>
-					<td valign="bottom">
-						&nbsp;<a href="index.php"><img src="<?php print html_get_theme_images_path('tab_console.gif');?>" alt="<?php echo _('Console');?>" align="absmiddle" border="0"></a><a href="graph_view.php"><img src="<?php print html_get_theme_images_path('tab_graphs.gif');?>" alt="<?php echo _('Graphs');?>" align="absmiddle" border="0"></a>
-					</td>
-					<td align="right">
-						<img src="<?php print html_get_theme_images_path('cacti_backdrop.gif');?>" align="absmiddle">
-					</td>
-				</tr>
-			</table>
-		</td>
-	</tr>
-	<tr height="2" bgcolor="#<?php print $colors['main_border'];?>">
-		<td colspan="3">
-			<img src="<?php print html_get_theme_images_path('transparent_line.gif');?>" width="170" height="2" border="0"><br>
-		</td>
-	</tr>
-	<tr height="5" bgcolor="#<?php print $colors['navbar_background'];?>">
-		<td colspan="3">
-			<table width="100%">
-				<tr>
-					<td>
-						<?php draw_navigation_text();?>
-					</td>
-						<?php if (read_config_option("auth_method") == "1") {
-							$expire_days = api_user_expire_info($current_user["id"]);
-							if (($expire_days != -1) && ($expire_days <= read_config_option("password_expire_warning"))) {
-						?>
-					<td align="right" class="textError">
-						<?php echo _("Password expires in ") . $expire_days . _(" days");?>
-					</td>
-						<?php } } ?>
-					<td align="right">
-						<?php if (read_config_option("auth_method") != "0") {
-						    printf( _("Logged in as") . " <strong>%s</strong>", $current_user["username"]);
-                            print "(<a href='logout.php'>" . _("Logout") . "</a>)&nbsp;";
-                        } ?>
-					</td>
-				</tr>
-			</table>
-		</td>
-	</tr>
-	<tr>
-		<td bgcolor="#<?php print $colors['console_menu_background'];?>" colspan="1" height="8" width="135" style="background-image: url(<?php print html_get_theme_images_path('shadow_gray.gif');?>); background-repeat: repeat-x; border-right: #<?php print $colors['console_menu_border'];?> 1px solid;">
-			<img src="<?php print html_get_theme_images_path('transparent_line.gif');?>" width="135" height="2" border="0"><br>
-		</td>
-		<td colspan="2" height="8" style="background-image: url(<?php print html_get_theme_images_path('shadow.gif');?>); background-repeat: repeat-x;" bgcolor="#<?php print $colors['console_menu_background'];?>">
-
-		</td>
-	</tr>
-	<tr height="5">
-		<td valign="top" rowspan="2" width="135" style="padding: 5px; border-right: #<?php print $colors['console_menu_border'];?> 1px solid;" bgcolor='#<?php print $colors['console_menu_background'];?>'>
-			<table bgcolor="#<?php print $colors['console_menu_background'];?>" width="100%" cellpadding="1" cellspacing="0" border="0">
-				<?php draw_menu();?>
-			</table>
-
-			<img src="<?php print html_get_theme_images_path('transparent_line.gif');?>" width="135" height="5" border="0"><br>
-			<p align="center"><a href='about.php'><img src="<?php print html_get_theme_images_path('cacti_logo.gif');?>" border="0"></a></p>
-		</td>
-		<td></td>
-	</tr>
-	<tr>
-		<td width="135" height="500"></td>
-		<td width="100%" valign="top"><?php display_output_messages();?>
+<div id="content">

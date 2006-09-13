@@ -1,7 +1,6 @@
 /* generic */
 body {
 	margin: 0;
-	background: white url(images/left_border.gif) top left repeat-y;
 	font: 10pt Verdana, Arial, Helvetica, sans-serif;
 }
 
@@ -79,9 +78,20 @@ a {
 	color: #818181;
 	text-decoration: none;
 }
+#header div#navigation ul li.selected a {
+	font-weight: bold;
+}
 #header div#navigation ul li {
 	display: inline;
 	padding: 5px;
+}
+
+#header div#login {
+	position: relative;
+	padding: 3px;
+	width: auto;
+	height: 25px;
+	text-align: right;
 }
 
 .linkEditMain, .linkEditMain:visited, .linkEditMain:active {

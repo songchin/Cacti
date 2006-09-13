@@ -30,14 +30,23 @@ function ui_html_header_navigation_group_make($name, $items) {
 	$html  = "<div id=\"nav_" . ui_html_escape($name) . "\">\n";
 	$html .= "\t<ul>\n";
 
+	$selected_item = "";
 	if (is_array($items)) {
 		foreach ($items as $item_title => $item_url) {
-			$html .= "\t\t<li><a href=\"" . ui_html_escape($item_url) . "\">" . ui_html_escape(_($item_title)) . "</a></li>\n";
+			if (basename($_SERVER["PHP_SELF"]) == basename($item_url)) {
+				$selected_item = $item_url;
+			}
+
+			$html .= "\t\t<li" . ($selected_item == $item_url ? " class=\"selected\"" : "") . "><a href=\"" . ui_html_escape($item_url) . "\">" . ui_html_escape(_($item_title)) . "</a></li>\n";
 		}
 	}
 
 	$html .= "\t</ul>\n";
 	$html .= "</div>\n";
+
+	if ($selected_item != "") {
+		$html .= "<script language=\"JavaScript\">navigation_select('" . ui_html_escape($name) . "')</script>\n";
+	}
 
 	return $html;
 }
