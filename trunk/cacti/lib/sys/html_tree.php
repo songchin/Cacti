@@ -391,7 +391,7 @@ function grow_right_pane_tree($tree_id, $leaf_id, $host_group_data) {
 	$sql_where = "";
 	$sql_join = "";
 	$title = "";
-	$title_delimeter = "";
+	$title_delimiter = "";
 	$search_key = "";
 
 	$leaf = db_fetch_row("select order_key,title,host_id,host_grouping_type from graph_tree_items where id=$leaf_id");
@@ -432,10 +432,10 @@ function grow_right_pane_tree($tree_id, $leaf_id, $host_group_data) {
 		$data_query_index = $host_group_data_array[2];
 	}
 
-	if (!empty($tree_name)) { $title .= $title_delimeter . "<strong>" . _("Tree:") . "</strong> $tree_name"; $title_delimeter = "-> "; }
-	if (!empty($leaf_name)) { $title .= $title_delimeter . "<strong>" . _("Leaf:") . "</strong> $leaf_name"; $title_delimeter = "-> "; }
-	if (!empty($host_name)) { $title .= $title_delimeter . "<strong>" . _("Device:") . "</strong> $host_name"; $title_delimeter = "-> "; }
-	if (!empty($host_group_data_name)) { $title .= $title_delimeter . " $host_group_data_name"; $title_delimeter = "-> "; }
+	if (!empty($tree_name)) { $title .= $title_delimiter . "<strong>" . _("Tree:") . "</strong> $tree_name"; $title_delimiter = "-> "; }
+	if (!empty($leaf_name)) { $title .= $title_delimiter . "<strong>" . _("Leaf:") . "</strong> $leaf_name"; $title_delimiter = "-> "; }
+	if (!empty($host_name)) { $title .= $title_delimiter . "<strong>" . _("Device:") . "</strong> $host_name"; $title_delimiter = "-> "; }
+	if (!empty($host_group_data_name)) { $title .= $title_delimiter . " $host_group_data_name"; $title_delimiter = "-> "; }
 
 	print "<table width='98%' align='center' cellpadding='3'>";
 
