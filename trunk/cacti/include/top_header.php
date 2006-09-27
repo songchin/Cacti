@@ -64,6 +64,12 @@ if (isset($_SESSION["sess_user_id"])) {
 		<?php echo ui_html_header_navigation_group_make("configuration", array("System Settings" => "settings.php", "User Settings" => "user_settings.php", "Data Presets" => "presets.php", "Plugins" => "plugins.php", "System Utilities" => "utilities.php", "Log Management" => "logs.php"));?>
 		<?php echo ui_html_header_navigation_group_make("users", array("Manage" => "auth_user.php", "Groups" => "auth_group.php"));?>
 	</div>
+</div>
+
+<div id="content">
+	<div id="panel">
+		<img src="<?php echo html_get_theme_images_path("side_search.gif");?>">
+	</div>
 	<div id="login">
 		<?php
 		if (read_config_option("auth_method") == "1") {
@@ -80,8 +86,4 @@ if (isset($_SESSION["sess_user_id"])) {
 		}
 		?>
 	</div>
-</div>
-
-<br />
-
-<div id="content">
+	<div id="body">

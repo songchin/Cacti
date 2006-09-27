@@ -1,7 +1,9 @@
 /* generic */
+
 body {
 	margin: 0;
 	font: 10pt Verdana, Arial, Helvetica, sans-serif;
+	background: transparent url("images/side_background.gif") 0 0 repeat-y;
 }
 
 a {
@@ -86,12 +88,31 @@ a {
 	padding: 5px;
 }
 
-#header div#login {
-	position: relative;
+#content {
+}
+
+#content div#panel {
+	width: 30px;
+	height: 200px;
+	padding: 8px 0 0 4px;
+	float: left;
+	overflow: hidden;
+}
+
+#content div#login {
 	padding: 3px;
-	width: auto;
 	height: 25px;
 	text-align: right;
+	padding-top: 10px;
+	overflow: hidden;
+}
+
+#content div#body {
+	overflow: hidden;
+}
+
+#content div#body table.box {
+	position: relative;
 }
 
 .linkEditMain, .linkEditMain:visited, .linkEditMain:active {
