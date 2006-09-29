@@ -3,7 +3,15 @@
 body {
 	margin: 0;
 	font: 10pt Verdana, Arial, Helvetica, sans-serif;
+	
+}
+
+body.sidebar_closed {
 	background: transparent url("images/side_background.gif") 0 0 repeat-y;
+}
+
+body.sidebar_open {
+	background: transparent url("images/side_background_open.gif") 0 0 repeat-y;
 }
 
 a {
@@ -91,12 +99,27 @@ a {
 #content {
 }
 
-#content div#panel {
-	width: 30px;
+#content div#sidebar {
 	height: 200px;
-	padding: 8px 0 0 4px;
+	padding: 8px 5px 0 4px;
 	float: left;
 	overflow: hidden;
+}
+#content div#sidebar div#sidebar_navigation {
+	float: left;
+	width: 30px;
+}
+#content div#sidebar div#sidebar_content {
+	width: 140px;
+	display: none;
+	overflow: hidden;
+}
+#content div#sidebar div#sidebar_content input {
+	border: 1px solid #aed484;
+	background-color: white;
+}
+#content div#sidebar div#sidebar_content div {
+	padding: 5px;
 }
 
 #content div#login {

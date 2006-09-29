@@ -45,7 +45,7 @@ if (isset($_SESSION["sess_user_id"])) {
 		<title>Cacti</title>
 </head>
 
-<body>
+<body id="page_body" class="sidebar_closed">
 
 <div id="header">
 	<div id="tabs">
@@ -67,8 +67,27 @@ if (isset($_SESSION["sess_user_id"])) {
 </div>
 
 <div id="content">
-	<div id="panel">
-		<img src="<?php echo html_get_theme_images_path("side_search.gif");?>">
+	<div id="sidebar">
+		<div id="sidebar_navigation">
+			<a href="#" onClick="navigation_sidebar_toggle()"><img src="<?php echo html_get_theme_images_path("side_search.gif");?>" border="0" alt="Search" title="Search"></a>
+		</div>
+		<div id="sidebar_content">
+			<div>
+				filter:<br />
+				<input type="text" size="18" name"x">
+			</div>
+			<div>
+				graph type:<br />
+				<input type="text" size="18" name"x">
+			</div>
+			<div>
+				device:<br />
+				<input type="text" size="18" name"x">
+			</div>
+			<div>
+				<input type="submit" value="search">
+			</div>
+		</div>
 	</div>
 	<div id="login">
 		<?php

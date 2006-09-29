@@ -22,7 +22,7 @@
 */
 
 function navigation_select(name) {
-	header_container = document.getElementById('tabs');
+	var header_container = document.getElementById('tabs');
 
 	for (var i = 0; i < header_container.childNodes[1].childNodes.length; i++) {
 		if (header_container.childNodes[1].childNodes[i].id) {
@@ -34,7 +34,7 @@ function navigation_select(name) {
 		}
 	}
 
-	navigation_container = document.getElementById('navigation');
+	var navigation_container = document.getElementById('navigation');
 
 	for (var i = 0; i < navigation_container.childNodes.length; i++) {
 		if (navigation_container.childNodes[i].id) {
@@ -44,5 +44,18 @@ function navigation_select(name) {
 				navigation_container.childNodes[i].style.display = 'none';
 			}
 		}
+	}
+}
+
+sidebar_state = 'close';
+function navigation_sidebar_toggle() {
+	if (sidebar_state == 'open') {
+		document.getElementById('page_body').className = 'sidebar_closed';
+		document.getElementById('sidebar_content').style.display = 'none';
+		sidebar_state = 'closed';
+	}else{
+		document.getElementById('page_body').className = 'sidebar_open';
+		document.getElementById('sidebar_content').style.display = 'block';
+		sidebar_state = 'open';
 	}
 }
