@@ -47,6 +47,8 @@ if (isset($_SESSION["sess_user_id"])) {
 
 <body id="page_body" class="sidebar_closed">
 
+<div id="backdrop"></div>
+
 <div id="header">
 	<div id="tabs">
 		<ul>

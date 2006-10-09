@@ -430,7 +430,7 @@ function data_query() {
 	html_end_box(false);
 
 	html_box_actions_menu_draw($box_id, "0", $menu_items);
-	html_box_actions_area_draw($box_id, "0");
+	html_box_actions_area_create($box_id);
 
 	form_end();
 	?>

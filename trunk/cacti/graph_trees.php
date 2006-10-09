@@ -224,7 +224,6 @@ function tree_edit() {
 		html_end_box(false);
 
 		html_box_actions_menu_draw($box_id, "1", $menu_items);
-		html_box_actions_area_draw($box_id, "1");
 
 		form_hidden_box("graph_tree_id", $_graph_tree_id);
 		form_hidden_box("action", "save");
@@ -300,7 +299,7 @@ function tree() {
 	html_end_box(false);
 
 	html_box_actions_menu_draw($box_id, "0", $menu_items);
-	html_box_actions_area_draw($box_id, "0");
+	html_box_actions_area_create($box_id);
 
 	form_hidden_box("action_post", "graph_tree_list");
 	form_end();

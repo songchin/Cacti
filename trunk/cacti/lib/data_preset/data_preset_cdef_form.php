@@ -86,7 +86,7 @@ function _data_preset_cdef__cdef_string($field_name, $field_value = "", $field_i
 			<?php echo _("The string (in RPN) which defines this CDEF.");?>
 		</td>
 		<td class="field-row">
-			<?php form_text_box($field_name, $field_value, "", 255, 40, "text", $field_id);?> (<a href="#" onClick="action_area_show('1', document.forms[0], 'editor', 400)">edit</a>)
+			<?php form_text_box($field_name, $field_value, "", 255, 40, "text", $field_id);?> (<a href="#" onClick="action_area_box_show('1', document.forms[0], 'editor', 600)">edit</a>)
 		</td>
 		<td align="right" class="field-row">
 			<span class="field-required">(required)</span>

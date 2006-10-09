@@ -84,7 +84,7 @@ function display_row_select(box_id, parent_form, row, checkbox) {
 		}
 
 		/* is the actions box currently being displayed? */
-		if ((document.getElementById('box-' + box_id + '-action-area-frame').style.visibility == 'visible') && (_current_action_type[box_id])) {
+		if ((document.getElementById('box-' + box_id + '-action-area').style.display == 'block') && (_current_action_type[box_id])) {
 			action_area_update_selected_rows(box_id, parent_form);
 		}
 	}
@@ -105,7 +105,7 @@ function display_row_block(id) {
    @arg object_name - (object) the object representing the button that the user's mouse
 	is hovering over */
 function action_bar_button_mouseover(object_name) {
-	document.getElementById(object_name).className = 'action-bar-button-hover';
+	document.getElementById(object_name).className = 'button_mouseover';
 }
 
 /* action_bar_button_mouseout - called when a user moves their mouse out of an actions
@@ -113,7 +113,7 @@ function action_bar_button_mouseover(object_name) {
    @arg object_name - (object) the object representing the button that the user's mouse
 	moved from */
 function action_bar_button_mouseout(object_name) {
-	document.getElementById(object_name).className = 'action-bar-button-out';
+	document.getElementById(object_name).className = 'button_mouseout';
 }
 
 /* action_bar_menu_mouseover - called when a user hovers their mouse over a row in the
@@ -121,7 +121,11 @@ function action_bar_button_mouseout(object_name) {
    @arg object_name - (object) the object representing the row that the user's mouse
 	is hovering over */
 function action_bar_menu_mouseover(object_name) {
-	document.getElementById(object_name).className = 'action-bar-menu-hover';
+	if (document.getElementById(object_name).className.match('item_spacer')) {
+		document.getElementById(object_name).className = 'mouseover item_spacer';
+	}else{
+		document.getElementById(object_name).className = 'mouseover';
+	}
 }
 
 /* action_bar_menu_mouseout - called when a user moves their mouse out of a row in the
@@ -129,7 +133,11 @@ function action_bar_menu_mouseover(object_name) {
    @arg object_name - (object) the object representing the row that the user's mouse
 	moved from */
 function action_bar_menu_mouseout(object_name) {
-	document.getElementById(object_name).className = 'action-bar-menu-out';
+	if (document.getElementById(object_name).className.match('item_spacer')) {
+		document.getElementById(object_name).className = 'mouseout item_spacer';
+	}else{
+		document.getElementById(object_name).className = 'mouseout';
+	}
 }
 
 /* action_bar_button_menu_mouseover - called when a user hovers their mouse over the
@@ -137,7 +145,7 @@ function action_bar_menu_mouseout(object_name) {
 	firing on this button when the actions area box is displayed
    @arg box_id - (string) the unique identifier for the container box */
 function action_bar_button_menu_mouseover(box_id) {
-	if (document.getElementById('box-' + box_id + '-action-bar-menu').style.visibility == 'hidden') {
+	if (document.getElementById('box-' + box_id + '-action-bar-menu').style.visibility != 'visible') {
 		action_bar_button_mouseover('box-' + box_id + '-button-menu');
 	}
 }
@@ -147,7 +155,7 @@ function action_bar_button_menu_mouseover(box_id) {
 	firing on this button when the actions area box is displayed
    @arg box_id - (string) the unique identifier for the container box */
 function action_bar_button_menu_mouseout(box_id) {
-	if (document.getElementById('box-' + box_id + '-action-bar-menu').style.visibility == 'hidden') {
+	if (document.getElementById('box-' + box_id + '-action-bar-menu').style.visibility != 'visible') {
 		action_bar_button_mouseout('box-' + box_id + '-button-menu');
 	}
 }
@@ -163,16 +171,53 @@ function action_bar_button_menu_click(box_id) {
 
 	if (action_bar_menu.style.visibility == 'visible') {
 		action_bar_menu.style.visibility = 'hidden';
-		action_bar_button_menu.className = 'action-bar-button-hover';
+		action_bar_button_menu.className = 'button_mouseover';
 		action_bar_button_container.style.backgroundColor = '#ffffff';
 	}else{
 		action_bar_menu.style.visibility = 'visible';
-		action_bar_button_menu.className = 'action-bar-button-click';
+		action_bar_button_menu.className = 'button_mouseclick';
 		action_bar_button_container.style.backgroundColor = '#e0e0ff';
 	}
 }
 
 /* ======== action area box functions ======== */
+
+function action_area_box_create(id) {
+	_elm_div_backdrop = document.getElementById('backdrop');
+	_elm_div_backdrop.style.height = get_browser_height() + "px";
+	_elm_div_backdrop.style.width = '100%';
+
+	_elm_div_container = document.createElement('div');
+	_elm_div_container.id = 'box-' + id + '-action-area';
+	_elm_div_container.className = 'action_box';
+
+	_elm_div_header = document.createElement('div');
+	_elm_div_header.id = 'box-' + id + '-action-area-header';
+	_elm_div_header.className = 'header';
+	_elm_div_container.appendChild(_elm_div_header);
+
+	_elm_div_body = document.createElement('div');
+	_elm_div_body.id = 'box-' + id + '-action-area-body';
+	_elm_div_body.className = 'body';
+	_elm_div_container.appendChild(_elm_div_body);
+
+	_elm_div_footer = document.createElement('div');
+	_elm_div_footer.id = 'box-' + id + '-action-area-footer';
+	_elm_div_footer.className = 'footer';
+	_elm_div_container.appendChild(_elm_div_footer);
+
+	_elm_div_button_close = action_area_generate_input('reset', 'box-' + id + '-action-area-button-close', 'Close');
+	_elm_div_button_close.id = 'box-' + id + '-action-area-button-close';
+	_elm_div_button_close.onclick = new Function('e', 'action_area_box_hide("' + id + '")');
+	_elm_div_footer.appendChild(_elm_div_button_close);
+
+	_elm_div_button_submit = action_area_generate_input('button', 'box-' + id + '-action-area-button-submit', 'Submit');
+	_elm_div_button_submit.id = 'box-' + id + '-action-area-button-submit';
+	_elm_div_button_submit.onclick = new Function('e', 'action_area_update_input("' + id + '",document.forms[0]);document.forms[0].submit()');
+	_elm_div_footer.appendChild(_elm_div_button_submit);
+
+	document.getElementById('page_body').appendChild(_elm_div_container);
+}
 
 /* action_area_show - called when a user performs a defined action (remove, duplicate, etc).
 	this function takes care of rendering objects in the actions are box, hiding the actions
@@ -180,15 +225,15 @@ function action_bar_button_menu_click(box_id) {
    @arg box_id - (string) the unique identifier for the container box
    @arg parent_form - (object) a reference to the container form object
    @arg type - (string) the unique identifier for the selected action type */
-function action_area_show(box_id, parent_form, type, width) {
+function action_area_box_show(box_id, parent_form, type, width) {
 
 	/* set width */
-	if (! width) {
+	if (!width) {
 		width = 400;
 	}
 
 	/* parent div container for all action box items */
-	parent_div = document.getElementById('box-' + box_id + '-action-area-items');
+	parent_div = document.getElementById('box-' + box_id + '-action-area-body');
 
 	/* clear the box */
 	parent_div.innerHTML = '';
@@ -200,36 +245,27 @@ function action_area_show(box_id, parent_form, type, width) {
 	if (document.getElementById('box-' + box_id + '-action-bar-menu') != null) {
 		document.getElementById('box-' + box_id + '-action-bar-menu').style.visibility = 'hidden';
 		document.getElementById('box-' + box_id + '-button-menu-container').style.backgroundColor = '#ffffff';
-		document.getElementById('box-' + box_id + '-button-menu').className = 'action-bar-button-out';
-	}
-
-	/* re-adjust div heights and display it */
-	document.getElementById('box-' + box_id + '-action-area-items').style.height = 'auto';
-	document.getElementById('box-' + box_id + '-action-area-menu').style.height = 'auto';
-
-	/* ie requires this because of the drag & drop control */
-	if (get_browser_type() == "ie") {
-		document.getElementById('box-' + box_id + '-action-area-menu').style.width = '400';
-		document.getElementById('box-' + box_id + '-action-area-header').style.width = '400';
-		document.getElementById('box-' + box_id + '-action-area-items').style.width = '400';
+		document.getElementById('box-' + box_id + '-button-menu').className = 'button_mouseout';
 	}
 
 	/* show the area box */
-	document.getElementById('box-' + box_id + '-action-area-frame').style.visibility = 'visible';
+	document.getElementById('box-' + box_id + '-action-area').style.top = getScrollY() + 150 + 'px';
+	document.getElementById('box-' + box_id + '-action-area').style.left = get_browser_width() / 2 - width / 2 + 'px';
+	document.getElementById('box-' + box_id + '-action-area').style.width = width + 'px';
+	document.getElementById('box-' + box_id + '-action-area').style.display = 'block';
+	document.getElementById('backdrop').style.display = 'block';
+
 	action_area_handle_type(box_id, type, parent_div, parent_form);
 
 	/* keep a cache of the active actions box type */
 	_current_action_type[box_id] = type;
-
-	/* move div into place depending on where the scroll bar is */
-	dd.elements['box-' + box_id + '-action-area-frame'].moveTo(get_browser_width() / 2 - width / 2, getScrollY() + 100);
-
 }
 
 /* action_bar_button_menu_click - hides the actions area box
    @arg box_id - (string) the unique identifier for the container box */
-function action_area_hide(box_id) {
-	document.getElementById('box-' + box_id + '-action-area-frame').style.visibility = 'hidden';
+function action_area_box_hide(box_id) {
+	document.getElementById('backdrop').style.display = 'none';
+	document.getElementById('box-' + box_id + '-action-area').style.display = 'none';
 }
 
 /* action_area_generate_search_field - creates an complete search field container
@@ -357,10 +393,6 @@ function action_area_update_selected_rows(box_id, parent_form) {
 			}
 		}
 	}
-
-	/* force browser to re-adjust div heights */
-	document.getElementById('box-' + box_id + '-action-area-items').style.height = 'auto';
-	document.getElementById('box-' + box_id + '-action-area-menu').style.height = 'auto';
 }
 
 /* action_area_update_submit_caption - updates the caption of the submit button in the actions
@@ -368,7 +400,7 @@ function action_area_update_selected_rows(box_id, parent_form) {
    @arg box_id - (string) the unique identifier for the container box
    @arg value - (string) the caption to set */
 function action_area_update_submit_caption(box_id, value) {
-	document.getElementById('box-' + box_id + '-action-area-button').value = value;
+	document.getElementById('box-' + box_id + '-action-area-button-submit').value = value;
 }
 
 /* action_area_update_header_caption - updates the caption of the box header in the actions
@@ -376,7 +408,7 @@ function action_area_update_submit_caption(box_id, value) {
    @arg box_id - (string) the unique identifier for the container box
    @arg value - (string) the caption to set */
 function action_area_update_header_caption(box_id, value) {
-	document.getElementById('box-' + box_id + '-action-area-header-caption').innerHTML = value;
+	document.getElementById('box-' + box_id + '-action-area-header').innerHTML = value;
 }
 
 /* action_area_generate_input - generates a form element for the actions area box
@@ -409,7 +441,7 @@ function action_area_generate_select(name) {
    @arg box_id - (string) the unique identifier for the container box
    @arg parent_form - (object) a reference to the container form object */
 function action_area_update_input(box_id, parent_form) {
-	_elm_form_container = document.getElementById('box-' + box_id + '-action-area-items');
+	_elm_form_container = document.getElementById('box-' + box_id + '-action-area-body');
 
 	fields = _elm_form_container.getElementsByTagName('input');
 

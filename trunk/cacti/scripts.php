@@ -218,7 +218,6 @@ function script_edit() {
 		html_end_box(false);
 
 		html_box_actions_menu_draw($box_id, "1", $menu_items);
-		html_box_actions_area_draw($box_id, "1");
 
 		form_hidden_box("script_id", $_script_id);
 		form_hidden_box("action", "save");
@@ -292,7 +291,7 @@ function script() {
 	html_end_box(false);
 
 	html_box_actions_menu_draw($box_id, "0", $menu_items);
-	html_box_actions_area_draw($box_id, "0");
+	html_box_actions_area_create($box_id);
 
 	form_end();
 	?>

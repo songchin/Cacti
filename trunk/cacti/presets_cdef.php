@@ -111,7 +111,7 @@ function cdef_edit() {
 	_data_preset_cdef__cdef_string("cdef_string", (isset($cdef["cdef_string"]) ? $cdef["cdef_string"] : ""), (isset($cdef["id"]) ? $cdef["id"] : "0"));
 	html_end_box();
 
-	html_box_actions_area_draw("1", "0", 550, false);
+	html_box_actions_area_create("1");
 
 	form_hidden_box("preset_cdef_id", $_cdef_preset_id);
 	form_hidden_box("action_post", "cdef_preset_edit");

@@ -33,25 +33,25 @@
 	corner of the box ("" for no 'Add' link) */
 function html_start_box($title, $add_url = "", $search_url = "", $box_id = false, $include_top_border = true, $box_padding = 3, $hidden = false) {
 	?>
-	<table<?php echo ($box_id === false ? "" : " id=\"box-$box_id\"");?> width="98%" cellspacing="1" cellpadding="0" align="center" class="content"<?php echo ($include_top_border == true ? "" : " style=\"border-top: none;\"");?><?php echo ($hidden == true ? " style=\"display: none;\"" : "");?>>
+	<table<?php echo ($box_id === false ? "" : " id=\"box-$box_id\"");?> cellspacing="1" cellpadding="0" align="center" class="box"<?php echo ($include_top_border == true ? "" : " style=\"border-top: none;\"");?><?php echo ($hidden == true ? " style=\"display: none;\"" : "");?>>
 		<?php if ($title != "") {?>
 		<tr>
 			<td>
 				<table width="100%" cellpadding="0" cellspacing="0">
-					<tr>
-						<td class="content-header" width="200">
+					<tr class="header">
+						<td width="200">
 							<?php echo $title;?>
 						</td>
 						<?php if ($search_url != "") { ?>
-						<td class="content-header content-navigation" align="center" style="padding-right: 5px; font-weight: bold;" nowrap>
+						<td class="pagination" align="center" nowrap="true">
 							[ <?php echo $search_url;?> ]
 						</td>
 						<?php } ?>
 						<?php if ($add_url == "") { ?>
-						<td class="content-header" width="200" align="right" style="padding-right: 5px; font-weight: bold;">&nbsp;</td>
+						<td width="200" align="right">&nbsp;</td>
 						<?php }else{ ?>
-						<td class="content-header" width="200" align="right" style="padding-right: 5px; font-weight: bold;">
-							<a class="linkOverDark" href="<?php echo $add_url;?>">Add</a>
+						<td width="200" align="right">
+							<a href="<?php echo $add_url;?>">Add</a>
 						</td>
 						<?php } ?>
 					</tr>
@@ -73,74 +73,41 @@ function html_end_box($trailing_br = true) { ?>
 			</td>
 		</tr>
 	</table>
-	<?php if ($trailing_br == true) { print "<br>"; } ?>
+	<?php if ($trailing_br == true) { echo "<br />"; } ?>
 <?php }
 
 function html_box_toolbar_draw($box_id, $form_id, $colspan, $search_type = HTML_BOX_SEARCH_NONE, $search_url = "", $show_default_actions = 1, $action_area_width = 400) {
 	?>
-	<tr>
-		<td style="border-top: 1px solid #b5b5b5; padding: 1px;" colspan="<?php echo $colspan;?>" >
+	<tr class="toolbar">
+		<td colspan="<?php echo $colspan;?>">
 			<table width="100%" cellpadding="3" cellspacing="0">
 				<tr>
-					<td width="200" style="padding: 0px;">
-						<?php if (($search_type == HTML_BOX_SEARCH_ACTIVE) || ($search_type == HTML_BOX_SEARCH_INACTIVE) || ($search_type == HTML_BOX_SEARCH_NO_ICON)) { ?>
-						<table width="100%" cellpadding="3" cellspacing="0">
-							<tr>
-								<?php if (($search_type == HTML_BOX_SEARCH_ACTIVE) || ($search_type == HTML_BOX_SEARCH_INACTIVE)) { ?>
-								<td width="16" id="box-<?php echo $box_id;?>-button-search" class="action-bar-button-out">
-									<a href="javascript:action_area_show('<?php echo $box_id;?>',document.forms[<?php echo $form_id;?>],'search',<?php echo $action_area_width; ?>)"><img src="<?php echo html_get_theme_images_path($search_type == HTML_BOX_SEARCH_ACTIVE ? 'action_search_active.gif' : 'action_search.gif');?>" width="16" height="16" border="0" alt="Search" onMouseOver="action_bar_button_mouseover('box-<?php echo $box_id;?>-button-search')" onMouseOut="action_bar_button_mouseout('box-<?php echo $box_id;?>-button-search')" align="absmiddle"></a>
-								</td>
-								<td width="3">
-									<img src="<?php echo html_get_theme_images_path('vertical_spacer.gif');?>" alt="" align="absmiddle">
-								</td>
-								<?php } ?>
-								<td nowrap>
-									<?php
-									form_text_box("box-$box_id-search_filter", get_get_var("search_filter"), "", 100, 15, "text", 0, "small");
-									form_hidden_box("action", "save");
-									?>
-									<input type="submit" name="box-<?php echo $box_id;?>-action-filter-button" value="Filter" class="small">
-									<input type="submit" name="box-<?php echo $box_id;?>-action-clear-button" value="Clear" class="small">
-								</td>
-							</tr>
-						</table>
-						<?php } ?>
+					<td width="200">
+						&nbsp;
 					</td>
-					<td align="center" nowrap>
-						<?php if (($search_type == HTML_BOX_SEARCH_ACTIVE) || ($search_type == HTML_BOX_SEARCH_INACTIVE)) { ?>
+					<td class="pagination" align="center" nowrap="true">
 						[ <?php echo $search_url;?> ]
-						<?php } ?>
 					</td>
-					<td width="165" style="padding: 0px;">
-						<table width="100%" cellpadding="3" cellspacing="0">
-							<tr>
-								<td>
-									&nbsp;
-								</td>
-								<?php if ($show_default_actions == 1) { ?>
-								<td width="16" id="box-<?php echo $box_id;?>-button-duplicate" class="action-bar-button-out">
-									<a href="javascript:action_area_show('<?php echo $box_id;?>',document.forms[<?php echo $form_id;?>],'duplicate')"><img src="<?php echo html_get_theme_images_path('action_copy.gif');?>" width="16" height="16" border="0" alt="Duplicate" onMouseOver="action_bar_button_mouseover('box-<?php echo $box_id;?>-button-duplicate')" onMouseOut="action_bar_button_mouseout('box-<?php echo $box_id;?>-button-duplicate')" align="absmiddle"></a>
-								</td>
-								<?php }else{ ?>
-								<td width="16">&nbsp;</td>
-								<?php } ?>
-							</tr>
-						</table>
-					</td>
+					<td width="126">&nbsp;</td>
 					<?php if ($show_default_actions == 1) { ?>
-					<td width="16" id="box-<?php echo $box_id;?>-button-delete" class="action-bar-button-out">
-						<a href="javascript:action_area_show('<?php echo $box_id;?>',document.forms[<?php echo $form_id;?>],'remove')"><img src="<?php echo html_get_theme_images_path('action_delete.gif');?>" width="16" height="16" border="0" alt="Delete" onMouseOver="action_bar_button_mouseover('box-<?php echo $box_id;?>-button-delete')" onMouseOut="action_bar_button_mouseout('box-<?php echo $box_id;?>-button-delete')" align="absmiddle"></a>
+					<td width="16" id="box-<?php echo $box_id;?>-button-duplicate" class="button_mouseout">
+						<a href="javascript:action_area_box_show('<?php echo $box_id;?>',document.forms[<?php echo $form_id;?>],'duplicate')"><img src="<?php echo html_get_theme_images_path('action_copy.gif');?>" width="16" height="16" border="0" alt="Duplicate" onMouseOver="action_bar_button_mouseover('box-<?php echo $box_id;?>-button-duplicate')" onMouseOut="action_bar_button_mouseout('box-<?php echo $box_id;?>-button-duplicate')" align="absmiddle"></a>
+					</td>
+					<td width="16" id="box-<?php echo $box_id;?>-button-delete" class="button_mouseout">
+						<a href="javascript:action_area_box_show('<?php echo $box_id;?>',document.forms[<?php echo $form_id;?>],'remove')"><img src="<?php echo html_get_theme_images_path('action_delete.gif');?>" width="16" height="16" border="0" alt="Delete" onMouseOver="action_bar_button_mouseover('box-<?php echo $box_id;?>-button-delete')" onMouseOut="action_bar_button_mouseout('box-<?php echo $box_id;?>-button-delete')" align="absmiddle"></a>
 					</td>
 					<?php }else{ ?>
-						<td width="16"></td>
+					<td width="16">&nbsp;</td>
+					<td width="16"></td>
 					<?php } ?>
+					</td>
 				</tr>
 			</table>
 		</td>
-		<td width="1%" id="box-<?php echo $box_id;?>-button-menu-container" style="border-top: 1px solid #b5b5b5; border-left: 1px solid #b5b5b5; padding: 1px;">
+		<td width="1%" id="box-<?php echo $box_id;?>-button-menu-container" class="button_menu">
 			<table width="100%" cellpadding="3" cellspacing="0">
 				<tr>
-					<td id="box-<?php echo $box_id;?>-button-menu" class="action-bar-button-out">
+					<td id="box-<?php echo $box_id;?>-button-menu" class="button_mouseout">
 						<a href="javascript:action_bar_button_menu_click('<?php echo $box_id;?>')"><img src="<?php echo html_get_theme_images_path('action_menu.gif');?>" width="16" height="16" border="0" alt="Choose..." onMouseOver="action_bar_button_menu_mouseover('<?php echo $box_id;?>')" onMouseOut="action_bar_button_menu_mouseout('<?php echo $box_id;?>')" align="absmiddle"></a>
 					</td>
 				</tr>
@@ -152,103 +119,32 @@ function html_box_toolbar_draw($box_id, $form_id, $colspan, $search_type = HTML_
 
 function html_box_actions_menu_draw($box_id, $form_id, $menu_items, $width = 400) {
 	?>
-	<div id="box-<?php echo $box_id;?>-action-bar-frame" style="width: 98%; left: 1%; position: relative;">
-		<div id="box-<?php echo $box_id;?>-action-bar-menu" class="action-bar-menu" style="visibility: hidden; position: absolute; right: 0px;">
-			<div id="box-<?php echo $box_id;?>-action-bar-items" class="action-bar-items">
-				<?php
-				if (sizeof($menu_items) > 0) {
-					$i = 1;
-					foreach ($menu_items as $action_name => $action_description) {
-						?>
-						<div id="box-<?php echo $box_id;?>-action-bar-item-<?php echo $i;?>" class="action-bar-menu-out" <?php echo ($i > 1 ? "style=\"border-top: 1px solid #aab;\"" : "");?> onMouseOver="action_bar_menu_mouseover('box-<?php echo $box_id;?>-action-bar-item-<?php echo $i;?>')" onMouseOut="action_bar_menu_mouseout('box-<?php echo $box_id;?>-action-bar-item-<?php echo $i;?>')" onClick="action_area_show('<?php echo $box_id;?>',document.forms[<?php echo $form_id;?>],'<?php echo $action_name;?>', '<?php echo $width; ?>')">
-							<?php echo $action_description;?>
-						</div>
-						<?php
-						$i++;
-					}
-				}
+	<div id="box-<?php echo $box_id;?>-action-bar-menu" class="action_menu">
+		<?php
+		if (sizeof($menu_items) > 0) {
+			$i = 1;
+			foreach ($menu_items as $action_name => $action_description) {
 				?>
-			</div>
-		</div>
+				<div id="box-<?php echo $box_id;?>-action-bar-item-<?php echo $i;?>" class="mouseout<?php echo ($i > 1 ? " item_spacer" : "");?>" onMouseOver="action_bar_menu_mouseover('box-<?php echo $box_id;?>-action-bar-item-<?php echo $i;?>')" onMouseOut="action_bar_menu_mouseout('box-<?php echo $box_id;?>-action-bar-item-<?php echo $i;?>')" onClick="action_area_box_show('<?php echo $box_id;?>',document.forms[<?php echo $form_id;?>],'<?php echo $action_name;?>', '<?php echo $width; ?>')">
+					<?php echo $action_description;?>
+				</div>
+				<?php
+				$i++;
+			}
+		}
+		?>
 	</div>
 	<?php
 }
 
-function html_box_actions_area_draw($box_id, $form_id, $width = 400, $submit = 1) {
+function html_box_actions_area_create($box_id, $width = 400) {
 	?>
-	<div id="box-<?php echo $box_id;?>-action-area-frame" class="shadowedBox" style="width: <?php echo $width + 14;?>px; position: absolute; left: 10px; top: 10px; visibility: hidden;" width="<?php echo $width + 14;?>">
-		<table cellpadding="0" cellspacing="0" border="0" width="<?php echo $width + 14;?>">
-			<tr valign="bottom">
-				<td class="bdr topleftcorner" width="7" height="7"></td>
-				<td class="bdr topleft" width="7" height="7"></td>
-				<td class="bdr top" width="<?php echo $width;?>" height="7"><img src"images/trans.gif" width="1" height="1"></td>
-				<td class="bdr topright" width="7" height="7"></td>
-				<td class="bdr toprightcorner" width="7" height="7"></td>
-			</tr>
-			<tr valign="top">
-				<td height="100%">
-					<table border="0" cellpadding="0" cellspacing="0" height="100%">
-						<tr><td class="bdr lefttop" width="7" height="7"></td></td>
-						<tr><td class="bdr left" width="7"><img src"images/trans.gif" width="7" height="1"></td></tr>
-						<tr><td class="bdr leftbottom" width="7" height="7"></td></tr>
-					</table>
-				</td>
-				<td class="action-box-border" colspan="3">
-					<table border="0" cellpadding="0" cellspacing="0" width="<?php echo $width; ?>">
-						<tr align="top">
-							<td width="<?php echo $width;?>">
-								<div id="box-<?php echo $box_id;?>-action-area-menu" class="action-area-menu">
-									<div id="box-<?php echo $box_id;?>-action-area-header" class="action-area-header">
-										<table width="<?php echo ($width);?>" cellspacing="0" cellpadding="0" border="0">
-											<tr>
-												<td id="box-<?php echo $box_id;?>-action-area-header-caption" class="action-area-header">
-													&nbsp;
-												</td>
-												<td align="right">
-													<a href="javascript:action_area_hide('<?php echo $box_id;?>')"><img src="<?php echo html_get_theme_images_path('action_area_close.gif');?>" border="0" alt="Close Dialog"></a>
-												</td>
-											</tr>
-										</table>
-									</div>
-									<div id="box-<?php echo $box_id;?>-action-area-items" class="action-area-items">
-										&nbsp;
-									</div>
-									<div class="action-area-buttons" width="<?php echo $width; ?>">
-										<input type="reset" value="Cancel" class="action-area-buttons" name="box-<?php echo $box_id;?>-action-area-button-cancel" id="box-<?php echo $box_id;?>-action-area-button-cancel" onClick="action_area_hide('<?php echo $box_id;?>')">
-										<?php if ($submit == 1) { ?>
-										<input type="submit" value="X" class="action-area-buttons" name="box-<?php echo $box_id;?>-action-area-button" id="box-<?php echo $box_id;?>-action-area-button" onClick="action_area_update_input('<?php echo $box_id;?>',document.forms[<?php echo $form_id;?>])">
-										<?php } ?>
-									</div>
-								</div>
-							</td>
-						</tr>
-					</table>
-				</td>
-				<td height="100%">
-					<table border="0" cellpadding="0" cellspacing="0" height="100%">
-						<tr><td class="bdr righttop" width="7" height="7"></td></tr>
-						<tr><td class="bdr right" width="7"><img src"images/trans.gif" width="7" height="1"></td></tr>
-						<tr><td class="bdr rightbottom" width="7" height="7"></td></tr>
-					</table>
-				</td>
-			</tr>
-			<tr valign="top">
-				<td class="bdr bottomleftcorner" width="7" height="7"></td>
-				<td class="bdr bottomleft" width="7" height="7"></td>
-				<td class="bdr bottom" width="<?php echo $width;?>" height="7"><img src"images/trans.gif" width="1" height="1"></td>
-				<td class="bdr bottomright" width="7" height="7"></td>
-				<td class="bdr bottomrightcorner" width="7" height="7"></td>
-			</tr>
-		</table>
-	</div>
 	<script language="JavaScript">
 	<!--
-	/* add this div to the drag DHTML */
-	ADD_DHTML("box-<?php echo $box_id;?>-action-area-frame", "box-<?php echo $box_id;?>-action-area-header", "box-<?php echo $box_id;?>-action-area-items");
-
-	/* force position because of ie weirdness */
-	dd.elements["box-<?php echo $box_id;?>-action-area-frame"].moveTo((get_browser_width() / 2) - <?php echo $width / 2; ?>, '100');
+	action_area_box_create("<?php echo $box_id;?>", <?php echo $width;?>);
 	-->
 	</script>
 	<?php
 }
+
+?>
