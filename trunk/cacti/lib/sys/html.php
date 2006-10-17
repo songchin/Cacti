@@ -229,7 +229,7 @@ function html_header_sort($header_items, $sort_column, $sort_direction, $last_it
 		$new_sort_direction = "ASC";
 	}
 
-	print "<tr bgcolor='#" . $colors["header_panel"] . "'>\n";
+	print "<tr class='heading'>\n";
 
 	$i = 1;
 	foreach ($header_items as $db_column => $display_array) {
@@ -243,7 +243,7 @@ function html_header_sort($header_items, $sort_column, $sort_direction, $last_it
 		}
 
 		print "<td " . ((($i) == count($header_items)) ? "colspan='$last_item_colspan'>" : ">");
-		print "<a class='textSubHeaderDark' href=" . $_SERVER["PHP_SELF"] . "?sort_column=" . $db_column . "&sort_direction=" . $direction . ">" . $display_text . "</a>";
+		print "<a href='" . $_SERVER["PHP_SELF"] . "?sort_column=" . $db_column . "&sort_direction=" . $direction . "'>" . $display_text . "</a>";
 		print "</td>\n";
 		$i++;
 	}
@@ -262,7 +262,7 @@ function html_header_sort($header_items, $sort_column, $sort_direction, $last_it
    @arg $sort_direction - the value the current sort direction.  The actual sort direction
         will be opposite this direction if the user selects the same named column.
    @arg $form_action - the url to post the 'select all' form to */
-function html_header_sort_checkbox($header_items, $sort_column, $sort_direction, $form_action = "") {
+function html_header_sort_checkbox($header_items, $sort_column, $sort_direction, $box_id, $form_id = "0") {
 	global $colors;
 
 	/* reverse the sort direction */
@@ -273,9 +273,9 @@ function html_header_sort_checkbox($header_items, $sort_column, $sort_direction,
 	}
 
 	/* default to the 'current' file */
-	if ($form_action == "") { $form_action = basename($_SERVER["PHP_SELF"]); }
+	//if ($form_action == "") { $form_action = basename($_SERVER["PHP_SELF"]); }
 
-	print "<tr bgcolor='#" . $colors["header_panel"] . "'>\n";
+	print "<tr class='heading'>\n";
 
 	foreach($header_items as $db_column => $display_array) {
 		/* by default, you will always sort ascending, with the exception of an already sorted column */
@@ -288,11 +288,11 @@ function html_header_sort_checkbox($header_items, $sort_column, $sort_direction,
 		}
 
 		print "<td>";
-		print "<a class='textSubHeaderDark' href=" . $_SERVER["PHP_SELF"] . "?sort_column=" . $db_column . "&sort_direction=" . $direction . ">" . $display_text . "</a>";
+		print "<a href='" . $_SERVER["PHP_SELF"] . "?sort_column=" . $db_column . "&sort_direction=" . $direction . "'>" . $display_text . "</a>";
 		print "</td>\n";
 	}
 
-	print "<td width='1%' align='right' bgcolor='#819bc0' style='" . get_checkbox_style() . "'><input type='checkbox' style='margin: 0px;' name='all' title='Select All' onClick='SelectAll(\"chk_\",this.checked)'></td>\n<form name='chk' method='post' action='$form_action'>\n";
+	print "<td class='checkbox' align='center'><input type='checkbox' name='box-$box_id-allchk' id='box-$box_id-allchk' title='" . _("Select All") . "' onClick='display_row_select_all(\"$box_id\",document.forms[$form_id])'></td>\n";
 	print "</tr>\n";
 }
 
@@ -300,10 +300,10 @@ function html_header_sort_checkbox($header_items, $sort_column, $sort_direction,
    @arg $header_items - an array containing a list of items to be included in the header
    @arg $last_item_colspan - the TD 'colspan' to apply to the last cell in the row */
 function html_header($header_items, $last_item_colspan = 1) {
-	echo "<tr>\n";
+	echo "<tr class='heading'>\n";
 
 	for ($i=0; $i<count($header_items); $i++) {
-		echo "<td " . ((($i+1) == count($header_items)) ? "colspan='$last_item_colspan' " : "") . "class='content-header-sub'>" . $header_items[$i] . "</td>\n";
+		echo "<td " . ((($i+1) == count($header_items)) ? "colspan='$last_item_colspan' " : "") . ">" . $header_items[$i] . "</td>\n";
 	}
 
 	echo "</tr>\n";
@@ -314,13 +314,13 @@ function html_header($header_items, $last_item_colspan = 1) {
    @arg $header_items - an array containing a list of items to be included in the header
    @arg $form_action - the url to post the 'select all' form to */
 function html_header_checkbox($header_items, $box_id, $form_id = "0") {
-	echo "<tr>\n";
+	echo "<tr class='heading'>\n";
 
 	for ($i=0; $i<count($header_items); $i++) {
-		echo "<td class='content-header-sub'>" . $header_items[$i] . "</td>\n";
+		echo "<td>" . $header_items[$i] . "</td>\n";
 	}
 
-	echo "<td width='1%' align='center' bgcolor='#819bc0' style='" . get_checkbox_style() . "'><input type='checkbox' style='margin: 0px;' name='box-$box_id-allchk' id='box-$box_id-allchk' title='" . _("Select All") . "' onClick='display_row_select_all(\"$box_id\",document.forms[$form_id])'></td>\n";
+	echo "<td class='checkbox' align='center'><input type='checkbox' name='box-$box_id-allchk' id='box-$box_id-allchk' title='" . _("Select All") . "' onClick='display_row_select_all(\"$box_id\",document.forms[$form_id])'></td>\n";
 	echo "</tr>\n";
 }
 

@@ -415,3 +415,34 @@ function get_browser_height() {
 function strip_html_tags(string) {
 	return string.replace(/(<([^>]+)>)/ig, "");
 }
+
+function css_has_class(element, class_name) {
+	classes = element.className.split(" ");
+
+	for (var i = 0; i < classes.length; i++) {
+		if (classes[i].match(class_name)) {
+			return true;
+		}
+	}
+
+	return false;
+}
+
+function css_add_class(element, class_name) {
+	if (!css_has_class(element, class_name)) {
+		element.className = element.className + " " + class_name;
+	}
+}
+
+function css_remove_class(element, class_name) {
+	classes = element.className.split(" ");
+
+	new_class_name = "";
+	for (var i = 0; i < classes.length; i++) {
+		if (!classes[i].match(class_name)) {
+			new_class_name = new_class_name + " " + classes[i];
+		}
+	}
+
+	element.className = new_class_name;
+}

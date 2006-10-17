@@ -33,18 +33,14 @@ var _elm_selected_rows = new Array();
    @arg row - (object) the object representing the row that the user's mouse is
 	hovering over */
 function display_row_hover(row) {
-	if (document.getElementById(row).className == 'content-row') {
-		document.getElementById(row).className = 'content-row-hover';
-	}
+	css_add_class(document.getElementById(row), 'hover');
 }
 
 /* display_row_clear - called when a user moves their mouse out of a row
    @arg row - (object) the object representing the row that the user's mouse moved
 	from */
 function display_row_clear(row) {
-	if (document.getElementById(row).className == 'content-row-hover') {
-		document.getElementById(row).className = 'content-row';
-	}
+	css_remove_class(document.getElementById(row), 'hover');
 }
 
 /* display_row_select_all - called when a user clicks the "select all" checkbox
@@ -55,13 +51,13 @@ function display_row_select_all(box_id, parent_form) {
 
 	for (var i = 0; i < parent_form.elements.length; i++) {
 		if (parent_form.elements[i].name.substr(0, box_id.length + 8) == 'box-' + box_id + '-chk') {
-			row_name = 'box-' + box_id + '-row' + parent_form.elements[i].name.substr(box_id.length + 8);
-
-			/* update the row class so display_row_select() knows whether to select or deselect the box */
-			document.getElementById(row_name).className = (checkbox_state ? 'content-row' : 'content-row-select');
-
-			/* update the row selection */
-			display_row_select(box_id, parent_form, row_name, parent_form.elements[i].name);
+			if (checkbox_state == true) {
+				css_add_class(document.getElementById('box-' + box_id + '-row' + parent_form.elements[i].name.substr(box_id.length + 8)), 'selected');
+				document.getElementById('box-' + box_id + '-chk-' + parent_form.elements[i].name.substr(box_id.length + 9)).checked = true;
+			}else{
+				css_remove_class(document.getElementById('box-' + box_id + '-row' + parent_form.elements[i].name.substr(box_id.length + 8)), 'selected');
+				document.getElementById('box-' + box_id + '-chk-' + parent_form.elements[i].name.substr(box_id.length + 9)).checked = false;
+			}
 		}
 	}
 }
@@ -75,17 +71,12 @@ function display_row_select(box_id, parent_form, row, checkbox) {
 	if (_block_row == row) {
 		_block_row = '';
 	}else{
-		if (document.getElementById(row).className == 'content-row-select') {
-			document.getElementById(row).className = 'content-row';
+		if (css_has_class(document.getElementById(row), 'selected')) {
+			css_remove_class(document.getElementById(row), 'selected');
 			document.getElementById(checkbox).checked = false;
 		}else{
-			document.getElementById(row).className = 'content-row-select';
+			css_add_class(document.getElementById(row), 'selected');
 			document.getElementById(checkbox).checked = true;
-		}
-
-		/* is the actions box currently being displayed? */
-		if ((document.getElementById('box-' + box_id + '-action-area').style.display == 'block') && (_current_action_type[box_id])) {
-			action_area_update_selected_rows(box_id, parent_form);
 		}
 	}
 }

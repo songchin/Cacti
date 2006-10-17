@@ -86,7 +86,13 @@ function html_box_toolbar_draw($box_id, $form_id, $colspan, $search_type = HTML_
 						&nbsp;
 					</td>
 					<td class="pagination" align="center" nowrap="true">
-						[ <?php echo $search_url;?> ]
+						<?php
+						if ($search_url == "") {
+							echo "&nbsp;\n";
+						}else{
+							echo "[$search_url]\n";
+						}
+						?>
 					</td>
 					<td width="126">&nbsp;</td>
 					<?php if ($show_default_actions == 1) { ?>

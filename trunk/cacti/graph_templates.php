@@ -367,12 +367,12 @@ function template() {
 	if (sizeof($graph_templates) > 0) {
 		foreach ($graph_templates as $graph_template) {
 			?>
-			<tr class="content-row" id="box-<?php echo $box_id;?>-row-<?php echo $graph_template["id"];?>" onClick="display_row_select('<?php echo $box_id;?>',document.forms[0],'box-<?php echo $box_id;?>-row-<?php echo $graph_template["id"];?>', 'box-<?php echo $box_id;?>-chk-<?php echo $graph_template["id"];?>')" onMouseOver="display_row_hover('box-<?php echo $box_id;?>-row-<?php echo $graph_template["id"];?>')" onMouseOut="display_row_clear('box-<?php echo $box_id;?>-row-<?php echo $graph_template["id"];?>')">
-				<td class="content-row">
-					<a class="linkEditMain" onClick="display_row_block('box-<?php echo $box_id;?>-row-<?php echo $graph_template["id"];?>')" href="graph_templates.php?action=edit&id=<?php echo $graph_template["id"];?>"><span id="box-<?php echo $box_id;?>-text-<?php echo $graph_template["id"];?>"><?php echo html_highlight_words(get_get_var("search_filter"), $graph_template["template_name"]);?></span></a>
+			<tr class="item" id="box-<?php echo $box_id;?>-row-<?php echo $graph_template["id"];?>" onClick="display_row_select('<?php echo $box_id;?>',document.forms[0],'box-<?php echo $box_id;?>-row-<?php echo $graph_template["id"];?>', 'box-<?php echo $box_id;?>-chk-<?php echo $graph_template["id"];?>')" onMouseOver="display_row_hover('box-<?php echo $box_id;?>-row-<?php echo $graph_template["id"];?>')" onMouseOut="display_row_clear('box-<?php echo $box_id;?>-row-<?php echo $graph_template["id"];?>')">
+				<td class="title">
+					<a onClick="display_row_block('box-<?php echo $box_id;?>-row-<?php echo $graph_template["id"];?>')" href="graph_templates.php?action=edit&id=<?php echo $graph_template["id"];?>"><span id="box-<?php echo $box_id;?>-text-<?php echo $graph_template["id"];?>"><?php echo html_highlight_words(get_get_var("search_filter"), $graph_template["template_name"]);?></span></a>
 				</td>
-				<td class="content-row" width="1%" align="center" style="border-left: 1px solid #b5b5b5; border-top: 1px solid #b5b5b5; background-color: #e9e9e9; <?php echo get_checkbox_style();?>">
-					<input type='checkbox' style='margin: 0px;' name='box-<?php echo $box_id;?>-chk-<?php echo $graph_template["id"];?>' id='box-<?php echo $box_id;?>-chk-<?php echo $graph_template["id"];?>' title="<?php echo $graph_template["template_name"];?>">
+				<td class="checkbox" align="center">
+					<input type='checkbox' name='box-<?php echo $box_id;?>-chk-<?php echo $graph_template["id"];?>' id='box-<?php echo $box_id;?>-chk-<?php echo $graph_template["id"];?>' title="<?php echo $graph_template["template_name"];?>">
 				</td>
 			</tr>
 			<?php
@@ -380,7 +380,7 @@ function template() {
 	}else{
 		?>
 		<tr>
-			<td class="content-list-empty" colspan="6">
+			<td class="empty" colspan="6">
 				No graph templates found.
 			</td>
 		</tr>
