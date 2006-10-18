@@ -277,44 +277,44 @@ function pollers() {
 	if (sizeof($pollers) > 0) {
 	foreach ($pollers as $poller) {
 		?>
-		<tr class="content-row" id="box-<?php echo $box_id;?>-row-<?php echo $poller["poller_id"];?>" onClick="display_row_select('<?php echo $box_id;?>',document.forms[0],'box-<?php echo $box_id;?>-row-<?php echo $poller["poller_id"];?>', 'box-<?php echo $box_id;?>-chk-<?php echo $poller["poller_id"];?>')" onMouseOver="display_row_hover('box-<?php echo $box_id;?>-row-<?php echo $poller["poller_id"];?>')" onMouseOut="display_row_clear('box-<?php echo $box_id;?>-row-<?php echo $poller["poller_id"];?>')">
-			<td class="content-row">
-				<a class="linkEditMain" href="pollers.php?action=edit&poller_id=<?php print $poller["id"];?>"><?php print $poller["name"];?></a>
+		<tr class="item" id="box-<?php echo $box_id;?>-row-<?php echo $poller["poller_id"];?>" onClick="display_row_select('<?php echo $box_id;?>',document.forms[0],'box-<?php echo $box_id;?>-row-<?php echo $poller["poller_id"];?>', 'box-<?php echo $box_id;?>-chk-<?php echo $poller["poller_id"];?>')" onMouseOver="display_row_hover('box-<?php echo $box_id;?>-row-<?php echo $poller["poller_id"];?>')" onMouseOut="display_row_clear('box-<?php echo $box_id;?>-row-<?php echo $poller["poller_id"];?>')">
+			<td class="title">
+				<a href="pollers.php?action=edit&poller_id=<?php print $poller["id"];?>"><?php print $poller["name"];?></a>
 			</td>
-			<td class="content-row">
+			<td>
 				<?php echo $poller["hostname"];?>
 			</td>
-			<td class="content-row">
+			<td>
 				<?php echo $poller["run_state"];?>
 			</td>
-			<td class="content-row">
+			<td>
 				<?php echo $poller["cur_time"];?>
 			</td>
-			<td class="content-row">
+			<td>
 				<?php echo $poller["min_time"];?>
 			</td>
-			<td class="content-row">
+			<td>
 				<?php echo $poller["max_time"];?>
 			</td>
-			<td class="content-row">
+			<td>
 				<?php echo $poller["avg_time"];?>
 			</td>
-			<td class="content-row">
+			<td>
 				<?php echo ($poller["active"] == "on" ? _("Yes") : _("No"));?>
 			</td>
-			<td class="content-row">
+			<td>
 				<?php echo $poller["last_update"];?>
 			</td>
-			<td class="content-row" width="1%" align="center" style="border-left: 1px solid #b5b5b5; border-top: 1px solid #b5b5b5; background-color: #e9e9e9; <?php echo get_checkbox_style();?>">
-				<input type='checkbox' style='margin: 0px;' name='box-<?php echo $box_id;?>-chk-<?php echo $poller["poller_id"];?>' id='box-<?php echo $box_id;?>-chk-<?php echo $poller["poller_id"];?>' title="<?php echo $poller["name"];?>">
+			<td class="checkbox" align="center">
+				<input type='checkbox' name='box-<?php echo $box_id;?>-chk-<?php echo $poller["poller_id"];?>' id='box-<?php echo $box_id;?>-chk-<?php echo $poller["poller_id"];?>' title="<?php echo $poller["name"];?>">
 			</td>
 		</tr>
 		<?php
 	}
 	}else{
 		?>
-		<tr>
-			<td class="content-list-empty" colspan="6">
+		<tr class="empty">
+			<td colspan="6">
 				<?php echo _("No Pollers Found.");?>
 			</td>
 		</tr>

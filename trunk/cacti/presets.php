@@ -108,12 +108,12 @@ function view_cdef() {
 	if (sizeof($cdefs) > 0) {
 		foreach ($cdefs as $cdef) {
 			?>
-			<tr class="content-row" id="box-<?php echo $box_id;?>-row-<?php echo $cdef["id"];?>" onClick="display_row_select('<?php echo $box_id;?>',document.forms[0],'box-<?php echo $box_id;?>-row-<?php echo $cdef["id"];?>', 'box-<?php echo $box_id;?>-chk-<?php echo $cdef["id"];?>')" onMouseOver="display_row_hover('box-<?php echo $box_id;?>-row-<?php echo $cdef["id"];?>')" onMouseOut="display_row_clear('box-<?php echo $box_id;?>-row-<?php echo $cdef["id"];?>')">
-				<td class="content-row">
-					<a class="linkEditMain" onClick="display_row_block('box-<?php echo $box_id;?>-row-<?php echo $cdef["id"];?>')" href="presets_cdef.php?action=edit&id=<?php echo $cdef["id"];?>"><span id="box-<?php echo $box_id;?>-text-<?php echo $cdef["id"];?>"><?php echo $cdef["name"];?></span></a>
+			<tr class="item" id="box-<?php echo $box_id;?>-row-<?php echo $cdef["id"];?>" onClick="display_row_select('<?php echo $box_id;?>',document.forms[0],'box-<?php echo $box_id;?>-row-<?php echo $cdef["id"];?>', 'box-<?php echo $box_id;?>-chk-<?php echo $cdef["id"];?>')" onMouseOver="display_row_hover('box-<?php echo $box_id;?>-row-<?php echo $cdef["id"];?>')" onMouseOut="display_row_clear('box-<?php echo $box_id;?>-row-<?php echo $cdef["id"];?>')">
+				<td class="title">
+					<a onClick="display_row_block('box-<?php echo $box_id;?>-row-<?php echo $cdef["id"];?>')" href="presets_cdef.php?action=edit&id=<?php echo $cdef["id"];?>"><span id="box-<?php echo $box_id;?>-text-<?php echo $cdef["id"];?>"><?php echo $cdef["name"];?></span></a>
 				</td>
-				<td class="content-row" width="1%" align="center" style="border-left: 1px solid #b5b5b5; border-top: 1px solid #b5b5b5; background-color: #e9e9e9; <?php echo get_checkbox_style();?>">
-					<input type='checkbox' style='margin: 0px;' name='box-<?php echo $box_id;?>-chk-<?php echo $cdef["id"];?>' id='box-<?php echo $box_id;?>-chk-<?php echo $cdef["id"];?>' title="<?php echo $cdef["name"];?>">
+				<td class="checkbox" align="center">
+					<input type='checkbox' name='box-<?php echo $box_id;?>-chk-<?php echo $cdef["id"];?>' id='box-<?php echo $box_id;?>-chk-<?php echo $cdef["id"];?>' title="<?php echo $cdef["name"];?>">
 				</td>
 			</tr>
 			<?php
@@ -122,8 +122,8 @@ function view_cdef() {
 		html_box_toolbar_draw($box_id, "0", "1");
 	}else{
 		?>
-		<tr>
-			<td class="content-list-empty" colspan="1">
+		<tr class="empty">
+			<td colspan="1">
 				No CDEF presets found.
 			</td>
 		</tr>
@@ -181,18 +181,18 @@ function view_color() {
 	if (sizeof($colors) > 0) {
 		foreach ($colors as $color) {
 			?>
-			<tr class="content-row" id="box-<?php echo $box_id;?>-row-<?php echo $color["id"];?>" onClick="display_row_select('<?php echo $box_id;?>',document.forms[0],'box-<?php echo $box_id;?>-row-<?php echo $color["id"];?>', 'box-<?php echo $box_id;?>-chk-<?php echo $color["id"];?>')" onMouseOver="display_row_hover('box-<?php echo $box_id;?>-row-<?php echo $color["id"];?>')" onMouseOut="display_row_clear('box-<?php echo $box_id;?>-row-<?php echo $color["id"];?>')">
-				<td class="content-row">
-					<a class="linkEditMain" onClick="display_row_block('box-<?php echo $box_id;?>-row-<?php echo $color["id"];?>')" href="presets_color.php?action=edit&id=<?php echo $color["id"];?>"><span id="box-<?php echo $box_id;?>-text-<?php echo $color["id"];?>"><?php echo $color["hex"];?></span></a>
+			<tr class="item" id="box-<?php echo $box_id;?>-row-<?php echo $color["id"];?>" onClick="display_row_select('<?php echo $box_id;?>',document.forms[0],'box-<?php echo $box_id;?>-row-<?php echo $color["id"];?>', 'box-<?php echo $box_id;?>-chk-<?php echo $color["id"];?>')" onMouseOver="display_row_hover('box-<?php echo $box_id;?>-row-<?php echo $color["id"];?>')" onMouseOut="display_row_clear('box-<?php echo $box_id;?>-row-<?php echo $color["id"];?>')">
+				<td class="title">
+					<a onClick="display_row_block('box-<?php echo $box_id;?>-row-<?php echo $color["id"];?>')" href="presets_color.php?action=edit&id=<?php echo $color["id"];?>"><span id="box-<?php echo $box_id;?>-text-<?php echo $color["id"];?>"><?php echo $color["hex"];?></span></a>
 				</td>
-				<td class="content-row" bgcolor="#<?php echo $color["hex"];?>" width="40">
+				<td bgcolor="#<?php echo $color["hex"];?>" width="40">
 					&nbsp;
 				</td>
-				<td class="content-row">
+				<td>
 					&nbsp;
 				</td>
-				<td class="content-row" width="1%" align="center" style="border-left: 1px solid #b5b5b5; border-top: 1px solid #b5b5b5; background-color: #e9e9e9; <?php echo get_checkbox_style();?>">
-					<input type='checkbox' style='margin: 0px;' name='box-<?php echo $box_id;?>-chk-<?php echo $color["id"];?>' id='box-<?php echo $box_id;?>-chk-<?php echo $color["id"];?>' title="<?php echo $color["hex"];?>">
+				<td class="checkbox" align="center">
+					<input type='checkbox' name='box-<?php echo $box_id;?>-chk-<?php echo $color["id"];?>' id='box-<?php echo $box_id;?>-chk-<?php echo $color["id"];?>' title="<?php echo $color["hex"];?>">
 				</td>
 			</tr>
 			<?php
@@ -201,8 +201,8 @@ function view_color() {
 		html_box_toolbar_draw($box_id, "0", "3");
 	}else{
 		?>
-		<tr>
-			<td class="content-list-empty" colspan="1">
+		<tr class="empty">
+			<td colspan="1">
 				No color presets found.
 			</td>
 		</tr>
@@ -260,15 +260,15 @@ function view_gprint() {
 	if (sizeof($gprints) > 0) {
 		foreach ($gprints as $gprint) {
 			?>
-			<tr class="content-row" id="box-<?php echo $box_id;?>-row-<?php echo $gprint["id"];?>" onClick="display_row_select('<?php echo $box_id;?>',document.forms[0],'box-<?php echo $box_id;?>-row-<?php echo $gprint["id"];?>', 'box-<?php echo $box_id;?>-chk-<?php echo $gprint["id"];?>')" onMouseOver="display_row_hover('box-<?php echo $box_id;?>-row-<?php echo $gprint["id"];?>')" onMouseOut="display_row_clear('box-<?php echo $box_id;?>-row-<?php echo $gprint["id"];?>')">
-				<td class="content-row">
+			<tr class="item" id="box-<?php echo $box_id;?>-row-<?php echo $gprint["id"];?>" onClick="display_row_select('<?php echo $box_id;?>',document.forms[0],'box-<?php echo $box_id;?>-row-<?php echo $gprint["id"];?>', 'box-<?php echo $box_id;?>-chk-<?php echo $gprint["id"];?>')" onMouseOver="display_row_hover('box-<?php echo $box_id;?>-row-<?php echo $gprint["id"];?>')" onMouseOut="display_row_clear('box-<?php echo $box_id;?>-row-<?php echo $gprint["id"];?>')">
+				<td class="title">
 					<a class="linkEditMain" onClick="display_row_block('box-<?php echo $box_id;?>-row-<?php echo $gprint["id"];?>')" href="presets_gprint.php?action=edit&id=<?php echo $gprint["id"];?>"><span id="box-<?php echo $box_id;?>-text-<?php echo $gprint["id"];?>"><?php echo $gprint["name"];?></span></a>
 				</td>
-				<td class="content-row">
+				<td>
 					<?php echo $gprint["gprint_text"];?>
 				</td>
-				<td class="content-row" width="1%" align="center" style="border-left: 1px solid #b5b5b5; border-top: 1px solid #b5b5b5; background-color: #e9e9e9; <?php echo get_checkbox_style();?>">
-					<input type='checkbox' style='margin: 0px;' name='box-<?php echo $box_id;?>-chk-<?php echo $gprint["id"];?>' id='box-<?php echo $box_id;?>-chk-<?php echo $gprint["id"];?>' title="<?php echo $gprint["name"];?>">
+				<td class="checkbox" align="center">
+					<input type='checkbox' name='box-<?php echo $box_id;?>-chk-<?php echo $gprint["id"];?>' id='box-<?php echo $box_id;?>-chk-<?php echo $gprint["id"];?>' title="<?php echo $gprint["name"];?>">
 				</td>
 			</tr>
 			<?php
@@ -277,8 +277,8 @@ function view_gprint() {
 		html_box_toolbar_draw($box_id, "0", "2");
 	}else{
 		?>
-		<tr>
-			<td class="content-list-empty" colspan="1">
+		<tr class="empty">
+			<td colspan="1">
 				No GPRINT presets found.
 			</td>
 		</tr>
@@ -336,12 +336,12 @@ function view_rra() {
 	if (sizeof($rras) > 0) {
 		foreach ($rras as $rra) {
 			?>
-			<tr class="content-row" id="box-<?php echo $box_id;?>-row-<?php echo $rra["id"];?>" onClick="display_row_select('<?php echo $box_id;?>',document.forms[0],'box-<?php echo $box_id;?>-row-<?php echo $rra["id"];?>', 'box-<?php echo $box_id;?>-chk-<?php echo $rra["id"];?>')" onMouseOver="display_row_hover('box-<?php echo $box_id;?>-row-<?php echo $rra["id"];?>')" onMouseOut="display_row_clear('box-<?php echo $box_id;?>-row-<?php echo $rra["id"];?>')">
-				<td class="content-row">
-					<a class="linkEditMain" onClick="display_row_block('box-<?php echo $box_id;?>-row-<?php echo $rra["id"];?>')" href="presets_rra.php?action=edit&id=<?php echo $rra["id"];?>"><span id="box-<?php echo $box_id;?>-text-<?php echo $rra["id"];?>"><?php echo $rra["name"];?></span></a>
+			<tr class="item" id="box-<?php echo $box_id;?>-row-<?php echo $rra["id"];?>" onClick="display_row_select('<?php echo $box_id;?>',document.forms[0],'box-<?php echo $box_id;?>-row-<?php echo $rra["id"];?>', 'box-<?php echo $box_id;?>-chk-<?php echo $rra["id"];?>')" onMouseOver="display_row_hover('box-<?php echo $box_id;?>-row-<?php echo $rra["id"];?>')" onMouseOut="display_row_clear('box-<?php echo $box_id;?>-row-<?php echo $rra["id"];?>')">
+				<td class="title">
+					<a onClick="display_row_block('box-<?php echo $box_id;?>-row-<?php echo $rra["id"];?>')" href="presets_rra.php?action=edit&id=<?php echo $rra["id"];?>"><span id="box-<?php echo $box_id;?>-text-<?php echo $rra["id"];?>"><?php echo $rra["name"];?></span></a>
 				</td>
-				<td class="content-row" width="1%" align="center" style="border-left: 1px solid #b5b5b5; border-top: 1px solid #b5b5b5; background-color: #e9e9e9; <?php echo get_checkbox_style();?>">
-					<input type='checkbox' style='margin: 0px;' name='box-<?php echo $box_id;?>-chk-<?php echo $rra["id"];?>' id='box-<?php echo $box_id;?>-chk-<?php echo $rra["id"];?>' title="<?php echo $rra["name"];?>">
+				<td class="checkbox" align="center">
+					<input type='checkbox' name='box-<?php echo $box_id;?>-chk-<?php echo $rra["id"];?>' id='box-<?php echo $box_id;?>-chk-<?php echo $rra["id"];?>' title="<?php echo $rra["name"];?>">
 				</td>
 			</tr>
 			<?php
@@ -350,8 +350,8 @@ function view_rra() {
 		html_box_toolbar_draw($box_id, "0", "1");
 	}else{
 		?>
-		<tr>
-			<td class="content-list-empty" colspan="1">
+		<tr class="empty">
+			<td colspan="1">
 				No RRA presets found.
 			</td>
 		</tr>

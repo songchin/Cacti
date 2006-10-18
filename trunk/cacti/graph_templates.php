@@ -379,8 +379,8 @@ function template() {
 		}
 	}else{
 		?>
-		<tr>
-			<td class="empty" colspan="6">
+		<tr class="empty">
+			<td colspan="6">
 				No graph templates found.
 			</td>
 		</tr>

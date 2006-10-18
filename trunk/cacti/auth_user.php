@@ -142,24 +142,24 @@ function view_users() {
 		foreach ($users as $user) {
 			$user_info = api_auth_control_get(AUTH_CONTROL_OBJECT_TYPE_USER,$user["id"]);
 			?>
-			<tr class="content-row" id="box-<?php echo $box_id;?>-row-<?php echo $user["id"];?>" onClick="display_row_select('<?php echo $box_id;?>',document.forms[0],'box-<?php echo $box_id;?>-row-<?php echo $user["id"];?>', 'box-<?php echo $box_id;?>-chk-<?php echo $user["id"];?>')" onMouseOver="display_row_hover('box-<?php echo $box_id;?>-row-<?php echo $user["id"];?>')" onMouseOut="display_row_clear('box-<?php echo $box_id;?>-row-<?php echo $user["id"];?>')">
-				<td class="content-row">
-					<a class="linkEditMain" onClick="display_row_block('box-<?php echo $box_id;?>-row-<?php echo $user["id"];?>')" href="auth_user.php?action=edit&id=<?php echo $user["id"];?>"><span id="box-<?php echo $box_id;?>-text-<?php echo $user["id"];?>"><?php echo html_highlight_words(get_get_var("search_filter"), $user["name"]);?></span></a>
+			<tr class="item" id="box-<?php echo $box_id;?>-row-<?php echo $user["id"];?>" onClick="display_row_select('<?php echo $box_id;?>',document.forms[0],'box-<?php echo $box_id;?>-row-<?php echo $user["id"];?>', 'box-<?php echo $box_id;?>-chk-<?php echo $user["id"];?>')" onMouseOver="display_row_hover('box-<?php echo $box_id;?>-row-<?php echo $user["id"];?>')" onMouseOut="display_row_clear('box-<?php echo $box_id;?>-row-<?php echo $user["id"];?>')">
+				<td class="title">
+					<a  onClick="display_row_block('box-<?php echo $box_id;?>-row-<?php echo $user["id"];?>')" href="auth_user.php?action=edit&id=<?php echo $user["id"];?>"><span id="box-<?php echo $box_id;?>-text-<?php echo $user["id"];?>"><?php echo html_highlight_words(get_get_var("search_filter"), $user["name"]);?></span></a>
 				</td>
-				<td class="content-row">
+				<td>
 					<?php echo $user["description"];?>
 				</td>
-				<td class="content-row">
+				<td>
 					<?php if ($user_info["enabled"] == 1) { echo "Yes"; }else{ echo "No"; }?>
 				</td>
-				<td class="content-row">
+				<td>
 					<?php if (($user_info["last_login"] == "0000-00-00 00:00:00") || ($user_info["last_login"] == "")) { echo "N/A"; }else{ echo $user["last_login"]; }?>
 				</td>
-				<td class="content-row">
+				<td>
 					<?php if ($user_info["last_login_ip"] == "") { echo "N/A"; }else{ echo $user_info["last_login_ip"]; } ?>
 				</td>
-				<td class="content-row" width="1%" align="center" style="border-left: 1px solid #b5b5b5; border-top: 1px solid #b5b5b5; background-color: #e9e9e9; <?php echo get_checkbox_style();?>">
-					<input type='checkbox' style='margin: 0px;' name='box-<?php echo $box_id;?>-chk-<?php echo $user["id"];?>' id='box-<?php echo $box_id;?>-chk-<?php echo $user["id"];?>' title="<?php echo $user["name"];?>">
+				<td class="checkbox" align="center">
+					<input type='checkbox' name='box-<?php echo $box_id;?>-chk-<?php echo $user["id"];?>' id='box-<?php echo $box_id;?>-chk-<?php echo $user["id"];?>' title="<?php echo $user["name"];?>">
 				</td>
 			</tr>
 
@@ -168,8 +168,8 @@ function view_users() {
 
 	}else{
 		?>
-		<tr>
-			<td class="content-list-empty" colspan="6">
+		<tr class="empty">
+			<td colspan="6">
 				No Users Found.
 			</td>
 		</tr>
@@ -184,8 +184,6 @@ function view_users() {
 
 	form_hidden_box("action_post", "auth_user_list");
 	form_end();
-
-
 
 	/* fill in the list of available host status types for the search dropdown */
 	$search_auth_enabled = array();

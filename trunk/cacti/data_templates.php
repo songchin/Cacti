@@ -521,26 +521,26 @@ function template() {
 	if (sizeof($data_templates) > 0) {
 		foreach ($data_templates as $data_template) {
 			?>
-			<tr class="content-row" id="box-<?php echo $box_id;?>-row-<?php echo $data_template["id"];?>" onClick="display_row_select('<?php echo $box_id;?>',document.forms[0],'box-<?php echo $box_id;?>-row-<?php echo $data_template["id"];?>', 'box-<?php echo $box_id;?>-chk-<?php echo $data_template["id"];?>')" onMouseOver="display_row_hover('box-<?php echo $box_id;?>-row-<?php echo $data_template["id"];?>')" onMouseOut="display_row_clear('box-<?php echo $box_id;?>-row-<?php echo $data_template["id"];?>')">
-				<td class="content-row">
-					<a class="linkEditMain" onClick="display_row_block('box-<?php echo $box_id;?>-row-<?php echo $data_template["id"];?>')" href="data_templates.php?action=edit&id=<?php echo $data_template["id"];?>"><span id="box-<?php echo $box_id;?>-text-<?php echo $data_template["id"];?>"><?php echo html_highlight_words(get_get_var("search_filter"), $data_template["template_name"]);?></span></a>
+			<tr class="item" id="box-<?php echo $box_id;?>-row-<?php echo $data_template["id"];?>" onClick="display_row_select('<?php echo $box_id;?>',document.forms[0],'box-<?php echo $box_id;?>-row-<?php echo $data_template["id"];?>', 'box-<?php echo $box_id;?>-chk-<?php echo $data_template["id"];?>')" onMouseOver="display_row_hover('box-<?php echo $box_id;?>-row-<?php echo $data_template["id"];?>')" onMouseOut="display_row_clear('box-<?php echo $box_id;?>-row-<?php echo $data_template["id"];?>')">
+				<td class="title">
+					<a onClick="display_row_block('box-<?php echo $box_id;?>-row-<?php echo $data_template["id"];?>')" href="data_templates.php?action=edit&id=<?php echo $data_template["id"];?>"><span id="box-<?php echo $box_id;?>-text-<?php echo $data_template["id"];?>"><?php echo html_highlight_words(get_get_var("search_filter"), $data_template["template_name"]);?></span></a>
 				</td>
-				<td class="content-row">
+				<td>
 					<?php echo $data_input_types{$data_template["data_input_type"]};?>
 				</td>
-				<td class="content-row">
+				<td>
 					<?php if ($data_template["active"] == "1") echo _("Active"); else echo _("Disabled");?>
 				</td>
-				<td class="content-row" width="1%" align="center" style="border-left: 1px solid #b5b5b5; border-top: 1px solid #b5b5b5; background-color: #e9e9e9; <?php echo get_checkbox_style();?>">
-					<input type='checkbox' style='margin: 0px;' name='box-<?php echo $box_id;?>-chk-<?php echo $data_template["id"];?>' id='box-<?php echo $box_id;?>-chk-<?php echo $data_template["id"];?>' title="<?php echo $data_template["template_name"];?>">
+				<td class="checkbox" align="center">
+					<input type='checkbox' name='box-<?php echo $box_id;?>-chk-<?php echo $data_template["id"];?>' id='box-<?php echo $box_id;?>-chk-<?php echo $data_template["id"];?>' title="<?php echo $data_template["template_name"];?>">
 				</td>
 			</tr>
 			<?php
 		}
 	}else{
 		?>
-		<tr>
-			<td class="content-list-empty" colspan="6">
+		<tr class="empty">
+			<td colspan="6">
 				No data templates found.
 			</td>
 		</tr>

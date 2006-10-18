@@ -133,18 +133,20 @@ function script_edit() {
 	form_save_button("scripts.php");
 
 	if (!empty($_script_id)) {
+		echo "<br />\n";
+
 		form_start("scripts_fields.php", "form_script_item");
 
 		$box_id = "1";
 		html_start_box("<strong>" . _("Script Fields") . "</strong>");
 
 		?>
-		<tr>
-			<td class="content-header-sub" colspan="2">
+		<tr class="heading">
+			<td colspan="2">
 				Input Fields
 			</td>
-			<td class="content-header-sub" align="right">
-				<a class="link-dark-small" href="scripts_fields.php?action=edit&field_type=<?php echo SCRIPT_FIELD_TYPE_INPUT;?>&script_id=<?php echo $_script_id;?>">Add</a>
+			<td align="right">
+				<a href="scripts_fields.php?action=edit&field_type=<?php echo SCRIPT_FIELD_TYPE_INPUT;?>&script_id=<?php echo $_script_id;?>">Add</a>
 			</td>
 		</tr>
 		<?php
@@ -153,23 +155,23 @@ function script_edit() {
 		if ((is_array($input_fields) > 0) && (sizeof($input_fields) > 0)) {
 			foreach ($input_fields as $field) {
 				?>
-				<tr class="content-row" id="box-<?php echo $box_id;?>-row-<?php echo $field["id"];?>" onClick="display_row_select('<?php echo $box_id;?>',document.forms[1],'box-<?php echo $box_id;?>-row-<?php echo $field["id"];?>', 'box-<?php echo $box_id;?>-chk-<?php echo $field["id"];?>')" onMouseOver="display_row_hover('box-<?php echo $box_id;?>-row-<?php echo $field["id"];?>')" onMouseOut="display_row_clear('box-<?php echo $box_id;?>-row-<?php echo $field["id"];?>')">
-					<td class="content-row">
+				<tr class="item" id="box-<?php echo $box_id;?>-row-<?php echo $field["id"];?>" onClick="display_row_select('<?php echo $box_id;?>',document.forms[1],'box-<?php echo $box_id;?>-row-<?php echo $field["id"];?>', 'box-<?php echo $box_id;?>-chk-<?php echo $field["id"];?>')" onMouseOver="display_row_hover('box-<?php echo $box_id;?>-row-<?php echo $field["id"];?>')" onMouseOut="display_row_clear('box-<?php echo $box_id;?>-row-<?php echo $field["id"];?>')">
+					<td class="item">
 						<a class="linkEditMain" onClick="display_row_block('box-<?php echo $box_id;?>-row-<?php echo $field["id"];?>')" href="scripts_fields.php?action=edit&script_id=<?php echo $_script_id;?>&id=<?php echo $field["id"];?>"><span id="box-<?php echo $box_id;?>-text-<?php echo $field["id"];?>"><?php echo $field["data_name"];?></span></a>
 					</td>
-					<td class="content-row">
+					<td>
 						<?php echo $field["name"];?>
 					</td>
-					<td class="content-row" width="1%" align="center" style="border-left: 1px solid #b5b5b5; border-top: 1px solid #b5b5b5; background-color: #e9e9e9; <?php echo get_checkbox_style();?>">
-						<input type='checkbox' style='margin: 0px;' name='box-<?php echo $box_id;?>-chk-<?php echo $field["id"];?>' id='box-<?php echo $box_id;?>-chk-<?php echo $field["id"];?>' title="<?php echo $field["data_name"];?>">
+					<td class="checkbox"align="center">
+						<input type='checkbox' name='box-<?php echo $box_id;?>-chk-<?php echo $field["id"];?>' id='box-<?php echo $box_id;?>-chk-<?php echo $field["id"];?>' title="<?php echo $field["data_name"];?>">
 					</td>
 				</tr>
 				<?php
 			}
 		}else{
 			?>
-			<tr>
-				<td class="content-list-empty" colspan="2">
+			<tr class="empty">
+				<td colspan="2">
 					No input fields found. This means that no input parameters will be passed to the script.
 				</td>
 			</tr>
@@ -177,12 +179,12 @@ function script_edit() {
 		}
 
 		?>
-		<tr>
-			<td class="content-header-sub" colspan="2">
+		<tr class="heading">
+			<td colspan="2">
 				Output Fields
 			</td>
-			<td class="content-header-sub" align="right">
-				<a class="link-dark-small" href="scripts_fields.php?action=edit&field_type=<?php echo SCRIPT_FIELD_TYPE_OUTPUT;?>&script_id=<?php echo $_script_id;?>">Add</a>
+			<td align="right">
+				<a href="scripts_fields.php?action=edit&field_type=<?php echo SCRIPT_FIELD_TYPE_OUTPUT;?>&script_id=<?php echo $_script_id;?>">Add</a>
 			</td>
 		</tr>
 		<?php
@@ -191,23 +193,23 @@ function script_edit() {
 		if ((is_array($output_fields) > 0) && (sizeof($output_fields) > 0)) {
 			foreach ($output_fields as $field) {
 				?>
-				<tr class="content-row" id="box-<?php echo $box_id;?>-row-<?php echo $field["id"];?>" onClick="display_row_select('<?php echo $box_id;?>',document.forms[1],'box-<?php echo $box_id;?>-row-<?php echo $field["id"];?>', 'box-<?php echo $box_id;?>-chk-<?php echo $field["id"];?>')" onMouseOver="display_row_hover('box-<?php echo $box_id;?>-row-<?php echo $field["id"];?>')" onMouseOut="display_row_clear('box-<?php echo $box_id;?>-row-<?php echo $field["id"];?>')">
-					<td class="content-row">
-						<a class="linkEditMain" onClick="display_row_block('box-<?php echo $box_id;?>-row-<?php echo $field["id"];?>')" href="scripts_fields.php?action=edit&script_id=<?php echo $_script_id;?>&id=<?php echo $field["id"];?>"><span id="box-<?php echo $box_id;?>-text-<?php echo $field["id"];?>"><?php echo $field["data_name"];?></span></a>
+				<tr class="item" id="box-<?php echo $box_id;?>-row-<?php echo $field["id"];?>" onClick="display_row_select('<?php echo $box_id;?>',document.forms[1],'box-<?php echo $box_id;?>-row-<?php echo $field["id"];?>', 'box-<?php echo $box_id;?>-chk-<?php echo $field["id"];?>')" onMouseOver="display_row_hover('box-<?php echo $box_id;?>-row-<?php echo $field["id"];?>')" onMouseOut="display_row_clear('box-<?php echo $box_id;?>-row-<?php echo $field["id"];?>')">
+					<td class="title">
+						<a onClick="display_row_block('box-<?php echo $box_id;?>-row-<?php echo $field["id"];?>')" href="scripts_fields.php?action=edit&script_id=<?php echo $_script_id;?>&id=<?php echo $field["id"];?>"><span id="box-<?php echo $box_id;?>-text-<?php echo $field["id"];?>"><?php echo $field["data_name"];?></span></a>
 					</td>
-					<td class="content-row">
+					<td>
 						<?php echo $field["name"];?>
 					</td>
-					<td class="content-row" width="1%" align="center" style="border-left: 1px solid #b5b5b5; border-top: 1px solid #b5b5b5; background-color: #e9e9e9; <?php echo get_checkbox_style();?>">
-						<input type='checkbox' style='margin: 0px;' name='box-<?php echo $box_id;?>-chk-<?php echo $field["id"];?>' id='box-<?php echo $box_id;?>-chk-<?php echo $field["id"];?>' title="<?php echo $field["data_name"];?>">
+					<td class="checkbox" align="center">
+						<input type='checkbox' name='box-<?php echo $box_id;?>-chk-<?php echo $field["id"];?>' id='box-<?php echo $box_id;?>-chk-<?php echo $field["id"];?>' title="<?php echo $field["data_name"];?>">
 					</td>
 				</tr>
 				<?php
 			}
 		}else{
 			?>
-			<tr>
-				<td class="content-list-empty" colspan="2">
+			<tr class="empty">
+				<td colspan="2">
 					No output fields found. Remember that <strong>at least one output field</strong> must be defined!
 				</td>
 			</tr>
@@ -263,15 +265,15 @@ function script() {
 	if (sizeof($scripts) > 0) {
 		foreach ($scripts as $script) {
 			?>
-			<tr class="content-row" id="box-<?php echo $box_id;?>-row-<?php echo $script["id"];?>" onClick="display_row_select('<?php echo $box_id;?>',document.forms[0],'box-<?php echo $box_id;?>-row-<?php echo $script["id"];?>', 'box-<?php echo $box_id;?>-chk-<?php echo $script["id"];?>')" onMouseOver="display_row_hover('box-<?php echo $box_id;?>-row-<?php echo $script["id"];?>')" onMouseOut="display_row_clear('box-<?php echo $box_id;?>-row-<?php echo $script["id"];?>')">
-				<td class="content-row">
-					<a class="linkEditMain" onClick="display_row_block('box-<?php echo $box_id;?>-row-<?php echo $script["id"];?>')" href="scripts.php?action=edit&id=<?php echo $script["id"];?>"><span id="box-<?php echo $box_id;?>-text-<?php echo $script["id"];?>"><?php echo $script["name"];?></span></a>
+			<tr class="item" id="box-<?php echo $box_id;?>-row-<?php echo $script["id"];?>" onClick="display_row_select('<?php echo $box_id;?>',document.forms[0],'box-<?php echo $box_id;?>-row-<?php echo $script["id"];?>', 'box-<?php echo $box_id;?>-chk-<?php echo $script["id"];?>')" onMouseOver="display_row_hover('box-<?php echo $box_id;?>-row-<?php echo $script["id"];?>')" onMouseOut="display_row_clear('box-<?php echo $box_id;?>-row-<?php echo $script["id"];?>')">
+				<td class="title">
+					<a onClick="display_row_block('box-<?php echo $box_id;?>-row-<?php echo $script["id"];?>')" href="scripts.php?action=edit&id=<?php echo $script["id"];?>"><span id="box-<?php echo $box_id;?>-text-<?php echo $script["id"];?>"><?php echo $script["name"];?></span></a>
 				</td>
-				<td class="content-row">
+				<td>
 					<?php echo $script_input_types{$script["type_id"]}; ?>
 				</td>
-				<td class="content-row" width="1%" align="center" style="border-left: 1px solid #b5b5b5; border-top: 1px solid #b5b5b5; background-color: #e9e9e9; <?php echo get_checkbox_style();?>">
-					<input type='checkbox' style='margin: 0px;' name='box-<?php echo $box_id;?>-chk-<?php echo $script["id"];?>' id='box-<?php echo $box_id;?>-chk-<?php echo $script["id"];?>' title="<?php echo $script["name"];?>">
+				<td class="checkbox" align="center">
+					<input type='checkbox' name='box-<?php echo $box_id;?>-chk-<?php echo $script["id"];?>' id='box-<?php echo $box_id;?>-chk-<?php echo $script["id"];?>' title="<?php echo $script["name"];?>">
 				</td>
 			</tr>
 			<?php
@@ -280,8 +282,8 @@ function script() {
 		html_box_toolbar_draw($box_id, "0", "2");
 	}else{
 		?>
-		<tr>
-			<td class="content-list-empty" colspan="2">
+		<tr class="empty">
+			<td colspan="2">
 				No scripts found.
 			</td>
 		</tr>

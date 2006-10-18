@@ -779,35 +779,35 @@ function host() {
 	if (sizeof($devices) > 0) {
 		foreach ($devices as $host) {
 			?>
-			<tr class="content-row" id="box-<?php echo $box_id;?>-row-<?php echo $host["id"];?>" onClick="display_row_select('<?php echo $box_id;?>',document.forms[0],'box-<?php echo $box_id;?>-row-<?php echo $host["id"];?>', 'box-<?php echo $box_id;?>-chk-<?php echo $host["id"];?>')" onMouseOver="display_row_hover('box-<?php echo $box_id;?>-row-<?php echo $host["id"];?>')" onMouseOut="display_row_clear('box-<?php echo $box_id;?>-row-<?php echo $host["id"];?>')">
-				<td class="content-row">
-					<a class="linkEditMain" onClick="display_row_block('box-<?php echo $box_id;?>-row-<?php echo $host["id"];?>')" href="devices.php?action=edit&id=<?php echo $host["id"];?>"><span id="box-<?php echo $box_id;?>-text-<?php echo $host["id"];?>"><?php echo html_highlight_words(get_get_var("search_filter"), $host["description"]);?></span></a>
+			<tr class="item" id="box-<?php echo $box_id;?>-row-<?php echo $host["id"];?>" onClick="display_row_select('<?php echo $box_id;?>',document.forms[0],'box-<?php echo $box_id;?>-row-<?php echo $host["id"];?>', 'box-<?php echo $box_id;?>-chk-<?php echo $host["id"];?>')" onMouseOver="display_row_hover('box-<?php echo $box_id;?>-row-<?php echo $host["id"];?>')" onMouseOut="display_row_clear('box-<?php echo $box_id;?>-row-<?php echo $host["id"];?>')">
+				<td class="title">
+					<a onClick="display_row_block('box-<?php echo $box_id;?>-row-<?php echo $host["id"];?>')" href="devices.php?action=edit&id=<?php echo $host["id"];?>"><span id="box-<?php echo $box_id;?>-text-<?php echo $host["id"];?>"><?php echo html_highlight_words(get_get_var("search_filter"), $host["description"]);?></span></a>
 				</td>
-				<td class="content-row">
+				<td>
 					<?php echo get_colored_device_status(($host["disabled"] == "on" ? true : false), $host["status"]);?>
 				</td>
-				<td class="content-row">
+				<td>
 					<?php echo html_highlight_words(get_get_var("search_filter"), $host["hostname"]);?>
 				</td>
-				<td class="content-row">
+				<td>
 					<?php echo round($host["cur_time"], 2);?>
 				</td>
-				<td class="content-row">
+				<td>
 					<?php echo round($host["avg_time"], 2);?>
 				</td>
-				<td class="content-row">
+				<td>
 					<?php echo round($host["availability"], 2);?>%
 				</td>
-				<td class="content-row" width="1%" align="center" style="border-left: 1px solid #b5b5b5; border-top: 1px solid #b5b5b5; background-color: #e9e9e9; <?php echo get_checkbox_style();?>">
-					<input type='checkbox' style='margin: 0px;' name='box-<?php echo $box_id;?>-chk-<?php echo $host["id"];?>' id='box-<?php echo $box_id;?>-chk-<?php echo $host["id"];?>' title="<?php echo $host["description"];?>">
+				<td class="checkbox" align="center">
+					<input type='checkbox' name='box-<?php echo $box_id;?>-chk-<?php echo $host["id"];?>' id='box-<?php echo $box_id;?>-chk-<?php echo $host["id"];?>' title="<?php echo $host["description"];?>">
 				</td>
 			</tr>
 			<?php
 		}
 	}else{
 		?>
-		<tr>
-			<td class="content-list-empty" colspan="6">
+		<tr class="empty">
+			<td colspan="6">
 				No devices found.
 			</td>
 		</tr>

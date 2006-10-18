@@ -655,26 +655,26 @@ function graph() {
 	if (sizeof($graphs) > 0) {
 		foreach ($graphs as $graph) {
 			?>
-			<tr class="content-row" id="box-<?php echo $box_id;?>-row-<?php echo $graph["id"];?>" onClick="display_row_select('<?php echo $box_id;?>',document.forms[0],'box-<?php echo $box_id;?>-row-<?php echo $graph["id"];?>', 'box-<?php echo $box_id;?>-chk-<?php echo $graph["id"];?>')" onMouseOver="display_row_hover('box-<?php echo $box_id;?>-row-<?php echo $graph["id"];?>')" onMouseOut="display_row_clear('box-<?php echo $box_id;?>-row-<?php echo $graph["id"];?>')">
-				<td class="content-row">
-					<a class="linkEditMain" onClick="display_row_block('box-<?php echo $box_id;?>-row-<?php echo $graph["id"];?>')" href="graphs.php?action=edit&id=<?php echo $graph["id"];?>"><span id="box-<?php echo $box_id;?>-text-<?php echo $graph["id"];?>"><?php echo html_highlight_words(get_get_var("search_filter"), $graph["title_cache"]);?></span></a>
+			<tr class="item" id="box-<?php echo $box_id;?>-row-<?php echo $graph["id"];?>" onClick="display_row_select('<?php echo $box_id;?>',document.forms[0],'box-<?php echo $box_id;?>-row-<?php echo $graph["id"];?>', 'box-<?php echo $box_id;?>-chk-<?php echo $graph["id"];?>')" onMouseOver="display_row_hover('box-<?php echo $box_id;?>-row-<?php echo $graph["id"];?>')" onMouseOut="display_row_clear('box-<?php echo $box_id;?>-row-<?php echo $graph["id"];?>')">
+				<td class="title">
+					<a onClick="display_row_block('box-<?php echo $box_id;?>-row-<?php echo $graph["id"];?>')" href="graphs.php?action=edit&id=<?php echo $graph["id"];?>"><span id="box-<?php echo $box_id;?>-text-<?php echo $graph["id"];?>"><?php echo html_highlight_words(get_get_var("search_filter"), $graph["title_cache"]);?></span></a>
 				</td>
-				<td class="content-row">
+				<td>
 					<?php echo ((empty($graph["template_name"])) ? "<em>" . _("None") . "</em>" : $graph["template_name"]); ?>
 				</td>
-				<td class="content-row">
+				<td>
 					<?php echo $graph["height"];?>x<?php echo $graph["width"];?>
 				</td>
-				<td class="content-row" width="1%" align="center" style="border-left: 1px solid #b5b5b5; border-top: 1px solid #b5b5b5; background-color: #e9e9e9; <?php echo get_checkbox_style();?>">
-					<input type='checkbox' style='margin: 0px;' name='box-<?php echo $box_id;?>-chk-<?php echo $graph["id"];?>' id='box-<?php echo $box_id;?>-chk-<?php echo $graph["id"];?>' title="<?php echo $graph["title_cache"];?>">
+				<td class="checkbox" align="center">
+					<input type='checkbox' name='box-<?php echo $box_id;?>-chk-<?php echo $graph["id"];?>' id='box-<?php echo $box_id;?>-chk-<?php echo $graph["id"];?>' title="<?php echo $graph["title_cache"];?>">
 				</td>
 			</tr>
 			<?php
 		}
 	}else{
 		?>
-		<tr>
-			<td class="content-list-empty" colspan="6">
+		<tr class="empty">
+			<td colspan="6">
 				No graphs found.
 			</td>
 		</tr>

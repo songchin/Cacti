@@ -155,6 +155,8 @@ function tree_edit() {
 	form_save_button("graph_trees.php");
 
 	if (!empty($_graph_tree_id)) {
+		echo "<br />\n";
+
 		form_start("graph_trees_items.php", "form_graph_tree_item");
 
 		$box_id = "1";
@@ -186,34 +188,34 @@ function tree_edit() {
 				}
 
 				?>
-				<tr class="content-row" id="box-<?php echo $box_id;?>-row-<?php echo $tree_item["id"];?>" onClick="display_row_select('<?php echo $box_id;?>',document.forms[1],'box-<?php echo $box_id;?>-row-<?php echo $tree_item["id"];?>', 'box-<?php echo $box_id;?>-chk-<?php echo $tree_item["id"];?>')" onMouseOver="display_row_hover('box-<?php echo $box_id;?>-row-<?php echo $tree_item["id"];?>')" onMouseOut="display_row_clear('box-<?php echo $box_id;?>-row-<?php echo $tree_item["id"];?>')">
-					<td class="content-row">
-						<img width="<?php echo (($current_depth - 1) * 20);?>" height="1" align="middle" alt="">&nbsp;<a class="linkEditMain" onClick="display_row_block('box-<?php echo $box_id;?>-row-<?php echo $tree_item["id"];?>')" href="graph_trees_items.php?action=edit&tree_id=<?php echo $_graph_tree_id;?>&id=<?php echo $tree_item["id"];?>"><span id="box-<?php echo $box_id;?>-text-<?php echo $tree_item["id"];?>"><?php echo html_highlight_words(get_get_var("search_filter"), $item_text);?></span></a>
+				<tr class="item" id="box-<?php echo $box_id;?>-row-<?php echo $tree_item["id"];?>" onClick="display_row_select('<?php echo $box_id;?>',document.forms[1],'box-<?php echo $box_id;?>-row-<?php echo $tree_item["id"];?>', 'box-<?php echo $box_id;?>-chk-<?php echo $tree_item["id"];?>')" onMouseOver="display_row_hover('box-<?php echo $box_id;?>-row-<?php echo $tree_item["id"];?>')" onMouseOut="display_row_clear('box-<?php echo $box_id;?>-row-<?php echo $tree_item["id"];?>')">
+					<td class="title">
+						<img width="<?php echo (($current_depth - 1) * 20);?>" height="1" align="middle" alt="">&nbsp;<a onClick="display_row_block('box-<?php echo $box_id;?>-row-<?php echo $tree_item["id"];?>')" href="graph_trees_items.php?action=edit&tree_id=<?php echo $_graph_tree_id;?>&id=<?php echo $tree_item["id"];?>"><span id="box-<?php echo $box_id;?>-text-<?php echo $tree_item["id"];?>"><?php echo html_highlight_words(get_get_var("search_filter"), $item_text);?></span></a>
 					</td>
-					<td class="content-row">
+					<td>
 						<?php echo $tree_item_types{$tree_item["item_type"]};?>
 					</td>
 					<?php if ( ((isset($sort_cache{$current_depth - 1})) && ($sort_cache{$current_depth - 1} != TREE_ORDERING_NONE)) || ($graph_tree["sort_type"] != TREE_ORDERING_NONE) ) { ?>
-					<td class="content-row" width="80">
+					<td width="80">
 						&nbsp;
 					</td>
 					<?php }else{ ?>
-					<td class="content-row" width="80" align="center">
+					<td width="80" align="center">
 						<a href="graph_trees_items.php?action=movedown&id=<?php echo $tree_item["id"];?>&graph_tree_id=<?php echo $_graph_tree_id;?>"><img src="<?php echo html_get_theme_images_path("move_down.gif");?>" border="0" alt="Move Down"></a>
 						<a href="graph_trees_items.php?action=moveup&id=<?php echo $tree_item["id"];?>&graph_tree_id=<?php echo $_graph_tree_id;?>"><img src="<?php echo html_get_theme_images_path("move_up.gif");?>" border="0" alt="Move Up"></a>
 					</td>
 					<?php } ?>
 
-					<td class="content-row" width="1%" align="center" style="border-left: 1px solid #b5b5b5; border-top: 1px solid #b5b5b5; background-color: #e9e9e9; <?php echo get_checkbox_style();?>">
-						<input type='checkbox' style='margin: 0px;' name='box-<?php echo $box_id;?>-chk-<?php echo $tree_item["id"];?>' id='box-<?php echo $box_id;?>-chk-<?php echo $tree_item["id"];?>' title="<?php echo strip_tags($item_text);?>">
+					<td class="checkbox" align="center">
+						<input type='checkbox' name='box-<?php echo $box_id;?>-chk-<?php echo $tree_item["id"];?>' id='box-<?php echo $box_id;?>-chk-<?php echo $tree_item["id"];?>' title="<?php echo strip_tags($item_text);?>">
 					</td>
 				</tr>
 				<?php
 			}
 		}else{
 			?>
-			<tr>
-				<td class="content-list-empty" colspan="6">
+			<tr class="empty">
+				<td colspan="6">
 					No graph tree items found.
 				</td>
 			</tr>
@@ -276,20 +278,20 @@ function tree() {
 	if (sizeof($graph_trees) > 0) {
 		foreach ($graph_trees as $graph_tree) {
 			?>
-			<tr class="content-row" id="box-<?php echo $box_id;?>-row-<?php echo $graph_tree["id"];?>" onClick="display_row_select('<?php echo $box_id;?>',document.forms[0],'box-<?php echo $box_id;?>-row-<?php echo $graph_tree["id"];?>', 'box-<?php echo $box_id;?>-chk-<?php echo $graph_tree["id"];?>')" onMouseOver="display_row_hover('box-<?php echo $box_id;?>-row-<?php echo $graph_tree["id"];?>')" onMouseOut="display_row_clear('box-<?php echo $box_id;?>-row-<?php echo $graph_tree["id"];?>')">
-				<td class="content-row">
-					<a class="linkEditMain" onClick="display_row_block('box-<?php echo $box_id;?>-row-<?php echo $graph_tree["id"];?>')" href="graph_trees.php?action=edit&id=<?php echo $graph_tree["id"];?>"><span id="box-<?php echo $box_id;?>-text-<?php echo $graph_tree["id"];?>"><?php echo html_highlight_words(get_get_var("search_filter"), $graph_tree["name"]);?></span></a>
+			<tr class="item" id="box-<?php echo $box_id;?>-row-<?php echo $graph_tree["id"];?>" onClick="display_row_select('<?php echo $box_id;?>',document.forms[0],'box-<?php echo $box_id;?>-row-<?php echo $graph_tree["id"];?>', 'box-<?php echo $box_id;?>-chk-<?php echo $graph_tree["id"];?>')" onMouseOver="display_row_hover('box-<?php echo $box_id;?>-row-<?php echo $graph_tree["id"];?>')" onMouseOut="display_row_clear('box-<?php echo $box_id;?>-row-<?php echo $graph_tree["id"];?>')">
+				<td class="title">
+					<a onClick="display_row_block('box-<?php echo $box_id;?>-row-<?php echo $graph_tree["id"];?>')" href="graph_trees.php?action=edit&id=<?php echo $graph_tree["id"];?>"><span id="box-<?php echo $box_id;?>-text-<?php echo $graph_tree["id"];?>"><?php echo html_highlight_words(get_get_var("search_filter"), $graph_tree["name"]);?></span></a>
 				</td>
-				<td class="content-row" width="1%" align="center" style="border-left: 1px solid #b5b5b5; border-top: 1px solid #b5b5b5; background-color: #e9e9e9; <?php echo get_checkbox_style();?>">
-					<input type='checkbox' style='margin: 0px;' name='box-<?php echo $box_id;?>-chk-<?php echo $graph_tree["id"];?>' id='box-<?php echo $box_id;?>-chk-<?php echo $graph_tree["id"];?>' title="<?php echo $graph_tree["name"];?>">
+				<td class="checkbox" align="center">
+					<input type='checkbox' name='box-<?php echo $box_id;?>-chk-<?php echo $graph_tree["id"];?>' id='box-<?php echo $box_id;?>-chk-<?php echo $graph_tree["id"];?>' title="<?php echo $graph_tree["name"];?>">
 				</td>
 			</tr>
 			<?php
 		}
 	}else{
 		?>
-		<tr>
-			<td class="content-list-empty" colspan="6">
+		<tr class="empty">
+			<td colspan="6">
 				No graph trees found.
 			</td>
 		</tr>

@@ -300,12 +300,12 @@ function data_query_edit() {
 		html_start_box("<strong>" . _("Data Query Fields") . "</strong>");
 
 		?>
-		<tr>
-			<td class="content-header-sub" colspan="2">
+		<tr class="heading">
+			<td colspan="2">
 				Input Fields
 			</td>
-			<td class="content-header-sub" align="right">
-				<a class="link-dark-small" href="data_queries.php?action=field_edit&field_type=<?php echo DATA_QUERY_FIELD_TYPE_INPUT;?>&data_query_id=<?php echo $_data_query_id;?>">Add</a>
+			<td align="right">
+				<a href="data_queries.php?action=field_edit&field_type=<?php echo DATA_QUERY_FIELD_TYPE_INPUT;?>&data_query_id=<?php echo $_data_query_id;?>">Add</a>
 			</td>
 		</tr>
 		<?php
@@ -314,15 +314,15 @@ function data_query_edit() {
 		if (sizeof($input_fields) > 0) {
 			foreach ($input_fields as $field) {
 				?>
-				<tr class="content-row" id="row_<?php echo $field["id"];?>" onClick="display_row_select('row_<?php echo $field["id"];?>', 'chk_<?php echo $field["id"];?>')" onMouseOver="display_row_hover('row_<?php echo $field["id"];?>')" onMouseOut="display_row_clear('row_<?php echo $field["id"];?>')">
-					<td class="content-row">
+				<tr class="item" id="row_<?php echo $field["id"];?>" onClick="display_row_select('row_<?php echo $field["id"];?>', 'chk_<?php echo $field["id"];?>')" onMouseOver="display_row_hover('row_<?php echo $field["id"];?>')" onMouseOut="display_row_clear('row_<?php echo $field["id"];?>')">
+					<td class="title">
 						<a class="linkEditMain" onClick="display_row_block('row_<?php echo $field["id"];?>')" href="data_queries.php?action=field_edit&id=<?php echo $field["id"];?>&data_query_id=<?php echo $field["data_query_id"];?>"><?php echo $field["name"];?></a>
 					</td>
-					<td class="content-row">
+					<td>
 						<?php echo $field["name_desc"]; ?>
 					</td>
-					<td class="content-row" align="right">
-						<input type='checkbox' style='margin: 0px;' id='chk_<?php echo $field["id"];?>' name='chk_<?php echo $field["id"];?>' title="<?php echo $field["name"];?>">
+					<td align="right">
+						<input type='checkbox' id='chk_<?php echo $field["id"];?>' name='chk_<?php echo $field["id"];?>' title="<?php echo $field["name"];?>">
 					</td>
 				</tr>
 				<?php
@@ -330,7 +330,7 @@ function data_query_edit() {
 		}else{
 			?>
 			<tr>
-				<td class="content-list-empty" colspan="2">
+				<td class="empty" colspan="2">
 					No input fields found. Remember that <strong>at least one index field</strong> must be defined!
 				</td>
 			</tr>
@@ -338,12 +338,12 @@ function data_query_edit() {
 		}
 
 		?>
-		<tr>
-			<td class="content-header-sub" colspan="2">
+		<tr class="heading">
+			<td colspan="2">
 				Output Fields
 			</td>
-			<td class="content-header-sub" align="right">
-				<a class="link-dark-small" href="data_queries.php?action=field_edit&field_type=<?php echo DATA_QUERY_FIELD_TYPE_OUTPUT;?>&data_query_id=<?php echo $_data_query_id;?>">Add</a>
+			<td align="right">
+				<a href="data_queries.php?action=field_edit&field_type=<?php echo DATA_QUERY_FIELD_TYPE_OUTPUT;?>&data_query_id=<?php echo $_data_query_id;?>">Add</a>
 			</td>
 		</tr>
 		<?php
@@ -352,23 +352,23 @@ function data_query_edit() {
 		if (sizeof($output_fields) > 0) {
 			foreach ($output_fields as $field) {
 				?>
-				<tr class="content-row" id="row_<?php echo $field["id"];?>" onClick="display_row_select('row_<?php echo $field["id"];?>', 'chk_<?php echo $field["id"];?>')" onMouseOver="display_row_hover('row_<?php echo $field["id"];?>')" onMouseOut="display_row_clear('row_<?php echo $field["id"];?>')">
-					<td class="content-row">
+				<tr class="item" id="row_<?php echo $field["id"];?>" onClick="display_row_select('row_<?php echo $field["id"];?>', 'chk_<?php echo $field["id"];?>')" onMouseOver="display_row_hover('row_<?php echo $field["id"];?>')" onMouseOut="display_row_clear('row_<?php echo $field["id"];?>')">
+					<td class="item">
 						<a class="linkEditMain" onClick="display_row_block('row_<?php echo $field["id"];?>')" href="data_queries.php?action=field_edit&id=<?php echo $field["id"];?>&data_query_id=<?php echo $field["data_query_id"];?>"><?php echo $field["name"];?></a>
 					</td>
-					<td class="content-row">
+					<td>
 						<?php echo $field["name_desc"]; ?>
 					</td>
-					<td class="content-row" align="right">
-						<input type='checkbox' style='margin: 0px;' id='chk_<?php echo $field["id"];?>' name='chk_<?php echo $field["id"];?>' title="<?php echo $field["name"];?>">
+					<td align="right">
+						<input type='checkbox' id='chk_<?php echo $field["id"];?>' name='chk_<?php echo $field["id"];?>' title="<?php echo $field["name"];?>">
 					</td>
 				</tr>
 				<?php
 			}
 		}else{
 			?>
-			<tr>
-				<td class="content-list-empty" colspan="2">
+			<tr class="empty">
+				<td colspan="2">
 					No output fields found.
 				</td>
 			</tr>
@@ -402,15 +402,15 @@ function data_query() {
 	if (sizeof($data_queries) > 0) {
 		foreach ($data_queries as $data_query) {
 			?>
-			<tr class="content-row" id="box-<?php echo $box_id;?>-row-<?php echo $data_query["id"];?>" onClick="display_row_select('<?php echo $box_id;?>',document.forms[0],'box-<?php echo $box_id;?>-row-<?php echo $data_query["id"];?>', 'box-<?php echo $box_id;?>-chk-<?php echo $data_query["id"];?>')" onMouseOver="display_row_hover('box-<?php echo $box_id;?>-row-<?php echo $data_query["id"];?>')" onMouseOut="display_row_clear('box-<?php echo $box_id;?>-row-<?php echo $data_query["id"];?>')">
-				<td class="content-row">
+			<tr class="item" id="box-<?php echo $box_id;?>-row-<?php echo $data_query["id"];?>" onClick="display_row_select('<?php echo $box_id;?>',document.forms[0],'box-<?php echo $box_id;?>-row-<?php echo $data_query["id"];?>', 'box-<?php echo $box_id;?>-chk-<?php echo $data_query["id"];?>')" onMouseOver="display_row_hover('box-<?php echo $box_id;?>-row-<?php echo $data_query["id"];?>')" onMouseOut="display_row_clear('box-<?php echo $box_id;?>-row-<?php echo $data_query["id"];?>')">
+				<td class="title">
 					<a class="linkEditMain" onClick="display_row_block('box-<?php echo $box_id;?>-row-<?php echo $data_query["id"];?>')" href="data_queries.php?action=edit&id=<?php echo $data_query["id"];?>"><span id="box-<?php echo $box_id;?>-text-<?php echo $data_query["id"];?>"><?php echo $data_query["name"];?></span></a>
 				</td>
-				<td class="content-row">
+				<td>
 					<?php echo $data_query_input_types{$data_query["input_type"]}; ?>
 				</td>
-				<td class="content-row" width="1%" align="center" style="border-left: 1px solid #b5b5b5; border-top: 1px solid #b5b5b5; background-color: #e9e9e9; <?php echo get_checkbox_style();?>">
-					<input type='checkbox' style='margin: 0px;' name='box-<?php echo $box_id;?>-chk-<?php echo $data_query["id"];?>' id='box-<?php echo $box_id;?>-chk-<?php echo $data_query["id"];?>' title="<?php echo $data_query["name"];?>">
+				<td class="checkbox" width="1%" align="center">
+					<input type='checkbox' name='box-<?php echo $box_id;?>-chk-<?php echo $data_query["id"];?>' id='box-<?php echo $box_id;?>-chk-<?php echo $data_query["id"];?>' title="<?php echo $data_query["name"];?>">
 				</td>
 			</tr>
 			<?php
@@ -419,8 +419,8 @@ function data_query() {
 		html_box_toolbar_draw($box_id, "0", "2");
 	}else{
 		?>
-		<tr>
-			<td class="content-list-empty" colspan="2">
+		<tr class="empty">
+			<td colspan="2">
 				No data queries found.
 			</td>
 		</tr>

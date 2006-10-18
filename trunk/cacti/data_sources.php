@@ -823,29 +823,29 @@ function ds() {
 	if (sizeof($data_sources) > 0) {
 		foreach ($data_sources as $data_source) {
 			?>
-			<tr class="content-row" id="box-<?php echo $box_id;?>-row-<?php echo $data_source["id"];?>" onClick="display_row_select('<?php echo $box_id;?>',document.forms[0],'box-<?php echo $box_id;?>-row-<?php echo $data_source["id"];?>', 'box-<?php echo $box_id;?>-chk-<?php echo $data_source["id"];?>')" onMouseOver="display_row_hover('box-<?php echo $box_id;?>-row-<?php echo $data_source["id"];?>')" onMouseOut="display_row_clear('box-<?php echo $box_id;?>-row-<?php echo $data_source["id"];?>')">
-				<td class="content-row">
-					<a class="linkEditMain" onClick="display_row_block('box-<?php echo $box_id;?>-row-<?php echo $data_source["id"];?>')" href="data_sources.php?action=edit&id=<?php echo $data_source["id"];?>"><span id="box-<?php echo $box_id;?>-text-<?php echo $data_source["id"];?>"><?php echo html_highlight_words(get_get_var("search_filter"), $data_source["name_cache"]);?></span></a>
+			<tr class="item" id="box-<?php echo $box_id;?>-row-<?php echo $data_source["id"];?>" onClick="display_row_select('<?php echo $box_id;?>',document.forms[0],'box-<?php echo $box_id;?>-row-<?php echo $data_source["id"];?>', 'box-<?php echo $box_id;?>-chk-<?php echo $data_source["id"];?>')" onMouseOver="display_row_hover('box-<?php echo $box_id;?>-row-<?php echo $data_source["id"];?>')" onMouseOut="display_row_clear('box-<?php echo $box_id;?>-row-<?php echo $data_source["id"];?>')">
+				<td class="title">
+					<a onClick="display_row_block('box-<?php echo $box_id;?>-row-<?php echo $data_source["id"];?>')" href="data_sources.php?action=edit&id=<?php echo $data_source["id"];?>"><span id="box-<?php echo $box_id;?>-text-<?php echo $data_source["id"];?>"><?php echo html_highlight_words(get_get_var("search_filter"), $data_source["name_cache"]);?></span></a>
 				</td>
-				<td class="content-row">
+				<td>
 					<?php echo $data_input_types{$data_source["data_input_type"]};?>
 				</td>
-				<td class="content-row">
+				<td>
 					<?php echo (empty($data_source["active"]) ? "<span style='color: red;'>" . _("No") . "</span>" : _("Yes"));?>
 				</td>
-				<td class="content-row">
+				<td>
 					<?php echo ((empty($data_source["data_template_name"])) ? "<em>" . _("None") . "</em>" : $data_source["data_template_name"]);?>
 				</td>
-				<td class="content-row" width="1%" align="center" style="border-left: 1px solid #b5b5b5; border-top: 1px solid #b5b5b5; background-color: #e9e9e9; <?php echo get_checkbox_style();?>">
-					<input type='checkbox' style='margin: 0px;' name='box-<?php echo $box_id;?>-chk-<?php echo $data_source["id"];?>' id='box-<?php echo $box_id;?>-chk-<?php echo $data_source["id"];?>' title="<?php echo $data_source["name_cache"];?>">
+				<td class="checkbox" align="center">
+					<input type='checkbox' name='box-<?php echo $box_id;?>-chk-<?php echo $data_source["id"];?>' id='box-<?php echo $box_id;?>-chk-<?php echo $data_source["id"];?>' title="<?php echo $data_source["name_cache"];?>">
 				</td>
 			</tr>
 			<?php
 		}
 	}else{
 		?>
-		<tr>
-			<td class="content-list-empty" colspan="6">
+		<tr class="empty">
+			<td colspan="6">
 				No data sources found.
 			</td>
 		</tr>

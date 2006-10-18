@@ -336,11 +336,11 @@ function package_edit() {
 		if (sizeof($graph_templates) > 0) {
 			foreach ($graph_templates as $graph_template) {
 				?>
-				<tr class="content-row">
-					<td class="content-row" style="padding: 4px;">
+				<tr class="item">
+					<td style="padding: 4px;">
 						<?php echo $graph_template["template_name"];?>
 					</td>
-					<td class="content-row" align="right" style="padding: 4px;">
+					<td align="right" style="padding: 4px;">
 						<a href="packages.php?action=remove_graph_template&id=<?php echo $_package_id;?>&graph_template_id=<?php echo $graph_template["id"];?>"><img src="<?php echo html_get_theme_images_path("delete_icon_large.gif");?>" alt="<?php echo _("Delete Graph Template Association");?>" border="0" align="absmiddle"></a>
 					</td>
 				</tr>
@@ -348,8 +348,8 @@ function package_edit() {
 			}
 		}else{
 			?>
-			<tr>
-				<td class="content-list-empty" colspan="2">
+			<tr class="empty">
+				<td colspan="2">
 					No graph templates have been associated with this package.
 				</td>
 			</tr>
@@ -736,26 +736,26 @@ function package() {
 	if (sizeof($packages) > 0) {
 		foreach ($packages as $package) {
 			?>
-			<tr class="content-row" id="box-<?php echo $box_id;?>-row-<?php echo $package["id"];?>" onClick="display_row_select('<?php echo $box_id;?>',document.forms[0],'box-<?php echo $box_id;?>-row-<?php echo $package["id"];?>', 'box-<?php echo $box_id;?>-chk-<?php echo $package["id"];?>')" onMouseOver="display_row_hover('box-<?php echo $box_id;?>-row-<?php echo $package["id"];?>')" onMouseOut="display_row_clear('box-<?php echo $box_id;?>-row-<?php echo $package["id"];?>')">
-				<td class="content-row">
-					<a class="linkEditMain" onClick="display_row_block('box-<?php echo $box_id;?>-row-<?php echo $package["id"];?>')" href="packages.php?action=view&id=<?php echo $package["id"];?>"><span id="box-<?php echo $box_id;?>-text-<?php echo $package["id"];?>"><?php echo html_highlight_words(get_get_var("search_filter"), $package["name"]);?></span></a>
+			<tr class="item" id="box-<?php echo $box_id;?>-row-<?php echo $package["id"];?>" onClick="display_row_select('<?php echo $box_id;?>',document.forms[0],'box-<?php echo $box_id;?>-row-<?php echo $package["id"];?>', 'box-<?php echo $box_id;?>-chk-<?php echo $package["id"];?>')" onMouseOver="display_row_hover('box-<?php echo $box_id;?>-row-<?php echo $package["id"];?>')" onMouseOut="display_row_clear('box-<?php echo $box_id;?>-row-<?php echo $package["id"];?>')">
+				<td class="title">
+					<a onClick="display_row_block('box-<?php echo $box_id;?>-row-<?php echo $package["id"];?>')" href="packages.php?action=view&id=<?php echo $package["id"];?>"><span id="box-<?php echo $box_id;?>-text-<?php echo $package["id"];?>"><?php echo html_highlight_words(get_get_var("search_filter"), $package["name"]);?></span></a>
 				</td>
-				<td class="content-row">
+				<td>
 					Ian Berry
 				</td>
-				<td class="content-row">
+				<td>
 					<?php echo $package["category"];?>
 				</td>
-				<td class="content-row" width="1%" align="center" style="border-left: 1px solid #b5b5b5; border-top: 1px solid #b5b5b5; background-color: #e9e9e9; <?php echo get_checkbox_style();?>">
-					<input type='checkbox' style='margin: 0px;' name='box-<?php echo $box_id;?>-chk-<?php echo $package["id"];?>' id='box-<?php echo $box_id;?>-chk-<?php echo $package["id"];?>' title="<?php echo $package["name"];?>">
+				<td class="checkbox" align="center">
+					<input type='checkbox' name='box-<?php echo $box_id;?>-chk-<?php echo $package["id"];?>' id='box-<?php echo $box_id;?>-chk-<?php echo $package["id"];?>' title="<?php echo $package["name"];?>">
 				</td>
 			</tr>
 			<?php
 		}
 	}else{
 		?>
-		<tr>
-			<td class="content-list-empty" colspan="6">
+		<tr class="empty">
+			<td colspan="6">
 				No template packages found.
 			</td>
 		</tr>
