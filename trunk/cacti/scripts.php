@@ -157,7 +157,7 @@ function script_edit() {
 				?>
 				<tr class="item" id="box-<?php echo $box_id;?>-row-<?php echo $field["id"];?>" onClick="display_row_select('<?php echo $box_id;?>',document.forms[1],'box-<?php echo $box_id;?>-row-<?php echo $field["id"];?>', 'box-<?php echo $box_id;?>-chk-<?php echo $field["id"];?>')" onMouseOver="display_row_hover('box-<?php echo $box_id;?>-row-<?php echo $field["id"];?>')" onMouseOut="display_row_clear('box-<?php echo $box_id;?>-row-<?php echo $field["id"];?>')">
 					<td class="item">
-						<a class="linkEditMain" onClick="display_row_block('box-<?php echo $box_id;?>-row-<?php echo $field["id"];?>')" href="scripts_fields.php?action=edit&script_id=<?php echo $_script_id;?>&id=<?php echo $field["id"];?>"><span id="box-<?php echo $box_id;?>-text-<?php echo $field["id"];?>"><?php echo $field["data_name"];?></span></a>
+						<a onClick="display_row_block('box-<?php echo $box_id;?>-row-<?php echo $field["id"];?>')" href="scripts_fields.php?action=edit&script_id=<?php echo $_script_id;?>&id=<?php echo $field["id"];?>"><span id="box-<?php echo $box_id;?>-text-<?php echo $field["id"];?>"><?php echo $field["data_name"];?></span></a>
 					</td>
 					<td>
 						<?php echo $field["name"];?>

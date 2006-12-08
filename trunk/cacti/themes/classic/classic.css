@@ -301,6 +301,12 @@ div.action_box div.footer input {
 	background-color: #ffffff;
 	font-style: italic;
 }
+#content table.box tr td span.in_use {
+	color: green;
+}
+#content table.box tr td span.not_in_use {
+	color: red;
+}
 
 #content table.box tr.toolbar td {
 	border-top: 1px solid #b5b5b5;

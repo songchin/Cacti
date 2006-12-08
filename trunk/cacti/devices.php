@@ -29,6 +29,7 @@ require_once(CACTI_BASE_PATH . "/lib/poller.php");
 require_once(CACTI_BASE_PATH . "/lib/sys/snmp.php");
 require_once(CACTI_BASE_PATH . "/lib/device/device_update.php");
 require_once(CACTI_BASE_PATH . "/lib/device/device_info.php");
+require_once(CACTI_BASE_PATH . "/lib/device/device_form.php");
 require_once(CACTI_BASE_PATH . "/lib/data_source/data_source_update.php");
 require_once(CACTI_BASE_PATH . "/lib/data_query/data_query_execute.php");
 require_once(CACTI_BASE_PATH . "/lib/data_query/data_query_info.php");
@@ -499,150 +500,160 @@ function host_remove() {
 }
 
 function host_edit() {
-	global $colors, $fields_host_edit, $reindex_types;
+	$_device_id = get_get_var_number("id");
 
-	display_output_messages();
-
-	if (!empty($_GET["id"])) {
-		$host = db_fetch_row("select * from host where id=" . $_GET["id"]);
-		$header_label = _("[edit: ") . $host["description"] . "]";
+	if (empty($_device_id)) {
+		$header_label = "[new]";
 	}else{
-		$header_label = _("[new]");
+		$device = api_device_get($_device_id);
+
+		$header_label = "[edit: " . $device["description"] . "]";
 	}
 
-	if (!empty($host["id"])) {
+	if (!empty($device["id"])) {
+		echo "<div>\n";
+		echo $device["description"] . " (" . $device["hostname"] . ")<br />\n";
+		echo _("SNMP Information") . "\n";
+
+		if (($device["snmp_community"] == "") && ($device["snmpv3_auth_username"] == "")) {
+			echo "<span style='color: #ab3f1e; font-weight: bold;'>" . _("SNMP not in use") . "</span>\n";
+		}else{
+			$snmp_system = cacti_snmp_get($device["hostname"], $device["snmp_community"], ".1.3.6.1.2.1.1.1.0",
+				$device["snmp_version"], $device["snmpv3_auth_username"], $device["snmpv3_auth_password"],
+				$device["snmpv3_auth_protocol"], $device["snmpv3_priv_passphrase"], $device["snmpv3_priv_protocol"],
+				$device["snmp_port"], $device["snmp_timeout"], SNMP_WEBUI);
+
+			if ($snmp_system == "") {
+				echo "<span style='color: #ff0000; font-weight: bold;'>" . _("SNMP error") . "</span>\n";
+			}else{
+				$snmp_uptime = cacti_snmp_get($device["hostname"], $device["snmp_community"], ".1.3.6.1.2.1.1.3.0",
+					$device["snmp_version"], $device["snmpv3_auth_username"], $device["snmpv3_auth_password"],
+					$device["snmpv3_auth_protocol"], $device["snmpv3_priv_passphrase"], $device["snmpv3_priv_protocol"],
+					$device["snmp_port"], $device["snmp_timeout"], SNMP_WEBUI);
+				$snmp_hostname = cacti_snmp_get($device["hostname"], $device["snmp_community"], ".1.3.6.1.2.1.1.5.0",
+					$device["snmp_version"], $device["snmpv3_auth_username"], $device["snmpv3_auth_password"],
+					$device["snmpv3_auth_protocol"], $device["snmpv3_priv_passphrase"], $device["snmpv3_priv_protocol"],
+					$device["snmp_port"], $device["snmp_timeout"], SNMP_WEBUI);
+				$snmp_location = cacti_snmp_get($device["hostname"], $device["snmp_community"], ".1.3.6.1.2.1.1.6.0",
+					$device["snmp_version"], $device["snmpv3_auth_username"], $device["snmpv3_auth_password"],
+					$device["snmpv3_auth_protocol"], $device["snmpv3_priv_passphrase"], $device["snmpv3_priv_protocol"],
+					$device["snmp_port"], $device["snmp_timeout"], SNMP_WEBUI);
+				$snmp_contact = cacti_snmp_get($device["hostname"], $device["snmp_community"], ".1.3.6.1.2.1.1.4.0",
+					$device["snmp_version"], $device["snmpv3_auth_username"], $device["snmpv3_auth_password"],
+					$device["snmpv3_auth_protocol"], $device["snmpv3_priv_passphrase"], $device["snmpv3_priv_protocol"],
+					$device["snmp_port"], $device["snmp_timeout"], SNMP_WEBUI);
+
+				echo "<strong>System:</strong> $snmp_system<br>\n";
+
+				$days = intval($snmp_uptime / (60*60*24*100));
+				$remainder = $snmp_uptime % (60*60*24*100);
+				$hours = intval($remainder / (60*60*100));
+				$remainder = $remainder % (60*60*100);
+				$minutes = intval($remainder / (60*100));
+
+				echo "<strong>" . _("Uptime:") . "</strong> $snmp_uptime";
+				echo "&nbsp;($days days, $hours hours, $minutes minutes)<br>\n";
+				echo "<strong>" . _("Hostname:") . "</strong> $snmp_hostname<br>\n";
+				echo "<strong>" . _("Location:") . "</strong> $snmp_location<br>\n";
+				echo "<strong>" . _("Contact:") . "</strong> $snmp_contact<br>\n";
+			}
+		}
 		?>
-		<table width="98%" align="center">
-			<tr>
-				<td class="textInfo" colspan="2">
-					<?php print $host["description"];?> (<?php print $host["hostname"];?>)
-				</td>
-			</tr>
-			<tr>
-				<td class="textHeader">
-					<?php echo _("SNMP Information");?><br>
-
-					<span style="font-size: 10px; font-weight: normal; font-family: monospace;">
-					<?php
-					if (($host["snmp_community"] == "") && ($host["snmpv3_auth_username"] == "")) {
-						print "<span style='color: #ab3f1e; font-weight: bold;'>" . _("SNMP not in use") . "</span>\n";
-					}else{
-						$snmp_system = cacti_snmp_get($host["hostname"], $host["snmp_community"], ".1.3.6.1.2.1.1.1.0",
-											$host["snmp_version"], $host["snmpv3_auth_username"], $host["snmpv3_auth_password"],
-											$host["snmpv3_auth_protocol"], $host["snmpv3_priv_passphrase"], $host["snmpv3_priv_protocol"],
-											$host["snmp_port"], $host["snmp_timeout"], SNMP_WEBUI);
-
-						if ($snmp_system == "") {
-							print "<span style='color: #ff0000; font-weight: bold;'>" . _("SNMP error") . "</span>\n";
-						}else{
-							$snmp_uptime = cacti_snmp_get($host["hostname"], $host["snmp_community"], ".1.3.6.1.2.1.1.3.0",
-												$host["snmp_version"], $host["snmpv3_auth_username"], $host["snmpv3_auth_password"],
-												$host["snmpv3_auth_protocol"], $host["snmpv3_priv_passphrase"], $host["snmpv3_priv_protocol"],
-												$host["snmp_port"], $host["snmp_timeout"], SNMP_WEBUI);
-							$snmp_hostname = cacti_snmp_get($host["hostname"], $host["snmp_community"], ".1.3.6.1.2.1.1.5.0",
-												$host["snmp_version"], $host["snmpv3_auth_username"], $host["snmpv3_auth_password"],
-												$host["snmpv3_auth_protocol"], $host["snmpv3_priv_passphrase"], $host["snmpv3_priv_protocol"],
-												$host["snmp_port"], $host["snmp_timeout"], SNMP_WEBUI);
-							$snmp_location = cacti_snmp_get($host["hostname"], $host["snmp_community"], ".1.3.6.1.2.1.1.6.0",
-												$host["snmp_version"], $host["snmpv3_auth_username"], $host["snmpv3_auth_password"],
-												$host["snmpv3_auth_protocol"], $host["snmpv3_priv_passphrase"], $host["snmpv3_priv_protocol"],
-												$host["snmp_port"], $host["snmp_timeout"], SNMP_WEBUI);
-							$snmp_contact = cacti_snmp_get($host["hostname"], $host["snmp_community"], ".1.3.6.1.2.1.1.4.0",
-												$host["snmp_version"], $host["snmpv3_auth_username"], $host["snmpv3_auth_password"],
-												$host["snmpv3_auth_protocol"], $host["snmpv3_priv_passphrase"], $host["snmpv3_priv_protocol"],
-												$host["snmp_port"], $host["snmp_timeout"], SNMP_WEBUI);
-
-							print "<strong>System:</strong> $snmp_system<br>\n";
-							$days = intval($snmp_uptime / (60*60*24*100));
-							$remainder = $snmp_uptime % (60*60*24*100);
-							$hours = intval($remainder / (60*60*100));
-							$remainder = $remainder % (60*60*100);
-							$minutes = intval($remainder / (60*100));
-							print "<strong>" . _("Uptime:") . "</strong> $snmp_uptime";
-							print "&nbsp;($days days, $hours hours, $minutes minutes)<br>\n";
-							print "<strong>" . _("Hostname:") . "</strong> $snmp_hostname<br>\n";
-							print "<strong>" . _("Location:") . "</strong> $snmp_location<br>\n";
-							print "<strong>" . _("Contact:") . "</strong> $snmp_contact<br>\n";
-						}
-					}
-					?>
-					</span>
-				</td>
-				<td class="textInfo" valign="top">
-					<span style="color: #c16921;">*</span><a href="graphs_new.php?host_id=<?php print $host["id"];?>"><?php echo _("Create Graphs for this Host"); ?></a>
-				</td>
-			</tr>
-		</table>
-		<br>
+		</span>
+		</div>
+		<div>
+			<span style="color: #c16921;">*</span><a href="graphs_new.php?host_id=<?php print $host["id"];?>"><?php echo _("Create Graphs for this Host"); ?></a>
+		</div>
+		<br />
 		<?php
 	}
 
-	html_start_box("<strong>" . _("Devices") . "</strong> $header_label", "98%", $colors["header_background"], "3", "center", "");
+	form_start("devices.php", "form_device");
 
-	/* preserve the host template id if passed in via a GET variable */
-	if (!empty($_GET["host_template_id"])) {
-		$fields_host_edit["host_template_id"]["value"] = $_GET["host_template_id"];
-	}
+	html_start_box("<strong>" . _("Devices") . "</strong> $header_label");
 
-	draw_edit_form(array(
-		"config" => array("form_name" => "chk"),
-		"fields" => inject_form_variables($fields_host_edit, (isset($host) ? $host : array()))
-		));
+	_device_field__description("description", (isset($device["description"]) ? $device["description"] : ""), (isset($device["id"]) ? $device["id"] : "0"));
+	_device_field__hostname("hostname", (isset($device["hostname"]) ? $device["hostname"] : ""), (isset($device["id"]) ? $device["id"] : "0"));
+	_device_field__host_template_id("host_template_id", (isset($device["host_template_id"]) ? $device["host_template_id"] : ""), (isset($device["id"]) ? $device["id"] : "0"));
+	_device_field__poller_id("poller_id", (isset($device["poller_id"]) ? $device["poller_id"] : ""), (isset($device["id"]) ? $device["id"] : "0"));
+	_device_field__disabled("disabled", (isset($device["disabled"]) ? $device["disabled"] : ""), (isset($device["id"]) ? $device["id"] : "0"));
+
+	echo ui_html_box_heading_make("SNMP Options");
+
+	_device_field__snmp_version("snmp_version", (isset($device["snmp_version"]) ? $device["snmp_version"] : ""), (isset($device["id"]) ? $device["id"] : "0"));
+	_device_field__snmp_community("snmp_community", (isset($device["snmp_community"]) ? $device["snmp_community"] : ""), (isset($device["id"]) ? $device["id"] : "0"));
+	_device_field__snmp_port("snmp_port", (isset($device["snmp_port"]) ? $device["snmp_port"] : ""), (isset($device["id"]) ? $device["id"] : "0"));
+	_device_field__snmp_timeout("snmp_timeout", (isset($device["snmp_timeout"]) ? $device["snmp_timeout"] : ""), (isset($device["id"]) ? $device["id"] : "0"));
+
+	echo ui_html_box_heading_make("SNMPv3 Authentication");
+
+	_device_field__snmpv3_auth_username("snmpv3_auth_username", (isset($device["snmpv3_auth_username"]) ? $device["snmpv3_auth_username"] : ""), (isset($device["id"]) ? $device["id"] : "0"));
+	_device_field__snmpv3_auth_password("snmpv3_auth_password", (isset($device["snmpv3_auth_password"]) ? $device["snmpv3_auth_password"] : ""), (isset($device["id"]) ? $device["id"] : "0"));
+	_device_field__snmpv3_uth_protocol("snmpv3_uth_protocol", (isset($device["snmpv3_uth_protocol"]) ? $device["snmpv3_uth_protocol"] : ""), (isset($device["id"]) ? $device["id"] : "0"));
+	_device_field__snmpv3_priv_passphrase("snmpv3_priv_passphrase", (isset($device["snmpv3_priv_passphrase"]) ? $device["snmpv3_priv_passphrase"] : ""), (isset($device["id"]) ? $device["id"] : "0"));
+	_device_field__snmpv3_priv_protocol("snmpv3_priv_protocol", (isset($device["snmpv3_priv_protocol"]) ? $device["snmpv3_priv_protocol"] : ""), (isset($device["id"]) ? $device["id"] : "0"));
 
 	html_end_box();
 
-	if ((isset($_GET["display_dq_details"])) && (isset($_SESSION["debug_log"]["data_query"]))) {
-		html_start_box("<strong>" . _("Data Query Debug Information") . "</strong>", "98%", $colors["header_background"], "3", "center", "");
+	form_hidden_box("id", $_device_id);
+	form_hidden_box("action_post", "device_edit");
 
-		print "<tr><td bgcolor='#" . $colors["form_alternate1"] . "'><span style='font-family: monospace;'>" . debug_log_return("data_query") . "</span></td></tr>";
+	form_save_button("devices.php");
+
+	if ((isset($_GET["display_dq_details"])) && (isset($_SESSION["debug_log"]["data_query"]))) {
+		html_start_box("<strong>" . _("Data Query Debug Information") . "</strong>");
+
+		echo "<tr><td><span style='font-family: monospace;'>" . debug_log_return("data_query") . "</span></td></tr>";
 
 		html_end_box();
 	}
 
-	if (!empty($host["id"])) {
-		html_start_box("<strong>" . _("Associated Graph Templates") . "</strong>", "98%", $colors["header_background"], "3", "center", "");
+	if (!empty($_device_id)) {
+		echo "<br />\n";
+
+		form_start("scripts_fields.php", "form_script_item");
+
+		$box_id = "1";
+		html_start_box("<strong>" . _("Associated Graph Templates") . "</strong>");
 
 		html_header(array(_("Graph Template Name"), _("Status")), 2);
 
-		$selected_graph_templates = db_fetch_assoc("select
-			graph_template.id,
-			graph_template.template_name
-			from graph_template,host_graph
-			where graph_template.id=host_graph.graph_template_id
-			and host_graph.host_id = " . $_GET["id"] . "
-			order by graph_template.template_name");
+		$selected_graph_templates = api_device_associated_graph_template_list($_device_id);
 
-		$available_graph_templates = db_fetch_assoc("select
-			graph_template.id,
-			graph_template.template_name
-			from graph_template left join host_graph
-			on (host_graph.graph_template_id = graph_template.id)
-			where host_graph.graph_template_id is null
-			order by graph_template.template_name");
-
-		$i = 0;
-		if (sizeof($selected_graph_templates) > 0) {
-			foreach ($selected_graph_templates as $item) {
-				$i++;
-
-				/* get status information for this graph template */
-				$is_being_graphed = (db_fetch_cell("select count(*) from graph where graph_template_id = " . $item["id"] . " and host_id = " . $_GET["id"]) > 0) ? true : false;
-
+		if (is_array($selected_graph_templates)) {
+			foreach ($selected_graph_templates as $graph_template) {
 				?>
-				<tr bgcolor='#<?php print $colors["form_alternate1"];?>'>
-					<td style="padding: 4px;">
-						<strong><?php print $i;?>)</strong> <?php print $item["template_name"];?>
+				<tr class="item" id="box-<?php echo $box_id;?>-row-<?php echo $graph_template["id"];?>" onClick="display_row_select('<?php echo $box_id;?>',document.forms[1],'box-<?php echo $box_id;?>-row-<?php echo $graph_template["id"];?>', 'box-<?php echo $box_id;?>-chk-<?php echo $graph_template["id"];?>')" onMouseOver="display_row_hover('box-<?php echo $box_id;?>-row-<?php echo $graph_template["id"];?>')" onMouseOut="display_row_clear('box-<?php echo $box_id;?>-row-<?php echo $graph_template["id"];?>')">
+					<td class="item">
+						<?php echo $graph_template["name"];?>
 					</td>
 					<td>
-						<?php print (($is_being_graphed == true) ? "<span style='color: green;'>" . _("Is Being Graphed") . "</span> (<a href='graphs.php?action=graph_edit&id=" . db_fetch_cell("select id from graph_local where graph_template_id=" . $item["id"] . " and host_id=" . $_GET["id"] . " limit 0,1") . "'>" . _("Edit") . "</a>)" : "<span style='color: #484848;'>" . _("Not Being Graphed") . "</span>");?>
+						<?php
+						$associated_graph_id = api_device_graph_template_used_get($_device_id, $graph_template["id"]);
+
+						if ($associated_graph_id) {
+							echo "<span class=\"in_use\">Is Being Graphed</span>\n";
+							echo "(<a href=\"graphs.php?action=graph_edit&id=$associated_graph_id\">" . _("Edit") . "</a>)\n";
+						}else{
+							echo "<span class=\"not_in_use\">Not Being Graphed</span>";
+						}
+						?>
 					</td>
-					<td align='right' nowrap>
-						<a href='devices.php?action=gt_remove&id=<?php print $item["id"];?>&host_id=<?php print $_GET["id"];?>'><img src='<?php print html_get_theme_images_path("delete_icon_large.gif");?>' alt='<?php echo _("Delete Graph Template Association");?>' border='0' align='absmiddle'></a>
+					<td class="checkbox"align="center">
+						<input type='checkbox' name='box-<?php echo $box_id;?>-chk-<?php echo $graph_template["id"];?>' id='box-<?php echo $box_id;?>-chk-<?php echo $graph_template["id"];?>' title="<?php echo $graph_template["name"];?>">
 					</td>
 				</tr>
 				<?php
 			}
-		}else{ print "<tr><td bgcolor='#" . $colors["form_alternate1"] . "' colspan=7><em>" . _("No associated graph templates.") . "</em></td></tr>"; }
+		}else{
+			?>
+			<tr class="empty">
+				<td colspan="2">
+					No associated graph templates found.
+				</td>
+			</tr>
+			<?php
+		}
 
 		?>
 		<tr bgcolor="#<?php print $colors["buttonbar_background"];?>">
@@ -659,6 +670,7 @@ function host_edit() {
 		</tr>
 
 		<?php
+		html_box_toolbar_draw($box_id, "1", "2", HTML_BOX_SEARCH_NONE);
 		html_end_box();
 
 		html_start_box("<strong>" . _("Associated Data Queries") . "</strong>", "98%", $colors["header_background"], "3", "center", "");

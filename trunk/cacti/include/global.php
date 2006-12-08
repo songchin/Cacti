@@ -114,6 +114,7 @@ if ((!in_array(basename($_SERVER["PHP_SELF"]), $no_http_header_files, true)) && 
 
 	require(CACTI_BASE_PATH . "/lib/ui/ui_navigation.php");
 	require(CACTI_BASE_PATH . "/lib/ui/ui_utility.php");
+	require(CACTI_BASE_PATH . "/lib/ui/ui_box.php");
 
 	/* load color scheme from theme file.  Load the default first and then overwrite as required with theme */
 	require(CACTI_BASE_PATH . "/include/global_colors.php");
