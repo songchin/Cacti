@@ -167,7 +167,7 @@ function &api_graph_item_form_list() {
 	$field_list = array(
 			"data_source_item_id" => array(
 				"default" => "",
-				"data_type" => DB_TYPE_NUMBER
+				"data_type" => DB_TYPE_INTEGER
 			)
 		) + $fields_graph_item;
 

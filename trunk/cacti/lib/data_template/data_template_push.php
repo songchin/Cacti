@@ -146,7 +146,7 @@ function api_data_template_propagate($data_template_id) {
 	}
 
 	if (sizeof($ds_fields) > 0) {
-		$ds_fields["data_template_id"] = array("type" => DB_TYPE_NUMBER, "value" => $data_template_id);
+		$ds_fields["data_template_id"] = array("type" => DB_TYPE_INTEGER, "value" => $data_template_id);
 
 		return db_update("data_source", $ds_fields, array("data_template_id"));
 	}

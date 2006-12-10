@@ -206,14 +206,14 @@ function &package_dependencies_list($type, $id, $dep_array) {
 			/* dependency: script */
 			$script_id = api_data_template_input_field_value_get($id, "script_id");
 
-			if (($script_id != false) && (db_number_validate($script_id)) && (!in_array($script_id, $dep_array["script"]))) {
+			if (($script_id != false) && (db_integer_validate($script_id)) && (!in_array($script_id, $dep_array["script"]))) {
 				$dep_array["script"][] = $script_id;
 			}
 
 			/* dependency: data query */
 			$data_query_id = api_data_template_input_field_value_get($id, "data_query_id");
 
-			if (($data_query_id !== false) && (db_number_validate($data_query_id)) && (!in_array($data_query_id, $dep_array["data_query"]))) {
+			if (($data_query_id !== false) && (db_integer_validate($data_query_id)) && (!in_array($data_query_id, $dep_array["data_query"]))) {
 				$dep_array["data_query"][] = $data_query_id;
 			}
 

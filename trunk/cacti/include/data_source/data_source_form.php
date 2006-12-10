@@ -45,7 +45,7 @@ $fields_data_source = array(
 		"default" => "3",
 		"validate_regexp" => "^[0-9]+$",
 		"validate_empty" => false,
-		"data_type" => DB_TYPE_NUMBER
+		"data_type" => DB_TYPE_INTEGER
 		),
 	"rrd_path" => array(
 		"default" => "",
@@ -57,13 +57,13 @@ $fields_data_source = array(
 		"default" => "",
 		"validate_regexp" => "^[0-9]+$",
 		"validate_empty" => false,
-		"data_type" => DB_TYPE_NUMBER
+		"data_type" => DB_TYPE_INTEGER
 		),
 	"polling_interval" => array(
 		"default" => "300",
 		"validate_regexp" => "^[0-9]+$",
 		"validate_empty" => false,
-		"data_type" => DB_TYPE_NUMBER
+		"data_type" => DB_TYPE_INTEGER
 		),
 	"active" => array(
 		"default" => "on",
@@ -96,13 +96,13 @@ $fields_data_source_item = array(
 		"default" => "",
 		"validate_regexp" => "^[0-9]+$",
 		"validate_empty" => true,
-		"data_type" => DB_TYPE_NUMBER
+		"data_type" => DB_TYPE_INTEGER
 		),
 	"rrd_heartbeat" => array(
 		"default" => "600",
 		"validate_regexp" => "^[0-9]+$",
 		"validate_empty" => false,
-		"data_type" => DB_TYPE_NUMBER
+		"data_type" => DB_TYPE_INTEGER
 		),
 	"field_input_value" => array(
 		"default" => "",

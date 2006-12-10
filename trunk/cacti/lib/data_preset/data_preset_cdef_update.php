@@ -34,7 +34,7 @@ function api_data_preset_cdef_save($data_preset_cdef_id, $_fields_data_preset_cd
 	}
 
 	/* field: id */
-	$_fields["id"] = array("type" => DB_TYPE_NUMBER, "value" => $data_preset_cdef_id);
+	$_fields["id"] = array("type" => DB_TYPE_INTEGER, "value" => $data_preset_cdef_id);
 
 	/* convert the input array into something that is compatible with db_replace() */
 	$_fields += sql_get_database_field_array($_fields_data_preset_cdef, api_data_preset_cdef_form_list());
@@ -56,12 +56,12 @@ function api_data_preset_cdef_remove($data_preset_id) {
 
 	db_delete("preset_cdef_item",
 		array(
-			"preset_cdef_id" => array("type" => DB_TYPE_NUMBER, "value" => $data_preset_id)
+			"preset_cdef_id" => array("type" => DB_TYPE_INTEGER, "value" => $data_preset_id)
 			));
 
 	db_delete("preset_cdef",
 		array(
-			"id" => array("type" => DB_TYPE_NUMBER, "value" => $data_preset_id)
+			"id" => array("type" => DB_TYPE_INTEGER, "value" => $data_preset_id)
 			));
 }
 

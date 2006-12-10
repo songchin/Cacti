@@ -33,7 +33,7 @@ $fields_script = array(
 		),
 	"type_id" => array(
 		"default" => SCRIPT_INPUT_TYPE_SCRIPT,
-		"data_type" => DB_TYPE_NUMBER
+		"data_type" => DB_TYPE_INTEGER
 		),
 	"input_string" => array(
 		"default" => "",
@@ -46,7 +46,7 @@ $fields_script = array(
 $fields_script_fields = array(
 	"field_input_type" => array(
 		"default" => SCRIPT_FIELD_INPUT_CUSTOM,
-		"data_type" => DB_TYPE_NUMBER
+		"data_type" => DB_TYPE_INTEGER
 		),
 	"field_input_value" => array(
 		"default" => "",
@@ -74,7 +74,7 @@ $fields_script_fields = array(
 		),
 	"update_rrd" => array(
 		"default" => "1",
-		"data_type" => DB_TYPE_NUMBER
+		"data_type" => DB_TYPE_INTEGER
 		),
 	"regexp_match" => array(
 		"default" => "",
@@ -84,7 +84,7 @@ $fields_script_fields = array(
 		),
 	"allow_empty" => array(
 		"default" => "0",
-		"data_type" => DB_TYPE_NUMBER
+		"data_type" => DB_TYPE_INTEGER
 		)
 	);
 

@@ -87,14 +87,14 @@ function api_poller_enable($poller_id) {
 function api_poller_statistics_clear($poller_id) {
 	db_update("poller",
 		array(
-			"min_time" => array("type" => DB_TYPE_NUMBER, "value" => "9.99999"),
-			"max_time" => array("type" => DB_TYPE_NUMBER, "value" => "0"),
-			"cur_time" => array("type" => DB_TYPE_NUMBER, "value" => "0"),
-			"avg_time" => array("type" => DB_TYPE_NUMBER, "value" => "0"),
-			"total_polls" => array("type" => DB_TYPE_NUMBER, "value" => "0"),
-			"failed_polls" => array("type" => DB_TYPE_NUMBER, "value" => "0"),
-			"availability" => array("type" => DB_TYPE_NUMBER, "value" => "100.00"),
-			"poller_id" => array("type" => DB_TYPE_NUMBER, "value" => $poller_id)
+			"min_time" => array("type" => DB_TYPE_INTEGER, "value" => "9.99999"),
+			"max_time" => array("type" => DB_TYPE_INTEGER, "value" => "0"),
+			"cur_time" => array("type" => DB_TYPE_INTEGER, "value" => "0"),
+			"avg_time" => array("type" => DB_TYPE_INTEGER, "value" => "0"),
+			"total_polls" => array("type" => DB_TYPE_INTEGER, "value" => "0"),
+			"failed_polls" => array("type" => DB_TYPE_INTEGER, "value" => "0"),
+			"availability" => array("type" => DB_TYPE_INTEGER, "value" => "100.00"),
+			"poller_id" => array("type" => DB_TYPE_INTEGER, "value" => $poller_id)
 			),
 		array("poller_id"));
 }

@@ -23,12 +23,12 @@
 */
 
 function validate_id_die($argument_value, $argument_name, $allow_empty = false) {
-	if (!db_number_validate($argument_value, $allow_empty)) {
+	if (!db_integer_validate($argument_value, $allow_empty)) {
 		die("Invalid input '$argument_value' for '$argument_name' in " . log_last_function_get() . "()");
 	}
 }
 
-function db_number_validate($number, $allow_empty = false, $log_errors = true) {
+function db_integer_validate($number, $allow_empty = false, $log_errors = true) {
 	$number_str = strval($number);
 
 	/* only allow whole digit numbers */
@@ -53,7 +53,7 @@ function db_number_validate($number, $allow_empty = false, $log_errors = true) {
 	}
 }
 
-function db_order_column_validate($column_name, $log_errors = true) {
+function db_column_name_validate($column_name, $log_errors = true) {
 	if (preg_match("/^[a-z_]+$/", $column_name)) {
 		return true;
 	}else{

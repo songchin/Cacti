@@ -29,7 +29,7 @@ function api_package_save($package_id, &$_fields_package) {
 	validate_id_die($package_id, "package_id", true);
 
 	/* field: id */
-	$_fields["id"] = array("type" => DB_TYPE_NUMBER, "value" => $package_id);
+	$_fields["id"] = array("type" => DB_TYPE_INTEGER, "value" => $package_id);
 
 	/* convert the input array into something that is compatible with db_replace() */
 	$_fields += sql_get_database_field_array($_fields_package, api_package_form_list());
@@ -65,11 +65,11 @@ function api_package_metadata_save($package_metadata_id, &$_fields_package_metad
 	}
 
 	/* field: id */
-	$_fields["id"] = array("type" => DB_TYPE_NUMBER, "value" => $package_metadata_id);
+	$_fields["id"] = array("type" => DB_TYPE_INTEGER, "value" => $package_metadata_id);
 
 	/* field: package_id */
 	if (!empty($_fields_package_metadata["package_id"])) {
-		$_fields["package_id"] = array("type" => DB_TYPE_NUMBER, "value" => $_fields_package_metadata["package_id"]);
+		$_fields["package_id"] = array("type" => DB_TYPE_INTEGER, "value" => $_fields_package_metadata["package_id"]);
 	}
 
 	/* convert the input array into something that is compatible with db_replace() */
@@ -98,8 +98,8 @@ function api_package_package_template_add($package_id, $graph_template_id) {
 
 	return db_insert("package_graph_template",
 		array(
-			"package_id" => array("type" => DB_TYPE_NUMBER, "value" => $package_id),
-			"graph_template_id" => array("type" => DB_TYPE_NUMBER, "value" => $graph_template_id)
+			"package_id" => array("type" => DB_TYPE_INTEGER, "value" => $package_id),
+			"graph_template_id" => array("type" => DB_TYPE_INTEGER, "value" => $graph_template_id)
 			),
 		array("package_id", "graph_template_id"));
 }
@@ -111,8 +111,8 @@ function api_package_graph_template_remove($package_id, $graph_template_id) {
 
 	return db_delete("package_graph_template",
 		array(
-			"package_id" => array("type" => DB_TYPE_NUMBER, "value" => $package_id),
-			"graph_template_id" => array("type" => DB_TYPE_NUMBER, "value" => $graph_template_id)
+			"package_id" => array("type" => DB_TYPE_INTEGER, "value" => $package_id),
+			"graph_template_id" => array("type" => DB_TYPE_INTEGER, "value" => $graph_template_id)
 			));
 }
 
@@ -122,7 +122,7 @@ function api_package_metadata_remove($package_metadata_id) {
 
 	return db_delete("package_metadata",
 		array(
-			"id" => array("type" => DB_TYPE_NUMBER, "value" => $package_metadata_id)
+			"id" => array("type" => DB_TYPE_INTEGER, "value" => $package_metadata_id)
 			));
 }
 

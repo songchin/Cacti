@@ -51,7 +51,7 @@ function save() {
 
 	$save = array();
 
-	$save["id"] = array("type" => DB_TYPE_NUMBER, "value" => $_SESSION["sess_user_id"]);
+	$save["id"] = array("type" => DB_TYPE_INTEGER, "value" => $_SESSION["sess_user_id"]);
 	$save["current_theme"] = array("type" => DB_TYPE_STRING, "value" => form_input_validate($_POST["current_theme"], "current_theme", "", true, 3));
 
 	if (!is_error_message()) {

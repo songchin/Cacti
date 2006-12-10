@@ -33,7 +33,7 @@ $fields_graph_tree = array(
 		"default" => "",
 		"validate_regexp" => "^[0-9]+$",
 		"validate_empty" => false,
-		"data_type" => DB_TYPE_NUMBER
+		"data_type" => DB_TYPE_INTEGER
 		)
 	);
 
@@ -42,19 +42,19 @@ $fields_graph_tree_item = array(
 		"default" => "",
 		"validate_regexp" => "^[0-9]+$",
 		"validate_empty" => false,
-		"data_type" => DB_TYPE_NUMBER
+		"data_type" => DB_TYPE_INTEGER
 		),
 	"sort_children_type" => array(
 		"default" => "",
 		"validate_regexp" => "^[0-9]+$",
 		"validate_empty" => false,
-		"data_type" => DB_TYPE_NUMBER
+		"data_type" => DB_TYPE_INTEGER
 		),
 	"item_type" => array(
 		"default" => "",
 		"validate_regexp" => "",
 		"validate_empty" => false,
-		"data_type" => DB_TYPE_NUMBER
+		"data_type" => DB_TYPE_INTEGER
 		),
 	"item_value" => array(
 		"default" => "",

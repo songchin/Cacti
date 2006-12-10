@@ -164,7 +164,7 @@ function form_save() {
 		form_input_validate($_POST["password"], "password", "" . preg_quote($_POST["password_confirm"]) . "", true, 4);
 		form_input_validate($_POST["password_confirm"], "password_confirm", "" . preg_quote($_POST["password"]) . "", true, 4);
 
-		$save["id"] = array("type" => DB_TYPE_NUMBER, "value" => $_POST["id"]);
+		$save["id"] = array("type" => DB_TYPE_INTEGER, "value" => $_POST["id"]);
 		$save["username"] = array("type" => DB_TYPE_STRING, "value" => form_input_validate($_POST["username"], "username", "^[A-Za-z_0-9\.]+$", false, 3));
 		$save["full_name"] = array("type" => DB_TYPE_STRING, "value" => form_input_validate($_POST["full_name"], "full_name", "", true, 3));
 		$save["password"] = array("type" => DB_TYPE_STRING, "value" => $password);
@@ -176,8 +176,8 @@ function form_save() {
 		$save["show_preview"] = array("type" => DB_TYPE_STRING, "value" => form_input_validate((isset($_POST["show_preview"]) ? $_POST["show_preview"] : ""), "show_preview", "", true, 3));
 		$save["graph_settings"] = array("type" => DB_TYPE_STRING, "value" => form_input_validate((isset($_POST["graph_settings"]) ? $_POST["graph_settings"] : ""), "graph_settings", "", true, 3));
 		$save["login_opts"] = array("type" => DB_TYPE_STRING, "value" => form_input_validate($_POST["login_opts"], "login_opts", "", true, 3));
-		$save["enabled"] = array("type" => DB_TYPE_NUMBER, "value" => form_input_validate($_POST["enabled"], "enabled", "", true, 3));
-		$save["password_expire_length"] = array("type" => DB_TYPE_NUMBER, "value" => form_input_validate($_POST["password_expire_length"], "password_expire_length", "", true, 3));
+		$save["enabled"] = array("type" => DB_TYPE_INTEGER, "value" => form_input_validate($_POST["enabled"], "enabled", "", true, 3));
+		$save["password_expire_length"] = array("type" => DB_TYPE_INTEGER, "value" => form_input_validate($_POST["password_expire_length"], "password_expire_length", "", true, 3));
 		$save["current_theme"] = array("type" => DB_TYPE_STRING, "value" => form_input_validate($_POST["current_theme"], "current_theme", "", true, 3));
 		$save["policy_graphs"] = array("type" => DB_TYPE_STRING, "value" => form_input_validate((isset($_POST["policy_graphs"]) ? $_POST["policy_graphs"] : $_POST["_policy_graphs"]), "policy_graphs", "", true, 3));
 		$save["policy_trees"] = array("type" => DB_TYPE_STRING, "value" => form_input_validate((isset($_POST["policy_trees"]) ? $_POST["policy_trees"] : $_POST["_policy_trees"]), "policy_trees", "", true, 3));
@@ -186,7 +186,7 @@ function form_save() {
 
 		/* New user, update created */
 		if (empty($_POST["id"])) {
-			$save["created"] = array("type" => DB_TYPE_NUMBER, "value" => "now()");
+			$save["created"] = array("type" => DB_TYPE_INTEGER, "value" => "now()");
 		}
 
 		if (!is_error_message()) {
@@ -231,7 +231,7 @@ function form_save() {
 				$user["policy_tress"] = array("type" => DB_TYPE_STRING, "value" => $_POST["policy_trees"]);
 				$user["policy_hosts"] = array("type" => DB_TYPE_STRING, "value" => $_POST["policy_hosts"]);
 				$user["policy_graph_templates"] = array("type" => DB_TYPE_STRING, "value" => $_POST["policy_graph_templates"]);
-				$user["id"] = array("type" => DB_TYPE_NUMBER, "value" => $_POST["id"]);
+				$user["id"] = array("type" => DB_TYPE_INTEGER, "value" => $_POST["id"]);
 				if (api_user_save($user) == 0) {
 					raise_message(2);
 				}

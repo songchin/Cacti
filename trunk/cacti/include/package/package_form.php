@@ -94,7 +94,7 @@ $fields_package = array(
 $fields_package_metadata = array(
 	"type" => array(
 		"default" => "",
-		"data_type" => DB_TYPE_NUMBER
+		"data_type" => DB_TYPE_INTEGER
 		),
 	"name" => array(
 		"default" => "",
@@ -116,7 +116,7 @@ $fields_package_metadata = array(
 		),
 	"required" => array(
 		"default" => "1",
-		"data_type" => DB_TYPE_NUMBER
+		"data_type" => DB_TYPE_INTEGER
 		),
 	"mime_type" => array(
 		"default" => "",

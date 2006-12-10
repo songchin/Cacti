@@ -93,7 +93,7 @@ function api_graph_tree_item_list($graph_tree_id, $filter_array = "", $limit_sub
 	}
 
 	/* only show tree items under this item if specified */
-	if (db_number_validate($limit_sub_tree_id, false, false)) {
+	if (db_integer_validate($limit_sub_tree_id, false, false)) {
 		$graph_tree_item = api_graph_tree_item_get($limit_sub_tree_id);
 		$search_key = substr($graph_tree_item["order_key"], 0, (api_graph_tree_item_depth_get($graph_tree_item["order_key"]) * CHARS_PER_TIER));
 

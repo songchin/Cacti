@@ -34,7 +34,7 @@ function api_data_preset_rra_save($data_preset_rra_id, $_fields_data_preset_rra)
 	}
 
 	/* field: id */
-	$_fields["id"] = array("type" => DB_TYPE_NUMBER, "value" => $data_preset_rra_id);
+	$_fields["id"] = array("type" => DB_TYPE_INTEGER, "value" => $data_preset_rra_id);
 
 	/* convert the input array into something that is compatible with db_replace() */
 	$_fields += sql_get_database_field_array($_fields_data_preset_rra, api_data_preset_rra_form_list());
@@ -65,16 +65,16 @@ function api_data_preset_rra_item_save($data_preset_rra_item_id, $_fields_data_p
 	if ((empty($data_preset_rra_item_id)) && (empty($_fields_data_preset_rra_item["preset_rra_id"]))) {
 		api_log_log("Required preset_rra_id when data_preset_rra_item_id = 0", SEV_ERROR);
 		return false;
-	} else if ((isset($_fields_data_preset_rra_item["preset_rra_id"])) && (!db_number_validate($_fields_data_preset_rra_item["preset_rra_id"]))) {
+	} else if ((isset($_fields_data_preset_rra_item["preset_rra_id"])) && (!db_integer_validate($_fields_data_preset_rra_item["preset_rra_id"]))) {
 		return false;
 	}
 
 	/* field: id */
-	$_fields["id"] = array("type" => DB_TYPE_NUMBER, "value" => $data_preset_rra_item_id);
+	$_fields["id"] = array("type" => DB_TYPE_INTEGER, "value" => $data_preset_rra_item_id);
 
 	/* field: preset_rra_id */
 	if (!empty($_fields_data_preset_rra_item["preset_rra_id"])) {
-		$_fields["preset_rra_id"] = array("type" => DB_TYPE_NUMBER, "value" => $_fields_data_preset_rra_item["preset_rra_id"]);
+		$_fields["preset_rra_id"] = array("type" => DB_TYPE_INTEGER, "value" => $_fields_data_preset_rra_item["preset_rra_id"]);
 	}
 
 	/* convert the input array into something that is compatible with db_replace() */
@@ -97,12 +97,12 @@ function api_data_preset_rra_remove($data_preset_id) {
 
 	db_delete("preset_rra_item",
 		array(
-			"preset_rra_id" => array("type" => DB_TYPE_NUMBER, "value" => $data_preset_id)
+			"preset_rra_id" => array("type" => DB_TYPE_INTEGER, "value" => $data_preset_id)
 			));
 
 	db_delete("preset_rra",
 		array(
-			"id" => array("type" => DB_TYPE_NUMBER, "value" => $data_preset_id)
+			"id" => array("type" => DB_TYPE_INTEGER, "value" => $data_preset_id)
 			));
 }
 
@@ -114,7 +114,7 @@ function api_data_preset_rra_item_remove($data_preset_rra_item_id) {
 
 	return db_delete("preset_rra_item",
 		array(
-			"id" => array("type" => DB_TYPE_NUMBER, "value" => $data_preset_rra_item_id)
+			"id" => array("type" => DB_TYPE_INTEGER, "value" => $data_preset_rra_item_id)
 			));
 }
 

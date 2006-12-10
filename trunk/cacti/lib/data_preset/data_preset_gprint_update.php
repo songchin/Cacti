@@ -34,7 +34,7 @@ function api_data_preset_gprint_save($data_preset_gprint_id, $_fields_data_prese
 	}
 
 	/* field: id */
-	$_fields["id"] = array("type" => DB_TYPE_NUMBER, "value" => $data_preset_gprint_id);
+	$_fields["id"] = array("type" => DB_TYPE_INTEGER, "value" => $data_preset_gprint_id);
 
 	/* convert the input array into something that is compatible with db_replace() */
 	$_fields += sql_get_database_field_array($_fields_data_preset_gprint, api_data_preset_gprint_form_list());
@@ -56,7 +56,7 @@ function api_data_preset_gprint_remove($data_preset_gprint_id) {
 
 	db_delete("preset_gprint",
 		array(
-			"id" => array("type" => DB_TYPE_NUMBER, "value" => $data_preset_gprint_id)
+			"id" => array("type" => DB_TYPE_INTEGER, "value" => $data_preset_gprint_id)
 			));
 }
 

@@ -173,8 +173,8 @@ function generate_complete_graph($graph_template_id, $host_id = 0, $data_query_i
 				 * as a primary key here because the graph was just created above and therefore must be accurate */
 				db_update("graph_item",
 					array(
-						"id" => array("type" => DB_TYPE_NUMBER, "value" => db_fetch_cell("select id from graph_item where graph_id = " . sql_sanitize($graph_id) . " and graph_template_item_id = " . sql_sanitize($item["graph_template_item_id"]))),
-						"data_source_item_id" => array("type" => DB_TYPE_NUMBER, "value" => db_fetch_cell("select id from data_source_item where data_source_name = '" . sql_sanitize($item["data_source_name"]) . "' and data_source_id = " . sql_sanitize($dti_to_dsi{$item["data_template_id"]})))
+						"id" => array("type" => DB_TYPE_INTEGER, "value" => db_fetch_cell("select id from graph_item where graph_id = " . sql_sanitize($graph_id) . " and graph_template_item_id = " . sql_sanitize($item["graph_template_item_id"]))),
+						"data_source_item_id" => array("type" => DB_TYPE_INTEGER, "value" => db_fetch_cell("select id from data_source_item where data_source_name = '" . sql_sanitize($item["data_source_name"]) . "' and data_source_id = " . sql_sanitize($dti_to_dsi{$item["data_template_id"]})))
 						),
 					array("id"));
 			}
@@ -220,7 +220,7 @@ function api_graph_template_propagate($graph_template_id) {
 	}
 
 	if (sizeof($g_fields) > 0) {
-		$g_fields["graph_template_id"] = array("type" => DB_TYPE_NUMBER, "value" => $graph_template_id);
+		$g_fields["graph_template_id"] = array("type" => DB_TYPE_INTEGER, "value" => $graph_template_id);
 
 		return db_update("graph", $g_fields, array("graph_template_id"));
 	}
@@ -248,7 +248,7 @@ function api_graph_template_item_input_propagate($graph_template_item_input_id, 
 			foreach ($graph_template_items as $graph_template_item) {
 				db_update("graph_item",
 					array(
-						"graph_template_item_id" => array("type" => DB_TYPE_NUMBER, "value" => $graph_template_item["graph_template_item_id"]),
+						"graph_template_item_id" => array("type" => DB_TYPE_INTEGER, "value" => $graph_template_item["graph_template_item_id"]),
 						$input_field_name => array("type" => $graph_item_fields[$input_field_name]["data_type"], "value" => $value)
 						),
 					array("graph_template_item_id"));

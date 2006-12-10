@@ -37,7 +37,7 @@ $fields_graph = array(
 		),
 	"image_format" => array(
 		"default" => GRAPH_IMAGE_TYPE_PNG,
-		"data_type" => DB_TYPE_NUMBER
+		"data_type" => DB_TYPE_INTEGER
 		),
 	"export" => array(
 		"default" => "on",
@@ -53,13 +53,13 @@ $fields_graph = array(
 		"default" => "120",
 		"validate_regexp" => "^[0-9]+$",
 		"validate_empty" => false,
-		"data_type" => DB_TYPE_NUMBER
+		"data_type" => DB_TYPE_INTEGER
 		),
 	"width" => array(
 		"default" => "500",
 		"validate_regexp" => "^[0-9]+$",
 		"validate_empty" => false,
-		"data_type" => DB_TYPE_NUMBER
+		"data_type" => DB_TYPE_INTEGER
 		),
 	"x_grid" => array(
 		"default" => "",
@@ -90,7 +90,7 @@ $fields_graph = array(
 		),
 	"auto_scale_opts" => array(
 		"default" => GRAPH_AUTOSCALE_OPT_AUTOSCALE_MAX,
-		"data_type" => DB_TYPE_NUMBER
+		"data_type" => DB_TYPE_INTEGER
 		),
 	"auto_scale_log" => array(
 		"default" => "",
@@ -111,17 +111,17 @@ $fields_graph = array(
 		"default" => "100",
 		"validate_regexp" => "^-?[0-9]+$",
 		"validate_empty" => false,
-		"data_type" => DB_TYPE_NUMBER
+		"data_type" => DB_TYPE_INTEGER
 		),
 	"lower_limit" => array(
 		"default" => "0",
 		"validate_regexp" => "^-?[0-9]+$",
 		"validate_empty" => false,
-		"data_type" => DB_TYPE_NUMBER
+		"data_type" => DB_TYPE_INTEGER
 		),
 	"base_value" => array(
 		"default" => "1000",
-		"data_type" => DB_TYPE_NUMBER
+		"data_type" => DB_TYPE_INTEGER
 		),
 	"unit_value" => array(
 		"default" => "",
@@ -133,11 +133,11 @@ $fields_graph = array(
 		"default" => "9",
 		"validate_regexp" => "^[0-9]+$",
 		"validate_empty" => false,
-		"data_type" => DB_TYPE_NUMBER
+		"data_type" => DB_TYPE_INTEGER
 		),
 	"unit_exponent_value" => array(
 		"default" => "0",
-		"data_type" => DB_TYPE_NUMBER
+		"data_type" => DB_TYPE_INTEGER
 		)
 	);
 
@@ -150,11 +150,11 @@ $fields_graph_item = array(
 		),
 	"graph_item_type" => array(
 		"default" => GRAPH_ITEM_TYPE_COMMENT,
-		"data_type" => DB_TYPE_NUMBER
+		"data_type" => DB_TYPE_INTEGER
 		),
 	"consolidation_function" => array(
 		"default" => 1,
-		"data_type" => DB_TYPE_NUMBER
+		"data_type" => DB_TYPE_INTEGER
 		),
 	"cdef" => array(
 		"default" => "",
@@ -182,7 +182,7 @@ $fields_graph_item = array(
 		),
 	"hard_return" => array(
 		"default" => "",
-		"data_type" => DB_TYPE_NUMBER
+		"data_type" => DB_TYPE_INTEGER
 		)
 	);
 

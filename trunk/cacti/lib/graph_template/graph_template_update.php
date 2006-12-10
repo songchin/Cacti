@@ -36,7 +36,7 @@ function api_graph_template_save($graph_template_id, $_fields_graph) {
 	}
 
 	/* field: id */
-	$_fields["id"] = array("type" => DB_TYPE_NUMBER, "value" => $graph_template_id);
+	$_fields["id"] = array("type" => DB_TYPE_INTEGER, "value" => $graph_template_id);
 
 	/* convert the input array into something that is compatible with db_replace() */
 	$_fields += sql_get_database_field_array($_fields_graph, api_graph_template_form_list());
@@ -69,17 +69,17 @@ function api_graph_template_suggested_values_save($graph_template_id, $_fields_s
 				if (empty($field_item["id"])) {
 					db_insert("graph_template_suggested_value",
 						array(
-							"id" => array("type" => DB_TYPE_NUMBER, "value" => "0"),
-							"graph_template_id" => array("type" => DB_TYPE_NUMBER, "value" => $graph_template_id),
+							"id" => array("type" => DB_TYPE_INTEGER, "value" => "0"),
+							"graph_template_id" => array("type" => DB_TYPE_INTEGER, "value" => $graph_template_id),
 							"field_name" => array("type" => DB_TYPE_STRING, "value" => $field_name),
 							"value" => array("type" => DB_TYPE_STRING, "value" => $field_item["value"]),
-							"sequence" => array("type" => DB_TYPE_NUMBER, "value" => seq_get_current(0, "sequence", "graph_template_suggested_value", "graph_template_id = " . sql_sanitize($graph_template_id) . " and field_name = '" . sql_sanitize($field_name) . "'"))
+							"sequence" => array("type" => DB_TYPE_INTEGER, "value" => seq_get_current(0, "sequence", "graph_template_suggested_value", "graph_template_id = " . sql_sanitize($graph_template_id) . " and field_name = '" . sql_sanitize($field_name) . "'"))
 							),
 						array("id"));
 				}else{
 					db_update("graph_template_suggested_value",
 						array(
-							"id" => array("type" => DB_TYPE_NUMBER, "value" => $field_item["id"]),
+							"id" => array("type" => DB_TYPE_INTEGER, "value" => $field_item["id"]),
 							"value" => array("type" => DB_TYPE_STRING, "value" => $field_item["value"])
 							),
 						array("id"));
@@ -107,25 +107,25 @@ function api_graph_template_remove($graph_template_id) {
 	/* base tables */
 	db_delete("graph_template_suggested_value",
 		array(
-			"graph_template_id" => array("type" => DB_TYPE_NUMBER, "value" => $graph_template_id)
+			"graph_template_id" => array("type" => DB_TYPE_INTEGER, "value" => $graph_template_id)
 			));
 	db_delete("graph_template_item_input",
 		array(
-			"graph_template_id" => array("type" => DB_TYPE_NUMBER, "value" => $graph_template_id)
+			"graph_template_id" => array("type" => DB_TYPE_INTEGER, "value" => $graph_template_id)
 			));
 	db_delete("graph_template_item",
 		array(
-			"graph_template_id" => array("type" => DB_TYPE_NUMBER, "value" => $graph_template_id)
+			"graph_template_id" => array("type" => DB_TYPE_INTEGER, "value" => $graph_template_id)
 			));
 	db_delete("graph_template",
 		array(
-			"graph_template_id" => array("type" => DB_TYPE_NUMBER, "value" => $graph_template_id)
+			"graph_template_id" => array("type" => DB_TYPE_INTEGER, "value" => $graph_template_id)
 			));
 
 	/* host templates */
 	db_delete("host_template_graph",
 		array(
-			"graph_template_id" => array("type" => DB_TYPE_NUMBER, "value" => $graph_template_id)
+			"graph_template_id" => array("type" => DB_TYPE_INTEGER, "value" => $graph_template_id)
 			));
 
 	/* attached graphs */
@@ -148,21 +148,21 @@ function api_graph_template_item_save($graph_template_item_id, $_fields_graph_it
 	if ((empty($graph_template_item_id)) && (empty($_fields_graph_item["graph_template_id"]))) {
 		api_log_log("Required graph_template_id when graph_template_item_id = 0", SEV_ERROR);
 		return false;
-	} else if ((isset($_fields_graph_item["graph_template_id"])) && (!db_number_validate($_fields_graph_item["graph_template_id"]))) {
+	} else if ((isset($_fields_graph_item["graph_template_id"])) && (!db_integer_validate($_fields_graph_item["graph_template_id"]))) {
 		return false;
 	}
 
 	/* field: id */
-	$_fields["id"] = array("type" => DB_TYPE_NUMBER, "value" => $graph_template_item_id);
+	$_fields["id"] = array("type" => DB_TYPE_INTEGER, "value" => $graph_template_item_id);
 
 	/* field: graph_template_id */
 	if (!empty($_fields_graph_item["graph_template_id"])) {
-		$_fields["graph_template_id"] = array("type" => DB_TYPE_NUMBER, "value" => $_fields_graph_item["graph_template_id"]);
+		$_fields["graph_template_id"] = array("type" => DB_TYPE_INTEGER, "value" => $_fields_graph_item["graph_template_id"]);
 	}
 
 	/* field: sequence */
 	if (empty($graph_template_item_id)) {
-		$_fields["sequence"] = array("type" => DB_TYPE_NUMBER, "value" => seq_get_current($graph_template_item_id, "sequence", "graph_template_item", "graph_template_id = " . sql_sanitize($_fields_graph_item["graph_template_id"])));
+		$_fields["sequence"] = array("type" => DB_TYPE_INTEGER, "value" => seq_get_current($graph_template_item_id, "sequence", "graph_template_item", "graph_template_id = " . sql_sanitize($_fields_graph_item["graph_template_id"])));
 	}
 
 	/* convert the input array into something that is compatible with db_replace() */
@@ -186,18 +186,18 @@ function api_graph_template_item_remove($graph_template_item_id, $delete_attache
 	/* base tables */
 	db_delete("graph_template_item",
 		array(
-			"id" => array("type" => DB_TYPE_NUMBER, "value" => $graph_template_item_id)
+			"id" => array("type" => DB_TYPE_INTEGER, "value" => $graph_template_item_id)
 			));
 	db_delete("graph_template_item_input_item",
 		array(
-			"graph_template_item_id" => array("type" => DB_TYPE_NUMBER, "value" => $graph_template_item_id)
+			"graph_template_item_id" => array("type" => DB_TYPE_INTEGER, "value" => $graph_template_item_id)
 			));
 
 	/* attached graph items */
 	if ($delete_attached === true) {
 		db_delete("graph_item",
 			array(
-				"graph_template_item_id" => array("type" => DB_TYPE_NUMBER, "value" => $graph_template_item_id)
+				"graph_template_item_id" => array("type" => DB_TYPE_INTEGER, "value" => $graph_template_item_id)
 				));
 	}else{
 		db_execute("UPDATE graph_item SET graph_template_item_id = 0 WHERE graph_template_item_id = " . sql_sanitize($graph_template_item_id));

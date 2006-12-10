@@ -29,7 +29,7 @@ function api_graph_tree_save($graph_tree_id, &$_fields_graph_tree) {
 	validate_id_die($graph_tree_id, "graph_tree_id", true);
 
 	/* field: id */
-	$_fields["id"] = array("type" => DB_TYPE_NUMBER, "value" => $graph_tree_id);
+	$_fields["id"] = array("type" => DB_TYPE_INTEGER, "value" => $graph_tree_id);
 
 	/* convert the input array into something that is compatible with db_replace() */
 	$_fields += sql_get_database_field_array($_fields_graph_tree, api_graph_tree_form_list());
@@ -61,12 +61,12 @@ function api_graph_tree_remove($graph_tree_id) {
 
 	db_delete("graph_tree_items",
 		array(
-			"graph_tree_id" => array("type" => DB_TYPE_NUMBER, "value" => $graph_tree_id)
+			"graph_tree_id" => array("type" => DB_TYPE_INTEGER, "value" => $graph_tree_id)
 			));
 
 	return db_delete("graph_tree",
 		array(
-			"id" => array("type" => DB_TYPE_NUMBER, "value" => $graph_tree_id)
+			"id" => array("type" => DB_TYPE_INTEGER, "value" => $graph_tree_id)
 			));
 }
 
@@ -82,12 +82,12 @@ function api_graph_tree_item_save($graph_tree_item_id, &$_fields_graph_tree_item
 	if ((empty($graph_tree_item_id)) && (empty($_fields_graph_tree_item["graph_tree_id"]))) {
 		api_log_log("Required graph_tree_id when graph_tree_item_id = 0", SEV_ERROR);
 		return false;
-	}else if ((isset($_fields_graph_tree_item["graph_tree_id"])) && (!db_number_validate($_fields_graph_tree_item["graph_tree_id"]))) {
+	}else if ((isset($_fields_graph_tree_item["graph_tree_id"])) && (!db_integer_validate($_fields_graph_tree_item["graph_tree_id"]))) {
 		return false;
 	}
 
 	/* sanity check for $item_type */
-	if ((!isset($_fields_graph_tree_item["item_type"])) || (!db_number_validate($_fields_graph_tree_item["item_type"]))) {
+	if ((!isset($_fields_graph_tree_item["item_type"])) || (!db_integer_validate($_fields_graph_tree_item["item_type"]))) {
 		api_log_log("Missing required item_type", SEV_ERROR);
 		return false;
 	}
@@ -96,22 +96,22 @@ function api_graph_tree_item_save($graph_tree_item_id, &$_fields_graph_tree_item
 	if ((empty($graph_tree_item_id)) && (empty($_fields_graph_tree_item["item_value"]))) {
 		api_log_log("Required item_value when graph_tree_item_id = 0", SEV_ERROR);
 		return false;
-	}else if ((isset($_fields_graph_tree_item["item_value"])) && ( (($_fields_graph_tree_item["item_type"] == TREE_ITEM_TYPE_GRAPH) || ($_fields_graph_tree_item["item_type"] == TREE_ITEM_TYPE_HOST)) && (!db_number_validate($_fields_graph_tree_item["item_value"])) )) {
+	}else if ((isset($_fields_graph_tree_item["item_value"])) && ( (($_fields_graph_tree_item["item_type"] == TREE_ITEM_TYPE_GRAPH) || ($_fields_graph_tree_item["item_type"] == TREE_ITEM_TYPE_HOST)) && (!db_integer_validate($_fields_graph_tree_item["item_value"])) )) {
 		return false;
 	}
 
 	/* sanity check for $parent_item_id */
-	if ((!isset($_fields_graph_tree_item["parent_item_id"])) || (!db_number_validate($_fields_graph_tree_item["parent_item_id"], true))) {
+	if ((!isset($_fields_graph_tree_item["parent_item_id"])) || (!db_integer_validate($_fields_graph_tree_item["parent_item_id"], true))) {
 		api_log_log("Missing required parent_item_id", SEV_ERROR);
 		return false;
 	}
 
 	/* field: id */
-	$_fields["id"] = array("type" => DB_TYPE_NUMBER, "value" => $graph_tree_item_id);
+	$_fields["id"] = array("type" => DB_TYPE_INTEGER, "value" => $graph_tree_item_id);
 
 	/* field: graph_tree_id */
 	if (isset($_fields_graph_tree_item["graph_tree_id"])) {
-		$_fields["graph_tree_id"] = array("type" => DB_TYPE_NUMBER, "value" => $_fields_graph_tree_item["graph_tree_id"]);
+		$_fields["graph_tree_id"] = array("type" => DB_TYPE_INTEGER, "value" => $_fields_graph_tree_item["graph_tree_id"]);
 	}
 
 	/* get a copy of the parent tree item id */
@@ -188,8 +188,8 @@ function api_graph_tree_item_save($graph_tree_item_id, &$_fields_graph_tree_item
 				foreach ($graph_tree_items as $graph_tree_item) {
 					db_update("graph_tree_items",
 						array(
-							"id" => array("type" => DB_TYPE_NUMBER, "value" => $graph_tree_item["id"]),
-							"sort_children_type" => array("type" => DB_TYPE_NUMBER, "value" => $_fields_graph_tree_item["sort_children_type"])
+							"id" => array("type" => DB_TYPE_INTEGER, "value" => $graph_tree_item["id"]),
+							"sort_children_type" => array("type" => DB_TYPE_INTEGER, "value" => $_fields_graph_tree_item["sort_children_type"])
 							),
 						array("id"));
 
@@ -375,7 +375,7 @@ function api_graph_tree_item_remove($graph_tree_item_id) {
 	if (($graph_tree_item["item_type"] == TREE_ITEM_TYPE_GRAPH) || ($graph_tree_item["item_type"] == TREE_ITEM_TYPE_HOST)) {
 		return db_delete("graph_tree_items",
 			array(
-				"id" => array("type" => DB_TYPE_NUMBER, "value" => $graph_tree_item_id)
+				"id" => array("type" => DB_TYPE_INTEGER, "value" => $graph_tree_item_id)
 				));
 	}
 
@@ -391,7 +391,7 @@ function api_graph_tree_item_remove($graph_tree_item_id) {
 		foreach ($graph_tree_items as $_graph_tree_item) {
 			db_delete("graph_tree_items",
 				array(
-					"id" => array("type" => DB_TYPE_NUMBER, "value" => $_graph_tree_item["id"])
+					"id" => array("type" => DB_TYPE_INTEGER, "value" => $_graph_tree_item["id"])
 					));
 		}
 	}
@@ -427,7 +427,7 @@ function api_graph_tree_item_remove($graph_tree_item_id) {
 			db_update("graph_tree_items",
 				array(
 					"order_key" => array("type" => DB_TYPE_STRING, "value" => $key),
-					"id" => array("type" => DB_TYPE_NUMBER, "value" => $_graph_tree_item["id"])
+					"id" => array("type" => DB_TYPE_INTEGER, "value" => $_graph_tree_item["id"])
 					),
 				array("id"));
 

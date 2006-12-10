@@ -36,67 +36,67 @@ $fields_data_preset_rra_item = array(
 		"default" => "",
 		"validate_regexp" => "^[0-9]+$",
 		"validate_empty" => false,
-		"data_type" => DB_TYPE_NUMBER
+		"data_type" => DB_TYPE_INTEGER
 		),
 	"steps" => array(
 		"default" => "1",
 		"validate_regexp" => "^[0-9]+$",
 		"validate_empty" => false,
-		"data_type" => DB_TYPE_NUMBER
+		"data_type" => DB_TYPE_INTEGER
 		),
 	"rows" => array(
 		"default" => "0",
 		"validate_regexp" => "^[0-9]+$",
 		"validate_empty" => false,
-		"data_type" => DB_TYPE_NUMBER
+		"data_type" => DB_TYPE_INTEGER
 		),
 	"x_files_factor" => array(
 		"default" => "0.5",
 		"validate_regexp" => "^[0-9]+(\.[0-9]+)$",
 		"validate_empty" => false,
-		"data_type" => DB_TYPE_NUMBER
+		"data_type" => DB_TYPE_INTEGER
 		),
 	"hw_alpha" => array(
 		"default" => "0.1",
 		"validate_regexp" => "^[0-9]+(\.[0-9]+)$",
 		"validate_empty" => false,
-		"data_type" => DB_TYPE_NUMBER
+		"data_type" => DB_TYPE_INTEGER
 		),
 	"hw_beta" => array(
 		"default" => "0.0035",
 		"validate_regexp" => "^[0-9]+(\.[0-9]+)$",
 		"validate_empty" => false,
-		"data_type" => DB_TYPE_NUMBER
+		"data_type" => DB_TYPE_INTEGER
 		),
 	"hw_gamma" => array(
 		"default" => "0.1",
 		"validate_regexp" => "^[0-9]+(\.[0-9]+)$",
 		"validate_empty" => false,
-		"data_type" => DB_TYPE_NUMBER
+		"data_type" => DB_TYPE_INTEGER
 		),
 	"hw_seasonal_period" => array(
 		"default" => "",
 		"validate_regexp" => "^[0-9]+$",
 		"validate_empty" => false,
-		"data_type" => DB_TYPE_NUMBER
+		"data_type" => DB_TYPE_INTEGER
 		),
 	"hw_rra_num" => array(
 		"default" => "",
 		"validate_regexp" => "^[0-9]+$",
 		"validate_empty" => false,
-		"data_type" => DB_TYPE_NUMBER
+		"data_type" => DB_TYPE_INTEGER
 		),
 	"hw_threshold" => array(
 		"default" => "7",
 		"validate_regexp" => "^[0-9]+$",
 		"validate_empty" => false,
-		"data_type" => DB_TYPE_NUMBER
+		"data_type" => DB_TYPE_INTEGER
 		),
 	"hw_window_length" => array(
 		"default" => "9",
 		"validate_regexp" => "^[0-9]+$",
 		"validate_empty" => false,
-		"data_type" => DB_TYPE_NUMBER
+		"data_type" => DB_TYPE_INTEGER
 		)
 	);
 

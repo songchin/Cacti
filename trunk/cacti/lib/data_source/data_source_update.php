@@ -29,16 +29,16 @@ function api_data_source_save($data_source_id, &$_fields_data_source, $skip_cach
 	validate_id_die($data_source_id, "data_source_id", true);
 
 	/* field: id */
-	$_fields["id"] = array("type" => DB_TYPE_NUMBER, "value" => $data_source_id);
+	$_fields["id"] = array("type" => DB_TYPE_INTEGER, "value" => $data_source_id);
 
 	/* field: data_template_id */
 	if (isset($_fields_data_source["data_template_id"])) {
-		$_fields["data_template_id"] = array("type" => DB_TYPE_NUMBER, "value" => $_fields_data_source["data_template_id"]);
+		$_fields["data_template_id"] = array("type" => DB_TYPE_INTEGER, "value" => $_fields_data_source["data_template_id"]);
 	}
 
 	/* field: host_id */
 	if (isset($_fields_data_source["host_id"])) {
-		$_fields["host_id"] = array("type" => DB_TYPE_NUMBER, "value" => $_fields_data_source["host_id"]);
+		$_fields["host_id"] = array("type" => DB_TYPE_INTEGER, "value" => $_fields_data_source["host_id"]);
 	}
 
 	/* convert the input array into something that is compatible with db_replace() */
@@ -134,7 +134,7 @@ function api_data_source_rra_item_clear($data_source_id) {
 
 	return db_delete("data_source_rra_item",
 		array(
-			"data_source_id" => array("type" => DB_TYPE_NUMBER, "value" => $data_source_id)
+			"data_source_id" => array("type" => DB_TYPE_INTEGER, "value" => $data_source_id)
 			));
 }
 
@@ -153,16 +153,16 @@ function api_data_source_rra_item_save($data_source_rra_item_id, $_fields_data_s
 	if ((empty($data_source_rra_item_id)) && (empty($_fields_data_source_rra_item["data_source_id"]))) {
 		api_log_log("Required data_source_id when data_source_rra_item_id = 0", SEV_ERROR);
 		return false;
-	} else if ((isset($_fields_data_source_rra_item["data_source_id"])) && (!db_number_validate($_fields_data_source_rra_item["data_source_id"]))) {
+	} else if ((isset($_fields_data_source_rra_item["data_source_id"])) && (!db_integer_validate($_fields_data_source_rra_item["data_source_id"]))) {
 		return false;
 	}
 
 	/* field: id */
-	$_fields["id"] = array("type" => DB_TYPE_NUMBER, "value" => $data_source_rra_item_id);
+	$_fields["id"] = array("type" => DB_TYPE_INTEGER, "value" => $data_source_rra_item_id);
 
 	/* field: preset_rra_id */
 	if (!empty($_fields_data_source_rra_item["data_source_id"])) {
-		$_fields["data_source_id"] = array("type" => DB_TYPE_NUMBER, "value" => $_fields_data_source_rra_item["data_source_id"]);
+		$_fields["data_source_id"] = array("type" => DB_TYPE_INTEGER, "value" => $_fields_data_source_rra_item["data_source_id"]);
 	}
 
 	/* convert the input array into something that is compatible with db_replace() */
@@ -195,7 +195,7 @@ function api_data_source_fields_save($data_source_id, &$_fields_data_input) {
 	foreach ($_fields_data_input as $field_name => $field_value) {
 		db_replace("data_source_field",
 			array(
-				"data_source_id" => array("type" => DB_TYPE_NUMBER, "value" => $data_source_id),
+				"data_source_id" => array("type" => DB_TYPE_INTEGER, "value" => $data_source_id),
 				"name" => array("type" => DB_TYPE_STRING, "value" => $field_name),
 				"value" => array("type" => DB_TYPE_STRING, "value" => $field_value)
 				),
@@ -211,22 +211,22 @@ function api_data_source_remove($data_source_id) {
 
 	db_delete("data_source_field",
 		array(
-			"data_source_id" => array("type" => DB_TYPE_NUMBER, "value" => $data_source_id)
+			"data_source_id" => array("type" => DB_TYPE_INTEGER, "value" => $data_source_id)
 			));
 
 	db_delete("data_source_item",
 		array(
-			"data_source_id" => array("type" => DB_TYPE_NUMBER, "value" => $data_source_id)
+			"data_source_id" => array("type" => DB_TYPE_INTEGER, "value" => $data_source_id)
 			));
 
 	db_delete("data_source_rra_item",
 		array(
-			"data_source_id" => array("type" => DB_TYPE_NUMBER, "value" => $data_source_id)
+			"data_source_id" => array("type" => DB_TYPE_INTEGER, "value" => $data_source_id)
 			));
 
 	db_delete("data_source",
 		array(
-			"id" => array("type" => DB_TYPE_NUMBER, "value" => $data_source_id)
+			"id" => array("type" => DB_TYPE_INTEGER, "value" => $data_source_id)
 			));
 }
 
@@ -236,7 +236,7 @@ function api_data_source_rra_item_remove($data_source_rra_item_id) {
 
 	return db_delete("data_source_rra_item",
 		array(
-			"id" => array("type" => DB_TYPE_NUMBER, "value" => $data_source_rra_item_id)
+			"id" => array("type" => DB_TYPE_INTEGER, "value" => $data_source_rra_item_id)
 			));
 }
 
@@ -282,16 +282,16 @@ function api_data_source_item_save($data_source_item_id, &$_fields_data_source_i
 	}
 
 	/* field: id */
-	$_fields["id"] = array("type" => DB_TYPE_NUMBER, "value" => $data_source_item_id);
+	$_fields["id"] = array("type" => DB_TYPE_INTEGER, "value" => $data_source_item_id);
 
 	/* field: data_source_id */
 	if (!empty($_fields_data_source_item["data_source_id"])) {
-		$_fields["data_source_id"] = array("type" => DB_TYPE_NUMBER, "value" => $_fields_data_source_item["data_source_id"]);
+		$_fields["data_source_id"] = array("type" => DB_TYPE_INTEGER, "value" => $_fields_data_source_item["data_source_id"]);
 	}
 
 	/* field: data_template_item_id */
 	if (!empty($_fields_data_source_item["data_template_item_id"])) {
-		$_fields["data_template_item_id"] = array("type" => DB_TYPE_NUMBER, "value" => $_fields_data_source_item["data_template_item_id"]);
+		$_fields["data_template_item_id"] = array("type" => DB_TYPE_INTEGER, "value" => $_fields_data_source_item["data_template_item_id"]);
 	}
 
 	/* field: field_input_value */

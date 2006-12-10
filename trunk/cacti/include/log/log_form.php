@@ -33,25 +33,25 @@ $fields_log = array(
 		"default" => "",
 		"validate_regexp" => "",
 		"validate_empty" => false,
-		"data_type" => DB_TYPE_NUMBER
+		"data_type" => DB_TYPE_INTEGER
 		),
 	"severity" => array(
 		"default" => "",
 		"validate_regexp" => "",
 		"validate_empty" => false,
-		"data_type" => DB_TYPE_NUMBER
+		"data_type" => DB_TYPE_INTEGER
 		),
 	"poller" => array(
 		"default" => "",
 		"validate_regexp" => "",
 		"validate_empty" => false,
-		"data_type" => DB_TYPE_NUMBER
+		"data_type" => DB_TYPE_INTEGER
 		),
 	"host" => array(
 		"default" => "",
 		"validate_regexp" => "",
 		"validate_empty" => false,
-		"data_type" => DB_TYPE_NUMBER
+		"data_type" => DB_TYPE_INTEGER
 		),
 	"username" => array(
 		"default" => "",

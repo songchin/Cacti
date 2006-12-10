@@ -29,7 +29,7 @@ function api_device_save($device_id, &$_fields_device) {
 	validate_id_die($device_id, "device_id", true);
 
 	/* field: id */
-	$_fields["id"] = array("type" => DB_TYPE_NUMBER, "value" => $device_id);
+	$_fields["id"] = array("type" => DB_TYPE_INTEGER, "value" => $device_id);
 
 	/* convert the input array into something that is compatible with db_replace() */
 	$_fields += sql_get_database_field_array($_fields_device, api_device_form_list());
@@ -107,8 +107,8 @@ function api_device_package_add($device_id, $package_id) {
 
 	return db_insert("host_package",
 		array(
-			"host_id" => array("type" => DB_TYPE_NUMBER, "value" => $device_id),
-			"package_id" => array("type" => DB_TYPE_NUMBER, "value" => $package_id)
+			"host_id" => array("type" => DB_TYPE_INTEGER, "value" => $device_id),
+			"package_id" => array("type" => DB_TYPE_INTEGER, "value" => $package_id)
 			),
 		array("host_id", "package_id"));
 }
@@ -120,8 +120,8 @@ function api_device_package_remove($device_id, $package_id) {
 
 	return db_delete("host_package",
 		array(
-			"host_id" => array("type" => DB_TYPE_NUMBER, "value" => $device_id),
-			"package_id" => array("type" => DB_TYPE_NUMBER, "value" => $package_id)
+			"host_id" => array("type" => DB_TYPE_INTEGER, "value" => $device_id),
+			"package_id" => array("type" => DB_TYPE_INTEGER, "value" => $package_id)
 			));
 }
 
@@ -131,7 +131,7 @@ function api_device_enable($device_id) {
 	db_update("host",
 		array(
 			"disabled" => array("type" => DB_TYPE_STRING, "value" => ""),
-			"id" => array("type" => DB_TYPE_NUMBER, "value" => $device_id)
+			"id" => array("type" => DB_TYPE_INTEGER, "value" => $device_id)
 			),
 		array("id"));
 
@@ -149,32 +149,32 @@ function api_device_disable($device_id) {
 	db_update("host",
 		array(
 			"disabled" => array("type" => DB_TYPE_STRING, "value" => "on"),
-			"id" => array("type" => DB_TYPE_NUMBER, "value" => $device_id)
+			"id" => array("type" => DB_TYPE_INTEGER, "value" => $device_id)
 			),
 		array("id"));
 
 	/* update poller cache */
 	db_delete("poller_item",
 		array(
-			"host_id" => array("type" => DB_TYPE_NUMBER, "value" => $device_id)
+			"host_id" => array("type" => DB_TYPE_INTEGER, "value" => $device_id)
 			));
 	db_delete("poller_reindex",
 		array(
-			"host_id" => array("type" => DB_TYPE_NUMBER, "value" => $device_id)
+			"host_id" => array("type" => DB_TYPE_INTEGER, "value" => $device_id)
 			));
 }
 
 function api_device_statistics_clear($device_id) {
 	db_update("host",
 		array(
-			"min_time" => array("type" => DB_TYPE_NUMBER, "value" => "9.99999"),
-			"max_time" => array("type" => DB_TYPE_NUMBER, "value" => "0"),
-			"cur_time" => array("type" => DB_TYPE_NUMBER, "value" => "0"),
-			"avg_time" => array("type" => DB_TYPE_NUMBER, "value" => "0"),
-			"total_polls" => array("type" => DB_TYPE_NUMBER, "value" => "0"),
-			"failed_polls" => array("type" => DB_TYPE_NUMBER, "value" => "0"),
-			"availability" => array("type" => DB_TYPE_NUMBER, "value" => "100.00"),
-			"id" => array("type" => DB_TYPE_NUMBER, "value" => $device_id)
+			"min_time" => array("type" => DB_TYPE_INTEGER, "value" => "9.99999"),
+			"max_time" => array("type" => DB_TYPE_INTEGER, "value" => "0"),
+			"cur_time" => array("type" => DB_TYPE_INTEGER, "value" => "0"),
+			"avg_time" => array("type" => DB_TYPE_INTEGER, "value" => "0"),
+			"total_polls" => array("type" => DB_TYPE_INTEGER, "value" => "0"),
+			"failed_polls" => array("type" => DB_TYPE_INTEGER, "value" => "0"),
+			"availability" => array("type" => DB_TYPE_INTEGER, "value" => "100.00"),
+			"id" => array("type" => DB_TYPE_INTEGER, "value" => $device_id)
 			),
 		array("id"));
 }

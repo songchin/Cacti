@@ -110,8 +110,8 @@ function api_data_query_script_execute($host_id, $data_query_id) {
 
 						db_insert("host_data_query_cache",
 							array(
-								"host_id" => array("type" => DB_TYPE_NUMBER, "value" => $host_id),
-								"data_query_id" => array("type" => DB_TYPE_NUMBER, "value" => $data_query_id),
+								"host_id" => array("type" => DB_TYPE_INTEGER, "value" => $host_id),
+								"data_query_id" => array("type" => DB_TYPE_INTEGER, "value" => $data_query_id),
 								"field_name" => array("type" => DB_TYPE_STRING, "value" => $data_query_field["name"]),
 								"field_value" => array("type" => DB_TYPE_STRING, "value" => $result["value"]),
 								"index_value" => array("type" => DB_TYPE_STRING, "value" => $found_index)
@@ -213,8 +213,8 @@ function api_data_query_snmp_execute($host_id, $data_query_id) {
 
 						db_insert("host_data_query_cache",
 							array(
-								"host_id" => array("type" => DB_TYPE_NUMBER, "value" => $host_id),
-								"data_query_id" => array("type" => DB_TYPE_NUMBER, "value" => $data_query_id),
+								"host_id" => array("type" => DB_TYPE_INTEGER, "value" => $host_id),
+								"data_query_id" => array("type" => DB_TYPE_INTEGER, "value" => $data_query_id),
 								"field_name" => array("type" => DB_TYPE_STRING, "value" => $field["name"]),
 								"field_value" => array("type" => DB_TYPE_STRING, "value" => $result["value_parsed"]),
 								"index_value" => array("type" => DB_TYPE_STRING, "value" => $expected_index),

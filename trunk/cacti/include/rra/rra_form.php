@@ -33,25 +33,25 @@ $fields_rra = array(
 		"default" => "0.5",
 		"validate_regexp" => "^[0-9]+(\.[0-9])?$",
 		"validate_empty" => false,
-		"data_type" => DB_TYPE_NUMBER
+		"data_type" => DB_TYPE_INTEGER
 		),
 	"steps" => array(
 		"default" => "0",
 		"validate_regexp" => "^[0-9]+$",
 		"validate_empty" => false,
-		"data_type" => DB_TYPE_NUMBER
+		"data_type" => DB_TYPE_INTEGER
 		),
 	"rows" => array(
 		"default" => "0",
 		"validate_regexp" => "^[0-9]+$",
 		"validate_empty" => false,
-		"data_type" => DB_TYPE_NUMBER
+		"data_type" => DB_TYPE_INTEGER
 		),
 	"timespan" => array(
 		"default" => "0",
 		"validate_regexp" => "^[0-9]+$",
 		"validate_empty" => false,
-		"data_type" => DB_TYPE_NUMBER
+		"data_type" => DB_TYPE_INTEGER
 		)
 	);
 

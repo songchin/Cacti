@@ -22,29 +22,26 @@
  +-------------------------------------------------------------------------+
 */
 
-function api_device_list($filter_array = "", $current_page = 0, $rows_per_page = 0) {
-	require_once(CACTI_BASE_PATH . "/lib/device/device_form.php");
+/**
+ * Returns a list of all available devices
+ *
+ * @param array $filter_array specifies fields to filter the database output with
+ * @param string $order_column the database field to sort on
+ * @param string $order_direction whether to sort in ascending or descending order
+ * @param int $limit_start the row number to begin at
+ * @param int $limit_length the number of rows to return
+ * @return array an associative array with one key for each row
+ */
+function api_device_list($filter_array = "", $order_column = "description", $order_direction = "asc", $limit_start = 0, $limit_length = 0)
+{
+	if (!db_column_name_validate($order_column)) return false;
+	if (!db_order_direction_validate($order_direction)) return false;
+	if (!db_integer_validate($limit_start, true)) return false;
+	if (!db_integer_validate($limit_length, true)) return false;
 
 	$sql_where = "";
-	/* validation and setup for the WHERE clause */
 	if ((is_array($filter_array)) && (sizeof($filter_array) > 0)) {
-		/* validate each field against the known master field list */
-		$field_errors = api_device_field_validate(sql_filter_array_to_field_array($filter_array));
-
-		/* if a field input error has occured, register the error in the session and return */
-		if (sizeof($field_errors) > 0) {
-			field_register_error($field_errors);
-			return false;
-		/* otherwise, form an SQL WHERE string using the filter fields */
-		}else{
-			$sql_where = sql_filter_array_to_where_string($filter_array, api_device_form_list(), true);
-		}
-	}
-
-	$sql_limit = "";
-	/* validation and setup for the LIMIT clause */
-	if ((is_numeric($current_page)) && (is_numeric($rows_per_page)) && (!empty($current_page)) && (!empty($rows_per_page))) {
-		$sql_limit = "limit " . ($rows_per_page * ($current_page - 1)) . ",$rows_per_page";
+		$sql_where = db_filter_array_to_where_string(sql_filter_array_add_types($filter_array, api_device_form_list()), true);
 	}
 
 	return db_fetch_assoc("select
@@ -60,8 +57,8 @@ function api_device_list($filter_array = "", $current_page = 0, $rows_per_page =
 		host.availability
 		from host
 		$sql_where
-		order by host.description
-		$sql_limit");
+		order by $order_column $order_direction
+		" . ($limit_length > 0 ? "limit $limit_start,$limit_length" : ""));
 }
 
 function api_device_total_get($filter_array = "") {

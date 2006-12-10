@@ -34,7 +34,7 @@ function api_data_preset_color_save($data_preset_color_id, $_fields_data_preset_
 	}
 
 	/* field: id */
-	$_fields["id"] = array("type" => DB_TYPE_NUMBER, "value" => $data_preset_color_id);
+	$_fields["id"] = array("type" => DB_TYPE_INTEGER, "value" => $data_preset_color_id);
 
 	/* convert the input array into something that is compatible with db_replace() */
 	$_fields += sql_get_database_field_array($_fields_data_preset_color, api_data_preset_color_form_list());
@@ -56,7 +56,7 @@ function api_data_preset_color_remove($data_preset_color_id) {
 
 	db_delete("preset_color",
 		array(
-			"id" => array("type" => DB_TYPE_NUMBER, "value" => $data_preset_color_id)
+			"id" => array("type" => DB_TYPE_INTEGER, "value" => $data_preset_color_id)
 			));
 }
 

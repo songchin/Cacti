@@ -34,7 +34,7 @@ function api_script_save($script_id, $_fields_script) {
 	}
 
 	/* field: id */
-	$_fields["id"] = array("type" => DB_TYPE_NUMBER, "value" => $script_id);
+	$_fields["id"] = array("type" => DB_TYPE_INTEGER, "value" => $script_id);
 
 	/* convert the input array into something that is compatible with db_replace() */
 	$_fields += sql_get_database_field_array($_fields_script, api_script_form_list());
@@ -57,15 +57,15 @@ function api_script_remove($script_id) {
 	/* base tables */
 	db_delete("data_input",
 		array(
-			"id" => array("type" => DB_TYPE_NUMBER, "value" => $script_id)
+			"id" => array("type" => DB_TYPE_INTEGER, "value" => $script_id)
 			));
 	db_delete("data_input_fields",
 		array(
-			"data_input_id" => array("type" => DB_TYPE_NUMBER, "value" => $script_id)
+			"data_input_id" => array("type" => DB_TYPE_INTEGER, "value" => $script_id)
 			));
 	db_delete("data_input_data",
 		array(
-			"data_input_id" => array("type" => DB_TYPE_NUMBER, "value" => $script_id)
+			"data_input_id" => array("type" => DB_TYPE_INTEGER, "value" => $script_id)
 			));
 }
 
@@ -84,16 +84,16 @@ function api_script_field_save($script_field_id, $_fields_script_field) {
 	if ((empty($script_field_id)) && (empty($_fields_script_field["data_input_id"]))) {
 		api_log_log("Required script_id when script_field_id = 0", SEV_ERROR);
 		return false;
-	} else if ((isset($_fields_script_field["data_input_id"])) && (!db_number_validate($_fields_script_field["data_input_id"]))) {
+	} else if ((isset($_fields_script_field["data_input_id"])) && (!db_integer_validate($_fields_script_field["data_input_id"]))) {
 		return false;
 	}
 
 	/* field: id */
-	$_fields["id"] = array("type" => DB_TYPE_NUMBER, "value" => $script_field_id);
+	$_fields["id"] = array("type" => DB_TYPE_INTEGER, "value" => $script_field_id);
 
 	/* field: graph_tree_id */
 	if (isset($_fields_script_field["data_input_id"])) {
-		$_fields["data_input_id"] = array("type" => DB_TYPE_NUMBER, "value" => $_fields_script_field["data_input_id"]);
+		$_fields["data_input_id"] = array("type" => DB_TYPE_INTEGER, "value" => $_fields_script_field["data_input_id"]);
 	}
 
 	/* convert the input array into something that is compatible with db_replace() */
@@ -117,11 +117,11 @@ function api_script_field_remove($script_field_id) {
 	/* base tables */
 	db_delete("data_input_fields",
 		array(
-			"id" => array("type" => DB_TYPE_NUMBER, "value" => $script_field_id)
+			"id" => array("type" => DB_TYPE_INTEGER, "value" => $script_field_id)
 			));
 	db_delete("data_input_data",
 		array(
-			"data_input_field_id" => array("type" => DB_TYPE_NUMBER, "value" => $script_field_id)
+			"data_input_field_id" => array("type" => DB_TYPE_INTEGER, "value" => $script_field_id)
 			));
 }
 

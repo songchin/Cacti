@@ -31,7 +31,7 @@ function api_data_query_save($data_query_id, &$_fields_data_query) {
 	}
 
 	/* field: id */
-	$_fields["id"] = array("type" => DB_TYPE_NUMBER, "value" => $data_query_id);
+	$_fields["id"] = array("type" => DB_TYPE_INTEGER, "value" => $data_query_id);
 
 	/* convert the input array into something that is compatible with db_replace() */
 	$_fields += sql_get_database_field_array($_fields_data_query, api_data_query_form_list());
@@ -69,11 +69,11 @@ function api_data_query_field_save($data_query_field_id, &$_fields_data_query_fi
 	}
 
 	/* field: id */
-	$_fields["id"] = array("type" => DB_TYPE_NUMBER, "value" => $data_query_field_id);
+	$_fields["id"] = array("type" => DB_TYPE_INTEGER, "value" => $data_query_field_id);
 
 	/* field: graph_id */
 	if (!empty($_fields_data_query_fields["data_query_id"])) {
-		$_fields["data_query_id"] = array("type" => DB_TYPE_NUMBER, "value" => $_fields_data_query_fields["data_query_id"]);
+		$_fields["data_query_id"] = array("type" => DB_TYPE_INTEGER, "value" => $_fields_data_query_fields["data_query_id"]);
 	}
 
 	/* convert the input array into something that is compatible with db_replace() */
@@ -154,8 +154,8 @@ function update_data_query_sort_cache($host_id, $data_query_id) {
 		array(
 			"sort_field" => array("type" => DB_TYPE_STRING, "value" => $sort_field),
 			"title_format" => array("type" => DB_TYPE_STRING, "value" => $title_format),
-			"host_id" => array("type" => DB_TYPE_NUMBER, "value" => $host_id),
-			"data_query_id" => array("type" => DB_TYPE_NUMBER, "value" => $data_query_id)
+			"host_id" => array("type" => DB_TYPE_INTEGER, "value" => $host_id),
+			"data_query_id" => array("type" => DB_TYPE_INTEGER, "value" => $data_query_id)
 			),
 		array("host_id", "data_query_id"));
 }

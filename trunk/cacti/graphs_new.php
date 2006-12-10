@@ -389,6 +389,8 @@ function graphs() {
 
 	/* use the first host in the list as the default */
 	if ((!isset($_SESSION["sess_graphs_new_host_id"])) && (empty($_REQUEST["host_id"]))) {
+
+
 		$_REQUEST["host_id"] = db_fetch_cell("select id from host order by description,hostname limit 1");
 	}
 
@@ -397,21 +399,6 @@ function graphs() {
 
 	$host = db_fetch_row("select id,description,hostname,host_template_id from host where id=" . $_REQUEST["host_id"]);
 
-	$debug_log = debug_log_return("new_graphs");
-
-	if (!empty($debug_log)) {
-		debug_log_clear("new_graphs");
-		?>
-		<table width='98%' style='background-color: #<?php print $colors["messagebar_background"];?>; border: 1px solid #<?php print $colors["messagebar_border"];?>;' align='center'>
-			<tr bgcolor="<?php print $colors["form_alternate2"];?>">
-				<td style="padding: 3px; font-family: monospace;">
-					<?php print $debug_log;?>
-				</td>
-			</tr>
-		</table>
-		<br>
-		<?php
-	}
 	?>
 
 	<table width="98%" align="center">

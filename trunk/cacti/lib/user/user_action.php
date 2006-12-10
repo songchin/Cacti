@@ -115,8 +115,8 @@ function api_user_remove($user_id) {
 function api_user_enable($user_id) {
 	if (!empty($user_id)) {
 		$user = array();
-		$user["id"] = array("type" => DB_TYPE_NUMBER, "value" => $user_id);
-		$user["enabled"] = array("type" => DB_TYPE_NUMBER, "value" => 1);
+		$user["id"] = array("type" => DB_TYPE_INTEGER, "value" => $user_id);
+		$user["enabled"] = array("type" => DB_TYPE_INTEGER, "value" => 1);
 		if (db_update("user_auth",$user)) {
 			api_log_log(sprintf(_("USER_ADMIN: User id '%s' enabled"), $user_id), SEV_NOTICE, FACIL_AUTH);
 			return true;
@@ -132,8 +132,8 @@ function api_user_enable($user_id) {
 function api_user_disable($user_id) {
 	if (!empty($user_id)) {
 		$user = array();
-		$user["id"] = array("type" => DB_TYPE_NUMBER, "value" => $user_id);
-		$user["enabled"] = array("type" => DB_TYPE_NUMBER, "value" => 0);
+		$user["id"] = array("type" => DB_TYPE_INTEGER, "value" => $user_id);
+		$user["enabled"] = array("type" => DB_TYPE_INTEGER, "value" => 0);
 		if (db_update("user_auth",$user)) {
 			api_log_log(sprintf(_("USER_ADMIN: User id '%s' disabled"), $user_id), SEV_NOTICE, FACIL_AUTH);
 			return true;
@@ -150,8 +150,8 @@ function api_user_disable($user_id) {
 function api_user_expire_length_set($user_id, $interval) {
 	if (!empty($user_id)) {
 		$user = array();
-		$user["id"] = array("type" => DB_TYPE_NUMBER, "value" => sql_sanitize($user_id));
-		$user["password_expire_length"] = array("type" => DB_TYPE_NUMBER, "value" => sql_sanitize($interval));
+		$user["id"] = array("type" => DB_TYPE_INTEGER, "value" => sql_sanitize($user_id));
+		$user["password_expire_length"] = array("type" => DB_TYPE_INTEGER, "value" => sql_sanitize($interval));
 	 	if (db_update("user_auth",$user)) {
 			api_log_log(sprintf(_("USER_ADMIN: User id '%s' expiration length set to '%s'"), $user_id,$interval), SEV_ERROR, FACIL_AUTH);
 			return true;

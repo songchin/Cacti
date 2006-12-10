@@ -27,7 +27,7 @@
 $fields_data_query = array(
 	"input_type" => array(
 		"default" => "",
-		"data_type" => DB_TYPE_NUMBER
+		"data_type" => DB_TYPE_INTEGER
 		),
 	"name" => array(
 		"default" => "",
@@ -37,7 +37,7 @@ $fields_data_query = array(
 		),
 	"index_order_type" => array(
 		"default" => "",
-		"data_type" => DB_TYPE_NUMBER
+		"data_type" => DB_TYPE_INTEGER
 		),
 	"index_title_format" => array(
 		"default" => "",
@@ -53,7 +53,7 @@ $fields_data_query = array(
 		),
 	"index_field_id" => array(
 		"default" => "",
-		"data_type" => DB_TYPE_NUMBER
+		"data_type" => DB_TYPE_INTEGER
 		),
 	"snmp_oid_num_rows" => array(
 		"default" => "",
@@ -78,7 +78,7 @@ $fields_data_query = array(
 $fields_data_query_fields = array(
 	"type" => array(
 		"default" => "",
-		"data_type" => DB_TYPE_NUMBER
+		"data_type" => DB_TYPE_INTEGER
 		),
 	"name" => array(
 		"default" => "",
@@ -100,7 +100,7 @@ $fields_data_query_fields = array(
 		),
 	"method_type" => array(
 		"default" => "",
-		"data_type" => DB_TYPE_NUMBER
+		"data_type" => DB_TYPE_INTEGER
 		),
 	"method_value" => array(
 		"default" => "",

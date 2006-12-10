@@ -31,16 +31,16 @@ function api_graph_save($graph_id, &$_fields_graph, $skip_cache_update = false) 
 	}
 
 	/* field: id */
-	$_fields["id"] = array("type" => DB_TYPE_NUMBER, "value" => $graph_id);
+	$_fields["id"] = array("type" => DB_TYPE_INTEGER, "value" => $graph_id);
 
 	/* field: graph_template_id */
 	if (isset($_fields_graph["graph_template_id"])) {
-		$_fields["graph_template_id"] = array("type" => DB_TYPE_NUMBER, "value" => $_fields_graph["graph_template_id"]);
+		$_fields["graph_template_id"] = array("type" => DB_TYPE_INTEGER, "value" => $_fields_graph["graph_template_id"]);
 	}
 
 	/* field: host_id */
 	if (isset($_fields_graph["host_id"])) {
-		$_fields["host_id"] = array("type" => DB_TYPE_NUMBER, "value" => $_fields_graph["host_id"]);
+		$_fields["host_id"] = array("type" => DB_TYPE_INTEGER, "value" => $_fields_graph["host_id"]);
 	}
 
 	/* convert the input array into something that is compatible with db_replace() */
@@ -92,7 +92,7 @@ function api_graph_host_update($graph_id, $host_id) {
 	db_update("graph",
 		array(
 			"host_id" => array("type" => DB_TYPE_STRING, "value" => $host_id),
-			"id" => array("type" => DB_TYPE_NUMBER, "value" => $graph_id)
+			"id" => array("type" => DB_TYPE_INTEGER, "value" => $graph_id)
 			),
 		array("id"));
 
@@ -118,21 +118,21 @@ function api_graph_item_save($graph_item_id, &$_fields_graph_item) {
 	}
 
 	/* field: id */
-	$_fields["id"] = array("type" => DB_TYPE_NUMBER, "value" => $graph_item_id);
+	$_fields["id"] = array("type" => DB_TYPE_INTEGER, "value" => $graph_item_id);
 
 	/* field: graph_id */
 	if (!empty($_fields_graph_item["graph_id"])) {
-		$_fields["graph_id"] = array("type" => DB_TYPE_NUMBER, "value" => $_fields_graph_item["graph_id"]);
+		$_fields["graph_id"] = array("type" => DB_TYPE_INTEGER, "value" => $_fields_graph_item["graph_id"]);
 	}
 
 	/* field: graph_template_item_id */
 	if (isset($_fields_graph_item["graph_template_item_id"])) {
-		$_fields["graph_template_item_id"] = array("type" => DB_TYPE_NUMBER, "value" => $_fields_graph_item["graph_template_item_id"]);
+		$_fields["graph_template_item_id"] = array("type" => DB_TYPE_INTEGER, "value" => $_fields_graph_item["graph_template_item_id"]);
 	}
 
 	/* field: sequence */
 	if (empty($graph_item_id)) {
-		$_fields["sequence"] = array("type" => DB_TYPE_NUMBER, "value" => seq_get_current($_fields_graph_item["id"], "sequence", "graph_item", "graph_id = " . sql_sanitize($_fields_graph_item["graph_id"])));
+		$_fields["sequence"] = array("type" => DB_TYPE_INTEGER, "value" => seq_get_current($_fields_graph_item["id"], "sequence", "graph_item", "graph_id = " . sql_sanitize($_fields_graph_item["graph_id"])));
 	}
 
 	/* check for an empty field list */

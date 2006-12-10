@@ -36,7 +36,7 @@ function api_data_template_save($data_template_id, $_fields_data_source) {
 	}
 
 	/* field: id */
-	$_fields["id"] = array("type" => DB_TYPE_NUMBER, "value" => $data_template_id);
+	$_fields["id"] = array("type" => DB_TYPE_INTEGER, "value" => $data_template_id);
 
 	/* convert the input array into something that is compatible with db_replace() */
 	$_fields += sql_get_database_field_array($_fields_data_source, api_data_template_form_list());
@@ -71,16 +71,16 @@ function api_data_template_rra_item_save($data_template_rra_item_id, $_fields_da
 	if ((empty($data_template_rra_item_id)) && (empty($_fields_data_template_rra_item["data_template_id"]))) {
 		api_log_log("Required data_template_id when data_template_rra_item_id = 0", SEV_ERROR);
 		return false;
-	} else if ((isset($_fields_data_template_rra_item["data_template_id"])) && (!db_number_validate($_fields_data_template_rra_item["data_template_id"]))) {
+	} else if ((isset($_fields_data_template_rra_item["data_template_id"])) && (!db_integer_validate($_fields_data_template_rra_item["data_template_id"]))) {
 		return false;
 	}
 
 	/* field: id */
-	$_fields["id"] = array("type" => DB_TYPE_NUMBER, "value" => $data_template_rra_item_id);
+	$_fields["id"] = array("type" => DB_TYPE_INTEGER, "value" => $data_template_rra_item_id);
 
 	/* field: preset_rra_id */
 	if (!empty($_fields_data_template_rra_item["data_template_id"])) {
-		$_fields["data_template_id"] = array("type" => DB_TYPE_NUMBER, "value" => $_fields_data_template_rra_item["data_template_id"]);
+		$_fields["data_template_id"] = array("type" => DB_TYPE_INTEGER, "value" => $_fields_data_template_rra_item["data_template_id"]);
 	}
 
 	/* convert the input array into something that is compatible with db_replace() */
@@ -131,7 +131,7 @@ function api_data_template_rra_item_clear($data_template_id) {
 
 	return db_delete("data_template_rra_item",
 		array(
-			"data_template_id" => array("type" => DB_TYPE_NUMBER, "value" => $data_template_id)
+			"data_template_id" => array("type" => DB_TYPE_INTEGER, "value" => $data_template_id)
 			));
 }
 
@@ -148,17 +148,17 @@ function api_data_template_suggested_values_save($data_template_id, $_fields_sug
 				if (empty($field_item["id"])) {
 					db_insert("data_template_suggested_value",
 						array(
-							"id" => array("type" => DB_TYPE_NUMBER, "value" => "0"),
-							"data_template_id" => array("type" => DB_TYPE_NUMBER, "value" => $data_template_id),
+							"id" => array("type" => DB_TYPE_INTEGER, "value" => "0"),
+							"data_template_id" => array("type" => DB_TYPE_INTEGER, "value" => $data_template_id),
 							"field_name" => array("type" => DB_TYPE_STRING, "value" => $field_name),
 							"value" => array("type" => DB_TYPE_STRING, "value" => $field_item["value"]),
-							"sequence" => array("type" => DB_TYPE_NUMBER, "value" => seq_get_current(0, "sequence", "data_template_suggested_value", "data_template_id = " . sql_sanitize($data_template_id) . " and field_name = '" . sql_sanitize($field_name) . "'"))
+							"sequence" => array("type" => DB_TYPE_INTEGER, "value" => seq_get_current(0, "sequence", "data_template_suggested_value", "data_template_id = " . sql_sanitize($data_template_id) . " and field_name = '" . sql_sanitize($field_name) . "'"))
 							),
 						array("id"));
 				}else{
 					db_update("data_template_suggested_value",
 						array(
-							"id" => array("type" => DB_TYPE_NUMBER, "value" => $field_item["id"]),
+							"id" => array("type" => DB_TYPE_INTEGER, "value" => $field_item["id"]),
 							"value" => array("type" => DB_TYPE_STRING, "value" => $field_item["value"])
 							),
 						array("id"));
@@ -175,7 +175,7 @@ function api_data_template_input_fields_save($data_template_id, $_fields_input_f
 	/* clear out the old custom field values */
 	db_delete("data_template_field",
 		array(
-			"data_template_id" => array("type" => DB_TYPE_NUMBER, "value" => $data_template_id)
+			"data_template_id" => array("type" => DB_TYPE_INTEGER, "value" => $data_template_id)
 			));
 
 	/* insert the new custom field values */
@@ -183,9 +183,9 @@ function api_data_template_input_fields_save($data_template_id, $_fields_input_f
 		foreach ($_fields_input_fields as $field_name => $field_array) {
 			db_insert("data_template_field",
 				array(
-					"data_template_id" => array("type" => DB_TYPE_NUMBER, "value" => $data_template_id),
+					"data_template_id" => array("type" => DB_TYPE_INTEGER, "value" => $data_template_id),
 					"name" => array("type" => DB_TYPE_STRING, "value" => $field_name),
-					"t_value" => array("type" => DB_TYPE_NUMBER, "value" => $field_array["t_value"]),
+					"t_value" => array("type" => DB_TYPE_INTEGER, "value" => $field_array["t_value"]),
 					"value" => array("type" => DB_TYPE_STRING, "value" => $field_array["value"])
 					),
 				array("data_template_id", "name"));
@@ -209,16 +209,16 @@ function api_data_template_item_save($data_template_item_id, $_fields_data_sourc
 	if ((empty($data_template_item_id)) && (empty($_fields_data_source_item["data_template_id"]))) {
 		api_log_log("Required data_template_id when data_template_item_id = 0", SEV_ERROR);
 		return false;
-	} else if ((isset($_fields_data_source_item["data_template_id"])) && (!db_number_validate($_fields_data_source_item["data_template_id"]))) {
+	} else if ((isset($_fields_data_source_item["data_template_id"])) && (!db_integer_validate($_fields_data_source_item["data_template_id"]))) {
 		return false;
 	}
 
 	/* field: id */
-	$_fields["id"] = array("type" => DB_TYPE_NUMBER, "value" => $data_template_item_id);
+	$_fields["id"] = array("type" => DB_TYPE_INTEGER, "value" => $data_template_item_id);
 
 	/* field: data_template_id */
 	if (!empty($_fields_data_source_item["data_template_id"])) {
-		$_fields["data_template_id"] = array("type" => DB_TYPE_NUMBER, "value" => $_fields_data_source_item["data_template_id"]);
+		$_fields["data_template_id"] = array("type" => DB_TYPE_INTEGER, "value" => $_fields_data_source_item["data_template_id"]);
 	}
 
 	/* convert the input array into something that is compatible with db_replace() */
@@ -245,23 +245,23 @@ function api_data_template_remove($data_template_id) {
 	/* base tables */
 	db_delete("data_template_rra",
 		array(
-			"data_template_id" => array("type" => DB_TYPE_NUMBER, "value" => $data_template_id)
+			"data_template_id" => array("type" => DB_TYPE_INTEGER, "value" => $data_template_id)
 			));
 	db_delete("data_template_field",
 		array(
-			"data_template_id" => array("type" => DB_TYPE_NUMBER, "value" => $data_template_id)
+			"data_template_id" => array("type" => DB_TYPE_INTEGER, "value" => $data_template_id)
 			));
 	db_delete("data_template_item",
 		array(
-			"data_template_id" => array("type" => DB_TYPE_NUMBER, "value" => $data_template_id)
+			"data_template_id" => array("type" => DB_TYPE_INTEGER, "value" => $data_template_id)
 			));
 	db_delete("data_template_rra_item",
 		array(
-			"data_template_id" => array("type" => DB_TYPE_NUMBER, "value" => $data_template_id)
+			"data_template_id" => array("type" => DB_TYPE_INTEGER, "value" => $data_template_id)
 			));
 	db_delete("data_template",
 		array(
-			"id" => array("type" => DB_TYPE_NUMBER, "value" => $data_template_id)
+			"id" => array("type" => DB_TYPE_INTEGER, "value" => $data_template_id)
 			));
 
 	/* detach this template from all data sources */
@@ -274,7 +274,7 @@ function api_data_template_rra_item_remove($data_template_rra_item_id) {
 
 	return db_delete("data_template_rra_item",
 		array(
-			"id" => array("type" => DB_TYPE_NUMBER, "value" => $data_template_rra_item_id)
+			"id" => array("type" => DB_TYPE_INTEGER, "value" => $data_template_rra_item_id)
 			));
 }
 
@@ -294,7 +294,7 @@ function api_data_template_item_remove($data_template_item_id) {
 		foreach ($data_sources as $item) {
 			db_delete("data_source_item",
 				array(
-					"data_source_id" => array("type" => DB_TYPE_NUMBER, "value" => $item["id"]),
+					"data_source_id" => array("type" => DB_TYPE_INTEGER, "value" => $item["id"]),
 					"data_source_name" => array("type" => DB_TYPE_STRING, "value" => $data_template_item["data_source_name"])
 					));
 		}
@@ -302,7 +302,7 @@ function api_data_template_item_remove($data_template_item_id) {
 
 	db_delete("data_template_item",
 		array(
-			"id" => array("type" => DB_TYPE_NUMBER, "value" => $data_template_item_id)
+			"id" => array("type" => DB_TYPE_INTEGER, "value" => $data_template_item_id)
 			));
 }
 

@@ -675,21 +675,21 @@ function host() {
 
 	/* search field: device template */
 	if (isset_get_var("search_device_template")) {
-		$filter_array["host_template_id"] = get_get_var("search_device_template");
+		$filter_array["=host_template_id"] = get_get_var("search_device_template");
 	}
 
 	/* search field: device status */
 	if (isset_get_var("search_status")) {
-		$filter_array["status"] = get_get_var("search_status");
+		$filter_array["=status"] = get_get_var("search_status");
 	}
 
 	/* search field: filter (searches device description and hostname) */
 	if (isset_get_var("search_filter")) {
-		$filter_array["filter"] = array("hostname" => get_get_var("search_filter"), "description" => get_get_var("search_filter"));
+		$filter_array["%filter"] = array("hostname" => get_get_var("search_filter"), "description" => get_get_var("search_filter"));
 	}
 
 	/* get a list of all devices on this page */
-	$devices = api_device_list($filter_array, $current_page, read_config_option("num_rows_device"));
+	$devices = api_device_list($filter_array, "description", "asc", (read_config_option("num_rows_device") * ($current_page - 1)), read_config_option("num_rows_device"));
 
 	/* get the total number of devices on all pages */
 	$total_rows = api_device_total_get($filter_array);

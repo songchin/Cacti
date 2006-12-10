@@ -204,7 +204,7 @@ function db_replace($table_name, $fields, $keys = "") {
 	/* generate a WHERE statement that reflects the list of keys */
 	$sql_key_where = "";
 	for ($i=0; $i<sizeof($keys); $i++) {
-		$sql_key_where .= ($i == 0 ? "WHERE " : " AND ") . $keys[$i]  . " = " . sql_get_quoted_string($fields{$keys[$i]});
+		$sql_key_where .= ($i == 0 ? "WHERE " : " AND ") . $keys[$i]  . " = " . sql_get_quoted_string($fields{$keys[$i]}["type"], $fields{$keys[$i]}["value"]);
 	}
 
 	/* no rows exist at this key; generate an INSERT statement */
@@ -218,7 +218,7 @@ function db_replace($table_name, $fields, $keys = "") {
 				}
 
 				$sql_field_names .= $db_field_name . ($i == (sizeof($fields) - 1) ? "" : ",");
-				$sql_field_values .= sql_get_quoted_string($db_field_array) . ($i == (sizeof($fields) - 1) ? "" : ",");
+				$sql_field_values .= sql_get_quoted_string($db_field_array["type"], $db_field_array["value"]) . ($i == (sizeof($fields) - 1) ? "" : ",");
 
 				if ($i == (sizeof($fields) - 1)) {
 					$sql_field_names .= ")";
@@ -237,7 +237,7 @@ function db_replace($table_name, $fields, $keys = "") {
 			foreach ($fields as $db_field_name => $db_field_array) {
 				/* do not include the key fields in the SET string */
 				if (!in_array($db_field_name, $keys)) {
-					$sql_set_fields .= $db_field_name . " = " . sql_get_quoted_string($db_field_array) . (($i == (sizeof($fields) - sizeof($keys) - 1)) ? "" : ",");
+					$sql_set_fields .= $db_field_name . " = " . sql_get_quoted_string($db_field_array["type"], $db_field_array["value"]) . (($i == (sizeof($fields) - sizeof($keys) - 1)) ? "" : ",");
 
 					$i++;
 				}
@@ -279,7 +279,7 @@ function db_insert($table_name, $fields, $keys = "") {
 	/* generate a WHERE statement that reflects the list of keys */
 	$sql_key_where = "";
 	for ($i=0; $i<sizeof($keys); $i++) {
-		$sql_key_where .= ($i == 0 ? "WHERE " : " AND ") . $keys[$i]  . " = " . sql_get_quoted_string($fields{$keys[$i]});
+		$sql_key_where .= ($i == 0 ? "WHERE " : " AND ") . $keys[$i]  . " = " . sql_get_quoted_string($fields{$keys[$i]}["type"], $fields{$keys[$i]}["value"]);
 	}
 
 	$sql_field_names = ""; $sql_field_values = ""; $i = 0;
@@ -291,7 +291,7 @@ function db_insert($table_name, $fields, $keys = "") {
 			}
 
 			$sql_field_names .= $db_field_name . ($i == (sizeof($fields) - 1) ? "" : ",");
-			$sql_field_values .= sql_get_quoted_string($db_field_array) . ($i == (sizeof($fields) - 1) ? "" : ",");
+			$sql_field_values .= sql_get_quoted_string($db_field_array["type"], $db_field_array["value"]) . ($i == (sizeof($fields) - 1) ? "" : ",");
 
 			if ($i == (sizeof($fields) - 1)) {
 				$sql_field_names .= ")";
@@ -330,7 +330,7 @@ function db_update($table_name, $fields, $keys = "") {
 	/* generate a WHERE statement that reflects the list of keys */
 	$sql_key_where = "";
 	for ($i=0; $i<sizeof($keys); $i++) {
-		$sql_key_where .= ($i == 0 ? "WHERE " : " AND ") . $keys[$i] . " = " . sql_get_quoted_string($fields{$keys[$i]});
+		$sql_key_where .= ($i == 0 ? "WHERE " : " AND ") . $keys[$i] . " = " . sql_get_quoted_string($fields{$keys[$i]}["type"], $fields{$keys[$i]}["value"]);
 	}
 
 	$sql_set_fields = ""; $i = 0;
@@ -338,7 +338,7 @@ function db_update($table_name, $fields, $keys = "") {
 		foreach ($fields as $db_field_name => $db_field_array) {
 			/* do not include the key fields in the SET string */
 			if (!in_array($db_field_name, $keys)) {
-				$sql_set_fields .= $db_field_name . " = " . sql_get_quoted_string($db_field_array) . (($i == (sizeof($fields) - sizeof($keys) - 1)) ? "" : ",");
+				$sql_set_fields .= $db_field_name . " = " . sql_get_quoted_string($db_field_array["type"], $db_field_array["value"]) . (($i == (sizeof($fields) - sizeof($keys) - 1)) ? "" : ",");
 
 				$i++;
 			}
@@ -360,7 +360,7 @@ function db_delete($table_name, $fields) {
 	$sql_key_where = ""; $i = 0;
 	if (sizeof($fields) > 0) {
 		foreach ($fields as $db_field_name => $db_field_array) {
-			$sql_key_where .= ($i == 0 ? "WHERE " : " AND ") . $db_field_name  . " = " . sql_get_quoted_string($db_field_array);
+			$sql_key_where .= ($i == 0 ? "WHERE " : " AND ") . $db_field_name  . " = " . sql_get_quoted_string($db_field_array["type"], $db_field_array["value"]);
 			$i++;
 		}
 	}

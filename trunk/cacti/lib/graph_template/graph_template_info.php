@@ -125,7 +125,7 @@ function &api_graph_template_item_form_list() {
 	$field_list = array(
 			"data_template_item_id" => array(
 				"default" => "",
-				"data_type" => DB_TYPE_NUMBER
+				"data_type" => DB_TYPE_INTEGER
 			)
 		) + $fields_graph_item;
 

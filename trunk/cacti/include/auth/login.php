@@ -205,7 +205,7 @@ if ($action == 'login') {
 			/* Update ip and lastlogin information for the user*/
 			api_log_log(_("LOGIN: Updating user last login information"), SEV_DEBUG, FACIL_AUTH);
 			$user_save = array();
-			$user_save["id"] = array("type" => DB_TYPE_NUMBER, "value" => $user["id"]);
+			$user_save["id"] = array("type" => DB_TYPE_INTEGER, "value" => $user["id"]);
 			$user_save["last_login"] = array("type" => DB_TYPE_FUNC_NOW, "value" => "");
 			$user_save["last_login_ip"] = array("type" => DB_TYPE_STRING, "value" => $_SERVER["REMOTE_ADDR"]);
 			api_user_save($user_save);
