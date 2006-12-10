@@ -39,7 +39,7 @@ function api_device_save($device_id, &$_fields_device) {
 		return true;
 	}
 
-	if (db_replace("device", $_fields, array("id"))) {
+	if (db_replace("host", $_fields, array("id"))) {
 		if (empty($device_id)) {
 			return db_fetch_insert_id();
 		}else{

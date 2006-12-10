@@ -50,10 +50,10 @@ $fields_device = array(
 		"data_type" => DB_TYPE_NUMBER
 		),
 	"disabled" => array(
-		"default" => "",
-		"validate_regexp" => "",
+		"default" => "0",
+		"validate_regexp" => "^[01]$",
 		"validate_empty" => true,
-		"data_type" => DB_TYPE_HTML_CHECKBOX
+		"data_type" => DB_TYPE_NUMBER
 		),
 	"availability_method" => array(
 		"default" => AVAIL_SNMP,
