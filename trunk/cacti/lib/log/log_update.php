@@ -240,13 +240,15 @@ function log_read_config_option($config_name) {
 			/* Go to the database */
 			$cnn_id->SetFetchMode(ADODB_FETCH_ASSOC);
 			$query = $cnn_id->Execute("select value from settings where name='" . $config_name . "'");
+
 			if ($query) {
 				if (! $query->EOF) {
 					$db_setting = $query->fields;
 				}
 			}
-			if (isset($db_settings[$config_name])) {
-				$value = $db_settings[$config_name];
+
+			if (isset($db_setting["value"])) {
+				$value = $db_setting["value"];
 			}else{
 				/* Read default if nothing else set */
 				$value = read_default_config_option($config_name);
