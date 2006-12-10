@@ -762,13 +762,15 @@ function package() {
 		<?php
 	}
 	html_box_toolbar_draw($box_id, "0", "3", HTML_BOX_SEARCH_NONE);
-	html_end_box();
+	html_end_box(false);
 
-	html_box_actions_menu_draw($box_id, "0", $menu_items);
+	//html_box_actions_menu_draw($box_id, "0", $menu_items);
 	html_box_actions_area_create($box_id);
 
 	form_hidden_box("action_post", "package_list");
 	form_end();
+
+	echo "<br />\n";
 
 	form_start("packages.php", "import_package", true);
 
@@ -791,13 +793,13 @@ function package() {
 	</tr>
 	<?php
 
-	html_end_box(false);
+	html_end_box();
 
 	form_hidden_box("action", "save");
 	form_hidden_box("action_post", "package_import");
 	form_end();
 
-	print_a(htmlspecialchars(package_export("1")));
+	//print_a(htmlspecialchars(package_export("1")));
 
 	?>
 

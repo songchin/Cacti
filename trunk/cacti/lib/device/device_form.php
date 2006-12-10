@@ -24,7 +24,7 @@
 
 /* form validation functions */
 
-function api_device_fields_validate(&$_fields_device, $device_field_name_format = "|field|") {
+function api_device_field_validate(&$_fields_device, $device_field_name_format = "|field|") {
 	require_once(CACTI_BASE_PATH . "/lib/device/device_info.php");
 
 	if (sizeof($_fields_device) == 0) {
@@ -238,7 +238,7 @@ function _device_field__snmpv3_auth_password($field_name, $field_value = "", $fi
 	<?php
 }
 
-function _device_field__snmpv3_uth_protocol($field_name, $field_value = "", $field_id = 0) {
+function _device_field__snmpv3_auth_protocol($field_name, $field_value = "", $field_id = 0) {
 	require(CACTI_BASE_PATH . "/include/device/device_arrays.php");
 	require_once(CACTI_BASE_PATH . "/lib/sys/html_form.php");
 

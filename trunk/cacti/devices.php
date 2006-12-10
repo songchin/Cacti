@@ -34,6 +34,7 @@ require_once(CACTI_BASE_PATH . "/lib/data_source/data_source_update.php");
 require_once(CACTI_BASE_PATH . "/lib/data_query/data_query_execute.php");
 require_once(CACTI_BASE_PATH . "/lib/data_query/data_query_info.php");
 require_once(CACTI_BASE_PATH . "/lib/device_template/device_template_info.php");
+require_once(CACTI_BASE_PATH . "/lib/package/package_info.php");
 require_once(CACTI_BASE_PATH . "/lib/graph/graph_update.php");
 
 define("MAX_DISPLAY_PAGES", 21);
@@ -46,15 +47,9 @@ switch ($_REQUEST["action"]) {
 		form_post();
 
 		break;
-	case 'gt_remove':
-		host_remove_gt();
+	case 'remove_package':
+		host_remove_package();
 
-		header("Location: devices.php?action=edit&id=" . $_GET["host_id"]);
-		break;
-	case 'query_remove':
-		host_remove_query();
-
-		header("Location: devices.php?action=edit&id=" . $_GET["host_id"]);
 		break;
 	case 'query_reload':
 		host_reload_query();
@@ -88,40 +83,51 @@ switch ($_REQUEST["action"]) {
 
 function form_post() {
 	if ($_POST["action_post"] == "device_edit") {
-		/* verify that the snmpv3 passwords and passphrases match */
-		if ($_POST["snmpv3_auth_password"] != $_POST["snmpv3_auth_password_confirm"]) {
-			raise_message(13);
-		}
-
-		if ((!empty($_POST["add_dq_y"])) && (!empty($_POST["data_query_id"]))) {
-			db_execute("replace into host_data_query (host_id,data_query_id,reindex_method) values (" . $_POST["id"] . "," . $_POST["data_query_id"] . "," . $_POST["reindex_method"] . ")");
-
-			/* recache snmp data */
-			api_data_query_execute($_POST["id"], $_POST["data_query_id"]);
-
+		/* the "Add" assigned package button was pressed */
+		if (isset($_POST["assoc_package_add_y"])) {
+			api_device_package_add($_POST["id"], $_POST["assoc_package_id"]);
 			header("Location: devices.php?action=edit&id=" . $_POST["id"]);
 			exit;
 		}
 
-		if ((!empty($_POST["add_gt_y"])) && (!empty($_POST["graph_template_id"]))) {
-			db_execute("replace into host_graph (host_id,graph_template_id) values (" . $_POST["id"] . "," . $_POST["graph_template_id"] . ")");
+		/* cache all post field values */
+		init_post_field_cache();
 
-			header("Location: devices.php?action=edit&id=" . $_POST["id"]);
-			exit;
-		}
+		/* field validation */
+		$form_device["id"] = $_POST["id"];
+		$form_device["description"] = $_POST["description"];
+		$form_device["hostname"] = $_POST["hostname"];
+		$form_device["host_template_id"] = $_POST["host_template_id"];
+		$form_device["poller_id"] = $_POST["poller_id"];
+		$form_device["disabled"] = html_boolean(isset($_POST["disabled"]) ? $_POST["disabled"] : "");
+		$form_device["snmp_version"] = $_POST["snmp_version"];
+		$form_device["snmp_community"] = $_POST["snmp_community"];
+		$form_device["snmp_port"] = $_POST["snmp_port"];
+		$form_device["snmp_timeout"] = $_POST["snmp_timeout"];
+		$form_device["snmpv3_auth_username"] = $_POST["snmpv3_auth_username"];
+		$form_device["snmpv3_auth_password"] = $_POST["snmpv3_auth_password"];
+		$form_device["snmpv3_auth_protocol"] = $_POST["snmpv3_auth_protocol"];
+		$form_device["snmpv3_priv_passphrase"] = $_POST["snmpv3_priv_passphrase"];
+		$form_device["snmpv3_priv_protocol"] = $_POST["snmpv3_priv_protocol"];
 
-		if ((isset($_POST["save_component_host"])) && (empty($_POST["add_dq_y"]))) {
-			$host_id = api_device_save($_POST["id"], $_POST["poller_id"], $_POST["host_template_id"], $_POST["description"], $_POST["hostname"],
-				$_POST["snmp_community"], $_POST["snmp_version"], $_POST["snmpv3_auth_username"], $_POST["snmpv3_auth_password"],
-				$_POST["snmpv3_auth_protocol"], $_POST["snmpv3_priv_passphrase"], $_POST["snmpv3_priv_protocol"],
-				$_POST["snmp_port"], $_POST["snmp_timeout"], $_POST["availability_method"], $_POST["ping_method"],
-				(isset($_POST["disabled"]) ? $_POST["disabled"] : ""));
+		field_register_error(api_device_field_validate($form_device, "|field|"));
 
-			if ((is_error_message()) || ($_POST["host_template_id"] != $_POST["_host_template_id"])) {
-				header("Location: devices.php?action=edit&id=" . (empty($host_id) ? $_POST["id"] : $host_id));
-			}else{
-				header("Location: devices.php");
+		/* field save */
+		$device_id = false;
+		if (is_error_message()) {
+			api_log_log("User input validation error for device [ID#" . $_POST["id"] . "]", SEV_DEBUG);
+		}else{
+			$device_id = api_device_save($_POST["id"], $form_device);
+
+			if ($device_id === false) {
+				api_log_log("Save error for device [ID#" . $_POST["id"] . "]", SEV_ERROR);
 			}
+		}
+
+		if (($device_id === false) || (empty($_POST["id"]))) {
+			header("Location: devices.php?action=edit" . (empty($_POST["id"]) ? "" : "&id=" . $_POST["id"]));
+		}else{
+			header("Location: devices.php");
 		}
 	/* submit button on the actions area page */
 	}else if ($_POST["action_post"] == "box-1") {
@@ -466,25 +472,15 @@ function form_actions() {
 	require_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
 }
 
-/* -------------------
-    Data Query Functions
-   ------------------- */
-
 function host_reload_query() {
 	api_data_query_execute($_GET["host_id"], $_GET["id"]);
 }
 
-function host_remove_query() {
-	api_device_dq_remove($_GET["host_id"], $_GET["id"]);
-}
+function host_remove_package() {
+	api_device_package_remove($_GET["id"], $_GET["package_id"]);
 
-function host_remove_gt() {
-	api_device_gt_remove($_GET["host_id"], $_GET["id"]);
+	header("Location: devices.php?action=edit&id=" . $_GET["id"]);
 }
-
-/* ---------------------
-    Device Functions
-   --------------------- */
 
 function host_remove() {
 	if ((read_config_option("remove_verification") == "on") && (!isset($_GET["confirm"]))) {
@@ -506,6 +502,9 @@ function host_edit() {
 		$header_label = "[new]";
 	}else{
 		$device = api_device_get($_device_id);
+
+		/* get a list of each package that is associated with this device */
+		$packages = api_device_package_list($_device_id);
 
 		$header_label = "[edit: " . $device["description"] . "]";
 	}
@@ -589,16 +588,11 @@ function host_edit() {
 
 	_device_field__snmpv3_auth_username("snmpv3_auth_username", (isset($device["snmpv3_auth_username"]) ? $device["snmpv3_auth_username"] : ""), (isset($device["id"]) ? $device["id"] : "0"));
 	_device_field__snmpv3_auth_password("snmpv3_auth_password", (isset($device["snmpv3_auth_password"]) ? $device["snmpv3_auth_password"] : ""), (isset($device["id"]) ? $device["id"] : "0"));
-	_device_field__snmpv3_uth_protocol("snmpv3_uth_protocol", (isset($device["snmpv3_uth_protocol"]) ? $device["snmpv3_uth_protocol"] : ""), (isset($device["id"]) ? $device["id"] : "0"));
+	_device_field__snmpv3_auth_protocol("snmpv3_auth_protocol", (isset($device["snmpv3_auth_protocol"]) ? $device["snmpv3_auth_protocol"] : ""), (isset($device["id"]) ? $device["id"] : "0"));
 	_device_field__snmpv3_priv_passphrase("snmpv3_priv_passphrase", (isset($device["snmpv3_priv_passphrase"]) ? $device["snmpv3_priv_passphrase"] : ""), (isset($device["id"]) ? $device["id"] : "0"));
 	_device_field__snmpv3_priv_protocol("snmpv3_priv_protocol", (isset($device["snmpv3_priv_protocol"]) ? $device["snmpv3_priv_protocol"] : ""), (isset($device["id"]) ? $device["id"] : "0"));
 
 	html_end_box();
-
-	form_hidden_box("id", $_device_id);
-	form_hidden_box("action_post", "device_edit");
-
-	form_save_button("devices.php");
 
 	if ((isset($_GET["display_dq_details"])) && (isset($_SESSION["debug_log"]["data_query"]))) {
 		html_start_box("<strong>" . _("Data Query Debug Information") . "</strong>");
@@ -609,38 +603,18 @@ function host_edit() {
 	}
 
 	if (!empty($_device_id)) {
-		echo "<br />\n";
+		html_start_box("<strong>" . _("Assigned Packages") . "</strong>");
+		html_header(array(_("Package Name")), 2);
 
-		form_start("scripts_fields.php", "form_script_item");
-
-		$box_id = "1";
-		html_start_box("<strong>" . _("Associated Graph Templates") . "</strong>");
-
-		html_header(array(_("Graph Template Name"), _("Status")), 2);
-
-		$selected_graph_templates = api_device_associated_graph_template_list($_device_id);
-
-		if (is_array($selected_graph_templates)) {
-			foreach ($selected_graph_templates as $graph_template) {
+		if (sizeof($packages) > 0) {
+			foreach ($packages as $package) {
 				?>
-				<tr class="item" id="box-<?php echo $box_id;?>-row-<?php echo $graph_template["id"];?>" onClick="display_row_select('<?php echo $box_id;?>',document.forms[1],'box-<?php echo $box_id;?>-row-<?php echo $graph_template["id"];?>', 'box-<?php echo $box_id;?>-chk-<?php echo $graph_template["id"];?>')" onMouseOver="display_row_hover('box-<?php echo $box_id;?>-row-<?php echo $graph_template["id"];?>')" onMouseOut="display_row_clear('box-<?php echo $box_id;?>-row-<?php echo $graph_template["id"];?>')">
-					<td class="item">
-						<?php echo $graph_template["name"];?>
+				<tr class="item">
+					<td style="padding: 4px;">
+						<?php echo $package["name"];?>
 					</td>
-					<td>
-						<?php
-						$associated_graph_id = api_device_graph_template_used_get($_device_id, $graph_template["id"]);
-
-						if ($associated_graph_id) {
-							echo "<span class=\"in_use\">Is Being Graphed</span>\n";
-							echo "(<a href=\"graphs.php?action=graph_edit&id=$associated_graph_id\">" . _("Edit") . "</a>)\n";
-						}else{
-							echo "<span class=\"not_in_use\">Not Being Graphed</span>";
-						}
-						?>
-					</td>
-					<td class="checkbox"align="center">
-						<input type='checkbox' name='box-<?php echo $box_id;?>-chk-<?php echo $graph_template["id"];?>' id='box-<?php echo $box_id;?>-chk-<?php echo $graph_template["id"];?>' title="<?php echo $graph_template["name"];?>">
+					<td align="right" style="padding: 4px;">
+						<a href="devices.php?action=remove_package&id=<?php echo $_device_id;?>&package_id=<?php echo $package["id"];?>"><img src="<?php echo html_get_theme_images_path("delete_icon_large.gif");?>" alt="<?php echo _("Delete Package Assignment");?>" border="0" align="absmiddle"></a>
 					</td>
 				</tr>
 				<?php
@@ -649,94 +623,37 @@ function host_edit() {
 			?>
 			<tr class="empty">
 				<td colspan="2">
-					No associated graph templates found.
+					No packages have been assigned to this device.
 				</td>
 			</tr>
 			<?php
 		}
 
 		?>
-		<tr bgcolor="#<?php print $colors["buttonbar_background"];?>">
-			<td colspan="4">
-				<table cellspacing="0" cellpadding="1" width="100%">
-					<td nowrap><?php echo _("Add Graph Template");?>:&nbsp;
-						<?php form_dropdown("graph_template_id",$available_graph_templates,"template_name","id","","","");?>
-					</td>
-					<td align="right">
-						&nbsp;<input type="image" src="<?php print html_get_theme_images_path('button_add.gif');?>" alt="<?php echo _('Add');?>" name="add_gt" align="absmiddle">
-					</td>
+		<tr>
+			<td style="border-top: 1px solid #b5b5b5; padding: 1px;" colspan="2">
+				<table width="100%" cellpadding="2" cellspacing="0">
+					<tr>
+						<td>
+							Add package:
+							<?php form_dropdown("assoc_package_id", api_package_list(), "name", "id", "", "", "");?>
+						</td>
+						<td align="right">
+							&nbsp;<input type="image" src="<?php echo html_get_theme_images_path('button_add.gif');?>" alt="<?php echo _('Add');?>" name="assoc_package_add" align="absmiddle">
+						</td>
+					</tr>
 				</table>
 			</td>
 		</tr>
 
 		<?php
-		html_box_toolbar_draw($box_id, "1", "2", HTML_BOX_SEARCH_NONE);
-		html_end_box();
 
-		html_start_box("<strong>" . _("Associated Data Queries") . "</strong>", "98%", $colors["header_background"], "3", "center", "");
-
-		html_header(array(_("Data Query Name"), _("Debugging"), _("Re-Index Method"), _("Status")), 2);
-
-		$assigned_data_queries = api_data_query_device_assigned_list($_GET["id"]);
-
-		$i = 0;
-		if (sizeof($assigned_data_queries) > 0) {
-			foreach ($assigned_data_queries as $item) {
-				$i++;
-
-				/* get status information for this data query */
-				$num_dq_items = api_data_query_cache_num_items_get($item["id"], $_GET["id"]);
-				$num_dq_rows = api_data_query_cache_num_rows_get($item["id"], $_GET["id"]);
-
-				$status = "success";
-
-				?>
-				<tr bgcolor='#<?php echo $colors["form_alternate1"];?>'>
-					<td style="padding: 4px;">
-						<strong><?php echo $i;?>)</strong> <?php echo $item["name"];?>
-					</td>
-					<td>
-						(<a href="devices.php?action=query_verbose&id=<?php echo $item["id"];?>&host_id=<?php echo $_GET["id"];?>"><?php echo _("Verbose Query");?></a>)
-					</td>
-					<td>
-						<?php echo $reindex_types{$item["reindex_method"]};?>
-					</td>
-					<td>
-						<?php echo (($status == "success") ? "<span style='color: green;'>" . _("Success") . "</span>" : "<span style='color: green;'>" . _("Fail") . "</span>");?> [<?php echo $num_dq_items;?> Item<?php echo ($num_dq_items == 1 ? "" : "s");?>, <?php echo $num_dq_rows;?> Row<?php echo ($num_dq_rows == 1 ? "" : "s");?>]
-					</td>
-					<td align='right' nowrap>
-						<a href='devices.php?action=query_reload&id=<?php echo $item["id"];?>&host_id=<?php echo $_GET["id"];?>'><img src='<?php echo html_get_theme_images_path("reload_icon_small.gif");?>' alt='<?php echo _("Reload Data Query");?>' border='0' align='absmiddle'></a>&nbsp;
-						<a href='devices.php?action=query_remove&id=<?php echo $item["id"];?>&host_id=<?php echo $_GET["id"];?>'><img src='<?php echo html_get_theme_images_path("delete_icon_large.gif");?>' alt='<?php echo _("Delete Data Query Association");?>' border='0' align='absmiddle'></a>
-					</td>
-				</tr>
-				<?php
-			}
-		}else{
-			print "<tr><td bgcolor='#" . $colors["form_alternate1"] . "' colspan=7><em>" . _("No associated data queries.") . "</em></td></tr>";
-		}
-
-		?>
-		<tr bgcolor="#<?php echo $colors["buttonbar_background"];?>">
-			<td colspan="5">
-				<table cellspacing="0" cellpadding="1" width="100%">
-					<td nowrap><?php echo _("Add Data Query");?>:&nbsp;
-						<?php form_dropdown("data_query_id", api_data_query_device_unassigned_list($_GET["id"]), "name", "id", "", "None", "");?>
-					</td>
-					<td nowrap><?php echo _("Re-Index Method");?>:&nbsp;
-						<?php form_dropdown("reindex_method", $reindex_types, "", "", "1", "", "");?>
-					</td>
-					<td align="right">
-						&nbsp;<input type="image" src="<?php echo html_get_theme_images_path('button_add.gif');?>" alt="<?php echo _('Add');?>" name="add_dq" align="absmiddle">
-					</td>
-				</table>
-			</td>
-		</tr>
-
-		<?php
 		html_end_box();
 	}
 
+	form_hidden_box("id", $_device_id);
 	form_hidden_box("action_post", "device_edit");
+
 	form_save_button("devices.php", "save_device");
 }
 

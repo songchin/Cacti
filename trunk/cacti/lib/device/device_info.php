@@ -29,7 +29,7 @@ function api_device_list($filter_array = "", $current_page = 0, $rows_per_page =
 	/* validation and setup for the WHERE clause */
 	if ((is_array($filter_array)) && (sizeof($filter_array) > 0)) {
 		/* validate each field against the known master field list */
-		$field_errors = api_device_fields_validate(sql_filter_array_to_field_array($filter_array));
+		$field_errors = api_device_field_validate(sql_filter_array_to_field_array($filter_array));
 
 		/* if a field input error has occured, register the error in the session and return */
 		if (sizeof($field_errors) > 0) {
@@ -71,7 +71,7 @@ function api_device_total_get($filter_array = "") {
 	/* validation and setup for the WHERE clause */
 	if ((is_array($filter_array)) && (sizeof($filter_array) > 0)) {
 		/* validate each field against the known master field list */
-		$field_errors = api_device_fields_validate(sql_filter_array_to_field_array($filter_array), "|field|");
+		$field_errors = api_device_field_validate(sql_filter_array_to_field_array($filter_array), "|field|");
 
 		/* if a field input error has occured, register the error in the session and return */
 		if (sizeof($field_errors) > 0) {
@@ -112,17 +112,17 @@ function api_device_data_query_get($device_id, $data_query_id) {
 	return db_fetch_row("select * from host_data_query where host_id = " . sql_sanitize($device_id) . " and data_query_id = " . sql_sanitize($data_query_id));
 }
 
-function api_device_associated_graph_template_list($device_id) {
+function api_device_package_list($device_id) {
 	/* sanity checks */
 	validate_id_die($device_id, "device_id");
 
 	return db_fetch_assoc("select
-		graph_template.id,
-		graph_template.template_name as name
-		from graph_template,host_graph
-		where graph_template.id=host_graph.graph_template_id
-		and host_graph.host_id = $device_id
-		order by graph_template.template_name");
+		package.id,
+		package.name
+		from package,host_package
+		where package.id=host_package.package_id
+		and host_package.host_id = $device_id
+		order by package.name");
 }
 
 function api_device_graph_template_used_get($device_id, $graph_template_id) {
