@@ -1,7 +1,7 @@
 <?php
 /*
  +-------------------------------------------------------------------------+
- | Copyright (C) 2006 The Cacti Group                                      |
+ | Copyright (C) 2007 The Cacti Group                                      |
  |                                                                         |
  | This program is free software; you can redistribute it and/or           |
  | modify it under the terms of the GNU General Public License             |
@@ -61,16 +61,20 @@ function api_auth_control_total_get ($filter_array = "") {
 
 
 /**
- * List log records
+ * List auth records
  *
  * Given filter array, return list of user records
  *
  * @param array $filter_array filter array, field => value elements
  * @return array user records
  */
-function api_auth_control_list ($filter_array, $limit = -1, $offset = -1) {
+function api_auth_control_list ($control_type, $filter_array, $limit = -1, $offset = -1) {
 
-	$sql_where = " WHERE object_type = " . AUTH_CONTROL_OBJECT_TYPE_USER . " ";
+	if (empty($control_type)) {
+		return array();
+	}
+
+	$sql_where = " WHERE object_type = " . $control_type . " ";
 
 	/* validation and setup for the WHERE clauses */
 	if ((is_array($filter_array)) && (sizeof($filter_array) > 0)) {

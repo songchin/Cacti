@@ -1,7 +1,7 @@
 <?php
 /*
  +-------------------------------------------------------------------------+
- | Copyright (C) 2006 The Cacti Group                                      |
+ | Copyright (C) 2007 The Cacti Group                                      |
  |                                                                         |
  | This program is free software; you can redistribute it and/or           |
  | modify it under the terms of the GNU General Public License             |
@@ -39,6 +39,10 @@ switch ($_REQUEST["action"]) {
 
 	case 'save':
 		form_post();
+
+	case 'edit':
+		edit_user();
+
 
 	default:
 		require_once(CACTI_BASE_PATH . "/include/top_header.php");
@@ -123,7 +127,7 @@ function view_users() {
 
 
 	/* get log entires */
-	$users = api_auth_control_list($filter_array,read_config_option("num_rows_page"),read_config_option("num_rows_page")*($current_page-1));
+	$users = api_auth_control_list(AUTH_CONTROL_OBJECT_TYPE_USER, $filter_array, read_config_option("num_rows_page"), read_config_option("num_rows_page")*($current_page-1));
 	$total_rows = api_auth_control_total_get($filter_array);
 
 	/* generate page list */
