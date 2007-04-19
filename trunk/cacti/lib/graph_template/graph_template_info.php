@@ -64,7 +64,7 @@ function api_graph_template_get($graph_template_id) {
 	$graph_template = db_fetch_row("select * from graph_template where id = " . sql_sanitize($graph_template_id));
 
 	if (sizeof($graph_template) == 0) {
-		api_log_log("Invalid graph template [ID#$graph_template_id] specified in api_graph_template_get()", SEV_ERROR);
+		log_save("Invalid graph template [ID#$graph_template_id] specified in api_graph_template_get()", SEV_ERROR);
 		return false;
 	}else{
 		return $graph_template;

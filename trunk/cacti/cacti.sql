@@ -708,7 +708,7 @@ CREATE TABLE `event_handler` (
 -- Dumping data for table `event_handler`
 -- 
 
-INSERT INTO `event_handler` VALUES (1, 0, 'api_log_log_event', 'cacti_log');
+INSERT INTO `event_handler` VALUES (1, 0, 'log_save_event', 'cacti_log');
 
 -- --------------------------------------------------------
 

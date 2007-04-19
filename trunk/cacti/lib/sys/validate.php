@@ -35,7 +35,7 @@ function db_integer_validate($number, $allow_empty = false, $log_errors = true) 
 	for ($i=0; $i<strlen($number_str); $i++) {
 		if ((ord(substr($number_str, $i, 1)) < 48) || (ord(substr($number_str, $i, 1)) > 57)) {
 			if ($log_errors == true) {
-				api_log_log("Invalid number '$number' in " . api_log_last_function_get() . "()", SEV_WARNING);
+				log_save("Invalid number '$number' in " . log_get_last_function() . "()", SEV_WARNING);
 			}
 
 			return false;
@@ -44,7 +44,7 @@ function db_integer_validate($number, $allow_empty = false, $log_errors = true) 
 
 	if (($allow_empty === false) && (empty($number))) {
 		if ($log_errors == true) {
-			api_log_log("Invalid (empty) number '$number' in " . api_log_last_function_get() . "()", SEV_WARNING);
+			log_save("Invalid (empty) number '$number' in " . log_get_last_function() . "()", SEV_WARNING);
 		}
 
 		return false;
@@ -58,7 +58,7 @@ function db_column_name_validate($column_name, $log_errors = true) {
 		return true;
 	}else{
 		if ($log_errors == true) {
-			api_log_log("Invalid order column name '$column_name' in " . api_log_last_function_get() . "()", SEV_WARNING);
+			log_save("Invalid order column name '$column_name' in " . log_get_last_function() . "()", SEV_WARNING);
 		}
 
 		return false;
@@ -70,7 +70,7 @@ function db_order_direction_validate($direction, $log_errors = true) {
 		return true;
 	}else{
 		if ($log_errors == true) {
-			api_log_log("Invalid order direction '$direction' in " . api_log_last_function_get() . "()", SEV_WARNING);
+			log_save("Invalid order direction '$direction' in " . log_get_last_function() . "()", SEV_WARNING);
 		}
 
 		return false;

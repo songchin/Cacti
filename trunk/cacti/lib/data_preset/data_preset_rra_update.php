@@ -63,7 +63,7 @@ function api_data_preset_rra_item_save($data_preset_rra_item_id, $_fields_data_p
 
 	/* sanity check for $preset_rra_id */
 	if ((empty($data_preset_rra_item_id)) && (empty($_fields_data_preset_rra_item["preset_rra_id"]))) {
-		api_log_log("Required preset_rra_id when data_preset_rra_item_id = 0", SEV_ERROR);
+		log_save("Required preset_rra_id when data_preset_rra_item_id = 0", SEV_ERROR);
 		return false;
 	} else if ((isset($_fields_data_preset_rra_item["preset_rra_id"])) && (!db_integer_validate($_fields_data_preset_rra_item["preset_rra_id"]))) {
 		return false;

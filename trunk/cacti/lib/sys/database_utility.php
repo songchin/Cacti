@@ -289,7 +289,7 @@ function sql_filter_array_to_field_array($array) {
 						/* there is a potential security issue here if we allow key collisions since an
 						 * attacker could effectivly bypass validation by faking multiple duplicate field
 						 * names */
-						api_log_log("Key collision found at '$vl_or_field_name' in " . __FUNCTION__ . "()", SEV_WARNING);
+						log_save("Key collision found at '$vl_or_field_name' in " . __FUNCTION__ . "()", SEV_WARNING);
 						die("Key collision found at '$vl_or_field_name' in " . __FUNCTION__ . "()");
 					}else{
 						$field_array[$vl_or_field_name] = $or_field_value;
@@ -304,7 +304,7 @@ function sql_filter_array_to_field_array($array) {
 					/* there is a potential security issue here if we allow key collisions since an
 					 * attacker could effectivly bypass validation by faking multiple duplicate field
 					 * names */
-					api_log_log("Key collision found at '$vl_field_name' in " . __FUNCTION__ . "()", SEV_WARNING);
+					log_save("Key collision found at '$vl_field_name' in " . __FUNCTION__ . "()", SEV_WARNING);
 					die("Key collision found at '$vl_field_name' in " . __FUNCTION__ . "()");
 				}else{
 					$field_array[$vl_field_name] = $field_value;
@@ -384,7 +384,7 @@ function sql_get_quoted_string($field_type, $field_value) {
 	}else if ($field_type == DB_TYPE_FUNC_MD5) {
 		return "'" . md5($field_value) . "'";
 	}else{
-		api_log_log("Invalid column type '" . $field_type . "' value '" . $field_value . "' in " . __FUNCTION__ . "()", SEV_WARNING);
+		log_save("Invalid column type '" . $field_type . "' value '" . $field_value . "' in " . __FUNCTION__ . "()", SEV_WARNING);
 	}
 }
 

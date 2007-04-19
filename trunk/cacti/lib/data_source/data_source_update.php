@@ -151,7 +151,7 @@ function api_data_source_rra_item_save($data_source_rra_item_id, $_fields_data_s
 
 	/* sanity check for $preset_rra_id */
 	if ((empty($data_source_rra_item_id)) && (empty($_fields_data_source_rra_item["data_source_id"]))) {
-		api_log_log("Required data_source_id when data_source_rra_item_id = 0", SEV_ERROR);
+		log_save("Required data_source_id when data_source_rra_item_id = 0", SEV_ERROR);
 		return false;
 	} else if ((isset($_fields_data_source_rra_item["data_source_id"])) && (!db_integer_validate($_fields_data_source_rra_item["data_source_id"]))) {
 		return false;
@@ -275,7 +275,7 @@ function api_data_source_item_save($data_source_item_id, &$_fields_data_source_i
 
 	/* sanity check for $data_source_id */
 	if ((empty($data_source_item_id)) && (empty($_fields_data_source_item["data_source_id"]))) {
-		api_log_log("Required data_source_id when data_source_item_id = 0", SEV_ERROR);
+		log_save("Required data_source_id when data_source_item_id = 0", SEV_ERROR);
 		return false;
 	} else if ((isset($_fields_data_source_item["data_source_id"])) && (!is_numeric($_fields_data_source_item["data_source_id"]))) {
 		return false;

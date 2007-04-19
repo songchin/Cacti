@@ -43,7 +43,7 @@ $poller_id = 1;
 if ( $_SERVER["argc"] == 2 ) {
 	$poller_id = $_SERVER["argv"][1];
 	if (!is_numeric($poller_id)) {
-		api_log_log(_("The poller id is not numeric"), SEV_ALERT, FACIL_POLLER, "", $poller_id, 0, true);
+		log_save(_("The poller id is not numeric"), SEV_ALERT, FACIL_POLLER, "", $poller_id, 0, true);
 		exit -1;
 	}
 }
@@ -76,18 +76,18 @@ if (sizeof($poller_commands) > 0) {
 			}
 
 			if ($first_host) {
-				api_log_log(_("Host[$host_id] WARNING: Recache Event Detected for Host"), SEV_WARNING, FACIL_POLLER, "", $poller_id, 0, true);
+				log_save(_("Host[$host_id] WARNING: Recache Event Detected for Host"), SEV_WARNING, FACIL_POLLER, "", $poller_id, 0, true);
 			}
 
-			api_log_log(_("Host[$host_id] RECACHE: Re-cache for Host, data query #$data_query_id"), SEV_NOTICE, FACIL_POLLER, "", $poller_id, 0, true);
+			log_save(_("Host[$host_id] RECACHE: Re-cache for Host, data query #$data_query_id"), SEV_NOTICE, FACIL_POLLER, "", $poller_id, 0, true);
 
 			api_data_query_execute($host_id, $data_query_id);
 
-			api_log_log(_("Host[$host_id] RECACHE: Re-cache successful."), SEV_NOTICE, FACIL_POLLER, "", $poller_id, 0, true);
+			log_save(_("Host[$host_id] RECACHE: Re-cache successful."), SEV_NOTICE, FACIL_POLLER, "", $poller_id, 0, true);
 
 			break;
 		case POLLER_COMMAND_RRDPURGE:
-			api_log_log(sprintf("_(Host[%i] PURGE: Unused RRDfile removed from system '%s')", $host_id, $command),SEV_NOTICE,  FACIL_POLLER, "", $poller_id, 0, 0, true);
+			log_save(sprintf("_(Host[%i] PURGE: Unused RRDfile removed from system '%s')", $host_id, $command),SEV_NOTICE,  FACIL_POLLER, "", $poller_id, 0, 0, true);
 
 			if (file_exists($command)) {
 				@unlink($command);
@@ -104,7 +104,7 @@ if (sizeof($poller_commands) > 0) {
 
 		/* end if runtime has been exceeded */
 		if (($current-$start) > MAX_RECACHE_RUNTIME) {
-			api_log_log(sprintf(_("Poller Command processing timed out after processing '%s'"), $command), SEV_ERROR, FACIL_POLLER, "", $poller_id, 0, true);
+			log_save(sprintf(_("Poller Command processing timed out after processing '%s'"), $command), SEV_ERROR, FACIL_POLLER, "", $poller_id, 0, true);
 			break;
 		}
 	}
@@ -119,7 +119,7 @@ $recache = $seconds + $micro;
 $recache_stats = sprintf(_("RecacheTime:%01.4f HostsRecached:%s"), round($recache - $start, 4), $recached_hosts);
 
 if ($recached_hosts > 0) {
-	api_log_log($recache_stats, SEV_NOTICE, FACIL_POLLER, "", $poller_id, 0, true);
+	log_save($recache_stats, SEV_NOTICE, FACIL_POLLER, "", $poller_id, 0, true);
 }
 
 /* insert poller stats into the settings table */

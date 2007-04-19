@@ -58,7 +58,7 @@ function api_package_metadata_save($package_metadata_id, &$_fields_package_metad
 
 	/* sanity check for $package_id */
 	if ((empty($package_metadata_id)) && (empty($_fields_package_metadata["package_id"]))) {
-		api_log_log("Required package_id when package_metadata_id = 0", SEV_ERROR);
+		log_save("Required package_id when package_metadata_id = 0", SEV_ERROR);
 		return false;
 	} else if ((isset($_fields_package_metadata["package_id"])) && (!is_numeric($_fields_package_metadata["package_id"]))) {
 		return false;

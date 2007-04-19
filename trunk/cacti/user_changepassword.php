@@ -61,15 +61,15 @@ function change_password() {
 					raise_message(11);
 					/* Log password change */
 					$username = db_fetch_cell("select username from user_auth where id=" . $_SESSION["sess_user_id"]);
-					api_log_log(_("CHANGEPASSWORD: Password change successful"), SEV_INFO, FACIL_AUTH);
+					log_save(_("CHANGEPASSWORD: Password change successful"), SEV_INFO, FACIL_AUTH);
 				}elseif ($change_result == "2") {
 					/* Authentication failure for old password */
 					raise_message(8);
-					api_log_log(_("CHANGEPASSWORD: Authenication failure on old password"), SEV_WARNING, FACIL_AUTH);
+					log_save(_("CHANGEPASSWORD: Authenication failure on old password"), SEV_WARNING, FACIL_AUTH);
 				}else{
 					/* General error changing password */
 					raise_message(9);
-					api_log_log(_("CHANGEPASSWORD: General Error unable to change password"), SEV_ERROR, FACIL_AUTH);
+					log_save(_("CHANGEPASSWORD: General Error unable to change password"), SEV_ERROR, FACIL_AUTH);
 				}
 			}
 		}else{

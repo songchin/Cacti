@@ -68,7 +68,7 @@ function api_data_template_get($data_template_id) {
 	$data_template = db_fetch_row("select * from data_template where id = " . sql_sanitize($data_template_id));
 
 	if (sizeof($data_template) == 0) {
-		api_log_log("Invalid data template [ID#$data_template_id] specified in api_data_template_get()", SEV_ERROR);
+		log_save("Invalid data template [ID#$data_template_id] specified in api_data_template_get()", SEV_ERROR);
 		return false;
 	}else{
 		return $data_template;
@@ -133,7 +133,7 @@ function api_data_template_item_get($data_template_item_id) {
 	$data_template_item = db_fetch_row("select * from data_template_item where id = " . sql_sanitize($data_template_item_id));
 
 	if (sizeof($data_template_item) == 0) {
-		api_log_log("Invalid data template item [ID#$data_template_item_id] specified in api_data_template_item_get()", SEV_ERROR);
+		log_save("Invalid data template item [ID#$data_template_item_id] specified in api_data_template_item_get()", SEV_ERROR);
 		return false;
 	}else{
 		return $data_template_item;

@@ -71,7 +71,7 @@ function form_input_validate($field_value, $field_name, $regexp_match, $allow_em
 		if ($custom_message == 3) {
 			return $field_value;
 		}else{
-			api_log_log("Field validation error occured for field '$field_name' value '$field_value' pattern '$regexp_match' allow empty '" . ($allow_empty == false ? "no" : "yes") . "' in ". __FUNCTION__ . "()", SEV_NOTICE);
+			log_save("Field validation error occured for field '$field_name' value '$field_value' pattern '$regexp_match' allow empty '" . ($allow_empty == false ? "no" : "yes") . "' in ". __FUNCTION__ . "()", SEV_NOTICE);
 
 			return false;
 		}

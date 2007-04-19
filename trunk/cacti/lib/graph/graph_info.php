@@ -92,7 +92,7 @@ function api_graph_get($graph_id) {
 	$graph = db_fetch_row("select * from graph where id = " . sql_sanitize($graph_id));
 
 	if (sizeof($graph) == 0) {
-		api_log_log("Invalid graph [ID#$graph] specified in api_graph_get()", SEV_ERROR);
+		log_save("Invalid graph [ID#$graph] specified in api_graph_get()", SEV_ERROR);
 		return false;
 	}else{
 		return $graph;

@@ -128,7 +128,7 @@ function form_post() {
 		if ($_POST["box-1-action-area-type"] == "export") {
 			$get_string .= ($get_string == "" ? "?" : "&") . "action=export";
 		}elseif ($_POST["box-1-action-area-type"] == "purge") {
-			api_log_truncate();
+			log_clear();
 			$get_string="";
 		}
 	}
@@ -197,8 +197,8 @@ function view_logs() {
 	}
 
 	/* get log entires */
-	$logs = api_log_list($filter_array,read_config_option("num_rows_log"),read_config_option("num_rows_log")*($current_page-1));
-	$total_rows = api_log_total_get($filter_array);
+	$logs = log_list($filter_array,read_config_option("num_rows_log"),read_config_option("num_rows_log")*($current_page-1));
+	$total_rows = log_get_total($filter_array);
 
 	/* generate page list */
 	$url_string = build_get_url_string(array("search_filter","search_facility","search_severity","search_poller","search_host","search_plugin","search_username","search_source","search_start_date","search_end_date"));
@@ -225,15 +225,15 @@ function view_logs() {
 	if ((is_array($logs)) && (sizeof($logs) > 0)) {
 		foreach ($logs as $log) {
 			?>
-			<tr class="<?php echo api_log_html_css_class(api_log_severity_get($log["severity"])); ?>">
+			<tr class="<?php echo log_get_html_css_class(log_get_severity($log["severity"])); ?>">
 				<td class="log-content-row">
 					<?php echo $log["logdate"]; ?>
 				</td>
 				<td class="log-content-row">
-					<?php echo api_log_facility_get($log["facility"]); ?>
+					<?php echo log_get_facility($log["facility"]); ?>
 				</td>
 				<td class="log-content-row">
-					<?php echo api_log_severity_get($log["severity"]); ?>
+					<?php echo log_get_severity($log["severity"]); ?>
 				</td>
 				<td class="log-content-row">
 					<?php if ($log["poller_name"] == "") { echo "SYSTEM"; }else{ echo $log["poller_name"]; } ?>
@@ -253,7 +253,7 @@ function view_logs() {
 				<td width="1%" class="log-content-row">
 					&nbsp;
 				</td>
-			</tr><tr class="<?php echo api_log_html_css_class(api_log_severity_get($log["severity"])); ?>">
+			</tr><tr class="<?php echo log_get_html_css_class(log_get_severity($log["severity"])); ?>">
 				<td colspan="9" class="log-content-row-div">
 					<?php echo $log["message"]; ?>
 				</td>
@@ -283,28 +283,28 @@ function view_logs() {
 	/* fill in the list of available search dropdown */
 	$search_facility = array();
 	$search_facility["-1"] = "Any";
-	$search_facility += api_log_facility_list();
+	$search_facility += log_list_facility();
 
 	$search_severity = array();
 	$search_severity["-2"] = "Any";
-	$search_severity += api_log_severity_list();
+	$search_severity += log_list_severity();
 
 	$search_poller = array();
 	$search_poller["-1"] = "Any";
-	$search_poller += api_log_poller_list();
+	$search_poller += log_list_poller();
 
 	$search_host = array();
 	$search_host["-1"] = "Any";
-	$search_host += api_log_host_list();
+	$search_host += log_list_host();
 
 	$search_plugin = array();
 	$search_plugin["-1"] = "Any";
 	$search_plugin["N/A"] = "N/A";
-	$search_plugin += api_log_plugin_list();
+	$search_plugin += log_list_plugin();
 
 	$search_username = array();
 	$search_username["-1"] = "Any";
-	$search_username += api_log_username_list();
+	$search_username += log_list_username();
 
 	?>
 
@@ -468,8 +468,8 @@ function print_logs() {
 	}
 
 	/* get log entires */
-	$logs = api_log_list($filter_array);
-	$total_rows = api_log_total_get($filter_array);
+	$logs = log_list($filter_array);
+	$total_rows = log_get_total($filter_array);
 
 	/* Output html */
 	print "<html>\n";
@@ -501,8 +501,8 @@ function print_logs() {
 
 			<tr>
 				<td><?php echo $log["logdate"]; ?></td>
-				<td><?php echo api_log_facility_get($log["facility"]); ?></td>
-				<td><?php echo api_log_severity_get($log["severity"]); ?></td>
+				<td><?php echo log_get_facility($log["facility"]); ?></td>
+				<td><?php echo log_get_severity($log["severity"]); ?></td>
 				<td><?php if ($log["poller_name"] == "") { echo "SYSTEM"; }else{ echo $log["poller_name"]; } ?></td>
 				<td><?php if ($log["host"] == "") { echo "SYSTEM"; }else{ echo $log["host"]; } ?></td>
 				<td><?php if ($log["plugin"] == "") { echo "N/A"; }else{ echo $log["plugin"]; } ?></td>
@@ -572,7 +572,7 @@ function export_logs() {
 	$replace = array(""," "," "," ");
 
 	/* get log entires */
-	$logs = api_log_list($filter_array);
+	$logs = log_list($filter_array);
 
 	/* Output CSV */
 	header("Content-type: text/plain");
@@ -592,8 +592,8 @@ function export_logs() {
 	if ((is_array($logs)) && (sizeof($logs) > 0)) {
 		foreach ($logs as $log) {
 			print "\"" . $log["logdate"] . "\",";
-			print "\"" . api_log_facility_get($log["facility"]) . "\",";
-			print "\"" . api_log_severity_get($log["severity"]) . "\",";
+			print "\"" . log_get_facility($log["facility"]) . "\",";
+			print "\"" . log_get_severity($log["severity"]) . "\",";
 			print "\"";
 			if ($log["poller_name"] == "") {
 				print "SYSTEM";

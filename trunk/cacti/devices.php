@@ -115,12 +115,12 @@ function form_post() {
 		/* field save */
 		$device_id = false;
 		if (is_error_message()) {
-			api_log_log("User input validation error for device [ID#" . $_POST["id"] . "]", SEV_DEBUG);
+			log_save("User input validation error for device [ID#" . $_POST["id"] . "]", SEV_DEBUG);
 		}else{
 			$device_id = api_device_save($_POST["id"], $form_device);
 
 			if ($device_id === false) {
-				api_log_log("Save error for device [ID#" . $_POST["id"] . "]", SEV_ERROR);
+				log_save("Save error for device [ID#" . $_POST["id"] . "]", SEV_ERROR);
 			}
 		}
 

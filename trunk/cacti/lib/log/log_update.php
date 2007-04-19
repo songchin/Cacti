@@ -44,7 +44,7 @@ require_once(CACTI_BASE_PATH . "/include/log/log_arrays.php");
  * @param bool $output output messages to stdout
  * @return bool true
  */
-function api_log_log($message, $severity = SEV_INFO, $facility = FACIL_WEBUI, $plugin = "", $poller_id = 0, $host_id = 0, $output = false) {
+function log_save ($message, $severity = SEV_INFO, $facility = FACIL_WEBUI, $plugin = "", $poller_id = 0, $host_id = 0, $output = false) {
 	global $cnn_id;
 
 	/* fill in the current date for printing in the log */
@@ -101,45 +101,23 @@ function api_log_log($message, $severity = SEV_INFO, $facility = FACIL_WEBUI, $p
 	/* Syslog is currently Unstable in Win32 */
 	if ((log_read_config_option("log_dest_system") == "on") && ($severity >= $log_severity)) {
 		openlog("cacti", LOG_NDELAY | LOG_PID, log_read_config_option("log_system_facility"));
-		syslog(api_log_system_severity_get($severity), api_log_severity_get($severity) . ": " . api_log_facility_get($facility) . ": " . $message);
+		syslog(log_get_system_severity($severity), log_get_severity($severity) . ": " . log_get_facility($facility) . ": " . $message);
 		closelog();
 	}
 
 	/* Log to Syslog Server */
 	if ((log_read_config_option("log_dest_syslog") == "on") && ($severity >= $log_severity)) {
-		api_log_syslog(log_read_config_option("log_syslog_server"), log_read_config_option("log_syslog_port"), log_read_config_option("log_syslog_facility"), api_log_syslog_severity_get($severity), api_log_severity_get($severity) . ": " . api_log_facility_get($facility) . ": " . $message);
+		log_save_syslog(log_read_config_option("log_syslog_server"), log_read_config_option("log_syslog_port"), log_read_config_option("log_syslog_facility"), log_get_severity_syslog($severity), log_get_severity($severity) . ": " . log_get_facility($facility) . ": " . $message);
 	}
 
 
 	/* print output to standard out if required, only for use in command line scripts */
 	if (($output == true) && ($severity >= $log_severity)) {
-		print $logdate . " - " . api_log_severity_get($severity) . ": " . api_log_facility_get($facility) . ": " . $message . "\n";
+		print $logdate . " - " . log_get_severity($severity) . ": " . log_get_facility($facility) . ": " . $message . "\n";
 	}
 
 	return true;
 
-}
-
-
-/**
- * Event Handler for Loggings a message to the configured logging system
- *
- * This function is designed to be used by the Event Manager for logging to the cacti system
- *
- * @param array $params This is an array of values from the Event Manager that may or may not include all necessary parameters for the Cacti logging function
- */
-function api_log_log_event ($params) {
-	/* read in the passed values, and set defaults if they do not exist */
-	$message   = ((isset($params['message']))   ? $params['message']   : '');
-	$severity  = ((isset($params['severity']))  ? $params['severity']  : FACIL_WEBUI);
-	$facility  = ((isset($params['facility']))  ? $params['facility']  : SEV_INFO);
-	$plugin    = ((isset($params['plugin']))    ? $params['plugin']    : '');
-	$poller_id = ((isset($params['poller_id'])) ? $params['poller_id'] : 0);
-	$host_id   = ((isset($params['host_id']))   ? $params['host_id']   : 0);
-	$output    = ((isset($params['output']))    ? $params['output']    : false);
-
-	/* Log the event to the Cacti Logger, which will decide where to actually place it from here */
-	api_log_log($message, $severity, $facility, $plugin, $poller_id, $host_id, $output);
 }
 
 
@@ -151,7 +129,7 @@ function api_log_log_event ($params) {
  * @param bool $print_data_to_stdout display log message to stdout
  * @return bool true
  */
-function api_log_maintain($print_data_to_stdout) {
+function log_maintain ($print_data_to_stdout) {
 	/* read current configuration options */
 	$syslog_size = read_config_option("log_size");
 	$syslog_control = read_config_option("log_control");
@@ -171,22 +149,22 @@ function api_log_maintain($print_data_to_stdout) {
 		case SYSLOG_MNG_ASNEEDED:
 			$records_to_delete = $total_records - $syslog_size;
 			db_execute("DELETE FROM log ORDER BY logdate LIMIT " . $records_to_delete);
-			api_log_log(_("Log control removed " . $records_to_delete . " log entires."), SEV_NOTICE, FACIL_POLLER, "", 0, 0, $print_data_to_stdout);
+			log_save(_("Log control removed " . $records_to_delete . " log entires."), SEV_NOTICE, FACIL_POLLER, "", 0, 0, $print_data_to_stdout);
 			break;
 		case SYSLOG_MNG_DAYSOLD:
 			db_execute("delete from log where logdate <= '" . date("Y-m-d H:i:s", strtotime("-" . $syslog_maxdays * 24 * 3600 . " Seconds"))."'");
-			api_log_log(_("Log control removed log entries older than " . $syslog_maxdays . " days."), SEV_NOTICE, FACIL_POLLER, "", 0, 0, $print_data_to_stdout);
+			log_save(_("Log control removed log entries older than " . $syslog_maxdays . " days."), SEV_NOTICE, FACIL_POLLER, "", 0, 0, $print_data_to_stdout);
 
 			break;
 		case SYSLOG_MNG_STOPLOG:
 			if (read_config_option("log_status") != "suspended") {
-				api_log__log(_("Log control suspended logging due to the log being full.  Please purge your logs manually."), SEV_CRITICAL,FACIL_POLLER, "", 0, 0, 0, $print_data_to_stdout);
+				log_save(_("Log control suspended logging due to the log being full.  Please purge your logs manually."), SEV_CRITICAL,FACIL_POLLER, "", 0, 0, 0, $print_data_to_stdout);
 				db_execute("REPLACE INTO settings (name,value) VALUES('log_status','suspended')");
 			}
 
 			break;
 		case SYSLOG_MNG_NONE:
-			api_log_log(_("The cacti log control mechanism is set to None.  This is not recommended, please purge your logs on a manual basis."), SEV_WARNING, FACIL_POLLER, "", 0, 0, $print_data_to_stdout);
+			log_save(_("The cacti log control mechanism is set to None.  This is not recommended, please purge your logs on a manual basis."), SEV_WARNING, FACIL_POLLER, "", 0, 0, $print_data_to_stdout);
 			break;
 		}
 	}
@@ -203,10 +181,10 @@ function api_log_maintain($print_data_to_stdout) {
  *
  * @return bool true
  */
-function api_log_truncate() {
+function log_clear () {
 	db_execute("TRUNCATE TABLE log");
 	db_execute("REPLACE INTO settings (name,value) VALUES('log_status','active')");
-	api_log_log("Log truncated", SEV_NOTICE, FACIL_WEBUI);
+	log_save("Log truncated", SEV_NOTICE, FACIL_WEBUI);
 
 	return true;
 
@@ -219,14 +197,14 @@ function api_log_truncate() {
  */
 
 /**
- * Reads cacti configuration settings
+ * Reads cacti configuration settings, without this Developer debug can cause database looping
  *
  * Finds the current value of a cacti configuration setting
  *
  * @param string $config_name configuration variable to retrieve value
  * @return bool true
  */
-function log_read_config_option($config_name) {
+function log_read_config_option ($config_name) {
 	global $cnn_id, $log_config_options;
 
 	if (isset($log_config_options[$config_name])) {
@@ -276,7 +254,7 @@ function log_read_config_option($config_name) {
  * @param int $severity cacti severity level
  * @return int php syslog severity level
  */
-function api_log_system_severity_get($severity) {
+function log_get_system_severity ($severity) {
 	if (CACTI_SERVER_OS == "win32") {
 		return LOG_WARNING;
 	} else {
@@ -324,7 +302,7 @@ function api_log_system_severity_get($severity) {
  * @param int $facility cacti facility constant
  * @return string cacti facility in human readable text
  */
-function api_log_facility_get($facility) {
+function log_get_facility ($facility) {
 	switch ($facility) {
 		case FACIL_CMDPHP:
 			return "CMDPHP";
@@ -365,7 +343,7 @@ function api_log_facility_get($facility) {
  * @param int $severity cacti severity constant
  * @return string cacti severity in human readable text
  */
-function api_log_severity_get($severity) {
+function log_get_severity ($severity) {
 	switch ($severity) {
 		case SEV_EMERGENCY:
 			return _("EMERGENCY");
@@ -409,7 +387,7 @@ function api_log_severity_get($severity) {
  * @param int $severity cacti severity constant
  * @return int syslog severity value
  */
-function api_log_syslog_severity_get($severity) {
+function log_get_severity_syslog ($severity) {
 
 	switch ($severity) {
 		case SEV_EMERGENCY:
@@ -459,7 +437,7 @@ function api_log_syslog_severity_get($severity) {
  * @param string $syslog_message message to send to syslog server
  * @return bool true on sent, false on error
  */
-function api_log_syslog($syslog_server, $syslog_server_port, $syslog_facility, $syslog_severity, $syslog_message) {
+function log_save_syslog ($syslog_server, $syslog_server_port, $syslog_facility, $syslog_severity, $syslog_message) {
 	global $cnn_id;
 
 	/* Set syslog tag */
@@ -538,7 +516,7 @@ function api_log_syslog($syslog_server, $syslog_server_port, $syslog_facility, $
  *
  * @return string the function name from the call stack
  */
-function api_log_last_function_get() {
+function log_get_last_function () {
 	$backtrace = debug_backtrace();
 	if (sizeof($backtrace) < 3) {
 		return $backtrace[1]["function"];

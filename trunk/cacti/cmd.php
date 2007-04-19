@@ -87,7 +87,7 @@ if ( $_SERVER["argc"] == 1 ) {
 					$poller_id = substr($parameter,3);
 					break;
 				default:
-					api_log_log(_("Invalid Calling Parameter in CMD.PHP"), SEV_CRITICAL, FACIL_CMDPHP, "", $poller_id, 0, $print_data_to_stdout);
+					log_save(_("Invalid Calling Parameter in CMD.PHP"), SEV_CRITICAL, FACIL_CMDPHP, "", $poller_id, 0, $print_data_to_stdout);
 			}
 		}
 
@@ -116,12 +116,12 @@ if ( $_SERVER["argc"] == 1 ) {
 		}else{
 			print _("ERROR: Invalid Arguments.  The first argument must be less than or equal to the first.") . "\n";
 			print _("USAGE: CMD.PHP [-f=first_host -l=last_host -p=poller_id]") . "\n";
-			api_log_log(_("Invalid Arguments.  CMD.PHP calling parameters invalid."), SEV_ERROR, FACIL_CMDPHP, "", $poller_id, 0, $print_data_to_stdout);
+			log_save(_("Invalid Arguments.  CMD.PHP calling parameters invalid."), SEV_ERROR, FACIL_CMDPHP, "", $poller_id, 0, $print_data_to_stdout);
 		}
 	}else{
 		print _("ERROR: Invalid Arguments.  The first argument must be less than or equal to the first.") . "\n";
 		print _("USAGE: CMD.PHP [-f=first_host -l=last_host -p=poller_id]") . "\n";
-		api_log_log(_("Invalid Arguments.  CMD.PHP calling parameters invalid."), SEV_ERROR, FACIL_CMDPHP, "", $poller_id, 0, $print_data_to_stdout);
+		log_save(_("Invalid Arguments.  CMD.PHP calling parameters invalid."), SEV_ERROR, FACIL_CMDPHP, "", $poller_id, 0, $print_data_to_stdout);
 	}
 }
 
@@ -129,7 +129,7 @@ if ( $_SERVER["argc"] == 1 ) {
 if (CACTI_SERVER_OS == "win32") {
 	$guess = substr(__FILE__,0,2);
 	if ($guess == strtoupper($guess)) {
-		api_log_log(_("The PHP Script: CMD.PHP Must be started using the full path to the file and in lower case.  This is a PHP Bug!!!"), SEV_CRITICAL, FACIL_CMDPHP, "", $poller_id, 0, $print_data_to_stdout);
+		log_save(_("The PHP Script: CMD.PHP Must be started using the full path to the file and in lower case.  This is a PHP Bug!!!"), SEV_CRITICAL, FACIL_CMDPHP, "", $poller_id, 0, $print_data_to_stdout);
 		exit(-1);
 	}
 }
@@ -155,13 +155,13 @@ if ((sizeof($polling_items) > 0) && (read_config_option("poller_enabled") == "on
 		$cactiphp = proc_open(read_config_option("path_php_binary") . " " . CACTI_BASE_PATH . "/script_server.php cmd " . $poller_id, $cactides, $pipes);
 		$output = fgets($pipes[1], 1024);
 		if (substr_count($output, _("Started")) != 0) {
-			api_log_log(_("PHP Script Server Started Properly"), SEV_DEBUG, FACIL_CMDPHP, "", $poller_id, 0, $print_data_to_stdout);
+			log_save(_("PHP Script Server Started Properly"), SEV_DEBUG, FACIL_CMDPHP, "", $poller_id, 0, $print_data_to_stdout);
 		}
 		$using_proc_function = true;
 
 	}else {
 		$using_proc_function = false;
-		api_log_log(_("PHP version 4.3 or above is recommended for performance considerations."), SEV_WARNING, FACIL_CMDPHP, "", $poller_id, 0, $print_data_to_stdout);
+		log_save(_("PHP version 4.3 or above is recommended for performance considerations."), SEV_WARNING, FACIL_CMDPHP, "", $poller_id, 0, $print_data_to_stdout);
 	}
 
 	foreach ($polling_items as $item) {
@@ -207,7 +207,7 @@ if ((sizeof($polling_items) > 0) && (read_config_option("poller_enabled") == "on
 				$host_down = false;
 				update_host_status($poller_id, HOST_UP, $host_id, $hosts, $ping, $ping_availability, $print_data_to_stdout);
 
-				api_log_log(_("Availability Disabled for Host."), SEV_NOTICE, FACIL_CMDPHP, "", $poller_id, $host_id, 0, $print_data_to_stdout);
+				log_save(_("Availability Disabled for Host."), SEV_NOTICE, FACIL_CMDPHP, "", $poller_id, $host_id, 0, $print_data_to_stdout);
 			}else{
 				if ($ping->ping($ping_availability, $item["ping_method"], read_config_option("ping_timeout"), read_config_option("ping_retries"))) {
 					$host_down = false;
@@ -230,7 +230,7 @@ if ((sizeof($polling_items) > 0) && (read_config_option("poller_enabled") == "on
 					where poller_reindex.host_id=" . $item["host_id"]);
 
 				if ((sizeof($reindex) > 0) && (!$host_down)) {
-					api_log_log(sprintf(_("RECACHE: Processing '%i' items in the auto reindex cache for '%s'"), sizeof($reindex), $item["hostname"]), SEV_DEBUG, FACIL_CMDPHP, "", $poller_id, $host_id, 0, $print_data_to_stdout);
+					log_save(sprintf(_("RECACHE: Processing '%i' items in the auto reindex cache for '%s'"), sizeof($reindex), $item["hostname"]), SEV_DEBUG, FACIL_CMDPHP, "", $poller_id, $host_id, 0, $print_data_to_stdout);
 
 					foreach ($reindex as $index_item) {
 						$assert_fail = false;
@@ -247,15 +247,15 @@ if ((sizeof($polling_items) > 0) && (read_config_option("poller_enabled") == "on
 
 						/* assert the result with the expected value in the db; recache if the assert fails */
 						if (($index_item["op"] == "=") && ($index_item["assert_value"] != trim($output))) {
-							api_log_log(_("ASSERT") . ": '" . $index_item["assert_value"] . "=" . trim($output) . "' " . _("failed. Recaching host") . " '" . $item["hostname"] . "', " . _("data query #") . $index_item["data_query_id"], SEV_DEBUG, FACIL_CMDPHP, "", $poller_id, $host_id, 0, $print_data_to_stdout);
+							log_save(_("ASSERT") . ": '" . $index_item["assert_value"] . "=" . trim($output) . "' " . _("failed. Recaching host") . " '" . $item["hostname"] . "', " . _("data query #") . $index_item["data_query_id"], SEV_DEBUG, FACIL_CMDPHP, "", $poller_id, $host_id, 0, $print_data_to_stdout);
 							db_execute("insert into poller_command (poller_id,time,action,command) values (0,NOW()," . POLLER_COMMAND_REINDEX . ",'" . $item["host_id"] . ":" . $index_item["data_query_id"] . "')");
 							$assert_fail = true;
 						}else if (($index_item["op"] == ">") && ($index_item["assert_value"] <= trim($output))) {
-							api_log_log(_("ASSERT") . ": '" . $index_item["assert_value"] . ">" . trim($output) . "' " . _("failed. Recaching host") . " '" . $item["hostname"] . "', " . _("data query #") . $index_item["data_query_id"], SEV_DEBUG, FACIL_CMDPHP, "", $poller_id, $host_id, 0, $print_data_to_stdout);
+							log_save(_("ASSERT") . ": '" . $index_item["assert_value"] . ">" . trim($output) . "' " . _("failed. Recaching host") . " '" . $item["hostname"] . "', " . _("data query #") . $index_item["data_query_id"], SEV_DEBUG, FACIL_CMDPHP, "", $poller_id, $host_id, 0, $print_data_to_stdout);
 							db_execute("insert into poller_command (poller_id,time,action,command) values (0,NOW()," . POLLER_COMMAND_REINDEX . ",'" . $item["host_id"] . ":" . $index_item["data_query_id"] . "')");
 							$assert_fail = true;
 						}else if (($index_item["op"] == "<") && ($index_item["assert_value"] >= trim($output))) {
-							api_log_log(_("ASSERT") . ": '" . $index_item["assert_value"] . "<" . trim($output) . "' " . _("failed. Recaching host") . " '" . $item["hostname"] . "', " . _("data query #") . $index_item["data_query_id"], SEV_DEBUG, FACIL_CMDPHP, "", $poller_id, $host_id, 0, $print_data_to_stdout);
+							log_save(_("ASSERT") . ": '" . $index_item["assert_value"] . "<" . trim($output) . "' " . _("failed. Recaching host") . " '" . $item["hostname"] . "', " . _("data query #") . $index_item["data_query_id"], SEV_DEBUG, FACIL_CMDPHP, "", $poller_id, $host_id, 0, $print_data_to_stdout);
 							db_execute("insert into poller_command (poller_id,time,action,command) values (0,NOW()," . POLLER_COMMAND_REINDEX . ",'" . $item["host_id"] . ":" . $index_item["data_query_id"] . "')");
 							$assert_fail = true;
 						}
@@ -291,7 +291,7 @@ if ((sizeof($polling_items) > 0) && (read_config_option("poller_enabled") == "on
 			switch ($item["action"]) {
 			case POLLER_ACTION_SNMP: /* snmp */
 				if (($item["snmp_version"] == 0) || ($item["snmp_community"] == "")) {
-					api_log_log(_("Invalid SNMP Data Source.  Please either delete it from the database, or correct it."), SEV_ERROR, FACIL_CMDPHP, "", $poller_id, $host_id, 0, $print_data_to_stdout);
+					log_save(_("Invalid SNMP Data Source.  Please either delete it from the database, or correct it."), SEV_ERROR, FACIL_CMDPHP, "", $poller_id, $host_id, 0, $print_data_to_stdout);
 					$output = "U";
 				}else{
 					$output = cacti_snmp_get($item["hostname"], $item["snmp_community"], $item["arg1"], $item["snmp_version"], $item["snmpv3_auth_username"], $item["snmpv3_auth_password"], $item["snmpv3_auth_protocol"], $item["snmpv3_priv_passphrase"], $item["snmpv3_priv_protocol"], $item["snmp_port"], $item["snmp_timeout"], SNMP_CMDPHP);
@@ -306,12 +306,12 @@ if ((sizeof($polling_items) > 0) && (read_config_option("poller_enabled") == "on
 							$strout = strlen($output);
 						}
 
-						api_log_log(_("Result from SNMP not valid.  Partial Result") . ": " . substr($output, 0, $strout), SEV_WARNING, FACIL_CMDPHP, "", $poller_id, $host_id, 0, $print_data_to_stdout);
+						log_save(_("Result from SNMP not valid.  Partial Result") . ": " . substr($output, 0, $strout), SEV_WARNING, FACIL_CMDPHP, "", $poller_id, $host_id, 0, $print_data_to_stdout);
 						$output = "U";
 					}
 				}
 
-				api_log_log(_("SNMP: v") . $item["snmp_version"] . ": " . $item["hostname"] . _(", dsname: ") . $item["rrd_name"] . _(", oid: ") . $item["arg1"] . _(", output: ") . $output, SEV_INFO, FACIL_CMDPHP, "", $poller_id, $host_id, 0, $print_data_to_stdout);
+				log_save(_("SNMP: v") . $item["snmp_version"] . ": " . $item["hostname"] . _(", dsname: ") . $item["rrd_name"] . _(", oid: ") . $item["arg1"] . _(", output: ") . $output, SEV_INFO, FACIL_CMDPHP, "", $poller_id, $host_id, 0, $print_data_to_stdout);
 
 				break;
 			case POLLER_ACTION_SCRIPT: /* script (popen) */
@@ -327,11 +327,11 @@ if ((sizeof($polling_items) > 0) && (read_config_option("poller_enabled") == "on
 						$strout = strlen($output);
 					}
 
-					api_log_log(_("Result from CMD not valid.  Partial Result:") . " " . substr($output, 0, $strout), SEV_WARNING, FACIL_CMDPHP, "", $poller_id, $host_id, 0, $print_data_to_stdout);
+					log_save(_("Result from CMD not valid.  Partial Result:") . " " . substr($output, 0, $strout), SEV_WARNING, FACIL_CMDPHP, "", $poller_id, $host_id, 0, $print_data_to_stdout);
 					$output = "U";
 				}
 
-				api_log_log(_("CMD: ") . $item["arg1"] . _(", output: ") . $output, SEV_INFO, FACIL_CMDPHP, "", $poller_id, $host_id, 0, $print_data_to_stdout);
+				log_save(_("CMD: ") . $item["arg1"] . _(", output: ") . $output, SEV_INFO, FACIL_CMDPHP, "", $poller_id, $host_id, 0, $print_data_to_stdout);
 
 				break;
 			case POLLER_ACTION_SCRIPT_PHP: /* script (php script server) */
@@ -348,13 +348,13 @@ if ((sizeof($polling_items) > 0) && (read_config_option("poller_enabled") == "on
 							$strout = strlen($output);
 						}
 
-						api_log_log(_("Result from SERVER not valid.  Partial Result:") . " " . substr($output, 0, $strout), SEV_WARNING, FACIL_CMDPHP, "", $poller_id, $host_id, 0, $print_data_to_stdout);
+						log_save(_("Result from SERVER not valid.  Partial Result:") . " " . substr($output, 0, $strout), SEV_WARNING, FACIL_CMDPHP, "", $poller_id, $host_id, 0, $print_data_to_stdout);
 						$output = "U";
 					}
 
-					api_log_log(_("SERVER: ") . $item["arg1"] . _(", output: ") . $output, SEV_INFO, FACIL_CMDPHP, "", $poller_id, $host_id, 0, $print_data_to_stdout);
+					log_save(_("SERVER: ") . $item["arg1"] . _(", output: ") . $output, SEV_INFO, FACIL_CMDPHP, "", $poller_id, $host_id, 0, $print_data_to_stdout);
 				}else{
-					api_log_log(_("*SKIPPING* SERVER: ") . $item["arg1"] . _(" (PHP < 4.3)"), SEV_WARNING, FACIL_CMDPHP, "", $poller_id, $host_id, 0, $print_data_to_stdout);
+					log_save(_("*SKIPPING* SERVER: ") . $item["arg1"] . _(" (PHP < 4.3)"), SEV_WARNING, FACIL_CMDPHP, "", $poller_id, $host_id, 0, $print_data_to_stdout);
 
 					$output = "U";
 				}
@@ -391,7 +391,7 @@ if ((sizeof($polling_items) > 0) && (read_config_option("poller_enabled") == "on
 		list($micro,$seconds) = split(" ", microtime());
 		$end = $seconds + $micro;
 
-		api_log_log(sprintf(_("Run Time:") . " %01.4f " .
+		log_save(sprintf(_("Run Time:") . " %01.4f " .
 			_("s, Theads: N/A, Hosts:") .
 			" %s",
 			round($end-$start,4), $host_count),
@@ -404,7 +404,7 @@ if ((sizeof($polling_items) > 0) && (read_config_option("poller_enabled") == "on
 	$end = $seconds + $micro;
 
 	if (read_config_option("poller_enabled") != "on") {
-		api_log_log(_("NOTICE: The poller is disabled."), SEV_ERROR, FACIL_CMDPHP, "", $poller_id, 0, 0, $print_data_to_stdout);
+		log_save(_("NOTICE: The poller is disabled."), SEV_ERROR, FACIL_CMDPHP, "", $poller_id, 0, 0, $print_data_to_stdout);
 	}
 }
 

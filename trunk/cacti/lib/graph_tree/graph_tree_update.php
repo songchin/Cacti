@@ -80,7 +80,7 @@ function api_graph_tree_item_save($graph_tree_item_id, &$_fields_graph_tree_item
 
 	/* sanity check for $graph_tree_id */
 	if ((empty($graph_tree_item_id)) && (empty($_fields_graph_tree_item["graph_tree_id"]))) {
-		api_log_log("Required graph_tree_id when graph_tree_item_id = 0", SEV_ERROR);
+		log_save("Required graph_tree_id when graph_tree_item_id = 0", SEV_ERROR);
 		return false;
 	}else if ((isset($_fields_graph_tree_item["graph_tree_id"])) && (!db_integer_validate($_fields_graph_tree_item["graph_tree_id"]))) {
 		return false;
@@ -88,13 +88,13 @@ function api_graph_tree_item_save($graph_tree_item_id, &$_fields_graph_tree_item
 
 	/* sanity check for $item_type */
 	if ((!isset($_fields_graph_tree_item["item_type"])) || (!db_integer_validate($_fields_graph_tree_item["item_type"]))) {
-		api_log_log("Missing required item_type", SEV_ERROR);
+		log_save("Missing required item_type", SEV_ERROR);
 		return false;
 	}
 
 	/* sanity check for $item_value */
 	if ((empty($graph_tree_item_id)) && (empty($_fields_graph_tree_item["item_value"]))) {
-		api_log_log("Required item_value when graph_tree_item_id = 0", SEV_ERROR);
+		log_save("Required item_value when graph_tree_item_id = 0", SEV_ERROR);
 		return false;
 	}else if ((isset($_fields_graph_tree_item["item_value"])) && ( (($_fields_graph_tree_item["item_type"] == TREE_ITEM_TYPE_GRAPH) || ($_fields_graph_tree_item["item_type"] == TREE_ITEM_TYPE_HOST)) && (!db_integer_validate($_fields_graph_tree_item["item_value"])) )) {
 		return false;
@@ -102,7 +102,7 @@ function api_graph_tree_item_save($graph_tree_item_id, &$_fields_graph_tree_item
 
 	/* sanity check for $parent_item_id */
 	if ((!isset($_fields_graph_tree_item["parent_item_id"])) || (!db_integer_validate($_fields_graph_tree_item["parent_item_id"], true))) {
-		api_log_log("Missing required parent_item_id", SEV_ERROR);
+		log_save("Missing required parent_item_id", SEV_ERROR);
 		return false;
 	}
 

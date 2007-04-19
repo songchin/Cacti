@@ -82,7 +82,7 @@ function api_script_field_save($script_field_id, $_fields_script_field) {
 
 	/* sanity check for $script_id */
 	if ((empty($script_field_id)) && (empty($_fields_script_field["data_input_id"]))) {
-		api_log_log("Required script_id when script_field_id = 0", SEV_ERROR);
+		log_save("Required script_id when script_field_id = 0", SEV_ERROR);
 		return false;
 	} else if ((isset($_fields_script_field["data_input_id"])) && (!db_integer_validate($_fields_script_field["data_input_id"]))) {
 		return false;

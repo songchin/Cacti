@@ -111,7 +111,7 @@ function api_graph_item_save($graph_item_id, &$_fields_graph_item) {
 
 	/* sanity check for $graph_id */
 	if ((empty($graph_item_id)) && (empty($_fields_graph_item["graph_id"]))) {
-		api_log_log("Required graph_id when graph_item_id = 0", SEV_ERROR);
+		log_save("Required graph_id when graph_item_id = 0", SEV_ERROR);
 		return false;
 	} else if ((isset($_fields_graph_item["graph_id"])) && (!is_numeric($_fields_graph_item["graph_id"]))) {
 		return false;

@@ -80,7 +80,7 @@ function api_poller_total_get($filter_array = "") {
 function api_poller_get($poller_id) {
 	/* sanity check for $poller_id */
 	if ((!is_numeric($poller_id)) || (empty($poller_id))) {
-		api_log_log("Invalid input '$poller_id' for 'poller_id' in " . __FUNCTION__ . "()", SEV_ERROR);
+		log_save("Invalid input '$poller_id' for 'poller_id' in " . __FUNCTION__ . "()", SEV_ERROR);
 		return false;
 	}
 

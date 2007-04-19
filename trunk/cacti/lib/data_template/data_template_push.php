@@ -71,7 +71,7 @@ function copy_data_template_to_data_source($data_template_id, $host_id = 0, $dat
 		$data_source_id = api_data_source_save(0, $_fields, true);
 
 		if ($data_source_id) {
-			api_log_log("Cloning data source [ID#$data_source_id] from template [ID#$data_template_id]", SEV_DEBUG);
+			log_save("Cloning data source [ID#$data_source_id] from template [ID#$data_template_id]", SEV_DEBUG);
 
 			/* reformat the $_data_template_input_fields to be more compatible with api_data_source_save() */
 			$data_template_input_fields = array();
@@ -103,14 +103,14 @@ function copy_data_template_to_data_source($data_template_id, $host_id = 0, $dat
 					}
 
 					if (!api_data_source_item_save(0, $_fields)) {
-						api_log_log("Save error in api_data_source_item_save()", SEV_ERROR);
+						log_save("Save error in api_data_source_item_save()", SEV_ERROR);
 					}
 				}
 			}
 
 			return $data_source_id;
 		}else{
-			api_log_log("Save error in api_data_source_save()", SEV_ERROR, FACIL_WEBUI);
+			log_save("Save error in api_data_source_save()", SEV_ERROR, FACIL_WEBUI);
 
 			return false;
 		}

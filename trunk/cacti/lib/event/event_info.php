@@ -82,7 +82,7 @@ function api_event_handler_function_name ($handler_name) {
 function api_event_get($event_id) {
 	/* sanity check for $event_id */
 	if ((!is_numeric($event_id)) || (empty($event_id))) {
-		api_log_log("Invalid input '$event_id' for 'event_id' in " . __FUNCTION__ . "()", SEV_ERROR);
+		log_save("Invalid input '$event_id' for 'event_id' in " . __FUNCTION__ . "()", SEV_ERROR);
 		return false;
 	}
 	$event = db_fetch_row("select * from event_queue_control where id = " . sql_sanitize($event_id));

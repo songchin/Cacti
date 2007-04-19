@@ -100,7 +100,7 @@ function form_post() {
 			if ($data_source_id) {
 				api_data_source_title_cache_update($data_source_id);
 			}else{
-				api_log_log("Error pushing data template [ID#" . $_POST["data_template_id"] . "] down to a data source.", SEV_ERROR);
+				log_save("Error pushing data template [ID#" . $_POST["data_template_id"] . "] down to a data source.", SEV_ERROR);
 			}
 		}
 
@@ -152,7 +152,7 @@ function form_post() {
 
 		/* step #3: field save */
 		if (is_error_message()) {
-			api_log_log("User input validation error for data source [ID#" . $_POST["data_source_id"] . "]", SEV_DEBUG);
+			log_save("User input validation error for data source [ID#" . $_POST["data_source_id"] . "]", SEV_DEBUG);
 		}else{
 			/* save data source data */
 			$data_source_id = api_data_source_save($_POST["data_source_id"], $data_source_fields);
@@ -172,14 +172,14 @@ function form_post() {
 					/* ONLY copy down rra items from the template if the data source is new */
 					if (empty($_POST["data_source_id"])) {
 						if (!api_data_source_data_template_rra_item_copy($data_source_id, $_POST["data_template_id"])) {
-							api_log_log("Copy error for data template [ID#" . $_POST["data_template_id"] . "], data source [ID#" . $data_source_id . "]", SEV_ERROR);
+							log_save("Copy error for data template [ID#" . $_POST["data_template_id"] . "], data source [ID#" . $data_source_id . "]", SEV_ERROR);
 						}
 					}
 				}
 
 				/* save data source input fields */
 				if (!api_data_source_fields_save($data_source_id, $data_input_fields)) {
-					api_log_log("Save error for data input fields, data source [ID#" . $data_source_id . "]", SEV_ERROR);
+					log_save("Save error for data input fields, data source [ID#" . $data_source_id . "]", SEV_ERROR);
 				}
 
 				/* save data source item data */
@@ -188,12 +188,12 @@ function form_post() {
 					$data_source_item["data_source_id"] = $data_source_id;
 
 					if (!api_data_source_item_save($data_source_item_id, $data_source_item)) {
-						api_log_log("Save error for data source item [ID#" . $data_source_item_id . "], data source [ID#" . $data_source_id . "]", SEV_ERROR);
+						log_save("Save error for data source item [ID#" . $data_source_item_id . "], data source [ID#" . $data_source_id . "]", SEV_ERROR);
 					}
 				}
 
 			}else{
-				api_log_log("Save error for data source [ID#" . $_POST["data_source_id"] . "]", SEV_ERROR);
+				log_save("Save error for data source [ID#" . $_POST["data_source_id"] . "]", SEV_ERROR);
 			}
 		}
 

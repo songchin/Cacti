@@ -62,7 +62,7 @@ function api_data_query_field_save($data_query_field_id, &$_fields_data_query_fi
 
 	/* sanity check for $data_query_id */
 	if ((empty($data_query_field_id)) && (empty($_fields_data_query_fields["data_query_id"]))) {
-		api_log_log("Required data_query_id when data_query_field_id = 0", SEV_ERROR);
+		log_save("Required data_query_id when data_query_field_id = 0", SEV_ERROR);
 		return false;
 	} else if ((isset($_fields_data_query_fields["data_query_id"])) && (!is_numeric($_fields_data_query_fields["data_query_id"]))) {
 		return false;
@@ -118,13 +118,13 @@ function update_data_query_sort_cache($host_id, $data_query_id) {
 
 	/* sanity check for $host_id */
 	if ((!is_numeric($host_id)) || (empty($host_id))) {
-		api_log_log("Invalid input '$host_id' for 'host_id' in " . __FUNCTION__ . "()", SEV_ERROR);
+		log_save("Invalid input '$host_id' for 'host_id' in " . __FUNCTION__ . "()", SEV_ERROR);
 		return false;
 	}
 
 	/* sanity check for $data_query_id */
 	if ((!is_numeric($data_query_id)) || (empty($data_query_id))) {
-		api_log_log("Invalid input '$data_query_id' for 'data_query_id' in " . __FUNCTION__ . "()", SEV_ERROR);
+		log_save("Invalid input '$data_query_id' for 'data_query_id' in " . __FUNCTION__ . "()", SEV_ERROR);
 		return false;
 	}
 

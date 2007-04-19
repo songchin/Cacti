@@ -104,43 +104,43 @@ function api_user_ldap_auth($username,$password = "",$ldap_dn = "",$ldap_host = 
 	}
 
 	/* Connect to LDAP server */
-	api_log_log(sprintf(_("LDAP: Setting up connection to %s:%s"), $ldap_host, $ldap_port), SEV_DEBUG, FACIL_AUTH);
+	log_save(sprintf(_("LDAP: Setting up connection to %s:%s"), $ldap_host, $ldap_port), SEV_DEBUG, FACIL_AUTH);
 	$ldap_conn = @ldap_connect($ldap_host,$ldap_port);
 
 	if ($ldap_conn) {
 		/* Set protocol version */
-		api_log_log(_("LDAP: Setting protocol version to ") . $ldap_version, SEV_DEBUG, FACIL_AUTH);
+		log_save(_("LDAP: Setting protocol version to ") . $ldap_version, SEV_DEBUG, FACIL_AUTH);
 		if (!@ldap_set_option($ldap_conn, LDAP_OPT_PROTOCOL_VERSION, $ldap_version)) {
 			$output["error_num"] = "3";
 			$output["error_text"] = _("Protocol Error, Unable to set version");
-			api_log_log(_("LDAP: ") . $output["error_text"], SEV_ERROR, FACIL_AUTH);
+			log_save(_("LDAP: ") . $output["error_text"], SEV_ERROR, FACIL_AUTH);
 			@ldap_close($ldap_conn);
 			return $output;
 		}
 		/* set referrals */
 		if ($ldap_referrals == "0") {
-			api_log_log(_("LDAP: Setting referral option to ") . $ldap_referrals, SEV_DEBUG, FACIL_AUTH);
+			log_save(_("LDAP: Setting referral option to ") . $ldap_referrals, SEV_DEBUG, FACIL_AUTH);
 			if (!@ldap_set_option($ldap_conn, LDAP_OPT_REFERRALS, 0)) {
 				$output["error_num"] = "4";
 				$output["error_text"] = _("Unable to set referrals option");
-				api_log_log(_("LDAP: ") . $output["error_text"], SEV_ERROR, FACIL_AUTH);
+				log_save(_("LDAP: ") . $output["error_text"], SEV_ERROR, FACIL_AUTH);
 				@ldap_close($ldap_conn);
 				return $output;
 			}
 		}
 		/* start TLS if requested */
 		if ($ldap_encryption == "2") {
-			api_log_log(_("LDAP: Starting TLS encryption"), SEV_DEBUG, FACIL_AUTH);
+			log_save(_("LDAP: Starting TLS encryption"), SEV_DEBUG, FACIL_AUTH);
 			if (!@ldap_start_tls($ldap_conn)) {
 				$output["error_num"] = "5";
 				$output["error_text"] = _("Protocol error, unable to start TLS communications");
-				api_log_log(_("LDAP: ") . $output["error_text"], SEV_ERROR, FACIL_AUTH);
+				log_save(_("LDAP: ") . $output["error_text"], SEV_ERROR, FACIL_AUTH);
 				@ldap_close($ldap_conn);
 				return $output;
 			}
 		}
 		/* Bind to the LDAP directory */
-		api_log_log(_("LDAP: Binding to LDAP server"), SEV_DEBUG, FACIL_AUTH);
+		log_save(_("LDAP: Binding to LDAP server"), SEV_DEBUG, FACIL_AUTH);
 		$ldap_response = @ldap_bind($ldap_conn,$ldap_dn,$password);
 		if ($ldap_response) {
 			/* Auth ok */
@@ -185,7 +185,7 @@ function api_user_ldap_auth($username,$password = "",$ldap_dn = "",$ldap_host = 
 	@ldap_close($ldap_conn);
 
 	if ($output["error_num"] > 0) {
-		api_log_log("LDAP: " . $output["error_text"], SEV_ERROR, FACIL_AUTH);
+		log_save("LDAP: " . $output["error_text"], SEV_ERROR, FACIL_AUTH);
 	}
 
 	return $output;
@@ -242,7 +242,7 @@ function api_user_ldap_search_dn($username,$ldap_dn = "",$ldap_host = "",$ldap_p
 		$output["dn"] = "";
 		$output["error_num"] = "1";
 		$output["error_text"] = _("No username defined");
-		api_log_log(_("LDAP_SEARCH: No username defined"), SEV_DEBUG, FACIL_AUTH);
+		log_save(_("LDAP_SEARCH: No username defined"), SEV_DEBUG, FACIL_AUTH);
 		return $output;
 	}
 
@@ -305,12 +305,12 @@ function api_user_ldap_search_dn($username,$ldap_dn = "",$ldap_host = "",$ldap_p
 		if (empty($ldap_specific_password)) {
 			$ldap_specific_password = read_config_option("ldap_specific_password");
 		}
-		api_log_log(sprintf(_("LDAP_SEARCH: Using DN '%s' and password '%s' for binding"), $ldap_specific_dn, $ldap_specific_password), SEV_DEBUG, FACIL_AUTH);
+		log_save(sprintf(_("LDAP_SEARCH: Using DN '%s' and password '%s' for binding"), $ldap_specific_dn, $ldap_specific_password), SEV_DEBUG, FACIL_AUTH);
 	}elseif ($ldap_mode == "1"){
 		/* assume anonymous */
 		$ldap_specific_dn = "";
 		$ldap_specific_password = "";
-		api_log_log(_("LDAP_SEARCH: Using anonymous for binding"), SEV_DEBUG, FACIL_AUTH);
+		log_save(_("LDAP_SEARCH: Using anonymous for binding"), SEV_DEBUG, FACIL_AUTH);
 	}
 
 	if (empty($ldap_search_base)) {
@@ -320,55 +320,55 @@ function api_user_ldap_search_dn($username,$ldap_dn = "",$ldap_host = "",$ldap_p
 		$ldap_search_filter = read_config_option("ldap_search_filter");
 	}
 	$ldap_search_filter = str_replace("<username>",$username,$ldap_search_filter);
-	api_log_log(sprintf(_("LDAP_SEARCH: Search filter '%s'"), $ldap_search_filter), SEV_DEBUG, FACIL_AUTH);
+	log_save(sprintf(_("LDAP_SEARCH: Search filter '%s'"), $ldap_search_filter), SEV_DEBUG, FACIL_AUTH);
 
 
 	/* Searching mode */
         /* Setup connection to LDAP server */
-	api_log_log(sprintf(_("LDAP: Setting up connection to %s:%s"), $ldap_host, $ldap_port), SEV_DEBUG, FACIL_AUTH);
+	log_save(sprintf(_("LDAP: Setting up connection to %s:%s"), $ldap_host, $ldap_port), SEV_DEBUG, FACIL_AUTH);
         $ldap_conn = @ldap_connect($ldap_host,$ldap_port);
 
 	if ($ldap_conn) {
 		/* Set protocol version */
-		api_log_log(sprintf(_("LDAP_SEARCH: Setting protocol version to %s"), $ldap_version), SEV_DEBUG, FACIL_AUTH);
+		log_save(sprintf(_("LDAP_SEARCH: Setting protocol version to %s"), $ldap_version), SEV_DEBUG, FACIL_AUTH);
 		if (!@ldap_set_option($ldap_conn, LDAP_OPT_PROTOCOL_VERSION, $ldap_version)) {
 			/* protocol error */
 			$output["dn"] = "";
 			$output["error_num"] = "4";
 			$output["error_text"] = _("Protocol error, unable to set version");
-			api_log_log(sprintf(_("LDAP_SEARCH: %s"), $output["error_text"]), SEV_ERROR, FACIL_AUTH);
+			log_save(sprintf(_("LDAP_SEARCH: %s"), $output["error_text"]), SEV_ERROR, FACIL_AUTH);
 			@ldap_close($ldap_conn);
 			return $output;
 		}
 		/* set referrals */
 		if ($ldap_referrals == "0") {
-			api_log_log(_("LDAP_SEARCH: Setting referral option to ") . $ldap_referrals, SEV_DEBUG, FACIL_AUTH);
+			log_save(_("LDAP_SEARCH: Setting referral option to ") . $ldap_referrals, SEV_DEBUG, FACIL_AUTH);
 			if (!@ldap_set_option($ldap_conn, LDAP_OPT_REFERRALS, 0)) {
 				/* referrals set error */
 				$output["dn"] = "";
 				$output["error_num"] = "13";
 				$output["error_text"] = _("Unable to set referrals option");
-				api_log_log(_("LDAP_SEARCH: ") . $output["error_text"], SEV_ERROR, FACIL_AUTH);
+				log_save(_("LDAP_SEARCH: ") . $output["error_text"], SEV_ERROR, FACIL_AUTH);
 				@ldap_close($ldap_conn);
 				return $output;
 			}
 		}
 		/* start TLS if requested */
 		if ($ldap_encryption == "2") {
-			api_log_log(_("LDAP_SEARCH: Starting TLS encryption"), SEV_DEBUG, FACIL_AUTH);
+			log_save(_("LDAP_SEARCH: Starting TLS encryption"), SEV_DEBUG, FACIL_AUTH);
 			if (!@ldap_start_tls($ldap_conn)) {
 				/* TLS startup error */
 				$output["dn"] = "";
 				$output["error_num"] = "5";
 				$output["error_text"] = _("Protocol error, unable to start TLS communications");
-				api_log_log(_("LDAP_SEARCH: ") . $output["error_text"], SEV_ERROR, FACIL_AUTH);
+				log_save(_("LDAP_SEARCH: ") . $output["error_text"], SEV_ERROR, FACIL_AUTH);
 				@ldap_close($ldap_conn);
 				return $output;
 			}
 		}
 
 		/* bind to the directory */
-		api_log_log(_("LDAP_SEARCH: Binding to LDAP server"), SEV_DEBUG, FACIL_AUTH);
+		log_save(_("LDAP_SEARCH: Binding to LDAP server"), SEV_DEBUG, FACIL_AUTH);
 		if (@ldap_bind($ldap_conn,$ldap_specific_dn,$ldap_specific_password)) {
 			/* Search */
 
@@ -381,7 +381,7 @@ function api_user_ldap_search_dn($username,$ldap_dn = "",$ldap_host = "",$ldap_p
 					$output["dn"] = $ldap_entries["0"]["dn"];
 					$output["error_num"] = "0";
 					$output["error_text"] = _("User found");
-					api_log_log(sprintf(_("LDAP_SEARCH: User found, DN '%s'"), $output["dn"]), SEV_DEBUG, FACIL_AUTH);
+					log_save(sprintf(_("LDAP_SEARCH: User found, DN '%s'"), $output["dn"]), SEV_DEBUG, FACIL_AUTH);
 				}elseif ($ldap_entries["count"] > 1) {
 					/* more than 1 result */
 					$output["dn"] = "";
@@ -444,7 +444,7 @@ function api_user_ldap_search_dn($username,$ldap_dn = "",$ldap_host = "",$ldap_p
 	@ldap_close($ldap_conn);
 
 	if ($output["error_num"] > 0) {
-		api_log_log(_("LDAP_SEARCH: ") . $output["error_text"], SEV_ERROR, FACIL_AUTH);
+		log_save(_("LDAP_SEARCH: ") . $output["error_text"], SEV_ERROR, FACIL_AUTH);
 	}
 
 	return $output;

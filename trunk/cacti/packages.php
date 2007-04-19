@@ -147,12 +147,12 @@ function form_save() {
 		/* step #3: field save */
 		$package_id = false;
 		if (is_error_message()) {
-			api_log_log("User input validation error for package [ID#" . $_POST["package_id"] . "]", SEV_DEBUG);
+			log_save("User input validation error for package [ID#" . $_POST["package_id"] . "]", SEV_DEBUG);
 		}else{
 			$package_id = api_package_save($_POST["package_id"], $form_package);
 
 			if ($package_id === false) {
-				api_log_log("Save error for package [ID#" . $_POST["package_id"] . "]", SEV_ERROR);
+				log_save("Save error for package [ID#" . $_POST["package_id"] . "]", SEV_ERROR);
 			}
 		}
 
@@ -194,12 +194,12 @@ function form_save() {
 		/* step #3: field save */
 		$package_metadata_id = false;
 		if (is_error_message()) {
-			api_log_log("User input validation error for package metadata [ID#" . $_POST["package_metadata_id"] . "], package [ID#" . $_POST["package_id"] . "]", SEV_DEBUG);
+			log_save("User input validation error for package metadata [ID#" . $_POST["package_metadata_id"] . "], package [ID#" . $_POST["package_id"] . "]", SEV_DEBUG);
 		}else{
 			$package_metadata_id = api_package_metadata_save($_POST["package_metadata_id"], $form_package_metadata);
 
 			if ($package_metadata_id === false) {
-				api_log_log("Save error for package metadata [ID#" . $_POST["package_metadata_id"] . "], package [ID#" . $_POST["package_id"] . "]", SEV_ERROR);
+				log_save("Save error for package metadata [ID#" . $_POST["package_metadata_id"] . "], package [ID#" . $_POST["package_id"] . "]", SEV_ERROR);
 			}
 		}
 

@@ -202,21 +202,21 @@ function host_new_graphs_save() {
 			foreach (array_keys($create_info["data_source"]) as $data_template_id) {
 				if (isset($skel["data_template"][$data_template_id])) {
 					if (!api_data_source_save($create_info["data_source"][$data_template_id], $skel["data_template"][$data_template_id])) {
-						api_log_log("Problems updating new data source [ID#" . $create_info["data_source"][$data_template_id] . "], data template [ID#$data_template_id] from user data", SEV_ERROR);
+						log_save("Problems updating new data source [ID#" . $create_info["data_source"][$data_template_id] . "], data template [ID#$data_template_id] from user data", SEV_ERROR);
 					}
 				}
 
 				if (isset($skel["data_template_item"][$data_template_id])) {
 					foreach ($skel["data_template_item"][$data_template_id] as $data_source_item_id => $data_template_item_array) {
 						if (!api_data_source_item_save($data_source_item_id, $data_template_item_array)) {
-							api_log_log("Problems updating new data source [item] [ID#" . $create_info["data_source"][$data_template_id] . "], data template [ID#$data_template_id] from user data", SEV_ERROR);
+							log_save("Problems updating new data source [item] [ID#" . $create_info["data_source"][$data_template_id] . "], data template [ID#$data_template_id] from user data", SEV_ERROR);
 						}
 					}
 				}
 
 				if (isset($skel["custom_data"][$data_template_id])) {
 					if (!api_data_source_fields_save($create_info["data_source"][$data_template_id], $skel["custom_data"][$data_template_id])) {
-						api_log_log("Problems updating new data source (fields) [ID#" . $create_info["data_source"][$data_template_id] . "], data template [ID#$data_template_id] from user data", SEV_ERROR);
+						log_save("Problems updating new data source (fields) [ID#" . $create_info["data_source"][$data_template_id] . "], data template [ID#$data_template_id] from user data", SEV_ERROR);
 					}
 				}
 
@@ -231,14 +231,14 @@ function host_new_graphs_save() {
 			foreach (array_keys($create_info["graph"]) as $graph_template_id) {
 				if (isset($skel["graph_template"][$graph_template_id])) {
 					if (!api_graph_save($create_info["graph"][$graph_template_id], $skel["graph_template"][$graph_template_id])) {
-						api_log_log("Problems updating new graph [ID#" . $create_info["graph"][$graph_template_id] . "], graph template [ID#$graph_template_id] from user data", SEV_ERROR);
+						log_save("Problems updating new graph [ID#" . $create_info["graph"][$graph_template_id] . "], graph template [ID#$graph_template_id] from user data", SEV_ERROR);
 					}
 				}
 
 				if (isset($skel["graph_template_item"][$graph_template_id])) {
 					foreach ($skel["graph_template_item"][$graph_template_id] as $graph_template_item_input_id => $value) {
 						if (!api_graph_template_item_input_propagate($graph_template_item_input_id, $value)) {
-							api_log_log("Problems updating new graph [item] [ID#" . $create_info["graph"][$graph_template_id] . "], graph template [ID#$graph_template_id] from user data", SEV_ERROR);
+							log_save("Problems updating new graph [item] [ID#" . $create_info["graph"][$graph_template_id] . "], graph template [ID#$graph_template_id] from user data", SEV_ERROR);
 						}
 					}
 				}

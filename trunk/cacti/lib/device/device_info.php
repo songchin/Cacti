@@ -86,7 +86,7 @@ function api_device_total_get($filter_array = "") {
 function api_device_get($device_id) {
 	/* sanity check for $device_id */
 	if ((!is_numeric($device_id)) || (empty($device_id))) {
-		api_log_log("Invalid input '$device_id' for 'device_id' in " . __FUNCTION__ . "()", SEV_ERROR);
+		log_save("Invalid input '$device_id' for 'device_id' in " . __FUNCTION__ . "()", SEV_ERROR);
 		return false;
 	}
 
@@ -96,13 +96,13 @@ function api_device_get($device_id) {
 function api_device_data_query_get($device_id, $data_query_id) {
 	/* sanity check for $data_query_id */
 	if ((!is_numeric($data_query_id)) || (empty($data_query_id))) {
-		api_log_log("Invalid input '$data_query_id' for 'data_query_id' in " . __FUNCTION__ . "()", SEV_ERROR);
+		log_save("Invalid input '$data_query_id' for 'data_query_id' in " . __FUNCTION__ . "()", SEV_ERROR);
 		return false;
 	}
 
 	/* sanity check for $device_id */
 	if ((!is_numeric($device_id)) || (empty($device_id))) {
-		api_log_log("Invalid input '$device_id' for 'host_id' in " . __FUNCTION__ . "()", SEV_ERROR);
+		log_save("Invalid input '$device_id' for 'host_id' in " . __FUNCTION__ . "()", SEV_ERROR);
 		return false;
 	}
 

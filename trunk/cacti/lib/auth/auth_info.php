@@ -51,7 +51,7 @@ function api_auth_control_total_get ($filter_array = "") {
 			return false;
 		/* otherwise, form an SQL WHERE string using the filter fields */
 		}else{
-			$sql_where .= sql_filter_array_to_where_string($filter_array, api_log_form_list(), true);
+			$sql_where .= sql_filter_array_to_where_string($filter_array, log_list_form(), true);
 		}
 	}
 

@@ -34,13 +34,13 @@
  * @param array $filter_array filter array, field => value elements
  * @return int total number of records
  */
-function api_log_total_get ($filter_array = "") {
+function log_get_total ($filter_array = "") {
 
 	$sql_where = "";
 	/* validation and setup for the WHERE clause */
 	if ((is_array($filter_array)) && (sizeof($filter_array) > 0)) {
 		/* validate each field against the known master field list */
-		$field_errors = validate_log_fields(sql_filter_array_to_field_array($filter_array), "|field|");
+		$field_errors = log_validate(sql_filter_array_to_field_array($filter_array), "|field|");
 
 		/* if a field input error has occured, register the error in the session and return */
 		if (sizeof($field_errors) > 0) {
@@ -69,7 +69,7 @@ function api_log_total_get ($filter_array = "") {
 				$sql_where = " WHERE " . $sql_where;
 			}
 
-			$sql_where .= sql_filter_array_to_where_string($filter_array, api_log_form_list(), $sql_start);
+			$sql_where .= sql_filter_array_to_where_string($filter_array, log_list_form(), $sql_start);
 
 		}
 	}
@@ -86,13 +86,13 @@ function api_log_total_get ($filter_array = "") {
  * @param array $filter_array filter array, field => value elements
  * @return array log records
  */
-function api_log_list ($filter_array,$limit = -1,$offset = -1) {
+function log_list ($filter_array,$limit = -1,$offset = -1) {
 
 	$sql_where = "";
 	/* validation and setup for the WHERE clause */
 	if ((is_array($filter_array)) && (sizeof($filter_array) > 0)) {
 		/* validate each field against the known master field list */
-		$field_errors = validate_log_fields(sql_filter_array_to_field_array($filter_array), "|field|");
+		$field_errors = log_validate(sql_filter_array_to_field_array($filter_array), "|field|");
 
 		/* if a field input error has occured, register the error in the session and return */
 		if (sizeof($field_errors) > 0) {
@@ -121,7 +121,7 @@ function api_log_list ($filter_array,$limit = -1,$offset = -1) {
 				$sql_where = " WHERE " . $sql_where;
 			}
 
-			$sql_where .= sql_filter_array_to_where_string($filter_array, api_log_form_list(), $sql_start);
+			$sql_where .= sql_filter_array_to_where_string($filter_array, log_list_form(), $sql_start);
 
 		}
 
@@ -156,7 +156,7 @@ function api_log_list ($filter_array,$limit = -1,$offset = -1) {
  *
  * @return array log fields
  */
-function api_log_form_list() {
+function log_list_form () {
 	require(CACTI_BASE_PATH . "/include/log/log_form.php");
 
 	return $fields_log;
@@ -173,7 +173,7 @@ function api_log_form_list() {
  * @param $log_field_name_format replacement variable
  * @return array error array if any
  */
-function validate_log_fields(&$_fields_log, $log_field_name_format = "|field|") {
+function log_validate (&$_fields_log, $log_field_name_format = "|field|") {
 
 	if (sizeof($_fields_log) == 0) {
 
@@ -184,7 +184,7 @@ function validate_log_fields(&$_fields_log, $log_field_name_format = "|field|") 
 	$error_fields = array();
 
 	/* get a complete field list */
-	$fields_device = api_log_form_list();
+	$fields_device = log_list_form();
 
 	/* base fields */
 	while (list($_field_name, $_field_array) = each($fields_device)) {
@@ -207,7 +207,7 @@ function validate_log_fields(&$_fields_log, $log_field_name_format = "|field|") 
  *
  * @return array record array
  */
-function api_log_username_list() {
+function log_list_username () {
 
 	$user = array();
 	$users = db_fetch_assoc("select username from user_auth order by username");
@@ -229,7 +229,7 @@ function api_log_username_list() {
  *
  * @return array record array
  */
-function api_log_plugin_list() {
+function log_list_plugin () {
 
 	$plugin = array();
 
@@ -253,7 +253,7 @@ function api_log_plugin_list() {
  *
  * @return array record array
  */
-function api_log_poller_list() {
+function logi_list_poller () {
 
 	$poller = array();
 
@@ -276,7 +276,7 @@ function api_log_poller_list() {
  *
  * @return array record array
  */
-function api_log_host_list() {
+function log_list_host () {
 
 	$host = array();
 
@@ -299,7 +299,7 @@ function api_log_host_list() {
  *
  * @return array record array
  */
-function api_log_facility_list() {
+function log_list_facility () {
 
 	$facility = array();
 	$facility[FACIL_CMDPHP] = "CMDPHP";
@@ -322,7 +322,7 @@ function api_log_facility_list() {
  *
  * @return array record array
  */
-function api_log_severity_list() {
+function log_list_severity () {
 
 	$severity = array();
 	$severity[SEV_EMERGENCY] = "EMERGENCY";
@@ -347,7 +347,7 @@ function api_log_severity_list() {
  * @param int Cacti system severity
  * @return string HTML CSS class
  */
-function api_log_html_css_class($severity) {
+function log_get_html_css_class($severity) {
 
 	switch ($severity) {
 		case "EMERGENCY":

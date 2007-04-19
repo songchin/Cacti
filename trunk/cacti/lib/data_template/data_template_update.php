@@ -69,7 +69,7 @@ function api_data_template_rra_item_save($data_template_rra_item_id, $_fields_da
 
 	/* sanity check for $preset_rra_id */
 	if ((empty($data_template_rra_item_id)) && (empty($_fields_data_template_rra_item["data_template_id"]))) {
-		api_log_log("Required data_template_id when data_template_rra_item_id = 0", SEV_ERROR);
+		log_save("Required data_template_id when data_template_rra_item_id = 0", SEV_ERROR);
 		return false;
 	} else if ((isset($_fields_data_template_rra_item["data_template_id"])) && (!db_integer_validate($_fields_data_template_rra_item["data_template_id"]))) {
 		return false;
@@ -207,7 +207,7 @@ function api_data_template_item_save($data_template_item_id, $_fields_data_sourc
 
 	/* sanity check for $data_template_id */
 	if ((empty($data_template_item_id)) && (empty($_fields_data_source_item["data_template_id"]))) {
-		api_log_log("Required data_template_id when data_template_item_id = 0", SEV_ERROR);
+		log_save("Required data_template_id when data_template_item_id = 0", SEV_ERROR);
 		return false;
 	} else if ((isset($_fields_data_source_item["data_template_id"])) && (!db_integer_validate($_fields_data_source_item["data_template_id"]))) {
 		return false;

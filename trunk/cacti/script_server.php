@@ -65,15 +65,15 @@ if ($_SERVER["argc"] >= 2) {
 if (CACTI_SERVER_OS == "win32") {
 	$guess = substr(__FILE__,0,2);
 	if ($guess == strtoupper($guess)) {
-		api_log_log(_("The PHP Script Server MUST be started using the full path to the file and in lower case.  This is a PHP Bug!!!"), SEV_CRITICAL, FACIL_SCPTSVR, "", $poller_id);
+		log_save(_("The PHP Script Server MUST be started using the full path to the file and in lower case.  This is a PHP Bug!!!"), SEV_CRITICAL, FACIL_SCPTSVR, "", $poller_id);
 		exit(-1);
 	}
 }
 
-api_log_log(_("POLLER: ") . $environ . _(" CWD: ") . strtolower(strtr(getcwd(),"\\","/")) . _(" ROOT: ") . strtolower(strtr(dirname(__FILE__),"\\","/")) . _(" SERVER: ") . __FILE__, SEV_DEBUG, FACIL_SCPTSVR, "", $poller_id);
+log_save(_("POLLER: ") . $environ . _(" CWD: ") . strtolower(strtr(getcwd(),"\\","/")) . _(" ROOT: ") . strtolower(strtr(dirname(__FILE__),"\\","/")) . _(" SERVER: ") . __FILE__, SEV_DEBUG, FACIL_SCPTSVR, "", $poller_id);
 
 /* send status back to the server */
-api_log_log(_("PHP Script Server has Started - Parent is") . " " . $environ, SEV_DEBUG, FACIL_SCPTSVR, "", $poller_id);
+log_save(_("PHP Script Server has Started - Parent is") . " " . $environ, SEV_DEBUG, FACIL_SCPTSVR, "", $poller_id);
 
 fputs(STDOUT, _("PHP Script Server has Started - Parent is") . " " . $environ . "\n");
 fflush(STDOUT);
@@ -102,7 +102,7 @@ while (1) {
 				$parm = explode(" ",$preparm);
 			}
 
-			api_log_log(_("INCLUDE: '"). $inc . _("' SCRIPT: '") .$cmd . _("' CMD: '") . $preparm . "'", SEV_DEBUG, FACIL_SCPTSVR, "", $poller_id);
+			log_save(_("INCLUDE: '"). $inc . _("' SCRIPT: '") .$cmd . _("' CMD: '") . $preparm . "'", SEV_DEBUG, FACIL_SCPTSVR, "", $poller_id);
 
 			/* check for existance of function.  If exists call it */
 			if ($cmd != "") {
@@ -118,11 +118,11 @@ while (1) {
 
 						require_once($inc);
 					} else {
-						api_log_log(_("PHP Script File to be included, does not exist"), SEV_CRITICAL, FACIL_SCPTSVR, "", $poller_id);
+						log_save(_("PHP Script File to be included, does not exist"), SEV_CRITICAL, FACIL_SCPTSVR, "", $poller_id);
 					}
 				}
 			} else {
-				api_log_log(_("PHP Script Server encountered errors parsing the command"), SEV_ERROR, FACIL_SCPTSVR, "", $poller_id);
+				log_save(_("PHP Script Server encountered errors parsing the command"), SEV_ERROR, FACIL_SCPTSVR, "", $poller_id);
 			}
 
 			if (function_exists($cmd)) {
@@ -144,21 +144,21 @@ while (1) {
 					fflush(STDOUT);
 				}
 
-				api_log_log(_("SERVER: ") . $in_string . _(" output ") . $result, SEV_DEBUG, FACIL_SCPTSVR, "", $poller_id);
+				log_save(_("SERVER: ") . $in_string . _(" output ") . $result, SEV_DEBUG, FACIL_SCPTSVR, "", $poller_id);
 			} else {
-				api_log_log(_("Function does not exist"), SEV_WARNING, FACIL_SCPTSVR, "", $poller_id);
+				log_save(_("Function does not exist"), SEV_WARNING, FACIL_SCPTSVR, "", $poller_id);
 				fputs(STDOUT, _("WARNING: Function does not exist") . "\n");
 			}
 		}elseif ($in_string == "quit") {
 			fputs(STDOUT, _("PHP Script Server Shutdown request received, exiting") . "\n");
-			api_log_log(_("PHP Script Server Shutdown request received, exiting"), SEV_DEBUG, FACIL_SCPTSVR, "", $poller_id);
+			log_save(_("PHP Script Server Shutdown request received, exiting"), SEV_DEBUG, FACIL_SCPTSVR, "", $poller_id);
 			break;
 		}else {
-			api_log_log(_("Problems with input, command ingnored"), SEV_WARNING, FACIL_SCPTSVR, "", $poller_id);
+			log_save(_("Problems with input, command ingnored"), SEV_WARNING, FACIL_SCPTSVR, "", $poller_id);
 			fputs(STDOUT, _("ERROR: Problems with input") . "\n");
 		}
 	}else {
-		api_log_log(_("Input Expected, Script Server Terminating"), SEV_ERROR, FACIL_SCPTSVR, "", $poller_id);
+		log_save(_("Input Expected, Script Server Terminating"), SEV_ERROR, FACIL_SCPTSVR, "", $poller_id);
 		fputs(STDOUT, _("ERROR: Input Expected, Script Server Terminating") . "\n");
 		/* parent abended, let's show the parent as done  */
 		db_execute("insert into poller_time (poller_id, start_time, end_time) values (0, NOW(), NOW())");

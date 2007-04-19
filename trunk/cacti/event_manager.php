@@ -36,7 +36,7 @@ require(dirname(__FILE__) . '/include/global.php');
 
 $event_manager_interval = read_config_option('event_manager_interval');
 
-api_log_log('Event Manager Starting', SEV_INFO, FACIL_POLLER, '', 0, 0, 0, true);
+log_save('Event Manager Starting', SEV_INFO, FACIL_POLLER, '', 0, 0, 0, true);
 
 $counter = time() - $event_manager_interval;
 while (true) {
@@ -57,7 +57,7 @@ while (true) {
 
 	/* Loop through each event for processing */
 	foreach ($events as $event) {
-		api_log_log('Processing Event ' . $event['id'], SEV_INFO, FACIL_POLLER, '', 0, 0, 0, true);
+		log_save('Processing Event ' . $event['id'], SEV_INFO, FACIL_POLLER, '', 0, 0, 0, true);
 		api_event_process ($event['id']);
 	}
 
@@ -69,6 +69,6 @@ while (true) {
 	}
 }
 
-api_log_log('Event Manager exitting', SEV_INFO, FACIL_POLLER, '', 0, 0, 0, true);
+log_save('Event Manager exitting', SEV_INFO, FACIL_POLLER, '', 0, 0, 0, true);
 
 ?>

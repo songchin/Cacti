@@ -59,7 +59,7 @@ if (!$access_denied) {
 			if (($_POST["password"] == $_POST["confirm"]) && ($_POST["password"] != "")) {
 
 				/* Log password change */
-				api_log_log(_("CHANGEPASSWORD: Password change successful"), SEV_INFO, FACIL_AUTH);
+				log_save(_("CHANGEPASSWORD: Password change successful"), SEV_INFO, FACIL_AUTH);
 
 				/* change password */
 				api_user_changepassword($_SESSION["sess_user_id"], $_POST["password"]);

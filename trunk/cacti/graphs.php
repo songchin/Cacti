@@ -131,11 +131,11 @@ function form_save() {
 
 		/* step #3: field save */
 		if (is_error_message()) {
-			api_log_log("User input validation error for graph [ID#" . $_POST["id"] . "]", SEV_DEBUG);
+			log_save("User input validation error for graph [ID#" . $_POST["id"] . "]", SEV_DEBUG);
 		}else{
 			/* save graph data */
 			if (!api_graph_save($_POST["id"], $form_graph_fields)) {
-				api_log_log("Save error for graph [ID#" . $_POST["id"] . "]", SEV_ERROR);
+				log_save("Save error for graph [ID#" . $_POST["id"] . "]", SEV_ERROR);
 			}
 
 			/* save graph item data for templated graphs */
@@ -143,7 +143,7 @@ function form_save() {
 				if (sizeof($form_graph_item_fields) > 0) {
 					foreach ($form_graph_item_fields as $graph_template_item_input_id => $value) {
 						if (!api_graph_template_item_input_propagate($graph_template_item_input_id, $value)) {
-							api_log_log("Save error when propagating graph item input [ID#$graph_template_item_input_id] to graph [ID#" . $_POST["id"] . "]", SEV_ERROR);
+							log_save("Save error when propagating graph item input [ID#$graph_template_item_input_id] to graph [ID#" . $_POST["id"] . "]", SEV_ERROR);
 						}
 					}
 				}

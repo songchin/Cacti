@@ -68,9 +68,9 @@ function rrdtool_execute($command_line, $log_to_stdout, $output_flag, $rrd_struc
 
 	/* output information to the log file if appropriate */
 	if (($syslog_facility == FACIL_POLLER) || ($syslog_facility == FACIL_CMDPHP)) {
-		api_log_log("RRD: " . addslashes(read_config_option("path_rrdtool")) . " $command_line", SEV_DEBUG, $syslog_facility, "", 0, 0, $log_to_stdout);
+		log_save("RRD: " . addslashes(read_config_option("path_rrdtool")) . " $command_line", SEV_DEBUG, $syslog_facility, "", 0, 0, $log_to_stdout);
 	} else {
-		api_log_log("RRD: " . addslashes(read_config_option("path_rrdtool")) . " $command_line", SEV_DEBUG, $syslog_facility);
+		log_save("RRD: " . addslashes(read_config_option("path_rrdtool")) . " $command_line", SEV_DEBUG, $syslog_facility);
 	}
 
 	/* if we want to see the error output from rrdtool; make sure to specify this */
@@ -174,7 +174,7 @@ function rrdtool_function_create($data_source_id, $show_source, $rrd_struc, $sys
 
 	/* if we find that this data source has no RRA associated; get out */
 	if ((!is_array($rra_items)) || (sizeof($rra_items) == 0)) {
-		api_log_log(_("There are no RRA's assigned to data_source_id: ") . $data_source_id . ".", SEV_ERROR, FACIL_POLLER);
+		log_save(_("There are no RRA's assigned to data_source_id: ") . $data_source_id . ".", SEV_ERROR, FACIL_POLLER);
 		return false;
 	}
 
@@ -305,7 +305,7 @@ function rrdtool_function_tune($rrd_tune_array) {
 			$fp = popen(read_config_option("path_rrdtool") . " tune $data_source_path $rrd_tune", "r");
 			pclose($fp);
 
-			api_log_log("RRD_TUNE: " . addslashes(read_config_option("path_rrdtool")) . " tune $data_source_path $rrd_tune", SEV_DEBUG, FACIL_POLLER);
+			log_save("RRD_TUNE: " . addslashes(read_config_option("path_rrdtool")) . " tune $data_source_path $rrd_tune", SEV_DEBUG, FACIL_POLLER);
 		}
 	}
 }

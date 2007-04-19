@@ -69,7 +69,7 @@ function copy_graph_template_to_graph($graph_template_id, $host_id = 0, $data_qu
 		if (api_graph_save(0, $_fields, true)) {
 			$graph_id = db_fetch_insert_id();
 
-			api_log_log("Cloning graph [ID#$graph_id] from template [ID#$graph_template_id]", SEV_DEBUG);
+			log_save("Cloning graph [ID#$graph_id] from template [ID#$graph_template_id]", SEV_DEBUG);
 
 			/* move onto the graph items */
 			$graph_template_items = api_graph_template_item_list($graph_template_id);
@@ -89,14 +89,14 @@ function copy_graph_template_to_graph($graph_template_id, $host_id = 0, $data_qu
 					}
 
 					if (!api_graph_item_save(0, $_fields)) {
-						api_log_log("Save error in api_graph_item_save()", SEV_ERROR);
+						log_save("Save error in api_graph_item_save()", SEV_ERROR);
 					}
 				}
 			}
 
 			return $graph_id;
 		}else{
-			api_log_log("Save error in api_graph_save()", SEV_ERROR);
+			log_save("Save error in api_graph_save()", SEV_ERROR);
 
 			return false;
 		}
@@ -152,7 +152,7 @@ function generate_complete_graph($graph_template_id, $host_id = 0, $data_query_i
 		$data_source_id = copy_data_template_to_data_source($data_template_id, $host_id, $data_query_id, $data_query_index);
 
 		if ($data_source_id === false) {
-			api_log_log("Error generating data source from data template [ID#$data_template_id]", SEV_ERROR);
+			log_save("Error generating data source from data template [ID#$data_template_id]", SEV_ERROR);
 		}else{
 			$dti_to_dsi[$data_template_id] = $data_source_id;
 		}
@@ -162,7 +162,7 @@ function generate_complete_graph($graph_template_id, $host_id = 0, $data_query_i
 	$graph_id = copy_graph_template_to_graph($graph_template_id, $host_id, $data_query_id, $data_query_index);
 
 	if ($graph_id === false) {
-		api_log_log("Error generating graph from graph template [ID#$graph_template_id]", SEV_ERROR);
+		log_save("Error generating graph from graph template [ID#$graph_template_id]", SEV_ERROR);
 	}else{
 		/* fetch a list graph template items and their associated data template items */
 		$data_template_items = get_data_template_items_from_graph_template($graph_template_id);
