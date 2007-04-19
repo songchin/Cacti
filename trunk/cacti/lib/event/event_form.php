@@ -25,7 +25,7 @@
 
 /* form validation functions */
 
-function api_event_fields_validate(&$_fields_event, $event_field_name_format = "|field|") {
+function event_validate (&$_fields_event, $event_field_name_format = "|field|") {
 	if (sizeof($_fields_event) == 0) {
 		return array();
 	}
@@ -34,7 +34,7 @@ function api_event_fields_validate(&$_fields_event, $event_field_name_format = "
 	$error_fields = array();
 
 	/* get a complete field list */
-	$fields_event = api_event_form_list();
+	$fields_event = event_list_form();
 
 	/* base fields */
 	while (list($_field_name, $_field_array) = each($fields_event)) {

@@ -34,7 +34,7 @@
  * @param int $plugin_id ID of plugin that is inserting the event
  * @return int row number of insert (false if unsuccessful)
  */
-function api_event_insert($handler, $params, $message = '', $plugin_id = 0) {
+function event_save ($handler, $params, $message = '', $plugin_id = 0) {
 	$save['id'] = '';
 	$save["handler"] = $handler;
 	$save['created'] = time();
@@ -71,7 +71,7 @@ function api_event_insert($handler, $params, $message = '', $plugin_id = 0) {
  *
  * @param int $id ID of event to be removed
  */
-function api_event_remove($id) {
+function event_delete ($id) {
 	db_execute("DELETE FROM event_queue_control WHERE id=". $id);
 	db_execute("DELETE FROM event_queue_param WHERE control_id=". $id);
 }
@@ -84,10 +84,10 @@ function api_event_remove($id) {
  *
  * @param int $id ID of event to be processed
  */
-function api_event_process ($id) {
-	$event = api_event_get($id);
+function event_process ($id) {
+	$event = event_get($id);
 
-	$function_names = api_event_handler_function_name ($event['handler']);
+	$function_names = event_list_handler_functions ($event['handler']);
 	foreach ($function_names as $function_name) {
 		$function_name ($event);
 	}
@@ -100,7 +100,7 @@ function api_event_process ($id) {
  * This function sets the status of all events to 1 to allow them to be processed
  *
  */
-function api_event_set_status() {
+function event_save_status () {
 	$id = rand(1, 99999);
 	db_execute("UPDATE event_queue_control set status = $id");
 	return $id;
@@ -113,7 +113,7 @@ function api_event_set_status() {
  * This function removes all events from the queue that have a status showing that they have been processed.
  *
  */
-function api_event_removed_processed($status_id) {
+function event_clear_processed ($status_id) {
 	$events = db_fetch_assoc("SELECT id FROM event_queue_control where status = $status_id");
 	db_execute("DELETE FROM event_queue_control WHERE status=$status_id");
 

@@ -50,19 +50,19 @@ while (true) {
 	$counter = time();
 
 	/* Set the status to show which events are being processed */
-	$status_id = api_event_set_status();
+	$status_id = event_save_status();
 
 	/* Get all events so we can begin processing */
-	$events = api_event_list(array('status'=>$status_id));
+	$events = event_list(array('status'=>$status_id));
 
 	/* Loop through each event for processing */
 	foreach ($events as $event) {
 		log_save('Processing Event ' . $event['id'], SEV_INFO, FACIL_POLLER, '', 0, 0, 0, true);
-		api_event_process ($event['id']);
+		event_process ($event['id']);
 	}
 
 	/* Remove all events that were set to be processed */
-	api_event_removed_processed($status_id);
+	event_deleted_processed($status_id);
 	if (date('s', time()) < $event_manager_interval) {
 		unset($_SESSION['sess_config_array']['event_manager_interval']);
 		$event_manager_interval = read_config_option('event_manager_interval');
