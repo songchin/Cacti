@@ -328,7 +328,7 @@ function get_visibility($leaf) {
 	while ($i > 1) {
 		$i--;
 
-		$parent_tier = substr($tier_string, 0, $i * CHARS_PER_TIER);
+		$parent_tier = tree_tier_string(substr($tier_string, 0, $i * CHARS_PER_TIER));
 		$parent_variable = "sess_tree_leaf_expand_" . $leaf["graph_tree_id"] . "_" . $parent_tier;
 
 		$effective = @$_SESSION[$parent_variable];
@@ -365,8 +365,6 @@ function get_icon($graph_tree_id, $order_key) {
    @returns - the string representing the leaf position
 */
 function tree_tier_string($order_key, $chars_per_tier = CHARS_PER_TIER) {
-	$root_test = str_pad('', $chars_per_tier, '0');
-
 	$new_string = preg_replace("/0+$/",'',$order_key);
 
 	return $new_string;
