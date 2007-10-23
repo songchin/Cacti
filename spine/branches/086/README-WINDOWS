@@ -1,0 +1,43 @@
+Prerequisites
+
+A working cygwin enviroment available @ www.cygwin.com
+You will need at least GCC from the cygwin distrubution in order to compile cactid.  I
+that you build cactid on a full development system and then transfer the binary to
+a minimal build system to run.
+
+You need to download the UNIX sources of NetSNMP and the MySQL.  Please do not download
+the Windows versions of these source distributions.
+
+MySQL source files available @ www.mysql.com/downloads
+Net-SNMP source files available @ www.net-snmp.org/download
+
+Build instructions
+
+MySQL
+
+Only the client libraries are needed for cactid so MySQL can be configured with the following option:
+
+./configure --without-server --enable-thread-safe-client
+
+make
+make install
+
+NetSNMP
+
+Use the experimental reentrant configure flag.  Also, these options works with the 5.3++ net-snmp, but may not work
+with prior versions.  The big thing to note when compiling net-snmp on Cygwin is to avoid all PERL related
+options as perlmod's do not compile in windows in general.
+
+./configure --enable-reentrant --disable-agent --disable-mibs --with-perl-modules=no --disable-mib-loading --with-defaults
+
+make
+make install
+
+Cactid
+
+nothing special required
+
+./configure
+
+make
+make install
