@@ -1,0 +1,370 @@
+snmp.o: snmp.c common.h config/config.h /usr/include/stdlib.h \
+  /usr/include/_ansi.h /usr/include/newlib.h /usr/include/sys/config.h \
+  /usr/include/machine/ieeefp.h /usr/include/cygwin/config.h \
+  /usr/lib/gcc/i686-pc-cygwin/3.4.4/include/stddef.h \
+  /usr/include/sys/reent.h /usr/include/_ansi.h /usr/include/sys/_types.h \
+  /usr/include/sys/lock.h /usr/include/machine/stdlib.h \
+  /usr/include/alloca.h /usr/include/cygwin/stdlib.h \
+  /usr/include/cygwin/wait.h /usr/include/string.h \
+  /usr/include/sys/string.h /usr/include/sys/types.h \
+  /usr/include/machine/_types.h /usr/include/machine/types.h \
+  /usr/include/sys/features.h /usr/include/cygwin/types.h \
+  /usr/include/sys/sysmacros.h /usr/include/stdint.h \
+  /usr/include/endian.h /usr/include/unistd.h /usr/include/sys/unistd.h \
+  /usr/include/getopt.h /usr/include/netinet/in.h \
+  /usr/include/cygwin/in.h /usr/include/cygwin/socket.h \
+  /usr/include/asm/socket.h /usr/include/cygwin/if.h \
+  /usr/include/sys/socket.h /usr/include/features.h \
+  /usr/include/sys/cdefs.h /usr/include/sys/time.h \
+  /usr/include/cygwin/sys_time.h /usr/include/sys/select.h \
+  /usr/include/time.h /usr/include/machine/time.h \
+  /usr/include/cygwin/time.h /usr/include/signal.h \
+  /usr/include/sys/signal.h /usr/include/cygwin/signal.h \
+  /usr/include/cygwin/sockios.h /usr/include/cygwin/uio.h \
+  /usr/include/asm/byteorder.h /usr/include/pthread.h \
+  /usr/include/sched.h /usr/include/sys/wait.h \
+  /usr/include/sys/resource.h /usr/include/sys/stat.h \
+  /usr/include/cygwin/stat.h /usr/include/assert.h /usr/include/ctype.h \
+  /usr/include/errno.h /usr/include/sys/errno.h /usr/include/math.h \
+  /usr/local/include/mysql/mysql.h \
+  /usr/local/include/mysql/mysql_version.h \
+  /usr/local/include/mysql/mysql_com.h \
+  /usr/local/include/mysql/mysql_time.h \
+  /usr/local/include/mysql/typelib.h /usr/local/include/mysql/my_alloc.h \
+  /usr/local/include/mysql/my_list.h /usr/include/netdb.h \
+  /usr/lib/gcc/i686-pc-cygwin/3.4.4/include/stdarg.h /usr/include/stdio.h \
+  /usr/include/sys/stdio.h /usr/include/syslog.h \
+  /usr/include/sys/syslog.h cactid.h poller.h locks.h keywords.h snmp.h \
+  php.h ping.h sql.h util.h nft_popen.h error.h \
+  /usr/local/include/net-snmp/net-snmp-config.h \
+  /usr/local/include/net-snmp/system/cygwin.h \
+  /usr/local/include/net-snmp/system/generic.h \
+  /usr/local/include/net-snmp/machine/generic.h \
+  /usr/local/include/net-snmp/utilities.h \
+  /usr/local/include/net-snmp/types.h \
+  /usr/local/include/net-snmp/definitions.h \
+  /usr/local/include/net-snmp/library/snmp_api.h \
+  /usr/local/include/net-snmp/library/asn1.h \
+  /usr/local/include/net-snmp/library/snmp_impl.h \
+  /usr/local/include/net-snmp/library/snmp.h \
+  /usr/local/include/net-snmp/library/snmp-tc.h \
+  /usr/local/include/net-snmp/library/snmp_client.h \
+  /usr/local/include/net-snmp/library/getopt.h \
+  /usr/local/include/net-snmp/library/system.h \
+  /usr/local/include/net-snmp/library/tools.h \
+  /usr/local/include/net-snmp/library/int64.h \
+  /usr/local/include/net-snmp/library/mt_support.h \
+  /usr/local/include/net-snmp/library/snmp_alarm.h \
+  /usr/local/include/net-snmp/library/data_list.h \
+  /usr/local/include/net-snmp/library/callback.h \
+  /usr/local/include/net-snmp/library/oid_stash.h \
+  /usr/local/include/net-snmp/library/check_varbind.h \
+  /usr/local/include/net-snmp/version.h \
+  /usr/local/include/net-snmp/net-snmp-includes.h \
+  /usr/local/include/net-snmp/session_api.h \
+  /usr/local/include/net-snmp/library/snmp_transport.h \
+  /usr/local/include/net-snmp/library/snmpCallbackDomain.h \
+  /usr/local/include/net-snmp/library/snmpUDPDomain.h \
+  /usr/local/include/net-snmp/library/snmpTCPDomain.h \
+  /usr/local/include/net-snmp/library/ucd_compat.h \
+  /usr/local/include/net-snmp/pdu_api.h \
+  /usr/local/include/net-snmp/mib_api.h \
+  /usr/local/include/net-snmp/library/mib.h \
+  /usr/local/include/net-snmp/library/parse.h \
+  /usr/local/include/net-snmp/varbind_api.h \
+  /usr/local/include/net-snmp/config_api.h \
+  /usr/local/include/net-snmp/library/read_config.h \
+  /usr/local/include/net-snmp/library/default_store.h \
+  /usr/local/include/net-snmp/library/snmp_parse_args.h \
+  /usr/local/include/net-snmp/library/snmp_enum.h \
+  /usr/local/include/net-snmp/library/vacm.h \
+  /usr/local/include/net-snmp/output_api.h \
+  /usr/local/include/net-snmp/library/snmp_debug.h \
+  /usr/local/include/net-snmp/library/snmp_logging.h \
+  /usr/local/include/net-snmp/snmpv3_api.h \
+  /usr/local/include/net-snmp/library/snmpv3.h \
+  /usr/local/include/net-snmp/library/transform_oids.h \
+  /usr/local/include/net-snmp/library/keytools.h \
+  /usr/local/include/net-snmp/library/scapi.h \
+  /usr/local/include/net-snmp/library/lcd_time.h \
+  /usr/local/include/net-snmp/library/snmp_secmod.h \
+  /usr/local/include/net-snmp/library/snmpv3-security-includes.h \
+  /usr/local/include/net-snmp/library/snmpusm.h
+
+common.h:
+
+config/config.h:
+
+/usr/include/stdlib.h:
+
+/usr/include/_ansi.h:
+
+/usr/include/newlib.h:
+
+/usr/include/sys/config.h:
+
+/usr/include/machine/ieeefp.h:
+
+/usr/include/cygwin/config.h:
+
+/usr/lib/gcc/i686-pc-cygwin/3.4.4/include/stddef.h:
+
+/usr/include/sys/reent.h:
+
+/usr/include/_ansi.h:
+
+/usr/include/sys/_types.h:
+
+/usr/include/sys/lock.h:
+
+/usr/include/machine/stdlib.h:
+
+/usr/include/alloca.h:
+
+/usr/include/cygwin/stdlib.h:
+
+/usr/include/cygwin/wait.h:
+
+/usr/include/string.h:
+
+/usr/include/sys/string.h:
+
+/usr/include/sys/types.h:
+
+/usr/include/machine/_types.h:
+
+/usr/include/machine/types.h:
+
+/usr/include/sys/features.h:
+
+/usr/include/cygwin/types.h:
+
+/usr/include/sys/sysmacros.h:
+
+/usr/include/stdint.h:
+
+/usr/include/endian.h:
+
+/usr/include/unistd.h:
+
+/usr/include/sys/unistd.h:
+
+/usr/include/getopt.h:
+
+/usr/include/netinet/in.h:
+
+/usr/include/cygwin/in.h:
+
+/usr/include/cygwin/socket.h:
+
+/usr/include/asm/socket.h:
+
+/usr/include/cygwin/if.h:
+
+/usr/include/sys/socket.h:
+
+/usr/include/features.h:
+
+/usr/include/sys/cdefs.h:
+
+/usr/include/sys/time.h:
+
+/usr/include/cygwin/sys_time.h:
+
+/usr/include/sys/select.h:
+
+/usr/include/time.h:
+
+/usr/include/machine/time.h:
+
+/usr/include/cygwin/time.h:
+
+/usr/include/signal.h:
+
+/usr/include/sys/signal.h:
+
+/usr/include/cygwin/signal.h:
+
+/usr/include/cygwin/sockios.h:
+
+/usr/include/cygwin/uio.h:
+
+/usr/include/asm/byteorder.h:
+
+/usr/include/pthread.h:
+
+/usr/include/sched.h:
+
+/usr/include/sys/wait.h:
+
+/usr/include/sys/resource.h:
+
+/usr/include/sys/stat.h:
+
+/usr/include/cygwin/stat.h:
+
+/usr/include/assert.h:
+
+/usr/include/ctype.h:
+
+/usr/include/errno.h:
+
+/usr/include/sys/errno.h:
+
+/usr/include/math.h:
+
+/usr/local/include/mysql/mysql.h:
+
+/usr/local/include/mysql/mysql_version.h:
+
+/usr/local/include/mysql/mysql_com.h:
+
+/usr/local/include/mysql/mysql_time.h:
+
+/usr/local/include/mysql/typelib.h:
+
+/usr/local/include/mysql/my_alloc.h:
+
+/usr/local/include/mysql/my_list.h:
+
+/usr/include/netdb.h:
+
+/usr/lib/gcc/i686-pc-cygwin/3.4.4/include/stdarg.h:
+
+/usr/include/stdio.h:
+
+/usr/include/sys/stdio.h:
+
+/usr/include/syslog.h:
+
+/usr/include/sys/syslog.h:
+
+cactid.h:
+
+poller.h:
+
+locks.h:
+
+keywords.h:
+
+snmp.h:
+
+php.h:
+
+ping.h:
+
+sql.h:
+
+util.h:
+
+nft_popen.h:
+
+error.h:
+
+/usr/local/include/net-snmp/net-snmp-config.h:
+
+/usr/local/include/net-snmp/system/cygwin.h:
+
+/usr/local/include/net-snmp/system/generic.h:
+
+/usr/local/include/net-snmp/machine/generic.h:
+
+/usr/local/include/net-snmp/utilities.h:
+
+/usr/local/include/net-snmp/types.h:
+
+/usr/local/include/net-snmp/definitions.h:
+
+/usr/local/include/net-snmp/library/snmp_api.h:
+
+/usr/local/include/net-snmp/library/asn1.h:
+
+/usr/local/include/net-snmp/library/snmp_impl.h:
+
+/usr/local/include/net-snmp/library/snmp.h:
+
+/usr/local/include/net-snmp/library/snmp-tc.h:
+
+/usr/local/include/net-snmp/library/snmp_client.h:
+
+/usr/local/include/net-snmp/library/getopt.h:
+
+/usr/local/include/net-snmp/library/system.h:
+
+/usr/local/include/net-snmp/library/tools.h:
+
+/usr/local/include/net-snmp/library/int64.h:
+
+/usr/local/include/net-snmp/library/mt_support.h:
+
+/usr/local/include/net-snmp/library/snmp_alarm.h:
+
+/usr/local/include/net-snmp/library/data_list.h:
+
+/usr/local/include/net-snmp/library/callback.h:
+
+/usr/local/include/net-snmp/library/oid_stash.h:
+
+/usr/local/include/net-snmp/library/check_varbind.h:
+
+/usr/local/include/net-snmp/version.h:
+
+/usr/local/include/net-snmp/net-snmp-includes.h:
+
+/usr/local/include/net-snmp/session_api.h:
+
+/usr/local/include/net-snmp/library/snmp_transport.h:
+
+/usr/local/include/net-snmp/library/snmpCallbackDomain.h:
+
+/usr/local/include/net-snmp/library/snmpUDPDomain.h:
+
+/usr/local/include/net-snmp/library/snmpTCPDomain.h:
+
+/usr/local/include/net-snmp/library/ucd_compat.h:
+
+/usr/local/include/net-snmp/pdu_api.h:
+
+/usr/local/include/net-snmp/mib_api.h:
+
+/usr/local/include/net-snmp/library/mib.h:
+
+/usr/local/include/net-snmp/library/parse.h:
+
+/usr/local/include/net-snmp/varbind_api.h:
+
+/usr/local/include/net-snmp/config_api.h:
+
+/usr/local/include/net-snmp/library/read_config.h:
+
+/usr/local/include/net-snmp/library/default_store.h:
+
+/usr/local/include/net-snmp/library/snmp_parse_args.h:
+
+/usr/local/include/net-snmp/library/snmp_enum.h:
+
+/usr/local/include/net-snmp/library/vacm.h:
+
+/usr/local/include/net-snmp/output_api.h:
+
+/usr/local/include/net-snmp/library/snmp_debug.h:
+
+/usr/local/include/net-snmp/library/snmp_logging.h:
+
+/usr/local/include/net-snmp/snmpv3_api.h:
+
+/usr/local/include/net-snmp/library/snmpv3.h:
+
+/usr/local/include/net-snmp/library/transform_oids.h:
+
+/usr/local/include/net-snmp/library/keytools.h:
+
+/usr/local/include/net-snmp/library/scapi.h:
+
+/usr/local/include/net-snmp/library/lcd_time.h:
+
+/usr/local/include/net-snmp/library/snmp_secmod.h:
+
+/usr/local/include/net-snmp/library/snmpv3-security-includes.h:
+
+/usr/local/include/net-snmp/library/snmpusm.h:
