@@ -608,6 +608,9 @@ void poll_host(int host_id) {
 		/* create an array for snmp oids */
 		snmp_oids = (snmp_oids_t *) calloc(set.snmp_max_get_size, sizeof(snmp_oids_t));
 
+		/* clear snmpoid memory */
+		memset(snmp_oids, 0, set.snmp_max_get_size*sizeof(snmp_oids_t));
+
 		i = 0;
 		while ((i < num_rows) && (!host->ignore_host)) {
 			if (!host->ignore_host) {
@@ -665,6 +668,9 @@ void poll_host(int host_id) {
 								CACTID_LOG_MEDIUM(("Host[%i] DS[%i] SNMP: v%i: %s, dsname: %s, oid: %s, value: %s\n", host_id, poller_items[snmp_oids[j].array_position].local_data_id, host->snmp_version, host->hostname, poller_items[snmp_oids[j].array_position].rrd_name, poller_items[snmp_oids[j].array_position].arg1, poller_items[snmp_oids[j].array_position].result));
 							}
 
+							/* clear snmpoid memory */
+							memset(snmp_oids, 0, set.snmp_max_get_size*sizeof(snmp_oids_t));
+
 							/* reset num_snmps */
 							num_oids = 0;
 						}
@@ -713,6 +719,9 @@ void poll_host(int host_id) {
 								}
 							}
 						}
+
+						/* clear snmpoid memory */
+						memset(snmp_oids, 0, set.snmp_max_get_size*sizeof(snmp_oids_t));
 
 						/* reset num_snmps */
 						num_oids = 0;

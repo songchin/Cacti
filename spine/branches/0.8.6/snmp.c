@@ -518,7 +518,7 @@ void snmp_get_multi(host_t *current_host, snmp_oids_t *snmp_oids, int num_oids) 
 					if (pdu != NULL) {
 						goto retry;
 					}else{
-						status = STAT_DESCRIP_ERROR;
+						status = STAT_SUCCESS;
 					}
 				}else{
 					status = STAT_DESCRIP_ERROR;
