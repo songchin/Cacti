@@ -22,11 +22,11 @@
  +-------------------------------------------------------------------------+
 */
 
-/* 
+/*
    !!! IMPORTANT !!!
 
-   The following defaults are not to be altered.  Please refer to 
-   include/config.php for user configurable database settings. 
+   The following defaults are not to be altered.  Please refer to
+   include/config.php for user configurable database settings.
 
 */
 
@@ -190,6 +190,6 @@ include_once($config["library_path"] . "/variables.php");
 include_once($config["library_path"] . "/auth.php");
 
 /* current cacti version */
-$config["cacti_version"] = "0.8.7";
+$config["cacti_version"] = "0.8.7a";
 
 ?>
