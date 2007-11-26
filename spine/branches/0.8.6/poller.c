@@ -345,7 +345,7 @@ void poll_host(int host_id) {
 						host->ignore_host = FALSE;
 						update_host_status(HOST_UP, host, ping, set.availability_method);
 					}else{
-						host->ignore_host = FALSE;
+						host->ignore_host = TRUE;
 						update_host_status(HOST_DOWN, host, ping, set.availability_method);
 					}
 				}

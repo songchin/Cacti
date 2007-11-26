@@ -1,5 +1,15 @@
 The Cacti Group – cactid
 
+0.8.6l
+-bug#0001097: cactid: Patch to allow unknown values 
+-bug#0001101: cactid hangs and timed out
+
+0.8.6k
+-bug#0001054: Cactid/Spine installation instructions are missing dependencies
+-bug#0001056: Spine/Cactid configure reports incorrect URL for bug reporting
+-bug#0001071: When using Multiget OID's in Spine/Cactid Errored OID's Cause Alignment Issues
+-bug#0001072: When the Last OID of a group is 'U', the host is repored down and remainder of OID's not polled
+
 0.8.6j
 -bug#0000879/0000872: cactid doesn't always report error messages before dying 
 -bug#0000856: Slight documentation change

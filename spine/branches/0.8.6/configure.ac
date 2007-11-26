@@ -1,5 +1,5 @@
 AC_PREREQ(2.53)
-AC_INIT(Cactid Poller, 0.8.6k, http://www.cacti.net/bugs.php)
+AC_INIT(Cactid Poller, 0.8.6l, http://www.cacti.net/bugs.php)
 
 AC_CONFIG_AUX_DIR(config)
 AC_SUBST(ac_aux_dir)
@@ -9,7 +9,7 @@ AC_CONFIG_SRCDIR(cactid.c)
 AC_PREFIX_DEFAULT(/usr/local/cactid)
 AC_LANG(C)
 
-AM_INIT_AUTOMAKE(cactid, 0.8.6k)
+AM_INIT_AUTOMAKE(cactid, 0.8.8l)
 AM_CONFIG_HEADER(config/config.h)
 
 # static libraries
@@ -95,7 +95,7 @@ AC_HEADER_STDC
 AC_CHECK_HEADERS(sys/socket.h sys/select.h sys/wait.h sys/time.h)
 AC_CHECK_HEADERS(assert.h ctype.h errno.h signal.h math.h malloc.h netdb.h)
 AC_CHECK_HEADERS(signal.h stdarg.h stdio.h syslog.h)
-AC_CHECK_HEADERS(netinet/in.h netinet/ip.h netinet/ip_icmp.h)
+AC_CHECK_HEADERS(netinet/in_systm.h netinet/in.h netinet/ip.h netinet/ip_icmp.h)
 
 # Checks for typedefs, structures, and compiler characteristics.
 AC_CHECK_TYPES([unsigned long long, long long])
