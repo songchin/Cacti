@@ -310,7 +310,7 @@ function cdef_edit() {
 
 		html_start_box("<strong>CDEF Items</strong>", "100%", $colors["header"], "3", "center", "cdef.php?action=item_edit&cdef_id=" . $cdef["id"]);
 
-		print "<tr bgcolor='#" . $colors["header_panel"] . "'>";
+		print "<tr class='rowSubHeader'>";
 			DrawMatrixHeaderItem("Item",$colors["header_text"],1);
 			DrawMatrixHeaderItem("Item Value",$colors["header_text"],1);
 			DrawMatrixHeaderItem("&nbsp;",$colors["header_text"],2);
@@ -351,7 +351,7 @@ function cdef() {
 
 	html_start_box("<strong>CDEF's</strong>", "100%", $colors["header"], "3", "center", "cdef.php?action=edit");
 
-	print "<tr bgcolor='#" . $colors["header_panel"] . "'>";
+	print "<tr class='rowSubHeader'>";
 		DrawMatrixHeaderItem("Name",$colors["header_text"],1);
 		DrawMatrixHeaderItem("&nbsp;",$colors["header_text"],1);
 	print "</tr>";

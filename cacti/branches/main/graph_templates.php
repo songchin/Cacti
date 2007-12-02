@@ -314,7 +314,7 @@ function item() {
 
 	html_start_box("<strong>Graph Item Inputs</strong>", "100%", $colors["header"], "3", "center", "graph_templates_inputs.php?action=input_edit&graph_template_id=" . $_GET["id"]);
 
-	print "<tr bgcolor='#" . $colors["header_panel"] . "'>";
+	print "<tr class='rowSubHeader'>";
 		DrawMatrixHeaderItem("Name",$colors["header_text"],2);
 	print "</tr>";
 

@@ -772,7 +772,7 @@ function user_realms_edit() {
 
 	html_start_box("", "100%", $colors["header"], "3", "center", "");
 
-	print "	<tr bgcolor='#" . $colors["header"] . "'>
+	print "	<tr class='rowHeader'>
 			<td class='textHeaderDark'><strong>Realm Permissions</strong></td>
 			<td width='1%' align='center' bgcolor='#819bc0' style='" . get_checkbox_style() . "'><input type='checkbox' style='margin: 0px;' name='all' title='Select All' onClick='SelectAll(\"section\",this.checked)'></td>\n
 		</tr>\n";
@@ -837,7 +837,7 @@ function graph_settings_edit() {
 
 	while (list($tab_short_name, $tab_fields) = each($settings_graphs)) {
 		?>
-		<tr bgcolor='<?php print $colors["header_panel"];?>'>
+		<tr class='rowSubHeader'>
 			<td colspan='2' class='textSubHeaderDark' style='padding: 3px;'>
 				<?php print $tabs_graphs[$tab_short_name];?>
 			</td>

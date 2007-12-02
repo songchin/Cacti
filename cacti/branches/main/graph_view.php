@@ -404,7 +404,7 @@ case 'list':
 	-->
 	</script>
 
-	<tr bgcolor="<?php print $colors["panel"];?>">
+	<tr class='rowSubHeader'>
 		<form name="form_graph_list" method="POST" onSubmit='form_graph(document.graphs,document.form_graph_list)'>
 		<input type='hidden' name='graph_list' value='<?php print $graph_list_text; ?>'>
 		<input type='hidden' name='graph_add' value=''>
@@ -592,7 +592,7 @@ case 'list':
 
 	html_graph_start_box(1, true);
 	?>
-	<tr bgcolor='#<?php print $colors["header_panel"];?>'>
+	<tr class='rowSubHeader'>
 		<td colspan='3'>
 			<table width='100%' cellspacing='0' cellpadding='3' border='0'>
 				<tr>

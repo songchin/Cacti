@@ -43,6 +43,17 @@ a:hover {
 	color: white;
 	text-decoration: underline;
 }
+/* row styles */
+.rowHeader {
+	background-image: url('../images/rowHeader.png');
+	background-repeat-x;
+}
+
+.rowSubHeader {
+	height: 100%;
+	background-image: url('../images/rowSubHeader.png');
+	background-repeat-x;
+}
 
 /* text styles */
 
@@ -69,6 +80,11 @@ a:hover {
 }
 
 .textSubHeaderDark, .textSubHeaderDark:visited {
+	font-size: 10px;
+	color: #ffffff;
+	font-weight: bold;
+}
+.textSubSortHeaderDark, .textSubSortHeaderDark:visited {
 	font-size: 10px;
 	color: #ffffff;
 	font-weight: bold;

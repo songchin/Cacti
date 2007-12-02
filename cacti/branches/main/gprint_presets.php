@@ -135,7 +135,7 @@ function gprint_presets() {
 
 	html_start_box("<strong>GPRINT Presets</strong>", "100%", $colors["header"], "3", "center", "gprint_presets.php?action=edit");
 
-	print "	<tr bgcolor='#" . $colors["header_panel"] . "'>
+	print "	<tr class='rowSubHeader'>
 			<td colspan='2' class='textSubHeaderDark'>GPRINT Preset Title</td>
 		</tr>";
 

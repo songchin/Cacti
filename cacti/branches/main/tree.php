@@ -179,7 +179,7 @@ function item_edit() {
 			</select>
 		</td>
 	</tr>
-	<tr bgcolor='#<?php print $colors["header_panel"];?>'>
+	<tr class='rowSubHeader'>
 		<td colspan="2" class='textSubHeaderDark'>Tree Item Value</td>
 	</tr>
 	<?php
@@ -399,7 +399,7 @@ function tree_edit() {
 		</td>
 		<?php
 
-		print "<tr bgcolor='#" . $colors["header_panel"] . "'>";
+		print "<tr class='rowSubHeader'>";
 			DrawMatrixHeaderItem("Item",$colors["header_text"],1);
 			DrawMatrixHeaderItem("Value",$colors["header_text"],1);
 			DrawMatrixHeaderItem("&nbsp;",$colors["header_text"],2);
@@ -417,7 +417,7 @@ function tree() {
 
 	html_start_box("<strong>Graph Trees</strong>", "100%", $colors["header"], "3", "center", "tree.php?action=edit");
 
-	print "<tr bgcolor='#" . $colors["header_panel"] . "'>";
+	print "<tr class='rowSubHeader'>";
 		DrawMatrixHeaderItem("Name",$colors["header_text"],1);
 		DrawMatrixHeaderItem("&nbsp;",$colors["header_text"],1);
 	print "</tr>";

@@ -123,7 +123,7 @@ function color() {
 
 	html_start_box("<strong>Colors</strong>", "100%", $colors["header"], "3", "center", "color.php?action=edit");
 
-	print "<tr bgcolor='#" . $colors["header_panel"] . "'>";
+	print "<tr class='rowSubHeader'>";
 		DrawMatrixHeaderItem("Hex Value",$colors["header_text"],1);
 		DrawMatrixHeaderItem("Color",$colors["header_text"],1);
 		DrawMatrixHeaderItem("&nbsp;",$colors["header_text"],1);

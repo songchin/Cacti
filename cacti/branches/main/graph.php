@@ -71,7 +71,7 @@ $rras = get_associated_rras($_GET["local_graph_id"]);
 switch ($_REQUEST["action"]) {
 case 'view':
 	?>
-	<tr bgcolor='#<?php print $colors["header_panel"];?>'>
+	<tr class='rowSubHeader'>
 		<td colspan='3' class='textHeaderDark'>
 			<strong>Viewing Graph</strong> '<?php print $graph_title;?>'
 		</td>
@@ -184,7 +184,7 @@ case 'zoom':
 	}
 
 	?>
-	<tr bgcolor='#<?php print $colors["header_panel"];?>'>
+	<tr class='rowSubHeader'>
 		<td colspan='3' class='textHeaderDark'>
 			<strong>Zooming Graph</strong> '<?php print $graph_title;?>'
 		</td>
@@ -224,7 +224,7 @@ case 'zoom':
 	break;
 case 'properties':
 	?>
-	<tr bgcolor='#<?php print $colors["header_panel"];?>'>
+	<tr class='rowSubHeader'>
 		<td colspan='3' class='textHeaderDark'>
 			<strong>Viewing Graph Properties </strong> '<?php print $graph_title;?>'
 		</td>

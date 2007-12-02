@@ -389,7 +389,7 @@ function data_edit() {
 
 	if (!empty($_GET["id"])) {
 		html_start_box("<strong>Input Fields</strong>", "100%", $colors["header"], "3", "center", "data_input.php?action=field_edit&type=in&data_input_id=" . $_GET["id"]);
-		print "<tr bgcolor='#" . $colors["header_panel"] . "'>";
+		print "<tr class='rowSubHeader'>";
 			DrawMatrixHeaderItem("Name",$colors["header_text"],1);
 			DrawMatrixHeaderItem("Field Order",$colors["header_text"],1);
 			DrawMatrixHeaderItem("Friendly Name",$colors["header_text"],2);
@@ -423,7 +423,7 @@ function data_edit() {
 		html_end_box();
 
 		html_start_box("<strong>Output Fields</strong>", "100%", $colors["header"], "3", "center", "data_input.php?action=field_edit&type=out&data_input_id=" . $_GET["id"]);
-		print "<tr bgcolor='#" . $colors["header_panel"] . "'>";
+		print "<tr class='rowSubHeader'>";
 			DrawMatrixHeaderItem("Name",$colors["header_text"],1);
 			DrawMatrixHeaderItem("Field Order",$colors["header_text"],1);
 			DrawMatrixHeaderItem("Friendly Name",$colors["header_text"],1);

@@ -400,7 +400,7 @@ function data_query_item_edit() {
 		$i = 0;
 		if (sizeof($data_templates) > 0) {
 		foreach ($data_templates as $data_template) {
-			print "	<tr bgcolor='#" . $colors["header_panel"] . "'>
+			print "	<tr class='rowSubHeader'>
 					<td><span style='color: white; font-weight: bold;'>Data Template - " . $data_template["name"] . "</span></td>
 				</tr>";
 
@@ -479,7 +479,7 @@ function data_query_item_edit() {
 				and data_template_id=" . $data_template["id"] . "
 				order by field_name,sequence");
 
-			print "	<tr bgcolor='#" . $colors["header_panel"] . "'>
+			print "	<tr class='rowSubHeader'>
 					<td style='padding: 3px;'><span style='color: white; font-weight: bold;'>Data Template - " . $data_template["name"] . "</span></td>
 				</tr>";
 
@@ -541,7 +541,7 @@ function data_query_item_edit() {
 			where snmp_query_graph_id=" . $_GET["id"] . "
 			order by field_name,sequence");
 
-		print "	<tr bgcolor='#" . $colors["header_panel"] . "'>
+		print "	<tr class='rowSubHeader'>
 				<td style='padding: 3px;'><span style='color: white; font-weight: bold;'>Graph Template - " . db_fetch_cell("select name from graph_templates where id=" . $snmp_query_item["graph_template_id"]) . "</span></td>
 			</tr>";
 
@@ -659,7 +659,7 @@ function data_query_edit() {
 		if ($xml_file_exists == true) {
 			html_start_box("<strong>Associated Graph Templates</strong>", "100%", $colors["header"], "3", "center", "data_queries.php?action=item_edit&snmp_query_id=" . $snmp_query["id"]);
 
-			print "	<tr bgcolor='#" . $colors["header_panel"] . "'>
+			print "	<tr class='rowSubHeader'>
 					<td><span style='color: white; font-weight: bold;'>Name</span></td>
 					<td><span style='color: white; font-weight: bold;'>Graph Template Name</span></td>
 					<td></td>

@@ -514,7 +514,7 @@ function graphs() {
 	if ($_REQUEST["graph_type"] < 0) {
 		html_start_box("<strong>Graph Templates</strong>", "100%", $colors["header"], "3", "center", "");
 
-		print "	<tr bgcolor='#" . $colors["header_panel"] . "'>
+		print "	<tr class='rowSubHeader'>
 				<td class='textSubHeaderDark'>Graph Template Name</td>
 				<td width='1%' align='center' bgcolor='#819bc0' style='" . get_checkbox_style() . "'><input type='checkbox' style='margin: 0px;' name='all_cg' title='Select All' onClick='SelectAll(\"cg\",this.checked);gt_update_selection_indicators();'></td>\n
 			</tr>\n";

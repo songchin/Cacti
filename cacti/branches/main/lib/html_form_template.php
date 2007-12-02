@@ -69,7 +69,7 @@ function draw_nontemplated_fields_graph($graph_template_id, &$values_array, $fie
 			}
 		}else{
 			if (($draw_any_items == false) && ($header_title != "")) {
-				print "<tr bgcolor='#" . $colors["header_panel"] . "'><td colspan='2' style='font-size: 10px; color: white;'>$header_title</td></tr>\n";
+				print "<tr class='rowSubHeader'><td colspan='2' style='font-size: 10px; color: white;'>$header_title</td></tr>\n";
 			}
 
 			$draw_any_items = true;
@@ -169,7 +169,7 @@ function draw_nontemplated_fields_graph_item($graph_template_id, $local_graph_id
 				unset($form_array[$form_field_name]);
 			}else{
 				if (($draw_any_items == false) && ($header_title != "")) {
-					print "<tr bgcolor='#" . $colors["header_panel"] . "'><td colspan='2' style='font-size: 10px; color: white;'>$header_title</td></tr>\n";
+					print "<tr class='rowSubHeader'><td colspan='2' style='font-size: 10px; color: white;'>$header_title</td></tr>\n";
 				}
 
 				$draw_any_items = true;
@@ -253,7 +253,7 @@ function draw_nontemplated_fields_data_source($data_template_id, $local_data_id,
 			}
 		}else{
 			if (($draw_any_items == false) && ($header_title != "")) {
-				print "<tr bgcolor='#" . $colors["header_panel"] . "'><td colspan='2' style='font-size: 10px; color: white;'>$header_title</td></tr>\n";
+				print "<tr class='rowSubHeader'><td colspan='2' style='font-size: 10px; color: white;'>$header_title</td></tr>\n";
 			}
 
 			$draw_any_items = true;
@@ -354,9 +354,9 @@ function draw_nontemplated_fields_data_source_item($data_template_id, &$values_a
 				}
 			}else{
 				if (($draw_any_items == false) && ($draw_title_for_each_item == false) && ($header_title != "")) {
-					print "<tr bgcolor='#" . $colors["header_panel"] . "'><td colspan='2' style='font-size: 10px; color: white;'>$header_title</td></tr>\n";
+					print "<tr class='rowSubHeader'><td colspan='2' style='font-size: 10px; color: white;'>$header_title</td></tr>\n";
 				}elseif (($draw_any_items == false) && ($draw_title_for_each_item == true) && ($header_title != "")) {
-					print "<tr bgcolor='#" . $colors["header_panel"] . "'><td colspan='2' style='font-size: 10px; color: white;'>$header_title [" . $rrd["data_source_name"] . "]</td></tr>\n";
+					print "<tr class='rowSubHeader'><td colspan='2' style='font-size: 10px; color: white;'>$header_title [" . $rrd["data_source_name"] . "]</td></tr>\n";
 				}
 
 				$draw_any_items = true;
@@ -439,7 +439,7 @@ function draw_nontemplated_fields_custom_data($data_template_data_id, $field_nam
 			}
 		}else{
 			if (($draw_any_items == false) && ($header_title != "")) {
-				print "<tr bgcolor='#" . $colors["header_panel"] . "'><td colspan='2' style='font-size: 10px; color: white;'>$header_title</td></tr>\n";
+				print "<tr class='rowSubHeader'><td colspan='2' style='font-size: 10px; color: white;'>$header_title</td></tr>\n";
 			}
 
 			if ($alternate_colors == true) {

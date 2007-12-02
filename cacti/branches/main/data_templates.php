@@ -514,8 +514,8 @@ function template_edit() {
 
 	html_start_box("", "100%", $colors["header"], "3", "center", "");
 
-	print "	<tr>
-			<td bgcolor='#" . $colors["header"] . "' class='textHeaderDark'>
+	print "	<tr class='rowHeader'>
+			<td class='textHeaderDark'>
 				<strong>Data Source Item</strong> [" . (isset($template_rrd) ? $template_rrd["data_source_name"] : "") . "]
 			</td>
 			<td class='textHeaderDark' align='right' bgcolor='" . $colors["header"] . "'>

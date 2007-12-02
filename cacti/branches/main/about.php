@@ -28,8 +28,8 @@ include("./include/top_header.php");
 html_start_box("<strong>About Cacti</strong>", "100%", $colors["header"], "3", "center", "");
 ?>
 
-<tr>
-	<td bgcolor="#<?php print $colors["header_panel"];?>" colspan="2">
+<tr class='rowSubHeader'>
+	<td colspan="2">
 		<strong><font color="#<?php print $colors["header_text"];?>">Version <?php print $config["cacti_version"];?></font></strong>
 	</td>
 </tr>

@@ -37,18 +37,40 @@ function html_start_box($title, $width, $background_color, $cell_padding, $align
 		<tr>
 			<td>
 				<table cellpadding=<?php print $cell_padding;?> cellspacing=0 border=0 bgcolor="#<?php print $colors["form_background_dark"];?>" width="100%">
-					<?php if ($title != "") {?><tr>
-						<td bgcolor="#<?php print $background_color;?>" style="padding: 3px;" colspan="100">
+					<?php if ($title != "") {?><tr class="rowHeader">
+						<td style="padding: 3px;" colspan="100">
 							<table width="100%" cellpadding="0" cellspacing="0">
 								<tr>
-									<td bgcolor="#<?php print $background_color;?>" class="textHeaderDark"><?php print $title;?></td>
-										<?php if ($add_text != "") {?><td class="textHeaderDark" align="right" bgcolor="#<?php print $colors["header"];?>"><strong><a class="linkOverDark" href="<?php print $add_text;?>">Add</a>&nbsp;</strong></td><?php }?>
+									<td class="textHeaderDark"><?php print $title;?></td>
+										<?php if ($add_text != "") {?><td align="right"><strong><a class="linkOverDark" href="<?php print $add_text;?>">Add</a>&nbsp;</strong></td><?php }?>
 								</tr>
 							</table>
 						</td>
 					</tr><?php }?>
 
 <?php }
+
+function html_start_box_dq($query_name, $query_id, $host_id, $colspan, $width, $background_color, $cell_padding, $align) {
+	global $colors; ?>
+	<table align="<?php print $align;?>" width="<?php print $width;?>" cellpadding=1 cellspacing=0 border=0 bgcolor="#<?php print $background_color;?>">
+		<tr>
+			<td>
+				<table cellpadding=<?php print $cell_padding;?> cellspacing=0 border=0 bgcolor="#<?php print $colors["form_background_dark"];?>" width="100%">
+					<tr class='rowHeader'>
+						<td style='padding: 3px;' colspan='<?php print $colspan+1;?>'>
+							<table  cellspacing='0' cellpadding='0' width='100%' >
+								<tr>
+									<td class='textHeaderDark'>
+										<strong>Data Query</strong> [<?php print $query_name; ?>]
+									</td>
+									<td align='right' nowrap>
+										<a href='graphs_new.php?action=query_reload&id=<?php print $query_id;?>&host_id=<?php print $host_id;?>'><img src='images/reload_icon_small.gif' alt='Reload Associated Query' border='0' align='absmiddle'></a>
+									</td>
+								</tr>
+							</table>
+						</td>
+					</tr><?php
+}
 
 /* html_end_box - draws the end of an HTML box
    @arg $trailing_br (bool) - whether to draw a trailing <br> tag after ending
@@ -183,6 +205,11 @@ function html_graph_thumbnail_area(&$graph_array, $no_graphs_message = "", $extr
    @arg $nav_url - the url to use when presenting users with previous/next links. the variable
      <PAGE> will be substituted with the correct page number if included */
 function html_nav_bar($background_color, $colspan, $current_page, $rows_per_page, $total_rows, $nav_url) {
+	if (substr_count($nav_url, "?")) {
+		$nav_url .= "&";
+	}else{
+		$nav_url .= "?";
+	}
 	?>
 	<tr bgcolor='#<?php print $background_color;?>' class='noprint'>
 		<td colspan='<?php print $colspan;?>'>
@@ -224,7 +251,7 @@ function html_header_sort($header_items, $sort_column, $sort_direction, $last_it
 		$new_sort_direction = "ASC";
 	}
 
-	print "<tr bgcolor='#" . $colors["header_panel"] . "'>\n";
+	print "<tr class='rowSubHeader'>\n";
 
 	$i = 1;
 	foreach ($header_items as $db_column => $display_array) {
@@ -240,8 +267,8 @@ function html_header_sort($header_items, $sort_column, $sort_direction, $last_it
 		if (($db_column == "") || (substr_count($db_column, "nosort"))) {
 			print "<td " . ((($i+1) == count($header_items)) ? "colspan='$last_item_colspan' " : "") . "class='textSubHeaderDark'>" . $display_text . "</td>\n";
 		}else{
-			print "<td " . ((($i) == count($header_items)) ? "colspan='$last_item_colspan'>" : ">");
-			print "<a class='textSubHeaderDark' href=" . $_SERVER["PHP_SELF"] . "?sort_column=" . $db_column . "&sort_direction=" . $direction . ">" . $display_text . "</a>";
+			print "<td " . ((($i) == count($header_items)) ? "colspan='$last_item_colspan'" : "") . " class='textSubHeaderDark'>";
+			print "<a class='textSubSortHeaderDark' href=" . $_SERVER["PHP_SELF"] . "?sort_column=" . $db_column . "&sort_direction=" . $direction . ">" . $display_text . "</a>";
 			print "</td>\n";
 		}
 
@@ -275,7 +302,7 @@ function html_header_sort_checkbox($header_items, $sort_column, $sort_direction,
 	/* default to the 'current' file */
 	if ($form_action == "") { $form_action = basename($_SERVER["PHP_SELF"]); }
 
-	print "<tr bgcolor='#" . $colors["header_panel"] . "'>\n";
+	print "<tr class='rowSubHeader'>\n";
 
 	foreach($header_items as $db_column => $display_array) {
 		/* by default, you will always sort ascending, with the exception of an already sorted column */
@@ -306,7 +333,7 @@ function html_header_sort_checkbox($header_items, $sort_column, $sort_direction,
 function html_header($header_items, $last_item_colspan = 1) {
 	global $colors;
 
-	print "<tr bgcolor='#" . $colors["header_panel"] . "'>\n";
+	print "<tr class='rowSubHeader'>\n";
 
 	for ($i=0; $i<count($header_items); $i++) {
 		print "<td " . ((($i+1) == count($header_items)) ? "colspan='$last_item_colspan' " : "") . "class='textSubHeaderDark'>" . $header_items[$i] . "</td>\n";
@@ -325,7 +352,7 @@ function html_header_checkbox($header_items, $form_action = "") {
 	/* default to the 'current' file */
 	if ($form_action == "") { $form_action = basename($_SERVER["PHP_SELF"]); }
 
-	print "<tr bgcolor='#" . $colors["header_panel"] . "'>\n";
+	print "<tr class='rowSubHeader'>\n";
 
 	for ($i=0; $i<count($header_items); $i++) {
 		print "<td class='textSubHeaderDark'>" . $header_items[$i] . "</td>\n";
@@ -377,6 +404,41 @@ function html_create_list($form_data, $column_display, $column_id, $form_previou
 	}
 }
 
+/* html_create_nav - creates page select navigation html
+   @arg $current_page - the current page displayed
+   @arg $rows_per_page - the number of rows to display per page
+   @arg $total_rows - the total number of rows that can be displayed
+   @arg $columns - the total number of columns on this page
+   @arg $base_url - the url to navigate to
+   @arg $url_page_select - the page list to display */
+function html_create_nav($current_page, $rows_per_page, $total_rows, $columns, $base_url, $url_page_select) {
+	if (substr_count($base_url, "?")) {
+		$base_url .= "&";
+	}else{
+		$base_url .= "?";
+	}
+
+	$nav = "<tr class='rowHeader'>
+			<td colspan='$columns'>
+				<table width='100%' cellspacing='0' cellpadding='0' border='0'>
+					<tr>
+						<td align='left' class='textHeaderDark'>
+							<strong>&lt;&lt; "; if ($current_page > 1) { $nav .= "<a class='linkOverDark' href='" . $base_url . "page=" . ($current_page-1) . "'>"; } $nav .= "Previous"; if ($current_page > 1) { $nav .= "</a>"; } $nav .= "</strong>
+						</td>\n
+						<td align='center' class='textHeaderDark'>
+							Showing Rows " . (($rows_per_page*($current_page-1))+1) . " to " . ((($total_rows < $rows_per_page) || ($total_rows < ($rows_per_page*$current_page))) ? $total_rows : ($rows_per_page*$current_page)) . " of $total_rows [$url_page_select]
+						</td>\n
+						<td align='right' class='textHeaderDark'>
+							<strong>"; if (($current_page * $rows_per_page) < $total_rows) { $nav .= "<a class='linkOverDark' href='" . $base_url . "page=" . ($current_page+1) . "'>"; } $nav .= "Next"; if (($current_page * $rows_per_page) < $total_rows) { $nav .= "</a>"; } $nav .= " &gt;&gt;</strong>
+						</td>\n
+					</tr>
+				</table>
+			</td>
+		</tr>\n";
+
+	return $nav;
+}
+
 /* draw_graph_items_list - draws a nicely formatted list of graph items for display
      on an edit form
    @arg $item_list - an array representing the list of graph items. this array should
@@ -390,7 +452,7 @@ function draw_graph_items_list($item_list, $filename, $url_data, $disable_contro
 
 	include($config["include_path"] . "/global_arrays.php");
 
-	print "<tr bgcolor='#" . $colors["header_panel"] . "'>";
+	print "<tr class='rowSubHeader'>";
 		DrawMatrixHeaderItem("Graph Item",$colors["header_text"],1);
 		DrawMatrixHeaderItem("Data Source",$colors["header_text"],1);
 		DrawMatrixHeaderItem("Graph Item Type",$colors["header_text"],1);
