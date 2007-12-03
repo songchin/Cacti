@@ -35,20 +35,22 @@ function html_start_box($title, $width, $background_color, $cell_padding, $align
 	global $colors;
 
 	if ($title != "") {
-		$item_id = clean_up_name($title);
+		$item_id = clean_up_name(str_replace("strong", "", $title));
 	}else{
 		$item_id = "item_" . rand(255, 65535);
 	}
 
 	if ($collapsing) {
-		$animation="style=\"cursor:pointer;\" onClick=\"htmlStartBoxFilterChange('" . $item_id . "')\"";
+		$ani  = "style=\"cursor:pointer;\" onClick=\"htmlStartBoxFilterChange('" . $item_id . "')\"";
+		$ani2 = "onload=\"htmlStartBoxFilterChange('" . $item_id . "', true)\"";
 	}else{
-		$animation="";
+		$ani  = "";
+		$ani2 = "";
 	}
 
 	?>
 	<table align="<?php print $align;?>" width="<?php print $width;?>" cellpadding=1 cellspacing=0 border=0 bgcolor="#<?php print $background_color;?>"><?php if ($title != "") {?>
-		<tr class="rowHeader" <?php print $animation;?>>
+		<tr class="rowHeader" <?php print $ani;?>>
 			<td style="padding: 3px;" colspan="100">
 				<table width="100%" cellpadding="0" cellspacing="0">
 					<tr><?php if ($collapsing) {?>
@@ -56,7 +58,10 @@ function html_start_box($title, $width, $background_color, $cell_padding, $align
 							<img id="<?php print $item_id . '_twisty';?>" src="images/tw_open.gif" alt="Filter" border="0" align="absmiddle">
 						</td><?php } ?>
 						<td class="textHeaderDark"><?php print $title;?>
-						</td><?php if ($add_text != "") {?>
+						</td><?php if ($collapsing) {?>
+						<td class="textHeaderDark" width="1">
+							<img src="images/transparent_line.gif" <?php print $ani2;?>>
+						</td><?php } if ($add_text != "") {?>
 						<td class="textHeaderDark" align="right">
 							<strong><a class="linkOverDark" href="<?php print $add_text;?>">Add</a>&nbsp;</strong>
 						</td><?php }?>

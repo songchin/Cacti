@@ -252,14 +252,74 @@ function SelectAllGraphs(prefix, checkbox_state) {
 	}
 }
 
-function htmlStartBoxFilterChange(id) {
-	if (document.getElementById(id).style.display  == "") {
+function htmlStartBoxFilterChange(id, initialize) {
+	filter = readCookie("fs_" + id);
+
+	if (filter == "open") {
+		if (initialize != null) {
+			/* do nothing we want to stay the same */
+		}else{
+			createCookie("fs_" + id, "closed");
+			filter = "closed";
+		}
+	}else{
+		if (initialize != null) {
+			if (filter == "closed") {
+				/* do nothing we want to stay the same */
+			}else{
+				createCookie("fs_" + id, "open");
+				filter = "open";
+			}
+		}else{
+			createCookie("fs_" + id, "open");
+			filter = "open";
+		}
+	}
+
+	if (filter == "closed") {
 		document.getElementById(id).style.display  = "none";
 		document.getElementById(id+'_twisty').src = "images/tw_close.gif";
 	}else{
 		document.getElementById(id).style.display  = "";
 		document.getElementById(id+'_twisty').src = "images/tw_open.gif";
 	}
+}
+
+// Cookie Functions
+function createCookie(name, value, days) {
+	if (days) {
+		var date    = new Date();
+		date.setTime(date.getTime() + (days*24*60*60*1000));
+		var expires = "; expires=" + date.toGMTString();
+	} else {
+		var expires = "";
+	}
+
+	document.cookie  = name + "=" + value + expires + "; path=/";
+}
+
+function readCookie(name) {
+	var nameEQ = name + "=";
+
+	var ca     = document.cookie.split(';');
+
+	for (var i=0; i < ca.length; i++) {
+		var c = ca[i];
+
+		while (c.charAt(0)==' ') {
+			c = c.substring(1, c.length);
+		}
+
+		if (c.indexOf(nameEQ) == 0) {
+			return c.substring(nameEQ.length, c.length);
+		}
+	}
+
+	return null;
+}
+
+function eraseCookie(name) {
+	createCookie(name, "", -1);
 }
 
 
