@@ -768,26 +768,8 @@ function graphs() {
 					}
 
 					if ($total_rows > $row_limit) {
-						/* generate page list */
-						$url_page_select = get_page_list($page, MAX_DISPLAY_PAGES, $row_limit, $total_rows, "graphs_new.php?", "page" . $snmp_query["id"]);
-
-						$nav = "<tr bgcolor='#" . $colors["header"] . "' class='noprint'>
-									<td colspan='15'>
-										<table width='100%' cellspacing='0' cellpadding='0' border='0'>
-											<tr>
-												<td align='left' class='textHeaderDark'>
-													<strong>&lt;&lt; "; if ($page > 1) { $nav .= "<a class='linkOverDark' href='graphs_new.php?page" . $snmp_query["id"] . "=" . ($page-1) . "'>"; } $nav .= "Previous"; if ($page > 1) { $nav .= "</a>"; } $nav .= "</strong>
-												</td>\n
-												<td align='center' class='textHeaderDark'>
-													Showing Rows " . (($row_limit*($page-1))+1) . " to " . ((($total_rows < $row_limit) || ($total_rows < ($row_limit*$page))) ? $total_rows : ($row_limit*$page)) . " of $total_rows [$url_page_select]
-												</td>\n
-												<td align='right' class='textHeaderDark'>
-													<strong>"; if (($page * $row_limit) < $total_rows) { $nav .= "<a class='linkOverDark' href='graphs_new.php?page" . $snmp_query["id"] . "=" . ($page+1) . "'>"; } $nav .= "Next"; if (($page * $row_limit) < $total_rows) { $nav .= "</a>"; } $nav .= " &gt;&gt;</strong>
-												</td>\n
-											</tr>
-										</table>
-									</td>
-								</tr>\n";
+						/* generate page list navigation */
+						$nav = html_create_nav($page, MAX_DISPLAY_PAGES, $row_limit, $total_rows, 40, "graphs_new.php", "page" . $snmp_query["id"]);
 
 						print $nav;
 					}

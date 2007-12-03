@@ -31,24 +31,44 @@
    @arg $align - the HTML alignment to use for the box (center, left, or right)
    @arg $add_text - the url to use when the user clicks 'Add' in the upper-right
      corner of the box ("" for no 'Add' link) */
-function html_start_box($title, $width, $background_color, $cell_padding, $align, $add_text) {
-	global $colors; ?>
-	<table align="<?php print $align;?>" width="<?php print $width;?>" cellpadding=1 cellspacing=0 border=0 bgcolor="#<?php print $background_color;?>">
-		<tr>
+function html_start_box($title, $width, $background_color, $cell_padding, $align, $add_text = "", $collapsing = false) {
+	global $colors;
+
+	if ($title != "") {
+		$item_id = clean_up_name($title);
+	}else{
+		$item_id = "item_" . rand(255, 65535);
+	}
+
+	if ($collapsing) {
+		$animation="style=\"cursor:pointer;\" onClick=\"htmlStartBoxFilterChange('" . $item_id . "')\"";
+	}else{
+		$animation="";
+	}
+
+	?>
+	<table align="<?php print $align;?>" width="<?php print $width;?>" cellpadding=1 cellspacing=0 border=0 bgcolor="#<?php print $background_color;?>"><?php if ($title != "") {?>
+		<tr class="rowHeader" <?php print $animation;?>>
+			<td style="padding: 3px;" colspan="100">
+				<table width="100%" cellpadding="0" cellspacing="0">
+					<tr><?php if ($collapsing) {?>
+						<td class="textHeaderDark" width="20">
+							<img id="<?php print $item_id . '_twisty';?>" src="images/tw_open.gif" alt="Filter" border="0" align="absmiddle">
+						</td><?php } ?>
+						<td class="textHeaderDark"><?php print $title;?>
+						</td><?php if ($add_text != "") {?>
+						<td class="textHeaderDark" align="right">
+							<strong><a class="linkOverDark" href="<?php print $add_text;?>">Add</a>&nbsp;</strong>
+						</td><?php }?>
+					</tr>
+				</table>
+			</td>
+		</tr><?php }?>
+		<tr id='<?php print $item_id;?>'>
 			<td>
 				<table cellpadding=<?php print $cell_padding;?> cellspacing=0 border=0 bgcolor="#<?php print $colors["form_background_dark"];?>" width="100%">
-					<?php if ($title != "") {?><tr class="rowHeader">
-						<td style="padding: 3px;" colspan="100">
-							<table width="100%" cellpadding="0" cellspacing="0">
-								<tr>
-									<td class="textHeaderDark"><?php print $title;?></td>
-										<?php if ($add_text != "") {?><td align="right"><strong><a class="linkOverDark" href="<?php print $add_text;?>">Add</a>&nbsp;</strong></td><?php }?>
-								</tr>
-							</table>
-						</td>
-					</tr><?php }?>
-
-<?php }
+<?php
+}
 
 function html_start_box_dq($query_name, $query_id, $host_id, $colspan, $width, $background_color, $cell_padding, $align) {
 	global $colors; ?>
@@ -406,17 +426,21 @@ function html_create_list($form_data, $column_display, $column_id, $form_previou
 
 /* html_create_nav - creates page select navigation html
    @arg $current_page - the current page displayed
+   @arg $max_pages - the maxium number of pages to show on a page
    @arg $rows_per_page - the number of rows to display per page
    @arg $total_rows - the total number of rows that can be displayed
    @arg $columns - the total number of columns on this page
    @arg $base_url - the url to navigate to
+   @arg $page_var - the request variable to look for the page number
    @arg $url_page_select - the page list to display */
-function html_create_nav($current_page, $rows_per_page, $total_rows, $columns, $base_url, $url_page_select) {
+function html_create_nav($current_page, $max_pages, $rows_per_page, $total_rows, $columns, $base_url, $page_var = "page") {
 	if (substr_count($base_url, "?")) {
 		$base_url .= "&";
 	}else{
 		$base_url .= "?";
 	}
+
+	$url_page_select = get_page_list($current_page, $max_pages, $rows_per_page, $total_rows, $base_url, $page_var);
 
 	$nav = "<tr class='rowHeader'>
 			<td colspan='$columns'>

@@ -252,3 +252,14 @@ function SelectAllGraphs(prefix, checkbox_state) {
 	}
 }
 
+function htmlStartBoxFilterChange(id) {
+	if (document.getElementById(id).style.display  == "") {
+		document.getElementById(id).style.display  = "none";
+		document.getElementById(id+'_twisty').src = "images/tw_close.gif";
+	}else{
+		document.getElementById(id).style.display  = "";
+		document.getElementById(id+'_twisty').src = "images/tw_open.gif";
+	}
+}
+
+

@@ -523,7 +523,7 @@ function utilities_view_user_log() {
 	</script>
 	<?php
 
-	html_start_box("<strong>User Login History</strong>", "100%", $colors["header"], "3", "center", "");
+	html_start_box("<strong>User Login History</strong>", "100%", $colors["header"], "3", "center", "", true);
 
 	include("./include/html/inc_user_log_filter_table.php");
 
@@ -591,26 +591,8 @@ function utilities_view_user_log() {
 
 	$user_log = db_fetch_assoc($user_log_sql);
 
-	/* generate page list */
-	$url_page_select = get_page_list($_REQUEST["page"], MAX_DISPLAY_PAGES, read_config_option("num_rows_data_source"), $total_rows, "utilities.php?action=view_user_log&username=" . $_REQUEST["username"] . "&filter=" . $_REQUEST["filter"]);
-
-	$nav = "<tr bgcolor='#" . $colors["header"] . "'>
-			<td colspan='7'>
-				<table width='100%' cellspacing='0' cellpadding='0' border='0'>
-					<tr>
-						<td align='left' class='textHeaderDark'>
-							<strong>&lt;&lt; "; if ($_REQUEST["page"] > 1) { $nav .= "<a class='linkOverDark' href='utilities.php?action=view_user_log&username=" . $_REQUEST["username"] . "&filter=" . $_REQUEST["filter"] . "&page=" . ($_REQUEST["page"]-1) . "'>"; } $nav .= "Previous"; if ($_REQUEST["page"] > 1) { $nav .= "</a>"; } $nav .= "</strong>
-						</td>\n
-						<td align='center' class='textHeaderDark'>
-							Showing Rows " . ((read_config_option("num_rows_data_source")*($_REQUEST["page"]-1))+1) . " to " . ((($total_rows < read_config_option("num_rows_data_source")) || ($total_rows < (read_config_option("num_rows_data_source")*$_REQUEST["page"]))) ? $total_rows : (read_config_option("num_rows_data_source")*$_REQUEST["page"])) . " of $total_rows [$url_page_select]
-						</td>\n
-						<td align='right' class='textHeaderDark'>
-							<strong>"; if (($_REQUEST["page"] * read_config_option("num_rows_data_source")) < $total_rows) { $nav .= "<a class='linkOverDark' href='utilities.php?action=view_user_log&username=" . $_REQUEST["username"] . "&filter=" . $_REQUEST["filter"] . "&page=" . ($_REQUEST["page"]+1) . "'>"; } $nav .= "Next"; if (($_REQUEST["page"] * read_config_option("num_rows_data_source")) < $total_rows) { $nav .= "</a>"; } $nav .= " &gt;&gt;</strong>
-						</td>\n
-					</tr>
-				</table>
-			</td>
-		</tr>\n";
+	/* generate page list navigation */
+	$nav = html_create_nav($_REQUEST["page"], MAX_DISPLAY_PAGES, read_config_option("num_rows_data_source"), $total_rows, 7, "utilities.php?action=view_user_log");
 
 	print $nav;
 
@@ -739,7 +721,7 @@ function utilities_view_logfile() {
 	</script>
 	<?php
 
-	html_start_box("<strong>Log File Filters</strong>", "100%", $colors["header"], "3", "center", "");
+	html_start_box("<strong>Log File Filters</strong>", "100%", $colors["header"], "3", "center", "", true);
 
 	include("./include/html/inc_view_logfile_table.php");
 
@@ -928,7 +910,7 @@ function utilities_view_snmp_cache() {
 	</script>
 	<?php
 
-	html_start_box("<strong>SNMP Cache Items</strong>", "100%", $colors["header"], "3", "center", "");
+	html_start_box("<strong>SNMP Cache Items</strong>", "100%", $colors["header"], "3", "center", "", true);
 
 	include("./include/html/inc_snmp_cache_filter_table.php");
 
@@ -984,26 +966,8 @@ function utilities_view_snmp_cache() {
 
 	$snmp_cache = db_fetch_assoc($snmp_cache_sql);
 
-	/* generate page list */
-	$url_page_select = get_page_list($_REQUEST["page"], MAX_DISPLAY_PAGES, read_config_option("num_rows_data_source"), $total_rows, "utilities.php?action=view_snmp_cache&host_id=" . $_REQUEST["host_id"] . "&filter=" . $_REQUEST["filter"]);
-
-	$nav = "<tr bgcolor='#" . $colors["header"] . "'>
-			<td colspan='7'>
-				<table width='100%' cellspacing='0' cellpadding='0' border='0'>
-					<tr>
-						<td align='left' class='textHeaderDark'>
-							<strong>&lt;&lt; "; if ($_REQUEST["page"] > 1) { $nav .= "<a class='linkOverDark' href='utilities.php?action=view_snmp_cache&host_id=" . $_REQUEST["host_id"] . "&filter=" . $_REQUEST["filter"] . "&page=" . ($_REQUEST["page"]-1) . "'>"; } $nav .= "Previous"; if ($_REQUEST["page"] > 1) { $nav .= "</a>"; } $nav .= "</strong>
-						</td>\n
-						<td align='center' class='textHeaderDark'>
-							Showing Rows " . ((read_config_option("num_rows_data_source")*($_REQUEST["page"]-1))+1) . " to " . ((($total_rows < read_config_option("num_rows_data_source")) || ($total_rows < (read_config_option("num_rows_data_source")*$_REQUEST["page"]))) ? $total_rows : (read_config_option("num_rows_data_source")*$_REQUEST["page"])) . " of $total_rows [$url_page_select]
-						</td>\n
-						<td align='right' class='textHeaderDark'>
-							<strong>"; if (($_REQUEST["page"] * read_config_option("num_rows_data_source")) < $total_rows) { $nav .= "<a class='linkOverDark' href='utilities.php?action=view_snmp_cache&host_id=" . $_REQUEST["host_id"] . "&filter=" . $_REQUEST["filter"] . "&page=" . ($_REQUEST["page"]+1) . "'>"; } $nav .= "Next"; if (($_REQUEST["page"] * read_config_option("num_rows_data_source")) < $total_rows) { $nav .= "</a>"; } $nav .= " &gt;&gt;</strong>
-						</td>\n
-					</tr>
-				</table>
-			</td>
-		</tr>\n";
+	/* generate page list navigation */
+	$nav = html_create_nav($_REQUEST["page"], MAX_DISPLAY_PAGES, read_config_option("num_rows_data_source"), $total_rows, 7, "utilities.php?action=view_snmp_cache");
 
 	print $nav;
 
@@ -1114,7 +1078,7 @@ function utilities_view_poller_cache() {
 	</script>
 	<?php
 
-	html_start_box("<strong>Poller Cache Items</strong>", "100%", $colors["header"], "3", "center", "");
+	html_start_box("<strong>Poller Cache Items</strong>", "100%", $colors["header"], "3", "center", "", true);
 
 	include("./include/html/inc_poller_item_filter_table.php");
 
@@ -1173,26 +1137,8 @@ function utilities_view_poller_cache() {
 
 	$poller_cache = db_fetch_assoc($poller_sql);
 
-	/* generate page list */
-	$url_page_select = get_page_list($_REQUEST["page"], MAX_DISPLAY_PAGES, read_config_option("num_rows_data_source"), $total_rows, "utilities.php?action=view_poller_cache&host_id=" . $_REQUEST["host_id"] . "&poller_action=" . $_REQUEST["poller_action"]);
-
-	$nav = "<tr bgcolor='#" . $colors["header"] . "'>
-			<td colspan='7'>
-				<table width='100%' cellspacing='0' cellpadding='0' border='0'>
-					<tr>
-						<td align='left' class='textHeaderDark'>
-							<strong>&lt;&lt; "; if ($_REQUEST["page"] > 1) { $nav .= "<a class='linkOverDark' href='utilities.php?action=view_poller_cache&host_id=" . $_REQUEST["host_id"] . "&poller_action=" . $_REQUEST["poller_action"] . "&page=" . ($_REQUEST["page"]-1) . "'>"; } $nav .= "Previous"; if ($_REQUEST["page"] > 1) { $nav .= "</a>"; } $nav .= "</strong>
-						</td>\n
-						<td align='center' class='textHeaderDark'>
-							Showing Rows " . ((read_config_option("num_rows_data_source")*($_REQUEST["page"]-1))+1) . " to " . ((($total_rows < read_config_option("num_rows_data_source")) || ($total_rows < (read_config_option("num_rows_data_source")*$_REQUEST["page"]))) ? $total_rows : (read_config_option("num_rows_data_source")*$_REQUEST["page"])) . " of $total_rows [$url_page_select]
-						</td>\n
-						<td align='right' class='textHeaderDark'>
-							<strong>"; if (($_REQUEST["page"] * read_config_option("num_rows_data_source")) < $total_rows) { $nav .= "<a class='linkOverDark' href='utilities.php?action=view_poller_cache&host_id=" . $_REQUEST["host_id"] . "&poller_action=" . $_REQUEST["poller_action"] . "&page=" . ($_REQUEST["page"]+1) . "'>"; } $nav .= "Next"; if (($_REQUEST["page"] * read_config_option("num_rows_data_source")) < $total_rows) { $nav .= "</a>"; } $nav .= " &gt;&gt;</strong>
-						</td>\n
-					</tr>
-				</table>
-			</td>
-		</tr>\n";
+	/* generate page list navigation */
+	$nav = html_create_nav($_REQUEST["page"], MAX_DISPLAY_PAGES, read_config_option("num_rows_data_source"), $total_rows, 7, "utilities.php?action=view_poller_cache");
 
 	print $nav;
 
