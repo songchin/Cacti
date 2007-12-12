@@ -1114,10 +1114,10 @@ function utilities_view_poller_cache() {
 	$total_rows = db_fetch_cell("SELECT
 		COUNT(*)
 		FROM data_template_data
-		INNER JOIN (poller_item
-		INNER JOIN host
-		ON poller_item.host_id = host.id)
-		ON data_template_data.local_data_id = poller_item.local_data_id
+		RIGHT JOIN (poller_item
+		LEFT JOIN host
+		ON poller_item.host_id=host.id)
+		ON data_template_data.local_data_id=poller_item.local_data_id
 		$sql_where");
 
 	$poller_sql = "SELECT
@@ -1125,10 +1125,10 @@ function utilities_view_poller_cache() {
 		data_template_data.name_cache,
 		host.description
 		FROM data_template_data
-		INNER JOIN (poller_item
-		INNER JOIN host
-		ON poller_item.host_id = host.id)
-		ON data_template_data.local_data_id = poller_item.local_data_id
+		RIGHT JOIN (poller_item
+		LEFT JOIN host
+		ON poller_item.host_id=host.id)
+		ON data_template_data.local_data_id=poller_item.local_data_id
 		$sql_where
 		ORDER BY " . $_REQUEST["sort_column"] . " " . $_REQUEST["sort_direction"] . ", action ASC
 		LIMIT " . (read_config_option("num_rows_data_source")*($_REQUEST["page"]-1)) . "," . read_config_option("num_rows_data_source");
