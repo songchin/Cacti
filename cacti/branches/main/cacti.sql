@@ -478,7 +478,8 @@ CREATE TABLE data_local (
   host_id mediumint(8) unsigned NOT NULL default '0',
   snmp_query_id mediumint(8) NOT NULL default '0',
   snmp_index varchar(255) NOT NULL default '',
-  PRIMARY KEY  (id)
+  PRIMARY KEY  (id),
+  KEY host_id (host_id)
 ) TYPE=MyISAM;
 
 --
@@ -1500,6 +1501,7 @@ CREATE TABLE graph_templates_item (
   sequence mediumint(8) unsigned NOT NULL default '0',
   PRIMARY KEY  (id),
   KEY graph_template_id (graph_template_id),
+  KEY task_item_id (task_item_id),
   KEY local_graph_id (local_graph_id)
 ) TYPE=MyISAM COMMENT='Stores the actual graph item data.';
 
