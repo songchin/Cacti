@@ -77,6 +77,9 @@ switch ($_REQUEST["action"]) {
    -------------------------- */
 
 function form_save() {
+	/* required for "run_data_query" */
+	include_once("./lib/data_query.php");
+
 	if (isset($_POST["save_component_template"])) {
 		$redirect_back = false;
 
@@ -90,11 +93,81 @@ function form_save() {
 			if ($host_template_id) {
 				raise_message(1);
 
-				if (isset($_POST["add_gt_x"])) {
+				if (isset($_POST["add_gt_y"])) {
 					db_execute("replace into host_template_graph (host_template_id,graph_template_id) values($host_template_id," . $_POST["graph_template_id"] . ")");
+					/* associate this new Graph Template with all hosts that are using the current Host Template
+					   but leave those hosts that have this template already */
+					$new_gt_host_entries = db_fetch_assoc("
+								SELECT 	host.id AS host_id,
+										host.description AS description,
+										host.hostname AS hostname
+								FROM 	host,
+									 	host_template_graph
+								WHERE	host.host_template_id 					= host_template_graph.host_template_id
+								AND		host_template_graph.graph_template_id 	= " . $_POST["graph_template_id"] . "
+								AND		host.id NOT
+								IN (
+									SELECT host_graph.host_id
+									FROM   host_graph
+									WHERE  host_graph.graph_template_id = " . $_POST["graph_template_id"] . "
+									)"
+								);
+					if (sizeof($new_gt_host_entries) > 0) {
+						/* notify the user of changes to hosts */
+						debug_log_clear("host_template");
+						$template_name = db_fetch_cell("SELECT name FROM graph_templates WHERE id = " . $_POST["graph_template_id"]);
+						debug_log_insert("host_template", "Adding Graph Template: " . $template_name . " to ");
+
+						foreach($new_gt_host_entries as $entry) {
+							/* add the Graph Template */
+							db_execute("REPLACE INTO host_graph ( host_id, graph_template_id )
+									VALUES (" . $entry["host_id"] . ","
+											  . $_POST["graph_template_id"] . "
+											)"
+									);
+							debug_log_insert("host_template", $entry["hostname"] . ", " . $entry["description"]);
+						}
+					}
 					$redirect_back = true;
-				}elseif (isset($_POST["add_dq_x"])) {
+				}elseif (isset($_POST["add_dq_y"])) {
 					db_execute("replace into host_template_snmp_query (host_template_id,snmp_query_id) values($host_template_id," . $_POST["snmp_query_id"] . ")");
+					/* associate this new Data Query with all hosts that are using the current Host Template
+					   but leave those hosts that have this Data Query already.
+					   Reindex all those Hosts */
+					$new_dq_host_entries = db_fetch_assoc("
+								SELECT 	host.id AS host_id,
+										host.description AS description,
+										host.hostname AS hostname
+								FROM  	host,
+										host_template_snmp_query
+								WHERE	host.host_template_id					= host_template_snmp_query.host_template_id
+								AND		host_template_snmp_query.snmp_query_id	= " . $_POST["snmp_query_id"] . "
+								AND		host.id NOT
+								IN (
+									SELECT host_snmp_query.host_id
+									FROM   host_snmp_query
+									WHERE  host_snmp_query.snmp_query_id = " . $_POST["snmp_query_id"] . "
+									)"
+								);
+					if (sizeof($new_dq_host_entries) > 0) {
+						/* notify the user of changes to hosts */
+						debug_log_clear("host_template");
+						$template_name = db_fetch_cell("SELECT name FROM snmp_query WHERE id = " . $_POST["snmp_query_id"]);
+						debug_log_insert("host_template", "Adding Data Query: " . $template_name . " to ");
+
+						foreach($new_dq_host_entries as $entry) {
+							/* add the Data Query */
+							db_execute("REPLACE INTO host_snmp_query (host_id,snmp_query_id,reindex_method)
+										VALUES (". $entry["host_id"] . ","
+												 . $_POST["snmp_query_id"] . ","
+												 . DATA_QUERY_AUTOINDEX_BACKWARDS_UPTIME . "
+												)"
+										);
+							/* recache snmp data */
+							run_data_query($entry["host_id"], $_POST["snmp_query_id"]);
+							debug_log_insert("host_template", $entry["hostname"] . ", " . $entry["description"]);
+						}
+					}
 					$redirect_back = true;
 				}
 			}else{
@@ -235,6 +308,22 @@ function template_edit() {
 	/* ==================================================== */
 
 	display_output_messages();
+	/* remember if there's something we want to show to the user */
+	$debug_log = debug_log_return("host_template");
+
+	if (!empty($debug_log)) {
+		debug_log_clear("host_template");
+		?>
+		<table width='100%' style='background-color: #f5f5f5; border: 1px solid #bbbbbb;' align='center'>
+			<tr bgcolor="<?php print $colors["light"];?>">
+				<td style="padding: 3px; font-family: monospace;">
+					<?php print $debug_log;?>
+				</td>
+			</tr>
+		</table>
+		<br>
+		<?php
+	}
 
 	if (!empty($_GET["id"])) {
 		$host_template = db_fetch_row("select * from host_template where id=" . $_GET["id"]);
@@ -345,7 +434,7 @@ function template_edit() {
 							order by snmp_query.name"),"name","id","","","");?>
 					</td>
 					<td align="right">
-						&nbsp;<input type="button" value="Add" name="add_dq_y" align="absmiddle">
+						&nbsp;<input type="submit" value="Add" name="add_dq_y" align="absmiddle">
 					</td>
 				</table>
 			</td>
