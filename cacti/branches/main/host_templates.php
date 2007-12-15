@@ -35,6 +35,8 @@ $host_actions = array(
 /* set default action */
 if (!isset($_REQUEST["action"])) { $_REQUEST["action"] = ""; }
 
+form_cancel_action_validate();
+
 switch ($_REQUEST["action"]) {
 	case 'save':
 		form_save();
@@ -163,44 +165,40 @@ function form_actions() {
 
 	print "<form action='host_templates.php' method='post'>\n";
 
-	if ($_POST["drp_action"] == "1") { /* delete */
+	if (sizeof($host_array)) {
+		if ($_POST["drp_action"] == "1") { /* delete */
+			print "	<tr>
+					<td class='textArea' bgcolor='#" . $colors["form_alternate1"]. "'>
+						<p>Are you sure you want to delete the following host templates? All devices currently attached
+						this these host templates will lose their template assocation.</p>
+						<p>$host_list</p>
+					</td>
+				</tr>\n
+				";
+		}elseif ($_POST["drp_action"] == "2") { /* duplicate */
+			print "	<tr>
+					<td class='textArea' bgcolor='#" . $colors["form_alternate1"]. "'>
+						<p>When you click save, the following host templates will be duplicated. You can
+						optionally change the title format for the new host templates.</p>
+						<p>$host_list</p>
+						<p><strong>Title Format:</strong><br>"; form_text_box("title_format", "<template_title> (1)", "", "255", "30", "text"); print "</p>
+					</td>
+				</tr>\n
+				";
+		}
+	} else {
 		print "	<tr>
 				<td class='textArea' bgcolor='#" . $colors["form_alternate1"]. "'>
-					<p>Are you sure you want to delete the following host templates? All devices currently attached
-					this these host templates will lose their template assocation.</p>
-					<p>$host_list</p>
+					<p>You must first select a Device Template.  Please select 'Return' to return to the previous menu.</p>
 				</td>
-			</tr>\n
-			";
-	}elseif ($_POST["drp_action"] == "2") { /* duplicate */
-		print "	<tr>
-				<td class='textArea' bgcolor='#" . $colors["form_alternate1"]. "'>
-					<p>When you click save, the following host templates will be duplicated. You can
-					optionally change the title format for the new host templates.</p>
-					<p>$host_list</p>
-					<p><strong>Title Format:</strong><br>"; form_text_box("title_format", "<template_title> (1)", "", "255", "30", "text"); print "</p>
-				</td>
-			</tr>\n
-			";
+			</tr>\n";
 	}
 
 	if (!isset($host_array)) {
-		print "<tr><td bgcolor='#" . $colors["form_alternate1"]. "'><span class='textError'>You must select at least one host template.</span></td></tr>\n";
-		$save_html = "";
+		form_return_button_alt();
 	}else{
-		$save_html = "<input type='image' src='images/button_yes.gif' alt='Save' align='absmiddle'>";
+		form_yesno_button_alt(serialize($host_array), $_POST["drp_action"]);
 	}
-
-	print "	<tr>
-			<td align='right' bgcolor='#eaeaea'>
-				<input type='hidden' name='action' value='actions'>
-				<input type='hidden' name='selected_items' value='" . (isset($host_array) ? serialize($host_array) : '') . "'>
-				<input type='hidden' name='drp_action' value='" . $_POST["drp_action"] . "'>
-				<a href='host_templates.php'><img src='images/button_no.gif' alt='Cancel' align='absmiddle' border='0'></a>
-				$save_html
-			</td>
-		</tr>
-		";
 
 	html_end_box();
 
@@ -297,7 +295,7 @@ function template_edit() {
 							order by graph_templates.name"),"name","id","","","");?>
 					</td>
 					<td align="right">
-						&nbsp;<input type="image" src="images/button_add.gif" alt="Add" name="add_gt" align="absmiddle">
+						&nbsp;<input type="submit" Value="Add" name="add_gt_y" align="absmiddle">
 					</td>
 				</table>
 			</td>
@@ -347,7 +345,7 @@ function template_edit() {
 							order by snmp_query.name"),"name","id","","","");?>
 					</td>
 					<td align="right">
-						&nbsp;<input type="image" src="images/button_add.gif" alt="Add" name="add_dq" align="absmiddle">
+						&nbsp;<input type="button" value="Add" name="add_dq_y" align="absmiddle">
 					</td>
 				</table>
 			</td>
@@ -357,7 +355,7 @@ function template_edit() {
 		html_end_box();
 	}
 
-	form_save_button("host_templates.php");
+	form_save_button_alt();
 }
 
 function template() {
@@ -436,10 +434,9 @@ function template() {
 
 	html_header_sort_checkbox($display_text, $_REQUEST["sort_column"], $_REQUEST["sort_direction"]);
 
-	$i = 0;
 	if (sizeof($template_list) > 0) {
 		foreach ($template_list as $template) {
-			form_alternate_row_color($colors["alternate"], $colors["light"], $i, 'line' . $template["id"]);$i++;
+			form_alternate_row_color('line' . $template["id"]);
 			form_selectable_cell("<a class='linkEditMain' href='host_templates.php?action=edit&id=" . $template["id"] . "'>" . (strlen($_REQUEST["filter"]) ? eregi_replace("(" . preg_quote($_REQUEST["filter"]) . ")", "<span style='background-color: #F8D93D;'>\\1</span>", $template["name"]) : $template["name"]) . "</a>", $template["id"]);
 			form_checkbox_cell($template["name"], $template["id"]);
 			form_end_row();

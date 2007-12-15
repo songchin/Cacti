@@ -75,8 +75,8 @@
 						<input type="text" name="filter" size="40" value="<?php print $_REQUEST["filter"];?>">
 					</td>
 					<td>
-						&nbsp;<input type="image" src="images/button_go.gif" alt="Go" border="0" align="absmiddle">
-						<input type="image" src="images/button_clear.gif" name="clear" alt="Clear" border="0" align="absmiddle">
+						&nbsp;<input type="submit" Value="Go" name="go" border="0" align="absmiddle">
+						<input type="submit" Value="Clear" name="clear_x" border="0" align="absmiddle">
 					</td>
 				</tr>
 			</table>

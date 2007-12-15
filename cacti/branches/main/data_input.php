@@ -32,6 +32,7 @@ $di_actions = array(
 
 /* set default action */
 if (!isset($_REQUEST["action"])) { $_REQUEST["action"] = ""; }
+form_cancel_action_validate();
 
 switch ($_REQUEST["action"]) {
 	case 'save':
@@ -195,35 +196,31 @@ function form_actions() {
 
 	print "<form action='data_input.php' method='post'>\n";
 
-	if ($_POST["drp_action"] == "1") { /* delete */
-		$graphs = array();
+	if (sizeof($di_array)) {
+		if ($_POST["drp_action"] == "1") { /* delete */
+			$graphs = array();
 
-		print "
-			<tr>
-				<td class='textArea' bgcolor='#" . $colors["form_alternate1"]. "'>
-					<p>Are you sure you want to delete the following data input methods?</p>
-					<p>$di_list</p>
+			print "
+				<tr>
+					<td class='textArea'>
+						<p>Are you sure you want to delete the following data input methods?</p>
+						<p>$di_list</p>
+					</td>
+				</tr>\n";
+		}
+	} else {
+		print "	<tr>
+				<td class='textArea'>
+					<p>You must first select a Data Input Method.  Please select 'Return' to return to the previous menu.</p>
 				</td>
 			</tr>\n";
 	}
 
 	if (!isset($di_array)) {
-		print "<tr><td bgcolor='#" . $colors["form_alternate1"]. "'><span class='textError'>You must select at least one data input method.</span></td></tr>\n";
-		$save_html = "";
+		form_return_button_alt();
 	}else{
-		$save_html = "<input type='image' src='images/button_yes.gif' alt='Save' align='absmiddle'>";
+		form_yesno_button_alt(serialize($di_array), $_POST["drp_action"]);
 	}
-
-	print "	<tr>
-			<td align='right' bgcolor='#eaeaea'>
-				<input type='hidden' name='action' value='actions'>
-				<input type='hidden' name='selected_items' value='" . (isset($di_array) ? serialize($di_array) : '') . "'>
-				<input type='hidden' name='drp_action' value='" . $_POST["drp_action"] . "'>
-				<a href='data_input.php'><img src='images/button_no.gif' alt='Cancel' align='absmiddle' border='0'></a>
-				$save_html
-			</td>
-		</tr>
-		";
 
 	html_end_box();
 
@@ -344,7 +341,7 @@ function field_edit() {
 
 	html_end_box();
 
-	form_save_button("data_input.php?action=edit&id=" . $_GET["data_input_id"]);
+	form_save_button_alt("action!edit|id!" . $_GET["data_input_id"]);
 }
 
 /* -----------------------
@@ -397,10 +394,9 @@ function data_edit() {
 
 		$fields = db_fetch_assoc("select id,data_name,name,sequence from data_input_fields where data_input_id=" . $_GET["id"] . " and input_output='in' order by sequence, data_name");
 
-		$i = 0;
 		if (sizeof($fields) > 0) {
 		foreach ($fields as $field) {
-			form_alternate_row_color($colors["alternate"],$colors["light"],$i); $i++;
+			form_alternate_row_color();
 				?>
 				<td>
 					<a class="linkEditMain" href="data_input.php?action=field_edit&id=<?php print $field["id"];?>&data_input_id=<?php print $_GET["id"];?>"><?php print $field["data_name"];?></a>
@@ -431,11 +427,9 @@ function data_edit() {
 		print "</tr>";
 
 		$fields = db_fetch_assoc("select id,name,data_name,update_rra,sequence from data_input_fields where data_input_id=" . $_GET["id"] . " and input_output='out' order by sequence, data_name");
-
-		$i = 0;
 		if (sizeof($fields) > 0) {
 		foreach ($fields as $field) {
-			form_alternate_row_color($colors["alternate"],$colors["light"],$i); $i++;
+			form_alternate_row_color();
 				?>
 				<td>
 					<a class="linkEditMain" href="data_input.php?action=field_edit&id=<?php print $field["id"];?>&data_input_id=<?php print $_GET["id"];?>"><?php print $field["data_name"];?></a>
@@ -461,7 +455,7 @@ function data_edit() {
 		html_end_box();
 	}
 
-	form_save_button("data_input.php");
+	form_save_button_alt();
 }
 
 function data() {
@@ -539,11 +533,10 @@ function data() {
 
 	html_header_sort_checkbox($display_text, $_REQUEST["sort_column"], $_REQUEST["sort_direction"]);
 
-	$i = 0;
 	if (sizeof($data_inputs) > 0) {
 		foreach ($data_inputs as $data_input) {
 			/* hide system types */
-			form_alternate_row_color($colors["alternate"], $colors["light"], $i, 'line' . $data_input["id"]); $i++;
+			form_alternate_row_color('line' . $data_input["id"]);
 			form_selectable_cell("<a class='linkEditMain' href='data_input.php?action=edit&id=" . $data_input["id"] . "'>" . (strlen($_REQUEST["filter"]) ? eregi_replace("(" . preg_quote($_REQUEST["filter"]) . ")", "<span style='background-color: #F8D93D;'>\\1</span>", $data_input["name"]) : $data_input["name"]) . "</a>", $data_input["id"]);
 			form_selectable_cell($input_types{$data_input["type_id"]}, $data_input["id"]);
 			form_checkbox_cell($data_input["name"], $data_input["id"]);

@@ -45,6 +45,7 @@ $ds_actions = array(
 
 /* set default action */
 if (!isset($_REQUEST["action"])) { $_REQUEST["action"] = ""; }
+form_cancel_action_validate();
 
 switch ($_REQUEST["action"]) {
 	case 'save':
@@ -422,120 +423,116 @@ function form_actions() {
 
 	print "<form action='data_sources.php' method='post'>\n";
 
-	if ($_POST["drp_action"] == "1") { /* delete */
-		$graphs = array();
+	if (sizeof($ds_array)) {
+		if ($_POST["drp_action"] == "1") { /* delete */
+			$graphs = array();
 
-		/* find out which (if any) graphs are using this data source, so we can tell the user */
-		if (isset($ds_array)) {
-			$graphs = db_fetch_assoc("select
-				graph_templates_graph.local_graph_id,
-				graph_templates_graph.title_cache
-				from (data_template_rrd,graph_templates_item,graph_templates_graph)
-				where graph_templates_item.task_item_id=data_template_rrd.id
-				and graph_templates_item.local_graph_id=graph_templates_graph.local_graph_id
-				and " . array_to_sql_or($ds_array, "data_template_rrd.local_data_id") . "
-				and graph_templates_graph.local_graph_id > 0
-				group by graph_templates_graph.local_graph_id
-				order by graph_templates_graph.title_cache");
-		}
+			/* find out which (if any) graphs are using this data source, so we can tell the user */
+			if (isset($ds_array)) {
+				$graphs = db_fetch_assoc("select
+					graph_templates_graph.local_graph_id,
+					graph_templates_graph.title_cache
+					from (data_template_rrd,graph_templates_item,graph_templates_graph)
+					where graph_templates_item.task_item_id=data_template_rrd.id
+					and graph_templates_item.local_graph_id=graph_templates_graph.local_graph_id
+					and " . array_to_sql_or($ds_array, "data_template_rrd.local_data_id") . "
+					and graph_templates_graph.local_graph_id > 0
+					group by graph_templates_graph.local_graph_id
+					order by graph_templates_graph.title_cache");
+			}
 
-		print "	<tr>
-				<td class='textArea' bgcolor='#" . $colors["form_alternate1"]. "'>
-					<p>Are you sure you want to delete the following data sources?</p>
-					<p>$ds_list</p>
-					";
-					if (sizeof($graphs) > 0) {
-						print "<tr bgcolor='#" . $colors["form_alternate1"] . "'><td class='textArea'><p class='textArea'>The following graphs are using these data sources:</p>\n";
+			print "	<tr>
+					<td class='textArea'>
+						<p>Are you sure you want to delete the following data sources?</p>
+						<p>$ds_list</p>
+						";
+						if (sizeof($graphs) > 0) {
+							print "<tr bgcolor='#" . $colors["form_alternate1"] . "'><td class='textArea'><p class='textArea'>The following graphs are using these data sources:</p>\n";
 
-						foreach ($graphs as $graph) {
-							print "<strong>" . $graph["title_cache"] . "</strong><br>\n";
+							foreach ($graphs as $graph) {
+								print "<strong>" . $graph["title_cache"] . "</strong><br>\n";
+							}
+
+							print "<br>";
+							form_radio_button("delete_type", "3", "1", "Leave the graphs untouched.", "1"); print "<br>";
+							form_radio_button("delete_type", "3", "2", "Delete all <strong>graph items</strong> that reference these data sources.", "1"); print "<br>";
+							form_radio_button("delete_type", "3", "3", "Delete all <strong>graphs</strong> that reference these data sources.", "1"); print "<br>";
+							print "</td></tr>";
 						}
-
-						print "<br>";
-						form_radio_button("delete_type", "3", "1", "Leave the graphs untouched.", "1"); print "<br>";
-						form_radio_button("delete_type", "3", "2", "Delete all <strong>graph items</strong> that reference these data sources.", "1"); print "<br>";
-						form_radio_button("delete_type", "3", "3", "Delete all <strong>graphs</strong> that reference these data sources.", "1"); print "<br>";
-						print "</td></tr>";
-					}
-				print "
-				</td>
-			</tr>\n
-			";
-	}elseif ($_POST["drp_action"] == "2") { /* change graph template */
+					print "
+					</td>
+				</tr>\n
+				";
+		}elseif ($_POST["drp_action"] == "2") { /* change graph template */
+			print "	<tr>
+					<td class='textArea'>
+						<p>Choose a data template and click save to change the data template for
+						the following data souces. Be aware that all warnings will be suppressed during the
+						conversion, so graph data loss is possible.</p>
+						<p>$ds_list</p>
+						<p><strong>New Data Template:</strong><br>"; form_dropdown("data_template_id",db_fetch_assoc("select data_template.id,data_template.name from data_template order by data_template.name"),"name","id","","","0"); print "</p>
+					</td>
+				</tr>\n
+				";
+		}elseif ($_POST["drp_action"] == "3") { /* change host */
+			print "	<tr>
+					<td class='textArea'>
+						<p>Choose a new host for these data sources:</p>
+						<p>$ds_list</p>
+						<p><strong>New Host:</strong><br>"; form_dropdown("host_id",db_fetch_assoc("select id,CONCAT_WS('',description,' (',hostname,')') as name from host order by description,hostname"),"name","id","","","0"); print "</p>
+					</td>
+				</tr>\n
+				";
+		}elseif ($_POST["drp_action"] == "4") { /* duplicate */
+			print "	<tr>
+					<td class='textArea'>
+						<p>When you click save, the following data sources will be duplicated. You can
+						optionally change the title format for the new data sources.</p>
+						<p>$ds_list</p>
+						<p><strong>Title Format:</strong><br>"; form_text_box("title_format", "<ds_title> (1)", "", "255", "30", "text"); print "</p>
+					</td>
+				</tr>\n
+				";
+		}elseif ($_POST["drp_action"] == "5") { /* data source -> data template */
+			print "	<tr>
+					<td class='textArea'>
+						<p>When you click save, the following data sources will be converted into data templates.
+						You can optionally change the title format for the new data templates.</p>
+						<p>$ds_list</p>
+						<p><strong>Title Format:</strong><br>"; form_text_box("title_format", "<ds_title> Template", "", "255", "30", "text"); print "</p>
+					</td>
+				</tr>\n
+				";
+		}elseif ($_POST["drp_action"] == "6") { /* data source enable */
+			print "	<tr>
+					<td class='textArea'>
+						<p>When you click yes, the following data sources will be enabled.</p>
+						<p>$ds_list</p>
+					</td>
+				</tr>\n
+				";
+		}elseif ($_POST["drp_action"] == "7") { /* data source disable */
+			print "	<tr>
+					<td class='textArea'>
+						<p>When you click yes, the following data sources will be disabled.</p>
+						<p>$ds_list</p>
+					</td>
+				</tr>\n
+				";
+		}
+	} else {
 		print "	<tr>
-				<td class='textArea' bgcolor='#" . $colors["form_alternate1"]. "'>
-					<p>Choose a data template and click save to change the data template for
-					the following data souces. Be aware that all warnings will be suppressed during the
-					conversion, so graph data loss is possible.</p>
-					<p>$ds_list</p>
-					<p><strong>New Data Template:</strong><br>"; form_dropdown("data_template_id",db_fetch_assoc("select data_template.id,data_template.name from data_template order by data_template.name"),"name","id","","","0"); print "</p>
+				<td class='textArea'>
+					<p>You must first select a Data Source.  Please select 'Return' to return to the previous menu.</p>
 				</td>
-			</tr>\n
-			";
-	}elseif ($_POST["drp_action"] == "3") { /* change host */
-		print "	<tr>
-				<td class='textArea' bgcolor='#" . $colors["form_alternate1"]. "'>
-					<p>Choose a new host for these data sources:</p>
-					<p>$ds_list</p>
-					<p><strong>New Host:</strong><br>"; form_dropdown("host_id",db_fetch_assoc("select id,CONCAT_WS('',description,' (',hostname,')') as name from host order by description,hostname"),"name","id","","","0"); print "</p>
-				</td>
-			</tr>\n
-			";
-	}elseif ($_POST["drp_action"] == "4") { /* duplicate */
-		print "	<tr>
-				<td class='textArea' bgcolor='#" . $colors["form_alternate1"]. "'>
-					<p>When you click save, the following data sources will be duplicated. You can
-					optionally change the title format for the new data sources.</p>
-					<p>$ds_list</p>
-					<p><strong>Title Format:</strong><br>"; form_text_box("title_format", "<ds_title> (1)", "", "255", "30", "text"); print "</p>
-				</td>
-			</tr>\n
-			";
-	}elseif ($_POST["drp_action"] == "5") { /* data source -> data template */
-		print "	<tr>
-				<td class='textArea' bgcolor='#" . $colors["form_alternate1"]. "'>
-					<p>When you click save, the following data sources will be converted into data templates.
-					You can optionally change the title format for the new data templates.</p>
-					<p>$ds_list</p>
-					<p><strong>Title Format:</strong><br>"; form_text_box("title_format", "<ds_title> Template", "", "255", "30", "text"); print "</p>
-				</td>
-			</tr>\n
-			";
-	}elseif ($_POST["drp_action"] == "6") { /* data source enable */
-		print "	<tr>
-				<td class='textArea' bgcolor='#" . $colors["form_alternate1"]. "'>
-					<p>When you click yes, the following data sources will be enabled.</p>
-					<p>$ds_list</p>
-				</td>
-			</tr>\n
-			";
-	}elseif ($_POST["drp_action"] == "7") { /* data source disable */
-		print "	<tr>
-				<td class='textArea' bgcolor='#" . $colors["form_alternate1"]. "'>
-					<p>When you click yes, the following data sources will be disabled.</p>
-					<p>$ds_list</p>
-				</td>
-			</tr>\n
-			";
+			</tr>\n";
 	}
 
 	if (!isset($ds_array)) {
-		print "<tr><td bgcolor='#" . $colors["form_alternate1"]. "'><span class='textError'>You must select at least one data source.</span></td></tr>\n";
-		$save_html = "";
+		form_return_button_alt();
 	}else{
-		$save_html = "<input type='image' src='images/button_yes.gif' alt='Save' align='absmiddle'>";
+		form_yesno_button_alt(serialize($ds_array), $_POST["drp_action"]);
 	}
-
-	print "	<tr>
-			<td align='right' bgcolor='#eaeaea'>
-				<input type='hidden' name='action' value='actions'>
-				<input type='hidden' name='selected_items' value='" . (isset($ds_array) ? serialize($ds_array) : '') . "'>
-				<input type='hidden' name='drp_action' value='" . $_POST["drp_action"] . "'>
-				<a href='data_sources.php'><img src='images/button_no.gif' alt='Cancel' align='absmiddle' border='0'></a>
-				$save_html
-			</td>
-		</tr>
-		";
 
 	html_end_box();
 
@@ -591,7 +588,7 @@ function data_edit() {
 				$can_template = db_fetch_cell("select t_value from data_input_data where data_template_data_id=" . $template_data["id"] . " and data_input_field_id=" . $field["id"]);
 			}
 
-			form_alternate_row_color($colors["form_alternate1"],$colors["form_alternate2"],$i);
+			form_alternate_row_color();
 
 			if ((!empty($host["id"])) && (eregi('^' . VALID_HOST_FIELDS . '$', $field["type_code"]))) {
 				print "<td width='50%'><strong>" . $field["name"] . "</strong> (From Host: " . $host["hostname"] . ")</td>\n";
@@ -609,8 +606,6 @@ function data_edit() {
 			}
 
 			print "</tr>\n";
-
-			$i++;
 		}
 		}else{
 			print "<tr><td><em>No Input Fields for the Selected Data Input Source</em></td></tr>";
@@ -940,7 +935,7 @@ function ds_edit() {
 		form_hidden_box("save_component_data_source_new","1","");
 	}
 
-	form_save_button("data_sources.php");
+	form_save_button_alt();
 
 	include_once("./include/bottom_footer.php");
 
@@ -1143,13 +1138,12 @@ function ds() {
 
 	html_header_sort_checkbox($display_text, $_REQUEST["sort_column"], $_REQUEST["sort_direction"]);
 
-	$i = 0;
 	if (sizeof($data_sources) > 0) {
 		foreach ($data_sources as $data_source) {
 			$data_template_name = ((empty($data_source["data_template_name"])) ? "<em>None</em>" : $data_source["data_template_name"]);
 			$data_input_name    = ((empty($data_source["data_input_name"])) ? "<em>External</em>" : $data_source["data_input_name"]);
 			$poller_interval    = ((isset($poller_intervals[$data_source["local_data_id"]])) ? $poller_intervals[$data_source["local_data_id"]] : 0);
-			form_alternate_row_color($colors["alternate"], $colors["light"], $i, 'line' . $data_source["local_data_id"]); $i++;
+			form_alternate_row_color('line' . $data_source["local_data_id"]);
 			form_selectable_cell("<a class='linkEditMain' href='data_sources.php?action=ds_edit&id=" . $data_source["local_data_id"] . "'>" . (($_REQUEST["filter"] != "") ? eregi_replace("(" . preg_quote($_REQUEST["filter"]) . ")", "<span style='background-color: #F8D93D;'>\\1</span>", title_trim(htmlentities($data_source["name_cache"]), read_config_option("max_title_data_source"))) : title_trim(htmlentities($data_source["name_cache"]), read_config_option("max_title_data_source"))) . "</a>", $data_source["local_data_id"]);
 			form_selectable_cell($data_source['local_data_id'], $data_source['local_data_id']);
 			form_selectable_cell((($_REQUEST["filter"] != "") ? eregi_replace("(" . preg_quote($_REQUEST["filter"]) . ")", "<span style='background-color: #F8D93D;'>\\1</span>", $data_input_name) : $data_input_name) . "</a>", $data_source["local_data_id"]);

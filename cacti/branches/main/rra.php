@@ -27,6 +27,8 @@ include("./include/auth.php");
 /* set default action */
 if (!isset($_REQUEST["action"])) { $_REQUEST["action"] = ""; }
 
+form_cancel_action_validate();
+
 switch ($_REQUEST["action"]) {
 	case 'save':
 		form_save();
@@ -142,7 +144,7 @@ function rra_edit() {
 
 	html_end_box();
 
-	form_save_button("rra.php");
+	form_save_button_alt();
 }
 
 function rra() {
@@ -181,10 +183,9 @@ function rra() {
 		FROM rra
 		ORDER BY " . $_REQUEST['sort_column'] . " " . $_REQUEST['sort_direction']);
 
-	$i = 0;
 	if (sizeof($rras) > 0) {
 	foreach ($rras as $rra) {
-		form_alternate_row_color($colors["alternate"],$colors["light"],$i); $i++;
+		form_alternate_row_color();
 			?>
 			<td>
 				<a class="linkEditMain" href="rra.php?action=edit&id=<?php print $rra["id"];?>"><?php print $rra["name"];?></a>

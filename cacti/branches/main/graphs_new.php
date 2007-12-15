@@ -34,6 +34,8 @@ define("MAX_DISPLAY_PAGES", 21);
 /* set default action */
 if (!isset($_REQUEST["action"])) { $_REQUEST["action"] = ""; }
 
+form_cancel_action_validate();
+
 switch ($_REQUEST["action"]) {
 	case 'save':
 		form_save();
@@ -332,7 +334,7 @@ function host_new_graphs($host_id, $host_template_id, $selected_graphs_array) {
 	form_hidden_box("save_component_new_graphs", "1", "");
 	print "<input type='hidden' name='selected_graphs_array' value='" . serialize($selected_graphs_array) . "'>\n";
 
-	form_save_button("graphs_new.php?host_id=$host_id");
+	form_save_button_alt("host_id!$host_id");
 
 	include_once("./include/bottom_footer.php");
 }
@@ -873,7 +875,7 @@ function graphs() {
 	form_hidden_box("host_id", $host["id"], "0");
 	form_hidden_box("host_template_id", $host["host_template_id"], "0");
 
-	form_save_button((isset($_SERVER["HTTP_REFERER"]) ? $_SERVER["HTTP_REFERER"] : "index.php"));
+	form_save_button_alt("url!" . (isset($_SERVER["HTTP_REFERER"]) ? $_SERVER["HTTP_REFERER"] : ""));
 
 	print "<script type='text/javascript'>dq_update_selection_indicators();</script>\n";
 	print "<script type='text/javascript'>gt_update_selection_indicators();</script>\n";

@@ -443,7 +443,7 @@ function draw_nontemplated_fields_custom_data($data_template_data_id, $field_nam
 			}
 
 			if ($alternate_colors == true) {
-				form_alternate_row_color($colors["form_alternate1"],$colors["form_alternate2"],$i);
+				form_alternate_row_color();
 			}else{
 				print "<tr bgcolor='#" . $colors["form_alternate1"] . "'>\n";
 			}

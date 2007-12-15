@@ -27,6 +27,7 @@ include_once("./lib/cdef.php");
 
 /* set default action */
 if (!isset($_REQUEST["action"])) { $_REQUEST["action"] = ""; }
+form_cancel_action_validate();
 
 switch ($_REQUEST["action"]) {
 	case 'save':
@@ -204,7 +205,7 @@ function item_edit() {
 
 	print "<form method='post' action='cdef.php' name='form_cdef'>\n";
 
-	form_alternate_row_color($colors["form_alternate1"],$colors["form_alternate2"],0); ?>
+	form_alternate_row_color(); ?>
 		<td width="50%">
 			<font class="textEditTitle">CDEF Item Type</font><br>
 			Choose what type of CDEF item this is.
@@ -219,7 +220,7 @@ function item_edit() {
 			</select>
 		</td>
 	</tr>
-	<?php form_alternate_row_color($colors["form_alternate1"],$colors["form_alternate2"],1); ?>
+	<?php form_alternate_row_color(); ?>
 		<td width="50%">
 			<font class="textEditTitle">CDEF Item Value</font><br>
 			Enter a value for this CDEF item.
@@ -255,7 +256,7 @@ function item_edit() {
 
 	html_end_box();
 
-	form_save_button("cdef.php?action=edit&id=" . $_GET["cdef_id"]);
+	form_save_button_alt("action!edit|id!" . $_GET["cdef_id"]);
 }
 
 /* ---------------------
@@ -318,10 +319,9 @@ function cdef_edit() {
 
 		$cdef_items = db_fetch_assoc("select * from cdef_items where cdef_id=" . $_GET["id"] . " order by sequence");
 
-		$i = 0;
 		if (sizeof($cdef_items) > 0) {
 		foreach ($cdef_items as $cdef_item) {
-			form_alternate_row_color($colors["alternate"],$colors["light"],$i); $i++;
+			form_alternate_row_color();
 				?>
 				<td>
 					<a class="linkEditMain" href="cdef.php?action=item_edit&id=<?php print $cdef_item["id"];?>&cdef_id=<?php print $cdef["id"];?>">Item #<?php print $i;?></a>
@@ -343,7 +343,7 @@ function cdef_edit() {
 		html_end_box();
 	}
 
-	form_save_button("cdef.php");
+	form_save_button_alt();
 }
 
 function cdef() {
@@ -358,10 +358,9 @@ function cdef() {
 
 	$cdefs = db_fetch_assoc("select * from cdef order by name");
 
-	$i = 0;
 	if (sizeof($cdefs) > 0) {
 	foreach ($cdefs as $cdef) {
-		form_alternate_row_color($colors["alternate"],$colors["light"],$i); $i++;
+		form_alternate_row_color();
 			?>
 			<td>
 				<a class="linkEditMain" href="cdef.php?action=edit&id=<?php print $cdef["id"];?>"><?php print $cdef["name"];?></a>

@@ -27,6 +27,7 @@ include_once("./lib/utility.php");
 
 /* set default action */
 if (!isset($_REQUEST["action"])) { $_REQUEST["action"] = ""; }
+form_cancel_action_validate();
 
 switch ($_REQUEST["action"]) {
 	case 'save':
@@ -297,7 +298,7 @@ function item_edit() {
 
 	html_end_box();
 
-	form_save_button("graphs.php?action=graph_edit&id=" . $_REQUEST["local_graph_id"]);
+	form_save_button_alt("action!graph_edit|id!" . $_REQUEST["local_graph_id"]);
 }
 
 //Now we need some javascript to make it dynamic

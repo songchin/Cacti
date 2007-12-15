@@ -55,6 +55,14 @@ a:hover {
 	background-repeat-x;
 }
 
+.rowAlternate1 {
+	background-color: #F5F5F5;
+}
+
+.rowAlternate2 {
+	background-color: #E7E9F2;
+}
+
 /* text styles */
 
 .textError {
@@ -84,6 +92,7 @@ a:hover {
 	color: #ffffff;
 	font-weight: bold;
 }
+
 .textSubSortHeaderDark, .textSubSortHeaderDark:visited {
 	font-size: 10px;
 	color: #ffffff;
@@ -92,6 +101,7 @@ a:hover {
 
 .textArea {
 	font-size: 12px;
+	background-color: #F5F5F5;
 }
 
 .textAreaNotes {

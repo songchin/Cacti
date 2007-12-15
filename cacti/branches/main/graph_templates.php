@@ -38,6 +38,8 @@ $graph_actions = array(
 /* set default action */
 if (!isset($_REQUEST["action"])) { $_REQUEST["action"] = ""; }
 
+form_cancel_action_validate();
+
 switch ($_REQUEST["action"]) {
 	case 'save':
 		form_save();
@@ -229,44 +231,40 @@ function form_actions() {
 
 	print "<form action='graph_templates.php' method='post'>\n";
 
-	if ($_POST["drp_action"] == "1") { /* delete */
+	if (sizeof($graph_array)) {
+		if ($_POST["drp_action"] == "1") { /* delete */
+			print "	<tr>
+					<td class='textArea' bgcolor='#" . $colors["form_alternate1"]. "'>
+						<p>Are you sure you want to delete the following graph templates? Any graphs attached
+						to these templates will become individual graphs.</p>
+						<p>$graph_list</p>
+					</td>
+				</tr>\n
+				";
+		}elseif ($_POST["drp_action"] == "2") { /* duplicate */
+			print "	<tr>
+					<td class='textArea' bgcolor='#" . $colors["form_alternate1"]. "'>
+						<p>When you click save, the following graph templates will be duplicated. You can
+						optionally change the title format for the new graph templates.</p>
+						<p>$graph_list</p>
+						<p><strong>Title Format:</strong><br>"; form_text_box("title_format", "<template_title> (1)", "", "255", "30", "text"); print "</p>
+					</td>
+				</tr>\n
+				";
+		}
+	} else {
 		print "	<tr>
-				<td class='textArea' bgcolor='#" . $colors["form_alternate1"]. "'>
-					<p>Are you sure you want to delete the following graph templates? Any graphs attached
-					to these templates will become individual graphs.</p>
-					<p>$graph_list</p>
+				<td class='textArea'>
+					<p>You must first select a Graph Template.  Please select 'Return' to return to the previous menu.</p>
 				</td>
-			</tr>\n
-			";
-	}elseif ($_POST["drp_action"] == "2") { /* duplicate */
-		print "	<tr>
-				<td class='textArea' bgcolor='#" . $colors["form_alternate1"]. "'>
-					<p>When you click save, the following graph templates will be duplicated. You can
-					optionally change the title format for the new graph templates.</p>
-					<p>$graph_list</p>
-					<p><strong>Title Format:</strong><br>"; form_text_box("title_format", "<template_title> (1)", "", "255", "30", "text"); print "</p>
-				</td>
-			</tr>\n
-			";
+			</tr>\n";
 	}
 
 	if (!isset($graph_array)) {
-		print "<tr><td bgcolor='#" . $colors["form_alternate1"]. "'><span class='textError'>You must select at least one graph template.</span></td></tr>\n";
-		$save_html = "";
+		form_return_button_alt();
 	}else{
-		$save_html = "<input type='image' src='images/button_yes.gif' alt='Save' align='absmiddle'>";
+		form_yesno_button_alt(serialize($graph_array), $_POST["drp_action"]);
 	}
-
-	print "	<tr>
-			<td align='right' bgcolor='#eaeaea'>
-				<input type='hidden' name='action' value='actions'>
-				<input type='hidden' name='selected_items' value='" . (isset($graph_array) ? serialize($graph_array) : '') . "'>
-				<input type='hidden' name='drp_action' value='" . $_POST["drp_action"] . "'>
-				<a href='graph_templates.php'><img src='images/button_no.gif' alt='Cancel' align='absmiddle' border='0'></a>
-				$save_html
-			</td>
-		</tr>
-		";
 
 	html_end_box();
 
@@ -320,10 +318,9 @@ function item() {
 
 	$template_item_list = db_fetch_assoc("select id,name from graph_template_input where graph_template_id=" . $_GET["id"] . " order by name");
 
-	$i = 0;
 	if (sizeof($template_item_list) > 0) {
 	foreach ($template_item_list as $item) {
-		form_alternate_row_color($colors["alternate"],$colors["light"],$i);
+		form_alternate_row_color();
 	?>
 			<td>
 				<a class="linkEditMain" href="graph_templates_inputs.php?action=input_edit&id=<?php print $item["id"];?>&graph_template_id=<?php print $_GET["id"];?>"><?php print $item["name"];?></a>
@@ -333,7 +330,6 @@ function item() {
 			</td>
 		</tr>
 	<?php
-	$i++;
 	}
 	}else{
 		print "<tr bgcolor='#" . $colors["form_alternate2"] . "'><td colspan='2'><em>No Inputs</em></td></tr>";
@@ -404,7 +400,7 @@ function template_edit() {
 	form_hidden_box("rrdtool_version", read_config_option("rrdtool_version"), "");
 	html_end_box();
 
-	form_save_button("graph_templates.php");
+	form_save_button_alt();
 
 //Now we need some javascript to make it dynamic
 ?>
@@ -514,10 +510,9 @@ function template() {
 
 	html_header_sort_checkbox($display_text, $_REQUEST["sort_column"], $_REQUEST["sort_direction"]);
 
-	$i = 0;
 	if (sizeof($template_list) > 0) {
 		foreach ($template_list as $template) {
-			form_alternate_row_color($colors["alternate"], $colors["light"], $i, 'line' . $template["id"]);$i++;
+			form_alternate_row_color('line' . $template["id"]);
 			form_selectable_cell("<a class='linkEditMain' href='graph_templates.php?action=template_edit&id=" . $template["id"] . "'>" . (strlen($_REQUEST["filter"]) ? eregi_replace("(" . preg_quote($_REQUEST["filter"]) . ")", "<span style='background-color: #F8D93D;'>\\1</span>", $template["name"]) : $template["name"]) . "</a>", $template["id"]);
 			form_checkbox_cell($template["name"], $template["id"]);
 			form_end_row();

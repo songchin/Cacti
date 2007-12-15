@@ -625,7 +625,7 @@ case 'list':
 	$i = 0;
 	if (sizeof($graphs) > 0) {
 		foreach ($graphs as $graph) {
-			form_alternate_row_color("f5f5f5", "ffffff", $i);
+			form_alternate_row_color();
 
 			print "<td width='1%'>";
 			print "<input type='checkbox' name='graph_" . $graph["local_graph_id"] . "' id='graph_" . $graph["local_graph_id"] . "' value='" . $graph["local_graph_id"] . "'";

@@ -28,6 +28,8 @@ include_once("./lib/template.php");
 /* set default action */
 if (!isset($_REQUEST["action"])) { $_REQUEST["action"] = ""; }
 
+form_cancel_action_validate();
+
 switch ($_REQUEST["action"]) {
 	case 'save':
 		form_save();
@@ -186,7 +188,7 @@ function input_edit() {
 		and graph_templates_item.graph_template_id=" . $_GET["graph_template_id"] . "
 		order by graph_templates_item.sequence");
 
-	form_alternate_row_color($colors["form_alternate1"],$colors["form_alternate2"],1); ?>
+	form_alternate_row_color(); ?>
 		<td width="50%">
 			<font class="textEditTitle">Associated Graph Items</font><br>
 			Select the graph items that you want to accept user input for.
@@ -228,5 +230,5 @@ function input_edit() {
 
 	form_hidden_box("any_selected_item", $any_selected_item, "");
 
-	form_save_button("graph_templates.php?action=template_edit&id=" . $_GET["graph_template_id"]);
+	form_save_button_alt("action!template_edit|id!" . $_GET["graph_template_id"]);
 }

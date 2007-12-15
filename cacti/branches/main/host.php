@@ -47,6 +47,8 @@ $device_actions = array(
 /* set default action */
 if (!isset($_REQUEST["action"])) { $_REQUEST["action"] = ""; }
 
+form_cancel_action_validate();
+
 switch ($_REQUEST["action"]) {
 	case 'save':
 		form_save();
@@ -341,129 +343,125 @@ function form_actions() {
 
 	print "<form action='host.php' method='post'>\n";
 
-	if ($_POST["drp_action"] == "2") { /* Enable Devices */
-		print "	<tr>
-				<td colspan='2' class='textArea' bgcolor='#" . $colors["form_alternate1"]. "'>
-					<p>To enable the following devices, press the \"yes\" button below.</p>
-					<p>$host_list</p>
-				</td>
-				</tr>";
-	}elseif ($_POST["drp_action"] == "3") { /* Disable Devices */
-		print "	<tr>
-				<td colspan='2' class='textArea' bgcolor='#" . $colors["form_alternate1"]. "'>
-					<p>To disable the following devices, press the \"yes\" button below.</p>
-					<p>$host_list</p>
-				</td>
-				</tr>";
-	}elseif ($_POST["drp_action"] == "4") { /* change snmp options */
-		print "	<tr>
-				<td colspan='2' class='textArea' bgcolor='#" . $colors["form_alternate1"]. "'>
-					<p>To change SNMP parameters for the following devices, check the box next to the fields
-					you want to update, fill in the new value, and click Save.</p>
-					<p>$host_list</p>
-				</td>
-				</tr>";
-				$form_array = array();
-				while (list($field_name, $field_array) = each($fields_host_edit)) {
-					if ((ereg("^snmp_", $field_name)) ||
-						($field_name == "max_oids")) {
-						$form_array += array($field_name => $fields_host_edit[$field_name]);
+	if (sizeof($host_array)) {
+		if ($_POST["drp_action"] == "2") { /* Enable Devices */
+			print "	<tr>
+					<td colspan='2' class='textArea' bgcolor='#" . $colors["form_alternate1"]. "'>
+						<p>To enable the following devices, press the \"yes\" button below.</p>
+						<p>$host_list</p>
+					</td>
+					</tr>";
+		}elseif ($_POST["drp_action"] == "3") { /* Disable Devices */
+			print "	<tr>
+					<td colspan='2' class='textArea' bgcolor='#" . $colors["form_alternate1"]. "'>
+						<p>To disable the following devices, press the \"yes\" button below.</p>
+						<p>$host_list</p>
+					</td>
+					</tr>";
+		}elseif ($_POST["drp_action"] == "4") { /* change snmp options */
+			print "	<tr>
+					<td colspan='2' class='textArea' bgcolor='#" . $colors["form_alternate1"]. "'>
+						<p>To change SNMP parameters for the following devices, check the box next to the fields
+						you want to update, fill in the new value, and click Save.</p>
+						<p>$host_list</p>
+					</td>
+					</tr>";
+					$form_array = array();
+					while (list($field_name, $field_array) = each($fields_host_edit)) {
+						if ((ereg("^snmp_", $field_name)) ||
+							($field_name == "max_oids")) {
+							$form_array += array($field_name => $fields_host_edit[$field_name]);
 
-						$form_array[$field_name]["value"] = "";
-						$form_array[$field_name]["description"] = "";
-						$form_array[$field_name]["form_id"] = 0;
-						$form_array[$field_name]["sub_checkbox"] = array(
-							"name" => "t_" . $field_name,
-							"friendly_name" => "Update this Field",
-							"value" => ""
-							);
+							$form_array[$field_name]["value"] = "";
+							$form_array[$field_name]["description"] = "";
+							$form_array[$field_name]["form_id"] = 0;
+							$form_array[$field_name]["sub_checkbox"] = array(
+								"name" => "t_" . $field_name,
+								"friendly_name" => "Update this Field",
+								"value" => ""
+								);
+						}
 					}
-				}
 
-				draw_edit_form(
-					array(
-						"config" => array("no_form_tag" => true),
-						"fields" => $form_array
-						)
-					);
-	}elseif ($_POST["drp_action"] == "6") { /* change availability options */
-		print "	<tr>
-				<td colspan='2' class='textArea' bgcolor='#" . $colors["form_alternate1"]. "'>
-					<p>To change SNMP parameters for the following devices, check the box next to the fields
-					you want to update, fill in the new value, and click Save.</p>
-					<p>$host_list</p>
-				</td>
-				</tr>";
-				$form_array = array();
-				while (list($field_name, $field_array) = each($fields_host_edit)) {
-					if (ereg("(availability_method|ping_method|ping_port)", $field_name)) {
-						$form_array += array($field_name => $fields_host_edit[$field_name]);
+					draw_edit_form(
+						array(
+							"config" => array("no_form_tag" => true),
+							"fields" => $form_array
+							)
+						);
+		}elseif ($_POST["drp_action"] == "6") { /* change availability options */
+			print "	<tr>
+					<td colspan='2' class='textArea' bgcolor='#" . $colors["form_alternate1"]. "'>
+						<p>To change SNMP parameters for the following devices, check the box next to the fields
+						you want to update, fill in the new value, and click Save.</p>
+						<p>$host_list</p>
+					</td>
+					</tr>";
+					$form_array = array();
+					while (list($field_name, $field_array) = each($fields_host_edit)) {
+						if (ereg("(availability_method|ping_method|ping_port)", $field_name)) {
+							$form_array += array($field_name => $fields_host_edit[$field_name]);
 
-						$form_array[$field_name]["value"] = "";
-						$form_array[$field_name]["description"] = "";
-						$form_array[$field_name]["form_id"] = 0;
-						$form_array[$field_name]["sub_checkbox"] = array(
-							"name" => "t_" . $field_name,
-							"friendly_name" => "Update this Field",
-							"value" => ""
-							);
+							$form_array[$field_name]["value"] = "";
+							$form_array[$field_name]["description"] = "";
+							$form_array[$field_name]["form_id"] = 0;
+							$form_array[$field_name]["sub_checkbox"] = array(
+								"name" => "t_" . $field_name,
+								"friendly_name" => "Update this Field",
+								"value" => ""
+								);
+						}
 					}
-				}
 
-				draw_edit_form(
-					array(
-						"config" => array("no_form_tag" => true),
-						"fields" => $form_array
-						)
-					);
-	}elseif ($_POST["drp_action"] == "5") { /* Clear Statisitics for Selected Devices */
-		print "	<tr>
-				<td colspan='2' class='textArea' bgcolor='#" . $colors["form_alternate1"]. "'>
-					<p>To clear the counters for the following devices, press the \"yes\" button below.</p>
-					<p>$host_list</p>
-				</td>
-				</tr>";
-	}elseif ($_POST["drp_action"] == "1") { /* delete */
+					draw_edit_form(
+						array(
+							"config" => array("no_form_tag" => true),
+							"fields" => $form_array
+							)
+						);
+		}elseif ($_POST["drp_action"] == "5") { /* Clear Statisitics for Selected Devices */
+			print "	<tr>
+					<td colspan='2' class='textArea' bgcolor='#" . $colors["form_alternate1"]. "'>
+						<p>To clear the counters for the following devices, press the \"yes\" button below.</p>
+						<p>$host_list</p>
+					</td>
+					</tr>";
+		}elseif ($_POST["drp_action"] == "1") { /* delete */
+			print "	<tr>
+					<td class='textArea' bgcolor='#" . $colors["form_alternate1"]. "'>
+						<p>Are you sure you want to delete the following devices?</p>
+						<p>$host_list</p>";
+						form_radio_button("delete_type", "2", "1", "Leave all graphs and data sources untouched.  Data sources will be disabled however.", "1"); print "<br>";
+						form_radio_button("delete_type", "2", "2", "Delete all associated <strong>graphs</strong> and <strong>data sources</strong>.", "1"); print "<br>";
+						print "</td></tr>
+					</td>
+				</tr>\n
+				";
+		}elseif (ereg("^tr_([0-9]+)$", $_POST["drp_action"], $matches)) { /* place on tree */
+			print "	<tr>
+					<td class='textArea' bgcolor='#" . $colors["form_alternate1"]. "'>
+						<p>When you click save, the following hosts will be placed under the branch selected
+						below.</p>
+						<p>$host_list</p>
+						<p><strong>Destination Branch:</strong><br>"; grow_dropdown_tree($matches[1], "tree_item_id", "0"); print "</p>
+					</td>
+				</tr>\n
+				<input type='hidden' name='tree_id' value='" . $matches[1] . "'>\n
+				";
+		}
+	} else {
 		print "	<tr>
 				<td class='textArea' bgcolor='#" . $colors["form_alternate1"]. "'>
-					<p>Are you sure you want to delete the following devices?</p>
-					<p>$host_list</p>";
-					form_radio_button("delete_type", "2", "1", "Leave all graphs and data sources untouched.  Data sources will be disabled however.", "1"); print "<br>";
-					form_radio_button("delete_type", "2", "2", "Delete all associated <strong>graphs</strong> and <strong>data sources</strong>.", "1"); print "<br>";
-					print "</td></tr>
+					<p>You must first select a Device.  Please select 'Return' to return to the previous menu.</p>
 				</td>
-			</tr>\n
-			";
-	}elseif (ereg("^tr_([0-9]+)$", $_POST["drp_action"], $matches)) { /* place on tree */
-		print "	<tr>
-				<td class='textArea' bgcolor='#" . $colors["form_alternate1"]. "'>
-					<p>When you click save, the following hosts will be placed under the branch selected
-					below.</p>
-					<p>$host_list</p>
-					<p><strong>Destination Branch:</strong><br>"; grow_dropdown_tree($matches[1], "tree_item_id", "0"); print "</p>
-				</td>
-			</tr>\n
-			<input type='hidden' name='tree_id' value='" . $matches[1] . "'>\n
-			";
+			</tr>\n";
 	}
 
 	if (!isset($host_array)) {
-		print "<tr><td bgcolor='#" . $colors["form_alternate1"]. "'><span class='textError'>You must select at least one device.</span></td></tr>\n";
-		$save_html = "";
+		form_return_button_alt();
 	}else{
-		$save_html = "<input type='image' src='images/button_yes.gif' alt='Save' align='absmiddle'>";
+		form_yesno_button_alt(serialize($host_array), $_POST["drp_action"]);
 	}
-
-	print "	<tr>
-			<td colspan='2' align='right' bgcolor='#eaeaea'>
-				<input type='hidden' name='action' value='actions'>
-				<input type='hidden' name='selected_items' value='" . (isset($host_array) ? serialize($host_array) : '') . "'>
-				<input type='hidden' name='drp_action' value='" . $_POST["drp_action"] . "'>
-				<a href='host.php'><img src='images/button_no.gif' alt='Cancel' align='absmiddle' border='0'></a>
-				$save_html
-			</td>
-		</tr>
-		";
 
 	html_end_box();
 
@@ -984,7 +982,7 @@ function host_edit() {
 						<?php form_dropdown("graph_template_id",$available_graph_templates,"name","id","","","");?>
 					</td>
 					<td align="right">
-						&nbsp;<input type="image" src="images/button_add.gif" alt="Add" name="add_gt" align="absmiddle">
+						&nbsp;<input type="submit" value="Add" name="add_gt_y" align="absmiddle">
 					</td>
 				</table>
 			</td>
@@ -1070,7 +1068,7 @@ function host_edit() {
 						<?php form_dropdown("reindex_method",$reindex_types,"","","1","","");?>
 					</td>
 					<td align="right">
-						&nbsp;<input type="image" src="images/button_add.gif" alt="Add" name="add_dq" align="absmiddle">
+						&nbsp;<input type="submit" value="Add" name="add_dq_y" align="absmiddle">
 					</td>
 				</table>
 			</td>
@@ -1080,7 +1078,7 @@ function host_edit() {
 		html_end_box();
 	}
 
-	form_save_button("host.php");
+	form_save_button_alt();
 }
 
 function host() {
@@ -1240,10 +1238,9 @@ function host() {
 
 	html_header_sort_checkbox($display_text, $_REQUEST["sort_column"], $_REQUEST["sort_direction"]);
 
-	$i = 0;
 	if (sizeof($hosts) > 0) {
 		foreach ($hosts as $host) {
-			form_alternate_row_color($colors["alternate"], $colors["light"], $i, 'line' . $host["id"]); $i++;
+			form_alternate_row_color('line' . $host["id"]);
 			form_selectable_cell("<a class='linkEditMain' href='host.php?action=edit&id=" . $host["id"] . "'>" .
 				(strlen($_REQUEST["filter"]) ? eregi_replace("(" . preg_quote($_REQUEST["filter"]) . ")", "<span style='background-color: #F8D93D;'>\\1</span>", $host["description"]) : $host["description"]) . "</a>", $host["id"], 250);
 			form_selectable_cell(round(($host["id"]), 2), $host["id"]);

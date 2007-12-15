@@ -37,6 +37,7 @@ $ds_actions = array(
 
 /* set default action */
 if (!isset($_REQUEST["action"])) { $_REQUEST["action"] = ""; }
+form_cancel_action_validate();
 
 switch ($_REQUEST["action"]) {
 	case 'save':
@@ -137,7 +138,7 @@ function form_save() {
 			where data_input_id=" . $_POST["data_input_id"] . "
 			and input_output='in'");
 
-		/* pass 1 for validation */
+		/* pass#1 for validation */
 		if (sizeof($input_fields) > 0) {
 			foreach ($input_fields as $input_field) {
 				$form_value = "value_" . $input_field["data_name"];
@@ -243,11 +244,7 @@ function form_save() {
 			}
 		}
 
-		if ((is_error_message()) || (empty($_POST["data_template_id"]))) {
-			header("Location: data_templates.php?action=template_edit&id=" . (empty($data_template_id) ? $_POST["data_template_id"] : $data_template_id) . (empty($_POST["current_rrd"]) ? "" : "&view_rrd=" . ($_POST["current_rrd"] ? $_POST["current_rrd"] : $data_template_rrd_id)));
-		}else{
-			header("Location: data_templates.php");
-		}
+		header("Location: data_templates.php?action=template_edit&id=" . (empty($data_template_id) ? $_POST["data_template_id"] : $data_template_id) . (empty($_POST["current_rrd"]) ? "" : "&view_rrd=" . ($_POST["current_rrd"] ? $_POST["current_rrd"] : $data_template_rrd_id)));
 	}
 }
 
@@ -318,44 +315,40 @@ function form_actions() {
 
 	print "<form action='data_templates.php' method='post'>\n";
 
-	if ($_POST["drp_action"] == "1") { /* delete */
+	if (sizeof($ds_array)) {
+		if ($_POST["drp_action"] == "1") { /* delete */
+			print "	<tr>
+					<td class='textArea'>
+						<p>Are you sure you want to delete the following data templates? Any data sources attached
+						to these templates will become individual data sources.</p>
+						<p>$ds_list</p>
+					</td>
+				</tr>\n
+				";
+		}elseif ($_POST["drp_action"] == "2") { /* duplicate */
+			print "	<tr>
+					<td class='textArea'>
+						<p>When you click save, the following data templates will be duplicated. You can
+						optionally change the title format for the new data templates.</p>
+						<p>$ds_list</p>
+						<p><strong>Title Format:</strong><br>"; form_text_box("title_format", "<template_title> (1)", "", "255", "30", "text"); print "</p>
+					</td>
+				</tr>\n
+				";
+		}
+	} else {
 		print "	<tr>
-				<td class='textArea' bgcolor='#" . $colors["form_alternate1"]. "'>
-					<p>Are you sure you want to delete the following data templates? Any data sources attached
-					to these templates will become individual data sources.</p>
-					<p>$ds_list</p>
+				<td class='textArea'>
+					<p>You must first select a Data Template.  Please select 'Return' to return to the previous menu.</p>
 				</td>
-			</tr>\n
-			";
-	}elseif ($_POST["drp_action"] == "2") { /* duplicate */
-		print "	<tr>
-				<td class='textArea' bgcolor='#" . $colors["form_alternate1"]. "'>
-					<p>When you click save, the following data templates will be duplicated. You can
-					optionally change the title format for the new data templates.</p>
-					<p>$ds_list</p>
-					<p><strong>Title Format:</strong><br>"; form_text_box("title_format", "<template_title> (1)", "", "255", "30", "text"); print "</p>
-				</td>
-			</tr>\n
-			";
+			</tr>\n";
 	}
 
 	if (!isset($ds_array)) {
-		print "<tr><td bgcolor='#" . $colors["form_alternate1"]. "'><span class='textError'>You must select at least one data template.</span></td></tr>\n";
-		$save_html = "";
+		form_return_button_alt();
 	}else{
-		$save_html = "<input type='image' src='images/button_yes.gif' alt='Save' align='absmiddle'>";
+		form_yesno_button_alt(serialize($ds_array), $_POST["drp_action"]);
 	}
-
-	print "	<tr>
-			<td align='right' bgcolor='#eaeaea'>
-				<input type='hidden' name='action' value='actions'>
-				<input type='hidden' name='selected_items' value='" . (isset($ds_array) ? serialize($ds_array) : '') . "'>
-				<input type='hidden' name='drp_action' value='" . $_POST["drp_action"] . "'>
-				<a href='data_templates.php'><img src='images/button_no.gif' alt='Cancel' align='absmiddle' border='0'></a>
-				$save_html
-			</td>
-		</tr>
-		";
 
 	html_end_box();
 
@@ -518,7 +511,7 @@ function template_edit() {
 			<td class='textHeaderDark'>
 				<strong>Data Source Item</strong> [" . (isset($template_rrd) ? $template_rrd["data_source_name"] : "") . "]
 			</td>
-			<td class='textHeaderDark' align='right' bgcolor='" . $colors["header"] . "'>
+			<td class='textHeaderDark' align='right'>
 				" . (!empty($_GET["id"]) ? "<strong><a class='linkOverDark' href='data_templates.php?action=rrd_add&id=" . $_GET["id"] . "'>New</a>&nbsp;</strong>" : "") . "
 			</td>
 		</tr>\n";
@@ -580,7 +573,7 @@ function template_edit() {
 				$old_value = "";
 			}
 
-			form_alternate_row_color($colors["form_alternate1"],$colors["form_alternate2"],$i); ?>
+			form_alternate_row_color(); ?>
 				<td width="50%">
 					<strong><?php print $field["name"];?></strong><br>
 					<?php form_checkbox("t_value_" . $field["data_name"], $data_input_data["t_value"], "Use Per-Data Source Value (Ignore this Value)", "", "", $_GET["id"]);?>
@@ -591,8 +584,6 @@ function template_edit() {
 				</td>
 			</tr>
 			<?php
-
-			$i++;
 		}
 		}else{
 			print "<tr><td><em>No Input Fields for the Selected Data Input Source</em></td></tr>";
@@ -601,7 +592,7 @@ function template_edit() {
 		html_end_box();
 	}
 
-	form_save_button("data_templates.php");
+	form_save_button_alt("return");
 }
 
 function template() {
@@ -687,16 +678,14 @@ function template() {
 
 	html_header_sort_checkbox($display_text, $_REQUEST["sort_column"], $_REQUEST["sort_direction"]);
 
-	$i = 0;
 	if (sizeof($template_list) > 0) {
 		foreach ($template_list as $template) {
-			form_alternate_row_color($colors["alternate"],$colors["light"],$i, 'line' . $template["id"]);
+			form_alternate_row_color('line' . $template["id"]);
 			form_selectable_cell("<a class='linkEditMain' href='data_templates.php?action=template_edit&id=" . $template["id"] . "'>" . (strlen($_REQUEST["filter"]) ? eregi_replace("(" . preg_quote($_REQUEST["filter"]) . ")", "<span style='background-color: #F8D93D;'>\\1</span>", $template["name"]) : $template["name"]) . "</a>", $template["id"]);
 			form_selectable_cell((empty($template["data_input_method"]) ? "<em>None</em>": $template["data_input_method"]), $template["id"]);
 			form_selectable_cell((($template["active"] == "on") ? "Active" : "Disabled"), $template["id"]);
 			form_checkbox_cell($template["name"], $template["id"]);
 			form_end_row();
-			$i++;
 		}
 
 		/* put the nav bar on the bottom as well */

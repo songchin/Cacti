@@ -27,6 +27,8 @@ include("./include/auth.php");
 /* set default action */
 if (!isset($_REQUEST["action"])) { $_REQUEST["action"] = ""; }
 
+form_cancel_action_validate();
+
 switch ($_REQUEST["action"]) {
 case 'save':
 	while (list($field_name, $field_array) = each($settings{$_POST["tab"]})) {
@@ -115,7 +117,7 @@ default:
 
 	form_hidden_box("tab", $current_tab, "");
 
-	form_save_button("settings.php?tab=$current_tab", "save");
+	form_save_button_alt("url!index.php", "save");
 
 	include("./include/bottom_footer.php");
 

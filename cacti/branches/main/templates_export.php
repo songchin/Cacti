@@ -28,6 +28,8 @@ include_once("./lib/export.php");
 /* set default action */
 if (!isset($_REQUEST["action"])) { $_REQUEST["action"] = ""; }
 
+form_cancel_action_validate();
+
 $export_types = array(
 	"graph_template" => array(
 		"name" => "Graph Template",
@@ -125,7 +127,7 @@ function export() {
 
 	html_start_box("<strong>Export Template</strong> [" . $export_types{$_REQUEST["export_type"]}["name"] . "]", "100%", $colors["header"], "3", "center", "");
 
-	form_alternate_row_color($colors["form_alternate1"],$colors["form_alternate2"],0); ?>
+	form_alternate_row_color(); ?>
 		<td width="50%">
 			<font class="textEditTitle"><?php print $export_types{$_REQUEST["export_type"]}["name"];?> to Export</font><br>
 			Choose the exact item to export to XML.
@@ -135,7 +137,7 @@ function export() {
 		</td>
 	</tr>
 
-	<?php form_alternate_row_color($colors["form_alternate1"],$colors["form_alternate2"],1); ?>
+	<?php form_alternate_row_color(); ?>
 		<td width="50%">
 			<font class="textEditTitle">Include Dependencies</font><br>
 			Some templates rely on other items in Cacti to function properly. It is highly recommended that you select
@@ -146,7 +148,7 @@ function export() {
 		</td>
 	</tr>
 
-	<?php form_alternate_row_color($colors["form_alternate1"],$colors["form_alternate2"],0); ?>
+	<?php form_alternate_row_color(); ?>
 		<td width="50%">
 			<font class="textEditTitle">Output Format</font><br>
 			Choose the format to output the resulting XML file in.
@@ -166,6 +168,6 @@ function export() {
 
 	html_end_box();
 
-	form_save_button("templates_export.php");
+	form_save_button_alt("url!" . (isset($_SERVER["HTTP_REFERER"]) ? $_SERVER["HTTP_REFERER"] : ""));
 }
 ?>

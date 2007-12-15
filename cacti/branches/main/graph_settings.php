@@ -27,6 +27,7 @@ include("./include/auth.php");
 
 /* set default action */
 if (!isset($_REQUEST["action"])) { $_REQUEST["action"] = ""; }
+form_cancel_action_validate();
 
 switch ($_REQUEST["action"]) {
 	case 'save':
@@ -195,13 +196,14 @@ function settings() {
 	if (isset($_SERVER["HTTP_REFERER"])) {
 		$timespan_sel_pos = strpos($_SERVER["HTTP_REFERER"],"&predefined_timespan");
 		if ($timespan_sel_pos) {
-		   $_SERVER["HTTP_REFERER"] = substr($_SERVER["HTTP_REFERER"],0,$timespan_sel_pos);
+			$_SERVER["HTTP_REFERER"] = substr($_SERVER["HTTP_REFERER"],0,$timespan_sel_pos);
 		}
 	}
 
 	form_hidden_box("referer",(isset($_SERVER["HTTP_REFERER"]) ? $_SERVER["HTTP_REFERER"] : ""),"");
 	form_hidden_box("save_component_graph_config","1","");
-	form_save_button("graph_settings.php", "save");
+
+	form_save_button_alt("url!" . (isset($_SERVER["HTTP_REFERER"]) ? $_SERVER["HTTP_REFERER"] : ""), "save");
 }
 
 ?>

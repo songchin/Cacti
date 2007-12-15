@@ -26,6 +26,7 @@ include("./include/auth.php");
 
 /* set default action */
 if (!isset($_REQUEST["action"])) { $_REQUEST["action"] = ""; }
+form_cancel_action_validate();
 
 switch ($_REQUEST["action"]) {
 	case 'save':
@@ -115,7 +116,7 @@ function color_edit() {
 
 	html_end_box();
 
-	form_save_button("color.php");
+	form_save_button_alt();
 }
 
 function color() {
@@ -130,19 +131,18 @@ function color() {
 		## Space
 		DrawMatrixHeaderItem("&nbsp; &nbsp; ",$colors["header_text"],1);
 		DrawMatrixHeaderItem("Hex Value",$colors["header_text"],1);
-                DrawMatrixHeaderItem("Color",$colors["header_text"],1);
+		DrawMatrixHeaderItem("Color",$colors["header_text"],1);
 		DrawMatrixHeaderItem("&nbsp;",$colors["header_text"],1);
 	print "</tr>";
 
 	$color_list = db_fetch_assoc("select * from colors order by hex");
 
-	$i = 0;
 	if (sizeof($color_list) > 0) {
 		$j=0; ## even/odd counter
 		foreach ($color_list as $color) {
 			$j++;
 			if ($j % 2 == 1) {
-				form_alternate_row_color($colors["alternate"],$colors["light"],$i); $i++;
+				form_alternate_row_color();
 					?>
 					<td>
 						<a class="linkEditMain" href="color.php?action=edit&id=<?php print $color["id"];?>"><?php print $color["hex"];?></a>

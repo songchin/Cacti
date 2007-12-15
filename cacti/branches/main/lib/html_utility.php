@@ -75,20 +75,22 @@ function inject_form_variables(&$form_array, $arg1 = array(), $arg2 = array(), $
      to display for this particular row. must be an integer
    @arg $row_id - used to allow js and ajax actions on this object
    @returns - the background color used for this particular row */
-function form_alternate_row_color($row_color1, $row_color2, $row_value, $row_id = "") {
-	if (($row_value % 2) == 1) {
-		$current_color = $row_color1;
+function form_alternate_row_color($row_id = "") {
+	static $class_int = 1;
+
+	if ($class_int == 1) {
+		$class = "rowAlternate1";
 	}else{
-		$current_color = $row_color2;
+		$class = "rowAlternate2";
 	}
+
+	$class_int = ($class_int + 1) % 2;
 
 	if (strlen($row_id)) {
-		print "<tr id='$row_id' bgcolor='#$current_color'>\n";
+		print "<tr id='$row_id' class='$class'>\n";
 	}else{
-		print "<tr bgcolor='#$current_color'>\n";
+		print "<tr class='$class'>\n";
 	}
-
-	return $current_color;
 }
 
 /* form_selectable_cell - format's a table row such that it can be highlighted using cacti's js actions

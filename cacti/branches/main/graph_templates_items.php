@@ -28,6 +28,8 @@ include_once("./lib/template.php");
 /* set default action */
 if (!isset($_REQUEST["action"])) { $_REQUEST["action"] = ""; }
 
+form_cancel_action_validate();
+
 switch ($_REQUEST["action"]) {
 	case 'save':
 		form_save();
@@ -374,7 +376,7 @@ function item_edit() {
 	form_hidden_box("invisible_alpha", $form_array["alpha"]["value"], "FF");
 	form_hidden_box("rrdtool_version", read_config_option("rrdtool_version"), "");
 
-	form_save_button("graph_templates.php?action=template_edit&id=" . $_GET["graph_template_id"]);
+	form_save_button_alt("url!" . (isset($_SERVER["HTTP_REFERER"]) ? $_SERVER["HTTP_REFERER"] : ""));
 
 //Now we need some javascript to make it dynamic
 ?>

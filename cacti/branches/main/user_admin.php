@@ -34,6 +34,8 @@ $user_actions = array(
 	5 => "Batch Copy"
 	);
 
+form_cancel_action_validate();
+
 switch (get_request_var_request("action")) {
 	case 'actions':
 		form_actions();
@@ -941,7 +943,7 @@ function user_edit() {
 		user_realms_edit();
 	}
 
-	form_save_button("user_admin.php");
+	form_save_button_alt();
 }
 
 function user() {
@@ -1036,8 +1038,6 @@ function user() {
 
 	html_header_sort_checkbox($display_text, get_request_var_request("sort_column"), get_request_var_request("sort_direction"));
 
-
-	$i = 0;
 	if (sizeof($user_list) > 0) {
 		foreach ($user_list as $user) {
 			if (empty($user["dtime"]) || ($user["dtime"] == "12/31/1969")) {
@@ -1051,7 +1051,7 @@ function user() {
 				$enabled = "No";
 			}
 
-			form_alternate_row_color($colors["alternate"], $colors["light"], $i, 'line' . $user["id"]); $i++;
+			form_alternate_row_color('line' . $user["id"]);
 			form_selectable_cell("<a class='linkEditMain' href='user_admin.php?action=user_edit&id=" . $user["id"] . "'>" .
 			(strlen(get_request_var_request("filter")) ? eregi_replace("(" . preg_quote(get_request_var_request("filter")) . ")", "<span style='background-color: #F8D93D;'>\\1</span>",  $user["username"]) : $user["username"])
 			, $user["id"]);

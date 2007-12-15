@@ -30,6 +30,8 @@ include_once('./lib/html_tree.php');
 /* set default action */
 if (!isset($_REQUEST["action"])) { $_REQUEST["action"] = ""; }
 
+form_cancel_action_validate();
+
 switch ($_REQUEST["action"]) {
 	case 'save':
 		form_save();
@@ -155,7 +157,7 @@ function item_edit() {
 
 	print "<form method='post' action='tree.php' name='form_tree'>\n";
 
-	form_alternate_row_color($colors["form_alternate1"],$colors["form_alternate2"],0); ?>
+	form_alternate_row_color(); ?>
 		<td width="50%">
 			<font class="textEditTitle">Parent Item</font><br>
 			Choose the parent for this header/graph.
@@ -164,7 +166,7 @@ function item_edit() {
 			<?php grow_dropdown_tree($_GET["tree_id"], "parent_item_id", (isset($_GET["parent_id"]) ? $_GET["parent_id"] : get_parent_id($tree_item["id"], "graph_tree_items", "graph_tree_id=" . $_GET["tree_id"])));?>
 		</td>
 	</tr>
-	<?php form_alternate_row_color($colors["form_alternate1"],$colors["form_alternate2"],1); ?>
+	<?php form_alternate_row_color(); ?>
 		<td width="50%">
 			<font class="textEditTitle">Tree Item Type</font><br>
 			Choose what type of tree item this is.
@@ -194,7 +196,7 @@ function item_edit() {
 			$default_sorting_type = TREE_ORDERING_NONE;
 		}
 
-		form_alternate_row_color($colors["form_alternate1"],$colors["form_alternate2"],$i); $i++; ?>
+		form_alternate_row_color(); ?>
 			<td width="50%">
 				<font class="textEditTitle">Title</font><br>
 				If this item is a header, enter a title here.
@@ -206,7 +208,7 @@ function item_edit() {
 		<?php
 		/* don't allow the user to change the tree item ordering if a tree order has been specified */
 		if ($tree_sort_type == TREE_ORDERING_NONE) {
-			form_alternate_row_color($colors["form_alternate1"],$colors["form_alternate2"],$i); $i++; ?>
+			form_alternate_row_color(); ?>
 				<td width="50%">
 					<font class="textEditTitle">Sorting Type</font><br>
 					Choose how children of this branch will be sorted.
@@ -219,7 +221,7 @@ function item_edit() {
 		}
 
 		if ((!empty($_GET["id"])) && ($tree_sort_type == TREE_ORDERING_NONE)) {
-			form_alternate_row_color($colors["form_alternate1"],$colors["form_alternate2"],$i); $i++; ?>
+			form_alternate_row_color(); ?>
 				<td width="50%">
 					<font class="textEditTitle">Propagate Changes</font><br>
 					Propagate all options on this form (except for 'Title') to all child 'Header' items.
@@ -232,7 +234,7 @@ function item_edit() {
 		}
 		break;
 	case TREE_ITEM_TYPE_GRAPH:
-		form_alternate_row_color($colors["form_alternate1"],$colors["form_alternate2"],0); ?>
+		form_alternate_row_color(); ?>
 			<td width="50%">
 				<font class="textEditTitle">Graph</font><br>
 				Choose a graph from this list to add it to the tree.
@@ -241,7 +243,7 @@ function item_edit() {
 				<?php form_dropdown("local_graph_id", db_fetch_assoc("select graph_templates_graph.local_graph_id as id,graph_templates_graph.title_cache as name from (graph_templates_graph,graph_local) where graph_local.id=graph_templates_graph.local_graph_id and local_graph_id != 0 order by title_cache"), "name", "id", (isset($tree_item["local_graph_id"]) ? $tree_item["local_graph_id"] : ""), "", "");?>
 			</td>
 		</tr>
-		<?php form_alternate_row_color($colors["form_alternate1"],$colors["form_alternate2"],1); ?>
+		<?php form_alternate_row_color(); ?>
 			<td width="50%">
 				<font class="textEditTitle">Round Robin Archive</font><br>
 				Choose a round robin archive to control how this graph is displayed.
@@ -253,7 +255,7 @@ function item_edit() {
 		<?php
 		break;
 	case TREE_ITEM_TYPE_HOST:
-		form_alternate_row_color($colors["form_alternate1"],$colors["form_alternate2"],0); ?>
+		form_alternate_row_color(); ?>
 			<td width="50%">
 				<font class="textEditTitle">Host</font><br>
 				Choose a host here to add it to the tree.
@@ -262,7 +264,7 @@ function item_edit() {
 				<?php form_dropdown("host_id", db_fetch_assoc("select id,CONCAT_WS('',description,' (',hostname,')') as name from host order by description,hostname"), "name", "id", (isset($tree_item["host_id"]) ? $tree_item["host_id"] : ""), "", "");?>
 			</td>
 		</tr>
-		<?php form_alternate_row_color($colors["form_alternate1"],$colors["form_alternate2"],1); ?>
+		<?php form_alternate_row_color(); ?>
 			<td width="50%">
 				<font class="textEditTitle">Graph Grouping Style</font><br>
 				Choose how graphs are grouped when drawn for this particular host on the tree.
@@ -285,7 +287,7 @@ function item_edit() {
 
 	html_end_box();
 
-	form_save_button("tree.php?action=edit&id=" . $_GET["tree_id"]);
+	form_save_button_alt("action!edit|id!" . $_GET["tree_id"]);
 }
 
 function item_moveup() {
@@ -409,7 +411,7 @@ function tree_edit() {
 		html_end_box();
 	}
 
-	form_save_button("tree.php");
+	form_save_button_alt();
 }
 
 function tree() {
@@ -424,10 +426,9 @@ function tree() {
 
 	$trees = db_fetch_assoc("SELECT * FROM graph_tree ORDER BY name");
 
-	$i = 0;
 	if (sizeof($trees) > 0) {
 	foreach ($trees as $tree) {
-		form_alternate_row_color($colors["alternate"],$colors["light"],$i); $i++;
+		form_alternate_row_color();
 			?>
 			<td>
 				<a class="linkEditMain" href="tree.php?action=edit&id=<?php print $tree["id"];?>"><?php print $tree["name"];?></a>

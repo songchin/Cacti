@@ -517,7 +517,7 @@ function draw_graph_items_list($item_list, $filename, $url_data, $disable_contro
 
 		/* alternating row color */
 		if ($use_custom_row_color == false) {
-			form_alternate_row_color($alternate_color_1,$alternate_color_2,$i);
+			form_alternate_row_color();
 		}else{
 			print "<tr bgcolor='#$custom_row_color'>";
 		}
@@ -559,8 +559,6 @@ function draw_graph_items_list($item_list, $filename, $url_data, $disable_contro
 		}
 
 		print "</tr>";
-
-		$i++;
 	}
 	}else{
 		print "<tr bgcolor='#" . $colors["form_alternate2"] . "'><td colspan='7'><em>No Items</em></td></tr>";

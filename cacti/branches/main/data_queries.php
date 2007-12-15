@@ -33,6 +33,7 @@ $dq_actions = array(
 
 /* set default action */
 if (!isset($_REQUEST["action"])) { $_REQUEST["action"] = ""; }
+form_cancel_action_validate();
 
 switch ($_REQUEST["action"]) {
 	case 'save':
@@ -244,35 +245,32 @@ function form_actions() {
 
 	print "<form action='data_queries.php' method='post'>\n";
 
-	if ($_POST["drp_action"] == "1") { /* delete */
-		$graphs = array();
+	if (sizeof($dq_array)) {
+		if ($_POST["drp_action"] == "1") { /* delete */
+			$graphs = array();
 
-		print "
-			<tr>
-				<td class='textArea' bgcolor='#" . $colors["form_alternate1"]. "'>
-					<p>Are you sure you want to delete the following data queries?</p>
-					<p>$dq_list</p>
+			print "
+				<tr>
+					<td class='textArea'>
+						<p>Are you sure you want to delete the following data queries?</p>
+						<p>$dq_list</p>
+					</td>
+				</tr>\n";
+		}
+	} else {
+		print "	<tr>
+				<td class='textArea'>
+					<p>You must first select a Data Query.  Please select 'Return' to return to the previous menu.</p>
 				</td>
 			</tr>\n";
 	}
 
 	if (!isset($dq_array)) {
-		print "<tr><td bgcolor='#" . $colors["form_alternate1"]. "'><span class='textError'>You must select at least one data query.</span></td></tr>\n";
-		$save_html = "";
+		form_return_button_alt();
 	}else{
-		$save_html = "<input type='image' src='images/button_yes.gif' alt='Save' align='absmiddle'>";
+		form_yesno_button_alt(serialize($dq_array), $_POST["drp_action"]);
 	}
 
-	print "	<tr>
-			<td align='right' bgcolor='#eaeaea'>
-				<input type='hidden' name='action' value='actions'>
-				<input type='hidden' name='selected_items' value='" . (isset($dq_array) ? serialize($dq_array) : '') . "'>
-				<input type='hidden' name='drp_action' value='" . $_POST["drp_action"] . "'>
-				<a href='data_queries.php'><img src='images/button_no.gif' alt='Cancel' align='absmiddle' border='0'></a>
-				$save_html
-			</td>
-		</tr>
-		";
 
 	html_end_box();
 
@@ -415,7 +413,6 @@ function data_query_item_edit() {
 				and data_template_rrd.local_data_id=0
 				order by data_template_rrd.data_source_name");
 
-			$i = 0;
 			if (sizeof($data_template_rrds) > 0) {
 			foreach ($data_template_rrds as $data_template_rrd) {
 				if (empty($data_template_rrd["snmp_query_graph_id"])) {
@@ -424,7 +421,7 @@ function data_query_item_edit() {
 					$old_value = "on";
 				}
 
-				form_alternate_row_color($colors["form_alternate1"],$colors["form_alternate2"],$i); $i++;
+				form_alternate_row_color();
 				?>
 					<td>
 						<table cellspacing="0" cellpadding="0" border="0" width="100%">
@@ -483,12 +480,11 @@ function data_query_item_edit() {
 					<td style='padding: 3px;'><span style='color: white; font-weight: bold;'>Data Template - " . $data_template["name"] . "</span></td>
 				</tr>";
 
-			$i = 0;
 			if (sizeof($suggested_values) > 0) {
 				print "<tr><td><table cellspacing='0' cellpadding='3' border='0' width='100%'>\n";
 
 				foreach ($suggested_values as $suggested_value) {
-					form_alternate_row_color($colors["form_alternate1"],$colors["form_alternate2"],$i); $i++;
+					form_alternate_row_color();
 					?>
 						<td width="120">
 							<strong><?php print $suggested_value["field_name"];?></strong>
@@ -510,7 +506,7 @@ function data_query_item_edit() {
 				print "</table></td></tr>\n";
 			}
 
-			form_alternate_row_color($colors["form_alternate1"],$colors["form_alternate2"],$i);
+			form_alternate_row_color();
 			?>
 				<td>
 					<table cellspacing="0" cellpadding="3" border="0" width="100%">
@@ -545,12 +541,11 @@ function data_query_item_edit() {
 				<td style='padding: 3px;'><span style='color: white; font-weight: bold;'>Graph Template - " . db_fetch_cell("select name from graph_templates where id=" . $snmp_query_item["graph_template_id"]) . "</span></td>
 			</tr>";
 
-		$i = 0;
 		if (sizeof($suggested_values) > 0) {
 			print "<tr><td><table cellspacing='0' cellpadding='3' border='0' width='100%'>\n";
 
 			foreach ($suggested_values as $suggested_value) {
-				form_alternate_row_color($colors["form_alternate1"],$colors["form_alternate2"],$i); $i++;
+				form_alternate_row_color();
 				?>
 					<td width="120">
 						<strong><?php print $suggested_value["field_name"];?></strong>
@@ -572,7 +567,7 @@ function data_query_item_edit() {
 			print "</table></td></tr>\n";
 		}
 
-		form_alternate_row_color($colors["form_alternate1"],$colors["form_alternate2"],$i);
+		form_alternate_row_color();
 		?>
 			<td>
 				<table cellspacing="0" cellpadding="3" border="0" width="100%">
@@ -595,7 +590,7 @@ function data_query_item_edit() {
 		html_end_box();
 	}
 
-	form_save_button("data_queries.php?action=edit&id=" . $_GET["snmp_query_id"]);
+	form_save_button_alt("action!edit|id!" . $_GET["snmp_query_id"]);
 }
 
 /* ---------------------
@@ -674,10 +669,9 @@ function data_query_edit() {
 				where snmp_query_graph.snmp_query_id=" . $snmp_query["id"] . "
 				order by snmp_query_graph.name");
 
-			$i = 0;
 			if (sizeof($snmp_query_graphs) > 0) {
 			foreach ($snmp_query_graphs as $snmp_query_graph) {
-				form_alternate_row_color($colors["form_alternate1"],$colors["form_alternate2"],$i); $i++;
+				form_alternate_row_color();
 				?>
 					<td>
 						<strong><a href="data_queries.php?action=item_edit&id=<?php print $snmp_query_graph["id"];?>&snmp_query_id=<?php print $snmp_query["id"];?>"><?php print $snmp_query_graph["name"];?></a></strong>
@@ -699,7 +693,7 @@ function data_query_edit() {
 		}
 	}
 
-	form_save_button("data_queries.php");
+	form_save_button_alt();
 }
 
 function data_query() {
@@ -779,10 +773,9 @@ function data_query() {
 
 	html_header_sort_checkbox($display_text, $_REQUEST["sort_column"], $_REQUEST["sort_direction"]);
 
-	$i = 0;
 	if (sizeof($snmp_queries) > 0) {
 		foreach ($snmp_queries as $snmp_query) {
-			form_alternate_row_color($colors["alternate"],$colors["light"],$i, 'line' . $snmp_query["id"]); $i++;
+			form_alternate_row_color('line' . $snmp_query["id"]);
 			form_selectable_cell("<a class='linkEditMain' href='data_queries.php?action=edit&id=" . $snmp_query["id"] . "'>" . (strlen($_REQUEST["filter"]) ? eregi_replace("(" . preg_quote($_REQUEST["filter"]) . ")", "<span style='background-color: #F8D93D;'>\\1</span>", $snmp_query["name"]) : $snmp_query["name"]) . "</a>", $snmp_query["id"]);
 			form_selectable_cell((strlen($_REQUEST["filter"]) ? eregi_replace("(" . preg_quote($_REQUEST["filter"]) . ")", "<span style='background-color: #F8D93D;'>\\1</span>", $snmp_query["data_input_method"]) : $snmp_query["data_input_method"]), $snmp_query["id"]);
 			form_checkbox_cell($snmp_query["name"], $snmp_query["id"]);

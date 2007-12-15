@@ -606,10 +606,9 @@ function utilities_view_user_log() {
 
 	html_header_sort($display_text, $_REQUEST["sort_column"], $_REQUEST["sort_direction"]);
 
-	$i = 0;
 	if (sizeof($user_log) > 0) {
 		foreach ($user_log as $item) {
-			form_alternate_row_color($colors["form_alternate1"],$colors["form_alternate2"],$i);
+			form_alternate_row_color();
 			?>
 			<td width='35%'>
 				<?php print eregi_replace("(" . preg_quote($_REQUEST["filter"]) . ")", "<span style='background-color: #F8D93D;'>\\1</span>", $item["username"]);?>
@@ -973,10 +972,9 @@ function utilities_view_snmp_cache() {
 
 	html_header(array("Details"));
 
-	$i = 0;
 	if (sizeof($snmp_cache) > 0) {
 	foreach ($snmp_cache as $item) {
-		form_alternate_row_color($colors["form_alternate1"],$colors["form_alternate2"],$i);
+		form_alternate_row_color();
 		?>
 		<td>
 			Host: <?php print eregi_replace("(" . preg_quote($_REQUEST["filter"]) . ")", "<span style='background-color: #F8D93D;'>\\1</span>", $item["description"]);?>
@@ -984,7 +982,7 @@ function utilities_view_snmp_cache() {
 		</td>
 		</tr>
 		<?php
-		form_alternate_row_color($colors["form_alternate1"],$colors["form_alternate2"],$i);
+		form_alternate_row_color();
 		?>
 		<td>
 			Index: <?php print $item["snmp_index"];?>
@@ -993,7 +991,7 @@ function utilities_view_snmp_cache() {
 		</td>
 		</tr>
 		<?php
-		form_alternate_row_color($colors["form_alternate1"],$colors["form_alternate2"],$i); $i++;
+		form_alternate_row_color();
 		?>
 		<td>
 			OID: <?php print eregi_replace("(" . preg_quote($_REQUEST["filter"]) . ")", "<span style='background-color: #F8D93D;'>\\1</span>", $item["oid"]);?>
@@ -1148,10 +1146,9 @@ function utilities_view_poller_cache() {
 
 	html_header_sort($display_text, $_REQUEST["sort_column"], $_REQUEST["sort_direction"]);
 
-	$i = 0;
 	if (sizeof($poller_cache) > 0) {
 	foreach ($poller_cache as $item) {
-		form_alternate_row_color($colors["form_alternate1"],$colors["form_alternate2"],$i);
+		form_alternate_row_color();
 			?>
 			<td width="375">
 				<a class="linkEditMain" href="data_sources.php?action=ds_edit&id=<?php print $item["local_data_id"];?>"><?php print eregi_replace("(" . preg_quote($_REQUEST["filter"]) . ")", "<span style='background-color: #F8D93D;'>\\1</span>", $item["name_cache"]);?></a>
@@ -1182,7 +1179,7 @@ function utilities_view_poller_cache() {
 		</tr>
 		<?php
 
-		form_alternate_row_color($colors["form_alternate1"],$colors["form_alternate2"],$i);
+		form_alternate_row_color();
 		?>
 			<td>
 			</td>
@@ -1191,7 +1188,6 @@ function utilities_view_poller_cache() {
 			</td>
 		</tr>
 		<?php
-		$i++;
 	}
 	}
 

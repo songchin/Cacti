@@ -29,9 +29,9 @@
 						</select>
 					</td>
 					<td nowrap style='white-space: nowrap;'>
-						&nbsp;<input type="image" src="images/button_go.gif" name="go" alt="Go" border="0" align="absmiddle">
-						<input type="image" src="images/button_clear.gif" name="clear" alt="Clear" border="0" align="absmiddle">
-						<input type="image" src="images/button_purge.gif" name="purge" alt="Purge" border="0" align="absmiddle">
+						&nbsp;<input type="submit" Value="Go" name="go" border="0" align="absmiddle">
+						<input type="submit" Value="Clear" name="clear_x" border="0" align="absmiddle">
+						<input type="submit" Value="Purge" name="purge_x" border="0" align="absmiddle">
 					</td>
 				</tr>
 				<tr>

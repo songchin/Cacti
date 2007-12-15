@@ -26,6 +26,7 @@ include("./include/auth.php");
 
 /* set default action */
 if (!isset($_REQUEST["action"])) { $_REQUEST["action"] = ""; }
+form_cancel_action_validate();
 
 switch ($_REQUEST["action"]) {
 	case 'save':
@@ -127,7 +128,7 @@ function gprint_presets_edit() {
 
 	html_end_box();
 
-	form_save_button("gprint_presets.php");
+	form_save_button_alt();
 }
 
 function gprint_presets() {
@@ -144,10 +145,9 @@ function gprint_presets() {
 		graph_templates_gprint.name
 		from graph_templates_gprint");
 
-	$i = 0;
 	if (sizeof($template_list) > 0) {
 	foreach ($template_list as $template) {
-		form_alternate_row_color($colors["alternate"],$colors["light"],$i);
+		form_alternate_row_color();
 			?>
 			<td>
 				<a class="linkEditMain" href="gprint_presets.php?action=edit&id=<?php print $template["id"];?>"><?php print $template["name"];?></a>
@@ -157,10 +157,9 @@ function gprint_presets() {
 			</td>
 		</tr>
 		<?php
-		$i++;
 	}
 	}else{
-		form_alternate_row_color($colors["form_alternate1"],$colors["form_alternate2"],0); ?>
+		form_alternate_row_color(); ?>
 			<td colspan="2">
 				<em>No Items</em>
 			</td>
