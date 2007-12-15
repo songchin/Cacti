@@ -484,7 +484,7 @@ function template_edit() {
 		if (sizeof($template_data_rrds) > 1) {
 
 		/* draw the data source tabs on the top of the page */
-		print "	<table class='tabs' width='100%' cellspacing='0' cellpadding='3' align='center'>
+		print "<table class='tabs' width='100%' cellspacing='0' cellpadding='3' align='center'>
 				<tr>\n";
 
 				foreach ($template_data_rrds as $template_data_rrd) {

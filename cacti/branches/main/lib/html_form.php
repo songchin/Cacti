@@ -737,6 +737,7 @@ function form_save_button_alt($action = "save", $force_type = "", $key_field = "
 
 		if ($action == "return") {
 			$calt   = "Return";
+			$action = "save";
 		}else{
 			$calt   = "Cancel";
 		}

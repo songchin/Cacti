@@ -230,5 +230,5 @@ function input_edit() {
 
 	form_hidden_box("any_selected_item", $any_selected_item, "");
 
-	form_save_button_alt("action!template_edit|id!" . $_GET["graph_template_id"]);
+	form_save_button_alt("url!" . (isset($_SERVER["HTTP_REFERER"]) ? $_SERVER["HTTP_REFERER"] : ""));
 }
