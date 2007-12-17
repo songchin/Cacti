@@ -54,7 +54,7 @@ function html_start_box($title, $width, $background_color, $cell_padding, $align
 			<td style="padding: 3px;" colspan="100">
 				<table width="100%" cellpadding="0" cellspacing="0">
 					<tr><?php if ($collapsing) {?>
-						<td class="textHeaderDark" width="20">
+						<td class="textHeaderDark" width="14">
 							<img id="<?php print $item_id . '_twisty';?>" src="images/tw_open.gif" alt="Filter" border="0" align="absmiddle">
 						</td><?php } ?>
 						<td class="textHeaderDark"><?php print $title;?>
@@ -348,7 +348,7 @@ function html_header_sort_checkbox($header_items, $sort_column, $sort_direction,
 		}
 	}
 
-	print "<td width='1%' align='right' bgcolor='#819bc0' style='" . get_checkbox_style() . "'><input type='checkbox' style='margin: 0px;' name='all' title='Select All' onClick='SelectAll(\"chk_\",this.checked)'></td>\n<form name='chk' method='post' action='$form_action'>\n";
+	print "<td class='textSubHeaderDark'><input type='checkbox' style='margin: 0px;' name='all' title='Select All' onClick='SelectAll(\"chk_\",this.checked)'></td>\n<form name='chk' method='post' action='$form_action'>\n";
 	print "</tr>\n";
 }
 
@@ -383,7 +383,7 @@ function html_header_checkbox($header_items, $form_action = "") {
 		print "<td class='textSubHeaderDark'>" . $header_items[$i] . "</td>\n";
 	}
 
-	print "<td width='1%' align='right' bgcolor='#819bc0' style='" . get_checkbox_style() . "'><input type='checkbox' style='margin: 0px;' name='all' title='Select All' onClick='SelectAll(\"chk_\",this.checked)'></td>\n<form name='chk' method='post' action='$form_action'>\n";
+	print "<td class='textSubHeaderDark'><input type='checkbox' style='margin: 0px;' name='all' title='Select All' onClick='SelectAll(\"chk_\",this.checked)'></td>\n<form name='chk' method='post' action='$form_action'>\n";
 	print "</tr>\n";
 }
 

@@ -1,17 +1,21 @@
 /* main styles */
 
-body, table, tr, td {
-	font-family: Verdana, Arial, Helvetica, sans-serif;
-	font-size: 10px;
-}
-
 body {
 	background-color: #FFFFFF;
 	background-repeat: repeat-y;
 }
 
-/* links */
+tr {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+}
 
+td {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 10px;
+}
+
+/* links */
 a, a:active, a:visited {
 	color: blue;
 	text-decoration: none;
@@ -57,10 +61,12 @@ a:hover {
 
 .rowAlternate1 {
 	background-color: #F5F5F5;
+	font-size: 10px;
 }
 
 .rowAlternate2 {
 	background-color: #E7E9F2;
+	font-size: 10px;
 }
 
 /* text styles */
