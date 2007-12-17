@@ -145,20 +145,42 @@ a:hover {
 }
 
 /* tabs */
-td.tab {
-    border-top: 1px solid #999;
-    border-right: 1px solid #666;
-    border-left: 1px solid #999;
-    border-bottom: none;
-    border-radius: 2px;
-    -moz-border-radius: 2px;
+.menu a.tabSelected {
+	border:0px;
+	border-bottom:0px;
+	color:#FFFFFF;
+	display:block;
+	float:left;
+	margin-right: 4px;
+	font-size:12px;
+	font-weight: bold;
+	height:12px;
+	line-height:12px;
+	text-decoration: none;
+	padding:3px 15px 5px 14px;
+	background: transparent url('../images/tabSelected.png') repeat-x scroll left top;
 }
 
-table.tabs      {
-    border-top: none;
-    border-right: none;
-    border-left: none;
-    border-bottom: 1px solid #666;
+.menu a.tabDefault {
+	border:0px;
+	border-bottom:0px;
+	color:#FFFFFF;
+	display:block;
+	float:left;
+	margin-right: 4px;
+	font-size:12px;
+	font-weight: bold;
+	height:12px;
+	line-height:12px;
+	text-decoration: none;
+	padding:3px 15px 5px 14px;
+	background: transparent url('../images/tabDefault.png') repeat-x scroll left top;
+}
+
+.menu a.tabDefault:hover {
+	background-position:0px -25px;
+	border-bottom:0px;
+	background-color:#E16769;
 }
 
 /* The main calendar widget.  DIV containing a table. */

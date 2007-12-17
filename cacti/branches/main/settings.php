@@ -70,20 +70,18 @@ default:
 	}
 
 	/* draw the categories tabs on the top of the page */
-	print "<table class='tabs' width='100%' cellspacing='0' cellpadding='3' align='center'><tr>\n";
+	print "<table width='98%' cellspacing='0' cellpadding='0' align='center'><tr>";
+	print "<td><div class='menu'>";
 
 	if (sizeof($tabs) > 0) {
 	foreach (array_keys($tabs) as $tab_short_name) {
-		print "<td " . (($tab_short_name == $current_tab) ? "bgcolor='silver'" : "bgcolor='#DFDFDF'") . " nowrap='nowrap' width='" . (strlen($tabs[$tab_short_name]) * 9) . "' align='center' class='tab'>
-				<span class='textHeader'><a href='settings.php?tab=$tab_short_name'>$tabs[$tab_short_name]</a></span>
-				</td>\n
-				<td width='1'></td>\n";
+		print "<div><a " . (($tab_short_name == $current_tab) ? "class='tabSelected'" : "class='tabDefault'") . " href='settings.php?tab=$tab_short_name'>$tabs[$tab_short_name]</a></div>";
 	}
 	}
 
-	print "<td></td>\n</tr></table>\n";
+	print "</div></td></tr></table>\n";
 
-	html_start_box("<strong>Cacti Settings (" . $tabs[$current_tab] . ")</strong>", "100%", $colors["header"], "3", "center", "");
+	html_start_box("<strong>Cacti Settings (" . $tabs[$current_tab] . ")</strong>", "98%", $colors["header"], "3", "center", "");
 
 	$form_array = array();
 
