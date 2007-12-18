@@ -1240,7 +1240,7 @@ function host() {
 
 	if (sizeof($hosts) > 0) {
 		foreach ($hosts as $host) {
-			form_alternate_row_color('line' . $host["id"]);
+			form_alternate_row_color('line' . $host["id"], true);
 			form_selectable_cell("<a class='linkEditMain' href='host.php?action=edit&id=" . $host["id"] . "'>" .
 				(strlen($_REQUEST["filter"]) ? eregi_replace("(" . preg_quote($_REQUEST["filter"]) . ")", "<span style='background-color: #F8D93D;'>\\1</span>", $host["description"]) : $host["description"]) . "</a>", $host["id"], 250);
 			form_selectable_cell(round(($host["id"]), 2), $host["id"]);

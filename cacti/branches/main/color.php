@@ -142,10 +142,10 @@ function color() {
 		foreach ($color_list as $color) {
 			$j++;
 			if ($j % 2 == 1) {
-				form_alternate_row_color();
+				form_alternate_row_color($color["id"], true);
 					?>
 					<td>
-						<a class="linkEditMain" href="color.php?action=edit&id=<?php print $color["id"];?>"><?php print $color["hex"];?></a>
+						<a class="linkEditMain" style='display:block;' href="color.php?action=edit&id=<?php print $color["id"];?>"><?php print $color["hex"];?></a>
 					</td>
 					<td bgcolor="#<?php print $color["hex"];?>" width="1%">&nbsp;</td>
 					<td align="right">
@@ -155,7 +155,7 @@ function color() {
 			} else { ?>
 					<td></td>
 					<td>
-						<a class="linkEditMain" href="color.php?action=edit&id=<?php print $color["id"];?>"><?php print $color["hex"];?></a>
+						<a class="linkEditMain" style='display:block;' href="color.php?action=edit&id=<?php print $color["id"];?>"><?php print $color["hex"];?></a>
 					</td>
 					<td bgcolor="#<?php print $color["hex"];?>" width="1%">&nbsp;</td>
 					<td align="right">

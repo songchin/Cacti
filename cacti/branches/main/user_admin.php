@@ -776,7 +776,7 @@ function user_realms_edit() {
 
 	print "	<tr class='rowHeader'>
 			<td class='textHeaderDark'><strong>Realm Permissions</strong></td>
-			<td width='1%' align='center' bgcolor='#819bc0' style='" . get_checkbox_style() . "'><input type='checkbox' style='margin: 0px;' name='all' title='Select All' onClick='SelectAll(\"section\",this.checked)'></td>\n
+			<td class='textHeaderDark' width='1%' align='center'><input type='checkbox' style='margin: 0px;' name='all' title='Select All' onClick='SelectAll(\"section\",this.checked)'></td>\n
 		</tr>\n";
 
 	?>
@@ -901,7 +901,7 @@ function user_edit() {
 		$header_label = "[new]";
 	}
 
-	html_start_box("<strong>User Management</strong> $header_label", "100%", $colors["header"], "3", "center", "");
+	html_start_box("<strong>User Management</strong> $header_label", "100%", $colors["header"], "3", "center", "", true);
 
 	draw_edit_form(array(
 		"config" => array("form_name" => "chk"),
@@ -991,7 +991,7 @@ function user() {
 
 	include("./include/html/inc_user_admin_filter_table.php");
 
-	html_end_box();
+	html_end_box(false);
 
 	/* form the 'where' clause for our main sql query */
 	if (strlen($_REQUEST["filter"])) {
@@ -1051,7 +1051,7 @@ function user() {
 				$enabled = "No";
 			}
 
-			form_alternate_row_color('line' . $user["id"]);
+			form_alternate_row_color('line' . $user["id"], true);
 			form_selectable_cell("<a class='linkEditMain' href='user_admin.php?action=user_edit&id=" . $user["id"] . "'>" .
 			(strlen(get_request_var_request("filter")) ? eregi_replace("(" . preg_quote(get_request_var_request("filter")) . ")", "<span style='background-color: #F8D93D;'>\\1</span>",  $user["username"]) : $user["username"])
 			, $user["id"]);

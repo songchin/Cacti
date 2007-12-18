@@ -147,10 +147,10 @@ function gprint_presets() {
 
 	if (sizeof($template_list) > 0) {
 	foreach ($template_list as $template) {
-		form_alternate_row_color();
+		form_alternate_row_color($template["id"], true);
 			?>
 			<td>
-				<a class="linkEditMain" href="gprint_presets.php?action=edit&id=<?php print $template["id"];?>"><?php print $template["name"];?></a>
+				<a class="linkEditMain" style='display:block;' href="gprint_presets.php?action=edit&id=<?php print $template["id"];?>"><?php print $template["name"];?></a>
 			</td>
 			<td align="right">
 				<a href="gprint_presets.php?action=remove&id=<?php print $template["id"];?>"><img src="images/delete_icon.gif" width="10" height="10" border="0" alt="Delete"></a>

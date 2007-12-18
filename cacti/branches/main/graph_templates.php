@@ -481,7 +481,7 @@ function template() {
 
 	include("./include/html/inc_graph_template_filter_table.php");
 
-	html_end_box();
+	html_end_box(false);
 
 	/* form the 'where' clause for our main sql query */
 	$sql_where = "WHERE (graph_templates.name LIKE '%%" . $_REQUEST["filter"] . "%%')";
@@ -512,7 +512,7 @@ function template() {
 
 	if (sizeof($template_list) > 0) {
 		foreach ($template_list as $template) {
-			form_alternate_row_color('line' . $template["id"]);
+			form_alternate_row_color('line' . $template["id"], true);
 			form_selectable_cell("<a class='linkEditMain' href='graph_templates.php?action=template_edit&id=" . $template["id"] . "'>" . (strlen($_REQUEST["filter"]) ? eregi_replace("(" . preg_quote($_REQUEST["filter"]) . ")", "<span style='background-color: #F8D93D;'>\\1</span>", $template["name"]) : $template["name"]) . "</a>", $template["id"]);
 			form_checkbox_cell($template["name"], $template["id"]);
 			form_end_row();

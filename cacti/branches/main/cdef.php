@@ -241,7 +241,7 @@ function item_edit() {
 				form_dropdown("value", db_fetch_assoc("select name,id from cdef order by name"), "name", "id", (isset($cdef["value"]) ? $cdef["value"] : ""), "", "");
 				break;
 			case '6':
-				form_text_box("value", (isset($cdef["value"]) ? $cdef["value"] : ""), "", "255", 30, "text", (isset($_GET["id"]) ? $_GET["id"] : "0"));
+				form_text_box("value", (isset($cdef["value"]) ? $cdef["value"] : ""), "", "255", 60, "text", (isset($_GET["id"]) ? $_GET["id"] : "0"));
 				break;
 			}
 			?>
@@ -319,12 +319,13 @@ function cdef_edit() {
 
 		$cdef_items = db_fetch_assoc("select * from cdef_items where cdef_id=" . $_GET["id"] . " order by sequence");
 
+		$i = 0;
 		if (sizeof($cdef_items) > 0) {
 		foreach ($cdef_items as $cdef_item) {
-			form_alternate_row_color();
+			form_alternate_row_color($cdef_item["id"], true);
 				?>
 				<td>
-					<a class="linkEditMain" href="cdef.php?action=item_edit&id=<?php print $cdef_item["id"];?>&cdef_id=<?php print $cdef["id"];?>">Item #<?php print $i;?></a>
+					<a class="linkEditMain" style='display:block;' href="cdef.php?action=item_edit&id=<?php print $cdef_item["id"];?>&cdef_id=<?php print $cdef["id"];?>">Item #<?php print $i;?></a>
 				</td>
 				<td>
 					<em><?php $cdef_item_type = $cdef_item["type"]; print $cdef_item_types[$cdef_item_type];?></em>: <strong><?php print get_cdef_item_name($cdef_item["id"]);?></strong>
@@ -338,6 +339,7 @@ function cdef_edit() {
 				</td>
 			</tr>
 		<?php
+		$i++;
 		}
 		}
 		html_end_box();
@@ -360,10 +362,10 @@ function cdef() {
 
 	if (sizeof($cdefs) > 0) {
 	foreach ($cdefs as $cdef) {
-		form_alternate_row_color();
+		form_alternate_row_color($cdef["id"], true);
 			?>
 			<td>
-				<a class="linkEditMain" href="cdef.php?action=edit&id=<?php print $cdef["id"];?>"><?php print $cdef["name"];?></a>
+				<a class="linkEditMain" style='display:block;' href="cdef.php?action=edit&id=<?php print $cdef["id"];?>"><?php print $cdef["name"];?></a>
 			</td>
 			<td align="right">
 				<a href="cdef.php?action=remove&id=<?php print $cdef["id"];?>"><img src="images/delete_icon.gif" width="10" height="10" border="0" alt="Delete"></a>

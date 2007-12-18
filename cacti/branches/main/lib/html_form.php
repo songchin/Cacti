@@ -817,7 +817,7 @@ function form_confirm_buttons_alt() {
      has selected "cancel", where to goto.  the default will be to goto the current
      page with no action (aka continue) */
 function form_cancel_action_validate() {
-	if (substr_count($_REQUEST["action"], "!")) {
+	if ((isset($_REQUEST["action"])) && (substr_count($_REQUEST["action"], "!"))) {
 		$vars        = explode("|", $_REQUEST["action"]);
 		$uri         = $_SERVER["REQUEST_URI"];
 		$uri_request = "";

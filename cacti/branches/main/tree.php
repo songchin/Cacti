@@ -382,14 +382,14 @@ function tree_edit() {
 		$header_label = "[new]";
 	}
 
-	html_start_box("<strong>Graph Trees</strong> $header_label", "100%", $colors["header"], "3", "center", "");
+	html_start_box("<strong>Graph Trees</strong> $header_label", "100%", $colors["header"], "3", "center", "", true);
 
 	draw_edit_form(array(
 		"config" => array(),
 		"fields" => inject_form_variables($fields_tree_edit, (isset($tree) ? $tree : array()))
 		));
 
-	html_end_box();
+	html_end_box(FALSE);
 
 	if (!empty($_GET["id"])) {
 		html_start_box("<strong>Tree Items</strong>", "100%", $colors["header"], "3", "center", "tree.php?action=item_edit&tree_id=" . $tree["id"] . "&parent_id=0");
@@ -428,10 +428,10 @@ function tree() {
 
 	if (sizeof($trees) > 0) {
 	foreach ($trees as $tree) {
-		form_alternate_row_color();
+		form_alternate_row_color($tree["id"], true);
 			?>
 			<td>
-				<a class="linkEditMain" href="tree.php?action=edit&id=<?php print $tree["id"];?>"><?php print $tree["name"];?></a>
+				<a class="linkEditMain" style='display:block;' href="tree.php?action=edit&id=<?php print $tree["id"];?>"><?php print $tree["name"];?></a>
 			</td>
 			<td align="right">
 				<a href="tree.php?action=remove&id=<?php print $tree["id"];?>"><img src="images/delete_icon.gif" width="10" height="10" border="0" alt="Delete"></a>

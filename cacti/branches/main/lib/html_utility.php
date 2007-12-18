@@ -75,7 +75,7 @@ function inject_form_variables(&$form_array, $arg1 = array(), $arg2 = array(), $
      to display for this particular row. must be an integer
    @arg $row_id - used to allow js and ajax actions on this object
    @returns - the background color used for this particular row */
-function form_alternate_row_color($row_id = "") {
+function form_alternate_row_color($row_id = "", $hover = false) {
 	static $class_int = 1;
 
 	if ($class_int == 1) {
@@ -87,7 +87,11 @@ function form_alternate_row_color($row_id = "") {
 	$class_int = ($class_int + 1) % 2;
 
 	if (strlen($row_id)) {
-		print "<tr id='$row_id' class='$class' onmouseover=(this.className='rowSelected') onmouseout=(this.className='$class')>\n";
+		if ($hover) {
+			print "<tr id='$row_id' class='$class' onmouseover=(this.className='rowSelected') onmouseout=(this.className='$class')>\n";
+		}else{
+			print "<tr id='$row_id' class='$class'>\n";
+		}
 	}else{
 		print "<tr class='$class'>\n";
 	}

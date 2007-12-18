@@ -527,7 +527,7 @@ function utilities_view_user_log() {
 
 	include("./include/html/inc_user_log_filter_table.php");
 
-	html_end_box();
+	html_end_box(false);
 
 	$sql_where = "";
 
@@ -630,7 +630,6 @@ function utilities_view_user_log() {
 			</td>
 			</tr>
 			<?php
-			$i++;
 		}
 	}
 
@@ -724,7 +723,7 @@ function utilities_view_logfile() {
 
 	include("./include/html/inc_view_logfile_table.php");
 
-	html_end_box();
+	html_end_box(false);
 
 	/* read logfile into an array and display */
 	$logcontents = tail_file($logfile, $_REQUEST["tail_lines"], $_REQUEST["message_type"], $_REQUEST["filter"]);
@@ -913,7 +912,7 @@ function utilities_view_snmp_cache() {
 
 	include("./include/html/inc_snmp_cache_filter_table.php");
 
-	html_end_box();
+	html_end_box(false);
 
 	$sql_where = "";
 
@@ -1080,7 +1079,7 @@ function utilities_view_poller_cache() {
 
 	include("./include/html/inc_poller_item_filter_table.php");
 
-	html_end_box();
+	html_end_box(false);
 
 	/* form the 'where' clause for our main sql query */
 	$sql_where = "WHERE poller_item.local_data_id=data_template_data.local_data_id";
