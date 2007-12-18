@@ -185,7 +185,7 @@ function rra() {
 
 	if (sizeof($rras) > 0) {
 	foreach ($rras as $rra) {
-		form_alternate_row_color();
+		form_alternate_row_color($rra["id"], true);
 			?>
 			<td>
 				<a class="linkEditMain" href="rra.php?action=edit&id=<?php print $rra["id"];?>"><?php print $rra["name"];?></a>
