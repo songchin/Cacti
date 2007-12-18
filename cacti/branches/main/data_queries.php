@@ -737,7 +737,7 @@ function data_query() {
 
 	include("./include/html/inc_dq_view_filter_table.php");
 
-	html_end_box();
+	html_end_box(false);
 
 	html_start_box("", "100%", $colors["header"], "3", "center", "");
 
