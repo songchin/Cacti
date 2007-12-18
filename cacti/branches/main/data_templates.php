@@ -420,7 +420,7 @@ function template_edit() {
 		$header_label = "[new]";
 	}
 
-	html_start_box("<strong>Data Templates</strong> $header_label", "100%", $colors["header"], "3", "center", "");
+	html_start_box("<strong>Data Template</strong> $header_label", "100%", $colors["header"], "3", "center", "");
 
 	draw_edit_form(array(
 		"config" => array(),
@@ -429,7 +429,7 @@ function template_edit() {
 
 	html_end_box();
 
-	html_start_box("<strong>Data Source</strong>", "100%", $colors["header"], "3", "center", "");
+	html_start_box("<strong>Data Source</strong>", "100%", $colors["header"], "3", "center", "", true);
 
 	/* make sure 'data source path' doesn't show up for a template... we should NEVER template this field */
 	unset($struct_data_source["data_source_path"]);
@@ -482,24 +482,17 @@ function template_edit() {
 	$i = 0;
 	if (isset($template_data_rrds)) {
 		if (sizeof($template_data_rrds) > 1) {
+			/* draw the categories tabs on the top of the page */
+			print "<table width='100%' cellspacing='0' cellpadding='0' align='center'><tr>";
+			print "<td><div class='menu'>";
 
+			foreach ($template_data_rrds as $template_data_rrd) {
+				$i++;
+				print "<div><a " . (($template_data_rrd["id"] == $_GET["view_rrd"]) ? "class='tabSelected'" : "class='tabDefault'") . " style='margin-right:0; padding-left: 4px; ; padding: 5px 8px 6px 8px;' href='data_templates.php?action=template_edit&id=" . $_GET["id"] . "&view_rrd=" . $template_data_rrd["id"] . "'>$i: " . $template_data_rrd["data_source_name"] . "</a><a " . (($template_data_rrd["id"] == $_GET["view_rrd"]) ? "class='tabSelected'" : "class='tabDefault'") . " style='margin-left:0; padding: 6px 8px 5px 8px' href='data_templates.php?action=rrd_remove&id=" . $template_data_rrd["id"] . "&data_template_id=" . $_GET["id"] . "'><img src='images/delete_icon.gif' border='0' alt='Delete'></a></div>";
+			}
+
+			print "</div></td></tr></table>\n";
 		/* draw the data source tabs on the top of the page */
-		print "<table class='tabs' width='100%' cellspacing='0' cellpadding='3' align='center'>
-				<tr>\n";
-
-				foreach ($template_data_rrds as $template_data_rrd) {
-					$i++;
-					print "	<td " . (($template_data_rrd["id"] == $_GET["view_rrd"]) ? "bgcolor='silver'" : "bgcolor='#DFDFDF'") . " nowrap='nowrap' width='" . ((strlen($template_data_rrd["data_source_name"]) * 9) + 50) . "' align='center' class='tab'>
-							<span class='textHeader'><a href='data_templates.php?action=template_edit&id=" . $_GET["id"] . "&view_rrd=" . $template_data_rrd["id"] . "'>$i: " . $template_data_rrd["data_source_name"] . "</a> <a href='data_templates.php?action=rrd_remove&id=" . $template_data_rrd["id"] . "&data_template_id=" . $_GET["id"] . "'><img src='images/delete_icon.gif' border='0' alt='Delete'></a></span>
-						</td>\n
-						<td width='1'></td>\n";
-				}
-
-				print "
-				<td></td>\n
-				</tr>
-			</table>\n";
-
 		}elseif (sizeof($template_data_rrds) == 1) {
 			$_GET["view_rrd"] = $template_data_rrds[0]["id"];
 		}
@@ -560,7 +553,7 @@ function template_edit() {
 		/* get each INPUT field for this data input source */
 		$fields = db_fetch_assoc("select * from data_input_fields where data_input_id=" . $template_data["data_input_id"] . " and input_output='in' order by sequence");
 
-		html_start_box("<strong>Custom Data</strong> [data input: " . db_fetch_cell("select name from data_input where id=" . $template_data["data_input_id"]) . "]", "100%", $colors["header"], "3", "center", "");
+		html_start_box("<strong>Custom Data</strong> [data input: " . db_fetch_cell("select name from data_input where id=" . $template_data["data_input_id"]) . "]", "100%", $colors["header"], "3", "center", "", true);
 
 		/* loop through each field found */
 		if (sizeof($fields) > 0) {

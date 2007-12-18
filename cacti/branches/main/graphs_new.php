@@ -415,7 +415,7 @@ function graphs() {
 	?>
 
 	<form name="form_graphs_new">
-	<table width="100%" cellpadding="4" align="center">
+	<table width="100%" cellpadding="0" align="center">
 		<tr>
 			<td nowrap style='white-space: nowrap;' width="30%" class="textInfo">
 				<?php print $host["description"];?> (<?php print $host["hostname"];?>)
@@ -431,7 +431,7 @@ function graphs() {
 	</table>
 	<table width="100%" cellpadding="0" align="center">
 		<tr>
-			<td nowrap style='white-space: nowrap;' width="55" class="textArea">
+			<td nowrap style='white-space: nowrap;' width="55" class="textGraphFilter">
 				Host:&nbsp;
 			</td>
 			<td width="1">
@@ -447,7 +447,7 @@ function graphs() {
 				?>
 				</select>
 			</td>
-			<td nowrap style='white-space: nowrap;' width="100" class="textArea">
+			<td nowrap style='white-space: nowrap;' width="100" class="textGraphFilter">
 				&nbsp;Graph Types:&nbsp;
 			</td>
 			<td width="1">
@@ -482,15 +482,15 @@ function graphs() {
 	<?php if ($_REQUEST["graph_type"] > 0) {?>
 	<table width="100%" cellpadding="0" align="center">
 		<tr>
-			<td nowrap style='white-space: nowrap;' width="55" class="textArea">
+			<td nowrap style='white-space: nowrap;' width="55" class="textGraphFilter">
 				Search:&nbsp;
 			</td>
 			<td nowrap style='white-space: nowrap;' width="200">
 				<input type="text" name="filter" size="30" width="200" value="<?php print $_REQUEST["filter"];?>">
 			</td>
 			<td align="left" nowrap style='white-space: nowrap;'>
-				&nbsp;<input type="image" src="images/button_go.gif" name="go" alt="Go" border="0" align="absmiddle">
-				<input type="image" src="images/button_clear.gif" name="clear" alt="Clear" border="0" align="absmiddle">
+				&nbsp;<input type="submit" name="go" value="Go" border="0" align="absmiddle">
+				<input type="submit" name="clear_x" value="Clear" border="0" align="absmiddle">
 			</td>
 		</tr>
 	</table>
@@ -518,7 +518,7 @@ function graphs() {
 
 		print "	<tr class='rowSubHeader'>
 				<td class='textSubHeaderDark'>Graph Template Name</td>
-				<td width='1%' align='center' bgcolor='#819bc0' style='" . get_checkbox_style() . "'><input type='checkbox' style='margin: 0px;' name='all_cg' title='Select All' onClick='SelectAll(\"cg\",this.checked);gt_update_selection_indicators();'></td>\n
+				<td class='rowSubHeader' width='1%' align='center' bgcolor='#819bc0' style='" . get_checkbox_style() . "'><input type='checkbox' style='margin: 0px;' name='all_cg' title='Select All' onClick='SelectAll(\"cg\",this.checked);gt_update_selection_indicators();'></td>\n
 			</tr>\n";
 
 		$graph_templates = db_fetch_assoc("SELECT
@@ -665,21 +665,7 @@ function graphs() {
 				print "//-->\n</script>\n";
 			}
 
-			print "	<table width='100%' style='background-color: #" . $colors["form_alternate2"] . "; border: 1px solid #" . $colors["header"] . ";' align='center' cellpadding='3' cellspacing='0'>\n
-					<tr>
-						<td bgcolor='#" . $colors["header"] . "' colspan='" . ($num_input_fields+1) . "'>
-							<table  cellspacing='0' cellpadding='0' width='100%' >
-								<tr>
-									<td class='textHeaderDark'>
-										<strong>Data Query</strong> [" . $snmp_query["name"] . "]
-									</td>
-									<td align='right' nowrap>
-										<a href='graphs_new.php?action=query_reload&id=" . $snmp_query["id"] . "&host_id=" . $host["id"] . "'><img src='images/reload_icon_small.gif' alt='Reload Associated Query' border='0' align='absmiddle'></a>
-									</td>
-								</tr>
-							</table>
-						</td>
-					</tr>";
+			html_start_box_dq($snmp_query["name"], $snmp_query["id"], $host["id"], $num_input_fields+1, "100%", $colors["header"], "3", "center");
 
 			if ($xml_array != false) {
 				$html_dq_header = "";
@@ -788,13 +774,13 @@ function graphs() {
 					}
 
 					if (!sizeof($snmp_query_indexes)) {
-						print "<tr bgcolor='#" . $colors["form_alternate1"] . "'><td>This data query returned 0 rows, perhaps there was a problem executing this
+						print "<tr class='rowAlternate1'><td>This data query returned 0 rows, perhaps there was a problem executing this
 							data query. You can <a href='host.php?action=query_verbose&id=" . $snmp_query["id"] . "&host_id=" . $host["id"] . "'>run this data
 							query in debug mode</a> to get more information.</td></tr>\n";
 					}else{
-						print "	<tr bgcolor='#" . $colors["header_panel"] . "'>
+						print "<tr class='rowSubHeader'>
 								$html_dq_header
-								<td width='1%' align='center' bgcolor='#819bc0' style='" . get_checkbox_style() . "'><input type='checkbox' style='margin: 0px;' name='all_" . $snmp_query["id"] . "' title='Select All' onClick='SelectAll(\"sg_" . $snmp_query["id"] . "\",this.checked);dq_update_selection_indicators();'></td>\n
+								<td class='rowSubHeader' width='1%' align='center' style='" . get_checkbox_style() . "'><input type='checkbox' style='margin: 0px;' name='all_" . $snmp_query["id"] . "' title='Select All' onClick='SelectAll(\"sg_" . $snmp_query["id"] . "\",this.checked);dq_update_selection_indicators();'></td>\n
 							</tr>\n";
 					}
 
@@ -836,13 +822,13 @@ function graphs() {
 						print $nav;
 					}
 				}else{
-					print "<tr bgcolor='#" . $colors["form_alternate1"] . "'><td colspan='2' style='color: red; font-size: 12px; font-weight: bold;'>Search Returned no Rows.</td></tr>\n";
+					print "<tr class='rowAlternate1'><td colspan='2' style='color: red; font-size: 12px; font-weight: bold;'>Search Returned no Rows.</td></tr>\n";
 				}
 			}else{
-				print "<tr bgcolor='#" . $colors["form_alternate1"] . "'><td colspan='2' style='color: red; font-size: 12px; font-weight: bold;'>Error in data query.</td></tr>\n";
+				print "<tr class='rowAlternate1'><td colspan='2' style='color: red; font-size: 12px; font-weight: bold;'>Error in data query.</td></tr>\n";
 			}
 
-			print "</table>";
+			html_end_box(FALSE);
 
 			/* draw the graph template drop down here */
 			$data_query_graphs = db_fetch_assoc("select snmp_query_graph.id,snmp_query_graph.name from snmp_query_graph where snmp_query_graph.snmp_query_id=" . $snmp_query["id"] . " order by snmp_query_graph.name");

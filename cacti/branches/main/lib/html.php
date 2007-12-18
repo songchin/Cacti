@@ -34,8 +34,13 @@
 function html_start_box($title, $width, $background_color, $cell_padding, $align, $add_text = "", $collapsing = false) {
 	global $colors;
 
+	$temp_string = str_replace("strong", "", $title);
+	if (strpos($temp_string, "[")) {
+		$temp_string = substr($temp_string, 0, strpos($temp_string, "[")-1);
+	}
+
 	if ($title != "") {
-		$item_id = clean_up_name(str_replace("strong", "", $title));
+		$item_id = clean_up_name($temp_string);
 	}else{
 		$item_id = "item_" . rand(255, 65535);
 	}

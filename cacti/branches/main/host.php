@@ -646,7 +646,7 @@ function host_edit() {
 		<?php
 	}
 
-	html_start_box("<strong>Devices</strong> $header_label", "100%", $colors["header"], "3", "center", "");
+	html_start_box("<strong>Devices</strong> $header_label", "100%", $colors["header"], "3", "center", "", true);
 
 	/* preserve the host template id if passed in via a GET variable */
 	if (!empty($_GET["host_template_id"])) {
@@ -658,7 +658,7 @@ function host_edit() {
 		"fields" => inject_form_variables($fields_host_edit, (isset($host) ? $host : array()))
 		));
 
-	html_end_box();
+	html_end_box(FALSE);
 
 	?>
 	<script type="text/javascript">
@@ -932,7 +932,7 @@ function host_edit() {
 	}
 
 	if (!empty($host["id"])) {
-		html_start_box("<strong>Associated Graph Templates</strong>", "100%", $colors["header"], "3", "center", "");
+		html_start_box("<strong>Associated Graph Templates</strong>", "100%", $colors["header"], "3", "center", "", true);
 
 		html_header(array("Graph Template Name", "Status"), 2);
 
@@ -989,9 +989,9 @@ function host_edit() {
 		</tr>
 
 		<?php
-		html_end_box();
+		html_end_box(FALSE);
 
-		html_start_box("<strong>Associated Data Queries</strong>", "100%", $colors["header"], "3", "center", "");
+		html_start_box("<strong>Associated Data Queries</strong>", "100%", $colors["header"], "3", "center", "", true);
 
 		html_header(array("Data Query Name", "Debugging", "Re-Index Method", "Status"), 2);
 
