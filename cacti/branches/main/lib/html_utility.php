@@ -87,7 +87,7 @@ function form_alternate_row_color($row_id = "") {
 	$class_int = ($class_int + 1) % 2;
 
 	if (strlen($row_id)) {
-		print "<tr id='$row_id' class='$class'>\n";
+		print "<tr id='$row_id' class='$class' onmouseover=(this.className='rowSelected') onmouseout=(this.className='$class')>\n";
 	}else{
 		print "<tr class='$class'>\n";
 	}
