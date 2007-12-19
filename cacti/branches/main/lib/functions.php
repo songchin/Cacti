@@ -1605,6 +1605,7 @@ function draw_navigation_text() {
 		"utilities.php:clear_user_log" => array("title" => "Clear User Log File", "mapping" => "index.php:,utilities.php:", "url" => "utilities.php", "level" => "2"),
 		"utilities.php:view_tech" => array("title" => "Technical Support", "mapping" => "index.php:,utilities.php:", "url" => "utilities.php", "level" => "2"),
 		"settings.php:" => array("title" => "Cacti Settings", "mapping" => "index.php:", "url" => "settings.php", "level" => "1"),
+		"settings.php:shift" => array("title" => "Cacti Settings", "mapping" => "index.php:", "url" => "settings.php", "level" => "1"),
 		"user_admin.php:" => array("title" => "User Management", "mapping" => "index.php:", "url" => "user_admin.php", "level" => "1"),
 		"user_admin.php:user_edit" => array("title" => "(Edit)", "mapping" => "index.php:,user_admin.php:", "url" => "", "level" => "2"),
 		"user_admin.php:actions" => array("title" => "(Action)", "mapping" => "index.php:,user_admin.php:", "url" => "", "level" => "2"),

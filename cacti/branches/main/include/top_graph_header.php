@@ -117,30 +117,30 @@ if ((read_graph_config_option("default_tree_view_mode") == "2") &&
 <body leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
 <a name='page_top'></a>
 
-<table width="100%" height="100%" cellspacing="0" cellpadding="0">
-	<tr height="37" bgcolor="#a9a9a9" class="noprint">
+<table width="100%" cellspacing="0" cellpadding="0">
+	<tr bgcolor="#a9a9a9" class="noprint">
 		<td colspan="2" valign="bottom" nowrap>
 			<table width="100%" cellspacing="0" cellpadding="0">
 				<tr>
 					<td nowrap>
-						&nbsp;<?php if ($show_console_tab == true) {?><a href="index.php"><img src="images/tab_console.gif" alt="Console" align="absmiddle" border="0"></a><?php }?><a href="graph_view.php"><img src="images/tab_graphs<?php if ((substr(basename($_SERVER["PHP_SELF"]),0,5) == "graph") || (basename($_SERVER["PHP_SELF"]) == "graph_settings.php")) { print "_down"; } print ".gif";?>" alt="Graphs" align="absmiddle" border="0"></a>&nbsp;
+						&nbsp;<?php if ($show_console_tab == true) {?><a href="index.php"><img src="images/tab_console.gif" alt="Console" align="middle" border="0"></a><?php }?><a href="graph_view.php"><img src="images/tab_graphs<?php if ((substr(basename($_SERVER["PHP_SELF"]),0,5) == "graph") || (basename($_SERVER["PHP_SELF"]) == "graph_settings.php")) { print "_down"; } print ".gif";?>" alt="Graphs" align="middle" border="0"></a>&nbsp;
 					</td>
 					<td>
-						<img src="images/cacti_backdrop2.gif" align="absmiddle">
+						<img src="images/cacti_backdrop2.gif" alt='' align="middle">
 					</td>
 					<td align="right" nowrap>
-						<?php if ((!isset($_SESSION["sess_user_id"])) || ($current_user["graph_settings"] == "on")) { print '<a href="graph_settings.php"><img src="images/tab_settings'; if (basename($_SERVER["PHP_SELF"]) == "graph_settings.php") { print "_down"; } print '.gif" border="0" alt="Settings" align="absmiddle"></a>';}?>&nbsp;&nbsp;<?php if ((!isset($_SESSION["sess_user_id"])) || ($current_user["show_tree"] == "on")) {?><a href="graph_view.php?action=tree"><img src="images/tab_mode_tree<?php if ($_REQUEST["action"] == "tree") { print "_down"; }?>.gif" border="0" title="Tree View" alt="Tree View" align="absmiddle"></a><?php }?><?php if ((!isset($_SESSION["sess_user_id"])) || ($current_user["show_list"] == "on")) {?><a href="graph_view.php?action=list"><img src="images/tab_mode_list<?php if ($_REQUEST["action"] == "list") { print "_down"; }?>.gif" border="0" title="List View" alt="List View" align="absmiddle"></a><?php }?><?php if ((!isset($_SESSION["sess_user_id"])) || ($current_user["show_preview"] == "on")) {?><a href="graph_view.php?action=preview"><img src="images/tab_mode_preview<?php if ($_REQUEST["action"] == "preview") { print "_down"; }?>.gif" border="0" title="Preview View" alt="Preview View" align="absmiddle"></a><?php }?>&nbsp;<br>
+						<?php if ((!isset($_SESSION["sess_user_id"])) || ($current_user["graph_settings"] == "on")) { print '<a href="graph_settings.php"><img src="images/tab_settings'; if (basename($_SERVER["PHP_SELF"]) == "graph_settings.php") { print "_down"; } print '.gif" border="0" alt="Settings" align="middle"></a>';}?>&nbsp;&nbsp;<?php if ((!isset($_SESSION["sess_user_id"])) || ($current_user["show_tree"] == "on")) {?><a href="graph_view.php?action=tree"><img src="images/tab_mode_tree<?php if ($_REQUEST["action"] == "tree") { print "_down"; }?>.gif" border="0" title="Tree View" alt="Tree View" align="middle"></a><?php }?><?php if ((!isset($_SESSION["sess_user_id"])) || ($current_user["show_list"] == "on")) {?><a href="graph_view.php?action=list"><img src="images/tab_mode_list<?php if ($_REQUEST["action"] == "list") { print "_down"; }?>.gif" border="0" title="List View" alt="List View" align="middle"></a><?php }?><?php if ((!isset($_SESSION["sess_user_id"])) || ($current_user["show_preview"] == "on")) {?><a href="graph_view.php?action=preview"><img src="images/tab_mode_preview<?php if ($_REQUEST["action"] == "preview") { print "_down"; }?>.gif" border="0" title="Preview View" alt="Preview View" align="middle"></a><?php }?>&nbsp;<br>
 					</td>
 				</tr>
 			</table>
 		</td>
 	</tr>
-	<tr height="2" colspan="2" bgcolor="#183c8f" class="noprint">
+	<tr colspan="2" bgcolor="#183c8f" class="noprint">
 		<td colspan="2">
-			<img src="images/transparent_line.gif" width="170" height="2" border="0"><br>
+			<img src="images/transparent_line.gif" width="170" alt="" height="2" border="0"><br>
 		</td>
 	</tr>
-	<tr height="5" bgcolor="#e9e9e9" class="noprint">
+	<tr bgcolor="#e9e9e9" class="noprint">
 		<td colspan="2">
 			<table width="100%">
 				<tr>
@@ -158,7 +158,7 @@ if ((read_graph_config_option("default_tree_view_mode") == "2") &&
 	</tr>
 	<tr class="noprint">
 		<td bgcolor="#efefef" colspan="1" height="8" style="background-image: url(images/shadow_gray.gif); background-repeat: repeat-x; border-right: #aaaaaa 1px solid;">
-			<img src="images/transparent_line.gif" width="<?php print read_graph_config_option("default_dual_pane_width");?>" height="2" border="0"><br>
+			<img src="images/transparent_line.gif" width="<?php print read_graph_config_option("default_dual_pane_width");?>" alt="" height="2" border="0"><br>
 		</td>
 		<td bgcolor="#ffffff" colspan="1" height="8" style="background-image: url(images/shadow.gif); background-repeat: repeat-x;">
 

@@ -518,7 +518,7 @@ function data_query_item_edit() {
 								&nbsp;Field Name:&nbsp;<input type="text" name="svds_<?php print $data_template["id"];?>_field" size="15">
 							</td>
 							<td>
-								&nbsp;<input type="image" src="images/button_add.gif" name="svds_<?php print $data_template["id"];?>" alt="Add" align="absmiddle">
+								&nbsp;<input type="submit" value="Add" name="svds_<?php print $data_template["id"];?>_x" align="left">
 							</td>
 						</tr>
 					</table>
@@ -579,7 +579,7 @@ function data_query_item_edit() {
 							&nbsp;Field Name:&nbsp;<input type="text" name="svg_field" size="15">
 						</td>
 						<td>
-							&nbsp;<input type="image" src="images/button_add.gif" name="svg" alt="Add" align="absmiddle">
+							&nbsp;<input type="submit" value="Add" name="svg_x" align="left">
 						</td>
 					</tr>
 				</table>
@@ -787,7 +787,7 @@ function data_query() {
 		print "<tr><td><em>No Data Queries</em></td></tr>";
 	}
 
-	html_end_box();
+	html_end_box(false);
 
 	/* draw the dropdown containing a list of available actions for this form */
 	draw_actions_dropdown($dq_actions);

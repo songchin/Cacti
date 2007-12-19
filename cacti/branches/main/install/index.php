@@ -430,7 +430,7 @@ if ($_REQUEST["step"] == "4") {
 <form method="post" action="index.php">
 
 <table width="500" align="center" cellpadding="1" cellspacing="0" border="0" bgcolor="#104075">
-	<tr bgcolor="#FFFFFF" height="10">
+	<tr bgcolor="#FFFFFF">
 		<td>&nbsp;</td>
 	</tr>
 	<tr>

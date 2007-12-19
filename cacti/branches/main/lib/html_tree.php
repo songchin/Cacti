@@ -231,7 +231,7 @@ function grow_edit_graph_tree($tree_id, $user_id, $options) {
 		}elseif ($leaf["title"] != "") {
 			$icon = get_icon($leaf["graph_tree_id"], $leaf["order_key"]);
 			if ($visible) {
-				print "<td bgcolor='#$row_color' bgcolor='#" . $colors["panel"] . "'>$transparent_indent<a href='tree.php?action=edit&id=" . $_GET["id"] . "&leaf_id=" . $leaf["id"] . "&subaction=change'><img src='" . $icon . "' border='0'></a><a href='tree.php?action=item_edit&tree_id=" . $_GET["id"] . "&id=" . $leaf["id"] . "'>&nbsp;<strong>" . $leaf["title"] . "</strong></a> (<a href='tree.php?action=item_edit&tree_id=" . $_GET["id"] . "&parent_id=" . $leaf["id"] . "'>Add</a>)</td>\n";
+				print "<td bgcolor='#$row_color' bgcolor='#" . $colors["panel"] . "'>$transparent_indent<a href='tree.php?action=edit&id=" . $_GET["id"] . "&leaf_id=" . $leaf["id"] . "&subaction=change'><img src='" . $icon . "' alt='' border='0'></a><a href='tree.php?action=item_edit&tree_id=" . $_GET["id"] . "&id=" . $leaf["id"] . "'>&nbsp;<strong>" . $leaf["title"] . "</strong></a> (<a href='tree.php?action=item_edit&tree_id=" . $_GET["id"] . "&parent_id=" . $leaf["id"] . "'>Add</a>)</td>\n";
 				print "<td bgcolor='#$row_color' bgcolor='#" . $colors["panel"] . "'>Heading</td>";
 			}
 		}elseif ($leaf["host_id"] > 0) {
@@ -246,8 +246,8 @@ function grow_edit_graph_tree($tree_id, $user_id, $options) {
 				print "<td bgcolor='#$row_color' width='80'></td>\n";
 			}else{
 				print "<td bgcolor='#$row_color' width='80' align='center'>\n
-					<a href='tree.php?action=item_movedown&id=" . $leaf["id"] . "&tree_id=" . $_GET["id"] . "'><img src='images/move_down.gif' border='0' alt='Move Down'></a>\n
-					<a href='tree.php?action=item_moveup&id=" . $leaf["id"] . "&tree_id=" . $_GET["id"] . "'><img src='images/move_up.gif' border='0' alt='Move Up'></a>\n
+					<a href='tree.php?action=item_movedown&id=" . $leaf["id"] . "&tree_id=" . $_GET["id"] . "'><img src='images/move_down.gif' alt=''' border='0' alt='Move Down'></a>\n
+					<a href='tree.php?action=item_moveup&id=" . $leaf["id"] . "&tree_id=" . $_GET["id"] . "'><img src='images/move_up.gif' alt='' border='0' alt='Move Up'></a>\n
 					</td>\n";
 			}
 
@@ -854,7 +854,7 @@ function draw_tree_header_row($tree_id, $tree_item_id, $current_tier, $current_t
 
 		print "<td bgcolor='" . $colors["panel"] . "' align='center' width='1%'><a
 			href='graph_view.php?action=tree&tree_id=$tree_id&hide=$other_status&branch_id=$tree_item_id'>
-			<img src='images/$ec_icon.gif' border='0'></a></td>\n";
+			<img src='images/$ec_icon.gif' alt='' border='0'></a></td>\n";
 	}elseif (!($use_expand_contract) && (!empty($current_title))) {
 		print "<td bgcolor='" . $colors["panel"] . "' width='10'></td>\n";
 	}

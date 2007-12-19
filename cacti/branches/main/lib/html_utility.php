@@ -86,11 +86,11 @@ function form_alternate_row_color($row_id = "", $hover = false) {
 
 	$class_int = ($class_int + 1) % 2;
 
-	if (strlen($row_id)) {
+	if ((strlen($row_id)) & (!is_numeric($row_id))) {
 		if ($hover) {
 			print "<tr id='$row_id' class='$class' onmouseover=(this.className='rowSelected') onmouseout=(this.className='$class')>\n";
 		}else{
-			print "<tr id='$row_id' class='$class'>\n";
+			print "<tr id='row_$row_id' class='$class'>\n";
 		}
 	}else{
 		print "<tr class='$class'>\n";
@@ -244,19 +244,19 @@ function get_colored_device_status($disabled, $status) {
 		);
 
 	if ($disabled) {
-		return "<span style='color: #$disabled_color'>Disabled</a>";
+		return "<span style='color: #$disabled_color'>Disabled</span>";
 	}else{
 		switch ($status) {
 			case HOST_DOWN:
-				return "<span style='color: #" . $status_colors[HOST_DOWN] . "'>Down</a>"; break;
+				return "<span style='color: #" . $status_colors[HOST_DOWN] . "'>Down</span>"; break;
 			case HOST_RECOVERING:
-				return "<span style='color: #" . $status_colors[HOST_RECOVERING] . "'>Recovering</a>"; break;
+				return "<span style='color: #" . $status_colors[HOST_RECOVERING] . "'>Recovering</span>"; break;
 			case HOST_UP:
-				return "<span style='color: #" . $status_colors[HOST_UP] . "'>Up</a>"; break;
+				return "<span style='color: #" . $status_colors[HOST_UP] . "'>Up</span>"; break;
 			case HOST_ERROR:
-				return "<span style='color: #" . $status_colors[HOST_ERROR] . "'>Error</a>"; break;
+				return "<span style='color: #" . $status_colors[HOST_ERROR] . "'>Error</span>"; break;
 			default:
-				return "<span style='color: #0000ff'>Unknown</a>"; break;
+				return "<span style='color: #0000ff'>Unknown</span>"; break;
 		}
 	}
 }

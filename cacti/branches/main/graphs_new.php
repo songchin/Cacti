@@ -489,8 +489,8 @@ function graphs() {
 				<input type="text" name="filter" size="30" width="200" value="<?php print $_REQUEST["filter"];?>">
 			</td>
 			<td align="left" nowrap style='white-space: nowrap;'>
-				&nbsp;<input type="submit" name="go" value="Go" border="0" align="absmiddle">
-				<input type="submit" name="clear_x" value="Clear" border="0" align="absmiddle">
+				&nbsp;<input type="submit" name="go" value="Go" border="0" align="middle">
+				<input type="submit" name="clear_x" value="Clear" border="0" align="middle">
 			</td>
 		</tr>
 	</table>

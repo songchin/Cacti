@@ -83,9 +83,9 @@ function draw_edit_form($array) {
 				draw_edit_control($field_name, $field_array);
 
 				print "</td>\n</tr>\n";
-
-				$i++;
 			}
+
+			$i++;
 		}
 	}
 }
@@ -721,12 +721,12 @@ function form_confirm_alt($title_text, $body_text, $cancel_url, $action_url) { ?
      an html edit form
    @arg $force_type - if specified, will force the 'action' button to be either
      'save' or 'create'. otherwise this field should be properly auto-detected */
-function form_save_button_alt($action = "save", $force_type = "", $key_field = "id") {
+function form_save_button_alt($cancel_action = "", $action = "save", $force_type = "", $key_field = "id") {
 	global $config;
 
 	$calt = "Cancel";
 
-	if ((empty($force_type)) || ($action == "return")) {
+	if ((empty($force_type)) || ($cancel_action == "return")) {
 		if (empty($_GET[$key_field])) {
 			$sname = "create";
 			$salt  = "Create";
@@ -735,7 +735,7 @@ function form_save_button_alt($action = "save", $force_type = "", $key_field = "
 			$salt  = "Save";
 		}
 
-		if ($action == "return") {
+		if ($cancel_action == "return") {
 			$calt   = "Return";
 			$action = "save";
 		}else{
@@ -752,7 +752,8 @@ function form_save_button_alt($action = "save", $force_type = "", $key_field = "
 	<table align='center' width='100%' style='background-color: #ffffff; border: 1px solid #bbbbbb;'>
 		<tr>
 			<td bgcolor="#f5f5f5" align="right">
-				<input type='hidden' name='action' value='<?php print htmlspecialchars($action);?>'>
+				<input type='hidden' name='action' value='<?php print $action;?>'>
+				<input type='hidden' name='cancel_action' value='<?php print htmlspecialchars($cancel_action);?>'>
 				<input type='submit' value='<?php print $calt;?>' name='cancel'>
 				<input type='submit' value='<?php print $salt;?>' name='<?php print $sname;?>'>
 			</td>
@@ -817,7 +818,7 @@ function form_confirm_buttons_alt() {
      has selected "cancel", where to goto.  the default will be to goto the current
      page with no action (aka continue) */
 function form_cancel_action_validate() {
-	if ((isset($_REQUEST["action"])) && (substr_count($_REQUEST["action"], "!"))) {
+	if ((isset($_REQUEST["cancel"])) && (substr_count($_REQUEST["action"], "!"))) {
 		$vars        = explode("|", $_REQUEST["action"]);
 		$uri         = $_SERVER["REQUEST_URI"];
 		$uri_request = "";

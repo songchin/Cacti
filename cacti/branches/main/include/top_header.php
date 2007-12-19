@@ -24,41 +24,42 @@
 
 global $colors;
 ?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
 	<title>Cacti</title>
+	<meta http-equiv="Content-Type" content="text/html;charset=utf-8" >
 	<link href="include/main.css" rel="stylesheet">
-	<link href="images/favicon.ico" rel="shortcut icon"/>
+	<link href="images/favicon.ico" rel="shortcut icon">
 	<script type="text/javascript" src="include/layout.js"></script>
 	<?php if (isset($refresh)) {
 	print "<meta http-equiv=refresh content=\"" . $refresh["seconds"] . "; url='" . $refresh["page"] . "'\">";
 	}?>
-</style>
 </head>
 
 <body leftmargin="0" topmargin="0" marginwidth="0" marginheight="0" background="images/left_border.gif">
 
 <table width="100%" cellspacing="0" cellpadding="0">
-	<tr height="37" bgcolor="#a9a9a9">
+	<tr bgcolor="#a9a9a9">
 		<td valign="bottom" colspan="3" nowrap>
 			<table width="100%" cellspacing="0" cellpadding="0">
 				<tr>
 					<td valign="bottom">
-						&nbsp;<a href="index.php"><img src="images/tab_console_down.gif" alt="Console" align="absmiddle" border="0"></a><a href="graph_view.php"><img src="images/tab_graphs.gif" alt="Graphs" align="absmiddle" border="0"></a>
+						&nbsp;<a href="index.php"><img src="images/tab_console_down.gif" alt="Console" align="middle" border="0"></a><a href="graph_view.php"><img src="images/tab_graphs.gif" alt="Graphs" align="middle" border="0"></a>
 					</td>
 					<td align="right">
-						<img src="images/cacti_backdrop.gif" align="absmiddle">
+						<img src="images/cacti_backdrop.gif" alt="" align="middle">
 					</td>
 				</tr>
 			</table>
 		</td>
 	</tr>
-	<tr height="2" bgcolor="#183c8f">
+	<tr bgcolor="#183c8f">
 		<td colspan="3">
-			<img src="images/transparent_line.gif" height="2" border="0"><br>
+			<img src="images/transparent_line.gif" alt="" height="2" border="0"><br>
 		</td>
 	</tr>
-	<tr height="5" bgcolor="#e9e9e9">
+	<tr bgcolor="#e9e9e9">
 		<td colspan="3">
 			<table width="100%">
 				<tr>
@@ -76,7 +77,7 @@ global $colors;
 	</tr>
 	<tr>
 		<td bgcolor="#f5f5f5" colspan="1" height="8" width="135" style="background-image: url(images/shadow_gray.gif); background-repeat: repeat-x; border-right: #aaaaaa 1px solid;">
-			<img src="images/transparent_line.gif" width="135" height="2" border="0"><br>
+			<img src="images/transparent_line.gif" alt="" width="135" height="2" border="0"><br>
 		</td>
 		<td colspan="2" height="8" style="background-image: url(images/shadow.gif); background-repeat: repeat-x;" bgcolor="#ffffff">
 
@@ -88,9 +89,9 @@ global $colors;
 				<?php draw_menu();?>
 			</table>
 
-			<img src="images/transparent_line.gif" width="135" height="5" border="0"><br>
-			<p align="center"><a href='about.php'><img src="images/cacti_logo.gif" border="0"></a></p>
-			<img src="images/transparent_line.gif" width="135" height="5" border="0"><br>
+			<img src="images/transparent_line.gif" alt="" width="135" height="5" border="0"><br>
+			<p align="center"><a href='about.php'><img src="images/cacti_logo.gif" alt="Cacti" border="0"></a></p>
+			<img src="images/transparent_line.gif" alt="" width="135" height="5" border="0"><br>
 		</td>
 		<td width="100%" colspan="2" valign="top" style="padding: 5px; border-right: #aaaaaa 1px solid;"><?php display_output_messages();?>
 

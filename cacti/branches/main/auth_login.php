@@ -23,7 +23,7 @@
 */
 
 /* set default action */
-if (isset($_REQUEST["action"])) { 
+if (isset($_REQUEST["action"])) {
 	$action = $_REQUEST["action"];
 }else{
 	$action = "";
@@ -227,18 +227,19 @@ function auth_display_custom_error_message($message) {
 	setcookie(session_name(),"",time() - 3600,"/");
 	/* print error */
 	print "<html>\n<head>\n";
-        print "     <title>" . "Cacti" . "</title>\n";
-        print "     <link href=\"include/main.css\" rel=\"stylesheet\">";
+	print "     <title>" . "Cacti" . "</title>\n";
+	print "     <link href=\"include/main.css\" rel=\"stylesheet\">";
 	print "</head>\n";
 	print "<body leftmargin=\"0\" topmargin=\"0\" marginwidth=\"0\" marginheight=\"0\">\n<br><br>\n";
 	display_custom_error_message($message);
-        print "</body>\n</html>\n";
+	print "</body>\n</html>\n";
 }
 
 ?>
-
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
+	<meta http-equiv="Content-Type" content="text/html;charset=utf-8" >
 	<title>Login to Cacti</title>
 	<STYLE TYPE="text/css">
 	<!--
@@ -255,34 +256,34 @@ function auth_display_custom_error_message($message) {
 	<input type="hidden" name="action" value="login">
 	<table align="center">
 		<tr>
-			<td colspan="2"><img src="images/auth_login.gif" border="0" alt=""></td>
+			<td colspan="2"><img src="images/auth_login.gif" border="0" alt="Login"></td>
 		</tr>
 		<?php
 
 		if ($ldap_error) {?>
-		<tr height="10"><td></td></tr>
+		<tr><td></td></tr>
 		<tr>
 			<td colspan="2"><font color="#FF0000"><strong><?php print $ldap_error_message; ?></strong></font></td>
 		</tr>
 		<?php }else{
 		if ($action == "login") {?>
-		<tr height="10"><td></td></tr>
+		<tr><td></td></tr>
 		<tr>
 			<td colspan="2"><font color="#FF0000"><strong>Invalid User Name/Password Please Retype</strong></font></td>
 		</tr>
 		<?php }
 		if ($user_enabled == "0") {?>
-		<tr height="10"><td></td></tr>
+		<tr><td></td></tr>
 		<tr>
 			<td colspan="2"><font color="#FF0000"><strong>User Account Disabled</strong></font></td>
 		</tr>
 		<?php } } ?>
 
-		<tr height="10"><td></td></tr>
+		<tr><td></td></tr>
 		<tr>
 			<td colspan="2">Please enter your Cacti user name and password below:</td>
 		</tr>
-		<tr height="10"><td></td></tr>
+		<tr><td></td></tr>
 		<tr>
 			<td>User Name:</td>
 			<td><input type="text" name="login_username" size="40" style="width: 295px;" value="<?php print $username; ?>"></td>
@@ -293,17 +294,17 @@ function auth_display_custom_error_message($message) {
 		</tr>
 		<?php
 		if (read_config_option("auth_method") == "3") {?>
-        	<tr>
-	                <td>Realm:</td>
-	                <td>
+		<tr>
+				<td>Realm:</td>
+				<td>
 				<select name="realm" style="width: 295px;">
 					<option value="local">Local</option>
 					<option value="ldap" selected>LDAP</option>
 				</select>
 			</td>
-        	</tr>
+		</tr>
 		<?php }?>
-		<tr height="10"><td></td></tr>
+		<tr><td></td></tr>
 		<tr>
 			<td><input type="submit" value="Login"></td>
 		</tr>

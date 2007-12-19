@@ -384,7 +384,7 @@ function template_edit() {
 							order by graph_templates.name"),"name","id","","","");?>
 					</td>
 					<td align="right">
-						&nbsp;<input type="submit" Value="Add" name="add_gt_y" align="absmiddle">
+						&nbsp;<input type="submit" Value="Add" name="add_gt_y" align="middle">
 					</td>
 				</table>
 			</td>
@@ -434,7 +434,7 @@ function template_edit() {
 							order by snmp_query.name"),"name","id","","","");?>
 					</td>
 					<td align="right">
-						&nbsp;<input type="submit" value="Add" name="add_dq_y" align="absmiddle">
+						&nbsp;<input type="submit" value="Add" name="add_dq_y" align="middle">
 					</td>
 				</table>
 			</td>

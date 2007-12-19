@@ -286,10 +286,10 @@ function form_actions() {
 
 	if (sizeof($user_array) == 0) {
 		print "<tr><td bgcolor='#" . $colors["form_alternate1"]. "'><span class='textError'>You must select at least one user.</span></td></tr>\n";
-		$save_html = "<a href='user_admin.php'><img src='images/button_cancel.gif' alt='Cancel' align='absmiddle' border='0'></a>";
+		$save_html = "<a href='user_admin.php'><img src='images/button_cancel.gif' alt='Cancel' align='middle' border='0'></a>";
 
 	}else{
-		$save_html = "<a href='user_admin.php'><img src='images/button_no.gif' alt='Cancel' align='absmiddle' border='0'></a> <input type='image' src='images/button_yes.gif' alt='Save' align='absmiddle'>";
+		$save_html = "<a href='user_admin.php'><img src='images/button_no.gif' alt='Cancel' align='middle' border='0'></a> <input type='image' src='images/button_yes.gif' alt='Save' align='middle'>";
 	}
 
 	print " <tr>
@@ -567,7 +567,7 @@ function graph_perms_edit() {
 				<?php form_dropdown("perm_graphs",db_fetch_assoc("SELECT local_graph_id,title_cache FROM graph_templates_graph WHERE local_graph_id > 0 ORDER BY title_cache"),"title_cache","local_graph_id","","","");?>
 			</td>
 			<td align="right">
-				&nbsp;<input type="image" src="images/button_add.gif" alt="Add" name="add_graph" align="absmiddle">
+				&nbsp;<input type="image" src="images/button_add.gif" alt="Add" name="add_graph" align="middle">
 			</td>
 		</tr>
 	</table>
@@ -627,7 +627,7 @@ function graph_perms_edit() {
 				<?php form_dropdown("perm_hosts",db_fetch_assoc("SELECT id,CONCAT('',description,' (',hostname,')') AS name FROM host ORDER BY description,hostname"),"name","id","","","");?>
 			</td>
 			<td align="right">
-				&nbsp;<input type="image" src="images/button_add.gif" alt="Add" name="add_host" align="absmiddle">
+				&nbsp;<input type="image" src="images/button_add.gif" alt="Add" name="add_host" align="middle">
 			</td>
 		</tr>
 	</table>
@@ -686,7 +686,7 @@ function graph_perms_edit() {
 				<?php form_dropdown("perm_graph_templates",db_fetch_assoc("SELECT id,name FROM graph_templates ORDER BY name"),"name","id","","","");?>
 			</td>
 			<td align="right">
-				&nbsp;<input type="image" src="images/button_add.gif" alt="Add" name="add_graph_template" align="absmiddle">
+				&nbsp;<input type="image" src="images/button_add.gif" alt="Add" name="add_graph_template" align="middle">
 			</td>
 		</tr>
 	</table>
@@ -745,7 +745,7 @@ function graph_perms_edit() {
 				<?php form_dropdown("perm_trees",db_fetch_assoc("SELECT id,name FROM graph_tree ORDER BY name"),"name","id","","","");?>
 			</td>
 			<td align="right">
-				&nbsp;<input type="image" src="images/button_add.gif" alt="Add" name="add_tree" align="absmiddle">
+				&nbsp;<input type="image" src="images/button_add.gif" alt="Add" name="add_tree" align="middle">
 			</td>
 		</tr>
 	</table>

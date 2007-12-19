@@ -70,18 +70,18 @@ default:
 	}
 
 	/* draw the categories tabs on the top of the page */
-	print "<table width='98%' cellspacing='0' cellpadding='0' align='center'><tr>";
+	print "<table width='100%' cellspacing='0' cellpadding='0' align='center'><tr>";
 	print "<td><div class='menu'>";
 
 	if (sizeof($tabs) > 0) {
 	foreach (array_keys($tabs) as $tab_short_name) {
-		print "<div><a " . (($tab_short_name == $current_tab) ? "class='tabSelected'" : "class='tabDefault'") . " href='settings.php?tab=$tab_short_name'>$tabs[$tab_short_name]</a></div>";
+		print "<div><a " . (($tab_short_name == $current_tab) ? "class='tabSelected'" : "class='tabDefault'") . " href='settings.php?action=shift&tab=$tab_short_name'>$tabs[$tab_short_name]</a></div>";
 	}
 	}
 
 	print "</div></td></tr></table>\n";
 
-	html_start_box("<strong>Cacti Settings (" . $tabs[$current_tab] . ")</strong>", "98%", $colors["header"], "3", "center", "");
+	html_start_box("<strong>Cacti Settings (" . $tabs[$current_tab] . ")</strong>", "100%", $colors["header"], "3", "center", "");
 
 	$form_array = array();
 
@@ -115,7 +115,7 @@ default:
 
 	form_hidden_box("tab", $current_tab, "");
 
-	form_save_button_alt("url!index.php", "save");
+	form_save_button_alt("url!index.php", "save", "save");
 
 	include("./include/bottom_footer.php");
 

@@ -65,7 +65,7 @@ function html_start_box($title, $width, $background_color, $cell_padding, $align
 						<td class="textHeaderDark"><?php print $title;?>
 						</td><?php if ($collapsing) {?>
 						<td class="textHeaderDark" width="1">
-							<img src="images/transparent_line.gif" <?php print $ani2;?>>
+							<img src="images/transparent_line.gif" alt='' <?php print $ani2;?>>
 						</td><?php } if ($add_text != "") {?>
 						<td class="textHeaderDark" align="right">
 							<strong><a class="linkOverDark" href="<?php print $add_text;?>">Add</a>&nbsp;</strong>
