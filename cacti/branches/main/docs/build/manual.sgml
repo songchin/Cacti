@@ -1734,8 +1734,8 @@ IF-MIB::ifType.3 = INTEGER: ethernetCsmacd(6)
 							<entry>These options dictate what occurs immediately after the user logs in. The first option, 'Show the page that user pointed their browser to.' will point the user to whatever page they were heading to before being interrupted by the login page. The 'Show the default console screen.' option will always point the user to 'index.php' after a successful login. The last option, 'Show the default graph screen.' will point the user to 'graph_view.php' after a successful login.</entry>
 						</row>
 						<row>
-							<entry>Authenication Realm</entry>
-							<entry>Multiple types of users can exist in Cacti.  This setting allows you to specify a user for use with Local, Web Basic or LDAP authenication.  Template users must be Local.  </entry>
+							<entry>Authentication Realm</entry>
+							<entry>Multiple types of users can exist in Cacti.  This setting allows you to specify a user for use with Local, Web Basic or LDAP Authentication.  Template users must be Local.  </entry>
 						</row>
 					</tbody>
 				</tgroup>
