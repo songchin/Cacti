@@ -86,14 +86,18 @@ function form_alternate_row_color($row_id = "", $hover = false) {
 
 	$class_int = ($class_int + 1) % 2;
 
-	if ((strlen($row_id)) & (!is_numeric($row_id))) {
+	if ((strlen($row_id)) && (!is_numeric($row_id))) {
 		if ($hover) {
 			print "<tr id='$row_id' class='$class' onmouseover=(this.className='rowSelected') onmouseout=(this.className='$class')>\n";
 		}else{
 			print "<tr id='row_$row_id' class='$class'>\n";
 		}
 	}else{
-		print "<tr class='$class'>\n";
+		if ((is_numeric($row_id)) && ($hover)) {
+			print "<tr id='$row_id' class='$class' onmouseover=(this.className='rowSelected') onmouseout=(this.className='$class')>\n";
+		}else{
+			print "<tr class='$class'>\n";
+		}
 	}
 }
 
