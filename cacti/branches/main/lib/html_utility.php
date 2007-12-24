@@ -76,7 +76,8 @@ function inject_form_variables(&$form_array, $arg1 = array(), $arg2 = array(), $
    @arg $row_id - used to allow js and ajax actions on this object
    @returns - the background color used for this particular row */
 function form_alternate_row_color($row_id = "", $hover = false) {
-	static $class_int = 1;
+	static $class_int  = 1;
+	static $alt_row_id = 0;
 
 	if ($class_int == 1) {
 		$class = "rowAlternate1";
@@ -86,17 +87,25 @@ function form_alternate_row_color($row_id = "", $hover = false) {
 
 	$class_int = ($class_int + 1) % 2;
 
-	if ((strlen($row_id)) && (!is_numeric($row_id))) {
+	if (is_numeric($row_id)) {
 		if ($hover) {
-			print "<tr id='$row_id' class='$class' onmouseover=(this.className='rowSelected') onmouseout=(this.className='$class')>\n";
+			print "<tr id='row_$row_id' class='$class' onmouseover=(this.className='rowSelected') onmouseout=(this.className='$class')>\n";
 		}else{
 			print "<tr id='row_$row_id' class='$class'>\n";
 		}
 	}else{
-		if ((is_numeric($row_id)) && ($hover)) {
-			print "<tr id='$row_id' class='$class' onmouseover=(this.className='rowSelected') onmouseout=(this.className='$class')>\n";
+		if (strlen($row_id)) {
+			if ($hover) {
+				print "<tr id='$row_id' class='$class' onmouseover=(this.className='rowSelected') onmouseout=(this.className='$class')>\n";
+			}else{
+				print "<tr id='$row_id' class='$class'>\n";
+			}
 		}else{
-			print "<tr class='$class'>\n";
+			if ($hover) {
+				print "<tr id='row_$alt_row_id' class='$class' onmouseover=(this.className='rowSelected') onmouseout=(this.className='$class')>\n";
+			}else{
+				print "<tr id='row_$alt_row_id' class='$class'>\n";
+			}
 		}
 	}
 }
