@@ -29,20 +29,23 @@ if (!isset($_REQUEST["action"])) { $_REQUEST["action"] = ""; }
 
 switch ($_REQUEST["action"]) {
 case 'login':
+
+	$username = sanitize_search_string(get_request_var_post('login_username'));
+
 	/* --- start ldap section --- */
 	$ldap_auth = false;
-	if ((read_config_option("ldap_enabled") == "on") && ($_POST["realm"] == "ldap") && (strlen($_POST["login_password"])) && (strlen($_POST["login_username"]))){
+	if ((read_config_option("ldap_enabled") == "on") && ($_POST["realm"] == "ldap") && (strlen($username)) && (strlen($username))){
 		$ldap_conn = ldap_connect(read_config_option("ldap_server"));
 
 		if ($ldap_conn) {
-			$ldap_dn = str_replace("<username>",$_POST["login_username"],read_config_option("ldap_dn"));
+			$ldap_dn = str_replace("<username>",$username,read_config_option("ldap_dn"));
 			$ldap_response = @ldap_bind($ldap_conn,$ldap_dn,stripslashes($_POST["login_password"]));
 
 			if ($ldap_response) {
 				$ldap_auth = true;
-				if (sizeof(db_fetch_assoc("select * from user_auth where username='" . $_POST["login_username"] . "' and realm = 1")) == 0) {
+				if (sizeof(db_fetch_assoc("select * from user_auth where username='$username' and realm = 1")) == 0) {
 					/* copy template user's settings */
-					user_copy(read_config_option("ldap_template"), $_POST["login_username"], 1);
+					user_copy(read_config_option("ldap_template"), $username, 1);
 				}
 			}
 		}
@@ -50,14 +53,14 @@ case 'login':
 	/* --- end ldap section --- */
 
 	if ($ldap_auth) {
-		$user = db_fetch_row("select * from user_auth where username='" . $_POST["login_username"] . "' and realm = 1");
+		$user = db_fetch_row("select * from user_auth where username='$username' and realm = 1");
 	} else {
-		$user = db_fetch_row("select * from user_auth where username='" . $_POST["login_username"] . "' and password = '" . md5($_POST["login_password"]) . "' and realm = 0");
+		$user = db_fetch_row("select * from user_auth where username='$username' and password = '" . md5($_POST["login_password"]) . "' and realm = 0");
 	}
 
 	if (sizeof($user)) {
 		/* make entry in the transactions log */
-		db_execute("insert into user_log (username,user_id,result,ip,time) values('" . $_POST["login_username"] ."'," . $user["id"] . ",1,'" . $_SERVER["REMOTE_ADDR"] . "',NOW())");
+		db_execute("insert into user_log (username,user_id,result,ip,time) values('$username'," . $user["id"] . ",1,'" . $_SERVER["REMOTE_ADDR"] . "',NOW())");
 
 		/* set the php session */
 		$_SESSION["sess_user_id"] = $user["id"];
@@ -86,7 +89,7 @@ case 'login':
 		exit;
 	}else{
 		/* --- BAD username/password --- */
-		db_execute("insert into user_log (username,user_id,result,ip,time) values('" . $_POST["login_username"] . "',0,0,'" . $_SERVER["REMOTE_ADDR"] . "',NOW())");
+		db_execute("insert into user_log (username,user_id,result,ip,time) values('$username',0,0,'" . $_SERVER["REMOTE_ADDR"] . "',NOW())");
 	}
 }
 
