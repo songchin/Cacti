@@ -181,6 +181,10 @@ function get_request_var($name, $default = "")
 {
 	if (isset($_GET[$name]))
 	{
+		if (isset($_POST[$name])) {
+			unset($_POST[$name]);
+			$_REQUEST[$name] = $_GET[$name];
+		}
 		return $_GET[$name];
 	} else
 	{
@@ -199,6 +203,10 @@ function get_request_var_post($name, $default = "")
 {
 	if (isset($_POST[$name]))
 	{
+		if (isset($_GET[$name])) {
+			unset($_GET[$name]);
+			$_REQUEST[$name] = $_POST[$name];
+		}
 		return $_POST[$name];
 	} else
 	{
