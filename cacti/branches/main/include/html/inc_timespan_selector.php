@@ -54,7 +54,7 @@
 -->
 </script>
 
-	<tr bgcolor="<?php print $colors["panel"];?>" class="noprint">
+	<tr class="noprint">
 		<form name="form_timespan_selector" method="post">
 		<td class="noprint">
 			<table width="100%" cellpadding="0" cellspacing="0">

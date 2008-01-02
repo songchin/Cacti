@@ -416,7 +416,7 @@ function form_actions() {
 						<p>$graph_list</p>
 						";
 						if (sizeof($data_sources) > 0) {
-							print "<tr bgcolor='#" . $colors["form_alternate1"] . "'><td class='textArea'><p class='textArea'>The following data sources are in use by these graphs:</p>\n";
+							print "<tr class='rowAlternate1'><td class='textArea'><p class='textArea'>The following data sources are in use by these graphs:</p>\n";
 
 							foreach ($data_sources as $data_source) {
 								print "<strong>" . $data_source["name_cache"] . "</strong><br>\n";

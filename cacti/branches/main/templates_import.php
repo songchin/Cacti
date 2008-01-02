@@ -92,7 +92,7 @@ function import() {
 	if ((isset($_SESSION["import_debug_info"])) && (is_array($_SESSION["import_debug_info"]))) {
 		html_start_box("<strong>Import Results</strong>", "100%", "aaaaaa", "3", "center", "");
 
-		print "<tr bgcolor='#" . $colors["form_alternate1"] . "'><td><p class='textArea'>Cacti has imported the following items:</p>";
+		print "<tr class='rowAlternate1'><td><p class='textArea'>Cacti has imported the following items:</p>";
 
 		while (list($type, $type_array) = each($_SESSION["import_debug_info"])) {
 			print "<p><strong>" . $hash_type_names[$type] . "</strong></p>";

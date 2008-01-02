@@ -29,12 +29,12 @@ html_start_box("<strong>About Cacti</strong>", "100%", $colors["header"], "3", "
 ?>
 
 <tr class='rowSubHeader'>
-	<td colspan="2">
-		<strong><font color="#<?php print $colors["header_text"];?>">Version <?php print $config["cacti_version"];?></font></strong>
+	<td class='textSubHeaderDark' colspan="2">
+		<strong>Version <?php print $config["cacti_version"];?></strong>
 	</td>
 </tr>
 <tr>
-	<td valign="top" bgcolor="#<?php print $colors["light"];?>" class="textArea">
+	<td valign="top" class="textArea">
 		<a href="http://www.cacti.net/"><img align="right" src="images/cacti_about_logo.gif" border="0" alt="raXnet"></a>
 
 		Cacti is designed to be a complete graphing solution based on the RRDTool's framework. Its goal is to make a

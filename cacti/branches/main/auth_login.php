@@ -242,6 +242,7 @@ function auth_display_custom_error_message($message) {
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html;charset=utf-8" >
+	<link href="include/main.css" rel="stylesheet">
 	<title>Login to Cacti</title>
 	<STYLE TYPE="text/css">
 	<!--
@@ -253,7 +254,7 @@ function auth_display_custom_error_message($message) {
 	-->
 	</style>
 </head>
-<body bgcolor="#FFFFFF" onload="document.login.login_username.focus()">
+<body onload="document.login.login_username.focus()">
 	<form name="login" method="post" action="<?php print basename($_SERVER["PHP_SELF"]);?>">
 	<input type="hidden" name="action" value="login">
 	<table align="center">

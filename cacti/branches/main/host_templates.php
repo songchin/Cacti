@@ -241,7 +241,7 @@ function form_actions() {
 	if (sizeof($host_array)) {
 		if ($_POST["drp_action"] == "1") { /* delete */
 			print "	<tr>
-					<td class='textArea' bgcolor='#" . $colors["form_alternate1"]. "'>
+					<td class='textArea'>
 						<p>Are you sure you want to delete the following host templates? All devices currently attached
 						this these host templates will lose their template assocation.</p>
 						<p>$host_list</p>
@@ -250,7 +250,7 @@ function form_actions() {
 				";
 		}elseif ($_POST["drp_action"] == "2") { /* duplicate */
 			print "	<tr>
-					<td class='textArea' bgcolor='#" . $colors["form_alternate1"]. "'>
+					<td class='textArea'>
 						<p>When you click save, the following host templates will be duplicated. You can
 						optionally change the title format for the new host templates.</p>
 						<p>$host_list</p>
@@ -261,7 +261,7 @@ function form_actions() {
 		}
 	} else {
 		print "	<tr>
-				<td class='textArea' bgcolor='#" . $colors["form_alternate1"]. "'>
+				<td class='textArea'>
 					<p>You must first select a Device Template.  Please select 'Return' to return to the previous menu.</p>
 				</td>
 			</tr>\n";
@@ -371,7 +371,7 @@ function template_edit() {
 		}else{ print "<tr><td><em>No associated graph templates.</em></td></tr>"; }
 
 		?>
-		<tr bgcolor="#<?php print $colors["form_alternate1"];?>">
+		<tr class='rowAlternate2'>
 			<td colspan="2">
 				<table cellspacing="0" cellpadding="1" width="100%">
 					<td nowrap>Add Graph Template:&nbsp;
@@ -421,7 +421,7 @@ function template_edit() {
 		}else{ print "<tr><td><em>No associated data queries.</em></td></tr>"; }
 
 		?>
-		<tr bgcolor="#<?php print $colors["form_alternate1"];?>">
+		<tr class='rowAlternate2'>
 			<td colspan="2">
 				<table cellspacing="0" cellpadding="1" width="100%">
 					<tr>

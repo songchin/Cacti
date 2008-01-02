@@ -246,38 +246,38 @@ function utilities_view_tech($php_info = "") {
 	/* Display tech information */
 	html_start_box("<strong>Technical Support</strong>", "100%", $colors["header"], "3", "center", "");
 	html_header(array("General Information"), 2);
-	print "<tr bgcolor='" . $colors["form_alternate1"] . "'>\n";
-	print "		<td class='textArea'>Date</td>\n";
-	print "		<td class='textArea'>" . date("r") . "</td>\n";
+	print "<tr class='rowAlternate1'>\n";
+	print "		<td class='textAreaNotes'>Date</td>\n";
+	print "		<td class='textAreaNotes'>" . date("r") . "</td>\n";
 	print "</tr>\n";
-	print "<tr bgcolor='" . $colors["form_alternate2"] . "'>\n";
-	print "		<td class='textArea'>Cacti Version</td>\n";
-	print "		<td class='textArea'>" . $config["cacti_version"] . "</td>\n";
+	print "<tr class='rowAlternate2'>\n";
+	print "		<td class='textAreaNotes'>Cacti Version</td>\n";
+	print "		<td class='textAreaNotes'>" . $config["cacti_version"] . "</td>\n";
 	print "</tr>\n";
-	print "<tr bgcolor='" . $colors["form_alternate1"] . "'>\n";
-	print "		<td class='textArea'>Cacti OS</td>\n";
-	print "		<td class='textArea'>" . $config["cacti_server_os"] . "</td>\n";
+	print "<tr class='rowAlternate1'>\n";
+	print "		<td class='textAreaNotes'>Cacti OS</td>\n";
+	print "		<td>" . $config["cacti_server_os"] . "</td>\n";
 	print "</tr>\n";
-	print "<tr bgcolor='" . $colors["form_alternate2"] . "'>\n";
-	print "		<td class='textArea'>SNMP Version</td>\n";
-	print "		<td class='textArea'>" . read_config_option("snmp_version") . "</td>\n";
+	print "<tr class='rowAlternate2'>\n";
+	print "		<td class='textAreaNotes'>SNMP Version</td>\n";
+	print "		<td>" . read_config_option("snmp_version") . "</td>\n";
 	print "</tr>\n";
 
-	print "<tr bgcolor='" . $colors["form_alternate1"] . "'>\n";
-	print "		<td class='textArea'>RRDTool Version</td>\n";
-	print "		<td class='textArea'>" . $rrdtool_versions[$rrdtool_version] . " " . $rrdtool_error . "</td>\n";
+	print "<tr class='rowAlternate1'>\n";
+	print "		<td class='textAreaNotes'>RRDTool Version</td>\n";
+	print "		<td class='textAreaNotes'>" . $rrdtool_versions[$rrdtool_version] . " " . $rrdtool_error . "</td>\n";
 	print "</tr>\n";
-	print "<tr bgcolor='" . $colors["form_alternate2"] . "'>\n";
-	print "		<td class='textArea'>Hosts</td>\n";
-	print "		<td class='textArea'>" . $host_count . "</td>\n";
+	print "<tr class='rowAlternate2'>\n";
+	print "		<td class='textAreaNotes'>Hosts</td>\n";
+	print "		<td class='textAreaNotes'>" . $host_count . "</td>\n";
 	print "</tr>\n";
-	print "<tr bgcolor='" . $colors["form_alternate1"] . "'>\n";
-	print "		<td class='textArea'>Graphs</td>\n";
-	print "		<td class='textArea'>" . $graph_count . "</td>\n";
+	print "<tr class='rowAlternate1'>\n";
+	print "		<td class='textAreaNotes'>Graphs</td>\n";
+	print "		<td class='textAreaNotes'>" . $graph_count . "</td>\n";
 	print "</tr>\n";
-	print "<tr bgcolor='" . $colors["form_alternate2"] . "'>\n";
-	print "		<td class='textArea'>Data Sources</td>\n";
-	print "		<td class='textArea'>";
+	print "<tr class='rowAlternate2'>\n";
+	print "		<td class='textAreaNotes'>Data Sources</td>\n";
+	print "		<td class='textAreaNotes'>";
 	$data_total = 0;
 	if (sizeof($data_count)) {
 		foreach ($data_count as $item) {
@@ -292,17 +292,17 @@ function utilities_view_tech($php_info = "") {
 	print "</tr>\n";
 
 	html_header(array("Poller Information"), 2);
-	print "<tr bgcolor='" . $colors["form_alternate1"] . "'>\n";
-	print "		<td class='textArea'>Interval</td>\n";
-	print "		<td class='textArea'>" . read_config_option("poller_interval") . "</td>\n";
+	print "<tr class='rowAlternate1'>\n";
+	print "		<td class='textAreaNotes'>Interval</td>\n";
+	print "		<td class='textAreaNotes'>" . read_config_option("poller_interval") . "</td>\n";
 	print "</tr>\n";
-	print "<tr bgcolor='" . $colors["form_alternate2"] . "'>\n";
-	print "		<td class='textArea'>Type</td>\n";
-	print "		<td class='textArea'>" . $poller_options[read_config_option("poller_type")] . "</td>\n";
+	print "<tr class='rowAlternate2'>\n";
+	print "		<td class='textAreaNotes'>Type</td>\n";
+	print "		<td class='textAreaNotes'>" . $poller_options[read_config_option("poller_type")] . "</td>\n";
 	print "</tr>\n";
-	print "<tr bgcolor='" . $colors["form_alternate1"] . "'>\n";
-	print "		<td class='textArea'>Items</td>\n";
-	print "		<td class='textArea'>";
+	print "<tr class='rowAlternate1'>\n";
+	print "		<td class='textAreaNotes'>Items</td>\n";
+	print "		<td class='textAreaNotes'>";
 	$total = 0;
 	if (sizeof($poller_item)) {
 		foreach ($poller_item as $item) {
@@ -316,60 +316,58 @@ function utilities_view_tech($php_info = "") {
 	print "</td>\n";
 	print "</tr>\n";
 
-	print "<tr bgcolor='" . $colors["form_alternate2"] . "'>\n";
-	print "		<td class='textArea'>Concurrent Processes</td>\n";
-	print "		<td class='textArea'>" . read_config_option("concurrent_processes") . "</td>\n";
+	print "<tr class='rowAlternate2'>\n";
+	print "		<td class='textAreaNotes'>Concurrent Processes</td>\n";
+	print "		<td class='textAreaNotes'>" . read_config_option("concurrent_processes") . "</td>\n";
 	print "</tr>\n";
 
-	print "<tr bgcolor='" . $colors["form_alternate1"] . "'>\n";
-	print "		<td class='textArea'>Max Threads</td>\n";
-	print "		<td class='textArea'>" . read_config_option("max_threads") . "</td>\n";
+	print "<tr class='rowAlternate1'>\n";
+	print "		<td class='textAreaNotes'>Max Threads</td>\n";
+	print "		<td class='textAreaNotes'>" . read_config_option("max_threads") . "</td>\n";
 	print "</tr>\n";
 
-	print "<tr bgcolor='" . $colors["form_alternate2"] . "'>\n";
-	print "		<td class='textArea'>PHP Servers</td>\n";
-	print "		<td class='textArea'>" . read_config_option("php_servers") . "</td>\n";
+	print "<tr class='rowAlternate2'>\n";
+	print "		<td class='textAreaNotes'>PHP Servers</td>\n";
+	print "		<td class='textAreaNotes'>" . read_config_option("php_servers") . "</td>\n";
 	print "</tr>\n";
 
-	print "<tr bgcolor='" . $colors["form_alternate1"] . "'>\n";
-	print "		<td class='textArea'>Script Timeout</td>\n";
-	print "		<td class='textArea'>" . read_config_option("script_timeout") . "</td>\n";
+	print "<tr class='rowAlternate1'>\n";
+	print "		<td class='textAreaNotes'>Script Timeout</td>\n";
+	print "		<td class='textAreaNotes'>" . read_config_option("script_timeout") . "</td>\n";
 	print "</tr>\n";
 
-	print "<tr bgcolor='" . $colors["form_alternate2"] . "'>\n";
-	print "		<td class='textArea'>Max OID</td>\n";
-	print "		<td class='textArea'>" . read_config_option("max_get_size") . "</td>\n";
+	print "<tr class='rowAlternate2'>\n";
+	print "		<td class='textAreaNotes'>Max OID</td>\n";
+	print "		<td class='textAreaNotes'>" . read_config_option("max_get_size") . "</td>\n";
 	print "</tr>\n";
 
-
-	print "<tr bgcolor='" . $colors["form_alternate1"] . "'>\n";
-	print "		<td class='textArea'>Last Run Statistics</td>\n";
-	print "		<td class='textArea'>" . read_config_option("stats_poller") . "</td>\n";
+	print "<tr class='rowAlternate1'>\n";
+	print "		<td class='textAreaNotes'>Last Run Statistics</td>\n";
+	print "		<td class='textAreaNotes'>" . read_config_option("stats_poller") . "</td>\n";
 	print "</tr>\n";
-
 
 	html_header(array("PHP Information"), 2);
-	print "<tr bgcolor='" . $colors["form_alternate1"] . "'>\n";
-	print "		<td class='textArea'>PHP Version</td>\n";
-	print "		<td class='textArea'>" . phpversion() . "</td>\n";
+	print "<tr class='rowAlternate1'>\n";
+	print "		<td class='textAreaNotes'>PHP Version</td>\n";
+	print "		<td class='textAreaNotes'>" . phpversion() . "</td>\n";
 	print "</tr>\n";
-	print "<tr bgcolor='" . $colors["form_alternate2"] . "'>\n";
-	print "		<td class='textArea'>PHP OS</td>\n";
-	print "		<td class='textArea'>" . PHP_OS . "</td>\n";
+	print "<tr class='rowAlternate2'>\n";
+	print "		<td class='textAreaNotes'>PHP OS</td>\n";
+	print "		<td class='textAreaNotes'>" . PHP_OS . "</td>\n";
 	print "</tr>\n";
-	print "<tr bgcolor='" . $colors["form_alternate1"] . "'>\n";
-	print "		<td class='textArea'>PHP uname</td>\n";
-	print "		<td class='textArea'>";
+	print "<tr class='rowAlternate1'>\n";
+	print "		<td class='textAreaNotes'>PHP uname</td>\n";
+	print "		<td class='textAreaNotes'>";
 	if (function_exists("php_uname")) {
-       		print php_uname();
+		print php_uname();
 	}else{
 		print "N/A";
 	}
 	print "</td>\n";
 	print "</tr>\n";
-	print "<tr bgcolor='" . $colors["form_alternate2"] . "'>\n";
-	print "		<td class='textArea'>PHP SNMP</td>\n";
-	print "		<td class='textArea'>";
+	print "<tr class='rowAlternate2'>\n";
+	print "		<td class='textAreaNotes'>PHP SNMP</td>\n";
+	print "		<td class='textAreaNotes'>";
 	if (function_exists("snmpget")) {
 		print "Installed";
 	} else {
@@ -377,13 +375,13 @@ function utilities_view_tech($php_info = "") {
 	}
 	print "</td>\n";
 	print "</tr>\n";
-	print "<tr bgcolor='" . $colors["form_alternate1"] . "'>\n";
-	print "		<td class='textArea'>max_execution_time</td>\n";
-	print "		<td class='textArea'>" . ini_get("max_execution_time") . "</td>\n";
+	print "<tr class='rowAlternate1'>\n";
+	print "		<td class='textAreaNotes'>max_execution_time</td>\n";
+	print "		<td class='textAreaNotes'>" . ini_get("max_execution_time") . "</td>\n";
 	print "</tr>\n";
-	print "<tr bgcolor='" . $colors["form_alternate2"] . "'>\n";
-	print "		<td class='textArea'>memory_limit</td>\n";
-	print "		<td class='textArea'>" . ini_get("memory_limit");
+	print "<tr class='rowAlternate2'>\n";
+	print "		<td class='textAreaNotes'>memory_limit</td>\n";
+	print "		<td class='textAreaNotes'>" . ini_get("memory_limit");
 
 	/* Calculate memory suggestion based off of data source count */
 	$memory_suggestion = $data_total * 32768;
@@ -397,15 +395,15 @@ function utilities_view_tech($php_info = "") {
 	}
 	/* Suggest values in 8M increments */
 	$memory_suggestion = round($memory_suggestion / 8388608) * 8388608;
-        if (memory_bytes(ini_get('memory_limit')) < $memory_suggestion) {
+	if (memory_bytes(ini_get('memory_limit')) < $memory_suggestion) {
 		print "<br><font color='red'>It is highly suggested that you alter you php.ini memory_limit to " . memory_readable($memory_suggestion) . " or higher.  This suggested memory value is calculated based on the number of data source present and is only to be used as a suggestion, actual values may vary system to system based on requirements.</font><br>";
-        }
-        print "</td>\n";
+	}
+	print "</td>\n";
 	print "</tr>\n";
 
 	html_header(array("MySQL Table Information"), 2);
-	print "<tr bgcolor='" . $colors["form_alternate1"] . "'>\n";
-	print "		<td class='textArea' colspan='2' align='center'>";
+	print "<tr class='rowAlternate1'>\n";
+	print "		<td class='textAreaNotes' colspan='2' align='center'>";
 	if (sizeof($table_status) > 0) {
 		print "<table border='1' cellpadding='2' cellspacing='0'>\n";
 		print "<tr>\n";
@@ -416,7 +414,7 @@ function utilities_view_tech($php_info = "") {
 		print "  <th>Check Status</th>\n";
 		print "</tr>\n";
 		foreach ($table_status as $item) {
-			print "<tr>\n";
+			form_alternate_row_color();
 			print "  <td>" . $item["Name"] . "</td>\n";
 			print "  <td>" . $item["Rows"] . "</td>\n";
 			if (isset($item["Engine"])) {
@@ -441,14 +439,12 @@ function utilities_view_tech($php_info = "") {
 	print "</tr>\n";
 
 	html_header(array("PHP Module Information"), 2);
-	print "<tr bgcolor='" . $colors["form_alternate1"] . "'>\n";
-	print "		<td class='textArea' colspan='2'>" . $php_info . "</td>\n";
+	print "<tr class='rowAlternate1'>\n";
+	print "		<td class='textAreaNotes' colspan='2'>" . $php_info . "</td>\n";
 	print "</tr>\n";
 
 	html_end_box();
-
 }
-
 
 function utilities_view_user_log() {
 	global $colors, $auth_realms;
@@ -1205,57 +1201,57 @@ function utilities() {
 	</colgroup>
 
 	<?php html_header(array("Technical Support"), 2); ?>
-	<tr bgcolor="#<?php print $colors["form_alternate1"];?>">
-		<td class="textArea">
+	<tr class="rowAlternate1">
+		<td class="textAreaNotes">
 			<p><a href='utilities.php?action=view_tech'>Technical Support</a></p>
 		</td>
-		<td class="textArea">
+		<td class="textAreaNotes">
 			<p>Cacti technical support page.  Used by developers and technical support persons to assist with issues in Cacti.  Includes checks for common configuration issues.</p>
 		</td>
 	</tr>
 
 	<?php html_header(array("Log Administration"), 2);?>
 
-	<tr bgcolor="#<?php print $colors["form_alternate1"];?>">
-		<td class="textArea">
+	<tr class="rowAlternate1">
+		<td class="textAreaNotes">
 			<p><a href='utilities.php?action=view_logfile'>View Cacti Log File</a></p>
 		</td>
-		<td class="textArea">
+		<td class="textAreaNotes">
 			<p>The Cacti Log File stores statistic, error and other message depending on system settings.  This information can be used to identify problems with the poller and application.</p>
 		</td>
 	</tr>
-	<tr bgcolor="#<?php print $colors["form_alternate1"];?>">
-		<td class="textArea">
+	<tr class="rowAlternate2">
+		<td class="textAreaNotes">
 			<p><a href='utilities.php?action=view_user_log'>View User Log</a></p>
 		</td>
-		<td class="textArea">
+		<td class="textAreaNotes">
 			<p>Allows Administrators to browse the user log.  Administrators can filter and export the log as well.</p>
 		</td>
 	</tr>
 
 	<?php html_header(array("Poller Cache Administration"), 2); ?>
 
-	<tr bgcolor="#<?php print $colors["form_alternate1"];?>">
-		<td class="textArea">
+	<tr class="rowAlternate1">
+		<td class="textAreaNotes">
 			<p><a href='utilities.php?action=view_poller_cache'>View Poller Cache</a></p>
 		</td>
-		<td class="textArea">
+		<td class="textAreaNotes">
 			<p>This is the data that is being passed to the poller each time it runs. This data is then in turn executed/interpreted and the results are fed into the rrd files for graphing or the database for display.</p>
 		</td>
 	</tr>
-	<tr bgcolor="#<?php print $colors["form_alternate2"];?>">
-		<td class="textArea">
+	<tr class="rowAlternate2">
+		<td class="textAreaNotes">
 			<p><a href='utilities.php?action=view_snmp_cache'>View SNMP Cache</a></p>
 		</td>
-		<td class="textArea">
+		<td class="textAreaNotes">
 			<p>The SNMP cache stores information gathered from SNMP queries. It is used by cacti to determine the OID to use when gathering information from an SNMP-enabled host.</p>
 		</td>
 	</tr>
-	<tr bgcolor="#<?php print $colors["form_alternate1"];?>">
-		<td class="textArea">
+	<tr class="rowAlternate1">
+		<td class="textAreaNotes">
 			<p><a href='utilities.php?action=clear_poller_cache'>Rebuild Poller Cache</a></p>
 		</td>
-		<td class="textArea">
+		<td class="textAreaNotes">
 			<p>The poller cache will be cleared and re-generated if you select this option. Sometimes host/data source data can get out of sync with the cache in which case it makes sense to clear the cache and start over.</p>
 		</td>
 	</tr>

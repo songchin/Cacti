@@ -206,7 +206,7 @@ function form_actions() {
 	if ((get_request_var_post("drp_action") == "1") && (sizeof($user_array))) { /* delete */
 		print "
 			<tr>
-				<td class='textArea' bgcolor='#" . $colors["form_alternate1"] . "'>
+				<td class='textArea'>
 					<p>Are you sure you want to delete the following users?</p>
 					<p>$user_list</p>
 				</td>
@@ -219,25 +219,25 @@ function form_actions() {
 
 		print "
 			<tr>
-				<td class='textArea' bgcolor='#" . $colors["form_alternate1"] . "'>
+				<td class='textArea'>
 					Would you like to copy this user?<br><br>
 				</td>
 			</tr><tr>
-				<td class='textArea' bgcolor='#" . $colors["form_alternate1"] . "'>
+				<td class='textArea'>
 					Template Username: <i>" . db_fetch_cell("SELECT username FROM user_auth WHERE id=" . $user_id) . "</i>
 				</td>
 			</tr><tr>
-				<td class='textArea' bgcolor='#" . $colors["form_alternate1"] . "'>
+				<td class='textArea'>
 				New Username: ";
 		print form_text_box("new_username", "", "", 25);
 		print "				</td>
 			</tr><tr>
-				<td class='textArea' bgcolor='#" . $colors["form_alternate1"] . "'>
+				<td class='textArea'>
 					New Full Name: ";
 		print form_text_box("new_fullname", "", "", 35);
 		print "				</td>
 			</tr><tr>
-				<td class='textArea' bgcolor='#" . $colors["form_alternate1"] . "'>
+				<td class='textArea'>
 					New Realm: \n";
 		print form_dropdown("new_realm", $auth_realms, "", "", $user_realm, "", 0);
 		print "				</td>
@@ -248,7 +248,7 @@ function form_actions() {
 	if ((get_request_var_post("drp_action") == "3") && (sizeof($user_array))) { /* enable */
 		print "
 			<tr>
-				<td class='textArea' bgcolor='#" . $colors["form_alternate1"] . "'>
+				<td class='textArea'>
 					<p>Are you sure you want to enable the following users?</p>
 					<p>$user_list</p>
 				</td>
@@ -258,7 +258,7 @@ function form_actions() {
 	if ((get_request_var_post("drp_action") == "4") && (sizeof($user_array))) { /* disable */
 		print "
 			<tr>
-				<td class='textArea' bgcolor='#" . $colors["form_alternate1"] . "'>
+				<td class='textArea'>
 					<p>Are you sure you want to disable the following users?</p>
 					<p>$user_list</p>
 				</td>
@@ -269,15 +269,18 @@ function form_actions() {
 		$usernames = db_fetch_assoc("SELECT id,username FROM user_auth WHERE realm = 0 ORDER BY username");
 		print "
 			<tr>
-				<td class='textArea' bgcolor='#" . $colors["form_alternate1"] . "'>Are you sure you want to overwrite the selected users with the selected template users settings and permissions?  Original user Full Name, Password, Realm and Enable status will be retained, all other fields will be overwritten from template user.<br><br></td>
-			</tr><tr>
-				<td class='textArea' bgcolor='#" . $colors["form_alternate1"] . "'>
+				<td class='textArea'>
+					>Are you sure you want to overwrite the selected users with the selected template users settings and permissions?  Original user Full Name, Password, Realm and Enable status will be retained, all other fields will be overwritten from template user.<br><br>
+				</td>
+			</tr>
+			<tr>
+				<td class='textArea'>
 					Template User: \n";
 		print form_dropdown("template_user", $usernames, "username", "id", "", "", 0);
 		print "		</td>
-
-			</tr><tr>
-				<td class='textArea' bgcolor='#" . $colors["form_alternate1"] . "'>
+			</tr>
+			<tr>
+				<td class='textArea'>
 					<p>Users to update:
 					$user_list</p>
 				</td>

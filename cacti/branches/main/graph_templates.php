@@ -234,7 +234,7 @@ function form_actions() {
 	if (sizeof($graph_array)) {
 		if ($_POST["drp_action"] == "1") { /* delete */
 			print "	<tr>
-					<td class='textArea' bgcolor='#" . $colors["form_alternate1"]. "'>
+					<td class='textArea'>
 						<p>Are you sure you want to delete the following graph templates? Any graphs attached
 						to these templates will become individual graphs.</p>
 						<p>$graph_list</p>
@@ -243,7 +243,7 @@ function form_actions() {
 				";
 		}elseif ($_POST["drp_action"] == "2") { /* duplicate */
 			print "	<tr>
-					<td class='textArea' bgcolor='#" . $colors["form_alternate1"]. "'>
+					<td class='textArea'>
 						<p>When you click save, the following graph templates will be duplicated. You can
 						optionally change the title format for the new graph templates.</p>
 						<p>$graph_list</p>
@@ -332,7 +332,7 @@ function item() {
 	<?php
 	}
 	}else{
-		print "<tr bgcolor='#" . $colors["form_alternate2"] . "'><td colspan='2'><em>No Inputs</em></td></tr>";
+		print "<tr class='rowAlternate1'><td colspan='2'><em>No Inputs</em></td></tr>";
 	}
 
 	html_end_box();

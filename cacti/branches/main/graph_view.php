@@ -387,7 +387,7 @@ case 'list':
 	}
 
 	/* display graph view filter selector */
-	html_graph_start_box(3, true);
+	html_graph_start_box(3, false);
 
 	if (empty($_REQUEST["host_id"])) { $_REQUEST["host_id"] = 0; }
 	if (empty($_REQUEST["graph_template_id"])) { $_REQUEST["graph_template_id"] = 0; }
@@ -407,7 +407,7 @@ case 'list':
 	-->
 	</script>
 
-	<tr class='rowSubHeader'>
+	<tr class='rowHeader'>
 		<form name="form_graph_list" method="POST" onSubmit='form_graph(document.graphs,document.form_graph_list)'>
 		<input type='hidden' name='graph_list' value='<?php print $graph_list_text; ?>'>
 		<input type='hidden' name='graph_add' value=''>
@@ -415,7 +415,7 @@ case 'list':
 		<td>
 			<table width="100%" cellpadding="0" cellspacing="0">
 				<tr>
-					<td nowrap style='white-space: nowrap;' width="40">
+					<td nowrap style='white-space: nowrap; color: #FFFFFF;' width="40">
 						&nbsp;<strong>Host:</strong>&nbsp;
 					</td>
 					<td width="1">
@@ -448,7 +448,7 @@ case 'list':
 							?>
 						</select>
 					</td>
-					<td nowrap style='white-space: nowrap;' width="70">
+					<td nowrap style='white-space: nowrap; color: #FFFFFF;' width="70">
 						&nbsp;<strong>Template:</strong>&nbsp;
 					</td>
 					<td width="1">
@@ -478,15 +478,15 @@ case 'list':
 							?>
 						</select>
 					</td>
-					<td nowrap style='white-space: nowrap;' width="50">
+					<td nowrap style='white-space: nowrap; color: #FFFFFF;' width="50">
 						&nbsp;<strong>Search:</strong>&nbsp;
 					</td>
 					<td width="1">
 						<input type="text" name="filter" size="40" value="<?php print $_REQUEST["filter"];?>">
 					</td>
 					<td>
-						&nbsp;<input type="image" src="images/button_go.gif" alt="Go" border="0" align="absmiddle">
-						<input type="image" src="images/button_clear.gif" name="clear" alt="Clear" border="0" align="absmiddle">
+						&nbsp;<input type="submit" value="Go" name="go">
+						<input type="submit" value="Clear" name="clear_x">
 					</td>
 				</tr>
 			</table>
@@ -590,13 +590,12 @@ case 'list':
 	}
 	-->
 	</script>
-	<form name='graphs' id='graphs' action='graph_view.php' method='get' onSubmit='form_graph(document.graphs,document.graphs)'>
-
 	<?php
 
 	html_graph_start_box(1, true);
 	?>
-	<tr class='rowSubHeader'>
+	<tr class='rowHeader'>
+		<form name='graphs' id='graphs' action='graph_view.php' method='get' onSubmit='form_graph(document.graphs,document.graphs)'>
 		<td colspan='3'>
 			<table width='100%' cellspacing='0' cellpadding='3' border='0'>
 				<tr>
@@ -613,12 +612,12 @@ case 'list':
 			</table>
 		</td>
 	</tr>
-	<tr bgcolor='#6d88ad'>
+	<tr class='rowSubHeader'>
 		<td colspan='3'>
 			<table width='100%' cellspacing='0' cellpadding='3' border='0'>
 				<tr>
 					<?php
-					print "<td width='1%' align='right' class='textHeaderDark' style='" . get_checkbox_style() . "'><input type='checkbox' style='margin: 0px;' name='all' title='Select All' onClick='SelectAllGraphs(\"graph_\",this.checked)'></td><td bgcolor='#6D88AD'><strong>Select All</strong></td>\n";
+					print "<td width='1%' align='right' class='textHeaderDark' style='" . get_checkbox_style() . "'><input type='checkbox' style='margin: 0px;' name='all' title='Select All' onClick='SelectAllGraphs(\"graph_\",this.checked)'></td><td class='textSubHeaderDark'><strong>Select All</strong></td>\n";
 					?>
 				</tr>
 			</table>
@@ -648,12 +647,12 @@ case 'list':
 	}
 
 	?>
-	<tr bgcolor='#6d88ad'>
+	<tr class='rowSubHeader'>
 		<td colspan='3'>
 			<table width='100%' cellspacing='0' cellpadding='3' border='0'>
 				<tr>
 					<?php
-					print "<td width='1%' align='right' class='textHeaderDark' style='" . get_checkbox_style() . "'><input type='checkbox' style='margin: 0px;' name='all' title='Select All' onClick='SelectAllGraphs(\"graph_\",this.checked)'></td><td bgcolor='#6D88AD'><strong>Select All</strong></td>\n";
+					print "<td width='1%' align='right' class='textHeaderDark' style='" . get_checkbox_style() . "'><input type='checkbox' style='margin: 0px;' name='all' title='Select All' onClick='SelectAllGraphs(\"graph_\",this.checked)'></td><td class='textSubHeaderDark'><strong>Select All</strong></td>\n";
 					?>
 				</tr>
 			</table>

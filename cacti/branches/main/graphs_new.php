@@ -403,7 +403,7 @@ function graphs() {
 		debug_log_clear("new_graphs");
 		?>
 		<table width='100%' style='background-color: #f5f5f5; border: 1px solid #bbbbbb;' align='center'>
-			<tr bgcolor="<?php print $colors["light"];?>">
+			<tr>
 				<td style="padding: 3px; font-family: monospace;">
 					<?php print $debug_log;?>
 				</td>
@@ -518,7 +518,7 @@ function graphs() {
 
 		print "	<tr class='rowSubHeader'>
 				<td class='textSubHeaderDark'>Graph Template Name</td>
-				<td class='rowSubHeader' width='1%' align='center' bgcolor='#819bc0' style='" . get_checkbox_style() . "'><input type='checkbox' style='margin: 0px;' name='all_cg' title='Select All' onClick='SelectAll(\"cg\",this.checked);gt_update_selection_indicators();'></td>\n
+				<td class='rowSubHeader' width='1%' align='center' style='" . get_checkbox_style() . "'><input type='checkbox' style='margin: 0px;' name='all_cg' title='Select All' onClick='SelectAll(\"cg\",this.checked);gt_update_selection_indicators();'></td>\n
 			</tr>\n";
 
 		$graph_templates = db_fetch_assoc("SELECT

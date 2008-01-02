@@ -1,4 +1,4 @@
-	<tr bgcolor="<?php print $colors["panel"];?>">
+	<tr>
 		<form name="form_userlog">
 		<td>
 			<table cellpadding="0" cellspacing="0">

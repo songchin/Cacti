@@ -1,4 +1,4 @@
-	<tr bgcolor="<?php print $colors["panel"];?>">
+	<tr>
 		<form name="form_graph_template">
 		<td>
 			<table width="100%" cellpadding="0" cellspacing="0">

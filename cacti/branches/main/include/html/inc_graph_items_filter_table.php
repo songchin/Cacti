@@ -5,7 +5,7 @@
 	}
 
 ?>
-	<tr bgcolor="<?php print $colors["panel"];?>">
+	<tr>
 		<form name="form_graph_items">
 		<td>
 			<table cellpadding="0" cellspacing="0">
