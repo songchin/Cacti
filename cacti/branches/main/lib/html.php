@@ -54,29 +54,29 @@ function html_start_box($title, $width, $background_color, $cell_padding, $align
 	}
 
 	?>
-	<table style="border-width: 1px; border-style: solid; border-color: #708DE2;" align="<?php print $align;?>" width="<?php print $width;?>" cellpadding=0 cellspacing=0><?php if ($title != "") {?>
-		<tr class="rowHeader" <?php print $ani;?>>
-			<td style="padding: 3px;" colspan="100">
-				<table width="100%" cellpadding="0" cellspacing="0">
-					<tr><?php if ($collapsing) {?>
-						<td class="textHeaderDark" width="14">
-							<img id="<?php print $item_id . '_twisty';?>" src="images/tw_open.gif" alt="Filter" border="0" align="absmiddle">
-						</td><?php } ?>
-						<td class="textHeaderDark"><?php print $title;?>
-						</td><?php if ($collapsing) {?>
-						<td class="textHeaderDark" width="1">
-							<img src="images/transparent_line.gif" alt='' <?php print $ani2;?>>
-						</td><?php } if ($add_text != "") {?>
-						<td class="textHeaderDark" align="right">
-							<strong><a class="linkOverDark" href="<?php print $add_text;?>">Add</a>&nbsp;</strong>
-						</td><?php }?>
-					</tr>
-				</table>
-			</td>
-		</tr><?php }?>
-		<tr id='<?php print $item_id;?>'>
-			<td>
-				<table cellpadding=<?php print $cell_padding;?> cellspacing=0 border=0 bgcolor="#<?php print $colors["form_background_dark"];?>" width="100%">
+		<table style="border-width: 1px; border-style: solid; border-color: #708DE2;" align="<?php print $align;?>" width="<?php print $width;?>" cellpadding=0 cellspacing=0>
+			<?php if ($title != "") {?><tr class="rowHeader" <?php print $ani;?>>
+				<td style="padding: 3px;" colspan="100">
+					<table width="100%" cellpadding="0" cellspacing="0">
+						<tr>
+							<?php if ($collapsing) {?><td class="textHeaderDark" width="14">
+								<img id="<?php print $item_id . '_twisty';?>" src="images/tw_open.gif" alt="Filter" border="0" align="absmiddle">
+							</td><?php } ?>
+							<td class="textHeaderDark"><?php print $title;?>
+							</td>
+							<?php if ($collapsing) {?><td class="textHeaderDark" width="1">
+								<img src="images/transparent_line.gif" alt='' <?php print $ani2;?>>
+							</td><?php } if ($add_text != "") {?>
+							<td class="textHeaderDark" align="right">
+								<strong><a class="linkOverDark" href="<?php print $add_text;?>">Add</a>&nbsp;</strong>
+							</td>
+						<?php }?></tr>
+					</table>
+				</td>
+			</tr>
+			<?php }?><tr id='<?php print $item_id;?>'>
+				<td>
+					<table cellpadding=<?php print $cell_padding;?> cellspacing=0 border=0 bgcolor="#<?php print $colors["form_background_dark"];?>" width="100%">
 <?php
 }
 
@@ -281,7 +281,7 @@ function html_header_sort($header_items, $sort_column, $sort_direction, $last_it
 		$new_sort_direction = "ASC";
 	}
 
-	print "<tr class='rowSubHeader'>\n";
+	print "\t\t<tr class='rowSubHeader'>\n";
 
 	$i = 1;
 	foreach ($header_items as $db_column => $display_array) {
@@ -295,17 +295,17 @@ function html_header_sort($header_items, $sort_column, $sort_direction, $last_it
 		}
 
 		if (($db_column == "") || (substr_count($db_column, "nosort"))) {
-			print "<td " . ((($i+1) == count($header_items)) ? "colspan='$last_item_colspan' " : "") . "class='textSubHeaderDark'>" . $display_text . "</td>\n";
+			print "\t\t\t<td " . ((($i+1) == count($header_items)) ? "colspan='$last_item_colspan' " : "") . "class='textSubHeaderDark'>" . $display_text . "</td>\n";
 		}else{
-			print "<td " . ((($i) == count($header_items)) ? "colspan='$last_item_colspan'" : "") . " class='textSubHeaderDark'>";
-			print "<a class='textSubSortHeaderDark' href=" . $_SERVER["PHP_SELF"] . "?sort_column=" . $db_column . "&sort_direction=" . $direction . ">" . $display_text . "</a>";
-			print "</td>\n";
+			print "\t\t\t<td " . ((($i) == count($header_items)) ? "colspan='$last_item_colspan'" : "") . " class='textSubHeaderDark'>";
+			print "\n\t\t\t\t<a class='textSubSortHeaderDark' href=" . $_SERVER["PHP_SELF"] . "?sort_column=" . $db_column . "&sort_direction=" . $direction . ">" . $display_text . "</a>";
+			print "\n\t\t\t</td>\n";
 		}
 
 		$i++;
 	}
 
-	print "</tr>\n";
+	print "\t\t</tr>\n";
 }
 
 /* html_header_sort_checkbox - draws a header row with a 'select all' checkbox in the last cell
@@ -332,7 +332,7 @@ function html_header_sort_checkbox($header_items, $sort_column, $sort_direction,
 	/* default to the 'current' file */
 	if ($form_action == "") { $form_action = basename($_SERVER["PHP_SELF"]); }
 
-	print "<tr class='rowSubHeader'>\n";
+	print "\t\t<tr class='rowSubHeader'>\n";
 
 	foreach($header_items as $db_column => $display_array) {
 		/* by default, you will always sort ascending, with the exception of an already sorted column */
@@ -345,16 +345,16 @@ function html_header_sort_checkbox($header_items, $sort_column, $sort_direction,
 		}
 
 		if (($db_column == "") || (substr_count($db_column, "nosort"))) {
-			print "<td class='textSubHeaderDark'>" . $display_text . "</td>\n";
+			print "\t\t\t<td class='textSubHeaderDark'>" . $display_text . "</td>\n";
 		}else{
-			print "<td>";
-			print "<a class='textSubHeaderDark' href=" . $_SERVER["PHP_SELF"] . "?sort_column=" . $db_column . "&sort_direction=" . $direction . ">" . $display_text . "</a>";
-			print "</td>\n";
+			print "\t\t\t<td class='textSubHeaderDark'>";
+			print "\n\t\t\t\t<a class='textSubHeaderDark' href=" . $_SERVER["PHP_SELF"] . "?sort_column=" . $db_column . "&sort_direction=" . $direction . ">" . $display_text . "</a>";
+			print "\n\t\t\t</td>\n";
 		}
 	}
 
-	print "<td class='textSubHeaderDark'><input type='checkbox' style='margin: 0px;' name='all' title='Select All' onClick='SelectAll(\"chk_\",this.checked)'></td>\n<form name='chk' method='post' action='$form_action'>\n";
-	print "</tr>\n";
+	print "\t\t\t<td class='textSubHeaderDark'><input type='checkbox' style='margin: 0px;' name='all' title='Select All' onClick='SelectAll(\"chk_\",this.checked)'></td>\n<form name='chk' method='post' action='$form_action'>\n";
+	print "\t\t</tr>\n";
 }
 
 /* html_header - draws a header row suitable for display inside of a box element
@@ -363,13 +363,13 @@ function html_header_sort_checkbox($header_items, $sort_column, $sort_direction,
 function html_header($header_items, $last_item_colspan = 1) {
 	global $colors;
 
-	print "<tr class='rowSubHeader'>\n";
+	print "\t\t<tr class='rowSubHeader'>\n";
 
 	for ($i=0; $i<count($header_items); $i++) {
-		print "<td " . ((($i+1) == count($header_items)) ? "colspan='$last_item_colspan' " : "") . "class='textSubHeaderDark'>" . $header_items[$i] . "</td>\n";
+		print "\t\t\t<td " . ((($i+1) == count($header_items)) ? "colspan='$last_item_colspan' " : "") . "class='textSubHeaderDark'>" . $header_items[$i] . "</td>\n";
 	}
 
-	print "</tr>\n";
+	print "\t\t</tr>\n";
 }
 
 /* html_header_checkbox - draws a header row with a 'select all' checkbox in the last cell
@@ -382,14 +382,14 @@ function html_header_checkbox($header_items, $form_action = "") {
 	/* default to the 'current' file */
 	if ($form_action == "") { $form_action = basename($_SERVER["PHP_SELF"]); }
 
-	print "<tr class='rowSubHeader'>\n";
+	print "\t\t<tr class='rowSubHeader'>\n";
 
 	for ($i=0; $i<count($header_items); $i++) {
-		print "<td class='textSubHeaderDark'>" . $header_items[$i] . "</td>\n";
+		print "\t\t\t<td class='textSubHeaderDark'>" . $header_items[$i] . "</td>\n";
 	}
 
-	print "<td class='textSubHeaderDark'><input type='checkbox' style='margin: 0px;' name='all' title='Select All' onClick='SelectAll(\"chk_\",this.checked)'></td>\n<form name='chk' method='post' action='$form_action'>\n";
-	print "</tr>\n";
+	print "\t\t\t<td class='textSubHeaderDark'><input type='checkbox' style='margin: 0px;' name='all' title='Select All' onClick='SelectAll(\"chk_\",this.checked)'></td>\n<form name='chk' method='post' action='$form_action'>\n";
+	print "\t\t</tr>\n";
 }
 
 /* create_list - draws the items for an html dropdown given an array of data
@@ -588,7 +588,7 @@ function draw_menu($user_menu = "") {
 		$user_realms = $user_auth_realms;
 	}
 
-	print "<tr><td width='100%'><table cellpadding='3' cellspacing='0' border='0' width='100%'>\n";
+	print "<table cellpadding='3' cellspacing='0' border='0' width='100%'>\n";
 
 	/* loop through each header */
 	while (list($header_name, $header_array) = each($user_menu)) {
@@ -605,7 +605,7 @@ function draw_menu($user_menu = "") {
 		reset($header_array);
 
 		if ($show_header_items == true) {
-			print "<tr><td class='textMenuHeader'>$header_name</td></tr>\n";
+			print "\t\t\t<tr><td class='textMenuHeader'>$header_name</td></tr>\n";
 		}
 
 		/* pass 2: loop through each top level item and render it */
@@ -652,9 +652,9 @@ function draw_menu($user_menu = "") {
 						that is contained in the sub-items array */
 						if (($i == 0) || ($draw_sub_items)) {
 							if (basename($_SERVER["PHP_SELF"]) == basename($item_sub_url)) {
-								print "<tr><td class='$td_class' background='$background'>$prepend_string<strong><a href='$item_sub_url'>$item_sub_title</a></strong></td></tr>\n";
+								print "\t\t\t<tr><td class='$td_class' background='$background'>$prepend_string<strong><a href='$item_sub_url'>$item_sub_title</a></strong></td></tr>\n";
 							}else{
-								print "<tr><td class='$td_class' background='$background'>$prepend_string<a href='$item_sub_url'>$item_sub_title</a></td></tr>\n";
+								print "\t\t\t<tr><td class='$td_class' background='$background'>$prepend_string<a href='$item_sub_url'>$item_sub_title</a></td></tr>\n";
 							}
 						}
 
@@ -665,18 +665,18 @@ function draw_menu($user_menu = "") {
 				if ((isset($user_realms[$current_realm_id])) || (!isset($user_auth_realm_filenames{basename($item_url)}))) {
 					/* draw normal (non sub-item) menu item */
 					if (basename($_SERVER["PHP_SELF"]) == basename($item_url)) {
-						print "<tr><td class='textMenuItemSelected' background='images/menu_line.gif'><strong><a href='$item_url'>$item_title</a></strong></td></tr>\n";
+						print "\t\t\t<tr><td class='textMenuItemSelected' background='images/menu_line.gif'><strong><a href='$item_url'>$item_title</a></strong></td></tr>\n";
 					}else{
-						print "<tr><td class='textMenuItem' background='images/menu_line.gif'><a href='$item_url'>$item_title</a></td></tr>\n";
+						print "\t\t\t<tr><td class='textMenuItem' background='images/menu_line.gif'><a href='$item_url'>$item_title</a></td></tr>\n";
 					}
 				}
 			}
 		}
 	}
 
-	print "<tr><td class='textMenuItem' background='images/menu_line.gif'></td></tr>\n";
+	print "\t\t\t<tr><td class='textMenuItem' background='images/menu_line.gif'></td></tr>\n";
 
-	print "</table></td></tr>";
+	print "\t\t</table>\n";
 }
 
 /* draw_actions_dropdown - draws a table the allows the user to select an action to perform

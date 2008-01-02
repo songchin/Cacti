@@ -536,7 +536,7 @@ function data() {
 	if (sizeof($data_inputs) > 0) {
 		foreach ($data_inputs as $data_input) {
 			/* hide system types */
-			form_alternate_row_color('line' . $data_input["id"], true);
+			form_alternate_row_color('line' . $data_input["id"], true, true);
 			form_selectable_cell("<a class='linkEditMain' href='data_input.php?action=edit&id=" . $data_input["id"] . "'>" . (strlen($_REQUEST["filter"]) ? eregi_replace("(" . preg_quote($_REQUEST["filter"]) . ")", "<span style='background-color: #F8D93D;'>\\1</span>", $data_input["name"]) : $data_input["name"]) . "</a>", $data_input["id"]);
 			form_selectable_cell($input_types{$data_input["type_id"]}, $data_input["id"]);
 			form_checkbox_cell($data_input["name"], $data_input["id"]);

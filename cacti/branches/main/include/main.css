@@ -1,7 +1,49 @@
 /* main styles */
 body {
+	margin:  0px;
+	padding: 0px;
 	background-color: #FFFFFF;
-	background-repeat: repeat-y;
+}
+
+.navbar {
+	background-image: url('../images/cacti_backdrop.gif');
+	background-position: right;
+	background-repeat: no-repeat;
+	background-color: #A9A9A9;
+	border-bottom: 1px solid #183c8f;
+	width: 100%;
+}
+
+.navbrcrumb {
+	width: 100%;
+	background-color: #e9e9e9;
+}
+
+.menu {
+	background-image: url('../images/shadow.gif');
+	background-repeat: repeat-x;
+	background-position: top left;
+	position: relative;
+	float: left;
+	border-right: 1px ridge #A9A9A9;
+	padding-top: 8px;
+	min-height: 700px;
+	background-color: #F5F5F5;
+	width: 120px;
+}
+
+.content {
+	background-image: url('../images/shadow.gif');
+	background-repeat: repeat-x;
+	background-position: top right;
+	min-height: 500px;
+	margin: 0px 0px 0px 120px;
+	padding: 8px 5px 8px 5px;
+}
+
+.about {
+	float: left;
+	padding: 15px 15px 15px 15px;
 }
 
 tr {

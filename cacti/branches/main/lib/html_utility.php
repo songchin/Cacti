@@ -75,7 +75,7 @@ function inject_form_variables(&$form_array, $arg1 = array(), $arg2 = array(), $
      to display for this particular row. must be an integer
    @arg $row_id - used to allow js and ajax actions on this object
    @returns - the background color used for this particular row */
-function form_alternate_row_color($row_id = "", $hover = false) {
+function form_alternate_row_color($row_id = "", $hover = false, $row_select = false) {
 	static $class_int  = 1;
 	static $alt_row_id = 0;
 
@@ -85,18 +85,25 @@ function form_alternate_row_color($row_id = "", $hover = false) {
 		$class = "rowAlternate2";
 	}
 
+	if (($row_select) && (strstr($row_id, "line"))) {
+		$line_no = str_replace("line", "", $row_id);
+		$row_select = "onClick='select_line($line_no)'";
+	}else{
+		$row_select = "";
+	}
+
 	$class_int = ($class_int + 1) % 2;
 
 	if (is_numeric($row_id)) {
 		if ($hover) {
-			print "<tr id='row_$row_id' class='$class' onmouseover=(this.className='rowSelected') onmouseout=(this.className='$class')>\n";
+			print "<tr id='row_$row_id' class='$class' $row_select onMouseOver=(this.className='rowSelected') onMouseOut=(this.className='$class')>\n";
 		}else{
 			print "<tr id='row_$row_id' class='$class'>\n";
 		}
 	}else{
 		if (strlen($row_id)) {
 			if ($hover) {
-				print "<tr id='$row_id' class='$class' onmouseover=(this.className='rowSelected') onmouseout=(this.className='$class')>\n";
+				print "<tr id='$row_id' class='$class' $row_select onMouseOver=(this.className='rowSelected') onMouseOut=(this.className='$class')>\n";
 			}else{
 				print "<tr id='$row_id' class='$class'>\n";
 			}
@@ -116,7 +123,7 @@ function form_alternate_row_color($row_id = "", $hover = false) {
    @arg $width - the width of the table element
    @arg $style - the style to apply to the table element */
 function form_selectable_cell($contents, $id, $width="", $style="") {
-	print "\t<td" . (strlen($width) ? " width='$width'" : "") . (strlen($style) ? " style='$style;'" : "") . " onClick='select_line($id)'>" . $contents . "</td>\n";
+	print "\t<td" . (strlen($width) ? " width='$width'" : "") . (strlen($style) ? " style='$style;'" : "") . ">" . $contents . "</td>\n";
 }
 
 /* form_checkbox_cell - format's a tables checkbox form element so that the cacti js actions work on it

@@ -494,6 +494,7 @@ case 'list':
 		</form>
 	</tr>
 	<?php
+
 	html_graph_end_box();
 
 	/* create filter for sql */

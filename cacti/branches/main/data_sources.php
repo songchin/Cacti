@@ -1143,7 +1143,8 @@ function ds() {
 			$data_template_name = ((empty($data_source["data_template_name"])) ? "<em>None</em>" : $data_source["data_template_name"]);
 			$data_input_name    = ((empty($data_source["data_input_name"])) ? "<em>External</em>" : $data_source["data_input_name"]);
 			$poller_interval    = ((isset($poller_intervals[$data_source["local_data_id"]])) ? $poller_intervals[$data_source["local_data_id"]] : 0);
-			form_alternate_row_color('line' . $data_source["local_data_id"], true);
+
+			form_alternate_row_color('line' . $data_source["local_data_id"], true, true);
 			form_selectable_cell("<a class='linkEditMain' href='data_sources.php?action=ds_edit&id=" . $data_source["local_data_id"] . "'>" . (($_REQUEST["filter"] != "") ? eregi_replace("(" . preg_quote($_REQUEST["filter"]) . ")", "<span style='background-color: #F8D93D;'>\\1</span>", title_trim(htmlentities($data_source["name_cache"]), read_config_option("max_title_data_source"))) : title_trim(htmlentities($data_source["name_cache"]), read_config_option("max_title_data_source"))) . "</a>", $data_source["local_data_id"]);
 			form_selectable_cell($data_source['local_data_id'], $data_source['local_data_id']);
 			form_selectable_cell((($_REQUEST["filter"] != "") ? eregi_replace("(" . preg_quote($_REQUEST["filter"]) . ")", "<span style='background-color: #F8D93D;'>\\1</span>", $data_input_name) : $data_input_name) . "</a>", $data_source["local_data_id"]);
