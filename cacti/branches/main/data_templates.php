@@ -488,7 +488,7 @@ function template_edit() {
 
 			foreach ($template_data_rrds as $template_data_rrd) {
 				$i++;
-				print "<div><a " . (($template_data_rrd["id"] == $_GET["view_rrd"]) ? "class='tabSelected'" : "class='tabDefault'") . " style='margin-right:0; padding-left: 4px; ; padding: 5px 8px 6px 8px;' href='data_templates.php?action=template_edit&id=" . $_GET["id"] . "&view_rrd=" . $template_data_rrd["id"] . "'>$i: " . $template_data_rrd["data_source_name"] . "</a><a " . (($template_data_rrd["id"] == $_GET["view_rrd"]) ? "class='tabSelected'" : "class='tabDefault'") . " style='margin-left:0; padding: 6px 8px 5px 8px' href='data_templates.php?action=rrd_remove&id=" . $template_data_rrd["id"] . "&data_template_id=" . $_GET["id"] . "'><img src='images/delete_icon.gif' border='0' alt='Delete'></a></div>";
+				print "<div class='tabDefault'><a " . (($template_data_rrd["id"] == $_GET["view_rrd"]) ? "class='tabSelected'" : "class='tabDefault'") . " style='margin-right:0; padding-left: 4px; ; padding: 5px 8px 6px 8px;' href='data_templates.php?action=template_edit&id=" . $_GET["id"] . "&view_rrd=" . $template_data_rrd["id"] . "'>$i: " . $template_data_rrd["data_source_name"] . "</a><a " . (($template_data_rrd["id"] == $_GET["view_rrd"]) ? "class='tabSelected'" : "class='tabDefault'") . " style='margin-left:0; padding: 6px 8px 5px 8px' href='data_templates.php?action=rrd_remove&id=" . $template_data_rrd["id"] . "&data_template_id=" . $_GET["id"] . "'><img src='images/delete_icon.gif' border='0' alt='Delete'></a></div>";
 			}
 
 			print "</div></td></tr></table>\n";

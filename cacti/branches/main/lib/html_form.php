@@ -629,7 +629,7 @@ function form_color_dropdown($form_name, $form_previous_value, $form_none_entry,
    @arg $action_url - the url to go to when the user clicks 'delete' */
 function form_confirm($title_text, $body_text, $cancel_url, $action_url) { ?>
 	<br>
-	<table align="center" cellpadding=1 cellspacing=0 border=0 bgcolor="#B61D22" width="60%">
+	<table align="center" cellpadding="1" cellspacing="0" border="0" bgcolor="#B61D22" width="60%">
 		<tr>
 			<td bgcolor="#B61D22" colspan="10">
 				<table width="100%" cellpadding="3" cellspacing="0">
@@ -699,7 +699,7 @@ function form_save_button($cancel_url, $force_type = "", $key_field = "id") {
    @arg $body_text - the text to prompt the user with on this form */
 function form_confirm_alt($title_text, $body_text, $cancel_url, $action_url) { ?>
 		<br>
-		<table align="center" cellpadding=1 cellspacing=0 border=0 bgcolor="#B61D22" width="60%">
+		<table align="center" cellpadding="1" cellspacing="0" border="0" bgcolor="#B61D22" width="60%">
 			<tr>
 				<td bgcolor="#B61D22" colspan="10">
 					<table width="100%" cellpadding="3" cellspacing="0">
@@ -818,8 +818,8 @@ function form_confirm_buttons_alt() {
      has selected "cancel", where to goto.  the default will be to goto the current
      page with no action (aka continue) */
 function form_cancel_action_validate() {
-	if ((isset($_REQUEST["cancel"])) && (substr_count($_REQUEST["action"], "!"))) {
-		$vars        = explode("|", $_REQUEST["action"]);
+	if ((isset($_REQUEST["cancel"])) && (substr_count($_REQUEST["cancel_action"], "!"))) {
+		$vars        = explode("|", $_REQUEST["cancel_action"]);
 		$uri         = $_SERVER["REQUEST_URI"];
 		$uri_request = "";
 		$url         = "";

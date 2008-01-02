@@ -447,7 +447,9 @@ function form_actions() {
 						<p>$ds_list</p>
 						";
 						if (sizeof($graphs) > 0) {
-							print "<tr bgcolor='#" . $colors["form_alternate1"] . "'><td class='textArea'><p class='textArea'>The following graphs are using these data sources:</p>\n";
+							form_alternate_row_color();
+
+							print "<td class='textArea'><p class='textArea'>The following graphs are using these data sources:</p>\n";
 
 							foreach ($graphs as $graph) {
 								print "<strong>" . $graph["title_cache"] . "</strong><br>\n";

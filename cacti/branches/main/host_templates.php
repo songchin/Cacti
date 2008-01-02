@@ -424,18 +424,20 @@ function template_edit() {
 		<tr bgcolor="#<?php print $colors["form_alternate1"];?>">
 			<td colspan="2">
 				<table cellspacing="0" cellpadding="1" width="100%">
-					<td nowrap>Add Data Query:&nbsp;
-						<?php form_dropdown("snmp_query_id",db_fetch_assoc("select
-							snmp_query.id,
-							snmp_query.name
-							from snmp_query left join host_template_snmp_query
-							on (snmp_query.id=host_template_snmp_query.snmp_query_id and host_template_snmp_query.host_template_id=" . $_GET["id"] . ")
-							where host_template_snmp_query.host_template_id is null
-							order by snmp_query.name"),"name","id","","","");?>
-					</td>
-					<td align="right">
-						&nbsp;<input type="submit" value="Add" name="add_dq_y" align="middle">
-					</td>
+					<tr>
+						<td nowrap>Add Data Query:&nbsp;
+							<?php form_dropdown("snmp_query_id",db_fetch_assoc("select
+								snmp_query.id,
+								snmp_query.name
+								from snmp_query left join host_template_snmp_query
+								on (snmp_query.id=host_template_snmp_query.snmp_query_id and host_template_snmp_query.host_template_id=" . $_GET["id"] . ")
+								where host_template_snmp_query.host_template_id is null
+								order by snmp_query.name"),"name","id","","","");?>
+						</td>
+						<td align="right">
+							&nbsp;<input type="submit" value="Add" name="add_dq_y" align="middle">
+						</td>
+					</tr>
 				</table>
 			</td>
 		</tr>

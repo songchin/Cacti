@@ -83,7 +83,7 @@ switch ($_REQUEST["action"]) {
 
 function draw_cdef_preview($cdef_id) {
 	global $colors; ?>
-	<tr bgcolor="#<?php print $colors["panel"];?>">
+	<tr>
 		<td>
 			<pre>cdef=<?php print get_cdef($cdef_id, true);?></pre>
 		</td>

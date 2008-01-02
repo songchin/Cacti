@@ -346,89 +346,91 @@ function form_actions() {
 	if (sizeof($host_array)) {
 		if ($_POST["drp_action"] == "2") { /* Enable Devices */
 			print "	<tr>
-					<td colspan='2' class='textArea' bgcolor='#" . $colors["form_alternate1"]. "'>
+					<td colspan='2' class='textArea'>
 						<p>To enable the following devices, press the \"yes\" button below.</p>
 						<p>$host_list</p>
 					</td>
 					</tr>";
 		}elseif ($_POST["drp_action"] == "3") { /* Disable Devices */
 			print "	<tr>
-					<td colspan='2' class='textArea' bgcolor='#" . $colors["form_alternate1"]. "'>
+					<td colspan='2' class='textArea'>
 						<p>To disable the following devices, press the \"yes\" button below.</p>
 						<p>$host_list</p>
 					</td>
 					</tr>";
 		}elseif ($_POST["drp_action"] == "4") { /* change snmp options */
 			print "	<tr>
-					<td colspan='2' class='textArea' bgcolor='#" . $colors["form_alternate1"]. "'>
+					<td colspan='2' class='textArea'>
 						<p>To change SNMP parameters for the following devices, check the box next to the fields
 						you want to update, fill in the new value, and click Save.</p>
 						<p>$host_list</p>
 					</td>
 					</tr>";
-					$form_array = array();
-					while (list($field_name, $field_array) = each($fields_host_edit)) {
-						if ((ereg("^snmp_", $field_name)) ||
-							($field_name == "max_oids")) {
-							$form_array += array($field_name => $fields_host_edit[$field_name]);
 
-							$form_array[$field_name]["value"] = "";
-							$form_array[$field_name]["description"] = "";
-							$form_array[$field_name]["form_id"] = 0;
-							$form_array[$field_name]["sub_checkbox"] = array(
-								"name" => "t_" . $field_name,
-								"friendly_name" => "Update this Field",
-								"value" => ""
-								);
-						}
-					}
+			$form_array = array();
+			while (list($field_name, $field_array) = each($fields_host_edit)) {
+				if ((ereg("^snmp_", $field_name)) ||
+					($field_name == "max_oids")) {
+					$form_array += array($field_name => $fields_host_edit[$field_name]);
 
-					draw_edit_form(
-						array(
-							"config" => array("no_form_tag" => true),
-							"fields" => $form_array
-							)
+					$form_array[$field_name]["value"] = "";
+					$form_array[$field_name]["description"] = "";
+					$form_array[$field_name]["form_id"] = 0;
+					$form_array[$field_name]["sub_checkbox"] = array(
+						"name" => "t_" . $field_name,
+						"friendly_name" => "Update this Field",
+						"value" => ""
 						);
+				}
+			}
+
+			draw_edit_form(
+				array(
+					"config" => array("no_form_tag" => true),
+					"fields" => $form_array
+					)
+				);
 		}elseif ($_POST["drp_action"] == "6") { /* change availability options */
 			print "	<tr>
-					<td colspan='2' class='textArea' bgcolor='#" . $colors["form_alternate1"]. "'>
+					<td colspan='2' class='textArea'>
 						<p>To change SNMP parameters for the following devices, check the box next to the fields
 						you want to update, fill in the new value, and click Save.</p>
 						<p>$host_list</p>
 					</td>
 					</tr>";
-					$form_array = array();
-					while (list($field_name, $field_array) = each($fields_host_edit)) {
-						if (ereg("(availability_method|ping_method|ping_port)", $field_name)) {
-							$form_array += array($field_name => $fields_host_edit[$field_name]);
 
-							$form_array[$field_name]["value"] = "";
-							$form_array[$field_name]["description"] = "";
-							$form_array[$field_name]["form_id"] = 0;
-							$form_array[$field_name]["sub_checkbox"] = array(
-								"name" => "t_" . $field_name,
-								"friendly_name" => "Update this Field",
-								"value" => ""
-								);
-						}
-					}
+			$form_array = array();
+			while (list($field_name, $field_array) = each($fields_host_edit)) {
+				if (ereg("(availability_method|ping_method|ping_port)", $field_name)) {
+					$form_array += array($field_name => $fields_host_edit[$field_name]);
 
-					draw_edit_form(
-						array(
-							"config" => array("no_form_tag" => true),
-							"fields" => $form_array
-							)
+					$form_array[$field_name]["value"] = "";
+					$form_array[$field_name]["description"] = "";
+					$form_array[$field_name]["form_id"] = 0;
+					$form_array[$field_name]["sub_checkbox"] = array(
+						"name" => "t_" . $field_name,
+						"friendly_name" => "Update this Field",
+						"value" => ""
 						);
+				}
+			}
+
+			draw_edit_form(
+				array(
+					"config" => array("no_form_tag" => true),
+					"fields" => $form_array
+					)
+				);
 		}elseif ($_POST["drp_action"] == "5") { /* Clear Statisitics for Selected Devices */
 			print "	<tr>
-					<td colspan='2' class='textArea' bgcolor='#" . $colors["form_alternate1"]. "'>
+					<td colspan='2' class='textArea'>
 						<p>To clear the counters for the following devices, press the \"yes\" button below.</p>
 						<p>$host_list</p>
 					</td>
 					</tr>";
 		}elseif ($_POST["drp_action"] == "1") { /* delete */
 			print "	<tr>
-					<td class='textArea' bgcolor='#" . $colors["form_alternate1"]. "'>
+					<td class='textArea'>
 						<p>Are you sure you want to delete the following devices?</p>
 						<p>$host_list</p>";
 						form_radio_button("delete_type", "2", "1", "Leave all graphs and data sources untouched.  Data sources will be disabled however.", "1"); print "<br>";
@@ -439,7 +441,7 @@ function form_actions() {
 				";
 		}elseif (ereg("^tr_([0-9]+)$", $_POST["drp_action"], $matches)) { /* place on tree */
 			print "	<tr>
-					<td class='textArea' bgcolor='#" . $colors["form_alternate1"]. "'>
+					<td class='textArea'>
 						<p>When you click save, the following hosts will be placed under the branch selected
 						below.</p>
 						<p>$host_list</p>
@@ -451,7 +453,7 @@ function form_actions() {
 		}
 	} else {
 		print "	<tr>
-				<td class='textArea' bgcolor='#" . $colors["form_alternate1"]. "'>
+				<td class='textArea'>
 					<p>You must first select a Device.  Please select 'Return' to return to the previous menu.</p>
 				</td>
 			</tr>\n";
@@ -974,8 +976,8 @@ function host_edit() {
 		}
 		}else{ print "<tr><td><em>No associated graph templates.</em></td></tr>"; }
 
+		form_alternate_row_color();
 		?>
-		<tr bgcolor="#<?php print $colors["form_alternate1"];?>">
 			<td colspan="4">
 				<table cellspacing="0" cellpadding="1" width="100%">
 					<td nowrap>Add Graph Template:&nbsp;
@@ -1057,8 +1059,9 @@ function host_edit() {
 		}
 		}else{ print "<tr><td><em>No associated data queries.</em></td></tr>"; }
 
+		form_alternate_row_color();
+
 		?>
-		<tr bgcolor="#<?php print $colors["form_alternate1"];?>">
 			<td colspan="5">
 				<table cellspacing="0" cellpadding="1" width="100%">
 					<td nowrap>Add Data Query:&nbsp;

@@ -76,19 +76,19 @@ function html_start_box($title, $width, $background_color, $cell_padding, $align
 			</tr>
 			<?php }?><tr id='<?php print $item_id;?>'>
 				<td>
-					<table cellpadding=<?php print $cell_padding;?> cellspacing=0 border=0 bgcolor="#<?php print $colors["form_background_dark"];?>" width="100%">
+					<table cellpadding="<?php print $cell_padding;?>" cellspacing="0" border="0" bgcolor="#<?php print $colors["form_background_dark"];?>" width="100%">
 <?php
 }
 
 function html_start_box_dq($query_name, $query_id, $host_id, $colspan, $width, $background_color, $cell_padding, $align) {
 	global $colors; ?>
-	<table align="<?php print $align;?>" width="<?php print $width;?>" cellpadding=1 cellspacing=0 border=0 bgcolor="#<?php print $background_color;?>">
+	<table align="<?php print $align;?>" width="<?php print $width;?>" cellpadding="1" cellspacing="0" border="0" bgcolor="#<?php print $background_color;?>">
 		<tr>
 			<td>
-				<table cellpadding=<?php print $cell_padding;?> cellspacing=0 border=0 bgcolor="#<?php print $colors["form_background_dark"];?>" width="100%">
+				<table cellpadding="<?php print $cell_padding;?>" cellspacing="0" border="0" bgcolor="#<?php print $colors["form_background_dark"];?>" width="100%">
 					<tr class='rowHeader'>
 						<td style='padding: 3px;' colspan='<?php print $colspan+1;?>'>
-							<table  cellspacing='0' cellpadding='0' width='100%' >
+							<table cellspacing='0' cellpadding='0' width='100%' >
 								<tr>
 									<td class='textHeaderDark'>
 										<strong>Data Query</strong> [<?php print $query_name; ?>]
@@ -497,6 +497,7 @@ function draw_graph_items_list($item_list, $filename, $url_data, $disable_contro
 	$group_counter = 0; $_graph_type_name = ""; $i = 0;
 	$alternate_color_1 = $colors["alternate"]; $alternate_color_2 = $colors["alternate"];
 
+	$i = 0;
 	if (sizeof($item_list) > 0) {
 	foreach ($item_list as $item) {
 		/* graph grouping display logic */
@@ -564,6 +565,8 @@ function draw_graph_items_list($item_list, $filename, $url_data, $disable_contro
 		}
 
 		print "</tr>";
+
+		$i++;
 	}
 	}else{
 		print "<tr bgcolor='#" . $colors["form_alternate2"] . "'><td colspan='7'><em>No Items</em></td></tr>";

@@ -75,7 +75,7 @@ default:
 
 	if (sizeof($tabs) > 0) {
 	foreach (array_keys($tabs) as $tab_short_name) {
-		print "<div><a " . (($tab_short_name == $current_tab) ? "class='tabSelected'" : "class='tabDefault'") . " href='settings.php?action=shift&tab=$tab_short_name'>$tabs[$tab_short_name]</a></div>";
+		print "<div class='tabDefault'><a " . (($tab_short_name == $current_tab) ? "class='tabSelected'" : "class='tabDefault'") . " href='settings.php?action=shift&tab=$tab_short_name'>$tabs[$tab_short_name]</a></div>";
 	}
 	}
 
