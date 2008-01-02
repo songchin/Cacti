@@ -22,11 +22,11 @@
  +-------------------------------------------------------------------------+
 */
 
-/* 
+/*
    !!! IMPORTANT !!!
 
-   The following defaults are not to be altered.  Please refer to 
-   include/config.php for user configurable database settings. 
+   The following defaults are not to be altered.  Please refer to
+   include/config.php for user configurable database settings.
 
 */
 

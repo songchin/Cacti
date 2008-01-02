@@ -71,7 +71,7 @@ default:
 
 	/* draw the categories tabs on the top of the page */
 	print "<table width='100%' cellspacing='0' cellpadding='0' align='center'><tr>";
-	print "<td><div class='menu'>";
+	print "<td><div class='tabs'>";
 
 	if (sizeof($tabs) > 0) {
 	foreach (array_keys($tabs) as $tab_short_name) {

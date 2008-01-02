@@ -484,7 +484,7 @@ function template_edit() {
 		if (sizeof($template_data_rrds) > 1) {
 			/* draw the categories tabs on the top of the page */
 			print "<table width='100%' cellspacing='0' cellpadding='0' align='center'><tr>";
-			print "<td><div class='menu'>";
+			print "<td><div class='tabs'>";
 
 			foreach ($template_data_rrds as $template_data_rrd) {
 				$i++;

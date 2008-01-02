@@ -201,7 +201,7 @@ a:hover {
 }
 
 /* tabs */
-.menu a.tabSelected {
+.tabs a.tabSelected {
 	border:0px;
 	border-bottom:0px;
 	color:#FFFFFF;
@@ -217,7 +217,7 @@ a:hover {
 	background: transparent url('../images/tabSelected.png') repeat-x scroll left top;
 }
 
-.menu a.tabDefault {
+.tabs a.tabDefault {
 	border:0px;
 	border-bottom:0px;
 	color:#FFFFFF;
@@ -233,7 +233,13 @@ a:hover {
 	background: transparent url('../images/tabDefault.png') repeat-x scroll left top;
 }
 
-.menu a.tabDefault:hover {
+.tabs a.tabDefault:hover {
+	background-position:0px -25px;
+	border-bottom:0px;
+	background-color:#E16769;
+}
+
+.tabs a.tabSelected:hover {
 	background-position:0px -25px;
 	border-bottom:0px;
 	background-color:#E16769;
