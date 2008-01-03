@@ -122,7 +122,7 @@ function export() {
 		</tr>
 	</table>
 	</form>
-	<form method="post" action="templates_export.php">
+	<form action="templates_export.php" method="post">
 	<?php
 
 	html_start_box("<strong>Export Template</strong> [" . $export_types{$_REQUEST["export_type"]}["name"] . "]", "100%", $colors["header"], "3", "center", "");

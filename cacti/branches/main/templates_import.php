@@ -86,7 +86,7 @@ function import() {
 	global $colors, $hash_type_names;
 
 	?>
-	<form method="post" action="templates_import.php" enctype="multipart/form-data">
+	<form action="templates_import.php" method="post" enctype="multipart/form-data">
 	<?php
 
 	if ((isset($_SESSION["import_debug_info"])) && (is_array($_SESSION["import_debug_info"]))) {

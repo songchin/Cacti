@@ -50,7 +50,7 @@ function draw_edit_form($array) {
 		while (list($field_name, $field_array) = each($fields_array)) {
 			if ($i == 0) {
 				if (!isset($config_array["no_form_tag"])) {
-					print "<form method='post' action='" . ((isset($config_array["post_to"])) ? $config_array["post_to"] : basename($_SERVER["PHP_SELF"])) . "'" . ((isset($config_array["form_name"])) ? " name='" . $config_array["form_name"] . "'" : "") . ">\n";
+					print "<form action='" . ((isset($config_array["post_to"])) ? $config_array["post_to"] : basename($_SERVER["PHP_SELF"])) . "'" . ((isset($config_array["form_name"])) ? " name='" . $config_array["form_name"] . "'" : "") . "\n";
 				}
 			}
 
@@ -818,7 +818,9 @@ function form_confirm_buttons_alt() {
      has selected "cancel", where to goto.  the default will be to goto the current
      page with no action (aka continue) */
 function form_cancel_action_validate() {
-	if ((isset($_REQUEST["cancel"])) && (substr_count($_REQUEST["cancel_action"], "!"))) {
+	if ((isset($_REQUEST["cancel"])) &&
+		(isset($_REQUEST["cancel_action"])) &&
+		(strlen($_REQUEST["cancel_action"]))) {
 		$vars        = explode("|", $_REQUEST["cancel_action"]);
 		$uri         = $_SERVER["REQUEST_URI"];
 		$uri_request = "";
@@ -840,10 +842,19 @@ function form_cancel_action_validate() {
 	}
 
 	if ((isset($url)) && (strlen($url))) {
+		$_REQUEST = array();
+		$_GET     = array();
+		$_POST    = array();
 		header("Location: " . html_simple_decode($url));
 	}elseif ((isset($uri)) && (strlen($uri))) {
+		$_REQUEST = array();
+		$_GET     = array();
+		$_POST    = array();
 		header("Location: $uri$uri_request");
 	}elseif (isset($_REQUEST["cancel"])) {
+		$_REQUEST = array();
+		$_GET     = array();
+		$_POST    = array();
 		$_REQUEST["action"] = "";
 	}
 }

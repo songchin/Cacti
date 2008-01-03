@@ -59,3 +59,4 @@ global $colors;
 		<a class='about' href='about.php'><img src="images/cacti_logo.gif" align="absmiddle" alt="Cacti" border="0"></a>
 	</div>
 	<div class='content'>
+	<?php display_output_messages();?>

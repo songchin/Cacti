@@ -1,5 +1,5 @@
 	<tr class="noprint">
-		<form name="form_graph_id" method="get">
+		<form name="form_graph_id">
 		<td class="noprint">
 			<table width="100%" cellpadding="0" cellspacing="0">
 				<tr class="noprint">

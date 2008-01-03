@@ -218,7 +218,7 @@ function finalize_timespan(&$timespan) {
 
 	/* if moved to future although not allow by settings, stop at current time */
 	if ( ($timespan["end_now"] > time()) && (read_graph_config_option("allow_graph_dates_in_future") == "") ) {
-		$timespan["end_now"] = time();			
+		$timespan["end_now"] = time();
 		# convert end time to human readable format
 		$timespan["current_value_date2"] = date("Y-m-d H:i", $timespan["end_now"]);
 	}
@@ -240,9 +240,9 @@ function finalize_timespan(&$timespan) {
 function set_timeshift() {
 	global $config;
 	include($config["include_path"] . "/global_arrays.php");
-	
+
 	# no current timeshift: get default timeshift
-	if ((!isset($_SESSION["sess_current_timeshift"])) || 
+	if ((!isset($_SESSION["sess_current_timeshift"])) ||
 		(read_graph_config_option("timespan_sel") == "") ||
 		(isset($_POST["button_clear_x"]))
 		) {

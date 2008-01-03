@@ -203,7 +203,7 @@ function item_edit() {
 		$current_type = "1";
 	}
 
-	print "<form method='post' action='cdef.php' name='form_cdef'>\n";
+	print "<form action='cdef.php' name='form_cdef' method='post'>\n";
 
 	form_alternate_row_color(); ?>
 		<td width="50%">

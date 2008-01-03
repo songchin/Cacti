@@ -117,13 +117,13 @@ a:hover {
 
 /* text styles */
 .textError {
-	font-size: 16px;
+	font-size: 12px;
 	font-weight: bold;
 	color: red;
 }
 
 .textInfo {
-	font-size: 16px;
+	font-size: 12px;
 	font-weight: bold;
 	color: black;
 }

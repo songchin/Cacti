@@ -529,7 +529,7 @@ function graph_perms_edit() {
 		ORDER BY graph_templates_graph.title_cache");
 
 	?>
-	<form method="post" action="user_admin.php">
+	<form action="user_admin.php" method="post">
 
 	<tr bgcolor="#<?php print $colors["form_alternate1"];?>">
 		<td width="50%">

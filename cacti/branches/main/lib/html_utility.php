@@ -85,18 +85,11 @@ function form_alternate_row_color($row_id = "", $hover = false, $row_select = fa
 		$class = "rowAlternate2";
 	}
 
-	if (($row_select) && (strstr($row_id, "line"))) {
-		$line_no = str_replace("line", "", $row_id);
-		$row_select = "onClick='select_line($line_no)'";
-	}else{
-		$row_select = "";
-	}
-
 	$class_int = ($class_int + 1) % 2;
 
 	if (is_numeric($row_id)) {
 		if ($hover) {
-			print "<tr id='row_$row_id' class='$class' $row_select onMouseOver=(this.className='rowSelected') onMouseOut=(this.className='$class')>\n";
+			print "<tr id='row_$row_id' class='$class' onMouseOver=(this.className='rowSelected') onMouseOut=(this.className='$class')>\n";
 		}else{
 			print "<tr id='row_$row_id' class='$class'>\n";
 		}
@@ -123,13 +116,13 @@ function form_alternate_row_color($row_id = "", $hover = false, $row_select = fa
    @arg $width - the width of the table element
    @arg $style - the style to apply to the table element */
 function form_selectable_cell($contents, $id, $width="", $style="") {
-	print "\t<td" . (strlen($width) ? " width='$width'" : "") . (strlen($style) ? " style='$style;'" : "") . ">" . $contents . "</td>\n";
+	print "\t<td onClick='select_line($id)' " . (strlen($width) ? " width='$width'" : "") . (strlen($style) ? " style='$style;'" : "") . ">" . $contents . "</td>\n";
 }
 
 /* form_checkbox_cell - format's a tables checkbox form element so that the cacti js actions work on it
    @arg $title - the text that will be displayed if your hover over the checkbox */
 function form_checkbox_cell($title, $id) {
-	print "\t<td onClick='select_line($id, true)' style='" . get_checkbox_style() . "' width='1%' align='right'>\n";
+	print "\t<td onClick='select_line($id,true)' style='" . get_checkbox_style() . "' width='1%' align='right'>\n";
 	print "\t\t<input type='checkbox' style='margin: 0px;' id='chk_" . $id . "' name='chk_" . $id . "'>\n";
 	print "\t</td>\n";
 }
@@ -217,20 +210,17 @@ function get_request_var_post($name, $default = "") {
 	}
 }
 
-/* get_request_var_request - returns the current value of a PHP $_POST variable, optionally
+/* get_request_var_request - returns the current value of a PHP $_REQUEST variable, optionally
      returning a default value if the request variable does not exist
    @arg $name - the name of the request variable. this should be a valid key in the
      $_REQUEST array
    @arg $default - the value to return if the specified name does not exist in the
      $_REQUEST array
    @returns - the value of the request variable */
-function get_request_var_request($name, $default = "")
-{
-	if (isset($_REQUEST[$name]))
-	{
+function get_request_var_request($name, $default = "") {
+	if (isset($_REQUEST[$name])) {
 		return $_REQUEST[$name];
-	} else
-	{
+	}else{
 		return $default;
 	}
 }

@@ -260,17 +260,17 @@ function display_output_messages() {
 				switch ($messages[$current_message_id]["type"]) {
 				case 'info':
 					if ($error_message == false) {
-						print "<table align='center' width='100%' style='background-color: #ffffff; border: 1px solid #bbbbbb;'>";
-						print "<tr><td bgcolor='#f5f5f5'><p class='textInfo'>$message</p></td></tr>";
-						print "</table><br>";
+						print "<table align='center' width='100%' style='margin-bottom: 5px; border: 1px solid #bbbbbb;'>";
+						print "<tr class='rowAlternate1'><td class='textInfo'>$message</td></tr>";
+						print "</table>";
 
 						/* we don't need these if there are no error messages */
 						kill_session_var("sess_field_values");
 					}
 					break;
 				case 'error':
-					print "<table align='center' width='100%' style='background-color: #ffffff; border: 1px solid #ff0000;'>";
-					print "<tr><td bgcolor='#f5f5f5'><p class='textError'>Error: $message</p></td></tr>";
+					print "<table align='center' width='100%' style='margin-bottom: 5px; border: 1px solid #ff0000;'>";
+					print "<tr class='rowAlternate1'><td class='textError'>Error: $message</td></tr>";
 					print "</table><br>";
 					break;
 				}

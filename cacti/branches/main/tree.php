@@ -160,7 +160,7 @@ function item_edit() {
 
 	html_start_box("<strong>Tree Items</strong>", "100%", $colors["header"], "3", "center", "");
 
-	print "<form method='post' action='tree.php' name='form_tree'>\n";
+	print "<form action='tree.php' name='form_tree' method='post'>\n";
 
 	form_alternate_row_color(); ?>
 		<td width="50%">

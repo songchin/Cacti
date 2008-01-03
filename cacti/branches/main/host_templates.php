@@ -307,7 +307,6 @@ function template_edit() {
 	input_validate_input_number(get_request_var("id"));
 	/* ==================================================== */
 
-	display_output_messages();
 	/* remember if there's something we want to show to the user */
 	$debug_log = debug_log_return("host_template");
 

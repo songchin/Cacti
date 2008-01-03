@@ -224,7 +224,7 @@ function host_new_graphs($host_id, $host_template_id, $selected_graphs_array) {
 
 	include_once("./include/top_header.php");
 
-	print "<form method='post' action='graphs_new.php'>\n";
+	print "<form action='graphs_new.php' method='post'>\n";
 
 	$snmp_query_id = 0;
 	$num_output_fields = array();

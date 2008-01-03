@@ -563,7 +563,7 @@ function data_edit() {
 		$header_label = "[new]";
 	}
 
-	print "<form method='post' action='data_sources.php'>\n";
+	print "<form action='data_sources.php' method='post'>\n";
 
 	$i = 0;
 	if (!empty($data["data_input_id"])) {

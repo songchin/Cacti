@@ -135,8 +135,8 @@ if ((!in_array(basename($_SERVER["PHP_SELF"]), $no_http_header_files, true)) && 
 			return $value;
 		}
 
-		$_POST = array_map('addslashes_deep', $_POST);
-		$_GET = array_map('addslashes_deep', $_GET);
+		$_POST   = array_map('addslashes_deep', $_POST);
+		$_GET    = array_map('addslashes_deep', $_GET);
 		$_COOKIE = array_map('addslashes_deep', $_COOKIE);
 	}
 

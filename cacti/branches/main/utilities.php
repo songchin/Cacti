@@ -1203,10 +1203,10 @@ function utilities() {
 	<?php html_header(array("Technical Support"), 2); ?>
 	<tr class="rowAlternate1">
 		<td class="textAreaNotes">
-			<p><a href='utilities.php?action=view_tech'>Technical Support</a></p>
+			<a href='utilities.php?action=view_tech'>Technical Support</a>
 		</td>
 		<td class="textAreaNotes">
-			<p>Cacti technical support page.  Used by developers and technical support persons to assist with issues in Cacti.  Includes checks for common configuration issues.</p>
+			Cacti technical support page.  Used by developers and technical support persons to assist with issues in Cacti.  Includes checks for common configuration issues.
 		</td>
 	</tr>
 
@@ -1214,18 +1214,18 @@ function utilities() {
 
 	<tr class="rowAlternate1">
 		<td class="textAreaNotes">
-			<p><a href='utilities.php?action=view_logfile'>View Cacti Log File</a></p>
+			<a href='utilities.php?action=view_logfile'>View Cacti Log File</a>
 		</td>
 		<td class="textAreaNotes">
-			<p>The Cacti Log File stores statistic, error and other message depending on system settings.  This information can be used to identify problems with the poller and application.</p>
+			The Cacti Log File stores statistic, error and other message depending on system settings.  This information can be used to identify problems with the poller and application.
 		</td>
 	</tr>
 	<tr class="rowAlternate2">
 		<td class="textAreaNotes">
-			<p><a href='utilities.php?action=view_user_log'>View User Log</a></p>
+			<a href='utilities.php?action=view_user_log'>View User Log</a>
 		</td>
 		<td class="textAreaNotes">
-			<p>Allows Administrators to browse the user log.  Administrators can filter and export the log as well.</p>
+			Allows Administrators to browse the user log.  Administrators can filter and export the log as well.
 		</td>
 	</tr>
 
@@ -1233,26 +1233,26 @@ function utilities() {
 
 	<tr class="rowAlternate1">
 		<td class="textAreaNotes">
-			<p><a href='utilities.php?action=view_poller_cache'>View Poller Cache</a></p>
+			<a href='utilities.php?action=view_poller_cache'>View Poller Cache</a>
 		</td>
 		<td class="textAreaNotes">
-			<p>This is the data that is being passed to the poller each time it runs. This data is then in turn executed/interpreted and the results are fed into the rrd files for graphing or the database for display.</p>
+			This is the data that is being passed to the poller each time it runs. This data is then in turn executed/interpreted and the results are fed into the rrd files for graphing or the database for display.
 		</td>
 	</tr>
 	<tr class="rowAlternate2">
 		<td class="textAreaNotes">
-			<p><a href='utilities.php?action=view_snmp_cache'>View SNMP Cache</a></p>
+			<a href='utilities.php?action=view_snmp_cache'>View SNMP Cache</a>
 		</td>
 		<td class="textAreaNotes">
-			<p>The SNMP cache stores information gathered from SNMP queries. It is used by cacti to determine the OID to use when gathering information from an SNMP-enabled host.</p>
+			The SNMP cache stores information gathered from SNMP queries. It is used by cacti to determine the OID to use when gathering information from an SNMP-enabled host.
 		</td>
 	</tr>
 	<tr class="rowAlternate1">
 		<td class="textAreaNotes">
-			<p><a href='utilities.php?action=clear_poller_cache'>Rebuild Poller Cache</a></p>
+			<a href='utilities.php?action=clear_poller_cache'>Rebuild Poller Cache</a>
 		</td>
 		<td class="textAreaNotes">
-			<p>The poller cache will be cleared and re-generated if you select this option. Sometimes host/data source data can get out of sync with the cache in which case it makes sense to clear the cache and start over.</p>
+			The poller cache will be cleared and re-generated if you select this option. Sometimes host/data source data can get out of sync with the cache in which case it makes sense to clear the cache and start over.
 		</td>
 	</tr>
 
