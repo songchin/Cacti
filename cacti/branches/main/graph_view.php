@@ -108,8 +108,6 @@ case 'tree':
 	print "<br><br>";
 
 	break;
-
-
 case 'preview':
 	define("ROWS_PER_PAGE", read_graph_config_option("preview_graphs_per_page"));
 
@@ -255,13 +253,13 @@ case 'preview':
 	<?php
 
 	/* include graph view filter selector */
-	html_graph_start_box(3, true);
+	html_graph_start_box(3, false);
 	include("./include/html/inc_graph_view_filter_table.php");
 	html_graph_end_box();
 
 	/* include time span selector */
 	if (read_graph_config_option("timespan_sel") == "on") {
-		html_graph_start_box(3, true);
+		html_graph_start_box(3, false);
 		include("./include/html/inc_timespan_selector.php");
 		html_graph_end_box();
 	}
@@ -275,7 +273,7 @@ case 'preview':
 
 	$nav_url = ereg_replace("((\?|&)host_id=[0-9]+|(\?|&)filter=[a-zA-Z0-9]*)", "", $nav_url);
 
-	html_graph_start_box(1, true);
+	html_graph_start_box(2, false);
 	html_nav_bar($colors["header_panel"], read_graph_config_option("num_columns"), $_REQUEST["page"], ROWS_PER_PAGE, $total_rows, $nav_url);
 
 	if (read_graph_config_option("thumbnail_section_preview") == "on") {
@@ -291,9 +289,6 @@ case 'preview':
 	print "<br><br>";
 
 	break;
-
-
-
 case 'list':
 	define("ROWS_PER_PAGE", read_graph_config_option("list_graphs_per_page"));
 
@@ -592,9 +587,9 @@ case 'list':
 	</script>
 	<?php
 
-	html_graph_start_box(1, true);
+	html_graph_start_box(1, false);
 	?>
-	<tr class='rowHeader'>
+	<tr class='rowHeader noprint'>
 		<form name='graphs' id='graphs' action='graph_view.php' method='get' onSubmit='form_graph(document.graphs,document.graphs)'>
 		<td colspan='3'>
 			<table width='100%' cellspacing='0' cellpadding='3' border='0'>

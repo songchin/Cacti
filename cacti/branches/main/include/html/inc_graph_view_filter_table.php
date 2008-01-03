@@ -1,8 +1,8 @@
-	<tr class="noprint">
+	<tr class="rowGraphFilter noprint">
 		<form name="form_graph_view" method="post">
 		<td class="noprint">
 			<table width="100%" cellpadding="0" cellspacing="0">
-				<tr class="noprint">
+				<tr class="rowGraphFilter noprint">
 					<td nowrap style='white-space: nowrap;' width="40">
 						&nbsp;<strong>Host:</strong>&nbsp;
 					</td>

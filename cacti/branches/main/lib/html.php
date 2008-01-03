@@ -138,15 +138,14 @@ function html_graph_end_box() {
    @arg $extra_url_args - extra arguments to append to the url
    @arg $header - html to use as a header */
 function html_graph_area(&$graph_array, $no_graphs_message = "", $extra_url_args = "", $header = "") {
-	$i = 0;
 	if (sizeof($graph_array) > 0) {
 		if ($header != "") {
 			print $header;
 		}
 
 		foreach ($graph_array as $graph) {
+			form_alternate_row_color();
 			?>
-			<tr bgcolor='#<?php print ($i % 2 == 0 ? "f9f9f9" : "ffffff");?>'>
 				<td align='center'>
 					<table width='1' cellpadding='0'>
 						<tr>
@@ -163,8 +162,6 @@ function html_graph_area(&$graph_array, $no_graphs_message = "", $extra_url_args
 				</td>
 			</tr>
 			<?php
-
-			$i++;
 		}
 	}else{
 		if ($no_graphs_message != "") {
@@ -188,12 +185,12 @@ function html_graph_thumbnail_area(&$graph_array, $no_graphs_message = "", $extr
 			print $header;
 		}
 
-		print "<tr>";
+		form_alternate_row_color();
 
 		foreach ($graph_array as $graph) {
 			?>
-			<td align='center' width='<?php print (98 / read_graph_config_option("num_columns"));?>%'>
-				<table width='1' cellpadding='0'>
+			<td align='center' width='<?php print (100 / read_graph_config_option("num_columns"));?>%'>
+				<table border='0' cellspacing='0' cellpadding='0'>
 					<tr>
 						<td>
 							<a href='graph.php?action=view&rra_id=all&local_graph_id=<?php print $graph["local_graph_id"];?>'><img class='graphimage' id='graph_<?php print $graph["local_graph_id"] ?>' src='graph_image.php?local_graph_id=<?php print $graph["local_graph_id"];?>&rra_id=0&graph_height=<?php print read_graph_config_option("default_height");?>&graph_width=<?php print read_graph_config_option("default_width");?>&graph_nolegend=true<?php print (($extra_url_args == "") ? "" : "&$extra_url_args");?>' border='0' alt='<?php print $graph["title_cache"];?>'></a>
@@ -213,7 +210,8 @@ function html_graph_thumbnail_area(&$graph_array, $no_graphs_message = "", $extr
 
 			if (($i == read_graph_config_option("num_columns")) && ($k < count($graph_array))) {
 				$i = 0;
-				print "</tr><tr>";
+				print "</tr>";
+				form_alternate_row_color();
 			}
 		}
 
@@ -241,7 +239,7 @@ function html_nav_bar($background_color, $colspan, $current_page, $rows_per_page
 		$nav_url .= "?";
 	}
 	?>
-	<tr bgcolor='#<?php print $background_color;?>' class='noprint'>
+	<tr class='rowHeader noprint'>
 		<td colspan='<?php print $colspan;?>'>
 			<table width='100%' cellspacing='0' cellpadding='3' border='0'>
 				<tr>

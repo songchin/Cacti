@@ -57,7 +57,6 @@ function grow_graph_tree($tree_id, $start_branch, $user_id, $options) {
 		html_graph_start_box(3, false);
 		include("./include/html/inc_timespan_selector.php");
 		html_graph_end_box();
-		print "<br>";
 	}
 
 	$heirarchy = db_fetch_assoc("select
@@ -644,12 +643,11 @@ function grow_right_pane_tree($tree_id, $leaf_id, $host_group_data) {
 		html_graph_start_box(3, false);
 		include("./include/html/inc_timespan_selector.php");
 		html_graph_end_box();
-		print "<br>";
 	}
 
 	/* start graph display */
 	html_graph_start_box(3, false);
-	print "<tr bgcolor='#" . $colors["header_panel"] . "'><td width='390' colspan='3' class='textHeaderDark'>$title</td></tr>";
+	print "<tr class='rowHeader'><td width='390' colspan='3' class='textHeaderDark'>$title</td></tr>";
 
 	if (($leaf_type == "header") || (empty($leaf_id))) {
 		$heirarchy = db_fetch_assoc("select
@@ -712,9 +710,9 @@ function grow_right_pane_tree($tree_id, $leaf_id, $host_group_data) {
 				usort($graphs, 'naturally_sort_graphs');
 
 				if (read_graph_config_option("thumbnail_section_tree_2") == "on") {
-					html_graph_thumbnail_area($graphs, "", "view_type=tree&graph_start=" . get_current_graph_start() . "&graph_end=" . get_current_graph_end(), "<tr bgcolor='#a9b7cb'><td colspan='3' class='textHeaderDark'><strong>Graph Template:</strong> " . $graph_template["name"] . "</td></tr>");
+					html_graph_thumbnail_area($graphs, "", "view_type=tree&graph_start=" . get_current_graph_start() . "&graph_end=" . get_current_graph_end(), "<tr class='rowSubHeaderAlt'><td colspan='3' class='textHeaderDark'><strong>Graph Template:</strong> " . $graph_template["name"] . "</td></tr>");
 				}else{
-					html_graph_area($graphs, "", "view_type=tree&graph_start=" . get_current_graph_start() . "&graph_end=" . get_current_graph_end(), "<tr bgcolor='#a9b7cb'><td colspan='3' class='textHeaderDark'><strong>Graph Template:</strong> " . $graph_template["name"] . "</td></tr>");
+					html_graph_area($graphs, "", "view_type=tree&graph_start=" . get_current_graph_start() . "&graph_end=" . get_current_graph_end(), "<tr class='rowSubHeaderAlt'><td colspan='3' class='textHeaderDark'><strong>Graph Template:</strong> " . $graph_template["name"] . "</td></tr>");
 				}
 			}
 			}
@@ -760,7 +758,7 @@ function grow_right_pane_tree($tree_id, $leaf_id, $host_group_data) {
 
 				/* re-key the results on data query index */
 				if (sizeof($graphs) > 0) {
-					print "<tr bgcolor='#a9b7cb'><td colspan='3' class='textHeaderDark'><strong>Data Query:</strong> " . $data_query["name"] . "</td></tr>";
+					print "<tr class='rowSubHeaderAlt'><td colspan='3' class='textHeaderDark'><strong>Data Query:</strong> " . $data_query["name"] . "</td></tr>";
 
 					/* let's sort the graphs naturally */
 					usort($graphs, 'naturally_sort_graphs');
@@ -782,9 +780,9 @@ function grow_right_pane_tree($tree_id, $leaf_id, $host_group_data) {
 						}
 
 						if (read_graph_config_option("thumbnail_section_tree_2") == "on") {
-							html_graph_thumbnail_area($graph_list, "", "view_type=tree&graph_start=" . get_current_graph_start() . "&graph_end=" . get_current_graph_end(), "<tr bgcolor='#a9b7cb'><td colspan='3' class='textHeaderDark'>$sort_field_value</td></tr>");
+							html_graph_thumbnail_area($graph_list, "", "view_type=tree&graph_start=" . get_current_graph_start() . "&graph_end=" . get_current_graph_end(), "<tr class='rowSubHeaderAlt'><td colspan='3' class='textHeaderDark'>$sort_field_value</td></tr>");
 						}else{
-							html_graph_area($graph_list, "", "view_type=tree&graph_start=" . get_current_graph_start() . "&graph_end=" . get_current_graph_end(), "<tr bgcolor='#a9b7cb'><td colspan='3' class='textHeaderDark'>$sort_field_value</td></tr>");
+							html_graph_area($graph_list, "", "view_type=tree&graph_start=" . get_current_graph_start() . "&graph_end=" . get_current_graph_end(), "<tr class='rowSubHeaderAlt'><td colspan='3' class='textHeaderDark'>$sort_field_value</td></tr>");
 						}
 					}
 				}

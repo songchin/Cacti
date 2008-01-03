@@ -5,6 +5,13 @@ body {
 	background-color: #FFFFFF;
 }
 
+form {
+	margin: 0px;
+	background-color: #E1E1E1;
+	padding: 0px;
+	height: 0px;
+}
+
 .navbar {
 	background-image: url('../images/cacti_backdrop.gif');
 	background-position: right;
@@ -97,6 +104,16 @@ a:hover {
 
 .rowSubHeader {
 	background-image: url('../images/rowSubHeader.png');
+	background-repeat-x;
+}
+
+.rowSubHeaderAlt {
+	background-image: url('../images/rowSubHeaderAlt.png');
+	background-repeat-x;
+}
+
+.rowGraphFilter {
+	background-image: url('../images/rowGraphFilter.png');
 	background-repeat-x;
 }
 

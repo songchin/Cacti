@@ -122,7 +122,7 @@ function form_selectable_cell($contents, $id, $width="", $style="") {
 /* form_checkbox_cell - format's a tables checkbox form element so that the cacti js actions work on it
    @arg $title - the text that will be displayed if your hover over the checkbox */
 function form_checkbox_cell($title, $id) {
-	print "\t<td onClick='select_line($id,true)' style='" . get_checkbox_style() . "' width='1%' align='right'>\n";
+	print "\t<td onClick='select_line($id,true)' style='" . get_checkbox_style() . "' width='1%' align='center'>\n";
 	print "\t\t<input type='checkbox' style='margin: 0px;' id='chk_" . $id . "' name='chk_" . $id . "'>\n";
 	print "\t</td>\n";
 }
