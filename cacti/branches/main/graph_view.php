@@ -402,7 +402,7 @@ case 'list':
 	-->
 	</script>
 
-	<tr class='rowHeader'>
+	<tr class='rowGraphFilter noprint'>
 		<form name="form_graph_list" method="POST" onSubmit='form_graph(document.graphs,document.form_graph_list)'>
 		<input type='hidden' name='graph_list' value='<?php print $graph_list_text; ?>'>
 		<input type='hidden' name='graph_add' value=''>

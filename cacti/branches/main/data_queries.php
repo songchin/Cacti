@@ -271,7 +271,6 @@ function form_actions() {
 		form_yesno_button_alt(serialize($dq_array), $_POST["drp_action"]);
 	}
 
-
 	html_end_box();
 
 	include_once("./include/bottom_footer.php");

@@ -5,11 +5,9 @@ body {
 	background-color: #FFFFFF;
 }
 
-form {
+form input {
 	margin: 0px;
-	background-color: #E1E1E1;
 	padding: 0px;
-	height: 0px;
 }
 
 .navbar {
@@ -34,6 +32,7 @@ form {
 	float: left;
 	border-right: 1px ridge #A9A9A9;
 	padding-top: 8px;
+	padding-right: 4px;
 	min-height: 700px;
 	background-color: #F5F5F5;
 	width: 120px;
