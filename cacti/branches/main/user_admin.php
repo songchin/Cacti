@@ -34,8 +34,6 @@ $user_actions = array(
 	5 => "Batch Copy"
 	);
 
-form_cancel_action_validate();
-
 switch (get_request_var_request("action")) {
 	case 'actions':
 		form_actions();

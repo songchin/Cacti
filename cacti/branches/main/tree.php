@@ -35,8 +35,6 @@ input_validate_input_number(get_request_var_post('parent_item_id'));
 /* set default action */
 if (!isset($_REQUEST["action"])) { $_REQUEST["action"] = ""; }
 
-form_cancel_action_validate();
-
 switch ($_REQUEST["action"]) {
 	case 'save':
 		form_save();

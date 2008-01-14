@@ -47,7 +47,6 @@ $graph_actions = array(
 
 /* set default action */
 if (!isset($_REQUEST["action"])) { $_REQUEST["action"] = ""; }
-form_cancel_action_validate();
 
 switch ($_REQUEST["action"]) {
 	case 'save':
@@ -367,7 +366,7 @@ function form_actions() {
 	}
 
 	/* setup some variables */
-	$graph_list = ""; $i = 0;
+	$graph_list = ""; $i = 0; $graph_array = array();
 
 	/* loop through each of the graphs selected on the previous page and get more info about them */
 	while (list($var,$val) = each($_POST)) {
@@ -510,7 +509,7 @@ function form_actions() {
 			</tr>\n";
 	}
 
-	if (!isset($graph_array)) {
+	if (!sizeof($graph_array)) {
 		form_return_button_alt();
 	}else{
 		form_yesno_button_alt(serialize($graph_array), $_POST["drp_action"]);

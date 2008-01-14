@@ -32,7 +32,6 @@ $di_actions = array(
 
 /* set default action */
 if (!isset($_REQUEST["action"])) { $_REQUEST["action"] = ""; }
-form_cancel_action_validate();
 
 switch ($_REQUEST["action"]) {
 	case 'save':
@@ -174,7 +173,7 @@ function form_actions() {
 	}
 
 	/* setup some variables */
-	$di_list = ""; $i = 0;
+	$di_list = ""; $i = 0; $di_array = array();
 
 	/* loop through each of the data queries and process them */
 	while (list($var,$val) = each($_POST)) {
@@ -216,7 +215,7 @@ function form_actions() {
 			</tr>\n";
 	}
 
-	if (!isset($di_array)) {
+	if (!sizeof($di_array)) {
 		form_return_button_alt();
 	}else{
 		form_yesno_button_alt(serialize($di_array), $_POST["drp_action"]);

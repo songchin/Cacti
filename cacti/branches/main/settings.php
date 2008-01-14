@@ -27,8 +27,6 @@ include("./include/auth.php");
 /* set default action */
 if (!isset($_REQUEST["action"])) { $_REQUEST["action"] = ""; }
 
-form_cancel_action_validate();
-
 switch ($_REQUEST["action"]) {
 case 'save':
 	while (list($field_name, $field_array) = each($settings{$_POST["tab"]})) {

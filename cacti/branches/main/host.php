@@ -47,7 +47,6 @@ $device_actions = array(
 /* set default action */
 if (!isset($_REQUEST["action"])) { $_REQUEST["action"] = ""; }
 
-form_cancel_action_validate();
 
 switch ($_REQUEST["action"]) {
 	case 'save':
@@ -318,7 +317,7 @@ function form_actions() {
 	}
 
 	/* setup some variables */
-	$host_list = ""; $i = 0;
+	$host_list = ""; $i = 0; $host_array = array();
 
 	/* loop through each of the host templates selected on the previous page and get more info about them */
 	while (list($var,$val) = each($_POST)) {
@@ -459,7 +458,7 @@ function form_actions() {
 			</tr>\n";
 	}
 
-	if (!isset($host_array)) {
+	if (!sizeof($host_array)) {
 		form_return_button_alt();
 	}else{
 		form_yesno_button_alt(serialize($host_array), $_POST["drp_action"]);

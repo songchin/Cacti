@@ -28,8 +28,6 @@ include_once("./lib/export.php");
 /* set default action */
 if (!isset($_REQUEST["action"])) { $_REQUEST["action"] = ""; }
 
-form_cancel_action_validate();
-
 $export_types = array(
 	"graph_template" => array(
 		"name" => "Graph Template",

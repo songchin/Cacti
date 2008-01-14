@@ -757,8 +757,7 @@ function form_save_button_alt($cancel_action = "", $action = "save", $force_type
 		<tr>
 			<td bgcolor="#f5f5f5" align="right">
 				<input type='hidden' name='action' value='<?php print $action;?>'>
-				<input type='hidden' name='cancel_action' value='<?php print htmlspecialchars($cancel_action);?>'>
-				<input type='submit' value='<?php print $calt;?>' name='cancel'>
+				<input type='button' value='<?php print $calt;?>' onClick='window.location.assign("<?php print htmlspecialchars($_SERVER['HTTP_REFERER']);?>")' name='cancel'>
 				<input type='submit' value='<?php print $salt;?>' name='<?php print $sname;?>'>
 			</td>
 		</tr>
@@ -776,8 +775,7 @@ function form_return_button_alt() {
 	?>
 	<tr>
 		<td bgcolor="#f5f5f5" align="right">
-			<input type='hidden' name='action' value='<?php print htmlspecialchars($action);?>'>
-			<input type='submit' value='Return' name='cancel'>
+			<input type='button' value='Return' onClick='window.location.assign("<?php print htmlspecialchars($_SERVER['HTTP_REFERER']);?>")' name='cancel'>
 		</td>
 	</tr>
 	</form>
@@ -788,16 +786,16 @@ function form_return_button_alt() {
      an html edit form
    @arg $action - if specified, will direct the system what to do if "No"
      is selected */
-function form_yesno_button_alt($host_list, $drp_action = "none", $action = "actions") {
+function form_yesno_button_alt($host_list, $drp_action = "none") {
 	global $config;
 
 	?>
 	<tr>
 		<td align="right">
-			<input type='hidden' name='action' value='<?php print htmlspecialchars($action);?>'>
-			<input type='hidden' name='selected_items' value='<?php print $host_list;?>'>
-			<input type='hidden' name='drp_action' value='<?php print $drp_action;?>'>
-			<input type='submit' value='No' name='cancel'>
+			<div><input type='hidden' name='action' value='actions'></div>
+			<div><input type='hidden' name='selected_items' value='<?php print $host_list;?>'></div>
+			<div><input type='hidden' name='drp_action' value='<?php print $drp_action;?>'></div>
+			<input type='button' value='No' onClick='window.location.assign("<?php print htmlspecialchars($_SERVER['HTTP_REFERER']);?>")' name='cancel'>
 			<input type='submit' value='Yes' name='yes'>
 		</td>
 	</tr>
@@ -817,51 +815,6 @@ function form_confirm_buttons_alt() {
 		</td>
 	</tr>
 <?php }
-
-/* form_cancel_action_validate - determine if the user has chosen to cancel, and if the user
-     has selected "cancel", where to goto.  the default will be to goto the current
-     page with no action (aka continue) */
-function form_cancel_action_validate() {
-	if ((isset($_REQUEST["cancel"])) &&
-		(isset($_REQUEST["cancel_action"])) &&
-		(strlen($_REQUEST["cancel_action"]))) {
-		$vars        = explode("|", $_REQUEST["cancel_action"]);
-		$uri         = $_SERVER["REQUEST_URI"];
-		$uri_request = "";
-		$url         = "";
-
-		if (sizeof($vars)) {
-		foreach($vars as $var) {
-			$request = explode("!", $var);
-
-			if ($request[0] == "url") {
-				$url = $request[1];
-			}elseif (strlen($uri_request)) {
-				$uri_request .= "&" . $request[0] . "=" . $request[1];
-			}else{
-				$uri_request .= "?" . $request[0] . "=" . $request[1];
-			}
-		}
-		}
-	}
-
-	if ((isset($url)) && (strlen($url))) {
-		$_REQUEST = array();
-		$_GET     = array();
-		$_POST    = array();
-		header("Location: " . html_simple_decode($url));
-	}elseif ((isset($uri)) && (strlen($uri))) {
-		$_REQUEST = array();
-		$_GET     = array();
-		$_POST    = array();
-		header("Location: $uri$uri_request");
-	}elseif (isset($_REQUEST["cancel"])) {
-		$_REQUEST = array();
-		$_GET     = array();
-		$_POST    = array();
-		$_REQUEST["action"] = "";
-	}
-}
 
 function html_simple_decode($string) {
 	if (function_exists("html_entity_decode")) {

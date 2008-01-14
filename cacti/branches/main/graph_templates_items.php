@@ -28,7 +28,6 @@ include_once("./lib/template.php");
 /* set default action */
 if (!isset($_REQUEST["action"])) { $_REQUEST["action"] = ""; }
 
-form_cancel_action_validate();
 
 switch ($_REQUEST["action"]) {
 	case 'save':
