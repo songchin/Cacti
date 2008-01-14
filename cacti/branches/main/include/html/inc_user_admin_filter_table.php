@@ -1,4 +1,4 @@
-	<tr>
+	<tr class='rowAlternate2'>
 		<form name="form_user_admin">
 		<td>
 			<table width="100%" cellpadding="0" cellspacing="0">
@@ -16,6 +16,6 @@
 				</tr>
 			</table>
 		</td>
-		<input type='hidden' name='page' value='1'>
+		<div><input type='hidden' name='page' value='1'></div>
 		</form>
 	</tr>

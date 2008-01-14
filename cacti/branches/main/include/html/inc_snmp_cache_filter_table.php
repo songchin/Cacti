@@ -1,4 +1,4 @@
-	<tr>
+	<tr class='rowAlternate2'>
 		<form name="form_snmpcache">
 		<td>
 			<table cellpadding="0" cellspacing="0">
@@ -85,7 +85,7 @@
 				</tr>
 			</table>
 		</td>
-		<input type='hidden' name='page' value='1'>
-		<input type='hidden' name='action' value='view_snmp_cache'>
+		<div><input type='hidden' name='page' value='1'></div>
+		<div><input type='hidden' name='action' value='view_snmp_cache'></div>
 		</form>
 	</tr>

@@ -5,7 +5,12 @@ body {
 	background-color: #FFFFFF;
 }
 
-form input {
+form {
+	margin: 0px;
+	padding: -3px;
+}
+
+input {
 	margin: 0px;
 	padding: 0px;
 }
@@ -24,6 +29,12 @@ form input {
 	background-color: #E9E9E9;
 }
 
+.wrapper {
+	float:right;
+	margin-left:-120px;
+	width:100%;
+}
+
 .menu {
 	background-image: url('../images/shadow.gif');
 	background-repeat: repeat-x;
@@ -32,7 +43,8 @@ form input {
 	float: left;
 	border-right: 1px ridge #A9A9A9;
 	padding-top: 8px;
-	padding-right: 4px;
+	padding-left: 3px;
+	padding-right: 3px;
 	min-height: 700px;
 	background-color: #F5F5F5;
 	width: 120px;
@@ -43,7 +55,7 @@ form input {
 	background-repeat: repeat-x;
 	background-position: top right;
 	min-height: 500px;
-	margin: 0px 0px 0px 120px;
+	margin: 0px 0px 0px 126px;
 	padding: 8px 5px 8px 5px;
 }
 
@@ -96,6 +108,20 @@ a:hover {
 }
 
 /* row styles */
+.startBoxHeader {
+	border-width: 1px 1px 1px 1px;
+	border-style: solid;
+	border-color: #708DE2;
+	height: 15px;
+}
+
+.startBoxContent {
+	border-width: 1px 1px 1px 1px;
+	border-style: solid;
+	border-color: #708DE2;
+	background-color: #E7E9F2;
+}
+
 .rowHeader {
 	background-image: url('../images/rowHeader.png');
 	background-repeat-x;

@@ -1,4 +1,4 @@
-	<tr>
+	<tr class='rowAlternate2'>
 		<form name="form_logfile">
 		<td>
 			<table cellpadding="1" cellspacing="0">
@@ -69,7 +69,7 @@
 				</tr>
 			</table>
 		</td>
-		<input type='hidden' name='page' value='1'>
-		<input type='hidden' name='action' value='view_logfile'>
+		<div><input type='hidden' name='page' value='1'></div>
+		<div><input type='hidden' name='action' value='view_logfile'></div>
 		</form>
 	</tr>

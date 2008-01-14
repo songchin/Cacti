@@ -50,7 +50,7 @@ function draw_edit_form($array) {
 		while (list($field_name, $field_array) = each($fields_array)) {
 			if ($i == 0) {
 				if (!isset($config_array["no_form_tag"])) {
-					print "<form action='" . ((isset($config_array["post_to"])) ? $config_array["post_to"] : basename($_SERVER["PHP_SELF"])) . "'" . ((isset($config_array["form_name"])) ? " name='" . $config_array["form_name"] . "'" : "") . " method='post'>\n";
+					print "<form method='post' action='" . ((isset($config_array["post_to"])) ? $config_array["post_to"] : basename($_SERVER["PHP_SELF"])) . "'" . ((isset($config_array["form_name"])) ? " name='" . $config_array["form_name"] . "'" : "") . ">\n";
 				}
 			}
 
@@ -59,7 +59,7 @@ function draw_edit_form($array) {
 			}elseif ($field_array["method"] == "hidden_zero") {
 				form_hidden_box($field_name, $field_array["value"], "0");
 			}elseif ($field_array["method"] == "spacer") {
-				print "<tr id='row_$field_name' class='rowSubHeader'><td colspan='2' class='textSubHeaderDark'>" . $field_array["friendly_name"] . "</td></tr>\n";
+				print "<tr id='row_$field_name'><td colspan='2' class='textSubHeaderDark'>" . $field_array["friendly_name"] . "</td></tr>\n";
 			}else{
 				if (isset($config_array["force_row_color"])) {
 					print "<tr id='row_$field_name' bgcolor='#" . $config_array["force_row_color"] . "'>";
@@ -381,12 +381,16 @@ function form_text_box($form_name, $form_previous_value, $form_default_value, $f
    @arg $form_previous_value - the current value of this form element
    @arg $form_default_value - the value of this form element to use if there is
      no current value available */
-function form_hidden_box($form_name, $form_previous_value, $form_default_value) {
+function form_hidden_box($form_name, $form_previous_value, $form_default_value, $echo = false) {
 	if ($form_previous_value == "") {
 		$form_previous_value = $form_default_value;
 	}
 
-	print "<input type='hidden' id='$form_name' name='$form_name' value='$form_previous_value'>\n";
+	if ($echo) {
+		print "<div><input type='hidden' id='$form_name' name='$form_name' value='$form_previous_value'></div>";
+	}else{
+		print "<div><input type='hidden' id='$form_name' name='$form_name' value='$form_previous_value'></div>";
+	}
 }
 
 /* form_dropdown - draws a standard html dropdown box

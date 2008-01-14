@@ -1,4 +1,4 @@
-	<tr>
+	<tr class='rowAlternate2'>
 		<form name="form_pollercache">
 		<td>
 			<table cellpadding="0" cellspacing="0">
@@ -45,7 +45,7 @@
 				</tr>
 			</table>
 		</td>
-		<input type='hidden' name='page' value='1'>
-		<input type='hidden' name='action' value='view_poller_cache'>
+		<div><input type='hidden' name='page' value='1'></div>
+		<div><input type='hidden' name='action' value='view_poller_cache'></div>
 		</form>
 	</tr>

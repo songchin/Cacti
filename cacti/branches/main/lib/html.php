@@ -54,20 +54,29 @@ function html_start_box($title, $width, $background_color, $cell_padding, $align
 	}
 
 	?>
-	<table style="border: 1px solid #708DE2;" align="<?php print $align;?>" width="<?php print $width;?>" cellpadding=<?php print $cell_padding;?> cellspacing=0>
-		<?php if ($title != "") {?><tr class="rowHeader" <?php print $ani;?>>
-			<td style="padding: 3px;" colspan="100">
-				<table width="100%" cellpadding="0" cellspacing="0">
-					<tr>
-						<?php if ($collapsing) {?><td class="textHeaderDark" width="14"><img id="<?php print $item_id . '_twisty';?>" src="images/tw_open.gif" alt="Filter" border="0" align="absmiddle"></td><?php } ?>
-						<td class="textHeaderDark"><?php print $title;?></td>
-						<?php if ($collapsing) {?><td class="textHeaderDark" width="1"><img src="images/transparent_line.gif" alt="" <?php print $ani2;?>></td>
-						<?php } if ($add_text != "") {?><td class="textHeaderDark" align="right"><strong><a class="linkOverDark" href="<?php print $add_text;?>">Add</a>&nbsp;</strong></td><?php }?>
-					</tr>
-				</table>
-			</td>
-		</tr><?php }?>
-<?php
+		<table class="startBoxHeader" align="<?php print $align;?>" width="<?php print $width;?>" cellpadding=0 cellspacing=0>
+			<?php if ($title != "") {?><tr class="rowHeader" <?php print $ani;?>>
+				<td colspan="100">
+					<table width="100%" cellpadding="<?php print $cell_padding;?>" cellspacing="0">
+						<tr>
+							<?php if ($collapsing) {?><td class="textHeaderDark" width="14">
+								<img id="<?php print $item_id . '_twisty';?>" src="images/tw_open.gif" alt="Filter" border="0" align="absmiddle">
+							</td><?php } ?>
+							<td class="textHeaderDark"><?php print $title;?>
+							</td>
+							<?php if ($collapsing) {?><td class="textHeaderDark" width="1">
+								<img src="images/transparent_line.gif" alt='' <?php print $ani2;?>>
+							</td><?php } if ($add_text != "") {?>
+							<td class="textHeaderDark" align="right">
+								<strong><a class="linkOverDark" href="<?php print $add_text;?>">Add</a>&nbsp;</strong>
+							</td>
+						<?php }?></tr>
+					</table>
+				</td>
+			</tr>
+			<?php }?><tr style='border: 0px;' id='<?php print $item_id;?>'>
+				<td>
+	 				<table width="100%" cellpadding="<?php print $cell_padding;?>" cellspacing="0" border="0"><?php
 }
 
 function html_start_box_dq($query_name, $query_id, $host_id, $colspan, $width, $background_color, $cell_padding, $align) {
