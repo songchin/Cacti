@@ -382,575 +382,766 @@ patch -p1 -N < snmpwalk_fix.patch</userinput></screen>
 			</sect1>
 	</chapter>
 	<chapter id="install_windows">
-	<title>Installing Under Windows</title>
+<title>Installing Under Windows</title>
+	<sect1 id="windows_downloads"><title>Downloads</title>
+		<para>Required downloads:</para>
 		<orderedlist>
-			<title>Software Components Required</title>
-			<listitem>
-				<para>
-					(Optional) Apache> - This software is optional if running Windows Internet Information Server.
-				</para>
-			</listitem>
-			<listitem>
-				<para>
-					Cacti> - Install from the zip distribution and install in the web root or your choice.
-					Many choose to install into a "Cacti" sub folder.
-				</para>
-			</listitem>
-			<listitem>
-				<para>
-					Spine - Install from the zip distribution into the <filename>c:\cacti</filename>
-					directory.  Make sure your <filename>spine.conf.dist</filename> is located in that directory as well.
-				</para>
-			</listitem>
-			<listitem>
-				<para>
-					RRDTool - Install from the Cacti website.  Install it into the <filename>c:\cacti</filename> directory.
-				</para>
-			</listitem>
-			<listitem>
-				<para>
-					PHP 4.3.6+ or 5.x - Install into the <filename>c:\php</filename> folder.  If you choose
-					to install into <filename>c:\Program Files\php</filename>, you will have to use 8.3 filenames
-					to reference it's binaries in Cacti.
-				</para>
-			</listitem>
-			<listitem>
-				<para>
-					MySQL 4.x or MySQL 5.x - Install into the default location.  This is typically
-					<filename>c:\Program Files\MySQL\MySQL Server X.XX</filename>.
-				</para>
-			</listitem>
-			<listitem>
-				<para>
-					(Optional) Cygwin - Download and execute <filename>setup.exe</filename> from the Cygwin
-					website.  Keep the <filename>setup.exe</filename> file for later use.
-				</para>
-			</listitem>
-			<listitem>
-				<para>
-					(Optional) Net-SNMP - Install to the <filename>c:\net-snmp</filename> directory.  If you
-					choose to use <filename>c:\Program Files\net-snmp</filename> you will have tu use 8.3 filenames
-					to reference it's binaries in Cacti.
-				</para>
-			</listitem>
+			<listitem><para><ulink url="http://www.cacti.net/download_cacti.php">Cacti</ulink></para>
+<para>Latest version available.</para></listitem>
+
+			<listitem><para><ulink url="http://www.cacti.net/downloads/rrdtool/win32/">RRDTool</ulink>.</para> 
+<para>Minimum version: <emphasis>1.0</emphasis>. Recommended: <emphasis>1.2.15</emphasis></para>
+<Note><para>Cygwin build for versions before 1.2.15 are required. Win32 build 
+should work fine after 1.2.15.</para></Note></listitem>
+	
+			<listitem><para><ulink url="http://www.php.net/downloads.php">PHP</ulink>.</para>
+<para>Minimum: <emphasis>4.3.6</emphasis>. Recommended: <emphasis>5.2</emphasis></para>
+<para>Download the installer and zip package.</para></listitem>
+
+			<listitem><para><ulink url="http://dev.mysql.com/downloads/mysql/5.0.html">MySQL</ulink>.</para>
+<para>Minimum: <emphasis>4.1</emphasis>. Recommended: <emphasis>5.0</emphasis>.</para>
+<para>Download the larger	ZIP/Setup.exe file, NOT Windows Essentials.</para>
+<Note><para>MySQL 5 is only supported in Cacti 0.8.6i or later.</para></Note></listitem>
 		</orderedlist>
+		
+		<para>Optional downloads:</para>
 		<orderedlist>
-			<title>Configure PHP</title>
-			<listitem>
-				<para>
-					If using PHP 4, move the files in <filename>c:\php\dlls</filename> to <filename>c:\php</filename>
-				</para>
-			</listitem>
-			<listitem>
-				<para>
-					Add the following directory to the existing Windows System <userinput>PATH</userinput> environment variable:
-					<filename>c:\php</filename>.  The Windows path can be accessed via the Control Panel at: System |
-					Advanced | Environment Variables | System Variables.
-				</para>
-			</listitem>
-			<listitem>
-				<para>
-					Add the following directory to a new Windows System environment variable called <userinput>PHPRC</userinput>:
-					<filename>c:\php</filename>.
-				</para>
-			</listitem>
-			<listitem>
-				<para>
-					Add a new Windows System environment variable called <userinput>MIBDIRS</userinput>.  If using
-					PHP 4, set it to <filename>c:\php\mibs</filename>.  If using PHP 5, set it to <filename>c:\php\extras\mibs</filename>
-				</para>
-			</listitem>
-			<listitem>
-				<para>
-					If using PHP 4.3.5 or less, create the following directory <filename>c:\tmp</filename>.
-				</para>
-			</listitem>
-			<listitem>
-				<para>
-					Rename the file <filename>c:\php\php.ini.dist</filename> to <filename>php.ini</filename>, and make the
-					following changes to it:
-				</para>
-				<para>
-					If using PHP 4 add/uncomment the following lines.
-				</para>
-				<screen><userinput>extension_dir = c:\php\extensions
-extension=php_snmp.dll
-extension=php_sockets.dll
-cgi.force_redirect = 0</userinput></screen>
-				<para>
-					If using PHP 5 uncomment the following lines.
-				</para>
-				<screen><userinput>extension_dir = c:\php\ext
-extension=php_mysql.dll
-extension=php_snmp.dll
-extension=php_sockets.dll
-cgi.force_redirect = 0</userinput></screen>
-				<para>
-					If using PHP 4.3.5 or less include the following line.  If using 4.3.6 or greater, you should remove this line if present.
-				</para>
-				<screen><userinput>session.save_path=c:\tmp</userinput></screen>
-			</listitem>
-			<listitem>
-				<para>
-					In earlier installation guides to PHP, they recommended moving certain DLL's to the <filename>
-					c:\winnt\system32</filename> directory.  If so, you will have to remove those files.  Please
-					review the PHP installation documentation for instructions on removing those files.
-				</para>
-			</listitem>
-			<listitem>
-				<para>
-					If you want to allow template importing, uncomment the following line:
-				</para>
-				<screen><userinput>file_uploads = On</userinput></screen>
-			</listitem>
-			<listitem>
-				<para>
-					Give the user who will be running the scheduled task, modify rights to the <filename>.index</filename>
-					file in the location pointed to by the <userinput>MIBDIRS</userinput> Windows System environment variable.
-				</para>
-			</listitem>
+			<listitem><para><ulink url="http://www.cacti.net/spine_download.php">Spine</ulink>.</para>
+<para>Latest version available.</para></listitem>
+
+			<listitem><para><ulink url="http://www.cygwin.com/">Cygwin</ulink>.</para>
+<para>Recommended: <emphasis>1.5</emphasis>.</para>
+<para>Download <filename>setup.exe</filename>.</para></listitem>
+
+			<listitem><para><ulink url="http://httpd.apache.org/download.cgi">Apache</ulink>.</para>
+<para>Minimum	version: <emphasis>2.0</emphasis>. Recommended version: <emphasis>2.2</emphasis>.</para>
+<para>Download the MSI installer.</para></listitem>
+
+			<listitem><para><ulink url="http://net-snmp.sourceforge.net/download.html">Net-SNMP</ulink>.</para> 
+<para>Minimum: <emphasis>5.3.1</emphasis>. Recommended: <emphasis>5.4</emphasis>.</para>
+<para>ownload the Win32 installer.</para></listitem>
+
+			<listitem><para><ulink url="Cacti-Security.zip">Cacti-Security</ulink></para>
+<para>A script to configure NTFS permissions automatically for you.</para>
+<para><ulink url="http://www.microsoft.com/windows2000/techinfo/reskit/tools/existing/xcacls-o.asp">Xcacls</ulink> will be needed.</para></listitem>
 		</orderedlist>
+	</sect1>
+
+
+	<sect1 id="windows_installation"><title>Installation</title>
+		<para>Log on as an Administrator and install the following pieces of software.</para>
+		<para><emphasis>Cacti</emphasis></para>
+		<para><emphasis>Recommended Install Path:</emphasis><filename>C:\Inetpub\wwwroot\cacti\</filename></para>
+
+		<itemizedlist>
+			<listitem><para>Extract the cacti zip file to the root of your web server directory. This will be 
+			<filename>c:\inetpub\wwwroot</filename> if you are using the default installation of IIS. The extracted directory will be called 
+			<emphasis>cacti-0.8.6j</emphasis>. Rename it to <emphasis>cacti</emphasis>. </para></listitem>
+		</itemizedlist>
+
+		<para><emphasis>PHP</emphasis></para>
+		<para><emphasis>Recommended Install Path:</emphasis> <filename>C:\PHP\</filename></para>
+		<Note><para>Do not install into a path containing spaces (i.e. <filename>C:\Program Files\PHP\</filename>) unless you're prepared to deal with 8.3 filenames.</para></Note>
+
+		<itemizedlist>
+			<listitem><para>Double-click on the php installer to start it running.</para>
+			<orderedlist numeration=lowerroman>
+				<listitem><para>Click <emphasis>Next</emphasis> to the welcome page.</para></listitem>
+				<listitem><para>Click <emphasis>I Agree</emphasis> to accept the license agreement.</para></listitem>
+				<listitem><para>At the Destination Folder page, change the path to:
+				<filename>C:\PHP\</filename> and click <emphasis>Next</emphasis>.</para></listitem>
+				<listitem><para>At the Web Server page, select <emphasis>IIS ISAPI Module</emphasis> 
+				and click <emphasis>Next</emphasis>.</para></listitem>
+				<listitem><para>At the Choose Item page, do the following:</para>
+				<orderedlist numeration=lowerroman>
+					<listitem><para>Click on the Program folder and select <emphasis>entire 
+					feature will be installed on local hard drive</emphasis>. The icon 
+					should now be white.</para></listitem>
+					<listitem><para>Under the Extension folder, select <emphasis>MySQL</emphasis>,
+					<emphasis>SNMP</emphasis>, and <emphasis>Sockets</emphasis> to be 
+					installed.</para></listitem>
+				</orderedlist></listitem>
+				<listitem><para>Click <emphasis>Next</emphasis>.</para></listitem>
+				<listitem><para>Click <emphasis>Install</emphasis>.</para></listitem>
+				<listitem><para>Once done installing, click <emphasis>Finish</emphasis>.</para></listitem>
+			</orderedlist></listitem>
+			<listitem><para>Create new folders under <filename>C:\PHP\</filename> called
+			<emphasis>Uploadtemp</emphasis> and <emphasis>Session</emphasis>.</para></listitem>
+			<listitem><para>Extract the contents of the PHP zip file</para>
+			<orderedlist>
+				<listitem><para>Move the \extras\mibs\ folder to <filename>C:\PHP\Extras\</filename></para></listitem>
+			</orderedlist></listitem>
+		</itemizedlist>
+
+		<para><emphasis>MySQL</emphasis></para>
+		<para><emphasis>Recommended Install Path:</emphasis> <filename>C:\MySQL\</filename></para>
+		<itemizedlist>
+			<listitem><para>Extract the MySQL zip file to a temporary directory (e.g. C:\Temp) and run the
+			<filename>Setup.exe</filename> file.</para> 
+			<orderedlist numeration=lowerroman>
+				<listitem><para>At the Welcome screen, click <emphasis>Next</emphasis>.</para></listitem>
+				<listitem><para>At the Setup Type screen, select <emphasis>Custom</emphasis> and click 
+				<emphasis>Next</emphasis>.</para></listitem>
+				<listitem><para>At the Custom Setup screen for component selection, leave the 
+				defaults. </para></listitem>
+				<listitem><para>At the bottom of the page, click on <emphasis>Change...</emphasis> and alter the destination 
+				folder to be <filename>C:\MySQL\</filename> and click <emphasis>OK</emphasis>.</para></listitem>
+				<listitem><para>Click on <emphasis>Next</emphasis>.</para></listitem>
+				<listitem><para>Click <emphasis>Install</emphasis> to proceed with the installation.</para></listitem>
+				<listitem><para>Close the MySQL Enterprise screen.</para></listitem>
+				<listitem><para>At the Wizard Completed screen, leave <emphasis>Configure MySQL Server now</emphasis> 
+				checked and click <emphasis>Finish</emphasis>.</para></listitem>
+			</orderedlist></listitem>
+			<listitem><para>MySQL Service Instance Configuration Wizard</para>
+			<orderedlist numeration=lowerroman>
+				<listitem><para>At the Welcome screen, click <emphasis>Next</emphasis>.</para></listitem>
+				<listitem><para>At the MySQL Service Instance Configuration screen, select <emphasis>Detailed Configuration</emphasis> and click 
+				<emphasis>Next</emphasis>.</para></listitem>
+				<listitem><para>At the server type screen, select <emphasis>Server Machine</emphasis> and click 
+				<emphasis>Next</emphasis>.</para></listitem>
+				<listitem><para>At the database usage screen, select <emphasis>Non-Transactional Database Only</emphasis> and click 
+				<emphasis>Next</emphasis>.</para></listitem>
+				<listitem><para>At the concurrent connection screen, select <emphasis>Decision Support OLAP</emphasis> and click 
+				<emphasis>Next</emphasis>.</para></listitem>
+				<listitem><para>At the networking options page, check <emphasis>Enabled TCP/IP 
+				networking</emphasis> and leave default port 3306. <emphasis>Uncheck</emphasis></para></listitem>
+				<listitem><para><emphasis>Enable Strict Mode</emphasis>. Click <emphasis>Next</emphasis>.</para></listitem>
+				<listitem><para>At the default character set page, select <emphasis>Standard Character Set</emphasis> and click
+				<emphasis>Next</emphasis>. </para></listitem>
+				<listitem><para>At the Windows options page, check <emphasis>Install as Windows 
+				Service</emphasis> and <emphasis>Include Bin Directory in Windows PATH</emphasis>. Click 
+				<emphasis>Next</emphasis>.</para></listitem>
+				<listitem><para>At the security options page, type in a root password. Click 
+				<emphasis>Next</emphasis>.</para></listitem>
+				<listitem><para>At the Ready to execute page, click on <emphasis>Execute</emphasis>.</para></listitem>
+				<listitem><para>Click on <emphasis>Finish</emphasis>.</para></listitem>
+			</orderedlist></listitem>
+		</itemizedlist>
+	
+		<para><emphasis>RRDTool</emphasis></para>
+		<para><emphasis>Recommended Install Path:</emphasis> <filename>C:\RRDTool\</filename></para>
+	
+		<itemizedlist>
+			<listitem><para>Extract the rrdtool zip file to <filename>C:\RRDTool\.</filename></para></listitem>
+		</itemizedlist>
+	
+	
+		<para>Now at this point you have enough installed to configure and test before adding further complication 
+		and problems. Continue on to the <ulink url="windows_patching.html">patching</ulink> section.</para>
+	</sect1>
+
+
+	<sect1 id="windows_installation_optional"><title>Installations - Optional Components</title>
+		<para>These various components are not required for Cacti to function. Some 
+		are a choice of preference or performance.</para>
+
+		<para><emphasis>Spine</emphasis>
+		Recommended Install Path: <filename>C:\Spine\</filename>
+		<emphasis>Information:</emphasis> Spine is a poller for Cacti that primarily 
+		strives to be as fast as possible. For this reason it is written in native C, 
+		makes use of POSIX threads, and is linked directly against the net-snmp library 
+		for minimal SNMP polling overhead. Spine is a replacement for the default 
+		cmd.php poller so you must decide if using Spine makes sense for your 
+		installation. It is highly recommended that users start out with the 
+		default cmd.php poller until their installation is fully functional! 
+		Cactid was renamed to Spine for the 0.8.7 release.</para>
+
+		<para>Cactid is for Cacti 0.8.6 and below. Spine is for Cacti 0.8.7 and above.</para>
+
+		<itemizedlist>
+			<listitem><para>Extract the spine zip file to C:\Spine\</para></listitem>
+		</itemizedlist>
+		<Warning><para> Spine is only compiled with Cygwin and thusly needs a few Cygwin dlls on the system. These are 
+		included with the downloaded zip file. This can become a problem if 
+		RRDTool is also compiled under a different Cygwin version, since then there will 
+		be different Cygwin dll versions on the system which can cause issues. If 
+		you&#39;re using a Win32 build of RRDTool, then nothing to worry about.</para></Warning>
+		
+		<para>There are a few ways to solve the problem: </para>
+
 		<orderedlist>
-			<title>Configure the Webserver (Apache)</title>
-			<listitem>
-				<para>
-					Make sure you have stopped any IIS web servers before you proceed with Apache installation, or make
-					sure Apache is configured on an alternate port.
-				</para>
-			</listitem>
-			<listitem>
-				<para>
-					If you are using <emphasis>Apache 1.3.x</emphasis>, installation of PHP 5 is not recommended.
-					If using PHP 4, add the following lines to your <filename>httpd.conf</filename> file.  You can edit
-					that file by selecting Start | All Programs | Apache HTTP Server X.XX | Configure Server | Edit the
-					httpd.conf file pick from the Taskbar.
-				</para>
-				<para>
-					If using Apache 1.3.x and PHP 4, then add the following lines:
-				</para>
-				<screen><userinput>LoadModule php4_module c:\php\sapi\php4apache.dll
-AddModule mod_php4.c
-AddType application/x-httpd-php .php
-DirectoryIndex index.html index.htm index.php</userinput></screen>
-				<para>
-					If using Apache 2.x and PHP 4, then add the following lines:
-				</para>
-				<screen><userinput>LoadModule php4_module c:\php\sapi\php4apache2.dll
-AddType application/x-httpd-php .php
-DirectoryIndex index.html index.htm index.php</userinput></screen>
-				<para>
-					If using Apache 2.x and PHP 5, then add the following lines.
-				</para>
-				<screen><userinput>LoadModule php5_module c:\php\php5apache2.dll
-AddType application/x-httpd-php .php
-DirectoryIndex index.html index.htm index.php</userinput></screen>
-			</listitem>
+			<listitem><para>Install a base install of Cygwin and delete all cygwin files from the 
+			RRDTool and Spine folders.</para></listitem>
+			<listitem><para>Move RRDTool and Spine into the same folder, so they share the Cygwin 
+			dlls. Your mileage may vary due to each binary being compiled against 
+			a different Cygwin version.</para></listitem>
 		</orderedlist>
+		
+		<para><emphasis>Cygwin</emphasis></para>
+		<para>Recommended Install Path:<filename>C:\Cygwin\</filename></para>
+		
+		<para><emphasis>Information:</emphasis> Cygwin is a Linux-like environment for Windows. 
+		The benefit of having Cygwin installed is so there that there are only one 
+		set of Cygwin dlls on the system. Both RRDTool and Spine come with 
+		cygwin dlls and can cause version conflicts. If you plan on compiling 
+		RRDTool or Spine, Cygwin is required.</para>
 		<orderedlist>
-			<title>Configure the Webserver (IIS)</title>
-			<listitem>
-				<para>
-					Start the Internet Information Services (IIS) Manager, right click on the <guilabel>Default Web Site</guilabel> (in most cases) and select <guilabel>Properties</guilabel>.
-				</para>
-			</listitem>
-			<listitem>
-				<para>
-					Under the <guilabel>Home Directory</guilabel> tab, select <guilabel>Configuration</guilabel>
-					and click <guilabel>Add</guilabel>. Browse to the path of <filename>php4isapi.dll</filename> or
-					<filename>php5isapi.dll</filename>, and type in .php as the extension.  Note: if using IIS6,
-					Enable All Verbs and Script Engine.
-				</para>
-			</listitem>
-			<listitem>
-				<para>
-					Under the <guilabel>ISAPI Filters</guilabel> tab, click <guilabel>Add</guilabel> and browse
-					to the <filename>php4isapi.dll</filename> or <filename>php5isapi.dll</filename> file. Name the filter
-					"php" and click OK.
-				</para>
-			</listitem>
-			<listitem>
-				<para>
-					Under the <guilabel>Documents</guilabel> tab, add <filename>index.php</filename> to the list.
-				</para>
-			</listitem>
-			<listitem>
-				<para>
-					If using IIS6, goto <guilabel>Web Service Extensions</guilabel> and add a new Web Service Extension.
-					Name the extension "php", and click <guilabel>Add</guilabel> and browse to the <filename>php4isapi.dll</filename>
-					or <filename>php5isapi.dll</filename> file, enable <guilabel>Set Extension</guilabel> status to Enable, and click OK.
-				</para>
-			</listitem>
-			<listitem>
-				<para>
-					Give the IUSR_XXXX and IIS_WPG users read & execute permissions to the file <filename>%windir%\system32\cmd.exe</filename>.
-					They will also need read permissions on <filename>cacti_web_root/cacti</filename> and it's subfolders.
-				</para>
-			</listitem>
-			<listitem>
-				<para>
-					If using IIS6, give the IIS_WPG user modify permissions to the folders <filename>cacti_web_root/cacti/log</filename>
-					and <filename>cacti_web_root/cacti/rrd</filename>.
-				</para>
-			</listitem>
-			<listitem>
-				<para>
-					Completely stop and start the IIS service using the following commands:
-				</para>
-				<screen><userinput>net stop iisadmin
-net start w3svc</userinput></screen>
-			</listitem>
-		</orderedlist>
-		<orderedlist>
-			<title>Install Cygwin (optional)</title>
-			<listitem>
-				<para>
-					Installing a single instance of Cygwin, and using it for all applications that require it is
-					recommended so you do not have different versions of the Cygwin dlls laying around on your system,
-					which can cause conflicts.
-				</para>
-			</listitem>
-			<listitem>
-				<para>
-					Run <filename>setup.exe</filename> you previously download.
-				</para>
-			</listitem>
-			<listitem>
-				<para>
-					Once you reach the portion of setup entitled Select Packages, install the following:
-				</para>
-				<screen><userinput>Base (include all items)
+			<listitem><para>Run <filename>setup.exe.</filename></para></listitem>
+			<listitem><para>Once you reach the portion of setup entitled <guilabel>Select Packages</guilabel>, 
+			install the following:
+			<screen>Base (whole thing)
 Libs
-	libart_lgpl
-	libfreetype26
-	libpng12
-	zlib
-	openssl
+libart_lgpl
+libfreetype26
+libintl3
+libpng12
+readline
+zlib
 Utils
-	patch
+patch
 Web
-	wget</userinput></screen>
-			</listitem>
-			<listitem>
-				<para>
-					Add <filename>c:\cygwin\bin</filename> to your Windows System PATH environment variable.
-				</para>
-			</listitem>
-			<listitem>
-				<para>
-					Move <filename>setup.exe</filename> to <filename>c:\cygwin</filename> for future use.
-				</para>
-			</listitem>
+wget</screen></para></listitem>
+			<listitem><para>Add <filename>c:\cygwin\bin</filename> to your system path.</para></listitem>
+			<listitem><para>Move <filename>setup.exe</filename> to <filename>c:\cygwin</filename> for future use.</para></listitem>
 		</orderedlist>
-		<orderedlist>
-			<title>Install RRDTool</title>
-			<listitem>
-				<para>
-					Extract the RRDTool zip file from the Cacti web site to <filename>c:\cacti\rrdtool.exe</filename>.
-				</para>
+
+		<para><emphasis>Apache</emphasis>
+		<emphasis>Recommended Install Path:</emphasis> <filename>C:\Apache2\</filename></para>
+		<Note><para>Do not install into a path containing spaces (i.e. 
+		C:\Program Files\Apache\) unless you're prepared to deal with 8.3 filenames.</para></Note>
+		<Note><para>Using Apache instead of IIS is purely preferential 
+		as Cacti works with either.</para></Note>
+		<itemizedlist>
+			<listitem><para>If planning on using Apache, it should be installed before installing PHP.</para></listitem>
+			<listitem><para>Make sure you have stopped all IIS services before you proceed with the Apache installation.</para></listitem>
+			<listitem><para>Run the apache setup msi file
+				<orderedlist>
+					<listitem><para>At the Welcome screen, click <emphasis>Next</emphasis>.</para></listitem>
+					<listitem><para>At the license agreement screen, select <emphasis>I Accept</emphasis> 
+					and click <emphasis>Next</emphasis>.</para></listitem>
+					<listitem><para>At the Read this first page, click <emphasis>Next</emphasis>.</para></listitem>
+					<listitem><para>At the Server Information page, enter in the network domain, server 
+					name and email (if applicable) and click <emphasis>Next</emphasis>.</para></listitem>
+					<listitem><para>At the Setup type page, select <emphasis>Typical</emphasis> and click
+					<emphasis>Next</emphasis>.</para></listitem>
+					<listitem><para>At the Destination folder page, click on <emphasis>Change...</emphasis>. 
+					Change the folder name to <filename>C:\Apache2\</filename>. Click
+					<emphasis>OK</emphasis> and then <emphasis>Next</emphasis>.</para></listitem>
+					<listitem><para>Click <emphasis>Install</emphasis>.</para></listitem>
+					<listitem><para>Click <emphasis>Finish</emphasis> to close the installer.</para></listitem>
+				</orderedlist>
+			</para></listitem>
+		</itemizedlist>
+		
+		<para><emphasis>Net-SNMP</emphasis></para>
+		<para><emphasis>Recommended Install Path:</emphasis> <filename>C:\Net-SNMP\</filename></para>
+		<Note><para>If PHP 5.2 is not installed, then Net-SNMP should 
+		be installed. If you plan to use any hosts with SNMP v3 support, you must install the <application>Net-SNMP</application> binaries, 
+		since the PHP SNMP extension does not handle SNMPv3. You do <emphasis>NOT</emphasis> 
+		need to install/use the Net-SNMP SNMP agent. The Microsoft SNMP agent is 
+		recommended. The Net-SNMP binaries are useful when creating custom 
+		scripts, as they provide an easy way to query SNMP data from devices.</para></Note>
+		
+		<itemizedlist>
+			<listitem><para>Run the net-snmp installer</para>
+				<orderedlist>
+					<listitem><para>At the Welcome page, click <emphasis>Next</emphasis>.</para></listitem>
+					<listitem><para>At the license agreement page, select <emphasis>I Agree</emphasis> and 
+					click <emphasis>Next</emphasis>.</para></listitem>
+					<listitem><para>At the Components page:</para>
+						<orderedlist>
+						<listitem><para>Check <emphasis>Base Components</emphasis>.</para></listitem>
+						<listitem><para>Under Net-SNMP Agent Service, check <emphasis>With Windows 
+						Extension DLL support</emphasis>.</para></listitem>
+						<listitem><para><emphasis>Uncheck</emphasis> <emphasis>Net-SNMP trap service</emphasis></para></listitem>
+						<listitem><para><emphasis>Uncheck</emphasis> <emphasis>Perl SNMP modules</emphasis></para></listitem>
+						<listitem><para><emphasis>Uncheck</emphasis> <emphasis>Development files</emphasis></para></listitem>
+					</orderedlist>
+					</listitem>
+					<listitem><para>Click <emphasis>Next</emphasis>.</para></listitem>
+					<listitem><para>At the Installation location page, change the destination folder to
+					<filename>C:\Net-SNMP\</filename>. Click <emphasis>Next</emphasis>.</para></listitem>
+					<listitem><para>At the Start menu folder location page, leave the default and click
+					<emphasis>Install</emphasis>.</para></listitem>
+					<listitem><para>Once done installing, click <emphasis>Finish</emphasis>.</para></listitem>
+				</orderedlist>
 			</listitem>
+		</itemizedlist>
+	</sect1>
+
+	
+	<sect1 id="windows_patching"><title>Applying Patches</title> 
+
+		<orderedlist>
+			<listitem><para>There are two methods of applying patches to Cacti:</para> 
+			<orderedlist numeration=loweralpha>
+				<listitem><para>If you have Cygwin installed (installation instructions further down in this guide), 
+				then the <ulink url="http://www.cacti.net/download_patches.php">patch instructions</ulink> which use 
+				wget and patch, will work.</para></listitem>
+				<listitem><para>The other method requires you to visit <ulink url="http://www.cacti.net/downloads/patches/">http://www.cacti.net/downloads/patches/&lt;cacti version&gt;/pre-patched/</ulink> 
+				and manually download and replace the patched files.</para></listitem>
+			</orderedlist></listitem>
+			<listitem><para>You	must reapply file/folder security on the files patched, due to the fact they 
+			will not likely inherit the correct permissions. Double check they are correct.</para></listitem>
+			<listitem><para>The other method requires you to visit <ulink url="http://www.cacti.net/downloads/patches/">http://www.cacti.net/downloads/patches/&lt;cacti version&gt;/pre-patched/</ulink>
+			and manually download and replace the patched files.</para></listitem>
 		</orderedlist>
+	</sect1>
+
+
+	<sect1 id="windows_configuration"><title>Configuration</title>
+
+		<para><emphasis>PHP:</emphasis></para>
 		<orderedlist>
-			<title>Install MySQL</title>
-			<listitem>
-				<para>
-					Extract the MySQL zip file to a temp directory and run <filename>setup.exe</filename>.
-				</para>
-			</listitem>
-			<listitem>
-				<para>
-					Install MySQL to the default directory, or for the purposes of this manual to the <filename>c:\mysql</filename> directory.
-				</para>
-			</listitem>
-			<listitem>
-				<para>
-					If running an older version of MySQL, start it by running <filename>c:\mysql\bin\winmysqladmin.exe</filename>.
-					In more recent versions, this is not required.
-				</para>
-			</listitem>
-			<listitem>
-				<para>
-					Set a password for the root user
-				</para>
-				<screen><prompt>shell&gt;</prompt> <userinput>cd mysql\bin</userinput>
-<prompt>shell&gt;</prompt> <userinput>mysqladmin --user=root password somepassword</userinput>
-<prompt>shell&gt;</prompt> <userinput>mysqladmin --user=root --password reload</userinput></screen>
-			</listitem>
-			<listitem>
-				<para>
-					Create the MySQL database:
-				</para>
-				<screen><prompt>shell&gt;</prompt> <userinput>mysqladmin --user=root --password create cacti</userinput></screen>
-			</listitem>
-			<listitem>
-				<para>
-					Import the default Cacti database:
-				</para>
-				<screen><prompt>shell&gt;</prompt> <userinput>mysql --user=root --password cacti &lt; c:\apache2\htdocs\cacti\cacti.sql</userinput></screen>
-			</listitem>
-			<listitem>
-				<para>
-					Create a MySQL username and password for Cacti.
-				</para>
-				<screen><prompt>shell&gt;</prompt> <userinput>mysql --user=root --password mysql</userinput>
-<prompt>mysql&gt;</prompt> <userinput>GRANT ALL ON cacti.* TO cactiuser@localhost IDENTIFIED BY 'somepassword';</userinput>
-<prompt>mysql&gt;</prompt> <userinput>flush privileges;</userinput></screen>
-			</listitem>
-			<listitem>
-				<para>
-					If you are running MySQl 4.1 and above, you will need to apply the old password setting in order
-					to authenticate with Cacti.  To make this change, stop the MySQL service and add the following to
-					the Start Parameter field.  Start it again once it has been added.
-				</para>
-				<screen><userinput>--old-password</userinput></screen>
-				<para>
-					You will also need to update the cactiuser account with the old password style.
-				</para>
-				<screen><prompt>shell&gt;</prompt> <userinput>UPDATE mysql.user SET Password = OLD_PASSWORD('cactipwd')
-				WHERE Host = 'localhost' AND User = 'cactiuser';</userinput>
-<prompt>mysql&gt;</prompt> <userinput>FLUSH PRIVILEGES;</userinput></screen>
-			</listitem>
+			<listitem><para>Verify the PHP installer properly added
+			<filename>C:\PHP\</filename> to your Windows PATH environment variable. </para>
+	
+			<orderedlist numeration=upperalpha>
+				<listitem><para>The Windows path variable can be accessed via the Control Panel at:System |<guilabel>Advanced</guilabel> | 
+				<guilabel>Environment Variables</guilabel></para></listitem>
+				<listitem><para>In the System Variables groupbox, find <emphasis>Path</emphasis> and 
+				click <emphasis>Edit</emphasis>. Make sure <filename>C:\PHP\</filename> is in there 
+				somewhere.</para></listitem>
+			</orderedlist></listitem>
+				
+			<listitem><para>Verify the PHP installer properly added a new system variable called
+			<emphasis>PHPRC</emphasis>. Its value should be <filename>C:\PHP\</filename>.</para></listitem>
+			<listitem><para>Add a new system variable called <emphasis>MIBDIRS</emphasis>. 
+			Its value should be <filename>C:\PHP\Extras\mibs</filename></para>
+		
+			<orderedlist numeration=upperalpha>
+				<listitem><para>Refer to step 1 on the location of the System Variables</para></listitem>
+				<listitem><para>Under the System variables groupbox, click on <emphasis>New</emphasis>.</para></listitem>
+				<listitem><para>In the Variable name field, type <emphasis>MIBDIRS</emphasis>.</para></listitem>
+				<listitem><para>In the Variable value field, type <filename>C:\PHP\Extras\mibs</filename></para></listitem>
+				<listitem><para>Click <emphasis>OK</emphasis> and close the dialog boxes.</para></listitem>
+			</orderedlist></listitem>
+			
+			<listitem><para>Uncomment/modify the following lines in <filename>C:\PHP\php.ini</filename>.</para>
+			<screen><userinput>register_argc_argv = On
+safe_mode = Off
+cgi.force_redirect = 0
+upload_tmp_dir = &quot;C:\PHP\Uploadtemp&quot;
+session.save_path=&quot;C:\PHP\Session&quot;</userinput></screen></listitem>
+
+			<listitem><para>The	following resource limits should be changed from their defaults. 
+			Depending on the scripts, amount of data being returned and number of devices you use, they might need to 
+			be further increased at a later period in time.</para>
+			<screen><userinput>max_execution_time = 60 ; Maximum execution time of each script, in seconds
+max_input_time = 120 ; Maximum amount of time each script may spend parsing request data
+memory_limit = 64M ; Maximum amount of memory a script may consume (8MB)</userinput></screen></listitem>
+
+			<listitem><para>If you have had previous versions of PHP installed, you had likely moved the PHP system files to in the Windows directory structure. If so, you will have to remove those files. Please review your PHP installation documentation for instructions on removing those files.</para></listitem>
+			<listitem><para>Change NTFS permissions on <filename>C:\PHP\Uploadtemp</filename> 
+			and <filename>C:\PHP\Session</filename> to grant <emphasis>Modify</emphasis> 
+			rights to the <emphasis>IUSR_</emphasis> and <emphasis>IIS_WPG</emphasis> users 
+			for only files in the directory.</para></listitem>
+
+			<listitem><para>Give the user who will be running the scheduled task,
+			<emphasis>Modify</emphasis> rights to:
+			<filename>c:\php\extras\mibs\.index</filename></para></listitem>
 		</orderedlist>
+
+		<para><emphasis>IIS:</emphasis></para>
+		<Note><para>Only IIS6 and later has the IIS_WPG user account.</para></Note>
 		<orderedlist>
-			<title>Install Net-SNMP</title>
-			<listitem>
-				<para>
-					If you plan to use any hosts with SNMP v2c support, and are using early versions of PHP, you must
-					download and install the <application>Net-SNMP</application> libraries.  <application>Net-SNMP</application>
-					provides installers	to install their product.  However, caution must be taken if you choose to use
-					long file names as Cacti does not them as long file names.  You will have to user 8.3 notation.  For
-					example <filename>c:\Program Files\Net-SNMP\bin</filename> becomes <filename>c:\progra~1\net-snmp\bin</filename>.
-				</para>
-			</listitem>
+			<listitem><para>Start the Internet Information Services (IIS) Manager, right click on 
+			<emphasis>Default Web Site</emphasis> and select <emphasis>Properties</emphasis>.</para></listitem>
+		
+			<listitem><para>Under the <emphasis>ISAPI Filters</emphasis> tab: </para>
+			<orderedlist numeration=upperalpha>
+				<listitem><para>Click on <emphasis>Add</emphasis>. </para></listitem>
+				<listitem><para>In the Filter Name field, type: <emphasis>.php</emphasis>.</para></listitem>
+				<listitem><para>In the Executable field, click on <emphasis>Browse...</emphasis> </para></listitem>
+				<listitem><para>Navigate to <filename>C:\PHP\php5isapi.dll</filename>.</para></listitem>
+				<listitem><para>Click <emphasis>OK</emphasis>.</para></listitem>
+			</orderedlist></listitem>
+			
+			<listitem><para>Under the <emphasis>Home Directory</emphasis> tab:</para>
+			<orderedlist numeration=upperalpha>
+				<listitem><para>Verify the PHP installer created a mapping for the <emphasis>.PHP 
+				extension</emphasis> to <filename>C:\PHP\php5isapi.dll</filename>.</para></listitem>
+				<listitem><para>Verify the .PHP mapping has <emphasis>All Verbs</emphasis> and <emphasis>
+				Script Engine</emphasis> checked.</para></listitem>
+			</orderedlist></listitem>
+			
+			<listitem><para>Under the <emphasis>Documents</emphasis> tab, add <filename>index.php</filename> to the list.</para></listitem>
+			
+			<listitem><para>Click <emphasis>OK</emphasis> to close the Default Website Properties window.</para></listitem>
+			<listitem><para>If using IIS6, go to<guilabel>Web Service Extensions</guilabel> and add a new <guilabel>Web Service Extension</guilabel>. 
+			Name the extension <emphasis>php</emphasis>, click <guilabel>Add</guilabel> 
+			and browse to <filename>C:\PHP\php5isapi.dll</filename>, enable <guilabel>Set Extension status to Enable</guilabel>, and click 
+			<emphasis>OK</emphasis>.</para></listitem>
+			
+			<listitem><para>Under the <emphasis>Default Web Site</emphasis>, right click on 
+			<emphasis>Cacti</emphasis> folder and select <emphasis>Properties</emphasis>.</para>
+			
+			<orderedlist numeration=upperalpha>
+				<listitem><para>Click on the <emphasis>Documents</emphasis> tab</para></listitem>
+				<listitem><para>Click on <emphasis>Add...</emphasis>.</para></listitem>
+				<listitem><para>In the Default Document Name field, type in: <emphasis>index.php</emphasis> 
+				and click <emphasis>OK</emphasis>.</para></listitem>
+				<listitem><para>Select<emphasis> index.php</emphasis> in the default document list 
+				and move it to the top.</para></listitem>
+				<listitem><para>Click <emphasis>OK</emphasis> to close the cacti properties window.</para></listitem>
+			</orderedlist></listitem>
+		
+			<listitem><para>Give the <emphasis>COMPUTERNAME\IUSR_</emphasis> and <emphasis>COMPUTERNAME\IIS_WPG</emphasis> users 
+			<emphasis>Read &amp; Execute</emphasis> permissions to the file 
+			<filename>C:\Windows\system32\cmd.exe</filename>.
+			Yes, this can be a large security hole, but it&#39;s required so RRDTool can be launched for graphing by 
+			the anonymous web account. For slightly improved security, one can 
+			specify a separate custom User account which would be used for the /wwwroot/Cacti/ 
+			site. Then, instead of using <emphasis>IUSR_</emphasis> everywhere throughout this 
+			document, replace it with the custom User account. This way, only a 
+			security hole in Cacti&#39;s code could exploit <filename>cmd.exe</filename> and not all sites on the 
+			IIS server.</para>
+			
+			<orderedlist numeration=upperalpha>
+				<listitem><para>Right click on <filename>cmd.exe</filename> and select
+				<emphasis>Properties</emphasis>.</para></listitem>
+				<listitem><para>Click on the <emphasis>Security</emphasis> tab.</para></listitem>
+				<listitem><para>Select the <emphasis>IUSR_</emphasis> account</para></listitem>
+				<listitem><para>Click on <emphasis>Read &amp; Execute</emphasis> in the Permissions box.</para></listitem>
+				<listitem><para>Repeat for the IIS_WPG user.</para></listitem>
+				<listitem><para>Click <emphasis>OK</emphasis>.</para></listitem>
+			</orderedlist></listitem>
+			
+			<listitem><para>Both <emphasis>IUSR_</emphasis> and <emphasis>IIS_WPG</emphasis> users will also need read permissions on 
+			<filename>C:\Inetpub\wwwroot\cacti\</filename>and its subfolders.</para>
+			
+			<orderedlist numeration=upperalpha>
+				<listitem><para>Right click on the folder <filename>C:\Inetpub\wwwroot\cacti</filename> 
+				and select <emphasis>Properties</emphasis>.</para></listitem>
+				<listitem><para>Click on the <emphasis>Security</emphasis> tab.</para></listitem>
+				<listitem><para>Click on <emphasis>Add...</emphasis> under the group or user names 
+				section.</para></listitem>
+				<listitem><para>Type in <emphasis>IUSR_</emphasis>COMPUTERNAME or click Advanced... 
+				and Find Now. Repeat for the IIS_WPG account.</para></listitem>
+				<listitem><para>Click <emphasis>OK</emphasis> to close the select users or groups 
+				window.</para></listitem>
+				<listitem><para>Select the <emphasis>IUSR_</emphasis>COMPUTERNAME from the list.</para></listitem>
+				<listitem><para>Select <emphasis>Read &amp; Execute</emphasis> from the Permissions box.</para></listitem>
+				<listitem><para>Repeat for the IIS_WPG account.</para></listitem>
+				<listitem><para>At the bottom of the Security tab, click on <emphasis>Advanced...</emphasis>.</para></listitem>
+				<listitem><para>In the Permissions tab, click on <emphasis>Replace permissions 
+				entries on all child objects with entries shown here that apply to 
+				child objects</emphasis>.</para></listitem>
+				<listitem><para>Click <emphasis>OK</emphasis>. </para></listitem>
+				<listitem><para>Click <emphasis>Yes</emphasis> to the Security warning dialog box.</para></listitem>
+				<listitem><para>Click <emphasis>OK</emphasis> to close the properties window.</para></listitem>
+			</orderedlist></listitem>
+			
+			<listitem><para>Give the <emphasis>IUSR_</emphasis> and <emphasis>IIS_WPG</emphasis> users <emphasis>modify</emphasis> permissions to the folders 
+			<filename>C:\Inetpub\wwwroot\cacti\log</filename> and <filename>C:\Inetpub\wwwroot\cacti\rra</filename>.</para></listitem>
+			<listitem><para>Completely stop and start the IIS service using the following commands 
+			from the command prompt. Alternatively, use the Service MMC 
+			snap-in under Administrative Tools.</para>
+	
+			<screen><userinput>net stop iisadmin
+net start w3svc</userinput></screen></listitem>
+
+			<listitem><para>Verify PHP is functional by running: <userinput>php -m</userinput> 
+			at the command prompt.</para> 
+			
+			<Note><para>If messages with, <emphasis>Cannot find module</emphasis> appearing, then there is 
+			something wrong with the MIBDIRS variable or missing mib files in the 
+			PHP\Extras\mib folder. Make sure the MySQL, SNMP and Sockets PHP 
+			modules are in the list.</para></Note>
+			<screen><prompt>c:\&gt;</prompt> <userinput>php -m
+[PHP Modules]
+bcmath
+calendar
+com_dotnet
+ctype
+date
+dom
+filter
+ftp
+hash
+iconv
+json
+libxml
+mssql
+mysql				<-- required
+odbc
+pcre
+Reflection
+session
+SimpleXML
+snmp				<-- required
+sockets				<-- required
+SPL
+standard
+tokenizer
+wddx
+xml
+xmlreader
+xmlwriter
+zlib
+
+[Zend Modules]</userinput></screen></listitem>
 		</orderedlist>
-		<orderedlist>
-			<title>Install <application>Spine</application></title>
-			<listitem>
-				<para>
-					Extract the <application>Spine</application> zip file to <filename>c:\cacti</filename> and modify the <filename>spine.conf.dist</filename> file to
-					include the following statements.
-				</para>
-				<screen><userinput>DB_Host	127.0.0.1 or hostname (not localhost)
-DB_Database	cacti
-DB_User		cactiuser
-DB_Password	cacti
-DB_Port		3306</userinput></screen>
-				<para>
-					All other pre 0.8.6 settings are obsolete.
-				</para>
-			</listitem>
-			<listitem>
-				<para>
-					<application>Spine</application> now comes with a binary distribution.  However, we strongly suggest that you install
-					Cygwin and then remove all the DLL files and <filename>sh.exe</filename> from the
-					<filename>c:\cacti</filename> directory.
-				</para>
-			</listitem>
-		</orderedlist>
-		<orderedlist>
-			<title>Configure Cacti</title>
-			<listitem>
-				<para>
-					Edit <filename>cacti_web_root/cacti/include/config.php</filename> and specify the MySQL user,
-					password, database, and database port for your Cacti configuration.
-				</para>
-				<screen><userinput>$database_default = "cacti";
+
+
+	<para><emphasis>RRDTool</emphasis></para>
+	<orderedlist>
+		<listitem><para>If you plan on installing Cygwin,remove 
+		all DLL filesfrom the <filename>C:\rrdtool</filename> directory. Otherwise, 
+		nothing to configure.</para></listitem>
+	</orderedlist>
+
+	<para><emphasis>MySQL</emphasis></para>
+	<orderedlist>
+		<listitem><para>Stop the MySQL service.</para></listitem>
+		<listitem><para>Edit your <filename>C:\MySQL\my.ini</filename> file</para></listitem>
+		<listitem><para>Verify you don't have a <emphasis>sql-mode </emphasis>defined. If so, 
+		comment it out.</para></listitem>
+		<listitem><para>You will need to apply the <ulink url="http://dev.mysql.com/doc/mysql/en/old-client.html">old client</ulink> hack for user authentication to work with Cacti.</para> 
+			<orderedlist numeration=upperalpha>
+				<listitem><para>Add the following to the [mysqld] sub-section:
+				<screen>#Use old password encryption method (needed for 4.0 and older clients).
+old-passwords</screen></para></listitem>
+			</orderedlist></listitem>
+		<listitem><para>Start the MySQL service.</para></listitem>
+		<listitem><para>Set a password for the root user (if not set already during MySQL installation) </para>
+	    <screen><prompt>c:\&gt;</prompt> <userinput>mysqladmin --user=root password somepassword</userinput>
+<prompt>c:\&gt;</prompt> <userinput>mysqladmin --user=root --password reload</userinput></screen></listitem>
+		<listitem><para>Create the MySQL database:</para>
+		<screen><prompt>c:\&gt;</prompt> <userinput>mysqladmin --user=root --password create cacti</userinput></screen></listitem>
+		<listitem><para>Import the default Cacti database:</para>
+		<screen><prompt>c:\&gt;</prompt> <userinput>mysql --user=root --password cacti &lt; c:\inetpub\wwwroot\cacti\cacti.sql</userinput></screen>
+		<Note><para>If you get any errors during this 
+		phase, you likely have sql-strict mode enabled or something else 
+		misconfigured in my.ini!</para></Note></listitem> 
+		<listitem><para>Create a MySQL username and password for Cacti.</para>
+		<screen><prompt>c:\&gt;</prompt> <userinput>mysql --user=root --password mysql</userinput>
+<prompt>mysql&gt;</prompt> <userinput>GRANT ALL ON cacti.* TO cactiuser@localhost IDENTIFIED BY 'cactipw';</userinput>
+<prompt>mysql&gt;</prompt> <userinput>flush privileges;</userinput></screen></listitem>
+
+		<listitem><para>You will also need to update the cactiuser account with the old password style:</para>
+		<screen><prompt>mysql&gt;</prompt> <userinput>UPDATE mysql.user SET Password = OLD_PASSWORD('cactipw') WHERE Host = 'localhost' AND User = 'cactiuser';</userinput>
+<prompt>mysql&gt;</prompt> <userinput>FLUSH PRIVILEGES;</userinput>
+<prompt>mysql&gt;</prompt> <userinput>exit</userinput></screen></listitem>
+	</orderedlist>
+
+	<para><emphasis>Cacti</emphasis></para>
+	<orderedlist>
+		<listitem><para>Reboot your server. Some times environment variables and services need to be reset in order for everything to work properly.</para></listitem>
+		<listitem><para>Edit <filename>c:\inetpub\wwwroot\cacti\include\config.php</filename> and specify the MySQL user, password and database for your Cacti configuration.</para>
+		<screen><userinput>$database_default = "cacti";
 $database_hostname = "localhost";
 $database_username = "cactiuser";
-$database_password = "cacti";
-$database_port = "3306";</userinput></screen>
-			</listitem>
-			<listitem>
-				<para>
-					Point your web browser to:
-				</para>
-				<screen>http://your-server/cacti/</screen>
-				<para>
-					Log in using the username and password of admin/admin.  You will be required to change this
-					password immediately.
-				</para>
-			</listitem>
-			<listitem>
-				<para>
-					From Cacti, go to <guilabel>Settings</guilabel>-&gt;<guilabel>Paths</guilabel> and verify/udate
-					your paths to point to the correct locations.  Recommended examples are posted below.  If you
-					plan on using <application>Spine</application>, then it is very important that all paths include forward slashes instead
-					of backslashes.
-				</para>
-				<para>
-				<emphasis>PHP Binary Path:</emphasis>
-				</para>
-					<screen>c:/php/php.exe</screen>
-				<para>
-					<emphasis>RRDTool Binary Path:</emphasis>
-				</para>
-				<screen>c:/cacti/rrdtool.exe</screen>
-				<para>
-					<emphasis>SNMPGET, SNMPWALK, SNMPBULKWALK, SNMPGETNEXT Paths:</emphasis>
-				</para>
-					<screen>c:/progra~1/net-snmp/bin/snmpget.exe</screen>
-					<screen>c:/progra~1/net-snmp/bin/snmpwalk.exe</screen>
-					<screen>c:/progra~1/net-snmp/bin/snmpbulkwalk.exe</screen>
-					<screen>c:/progra~1/net-snmp/bin/snmpgetnext.exe</screen>
-				<para>
-					<emphasis>Cacti Logfile Path:</emphasis>
-				</para>
-					<screen>c:/mycacti/website/cacti/log/cacti.log</screen>
-				<para>
-					<emphasis><application>Spine</application> Path:</emphasis>
-				</para>
-				<screen>c:/cacti/<application>Spine</application>.exe</screen>
-			</listitem>
-			<listitem>
-				<para>
-					Click on Devices.  Delete the Localhost devices as it intended for Linux environments  In the upper
-					right corner, click Add.  Fill in the following information and then click Add.
-				</para>
-				<screen><userinput>Description: My Windows localhost
+$database_password = "cactipw";</userinput></screen></listitem>
+		<listitem><para>Point your web browser to <ulink url="http://localhost/cacti/">http://localhost/cacti/</ulink>
+		You should be presented with the <emphasis>Cacti Installation Guide</emphasis> 
+		page.</para></listitem>
+		<listitem><para>Click <emphasis>Next</emphasis>.</para></listitem>
+		<listitem><para>Select <emphasis>New Install</emphasis> for the type of installation. 
+		Click <emphasis>Next</emphasis>.</para></listitem>
+		<listitem><para>Verify the RRDTool, PHP, Cacti Log File, paths and RRDTool Utility 
+		version are all correct. Ignore the Net-SNMP paths unless it was 
+		previously installed. Click <emphasis>Finish</emphasis>.</para></listitem>
+		<listitem><para>At the User Login page,
+		log in the with a username of <emphasis>admin</emphasis> and password of 
+		<emphasis>admin</emphasis>. You will be required to change this password immediately.</para>
+		<Note><para>If you are brought back to the User Login
+		page with no error messages, then you have have a PHP session/cookie 
+		problem.</para></Note></listitem>
+		<listitem><para>Once logged in, click on <guilabel>Settings</guilabel> 
+		and then the <guilabel>Paths</guilabel> tab. Verify/update your paths to point to the correct locations. Recommended examples are posted below. If you plan on using 
+		Spine in the future, then it is very important that your all your paths and scripts use forward slashes.
+		Additionally, RRDTool 1.0 used a mono-spaced font while RRDTool 1.2 defaults to variable width font. Using the latter will cause graph text to not align properly. That being the case, a solution is to specify a mono-spaced font like VeraMono or DejaVuSansMono-Roman 
+		in the RRDTool Default Font Path (i.e. <filename>C:/windows/fonts/VeraMono.ttf</filename>). 
+		Google for these fonts, as they don&#39;t come with Windows.</para>
+
+		<para><emphasis>PHP Binary Path:</emphasis></para>
+		<screen><userinput>c:/php/php.exe</userinput></screen>
+		<para><emphasis>RRDTool Binary Path:</emphasis></para>
+		<screen><userinput>c:/rrdtool/rrdtool.exe</userinput></screen>
+		<para><emphasis>RRDTool Default Font Path:</emphasis></para>
+		<screen><userinput>c:/windows/fonts/arial.ttf</userinput></screen>
+		<para><emphasis>RRDTool Version:</emphasis></para>
+		<screen><userinput>Select the appropriate version</userinput></screen>
+		<para><emphasis>SNMPGET, SNMPWALK, SNMPBULKWALK, SNMPGETNEXT Paths:</emphasis></para>
+		<screen><userinput>c:/net-snmp/bin/snmpget.exe
+c:/net-snmp/bin/snmpwalk.exe
+c:/net-snmp/bin/snmpbulkwalk.exe
+c:/net-snmp/bin/snmpgetnext.exe</userinput></screen>
+		<para><emphasis>Cacti Logfile Path:</emphasis></para>
+		<screen><userinput>c:/inetpub/wwwroot/cacti/log/cacti.log</userinput></screen>
+		<para><emphasis>Spine Path:</emphasis></para>
+		<screen><userinput>c:/Spine/Spine.exe</userinput></screen></listitem>
+
+		<listitem><para>Click on <guibutton>Devices</guibutton>. Delete Localhost, since it's set up to use the Linux host template. </para></listitem>
+		<listitem><para>In the upper right corner, click on <guibutton>Add</guibutton>.  Fill in the following information and then click 
+		<guibutton>Add</guibutton>.</para>
+
+		<screen><userinput>Description: localhost
 Hostname: localhost
-Host Template: Windows 2000/XP</userinput></screen>
-			</listitem>
-			<listitem>
-				<para>
-					You should now be looking at the localhost device screen.  Right under it's name, there should be
-					some SNMP information listed, if not you should double check the SNMP settings on the server and
-					firewall settings.  In the upper right-hand corner, click on Create Graphs for this Host. On the
-					following screen, select a disk partition and network interface.  At the bottom of the page,
-					click on Create.
-				</para>
-			</listitem>
-			<listitem>
-				<para>
-                    Log into the user account you'll be using  for the scheduled task and  verify starting a Cacti
-					polling cycle works.  Do this by running the following from the command prompt:
-				</para>
-				<screen><userinput>php c:/cacti_web_root/cacti/poller.php</userinput></screen>
-				<para>
-					The output should look something like the following:
-				</para>
-				<screen><userinput>C:\>php c:\inetpub\wwwroot\cacti\poller.php
+Host Template: Windows 2000/XP</userinput></screen></listitem>
+
+		<listitem><para>You should now be looking at the localhost device screen. Right under it's name, there should be some SNMP 
+		Information listed regarding the system, uptime, hostname, location and	contact. 
+		If not, you should double check the SNMP settings on the server and firewall settings. In the upper right-hand corner, click on
+		<guibutton>Create Graphs for this Host</guibutton>. </para></listitem>
+		<listitem><para>On the following screen, select a disk partition and network interface. At the bottom of the page, click on
+		<guibutton>Create</guibutton>.</para></listitem>
+		<listitem><para>Log into the user account you'll be using for the scheduled task andverify starting a Cacti polling cycle works. Do this by running the following from the command prompt:</para>
+		<screen><userinput>php c:\inetpub\wwwroot\cacti\poller.php</userinput></screen>
+		<para>The output should look something like this:</para>
+		<screen><prompt>C:\&gt;</prompt> <userinput>php c:\inetpub\wwwroot\cacti\poller.php</userinput>
 OK u:0.00 s:0.06 r:1.32
 OK u:0.00 s:0.06 r:1.32
 OK u:0.00 s:0.16 r:2.59
 OK u:0.00 s:0.17 r:2.62
-10/28/2005 04:57:12 PM - SYSTEM STATS: Time:4.7272 Method:cmd.php Processes:1 Threads:N/A Hosts:1 HostsPerProcess:2 DataSources:4 RRDsProcessed:2</userinput></screen>
-				<para>
-					After this has ran once, you should have <filename>cacti.log</filename> in <filename>/cacti/log/</filename>
-					and rrd files in /cacti/rra/.
-				</para>
-			</listitem>
-			<listitem>
-				<para>
-					You are going to need to schedule a task while logged on as an Administrator.  This task is
-					required to you can run <filename>poller.php</filename> every 5 minutes. Make sure the
-					Task Scheduler service is started and follow the steps below to	begin.
-				</para>
-				<para>
-					<emphasis>Note:</emphasis> The following instructions are based on Windows XP and Windows Server
-					2003. You should be able to follow these instructions close enough for Windows 2000 as well.
-				</para>
-				<orderedlist>
-					<listitem>
-						<para>
-							Select <guilabel>Start</guilabel> --> <guilabel>Settings</guilabel> --> <guilabel>Control Panel</guilabel> and double
-							click on  <guilabel>Scheduled Tasks</guilabel>.
-						</para>
-					</listitem>
-					<listitem>
-						<para>
-							Double click on <guilabel>Add Scheduled Task</guilabel>.
-						</para>
-					</listitem>
-					<listitem>
-						<para>
-							Click <guilabel>Next</guilabel> and <guilabel>Browse</guilabel> on the following screen. Find <filename>c:\php</filename> and select
-							<filename>php.exe</filename>.  Choose <guilabel>Daily</guilabel> on and click <guilabel>Next</guilabel>.
-						</para>
-					</listitem>
-					<listitem>
-						<para>
-							Click <guilabel>Next</guilabel> again without changing the time or date settings.
-						</para>
-					</listitem>
-					<listitem>
-						<para>
-							When entering a username and password make sure the user has read and write access to the following directories:
-						</para>
-						<screen><userinput>cacti_web_root/cacti/rra
-cacti_web_root/log</userinput></screen>
-						<para>
-							Make sure the user has read, write, and execute access to the following directories:
-						</para>
-						<screen><userinput>c:\php
-c:\php\sapi</userinput></screen>
-					</listitem>
-					<listitem>
-						<para>
-							Click <guilabel>Next</guilabel> and <guilabel>Finish</guilabel> to close the wizard.
-						</para>
-					</listitem>
-					<listitem>
-						<para>
-							Right click on the task you just created, and select <guilabel>Properties</guilabel>.
-						</para>
-					</listitem>
-					<listitem>
-						<para>
-							Select the <guilabel>Schedule</guilabel> tab.
-						</para>
-					</listitem>
-					<listitem>
-						<para>
-							Make sure <guilabel>Daily</guilabel> is selected and click the <guilabel>Advanced</guilabel> button.
-						</para>
-					</listitem>
-					<listitem>
-						<para>
-							Check the <guilabel>Repeat</guilabel> checkbox, set it for 5 minutes and set the duration for 24 hours.
-						</para>
-					</listitem>
-					<listitem>
-						<para>
-							Click <guilabel>Ok</guilabel>
-						</para>
-					</listitem>
-					<listitem>
-						<para>
-							In the <guilabel>Run</guilabel> textbox enter the following text making sure to use the appropriate paths.
-						</para>
-						<screen>c:\php\php.exe c:\mycacti\website\cacti\poller.php</screen>
-						<para>
-							The start in box should say <filename>c:\mycacti\website\cacti</filename>.
-						</para>
-					</listitem>
-				</orderedlist>
-			</listitem>
-		</orderedlist>
+10/28/2005 04:57:12 PM - SYSTEM STATS: Time:4.7272 Method:cmd.php Processes:1 Threads:N/A Hosts:1 HostsPerProcess:2 DataSources:4 RRDsProcessed:2</screen>
+
+		<para>After this has ran once, you should have <filename>cacti.log</filename>in 
+		<filename>/cacti/log/</filename>and rrd files in
+		<filename>/cacti/rra/</filename>.</para></listitem>
+		<listitem><para>You are going to need to schedule a task while logged on as an Administrator account, so 
+		<filename>poller.php</filename> can run every 5 minutes. Make sure the Task Scheduler service is started and follow the steps below to begin.</para>
+
+		<orderedlist numeration=upperalpha>
+			<listitem><para>Select <guilabel>Start</guilabel> --&gt; 
+			<guilabel>Settings</guilabel> --&gt; <guilabel>Control Panel</guilabel> and double click on 
+			<guilabel>Scheduled Tasks</guilabel>.</para></listitem>
+			<listitem><para>Double click on <guilabel>Add Scheduled Task</guilabel>.</para></listitem>
+			<listitem><para>Click <guilabel>Next</guilabel> and 
+			<guilabel>Browse</guilabel> on the following screen. Find 
+			<filename>c:\php</filename> and select <filename>php.exe</filename>. Choose
+			<guilabel>Daily</guilabel> on and click 
+			<guilabel>Next</guilabel>.</para></listitem>
+			<listitem><para>Click <guilabel>Next</guilabel> again without changing the time or date settings.</para></listitem>
+			<listitem><para>When entering a username and password make sure the user has 
+			<emphasis>modify</emphasis> permissions to the following directories:</para>
+
+			<screen><userinput>c:\inetpub\wwwroot\cacti\rra\
+c:\inetpub\wwwroot\cacti\log\</userinput></screen>
+			<para>Make sure the user has <emphasis>Read&amp; Execute</emphasis> 
+			permissions to the following directories:</para>
+			
+			<screen><userinput>c:\php\
+c:\inetpub\wwwroot\cacti\
+c:\rrdtool\</userinput></screen></listitem>
+
+			<listitem><para>Click <guilabel>Next</guilabel> and 
+			<guilabel>Finish</guilabel> to close the wizard.</para></listitem>
+			<listitem><para>Right click on the task you just created, and select 
+			<guilabel>Properties</guilabel>.</para></listitem>
+			<listitem><para>Select the <guilabel>Schedule</guilabel> tab.</para></listitem>
+			<listitem><para>Make sure <guilabel>Daily</guilabel> is selected and click the 
+			<guilabel>Advanced</guilabel> button.</para></listitem>
+			<listitem><para>Check the <guilabel>Repeat</guilabel> checkbox, set the repetition for every 5 minutes,set the durationfor 24 hours, and check 
+			the <guilabel>If the task is still running, stop it at this time</guilabel> checkbox.</para></listitem>
+			<listitem><para>Click <guilabel>OK</guilabel></para></listitem>
+			<listitem><para>In the <guilabel>Run</guilabel> textbox enter the following text making sure to use the appropriate paths.</para>
+			
+			<screen><userinput>c:\php\php.exe c:\inetpub\wwwroot\cacti\poller.php</userinput></screen>
+			<para>The start in box should say <filename>c:\inetpub\wwwroot\cacti</filename>.</para></listitem>
+		</orderedlist></listitem>
+		
+		<listitem><para>After waiting 10 minutes (aka 2 polling cycles), one should be able 
+		to view the graphs.</para></listitem>
+		<listitem><para>Go to <guilabel>Graph Management</guilabel> and click on 
+		each graph to view its progress.</para></listitem>
+		<listitem><para>Go to <guilabel>Graph Trees</guilabel> and click on
+		<guilabel>Default Tree</guilabel>.</para></listitem>
+		<listitem><para>Click on <guilabel>Add</guilabel>.</para></listitem>
+		<listitem><para>Under <guilabel>Tree Item Type,</guilabel> select <emphasis>Host</emphasis>. 
+		Click on <guilabel>Create</guilabel> and then <guilabel>Save</guilabel>.</para></listitem>
+		<listitem><para>View the new graph tree by clicking on the <guilabel>Graphs</guilabel> tab
+		at the top of the screen.</para></listitem>
+	</orderedlist>
+	</sect1>
+
+
+	<sect1 id="windows_config_optional"><title>Configuration - Optional Components</title>
+	<para><emphasis>Apache:</emphasis></para>
+	<orderedlist>
+		<listitem><para>Add the following lines to your <filename>httpd.conf</filename> file in the <filename>c:\apache2\conf</filename> directory:</para>
+    
+<screen><userinput>LoadModule php5_module &quot;c:/php/php5apache2_2.dll&quot;
+AddType application/x-httpd-php .php
+PHPIniDir &quot;C:/php&quot;
+DirectoryIndex index.php index.html index.htm</userinput></screen></listitem>
+		<listitem><para>Restart the Apache service.</para></listitem>
+	</orderedlist>
+
+
+	<para><emphasis>Net-SNMP</emphasis></para>
+	<orderedlist>
+		<listitem><para>Append the <emphasis>MIBDIRS</emphasis> system variable with the path of 
+		Net-SNMP MIB files.</para>
+		<screen><userinput>MIBDIRS=c:\php\extras\mibs;C:\Net-SNMP\share\snmp\mibs</userinput></screen></listitem>
+	</orderedlist>
+	
+	
+	<para><emphasis>Spine</emphasis></para>
+	<orderedlist>
+		<listitem><para>Modify the <filename>Spine.conf</filename> file in <filename>c:\Spine</filename> to include the following statements.</para>
+	
+		<screen>DB_Host      	IP Address or Hostname (not localhost)
+DB_Database	cacti
+DB_User      	cactiuser
+DB_Password 	cactipw
+DB_Port     	3306</screen></listitem>
+
+		<listitem><para>If you have <application>Cygwin</application> installed, remove the DLL files from the <filename>c:\Spine</filename> directory.</para></listitem>
+	</orderedlist>
+	</sect1>
+
+
+	<sect1 id="windows_troubleshooting"><title>Troubleshooting:</title>
+	
+	<orderedlist>
+		<listitem><para>If you're not getting any graphs or rrd files created, it's possibly because Cacti is not 
+		collecting valid data. You must wait at least two polling cycles for data to show up in a graph. 
+		To check if Cacti is collecting valid data from your device in question, do the following:</para> 
+		
 		<orderedlist>
-			<title>Apply Patches</title>
-			<listitem>
-				<para>
-					There are two methods of applying patches to Cacti:
-				</para>
-				<orderedlist>
-					<listitem>
-						<para>
-							If you have Cygwin installed, then the patch instructions which use wget and patch, will work.
-						</para>
-					</listitem>
-					<listitem>
-						<para>
-							The other method requires you to visit http://www.cacti.net/downloads/patches/0.8.6h/pre-patched/
-							and manually download and replace the patched files.
-						</para>
-					</listitem>
-				</orderedlist>
-			</listitem>
-			<listitem>
-				<para>
-					You might need to reapply file/folder security on the files patched. Double check they are correct.
-				</para>
-			</listitem>
-		</orderedlist>
+			<listitem><para>Turn the <guilabel>Poller Logging Level</guilabel> in Cacti to debug 
+			(Settings | Polling level) for one cycle, wait for Cacti to run</para></listitem>
+			<listitem><para>This is an example of a successful SNMP query:</para> 
+			<screen>CMDPHP: Poller[0] Host[2] DS[18] SNMP: v1: 192.168.100.1, dsname: traffic_out, oid: .1.3.6.1.2.1.2.2.1.16.1, output: 322328722
+CMDPHP: Poller[0] Host[2] DS[18] SNMP: v1: 192.168.100.1, dsname: traffic_in, oid: .1.3.6.1.2.1.2.2.1.10.1, output: 426701050</screen>
+
+		<para>If the output was NaN, then Cacti did not collect any data. This is where either the 
+		Net-SNMP tools or <ulink url="http://www.wtcs.org/snmp4tpc/getif.htm">GetIF</ulink> comes in 
+		handy for testing SNMP.</para>
+			<orderedlist numeration=lowerroman>
+				<listitem><para>Test if you're able to retrieve SNMP data manually using the OID Cacti failed on. You might need to remove the last number from the OID when doing this. For example, in the case of retrieving interface data, instead of using .1.3.6.1.2.1.2.2.1.10.1 in the example above, you should snmpwalk .1.3.6.1.2.1.2.2.1. Using Net-SNMP snmpwalk, you would do:
+				<screen><userinput>C:\net-snmp\bin&gt;snmpwalk -v 1 -c public 192.168.2.1 .1.3.6.1.2.1.2.2.1</userinput></screen></para></listitem>
+				<listitem><para>If you still receive no SNMP output, then you either didn't properly configure the SNMP agent or there is a firewall blocking the data.</para></listitem>
+			</orderedlist></listitem>
+			<listitem><para>Another thing you'll want to look for in the log file are CACTI2RRD entries. These are when Cacti updates the rrd files with the data it collected during a polling cycle. Here is an example of one from my traffic collected from above:
+			<screen><userinput>POLLER: Poller[0] CACTI2RRD: c:/rrdtool/rrdtool.exe update C:\inetpub\wwwroot\cacti\rra\cable_modem_traffic_1.rrd --template traffic_out:traffic_in 1141333802:322328722:426701050</userinput></screen></para></listitem><listitem><para>If you saw in the log file Cacti updating the rrd file, but the modification date never changed on the rrd file, then you have a permission problem somewhere. Check the IUSR and IIS_WPG user accounts have read/execute rights on rrdtool.exe and cmd.exe. They'll also need modfiy rights to the <filename>/cacti/rra</filename> and 
+			<filename>/cacti/log</filename> folders. </para></listitem>
+
+			<listitem><para>Follow <ulink url="http://docs.cacti.net/node/283">this guide</ulink> on 
+			debugging NaN&#39;s.</para></listitem>
+		</orderedlist></listitem>
+	</orderedlist>
+	</sect1>
+
+	<sect1 id="windows_optimizations"><title>Optimizations:</title>
+	<para>There are several things you can do to speed up your Cacti web server. It's suggested that you only apply these 
+	<emphasis>after</emphasis> you have a fully functional Cacti installation. </para>
+	<orderedlist>
+		<listitem><para>Switch the polling agent in Cacti from cmd.php to 
+		Spine.exe. Go to <guilabel>Settings</guilabel> 
+		<guibutton>Poller</guibutton> | <guilabel>Type</guilabel>. 
+		Don't forget to configure your <filename>C:\Spine\Spine.conf</filename> file.</para></listitem>
+		<listitem><para>Install the <ulink url="http://www.zend.com/store/products/zend-optimizer.php">Zend Optimizer</ulink> for PHP.</para></listitem>
+		<listitem><para>Set up the query cache in MySQL. Read about how to properly <ulink url="http://dev.mysql.com/doc/refman/4.1/en/query-cache-configuration.html">configure the settings</ulink>. 
+		You will need to stop the MySQL service when you edit <filename>c:\mysql\my.ini</filename> and put in the following:</para>
+		<screen>#The memory allocated to store results from old queries.
+query_cache_size=16M
+#Don't cache results that are bigger than this.
+query_cache_limit=1M
+#Query cache type to use.
+query_cache_type=1</screen></listitem>
+		<listitem><para>Install <ulink url="http://www.fastcgi.com/">FastCGI</ulink>, which can offer 
+		<ulink url="http://phplens.com/phpeverywhere/node/view/13">x4 to x8 improvement</ulink> 
+		(for IIS users at least).</para></listitem>
+		<listitem><para>An extensive list of other optimizations for PHP and MySQL can be found over at 
+		<ulink url="http://phplens.com/lens/php-book/optimizing-debugging-php.php">phplens.com</ulink>.</para></listitem>
+		<listitem><para>Install the Cacti
+		<ulink url="http://cactiusers.org/wiki/PluginArchitectureInstall">plugin architecture</ulink> and 
+		<ulink url="http://forums.cacti.net/viewtopic.php?t=18430">Boost plugin</ulink>.</para></listitem>
+	</orderedlist>
+	</sect1>
 	</chapter>
 	<chapter id="upgrade">
 		<title>Upgrading Cacti</title>
@@ -3326,12 +3517,18 @@ IF-MIB::ifType.3 = INTEGER: ethernetCsmacd(6)
 							is the same as your filename.
 						</para>
 						<programlisting>&lt;?php
-$no_http_headers = true;
-
 /* display No errors */
 error_reporting(E_ERROR);
 
-include_once(dirname(__FILE__) . "/../include/config.php");
+/* do NOT run this script through a web browser */
+if (!isset($_SERVER["argv"][0]) || isset($_SERVER['REQUEST_METHOD'])  || isset($_SERVER['REMOTE_ADDR'])) {
+	die("&lt;br&gt;&lt;strong&gt;This script is only meant to run at the command line.&lt;/strong&gt;");
+}
+
+/* We are not talking to the browser */
+$no_http_headers = true;
+
+include_once(dirname(__FILE__) . "/../include/global.php");
 include_once(dirname(__FILE__) . "/../lib/snmp.php");
 
 if (!isset($called_by_script_server)) {
@@ -4448,8 +4645,741 @@ disk /</userinput></screen>
 						</para>
 					</answer>
 				</qandaentry>
+				<qandaentry>
+					<question>
+						<para>
+							Call to undefined function mysql_connect() in C:\Inetpub\www\cacti\lib\adodb\drivers\adodb-mysql.inc.php on line 338
+						</para>
+					</question>
+					<answer>
+						<para>
+							This is caused because newer versions of PHP 
+							<ulink url="http://www.php.net/manual/en/faq.databases.php#faq.databases.mysql.php5">no longer support</ulink>
+							the new client libraries for MySQL 4.1.0 and beyond. The universal fix is to apply the
+							<ulink url="http://dev.mysql.com/doc/mysql/en/old-client.html">old client</ulink> 
+							hack, outlined in the MySQL section above.
+						</para>
+					</answer>
+				</qandaentry>
+
+
+				<qandaentry>
+					<question>
+						<para>
+							How do I stop the command windows from opening every 5 minutes?
+						</para>
+					</question>
+					<answer>
+						<para>
+							This is occurring because your Cacti scheduled task is using the same user name 
+							you've logged onto the computer with. There are two possible fixes: </para>
+							<orderedlist>
+								<listitem><para>Use a different user name to run the Cacti scheduled task</para></listitem>
+								<listitem><para>Use a windows script to hide the command windows. Only do this after your 
+								cacti installation is fully functional!</para>
+								<orderedlist numeration=loweralpha>
+									<listitem><para>Create a file called <filename>invisible.vbs</filename>. 
+									Place it where ever you like.</para></listitem>
+									<listitem><para>Edit <filename>invisible.vbs</filename> and paste the following</para>
+									<screen><userinput>Set objWSHShell = WScript.CreateObject("WScript.Shell")
+objWSHShell.Run "poller.php", 0, False</userinput></screen></listitem>
+									<listitem><para>Edit the Cacti scheduled task and change the <guilabel>Run</guilabel> to:</para>
+									<screen><userinput>C:\Windows\system32\wscript.exe "C:\invisible.vbs" "C:\Inetpub\wwwroot\cacti\poller.php"</userinput></screen></listitem>
+								</orderedlist></listitem>
+							</orderedlist>
+					</answer>
+				</qandaentry>
+
+
+				<qandaentry>
+					<question>
+						<para>
+							I see errors in the cacti.log file. How to I find out what is wrong?
+						</para>
+					</question>
+					<answer>
+						<para>
+							Turn up the logging level in Cacti. In Cacti go to <guibutton>Settings</guibutton> 
+							and change the <guilabel>Poller Logging Level</guilabel> to Debug for 
+							<emphasis>one cycle</emphasis>. If you notice your log file is filled with WEBLOG entries, 
+							which makes it hard to follow what is going on, then uncheck all of the 
+							<guilabel>Web Events</guilabel>, save and wait for the next polling cycle.
+						</para>
+					</answer>
+				</qandaentry>
+
+
+				<qandaentry>
+					<question>
+						<para>
+							Does Cacti use MIB files?
+						</para>
+					</question>
+					<answer>
+						<para>
+							No. But they are handy to have around when making custom scripts in conjunction 
+							with Net-SNMP or GetIF.
+						</para>
+					</answer>
+				</qandaentry>
+
+
+				<qandaentry>
+					<question>
+						<para>
+							How can I debug SNMP output from a device?
+						</para>
+					</question>
+					<answer>
+						<para>
+							The easiest tools are either <ulink url="http://www.wtcs.org/snmp4tpc/getif.htm">GetIf</ulink> or <ulink url="http://net-snmp.sourceforge.net/">Net-SNMP</ulink>.
+							GetIf is fairly self explanatory since it has a GUI. Using the MBrowser 
+							tab is handy for navigating the SNMP trees and OIDs. 
+							Net-SNMP is comprised of several tools. You'll want to use snmpget and snmpwalk.
+							An example of parsing the interfaces on a device would be:</para>
+
+							<screen><prompt>C:\net-snmp\bin\&gt;</prompt> <userinput>snmpwalk -v 1 -c public 127.0.0.1 .1.3.6.1.2.1.2.2</userinput></screen>
+							<para>An alternative would be to use a MIB name. This of course does require the use of MIB files:</para>
+							<screen><prompt>C:\net-snmp\bin\&gt;</prompt> <userinput>snmpwalk -v 1 -c public 127.0.0.1 ifDescr</userinput></screen>
+					</answer>
+				</qandaentry>
+
+
+				<qandaentry>
+					<question>
+						<para>
+							Why doesn't Windows return Disk or CPU usage via SNMP?
+						</para>
+					</question>
+					<answer>
+						<para>
+							Open up the SNMP Service and click on the Agent tab. Make sure all the 
+							service checkboxes are marked (they are not by default). Restart the SNMP service.
+						</para>
+					</answer>
+				</qandaentry>
+
+
+				<qandaentry>
+					<question>
+						<para>
+							How do I get FastCGI to work with Windows 20003?
+						</para>
+					</question>
+					<answer>
+						<para>
+							A little modification needs to be done to the 
+							<ulink url="http://phplens.com/phpeverywhere/node/view/13">existing documentation</ulink>.</para>
+							<orderedlist>
+								<listitem><para>Make sure IIS_WPG account has read/execute rights on 
+								the PHP and Cacti folders.</para></listitem>
+								<listitem><para>Use the following modified <filename>fastcgi.reg</filename> file 
+								(assumes you're using PHP5)</para>
+								<screen><userinput>Windows Registry Editor Version 5.00
+[HKEY_LOCAL_MACHINE\SOFTWARE\FASTCGI]
+"S"StartServers"=dword:00000002
+"IncrementServers"=dword:00000002
+"MaxServers"=dword:00000019
+"Timeout"=dword:00000258
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\FASTCGI\.php]
+"AppPath"="c:\\php\\php-cgi.exe"
+"BindPath"="php-fcgi"</userinput></screen></listitem>
+								<listitem><para>Create a web site extension called <userinput>fastcgi</userinput>. 
+								Add <filename>isapi_fcgi.dll</filename> and <filename>php-cgi.exe</filename>.</para></listitem>
+								<listitem><para>In the <guilabel>Default Website</guilabel>, under 
+								<guilabel>ISAPI filters</guilabel>, create a new filter in addition to the PHP one. 
+								Call it<userinput>fastcgi</userinput> and point it to 
+								<filename>isapi_fcgi.dll</filename>.</para></listitem>
+								<listitem><para>Under the <guilabel>Home Directory</guilabel> tab, 
+								select <guilabel>Configuration</guilabel> and, change the .php 
+								extension to use <filename>isapi_fcgi.dll</filename>.</para></listitem>
+							</orderedlist>
+					</answer>
+				</qandaentry>
+
+
+				<qandaentry>
+					<question>
+						<para>
+							ERROR: change root is not supported by your OS or at least by this copy of rrdtool.
+						</para>
+					</question>
+					<answer>
+						<para>
+							This error message occurs when you use the Win32 version of rrdtool instead of 
+							the Cygwin one. RRDTool 1.2.15 and later work with the Win32 build.
+						</para>
+					</answer>
+				</qandaentry>
+
+
+				<qandaentry>
+					<question>
+						<para>
+							When attempting to run poller.php or cmd.php you get, 
+							<emphasis>This script is only meant to run at the command line</emphasis>
+						</para>
+					</question>
+					<answer>
+						<para>
+							Most likely caused by a misconfiguration in your <filename>php.ini</filename> file. 
+							Make sure the following is set in it:</para>
+							<screen><userinput>register_argc_argv = On
+safe_mode = Off</userinput></screen>
+
+							<para>Another possibility is a logic bug in cmd.php only present in Cacti 0.8.6j and 
+							PHP 5.2. Open cmd.php and go to line 49. 
+							Change it to:</para>
+							<screen><userinput>if (version_compare(&quot;5.2.0&quot;, PHP_VERSION, &quot;&gt;=&quot;)) {</userinput></screen>
+					</answer>
+				</qandaentry>
+
+
+				<qandaentry>
+					<question>
+						<para>
+							How do I get WMI scripts working on remote computers?
+						</para>
+					</question>
+					<answer>
+						<para>
+							There are several things one needs to do to accomplish this:</para>
+							<orderedlist>
+								<listitem><para>Open a hole in the firewall for DCOM. For the 
+								Windows XP SP2 or Windows 2003 SP1 firewall, do the following:</para> 
+								<orderedlist numeration=loweralpha>
+									<listitem><para>Open up the Windows Firewall control panel</para></listitem>
+									<listitem><para>Click on <guibutton>Add Port</guibutton>.</para></listitem>
+									<listitem><para><emphasis>Name:</emphasis> DCOM <emphasis>Port:</emphasis> 135 <emphasis>Type:</emphasis> TCP</para></listitem>
+									<listitem><para>You might need to change the scope of the rule, depending on where you will be 
+									remotely querying the server from.</para></listitem>
+									<listitem><para>Start | Run: <filename>gpedit.msc</filename></para></listitem>
+									<listitem><para>Navigate to: <guilabel>Computer Configuration</guilabel> | <guilabel>Administrative Templates</guilabel> | <guilabel>Network</guilabel> | <guilabel>Network Connections</guilabel> | <guilabel>Windows Firewall</guilabel></para></listitem>
+									<listitem><para>Enable the following:</para>
+									<screen><userinput>Allow remote administration exception
+Allow local port exceptions</userinput></screen></listitem>
+								</orderedlist></listitem>
+								<listitem><para>Edit WMI security</para>
+								<orderedlist numeration=loweralpha>
+									<listitem><para>Start | Run: <filename>wmimgmt.msc</filename>.</para></listitem>
+									<listitem><para>Get properties on <guilabel>WMI Control</guilabel>.</para></listitem>
+									<listitem><para>Go to the <guibutton>Security</guibutton> tab</para></listitem>
+									<listitem><para>Click on the <guilabel>Root</guilabel> folder, then the 
+									<guibutton>security</guibutton> button at the bottom</para></listitem>
+									<listitem><para>Click on <guilabel>Advanced</guilabel></para></listitem>
+									<listitem><para>Add the cactiuser account that's going to be used. Assign the following rights:</para>
+									<screen><userinput>Enable Account
+Enable Remote</userinput></screen></listitem>
+									<listitem><para>Change the <guilabel>Apply onto</guilabel> to: 
+									<userinput>This namespace and subnamespaces</userinput>.</para></listitem>
+									<listitem><para>Click OK several times and close the WMI window.</para></listitem>
+								</orderedlist></listitem>
+								<listitem><para>Edit DCOM security</para>
+								<orderedlist numeration=loweralpha>
+									<listitem><para>Start | Run: <filename>dcomcnfg</filename></para></listitem>
+									<listitem><para>Navigate to: <guilabel>Component Services</guilabel> | <guilabel>Computers</guilabel> | <guilabel>My Computer</guilabel>.</para></listitem>
+									<listitem><para>Get properties on <guilabel>My Computer</guilabel></para></listitem>
+									<listitem><para>Click on the <guilabel>COM Security</guilabel> tab.</para></listitem>
+									<listitem><para>Under <guilabel>Launch and Activate Permissions</guilabel>, click on <guilabel>Edit Limits</guilabel></para></listitem>
+									<listitem><para>Add the cactiuser account that's going to be used.  Assign the following rights:</para>
+									<screen><userinput>Remote Activation</userinput></screen></listitem>
+									<listitem><para>Click OK and exit.</para></listitem>
+								</orderedlist></listitem>
+							</orderedlist>
+					</answer>
+				</qandaentry>
+
+
+				<qandaentry>
+					<question>
+						<para>
+							Why doesn't a WMI counter say it exists when I know it should?
+						</para>
+					</question>
+					<answer>
+						<para>
+							It's possible you need to run <ulink url="http://msdn.microsoft.com/library/default.asp?url=/library/en-us/wmisdk/wmi/wmiadap.asp">wmiadap /f</ulink> 
+							which will re-parse all the performance libraries on the system.
+						</para>
+					</answer>
+				</qandaentry>
+
+
+				<qandaentry>
+					<question>
+						<para>
+							I don't see any graphs on the main graph page, but when I click on one, 
+							I see 4 graphs with data.
+						</para>
+					</question>
+					<answer>
+						<para>
+							This happens because you have the wrong version of RRDTool selected in Cacti. 
+							Set it by going to Settings and applying the proper 
+							<guilabel>RRDTool Utility Version.</guilabel>
+						</para>
+					</answer>
+				</qandaentry>
+
+
+				<qandaentry>
+					<question>
+						<para>
+							Why do my graphs <emphasis>randomly</emphasis> not have any text while the 
+							data is properly displayed?
+						</para>
+					</question>
+					<answer>
+						<para>
+							It seems there is a bug in newer versions of PHP 4, specifically in <filename>php4ts.dll</filename>. 
+							Get <filename>php4ts.dll</filename> from PHP 4.3.11 and replace the current one in your PHP directory. 
+							<emphasis>*WARNING* </emphasis>not responsible for any adverse affects this might have on your system.
+						</para>
+					</answer>
+				</qandaentry>
+
+
+				<qandaentry>
+					<question>
+						<para>
+							How does one know if Cacti has debugging logging properly enabled?
+						</para>
+					</question>
+					<answer>
+						<para>
+							It seems there is a bug in Cacti were even though the logging level is set to DEBUG, you do not 
+							truly get debugging output. If your log file is filled with something like the following which 
+							constantly repeats, Cacti is NOT in debugging mode:</para>
+							<screen><userinput>CMDPHP: Poller[0] DEBUG: SQL Assoc: "select  poller_output.output,  poller_output.time,  poller_output.local_data_id,  poller_item.rrd_path,  &lt;snip&gt;
+CMDPHP: Poller[0] DEBUG: SQL Assoc: "select poller_id,end_time from poller_time where poller_id = 0"</userinput></screen>
+							<para>If your log file contains things like the following, then debugging logging 
+							is properly enabled:</para>
+							<screen><userinput>CMDPHP: Poller[0] Host[1] SNMP: Host responded to SNMP
+CMDPHP: Poller[0] DEBUG: SQL Exec: &quot;update host set  status = '3',  status_event_count = '0',  status_fail_date = '2006-01-19 02:20:10',  &lt;snip&gt;
+CMDPHP: Poller[0] Host[1] RECACHE: Processing 3 items in the auto reindex cache for 'ares.mydomain.com'.
+CMDPHP: Poller[0] DEBUG: SQL Exec: &quot;update poller_reindex set assert_value='368365818' where host_id='1' and data_query_id='8' and arg1='.1.3.6.1.2.1.1.3.0'&quot;
+CMDPHP: Poller[0] DEBUG: SQL Exec: &quot;update poller_reindex set assert_value='368365819' where host_id='1' and data_query_id='14' and arg1='.1.3.6.1.2.1.1.3.0'&quot;
+CMDPHP: Poller[0] Host[1] DS[10] SNMP: v2: ares.mydomain.com, dsname: proc, oid: .1.3.6.1.2.1.25.1.6.0, output: 53
+CMDPHP: Poller[0] DEBUG: SQL Exec: &quot;insert into poller_output (local_data_id,rrd_name,time,output) values (10,'proc','2006-05-28 09:20:02','53')&quot;
+CMDPHP: Poller[0] DEBUG: SQL Assoc: &quot;select poller_id,end_time from poller_time where poller_id = 0&quot;
+CMDPHP: Poller[0] DEBUG: SQL Assoc: &quot;select  poller_output.output,  poller_output.time,  poller_output.local_data_id,  poller_item.rrd_path,  &lt;snip&gt;
+CMDPHP: Poller[0] DEBUG: SQL Exec: &quot;delete from poller_output where local_data_id='10' and rrd_name='proc' and time='2006-05-28 09:20:02'&quot;
+POLLER: Poller[0] CACTI2RRD: c:/rrdtool/rrdtool.exe update c:\cacti\rra\ares_proc_10.rrd</userinput></screen>
+					</answer>
+				</qandaentry>
+
+
+				<qandaentry>
+					<question>
+						<para>
+							What are all the NTFS permissions that need to be set for Cacti to 
+function?
+						</para>
+					</question>
+					<answer>
+<table frame='all'>
+	<title>NTFS Permissions</title>
+	<tgroup cols='3' align='left' colsep='1' rowsep='1'>
+		<colspec colnum="1">
+		<colspec colnum="2">
+		<colspec colwidth="3*" colnum="3">
+	<THead>
+	<Row>
+		<entry align="center">Path</entry>
+		<entry align="center">User</entry>
+		<entry align="center">NTFS Permissions</entry>
+	</Row>
+	</THead>
+	<TBody>
+	<Row>
+		<entry>C:\Spine\</entry>
+		<entry>TaskUser</entry>
+		<entry>Read &amp; Execute</entry>
+	</Row>
+
+	<Row>
+		<entry>C:\Cygwin\bin\</entry>
+		<entry>TaskUser</entry>
+		<entry>Read &amp; Execute</entry>
+	</Row>
+	<Row>
+		<entry>C:\Inetpub\wwwroot\cacti\</entry>
+		<entry>TaskUser</entry>
+		<entry>Read &amp; Execute</entry>
+	</Row>
+	<Row>
+		<entry></entry>
+		<entry>IUSR_</entry>
+		<entry>Read &amp; Execute</entry>
+	</Row>
+	<Row>
+		<entry>C:\Inetpub\wwwroot\cacti\rra\</entry>
+		<entry>IIS_WPGd></entry>
+		<entry>Modify</entry>
+	</Row>
+	<Row>
+		<entry></entry>
+		<entry>IUSR_</entry>
+		<entry>Modify</entry>
+	</Row>
+	<Row>
+		<entry>C:\C:\Inetpub\wwwroot\cacti\log\</entry>
+		<entry>IIS_WPG</entry>
+		<entry>Modify</entry>
+	</Row>
+	<Row>
+		<entry></entry>
+		<entry>IUSR_</entry>
+		<entry>Modify</entry>
+	</Row>
+	<Row>
+		<entry>C:\PHP\</entry>
+		<entry>IUSR_</entry>
+		<entry>Read &amp; Execute</entry>
+	</Row>
+
+	<Row>
+		<entry></entry>
+		<entry>TaskUser</entry>
+		<entry>Read &amp; Execute</entry>
+	</Row>
+	<Row>
+		<entry>C:\PHP\sessiondata\</entry>
+		<entry>IUSR_</entry>
+		<entry>Modify (Files only)</entry>
+	</Row>
+	<Row>
+		<entry>C:\PHP\uploadtemp\</entry>
+		<entry>IUSR_</entry>
+		<entry>Modify (Files only)</entry>
+	</Row>
+	<Row>
+		<entry>C:\Net-SNMP\</entry>
+		<entry>IUSR_</entry>
+		<entry>Read &amp; Execute</entry>
+	</Row>
+
+	<Row>
+		<entry>C:\RRDTool\</entry>
+		<entry>IUSR_d></entry>
+		<entry>Read &amp; Execute</entry>
+	</Row>
+	<Row>
+		<entry></entry>
+		<entry>TaskUser</entry>
+		<entry>Read &amp; Execute</entry>
+	</Row>
+	<Row>
+		<entry>C:\Windows\System32\cmd.exe</entry>
+		<entry>IUSR_</entry>
+		<entry>Read &amp; Execute</entry>
+	</Row>
+	<Row>
+		<entry></entry>
+		<entry>IIS_WPG</entry>
+		<entry>Read &amp; Execute</entry>
+	</Row>
+	</TBody>
+	</TGroup>
+</table>
+<Note><para>* TaskUser is the user account that runs the scheduled task for Cacti.
+* IUSR_<emphasis>COMPUTERNAME</emphasis> is the user account that Windows uses for anonymous 
+access for the web server.
+* IIS_WPG account is only present on Windows 2003.</para></Note>
+					</answer>
+				</qandaentry>
+
+
+				<qandaentry>
+					<question>
+						<para>
+							How do I repair my Cacti database?
+						</para>
+					</question>
+					<answer>
+						<para>
+							Run the following from the command prompt:</para>
+							<screen><userinput>mysqlcheck --auto-repair --databases cacti</userinput></screen>
+					</answer>
+				</qandaentry>
+
+
+				<qandaentry>
+					<question>
+						<para>
+							I&#39;m getting errors with something like: 
+							<emphasis>Warning: fgets(): supplied argument is not a valid stream resource: &lt;filename&gt;</emphasis>
+						</para>
+					</question>
+					<answer>
+						<para>
+							This is most likely due to incorrect NTFS permissions 
+							on that file/folder. This prevents Cacti from accessing the file(s) to execute 
+							the code. Read up above in the installation guide on what NTFS permissions 
+							need to be set.
+						</para>
+					</answer>
+				</qandaentry>
+
+
+
+				<qandaentry>
+					<question>
+						<para>
+							How do I configure Microsoft SNMP?
+						</para>
+					</question>
+					<answer>
+						<para>
+							Read <ulink url="http://forums.cacti.net/viewtopic.php?t=24267">HOW TO: Configure the Simple Network Management Protocol (SNMP) Service in Windows Server 2003</ulink></para>
+					</answer>
+				</qandaentry>
 			</qandadiv>
 		</qandaset>
+	</chapter>
+
+
+	<chapter id=Debugging>
+		<title>Debugging</title>
+		<para>Cacti users sometimes complain about NaN's in their graphs.
+		Unfortunately, there are several reasons for this result.
+		The following is a step-by-step procedure recommended for debugging.</para>
+
+		<sect1 id="check_log_file">
+		<title>Check Cacti Log File</title>
+			<para>Please have a look at your cacti log file.
+			Usually, you'll find it at <filename>&lt;path_cacti&gt;/log/cacti.log</filename>.
+			Else see <userinput>Settings</userinput>, <userinput>Paths</userinput>.
+			Check for this kind of error:</para>
+			<screen>SPINE: Host[...] DS[....] WARNING: SNMP timeout detected [500 ms], ignoring host '........'</screen>
+			<para>For "reasonable" timeouts, this may be related
+			to a snmpbulkwalk issue. To change this, see
+			<userinput>Settings</userinput>, <userinput>Poller</userinput>
+			and lower the value for
+			<userinput>The Maximum SNMP OID's Per SNMP Get Request</userinput>.
+			Start at a value of 1 and increase it again,
+			if the poller starts working.
+			Some agent's don't have the horsepower
+			to deliver that many OID's at a time. Therefore,
+			we can reduce the number for those older/underpowered devices.</para>
+		</sect1>
+		<sect1 id="check_data_gathering">
+		<title>Check Basic Data Gathering</title>
+			<para>For scripts, run them as cactiuser from cli to
+			check basic functionality. E.g. for a perl script
+			named <filename>your-perl-script.pl</filename>
+			with parameters "p1 p2" under *nix this would look like:</para>
+			<screen>su - cactiuser
+/full/path/to/perl your-perl-script.pl p1 p2
+... (check output)</screen>
+			<para>For snmp, snmpget the _exact_ OID you're asking for,
+			using same community string and snmp version as defined
+			within cacti. For an OID of <userinput>.1.3.6.1.4.something</userinput>,
+			community string of <userinput>very-secret</userinput>
+			and version 2 for target host <userinput>target-host</userinput>
+			this would look like</para>
+			<screen>snmpget -c very-secret -v 2c target-host .1.3.6.1.4.something
+.... (check output)</screen>
+		</sect1>
+		<sect1 id="check_cacti_poller">
+		<title>Check cacti's poller</title>
+			<para>First make sure that crontab always shows poller.php.
+			This program will either call cmd.php, the PHP based poller
+			 _or_ spine, the fast alternative, written in C.
+			 Define the poller you're using at
+			 <userinput>Settings</userinput>, <userinput>Poller</userinput>.
+			 Spine has to be implemented seperately, it does not
+			 come with cacti by default.</para>
+			<para>Now, clear <filename>./log/cacti.log</filename>
+			(or rename it to get a fresh start)</para>
+			<para>Then, change <userinput>Settings</userinput>, <userinput>Poller Logging Level</userinput>
+			to DEBUG for _one_ polling cycle. You may rename
+			this log as well to avoid more stuff added to it with
+			subsequent polling cycles.</para>
+			<para>Now, find the host/data source in question.
+			The <userinput>Host[&lt;id&gt;]</userinput>
+			is given numerically, the &lt;id&gt; being a specific
+			number for that host. Find this &lt;id&gt;
+			from the <userinput>Devices</userinput> menue when
+			editing the host: The url contains a string like</para>
+			<screen>id=&lt;id&gt;</screen>
+			<para>Check, whether the output is as expected.
+			If not, check your script (e.g. <filename>/full/path/to/perl</filename>).
+			If ok, proceed to next step</para>
+			<para>This procedure may be replaced by running the
+			poller manually for the failing host only.
+			To do so, you need the &lt;id&gt;, again.
+			If you're using cmd.php, set the DEBUG logging level as
+			defined above and run</para>
+			<screen>php -q cmd.php &lt;id&gt; &lt;id&gt;</screen>
+			<para>If you're using spine, you may override
+			logging level when calling the poller:</para>
+			<screen>./spine --verbosity=5 &lt;id&gt; &lt;id&gt;</screen>
+			<para>All output is printed to STDOUT in both cases.
+			This procdure allows for repeated tests without waiting
+			for the next polling interval. And there's no need to manually
+			search for the failing host between hundreds of lines of output.</para>
+		</sect1>
+		<sect1 id="check_mysql_updating">
+		<title>Check MySQL updating</title>
+			<para>In most cases, this step make be skipped.
+			You may want to return to this step, if the next one
+			fails (e.g. no rrdtool update to be found)</para>
+			<para>From debug log, please find the MySQL update statement
+			for that host concerning table
+			<userinput>poller_output</userinput>.
+			On very rare occasions, this will fail. So please copy
+			that sql statement and paste it to a mysql session started
+			from cli. This may as well be done from some tool like
+			phpMyAdmin. Check the sql return code.</para>
+		</sect1>
+		<sect1 id="check_rrd_updating">
+		<title>Check rrd file updating</title>
+			<para>Down in the same log, you should find some</para>
+			<screen>rrdtool update &lt;filename&gt; --template ...</screen>
+			<para>You should find exactly one update statement for each file.</para>
+			<para>RRD files should be created by the poller.
+			If it does not create them, it will not fill them either.
+			If it does, please check your
+			<userinput>Poller Cache</userinput>
+			from Utilities and search for your target.
+			Does the query show up here?</para>
+		</sect1>
+		<sect1 id="check_rrd_owner">
+		<title>Check rrd file ownership</title>
+			<para>If rrd files were created e.g. with root ownership,
+			a poller running as cactiuser will not be able to update
+			those files</para>
+			<screen>cd /var/www/html/cacti/rra
+ls -l localhost*
+-rw-r--r--  1 root      root      463824 May 31 12:40 localhost_load_1min_5.rrd
+-rw-r--r--  1 cactiuser cactiuser 155584 Jun  1 17:10 localhost_mem_buffers_3.rrd
+-rw-r--r--  1 cactiuser cactiuser 155584 Jun  1 17:10 localhost_mem_swap_4.rrd
+-rw-r--r--  1 cactiuser cactiuser 155584 Jun  1 17:10 localhost_proc_7.rrd
+-rw-r--r--  1 cactiuser cactiuser 155584 Jun  1 17:10 localhost_users_6.rrd</screen>
+
+			<para>Run the following command to cure this problem</para>
+			<screen>chown cactiuser:cactiuser *.rrd</screen>
+		</sect1>
+		<sect1 id="check_rrd_numbers">
+		<title>Check rrd file numbers</title>
+			<para>You're perhaps wondering about this step,
+			if the former was ok. But due to data sources
+			MINIMUM and MAXIMUM definitions, it is possible,
+			that valid updates for rrd files are suppressed,
+			because MINIMUM was not reached or MAXIMUM was exceeded.</para>
+			<para>Assuming, you've got some valid
+			<userinput>rrdtool update</userinput> in step 3, perform a</para>
+			<screen>rrdtool fetch &lt;rrd file&gt; AVERAGE</screen>
+			<para>and look at the last 10-20 lines. If you find NaN's there,
+			perform</para>
+			<screen>rrdtool info &lt;rrd file&gt;</screen>
+			<para>and check the
+			<userinput>ds[...].min</userinput> and
+			<userinput>ds[...].max</userinput> entries, e.g.</para>
+			<screen>ds[loss].min = 0.0000000000e+00
+ds[loss].max = 1.0000000000e+02</screen>
+			<para>In this example, MINIMUM = 0 and MAXIMUM = 100. For a
+			<userinput>ds.[...].type=GAUGE</userinput>
+			verify, that e.g. the number returned by the script does
+			not exceed
+			<userinput>ds[...].MAX</userinput>
+			(same holds for MINIMUM, respectively).</para>
+			<para>If you run into this, please do not only update
+			the data source definition within the Data Template,
+			but perform a</para>
+			<screen>rrdtool tune &lt;rrd file&gt; --maximum &lt;ds-name&gt;:&lt;new ds maximum&gt;</screen>
+			 <para>for all existing rrd files belonging to that Data Template.</para>
+			<para>At this step, it is wise to check
+			<userinput>step</userinput> and <userinput>heartbeat</userinput>
+			of the rrd file as well. For standard 300 seconds
+			polling intervals (step=300), it is wise to set
+			<userinput>minimal_heartbeat</userinput> to 600 seconds.
+			If a single update is missing and the next one occurs in
+			less than 600 seconds from the last one, rrdtool will
+			interpolate the missing update. Thus, gaps are
+			"filled" automatically by interpolation.
+			Be aware of the fact, that this is no "real" data!
+			Again, this must be done in the Data Template itself
+			and by using rrdtool tune for all existing rrd files
+			of this type.</para>
+		</sect1>
+		<sect1 id="check_rrd_graph">
+		<title>Check rrdtool graph statement</title>
+			<para>Last resort would be to check, that the correct
+			data sources are used.
+			Goto <userinput>Graph Management</userinput> and select
+			your Graph. Enable DEBUG Mode to find the whole
+			<userinput>rrdtool graph</userinput> statement. You should
+			notice the <userinput>DEF</userinput> statements. They specify
+			the rrd file and data source to be used. You may check, that
+			all of them are as wanted.</para>
+		</sect1>
+		<sect1 id="debug_miscellaneous">
+		<title>Miscellaneous</title>
+			<para>Up to current cacti 0.8.6h, table
+			<userinput>poller_output</userinput> may increase beyond
+			reasonable size.</para>
+			<para>This is commonly due to php.ini's memory settings of
+			8MB default. Change this to at least 64 MB.</para>
+			<para>To check this, please run following sql from mysql
+			cli (or phpmyadmin or the like)</para>
+			<screen>select count(*) from poller_output;</screen>
+			<para>If the result is huge, you may get rid of those
+			stuff by</para>
+			<screen>truncate table poller_output;</screen>
+			<para>As of current SVN code for upcoming cacti 0.9,
+			I saw measures were taken on both issues
+			(memory size, truncating poller_output).</para>
+		</sect1>
+
+		<sect1 id="debug_rpm_installation">
+		<title>RPM Installation?</title>
+			<para>Most rpm installations will setup the crontab entry now.
+			If you've followed the installation instructions to the
+			letter (which you should always do ;-) ),
+			you may now have two poller running. That's not a good thing,
+			though. Most rpm installations will setup cron in
+			<filename>/etc/cron.d/cacti</filename></para>
+			<para>Now, please check all your crontabs, especially
+			<filename>/etc/crontab</filename> and crontabs of
+			users root and cactiuser. Leave only one poller entry for
+			all of them. Personally, I've chosen
+			<filename>/etc/cron.d/cacti</filename> to avoid problems
+			when updating rpm's. Mosten often, you won't remember this
+			item when updating lots of rpm's, so I felt more secure to
+			put it here. And I've made some slight modifications, see</para>
+			<screen><prompt>shell&gt;</prompt> vi /etc/cron.d/cacti
+*/5 * * * *     cactiuser       /usr/bin/php -q /var/www/html/cacti/poller.php > /var/local/log/poller.log 2>&1</screen>
+
+			<para>This will produce a file
+			<filename>/var/local/log/poller.log</filename>, which includes
+			some additional informations from each poller's run, such as
+			rrdtool errors. It occupies only some few bytes and will be
+			overwritten each time.</para>
+			<para>If you're using the crontab of user "cactiuser" instead,
+			this will look like</para>
+			<screen><prompt>shell&gt;</prompt> crontab -e -u cactiuser
+*/5 * * * *     /usr/bin/php -q /var/www/html/cacti/poller.php > /var/local/log/poller.log 2>&1</screen>
+		</sect1>
+
+		<sect1 id="check_zero_values">
+		<title>Not NaN, but 0 (zero) values?</title>
+			<para>Pay attention to custom scripts. It is required,
+			that external commands called from there are in the <filename>$PATH</filename>
+			of the cactiuser running the poller. It is therefor recommended to provide
+			<filename>/full/path/to/external/command</filename></para>
+			<para>User "criggie" reported an issue with running smartctl.
+			It was complaining "you are not root" so a quick
+			<userinput>chmod +s</userinput> on the script fixed that
+			problem.</para>
+			<para>Secondly, the script was taking several seconds to run.
+			So cacti was logging a "U" for unparseable in the debug
+			output, and was recording NAN. So my fix there was to make
+			the script run faster - it has to complete in less than one
+			second, and the age of my box made it difficult to accomplish.</para>
+		</sect1>
 	</chapter>
 </part>
 
@@ -4595,9 +5525,8 @@ disk /</userinput></screen>
 						</tbody>
 					</tgroup>
 				</table>
-				<note><title>Concerning aggregate Nth percentile functions and rra definitions</title>
-				<para>All data sources used in a graph MUST have the same rra definitions.  If the number of rows do not match when calculations are attempted, the results may produce errors and invalid results.  Please also be aware the aggregate functions take more memory and processor power when used.  Recommended minimum of 64 megs memory limit for php when querying large ranges or graphs with a large ammount of aggregated data sources.</para>
-				</note>
+				<Note><title>Concerning aggregate Nth percentile functions and rra definitions</title>
+				<para>All data sources used in a graph MUST have the same rra definitions.  If the number of rows do not match when calculations are attempted, the results may produce errors and invalid results.  Please also be aware the aggregate functions take more memory and processor power when used.  Recommended minimum of 64 megs memory limit for php when querying large ranges or graphs with a large ammount of aggregated data sources.</para></Note>
 				<example>
 					<title>Output in the following format, for 95th percentile: 42.58 mbit</title>
 					<para>
@@ -5693,247 +6622,6 @@ Known Host Graphs: (id, name, template)
 				with this specific id exists, an error message will be printed.
 				No output is produced on successful operations.</para>
 			</sect2>
-		</sect1>
-	</chapter>
-	<chapter id=Debugging>
-		<title>Debugging</title>
-		<para>Cacti users sometimes complain about NaN's in their graphs.
-		Unfortunately, there are several reasons for this result.
-		The following is a step-by-step procedure recommended for debugging.</para>
-
-		<sect1 id="check_log_file">
-		<title>Check Cacti Log File</title>
-			<para>Please have a look at your cacti log file.
-			Usually, you'll find it at <filename>&lt;path_cacti&gt;/log/cacti.log</filename>.
-			Else see <userinput>Settings</userinput>, <userinput>Paths</userinput>.
-			Check for this kind of error:</para>
-			<screen>CACTID: Host[...] DS[....] WARNING: SNMP timeout detected [500 ms], ignoring host '........'</screen>
-			<para>For "reasonable" timeouts, this may be related
-			to a snmpbulkwalk issue. To change this, see
-			<userinput>Settings</userinput>, <userinput>Poller</userinput>
-			and lower the value for
-			<userinput>The Maximum SNMP OID's Per SNMP Get Request</userinput>.
-			Start at a value of 1 and increase it again,
-			if the poller starts working.
-			Some agent's don't have the horsepower
-			to deliver that many OID's at a time. Therefore,
-			we can reduce the number for those older/underpowered devices.</para>
-		</sect1>
-		<sect1 id="check_data_gathering">
-		<title>Check Basic Data Gathering</title>
-			<para>For scripts, run them as cactiuser from cli to
-			check basic functionality. E.g. for a perl script
-			named <filename>your-perl-script.pl</filename>
-			with parameters "p1 p2" under *nix this would look like:</para>
-			<screen>su - cactiuser
-/full/path/to/perl your-perl-script.pl p1 p2
-... (check output)</screen>
-			<para>For snmp, snmpget the _exact_ OID you're asking for,
-			using same community string and snmp version as defined
-			within cacti. For an OID of <userinput>.1.3.6.1.4.something</userinput>,
-			community string of <userinput>very-secret</userinput>
-			and version 2 for target host <userinput>target-host</userinput>
-			this would look like</para>
-			<screen>snmpget -c very-secret -v 2c target-host .1.3.6.1.4.something
-.... (check output)</screen>
-		</sect1>
-		<sect1 id="check_cacti_poller">
-		<title>Check cacti's poller</title>
-			<para>First make sure that crontab always shows poller.php.
-			This program will either call cmd.php, the PHP based poller
-			 _or_ cactid, the fast alternative, written in C.
-			 Define the poller you're using at
-			 <userinput>Settings</userinput>, <userinput>Poller</userinput>.
-			 Cactid has to be implemented seperately, it does not
-			 come with cacti by default.</para>
-			<para>Now, clear <filename>./log/cacti.log</filename>
-			(or rename it to get a fresh start)</para>
-			<para>Then, change <userinput>Settings</userinput>, <userinput>Poller Logging Level</userinput>
-			to DEBUG for _one_ polling cycle. You may rename
-			this log as well to avoid more stuff added to it with
-			subsequent polling cycles.</para>
-			<para>Now, find the host/data source in question.
-			The <userinput>Host[&lt;id&gt;]</userinput>
-			is given numerically, the &lt;id&gt; being a specific
-			number for that host. Find this &lt;id&gt;
-			from the <userinput>Devices</userinput> menue when
-			editing the host: The url contains a string like</para>
-			<screen>id=&lt;id&gt;</screen>
-			<para>Check, whether the output is as expected.
-			If not, check your script (e.g. <filename>/full/path/to/perl</filename>).
-			If ok, proceed to next step</para>
-			<para>This procedure may be replaced by running the
-			poller manually for the failing host only.
-			To do so, you need the &lt;id&gt;, again.
-			If you're using cmd.php, set the DEBUG logging level as
-			defined above and run</para>
-			<screen>php -q cmd.php &lt;id&gt; &lt;id&gt;</screen>
-			<para>If you're using cactid, you may override
-			logging level when calling the poller:</para>
-			<screen>./cactid --verbosity=5 &lt;id&gt; &lt;id&gt;</screen>
-			<para>All output is printed to STDOUT in both cases.
-			This procdure allows for repeated tests without waiting
-			for the next polling interval. And there's no need to manually
-			search for the failing host between hundreds of lines of output.</para>
-		</sect1>
-		<sect1 id="check_mysql_updating">
-		<title>Check MySQL updating</title>
-			<para>In most cases, this step make be skipped.
-			You may want to return to this step, if the next one
-			fails (e.g. no rrdtool update to be found)</para>
-			<para>From debug log, please find the MySQL update statement
-			for that host concerning table
-			<userinput>poller_output</userinput>.
-			On very rare occasions, this will fail. So please copy
-			that sql statement and paste it to a mysql session started
-			from cli. This may as well be done from some tool like
-			phpMyAdmin. Check the sql return code.</para>
-		</sect1>
-		<sect1 id="check_rrd_updating">
-		<title>Check rrd file updating</title>
-			<para>Down in the same log, you should find some</para>
-			<screen>rrdtool update &lt;filename&gt; --template ...</screen>
-			<para>You should find exactly one update statement for each file.</para>
-			<para>RRD files should be created by the poller.
-			If it does not create them, it will not fill them either.
-			If it does, please check your
-			<userinput>Poller Cache</userinput>
-			from Utilities and search for your target.
-			Does the query show up here?</para>
-		</sect1>
-		<sect1 id="check_rrd_owner">
-		<title>Check rrd file ownership</title>
-			<para>If rrd files were created e.g. with root ownership,
-			a poller running as cactiuser will not be able to update
-			those files</para>
-			<screen>cd /var/www/html/cacti/rra
-ls -l localhost*
--rw-r--r--  1 root      root      463824 May 31 12:40 localhost_load_1min_5.rrd
--rw-r--r--  1 cactiuser cactiuser 155584 Jun  1 17:10 localhost_mem_buffers_3.rrd
--rw-r--r--  1 cactiuser cactiuser 155584 Jun  1 17:10 localhost_mem_swap_4.rrd
--rw-r--r--  1 cactiuser cactiuser 155584 Jun  1 17:10 localhost_proc_7.rrd
--rw-r--r--  1 cactiuser cactiuser 155584 Jun  1 17:10 localhost_users_6.rrd</screen>
-
-			<para>Run the following command to cure this problem</para>
-			<screen>chown cactiuser:cactiuser *.rrd</screen>
-		</sect1>
-		<sect1 id="check_rrd_numbers">
-		<title>Check rrd file numbers</title>
-			<para>You're perhaps wondering about this step,
-			if the former was ok. But due to data sources
-			MINIMUM and MAXIMUM definitions, it is possible,
-			that valid updates for rrd files are suppressed,
-			because MINIMUM was not reached or MAXIMUM was exceeded.</para>
-			<para>Assuming, you've got some valid
-			<userinput>rrdtool update</userinput> in step 3, perform a</para>
-			<screen>rrdtool fetch &lt;rrd file&gt; AVERAGE</screen>
-			<para>and look at the last 10-20 lines. If you find NaN's there,
-			perform</para>
-			<screen>rrdtool info &lt;rrd file&gt;</screen>
-			<para>and check the
-			<userinput>ds[...].min</userinput> and
-			<userinput>ds[...].max</userinput> entries, e.g.</para>
-			<screen>ds[loss].min = 0.0000000000e+00
-ds[loss].max = 1.0000000000e+02</screen>
-			<para>In this example, MINIMUM = 0 and MAXIMUM = 100. For a
-			<userinput>ds.[...].type=GAUGE</userinput>
-			verify, that e.g. the number returned by the script does
-			not exceed
-			<userinput>ds[...].MAX</userinput>
-			(same holds for MINIMUM, respectively).</para>
-			<para>If you run into this, please do not only update
-			the data source definition within the Data Template,
-			but perform a</para>
-			<screen>rrdtool tune &lt;rrd file&gt; --maximum &lt;ds-name&gt;:&lt;new ds maximum&gt;</screen>
-			 <para>for all existing rrd files belonging to that Data Template.</para>
-			<para>At this step, it is wise to check
-			<userinput>step</userinput> and <userinput>heartbeat</userinput>
-			of the rrd file as well. For standard 300 seconds
-			polling intervals (step=300), it is wise to set
-			<userinput>minimal_heartbeat</userinput> to 600 seconds.
-			If a single update is missing and the next one occurs in
-			less than 600 seconds from the last one, rrdtool will
-			interpolate the missing update. Thus, gaps are
-			"filled" automatically by interpolation.
-			Be aware of the fact, that this is no "real" data!
-			Again, this must be done in the Data Template itself
-			and by using rrdtool tune for all existing rrd files
-			of this type.</para>
-		</sect1>
-		<sect1 id="check_rrd_graph">
-		<title>Check rrdtool graph statement</title>
-			<para>Last resort would be to check, that the correct
-			data sources are used.
-			Goto <userinput>Graph Management</userinput> and select
-			your Graph. Enable DEBUG Mode to find the whole
-			<userinput>rrdtool graph</userinput> statement. You should
-			notice the <userinput>DEF</userinput> statements. They specify
-			the rrd file and data source to be used. You may check, that
-			all of them are as wanted.</para>
-		</sect1>
-		<sect1 id="debug_miscellaneous">
-		<title>Miscellaneous</title>
-			<para>Up to current cacti 0.8.6h, table
-			<userinput>poller_output</userinput> may increase beyond
-			reasonable size.</para>
-			<para>This is commonly due to php.ini's memory settings of
-			8MB default. Change this to at least 64 MB.</para>
-			<para>To check this, please run following sql from mysql
-			cli (or phpmyadmin or the like)</para>
-			<screen>select count(*) from poller_output;</screen>
-			<para>If the result is huge, you may get rid of those
-			stuff by</para>
-			<screen>truncate table poller_output;</screen>
-			<para>As of current SVN code for upcoming cacti 0.9,
-			I saw measures were taken on both issues
-			(memory size, truncating poller_output).</para>
-		</sect1>
-
-		<sect1 id="debug_rpm_installation">
-		<title>RPM Installation?</title>
-			<para>Most rpm installations will setup the crontab entry now.
-			If you've followed the installation instructions to the
-			letter (which you should always do ;-) ),
-			you may now have two poller running. That's not a good thing,
-			though. Most rpm installations will setup cron in
-			<filename>/etc/cron.d/cacti</filename></para>
-			<para>Now, please check all your crontabs, especially
-			<filename>/etc/crontab</filename> and crontabs of
-			users root and cactiuser. Leave only one poller entry for
-			all of them. Personally, I've chosen
-			<filename>/etc/cron.d/cacti</filename> to avoid problems
-			when updating rpm's. Mosten often, you won't remember this
-			item when updating lots of rpm's, so I felt more secure to
-			put it here. And I've made some slight modifications, see</para>
-			<screen><prompt>shell&gt;</prompt> vi /etc/cron.d/cacti
-*/5 * * * *     cactiuser       /usr/bin/php -q /var/www/html/cacti/poller.php > /var/local/log/poller.log 2>&1</screen>
-
-			<para>This will produce a file
-			<filename>/var/local/log/poller.log</filename>, which includes
-			some additional informations from each poller's run, such as
-			rrdtool errors. It occupies only some few bytes and will be
-			overwritten each time.</para>
-			<para>If you're using the crontab of user "cactiuser" instead,
-			this will look like</para>
-			<screen><prompt>shell&gt;</prompt> crontab -e -u cactiuser
-*/5 * * * *     /usr/bin/php -q /var/www/html/cacti/poller.php > /var/local/log/poller.log 2>&1</screen>
-		</sect1>
-
-		<sect1 id="check_zero_values">
-		<title>Not NaN, but 0 (zero) values?</title>
-			<para>Pay attention to custom scripts. It is required,
-			that external commands called from there are in the <filename>$PATH</filename>
-			of the cactiuser running the poller. It is therefor recommended to provide
-			<filename>/full/path/to/external/command</filename></para>
-			<para>User "criggie" reported an issue with running smartctl.
-			It was complaining "you are not root" so a quick
-			<userinput>chmod +s</userinput> on the script fixed that
-			problem.</para>
-			<para>Secondly, the script was taking several seconds to run.
-			So cacti was logging a "U" for unparseable in the debug
-			output, and was recording NAN. So my fix there was to make
-			the script run faster - it has to complete in less than one
-			second, and the age of my box made it difficult to accomplish.</para>
 		</sect1>
 	</chapter>
 </part>
