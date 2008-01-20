@@ -918,6 +918,20 @@ Graph Added - graph-id: (40) - data-source-id: (65)</screen>
 				<screen>Graph Title** 				Template Name 				Size
 Device Add Test - CPU Usage 		ucd/net - CPU Usage 			120x500
 Device Add Test - Traffic - lo  	Interface - Traffic (bits/sec)  	120x500</screen>
+				<para>With <emphasis>Indexed Graphs</emphasis> it is surely possible to add multiple graphs in a single run.</para>
+				<itemizedlist>
+					<listitem><para>Assume a host with multiple interfaces.</para></listitem>
+					<listitem><para>Assume, at least 3 of them are ifSpeed=100M.</para></listitem> 
+					<listitem><para>Assume, you've already created a single graph for one of those interfaces.</para></listitem>
+				</itemizedlist>
+				<para><emphasis>Goal:</emphasis> Run <filename>add_graph.php</filename> to make sure, 
+				that for this host ALL interfaces of ifSpeed=100M are graphed. 
+				In other words: Don't care if any of this graphs already exists or if any interface 
+				meets this condition.</para>
+				<para>In this case, <filename>add_graphs.php</filename>  does not care about any graphs 
+				previously created; it simply skips them silently. 
+				Cacti will create missing graphs only. In this case, even if not a single graph is created, 
+				this will be considered successful.</para>
 			</sect2>
 		</sect1>
 		<sect1 id="cli_add_tree">
