@@ -171,6 +171,17 @@ AddType text/html .php
 # Add index.php to the list of files that will be served as directory
 # indexes.
 DirectoryIndex index.php</userinput></screen>
+					<para>If you decide to not install cacti to a subdirectory of <parameter>DocumentRoot</parameter>,
+					please add a new Apache configuration file in <filename>/etc/http/conf.d/cacti</filename> that holds</para>
+					<screen><userinput>Alias /cacti  "/full/path/to/cacti/"
+&lt;Directory "/full/path/to/cacti/"&gt;
+    Options Indexes FollowSymLinks Includes MultiViews
+    Order allow,deny
+    Allow from all
+&lt;/Directory&gt;</userinput></screen>
+					<para>Where <filename>/full/path/to/cacti/</filename> is the name of the directory,
+					were <application>cacti</application> was installed. The, please restart Apache via</para>
+					<screen><prompt>shell &gt;</prompt> <userinput>/etc/init.d/httpd restart</userinput></screen>
 			</sect1>
 			<sect1 id="unix_configure_mysql">
 				<title>Configure MySQL</title>
