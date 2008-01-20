@@ -67,8 +67,11 @@ case 'changepassword':
 	break;
 }
 ?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
+	<meta http-equiv="Content-Type" content="text/html;charset=utf-8" >
+	<link href="include/main.css" rel="stylesheet">
 	<title>Login to cacti</title>
 	<STYLE TYPE="text/css">
 	<!--
@@ -80,47 +83,44 @@ case 'changepassword':
 	-->
 	</style>
 </head>
-
-<body onload="document.login.password.focus()">
-
-<form action="<?php print basename($_SERVER['PHP_SELF']);?>" name="login" method="post">
-
-<table align="center">
-	<tr>
-		<td colspan="2"><img src="images/auth_login.gif" border="0" alt="Login"></td>
-	</tr>
-	<?php if ($bad_password == true) {?>
-	<tr><td></td></tr>
-	<tr>
-		<td colspan="2"><font color="#FF0000"><strong>Your passwords do not match, please retype:</strong></font></td>
-	</tr>
-	<?php }?>
-	<tr><td></td></tr>
-	<tr>
-		<td colspan="2">
-			<strong><font color="#FF0000">*** Forced Password Change ***</font></strong><br><br>
-			Please enter a new password for cacti:
-		</td>
-	</tr>
-	<tr><td></td></tr>
-	<tr>
-		<td>Password:</td>
-		<td><input type="password" name="password" size="40"></td>
-	</tr>
-	<tr>
-		<td>Confirm:</td>
-		<td><input type="password" name="confirm" size="40"></td>
-	</tr>
-	<tr><td></td></tr>
-	<tr>
-		<td><input type="submit" value="Save"></td>
-	</tr>
-</table>
-
-<input type="hidden" name="action" value="changepassword">
-<input type="hidden" name="ref" value="<?php print $_REQUEST["ref"];?>">
-
-</form>
-
+<body class='authBody' onload="document.login.password.focus()">
+	<div class='autoContainer'>
+		<div class='authLogo'></div>
+		<div class='authLogin'>
+			<form action="<?php print basename($_SERVER['PHP_SELF']);?>" name="login" method="post">
+			<table align="center">
+				<?php if ($bad_password == true) {?>
+				<tr><td></td></tr>
+				<tr>
+					<td colspan="2"><font color="#FF0000"><strong>Your passwords do not match, please retype:</strong></font></td>
+				</tr>
+				<?php }?>
+				<tr><td></td></tr>
+				<tr>
+					<td colspan="2">
+						<strong><font color="#FF0000">*** Forced Password Change ***</font></strong><br><br>
+						Please enter a new password for cacti:
+					</td>
+				</tr>
+				<tr><td></td></tr>
+				<tr>
+					<td>Password:</td>
+					<td><input type="password" name="password" size="40"></td>
+				</tr>
+				<tr>
+					<td>Confirm:</td>
+					<td><input type="password" name="confirm" size="40"></td>
+				</tr>
+				<tr><td></td></tr>
+				<tr>
+					<td><input type="submit" value="Save"></td>
+				</tr>
+			</table>
+			<input type="hidden" name="action" value="changepassword">
+			<input type="hidden" name="ref" value="<?php print $_REQUEST["ref"];?>">
+			</form>
+		</div>
+		<div class='authFooter'></div>
+	</div>
 </body>
 </html>

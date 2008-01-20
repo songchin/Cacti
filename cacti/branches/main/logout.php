@@ -57,7 +57,7 @@ if (read_config_option("auth_method") == "2") {
 		<?php
 
 }else{
-        /* Default action */
+	/* Default action */
 	header("Location: index.php");
 	exit;
 }

@@ -254,64 +254,67 @@ function auth_display_custom_error_message($message) {
 	-->
 	</style>
 </head>
-<body onload="document.login.login_username.focus()">
-	<form action="<?php print basename($_SERVER['PHP_SELF']);?>" name="login" method="post">
-	<input type="hidden" name="action" value="login">
-	<table align="center">
-		<tr>
-			<td colspan="2"><img src="images/auth_login.gif" border="0" alt="Login"></td>
-		</tr>
-		<?php
+<body class='authBody' onload="document.login.login_username.focus()">
+	<div class='autoContainer'>
+		<div class='authLogo'></div>
+		<div class='authLogin'>
+			<form action="<?php print basename($_SERVER['PHP_SELF']);?>" name="login" method="post">
+			<input type="hidden" name="action" value="login">
+			<table align='center'>
+				<?php
 
-		if ($ldap_error) {?>
-		<tr><td></td></tr>
-		<tr>
-			<td colspan="2"><font color="#FF0000"><strong><?php print $ldap_error_message; ?></strong></font></td>
-		</tr>
-		<?php }else{
-		if ($action == "login") {?>
-		<tr><td></td></tr>
-		<tr>
-			<td colspan="2"><font color="#FF0000"><strong>Invalid User Name/Password Please Retype</strong></font></td>
-		</tr>
-		<?php }
-		if ($user_enabled == "0") {?>
-		<tr><td></td></tr>
-		<tr>
-			<td colspan="2"><font color="#FF0000"><strong>User Account Disabled</strong></font></td>
-		</tr>
-		<?php } } ?>
+				if ($ldap_error) {?>
+				<tr><td></td></tr>
+				<tr>
+					<td colspan="2"><font color="#FF0000"><strong><?php print $ldap_error_message; ?></strong></font></td>
+				</tr>
+				<?php }else{
+				if ($action == "login") {?>
+				<tr><td></td></tr>
+				<tr>
+					<td colspan="2"><font color="#FF0000"><strong>Invalid User Name/Password Please Retype</strong></font></td>
+				</tr>
+				<?php }
+				if ($user_enabled == "0") {?>
+				<tr><td></td></tr>
+				<tr>
+					<td colspan="2"><font color="#FF0000"><strong>User Account Disabled</strong></font></td>
+				</tr>
+				<?php } } ?>
 
-		<tr><td></td></tr>
-		<tr>
-			<td colspan="2">Please enter your Cacti user name and password below:</td>
-		</tr>
-		<tr><td></td></tr>
-		<tr>
-			<td>User Name:</td>
-			<td><input type="text" name="login_username" size="40" style="width: 295px;" value="<?php print $username; ?>"></td>
-		</tr>
-		<tr>
-			<td>Password:</td>
-			<td><input type="password" name="login_password" size="40" style="width: 295px;"></td>
-		</tr>
-		<?php
-		if (read_config_option("auth_method") == "3") {?>
-		<tr>
-				<td>Realm:</td>
-				<td>
-				<select name="realm" style="width: 295px;">
-					<option value="local">Local</option>
-					<option value="ldap" selected>LDAP</option>
-				</select>
-			</td>
-		</tr>
-		<?php }?>
-		<tr><td></td></tr>
-		<tr>
-			<td><input type="submit" value="Login"></td>
-		</tr>
-	</table>
-	</form>
+				<tr><td></td></tr>
+				<tr>
+					<td colspan="2">Please enter your Cacti user name and password below:</td>
+				</tr>
+				<tr><td></td></tr>
+				<tr>
+					<td>User Name:</td>
+					<td><input type="text" name="login_username" size="40" style="width: 295px;" value="<?php print $username; ?>"></td>
+				</tr>
+				<tr>
+					<td>Password:</td>
+					<td><input type="password" name="login_password" size="40" style="width: 295px;"></td>
+				</tr>
+				<?php
+				if (read_config_option("auth_method") == "3") {?>
+				<tr>
+					<td>Realm:</td>
+					<td>
+						<select name="realm" style="width: 295px;">
+							<option value="local">Local</option>
+							<option value="ldap" selected>LDAP</option>
+						</select>
+					</td>
+				</tr>
+				<?php }?>
+				<tr><td></td></tr>
+				<tr>
+					<td><input type="submit" value="Login"></td>
+				</tr>
+			</table>
+			</form>
+		</div>
+		<div class='authFooter'></div>
+	</div>
 </body>
 </html>

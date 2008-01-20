@@ -15,6 +15,17 @@ input {
 	padding: 0px;
 }
 
+tr {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+}
+
+td {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 10px;
+}
+
+/* main navigation constructor classes */
 .navbar {
 	background-image: url('../images/cacti_backdrop.gif');
 	background-position: right;
@@ -64,14 +75,35 @@ input {
 	padding: 15px 15px 15px 15px;
 }
 
-tr {
-	font-family: Verdana, Arial, Helvetica, sans-serif;
-	font-size: 12px;
+/* login/logout class information */
+.authBody {
 }
 
-td {
-	font-family: Verdana, Arial, Helvetica, sans-serif;
-	font-size: 10px;
+.authContainer {
+	padding:0pt;
+	width:auto;
+	margin:0pt auto;
+	overflow:hidden;
+	position:relative;
+}
+
+.authLogo {
+	background-image: url('../images/auth_login.gif');
+	background-position: top center;
+	background-repeat: no-repeat;
+	margin: 40px 0px 0px 0px;
+	padding: 50px 0px 0px 0px;
+	height: 60px;
+	width: 100%;
+}
+
+.authLogin {
+	margin:0px auto;
+	padding:5px 0px 0px;
+	width:100%;
+}
+
+.authFooter {
 }
 
 /* links */
@@ -107,7 +139,7 @@ a:hover {
 	text-decoration: underline;
 }
 
-/* row styles */
+/* form constructor styles */
 .startBoxHeader {
 	border-width: 1px 1px 1px 1px;
 	border-style: solid;
