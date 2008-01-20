@@ -298,6 +298,7 @@ function initializePage() {
 		case "text":
 		case "password":
 		case "file":
+		case "button":
 			inputs[i].focus();
 			found = true;
 
