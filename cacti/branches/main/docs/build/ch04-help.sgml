@@ -1,0 +1,1640 @@
+<part id="cacti_help">
+	<title>Help</title>
+	<chapter id="how_to">
+		<title>How To</title>
+		<sect1 id="script_to_graph">
+			<title>Simplest Method of Going from Script to Graph (Walkthrough)</title>
+			<authorblurb>
+				<para>
+					<emphasis>Written by Kevin der Kinderen, <ulink url="http://kdeuja.com/~kevin/">http://kdeuja.com/~kevin/</ulink></emphasis>
+				</para>
+			</authorblurb>
+			<para>
+				This HOWTO walks you through the simplest steps of graphing the output of a single value from a script.
+				As a new user of cacti, I had a difficult time understanding how to graph anything that wasn't canned with
+				the original load. After a lot of playing around, I came up with these procedures which can be built upon for
+				more sophisticated collections and graphs.
+			</para>
+			<para>
+				I do not use templates in this HOWTO. Templates provide a significant advantage if you are graphing the output
+				for multiple instances or creating graphs for multiple hosts. They help to maintain consistency and simplify
+				setup.
+			</para>
+			<para>
+				The example here is not realistic, but can be used and expanded upon as a model for creating your own graphs.
+			</para>
+			<para>
+				I've not put a lot of explanations in the procedures. Refer to the Cacti manual for more details.
+			</para>
+			<para>
+				Have a tested script ready to go. I used the following script located in <filename>/home/cactiuser/bin</filename>
+				called <filename>random2.pl</filename>:
+			</para>
+			<programlisting>#!/usr/bin/perl -w
+
+print int(rand(10));</programlisting>
+			<para>
+				This script simply prints out a random integer between 0 and 9 every time it's called.
+			</para>
+			<orderedlist>
+				<title>The minimal steps to create a graph from a script are simply:</title>
+				<listitem>
+					<para>
+						Create a Data Input Method to tell Cacti how to call the script and what to expect from it.
+					</para>
+				</listitem>
+				<listitem>
+					<para>
+						Create a Data Source to tell cacti how and where the data will be stored.
+					</para>
+				</listitem>
+				<listitem>
+					<para>
+						Create a Graph to tell cacti how the data will be presented in graph form.
+					</para>
+				</listitem>
+				<listitem>
+					<para>
+						Add Graph to Graph View so you can view the graph.
+					</para>
+				</listitem>
+				<listitem>
+					<para>
+						View the Graph
+					</para>
+				</listitem>
+			</orderedlist>
+			<orderedlist>
+				<title>The details are below:</title>
+				<listitem>
+					<para>
+						Create Data Input Method
+					</para>
+					<itemizedlist>
+						<listitem>
+							<para>
+								Click the <guilabel>Console</guilabel> tab at the top
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Click <guilabel>Data Input Methods</guilabel> under <guilabel>Management</guilabel>
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Click <guilabel>Add</guilabel>
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Name: Random 2 Input
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Input Type: Script/Command
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Input String: /home/cactiuser/bin/random2.pl
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Click <guilabel>Create</guilabel>
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Should see "Save Successful." at the top of the page.
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Click <guilabel>Add</guilabel> by Output Fields (there are no input fields for this example)
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Field [Output]: random_number
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Friendly Name: Random Number
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Update RRD File: checked
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Click <guilabel>Create</guilabel>
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Should see "Save Successful." and random_number listed under <guilabel>Output Fields</guilabel>.
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Click <guilabel>Save</guilabel>
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Should see "Save Successful." and Random Input listed in <guilabel>Data Input Methods</guilabel>.
+							</para>
+						</listitem>
+					</itemizedlist>
+				</listitem>
+				<listitem>
+					<para>
+						Create a Data Source
+					</para>
+					<itemizedlist>
+						<listitem>
+							<para>
+								Click <guilabel>Data Sources</guilabel> under <guilabel>Management</guilabel>
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Click <guilabel>Add</guilabel> in the top right
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								The <guilabel>Data Template</guilabel> Section should be None and None, we're not using templates for this example.
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Click <guilabel>Create</guilabel>.
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Name: random2ds
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Data Source Path: blank (Cacti will fill this in)
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Data Input Source: Random 2 Input (this is the data input method you created in step 1)
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Highlight each of the Associated RRA's using control-click
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Step: 300 (300 seconds = 5 minutes)
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Data Source Active: checked
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Describe the Data Source Item inside the RRA by...
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Internal Data Source Name: random_number
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Minimum Value: 0
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Maximum Value: 0
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Data Source Type: GAUGE
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Heartbeat: 600
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Click <guilabel>Create</guilabel>
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Should see "Save Successful." at the top and the Data Source Path should now have a value (my example &lt;path_rra&gt;/random_number_286.rrd)
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Click Turn On Data Source Debugging Mode to see the results of this step.
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Click <guilabel>Save</guilabel>
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Should see "Save Successful" and your new Data Source listed.
+							</para>
+						</listitem>
+					</itemizedlist>
+				</listitem>
+				<listitem>
+					<para>
+						Create Graph
+					</para>
+					<itemizedlist>
+						<listitem>
+							<para>
+								Select <guilabel>Graph Management</guilabel> under <guilabel>Management</guilabel>
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Click <guilabel>Add</guilabel>
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Selected Graph Template: None
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Host: None
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Click <guilabel>Create</guilabel>
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Title: RANDOM NUMBERS
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Image Format: PNG
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Height: 120
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Width: 500
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Auto Scale: checked
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Auto Scale Options: Use --alt-autoscale-max
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Logarithmic Scaling: unchecked
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Rigid Boundaries: unchecked
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Auto Padding: checked
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Allow Graph Export: checked
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Upper Limit: 100
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Lower Limit: 0
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Base Value: 1000
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Unit Value: blank
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Unit Exponent Value: 0
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Vertical Label: Random Number
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Click <guilabel>Create</guilabel>
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Should see "Save Successful."
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								If you click "Turn On Graph Debug Mode." now you will see: "Error: can't make a graph without contents." We need to add Graph Items:
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Click <guilabel>Add</guilabel> by <guilabel>Graph Items</guilabel>
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Data Source: (from list) No Host - random2ds (random_number)
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Color: 0000FF (Blue)
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Graph Item Type: LINE2
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Consolidation Function: AVERAGE
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								CDEF Function: None
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Value: blank
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								GPRINT Type: Normal
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Text Format: blank
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Insert Hard Return: unchecked
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Click <guilabel>Create</guilabel>
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Should see "Save Successful.", Item #1 listed and a graph under debug (probably with nothing in it yet)
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								To add a legend, click <guilabel>Add</guilabel> by <guilabel>Graph Items</guilabel> again
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Data Source: No Host - random2ds (random_number)
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Color: None
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Graph Item Type: GPRINT
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Consolidation Function: LAST
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								CDEF Function: None
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Value: blank
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								GPRINT Type: Normal
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Text Format: Cur:
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Insert Hard Return: unchecked
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Click <guilabel>Create</guilabel>
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Should see "Save Successful." and the graph will have a legend showing the current value. Note: your integer random number has been averaged over the past 5 minutes. At the bottom of the page, click save.
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								At the bottom of the page, click <guilabel>Save</guilabel>.
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Should see "Save Successful." and your graph listed.
+							</para>
+						</listitem>
+					</itemizedlist>
+				</listitem>
+				<listitem>
+					<para>
+						Add graph to the graph view
+					</para>
+					<itemizedlist>
+						<listitem>
+							<para>
+								Click <guilabel>Graph Trees</guilabel> under <guilabel>Management</guilabel>
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								We'll create a tree called "test" to place our graph
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Click <guilabel>Add</guilabel>
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Name: test
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Should see "Save Successful"
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Click <guilabel>Add</guilabel> beside <guilabel>Tree Items</guilabel> (to add our graph to this tree)
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Under Tree Items [graph]...
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Graph: RANDOM NUMBERS (we named this in step 3)
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Round Robin Archive: Daily (5 Minute Average)
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Click <guilabel>Create</guilabel>
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Should see "Save Successful." and RANDOM NUMBERS listed under <guilabel>Tree Items</guilabel>
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Click <guilabel>Save</guilabel>
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Should see "Save Successful." and test listed under <guilabel>Graph Trees</guilabel>
+							</para>
+						</listitem>
+					</itemizedlist>
+				</listitem>
+				<listitem>
+					<para>
+						View Graph
+					</para>
+					<itemizedlist>
+						<listitem>
+							<para>
+								Select <guilabel>Graphs</guilabel> tab
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Select tree view (Tree beside settings tab)
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Select test tree on left
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								You may see "Random Graph" but no graph. It takes two or three polls (10 - 15 minutes) to see a graph. I believe poll 1 to create the rrd, poll 2 to get the first data point and poll 3 to have graphable points.
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								While waiting, you can click the RANDOM NUMBERS graph. You'll see	place holders for 4 graphs. Select [source] under Daily (5 Minute Average). You'll see the source for the call to rrdtool graph. Give it a sanity check.
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Now be patient. Hit your refresh button every few minutes. After the first poll I got a few empty graphs.	A few minutes later data started showing up.
+							</para>
+						</listitem>
+					</itemizedlist>
+				</listitem>
+			</orderedlist>
+		</sect1>
+	</chapter>
+	<chapter id="faq">
+		<title>Frequently Asked Questions</title>
+		<qandaset defaultlabel="none">
+			<qandadiv>
+				<title>Using Cacti</title>
+				<qandaentry>
+					<question>
+						<para>
+							How do I create traffic graphs?
+						</para>
+					</question>
+					<answer>
+						<para>
+							Before you can create traffic graphs, Cacti must have working SNMP support. One way to do this is to compile
+							PHP with SNMP support built in, many times you can install the 'php-snmp' package to do this. The second option
+							is to have Cacti call the snmpget and snmpwalk binaries from your ucd-snmp or <application>net-snmp</application>
+							installation. You can use the about page to determine whether to are using "built-in" or "external" SNMP support.
+						</para>
+						<para>
+							Now that you have working SNMP support, follow these steps.
+						</para>
+						<orderedlist>
+							<listitem>
+								<para>Click <guilabel>Devices</guilabel> on Cacti's menu.</para>
+							</listitem>
+							<listitem>
+								<para>Click <guilabel>Add</guilabel> to add a new device.</para>
+							</listitem>
+							<listitem>
+								<para>Type a description, hostname, management IP, and SNMP community. Make sure to select "Generic SNMP-enabled Host" under <guilabel>Host Template</guilabel> and click <guilabel>Create</guilabel>.</para>
+							</listitem>
+							<listitem>
+								<para>Click <guilabel>Create Graphs for this Host</guilabel> at the top of the page.</para>
+							</listitem>
+							<listitem>
+								<para>You should see one or more interfaces listed under the <guilabel>Data Query [SNMP - Interface Statistics]</guilabel> box. Place a check next to each interface that you want to graph. Below the box, select type of graph that you want to create (bits, bytes, summation, etc).</para>
+							</listitem>
+							<listitem>
+								<para>Click <guilabel>Create</guilabel>, and <guilabel>Create</guilabel> again on the following screen to create your graphs.</para>
+							</listitem>
+						</orderedlist>
+					</answer>
+				</qandaentry>
+			</qandadiv>
+			<qandadiv>
+				<title>General</title>
+				<qandaentry>
+					<question>
+						<para>
+							I get a "Undefined variable: _SERVER" error message from Cacti.
+						</para>
+					</question>
+					<answer>
+						<para>
+							Cacti 0.8.6 and above requires that you have at least PHP 4.1 or greater installed.
+						</para>
+					</answer>
+				</qandaentry>
+				<qandaentry>
+					<question>
+						<para>
+							I get a "Call to undefined function: mysql_connect()" error message from Cacti.
+						</para>
+					</question>
+					<answer>
+						<para>
+							Your installation of PHP does not have MySQL installed or enabled. On binary-based distributions, make
+							sure you have the 'php-mysql' package installed. Also make sure that 'extension=mysql.so' is uncommented
+							in your php.ini file.
+						</para>
+					</answer>
+				</qandaentry>
+				<qandaentry>
+					<question>
+						<para>
+							I have forgotten my 'admin' password to Cacti, how do I reset it?
+						</para>
+					</question>
+					<answer>
+						<para>
+							To reset the admin account password back to the default of 'admin', connect to your Cacti database at the
+							command line.
+						</para>
+						<screen><prompt>shell&gt;</prompt> <userinput>mysql -u root -p cacti</userinput></screen>
+						<para>
+							Now execute the following SQL:
+						</para>
+						<screen><prompt>mysql&gt;</prompt> <userinput>update user_auth set password=md5('admin') where username='admin';</userinput></screen>
+					</answer>
+				</qandaentry>
+			</qandadiv>
+			<qandadiv>
+				<title>Monitoring</title>
+				<qandaentry>
+					<question>
+						<para>
+							I am polling thousands of items and poller.php takes more than 5 minutes to run.
+						</para>
+					</question>
+					<answer>
+						<para>
+							Give <application>Spine</application>, the fast replacement for poller.php a try. Unlike poller.php, <application>Spine</application> is written in c and makes use
+							of pthreads. On a typical installation, it is not uncommon for <application>Spine</application> to poll about 500 items in less then 10
+							seconds.
+						</para>
+					</answer>
+				</qandaentry>
+				<qandaentry>
+					<question>
+						<para>
+							I changed x, and now some of my graphs are not updating.
+						</para>
+					</question>
+					<answer>
+						<para>
+							The best thing to do here is to force Cacti to rebuild its poller cache. To do this click <guilabel>Utilities</guilabel> on the Cacti menu, and select <guilabel>Clear Poller Cache</guilabel>.
+						</para>
+					</answer>
+				</qandaentry>
+				<qandaentry>
+					<question>
+						<para>
+							I am using <application>Redhat 8.0</application> and SNMP is not working.
+						</para>
+					</question>
+					<answer>
+						<para>
+							<application>Redhat 8.0</application> comes with a broken php-snmp package. Updating your 'php-snmp' and 'net-snmp'
+							packages to their latest versions should fix this problem.
+						</para>
+					</answer>
+				</qandaentry>
+				<qandaentry>
+					<question>
+						<para>
+							How do I configure <application>net-snmp</application> so it will work with Cacti?
+						</para>
+					</question>
+					<answer>
+						<para>
+							Run <command>snmpconf -g basic_setup</command> and follow the prompts. Also check that the file being used by snmpd
+							is the correct config file. For Redhat Linux, snmpconf creates the <filename>/etc/snmpd.conf</filename>, but snmpd
+							uses <filename>/etc/snmpd/snmpd.conf</filename>.
+						</para>
+						<para>
+							If this doesn't work a very simple config file is:
+						</para>
+						<screen><userinput># contact
+syslocation Something
+syscontact "root@someone.com"
+
+# auth
+rocommunity public
+
+# disk monitoring
+disk /</userinput></screen>
+					</answer>
+				</qandaentry>
+			</qandadiv>
+			<qandadiv>
+				<title>Graphs</title>
+				<qandaentry>
+					<question>
+						<para>
+							I just installed Cacti and all of my graphs appear as broken images.
+						</para>
+					</question>
+					<answer>
+						<para>
+							For you to actually get graph images, poller.php must run at least once so it can create .rrd files in Cacti's 'rra/'
+							directory. Double check that you configured your <filename>/etc/crontab</filename> file to execute poller.php every
+							five minutes. Also make sure that the user poller.php runs as has permission to create new files in Cacti's 'rra/'
+							directory.
+						</para>
+						<para>
+							If all of your settings appear correct, try running poller.php manually by cd'ing to Cacti's directory and typing:
+						</para>
+						<screen><prompt>shell&gt;</prompt> <userinput>php poller.php</userinput></screen>
+						<para>
+							If you have files in your 'rra/' directory, but your graphs still appear as broken images, you should enable graph
+							debug mode see exactly why the graphs are not rendering. To do this go into Cacti, select <guilabel>Graph Management</guilabel>
+							from the menu, select any graph listed, and select <guilabel>Turn On Graph Debug Mode</guilabel>.
+						</para>
+					</answer>
+				</qandaentry>
+				<qandaentry>
+					<question>
+						<para>
+							My graphs render, but they do not contain any data.
+						</para>
+					</question>
+					<answer>
+						<para>
+							More often than not, this problem's cause is permissions. For instance if you run poller.php manually as root for testing, any
+							.rrd files that it creates will be owned by root. Now when poller.php runs from cron, it will not be able to update these .rrd
+							files because they are owned by root. You can double check the owner of your .rrd files by running the following command in
+							your Cacti directory:
+						</para>
+						<screen><prompt>shell&gt;</prompt> <userinput>ls -al rra/</userinput></screen>
+						<para>
+							If only some of your graphs are not updating correctly, double check the <guilabel>Maximum Value</guilabel> field for all data
+							sources used by these graphs. If the value being fed to the .rrd file exceeds its <guilabel>Maximum Value</guilabel>, RRDTool
+							will insert an <guilabel>Unknown</guilabel> and you will see no data on the graph.
+						</para>
+					</answer>
+				</qandaentry>
+				<qandaentry>
+					<question>
+						<para>
+							A lot of my graphs contain long ifAlias names, but they are being truncated to 15 characters.
+						</para>
+					</question>
+					<answer>
+						<para>
+							Cacti does this by default to better control graph title formatting. You can change this limit, by going to <guilabel>Cacti
+							Settings</guilabel> on the Cacti menu, selecting the <guilabel>Visual</guilabel> tab, and changing the value for <guilabel>Data
+							Queries - Maximum Field Length</guilabel>.
+						</para>
+					</answer>
+				</qandaentry>
+				<qandaentry>
+					<question>
+						<para>
+							One of my devices rebooted and now I have a huge spike on my graph!
+						</para>
+					</question>
+					<answer>
+						<para>
+							This occurs because the reboot causes SNMP's counters to reset, which can cause a rather large spike on the graph when
+							<application>RRDTool</application> tries to determine the change between the new small counter value and the large
+							previous value. One way to combat this issue is to specify realistic maximum values for your data sources.
+							<application>RRDTool</application> will ignore any value that is larger than the maximum value.
+						</para>
+						<para>
+							If you already have a spike on one or more of your graphs, there is a really <ulink url="http://cricket.sourceforge.net/contrib/files/killspike2">useful Perl script</ulink> that will remove them for you.
+						</para>
+					</answer>
+				</qandaentry>
+				<qandaentry>
+					<question>
+						<para>
+							RRDTool Says: ERROR: unknown option '--slope-mode' or RRDTool Says: ERROR: Garbage ':39:24 To 2005/10/22 16:39:24\c' after command: COMMENT:From 2005/10/21 16:39:24 To 2005/10/22 16:39:24\c
+						</para>
+					</question>
+					<answer>
+						<para>
+							This occurs because the version of RRDTool that you are running does not match the RRDTool version Cacti is configured to use.  Double check your Cacti Settings and make sure that the RRDTool version matches what version of RRDTool you are running.
+						</para>
+					</answer>
+				</qandaentry>
+
+			</qandadiv>
+			<qandadiv>
+				<title>Windows Related</title>
+				<qandaentry>
+					<question>
+						<para>
+							I get a "Fatal error: Cannot redeclare title_trim()" error message from Cacti.
+						</para>
+					</question>
+					<answer>
+						<para>
+							Contrary to previous versions of Cacti, you must not put Cacti in your PHP include path. Check your <filename>php.ini</filename> file to make sure there is not something like <userinput>include_path = C:/Apache2/htdocs/cacti</userinput>.
+						</para>
+					</answer>
+				</qandaentry>
+				<qandaentry>
+					<question>
+						<para>
+							Call to undefined function mysql_connect() in C:\Inetpub\www\cacti\lib\adodb\drivers\adodb-mysql.inc.php on line 338
+						</para>
+					</question>
+					<answer>
+						<para>
+							This is caused because newer versions of PHP 
+							<ulink url="http://www.php.net/manual/en/faq.databases.php#faq.databases.mysql.php5">no longer support</ulink>
+							the new client libraries for MySQL 4.1.0 and beyond. The universal fix is to apply the
+							<ulink url="http://dev.mysql.com/doc/mysql/en/old-client.html">old client</ulink> 
+							hack, outlined in the MySQL section above.
+						</para>
+					</answer>
+				</qandaentry>
+
+
+				<qandaentry>
+					<question>
+						<para>
+							How do I stop the command windows from opening every 5 minutes?
+						</para>
+					</question>
+					<answer>
+						<para>
+							This is occurring because your Cacti scheduled task is using the same user name 
+							you've logged onto the computer with. There are two possible fixes: </para>
+							<orderedlist>
+								<listitem><para>Use a different user name to run the Cacti scheduled task</para></listitem>
+								<listitem><para>Use a windows script to hide the command windows. Only do this after your 
+								cacti installation is fully functional!</para>
+								<orderedlist numeration=loweralpha>
+									<listitem><para>Create a file called <filename>invisible.vbs</filename>. 
+									Place it where ever you like.</para></listitem>
+									<listitem><para>Edit <filename>invisible.vbs</filename> and paste the following</para>
+									<screen><userinput>Set objWSHShell = WScript.CreateObject("WScript.Shell")
+objWSHShell.Run "poller.php", 0, False</userinput></screen></listitem>
+									<listitem><para>Edit the Cacti scheduled task and change the <guilabel>Run</guilabel> to:</para>
+									<screen><userinput>C:\Windows\system32\wscript.exe "C:\invisible.vbs" "C:\Inetpub\wwwroot\cacti\poller.php"</userinput></screen></listitem>
+								</orderedlist></listitem>
+							</orderedlist>
+					</answer>
+				</qandaentry>
+
+
+				<qandaentry>
+					<question>
+						<para>
+							I see errors in the cacti.log file. How to I find out what is wrong?
+						</para>
+					</question>
+					<answer>
+						<para>
+							Turn up the logging level in Cacti. In Cacti go to <guibutton>Settings</guibutton> 
+							and change the <guilabel>Poller Logging Level</guilabel> to Debug for 
+							<emphasis>one cycle</emphasis>. If you notice your log file is filled with WEBLOG entries, 
+							which makes it hard to follow what is going on, then uncheck all of the 
+							<guilabel>Web Events</guilabel>, save and wait for the next polling cycle.
+						</para>
+					</answer>
+				</qandaentry>
+
+
+				<qandaentry>
+					<question>
+						<para>
+							Does Cacti use MIB files?
+						</para>
+					</question>
+					<answer>
+						<para>
+							No. But they are handy to have around when making custom scripts in conjunction 
+							with Net-SNMP or GetIF.
+						</para>
+					</answer>
+				</qandaentry>
+
+
+				<qandaentry>
+					<question>
+						<para>
+							How can I debug SNMP output from a device?
+						</para>
+					</question>
+					<answer>
+						<para>
+							The easiest tools are either <ulink url="http://www.wtcs.org/snmp4tpc/getif.htm">GetIf</ulink> or <ulink url="http://net-snmp.sourceforge.net/">Net-SNMP</ulink>.
+							GetIf is fairly self explanatory since it has a GUI. Using the MBrowser 
+							tab is handy for navigating the SNMP trees and OIDs. 
+							Net-SNMP is comprised of several tools. You'll want to use snmpget and snmpwalk.
+							An example of parsing the interfaces on a device would be:</para>
+
+							<screen><prompt>C:\net-snmp\bin\&gt;</prompt> <userinput>snmpwalk -v 1 -c public 127.0.0.1 .1.3.6.1.2.1.2.2</userinput></screen>
+							<para>An alternative would be to use a MIB name. This of course does require the use of MIB files:</para>
+							<screen><prompt>C:\net-snmp\bin\&gt;</prompt> <userinput>snmpwalk -v 1 -c public 127.0.0.1 ifDescr</userinput></screen>
+					</answer>
+				</qandaentry>
+
+
+				<qandaentry>
+					<question>
+						<para>
+							Why doesn't Windows return Disk or CPU usage via SNMP?
+						</para>
+					</question>
+					<answer>
+						<para>
+							Open up the SNMP Service and click on the Agent tab. Make sure all the 
+							service checkboxes are marked (they are not by default). Restart the SNMP service.
+						</para>
+					</answer>
+				</qandaentry>
+
+
+				<qandaentry>
+					<question>
+						<para>
+							How do I get FastCGI to work with Windows 20003?
+						</para>
+					</question>
+					<answer>
+						<para>
+							A little modification needs to be done to the 
+							<ulink url="http://phplens.com/phpeverywhere/node/view/13">existing documentation</ulink>.</para>
+							<orderedlist>
+								<listitem><para>Make sure IIS_WPG account has read/execute rights on 
+								the PHP and Cacti folders.</para></listitem>
+								<listitem><para>Use the following modified <filename>fastcgi.reg</filename> file 
+								(assumes you're using PHP5)</para>
+								<screen><userinput>Windows Registry Editor Version 5.00
+[HKEY_LOCAL_MACHINE\SOFTWARE\FASTCGI]
+"S"StartServers"=dword:00000002
+"IncrementServers"=dword:00000002
+"MaxServers"=dword:00000019
+"Timeout"=dword:00000258
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\FASTCGI\.php]
+"AppPath"="c:\\php\\php-cgi.exe"
+"BindPath"="php-fcgi"</userinput></screen></listitem>
+								<listitem><para>Create a web site extension called <userinput>fastcgi</userinput>. 
+								Add <filename>isapi_fcgi.dll</filename> and <filename>php-cgi.exe</filename>.</para></listitem>
+								<listitem><para>In the <guilabel>Default Website</guilabel>, under 
+								<guilabel>ISAPI filters</guilabel>, create a new filter in addition to the PHP one. 
+								Call it<userinput>fastcgi</userinput> and point it to 
+								<filename>isapi_fcgi.dll</filename>.</para></listitem>
+								<listitem><para>Under the <guilabel>Home Directory</guilabel> tab, 
+								select <guilabel>Configuration</guilabel> and, change the .php 
+								extension to use <filename>isapi_fcgi.dll</filename>.</para></listitem>
+							</orderedlist>
+					</answer>
+				</qandaentry>
+
+
+				<qandaentry>
+					<question>
+						<para>
+							ERROR: change root is not supported by your OS or at least by this copy of rrdtool.
+						</para>
+					</question>
+					<answer>
+						<para>
+							This error message occurs when you use the Win32 version of rrdtool instead of 
+							the Cygwin one. RRDTool 1.2.15 and later work with the Win32 build.
+						</para>
+					</answer>
+				</qandaentry>
+
+
+				<qandaentry>
+					<question>
+						<para>
+							When attempting to run poller.php or cmd.php you get, 
+							<emphasis>This script is only meant to run at the command line</emphasis>
+						</para>
+					</question>
+					<answer>
+						<para>
+							Most likely caused by a misconfiguration in your <filename>php.ini</filename> file. 
+							Make sure the following is set in it:</para>
+							<screen><userinput>register_argc_argv = On
+safe_mode = Off</userinput></screen>
+
+							<para>Another possibility is a logic bug in cmd.php only present in Cacti 0.8.6j and 
+							PHP 5.2. Open cmd.php and go to line 49. 
+							Change it to:</para>
+							<screen><userinput>if (version_compare(&quot;5.2.0&quot;, PHP_VERSION, &quot;&gt;=&quot;)) {</userinput></screen>
+					</answer>
+				</qandaentry>
+
+
+				<qandaentry>
+					<question>
+						<para>
+							How do I get WMI scripts working on remote computers?
+						</para>
+					</question>
+					<answer>
+						<para>
+							There are several things one needs to do to accomplish this:</para>
+							<orderedlist>
+								<listitem><para>Open a hole in the firewall for DCOM. For the 
+								Windows XP SP2 or Windows 2003 SP1 firewall, do the following:</para> 
+								<orderedlist numeration=loweralpha>
+									<listitem><para>Open up the Windows Firewall control panel</para></listitem>
+									<listitem><para>Click on <guibutton>Add Port</guibutton>.</para></listitem>
+									<listitem><para><emphasis>Name:</emphasis> DCOM <emphasis>Port:</emphasis> 135 <emphasis>Type:</emphasis> TCP</para></listitem>
+									<listitem><para>You might need to change the scope of the rule, depending on where you will be 
+									remotely querying the server from.</para></listitem>
+									<listitem><para>Start | Run: <filename>gpedit.msc</filename></para></listitem>
+									<listitem><para>Navigate to: <guilabel>Computer Configuration</guilabel> | <guilabel>Administrative Templates</guilabel> | <guilabel>Network</guilabel> | <guilabel>Network Connections</guilabel> | <guilabel>Windows Firewall</guilabel></para></listitem>
+									<listitem><para>Enable the following:</para>
+									<screen><userinput>Allow remote administration exception
+Allow local port exceptions</userinput></screen></listitem>
+								</orderedlist></listitem>
+								<listitem><para>Edit WMI security</para>
+								<orderedlist numeration=loweralpha>
+									<listitem><para>Start | Run: <filename>wmimgmt.msc</filename>.</para></listitem>
+									<listitem><para>Get properties on <guilabel>WMI Control</guilabel>.</para></listitem>
+									<listitem><para>Go to the <guibutton>Security</guibutton> tab</para></listitem>
+									<listitem><para>Click on the <guilabel>Root</guilabel> folder, then the 
+									<guibutton>security</guibutton> button at the bottom</para></listitem>
+									<listitem><para>Click on <guilabel>Advanced</guilabel></para></listitem>
+									<listitem><para>Add the cactiuser account that's going to be used. Assign the following rights:</para>
+									<screen><userinput>Enable Account
+Enable Remote</userinput></screen></listitem>
+									<listitem><para>Change the <guilabel>Apply onto</guilabel> to: 
+									<userinput>This namespace and subnamespaces</userinput>.</para></listitem>
+									<listitem><para>Click OK several times and close the WMI window.</para></listitem>
+								</orderedlist></listitem>
+								<listitem><para>Edit DCOM security</para>
+								<orderedlist numeration=loweralpha>
+									<listitem><para>Start | Run: <filename>dcomcnfg</filename></para></listitem>
+									<listitem><para>Navigate to: <guilabel>Component Services</guilabel> | <guilabel>Computers</guilabel> | <guilabel>My Computer</guilabel>.</para></listitem>
+									<listitem><para>Get properties on <guilabel>My Computer</guilabel></para></listitem>
+									<listitem><para>Click on the <guilabel>COM Security</guilabel> tab.</para></listitem>
+									<listitem><para>Under <guilabel>Launch and Activate Permissions</guilabel>, click on <guilabel>Edit Limits</guilabel></para></listitem>
+									<listitem><para>Add the cactiuser account that's going to be used.  Assign the following rights:</para>
+									<screen><userinput>Remote Activation</userinput></screen></listitem>
+									<listitem><para>Click OK and exit.</para></listitem>
+								</orderedlist></listitem>
+							</orderedlist>
+					</answer>
+				</qandaentry>
+
+
+				<qandaentry>
+					<question>
+						<para>
+							Why doesn't a WMI counter say it exists when I know it should?
+						</para>
+					</question>
+					<answer>
+						<para>
+							It's possible you need to run <ulink url="http://msdn.microsoft.com/library/default.asp?url=/library/en-us/wmisdk/wmi/wmiadap.asp">wmiadap /f</ulink> 
+							which will re-parse all the performance libraries on the system.
+						</para>
+					</answer>
+				</qandaentry>
+
+
+				<qandaentry>
+					<question>
+						<para>
+							I don't see any graphs on the main graph page, but when I click on one, 
+							I see 4 graphs with data.
+						</para>
+					</question>
+					<answer>
+						<para>
+							This happens because you have the wrong version of RRDTool selected in Cacti. 
+							Set it by going to Settings and applying the proper 
+							<guilabel>RRDTool Utility Version.</guilabel>
+						</para>
+					</answer>
+				</qandaentry>
+
+
+				<qandaentry>
+					<question>
+						<para>
+							Why do my graphs <emphasis>randomly</emphasis> not have any text while the 
+							data is properly displayed?
+						</para>
+					</question>
+					<answer>
+						<para>
+							It seems there is a bug in newer versions of PHP 4, specifically in <filename>php4ts.dll</filename>. 
+							Get <filename>php4ts.dll</filename> from PHP 4.3.11 and replace the current one in your PHP directory. 
+							<emphasis>*WARNING* </emphasis>not responsible for any adverse affects this might have on your system.
+						</para>
+					</answer>
+				</qandaentry>
+
+
+				<qandaentry>
+					<question>
+						<para>
+							How does one know if Cacti has debugging logging properly enabled?
+						</para>
+					</question>
+					<answer>
+						<para>
+							It seems there is a bug in Cacti were even though the logging level is set to DEBUG, you do not 
+							truly get debugging output. If your log file is filled with something like the following which 
+							constantly repeats, Cacti is NOT in debugging mode:</para>
+							<screen><userinput>CMDPHP: Poller[0] DEBUG: SQL Assoc: "select  poller_output.output,  poller_output.time,  poller_output.local_data_id,  poller_item.rrd_path,  &lt;snip&gt;
+CMDPHP: Poller[0] DEBUG: SQL Assoc: "select poller_id,end_time from poller_time where poller_id = 0"</userinput></screen>
+							<para>If your log file contains things like the following, then debugging logging 
+							is properly enabled:</para>
+							<screen><userinput>CMDPHP: Poller[0] Host[1] SNMP: Host responded to SNMP
+CMDPHP: Poller[0] DEBUG: SQL Exec: &quot;update host set  status = '3',  status_event_count = '0',  status_fail_date = '2006-01-19 02:20:10',  &lt;snip&gt;
+CMDPHP: Poller[0] Host[1] RECACHE: Processing 3 items in the auto reindex cache for 'ares.mydomain.com'.
+CMDPHP: Poller[0] DEBUG: SQL Exec: &quot;update poller_reindex set assert_value='368365818' where host_id='1' and data_query_id='8' and arg1='.1.3.6.1.2.1.1.3.0'&quot;
+CMDPHP: Poller[0] DEBUG: SQL Exec: &quot;update poller_reindex set assert_value='368365819' where host_id='1' and data_query_id='14' and arg1='.1.3.6.1.2.1.1.3.0'&quot;
+CMDPHP: Poller[0] Host[1] DS[10] SNMP: v2: ares.mydomain.com, dsname: proc, oid: .1.3.6.1.2.1.25.1.6.0, output: 53
+CMDPHP: Poller[0] DEBUG: SQL Exec: &quot;insert into poller_output (local_data_id,rrd_name,time,output) values (10,'proc','2006-05-28 09:20:02','53')&quot;
+CMDPHP: Poller[0] DEBUG: SQL Assoc: &quot;select poller_id,end_time from poller_time where poller_id = 0&quot;
+CMDPHP: Poller[0] DEBUG: SQL Assoc: &quot;select  poller_output.output,  poller_output.time,  poller_output.local_data_id,  poller_item.rrd_path,  &lt;snip&gt;
+CMDPHP: Poller[0] DEBUG: SQL Exec: &quot;delete from poller_output where local_data_id='10' and rrd_name='proc' and time='2006-05-28 09:20:02'&quot;
+POLLER: Poller[0] CACTI2RRD: c:/rrdtool/rrdtool.exe update c:\cacti\rra\ares_proc_10.rrd</userinput></screen>
+					</answer>
+				</qandaentry>
+
+
+				<qandaentry>
+					<question>
+						<para>
+							What are all the NTFS permissions that need to be set for Cacti to 
+function?
+						</para>
+					</question>
+					<answer>
+<table frame='all'>
+	<title>NTFS Permissions</title>
+	<tgroup cols='3' align='left' colsep='1' rowsep='1'>
+		<colspec colnum="1">
+		<colspec colnum="2">
+		<colspec colwidth="3*" colnum="3">
+	<THead>
+	<Row>
+		<entry align="center">Path</entry>
+		<entry align="center">User</entry>
+		<entry align="center">NTFS Permissions</entry>
+	</Row>
+	</THead>
+	<TBody>
+	<Row>
+		<entry>C:\Spine\</entry>
+		<entry>TaskUser</entry>
+		<entry>Read &amp; Execute</entry>
+	</Row>
+
+	<Row>
+		<entry>C:\Cygwin\bin\</entry>
+		<entry>TaskUser</entry>
+		<entry>Read &amp; Execute</entry>
+	</Row>
+	<Row>
+		<entry>C:\Inetpub\wwwroot\cacti\</entry>
+		<entry>TaskUser</entry>
+		<entry>Read &amp; Execute</entry>
+	</Row>
+	<Row>
+		<entry></entry>
+		<entry>IUSR_</entry>
+		<entry>Read &amp; Execute</entry>
+	</Row>
+	<Row>
+		<entry>C:\Inetpub\wwwroot\cacti\rra\</entry>
+		<entry>IIS_WPGd></entry>
+		<entry>Modify</entry>
+	</Row>
+	<Row>
+		<entry></entry>
+		<entry>IUSR_</entry>
+		<entry>Modify</entry>
+	</Row>
+	<Row>
+		<entry>C:\C:\Inetpub\wwwroot\cacti\log\</entry>
+		<entry>IIS_WPG</entry>
+		<entry>Modify</entry>
+	</Row>
+	<Row>
+		<entry></entry>
+		<entry>IUSR_</entry>
+		<entry>Modify</entry>
+	</Row>
+	<Row>
+		<entry>C:\PHP\</entry>
+		<entry>IUSR_</entry>
+		<entry>Read &amp; Execute</entry>
+	</Row>
+
+	<Row>
+		<entry></entry>
+		<entry>TaskUser</entry>
+		<entry>Read &amp; Execute</entry>
+	</Row>
+	<Row>
+		<entry>C:\PHP\sessiondata\</entry>
+		<entry>IUSR_</entry>
+		<entry>Modify (Files only)</entry>
+	</Row>
+	<Row>
+		<entry>C:\PHP\uploadtemp\</entry>
+		<entry>IUSR_</entry>
+		<entry>Modify (Files only)</entry>
+	</Row>
+	<Row>
+		<entry>C:\Net-SNMP\</entry>
+		<entry>IUSR_</entry>
+		<entry>Read &amp; Execute</entry>
+	</Row>
+
+	<Row>
+		<entry>C:\RRDTool\</entry>
+		<entry>IUSR_d></entry>
+		<entry>Read &amp; Execute</entry>
+	</Row>
+	<Row>
+		<entry></entry>
+		<entry>TaskUser</entry>
+		<entry>Read &amp; Execute</entry>
+	</Row>
+	<Row>
+		<entry>C:\Windows\System32\cmd.exe</entry>
+		<entry>IUSR_</entry>
+		<entry>Read &amp; Execute</entry>
+	</Row>
+	<Row>
+		<entry></entry>
+		<entry>IIS_WPG</entry>
+		<entry>Read &amp; Execute</entry>
+	</Row>
+	</TBody>
+	</TGroup>
+</table>
+<Note><para>* TaskUser is the user account that runs the scheduled task for Cacti.
+* IUSR_<emphasis>COMPUTERNAME</emphasis> is the user account that Windows uses for anonymous 
+access for the web server.
+* IIS_WPG account is only present on Windows 2003.</para></Note>
+					</answer>
+				</qandaentry>
+
+
+				<qandaentry>
+					<question>
+						<para>
+							How do I repair my Cacti database?
+						</para>
+					</question>
+					<answer>
+						<para>
+							Run the following from the command prompt:</para>
+							<screen><userinput>mysqlcheck --auto-repair --databases cacti</userinput></screen>
+					</answer>
+				</qandaentry>
+
+
+				<qandaentry>
+					<question>
+						<para>
+							I&#39;m getting errors with something like: 
+							<emphasis>Warning: fgets(): supplied argument is not a valid stream resource: &lt;filename&gt;</emphasis>
+						</para>
+					</question>
+					<answer>
+						<para>
+							This is most likely due to incorrect NTFS permissions 
+							on that file/folder. This prevents Cacti from accessing the file(s) to execute 
+							the code. Read up above in the installation guide on what NTFS permissions 
+							need to be set.
+						</para>
+					</answer>
+				</qandaentry>
+
+
+
+				<qandaentry>
+					<question>
+						<para>
+							How do I configure Microsoft SNMP?
+						</para>
+					</question>
+					<answer>
+						<para>
+							Read <ulink url="http://forums.cacti.net/viewtopic.php?t=24267">HOW TO: Configure the Simple Network Management Protocol (SNMP) Service in Windows Server 2003</ulink></para>
+					</answer>
+				</qandaentry>
+			</qandadiv>
+		</qandaset>
+	</chapter>
+
+
+	<chapter id=Debugging>
+		<title>Debugging</title>
+		<para>Cacti users sometimes complain about NaN's in their graphs.
+		Unfortunately, there are several reasons for this result.
+		The following is a step-by-step procedure recommended for debugging.</para>
+
+		<sect1 id="check_log_file">
+		<title>Check Cacti Log File</title>
+			<para>Please have a look at your cacti log file.
+			Usually, you'll find it at <filename>&lt;path_cacti&gt;/log/cacti.log</filename>.
+			Else see <userinput>Settings</userinput>, <userinput>Paths</userinput>.
+			Check for this kind of error:</para>
+			<screen>SPINE: Host[...] DS[....] WARNING: SNMP timeout detected [500 ms], ignoring host '........'</screen>
+			<para>For "reasonable" timeouts, this may be related
+			to a snmpbulkwalk issue. To change this, see
+			<userinput>Settings</userinput>, <userinput>Poller</userinput>
+			and lower the value for
+			<userinput>The Maximum SNMP OID's Per SNMP Get Request</userinput>.
+			Start at a value of 1 and increase it again,
+			if the poller starts working.
+			Some agent's don't have the horsepower
+			to deliver that many OID's at a time. Therefore,
+			we can reduce the number for those older/underpowered devices.</para>
+		</sect1>
+		<sect1 id="check_data_gathering">
+		<title>Check Basic Data Gathering</title>
+			<para>For scripts, run them as cactiuser from cli to
+			check basic functionality. E.g. for a perl script
+			named <filename>your-perl-script.pl</filename>
+			with parameters "p1 p2" under *nix this would look like:</para>
+			<screen>su - cactiuser
+/full/path/to/perl your-perl-script.pl p1 p2
+... (check output)</screen>
+			<para>For snmp, snmpget the _exact_ OID you're asking for,
+			using same community string and snmp version as defined
+			within cacti. For an OID of <userinput>.1.3.6.1.4.something</userinput>,
+			community string of <userinput>very-secret</userinput>
+			and version 2 for target host <userinput>target-host</userinput>
+			this would look like</para>
+			<screen>snmpget -c very-secret -v 2c target-host .1.3.6.1.4.something
+.... (check output)</screen>
+		</sect1>
+		<sect1 id="check_cacti_poller">
+		<title>Check cacti's poller</title>
+			<para>First make sure that crontab always shows poller.php.
+			This program will either call cmd.php, the PHP based poller
+			 _or_ spine, the fast alternative, written in C.
+			 Define the poller you're using at
+			 <userinput>Settings</userinput>, <userinput>Poller</userinput>.
+			 Spine has to be implemented seperately, it does not
+			 come with cacti by default.</para>
+			<para>Now, clear <filename>./log/cacti.log</filename>
+			(or rename it to get a fresh start)</para>
+			<para>Then, change <userinput>Settings</userinput>, <userinput>Poller Logging Level</userinput>
+			to DEBUG for _one_ polling cycle. You may rename
+			this log as well to avoid more stuff added to it with
+			subsequent polling cycles.</para>
+			<para>Now, find the host/data source in question.
+			The <userinput>Host[&lt;id&gt;]</userinput>
+			is given numerically, the &lt;id&gt; being a specific
+			number for that host. Find this &lt;id&gt;
+			from the <userinput>Devices</userinput> menue when
+			editing the host: The url contains a string like</para>
+			<screen>id=&lt;id&gt;</screen>
+			<para>Check, whether the output is as expected.
+			If not, check your script (e.g. <filename>/full/path/to/perl</filename>).
+			If ok, proceed to next step</para>
+			<para>This procedure may be replaced by running the
+			poller manually for the failing host only.
+			To do so, you need the &lt;id&gt;, again.
+			If you're using cmd.php, set the DEBUG logging level as
+			defined above and run</para>
+			<screen>php -q cmd.php &lt;id&gt; &lt;id&gt;</screen>
+			<para>If you're using spine, you may override
+			logging level when calling the poller:</para>
+			<screen>./spine --verbosity=5 &lt;id&gt; &lt;id&gt;</screen>
+			<para>All output is printed to STDOUT in both cases.
+			This procdure allows for repeated tests without waiting
+			for the next polling interval. And there's no need to manually
+			search for the failing host between hundreds of lines of output.</para>
+		</sect1>
+		<sect1 id="check_mysql_updating">
+		<title>Check MySQL updating</title>
+			<para>In most cases, this step make be skipped.
+			You may want to return to this step, if the next one
+			fails (e.g. no rrdtool update to be found)</para>
+			<para>From debug log, please find the MySQL update statement
+			for that host concerning table
+			<userinput>poller_output</userinput>.
+			On very rare occasions, this will fail. So please copy
+			that sql statement and paste it to a mysql session started
+			from cli. This may as well be done from some tool like
+			phpMyAdmin. Check the sql return code.</para>
+		</sect1>
+		<sect1 id="check_rrd_updating">
+		<title>Check rrd file updating</title>
+			<para>Down in the same log, you should find some</para>
+			<screen>rrdtool update &lt;filename&gt; --template ...</screen>
+			<para>You should find exactly one update statement for each file.</para>
+			<para>RRD files should be created by the poller.
+			If it does not create them, it will not fill them either.
+			If it does, please check your
+			<userinput>Poller Cache</userinput>
+			from Utilities and search for your target.
+			Does the query show up here?</para>
+		</sect1>
+		<sect1 id="check_rrd_owner">
+		<title>Check rrd file ownership</title>
+			<para>If rrd files were created e.g. with root ownership,
+			a poller running as cactiuser will not be able to update
+			those files</para>
+			<screen>cd /var/www/html/cacti/rra
+ls -l localhost*
+-rw-r--r--  1 root      root      463824 May 31 12:40 localhost_load_1min_5.rrd
+-rw-r--r--  1 cactiuser cactiuser 155584 Jun  1 17:10 localhost_mem_buffers_3.rrd
+-rw-r--r--  1 cactiuser cactiuser 155584 Jun  1 17:10 localhost_mem_swap_4.rrd
+-rw-r--r--  1 cactiuser cactiuser 155584 Jun  1 17:10 localhost_proc_7.rrd
+-rw-r--r--  1 cactiuser cactiuser 155584 Jun  1 17:10 localhost_users_6.rrd</screen>
+
+			<para>Run the following command to cure this problem</para>
+			<screen>chown cactiuser:cactiuser *.rrd</screen>
+		</sect1>
+		<sect1 id="check_rrd_numbers">
+		<title>Check rrd file numbers</title>
+			<para>You're perhaps wondering about this step,
+			if the former was ok. But due to data sources
+			MINIMUM and MAXIMUM definitions, it is possible,
+			that valid updates for rrd files are suppressed,
+			because MINIMUM was not reached or MAXIMUM was exceeded.</para>
+			<para>Assuming, you've got some valid
+			<userinput>rrdtool update</userinput> in step 3, perform a</para>
+			<screen>rrdtool fetch &lt;rrd file&gt; AVERAGE</screen>
+			<para>and look at the last 10-20 lines. If you find NaN's there,
+			perform</para>
+			<screen>rrdtool info &lt;rrd file&gt;</screen>
+			<para>and check the
+			<userinput>ds[...].min</userinput> and
+			<userinput>ds[...].max</userinput> entries, e.g.</para>
+			<screen>ds[loss].min = 0.0000000000e+00
+ds[loss].max = 1.0000000000e+02</screen>
+			<para>In this example, MINIMUM = 0 and MAXIMUM = 100. For a
+			<userinput>ds.[...].type=GAUGE</userinput>
+			verify, that e.g. the number returned by the script does
+			not exceed
+			<userinput>ds[...].MAX</userinput>
+			(same holds for MINIMUM, respectively).</para>
+			<para>If you run into this, please do not only update
+			the data source definition within the Data Template,
+			but perform a</para>
+			<screen>rrdtool tune &lt;rrd file&gt; --maximum &lt;ds-name&gt;:&lt;new ds maximum&gt;</screen>
+			 <para>for all existing rrd files belonging to that Data Template.</para>
+			<para>At this step, it is wise to check
+			<userinput>step</userinput> and <userinput>heartbeat</userinput>
+			of the rrd file as well. For standard 300 seconds
+			polling intervals (step=300), it is wise to set
+			<userinput>minimal_heartbeat</userinput> to 600 seconds.
+			If a single update is missing and the next one occurs in
+			less than 600 seconds from the last one, rrdtool will
+			interpolate the missing update. Thus, gaps are
+			"filled" automatically by interpolation.
+			Be aware of the fact, that this is no "real" data!
+			Again, this must be done in the Data Template itself
+			and by using rrdtool tune for all existing rrd files
+			of this type.</para>
+		</sect1>
+		<sect1 id="check_rrd_graph">
+		<title>Check rrdtool graph statement</title>
+			<para>Last resort would be to check, that the correct
+			data sources are used.
+			Goto <userinput>Graph Management</userinput> and select
+			your Graph. Enable DEBUG Mode to find the whole
+			<userinput>rrdtool graph</userinput> statement. You should
+			notice the <userinput>DEF</userinput> statements. They specify
+			the rrd file and data source to be used. You may check, that
+			all of them are as wanted.</para>
+		</sect1>
+		<sect1 id="debug_miscellaneous">
+		<title>Miscellaneous</title>
+			<para>Up to current cacti 0.8.6h, table
+			<userinput>poller_output</userinput> may increase beyond
+			reasonable size.</para>
+			<para>This is commonly due to php.ini's memory settings of
+			8MB default. Change this to at least 64 MB.</para>
+			<para>To check this, please run following sql from mysql
+			cli (or phpmyadmin or the like)</para>
+			<screen>select count(*) from poller_output;</screen>
+			<para>If the result is huge, you may get rid of those
+			stuff by</para>
+			<screen>truncate table poller_output;</screen>
+			<para>As of current SVN code for upcoming cacti 0.9,
+			I saw measures were taken on both issues
+			(memory size, truncating poller_output).</para>
+		</sect1>
+
+		<sect1 id="debug_rpm_installation">
+		<title>RPM Installation?</title>
+			<para>Most rpm installations will setup the crontab entry now.
+			If you've followed the installation instructions to the
+			letter (which you should always do ;-) ),
+			you may now have two poller running. That's not a good thing,
+			though. Most rpm installations will setup cron in
+			<filename>/etc/cron.d/cacti</filename></para>
+			<para>Now, please check all your crontabs, especially
+			<filename>/etc/crontab</filename> and crontabs of
+			users root and cactiuser. Leave only one poller entry for
+			all of them. Personally, I've chosen
+			<filename>/etc/cron.d/cacti</filename> to avoid problems
+			when updating rpm's. Mosten often, you won't remember this
+			item when updating lots of rpm's, so I felt more secure to
+			put it here. And I've made some slight modifications, see</para>
+			<screen><prompt>shell&gt;</prompt> vi /etc/cron.d/cacti
+*/5 * * * *     cactiuser       /usr/bin/php -q /var/www/html/cacti/poller.php > /var/local/log/poller.log 2>&1</screen>
+
+			<para>This will produce a file
+			<filename>/var/local/log/poller.log</filename>, which includes
+			some additional informations from each poller's run, such as
+			rrdtool errors. It occupies only some few bytes and will be
+			overwritten each time.</para>
+			<para>If you're using the crontab of user "cactiuser" instead,
+			this will look like</para>
+			<screen><prompt>shell&gt;</prompt> crontab -e -u cactiuser
+*/5 * * * *     /usr/bin/php -q /var/www/html/cacti/poller.php > /var/local/log/poller.log 2>&1</screen>
+		</sect1>
+
+		<sect1 id="check_zero_values">
+		<title>Not NaN, but 0 (zero) values?</title>
+			<para>Pay attention to custom scripts. It is required,
+			that external commands called from there are in the <filename>$PATH</filename>
+			of the cactiuser running the poller. It is therefor recommended to provide
+			<filename>/full/path/to/external/command</filename></para>
+			<para>User "criggie" reported an issue with running smartctl.
+			It was complaining "you are not root" so a quick
+			<userinput>chmod +s</userinput> on the script fixed that
+			problem.</para>
+			<para>Secondly, the script was taking several seconds to run.
+			So cacti was logging a "U" for unparseable in the debug
+			output, and was recording NAN. So my fix there was to make
+			the script run faster - it has to complete in less than one
+			second, and the age of my box made it difficult to accomplish.</para>
+		</sect1>
+	</chapter>
+</part>
+

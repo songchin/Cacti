@@ -1,0 +1,1242 @@
+<part id="reference">
+	<title>Reference</title>
+	<chapter id="variables">
+		<title>Variables</title>
+		<sect1 id="graph_variables">
+			<title>Graph Variables</title>
+			<para>
+				The following variables can be used in the <guilabel>Text Format</guilabel> and <guilabel>Value</guilabel> graph
+				item fields. Below is a description of each of these variables.
+			</para>
+			<sect2 id="variable_date_time">
+				<title>Date/Time</title>
+				<screen><userinput>|date_time|</userinput></screen>
+				<para>
+					This variable will place the date and time of the last poller run on the graph. It can be used to replicate
+					<application>MRTG</application>'s "graph last updated" feature.
+				</para>
+			</sect2>
+			<sect2 id="variable_data_query">
+				<title>Data Query Fields</title>
+				<screen><userinput>|query_field_name|</userinput></screen>
+				<para>
+					You can place the value of any data query field on the by including this variable. Make sure
+					to substitute "field_name" with the actual data query field name.
+				</para>
+				<example>
+					<title>Print the IP Address on a traffic graph</title>
+					<para>
+						<userinput>|query_ifIP|</userinput>
+					</para>
+				</example>
+				<example>
+					<title>Print the mount point on net-snmp disk graph</title>
+					<para>
+						<userinput>|query_dskPath|</userinput>
+					</para>
+				</example>
+			</sect2>
+			<sect2 id="variable_Nth_percentile">
+				<title>Nth Percentile</title>
+				<screen><userinput>|[0-9]:(bits|bytes):[0-9]:(current|total|max|total_peak|all_max_current|all_max_peak|aggregate_max|aggregate_sum|aggregate_current|aggregate):[0-9]|</userinput></screen>
+				<para>
+					Nth percentile is often used by hosting providers to bill customers based on their peak traffic usage while
+					ignoring their top (100 - Nth) percent. This way if a customer has a fairly consistent traffic pattern and
+					decides to download a huge file one day, the large spike will be ignored.  Common Nth percentile is 95, which
+					would cut off the top 5% of the traffic.
+				</para>
+				<para>
+					In Cacti, Nth percentile works just like any other graph variable. To use this variable you must give it five
+					arguments:
+				</para>
+				<table frame='all'>
+					<title>Nth Percentile Argument Description</title>
+					<tgroup cols='2' align='left' colsep='1' rowsep='1'>
+						<colspec colnum="1">
+						<colspec colwidth="3*" colnum="2">
+						<thead>
+							<row>
+								<entry align="center">Name</entry>
+								<entry align="center">Description</entry>
+							</row>
+						</thead>
+						<tbody>
+							<row>
+								<entry><function>[0-9]</function></entry>
+								<entry>The first argument is a number between 1 and 99.  This number represents the Nth percentile that you would like to calculate.</entry>
+							</row>
+							<row>
+								<entry><function>(bits|bytes)</function></entry>
+								<entry>Choose whether you want to represent your Nth percentile in bits or bytes. The only valid values for this field are 'bits' and 'bytes'.</entry>
+							</row>
+							<row>
+								<entry><function>[0-9]</function></entry>
+								<entry>This field determines the power of 10 divisor that will be applied to your Nth percentile number. Enter '0' to leave the number alone, '3' for kilo or '6' for mega, etc.</entry>
+							</row>
+							<row>
+								<entry><function>( current | total | max | total_peak | all_max_current | all_max_peak | aggregate_max | aggregate_sum | aggregate_current | aggregate )</function></entry>
+								<entry>Nth Percentile Type - Refer to Nth Types</entry>
+							</row>
+							<row>
+								<entry><function>[0-9]</function></entry>
+								<entry>Enter the number of digits to use for floating point precision when printing out the final number. The default value for this field is two decimal places.</entry>
+							</row>
+						</tbody>
+					</tgroup>
+				</table>
+				<table frame='all'>
+					<title>Nth Percentile Types</title>
+					<tgroup cols='2' align='left' colsep='1' rowsep='1'>
+						<colspec colnum="1">
+						<colspec colwidth="3*" colnum="2">
+						<thead>
+							<row>
+								<entry align="center">Type</entry>
+								<entry align="center">Description</entry>
+							</row>
+						</thead>
+						<tbody>
+							<row>
+								<entry><function>current</function></entry>
+								<entry>Calculates the Nth percentile based off the selected data source on the graph item wich the variable is used.   This type requires a selected Data Source Item in the graph item in which it is defined.</entry>
+							</row>
+							<row>
+								<entry><function>total</function></entry>
+								<entry>Calculates the Nth percentile based off the selected data source on the graph item wich the variable is used.  But unlike current, this function totals the Nth percentile results of all same named data source names on the graph.  Example, all traffic_in would have their Nth percentile calculated and then totaled.  This type requires a selected Data Source Item in the graph item in which it is defined.</entry>
+							</row>
+							<row>
+								<entry><function>max</function></entry>
+								<entry>Calculates the Nth percentile based off the selected data source on the graph item which the variable is used, but it is important to note that it selects the higher of the values for each row in data source and then uses the resulting set to calculate the Nth percentile.  Example, you have selected a interface data source for traffic_in, this will evaluate traffic_out and traffic_in for that selected data source (rrdtool file) and select the higher of the two values for each row of data.  The resulting max values are used to calculate the Nth percentile value.  This type requires a selected Data Source Item in the graph item in which it is defined.</entry>
+							</row>
+							<row>
+								<entry><function>total_peak</function></entry>
+								<entry>Calculates the Nth percentile based on the max for each data source defined on the graph.  Example, the max is taken for each data source defined on the graph, but it's the max of traffic_in or traffic_out for that data source (rrdtool file).  The resulting max values are summed and returned.</entry>
+							</row>
+							<row>
+								<entry><function>all_max_current</function></entry>
+								<entry>Calculates the Nth percentile based off the selected data source on the graph item which the variable is used, but it only selects the highest (max) value of all the data source items on the graph. Example, there are 3 data sources defined on the graph, the selected data source is traffic_in, all data sources for traffic_in will be compared against each other and the highest Nth value of all graph items will be selected as the result.  This type requires a selected Data Source Item in the graph item in which it is defined.</entry>
+							</row>
+							<row>
+								<entry><function>all_max_peak</function></entry>
+								<entry>Calculates the Nth percentile by selecting the highest (max) calculated max Nth percentile value for each data source (rrdtool file) selected on the graph.  Example, 3 data sources are defined on the graph, for each data source, the max Nth percentile is calculated, and out of the resulting set of values, the highest value is selected and returned.</entry>
+							</row>
+							<row>
+								<entry><function>aggregate_max</function></entry>
+								<entry>Calculates the Nth percentile by selecting the highest value for each summed value of like data sources and selecting the maximum value of that set to calculate the Nth percentile value.  Example, you have a graph with 5 traffic_in and 18 traffic_out data sources.  The traffic_in rows are summed together, then the traffic_out rows are summed together, then for each row, the higher of the 2 values is selected.  The Nth percentile is calculated from the resulting maximum values.</entry>
+							</row>
+							<row>
+								<entry><function>aggregate_sum</function></entry>
+								<entry>Calculates the Nth percentile by summing all data sources on the graph row for row and calculates the Nth value on the resulting summed data.  Example, you have a graph with 4 traffic_in and 3 traffic_out data sources defined.  All the defined traffic_in and traffic_out are summed together and then the Nth percentile value is calculated from that set.</entry>
+							</row>
+							<row>
+								<entry><function>aggregate_current</function></entry>
+								<entry>Calculates the Nth percentile by summing items matching the selected data source name row for row from each data source defined on the graph with the same data source name and then returning the Nth percent value calculated.  Example, you have a graph with 3 traffic_out and 5 traffic_in data sources defined.  The traffic_in is selected on the graph item where this variable is used, so all graph items for traffic_in are summed and then the Nth value is calculated and returned as the variable.</entry>
+							</row>
+
+							<row>
+								<entry><function>aggregate</function></entry>
+								<entry>Calculates the Nth percentile by summing like data source names row for row from each data source defined on the graph and then returning the highest Nth percent value calculated for like data source names.  Example, you have a graph with 3 traffic_out and 5 traffic_in data sources defined.  The traffic_in and traffic_out are summed then the Nth value is calculated and the higher of the 2 values is returned as the variable.</entry>
+							</row>
+						</tbody>
+					</tgroup>
+				</table>
+				<Note><title>Concerning aggregate Nth percentile functions and rra definitions</title>
+				<para>All data sources used in a graph MUST have the same rra definitions.  If the number of rows do not match when calculations are attempted, the results may produce errors and invalid results.  Please also be aware the aggregate functions take more memory and processor power when used.  Recommended minimum of 64 megs memory limit for php when querying large ranges or graphs with a large ammount of aggregated data sources.</para></Note>
+				<example>
+					<title>Output in the following format, for 95th percentile: 42.58 mbit</title>
+					<para>
+						<userinput>|95:bits:6:max:2|</userinput>
+					</para>
+				</example>
+			</sect2>
+			<sect2 id="variable_bandwidth_summation">
+				<title>Bandwidth Summation</title>
+				<screen><userinput>|sum:([0-9]|auto):(current|total):([0-9]):([0-9]+|auto)|</userinput></screen>
+				<para>
+					Bandwidth summation is useful for summing up all values in an RRD file for a given time range. This is typically
+					useful on traffic graphs where you can see a total of all traffic that has gone through an interface in a given
+					time period.
+				</para>
+				<para>
+					In Cacti, bandwidth summation works just like any other graph variable. To use this variable you must give it three
+					arguments:
+				</para>
+				<table frame='all'>
+					<title>Bandwidth Summation Argument Description</title>
+					<tgroup cols='2' align='left' colsep='1' rowsep='1'>
+						<colspec colnum="1">
+						<colspec colwidth="3*" colnum="2">
+						<thead>
+							<row>
+								<entry align="center">Name</entry>
+								<entry align="center">Description</entry>
+							</row>
+						</thead>
+						<tbody>
+							<row>
+								<entry><function>([0-9]|auto)</function></entry>
+								<entry>This field determines the power of 10 divisor that will be applied to your number. Enter '0' to leave the number alone, '3' for kilo or '6' for mega, etc. You can also enter 'auto' for this field to have Cacti automatically scale the number and insert the appropriate label.</entry>
+							</row>
+							<row>
+								<entry><function>(current|total)</function></entry>
+								<entry>You can choose to calculate the summation based on the current data source or a total of all data sources used on the graph. The only valid values for this field are 'current' and 'total'.</entry>
+							</row>
+							<row>
+								<entry><function>[0-9]</function></entry>
+								<entry>Enter the number of digits to use for floating point precision when printing out the final number. The default value for this field is two decimal places.</entry>
+							</row>
+							<row>
+								<entry><function>([0-9]+|auto)</function></entry>
+								<entry>Enter the number of seconds in the past to perform the summation calculation for. For instance '86400' for 24 hours, '172800' for 48 hours, etc. You can also enter 'auto' for this field to have Cacti use the graph timespan.</entry>
+							</row>
+						</tbody>
+					</tgroup>
+				</table>
+				<example>
+					<title>Output in the following format: 36.47 GB</title>
+					<para>
+						<userinput>|sum:auto:current:2:auto|</userinput>
+					</para>
+				</example>
+			</sect2>
+		</sect1>
+		<sect1 id="host_variables">
+			<title>Host Variables</title>
+			<para>
+				Host variables represent host data and can be placed in graph or data source titles. The following
+				table describes which host variables can be used and which host fields the correspond to.
+			</para>
+			<table frame='all'>
+				<title>Host Variables</title>
+				<tgroup cols='2' align='left' colsep='1' rowsep='1'>
+					<colspec colnum="1">
+					<colspec colwidth="3*" colnum="2">
+					<thead>
+						<row>
+							<entry align="center">Variable Name</entry>
+							<entry align="center">Description</entry>
+						</row>
+					</thead>
+					<tbody>
+						<row>
+							<entry><function>|host_description|</function></entry>
+							<entry>Description</entry>
+						</row>
+						<row>
+							<entry><function>|host_hostname|</function></entry>
+							<entry>Hostname</entry>
+						</row>
+						<row>
+							<entry><function>|host_snmp_community|</function></entry>
+							<entry>SNMP Community</entry>
+						</row>
+						<row>
+							<entry><function>|host_snmp_version|</function></entry>
+							<entry>SNMP Version</entry>
+						</row>
+						<row>
+							<entry><function>|host_snmp_username|</function></entry>
+							<entry>SNMP Username (v3)</entry>
+						</row>
+						<row>
+							<entry><function>|host_snmp_password|</function></entry>
+							<entry>SNMP Password (v3)</entry>
+						</row>
+					</tbody>
+				</tgroup>
+			</table>
+		</sect1>
+	</chapter>
+	<chapter id="rrdtool_features">
+		<title>RRDTool Specific Features</title>
+		<sect1 id="gprint_presets">
+			<title>GPRINT Presets</title>
+			<para>
+				A GPRINT is a graph item type that enables you to print the values of data sources on a graph.
+				They are typically used to represent legend values on the graph. The output format of these
+				numbers are controlled by a printf-like format string. Cacti enables you to keep a global list
+				of these strings that can be applied to any graph item throughout Cacti.
+			</para>
+			<sect2 id="add_new_gprint_preset">
+				<title>Creating a GPRINT Preset</title>
+				<para>
+					To create a new GPRINT preset, select the <guilabel>Graph Management</guilabel> menu item under the
+					<guilabel>Management</guilabel> heading, and select <guilabel>GPRINT Presets</guilabel>. Click
+					<guilabel>Add</guilabel> to the right and you will be presented with an edit page containing two fields.
+					Enter a name for your GPRINT preset, and the actual printf-like string in the <guilabel>GPRINT
+					Text</guilabel> field. When you are finished, click the <guilabel>Create</guilabel> button to create
+					your new GPRINT preset.
+				</para>
+			</sect2>
+		</sect1>
+		<sect1 id="cdefs">
+			<title>CDEFs</title>
+			<para>
+				CDEFs allow you to apply mathematical functions to graph data to alter output. The concept of a
+				CDEF comes straight from <application>RRDTool</application>, and are written in reverse polish notation (RPN). For more
+				information regarding the syntax of CDEFs, check out the <ulink url="http://people.ee.ethz.ch/~oetiker/webtools/rrdtool/doc/rrdgraph_data.en.html">CDEF tutorial</ulink>.
+			</para>
+			<sect2 id="add_new_cdef">
+				<title>Creating a CDEF</title>
+				<para>
+					To create a new CDEF in Cacti, select the <guilabel>Graph Management</guilabel> option under
+					the <guilabel>Management</guilabel> heading, and select <guilabel>CDEFs</guilabel>. Once at
+					this screen, click <guilabel>Add</guilabel> to the right. You will be prompted for a CDEF
+					name, for which you can type anything used to describe your CDEF. Click the <guilabel>Create</guilabel>
+					button so you are redirected back to the edit page, now with an empty <guilabel>CDEF Items</guilabel>
+					box. Construct your CDEF by adding an item for each element in the CDEF string, common types such as
+					operators and functions are enumerated for your convenience. Below is a basic description of each
+					CDEF item type.
+				</para>
+				<table frame='all'>
+					<title>CDEF Item Types</title>
+					<tgroup cols='2' align='left' colsep='1' rowsep='1'>
+						<colspec colnum="1">
+						<colspec colwidth="3*" colnum="2">
+						<thead>
+							<row>
+								<entry align="center">Type</entry>
+								<entry align="center">Description</entry>
+							</row>
+						</thead>
+						<tbody>
+							<row>
+								<entry>Function</entry>
+								<entry>You can choose a CDEF function to use as the item. The <ulink url="http://people.ee.ethz.ch/~oetiker/webtools/rrdtool/doc/rrdgraph.en.html">RRDTool graph manual</ulink> describes the purpose of each CDEF function.</entry>
+							</row>
+							<row>
+								<entry>Operator</entry>
+								<entry>Just your standard math operators, including modulo (%).</entry>
+							</row>
+							<row>
+								<entry>Special Data Source</entry>
+								<entry>A special data source is basically a flag to tell Cacti to do some special processing when it encounters this CDEF item. The "Current Graph Item Data Source" type basically inserts the name of the data source that is referenced by the graph item that references to this CDEF. Both of the "All Data Sources" types insert a summation of all data sources used on a graph.</entry>
+							</row>
+							<row>
+								<entry>Another CDEF</entry>
+								<entry>You can recursively use another CDEF within this CDEF.</entry>
+							</row>
+							<row>
+								<entry>Custom String</entry>
+								<entry>Sometimes it's just easier to type out the literal CDEF string manually. When referencing to data sources on the graph, remember that Cacti names them 'a', 'b', 'c', '...', starting with the first data source on the graph.</entry>
+							</row>
+						</tbody>
+					</tgroup>
+				</table>
+			</sect2>
+		</sect1>
+	</chapter>
+	<chapter id=Scripts>
+		<title>Command Line Scripts</title>
+			<para>Cacti support a number of command line scripts.
+			Please find them in the <filename>./cli</filename> directory.
+			As of current, following scripts are supported:</para>
+			<screen>add_device.php
+add_graphs.php
+add_perms.php
+add_tree.php
+copy_user.php
+poller_graphs_reapply_names.php
+poller_output_empty.php
+poller_reindex_hosts.php
+rebuild_poller_cache.php</screen>
+			<caution>
+				<title>Numbers may vary!</title>
+				<para>In the following examples, several numbers are shown
+				as output from various scripts. They will vary between different
+				installations. So don't bother, if your numbers will vary</para>
+			</caution>
+		<sect1 id="cli_rebuild_poller_cache">
+		<title>Rebuild Poller Cache</title>
+			<para>The poller cache holds all commands that cacti will issue during
+			the polling process in an internal format. It is possible, to review
+			the currenty contents of the poller cache by visiting <userinput>System Utilities</userinput>,
+			<userinput>View Poller Cache</userinput>. It is possible to apply filters
+			to this view; it will show up like</para>
+			<screen>Localhost - Hard Drive Space   	Script Server: /var/www/html/cacti/scripts/ss_host_disk.php ss_host_disk 127.0.0.1 1 1:161:500:somesecret:::::: get total 6
+	                        RRD: /var/www/html/cacti/rra/localhost_hdd_total_61.rrd
+Localhost - Load Average 	Script: /usr/bin/perl /var/www/html/cacti/scripts/loadavg_multi.pl
+	                        RRD: /var/www/html/cacti/rra/localhost_load_1min_5.rrd
+Localhost - Logged in Users 	Script: /usr/bin/perl /var/www/html/cacti/scripts/unix_users.pl
+	                        RRD: /var/www/html/cacti/rra/localhost_users_6.rrd
+Localhost - Memory - Free 	Script: /usr/bin/perl /var/www/html/cacti/scripts/linux_memory.pl MemFree:
+	                        RRD: /var/www/html/cacti/rra/localhost_mem_buffers_3.rrd
+Localhost - Memory - Free Swap 	Script: /usr/bin/perl /var/www/html/cacti/scripts/linux_memory.pl SwapFree:
+	                        RRD: /var/www/html/cacti/rra/localhost_mem_swap_4.rrd
+Localhost - mtaReceivedMessages SNMP Version: 1, Community: somesecret, OID: .1.3.6.1.2.1.28.1.1.1.1
+	                        RRD: /var/www/html/cacti/rra/localhost_mtareceivedmessages_47.rrd
+Localhost - mtaReceivedVolume 	SNMP Version: 1, Community: somesecret, OID: .1.3.6.1.2.1.28.1.1.4.1
+	                        RRD: /var/www/html/cacti/rra/localhost_mtareceivedvolume_49.rrd</screen>
+
+			<para>There are several circumstances, that may result in the poller cache
+			being out of sync. An example would be a change of the name of a script used in a
+			<userinput>Data Input Method</userinput>. This change is <emphasis>not</emphasis>
+			automatically propagated to the poller cache. It is required, to run
+			<application>php -q rebuild poller_cache.php</application> manually.</para>
+
+			<para>Calling the script with the parameter <userinput>--help</userinput> yields</para>
+			<screen><prompt>shell&gt;</prompt>php -q rebuild_poller_cache.php --help
+Cacti Rebuild Poller Cache Script 1.0, Copyright 2007 - The Cacti Group
+
+usage: rebuild_poller_cache.php [-d] [-h] [--help] [-v] [--version]
+
+-d            - Display verbose output during execution
+-v --version  - Display this help message
+-h --help     - Display this help message</screen>
+			<para>Debug mode lists the data sources items that are worked upon.</para>
+			<screen><prompt>shell&gt;</prompt>php -q rebuild_poller_cache.php -d
+WARNING: Do not interrupt this script.  Rebuilding the Poller Cache can take quite some time
+DEBUG: There are '38' data source elements to update.
+DEBUG: Data Source Item '1' of '38' updated
+DEBUG: Data Source Item '2' of '38' updated
+DEBUG: Data Source Item '3' of '38' updated
+DEBUG: Data Source Item '4' of '38' updated
+....</screen>
+			<para>Without any parameter, some dots are shown as progress indicators.</para>
+			<screen><prompt>shell&gt;</prompt>php -q rebuild_poller_cache.php
+WARNING: Do not interrupt this script.  Rebuilding the Poller Cache can take quite some time
+......................................
+<prompt>shell&gt;</prompt></screen>
+			<caution>
+				<title>Stop the Poller when Rebuilding the Poller Cache</title>
+				<para>Rebuilding the poller cache interferes with the poller operation.
+				Please make sure, that the poller is not running and will not start
+				during a rebuild operation</para>
+			</caution>
+
+		</sect1>
+		<sect1 id="cli_poller_reindex_hosts">
+		<title>Re-Index Hosts</title>
+			<para>Re-Indexing is required only for SNMP/Script Data Queries.
+			Remember, that whan applying a Data Query to a Host, a
+			<userinput>Re-Index Method</userinput> has to be chosen. This reindex method
+			governs the automatic re-indexing based on specific events.</para>
+			<table frame='all'>
+				<title>Re_Index Methods</title>
+				<tgroup cols='2' align='left' colsep='1' rowsep='1'>
+					<colspec colnum="1">
+					<colspec colwidth="3*" colnum="2">
+					<thead>
+						<row>
+							<entry align="center">Re-Index Method</entry>
+							<entry align="center">Description</entry>
+						</row>
+					</thead>
+					<tbody>
+						<row>
+							<entry>Uptime Goes Backwards</entry>
+							<entry>Refers to a system reboot. Cacti will detect
+							if the target has been rebootet by querying
+							sysUptime (.1.3.6.1.2.1.1.3.0).
+							If the current value for the uptime is lower
+							than the previous one (uptime goes backwards),
+							a reboot is assumed and a re-index is performed</entry>
+						</row>
+						<row>
+							<entry>Index Count Changed</entry>
+							<entry>Refers to a change of the number of indexed
+							items, e.g. interfaces, without checking sysUptime.
+							It is of particular interest in cases, where indexed
+							entries may change without the need of a reboot.
+							As modern operating systems seldom require reboots for
+							system configuration changes, you may want to consider
+							this setting for many cases (e.g. creating of a new
+							filesystem without a reboot). The index to be considered
+							is defined by the according XML file.</entry>
+						</row>
+						<row>
+							<entry>Verify All Fields</entry>
+							<entry>All index fields of the according XML file are checked
+							for changes. This is of particular interest e.g. in cases, where
+							the index is non-numeric (e.g. a MAC address).</entry>
+						</row>
+					</tbody>
+				</tgroup>
+			</table>
+			<para>If you feel the need for manual re-indexing, you may run it from cli.
+			Calling the script with the parameter <userinput>--help</userinput> yields</para>
+			<screen><prompt>shell&gt;</prompt>php -q poller_reindex_hosts.php --help
+Cacti Reindex Host Script 1.0, Copyright 2007 - The Cacti Group
+
+usage: poller_reindex_hosts.php -id=[host_id|All] [-d] [-h] [--help] [-v] [--version]
+
+-id=host_id   - The host_id to have data queries reindexed or 'All' to reindex all hosts
+-d            - Display verbose output during execution
+-v --version  - Display this help message
+-h --help     - Display this help message</screen>
+			<para>Running it in debug mode for the host with <userinput>id=2</userinput> may yield</para>
+			<screen><prompt>shell&gt;</prompt>php -q poller_reindex_hosts.php -id=2 -d
+WARNING: Do not interrupt this script.  Reindexing can take quite some time
+DEBUG: There are '1' data queries to run
+DEBUG: Data query number '1' starting
+DEBUG: Data query number '1' ending</screen>
+			<para>A silent run for all devices is issued by</para>
+			<screen><prompt>shell&gt;</prompt>php -q poller_reindex_hosts.php -id=All
+WARNING: Do not interrupt this script.  Reindexing can take quite some time
+.....<prompt>shell&gt;</prompt></screen>
+			<caution>
+				<title>Stop the Poller during Re-Indexing</title>
+				<para>Re-Indexing interferes with the poller operation.
+				Please make sure, that the poller is not running and will not start
+				during a reindex operation</para>
+			</caution>
+		</sect1>
+		<sect1 id="cli_poller_output_empty">
+		<title>Empty Poller Output Table</title>
+			<para>During normal poller operation, all retrieved results
+			are intermediately stored in the table named <structname>poller_output</structname>
+			After execution of <application>cmd.php</application> or <application>Spine</application>,
+			this table holds all results. The <application>poller.php</application> finally
+			issues all <application>rrdtool update</application> operations. Thus,
+			after polling has completed, the table should be empty.</para>
+			<para>Conditions may arise, where the table is not (completely) emptied.
+			The most often known issue is lack of php memory. In those cases, the
+			table is bigger than the php memory size, thus not all items are handled
+			correctly. If that issue occurs, you may save all pending updates
+			<emphasis>after increasing PHP memory appropriately</emphasis> by running
+			this very script. Calling the script with the parameter <userinput>--help</userinput> yields</para>
+			<screen><prompt>shell&gt;</prompt>php -q poller_output_empty.php --help
+Cacti Empty Poller Output Table Script 1.0, Copyright 2007 - The Cacti Group
+
+usage: poller_output_empty.php [-h] [--help] [-v] [--version]
+
+-v --version  - Display this help message
+-h --help     - Display this help message</screen>
+			<para>You see, no parameter is required for operating successfully.
+			Under normal circumstances, running this script should yield</para>
+			<screen><prompt>shell&gt;</prompt>php -q poller_output_empty.php
+There were 0, RRD updates made this pass
+<prompt>shell&gt;</prompt></screen>
+			<para>In case, you hit the poller process or if the table was really
+			not fully processed, you may find</para>
+			<screen><prompt>shell&gt;</prompt>php -q poller_output_empty.php
+OK u:0.00 s:0.00 r:0.04
+OK u:0.00 s:0.00 r:0.04
+OK u:0.00 s:0.00 r:0.04
+OK u:0.00 s:0.00 r:0.04
+OK u:0.00 s:0.00 r:0.04
+OK u:0.00 s:0.00 r:0.04
+OK u:0.00 s:0.00 r:0.04
+OK u:0.00 s:0.00 r:0.04
+OK u:0.00 s:0.00 r:0.04
+OK u:0.00 s:0.00 r:0.05
+OK u:0.00 s:0.00 r:0.05
+OK u:0.00 s:0.00 r:0.05
+OK u:0.00 s:0.00 r:0.05
+OK u:0.00 s:0.00 r:0.05
+OK u:0.00 s:0.00 r:0.05
+OK u:0.00 s:0.00 r:0.05
+OK u:0.00 s:0.00 r:0.05
+OK u:0.00 s:0.00 r:0.05
+OK u:0.00 s:0.00 r:0.05
+OK u:0.00 s:0.00 r:0.05
+OK u:0.00 s:0.01 r:0.06
+There were 21, RRD updates made this pass
+<prompt>shell&gt;</prompt></screen>
+			<para>If logging level verbosity was switched to <userinput>DEBUG</userinput>
+			you may find additional debug messages that usually show up in
+			<filename>cacti.log</filename></para>
+		</sect1>
+		<sect1 id="cli_poller_graphs_reapply_names">
+		<title>Reapply Suggested Names to Graphs</title>
+			<para>For a general understanding of suggested names used with data queries,
+			please see <xref linkend="data_queries_associated_graph_templates"/>.
+			Be aware, that changes to the <userinput>Suggested Names</userinput>
+			section of a data query will not automatically be propagated to
+			all existing graphs. This is, where <application>poller_graphs_reapply_names.php</application>
+			drops in. Calling the script with the parameter <userinput>--help</userinput> yields</para>
+			<screen><prompt>shell&gt;</prompt>php -q poller_graphs_reapply_names.php --help
+Cacti Reapply Graph Names Script 1.0, Copyright 2007 - The Cacti Group
+
+usage: poller_graphs_reapply_names.php -id=[host_id|All][host_id1|host_id2|...] [-s=[search_string] [-d] [-h] [--help] [-v] [--version]
+
+-id=host_id   - The host_id or 'All' or a pipe delimited list of host_id's
+-s=search_str - A graph template name or graph title to search for
+-d            - Display verbose output during execution
+-v --version  - Display this help message
+-h --help     - Display this help message</screen>
+			<para>Assume a situation, where the suggested names where changed
+			for the standard data query named <userinput>SNMP - Get Mounted Partitions</userinput>.
+			In this case, you will want to rework all graphs for this data query only. A verbose
+			run will yield</para>
+			<screen><prompt>shell&gt;</prompt>php -q poller_graphs_reapply_names.php -id=All -d -s="Used space"
+WARNING: Do not interrupt this script.  Interrupting during rename can cause issues
+DEBUG: There are '6' Graphs to rename
+DEBUG: Graph Name 'Localhost - Used Space - Memory Buffers' starting
+DEBUG: Graph Rename Done for Graph 'Localhost - Used Space - Memory Buffers'
+DEBUG: Graph Name 'Localhost - Used Space - Real Memory' starting
+DEBUG: Graph Rename Done for Graph 'Localhost - Used Space - Real Memory'
+DEBUG: Graph Name 'Localhost - Used Space - Swap Space' starting
+DEBUG: Graph Rename Done for Graph 'Localhost - Used Space - Swap Space'
+DEBUG: Graph Name 'Localhost - Used Space - /' starting
+DEBUG: Graph Rename Done for Graph 'Localhost - Used Space - /'
+DEBUG: Graph Name 'Localhost - Used Space - /sys' starting
+DEBUG: Graph Rename Done for Graph 'Localhost - Used Space - /sys'
+DEBUG: Graph Name 'Localhost - Used Space - /boot' starting
+DEBUG: Graph Rename Done for Graph 'Localhost - Used Space - /boot'</screen>
+			<para>Please notice my miss-spelling of the word <quote>Space</quote>.
+			The <userinput>-s=</userinput> option is not case sensitive.</para>
+		</sect1>
+		<sect1 id="cli_copy_user">
+		<title>Copy Local Cacti Users</title>
+			<para>For use and understanding the
+			limitation of this script, it is of importance to read <xref linkend="user_management">.
+			In case you're using local cacti user definitions, you may copy
+			a template user to a new user. Don't use this script for
+			<application>LDAP</application> or Web Basic users.</para>
+			<para>Calling the script with the parameter <userinput>--help</userinput> yields</para>
+			<screen><prompt>shell&gt;</prompt>php -q copy_user.php --help
+
+It is highly recommended that you use the web interface to copy users as this script will only copy Local Cacti users.
+
+Syntax:
+ php copy_cacti_user.php &lt;template user&gt; &lt;new user&gt;</screen>
+ 			<para>Now let's create a new user <userinput>Harry Potter</userinput> as follows</para>
+ 			<screen><prompt>shell&gt;</prompt>php -q copy_user.php guest "Harry Potter"
+
+It is highly recommended that you use the web interface to copy users as this script will only copy Local Cacti users.
+
+Cacti User Copy Utility
+Template User: guest
+New User: Harry Potter
+
+Copying User...
+User copied...</screen>
+			<para>Find the results of this program call at <guimenu>User Management</guimenu></para>
+			<screen>User Name** 	Full Name 	Enabled 	Realm 	Default Graph Policy 	Last Login
+admin  	        Administrator  	Yes  		Local  	ALLOW  			Sunday, October 07, 2007 14:59:32
+guest 	        Guest Account 	Yes 		Local 	ALLOW 			N/A
+Harry Potter 	Guest Account 	Yes 		Local 	ALLOW 			N/A</screen>
+		</sect1>
+		<sect1 id="cli_add_device">
+		<title>Add a New Device</title>
+			<para>While it is an easy task to add a new device from the panels,
+			this would be a tedious task for creating dozens of hundreds of devices
+			in one turn. This is, where the script <filename>add_device.php</filename>
+			comes in. First, let's have a look at the whole list of features
+			it provides. Calling the script with the parameter <userinput>--help</userinput> yields</para>
+			<screen><prompt>shell&gt;</prompt>php -q add_device.php --help
+
+Add Device Script 1.0, Copyright 2007 - The Cacti Group
+
+A simple command line utility to add a device in Cacti
+
+usage: add_device.php --description=[description] --ip=[IP] --template=[ID] [--notes="[]"] [--disable]
+    [--avail=[ping]] --ping_method=[icmp] --ping_port=[N/A, 1-65534] --ping_retries=[2]
+    [--version=[1|2|3]] [--community=] [--port=161] [--timeout=500]
+    [--username= --password=] [--authproto=] [--privpass= --privproto=] [--context=]
+    [--quiet]
+
+Required:
+    --description  the name that will be displayed by Cacti in the graphs
+    --ip           self explanatory (can also be a FQDN)
+Optional:
+    --template     0, is a number (read below to get a list of templates)
+    --notes        '', General information about this host.  Must be enclosed using double quotes.
+    --disable      0, 1 to add this host but to disable checks and 0 to enable it
+    --avail        pingsnmp, [ping][none, snmp, pingsnmp]
+    --ping_method  tcp, icmp|tcp|udp
+    --ping_port    '', 1-65534
+    --ping_retries 2, the number of time to attempt to communicate with a host
+    --version      1, 1|2|3, snmp version
+    --community    '', snmp community string for snmpv1 and snmpv2.  Leave blank for no community
+    --port         161
+    --timeout      500
+    --username     '', snmp username for snmpv3
+    --password     '', snmp password for snmpv3
+    --authproto    '', snmp authentication protocol for snmpv3
+    --privpass     '', snmp privacy passphrase for snmpv3
+    --privproto    '', snmp privacy protocol for snmpv3
+    --context      '', snmp context for snmpv3
+
+List Options:
+    --list-host-templates
+    --list-communities
+    --quiet - batch mode value return</screen>
+			<para>Wow, that's quite a lot of options. To better understand it's use,
+			let's first stick to the listing options</para>
+			<sect2 id="cli_add_device_list_host_template">
+			<title>List all Host Templates</title>
+				<screen><prompt>shell&gt;</prompt>php -q add_device.php --list-host-templates
+
+Valid Host Templates: (id, name)
+1       Generic SNMP-enabled Host
+3       ucd/net SNMP Host
+4       Karlnet Wireless Bridge
+5       Cisco Router
+6       Netware 4/5 Server
+7       Windows 2000/XP Host
+8       Local Linux Machine</screen>
+				<para>Why are those <userinput>Host Templates</userinput> of such importance for this
+				script? Well, when using this script to add a new device, there are 3 required
+				parameters. The <userinput>description</userinput> and the <userinput>device ip address</userinput>
+				are of course left to you. But for assigning the correct <userinput>Host Template Id</userinput>,
+				you should first know the correct id of that very parameter. For the purpose of this
+				chapter we assume to add a device that will be associated to a <userinput>ucd/net SNMP Host</userinput>,
+				so the id of <userinput>3</userinput> is required.</para>
+				<para>If you do not want to associate the host to any <userinput>Host Template Id</userinput>, known
+				as host template <guimenuitem>None</guimenuitem>, please provide the parameter
+				<userinput>--template=0</userinput> or omit this parameter.</para>
+			</sect2>
+			<sect2 id="cli_add_device_list_communities">
+			<title>List all Community Strings</title>
+				<screen><prompt>shell&gt;</prompt>php -q add_device.php --list-communities
+
+Known communities are: (community)
+
+public
+snmp-get</screen>
+				<para>Of course, your list will vary</para>
+			</sect2>
+			<sect2 id="cli_add_device_simple">
+			<title>Create a New Device</title>
+				<para>Now, let's set up the most basic command to add a new device. The description shall be
+				<userinput>"Device Add Test"</userinput>, the ip will be given as a FQDN, <userinput>router.mydomain.com</userinput>.
+				As a SNMP enabled device, surely a community string has to be provided; in this case given
+				as <userinput>public</userinput>.
+				In total, this makes the following command</para>
+				<screen><prompt>shell&gt;</prompt>php -q add_device.php --description="Device Add Test" --ip="router.mydomain.com" --template=3 --community="public"
+
+Adding Device Add Test (router.mydomain.com) as "ucd/net SNMP Host" using SNMP v1 with community "public"
+Success - new device-id: (11)</screen>
+				<para>Please visit <guimenu>Devices</guimenu> to see the result:</para>
+				<screen>Description** 		Graphs 	Data Sources 	Status 	Hostname 		Current (ms) 	Average (ms) 	Availability
+Device Add Test 	0 	0 		Unknown router.mydomain.com 	0 		0 		100</screen>
+				<para>Please use any other combination of parameters in the same way
+				as via the web browser console. You may want to remember the new device id, <userinput>11</userinput>
+				in this case, for the next steps.</para>
+			</sect2>
+		</sect1>
+		<sect1 id="cli_add_graphs">
+		<title>Add a New Graph</title>
+			<para>You won't stop now as you've just created a device from cli.
+			Surely, the task of setting up graphs is the next step. This is done using
+			<filename>add_graphs.php</filename>. Calling the script with the parameter <userinput>--help</userinput> yields</para>
+			<screen><prompt>shell&gt;</prompt>php -q add_graphs.php
+
+Add Graphs Script 1.0, Copyright 2007 - The Cacti Group
+
+A simple command line utility to add graphs in Cacti
+
+usage: add_graphs.php --graph-type=[cg|ds] --graph-template-id=[ID]
+    --host-id=[ID] [--graph-title=title] [graph options] [--force] [--quiet]
+
+For cg graphs:
+    [--input-fields="[data-template-id:]field-name=value ..."] [--force]
+
+    --input-fields  If your data template allows for custom input data, you may specify that
+                    here.  The data template id is optional and applies where two input fields
+                    have the same name.
+    --force         If you set this flag, then new cg graphs will be created, even though they
+                    may already exist
+
+For ds graphs:
+    --snmp-query-id=[ID] --snmp-query-type-id=[ID] --snmp-field=[SNMP Field] --snmp-value=[SNMP Value]
+
+    [--graph-title=] Defaults to what ever is in the graph template/data-source template.
+
+List Options:
+    --list-hosts
+    --list-graph-templates
+    --list-input-fields --graph-template-id=[ID]
+    --list-snmp-queries
+    --list-query-types  --snmp-query-id [ID]
+    --list-snmp-fields  --host-id=[ID]
+    --list-snmp-values  --host-id=[ID] --snmp-field=[Field]
+
+'cg' graphs are for things like CPU temp/fan speed, while
+'ds' graphs are for data-source based graphs (interface stats etc.)</screen>
+			<para>Like the graph creation from the console, this task is split
+			into two different ones:</para>
+			<itemizedlist>
+				<listitem><para><guimenuitem>Associated Graph Templates</guimenuitem>:
+				These are named <userinput>cg</userinput> graph_type for this script.</para></listitem>
+				<listitem><para><guimenuitem>Associated Data Queries</guimenuitem>:
+				These are named <userinput>ds</userinput> graph_type for this script.
+				Additional SNMP parameters are required to define those graphs.</para></listitem>
+			</itemizedlist>
+			<caution>
+				<title>Exact typing required</title>
+				<para>When running this cli script, caution must be taken
+				to avoid typos. Sometimes, list options take an ending <quote>s</quote>,
+				where the option for graph creation comes without <quote>s</quote>.
+				Error messages are not issued to indicate this typo; instead you will
+				see the general help screen.</para>
+			</caution>
+			<sect2 id="cli_add_graphs_list_cg">
+			<title>List Options for Associated Graph Templates</title>
+				<para>The first list option, <userinput>--list-hosts</userinput>,
+				is required only if you do not know the <userinput>id</userinput>
+				of the device you want to add graphs for. It will produce output as follows</para>
+				<screen><prompt>shell&gt;</prompt>php -q add_graphs.php --list-hosts
+
+Known Hosts: (id, hostname, template, description)
+...
+11      router.mydomain.com 3       Device Add Test</screen>
+				<para>You surely recognize the device we've just added?</para>
+
+				<para>The next list option, <userinput>--list-graph-templates</userinput>,
+				is required to identify the number of an <userinput>Associated Graph Templates</userinput>.</para>
+				<screen><prompt>shell&gt;</prompt>php -q add_graphs.php --list-graph-templates
+
+Known Graph Templates:(id, name)
+2       Interface - Traffic (bits/sec)
+3       ucd/net - Available Disk Space
+4       ucd/net - CPU Usage
+5       Karlnet - Wireless Levels
+6       Karlnet - Wireless Transmissions
+7       Unix - Ping Latency
+8       Unix - Processes
+9       Unix - Load Average
+...</screen>
+				<para>We will need the graph template id of the <userinput>ucd/net - CPU Usage</userinput>
+				template later. So note the number <userinput>4</userinput> for it.</para>
+			</sect2>
+			<sect2 id="cli_add_graphs_list_ds">
+			<title>List Options for Associated Data Queries</title>
+				<para>First task is to find all id's for available data queries.</para>
+				<screen><prompt>shell&gt;</prompt>php -q add_graphs.php --host-id=2 --list-snmp-queries
+
+Known SNMP Queries:(id, name)
+1       SNMP - Interface Statistics
+2       ucd/net -  Get Monitored Partitions
+3       Karlnet - Wireless Bridge Statistics
+4       Netware - Get Available Volumes
+6       Unix - Get Mounted Partitions
+7       Netware - Get Processor Information
+8       SNMP - Get Mounted Partitions
+9       SNMP - Get Processor Information</screen>
+				<para>For standard interface statistics, we note the id of
+				<userinput>1</userinput></para>
+				<para>Next task is to find the query_type as done by issuing</para>
+				<screen><prompt>shell&gt;</prompt>php -q add_graphs.php --snmp-query-id=1 --list-query-types
+
+Known SNMP Query Types: (id, name)
+2       In/Out Errors/Discarded Packets
+3       In/Out Non-Unicast Packets
+4       In/Out Unicast Packets
+9       In/Out Bytes (64-bit Counters)
+13      In/Out Bits
+14      In/Out Bits (64-bit Counters)
+16      In/Out Bytes
+20      In/Out Bits with 95th Percentile
+21      In/Out Bits with Total Bandwidth
+22      In/Out Bytes with Total Bandwidth
+23      In/Out Bits 1 min
+24      In/Out Bits 1 min (64-bit Counters)</screen>
+				<para>For a standard <userinput>In/Out Bits</userinput> type, we
+				note the id of <userinput>13</userinput></para>
+				<para>Next issue is to select the <userinput>SNMP Field</userinput>
+				that shall be used for a new graph.</para>
+				<screen><prompt>shell&gt;</prompt>php -q add_graphs.php --host-id=11 --list-snmp-fields
+
+Known SNMP Fields for host-id 11: (name)
+ifAlias
+ifDescr
+ifHwAddr
+ifIndex
+ifIP
+ifName
+ifOperStatus
+ifSpeed
+ifType</screen>
+				<para>For our graph, we will use the field <userinput>ifOperStatus</userinput>
+				to select the correct interfaces.</para>
+				<para>In general, you will next determine the values available for the <userinput>SNMP Field</userinput>,
+				in our case <userinput>ifOperStatus</userinput>. This is done by</para>
+				<screen><prompt>shell&gt;</prompt>php -q add_graphs.php --host-id=11 --snmp-field=ifOperStatus --list-snmp-values
+
+Known values for ifOperStatus for host 11: (name)
+Down
+Up</screen>
+				<para>This is no surprise, of course. Now, all paarmeters required for
+				creating a new graph are determined.</para>
+			</sect2>
+			<sect2 id="cli_add_graphs_cg">
+			<title>Add Non-Indexed Graphs</title>
+				<para>We will create a graph for <userinput>ucd/net - CPU Usage</userinput>. Above,
+				we've identified the graph template it to be <userinput>4</userinput>.
+				In total, that makes up for the following command</para>
+				<screen><prompt>shell&gt;</prompt>php -q add_graphs.php --host-id=11 --graph-type=cg --graph-template-id=4
+
+Graph Added - graph-id: (39) - data-source-id: (63)</screen>
+				<para>Find the result when visiting <guimenu>Graph Management</guimenu></para>
+				<screen>Graph Title** 			Template Name 		Size
+Device Add Test - CPU Usage 	ucd/net - CPU Usage 	120x500</screen>
+			</sect2>
+			<sect2 id="cli_add_graphs_ds">
+			<title>Add Indexed Graphs</title>
+				<para>First, let's sum up the id's of all resources required for this
+				task:</para>
+				<table frame='all'>
+					<title>Parametes required for an Interface Traffic Graph</title>
+					<tgroup cols='3' align='left' colsep='1' rowsep='1'>
+						<colspec colnum="2">
+						<colspec colwidth="1" colnum="2">
+						<colspec colwidth="3*" colnum="3">
+						<thead>
+							<row>
+								<entry align="center">Object</entry>
+								<entry align="center">Value</entry>
+								<entry align="center">Description</entry>
+							</row>
+						</thead>
+						<tbody>
+							<row>
+								<entry>Graph Template Id</entry>
+								<entry align="right">2</entry>
+								<entry>Interface - Traffic (bits/sec)</entry>
+							</row>
+							<row>
+								<entry>SNMP Query Id</entry>
+								<entry align="right">1</entry>
+								<entry>SNMP - Interface Statistics</entry>
+							</row>
+							<row>
+								<entry>SNMP Query Type Id</entry>
+								<entry align="right">13</entry>
+								<entry>In/Out Bits</entry>
+							</row>
+							<row>
+								<entry>SNMP Field</entry>
+								<entry align="right">ifOperStatus</entry>
+								<entry></entry>
+							</row>
+							<row>
+								<entry>SNMP Value</entry>
+								<entry align="right">Up</entry>
+								<entry></entry>
+							</row>
+						</tbody>
+					</tgroup>
+				</table>
+				<para>This will make up for the following command</para>
+				<screen><prompt>shell&gt;</prompt>php -q add_graphs.php --host-id=11 --graph-type=ds --graph-template-id=2 --snmp-query-id=1 --snmp-query-type-id=13 --snmp-field=ifOperStatus --snmp-value=Up
+
+Graph Added - graph-id: (40) - data-source-id: (65)</screen>
+				<para>Find the result when visiting <guimenu>Graph Management</guimenu></para>
+				<screen>Graph Title** 				Template Name 				Size
+Device Add Test - CPU Usage 		ucd/net - CPU Usage 			120x500
+Device Add Test - Traffic - lo  	Interface - Traffic (bits/sec)  	120x500</screen>
+			</sect2>
+		</sect1>
+		<sect1 id="cli_add_tree">
+		<title>Add Items to a Tree</title>
+			<para>Now, that we've created some nice graphs, they should be put
+			the graph trees. This is done using <filename>add_tree.php</filename>.
+			As you will notice soon, it is possible to even add header items,
+			hosts and graphs to a tree as well as adding a new tree itself.
+			But let us first see the help output.
+			Calling the script with the parameter <userinput>--help</userinput> yields</para>
+			<screen><prompt>shell&gt;</prompt>php -q add_tree.php --help
+
+Add Tree Script 1.0, Copyright 2007 - The Cacti Group
+
+A simple command line utility to add objects to a tree in Cacti
+
+usage: add_tree.php  --type=[tree|node] [type-options] [--quiet]
+
+Tree options:
+    --name=[Tree Name]
+    --sort-method=[manual|alpha|natural|numeric]
+
+Node options:
+    --node-type=[header|host|graph]
+    --tree-id=[ID]
+    [--parent-node=[ID] [Node Type Options]]
+
+Header node options:
+    --name=[Name]
+
+Host node options:
+    --host-id=[ID]
+    [--host-group-style=[1|2]]
+    (host group styles:
+     1 = Graph Template,
+     2 = Data Query Index)
+
+Graph node options:
+    --graph-id=[ID]
+    [--rra-id=[ID]]
+
+List Options:
+    --list-hosts
+    --list-trees
+    --list-nodes --tree-id=[ID]
+    --list-rras
+    --list-graphs --host-id=[ID]</screen>
+			<sect2 id="cli_add_tree_list_hosts">
+			<title>List Hosts</title>
+	       		<para>The first try is dedicated to the list option
+				<userinput>--list-hosts</userinput>. It goes like</para>
+				<screen><prompt>shell&gt;</prompt>php -q add_tree.php --list-hosts
+
+Known Hosts: (id, hostname, template, description)
+1       127.0.0.1       	8       Localhost
+2       gandalf 		3       gandalf
+...
+11      router.mydomain.com	3       Device Add Test</screen>
+			</sect2>
+			<sect2 id="cli_add_tree_list_trees">
+			<title>List Trees</title>
+        		<para>Now, let us
+	           <userinput>--list-trees</userinput>. It goes like</para>
+    	       <screen><prompt>shell&gt;</prompt>php -q add_tree.php --list-trees
+
+Known Trees:
+id      sort method                     name
+1       Manual Ordering (No Sorting)    Default Tree</screen>
+			</sect2>
+			<sect2 id="cli_add_tree_list_nodes">
+			<title>List Nodes</title>
+				<para>Listing all existend node of a given tree is done by</para
+				<screen><prompt>shell&gt;</prompt>php -q add_tree.php --list-nodes --tree-id=1
+
+Known Tree Nodes:
+type    id      text
+Host    7       127.0.0.1       Graph Template
+Host    9       gandalf 	Graph Template
+Host    12      gandalf 	Graph Template</screen>
+			</sect2>
+			<sect2 id="cli_add_tree_list_rras">
+			<title>List RRAs</title>
+				<para>For special tree add options, you will require the id of
+				the RRA definition to completly specify the add request. That's
+				why the corresponding <userinput>--list-rras</userinput> option is
+				implemented. It goes this way</para>
+				<screen><prompt>shell&gt;</prompt>php -q add_tree.php --list-rras
+
+Known RRAs:
+id      steps   rows    timespan        name
+1       1       600     86400           Daily (5 Minute Average)
+2       6       700     604800          Weekly (30 Minute Average)
+3       24      775     2678400         Monthly (2 Hour Average)
+4       288     797     33053184        Yearly (1 Day Average)</screen>
+			</sect2>
+			<sect2 id="cli_add_tree_list_graphs">
+			<title>List Graphs for given Hosts</title>
+				<para>To be able to add a Graph, the id of that very graph is required.
+				Thus, a <userinput>--list-graphs --host-id=[id]</userinput> option was implemented</para>
+				<screen><prompt>shell&gt;</prompt>php -q add_tree.php --list-graphs --host-id=1
+
+Known Host Graphs: (id, name, template)
+1       Localhost - Memory Usage        	Linux - Memory Usage
+2       Localhost - Load Average        	Unix - Load Average
+3       Localhost - Logged in Users     	Unix - Logged in Users
+4       Localhost - Processes   		Unix - Processes
+5       Localhost - Traffic - eth0      	Interface - Traffic (bits/sec, 95th Percentile)
+33      Localhost - Used Space - Memory Buffers Host MIB - Available Disk Space
+34      Localhost - Used Space - Real Memory    Host MIB - Available Disk Space
+35      Localhost - Used Space - Swap Space     Host MIB - Available Disk Space
+36      Localhost - Used Space - /      	Host MIB - Available Disk Space
+37      Localhost - Used Space - /sys   	Host MIB - Available Disk Space
+38      Localhost - Used Space - /boot  	Host MIB - Available Disk Space</screen>
+			</sect2>
+			<sect2 id="cli_add_tree_tree">
+			<title>Add a new Tree</title>
+				<para>Cacti comes with a single tree, named
+				<guimenuitem>Default Tree</guimenuitem>. Console entry
+				<guimenu>Graph Trees</guimenu> is used to add more trees. With
+				<filename>add_tree.php</filename>, you may now do so from command line as well:</para>
+				<screen><prompt>shell&gt;</prompt>php -q add_tree.php --type=tree --name="Test Tree Add" --sort-method=manual
+
+Tree Created - tree-id: (6)</screen>
+				<para>Verify this from console, <guimenu>Graph Trees</guimenu>
+				to find</para>
+				<screen>Default Tree
+Test Tree Add</screen>
+				<para>as expected.</para>
+			</sect2>
+			<sect2 id="cli_add_tree_header">
+			<title>Add a new Header Node to a Tree</title>
+				<para>Now, that a new tree has been created, you may want to add
+				a new header to that very tree. Use</para>
+				<screen><prompt>shell&gt;</prompt>php -q add_tree.php --type=node --node-type=header --tree-id=6 --name="Header Test"
+
+Added Node node-id: (21)</screen>
+				<para>You will want to save the id returned if willing to add further
+				nodes to exactly this new Header Node</para>
+				<para>Please pay attention, that it is currently not possible to
+				add another header with the same options even if this is possible
+				from console</para>
+				<para>But it is possible to add a subheader to an already defined header.
+				Even in this case, the <userinput>name</userinput> has to be unique</para>
+				<screen><prompt>shell&gt;</prompt>php -q add_tree.php --type=node --node-type=header --tree-id=6 --parent-node=21  --name="SubHeader Test"
+
+Added Node node-id: (22)</screen>
+			</sect2>
+			<sect2 id="cli_add_tree_host">
+			<title>Add a new Host Node to a Tree</title>
+				<para>We will distinguish several options adding a host to a tree.
+				First, let's add a Host directly to a tree. For this example, we use
+				the tree id returned from adding our own <userinput>Test Tree Add</userinput>
+				known with <userinput>id=6</userinput></para>
+				<screen><prompt>shell&gt;</prompt>php -q add_tree.php --type=node --node-type=host --tree-id=6 --host-id=1
+
+Added Node node-id: (23)</screen>
+				<para>As no <userinput>--parent-node</userinput> was given, this host
+				is directly added to the tree itself. If you wish to add a host to
+				a (sub)header, please specify as follows</para>
+				<screen><prompt>shell&gt;</prompt>php -q add_tree.php --type=node --node-type=host --tree-id=6 --parent-node=21 --host-id=1
+
+Added Node node-id: (24)</screen>
+				<para>Both example come without a <userinput>--host-group-style</userinput> option.
+				For those cases, <userinput>Graph Template</userinput> host group style is default.
+				Here's an example for providing a host group option of
+				<userinput>Data Query Index</userinput> instead</para>
+				<screen><prompt>shell&gt;</prompt>php -q add_tree.php --type=node --node-type=host --tree-id=6 --parent-node=22 --host-id=1 --host-group-style=2
+
+Added Node node-id: (25)</screen>
+			</sect2>
+			<sect2 id="cli_add_tree_graph">
+			<title>Add a new Graph Node to a Tree</title>
+				<para>Like above, instead of hosts it is possible to add a single
+				graph to a tree or a (sub)header of any tree. Of course, you again will
+				require the <userinput>id</userinput> of the tree and optionally of the
+				<userinput>header</userinput>. This results in</para>
+				<screen><prompt>shell&gt;</prompt>php -q add_tree.php --type=node --node-type=graph --tree-id=6 --graph-id=5
+
+Added Node node-id: (26)</screen>
+				<para>Like above, this graph now was added directly to the tree itself.
+				To add a graph to a header, proceed as follows</para>
+				<screen><prompt>shell&gt;</prompt>php -q add_tree.php --type=node --node-type=graph --tree-id=6 --parent-node=21 --graph-id=5
+
+Added Node node-id: (27)</screen>
+				<para>In both cases, no explicit <userinput>--rra-id</userinput>
+				was given. This will default to the <guimenuitem>Daily (5 Minute Average)</guimenuitem>.
+				Specify any other <userinput>--rra-id</userinput> as given</para>
+				<screen><prompt>shell&gt;</prompt>php -q add_tree.php --type=node --node-type=graph --tree-id=6 --parent-node=21 --graph-id=1 --rra-id=4
+
+Added Node node-id: (28)</screen>
+				<para>to provide the <userinput>--rra-id</userinput> for a rra of
+				<guimenuitem>Yearly (1 Day Average)</guimenuitem>.</para>
+			</sect2>
+		</sect1>
+		<sect1 id="cli_add_perms">
+		<title>Add Graph Permissions</title>
+			<para>This script is used to specify special graph permissions to users.
+			The list of parameters is displyed as usual when calling the script with
+			the parameter <userinput>--help</userinput></para>
+			<screen><prompt>shell&gt;</prompt>php -q add_perms.php --help
+
+Add Permissions Script 1.0, Copyright 2007 - The Cacti Group
+
+A simple command line utility to add permissions to tree items in Cacti
+
+usage: add_perms.php [ --user-id=[ID] ]
+    --item-type=[graph|tree|host|graph_template]
+    --item-id [--quiet]
+
+Where item-id is the id of the object of type item-type
+List Options:
+    --list-users
+    --list-trees
+    --list-graph-templates
+    --list-graphs --host-id=[ID]</screen>
+			<sect2 id="cli_add_perms_list_users">
+			<title>List Users</title>
+	       		<para>The list of users is retrieved by calling the script with the parameter
+				<userinput>--list-users</userinput>. It goes like</para>
+				<screen><prompt>shell&gt;</prompt>php -q add_perms.php --list-users
+
+Known Users:
+id      username        full_name
+1       admin   Administrator
+3       guest   Guest Account</screen>
+			</sect2>
+			<sect2 id="cli_add_perms_list_trees">
+			<title>List Trees</title>
+	       		<para>The list of trees is retrieved by calling the script with the parameter
+				<userinput>--list-trees</userinput>. It goes like</para>
+				<screen><prompt>shell&gt;</prompt>php -q add_perms.php --list-trees
+
+Known Trees:
+id      sort method                     name
+1       Manual Ordering (No Sorting)    Default Tree</screen>
+			</sect2>
+			<sect2 id="cli_add_perms_list_graph_templates">
+			<title>List Graph Templates</title>
+	       		<para>The list of available graph templates is retrieved by calling the script with the parameter
+				<userinput>--list-graph-templates</userinput>. It goes like</para>
+				<screen><prompt>shell&gt;</prompt>php -q add_perms.php --list-graph-templates
+
+Known Graph Templates:(id, name)
+2       Interface - Traffic (bits/sec)
+3       ucd/net - Available Disk Space
+4       ucd/net - CPU Usage
+5       Karlnet - Wireless Levels
+6       Karlnet - Wireless Transmissions
+7       Unix - Ping Latency
+8       Unix - Processes
+9       Unix - Load Average
+...</screen>
+			</sect2>
+			<sect2 id="cli_add_perms_list_graphs">
+			<title>List Graphs for given Hosts</title>
+				<para>To be able to add a permissions to a specific Graph,
+				the id of that very graph is required.
+				Thus, a <userinput>--list-graphs --host-id=[id]</userinput> option was implemented</para>
+				<screen><prompt>shell&gt;</prompt>php -q add_perms.php --list-graphs --host-id=1
+
+Known Host Graphs: (id, name, template)
+1       Localhost - Memory Usage        	Linux - Memory Usage
+2       Localhost - Load Average        	Unix - Load Average
+3       Localhost - Logged in Users     	Unix - Logged in Users
+4       Localhost - Processes   		Unix - Processes
+5       Localhost - Traffic - eth0      	Interface - Traffic (bits/sec, 95th Percentile)
+33      Localhost - Used Space - Memory Buffers Host MIB - Available Disk Space
+34      Localhost - Used Space - Real Memory    Host MIB - Available Disk Space
+35      Localhost - Used Space - Swap Space     Host MIB - Available Disk Space
+36      Localhost - Used Space - /      	Host MIB - Available Disk Space
+37      Localhost - Used Space - /sys   	Host MIB - Available Disk Space
+38      Localhost - Used Space - /boot  	Host MIB - Available Disk Space</screen>
+			</sect2>
+			<sect2 id="cli_add_perms_user">
+			<title>Add Graph Permissions to specific Users</title>
+				<para>There are various ways to define graph permissions
+				to specific users. First, we will add graph permissions
+				for a given host. This is done using the parameter
+				<userinput>--item-type=host</userinput> as follows</para>
+				<screen><prompt>shell&gt;</prompt>php -q add_perms.php --user-id=4 --item-type=host --item-id=1</screen>
+				<para><userinput>--user-id=4</userinput> must specify an existing users.
+				Else, an error message will be printed. As <userinput>--item-type=host</userinput> is given,
+				<userinput>--item-id=1</userinput> must specify a valid host. Again, if no host
+				with this specific id exists, an error message will be printed.
+				No output is produced on successful operations.</para>
+
+				<para>Next, we will add graph permissions
+				for a given tree. This is done using the parameter
+				<userinput>--item-type=tree</userinput> as follows</para>
+				<screen><prompt>shell&gt;</prompt>php -q add_perms.php --user-id=4 --item-type=tree --item-id=1</screen>
+				<para><userinput>--user-id=4</userinput> must specify an existing users.
+				Else, an error message will be printed. As <userinput>--item-type=tree</userinput> is given,
+				<userinput>--item-id=1</userinput> must specify a valid tree (the <guimenuitem>Default Tree</guimenuitem>
+				in this case). Again, if no tree
+				with this specific id exists, an error message will be printed.
+				No output is produced on successful operations.</para>
+
+				<para>Adding graph permissions
+				for a given graph template is done using the parameter
+				<userinput>--item-type=graph_template</userinput> as follows</para>
+				<screen><prompt>shell&gt;</prompt>php -q add_perms.php --user-id=4 --item-type=graph_template --item-id=25</screen>
+				<para><userinput>--user-id=4</userinput> must specify an existing users.
+				Else, an error message will be printed. As <userinput>--item-type=graph_template</userinput> is given,
+				<userinput>--item-id=1</userinput> must specify a valid graph_template (the <guimenuitem>Interface - Traffic (bytes/sec)</guimenuitem>
+				in this case). Again, if no graph template
+				with this specific id exists, an error message will be printed.
+				No output is produced on successful operations.</para>
+
+				<para>Last but not least we add graph permissions
+				for a given graph by using the parameter
+				<userinput>--item-type=graph</userinput> as follows</para>
+				<screen><prompt>shell&gt;</prompt>php -q add_perms.php --user-id=4 --item-type=graph --item-id=8</screen>
+				<para><userinput>--user-id=4</userinput> must specify an existing users.
+				Else, an error message will be printed. As <userinput>--item-type=graph</userinput> is given,
+				<userinput>--item-id=1</userinput> must specify a valid graph.
+				Again, if no graph template
+				with this specific id exists, an error message will be printed.
+				No output is produced on successful operations.</para>
+			</sect2>
+		</sect1>
+	</chapter>
+</part>
