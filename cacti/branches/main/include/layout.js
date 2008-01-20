@@ -246,7 +246,8 @@ function SelectAll(prefix, checkbox_state) {
 
 function SelectAllGraphs(prefix, checkbox_state) {
 	for (var i = 0; i < document.graphs.elements.length; i++) {
-		if ((document.graphs.elements[i].name.substr(0, prefix.length) == prefix) && (document.graphs.elements[i].style.visibility != 'hidden')) {
+		if ((document.graphs.elements[i].name.substr(0, prefix.length) == prefix) &&
+			(document.graphs.elements[i].style.visibility != 'hidden')) {
 			document.graphs.elements[i].checked = checkbox_state;
 		}
 	}
@@ -282,6 +283,40 @@ function htmlStartBoxFilterChange(id, initialize) {
 	}else{
 		document.getElementById(id).style.display  = "";
 		document.getElementById(id+'_twisty').src = "images/tw_open.gif";
+	}
+}
+
+/* page load functions */
+function initializePage() {
+	inputs = document.getElementsByTagName("input");
+	found  = false;
+	hfound = false;
+
+	for (var i=0; i < inputs.length; i++) {
+		switch (inputs[i].type) {
+		case "image":
+		case "text":
+		case "password":
+		case "file":
+			inputs[i].focus();
+			found = true;
+
+			break;
+		case "hidden":
+			hid_count = i;
+			hfound    = true;
+
+			break;
+		default:
+		}
+
+		if (found) {
+			break;
+		}
+	}
+
+	if ((!found) && (hfound)) {
+		inputs[hid_count].focus();
 	}
 }
 

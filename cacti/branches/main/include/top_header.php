@@ -36,7 +36,7 @@ global $colors;
 	print "<meta http-equiv=refresh content=\"" . $refresh["seconds"] . "; url='" . $refresh["page"] . "'\">";
 	}?>
 </head>
-<body class='body'>
+<body class='body' onLoad='initializePage()'>
 <div class='header'></div>
 <div class='navbar'>
 	&nbsp;<a href="index.php"><img src="images/tab_console_down.gif" alt="Console" align="middle" border="0"></a><a href="graph_view.php"><img src="images/tab_graphs.gif" alt="Graphs" align="middle" border="0"></a>

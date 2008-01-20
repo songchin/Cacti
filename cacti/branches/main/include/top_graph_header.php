@@ -114,7 +114,7 @@ if ((read_graph_config_option("default_tree_view_mode") == "2") &&
 	<script type="text/javascript" src="include/jscalendar/calendar-setup.js"></script>
 </head>
 
-<body>
+<body onLoad='initializePage()'>
 <a name='page_top'></a>
 
 <table width="100%" cellspacing="0" cellpadding="0">
