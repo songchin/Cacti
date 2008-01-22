@@ -313,20 +313,12 @@ $menu = array(
 		"graphs_new.php" => "New Graphs"
 		),
 	"Management" => array(
-		"graphs.php" => array(
-			"graphs.php" => "Graph Management",
-			"cdef.php" => "CDEFs",
-			"color.php" => "Colors",
-			"gprint_presets.php" => "GPRINT Presets"
-			),
+		"graphs.php" => "Graph Management",
 		"tree.php" => "Graph Trees",
-		"data_sources.php" => array(
-			"data_sources.php" => "Data Sources",
-			"rra.php" => "RRAs"
-			),
+		"data_sources.php" => "Data Sources",
 		"host.php" => 'Devices'
 		),
-	"Collection Methods" => array(
+	"Data Collection" => array(
 		"data_queries.php" => "Data Queries",
 		"data_input.php" => "Data Input Methods"
 		),
@@ -334,6 +326,12 @@ $menu = array(
 		"graph_templates.php" => "Graph Templates",
 		"host_templates.php" => "Host Templates",
 		"data_templates.php" => "Data Templates"
+		),
+	"Presets" => array(
+		"cdef.php" => "CDEFs",
+		"color.php" => "Colors",
+		"gprint_presets.php" => "GPRINT Presets",
+		"rra.php" => "RRAs"
 		),
 	"Import/Export" => array(
 		"templates_import.php" => "Import Templates",

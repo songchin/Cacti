@@ -281,7 +281,6 @@ function auth_display_custom_error_message($message) {
 					<td colspan="2"><font color="#FF0000"><strong>User Account Disabled</strong></font></td>
 				</tr>
 				<?php } } ?>
-
 				<tr><td></td></tr>
 				<tr>
 					<td colspan="2">Please enter your Cacti user name and password below:</td>

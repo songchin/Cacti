@@ -30,35 +30,31 @@ td {
 	background-image: url('../images/cacti_backdrop.gif');
 	background-position: right;
 	background-repeat: no-repeat;
-	background-color: #A9A9A9;
+	background-color: #898989;
 	border-bottom: 1px solid #183c8f;
 	width: 100%;
 }
 
 .navbrcrumb {
+	background-image: url('../images/navbar.png');
+	color: #C1C1C1;
+}
+
+.navbrcrumb td a {
+	color: #E1E1E1;
 	width: 100%;
-	background-color: #E9E9E9;
+	text-decoration: none;
+}
+
+.navbrcrumb td a:hover {
+	text-decoration: none;
+	color: #FFFFFF;
 }
 
 .wrapper {
 	float:right;
-	margin-left:-120px;
+	margin-left:-150px;
 	width:100%;
-}
-
-.menu {
-	background-image: url('../images/shadow.gif');
-	background-repeat: repeat-x;
-	background-position: top left;
-	position: relative;
-	float: left;
-	border-right: 1px ridge #A9A9A9;
-	padding-top: 8px;
-	padding-left: 3px;
-	padding-right: 3px;
-	min-height: 700px;
-	background-color: #F5F5F5;
-	width: 120px;
 }
 
 .content {
@@ -66,13 +62,13 @@ td {
 	background-repeat: repeat-x;
 	background-position: top right;
 	min-height: 500px;
-	margin: 0px 0px 0px 126px;
+	margin: 0px 0px 0px 156px;
 	padding: 8px 5px 8px 5px;
 }
 
 .about {
-	float: left;
-	padding: 15px 15px 15px 15px;
+	float: center;
+	padding: 15px 15px 15px 35px;
 }
 
 /* login/logout class information */
@@ -213,6 +209,7 @@ a:hover {
 }
 
 .textSubHeaderDark, .textSubHeaderDark:visited {
+	background-image: url('../images/rowSubHeader.png');
 	font-size: 10px;
 	color: #FFFFFF;
 	font-weight: bold;
@@ -243,32 +240,93 @@ a:hover {
 	font-weight: bold;
 }
 
-.textMenuHeader {
-	color: #FFFFFF;
-	background-color: #9C9C9C;
-	font-family: Verdana, Arial, Helvetica, sans-serif;
-	font-size: 10px;
-	font-weight: bold;
-}
-
-.textMenuItem {
+/* menu classes */
+.menu {
+	background-image: url('../images/shadow.gif');
+	background-repeat: repeat-x;
+	background-position: top left;
+	position: relative;
+	float: left;
+	overflow: fixed;
+	border-right: 1px ridge #A9A9A9;
+	padding-top: 0px;
+	padding-left: 3px;
+	padding-right: 3px;
+	height: auto;
 	background-color: #F5F5F5;
-	font-family: Verdana, Arial, Helvetica, sans-serif;
-	font-size: 10px;
+	padding-top: 8px;
+	width: 150px;
 }
 
-.textMenuSubItem {
-	background-color: #FFFFFF;
-	font-family: Verdana, Arial, Helvetica, sans-serif;
-	font-size: 10px;
+.menuMain td {
+	background-image: url('../images/rowHeader.png');
+	background-repeat-x;
+	position: relative;
+	color: #FFFFFF;
+	cursor: pointer;
+	position-top: auto;
+	margin: 0px;
+	padding: 3px;
+	font-family:Verdana,Arial,Helvetica,sans-serif;
+	font-weight: bold;
+	font-size: 11px;
 }
 
-.textMenuItemSelected {
+.menuMain tr {
+	border: 10px thin #FFFFFF;
+}
+
+.menuSubMain {
+	background-image: none;
+	position: relative;
+	color: #000000;
+	border: 0px;
+	margin: 0px;
+	padding: 0px;
+	background-color: #F5F5F5;
+	list-style-type: none;
+	position-top: auto;
+	display: block;
+	font-family:Verdana,Arial,Helvetica,sans-serif;
+	font-weight: normal;
+	font-size: 11px;
+}
+
+.menuSubMain li {
+	background-image: none;
+	display: block;
+	padding: 0px;
+	margin: 2px 0px 2px 0px;
+	color: #FFFFFF;
+	cursor: pointer;
+}
+
+.menuSubMain a {
+	background-image: none;
+	color: blue;
+	padding: 2px;
+	text-decoration: none;
+	display: block;
+}
+
+.menuSubMain a:hover {
+	background-image: none;
+	position: relative;
+	color: #333333;
+	padding: 2px;
+	margin: 0px;
+	background-color: #E7E9F2;
+	text-decoration: none;
+	list-style-type: none;
+	display: block;
+	position-top: auto;
+}
+
+.menuSubMainSelected {
 	background-color: #E1E1E1;
-	font-family: Verdana, Arial, Helvetica, sans-serif;
-	font-size: 10px;
 }
 
+/* error classes */
 .txtErrorTextBox {
 	border: 2px solid #FF0000;
 }

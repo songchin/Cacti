@@ -39,7 +39,8 @@ global $colors;
 <body class='body' onLoad='initializePage()'>
 <div class='header'></div>
 <div class='navbar'>
-	&nbsp;<a href="index.php"><img src="images/tab_console_down.gif" alt="Console" align="middle" border="0"></a><a href="graph_view.php"><img src="images/tab_graphs.gif" alt="Graphs" align="middle" border="0"></a>
+	&nbsp;<a href="index.php"><img src="images/tab_console_down.gif" alt="Console" align="middle" border="0"></a>
+	<a href="graph_view.php"><img src="images/tab_graphs.gif" alt="Graphs" align="middle" border="0"></a>
 </div>
 <div class='navbrcrumb'>
 	<table width='100%'>
@@ -56,7 +57,7 @@ global $colors;
 <div class='wrapper'>
 	<div class='menu'>
 		<?php draw_menu();?>
-		<a class='about' href='about.php'><img src="images/cacti_logo.gif" align="absmiddle" alt="Cacti" border="0"></a>
+		<div class='about'><a href='about.php'><img src="images/cacti_logo.gif" align="absmiddle" alt="Cacti" border="0"></a></div>
 	</div>
 	<div class='content'>
 	<?php display_output_messages();?>

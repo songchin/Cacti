@@ -588,7 +588,8 @@ function draw_menu($user_menu = "") {
 		$user_realms = $user_auth_realms;
 	}
 
-	print "<table cellpadding='3' cellspacing='0' border='0' width='100%'>\n";
+	print "<table cellpadding='0' cellspacing='0' border='0' width='100%'>\n";
+	$first_ul = true;
 
 	/* loop through each header */
 	while (list($header_name, $header_array) = each($user_menu)) {
@@ -605,7 +606,26 @@ function draw_menu($user_menu = "") {
 		reset($header_array);
 
 		if ($show_header_items == true) {
-			print "\t\t\t<tr><td class='textMenuHeader'>$header_name</td></tr>\n";
+			if (!$first_ul) {
+				print "\t\t\t\t\t</ul>\n\t\t\t\t</td>\n\t\t\t</tr>\n";
+			}else{
+				$first_ul = false;
+			}
+
+			$id = clean_up_name(strtolower($header_name));
+
+			$ani  = "onClick='changeMenuState(\"" . $id . "\")'";
+			$ani2 = "onload='changeMenuState(\"" . $id . "\", true)'";
+
+			print "\t\t\t<tr class='menuMain' $ani>
+				<td valign='middle'>
+					<img id='tw_" . $id . "' src='images/tw_open.gif' align='absmiddle' alt='Menu Item'>$header_name
+					<img src='images/transparent_line.gif' $ani2>
+				</td>
+			</tr>
+			<tr class='mainMenu' id='menu_$id'>
+				<td>
+					<ul class='menuSubMain'>\n";
 		}
 
 		/* pass 2: loop through each top level item and render it */
@@ -628,7 +648,7 @@ function draw_menu($user_menu = "") {
 					while (list($item_sub_url, $item_sub_title) = each($item_title)) {
 						/* indent sub-items */
 						if ($i > 0) {
-							$prepend_string = "---&nbsp;";
+							$prepend_string = "--- ";
 						}else{
 							$prepend_string = "";
 						}
@@ -652,9 +672,9 @@ function draw_menu($user_menu = "") {
 						that is contained in the sub-items array */
 						if (($i == 0) || ($draw_sub_items)) {
 							if (basename($_SERVER["PHP_SELF"]) == basename($item_sub_url)) {
-								print "\t\t\t<tr><td class='$td_class' background='$background'>$prepend_string<strong><a href='$item_sub_url'>$item_sub_title</a></strong></td></tr>\n";
+								print "\t\t\t\t\t\t<li class='menuSubMainSelected'><a href='$item_sub_url'>$prepend_string$item_sub_title</a></li>\n";
 							}else{
-								print "\t\t\t<tr><td class='$td_class' background='$background'>$prepend_string<a href='$item_sub_url'>$item_sub_title</a></td></tr>\n";
+								print "\t\t\t\t\t\t<li><a href='$item_sub_url'>$prepend_string$item_sub_title</a></li>\n";
 							}
 						}
 
@@ -665,18 +685,16 @@ function draw_menu($user_menu = "") {
 				if ((isset($user_realms[$current_realm_id])) || (!isset($user_auth_realm_filenames{basename($item_url)}))) {
 					/* draw normal (non sub-item) menu item */
 					if (basename($_SERVER["PHP_SELF"]) == basename($item_url)) {
-						print "\t\t\t<tr><td class='textMenuItemSelected' background='images/menu_line.gif'><strong><a href='$item_url'>$item_title</a></strong></td></tr>\n";
+						print "\t\t\t\t\t\t<li class='menuSubMainSelected'><a href='$item_url'>$item_title</a></li>\n";
 					}else{
-						print "\t\t\t<tr><td class='textMenuItem' background='images/menu_line.gif'><a href='$item_url'>$item_title</a></td></tr>\n";
+						print "\t\t\t\t\t\t<li><a href='$item_url'>$item_title</a></li>\n";
 					}
 				}
 			}
 		}
 	}
 
-	print "\t\t\t<tr><td class='textMenuItem' background='images/menu_line.gif'></td></tr>\n";
-
-	print "\t\t</table>\n";
+	print "\t\t\t\t\t</ul>\n\t\t\t\t</td>\n\t\t\t</tr>\n\t\t</table>\n";
 }
 
 /* draw_actions_dropdown - draws a table the allows the user to select an action to perform

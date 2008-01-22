@@ -286,6 +286,39 @@ function htmlStartBoxFilterChange(id, initialize) {
 	}
 }
 
+function changeMenuState(id, initialize) {
+	filter = readCookie("menu_" + id);
+
+	if (filter == "open") {
+		if (initialize != null) {
+			/* do nothing we want to stay the same */
+		}else{
+			createCookie("menu_" + id, "closed");
+			filter = "closed";
+		}
+	}else{
+		if (initialize != null) {
+			if (filter == "closed") {
+				/* do nothing we want to stay the same */
+			}else{
+				createCookie("menu_" + id, "open");
+				filter = "open";
+			}
+		}else{
+			createCookie("menu_" + id, "open");
+			filter = "open";
+		}
+	}
+
+	if (filter == "closed") {
+		document.getElementById("menu_"+id).style.display  = "none";
+		document.getElementById("tw_"+id).src = "images/tw_close.gif";
+	}else{
+		document.getElementById("menu_"+id).style.display  = "";
+		document.getElementById("tw_"+id).src = "images/tw_open.gif";
+	}
+}
+
 /* page load functions */
 function initializePage() {
 	inputs = document.getElementsByTagName("input");
