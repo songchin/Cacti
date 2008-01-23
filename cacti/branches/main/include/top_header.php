@@ -37,22 +37,26 @@ global $colors;
 	}?>
 </head>
 <body class='body' onLoad='initializePage()'>
-<div class='header'></div>
-<div class='navbar'>
-	&nbsp;<a href="index.php"><img src="images/tab_console_down.gif" alt="Console" align="middle" border="0"></a>
-	<a href="graph_view.php"><img src="images/tab_graphs.gif" alt="Graphs" align="middle" border="0"></a>
-</div>
-<div class='navbrcrumb'>
-	<table width='100%'>
-		<tr>
-			<td>
-				<?php draw_navigation_text();?>
-			</td>
-			<?php if (read_config_option("auth_method") != 0) { ?><td align='right'>
+<div id='header' class='header'>
+	<div id=logobar' class='logobar'></div>
+	<div id='navbar' class='navbar'>
+		<div id='navbar_l'>
+			<ul>
+				<?php echo draw_header_tab("console", "Console", "index.php");?>
+				<?php echo draw_header_tab("graphs", "Graphs", "graph_view.php");?>
+			</ul>
+		</div>
+	</div>
+	<div id='navbrcrumb'>
+		<div style='float:left'>
+			<?php draw_navigation_text();?>
+		</div>
+		<div style='float:right'>
+			<?php if (read_config_option("auth_method") != 0) { ?>
 				Logged in as <strong><?php print db_fetch_cell("select username from user_auth where id=" . $_SESSION["sess_user_id"]);?></strong> (<a href="logout.php">Logout</a>)&nbsp;
-			</td><?php echo "\n"; } ?>
-		</tr>
-	</table>
+			<?php } ?>
+		</div>
+	</div>
 </div>
 <div class='wrapper'>
 	<div class='menu'>

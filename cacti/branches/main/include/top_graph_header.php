@@ -93,6 +93,7 @@ if ((read_graph_config_option("default_tree_view_mode") == "2") &&
 }
 
 ?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
 	<title>Cacti</title>
@@ -113,49 +114,38 @@ if ((read_graph_config_option("default_tree_view_mode") == "2") &&
 	<script type="text/javascript" src="include/jscalendar/lang/calendar-en.js"></script>
 	<script type="text/javascript" src="include/jscalendar/calendar-setup.js"></script>
 </head>
-
-<body onLoad='initializePage()'>
+<body class='body' onLoad='initializePage()'>
 <a name='page_top'></a>
-
+<div id='header' class='header'>
+	<div id=logobar' class='logobar'></div>
+	<div id='navbar' class='navbar'>
+		<div id='navbar_l'>
+			<ul>
+				<?php echo draw_header_tab("console", "Console", "index.php");?>
+				<?php echo draw_header_tab("graphs", "Graphs", "graph_view.php");?>
+			</ul>
+		</div>
+		<div id='navbar_r' class='navbar_r'>
+			<ul>
+				<?php echo draw_header_tab("graph_settings", "Settings", "graph_settings.php");?>
+				<?php echo draw_header_tab("tree", "Tree", "graph_view.php?action=tree", "images/tab_mode_tree_new.gif");?>
+				<?php echo draw_header_tab("list", "List", "graph_view.php?action=list", "images/tab_mode_list_new.gif");?>
+				<?php echo draw_header_tab("preview", "Preview", "graph_view.php?action=preview", "images/tab_mode_preview_new.gif");?>
+			</ul>
+		</div>
+	</div>
+	<div id='navbrcrumb'>
+		<div style='float:left'>
+			<?php draw_navigation_text();?>
+		</div>
+		<div style='float:right'>
+			<?php if (read_config_option("auth_method") != 0) { ?>
+				Logged in as <strong><?php print db_fetch_cell("select username from user_auth where id=" . $_SESSION["sess_user_id"]);?></strong> (<a href="logout.php">Logout</a>)&nbsp;
+			<?php } ?>
+		</div>
+	</div>
+</div>
 <table width="100%" cellspacing="0" cellpadding="0">
-	<tr bgcolor="#a9a9a9" class="noprint">
-		<td colspan="2" valign="bottom" nowrap>
-			<table width="100%" cellspacing="0" cellpadding="0">
-				<tr>
-					<td nowrap>
-						&nbsp;<?php if ($show_console_tab == true) {?><a href="index.php"><img src="images/tab_console.gif" alt="Console" align="middle" border="0"></a><?php }?><a href="graph_view.php"><img src="images/tab_graphs<?php if ((substr(basename($_SERVER["PHP_SELF"]),0,5) == "graph") || (basename($_SERVER["PHP_SELF"]) == "graph_settings.php")) { print "_down"; } print ".gif";?>" alt="Graphs" align="middle" border="0"></a>&nbsp;
-					</td>
-					<td>
-						<img src="images/cacti_backdrop2.gif" alt='' align="middle">
-					</td>
-					<td align="right" nowrap>
-						<?php if ((!isset($_SESSION["sess_user_id"])) || ($current_user["graph_settings"] == "on")) { print '<a href="graph_settings.php"><img src="images/tab_settings'; if (basename($_SERVER["PHP_SELF"]) == "graph_settings.php") { print "_down"; } print '.gif" border="0" alt="Settings" align="middle"></a>';}?>&nbsp;&nbsp;<?php if ((!isset($_SESSION["sess_user_id"])) || ($current_user["show_tree"] == "on")) {?><a href="graph_view.php?action=tree"><img src="images/tab_mode_tree<?php if ($_REQUEST["action"] == "tree") { print "_down"; }?>.gif" border="0" title="Tree View" alt="Tree View" align="middle"></a><?php }?><?php if ((!isset($_SESSION["sess_user_id"])) || ($current_user["show_list"] == "on")) {?><a href="graph_view.php?action=list"><img src="images/tab_mode_list<?php if ($_REQUEST["action"] == "list") { print "_down"; }?>.gif" border="0" title="List View" alt="List View" align="middle"></a><?php }?><?php if ((!isset($_SESSION["sess_user_id"])) || ($current_user["show_preview"] == "on")) {?><a href="graph_view.php?action=preview"><img src="images/tab_mode_preview<?php if ($_REQUEST["action"] == "preview") { print "_down"; }?>.gif" border="0" title="Preview View" alt="Preview View" align="middle"></a><?php }?>&nbsp;<br>
-					</td>
-				</tr>
-			</table>
-		</td>
-	</tr>
-	<tr colspan="2" bgcolor="#183c8f" class="noprint">
-		<td colspan="2">
-			<img src="images/transparent_line.gif" width="170" alt="" height="2" border="0"><br>
-		</td>
-	</tr>
-	<tr bgcolor="#e9e9e9" class="noprint">
-		<td colspan="2">
-			<table width="100%">
-				<tr>
-					<td>
-						<?php draw_navigation_text();?>
-					</td>
-					<td align="right">
-						<?php if ((isset($_SESSION["sess_user_id"])) && ($using_guest_account == false)) { ?>
-						Logged in as <strong><?php print db_fetch_cell("select username from user_auth where id=" . $_SESSION["sess_user_id"]);?></strong> (<a href="logout.php">Logout</a>)&nbsp;
-						<?php } ?>
-					</td>
-				</tr>
-			</table>
-		</td>
-	</tr>
 	<tr class="noprint">
 		<td bgcolor="#efefef" colspan="1" height="8" style="background-image: url(images/shadow_gray.gif); background-repeat: repeat-x; border-right: #aaaaaa 1px solid;">
 			<img src="images/transparent_line.gif" width="<?php print read_graph_config_option("default_dual_pane_width");?>" alt="" height="2" border="0"><br>

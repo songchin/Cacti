@@ -253,6 +253,12 @@ function SelectAllGraphs(prefix, checkbox_state) {
 	}
 }
 
+function navigation_select(name, location) {
+	createCookie("navbar_id", name);
+
+	document.location = location;
+}
+
 function htmlStartBoxFilterChange(id, initialize) {
 	filter = readCookie("fs_" + id);
 

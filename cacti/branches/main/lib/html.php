@@ -570,6 +570,42 @@ function draw_graph_items_list($item_list, $filename, $url_data, $disable_contro
 	}
 }
 
+function draw_header_tab($name, $title, $location, $image = "") {
+	if ($image == "") {
+		return "<li id=\"tab_" . html_escape($name) . "\"" . (html_selected_tab($name, $location) ? "class=\"selected\"" : "class=\"notselected\"") . "><a href=\"javascript:navigation_select('" . html_escape($name) . "', '" . html_escape($location) . "')\" title=\"" . html_escape($title) . "\">" . html_escape($title) . "</a></li>\n";
+	}else{
+		return "<li id=\"tab_" . html_escape($name) . "\"" . (html_selected_tab($name, $location) ? "class=\"selected\"" : "class=\"notselected\"") . "><a href=\"javascript:navigation_select('" . html_escape($name) . "', '" . html_escape($location) . "')\" title=\"" . html_escape($title) . "\"><img border='0' src='$image' align='absmiddle'></a></li>\n";
+	}
+}
+
+function html_selected_tab($name, $location) {
+	if (isset($_COOKIE["navbar_id"])) {
+		if ($name == "graphs") {
+			switch($_COOKIE["navbar_id"]) {
+				case "list":
+				case "preview":
+				case "tree":
+				case "graphs":
+					return true;
+			}
+		}else if ($name == $_COOKIE["navbar_id"]) {
+			return true;
+		}else if (substr_count($_SERVER["REQUEST_URI"], $location)) {
+			return true;
+		}
+	}else{
+		if ($name == "console") {
+			return true;
+		}
+	}
+
+	return false;
+}
+
+function html_escape($html) {
+	return htmlentities($html, ENT_QUOTES);
+}
+
 /* draw_menu - draws the cacti menu for display in the console */
 function draw_menu($user_menu = "") {
 	global $colors, $config, $user_auth_realms, $user_auth_realm_filenames;
