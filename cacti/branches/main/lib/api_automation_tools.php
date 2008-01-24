@@ -339,6 +339,159 @@ function displaySNMPValues($values, $hostId, $field, $quietMode) {
 	}
 }
 
+function displaySNMPValuesExtended($hostId, $fields, $snmpQueryId, $quietMode) {
+	if (!$quietMode) {
+		echo "Known values for $fields for host $hostId: (name)\n";
+	}
+
+	$exit_code = 1; # assume an error until we've printed sth
+			
+	$req_fields = array();
+	if (strlen($fields) > 0) {
+		# remove unwanted blanks
+		$query_FieldSpec = str_replace(" ", "", $fields);
+		# add tics for SQL query
+		$query_FieldSpec = str_replace(",", "','", $query_FieldSpec);
+		$query_FieldSpec = " AND field_name in ('" . $query_FieldSpec . "')";
+	} else {
+		$query_FieldSpec ="";
+	}
+
+	$xml_array = get_data_query_array($snmpQueryId);
+
+	if ($xml_array != false) {
+		/* loop through once so we can find out how many input fields there are */
+		reset($xml_array["fields"]);
+		while (list ($field_name, $field_array) = each($xml_array["fields"])) {
+			if ($field_array["direction"] == "input") {
+				# is spec was given ...
+				if (strlen($fields) > 0) {
+					#  ... but current field doesn't match (make it case-insensitive, beware of the users!)
+					if (strpos(strtolower($fields), strtolower($field_name)) === false) {
+						# skip it
+						continue;
+					}
+				}
+				$req_fields[$field_name] = $xml_array["fields"][$field_name];
+				if (!isset ($total_rows)) {
+					$total_rows = db_fetch_cell("SELECT count(*) FROM host_snmp_cache WHERE host_id=" . $hostId . " and snmp_query_id=" . $snmpQueryId . " AND field_name='$field_name'");
+				}
+			}
+		}
+	
+		if (!isset ($total_rows)) {
+			echo "ERROR: No cached SNMP values found for this SNMP Query\n";
+			return (1);
+		}
+
+		$snmp_query_graphs = db_fetch_assoc("SELECT snmp_query_graph.id,snmp_query_graph.name FROM snmp_query_graph WHERE snmp_query_graph.snmp_query_id=" . $snmpQueryId . " ORDER BY snmp_query_graph.name");
+
+		reset($req_fields);
+		$snmp_query_indexes = array ();
+		$sql_order = "";
+
+		/* get the unique field values from the database */
+		$field_names = db_fetch_assoc("SELECT DISTINCT field_name
+											FROM host_snmp_cache
+											WHERE host_id=" . $hostId . "
+											AND snmp_query_id=" . $snmpQueryId .
+											$query_FieldSpec);
+
+		/* build magic query */
+		$sql_query = "SELECT host_id, snmp_query_id, snmp_index";
+		if (sizeof($field_names) > 0) {
+			foreach ($field_names as $column) {
+				$field_name = $column["field_name"];
+				$sql_query .= ", MAX(CASE WHEN field_name='$field_name' THEN field_value ELSE NULL END) AS '$field_name'";
+			}
+		} else {
+			echo "ERROR: No SNMP field names found for this SNMP Query\n";
+			return (1);
+		}
+
+		$sql_query .= " FROM host_snmp_cache
+			WHERE host_id=" . $hostId .
+		" AND snmp_query_id=" . $snmpQueryId .
+		$query_FieldSpec .
+		" GROUP BY host_id, snmp_query_id, snmp_index " .
+		$sql_order;
+
+		$snmp_query_indexes = db_fetch_assoc($sql_query);
+
+		if (!sizeof($snmp_query_indexes)) {
+			print "This data query returned 0 rows, perhaps there was a problem executing this data query.\n";
+			return (1);
+		}
+
+		# determine length of each header field
+		while (list ($field_name, $field_array) = each($req_fields)) {
+			foreach ($field_names as $row) {
+				if ($row["field_name"] == $field_name) {
+					if (!$quietMode) {
+						$req_fields[$field_name]["length"] = max(strlen($field_array["name"]), strlen($field_name));
+					} else {
+						$req_fields[$field_name]["length"] = 0;
+					}
+					break;
+				}
+			}
+		}
+
+		$fields = array_rekey($field_names, "field_name", "field_name");
+		if (sizeof($snmp_query_indexes) > 0) {
+			foreach ($snmp_query_indexes as $row) {
+				# determine length of each data field
+				reset($req_fields);
+				while (list ($field_name, $field_array) = each($req_fields)) {
+					$req_fields[$field_name]["length"] = max($req_fields[$field_name]["length"],strlen($row[$field_name]));
+				}
+			}
+		}
+		
+		if (!$quietMode) {
+			# now print headers: field identifier and field names
+			reset($req_fields);
+			while (list ($field_name, $field_array) = each($req_fields)) {
+				foreach ($field_names as $row) {
+					if ($row["field_name"] == $field_name) {
+						print(str_pad($field_name, $req_fields[$field_name]["length"]+1));
+						break;
+					}
+				}
+			}
+			print "\n";
+			reset($req_fields);
+			while (list ($field_name, $field_array) = each($req_fields)) {
+				foreach ($field_names as $row) {
+					if ($row["field_name"] == $field_name) {
+						print(str_pad($field_array["name"], $req_fields[$field_name]["length"]+1));
+						break;
+					}
+				}
+			}
+			print "\n";
+		}
+		
+		# and data, finally
+		if (sizeof($snmp_query_indexes) > 0) {
+			foreach ($snmp_query_indexes as $row) {
+				reset($req_fields);
+				while (list ($field_name, $field_array) = each($req_fields)) {
+					print(str_pad($row[$field_name], $req_fields[$field_name]["length"]+1));
+					$exit_code = 0;
+				}
+				print "\n";
+			}
+		}
+	}
+
+	if (!$quietMode) {
+		echo "\n";
+	}
+
+	return($exit_code);
+}
+
 function displaySNMPQueries($queries, $quietMode) {
 	if (!$quietMode) {
 		echo "Known SNMP Queries:(id, name)\n";

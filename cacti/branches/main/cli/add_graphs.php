@@ -51,6 +51,7 @@ if (sizeof($parms)) {
 	$graph_type    = "";
 	$templateGraph = array();
 	$dsGraph       = array();
+	$dsGraph["snmpFieldSpec"] = "";
 	$input_fields  = array();
 	$values["cg"]  = array();
 
@@ -107,6 +108,10 @@ if (sizeof($parms)) {
 			break;
 		case "--snmp-field":
 			$dsGraph["snmpField"] = $value;
+
+			break;
+		case "--snmp-field-spec" :
+			$dsGraph["snmpFieldSpec"] = $value;
 
 			break;
 		case "--snmp-value":
@@ -252,14 +257,22 @@ if (sizeof($parms)) {
 	}
 
 	if ($listSNMPValues)  {
-		if (!isset($dsGraph["snmpField"])) {
-			echo "ERROR: You must supply an snmp-field before you can list its values\n";
-			echo "Try --list-snmp-fields\n";
-			exit(1);
-		}
+		if (!isset ($dsGraph["snmpField"])) {
+			if (!isset ($dsGraph["snmpQueryId"])) {
+				echo "ERROR: Unknown snmp-query-id\n";
+				echo "Try --list-snmp-queries\n";
+				exit (1);
+			}
+			
+			$rc = displaySNMPValuesExtended($hostId, $dsGraph["snmpFieldSpec"], $dsGraph["snmpQueryId"], $quietMode);
+			exit ($rc);
 
-		displaySNMPValues($snmpValues, $hostId, $dsGraph["snmpField"], $quietMode);
-		exit(0);
+		} else {
+
+			displaySNMPValues($snmpValues, $hostId, $dsGraph["snmpField"], $quietMode);
+			exit (0);
+
+		}
 	}
 
 	if (!isset($graphTemplates[$templateId])) {
@@ -444,7 +457,7 @@ if (sizeof($parms)) {
 }
 
 function display_help() {
-	echo "Add Graphs Script 1.0, Copyright 2007 - The Cacti Group\n\n";
+	echo "Add Graphs Script 1.1, Copyright 2008 - The Cacti Group\n\n";
 	echo "A simple command line utility to add graphs in Cacti\n\n";
 	echo "usage: add_graphs.php --graph-type=[cg|ds] --graph-template-id=[ID]\n";
 	echo "    --host-id=[ID] [--graph-title=title] [graph options] [--force] [--quiet]\n\n";
@@ -462,9 +475,12 @@ function display_help() {
 	echo "    --list-hosts\n";
 	echo "    --list-graph-templates\n";
 	echo "    --list-input-fields --graph-template-id=[ID]\n";
+	echo "More list Options for 'cg' graphs only:\n";
 	echo "    --list-snmp-queries\n";
-	echo "    --list-query-types  --snmp-query-id [ID]\n";
+	echo "    --list-query-types  --snmp-query-id=[ID]\n";
 	echo "    --list-snmp-fields  --host-id=[ID]\n";
+	echo "    --list-snmp-values  --host-id=[ID] --snmp-query-id=[ID]\n";
+	echo "    --list-snmp-values  --host-id=[ID] --snmp-query-id=[ID] --snmp-field-spec=[field1[,field2]...[,fieldn]]\n";
 	echo "    --list-snmp-values  --host-id=[ID] --snmp-field=[Field]\n\n";
 	echo "'cg' graphs are for things like CPU temp/fan speed, while \n";
 	echo "'ds' graphs are for data-source based graphs (interface stats etc.)\n";

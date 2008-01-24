@@ -714,7 +714,7 @@ Device Add Test 	0 	0 		Unknown router.mydomain.com 	0 		0 		100</screen>
 			<filename>add_graphs.php</filename>. Calling the script with the parameter <userinput>--help</userinput> yields</para>
 			<screen><prompt>shell&gt;</prompt>php -q add_graphs.php
 
-Add Graphs Script 1.0, Copyright 2007 - The Cacti Group
+Add Graphs Script 1.1, Copyright 2008 - The Cacti Group
 
 A simple command line utility to add graphs in Cacti
 
@@ -739,13 +739,17 @@ List Options:
     --list-hosts
     --list-graph-templates
     --list-input-fields --graph-template-id=[ID]
+More list Options for 'cg' graphs only:
     --list-snmp-queries
-    --list-query-types  --snmp-query-id [ID]
+    --list-query-types  --snmp-query-id=[ID]
     --list-snmp-fields  --host-id=[ID]
+    --list-snmp-values  --host-id=[ID] --snmp-query-id=[ID]
+    --list-snmp-values  --host-id=[ID] --snmp-query-id=[ID] --snmp-field-spec=[field1[,field2]...[,fieldn]]
     --list-snmp-values  --host-id=[ID] --snmp-field=[Field]
 
-'cg' graphs are for things like CPU temp/fan speed, while
-'ds' graphs are for data-source based graphs (interface stats etc.)</screen>
+'cg' graphs are for things like CPU temp/fan speed, while 
+'ds' graphs are for data-source based graphs (interface stats etc.)
+</screen>
 			<para>Like the graph creation from the console, this task is split
 			into two different ones:</para>
 			<itemizedlist>
@@ -849,8 +853,50 @@ ifType</screen>
 Known values for ifOperStatus for host 11: (name)
 Down
 Up</screen>
-				<para>This is no surprise, of course. Now, all paarmeters required for
+				<para>This is no surprise, of course. Now, all parameters required for
 				creating a new graph are determined.</para>
+			</sect2>
+			<sect2 id="cli_add_graphs_list_ds_extended">
+			<title>Extended List Options for Associated Data Queries</title>
+				<para>It is possible to get all field values printed for a specific data query, very much
+				like the tabular display when <guilabel>Create Graphs for this Host</guilabel> is selected.</para>
+				<screen><prompt>shell&gt;</prompt>php -q add_graphs.php --list-snmp-values --host-id=11 --snmp-query-id=1
+
+Known values for  for host 11: (name)
+ifIndex ifOperStatus ifDescr     ifName        ifAlias        ifType               ifSpeed   ifHwAddr             ifIP         
+Index   Status       Description Name (IF-MIB) Alias (IF-MIB) Type                 Speed     Hardware Address     IP Address   
+1       Up           lo          lo                           softwareLoopback(24) 10000000                       127.0.0.1    
+2       Up           eth0        eth0                         ethernetCsmacd(6)    100000000 00:00:09:6B:86:FE:89 192.168.1.62 
+3       Down         irda0       irda0                        other(1)             0</screen>
+				<para>Please notice, that the column width is calculated dynamically. So your screen layout
+				may differ due to different snmp values for your device. The headers show both the XML file's field
+				identfiers as well as their long names.</para> 
+				<para>For parsing with external scripts, you may like the <parameter>--quiet</parameter> option</para>
+				<screen><prompt>shell&gt;</prompt>php -q add_graphs.php --list-snmp-values --host-id=11 --snmp-query-id=1 --quiet
+
+1 Up   lo    lo     softwareLoopback(24) 10000000                       127.0.0.1    
+2 Up   eth0  eth0   ethernetCsmacd(6)    100000000 00:00:09:6B:86:FE:89 192.168.1.62 
+3 Down irda0 irda0  other(1)             0</screen>
+				<para>Omitting headers results in a smaller column layout. Please be aware of the fact, that
+				e.g. column <parameter>ifAlias</parameter> does not carry any value in this examples. The first one shows clearly 
+				an empty column (you only notice the column header). Even the second example shows this behaviour.
+				When watching very closely, you will notice an extra space between columns 4 and 5. This may become
+				an important fact when parsing for words.</para>
+				<para>Apart from asking for all knows fields and values for a given host and data query,
+				you may want to reduce the query to specific snmp fields only. The next example prints only
+				<parameter>ifIndex, ifOperStatus, ifSpeed and ifIP</parameter>. You must specify the XML field identifiers
+				here. The option is case-insensitive. Please pay attention to separate different field identifiers
+				by comma only. No space allowed!</para>
+				<screen><prompt>shell&gt;</prompt>php -q add_graphs.php --list-snmp-values --host-id=11 --snmp-query-id=1 --snmp-field-spec=ifIndex,ifOperStatus,ifSpeed,ifIP
+
+Known values for ifIndex,ifOperStatus,ifSpeed,ifIP for host 11: (name)
+ifIndex ifOperStatus ifSpeed   ifIP         
+Index   Status       Speed     IP Address   
+1       Up           10000000  127.0.0.1    
+2       Up           100000000 192.168.1.62 
+3       Down         0</screen>
+				 <para>The sequence of columns is always governed by the sequence of fields in the XML description.
+				 The <parameter>--quiet</parameter> option is supported as well.</para>
 			</sect2>
 			<sect2 id="cli_add_graphs_cg">
 			<title>Add Non-Indexed Graphs</title>
