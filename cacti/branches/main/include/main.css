@@ -27,15 +27,15 @@ td {
 
 /* main navigation constructor classes */
 #navbrcrumb {
-	background-image: url('../images/navbar.png');
+	background: #363636 url('../images/navbar.png') repeat-x scroll top left;
 	clear:both;
 	color:#C1C1C1;
 	font-family:arial,verdana,sans-serif;
 	font-size:71%;
-	height:20px;
+	height:1.7em;
 }
 #navbrcrumb div {
-	background-image: url('../images/navbar.png');
+	background: #363636 url('../images/navbar.png') repeat-x scroll top left;
 	margin:0pt auto;
 	padding:3px 5pt 0pt 5px;
 	text-align:center;
@@ -66,7 +66,7 @@ td {
 	padding: 8px 5px 8px 5px;
 }
 
-.about {
+#about img {
 	float: center;
 	padding: 15px 15px 15px 35px;
 }
@@ -137,32 +137,25 @@ a:hover {
 
 /* form constructor styles */
 .startBoxHeader {
-	border-width: 1px 1px 1px 1px;
-	border-style: solid;
-	border-color: #708DE2;
+	border: 1px solid #708DE2;
 	height: 15px;
 }
 
 .startBoxContent {
-	border-width: 1px 1px 1px 1px;
-	border-style: solid;
-	border-color: #708DE2;
+	border: 1px solid #708DE2;
 	background-color: #E7E9F2;
 }
 
 .rowHeader {
-	background-image: url('../images/rowHeader.png');
-	background-repeat-x;
+	background: #001A6E url('../images/rowHeader.png') repeat-x scroll top left;
 }
 
 .rowSubHeader {
-	background-image: url('../images/rowSubHeader.png');
-	background-repeat-x;
+	background: #1F2328 url('../images/rowSubHeader.png') repeat-x scroll top left;
 }
 
 .rowSubHeaderAlt {
-	background-image: url('../images/rowSubHeaderAlt.png');
-	background-repeat-x;
+	background: #000000 url('../images/rowSubHeaderAlt.png') repeat-x scroll top left;
 }
 
 .rowGraphFilter {
@@ -209,7 +202,6 @@ a:hover {
 }
 
 .textSubHeaderDark, .textSubHeaderDark:visited {
-	background-image: url('../images/rowSubHeader.png');
 	font-size: 10px;
 	color: #FFFFFF;
 	font-weight: bold;
@@ -259,7 +251,7 @@ a:hover {
 }
 
 .menuMain td {
-	background-image: url('../images/rowHeader.png');
+	background: #001A6E url('../images/rowHeader.png') repeat-x scroll top left;
 	background-repeat-x;
 	position: relative;
 	color: #FFFFFF;
@@ -322,6 +314,8 @@ a:hover {
 /* header tabs */
 #header div#navbar {
 	background: #3F4D6B url("../images/header_backdrop.gif") right -8px no-repeat;
+	background-width: 1.0em;
+	background-height: 1.0em;
 	position: relative;
 	height: 5em;
 	padding: 0;
@@ -399,6 +393,8 @@ a:hover {
 
 #header div#navbar ul li.notselected:hover a { background-position: 0% -400px; }
 #header div#navbar ul li.notselected:hover { background-position: 100% -400px; }
+
+#header div#navbar img { width: 1.25em; height: 1.25em; }
 
 /* error classes */
 .txtErrorTextBox {

@@ -116,9 +116,9 @@ if ((read_graph_config_option("default_tree_view_mode") == "2") &&
 </head>
 <body class='body' onLoad='initializePage()'>
 <a name='page_top'></a>
-<div id='header' class='header'>
-	<div id=logobar' class='logobar'></div>
-	<div id='navbar' class='navbar'>
+<div id='header'>
+	<div id=logobar'></div>
+	<div id='navbar'>
 		<div id='navbar_l'>
 			<ul>
 				<?php echo draw_header_tab("console", "Console", "index.php");?>

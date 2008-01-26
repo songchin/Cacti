@@ -65,7 +65,7 @@ function html_start_box($title, $width, $background_color, $cell_padding, $align
 							<td class="textHeaderDark"><?php print $title;?>
 							</td>
 							<?php if ($collapsing) {?><td class="textHeaderDark" width="1">
-								<img src="images/transparent_line.gif" alt='' <?php print $ani2;?>>
+								<img src="images/transparent_pixel.gif" alt='' <?php print $ani2;?>>
 							</td><?php } if ($add_text != "") {?>
 							<td class="textHeaderDark" align="right">
 								<strong><a class="linkOverDark" href="<?php print $add_text;?>">Add</a>&nbsp;</strong>
@@ -656,7 +656,7 @@ function draw_menu($user_menu = "") {
 			print "\t\t\t<tr class='menuMain' $ani>
 				<td valign='middle'>
 					<img id='tw_" . $id . "' src='images/tw_open.gif' align='absmiddle' alt='Menu Item'>$header_name
-					<img src='images/transparent_line.gif' $ani2>
+					<img src='images/transparent_pixel.gif' $ani2>
 				</td>
 			</tr>
 			<tr class='mainMenu' id='menu_$id'>
