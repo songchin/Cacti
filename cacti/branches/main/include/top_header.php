@@ -58,10 +58,10 @@ global $colors;
 		</div>
 	</div>
 </div>
-<div class='wrapper'>
-	<div class='menu'>
+<div id='wrapper'>
+	<div id='menu'>
 		<?php draw_menu();?>
 		<div id='about'><a href='about.php'><img src="images/cacti_logo.gif" align="absmiddle" alt="Cacti" border="0"></a></div>
 	</div>
-	<div class='content'>
+	<div id='content'>
 	<?php display_output_messages();?>

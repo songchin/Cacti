@@ -51,19 +51,21 @@ td {
 	color: #FFFFFF;
 }
 
-.wrapper {
+#wrapper {
 	float:right;
-	margin-left:-150px;
-	width:100%;
+	width: 100%;
+	height: 100%
 }
 
-.content {
-	background-image: url('../images/shadow.gif');
-	background-repeat: repeat-x;
-	background-position: top right;
-	min-height: 500px;
-	margin: 0px 0px 0px 156px;
+#content {
+	background: transparent url('../images/shadow.gif') repeat-x scroll top right;
+	position: fixed;
+	overflow: auto;
+	top: 4.8em;
+	left: 167px;
 	padding: 8px 5px 8px 5px;
+	height: 88%;
+	width: 86%;
 }
 
 #about img {
@@ -232,27 +234,29 @@ a:hover {
 	font-weight: bold;
 }
 
+#menu table {
+	overflow: auto;
+}
+
 /* menu classes */
-.menu {
-	background-image: url('../images/shadow.gif');
-	background-repeat: repeat-x;
-	background-position: top left;
-	position: relative;
+#menu {
+	background: #F5F5F5 url('../images/shadow.gif') repeat-x scroll top left;
+	position: fixed;
 	float: left;
-	overflow: fixed;
+	overflow: auto;
+	top: 4.8em;
+	left: 0px;
 	border-right: 1px ridge #A9A9A9;
 	padding-top: 0px;
 	padding-left: 3px;
 	padding-right: 3px;
-	height: auto;
-	background-color: #F5F5F5;
 	padding-top: 8px;
-	width: 150px;
+	width: 160px;
+	height: 100%;
 }
 
 .menuMain td {
 	background: #001A6E url('../images/rowHeader.png') repeat-x scroll top left;
-	background-repeat-x;
 	position: relative;
 	color: #FFFFFF;
 	cursor: pointer;
@@ -307,15 +311,24 @@ a:hover {
 	background-color: #E7E9F2;
 }
 
+
 .menuSubMainSelected {
 	background-color: #E1E1E1;
 }
 
-/* header tabs */
-#header div#navbar {
+#header {
 	background: #3F4D6B url("../images/header_backdrop.gif") right -8px no-repeat;
 	background-width: 1.0em;
 	background-height: 1.0em;
+	position: fixed;
+	width: 100%;
+	height: 4.8em;
+	top: 0px;
+	left: 0px;
+}
+
+/* header tabs */
+#header div#navbar {
 	position: relative;
 	height: 5em;
 	padding: 0;
