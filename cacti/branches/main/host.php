@@ -115,6 +115,36 @@ function add_tree_names_to_actions_array() {
    -------------------------- */
 
 function form_save() {
+
+	/* 
+	 * loop for all possible changes of reindex_method
+	 * post variable is build like this
+	 * 		reindex_method_host_<host_id>_query_<snmp_query_id>_method_<old_reindex_method>
+	 * if values of this variable differs from <old_reindex_method>, we will have to update 
+	 */
+	$reindex_performed = false; 
+	while (list($var,$val) = each($_POST)) {
+		if (ereg("^reindex_method_host_([0-9]+)_query_([0-9]+)_method_([0-9]+)$", $var, $matches)) {
+			/* ================= input validation ================= */
+			input_validate_input_number(get_request_var_post("id"));
+			input_validate_input_number($matches[1]); # host
+			input_validate_input_number($matches[2]); # snmp_query_id
+			input_validate_input_number($matches[3]); # old reindex method
+			$reindex_method = $val;
+			input_validate_input_number($reindex_method); # new reindex_method
+			/* ==================================================== */
+
+			# change reindex method of this very item
+			if ( $reindex_method != $matches[3]) {
+				db_execute("replace into host_snmp_query (host_id,snmp_query_id,reindex_method) values (" . $matches[1] . "," . $matches[2] . "," . $reindex_method . ")");
+			
+				/* recache snmp data */
+				run_data_query($matches[1], $matches[2]);
+				$reindex_performed = true;
+			}		
+		}
+	}
+
 	if ((!empty($_POST["add_dq_y"])) && (!empty($_POST["snmp_query_id"]))) {
 		/* ================= input validation ================= */
 		input_validate_input_number(get_request_var_post("id"));
@@ -159,7 +189,7 @@ function form_save() {
 				$_POST["snmp_priv_protocol"], $_POST["snmp_context"], $_POST["max_oids"]);
 		}
 
-		if ((is_error_message()) || ($_POST["host_template_id"] != $_POST["_host_template_id"])) {
+		if ((is_error_message()) || ($_POST["host_template_id"] != $_POST["_host_template_id"]) || $reindex_performed) {
 			header("Location: host.php?action=edit&id=" . (empty($host_id) ? $_POST["id"] : $host_id));
 		}else{
 			header("Location: host.php");
@@ -1044,7 +1074,7 @@ function host_edit() {
 					(<a href="host.php?action=query_verbose&id=<?php print $item["id"];?>&host_id=<?php print $_GET["id"];?>">Verbose Query</a>)
 				</td>
 				<td>
-					<?php print $reindex_types{$item["reindex_method"]};?>
+					<?php form_dropdown("reindex_method_host_".$_GET["id"]."_query_".$item["id"]."_method_".$item["reindex_method"],$reindex_types,"","",$item["reindex_method"],"","","","");?>
 				</td>
 				<td>
 					<?php print (($status == "success") ? "<span style='color: green;'>Success</span>" : "<span style='color: green;'>Fail</span>");?> [<?php print $num_dq_items;?> Item<?php print ($num_dq_items == 1 ? "" : "s");?>, <?php print $num_dq_rows;?> Row<?php print ($num_dq_rows == 1 ? "" : "s");?>]

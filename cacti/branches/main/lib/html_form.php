@@ -409,7 +409,8 @@ function form_hidden_box($form_name, $form_previous_value, $form_default_value, 
    @arg $form_none_entry - the name to use for a default 'none' element in the dropdown
    @arg $form_default_value - the value of this form element to use if there is
      no current value available
-   @arg $css_class - any css that needs to be applied to this form element */
+   @arg $css_class - any css that needs to be applied to this form element
+   @arg $on_change - onChange modifier */
 function form_dropdown($form_name, $form_data, $column_display, $column_id, $form_previous_value, $form_none_entry, $form_default_value, $class = "", $on_change = "") {
 	if ($form_previous_value == "") {
 		$form_previous_value = $form_default_value;
