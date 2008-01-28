@@ -82,7 +82,7 @@ td {
 }
 
 #graph_tree {
-	background: #F5F5F5 url('../images/shadow.gif') repeat-x scroll top left;
+	background: #FFFFFF url('../images/shadow.gif') repeat-x scroll top left;
 	float: left;
 	position: fixed;
 	top: 5.2em;
@@ -218,6 +218,7 @@ td {
 	width: 100%;
 	top: 0px;
 	left: 0px;
+	font-family: Arial, Verdana, Helvetica, sans-serif;
 	font-weight: bold;
 	font-size: 12px;
 }
@@ -392,12 +393,11 @@ a:hover {
 }
 
 .rowSubHeaderAlt {
-	background: #000000 url('../images/rowSubHeaderAlt.png') repeat-x scroll top left;
+	background: #2D2D2D url('../images/rowSubHeaderAlt.png') repeat-x scroll top left;
 }
 
 .rowGraphFilter {
-	background-image: url('../images/rowGraphFilter.png');
-	background-repeat-x;
+	background: #757575 url('../images/rowGraphFilter.png') repeat-x scroll top left;
 }
 
 .rowAlternate1 {
