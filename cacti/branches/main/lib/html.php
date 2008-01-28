@@ -661,7 +661,7 @@ function draw_menu($user_menu = "") {
 			</tr>
 			<tr class='mainMenu' id='menu_$id'>
 				<td>
-					<ul class='menuSubMain'>\n";
+					<ul id='ul_$id' class='menuSubMain'>\n";
 		}
 
 		/* pass 2: loop through each top level item and render it */

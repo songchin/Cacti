@@ -254,10 +254,10 @@ function auth_display_custom_error_message($message) {
 	-->
 	</style>
 </head>
-<body class='authBody' onload="document.login.login_username.focus()">
-	<div class='autoContainer'>
-		<div class='authLogo'></div>
-		<div class='authLogin'>
+<body id='authBody' onload="document.login.login_username.focus()">
+	<div id='autoContainer'>
+		<div id='authLogo'></div>
+		<div id='authLogin'>
 			<form action="<?php print basename($_SERVER['PHP_SELF']);?>" name="login" method="post">
 			<input type="hidden" name="action" value="login">
 			<table align='center'>
@@ -313,7 +313,7 @@ function auth_display_custom_error_message($message) {
 			</table>
 			</form>
 		</div>
-		<div class='authFooter'></div>
+		<div id='authFooter'></div>
 	</div>
 </body>
 </html>

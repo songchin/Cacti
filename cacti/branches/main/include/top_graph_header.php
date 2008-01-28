@@ -125,7 +125,7 @@ if ((read_graph_config_option("default_tree_view_mode") == "2") &&
 				<?php echo draw_header_tab("graphs", "Graphs", "graph_view.php");?>
 			</ul>
 		</div>
-		<div id='navbar_r' class='navbar_r'>
+		<div id='navbar_r'>
 			<ul>
 				<?php echo draw_header_tab("graph_settings", "Settings", "graph_settings.php");?>
 				<?php echo draw_header_tab("tree", "Tree", "graph_view.php?action=tree", "images/tab_mode_tree_new.gif");?>
@@ -145,57 +145,27 @@ if ((read_graph_config_option("default_tree_view_mode") == "2") &&
 		</div>
 	</div>
 </div>
-<table width="100%" cellspacing="0" cellpadding="0">
-	<tr class="noprint">
-		<td bgcolor="#efefef" colspan="1" height="8" style="background-image: url(images/shadow_gray.gif); background-repeat: repeat-x; border-right: #aaaaaa 1px solid;">
-			<img src="images/transparent_line.gif" width="<?php print read_graph_config_option("default_dual_pane_width");?>" alt="" height="2" border="0"><br>
-		</td>
-		<td bgcolor="#ffffff" colspan="1" height="8" style="background-image: url(images/shadow.gif); background-repeat: repeat-x;">
+<div id='wrapper'>
+	<?php if ((read_graph_config_option("default_tree_view_mode") == "2") && (($_REQUEST["action"] == "tree") || ((isset($_REQUEST["view_type"]) ? $_REQUEST["view_type"] : "") == "tree"))) { ?>
+	<div id='graph_tree'>
+		<table border=0 cellpadding=0 cellspacing=0><tr><td><font size=-2><a style="font-size:7pt;text-decoration:none;color:silver" href="http://www.treemenu.net/" target=_blank></a></font></td></tr></table>
+		<?php grow_dhtml_trees(); ?>
+		<script type="text/javascript">initializeDocument();</script>
 
-		</td>
-	</tr>
+		<?php if (isset($_GET["select_first"])) { ?>
+		<script type="text/javascript">
+		var obj;
+		obj = findObj(1);
 
-	<?php if ((basename($_SERVER["PHP_SELF"]) == "graph.php") && ($_REQUEST["action"] == "properties")) {?>
-	<tr>
-		<td valign="top" height="1" colspan="3" bgcolor="#efefef">
-			<?php
-			$graph_data_array["print_source"] = true;
+		if (!obj.isOpen) {
+			clickOnNode(1);
+		}
 
-			/* override: graph start time (unix time) */
-			if (!empty($_GET["graph_start"])) {
-				$graph_data_array["graph_start"] = $_GET["graph_start"];
-			}
-
-			/* override: graph end time (unix time) */
-			if (!empty($_GET["graph_end"])) {
-				$graph_data_array["graph_end"] = $_GET["graph_end"];
-			}
-
-			print trim(rrdtool_function_graph($_GET["local_graph_id"], $_GET["rra_id"], $graph_data_array));
-			?>
-		</td>
-	</tr>
-	<?php }?>
-
-	<tr>
-		<?php if ((read_graph_config_option("default_tree_view_mode") == "2") && (($_REQUEST["action"] == "tree") || ((isset($_REQUEST["view_type"]) ? $_REQUEST["view_type"] : "") == "tree"))) { ?>
-		<td valign="top" style="padding: 5px; border-right: #aaaaaa 1px solid;" bgcolor='#efefef' width='<?php print read_graph_config_option("default_dual_pane_width");?>' class='noprint'>
-			<table border=0 cellpadding=0 cellspacing=0><tr><td><font size=-2><a style="font-size:7pt;text-decoration:none;color:silver" href="http://www.treemenu.net/" target=_blank></a></font></td></tr></table>
-			<?php grow_dhtml_trees(); ?>
-			<script type="text/javascript">initializeDocument();</script>
-
-			<?php if (isset($_GET["select_first"])) { ?>
-			<script type="text/javascript">
-			var obj;
-			obj = findObj(1);
-
-			if (!obj.isOpen) {
-				clickOnNode(1);
-			}
-
-			clickOnLink(2,'','main');
-			</script>
-			<?php } ?>
-		</td>
+		clickOnLink(2,'','main');
+		</script>
 		<?php } ?>
-		<td valign="top" style="padding: 5px; border-right: #aaaaaa 1px solid;">
+	</div>
+	<div id='graph_tree_content'>
+	<?php }else{ ?>
+	<div id='graph_content'>
+	<?php } ?>

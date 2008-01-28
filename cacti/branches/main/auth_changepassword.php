@@ -83,10 +83,10 @@ case 'changepassword':
 	-->
 	</style>
 </head>
-<body class='authBody' onload="document.login.password.focus()">
-	<div class='autoContainer'>
-		<div class='authLogo'></div>
-		<div class='authLogin'>
+<body id='authBody' onload="document.login.password.focus()">
+	<div id='autoContainer'>
+		<div id='authLogo'></div>
+		<div id='authLogin'>
 			<form action="<?php print basename($_SERVER['PHP_SELF']);?>" name="login" method="post">
 			<table align="center">
 				<?php if ($bad_password == true) {?>
@@ -120,7 +120,7 @@ case 'changepassword':
 			<input type="hidden" name="ref" value="<?php print $_REQUEST["ref"];?>">
 			</form>
 		</div>
-		<div class='authFooter'></div>
+		<div id='authFooter'></div>
 	</div>
 </body>
 </html>

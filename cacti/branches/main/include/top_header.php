@@ -36,8 +36,8 @@ global $colors;
 	print "<meta http-equiv=refresh content=\"" . $refresh["seconds"] . "; url='" . $refresh["page"] . "'\">";
 	}?>
 </head>
-<body class='body' onLoad='initializePage()'>
-<div id='header' class='header'>
+<body id='body' onLoad='initializePage()'>
+<div id='header'>
 	<div id=logobar' class='logobar'></div>
 	<div id='navbar' class='navbar'>
 		<div id='navbar_l'>
