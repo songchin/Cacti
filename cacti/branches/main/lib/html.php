@@ -93,7 +93,7 @@ function html_start_box_dq($query_name, $query_id, $host_id, $colspan, $width, $
 										<strong>Data Query</strong> [<?php print $query_name; ?>]
 									</td>
 									<td align='right' nowrap>
-										<a href='graphs_new.php?action=query_reload&id=<?php print $query_id;?>&host_id=<?php print $host_id;?>'><img src='images/reload_icon_small.gif' alt='Reload Associated Query' border='0' align='absmiddle'></a>
+										<a href='graphs_new.php?action=query_reload&id=<?php print $query_id;?>&host_id=<?php print $host_id;?>'><img src='images/reload_icon_small.gif' alt='Reload Associated Query' title='Reload Associated Query' border='0' align='absmiddle'></a>
 									</td>
 								</tr>
 							</table>
