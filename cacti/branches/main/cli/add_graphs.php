@@ -2,7 +2,7 @@
 <?php
 /*
  +-------------------------------------------------------------------------+
- | Copyright (C) 2004-2007 The Cacti Group                                 |
+ | Copyright (C) 2004-2008 The Cacti Group                                 |
  |                                                                         |
  | This program is free software; you can redistribute it and/or           |
  | modify it under the terms of the GNU General Public License             |
@@ -263,7 +263,7 @@ if (sizeof($parms)) {
 				echo "Try --list-snmp-queries\n";
 				exit (1);
 			}
-			
+
 			$rc = displaySNMPValuesExtended($hostId, $dsGraph["snmpFieldSpec"], $dsGraph["snmpQueryId"], $quietMode);
 			exit ($rc);
 

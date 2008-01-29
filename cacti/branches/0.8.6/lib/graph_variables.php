@@ -1,7 +1,7 @@
 <?php
 /*
  +-------------------------------------------------------------------------+
- | Copyright (C) 2004 Ian Berry                                            |
+ | Copyright (C) 2004-2008 The Cacti Group                                 |
  |                                                                         |
  | This program is free software; you can redistribute it and/or           |
  | modify it under the terms of the GNU General Public License             |
@@ -13,14 +13,12 @@
  | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           |
  | GNU General Public License for more details.                            |
  +-------------------------------------------------------------------------+
- | cacti: a php-based graphing solution                                    |
+ | Cacti: The Complete RRDTool-based Graphing Solution                     |
  +-------------------------------------------------------------------------+
- | Most of this code has been designed, written and is maintained by       |
- | Ian Berry. See about.php for specific developer credit. Any questions   |
- | or comments regarding this code should be directed to:                  |
- | - iberry@raxnet.net                                                     |
+ | This code is designed, written, and maintained by the Cacti Group. See  |
+ | about.php and/or the AUTHORS file for specific developer information.   |
  +-------------------------------------------------------------------------+
- | - raXnet - http://www.raxnet.net/                                       |
+ | http://www.cacti.net/                                                   |
  +-------------------------------------------------------------------------+
 */
 
@@ -85,7 +83,7 @@ function nth_percentile($local_data_id, $start_seconds, $end_seconds, $percentil
 				/* Go through data souce names */
 				reset($fetch_array[$i]["data_source_names"]);
 				foreach ( $fetch_array[$i]["data_source_names"] as $ds_name ) {
-					$dsi_name_to_id[$ds_name][] = $i; 
+					$dsi_name_to_id[$ds_name][] = $i;
 				}
 			}
 
@@ -96,7 +94,7 @@ function nth_percentile($local_data_id, $start_seconds, $end_seconds, $percentil
 				$sum_array["data_source_names"][$i] = $ds_name;
 				foreach ($id_array as $id) {
 					$fetch_id = array_search($ds_name,$fetch_array[$id]["data_source_names"]);
-						/* Sum up like ds names */	
+						/* Sum up like ds names */
 						for ($j=0; $j<count($fetch_array[$id]["values"][$fetch_id]); $j++) {
 							if (isset($fetch_array[$id]["values"][$fetch_id][$j])) {
 								$value = $fetch_array[$id]["values"][$fetch_id][$j];
@@ -110,7 +108,7 @@ function nth_percentile($local_data_id, $start_seconds, $end_seconds, $percentil
 							}
 						}
 				}
-				$i++;	
+				$i++;
 			}
 		}
 
@@ -163,25 +161,25 @@ function nth_percentile($local_data_id, $start_seconds, $end_seconds, $percentil
 		for ($i=0; $i<count($fetch_array["data_source_names"]); $i++) {
 			if (isset($fetch_array["values"][$i])) {
 				$values_array = $fetch_array["values"][$i];
-	
+
 				/* sort the array in descending order */
 				rsort($values_array, SORT_NUMERIC);
 			}
-	
+
 			/* grab the N% row (or 1 - N% in reverse) and use that as our Nth percentile
 			value */
 			$inverse_percentile = 1 - ($percentile / 100);
 			$target = ((count($values_array) + 1) * $inverse_percentile);
 			$target = sprintf("%d", $target);
-	
+
 			if (empty($values_array[$target])) { $values_array[$target] = 0; }
-	
+
 			/* collect Nth percentile values in this array so we can return them */
 			$return_array{$fetch_array["data_source_names"][$i]} = $values_array[$target];
 
 			/* get max Nth calculation for aggregate */
-			if (($fetch_array["data_source_names"][$i] != "nth_percentile_aggregate_max") && 
-				($fetch_array["data_source_names"][$i] != "nth_percentile_aggregate_sum") && 
+			if (($fetch_array["data_source_names"][$i] != "nth_percentile_aggregate_max") &&
+				($fetch_array["data_source_names"][$i] != "nth_percentile_aggregate_sum") &&
 				($fetch_array["data_source_names"][$i] != "nth_percentile_maximum")) {
 				if (isset($return_array{"nth_percentile_aggregate_total"})) {
 					if (($return_array{"nth_percentile_aggregate_total"} < $values_array[$target])) {
@@ -314,7 +312,7 @@ function variable_nth_percentile(&$regexp_match_array, &$graph_item, &$graph_ite
 					$local_nth = $nth_cache{$graph_items[$t]["local_data_id"]}{$graph_items[$t]["data_source_name"]};
 					$local_nth = ($regexp_match_array[2] == "bits") ? $local_nth * 8 : $local_nth;
 					$local_nth /= pow(10,intval($regexp_match_array[3]));
-	
+
 					$nth += $local_nth;
 				}
 

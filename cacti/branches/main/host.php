@@ -1,7 +1,7 @@
 <?php
 /*
  +-------------------------------------------------------------------------+
- | Copyright (C) 2004-2007 The Cacti Group                                 |
+ | Copyright (C) 2004-2008 The Cacti Group                                 |
  |                                                                         |
  | This program is free software; you can redistribute it and/or           |
  | modify it under the terms of the GNU General Public License             |
@@ -116,13 +116,13 @@ function add_tree_names_to_actions_array() {
 
 function form_save() {
 
-	/* 
+	/*
 	 * loop for all possible changes of reindex_method
 	 * post variable is build like this
 	 * 		reindex_method_host_<host_id>_query_<snmp_query_id>_method_<old_reindex_method>
-	 * if values of this variable differs from <old_reindex_method>, we will have to update 
+	 * if values of this variable differs from <old_reindex_method>, we will have to update
 	 */
-	$reindex_performed = false; 
+	$reindex_performed = false;
 	while (list($var,$val) = each($_POST)) {
 		if (ereg("^reindex_method_host_([0-9]+)_query_([0-9]+)_method_([0-9]+)$", $var, $matches)) {
 			/* ================= input validation ================= */
@@ -137,11 +137,11 @@ function form_save() {
 			# change reindex method of this very item
 			if ( $reindex_method != $matches[3]) {
 				db_execute("replace into host_snmp_query (host_id,snmp_query_id,reindex_method) values (" . $matches[1] . "," . $matches[2] . "," . $reindex_method . ")");
-			
+
 				/* recache snmp data */
 				run_data_query($matches[1], $matches[2]);
 				$reindex_performed = true;
-			}		
+			}
 		}
 	}
 

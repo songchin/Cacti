@@ -1,7 +1,7 @@
 <?php
 /*
  +-------------------------------------------------------------------------+
- | Copyright (C) 2004 Ian Berry                                            |
+ | Copyright (C) 2004-2008 The Cacti Group                                 |
  |                                                                         |
  | This program is free software; you can redistribute it and/or           |
  | modify it under the terms of the GNU General Public License             |
@@ -13,14 +13,12 @@
  | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           |
  | GNU General Public License for more details.                            |
  +-------------------------------------------------------------------------+
- | cacti: a php-based graphing solution                                    |
+ | Cacti: The Complete RRDTool-based Graphing Solution                     |
  +-------------------------------------------------------------------------+
- | Most of this code has been designed, written and is maintained by       |
- | Ian Berry. See about.php for specific developer credit. Any questions   |
- | or comments regarding this code should be directed to:                  |
- | - iberry@raxnet.net                                                     |
+ | This code is designed, written, and maintained by the Cacti Group. See  |
+ | about.php and/or the AUTHORS file for specific developer information.   |
  +-------------------------------------------------------------------------+
- | - raXnet - http://www.raxnet.net/                                       |
+ | http://www.cacti.net/                                                   |
  +-------------------------------------------------------------------------+
 */
 
@@ -39,9 +37,9 @@ case 'changepassword':
 	if (($_POST["password"] == $_POST["confirm"]) && ($_POST["password"] != "")) {
 		db_execute("insert into user_log (username,result,ip) values('" . $user["username"] . "',3,'" . $_SERVER["REMOTE_ADDR"] . "')");
 		db_execute("update user_auth set must_change_password='',password='" . md5($_POST["password"]) . "' where id=" . $_SESSION["sess_user_id"]);
-		
+
 		kill_session_var("sess_change_password");
-		
+
 		/* ok, at the point the user has been sucessfully authenticated; so we must
 		decide what to do next */
 
@@ -58,14 +56,14 @@ case 'changepassword':
 					header("Location: graph_view.php"); break;
 			}
 		}else{
-			header("Location: graph_view.php"); 
+			header("Location: graph_view.php");
 		}
 		exit;
 
 	}else{
 		$bad_password = true;
 	}
-	
+
 	break;
 }
 ?>
@@ -73,7 +71,7 @@ case 'changepassword':
 <head>
 	<title>Login to cacti</title>
 	<STYLE TYPE="text/css">
-	<!--	
+	<!--
 		BODY, TABLE, TR, TD {font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 12px;}
 		A {text-decoration: none;}
 		A:active { text-decoration: none;}

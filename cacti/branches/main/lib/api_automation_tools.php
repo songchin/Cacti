@@ -2,7 +2,7 @@
 <?php
 /*
  +-------------------------------------------------------------------------+
- | Copyright (C) 2004-2007 The Cacti Group                                 |
+ | Copyright (C) 2004-2008 The Cacti Group                                 |
  |                                                                         |
  | This program is free software; you can redistribute it and/or           |
  | modify it under the terms of the GNU General Public License             |
@@ -345,7 +345,7 @@ function displaySNMPValuesExtended($hostId, $fields, $snmpQueryId, $quietMode) {
 	}
 
 	$exit_code = 1; # assume an error until we've printed sth
-			
+
 	$req_fields = array();
 	if (strlen($fields) > 0) {
 		# remove unwanted blanks
@@ -378,7 +378,7 @@ function displaySNMPValuesExtended($hostId, $fields, $snmpQueryId, $quietMode) {
 				}
 			}
 		}
-	
+
 		if (!isset ($total_rows)) {
 			echo "ERROR: No cached SNMP values found for this SNMP Query\n";
 			return (1);
@@ -447,7 +447,7 @@ function displaySNMPValuesExtended($hostId, $fields, $snmpQueryId, $quietMode) {
 				}
 			}
 		}
-		
+
 		if (!$quietMode) {
 			# now print headers: field identifier and field names
 			reset($req_fields);
@@ -471,7 +471,7 @@ function displaySNMPValuesExtended($hostId, $fields, $snmpQueryId, $quietMode) {
 			}
 			print "\n";
 		}
-		
+
 		# and data, finally
 		if (sizeof($snmp_query_indexes) > 0) {
 			foreach ($snmp_query_indexes as $row) {
