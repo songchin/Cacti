@@ -153,10 +153,10 @@ function draw_edit_control($field_name, &$field_array) {
 	case 'drop_sql':
 		form_dropdown($field_name,
 			db_fetch_assoc($field_array["sql"]), "name", "id", $field_array["value"],
-			((isset($field_array["none_value"])) ? $field_array["none_value"] : ""),
-			((isset($field_array["default"])) ? $field_array["default"] : ""),
-			((isset($field_array["class"])) ? $field_array["class"] : ""),
-			((isset($field_array["on_change"])) ? $field_array["on_change"] : ""));
+				((isset($field_array["none_value"])) ? $field_array["none_value"] : ""),
+				((isset($field_array["default"])) ? $field_array["default"] : ""),
+				((isset($field_array["class"])) ? $field_array["class"] : ""),
+				((isset($field_array["on_change"])) ? $field_array["on_change"] : ""));
 
 		break;
 	case 'drop_multi':
@@ -187,10 +187,10 @@ function draw_edit_control($field_name, &$field_array) {
 		form_checkbox($field_name,
 			$field_array["value"],
 			$field_array["friendly_name"],
-				((isset($field_array["default"])) ? $field_array["default"] : ""),
-				((isset($field_array["form_id"])) ? $field_array["form_id"] : ""),
-				((isset($field_array["class"])) ? $field_array["class"] : ""),
-				((isset($field_array["on_change"])) ? $field_array["on_change"] : ""));
+			((isset($field_array["default"])) ? $field_array["default"] : ""),
+			((isset($field_array["form_id"])) ? $field_array["form_id"] : ""),
+			((isset($field_array["class"])) ? $field_array["class"] : ""),
+			((isset($field_array["on_change"])) ? $field_array["on_change"] : ""));
 
 		break;
 	case 'checkbox_group':
@@ -237,7 +237,7 @@ function draw_edit_control($field_name, &$field_array) {
 
 		if (sizeof($items) > 0) {
 		foreach ($items as $item) {
-		        print $item["name"] . "<br>";
+			print $item["name"] . "<br>";
 		}
 		}
 
@@ -511,7 +511,9 @@ function form_radio_button($form_name, $form_previous_value, $form_current_value
 		$checked = "";
 	}
 
-	print "<input type='radio' id='$form_name' name='$form_name' value='$form_current_value'" . $class . $on_change . $checked . "> $form_caption\n";
+	$css_id = $form_name . "_" . $form_current_value;
+
+	print "<input type='radio' id='$css_id' name='$form_name' value='$form_current_value'" . $class . $on_change . $checked . "><label for='$css_id'>$form_caption</label>\n";
 }
 
 /* form_text_box - draws a standard html text area box
@@ -656,12 +658,12 @@ function form_confirm($title_text, $body_text, $cancel_url, $action_url) { ?>
    @arg $cancel_url - the url to go to when the user clicks 'cancel'
    @arg $action_url - the url to go to when the user clicks 'delete' */
 function form_confirm_buttons($action_url, $cancel_url) { ?>
-<tr>
-	<td bgcolor="#E1E1E1">
-		<a href="<?php print $cancel_url;?>"><img src="images/button_cancel.gif" border="0" alt="Cancel" align="absmiddle"></a>
-		<a href="<?php print $action_url . "&confirm=yes";?>"><img src="images/button_delete.gif" border="0" alt="Delete" align="absmiddle"></a>
-	</td>
-</tr>
+	<tr>
+		<td bgcolor="#E1E1E1">
+			<a href="<?php print $cancel_url;?>"><img src="images/button_cancel.gif" border="0" alt="Cancel" align="absmiddle"></a>
+			<a href="<?php print $action_url . "&confirm=yes";?>"><img src="images/button_delete.gif" border="0" alt="Delete" align="absmiddle"></a>
+		</td>
+	</tr>
 <?php }
 
 /* form_save_button - draws a (save|create) and cancel button at the bottom of
