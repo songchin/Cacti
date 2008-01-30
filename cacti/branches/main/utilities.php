@@ -610,10 +610,20 @@ function utilities_view_user_log() {
 				<?php print eregi_replace("(" . preg_quote($_REQUEST["filter"]) . ")", "<span style='background-color: #F8D93D;'>\\1</span>", $item["username"]);?>
 			</td>
 			<td width='20%'>
-				<?php print eregi_replace("(" . preg_quote($_REQUEST["filter"]) . ")", "<span style='background-color: #F8D93D;'>\\1</span>", $item["full_name"]);?>
+				<?php if (isset($item["full_name"])) {
+						print eregi_replace("(" . preg_quote($_REQUEST["filter"]) . ")", "<span style='background-color: #F8D93D;'>\\1</span>", $item["full_name"]);
+					}else{
+						print "(User Removed)";
+					}
+				?>
 			</td>
 			<td width='20%'>
-				<?php print eregi_replace("(" . preg_quote($_REQUEST["filter"]) . ")", "<span style='background-color: #F8D93D;'>\\1</span>", $auth_realms[$item["realm"]]);?>
+				<?php if (isset($auth_realms[$item["realm"]])) {
+						print eregi_replace("(" . preg_quote($_REQUEST["filter"]) . ")", "<span style='background-color: #F8D93D;'>\\1</span>", $auth_realms[$item["realm"]]);
+					}else{
+						print "N/A";
+					}
+				?>
 			</td>
 			<td width='20%'>
 				<?php print eregi_replace("(" . preg_quote($_REQUEST["filter"]) . ")", "<span style='background-color: #F8D93D;'>\\1</span>", $item["time"]);?>
