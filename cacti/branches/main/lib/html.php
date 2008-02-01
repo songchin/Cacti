@@ -278,7 +278,7 @@ function html_header_sort($header_items, $sort_column, $sort_direction, $last_it
 		$new_sort_direction = "ASC";
 	}
 
-	print "\t\t<tr class='rowSubHeader'>\n";
+	print "\t\t<table class='resizable' cellpadding=3 cellspacing=0><thead><tr class='rowSubHeader'>\n";
 
 	$i = 1;
 	foreach ($header_items as $db_column => $display_array) {
@@ -292,17 +292,17 @@ function html_header_sort($header_items, $sort_column, $sort_direction, $last_it
 		}
 
 		if (($db_column == "") || (substr_count($db_column, "nosort"))) {
-			print "\t\t\t<td " . ((($i+1) == count($header_items)) ? "colspan='$last_item_colspan' " : "") . "class='textSubHeaderDark'>" . $display_text . "</td>\n";
+			print "\t\t\t<th onMousemove='doColResize(this, event)' onMouseover='doColResize(this, event)' onMouseout='doneColResize()' style='width: auto;' " . ((($i+1) == count($header_items)) ? "colspan='$last_item_colspan' " : "") . "id='textSubHeaderDark'>" . $display_text . "</th>\n";
 		}else{
-			print "\t\t\t<td " . ((($i) == count($header_items)) ? "colspan='$last_item_colspan'" : "") . " class='textSubHeaderDark'>";
-			print "\n\t\t\t\t<a class='textSubSortHeaderDark' href=" . $_SERVER["PHP_SELF"] . "?sort_column=" . $db_column . "&sort_direction=" . $direction . ">" . $display_text . "</a>";
-			print "\n\t\t\t</td>\n";
+			print "\t\t\t<th onMousemove='doColResize(this, event)' onMouseover='doColResize(this, event)' onMouseout='doneColResize()' style='width: auto;' " . ((($i) == count($header_items)) ? "colspan='$last_item_colspan'" : "") . " id='textSubHeaderDark'>";
+			print "\n\t\t\t\t<a style='display:block;' href=" . $_SERVER["PHP_SELF"] . "?sort_column=" . $db_column . "&sort_direction=" . $direction . ">" . $display_text . "</a>";
+			print "\n\t\t\t</th>\n";
 		}
 
 		$i++;
 	}
 
-	print "\t\t</tr>\n";
+	print "\t\t</tr></thead>\n";
 }
 
 /* html_header_sort_checkbox - draws a header row with a 'select all' checkbox in the last cell
@@ -322,36 +322,42 @@ function html_header_sort_checkbox($header_items, $sort_column, $sort_direction,
 	/* reverse the sort direction */
 	if ($sort_direction == "ASC") {
 		$new_sort_direction = "DESC";
+		$selected_sort_class = "sort_asc";
 	}else{
 		$new_sort_direction = "ASC";
+		$selected_sort_class = "sort_desc";
 	}
 
 	/* default to the 'current' file */
 	if ($form_action == "") { $form_action = basename($_SERVER["PHP_SELF"]); }
 
-	print "\t\t<tr class='rowSubHeader'>\n";
+	print "\t\t<table class='resizable' cellpadding=3 cellspacing=0><thead><tr class='rowSubHeader'>\n";
 
 	foreach($header_items as $db_column => $display_array) {
 		/* by default, you will always sort ascending, with the exception of an already sorted column */
 		if ($sort_column == $db_column) {
-			$direction = $new_sort_direction;
-			$display_text = $display_array[0] . "**";
+			$direction    = $new_sort_direction;
+			$display_text = $display_array[0];
+			$sort_class   = $selected_sort_class;
 		}else{
 			$display_text = $display_array[0];
-			$direction = $display_array[1];
+			$direction    = $display_array[1];
+			$sort_class   = "";
 		}
 
+
+
 		if (($db_column == "") || (substr_count($db_column, "nosort"))) {
-			print "\t\t\t<td class='textSubHeaderDark'>" . $display_text . "</td>\n";
+			print "\t\t\t<th onMousemove='doColResize(this,event)' onMouseover='doColResize(this,event)' onMouseout='doneColResize()' id='textSubHeaderDark'>" . $display_text . "</th>\n";
 		}else{
-			print "\t\t\t<td class='textSubHeaderDark'>";
-			print "\n\t\t\t\t<a class='textSubHeaderDark' href=" . $_SERVER["PHP_SELF"] . "?sort_column=" . $db_column . "&sort_direction=" . $direction . ">" . $display_text . "</a>";
-			print "\n\t\t\t</td>\n";
+			print "\t\t\t<th onMousemove='doColResize(this,event)' onMouseover='doColResize(this,event)' onMouseout='doneColResize()' id='textSubHeaderDark'>";
+			print "\n\t\t\t\t<a class='$sort_class' style='display:block;' href=" . $_SERVER["PHP_SELF"] . "?sort_column=" . $db_column . "&sort_direction=" . $direction . ">" . $display_text . "</a>";
+			print "\n\t\t\t</th>\n";
 		}
 	}
 
-	print "\t\t\t<td class='textSubHeaderDark'><input type='checkbox' style='margin: 0px;' name='all' title='Select All' onClick='SelectAll(\"chk_\",this.checked)'></td>\n<form name='chk' method='post' action='$form_action'>\n";
-	print "\t\t</tr>\n";
+	print "\t\t\t<th id='textSubHeaderDark'><input type='checkbox' style='margin: 0px width: 10px;' name='all' title='Select All' onClick='SelectAll(\"chk_\",this.checked)'></th>\n<form name='chk' method='post' action='$form_action'>\n";
+	print "\t\t</tr></thead>\n";
 }
 
 /* html_header - draws a header row suitable for display inside of a box element
@@ -360,13 +366,13 @@ function html_header_sort_checkbox($header_items, $sort_column, $sort_direction,
 function html_header($header_items, $last_item_colspan = 1) {
 	global $colors;
 
-	print "\t\t<tr class='rowSubHeader'>\n";
+	print "\t\t<table class=resizable' cellpadding=3 cellspacing=0><thead><tr class='rowSubHeader'>\n";
 
 	for ($i=0; $i<count($header_items); $i++) {
-		print "\t\t\t<td " . ((($i+1) == count($header_items)) ? "colspan='$last_item_colspan' " : "") . "class='textSubHeaderDark'>" . $header_items[$i] . "</td>\n";
+		print "\t\t\t<th onMousemove='doColResize(this,event)' onMouseover='doColResize(this,event)' onMouseout='doneColResize()' style='width: auto;' " . ((($i+1) == count($header_items)) ? "colspan='$last_item_colspan' " : "") . "id='textSubHeaderDark'>" . $header_items[$i] . "</th>\n";
 	}
 
-	print "\t\t</tr>\n";
+	print "\t\t</tr></thead>\n";
 }
 
 /* html_header_checkbox - draws a header row with a 'select all' checkbox in the last cell
@@ -379,14 +385,14 @@ function html_header_checkbox($header_items, $form_action = "") {
 	/* default to the 'current' file */
 	if ($form_action == "") { $form_action = basename($_SERVER["PHP_SELF"]); }
 
-	print "\t\t<tr class='rowSubHeader'>\n";
+	print "\t\t<table class='resizable' cellpadding=3 cellspacing=0><thead><tr class='rowSubHeader'>\n";
 
 	for ($i=0; $i<count($header_items); $i++) {
-		print "\t\t\t<td class='textSubHeaderDark'>" . $header_items[$i] . "</td>\n";
+		print "\t\t\t<th onMousemove='doColResize(this,event)' onMouseover='doColResize(this,event)' onMouseout='doneColResize()' style='width: auto;' id='textSubHeaderDark'>" . $header_items[$i] . "</th>\n";
 	}
 
-	print "\t\t\t<td class='textSubHeaderDark'><input type='checkbox' style='margin: 0px;' name='all' title='Select All' onClick='SelectAll(\"chk_\",this.checked)'></td>\n<form name='chk' method='post' action='$form_action'>\n";
-	print "\t\t</tr>\n";
+	print "\t\t\t<th id='textSubHeaderDark'><input type='checkbox' style='margin: 0px;' name='all' title='Select All' onClick='SelectAll(\"chk_\",this.checked)'></th>\n<form name='chk' method='post' action='$form_action'>\n";
+	print "\t\t</tr></thead>\n";
 }
 
 /* create_list - draws the items for an html dropdown given an array of data
@@ -465,7 +471,8 @@ function html_create_nav($current_page, $max_pages, $rows_per_page, $total_rows,
 					</tr>
 				</table>
 			</td>
-		</tr>\n";
+		</tr>
+	</table>\n";
 
 	return $nav;
 }

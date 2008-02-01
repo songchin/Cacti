@@ -346,9 +346,7 @@ function openMenu(id) {
 }
 
 function moveUp(object) {
-	newEM = object.style.height;
-	newEM = newEM.replace("px","");
-	newEM = (newEM * 1);
+	newEM = parseInt(object.style.height);
 
 	if ((newEM - 15) < 0) {
 		newEM = 0;
@@ -364,9 +362,7 @@ function moveUp(object) {
 }
 
 function moveDown(object) {
-	newEM = object.style.height;
-	newEM = newEM.replace("px","");
-	newEM = (newEM * 1);
+	newEM = parseInt(object.style.height);
 
 	if ((newEM + 15) > object.scrollHeight) {
 		newEM = object.scrollHeight;
@@ -377,10 +373,193 @@ function moveDown(object) {
 	object.style.height  = newEM + "px";
 
 	if (newEM >= object.scrollHeight) {
-		object.style.height = object.scrollHeight + "px";
 		clearInterval(openMe);
 	}
 }
+
+var objTh          = null;
+var objDiv         = null;
+var overColumn     = false;
+var overVSplit     = false;
+var iEdgeThreshold = 10;
+
+/* tells if on the right border or not */
+function isOnBorderRight(object, event) {
+	var width    = object.offsetWidth;
+	var pos      = findPos(object);
+	var absRight = pos[0] + width;
+
+	if (event.clientX > (absRight - iEdgeThreshold)) {
+		return true;
+	}
+
+	return false;
+}
+
+function findPos(obj) {
+	var curleft = curtop = 0;
+	if (obj.offsetParent) {
+		curleft = obj.offsetLeft;
+		curtop  = obj.offsetTop;
+
+		while (obj = obj.offsetParent) {
+			curleft += obj.offsetLeft;
+			curtop  += obj.offsetTop;
+		}
+	}
+
+	return [curleft,curtop];
+}
+
+/* tells if on the bottom border or not */
+function isOnBorderBottom(object, event) {
+	var height = object.offsetHeight;
+	var pos    = findPos(object);
+	var absTop = pos[1];
+
+	if (event.clientY > (absTop + object.offsetHeight - iEdgeThreshold)) {
+		return true;
+	}
+
+	return false;
+}
+
+function getParentNode(objReference, nodeName, className) {
+	var oElement = objReference;
+	while (oElement != null && oElement.tagName != null && oElement.tagName != "BODY") {
+		if (oElement.tagName.toUpperCase() == nodeName &&
+			(className == null || oElement.className.search("\b"+className+"\b") != 1)) {
+			return oElement;
+		}
+
+		oElement = oElement.parentNode;
+	}
+
+	return null;
+}
+
+function doColResize(object, event){
+	if(!event) event = window.event;
+
+	if(isOnBorderRight(object, event)) {
+		overColumn          = true;
+		object.style.cursor = "e-resize";
+	}else{
+		overColumn          = false;
+		object.style.cursor = "";
+	}
+
+	return overColumn;
+}
+
+function doneColResize(){
+	overColumn = false;
+	overVSplit = false;
+}
+
+function doDivResize(object, event){
+	if(!event) event = window.event;
+
+	if(isOnBorderRight(object, event)) {
+		overVSplit          = true;
+		object.style.cursor = "e-resize";
+	}else{
+		overVSplit          = false;
+		object.style.cursor = "";
+	}
+
+	return overColumn;
+}
+
+function doneDivResize(){
+	overVSplit = false;
+}
+
+function MouseDown(event) {
+	if(!event) event = window.event;
+
+	MOUSTSTART_X = event.clientX;
+	MOUSTSTART_Y = event.clientY;
+
+	if (overColumn) {
+		if (event.srcElement)objTh = event.srcElement;
+		else if(event.target)objTh = event.target;
+		else return;
+
+		objTh = getParentNode(objTh,"TH");
+
+		if(objTh == null) return;
+		objTable      = getParentNode(objTh,"TABLE");
+
+		objThWidth    = parseInt(objTh.style.width);
+
+		if (objThWidth > 0) {
+		}else{
+			objThWidth = parseInt(objTh.scrollWidth);
+		}
+
+		objTableWidth = parseInt(objTable.offsetWidth);
+	} else if (overVSplit) {
+		if (event.srcElement)objDiv = event.srcElement;
+		else if (event.target)objDiv = event.target;
+		else return;
+
+		objDiv = getParentNode(objDiv,"DIV");
+
+		if (objDiv == null) return;
+
+		objDivWidth   = objDiv.offsetLeft;
+	}
+}
+
+function MouseMove(event) {
+	if(!event) event = window.event;
+
+	if (objTh) {
+		var thSt    = event.clientX - MOUSTSTART_X + objThWidth;
+		var tableSt = event.clientX - MOUSTSTART_X + objTableWidth;
+
+		/* check for minimum width */
+		if (thSt >= 10){
+			objTh.style.width    = thSt + "px";
+		}
+
+		if(document.selection) {
+			document.selection.empty();
+		}else if(window.getSelection) {
+			window.getSelection().removeAllRanges();
+		}
+	} else if (objDiv){
+		var divSt   = event.clientX - MOUSTSTART_X + objDivWidth;
+
+		/* check for minimum height */
+		if (divSt >=70 ) {
+			objDiv.style.marginLeft                             = divSt + "px";
+			document.getElementById("menu").style.width         = parseInt(divSt - 5) + "px";
+			document.getElementById("content").style.marginLeft = parseInt(divSt + 2) + "px";
+		}
+		if(document.selection) document.selection.empty();
+		else if(window.getSelection)window.getSelection().removeAllRanges();
+	}
+}
+
+function MouseUp(event) {
+	if(!event) event = window.event;
+	if(objTh){
+		if(document.selection) document.selection.empty();
+		else if(window.getSelection)window.getSelection().removeAllRanges();
+		objTh = null;
+	}
+	else if( objDiv ){
+		if(document.selection) document.selection.empty();
+		else if(window.getSelection)window.getSelection().removeAllRanges();
+		objDiv = null;
+	}
+}
+
+document.onmousedown = MouseDown;
+document.onmousemove = MouseMove;
+document.onmouseup   = MouseUp;
 
 /* page load functions */
 function initializePage() {
@@ -417,7 +596,7 @@ function initializePage() {
 	}
 }
 
-// Cookie Functions
+/* Cookie Functions */
 function createCookie(name, value, days) {
 	if (days) {
 		var date    = new Date();

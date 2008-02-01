@@ -63,5 +63,6 @@ global $colors;
 		<?php draw_menu();?>
 		<div id='about'><a href='about.php'><img src="images/cacti_logo.gif" align="absmiddle" alt="Cacti" border="0"></a></div>
 	</div>
+	<div id='vsplitter' onMouseout="doneDivResize()" onMouseover="doDivResize(this,event)" onMousemove="doDivResize(this,event)"></div>
 	<div id='content'>
 	<?php display_output_messages();?>

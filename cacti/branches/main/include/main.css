@@ -64,6 +64,17 @@ td {
 	height: 98%;
 }
 
+#vsplitter {
+	background: #363636 url('../images/vsplitter2.gif') no-repeat scroll center;
+	-moz-user-select: none;
+	cursor: e-resize;
+	height: 100%;
+	margin-left: 170px;
+	position: absolute;
+	width: 4px;
+	z-index: 10;
+}
+
 #content {
 	background: #FFFFFF url('../images/shadow.gif') repeat-x scroll top right;
 	float: none;
@@ -71,11 +82,11 @@ td {
 	top: 5.2em;
 	left: 0;
 	overflow: auto;
-	margin-left:16%;
+	margin-left:173px;
 	margin-right: 0px;
 	padding-top: 8px;
 	padding-bottom: 8px;
-	padding-left: 5px;
+	padding-left: 10px;
 	padding-right: 5px;
 	height: 86%;
 	width: auto;
@@ -139,12 +150,11 @@ td {
 	top: 5.2em;
 	left: 0;
 	overflow: auto;
-	border-right: 1px ridge #A9A9A9;
 	padding-top: 0px;
 	padding-left: 3px;
 	padding-right: 3px;
 	padding-top: 8px;
-	width: 15.5%;
+	width: 165px;
 	height: 100%;
 	z-index: 1;
 }
@@ -389,7 +399,6 @@ a:hover {
 }
 
 .rowSubHeader {
-	background: #1F2328 url('../images/rowSubHeader.png') repeat-x scroll top left;
 }
 
 .rowSubHeaderAlt {
@@ -438,19 +447,56 @@ a:hover {
 	color: #FFFFFF;
 }
 
-.textSubHeaderDark, .textSubHeaderDark:visited {
+table.resizable td{
+	overflow: hidden;
+}
+
+table.resizable th{
+	overflow: hidden;
+}
+
+table.resizable{
+	table-layout:fixed;
+}
+
+table.resizable input{
+	width:100%;
+}
+
+table.resizable textarea{
+	width:100%;
+}
+
+.sort_asc {
+}
+
+.sort_desc {
+}
+
+#textSubHeaderDark, #textSubHeaderDark:visited {
+	background: #1F2328 url('../images/rowSubHeader.png') repeat-x scroll top left;
+	border-right: 2px ridge #A5A5A5;
+	text-align: left;
 	font-size: 10px;
 	color: #FFFFFF;
 	font-weight: bold;
 }
 
+#textSubHeaderDark a, #textSubHeaderDark a:visited, #textSubHeaderDark a:hover {
+	color: #FFFFFF;
+	text-decoration: none;
+}
 .textSubSortHeaderDark, .textSubSortHeaderDark:visited {
+	background: #1F2328 url('../images/rowSubHeader.png') repeat-x scroll top left;
+	border-right: 2px groove #000000;
+	text-align: left;
 	font-size: 10px;
 	color: #FFFFFF;
 	font-weight: bold;
 }
 
 .textRowSubHeaderDark {
+	text-align: left;
 	font-size: 10px;
 	color: #FFFFFF;
 	background: #1F2328 url('../images/rowSubHeader.png') repeat-x scroll top left;
