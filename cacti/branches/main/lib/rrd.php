@@ -545,6 +545,7 @@ function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rr
 		graph_templates_graph.auto_scale_log,
 		graph_templates_graph.scale_log_units,
 		graph_templates_graph.auto_scale_rigid,
+		graph_templates_graph.alt_y_grid,
 		graph_templates_graph.auto_padding,
 		graph_templates_graph.base_value,
 		graph_templates_graph.upper_limit,
@@ -589,6 +590,7 @@ function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rr
 	/* define some variables */
 	$scale = "";
 	$rigid = "";
+	$alt_y_grid = "";
 	$unit_value = "";
 	$unit_exponent_value = "";
 	$graph_legend = "";
@@ -644,6 +646,10 @@ function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rr
 
 	if ($graph["auto_scale_rigid"] == "on") {
 		$rigid = "--rigid" . RRD_NL;
+	}
+
+	if ($graph["alt_y_grid"] == "on") {
+		$alt_y_grid = "--alt-y-grid" . RRD_NL;
 	}
 
 	if (!empty($graph["unit_value"])) {
@@ -764,6 +770,7 @@ function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rr
 		"--end=$graph_end" . RRD_NL .
 		"--title=\"" . str_replace("\"", "\\\"", $graph["title_cache"]) . "\"" . RRD_NL .
 		"$rigid" .
+		"$alt_y_grid" .
 		"--base=" . $graph["base_value"] . RRD_NL .
 		"--height=$graph_height" . RRD_NL .
 		"--width=$graph_width" . RRD_NL .
@@ -1272,6 +1279,7 @@ function rrdtool_function_xport($local_graph_id, $rra_id, $xport_data_array, &$x
 		graph_templates_graph.auto_scale_log,
 		graph_templates_graph.scale_log_units,
 		graph_templates_graph.auto_scale_rigid,
+		graph_templates_graph.alt_y_grid,
 		graph_templates_graph.auto_padding,
 		graph_templates_graph.base_value,
 		graph_templates_graph.upper_limit,

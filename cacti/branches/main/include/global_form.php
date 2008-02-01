@@ -431,6 +431,14 @@ $struct_graph = array(
 		"default" => "",
 		"description" => "Do not expand the lower and upper limit if the graph contains a value outside the valid range."
 		),
+	"alt_y_grid" => array(
+		"friendly_name" => "Alternative Y Grid (--alt-y-grid)",
+		"method" => "checkbox",
+		"default" => "",
+		"description" => "The algorithm ensures that you always have a grid, that there are enough but not too many grid lines,
+			and that the grid is metric. This parameter will also ensure that you
+			get enough decimals displayed. <strong>Note</strong> This parameter may interfere with --alt-autoscale options."
+		),
 	"auto_padding" => array(
 		"friendly_name" => "Auto Padding",
 		"method" => "checkbox",

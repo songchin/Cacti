@@ -925,6 +925,14 @@
 								With this option you can disable this behavior</quote>.</entry>
 							</row>
 							<row>
+								<entry>Alternative Y Grid</entry>
+								<entry>From the RRDTool manual
+								<quote>Place the Y grid dynamically based on the graph's Y range. The algorithm ensures that you always
+               have a grid, that there are enough but not too many grid lines, and that the grid is metric. That
+               is the grid lines are placed every 1, 2, 5 or 10 units. This parameter will also ensure that you
+               get enough decimals displayed even if your graph goes from 69.998 to 70.001.</quote>.</entry>
+							</row>
+							<row>
 								<entry>Auto Padding</entry>
 								<entry>If you have ever created RRDTool-based graphs manually,
 								you may have realized how annoying it can be to get text to
