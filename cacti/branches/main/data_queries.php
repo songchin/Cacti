@@ -252,7 +252,7 @@ function form_actions() {
 				<tr>
 					<td class='textArea'>
 						<p>Are you sure you want to delete the following data queries?</p>
-						<p>$dq_list</p>
+						<p><ul>$dq_list</ul></p>
 					</td>
 				</tr>\n";
 		}
@@ -395,135 +395,138 @@ function data_query_item_edit() {
 
 		$i = 0;
 		if (sizeof($data_templates) > 0) {
-		foreach ($data_templates as $data_template) {
-			print "	<tr class='rowSubHeader'>
-					<td><span style='color: white; font-weight: bold;'>Data Template - " . $data_template["name"] . "</span></td>
-				</tr>";
-
-			$data_template_rrds = db_fetch_assoc("select
-				data_template_rrd.id,
-				data_template_rrd.data_source_name,
-				snmp_query_graph_rrd.snmp_field_name,
-				snmp_query_graph_rrd.snmp_query_graph_id
-				from data_template_rrd
-				left join snmp_query_graph_rrd on (snmp_query_graph_rrd.data_template_rrd_id=data_template_rrd.id and snmp_query_graph_rrd.snmp_query_graph_id=" . $_GET["id"] . " and snmp_query_graph_rrd.data_template_id=" . $data_template["id"] . ")
-				where data_template_rrd.data_template_id=" . $data_template["id"] . "
-				and data_template_rrd.local_data_id=0
-				order by data_template_rrd.data_source_name");
-
-			if (sizeof($data_template_rrds) > 0) {
-			foreach ($data_template_rrds as $data_template_rrd) {
-				if (empty($data_template_rrd["snmp_query_graph_id"])) {
-					$old_value = "";
-				}else{
-					$old_value = "on";
-				}
-
-				form_alternate_row_color();
-				?>
-					<td>
-						<table cellspacing="0" cellpadding="0" border="0" width="100%">
-							<tr>
-								<td width="200">
-									<strong>Data Source:</strong>
-								</td>
-								<td width="200">
-									<?php print $data_template_rrd["data_source_name"];?>
-								</td>
-								<td width="1">
-									<?php
-									$snmp_queries = get_data_query_array($_GET["snmp_query_id"]);
-									$xml_outputs = array();
-
-									while (list($field_name, $field_array) = each($snmp_queries["fields"])) {
-										if ($field_array["direction"] == "output") {
-											$xml_outputs[$field_name] = $field_name . " (" . $field_array["name"] . ")";;
-										}
-									}
-
-									form_dropdown("dsdt_" . $data_template["id"] . "_" . $data_template_rrd["id"] . "_snmp_field_output",$xml_outputs,"","",$data_template_rrd["snmp_field_name"],"","");?>
-								</td>
-								<td align="right">
-									<?php form_checkbox("dsdt_" . $data_template["id"] . "_" . $data_template_rrd["id"] . "_check", $old_value, "", "", "", $_GET["id"]); print "<br>";?>
-								</td>
-							</tr>
-						</table>
-					</td>
+			foreach ($data_templates as $data_template) {
+				print "	<tr class='rowHeader'>
+							<td><span style='color: white; font-weight: bold;'>Data Template - " . $data_template["name"] . "</span></td>
+							<td></td>
+							<td></td>
+						</tr>";
+	
+				print "	<tr class='rowSubHeader'>
+							<td><span style='color: white; font-weight: bold;'>Data Source Name</span></td>
+							<td><span style='color: white; font-weight: bold;'>Associated XML Field</span></td>
+							<td align='right'><span style='color: white; font-weight: bold;'>Use this Field</span></td>
+						</tr>";
+	
+				$data_template_rrds = db_fetch_assoc("select
+					data_template_rrd.id,
+					data_template_rrd.data_source_name,
+					snmp_query_graph_rrd.snmp_field_name,
+					snmp_query_graph_rrd.snmp_query_graph_id
+					from data_template_rrd
+					left join snmp_query_graph_rrd on (snmp_query_graph_rrd.data_template_rrd_id=data_template_rrd.id and snmp_query_graph_rrd.snmp_query_graph_id=" . $_GET["id"] . " and snmp_query_graph_rrd.data_template_id=" . $data_template["id"] . ")
+					where data_template_rrd.data_template_id=" . $data_template["id"] . "
+					and data_template_rrd.local_data_id=0
+					order by data_template_rrd.data_source_name");
+	
+				if (sizeof($data_template_rrds) > 0) {
+					foreach ($data_template_rrds as $data_template_rrd) {
+						if (empty($data_template_rrd["snmp_query_graph_id"])) {
+							$old_value = "";
+						}else{
+							$old_value = "on";
+						}
+		
+						form_alternate_row_color();
+						?>
+						<td>
+							<?php print $data_template_rrd["data_source_name"];?>
+						</td>
+						<td>
+							<?php
+							$snmp_queries = get_data_query_array($_GET["snmp_query_id"]);
+							$xml_outputs = array();
+		
+							while (list($field_name, $field_array) = each($snmp_queries["fields"])) {
+								if ($field_array["direction"] == "output") {
+									$xml_outputs[$field_name] = $field_name . " (" . $field_array["name"] . ")";;
+								}
+							}
+		
+							form_dropdown("dsdt_" . $data_template["id"] . "_" . $data_template_rrd["id"] . "_snmp_field_output",$xml_outputs,"","",$data_template_rrd["snmp_field_name"],"","");?>
+						</td>
+						<td align="right">
+							<?php form_checkbox("dsdt_" . $data_template["id"] . "_" . $data_template_rrd["id"] . "_check", $old_value, "", "", "", $_GET["id"]); print "<br>";?>
+						</td>
+					</tr>
 				</tr>
-				<?php
+						<?php
+					}
+				}
 			}
-			}
-		}
 		}
 
 		html_end_box();
 
-		html_start_box("<strong>Suggested Values</strong>", "100%", $colors["header"], "0", "center", "");
+		html_start_box("<strong>Suggested Values</strong>", "100%", $colors["header"], "4", "center", "");
 
 		reset($data_templates);
 
 		/* suggested values for data templates */
 		if (sizeof($data_templates) > 0) {
-		foreach ($data_templates as $data_template) {
-			$suggested_values = db_fetch_assoc("select
-				text,
-				field_name,
-				id
-				from snmp_query_graph_rrd_sv
-				where snmp_query_graph_id=" . $_GET["id"] . "
-				and data_template_id=" . $data_template["id"] . "
-				order by field_name,sequence");
+			foreach ($data_templates as $data_template) {
+				$suggested_values = db_fetch_assoc("select
+					text,
+					field_name,
+					id
+					from snmp_query_graph_rrd_sv
+					where snmp_query_graph_id=" . $_GET["id"] . "
+					and data_template_id=" . $data_template["id"] . "
+					order by field_name,sequence");
 
+			print "	<tr class='rowHeader'>
+						<td style='padding: 3px;'><span style='color: white; font-weight: bold;'>Data Template - " . $data_template["name"] . "</span></td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>";
+	
 			print "	<tr class='rowSubHeader'>
-					<td style='padding: 3px;'><span style='color: white; font-weight: bold;'>Data Template - " . $data_template["name"] . "</span></td>
-				</tr>";
-
-			if (sizeof($suggested_values) > 0) {
-				print "<tr><td><table cellspacing='0' cellpadding='3' border='0' width='100%'>\n";
-
-				foreach ($suggested_values as $suggested_value) {
-					form_alternate_row_color();
-					?>
-						<td width="120">
-							<strong><?php print $suggested_value["field_name"];?></strong>
-						</td>
-						<td>
-							<?php print $suggested_value["text"];?>
-						</td>
-						<td width="70">
-							<a href="data_queries.php?action=item_movedown_dssv&snmp_query_graph_id=<?php print $_GET["id"];?>&id=<?php print $suggested_value["id"];?>&snmp_query_id=<?php print $_GET["snmp_query_id"];?>&data_template_id=<?php print $data_template["id"];?>&field_name=<?php print $suggested_value["field_name"];?>"><img src="images/move_down.gif" border="0" alt="Move Down"></a>
-							<a href="data_queries.php?action=item_moveup_dssv&snmp_query_graph_id=<?php print $_GET["id"];?>&id=<?php print $suggested_value["id"];?>&snmp_query_id=<?php print $_GET["snmp_query_id"];?>&data_template_id=<?php print $data_template["id"];?>&field_name=<?php print $suggested_value["field_name"];?>"><img src="images/move_up.gif" border="0" alt="Move Up"></a>
-						</td>
-						<td align="right">
-							<a href="data_queries.php?action=item_remove_dssv&snmp_query_graph_id=<?php print $_GET["id"];?>&id=<?php print $suggested_value["id"];?>&snmp_query_id=<?php print $_GET["snmp_query_id"];?>&data_template_id=<?php print $data_template["id"];?>"><img src="images/delete_icon.gif" width="10" height="10" border="0" alt="Delete"></a>
-						</td>
-					</tr>
-					<?php
-				}
-
-				print "</table></td></tr>\n";
-			}
-
-			form_alternate_row_color();
-			?>
-				<td>
-					<table cellspacing="0" cellpadding="3" border="0" width="100%">
-						<tr>
-							<td width="1">
-								<input type="text" name="svds_<?php print $data_template["id"];?>_text" size="30">
-							</td>
-							<td width="220" nowrap>
-								&nbsp;Field Name:&nbsp;<input type="text" name="svds_<?php print $data_template["id"];?>_field" size="15">
+						<td><span style='color: white; font-weight: bold;'>Data Template Field Name</span></td>
+						<td><span style='color: white; font-weight: bold;'>Suggested Value</span></td>
+						<td></td>
+						<td></td>
+					</tr>";
+	
+				if (sizeof($suggested_values) > 0) {
+					foreach ($suggested_values as $suggested_value) {
+						form_alternate_row_color();
+						?>
+							<td>
+								<strong><?php print $suggested_value["field_name"];?></strong>
 							</td>
 							<td>
-								&nbsp;<input type="submit" value="Add" name="svds_<?php print $data_template["id"];?>_x" align="left">
+								<?php print $suggested_value["text"];?>
+							</td>
+							<td width="70">
+								<a href="data_queries.php?action=item_movedown_dssv&snmp_query_graph_id=<?php print $_GET["id"];?>&id=<?php print $suggested_value["id"];?>&snmp_query_id=<?php print $_GET["snmp_query_id"];?>&data_template_id=<?php print $data_template["id"];?>&field_name=<?php print $suggested_value["field_name"];?>"><img src="images/move_down.gif" border="0" alt="Move Down"></a>
+								<a href="data_queries.php?action=item_moveup_dssv&snmp_query_graph_id=<?php print $_GET["id"];?>&id=<?php print $suggested_value["id"];?>&snmp_query_id=<?php print $_GET["snmp_query_id"];?>&data_template_id=<?php print $data_template["id"];?>&field_name=<?php print $suggested_value["field_name"];?>"><img src="images/move_up.gif" border="0" alt="Move Up"></a>
+							</td>
+							<td align="right">
+								<a href="data_queries.php?action=item_remove_dssv&snmp_query_graph_id=<?php print $_GET["id"];?>&id=<?php print $suggested_value["id"];?>&snmp_query_id=<?php print $_GET["snmp_query_id"];?>&data_template_id=<?php print $data_template["id"];?>"><img src="images/delete_icon.gif" width="10" height="10" border="0" alt="Delete"></a>
 							</td>
 						</tr>
-					</table>
-				</td>
-			</tr>
-			<?php
-		}
+						<?php
+					}
+	
+					print "</tr>\n";
+				}
+	
+				form_alternate_row_color();
+				?>
+					<td>
+						<input type="text" name="svds_<?php print $data_template["id"];?>_field" size="15">
+					</td>
+					<td>
+						<input type="text" name="svds_<?php print $data_template["id"];?>_text" size="30">
+					</td>
+					<td>
+						<input type="submit" value="Add" name="svds_<?php print $data_template["id"];?>_x" align="left">
+					</td>
+					<td></td>
+				</tr>
+				<?php
+			}
 		}
 
 		/* suggested values for graphs templates */
@@ -535,17 +538,25 @@ function data_query_item_edit() {
 			where snmp_query_graph_id=" . $_GET["id"] . "
 			order by field_name,sequence");
 
+		print "	<tr class='rowHeader'>
+					<td style='padding: 3px;'><span style='color: white; font-weight: bold;'>Graph Template - " . db_fetch_cell("select name from graph_templates where id=" . $snmp_query_item["graph_template_id"]) . "</span></td>
+					<td></td>
+					<td></td>
+					<td></td>
+				</tr>";
+
 		print "	<tr class='rowSubHeader'>
-				<td style='padding: 3px;'><span style='color: white; font-weight: bold;'>Graph Template - " . db_fetch_cell("select name from graph_templates where id=" . $snmp_query_item["graph_template_id"]) . "</span></td>
-			</tr>";
+					<td><span style='color: white; font-weight: bold;'>Graph Template Field Name</span></td>
+					<td><span style='color: white; font-weight: bold;'>Suggested Value</span></td>
+					<td></td>
+					<td></td>
+				</tr>";
 
 		if (sizeof($suggested_values) > 0) {
-			print "<tr><td><table cellspacing='0' cellpadding='3' border='0' width='100%'>\n";
-
 			foreach ($suggested_values as $suggested_value) {
 				form_alternate_row_color();
 				?>
-					<td width="120">
+					<td>
 						<strong><?php print $suggested_value["field_name"];?></strong>
 					</td>
 					<td>
@@ -562,26 +573,21 @@ function data_query_item_edit() {
 				<?php
 			}
 
-			print "</table></td></tr>\n";
+			print "</tr>\n";
 		}
 
 		form_alternate_row_color();
 		?>
 			<td>
-				<table cellspacing="0" cellpadding="3" border="0" width="100%">
-					<tr>
-						<td width="1">
-							<input type="text" name="svg_text" size="30">
-						</td>
-						<td width="220" nowrap>
-							&nbsp;Field Name:&nbsp;<input type="text" name="svg_field" size="15">
-						</td>
-						<td>
-							&nbsp;<input type="submit" value="Add" name="svg_x" align="left">
-						</td>
-					</tr>
-				</table>
+				<input type="text" name="svg_field" size="15">
 			</td>
+			<td>
+				<input type="text" name="svg_text" size="30">
+			</td>
+			<td>
+				<input type="submit" value="Add" name="svg_x" align="left">
+			</td>
+			<td></td>
 		</tr>
 		<?php
 
