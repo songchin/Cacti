@@ -20,6 +20,7 @@ Cacti CHANGELOG
 -bug#0001160: In Suggested Values editor, name and field are reversed. Include column headers
 -bug#0001164: alt attributes don't make tooltips, title attrs do (host.php)
 -bug: Cacti does not guarentee RRA consolidation functions exist in RRA's.
+-bug: Alert on changing logarithmic scaling removed
 -feature#0001162: WEB UI now accepts max_oids on SNMP bulkwalks
 -feature#0001123: Performance tweak by adding some indices
 -feature#0001122: Propagate Host Template changes to related hosts
