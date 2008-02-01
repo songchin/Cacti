@@ -294,34 +294,91 @@ function htmlStartBoxFilterChange(id, initialize) {
 
 function changeMenuState(id, initialize) {
 	filter = readCookie("menu_" + id);
+	object = document.getElementById("ul_"+id);
 
 	if (filter == "open") {
 		if (initialize != null) {
-			/* do nothing we want to stay the same */
+			createCookie("menu_" + id, "open");
+
+			/* set the display properly */
+			document.getElementById("tw_"+id).src = "images/tw_open.gif";
+			object.style.height = object.scrollHeight + "px";
 		}else{
 			createCookie("menu_" + id, "closed");
-			filter = "closed";
+			closeMenu(id);
 		}
 	}else{
 		if (initialize != null) {
 			if (filter == "closed") {
-				/* do nothing we want to stay the same */
+				createCookie("menu_" + id, "closed");
+
+				/* set the display properly */
+				document.getElementById("tw_"+id).src = "images/tw_close.gif";
+				object.style.height = "0px";
 			}else{
 				createCookie("menu_" + id, "open");
-				filter = "open";
+
+				/* set the display properly */
+				document.getElementById("tw_"+id).src = "images/tw_open.gif";
+				object.style.height = object.scrollHeight + "px";
 			}
 		}else{
 			createCookie("menu_" + id, "open");
-			filter = "open";
+			openMenu(id);
 		}
 	}
+}
 
-	if (filter == "closed") {
-		document.getElementById("menu_"+id).style.display  = "none";
-		document.getElementById("tw_"+id).src = "images/tw_close.gif";
+function closeMenu(id) {
+	element = document.getElementById("ul_"+id);
+
+	closeMe = setInterval(function() { moveUp(element) }, 10);
+
+	document.getElementById("tw_"+id).src = "images/tw_close.gif";
+}
+
+function openMenu(id) {
+	element = document.getElementById("ul_"+id);
+
+	openMe  = setInterval(function() { moveDown(element) }, 10);
+
+	document.getElementById("tw_"+id).src = "images/tw_open.gif";
+}
+
+function moveUp(object) {
+	newEM = object.style.height;
+	newEM = newEM.replace("px","");
+	newEM = (newEM * 1);
+
+	if ((newEM - 15) < 0) {
+		newEM = 0;
 	}else{
-		document.getElementById("menu_"+id).style.display  = "";
-		document.getElementById("tw_"+id).src = "images/tw_open.gif";
+		newEM = newEM - 15;
+	}
+
+	object.style.height = newEM + "px";
+
+	if (newEM <= 0) {
+		clearInterval(closeMe);
+	}
+}
+
+function moveDown(object) {
+	newEM = object.style.height;
+	newEM = newEM.replace("px","");
+	newEM = (newEM * 1);
+
+	if ((newEM + 15) > object.scrollHeight) {
+		newEM = object.scrollHeight;
+	}else{
+		newEM = newEM + 15;
+	}
+
+	object.style.height  = newEM + "px";
+
+	if (newEM >= object.scrollHeight) {
+		object.style.height = object.scrollHeight + "px";
+		clearInterval(openMe);
 	}
 }
 
