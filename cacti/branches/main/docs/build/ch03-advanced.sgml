@@ -948,12 +948,14 @@
 							<row>
 								<entry>Upper Limit</entry>
 								<entry>The maximum value that will be displayed on the y-axis.
-								This value is ignored is auto-scaling is turned on.</entry>
+								|query_*| variables will be replaced by their respective values.
+								E.g. for an "Interface - Traffic" graph template, 
+								|query_ifSpeed| will be replaced by the ifSpeed value for that very interface.</entry>
 							</row>
 							<row>
 								<entry>Lower Limit</entry>
 								<entry>The minimum value that will be displayed on the y-axis.
-								This value is ignored is auto-scaling is turned on.</entry>
+								|query_*| variables will be replaced by their respective values (see: Upper Limit).</entry>
 							</row>
 							<row>
 								<entry>Base Value</entry>

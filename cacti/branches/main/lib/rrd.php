@@ -600,6 +600,10 @@ function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rr
 	$greatest_text_format = 0;
 	$last_graph_type = "";
 
+	/* do query_ substitions for upper and lower limit */
+	$graph["lower_limit"] = rrd_substitute_host_query_data($graph["lower_limit"], $graph, $graph_items);
+	$graph["upper_limit"] = rrd_substitute_host_query_data($graph["upper_limit"], $graph, $graph_items);
+	
 	if ($graph["auto_scale"] == "on") {
 		switch ($graph["auto_scale_opts"]) {
 			case "1": /* autoscale ignores lower, upper limit */
@@ -1642,7 +1646,16 @@ function rrdtool_set_font($type, $no_legend = "") {
 	return "--font " . strtoupper($type) . ":" . $size . ":" . $font . RRD_NL;
 }
 
+/* rrd_substitute_host_query_data substitute |host*| and |query*| type variables
+ * @arg $txt_graph_item 	the variable to be substituted
+ * @arg $graph				from table graph_templates_graph
+ * @arg $graph_item			from table graph.templates_item
+ * returns					variable substituted by value
+ */
 function rrd_substitute_host_query_data($txt_graph_item, $graph, $graph_item) {
+global $config;
+include_once($config["library_path"] . "/functions.php");
+cacti_log("rrd_substitute_host_query_data var: " . $txt_graph_item . " local_data_id: " . $graph_item["local_data_id"], true, "TEST");
 	/* replace host variables in graph elements */
 	$txt_graph_item = substitute_host_data($txt_graph_item, '|','|', $graph["host_id"]);
 
