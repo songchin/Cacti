@@ -856,13 +856,13 @@ function ds_edit() {
 			}
 		}
 
-		html_start_box("", "100%", $colors["header"], "3", "center", "");
+		html_start_box("", "100%", $colors["header"], "2", "center", "");
 
-		print "	<tr>
-				<td bgcolor='#" . $colors["header"] . "' class='textHeaderDark'>
+		print "	<tr class='rowHeader'>
+				<td class='textHeaderDark'>
 					<strong>Data Source Item</strong> $header_label
 				</td>
-				<td class='textHeaderDark' align='right' bgcolor='" . $colors["header"] . "'>
+				<td class='textHeaderDark' align='right'>
 					" . ((!empty($_GET["id"]) && (empty($data_template["id"]))) ? "<strong><a class='linkOverDark' href='data_sources.php?action=rrd_add&id=" . $_GET["id"] . "'>New</a>&nbsp;</strong>" : "") . "
 				</td>
 			</tr>\n";
