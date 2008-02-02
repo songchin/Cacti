@@ -512,6 +512,7 @@ function utilities_view_user_log() {
 		strURL = '?username=' + objForm.username.value;
 		strURL = strURL + '&result=' + objForm.result.value;
 		strURL = strURL + '&action=view_user_log';
+		strURL = strURL + '&page=1';
 		document.location = strURL;
 	}
 
@@ -720,6 +721,7 @@ function utilities_view_logfile() {
 		strURL = strURL + '&reverse=' + objForm.reverse.value;
 		strURL = strURL + '&filter=' + objForm.filter.value;
 		strURL = strURL + '&action=view_logfile';
+		strURL = strURL + '&page=1';
 		document.location = strURL;
 	}
 
@@ -909,6 +911,7 @@ function utilities_view_snmp_cache() {
 		strURL = strURL + '&snmp_query_id=' + objForm.snmp_query_id.value;
 		strURL = strURL + '&filter=' + objForm.filter.value;
 		strURL = strURL + '&action=view_snmp_cache';
+		strURL = strURL + '&page=1';
 		document.location = strURL;
 	}
 
@@ -1078,6 +1081,7 @@ function utilities_view_poller_cache() {
 		strURL = strURL + '&host_id=' + objForm.host_id.value;
 		strURL = strURL + '&filter=' + objForm.filter.value;
 		strURL = strURL + '&action=view_poller_cache';
+		strURL = strURL + '&page=1';
 		document.location = strURL;
 	}
 
