@@ -132,6 +132,12 @@ function form_end_row() {
 	print "</tr>\n";
 }
 
+/* form_end_table - properly ends a table and starts the next navigation */
+function form_end_table() {
+	print "</table>\n";
+	print "<table cellspacing='0' cellpadding='3' width='100%'>\n";
+}
+
 /* html_boolean - returns the boolean equivalent of an HTML checkbox value
    @arg $html_boolean - the value of the HTML checkbox
    @returns - true or false based on the value of the HTML checkbox */

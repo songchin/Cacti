@@ -786,6 +786,8 @@ function data_query() {
 			form_end_row();
 		}
 
+		form_end_table();
+
 		print $nav;
 	}else{
 		print "<tr><td><em>No Data Queries</em></td></tr>";

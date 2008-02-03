@@ -278,9 +278,13 @@ function html_header_sort($header_items, $sort_column, $sort_direction, $last_it
 		$new_sort_direction = "ASC";
 	}
 
-	print "\t\t<table class='resizable' cellpadding=3 cellspacing=0><thead><tr class='rowSubHeader'>\n";
+	print "\t\t<table class='resizable' cellpadding='3px' cellspacing='0px' width='100%'><thead><tr class='rowSubHeader'>\n";
 
 	$i = 1;
+	$rand_id = 0;
+
+	$pathname = html_get_php_pathname();
+
 	foreach ($header_items as $db_column => $display_array) {
 		/* by default, you will always sort ascending, with the exception of an already sorted column */
 		if ($sort_column == $db_column) {
@@ -292,9 +296,15 @@ function html_header_sort($header_items, $sort_column, $sort_direction, $last_it
 		}
 
 		if (($db_column == "") || (substr_count($db_column, "nosort"))) {
-			print "\t\t\t<th onMousemove='doColResize(this, event)' onMouseover='doColResize(this, event)' onMouseout='doneColResize()' style='width: auto;' " . ((($i+1) == count($header_items)) ? "colspan='$last_item_colspan' " : "") . "id='textSubHeaderDark'>" . $display_text . "</th>\n";
+			$width = html_get_column_width($pathname, "rand_$rand_id");
+
+			print "\t\t\t<th style='width: $width;' id='rand_$rand_id' onMousemove='doColResize(this, event)' onMouseover='doColResize(this, event)' onMouseout='doneColResize()' class='texSubHeaderDark' " . ((($i+1) == count($header_items)) ? "colspan='$last_item_colspan' " : "") . " class='textSubHeaderDark'>" . $display_text . "</th>\n";
+
+			$rand_id++;
 		}else{
-			print "\t\t\t<th onMousemove='doColResize(this, event)' onMouseover='doColResize(this, event)' onMouseout='doneColResize()' style='width: auto;' " . ((($i) == count($header_items)) ? "colspan='$last_item_colspan'" : "") . " id='textSubHeaderDark'>";
+			$width = html_get_column_width($pathname, $db_column);
+
+			print "\t\t\t<th style='width: $width;' id='$db_column' onMousemove='doColResize(this, event)' onMouseover='doColResize(this, event)' onMouseout='doneColResize()' class='texSubHeaderDark' " . ((($i) == count($header_items)) ? "colspan='$last_item_colspan'" : "") . " class='textSubHeaderDark'>";
 			print "\n\t\t\t\t<a style='display:block;' href=" . $_SERVER["PHP_SELF"] . "?sort_column=" . $db_column . "&sort_direction=" . $direction . ">" . $display_text . "</a>";
 			print "\n\t\t\t</th>\n";
 		}
@@ -331,7 +341,10 @@ function html_header_sort_checkbox($header_items, $sort_column, $sort_direction,
 	/* default to the 'current' file */
 	if ($form_action == "") { $form_action = basename($_SERVER["PHP_SELF"]); }
 
-	print "\t\t<table class='resizable' cellpadding=3 cellspacing=0><thead><tr class='rowSubHeader'>\n";
+	print "\t\t<table class='resizable' cellpadding='3px' cellspacing='0px' width='100%'><thead><tr class='rowSubHeader'>\n";
+
+	$rand_id  = 0;
+	$pathname = html_get_php_pathname();
 
 	foreach($header_items as $db_column => $display_array) {
 		/* by default, you will always sort ascending, with the exception of an already sorted column */
@@ -346,30 +359,47 @@ function html_header_sort_checkbox($header_items, $sort_column, $sort_direction,
 		}
 
 
-
 		if (($db_column == "") || (substr_count($db_column, "nosort"))) {
-			print "\t\t\t<th onMousemove='doColResize(this,event)' onMouseover='doColResize(this,event)' onMouseout='doneColResize()' id='textSubHeaderDark'>" . $display_text . "</th>\n";
+			$width = html_get_column_width($pathname, "rand_$rand_id");
+
+			print "\t\t\t<th style='width: $width;' id='rand_$rand_id' onMousemove='doColResize(this,event)' onMouseover='doColResize(this,event)' onMouseout='doneColResize()' class='textSubHeaderDark'>" . $display_text . "</th>\n";
+
+			$rand_id++;
 		}else{
-			print "\t\t\t<th onMousemove='doColResize(this,event)' onMouseover='doColResize(this,event)' onMouseout='doneColResize()' id='textSubHeaderDark'>";
+			$width = html_get_column_width($pathname, $db_column);
+
+			print "\t\t\t<th style='width: $width;' id='$db_column' onMousemove='doColResize(this,event)' onMouseover='doColResize(this,event)' onMouseout='doneColResize()' class='textSubHeaderDark'>";
 			print "\n\t\t\t\t<a class='$sort_class' style='display:block;' href=" . $_SERVER["PHP_SELF"] . "?sort_column=" . $db_column . "&sort_direction=" . $direction . ">" . $display_text . "</a>";
 			print "\n\t\t\t</th>\n";
 		}
 	}
 
-	print "\t\t\t<th id='textSubHeaderDark'><input type='checkbox' style='margin: 0px width: 10px;' name='all' title='Select All' onClick='SelectAll(\"chk_\",this.checked)'></th>\n<form name='chk' method='post' action='$form_action'>\n";
+	print "\t\t\t<th id='rand_$rand_id' style='width: 14px;' class='textSubHeaderDark'><input type='checkbox' style='width: 14px; margin: 0px;' name='all' title='Select All' onClick='SelectAll(\"chk_\",this.checked)'></th>\n<form name='chk' method='post' action='$form_action'>\n";
 	print "\t\t</tr></thead>\n";
 }
 
 /* html_header - draws a header row suitable for display inside of a box element
    @arg $header_items - an array containing a list of items to be included in the header
    @arg $last_item_colspan - the TD 'colspan' to apply to the last cell in the row */
-function html_header($header_items, $last_item_colspan = 1) {
+function html_header($header_items, $last_item_colspan = 1, $resizable = false) {
 	global $colors;
 
-	print "\t\t<table class=resizable' cellpadding=3 cellspacing=0><thead><tr class='rowSubHeader'>\n";
+	if ($resizable) {
+		$pathname = html_get_php_pathname();
+
+		print "\t\t<table class='resizable' cellpadding='3px' cellspacing='0px' width='100%'><thead><tr class='rowSubHeader'>\n";
+	}else{
+		print "\t\t<table cellpadding='3px' cellspacing='0px' width='100%'><thead><tr class='rowSubHeader'>\n";
+	}
 
 	for ($i=0; $i<count($header_items); $i++) {
-		print "\t\t\t<th onMousemove='doColResize(this,event)' onMouseover='doColResize(this,event)' onMouseout='doneColResize()' style='width: auto;' " . ((($i+1) == count($header_items)) ? "colspan='$last_item_colspan' " : "") . "id='textSubHeaderDark'>" . $header_items[$i] . "</th>\n";
+		if ($resizable) {
+			$width = html_get_column_width($pathname, "rand_$i");
+
+			print "\t\t\t<th id='rand_$i' style='width: $width;' onMousemove='doColResize(this,event)' onMouseover='doColResize(this,event)' onMouseout='doneColResize()' " . ((($i+1) == count($header_items)) ? "colspan='$last_item_colspan' " : "") . " class='textSubHeaderDark'>" . $header_items[$i] . "</th>\n";
+		}else{
+			print "\t\t\t<th id='rand_$i' " . ((($i+1) == count($header_items)) ? "colspan='$last_item_colspan' " : "") . " class='textSubHeaderDark'>" . $header_items[$i] . "</th>\n";
+		}
 	}
 
 	print "\t\t</tr></thead>\n";
@@ -379,19 +409,31 @@ function html_header($header_items, $last_item_colspan = 1) {
      suitable for display inside of a box element
    @arg $header_items - an array containing a list of items to be included in the header
    @arg $form_action - the url to post the 'select all' form to */
-function html_header_checkbox($header_items, $form_action = "") {
+function html_header_checkbox($header_items, $form_action = "", $resizable = false) {
 	global $colors;
 
 	/* default to the 'current' file */
 	if ($form_action == "") { $form_action = basename($_SERVER["PHP_SELF"]); }
 
-	print "\t\t<table class='resizable' cellpadding=3 cellspacing=0><thead><tr class='rowSubHeader'>\n";
+	if ($resizable) {
+		$pathname = html_get_php_pathname();
 
-	for ($i=0; $i<count($header_items); $i++) {
-		print "\t\t\t<th onMousemove='doColResize(this,event)' onMouseover='doColResize(this,event)' onMouseout='doneColResize()' style='width: auto;' id='textSubHeaderDark'>" . $header_items[$i] . "</th>\n";
+		print "\t\t<table class='resizable' cellpadding='3px' cellspacing='0px' width='100%'><thead><tr class='rowSubHeader'>\n";
+	}else{
+		print "\t\t<table cellpadding='3px' cellspacing='0px' width='100%'><thead><tr class='rowSubHeader'>\n";
 	}
 
-	print "\t\t\t<th id='textSubHeaderDark'><input type='checkbox' style='margin: 0px;' name='all' title='Select All' onClick='SelectAll(\"chk_\",this.checked)'></th>\n<form name='chk' method='post' action='$form_action'>\n";
+	for ($i=0; $i<count($header_items); $i++) {
+		if ($resizable) {
+			$width = html_get_column_width($pathname, "rand_$i");
+
+			print "\t\t\t<th id='rand_$i' style='width: $width;' onMousemove='doColResize(this,event)' onMouseover='doColResize(this,event)' onMouseout='doneColResize()' class='textSubHeaderDark'>" . $header_items[$i] . "</th>\n";
+		}else{
+			print "\t\t\t<th id='rand_$i' class='textSubHeaderDark'>" . $header_items[$i] . "</th>\n";
+		}
+	}
+
+	print "\t\t\t<th id='rand_$i' style='width: 14px' class='textSubHeaderDark'><input type='checkbox' style='margin: 0px;' name='all' title='Select All' onClick='SelectAll(\"chk_\",this.checked)'></th>\n<form name='chk' method='post' action='$form_action'>\n";
 	print "\t\t</tr></thead>\n";
 }
 
@@ -611,6 +653,51 @@ function html_selected_tab($name, $location) {
 
 function html_escape($html) {
 	return htmlentities($html, ENT_QUOTES);
+}
+
+/* html_get_php_pathname() - extracts the name of the php file without the
+   extention.  This value is used to store and retriev cookie values */
+function html_get_php_pathname() {
+	$path = $_SERVER["PHP_SELF"];
+
+	while (($location = strpos($path, "/")) !== FALSE) {
+		$path = substr($path, $location + 1);
+	}
+
+	return str_replace(".php", "", $path);
+}
+
+function html_get_column_width($name, $element) {
+	$width = html_read_cookie_element($name, $element);
+
+	if (!strlen($width)) {
+		return "auto";
+	}else{
+		return $width . "px";
+	}
+}
+
+/* html_read_cookie_element - extracts an element from the specified cookie array
+   @arg $name - the cookie name that contains the cookie elements
+   @arg $element - the name of the cookie element to be searched for. */
+function html_read_cookie_element($name, $element) {
+	if (isset($_COOKIE[$name])) {
+		$parts = explode("!", $_COOKIE[$name]);
+
+		foreach ($parts as $part) {
+			$name_value = explode("@@", $part);
+
+			if ($name_value[0] == $element) {
+				if ($name_value[1] == "NaN") {
+					return "";
+				}else{
+					return $name_value[1];
+				}
+			}
+		}
+	}
+
+	return "";
 }
 
 /* draw_menu - draws the cacti menu for display in the console */

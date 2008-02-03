@@ -1076,9 +1076,9 @@ function generate_data_source_path($local_data_id) {
     @arg $requested_cf
     @returns - the best cf to use */
 function generate_graph_best_cf($local_data_id, $requested_cf) {
-
 	if ($local_data_id > 0) {
 		$avail_cf_functions = get_rrd_cfs($local_data_id);
+
 		/* workaround until we have RRA presets in 0.8.8 */
 		if (sizeof($avail_cf_functions)) {
 			/* check through the cf's and get the best */

@@ -165,6 +165,7 @@ if ((read_graph_config_option("default_tree_view_mode") == "2") &&
 		</script>
 		<?php } ?>
 	</div>
+	<div id='vsplitter' onMouseout="doneDivResize()" onMouseover="doDivResize(this,event)" onMousemove="doDivResize(this,event)"></div>
 	<div id='graph_tree_content'>
 	<?php }else{ ?>
 	<div id='graph_content'>

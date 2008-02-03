@@ -260,30 +260,30 @@ function navigation_select(name, location) {
 }
 
 function htmlStartBoxFilterChange(id, initialize) {
-	filter = readCookie("fs_" + id);
+	filter = readCookieElement("fs", id);
 
-	if (filter == "open") {
+	if (filter == "o") {
 		if (initialize != null) {
 			/* do nothing we want to stay the same */
 		}else{
-			createCookie("fs_" + id, "closed");
-			filter = "closed";
+			createCookieElement("fs", id, "c");
+			filter = "c";
 		}
 	}else{
 		if (initialize != null) {
-			if (filter == "closed") {
+			if (filter == "c") {
 				/* do nothing we want to stay the same */
 			}else{
-				createCookie("fs_" + id, "open");
-				filter = "open";
+				createCookieElement("fs", id, "o");
+				filter = "o";
 			}
 		}else{
-			createCookie("fs_" + id, "open");
-			filter = "open";
+			createCookieElement("fs", id, "o");
+			filter = "o";
 		}
 	}
 
-	if (filter == "closed") {
+	if (filter == "c") {
 		document.getElementById(id).style.display  = "none";
 		document.getElementById(id+'_twisty').src = "images/tw_close.gif";
 	}else{
@@ -293,37 +293,37 @@ function htmlStartBoxFilterChange(id, initialize) {
 }
 
 function changeMenuState(id, initialize) {
-	filter = readCookie("menu_" + id);
+	filter = readCookieElement("menu", id);
 	object = document.getElementById("ul_"+id);
 
-	if (filter == "open") {
+	if (filter == "o") {
 		if (initialize != null) {
-			createCookie("menu_" + id, "open");
+			createCookieElement("menu", id, "o");
 
 			/* set the display properly */
 			document.getElementById("tw_"+id).src = "images/tw_open.gif";
 			object.style.height = object.scrollHeight + "px";
 		}else{
-			createCookie("menu_" + id, "closed");
+			createCookieElement("menu", id, "c");
 			closeMenu(id);
 		}
 	}else{
 		if (initialize != null) {
-			if (filter == "closed") {
-				createCookie("menu_" + id, "closed");
+			if (filter == "c") {
+				createCookieElement("menu", id, "c");
 
 				/* set the display properly */
 				document.getElementById("tw_"+id).src = "images/tw_close.gif";
 				object.style.height = "0px";
 			}else{
-				createCookie("menu_" + id, "open");
+				createCookieElement("menu", id, "o");
 
 				/* set the display properly */
 				document.getElementById("tw_"+id).src = "images/tw_open.gif";
 				object.style.height = object.scrollHeight + "px";
 			}
 		}else{
-			createCookie("menu_" + id, "open");
+			createCookieElement("menu", id, "o");
 			openMenu(id);
 		}
 	}
@@ -381,6 +381,7 @@ var objTh          = null;
 var objDiv         = null;
 var overColumn     = false;
 var overVSplit     = false;
+var resizedColumn  = false;
 var iEdgeThreshold = 10;
 
 /* tells if on the right border or not */
@@ -441,7 +442,7 @@ function getParentNode(objReference, nodeName, className) {
 function doColResize(object, event){
 	if(!event) event = window.event;
 
-	if(isOnBorderRight(object, event)) {
+	if (isOnBorderRight(object, event)) {
 		overColumn          = true;
 		object.style.cursor = "e-resize";
 	}else{
@@ -454,13 +455,53 @@ function doColResize(object, event){
 
 function doneColResize(){
 	overColumn = false;
-	overVSplit = false;
+
+	if (resizedColumn) {
+		saveColumnWidths();
+		resizedColumn = false;
+	}
+}
+
+function initColumnWidths() {
+	columns = document.getElementsByTagName("TH");
+
+	pathname = getBaseName();
+
+	if (columns.length > 0) {
+		for (i = 0; i < columns.length; i++) {
+			cur_value = readCookieElement(pathname, columns[i].id);
+
+			if (cur_value) {
+				columns[i].style.width = cur_value + "px";
+			}
+		}
+	}
+}
+
+function getBaseName() {
+	pathname = location.pathname;
+
+	while (pathname.indexOf("/") >= 0) {
+		pathname = pathname.substring(pathname.indexOf("/")+1);
+	}
+
+	return pathname.replace(".php", "");
+}
+
+function saveColumnWidths() {
+	columns = document.getElementsByTagName("TH");
+
+	pathname = getBaseName();
+
+	for (i = 0; i < columns.length; i++) {
+		createCookieElement(pathname, columns[i].id, parseInt(columns[i].style.width));
+	}
 }
 
 function doDivResize(object, event){
-	if(!event) event = window.event;
+	if (!event) event = window.event;
 
-	if(isOnBorderRight(object, event)) {
+	if (isOnBorderRight(object, event)) {
 		overVSplit          = true;
 		object.style.cursor = "e-resize";
 	}else{
@@ -476,19 +517,19 @@ function doneDivResize(){
 }
 
 function MouseDown(event) {
-	if(!event) event = window.event;
+	if (!event) event = window.event;
 
 	MOUSTSTART_X = event.clientX;
 	MOUSTSTART_Y = event.clientY;
 
 	if (overColumn) {
 		if (event.srcElement)objTh = event.srcElement;
-		else if(event.target)objTh = event.target;
+		else if (event.target)objTh = event.target;
 		else return;
 
 		objTh = getParentNode(objTh,"TH");
 
-		if(objTh == null) return;
+		if (objTh == null) return;
 		objTable      = getParentNode(objTh,"TABLE");
 
 		objThWidth    = parseInt(objTh.style.width);
@@ -513,56 +554,60 @@ function MouseDown(event) {
 }
 
 function MouseMove(event) {
-	if(!event) event = window.event;
+	if (!event) event = window.event;
 
 	if (objTh) {
-		var thSt    = event.clientX - MOUSTSTART_X + objThWidth;
-		var tableSt = event.clientX - MOUSTSTART_X + objTableWidth;
+		thSt    = event.clientX - MOUSTSTART_X + objThWidth;
+		tableSt = event.clientX - MOUSTSTART_X + objTableWidth;
+
+		resizedColumn = true;
 
 		/* check for minimum width */
-		if (thSt >= 10){
+		if (thSt >= 10) {
 			objTh.style.width    = thSt + "px";
 		}
 
-		if(document.selection) {
+		if (document.selection) {
 			document.selection.empty();
-		}else if(window.getSelection) {
+		}else if (window.getSelection) {
 			window.getSelection().removeAllRanges();
 		}
-	} else if (objDiv){
+	}else if (objDiv) {
 		var divSt   = event.clientX - MOUSTSTART_X + objDivWidth;
 
 		/* check for minimum height */
 		if (divSt >=70 ) {
 			objDiv.style.marginLeft                             = divSt + "px";
-			document.getElementById("menu").style.width         = parseInt(divSt - 5) + "px";
-			document.getElementById("content").style.marginLeft = parseInt(divSt + 2) + "px";
+
+			if (document.getElementById("menu") != null) {
+				document.getElementById("menu").style.width         = parseInt(divSt - 5) + "px";
+				document.getElementById("content").style.marginLeft = parseInt(divSt + 2) + "px";
+			}else{
+				document.getElementById("graph_tree").style.width              = parseInt(divSt - 5) + "px";
+				document.getElementById("graph_tree_content").style.marginLeft = parseInt(divSt + 2) + "px";
+			}
 		}
-		if(document.selection) document.selection.empty();
-		else if(window.getSelection)window.getSelection().removeAllRanges();
+
+		if (document.selection) document.selection.empty();
+		else if (window.getSelection) window.getSelection().removeAllRanges();
 	}
 }
 
 function MouseUp(event) {
-	if(!event) event = window.event;
-	if(objTh){
+	if (!event) event = window.event;
+	if (objTh) {
 		if(document.selection) document.selection.empty();
 		else if(window.getSelection)window.getSelection().removeAllRanges();
 		objTh = null;
-	}
-	else if( objDiv ){
-		if(document.selection) document.selection.empty();
-		else if(window.getSelection)window.getSelection().removeAllRanges();
+	} else if (objDiv) {
+		if (document.selection) document.selection.empty();
+		else if (window.getSelection) window.getSelection().removeAllRanges();
 		objDiv = null;
 	}
 }
 
-document.onmousedown = MouseDown;
-document.onmousemove = MouseMove;
-document.onmouseup   = MouseUp;
-
 /* page load functions */
-function initializePage() {
+function setFocus() {
 	inputs = document.getElementsByTagName("input");
 	found  = false;
 	hfound = false;
@@ -594,6 +639,14 @@ function initializePage() {
 	if ((!found) && (hfound)) {
 		inputs[hid_count].focus();
 	}
+}
+
+document.onmousedown = MouseDown;
+document.onmousemove = MouseMove;
+document.onmouseup   = MouseUp;
+
+function initializePage() {
+	setFocus();
 }
 
 /* Cookie Functions */
@@ -631,4 +684,74 @@ function readCookie(name) {
 
 function eraseCookie(name) {
 	createCookie(name, "", -1);
+}
+
+/* cookie container functions */
+function readCookieElement(name, element) {
+	var elements       = readCookie(name);
+	var search_for     = element + "@@";
+	var return_value   = null;
+
+	if (elements) {
+		var start_location = elements.indexOf(search_for);
+
+		if (start_location >= 0) {
+			end_location = elements.indexOf("!", start_location);
+
+			if (end_location > 0) {
+				return_value = elements.substring(start_location + search_for.length, end_location);
+			}else{
+				return_value = elements.substring(start_location + search_for.length);
+			}
+		}
+	}
+
+	return return_value;
+}
+
+function createCookieElement(name, element, value) {
+	if (readCookieElement(name, element)) {
+		updateCookieElement(name, element, value);
+	}else{
+		appendCookieElement(name, element, value);
+	}
+}
+
+function appendCookieElement(name, element, value) {
+	elements = readCookie(name);
+
+	if (elements) {
+		elements = elements + "!" + element + "@@" + value;
+	}else{
+		elements = element + "@@" + value;
+	}
+
+	createCookie(name, elements);
+}
+
+function updateCookieElement(name, element, value) {
+	var elements     = readCookie(name);
+	var new_elements = "";
+
+	if (elements) {
+		start_location = elements.indexOf(element + "@@");
+
+		if (start_location >= 0) {
+			new_elements = new_elements + elements.substring(0, start_location);
+
+			remainder = elements.indexOf("!", start_location);
+
+			if (remainder > 0) {
+				new_elements = new_elements + elements.substring(remainder + 1);
+			}
+
+			new_elements = new_elements + "!" + element + "@@" + value;
+		}else{
+			new_elements = elements + "!" + element + "@@" + value;
+		}
+	}else{
+		new_elements = element + "@@" + value;
+	}
+
+	createCookie(name, new_elements);
 }

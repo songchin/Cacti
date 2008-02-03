@@ -32,9 +32,7 @@ global $colors;
 	<link href="include/main.css" rel="stylesheet">
 	<link href="images/favicon.ico" rel="shortcut icon">
 	<script type="text/javascript" src="include/layout.js"></script>
-	<?php if (isset($refresh)) {
-	print "<meta http-equiv=refresh content=\"" . $refresh["seconds"] . "; url='" . $refresh["page"] . "'\">";
-	}?>
+<?php if (isset($refresh)) { print "\t<meta http-equiv=refresh content=\"" . $refresh["seconds"] . "; url='" . $refresh["page"] . "'\">\n"; } ?>
 </head>
 <body id='body' onLoad='initializePage()'>
 <div id='header'>
@@ -49,12 +47,11 @@ global $colors;
 	</div>
 	<div id='navbrcrumb'>
 		<div style='float:left'>
-			<?php draw_navigation_text();?>
+			<?php print draw_navigation_text() . "\n";?>
 		</div>
 		<div style='float:right'>
-			<?php if (read_config_option("auth_method") != 0) { ?>
-				Logged in as <strong><?php print db_fetch_cell("select username from user_auth where id=" . $_SESSION["sess_user_id"]);?></strong> (<a href="logout.php">Logout</a>)&nbsp;
-			<?php } ?>
+			<?php if (read_config_option("auth_method") != 0) { ?>Logged in as <strong><?php print db_fetch_cell("select username from user_auth where id=" . $_SESSION["sess_user_id"]);?></strong> (<a href="logout.php">Logout</a>)
+<?php } ?>
 		</div>
 	</div>
 </div>

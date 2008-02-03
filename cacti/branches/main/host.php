@@ -1176,22 +1176,20 @@ function host() {
 	if ($_REQUEST["host_rows"] == -1) {
 		$_REQUEST["host_rows"] = read_config_option("num_rows_device");
 	}
+?>	<script type="text/javascript">
+		<!--
 
-	?>
-	<script type="text/javascript">
-	<!--
+		function applyViewDeviceFilterChange(objForm) {
+			strURL = '?host_status=' + objForm.host_status.value;
+			strURL = strURL + '&host_template_id=' + objForm.host_template_id.value;
+			strURL = strURL + '&host_rows=' + objForm.host_rows.value;
+			strURL = strURL + '&filter=' + objForm.filter.value;
+			document.location = strURL;
+		}
 
-	function applyViewDeviceFilterChange(objForm) {
-		strURL = '?host_status=' + objForm.host_status.value;
-		strURL = strURL + '&host_template_id=' + objForm.host_template_id.value;
-		strURL = strURL + '&host_rows=' + objForm.host_rows.value;
-		strURL = strURL + '&filter=' + objForm.filter.value;
-		document.location = strURL;
-	}
-
-	-->
-	</script>
-	<?php
+		-->
+		</script>
+<?php
 
 	html_start_box("<strong>Devices</strong>", "100%", $colors["header"], "3", "center", "host.php?action=edit&host_template_id=" . $_REQUEST["host_template_id"] . "&host_status=" . $_REQUEST["host_status"], true);
 
@@ -1274,7 +1272,7 @@ function host() {
 		foreach ($hosts as $host) {
 			form_alternate_row_color('line' . $host["id"], true, true);
 			form_selectable_cell("<a class='linkEditMain' href='host.php?action=edit&id=" . $host["id"] . "'>" .
-				(strlen($_REQUEST["filter"]) ? eregi_replace("(" . preg_quote($_REQUEST["filter"]) . ")", "<span style='background-color: #F8D93D;'>\\1</span>", $host["description"]) : $host["description"]) . "</a>", $host["id"], 250);
+				(strlen($_REQUEST["filter"]) ? eregi_replace("(" . preg_quote($_REQUEST["filter"]) . ")", "<span style='background-color: #F8D93D;'>\\1</span>", $host["description"]) : $host["description"]) . "</a>", $host["id"]);
 			form_selectable_cell(round(($host["id"]), 2), $host["id"]);
 			form_selectable_cell((isset($host_graphs[$host["id"]]) ? $host_graphs[$host["id"]] : 0), $host["id"]);
 			form_selectable_cell((isset($host_data_sources[$host["id"]]) ? $host_data_sources[$host["id"]] : 0), $host["id"]);
@@ -1288,11 +1286,14 @@ function host() {
 			form_end_row();
 		}
 
+		form_end_table();
+
 		/* put the nav bar on the bottom as well */
 		print $nav;
 	}else{
 		print "<tr><td><em>No Hosts</em></td></tr>";
 	}
+
 	html_end_box(false);
 
 	/* add a list of tree names to the actions dropdown */

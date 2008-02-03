@@ -18,11 +18,19 @@ input {
 }
 
 tr {
+	overflow: hidden;
+	font-family: Arial, Verdana, Helvetica, sans-serif;
+	font-size: 12px;
+}
+
+th {
+	overflow: none;
 	font-family: Arial, Verdana, Helvetica, sans-serif;
 	font-size: 12px;
 }
 
 td {
+	overflow: hidden;
 	font-family: Arial, Verdana, Helvetica, sans-serif;
 	font-size: 10px;
 }
@@ -93,18 +101,17 @@ td {
 }
 
 #graph_tree {
-	background: #FFFFFF url('../images/shadow.gif') repeat-x scroll top left;
+	background: #F5F5F5 url('../images/shadow.gif') repeat-x scroll top left;
 	float: left;
 	position: fixed;
 	top: 5.2em;
 	left: 0;
 	overflow: auto;
-	border-right: 1px ridge #A9A9A9;
 	padding-top: 0px;
 	padding-left: 3px;
 	padding-right: 3px;
 	padding-top: 8px;
-	width: 19.5%;
+	width: 165px;
 	height: 100%;
 	z-index: 1;
 }
@@ -116,7 +123,7 @@ td {
 	top: 5.2em;
 	left: 0;
 	overflow: auto;
-	margin-left:20%;
+	margin-left:173px;
 	margin-right: 0px;
 	padding-top: 8px;
 	padding-bottom: 8px;
@@ -399,6 +406,7 @@ a:hover {
 }
 
 .rowSubHeader {
+	background: #1F2328 url('../images/rowSubHeader.png') repeat-x scroll top left;
 }
 
 .rowSubHeaderAlt {
@@ -447,33 +455,28 @@ a:hover {
 	color: #FFFFFF;
 }
 
-table.resizable td{
+table.resizable {
+	table-layout:automatic;
 	overflow: hidden;
 }
 
-table.resizable th{
-	overflow: hidden;
+table.resizable td {
+	overflow:hidden;
 }
 
-table.resizable{
-	table-layout:fixed;
-}
-
-table.resizable input{
-	width:100%;
-}
-
-table.resizable textarea{
-	width:100%;
+table.resizable th {
+	overflow:hidden;
 }
 
 .sort_asc {
+	background: transparent url('../images/sort_asc.gif') no-repeat scroll center right;
 }
 
 .sort_desc {
+	background: transparent url('../images/sort_desc.gif') no-repeat scroll center right;
 }
 
-#textSubHeaderDark, #textSubHeaderDark:visited {
+.textSubHeaderDark, .textSubHeaderDark:visited {
 	background: #1F2328 url('../images/rowSubHeader.png') repeat-x scroll top left;
 	border-right: 2px ridge #A5A5A5;
 	text-align: left;
@@ -482,7 +485,7 @@ table.resizable textarea{
 	font-weight: bold;
 }
 
-#textSubHeaderDark a, #textSubHeaderDark a:visited, #textSubHeaderDark a:hover {
+.textSubHeaderDark a, .textSubHeaderDark a:visited, .textSubHeaderDark a:hover {
 	color: #FFFFFF;
 	text-decoration: none;
 }
