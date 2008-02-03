@@ -332,7 +332,11 @@ function changeMenuState(id, initialize) {
 function closeMenu(id) {
 	element = document.getElementById("ul_"+id);
 
-	closeMe = setInterval(function() { moveUp(element) }, 10);
+	if (!aniInProgress) {
+		aniInProgress = true;
+		closeMe = setInterval(function() { moveUp(element) }, 10);
+		aniInProgress = false;
+	}
 
 	document.getElementById("tw_"+id).src = "images/tw_close.gif";
 }
@@ -340,7 +344,11 @@ function closeMenu(id) {
 function openMenu(id) {
 	element = document.getElementById("ul_"+id);
 
-	openMe  = setInterval(function() { moveDown(element) }, 10);
+	if (!aniInProgress) {
+		aniInProgress = true;
+		openMe  = setInterval(function() { moveDown(element) }, 10);
+		aniInProgress = false;
+	}
 
 	document.getElementById("tw_"+id).src = "images/tw_open.gif";
 }
@@ -377,12 +385,14 @@ function moveDown(object) {
 	}
 }
 
-var objTh          = null;
-var objDiv         = null;
-var overColumn     = false;
-var overVSplit     = false;
-var resizedColumn  = false;
-var iEdgeThreshold = 10;
+var objTh           = null;
+var objDiv          = null;
+var overColumn      = false;
+var overVSplit      = false;
+var resizedColumn   = false;
+var iEdgeThreshold  = 10;
+var aniInProgress   = false;
+var vSplitterClosed = false;
 
 /* tells if on the right border or not */
 function isOnBorderRight(object, event) {
@@ -516,6 +526,11 @@ function doneDivResize(){
 	overVSplit = false;
 }
 
+function vSplitterToggle() {
+	if (!vSplitterClosed) {
+	}
+}
+
 function MouseDown(event) {
 	if (!event) event = window.event;
 
@@ -645,7 +660,22 @@ document.onmousedown = MouseDown;
 document.onmousemove = MouseMove;
 document.onmouseup   = MouseUp;
 
+function vSplitterPos() {
+	if (document.getElementById('vsplitter_toggle')) {
+		if (document.getElementById('content')) {
+			vertical_pos = parseInt(document.getElementById('content').clientHeight) / 2;
+
+			document.getElementById('vsplitter_toggle').style.marginTop = vertical_pos + "px";
+		}else if (document.getElementById('graph_tree_content')) {
+			vertical_pos = parseInt(document.getElementById('graph_tree_content').clientHeight) / 2;
+
+			document.getElementById('vsplitter_toggle').style.marginTop = vertical_pos + "px";
+		}
+	}
+}
+
 function initializePage() {
+	vSplitterPos();
 	setFocus();
 }
 

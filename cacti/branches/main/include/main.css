@@ -73,7 +73,7 @@ td {
 }
 
 #vsplitter {
-	background: #363636 url('../images/vsplitter2.gif') no-repeat scroll center;
+	background: #363636 url('../images/vsplitter0.gif') repeat-y scroll center;
 	-moz-user-select: none;
 	cursor: e-resize;
 	height: 100%;
@@ -81,6 +81,13 @@ td {
 	position: absolute;
 	width: 4px;
 	z-index: 10;
+}
+
+#vsplitter_toggle {
+	-moz-user-select: none;
+	cursor: pointer;
+	position: relative;
+	z-index: 11;
 }
 
 #content {
