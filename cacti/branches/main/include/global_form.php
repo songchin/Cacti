@@ -690,6 +690,22 @@ $fields_host_edit = array(
 		"default" => "",
 		"form_id" => false
 		),
+	"id" => array(
+		"method" => "hidden_zero",
+		"value" => "|arg1:id|"
+		),
+	"_host_template_id" => array(
+		"method" => "hidden_zero",
+		"value" => "|arg1:host_template_id|"
+		),
+	"save_basic_host" => array(
+		"method" => "hidden",
+		"value" => "1"
+		)
+	);
+
+/* file: host.php, action: edit */
+$fields_host_edit_availability = array(
 	"avalaibility_header" => array(
 		"method" => "spacer",
 		"friendly_name" => "Availability/Reachability Options"
@@ -841,14 +857,6 @@ $fields_host_edit = array(
 		"default" => read_config_option("max_get_size"),
 		"size" => "15"
 		),
-	"id" => array(
-		"method" => "hidden_zero",
-		"value" => "|arg1:id|"
-		),
-	"_host_template_id" => array(
-		"method" => "hidden_zero",
-		"value" => "|arg1:host_template_id|"
-		),
 	"save_component_host" => array(
 		"method" => "hidden",
 		"value" => "1"
@@ -863,6 +871,157 @@ $fields_host_template_edit = array(
 		"description" => "A useful name for this host template.",
 		"value" => "|arg1:name|",
 		"max_length" => "255",
+		),
+	"avalaibility_header" => array(
+		"method" => "spacer",
+		"friendly_name" => "Availability/Reachability Options"
+		),
+	"availability_method" => array(
+		"friendly_name" => "Downed Device Detection",
+		"description" => "The method Cacti will use to determine if a host is available for polling.  <br><i>NOTE: It is recommended that, at a minimum, SNMP always be selected.</i>",
+		"on_change" => "changeHostForm()",
+		"value" => "|arg1:availability_method|",
+		"method" => "drop_array",
+		"default" => read_config_option("availability_method"),
+		"array" => $availability_options
+		),
+	"ping_method" => array(
+		"friendly_name" => "Ping Method",
+		"description" => "The type of ping packet to sent.  <br><i>NOTE: ICMP on Linux/UNIX requires root privileges.</i>",
+		"on_change" => "changeHostForm()",
+		"value" => "|arg1:ping_method|",
+		"method" => "drop_array",
+		"default" => read_config_option("ping_method"),
+		"array" => $ping_methods
+		),
+	"ping_port" => array(
+		"method" => "textbox",
+		"friendly_name" => "Ping Port",
+		"value" => "|arg1:ping_port|",
+		"description" => "TCP or UDP port to attempt connection.",
+		"default" => read_config_option("ping_port"),
+		"max_length" => "50",
+		"size" => "15"
+		),
+	"ping_timeout" => array(
+		"friendly_name" => "Ping Timeout Value",
+		"description" => "The timeout value to use for host ICMP and UDP pinging.  This host SNMP timeout value applies for SNMP pings.",
+		"method" => "textbox",
+		"value" => "|arg1:ping_timeout|",
+		"default" => read_config_option("ping_timeout"),
+		"max_length" => "10",
+		"size" => "15"
+		),
+	"ping_retries" => array(
+		"friendly_name" => "Ping Retry Count",
+		"description" => "The number of times Cacti will attempt to ping a host before failing.",
+		"method" => "textbox",
+		"value" => "|arg1:ping_retries|",
+		"default" => read_config_option("ping_retries"),
+		"max_length" => "10",
+		"size" => "15"
+		),
+	"spacer1" => array(
+		"method" => "spacer",
+		"friendly_name" => "SNMP Options"
+		),
+	"snmp_version" => array(
+		"method" => "drop_array",
+		"friendly_name" => "SNMP Version",
+		"description" => "Choose the SNMP version for this device.",
+		"on_change" => "changeHostForm()",
+		"value" => "|arg1:snmp_version|",
+		"default" => read_config_option("snmp_ver"),
+		"array" => $snmp_versions,
+		),
+	"snmp_community" => array(
+		"method" => "textbox",
+		"friendly_name" => "SNMP Community",
+		"description" => "SNMP read community for this device.",
+		"value" => "|arg1:snmp_community|",
+		"form_id" => "|arg1:id|",
+		"default" => read_config_option("snmp_community"),
+		"max_length" => "100",
+		"size" => "15"
+		),
+	"snmp_username" => array(
+		"method" => "textbox",
+		"friendly_name" => "SNMP Username (v3)",
+		"description" => "SNMP v3 username for this device.",
+		"value" => "|arg1:snmp_username|",
+		"default" => read_config_option("snmp_username"),
+		"max_length" => "50",
+		"size" => "15"
+		),
+	"snmp_password" => array(
+		"method" => "textbox_password",
+		"friendly_name" => "SNMP Password (v3)",
+		"description" => "SNMP v3 password for this device.",
+		"value" => "|arg1:snmp_password|",
+		"default" => read_config_option("snmp_password"),
+		"max_length" => "50",
+		"size" => "15"
+		),
+	"snmp_auth_protocol" => array(
+		"method" => "drop_array",
+		"friendly_name" => "SNMP Auth Protocol (v3)",
+		"description" => "Choose the SNMPv3 Authorization Protocol.",
+		"value" => "|arg1:snmp_auth_protocol|",
+		"default" => read_config_option("snmp_auth_protocol"),
+		"array" => $snmp_auth_protocols,
+		),
+	"snmp_priv_passphrase" => array(
+		"method" => "textbox",
+		"friendly_name" => "SNMP Privacy Passphrase (v3)",
+		"description" => "Choose the SNMPv3 Privacy Passphrase.",
+		"value" => "|arg1:snmp_priv_passphrase|",
+		"default" => read_config_option("snmp_priv_passphrase"),
+		"max_length" => "200",
+		"size" => "40"
+		),
+	"snmp_priv_protocol" => array(
+		"method" => "drop_array",
+		"friendly_name" => "SNMP Privacy Protocol (v3)",
+		"description" => "Choose the SNMPv3 Privacy Protocol.",
+		"value" => "|arg1:snmp_priv_protocol|",
+		"default" => read_config_option("snmp_priv_protocol"),
+		"array" => $snmp_priv_protocols,
+		),
+	"snmp_context" => array(
+		"method" => "textbox",
+		"friendly_name" => "SNMP Context",
+		"description" => "Enter the SNMP Context to use for this device.",
+		"value" => "|arg1:snmp_context|",
+		"default" => "",
+		"max_length" => "64",
+		"size" => "25"
+		),
+	"snmp_port" => array(
+		"method" => "textbox",
+		"friendly_name" => "SNMP Port",
+		"description" => "Enter the UDP port number to use for SNMP (default is 161).",
+		"value" => "|arg1:snmp_port|",
+		"max_length" => "5",
+		"default" => read_config_option("snmp_port"),
+		"size" => "15"
+		),
+	"snmp_timeout" => array(
+		"method" => "textbox",
+		"friendly_name" => "SNMP Timeout",
+		"description" => "The maximum number of milliseconds Cacti will wait for an SNMP response (does not work with php-snmp support).",
+		"value" => "|arg1:snmp_timeout|",
+		"max_length" => "8",
+		"default" => read_config_option("snmp_timeout"),
+		"size" => "15"
+		),
+	"max_oids" => array(
+		"method" => "textbox",
+		"friendly_name" => "Maximum OID's Per Get Request",
+		"description" => "Specified the number of OID's that can be obtained in a single SNMP Get request.",
+		"value" => "|arg1:max_oids|",
+		"max_length" => "8",
+		"default" => read_config_option("max_get_size"),
+		"size" => "15"
 		),
 	"id" => array(
 		"method" => "hidden_zero",

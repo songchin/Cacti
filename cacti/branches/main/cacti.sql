@@ -1953,6 +1953,22 @@ CREATE TABLE host_template (
   id mediumint(8) unsigned NOT NULL auto_increment,
   hash varchar(32) NOT NULL default '',
   name varchar(100) NOT NULL default '',
+  snmp_community varchar(100) default NULL,
+  snmp_version tinyint(1) unsigned NOT NULL default '1',
+  snmp_username varchar(50) default NULL,
+  snmp_password varchar(50) default NULL,
+  snmp_auth_protocol char(5) default '',
+  snmp_priv_passphrase varchar(200) default '',
+  snmp_priv_protocol char(6) default '',
+  snmp_context varchar(64) default '',
+  snmp_port mediumint(5) unsigned NOT NULL default '161',
+  snmp_timeout mediumint(8) unsigned NOT NULL default '500',
+  availability_method smallint(5) unsigned NOT NULL default '1',
+  ping_method smallint(5) unsigned default '0',
+  ping_port int(12) unsigned default '0',
+  ping_timeout int(12) unsigned default '500',
+  ping_retries int(12) unsigned default '2',
+  max_oids int(12) unsigned default '10',
   PRIMARY KEY  (id)
 ) TYPE=MyISAM;
 
@@ -1960,13 +1976,13 @@ CREATE TABLE host_template (
 -- Dumping data for table `host_template`
 --
 
-INSERT INTO host_template VALUES (1,'4855b0e3e553085ed57219690285f91f','Generic SNMP-enabled Host');
-INSERT INTO host_template VALUES (3,'07d3fe6a52915f99e642d22e27d967a4','ucd/net SNMP Host');
-INSERT INTO host_template VALUES (4,'4e5dc8dd115264c2e9f3adb725c29413','Karlnet Wireless Bridge');
-INSERT INTO host_template VALUES (5,'cae6a879f86edacb2471055783bec6d0','Cisco Router');
-INSERT INTO host_template VALUES (6,'9ef418b4251751e09c3c416704b01b01','Netware 4/5 Server');
-INSERT INTO host_template VALUES (7,'5b8300be607dce4f030b026a381b91cd','Windows 2000/XP Host');
-INSERT INTO host_template VALUES (8,'2d3e47f416738c2d22c87c40218cc55e','Local Linux Machine');
+INSERT INTO host_template VALUES (1,'4855b0e3e553085ed57219690285f91f','Generic SNMP-enabled Host', 'public', 0, '', '', 'MD5', '', 'DES', '', 161, 500, 3, 2, 23, 400, 1, 10);
+INSERT INTO host_template VALUES (3,'07d3fe6a52915f99e642d22e27d967a4','ucd/net SNMP Host', 'public', 0, '', '', 'MD5', '', 'DES', '', 161, 500, 3, 2, 23, 400, 1, 10);
+INSERT INTO host_template VALUES (4,'4e5dc8dd115264c2e9f3adb725c29413','Karlnet Wireless Bridge', 'public', 0, '', '', 'MD5', '', 'DES', '', 161, 500, 3, 2, 23, 400, 1, 10);
+INSERT INTO host_template VALUES (5,'cae6a879f86edacb2471055783bec6d0','Cisco Router', 'public', 0, '', '', 'MD5', '', 'DES', '', 161, 500, 3, 2, 23, 400, 1, 10);
+INSERT INTO host_template VALUES (6,'9ef418b4251751e09c3c416704b01b01','Netware 4/5 Server', 'public', 0, '', '', 'MD5', '', 'DES', '', 161, 500, 3, 2, 23, 400, 1, 10);
+INSERT INTO host_template VALUES (7,'5b8300be607dce4f030b026a381b91cd','Windows 2000/XP Host', 'public', 0, '', '', 'MD5', '', 'DES', '', 161, 500, 3, 2, 23, 400, 1, 10);
+INSERT INTO host_template VALUES (8,'2d3e47f416738c2d22c87c40218cc55e','Local Linux Machine', 'public', 0, '', '', 'MD5', '', 'DES', '', 161, 500, 3, 2, 23, 400, 1, 10);
 
 --
 -- Table structure for table `host_template_graph`
@@ -2005,6 +2021,7 @@ INSERT INTO host_template_graph VALUES (8,12);
 CREATE TABLE host_template_snmp_query (
   host_template_id mediumint(8) unsigned NOT NULL default '0',
   snmp_query_id mediumint(8) unsigned NOT NULL default '0',
+  reindex_method tinyint(3) unsigned NOT NULL default '0',
   PRIMARY KEY  (host_template_id,snmp_query_id),
   KEY host_template_id (host_template_id)
 ) TYPE=MyISAM;
@@ -2013,19 +2030,19 @@ CREATE TABLE host_template_snmp_query (
 -- Dumping data for table `host_template_snmp_query`
 --
 
-INSERT INTO host_template_snmp_query VALUES (1,1);
-INSERT INTO host_template_snmp_query VALUES (3,1);
-INSERT INTO host_template_snmp_query VALUES (3,2);
-INSERT INTO host_template_snmp_query VALUES (4,1);
-INSERT INTO host_template_snmp_query VALUES (4,3);
-INSERT INTO host_template_snmp_query VALUES (5,1);
-INSERT INTO host_template_snmp_query VALUES (6,1);
-INSERT INTO host_template_snmp_query VALUES (6,4);
-INSERT INTO host_template_snmp_query VALUES (6,7);
-INSERT INTO host_template_snmp_query VALUES (7,1);
-INSERT INTO host_template_snmp_query VALUES (7,8);
-INSERT INTO host_template_snmp_query VALUES (7,9);
-INSERT INTO host_template_snmp_query VALUES (8,6);
+INSERT INTO host_template_snmp_query VALUES (1,1,1);
+INSERT INTO host_template_snmp_query VALUES (3,1,1);
+INSERT INTO host_template_snmp_query VALUES (3,2,1);
+INSERT INTO host_template_snmp_query VALUES (4,1,1);
+INSERT INTO host_template_snmp_query VALUES (4,3,1);
+INSERT INTO host_template_snmp_query VALUES (5,1,1);
+INSERT INTO host_template_snmp_query VALUES (6,1,1);
+INSERT INTO host_template_snmp_query VALUES (6,4,1);
+INSERT INTO host_template_snmp_query VALUES (6,7,1);
+INSERT INTO host_template_snmp_query VALUES (7,1,1);
+INSERT INTO host_template_snmp_query VALUES (7,8,1);
+INSERT INTO host_template_snmp_query VALUES (7,9,1);
+INSERT INTO host_template_snmp_query VALUES (8,6,1);
 
 --
 -- Table structure for table `poller`

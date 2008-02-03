@@ -79,12 +79,54 @@ function form_save() {
 	/* required for "run_data_query" */
 	include_once("./lib/data_query.php");
 
+	/*
+	 * loop for all possible changes of reindex_method
+	 * post variable is build like this
+	 * 		reindex_method_host_template_<host_id>_query_<snmp_query_id>_method_<old_reindex_method>
+	 * if values of this variable differs from <old_reindex_method>, we will have to update
+	 */
+	$reindex_performed = false;
+	while (list($var,$val) = each($_POST)) {
+		if (ereg("^reindex_method_host_template_([0-9]+)_query_([0-9]+)_method_([0-9]+)$", $var, $matches)) {
+			/* ================= input validation ================= */
+			input_validate_input_number(get_request_var_post("id"));
+			input_validate_input_number($matches[1]); # host_template
+			input_validate_input_number($matches[2]); # snmp_query_id
+			input_validate_input_number($matches[3]); # old reindex method
+			$reindex_method = $val;
+			input_validate_input_number($reindex_method); # new reindex_method
+			/* ==================================================== */
+
+			# change reindex method of this very item
+			if ( $reindex_method != $matches[3]) {
+				db_execute("replace into host_template_snmp_query (host_template_id,snmp_query_id,reindex_method) values (" . $matches[1] . "," . $matches[2] . "," . $reindex_method . ")");
+				$reindex_performed = true;
+			}
+		}
+	}
+
 	if (isset($_POST["save_component_template"])) {
 		$redirect_back = false;
 
-		$save["id"] = $_POST["id"];
-		$save["hash"] = get_hash_host_template($_POST["id"]);
-		$save["name"] = form_input_validate($_POST["name"], "name", "", false, 3);
+		$save["id"] 					= $_POST["id"];
+		$save["hash"]					= get_hash_host_template($_POST["id"]);
+		$save["name"]					= form_input_validate($_POST["name"], "name", "", false, 3);
+		$save["snmp_version"]			= form_input_validate($_POST["snmp_version"], "snmp_version", "", true, 3);
+		$save["snmp_community"]			= form_input_validate($_POST["snmp_community"], "snmp_community", "", true, 3);
+		$save["snmp_username"]			= form_input_validate($_POST["snmp_username"], "snmp_username", "", true, 3);
+		$save["snmp_password"]			= form_input_validate($_POST["snmp_password"], "snmp_password", "", true, 3);
+		$save["snmp_auth_protocol"]		= form_input_validate($_POST["snmp_auth_protocol"], "snmp_auth_protocol", "", true, 3);
+		$save["snmp_priv_passphrase"]	= form_input_validate($_POST["snmp_priv_passphrase"], "snmp_priv_passphrase", "", true, 3);
+		$save["snmp_priv_protocol"]		= form_input_validate($_POST["snmp_priv_protocol"], "snmp_priv_protocol", "", true, 3);
+		$save["snmp_context"]			= form_input_validate($_POST["snmp_context"], "snmp_context", "", true, 3);
+		$save["snmp_port"]				= form_input_validate($_POST["snmp_port"], "snmp_port", "^[0-9]+$", false, 3);
+		$save["snmp_timeout"]			= form_input_validate($_POST["snmp_timeout"], "snmp_timeout", "^[0-9]+$", false, 3);
+		$save["availability_method"]	= form_input_validate($_POST["availability_method"], "availability_method", "^[0-9]+$", false, 3);
+		$save["ping_method"]			= form_input_validate($_POST["ping_method"], "ping_method", "^[0-9]+$", false, 3);
+		$save["ping_port"]				= form_input_validate($_POST["ping_port"], "ping_port", "^[0-9]+$", true, 3);
+		$save["ping_timeout"]			= form_input_validate($_POST["ping_timeout"], "ping_timeout", "^[0-9]+$", true, 3);
+		$save["ping_retries"]			= form_input_validate($_POST["ping_retries"], "ping_retries", "^[0-9]+$", true, 3);
+		$save["max_oids"]				= form_input_validate($_POST["max_oids"], "max_oids", "^[0-9]+$", true, 3);
 
 		if (!is_error_message()) {
 			$host_template_id = sql_save($save, "host_template");
@@ -93,6 +135,9 @@ function form_save() {
 				raise_message(1);
 
 				if (isset($_POST["add_gt_y"])) {
+					/* ================= input validation ================= */
+					input_validate_input_number(get_request_var_post("graph_template_id"));
+					/* ==================================================== */
 					db_execute("replace into host_template_graph (host_template_id,graph_template_id) values($host_template_id," . $_POST["graph_template_id"] . ")");
 					/* associate this new Graph Template with all hosts that are using the current Host Template
 					   but leave those hosts that have this template already */
@@ -129,7 +174,11 @@ function form_save() {
 					}
 					$redirect_back = true;
 				}elseif (isset($_POST["add_dq_y"])) {
-					db_execute("replace into host_template_snmp_query (host_template_id,snmp_query_id) values($host_template_id," . $_POST["snmp_query_id"] . ")");
+					/* ================= input validation ================= */
+					input_validate_input_number(get_request_var_post("snmp_query_id"));
+					input_validate_input_number(get_request_var_post("reindex_method"));
+					/* ==================================================== */
+					db_execute("replace into host_template_snmp_query (host_template_id,snmp_query_id, reindex_method) values($host_template_id," . $_POST["snmp_query_id"] . ", " . $_POST["reindex_method"] . ")");
 					/* associate this new Data Query with all hosts that are using the current Host Template
 					   but leave those hosts that have this Data Query already.
 					   Reindex all those Hosts */
@@ -159,7 +208,7 @@ function form_save() {
 							db_execute("REPLACE INTO host_snmp_query (host_id,snmp_query_id,reindex_method)
 										VALUES (". $entry["host_id"] . ","
 												 . $_POST["snmp_query_id"] . ","
-												 . DATA_QUERY_AUTOINDEX_BACKWARDS_UPTIME . "
+												 . $_POST["reindex_method"] . "
 												)"
 										);
 							/* recache snmp data */
@@ -174,7 +223,7 @@ function form_save() {
 			}
 		}
 
-		if ((is_error_message()) || (empty($_POST["id"])) || ($redirect_back == true)) {
+		if ((is_error_message()) || (empty($_POST["id"])) || ($redirect_back == true) || $reindex_performed) {
 			header("Location: host_templates.php?action=edit&id=" . (empty($host_template_id) ? $_POST["id"] : $host_template_id));
 		}else{
 			header("Location: host_templates.php");
@@ -300,7 +349,7 @@ function template_item_remove_dq() {
 }
 
 function template_edit() {
-	global $colors, $fields_host_template_edit;
+	global $colors, $fields_host_template_edit, $reindex_types;
 
 	/* ================= input validation ================= */
 	input_validate_input_number(get_request_var("id"));
@@ -331,117 +380,424 @@ function template_edit() {
 		$_GET["id"] = 0;
 	}
 
-	html_start_box("<strong>Host Templates</strong> $header_label", "100%", $colors["header"], "3", "center", "");
+	html_start_box("<strong>Host Templates</strong> $header_label", "100%", $colors["header"], "3", "center", "", true);
 
 	draw_edit_form(array(
 		"config" => array(),
 		"fields" => inject_form_variables($fields_host_template_edit, (isset($host_template) ? $host_template : array()))
 		));
 
-	html_end_box();
+	html_end_box(FALSE);
+
+	?>
+	<script type="text/javascript">
+	<!--
+
+	// default snmp information
+	var snmp_community       = document.getElementById('snmp_community').value;
+	var snmp_username        = document.getElementById('snmp_username').value;
+	var snmp_password        = document.getElementById('snmp_password').value;
+	var snmp_auth_protocol   = document.getElementById('snmp_auth_protocol').value;
+	var snmp_priv_passphrase = document.getElementById('snmp_priv_passphrase').value;
+	var snmp_priv_protocol   = document.getElementById('snmp_priv_protocol').value;
+	var snmp_context         = document.getElementById('snmp_context').value;
+	var snmp_port            = document.getElementById('snmp_port').value;
+	var snmp_timeout         = document.getElementById('snmp_timeout').value;
+	var max_oids             = document.getElementById('max_oids').value;
+
+	// default ping methods
+	var ping_method    = document.getElementById('ping_method').value;
+	var ping_port      = document.getElementById('ping_port').value;
+	var ping_timeout   = document.getElementById('ping_timeout').value;
+	var ping_retries   = document.getElementById('ping_retries').value;
+
+	var availability_methods = document.getElementById('availability_method').options;
+	var num_methods          = document.getElementById('availability_method').length;
+	var selectedIndex        = document.getElementById('availability_method').selectedIndex;
+
+	var agent = navigator.userAgent;
+	agent = agent.match("MSIE");
+
+	function setPingVisibility() {
+		availability_method = document.getElementById('availability_method').value;
+		ping_method         = document.getElementById('ping_method').value;
+
+		/* debugging, uncomment as required */
+		//alert("The availability method is '" + availability_method + "'");
+		//alert("The ping method is '" + ping_method + "'");
+
+		switch(availability_method) {
+		case "0": // none
+			document.getElementById('row_ping_method').style.display  = "none";
+			document.getElementById('row_ping_port').style.display    = "none";
+			document.getElementById('row_ping_timeout').style.display = "none";
+			document.getElementById('row_ping_retries').style.display = "none";
+
+			break;
+		case "2": // snmp
+			document.getElementById('row_ping_method').style.display  = "none";
+			document.getElementById('row_ping_port').style.display    = "none";
+			document.getElementById('row_ping_timeout').style.display = "";
+			document.getElementById('row_ping_retries').style.display = "";
+
+			break;
+		default: // ping ok
+			switch(ping_method) {
+			case "1": // ping icmp
+				document.getElementById('row_ping_method').style.display  = "";
+				document.getElementById('row_ping_port').style.display    = "none";
+				document.getElementById('row_ping_timeout').style.display = "";
+				document.getElementById('row_ping_retries').style.display = "";
+
+				break;
+			case "2": // ping udp
+			case "3": // ping tcp
+				document.getElementById('row_ping_method').style.display  = "";
+				document.getElementById('row_ping_port').style.display    = "";
+				document.getElementById('row_ping_timeout').style.display = "";
+				document.getElementById('row_ping_retries').style.display = "";
+
+				break;
+			}
+
+			break;
+		}
+	}
+
+	function addSelectItem(item, formObj) {
+		if (agent != "MSIE") {
+			formObj.add(item,null); // standards compliant
+		}else{
+			formObj.add(item);      // IE only
+		}
+	}
+
+	function setAvailability(type) {
+		/* get the availability structure */
+		var am=document.getElementById('availability_method');
+
+		/* get current selectedIndex */
+		selectedIndex = document.getElementById('availability_method').selectedIndex;
+
+		/* debugging uncomment as required */
+		//alert("The selectedIndex is '" + selectedIndex + "'");
+		//alert("The array length is '" + am.length + "'");
+
+		switch(type) {
+		case "NoSNMP":
+			/* remove snmp options */
+			if (am.length == 4) {
+				am.remove(1);
+				am.remove(1);
+			}
+
+			/* set the index to something valid, like "ping" */
+			if (selectedIndex > 1) {
+				am.selectedIndex=1;
+			}
+
+			break;
+		case "All":
+			/* restore all options */
+			if (am.length == 2) {
+				am.remove(0);
+				am.remove(0);
+
+				var a=document.createElement('option');
+				var b=document.createElement('option');
+				var c=document.createElement('option');
+				var d=document.createElement('option');
+
+				a.value="0";
+				a.text="None";
+				addSelectItem(a,am);
+
+				b.value="1";
+				b.text="Ping and SNMP";
+				addSelectItem(b,am);
+
+				c.value="2";
+				c.text="SNMP";
+				addSelectItem(c,am);
+
+				d.value="3";
+				d.text="Ping";
+				addSelectItem(d,am);
+
+				/* restore the correct index number */
+				if (selectedIndex == 0) {
+					am.selectedIndex = 0;
+				}else{
+					am.selectedIndex = 3;
+				}
+			}
+
+			break;
+		}
+
+		setAvailabilityVisibility(type, am.selectedIndex);
+		setPingVisibility();
+	}
+
+	function setAvailabilityVisibility(type, selectedIndex) {
+		switch(type) {
+		case "NoSNMP":
+			switch(selectedIndex) {
+			case "0": // availability none
+				document.getElementById('row_ping_method').style.display="none";
+				document.getElementById('ping_method').value=0;
+
+				break;
+			case "1": // ping
+				document.getElementById('row_ping_method').style.display="";
+				document.getElementById('ping_method').value=ping_method;
+
+				break;
+			}
+		case "All":
+			switch(selectedIndex) {
+			case "0": // availability none
+				document.getElementById('row_ping_method').style.display="none";
+				document.getElementById('ping_method').value=0;
+
+				break;
+			case "1": // ping and snmp
+			case 3: // ping
+				if ((document.getElementById('row_ping_method').style.display == "none") ||
+					(document.getElementById('row_ping_method').style.display == undefined)) {
+					document.getElementById('ping_method').value=ping_method;
+					document.getElementById('row_ping_method').style.display="";
+				}
+
+				break;
+			case "2": // snmp
+				document.getElementById('row_ping_method').style.display="none";
+				document.getElementById('ping_method').value="0";
+
+				break;
+			}
+		}
+	}
+
+	function changeHostForm() {
+		snmp_version        = document.getElementById('snmp_version').value;
+
+		switch(snmp_version) {
+		case "0":
+			setAvailability("NoSNMP");
+			setSNMP("None");
+
+			break;
+		case "1":
+		case "2":
+			setAvailability("All");
+			setSNMP("v1v2");
+
+			break;
+		case "3":
+			setAvailability("All");
+			setSNMP("v3");
+
+			break;
+		}
+	}
+
+	function setSNMP(snmp_type) {
+		switch(snmp_type) {
+		case "None":
+			document.getElementById('row_snmp_username').style.display        = "none";
+			document.getElementById('row_snmp_password').style.display        = "none";
+			document.getElementById('row_snmp_community').style.display       = "none";
+			document.getElementById('row_snmp_auth_protocol').style.display   = "none";
+			document.getElementById('row_snmp_priv_passphrase').style.display = "none";
+			document.getElementById('row_snmp_priv_protocol').style.display   = "none";
+			document.getElementById('row_snmp_context').style.display         = "none";
+			document.getElementById('row_snmp_port').style.display            = "none";
+			document.getElementById('row_snmp_timeout').style.display         = "none";
+			document.getElementById('row_max_oids').style.display             = "none";
+
+			break;
+		case "v1v2":
+			document.getElementById('row_snmp_username').style.display        = "none";
+			document.getElementById('row_snmp_password').style.display        = "none";
+			document.getElementById('row_snmp_community').style.display       = "";
+			document.getElementById('row_snmp_auth_protocol').style.display   = "none";
+			document.getElementById('row_snmp_priv_passphrase').style.display = "none";
+			document.getElementById('row_snmp_priv_protocol').style.display   = "none";
+			document.getElementById('row_snmp_context').style.display         = "none";
+			document.getElementById('row_snmp_port').style.display            = "";
+			document.getElementById('row_snmp_timeout').style.display         = "";
+			document.getElementById('row_max_oids').style.display             = "";
+
+			break;
+		case "v3":
+			document.getElementById('row_snmp_username').style.display        = "";
+			document.getElementById('row_snmp_password').style.display        = "";
+			document.getElementById('row_snmp_community').style.display       = "none";
+			document.getElementById('row_snmp_auth_protocol').style.display   = "";
+			document.getElementById('row_snmp_priv_passphrase').style.display = "";
+			document.getElementById('row_snmp_priv_protocol').style.display   = "";
+			document.getElementById('row_snmp_context').style.display         = "";
+			document.getElementById('row_snmp_port').style.display            = "";
+			document.getElementById('row_snmp_timeout').style.display         = "";
+			document.getElementById('row_max_oids').style.display             = "";
+
+			break;
+		}
+	}
+
+	window.onload = changeHostForm();
+
+	-->
+	</script>
+	<?php
 
 	if (!empty($_GET["id"])) {
-		html_start_box("<strong>Associated Graph Templates</strong>", "100%", $colors["header"], "3", "center", "");
+		html_start_box("<strong>Associated Graph Templates</strong>", "100%", $colors["header"], "2", "center", "", true);
 
-		$selected_graph_templates = db_fetch_assoc("select
+		print "	<tr class='rowSubHeader'>
+				<td><span style='color: white; font-weight: bold;'>Graph Template Name</span></td>
+				<td></td>
+			</tr>";
+
+		$selected_graph_templates = db_fetch_assoc("SELECT
 			graph_templates.id,
 			graph_templates.name
-			from (graph_templates,host_template_graph)
-			where graph_templates.id=host_template_graph.graph_template_id
-			and host_template_graph.host_template_id=" . $_GET["id"] . "
-			order by graph_templates.name");
+			FROM (graph_templates,host_template_graph)
+			WHERE graph_templates.id=host_template_graph.graph_template_id
+			AND host_template_graph.host_template_id=" . $_GET["id"] . "
+			ORDER BY graph_templates.name");
+
+		$available_graph_templates = db_fetch_assoc("SELECT
+			graph_templates.id,
+			graph_templates.name
+			FROM graph_templates LEFT JOIN host_template_graph
+			ON (graph_templates.id=host_template_graph.graph_template_id AND host_template_graph.host_template_id=" . $_GET["id"] . ")
+			WHERE host_template_graph.host_template_id IS NULL
+			ORDER BY graph_templates.name");
+
+		/* omit those graph_templates, that have already been associated */
+		$keeper = array();
+		foreach ($available_graph_templates as $item) {
+			if (sizeof(db_fetch_assoc("SELECT graph_template_id FROM host_template_graph " .
+					" WHERE ((host_template_id=" . $_GET["id"] . ")" .
+					" AND (graph_template_id=" . $item["id"] ."))")) > 0) {
+				/* do nothing */
+			} else {
+				array_push($keeper, $item);
+			}
+		}
+
+		$available_graph_templates = $keeper;
 
 		$i = 0;
 		if (sizeof($selected_graph_templates) > 0) {
-		foreach ($selected_graph_templates as $item) {
-			$i++;
-			?>
-			<tr>
-				<td style="padding: 4px;">
-					<strong><?php print $i;?>)</strong> <?php print $item["name"];?>
-				</td>
-				<td align="right">
-					<a href='host_templates.php?action=item_remove_gt&id=<?php print $item["id"];?>&host_template_id=<?php print $_GET["id"];?>'><img src='images/delete_icon.gif' width='10' height='10' border='0' alt='Delete'></a>
-				</td>
-			</tr>
-			<?php
-		}
+			foreach ($selected_graph_templates as $item) {
+				form_alternate_row_color($_GET["id"], true);
+				$i++;
+				?>
+					<td style="padding: 4px;">
+						<strong><?php print $i;?>)</strong> <?php print $item["name"];?>
+					</td>
+					<td align='right' nowrap>
+						<a href='host_templates.php?action=item_remove_gt&id=<?php print $item["id"];?>&host_template_id=<?php print $_GET["id"];?>'><img src='images/delete_icon_large.gif' title='Delete Graph Template Association' alt='Delete Graph Template Association' border='0' align='absmiddle'></a>
+					</td>
+				</tr>
+				<?php
+			}
 		}else{ print "<tr><td><em>No associated graph templates.</em></td></tr>"; }
 
+		form_alternate_row_color($_GET["id"], true);
 		?>
-		<tr class='rowAlternate2'>
 			<td colspan="2">
 				<table cellspacing="0" cellpadding="1" width="100%">
 					<td nowrap>Add Graph Template:&nbsp;
-						<?php form_dropdown("graph_template_id",db_fetch_assoc("select
-							graph_templates.id,
-							graph_templates.name
-							from graph_templates left join host_template_graph
-							on (graph_templates.id=host_template_graph.graph_template_id and host_template_graph.host_template_id=" . $_GET["id"] . ")
-							where host_template_graph.host_template_id is null
-							order by graph_templates.name"),"name","id","","","");?>
+						<?php form_dropdown("graph_template_id",$available_graph_templates,"name","id","","","");?>
 					</td>
 					<td align="right">
-						&nbsp;<input type="submit" Value="Add" name="add_gt_y" align="middle">
+						&nbsp;<input type="submit" Value="Add" name="add_gt_y" align="absmiddle">
 					</td>
 				</table>
 			</td>
 		</tr>
 
 		<?php
-		html_end_box();
+		html_end_box(FALSE);
 
-		html_start_box("<strong>Associated Data Queries</strong>", "100%", $colors["header"], "3", "center", "");
+		html_start_box("<strong>Associated Data Queries</strong>", "100%", $colors["header"], "3", "center", "", true);
 
-		$selected_data_queries = db_fetch_assoc("select
+		html_header(array("Data Query Name", "Re-Index Method"), 2);
+
+		$selected_data_queries = db_fetch_assoc("SELECT
+			snmp_query.id,
+			snmp_query.name,
+			host_template_snmp_query.reindex_method
+			FROM (snmp_query,host_template_snmp_query)
+			WHERE snmp_query.id=host_template_snmp_query.snmp_query_id
+			AND host_template_snmp_query.host_template_id=" . $_GET["id"] . "
+			ORDER BY snmp_query.name");
+
+		$available_data_queries = db_fetch_assoc("SELECT
 			snmp_query.id,
 			snmp_query.name
-			from (snmp_query,host_template_snmp_query)
-			where snmp_query.id=host_template_snmp_query.snmp_query_id
-			and host_template_snmp_query.host_template_id=" . $_GET["id"] . "
-			order by snmp_query.name");
+			FROM snmp_query LEFT JOIN host_template_snmp_query
+			ON (snmp_query.id=host_template_snmp_query.snmp_query_id AND host_template_snmp_query.host_template_id=" . $_GET["id"] . ")
+			WHERE host_template_snmp_query.host_template_id IS NULL
+			ORDER BY snmp_query.name");
+
+		/* omit those data_queries, that have already been associated */
+		$keeper = array();
+		foreach ($available_data_queries as $item) {
+			if (sizeof(db_fetch_assoc("SELECT snmp_query_id FROM host_template_snmp_query " .
+					" WHERE ((host_template_id=" . $_GET["id"] . ")" .
+					" AND (snmp_query_id=" . $item["id"] ."))")) > 0) {
+				/* do nothing */
+			} else {
+				array_push($keeper, $item);
+			}
+		}
+
+		$available_data_queries = $keeper;
 
 		$i = 0;
 		if (sizeof($selected_data_queries) > 0) {
 		foreach ($selected_data_queries as $item) {
+			form_alternate_row_color($_GET["id"], true);
 			$i++;
 			?>
-			<tr>
 				<td style="padding: 4px;">
 					<strong><?php print $i;?>)</strong> <?php print $item["name"];?>
 				</td>
+				<td>
+					<?php form_dropdown("reindex_method_host_template_".$_GET["id"]."_query_".$item["id"]."_method_".$item["reindex_method"],$reindex_types,"","",$item["reindex_method"],"","","","");?>
+				</td>
 				<td align='right'>
-					<a href='host_templates.php?action=item_remove_dq&id=<?php print $item["id"];?>&host_template_id=<?php print $_GET["id"];?>'><img src='images/delete_icon.gif' width='10' height='10' border='0' alt='Delete'></a>
+					<a href='host_templates.php?action=item_remove_dq&id=<?php print $item["id"];?>&host_template_id=<?php print $_GET["id"];?>'><img src='images/delete_icon_large.gif' title='Delete Data Query Association' alt='Delete Data Query Association' border='0' align='absmiddle'></a>
 				</td>
 			</tr>
 			<?php
 		}
 		}else{ print "<tr><td><em>No associated data queries.</em></td></tr>"; }
 
+		form_alternate_row_color();
 		?>
-		<tr class='rowAlternate2'>
-			<td colspan="2">
+			<td colspan="5">
 				<table cellspacing="0" cellpadding="1" width="100%">
-					<tr>
-						<td nowrap>Add Data Query:&nbsp;
-							<?php form_dropdown("snmp_query_id",db_fetch_assoc("select
-								snmp_query.id,
-								snmp_query.name
-								from snmp_query left join host_template_snmp_query
-								on (snmp_query.id=host_template_snmp_query.snmp_query_id and host_template_snmp_query.host_template_id=" . $_GET["id"] . ")
-								where host_template_snmp_query.host_template_id is null
-								order by snmp_query.name"),"name","id","","","");?>
-						</td>
-						<td align="right">
-							&nbsp;<input type="submit" value="Add" name="add_dq_y" align="middle">
-						</td>
-					</tr>
+					<td nowrap>Add Data Query:&nbsp;
+						<?php form_dropdown("snmp_query_id",$available_data_queries,"name","id","","","");?>
+					</td>
+					<td nowrap>Re-Index Method:&nbsp;
+						<?php form_dropdown("reindex_method",$reindex_types,"","","1","","");?>
+					</td>
+					<td align="right">
+						&nbsp;<input type="submit" value="Add" name="add_dq_y" align="middle">
+					</td>
 				</table>
 			</td>
 		</tr>
 
 		<?php
-		html_end_box();
+		html_end_box(TRUE);
 	}
 
 	form_save_button_alt();
