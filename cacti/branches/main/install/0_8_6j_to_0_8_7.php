@@ -76,7 +76,7 @@ function upgrade_to_0_8_7() {
         $ldap_enabled = "";
 	$ldap_enabled_db = db_fetch_row("SELECT value FROM settings WHERE name = 'ldap_enabled'");
 	if (sizeof($ldap_enabled_db)) {
-		$ldap_enabled = $ldap_enable_db["value"];
+		$ldap_enabled = $ldap_enabled_db["value"];
 
 	}
 	if ($global_auth == "on") {
