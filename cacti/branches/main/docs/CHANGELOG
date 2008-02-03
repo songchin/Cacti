@@ -23,6 +23,7 @@ Cacti CHANGELOG
 -bug: Cacti does not guarentee RRA consolidation functions exist in RRA's.
 -bug: Alert on changing logarithmic scaling removed
 -feature#0001162: WEB UI now accepts max_oids on SNMP bulkwalks
+-feature#0001124: Devices/Host Templates - remove already associated objects from dropdown selector
 -feature#0001123: Performance tweak by adding some indices
 -feature#0001122: Propagate Host Template changes to related hosts
 -feature#0001030: Lower limit and upper limit |query_*| variable support for Graph Templates
