@@ -175,27 +175,47 @@ function form_save() {
 
 	/* save basic host information during first run, host_template should have bee selected */
 	if (isset($_POST["save_basic_host"])) {
-		$host_template = db_fetch_row("SELECT
-			host_template.id,
-			host_template.name,
-			host_template.snmp_community,
-			host_template.snmp_version,
-			host_template.snmp_username,
-			host_template.snmp_password,
-			host_template.snmp_port,
-			host_template.snmp_timeout,
-			host_template.availability_method,
-			host_template.ping_method,
-			host_template.ping_port,
-			host_template.ping_timeout,
-			host_template.ping_retries,
-			host_template.snmp_auth_protocol,
-			host_template.snmp_priv_passphrase,
-			host_template.snmp_priv_protocol,
-			host_template.snmp_context,
-			host_template.max_oids
-			FROM host_template
-			WHERE id=" . $_POST["host_template_id"]);
+		/* host template was given, so fetch defaults from it */
+		if ($_POST["host_template_id"] === 0) {
+			$host_template = db_fetch_row("SELECT
+				host_template.id,
+				host_template.name,
+				host_template.snmp_community,
+				host_template.snmp_version,
+				host_template.snmp_username,
+				host_template.snmp_password,
+				host_template.snmp_port,
+				host_template.snmp_timeout,
+				host_template.availability_method,
+				host_template.ping_method,
+				host_template.ping_port,
+				host_template.ping_timeout,
+				host_template.ping_retries,
+				host_template.snmp_auth_protocol,
+				host_template.snmp_priv_passphrase,
+				host_template.snmp_priv_protocol,
+				host_template.snmp_context,
+				host_template.max_oids
+				FROM host_template
+				WHERE id=" . $_POST["host_template_id"]);
+		} else { /* no host template given, so fetch system defaults */
+			$host_template["snmp_community"]		= read_config_option("snmp_community");
+			$host_template["snmp_version"]			= read_config_option("snmp_ver");
+			$host_template["snmp_username"]			= read_config_option("snmp_username");
+			$host_template["snmp_password"]			= read_config_option("snmp_password");
+			$host_template["snmp_port"]				= read_config_option("snmp_port");
+			$host_template["snmp_timeout"]			= read_config_option("snmp_timeout");
+			$host_template["availability_method"]	= read_config_option("availability_method");
+			$host_template["ping_method"]			= read_config_option("ping_method");
+			$host_template["ping_port"]				= read_config_option("ping_port");
+			$host_template["ping_timeout"]			= read_config_option("ping_timeout");
+			$host_template["ping_retries"]			= read_config_option("ping_retries");
+			$host_template["snmp_auth_protocol"]	= read_config_option("snmp_auth_protocol");
+			$host_template["snmp_priv_passphrase"]	= read_config_option("snmp_priv_passphrase");
+			$host_template["snmp_priv_protocol"]	= read_config_option("snmp_priv_protocol");
+			$host_template["snmp_context"]			= read_config_option("snmp_context");
+			$host_template["max_oids"]				= read_config_option("max_get_size");
+		}
 
 		$host_id = api_device_save($_POST["id"], $_POST["host_template_id"], $_POST["description"],
 			$_POST["hostname"], $host_template["snmp_community"], $host_template["snmp_version"],
