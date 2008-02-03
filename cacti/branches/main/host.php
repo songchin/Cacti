@@ -985,12 +985,12 @@ function host_edit() {
 		if (sizeof($selected_graph_templates) > 0) {
 		foreach ($selected_graph_templates as $item) {
 			$i++;
+			form_alternate_row_color();
 
 			/* get status information for this graph template */
 			$is_being_graphed = (sizeof(db_fetch_assoc("select id from graph_local where graph_template_id=" . $item["id"] . " and host_id=" . $_GET["id"])) > 0) ? true : false;
 
 			?>
-			<tr>
 				<td style="padding: 4px;">
 					<strong><?php print $i;?>)</strong> <?php print $item["name"];?>
 				</td>
@@ -1058,6 +1058,7 @@ function host_edit() {
 		if (sizeof($selected_data_queries) > 0) {
 		foreach ($selected_data_queries as $item) {
 			$i++;
+			form_alternate_row_color();
 
 			/* get status information for this data query */
 			$num_dq_items = sizeof(db_fetch_assoc("select snmp_index from host_snmp_cache where host_id=" . $_GET["id"] . " and snmp_query_id=" . $item["id"]));
@@ -1066,7 +1067,6 @@ function host_edit() {
 			$status = "success";
 
 			?>
-			<tr>
 				<td style="padding: 4px;">
 					<strong><?php print $i;?>)</strong> <?php print $item["name"];?>
 				</td>
