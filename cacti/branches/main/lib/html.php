@@ -702,7 +702,7 @@ function html_read_cookie_element($name, $element) {
 
 /* draw_menu - draws the cacti menu for display in the console */
 function draw_menu($user_menu = "") {
-	global $colors, $config, $user_auth_realms, $user_auth_realm_filenames;
+	global $colors, $config, $user_auth_realms, $user_auth_realm_filenames, $menu;
 
 	include($config["include_path"] . "/global_arrays.php");
 
