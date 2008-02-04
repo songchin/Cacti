@@ -154,11 +154,11 @@ function api_device_save($id, $host_template_id, $description, $hostname, $snmp_
 
 		/* if the user changes the host template, add each snmp query associated with it */
 		if (($host_template_id != $_host_template_id) && (!empty($host_template_id))) {
-			$snmp_queries = db_fetch_assoc("select snmp_query_id from host_template_snmp_query where host_template_id=$host_template_id");
+			$snmp_queries = db_fetch_assoc("select snmp_query_id, reindex_method from host_template_snmp_query where host_template_id=$host_template_id");
 
 			if (sizeof($snmp_queries) > 0) {
 			foreach ($snmp_queries as $snmp_query) {
-				db_execute("replace into host_snmp_query (host_id,snmp_query_id,reindex_method) values ($host_id," . $snmp_query["snmp_query_id"] . "," . DATA_QUERY_AUTOINDEX_BACKWARDS_UPTIME . ")");
+				db_execute("replace into host_snmp_query (host_id,snmp_query_id,reindex_method) values ($host_id," . $snmp_query["snmp_query_id"] . "," . $snmp_query["reindex_method"] . ")");
 
 				/* recache snmp data */
 				run_data_query($host_id, $snmp_query["snmp_query_id"]);
