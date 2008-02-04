@@ -463,7 +463,7 @@ function &rrdtool_function_fetch($local_data_id, $start_time, $end_time, $resolu
 }
 
 function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rrd_struc = array()) {
-	global $config;
+	global $config, $consolidation_functions;
 
 	include_once($config["library_path"] . "/cdef.php");
 	include_once($config["library_path"] . "/graph_variables.php");
@@ -723,10 +723,10 @@ function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rr
 	$date_fmt = read_graph_config_option("default_date_format");
 	$datechar = read_graph_config_option("default_datechar");
 
-	if ($datechar == GDC_HYPHEN) {
-		$datechar = "-";
-	}else {
-		$datechar = "/";
+	switch ($datechar) {
+		case GDC_HYPHEN: 	$datechar = "-"; break;
+		case GDC_SLASH: 	$datechar = "/"; break;
+		case GDC_DOT:	 	$datechar = "."; break;
 	}
 
 	switch ($date_fmt) {
@@ -1191,7 +1191,7 @@ function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rr
 }
 
 function rrdtool_function_xport($local_graph_id, $rra_id, $xport_data_array, &$xport_meta, $rrd_struc = array()) {
-	global $config;
+	global $config, $consolidation_functions;
 
 	include_once($config["library_path"] . "/cdef.php");
 	include_once($config["library_path"] . "/graph_variables.php");

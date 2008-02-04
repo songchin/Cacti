@@ -605,7 +605,8 @@ $graph_dateformats = array(
 
 $graph_datechar = array(
 	GDC_HYPHEN => "-",
-	GDC_SLASH => "/"
+	GDC_SLASH => "/",
+	GDC_DOT => "."
 	);
 
 ?>
