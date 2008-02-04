@@ -26,7 +26,7 @@
    @arg $cdef_item_id - the id of the individual cdef item
    @returns - a text-based representation of the cdef item */
 function get_cdef_item_name($cdef_item_id) 	{
-	global $config;
+	global $config, $cdef_functions, $cdef_operators;
 
 	include($config["include_path"] . "/global_arrays.php");
 
