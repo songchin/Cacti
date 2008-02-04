@@ -73,20 +73,24 @@ td {
 }
 
 #vsplitter {
-	background: #363636 url('../images/vsplitter0.gif') repeat-y scroll center;
+	background: #666666 url('../images/vsplitter0.gif') repeat-y scroll 1px 0px;
 	-moz-user-select: none;
 	cursor: e-resize;
 	height: 100%;
 	margin-left: 170px;
 	position: absolute;
-	width: 4px;
+	width: 5px;
 	z-index: 10;
 }
 
 #vsplitter_toggle {
-	-moz-user-select: none;
+	background: transparent url('../images/vsplitter1.gif') no-repeat scroll 0px 0px;
 	cursor: pointer;
-	position: relative;
+	height: 32px;
+	opacity: 0.7;
+	overflow: hidden;
+	position: absolute;
+	width: 6px;
 	z-index: 11;
 }
 

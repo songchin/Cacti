@@ -114,7 +114,7 @@ if ((read_graph_config_option("default_tree_view_mode") == "2") &&
 	<script type="text/javascript" src="include/jscalendar/lang/calendar-en.js"></script>
 	<script type="text/javascript" src="include/jscalendar/calendar-setup.js"></script>
 </head>
-<body class='body' onLoad='initializePage()'>
+<body class='body' onResize='pageResize()' onLoad='pageInitialize()'>
 <a name='page_top'></a>
 <div id='header'>
 	<div id=logobar'></div>
@@ -165,8 +165,8 @@ if ((read_graph_config_option("default_tree_view_mode") == "2") &&
 		</script>
 		<?php } ?>
 	</div>
-	<div id='vsplitter' onMouseout="doneDivResize()" onMouseover="doDivResize(this,event)" onMousemove="doDivResize(this,event)">
-		<img id='vsplitter_toggle' src='images/vsplitter1.gif' onClick='vSplitterToggle()' title='ToggleMenu' style='vertical-align: middle;'>
+	<div id='vsplitter' onMouseout='doneDivResize()' onMouseover='doDivResize(this,event)' onMousemove='doDivResize(this,event)'>
+		<div id='vsplitter_toggle' onClick='vSplitterToggle()' title='ToggleMenu'></div>
 	</div>
 	<div id='graph_tree_content'>
 	<?php }else{ ?>

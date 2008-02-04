@@ -390,9 +390,11 @@ var objDiv          = null;
 var overColumn      = false;
 var overVSplit      = false;
 var resizedColumn   = false;
+var resizedDiv      = false;
 var iEdgeThreshold  = 10;
 var aniInProgress   = false;
 var vSplitterClosed = false;
+var creatingCookie  = false;
 
 /* tells if on the right border or not */
 function isOnBorderRight(object, event) {
@@ -524,11 +526,24 @@ function doDivResize(object, event){
 
 function doneDivResize(){
 	overVSplit = false;
+
+	if (resizedDiv == true) {
+		createCookieElement("menu", "vsplitter_last", parseInt(document.getElementById("vsplitter").style.marginLeft));
+		resizedDiv = false;
+	}
+
 }
 
 function vSplitterToggle() {
-	if (!vSplitterClosed) {
+	if (vSplitterClosed) {
+		vSplitterClosed = false;
+		createCookieElement("menu", "vsplitter_status", "0");
+	}else{
+		vSplitterClosed = true;
+		createCookieElement("menu", "vsplitter_status", "1");
 	}
+
+	vSplitterPos();
 }
 
 function MouseDown(event) {
@@ -590,17 +605,29 @@ function MouseMove(event) {
 	}else if (objDiv) {
 		var divSt   = event.clientX - MOUSTSTART_X + objDivWidth;
 
+		resizedDiv = true;
+
 		/* check for minimum height */
-		if (divSt >=70 ) {
-			objDiv.style.marginLeft                             = divSt + "px";
+		if (divSt >=30 ) {
+			objDiv.style.marginLeft = divSt + "px";
 
 			if (document.getElementById("menu") != null) {
 				document.getElementById("menu").style.width         = parseInt(divSt - 5) + "px";
+				document.getElementById("menu").style.marginLeft    = "0px";
 				document.getElementById("content").style.marginLeft = parseInt(divSt + 2) + "px";
 			}else{
 				document.getElementById("graph_tree").style.width              = parseInt(divSt - 5) + "px";
+				document.getElementById("graph_tree").style.marginLeft         = "0px";
 				document.getElementById("graph_tree_content").style.marginLeft = parseInt(divSt + 2) + "px";
 			}
+
+			vSplitterClosed = false;
+		}else{
+			vSplitterClosed = true;
+			document.getElementById("vsplitter").style.marginLeft = "0px";
+			document.getElementById("menu").style.width           = "0px";
+			document.getElementById("menu").style.marginLeft      = "-200px";
+			document.getElementById("content").style.marginLeft   = "2px";
 		}
 
 		if (document.selection) document.selection.empty();
@@ -610,6 +637,7 @@ function MouseMove(event) {
 
 function MouseUp(event) {
 	if (!event) event = window.event;
+
 	if (objTh) {
 		if(document.selection) document.selection.empty();
 		else if(window.getSelection)window.getSelection().removeAllRanges();
@@ -661,6 +689,43 @@ document.onmousemove = MouseMove;
 document.onmouseup   = MouseUp;
 
 function vSplitterPos() {
+	divSt           = parseInt(readCookieElement("menu", "vsplitter_last"), 10);
+
+	vSplitterClosed = parseInt(readCookieElement("menu", "vsplitter_status"), 10);
+
+	if (!divSt) {
+		divSt = 165;
+	}
+
+	menuWidth  = divSt - 5;
+	marginLeft = divSt + 2;
+
+	if (vSplitterClosed == 1) {
+		if (document.getElementById("menu") != null) {
+			document.getElementById("vsplitter").style.marginLeft = "0px";
+			document.getElementById("menu").style.width           = "0px";
+			document.getElementById("menu").style.marginLeft      = "-200px";
+			document.getElementById("content").style.marginLeft   = "2px";
+		}else{
+			document.getElementById("vsplitter").style.marginLeft          = "0px";
+			document.getElementById("graph_tree").style.width              = "0px";
+			document.getElementById("graph_tree").style.marginLeft         = "-200px";
+			document.getElementById("graph_tree_content").style.marginLeft = "2px";
+		}
+	}else{
+		if (document.getElementById("menu") != null) {
+			document.getElementById("vsplitter").style.marginLeft = divSt      + "px";
+			document.getElementById("menu").style.width           = menuWidth  + "px";
+			document.getElementById("menu").style.marginLeft      = "0px";
+			document.getElementById("content").style.marginLeft   = marginLeft + "px";
+		}else{
+			document.getElementById("vsplitter").style.marginLeft          = divSt      + "px";
+			document.getElementById("graph_tree").style.width              = menuWidth  + "px";
+			document.getElementById("graph_tree").style.marginLeft         = "0px";
+			document.getElementById("graph_tree_content").style.marginLeft = marginLeft + "px";
+		}
+	}
+
 	if (document.getElementById('vsplitter_toggle')) {
 		if (document.getElementById('content')) {
 			vertical_pos = parseInt(document.getElementById('content').clientHeight) / 2;
@@ -674,22 +739,32 @@ function vSplitterPos() {
 	}
 }
 
-function initializePage() {
+function pageResize() {
+	vSplitterPos();
+}
+
+function pageInitialize() {
 	vSplitterPos();
 	setFocus();
 }
 
 /* Cookie Functions */
 function createCookie(name, value, days) {
-	if (days) {
-		var date    = new Date();
-		date.setTime(date.getTime() + (days*24*60*60*1000));
-		var expires = "; expires=" + date.toGMTString();
-	} else {
-		var expires = "";
-	}
+	if (!creatingCookie) {
+		creatingCookie = true;
 
-	document.cookie  = name + "=" + value + expires + "; path=/";
+		if (days) {
+			var date    = new Date();
+			date.setTime(date.getTime() + (days*24*60*60*1000));
+			var expires = "; expires=" + date.toGMTString();
+		} else {
+			var expires = "";
+		}
+
+		document.cookie  = name + "=" + value + expires + "; path=/";
+
+		creatingCookie = false;
+	}
 }
 
 function readCookie(name) {
@@ -769,13 +844,21 @@ function updateCookieElement(name, element, value) {
 		if (start_location >= 0) {
 			new_elements = new_elements + elements.substring(0, start_location);
 
+			if (new_elements.substring(new_elements.length - 1) == "!") {
+				new_elements = new_elements.substring(0, new_elements.length - 1);
+			}
+
 			remainder = elements.indexOf("!", start_location);
 
 			if (remainder > 0) {
-				new_elements = new_elements + elements.substring(remainder + 1);
+				new_elements = new_elements + elements.substring(remainder);
 			}
 
-			new_elements = new_elements + "!" + element + "@@" + value;
+			if (new_elements.substring(new_elements.length, 1) == "!") {
+				new_elements = new_elements + element + "@@" + value;
+			}else{
+				new_elements = new_elements + "!" + element + "@@" + value;
+			}
 		}else{
 			new_elements = elements + "!" + element + "@@" + value;
 		}

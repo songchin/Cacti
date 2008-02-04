@@ -34,7 +34,7 @@ global $colors;
 	<script type="text/javascript" src="include/layout.js"></script>
 <?php if (isset($refresh)) { print "\t<meta http-equiv=refresh content=\"" . $refresh["seconds"] . "; url='" . $refresh["page"] . "'\">\n"; } ?>
 </head>
-<body id='body' onLoad='initializePage()'>
+<body id='body' onResize='pageResize()' onLoad='pageInitialize()'>
 <div id='header'>
 	<div id=logobar' class='logobar'></div>
 	<div id='navbar' class='navbar'>
@@ -61,7 +61,7 @@ global $colors;
 		<div id='about'><a href='about.php'><img src="images/cacti_logo.gif" align="absmiddle" alt="Cacti" border="0"></a></div>
 	</div>
 	<div id='vsplitter' onMouseout='doneDivResize()' onMouseover='doDivResize(this,event)' onMousemove='doDivResize(this,event)'>
-		<img id='vsplitter_toggle' src='images/vsplitter1.gif' onClick='vSplitterToggle()' title='ToggleMenu' style='vertical-align: middle;'>
+		<div id='vsplitter_toggle' onClick='vSplitterToggle()' title='ToggleMenu'></div>
 	</div>
 	<div id='content'>
 	<?php display_output_messages();?>
