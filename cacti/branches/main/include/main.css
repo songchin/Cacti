@@ -9,7 +9,6 @@
 
 form {
 	margin: 0px;
-	padding: -3px;
 }
 
 input {
@@ -24,7 +23,7 @@ tr {
 }
 
 th {
-	overflow: none;
+	overflow: hidden;
 	font-family: Arial, Verdana, Helvetica, sans-serif;
 	font-size: 12px;
 }
@@ -191,7 +190,7 @@ td {
 }
 
 .menuMain tr {
-	border: 10px thin #FFFFFF;
+	border: 10px solid #FFFFFF;
 }
 
 .menuSubMain {
@@ -333,7 +332,6 @@ td {
 #header div#navbar img { width: 1.14em; height: 1.14em; padding: 0px;}
 
 #about img {
-	float: center;
 	padding: 15px 15px 15px 35px;
 }
 
@@ -350,9 +348,7 @@ td {
 }
 
 #authLogo {
-	background-image: url('../images/auth_login.gif');
-	background-position: top center;
-	background-repeat: no-repeat;
+	background: transparent url('../images/auth_login.gif') no-repeat top center;
 	margin: 40px 0px 0px 0px;
 	padding: 50px 0px 0px 0px;
 	height: 60px;
@@ -467,7 +463,7 @@ a:hover {
 }
 
 table.resizable {
-	table-layout:automatic;
+	table-layout: auto;
 	overflow: hidden;
 }
 

@@ -395,6 +395,7 @@ var iEdgeThreshold  = 10;
 var aniInProgress   = false;
 var vSplitterClosed = false;
 var creatingCookie  = false;
+var browser         = "Unknwn";
 
 /* tells if on the right border or not */
 function isOnBorderRight(object, event) {
@@ -597,7 +598,7 @@ function MouseMove(event) {
 			objTh.style.width    = thSt + "px";
 		}
 
-		if (document.selection) {
+		if ((browser == 'IE') && (document.selection)) {
 			document.selection.empty();
 		}else if (window.getSelection) {
 			window.getSelection().removeAllRanges();
@@ -630,8 +631,11 @@ function MouseMove(event) {
 			document.getElementById("content").style.marginLeft   = "2px";
 		}
 
-		if (document.selection) document.selection.empty();
-		else if (window.getSelection) window.getSelection().removeAllRanges();
+		if ((browser == 'IE') && (document.selection)) {
+			document.selection.empty();
+		}else if (window.getSelection) {
+			window.getSelection().removeAllRanges();
+		}
 	}
 }
 
@@ -639,12 +643,20 @@ function MouseUp(event) {
 	if (!event) event = window.event;
 
 	if (objTh) {
-		if(document.selection) document.selection.empty();
-		else if(window.getSelection)window.getSelection().removeAllRanges();
+		if ((browser == 'IE') && (document.selection)) {
+			document.selection.empty();
+		} else if(window.getSelection) {
+			window.getSelection().removeAllRanges();
+		}
+
 		objTh = null;
 	} else if (objDiv) {
-		if (document.selection) document.selection.empty();
-		else if (window.getSelection) window.getSelection().removeAllRanges();
+		if ((browser == 'IE') && (document.selection)) {
+			document.selection.empty();
+		}else if (window.getSelection) {
+			window.getSelection().removeAllRanges();
+		}
+
 		objDiv = null;
 	}
 }
@@ -683,10 +695,6 @@ function setFocus() {
 		inputs[hid_count].focus();
 	}
 }
-
-document.onmousedown = MouseDown;
-document.onmousemove = MouseMove;
-document.onmouseup   = MouseUp;
 
 function vSplitterPos() {
 	divSt           = parseInt(readCookieElement("menu", "vsplitter_last"), 10);
@@ -744,8 +752,25 @@ function pageResize() {
 }
 
 function pageInitialize() {
+	document.onmousedown = MouseDown;
+	document.onmousemove = MouseMove;
+	document.onmouseup   = MouseUp;
+
 	vSplitterPos();
 	setFocus();
+	detectBrowser();
+}
+
+function detectBrowser() {
+	if (navigator.userAgent.indexOf('MSIE') >= 0) {
+		browser = "IE";
+	}else if (navigator.userAgent.indexOf('Mozilla') >= 0) {
+		browser = "FF";
+	}else if (navigator.userAgent.indexOf('Opera') >= 0) {
+		browser = "Opera";
+	}else{
+		browser = "Other";
+	}
 }
 
 /* Cookie Functions */
