@@ -217,6 +217,7 @@ function form_save() {
 			$host_template["max_oids"]				= read_config_option("max_get_size");
 		}
 
+		$host_template["notes"] = ""; /* no support for notes in a host template */
 		$host_id = api_device_save($_POST["id"], $_POST["host_template_id"], $_POST["description"],
 			$_POST["hostname"], $host_template["snmp_community"], $host_template["snmp_version"],
 			$host_template["snmp_username"], $host_template["snmp_password"],
