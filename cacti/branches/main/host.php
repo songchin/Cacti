@@ -175,7 +175,6 @@ function form_save() {
 
 	/* save basic host information during first run, host_template should have bee selected */
 	if (isset($_POST["save_basic_host"])) {
-		cacti_log("host template: " . $_POST["host_template_id"], true, "TEST");
 		/* host template was given, so fetch defaults from it */
 		if ($_POST["host_template_id"] != 0) {
 			$host_template = db_fetch_row("SELECT
