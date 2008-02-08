@@ -175,8 +175,9 @@ function form_save() {
 
 	/* save basic host information during first run, host_template should have bee selected */
 	if (isset($_POST["save_basic_host"])) {
+		cacti_log("host template: " . $_POST["host_template_id"], true, "TEST");
 		/* host template was given, so fetch defaults from it */
-		if ($_POST["host_template_id"] === 0) {
+		if ($_POST["host_template_id"] != 0) {
 			$host_template = db_fetch_row("SELECT
 				host_template.id,
 				host_template.name,
@@ -218,11 +219,12 @@ function form_save() {
 		}
 
 		$host_template["notes"] = ""; /* no support for notes in a host template */
+		$host_template["disabled"] = ""; /* no support for disabling in a host template */
 		$host_id = api_device_save($_POST["id"], $_POST["host_template_id"], $_POST["description"],
 			$_POST["hostname"], $host_template["snmp_community"], $host_template["snmp_version"],
 			$host_template["snmp_username"], $host_template["snmp_password"],
 			$host_template["snmp_port"], $host_template["snmp_timeout"],
-			"",
+			$host_template["disabled"],
 			$host_template["availability_method"], $host_template["ping_method"],
 			$host_template["ping_port"], $host_template["ping_timeout"],
 			$host_template["ping_retries"], $host_template["notes"],
