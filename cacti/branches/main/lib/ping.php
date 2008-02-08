@@ -365,7 +365,13 @@ class Net_Ping
 			/* determine the host's ip address */
 			$host_ip = gethostbyname($this->host["hostname"]);
 
-			/* initilize the socket */
+			if ($host_ip == $this->host["hostname"]) { /* name resolution failed */
+				cacti_log("WARNING: UDP Ping Error: gethostbyname failed for " . $this->host["hostname"]);
+				$this->response = "UDP Ping Error: gethostbyname failed for " . $this->host["hostname"];
+				return false;
+			}
+
+ 			/* initialize the socket */
 			if (substr_count($host_ip,":") > 0) {
 				if (defined("AF_INET6")) {
 					$this->socket = socket_create(AF_INET6, SOCK_DGRAM, SOL_UDP);
