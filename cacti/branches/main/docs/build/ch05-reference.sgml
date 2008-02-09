@@ -653,12 +653,12 @@ Harry Potter 	Guest Account 	Yes 		Local 	ALLOW 			N/A</screen>
 			it provides. Calling the script with the parameter <userinput>--help</userinput> yields</para>
 			<screen><prompt>shell&gt;</prompt>php -q add_device.php --help
 
-Add Device Script 1.0, Copyright 2007 - The Cacti Group
+Add Device Script 1.1, Copyright 2008 - The Cacti Group
 
 A simple command line utility to add a device in Cacti
 
-usage: add_device.php --description=[description] --ip=[IP] --template=[ID] [--notes="[]"] [--disable]
-    [--avail=[ping]] --ping_method=[icmp] --ping_port=[N/A, 1-65534] --ping_retries=[2]
+usage: add_device.php --description=[description] --ip=[IP] --template=[ID] [--notes="[]"] [--disabled]
+    [--avail=[ping]] --ping_method=[icmp] --ping_port=[N/A, 1-65534] --ping_retries=[2]  --ping_timeout=[500]
     [--version=[1|2|3]] [--community=] [--port=161] [--timeout=500]
     [--username= --password=] [--authproto=] [--privpass= --privproto=] [--context=]
     [--quiet]
@@ -666,24 +666,29 @@ usage: add_device.php --description=[description] --ip=[IP] --template=[ID] [--n
 Required:
     --description  the name that will be displayed by Cacti in the graphs
     --ip           self explanatory (can also be a FQDN)
+    --template     denotes the host_template to be used (read below to get a list of templates)
+                   In case a host_template is given, all values are fetched from this one.
+                   For a host_template = 0 (NONE), Cacti default settings are used.
+                   Optionally overwrite by any of the following:
 Optional:
-    --template     0, is a number (read below to get a list of templates)
-    --notes        '', General information about this host.  Must be enclosed using double quotes.
-    --disable      0, 1 to add this host but to disable checks and 0 to enable it
+    --notes        General information about this host.  Must be enclosed using double quotes.
+    --disable      1 to add this host but to disable checks and 0 to enable it
     --avail        pingsnmp, [ping][none, snmp, pingsnmp]
     --ping_method  tcp, icmp|tcp|udp
-    --ping_port    '', 1-65534
+    --ping_port    23, port used for tcp|udp pings [1-65534]
     --ping_retries 2, the number of time to attempt to communicate with a host
+    --ping_timeout 500, ping timeout
     --version      1, 1|2|3, snmp version
     --community    '', snmp community string for snmpv1 and snmpv2.  Leave blank for no community
-    --port         161
-    --timeout      500
+    --port         161, snmp port
+    --timeout      500, snmp timeout
     --username     '', snmp username for snmpv3
     --password     '', snmp password for snmpv3
-    --authproto    '', snmp authentication protocol for snmpv3
+    --authproto    '', snmp authentication protocol for snmpv3 [MD5|SHA]
     --privpass     '', snmp privacy passphrase for snmpv3
-    --privproto    '', snmp privacy protocol for snmpv3
+    --privproto    '', snmp privacy protocol for snmpv3 [DES|AES]
     --context      '', snmp context for snmpv3
+    --max_oids     10, 1-60, the number of OID's that can be obtained in a single SNMP Get request
 
 List Options:
     --list-host-templates
@@ -712,7 +717,7 @@ Valid Host Templates: (id, name)
 				so the id of <userinput>3</userinput> is required.</para>
 				<para>If you do not want to associate the host to any <userinput>Host Template Id</userinput>, known
 				as host template <guimenuitem>None</guimenuitem>, please provide the parameter
-				<userinput>--template=0</userinput> or omit this parameter.</para>
+				<userinput>--template=0</userinput></para>
 			</sect2>
 			<sect2 id="cli_add_device_list_communities">
 			<title>List all Community Strings</title>
@@ -728,16 +733,18 @@ snmp-get</screen>
 			<title>Create a New Device</title>
 				<para>Now, let's set up the most basic command to add a new device. The description shall be
 				<userinput>"Device Add Test"</userinput>, the ip will be given as a FQDN, <userinput>router.mydomain.com</userinput>.
-				As a SNMP enabled device, surely a community string has to be provided; in this case given
-				as <userinput>public</userinput>.
+				We will use the <parameter>Host Template Id</parameter> of <emphasis>3</emphasis> which refers to a 
+				<parameter>ucd/net SNMP Host</parameter>. All avalability options, SNMP paremeters and stuff will be
+				taken from that very host template.
 				In total, this makes the following command</para>
-				<screen><prompt>shell&gt;</prompt>php -q add_device.php --description="Device Add Test" --ip="router.mydomain.com" --template=3 --community="public"
+				<screen><prompt>shell&gt;</prompt>php -q add_device.php --description="Device Add Test" --ip="router.mydomain.com" --template=3
 
-Adding Device Add Test (router.mydomain.com) as "ucd/net SNMP Host" using SNMP v1 with community "public"
+Adding Device Add Test (router.mydomain.com) as "ucd/net SNMP Host", Availability Method SNMP, SNMP V1, SNMP Port 161, SNMP Timeout 500, Community public
 Success - new device-id: (11)</screen>
 				<para>Please visit <guimenu>Devices</guimenu> to see the result:</para>
-				<screen>Description** 		Graphs 	Data Sources 	Status 	Hostname 		Current (ms) 	Average (ms) 	Availability
-Device Add Test 	0 	0 		Unknown router.mydomain.com 	0 		0 		100</screen>
+				<screen>
+Description      ID  Graphs  Data Sources   Status  Event Count             Hostname  Current (ms)  Average (ms)  Availability   	
+Device Add Test  49       0             0  Unknown            0  router.mydomain.com             0             0           100</screen>
 				<para>Please use any other combination of parameters in the same way
 				as via the web browser console. You may want to remember the new device id, <userinput>11</userinput>
 				in this case, for the next steps.</para>
