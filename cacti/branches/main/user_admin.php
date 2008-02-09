@@ -338,16 +338,16 @@ function form_save() {
 		$add_button_clicked = false;
 
 		if (isset($_POST["add_graph_y"])) {
-			db_execute("REPLACE INTO user_auth_perms (user_id,item_id,type) VALUES (" . get_request_var_post("id") . "," . get_request_var_post("perm_graphs") . ",1)");
+			db_execute("REPLACE INTO user_auth_perms (user_id,item_id,type) VALUES (" . get_request_var_post("id") . "," . get_request_var_post("perm_graphs") . "," . PERM_GRAPHS . ")");
 			$add_button_clicked = true;
 		}elseif (isset($_POST["add_tree_y"])) {
-			db_execute("REPLACE INTO user_auth_perms (user_id,item_id,type) VALUES (" . get_request_var_post("id") . "," . get_request_var_post("perm_trees") . ",2)");
+			db_execute("REPLACE INTO user_auth_perms (user_id,item_id,type) VALUES (" . get_request_var_post("id") . "," . get_request_var_post("perm_trees") . "," . PERM_TREES . ")");
 			$add_button_clicked = true;
 		}elseif (isset($_POST["add_host_y"])) {
-			db_execute("REPLACE INTO user_auth_perms (user_id,item_id,type) VALUES (" . get_request_var_post("id") . "," . get_request_var_post("perm_hosts") . ",3)");
+			db_execute("REPLACE INTO user_auth_perms (user_id,item_id,type) VALUES (" . get_request_var_post("id") . "," . get_request_var_post("perm_hosts") . "," . PERM_HOSTS . ")");
 			$add_button_clicked = true;
 		}elseif (isset($_POST["add_graph_template_y"])) {
-			db_execute("REPLACE INTO user_auth_perms (user_id,item_id,type) VALUES (" . get_request_var_post("id") . "," . get_request_var_post("perm_graph_templates") . ",4)");
+			db_execute("REPLACE INTO user_auth_perms (user_id,item_id,type) VALUES (" . get_request_var_post("id") . "," . get_request_var_post("perm_graph_templates") . "," . PERM_GRAPH_TEMPLATES . ")");
 			$add_button_clicked = true;
 		}
 
@@ -475,13 +475,13 @@ function perm_remove() {
 	/* ==================================================== */
 
 	if (get_request_var("type") == "graph") {
-		db_execute("DELETE FROM user_auth_perms WHERE type = 1 AND user_id = " . get_request_var("user_id") . " AND item_id = " . get_request_var("id"));
+		db_execute("DELETE FROM user_auth_perms WHERE type = " . PERM_GRAPHS . " AND user_id = " . get_request_var("user_id") . " AND item_id = " . get_request_var("id"));
 	}elseif (get_request_var("type") == "tree") {
-		db_execute("DELETE FROM user_auth_perms WHERE type = 2 AND user_id = " . get_request_var("user_id") . " AND item_id = " . get_request_var("id"));
+		db_execute("DELETE FROM user_auth_perms WHERE type = " . PERM_TREES . " AND user_id = " . get_request_var("user_id") . " AND item_id = " . get_request_var("id"));
 	}elseif (get_request_var("type") == "host") {
-		db_execute("DELETE FROM user_auth_perms WHERE type = 3 AND user_id = " . get_request_var("user_id") . " AND item_id = " . get_request_var("id"));
+		db_execute("DELETE FROM user_auth_perms WHERE type = " . PERM_HOSTS . " AND user_id = " . get_request_var("user_id") . " AND item_id = " . get_request_var("id"));
 	}elseif (get_request_var("type") == "graph_template") {
-		db_execute("DELETE FROM user_auth_perms WHERE type = 4 AND user_id=" . get_request_var("user_id") . " and item_id = " . get_request_var("id"));
+		db_execute("DELETE FROM user_auth_perms WHERE type = " . PERM_GRAPH_TEMPLATES . " AND user_id=" . get_request_var("user_id") . " and item_id = " . get_request_var("id"));
 	}
 
 	header("Location: user_admin.php?action=graph_perms_edit&id=" . get_request_var("user_id"));
@@ -521,7 +521,7 @@ function graph_perms_edit() {
 		graph_templates_graph.local_graph_id,
 		graph_templates_graph.title_cache
 		FROM graph_templates_graph
-		LEFT JOIN user_auth_perms ON (graph_templates_graph.local_graph_id = user_auth_perms.item_id AND user_auth_perms.type = 1)
+		LEFT JOIN user_auth_perms ON (graph_templates_graph.local_graph_id = user_auth_perms.item_id AND user_auth_perms.type = " . PERM_GRAPHS . ")
 		WHERE graph_templates_graph.local_graph_id > 0
 		AND user_auth_perms.user_id = " . get_request_var("id", 0) . "
 		ORDER BY graph_templates_graph.title_cache");
@@ -582,7 +582,7 @@ function graph_perms_edit() {
 		host.id,
 		CONCAT('',host.description,' (',host.hostname,')') as name
 		FROM host
-		LEFT JOIN user_auth_perms ON (host.id = user_auth_perms.item_id AND user_auth_perms.type = 3)
+		LEFT JOIN user_auth_perms ON (host.id = user_auth_perms.item_id AND user_auth_perms.type = " . PERM_HOSTS . ")
 		WHERE user_auth_perms.user_id = " . get_request_var("id", 0) . "
 		ORDER BY host.description,host.hostname");
 
@@ -642,7 +642,7 @@ function graph_perms_edit() {
 		graph_templates.id,
 		graph_templates.name
 		from graph_templates
-		LEFT JOIN user_auth_perms ON (graph_templates.id = user_auth_perms.item_id AND user_auth_perms.type = 4)
+		LEFT JOIN user_auth_perms ON (graph_templates.id = user_auth_perms.item_id AND user_auth_perms.type = " . PERM_GRAPH_TEMPLATES . ")
 		WHERE user_auth_perms.user_id = " . get_request_var("id", 0) . "
 		ORDER BY graph_templates.name");
 
@@ -701,7 +701,7 @@ function graph_perms_edit() {
 		graph_tree.id,
 		graph_tree.name
 		from graph_tree
-		LEFT JOIN user_auth_perms ON (graph_tree.id = user_auth_perms.item_id AND user_auth_perms.type = 2)
+		LEFT JOIN user_auth_perms ON (graph_tree.id = user_auth_perms.item_id AND user_auth_perms.type = " . PERM_TREES . ")
 		WHERE user_auth_perms.user_id = " . get_request_var("id", 0) . "
 		ORDER BY graph_tree.name");
 

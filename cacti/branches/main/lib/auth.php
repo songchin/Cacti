@@ -193,28 +193,28 @@ function get_graph_permissions_sql($policy_graphs, $policy_hosts, $policy_graph_
 	$sql_policy_and = "";
 
 	if ($policy_graphs == "1") {
-		$sql_policy_and .= "$sql_and(user_auth_perms.type != 1 OR user_auth_perms.type is null)";
+		$sql_policy_and .= "$sql_and(user_auth_perms.type != " . PERM_GRAPHS . " OR user_auth_perms.type is null)";
 		$sql_and = " AND ";
 		$sql_null = "is null";
 	}elseif ($policy_graphs == "2") {
-		$sql_policy_or .= "$sql_or(user_auth_perms.type = 1 OR user_auth_perms.type is not null)";
+		$sql_policy_or .= "$sql_or(user_auth_perms.type = " . PERM_GRAPHS . " OR user_auth_perms.type is not null)";
 		$sql_or = " OR ";
 		$sql_null = "is not null";
 	}
 
 	if ($policy_hosts == "1") {
-		$sql_policy_and .= "$sql_and((user_auth_perms.type != 3) OR (user_auth_perms.type is null))";
+		$sql_policy_and .= "$sql_and((user_auth_perms.type != " . PERM_HOSTS . ") OR (user_auth_perms.type is null))";
 		$sql_and = " AND ";
 	}elseif ($policy_hosts == "2") {
-		$sql_policy_or .= "$sql_or((user_auth_perms.type = 3) OR (user_auth_perms.type is not null))";
+		$sql_policy_or .= "$sql_or((user_auth_perms.type = " . PERM_HOSTS . ") OR (user_auth_perms.type is not null))";
 		$sql_or = " OR ";
 	}
 
 	if ($policy_graph_templates == "1") {
-		$sql_policy_and .= "$sql_and((user_auth_perms.type != 4) OR (user_auth_perms.type is null))";
+		$sql_policy_and .= "$sql_and((user_auth_perms.type != " . PERM_GRAPH_TEMPLATES . ") OR (user_auth_perms.type is null))";
 		$sql_and = " AND ";
 	}elseif ($policy_graph_templates == "2") {
-		$sql_policy_or .= "$sql_or((user_auth_perms.type = 4) OR (user_auth_perms.type is not null))";
+		$sql_policy_or .= "$sql_or((user_auth_perms.type = " . PERM_GRAPH_TEMPLATES . ") OR (user_auth_perms.type is not null))";
 		$sql_or = " OR ";
 	}
 
@@ -250,7 +250,7 @@ function is_graph_allowed($local_graph_id) {
 		from (graph_templates_graph,graph_local)
 		left join host on (host.id=graph_local.host_id)
 		left join graph_templates on (graph_templates.id=graph_local.graph_template_id)
-		left join user_auth_perms on ((graph_templates_graph.local_graph_id=user_auth_perms.item_id and user_auth_perms.type=1 and user_auth_perms.user_id=" . $_SESSION["sess_user_id"] . ") OR (host.id=user_auth_perms.item_id and user_auth_perms.type=3 and user_auth_perms.user_id=" . $_SESSION["sess_user_id"] . ") OR (graph_templates.id=user_auth_perms.item_id and user_auth_perms.type=4 and user_auth_perms.user_id=" . $_SESSION["sess_user_id"] . "))
+		left join user_auth_perms on ((graph_templates_graph.local_graph_id=user_auth_perms.item_id and user_auth_perms.type=" . PERM_GRAPHS . " and user_auth_perms.user_id=" . $_SESSION["sess_user_id"] . ") OR (host.id=user_auth_perms.item_id and user_auth_perms.type=" . PERM_HOSTS . " and user_auth_perms.user_id=" . $_SESSION["sess_user_id"] . ") OR (graph_templates.id=user_auth_perms.item_id and user_auth_perms.type=" . PERM_GRAPH_TEMPLATES . " and user_auth_perms.user_id=" . $_SESSION["sess_user_id"] . "))
 		where graph_templates_graph.local_graph_id=graph_local.id
 		" . (empty($sql_where) ? "" : "and $sql_where") . "
 		and graph_templates_graph.local_graph_id=$local_graph_id
@@ -273,7 +273,7 @@ function is_tree_allowed($tree_id) {
 		user_id
 		from user_auth_perms
 		where user_id=" . $_SESSION["sess_user_id"] . "
-		and type=2
+		and type=" . PERM_TREES . "
 		and item_id=$tree_id");
 
 	/* policy == allow AND matches = DENY */

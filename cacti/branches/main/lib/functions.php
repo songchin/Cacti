@@ -1482,7 +1482,7 @@ function get_graph_tree_array($return_sql = false, $force_refresh = false) {
 				graph_tree.name,
 				user_auth_perms.user_id
 				from graph_tree
-				left join user_auth_perms on (graph_tree.id=user_auth_perms.item_id and user_auth_perms.type=2 and user_auth_perms.user_id=" . $_SESSION["sess_user_id"] . ")
+				left join user_auth_perms on (graph_tree.id=user_auth_perms.item_id and user_auth_perms.type=" . PERM_TREES . " and user_auth_perms.user_id=" . $_SESSION["sess_user_id"] . ")
 				$sql_where
 				order by graph_tree.name";
 		}else{
@@ -1519,7 +1519,7 @@ function get_host_array() {
 			CONCAT_WS('',host.description,' (',host.hostname,')') as name,
 			user_auth_perms.user_id
 			from host
-			left join user_auth_perms on (host.id=user_auth_perms.item_id and user_auth_perms.type=3 and user_auth_perms.user_id=" . $_SESSION["sess_user_id"] . ")
+			left join user_auth_perms on (host.id=user_auth_perms.item_id and user_auth_perms.type=" . PERM_HOSTS . " and user_auth_perms.user_id=" . $_SESSION["sess_user_id"] . ")
 			$sql_where
 			order by host.description,host.hostname");
 	}else{
