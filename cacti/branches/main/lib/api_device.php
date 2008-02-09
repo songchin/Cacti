@@ -33,6 +33,7 @@ function api_device_remove($device_id) {
 	db_execute("delete from poller_reindex   where host_id=$device_id");
 	db_execute("delete from poller_command   where command like '$device_id:%'");
 	db_execute("delete from graph_tree_items where host_id=$device_id");
+	db_execute("delete from user_auth_perms  where item_id=$device_id and type=" . PERM_HOSTS);
 
 	db_execute("update data_local  set host_id=0 where host_id=$device_id");
 	db_execute("update graph_local set host_id=0 where host_id=$device_id");
@@ -67,6 +68,7 @@ function api_device_remove_multi($device_ids) {
 		db_execute("DELETE FROM host_snmp_cache  WHERE host_id IN ($devices_to_delete)");
 
 		db_execute("DELETE FROM graph_tree_items WHERE host_id IN ($devices_to_delete)");
+		db_execute("DELETE FROM user_auth_perms  WHERE item_id IN ($devices_to_delete) and type=" . PERM_HOSTS);
 
 		/* for people who choose to leave data sources around */
 		db_execute("UPDATE data_local  SET host_id=0 WHERE host_id IN ($devices_to_delete)");
