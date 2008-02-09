@@ -44,8 +44,7 @@ if (sizeof($parms) == 0) {
 }else{
 	$userId    = 0;
 
-	/* TODO replace magic numbers by global constants, treat user_admin as well */
-	$itemTypes = array('graph' => 1, 'tree' => 2, 'host' => 3, 'graph_template' => 4);
+	$itemTypes = array('graph' => PERM_GRAPHS, 'tree' => PERM_TREES, 'host' => PERM_HOSTS, 'graph_template' => PERM_GRAPH_TEMPLATES);
 
 	$itemType = 0;
 	$itemId   = 0;
@@ -68,7 +67,6 @@ if (sizeof($parms) == 0) {
 
 			break;
 		case "--item-type":
-			/* TODO replace magic numbers by global constants, treat user_admin as well */
 			if ( ($value == "graph") || ($value == "tree") || ($value == "host") || ($value == "graph_template")) {
 				$itemType = $itemTypes[$value];
 			}else{
@@ -194,30 +192,29 @@ if (sizeof($parms) == 0) {
 		exit(1);
 	}
 
-	/* TODO replace magic numbers by global constants, treat user_admin as well */
 	switch ($itemType) {
-		case 1: /* graph */
+		case PERM_GRAPHS: /* graph */
 			if ( !db_fetch_cell("SELECT local_graph_id FROM graph_templates_graph WHERE local_graph_id=$itemId") ) {
 				echo "ERROR: Invalid Graph item id: ($itemId)\n\n";
 				display_help();
 				exit(1);
 			}
 			break;
-		case 2: /* tree */
+		case PERM_TREES: /* tree */
 			if ( !db_fetch_cell("SELECT id FROM graph_tree WHERE id=$itemId") ) {
 				echo "ERROR: Invalid Tree item id: ($itemId)\n\n";
 				display_help();
 				exit(1);
 			}
 			break;
-		case 3: /* host */
+		case PERM_HOSTS: /* host */
 			if ( !db_fetch_cell("SELECT id FROM host WHERE id=$itemId") ) {
 				echo "ERROR: Invalid Host item id: ($itemId)\n\n";
 				display_help();
 				exit(1);
 			}
 			break;
-		case 4: /* graph_template */
+		case PERM_GRAPH_TEMPLATES: /* graph_template */
 			if ( !db_fetch_cell("SELECT id FROM graph_templates WHERE id=$itemId") ) {
 				print "ERROR: Invalid Graph Template item id: ($itemId)\n\n";
 				display_help();
