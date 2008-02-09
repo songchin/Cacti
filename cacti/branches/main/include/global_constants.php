@@ -174,4 +174,9 @@ define("SNMP_POLLER", 0);
 define("SNMP_CMDPHP", 1);
 define("SNMP_WEBUI", 2);
 
+define("PERM_GRAPHS", 1);
+define("PERM_TREES", 2);
+define("PERM_HOSTS", 3);
+define("PERM_GRAPH_TEMPLATES", 4);
+
 ?>

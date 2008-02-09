@@ -22,11 +22,13 @@ Cacti CHANGELOG
 -bug#0001164: alt attributes don't make tooltips, title attrs do (host.php)
 -bug: Cacti does not guarentee RRA consolidation functions exist in RRA's.
 -bug: Alert on changing logarithmic scaling removed
+-bug: remove graph permissions if graph is removed
 -feature#0001162: WEB UI now accepts max_oids on SNMP bulkwalks
 -feature#0001124: Devices/Host Templates - remove already associated objects from dropdown selector
 -feature#0001123: Performance tweak by adding some indices
 -feature#0001122: Propagate Host Template changes to related hosts
 -feature#0001030: Lower limit and upper limit |query_*| variable support for Graph Templates
+-feature#0001111: add remove-device.php cli script, replace numerical constants for permission handling by PERM_*
 -feature#0000954: implement --alt-y-grid graph option 
 -feature: show basic rrdtool graph options on Graph Template Edit
 -feature: Add additional logging to Graph Xport
@@ -39,6 +41,7 @@ Cacti CHANGELOG
 -feature: Support changing the "Reindex Method" of associated data queries
 -feature: Manage all Host Availability Options in each Host Template, derive Host options from those
 -feature: Add Server Time to page headers, pay respect to user specific date/timeformats
+-feature: add_device.php uses a host template like feature#0001122
 -feature: add_device.php uses a host template like feature#0001122
 
 0.8.7a

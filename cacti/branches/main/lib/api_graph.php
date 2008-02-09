@@ -30,6 +30,7 @@ function api_graph_remove($local_graph_id) {
 	db_execute("delete from graph_templates_graph where local_graph_id=$local_graph_id");
 	db_execute("delete from graph_templates_item where local_graph_id=$local_graph_id");
 	db_execute("delete from graph_tree_items where local_graph_id=$local_graph_id");
+	db_execute("delete from user_auth_perms where item_id=$local_graph_id and type=" . PERM_GRAPHS);
 	db_execute("delete from graph_local where id=$local_graph_id");
 }
 
@@ -53,6 +54,7 @@ function api_graph_remove_multi($local_graph_ids) {
 		db_execute("DELETE FROM graph_templates_graph WHERE local_graph_id IN ($ids_to_delete)");
 		db_execute("DELETE FROM graph_templates_item WHERE local_graph_id IN ($ids_to_delete)");
 		db_execute("DELETE FROM graph_tree_items WHERE local_graph_id IN ($ids_to_delete)");
+		db_execute("DELETE FROM user_auth_perms WHERE item_id IN ($ids_to_delete) and type=" . PERM_GRAPHS);
 		db_execute("DELETE FROM graph_local WHERE id IN ($ids_to_delete)");
 	}
 }
