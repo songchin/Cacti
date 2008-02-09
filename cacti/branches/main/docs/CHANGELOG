@@ -33,7 +33,7 @@ Cacti CHANGELOG
 -feature#0000954: implement --alt-y-grid graph option 
 -feature: show basic rrdtool graph options on Graph Template Edit
 -feature: Add additional logging to Graph Xport
--feature: Add rows dropdown to deivces, graphs and data sources
+-feature: Add rows dropdown to devices, graphs and data sources
 -feature: Add device_id and event count to devices
 -feature: Add ids to devices, graphs and data sources pages
 -feature: Add database repair utility
@@ -42,7 +42,6 @@ Cacti CHANGELOG
 -feature: Support changing the "Reindex Method" of associated data queries
 -feature: Manage all Host Availability Options in each Host Template, derive Host options from those
 -feature: Add Server Time to page headers, pay respect to user specific date/timeformats
--feature: add_device.php uses a host template like feature#0001122
 -feature: add_device.php uses a host template like feature#0001122
 
 0.8.7a
