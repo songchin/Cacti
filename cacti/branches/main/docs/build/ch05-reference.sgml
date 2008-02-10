@@ -1389,5 +1389,49 @@ Removing host but keeping resources for host id 11. Success - removed device-id:
 Removing host and all resources for host id 11. Success - removed device-id: (11)</screen>
 			</sect2>
 		</sect1>
+		<sect1 id="cli_remove_graph">
+		<title>Remove a Graph</title>
+			<para>As well as adding a new graph, you may want to delete them.
+			This is done by the script <filename>remove_graph.php</filename>
+			The help screen shows:</para>
+			<screen><prompt>shell&gt;</prompt>php -q remove_graph.php --help
+
+Remove Graph Script 1.0, Copyright 2008 - The Cacti Group
+
+A simple command line utility to remove a graph from Cacti
+
+usage: remove_graph.php --graph-id=[ID]
+
+Required:
+    --graph-id                the numerical id of the graph
+
+Optional:
+    --force                   delete all related data sources
+
+List Options:
+    --list-hosts              list available hosts
+    --list-graphs --host-id   list available graphs for a specific host
+    --quiet                   batch mode value return</screen>
+			<para>The list options are already known. We will not repeat them here.</para>
+			<sect2 id="cli_remove_graph_simple">
+			<title>Remove a Graph but keep Resources</title>
+				<para>The only input required for this script is the numerical id of the graph to be deleted.
+				Data sources related to that graph will not be deleted.
+				A tree entry for the graph will be deleted as well as graph related permissions.</para>
+				<screen><prompt>shell&gt;</prompt>php -q remove_graph.php --graph-id=170
+
+Removing graph but keeping resources for graph id 170. Success - removed graph-id: (170)</screen>
+			</sect2>
+			<sect2 id="cli_remove_graph_force">
+			<title>Remove a Graph and all Resources</title>
+				<para>In order to delete all data sources related to that graph as well
+				please provide the optional parameter <parameter>--force</parameter>.
+				All data sources will be deleted without any confirmation request. 
+				So be careful when running this script!</para>
+				<screen><prompt>shell&gt;</prompt>php -q remove_graph.php --graph-id=171 --force
+
+Removing graph and all resources for graph id 171. Success - removed graph-id: (171)</screen>
+			</sect2>
+		</sect1>
 	</chapter>
 </part>

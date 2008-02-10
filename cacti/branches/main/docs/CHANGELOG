@@ -30,6 +30,7 @@ Cacti CHANGELOG
 -feature#0001122: Propagate Host Template changes to related hosts
 -feature#0001030: Lower limit and upper limit |query_*| variable support for Graph Templates
 -feature#0001111: add remove-device.php cli script, replace numerical constants for permission handling by PERM_*
+-feature#0001111: add remove-graph.php cli script
 -feature#0000954: implement --alt-y-grid graph option 
 -feature: show basic rrdtool graph options on Graph Template Edit
 -feature: Add additional logging to Graph Xport
