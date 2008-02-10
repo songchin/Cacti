@@ -625,10 +625,18 @@ function MouseMove(event) {
 			vSplitterClosed = false;
 		}else{
 			vSplitterClosed = true;
-			document.getElementById("vsplitter").style.marginLeft = "0px";
-			document.getElementById("menu").style.width           = "0px";
-			document.getElementById("menu").style.marginLeft      = "-200px";
-			document.getElementById("content").style.marginLeft   = "2px";
+
+			if (document.getElementById("menu") != null) {
+				document.getElementById("vsplitter").style.marginLeft = "0px";
+				document.getElementById("menu").style.width           = "0px";
+				document.getElementById("menu").style.marginLeft      = "-200px";
+				document.getElementById("content").style.marginLeft   = "2px";
+			}else{
+				document.getElementById("vsplitter").style.marginLeft = "0px";
+				document.getElementById("graph_tree").style.width           = "0px";
+				document.getElementById("graph_tree").style.marginLeft      = "-200px";
+				document.getElementById("graph_tree_content").style.marginLeft   = "2px";
+			}
 		}
 
 		if ((browser == 'IE') && (document.selection)) {
