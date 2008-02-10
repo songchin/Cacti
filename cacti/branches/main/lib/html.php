@@ -78,40 +78,40 @@ function html_start_box($title, $width, $background_color, $cell_padding, $align
 			</tr>
 			<?php }?><tr style='border: 0px;' id='<?php print $item_id;?>'>
 				<td>
-	 				<table width="100%" cellpadding="<?php print $cell_padding;?>" cellspacing="0" border="0"><?php
+					<table width="100%" cellpadding="<?php print $cell_padding;?>" cellspacing="0" border="0"><?php
 }
 
 function html_start_box_dq($query_name, $query_id, $host_id, $colspan, $width, $background_color, $cell_padding, $align) {
 	global $colors; ?>
-	<table align="<?php print $align;?>" width="<?php print $width;?>" cellpadding="1" cellspacing="0" border="0" bgcolor="#<?php print $background_color;?>">
-		<tr>
-			<td>
-				<table cellpadding="<?php print $cell_padding;?>" cellspacing="0" border="0" bgcolor="#<?php print $colors["form_background_dark"];?>" width="100%">
-					<tr class='rowHeader'>
-						<td style='padding: 3px;' colspan='<?php print $colspan+1;?>'>
-							<table cellspacing='0' cellpadding='0' width='100%' >
-								<tr>
-									<td class='textHeaderDark'>
-										<strong>Data Query</strong> [<?php print $query_name; ?>]
-									</td>
-									<td align='right' nowrap>
-										<a href='graphs_new.php?action=query_reload&id=<?php print $query_id;?>&host_id=<?php print $host_id;?>'><img src='images/reload_icon_small.gif' alt='Reload Associated Query' title='Reload Associated Query' border='0' align='absmiddle'></a>
-									</td>
-								</tr>
-							</table>
-						</td>
-					</tr><?php
+		<table class='startBoxHeader' cellpadding="0" cellspacing="0" border="0" width="100%">
+			<tr class='rowHeader'>
+				<td style='padding: 3px;' colspan='<?php print $colspan+1;?>'>
+					<table cellspacing='0' cellpadding='0' width='100%' >
+						<tr>
+							<td class='textHeaderDark'>
+								<strong>Data Query</strong> [<?php print $query_name; ?>]
+							</td>
+							<td align='right' nowrap>
+								<a href='graphs_new.php?action=query_reload&id=<?php print $query_id;?>&host_id=<?php print $host_id;?>'><img src='images/reload_icon_small.gif' alt='Reload Associated Query' title='Reload Associated Query' border='0' align='absmiddle'></a>
+							</td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+			<tr style='border: 0px;' id='<?php print $item_id;?>'>
+				<td>
+					<table width="100%" cellpadding="<?php print $cell_padding;?>" cellspacing="0" border="0"><?php
 }
 
 /* html_end_box - draws the end of an HTML box
    @arg $trailing_br (bool) - whether to draw a trailing <br> tag after ending
      the box */
 function html_end_box($trailing_br = true) { ?>
-				</table>
-			</td>
-		</tr>
-	</table>
-	<?php if ($trailing_br == true) { print "<br>"; } ?>
+					</table>
+				</td>
+			</tr>
+		</table>
+		<?php if ($trailing_br == true) { print "<br>"; } ?>
 <?php }
 
 /* html_graph_start_box - draws the start of an HTML graph view box
@@ -504,19 +504,18 @@ function html_create_nav($current_page, $max_pages, $rows_per_page, $total_rows,
 				<table width='100%' cellspacing='0' cellpadding='0' border='0'>
 					<tr>
 						<td align='left' class='textHeaderDark'>
-							<strong>&lt;&lt; "; if ($current_page > 1) { $nav .= "<a class='linkOverDark' href='" . $base_url . "page=" . ($current_page-1) . "'>"; } $nav .= "Previous"; if ($current_page > 1) { $nav .= "</a>"; } $nav .= "</strong>
+							<strong>&lt;&lt; "; if ($current_page > 1) { $nav .= "<a class='linkOverDark' href='" . $base_url . $page_var . "=" . ($current_page-1) . "'>"; } $nav .= "Previous"; if ($current_page > 1) { $nav .= "</a>"; } $nav .= "</strong>
 						</td>\n
 						<td align='center' class='textHeaderDark'>
 							Showing Rows " . (($rows_per_page*($current_page-1))+1) . " to " . ((($total_rows < $rows_per_page) || ($total_rows < ($rows_per_page*$current_page))) ? $total_rows : ($rows_per_page*$current_page)) . " of $total_rows [$url_page_select]
 						</td>\n
 						<td align='right' class='textHeaderDark'>
-							<strong>"; if (($current_page * $rows_per_page) < $total_rows) { $nav .= "<a class='linkOverDark' href='" . $base_url . "page=" . ($current_page+1) . "'>"; } $nav .= "Next"; if (($current_page * $rows_per_page) < $total_rows) { $nav .= "</a>"; } $nav .= " &gt;&gt;</strong>
+							<strong>"; if (($current_page * $rows_per_page) < $total_rows) { $nav .= "<a class='linkOverDark' href='" . $base_url . $page_var . "=" . ($current_page+1) . "'>"; } $nav .= "Next"; if (($current_page * $rows_per_page) < $total_rows) { $nav .= "</a>"; } $nav .= " &gt;&gt;</strong>
 						</td>\n
 					</tr>
 				</table>
 			</td>
-		</tr>
-	</table>\n";
+		</tr>\n";
 
 	return $nav;
 }
