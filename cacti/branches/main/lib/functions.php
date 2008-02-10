@@ -189,6 +189,43 @@ function read_config_option($config_name, $force = FALSE) {
 	return $config_array[$config_name];
 }
 
+/* unset_config_option - removes the config option from the current settings array and or session variable
+   @arg $config_name - the name of the configuration setting as specified $settings array
+     in 'include/global_settings.php' */
+function unset_config_option($config_name) {
+	global $config;
+
+	if (isset($_SESSION["sess_config_array"])) {
+		$config_array     = $_SESSION["sess_config_array"];
+		$new_config_array = array();
+
+		if (array_key_exists($config_name, $config_array)) {
+			foreach($config_array as $key => $value) {
+				if (!($key == $config_name)) {
+					$new_config_array[$key] = $value;
+				}
+			}
+
+			$_SESSION["sess_config_array"] = $new_config_array;
+		}
+	}
+
+	if (isset($config["config_options_array"])) {
+		$config_array = $config["config_options_array"];
+		$new_config_array = array();
+
+		if (array_key_exists($config_name, $config_array)) {
+			foreach($config_array as $key => $value) {
+				if (!($key == $config_name)) {
+					$new_config_array[$key] = $value;
+				}
+			}
+
+			$config["config_options_array"] = $new_config_array;
+		}
+	}
+}
+
 /* form_input_validate - validates the value of a form field and takes the appropriate action if the input
      is not valid
    @arg $field_value - the value of the form field
@@ -1115,7 +1152,7 @@ function get_rrd_cfs($local_data_id) {
 
 	$output = rrdtool_execute("info $rrdfile", FALSE, RRDTOOL_OUTPUT_STDOUT);
 
-	/* search for 
+	/* search for
 	 * 		rra[0].cf = "LAST"
 	 * or similar
 	 */
@@ -1126,7 +1163,7 @@ function get_rrd_cfs($local_data_id) {
 			foreach($output as $line) {
 				if (substr_count($line, ".cf")) {
 					$values = explode("=",$line);
-	
+
 					if (!in_array(trim($values[1]), $cfs)) {
 						$cfs[] = trim($values[1], '" ');
 					}
