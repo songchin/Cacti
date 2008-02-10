@@ -636,13 +636,15 @@ function host_edit() {
 				<td class="textInfo" colspan="2">
 					<?php print $host["description"];?> (<?php print $host["hostname"];?>)
 				</td>
+				<td class="textInfo" valign="top">
+					<span style="color: #c16921;">*</span><a href="graphs_new.php?host_id=<?php print $host["id"];?>">Create Graphs for this Host</a>
+				</td>
 			</tr>
 			<tr>
 				<?php if (($host["availability_method"] == AVAIL_SNMP) || ($host["availability_method"] == AVAIL_SNMP_AND_PING)) { ?>
-				<td class="textHeader">
-					SNMP Information<br>
-
-					<span style="font-size: 10px; font-weight: normal; font-family: monospace;">
+				<td class="textHeader" style="line-height: 1.0em;">
+					SNMP Information<br><br>
+					<span style="font-size: 11px;">
 					<?php
 					if ((($host["snmp_community"] == "") && ($host["snmp_username"] == "")) ||
 						($host["snmp_version"] == 0)) {
@@ -728,12 +730,8 @@ function host_edit() {
 					No Availability Check In Use<br>
 				</td>
 				<?php } ?>
-				<td class="textInfo" valign="top">
-					<span style="color: #c16921;">*</span><a href="graphs_new.php?host_id=<?php print $host["id"];?>">Create Graphs for this Host</a>
-				</td>
 			</tr>
 		</table>
-		<br>
 		<?php
 	}
 
@@ -765,7 +763,7 @@ function host_edit() {
 		?>
 		<script type="text/javascript">
 		<!--
-	
+
 		// default snmp information
 		var snmp_community       = document.getElementById('snmp_community').value;
 		var snmp_username        = document.getElementById('snmp_username').value;
@@ -777,42 +775,42 @@ function host_edit() {
 		var snmp_port            = document.getElementById('snmp_port').value;
 		var snmp_timeout         = document.getElementById('snmp_timeout').value;
 		var max_oids             = document.getElementById('max_oids').value;
-	
+
 		// default ping methods
 		var ping_method    = document.getElementById('ping_method').value;
 		var ping_port      = document.getElementById('ping_port').value;
 		var ping_timeout   = document.getElementById('ping_timeout').value;
 		var ping_retries   = document.getElementById('ping_retries').value;
-	
+
 		var availability_methods = document.getElementById('availability_method').options;
 		var num_methods          = document.getElementById('availability_method').length;
 		var selectedIndex        = document.getElementById('availability_method').selectedIndex;
-	
+
 		var agent = navigator.userAgent;
 		agent = agent.match("MSIE");
-	
+
 		function setPingVisibility() {
 			availability_method = document.getElementById('availability_method').value;
 			ping_method         = document.getElementById('ping_method').value;
-	
+
 			/* debugging, uncomment as required */
 			//alert("The availability method is '" + availability_method + "'");
 			//alert("The ping method is '" + ping_method + "'");
-	
+
 			switch(availability_method) {
 			case "0": // none
 				document.getElementById('row_ping_method').style.display  = "none";
 				document.getElementById('row_ping_port').style.display    = "none";
 				document.getElementById('row_ping_timeout').style.display = "none";
 				document.getElementById('row_ping_retries').style.display = "none";
-	
+
 				break;
 			case "2": // snmp
 				document.getElementById('row_ping_method').style.display  = "none";
 				document.getElementById('row_ping_port').style.display    = "none";
 				document.getElementById('row_ping_timeout').style.display = "";
 				document.getElementById('row_ping_retries').style.display = "";
-	
+
 				break;
 			default: // ping ok
 				switch(ping_method) {
@@ -821,7 +819,7 @@ function host_edit() {
 					document.getElementById('row_ping_port').style.display    = "none";
 					document.getElementById('row_ping_timeout').style.display = "";
 					document.getElementById('row_ping_retries').style.display = "";
-	
+
 					break;
 				case "2": // ping udp
 				case "3": // ping tcp
@@ -829,14 +827,14 @@ function host_edit() {
 					document.getElementById('row_ping_port').style.display    = "";
 					document.getElementById('row_ping_timeout').style.display = "";
 					document.getElementById('row_ping_retries').style.display = "";
-	
+
 					break;
 				}
-	
+
 				break;
 			}
 		}
-	
+
 		function addSelectItem(item, formObj) {
 			if (agent != "MSIE") {
 				formObj.add(item,null); // standards compliant
@@ -844,18 +842,18 @@ function host_edit() {
 				formObj.add(item);      // IE only
 			}
 		}
-	
+
 		function setAvailability(type) {
 			/* get the availability structure */
 			var am=document.getElementById('availability_method');
-	
+
 			/* get current selectedIndex */
 			selectedIndex = document.getElementById('availability_method').selectedIndex;
-	
+
 			/* debugging uncomment as required */
 			//alert("The selectedIndex is '" + selectedIndex + "'");
 			//alert("The array length is '" + am.length + "'");
-	
+
 			switch(type) {
 			case "NoSNMP":
 				/* remove snmp options */
@@ -863,40 +861,40 @@ function host_edit() {
 					am.remove(1);
 					am.remove(1);
 				}
-	
+
 				/* set the index to something valid, like "ping" */
 				if (selectedIndex > 1) {
 					am.selectedIndex=1;
 				}
-	
+
 				break;
 			case "All":
 				/* restore all options */
 				if (am.length == 2) {
 					am.remove(0);
 					am.remove(0);
-	
+
 					var a=document.createElement('option');
 					var b=document.createElement('option');
 					var c=document.createElement('option');
 					var d=document.createElement('option');
-	
+
 					a.value="0";
 					a.text="None";
 					addSelectItem(a,am);
-	
+
 					b.value="1";
 					b.text="Ping and SNMP";
 					addSelectItem(b,am);
-	
+
 					c.value="2";
 					c.text="SNMP";
 					addSelectItem(c,am);
-	
+
 					d.value="3";
 					d.text="Ping";
 					addSelectItem(d,am);
-	
+
 					/* restore the correct index number */
 					if (selectedIndex == 0) {
 						am.selectedIndex = 0;
@@ -904,14 +902,14 @@ function host_edit() {
 						am.selectedIndex = 3;
 					}
 				}
-	
+
 				break;
 			}
-	
+
 			setAvailabilityVisibility(type, am.selectedIndex);
 			setPingVisibility();
 		}
-	
+
 		function setAvailabilityVisibility(type, selectedIndex) {
 			switch(type) {
 			case "NoSNMP":
@@ -919,12 +917,12 @@ function host_edit() {
 				case "0": // availability none
 					document.getElementById('row_ping_method').style.display="none";
 					document.getElementById('ping_method').value=0;
-	
+
 					break;
 				case "1": // ping
 					document.getElementById('row_ping_method').style.display="";
 					document.getElementById('ping_method').value=ping_method;
-	
+
 					break;
 				}
 			case "All":
@@ -932,7 +930,7 @@ function host_edit() {
 				case "0": // availability none
 					document.getElementById('row_ping_method').style.display="none";
 					document.getElementById('ping_method').value=0;
-	
+
 					break;
 				case "1": // ping and snmp
 				case 3: // ping
@@ -941,40 +939,40 @@ function host_edit() {
 						document.getElementById('ping_method').value=ping_method;
 						document.getElementById('row_ping_method').style.display="";
 					}
-	
+
 					break;
 				case "2": // snmp
 					document.getElementById('row_ping_method').style.display="none";
 					document.getElementById('ping_method').value="0";
-	
+
 					break;
 				}
 			}
 		}
-	
+
 		function changeHostForm() {
 			snmp_version        = document.getElementById('snmp_version').value;
-	
+
 			switch(snmp_version) {
 			case "0":
 				setAvailability("NoSNMP");
 				setSNMP("None");
-	
+
 				break;
 			case "1":
 			case "2":
 				setAvailability("All");
 				setSNMP("v1v2");
-	
+
 				break;
 			case "3":
 				setAvailability("All");
 				setSNMP("v3");
-	
+
 				break;
 			}
 		}
-	
+
 		function setSNMP(snmp_type) {
 			switch(snmp_type) {
 			case "None":
@@ -988,7 +986,7 @@ function host_edit() {
 				document.getElementById('row_snmp_port').style.display            = "none";
 				document.getElementById('row_snmp_timeout').style.display         = "none";
 				document.getElementById('row_max_oids').style.display             = "none";
-	
+
 				break;
 			case "v1v2":
 				document.getElementById('row_snmp_username').style.display        = "none";
@@ -1001,7 +999,7 @@ function host_edit() {
 				document.getElementById('row_snmp_port').style.display            = "";
 				document.getElementById('row_snmp_timeout').style.display         = "";
 				document.getElementById('row_max_oids').style.display             = "";
-	
+
 				break;
 			case "v3":
 				document.getElementById('row_snmp_username').style.display        = "";
@@ -1014,13 +1012,13 @@ function host_edit() {
 				document.getElementById('row_snmp_port').style.display            = "";
 				document.getElementById('row_snmp_timeout').style.display         = "";
 				document.getElementById('row_max_oids').style.display             = "";
-	
+
 				break;
 			}
 		}
-	
+
 		window.onload = changeHostForm();
-	
+
 		-->
 		</script>
 		<?php
