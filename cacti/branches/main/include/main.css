@@ -13,7 +13,7 @@ form {
 
 input {
 	margin: 0px;
-	padding: 0px;
+	padding: 2px;
 }
 
 tr {
@@ -30,6 +30,7 @@ th {
 
 td {
 	overflow: hidden;
+	line-height: 2.0em;
 	font-family: Arial, Verdana, Helvetica, sans-serif;
 	font-size: 10px;
 }
