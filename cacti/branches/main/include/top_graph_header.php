@@ -115,7 +115,6 @@ if ((read_graph_config_option("default_tree_view_mode") == "2") &&
 	<script type="text/javascript" src="include/jscalendar/calendar-setup.js"></script>
 </head>
 <body class='body' onResize='pageResize()' onLoad='pageInitialize()'>
-<a name='page_top'></a>
 <div id='header'>
 	<div id=logobar'></div>
 	<div id='navbar'>
@@ -139,19 +138,19 @@ if ((read_graph_config_option("default_tree_view_mode") == "2") &&
 			<?php draw_navigation_text();?>
 		</div>
 		<div style='float:right'>
-			<?php 
-			if (read_config_option("auth_method") != 0) { 
-							
+			<?php
+			if (read_config_option("auth_method") != 0) {
+
 				/* setup date format */
 				$date_fmt = read_graph_config_option("default_date_format");
 				$datechar = read_graph_config_option("default_datechar");
-			
+
 				switch ($datechar) {
 					case GDC_HYPHEN: 	$datechar = "-"; break;
 					case GDC_SLASH: 	$datechar = "/"; break;
 					case GDC_DOT:	 	$datechar = "."; break;
 				}
-			
+
 				switch ($date_fmt) {
 					case GD_MO_D_Y:
 						$date = "m" . $datechar . "d" . $datechar . "Y H:i:s";
@@ -172,7 +171,7 @@ if ((read_graph_config_option("default_tree_view_mode") == "2") &&
 						$date = "Y" . $datechar . "M" . $datechar . "d H:i:s";
 						break;
 				}
-				
+
 				?>System Time: <strong><?php echo date("D, " . $date . " T");?></strong>&nbsp;&nbsp;&nbsp;
 				Logged in as <strong><?php print db_fetch_cell("select username from user_auth where id=" . $_SESSION["sess_user_id"]);?></strong> (<a href="logout.php">Logout</a>)
 			<?php } ?>
