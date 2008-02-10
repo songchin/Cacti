@@ -48,9 +48,11 @@ function html_start_box($title, $width, $background_color, $cell_padding, $align
 	if ($collapsing) {
 		$ani  = "style=\"cursor:pointer;\" onClick=\"htmlStartBoxFilterChange('" . $item_id . "')\"";
 		$ani2 = "onload=\"htmlStartBoxFilterChange('" . $item_id . "', true)\"";
+		$ani3 = "onClick=\"htmlStartBoxFilterChange('" . $item_id . "')\"";
 	}else{
 		$ani  = "";
 		$ani2 = "";
+		$ani3 = "";
 	}
 
 	?>
@@ -68,7 +70,7 @@ function html_start_box($title, $width, $background_color, $cell_padding, $align
 								<img src="images/transparent_pixel.gif" alt='' <?php print $ani2;?>>
 							</td><?php } if ($add_text != "") {?>
 							<td class="textHeaderDark" align="right">
-								<strong><a class="linkOverDark" href="<?php print $add_text;?>">Add</a>&nbsp;</strong>
+								<strong><a class="linkOverDark" <?php print $ani3;?> href="<?php print $add_text;?>">Add</a>&nbsp;</strong>
 							</td>
 						<?php }?></tr>
 					</table>
@@ -747,7 +749,7 @@ function draw_menu($user_menu = "") {
 			$ani  = "onClick='changeMenuState(\"" . $id . "\")'";
 			$ani2 = "onload='changeMenuState(\"" . $id . "\", true)'";
 
-			print "\t\t\t<tr class='menuMain' $ani>
+			print "\t\t\t<tr class='menuMain' nowrap $ani>
 				<td valign='middle'>
 					<img id='tw_" . $id . "' src='images/tw_open.gif' align='absmiddle' alt='Menu Item'>$header_name
 					<img src='images/transparent_pixel.gif' $ani2>
