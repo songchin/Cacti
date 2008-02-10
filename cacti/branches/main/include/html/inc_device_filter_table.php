@@ -1,9 +1,9 @@
 	<tr class='rowAlternate2'>
 		<form name="form_devices">
 		<td>
-			<table width="100%" cellpadding="0" cellspacing="0">
+			<table cellpadding="0" cellspacing="0">
 				<tr>
-					<td nowrap style='white-space: nowrap;' width="50">
+					<td nowrap style='white-space: nowrap;' width="55">
 						Type:&nbsp;
 					</td>
 					<td width="1">
@@ -51,8 +51,12 @@
 							?>
 						</select>
 					</td>
-					<td nowrap style='white-space: nowrap;' width="20">
-						&nbsp;Search:&nbsp;
+				</tr>
+			</table>
+			<table cellpadding="0" cellspacing="0">
+				<tr>
+					<td nowrap style='white-space: nowrap;' width="55">
+						Search:&nbsp;
 					</td>
 					<td width="1">
 						<input type="text" name="filter" size="20" value="<?php print $_REQUEST["filter"];?>">
