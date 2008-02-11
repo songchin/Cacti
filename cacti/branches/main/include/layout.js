@@ -396,6 +396,8 @@ var aniInProgress   = false;
 var vSplitterClosed = false;
 var creatingCookie  = false;
 var browser         = "Unknwn";
+var windowOnLoadReg = new Array();
+var windowOnLoadCt  = 0;
 
 /* tells if on the right border or not */
 function isOnBorderRight(object, event) {
@@ -756,7 +758,11 @@ function vSplitterPos() {
 }
 
 function pageResize() {
+	/* initialize the page splitter as required */
 	vSplitterPos();
+
+	/* fix browser quirks */
+	fixBrowserQuirks();
 }
 
 function pageInitialize() {
@@ -776,10 +782,31 @@ function pageInitialize() {
 
 	/* fix browser quirks */
 	fixBrowserQuirks();
+
+	/* run page onLoad functions */
+	runOnLoadFunctions();
+}
+
+function registerOnLoadFunction(page, function_name) {
+	windowOnLoadReg[windowOnLoadCt] = page + ":" + function_name;
+	windowOnLoadCt++;
+}
+
+function runOnLoadFunctions() {
+	myPage = getBaseName();
+
+	for (i = 0; i < windowOnLoadCt; i++) {
+		valArray = windowOnLoadReg[i].split(":");
+
+		if (myPage == valArray[0]) {
+			eval(valArray[1]);
+		}
+	}
 }
 
 function fixBrowserQuirks() {
 	window_height = document.getElementById("wrapper").clientHeight;
+
 	if (browser == "IE") {
 		if (document.getElementById("content") != null) {
 			myDiv = document.getElementById("content");
@@ -793,6 +820,22 @@ function fixBrowserQuirks() {
 
 			if (myDiv.scrollHeight > window_height) {
 				myDiv.style.paddingRight = "25px";
+				myDiv.style.overflowX   = "hidden";
+			}
+		}
+	}else if (browser == "FF") {
+		if (document.getElementById("content") != null) {
+			myDiv = document.getElementById("content");
+
+			if (myDiv.scrollHeight <= window_height) {
+				myDiv.style.paddingRight = "0px";
+				myDiv.style.overflowX   = "hidden";
+			}
+		}else if (document.getElementById("graph_tree")) {
+			myDiv = document.getElementById("graph_tree_content");
+
+			if (myDiv.scrollHeight <= window_height) {
+				myDiv.style.paddingRight = "0px";
 				myDiv.style.overflowX   = "hidden";
 			}
 		}
