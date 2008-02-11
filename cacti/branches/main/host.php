@@ -1017,7 +1017,7 @@ function host_edit() {
 			}
 		}
 
-		window.onload = changeHostForm();
+		registerOnLoadFunction("host", "changeHostForm();");
 
 		-->
 		</script>

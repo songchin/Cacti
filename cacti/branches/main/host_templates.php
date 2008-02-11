@@ -646,7 +646,7 @@ function template_edit() {
 		}
 	}
 
-	window.onload = changeHostForm();
+	registerOnLoadFunction("host_templates", "changeHostForm();");
 
 	-->
 	</script>

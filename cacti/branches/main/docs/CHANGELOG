@@ -32,7 +32,7 @@ Cacti CHANGELOG
 -feature#0001030: Lower limit and upper limit |query_*| variable support for Graph Templates
 -feature#0001111: add remove-device.php cli script, replace numerical constants for permission handling by PERM_*
 -feature#0001111: add remove-graph.php cli script
--feature#0000954: implement --alt-y-grid graph option 
+-feature#0000954: implement --alt-y-grid graph option
 -feature: show basic rrdtool graph options on Graph Template Edit
 -feature: Add additional logging to Graph Xport
 -feature: Add rows dropdown to devices, graphs and data sources
@@ -45,6 +45,7 @@ Cacti CHANGELOG
 -feature: Manage all Host Availability Options in each Host Template, derive Host options from those
 -feature: Add Server Time to page headers, pay respect to user specific date/timeformats
 -feature: add_device.php uses a host template like feature#0001122
+-feature: Allow the enabling and disabling of a Data Source from the Data Source Edit form
 
 0.8.7a
 -bug#0000895: "Use Per-Data Source Value (Ignore this Value)" runs only when when checking "Allow Empty Input"

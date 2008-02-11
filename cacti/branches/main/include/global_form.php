@@ -255,10 +255,10 @@ $struct_data_source = array(
 		"flags" => ""
 		),
 	"active" => array(
-		"friendly_name" => "Data Source Active",
+		"friendly_name" => "Data Template Active",
 		"method" => "checkbox",
 		"default" => "on",
-		"description" => "Whether Cacti should gather data for this data source or not.",
+		"description" => "Whether Cacti should gather data for this class of Data Sources.",
 		"flags" => ""
 		)
 	);
@@ -651,6 +651,10 @@ $fields_graph_template_input_edit = array(
 
 /* file: host.php, action: edit */
 $fields_host_edit = array(
+	"host_header" => array(
+		"method" => "spacer",
+		"friendly_name" => "General Host Options"
+		),
 	"description" => array(
 		"method" => "textbox",
 		"friendly_name" => "Description",
@@ -865,6 +869,10 @@ $fields_host_edit_availability = array(
 
 /* file: host_templates.php, action: edit */
 $fields_host_template_edit = array(
+	"host_header" => array(
+		"method" => "spacer",
+		"friendly_name" => "General Host Template Options"
+		),
 	"name" => array(
 		"method" => "textbox",
 		"friendly_name" => "Name",

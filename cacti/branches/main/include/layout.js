@@ -827,7 +827,7 @@ function fixBrowserQuirks() {
 		if (document.getElementById("content") != null) {
 			myDiv = document.getElementById("content");
 
-			if (myDiv.scrollHeight <= window_height) {
+			if ((myDiv.scrollHeight + 60) <= window_height) {
 				myDiv.style.paddingRight = "0px";
 				myDiv.style.overflowX   = "hidden";
 			}

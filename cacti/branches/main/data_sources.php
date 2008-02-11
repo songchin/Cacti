@@ -79,6 +79,11 @@ switch ($_REQUEST["action"]) {
 		ds_edit();
 
 		break;
+
+	case 'ds_toggle_status':
+		ds_toggle_status();
+
+		break;
 	default:
 		include_once("./include/top_header.php");
 
@@ -544,6 +549,21 @@ function form_actions() {
     data - Custom Data
    ---------------------------- */
 
+function ds_toggle_status() {
+	/* ================= input validation ================= */
+	input_validate_input_number(get_request_var("id"));
+	/* ==================================================== */
+
+	if ($_GET["newstate"] == 1) {
+		api_data_source_enable($_GET["id"]);
+	}else{
+		cacti_log("Disabling Bad DS");
+		api_data_source_disable($_GET["id"]);
+	}
+
+	header("Location: " . $_SERVER["HTTP_REFERER"]);
+}
+
 function data_edit() {
 	/* ================= input validation ================= */
 	input_validate_input_number(get_request_var("id"));
@@ -700,7 +720,8 @@ function ds_edit() {
 					<?php print get_data_source_title($_GET["id"]);?>
 				</td>
 				<td class="textInfo" align="right" valign="top">
-					<span style="color: #c16921;">*<a href='data_sources.php?action=ds_edit&id=<?php print (isset($_GET["id"]) ? $_GET["id"] : 0);?>&debug=<?php print (isset($_SESSION["ds_debug_mode"]) ? "0" : "1");?>'>Turn <strong><?php print (isset($_SESSION["ds_debug_mode"]) ? "Off" : "On");?></strong> Data Source Debug Mode.</a>
+					<span style="color: #c16921;">*<a href='data_sources.php?action=ds_toggle_status&id=<?php print (isset($_GET["id"]) ? $_GET["id"] : 0);?>&newstate=<?php print (($data["active"] == "on") ? "0" : "1");?>'><strong><?php print (($data["active"] == "on") ? "Disable" : "Enable");?></strong> Data Source.</a>
+					<br><span style="color: #c16921;">*<a href='data_sources.php?action=ds_edit&id=<?php print (isset($_GET["id"]) ? $_GET["id"] : 0);?>&debug=<?php print (isset($_SESSION["ds_debug_mode"]) ? "0" : "1");?>'>Turn <strong><?php print (isset($_SESSION["ds_debug_mode"]) ? "Off" : "On");?></strong> Data Source Debug Mode.</a>
 				</td>
 			</tr>
 		</table>
