@@ -1,5 +1,8 @@
 Cacti CHANGELOG
 
+0.8.6k
+-security: Fix several security vulnerabilities
+
 0.8.6j
 -bug#0000842: SNMPv3 password field does not check if entered passwords match.
 -bug#0000848: Fix "PHP Script Server communications lost" error in the poller under high network load.
