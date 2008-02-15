@@ -25,6 +25,7 @@ Cacti CHANGELOG
 -bug: Alert on changing logarithmic scaling removed
 -bug: remove graph permissions if graph is removed
 -bug: remove host permissions if host is removed
+-bug: initialization of snmp_auth when using SNMP=NONE 
 -feature#0001162: WEB UI now accepts max_oids on SNMP bulkwalks
 -feature#0001124: Devices/Host Templates - remove already associated objects from dropdown selector
 -feature#0001123: Performance tweak by adding some indices
