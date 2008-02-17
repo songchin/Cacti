@@ -82,7 +82,20 @@ function html_start_box($title, $width, $background_color, $cell_padding, $align
 }
 
 function html_start_box_dq($query_name, $query_id, $host_id, $colspan, $width, $background_color, $cell_padding, $align) {
-	global $colors; ?>
+	global $colors; 
+
+	$temp_string = str_replace("strong", "", $query_name);
+	if (strpos($temp_string, "[")) {
+		$temp_string = substr($temp_string, 0, strpos($temp_string, "[")-1);
+	}
+
+	if ($query_name != "") {
+		$item_id = clean_up_name($temp_string);
+	}else{
+		$item_id = "item_" . rand(255, 65535);
+	}
+	
+	?>
 		<table class='startBoxHeader' cellpadding="0" cellspacing="0" border="0" width="100%">
 			<tr class='rowHeader'>
 				<td style='padding: 3px;' colspan='<?php print $colspan+1;?>'>
