@@ -122,6 +122,8 @@ function host_reload_query() {
 function host_new_graphs_save() {
 	$selected_graphs_array = unserialize(stripslashes($_POST["selected_graphs_array"]));
 
+	$values = array();
+	
 	/* form an array that contains all of the data on the previous form */
 	while (list($var, $val) = each($_POST)) {
 		if (preg_match("/^g_(\d+)_(\d+)_(\w+)/", $var, $matches)) { /* 1: snmp_query_id, 2: graph_template_id, 3: field_name */
