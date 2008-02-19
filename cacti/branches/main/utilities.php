@@ -291,6 +291,12 @@ function utilities_view_tech($php_info = "") {
 	print "</td>\n";
 	print "</tr>\n";
 
+	$spine_version = "";
+	if ($poller_options[read_config_option("poller_type")] == "spine") {
+		$spine_output = shell_exec(read_config_option("path_spine") . " -v");
+		$spine_version = substr($spine_output, 6, 6);
+	}
+
 	html_header(array("Poller Information"), 2);
 	print "<tr class='rowAlternate1'>\n";
 	print "		<td class='textAreaNotes'>Interval</td>\n";
@@ -298,8 +304,9 @@ function utilities_view_tech($php_info = "") {
 	print "</tr>\n";
 	print "<tr class='rowAlternate2'>\n";
 	print "		<td class='textAreaNotes'>Type</td>\n";
-	print "		<td class='textAreaNotes'>" . $poller_options[read_config_option("poller_type")] . "</td>\n";
+	print "		<td class='textAreaNotes'>" . $poller_options[read_config_option("poller_type")] . " " . $spine_version . "</td>\n";
 	print "</tr>\n";
+
 	print "<tr class='rowAlternate1'>\n";
 	print "		<td class='textAreaNotes'>Items</td>\n";
 	print "		<td class='textAreaNotes'>";
