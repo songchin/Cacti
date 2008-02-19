@@ -84,7 +84,7 @@ global $colors;
 						break;
 				}
 				
-				?>System Time: <strong><?php echo date("D, " . $date . " T");?></strong>&nbsp;&nbsp;&nbsp;
+				?><strong><?php echo date("D, " . $date . " T");?></strong>&nbsp;&nbsp;&nbsp;
 				Logged in as <strong><?php print db_fetch_cell("select username from user_auth where id=" . $_SESSION["sess_user_id"]);?></strong> (<a href="logout.php">Logout</a>)
 			<?php } ?>
 		</div>
