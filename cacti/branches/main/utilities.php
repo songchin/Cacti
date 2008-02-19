@@ -206,6 +206,9 @@ function memory_readable($val) {
 function utilities_view_tech($php_info = "") {
 	global $colors, $config, $rrdtool_versions, $poller_options, $input_types;
 
+	/* Remove all cached settings, cause read of database */
+	kill_session_var("sess_config_array");
+
 	/* Get table status */
 	$table_status = db_fetch_assoc("SHOW TABLE STATUS");
 
