@@ -756,7 +756,7 @@ function host_edit() {
 			));
 	}
 
-	html_end_box(FALSE);
+	html_end_box(empty($host["id"]));
 
 	/* javascript relates to availability options, so include it only for existing hosts */
 	if (!empty($host["id"])) {
