@@ -154,6 +154,41 @@ function api_device_save($id, $host_template_id, $description, $hostname, $snmp_
 			raise_message(2);
 		}
 
+		/* recache in case any snmp information was changed */
+		if (!empty($id)) { /* a valid host was already existing */
+			/* detect SNMP change, if current snmp parameters cannot be found in host table */
+			$snmp_changed = ($id != db_fetch_cell("SELECT " .
+					"id " .
+					"FROM host " .
+					"WHERE id=$id " .
+					"AND snmp_version=$snmp_version " .
+					"AND snmp_community=$snmp_community " .
+					"AND snmp_username=$snmp_username " .
+					"AND snmp_password=$snmp_password " .
+					"AND snmp_auth_protocol=$snmp_auth_protocol " .
+					"AND snmp_priv_passphrase=$snmp_priv_passphrase " .
+					"AND snmp_priv_protocol=$snmp_priv_protocol " .
+					"AND snmp_context=$snmp_context " .
+					"AND snmp_port=$snmp_port " .
+					"AND snmp_timeout=$snmp_timeout "));
+
+			if ($snmp_changed) {
+				/* fecth all existing snmp queries */
+				$snmp_queries = db_fetch_assoc("SELECT " .
+						"snmp_query_id, " .
+						"reindex_method " .
+						"FROM host_snmp_query " .
+						"WHERE host_id=$id");
+	
+				if (sizeof($snmp_queries) > 0) {
+					foreach ($snmp_queries as $snmp_query) {
+						/* recache all existing snmp queries */
+						run_data_query($id, $snmp_query["snmp_query_id"]);
+					}
+				}
+			}
+		}
+
 		/* if the user changes the host template, add each snmp query associated with it */
 		if (($host_template_id != $_host_template_id) && (!empty($host_template_id))) {
 			$snmp_queries = db_fetch_assoc("select snmp_query_id, reindex_method from host_template_snmp_query where host_template_id=$host_template_id");
