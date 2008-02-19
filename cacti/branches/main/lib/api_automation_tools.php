@@ -354,7 +354,7 @@ function displaySNMPValuesExtended($hostId, $fields, $snmpQueryId, $quietMode) {
 		$query_FieldSpec = str_replace(",", "','", $query_FieldSpec);
 		$query_FieldSpec = " AND field_name in ('" . $query_FieldSpec . "')";
 	} else {
-		$query_FieldSpec ="";
+		$query_FieldSpec = "";
 	}
 
 	$xml_array = get_data_query_array($snmpQueryId);
@@ -364,7 +364,7 @@ function displaySNMPValuesExtended($hostId, $fields, $snmpQueryId, $quietMode) {
 		reset($xml_array["fields"]);
 		while (list ($field_name, $field_array) = each($xml_array["fields"])) {
 			if ($field_array["direction"] == "input") {
-				# is spec was given ...
+				# if spec was given ...
 				if (strlen($fields) > 0) {
 					#  ... but current field doesn't match (make it case-insensitive, beware of the users!)
 					if (strpos(strtolower($fields), strtolower($field_name)) === false) {
@@ -373,6 +373,9 @@ function displaySNMPValuesExtended($hostId, $fields, $snmpQueryId, $quietMode) {
 					}
 				}
 				$req_fields[$field_name] = $xml_array["fields"][$field_name];
+				/* initialize column lengths */
+				$req_fields[$field_name]["length"] = $quietMode ? 0 : max(strlen($field_array["name"]), strlen($field_name));
+
 				if (!isset ($total_rows)) {
 					$total_rows = db_fetch_cell("SELECT count(*) FROM host_snmp_cache WHERE host_id=" . $hostId . " and snmp_query_id=" . $snmpQueryId . " AND field_name='$field_name'");
 				}
@@ -423,27 +426,17 @@ function displaySNMPValuesExtended($hostId, $fields, $snmpQueryId, $quietMode) {
 			return (1);
 		}
 
-		# determine length of each header field
-		while (list ($field_name, $field_array) = each($req_fields)) {
-			foreach ($field_names as $row) {
-				if ($row["field_name"] == $field_name) {
-					if (!$quietMode) {
-						$req_fields[$field_name]["length"] = max(strlen($field_array["name"]), strlen($field_name));
-					} else {
-						$req_fields[$field_name]["length"] = 0;
-					}
-					break;
-				}
-			}
-		}
+#		$fields = array_rekey($field_names, "field_name", "field_name");
 
-		$fields = array_rekey($field_names, "field_name", "field_name");
 		if (sizeof($snmp_query_indexes) > 0) {
 			foreach ($snmp_query_indexes as $row) {
 				# determine length of each data field
 				reset($req_fields);
 				while (list ($field_name, $field_array) = each($req_fields)) {
-					$req_fields[$field_name]["length"] = max($req_fields[$field_name]["length"],strlen($row[$field_name]));
+					/* verify, that the requested field is known in snmp_cache */
+					if (isset($row[$field_name])) {
+						$req_fields[$field_name]["length"] = max($req_fields[$field_name]["length"],strlen($row[$field_name]));
+					}
 				}
 			}
 		}
@@ -477,8 +470,10 @@ function displaySNMPValuesExtended($hostId, $fields, $snmpQueryId, $quietMode) {
 			foreach ($snmp_query_indexes as $row) {
 				reset($req_fields);
 				while (list ($field_name, $field_array) = each($req_fields)) {
-					print(str_pad($row[$field_name], $req_fields[$field_name]["length"]+1));
-					$exit_code = 0;
+					if (isset($row[$field_name])) {
+						print(str_pad($row[$field_name], $req_fields[$field_name]["length"]+1));
+						$exit_code = 0;
+					}
 				}
 				print "\n";
 			}
