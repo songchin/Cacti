@@ -109,7 +109,7 @@ td {
 }
 
 #graph_tree {
-	background: #F5F5F5 url('../images/shadow.gif') repeat-x scroll top left;
+	background: #FEFEFE url('../images/shadow.gif') repeat-x scroll top left;
 	float: left;
 	position: fixed;
 	top: 5.2em;
