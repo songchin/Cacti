@@ -133,6 +133,8 @@ function api_device_save($id, $host_template_id, $description, $hostname, $snmp_
 	$save["ping_retries"]         = form_input_validate($ping_retries, "ping_retries", "^[0-9]+$", true, 3);
 	$save["max_oids"]             = form_input_validate($max_oids, "max_oids", "^[0-9]+$", true, 3);
 
+	$save = api_plugin_hook_function('api_device_save', $save);
+
 	$host_id = 0;
 
 	if (!is_error_message()) {

@@ -657,11 +657,13 @@ function form_confirm($title_text, $body_text, $cancel_url, $action_url) { ?>
      on a confirmation form
    @arg $cancel_url - the url to go to when the user clicks 'cancel'
    @arg $action_url - the url to go to when the user clicks 'delete' */
-function form_confirm_buttons($action_url, $cancel_url) { ?>
+function form_confirm_buttons($action_url, $cancel_url) {
+	global $config;
+ ?>
 	<tr>
 		<td bgcolor="#E1E1E1">
-			<a href="<?php print $cancel_url;?>"><img src="images/button_cancel.gif" border="0" alt="Cancel" align="absmiddle"></a>
-			<a href="<?php print $action_url . "&confirm=yes";?>"><img src="images/button_delete.gif" border="0" alt="Delete" align="absmiddle"></a>
+			<a href="<?php print $cancel_url;?>"><img src="?php print $config['url_path'] ?>images/button_cancel.gif" border="0" alt="Cancel" align="absmiddle"></a>
+			<a href="<?php print $action_url . "&confirm=yes";?>"><img src="?php print $config['url_path'] ?>images/button_delete.gif" border="0" alt="Delete" align="absmiddle"></a>
 		</td>
 	</tr>
 <?php }
@@ -672,6 +674,7 @@ function form_confirm_buttons($action_url, $cancel_url) { ?>
    @arg $force_type - if specified, will force the 'action' button to be either
      'save' or 'create'. otherwise this field should be properly auto-detected */
 function form_save_button($cancel_url, $force_type = "", $key_field = "id") {
+	global $config;
 	if (empty($force_type)) {
 		if (empty($_GET[$key_field])) {
 			$img = "button_create.gif";
@@ -692,8 +695,8 @@ function form_save_button($cancel_url, $force_type = "", $key_field = "id") {
 		<tr>
 			<td bgcolor="#f5f5f5" align="right">
 				<input type='hidden' name='action' value='save'>
-				<a href='<?php print $cancel_url;?>'><img src='images/button_cancel2.gif' alt='Cancel' align='absmiddle' border='0'></a>
-				<input type='image' src='images/<?php print $img;?>' alt='<?php print $alt;?>' align='absmiddle'>
+				<a href='<?php print $cancel_url;?>'><img src='<?php echo $config['url_path']; ?>images/button_cancel2.gif' alt='Cancel' align='absmiddle' border='0'></a>
+				<input type='image' src='<?php echo $config['url_path']; ?>images/<?php print $img;?>' alt='<?php print $alt;?>' align='absmiddle'>
 			</td>
 		</tr>
 	</table>

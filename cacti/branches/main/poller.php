@@ -73,6 +73,8 @@ foreach($parms as $parameter) {
 }
 }
 
+api_plugin_hook('poller_top');
+
 /* record the start time */
 list($micro,$seconds) = split(" ", microtime());
 $poller_start         = $seconds + $micro;
@@ -230,6 +232,8 @@ while ($poller_runs_completed < $poller_runs) {
 			$extra_args     = "-q " . strtolower($config["base_path"] . "/cmd.php");
 			$method         = "cmd.php";
 		}
+
+		$extra_args = api_plugin_hook_function ('poller_command_args', $extra_args);
 
 		/* Populate each execution file with appropriate information */
 		foreach ($polling_hosts as $item) {
@@ -402,14 +406,18 @@ while ($poller_runs_completed < $poller_runs) {
 
 		/* sleep the appripriate amount of time */
 		if ($poller_runs_completed < $poller_runs) {
+			api_plugin_hook('poller_bottom');
 			db_close();
 			usleep($sleep_time * 1000000);
 			db_connect_real($database_hostname, $database_username, $database_password, $database_default, $database_type, $database_port);
+			api_plugin_hook('poller_top');
 		}
 	}else if (read_config_option('log_verbosity') >= POLLER_VERBOSITY_MEDIUM) {
 		cacti_log("WARNING: Cacti Polling Cycle Exceeded Poller Interval by " . $loop_end-$loop_start-$poller_interval . " seconds", TRUE, "POLLER");
 	}
 }
+
+api_plugin_hook('poller_bottom');
 
 function display_help() {
 	echo "Cacti Poller Version " . db_fetch_cell("SELECT cacti FROM version") . ", Copyright 2007 - The Cacti Group\n\n";

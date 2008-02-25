@@ -92,27 +92,30 @@ if ((read_graph_config_option("default_tree_view_mode") == "2") &&
 	}
 }
 
+$page_title = api_plugin_hook_function('page_title', 'Cacti');
+
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-	<title>Cacti</title>
+	<title><?php echo $page_title; ?></title>
 	<?php if (isset($_SESSION["custom"])) {
 		if ($_SESSION["custom"]) {
 			print "<meta http-equiv=refresh content='99999'>\r\n";
 		}else{
-			print "<meta http-equiv=refresh content='" . read_graph_config_option("page_refresh") . "'>\r\n";
-		}
+			$refresh = api_plugin_hook_function('top_graph_refresh', read_graph_config_option('page_refresh'));
+			print "<meta http-equiv=refresh content='" . $refresh . "'>\r\n";		}
 	}
 	?>
-	<link href="include/main.css" rel="stylesheet">
-	<link href="images/favicon.ico" rel="shortcut icon"/>
-	<script type="text/javascript" src="include/layout.js"></script>
-	<script type="text/javascript" src="include/treeview/ua.js"></script>
-	<script type="text/javascript" src="include/treeview/ftiens4.js"></script>
-	<script type="text/javascript" src="include/jscalendar/calendar.js"></script>
-	<script type="text/javascript" src="include/jscalendar/lang/calendar-en.js"></script>
-	<script type="text/javascript" src="include/jscalendar/calendar-setup.js"></script>
+	<link href="<?php echo $config['url_path']; ?>include/main.css" rel="stylesheet">
+	<link href="<?php echo $config['url_path']; ?>images/favicon.ico" rel="shortcut icon"/>
+	<script type="text/javascript" src="<?php echo $config['url_path']; ?>include/layout.js"></script>
+	<script type="text/javascript" src="<?php echo $config['url_path']; ?>include/treeview/ua.js"></script>
+	<script type="text/javascript" src="<?php echo $config['url_path']; ?>include/treeview/ftiens4.js"></script>
+	<script type="text/javascript" src="<?php echo $config['url_path']; ?>include/jscalendar/calendar.js"></script>
+	<script type="text/javascript" src="<?php echo $config['url_path']; ?>include/jscalendar/lang/calendar-en.js"></script>
+	<script type="text/javascript" src="<?php echo $config['url_path']; ?>include/jscalendar/calendar-setup.js"></script>
+	<?php api_plugin_hook('page_head'); ?>
 </head>
 <body class='body' onResize='pageResize()' onLoad='pageInitialize()'>
 <div id='header'>
@@ -120,16 +123,17 @@ if ((read_graph_config_option("default_tree_view_mode") == "2") &&
 	<div id='navbar'>
 		<div id='navbar_l'>
 			<ul>
-				<?php echo draw_header_tab("console", "Console", "index.php");?>
-				<?php echo draw_header_tab("graphs", "Graphs", "graph_view.php");?>
+				<?php echo draw_header_tab("console", "Console", $config['url_path'] . "index.php");?>
+				<?php echo draw_header_tab("graphs", "Graphs", $config['url_path'] . "graph_view.php");?>
+				<?php api_plugin_hook('top_graph_header_tabs'); ?>
 			</ul>
 		</div>
 		<div id='navbar_r'>
 			<ul>
-				<?php echo draw_header_tab("graph_settings", "Settings", "graph_settings.php");?>
-				<?php echo draw_header_tab("tree", "Tree", "graph_view.php?action=tree", "images/tab_mode_tree_new.gif");?>
-				<?php echo draw_header_tab("list", "List", "graph_view.php?action=list", "images/tab_mode_list_new.gif");?>
-				<?php echo draw_header_tab("preview", "Preview", "graph_view.php?action=preview", "images/tab_mode_preview_new.gif");?>
+				<?php echo draw_header_tab("graph_settings", "Settings", $config['url_path'] . "graph_settings.php");?>
+				<?php echo draw_header_tab("tree", "Tree", $config['url_path'] . "graph_view.php?action=tree", $config['url_path'] . "images/tab_mode_tree_new.gif");?>
+				<?php echo draw_header_tab("list", "List", $config['url_path'] . "graph_view.php?action=list", $config['url_path'] . "images/tab_mode_list_new.gif");?>
+				<?php echo draw_header_tab("preview", "Preview", $config['url_path'] . "graph_view.php?action=preview", $config['url_path'] . "images/tab_mode_preview_new.gif");?>
 			</ul>
 		</div>
 	</div>
@@ -173,7 +177,7 @@ if ((read_graph_config_option("default_tree_view_mode") == "2") &&
 				}
 
 				?><strong><?php echo date("D, " . $date . " T");?></strong>&nbsp;&nbsp;&nbsp;
-				Logged in as <strong><?php print db_fetch_cell("select username from user_auth where id=" . $_SESSION["sess_user_id"]);?></strong> (<a href="logout.php">Logout</a>)
+				Logged in as <strong><?php print db_fetch_cell("select username from user_auth where id=" . $_SESSION["sess_user_id"]);?></strong> (<a href="<?php echo $config['url_path']; ?>logout.php">Logout</a>)
 			<?php } ?>
 		</div>
 	</div>

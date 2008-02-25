@@ -44,6 +44,8 @@ $device_actions = array(
 	6 => "Change Availability Options"
 	);
 
+$device_actions = api_plugin_hook_function('device_action_array', $device_actions);
+
 /* set default action */
 if (!isset($_REQUEST["action"])) { $_REQUEST["action"] = ""; }
 
@@ -400,6 +402,8 @@ function form_actions() {
 
 				api_tree_item_save(0, $_POST["tree_id"], TREE_ITEM_TYPE_HOST, $_POST["tree_item_id"], "", 0, read_graph_config_option("default_rra_id"), $selected_items[$i], 1, 1, false);
 			}
+		} else {
+			api_plugin_hook_function('device_action_execute', $_POST['drp_action']); 
 		}
 
 		header("Location: host.php");
@@ -539,6 +543,11 @@ function form_actions() {
 				</tr>\n
 				<input type='hidden' name='tree_id' value='" . $matches[1] . "'>\n
 				";
+		} else {
+			$save['drp_action'] = $_POST['drp_action'];
+			$save['host_list'] = $host_list;
+			$save['host_array'] = (isset($host_array)? $host_array : array());
+			api_plugin_hook_function('device_action_prepare', $save);
 		}
 	} else {
 		print "	<tr>

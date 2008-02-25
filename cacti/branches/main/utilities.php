@@ -129,11 +129,14 @@ switch ($_REQUEST["action"]) {
 		include_once("./include/bottom_footer.php");
 		break;
 	default:
-		include_once("./include/top_header.php");
 
-		utilities();
+		if (!api_plugin_hook_function('utilities_action', $_REQUEST['action'])) {
+			include_once('./include/top_header.php');
 
-		include_once("./include/bottom_footer.php");
+			utilities();
+
+			include_once('./include/bottom_footer.php');
+		}
 		break;
 }
 
@@ -1287,6 +1290,8 @@ function utilities() {
 	</tr>
 
 	<?php
+
+	api_plugin_hook('utilities_list');
 
 	html_end_box();
 }

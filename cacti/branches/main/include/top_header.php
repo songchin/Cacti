@@ -22,17 +22,24 @@
  +-------------------------------------------------------------------------+
 */
 
-global $colors;
+global $colors, $config;
+
+$page_title = api_plugin_hook_function('page_title', 'Cacti');
+
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-	<title>Cacti</title>
+	<title><?php echo $page_title; ?></title>
 	<meta http-equiv="Content-Type" content="text/html;charset=utf-8" >
-	<link href="include/main.css" rel="stylesheet">
-	<link href="images/favicon.ico" rel="shortcut icon">
-	<script type="text/javascript" src="include/layout.js"></script>
-<?php if (isset($refresh)) { print "\t<meta http-equiv=refresh content=\"" . $refresh["seconds"] . "; url='" . $refresh["page"] . "'\">\n"; } ?>
+	<link href="<?php echo $config['url_path']; ?>include/main.css" rel="stylesheet">
+	<link href="<?php echo $config['url_path']; ?>images/favicon.ico" rel="shortcut icon">
+	<script type="text/javascript" src="<?php echo $config['url_path']; ?>include/layout.js"></script>
+<?php if (isset($refresh)) { print "\t<meta http-equiv=refresh content=\"" . $refresh["seconds"] . "; url='" . $refresh["page"] . "'\">\n"; }
+
+api_plugin_hook('page_head');
+
+ ?>
 </head>
 <body id='body' onResize='pageResize()' onLoad='pageInitialize()'>
 <div id='header'>
@@ -40,8 +47,9 @@ global $colors;
 	<div id='navbar' class='navbar'>
 		<div id='navbar_l'>
 			<ul>
-				<?php echo draw_header_tab("console", "Console", "index.php");?>
-				<?php echo draw_header_tab("graphs", "Graphs", "graph_view.php");?>
+				<?php echo draw_header_tab("console", "Console", $config['url_path'] . "index.php");?>
+				<?php echo draw_header_tab("graphs", "Graphs", $config['url_path'] . "graph_view.php");?>
+				<?php api_plugin_hook('top_header_tabs'); ?>
 			</ul>
 		</div>
 	</div>
@@ -85,7 +93,7 @@ global $colors;
 				}
 				
 				?><strong><?php echo date("D, " . $date . " T");?></strong>&nbsp;&nbsp;&nbsp;
-				Logged in as <strong><?php print db_fetch_cell("select username from user_auth where id=" . $_SESSION["sess_user_id"]);?></strong> (<a href="logout.php">Logout</a>)
+				Logged in as <strong><?php print db_fetch_cell("select username from user_auth where id=" . $_SESSION["sess_user_id"]);?></strong> (<a href="<?php echo $config['url_path']; ?>logout.php">Logout</a>)
 			<?php } ?>
 		</div>
 	</div>
@@ -93,7 +101,7 @@ global $colors;
 <div id='wrapper'>
 	<div id='menu'>
 		<?php draw_menu();?>
-		<div id='about'><a href='about.php'><img src="images/cacti_logo.gif" align="absmiddle" alt="Cacti" border="0"></a></div>
+		<div id='about'><a href='<?php echo $config['url_path']; ?>about.php'><img src="<?php echo $config['url_path']; ?>images/cacti_logo.gif" align="absmiddle" alt="Cacti" border="0"></a></div>
 	</div>
 	<div id='vsplitter' onMouseout='doneDivResize()' onMouseover='doDivResize(this,event)' onMousemove='doDivResize(this,event)'>
 		<div id='vsplitter_toggle' onClick='vSplitterToggle()' title='ToggleMenu'></div>

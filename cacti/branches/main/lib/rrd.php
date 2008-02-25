@@ -484,6 +484,10 @@ function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rr
 		}
 	}
 
+	$data = api_plugin_hook_function('rrdtool_function_graph_cache_check', array('local_graph_id' => $local_graph_id,'rra_id' => $rra_id,'rrd_struc' => $rrd_struc,'graph_data_array' => $graph_data_array, 'return' => false));
+	if (isset($data['return']) && $data['return'] != false)
+		return $data['return'];
+
 	/* find the step and how often this graph is updated with new data */
 	$ds_step = db_fetch_cell("select
 		data_template_data.rrd_step
@@ -1211,6 +1215,13 @@ function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rr
 	}
 	}
 
+	$graph_array = api_plugin_hook_function('rrd_graph_graph_options', array('graph_opts' => $graph_opts, 'graph_defs' => $graph_defs, 'txt_graph_items' => $txt_graph_items, 'graph_id' => $local_graph_id, 'start' => $graph_start, 'end' => $graph_end));
+	if (!empty($graph_array)) {
+		$graph_defs = $graph_array['graph_defs'];
+		$txt_graph_items = $graph_array['txt_graph_items'];
+		$graph_opts = $graph_array['graph_opts'];
+	}
+
 	/* either print out the source or pass the source onto rrdtool to get us a nice PNG */
 	if (isset($graph_data_array["print_source"])) {
 		print "<PRE>" . read_config_option("path_rrdtool") . " graph $graph_opts$graph_defs$txt_graph_items</PRE>";
@@ -1219,13 +1230,19 @@ function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rr
 			rrdtool_execute("graph $graph_opts$graph_defs$txt_graph_items", false, RRDTOOL_OUTPUT_NULL, $rrd_struc);
 			return 0;
 		}else{
+			$graph_data_array = api_plugin_hook_function('prep_graph_array', $graph_data_array);
+
 			if (isset($graph_data_array["output_flag"])) {
 				$output_flag = $graph_data_array["output_flag"];
 			}else{
 				$output_flag = RRDTOOL_OUTPUT_GRAPH_DATA;
 			}
 
-			return rrdtool_execute("graph $graph_opts$graph_defs$txt_graph_items", false, $output_flag, $rrd_struc);
+			$output = rrdtool_execute("graph $graph_opts$graph_defs$txt_graph_items", false, $output_flag, $rrd_struc);
+
+			api_plugin_hook_function('rrdtool_function_graph_set_file', array('output' => $output, 'local_graph_id' => $local_graph_id, 'rra_id' => $rra_id));
+
+			return $output;
 		}
 	}
 }

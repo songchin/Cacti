@@ -41,6 +41,9 @@ $database_port = "3306";
 /* Default session name - Session name must contain alpha characters */
 $cacti_session_name = "Cacti";
 
+/* Do not edit this line */
+$config = array();
+
 /* Include configuration */
 include(dirname(__FILE__) . "/config.php");
 
@@ -73,7 +76,6 @@ $no_http_header_files = array(
 	"rebuild_poller_cache.php"
 );
 
-$config = array();
 $colors = array();
 
 /* this should be auto-detected, set it manually if needed */
@@ -87,6 +89,8 @@ $config["base_path"] = strtr(ereg_replace("(.*)[\/\\]include", "\\1", dirname(__
 $config["library_path"] = ereg_replace("(.*[\/\\])include", "\\1lib", dirname(__FILE__));
 $config["include_path"] = dirname(__FILE__);
 $config["rra_path"] = $config["base_path"] . '/rra';
+
+define('URL_PATH', $config['url_path']);
 
 /* colors */
 $colors["dark_outline"] = "454E53";
@@ -105,6 +109,39 @@ $colors["form_background_dark"] = "E1E1E1";
 
 $colors["form_alternate1"] = "F5F5F5";
 $colors["form_alternate2"] = "E5E5E5";
+
+/* display ALL errors */
+error_reporting(E_ALL);
+
+/* current cacti version */
+$config["cacti_version"] = "0.8.8";
+
+/* include base modules */
+include($config["library_path"] . "/adodb/adodb.inc.php");
+include($config["library_path"] . "/database.php");
+
+/* connect to the database server */
+db_connect_real($database_hostname, $database_username, $database_password, $database_default, $database_type, $database_port);
+
+/* include additional modules */
+include_once($config["library_path"] . "/functions.php");
+include_once($config["library_path"] . "/plugins.php");
+
+include_once($config["include_path"] . "/global_constants.php");
+include_once($config["include_path"] . "/global_arrays.php");
+include_once($config["include_path"] . "/global_settings.php");
+
+include_once($config["include_path"] . "/global_form.php");
+include_once($config["library_path"] . "/html.php");
+include_once($config["library_path"] . "/html_form.php");
+include_once($config["library_path"] . "/html_utility.php");
+include_once($config["library_path"] . "/html_validate.php");
+include_once($config["library_path"] . "/variables.php");
+include_once($config["library_path"] . "/auth.php");
+
+api_plugin_hook('config_arrays');
+api_plugin_hook('config_settings');
+api_plugin_hook('config_form');
 
 if ((!in_array(basename($_SERVER["PHP_SELF"]), $no_http_header_files, true)) && ($_SERVER["PHP_SELF"] != "")) {
 	/* Sanity Check on "Corrupt" PHP_SELF */
@@ -176,30 +213,3 @@ if ((bool)ini_get("register_globals")) {
 	unset($input);
 }
 
-/* display ALL errors */
-error_reporting(E_ALL);
-
-/* include base modules */
-include($config["library_path"] . "/adodb/adodb.inc.php");
-include($config["library_path"] . "/database.php");
-include_once($config["library_path"] . "/functions.php");
-include_once($config["include_path"] . "/global_constants.php");
-include_once($config["include_path"] . "/global_arrays.php");
-include_once($config["include_path"] . "/global_settings.php");
-
-/* connect to the database server */
-db_connect_real($database_hostname, $database_username, $database_password, $database_default, $database_type, $database_port);
-
-/* include additional modules */
-include_once($config["include_path"] . "/global_form.php");
-include_once($config["library_path"] . "/html.php");
-include_once($config["library_path"] . "/html_form.php");
-include_once($config["library_path"] . "/html_utility.php");
-include_once($config["library_path"] . "/html_validate.php");
-include_once($config["library_path"] . "/variables.php");
-include_once($config["library_path"] . "/auth.php");
-
-/* current cacti version */
-$config["cacti_version"] = "0.8.8";
-
-?>

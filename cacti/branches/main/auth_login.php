@@ -205,6 +205,8 @@ if ($action == 'login') {
 				header("Location: index.php"); break;
 			case '3': /* default graph page */
 				header("Location: graph_view.php"); break;
+			default:
+				api_plugin_hook_function('login_options_navigate', $user['login_opts']);
 		}
 		exit;
 
@@ -225,12 +227,13 @@ if ($action == 'login') {
      the pre-defined error messages
    @arg $message - the actual text of the error message to display */
 function auth_display_custom_error_message($message) {
+	global $config;
 	/* kill the session */
 	setcookie(session_name(),"",time() - 3600,"/");
 	/* print error */
 	print "<html>\n<head>\n";
 	print "     <title>" . "Cacti" . "</title>\n";
-	print "     <link href=\"include/main.css\" rel=\"stylesheet\">";
+	print "     <link href=\"" . $config['url_path'] . "include/main.css\" rel=\"stylesheet\">";
 	print "</head>\n";
 	print "<body leftmargin=\"0\" topmargin=\"0\" marginwidth=\"0\" marginheight=\"0\">\n<br><br>\n";
 	display_custom_error_message($message);
@@ -260,6 +263,7 @@ function auth_display_custom_error_message($message) {
 		<div id='authLogin'>
 			<form action="<?php print basename($_SERVER['PHP_SELF']);?>" name="login" method="post">
 			<input type="hidden" name="action" value="login">
+			<?php api_plugin_hook("login_before"); ?>
 			<table align='center'>
 				<?php
 
@@ -311,6 +315,8 @@ function auth_display_custom_error_message($message) {
 					<td><input type="submit" value="Login"></td>
 				</tr>
 			</table>
+			<?php api_plugin_hook("login_after"); ?>
+
 			</form>
 		</div>
 		<div id='authFooter'></div>

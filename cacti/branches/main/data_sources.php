@@ -1162,6 +1162,7 @@ function ds() {
 
 	if (sizeof($data_sources) > 0) {
 		foreach ($data_sources as $data_source) {
+			$data_source = api_plugin_hook_function('data_sources_table', $data_source);
 			$data_template_name = ((empty($data_source["data_template_name"])) ? "<em>None</em>" : $data_source["data_template_name"]);
 			$data_input_name    = ((empty($data_source["data_input_name"])) ? "<em>External</em>" : $data_source["data_input_name"]);
 			$poller_interval    = ((isset($poller_intervals[$data_source["local_data_id"]])) ? $poller_intervals[$data_source["local_data_id"]] : 0);

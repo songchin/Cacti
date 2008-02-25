@@ -32,7 +32,7 @@
    @arg $add_text - the url to use when the user clicks 'Add' in the upper-right
      corner of the box ("" for no 'Add' link) */
 function html_start_box($title, $width, $background_color, $cell_padding, $align, $add_text = "", $collapsing = false) {
-	global $colors;
+	global $colors, $config;
 
 	$temp_string = str_replace("strong", "", $title);
 	if (strpos($temp_string, "[")) {
@@ -62,12 +62,12 @@ function html_start_box($title, $width, $background_color, $cell_padding, $align
 					<table width="100%" cellpadding="<?php print $cell_padding;?>" cellspacing="0">
 						<tr>
 							<?php if ($collapsing) {?><td class="textHeaderDark" width="14">
-								<img id="<?php print $item_id . '_twisty';?>" src="images/tw_open.gif" alt="Filter" border="0" align="absmiddle">
+								<img id="<?php print $item_id . '_twisty';?>" src="<?php print $config['url_path']; ?>images/tw_open.gif" alt="Filter" border="0" align="absmiddle">
 							</td><?php } ?>
 							<td class="textHeaderDark"><?php print $title;?>
 							</td>
 							<?php if ($collapsing) {?><td class="textHeaderDark" width="1">
-								<img src="images/transparent_pixel.gif" alt='' <?php print $ani2;?>>
+								<img src="<?php print $config['url_path']; ?>images/transparent_pixel.gif" alt='' <?php print $ani2;?>>
 							</td><?php } if ($add_text != "") {?>
 							<td class="textHeaderDark" align="right">
 								<strong><a class="linkOverDark" <?php print $ani3;?> href="<?php print $add_text;?>">Add</a>&nbsp;</strong>
@@ -152,6 +152,7 @@ function html_graph_end_box() {
    @arg $extra_url_args - extra arguments to append to the url
    @arg $header - html to use as a header */
 function html_graph_area(&$graph_array, $no_graphs_message = "", $extra_url_args = "", $header = "") {
+	global $config;
 	if (sizeof($graph_array) > 0) {
 		if ($header != "") {
 			print $header;
@@ -164,12 +165,12 @@ function html_graph_area(&$graph_array, $no_graphs_message = "", $extra_url_args
 					<table width='1' cellpadding='0'>
 						<tr>
 							<td>
-								<a href='graph.php?action=view&local_graph_id=<?php print $graph["local_graph_id"];?>&rra_id=all'><img class='graphimage' id='graph_<?php print $graph["local_graph_id"] ?>' src='graph_image.php?local_graph_id=<?php print $graph["local_graph_id"];?>&rra_id=0<?php print (($extra_url_args == "") ? "" : "&$extra_url_args");?>' border='0' alt='<?php print $graph["title_cache"];?>'></a>
+								<a href='<?php print $config['url_path']; ?>graph.php?action=view&local_graph_id=<?php print $graph["local_graph_id"];?>&rra_id=all'><img class='graphimage' id='graph_<?php print $graph["local_graph_id"] ?>' src='<?php print $config['url_path']; ?>graph_image.php?local_graph_id=<?php print $graph["local_graph_id"];?>&rra_id=0<?php print (($extra_url_args == "") ? "" : "&$extra_url_args");?>' border='0' alt='<?php print $graph["title_cache"];?>'></a>
 							</td>
 							<td valign='top' style='padding: 3px;' class='noprint'>
-								<a href='graph.php?action=zoom&local_graph_id=<?php print $graph["local_graph_id"];?>&rra_id=0&<?php print $extra_url_args;?>'><img src='images/graph_zoom.gif' border='0' alt='Zoom Graph' title='Zoom Graph' style='padding: 3px;'></a><br>
-								<a href='graph_xport.php?local_graph_id=<?php print $graph["local_graph_id"];?>&rra_id=0&<?php print $extra_url_args;?>'><img src='images/graph_query.png' border='0' alt='CSV Export' title='CSV Export' style='padding: 3px;'></a><br>
-								<img src='images/graph_page_top.gif' onClick='javascript:document.getElementById("graph_tree_content").scrollTop=0' border='0' alt='Page Top' title='Page Top' style='padding: 3px;'><br>
+								<a href='<?php print $config['url_path']; ?>graph.php?action=zoom&local_graph_id=<?php print $graph["local_graph_id"];?>&rra_id=0&<?php print $extra_url_args;?>'><img src='<?php print $config['url_path']; ?>images/graph_zoom.gif' border='0' alt='Zoom Graph' title='Zoom Graph' style='padding: 3px;'></a><br>
+								<a href='<?php print $config['url_path']; ?>graph_xport.php?local_graph_id=<?php print $graph["local_graph_id"];?>&rra_id=0&<?php print $extra_url_args;?>'><img src='<?php print $config['url_path']; ?>images/graph_query.png' border='0' alt='CSV Export' title='CSV Export' style='padding: 3px;'></a><br>
+								<img src='<?php print $config['url_path']; ?>images/graph_page_top.gif' onClick='javascript:document.getElementById("graph_tree_content").scrollTop=0' border='0' alt='Page Top' title='Page Top' style='padding: 3px;'><br>
 							</td>
 						</tr>
 					</table>
@@ -193,6 +194,7 @@ function html_graph_area(&$graph_array, $no_graphs_message = "", $extra_url_args
    @arg $extra_url_args - extra arguments to append to the url
    @arg $header - html to use as a header */
 function html_graph_thumbnail_area(&$graph_array, $no_graphs_message = "", $extra_url_args = "", $header = "") {
+	global $config;
 	$i = 0; $k = 0;
 	if (sizeof($graph_array) > 0) {
 		if ($header != "") {
@@ -207,12 +209,12 @@ function html_graph_thumbnail_area(&$graph_array, $no_graphs_message = "", $extr
 				<table border='0' cellspacing='0' cellpadding='0'>
 					<tr>
 						<td>
-							<a href='graph.php?action=view&rra_id=all&local_graph_id=<?php print $graph["local_graph_id"];?>'><img class='graphimage' id='graph_<?php print $graph["local_graph_id"] ?>' src='graph_image.php?local_graph_id=<?php print $graph["local_graph_id"];?>&rra_id=0&graph_height=<?php print read_graph_config_option("default_height");?>&graph_width=<?php print read_graph_config_option("default_width");?>&graph_nolegend=true<?php print (($extra_url_args == "") ? "" : "&$extra_url_args");?>' border='0' alt='<?php print $graph["title_cache"];?>'></a>
+							<a href='<?php print $config['url_path']; ?>graph.php?action=view&rra_id=all&local_graph_id=<?php print $graph["local_graph_id"];?>'><img class='graphimage' id='graph_<?php print $graph["local_graph_id"] ?>' src='<?php print $config['url_path']; ?>graph_image.php?local_graph_id=<?php print $graph["local_graph_id"];?>&rra_id=0&graph_height=<?php print read_graph_config_option("default_height");?>&graph_width=<?php print read_graph_config_option("default_width");?>&graph_nolegend=true<?php print (($extra_url_args == "") ? "" : "&$extra_url_args");?>' border='0' alt='<?php print $graph["title_cache"];?>'></a>
 						</td>
 						<td valign='top' style='padding: 3px;'>
-							<a href='graph.php?action=zoom&local_graph_id=<?php print $graph["local_graph_id"];?>&rra_id=0&<?php print $extra_url_args;?>'><img src='images/graph_zoom.gif' border='0' alt='Zoom Graph' title='Zoom Graph' style='padding: 3px;'></a><br>
-							<a href='graph_xport.php?local_graph_id=<?php print $graph["local_graph_id"];?>&rra_id=0&<?php print $extra_url_args;?>'><img src='images/graph_query.png' border='0' alt='CSV Export' title='CSV Export' style='padding: 3px;'></a><br>
-							<img src='images/graph_page_top.gif' onClick='javascript:document.getElementById("graph_tree_content").scrollTop=0' border='0' alt='Page Top' title='Page Top' style='padding: 3px;'><br>
+							<a href='<?php print $config['url_path']; ?>graph.php?action=zoom&local_graph_id=<?php print $graph["local_graph_id"];?>&rra_id=0&<?php print $extra_url_args;?>'><img src='<?php print $config['url_path']; ?>images/graph_zoom.gif' border='0' alt='Zoom Graph' title='Zoom Graph' style='padding: 3px;'></a><br>
+							<a href='<?php print $config['url_path']; ?>graph_xport.php?local_graph_id=<?php print $graph["local_graph_id"];?>&rra_id=0&<?php print $extra_url_args;?>'><img src='<?php print $config['url_path']; ?>images/graph_query.png' border='0' alt='CSV Export' title='CSV Export' style='padding: 3px;'></a><br>
+							<img src='<?php print $config['url_path']; ?>images/graph_page_top.gif' onClick='javascript:document.getElementById("graph_tree_content").scrollTop=0' border='0' alt='Page Top' title='Page Top' style='padding: 3px;'><br>
 						</td>
 					</tr>
 				</table>
@@ -634,6 +636,7 @@ function draw_graph_items_list($item_list, $filename, $url_data, $disable_contro
 }
 
 function draw_header_tab($name, $title, $location, $image = "") {
+	global $config;
 	if ($image == "") {
 		return "<li id=\"tab_" . html_escape($name) . "\"" . (html_selected_tab($name, $location) ? "class=\"selected\"" : "class=\"notselected\"") . "><a href=\"javascript:navigation_select('" . html_escape($name) . "', '" . html_escape($location) . "')\" title=\"" . html_escape($title) . "\">" . html_escape($title) . "</a></li>\n";
 	}else{
@@ -718,8 +721,6 @@ function html_read_cookie_element($name, $element) {
 function draw_menu($user_menu = "") {
 	global $colors, $config, $user_auth_realms, $user_auth_realm_filenames, $menu;
 
-	include($config["include_path"] . "/global_arrays.php");
-
 	if (strlen($user_menu == 0)) {
 		$user_menu = $menu;
 	}
@@ -790,6 +791,8 @@ function draw_menu($user_menu = "") {
 					}
 
 					while (list($item_sub_url, $item_sub_title) = each($item_title)) {
+						$item_sub_url = $config['url_path'] . $item_sub_url;
+
 						/* indent sub-items */
 						if ($i > 0) {
 							$prepend_string = "--- ";
@@ -799,7 +802,7 @@ function draw_menu($user_menu = "") {
 
 						/* do not put a line between each sub-item */
 						if (($i == 0) || ($draw_sub_items == false)) {
-							$background = "images/menu_line.gif";
+							$background = $config['url_path'] . "images/menu_line.gif";
 						}else{
 							$background = "";
 						}
@@ -828,6 +831,7 @@ function draw_menu($user_menu = "") {
 			}else{
 				if ((isset($user_realms[$current_realm_id])) || (!isset($user_auth_realm_filenames{basename($item_url)}))) {
 					/* draw normal (non sub-item) menu item */
+					$item_url = $config['url_path'] . $item_url;
 					if (basename($_SERVER["PHP_SELF"]) == basename($item_url)) {
 						print "\t\t\t\t\t\t<li class='menuSubMainSelected'><a href='$item_url'>$item_title</a></li>\n";
 					}else{
@@ -846,11 +850,12 @@ function draw_menu($user_menu = "") {
    @arg $actions_array - an array that contains a list of possible actions. this array should
      be compatible with the form_dropdown() function */
 function draw_actions_dropdown($actions_array) {
+	global $config;
 	?>
 	<table align='center' width='100%'>
 		<tr>
 			<td width='1' valign='top'>
-				<img src='images/arrow.gif' alt='' align='absmiddle'>&nbsp;
+				<img src='<?php echo $config['url_path']; ?>images/arrow.gif' alt='' align='absmiddle'>&nbsp;
 			</td>
 			<td align='right'>
 				Choose an action:

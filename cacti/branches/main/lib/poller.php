@@ -321,8 +321,11 @@ function process_poller_output($rrdtool_pipe, $remainder = FALSE) {
 				}
 			}
 		}
+		api_plugin_hook_function('poller_output', $rrd_update_array);
 
-		$rrds_processed = rrdtool_function_update($rrd_update_array, $rrdtool_pipe);
+		if (api_plugin_hook_function('poller_on_demand', $results)) {
+			$rrds_processed = rrdtool_function_update($rrd_update_array, $rrdtool_pipe);
+		}
 	}
 
 	return $rrds_processed;

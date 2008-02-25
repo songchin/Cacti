@@ -54,6 +54,8 @@ case 'changepassword':
 					header("Location: index.php"); break;
 				case '3': /* default graph page */
 					header("Location: graph_view.php"); break;
+				default:
+					api_plugin_hook_function('login_options_navigate', $user['login_opts']);
 			}
 		}else{
 			header("Location: graph_view.php");

@@ -45,6 +45,8 @@ $graph_actions = array(
 	4 => "Convert to Graph Template"
 	);
 
+$graph_actions = api_plugin_hook_function('graphs_action_array', $graph_actions);
+
 /* set default action */
 if (!isset($_REQUEST["action"])) { $_REQUEST["action"] = ""; }
 
@@ -357,8 +359,10 @@ function form_actions() {
 				input_validate_input_number($selected_items[$i]);
 				/* ==================================================== */
 
-				api_resize_graphs($selected_items[$i], $_POST["graph_width"], $_POST["graph_height"]);
+				api_resize_graphs($selected_items[$i], $_POST['graph_width'], $_POST['graph_height']);
 			}
+		} else {
+			api_plugin_hook_function('graphs_action_execute', $_POST['drp_action']); 
 		}
 
 		header("Location: graphs.php");
@@ -500,6 +504,11 @@ function form_actions() {
 					</td>
 				</tr>\n
 				";
+		} else {
+			$save['drp_action'] = $_POST['drp_action'];
+			$save['graph_list'] = $graph_list;
+			$save['graph_array'] = $graph_array;
+			api_plugin_hook_function('graphs_action_prepare', $save);
 		}
 	} else {
 		print "	<tr>

@@ -33,4 +33,13 @@ $database_port = "3306";
 /* Default session name - Session name must contain alpha characters */
 #$cacti_session_name = "Cacti";
 
+/*
+ This is full URL Path to the Cacti installation 
+   For example, if your cacti was accessible by http://server/cacti/ you would user '/cacti/'
+   as the url path.  For just http://server/ use '/'
+*/
+
+$config['url_path'] = '/';
+
+
 ?>
