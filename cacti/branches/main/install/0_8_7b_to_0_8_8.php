@@ -23,15 +23,103 @@
 */
 
 function upgrade_to_0_8_8() {
+
+	/* 
+	 * Authenication System upgrade 
+	 */
+	/* Create new tables */
+	db_install_execute("0.8.8","
+		CREATE TABLE `auth_control` (
+		  `id` mediumint(8) unsigned NOT NULL auto_increment,
+		  `name` varchar(100) NOT NULL default '',
+		  `description` varchar(255) default NULL,
+		  `object_type` int(8) unsigned NOT NULL default '0',
+		  `enabled` int(1) unsigned NOT NULL default '1',
+		  `updated_when` datetime NOT NULL default '0000-00-00 00:00:00',
+		  `updated_by` varchar(100) NOT NULL default '',
+		  `created_when` datetime NOT NULL default '0000-00-00 00:00:00',
+		  `created_by` varchar(100) NOT NULL default '',
+		  PRIMARY KEY  (`id`),
+		  KEY `name` (`name`),
+		  KEY `enabled` (`enabled`),
+		  KEY `object_type` (`object_type`)
+		) TYPE=MyISAM");
+	db_install_execute("0.8.8","
+		CREATE TABLE `auth_data` (
+		  `id` mediumint(8) unsigned NOT NULL auto_increment,
+		  `control_id` mediumint(8) unsigned NOT NULL default '0',
+		  `plugin_id` mediumint(8) unsigned NOT NULL default '0',
+		  `category` varchar(25) NOT NULL default 'SYSTEM',
+		  `name` varchar(100) NOT NULL default '',
+		  `value` varchar(255) default NULL,
+		  `enable_user_edit` int(1) unsigned NOT NULL default '0',
+		  `updated_when` datetime NOT NULL default '0000-00-00 00:00:00',
+		  `updated_by` varchar(100) NOT NULL default '',
+		  `created_when` datetime NOT NULL default '0000-00-00 00:00:00',
+		  `created_by` varchar(100) NOT NULL default '',
+		  PRIMARY KEY  (`id`),
+		  KEY `control_id` (`control_id`),
+		  KEY `name` (`name`),
+		  KEY `plugin_id` (`plugin_id`),
+		  KEY `category` (`category`)
+		) TYPE=MyISAM");
+	db_install_execute("0.8.8","
+		CREATE TABLE `auth_graph_perms` (
+		  `id` mediumint(8) unsigned NOT NULL auto_increment,
+		  `item_id` mediumint(8) unsigned NOT NULL default '0',
+		  `type` mediumint(8) unsigned NOT NULL default '0',
+		  `control_id` mediumint(8) unsigned NOT NULL default '0',
+		  PRIMARY KEY  (`id`),
+		  KEY `item_id` (`item_id`),
+		  KEY `type` (`type`),
+		  KEY `control_id` (`control_id`)
+		) TYPE=MyISAM");
+	db_install_execute("0.8.8","
+		CREATE TABLE `auth_link` (
+		  `id` mediumint(8) unsigned NOT NULL auto_increment,
+		  `control_id` mediumint(8) unsigned NOT NULL default '0',
+		  `parent_id` mediumint(8) unsigned NOT NULL default '0',
+		  PRIMARY KEY  (`id`),
+		  KEY `control_id` (`control_id`),
+		  KEY `parent_id` (`parent_id`)
+		) TYPE=MyISAM");
+	db_install_execute("0.8.8","
+		CREATE TABLE `auth_perm` (
+		  `id` mediumint(8) unsigned NOT NULL auto_increment,
+		  `name` varchar(100) NOT NULL default '',
+		  `description` text NOT NULL,
+		  `category` varchar(100) default NULL,
+		  `plugin_id` mediumint(8) unsigned NOT NULL default '0',
+		  PRIMARY KEY  (`id`),
+		  KEY `name` (`name`),
+		  KEY `plugin_id` (`plugin_id`),
+		  KEY `category` (`category`)
+		) TYPE=MyISAM");
+	db_install_execute("0.8.8","
+		CREATE TABLE `auth_perm_link` (
+		  `id` mediumint(8) unsigned NOT NULL auto_increment,
+		  `control_id` mediumint(8) unsigned NOT NULL default '0',
+		  `perm_id` mediumint(8) unsigned NOT NULL default '0',
+		  PRIMARY KEY  (`id`),
+		  KEY `control_id` (`control_id`),
+		  KEY `perm_id` (`perm_id`)
+		) TYPE=MyISAM");
+	/* Upgrade current users and permissions */
+
+
+
+
+
+
+
 	/* add --alt-y-grid as an option */
 	db_install_execute("0.8.8", "ALTER TABLE `graph_templates_graph` ADD COLUMN `t_alt_y_grid` CHAR(2) DEFAULT 0 AFTER `auto_scale_rigid`, ADD COLUMN `alt_y_grid` CHAR(2) DEFAULT '' AFTER `t_alt_y_grid`;");
+
 	/* increase size for upper/lower limit for use with |query_*| variables */
 	db_install_execute("0.8.8", "ALTER TABLE `graph_templates_graph` MODIFY `lower_limit` VARCHAR(255)");
 	db_install_execute("0.8.8", "ALTER TABLE `graph_templates_graph` MODIFY `upper_limit` VARCHAR(255)"); 
 	
-	/* 
-	 * add some fields required for hosts to table host_template 
-	 * */
+	/* add some fields required for hosts to table host_template */
 	db_install_execute("0.8.8", "ALTER TABLE `host_template` ADD COLUMN `snmp_community` VARCHAR(100) DEFAULT NULL AFTER `name`");
 	db_install_execute("0.8.8", "ALTER TABLE `host_template` ADD COLUMN `snmp_version` TINYINT(1) UNSIGNED NOT NULL DEFAULT '1' AFTER `snmp_community`");
 	db_install_execute("0.8.8", "ALTER TABLE `host_template` ADD COLUMN `snmp_username` VARCHAR(50) DEFAULT NULL AFTER `snmp_version`");
@@ -89,10 +177,9 @@ function upgrade_to_0_8_8() {
 				" `ping_retries` = $ping_retries," .
 				" `max_oids` = $max_oids");
 	
-	/* 
-	 * add reindexing to host_template_snmp_query 
-	 * */
+	/* add reindexing to host_template_snmp_query */
 	db_install_execute("0.8.8", "ALTER TABLE `host_template_snmp_query` ADD COLUMN `reindex_method` TINYINT(3) UNSIGNED NOT NULL DEFAULT '0' AFTER `snmp_query_id`");
 	db_install_execute("0.8.8", "UPDATE `host_template_snmp_query` SET `reindex_method` = '1'");
+
 }
 ?>
