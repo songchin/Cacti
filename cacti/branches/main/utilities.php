@@ -225,7 +225,7 @@ function utilities_view_tech($php_info = "") {
 
 	/* Get RRDtool version */
 	$rrdtool_version = "Unknown";
-	if ((file_exists(read_config_option("path_rrdtool"))) && (($config["cacti_server_os"] == "win32") || (is_executable(read_config_option("path_rrdtool"))))) {
+	if ((file_exists(read_config_option("path_rrdtool"))) && ((CACTI_SERVER_OS == "win32") || (is_executable(read_config_option("path_rrdtool"))))) {
 
 		$out_array = array();
 		exec(read_config_option("path_rrdtool"), $out_array);
@@ -258,11 +258,11 @@ function utilities_view_tech($php_info = "") {
 	print "</tr>\n";
 	print "<tr class='rowAlternate2'>\n";
 	print "		<td class='textAreaNotes'>Cacti Version</td>\n";
-	print "		<td class='textAreaNotes'>" . $config["cacti_version"] . "</td>\n";
+	print "		<td class='textAreaNotes'>" . CACTI_VERSION . "</td>\n";
 	print "</tr>\n";
 	print "<tr class='rowAlternate1'>\n";
 	print "		<td class='textAreaNotes'>Cacti OS</td>\n";
-	print "		<td>" . $config["cacti_server_os"] . "</td>\n";
+	print "		<td>" . CACTI_SERVER_OS . "</td>\n";
 	print "</tr>\n";
 	print "<tr class='rowAlternate2'>\n";
 	print "		<td class='textAreaNotes'>SNMP Version</td>\n";

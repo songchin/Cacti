@@ -31,8 +31,8 @@ if (!isset($_SERVER["argv"][0]) || isset($_SERVER['REQUEST_METHOD'])  || isset($
 $no_http_headers = true;
 
 include(dirname(__FILE__)."/../include/global.php");
-include_once($config["base_path"]."/lib/api_automation_tools.php");
-include_once($config["base_path"].'/lib/tree.php');
+include_once(CACTI_BASE_PATH."/lib/api_automation_tools.php");
+include_once(CACTI_BASE_PATH.'/lib/tree.php');
 
 /* process calling arguments */
 $parms = $_SERVER["argv"];

@@ -217,7 +217,7 @@ function reset_session_variables($pre_tree) {
 function sort_tree($sort_type, $item_id, $sort_style) {
 	global $config;
 
-	include_once($config["library_path"] . "/sort.php");
+	include_once(CACTI_BASE_PATH . "/lib/sort.php");
 
 	if (empty($item_id)) { return 0; }
 	if ($sort_style == TREE_ORDERING_NONE) { return 0; }

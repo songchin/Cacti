@@ -32,10 +32,10 @@ $no_http_headers = true;
 
 /* start initialization section */
 include(dirname(__FILE__) . "/include/global.php");
-include_once($config["base_path"] . "/lib/poller.php");
-include_once($config["base_path"] . "/lib/data_query.php");
-include_once($config["base_path"] . "/lib/graph_export.php");
-include_once($config["base_path"] . "/lib/rrd.php");
+include_once(CACTI_BASE_PATH . "/lib/poller.php");
+include_once(CACTI_BASE_PATH . "/lib/data_query.php");
+include_once(CACTI_BASE_PATH . "/lib/graph_export.php");
+include_once(CACTI_BASE_PATH . "/lib/rrd.php");
 
 /* initialize some variables */
 $force = FALSE;
@@ -107,7 +107,7 @@ if (isset($poller_interval)) {
 }
 
 /* some text formatting for platform specific vocabulary */
-if ($config["cacti_server_os"] == "unix") {
+if (CACTI_SERVER_OS == "unix") {
 	$task_type = "Cron";
 }else{
 	$task_type = "Scheduled Task";
@@ -180,7 +180,7 @@ while ($poller_runs_completed < $poller_runs) {
 	$last_host           = 0;
 
 	/* update web paths for the poller */
-	db_execute("replace into settings (name,value) values ('path_webroot','" . addslashes(($config["cacti_server_os"] == "win32") ? strtr(strtolower(substr(dirname(__FILE__), 0, 1)) . substr(dirname(__FILE__), 1),"\\", "/") : dirname(__FILE__)) . "')");
+	db_execute("replace into settings (name,value) values ('path_webroot','" . addslashes((CACTI_SERVER_OS == "win32") ? strtr(strtolower(substr(dirname(__FILE__), 0, 1)) . substr(dirname(__FILE__), 1),"\\", "/") : dirname(__FILE__)) . "')");
 
 	/* obtain some defaults from the database */
 	$poller      = read_config_option("poller_type");
@@ -223,13 +223,13 @@ while ($poller_runs_completed < $poller_runs) {
 			$extra_args     = "";
 			$method         = "spine";
 			chdir(dirname(read_config_option("path_spine")));
-		}else if ($config["cacti_server_os"] == "unix") {
+		}else if (CACTI_SERVER_OS == "unix") {
 			$command_string = read_config_option("path_php_binary");
-			$extra_args     = "-q " . $config["base_path"] . "/cmd.php";
+			$extra_args     = "-q " . CACTI_BASE_PATH . "/cmd.php";
 			$method         = "cmd.php";
 		}else{
 			$command_string = read_config_option("path_php_binary");
-			$extra_args     = "-q " . strtolower($config["base_path"] . "/cmd.php");
+			$extra_args     = "-q " . strtolower(CACTI_BASE_PATH . "/cmd.php");
 			$method         = "cmd.php";
 		}
 
@@ -366,14 +366,14 @@ while ($poller_runs_completed < $poller_runs) {
 		/* process poller commands */
 		if (db_fetch_cell("select count(*) from poller_command") > 0) {
 			$command_string = read_config_option("path_php_binary");
-			$extra_args = "-q " . $config["base_path"] . "/poller_commands.php";
+			$extra_args = "-q " . CACTI_BASE_PATH . "/poller_commands.php";
 			exec_background($command_string, "$extra_args");
 		}
 
 		/* graph export */
 		if ((read_config_option("export_type") != "disabled") && (read_config_option("export_timing") != "disabled")) {
 			$command_string = read_config_option("path_php_binary");
-			$extra_args = "-q " . $config["base_path"] . "/poller_export.php";
+			$extra_args = "-q " . CACTI_BASE_PATH . "/poller_export.php";
 			exec_background($command_string, "$extra_args");
 		}
 

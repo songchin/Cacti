@@ -79,7 +79,7 @@ if ($_SERVER["argc"] >= 2) {
 if(read_config_option("log_verbosity") == POLLER_VERBOSITY_DEBUG) {
 	cacti_log("DEBUG: SERVER: " . $environ, false, "PHPSVR");
 
-	if ($config["cacti_server_os"] == "win32") {
+	if (CACTI_SERVER_OS == "win32") {
 		cacti_log("DEBUG: GETCWD: " . strtolower(strtr(getcwd(),"\\","/")), false, "PHPSVR");
 		cacti_log("DEBUG: DIRNAM: " . strtolower(strtr(dirname(__FILE__),"\\","/")), false, "PHPSVR");
 	}else{
@@ -150,7 +150,7 @@ while (1) {
 					if (file_exists($include_file)) {
 						/* quirk in php on Windows, believe it or not.... */
 						/* path must be lower case */
-						if ($config["cacti_server_os"] == "win32") {
+						if (CACTI_SERVER_OS == "win32") {
 							$include_file = strtolower($include_file);
 						}
 

@@ -25,8 +25,8 @@
 function grow_graph_tree($tree_id, $start_branch, $user_id, $options) {
 	global $colors, $current_user, $config;
 
-	include($config["include_path"] . "/global_arrays.php");
-	include_once($config["library_path"] . "/tree.php");
+	include(CACTI_BASE_PATH . "/include/global_arrays.php");
+	include_once(CACTI_BASE_PATH . "/lib/tree.php");
 
 	$search_key = "";
 	$already_open = false;
@@ -55,7 +55,7 @@ function grow_graph_tree($tree_id, $start_branch, $user_id, $options) {
 	/* include time span selector */
 	if (read_graph_config_option("timespan_sel") == "on") {
 		html_graph_start_box(3, false);
-		include($config["include_path"] . "/html/inc_timespan_selector.php");
+		include(CACTI_BASE_PATH . "/include/html/inc_timespan_selector.php");
 		html_graph_end_box();
 	}
 
@@ -184,7 +184,7 @@ function grow_graph_tree($tree_id, $start_branch, $user_id, $options) {
 function grow_edit_graph_tree($tree_id, $user_id, $options) {
 	global $config, $colors;
 
-	include_once($config["library_path"] . "/tree.php");
+	include_once(CACTI_BASE_PATH . "/lib/tree.php");
 
 	$tree_sorting_type = db_fetch_cell("select sort_type from graph_tree where id='$tree_id'");
 
@@ -370,7 +370,7 @@ function tree_tier_string($order_key, $chars_per_tier = CHARS_PER_TIER) {
 function grow_dropdown_tree($tree_id, $form_name, $selected_tree_item_id) {
 	global $colors, $config;
 
-	include_once($config["library_path"] . "/tree.php");
+	include_once(CACTI_BASE_PATH . "/lib/tree.php");
 
 	$tree = db_fetch_assoc("select
 		graph_tree_items.id,
@@ -405,8 +405,8 @@ function grow_dropdown_tree($tree_id, $form_name, $selected_tree_item_id) {
 function grow_dhtml_trees() {
 	global $colors, $config;
 
-	include_once($config["library_path"] . "/tree.php");
-	include_once($config["library_path"] . "/data_query.php");
+	include_once(CACTI_BASE_PATH . "/lib/tree.php");
+	include_once(CACTI_BASE_PATH . "/lib/data_query.php");
 
 	?>
 	<script type="text/javascript">
@@ -580,10 +580,10 @@ function create_dhtml_tree() {
 function grow_right_pane_tree($tree_id, $leaf_id, $host_group_data) {
 	global $current_user, $colors, $config;
 
-	include($config["include_path"] . "/global_arrays.php");
-	include_once($config["library_path"] . "/data_query.php");
-	include_once($config["library_path"] . "/tree.php");
-	include_once($config["library_path"] . "/html_utility.php");
+	include(CACTI_BASE_PATH . "/include/global_arrays.php");
+	include_once(CACTI_BASE_PATH . "/lib/data_query.php");
+	include_once(CACTI_BASE_PATH . "/lib/tree.php");
+	include_once(CACTI_BASE_PATH . "/lib/html_utility.php");
 
 	if (empty($tree_id)) { return; }
 
@@ -641,7 +641,7 @@ function grow_right_pane_tree($tree_id, $leaf_id, $host_group_data) {
 	/* include time span selector */
 	if (read_graph_config_option("timespan_sel") == "on") {
 		html_graph_start_box(3, false);
-		include($config["include_path"] . "/html/inc_timespan_selector.php");
+		include(CACTI_BASE_PATH . "/include/html/inc_timespan_selector.php");
 		html_graph_end_box();
 	}
 

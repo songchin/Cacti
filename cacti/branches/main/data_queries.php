@@ -641,7 +641,7 @@ function data_query_edit() {
 	html_end_box();
 
 	if (!empty($snmp_query["id"])) {
-		$xml_filename = str_replace("<path_cacti>", $config["base_path"], $snmp_query["xml_path"]);
+		$xml_filename = str_replace("<path_cacti>", CACTI_BASE_PATH, $snmp_query["xml_path"]);
 
 		if ((file_exists($xml_filename)) && (is_file($xml_filename))) {
 			$text = "<font color='#0d7c09'><strong>Successfully located XML file</strong></font>";

@@ -148,7 +148,7 @@ function expand_title($host_id, $snmp_query_id, $snmp_index, $title) {
 function substitute_script_query_path($path) {
 	global $config;
 
-	$path = clean_up_path(str_replace("|path_cacti|", $config["base_path"], $path));
+	$path = clean_up_path(str_replace("|path_cacti|", CACTI_BASE_PATH, $path));
 	$path = clean_up_path(str_replace("|path_php_binary|", read_config_option("path_php_binary"), $path));
 
 	return $path;

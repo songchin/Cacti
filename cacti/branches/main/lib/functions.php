@@ -263,7 +263,7 @@ function form_input_validate($field_value, $field_name, $regexp_match, $allow_nu
 function is_error_message() {
 	global $config, $messages;
 
-	include($config["include_path"] . "/global_arrays.php");
+	include(CACTI_BASE_PATH . "/include/global_arrays.php");
 
 	if (isset($_SESSION["sess_messages"])) {
 		if (is_array($_SESSION["sess_messages"])) {
@@ -402,7 +402,7 @@ function cacti_log($string, $output = false, $environ = "CMDPHP") {
 	/* Log to Logfile */
 	if ((($logdestination == 1) || ($logdestination == 2)) && (read_config_option("log_verbosity") != POLLER_VERBOSITY_NONE)) {
 		if ($logfile == "") {
-			$logfile = $config["base_path"] . "/log/cacti.log";
+			$logfile = CACTI_BASE_PATH . "/log/cacti.log";
 		}
 
 		/* echo the data to the log (append) */
@@ -430,7 +430,7 @@ function cacti_log($string, $output = false, $environ = "CMDPHP") {
 		if (strlen($log_type)) {
 			define_syslog_variables();
 
-			if ($config["cacti_server_os"] == "win32")
+			if (CACTI_SERVER_OS == "win32")
 				openlog("Cacti", LOG_NDELAY | LOG_PID, LOG_USER);
 			else
 				openlog("Cacti", LOG_NDELAY | LOG_PID, LOG_SYSLOG);
@@ -906,7 +906,7 @@ function get_full_script_path($local_data_id) {
 	}
 	}
 
-	$full_path = str_replace("<path_cacti>", $config["base_path"], $full_path);
+	$full_path = str_replace("<path_cacti>", CACTI_BASE_PATH, $full_path);
 	$full_path = str_replace("<path_snmpget>", read_config_option("path_snmpget"), $full_path);
 	$full_path = str_replace("<path_php_binary>", read_config_option("path_php_binary"), $full_path);
 
@@ -1024,9 +1024,9 @@ function clean_up_file_name($string) {
 function clean_up_path($path) {
 	global $config;
 
-	if ($config["cacti_server_os"] == "unix" or read_config_option("using_cygwin") == "on") {
+	if (CACTI_SERVER_OS == "unix" or read_config_option("using_cygwin") == "on") {
 		$path = str_replace("\\", "/", $path);
-	}elseif ($config["cacti_server_os"] == "win32") {
+	}elseif (CACTI_SERVER_OS == "win32") {
 		$path = str_replace("/", "\\", $path);
 
 	}
@@ -1221,7 +1221,7 @@ function generate_graph_def_name($graph_item_id) {
 function generate_data_input_field_sequences($string, $data_input_id) {
 	global $config, $registered_cacti_names;
 
-	include ($config["include_path"] . "/global_arrays.php");
+	include (CACTI_BASE_PATH . "/include/global_arrays.php");
 
 	if (preg_match_all("/<([_a-zA-Z0-9]+)>/", $string, $matches)) {
 		$j = 0;
@@ -1900,9 +1900,9 @@ function get_hash_round_robin_archive($rra_id) {
      'data_input_method','cdef','gprint_preset','data_query','host_template')
    @returns - a 24-bit hexadecimal hash (8-bits for type, 16-bits for version) */
 function get_hash_version($type) {
-	global $hash_type_codes, $hash_version_codes, $config;
+	global $hash_type_codes, $hash_version_codes;
 
-	return $hash_type_codes[$type] . $hash_version_codes{$config["cacti_version"]};
+	return $hash_type_codes[$type] . $hash_version_codes{CACTI_VERSION};
 }
 
 /* generate_hash - generates a new unique hash

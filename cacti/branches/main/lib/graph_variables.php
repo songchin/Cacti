@@ -33,7 +33,7 @@
 function nth_percentile($local_data_id, $start_seconds, $end_seconds, $percentile = 95, $resolution = 0) {
 	global $config;
 
-	include_once($config["library_path"] . "/rrd.php");
+	include_once(CACTI_BASE_PATH . "/lib/rrd.php");
 
 	$values_array = array();
 

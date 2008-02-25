@@ -37,7 +37,7 @@ if (empty($_SERVER["argv"][2])) {
 $no_http_headers = true;
 
 include(dirname(__FILE__) . "/../include/global.php");
-include_once($config["base_path"] . "/lib/auth.php");
+include_once(CACTI_BASE_PATH . "/lib/auth.php");
 
 $template_user = $_SERVER["argv"][1];
 $new_user = $_SERVER["argv"][2];

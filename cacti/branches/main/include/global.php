@@ -79,16 +79,14 @@ $no_http_header_files = array(
 $colors = array();
 
 /* this should be auto-detected, set it manually if needed */
-$config["cacti_server_os"] = (strstr(PHP_OS, "WIN")) ? "win32" : "unix";
+define("CACTI_SERVER_OS", (strstr(PHP_OS, "WIN")) ? "win32" : "unix");
 
 /* built-in snmp support */
-$config["php_snmp_support"] = function_exists("snmpget");
+define("PHP_SNMP_SUPPORT", function_exists("snmpget"));
 
 /* used for includes */
-$config["base_path"] = strtr(ereg_replace("(.*)[\/\\]include", "\\1", dirname(__FILE__)), "\\", "/");
-$config["library_path"] = ereg_replace("(.*[\/\\])include", "\\1lib", dirname(__FILE__));
-$config["include_path"] = dirname(__FILE__);
-$config["rra_path"] = $config["base_path"] . '/rra';
+define("CACTI_BASE_PATH", strtr(ereg_replace("(.*)[\/\\]include", "\\1", dirname(__FILE__)), "\\", "/"));
+$config["rra_path"] = CACTI_BASE_PATH . '/rra';
 
 define('URL_PATH', $config['url_path']);
 
@@ -114,30 +112,28 @@ $colors["form_alternate2"] = "E5E5E5";
 error_reporting(E_ALL);
 
 /* current cacti version */
-$config["cacti_version"] = "0.8.8";
+define("CACTI_VERSION", "0.8.8");
 
 /* include base modules */
-include($config["library_path"] . "/adodb/adodb.inc.php");
-include($config["library_path"] . "/database.php");
+include(CACTI_BASE_PATH . "/lib/adodb/adodb.inc.php");
+include(CACTI_BASE_PATH . "/lib/database.php");
 
 /* connect to the database server */
 db_connect_real($database_hostname, $database_username, $database_password, $database_default, $database_type, $database_port);
 
 /* include additional modules */
-include_once($config["library_path"] . "/functions.php");
-include_once($config["library_path"] . "/plugins.php");
-
-include_once($config["include_path"] . "/global_constants.php");
-include_once($config["include_path"] . "/global_arrays.php");
-include_once($config["include_path"] . "/global_settings.php");
-
-include_once($config["include_path"] . "/global_form.php");
-include_once($config["library_path"] . "/html.php");
-include_once($config["library_path"] . "/html_form.php");
-include_once($config["library_path"] . "/html_utility.php");
-include_once($config["library_path"] . "/html_validate.php");
-include_once($config["library_path"] . "/variables.php");
-include_once($config["library_path"] . "/auth.php");
+include_once(CACTI_BASE_PATH . "/lib/functions.php");
+include_once(CACTI_BASE_PATH . "/lib/plugins.php");
+include_once(CACTI_BASE_PATH . "/include/global_constants.php");
+include_once(CACTI_BASE_PATH . "/include/global_arrays.php");
+include_once(CACTI_BASE_PATH . "/include/global_settings.php");
+include_once(CACTI_BASE_PATH . "/include/global_form.php");
+include_once(CACTI_BASE_PATH . "/lib/html.php");
+include_once(CACTI_BASE_PATH . "/lib/html_form.php");
+include_once(CACTI_BASE_PATH . "/lib/html_utility.php");
+include_once(CACTI_BASE_PATH . "/lib/html_validate.php");
+include_once(CACTI_BASE_PATH . "/lib/variables.php");
+include_once(CACTI_BASE_PATH . "/lib/auth.php");
 
 api_plugin_hook('config_arrays');
 api_plugin_hook('config_settings');
@@ -145,7 +141,7 @@ api_plugin_hook('config_form');
 
 if ((!in_array(basename($_SERVER["PHP_SELF"]), $no_http_header_files, true)) && ($_SERVER["PHP_SELF"] != "")) {
 	/* Sanity Check on "Corrupt" PHP_SELF */
-	if ((!is_file($_SERVER["PHP_SELF"])) && (!is_file($config["base_path"] . '/' . $_SERVER["PHP_SELF"]))) {
+	if ((!is_file($_SERVER["PHP_SELF"])) && (!is_file(CACTI_BASE_PATH . '/' . $_SERVER["PHP_SELF"]))) {
 		if (!is_file($_SERVER["DOCUMENT_ROOT"] . $_SERVER["PHP_SELF"])) {
 			if (!((is_file($_SERVER["SCRIPT_FILENAME"])) && (substr_count($_SERVER["SCRIPT_FILENAME"], $_SERVER["PHP_SELF"])))) {
 				echo "\nInvalid PHP_SELF Path\n";
@@ -179,9 +175,9 @@ if ((!in_array(basename($_SERVER["PHP_SELF"]), $no_http_header_files, true)) && 
 
 	/* make sure to start only only Cacti session at a time */
 	if (!isset($_SESSION["cacti_cwd"])) {
-		$_SESSION["cacti_cwd"] = $config["base_path"];
+		$_SESSION["cacti_cwd"] = CACTI_BASE_PATH;
 	}else{
-		if ($_SESSION["cacti_cwd"] != $config["base_path"]) {
+		if ($_SESSION["cacti_cwd"] != CACTI_BASE_PATH) {
 			session_unset();
 			session_destroy();
 		}

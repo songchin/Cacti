@@ -30,7 +30,7 @@ define("SNMP_METHOD_BINARY", 2);
 /* we must use an apostrophe to escape community names under Unix in case the user uses
 characters that the shell might interpret. the ucd-snmp binaries on Windows flip out when
 you do this, but are perfectly happy with a quotation mark. */
-if ($config["cacti_server_os"] == "unix") {
+if (CACTI_SERVER_OS == "unix") {
 	define("SNMP_ESCAPE_CHARACTER", "'");
 }else{
 	define("SNMP_ESCAPE_CHARACTER", "\"");

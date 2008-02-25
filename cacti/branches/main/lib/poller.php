@@ -29,7 +29,7 @@ function exec_poll($command) {
 	global $config;
 
 	if (function_exists("popen")) {
-		if ($config["cacti_server_os"] == "unix") {
+		if (CACTI_SERVER_OS == "unix") {
 			$fp = popen($command, "r");
 		}else{
 			$fp = popen($command, "rb");
@@ -85,7 +85,7 @@ function exec_poll_php($command, $using_proc_function, $pipes, $proc_fd) {
 		$command = read_config_option("path_php_binary") . " " . $command;
 
 		if (function_exists("popen")) {
-			if ($config["cacti_server_os"] == "unix")  {
+			if (CACTI_SERVER_OS == "unix")  {
 				$fp = popen($command, "r");
 			}else{
 				$fp = popen($command, "rb");
@@ -120,7 +120,7 @@ function exec_background($filename, $args = "") {
 	}
 
 	if (file_exists($filename)) {
-		if ($config["cacti_server_os"] == "win32") {
+		if (CACTI_SERVER_OS == "win32") {
 			pclose(popen("start \"Cactiplus\" /I \"" . $filename . "\" " . $args, "r"));
 		}else{
 			exec($filename . " " . $args . " > /dev/null &");
@@ -136,7 +136,7 @@ function exec_background($filename, $args = "") {
 function file_exists_2gb($filename) {
 	global $config;
 
-	if ($config["cacti_server_os"] != "win32") {
+	if (CACTI_SERVER_OS != "win32") {
 		system("test -f $filename", $rval);
 		return ($rval == 0);
 	}else{
@@ -151,8 +151,8 @@ function file_exists_2gb($filename) {
 function update_reindex_cache($host_id, $data_query_id) {
 	global $config;
 
-	include_once($config["library_path"] . "/data_query.php");
-	include_once($config["library_path"] . "/snmp.php");
+	include_once(CACTI_BASE_PATH . "/lib/data_query.php");
+	include_once(CACTI_BASE_PATH . "/lib/snmp.php");
 
 	/* will be used to keep track of sql statements to execute later on */
 	$recache_stack = array();
@@ -242,7 +242,7 @@ function update_reindex_cache($host_id, $data_query_id) {
 function process_poller_output($rrdtool_pipe, $remainder = FALSE) {
 	global $config;
 
-	include_once($config["library_path"] . "/rrd.php");
+	include_once(CACTI_BASE_PATH . "/lib/rrd.php");
 
 	/* let's count the number of rrd files we processed */
 	$rrds_processed = 0;

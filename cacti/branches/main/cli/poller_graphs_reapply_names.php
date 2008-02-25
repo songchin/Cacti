@@ -33,7 +33,7 @@ ini_set("memory_limit", "64M");
 $no_http_headers = true;
 
 include(dirname(__FILE__) . "/../include/global.php");
-include_once($config["base_path"] . "/lib/api_graph.php");
+include_once(CACTI_BASE_PATH . "/lib/api_graph.php");
 
 /* process calling arguments */
 $parms = $_SERVER["argv"];

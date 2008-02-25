@@ -25,8 +25,8 @@
 function run_data_query($host_id, $snmp_query_id) {
 	global $config;
 
-	include_once($config["library_path"] . "/poller.php");
-	include_once($config["library_path"] . "/utility.php");
+	include_once(CACTI_BASE_PATH . "/lib/poller.php");
+	include_once(CACTI_BASE_PATH . "/lib/utility.php");
 
 	debug_log_insert("data_query", "Running data query [$snmp_query_id].");
 	$type_id = db_fetch_cell("select data_input.type_id from (snmp_query,data_input) where snmp_query.data_input_id=data_input.id and snmp_query.id=$snmp_query_id");
@@ -62,10 +62,10 @@ function run_data_query($host_id, $snmp_query_id) {
 function get_data_query_array($snmp_query_id) {
 	global $config;
 
-	include_once($config["library_path"] . "/xml.php");
+	include_once(CACTI_BASE_PATH . "/lib/xml.php");
 
 	$xml_file_path = db_fetch_cell("select xml_path from snmp_query where id=$snmp_query_id");
-	$xml_file_path = str_replace("<path_cacti>", $config["base_path"], $xml_file_path);
+	$xml_file_path = str_replace("<path_cacti>", CACTI_BASE_PATH, $xml_file_path);
 
 	if (!file_exists($xml_file_path)) {
 		debug_log_insert("data_query", "Could not find data query XML file at '$xml_file_path'");
@@ -131,7 +131,7 @@ function query_script_host($host_id, $snmp_query_id) {
 function query_snmp_host($host_id, $snmp_query_id) {
 	global $config;
 
-	include_once($config["library_path"] . "/snmp.php");
+	include_once(CACTI_BASE_PATH . "/lib/snmp.php");
 
 	$host = db_fetch_row("SELECT
 		hostname,
@@ -455,7 +455,7 @@ function update_data_source_data_query_cache($local_data_id) {
 function get_formatted_data_query_indexes($host_id, $data_query_id) {
 	global $config;
 
-	include_once($config["library_path"] . "/sort.php");
+	include_once(CACTI_BASE_PATH . "/lib/sort.php");
 
 	if (empty($data_query_id)) {
 		return array("" => "Unknown Index");
@@ -641,7 +641,7 @@ function get_best_data_query_index_type($host_id, $data_query_id) {
 function get_script_query_path($args, $script_path, $host_id) {
 	global $config;
 
-	include_once($config["library_path"] . "/variables.php");
+	include_once(CACTI_BASE_PATH . "/lib/variables.php");
 
 	/* get any extra arguments that need to be passed to the script */
 	if (!empty($args)) {

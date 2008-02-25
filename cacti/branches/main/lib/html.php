@@ -546,7 +546,7 @@ function html_create_nav($current_page, $max_pages, $rows_per_page, $total_rows,
 function draw_graph_items_list($item_list, $filename, $url_data, $disable_controls) {
 	global $colors, $config;
 
-	include($config["include_path"] . "/global_arrays.php");
+	include(CACTI_BASE_PATH . "/include/global_arrays.php");
 
 	print "<tr class='rowSubHeader'>";
 		DrawMatrixHeaderItem("Graph Item",$colors["header_text"],1);

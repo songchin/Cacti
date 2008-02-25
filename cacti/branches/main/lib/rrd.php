@@ -40,7 +40,7 @@ function rrd_init($output_to_term = TRUE) {
 	if ($output_to_term) {
 		$command = read_config_option("path_rrdtool") . " - ";
 	}else{
-		if ($config["cacti_server_os"] == "win32") {
+		if (CACTI_SERVER_OS == "win32") {
 			$command = read_config_option("path_rrdtool") . " - > nul";
 		}else{
 			$command = read_config_option("path_rrdtool") . " - > /dev/null 2>&1";
@@ -90,7 +90,7 @@ function rrdtool_execute($command_line, $log_to_stdout, $output_flag, $rrd_struc
 	}
 
 	/* use popen to eliminate the zombie issue */
-	if ($config["cacti_server_os"] == "unix") {
+	if (CACTI_SERVER_OS == "unix") {
 		/* an empty $rrd_struc array means no fp is available */
 		if (sizeof($rrd_struc) == 0) {
 			session_write_close();
@@ -99,7 +99,7 @@ function rrdtool_execute($command_line, $log_to_stdout, $output_flag, $rrd_struc
 			fwrite(rrd_get_fd($rrd_struc, RRDTOOL_PIPE_CHILD_READ), escape_command(" $command_line") . "\r\n");
 			fflush(rrd_get_fd($rrd_struc, RRDTOOL_PIPE_CHILD_READ));
 		}
-	}elseif ($config["cacti_server_os"] == "win32") {
+	}elseif (CACTI_SERVER_OS == "win32") {
 		/* an empty $rrd_struc array means no fp is available */
 		if (sizeof($rrd_struc) == 0) {
 			session_write_close();
@@ -152,7 +152,7 @@ function rrdtool_execute($command_line, $log_to_stdout, $output_flag, $rrd_struc
 function rrdtool_function_create($local_data_id, $show_source, $rrd_struc) {
 	global $config;
 
-	include ($config["include_path"] . "/global_arrays.php");
+	include (CACTI_BASE_PATH . "/include/global_arrays.php");
 
 	$data_source_path = get_data_source_path($local_data_id, true);
 
@@ -292,7 +292,7 @@ function rrdtool_function_update($update_cache_array, $rrd_struc) {
 function rrdtool_function_tune($rrd_tune_array) {
 	global $config;
 
-	include($config["include_path"] . "/global_arrays.php");
+	include(CACTI_BASE_PATH . "/include/global_arrays.php");
 
 	$data_source_name = get_data_source_item_name($rrd_tune_array["data_source_id"]);
 	$data_source_type = $data_source_types{$rrd_tune_array["data-source-type"]};
@@ -465,9 +465,9 @@ function &rrdtool_function_fetch($local_data_id, $start_time, $end_time, $resolu
 function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rrd_struc = array()) {
 	global $config, $consolidation_functions;
 
-	include_once($config["library_path"] . "/cdef.php");
-	include_once($config["library_path"] . "/graph_variables.php");
-	include($config["include_path"] . "/global_arrays.php");
+	include_once(CACTI_BASE_PATH . "/lib/cdef.php");
+	include_once(CACTI_BASE_PATH . "/lib/graph_variables.php");
+	include(CACTI_BASE_PATH . "/include/global_arrays.php");
 
 	/* set the rrdtool default font */
 	if (read_config_option("path_rrdtool_default_font")) {
@@ -1250,10 +1250,10 @@ function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rr
 function rrdtool_function_xport($local_graph_id, $rra_id, $xport_data_array, &$xport_meta, $rrd_struc = array()) {
 	global $config, $consolidation_functions;
 
-	include_once($config["library_path"] . "/cdef.php");
-	include_once($config["library_path"] . "/graph_variables.php");
-	include_once($config["library_path"] . "/xml.php");
-	include($config["include_path"] . "/global_arrays.php");
+	include_once(CACTI_BASE_PATH . "/lib/cdef.php");
+	include_once(CACTI_BASE_PATH . "/lib/graph_variables.php");
+	include_once(CACTI_BASE_PATH . "/lib/xml.php");
+	include(CACTI_BASE_PATH . "/include/global_arrays.php");
 
 	/* before we do anything; make sure the user has permission to view this graph,
 	if not then get out */

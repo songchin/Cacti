@@ -41,7 +41,7 @@ api_plugin_hook('console_before');
 			</ul>
 		</td>
 		<td class="textHeader" align="right" valign="top">
-			<strong>Version <?php print $config["cacti_version"];?></strong>
+			<strong>Version <?php print CACTI_VERSION;?></strong>
 		</td>
 	</tr>
 </table>

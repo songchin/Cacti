@@ -30,7 +30,7 @@ html_start_box("<strong>About Cacti</strong>", "100%", $colors["header"], "3", "
 
 <tr class='rowSubHeader'>
 	<td class='textSubHeaderDark' colspan="2">
-		<strong>Version <?php print $config["cacti_version"];?></strong>
+		<strong>Version <?php print CACTI_VERSION;?></strong>
 	</td>
 </tr>
 <tr>
@@ -96,8 +96,8 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.</tt></p>
 
 		<p><strong>Cacti Variables</a></strong><span style="font-family: monospace; font-size: 10px;"><br>
-		<strong>Operating System:</strong> <?php print $config["cacti_server_os"];?><br>
-		<strong>PHP SNMP Support:</strong> <?php print $config["php_snmp_support"] ? "yes" : "no";?><br>
+		<strong>Operating System:</strong> <?php print CACTI_SERVER_OS;?><br>
+		<strong>PHP SNMP Support:</strong> <?php print PHP_SNMP_SUPPORT ? "yes" : "no";?><br>
 		</span></p>
 	</td>
 </tr>

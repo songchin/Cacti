@@ -96,7 +96,7 @@ $settings = array(
 			"friendly_name" => "Cacti Log File Path",
 			"description" => "The path to your Cacti log file (if blank, defaults to <path_cacti>/log/cacti.log)",
 			"method" => "filepath",
-			"default" => $config["base_path"] . "/log/cacti.log",
+			"default" => CACTI_BASE_PATH . "/log/cacti.log",
 			"max_length" => "255"
 			),
 		"pollerpaths_header" => array(

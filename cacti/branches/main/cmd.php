@@ -35,13 +35,13 @@ ini_set("memory_limit", "64M");
 $no_http_headers = true;
 
 include(dirname(__FILE__) . "/include/global.php");
-include_once($config["base_path"] . "/lib/snmp.php");
-include_once($config["base_path"] . "/lib/poller.php");
-include_once($config["base_path"] . "/lib/rrd.php");
-include_once($config["base_path"] . "/lib/ping.php");
+include_once(CACTI_BASE_PATH . "/lib/snmp.php");
+include_once(CACTI_BASE_PATH . "/lib/poller.php");
+include_once(CACTI_BASE_PATH . "/lib/rrd.php");
+include_once(CACTI_BASE_PATH . "/lib/ping.php");
 
 /* correct for a windows PHP bug. fixed in 5.2.0 */
-if ($config["cacti_server_os"] == "win32") {
+if (CACTI_SERVER_OS == "win32") {
 	/* check PHP versions first, we know 5.2.0 and above is fixed */
 	if (version_compare("5.2.0", PHP_VERSION, ">=")) {
 		$guess = substr(__FILE__,0,2);
@@ -182,7 +182,7 @@ if ((sizeof($polling_items) > 0) && (read_config_option("poller_enabled") == "on
 			);
 
 		if (function_exists("proc_open")) {
-			$cactiphp = proc_open(read_config_option("path_php_binary") . " -q " . $config["base_path"] . "/script_server.php cmd", $cactides, $pipes);
+			$cactiphp = proc_open(read_config_option("path_php_binary") . " -q " . CACTI_BASE_PATH . "/script_server.php cmd", $cactides, $pipes);
 			$output = fgets($pipes[1], 1024);
 			if (substr_count($output, "Started") != 0) {
 				if (read_config_option("log_verbosity") >= POLLER_VERBOSITY_HIGH) {

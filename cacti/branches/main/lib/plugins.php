@@ -69,7 +69,7 @@ function api_plugin_hook_function ($name, $parm=NULL) {
 
 function api_plugin_db_table_create ($plugin, $table, $data) {
 	global $config, $database_default;
-	include_once($config["library_path"] . "/database.php");
+	include_once(CACTI_BASE_PATH . "/lib/database.php");
 
 	$result = db_fetch_assoc("show tables from `" . $database_default . "`") or die (mysql_error());
 	$tables = array();

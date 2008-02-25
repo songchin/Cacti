@@ -47,8 +47,8 @@ function update_poller_cache_from_query($host_id, $data_query_id) {
 function update_poller_cache($local_data_id, $truncate_performed = false) {
 	global $config;
 
-	include_once($config["library_path"] . "/data_query.php");
-	include_once($config["library_path"] . "/api_poller.php");
+	include_once(CACTI_BASE_PATH . "/lib/data_query.php");
+	include_once(CACTI_BASE_PATH . "/lib/api_poller.php");
 
 	$data_input = db_fetch_row("select
 		data_input.id,

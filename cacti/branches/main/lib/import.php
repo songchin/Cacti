@@ -25,7 +25,7 @@
 function &import_xml_data(&$xml_data, $import_custom_rra_settings) {
 	global $config, $hash_type_codes, $hash_version_codes;
 
-	include_once($config["library_path"] . "/xml.php");
+	include_once(CACTI_BASE_PATH . "/lib/xml.php");
 
 	$info_array = array();
 
@@ -866,7 +866,7 @@ function check_hash_version($hash_version) {
 
 	reset($hash_version_codes);
 	while (list($version, $code) = each($hash_version_codes)) {
-		if ($version == $config["cacti_version"]) {
+		if ($version == CACTI_VERSION) {
 			$current_version_index = $i;
 		}
 
