@@ -38,18 +38,18 @@ switch ($_REQUEST["action"]) {
 		header("Location: gprint_presets.php");
 		break;
 	case 'edit':
-		include_once("./include/top_header.php");
+		include_once(CACTI_BASE_PATH . "/include/top_header.php");
 
 		gprint_presets_edit();
 
-		include_once("./include/bottom_footer.php");
+		include_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
 		break;
 	default:
-		include_once("./include/top_header.php");
+		include_once(CACTI_BASE_PATH . "/include/top_header.php");
 
 		gprint_presets();
 
-		include_once("./include/bottom_footer.php");
+		include_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
 		break;
 }
 
@@ -94,7 +94,7 @@ function gprint_presets_remove() {
 	/* ==================================================== */
 
 	if ((read_config_option("remove_verification") == "on") && (!isset($_GET["confirm"]))) {
-		include_once("./include/top_header.php");
+		include_once(CACTI_BASE_PATH . "/include/top_header.php");
 		form_confirm("Are You Sure?", "Are you sure you want to delete the GPRINT preset <strong>'" . db_fetch_cell("select name from graph_templates_gprint where id=" . $_GET["id"]) . "'</strong>? This could affect every graph that uses this preset, make sure you know what you are doing first!", "gprint_presets.php", "gprint_presets.php?action=remove&id=" . $_GET["id"]);
 		exit;
 	}

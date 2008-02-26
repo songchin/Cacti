@@ -37,7 +37,7 @@ if (isset($_REQUEST["date2"])) {
 	$_REQUEST["date2"] = sanitize_search_string(get_request_var("date2"));
 }
 
-include_once("./lib/time.php");
+include_once(CACTI_BASE_PATH . "/lib/time.php");
 
 /* initialize the timespan array */
 $timespan = array();

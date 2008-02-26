@@ -13,6 +13,7 @@ CREATE TABLE `auth_control` (
   `created_when` datetime NOT NULL default '0000-00-00 00:00:00',
   `created_by` varchar(100) NOT NULL default '',
   PRIMARY KEY  (`id`),
+  UNIQUE KEY `constraint_index` (`name`,`object_type`),
   KEY `name` (`name`),
   KEY `enabled` (`enabled`),
   KEY `object_type` (`object_type`)
@@ -38,9 +39,8 @@ CREATE TABLE `auth_data` (
   `enable_user_edit` int(1) unsigned NOT NULL default '0',
   `updated_when` datetime NOT NULL default '0000-00-00 00:00:00',
   `updated_by` varchar(100) NOT NULL default '',
-  `created_when` datetime NOT NULL default '0000-00-00 00:00:00',
-  `created_by` varchar(100) NOT NULL default '',
   PRIMARY KEY  (`id`),
+  UNIQUE KEY `constraint_index` (`control_id`,`plugin_id`,`category`,`name`),
   KEY `control_id` (`control_id`),
   KEY `name` (`name`),
   KEY `plugin_id` (`plugin_id`),
@@ -51,7 +51,7 @@ CREATE TABLE `auth_data` (
 -- Dumping data for table `auth_data`
 --
 
-INSERT INTO `auth_data` VALUES (1,1,0,'SYSTEM','password','21232f297a57a5a743894a0e4a801fc3',1,NOW(),'SYSTEM',NOW(),'SYSTEM');
+INSERT INTO `auth_data` VALUES (1,1,0,'SYSTEM','password','21232f297a57a5a743894a0e4a801fc3',1,NOW(),'SYSTEM');
 
 --
 -- Table structure for table `auth_graph_perms`

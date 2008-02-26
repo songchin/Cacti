@@ -23,15 +23,15 @@
 */
 
 include("./include/auth.php");
-include_once("./lib/utility.php");
-include_once("./lib/api_data_source.php");
-include_once("./lib/api_tree.php");
-include_once("./lib/html_tree.php");
-include_once("./lib/api_graph.php");
-include_once("./lib/snmp.php");
-include_once("./lib/ping.php");
-include_once("./lib/data_query.php");
-include_once("./lib/api_device.php");
+include_once(CACTI_BASE_PATH . "/lib/utility.php");
+include_once(CACTI_BASE_PATH . "/lib/api_data_source.php");
+include_once(CACTI_BASE_PATH . "/lib/api_tree.php");
+include_once(CACTI_BASE_PATH . "/lib/html_tree.php");
+include_once(CACTI_BASE_PATH . "/lib/api_graph.php");
+include_once(CACTI_BASE_PATH . "/lib/snmp.php");
+include_once(CACTI_BASE_PATH . "/lib/ping.php");
+include_once(CACTI_BASE_PATH . "/lib/data_query.php");
+include_once(CACTI_BASE_PATH . "/lib/api_device.php");
 
 define("MAX_DISPLAY_PAGES", 21);
 
@@ -80,18 +80,18 @@ switch ($_REQUEST["action"]) {
 		header("Location: host.php?action=edit&id=" . $_GET["host_id"] . "&display_dq_details=true");
 		break;
 	case 'edit':
-		include_once("./include/top_header.php");
+		include_once(CACTI_BASE_PATH . "/include/top_header.php");
 
 		host_edit();
 
-		include_once("./include/bottom_footer.php");
+		include_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
 		break;
 	default:
-		include_once("./include/top_header.php");
+		include_once(CACTI_BASE_PATH . "/include/top_header.php");
 
 		host();
 
-		include_once("./include/bottom_footer.php");
+		include_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
 		break;
 }
 
@@ -427,7 +427,7 @@ function form_actions() {
 		$i++;
 	}
 
-	include_once("./include/top_header.php");
+	include_once(CACTI_BASE_PATH . "/include/top_header.php");
 
 	/* add a list of tree names to the actions dropdown */
 	add_tree_names_to_actions_array();
@@ -565,7 +565,7 @@ function form_actions() {
 
 	html_end_box();
 
-	include_once("./include/bottom_footer.php");
+	include_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
 }
 
 /* -------------------
@@ -611,9 +611,9 @@ function host_remove() {
 	/* ==================================================== */
 
 	if ((read_config_option("remove_verification") == "on") && (!isset($_GET["confirm"]))) {
-		include("./include/top_header.php");
+		include(CACTI_BASE_PATH . "/include/top_header.php");
 		form_confirm("Are You Sure?", "Are you sure you want to delete the host <strong>'" . db_fetch_cell("select description from host where id=" . $_GET["id"]) . "'</strong>?", "host.php", "host.php?action=remove&id=" . $_GET["id"]);
-		include("./include/bottom_footer.php");
+		include(CACTI_BASE_PATH . "/include/bottom_footer.php");
 		exit;
 	}
 
@@ -1286,7 +1286,7 @@ function host() {
 
 	html_start_box("<strong>Devices</strong>", "100%", $colors["header"], "3", "center", "host.php?action=edit&host_template_id=" . $_REQUEST["host_template_id"] . "&host_status=" . $_REQUEST["host_status"], true);
 
-	include("./include/html/inc_device_filter_table.php");
+	include(CACTI_BASE_PATH . "/include/html/inc_device_filter_table.php");
 
 	html_end_box(false);
 

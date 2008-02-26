@@ -23,15 +23,15 @@
 */
 
 include("./include/auth.php");
-include_once("./lib/utility.php");
-include_once("./lib/api_graph.php");
-include_once("./lib/api_tree.php");
-include_once("./lib/api_data_source.php");
-include_once("./lib/template.php");
-include_once("./lib/html_tree.php");
-include_once("./lib/html_form_template.php");
-include_once("./lib/rrd.php");
-include_once("./lib/data_query.php");
+include_once(CACTI_BASE_PATH . "/lib/utility.php");
+include_once(CACTI_BASE_PATH . "/lib/api_graph.php");
+include_once(CACTI_BASE_PATH . "/lib/api_tree.php");
+include_once(CACTI_BASE_PATH . "/lib/api_data_source.php");
+include_once(CACTI_BASE_PATH . "/lib/template.php");
+include_once(CACTI_BASE_PATH . "/lib/html_tree.php");
+include_once(CACTI_BASE_PATH . "/lib/html_form_template.php");
+include_once(CACTI_BASE_PATH . "/lib/rrd.php");
+include_once(CACTI_BASE_PATH . "/lib/data_query.php");
 
 define("MAX_DISPLAY_PAGES", 21);
 
@@ -60,18 +60,18 @@ switch ($_REQUEST["action"]) {
 
 		break;
 	case 'graph_diff':
-		include_once("./include/top_header.php");
+		include_once(CACTI_BASE_PATH . "/include/top_header.php");
 
 		graph_diff();
 
-		include_once("./include/bottom_footer.php");
+		include_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
 		break;
 	case 'item':
-		include_once("./include/top_header.php");
+		include_once(CACTI_BASE_PATH . "/include/top_header.php");
 
 		item();
 
-		include_once("./include/bottom_footer.php");
+		include_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
 		break;
 	case 'graph_remove':
 		graph_remove();
@@ -79,18 +79,18 @@ switch ($_REQUEST["action"]) {
 		header("Location: graphs.php");
 		break;
 	case 'graph_edit':
-		include_once("./include/top_header.php");
+		include_once(CACTI_BASE_PATH . "/include/top_header.php");
 
 		graph_edit();
 
-		include_once("./include/bottom_footer.php");
+		include_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
 		break;
 	default:
-		include_once("./include/top_header.php");
+		include_once(CACTI_BASE_PATH . "/include/top_header.php");
 
 		graph();
 
-		include_once("./include/bottom_footer.php");
+		include_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
 		break;
 }
 
@@ -386,7 +386,7 @@ function form_actions() {
 		$i++;
 	}
 
-	include_once("./include/top_header.php");
+	include_once(CACTI_BASE_PATH . "/include/top_header.php");
 
 	/* add a list of tree names to the actions dropdown */
 	add_tree_names_to_actions_array();
@@ -526,7 +526,7 @@ function form_actions() {
 
 	html_end_box();
 
-	include_once("./include/bottom_footer.php");
+	include_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
 }
 
 /* -----------------------
@@ -1102,7 +1102,7 @@ function graph() {
 
 	html_start_box("<strong>Graph Management</strong>", "100%", $colors["header"], "3", "center", "graphs.php?action=graph_edit&host_id=" . $_REQUEST["host_id"], true);
 
-	include("./include/html/inc_graph_filter_table.php");
+	include(CACTI_BASE_PATH . "/include/html/inc_graph_filter_table.php");
 
 	html_end_box(false);
 

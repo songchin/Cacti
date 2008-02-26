@@ -23,7 +23,7 @@
 */
 
 include("./include/auth.php");
-include_once("./lib/import.php");
+include_once(CACTI_BASE_PATH . "/lib/import.php");
 
 /* set default action */
 if (!isset($_REQUEST["action"])) { $_REQUEST["action"] = ""; }
@@ -34,11 +34,11 @@ switch ($_REQUEST["action"]) {
 
 		break;
 	default:
-		include_once("./include/top_header.php");
+		include_once(CACTI_BASE_PATH . "/include/top_header.php");
 
 		import();
 
-		include_once("./include/bottom_footer.php");
+		include_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
 		break;
 }
 

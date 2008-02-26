@@ -84,7 +84,7 @@ if (isset($_GET['mode']) && in_array($_GET['mode'], $modes)  && isset($_GET['id'
 	}
 }
 
-include('./include/top_header.php');
+include(CACTI_BASE_PATH . "/include/top_header.php");
 
 plugins_draw_tabs ($ptabs, $current_tab);
 
@@ -103,7 +103,7 @@ switch ($current_tab) {
 }
 
 html_end_box();
-include('./include/bottom_footer.php');
+include(CACTI_BASE_PATH . "/include/bottom_footer.php");
 
 
 

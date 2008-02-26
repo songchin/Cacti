@@ -23,11 +23,11 @@
 */
 
 include("./include/auth.php");
-include_once("./lib/data_query.php");
-include_once("./lib/utility.php");
-include_once("./lib/sort.php");
-include_once("./lib/html_form_template.php");
-include_once("./lib/template.php");
+include_once(CACTI_BASE_PATH . "/lib/data_query.php");
+include_once(CACTI_BASE_PATH . "/lib/utility.php");
+include_once(CACTI_BASE_PATH . "/lib/sort.php");
+include_once(CACTI_BASE_PATH . "/lib/html_form_template.php");
+include_once(CACTI_BASE_PATH . "/lib/template.php");
 
 define("MAX_DISPLAY_PAGES", 21);
 
@@ -45,11 +45,11 @@ switch ($_REQUEST["action"]) {
 		header("Location: graphs_new.php?host_id=" . $_GET["host_id"]);
 		break;
 	default:
-		include_once("./include/top_header.php");
+		include_once(CACTI_BASE_PATH . "/include/top_header.php");
 
 		graphs();
 
-		include_once("./include/bottom_footer.php");
+		include_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
 		break;
 }
 
@@ -222,7 +222,7 @@ function host_new_graphs($host_id, $host_template_id, $selected_graphs_array) {
 	fields are actually drawn */
 	ob_start();
 
-	include_once("./include/top_header.php");
+	include_once(CACTI_BASE_PATH . "/include/top_header.php");
 
 	print "<form action='graphs_new.php' method='post'>\n";
 
@@ -336,7 +336,7 @@ function host_new_graphs($host_id, $host_template_id, $selected_graphs_array) {
 
 	form_save_button_alt("host_id!$host_id");
 
-	include_once("./include/bottom_footer.php");
+	include_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
 }
 
 function check_changed($request, $session) {

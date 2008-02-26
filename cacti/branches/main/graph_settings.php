@@ -37,12 +37,12 @@ switch ($_REQUEST["action"]) {
 
 		// We must exempt ourselves from the page refresh, or else the settings page could update while the user is making changes
 		$_SESSION['custom'] = 1;
-		include_once("./include/top_graph_header.php");
+		include_once(CACTI_BASE_PATH . "/include/top_graph_header.php");
 		unset($_SESSION['custom']);
 
 		settings();
 
-		include_once("./include/bottom_footer.php");
+		include_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
 		break;
 }
 
@@ -88,7 +88,7 @@ function settings() {
 	/* Find out whether this user has right here */
 	if($current_user["graph_settings"] == "") {
 		print "<strong><font size='+1' color='#FF0000'>YOU DO NOT HAVE RIGHTS TO CHANGE GRAPH SETTINGS</font></strong>";
-		include_once("./include/bottom_footer.php");
+		include_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
 		exit;
 	}
 

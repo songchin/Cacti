@@ -23,7 +23,7 @@
 */
 
 include("./include/auth.php");
-include_once("./lib/cdef.php");
+include_once(CACTI_BASE_PATH . "/lib/cdef.php");
 
 /* set default action */
 if (!isset($_REQUEST["action"])) { $_REQUEST["action"] = ""; }
@@ -49,11 +49,11 @@ switch ($_REQUEST["action"]) {
 		header("Location: cdef.php?action=edit&id=" . $_GET["cdef_id"]);
 		break;
 	case 'item_edit':
-		include_once("./include/top_header.php");
+		include_once(CACTI_BASE_PATH . "/include/top_header.php");
 
 		item_edit();
 
-		include_once("./include/bottom_footer.php");
+		include_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
 		break;
 	case 'remove':
 		cdef_remove();
@@ -61,18 +61,18 @@ switch ($_REQUEST["action"]) {
 		header ("Location: cdef.php");
 		break;
 	case 'edit':
-		include_once("./include/top_header.php");
+		include_once(CACTI_BASE_PATH . "/include/top_header.php");
 
 		cdef_edit();
 
-		include_once("./include/bottom_footer.php");
+		include_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
 		break;
 	default:
-		include_once("./include/top_header.php");
+		include_once(CACTI_BASE_PATH . "/include/top_header.php");
 
 		cdef();
 
-		include_once("./include/bottom_footer.php");
+		include_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
 		break;
 }
 
@@ -268,9 +268,9 @@ function cdef_remove() {
 	/* ==================================================== */
 
 	if ((read_config_option("remove_verification") == "on") && (!isset($_GET["confirm"]))) {
-		include("./include/top_header.php");
+		include(CACTI_BASE_PATH . "/include/top_header.php");
 		form_confirm("Are You Sure?", "Are you sure you want to delete the CDEF <strong>'" . db_fetch_cell("select name from cdef where id=" . $_GET["id"]) . "'</strong>?", "cdef.php", "cdef.php?action=remove&id=" . $_GET["id"]);
-		include("./include/bottom_footer.php");
+		include(CACTI_BASE_PATH . "/include/bottom_footer.php");
 		exit;
 	}
 

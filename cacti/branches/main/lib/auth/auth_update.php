@@ -24,18 +24,30 @@
 
 
 /**
- * Returns information about an auth control entry
+ * Saves auth control data for a certain control id
  *
- * Returns information array for a given auth control entries, or single requested value.
+ * Saves auth control data for a certain control id
  *
- * @return array fields => values or value, false on error
+ * @return 1 on success, 0 on error
  */
-function auth_control_set($control_type, $control_id, $data_field = "") {
+function auth_control_data_save($data, $category = "SYSTEM", $enable_user_edit = 0, $plugin_id = 0, $control_id) {
+
+	$user_id = "";
+	$user_name = "";
+
+	$sql = "REPLACE INTO `auth_data` (`control_id`,`plugin_id`,`category`,`name`,`value`,`enable_user_edit`,`updated_when`,`updated_by`) VALUES (";
+	$where = "";
+
+	if (!is_array($data)) {
+		return 0;
+	}
+
+	
+
+
 
 
 
 }
-
-
 
 ?>

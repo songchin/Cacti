@@ -23,10 +23,10 @@
 */
 
 include ("./include/auth.php");
-include_once("./lib/tree.php");
-include_once("./lib/html_tree.php");
-include_once("./lib/utility.php");
-include_once("./lib/template.php");
+include_once(CACTI_BASE_PATH . "/lib/tree.php");
+include_once(CACTI_BASE_PATH . "/lib/html_tree.php");
+include_once(CACTI_BASE_PATH . "/lib/utility.php");
+include_once(CACTI_BASE_PATH . "/lib/template.php");
 
 define("MAX_DISPLAY_PAGES", 21);
 
@@ -61,18 +61,18 @@ switch ($_REQUEST["action"]) {
 		header("Location: data_templates.php");
 		break;
 	case 'template_edit':
-		include_once("./include/top_header.php");
+		include_once(CACTI_BASE_PATH . "/include/top_header.php");
 
 		template_edit();
 
-		include_once ("./include/bottom_footer.php");
+		include_once (CACTI_BASE_PATH . "/include/bottom_footer.php");
 		break;
 	default:
-		include_once("./include/top_header.php");
+		include_once(CACTI_BASE_PATH . "/include/top_header.php");
 
 		template();
 
-		include_once("./include/bottom_footer.php");
+		include_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
 		break;
 }
 
@@ -308,7 +308,7 @@ function form_actions() {
 		$i++;
 	}
 
-	include_once("./include/top_header.php");
+	include_once(CACTI_BASE_PATH . "/include/top_header.php");
 
 	html_start_box("<strong>" . $ds_actions{$_POST["drp_action"]} . "</strong>", "60%", $colors["header_panel"], "3", "center", "");
 
@@ -351,7 +351,7 @@ function form_actions() {
 
 	html_end_box();
 
-	include_once("./include/bottom_footer.php");
+	include_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
 }
 
 /* ----------------------------
@@ -631,7 +631,7 @@ function template() {
 
 	html_start_box("<strong>Data Templates</strong>", "100%", $colors["header"], "3", "center", "data_templates.php?action=template_edit", true);
 
-	include("./include/html/inc_data_template_filter_table.php");
+	include(CACTI_BASE_PATH . "/include/html/inc_data_template_filter_table.php");
 
 	html_end_box(false);
 

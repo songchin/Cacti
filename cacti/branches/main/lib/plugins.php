@@ -30,7 +30,7 @@ function api_plugin_hook ($name) {
 		foreach ($result as $hdata) {
 			$p[] = $hdata['name'];
 			if (file_exists($config['base_path'] . '/plugins/' . $hdata['name'] . '/' . $hdata['file'])) {
-				include_once($config['base_path'] . '/plugins/' . $hdata['name'] . '/' . $hdata['file']);
+				include_once(CACTI_BASE_PATH . '/plugins/' . $hdata['name'] . '/' . $hdata['file']);
 			}
 			$function = $hdata['function'];
 			if (function_exists($function)) {
@@ -53,7 +53,7 @@ function api_plugin_hook_function ($name, $parm=NULL) {
 		foreach ($result as $hdata) {
 			$p[] = $hdata['name'];
 			if (file_exists($config['base_path'] . '/plugins/' . $hdata['name'] . '/' . $hdata['file'])) {
-				include_once($config['base_path'] . '/plugins/' . $hdata['name'] . '/' . $hdata['file']);
+				include_once(CACTI_BASE_PATH . '/plugins/' . $hdata['name'] . '/' . $hdata['file']);
 			}
 			$function = $hdata['function'];
 			if (function_exists($function)) {
@@ -147,7 +147,7 @@ function api_plugin_db_add_column ($plugin, $table, $column) {
 	// Example: api_plugin_db_add_column ('thold', 'plugin_config', array('name' => 'test' . rand(1, 200), 'type' => 'varchar (255)', 'NULL' => false));
 
 	global $config, $database_default;
-	include_once($config['library_path'] . '/database.php');
+	include_once(CACTI_BASE_PATH . '/lib/database.php');
 
 	$result = db_fetch_assoc('show columns from `' . $table . '`') or die (mysql_error());
 	$columns = array();
@@ -181,7 +181,7 @@ function api_plugin_db_add_column ($plugin, $table, $column) {
 
 function api_plugin_install ($plugin) {
 	global $config;
-	include_once($config['base_path'] . "/plugins/$plugin/setup.php");
+	include_once(CACTI_BASE_PATH . "/plugins/$plugin/setup.php");
 
 	$exists = db_fetch_assoc("SELECT id FROM plugin_config WHERE directory = '$plugin'", false);
 	if (!count($exists)) {
@@ -216,7 +216,7 @@ function api_plugin_install ($plugin) {
 
 function api_plugin_uninstall ($plugin) {
 	global $config;
-	include_once($config['base_path'] . "/plugins/$plugin/setup.php");
+	include_once(CACTI_BASE_PATH . "/plugins/$plugin/setup.php");
 	// Run the Plugin's Uninstall Function first
 	$function = 'plugin_' . $plugin . '_uninstall';
 	if (function_exists($function)) {
@@ -230,7 +230,7 @@ function api_plugin_uninstall ($plugin) {
 
 function api_plugin_check_config ($plugin) {
 	global $config;
-	include_once($config['base_path'] . "/plugins/$plugin/setup.php");
+	include_once(CACTI_BASE_PATH . "/plugins/$plugin/setup.php");
 	$function = 'plugin_' . $plugin . '_check_config';
 	if (function_exists($function)) {
 		return $function();

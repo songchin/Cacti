@@ -40,6 +40,7 @@ function upgrade_to_0_8_8() {
 		  `created_when` datetime NOT NULL default '0000-00-00 00:00:00',
 		  `created_by` varchar(100) NOT NULL default '',
 		  PRIMARY KEY  (`id`),
+		  UNIQUE KEY `constraint_index` (`name`,`object_type`),
 		  KEY `name` (`name`),
 		  KEY `enabled` (`enabled`),
 		  KEY `object_type` (`object_type`)
@@ -55,9 +56,8 @@ function upgrade_to_0_8_8() {
 		  `enable_user_edit` int(1) unsigned NOT NULL default '0',
 		  `updated_when` datetime NOT NULL default '0000-00-00 00:00:00',
 		  `updated_by` varchar(100) NOT NULL default '',
-		  `created_when` datetime NOT NULL default '0000-00-00 00:00:00',
-		  `created_by` varchar(100) NOT NULL default '',
 		  PRIMARY KEY  (`id`),
+		  UNIQUE KEY `constraint_index` (`control_id`,`plugin_id`,`category`,`name`),
 		  KEY `control_id` (`control_id`),
 		  KEY `name` (`name`),
 		  KEY `plugin_id` (`plugin_id`),
@@ -142,22 +142,22 @@ function upgrade_to_0_8_8() {
 	 * make sure to use current global default settings in order not to change
 	 * current behaviour when creating new hosts from those templates
 	 */
-	$snmp_community				= read_config_option("snmp_community");
-	$snmp_version				= read_config_option("snmp_ver");
-	$snmp_username				= read_config_option("snmp_username");
-	$snmp_password				= read_config_option("snmp_password");
-	$snmp_auth_protocol			= read_config_option("snmp_auth_protocol");
-	$snmp_priv_passphrase		= read_config_option("snmp_priv_passphrase");
-	$snmp_priv_protocol			= read_config_option("snmp_priv_protocol");
-	$snmp_context				= read_config_option("snmp_context");
-	$snmp_port					= read_config_option("snmp_port");
-	$snmp_timeout				= read_config_option("snmp_timeout");
-	$availability_method		= read_config_option("availability_method");
-	$ping_method				= read_config_option("ping_method");
-	$ping_port					= read_config_option("ping_port");
-	$ping_timeout				= read_config_option("ping_timeout");
-	$ping_retries				= read_config_option("ping_retries");
-	$max_oids					= read_config_option("max_get_size");
+	$snmp_community	= read_config_option("snmp_community");
+	$snmp_version = read_config_option("snmp_ver");
+	$snmp_username = read_config_option("snmp_username");
+	$snmp_password = read_config_option("snmp_password");
+	$snmp_auth_protocol = read_config_option("snmp_auth_protocol");
+	$snmp_priv_passphrase = read_config_option("snmp_priv_passphrase");
+	$snmp_priv_protocol = read_config_option("snmp_priv_protocol");
+	$snmp_context = read_config_option("snmp_context");
+	$snmp_port = read_config_option("snmp_port");
+	$snmp_timeout = read_config_option("snmp_timeout");
+	$availability_method = read_config_option("availability_method");
+	$ping_method = read_config_option("ping_method");
+	$ping_port = read_config_option("ping_port");
+	$ping_timeout = read_config_option("ping_timeout");
+	$ping_retries = read_config_option("ping_retries");
+	$max_oids = read_config_option("max_get_size");
 
 	db_install_execute("0.8.8", "UPDATE `host_template` " .
 			"SET  `snmp_community` = '" . $snmp_community . "' ," .

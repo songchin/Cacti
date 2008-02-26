@@ -56,7 +56,7 @@ case 'save':
 	header("Location: settings.php?tab=" . $_POST["tab"]);
 	break;
 default:
-	include("./include/top_header.php");
+	include(CACTI_BASE_PATH . "/include/top_header.php");
 
 	/* set the default settings category */
 	if (!isset($_GET["tab"])) {
@@ -115,7 +115,7 @@ default:
 
 	form_save_button_alt("url!index.php", "save", "save");
 
-	include("./include/bottom_footer.php");
+	include(CACTI_BASE_PATH . "/include/bottom_footer.php");
 
 	break;
 }

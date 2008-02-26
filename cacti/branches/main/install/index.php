@@ -304,8 +304,8 @@ if (empty($_REQUEST["step"])) {
 }
 
 if ($_REQUEST["step"] == "4") {
-	include_once("../lib/data_query.php");
-	include_once("../lib/utility.php");
+	include_once(CACTI_BASE_PATH . "/lib/data_query.php");
+	include_once(CACTI_BASE_PATH . "/lib/utility.php");
 
 	$i = 0;
 

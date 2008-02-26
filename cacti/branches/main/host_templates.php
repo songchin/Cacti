@@ -23,7 +23,7 @@
 */
 
 include("./include/auth.php");
-include_once("./lib/utility.php");
+include_once(CACTI_BASE_PATH . "/lib/utility.php");
 
 define("MAX_DISPLAY_PAGES", 21);
 
@@ -56,18 +56,18 @@ switch ($_REQUEST["action"]) {
 		header("Location: host_templates.php?action=edit&id=" . $_GET["host_template_id"]);
 		break;
 	case 'edit':
-		include_once("./include/top_header.php");
+		include_once(CACTI_BASE_PATH . "/include/top_header.php");
 
 		template_edit();
 
-		include_once("./include/bottom_footer.php");
+		include_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
 		break;
 	default:
-		include_once("./include/top_header.php");
+		include_once(CACTI_BASE_PATH . "/include/top_header.php");
 
 		template();
 
-		include_once("./include/bottom_footer.php");
+		include_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
 		break;
 }
 
@@ -77,7 +77,7 @@ switch ($_REQUEST["action"]) {
 
 function form_save() {
 	/* required for "run_data_query" */
-	include_once("./lib/data_query.php");
+	include_once(CACTI_BASE_PATH . "/lib/data_query.php");
 
 	/*
 	 * loop for all possible changes of reindex_method
@@ -280,7 +280,7 @@ function form_actions() {
 		$i++;
 	}
 
-	include_once("./include/top_header.php");
+	include_once(CACTI_BASE_PATH . "/include/top_header.php");
 
 	html_start_box("<strong>" . $host_actions{$_POST["drp_action"]} . "</strong>", "60%", $colors["header_panel"], "3", "center", "");
 
@@ -323,7 +323,7 @@ function form_actions() {
 
 	html_end_box();
 
-	include_once("./include/bottom_footer.php");
+	include_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
 }
 
 /* ---------------------
@@ -848,7 +848,7 @@ function template() {
 
 	html_start_box("<strong>Host Templates</strong>", "100%", $colors["header"], "3", "center", "host_templates.php?action=edit", true);
 
-	include("./include/html/inc_graph_template_filter_table.php");
+	include(CACTI_BASE_PATH . "/include/html/inc_graph_template_filter_table.php");
 
 	html_end_box(false);
 

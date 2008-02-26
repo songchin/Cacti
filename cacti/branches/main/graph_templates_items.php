@@ -23,7 +23,7 @@
 */
 
 include("./include/auth.php");
-include_once("./lib/template.php");
+include_once(CACTI_BASE_PATH . "/lib/template.php");
 
 /* set default action */
 if (!isset($_REQUEST["action"])) { $_REQUEST["action"] = ""; }
@@ -50,18 +50,18 @@ switch ($_REQUEST["action"]) {
 		header("Location: graph_templates.php?action=template_edit&id=" . $_GET["graph_template_id"]);
 		break;
 	case 'item_edit':
-		include_once("./include/top_header.php");
+		include_once(CACTI_BASE_PATH . "/include/top_header.php");
 
 		item_edit();
 
-		include_once("./include/bottom_footer.php");
+		include_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
 		break;
 	case 'item':
-		include_once("./include/top_header.php");
+		include_once(CACTI_BASE_PATH . "/include/top_header.php");
 
 		item();
 
-		include_once ("./include/bottom_footer.php");
+		include_once (CACTI_BASE_PATH . "/include/bottom_footer.php");
 		break;
 }
 

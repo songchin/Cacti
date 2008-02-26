@@ -48,34 +48,34 @@ switch (get_request_var_request("action")) {
 		break;
 
 	case 'user_realms_edit':
-		include_once("include/top_header.php");
+		include_once(CACTI_BASE_PATH . "/include/top_header.php");
 		user_edit();
-		include_once("include/bottom_footer.php");
+		include_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
 		break;
 
 	case 'graph_settings_edit':
-		include_once("include/top_header.php");
+		include_once(CACTI_BASE_PATH . "/include/top_header.php");
 		user_edit();
-		include_once("include/bottom_footer.php");
+		include_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
 		break;
 
 	case 'graph_perms_edit':
-		include_once("include/top_header.php");
+		include_once(CACTI_BASE_PATH . "/include/top_header.php");
 		user_edit();
-		include_once("include/bottom_footer.php");
+		include_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
 		break;
 
 	case 'user_edit':
-		include_once("include/top_header.php");
+		include_once(CACTI_BASE_PATH . "/include/top_header.php");
 		user_edit();
-		include_once("include/bottom_footer.php");
+		include_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
 		break;
 
 	default:
 		if (!api_plugin_hook_function('user_admin_action', get_request_var_request("action"))) {
-			include_once("include/top_header.php");
+			include_once(CACTI_BASE_PATH . "/include/top_header.php");
 			user();
-			include_once("include/bottom_footer.php");
+			include_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
 		}
 		break;
 }
@@ -197,7 +197,7 @@ function form_actions() {
 		$i++;
 	}
 
-	include_once("./include/top_header.php");
+	include_once(CACTI_BASE_PATH . "/include/top_header.php");
 
 	html_start_box("<strong>" . $user_actions[get_request_var_post("drp_action")] . "</strong>", "60%", $colors["header_panel"], "3", "center", "");
 
@@ -311,7 +311,7 @@ function form_actions() {
 
 	html_end_box();
 
-	include_once("./include/bottom_footer.php");
+	include_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
 
 }
 
@@ -1000,7 +1000,7 @@ function user() {
 
 	html_start_box("<strong>User Management</strong>", "100%", $colors["header"], "3", "center", "user_admin.php?action=user_edit", true);
 
-	include("./include/html/inc_user_admin_filter_table.php");
+	include(CACTI_BASE_PATH . "/include/html/inc_user_admin_filter_table.php");
 
 	html_end_box(false);
 

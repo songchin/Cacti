@@ -23,7 +23,7 @@
 */
 
 include("./include/auth.php");
-include_once("./lib/utility.php");
+include_once(CACTI_BASE_PATH . "/lib/utility.php");
 
 /* set default action */
 if (!isset($_REQUEST["action"])) { $_REQUEST["action"] = ""; }
@@ -39,11 +39,11 @@ switch ($_REQUEST["action"]) {
 		header("Location: graphs.php?action=graph_edit&id=" . $_GET["local_graph_id"]);
 		break;
 	case 'item_edit':
-		include_once("./include/top_header.php");
+		include_once(CACTI_BASE_PATH . "/include/top_header.php");
 
 		item_edit();
 
-		include_once("./include/bottom_footer.php");
+		include_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
 		break;
 	case 'item_movedown':
 		item_movedown();
@@ -209,7 +209,7 @@ function item_edit() {
 
 	html_start_box("<strong>Data Sources</strong> [host: " . (empty($host["hostname"]) ? "No Host" : $host["hostname"]) . "]", "100%", $colors["header"], "3", "center", "");
 
-	include("./include/html/inc_graph_items_filter_table.php");
+	include(CACTI_BASE_PATH . "/include/html/inc_graph_items_filter_table.php");
 
 	html_end_box();
 

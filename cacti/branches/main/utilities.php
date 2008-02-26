@@ -23,7 +23,7 @@
 */
 
 include("./include/auth.php");
-include_once("./lib/utility.php");
+include_once(CACTI_BASE_PATH . "/lib/utility.php");
 
 load_current_session_value("page_referrer", "page_referrer", "");
 
@@ -62,7 +62,7 @@ if (isset($_REQUEST["purge_x"])) {
 
 switch ($_REQUEST["action"]) {
 	case 'clear_poller_cache':
-		include_once("./include/top_header.php");
+		include_once(CACTI_BASE_PATH . "/include/top_header.php");
 
 		/* obtain timeout settings */
 		$max_execution = ini_get("max_execution_time");
@@ -78,21 +78,21 @@ switch ($_REQUEST["action"]) {
 
 		utilities_view_poller_cache();
 
-		include_once("./include/bottom_footer.php");
+		include_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
 		break;
 	case 'view_snmp_cache':
-		include_once("./include/top_header.php");
+		include_once(CACTI_BASE_PATH . "/include/top_header.php");
 
 		utilities_view_snmp_cache();
 
-		include_once("./include/bottom_footer.php");
+		include_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
 		break;
 	case 'view_poller_cache':
-		include_once("./include/top_header.php");
+		include_once(CACTI_BASE_PATH . "/include/top_header.php");
 
 		utilities_view_poller_cache();
 
-		include_once("./include/bottom_footer.php");
+		include_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
 		break;
 	case 'view_logfile':
 		utilities_view_logfile();
@@ -102,40 +102,40 @@ switch ($_REQUEST["action"]) {
 		utilities_clear_logfile();
 		utilities_view_logfile();
 
-		include_once("./include/bottom_footer.php");
+		include_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
 		break;
 	case 'view_user_log':
-		include_once("./include/top_header.php");
+		include_once(CACTI_BASE_PATH . "/include/top_header.php");
 
 		utilities_view_user_log();
 
-		include_once("./include/bottom_footer.php");
+		include_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
 		break;
 	case 'clear_user_log':
-		include_once("./include/top_header.php");
+		include_once(CACTI_BASE_PATH . "/include/top_header.php");
 
 		utilities_clear_user_log();
 		utilities_view_user_log();
 
-		include_once("./include/bottom_footer.php");
+		include_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
 		break;
 	case 'view_tech':
 		$php_info = utilities_php_modules();
 
-		include_once("./include/top_header.php");
+		include_once(CACTI_BASE_PATH . "/include/top_header.php");
 
 		utilities_view_tech($php_info);
 
-		include_once("./include/bottom_footer.php");
+		include_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
 		break;
 	default:
 
 		if (!api_plugin_hook_function('utilities_action', $_REQUEST['action'])) {
-			include_once('./include/top_header.php');
+			include_once(CACTI_BASE_PATH . "/include/top_header.php");
 
 			utilities();
 
-			include_once('./include/bottom_footer.php');
+			include_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
 		}
 		break;
 }
@@ -535,7 +535,7 @@ function utilities_view_user_log() {
 
 	html_start_box("<strong>User Login History</strong>", "100%", $colors["header"], "3", "center", "", true);
 
-	include("./include/html/inc_user_log_filter_table.php");
+	include(CACTI_BASE_PATH . "/include/html/inc_user_log_filter_table.php");
 
 	html_end_box(false);
 
@@ -721,7 +721,7 @@ function utilities_view_logfile() {
 	$refresh["seconds"] = $_REQUEST["refresh"];
 	$refresh["page"] = "utilities.php?action=view_logfile";
 
-	include_once("./include/top_header.php");
+	include_once(CACTI_BASE_PATH . "/include/top_header.php");
 
 	?>
 	<script type="text/javascript">
@@ -744,7 +744,7 @@ function utilities_view_logfile() {
 
 	html_start_box("<strong>Log File Filters</strong>", "100%", $colors["header"], "3", "center", "", true);
 
-	include("./include/html/inc_view_logfile_table.php");
+	include(CACTI_BASE_PATH . "/include/html/inc_view_logfile_table.php");
 
 	html_end_box(false);
 
@@ -840,7 +840,7 @@ function utilities_view_logfile() {
 
 	html_end_box();
 
-	include_once("./include/bottom_footer.php");
+	include_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
 }
 
 function utilities_clear_logfile() {
@@ -851,7 +851,7 @@ function utilities_clear_logfile() {
 	$refresh["seconds"] = $_REQUEST["refresh"];
 	$refresh["page"] = "utilities.php?action=view_logfile";
 
-	include_once("./include/top_header.php");
+	include_once(CACTI_BASE_PATH . "/include/top_header.php");
 
 	$logfile = read_config_option("path_cactilog");
 
@@ -934,7 +934,7 @@ function utilities_view_snmp_cache() {
 
 	html_start_box("<strong>SNMP Cache Items</strong>", "100%", $colors["header"], "3", "center", "", true);
 
-	include("./include/html/inc_snmp_cache_filter_table.php");
+	include(CACTI_BASE_PATH . "/include/html/inc_snmp_cache_filter_table.php");
 
 	html_end_box(false);
 
@@ -1104,7 +1104,7 @@ function utilities_view_poller_cache() {
 
 	html_start_box("<strong>Poller Cache Items</strong>", "100%", $colors["header"], "3", "center", "", true);
 
-	include("./include/html/inc_poller_item_filter_table.php");
+	include(CACTI_BASE_PATH . "/include/html/inc_poller_item_filter_table.php");
 
 	html_end_box(false);
 
