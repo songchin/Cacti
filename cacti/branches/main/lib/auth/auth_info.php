@@ -28,7 +28,7 @@
 
 require_once(CACTI_BASE_PATH . "/include/auth/auth_constants.php");
 
-/**
+/*
  * List auth records
  *
  * Given filter array, return list of user records
@@ -43,7 +43,7 @@ function auth_control_list ($control_type, $filter_array, $limit = -1, $offset =
 }
 
 
-/**
+/*
  * Returns information about an auth control entry
  *
  * Returns information array for a given auth control entries, or single requested value.
@@ -53,6 +53,48 @@ function auth_control_list ($control_type, $filter_array, $limit = -1, $offset =
 function auth_control_get($control_type, $control_id, $data_field = "") {
 
 
+
+}
+
+
+/*
+ * Returns information about an auth control data
+ *
+ * Returns information array for a given auth control data entries, or single requested value.
+ *
+ * @return array of data rows, false on error
+ */
+function auth_control_data_get($data, $category = "SYSTEM", $plugin_id = 0, $control_id = 0) {
+
+	/* Validate input */
+	if (!is_array($data)) {
+		return 0;
+	}
+	if (!is_numeric($plugin_id)) {
+		return 0;
+	}
+	if (!is_numeric($control_id)) {
+		return 0;
+	}
+	if (empty($control_id)) {
+		$control_id = $_SESSION["sess_user_id"];
+	}
+
+	/* Create SQL Query */
+	$sql = "SELECT * FROM auth_data WHERE ";
+	if (sizeof($data) > 0) {
+		$sql .= "name IN(";
+		foreach ($data as $name) {
+			$sql .= "'" . $name . "',";
+		}
+		$sql = substr($sql,0,strlen($sql) - 1) . ") AND ";
+	}
+	$sql .= "category = '" . $category . "' AND ";
+	$sql .= "plugin_id = " . $plugin_id . " AND ";
+	$sql .= "control_id = " . $control_id;
+
+	/* Execute query and return */
+	return db_fetch_assoc($sql);
 
 }
 

@@ -30,23 +30,38 @@
  *
  * @return 1 on success, 0 on error
  */
-function auth_control_data_save($data, $category = "SYSTEM", $enable_user_edit = 0, $plugin_id = 0, $control_id) {
+function auth_control_data_save($data, $category = "SYSTEM", $enable_user_edit = 0, $plugin_id = 0, $control_id = 0) {
 
-	$user_id = "";
-	$user_name = "";
-
-	$sql = "REPLACE INTO `auth_data` (`control_id`,`plugin_id`,`category`,`name`,`value`,`enable_user_edit`,`updated_when`,`updated_by`) VALUES (";
-	$where = "";
-
+	/* Validate input */
 	if (!is_array($data)) {
 		return 0;
 	}
+	if (!is_numeric($enable_user_edit)) {
+		return 0;
+	}
+	if (($enable_user_edit < 0) || ($enable_user_edit > 1)) {
+		$enable_user_edit = 0;
+	}
+	if (!is_numeric($plugin_id)) {
+		return 0;
+	}
+	if (!is_numeric($control_id)) {
+		return 0;
+	}
+	if (empty($control_id)) {
+		$control_id = $_SESSION["sess_user_id"];
+	}
 
-	
+	/* Create SQL Query */
+	$username = db_fetch_cell("SELECT username FROM user_auth WHERE id = " . $control_id, "username");
+	$sql = "REPLACE INTO `auth_data` (`control_id`,`plugin_id`,`category`,`name`,`value`,`enable_user_edit`,`updated_when`,`updated_by`) VALUES ";
+	foreach ($data as $name => $value) {
+		$sql .= "(" . $control_id . "," . $plugin_id . ",'" . $category . "','" . $name . "','" . $value . "'," . $enable_user_edit . ",NOW(),'" . $username . "'),";
+	}
+	$sql = substr($sql,0,strlen($sql) - 1);
 
-
-
-
+	/* Execute query and return */
+	return db_execute($sql);
 
 }
 
