@@ -23,13 +23,14 @@ function api_user_realm_auth ($filename = '') {
  */
 function api_plugin_hook ($name) {
 	global $config;
+
 	$data = func_get_args();
 
 	$result = db_fetch_assoc("SELECT name, file, function FROM plugin_hooks WHERE status = 1 AND hook = '$name'", false);
 	if (count($result)) {
 		foreach ($result as $hdata) {
 			$p[] = $hdata['name'];
-			if (file_exists($config['base_path'] . '/plugins/' . $hdata['name'] . '/' . $hdata['file'])) {
+			if (file_exists(CACTI_BASE_PATH . '/plugins/' . $hdata['name'] . '/' . $hdata['file'])) {
 				include_once(CACTI_BASE_PATH . '/plugins/' . $hdata['name'] . '/' . $hdata['file']);
 			}
 			$function = $hdata['function'];
@@ -46,13 +47,14 @@ function api_plugin_hook ($name) {
 
 function api_plugin_hook_function ($name, $parm=NULL) {
 	global $config;
-	$ret = $parm;
+
+	$ret    = $parm;
 	$result = db_fetch_assoc("SELECT name, file, function FROM plugin_hooks WHERE status = 1 AND hook = '$name'", false);
 
 	if (count($result)) {
 		foreach ($result as $hdata) {
 			$p[] = $hdata['name'];
-			if (file_exists($config['base_path'] . '/plugins/' . $hdata['name'] . '/' . $hdata['file'])) {
+			if (file_exists(CACTI_BASE_PATH . '/plugins/' . $hdata['name'] . '/' . $hdata['file'])) {
 				include_once(CACTI_BASE_PATH . '/plugins/' . $hdata['name'] . '/' . $hdata['file']);
 			}
 			$function = $hdata['function'];
@@ -69,6 +71,7 @@ function api_plugin_hook_function ($name, $parm=NULL) {
 
 function api_plugin_db_table_create ($plugin, $table, $data) {
 	global $config, $database_default;
+
 	include_once(CACTI_BASE_PATH . "/lib/database.php");
 
 	$result = db_fetch_assoc("show tables from `" . $database_default . "`") or die (mysql_error());
@@ -147,6 +150,7 @@ function api_plugin_db_add_column ($plugin, $table, $column) {
 	// Example: api_plugin_db_add_column ('thold', 'plugin_config', array('name' => 'test' . rand(1, 200), 'type' => 'varchar (255)', 'NULL' => false));
 
 	global $config, $database_default;
+
 	include_once(CACTI_BASE_PATH . '/lib/database.php');
 
 	$result = db_fetch_assoc('show columns from `' . $table . '`') or die (mysql_error());
@@ -181,6 +185,7 @@ function api_plugin_db_add_column ($plugin, $table, $column) {
 
 function api_plugin_install ($plugin) {
 	global $config;
+
 	include_once(CACTI_BASE_PATH . "/plugins/$plugin/setup.php");
 
 	$exists = db_fetch_assoc("SELECT id FROM plugin_config WHERE directory = '$plugin'", false);
@@ -216,15 +221,21 @@ function api_plugin_install ($plugin) {
 
 function api_plugin_uninstall ($plugin) {
 	global $config;
+
 	include_once(CACTI_BASE_PATH . "/plugins/$plugin/setup.php");
+
 	// Run the Plugin's Uninstall Function first
 	$function = 'plugin_' . $plugin . '_uninstall';
+
 	if (function_exists($function)) {
 		$function();
 	}
+
 	api_plugin_remove_hooks ($plugin);
 	api_plugin_remove_realms ($plugin);
+
 	db_execute("DELETE FROM plugin_config WHERE directory = '$plugin'");
+
 	api_plugin_db_changes_remove ($plugin);
 }
 
@@ -292,7 +303,7 @@ function api_plugin_register_realm ($plugin, $file, $display, $admin = false) {
 			$user_id = db_fetch_assoc("SELECT id FROM user_auth WHERE username = 'admin'", false);
 			if (count($user_id)) {
 				$user_id = $user_id[0]['id'];
-				$exists = db_fetch_assoc("SELECT realm_id FROM user_auth_realm WHERE user_id = $user_id and realm_id = $realm_id", false); 
+				$exists  = db_fetch_assoc("SELECT realm_id FROM user_auth_realm WHERE user_id = $user_id and realm_id = $realm_id", false);
 				if (!count($exists)) {
 					db_execute("INSERT INTO user_auth_realm (user_id, realm_id) VALUES ($user_id, $realm_id)");
 				}
@@ -328,7 +339,7 @@ function api_plugin_user_realm_auth ($filename = '') {
 	global $user_realms, $user_auth_realms, $user_auth_realm_filenames;
 	/* list all realms that this user has access to */
 	if (!isset($user_realms)) {
-		if (read_config_option('global_auth') == 'on' || read_config_option('auth_method') == 1) { 
+		if (read_config_option('global_auth') == 'on' || read_config_option('auth_method') == 1) {
 			$user_realms = db_fetch_assoc("select realm_id from user_auth_realm where user_id=" . $_SESSION["sess_user_id"], false);
 			$user_realms = array_rekey($user_realms, "realm_id", "realm_id");
 		}else{

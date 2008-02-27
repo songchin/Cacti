@@ -224,8 +224,9 @@ function plugins_show_uninstalled () {
 	$newplugins = array();
 	$cinfo = array ();
 
-	$path = $config['base_path'] . '/plugins/';
-	$dh = opendir($path);
+	$path = CACTI_BASE_PATH . '/plugins/';
+	$dh   = opendir($path);
+
 	while (($file = readdir($dh)) !== false) {
 		if (is_dir("$path/$file")) {
 			if (file_exists("$path/$file/setup.php") && !in_array($file, $plugins)) {
