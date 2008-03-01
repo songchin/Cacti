@@ -710,6 +710,15 @@ function ds_edit() {
 		}
 	}
 
+	/* handle info mode */
+	if (isset($_GET["info"])) {
+		if ($_GET["info"] == "0") {
+			kill_session_var("ds_info_mode");
+		}elseif ($_GET["info"] == "1") {
+			$_SESSION["ds_info_mode"] = true;
+		}
+	}
+
 	include_once(CACTI_BASE_PATH . "/include/top_header.php");
 
 	if (!empty($_GET["id"])) {
@@ -722,6 +731,7 @@ function ds_edit() {
 				<td class="textInfo" align="right" valign="top">
 					<span style="color: #c16921;">*<a href='data_sources.php?action=ds_toggle_status&id=<?php print (isset($_GET["id"]) ? $_GET["id"] : 0);?>&newstate=<?php print (($data["active"] == "on") ? "0" : "1");?>'><strong><?php print (($data["active"] == "on") ? "Disable" : "Enable");?></strong> Data Source.</a>
 					<br><span style="color: #c16921;">*<a href='data_sources.php?action=ds_edit&id=<?php print (isset($_GET["id"]) ? $_GET["id"] : 0);?>&debug=<?php print (isset($_SESSION["ds_debug_mode"]) ? "0" : "1");?>'>Turn <strong><?php print (isset($_SESSION["ds_debug_mode"]) ? "Off" : "On");?></strong> Data Source Debug Mode.</a>
+					<br><span style="color: #c16921;">*<a href='data_sources.php?action=ds_edit&id=<?php print (isset($_GET["id"]) ? $_GET["id"] : 0);?>&info=<?php print (isset($_SESSION["ds_info_mode"]) ? "0" : "1");?>'>Turn <strong><?php print (isset($_SESSION["ds_info_mode"]) ? "Off" : "On");?></strong> RRD File Information Mode.</a>
 				</td>
 			</tr>
 		</table>
@@ -945,6 +955,22 @@ function ds_edit() {
 				<td>
 					<span class="textInfo">Data Source Debug</span><br>
 					<pre><?php print rrdtool_function_create($_GET["id"], true, array());?></pre>
+				</td>
+			</tr>
+		</table>
+		<?php
+	}
+
+	if ((isset($_SESSION["ds_info_mode"])) && (isset($_GET["id"]))) {
+		$data_source_path = get_data_source_path($_GET["id"], true);
+		$rrd_output = rrdtool_execute("info $data_source_path");
+		?>
+		<table width="100%" align="center">
+			<tr>
+				<td>
+					<span class="textInfo">RRD File Information</span><br>
+					<pre><?php print($rrd_output);?>
+				</pre>
 				</td>
 			</tr>
 		</table>
