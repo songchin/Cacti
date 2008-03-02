@@ -291,6 +291,7 @@ int ping_icmp(host_t *host, ping_t *ping) {
 		if (init_sockaddr(&fromname, new_hostname, 7)) {
 			retry_count = 0;
 			total_time  = 0;
+			begin_time  = 0;
 
 			/* initialize file descriptor to review for input/output */
 			FD_ZERO(&socket_fds);
@@ -741,8 +742,8 @@ char *remove_tcp_udp_from_hostname(char *hostname) {
  *
  */
 unsigned short get_checksum(void* buf, int len) {
-	int nleft = len;
-	int sum   = 0;
+	int      nleft = len;
+	int32_t  sum   = 0;
 	unsigned short answer;
 	unsigned short* w = (unsigned short*)buf;
 
@@ -750,6 +751,7 @@ unsigned short get_checksum(void* buf, int len) {
 		sum += *w++;
 		nleft -= 2;
 	}
+
 	if (nleft == 1) {
 		sum += *(unsigned char*)w;
 	}
@@ -757,6 +759,7 @@ unsigned short get_checksum(void* buf, int len) {
 	sum    = (sum >> 16) + (sum & 0xffff);
 	sum   += (sum >> 16);
 	answer = ~sum;				/* truncate to 16 bits */
+
 	return answer;
 }
 
