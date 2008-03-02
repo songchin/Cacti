@@ -10,6 +10,7 @@ Cacti CHANGELOG
 -bug: remove host permissions if host is removed
 -bug: initialization of snmp_auth when using SNMP=NONE
 -bug: speed up add_graphs.php in most cases (still slow only if --input-fields is used)
+-bug: If the poller_output table is not empty, don't flood the log
 -documentation: Explaining Cacti Special Data Sources used on CDEFs, lots of CDEF examples using Special data Sources
 -feature#0001162: WEB UI now accepts max_oids on SNMP bulkwalks
 -feature#0001124: Devices/Host Templates - remove already associated objects from dropdown selector
