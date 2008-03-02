@@ -9,7 +9,7 @@ Cacti CHANGELOG
 -bug: remove graph permissions if graph is removed
 -bug: remove host permissions if host is removed
 -bug: initialization of snmp_auth when using SNMP=NONE
--bug: speed up add_graphs.php in most cases (still slow only if --input-fields is used) 
+-bug: speed up add_graphs.php in most cases (still slow only if --input-fields is used)
 -documentation: Explaining Cacti Special Data Sources used on CDEFs, lots of CDEF examples using Special data Sources
 -feature#0001162: WEB UI now accepts max_oids on SNMP bulkwalks
 -feature#0001124: Devices/Host Templates - remove already associated objects from dropdown selector
@@ -27,6 +27,7 @@ Cacti CHANGELOG
 -feature: add_device.php uses a host template like feature#0001122
 -feature: Allow the enabling and disabling of a Data Source from the Data Source Edit form
 -feature: Rerun already associated SNMP Queries if any SNMP related field was changed during host edit
+-feature: add graph title to graphs page
 
 0.8.7b
 -bug#0000855: Unnecessary (and faulty) DEF generation for CF:AVERAGE
