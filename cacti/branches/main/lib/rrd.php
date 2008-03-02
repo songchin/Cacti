@@ -289,45 +289,76 @@ function rrdtool_function_update($update_cache_array, $rrd_struc) {
 	return $rrds_processed;
 }
 
-function rrdtool_function_tune($rrd_tune_array) {
+/* rrd_check - Given a data source id, check the rrdtool file to the data source definition
+   @arg $data_source_id - data source id
+   @rerturn - (array) an array containing issues with the rrdtool file definition vs data source */
+function rrd_check($data_source_id) {
 	global $config;
 
-	include(CACTI_BASE_PATH . "/include/global_arrays.php");
+	include_once(CACTI_BASE_PATH . "/include/global_arrays.php");
 
 	$data_source_name = get_data_source_item_name($rrd_tune_array["data_source_id"]);
 	$data_source_type = $data_source_types{$rrd_tune_array["data-source-type"]};
 	$data_source_path = get_data_source_path($rrd_tune_array["data_source_id"], true);
 
-	if ($rrd_tune_array["heartbeat"] != "") {
-		$rrd_tune .= " --heartbeat $data_source_name:" . $rrd_tune_array["heartbeat"];
+
+}
+
+/* rrd_repair - Given a data source id, update the rrdtool file to match the data source definition
+   @arg $data_source_id - data source id
+   @rerturn - 1 success, 2 false */
+function rrd_repair($data_source_id) {
+	global $config;
+
+	include_once(CACTI_BASE_PATH . "/include/global_arrays.php");
+
+	$data_source_name = get_data_source_item_name($rrd_tune_array["data_source_id"]);
+	$data_source_type = $data_source_types{$rrd_tune_array["data-source-type"]};
+	$data_source_path = get_data_source_path($rrd_tune_array["data_source_id"], true);
+
+
+}
+
+/* rrdtool_function_info - given a data source id, return rrdtool info array
+   @arg $data_source_id - data source id
+   @returns - (array) an array containing all data from rrdtool info command */
+function rrd_function_info($data_source_id) {
+	global $config;
+	
+	/* Get the path to rrdtool file */
+	$data_source_path = get_data_source_path($data_source_id, true);
+
+	/* Execute rrdtool info command */
+	$cmd_line = " info " . $data_source_path; 	
+	$output = rrdtool_execute($cmd_line, false, RRDTOOL_OUTPUT_STDOUT);
+	if (sizeof($output) == 0) {
+		return false;
 	}
 
-	if ($rrd_tune_array["minimum"] != "") {
-		$rrd_tune .= " --minimum $data_source_name:" . $rrd_tune_array["minimum"];
-	}
-
-	if ($rrd_tune_array["maximum"] != "") {
-		$rrd_tune .= " --maximum $data_source_name:" . $rrd_tune_array["maximum"];
-	}
-
-	if ($rrd_tune_array["data-source-type"] != "") {
-		$rrd_tune .= " --data-source-type $data_source_name:" . $data_source_type;
-	}
-
-	if ($rrd_tune_array["data-source-rename"] != "") {
-		$rrd_tune .= " --data-source-rename $data_source_name:" . $rrd_tune_array["data-source-rename"];
-	}
-
-	if ($rrd_tune != "") {
-		if (file_exists($data_source_path) == true) {
-			$fp = popen(read_config_option("path_rrdtool") . " tune $data_source_path $rrd_tune", "r");
-			pclose($fp);
-
-			if (read_config_option("log_verbosity") >= POLLER_VERBOSITY_DEBUG) {
-				cacti_log("CACTI2RRD: " . read_config_option("path_rrdtool") . " tune $data_source_path $rrd_tune");
-			}
+	/* Parse the output */
+	$matches = array(); 
+	$rrd_info = array( "rra" => array(), "ds" => array() );
+	$output = explode("\n", $output);
+	foreach ($output as $line) {
+		$line = trim($line);
+		if (preg_match("/^ds\[(\S+)\]\.(\S+) = (\S+)$/", $line, $matches)) {
+			$rrd_info["ds"][$matches[1]][$matches[2]] = $matches[3];
+		} elseif (preg_match("/^rra\[(\S+)\]\.(\S+)\[(\S+)\]\.(\S+) = (\S+)$/", $line, $matches)) {
+			$rrd_info["rra"][$matches[1]][$matches[2]][$matches[3]][$matches[4]] = $matches[5];
+		} elseif (preg_match("/^rra\[(\S+)\]\.(\S+) = (\S+)$/", $line, $matches)) {
+			$rrd_info["rra"][$matches[1]][$matches[2]] = $matches[3];
+		} elseif (preg_match("/^(\S+) = \"(\S+)\"$/", $line, $matches)) {
+			$rrd_info[$matches[1]] = $matches[2];
+		} elseif (preg_match("/^(\S+) = (\S+)$/", $line, $matches)) {
+			$rrd_info[$matches[1]] = $matches[2];
 		}
 	}
+	$output = "";
+	$matches = array();
+	
+	/* Return parsed values */
+	return $rrd_info;
+
 }
 
 $rrd_fetch_cache = array();
