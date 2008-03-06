@@ -1,7 +1,7 @@
 /*
  ex: set tabstop=4 shiftwidth=4 autoindent:
  +-------------------------------------------------------------------------+
- | Copyright (C) 2002-2007 The Cacti Group                                 |
+ | Copyright (C) 2002-2008 The Cacti Group                                 |
  |                                                                         |
  | This program is free software; you can redistribute it and/or           |
  | modify it under the terms of the GNU Lesser General Public              |
@@ -148,7 +148,7 @@ int ping_snmp(host_t *host, ping_t *ping) {
 	double begin_time, end_time, total_time;
 	double one_thousand = 1000.00;
 
-	if (strlen(host->snmp_community) != 0) {
+	if ((strlen(host->snmp_community) != 0) || (host->snmp_version == 3)) {
 		/* by default, we look at sysUptime */
 		if ((oid = strdup(".1")) == NULL) {
 			die("ERROR: malloc(): strdup() oid ping.c failed");
