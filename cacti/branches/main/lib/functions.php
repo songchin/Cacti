@@ -143,14 +143,16 @@ function graph_config_value_exists($config_name, $user_id) {
 function read_default_config_option($config_name) {
 	global $config, $settings;
 
-	@reset($settings);
-	while (list($tab_name, $tab_array) = each($settings)) {
-		if ((isset($tab_array[$config_name])) && (isset($tab_array[$config_name]["default"]))) {
-			return $tab_array[$config_name]["default"];
-		}else{
-			while (list($field_name, $field_array) = each($tab_array)) {
-				if ((isset($field_array["items"])) && (isset($field_array["items"][$config_name])) && (isset($field_array["items"][$config_name]["default"]))) {
-					return $field_array["items"][$config_name]["default"];
+	if (is_array($settings)) {
+		reset($settings);
+		while (list($tab_name, $tab_array) = each($settings)) {
+			if ((isset($tab_array[$config_name])) && (isset($tab_array[$config_name]["default"]))) {
+				return $tab_array[$config_name]["default"];
+			}else{
+				while (list($field_name, $field_array) = each($tab_array)) {
+					if ((isset($field_array["items"])) && (isset($field_array["items"][$config_name])) && (isset($field_array["items"][$config_name]["default"]))) {
+						return $field_array["items"][$config_name]["default"];
+					}
 				}
 			}
 		}
