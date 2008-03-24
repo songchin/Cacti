@@ -2201,7 +2201,7 @@ CREATE TABLE `plugin_db_changes` (
   `id` int(10) NOT NULL auto_increment,
   `plugin` varchar(16) NOT NULL default '',
   `table` varchar(64) NOT NULL default '',
-  `column` varchar(64) NOT NULL,
+  `column` varchar(64) NOT NULL default '',
   `method` varchar(16) NOT NULL default '',
   PRIMARY KEY  (`id`),
   KEY `plugin` (`plugin`),
@@ -2238,7 +2238,7 @@ INSERT INTO `plugin_hooks` VALUES (2, 'internal', 'draw_navigation_text', '', 'p
 CREATE TABLE `plugin_realms` (
   `id` int(8) NOT NULL auto_increment,
   `plugin` varchar(32) NOT NULL default '',
-  `file` text NOT NULL,
+  `file` text NOT NULL default '',
   `display` varchar(64) NOT NULL default '',
   PRIMARY KEY  (`id`),
   KEY `plugin` (`plugin`)

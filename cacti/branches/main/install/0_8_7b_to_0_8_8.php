@@ -180,6 +180,59 @@ function upgrade_to_0_8_8() {
 	/* add reindexing to host_template_snmp_query */
 	db_install_execute("0.8.8", "ALTER TABLE `host_template_snmp_query` ADD COLUMN `reindex_method` TINYINT(3) UNSIGNED NOT NULL DEFAULT '0' AFTER `snmp_query_id`");
 	db_install_execute("0.8.8", "UPDATE `host_template_snmp_query` SET `reindex_method` = '1'");
+	/* 
+	 * Plugin Architecture
+	 */
+	/* Create new tables */
+	db_install_execute("0.8.8","
+		CREATE TABLE `plugin_config` (
+		  `id` int(8) NOT NULL auto_increment,
+		  `directory` varchar(32) NOT NULL default '',
+		  `name` varchar(64) NOT NULL default '',
+		  `status` tinyint(2) NOT NULL default '0',
+		  `author` varchar(64) NOT NULL default '',
+		  `webpage` varchar(255) NOT NULL default '',
+		  `version` varchar(8) NOT NULL default '',
+		  PRIMARY KEY  (`id`),
+		  KEY `status` (`status`),
+		  KEY `directory` (`directory`)
+		) TYPE=MyISAM");
+	db_install_execute("0.8.8","
+		CREATE TABLE `plugin_db_changes` (
+		  `id` int(10) NOT NULL auto_increment,
+		  `plugin` varchar(16) NOT NULL default '',
+		  `table` varchar(64) NOT NULL default '',
+		  `column` varchar(64) NOT NULL default '',
+		  `method` varchar(16) NOT NULL default '',
+		  PRIMARY KEY  (`id`),
+		  KEY `plugin` (`plugin`),
+		  KEY `method` (`method`)
+		) TYPE=MyISAM");
+	db_install_execute("0.8.8","
+		CREATE TABLE `plugin_hooks` (
+		  `id` int(8) NOT NULL auto_increment,
+		  `name` varchar(32) NOT NULL default '',
+		  `hook` varchar(64) NOT NULL default '',
+		  `file` varchar(255) NOT NULL default '',
+		  `function` varchar(128) NOT NULL default '',
+		  `status` int(8) NOT NULL default '0',
+		  PRIMARY KEY  (`id`),
+		  KEY `hook` (`hook`),
+		  KEY `status` (`status`)
+		) TYPE=MyISAM");
+	db_install_execute("0.8.8", "INSERT INTO `plugin_hooks` VALUES (1, 'internal', 'config_arrays', '', 'plugin_config_arrays', 1");
+	db_install_execute("0.8.8", "INSERT INTO `plugin_hooks` VALUES (2, 'internal', 'draw_navigation_text', '', 'plugin_draw_navigation_text', 1");
+
+	db_install_execute("0.8.8","
+		CREATE TABLE `plugin_realms` (
+		  `id` int(8) NOT NULL auto_increment,
+		  `plugin` varchar(32) NOT NULL default '',
+		  `file` text NOT NULL default '',
+		  `display` varchar(64) NOT NULL default '',
+		  PRIMARY KEY  (`id`),
+		  KEY `plugin` (`plugin`)
+		) TYPE=MyISAM");
+	db_install_execute("0.8.8", "INSERT INTO `plugin_realms` VALUES (1, 'internal', 'plugins.php', 'Plugin Management'");
 
 }
 ?>
