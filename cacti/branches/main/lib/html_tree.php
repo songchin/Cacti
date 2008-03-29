@@ -450,7 +450,7 @@ function grow_dhtml_trees() {
 }
 
 function create_dhtml_tree() {
-    /* Record Start Time */
+	/* Record Start Time */
 	list($micro,$seconds) = split(" ", microtime());
 	$start = $seconds + $micro;
 
