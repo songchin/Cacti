@@ -102,11 +102,9 @@ function settings() {
 		$settings_graphs["tree"]["default_tree_id"]["sql"] = get_graph_tree_array(true);
 	}
 
+	html_start_box("<strong>Graph Settings</strong>", "100%", $colors["header_panel"], "3", "center", "");
+
 	print "<form method='post' action='graph_settings.php'>\n";
-
-	html_graph_start_box(1, true);
-
-	print "<tr class='rowHeader'><td colspan='3'><table cellspacing='0' cellpadding='3' width='100%'><tr><td class='textHeaderDark'><strong>Graph Settings</strong></td></tr></table></td></tr>";
 
 	while (list($tab_short_name, $tab_fields) = each($settings_graphs)) {
 		?>
@@ -190,8 +188,6 @@ function settings() {
 	</script>
 	<?php
 
-	print "<br>";
-
 	if (isset($_SERVER["HTTP_REFERER"])) {
 		$timespan_sel_pos = strpos($_SERVER["HTTP_REFERER"],"&predefined_timespan");
 		if ($timespan_sel_pos) {
@@ -202,7 +198,7 @@ function settings() {
 	form_hidden_box("referer",(isset($_SERVER["HTTP_REFERER"]) ? $_SERVER["HTTP_REFERER"] : ""),"");
 	form_hidden_box("save_component_graph_config","1","");
 
-	form_save_button_alt("url!" . (isset($_SERVER["HTTP_REFERER"]) ? $_SERVER["HTTP_REFERER"] : ""), "save");
+	form_save_button_alt("", "save", "save");
 }
 
 ?>
