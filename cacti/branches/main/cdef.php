@@ -32,7 +32,7 @@ $cdef_actions = array(
 	1 => "Delete",
 	2 => "Duplicate"
 	);
-	
+
 /* set default action */
 if (!isset($_REQUEST["action"])) { $_REQUEST["action"] = ""; }
 
@@ -44,7 +44,7 @@ switch ($_REQUEST["action"]) {
 	case 'actions':
 		form_actions();
 
-		break;	
+		break;
 	case 'item_movedown':
 		item_movedown();
 
@@ -108,7 +108,7 @@ function draw_cdef_preview($cdef_id) {
 
 function form_save() {
 	if (isset($_POST["save_component_cdef"])) {
-		$save["id"] = $_POST["id"];
+		$save["id"]   = $_POST["id"];
 		$save["hash"] = get_hash_cdef($_POST["id"]);
 		$save["name"] = form_input_validate($_POST["name"], "name", "", false, 3);
 
@@ -130,12 +130,12 @@ function form_save() {
 	}elseif (isset($_POST["save_component_item"])) {
 		$sequence = get_sequence($_POST["id"], "sequence", "cdef_items", "cdef_id=" . $_POST["cdef_id"]);
 
-		$save["id"] = $_POST["id"];
-		$save["hash"] = get_hash_cdef($_POST["id"], "cdef_item");
-		$save["cdef_id"] = $_POST["cdef_id"];
+		$save["id"]       = $_POST["id"];
+		$save["hash"]     = get_hash_cdef($_POST["id"], "cdef_item");
+		$save["cdef_id"]  = $_POST["cdef_id"];
 		$save["sequence"] = $sequence;
-		$save["type"] = $_POST["type"];
-		$save["value"] = $_POST["value"];
+		$save["type"]     = $_POST["type"];
+		$save["value"]    = $_POST["value"];
 
 		if (!is_error_message()) {
 			$cdef_item_id = sql_save($save, "cdef_items");
@@ -169,7 +169,6 @@ function form_actions() {
 		if ($_POST["drp_action"] == "1") { /* delete */
 			db_execute("delete from cdef where " . array_to_sql_or($selected_items, "id"));
 			db_execute("delete from cdef_items where " . array_to_sql_or($selected_items, "cdef_id"));
-
 		}elseif ($_POST["drp_action"] == "2") { /* duplicate */
 			for ($i=0;($i<count($selected_items));$i++) {
 				/* ================= input validation ================= */
@@ -496,7 +495,7 @@ function cdef() {
 
 	include("./include/html/inc_cdef_filter_table.php");
 
-	html_end_box();
+	html_end_box(false);
 
 	/* form the 'where' clause for our main sql query */
 	$sql_where = "WHERE (cdef.name LIKE '%%" . $_REQUEST["filter"] . "%%')";
@@ -515,26 +514,8 @@ function cdef() {
 		ORDER BY " . $_REQUEST['sort_column'] . " " . $_REQUEST['sort_direction'] .
 		" LIMIT " . (read_config_option("num_rows_device")*($_REQUEST["page"]-1)) . "," . read_config_option("num_rows_device"));
 
-	/* generate page list */
-	$url_page_select = get_page_list($_REQUEST["page"], MAX_DISPLAY_PAGES, read_config_option("num_rows_device"), $total_rows, "cdef.php?filter=" . $_REQUEST["filter"]);
-
-	$nav = "<tr bgcolor='#" . $colors["header"] . "'>
-		<td colspan='7'>
-			<table width='100%' cellspacing='0' cellpadding='0' border='0'>
-				<tr>
-					<td align='left' class='textHeaderDark'>
-						<strong>&lt;&lt; "; if ($_REQUEST["page"] > 1) { $nav .= "<a class='linkOverDark' href='cdef.php?filter=" . $_REQUEST["filter"] . "&page=" . ($_REQUEST["page"]-1) . "'>"; } $nav .= "Previous"; if ($_REQUEST["page"] > 1) { $nav .= "</a>"; } $nav .= "</strong>
-					</td>\n
-					<td align='center' class='textHeaderDark'>
-						Showing Rows " . ((read_config_option("num_rows_device")*($_REQUEST["page"]-1))+1) . " to " . ((($total_rows < read_config_option("num_rows_device")) || ($total_rows < (read_config_option("num_rows_device")*$_REQUEST["page"]))) ? $total_rows : (read_config_option("num_rows_device")*$_REQUEST["page"])) . " of $total_rows [$url_page_select]
-					</td>\n
-					<td align='right' class='textHeaderDark'>
-						<strong>"; if (($_REQUEST["page"] * read_config_option("num_rows_device")) < $total_rows) { $nav .= "<a class='linkOverDark' href='cdef.php?filter=" . $_REQUEST["filter"] . "&page=" . ($_REQUEST["page"]+1) . "'>"; } $nav .= "Next"; if (($_REQUEST["page"] * read_config_option("num_rows_device")) < $total_rows) { $nav .= "</a>"; } $nav .= " &gt;&gt;</strong>
-					</td>\n
-				</tr>
-			</table>
-		</td>
-		</tr>\n";
+	/* generate page list navigation */
+	$nav = html_create_nav($_REQUEST["page"], MAX_DISPLAY_PAGES, read_config_option("num_rows_device"), $total_rows, 11, "cdef.php?filter=" . $_REQUEST["filter"]);
 
 	print $nav;
 
