@@ -13,6 +13,7 @@ Cacti CHANGELOG
 -bug: If the poller_output table is not empty, don't flood the log
 -bug: Remove warnings appear in the httpd log relative to reset attempts on settings array
 -bug: Graph Export would fail while zooming on some systems
+-bug: Add API Automation tool quietMode to additional functions
 -documentation: Explaining Cacti Special Data Sources used on CDEFs, lots of CDEF examples using Special data Sources
 -feature#0001205: add filtering and pagination to cdef management; add "Duplicate CDEF"
 -feature#0001162: WEB UI now accepts max_oids on SNMP bulkwalks

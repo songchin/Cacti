@@ -325,7 +325,7 @@ function displaySNMPFields($fields, $hostId, $quietMode = FALSE) {
 	}
 }
 
-function displaySNMPValues($values, $hostId, $field, $quietMode) {
+function displaySNMPValues($values, $hostId, $field, $quietMode = FALSE) {
 	if (!$quietMode) {
 		echo "Known values for $field for host $hostId: (name)\n";
 	}
@@ -339,7 +339,7 @@ function displaySNMPValues($values, $hostId, $field, $quietMode) {
 	}
 }
 
-function displaySNMPValuesExtended($hostId, $fields, $snmpQueryId, $quietMode) {
+function displaySNMPValuesExtended($hostId, $fields, $snmpQueryId, $quietMode = FALSE) {
 	if (!$quietMode) {
 		echo "Known values for $fields for host $hostId: (name)\n";
 	}
@@ -487,7 +487,7 @@ function displaySNMPValuesExtended($hostId, $fields, $snmpQueryId, $quietMode) {
 	return($exit_code);
 }
 
-function displaySNMPQueries($queries, $quietMode) {
+function displaySNMPQueries($queries, $quietMode = FALSE) {
 	if (!$quietMode) {
 		echo "Known SNMP Queries:(id, name)\n";
 	}
