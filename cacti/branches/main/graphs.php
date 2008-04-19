@@ -42,6 +42,8 @@ $graph_actions = array(
 	6 => "Reapply Suggested Names",
 	7 => "Resize Graphs",
 	3 => "Duplicate",
+	8 => "Enable Graph Export",
+	9 => "Disable Graph Export",
 	4 => "Convert to Graph Template"
 	);
 
@@ -361,6 +363,20 @@ function form_actions() {
 
 				api_resize_graphs($selected_items[$i], $_POST['graph_width'], $_POST['graph_height']);
 			}
+		}elseif ($_POST["drp_action"] == "8") { /* enable graph export */
+			for ($i=0;($i<count($selected_items));$i++) {
+				/* ================= input validation ================= */
+				input_validate_input_number($selected_items[$i]);
+				/* ==================================================== */
+				db_execute("UPDATE graph_templates_graph SET export='on' WHERE local_graph_id=" . $selected_items[$i]);
+			}
+		}elseif ($_POST["drp_action"] == "9") { /* disable graph export */
+			for ($i=0;($i<count($selected_items));$i++) {
+				/* ================= input validation ================= */
+				input_validate_input_number($selected_items[$i]);
+				/* ==================================================== */
+				db_execute("UPDATE graph_templates_graph SET export='' WHERE local_graph_id=" . $selected_items[$i]);
+			}
 		} else {
 			api_plugin_hook_function('graphs_action_execute', $_POST['drp_action']); 
 		}
@@ -501,6 +517,22 @@ function form_actions() {
 						<p>$graph_list</p>
 						<p><strong>Graph Height:</strong><br>"; form_text_box("graph_height", "", "", "255", "30", "text"); print "</p>
 						<p><strong>Graph Width:</strong><br>"; form_text_box("graph_width", "", "", "255", "30", "text"); print "</p>
+					</td>
+				</tr>\n
+				";
+		}elseif ($_POST["drp_action"] == "8") { /* enable graph export */
+			print "	<tr>
+					<td class='textArea'>
+						<p>When you click save, the following graphs will be enabled for graph export.</p>
+						<p>$graph_list</p>
+					</td>
+				</tr>\n
+				";
+		}elseif ($_POST["drp_action"] == "9") { /* disable graph export */
+			print "	<tr>
+					<td class='textArea'>
+						<p>When you click save, the following graphs will be disabled for graph export.</p>
+						<p>$graph_list</p>
 					</td>
 				</tr>\n
 				";

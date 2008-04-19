@@ -19,6 +19,7 @@ Cacti CHANGELOG
 -bug: Add API Automation tool quietMode to additional functions
 -documentation: Explaining Cacti Special Data Sources used on CDEFs, lots of CDEF examples using Special data Sources
 -feature#0001205: add filtering and pagination to cdef management; add "Duplicate CDEF"
+-feature#0001185: Mass enable/disable graph export per graph from Graph Management
 -feature#0001179: Visual Fix for CACTI Graphs View Interface(list,preview)
 -feature#0001162: WEB UI now accepts max_oids on SNMP bulkwalks
 -feature#0001124: Devices/Host Templates - remove already associated objects from dropdown selector
