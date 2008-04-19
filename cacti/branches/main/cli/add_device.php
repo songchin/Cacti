@@ -150,7 +150,7 @@ if (sizeof($parms)) {
 
 			break;
 		case "--timeout":
-			if (is_numeric($value) && ($value > 0) && ($snmp_timeout <= 20000)) {
+			if (is_numeric($value) && ($value > 0) && ($value <= 20000)) {
 				$snmp_timeout     = $value;
 			}else{
 				echo "ERROR: Invalid SNMP Timeout.  Valid values are from 1 to 20000\n";
@@ -162,7 +162,7 @@ if (sizeof($parms)) {
 		case "--avail":
 			switch($value) {
 			case "none":
-				$availability_method = AVAIL_NONE;
+				$availability_method = '0'; /* tried to use AVAIL_NONE, but then ereg failes on validation, sigh */
 
 				break;
 			case "ping":
