@@ -15,18 +15,22 @@
 								/* get policy information for the sql where clause */
 								$sql_where = get_graph_permissions_sql($current_user["policy_graphs"], $current_user["policy_hosts"], $current_user["policy_graph_templates"]);
 
-								$hosts = db_fetch_assoc("SELECT DISTINCT host.id, host.description as name
-									FROM (graph_templates_graph,graph_local)
-									LEFT JOIN host ON (host.id=graph_local.host_id)
-									LEFT JOIN graph_templates ON (graph_templates.id=graph_local.graph_template_id)
-									LEFT JOIN user_auth_perms ON ((graph_templates_graph.local_graph_id=user_auth_perms.item_id and user_auth_perms.type=" . PERM_GRAPHS . " and user_auth_perms.user_id=" . $_SESSION["sess_user_id"] . ") OR (host.id=user_auth_perms.item_id and user_auth_perms.type=" . PERM_HOSTS . " and user_auth_perms.user_id=" . $_SESSION["sess_user_id"] . ") OR (graph_templates.id=user_auth_perms.item_id and user_auth_perms.type=" . PERM_GRAPH_TEMPLATES . " and user_auth_perms.user_id=" . $_SESSION["sess_user_id"] . "))
-									WHERE graph_templates_graph.local_graph_id=graph_local.id
-									" . (empty($sql_where) ? "" : "and $sql_where") . "
-									ORDER BY name");
+								$hosts = db_fetch_assoc("SELECT DISTINCT host.id, host.description as name " .
+										"FROM (graph_templates_graph,graph_local) " .
+										"LEFT JOIN host ON (host.id=graph_local.host_id) " .
+										"LEFT JOIN graph_templates ON (graph_templates.id=graph_local.graph_template_id) " .
+										"LEFT JOIN user_auth_perms ON ((graph_templates_graph.local_graph_id=user_auth_perms.item_id and user_auth_perms.type=1 and user_auth_perms.user_id=" . $_SESSION["sess_user_id"] . ") OR (host.id=user_auth_perms.item_id and user_auth_perms.type=3 and user_auth_perms.user_id=" . $_SESSION["sess_user_id"] . ") OR (graph_templates.id=user_auth_perms.item_id and user_auth_perms.type=4 and user_auth_perms.user_id=" . $_SESSION["sess_user_id"] . ")) " .
+										"WHERE graph_templates_graph.local_graph_id=graph_local.id  and graph_local.host_id > 0 " .
+										(($_REQUEST["graph_template_id"] > 0) ? " and graph_local.graph_template_id=" . $_REQUEST["graph_template_id"] :"") .
+										(empty($sql_where) ? "" : "and $sql_where") . 
+										" ORDER BY name");
 							}else{
-								$hosts = db_fetch_assoc("SELECT DISTINCT host.id, host.description as name
-									FROM host
-									ORDER BY name");
+								$hosts = db_fetch_assoc("SELECT DISTINCT host.id, host.description as name " .
+										"FROM host " .
+										"INNER JOIN graph_local " .
+										"ON host.id=graph_local.host_id" .
+                                         (($_REQUEST["graph_template_id"] > 0) ? " WHERE graph_template_id=" . $_REQUEST["graph_template_id"] :"") .
+										" ORDER BY name");
 							}
 
 							if (sizeof($hosts) > 0) {
@@ -46,18 +50,24 @@
 
 							<?php
 							if (read_config_option("auth_method") != 0) {
-								$graph_templates = db_fetch_assoc("SELECT DISTINCT graph_templates.*
-									FROM (graph_templates_graph,graph_local)
-									LEFT JOIN host ON (host.id=graph_local.host_id)
-									LEFT JOIN graph_templates ON (graph_templates.id=graph_local.graph_template_id)
-									LEFT JOIN user_auth_perms ON ((graph_templates_graph.local_graph_id=user_auth_perms.item_id and user_auth_perms.type=" . PERM_GRAPHS . " and user_auth_perms.user_id=" . $_SESSION["sess_user_id"] . ") OR (host.id=user_auth_perms.item_id and user_auth_perms.type=" . PERM_HOSTS . " and user_auth_perms.user_id=" . $_SESSION["sess_user_id"] . ") OR (graph_templates.id=user_auth_perms.item_id and user_auth_perms.type=" . PERM_GRAPH_TEMPLATES . " and user_auth_perms.user_id=" . $_SESSION["sess_user_id"] . "))
-									WHERE graph_templates_graph.local_graph_id=graph_local.id
-									" . (empty($sql_where) ? "" : "and $sql_where") . "
-									ORDER BY name");
+								$graph_templates = db_fetch_assoc("SELECT DISTINCT graph_templates.* " .
+										"FROM (graph_templates_graph,graph_local) " .
+										"LEFT JOIN host ON (host.id=graph_local.host_id) " .
+										"LEFT JOIN graph_templates ON (graph_templates.id=graph_local.graph_template_id) " .
+										"LEFT JOIN user_auth_perms ON ((graph_templates_graph.local_graph_id=user_auth_perms.item_id and user_auth_perms.type=1 and user_auth_perms.user_id=" . $_SESSION["sess_user_id"] . ") OR (host.id=user_auth_perms.item_id and user_auth_perms.type=3 and user_auth_perms.user_id=" . $_SESSION["sess_user_id"] . ") OR (graph_templates.id=user_auth_perms.item_id and user_auth_perms.type=4 and user_auth_perms.user_id=" . $_SESSION["sess_user_id"] . ")) " .
+										"WHERE graph_templates_graph.local_graph_id=graph_local.id " .
+										"AND graph_templates_graph.graph_template_id > 0 " .
+										(($_REQUEST["host_id"] > 0) ? " and graph_local.host_id=" . $_REQUEST["host_id"] :" and graph_local.host_id > 0 ") . 
+										(empty($sql_where) ? "" : "and $sql_where") . 
+										" ORDER BY name");
 							}else{
-								$graph_templates = db_fetch_assoc("SELECT DISTINCT graph_templates.*
-									FROM graph_templates
-									ORDER BY name");
+								$graph_templates = db_fetch_assoc("SELECT DISTINCT graph_templates.* " .
+										"FROM graph_templates " .
+										"INNER JOIN graph_local " .
+										"ON graph_templates.id=graph_local.graph_template_id" .
+										(($_REQUEST["host_id"] > 0) ? " WHERE host_id=" . $_REQUEST["host_id"] :"") .
+										" GROUP BY graph_templates.name " . 
+										" ORDER BY name");
 							}
 
 							if (sizeof($graph_templates) > 0) {
