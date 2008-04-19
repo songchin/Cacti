@@ -234,5 +234,8 @@ function upgrade_to_0_8_8() {
 		) TYPE=MyISAM");
 	db_install_execute("0.8.8", "INSERT INTO `plugin_realms` VALUES (1, 'internal', 'plugins.php', 'Plugin Management'");
 
+	/* wrong lower limit for generic OID graph template */
+	db_install_execute("0.8.7c", "UPDATE graph_templates_graph SET lower_limit='0', vertical_label='' WHERE id=47");
+
 }
 ?>
