@@ -7,6 +7,8 @@ Cacti CHANGELOG
 -bug#0001160: In Suggested Values editor, name and field are reversed. Include column headers
 -bug#0001166: Installer does not properly handle disabled guest_user conversion
 -bug#0001182: Subdirectories are not secure and allow browsing
+-bug#0001191: Faulty IP address validation by ping.php script
+-bug#0001204: since upgrade to 0.87b the hosts with ip address with 255 are down and have no datas
 -bug: remove graph permissions if graph is removed
 -bug: remove host permissions if host is removed
 -bug: initialization of snmp_auth when using SNMP=NONE
