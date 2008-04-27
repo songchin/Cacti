@@ -18,6 +18,7 @@ Cacti CHANGELOG
 -bug: Remove warnings appear in the httpd log relative to reset attempts on settings array
 -bug: Graph Export would fail while zooming on some systems
 -bug: Add API Automation tool quietMode to additional functions
+-bug: SNMP string cleanup removes too many '=' signs
 -documentation: Explaining Cacti Special Data Sources used on CDEFs, lots of CDEF examples using Special data Sources
 -feature#0001205: add filtering and pagination to cdef management; add "Duplicate CDEF"
 -feature#0001201: Reapply Suggested Names for Data Sources and cli/poller_data_sources_reapply_names.php
