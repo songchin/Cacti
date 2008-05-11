@@ -783,6 +783,9 @@ GPRINT:cdefcd:MAX:"Maximum\:%8.2lf%s\n" </screen>
 					Please pay attention to the data source denoted by <guilabel>a</guilabel> and <guilabel>b</guilabel>, respectively,
 					appearing twice in those cdefs as expected.</para>
 				</example>
+			</sect2>
+			<sect2 id="cdef_more_examples">
+				<title>More CDEF Examples</title>
 				<example>
 					<title>Disk Usage as a Percentage</title>
 					<para>This example is based on the standard data template <emphasis>ucd/net - Hard Drive Space</emphasis>.
@@ -845,6 +848,34 @@ AREA:cdefc#FF0000FF:"% Used"</screen>
 					<para>You may of cource add GPRINT legends as usual. If you do this for the "% Used" entry only, you
 					will get surprising results, if your rrd file holds either MAXIMUM, LAST and/or MINIMUM
 					consolidation function(s). This is left as an exercise to you ;-)</para>
+				</example>
+				<example>
+					<title>Background Colors for Day and Night</title>
+					<para>This set of CDEFs is used to colorize the background of a graph with different colors for day, night and weekends.
+					The CDEFs are created as usual, we will show the CDEF definition only. Examples are taken from rrdtool-users mailing list
+					courtesy Erik de Mare. Here are the definitions</para>
+					<para><emphasis>Background for Daytime</emphasis></para>
+					<screen>cdef=LTIME,86400,%,28800,GT,LTIME,86400,%,64800,LT,INF,UNKN,CURRENT_DATA_SOURCE,*,IF,UNKN,CURRENT_DATA_SOURCE,*,IF</screen>
+					<para><emphasis>Background for Nighttime</emphasis></para>
+					<screen>cdef=LTIME,86400,%,28800,LT,INF,LTIME,86400,%,64800,GT,INF,UNKN,CURRENT_DATA_SOURCE,*,IF,IF</screen>
+					<para><emphasis>Background for Weekend</emphasis></para>
+					<screen>cdef=LTIME,604800,%,172800,GT,LTIME,604800,%,345600,LT,INF,UNKN,CURRENT_DATA_SOURCE,*,IF,UNKN,CURRENT_DATA_SOURCE,*,IF</screen>
+					<para>The value of <emphasis>86400</emphasis> represents the number of seconds of a day, whereas
+					<emphasis>28800</emphasis> represents 8:00, defined as the start of the day. End of the day, <emphasis>64800</emphasis> is
+					assumed at 18:00. Please replace those values if required. For weekends, same logic applies.</para>
+					<para>Now, let's apply those new CDEFs to a Graph Template. For this example, I've chosen the <emphasis>Unix - Processes</emphasis>
+					that applies to localhost only. In turn, please create three new graph items, associate the processes data source,
+					make them AREAs, select	a color and opacity. Choose the daytime , nighttime and weekend CDEF in this sequence. 
+					As a last step, move those three new graph items to the top. I've chosen opacity of 20% for Item#1 to 3.</para>
+					<screen>
+Graph Item  Data Source                Graph Item Type  CF Type  Item Color
+Item # 1    (proc):                    AREA             AVERAGE  FFFF00
+Item # 2    (proc):                    AREA             AVERAGE  0000FF
+Item # 3    (proc):                    AREA             AVERAGE  2E3127
+Item # 4    (proc): Running Processes  AREA             AVERAGE  F51D30
+Item # 5    (proc): Current:           GPRINT           LAST
+Item # 6    (proc): Average:           GPRINT           AVERAGE
+Item # 7    (proc): Maximum:           GPRINT           MAX</screen> 	  	
 				</example>
 			</sect2>
 		</sect1>
