@@ -633,6 +633,52 @@ print int(rand(10));</programlisting>
 				</listitem>
 			</orderedlist>
 		</sect1>
+		<sect1 id="help_snmp_exec">
+			<title>Using SNMP Exec Option (net-snmp <= 5.3)</title>
+			<para>
+			net-snmp version up to 5.3 supports a function that allows running user specific scripts.
+			This option is configured in <filename>/etc/snmp/snmpd.conf</filename> (the filename
+			depends on the distribution) in this way:</para>
+			<programlisting>
+exec &lt;oid&gt; &lt;identifier&gt; &lt;script&gt;
+			</programlisting>
+			<para><emphasis>Example</emphasis></para>
+			<programlisting>
+exec .1.3.6.1.4.1.2021.999.1.1   example1     /bin/sh /etc/snmp/scripts/example1.sh
+			</programlisting>
+			<para>If using many scripts, it is a good idea to implement some naming rules.
+			They should be maintained installation-wide, not target host specific.
+			This way, all OIDs are exactly related to a script. This way, you may maintain a single snmpd.conf
+			for a set of targets and a single /etc/snmp/scripts directory holding all scripts.
+			I decided to go this way for enumerating the &lt;OIDs&gt;:</para>
+			<screen>.1.3.1.4.1.2021.&lt;generic id&gt;.&lt;function&gt;.&lt;subfunction&gt;
+generic id      fix = 999
+function        enumerated for each function: 1, 2, 3, ...
+subfunction     enumerated for each subfunction within each funtion: 1, 2, 3, ...</screen>
+			<para>The name of the scripts go this way</para>
+			<screen>/etc/snmp/scripts/&lt;generic qualifier&gt;_&lt;function&gt;_&lt;subfunction&gt;
+generic id      e.g. abbreviated company name
+function        name of function, e.g. dhcp, dns, radius, ...
+subfunction     name of subfunction within each function, e.g. for dhcp: ack, nack, ...</screen>
+			
+			<para>This is a very simple example counting all occurences of the string STRING
+			in the file <filename>/var/log/FILE</filename></para>
+			<programlisting>
+#!/bin/sh
+/bin/grep "STRING" /var/log/FILE | /usr/bin/wc -l | /bin/awk '{print $1}'
+			</programlisting>
+
+			<para>Remember to refresh the snmp daemon after eaqch change to <filename>/etc/snmp/snmpd.conf</filename>.
+			Now execute this script by</para> 
+<screen><prompt>shell&gt;</prompt>snmpwalk -c &lt;read community&gt; -v1 &lt;target&gt; .1.3.6.1.4.1.2021.999.1.1
+UCD-SNMP-MIB::ucdavis.999.1.1.1.1 = INTEGER: 1
+UCD-SNMP-MIB::ucdavis.999.1.1.2.1 = STRING: "example1.sh"
+UCD-SNMP-MIB::ucdavis.999.1.1.3.1 = STRING: "/bin/sh /etc/snmp/scripts/example1.sh"
+UCD-SNMP-MIB::ucdavis.999.1.1.100.1 = INTEGER: 0
+UCD-SNMP-MIB::ucdavis.999.1.1.101.1 = STRING: "5113"
+UCD-SNMP-MIB::ucdavis.999.1.1.102.1 = INTEGER: 0</screen>
+			<para>The OID to be used by the data template would be 1.3.6.1.4.1.2021.999.1.1.100.1 in this case.</para>
+		</sect1>
 	</chapter>
 	<chapter id="faq">
 		<title>Frequently Asked Questions</title>
