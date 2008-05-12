@@ -292,9 +292,19 @@ $struct_data_source_item = array(
 	"data_source_type_id" => array(
 		"friendly_name" => "Data Source Type",
 		"method" => "drop_array",
+		"on_change" => "changeDataSourceTypeId()",
 		"array" => $data_source_types,
 		"default" => "",
 		"description" => "How data is represented in the RRA."
+		),
+	"rrd_compute_rpn" => array(
+		"friendly_name" => "RPN for a COMPUTE DS Item Type (RRDTool 1.2.x only)",
+		"method" => "textbox",
+		"max_length" => "150",
+		"size" => "30",
+		"default" => "",
+		"description" => "When using a COMPUTE data source type, please enter the RPN for it here.<br>" .
+						 "Available for RRDTool 1.2.x only"
 		),
 	"rrd_heartbeat" => array(
 		"friendly_name" => "Heartbeat",

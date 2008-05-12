@@ -201,6 +201,7 @@ function rrdtool_function_create($local_data_id, $show_source, $rrd_struc) {
 		data_template_rrd.rrd_heartbeat,
 		data_template_rrd.rrd_minimum,
 		data_template_rrd.rrd_maximum,
+		data_template_rrd.rrd_compute_rpn,
 		data_template_rrd.data_source_type_id
 		FROM data_template_rrd
 		WHERE data_template_rrd.local_data_id=$local_data_id
@@ -215,7 +216,12 @@ function rrdtool_function_create($local_data_id, $show_source, $rrd_struc) {
 		/* use the cacti ds name by default or the user defined one, if entered */
 		$data_source_name = get_data_source_item_name($data_source["id"]);
 
-		$create_ds .= "DS:$data_source_name:" . $data_source_types{$data_source["data_source_type_id"]} . ":" . $data_source["rrd_heartbeat"] . ":" . $data_source["rrd_minimum"] . ":" . (empty($data_source["rrd_maximum"]) ? "U" : $data_source["rrd_maximum"]) . RRD_NL;
+		/* special format for COMPUTE data source type */
+		if ( $data_source["data_source_type_id"] == DATA_SOURCE_TYPE_COMPUTE ) {
+			$create_ds .= "DS:$data_source_name:" . $data_source_types{$data_source["data_source_type_id"]} . ":" . (empty($data_source["rrd_compute_rpn"]) ? "U" : $data_source["rrd_compute_rpn"]) . RRD_NL;
+		} else {
+			$create_ds .= "DS:$data_source_name:" . $data_source_types{$data_source["data_source_type_id"]} . ":" . $data_source["rrd_heartbeat"] . ":" . $data_source["rrd_minimum"] . ":" . (empty($data_source["rrd_maximum"]) ? "U" : $data_source["rrd_maximum"]) . RRD_NL;
+		}
 	}
 	}
 

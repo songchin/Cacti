@@ -970,6 +970,8 @@ CREATE TABLE data_template_rrd (
   rrd_maximum varchar(20) NOT NULL default '0',
   t_rrd_minimum char(2) default NULL,
   rrd_minimum varchar(20) NOT NULL default '0',
+  t_rrd_compute_rpn char(2) default NULL,
+  rrd_compute_rpn varchar(150) NOT NULL default '',
   t_rrd_heartbeat char(2) default NULL,
   rrd_heartbeat mediumint(6) NOT NULL default '0',
   t_data_source_type_id char(2) default NULL,

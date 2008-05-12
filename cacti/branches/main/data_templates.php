@@ -81,6 +81,7 @@ switch ($_REQUEST["action"]) {
    -------------------------- */
 
 function form_save() {
+	global $data_source_types;
 	if (isset($_POST["save_component_template"])) {
 		/* ================= input validation ================= */
 		input_validate_input_number(get_request_var_post("data_input_id"));
@@ -116,6 +117,9 @@ function form_save() {
 		$save3["rrd_maximum"] = form_input_validate($_POST["rrd_maximum"], "rrd_maximum", "^(-?([0-9]+(\.[0-9]*)?|[0-9]*\.[0-9]+)([eE][+\-]?[0-9]+)?)|U$", (isset($_POST["t_rrd_maximum"]) ? true : false), 3);
 		$save3["t_rrd_minimum"] = form_input_validate((isset($_POST["t_rrd_minimum"]) ? $_POST["t_rrd_minimum"] : ""), "t_rrd_minimum", "", true, 3);
 		$save3["rrd_minimum"] = form_input_validate($_POST["rrd_minimum"], "rrd_minimum", "^(-?([0-9]+(\.[0-9]*)?|[0-9]*\.[0-9]+)([eE][+\-]?[0-9]+)?)|U$", (isset($_POST["t_rrd_minimum"]) ? true : false), 3);
+		$save3["t_rrd_compute_rpn"] = form_input_validate((isset($_POST["t_rrd_compute_rpn"]) ? $_POST["t_rrd_compute_rpn"] : ""), "t_rrd_compute_rpn", "", true, 3);
+		/* rrd_compute_rpn requires input only for COMPUTE data source type */
+		$save3["rrd_compute_rpn"] = form_input_validate($_POST["rrd_compute_rpn"], "rrd_compute_rpn", "", ((isset($_POST["t_rrd_compute_rpn"]) || ($_POST["data_source_type_id"] != DATA_SOURCE_TYPE_COMPUTE)) ? true : false), 3);
 		$save3["t_rrd_heartbeat"] = form_input_validate((isset($_POST["t_rrd_heartbeat"]) ? $_POST["t_rrd_heartbeat"] : ""), "t_rrd_heartbeat", "", true, 3);
 		$save3["rrd_heartbeat"] = form_input_validate($_POST["rrd_heartbeat"], "rrd_heartbeat", "^[0-9]+$", (isset($_POST["t_rrd_heartbeat"]) ? true : false), 3);
 		$save3["t_data_source_type_id"] = form_input_validate((isset($_POST["t_data_source_type_id"]) ? $_POST["t_data_source_type_id"] : ""), "t_data_source_type_id", "", true, 3);
@@ -185,6 +189,7 @@ function form_save() {
 
 		if (!is_error_message()) {
 			$save3["data_template_id"] = $data_template_id;
+			print_r($save3);
 			$data_template_rrd_id = sql_save($save3, "data_template_rrd");
 
 			if ($data_template_rrd_id) {
@@ -585,6 +590,41 @@ function template_edit() {
 	}
 
 	form_save_button_alt("return");
+?>
+<script type="text/javascript">
+<!--
+
+changeDataSourceTypeId();
+
+function setComputeFields(type) {
+
+	switch(type) {
+	case "5":
+		document.getElementById('t_rrd_minimum').style.display="none";
+		document.getElementById('rrd_minimum').style.display="none";
+		document.getElementById('t_rrd_maximum').style.display="none";
+		document.getElementById('rrd_maximum').style.display="none";
+		document.getElementById('t_rrd_compute_rpn').style.display="";
+		document.getElementById('rrd_compute_rpn').style.display="";
+		break;
+	default:
+		document.getElementById('t_rrd_minimum').style.display="";
+		document.getElementById('rrd_minimum').style.display="";
+		document.getElementById('t_rrd_maximum').style.display="";
+		document.getElementById('rrd_maximum').style.display="";
+		document.getElementById('t_rrd_compute_rpn').style.display="none";
+		document.getElementById('rrd_compute_rpn').style.display="none";
+		break;
+	}
+}
+
+function changeDataSourceTypeId() {
+	//alert("Selected Data Source Type is '" + document.getElementById('data_source_type_id').value + "'");
+	setComputeFields(document.getElementById('data_source_type_id').value)
+}
+-->
+</script>
+<?php
 }
 
 function template() {

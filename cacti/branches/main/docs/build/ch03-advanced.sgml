@@ -743,7 +743,7 @@
 								</row>
 								<row>
 									<entry>Data Source Type</entry>
-									<entry><para>Cacti currently supports four types of data that <application>RRDTool</application> can represent for any given data source:
+									<entry><para>Cacti currently supports all five types of data that <application>RRDTool</application> can represent for any given data source:
 									</para><para>COUNTER: is for continuous incrementing counters like the ifInOctets counter in a router. The COUNTER
 														data source assumes that the counter never decreases, except when a counter overflows. It is always a whole INTEGER,
 														floating point numbers are invalid.
@@ -753,7 +753,13 @@
 									</para><para>GAUGE: numbers that are not continuously incrementing, e.g. a temperature reading.
 														Floating point numbers are accepted.
 									</para><para>ABSOLUTE: counters that are reset upon reading
-									</para><para>DERIVE: like COUNTER but without overflow checks</para></entry>
+									</para><para>DERIVE: like COUNTER but without overflow checks
+									</para><para>COMPUTE: You may enter a RPN formulae. It may contain any data source name that is defined within this Data Template.
+											E.g. assuming <emphasis>traffic_in</emphasis> and <emphasis>traffic_out</emphasis> are given, the RPN of
+											<emphasis>traffic_in,traffic_out,+</emphasis> would add both values. 
+											Threshold checks will now be available against this data source.
+											In most cases, graph templates using CDEF RPNs is the recommended method instead of COMPUTE. 
+									</para></entry>
 								</row>
 								<row>
 									<entry>Heartbeat</entry>

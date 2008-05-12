@@ -133,11 +133,12 @@ $consolidation_functions = array(1 =>
 	"MAX",
 	"LAST");
 
-$data_source_types = array(1 =>
-	"GAUGE",
-	"COUNTER",
-	"DERIVE",
-	"ABSOLUTE");
+$data_source_types = array(
+	DATA_SOURCE_TYPE_GAUGE		=> "GAUGE",
+	DATA_SOURCE_TYPE_COUNTER	=> "COUNTER",
+	DATA_SOURCE_TYPE_DERIVE		=> "DERIVE",
+	DATA_SOURCE_TYPE_ABSOLUTE	=> "ABSOLUTE",
+	DATA_SOURCE_TYPE_COMPUTE	=> "COMPUTE");
 
 $graph_item_types = array(
 	GRAPH_ITEM_TYPE_COMMENT => "COMMENT",
