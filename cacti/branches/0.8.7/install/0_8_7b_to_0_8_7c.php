@@ -22,10 +22,8 @@
  +-------------------------------------------------------------------------+
 */
 
-function upgrade_to_0_8_7b() {
-	/* add Task Item Id Index */
-	db_install_execute("0.8.7b", "ALTER TABLE `graph_templates_item` ADD INDEX `task_item_id` ( `task_item_id` )");
-	/* make CLI more responsive */
-	db_install_execute("0.8.7b", "ALTER TABLE `data_input_data` ADD INDEX `t_value`(`t_value`)");
+function upgrade_to_0_8_7c() {
+	/* speed up the UI, missed in 0.8.7b upgrade */
+	db_install_execute("0.8.7b", "ALTER TABLE `data_local` ADD INDEX `host_id`(`host_id`)");
 }
 ?>
