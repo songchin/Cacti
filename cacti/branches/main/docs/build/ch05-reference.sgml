@@ -16,6 +16,41 @@
 					<application>MRTG</application>'s "graph last updated" feature.
 				</para>
 			</sect2>
+			<sect2 id="variable_data_source_title">
+				<title>Data Source Title</title>
+				<screen><userinput>|data_source_title|</userinput></screen>
+				<para>
+					This variable, |data_source_title|, gets replaced with the name of the data source associated with a particular 
+					graph item in a graph template. This change allows the creation of generic 
+					graph templates (2-variable line graph, 3-variable stack, etc.) 
+					which can be reused with large numbers of data sources.
+					See attached examples to understand usage.
+				</para>
+				<figure id="data_source_title_template">
+					<title>Example of a Graph Template using |data_source_title|</title>
+						<mediaobject>
+						<imageobject>
+							<imagedata fileref="images/data_source_title_template.png" format="PNG">
+						</imageobject>
+					</mediaobject>
+				</figure>
+				<figure id="data_source_title_example1">
+					<title>Example 1 of a Graph making use of |data_source_title|</title>
+						<mediaobject>
+						<imageobject>
+							<imagedata fileref="images/data_source_title_example1.png" format="PNG">
+						</imageobject>
+					</mediaobject>
+				</figure>
+				<figure id="data_source_title_example2">
+					<title>Example 2 of a Graph making use of |data_source_title|</title>
+						<mediaobject>
+						<imageobject>
+							<imagedata fileref="images/data_source_title_example2.png" format="PNG">
+						</imageobject>
+					</mediaobject>
+				</figure>
+			</sect2>
 			<sect2 id="variable_data_query">
 				<title>Data Query Fields</title>
 				<screen><userinput>|query_field_name|</userinput></screen>
