@@ -475,7 +475,7 @@ function display_help() {
 	echo "    --list-hosts\n";
 	echo "    --list-graph-templates\n";
 	echo "    --list-input-fields --graph-template-id=[ID]\n";
-	echo "More list Options for 'cg' graphs only:\n";
+	echo "More list Options for 'ds' graphs only:\n";
 	echo "    --list-snmp-queries\n";
 	echo "    --list-query-types  --snmp-query-id=[ID]\n";
 	echo "    --list-snmp-fields  --host-id=[ID]\n";
