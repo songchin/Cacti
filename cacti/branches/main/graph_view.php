@@ -24,9 +24,9 @@
 
 $guest_account = true;
 include("./include/auth.php");
-include(CACTI_BASE_PATH . "/lib/html_tree.php");
-include(CACTI_BASE_PATH . "/include/html/inc_timespan_settings.php");
-include(CACTI_BASE_PATH . "/include/top_graph_header.php");
+include_once(CACTI_BASE_PATH . "/lib/html_tree.php");
+include_once(CACTI_BASE_PATH . "/include/html/inc_timespan_settings.php");
+include_once(CACTI_BASE_PATH . "/include/top_graph_header.php");
 
 /* ================= input validation ================= */
 input_validate_input_number(get_request_var("branch_id"));
