@@ -34,11 +34,6 @@ $no_http_headers = true;
 include(dirname(__FILE__)."/../include/global.php");
 include_once(CACTI_BASE_PATH."/lib/api_automation_tools.php");
 include_once(CACTI_BASE_PATH."/lib/data_query.php");
-#include_once(CACTI_BASE_PATH."/lib/utility.php");
-#include_once(CACTI_BASE_PATH."/lib/api_data_source.php");
-#include_once(CACTI_BASE_PATH."/lib/api_graph.php");
-#include_once(CACTI_BASE_PATH."/lib/snmp.php");
-#include_once(CACTI_BASE_PATH."/lib/api_device.php");
 
 /* process calling arguments */
 $parms = $_SERVER["argv"];
@@ -109,15 +104,12 @@ if (sizeof($parms)) {
 			exit(0);
 		case "--list-hosts":
 			$displayHosts = TRUE;
-
 			break;
 		case "--list-data-queries":
 			$displayDataQueries = TRUE;
-
 			break;
 		case "--quiet":
 			$quietMode = TRUE;
-
 			break;
 		default:
 			echo "ERROR: Invalid Argument: ($arg)\n\n";
@@ -126,15 +118,12 @@ if (sizeof($parms)) {
 		}
 	}
 
-	/* 
-	 * handle display options 
-	 */
+	/* list options, recognizing $quietMode */
 	if ($displayHosts) {
 		$hosts = getHosts();
 		displayHosts($hosts, $quietMode);
 		exit(0);
 	}
-
 	if ($displayDataQueries) {
 		$data_queries = getSNMPQueries();
 		displaySNMPQueries($data_queries, $quietMode);
@@ -182,16 +171,23 @@ if (sizeof($parms)) {
 	/*
 	 * Now, add the data query and run it once to get the cache filled 
 	 */
-	db_execute("REPLACE INTO host_snmp_query (host_id,snmp_query_id,reindex_method) " .
-			   "VALUES (". $host_id . ","
-						 . $data_query_id . ","
-						 . $reindex_method . "
-						)");
-	/* recache snmp data */
-	run_data_query($host_id, $data_query_id);
+	$exists_already = db_fetch_cell("SELECT host_id FROM host_snmp_query WHERE host_id=$host_id AND snmp_query_id=$data_query_id AND reindex_method=$reindex_method");
+	if ((isset($exists_already)) &&
+		($exists_already > 0)) {
+		echo "ERROR: Data Query is already associated for host: ($host_id: $host_name) data query ($data_query_id: $data_query_name) reindex method ($reindex_method: $reindex_types[$reindex_method])\n";
+		exit(1);
+	}else{
+		db_execute("REPLACE INTO host_snmp_query (host_id,snmp_query_id,reindex_method) " .
+				   "VALUES (". $host_id . ","
+							 . $data_query_id . ","
+							 . $reindex_method . "
+							)");
+		/* recache snmp data */
+		run_data_query($host_id, $data_query_id);
+	}
 
 	if (is_error_message()) {
-		echo "ERROR: Failed to add this data query\n";
+		echo "ERROR: Failed to add this data query for host ($host_id: $host_name) data query ($data_query_id: $data_query_name) reindex method ($reindex_method: $reindex_types[$reindex_method])\n";
 		exit(1);
 	} else {
 		echo "Success - Host ($host_id: $host_name) data query ($data_query_id: $data_query_name) reindex method ($reindex_method: $reindex_types[$reindex_method])\n";

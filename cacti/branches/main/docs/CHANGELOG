@@ -36,6 +36,7 @@ Cacti CHANGELOG
 -feature#0001185: Mass enable/disable graph export per graph from Graph Management
 -feature#0001179: Visual Fix for CACTI Graphs View Interface(list,preview)
 -feature#0001162: WEB UI now accepts max_oids on SNMP bulkwalks
+-feature#0001140: CLI-Script to associate a graph template to a host
 -feature#0001124: Devices/Host Templates - remove already associated objects from dropdown selector
 -feature#0001123: Performance tweak by adding some indices
 -feature#0001122: Propagate Host Template changes to related hosts
