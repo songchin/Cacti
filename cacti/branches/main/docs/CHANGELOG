@@ -6,6 +6,7 @@ Cacti CHANGELOG
 -bug#0001145: Save Failed error when changing Graph Details
 -bug#0001160: In Suggested Values editor, name and field are reversed. Include column headers
 -bug#0001166: Installer does not properly handle disabled guest_user conversion
+-bug#0001174: Unidentified index warning
 -bug#0001182: Subdirectories are not secure and allow browsing
 -bug#0001191: Faulty IP address validation by ping.php script
 -bug#0001204: since upgrade to 0.87b the hosts with ip address with 255 are down and have no datas
