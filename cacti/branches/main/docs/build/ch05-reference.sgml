@@ -447,9 +447,31 @@
 								<entry>Graph: Upper Limit</entry>
 								<entry>Taken from the Graph Template: fetches the Upper Limit defined to the Graph Template. This is independant of all --alt-autoscaling options. It is NOT the dynamically determined upper boundary of the graph!</entry>
 							</row>
+							<row>
+								<entry>Count of All Data Sources (Don't Include Duplicates)</entry>
+								<entry>Will count the number of all data sources of the whole graph. A data source that appears more than once will be counted only once. Data sources that differ by consolidation functions only are NOT counted as different data sources (e.g. traffic_in:AVERAGE and traffic_in:MAX are counted only once). It is NOT required to associate the graph item to any data source!</entry>
+							</row>
+							<row>
+								<entry>Count of All Data Sources (Include Duplicates)</entry>
+								<entry>Will count the number of all data sources of the whole graph. A data source that appears more than once will be counted for each time of it's appearance. Data sources that differ by consolidation functions only are NOT counted as different data sources (e.g. traffic_in:AVERAGE and traffic_in:MAX are counted only once). It is NOT required to associate the graph item to any data source!</entry>
+							</row>
+							<row>
+								<entry>Count of Similar Data Sources (Don't Include Duplicates)</entry>
+								<entry>It is REQUIRED to associate the graph item to the data source that shall be counted! Let's assume the data source is named "traffic_in". Then, cacti will count all data sources "traffic_in" of the whole graph. Data sources with different consolidation functions are counted as same data sources (e.g. traffic_in:AVERAGE and traffic_in:MAX are counted once)</entry>
+							</row>
+							<row>
+								<entry>Count of Similar Data Sources (Include Duplicates)</entry>
+								<entry>It is REQUIRED to associate the graph item to the data source that shall be counted! If a data source appears multiple times, it will be counted this many times.</entry>
+							</row>
 						</tbody>
 					</tgroup>
 				</table>
+				<para>While the <parameter>All Data Sources/Similar Data Sources</parameter> pseudo CDEF variables
+				perform <emphasis>totaling</emphasis>, the <parameter>Count All Data Sources/Count Similar Data Sources</parameter> 
+				pseudo CDEF Variables simply <emphasis>count</emphasis> the occurences of the related data sources.
+				Thus, it is easy to compute e.g. an average of all similar data sources by creating the CDEF
+				</para>
+				<screen>CDEF=SIMILAR_DATA_SOURCES_NODUPS,COUNT_SIMILAR_DS_NODUPS,/</screen>
 			</sect2>
 			<sect2 id="cdef_special_data_source_examples">
 				<title>Using Special Data Source</title>

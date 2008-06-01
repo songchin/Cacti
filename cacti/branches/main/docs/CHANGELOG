@@ -28,6 +28,7 @@ Cacti CHANGELOG
 -documentation: Explaining Cacti Special Data Sources used on CDEFs, lots of CDEF examples using Special data Sources
 -documentation: Documentation of specific rrdtool feature
 -documentation: Use of SNMP exec option up to net-snmp 5.3
+-feature#0001249: New pseudo CDEF variables for "Count All|Similar Data Sources (NO)?DUPS"
 -feature#0001235: CLI script needed to activate a query: add_data_query.php
 -feature#0001233: Move $export_types variable definition from templates_export.php to include/global_form.php
 -feature#0001205: add filtering and pagination to cdef management; add "Duplicate CDEF"
