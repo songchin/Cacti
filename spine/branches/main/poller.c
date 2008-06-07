@@ -344,7 +344,7 @@ void poll_host(int host_id) {
 				/* free the host result */
 				mysql_free_result(result);
 
-				if (((host->snmp_version >= 1) && (host->snmp_version <= 2) && 
+				if (((host->snmp_version >= 1) && (host->snmp_version <= 2) &&
 					(strlen(host->snmp_community) > 0)) ||
 					(host->snmp_version == 3)) {
 					host->snmp_session = snmp_host_init(host->id,
@@ -377,7 +377,7 @@ void poll_host(int host_id) {
 				/* perform a check to see if the host is alive by polling it's SysDesc
 				 * if the host down from an snmp perspective, don't poll it.
 				 * function sets the ignore_host bit */
-				if ((host->availability_method == AVAIL_SNMP) && 
+				if ((host->availability_method == AVAIL_SNMP) &&
 					(strlen(host->snmp_community) == 0) &&
 					(host->snmp_version < 3)) {
 					host->ignore_host = FALSE;
@@ -786,7 +786,8 @@ void poll_host(int host_id) {
 								if (!validate_result(snmp_oids[j].result)) {
 									snprintf(errstr, BUFSIZE, "%s", snmp_oids[j].result);
 
-									if (!STRIMATCH(snmp_oids[j].result, "Nan")) {
+									if ((!STRIMATCH(snmp_oids[j].result, "nan")) &&
+										(!STRIMATCH(snmp_oids[j].result, "U"))) {
 										SPINE_LOG(("Host[%i] DS[%i] WARNING: Result from SNMP not valid. Partial Result: %.20s...\n", host_id, poller_items[snmp_oids[j].array_position].local_data_id, errstr));
 									}
 
@@ -808,7 +809,7 @@ void poll_host(int host_id) {
 
 						/* reset num_snmps */
 						num_oids = 0;
-		
+
 						/* initialize all the memory to insure we don't get issues */
 						memset(snmp_oids, 0, sizeof(snmp_oids_t)*host->max_oids);
 					}

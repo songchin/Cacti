@@ -542,7 +542,7 @@ void snmp_get_multi(host_t *current_host, snmp_oids_t *snmp_oids, int num_oids) 
 						#else
 						sprint_value(snmp_oids[i].result, vars->name, vars->name_length, vars);
 						#endif
-						
+
 						vars = vars->next_variable;
 					}
 				}

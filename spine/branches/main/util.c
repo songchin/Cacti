@@ -573,8 +573,8 @@ int spine_log(const char *format, ...) {
 	strncat(flogmessage, logprefix,   sizeof(flogmessage)-1);
 	strncat(flogmessage, ulogmessage, sizeof(flogmessage)-1);
 
-	if ((IS_LOGGING_TO_FILE() && 
-		(set.log_level != POLLER_VERBOSITY_NONE) && 
+	if ((IS_LOGGING_TO_FILE() &&
+		(set.log_level != POLLER_VERBOSITY_NONE) &&
 		(strlen(set.path_logfile) != 0))) {
 		if (set.logfile_processed) {
 			if (!file_exists(set.path_logfile)) {
@@ -836,7 +836,6 @@ char *add_slashes(char *string, int arguments_2_strip) {
 	return(return_str);
 }
 
-
 /*! \fn char *strncopy(char *dst, const char *src, size_t obuf)
  *  \brief copies source to destination add a NUL terminator
  *
@@ -993,5 +992,3 @@ char *reverse(char* str) {
 
 	return str;
 }
-
-
