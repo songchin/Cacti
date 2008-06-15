@@ -27,6 +27,7 @@ Cacti CHANGELOG
 -bug: When Cacti is launched from within an iframe, cookies are dropped from IE6
 -bug: database upgrade and cacti.sql differ
 -bug: drop color setting background on FF does not work
+-bug: cli/add_tree.php requires as least a host-id for --list-graphs
 -documentation: Explaining Cacti Special Data Sources used on CDEFs, lots of CDEF examples using Special data Sources
 -documentation: Documentation of specific rrdtool feature
 -documentation: Use of SNMP exec option up to net-snmp 5.3
