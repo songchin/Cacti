@@ -28,6 +28,8 @@ Cacti CHANGELOG
 -bug: database upgrade and cacti.sql differ
 -bug: drop color setting background on FF does not work
 -bug: cli/add_tree.php requires as least a host-id for --list-graphs
+-bug: add_tree.php did not allow nodes with propagating sort options
+-bug: when adding a tree node via the api numeric and natural were reversed
 -documentation: Explaining Cacti Special Data Sources used on CDEFs, lots of CDEF examples using Special data Sources
 -documentation: Documentation of specific rrdtool feature
 -documentation: Use of SNMP exec option up to net-snmp 5.3
