@@ -199,7 +199,7 @@ if (sizeof($parms)) {
 
 	/* Some sanity checking... */
 	if ($dsGraph["snmpQueryId"] != "") {
-		if ($snmpQueries[$dsGraph["snmpQueryId"]] != "") {
+		if (!isset($snmpQueries[$dsGraph["snmpQueryId"]])) {
 			echo "ERROR: Unknown snmp-query-id (" . $dsGraph["snmpQueryId"] . ")\n";
 			echo "Try --list-snmp-queries\n";
 			exit(1);
@@ -214,7 +214,7 @@ if (sizeof($parms)) {
 		}
 
 		if ($dsGraph["snmpQueryType"] != "") {
-			if ($snmp_query_types[$dsGraph["snmpQueryType"]] == "") {
+			if (!isset($snmp_query_types[$dsGraph["snmpQueryType"]])) {
 				echo "ERROR: Unknown snmp-query-type-id (" . $dsGraph["snmpQueryType"] . ")\n";
 				echo "Try --snmp-query-id=" . $dsGraph["snmpQueryId"] . " --list-query-types\n";
 				exit(1);
@@ -241,7 +241,7 @@ if (sizeof($parms)) {
 
 	/* More sanity checking */
 	if ($dsGraph["snmpField"] != "") {
-		if ($snmpFields[$dsGraph["snmpField"]] == "") {
+		if (!isset($snmpFields[$dsGraph["snmpField"]])) {
 			echo "ERROR: Unknown snmp-field " . $dsGraph["snmpField"] . " for host $hostId\n";
 			echo "Try --list-snmp-fields\n";
 			exit(1);
@@ -250,7 +250,7 @@ if (sizeof($parms)) {
 		$snmpValues = getSNMPValues($hostId, $dsGraph["snmpField"], $dsGraph["snmpQueryId"]);
 
 		if ($dsGraph["snmpValue"] != "") {
-			if($snmpValues[$dsGraph["snmpValue"]] == "") {
+			if(!isset($snmpValues[$dsGraph["snmpValue"]])) {
 				echo "ERROR: Unknown snmp-value for field " . $dsGraph["snmpField"] . " - " . $dsGraph["snmpValue"] . "\n";
 				echo "Try --snmp-field=" . $dsGraph["snmpField"] . " --list-snmp-values\n";
 				exit(1);
