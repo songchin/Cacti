@@ -52,6 +52,11 @@ if (sizeof($parms)) {
 	$templateGraph = array();
 	$dsGraph       = array();
 	$dsGraph["snmpFieldSpec"] = "";
+	$dsGraph["snmpQueryId"]   = "";
+	$dsGraph["snmpQueryType"] = "";
+	$dsGraph["snmpField"]     = "";
+	$dsGraph["snmpValue"]     = "";
+
 	$input_fields  = array();
 	$values["cg"]  = array();
 
@@ -193,8 +198,8 @@ if (sizeof($parms)) {
 	}
 
 	/* Some sanity checking... */
-	if (isset($dsGraph["snmpQueryId"])) {
-		if (!isset($snmpQueries[$dsGraph["snmpQueryId"]])) {
+	if ($dsGraph["snmpQueryId"] != "") {
+		if ($snmpQueries[$dsGraph["snmpQueryId"]] != "") {
 			echo "ERROR: Unknown snmp-query-id (" . $dsGraph["snmpQueryId"] . ")\n";
 			echo "Try --list-snmp-queries\n";
 			exit(1);
@@ -208,8 +213,8 @@ if (sizeof($parms)) {
 			exit(0);
 		}
 
-		if (isset($dsGraph["snmpQueryType"])) {
-			if (!isset($snmp_query_types[$dsGraph["snmpQueryType"]])) {
+		if ($dsGraph["snmpQueryType"] != "") {
+			if ($snmp_query_types[$dsGraph["snmpQueryType"]] == "") {
 				echo "ERROR: Unknown snmp-query-type-id (" . $dsGraph["snmpQueryType"] . ")\n";
 				echo "Try --snmp-query-id=" . $dsGraph["snmpQueryId"] . " --list-query-types\n";
 				exit(1);
@@ -235,8 +240,8 @@ if (sizeof($parms)) {
 	$snmpValues = array();
 
 	/* More sanity checking */
-	if (isset($dsGraph["snmpField"])) {
-		if (!isset($snmpFields[$dsGraph["snmpField"]])) {
+	if ($dsGraph["snmpField"] != "") {
+		if ($snmpFields[$dsGraph["snmpField"]] == "") {
 			echo "ERROR: Unknown snmp-field " . $dsGraph["snmpField"] . " for host $hostId\n";
 			echo "Try --list-snmp-fields\n";
 			exit(1);
@@ -244,8 +249,8 @@ if (sizeof($parms)) {
 
 		$snmpValues = getSNMPValues($hostId, $dsGraph["snmpField"], $dsGraph["snmpQueryId"]);
 
-		if (isset($dsGraph["snmpValue"])) {
-			if(!isset($snmpValues[$dsGraph["snmpValue"]])) {
+		if ($dsGraph["snmpValue"] != "") {
+			if($snmpValues[$dsGraph["snmpValue"]] == "") {
 				echo "ERROR: Unknown snmp-value for field " . $dsGraph["snmpField"] . " - " . $dsGraph["snmpValue"] . "\n";
 				echo "Try --snmp-field=" . $dsGraph["snmpField"] . " --list-snmp-values\n";
 				exit(1);
@@ -254,8 +259,8 @@ if (sizeof($parms)) {
 	}
 
 	if ($listSNMPValues)  {
-		if (!isset ($dsGraph["snmpField"])) {
-			if (!isset ($dsGraph["snmpQueryId"])) {
+		if ($dsGraph["snmpField"] == "") {
+			if ($dsGraph["snmpQueryId"] == "") {
 				echo "ERROR: Unknown snmp-query-id\n";
 				echo "Try --list-snmp-queries\n";
 				exit (1);
@@ -369,7 +374,7 @@ if (sizeof($parms)) {
 
 		echo "Graph Added - graph-id: (" . $returnArray["local_graph_id"] . ") - data-source-id: ($dataSourceId)\n";
 	}elseif ($graph_type == "ds") {
-		if ((!isset($dsGraph["snmpQueryId"])) || (!isset($dsGraph["snmpQueryType"])) || (!isset($dsGraph["snmpField"])) || (!isset($dsGraph["snmpValue"]))) {
+		if (($dsGraph["snmpQueryId"] == "") || ($dsGraph["snmpQueryType"] == "") || ($dsGraph["snmpField"] == "") || ($dsGraph["snmpValue"] == "")) {
 			echo "ERROR: For graph-type of 'ds' you must supply more options\n";
 			display_help();
 			exit(1);
@@ -457,7 +462,7 @@ if (sizeof($parms)) {
 }
 
 function display_help() {
-	echo "Add Graphs Script 1.1, Copyright 2008 - The Cacti Group\n\n";
+	echo "Add Graphs Script 1.2, Copyright 2008 - The Cacti Group\n\n";
 	echo "A simple command line utility to add graphs in Cacti\n\n";
 	echo "usage: add_graphs.php --graph-type=[cg|ds] --graph-template-id=[ID]\n";
 	echo "    --host-id=[ID] [--graph-title=title] [graph options] [--force] [--quiet]\n\n";
