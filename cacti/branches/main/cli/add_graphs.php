@@ -225,7 +225,7 @@ if (sizeof($parms)) {
 	}
 
 	/* process the snmp fields */
-	$snmpFields = getSNMPFields($hostId);
+	$snmpFields = getSNMPFields($hostId, $templateId);
 
 	if ($listSNMPFields) {
 		displaySNMPFields($snmpFields, $hostId, $quietMode);
@@ -242,7 +242,7 @@ if (sizeof($parms)) {
 			exit(1);
 		}
 
-		$snmpValues = getSNMPValues($hostId, $dsGraph["snmpField"]);
+		$snmpValues = getSNMPValues($hostId, $dsGraph["snmpField"], $templateId);
 
 		if (isset($dsGraph["snmpValue"])) {
 			if(!isset($snmpValues[$dsGraph["snmpValue"]])) {
