@@ -105,15 +105,45 @@ function api_plugin_db_table_create ($plugin, $table, $data) {
 			}
 		}
 
+		/* primary keys, multi-key columns are allowed */
 		if (isset($data['primary'])) {
-			$sql .= ",\n PRIMARY KEY (`" . $data['primary'] . '`)';
+			$sql .= ",\n PRIMARY KEY (`";
+			/* remove blanks */
+			$no_blanks = str_replace(" ", "", $data['primary']);
+			/* add tics to columns names */
+			$sql .=  str_replace(",", "`, `", $no_blanks) . '`)';
 		}
 
-		foreach ($data['keys'] as $key) {
-			if (isset($key['name'])) {
-				$sql .= ",\n KEY `" . $key['name'] . '` (`' . $key['columns'] . '`)';
+		/* "normal" keys, multi-key columns are allowed, multiple keys per run are allowed as well */
+		if (isset($data['keys'])) {
+			foreach ($data['keys'] as $key) {
+				if (isset($key['name'])) {
+					$sql .= ",\n KEY `" . $key['name'] . '` (`';
+					if (isset($key['columns'])) {
+						/* remove blanks */
+						$no_blanks = str_replace(" ", "", $key['columns']);
+						/* add tics to columns names */
+						$sql .=  str_replace(",", "`, `", $no_blanks) . '`)';
+					}
+				}
 			}
 		}
+
+		/* "unique" keys, multi-key columns are allowed, multiple keys per run are allowed as well */
+		if (isset($data['unique'])) {
+			foreach ($data['unique'] as $unique) {
+				if (isset($unique['name'])) {
+					$sql .= ",\n UNIQUE KEY `" . $unique['name'] . '` (`';
+					if (isset($unique['columns'])) {
+						/* remove blanks */
+						$no_blanks = str_replace(" ", "", $unique['columns']);
+						/* add tics to columns names */
+						$sql .=  str_replace(",", "`, `", $no_blanks) . '`)';
+					}
+				}
+			}
+		}
+
 		$sql .= ') TYPE = ' . $data['type'];
 
 		if (isset($data['comment'])) {
