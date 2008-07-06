@@ -18,6 +18,7 @@ Cacti CHANGELOG
 -bug#0001240: SNMP string cleanup removes too many '=' signs
 -bug#0001244: missing closing </form> on host.php
 -bug#0001247: snmp ping won't work for snmp v3
+-bug: host save failed in FireFox 3 for non-SNMP V3 hosts, complaining about "password mismatch"
 -bug: remove graph permissions if graph is removed
 -bug: remove host permissions if host is removed
 -bug: initialization of snmp_auth when using SNMP=NONE
