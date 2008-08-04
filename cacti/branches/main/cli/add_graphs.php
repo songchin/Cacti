@@ -341,16 +341,17 @@ if (sizeof($parms)) {
 
 	if ($graph_type == "cg") {
 		$existsAlready = db_fetch_cell("SELECT id FROM graph_local WHERE graph_template_id=$templateId AND host_id=$hostId");
-		$dataSourceId  = db_fetch_cell("SELECT DISTINCT
+		$dataSourceId  = db_fetch_cell("SELECT
 			data_template_rrd.local_data_id
 			FROM graph_templates_item, data_template_rrd
 			WHERE graph_templates_item.local_graph_id = " . $existsAlready . "
-			AND graph_templates_item.task_item_id = data_template_rrd.id");
+			AND graph_templates_item.task_item_id = data_template_rrd.id
+			LIMIT 1");
 
 		if ((isset($existsAlready)) &&
 			($existsAlready > 0) &&
 			(!$force)) {
-			echo "ERROR: Not Adding Graph - this graph already exists - graph-id: ($existsAlready) - data-source-id: ($dataSourceId)\n";
+			echo "NOTE: Not Adding Graph - this graph already exists - graph-id: ($existsAlready) - data-source-id: ($dataSourceId)\n";
 			exit(1);
 		}else{
 			$returnArray = create_complete_graph_from_template($templateId, $hostId, "", $values["cg"]);
@@ -364,13 +365,14 @@ if (sizeof($parms)) {
 			update_graph_title_cache($returnArray["local_graph_id"]);
 		}
 
-		push_out_host($hostId,0);
-
-		$dataSourceId = db_fetch_cell("SELECT DISTINCT
+		$dataSourceId = db_fetch_cell("SELECT
 			data_template_rrd.local_data_id
 			FROM graph_templates_item, data_template_rrd
 			WHERE graph_templates_item.local_graph_id = " . $returnArray["local_graph_id"] . "
-			AND graph_templates_item.task_item_id = data_template_rrd.id");
+			AND graph_templates_item.task_item_id = data_template_rrd.id
+			LIMIT 1");
+
+		push_out_host($hostId, $dataSourceId);
 
 		echo "Graph Added - graph-id: (" . $returnArray["local_graph_id"] . ") - data-source-id: ($dataSourceId)\n";
 	}elseif ($graph_type == "ds") {
@@ -412,13 +414,14 @@ if (sizeof($parms)) {
 						update_graph_title_cache($existsAlready);
 					}
 
-					$dataSourceId = db_fetch_cell("SELECT DISTINCT
+					$dataSourceId = db_fetch_cell("SELECT
 						data_template_rrd.local_data_id
 						FROM graph_templates_item, data_template_rrd
 						WHERE graph_templates_item.local_graph_id = " . $existsAlready . "
-						AND graph_templates_item.task_item_id = data_template_rrd.id");
+						AND graph_templates_item.task_item_id = data_template_rrd.id
+						LIMIT 1");
 
-					echo "ERROR: Not Adding Graph - this graph already exists - graph-id: ($existsAlready) - data-source-id: ($dataSourceId)\n";
+					echo "NOTE: Not Adding Graph - this graph already exists - graph-id: ($existsAlready) - data-source-id: ($dataSourceId)\n";
 
 					continue;
 				}
@@ -435,16 +438,17 @@ if (sizeof($parms)) {
 					update_graph_title_cache($returnArray["local_graph_id"]);
 				}
 
-				$dataSourceId = db_fetch_cell("SELECT DISTINCT
+				$dataSourceId = db_fetch_cell("SELECT
 					data_template_rrd.local_data_id
 					FROM graph_templates_item, data_template_rrd
 					WHERE graph_templates_item.local_graph_id = " . $returnArray["local_graph_id"] . "
-					AND graph_templates_item.task_item_id = data_template_rrd.id");
+					AND graph_templates_item.task_item_id = data_template_rrd.id
+					LIMIT 1");
+
+				push_out_host($hostId, $dataSourceId);
 
 				echo "Graph Added - graph-id: (" . $returnArray["local_graph_id"] . ") - data-source-id: ($dataSourceId)\n";
 			}
-
-			push_out_host($hostId,0);
 		}else{
 			echo "ERROR: Could not find snmp-field " . $dsGraph["snmpField"] . " (" . $dsGraph["snmpValue"] . ") for host-id " . $hostId . " (" . $hosts[$hostId]["hostname"] . ")\n";
 			echo "Try --host-id=" . $hostId . " --list-snmp-fields\n";
