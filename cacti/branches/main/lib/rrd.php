@@ -96,8 +96,28 @@ function rrdtool_execute($command_line, $log_to_stdout, $output_flag, $rrd_struc
 			session_write_close();
 			$fp = popen(read_config_option("path_rrdtool") . escape_command(" $command_line"), "r");
 		}else{
-			fwrite(rrd_get_fd($rrd_struc, RRDTOOL_PIPE_CHILD_READ), escape_command(" $command_line") . "\r\n");
-			fflush(rrd_get_fd($rrd_struc, RRDTOOL_PIPE_CHILD_READ));
+			$i = 0;
+
+			while (1) {
+				if (fwrite(rrd_get_fd($rrd_struc, RRDTOOL_PIPE_CHILD_READ), escape_command(" $command_line") . "\r\n") == false) {
+					cacti_log("ERROR: Detected RRDtool Crash attempting to perform write");
+					$i++;
+
+					$rrd_struc = rrd_init();
+
+					if ($i > 4) {
+						cacti_log("FATAL: RRDtool Restart Attempts Exceeded.  Giving up on command.");
+
+						break;
+					}
+
+					continue;
+				}else{
+					fflush(rrd_get_fd($rrd_struc, RRDTOOL_PIPE_CHILD_READ));
+
+					break;
+				}
+			}
 		}
 	}elseif (CACTI_SERVER_OS == "win32") {
 		/* an empty $rrd_struc array means no fp is available */
@@ -105,8 +125,28 @@ function rrdtool_execute($command_line, $log_to_stdout, $output_flag, $rrd_struc
 			session_write_close();
 			$fp = popen(read_config_option("path_rrdtool") . escape_command(" $command_line"), "rb");
 		}else{
-			fwrite(rrd_get_fd($rrd_struc, RRDTOOL_PIPE_CHILD_READ), escape_command(" $command_line") . "\r\n");
-			fflush(rrd_get_fd($rrd_struc, RRDTOOL_PIPE_CHILD_READ));
+			$i = 0;
+
+			while (1) {
+				if (fwrite(rrd_get_fd($rrd_struc, RRDTOOL_PIPE_CHILD_READ), escape_command(" $command_line") . "\r\n") == false) {
+					cacti_log("ERROR: Detected RRDtool Crash attempting to perform write");
+					$i++;
+
+					$rrd_struc = rrd_init();
+
+					if ($i > 4) {
+						cacti_log("FATAL: RRDtool Restart Attempts Exceeded.  Giving up on command.");
+
+						break;
+					}
+
+					continue;
+				}else{
+					fflush(rrd_get_fd($rrd_struc, RRDTOOL_PIPE_CHILD_READ));
+
+					break;
+				}
+			}
 		}
 	}
 
