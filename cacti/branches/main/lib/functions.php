@@ -195,6 +195,14 @@ function read_default_config_option($config_name) {
 	}
 }
 
+/* set_config_option - sets/updates a cacti config option with the given value.
+   @arg $config_name - the name of the configuration setting as specified $settings array
+   @arg $value       - the values to be saved
+   @returns          - void */
+function set_config_option($config_name, $value) {
+	db_execute("REPLACE INTO settings SET name='$config_name', $value='$value'");
+}
+
 /* read_config_option - finds the current value of a Cacti configuration setting
    @arg $config_name - the name of the configuration setting as specified $settings array
      in 'include/global_settings.php'
@@ -407,6 +415,25 @@ function array_rekey($array, $key, $key_value) {
 	}
 
 	return $ret_array;
+}
+
+/* timer start function */
+function timer_start() {
+	global $timer_start;
+
+	list($micro,$seconds) = split(" ", microtime());
+	$timer_start = $seconds + $micro;
+}
+
+/* timer end/step function */
+function timer_end($message = "default") {
+	global $timer_start;
+
+	list($micro,$seconds) = split(" ", microtime());
+	$timer_end = $seconds + $micro;
+
+	echo "TIMER: '$message' Time:'" . ($timer_end - $timer_start) . "' seconds\n";
+	$timer_start = $timer_end;
 }
 
 /* strip_newlines - removes \n\r from lines
