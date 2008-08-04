@@ -112,7 +112,7 @@ function upgrade_to_0_8_8() {
 
 
 	/* add rrd_compute_rpn for data source items */
-	db_install_execute("0.8.7a", "ALTER TABLE `data_template_rrd` ADD COLUMN `t_rrd_compute_rpn` CHAR(2) DEFAULT NULL AFTER `rrd_minimum`, ADD COLUMN `rrd_compute_rpn` VARCHAR(150) DEFAULT '' AFTER `t_rrd_compute_rpn`;");
+	db_install_execute("0.8.8", "ALTER TABLE `data_template_rrd` ADD COLUMN `t_rrd_compute_rpn` CHAR(2) DEFAULT NULL AFTER `rrd_minimum`, ADD COLUMN `rrd_compute_rpn` VARCHAR(150) DEFAULT '' AFTER `t_rrd_compute_rpn`;");
 
 	/* add --alt-y-grid as an option */
 	db_install_execute("0.8.8", "ALTER TABLE `graph_templates_graph` ADD COLUMN `t_alt_y_grid` CHAR(2) DEFAULT 0 AFTER `auto_scale_rigid`, ADD COLUMN `alt_y_grid` CHAR(2) DEFAULT '' AFTER `t_alt_y_grid`;");
