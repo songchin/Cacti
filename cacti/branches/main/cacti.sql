@@ -2868,3 +2868,33 @@ CREATE TABLE version (
 --
 
 INSERT INTO version VALUES ('new_install');
+
+
+-- 
+-- Table structure for table `log`
+-- 
+
+CREATE TABLE `log` (
+  `id` bigint(20) unsigned NOT NULL default '0',
+  `timestamp` datetime NOT NULL default '0000-00-00 00:00:00',
+  `facility` tinyint(1) unsigned NOT NULL default '0',
+  `severity` int(1) NOT NULL default '0',
+  `poller_id` smallint(5) unsigned NOT NULL default '0',
+  `host_id` mediumint(8) unsigned NOT NULL default '0',
+  `data_id` mediumint(8) unsigned NOT NULL default '0',
+  `username` varchar(100) NOT NULL default 'system',
+  `source` varchar(50) NOT NULL default 'localhost',
+  `plugin_name` varchar(64) NOT NULL default '',
+  `message` text NOT NULL,
+  PRIMARY KEY  (`id`),
+  KEY `facility` (`facility`),
+  KEY `severity` (`severity`),
+  KEY `host_id` (`host_id`),
+  KEY `data_id` (`host_id`),
+  KEY `poller_id` (`poller_id`),
+  KEY `username` (`username`),
+  KEY `timestamp` (`timestamp`),
+  KEY `plugin_name` (`plugin_name`)
+) TYPE=MyISAM;
+
+
