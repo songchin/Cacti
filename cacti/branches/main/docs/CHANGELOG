@@ -76,6 +76,7 @@ Cacti CHANGELOG
 -feature: Plugin Architecture is now part of main Cacti code
 -feature: api_plugin_db_table_create allows for multi-column indices and more than one key per table
 -feature: Add command line Database upgrade script
+-feature: Add api call to associate graphs with their data sources
 
 
 0.8.7b
