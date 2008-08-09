@@ -22,7 +22,7 @@
  +-------------------------------------------------------------------------+
 */
 
-include(CACTI_BASE_PATH . "/include/global.php");
+include("./include/global.php");
 
 $user = db_fetch_row("select * from user_auth where id=" . $_SESSION["sess_user_id"]);
 
