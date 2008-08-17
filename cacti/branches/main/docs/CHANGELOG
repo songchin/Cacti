@@ -19,6 +19,7 @@ Cacti CHANGELOG
 -bug#0001244: missing closing </form> on host.php
 -bug#0001247: snmp ping won't work for snmp v3
 -bug#0001230: poller stops updating rrd files
+-bug#0001262: Do not allow deletion of Graph Export User
 -bug: host save failed in FireFox 3 for non-SNMP V3 hosts, complaining about "password mismatch"
 -bug: remove graph permissions if graph is removed
 -bug: remove host permissions if host is removed
