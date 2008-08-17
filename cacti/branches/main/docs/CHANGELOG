@@ -22,7 +22,7 @@ Cacti CHANGELOG
 -bug#0001230: poller stops updating rrd files
 -bug#0001262: Do not allow deletion of Graph Export User
 -bug#0001281: ICMP Ping fails if an octet == 255
--bug#:0001288: A host with ICMP ping selected as method does not properly perform ping
+-bug#0001288: A host with ICMP ping selected as method does not properly perform ping
 -bug: host save failed in FireFox 3 for non-SNMP V3 hosts, complaining about "password mismatch"
 -bug: remove graph permissions if graph is removed
 -bug: remove host permissions if host is removed
@@ -81,7 +81,6 @@ Cacti CHANGELOG
 -feature: api_plugin_db_table_create allows for multi-column indices and more than one key per table
 -feature: Add command line Database upgrade script
 -feature: Add api call to associate graphs with their data sources
--feature: Allow ICMP ping in certain UNIX/Linux variants from UI
 
 0.8.7b
 -bug#0000855: Unnecessary (and faulty) DEF generation for CF:AVERAGE
