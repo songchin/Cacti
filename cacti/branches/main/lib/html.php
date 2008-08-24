@@ -171,6 +171,7 @@ function html_graph_area(&$graph_array, $no_graphs_message = "", $extra_url_args
 							<td valign='top' style='padding: 3px;' class='noprint'>
 								<a href='<?php print $config['url_path']; ?>graph.php?action=zoom&local_graph_id=<?php print $graph["local_graph_id"];?>&rra_id=0&<?php print $extra_url_args;?>'><img src='<?php print $config['url_path']; ?>images/graph_zoom.gif' border='0' alt='Zoom Graph' title='Zoom Graph' style='padding: 3px;'></a><br>
 								<a href='<?php print $config['url_path']; ?>graph_xport.php?local_graph_id=<?php print $graph["local_graph_id"];?>&rra_id=0&<?php print $extra_url_args;?>'><img src='<?php print $config['url_path']; ?>images/graph_query.png' border='0' alt='CSV Export' title='CSV Export' style='padding: 3px;'></a><br>
+								<a href='<?php print $config['url_path']; ?>graph.php?action=properties&local_graph_id=<?php print $graph["local_graph_id"];?>&rra_id=0&<?php print $extra_url_args;?>'><img src='<?php print $config['url_path']; ?>images/graph_properties.gif' border='0' alt='Graph Source/Properties' title='Graph Source/Properties' style='padding: 3px;'></a><br>
 								<img src='<?php print $config['url_path']; ?>images/graph_page_top.gif' onClick='javascript:document.getElementById("graph_tree_content").scrollTop=0' border='0' alt='Page Top' title='Page Top' style='padding: 3px;'><br>
 							</td>
 						</tr>
@@ -216,6 +217,7 @@ function html_graph_thumbnail_area(&$graph_array, $no_graphs_message = "", $extr
 						<td valign='top' style='padding: 3px;'>
 							<a href='<?php print $config['url_path']; ?>graph.php?action=zoom&local_graph_id=<?php print $graph["local_graph_id"];?>&rra_id=0&<?php print $extra_url_args;?>'><img src='<?php print $config['url_path']; ?>images/graph_zoom.gif' border='0' alt='Zoom Graph' title='Zoom Graph' style='padding: 3px;'></a><br>
 							<a href='<?php print $config['url_path']; ?>graph_xport.php?local_graph_id=<?php print $graph["local_graph_id"];?>&rra_id=0&<?php print $extra_url_args;?>'><img src='<?php print $config['url_path']; ?>images/graph_query.png' border='0' alt='CSV Export' title='CSV Export' style='padding: 3px;'></a><br>
+							<a href='<?php print $config['url_path']; ?>graph.php?action=properties&local_graph_id=<?php print $graph["local_graph_id"];?>&rra_id=0&<?php print $extra_url_args;?>'><img src='<?php print $config['url_path']; ?>images/graph_properties.gif' border='0' alt='Graph Source/Properties' title='Graph Source/Properties' style='padding: 3px;'></a><br>
 							<img src='<?php print $config['url_path']; ?>images/graph_page_top.gif' onClick='javascript:document.getElementById("graph_tree_content").scrollTop=0' border='0' alt='Page Top' title='Page Top' style='padding: 3px;'><br>
 						</td>
 					</tr>
