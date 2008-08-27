@@ -55,7 +55,7 @@ function grow_graph_tree($tree_id, $start_branch, $user_id, $options) {
 	/* include time span selector */
 	if (read_graph_config_option("timespan_sel") == "on") {
 		html_graph_start_box(3, false);
-		include(CACTI_BASE_PATH . "/include/html/inc_timespan_selector.php");
+		include(CACTI_BASE_PATH . "/lib/timespan_selector.php");
 		html_graph_end_box();
 	}
 
@@ -667,7 +667,7 @@ function grow_right_pane_tree($tree_id, $leaf_id, $host_group_data) {
 	/* include time span selector */
 	if (read_graph_config_option("timespan_sel") == "on") {
 		html_graph_start_box(3, false);
-		include(CACTI_BASE_PATH . "/include/html/inc_timespan_selector.php");
+		include(CACTI_BASE_PATH . "/lib/timespan_selector.php");
 		html_graph_end_box();
 	}
 
