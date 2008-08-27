@@ -239,7 +239,6 @@ function finalize_timespan(&$timespan) {
 /* establish graph timeshift from either a user select or the default */
 function set_timeshift() {
 	global $config, $graph_timeshifts;
-	include(CACTI_BASE_PATH . "/include/global_arrays.php");
 
 	# no current timeshift: get default timeshift
 	if ((!isset($_SESSION["sess_current_timeshift"])) ||

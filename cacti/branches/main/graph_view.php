@@ -25,7 +25,7 @@
 $guest_account = true;
 include("./include/auth.php");
 include_once(CACTI_BASE_PATH . "/lib/html_tree.php");
-include_once(CACTI_BASE_PATH . "/include/html/inc_timespan_settings.php");
+include_once(CACTI_BASE_PATH . "/lib/timespan_settings.php");
 include_once(CACTI_BASE_PATH . "/include/top_graph_header.php");
 
 /* ================= input validation ================= */
