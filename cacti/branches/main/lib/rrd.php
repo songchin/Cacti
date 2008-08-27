@@ -349,9 +349,7 @@ function rrdtool_function_update($update_cache_array, $rrd_struc) {
    @arg $data_source_id - data source id
    @rerturn - (array) an array containing issues with the rrdtool file definition vs data source */
 function rrd_check($data_source_id) {
-	global $config;
-
-	include_once(CACTI_BASE_PATH . "/include/global_arrays.php");
+	global $config, $rrd_tune_array;
 
 	$data_source_name = get_data_source_item_name($rrd_tune_array["data_source_id"]);
 	$data_source_type = $data_source_types{$rrd_tune_array["data-source-type"]};
@@ -364,9 +362,7 @@ function rrd_check($data_source_id) {
    @arg $data_source_id - data source id
    @rerturn - 1 success, 2 false */
 function rrd_repair($data_source_id) {
-	global $config;
-
-	include_once(CACTI_BASE_PATH . "/include/global_arrays.php");
+	global $config, $rrd_tune_array;
 
 	$data_source_name = get_data_source_item_name($rrd_tune_array["data_source_id"]);
 	$data_source_type = $data_source_types{$rrd_tune_array["data-source-type"]};
