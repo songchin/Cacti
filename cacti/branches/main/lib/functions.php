@@ -1288,8 +1288,6 @@ function generate_graph_def_name($graph_item_id) {
 function generate_data_input_field_sequences($string, $data_input_id) {
 	global $config, $registered_cacti_names;
 
-	include (CACTI_BASE_PATH . "/include/global_arrays.php");
-
 	if (preg_match_all("/<([_a-zA-Z0-9]+)>/", $string, $matches)) {
 		$j = 0;
 		for ($i=0; ($i < count($matches[1])); $i++) {
