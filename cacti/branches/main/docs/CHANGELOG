@@ -10,6 +10,7 @@ Cacti CHANGELOG
 -bug#0001160: In Suggested Values editor, name and field are reversed. Include column headers
 -bug#0001166: Installer does not properly handle disabled guest_user conversion
 -bug#0001174: Unidentified index warning
+-bug#0001176: Problem validating IPv6 addresses
 -bug#0001182: Subdirectories are not secure and allow browsing
 -bug#0001191: Faulty IP address validation by ping.php script
 -bug#0001204: since upgrade to 0.87b the hosts with ip address with 255 are down and have no datas
@@ -48,6 +49,7 @@ Cacti CHANGELOG
 -bug: cli/add_tree.php requires as least a host-id for --list-graphs
 -bug: add_tree.php did not allow nodes with propagating sort options
 -bug: when adding a tree node via the api numeric and natural were reversed
+-bug: Ping and SNMP should test both conditions
 -documentation: Explaining Cacti Special Data Sources used on CDEFs, lots of CDEF examples using Special data Sources
 -documentation: Documentation of specific rrdtool feature
 -documentation: Use of SNMP exec option up to net-snmp 5.3
@@ -94,6 +96,7 @@ Cacti CHANGELOG
 -feature: api_plugin_db_table_create allows for multi-column indices and more than one key per table
 -feature: Add command line Database upgrade script
 -feature: Add api call to associate graphs with their data sources
+-feature: New availability option "Ping or SNMP"
 
 0.8.7b
 -bug#0000855: Unnecessary (and faulty) DEF generation for CF:AVERAGE
