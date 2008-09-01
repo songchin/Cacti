@@ -1,5 +1,6 @@
 Cacti CHANGELOG
 
+-bug#0000486: RRA template edit allows invalid XFF values
 -bug#0001085: LDAP enabled status not maintained on upgrade from 0.8.6j to 0.8.7
 -bug#0001090: LDAP authenication fails when using quote character in password
 -bug#0001100: spine hangs on unreachable hosts
