@@ -1,6 +1,7 @@
 Cacti CHANGELOG
 
 -bug#0001085: LDAP enabled status not maintained on upgrade from 0.8.6j to 0.8.7
+-bug#0001090: LDAP authenication fails when using quote character in password
 -bug#0001100: spine hangs on unreachable hosts
 -bug#0001105: add_graphs.php --list-snmp-values for all available host snmp-fields
 -bug#0001135: Graph export feature not exporting as per user level selected
