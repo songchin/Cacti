@@ -652,10 +652,10 @@ function host_edit() {
 				</td>
 			</tr>
 			<tr>
+				<td class="textHeader" style="line-height: 1.0em;">
 				<?php if (($host["availability_method"] == AVAIL_SNMP) ||
 					($host["availability_method"] == AVAIL_SNMP_AND_PING) ||
 					($host["availability_method"] == AVAIL_SNMP_OR_PING)) { ?>
-				<td class="textHeader" style="line-height: 1.0em;">
 					SNMP Information<br><br>
 					<span style="font-size: 11px;">
 					<?php
@@ -698,7 +698,7 @@ function host_edit() {
 								$host["snmp_auth_protocol"], $host["snmp_priv_passphrase"], $host["snmp_priv_protocol"],
 								$host["snmp_context"], $host["snmp_port"], $host["snmp_timeout"], read_config_option("snmp_retries"), SNMP_WEBUI);
 
-							print "<strong>System:</strong> $snmp_system<br>\n";
+							print "<strong>System:</strong>" . html_split_string($snmp_system) . "<br>\n";
 							$days      = intval($snmp_uptime / (60*60*24*100));
 							$remainder = $snmp_uptime % (60*60*24*100);
 							$hours     = intval($remainder / (60*60*100));
@@ -713,8 +713,10 @@ function host_edit() {
 					}
 					?>
 					</span>
-				</td>
-				<?php }else if ($host["availability_method"] == AVAIL_PING) {
+				<?php }
+				if (($host["availability_method"] == AVAIL_PING) ||
+					($host["availability_method"] == AVAIL_SNMP_AND_PING) ||
+					($host["availability_method"] == AVAIL_SNMP_OR_PING)) {
 					/* create new ping socket for host pinging */
 					$ping = new Net_Ping;
 
@@ -732,14 +734,12 @@ function host_edit() {
 					}
 
 				?>
-				<td class="textHeader">
 					Ping Results<br>
 					<span style="font-size: 10px; font-weight: normal; color: <?php print $color; ?>; font-family: monospace;">
 					<?php print $ping->ping_response; ?>
 					</span>
 				</td>
-				<?php }else{ ?>
-				<td class="textHeader">
+				<?php }else if ($host["availability_method"] == AVAIL_NONE) { ?>
 					No Availability Check In Use<br>
 				</td>
 				<?php } ?>
