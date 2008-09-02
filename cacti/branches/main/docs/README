@@ -15,9 +15,13 @@ for data gathering in crontab.
 
 Cacti has been successfully run on the following operating systems:
 
-Redhat Enterprise Linux
-Fedora Core
-FreeBSD 
+Redhat Enterprize Linux
+Fedora Core 4
+Fedora Core 5
+Fedora Core 6
+FreeBSD 4.2
+FreeBSD 4.8
+FreeBSD 5.x
 Windows 2000 Professional/Server
 Windows XP Professional
 Windows 2003 Professional/Server
@@ -31,7 +35,7 @@ Solaris 10
 
 A Note About RRDtool:
 
-RRDTool is available in 2 versions, 1.0.x and 1.2.x, both are supported
+RRDTool is available in 3 versions, 1.0.x, 1.2.x and 1.3.x, are supported
 by Cacti.  Please remember to confirm your Cacti settings for the RRDtool
 version if you having problem rendering graphs.
 
