@@ -269,6 +269,12 @@ $settings = array(
 			"friendly_name" => "Other Defaults",
 			"method" => "spacer",
 			),
+		"require_ssl" => array(
+			"friendly_name" => "Require SSL Encryption",
+			"description" => "Redirect all HTTP connections to HTTPS.",
+			"default" => "off",
+			"method" => "checkbox"
+			),
 		"deletion_verification" => array(
 			"friendly_name" => "Deletion Verification",
 			"description" => "Prompt user before item deletion.",

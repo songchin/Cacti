@@ -139,6 +139,13 @@ api_plugin_hook('config_arrays');
 api_plugin_hook('config_settings');
 api_plugin_hook('config_form');
 
+if (read_config_option('require_ssl') == 'on') {
+	if (!isset($_SERVER['HTTPS']) && isset($_SERVER['HTTP_HOST']) && isset($_SERVER['REQUEST_URI'])) {
+		Header('Location: https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] . "\n\n");
+		exit;
+	}
+}
+
 if ((!in_array(basename($_SERVER["PHP_SELF"]), $no_http_header_files, true)) && ($_SERVER["PHP_SELF"] != "")) {
 	/* Sanity Check on "Corrupt" PHP_SELF */
 	if ((!is_file($_SERVER["PHP_SELF"])) && (!is_file(CACTI_BASE_PATH . '/' . $_SERVER["PHP_SELF"]))) {
