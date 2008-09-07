@@ -873,6 +873,7 @@ function host_edit() {
 				if (am.length == 4) {
 					am.remove(1);
 					am.remove(1);
+					am.remove(1);
 				}
 
 				/* set the index to something valid, like "ping" */
@@ -891,7 +892,8 @@ function host_edit() {
 					var b=document.createElement('option');
 					var c=document.createElement('option');
 					var d=document.createElement('option');
-
+					var e=document.createElement('option');
+	
 					a.value="0";
 					a.text="None";
 					addSelectItem(a,am);
@@ -899,6 +901,10 @@ function host_edit() {
 					b.value="1";
 					b.text="Ping and SNMP";
 					addSelectItem(b,am);
+
+					e.value="4";
+					e.text="Ping or SNMP";
+					addSelectItem(e,am);
 
 					c.value="2";
 					c.text="SNMP";
@@ -946,7 +952,8 @@ function host_edit() {
 
 					break;
 				case "1": // ping and snmp
-				case 3: // ping
+				case "3": // ping
+				case "4": // ping or snmp
 					if ((document.getElementById('row_ping_method').style.display == "none") ||
 						(document.getElementById('row_ping_method').style.display == undefined)) {
 						document.getElementById('ping_method').value=ping_method;
