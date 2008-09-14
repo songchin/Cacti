@@ -64,10 +64,10 @@ function html_start_box($title, $width, $background_color, $cell_padding, $align
 							<?php if ($collapsing) {?><td class="textHeaderDark" width="14">
 								<img id="<?php print $item_id . '_twisty';?>" src="<?php print $config['url_path']; ?>images/tw_open.gif" alt="Filter" border="0" align="absmiddle">
 							</td><?php } ?>
-							<td class="textHeaderDark"><?php print $title;?>
+							<td onMouseDown='return false' class="textHeaderDark"><?php print $title;?>
 							</td>
 							<?php if ($collapsing) {?><td class="textHeaderDark" width="1">
-								<img src="<?php print $config['url_path']; ?>images/transparent_pixel.gif" alt='' <?php print $ani2;?>>
+								<img style='display:none;' src="<?php print $config['url_path']; ?>images/transparent_pixel.gif" alt='' <?php print $ani2;?>>
 							</td><?php } if ($add_text != "") {?>
 							<td class="textHeaderDark" align="right">
 								<strong><a class="linkOverDark" <?php print $ani3;?> href="<?php print $add_text;?>">Add</a>&nbsp;</strong>
@@ -82,7 +82,7 @@ function html_start_box($title, $width, $background_color, $cell_padding, $align
 }
 
 function html_start_box_dq($query_name, $query_id, $host_id, $colspan, $width, $background_color, $cell_padding, $align) {
-	global $colors; 
+	global $colors;
 
 	$temp_string = str_replace("strong", "", $query_name);
 	if (strpos($temp_string, "[")) {
@@ -94,7 +94,7 @@ function html_start_box_dq($query_name, $query_id, $host_id, $colspan, $width, $
 	}else{
 		$item_id = "item_" . rand(255, 65535);
 	}
-	
+
 	?>
 		<table class='startBoxHeader' cellpadding="0" cellspacing="0" border="0" width="100%">
 			<tr class='rowHeader'>
@@ -801,9 +801,9 @@ function draw_menu($user_menu = "") {
 			$ani2 = "onload='changeMenuState(\"" . $id . "\", true)'";
 
 			print "\t\t\t<tr class='menuMain' nowrap $ani>
-				<td valign='middle'>
+				<td onMouseDown='return false' valign='middle'>
 					<img id='tw_" . $id . "' src='images/tw_open.gif' align='absmiddle' alt='Menu Item'>$header_name
-					<img src='images/transparent_pixel.gif' $ani2>
+					<img style='display:none;' src='images/transparent_pixel.gif' $ani2>
 				</td>
 			</tr>
 			<tr class='mainMenu' id='menu_$id'>
