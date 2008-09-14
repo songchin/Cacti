@@ -386,8 +386,8 @@ function grow_dropdown_tree($tree_id, $form_name, $selected_tree_item_id) {
 
 	if (sizeof($tree) > 0) {
 	foreach ($tree as $leaf) {
-	    	$tier = tree_tier($leaf["order_key"]);
-	    	$indent = str_repeat("---", ($tier));
+		$tier = tree_tier($leaf["order_key"]);
+		$indent = str_repeat("---", ($tier));
 
 		if ($selected_tree_item_id == $leaf["id"]) {
 			$html_selected = " selected";
@@ -395,7 +395,7 @@ function grow_dropdown_tree($tree_id, $form_name, $selected_tree_item_id) {
 			$html_selected = "";
 		}
 
-	    	print "<option value='" . $leaf["id"] . "'$html_selected>$indent " . $leaf["title"] . "</option>\n";
+		print "<option value='" . $leaf["id"] . "'$html_selected>$indent " . $leaf["title"] . "</option>\n";
 	}
 	}
 
