@@ -58,19 +58,19 @@ api_plugin_hook('page_head');
 			<?php print draw_navigation_text() . "\n";?>
 		</div>
 		<div style='float:right'>
-			<?php 
-			if (read_config_option("auth_method") != 0) { 
-							
+			<?php
+			if (read_config_option("auth_method") != 0) {
+
 				/* setup date format */
 				$date_fmt = read_graph_config_option("default_date_format");
 				$datechar = read_graph_config_option("default_datechar");
-			
+
 				switch ($datechar) {
 					case GDC_HYPHEN: 	$datechar = "-"; break;
 					case GDC_SLASH: 	$datechar = "/"; break;
 					case GDC_DOT:	 	$datechar = "."; break;
 				}
-			
+
 				switch ($date_fmt) {
 					case GD_MO_D_Y:
 						$date = "m" . $datechar . "d" . $datechar . "Y H:i:s";
@@ -91,14 +91,14 @@ api_plugin_hook('page_head');
 						$date = "Y" . $datechar . "M" . $datechar . "d H:i:s";
 						break;
 				}
-				
+
 				?><strong><?php echo date("D, " . $date . " T");?></strong>&nbsp;&nbsp;&nbsp;
 				Logged in as <strong><?php print db_fetch_cell("select username from user_auth where id=" . $_SESSION["sess_user_id"]);?></strong> (<a href="<?php echo $config['url_path']; ?>logout.php">Logout</a>)
 			<?php } ?>
 		</div>
 	</div>
 </div>
-<div id='wrapper'>
+<div id='wrapper' style='opacity:0;'>
 	<div id='menu'>
 		<?php draw_menu();?>
 		<div id='about'><a href='<?php echo $config['url_path']; ?>about.php'><img src="<?php echo $config['url_path']; ?>images/cacti_logo.gif" align="absmiddle" alt="Cacti" border="0"></a></div>

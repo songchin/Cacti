@@ -799,6 +799,43 @@ function pageInitialize() {
 
 	/* run page onLoad functions */
 	runOnLoadFunctions();
+
+	/* restore the page visibility */
+	transitionPage();
+}
+
+function transitionPage() {
+	if (browser != "IE") {
+		if (document.getElementById("graph_tree")) {
+			document.getElementById("graph_tree").style.opacity         = 1;
+			document.getElementById("graph_tree_content").style.opacity = 0;
+			document.getElementById("wrapper").style.opacity            = 1;
+			transition = setInterval(function() { fadeIn(document.getElementById("graph_tree_content")) }, 25);
+		}else{
+			document.getElementById("menu").style.opacity    = 1;
+			document.getElementById("content").style.opacity = 0;
+			document.getElementById("wrapper").style.opacity = 1;
+			transition = setInterval(function() { fadeIn(document.getElementById("content")) }, 25);
+		}
+	}
+}
+
+function fadeIn(object) {
+	if (browser != "IE") {
+		newEM = Number(object.style.opacity);
+
+		if ((newEM + 0.2) > 1) {
+			newEM = 1;
+		}else{
+			newEM = newEM + 0.4;
+		}
+
+		object.style.opacity = newEM;
+
+		if (newEM >= 1) {
+			clearInterval(transition);
+		}
+	}
 }
 
 function registerOnLoadFunction(page, function_name) {

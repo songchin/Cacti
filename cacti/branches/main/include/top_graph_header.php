@@ -182,7 +182,7 @@ $page_title = api_plugin_hook_function('page_title', 'Cacti');
 		</div>
 	</div>
 </div>
-<div id='wrapper'>
+<div id='wrapper' style='opacity:0;'>
 	<?php if ((read_graph_config_option("default_tree_view_mode") == "2") && (($_REQUEST["action"] == "tree") || ((isset($_REQUEST["view_type"]) ? $_REQUEST["view_type"] : "") == "tree"))) { ?>
 	<div id='graph_tree'>
 		<table border=0 cellpadding=0 cellspacing=0><tr><td><font size=-2><a style="font-size:7pt;text-decoration:none;color:silver" href="http://www.treemenu.net/" target=_blank></a></font></td></tr></table>
