@@ -589,6 +589,9 @@ function MouseDown(event) {
 function MouseMove(event) {
 	if (!event) event = window.event;
 
+	/* let's see how wide the page is */
+	var clWidth = document.getElementById("wrapper").clientWidth;
+
 	if (objTh) {
 		thSt    = event.clientX - MOUSTSTART_X + objThWidth;
 		tableSt = event.clientX - MOUSTSTART_X + objTableWidth;
@@ -617,11 +620,13 @@ function MouseMove(event) {
 			if (document.getElementById("menu") != null) {
 				document.getElementById("menu").style.width         = parseInt(divSt - 5) + "px";
 				document.getElementById("menu").style.marginLeft    = "0px";
-				document.getElementById("content").style.left = parseInt(divSt + 2) + "px";
+				document.getElementById("content").style.width      = parseInt(clWidth - divSt - 20) + "px";
+				document.getElementById("content").style.left       = parseInt(divSt + 2) + "px";
 			}else{
-				document.getElementById("graph_tree").style.width        = parseInt(divSt - 5) + "px";
-				document.getElementById("graph_tree").style.marginLeft   = "0px";
-				document.getElementById("graph_tree_content").style.left = parseInt(divSt + 2) + "px";
+				document.getElementById("graph_tree").style.width         = parseInt(divSt - 5) + "px";
+				document.getElementById("graph_tree").style.marginLeft    = "0px";
+				document.getElementById("graph_tree_content").style.width = parseInt(clWidth - divSt - 20) + "px";
+				document.getElementById("graph_tree_content").style.left  = parseInt(divSt + 2) + "px";
 			}
 
 			vSplitterClosed = false;
@@ -633,11 +638,13 @@ function MouseMove(event) {
 				document.getElementById("menu").style.width           = "0px";
 				document.getElementById("menu").style.marginLeft      = "-200px";
 				document.getElementById("content").style.left         = "2px";
+				document.getElementById("content").style.width        = parseInt(clWidth + 200) + "px"
 			}else{
-				document.getElementById("vsplitter").style.marginLeft    = "0px";
-				document.getElementById("graph_tree").style.width        = "0px";
-				document.getElementById("graph_tree").style.marginLeft   = "-200px";
-				document.getElementById("graph_tree_content").style.left = "2px";
+				document.getElementById("vsplitter").style.marginLeft     = "0px";
+				document.getElementById("graph_tree").style.width         = "0px";
+				document.getElementById("graph_tree").style.marginLeft    = "-200px";
+				document.getElementById("graph_tree_content").style.width = parseInt(clWidth + 200) + "px"
+				document.getElementById("graph_tree_content").style.left  = "2px";
 			}
 		}
 
@@ -707,7 +714,10 @@ function setFocus() {
 }
 
 function vSplitterPos() {
-	divSt           = parseInt(readCookieElement("menu", "vsplitter_last"), 10);
+	var divSt   = parseInt(readCookieElement("menu", "vsplitter_last"), 10);
+
+	/* let's see how wide the page is */
+	var clWidth = document.getElementById("wrapper").clientWidth;
 
 	vSplitterClosed = parseInt(readCookieElement("menu", "vsplitter_status"), 10);
 
@@ -720,27 +730,31 @@ function vSplitterPos() {
 
 	if (vSplitterClosed == 1) {
 		if (document.getElementById("menu") != null) {
-			document.getElementById("vsplitter").style.marginLeft    = "0px";
-			document.getElementById("menu").style.width              = "0px";
-			document.getElementById("menu").style.marginLeft         = "-200px";
-			document.getElementById("content").style.left            = "2px";
+			document.getElementById("vsplitter").style.marginLeft = "0px";
+			document.getElementById("menu").style.width           = "0px";
+			document.getElementById("menu").style.marginLeft      = "-200px";
+			document.getElementById("content").style.left         = "2px";
+			document.getElementById("content").style.width        = parseInt(clWidth - 20) + "px"
 		}else{
-			document.getElementById("vsplitter").style.marginLeft    = "0px";
-			document.getElementById("graph_tree").style.width        = "0px";
-			document.getElementById("graph_tree").style.marginLeft   = "-200px";
-			document.getElementById("graph_tree_content").style.left = "2px";
+			document.getElementById("vsplitter").style.marginLeft     = "0px";
+			document.getElementById("graph_tree").style.width         = "0px";
+			document.getElementById("graph_tree").style.marginLeft    = "-200px";
+			document.getElementById("graph_tree_content").style.left  = "2px";
+			document.getElementById("graph_tree_content").style.width = parseInt(clWidth - 20) + "px"
 		}
 	}else{
 		if (document.getElementById("menu") != null) {
-			document.getElementById("vsplitter").style.marginLeft    = divSt      + "px";
-			document.getElementById("menu").style.width              = menuWidth  + "px";
-			document.getElementById("menu").style.marginLeft         = "0px";
-			document.getElementById("content").style.left            = marginLeft + "px";
+			document.getElementById("vsplitter").style.marginLeft = divSt      + "px";
+			document.getElementById("menu").style.width           = menuWidth  + "px";
+			document.getElementById("menu").style.marginLeft      = "0px";
+			document.getElementById("content").style.left         = marginLeft + "px";
+			document.getElementById("content").style.width        = parseInt(clWidth - divSt - 20) + "px"
 		}else{
-			document.getElementById("vsplitter").style.marginLeft    = divSt      + "px";
-			document.getElementById("graph_tree").style.width        = menuWidth  + "px";
-			document.getElementById("graph_tree").style.marginLeft   = "0px";
-			document.getElementById("graph_tree_content").style.left = marginLeft + "px";
+			document.getElementById("vsplitter").style.marginLeft     = divSt      + "px";
+			document.getElementById("graph_tree").style.width         = menuWidth  + "px";
+			document.getElementById("graph_tree").style.marginLeft    = "0px";
+			document.getElementById("graph_tree_content").style.left  = marginLeft + "px";
+			document.getElementById("graph_tree_content").style.width = parseInt(clWidth - divSt - 20) + "px"
 		}
 	}
 
