@@ -403,7 +403,7 @@ function form_actions() {
 				api_tree_item_save(0, $_POST["tree_id"], TREE_ITEM_TYPE_HOST, $_POST["tree_item_id"], "", 0, read_graph_config_option("default_rra_id"), $selected_items[$i], 1, 1, false);
 			}
 		} else {
-			api_plugin_hook_function('device_action_execute', $_POST['drp_action']); 
+			api_plugin_hook_function('device_action_execute', $_POST['drp_action']);
 		}
 
 		header("Location: host.php");
@@ -631,33 +631,54 @@ function host_edit() {
 
 	display_output_messages();
 
+	$host_tabs = array(
+		"general" => "General",
+		"meta" => "Metadata",
+		"newgraphs" => "New Graphs",
+		"graphs" => "Graphs",
+		"datasources" => "Data Sources"
+	);
+
 	if (!empty($_GET["id"])) {
-		$host = db_fetch_row("select * from host where id=" . $_GET["id"]);
+		$host         = db_fetch_row("select * from host where id=" . $_GET["id"]);
+		$host_text    = "<strong>" . $host["description"] . "(" . $host["hostname"] . ")</strong>";
 		$header_label = "[edit: " . $host["description"] . "]";
 	}else{
 		$header_label = "[new]";
+		$host_text    = "New Host";
 	}
 
+	/* set the default settings category */
+	if (!isset($_GET["tab"])) {
+		/* there is no selected tab; select the first one */
+		$current_tab = array_keys($host_tabs);
+		$current_tab = $current_tab[0];
+	}else{
+		$current_tab = $_GET["tab"];
+	}
+
+	/* draw the categories tabs on the top of the page */
+	print "<table width='100%' cellspacing='0' cellpadding='0' align='center'><tr>";
+	print "<td><div class='tabs'>";
+
+	if (sizeof($host_tabs) > 0) {
+	foreach (array_keys($host_tabs) as $tab_short_name) {
+		print "<div class='tabDefault'><a " . (($tab_short_name == $current_tab) ? "class='tabSelected'" : "class='tabDefault'") . " href='host.php?action=edit" . (isset($_GET['id']) ? "&id=" . $_GET['id']: "") . "&tab=$tab_short_name'>$host_tabs[$tab_short_name]</a></div>";
+	}
+	}
+	print "</div>";
+
 	if (!empty($host["id"])) {
+		html_start_box($host_text, "100%", $colors["header"], "3", "center", "", true);
 		?>
 		<table width="100%" align="center">
 			<tr>
-				<td class="textInfo" colspan="2">
-					<?php print $host["description"];?> (<?php print $host["hostname"];?>)
-				</td>
-				<td class="textInfo" valign="top">
-					<span style="color: #c16921;">*</span><a href="graphs_new.php?host_id=<?php print $host["id"];?>">Create Graphs for this Host</a><br>
-					<span style="color: #c16921;">*</span><a href="data_sources.php?host_id=<?php print $host["id"];?>&ds_rows=30&filter=&template_id=-1&method_id=-1&page=1">Data Source List</a><br>
-					<span style="color: #c16921;">*</span><a href="graphs.php?host_id=<?php print $host["id"];?>&graph_rows=30&filter=&template_id=-1&page=1">Graph List</a>
-				</td>
-			</tr>
-			<tr>
-				<td class="textHeader" style="line-height: 1.0em;">
 				<?php if (($host["availability_method"] == AVAIL_SNMP) ||
 					($host["availability_method"] == AVAIL_SNMP_AND_PING) ||
 					($host["availability_method"] == AVAIL_SNMP_OR_PING)) { ?>
-					SNMP Information<br><br>
-					<span style="font-size: 11px;">
+				<td class="textInfo">
+					SNMP Information<br>
+					<span style="font-size: 11px; font-weight: normal;">
 					<?php
 					if ((($host["snmp_community"] == "") && ($host["snmp_username"] == "")) ||
 						($host["snmp_version"] == 0)) {
@@ -698,21 +719,22 @@ function host_edit() {
 								$host["snmp_auth_protocol"], $host["snmp_priv_passphrase"], $host["snmp_priv_protocol"],
 								$host["snmp_context"], $host["snmp_port"], $host["snmp_timeout"], read_config_option("snmp_retries"), SNMP_WEBUI);
 
-							print "<strong>System:</strong>" . html_split_string($snmp_system) . "<br>\n";
+							print "<strong>System:</strong> " . html_split_string($snmp_system,200) . "<br>\n";
 							$days      = intval($snmp_uptime / (60*60*24*100));
 							$remainder = $snmp_uptime % (60*60*24*100);
 							$hours     = intval($remainder / (60*60*100));
 							$remainder = $remainder % (60*60*100);
 							$minutes   = intval($remainder / (60*100));
-							print "<strong>Uptime:</strong> $snmp_uptime";
+							print "<strong>Uptime: </strong> $snmp_uptime";
 							print "&nbsp;($days days, $hours hours, $minutes minutes)<br>\n";
-							print "<strong>Hostname:</strong> $snmp_hostname<br>\n";
-							print "<strong>Location:</strong> $snmp_location<br>\n";
-							print "<strong>Contact:</strong> $snmp_contact<br>\n";
+							print "<strong>Hostname: </strong> $snmp_hostname<br>\n";
+							print "<strong>Location: </strong> $snmp_location<br>\n";
+							print "<strong>Contact: </strong> $snmp_contact<br>\n";
 						}
 					}
 					?>
 					</span>
+				</td>
 				<?php }
 				if (($host["availability_method"] == AVAIL_PING) ||
 					($host["availability_method"] == AVAIL_SNMP_AND_PING) ||
@@ -727,19 +749,23 @@ function host_edit() {
 					if ($ping->ping($host["availability_method"], $host["ping_method"],
 						$host["ping_timeout"], $host["ping_retries"])) {
 						$host_down = false;
-						$color     = "#000000";
+						$color     = "color:#000000";
+						$font      = "font-weight: normal;";
 					}else{
 						$host_down = true;
-						$color     = "#ff0000";
+						$color     = "color:#ff0000";
+						$font      = "font-weight:bold;";
 					}
 
 				?>
+				<td class="textInfo" style="vertical-align:top;">
 					Ping Results<br>
-					<span style="font-size: 10px; font-weight: normal; color: <?php print $color; ?>; font-family: monospace;">
+					<span style="font-size: 10px; <?php print $font . $color;?>;">
 					<?php print $ping->ping_response; ?>
 					</span>
 				</td>
 				<?php }else if ($host["availability_method"] == AVAIL_NONE) { ?>
+				<td class="textInfo">
 					No Availability Check In Use<br>
 				</td>
 				<?php } ?>
@@ -747,6 +773,7 @@ function host_edit() {
 		</table>
 		<?php
 	}
+	html_end_box(FALSE);
 
 	html_start_box("<strong>Devices</strong> $header_label", "100%", $colors["header"], "3", "center", "", true);
 
@@ -893,7 +920,7 @@ function host_edit() {
 					var c=document.createElement('option');
 					var d=document.createElement('option');
 					var e=document.createElement('option');
-	
+
 					a.value="0";
 					a.text="None";
 					addSelectItem(a,am);

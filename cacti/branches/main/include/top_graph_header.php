@@ -194,8 +194,10 @@ $page_title = api_plugin_hook_function('page_title', 'Cacti');
 		var obj;
 		obj = findObj(1);
 
-		if (!obj.isOpen) {
-			clickOnNode(1);
+		if (obj) {
+			if (!obj.isOpen) {
+				clickOnNode(1);
+			}
 		}
 
 		clickOnLink(2,'','main');
