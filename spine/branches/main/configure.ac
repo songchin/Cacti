@@ -50,7 +50,7 @@ ShLib="so"
 case $host_alias in
 *sparc-sun-solaris2.8)
   CPPFLAGS="$CPPFLAGS -D_POSIX_PTHREAD_SEMANTICS"
-  AC_DEFINE(SOLAR_THREAD, 1, [Correct issue areund Solaris threading model]);;
+  AC_DEFINE(SOLAR_THREAD, 1, [Correct issue around Solaris threading model]);;
 *solaris*)
   CPPFLAGS="$CPPFLAGS -D_POSIX_PTHREAD_SEMANTICS";;
 *freebsd*)
@@ -141,6 +141,31 @@ AC_STRUCT_TM
 # Checks for library functions.
 AC_TYPE_SIGNAL
 AC_CHECK_FUNCS(malloc calloc gettimeofday strerror strtoll)
+
+# ****************** Solaris Privileges Check ***********************
+
+# Check if usage of Solaris privileges support is possible
+AC_CHECK_HEADER(priv.h, [FOUND_PRIV_H=yes], [FOUND_PRIV_H=no])
+
+# If we should use the Solaris privileges support
+AC_MSG_CHECKING(whether we are using Solaris privileges)
+AC_ARG_ENABLE(solaris-priv,
+  [  --enable-solaris-priv   Enable support for the Solaris process privilege model (default: disabled)],
+  [ ENABLED_SOL_PRIV=$enableval ],
+  [ ENABLED_SOL_PRIV=no ]
+  )
+if test x$ENABLED_SOL_PRIV != xno; then
+  if test x$FOUND_PRIV_H != xno; then
+    AC_MSG_RESULT([yes])
+    AC_DEFINE([SOLAR_PRIV], [1],
+      [If upport for Solaris privileges should be enabled]
+    )
+  else
+    AC_MSG_RESULT([no])
+  fi
+else
+  AC_MSG_RESULT([no])
+fi
 
 # ****************** MySQL Checks ***********************
 
