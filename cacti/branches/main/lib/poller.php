@@ -276,6 +276,9 @@ function process_poller_output($rrdtool_pipe, $remainder = FALSE) {
 			/* single one value output */
 			if ((is_numeric($value)) || ($value == "U")) {
 				$rrd_update_array{$item["rrd_path"]}["times"][$unix_time]{$item["rrd_name"]} = $value;
+			/* special case of one value output: hexadecimal to decimal conversion */
+			}elseif (is_hexadecimal($value)) {
+				$rrd_update_array{$item["rrd_path"]}["times"][$unix_time]{$item["rrd_name"]} = hexdec($value);
 			/* multiple value output */
 			}else{
 				$values = explode(" ", $value);
