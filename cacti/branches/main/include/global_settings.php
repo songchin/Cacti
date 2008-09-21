@@ -542,14 +542,14 @@ $settings = array(
 			"friendly_name" => "Default Log File Tail Lines",
 			"description" => "How many lines of the Cacti log file to you want to tail, by default.",
 			"method" => "drop_array",
-			"default" => 50,
+			"default" => 500,
 			"array" => $log_tail_lines,
 			),
 		"log_refresh_interval" => array(
 			"friendly_name" => "Log File Tail Refresh",
 			"description" => "How many often do you want the Cacti log display to update.",
 			"method" => "drop_array",
-			"default" => 20,
+			"default" => 60,
 			"array" => $page_refresh_interval,
 			),
 		"fonts_header" => array(
@@ -1001,6 +1001,13 @@ $settings_graphs = array(
 			"array" => $graph_tree_views,
 			"default" => "2"
 			),
+		"treeview_graphs_per_page" => array(
+			"friendly_name" => "Graphs Per-Page",
+			"description" => "The number of graphs to display on one page in preview mode.",
+			"method" => "drop_array",
+			"default" => "10",
+			"array" => $graphs_per_page
+			),
 		"default_dual_pane_width" => array(
 			"friendly_name" => "Dual Pane Tree Width",
 			"description" => "When choosing dual pane Tree View, what width should the tree occupy in pixels.",
@@ -1013,24 +1020,30 @@ $settings_graphs = array(
 			"description" => "Choose whether to expand the graph templates used for a host on the dual pane tree.",
 			"method" => "checkbox",
 			"default" => ""
+			),
+		"show_graph_title" => array(
+			"friendly_name" => "Show Graph Title",
+			"description" => "Display the graph title on the page so that it may be searched using the browser.",
+			"method" => "checkbox",
+			"default" => ""
 			)
 		),
 	"preview" => array(
 		"preview_graphs_per_page" => array(
 			"friendly_name" => "Graphs Per-Page",
 			"description" => "The number of graphs to display on one page in preview mode.",
-			"method" => "textbox",
+			"method" => "drop_array",
 			"default" => "10",
-			"max_length" => "5"
+			"array" => $graphs_per_page
 			)
 		),
 	"list" => array(
 		"list_graphs_per_page" => array(
 			"friendly_name" => "Graphs Per-Page",
 			"description" => "The number of graphs to display on one page in list view mode.",
-			"method" => "textbox",
+			"method" => "drop_array",
 			"default" => "30",
-			"max_length" => "5"
+			"array" => $graphs_per_page
 			)
 		),
 	"fonts" => array(

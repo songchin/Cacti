@@ -383,7 +383,20 @@ $item_rows = array(
 	100  => "100 Rows",
 	250  => "250 Rows",
 	500  => "500 Rows",
-	1000 => "1000 Rows"
+	1000 => "1000 Rows",
+	2000 => "2000 Rows",
+	5000 => "5000 Rows"
+	);
+
+$graphs_per_page = array(
+	5    => "5 Graphs",
+	10   => "10 Graphs",
+	15   => "15 Graphs",
+	20   => "20 Graphs",
+	25   => "25 Graphs",
+	30   => "30 Graphs",
+	40   => "40 Graphs",
+	50   => "50 Graphs"
 	);
 
 $page_refresh_interval = array(
@@ -392,7 +405,9 @@ $page_refresh_interval = array(
 	20 => "20 Seconds",
 	30 => "30 Seconds",
 	60 => "1 Minute",
-	300 => "5 Minutes");
+	300 => "5 Minutes",
+	600 => "10 Minutes",
+	9999999 => "Never");
 
 $user_auth_realms = array(
 	1 => "User Administration",

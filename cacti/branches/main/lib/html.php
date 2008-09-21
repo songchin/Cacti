@@ -152,33 +152,78 @@ function html_graph_end_box() {
    @arg $extra_url_args - extra arguments to append to the url
    @arg $header - html to use as a header */
 function html_graph_area(&$graph_array, $no_graphs_message = "", $extra_url_args = "", $header = "") {
-	global $config;
+	$i = 0;
 	if (sizeof($graph_array) > 0) {
 		if ($header != "") {
 			print $header;
 		}
 
 		foreach ($graph_array as $graph) {
-			form_alternate_row_color();
+			if (isset($graph["graph_template_name"])) {
+				if (isset($prev_graph_template_name)) {
+					if ($prev_graph_template_name != $graph["graph_template_name"]) {
+						$print  = true;
+						$prev_graph_template_name = $graph["graph_template_name"];
+					}else{
+						$print = false;
+					}
+				}else{
+					$print  = true;
+					$prev_graph_template_name = $graph["graph_template_name"];
+				}
+
+				if ($print) {
+					print "<tr bgcolor='#a9b7cb'>
+						<td colspan='3' class='textHeaderDark'>
+							<strong>Graph Template:</strong> " . $graph["graph_template_name"] . "
+						</td>
+					</tr>";
+				}
+			}elseif (isset($graph["data_query_name"])) {
+				if (isset($prev_data_query_name)) {
+					if ($prev_data_query_name != $graph["data_query_name"]) {
+						$print  = true;
+						$prev_data_query_name = $graph["data_query_name"];
+					}else{
+						$print = false;
+					}
+				}else{
+					$print  = true;
+					$prev_data_query_name = $graph["data_query_name"];
+				}
+
+				if ($print) {
+					print "<tr bgcolor='#a9b7cb'><td colspan='3' class='textHeaderDark'><strong>Data Query:</strong> " . $graph["data_query_name"] . "</td></tr>";
+				}
+				print "<tr bgcolor='#a9b7cb'>
+					<td colspan='3' class='textHeaderDark'>
+						" . $graph["sort_field_value"]. "
+					</td>
+				</tr>";
+			}
+
 			?>
+			<tr align='center' style='background-color: #<?php print ($i % 2 == 0 ? "f9f9f9" : "ffffff");?>;'>
 				<td align='center'>
-					<table width='1' cellpadding='0'>
+					<table align='center' cellpadding='0'>
 						<tr>
-							<td>
-								<a href='<?php print $config['url_path']; ?>graph.php?action=view&local_graph_id=<?php print $graph["local_graph_id"];?>&rra_id=all'><img class='graphimage' id='graph_<?php print $graph["local_graph_id"] ?>' src='<?php print $config['url_path']; ?>graph_image.php?local_graph_id=<?php print $graph["local_graph_id"];?>&rra_id=0<?php print (($extra_url_args == "") ? "" : "&$extra_url_args");?>' border='0' alt='<?php print $graph["title_cache"];?>'></a>
-								<p style='font-size: 10;' align='left'><strong><?php print $graph["title_cache"];?></strong></p>
+							<td align='center'>
+								<a href='graph.php?action=view&local_graph_id=<?php print $graph["local_graph_id"];?>&rra_id=all'><img class='graphimage' id='graph_<?php print $graph["local_graph_id"] ?>' src='graph_image.php?local_graph_id=<?php print $graph["local_graph_id"];?>&rra_id=0<?php print (($extra_url_args == "") ? "" : "&$extra_url_args");?>' border='0' alt='<?php print $graph["title_cache"];?>'></a>
+								<?php print (read_graph_config_option("show_graph_title") == "on" ? "<p style='font-size: 10;' align='center'><strong>" . $graph["title_cache"] . "</strong></p>" : "");?>
 							</td>
-							<td valign='top' style='padding: 3px;' class='noprint'>
-								<a href='<?php print $config['url_path']; ?>graph.php?action=zoom&local_graph_id=<?php print $graph["local_graph_id"];?>&rra_id=0&<?php print $extra_url_args;?>'><img src='<?php print $config['url_path']; ?>images/graph_zoom.gif' border='0' alt='Zoom Graph' title='Zoom Graph' style='padding: 3px;'></a><br>
-								<a href='<?php print $config['url_path']; ?>graph_xport.php?local_graph_id=<?php print $graph["local_graph_id"];?>&rra_id=0&<?php print $extra_url_args;?>'><img src='<?php print $config['url_path']; ?>images/graph_query.png' border='0' alt='CSV Export' title='CSV Export' style='padding: 3px;'></a><br>
-								<a href='<?php print $config['url_path']; ?>graph.php?action=properties&local_graph_id=<?php print $graph["local_graph_id"];?>&rra_id=0&<?php print $extra_url_args;?>'><img src='<?php print $config['url_path']; ?>images/graph_properties.gif' border='0' alt='Graph Source/Properties' title='Graph Source/Properties' style='padding: 3px;'></a><br>
-								<img src='<?php print $config['url_path']; ?>images/graph_page_top.gif' onClick='javascript:document.getElementById("graph_tree_content").scrollTop=0' border='0' alt='Page Top' title='Page Top' style='padding: 3px;'><br>
+							<td valign='top' style='align: left; padding: 3px;' class='noprint'>
+								<a href='graph.php?action=zoom&local_graph_id=<?php print $graph["local_graph_id"];?>&rra_id=0&<?php print $extra_url_args;?>'><img src='images/graph_zoom.gif' border='0' alt='Zoom Graph' title='Zoom Graph' style='padding: 3px;'></a><br>
+								<a href='graph_xport.php?local_graph_id=<?php print $graph["local_graph_id"];?>&rra_id=0&<?php print $extra_url_args;?>'><img src='images/graph_query.png' border='0' alt='CSV Export' title='CSV Export' style='padding: 3px;'></a><br>
+								<a href='graph.php?action=properties&local_graph_id=<?php print $graph["local_graph_id"];?>&rra_id=0&<?php print $extra_url_args;?>'><img src='images/graph_properties.gif' border='0' alt='Graph Source/Properties' title='Graph Source/Properties' style='padding: 3px;'></a><br>
+								<a href='#page_top'><img src='images/graph_page_top.gif' border='0' alt='Page Top' title='Page Top' style='padding: 3px;'></a><br>
 							</td>
 						</tr>
 					</table>
 				</td>
 			</tr>
 			<?php
+
+			$i++;
 		}
 	}else{
 		if ($no_graphs_message != "") {
@@ -196,29 +241,73 @@ function html_graph_area(&$graph_array, $no_graphs_message = "", $extra_url_args
    @arg $extra_url_args - extra arguments to append to the url
    @arg $header - html to use as a header */
 function html_graph_thumbnail_area(&$graph_array, $no_graphs_message = "", $extra_url_args = "", $header = "") {
-	global $config;
-	$i = 0; $k = 0;
+	$i = 0; $k = 0; $j = 0;
 	if (sizeof($graph_array) > 0) {
 		if ($header != "") {
 			print $header;
 		}
 
-		form_alternate_row_color();
-
 		foreach ($graph_array as $graph) {
-			?>
-			<td align='center' width='<?php print (100 / read_graph_config_option("num_columns"));?>%'>
-				<table border='0' cellspacing='0' cellpadding='0'>
-					<tr>
-						<td>
-							<a href='<?php print $config['url_path']; ?>graph.php?action=view&rra_id=all&local_graph_id=<?php print $graph["local_graph_id"];?>'><img class='graphimage' id='graph_<?php print $graph["local_graph_id"] ?>' src='<?php print $config['url_path']; ?>graph_image.php?local_graph_id=<?php print $graph["local_graph_id"];?>&rra_id=0&graph_height=<?php print read_graph_config_option("default_height");?>&graph_width=<?php print read_graph_config_option("default_width");?>&graph_nolegend=true<?php print (($extra_url_args == "") ? "" : "&$extra_url_args");?>' border='0' alt='<?php print $graph["title_cache"];?>'></a>
-							<p style='font-size: 10;' align='left'><strong><?php print $graph["title_cache"];?></strong></p>
+			if (isset($graph["graph_template_name"])) {
+				if (isset($prev_graph_template_name)) {
+					if ($prev_graph_template_name != $graph["graph_template_name"]) {
+						$print  = true;
+						$prev_graph_template_name = $graph["graph_template_name"];
+					}else{
+						$print = false;
+					}
+				}else{
+					$print  = true;
+					$prev_graph_template_name = $graph["graph_template_name"];
+				}
+
+				if ($print) {
+					print "<tr bgcolor='#a9b7cb'>
+						<td colspan='3' class='textHeaderDark'>
+							<strong>Graph Template:</strong> " . $graph["graph_template_name"] . "
 						</td>
-						<td valign='top' style='padding: 3px;'>
-							<a href='<?php print $config['url_path']; ?>graph.php?action=zoom&local_graph_id=<?php print $graph["local_graph_id"];?>&rra_id=0&<?php print $extra_url_args;?>'><img src='<?php print $config['url_path']; ?>images/graph_zoom.gif' border='0' alt='Zoom Graph' title='Zoom Graph' style='padding: 3px;'></a><br>
-							<a href='<?php print $config['url_path']; ?>graph_xport.php?local_graph_id=<?php print $graph["local_graph_id"];?>&rra_id=0&<?php print $extra_url_args;?>'><img src='<?php print $config['url_path']; ?>images/graph_query.png' border='0' alt='CSV Export' title='CSV Export' style='padding: 3px;'></a><br>
-							<a href='<?php print $config['url_path']; ?>graph.php?action=properties&local_graph_id=<?php print $graph["local_graph_id"];?>&rra_id=0&<?php print $extra_url_args;?>'><img src='<?php print $config['url_path']; ?>images/graph_properties.gif' border='0' alt='Graph Source/Properties' title='Graph Source/Properties' style='padding: 3px;'></a><br>
-							<img src='<?php print $config['url_path']; ?>images/graph_page_top.gif' onClick='javascript:document.getElementById("graph_tree_content").scrollTop=0' border='0' alt='Page Top' title='Page Top' style='padding: 3px;'><br>
+					</tr>";
+				}
+			}elseif (isset($graph["data_query_name"])) {
+				if (isset($prev_data_query_name)) {
+					if ($prev_data_query_name != $graph["data_query_name"]) {
+						$print  = true;
+						$prev_data_query_name = $graph["data_query_name"];
+					}else{
+						$print = false;
+					}
+				}else{
+					$print  = true;
+					$prev_data_query_name = $graph["data_query_name"];
+				}
+
+				if ($print) {
+					print "<tr bgcolor='#a9b7cb'><td colspan='3' class='textHeaderDark'><strong>Data Query:</strong> " . $graph["data_query_name"] . "</td></tr>";
+				}
+				print "<tr bgcolor='#a9b7cb'>
+					<td colspan='3' class='textHeaderDark'>
+						" . $graph["sort_field_value"]. "
+					</td>
+				</tr>";
+			}
+
+			if ($i == 0) {
+				print "<tr style='background-color: #" . ($j % 2 == 0 ? "F2F2F2" : "FFFFFF") . ";'>";
+			}
+
+			?>
+			<td align='center' width='<?php print (98 / read_graph_config_option("num_columns"));?>%'>
+				<table align='center' cellpadding='0'>
+					<tr>
+						<td align='center'>
+							<a href='graph.php?action=view&rra_id=all&local_graph_id=<?php print $graph["local_graph_id"];?>'><img class='graphimage' id='graph_<?php print $graph["local_graph_id"] ?>' src='graph_image.php?local_graph_id=<?php print $graph["local_graph_id"];?>&rra_id=0&graph_height=<?php print read_graph_config_option("default_height");?>&graph_width=<?php print read_graph_config_option("default_width");?>&graph_nolegend=true<?php print (($extra_url_args == "") ? "" : "&$extra_url_args");?>' border='0' alt='<?php print $graph["title_cache"];?>'></a>
+							<?php print (read_graph_config_option("show_graph_title") == "on" ? "<p style='font-size: 10;' align='center'><strong>" . $graph["title_cache"] . "</strong></p>" : "");?>
+						</td>
+						<td valign='top' style='align: left; padding: 3px;'>
+							<a href='graph.php?action=zoom&local_graph_id=<?php print $graph["local_graph_id"];?>&rra_id=0&<?php print $extra_url_args;?>'><img src='images/graph_zoom.gif' border='0' alt='Zoom Graph' title='Zoom Graph' style='padding: 3px;'></a><br>
+							<a href='graph_xport.php?local_graph_id=<?php print $graph["local_graph_id"];?>&rra_id=0&<?php print $extra_url_args;?>'><img src='images/graph_query.png' border='0' alt='CSV Export' title='CSV Export' style='padding: 3px;'></a><br>
+							<a href='graph.php?action=properties&local_graph_id=<?php print $graph["local_graph_id"];?>&rra_id=0&<?php print $extra_url_args;?>'><img src='images/graph_properties.gif' border='0' alt='Graph Source/Properties' title='Graph Source/Properties' style='padding: 3px;'></a><br>
+							<a href='#page_top'><img src='images/graph_page_top.gif' border='0' alt='Page Top' title='Page Top' style='padding: 3px;'></a><br>
 						</td>
 					</tr>
 				</table>
@@ -230,8 +319,8 @@ function html_graph_thumbnail_area(&$graph_array, $no_graphs_message = "", $extr
 
 			if (($i == read_graph_config_option("num_columns")) && ($k < count($graph_array))) {
 				$i = 0;
-				print "</tr>";
-				form_alternate_row_color();
+				$j++;
+				print "</tr><tr style='background-color: #" . ($j % 2 == 0 ? "F2F2F2" : "FFFFFF") . ";'>";
 			}
 		}
 
