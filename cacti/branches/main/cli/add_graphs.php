@@ -57,7 +57,7 @@ if (sizeof($parms)) {
 	$dsGraph["snmpField"]      = "";
 	$dsGraph["snmpValue"]      = "";
 	$dsGraph["reindex_method"] = DATA_QUERY_AUTOINDEX_BACKWARDS_UPTIME;
-	
+
 	$input_fields  = array();
 	$values["cg"]  = array();
 
@@ -248,16 +248,16 @@ if (sizeof($parms)) {
 			}
 		}
 
-		if (!($listHosts ||			# you really want to create a new graph 
+		if (!($listHosts ||			# you really want to create a new graph
 			$listSNMPFields || 		# add this check to avoid reindexing on any list option
-			$listSNMPValues || 
+			$listSNMPValues ||
 			$listQueryTypes ||
 			$listSNMPQueries ||
 			$listInputFields)) {
-			
+
 			/* if data query is not yet associated,
-			 * add it and run it once to get the cache filled */ 
-			 
+			 * add it and run it once to get the cache filled */
+
 			/* is this data query already associated (independent of the reindex method)? */
 			$exists_already = db_fetch_cell("SELECT COUNT(host_id) FROM host_snmp_query WHERE host_id=$hostId AND snmp_query_id=" . $dsGraph["snmpQueryId"]);
 			if ((isset($exists_already)) &&
@@ -267,9 +267,9 @@ if (sizeof($parms)) {
 				db_execute("REPLACE INTO host_snmp_query (host_id,snmp_query_id,reindex_method) " .
 						   "VALUES (". $hostId . ","
 									 . $dsGraph["snmpQueryId"] . ","
-									 . $dsGraph["reindex_method"] . 
+									 . $dsGraph["reindex_method"] .
 									")");
-				/* recache snmp data, this is time consuming, 
+				/* recache snmp data, this is time consuming,
 				 * but should happen only once even if multiple graphs
 				 * are added for the same data query
 				 * because we checked above, if dq was already associated */
@@ -421,19 +421,20 @@ if (sizeof($parms)) {
 			update_graph_title_cache($returnArray["local_graph_id"]);
 		}
 
-		$dataSourceId = db_fetch_cell("SELECT
-			data_template_rrd.local_data_id
-			FROM graph_templates_item, data_template_rrd
-			WHERE graph_templates_item.local_graph_id = " . $returnArray["local_graph_id"] . "
-			AND graph_templates_item.task_item_id = data_template_rrd.id
-			LIMIT 1");
+		foreach($returnArray["local_data_id"] as $item) {
+			push_out_host($hostId, $item);
 
-		push_out_host($hostId, $dataSourceId);
+			if (strlen($dataSourceId)) {
+				$dataSourceId .= ", " . $item;
+			}else{
+				$dataSourceId = $item;
+			}
+		}
 
 		/* add this graph template to the list of associated graph templates for this host */
 		db_execute("replace into host_graph (host_id,graph_template_id) values (" . $hostId . "," . $templateId . ")");
 
-		echo "Graph Added - graph-id: (" . $returnArray["local_graph_id"] . ") - data-source-id: ($dataSourceId)\n";
+		echo "Graph Added - graph-id: (" . $returnArray["local_graph_id"] . ") - data-source-ids: ($dataSourceId)\n";
 	}elseif ($graph_type == "ds") {
 		if (($dsGraph["snmpQueryId"] == "") || ($dsGraph["snmpQueryType"] == "") || ($dsGraph["snmpField"] == "") || ($dsGraph["snmpValue"] == "")) {
 			echo "ERROR: For graph-type of 'ds' you must supply more options\n";
@@ -504,9 +505,17 @@ if (sizeof($parms)) {
 					AND graph_templates_item.task_item_id = data_template_rrd.id
 					LIMIT 1");
 
-				push_out_host($hostId, $dataSourceId);
+				foreach($returnArray["local_data_id"] as $item) {
+					push_out_host($hostId, $item);
 
-				echo "Graph Added - graph-id: (" . $returnArray["local_graph_id"] . ") - data-source-id: ($dataSourceId)\n";
+					if (strlen($dataSourceId)) {
+						$dataSourceId .= ", " . $item;
+					}else{
+						$dataSourceId = $item;
+					}
+				}
+
+				echo "Graph Added - graph-id: (" . $returnArray["local_graph_id"] . ") - data-source-ids: ($dataSourceId)\n";
 			}
 		}else{
 			echo "ERROR: Could not find snmp-field " . $dsGraph["snmpField"] . " (" . $dsGraph["snmpValue"] . ") for host-id " . $hostId . " (" . $hosts[$hostId]["hostname"] . ")\n";
