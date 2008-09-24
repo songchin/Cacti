@@ -397,16 +397,17 @@ if (sizeof($parms)) {
 
 	if ($graph_type == "cg") {
 		$existsAlready = db_fetch_cell("SELECT id FROM graph_local WHERE graph_template_id=$templateId AND host_id=$hostId");
-		$dataSourceId  = db_fetch_cell("SELECT
-			data_template_rrd.local_data_id
-			FROM graph_templates_item, data_template_rrd
-			WHERE graph_templates_item.local_graph_id = " . $existsAlready . "
-			AND graph_templates_item.task_item_id = data_template_rrd.id
-			LIMIT 1");
 
 		if ((isset($existsAlready)) &&
 			($existsAlready > 0) &&
 			(!$force)) {
+			$dataSourceId  = db_fetch_cell("SELECT
+				data_template_rrd.local_data_id
+				FROM graph_templates_item, data_template_rrd
+				WHERE graph_templates_item.local_graph_id = " . $existsAlready . "
+				AND graph_templates_item.task_item_id = data_template_rrd.id
+				LIMIT 1");
+
 			echo "NOTE: Not Adding Graph - this graph already exists - graph-id: ($existsAlready) - data-source-id: ($dataSourceId)\n";
 			exit(1);
 		}else{
