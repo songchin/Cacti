@@ -590,7 +590,7 @@ function create_dhtml_tree() {
 }
 
 function grow_right_pane_tree($tree_id, $leaf_id, $host_group_data) {
-	global $current_user, $colors, $config;
+	global $current_user, $colors, $config, $graphs_per_page;
 
 	include(CACTI_BASE_PATH . "/include/global_arrays.php");
 	include_once(CACTI_BASE_PATH . "/lib/data_query.php");
@@ -733,7 +733,7 @@ function grow_right_pane_tree($tree_id, $leaf_id, $host_group_data) {
 			<td class="noprint">
 				<table cellspacing="0" cellpadding="0">
 					<tr>
-						<td width="60" nowrap="" style="white-space: nowrap;">
+						<td width="55" nowrap="" style="white-space: nowrap;">
 							<strong>&nbsp;Search:</strong>&nbsp;
 						</td>
 						<td width="130" nowrap="" style="white-space: nowrap;">
@@ -752,6 +752,16 @@ function grow_right_pane_tree($tree_id, $leaf_id, $host_group_data) {
 								}
 								?>
 							</select>
+						</td>
+						<td width="40">
+							<label for="thumbnails"><strong>&nbsp;Thumbnails:&nbsp;<strong></label>
+						</td>
+						<td>
+							<input type="checkbox" name="thumbnails" id="thumbnails" onChange="if (this.checked == true) this.value='dogs'; else this.value='cats';submit()" <?php print (($_REQUEST['thumbnails'] == "dogs") ? "checked":"");?>>
+						</td>
+						<td nowrap>
+							&nbsp;<input type="image" src="images/button_go.gif" alt="Go" border="0" align="absmiddle">
+							<input type="image" src="images/button_clear.gif" name="clear" alt="Clear" border="0" align="absmiddle">
 						</td>
 					</tr>
 				</table>
