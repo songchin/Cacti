@@ -152,6 +152,8 @@ function html_graph_end_box() {
    @arg $extra_url_args - extra arguments to append to the url
    @arg $header - html to use as a header */
 function html_graph_area(&$graph_array, $no_graphs_message = "", $extra_url_args = "", $header = "") {
+	global $config;
+
 	$i = 0;
 	if (sizeof($graph_array) > 0) {
 		if ($header != "") {
@@ -241,6 +243,8 @@ function html_graph_area(&$graph_array, $no_graphs_message = "", $extra_url_args
    @arg $extra_url_args - extra arguments to append to the url
    @arg $header - html to use as a header */
 function html_graph_thumbnail_area(&$graph_array, $no_graphs_message = "", $extra_url_args = "", $header = "") {
+	global $config;
+
 	$i = 0; $k = 0; $j = 0;
 	if (sizeof($graph_array) > 0) {
 		if ($header != "") {
