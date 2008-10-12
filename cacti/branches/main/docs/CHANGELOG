@@ -73,6 +73,7 @@ Cacti CHANGELOG
 -bug: add_tree.php did not allow nodes with propagating sort options
 -bug: when adding a tree node via the api numeric and natural were reversed
 -bug: Ping and SNMP should test both conditions
+-bug: When step is less than poller interval, item will stop polling for long period of time
 -documentation: Explaining Cacti Special Data Sources used on CDEFs, lots of CDEF examples using Special data Sources
 -documentation: Documentation of specific rrdtool feature
 -documentation: Use of SNMP exec option up to net-snmp 5.3
