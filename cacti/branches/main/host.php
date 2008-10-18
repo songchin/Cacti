@@ -666,7 +666,7 @@ function host_edit() {
 		print "<div class='tabDefault'><a " . (($tab_short_name == $current_tab) ? "class='tabSelected'" : "class='tabDefault'") . " href='host.php?action=edit" . (isset($_GET['id']) ? "&id=" . $_GET['id']: "") . "&tab=$tab_short_name'>$host_tabs[$tab_short_name]</a></div>";
 	}
 	}
-	print "</div>";
+	print "</div></td></tr></table>";
 
 	if (!empty($host["id"])) {
 		html_start_box($host_text, "100%", $colors["header"], "3", "center", "", true);
@@ -775,7 +775,7 @@ function host_edit() {
 	}
 	html_end_box(FALSE);
 
-	html_start_box("<strong>Devices</strong> $header_label", "100%", $colors["header"], "3", "center", "", true);
+	html_start_box("<strong>General Settings</strong>", "100%", $colors["header"], "3", "center", "", true);
 
 	/* preserve the host template id if passed in via a GET variable */
 	if (!empty($_GET["host_template_id"])) {
