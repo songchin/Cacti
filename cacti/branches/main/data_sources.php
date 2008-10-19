@@ -1091,9 +1091,19 @@ function ds() {
 		$_REQUEST["ds_rows"] = read_config_option("num_rows_data_source");
 	}
 
-	?>
-	<script type="text/javascript">
-	<!--
+	?>	
+<script type="text/javascript">
+	$().ready(function() {
+	
+		$("#ds_host").autocomplete("./lib/ajax/ds_host.php", {
+			width: 400,
+		});
+	
+		$("#ds_host").result(function(event, data, formatted) {
+			if (data)
+				$(this).parent().find("#host_id").val(data[1]);
+		});
+	});
 
 	function applyDSFilterChange(objForm) {
 		strURL = '?host_id=' + objForm.host_id.value;
@@ -1104,7 +1114,6 @@ function ds() {
 		document.location = strURL;
 	}
 
-	-->
 	</script>
 	<?php
 

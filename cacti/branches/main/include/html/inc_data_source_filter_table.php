@@ -1,5 +1,5 @@
 	<tr class='rowAlternate2'>
-		<form name="form_data_sources">
+		<form name="form_data_sources" autocomplete="off">
 		<td>
 			<table cellpadding="1" cellspacing="0">
 				<tr>
@@ -7,20 +7,15 @@
 						Host:&nbsp;
 					</td>
 					<td>
-						<select name="host_id" onChange="applyDSFilterChange(document.form_data_sources)">
-							<option value="-1"<?php if ($_REQUEST["host_id"] == "-1") {?> selected<?php }?>>Any</option>
-							<option value="0"<?php if ($_REQUEST["host_id"] == "0") {?> selected<?php }?>>None</option>
-							<?php
-							$hosts = db_fetch_assoc("select id,CONCAT_WS('',description,' (',hostname,')') as name from host order by description,hostname");
-
-							if (sizeof($hosts) > 0) {
-							foreach ($hosts as $host) {
-								print "<option value='" . $host["id"] . "'"; if ($_REQUEST["host_id"] == $host["id"]) { print " selected"; } print ">" . title_trim($host["name"], 40) . "</option>\n";
-							}
-							}
-							?>
-
-						</select>
+						<?php
+						if (isset($_REQUEST["host_id"])) {
+							$hostname = db_fetch_cell("SELECT CONCAT_WS('',description,' (',hostname,')') as name FROM host WHERE id=".$_REQUEST["host_id"]." ORDER BY description,hostname");
+						} else {
+							$hostname = "";
+						}
+						?>
+						<input type="text" value="<?php print $hostname ?>" id="ds_host" onChange="applyDSFilterChange(document.form_data_sources)" />
+						<input type="hidden" id="host_id" />
 					</td>
 					<td width="50">
 						&nbsp;Template:&nbsp;
