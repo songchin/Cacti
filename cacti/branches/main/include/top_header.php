@@ -37,9 +37,9 @@ $page_title = api_plugin_hook_function('page_title', 'Cacti');
 	<link href="<?php echo $config['url_path']; ?>images/favicon.ico" rel="shortcut icon">
 	<script type="text/javascript" src="<?php echo $config['url_path']; ?>include/layout.js"></script>
 	<script type="text/javascript" src="<?php echo $config['url_path']; ?>include/jquery/jquery.js"></script>
+	<script type="text/javascript" src="<?php echo $config['url_path']; ?>include/jquery/jquery.autocomplete.js"></script>;
 	<script type="text/javascript" src="<?php echo $config['url_path']; ?>include/jquery/jquery.bgiframe.js"></script>;
 	<script type="text/javascript" src="<?php echo $config['url_path']; ?>include/jquery/jquery.ajaxQueue.js"></script>;
-	<script type="text/javascript" src="<?php echo $config['url_path']; ?>include/jquery/jquery.autocomplete.js"></script>;
 <?php if (isset($refresh)) { print "\t<meta http-equiv=refresh content=\"" . $refresh["seconds"] . "; url='" . $refresh["page"] . "'\">\n"; }
 
 api_plugin_hook('page_head');

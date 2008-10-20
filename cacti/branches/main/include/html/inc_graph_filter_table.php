@@ -14,7 +14,7 @@
 							$hostname = "";
 						}
 						?>
-						<input type="text" id="host" size="30" value="<?php print $hostname; ?>">
+						<input class="ac_field" type="text" id="host" size="30" value="<?php print $hostname; ?>">
 						<input type="hidden" id="host_id">
 					<td width="70">
 						&nbsp;Template:&nbsp;

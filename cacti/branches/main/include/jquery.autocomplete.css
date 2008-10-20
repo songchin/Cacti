@@ -19,15 +19,15 @@
 	padding: 2px 5px;
 	cursor: default;
 	display: block;
-	/* 
-	if width will be 100% horizontal scrollbar will apear 
+	/*
+	if width will be 100% horizontal scrollbar will apear
 	when scroll mode will be used
 	*/
 	/*width: 100%;*/
 	font: menu;
 	font-size: 12px;
-	/* 
-	it is very important, if line-height not setted or setted 
+	/*
+	it is very important, if line-height not setted or setted
 	in relative units scroll will be broken in firefox
 	*/
 	line-height: 16px;
@@ -46,3 +46,17 @@
 	background-color: #0A246A;
 	color: white;
 }
+
+.ac_field{
+	background-image:url(../images/filter.gif);
+	background-position:right center;
+	background-repeat:no-repeat;
+}
+
+.ac_field_busy{
+	background-image:url(../images/indicator.gif);
+	background-position:right center;
+	background-repeat:no-repeat;
+}
+
+
