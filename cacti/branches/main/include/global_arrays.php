@@ -319,9 +319,6 @@ $custom_data_source_types = array(
 	"COUNT_SIMILAR_DS_DUPS"		 		=> "Count of All Similar Data Sources (Include Duplicates)");
 
 $menu = array(
-	"Create" => array(
-		"graphs_new.php" => "New Graphs"
-		),
 	"Management" => array(
 		"graphs.php" => "Graph Management",
 		"tree.php" => "Graph Trees",
