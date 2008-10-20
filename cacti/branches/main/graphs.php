@@ -915,12 +915,12 @@ function graph_edit() {
 			"sql" => "select graph_templates.id,graph_templates.name from graph_templates order by name"
 			),
 		"host_id" => array(
-			"method" => "drop_sql",
+			"method" => "autocomplete",
+			"callback_function" => "./lib/ajax/get_hosts_detailed.php",
 			"friendly_name" => "Host",
 			"description" => "Choose the host that this graph belongs to.",
-			"value" => (isset($_GET["host_id"]) ? $_GET["host_id"] : $host_id),
-			"none_value" => "None",
-			"sql" => "select id,CONCAT_WS('',description,' (',hostname,')') as name from host order by description,hostname"
+			"id" => (isset($_GET["host_id"]) ? $_GET["host_id"] : $host_id),
+			"name" => db_fetch_cell("SELECT CONCAT_WS('',description,' (',hostname,')') FROM host WHERE id=" . (isset($_GET['host_id']) ? $_GET['host_id'] : $host_id))
 			),
 		"graph_template_graph_id" => array(
 			"method" => "hidden",

@@ -242,6 +242,13 @@ function draw_edit_control($field_name, &$field_array) {
 		}
 
 		break;
+	case 'autocomplete':
+		form_autocomplete_box($field_name,
+			$field_array["callback_function"], $field_array["id"],
+				((isset($field_array["name"])) ? $field_array["name"] : ""),
+				((isset($field_array["size"])) ? $field_array["size"] : "40"),
+				((isset($field_array["max_length"])) ? $field_array["max_length"] : ""));
+		break;
 	default:
 		print "<em>" . $field_array["value"] . "</em>";
 
@@ -374,6 +381,46 @@ function form_text_box($form_name, $form_previous_value, $form_default_value, $f
 	}
 
 	print " id='$form_name' name='$form_name' size='$form_size'" . (!empty($form_max_length) ? " maxlength='$form_max_length'" : "") . " value='" . htmlspecialchars($form_previous_value, ENT_QUOTES) . "'>\n";
+}
+
+/* form_autocomplete_box - draws a standard html textbox as an autocomplete type
+   @arg $form_name  - the name of this form element
+   @arg $callback_function - the function that primes the field
+   @arg $id - the key for this textbox
+   @arg $name - what should be displayed to the user
+   @arg $form_size - the size of the text box
+   @arg $form_max_length - the maximum number of text to allow */
+function form_autocomplete_box($form_name, $callback_function, $id, $name, $form_size = "40", $form_max_length = "") {
+	$display_id = $form_name . "_display";
+
+	print '<script  type="text/javascript">
+	$().ready(function() {
+		$("#' . $display_id . '").autocomplete("' . $callback_function . '", { max: 8, highlight: false, scroll: true, scrollHeight: 300 });
+		$("#' . $display_id . '").result(function(event, data, formatted) {
+			if (data) {
+				$(this).parent().find("#' . $form_name . '").val(data[1]);
+			}
+		});
+	});
+	</script>';
+
+	print "<input type='textbox'";
+
+	if (isset($_SESSION["sess_error_fields"])) {
+		if (!empty($_SESSION["sess_error_fields"][$form_name])) {
+			print "class='txtErrorTextBox'";
+			unset($_SESSION["sess_error_fields"][$form_name]);
+		}
+	}
+
+	if (isset($_SESSION["sess_field_values"])) {
+		if (!empty($_SESSION["sess_field_values"][$form_name])) {
+			$form_previous_value = $_SESSION["sess_field_values"][$form_name];
+		}
+	}
+
+	print " id='${form_name}_display' size='$form_size'" . (!empty($form_max_length) ? " maxlength='$form_max_length'" : "") . " value='" . htmlspecialchars($name, ENT_QUOTES) . "'>\n";
+	print "<div><input type='hidden' id='$form_name' name='$form_name' value='$id'></div>";
 }
 
 /* form_hidden_box - draws a standard html hidden element
