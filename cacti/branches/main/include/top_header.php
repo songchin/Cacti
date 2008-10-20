@@ -106,7 +106,7 @@ api_plugin_hook('page_head');
 <div id='wrapper' style='opacity:0;'>
 	<div id='menu'>
 		<?php draw_menu();?>
-		<div id='about'><a href='<?php echo $config['url_path']; ?>about.php'><img src="<?php echo $config['url_path']; ?>images/cacti_logo.gif" align="absmiddle" alt="Cacti" border="0"></a></div>
+		<table align='center' style='margin-top:10px;'><tr><td><a href='<?php echo $config['url_path']; ?>about.php'><img src="<?php echo $config['url_path']; ?>images/cacti_logo.gif" align="absmiddle" alt="Cacti" border="0"></a></td></tr></table>
 	</div>
 	<div id='vsplitter' onMouseout='doneDivResize()' onMouseover='doDivResize(this,event)' onMousemove='doDivResize(this,event)'>
 		<div id='vsplitter_toggle' onClick='vSplitterToggle()' title='ToggleMenu'></div>

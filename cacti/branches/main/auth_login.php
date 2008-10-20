@@ -35,7 +35,7 @@ if (read_config_option("auth_method") == "2") {
 	$action = "login";
 	if (isset($_SERVER["PHP_AUTH_USER"])) {
 		$username = str_replace("\\", "\\\\", $_SERVER["PHP_AUTH_USER"]);
-	}elseif (isset($_SERVER["REMOTE_USER"])) {	
+	}elseif (isset($_SERVER["REMOTE_USER"])) {
 		$username = str_replace("\\", "\\\\", $_SERVER["REMOTE_USER"]);
 	}else{
 		/* No user - Bad juju! */

@@ -245,6 +245,7 @@ function load_current_session_value($request_var_name, $session_var_name, $defau
 		$_REQUEST[$request_var_name] = $_SESSION[$session_var_name];
 	}else{
 		$_REQUEST[$request_var_name] = $default_value;
+		$_SESSION[$session_var_name] = $_REQUEST[$request_var_name];
 	}
 }
 

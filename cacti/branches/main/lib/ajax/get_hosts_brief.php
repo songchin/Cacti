@@ -30,16 +30,13 @@ if (isset($_REQUEST["q"])) {
 	$q = strtolower(sanitize_search_string(get_request_var("q")));
 } else return;
 
-$hosts = db_fetch_assoc("SELECT " .
-							"id, " .
-							"CONCAT_WS('',description,' (',hostname,')') as name " .
-						"FROM " .
-							"host " .
-						"WHERE " .
-							"hostname LIKE '%" . $q . "%' OR " .
-							"description LIKE '%" . $q . "%' " .
-						"ORDER BY " .
-							"description,hostname");
+$sql = "SELECT id, description as name
+	FROM host
+	WHERE hostname LIKE '%$q%'
+	OR description LIKE '%$q%'
+	ORDER BY description,hostname";
+
+$hosts = db_fetch_assoc($sql);
 
 if (sizeof($hosts) > 0) {
 	foreach ($hosts as $host) {

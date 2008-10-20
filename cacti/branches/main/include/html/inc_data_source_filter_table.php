@@ -6,16 +6,16 @@
 					<td width="50">
 						Host:&nbsp;
 					</td>
-					<td>
+					<td width="1">
 						<?php
 						if (isset($_REQUEST["host_id"])) {
-							$hostname = db_fetch_cell("SELECT CONCAT_WS('',description,' (',hostname,')') as name FROM host WHERE id=".$_REQUEST["host_id"]." ORDER BY description,hostname");
+							$hostname = db_fetch_cell("SELECT description as name FROM host WHERE id=".$_REQUEST["host_id"]." ORDER BY description,hostname");
 						} else {
 							$hostname = "";
 						}
 						?>
-						<input type="text" value="<?php print $hostname ?>" id="ds_host" onChange="applyDSFilterChange(document.form_data_sources)" />
-						<input type="hidden" id="host_id" />
+						<input type="text" id="host" size="30" value="<?php print $hostname; ?>">
+						<input type="hidden" id="host_id">
 					</td>
 					<td width="50">
 						&nbsp;Template:&nbsp;
@@ -76,12 +76,12 @@
 						&nbsp;Rows:&nbsp;
 					</td>
 					<td width="1">
-						<select name="ds_rows" onChange="applyDSFilterChange(document.form_data_sources)">
-							<option value="-1"<?php if ($_REQUEST["ds_rows"] == "-1") {?> selected<?php }?>>Default</option>
+						<select name="rows" onChange="applyDSFilterChange(document.form_data_sources)">
+							<option value="-1"<?php if ($_REQUEST["rows"] == "-1") {?> selected<?php }?>>Default</option>
 							<?php
 							if (sizeof($item_rows) > 0) {
 							foreach ($item_rows as $key => $value) {
-								print "<option value='" . $key . "'"; if ($_REQUEST["ds_rows"] == $key) { print " selected"; } print ">" . $value . "</option>\n";
+								print "<option value='" . $key . "'"; if ($_REQUEST["rows"] == $key) { print " selected"; } print ">" . $value . "</option>\n";
 							}
 							}
 							?>

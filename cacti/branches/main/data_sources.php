@@ -542,7 +542,7 @@ function form_actions() {
 						<p>$ds_list</p>
 					</td>
 				</tr>\n
-				";	
+				";
 			}
 	} else {
 		print "	<tr>
@@ -1027,11 +1027,9 @@ function get_poller_interval($seconds) {
 	}
 }
 
-function ds() {
-	global $colors, $ds_actions, $item_rows;
-
+function ds_validate() {
 	/* ================= input validation ================= */
-	input_validate_input_number(get_request_var_request("ds_rows"));
+	input_validate_input_number(get_request_var_request("rows"));
 	input_validate_input_number(get_request_var_request("host_id"));
 	input_validate_input_number(get_request_var_request("template_id"));
 	input_validate_input_number(get_request_var_request("method_id"));
@@ -1052,6 +1050,16 @@ function ds() {
 	if (isset($_REQUEST["sort_direction"])) {
 		$_REQUEST["sort_direction"] = sanitize_search_string(get_request_var("sort_direction"));
 	}
+}
+
+function ds_getrows() {
+}
+
+function ds() {
+	global $colors, $ds_actions, $item_rows;
+
+	/* validate request variables */
+	ds_validate();
 
 	/* if the user pushed the 'clear' button */
 	if (isset($_REQUEST["clear_x"])) {
@@ -1068,10 +1076,24 @@ function ds() {
 		unset($_REQUEST["filter"]);
 		unset($_REQUEST["sort_column"]);
 		unset($_REQUEST["sort_direction"]);
-		unset($_REQUEST["ds_rows"]);
+		unset($_REQUEST["rows"]);
 		unset($_REQUEST["host_id"]);
 		unset($_REQUEST["template_id"]);
 		unset($_REQUEST["method_id"]);
+
+		$_REQUEST["page"] = 1;
+	}
+
+	/* let's see if someone changed an important setting */
+	$changed  = FALSE;
+	$changed += check_changed("filter",      "sess_ds_filter");
+	$changed += check_changed("rows",        "sess_ds_rows");
+	$changed += check_changed("host_id",     "sess_ds_host_id");
+	$changed += check_changed("template_id", "sess_ds_template_id");
+	$changed += check_changed("method_id",   "sess_ds_method_id");
+
+	if ($changed) {
+		$_REQUEST["page"] = "1";
 	}
 
 	/* remember these search fields in session vars so we don't have to keep passing them around */
@@ -1079,36 +1101,36 @@ function ds() {
 	load_current_session_value("filter", "sess_ds_filter", "");
 	load_current_session_value("sort_column", "sess_ds_sort_column", "name_cache");
 	load_current_session_value("sort_direction", "sess_ds_sort_direction", "ASC");
-	load_current_session_value("ds_rows", "sess_ds_rows", read_config_option("num_rows_data_source"));
+	load_current_session_value("rows", "sess_ds_rows", read_config_option("num_rows_data_source"));
 	load_current_session_value("host_id", "sess_ds_host_id", "-1");
 	load_current_session_value("template_id", "sess_ds_template_id", "-1");
 	load_current_session_value("method_id", "sess_ds_method_id", "-1");
 
 	$host = db_fetch_row("select hostname from host where id=" . $_REQUEST["host_id"]);
 
-	/* if the number of rows is -1, set it to the default */
-	if ($_REQUEST["ds_rows"] == -1) {
-		$_REQUEST["ds_rows"] = read_config_option("num_rows_data_source");
-	}
-
-	?>	
-<script type="text/javascript">
+	?>
+	<script type="text/javascript">
 	$().ready(function() {
-	
-		$("#ds_host").autocomplete("./lib/ajax/ds_host.php", {
-			width: 400,
-		});
-	
-		$("#ds_host").result(function(event, data, formatted) {
-			if (data)
+		$("#host").autocomplete("./lib/ajax/get_hosts_brief.php", { max: 8, highlight: false, scroll: true, scrollHeight: 300 });
+		$("#host").result(function(event, data, formatted) {
+			if (data) {
 				$(this).parent().find("#host_id").val(data[1]);
+				applyDSFilterChange(document.form_data_sources);
+			}else{
+				$(this).parent().find("#host_id").val(0);
+			}
 		});
 	});
 
 	function applyDSFilterChange(objForm) {
-		strURL = '?host_id=' + objForm.host_id.value;
-		strURL = strURL + '&filter=' + objForm.filter.value;
-		strURL = strURL + '&ds_rows=' + objForm.ds_rows.value;
+		if (objForm.host_id.value) {
+			strURL = '?host_id=' + objForm.host_id.value;
+			strURL = strURL + '&filter=' + objForm.filter.value;
+		}else{
+			strURL = '?filter=' + objForm.filter.value;
+		}
+
+		strURL = strURL + '&rows=' + objForm.rows.value;
 		strURL = strURL + '&template_id=' + objForm.template_id.value;
 		strURL = strURL + '&method_id=' + objForm.method_id.value;
 		document.location = strURL;
@@ -1142,7 +1164,7 @@ function ds() {
 	}elseif ($_REQUEST["host_id"] == "0") {
 		$sql_where1 .= " AND data_local.host_id=0";
 		$sql_where2 .= " AND data_local.host_id=0";
-	}elseif (!empty($_REQUEST["host_id"])) {
+	}else {
 		$sql_where1 .= " AND data_local.host_id=" . $_REQUEST["host_id"];
 		$sql_where2 .= " AND data_local.host_id=" . $_REQUEST["host_id"];
 	}
@@ -1152,7 +1174,7 @@ function ds() {
 	}elseif ($_REQUEST["template_id"] == "0") {
 		$sql_where1 .= " AND data_template_data.data_template_id=0";
 		$sql_where2 .= " AND data_template_data.data_template_id=0";
-	}elseif (!empty($_REQUEST["host_id"])) {
+	}else {
 		$sql_where1 .= " AND data_template_data.data_template_id=" . $_REQUEST["template_id"];
 		$sql_where2 .= " AND data_template_data.data_template_id=" . $_REQUEST["template_id"];
 	}
@@ -1162,7 +1184,7 @@ function ds() {
 	}elseif ($_REQUEST["method_id"] == "0") {
 		$sql_where1 .= " AND data_template_data.data_input_id=0";
 		$sql_where2 .= " AND data_template_data.data_input_id=0";
-	}elseif (!empty($_REQUEST["method_id"])) {
+	}else {
 		$sql_where1 .= " AND data_template_data.data_input_id=" . $_REQUEST["method_id"];
 		$sql_where2 .= " AND data_template_data.data_input_id=" . $_REQUEST["method_id"];
 	}
@@ -1187,7 +1209,7 @@ function ds() {
 		$sql_where2
 		GROUP BY data_template_data.local_data_id"), "id", "poller_interval");
 
-	$data_sources = db_fetch_assoc("SELECT
+	$dssql = "SELECT
 		data_template_data.local_data_id,
 		data_template_data.name_cache,
 		data_template_data.active,
@@ -1202,12 +1224,14 @@ function ds() {
 		WHERE data_local.id=data_template_data.local_data_id
 		$sql_where1
 		ORDER BY ". $_REQUEST['sort_column'] . " " . $_REQUEST['sort_direction'] .
-		" LIMIT " . ($_REQUEST["ds_rows"]*($_REQUEST["page"]-1)) . "," . $_REQUEST["ds_rows"]);
+		" LIMIT " . ($_REQUEST["rows"]*($_REQUEST["page"]-1)) . "," . $_REQUEST["rows"];
+
+	$data_sources = db_fetch_assoc($dssql);
 
 	html_start_box("", "100%", $colors["header"], "3", "center", "");
 
 	/* generate page list navigation */
-	$nav = html_create_nav($_REQUEST["page"], MAX_DISPLAY_PAGES, $_REQUEST["ds_rows"], $total_rows, 7, "data_sources.php");
+	$nav = html_create_nav($_REQUEST["page"], MAX_DISPLAY_PAGES, $_REQUEST["rows"], $total_rows, 7, "data_sources.php");
 
 	print $nav;
 

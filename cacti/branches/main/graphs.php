@@ -378,7 +378,7 @@ function form_actions() {
 				db_execute("UPDATE graph_templates_graph SET export='' WHERE local_graph_id=" . $selected_items[$i]);
 			}
 		} else {
-			api_plugin_hook_function('graphs_action_execute', $_POST['drp_action']); 
+			api_plugin_hook_function('graphs_action_execute', $_POST['drp_action']);
 		}
 
 		header("Location: graphs.php");
@@ -1071,7 +1071,7 @@ function graph() {
 
 	/* ================= input validation ================= */
 	input_validate_input_number(get_request_var_request("host_id"));
-	input_validate_input_number(get_request_var_request("graph_rows"));
+	input_validate_input_number(get_request_var_request("rows"));
 	input_validate_input_number(get_request_var_request("template_id"));
 	input_validate_input_number(get_request_var_request("page"));
 	/* ==================================================== */
@@ -1106,8 +1106,19 @@ function graph() {
 		unset($_REQUEST["sort_column"]);
 		unset($_REQUEST["sort_direction"]);
 		unset($_REQUEST["host_id"]);
-		unset($_REQUEST["graph_rows"]);
+		unset($_REQUEST["rows"]);
 		unset($_REQUEST["template_id"]);
+	}
+
+	/* let's see if someone changed an important setting */
+	$changed  = FALSE;
+	$changed += check_changed("filter",      "sess_ds_filter");
+	$changed += check_changed("rows",        "sess_ds_rows");
+	$changed += check_changed("host_id",     "sess_ds_host_id");
+	$changed += check_changed("template_id", "sess_ds_template_id");
+
+	if ($changed) {
+		$_REQUEST["page"] = "1";
 	}
 
 	/* remember these search fields in session vars so we don't have to keep passing them around */
@@ -1116,22 +1127,32 @@ function graph() {
 	load_current_session_value("sort_column", "sess_graph_sort_column", "title_cache");
 	load_current_session_value("sort_direction", "sess_graph_sort_direction", "ASC");
 	load_current_session_value("host_id", "sess_graph_host_id", "-1");
-	load_current_session_value("graph_rows", "sess_graph_rows", read_config_option("num_rows_graph"));
+	load_current_session_value("rows", "sess_graph_rows", read_config_option("num_rows_graph"));
 	load_current_session_value("template_id", "sess_graph_template_id", "-1");
-
-	/* if the number of rows is -1, set it to the default */
-	if ($_REQUEST["graph_rows"] == -1) {
-		$_REQUEST["graph_rows"] = read_config_option("num_rows_graph");
-	}
 
 	?>
 	<script type="text/javascript">
 	<!--
+	$().ready(function() {
+		$("#host").autocomplete("./lib/ajax/get_hosts_brief.php", { max: 8, highlight: false, scroll: true, scrollHeight: 300 });
+		$("#host").result(function(event, data, formatted) {
+			if (data) {
+				$(this).parent().find("#host_id").val(data[1]);
+				applyGraphsFilterChange(document.form_graph_id);
+			}else{
+				$(this).parent().find("#host_id").val(0);
+			}
+		});
+	});
 
 	function applyGraphsFilterChange(objForm) {
-		strURL = '?host_id=' + objForm.host_id.value;
-		strURL = strURL + '&graph_rows=' + objForm.graph_rows.value;
-		strURL = strURL + '&filter=' + objForm.filter.value;
+		if (objForm.host_id.value) {
+			strURL = '?host_id=' + objForm.host_id.value;
+			strURL = strURL + '&filter=' + objForm.filter.value;
+		}else{
+			strURL = '?filter=' + objForm.filter.value;
+		}
+		strURL = strURL + '&rows=' + objForm.rows.value;
 		strURL = strURL + '&template_id=' + objForm.template_id.value;
 		document.location = strURL;
 	}
@@ -1192,10 +1213,10 @@ function graph() {
 		WHERE graph_local.id=graph_templates_graph.local_graph_id
 		$sql_where
 		ORDER BY " . $_REQUEST['sort_column'] . " " . $_REQUEST['sort_direction'] .
-		" LIMIT " . ($_REQUEST["graph_rows"]*($_REQUEST["page"]-1)) . "," . $_REQUEST["graph_rows"]);
+		" LIMIT " . ($_REQUEST["rows"]*($_REQUEST["page"]-1)) . "," . $_REQUEST["rows"]);
 
 	/* generate page list navigation */
-	$nav = html_create_nav($_REQUEST["page"], MAX_DISPLAY_PAGES, $_REQUEST["graph_rows"], $total_rows, 7, "graphs.php");
+	$nav = html_create_nav($_REQUEST["page"], MAX_DISPLAY_PAGES, $_REQUEST["rows"], $total_rows, 7, "graphs.php");
 
 	print $nav;
 
