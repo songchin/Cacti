@@ -1,0 +1,963 @@
+09/16/2007 01:08:20 PM - SYSTEM STATS: Time:1.2385 Method:cmd.php Processes:1 Threads:N/A Hosts:2 HostsPerProcess:2 DataSources:0 RRDsProcessed:0
+09/16/2007 01:08:47 PM - CMDPHP: Poller[0] DEBUG: SQL Cell: "select count(*) from poller_item where rrd_next_step<=0"
+09/16/2007 01:08:47 PM - POLLER: Poller[0] DEBUG: Poller Interval: '300', Cron Interval: '60', Max Poller Runtime '58', Poller Runs: '0.2'
+09/16/2007 01:08:47 PM - POLLER: Poller[0] NOTE: Cron is configured to run too often!  The Poller Interval is '300' seconds, with a minimum Cron period of '300' seconds, but only 29 seconds have passed since the poller last ran.
+09/16/2007 01:11:06 PM - CMDPHP: Poller[0] DEBUG: SQL Cell: "select count(*) from poller_item where rrd_next_step<=0"
+09/16/2007 01:11:06 PM - POLLER: Poller[0] DEBUG: Poller Interval: '300', Cron Interval: '180', Max Poller Runtime '178', Poller Runs: '0.6'
+09/16/2007 01:11:06 PM - POLLER: Poller[0] NOTE: Cron is configured to run too often!  The Poller Interval is '300' seconds, with a minimum Cron period of '300' seconds, but only 168 seconds have passed since the poller last ran.
+09/16/2007 01:11:14 PM - CMDPHP: Poller[0] DEBUG: SQL Cell: "select count(*) from poller_item where rrd_next_step<=0"
+09/16/2007 01:11:14 PM - POLLER: Poller[0] DEBUG: Poller Interval: '300', Cron Interval: '180', Max Poller Runtime '178', Poller Runs: '0.6'
+09/16/2007 01:11:14 PM - POLLER: Poller[0] NOTE: Cron is configured to run too often!  The Poller Interval is '300' seconds, with a minimum Cron period of '300' seconds, but only 176 seconds have passed since the poller last ran.
+09/16/2007 01:11:58 PM - CMDPHP: Poller[0] DEBUG: SQL Cell: "select count(*) from poller_item where rrd_next_step<=0"
+09/16/2007 01:11:58 PM - POLLER: Poller[0] DEBUG: Poller Interval: '300', Cron Interval: '240', Max Poller Runtime '238', Poller Runs: '0.8'
+09/16/2007 01:11:58 PM - POLLER: Poller[0] NOTE: Cron is configured to run too often!  The Poller Interval is '300' seconds, with a minimum Cron period of '300' seconds, but only 220 seconds have passed since the poller last ran.
+09/16/2007 01:13:07 PM - CMDPHP: Poller[0] DEBUG: SQL Cell: "select count(*) from poller_item where rrd_next_step<=0"
+09/16/2007 01:13:07 PM - POLLER: Poller[0] DEBUG: Poller Interval: '300', Cron Interval: '300', Max Poller Runtime '298', Poller Runs: '1'
+09/16/2007 01:13:07 PM - POLLER: Poller[0] NOTE: Cron is configured to run too often!  The Poller Interval is '300' seconds, with a minimum Cron period of '300' seconds, but only 289 seconds have passed since the poller last ran.
+09/16/2007 01:13:16 PM - CMDPHP: Poller[0] DEBUG: SQL Cell: "select count(*) from poller_item where rrd_next_step<=0"
+09/16/2007 01:13:16 PM - POLLER: Poller[0] DEBUG: Poller Interval: '300', Cron Interval: '300', Max Poller Runtime '298', Poller Runs: '1'
+09/16/2007 01:13:16 PM - CMDPHP: Poller[0] DEBUG: SQL Assoc: "select id from host where disabled = '' order by id"
+09/16/2007 01:13:16 PM - CMDPHP: Poller[0] DEBUG: SQL Exec: "delete from poller_time"
+09/16/2007 01:13:16 PM - CMDPHP: Poller[0] DEBUG: SQL Assoc: "SELECT local_data_id, rrd_name FROM poller_output"
+09/16/2007 01:13:16 PM - POLLER: Poller[0] DEBUG: About to Spawn a Remote Process [CMD: /usr/bin/php, ARGS: -q /var/www/cacti-0.8.7/cmd.php 0 1]
+09/16/2007 01:13:17 PM - CMDPHP: Poller[0] DEBUG: SQL Assoc: "select poller_id,end_time from poller_time where poller_id=0"
+09/16/2007 01:13:17 PM - CMDPHP: Poller[0] DEBUG: SQL Assoc: "select poller_output.output, poller_output.time, poller_output.local_data_id, poller_item.rrd_path, poller_item.rrd_name, poller_item.rrd_num from (poller_output cross join poller_item) where (poller_output.local_data_id=poller_item.local_data_id and poller_output.rrd_name=poller_item.rrd_name) LIMIT 10000"
+09/16/2007 01:13:17 PM - CMDPHP: Poller[0] DEBUG: SQL Assoc: "   SELECT * FROM host   WHERE (disabled = ''   AND id >= 0   AND id <= 1)   ORDER by id"
+09/16/2007 01:13:17 PM - CMDPHP: Poller[0] DEBUG: SQL Assoc: "SELECT *   FROM poller_item   WHERE (host_id >= 0   AND host_id <= 1   AND rrd_next_step <= 0)   ORDER by host_id"
+09/16/2007 01:13:17 PM - CMDPHP: Poller[0] DEBUG: SQL Cell: "SELECT count(*)   FROM poller_item   WHERE (action=2   AND host_id >= 0   AND host_id <= 1   AND rrd_next_step <= 0)"
+09/16/2007 01:13:17 PM - CMDPHP: Poller[0] DEBUG: SQL Exec: "UPDATE poller_item   SET rrd_next_step = rrd_next_step - 300   WHERE (host_id >= 0   AND host_id <= 1)"
+09/16/2007 01:13:17 PM - CMDPHP: Poller[0] DEBUG: SQL Exec: "UPDATE poller_item   SET rrd_next_step = rrd_step - 300   WHERE (rrd_next_step < 0   AND host_id >= 0   AND host_id <= 1)"
+09/16/2007 01:13:17 PM - POLLER: Poller[0] NOTE: There are no items in your poller for this polling cycle!
+09/16/2007 01:13:17 PM - CMDPHP: Poller[0] DEBUG: SQL Exec: "insert into poller_time (poller_id, start_time, end_time) values (0, NOW(), NOW())"
+09/16/2007 01:13:18 PM - CMDPHP: Poller[0] DEBUG: SQL Assoc: "select poller_id,end_time from poller_time where poller_id=0"
+09/16/2007 01:13:18 PM - CMDPHP: Poller[0] DEBUG: SQL Assoc: "select poller_output.output, poller_output.time, poller_output.local_data_id, poller_item.rrd_path, poller_item.rrd_name, poller_item.rrd_num from (poller_output cross join poller_item) where (poller_output.local_data_id=poller_item.local_data_id and poller_output.rrd_name=poller_item.rrd_name) "
+09/16/2007 01:13:18 PM - SYSTEM STATS: Time:1.2357 Method:cmd.php Processes:1 Threads:N/A Hosts:2 HostsPerProcess:2 DataSources:0 RRDsProcessed:0
+09/16/2007 01:13:18 PM - CMDPHP: Poller[0] DEBUG: SQL Cell: "select count(*) from poller_command"
+09/16/2007 01:13:37 PM - CMDPHP: Poller[0] DEBUG: SQL Cell: "select count(*) from poller_item where rrd_next_step<=0"
+09/16/2007 01:13:37 PM - POLLER: Poller[0] DEBUG: Poller Interval: '300', Cron Interval: '60', Max Poller Runtime '58', Poller Runs: '0.2'
+09/16/2007 01:13:37 PM - POLLER: Poller[0] NOTE: Cron is configured to run too often!  The Poller Interval is '300' seconds, with a minimum Cron period of '300' seconds, but only 21 seconds have passed since the poller last ran.
+09/16/2007 01:13:49 PM - CMDPHP: Poller[0] DEBUG: SQL Cell: "select count(*) from poller_item where rrd_next_step<=0"
+09/16/2007 01:13:49 PM - POLLER: Poller[0] DEBUG: Poller Interval: '300', Cron Interval: '60', Max Poller Runtime '58', Poller Runs: '0.2'
+09/16/2007 01:13:49 PM - POLLER: Poller[0] NOTE: Cron is configured to run too often!  The Poller Interval is '300' seconds, with a minimum Cron period of '300' seconds, but only 33 seconds have passed since the poller last ran.
+09/16/2007 01:16:00 PM - CMDPHP: Poller[0] DEBUG: SQL Cell: "select count(*) from poller_item where rrd_next_step<=0"
+09/16/2007 01:16:00 PM - POLLER: Poller[0] DEBUG: Poller Interval: '300', Cron Interval: '180', Max Poller Runtime '178', Poller Runs: '0.6'
+09/16/2007 01:16:00 PM - POLLER: Poller[0] NOTE: Cron is configured to run too often!  The Poller Interval is '300' seconds, with a minimum Cron period of '300' seconds, but only 164 seconds have passed since the poller last ran.
+09/16/2007 01:16:10 PM - CMDPHP: Poller[0] DEBUG: SQL Cell: "select count(*) from poller_item where rrd_next_step<=0"
+09/16/2007 01:16:10 PM - POLLER: Poller[0] DEBUG: Poller Interval: '300', Cron Interval: '180', Max Poller Runtime '178', Poller Runs: '0.6'
+09/16/2007 01:16:10 PM - POLLER: Poller[0] NOTE: Cron is configured to run too often!  The Poller Interval is '300' seconds, with a minimum Cron period of '300' seconds, but only 174 seconds have passed since the poller last ran.
+09/16/2007 01:16:26 PM - CMDPHP: Poller[0] DEBUG: SQL Cell: "select count(*) from poller_item where rrd_next_step<=0"
+09/16/2007 01:16:26 PM - POLLER: Poller[0] DEBUG: Poller Interval: '300', Cron Interval: '240', Max Poller Runtime '238', Poller Runs: '0.8'
+09/16/2007 01:16:26 PM - POLLER: Poller[0] NOTE: Cron is configured to run too often!  The Poller Interval is '300' seconds, with a minimum Cron period of '300' seconds, but only 190 seconds have passed since the poller last ran.
+09/16/2007 01:16:30 PM - CMDPHP: Poller[0] DEBUG: SQL Cell: "select count(*) from poller_item where rrd_next_step<=0"
+09/16/2007 01:16:30 PM - POLLER: Poller[0] DEBUG: Poller Interval: '300', Cron Interval: '240', Max Poller Runtime '238', Poller Runs: '0.8'
+09/16/2007 01:16:30 PM - POLLER: Poller[0] NOTE: Cron is configured to run too often!  The Poller Interval is '300' seconds, with a minimum Cron period of '300' seconds, but only 194 seconds have passed since the poller last ran.
+09/16/2007 01:16:30 PM - CMDPHP: Poller[0] DEBUG: SQL Cell: "select count(*) from poller_item where rrd_next_step<=0"
+09/16/2007 01:16:31 PM - POLLER: Poller[0] DEBUG: Poller Interval: '300', Cron Interval: '240', Max Poller Runtime '238', Poller Runs: '0.8'
+09/16/2007 01:16:31 PM - POLLER: Poller[0] NOTE: Cron is configured to run too often!  The Poller Interval is '300' seconds, with a minimum Cron period of '300' seconds, but only 194 seconds have passed since the poller last ran.
+09/16/2007 01:16:31 PM - CMDPHP: Poller[0] DEBUG: SQL Cell: "select count(*) from poller_item where rrd_next_step<=0"
+09/16/2007 01:16:31 PM - POLLER: Poller[0] DEBUG: Poller Interval: '300', Cron Interval: '240', Max Poller Runtime '238', Poller Runs: '0.8'
+09/16/2007 01:16:31 PM - POLLER: Poller[0] NOTE: Cron is configured to run too often!  The Poller Interval is '300' seconds, with a minimum Cron period of '300' seconds, but only 195 seconds have passed since the poller last ran.
+09/16/2007 01:16:31 PM - CMDPHP: Poller[0] DEBUG: SQL Cell: "select count(*) from poller_item where rrd_next_step<=0"
+09/16/2007 01:16:31 PM - POLLER: Poller[0] DEBUG: Poller Interval: '300', Cron Interval: '240', Max Poller Runtime '238', Poller Runs: '0.8'
+09/16/2007 01:16:31 PM - POLLER: Poller[0] NOTE: Cron is configured to run too often!  The Poller Interval is '300' seconds, with a minimum Cron period of '300' seconds, but only 195 seconds have passed since the poller last ran.
+09/16/2007 01:29:53 PM - CMDPHP: Poller[0] string(1) "1"
+
+Notice: Undefined index:  host_id in /var/www/cacti-0.8.7/cmd.php on line 223
+NULL
+array(1) {
+  [""]=>
+  array(33) {
+    ["host_template_id"]=>
+    string(1) "8"
+    ["description"]=>
+    string(9) "Localhost"
+    ["hostname"]=>
+    string(9) "127.0.0.1"
+    ["notes"]=>
+    string(0) ""
+    ["snmp_community"]=>
+    string(6) "public"
+    ["snmp_version"]=>
+    string(1) "0"
+    ["snmp_username"]=>
+    string(0) ""
+    ["snmp_password"]=>
+    string(0) ""
+    ["snmp_auth_protocol"]=>
+    string(3) "MD5"
+    ["snmp_priv_passphrase"]=>
+    string(0) ""
+    ["snmp_priv_protocol"]=>
+    string(3) "DES"
+    ["snmp_context"]=>
+    string(0) ""
+    ["snmp_port"]=>
+    string(3) "161"
+    ["snmp_timeout"]=>
+    string(3) "500"
+    ["max_oids"]=>
+    string(2) "10"
+    ["availability_method"]=>
+    string(1) "3"
+    ["ping_method"]=>
+    string(1) "2"
+    ["ping_port"]=>
+    string(2) "23"
+    ["ping_timeout"]=>
+    string(3) "400"
+    ["ping_retries"]=>
+    string(1) "1"
+    ["disabled"]=>
+    string(0) ""
+    ["status"]=>
+    string(1) "0"
+    ["status_event_count"]=>
+    string(1) "0"
+    ["status_fail_date"]=>
+    string(19) "1970-01-01 00:00:00"
+    ["status_rec_date"]=>
+    string(19) "1970-01-01 00:00:00"
+    ["status_last_error"]=>
+    string(0) ""
+    ["min_time"]=>
+    string(7) "9.99999"
+    ["max_time"]=>
+    string(7) "0.00000"
+    ["cur_time"]=>
+    string(7) "0.00000"
+    ["avg_time"]=>
+    string(7) "0.00000"
+    ["total_polls"]=>
+    string(1) "0"
+    ["failed_polls"]=>
+    string(1) "0"
+    ["availability"]=>
+    string(9) "100.00000"
+  }
+}
+
+09/16/2007 01:29:53 PM - CMDPHP: Poller[0] ERROR: A DB Exec Failed!, Error:'-1', SQL:"update host set status = '3', status_event_count = '0', status_fail_date = '', status_rec_date = '', status_last_error = '', min_time = '', max_time = 'down', cur_time = 'down', avg_time = '0', total_polls = '1', failed_polls = '', availability = '100' where hostname = '''
+09/16/2007 01:29:54 PM - CMDPHP: Poller[0] string(1) "1"
+
+Notice: Undefined index:  host_id in /var/www/cacti-0.8.7/cmd.php on line 223
+NULL
+array(2) {
+  [""]=>
+  array(33) {
+    ["host_template_id"]=>
+    string(1) "8"
+    ["description"]=>
+    string(9) "Localhost"
+    ["hostname"]=>
+    string(9) "127.0.0.1"
+    ["notes"]=>
+    string(0) ""
+    ["snmp_community"]=>
+    string(6) "public"
+    ["snmp_version"]=>
+    string(1) "0"
+    ["snmp_username"]=>
+    string(0) ""
+    ["snmp_password"]=>
+    string(0) ""
+    ["snmp_auth_protocol"]=>
+    string(3) "MD5"
+    ["snmp_priv_passphrase"]=>
+    string(0) ""
+    ["snmp_priv_protocol"]=>
+    string(3) "DES"
+    ["snmp_context"]=>
+    string(0) ""
+    ["snmp_port"]=>
+    string(3) "161"
+    ["snmp_timeout"]=>
+    string(3) "500"
+    ["max_oids"]=>
+    string(2) "10"
+    ["availability_method"]=>
+    string(1) "3"
+    ["ping_method"]=>
+    string(1) "2"
+    ["ping_port"]=>
+    string(2) "23"
+    ["ping_timeout"]=>
+    string(3) "400"
+    ["ping_retries"]=>
+    string(1) "1"
+    ["disabled"]=>
+    string(0) ""
+    ["status"]=>
+    string(1) "0"
+    ["status_event_count"]=>
+    string(1) "0"
+    ["status_fail_date"]=>
+    string(19) "1970-01-01 00:00:00"
+    ["status_rec_date"]=>
+    string(19) "1970-01-01 00:00:00"
+    ["status_last_error"]=>
+    string(0) ""
+    ["min_time"]=>
+    string(7) "9.99999"
+    ["max_time"]=>
+    string(7) "0.00000"
+    ["cur_time"]=>
+    string(7) "0.00000"
+    ["avg_time"]=>
+    string(7) "0.00000"
+    ["total_polls"]=>
+    string(1) "0"
+    ["failed_polls"]=>
+    string(1) "0"
+    ["availability"]=>
+    string(9) "100.00000"
+  }
+  [1]=>
+  array(7) {
+    ["total_polls"]=>
+    int(1)
+    ["availability"]=>
+    int(100)
+    ["cur_time"]=>
+    string(4) "down"
+    ["max_time"]=>
+    string(4) "down"
+    ["avg_time"]=>
+    int(0)
+    ["status"]=>
+    int(3)
+    ["status_event_count"]=>
+    int(0)
+  }
+}
+
+09/16/2007 01:29:54 PM - CMDPHP: Poller[0] string(1) "1"
+
+Notice: Undefined index:  host_id in /var/www/cacti-0.8.7/cmd.php on line 223
+NULL
+array(2) {
+  [""]=>
+  array(33) {
+    ["host_template_id"]=>
+    string(1) "8"
+    ["description"]=>
+    string(9) "Localhost"
+    ["hostname"]=>
+    string(9) "127.0.0.1"
+    ["notes"]=>
+    string(0) ""
+    ["snmp_community"]=>
+    string(6) "public"
+    ["snmp_version"]=>
+    string(1) "0"
+    ["snmp_username"]=>
+    string(0) ""
+    ["snmp_password"]=>
+    string(0) ""
+    ["snmp_auth_protocol"]=>
+    string(3) "MD5"
+    ["snmp_priv_passphrase"]=>
+    string(0) ""
+    ["snmp_priv_protocol"]=>
+    string(3) "DES"
+    ["snmp_context"]=>
+    string(0) ""
+    ["snmp_port"]=>
+    string(3) "161"
+    ["snmp_timeout"]=>
+    string(3) "500"
+    ["max_oids"]=>
+    string(2) "10"
+    ["availability_method"]=>
+    string(1) "3"
+    ["ping_method"]=>
+    string(1) "2"
+    ["ping_port"]=>
+    string(2) "23"
+    ["ping_timeout"]=>
+    string(3) "400"
+    ["ping_retries"]=>
+    string(1) "1"
+    ["disabled"]=>
+    string(0) ""
+    ["status"]=>
+    string(1) "0"
+    ["status_event_count"]=>
+    string(1) "0"
+    ["status_fail_date"]=>
+    string(19) "1970-01-01 00:00:00"
+    ["status_rec_date"]=>
+    string(19) "1970-01-01 00:00:00"
+    ["status_last_error"]=>
+    string(0) ""
+    ["min_time"]=>
+    string(7) "9.99999"
+    ["max_time"]=>
+    string(7) "0.00000"
+    ["cur_time"]=>
+    string(7) "0.00000"
+    ["avg_time"]=>
+    string(7) "0.00000"
+    ["total_polls"]=>
+    string(1) "0"
+    ["failed_polls"]=>
+    string(1) "0"
+    ["availability"]=>
+    string(9) "100.00000"
+  }
+  [1]=>
+  array(7) {
+    ["total_polls"]=>
+    int(1)
+    ["availability"]=>
+    int(100)
+    ["cur_time"]=>
+    string(4) "down"
+    ["max_time"]=>
+    string(4) "down"
+    ["avg_time"]=>
+    int(0)
+    ["status"]=>
+    int(3)
+    ["status_event_count"]=>
+    int(0)
+  }
+}
+
+09/16/2007 01:29:54 PM - CMDPHP: Poller[0] string(1) "1"
+
+Notice: Undefined index:  host_id in /var/www/cacti-0.8.7/cmd.php on line 223
+NULL
+array(2) {
+  [""]=>
+  array(33) {
+    ["host_template_id"]=>
+    string(1) "8"
+    ["description"]=>
+    string(9) "Localhost"
+    ["hostname"]=>
+    string(9) "127.0.0.1"
+    ["notes"]=>
+    string(0) ""
+    ["snmp_community"]=>
+    string(6) "public"
+    ["snmp_version"]=>
+    string(1) "0"
+    ["snmp_username"]=>
+    string(0) ""
+    ["snmp_password"]=>
+    string(0) ""
+    ["snmp_auth_protocol"]=>
+    string(3) "MD5"
+    ["snmp_priv_passphrase"]=>
+    string(0) ""
+    ["snmp_priv_protocol"]=>
+    string(3) "DES"
+    ["snmp_context"]=>
+    string(0) ""
+    ["snmp_port"]=>
+    string(3) "161"
+    ["snmp_timeout"]=>
+    string(3) "500"
+    ["max_oids"]=>
+    string(2) "10"
+    ["availability_method"]=>
+    string(1) "3"
+    ["ping_method"]=>
+    string(1) "2"
+    ["ping_port"]=>
+    string(2) "23"
+    ["ping_timeout"]=>
+    string(3) "400"
+    ["ping_retries"]=>
+    string(1) "1"
+    ["disabled"]=>
+    string(0) ""
+    ["status"]=>
+    string(1) "0"
+    ["status_event_count"]=>
+    string(1) "0"
+    ["status_fail_date"]=>
+    string(19) "1970-01-01 00:00:00"
+    ["status_rec_date"]=>
+    string(19) "1970-01-01 00:00:00"
+    ["status_last_error"]=>
+    string(0) ""
+    ["min_time"]=>
+    string(7) "9.99999"
+    ["max_time"]=>
+    string(7) "0.00000"
+    ["cur_time"]=>
+    string(7) "0.00000"
+    ["avg_time"]=>
+    string(7) "0.00000"
+    ["total_polls"]=>
+    string(1) "0"
+    ["failed_polls"]=>
+    string(1) "0"
+    ["availability"]=>
+    string(9) "100.00000"
+  }
+  [1]=>
+  array(7) {
+    ["total_polls"]=>
+    int(1)
+    ["availability"]=>
+    int(100)
+    ["cur_time"]=>
+    string(4) "down"
+    ["max_time"]=>
+    string(4) "down"
+    ["avg_time"]=>
+    int(0)
+    ["status"]=>
+    int(3)
+    ["status_event_count"]=>
+    int(0)
+  }
+}
+
+09/16/2007 01:29:54 PM - CMDPHP: Poller[0] string(1) "1"
+
+Notice: Undefined index:  host_id in /var/www/cacti-0.8.7/cmd.php on line 223
+NULL
+array(2) {
+  [""]=>
+  array(33) {
+    ["host_template_id"]=>
+    string(1) "8"
+    ["description"]=>
+    string(9) "Localhost"
+    ["hostname"]=>
+    string(9) "127.0.0.1"
+    ["notes"]=>
+    string(0) ""
+    ["snmp_community"]=>
+    string(6) "public"
+    ["snmp_version"]=>
+    string(1) "0"
+    ["snmp_username"]=>
+    string(0) ""
+    ["snmp_password"]=>
+    string(0) ""
+    ["snmp_auth_protocol"]=>
+    string(3) "MD5"
+    ["snmp_priv_passphrase"]=>
+    string(0) ""
+    ["snmp_priv_protocol"]=>
+    string(3) "DES"
+    ["snmp_context"]=>
+    string(0) ""
+    ["snmp_port"]=>
+    string(3) "161"
+    ["snmp_timeout"]=>
+    string(3) "500"
+    ["max_oids"]=>
+    string(2) "10"
+    ["availability_method"]=>
+    string(1) "3"
+    ["ping_method"]=>
+    string(1) "2"
+    ["ping_port"]=>
+    string(2) "23"
+    ["ping_timeout"]=>
+    string(3) "400"
+    ["ping_retries"]=>
+    string(1) "1"
+    ["disabled"]=>
+    string(0) ""
+    ["status"]=>
+    string(1) "0"
+    ["status_event_count"]=>
+    string(1) "0"
+    ["status_fail_date"]=>
+    string(19) "1970-01-01 00:00:00"
+    ["status_rec_date"]=>
+    string(19) "1970-01-01 00:00:00"
+    ["status_last_error"]=>
+    string(0) ""
+    ["min_time"]=>
+    string(7) "9.99999"
+    ["max_time"]=>
+    string(7) "0.00000"
+    ["cur_time"]=>
+    string(7) "0.00000"
+    ["avg_time"]=>
+    string(7) "0.00000"
+    ["total_polls"]=>
+    string(1) "0"
+    ["failed_polls"]=>
+    string(1) "0"
+    ["availability"]=>
+    string(9) "100.00000"
+  }
+  [1]=>
+  array(7) {
+    ["total_polls"]=>
+    int(1)
+    ["availability"]=>
+    int(100)
+    ["cur_time"]=>
+    string(4) "down"
+    ["max_time"]=>
+    string(4) "down"
+    ["avg_time"]=>
+    int(0)
+    ["status"]=>
+    int(3)
+    ["status_event_count"]=>
+    int(0)
+  }
+}
+
+09/16/2007 01:29:54 PM - SYSTEM STATS: Time:1.3705 Method:cmd.php Processes:1 Threads:N/A Hosts:2 HostsPerProcess:2 DataSources:5 RRDsProcessed:5
+09/16/2007 01:35:00 PM - POLLER: Poller[0] WARNING: Cron is out of sync with the Poller Interval!  The Poller Interval is '300' seconds, with a maximum of a '300' second Cron, but 307 seconds have passed since the last poll!
+09/16/2007 01:35:00 PM - CMDPHP: Poller[0] string(1) "1"
+
+Notice: Undefined index:  host_id in /var/www/cacti-0.8.7/cmd.php on line 223
+NULL
+array(1) {
+  [""]=>
+  array(33) {
+    ["host_template_id"]=>
+    string(1) "8"
+    ["description"]=>
+    string(9) "Localhost"
+    ["hostname"]=>
+    string(9) "127.0.0.1"
+    ["notes"]=>
+    string(0) ""
+    ["snmp_community"]=>
+    string(6) "public"
+    ["snmp_version"]=>
+    string(1) "0"
+    ["snmp_username"]=>
+    string(0) ""
+    ["snmp_password"]=>
+    string(0) ""
+    ["snmp_auth_protocol"]=>
+    string(3) "MD5"
+    ["snmp_priv_passphrase"]=>
+    string(0) ""
+    ["snmp_priv_protocol"]=>
+    string(3) "DES"
+    ["snmp_context"]=>
+    string(0) ""
+    ["snmp_port"]=>
+    string(3) "161"
+    ["snmp_timeout"]=>
+    string(3) "500"
+    ["max_oids"]=>
+    string(2) "10"
+    ["availability_method"]=>
+    string(1) "3"
+    ["ping_method"]=>
+    string(1) "2"
+    ["ping_port"]=>
+    string(2) "23"
+    ["ping_timeout"]=>
+    string(3) "400"
+    ["ping_retries"]=>
+    string(1) "1"
+    ["disabled"]=>
+    string(0) ""
+    ["status"]=>
+    string(1) "0"
+    ["status_event_count"]=>
+    string(1) "0"
+    ["status_fail_date"]=>
+    string(19) "1970-01-01 00:00:00"
+    ["status_rec_date"]=>
+    string(19) "1970-01-01 00:00:00"
+    ["status_last_error"]=>
+    string(0) ""
+    ["min_time"]=>
+    string(7) "9.99999"
+    ["max_time"]=>
+    string(7) "0.00000"
+    ["cur_time"]=>
+    string(7) "0.00000"
+    ["avg_time"]=>
+    string(7) "0.00000"
+    ["total_polls"]=>
+    string(1) "0"
+    ["failed_polls"]=>
+    string(1) "0"
+    ["availability"]=>
+    string(9) "100.00000"
+  }
+}
+
+09/16/2007 01:35:00 PM - CMDPHP: Poller[0] ERROR: A DB Exec Failed!, Error:'-1', SQL:"update host set status = '3', status_event_count = '0', status_fail_date = '', status_rec_date = '', status_last_error = '', min_time = '', max_time = 'down', cur_time = 'down', avg_time = '0', total_polls = '1', failed_polls = '', availability = '100' where hostname = '''
+09/16/2007 01:35:00 PM - CMDPHP: Poller[0] string(1) "1"
+
+Notice: Undefined index:  host_id in /var/www/cacti-0.8.7/cmd.php on line 223
+NULL
+array(2) {
+  [""]=>
+  array(33) {
+    ["host_template_id"]=>
+    string(1) "8"
+    ["description"]=>
+    string(9) "Localhost"
+    ["hostname"]=>
+    string(9) "127.0.0.1"
+    ["notes"]=>
+    string(0) ""
+    ["snmp_community"]=>
+    string(6) "public"
+    ["snmp_version"]=>
+    string(1) "0"
+    ["snmp_username"]=>
+    string(0) ""
+    ["snmp_password"]=>
+    string(0) ""
+    ["snmp_auth_protocol"]=>
+    string(3) "MD5"
+    ["snmp_priv_passphrase"]=>
+    string(0) ""
+    ["snmp_priv_protocol"]=>
+    string(3) "DES"
+    ["snmp_context"]=>
+    string(0) ""
+    ["snmp_port"]=>
+    string(3) "161"
+    ["snmp_timeout"]=>
+    string(3) "500"
+    ["max_oids"]=>
+    string(2) "10"
+    ["availability_method"]=>
+    string(1) "3"
+    ["ping_method"]=>
+    string(1) "2"
+    ["ping_port"]=>
+    string(2) "23"
+    ["ping_timeout"]=>
+    string(3) "400"
+    ["ping_retries"]=>
+    string(1) "1"
+    ["disabled"]=>
+    string(0) ""
+    ["status"]=>
+    string(1) "0"
+    ["status_event_count"]=>
+    string(1) "0"
+    ["status_fail_date"]=>
+    string(19) "1970-01-01 00:00:00"
+    ["status_rec_date"]=>
+    string(19) "1970-01-01 00:00:00"
+    ["status_last_error"]=>
+    string(0) ""
+    ["min_time"]=>
+    string(7) "9.99999"
+    ["max_time"]=>
+    string(7) "0.00000"
+    ["cur_time"]=>
+    string(7) "0.00000"
+    ["avg_time"]=>
+    string(7) "0.00000"
+    ["total_polls"]=>
+    string(1) "0"
+    ["failed_polls"]=>
+    string(1) "0"
+    ["availability"]=>
+    string(9) "100.00000"
+  }
+  [1]=>
+  array(7) {
+    ["total_polls"]=>
+    int(1)
+    ["availability"]=>
+    int(100)
+    ["cur_time"]=>
+    string(4) "down"
+    ["max_time"]=>
+    string(4) "down"
+    ["avg_time"]=>
+    int(0)
+    ["status"]=>
+    int(3)
+    ["status_event_count"]=>
+    int(0)
+  }
+}
+
+09/16/2007 01:35:00 PM - CMDPHP: Poller[0] string(1) "1"
+
+Notice: Undefined index:  host_id in /var/www/cacti-0.8.7/cmd.php on line 223
+NULL
+array(2) {
+  [""]=>
+  array(33) {
+    ["host_template_id"]=>
+    string(1) "8"
+    ["description"]=>
+    string(9) "Localhost"
+    ["hostname"]=>
+    string(9) "127.0.0.1"
+    ["notes"]=>
+    string(0) ""
+    ["snmp_community"]=>
+    string(6) "public"
+    ["snmp_version"]=>
+    string(1) "0"
+    ["snmp_username"]=>
+    string(0) ""
+    ["snmp_password"]=>
+    string(0) ""
+    ["snmp_auth_protocol"]=>
+    string(3) "MD5"
+    ["snmp_priv_passphrase"]=>
+    string(0) ""
+    ["snmp_priv_protocol"]=>
+    string(3) "DES"
+    ["snmp_context"]=>
+    string(0) ""
+    ["snmp_port"]=>
+    string(3) "161"
+    ["snmp_timeout"]=>
+    string(3) "500"
+    ["max_oids"]=>
+    string(2) "10"
+    ["availability_method"]=>
+    string(1) "3"
+    ["ping_method"]=>
+    string(1) "2"
+    ["ping_port"]=>
+    string(2) "23"
+    ["ping_timeout"]=>
+    string(3) "400"
+    ["ping_retries"]=>
+    string(1) "1"
+    ["disabled"]=>
+    string(0) ""
+    ["status"]=>
+    string(1) "0"
+    ["status_event_count"]=>
+    string(1) "0"
+    ["status_fail_date"]=>
+    string(19) "1970-01-01 00:00:00"
+    ["status_rec_date"]=>
+    string(19) "1970-01-01 00:00:00"
+    ["status_last_error"]=>
+    string(0) ""
+    ["min_time"]=>
+    string(7) "9.99999"
+    ["max_time"]=>
+    string(7) "0.00000"
+    ["cur_time"]=>
+    string(7) "0.00000"
+    ["avg_time"]=>
+    string(7) "0.00000"
+    ["total_polls"]=>
+    string(1) "0"
+    ["failed_polls"]=>
+    string(1) "0"
+    ["availability"]=>
+    string(9) "100.00000"
+  }
+  [1]=>
+  array(7) {
+    ["total_polls"]=>
+    int(1)
+    ["availability"]=>
+    int(100)
+    ["cur_time"]=>
+    string(4) "down"
+    ["max_time"]=>
+    string(4) "down"
+    ["avg_time"]=>
+    int(0)
+    ["status"]=>
+    int(3)
+    ["status_event_count"]=>
+    int(0)
+  }
+}
+
+09/16/2007 01:35:00 PM - CMDPHP: Poller[0] string(1) "1"
+
+Notice: Undefined index:  host_id in /var/www/cacti-0.8.7/cmd.php on line 223
+NULL
+array(2) {
+  [""]=>
+  array(33) {
+    ["host_template_id"]=>
+    string(1) "8"
+    ["description"]=>
+    string(9) "Localhost"
+    ["hostname"]=>
+    string(9) "127.0.0.1"
+    ["notes"]=>
+    string(0) ""
+    ["snmp_community"]=>
+    string(6) "public"
+    ["snmp_version"]=>
+    string(1) "0"
+    ["snmp_username"]=>
+    string(0) ""
+    ["snmp_password"]=>
+    string(0) ""
+    ["snmp_auth_protocol"]=>
+    string(3) "MD5"
+    ["snmp_priv_passphrase"]=>
+    string(0) ""
+    ["snmp_priv_protocol"]=>
+    string(3) "DES"
+    ["snmp_context"]=>
+    string(0) ""
+    ["snmp_port"]=>
+    string(3) "161"
+    ["snmp_timeout"]=>
+    string(3) "500"
+    ["max_oids"]=>
+    string(2) "10"
+    ["availability_method"]=>
+    string(1) "3"
+    ["ping_method"]=>
+    string(1) "2"
+    ["ping_port"]=>
+    string(2) "23"
+    ["ping_timeout"]=>
+    string(3) "400"
+    ["ping_retries"]=>
+    string(1) "1"
+    ["disabled"]=>
+    string(0) ""
+    ["status"]=>
+    string(1) "0"
+    ["status_event_count"]=>
+    string(1) "0"
+    ["status_fail_date"]=>
+    string(19) "1970-01-01 00:00:00"
+    ["status_rec_date"]=>
+    string(19) "1970-01-01 00:00:00"
+    ["status_last_error"]=>
+    string(0) ""
+    ["min_time"]=>
+    string(7) "9.99999"
+    ["max_time"]=>
+    string(7) "0.00000"
+    ["cur_time"]=>
+    string(7) "0.00000"
+    ["avg_time"]=>
+    string(7) "0.00000"
+    ["total_polls"]=>
+    string(1) "0"
+    ["failed_polls"]=>
+    string(1) "0"
+    ["availability"]=>
+    string(9) "100.00000"
+  }
+  [1]=>
+  array(7) {
+    ["total_polls"]=>
+    int(1)
+    ["availability"]=>
+    int(100)
+    ["cur_time"]=>
+    string(4) "down"
+    ["max_time"]=>
+    string(4) "down"
+    ["avg_time"]=>
+    int(0)
+    ["status"]=>
+    int(3)
+    ["status_event_count"]=>
+    int(0)
+  }
+}
+
+09/16/2007 01:35:00 PM - CMDPHP: Poller[0] string(1) "1"
+
+Notice: Undefined index:  host_id in /var/www/cacti-0.8.7/cmd.php on line 223
+NULL
+array(2) {
+  [""]=>
+  array(33) {
+    ["host_template_id"]=>
+    string(1) "8"
+    ["description"]=>
+    string(9) "Localhost"
+    ["hostname"]=>
+    string(9) "127.0.0.1"
+    ["notes"]=>
+    string(0) ""
+    ["snmp_community"]=>
+    string(6) "public"
+    ["snmp_version"]=>
+    string(1) "0"
+    ["snmp_username"]=>
+    string(0) ""
+    ["snmp_password"]=>
+    string(0) ""
+    ["snmp_auth_protocol"]=>
+    string(3) "MD5"
+    ["snmp_priv_passphrase"]=>
+    string(0) ""
+    ["snmp_priv_protocol"]=>
+    string(3) "DES"
+    ["snmp_context"]=>
+    string(0) ""
+    ["snmp_port"]=>
+    string(3) "161"
+    ["snmp_timeout"]=>
+    string(3) "500"
+    ["max_oids"]=>
+    string(2) "10"
+    ["availability_method"]=>
+    string(1) "3"
+    ["ping_method"]=>
+    string(1) "2"
+    ["ping_port"]=>
+    string(2) "23"
+    ["ping_timeout"]=>
+    string(3) "400"
+    ["ping_retries"]=>
+    string(1) "1"
+    ["disabled"]=>
+    string(0) ""
+    ["status"]=>
+    string(1) "0"
+    ["status_event_count"]=>
+    string(1) "0"
+    ["status_fail_date"]=>
+    string(19) "1970-01-01 00:00:00"
+    ["status_rec_date"]=>
+    string(19) "1970-01-01 00:00:00"
+    ["status_last_error"]=>
+    string(0) ""
+    ["min_time"]=>
+    string(7) "9.99999"
+    ["max_time"]=>
+    string(7) "0.00000"
+    ["cur_time"]=>
+    string(7) "0.00000"
+    ["avg_time"]=>
+    string(7) "0.00000"
+    ["total_polls"]=>
+    string(1) "0"
+    ["failed_polls"]=>
+    string(1) "0"
+    ["availability"]=>
+    string(9) "100.00000"
+  }
+  [1]=>
+  array(7) {
+    ["total_polls"]=>
+    int(1)
+    ["availability"]=>
+    int(100)
+    ["cur_time"]=>
+    string(4) "down"
+    ["max_time"]=>
+    string(4) "down"
+    ["avg_time"]=>
+    int(0)
+    ["status"]=>
+    int(3)
+    ["status_event_count"]=>
+    int(0)
+  }
+}
+
+09/16/2007 01:35:01 PM - SYSTEM STATS: Time:1.2647 Method:cmd.php Processes:1 Threads:N/A Hosts:2 HostsPerProcess:2 DataSources:5 RRDsProcessed:5

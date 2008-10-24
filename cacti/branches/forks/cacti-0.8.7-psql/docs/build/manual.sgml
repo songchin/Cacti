@@ -1,0 +1,3768 @@
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook V4.1//EN">
+<book>
+<bookinfo>
+	<title>The Cacti Manual</title>
+	<authorgroup>
+		<author>
+			<firstname>Ian</firstname>
+			<surname>Berry</surname>
+		</author>
+		<author>
+			<firstname>Tony</firstname>
+			<surname>Roman</surname>
+		</author>
+		<author>
+			<firstname>Larry</firstname>
+			<surname>Adams</surname>
+		</author>
+	</authorgroup>
+	<pubdate>2007</pubdate>
+	<copyright>
+		<year>2007</year>
+		<holder>The Cacti Group</holder>
+	</copyright>
+
+	<legalnotice id="license">
+		<para>This project is licensed under the terms of the GPL.</para>
+		<para>
+			This program is free software; you can redistribute it and/or
+			modify it under the terms of the GNU General Public License
+			as published by the Free Software Foundation; either version 2
+			of the License, or (at your option) any later version.
+		</para>
+		<para>
+			This program is distributed in the hope that it will be useful,
+			but WITHOUT ANY WARRANTY; without even the implied warranty of
+			MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+			GNU General Public License for more details.
+		</para>
+		<para>
+			All product names are property of their respective owners.  Such names are used
+			for identification purposes only and are not indicative of endorsement by or of
+			any company, organization, product, or platform.
+		</para>
+	</legalnotice>
+</bookinfo>
+
+<part id="installation">
+<title>Installation</title>
+	<chapter id="requirements">
+		<title>Requirements</title>
+		<para>Cacti requires that the following software is installed on your system.</para>
+		<itemizedlist>
+			<listitem>
+				<para>
+					<application>RRDTool</application> 1.0.49 or 1.2.x or greater
+				</para>
+			</listitem>
+			<listitem>
+				<para>
+					<application>MySQL</application> 3.23 or greater, 4.1.x or 5.x or greater 
+				</para>
+			</listitem>
+			<listitem>
+				<para>
+					<application>PHP</application> 4.3.6 or greater, 5.x greater highly recommended for advanced features
+				</para>
+			</listitem>
+		</itemizedlist>
+		<itemizedlist>
+			<title>Packages for RPM-based Operating Systems</title>
+			<listitem>
+				<para>
+					<filename>httpd</filename>
+				</para>
+			</listitem>
+			<listitem>
+				<para>
+					<filename>php</filename>
+				</para>
+			</listitem>
+			<listitem>
+				<para>
+					<filename>php-mysql</filename>
+				</para>
+			</listitem>
+			<listitem>
+				<para>
+					<filename>php-snmp</filename>
+				</para>
+			</listitem>
+			<listitem>
+				<para>
+					<filename>mysql</filename>
+				</para>
+			</listitem>
+			<listitem>
+				<para>
+					<filename>mysql-server</filename>
+				</para>
+			</listitem>
+			<listitem>
+				<para>
+					<filename>net-snmp</filename>
+				</para>
+			</listitem>
+		</itemizedlist>
+		<itemizedlist>
+			<title>Ports for FreeBSD</title>
+			<listitem>
+				<para>
+					<filename>www/apache2</filename>
+				</para>
+			</listitem>
+			<listitem>
+				<para>
+					<filename>net/rrdtool</filename>
+				</para>
+			</listitem>
+			<listitem>
+				<para>
+					<filename>net/net-snmp</filename>
+				</para>
+			</listitem>
+			<listitem>
+				<para>
+					<filename>www/php4-cgi</filename>
+				</para>
+			</listitem>
+			<listitem>
+				<para>
+					<filename>lang/php4</filename> (With <application>MySQL</application> and SNMP Support)
+				</para>
+			</listitem>
+			<listitem>
+				<para>
+					<filename>databases/mysql323-server</filename>
+				</para>
+			</listitem>
+		</itemizedlist>
+	</chapter>
+	<chapter id="install_unix">
+		<title>Installing Under Unix</title>
+		<orderedlist>
+			<listitem>
+				<para>Extract the distribution tarball.</para>
+				<screen><prompt>shell&gt;</prompt> <userinput>tar xzvf cacti-version.tar.gz</userinput></screen>
+			</listitem>
+			<listitem>
+				<para>Create the MySQL database:</para>
+				<screen><prompt>shell&gt;</prompt> <userinput>mysqladmin --user=root create cacti</userinput></screen>
+			</listitem>
+			<listitem>
+				<para>Import the default cacti database:</para>
+				<screen><prompt>shell&gt;</prompt> <userinput>mysql cacti &lt; cacti.sql</userinput></screen>
+			</listitem>
+			<listitem>
+				<para>
+					Optional: Create a MySQL username and password for Cacti.
+				</para>
+				<screen><prompt>shell&gt;</prompt> <userinput>mysql --user=root mysql</userinput>
+<prompt>mysql&gt;</prompt> <userinput>GRANT ALL ON cacti.* TO cactiuser@localhost IDENTIFIED BY 'somepassword';</userinput>
+<prompt>mysql&gt;</prompt> <userinput>flush privileges;</userinput></screen>
+			</listitem>
+			<listitem>
+				<para>
+					Edit <filename>include/config.php</filename> and specify the MySQL user, password and database for your Cacti configuration.
+				</para>
+				<screen><userinput>$database_default = "cacti";
+$database_hostname = "localhost";
+$database_username = "cactiuser";
+$database_password = "cacti";</userinput></screen>
+			</listitem>
+			<listitem>
+				<para>
+					Set the appropriate permissions on cacti's directories for graph/log generation. You
+					should execute these commands from inside cacti's directory to change the permissions.
+				</para>
+				<screen><prompt>shell&gt;</prompt> <userinput>chown -R cactiuser rra/ log/</userinput></screen>
+				<para>
+					(Enter a valid username for <emphasis>cactiuser</emphasis>, this user will also be used in the next step for
+					data gathering.)
+				</para>
+			</listitem>
+			<listitem>
+				<para>
+					Add a line to your <filename>/etc/crontab</filename> file similar to:
+				</para>
+				<screen>*/5 * * * * cactiuser php /var/www/html/cacti/poller.php &gt; /dev/null 2&gt;&amp;1</screen>
+				<simpara>
+					Replace <emphasis>cactiuser</emphasis> with the valid user specified in the previous step.
+				</simpara>
+				<simpara>
+					Replace <filename>/var/www/html/cacti/</filename> with your full Cacti path.
+				</simpara>
+			</listitem>
+			<listitem>
+				<para>
+					Point your web browser to:
+				</para>
+				<blockquote>
+					<para>
+						http://your-server/cacti/
+					</para>
+				</blockquote>
+				<para>
+					Log in the with a username/password of <emphasis>admin</emphasis>. You will be required to change this
+					password immediately. Make sure to fill in all of the path variables carefully and
+					correctly on the following screen.
+				</para>
+			</listitem>
+		</orderedlist>
+	</chapter>
+	<chapter id="install_windows">
+	<title>Installing Under Windows</title>
+		<orderedlist>
+			<title>Software Compoents Required</title>
+			<listitem>
+				<para>
+					(Optional) Apache> - This software is optional if running Windows Internet Information Server.
+				</para>
+			</listitem>
+			<listitem>
+				<para>
+					Cacti> - Install from the zip distribution and intstall in the web root or your choice.
+					Many choose to install into a "Cacti" sub folder.
+				</para>
+			</listitem>
+			<listitem>
+				<para>
+					Cactid - Install from the zip distribution into the <filename>c:\cacti</filename>
+					directory.  Make sure your <filename>cactid.conf.dist</filename> is located in that directory as well.
+				</para>
+			</listitem>
+			<listitem>
+				<para>
+					RRDTool - Install from the Cacti website.  Install it into the <filename>c:\cacti</filename> directory.
+				</para>
+			</listitem>
+			<listitem>
+				<para>
+					PHP 4.3.6+ or 5.x - Install into the <filename>c:\php</filename> folder.  If you choose
+					to install into <filename>c:\Program Files\php</filename>, you will have to use 8.3 filenames
+					to reference it's binaries in Cacti.
+				</para>
+			</listitem>
+			<listitem>
+				<para>
+					MySQL 4.x or MySQL 5.x - Install into the default location.  This is typically
+					<filename>c:\Program Files\MySQL\MySQL Server X.XX</filename>.
+				</para>
+			</listitem>
+			<listitem>
+				<para>
+					(Optional) Cygwin - Download and execute <filename>setup.exe</filename> from the Cygwin
+					website.  Keep the <filename>setup.exe</filename> file for later use.
+				</para>
+			</listitem>
+			<listitem>
+				<para>
+					(Optional) Net-SNMP - Install to the <filename>c:\net-snmp</filename> directory.  If you
+					choose to use <filename>c:\Program Files\net-snmp</filename> you will have tu use 8.3 filenames
+					to reference it's binaries in Cacti.
+				</para>
+			</listitem>
+		</orderedlist>
+		<orderedlist>
+			<title>Configure PHP</title>
+			<listitem>
+				<para>
+					If using PHP 4, move the files in <filename>c:\php\dlls</filename> to <filename>c:\php</filename>
+				</para>
+			</listitem>
+			<listitem>
+				<para>
+					Add the following directory to the existing Windows System <userinput>PATH</userinput> environment variable:
+					<filename>c:\php</filename>.  The Windows path can be accessed via the Control Panel at: System |
+					Advanced | Environment Variables | System Variables.
+				</para>
+			</listitem>
+			<listitem>
+				<para>
+					Add the following directory to a new Windows System environment variable called <userinput>PHPRC</userinput>:
+					<filename>c:\php</filename>.
+				</para>
+			</listitem>
+			<listitem>
+				<para>
+					Add a new Windows System environment variable called <userinput>MIBDIRS</userinput>.  If using
+					PHP 4, set it to <filename>c:\php\mibs</filename>.  If using PHP 5, set it to <filename>c:\php\extras\mibs</filename>
+				</para>
+			</listitem>
+			<listitem>
+				<para>
+					If using PHP 4.3.5 or less, create the following directory <filename>c:\tmp</filename>.
+				</para>
+			</listitem>
+			<listitem>
+				<para>
+					Rename the file <filename>c:\php\php.ini.dist</filename> to <filename>php.ini</filename>, and make the
+					following changes to it:
+				</para>
+				<para>
+					If using PHP 4 add/uncomment the following lines.
+				</para>
+				<screen><userinput>extension_dir = c:\php\extensions
+extension=php_snmp.dll
+extension=php_sockets.dll
+cgi.force_redirect = 0</userinput></screen>
+				<para>
+					If using PHP 5 uncomment the following lines.
+				</para>
+				<screen><userinput>extension_dir = c:\php\ext
+extension=php_mysql.dll
+extension=php_snmp.dll
+extension=php_sockets.dll
+cgi.force_redirect = 0</userinput></screen>
+				<para>
+					If using PHP 4.3.5 or less include the following line.  If using 4.3.6 or greater, you should remove this line if present.
+				</para>
+				<screen><userinput>session.save_path=c:\tmp</userinput></screen>
+			</listitem>
+			<listitem>
+				<para>
+					In earlier installation guides to PHP, they recommended moving certain DLL's to the <filename>
+					c:\winnt\system32</filename> directory.  If so, you will have to remove those files.  Please
+					review the PHP installation documentation for instructions on removing those files.
+				</para>
+			</listitem>
+			<listitem>
+				<para>
+					If you want to allow template importing, uncomment the following line:
+					<screen><userinput>file_uploads = On</userinput></screen>
+				</para>
+			</listitem>
+			<listitem>
+				<para>
+					Give the user who will be running the scheduled task, modify rights to the <filename>.index</filename>
+					file in the location pointed to by the <userinput>MIBDIRS</userinput> Windows System environment variable.
+				</para>
+			</listitem>
+		</orderedlist>
+		<orderedlist>
+			<title>Configure the Webserver (Apache)</title>
+			<listitem>
+				<para>
+					Make sure you have stopped any IIS web servers before you proceed with Apache installation, or make
+					sure Apache is configured on an alternate port.
+				</para>
+			</listitem>
+			<listitem>
+				<para>
+					If you are using <emphasis>Apache 1.3.x</emphasis>, installation of PHP 5 is not recommended.
+					If using PHP 4, add the following lines to your <filename>httpd.conf</filename> file.  You can edit
+					that file by selecting Start | All Programs | Apache HTTP Server X.XX | Configure Server | Edit the
+					httpd.conf file pick from the Taskbar.
+				</para>
+				<para>
+					If using Apache 1.3.x and PHP 4, then add the following lines:
+				</para>
+				<screen><userinput>LoadModule php4_module c:\php\sapi\php4apache.dll
+AddModule mod_php4.c
+AddType application/x-httpd-php .php
+DirectoryIndex index.html index.htm index.php</userinput></screen>
+				<para>
+					If using Apache 2.x and PHP 4, then add the following lines:
+				</para>
+				<screen><userinput>LoadModule php4_module c:\php\sapi\php4apache2.dll
+AddType application/x-httpd-php .php
+DirectoryIndex index.html index.htm index.php</userinput></screen>
+				<para>
+					If using Apache 2.x and PHP 5, then add the following lines.
+				</para>
+				<screen><userinput>LoadModule php5_module c:\php\php5apache2.dll
+AddType application/x-httpd-php .php
+DirectoryIndex index.html index.htm index.php</userinput></screen>
+			</listitem>
+		</orderedlist>
+		<orderedlist>
+			<title>Configure the Webserver (IIS)</title>
+			<listitem>
+				<para>
+					Start the Internet Information Services (IIS) Manager, right click on the <guilabel>Default Web Site</guilabel> (in most cases) and select <guilabel>Properties</guilabel>.
+				</para>
+			</listitem>
+			<listitem>
+				<para>
+					Under the <guilabel>Home Directory</guilabel> tab, select <guilabel>Configuration</guilabel>
+					and click <guilabel>Add</guilabel>. Browse to the path of <filename>php4isapi.dll</filename> or
+					<filename>php5isapi.dll</filename>, and type in .php as the extension.  Note: if using IIS6,
+					Enable All Verbs and Script Engine.
+				</para>
+			</listitem>
+			<listitem>
+				<para>
+					Under the <guilabel>ISAPI Filters</guilabel> tab, click <guilabel>Add</guilabel> and browse
+					to the <filename>php4isapi.dll</filename> or <filename>php5isapi.dll</filename> file. Name the filter
+					"php" and click OK.
+				</para>
+			</listitem>
+			<listitem>
+				<para>
+					Under the <guilabel>Documents</guilabel> tab, add <filename>index.php</filename> to the list.
+				</para>
+			</listitem>
+			<listitem>
+				<para>
+					If using IIS6, goto <guilabel>Web Service Extensions</guilabel> and add a new Web Service Extension.
+					Name the extension "php", and click <guilabel>Add</guilabel> and browse to the <filename>php4isapi.dll</filename>
+					or <filename>php5isapi.dll</filename> file, enable <guilabel>Set Extension</guilabel> status to Enable, and click OK.
+				</para>
+			</listitem>
+			<listitem>
+				<para>
+					Give the IUSR_XXXX and IIS_WPG users read & execute permissions to the file <filename>%windir%\system32\cmd.exe</filename>.
+					They will also need read permissions on <filename>cacti_web_root/cacti</filename> and it's subfolders.
+				</para>
+			</listitem>
+			<listitem>
+				<para>
+					If using IIS6, give the IIS_WPG user modify permissions to the folders <filename>cacti_web_root/cacti/log</filename>
+					and <filename>cacti_web_root/cacti/rrd</filename>.
+				</para>
+			</listitem>
+			<listitem>
+				<para>
+					Completely stop and start the IIS service using the following commands:
+				</para>
+				<screen><userinput>net stop iisadmin
+net start w3svc</userinput></screen>
+			</listitem>
+		</orderedlist>
+		<orderedlist>
+			<title>Install Cygwin (optional)</title>
+			<listitem>
+				<para>
+					Installing a single instance of Cygwin, and using it for all applications that require it is
+					recommended so you do not have different versions of the Cygwin dlls laying around on your system,
+					which can cause conflicts.
+				</para>
+			</listitem>
+			<listitem>
+				<para>
+					Run <filename>setup.exe</filename> you previously download.
+				</para>
+			</listitem>
+			<listitem>
+				<para>
+					Once you reach the portion of setup entitled Select Packages, install the following:
+				</para>
+				<screen><userinput>Base (include all items)
+Libs
+	libart_lgpl
+	libfreetype26
+	libpng12
+	zlib
+	openssl
+Utils
+	patch
+Web
+	wget</userinput></screen>
+			</listitem>
+			<listitem>
+				<para>
+					Add <filename>c:\cygwin\bin</filename> to your Windows System PATH environment variable.
+				</para>
+			</listitem>
+			<listitem>
+				<para>
+					Move <filename>setup.exe</filename> to <filename>c:\cygwin</filename> for future use.
+				</para>
+			</listitem>
+		</orderedlist>
+		<orderedlist>
+			<title>Install RRDTool</title>
+			<listitem>
+				<para>
+					Extract the RRDTool zip file from the Cacti web site to <filename>c:\cacti\rrdtool.exe</filename>.
+				</para>
+			</listitem>
+		</orderedlist>
+		<orderedlist>
+			<title>Install MySQL</title>
+			<listitem>
+				<para>
+					Extract the MySQL zip file to a temp directory and run <filename>setup.exe</filename>.
+				</para>
+			</listitem>
+			<listitem>
+				<para>
+					Install MySQL to the default directory, or for the purposes of this manual to the <filename>c:\mysql</filename> directory.
+				</para>
+			</listitem>
+			<listitem>
+				<para>
+					If running an older version of MySQL, start it by running <filename>c:\mysql\bin\winmysqladmin.exe</filename>.
+					In more recent versions, this is not required.
+				</para>
+			</listitem>
+			<listitem>
+				<para>
+					Set a password for the root user
+				</para>
+				<screen><prompt>shell&gt;</prompt> <userinput>cd mysql\bin</userinput>
+<prompt>shell&gt;</prompt> <userinput>mysqladmin --user=root password somepassword</userinput>
+<prompt>shell&gt;</prompt> <userinput>mysqladmin --user=root --password reload</userinput></screen>
+			</listitem>
+			<listitem>
+				<para>
+					Create the MySQL database:
+				</para>
+				<screen><prompt>shell&gt;</prompt> <userinput>mysqladmin --user=root --password create cacti</userinput></screen>
+			</listitem>
+			<listitem>
+				<para>
+					Import the default Cacti database:
+				</para>
+				<screen><prompt>shell&gt;</prompt> <userinput>mysql --user=root --password cacti &lt; c:\apache2\htdocs\cacti\cacti.sql</userinput></screen>
+			</listitem>
+			<listitem>
+				<para>
+					Create a MySQL username and password for Cacti.
+				</para>
+				<screen><prompt>shell&gt;</prompt> <userinput>mysql --user=root --password mysql</userinput>
+<prompt>mysql&gt;</prompt> <userinput>GRANT ALL ON cacti.* TO cactiuser@localhost IDENTIFIED BY 'somepassword';</userinput>
+<prompt>mysql&gt;</prompt> <userinput>flush privileges;</userinput></screen>
+			</listitem>
+			<listitem>
+				<para>
+					If you are running MySQl 4.1 and above, you will need to apply the old password setting in order
+					to authenticate with Cacti.  To make this change, stop the MySQL service and add the following to
+					the Start Parameter field.  Start it again once it has been added.
+				</para>
+				<screen><userinput>--old-password</userinput></screen>
+				<para>
+					You will also need to update the cactiuser account with the old password style.
+				</para>
+				<screen><prompt>shell&gt;</prompt> <userinput>UPDATE mysql.user SET Password = OLD_PASSWORD('cactipwd') WHERE Host = 'localhost' AND User = 'cactiuser';</userinput>
+<prompt>mysql&gt;</prompt> <userinput>FLUSH PRIVILEGES;</userinput></screen>
+			</listitem>
+		</orderedlist>
+		<orderedlist>
+			<title>Install Net-SNMP</title>
+			<listitem>
+				<para>
+					If you plan to use any hosts with SNMP v2c support, and are using early versions of PHP, you must
+					download and install the <application>Net-SNMP</application> libraries.  <application>Net-SNMP</application>
+					provides installers	to install their product.  However, caution must be taken if you choose to use
+					long file names as Cacti does not them as long file names.  You will have to user 8.3 notation.  For
+					example <filename>c:\Program Files\Net-SNMP\bin</filename> becomes <filename>c:\progra~1\net-snmp\bin</filename>.
+				</para>
+			</listitem>
+		</orderedlist>
+		<orderedlist>
+			<title>Install Cactid</title>
+			<listitem>
+				<para>
+					Extract the Cactid zip file to <filename>c:\cacti</filename> and modify the <filename>cactid.conf.dist</filename> file to
+					include the following statements.
+				</para>
+				<screen><userinput>DB_Host	127.0.0.1 or hostname (not localhost)
+DB_Database	cacti
+DB_User		cactiuser
+DB_Password	cacti
+DB_Port		3306</userinput></screen>
+				<para>
+					All other pre 0.8.6 settings are obsolete.
+				</para>
+			</listitem>
+			<listitem>
+				<para>
+					Cactid now comes with a binary distribution.  However, we strongly suggest that you install
+					Cygwin and then remove all the DLL files and <filename>sh.exe</filename> from the
+					<filename>c:\cacti</filename> directory.
+				</para>
+			</listitem>
+		</orderedlist>
+		<orderedlist>
+			<title>Configure Cacti</title>
+			<listitem>
+				<para>
+					Edit <filename>cacti_web_root/cacti/include/config.php</filename> and specify the MySQL user,
+					password, database, and database port for your Cacti configuration.
+				</para>
+				<screen><userinput>$database_default = "cacti";
+$database_hostname = "localhost";
+$database_username = "cactiuser";
+$database_password = "cacti";
+$database_port = "3306";</userinput></screen>
+			</listitem>
+			<listitem>
+				<para>
+					Point your web browser to:
+				</para>
+				<screen>http://your-server/cacti/</screen>
+				<para>
+					Log in using the username and password of admin/admin.  You will be required to change this
+					password immediately.
+				</para>
+			</listitem>
+			<listitem>
+				<para>
+					From Cacti, go to <guilabel>Settings</guilabel>-&gt;<guilabel>Paths</guilabel> and verify/udate
+					your paths to point to the correct locations.  Recommended examples are posted below.  If you
+					plan on using Cactid, then it is very important that all paths include forward slashes instead
+					of backslashes.
+				</para>
+				<para>
+				<emphasis>PHP Binary Path:</emphasis>
+				</para>
+					<screen>c:/php/php.exe</screen>
+				<para>
+					<emphasis>RRDTool Binary Path:</emphasis>
+				</para>
+				<screen>c:/cacti/rrdtool.exe</screen>
+				<para>
+					<emphasis>SNMPGET, SNMPWALK, SNMPBULKWALK, SNMPGETNEXT Paths:</emphasis>
+				</para>
+					<screen>c:/progra~1/net-snmp/bin/snmpget.exe</screen>
+					<screen>c:/progra~1/net-snmp/bin/snmpwalk.exe</screen>
+					<screen>c:/progra~1/net-snmp/bin/snmpbulkwalk.exe</screen>
+					<screen>c:/progra~1/net-snmp/bin/snmpgetnext.exe</screen>
+				<para>
+					<emphasis>Cacti Logfile Path:</emphasis>
+				</para>
+					<screen>c:/mycacti/website/cacti/log/cacti.log</screen>
+				<para>
+					<emphasis>Cactid Path:</emphasis>
+				</para>
+				<screen>c:/cacti/cactid.exe</screen>
+			</listitem>
+			<listitem>
+				<para>
+					Click on Devices.  Delete the Localhost devices as it intended for Linux environments  In the upper
+					right corner, click Add.  Fill in the following information and then click Add.
+				</para>
+				<screen><userinput>Description: My Windows localhost
+Hostname: localhost
+Host Template: Windows 2000/XP</userinput></screen>
+			</listitem>
+			<listitem>
+				<para>
+					You should now be looking at the localhost device screen.  Right under it's name, there should be
+					some SNMP information listed, if not you should double check the SNMP settings on the server and
+					firewall settings.  In the upper right-hand corner, click on Create Graphs for this Host. On the
+					following screen, select a disk partition and network interface.  At the bottom of the page,
+					click on Create.
+				</para>
+			</listitem>
+			<listitem>
+				<para>
+                    Log into the user account you'll be using  for the scheduled task and  verify starting a Cacti
+					polling cycle works.  Do this by running the following from the command prompt:
+				</para>
+				<screen><userinput>php c:/cacti_web_root/cacti/poller.php</userinput></screen>
+				<para>
+					The output should look something like the following:
+				</para>
+				<screen><userinput>C:\>php c:\inetpub\wwwroot\cacti\poller.php
+OK u:0.00 s:0.06 r:1.32
+OK u:0.00 s:0.06 r:1.32
+OK u:0.00 s:0.16 r:2.59
+OK u:0.00 s:0.17 r:2.62
+10/28/2005 04:57:12 PM - SYSTEM STATS: Time:4.7272 Method:cmd.php Processes:1 Threads:N/A Hosts:1 HostsPerProcess:2 DataSources:4 RRDsProcessed:2</userinput></screen>
+				<para>
+					After this has ran once, you should have <filename>cacti.log</filename> in <filename>/cacti/log/</filename>
+					and rrd files in /cacti/rra/.
+				</para>
+			</listitem>
+			<listitem>
+				<para>
+					You are going to need to schedule a task while logged on as an Administrator.  This task is
+					required to you can run <filename>poller.php</filename> every 5 minutes. Make sure the
+					Task Scheduler service is started and follow the steps below to	begin.
+				</para>
+				<para>
+					<emphasis>Note:</emphasis> The following instructions are based on Windows XP and Windows Server
+					2003. You should be able to follow these instructions close enough for Windows 2000 as well.
+				</para>
+				<orderedlist>
+					<listitem>
+						<para>
+							Select <guilabel>Start</guilabel> --> <guilabel>Settings</guilabel> --> <guilabel>Control Panel</guilabel> and double
+							click on  <guilabel>Scheduled Tasks</guilabel>.
+						</para>
+					</listitem>
+					<listitem>
+						<para>
+							Double click on <guilabel>Add Scheduled Task</guilabel>.
+						</para>
+					</listitem>
+					<listitem>
+						<para>
+							Click <guilabel>Next</guilabel> and <guilabel>Browse</guilabel> on the following screen. Find <filename>c:\php</filename> and select
+							<filename>php.exe</filename>.  Choose <guilabel>Daily</guilabel> on and click <guilabel>Next</guilabel>.
+						</para>
+					</listitem>
+					<listitem>
+						<para>
+							Click <guilabel>Next</guilabel> again without changing the time or date settings.
+						</para>
+					</listitem>
+					<listitem>
+						<para>
+							When entering a username and password make sure the user has read and write access to the following directories:
+						</para>
+						<screen><userinput>cacti_web_root/cacti/rra
+cacti_web_root/log</userinput></screen>
+						<para>
+							Make sure the user has read, write, and execute access to the following directories:
+						</para>
+						<screen><userinput>c:\php
+c:\php\sapi</userinput></screen>
+					</listitem>
+					<listitem>
+						<para>
+							Click <guilabel>Next</guilabel> and <guilabel>Finish</guilabel> to close the wizard.
+						</para>
+					</listitem>
+					<listitem>
+						<para>
+							Right click on the task you just created, and select <guilabel>Properties</guilabel>.
+						</para>
+					</listitem>
+					<listitem>
+						<para>
+							Select the <guilabel>Schedule</guilabel> tab.
+						</para>
+					</listitem>
+					<listitem>
+						<para>
+							Make sure <guilabel>Daily</guilabel> is selected and click the <guilabel>Advanced</guilabel> button.
+						</para>
+					</listitem>
+					<listitem>
+						<para>
+							Check the <guilabel>Repeat</guilabel> checkbox, set it for 5 minutes and set the duration for 24 hours.
+						</para>
+					</listitem>
+					<listitem>
+						<para>
+							Click <guilabel>Ok</guilabel>
+						</para>
+					</listitem>
+					<listitem>
+						<para>
+							In the <guilabel>Run</guilabel> textbox enter the following text making sure to use the appropriate paths.
+						</para>
+						<screen>c:\php\php.exe c:\mycacti\website\cacti\poller.php</screen>
+						<para>
+							The start in box should say <filename>c:\mycacti\website\cacti</filename>.
+						</para>
+					</listitem>
+				</orderedlist>
+			</listitem>
+		</orderedlist>
+		<orderedlist>
+			<title>Apply Patches</title>
+			<listitem>
+				<para>
+					There are two methods of applying patches to Cacti:
+				</para>
+				<orderedlist>
+					<listitem>
+						<para>
+							If you have Cygwin installed, then the patch instructions which use wget and patch, will work.
+						</para>
+					</listitem>
+					<listitem>
+						<para>
+							The other method requires you to visit http://www.cacti.net/downloads/patches/0.8.6h/pre-patched/
+							and manually download and replace the patched files.
+						</para>
+					</listitem>
+				</orderedlist>
+			</listitem>
+			<listitem>
+				<para>
+					You might need to reapply file/folder security on the files patched. Double check they are correct.
+				</para>
+			</listitem>
+		</orderedlist>
+	</chapter>
+	<chapter id="upgrade">
+		<title>Upgrading Cacti</title>
+		<orderedlist>
+			<listitem>
+				<para>
+					Backup the old Cacti database.
+				</para>
+				<screen><prompt>shell&gt;</prompt> <userinput>mysqldump -l --add-drop-table cacti &gt; mysql.cacti</userinput></screen>
+				<para>
+					Note: You will probably have to specify the -u and -p flags for the MySQL username and password. This user
+					must have permission to read from Cacti's database or you will end up with an empty backup.
+				</para>
+			</listitem>
+			<listitem>
+				<para>
+					Backup the old Cacti directory.
+				</para>
+				<screen><prompt>shell&gt;</prompt> <userinput>mv cacti cacti_old</userinput></screen>
+			</listitem>
+			<listitem>
+				<para>
+					Extract the distribution tarball.
+				</para>
+				<screen><prompt>shell&gt;</prompt> <userinput>tar xzvf cacti-version.tar.gz</userinput></screen>
+			</listitem>
+			<listitem>
+				<para>
+					Rename the new Cacti directory to match the old one.
+				</para>
+				<screen><prompt>shell&gt;</prompt> <userinput>mv cacti-version cacti</userinput></screen>
+			</listitem>
+			<listitem>
+				<para>
+					Edit <filename>include/config.php</filename> and specify the MySQL user, password and database for your Cacti configuration.
+				</para>
+				<screen><userinput>$database_default = "cacti";
+$database_hostname = "localhost";
+$database_username = "cactiuser";
+$database_password = "cacti";</userinput></screen>
+			</listitem>
+			<listitem>
+				<para>
+					Copy the *.rrd files from the old Cacti directory.
+				</para>
+				<screen><prompt>shell&gt;</prompt> <userinput>cp cacti_old/rra/* cacti/rra/</userinput></screen>
+			</listitem>
+			<listitem>
+				<para>
+					Copy any relevant custom scripts from the old Cacti directory.  Some script are updated between versions.  Therefore, make sure you only over write if the scripts either don't exist or are newer than the distribution's.
+				</para>
+				<screen><prompt>shell&gt;</prompt> <userinput>cp -u cacti_old/scripts/* cacti/scripts/</userinput></screen>
+			</listitem>
+			<listitem>
+				<para>
+					Copy any relevant custom resource XML files from the old Cacti directory.  Some resource XML files are updated between versions.  Therefore, make sure you only over write if the XML files either don't exist or are newer than the distribution's.
+				</para>
+				<screen><prompt>shell&gt;</prompt> <userinput>cp -u -R cacti_old/resource/* cacti/resource/</userinput></screen>
+			</listitem>
+
+			<listitem>
+				<para>
+					Set the appropriate permissions on Cacti's directories for graph/log generation. You
+					should execute these commands from inside Cacti's directory to change the permissions.
+				</para>
+				<screen><prompt>shell&gt;</prompt> <userinput>chown -R cactiuser rra/ log/</userinput></screen>
+				<para>
+					(Enter a valid username for cactiuser, this user will also be used in the next step for data
+					gathering.)
+				</para>
+			</listitem>
+			<listitem>
+				<para>
+					Point your web browser to:
+				</para>
+				<blockquote>
+					<para>
+						http://your-server/cacti/
+					</para>
+				</blockquote>
+				<para>
+					Follow the on-screen instructions so your database can be updated to the new version.
+				</para>
+			</listitem>
+		</orderedlist>
+	</chapter>
+</part>
+
+<part id="basics">
+	<title>Basics</title>
+	<chapter id="graph_overview">
+		<title>Graph Overview</title>
+		<para>
+			Almost everything in Cacti is somehow related to a graph. At any time, you can list all available
+			graphs by clicking on the <guilabel>Graph Management</guilabel> menu item. While it is possible to
+			manually create graphs through this screen, new users should follow the instructions provided in the
+			next chapter for creating new graphs in Cacti.
+		</para>
+		<para>
+			For users that are familiar with <ulink url="http://www.rrdtool.org/"><application>RRDTool</application>
+			</ulink>, you will immediately recognize that a graph in Cacti is closely modeled after <application>RRDTool</application>'s graphs.
+			This makes sense since Cacti provides a user friendly interface to <application>RRDTool</application> without requiring users to
+			understand how <application>RRDTool</application> works. With this in mind, every graph in Cacti has certain settings and at least
+			one graph item associated with it. While graph settings define the overall properties of a graph, the graph
+			items define the data that is to be represented on the graph. So the graph items define which data to display
+			and how it should displayed, and also define what should be displayed on the legend.
+		</para>
+		<para>
+			Each graph and graph item has a set of parameters which control various aspects of the graph.
+			Fortunately through the use of graph templates, it is not necessary to understand the function
+			of each field to create graphs for your network. When you are ready to take on the task of
+			creating your own graph templates, extensive field descriptions for both graphs and graph items
+			are provided in that section of the manual.
+		</para>
+	</chapter>
+	<chapter id="graph_howto">
+		<title>How to Graph Your Network</title>
+		<para>
+			At this point, you probably realize that graphing is Cacti's greatest strength. Cacti has many powerful
+			features that provide complex graphing and data acquisition, some which have a slight learning curve.
+			Do not let that stop you however, because graphing your network is incredibly simple.
+		</para>
+		<para>
+			The next two sections will outline the two basic steps which are typically required to create graphs for
+			most devices.
+		</para>
+		<sect1 id="new_device">
+			<title>Creating a Device</title>
+			<para>
+				The first step to creating graphs for your network is adding a device for each network device that
+				you want to create graphs for. A device specifies important details such as the network
+				hostname, SNMP parameters, and host type.
+			</para>
+			<para>
+				To manage devices within Cacti, click on the <guilabel>Devices</guilabel> menu item.
+				Clicking <guilabel>Add</guilabel>  will bring up a new device form. The first two fields,
+				<guilabel>Description</guilabel> and <guilabel>Hostname</guilabel> are the only two fields that
+				require your input beyond the defaults. If your host type is defined under the host template
+				dropdown, be sure to select it here. You can always choose "Generic SNMP-enabled Host" if you are
+				just graphing traffic or "None" if you are unsure. It is important to remember that the host
+				template you choose will not lock you into any particular configuration, it will just provide
+				more intelligent defaults for that type of host.
+			</para>
+			<figure id="img_device_new">
+				<title>Adding a New Device</title>
+
+				<mediaobject>
+					<imageobject>
+						<imagedata fileref="images/new_device" format="PNG">
+					</imageobject>
+				</mediaobject>
+			</figure>
+			<para>
+				After saving your new device, you should be redirected back to the same edit form with some
+				additional information. If you configured SNMP for this host by providing a valid community string,
+				you should see various statistics listed at the top of the page. If you see "SNMP error" instead,
+				this indicates an SNMP problem between Cacti and your device.
+			</para>
+			<para>
+				Towards the bottom of the page there will be two addition boxes, <guilabel>Associated Data
+				Queries</guilabel>, and <guilabel>Associated Graph Templates</guilabel>. If you selected a host
+				template on the previous page, there will probably be a few items in each box. If there is nothing
+				listed in either box, you will need to associate at least one data query or graph template with
+				your new device or you will not be able to create graphs in the next step. If no available
+				graph template or data query applies to your device, you can check the Cacti templates repository
+				or create your own if nothing currently exists.
+			</para>
+			<sect2 id='snmp_info'>
+				<title>A Word About SNMP</title>
+				<para>
+					The SNMP version that you choose can have a great effect on how SNMP works for you in
+					Cacti. Version 1 should be used for everything unless you have reason to choose otherwise.
+					If you plan on utilizing (and your device supports) high-speed (64-bit) counters, you must
+					select version 2. At the present time, version 3 is not fully implemented and will not work.
+				</para>
+				<para>
+					The way in which Cacti retrieves SNMP information from a host has an effect on which
+					SNMP-related options are supported. Currently there are three types of SNMP retrieval
+					methods in Cacti and are outlined below.
+				</para>
+				<table frame='all'>
+					<title>SNMP Retrieval Types</title>
+					<tgroup cols='4' align='left' colsep='1' rowsep='1'>
+						<colspec colnum="1">
+						<colspec colnum="2">
+						<colspec colnum="3">
+						<colspec colnum="4">
+						<thead>
+							<row>
+								<entry align="center">Type</entry>
+								<entry align="center">Description</entry>
+								<entry align="center">Supported Options</entry>
+								<entry align="center">Places Used</entry>
+							</row>
+						</thead>
+						<tbody>
+							<row>
+								<entry>External SNMP</entry>
+								<entry>Calls the net-snmp snmpwalk and snmpget binaries that are installed on your system.</entry>
+								<entry>All SNMP options</entry>
+								<entry>Web interface and PHP poller (poller.php)</entry>
+							</row>
+							<row>
+								<entry>Internal SNMP (php-snmp)</entry>
+								<entry>Uses PHP's SNMP functions which are linked against net-snmp or ucd-snmp at compile time.</entry>
+								<entry>Version 1 Only (Community and Port)</entry>
+								<entry>Web interface and PHP poller (poller.php)</entry>
+							</row>
+							<row>
+								<entry>Cactid SNMP</entry>
+								<entry>Links directly against net-snmp or ucd-snmp and calls the API directly.</entry>
+								<entry>All SNMP options</entry>
+								<entry>C-Based Poller (cactid)</entry>
+							</row>
+						</tbody>
+					</tgroup>
+				</table>
+			</sect2>
+		</sect1>
+
+		<sect1 id="new_graphs">
+			<title>Creating the Graphs</title>
+			<para>
+				Now that you have created some devices, it is time to create graphs for these devices. To
+				do this, select the <guilabel>New Graphs</guilabel> menu option under the <guilabel>Create</guilabel>
+				heading. You will see a screen similar to the image pictured below.
+			</para>
+			<figure id="img_graph_new">
+				<title>Creating New Graphs</title>
+
+				<mediaobject>
+					<imageobject>
+						<imagedata fileref="images/new_graphs" format="PNG">
+					</imageobject>
+				</mediaobject>
+			</figure>
+			<para>
+				The dropdown menu that contains each device should be used to select the host that you
+				want to create new graphs for. The basic concept to this page is simple, place a check in each
+				row that you want to create a graph for and click <guilabel>Create</guilabel>.
+			</para>
+			<para>
+				If you are creating graphs from inside a "Data Query" box, there are a few additional things to
+				keep in mind. First is that you may encounter the situation as pictured above with the "SNMP -
+				Interface Statistics" data query. If this occurs you may want to consult the section on debugging
+				data queries to see why your data query is not returning any results. Also, you may see a "Select
+				a graph type" dropdown box under some data query boxes. Changing the value of this dropdown box
+				affects which type of graph Cacti will make after clicking the <guilabel>Create</guilabel> button.
+				Cacti only displays this dropdown box when there is more than one type to choose from, so it may
+				not be displayed in all cases.
+			</para>
+			<para>
+				Once you have selected the graphs that you want to create, simply click the <guilabel>Create</guilabel>
+				button at the bottom of the page. You will be taken to a new page that allows you to specify
+				additional information about the graphs you are about to create. You only see the fields here
+				that are not part of each template, otherwise the value automatically comes from the template.
+				When all of the values on this page look correct, click the <guilabel>Create</guilabel> button
+				one last time to actually create your graphs.
+			</para>
+			<para>
+				If you would like to edit or delete your graphs after they have been created, use the
+				<guilabel>Graph Management</guilabel> item on the menu. Likewise, the <guilabel>Data Source
+				</guilabel> menu item allows you to manage your data sources in Cacti.
+			</para>
+		</sect1>
+	</chapter>
+	<chapter id="graph_viewing">
+		<title>Viewing Graphs</title>
+		<sect1 id="new_graph_trees">
+			<title>Graph Trees</title>
+			<para>
+				A graph tree can be thought of as a hierarchical way of organizing your graphs. Each graph tree
+				consists of zero or more headers or branch nodes that contain leaf nodes such as graphs or trees.
+				Multiple graph trees or branches within a single tree can be combined to form a very powerful way
+				of organizing your graphs.
+			</para>
+			<sect2 id="new_graph_tree">
+				<title>Creating a Graph Tree</title>
+				<para>
+					To create a new graph tree, select the <guilabel>Graph Trees</guilabel> menu item under the
+					<guilabel>Management</guilabel> header. Select <guilabel>Add</guilabel> on this page to create a
+					new tree. The following page will prompt you for a tree name, which will be used to identify the
+					graph tree throughout Cacti. Once you type a name, click the <guilabel>Create</guilabel> button to
+					continue. You will be redirected to a page similar to the one below, but without all of the items.
+				</para>
+				<figure id="img_graph_tree_new">
+					<title>Editing a Graph Tree</title>
+
+					<mediaobject>
+						<imageobject>
+							<imagedata fileref="images/graph_tree" format="PNG">
+						</imageobject>
+					</mediaobject>
+				</figure>
+				<para>
+					To start adding items to your tree, click add in the <guilabel>Tree Items</guilabel> box. There are
+					currently three different types of tree items you can choose from: header, graph, or host. Simply
+					choose the type you want, fill in the value for that type, and click <guilabel>Create</guilabel> to
+					make your new graph tree item. Clicking the <guilabel>Add</guilabel> link to the right of any branch
+					will add the new item below that branch, you can change the branch that any item belongs to by changing
+					its <guilabel>Parent Item</guilabel> field.
+				</para>
+			</sect2>
+		</sect1>
+	</chapter>
+	<chapter id="user_management">
+		<title>User Management</title>
+		<para>
+			In addition to giving you the tools to create sophisticated graphs, Cacti enables you to create users
+			that are tailored specifically to their requirements. Each user has certain settings such as login
+			actions, as well as graph viewing settings. There are also two levels of permissions control, realm
+			permissions and graph permissions which enable you to control what the user can see and change.
+		</para>
+		<para>
+			Out of the box, there are two users that come with every Cacti installation. The "admin" user, is the
+			main user that by default has access to see and change everything in Cacti. This is the user that you
+			first login with in Cacti, and is probably a good idea to keep around unless you know otherwise. The
+			second user is the "guest" user, which controls which areas/graphs are allowed for unauthenticated
+			users. By default this user only has rights to view, but not change all graphs. This enables any
+			unauthenticated user to visit 'graph_view.php' and view your graphs. This behavior can be changed by
+			either changing the realm permissions for the "guest" user, or disabling the guest user altogether
+			under <guilabel>Cacti Settings</guilabel>.
+		</para>
+		<sect1 id="create_new_user">
+			<title>Creating a New User</title>
+			<para>
+				To create a new user, select the <guilabel>User Management</guilabel> item under the
+				<guilabel>Utilities</guilabel> heading on the Cacti menu. Once at the user management screen,
+				click <guilabel>Add</guilabel>. You will see a screen that looks similar to the image below.
+			</para>
+			<figure id="img_user_new">
+				<title>Adding a User</title>
+
+				<mediaobject>
+					<imageobject>
+						<imagedata fileref="images/user_management" format="PNG">
+					</imageobject>
+				</mediaobject>
+			</figure>
+			<para>
+				At minimum, you must specify a <guilabel>User Name</guilabel> and
+				a <guilabel>Password</guilabel> for each user. Each user field is described in more detail
+				below. In addition to these fields, each user can have their own realm permissions", graph
+				permissions, and graph settings. Each of these items are described in this section of the
+				manual.
+			</para>
+			<table frame='all'>
+				<title>Field Description: User Management</title>
+				<tgroup cols='2' align='left' colsep='1' rowsep='1'>
+					<colspec colnum="1">
+					<colspec colwidth="3*" colnum="2">
+					<thead>
+						<row>
+							<entry align="center">Name</entry>
+							<entry align="center">Description</entry>
+						</row>
+					</thead>
+					<tbody>
+						<row>
+							<entry>User Name</entry>
+							<entry>This field contains the actual login name for the user. There are no character limits this field, but it would make sense to keep it to alphanumeric characters to maintain simplicity.</entry>
+						</row>
+						<row>
+							<entry>Full Name</entry>
+							<entry>(Optional) You can use this field as a more descriptive identifier for the user. It is currently only used for display on the user management page.</entry>
+						</row>
+						<row>
+							<entry>Password</entry>
+							<entry>Enter the password for the user twice, once in each text box. Keep in mind that passwords are case sensitive and the password will remain unchanged if the boxes are both left empty.</entry>
+						</row>
+						<row>
+							<entry>Account Options</entry>
+							<entry>There are currently two account related options that can be set for each user. The first, 'User Must Change Password at Next Login', forces a password change immediately after the user logs in. The second option, 'Allow this User to Keep Custom Graph Settings', dictates whether the user can maintain their own custom graph viewing settings which includes expanding and collapsing trees.</entry>
+						</row>
+						<row>
+							<entry>Graph Options</entry>
+							<entry>There are three permission related options that can be set for each user here. The 'User Has Rights to {Tree,List,Preview} View' checkboxes dictate which graph viewing areas the user can see.</entry>
+						</row>
+						<row>
+							<entry>Login Options</entry>
+							<entry>These options dictate what occurs immediately after the user logs in. The first option, 'Show the page that user pointed their browser to.' will point the user to whatever page they were heading to before being interrupted by the login page. The 'Show the default console screen.' option will always point the user to 'index.php' after a successful login. The last option, 'Show the default graph screen.' will point the user to 'graph_view.php' after a successful login.</entry>
+						</row>
+						<row>
+							<entry>Authenication Realm</entry>
+							<entry>Multiple types of users can exist in Cacti.  This setting allows you to specify a user for use with Local, Web Basic or LDAP authenication.  Template users must be Local.  </entry>
+						</row>
+					</tbody>
+				</tgroup>
+			</table>
+		</sect1>
+		<sect1 id="realm_permissions">
+			<title>Realm Permissions</title>
+			<para>
+				Realm permissions control which areas of Cacti a user can access. You can edit a user's realm
+				permissions by selecting <guilabel>User Management</guilabel> and choosing the user you
+				want to edit the permissions for. The <guilabel>Realm Permissions</guilabel> box will be displayed
+				in the lower part of the screen. Each "realm" is a grouping that represents common tasks in Cacti,
+				making it easier to fine tune each user's access.
+			</para>
+			<para>
+				If you want to create a user that can only view graphs, you should select the <guilabel>View
+				Graphs</guilabel> realm and leave everything else unchecked. See the <guilabel>Graph
+				Permissions</guilabel> section for more information about how to fine tune this even more on a per-graph
+				basis. Conversely, if the user needs to access the console, they will need <guilabel>Console
+				Access</guilabel> and any additional realms that you see fit.
+			</para>
+		</sect1>
+		<sect1 id="graph_permissions">
+			<title>Graph Permissions</title>
+			<para>
+				Graph permissions control which graphs a user is allowed to view, it does not apply to editing graphs.
+				You can edit a user's graph permissions by selecting <guilabel>User Management</guilabel> and choosing
+				the user you want to edit the permissions for. Now select the <guilabel>Graph Permissions</guilabel> tab
+				to view this user's graph permissions. There are three different ways that you can apply graph permissions,
+				by graph, by host, or by graph template. This works by allowing or denying the user to all graphs associated
+				with the particular group. So you can deny a user to a single graph, all graphs associated with a particular
+				host, or all graphs associated with a particular graph template. Combining these three types of assigning
+				graph permissions results in a very powerful graph policy editor.
+			</para>
+			<para>
+				Each assignment type contains a <guilabel>Default Policy</guilabel> dropdown which can be used to control
+				whether the user should be allowed to view everything or be denied from everything by default in the particular
+				group. It is very important to remember that these policies are evaluated in the order: graph, host, graph
+				template. Therefore, if you set graph's default policy to <guilabel>Deny</guilabel>, but kept host and graph
+				template at <guilabel>Allow</guilabel>, the user's effective policy would be <guilabel>Deny</guilabel> since
+				the graph assignment type is evaluated first. You typically either want to set all default policies to
+				<guilabel>Deny</guilabel> for a restrictive user, or <guilabel>Allow</guilabel> for a non-restrictive user.
+				If you thoroughly understand Cacti's graph permissions system, these default policies can be combined to provide
+				very complex results.
+			</para>
+		</sect1>
+		<sect1 id="graph_settings">
+			<title>Graph Settings</title>
+			<para>
+				Cacti stores certain graph viewing settings for each user, which enables each user to view graphs in an optimal
+				way. These preferences controls things such as the preview graph size or the default graph viewing mode to use.
+				In addition to managing these settings here under user management, each user can change their own settings by
+				clicking on the <guilabel>Graphs</guilabel> tab and selecting the <guilabel>Settings</guilabel> tab on the
+				following page. If you want to prevent a user from being able to keep their own graph preferences, uncheck the
+				<guilabel>Allow this User to Keep Custom Graph Settings</guilabel> checkbox in user management. The user will be
+				presented with an "Access Denied" error message if they attempt to click the <guilabel>Settings</guilabel> tab
+				when this box is checked.
+			</para>
+		</sect1>
+	</chapter>
+</part>
+
+<part id="advanced_topics">
+	<title>Advanced Topics</title>
+	<chapter id="data_input_methods">
+		<title>Data Input Methods</title>
+		<para>
+			Data input methods allow Cacti to retrieve data to insert into data sources and ultimately put on a graph.
+			There are different ways for Cacti to retrieve data, the most popular being through an external script or from
+			SNMP.
+		</para>
+		<sect1 id="new_data_input_method">
+			<title>Creating a Data Input Method</title>
+			<para>
+				To create a new data input method, select the <guilabel>Data Input Methods</guilabel> option under
+				the <guilabel>Management</guilabel> heading. Once on that screen, click <guilabel>Add</guilabel> on the
+				right. You will be presented with a few fields to populate on the following screen.
+			</para>
+			<table frame='all'>
+				<title>Field Description: Data Input Methods</title>
+				<tgroup cols='2' align='left' colsep='1' rowsep='1'>
+					<colspec colnum="1">
+					<colspec colwidth="3*" colnum="2">
+					<thead>
+						<row>
+							<entry align="center">Name</entry>
+							<entry align="center">Description</entry>
+						</row>
+					</thead>
+					<tbody>
+						<row>
+							<entry>Name</entry>
+							<entry>Give the data query a name that you will use to identify it. This name will be used throughout Cacti to identify the data input method.</entry>
+						</row>
+						<row>
+							<entry>Input Type</entry>
+							<entry>Select the type of data input method you are trying to create. Valid options here are 'Script/Command', 'SNMP', 'SNMP Query', and 'Script Query'.</entry>
+						</row>
+						<row>
+							<entry>Input String</entry>
+							<entry><para>This field is only used when the <guilabel>Input Type</guilabel> is set to 'Script/Command'. It specifies the full path to the script including any per data source variables inside &lt;&gt;'s from the user. For instance, if you are passing an IP address to a script, your input string might look something like:</para><para><emphasis>/path/to/script.pl &lt;ip&gt;</emphasis></para><para>When the user creates a data source based on this data input method, they will be prompted for an IP address to pass onto the script.</para></entry>
+						</row>
+						<row>
+							<entry>Output String</entry>
+							<entry>This field is only here for legacy purposes and will probably go away in a future version of Cacti.</entry>
+						</row>
+					</tbody>
+				</tgroup>
+			</table>
+			<para>
+				When you are finished filling in all necessary fields, click the <guilabel>Create</guilabel> button to continue. You will
+				be redirected back to the same page, but this time with two new boxes, <guilabel>Input Fields</guilabel> and <guilabel>Output
+				Fields</guilabel>. The <guilabel>Input Fields</guilabel> box is used to define any fields that require information from the
+				user. Any input fields referenced to in the input string must be defined here. The <guilabel>Output Fields</guilabel> box
+				is used to define each field that you expect back from the script. <emphasis>All data input methods must have at least one output field
+				defined</emphasis>, but may have more for a script.
+			</para>
+			<sect2 id='data_input_fields'>
+				<title>Data Input Fields</title>
+				<para>
+					To define a new field, click <guilabel>Add</guilabel> next to the input or output field boxes. You
+					will be presented with some or all of the fields below depending on whether you are adding an input or
+					output field.
+				</para>
+				<table frame='all'>
+					<title>Field Description: Data Input Fields</title>
+					<tgroup cols='2' align='left' colsep='1' rowsep='1'>
+						<colspec colnum="1">
+						<colspec colwidth="3*" colnum="2">
+						<thead>
+							<row>
+								<entry align="center">Name</entry>
+								<entry align="center">Description</entry>
+							</row>
+						</thead>
+						<tbody>
+							<row>
+								<entry>Field/Field Name</entry>
+								<entry>Either select or type in the name of the field you want to define. No spaces or other non-alphanumeric characters (except '-' or '_') should be used in this field.</entry>
+							</row>
+							<row>
+								<entry>Friendly Name</entry>
+								<entry>Enter a more descriptive name for this field which will be used for identification throughout Cacti.</entry>
+							</row>
+							<row>
+								<entry>Regular Expression Match (Input Only)</entry>
+								<entry>If you want to enforce a certain regular expression pattern when the user enters a value for this field, enter it here. The regular expression must follow POSIX syntax as it will be passed to PHP's ereg() function.</entry>
+							</row>
+							<row>
+								<entry>Allow Empty Input (Input Only)</entry>
+								<entry>Select whether you want to allow the user to leave the value of this field blank or not.</entry>
+							</row>
+							<row>
+								<entry>Special Type Code (Input Only) </entry>
+								<entry>Sometimes Cacti needs to reference a field internally, but needs to rely on more than just the field name. For instance, if your field requires an IP address from the user, you can enter 'management_ip' here and Cacti will fill this field in with the current IP address of the selected host. Valid values for this field are: 'hostname', 'management_ip', 'snmp_community', 'snmp_username', 'snmp_password', and 'snmp_version'.</entry>
+							</row>
+							<row>
+								<entry>Update RRD File (Output Only)</entry>
+								<entry>Check this box if you want Cacti to insert the return value from this field into the RRD file. Obviously, this box needs to be checked for at least one output field per data input source, but can be left blank to have Cacti store the value in the database instead.</entry>
+							</row>
+						</tbody>
+					</tgroup>
+				</table>
+				<para>
+					When you are finished filling in all necessary fields, click the <guilabel>Create</guilabel> button to continue. You
+					will be redirected back to the data input method edit page. From here you can continue to add additional fields, or
+					click <guilabel>Save</guilabel> on this screen when finished.
+				</para>
+			</sect2>
+		</sect1>
+		<sect1 id="making_scripts_work_with_cacti">
+			<title>Making Your Scripts Work With Cacti</title>
+			<para>
+				The simplest way to extend Cacti's data gathering functionality is through external scripts. Cacti comes
+				with a number of scripts out of the box which are located in the <filename>scripts/</filename> directory.
+				These scripts are used by the data input methods that are present in a new installation of Cacti.
+			</para>
+			<para>
+				To have Cacti call an external script to gather data you must create a new data input method, making sure
+				to specify <guilabel>Script/Command</guilabel> for the <guilabel>Input Type</guilabel> field. See the
+				previous section, <ulink url="data_input_methods.html">Creating a Data Input Method</ulink> for more
+				information about how to create a data input method. To gather data using your data input method, Cacti
+				simply executes the shell command specified in the <guilabel>Input String</guilabel> field. Because of
+				this, you can have Cacti run any shell command or call any script which can be written in almost any
+				language.
+			</para>
+			<para>
+				What Cacti is concerned with is the output of the script. When you define your data input method, you are
+				required to define one or more output fields. The number of output fields that you define here is important
+				to your script's output. For a data input method with only one output field, your script should output its
+				value in the following format:
+			</para>
+			<screen><userinput>&lt;value_1&gt;</userinput></screen>
+			<para>
+				So if I wrote a script that outputs the number of running processes, its output might look like the
+				following:
+			</para>
+			<example>
+				<title>Example script output using 1 field</title>
+				<para>
+					<userinput>67</userinput>
+				</para>
+			</example>
+			<para>
+				Data input methods with more than one output field are handled a bit differently when writing scripts.
+				Scripts that output more than one value should be formatted like the following:
+			</para>
+			<screen><userinput>&lt;fieldname_1&gt;:&lt;value_1&gt; &lt;fieldname_2&gt;:&lt;value_2&gt; ... &lt;fieldname_n&gt;:&lt;value_n&gt;</userinput></screen>
+			<para>
+				Lets say that I write a script that outputs the 1, 5, and 10 minute load average of a Unix machine. In Cacti,
+				I name the output fields '1min', '5min', and '10min', respectively. Based on these two things, the output of
+				the script should look like the following:
+			</para>
+			<example>
+				<title>Example script output using 3 fields</title>
+				<para>
+					<userinput>1min:0.40 5min:0.32 10min:0.01</userinput>
+				</para>
+			</example>
+			<para>
+				One last thing to keep in mind when writing scripts for Cacti is that they will be executed as the user the
+				data gatherer runs as. Sometimes a script may work correctly when executed as root, but fails due to permissions
+				problems when executed as a less privileged user.
+			</para>
+		</sect1>
+	</chapter>
+	<chapter id="data_queries">
+		<title>Data Queries</title>
+		<para>
+			Data queries are not a replacement for data input methods in Cacti. Instead they provide an easy way to
+			query, or list data based upon an index, making the data easier to graph. The most common use of a data query
+			within Cacti is to retrieve a list of network interfaces via SNMP. If you want to graph the traffic of a network
+			interface, first Cacti must retrieve a list of interfaces on the host. Second, Cacti can use that
+			information to create the necessary graphs and data sources. Data queries are only concerned with the
+			first step of the process, that is obtaining a list of network interfaces and not creating the graphs/data
+			sources for them. While listing network interfaces is a common use for data queries, they also have other
+			uses such as listing partitions, processors, or even cards in a router.
+		</para>
+		<para>
+			One requirement for any data query in Cacti, is that it has some unique value that defines each row in the list.
+			This concept follows that of a 'primary key' in SQL, and makes sure that each row in the list can be uniquely
+			referenced. Examples of these index values are 'ifIndex' for SNMP network interfaces or the device name for
+			partitions.
+		</para>
+		<para>
+			There are two types of data queries that you will see referred to throughout Cacti. They are script
+			queries and SNMP queries. Script and SNMP queries are virtually identical in their functionality and
+			only differ in how they obtain their information. A script query will call an external command or
+			script and an SNMP query will make an SNMP call to retrieve a list of data.
+		</para>
+		<para>
+			All data queries have two parts, the XML file and the definition within Cacti. An XML file must be
+			created for each query, that defines where each piece of information is and how to retrieve it. This
+			could be thought of as the actual query. The second part is a definition within Cacti, which tells
+			Cacti where to find the XML file and associates the data query with one or more graph templates.
+		</para>
+		<sect1 id="new_data_query">
+			<title>Creating a Data Query</title>
+			<para>
+				Once you have created the XML file that defines your data query, you must add the data query
+				within Cacti. To do this you must click on <guilabel>Data Queries</guilabel> under the <guilabel>Data
+				Gathering</guilabel> heading, and select <guilabel>Add</guilabel>. You will be prompted for some
+				basic information about the data query, described in more detail below.
+			</para>
+			<table frame='all'>
+				<title>Field Description: Data Queries</title>
+				<tgroup cols='2' align='left' colsep='1' rowsep='1'>
+					<colspec colnum="1">
+					<colspec colwidth="3*" colnum="2">
+					<thead>
+						<row>
+							<entry align="center">Name</entry>
+							<entry align="center">Description</entry>
+						</row>
+					</thead>
+					<tbody>
+						<row>
+							<entry>Name</entry>
+							<entry>Give the data query a name that you will use to identify it. This name will be used throughout Cacti when presented with a list of data queries.</entry>
+						</row>
+						<row>
+							<entry>Description</entry>
+							<entry>(Optional) Enter a more detailed description of the data query including the information it queries or additional requirements.</entry>
+						</row>
+						<row>
+							<entry>XML Path</entry>
+							<entry>Fill in the full path to the XML file that defines this query. You can optionally use the &lt;path_cacti&gt;  variable that will be substituted with the full path to Cacti. On the next screen, Cacti will check to make sure that it can find the XML file.</entry>
+						</row>
+						<row>
+							<entry>Data Input Method</entry>
+							<entry>This is how you tell Cacti to handle the data it receives from the data query. Typically, you will select "Get SNMP Data (Indexed)" for an SNMP query and "Get Script Data (Indexed)" for a script query.</entry>
+						</row>
+					</tbody>
+				</tgroup>
+			</table>
+			<para>
+				When you are finished filling in all necessary fields, click the <guilabel>Create</guilabel> button
+				to continue. You will be redirected back to the same page, but this time with some additional
+				information to fill in. If you receive a red warning that says 'XML File Does Not Exist', correct
+				the value specified in the 'XML Path' field.
+			</para>
+			<sect2 id="data_queries_associated_graph_templates">
+				<title>Associated Graph Templates</title>
+				<para>
+					Every data query must have at least one graph template associated with it, and possibly
+					more depending on the number of output fields specified in the XML file. This is where
+					you get to choose what kind of graphs to generate from this query. For instance, the
+					interface data query has multiple graph template associations, used to graph traffic,
+					errors, or packets. To add a new graph template association, simply click <guilabel>Add</guilabel>
+					at the right of the <guilabel>Associated Graph Templates</guilabel> box. You will be presented
+					with a few fields to fill in:
+				</para>
+				<table frame='all'>
+					<title>Field Description: Associated Graph Templates</title>
+					<tgroup cols='2' align='left' colsep='1' rowsep='1'>
+						<colspec colnum="1">
+						<colspec colwidth="3*" colnum="2">
+						<thead>
+							<row>
+								<entry align="center">Name</entry>
+								<entry align="center">Description</entry>
+							</row>
+						</thead>
+						<tbody>
+							<row>
+								<entry>Name</entry>
+								<entry>Give a name describing what kind of data you are trying to represent or graph. When the user creates a graph using this data query, they will see a list of graph template associations that they will have to choose from.</entry>
+							</row>
+							<row>
+								<entry>Graph Template</entry>
+								<entry>Choose the actual graph template that you want to make the association with.</entry>
+							</row>
+						</tbody>
+					</tgroup>
+				</table>
+				<para>
+					When you are finished filling in these fields, click the <guilabel>Create</guilabel> button.
+					You will be redirected back to the same page with some additional information to fill in. Cacti
+					will make a list of each data template referenced to in your selected graph template and display
+					them under the <guilabel>Associated Data Templates</guilabel> box. For each data source item
+					listed, you must selected the data query output field that corresponds with it. <emphasis>Do not forget to
+					check the checkbox to the right of each selection, or your settings will not be saved.</emphasis>
+				</para>
+				<para>
+					The <guilabel>Suggested Values</guilabel> box gives you a way to control field values of data sources and graphs
+					created using this data query. If you specify multiple suggested values for the same field, Cacti will evaluate
+					them in order which you can control using the up or down arrow icons. For more information about valid field names
+					and variables, read the section on suggested values.
+				</para>
+				<para>
+					When you are finished filling in all necessary fields on this form, click the <guilabel>Save</guilabel> button to
+					return to the data queries edit screen. Repeat the steps under this heading as many times as necessary to represent
+					all data in your XML file. When you are finished with this, you should be ready to start adding your data query to
+					hosts.
+				</para>
+			</sect2>
+		</sect1>
+		<sect1 id="snmp_query_xml">
+			<title>SNMP Query XML Syntax</title>
+			<programlisting>&lt;query&gt;
+   &lt;name&gt;Get SNMP Interfaces&lt;/name&gt;
+   &lt;description&gt;Queries a host for a list of monitorable interfaces&lt;/description&gt;
+   &lt;oid_index&gt;.1.3.6.1.2.1.2.2.1.1&lt;/oid_index&gt;
+   &lt;oid_index_parse&gt;OID/REGEXP:.*\.([0-9]{1,3}\.[0-9]{1,3})$&lt;/oid_index_parse&gt;
+   &lt;oid_num_indexes&gt;.1.3.6.1.2.1.2.1.0&lt;/oid_num_indexes&gt;
+   &lt;index_order&gt;ifDescr:ifName:ifIndex&lt;/index_order&gt;
+   &lt;index_order_type&gt;numeric&lt;/index_order_type&gt;
+   &lt;index_title_format&gt;|chosen_order_field|&lt;/index_title_format&gt;
+
+   &lt;fields&gt;
+      &lt;ifIndex&gt;
+         &lt;name&gt;Index&lt;/name&gt;
+         &lt;method&gt;walk&lt;/method&gt;
+         &lt;source&gt;value&lt;/source&gt;
+         &lt;direction&gt;input&lt;/direction&gt;
+         &lt;oid&gt;.1.3.6.1.2.1.2.2.1.1&lt;/oid&gt;
+      &lt;/ifIndex&gt;
+   &lt;/fields&gt;
+&lt;/query&gt;</programlisting>
+			<table frame='all'>
+				<title>SNMP Query XML Field Reference</title>
+				<tgroup cols='2' align='left' colsep='1' rowsep='1'>
+					<colspec colnum="1">
+					<colspec colwidth="2*" colnum="2">
+					<thead>
+						<row>
+							<entry align="center">Field</entry>
+							<entry align="center">Description</entry>
+						</row>
+					</thead>
+					<tbody>
+						<row>
+							<entry>query-&gt;name</entry>
+							<entry>(Optional) You can enter a "friendly name" for the SNMP query here. It will not be used by Cacti, and is for identification only.</entry>
+						</row>
+						<row>
+							<entry>query-&gt;description</entry>
+							<entry>(Optional) You can enter a description for the SNMP query here. It will not be used by Cacti, and is for identification only.</entry>
+						</row>
+						<row>
+							<entry>query-&gt;oid_index</entry>
+							<entry><para>Every SNMP query must have an OID that represents the index values for the query when walked. As described above, any data query in Cacti must contain a field that uniquely identifies each row returned by the query. In the example above, the oid_index points to the OID of ifIndex in the interface MIB.</para><para><emphasis>Note:</emphasis> Starting with version 0.8.6c, Cacti is able to parse unique indexes from the OID itself. While the regular expression used for parsing the value from the OID is defined below, you must still specify an OID that can be walked by Cacti in order to obtain the list of OID's. Any OID defined for one of your input fields should work in this case. The values returned from the snmpwalk walk will be completely disregarded.</para></entry>
+						</row>
+						<row>
+							<entry>query-&gt;oid_index_parse</entry>
+							<entry>This field should only be used if you are trying to parse the unique index from the OID itself. If this field is defined, to obtain a list of indexes, Cacti walks the OID provided in the <property>oid_index</property> field above. It then applies the regular expression provided in this field to the list of OID's that are returned. The matched substrings that remain become the list of indexes for this SNMP query.</entry>
+						</row>
+						<row>
+							<entry>query-&gt;oid_num_indexes</entry>
+							<entry>An OID that can be queried to determine the total number of available indexes. If specified, this will be used to determine when to automatically recache this SNMP query when it is attached to a device.</entry>
+						</row>
+						<row>
+							<entry>query-&gt;index_order</entry>
+							<entry>As of version 0.8.6, Cacti will attempt to find the best field to index off of based on whether each row in the query is unique and non-null. If specified, Cacti will perform this check on the fields listed here in the order specified. Only input fields can be specified and multiple fields should be delimited with a colon.</entry>
+						</row>
+						<row>
+							<entry>query-&gt;index_order_type</entry>
+							<entry><para>For sorting purposes, specify whether the index is numeric or alphanumeric.</para><para><parameter>numeric</parameter>: The indexes in this SNMP query are to be sorted numerically (ie. 1,2,3,10,20,31)</para><para><parameter>alphabetic</parameter>: The indexes in this SNMP query are to be sorted alphabetically (1,10,2,20,3,31).</para></entry>
+						</row>
+						<row>
+							<entry>query-&gt;index_title_format</entry>
+							<entry>Specify the title format to use when representing an index to the user. Any input field name can be used as a variable if enclosed in pipes (|). The variable <parameter>|chosen_order_field|</parameter> will be substituted with the field chosen by Cacti to index off of (see index_order above).</entry>
+						</row>
+						<row>
+							<entry>query-&gt;fields</entry>
+							<entry>Each field contained within the SNMP query must be defined under this tag.</entry>
+						</row>
+						<row>
+							<entry>query-&gt;fields-&gt;ifIndex</entry>
+							<entry>Each defined field in the SNMP query must have a unique name given to it. Do not use spaces or any non-alphanumeric characters, this name must be identifiable within Cacti.</entry>
+						</row>
+						<row>
+							<entry>query-&gt;fields-&gt;ifIndex-&gt;name</entry>
+							<entry>Here you can specify a "friendly name" for the field. This name will be used by Cacti to help the user identify this field.</entry>
+						</row>
+						<row>
+							<entry>query-&gt;fields-&gt;ifIndex-&gt;method</entry>
+							<entry><para>Tell Cacti how you want it to gather SNMP information for this field.</para><para><parameter>get</parameter>: The 'get' method obtains a list of indexes and does an snmpget for each index of the OID specified for this field.</para><para><parameter>walk</parameter>: The 'walk' method does a walk of the OID specified for this field. Both methods will return the same values, even though the 'walk' method is typically more efficient.</para></entry>
+						</row>
+						<row>
+							<entry>query-&gt;fields-&gt;ifIndex-&gt;source</entry>
+							<entry><para>When Cacti obtains a list for this field, you need to tell it how to derive its value for each row.</para><para><parameter>value</parameter>: The 'value' option simply returns the result of the snmpget for each row.</para><para><parameter>OID/REGEXP:(regexp_match)</parameter>: The 'OID/REGEXP:(regexp_match)' can be used when you need to use a POSIX-based regular expression to derive the value from the OID. The most common example of this is to retreive the IP address of an interface, and can be seen in the 'interface.xml' file.</para><para><parameter>VALUE/REGEXP:(regexp_match)</parameter>: The 'OID/REGEXP:(regexp_match)' option can be used to parse the value based on a regular expression, returning the first match.</para><para><parameter>index</parameter>: Simply use the value of the index for this row as the value. If the index is being parsed from the OID using the <property>oid_index_parse</property> field, you must specify <parameter>index</parameter> here.</para></entry>
+						</row>
+						<row>
+							<entry>query-&gt;fields-&gt;ifIndex-&gt;direction</entry>
+							<entry><para><parameter>input</parameter>: Input values are the "known" values that you will use to derive the output values, this is where the "query" part of SNMP query comes in. When you create a graph based on an SNMP query, Cacti will prompt you to choose the input value to base the graph on.</para><para><parameter>output</parameter>: Output values are "unknown" values that are returned from the script. An SNMP query may return multiple statistics for a single index. For instance, a single interface could return bytes/sec in, errors, packets/sec, etc.</para><para>A rule of thumb is that input fields contain semi-static data that is not graphable, while the output fields contain the data that will be graphed.</para></entry>
+						</row>
+						<row>
+							<entry>query-&gt;fields-&gt;ifIndex-&gt;oid</entry>
+							<entry>You must specify the actual OID that corresponds with the field. Each value for this field can be obtained by doing an snmpget on 'oid.(each)snmpindex'.</entry>
+						</row>
+					</tbody>
+				</tgroup>
+			</table>
+		</sect1>
+		<sect1 id="script_query_xml">
+			<title>Script Query XML Syntax</title>
+			<programlisting>&lt;query&gt;
+   &lt;name&gt;Get Unix Mounted Partitions&lt;/name&gt;
+   &lt;description&gt;Queries a list of mounted partitions on a unix-based host with the 'df' command.&lt;/description&gt;
+   &lt;script_path&gt;perl |path_cacti|/scripts/query_unix_partitions.pl&lt;/script_path&gt;
+   &lt;arg_index&gt;index&lt;/arg_index&gt;
+   &lt;arg_query&gt;query&lt;/arg_query&gt;
+   &lt;arg_get&gt;get&lt;/arg_get&gt;
+   &lt;arg_num_indexes&gt;num_indexes&lt;/arg_num_indexes&gt;
+   &lt;output_delimeter&gt;:&lt;/output_delimeter&gt;
+   &lt;index_order&gt;dskDevice:dskMount&lt;/index_order&gt;
+   &lt;index_order_type&gt;alphabetic&lt;/index_order_type&gt;
+   &lt;index_title_format&gt;|chosen_order_field|&lt;/index_title_format&gt;
+
+   &lt;fields&gt;
+      &lt;dskDevice&gt;
+         &lt;name&gt;Device Name&lt;/name&gt;
+         &lt;direction&gt;input&lt;/direction&gt;
+         &lt;query_name&gt;device&lt;/query_name&gt;
+      &lt;/dskDevice&gt;
+   &lt;/fields&gt;
+&lt;/query&gt;</programlisting>
+			<table frame='all'>
+				<title>Script Query XML Field Reference</title>
+				<tgroup cols='2' align='left' colsep='1' rowsep='1'>
+					<colspec colnum="1">
+					<colspec colwidth="2*" colnum="2">
+					<thead>
+						<row>
+							<entry align="center">Field</entry>
+							<entry align="center">Description</entry>
+						</row>
+					</thead>
+					<tbody>
+						<row>
+							<entry>query-&gt;name</entry>
+							<entry>(Optional) You can enter a "friendly name" for the script query here. It will not be used by Cacti, and is for identification only.</entry>
+						</row>
+						<row>
+							<entry>query-&gt;description</entry>
+							<entry>(Optional) You can enter a description for the script query here. It will not be used by Cacti, and is for identification only.</entry>
+						</row>
+						<row>
+							<entry>query-&gt;script_path</entry>
+							<entry>Enter the complete path to the script or executable that is going to handle your script query. When in doubt, specify the pull path to all binaries referenced in this path, the query may not execute otherwise.</entry>
+						</row>
+						<row>
+							<entry>query-&gt;arg_index</entry>
+							<entry>Enter the argument that is to be passed to the script to retrieve a list of indexes.</entry>
+						</row>
+						<row>
+							<entry>query-&gt;arg_query</entry>
+							<entry>Enter the argument that is to be passed to the script to retrieve a list of values given a field name.</entry>
+						</row>
+						<row>
+							<entry>query-&gt;arg_get</entry>
+							<entry>Enter the argument that is to be passed to the script to retrieve a single value given a field name and index value.</entry>
+						</row>
+						<row>
+							<entry>query-&gt;arg_num_indexes</entry>
+							<entry>Enter the argument that is to be passed to the script to determine the total number of available indexes. If specified, this will be used to determine when to automatically recache this script query when it is attached to a device.</entry>
+						</row>
+						<row>
+							<entry>query-&gt;output_delimeter</entry>
+							<entry>Enter the one character delimiter that will be used to separate output values. This is only used when you "query" the script in which case it outputs 'index(delimiter)value'.</entry>
+						</row>
+						<row>
+							<entry>query-&gt;index_order</entry>
+							<entry>As of version 0.8.6, Cacti will attempt to find the best field to index off of based on whether each row in the query is unique and non-null. If specified, Cacti will perform this check on the fields listed here in the order specified. Only input fields can be specified and multiple fields should be delimited with a comma.</entry>
+						</row>
+						<row>
+							<entry>query-&gt;index_order_type</entry>
+							<entry><para>For sorting purposes, specify whether the index is numeric or alphanumeric.</para><para><parameter>numeric</parameter>: The indexes in this script query are to be sorted numerically (ie. 1,2,3,10,20,31)</para><para><parameter>alphabetic</parameter>: The indexes in this script query are to be sorted alphabetically (1,10,2,20,3,31).</para></entry>
+						</row>
+						<row>
+							<entry>query-&gt;index_title_format</entry>
+							<entry>Specify the title format to use when representing an index to the user. Any input field name can be used as a variable if enclosed in pipes (|). The variable <parameter>|chosen_order_field|</parameter> will be substituted with the field chosen by Cacti to index off of (see index_order above).</entry>
+						</row>
+						<row>
+							<entry>query-&gt;fields</entry>
+							<entry>Each field contained within the script query must be defined under this tag.</entry>
+						</row>
+						<row>
+							<entry>query-&gt;fields-&gt;dskDevice</entry>
+							<entry>Each defined field in the script query must have a unique name given to it. Do not use spaces or any non-alphanumeric characters, this name must be identifiable within Cacti.</entry>
+						</row>
+						<row>
+							<entry>query-&gt;fields-&gt;dskDevice-&gt;name</entry>
+							<entry>Here you can specify a "friendly name" for the field. This name will be used by Cacti to help the user identify this field.</entry>
+						</row>
+						<row>
+							<entry>query-&gt;fields-&gt;dskDevice-&gt;direction</entry>
+							<entry><para><parameter>input</parameter>: Input values are the "known" values that you will use to derive the output values, this is where the "query" part of script query comes in. When you create a graph based on a script query, Cacti will prompt you to choose the input value to base the graph on.</para><para><parameter>output</parameter>: Output values are "unknown" values that are returned from the script. A script query may return multiple statistics for a single index. For instance, a single partition could return free disk space, total disk space, fragmentation percentage, etc.</para><para>A rule of thumb is that input fields contain semi-static data that is not graphable, while the output fields contain the data that will be graphed.</para></entry>
+						</row>
+						<row>
+							<entry>query-&gt;fields-&gt;dskDevice-&gt;query_name</entry>
+							<entry>Enter the name that Cacti must use when asking the script for information about this field. For instance, the following should return values: '(script_name) query (query_name)'.</entry>
+						</row>
+					</tbody>
+				</tgroup>
+			</table>
+		</sect1>
+	</chapter>
+	<chapter id="templates">
+		<title>Templates</title>
+		<sect1 id="graph_templates">
+			<title>Graph Templates</title>
+			<para>
+				In Cacti, a graph template provides a skeleton for an actual graph. If you have many graphs that
+				share most of their characteristics, using a graph template would probably make sense. After a
+				graph is attached to a particular graph template, all changes made to the graph template will
+				propagate out to all of its graphs.
+			</para>
+			<sect2 id="creating_graph_templates">
+				<title>Creating a Graph Template</title>
+				<para>
+					To create a new graph template, select <guilabel>Graph Templates</guilabel> under the
+					<guilabel>Templates</guilabel> heading and click <guilabel>Add</guilabel>.
+				</para>
+				<para>
+					The first thing you must do is give the template a name. This name has nothing to do with
+					the graph title, but is what you will use to identify the template throughout Cacti.
+					Second, you will notice a list of graph field names with Use Per-Graph Value checkboxes
+					next to each one. The nice thing about templates in Cacti is that you can choose whether
+					to template each field on a per-field basis. If you leave the checkbox uncheked, every
+					graph attached to the template will inherit its value from the template. If the checkbox
+					is checked, every graph attached to the template will contain its own value for that
+					particular field.
+				</para>
+				<table frame='all'>
+					<title>Field Description: Graph Templates</title>
+					<tgroup cols='2' align='left' colsep='1' rowsep='1'>
+						<colspec colnum="1">
+						<colspec colwidth="3*" colnum="2">
+						<thead>
+							<row>
+								<entry align="center">Name</entry>
+								<entry align="center">Description</entry>
+							</row>
+						</thead>
+						<tbody>
+							<row>
+								<entry>Title</entry>
+								<entry><para>The title of the graph within Cacti and the title that will be printed on the actual graph itself.</para><para><emphasis>Note:</emphasis> You can use the keyword |host_description| in this field, which will be automatically substituted with the current host description.</para></entry>
+							</row>
+							<row>
+								<entry>Image Format</entry>
+								<entry>Choose whether you would prefer to output your graph images in PNG or GIF. According to the <ulink url="http://people.ee.ethz.ch/~oetiker/webtools/rrdtool/manual/rrdgraph.html">RRDTool graph manual</ulink> PNG is preferred because it is both smaller and faster.</entry>
+							</row>
+							<row>
+								<entry>Height</entry>
+								<entry>The height of the graph area in pixels</entry>
+							</row>
+							<row>
+								<entry>Width</entry>
+								<entry>The width of the graph area in pixels</entry>
+							</row>
+							<row>
+								<entry>Auto Scale</entry>
+								<entry>Enable auto scale for the graph. This option must be check to use the next two options. Upper/Lower limit values are ignored when using autoscale since these boundaries are determined automatically.</entry>
+							</row>
+							<row>
+								<entry>Auto Scale Options</entry>
+								<entry>Choose whether you would like to use --alt-autoscale or --alt-autoscale-max on the graph. The <ulink url="http://people.ee.ethz.ch/~oetiker/webtools/rrdtool/manual/rrdgraph.html">RRDTool graph manual</ulink> says: <quote>Where --alt-autoscale will modify both the absolute maximum AND minimum values, this option will only affect the maximum value. The minimum value, if not defined on the command line, will be 0. This option can be useful when graphing router traffic when the WAN line uses compression, and thus the throughput may be higher than the WAN line speed</quote>.</entry>
+							</row>
+							<row>
+								<entry>Logarithmic Auto Scaling</entry>
+								<entry>Choose if you want logarithmic y-axis scaling.</entry>
+							</row>
+							<row>
+								<entry>Rigid Boundaries Mode</entry>
+								<entry>From the RRDTool manual <quote>Normally rrdgraph will automatically expand the lower and upper limit if the graph contains a value outside the valid range. With this option you can disable this behavior</quote>.</entry>
+							</row>
+							<row>
+								<entry>Auto Padding</entry>
+								<entry>If you have ever created RRDTool-based graphs manually, you may have realized how annoying it can be to get text to line up properly. With this option Cacti will do its best to make the columns on your graph legend line up. This option works best when your graph legend has a consistent number of columns.</entry>
+							</row>
+							<row>
+								<entry>Allow Graph Export</entry>
+								<entry>If you choose to use Cacti's static HTML/image export, you can choose whether you want each individual graph to be exported.</entry>
+							</row>
+							<row>
+								<entry>Upper Limit</entry>
+								<entry>The maximum value that will be displayed on the y-axis. This value is ignored is auto-scaling is turned on.</entry>
+							</row>
+							<row>
+								<entry>Lower Limit</entry>
+								<entry>The minimum value that will be displayed on the y-axis. This value is ignored is auto-scaling is turned on.</entry>
+							</row>
+							<row>
+								<entry>Base Value</entry>
+								<entry>Whether you want to base the y-axis labels on 1000 or 1024. This field will typically be set to 1024 for memory and 1000 for traffic measurements.</entry>
+							</row>
+							<row>
+								<entry>Unit Value</entry>
+								<entry>Sets the unit value for the y-axis. You should probably keep the unit short as to keep it readable.</entry>
+							</row>
+							<row>
+								<entry>Unit Exponent Value</entry>
+								<entry>Sets the 10^e scaling of the y-axis. Valid values for this field are between -18 and 18. For example, you could use 3 to display everything in 'k' (kilo) or -6 to display everything in 'u' (micro).</entry>
+							</row>
+							<row>
+								<entry>Vertical Label</entry>
+								<entry>The text to print on the left edge of the graph. Usually is the units the data on the graph is measured in.</entry>
+							</row>
+						</tbody>
+					</tgroup>
+				</table>
+				<para>
+					<emphasis>Note:</emphasis> For most graph templates, you will want to check the Use
+					<guilabel>Per-Graph Value</guilabel> checkbox for the title field so each graph using this
+					template has its own unique title. It also makes sense to enter an initial value in this
+					field that includes the variable |host_description| for organizational purposes.
+				</para>
+				<para>
+					When you are finished filling in values for the graph template, click <guilabel>Create</guilabel>
+					and you will be presented with a page similar to the graph edit page.
+				</para>
+				<figure id="img_graph_template_new">
+					<title>Adding a Graph Template</title>
+
+					<mediaobject>
+						<imageobject>
+							<imagedata fileref="images/graph_template" format="PNG">
+						</imageobject>
+					</mediaobject>
+				</figure>
+				<sect3 id="graph_items">
+					<title>Graph Items</title>
+					<para>
+						The first thing you should do is create graph items for this graph template, just like for a regular graph.
+						One difference you will notice is that the <guilabel>Data Sources</guilabel> dropdown will contain a list
+						of data template items rather than data source items. It is important that Cacti can make this association
+						here, so that Cacti doesn't have to make unnecessary assumptions later.
+					</para>
+					<table frame='all'>
+						<title>Field Description: Graph Template Items</title>
+						<tgroup cols='2' align='left' colsep='1' rowsep='1'>
+							<colspec colnum="1">
+							<colspec colwidth="3*" colnum="2">
+							<thead>
+								<row>
+									<entry align="center">Name</entry>
+									<entry align="center">Description</entry>
+								</row>
+							</thead>
+							<tbody>
+								<row>
+									<entry>Data Source</entry>
+									<entry>If this graph item is to represent some sort of data, you must select a your data source here. Keep in mind that not all graph items have a data source. Graph item types such as COMMENT, VRULE, and HRULE typically do not.</entry>
+								</row>
+								<row>
+									<entry>Color</entry>
+									<entry>Depending on the graph item type, you can select a color for the graph item. This field only applies to the graph item types AREA, STACK, LINE1, LINE2, and LINE3.</entry>
+								</row>
+								<row>
+									<entry>Graph Item Type</entry>
+									<entry><para>This field is important because it defines what kind of graph item this is. Types such as AREA, STACK, LINE1, LINE2, and LINE3 are used to represent data on the graph, while COMMENT and GPRINT are used put on the legend. The LEGEND type is specific to Cacti only and can be used if you want to Cacti to automatically create a GPRINT-LAST/GPRINT-AVERAGE/GPRINT-MAXIMUM graph item for you.</para><para><emphasis>Note:</emphasis>: You must always put an AREA item before using STACK or your graph will not render.</para></entry>
+								</row>
+								<row>
+									<entry>Consolidation Function</entry>
+									<entry>This tells <application>RRDTool</application> which consolidation function to use when representing this data on the graph. You will typically use AVERAGE for most things on the graph area, and LAST/MAXIMUM as well for GPRINT items.</entry>
+								</row>
+								<row>
+									<entry>CDEF Function</entry>
+									<entry>If you want to apply a CDEF function to the graph item, select one here. Check out the CDEF section  of the manual for more information.</entry>
+								</row>
+								<row>
+									<entry>Value</entry>
+									<entry>This field is only used with the HRULE/VRULE graph item types. Type any valid integer to draw the line at for HRULE or the time of the day HH:MM for VRULE.</entry>
+								</row>
+								<row>
+									<entry>GPRINT Type</entry>
+									<entry>If this item is a GPRINT, you can choose how you want the number to be formatted. You can add your own in the GPRINT Presets section of Cacti.</entry>
+								</row>
+								<row>
+									<entry>Text Format</entry>
+									<entry>You can enter text to be displayed on the legend here. This field is applicable for all graph item types except for the virtual LEGEND type.</entry>
+								</row>
+								<row>
+									<entry>Hard Return</entry>
+									<entry>Check this box to force graph items onto the next line.</entry>
+								</row>
+							</tbody>
+						</tgroup>
+					</table>
+				</sect3>
+				<sect3 id="graph_item_inputs">
+					<title>Graph Item Inputs</title>
+					<para>
+						After creating graph items for your template, you will need to create some graph item inputs. Graph item inputs are
+						unique to graph templates because of the large number of items they sometimes contain. Graph item inputs enable you to
+						take one graph item field, and associate it with multiple graph items.
+					</para>
+					<para>
+						To create a new graph item input, click <guilabel>Add</guilabel> on the right of the <guilabel>Graph Item
+						Inputs</guilabel> box. There are various fields that must be filled in for every graph item input:
+					</para>
+					<table frame='all'>
+						<title>Field Description: Graph Template Items</title>
+						<tgroup cols='2' align='left' colsep='1' rowsep='1'>
+							<colspec colnum="1">
+							<colspec colwidth="3*" colnum="2">
+							<thead>
+								<row>
+									<entry align="center">Name</entry>
+									<entry align="center">Description</entry>
+								</row>
+							</thead>
+							<tbody>
+								<row>
+									<entry>Name</entry>
+									<entry>This will be the name used to identify the graph item input on both the graph template and graph edit pages.</entry>
+								</row>
+								<row>
+									<entry>Description</entry>
+									<entry>(Optional) This description will be displayed on the graph edit page of any graph using this template if specified.</entry>
+								</row>
+								<row>
+									<entry>Field Type</entry>
+									<entry>You must choose the field that you are going to associate with one or more graph items.</entry>
+								</row>
+								<row>
+									<entry>Associated Graph Items</entry>
+									<entry>Choose one or more graph items to associate with the field selected for "Field Type". When the user specifies a value for the field, it will be applied to all of the items you select here.</entry>
+								</row>
+							</tbody>
+						</tgroup>
+					</table>
+				</sect3>
+			</sect2>
+			<sect2 id="applying_graph_templates">
+				<title>Applying Graph Templates to Graphs</title>
+				<para>
+					Applying a graph template to a graph is a very simple process. The first thing you must do is select the graph you
+					want to apply the template to under <guilabel>Graph Management</guilabel>. Under the <guilabel>Graph Template
+					Selection</guilabel> box, select the graph template that you want to apply to the graph and click
+					<guilabel>Save</guilabel>. If this is a new graph or the graph and graph template contains an equal number of
+					graph items, the graph template will be automatically applied. If number of graph items varies from the graph to
+					the target graph template, you will be propmted with a warning that your graph will be changed.
+				</para>
+				<para>
+					Once the template is applied to the graph, you will notice that you can only change values for the fields that
+					you checked Use Per-Graph Value for. You will also notice a new box, called <guilabel>Graph Item Inputs</guilabel>.
+					This is where you can specify values for the graph items inputs that you defined in the graph template. The values
+					specified here will be applied to each graph item tied to the graph item input.
+				</para>
+				<para>
+					<emphasis>Now any time a change is made to the graph template, it will be automatically propagated to the graphs
+					attached to it.</emphasis>
+				</para>
+			</sect2>
+		</sect1>
+		<sect1 id="data_templates">
+			<title>Data Templates</title>
+			<para>
+				In Cacti, a data template provides a skeleton for an actual data source. If you have many data
+				sources that share most of their characteristics, using a data template would probably make sense.
+				After a data source is attached to a particular data template, all changes made to the data template
+				will propagate out to all of its data sources.
+			</para>
+			<sect2 id="creating_data_templates">
+				<title>Creating a Data Template</title>
+				<para>
+					To create a new data template, select <guilabel>Data Templates</guilabel> under the
+					<guilabel>Templates</guilabel> heading and click <guilabel>Add</guilabel>.
+				</para>
+				<para>
+					The first thing you must do is give the template a name. This name has nothing to do with the
+					data source name, but is what you will use to identify the template throughout Cacti. Second,
+					you will notice a list of data source/data source item field names with Use <guilabel>Per-Data
+					Source Value</guilabel> checkboxes next to each one. The nice thing about templates in Cacti is
+					that you can choose whether to template each field on a per-field basis. If you leave the checkbox
+					unchecked, every data source attached to the template will inherit its value from the template. If
+					the checkbox is checked, every data source attached to the template will contain its own value for
+					that particular field.
+				</para>
+				<table frame='all'>
+					<title>Field Description: Data Templates</title>
+					<tgroup cols='2' align='left' colsep='1' rowsep='1'>
+						<colspec colnum="1">
+						<colspec colwidth="3*" colnum="2" >
+						<thead>
+							<row>
+								<entry align="center">Name</entry>
+								<entry align="center">Description</entry>
+							</row>
+						</thead>
+						<tbody>
+							<row>
+								<entry>Name</entry>
+								<entry><para>This is the name that cacti uses to identify this data source. You must type something here, but you may include spaces and other non-alphanumeric characters.</para><para><emphasis>Note:</emphasis> You can use the keyword |host_description| in this field, which will be automatically substituted with the current host description.</para></entry>
+							</row>
+							<row>
+								<entry>Data Source Path</entry>
+								<entry>The full path to the RRD file associated with this data source. When creating a new data source you will typically leave this field blank as Cacti will generate one for you. If you are using an RRD file generated outside of Cacti, you need to specify it here.</entry>
+							</row>
+							<row>
+								<entry>Data Input Method</entry>
+								<entry>Here is where you tell cacti how it is supposed to fetch data for this data source. There are several data input sources that come with cacti, and you can add your own by going to Data Input Methods. If this RRD file is being populated outside of cacti, make sure to leave this field set to "None".</entry>
+							</row>
+							<row>
+								<entry>Associated RRAs</entry>
+								<entry>You need to associate the data source with at least one RRA so <application>RRDTool</application> knows how often and for how long to keep its data. You will almost always want to select all of these values however so you can render daily, weekly, monthly, and yearly graphs.</entry>
+							</row>
+							<row>
+								<entry>Step</entry>
+								<entry>This tells <application>RRDTool</application> how many seconds there will be between updates. The default is 300 seconds (5 minutes), and is sufficient for most installations.</entry>
+							</row>
+							<row>
+								<entry>Data Source Active</entry>
+								<entry>This is a quick and easy to tell Cacti to stop gathering data for this data source. The data source can still be used on graphs, but no data will be fed to it until it is made active again.</entry>
+							</row>
+						</tbody>
+					</tgroup>
+				</table>
+				<para>
+					<emphasis>Note:</emphasis> For most data templates, you will want to check the <guilabel>Use
+					Per-Graph Value</guilabel> checkbox for the name field so each data source using this template has its
+					own unique name. It also makes sense to enter an inital value in this field that includes the variable
+					|host_description| for organizational purposes.
+				</para>
+				<para>
+					When you are finished filling in values for the data template, click <guilabel>Create</guilabel> and
+					you will be presented with a screen similar to the data source edit screen.
+				</para>
+				<figure id="img_data_template_new">
+					<title>Adding a Data Template</title>
+
+					<mediaobject>
+						<imageobject>
+							<imagedata fileref="images/data_template" format="PNG">
+						</imageobject>
+					</mediaobject>
+				</figure>
+				<sect3 id="data_template_items">
+					<title>Data Source Items</title>
+					<para>
+						Like a graph, a data source can have more than one items. This is useful in situations where a
+						script returns more than piece of data at one time. This also applies to data queries, so you
+						can have a single data template that contains both inbound and outbound traffic, rather than
+						having to create a separate data template for each.
+					</para>
+					<table frame='all'>
+						<title>Field Description: Data Source Items</title>
+						<tgroup cols='2' align='left' colsep='1' rowsep='1'>
+							<colspec colnum="1">
+							<colspec colwidth="3*" colnum="2">
+							<thead>
+								<row>
+									<entry align="center">Name</entry>
+									<entry align="center">Description</entry>
+								</row>
+							</thead>
+							<tbody>
+								<row>
+									<entry>Internal Data Source Name</entry>
+									<entry>This is the name used by <application>RRDTool</application> to identify this particular data source within the RRD file. <application>RRDTool</application> places a limit of 19 alphanumeric characters (plus '_' and '-') on this field.</entry>
+								</row>
+								<row>
+									<entry>Minimum Value</entry>
+									<entry>Here is where you specify the minimum value that is expected for this data source in the RRD file. If a value lower than the minimum is given, it will be stored as Unknown (U).</entry>
+								</row>
+								<row>
+									<entry>Maximum Value</entry>
+									<entry>Here is where you specify the maximum value that is expected for this data source in the RRD file. If a value higher than the maximum is given, it will be stored as Unknown (U).</entry>
+								</row>
+								<row>
+									<entry>Data Source Type</entry>
+									<entry>There are four types of data that <application>RRDTool</application> can represent for any given data source: COUNTER, GAUGE, ABSOLUTE, and DERIVE. A gauge is for numbers that are not continuously incrementing. A counter is for continuously incrementing values that might overflow, while a derive does not overflow. The absolute type is used for counters that are reset upon reading.</entry>
+								</row>
+								<row>
+									<entry>Heartbeat</entry>
+									<entry>As defined by <application>RRDTool</application>: <quote>The maximum amount of time that can pass before data is entered as "unknown". This field is usually '600' or 2 data gathering intervals</quote>.</entry>
+								</row>
+							</tbody>
+						</tgroup>
+					</table>
+				</sect3>
+				<sect3 id="custom_data">
+					<title>Custom Data</title>
+					<para>
+						Assuming you selected a data input source on the previous screen, you should now be presented
+						with a <guilabel>Custom Data</guilabel> box. Each custom data field is per-field templatable as
+						all of the other data source fields are. Even if you select the <guilabel>Use Per-Data Source
+						Value</guilabel> checkbox, it might be useful to specify a value that will be used as an "inital
+						value" for any data source using this data template.
+					</para>
+				</sect3>
+			</sect2>
+			<sect2 id="applying_data_templates">
+				<title>Applying Data Templates to Data Sources</title>
+				<para>
+					Applying a data template to a data source is a very simple process. The first thing you
+					must do is select the data source you want to apply the template to under <guilabel>Data
+					Sources</guilabel>. Under the <guilabel>Data Template Selection</guilabel> box, select
+					the data template that you want to apply to the data source and click <guilabel>Save</guilabel>.
+				</para>
+				<para>
+					Once the template is applied to the data source, you will notice that you can only change
+					values for the fields that you checked Use <guilabel>Per-Data Source Value</guilabel> for.
+				</para>
+				<para>
+					<emphasis>Now any time a change is made to the data template, it will be automatically
+					propagated to the data sources attached to it.</emphasis>
+				</para>
+			</sect2>
+		</sect1>
+		<sect1 id="host_templates">
+			<title>Host Templates</title>
+			<para>
+				Host templates in Cacti serve a different purpose then data and graph templates. Instead of
+				abstracting the fields of a host, a host template allows you to associate graph templates and
+				data queries with a given host type. This way when you assign a host template to a host, all
+				of the relevant graphs to that host type are only one click away from the user.
+			</para>
+			<sect2 id="host_template_new">
+				<title>Adding a Host Template</title>
+				<para>
+					To create a new host template in Cacti, select the <guilabel>Host Templates</guilabel>
+					option under the <guilabel>Templates</guilabel> heading. Once on that screen, click
+					<guilabel>Add</guilabel> on the right. Type a unique name for the host template and
+					click the <guilabel>Create</guilabel> button. You will be redirected back to the edit
+					page with the <guilabel>Associated Graph Templates</guilabel> and <guilabel>Associated
+					Data Queries</guilabel> boxes. These two boxes allow you to associate certain graph
+					templates or data queries with the host template. Simply select something from the
+					dropdown menu and click <guilabel>Add</guilabel> to associate it with your host template.
+				</para>
+				<figure id="img_host_template_new">
+					<title>Adding a Host Template</title>
+
+					<mediaobject>
+						<imageobject>
+							<imagedata fileref="images/host_template" format="PNG">
+						</imageobject>
+					</mediaobject>
+				</figure>
+			</sect2>
+		</sect1>
+	</chapter>
+	<chapter id="php_script_server">
+		<title>PHP Script Server</title>
+		<para>
+			The PHP Script Server is a new feature in Cacti 0.8.6.  This new feature allows for the rapid
+			execution of PHP based Data Queries in Cacti.  The Script Server process is launched by the poller
+			during every polling cycle.  It listens for commands from the poller, executes them, and then waits
+			for an quit signal.
+		</para>
+		<para>
+			The reason that it is so fast is that PHP is started in memory only one time, and for every Data
+			Query called, it's code is interpreted only once.  The resulting Data Query binaries are therefore
+			very efficient.  Using the Script Server process over the traditional POPEN process nets a 20+ fold
+			speed improvement in Cacti.
+		</para>
+		<para>
+			Since PHP scripts are so powerful, this new feature in Cacti, makes it an excellent choice for
+			collecting non-SNMP and SNMP based data.
+		</para>
+		<sect1 id="using_script_server">
+			<title>Using the Script Server</title>
+			<para>
+				Cacti 0.8.6 contains two sample script server routines.  They are for the collection of HostMib CPU
+				and Disk Partition information.  These two examples are based off the traditional POPEN version of
+				the HostMib functions found in earlier versions of Cacti.
+			</para>
+			<para>
+				For new installs, the HostMib functions are defaulted to using the PHP Script Server, therefore,
+				you don't need to do anything to use it.
+			</para>
+			<para>
+				For upgrades, you must make several changes to start using the PHP Script Server for the HostMib
+				CPU and HostMib Partitions Data Queries.  To migrate you must follow the step below.
+			</para>
+		</sect1>
+		<sect1 id="upgrade_using_hostmib_data_queries">
+			<title>Upgrade Steps for the Example HostMib Data Queries</title>
+			<para>
+				If you are using the two built in script queries, "SNMP - Get Mounted Partitions" and "SNMP - Get
+				Processor Information", you can migrate to the PHP Script Server using the steps below:
+			</para>
+			<orderedlist>
+				<listitem>
+					<para>
+						Verify the existence of New Data Input Method - Go to <guilabel>Data Input Methods</guilabel>,
+						verify that you see the "Get Script Server Data (Indexed)" Data Input Method exists and that
+						it is using the "Script Query - Script Server" method.
+					</para>
+				</listitem>
+				<listitem>
+					<para>
+						Disable the Poller - Goto <guilabel>Settings</guilabel>-><guilabel>Poller</guilabel> and
+						uncheck the <guilabel>Poller Enabled</guilabel> checkbox.  Press <guilabel>Save</guilabel>.
+					</para>
+				</listitem>
+				<listitem>
+					<para>
+						Update Your Data Queries - Go to <guilabel>Data Queries</guilabel> and Edit the two Data
+						Queries below. Change both their Data Input Method to "Get Script Server Data (Indexed)"
+						and in the XML path replace "script_query" with "script_server" as shown below:
+					</para>
+					<orderedlist>
+						<listitem>
+							<para>
+								SNMP - Get Mounted Partitions
+							</para>
+							<para>
+								<userinput>&lt;path_cacti&gt;/resource/script_server/host_disk.xml</userinput>
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								SNMP - Get Processor Information
+							</para>
+							<para>
+								<userinput>&lt;path_cacti&gt;/resource/script_server/host_cpu.xml</userinput>
+							</para>
+						</listitem>
+					</orderedlist>
+				</listitem>
+				<listitem>
+					<para>
+						Update Your Data Templates - Goto <guilabel>Data Templates</guilabel>, locate the following two
+						data templates and change their data input method to "Get Script Server Data (Indexed)".
+					</para>
+					<orderedlist>
+						<listitem>
+							<para>
+								Host MIB - Hard Drive Space
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Host MIB - CPU Utilization
+							</para>
+						</listitem>
+					</orderedlist>
+				</listitem>
+				<listitem>
+					<para>
+						Re Enable the Poller - Go to <guilabel>Settings</guilabel>-><guilabel>Poller</guilabel>
+						and check the <guilabel>Poller Enabled</guilabel> checkbox.  Press <guilabel>Save</guilabel>.
+					</para>
+				</listitem>
+			</orderedlist>
+			<para>
+				Following those steps should complete your migration to the new PHP Script Server for the two
+				example HostMIB Data Queries.
+			</para>
+		</sect1>
+		<sect1 id="migration_php_scripts_to_script_server">
+			<title>Migration of Existing PHP Scripts to Script Server</title>
+			<para>
+				If you have other PHP scripts that you wish to migrate, you must follow the steps below to
+				migrate your scripts to the PHP Script Server required format.
+			</para>
+			<sect2 id='script_file_changes'>
+				<title>Script File Changes</title>
+				<para>
+					Each PHP Script file must be changed to the new Script Server format.  The changes are
+					not dramatic, but required for the proper operation of the PHP Script Server.  Follow the
+					steps below to complete.
+				</para>
+				<orderedlist>
+					<listitem>
+						<para>
+							Copy you existing script to a new name.  The name must begin "ss_" followed by your script
+							name.  The "ss_" identifies the script as being a script server variety of the a PHP script.
+							For example, if you previously had a script called "get_mysql_stats.php", it's new name would
+							be "ss_get_mysql_stats.php".
+						</para>
+					</listitem>
+					<listitem>
+						<para>
+							Edit the new PHP script and add the following required lines to the file, where "ss_myfunction"
+							is the same as your filename.
+						</para>
+						<programlisting>&lt;?php
+$no_http_headers = true;
+
+/* display No errors */
+error_reporting(E_ERROR);
+
+include_once(dirname(__FILE__) . "/../include/config.php");
+include_once(dirname(__FILE__) . "/../lib/snmp.php");
+
+if (!isset($called_by_script_server)) {
+	array_shift($_SERVER["argv"]);
+	print call_user_func_array("ss_myfunction", $_SERVER["argv"]);
+}</programlisting>
+					</listitem>
+					<listitem>
+						<para>
+							What was originally just mainline code, must be replaced with a function name.  For example,
+							if your program previously contained the following three lines of code:
+						</para>
+						<programlisting>&lt;?php
+$a = 100;
+$b = $a / 10;
+print $b;
+?&gt;</programlisting>
+						<para>
+							Would become:
+						</para>
+						<programlisting>function ss_myfunction() {
+	$a = 100;
+	$b = $a / 10;
+	Print $b;
+}</programlisting>
+					</listitem>
+					<listitem>
+						<para>
+							If you have any additional functions declared within your script file, you must prefix them to
+							make then unique amongst all functions.  Our recommendation would be to prefix all functions with
+							the name of the main function.  For example if you have a function called "meme" you would rename
+							it to "ss_myfunction_meme".  This guarantee's correct Script Server functionality.
+						</para>
+					</listitem>
+					<listitem>
+						<para>
+							The last step is to change the function call that could have traditionally returned the value to the
+							Cacti poller using the PRINT function.  You must change that line  or lines in your code to utilize
+							the RETURN function instead.  However, this does not apply to PRINT statements that are not called
+							from the Poller.
+						</para>
+					</listitem>
+				</orderedlist>
+			</sect2>
+			<sect2 id='xml_file_changes'>
+				<title>XML File Changes</title>
+				<para>
+					If you are using a "Script Query" type function, then you must also change your XML file.  Please reference
+					the XML files in the <filename>&lt;path_cacti&gt;/resource/script_server</filename> directory for the
+					specifics related to your required modifications.  However, you may also follow the instructions below:
+				</para>
+				<orderedlist>
+					<listitem>
+						<para>
+							Modify the &lt;script_path&gt; tag.  Change it from:
+						</para>
+						<programlisting>&lt;script_path&gt;|path_php_binary| -q |path_cacti|/scripts/myfucntion.php&lt;/script_path&gt;</programlisting>
+						<para>
+							to simply the following:
+						</para>
+						<programlisting>&lt;script_path&gt;|path_cacti|/scripts/ss_myfunction.php&lt;/script_path&gt;</programlisting>
+					</listitem>
+					<listitem>
+						<para>
+							Add the following two XML tags below the &lt;script_path&gt; tag.  Replace <emphasis>ss_myfunction</emphasis>
+							with your function name:
+						</para>
+						<programlisting>&lt;script_function&gt;ss_myfunction&lt;/script_function&gt;
+&lt;script_server&gt;php&lt;/script_server&gt;</programlisting>
+					</listitem>
+					<listitem>
+						<para>
+							Save the XML file.
+						</para>
+					</listitem>
+				</orderedlist>
+			</sect2>
+			<sect2 id='data_query_data_template_changes'>
+				<title>Data Query & Data Template Changes</title>
+				<para>
+					Your Data Queries and Data Templates must be also changed.  Although somewhat self explanatory by
+					now, you must make the following changes:
+				</para>
+				<orderedlist>
+					<listitem>
+						<para>
+							Change it's Input Method to "Get Script Server Data" or "Get Script Server Data (Index)" depending
+							on it's type.
+						</para>
+						<para>
+							Change the XML file path to point to the new XML file in the <filename>&lt;path_cacti&gt;/resources/script_server/*.xml</filename> path.
+						</para>
+						<para>
+							For all data templates that use the data query you must change their "Data Input Method" accordingly.
+						</para>
+					</listitem>
+				</orderedlist>
+				<para>
+					Your final step is to go to the <guilabel>System Utilities</guilabel> and <guilabel>Clear
+					Poller Cache</guilabel> to apply the new settings.  If you script is operating correctly,
+					you should now be migrated to the script server.
+				</para>
+			</sect2>
+		</sect1>
+		<sect1 id="testing_script_in_script_server">
+			<title>Testing Your Script in the Script Server</title>
+			<para>
+				To test your script in the script server, simply follow the instructions below.  When you have
+				finished you testing, simply type "quit" &lt;cr&lt; at the Script Server command line to exit the
+				script server.
+			</para>
+			<orderedlist>
+				<listitem>
+					<para>
+						Start the script server - You can do this by typing the following command:
+					</para>
+					<screen><prompt>shell&gt;</prompt> <userinput>php &lt;path_cacti&gt;/script_server.php</userinput></screen>
+					<para>
+						<emphasis>NOTE</emphasis>: Due to a bug in Windows implementation of PHP, you must type the full path name to the <filename>script_server.php</filename> file.
+					</para>
+				</listitem>
+				<listitem>
+					<para>
+						Type in your command - Using the example from above, you would type in the following:
+					</para>
+					<screen><prompt>script server&gt;</prompt> <userinput>&lt;path_myfunction&gt; my_function argument1 argument2 ...</userinput></screen>
+					<para>
+						In the Windows environment, your example could be the following:
+					</para>
+					<screen><prompt>script server&gt;</prompt> <userinput>c:\wwwroot\cacti\scripts\ss_myfunction.php ss_myfunction localhost public 1 get duddle</userinput></screen>
+				</listitem>
+				<listitem>
+					<para>
+						If your function is operating properly, you should get a result.
+					</para>
+				</listitem>
+				<listitem>
+					<para>
+						To quit the script server, simply type "quit" &lt;cr&gt; at the command line.
+					</para>
+				</listitem>
+			</orderedlist>
+			<para>
+				<emphasis>NOTE</emphasis>: If there are errors in your script, you must restart the script server before
+				your retest your code.
+			</para>
+		</sect1>
+	</chapter>
+</part>
+
+<part id="using_cacti">
+	<title>Using Cacti</title>
+
+	<chapter id="how_to">
+		<title>How To</title>
+		<sect1 id="graph_snmp_oid">
+			<title>Graph a Single SNMP OID</title>
+			<para>
+				When dealing with SNMP-enabled devices, there are often times when you want to graph the value of a single
+				OID. This tutorial explains how to do this in Cacti. It also assumes that you have the "SNMP - Generic OID
+				Template" graph template, which is now included in Cacti as of version 0.8.5. If you do not see this
+				template listed under <guilabel>Graph Templates</guilabel>, download the template from the Cacti website
+				in XML form and import it using the <guilabel>Import Templates</guilabel> menu item.
+			</para>
+			<para>
+				To start the process of creating a new graph for your OID, click the <guilabel>New Graphs</guilabel> menu
+				item and select the host that contains the target OID from the dropdown. Under the <guilabel>Graph
+				Templates</guilabel> box, you will see a dropdown on the last line that reads <guilabel>(Select a graph
+				type to create)</guilabel>. From this dropdown, choose "SNMP - Generic OID Template" and click the
+				<guilabel>Create</guilabel> button at the bottom of the page.
+			</para>
+			<para>
+				You will be presented with several fields that will require input before the new graph can be created.
+				They are described in more detail below.
+			</para>
+			<table frame='all'>
+				<title>Field Description: SNMP - Generic OID Template</title>
+				<tgroup cols='2' align='left' colsep='1' rowsep='1'>
+					<colspec colnum="1">
+					<colspec colwidth="3*" colnum="2">
+					<thead>
+						<row>
+							<entry align="center">Name</entry>
+							<entry align="center">Description</entry>
+						</row>
+					</thead>
+					<tbody>
+						<row>
+							<entry>(Graph) Title</entry>
+							<entry>The title that is to be used for the new graph. It is generally a good idea to keep |host_description| in the title, as to make the graph easier to identify later.</entry>
+						</row>
+						<row>
+							<entry>(Graph) Vertical Label</entry>
+							<entry>The text that will be printed along the y-axis of the graph. It is generally used to describe units, such as 'bytes' or 'percent'.</entry>
+						</row>
+						<row>
+							<entry>(Graph Items) Legend Color</entry>
+							<entry>The color that will be used to reprent the data on the graph.</entry>
+						</row>
+						<row>
+							<entry>(Graph Items) Legend Text</entry>
+							<entry>The text that will be used to describe the data on the graph legend.</entry>
+						</row>
+						<row>
+							<entry>(Data Source) Name</entry>
+							<entry>The title that is to be used for the new data source. It is generally a good idea to keep |host_description| in the title, as to make the data source easier to identify later.</entry>
+						</row>
+						<row>
+							<entry>(Data Source) Maximum Value [snmp_oid]</entry>
+							<entry>The maximum value that will be accepted from the OID. Make sure you choose a value that is reasonable for the data you are trying to graph because anything larger than the maximum will be ignored. If you are graphing a percentage, you should use '100' as the value should never exceed this.</entry>
+						</row>
+						<row>
+							<entry>(Data Source) Data Source Type [snmp_oid]</entry>
+							<entry>How the data from the OID should be stored by RRDTool and interpreted on the graph. If the value of the OID represents the actual data, you should use <guilabel>GAUGE</guilabel> for this field. If the OID value is a constantly incrimenting number, you should use <guilabel>COUNTER</guilabel> for this field. The two remaining field values, <guilabel>DERIVE</guilabel> and <guilabel>ABSOLUTE</guilabel> can be ignored in most situations.</entry>
+						</row>
+						<row>
+							<entry>(Custom Data) OID</entry>
+							<entry>The actual SNMP OID to graph. It is typically a good idea to enter the number OID here as opposed to using MIB names. For instance, to get the number of open files on a Netware server, you would use ".1.3.6.1.4.1.23.2.28.2.7.0" as the OID.</entry>
+						</row>
+					</tbody>
+				</tgroup>
+			</table>
+			<para>
+				When finished filling in values for these fields, click the <guilabel>Create</guilabel> button. Your new graph can
+				now be accessed through the <guilabel>Graph Management</guilabel> page or the <guilabel>Graphs</guilabel> tab
+				inside of Cacti.
+			</para>
+		</sect1>
+		<sect1 id="script_to_graph">
+			<title>Simplest Method of Going from Script to Graph (Walkthrough)</title>
+			<authorblurb>
+				<para>
+					<emphasis>Written by Kevin der Kinderen, <ulink url="http://kdeuja.com/~kevin/">http://kdeuja.com/~kevin/</ulink></emphasis>
+				</para>
+			</authorblurb>
+			<para>
+				This HOWTO walks you through the simplest steps of graphing the output of a single value from a script.
+				As a new user of cacti, I had a difficult time understanding how to graph anything that wasn't canned with
+				the original load. After a lot of playing around, I came up with these procedures which can be built upon for
+				more sophisticated collections and graphs.
+			</para>
+			<para>
+				I do not use templates in this HOWTO. Templates provide a significant advantage if you are graphing the output
+				for multiple instances or creating graphs for multiple hosts. They help to maintain consistency and simplify
+				setup.
+			</para>
+			<para>
+				The example here is not realistic, but can be used and expanded upon as a model for creating your own graphs.
+			</para>
+			<para>
+				I've not put a lot of explanations in the procedures. Refer to the Cacti manual for more details.
+			</para>
+			<para>
+				Have a tested script ready to go. I used the following script located in <filename>/home/cactiuser/bin</filename>
+				called <filename>random2.pl</filename>:
+			</para>
+			<programlisting>#!/usr/bin/perl -w
+
+print int(rand(10));</programlisting>
+			<para>
+				This script simply prints out a random integer between 0 and 9 every time it's called.
+			</para>
+			<orderedlist>
+				<title>The minimal steps to create a graph from a script are simply:</title>
+				<listitem>
+					<para>
+						Create a Data Input Method to tell Cacti how to call the script and what to expect from it.
+					</para>
+				</listitem>
+				<listitem>
+					<para>
+						Create a Data Source to tell cacti how and where the data will be stored.
+					</para>
+				</listitem>
+				<listitem>
+					<para>
+						Create a Graph to tell cacti how the data will be presented in graph form.
+					</para>
+				</listitem>
+				<listitem>
+					<para>
+						Add Graph to Graph View so you can view the graph.
+					</para>
+				</listitem>
+				<listitem>
+					<para>
+						View the Graph
+					</para>
+				</listitem>
+			</orderedlist>
+			<orderedlist>
+				<title>The details are below:</title>
+				<listitem>
+					<para>
+						Create Data Input Method
+					</para>
+					<itemizedlist>
+						<listitem>
+							<para>
+								Click the <guilabel>Console</guilabel> tab at the top
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Click <guilabel>Data Input Methods</guilabel> under <guilabel>Management</guilabel>
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Click <guilabel>Add</guilabel>
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Name: Random 2 Input
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Input Type: Script/Command
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Input String: /home/cactiuser/bin/random2.pl
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Click <guilabel>Create</guilabel>
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Should see "Save Successful." at the top of the page.
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Click <guilabel>Add</guilabel> by Output Fields (there are no input fields for this example)
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Field [Output]: random_number
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Friendly Name: Random Number
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Update RRD File: checked
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Click <guilabel>Create</guilabel>
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Should see "Save Successful." and random_number listed under <guilabel>Output Fields</guilabel>.
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Click <guilabel>Save</guilabel>
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Should see "Save Successful." and Random Input listed in <guilabel>Data Input Methods</guilabel>.
+							</para>
+						</listitem>
+					</itemizedlist>
+				</listitem>
+				<listitem>
+					<para>
+						Create a Data Source
+					</para>
+					<itemizedlist>
+						<listitem>
+							<para>
+								Click <guilabel>Data Sources</guilabel> under <guilabel>Management</guilabel>
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Click <guilabel>Add</guilabel> in the top right
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								The <guilabel>Data Template</guilabel> Section should be None and None, we're not using templates for this example.
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Click <guilabel>Create</guilabel>.
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Name: random2ds
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Data Source Path: blank (Cacti will fill this in)
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Data Input Source: Random 2 Input (this is the data input method you created in step 1)
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Highlight each of the Associated RRA's using control-click
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Step: 300 (300 seconds = 5 minutes)
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Data Source Active: checked
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Describe the Data Source Item inside the RRA by...
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Internal Data Source Name: random_number
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Minimum Value: 0
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Maximum Value: 0
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Data Source Type: GAUGE
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Heartbeat: 600
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Click <guilabel>Create</guilabel>
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Should see "Save Successful." at the top and the Data Source Path should now have a value (my example &lt;path_rra&gt;/random_number_286.rrd)
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Click Turn On Data Source Debugging Mode to see the results of this step.
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Click <guilabel>Save</guilabel>
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Should see "Save Successful" and your new Data Source listed.
+							</para>
+						</listitem>
+					</itemizedlist>
+				</listitem>
+				<listitem>
+					<para>
+						Create Graph
+					</para>
+					<itemizedlist>
+						<listitem>
+							<para>
+								Select <guilabel>Graph Management</guilabel> under <guilabel>Management</guilabel>
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Click <guilabel>Add</guilabel>
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Selected Graph Template: None
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Host: None
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Click <guilabel>Create</guilabel>
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Title: RANDOM NUMBERS
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Image Format: PNG
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Height: 120
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Width: 500
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Auto Scale: checked
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Auto Scale Options: Use --alt-autoscale-max
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Logarithmic Auto Scaling: unchecked
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Rigid Boundaries: unchecked
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Auto Padding: checked
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Allow Graph Export: checked
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Upper Limit: 100
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Lower Limit: 0
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Base Value: 1000
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Unit Value: blank
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Unit Exponent Value: 0
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Vertical Label: Random Number
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Click <guilabel>Create</guilabel>
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Should see "Save Successful."
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								If you click "Turn On Graph Debug Mode." now you will see: "Error: can't make a graph without contents." We need to add Graph Items:
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Click <guilabel>Add</guilabel> by <guilabel>Graph Items</guilabel>
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Data Source: (from list) No Host - random2ds (random_number)
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Color: 0000FF (Blue)
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Graph Item Type: LINE2
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Consolidation Function: AVERAGE
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								CDEF Function: None
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Value: blank
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								GPRINT Type: Normal
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Text Format: blank
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Insert Hard Return: unchecked
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Click <guilabel>Create</guilabel>
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Should see "Save Successful.", Item #1 listed and a graph under debug (probably with nothing in it yet)
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								To add a legend, click <guilabel>Add</guilabel> by <guilabel>Graph Items</guilabel> again
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Data Source: No Host - random2ds (random_number)
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Color: None
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Graph Item Type: GPRINT
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Consolidation Function: LAST
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								CDEF Function: None
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Value: blank
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								GPRINT Type: Normal
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Text Format: Cur:
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Insert Hard Return: unchecked
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Click <guilabel>Create</guilabel>
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Should see "Save Successful." and the graph will have a legend showing the current value. Note: your integer random number has been averaged over the past 5 minutes. At the bottom of the page, click save.
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								At the bottom of the page, click <guilabel>Save</guilabel>.
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Should see "Save Successful." and your graph listed.
+							</para>
+						</listitem>
+					</itemizedlist>
+				</listitem>
+				<listitem>
+					<para>
+						Add graph to the graph view
+					</para>
+					<itemizedlist>
+						<listitem>
+							<para>
+								Click <guilabel>Graph Trees</guilabel> under <guilabel>Management</guilabel>
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								We'll create a tree called "test" to place our graph
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Click <guilabel>Add</guilabel>
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Name: test
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Should see "Save Successful"
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Click <guilabel>Add</guilabel> beside <guilabel>Tree Items</guilabel> (to add our graph to this tree)
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Under Tree Items [graph]...
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Graph: RANDOM NUMBERS (we named this in step 3)
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Round Robin Archive: Daily (5 Minute Average)
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Click <guilabel>Create</guilabel>
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Should see "Save Successful." and RANDOM NUMBERS listed under <guilabel>Tree Items</guilabel>
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Click <guilabel>Save</guilabel>
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Should see "Save Successful." and test listed under <guilabel>Graph Trees</guilabel>
+							</para>
+						</listitem>
+					</itemizedlist>
+				</listitem>
+				<listitem>
+					<para>
+						View Graph
+					</para>
+					<itemizedlist>
+						<listitem>
+							<para>
+								Select <guilabel>Graphs</guilabel> tab
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Select tree view (Tree beside settings tab)
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Select test tree on left
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								You may see "Random Graph" but no graph. It takes two or three polls (10 - 15 minutes) to see a graph. I believe poll 1 to create the rrd, poll 2 to get the first data point and poll 3 to have graphable points.
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								While waiting, you can click the RANDOM NUMBERS graph. You'll see	place holders for 4 graphs. Select [source] under Daily (5 Minute Average). You'll see the source for the call to rrdtool graph. Give it a sanity check.
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								Now be patient. Hit your refresh button every few minutes. After the first poll I got a few empty graphs.	A few minutes later data started showing up.
+							</para>
+						</listitem>
+					</itemizedlist>
+				</listitem>
+			</orderedlist>
+		</sect1>
+	</chapter>
+	<chapter id="faq">
+		<title>Frequently Asked Questions</title>
+		<qandaset defaultlabel="none">
+			<qandadiv>
+				<title>Using Cacti</title>
+				<qandaentry>
+					<question>
+						<para>
+							How do I create traffic graphs?
+						</para>
+					</question>
+					<answer>
+						<para>
+							Before you can create traffic graphs, Cacti must have working SNMP support. One way to do this is to compile
+							PHP with SNMP support built in, many times you can install the 'php-snmp' package to do this. The second option
+							is to have Cacti call the snmpget and snmpwalk binaries from your ucd-snmp or <application>net-snmp</application>
+							installation. You can use the about page to determine whether to are using "built-in" or "external" SNMP support.
+						</para>
+						<para>
+							Now that you have working SNMP support, follow these steps.
+						</para>
+						<orderedlist>
+							<listitem>
+								<para>Click <guilabel>Devices</guilabel> on Cacti's menu.</para>
+							</listitem>
+							<listitem>
+								<para>Click <guilabel>Add</guilabel> to add a new device.</para>
+							</listitem>
+							<listitem>
+								<para>Type a description, hostname, management IP, and SNMP community. Make sure to select "Generic SNMP-enabled Host" under <guilabel>Host Template</guilabel> and click <guilabel>Create</guilabel>.</para>
+							</listitem>
+							<listitem>
+								<para>Click <guilabel>Create Graphs for this Host</guilabel> at the top of the page.</para>
+							</listitem>
+							<listitem>
+								<para>You should see one or more interfaces listed under the <guilabel>Data Query [SNMP - Interface Statistics]</guilabel> box. Place a check next to each interface that you want to graph. Below the box, select type of graph that you want to create (bits, bytes, summation, etc).</para>
+							</listitem>
+							<listitem>
+								<para>Click <guilabel>Create</guilabel>, and <guilabel>Create</guilabel> again on the following screen to create your graphs.</para>
+							</listitem>
+						</orderedlist>
+					</answer>
+				</qandaentry>
+			</qandadiv>
+			<qandadiv>
+				<title>General</title>
+				<qandaentry>
+					<question>
+						<para>
+							I get a "Undefined variable: _SERVER" error message from Cacti.
+						</para>
+					</question>
+					<answer>
+						<para>
+							Cacti 0.8.6 and above requires that you have at least PHP 4.1 or greater installed.
+						</para>
+					</answer>
+				</qandaentry>
+				<qandaentry>
+					<question>
+						<para>
+							I get a "Call to undefined function: mysql_connect()" error message from Cacti.
+						</para>
+					</question>
+					<answer>
+						<para>
+							Your installation of PHP does not have MySQL installed or enabled. On binary-based distributions, make
+							sure you have the 'php-mysql' package installed. Also make sure that 'extension=mysql.so' is uncommented
+							in your php.ini file.
+						</para>
+					</answer>
+				</qandaentry>
+				<qandaentry>
+					<question>
+						<para>
+							I have forgotten my 'admin' password to Cacti, how do I reset it?
+						</para>
+					</question>
+					<answer>
+						<para>
+							To reset the admin account password back to the default of 'admin', connect to your Cacti database at the
+							command line.
+						</para>
+						<screen><prompt>shell&gt;</prompt> <userinput>mysql -u root -p cacti</userinput></screen>
+						<para>
+							Now execute the following SQL:
+						</para>
+						<screen><prompt>mysql&gt;</prompt> <userinput>update user_auth set password=md5('admin') where username='admin';</userinput></screen>
+					</answer>
+				</qandaentry>
+			</qandadiv>
+			<qandadiv>
+				<title>Monitoring</title>
+				<qandaentry>
+					<question>
+						<para>
+							I am polling thousands of items and poller.php takes more than 5 minutes to run.
+						</para>
+					</question>
+					<answer>
+						<para>
+							Give cactid, the future replacement for poller.php a try. Unlike poller.php, cactid is written in c and makes use
+							of pthreads. On a typical installation, it is not uncommon for cactid to poll about 500 items in less then 10
+							seconds.
+						</para>
+					</answer>
+				</qandaentry>
+				<qandaentry>
+					<question>
+						<para>
+							I changed x, and now some of my graphs are not updating.
+						</para>
+					</question>
+					<answer>
+						<para>
+							The best thing to do here is to force Cacti to rebuild its poller cache. To do this click <guilabel>Utilities</guilabel> on the Cacti menu, and select <guilabel>Clear Poller Cache</guilabel>.
+						</para>
+					</answer>
+				</qandaentry>
+				<qandaentry>
+					<question>
+						<para>
+							I am using <application>Redhat 8.0</application> and SNMP is not working.
+						</para>
+					</question>
+					<answer>
+						<para>
+							<application>Redhat 8.0</application> comes with a broken php-snmp package. Updating your 'php-snmp' and 'net-snmp'
+							packages to their latest versions should fix this problem.
+						</para>
+					</answer>
+				</qandaentry>
+				<qandaentry>
+					<question>
+						<para>
+							How do I configure <application>net-snmp</application> so it will work with Cacti?
+						</para>
+					</question>
+					<answer>
+						<para>
+							Run <command>snmpconf -g basic_setup</command> and follow the prompts. Also check that the file being used by snmpd
+							is the correct config file. For Redhat Linux, snmpconf creates the <filename>/etc/snmpd.conf</filename>, but snmpd
+							uses <filename>/etc/snmpd/snmpd.conf</filename>.
+						</para>
+						<para>
+							If this doesn't work a very simple config file is:
+						</para>
+						<screen><userinput># contact
+syslocation Something
+syscontact "root@someone.com"
+
+# auth
+rocommunity public
+
+# disk monitoring
+disk /</userinput></screen>
+					</answer>
+				</qandaentry>
+			</qandadiv>
+			<qandadiv>
+				<title>Graphs</title>
+				<qandaentry>
+					<question>
+						<para>
+							I just installed Cacti and all of my graphs appear as broken images.
+						</para>
+					</question>
+					<answer>
+						<para>
+							For you to actually get graph images, poller.php must run at least once so it can create .rrd files in Cacti's 'rra/'
+							directory. Double check that you configured your <filename>/etc/crontab</filename> file to execute poller.php every
+							five minutes. Also make sure that the user poller.php runs as has permission to create new files in Cacti's 'rra/'
+							directory.
+						</para>
+						<para>
+							If all of your settings appear correct, try running poller.php manually by cd'ing to Cacti's directory and typing:
+						</para>
+						<screen><prompt>shell&gt;</prompt> <userinput>php poller.php</userinput></screen>
+						<para>
+							If you have files in your 'rra/' directory, but your graphs still appear as broken images, you should enable graph
+							debug mode see exactly why the graphs are not rendering. To do this go into Cacti, select <guilabel>Graph Management</guilabel>
+							from the menu, select any graph listed, and select <guilabel>Turn On Graph Debug Mode</guilabel>.
+						</para>
+					</answer>
+				</qandaentry>
+				<qandaentry>
+					<question>
+						<para>
+							My graphs render, but they do not contain any data.
+						</para>
+					</question>
+					<answer>
+						<para>
+							More often than not, this problem's cause is permissions. For instance if you run poller.php manually as root for testing, any
+							.rrd files that it creates will be owned by root. Now when poller.php runs from cron, it will not be able to update these .rrd
+							files because they are owned by root. You can double check the owner of your .rrd files by running the following command in
+							your Cacti directory:
+						</para>
+						<screen><prompt>shell&gt;</prompt> <userinput>ls -al rra/</userinput></screen>
+						<para>
+							If only some of your graphs are not updating correctly, double check the <guilabel>Maximum Value</guilabel> field for all data
+							sources used by these graphs. If the value being fed to the .rrd file exceeds its <guilabel>Maximum Value</guilabel>, RRDTool
+							will insert an <guilabel>Unknown</guilabel> and you will see no data on the graph.
+						</para>
+					</answer>
+				</qandaentry>
+				<qandaentry>
+					<question>
+						<para>
+							A lot of my graphs contain long ifAlias names, but they are being truncated to 15 characters.
+						</para>
+					</question>
+					<answer>
+						<para>
+							Cacti does this by default to better control graph title formatting. You can change this limit, by going to <guilabel>Cacti
+							Settings</guilabel> on the Cacti menu, selecting the <guilabel>Visual</guilabel> tab, and changing the value for <guilabel>Data
+							Queries - Maximum Field Length</guilabel>.
+						</para>
+					</answer>
+				</qandaentry>
+				<qandaentry>
+					<question>
+						<para>
+							One of my devices rebooted and now I have a huge spike on my graph!
+						</para>
+					</question>
+					<answer>
+						<para>
+							This occurs because the reboot causes SNMP's counters to reset, which can cause a rather large spike on the graph when
+							<application>RRDTool</application> tries to determine the change between the new small counter value and the large
+							previous value. One way to combat this issue is to specify realistic maximum values for your data sources.
+							<application>RRDTool</application> will ignore any value that is larger than the maximum value.
+						</para>
+						<para>
+							If you already have a spike on one or more of your graphs, there is a really <ulink url="http://cricket.sourceforge.net/contrib/files/killspike2">useful Perl script</ulink> that will remove them for you.
+						</para>
+					</answer>
+				</qandaentry>
+				<qandaentry>
+					<question>
+						<para>
+							RRDTool Says: ERROR: unknown option '--slope-mode' or RRDTool Says: ERROR: Garbage ':39:24 To 2005/10/22 16:39:24\c' after command: COMMENT:From 2005/10/21 16:39:24 To 2005/10/22 16:39:24\c
+						</para>
+					</question>
+					<answer>
+						<para>
+							This occurs because the version of RRDTool that you are running does not match the RRDTool version Cacti is configured to use.  Double check your Cacti Settings and make sure that the RRDTool version matches what version of RRDTool you are running.
+						</para>
+					</answer>
+				</qandaentry>
+
+			</qandadiv>
+			<qandadiv>
+				<title>Windows Related</title>
+				<qandaentry>
+					<question>
+						<para>
+							I get a "Fatal error: Cannot redeclare title_trim()" error message from Cacti.
+						</para>
+					</question>
+					<answer>
+						<para>
+							Contrary to previous versions of Cacti, you must not put Cacti in your PHP include path. Check your <filename>php.ini</filename> file to make sure there is not something like <userinput>include_path = C:/Apache2/htdocs/cacti</userinput>.
+						</para>
+					</answer>
+				</qandaentry>
+			</qandadiv>
+		</qandaset>
+	</chapter>
+</part>
+
+<part id="reference">
+	<title>Reference</title>
+	<chapter id="variables">
+		<title>Variables</title>
+		<sect1 id="graph_variables">
+			<title>Graph Variables</title>
+			<para>
+				The following variables can be used in the <guilabel>Text Format</guilabel> and <guilabel>Value</guilabel> graph
+				item fields. Below is a description of each of these variables.
+			</para>
+			<sect2 id="variable_date_time">
+				<title>Date/Time</title>
+				<screen><userinput>|date_time|</userinput></screen>
+				<para>
+					This variable will place the date and time of the last poller run on the graph. It can be used to replicate
+					<application>MRTG</application>'s "graph last updated" feature.
+				</para>
+			</sect2>
+			<sect2 id="variable_data_query">
+				<title>Data Query Fields</title>
+				<screen><userinput>|query_field_name|</userinput></screen>
+				<para>
+					You can place the value of any data query field on the by including this variable. Make sure
+					to substitute "field_name" with the actual data query field name.
+				</para>
+				<example>
+					<title>Print the IP Address on a traffic graph</title>
+					<para>
+						<userinput>|query_ifIP|</userinput>
+					</para>
+				</example>
+				<example>
+					<title>Print the mount point on net-snmp disk graph</title>
+					<para>
+						<userinput>|query_dskPath|</userinput>
+					</para>
+				</example>
+			</sect2>
+			<sect2 id="variable_Nth_percentile">
+				<title>Nth Percentile</title>
+				<screen><userinput>|[0-9]:(bits|bytes):[0-9]:(current|total|max|total_peak|all_max_current|all_max_peak|aggregate_max|aggregate_sum|aggregate_current|aggregate):[0-9]|</userinput></screen>
+				<para>
+					Nth percentile is often used by hosting providers to bill customers based on their peak traffic usage while
+					ignoring their top (100 - Nth) percent. This way if a customer has a fairly consistent traffic pattern and
+					decides to download a huge file one day, the large spike will be ignored.  Common Nth percentile is 95, which
+					would cut off the top 5% of the traffic.
+				</para>
+				<para>
+					In Cacti, Nth percentile works just like any other graph variable. To use this variable you must give it five
+					arguments:
+				</para>
+				<table frame='all'>
+					<title>Nth Percentile Argument Description</title>
+					<tgroup cols='2' align='left' colsep='1' rowsep='1'>
+						<colspec colnum="1">
+						<colspec colwidth="3*" colnum="2">
+						<thead>
+							<row>
+								<entry align="center">Name</entry>
+								<entry align="center">Description</entry>
+							</row>
+						</thead>
+						<tbody>
+							<row>
+								<entry><function>[0-9]</function></entry>
+								<entry>The first argument is a number between 1 and 99.  This number represents the Nth percentile that you would like to calculate.</entry>
+							</row>
+							<row>
+								<entry><function>(bits|bytes)</function></entry>
+								<entry>Choose whether you want to represent your Nth percentile in bits or bytes. The only valid values for this field are 'bits' and 'bytes'.</entry>
+							</row>
+							<row>
+								<entry><function>[0-9]</function></entry>
+								<entry>This field determines the power of 10 divisor that will be applied to your Nth percentile number. Enter '0' to leave the number alone, '3' for kilo or '6' for mega, etc.</entry>
+							</row>
+							<row>
+								<entry><function>( current | total | max | total_peak | all_max_current | all_max_peak | aggregate_max | aggregate_sum | aggregate_current | aggregate )</function></entry>
+								<entry>Nth Percentile Type - Refer to Nth Types</entry>
+							</row>
+							<row>
+								<entry><function>[0-9]</function></entry>
+								<entry>Enter the number of digits to use for floating point precision when printing out the final number. The default value for this field is two decimal places.</entry>
+							</row>
+						</tbody>
+					</tgroup>
+				</table>
+				<table frame='all'>
+					<title>Nth Percentile Types</title>
+					<tgroup cols='2' align='left' colsep='1' rowsep='1'>
+						<colspec colnum="1">
+						<colspec colwidth="3*" colnum="2">
+						<thead>
+							<row>
+								<entry align="center">Type</entry>
+								<entry align="center">Description</entry>
+							</row>
+						</thead>
+						<tbody>
+							<row>
+								<entry><function>current</function></entry>
+								<entry>Calculates the Nth percentile based off the selected data source on the graph item wich the variable is used.   This type requires a selected Data Source Item in the graph item in which it is defined.</entry>
+							</row>
+							<row>
+								<entry><function>total</function></entry>
+								<entry>Calculates the Nth percentile based off the selected data source on the graph item wich the variable is used.  But unlike current, this function totals the Nth percentile results of all same named data source names on the graph.  Example, all traffic_in would have their Nth percentile calculated and then totaled.  This type requires a selected Data Source Item in the graph item in which it is defined.</entry>
+							</row>
+							<row>
+								<entry><function>max</function></entry>
+								<entry>Calculates the Nth percentile based off the selected data source on the graph item which the variable is used, but it is important to note that it selects the higher of the values for each row in data source and then uses the resulting set to calculate the Nth percentile.  Example, you have selected a interface data source for traffic_in, this will evaluate traffic_out and traffic_in for that selected data source (rrdtool file) and select the higher of the two values for each row of data.  The resulting max values are used to calculate the Nth percentile value.  This type requires a selected Data Source Item in the graph item in which it is defined.</entry>
+							</row>
+							<row>
+								<entry><function>total_peak</function></entry>
+								<entry>Calculates the Nth percentile based on the max for each data source defined on the graph.  Example, the max is taken for each data source defined on the graph, but it's the max of traffic_in or traffic_out for that data source (rrdtool file).  The resulting max values are summed and returned.</entry>
+							</row>
+							<row>
+								<entry><function>all_max_current</function></entry>
+								<entry>Calculates the Nth percentile based off the selected data source on the graph item which the variable is used, but it only selects the highest (max) value of all the data source items on the graph. Example, there are 3 data sources defined on the graph, the selected data source is traffic_in, all data sources for traffic_in will be compared against each other and the highest Nth value of all graph items will be selected as the result.  This type requires a selected Data Source Item in the graph item in which it is defined.</entry>
+							</row>
+							<row>
+								<entry><function>all_max_peak</function></entry>
+								<entry>Calculates the Nth percentile by selecting the highest (max) calculated max Nth percentile value for each data source (rrdtool file) selected on the graph.  Example, 3 data sources are defined on the graph, for each data source, the max Nth percentile is calculated, and out of the resulting set of values, the highest value is selected and returned.</entry>
+							</row>
+							<row>
+								<entry><function>aggregate_max</function></entry>
+								<entry>Calculates the Nth percentile by selecting the highest value for each summed value of like data sources and selecting the maximum value of that set to calculate the Nth percentile value.  Example, you have a graph with 5 traffic_in and 18 traffic_out data sources.  The traffic_in rows are summed together, then the traffic_out rows are summed together, then for each row, the higher of the 2 values is selected.  The Nth percentile is calculated from the resulting maximum values.</entry>
+							</row>
+							<row>
+								<entry><function>aggregate_sum</function></entry>
+								<entry>Calculates the Nth percentile by summing all data sources on the graph row for row and calculates the Nth value on the resulting summed data.  Example, you have a graph with 4 traffic_in and 3 traffic_out data sources defined.  All the defined traffic_in and traffic_out are summed together and then the Nth percentile value is calculated from that set.</entry>
+							</row>
+							<row>
+								<entry><function>aggregate_current</function></entry>
+								<entry>Calculates the Nth percentile by summing items matching the selected data source name row for row from each data source defined on the graph with the same data source name and then returning the Nth percent value calculated.  Example, you have a graph with 3 traffic_out and 5 traffic_in data sources defined.  The traffic_in is selected on the graph item where this variable is used, so all graph items for traffic_in are summed and then the Nth value is calculated and returned as the variable.</entry>
+							</row>
+
+							<row>
+								<entry><function>aggregate</function></entry>
+								<entry>Calculates the Nth percentile by summing like data source names row for row from each data source defined on the graph and then returning the highest Nth percent value calculated for like data source names.  Example, you have a graph with 3 traffic_out and 5 traffic_in data sources defined.  The traffic_in and traffic_out are summed then the Nth value is calculated and the higher of the 2 values is returned as the variable.</entry>
+							</row>
+						</tbody>
+					</tgroup>
+				</table>
+				<note><title>Concerning aggregate Nth percentile functions and rra definitions</title>
+				<para>All data sources used in a graph MUST have the same rra definitions.  If the number of rows do not match when calculations are attempted, the results may produce errors and invalid results.  Please also be aware the aggregate functions take more memory and processor power when used.  Recommended minimum of 64 megs memory limit for php when querying large ranges or graphs with a large ammount of aggregated data sources.</para>
+				</note>
+				<example>
+					<title>Output in the following format, for 95th percentile: 42.58 mbit</title>
+					<para>
+						<userinput>|95:bits:6:max:2|</userinput>
+					</para>
+				</example>
+			</sect2>
+			<sect2 id="variable_bandwidth_summation">
+				<title>Bandwidth Summation</title>
+				<screen><userinput>|sum:([0-9]|auto):(current|total):([0-9]):([0-9]+|auto)|</userinput></screen>
+				<para>
+					Bandwidth summation is useful for summing up all values in an RRD file for a given time range. This is typically
+					useful on traffic graphs where you can see a total of all traffic that has gone through an interface in a given
+					time period.
+				</para>
+				<para>
+					In Cacti, bandwidth summation works just like any other graph variable. To use this variable you must give it three
+					arguments:
+				</para>
+				<table frame='all'>
+					<title>Bandwidth Summation Argument Description</title>
+					<tgroup cols='2' align='left' colsep='1' rowsep='1'>
+						<colspec colnum="1">
+						<colspec colwidth="3*" colnum="2">
+						<thead>
+							<row>
+								<entry align="center">Name</entry>
+								<entry align="center">Description</entry>
+							</row>
+						</thead>
+						<tbody>
+							<row>
+								<entry><function>([0-9]|auto)</function></entry>
+								<entry>This field determines the power of 10 divisor that will be applied to your number. Enter '0' to leave the number alone, '3' for kilo or '6' for mega, etc. You can also enter 'auto' for this field to have Cacti automatically scale the number and insert the appropriate label.</entry>
+							</row>
+							<row>
+								<entry><function>(current|total)</function></entry>
+								<entry>You can choose to calculate the summation based on the current data source or a total of all data sources used on the graph. The only valid values for this field are 'current' and 'total'.</entry>
+							</row>
+							<row>
+								<entry><function>[0-9]</function></entry>
+								<entry>Enter the number of digits to use for floating point precision when printing out the final number. The default value for this field is two decimal places.</entry>
+							</row>
+							<row>
+								<entry><function>([0-9]+|auto)</function></entry>
+								<entry>Enter the number of seconds in the past to perform the summation calculation for. For instance '86400' for 24 hours, '172800' for 48 hours, etc. You can also enter 'auto' for this field to have Cacti use the graph timespan.</entry>
+							</row>
+						</tbody>
+					</tgroup>
+				</table>
+				<example>
+					<title>Output in the following format: 36.47 GB</title>
+					<para>
+						<userinput>|sum:auto:current:2:auto|</userinput>
+					</para>
+				</example>
+			</sect2>
+		</sect1>
+		<sect1 id="host_variables">
+			<title>Host Variables</title>
+			<para>
+				Host variables represent host data and can be placed in graph or data source titles. The following
+				table describes which host variables can be used and which host fields the correspond to.
+			</para>
+			<table frame='all'>
+				<title>Host Variables</title>
+				<tgroup cols='2' align='left' colsep='1' rowsep='1'>
+					<colspec colnum="1">
+					<colspec colwidth="3*" colnum="2">
+					<thead>
+						<row>
+							<entry align="center">Variable Name</entry>
+							<entry align="center">Description</entry>
+						</row>
+					</thead>
+					<tbody>
+						<row>
+							<entry><function>|host_description|</function></entry>
+							<entry>Description</entry>
+						</row>
+						<row>
+							<entry><function>|host_hostname|</function></entry>
+							<entry>Hostname</entry>
+						</row>
+						<row>
+							<entry><function>|host_snmp_community|</function></entry>
+							<entry>SNMP Community</entry>
+						</row>
+						<row>
+							<entry><function>|host_snmp_version|</function></entry>
+							<entry>SNMP Version</entry>
+						</row>
+						<row>
+							<entry><function>|host_snmp_username|</function></entry>
+							<entry>SNMP Username (v3)</entry>
+						</row>
+						<row>
+							<entry><function>|host_snmp_password|</function></entry>
+							<entry>SNMP Password (v3)</entry>
+						</row>
+					</tbody>
+				</tgroup>
+			</table>
+		</sect1>
+	</chapter>
+	<chapter id="rrdtool_features">
+		<title>RRDTool Specific Features</title>
+		<sect1 id="gprint_presets">
+			<title>GPRINT Presets</title>
+			<para>
+				A GPRINT is a graph item type that enables you to print the values of data sources on a graph.
+				They are typically used to represent legend values on the graph. The output format of these
+				numbers are controlled by a printf-like format string. Cacti enables you to keep a global list
+				of these strings that can be applied to any graph item throughout Cacti.
+			</para>
+			<sect2 id="add_new_gprint_preset">
+				<title>Creating a GPRINT Preset</title>
+				<para>
+					To create a new GPRINT preset, select the <guilabel>Graph Management</guilabel> menu item under the
+					<guilabel>Management</guilabel> heading, and select <guilabel>GPRINT Presets</guilabel>. Click
+					<guilabel>Add</guilabel> to the right and you will be presented with an edit page containing two fields.
+					Enter a name for your GPRINT preset, and the actual printf-like string in the <guilabel>GPRINT
+					Text</guilabel> field. When you are finished, click the <guilabel>Create</guilabel> button to create
+					your new GPRINT preset.
+				</para>
+			</sect2>
+		</sect1>
+		<sect1 id="cdefs">
+			<title>CDEFs</title>
+			<para>
+				CDEFs allow you to apply mathematical functions to graph data to alter output. The concept of a
+				CDEF comes straight from <application>RRDTool</application>, and are written in reverse polish notation (RPN). For more
+				information regarding the syntax of CDEFs, check out the <ulink url="http://people.ee.ethz.ch/~oetiker/webtools/rrdtool/doc/rrdgraph_data.en.html">CDEF tutorial</ulink>.
+			</para>
+			<sect2 id="add_new_cdef">
+				<title>Creating a CDEF</title>
+				<para>
+					To create a new CDEF in Cacti, select the <guilabel>Graph Management</guilabel> option under
+					the <guilabel>Management</guilabel> heading, and select <guilabel>CDEFs</guilabel>. Once at
+					this screen, click <guilabel>Add</guilabel> to the right. You will be prompted for a CDEF
+					name, for which you can type anything used to describe your CDEF. Click the <guilabel>Create</guilabel>
+					button so you are redirected back to the edit page, now with an empty <guilabel>CDEF Items</guilabel>
+					box. Construct your CDEF by adding an item for each element in the CDEF string, common types such as
+					operators and functions are enumerated for your convenience. Below is a basic description of each
+					CDEF item type.
+				</para>
+				<table frame='all'>
+					<title>CDEF Item Types</title>
+					<tgroup cols='2' align='left' colsep='1' rowsep='1'>
+						<colspec colnum="1">
+						<colspec colwidth="3*" colnum="2">
+						<thead>
+							<row>
+								<entry align="center">Type</entry>
+								<entry align="center">Description</entry>
+							</row>
+						</thead>
+						<tbody>
+							<row>
+								<entry>Function</entry>
+								<entry>You can choose a CDEF function to use as the item. The <ulink url="http://people.ee.ethz.ch/~oetiker/webtools/rrdtool/doc/rrdgraph.en.html">RRDTool graph manual</ulink> describes the purpose of each CDEF function.</entry>
+							</row>
+							<row>
+								<entry>Operator</entry>
+								<entry>Just your standard math operators, including modulo (%).</entry>
+							</row>
+							<row>
+								<entry>Special Data Source</entry>
+								<entry>A special data source is basically a flag to tell Cacti to do some special processing when it encounters this CDEF item. The "Current Graph Item Data Source" type basically inserts the name of the data source that is referenced by the graph item that references to this CDEF. Both of the "All Data Sources" types insert a summation of all data sources used on a graph.</entry>
+							</row>
+							<row>
+								<entry>Another CDEF</entry>
+								<entry>You can recursively use another CDEF within this CDEF.</entry>
+							</row>
+							<row>
+								<entry>Custom String</entry>
+								<entry>Sometimes it's just easier to type out the literal CDEF string manually. When referencing to data sources on the graph, remember that Cacti names them 'a', 'b', 'c', '...', starting with the first data source on the graph.</entry>
+							</row>
+						</tbody>
+					</tgroup>
+				</table>
+			</sect2>
+		</sect1>
+	</chapter>
+</part>
+
+</book>
