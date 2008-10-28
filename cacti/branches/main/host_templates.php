@@ -648,6 +648,33 @@ function template_edit() {
 
 	registerOnLoadFunction("host_templates", "changeHostForm();");
 
+	/* jQuery stuff */
+	$().ready(function() {
+	
+		/* Hide "Uptime Goes Backwards" if snmp_version has been set to "None" */
+		$("#snmp_version").change(function () {
+			switch ($(this).val())
+			{
+				case "0":
+					/* now that SNMP is disabled, select reindex method "None" */
+					$("#reindex_method option[value=0]").attr('selected', 'true');
+					/* disable SNMP options: "Uptime Goes Backwards" never works with pure Script Data Queries */
+					$("#reindex_method option[value=1]").attr('disabled', 'true');
+					$("#reindex_method option[value=1]").attr('title', 'Disabled due to SNMP settings');
+					break;
+				default:
+					/* "Uptime Goes Backwards" is allowed again */
+					$("#reindex_method option[value=1]").removeAttr("disabled");
+					$("#reindex_method option[value=1]").attr('title', '');
+					/* select this again as default reindex method */
+					/* TODO: this ignores the default reindex method of the associated host template */
+					/* TODO: currently, existing Data Queries' reindex method will NOT be changed */
+					$("#reindex_method option[value=1]").attr('selected', 'true');
+			}
+		});
+		
+	});
+
 	-->
 	</script>
 	<?php
