@@ -53,6 +53,7 @@ Cacti CHANGELOG
 -bug#0001295: Division by zero when rrd_step < poller_interval
 -bug#0001296: add_graphs.php does not add the graph template to the host 
 -bug#0001299: When creating graphs the entire poller cache is recreated for a host
+-bug#0001320: Invalid PHP_SELF Path
 -bug: IE generates errors on both the host and graph settings pages
 -feature: Pagainate Treeview Dual Pane
 -feature: Allow user to specify maximum graphs per page from Treeview Dual Pane
