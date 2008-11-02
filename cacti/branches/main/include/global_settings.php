@@ -281,6 +281,13 @@ $settings = array(
 			"friendly_name" => "Other Defaults",
 			"method" => "spacer",
 			),
+		"reindex_method" => array(
+			"friendly_name" => "Reindex Method for Data Queries",
+			"description" => "The default reindex method to use for all Data Queries.",
+			"method" => "drop_array",
+			"default" => "1",
+			"array" => $reindex_types,
+			),
 		"require_ssl" => array(
 			"friendly_name" => "Require SSL Encryption",
 			"description" => "Redirect all HTTP connections to HTTPS.",
@@ -656,7 +663,8 @@ $settings = array(
 			),
 		"poller_interval" => array(
 			"friendly_name" => "Poller Interval",
-			"description" => "The polling interval in use.  This setting will effect how often rrd's are checked and updated.",
+			"description" => "The polling interval in use.  This setting will effect how often rrd's are checked and updated.
+			<strong><u>NOTE: If you change this value, you must re-populate the poller cache.  Failure to do so, may result in lost data.</u></strong>",
 			"method" => "drop_array",
 			"default" => 300,
 			"array" => $poller_intervals,
