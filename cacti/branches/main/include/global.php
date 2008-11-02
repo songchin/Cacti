@@ -85,7 +85,7 @@ define("CACTI_SERVER_OS", (strstr(PHP_OS, "WIN")) ? "win32" : "unix");
 define("PHP_SNMP_SUPPORT", function_exists("snmpget"));
 
 /* used for includes */
-define("CACTI_BASE_PATH", strtr(ereg_replace("(.*)[\/\\]include", "\\1", dirname(__FILE__)), "\\", "/"));
+define("CACTI_BASE_PATH", strtr(ereg_replace("(.*)[\\\/]include", "\\1", dirname(__FILE__)), "\\", "/"));
 $config["rra_path"] = CACTI_BASE_PATH . '/rra';
 
 define('URL_PATH', $config['url_path']);
