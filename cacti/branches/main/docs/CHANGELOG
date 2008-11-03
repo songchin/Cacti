@@ -90,6 +90,7 @@ Cacti CHANGELOG
 -documentation: Documentation of specific rrdtool feature
 -documentation: Use of SNMP exec option up to net-snmp 5.3
 -feature#0000284: Custom <path_rra> for each device
+-feature#0000431: Add php-xml to requirements, verify required PHP extensions
 -feature#0001332: non SNMP Hosts' Reindex Method should not default to "Uptime goes backwards" 
 -feature#0001289: Add "Graph Properties" wrench to tree+preview mode
 -feature#0001249: New pseudo CDEF variables for "Count All|Similar Data Sources (NO)?DUPS"
