@@ -59,7 +59,7 @@ function grow_graph_tree($tree_id, $start_branch, $user_id, $options) {
 		html_graph_end_box();
 	}
 
-	$heirarchy = db_fetch_assoc("select
+	$hier_sql = "select
 		graph_tree_items.id,
 		graph_tree_items.title,
 		graph_tree_items.local_graph_id,
@@ -77,9 +77,11 @@ function grow_graph_tree($tree_id, $start_branch, $user_id, $options) {
 		where graph_tree_items.graph_tree_id=$tree_id
 		and graph_tree_items.order_key like '$search_key%'
 		$sql_where
-		order by graph_tree_items.order_key");
+		order by graph_tree_items.order_key";
 
-	print "<!-- <P>Building Heirarchy w/ " . sizeof($heirarchy) . " leaves</P>  -->\n";
+	$hierarchy = db_fetch_assoc($hier_sql);
+
+	print "<!-- <P>Building Hierarchy w/ " . sizeof($hierarchy) . " leaves</P>  -->\n";
 
 	html_graph_start_box(0, true);
 
@@ -88,8 +90,8 @@ function grow_graph_tree($tree_id, $start_branch, $user_id, $options) {
 	$i = 0;
 
 	/* loop through each tree item */
-	if (sizeof($heirarchy) > 0) {
-	foreach ($heirarchy as $leaf) {
+	if (sizeof($hierarchy) > 0) {
+	foreach ($hierarchy as $leaf) {
 		/* find out how 'deep' this item is */
 		$tier = tree_tier($leaf["order_key"]);
 
@@ -97,8 +99,8 @@ function grow_graph_tree($tree_id, $start_branch, $user_id, $options) {
 		if ($leaf["title"] != "") { $current_leaf_type = "heading"; }elseif (!empty($leaf["local_graph_id"])) { $current_leaf_type = "graph"; }else{ $current_leaf_type = "host"; }
 
 		/* find the type of the next branch. make sure the next item exists first */
-		if (isset($heirarchy{$i+1})) {
-			if ($heirarchy{$i+1}["title"] != "") { $next_leaf_type = "heading"; }elseif (!empty($heirarchy{$i+1}["local_graph_id"])) { $next_leaf_type = "graph"; }else{ $next_leaf_type = "host"; }
+		if (isset($hierarchy{$i+1})) {
+			if ($hierrarchy{$i+1}["title"] != "") { $next_leaf_type = "heading"; }elseif (!empty($hierarchy{$i+1}["local_graph_id"])) { $next_leaf_type = "graph"; }else{ $next_leaf_type = "host"; }
 		}else{
 			$next_leaf_type = "";
 		}
@@ -204,7 +206,7 @@ function grow_edit_graph_tree($tree_id, $user_id, $options) {
 		where graph_tree_items.graph_tree_id=$tree_id
 		order by graph_tree_id, graph_tree_items.order_key");
 
-	print "<!-- <P>Building Heirarchy w/ " . sizeof($tree) . " leaves</P>  -->\n";
+	print "<!-- <P>Building Hierarchy w/ " . sizeof($tree) . " leaves</P>  -->\n";
 
 	##  Here we go.  Starting the main tree drawing loop.
 
@@ -482,7 +484,7 @@ function create_dhtml_tree() {
 	if (sizeof($tree_list) > 0) {
 		foreach ($tree_list as $tree) {
 			$i++;
-			$heirarchy = db_fetch_assoc("select
+			$hierarchy = db_fetch_assoc("select
 				graph_tree_items.id,
 				graph_tree_items.title,
 				graph_tree_items.order_key,
@@ -501,8 +503,8 @@ function create_dhtml_tree() {
 			$i++;
 			$dhtml_tree[$i] = "ou0.xID = \"tree_" . $tree["id"] . "\"\n";
 
-			if (sizeof($heirarchy) > 0) {
-				foreach ($heirarchy as $leaf) {
+			if (sizeof($hierarchy) > 0) {
+				foreach ($hierarchy as $leaf) {
 					$i++;
 					$tier = tree_tier($leaf["order_key"]);
 
@@ -993,7 +995,7 @@ function find_first_folder_url() {
 
 	if (!empty($use_tree_id)) {
 		/* find the first clickable item in the tree */
-		$heirarchy = db_fetch_assoc("select
+		$hierarchy = db_fetch_assoc("select
 			graph_tree_items.id,
 			graph_tree_items.host_id
 			from graph_tree_items
@@ -1001,8 +1003,8 @@ function find_first_folder_url() {
 			and graph_tree_items.local_graph_id = 0
 			order by graph_tree_items.order_key");
 
-		if (sizeof($heirarchy) > 0) {
-			return "graph_view.php?action=tree&tree_id=$use_tree_id&leaf_id=" . $heirarchy[0]["id"] . "&select_first=true";
+		if (sizeof($hierarchy) > 0) {
+			return "graph_view.php?action=tree&tree_id=$use_tree_id&leaf_id=" . $hierarchy[0]["id"] . "&select_first=true";
 		}else{
 			return "graph_view.php?action=tree&tree_id=$use_tree_id&select_first=true";
 		}
