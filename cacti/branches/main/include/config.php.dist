@@ -35,11 +35,11 @@ $database_port = "3306";
 
 /*
  This is full URL Path to the Cacti installation 
-   For example, if your cacti was accessible by http://server/cacti/ you would user '/cacti/'
-   as the url path.  For just http://server/ use '/'
+   For example, if your cacti was accessible by http://server/cacti/ you would user "/cacti/"
+   as the url path.  For just http://server/ use "/".  Use value of "" for relative path.
 */
 
-$config['url_path'] = '/';
+$config['url_path'] = "";
 
 
 ?>
