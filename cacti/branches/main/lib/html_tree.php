@@ -739,10 +739,10 @@ function grow_right_pane_tree($tree_id, $leaf_id, $host_group_data) {
 							<strong>&nbsp;Search:</strong>&nbsp;
 						</td>
 						<td width="130" nowrap="" style="white-space: nowrap;">
-							<input size='40' width='130' name='filter' value='<?php print $_REQUEST["filter"];?>'>
+							<input size='30' width='100' name='filter' value='<?php print clean_html_output(get_request_var_request("filter"));?>'>
 						</td>
-						<td nowrap style='white-space: nowrap;' width="50">
-							&nbsp;<strong>Graphs:</strong>&nbsp;
+						<td nowrap style='white-space:nowrap;' width="110">
+							&nbsp;<strong>Graphs per Page:</strong>&nbsp;
 						</td>
 						<td width="1">
 							<select name="graphs" onChange="submit()">
@@ -761,7 +761,7 @@ function grow_right_pane_tree($tree_id, $leaf_id, $host_group_data) {
 						<td>
 							<input type="checkbox" name="thumbnails" id="thumbnails" onChange="if (this.checked == true) this.value='dogs'; else this.value='cats';submit()" <?php print (($_REQUEST['thumbnails'] == "dogs") ? "checked":"");?>>
 						</td>
-						<td nowrap>
+						<td style='white-space:nowrap;' nowrap>
 							&nbsp;<input type="image" src="images/button_go.gif" alt="Go" border="0" align="absmiddle">
 							<input type="image" src="images/button_clear.gif" name="clear" alt="Clear" border="0" align="absmiddle">
 						</td>
@@ -771,9 +771,8 @@ function grow_right_pane_tree($tree_id, $leaf_id, $host_group_data) {
 		</form>
 	</tr>
 	<?php
-	html_graph_end_box();
-	print "<br>";
-	html_graph_start_box(3, false);
+	html_graph_end_box(FALSE);
+	html_graph_start_box(3, TRUE);
 
 	$graph_list = array();
 

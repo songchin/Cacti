@@ -79,7 +79,6 @@ case 'tree':
 	/* don't even print the table if there is not >1 tree */
 	if ((!empty($tree_dropdown_html)) && (read_graph_config_option("default_tree_view_mode") == "1")) {
 		print "
-		<br>
 		<table width='100%' style='background-color: #f5f5f5; border: 1px solid #bbbbbb;' align='center' cellpadding='3'>
 			<tr>
 				$tree_dropdown_html
@@ -104,8 +103,6 @@ case 'tree':
 			grow_right_pane_tree((isset($_GET["tree_id"]) ? $_GET["tree_id"] : 0), (isset($_GET["leaf_id"]) ? $_GET["leaf_id"] : 0), (isset($_GET["host_group_data"]) ? urldecode($_GET["host_group_data"]) : 0));
 		}
 	}
-
-	print "<br><br>";
 
 	break;
 case 'preview':
@@ -253,13 +250,13 @@ case 'preview':
 	<?php
 
 	/* include graph view filter selector */
-	html_graph_start_box(3, false);
+	html_graph_start_box(3, FALSE);
 	include(CACTI_BASE_PATH . "/include/html/inc_graph_view_filter_table.php");
-	html_graph_end_box();
+	html_graph_end_box(FALSE);
 
 	/* include time span selector */
 	if (read_graph_config_option("timespan_sel") == "on") {
-		html_graph_start_box(3, false);
+		html_graph_start_box(3, FALSE);
 		include(CACTI_BASE_PATH . "/include/html/inc_timespan_selector.php");
 		html_graph_end_box();
 	}
@@ -285,8 +282,6 @@ case 'preview':
 	html_nav_bar($colors["header_panel"], read_graph_config_option("num_columns"), $_REQUEST["page"], ROWS_PER_PAGE, $total_rows, $nav_url);
 
 	html_graph_end_box();
-
-	print "<br><br>";
 
 	break;
 case 'list':
@@ -382,7 +377,7 @@ case 'list':
 	}
 
 	/* display graph view filter selector */
-	html_graph_start_box(3, false);
+	html_graph_start_box(3, FALSE);
 
 	if (empty($_REQUEST["host_id"])) { $_REQUEST["host_id"] = 0; }
 	if (empty($_REQUEST["graph_template_id"])) { $_REQUEST["graph_template_id"] = 0; }
@@ -499,8 +494,7 @@ case 'list':
 		</form>
 	</tr>
 	<?php
-
-	html_graph_end_box();
+	html_graph_end_box(TRUE);
 
 	/* create filter for sql */
 	$sql_filter = "";
@@ -597,7 +591,7 @@ case 'list':
 	</script>
 	<?php
 
-	html_graph_start_box(1, false);
+	html_graph_start_box(1, TRUE);
 	?>
 	<tr class='rowHeader noprint'>
 		<form name='graphs' id='graphs' action='graph_view.php' method='get' onSubmit='form_graph(document.graphs,document.graphs)'>
