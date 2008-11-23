@@ -118,6 +118,7 @@ Cacti CHANGELOG
 -feature#0001030: Lower limit and upper limit |query_*| variable support for Graph Templates
 -feature#0000954: implement --alt-y-grid graph option
 -feature#0000967: Option to force users to use SSL
+-feature#0000852: Have "Previous" and "Next" disappear when not in use (for most Console Panels)
 -feature#0000431: Add php-xml to requirements, verify required PHP extensions
 -feature#0000284: Custom <path_rra> for each device
 -feature: Default Script Server/Script Queries now accept host specific ping_retries, max_oids
