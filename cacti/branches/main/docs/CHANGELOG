@@ -93,9 +93,8 @@ Cacti CHANGELOG
 -documentation: Explaining Cacti Special Data Sources used on CDEFs, lots of CDEF examples using Special data Sources
 -documentation: Documentation of specific rrdtool feature
 -documentation: Use of SNMP exec option up to net-snmp 5.3
--feature#0000284: Custom <path_rra> for each device
--feature#0000431: Add php-xml to requirements, verify required PHP extensions
--feature#0001332: non SNMP Hosts' Reindex Method should not default to "Uptime goes backwards" 
+-feature#0001332: non SNMP Hosts' Reindex Method should not default to "Uptime goes backwards"
+-feature#0001323: getting all graph template id associated to a host template
 -feature#0001289: Add "Graph Properties" wrench to tree+preview mode
 -feature#0001249: New pseudo CDEF variables for "Count All|Similar Data Sources (NO)?DUPS"
 -feature#0001235: CLI script needed to activate a query: add_data_query.php
@@ -119,6 +118,8 @@ Cacti CHANGELOG
 -feature#0001030: Lower limit and upper limit |query_*| variable support for Graph Templates
 -feature#0000954: implement --alt-y-grid graph option
 -feature#0000967: Option to force users to use SSL
+-feature#0000431: Add php-xml to requirements, verify required PHP extensions
+-feature#0000284: Custom <path_rra> for each device
 -feature: Default Script Server/Script Queries now accept host specific ping_retries, max_oids
 -feature: Support for new variables |host_ping_retries| and |host_max_oids|
 -feature: Support changing the "Reindex Method" of associated data queries
