@@ -22,6 +22,8 @@
  +-------------------------------------------------------------------------+
 */
 
+include_once(CACTI_BASE_PATH . "/lib/time.php");
+
 global $colors, $config;
 
 $page_title = api_plugin_hook_function('page_title', 'Cacti');
@@ -65,37 +67,7 @@ api_plugin_hook('page_head');
 		<div style='float:right'>
 			<?php
 			if (read_config_option("auth_method") != 0) {
-
-				/* setup date format */
-				$date_fmt = read_graph_config_option("default_date_format");
-				$datechar = read_graph_config_option("default_datechar");
-
-				switch ($datechar) {
-					case GDC_HYPHEN: 	$datechar = "-"; break;
-					case GDC_SLASH: 	$datechar = "/"; break;
-					case GDC_DOT:	 	$datechar = "."; break;
-				}
-
-				switch ($date_fmt) {
-					case GD_MO_D_Y:
-						$date = "m" . $datechar . "d" . $datechar . "Y H:i:s";
-						break;
-					case GD_MN_D_Y:
-						$date = "M" . $datechar . "d" . $datechar . "Y H:i:s";
-						break;
-					case GD_D_MO_Y:
-						$date = "d" . $datechar . "m" . $datechar . "Y H:i:s";
-						break;
-					case GD_D_MN_Y:
-						$date = "d" . $datechar . "M" . $datechar . "Y H:i:s";
-						break;
-					case GD_Y_MO_D:
-						$date = "Y" . $datechar . "m" . $datechar . "d H:i:s";
-						break;
-					case GD_Y_MN_D:
-						$date = "Y" . $datechar . "M" . $datechar . "d H:i:s";
-						break;
-				}
+				$date = date_time_format();
 
 				?><strong><?php echo date("D, " . $date . " T");?></strong>&nbsp;&nbsp;&nbsp;
 				Logged in as <strong><?php print db_fetch_cell("select username from user_auth where id=" . $_SESSION["sess_user_id"]);?></strong> (<a href="<?php echo $config['url_path']; ?>logout.php">Logout</a>)
