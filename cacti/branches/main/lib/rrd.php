@@ -281,6 +281,29 @@ function rrdtool_function_create($local_data_id, $show_source, $rrd_struc) {
 		$create_rra .= "RRA:" . $consolidation_functions{$rra["consolidation_function_id"]} . ":" . $rra["x_files_factor"] . ":" . $rra["steps"] . ":" . $rra["rows"] . RRD_NL;
 	}
 
+	/* check for structured path configuration, if in place verify directory
+	   exists and if not create it.
+	 */
+	if (read_config_option("extended_paths") == "on") {
+		if (!is_dir(dirname($data_source_path))) {
+			if (mkdir(dirname($data_source_path), 0775)) {
+				if (CACTI_SERVER_OS != "win32") {
+					$owner_id      = fileowner($config["rra_path"]);
+					$group_id      = filegroup($config["rra_path"]);
+
+					if ((chown(dirname($data_source_path), $owner_id)) &&
+						(chgrp(dirname($data_source_path), $group_id))) {
+						/* permissions set ok */
+					}else{
+						cacti_log("ERROR: Unable to set directory permissions for '" . dirname($data_source_path) . "'", FALSE);
+					}
+				}
+			}else{
+				cacti_log("ERROR: Unable to create directory '" . dirname($data_source_path) . "'", FALSE);
+			}
+		}
+	}
+
 	if ($show_source == true) {
 		return read_config_option("path_rrdtool") . " create" . RRD_NL . "$data_source_path$create_ds$create_rra";
 	}else{
