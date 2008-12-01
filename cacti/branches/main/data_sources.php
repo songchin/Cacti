@@ -749,7 +749,7 @@ function ds_edit() {
 				<td class="textInfo" align="right" valign="top">
 					<span style="color: #c16921;">*<a href='data_sources.php?action=ds_toggle_status&id=<?php print (isset($_GET["id"]) ? $_GET["id"] : 0);?>&newstate=<?php print (($data["active"] == "on") ? "0" : "1");?>'><strong><?php print (($data["active"] == "on") ? "Disable" : "Enable");?></strong> Data Source.<br></a>
 					<span style="color: #c16921;">*<a href='data_sources.php?action=ds_edit&id=<?php print (isset($_GET["id"]) ? $_GET["id"] : 0);?>&debug=<?php print (isset($_SESSION["ds_debug_mode"]) ? "0" : "1");?>'>Turn <strong><?php print (isset($_SESSION["ds_debug_mode"]) ? "Off" : "On");?></strong> Data Source Debug Mode.<br></a>
-					<span style="color: #c16921;">*<a href='data_sources.php?action=ds_edit&id=<?php print (isset($_GET["id"]) ? $_GET["id"] : 0);?>&info=<?php print (isset($_SESSION["ds_info_mode"]) ? "0" : "1");?>'>Turn <strong><?php print (isset($_SESSION["ds_info_mode"]) ? "Off" : "On");?></strong> RRD File Information Mode.<br></a>
+					<span style="color: #c16921;">*<a href='data_sources.php?action=ds_edit&id=<?php print (isset($_GET["id"]) ? $_GET["id"] : 0);?>&info=<?php print (isset($_SESSION["ds_info_mode"]) ? "0" : "1");?>'>Turn <strong><?php print (isset($_SESSION["ds_info_mode"]) ? "Off" : "On");?></strong> Cacti2RRDTool Comparison Mode.<br></a>
 					<?php
 						if (!empty($data_template["id"])) {
 							?><span style="color: #c16921;">*<a href='data_templates.php?action=template_edit&id=<?php print (isset($data_template["id"]) ? $data_template["id"] : "0");?>'>Edit Data Template.</a><br><?php
@@ -973,6 +973,10 @@ function ds_edit() {
 		form_hidden_box("current_rrd", $_GET["view_rrd"], "0");
 	}
 
+	if ((isset($_SESSION["ds_info_mode"])) && (isset($_GET["id"]))) {
+		rrdtool_cacti_compare($_GET["id"]);
+	}
+
 	/* display the debug mode box if the user wants it */
 	if ((isset($_SESSION["ds_debug_mode"])) && (isset($_GET["id"]))) {
 		?>
@@ -981,22 +985,6 @@ function ds_edit() {
 				<td>
 					<span class="textInfo">Data Source Debug</span><br>
 					<pre><?php print rrdtool_function_create($_GET["id"], true, array());?></pre>
-				</td>
-			</tr>
-		</table>
-		<?php
-	}
-
-	if ((isset($_SESSION["ds_info_mode"])) && (isset($_GET["id"]))) {
-		$data_source_path = get_data_source_path($_GET["id"], true);
-		$rrd_output = rrdtool_execute("info $data_source_path");
-		?>
-		<table width="100%" align="center">
-			<tr>
-				<td>
-					<span class="textInfo">RRD File Information</span><br>
-					<pre><?php print($rrd_output);?>
-				</pre>
 				</td>
 			</tr>
 		</table>

@@ -93,6 +93,7 @@ Cacti CHANGELOG
 -documentation: Explaining Cacti Special Data Sources used on CDEFs, lots of CDEF examples using Special data Sources
 -documentation: Documentation of specific rrdtool feature
 -documentation: Use of SNMP exec option up to net-snmp 5.3
+-feature#0001350: Compare Cacti Data Source Info to current RRD File Info
 -feature#0001332: non SNMP Hosts' Reindex Method should not default to "Uptime goes backwards"
 -feature#0001323: getting all graph template id associated to a host template
 -feature#0001289: Add "Graph Properties" wrench to tree+preview mode
