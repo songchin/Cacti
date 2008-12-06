@@ -42,10 +42,6 @@ $parms = $_SERVER["argv"];
 array_shift($parms);
 
 if (sizeof($parms)) {
-	$displayHosts 	= FALSE;
-	$quietMode		= FALSE;
-	$host			= array();
-	$hosts			= getHosts($host);
 	$force			= FALSE;
 
 	foreach($parms as $parameter) {
@@ -57,7 +53,7 @@ if (sizeof($parms)) {
 
 			break;
 		case "--host-id":
-			$hostId = $value;
+			$host_id = $value;
 	
 			break;
 		case "--force":
@@ -70,10 +66,6 @@ if (sizeof($parms)) {
 		case "--help":
 			display_help();
 			exit(0);
-		case "--quiet":
-			$quietMode = TRUE;
-
-			break;
 		default:
 			echo "ERROR: Invalid Argument: ($arg)\n\n";
 			display_help();
@@ -82,13 +74,12 @@ if (sizeof($parms)) {
 	}
 
 
-
 	/* 
-	 * handle display options 
+	 * verify valid host id and get a name for it
 	 */
-	/* Verify the host's existance */
-	if (!isset($hosts[$hostId]) || $hostId == 0) {
-		echo "ERROR: Unknown Host ID ($hostId)\n";
+	$host_name = db_fetch_cell("SELECT hostname FROM host WHERE id = " . $host_id);
+	if (!isset($host_name)) {
+		echo "ERROR: Unknown Host Id ($host_id)\n";
 		echo "Try php -q device_list.php\n";
 		exit(1);
 	}
@@ -104,7 +95,7 @@ if (sizeof($parms)) {
 	$data_sources = db_fetch_assoc("select
 		data_local.id as local_data_id
 		from data_local
-		where data_local.host_id =" . $hostId);
+		where data_local.host_id =" . $host_id);
 
 	if (sizeof($data_sources) > 0) {
 		foreach ($data_sources as $data_source) {
@@ -116,7 +107,7 @@ if (sizeof($parms)) {
 		$graphs = db_fetch_assoc("select
 			graph_local.id as local_graph_id
 			from graph_local
-			where graph_local.host_id =" . $hostId);
+			where graph_local.host_id =" . $host_id);
 
 		if (sizeof($graphs) > 0) {
 			foreach ($graphs as $graph) {
@@ -129,20 +120,20 @@ if (sizeof($parms)) {
 		/* delete graphs/data sources tied to this device */
 		api_data_source_remove_multi($data_sources_to_act_on);
 		api_graph_remove_multi($graphs_to_act_on);
-		echo "Removing host and all resources for host id " . $hostId;
+		echo "Removing host and all resources for host id " . $host_id;
 	} else { 
 		/* leave graphs and data_sources in place, but disable the data sources */
 		api_data_source_disable_multi($data_sources_to_act_on);
-		echo "Removing host but keeping resources for host id " . $hostId;
+		echo "Removing host but keeping resources for host id " . $host_id;
 	}
 
-	api_device_remove($hostId);
+	api_device_remove($host_id);
 
 	if (is_error_message()) {
 		echo ". ERROR: Failed to remove this device\n";
 		exit(1);
 	} else {
-		echo ". Success - removed device-id: ($hostId)\n";
+		echo ". Success - removed device-id: ($host_id)\n";
 		exit(0);
 	}
 }else{
@@ -158,7 +149,6 @@ function display_help() {
 	echo "    --host-id		the numerical id of the host\n\n";
 	echo "Optional:\n";
 	echo "    --force		delete all graphs, graph permissions, host permissions and data sources\n\n";
-	echo "    --quiet		batch mode value return\n\n";
 }
 
 ?>
