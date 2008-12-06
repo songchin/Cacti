@@ -44,7 +44,8 @@ array_shift($parms);
 if (sizeof($parms)) {
 	$displayHosts 	= FALSE;
 	$quietMode		= FALSE;
-	$hosts			= getHosts();
+	$host			= array();
+	$hosts			= getHosts($host);
 	$force			= FALSE;
 
 	foreach($parms as $parameter) {
@@ -69,10 +70,6 @@ if (sizeof($parms)) {
 		case "--help":
 			display_help();
 			exit(0);
-		case "--list-hosts":
-			$displayHosts = TRUE;
-
-			break;
 		case "--quiet":
 			$quietMode = TRUE;
 
@@ -89,16 +86,10 @@ if (sizeof($parms)) {
 	/* 
 	 * handle display options 
 	 */
-	if ($displayHosts) {
-		displayHosts($hosts, $quietMode);
-		exit(0);
-	}
-
-
 	/* Verify the host's existance */
 	if (!isset($hosts[$hostId]) || $hostId == 0) {
 		echo "ERROR: Unknown Host ID ($hostId)\n";
-		echo "Try --list-hosts\n";
+		echo "Try php -q device_list.php\n";
 		exit(1);
 	}
 	
@@ -167,8 +158,6 @@ function display_help() {
 	echo "    --host-id		the numerical id of the host\n\n";
 	echo "Optional:\n";
 	echo "    --force		delete all graphs, graph permissions, host permissions and data sources\n\n";
-	echo "List Options:\n";
-	echo "    --list-hosts	list available hosts\n";
 	echo "    --quiet		batch mode value return\n\n";
 }
 

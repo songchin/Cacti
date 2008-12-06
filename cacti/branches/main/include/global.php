@@ -73,7 +73,13 @@ $no_http_header_files = array(
 	"poller_graphs_reapply_names.php",
 	"poller_output_empty.php",
 	"poller_reindex_hosts.php",
-	"rebuild_poller_cache.php"
+	"rebuild_poller_cache.php",
+	"device_add.php",
+	"device_list.php",
+	"graph_add.php",
+	"perms_add.php",
+	"tree_add.php",
+	"user_copy.php",
 );
 
 $colors = array();
@@ -88,7 +94,9 @@ define("PHP_SNMP_SUPPORT", function_exists("snmpget"));
 define("CACTI_BASE_PATH", strtr(ereg_replace("(.*)[\\\/]include", "\\1", dirname(__FILE__)), "\\", "/"));
 $config["rra_path"] = CACTI_BASE_PATH . '/rra';
 
-define('URL_PATH', $config['url_path']);
+define('URL_PATH', '');
+$config['url_path'] = '';
+#define('URL_PATH', $config['url_path']);
 
 /* colors */
 $colors["dark_outline"] = "454E53";

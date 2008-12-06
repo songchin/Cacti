@@ -56,7 +56,6 @@ if (sizeof($parms)) {
 	$hostGroupStyle = 1; # 1 = Graph Template,  2 = Data Query Index
 
 	$quietMode      = FALSE;
-	$displayHosts   = FALSE;
 	$displayTrees   = FALSE;
 	$displayNodes   = FALSE;
 	$displayRRAs    = FALSE;
@@ -108,10 +107,6 @@ if (sizeof($parms)) {
 			$quietMode = TRUE;
 
 			break;
-		case "--list-hosts":
-			$displayHosts = TRUE;
-
-			break;
 		case "--list-trees":
 			$displayTrees = TRUE;
 
@@ -147,11 +142,6 @@ if (sizeof($parms)) {
 			display_help();
 			exit(1);
 		}
-	}
-
-	if ($displayHosts) {
-		displayHosts($hosts, $quietMode);
-		exit(0);
 	}
 
 	if ($displayTrees) {
@@ -339,7 +329,6 @@ function display_help() {
 	echo "    --graph-id=[ID]\n";
 	echo "    [--rra-id=[ID]]\n\n";
 	echo "List Options:\n";
-	echo "    --list-hosts\n";
 	echo "    --list-trees\n";
 	echo "    --list-nodes --tree-id=[ID]\n";
 	echo "    --list-rras\n";

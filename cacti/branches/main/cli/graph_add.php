@@ -61,7 +61,8 @@ if (sizeof($parms)) {
 	$input_fields  = array();
 	$values["cg"]  = array();
 
-	$hosts          = getHosts();
+	$host			= array();
+	$hosts          = getHosts($host);
 	$graphTemplates = getGraphTemplates();
 
 	$graphTitle = "";
@@ -72,7 +73,6 @@ if (sizeof($parms)) {
 	$hostTemplateId = 0;
 	$force      	= 0;
 	
-	$listHosts       		= FALSE;
 	$listGraphTemplates 	= FALSE;
 	$listSNMPFields  		= FALSE;
 	$listSNMPValues  		= FALSE;
@@ -156,10 +156,6 @@ if (sizeof($parms)) {
 			}
 
 			break;
-		case "--list-hosts":
-			$listHosts = TRUE;
-
-			break;
 		case "--list-snmp-fields":
 			$listSNMPFields = TRUE;
 
@@ -235,11 +231,6 @@ if (sizeof($parms)) {
 		exit(0);
 	}
 
-	if ($listHosts) {
-		displayHosts($hosts, $quietMode);
-		exit(0);
-	}
-
 	/* get the existing snmp queries */
 	$snmpQueries = getSNMPQueries();
 
@@ -305,7 +296,7 @@ if (sizeof($parms)) {
 	/* Verify the host's existance */
 	if (!isset($hosts[$hostId]) || $hostId == 0) {
 		echo "ERROR: Unknown Host ID ($hostId)\n";
-		echo "Try --list-hosts\n";
+		echo "Try php -q device_list.php\n";
 		exit(1);
 	}
 
@@ -580,7 +571,6 @@ function display_help() {
 	echo "                    2|Index  = Index Count Changed\n";
 	echo "                    3|Fields = Verify all Fields\n";
 	echo "List Options:\n";
-	echo "    --list-hosts\n";
 	echo "    --list-graph-templates [--host_template=[ID]]\n";
 	echo "    --list-input-fields --graph-template-id=[ID]\n";
 	echo "More list Options for 'ds' graphs only:\n";

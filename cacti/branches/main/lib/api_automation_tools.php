@@ -148,22 +148,128 @@ function getHostTemplates() {
 	return $host_templates;
 }
 
-function getHostsByDescription() {
-	$hosts = array();
-	$tmpArray = db_fetch_assoc("select id, description from host order by description");
-
-	if (sizeof($tmpArray)) {
-		foreach ($tmpArray as $tmp) {
-			$hosts[$tmp["description"]] = $tmp["id"];
-		}
+/* getHosts				get all matching hosts for given selection criteria
+ * @arg $input_parms	array of selection criteria
+ * returns				array of hosts, indexed by host_id
+ */
+function getHosts($input_parms) {
+	$hosts    = array();
+	
+	$sql_where = "";
+	
+	if (isset($input_parms["description"])) {
+		strlen($sql_where) ? ($sql_where .= ' AND ') : ($sql_where .= ' WHERE ');
+		$sql_where .= 'description like "%%' . $input_parms["description"] . '%%" '; 
+	}
+	
+	if (isset($input_parms["ip"])) {
+		strlen($sql_where) ? ($sql_where .= ' AND ') : ($sql_where .= ' WHERE ');
+		$sql_where .= 'hostname like "%%' . $input_parms["ip"] . '%%" '; 
+	}
+	
+	if (isset($input_parms["host_template_id"])) {
+		strlen($sql_where) ? ($sql_where .= ' AND ') : ($sql_where .= ' WHERE ');
+		$sql_where .= 'host_template_id = ' . $input_parms["host_template_id"] . ' '; 
+	}
+	
+	if (isset($input_parms["notes"])) {
+		strlen($sql_where) ? ($sql_where .= ' AND ') : ($sql_where .= ' WHERE ');
+		$sql_where .= 'notes like "%%' . $input_parms["notes"] . '%%" '; 
+	}
+	
+	if (isset($input_parms["snmp_community"])) {
+		strlen($sql_where) ? ($sql_where .= ' AND ') : ($sql_where .= ' WHERE ');
+		$sql_where .= 'snmp_community like "%%' . $input_parms["snmp_community"] . '%%" '; 
+	}
+	
+	if (isset($input_parms["snmp_version"])) {
+		strlen($sql_where) ? ($sql_where .= ' AND ') : ($sql_where .= ' WHERE ');
+		$sql_where .= 'snmp_version = ' . $input_parms["snmp_version"] . ' '; 
+	}
+	
+	if (isset($input_parms["snmp_username"])) {
+		strlen($sql_where) ? ($sql_where .= ' AND ') : ($sql_where .= ' WHERE ');
+		$sql_where .= 'snmp_username like "%%' . $input_parms["snmp_username"] . '%%" '; 
+	}
+	
+	if (isset($input_parms["snmp_password"])) {
+		strlen($sql_where) ? ($sql_where .= ' AND ') : ($sql_where .= ' WHERE ');
+		$sql_where .= 'snmp_password like "%%' . $input_parms["snmp_password"] . '%%" '; 
+	}
+	
+	if (isset($input_parms["snmp_auth_protocol"])) {
+		strlen($sql_where) ? ($sql_where .= ' AND ') : ($sql_where .= ' WHERE ');
+		$sql_where .= 'snmp_auth_protocol = ' . $input_parms["snmp_auth_protocol"] . ' '; 
+	}
+	
+	if (isset($input_parms["snmp_priv_passphrase"])) {
+		strlen($sql_where) ? ($sql_where .= ' AND ') : ($sql_where .= ' WHERE ');
+		$sql_where .= 'snmp_priv_passphrase like "%%' . $input_parms["snmp_priv_passphrase"] . '%%" '; 
+	}
+	
+	if (isset($input_parms["snmp_priv_protocol"])) {
+		strlen($sql_where) ? ($sql_where .= ' AND ') : ($sql_where .= ' WHERE ');
+		$sql_where .= 'snmp_priv_protocol = ' . $input_parms["snmp_priv_protocol"] . ' '; 
+	}
+	
+	if (isset($input_parms["snmp_context"])) {
+		strlen($sql_where) ? ($sql_where .= ' AND ') : ($sql_where .= ' WHERE ');
+		$sql_where .= 'snmp_context like "%%' . $input_parms["snmp_context"] . '%%" '; 
+	}
+	
+	if (isset($input_parms["snmp_port"])) {
+		strlen($sql_where) ? ($sql_where .= ' AND ') : ($sql_where .= ' WHERE ');
+		$sql_where .= 'snmp_port = ' . $input_parms["snmp_port"] . ' '; 
+	}
+	
+	if (isset($input_parms["snmp_timeout"])) {
+		strlen($sql_where) ? ($sql_where .= ' AND ') : ($sql_where .= ' WHERE ');
+		$sql_where .= 'snmp_timeout = ' . $input_parms["snmp_timeout"] . ' '; 
+	}
+	
+	if (isset($input_parms["availability_method"])) {
+		strlen($sql_where) ? ($sql_where .= ' AND ') : ($sql_where .= ' WHERE ');
+		$sql_where .= 'availability_method = ' . $input_parms["availability_method"] . ' '; 
+	}
+	
+	if (isset($input_parms["ping_method"])) {
+		strlen($sql_where) ? ($sql_where .= ' AND ') : ($sql_where .= ' WHERE ');
+		$sql_where .= 'ping_method = ' . $input_parms["ping_method"] . ' '; 
+	}
+	
+	if (isset($input_parms["ping_port"])) {
+		strlen($sql_where) ? ($sql_where .= ' AND ') : ($sql_where .= ' WHERE ');
+		$sql_where .= 'ping_port = ' . $input_parms["ping_port"] . ' '; 
+	}
+	
+	if (isset($input_parms["ping_timeout"])) {
+		strlen($sql_where) ? ($sql_where .= ' AND ') : ($sql_where .= ' WHERE ');
+		$sql_where .= 'ping_timeout = ' . $input_parms["ping_timeout"] . ' '; 
+	}
+	
+	if (isset($input_parms["ping_retries"])) {
+		strlen($sql_where) ? ($sql_where .= ' AND ') : ($sql_where .= ' WHERE ');
+		$sql_where .= 'ping_retries = ' . $input_parms["ping_retries"] . ' '; 
+	}
+	
+	if (isset($input_parms["max_oids"])) {
+		strlen($sql_where) ? ($sql_where .= ' AND ') : ($sql_where .= ' WHERE ');
+		$sql_where .= 'max_oids = ' . $input_parms["max_oids"] . ' '; 
+	}
+	
+	if (isset($input_parms["disabled"])) {
+		strlen($sql_where) ? ($sql_where .= ' AND ') : ($sql_where .= ' WHERE ');
+		$sql_where .= 'disabled = ' . $input_parms["disabled"] . ' '; 
 	}
 
-	return $hosts;
-}
-
-function getHosts() {
-	$hosts    = array();
-	$tmpArray = db_fetch_assoc("select * from host order by id");
+	$sql_stmt = ("SELECT " .
+					"* " .
+				"FROM " .
+					"host " .
+				$sql_where .
+				"ORDER BY id");
+	//print $sql_stmt ."\n";	
+	$tmpArray = db_fetch_assoc($sql_stmt);
 
 	if (sizeof($tmpArray)) {
 		foreach ($tmpArray as $host) {

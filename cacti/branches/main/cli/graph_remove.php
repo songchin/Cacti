@@ -42,10 +42,8 @@ $parms = $_SERVER["argv"];
 array_shift($parms);
 
 if (sizeof($parms)) {
-	$displayHosts   = FALSE;
 	$displayGraphs  = FALSE;
 	$quietMode		= FALSE;
-	$hosts			= getHosts();
 	$force			= FALSE;
 	$hostId         = 0;
 
@@ -75,10 +73,6 @@ if (sizeof($parms)) {
 		case "--help":
 			display_help();
 			exit(0);
-		case "--list-hosts":
-			$displayHosts = TRUE;
-
-			break;
 		case "--list-graphs":
 			$displayGraphs = TRUE;
 
@@ -99,11 +93,6 @@ if (sizeof($parms)) {
 	/* 
 	 * handle display options 
 	 */
-	if ($displayHosts) {
-		displayHosts($hosts, $quietMode);
-		exit(0);
-	}
-
 	if ($displayGraphs) {
 		if (!isset($hostId)) {
 			echo "ERROR: You must supply a host_id before you can list its graphs\n";
@@ -172,7 +161,6 @@ function display_help() {
 	echo "Optional:\n";
 	echo "    --force                   delete all related data sources\n\n";
 	echo "List Options:\n";
-	echo "    --list-hosts              list available hosts\n";
 	echo "    --list-graphs --host-id   list available graphs for a specific host\n";
 	echo "    --quiet                   batch mode value return\n\n";
 }

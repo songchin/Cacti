@@ -39,7 +39,6 @@ $parms = $_SERVER["argv"];
 array_shift($parms);
 
 if (sizeof($parms)) {
-	$displayHosts 			= FALSE;
 	$displayGraphTemplates 	= FALSE;
 	$quietMode				= FALSE;
 	unset($host_id);
@@ -75,9 +74,6 @@ if (sizeof($parms)) {
 		case "--help":
 			display_help();
 			exit(0);
-		case "--list-hosts":
-			$displayHosts = TRUE;
-			break;
 		case "--list-graph-templates":
 			$displayGraphTemplates = TRUE;
 			break;
@@ -92,12 +88,6 @@ if (sizeof($parms)) {
 	}
 
 	/* list options, recognizing $quiteMode */
-	if ($displayHosts) {
-		$hosts = getHosts();
-		displayHosts($hosts, $quietMode);
-		exit(0);
-	}
-	
 	if ($displayGraphTemplates) {
 		$graphTemplates = getGraphTemplates();
 		displayGraphTemplates($graphTemplates, $quietMode);
@@ -167,7 +157,6 @@ function display_help() {
 	echo "    --host-id             the numerical ID of the host\n";
 	echo "    --graph_template-id   the numerical ID of the graph template to be added\n\n";
 	echo "List Options:\n";
-	echo "    --list-hosts\n";
 	echo "    --list-graph-templates\n";
 	echo "    --quiet - batch mode value return\n\n";
 }

@@ -119,11 +119,6 @@ if (sizeof($parms)) {
 	}
 
 	/* list options, recognizing $quietMode */
-	if ($displayHosts) {
-		$hosts = getHosts();
-		displayHosts($hosts, $quietMode);
-		exit(0);
-	}
 	if ($displayDataQueries) {
 		$data_queries = getSNMPQueries();
 		displaySNMPQueries($data_queries, $quietMode);

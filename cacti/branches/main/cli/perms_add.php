@@ -54,7 +54,6 @@ if (sizeof($parms) == 0) {
 	$displayGroups			= FALSE;
 	$displayUsers			= FALSE;
 	$displayTrees			= FALSE;
-	$displayHosts			= FALSE;
 	$displayGraphs			= FALSE;
 	$displayGraphTemplates 	= FALSE;
 
@@ -96,10 +95,6 @@ if (sizeof($parms) == 0) {
 			$displayTrees = TRUE;
 
 			break;
-		case "--list-hosts":
-			$displayHosts = TRUE;
-
-			break;
 		case "--list-graphs":
 			$displayGraphs = TRUE;
 
@@ -137,12 +132,6 @@ if (sizeof($parms) == 0) {
 
 	if ($displayTrees) {
 		displayTrees($quietMode);
-		exit(1);
-	}
-
-	if ($displayHosts) {
-		$hosts = getHosts();
-		displayHosts($hosts, $quietMode);
 		exit(1);
 	}
 
