@@ -77,7 +77,6 @@ if (sizeof($parms)) {
 	$listSNMPFields  		= FALSE;
 	$listSNMPValues  		= FALSE;
 	$listQueryTypes  		= FALSE;
-	$listSNMPQueries 		= FALSE;
 	$listInputFields 		= FALSE;
 
 	$quietMode       = FALSE;
@@ -168,10 +167,6 @@ if (sizeof($parms)) {
 			$listQueryTypes = TRUE;
 
 			break;
-		case "--list-snmp-queries":
-			$listSNMPQueries = TRUE;
-
-			break;
 		case "--force":
 			$force = TRUE;
 
@@ -234,11 +229,6 @@ if (sizeof($parms)) {
 	/* get the existing snmp queries */
 	$snmpQueries = getSNMPQueries();
 
-	if ($listSNMPQueries) {
-		displaySNMPQueries($snmpQueries, $quietMode);
-		exit(0);
-	}
-
 	/* Some sanity checking... */
 	if ($dsGraph["snmpQueryId"] != "") {
 		if (!isset($snmpQueries[$dsGraph["snmpQueryId"]])) {
@@ -267,7 +257,6 @@ if (sizeof($parms)) {
 			$listSNMPFields || 		# add this check to avoid reindexing on any list option
 			$listSNMPValues ||
 			$listQueryTypes ||
-			$listSNMPQueries ||
 			$listInputFields)) {
 
 			/* if data query is not yet associated,
@@ -574,7 +563,6 @@ function display_help() {
 	echo "    --list-graph-templates [--host_template=[ID]]\n";
 	echo "    --list-input-fields --graph-template-id=[ID]\n";
 	echo "More list Options for 'ds' graphs only:\n";
-	echo "    --list-snmp-queries\n";
 	echo "    --list-query-types  --snmp-query-id=[ID]\n";
 	echo "    --list-snmp-fields  --host-id=[ID]\n";
 	echo "    --list-snmp-values  --host-id=[ID] --snmp-query-id=[ID]\n";

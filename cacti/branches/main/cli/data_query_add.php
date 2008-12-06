@@ -40,9 +40,6 @@ $parms = $_SERVER["argv"];
 array_shift($parms);
 
 if (sizeof($parms)) {
-	$displayHosts 		= FALSE;
-	$displayDataQueries = FALSE;
-	$quietMode			= FALSE;
 	unset($host_id);
 	unset($data_query_id);
 	unset($reindex_method);
@@ -102,27 +99,11 @@ if (sizeof($parms)) {
 		case "--help":
 			display_help();
 			exit(0);
-		case "--list-hosts":
-			$displayHosts = TRUE;
-			break;
-		case "--list-data-queries":
-			$displayDataQueries = TRUE;
-			break;
-		case "--quiet":
-			$quietMode = TRUE;
-			break;
 		default:
 			echo "ERROR: Invalid Argument: ($arg)\n\n";
 			display_help();
 			exit(1);
 		}
-	}
-
-	/* list options, recognizing $quietMode */
-	if ($displayDataQueries) {
-		$data_queries = getSNMPQueries();
-		displaySNMPQueries($data_queries, $quietMode);
-		exit(0);
 	}
 
 	/* 
@@ -194,9 +175,9 @@ if (sizeof($parms)) {
 }
 
 function display_help() {
-	echo "Add Data Query Script 1.0, Copyright 2008 - The Cacti Group\n\n";
+	echo "Add Data Query Script 1.0, Copyright 2009 - The Cacti Group\n\n";
 	echo "A simple command line utility to add a data query to an existing device in Cacti\n\n";
-	echo "usage: add_data_query.php --host-id=[ID] --data-query-id=[dq_id] --reindex-method=[method] [--quiet]\n\n";
+	echo "usage: data_query_add.php --host-id=[ID] --data-query-id=[dq_id] --reindex-method=[method] [--quiet]\n\n";
 	echo "Required:\n";
 	echo "    --host-id         the numerical ID of the host\n";
 	echo "    --data-query-id   the numerical ID of the data_query to be added\n";
@@ -205,10 +186,6 @@ function display_help() {
 	echo "                      1|Uptime = Uptime goes Backwards\n";
 	echo "                      2|Index  = Index Count Changed\n";
 	echo "                      3|Fields = Verify all Fields\n";
-	echo "List Options:\n";
-	echo "    --list-hosts\n";
-	echo "    --list-data-queries\n";
-	echo "    --quiet - batch mode value return\n\n";
 	echo "If the data query was already associated, it will be reindexed.\n\n";
 }
 

@@ -74,6 +74,8 @@ $no_http_header_files = array(
 	"poller_output_empty.php",
 	"poller_reindex_hosts.php",
 	"rebuild_poller_cache.php",
+	"data_query_add.php",
+	"data_query_list.php",
 	"device_add.php",
 	"device_list.php",
 	"graph_add.php",
