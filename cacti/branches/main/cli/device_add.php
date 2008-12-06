@@ -45,7 +45,6 @@ $parms = $_SERVER["argv"];
 array_shift($parms);
 
 if (sizeof($parms)) {
-	$displayHostTemplates = FALSE;
 	$displayCommunities   = FALSE;
 	$quietMode            = FALSE;
 
@@ -255,10 +254,6 @@ if (sizeof($parms)) {
 			$displayCommunities = TRUE;
 
 			break;
-		case "--list-host-templates":
-			$displayHostTemplates = TRUE;
-
-			break;
 		case "--quiet":
 			$quietMode = TRUE;
 
@@ -277,11 +272,6 @@ if (sizeof($parms)) {
 	 */
 	if ($displayCommunities) {
 		displayCommunities($quietMode);
-		exit(0);
-	}
-
-	if ($displayHostTemplates) {
-		displayHostTemplates(getHostTemplates(), $quietMode);
 		exit(0);
 	}
 
@@ -524,7 +514,6 @@ function display_help() {
 	echo "    --context      '', snmp context for snmpv3\n";
 	echo "    --max_oids     10, 1-60, the number of OID's that can be obtained in a single SNMP Get request\n\n";
 	echo "List Options:\n";
-	echo "    --list-host-templates\n";
 	echo "    --list-communities\n";
 	echo "    --quiet - batch mode value return\n\n";
 }

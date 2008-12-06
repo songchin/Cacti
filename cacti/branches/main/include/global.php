@@ -78,6 +78,7 @@ $no_http_header_files = array(
 	"data_query_list.php",
 	"device_add.php",
 	"device_list.php",
+	"host_template_list.php",
 	"graph_add.php",
 	"perms_add.php",
 	"tree_add.php",
