@@ -91,6 +91,7 @@ Cacti CHANGELOG
 -bug: when adding a tree node via the api numeric and natural were reversed
 -bug: Ping and SNMP should test both conditions
 -bug: When step is less than poller interval, item will stop polling for long period of time
+-bug: When using Web Basic authentication, user is directed to default page and not REQUEST URI
 -documentation: Explaining Cacti Special Data Sources used on CDEFs, lots of CDEF examples using Special data Sources
 -documentation: Documentation of specific rrdtool feature
 -documentation: Use of SNMP exec option up to net-snmp 5.3
