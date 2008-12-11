@@ -1,6 +1,6 @@
 	<tr class='rowAlternate2'>
-		<form name="form_userlog">
 		<td>
+			<form name="form_userlog">
 			<table cellpadding="0" cellspacing="0">
 				<tr>
 					<td nowrap style='white-space: nowrap;' width="50">
@@ -44,8 +44,8 @@
 					</td>
 				</tr>
 			</table>
+			<div><input type='hidden' name='page' value='1'></div>
+			<div><input type='hidden' name='action' value='view_user_log'></div>
+			</form>
 		</td>
-		<div><input type='hidden' name='page' value='1'></div>
-		<div><input type='hidden' name='action' value='view_user_log'></div>
-		</form>
 	</tr>

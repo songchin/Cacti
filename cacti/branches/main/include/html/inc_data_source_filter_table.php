@@ -1,6 +1,6 @@
 	<tr class='rowAlternate2'>
-		<form name="form_data_sources" autocomplete="off">
 		<td>
+			<form name="form_data_sources" autocomplete="off">
 			<table cellpadding="1" cellspacing="0">
 				<tr>
 					<td width="50">
@@ -99,7 +99,7 @@
 					</td>
 				</tr>
 			</table>
+			<div><input type='hidden' name='page' value='1'></div>
+			</form>
 		</td>
-		<div><input type='hidden' name='page' value='1'></div>
-		</form>
 	</tr>

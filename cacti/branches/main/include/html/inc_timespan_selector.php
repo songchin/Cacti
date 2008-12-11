@@ -54,8 +54,8 @@
 -->
 </script>
 	<tr class="rowGraphFilter noprint">
-		<form name="form_timespan_selector" method="post">
 		<td class="noprint">
+			<form name="form_timespan_selector" method="post">
 			<table width="100%" cellpadding="0" cellspacing="0">
 				<tr class="rowGraphFilter">
 					<td nowrap style='white-space: nowrap;' width='55'>
@@ -120,6 +120,6 @@
 					</td>
 				</tr>
 			</table>
+			</form>
 		</td>
-		</form>
 	</tr>

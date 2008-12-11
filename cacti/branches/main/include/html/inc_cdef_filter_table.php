@@ -1,6 +1,6 @@
 	<tr class='rowAlternate2'>
-		<form name="form_cdef">
 		<td>
+			<form name="form_cdef">
 			<table cellpadding="0" cellspacing="0">
 				<tr>
 					<td nowrap style='white-space: nowrap;' width="50">
@@ -15,7 +15,7 @@
 					</td>
 				</tr>
 			</table>
+			<input type='hidden' name='page' value='1'>
+			</form>
 		</td>
-		<input type='hidden' name='page' value='1'>
-		</form>
 	</tr>

@@ -1,6 +1,6 @@
 	<tr class='rowAlternate2'>
-		<form name="form_logfile">
 		<td>
+			<form name="form_logfile">
 			<table cellpadding="1" cellspacing="0">
 				<tr>
 					<td nowrap style='white-space: nowrap;' width="80">
@@ -68,8 +68,8 @@
 					</td>
 				</tr>
 			</table>
+			<div><input type='hidden' name='page' value='1'></div>
+			<div><input type='hidden' name='action' value='view_logfile'></div>
+			</form>
 		</td>
-		<div><input type='hidden' name='page' value='1'></div>
-		<div><input type='hidden' name='action' value='view_logfile'></div>
-		</form>
 	</tr>

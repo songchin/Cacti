@@ -1,21 +1,21 @@
 	<tr class='rowAlternate2'>
-		<form name="form_devices">
 		<td>
+			<form name="form_devices">
 			<table cellpadding="0" cellspacing="0">
 				<tr>
 					<td nowrap style='white-space: nowrap;' width="55">
 						Type:&nbsp;
 					</td>
 					<td width="1">
-						<select name="host_template_id" onChange="applyViewDeviceFilterChange(document.form_devices)">
-							<option value="-1"<?php if ($_REQUEST["host_template_id"] == "-1") {?> selected<?php }?>>Any</option>
-							<option value="0"<?php if ($_REQUEST["host_template_id"] == "0") {?> selected<?php }?>>None</option>
+						<select name="template_id" onChange="applyViewDeviceFilterChange(document.form_devices)">
+							<option value="-1"<?php if ($_REQUEST["template_id"] == "-1") {?> selected<?php }?>>Any</option>
+							<option value="0"<?php if ($_REQUEST["template_id"] == "0") {?> selected<?php }?>>None</option>
 							<?php
 							$host_templates = db_fetch_assoc("select id,name from host_template order by name");
 
 							if (sizeof($host_templates) > 0) {
 							foreach ($host_templates as $host_template) {
-								print "<option value='" . $host_template["id"] . "'"; if ($_REQUEST["host_template_id"] == $host_template["id"]) { print " selected"; } print ">" . $host_template["name"] . "</option>\n";
+								print "<option value='" . $host_template["id"] . "'"; if ($_REQUEST["template_id"] == $host_template["id"]) { print " selected"; } print ">" . $host_template["name"] . "</option>\n";
 							}
 							}
 							?>
@@ -25,27 +25,27 @@
 						&nbsp;Status:&nbsp;
 					</td>
 					<td width="1">
-						<select name="host_status" onChange="applyViewDeviceFilterChange(document.form_devices)">
-							<option value="-1"<?php if ($_REQUEST["host_status"] == "-1") {?> selected<?php }?>>Any</option>
-							<option value="-3"<?php if ($_REQUEST["host_status"] == "-3") {?> selected<?php }?>>Enabled</option>
-							<option value="-2"<?php if ($_REQUEST["host_status"] == "-2") {?> selected<?php }?>>Disabled</option>
-							<option value="-4"<?php if ($_REQUEST["host_status"] == "-4") {?> selected<?php }?>>Not Up</option>
-							<option value="3"<?php if ($_REQUEST["host_status"] == "3") {?> selected<?php }?>>Up</option>
-							<option value="1"<?php if ($_REQUEST["host_status"] == "1") {?> selected<?php }?>>Down</option>
-							<option value="2"<?php if ($_REQUEST["host_status"] == "2") {?> selected<?php }?>>Recovering</option>
-							<option value="0"<?php if ($_REQUEST["host_status"] == "0") {?> selected<?php }?>>Unknown</option>
+						<select name="status" onChange="applyViewDeviceFilterChange(document.form_devices)">
+							<option value="-1"<?php if ($_REQUEST["status"] == "-1") {?> selected<?php }?>>Any</option>
+							<option value="-3"<?php if ($_REQUEST["status"] == "-3") {?> selected<?php }?>>Enabled</option>
+							<option value="-2"<?php if ($_REQUEST["status"] == "-2") {?> selected<?php }?>>Disabled</option>
+							<option value="-4"<?php if ($_REQUEST["status"] == "-4") {?> selected<?php }?>>Not Up</option>
+							<option value="3"<?php if ($_REQUEST["status"] == "3") {?> selected<?php }?>>Up</option>
+							<option value="1"<?php if ($_REQUEST["status"] == "1") {?> selected<?php }?>>Down</option>
+							<option value="2"<?php if ($_REQUEST["status"] == "2") {?> selected<?php }?>>Recovering</option>
+							<option value="0"<?php if ($_REQUEST["status"] == "0") {?> selected<?php }?>>Unknown</option>
 						</select>
 					</td>
 					<td nowrap style='white-space: nowrap;' width="50">
 						&nbsp;Rows:&nbsp;
 					</td>
 					<td width="1">
-						<select name="host_rows" onChange="applyViewDeviceFilterChange(document.form_devices)">
-							<option value="-1"<?php if ($_REQUEST["host_rows"] == "-1") {?> selected<?php }?>>Default</option>
+						<select name="rows" onChange="applyViewDeviceFilterChange(document.form_devices)">
+							<option value="-1"<?php if ($_REQUEST["rows"] == "-1") {?> selected<?php }?>>Default</option>
 							<?php
 							if (sizeof($item_rows) > 0) {
 							foreach ($item_rows as $key => $value) {
-								print "<option value='" . $key . "'"; if ($_REQUEST["host_rows"] == $key) { print " selected"; } print ">" . $value . "</option>\n";
+								print "<option value='" . $key . "'"; if ($_REQUEST["rows"] == $key) { print " selected"; } print ">" . $value . "</option>\n";
 							}
 							}
 							?>
@@ -67,7 +67,7 @@
 					</td>
 				</tr>
 			</table>
+			<div><input type='hidden' name='page' value='1'></div>
+			</form>
 		</td>
-		<div><input type='hidden' name='page' value='1'></div>
-		</form>
 	</tr>

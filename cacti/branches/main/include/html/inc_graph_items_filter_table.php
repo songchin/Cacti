@@ -6,8 +6,8 @@
 
 ?>
 	<tr>
-		<form name="form_graph_items">
 		<td>
+			<form name="form_graph_items">
 			<table cellpadding="0" cellspacing="0">
 				<tr width="100%">
 					<td nowrap style='white-space: nowrap;' width="50">
@@ -52,6 +52,6 @@
 					</td>
 				</tr>
 			</table>
+			</form>
 		</td>
-		</form>
 	</tr>

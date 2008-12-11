@@ -1,6 +1,6 @@
 	<tr class="rowAlternate2 noprint">
-		<form name="form_graph_id">
 		<td class="noprint">
+			<form name="form_graph_id">
 			<table width="100%" cellpadding="0" cellspacing="0">
 				<tr class="noprint">
 					<td nowrap style='white-space: nowrap;' width="50">
@@ -15,7 +15,7 @@
 					</td>
 				</tr>
 			</table>
+			<div><input type='hidden' name='page' value='1'></div>
+			</form>
 		</td>
-		<div><input type='hidden' name='page' value='1'></div>
-		</form>
 	</tr>
