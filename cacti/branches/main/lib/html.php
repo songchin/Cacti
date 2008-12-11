@@ -816,9 +816,9 @@ function draw_graph_items_list($item_list, $filename, $url_data, $disable_contro
 function draw_header_tab($name, $title, $location, $image = "") {
 	global $config;
 	if ($image == "") {
-		return "<li id=\"tab_" . html_escape($name) . "\"" . (html_selected_tab($name, $location) ? "class=\"selected\"" : "class=\"notselected\"") . "><a href=\"javascript:navigation_select('" . html_escape($name) . "', '" . html_escape($location) . "')\" title=\"" . html_escape($title) . "\">" . html_escape($title) . "</a></li>\n";
+		return "<li id=\"tab_" . html_escape($name) . "\"" . (html_selected_tab($name, $location) ? "class=\"selected\"" : "class=\"notselected\"") . "><a href=\"javascript:navigation_select('" . html_escape($name) . "','" . html_escape($location) . "')\" title=\"" . html_escape($title) . "\">" . html_escape($title) . "</a></li>\n";
 	}else{
-		return "<li id=\"tab_" . html_escape($name) . "\"" . (html_selected_tab($name, $location) ? "class=\"selected\"" : "class=\"notselected\"") . "><a href=\"javascript:navigation_select('" . html_escape($name) . "', '" . html_escape($location) . "')\" title=\"" . html_escape($title) . "\"><img border='0' src='$image' align='absmiddle'></a></li>\n";
+		return "<li id=\"tab_" . html_escape($name) . "\"" . (html_selected_tab($name, $location) ? "class=\"selected\"" : "class=\"notselected\"") . "><a href=\"javascript:navigation_select('" . html_escape($name) . "','" . html_escape($location) . "')\" title=\"" . html_escape($title) . "\"><img border='0' src='$image' align='absmiddle'></a></li>\n";
 	}
 }
 
