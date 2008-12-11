@@ -294,7 +294,7 @@ function item() {
 			CONCAT_WS(' - ',data_template_data.name,data_template_rrd.data_source_name) as data_source_name,
 			cdef.name as cdef_name,
 			colors.hex,
-			graph_templates_gprint.name as gprint_name		
+			graph_templates_gprint.name as gprint_name
 			from graph_templates_item
 			left join data_template_rrd on (graph_templates_item.task_item_id=data_template_rrd.id)
 			left join data_local on (data_template_rrd.local_data_id=data_local.id)
@@ -329,7 +329,7 @@ function item() {
 				<a class="linkEditMain" href="graph_templates_inputs.php?action=input_edit&id=<?php print $item["id"];?>&graph_template_id=<?php print $_GET["id"];?>"><?php print $item["name"];?></a>
 			</td>
 			<td align="right">
-				<a href="graph_templates_inputs.php?action=input_remove&id=<?php print $item["id"];?>&graph_template_id=<?php print $_GET["id"];?>"><img src="images/delete_icon.gif" width="10" height="10" style='border-width:0px;' alt="Delete"></a>
+				<a href="graph_templates_inputs.php?action=input_remove&id=<?php print $item["id"];?>&graph_template_id=<?php print $_GET["id"];?>"><img id="buttonSmall" src="images/delete_icon.gif" alt="Delete"></a>
 			</td>
 		</tr>
 	<?php

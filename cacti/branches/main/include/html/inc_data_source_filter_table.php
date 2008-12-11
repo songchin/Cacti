@@ -43,8 +43,8 @@
 						</select>
 					</td>
 					<td nowrap style='white-space: nowrap;'>
-						&nbsp;<input type="submit" Value="Go" name="go" style='border-width:0px;' align="middle">
-						<input type="submit" Value="Clear" name="clear_x" style='border-width:0px;' align="middle">
+						&nbsp;<input type="submit" Value="Go" name="go" align="middle">
+						<input type="submit" Value="Clear" name="clear_x" align="middle">
 					</td>
 				</tr>
 				<tr>

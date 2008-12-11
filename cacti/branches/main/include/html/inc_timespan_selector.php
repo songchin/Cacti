@@ -90,17 +90,17 @@
 					</td>
 					<td width='150' nowrap style='white-space: nowrap;'>
 						<input type='text' name='date1' id='date1' title='Graph Begin Timestamp' size='14' value='<?php print (isset($_SESSION["sess_current_date1"]) ? $_SESSION["sess_current_date1"] : "");?>'>
-						&nbsp;<input style='padding-bottom: 4px;' type='image' src='images/calendar.gif' alt='Start date selector' title='Start date selector' border='0' align='absmiddle' onclick="return showCalendar('date1');">&nbsp;
+						&nbsp;<input style='border-width:0px;padding-bottom:4px;' type='image' src='images/calendar.gif' alt='Start' title='Start date selector' align='middle' onclick="return showCalendar('date1');">&nbsp;
 					</td>
 					<td nowrap style='white-space: nowrap;' width='20'>
 						&nbsp;<strong>To:</strong>&nbsp;
 					</td>
 					<td width='150' nowrap style='white-space: nowrap;'>
 						<input type='text' name='date2' id='date2' title='Graph End Timestamp' size='14' value='<?php print (isset($_SESSION["sess_current_date2"]) ? $_SESSION["sess_current_date2"] : "");?>'>
-						&nbsp;<input style='padding-bottom: 4px;' type='image' src='images/calendar.gif' alt='End date selector' title='End date selector' border='0' align='absmiddle' onclick="return showCalendar('date2');">
+						&nbsp;<input style='border-width:0px;padding-bottom:4px;' type='image' src='images/calendar.gif' alt='End date selector' title='End date selector' align='middle' onclick="return showCalendar('date2');">
 					</td>
 					<td width='130' nowrap style='white-space: nowrap;'>
-						&nbsp;&nbsp;<input style='padding-bottom: 4px;' type='image' name='move_left' src='images/move_left.gif' alt='Left' border='0' align='absmiddle' title='Shift Left'>
+						&nbsp;&nbsp;<input style='border-width:0px;padding-bottom:4px;' type='image' name='move_left' src='images/move_left.gif' alt='Left' align='middle' title='Shift Left'>
 						<select name='predefined_timeshift' title='Define Shifting Interval' onChange="applyTimespanFilterChange(document.form_timespan_selector)">
 							<?php
 							$start_val = 1;
@@ -112,11 +112,11 @@
 							}
 							?>
 						</select>
-						<input style='padding-bottom: 4px;' type='image' name='move_right' src='images/move_right.gif' alt='Right' border='0' align='absmiddle' title='Shift Right'>
+						<input style='border-width:0px;padding-bottom:4px;' type='image' name='move_right' src='images/move_right.gif' alt='Right' align='middle' title='Shift Right'>
 					</td>
 					<td nowrap style='white-space: nowrap;'>
-						&nbsp;<input type='submit' value='Refresh' name='button_refresh' border='0'>
-						<input type='submit' value='Clear' name='button_clear_x' border='0'>
+						&nbsp;<input type='submit' value='Refresh' name='button_refresh'>
+						<input type='submit' value='Clear' name='button_clear_x'>
 					</td>
 				</tr>
 			</table>

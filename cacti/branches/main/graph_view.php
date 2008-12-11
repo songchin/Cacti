@@ -421,8 +421,8 @@ case 'list':
 									LEFT JOIN host ON (host.id=graph_local.host_id)
 									LEFT JOIN graph_templates ON (graph_templates.id=graph_local.graph_template_id)
 									LEFT JOIN user_auth_perms ON ((graph_templates_graph.local_graph_id=user_auth_perms.item_id and user_auth_perms.type=" . PERM_GRAPHS . " and user_auth_perms.user_id=" . $_SESSION["sess_user_id"] . ") OR (host.id=user_auth_perms.item_id and user_auth_perms.type=" . PERM_HOSTS . " and user_auth_perms.user_id=" . $_SESSION["sess_user_id"] . ") OR (graph_templates.id=user_auth_perms.item_id and user_auth_perms.type=" . PERM_GRAPH_TEMPLATES . " and user_auth_perms.user_id=" . $_SESSION["sess_user_id"] . "))
-									WHERE graph_templates_graph.local_graph_id=graph_local.id  and graph_local.host_id > 0 " . 
-									(($_REQUEST["graph_template_id"] > 0) ? " and graph_local.graph_template_id=" . $_REQUEST["graph_template_id"] : "") . " " .	
+									WHERE graph_templates_graph.local_graph_id=graph_local.id  and graph_local.host_id > 0 " .
+									(($_REQUEST["graph_template_id"] > 0) ? " and graph_local.graph_template_id=" . $_REQUEST["graph_template_id"] : "") . " " .
 									(empty($sql_where) ? "" : "and $sql_where") . " " .
 									"ORDER BY name");
 							}else{
@@ -430,7 +430,7 @@ case 'list':
 										"FROM host " .
 										"INNER JOIN graph_local " .
 										"ON host.id=graph_local.host_id " .
-	                                    (($_REQUEST["graph_template_id"] > 0) ? " WHERE graph_template_id=" . $_REQUEST["graph_template_id"] :"") . 
+	                                    (($_REQUEST["graph_template_id"] > 0) ? " WHERE graph_template_id=" . $_REQUEST["graph_template_id"] :"") .
                                         " ORDER BY name");
 							}
 
@@ -466,7 +466,7 @@ case 'list':
 										"INNER JOIN graph_local " .
 										"ON graph_templates.id=graph_local.graph_template_id" .
 										(($_REQUEST["host_id"] > 0) ? " WHERE host_id=" . $_REQUEST["host_id"] :"") .
-										" GROUP BY graph_templates.name " . 
+										" GROUP BY graph_templates.name " .
 										" ORDER BY name");
 							}
 
@@ -596,7 +596,7 @@ case 'list':
 	<tr class='rowHeader noprint'>
 		<form name='graphs' id='graphs' action='graph_view.php' method='get' onSubmit='form_graph(document.graphs,document.graphs)'>
 		<td colspan='3'>
-			<table width='100%' cellspacing='0' cellpadding='3' border='0'>
+			<table width='100%' cellspacing='0' cellpadding='3' style='border-width:0px;'>
 				<tr>
 					<td align='left' class='textHeaderDark'>
 						<strong>&lt;&lt; <?php if ($_REQUEST["page"] > 1) { print "<a class='linkOverDark' href='" . str_replace("<PAGE>", ($_REQUEST["page"]-1), $nav_url) . "' onClick='return url_go(url_graph(\"" . str_replace("<PAGE>", ($_REQUEST["page"]-1), $nav_url) . "\"))'>"; } print "Previous"; if ($_REQUEST["page"] > 1) { print "</a>"; } ?></strong>
@@ -613,7 +613,7 @@ case 'list':
 	</tr>
 	<tr class='rowSubHeader'>
 		<td colspan='3'>
-			<table width='100%' cellspacing='0' cellpadding='3' border='0'>
+			<table width='100%' cellspacing='0' cellpadding='3' style='border-width:0px;'>
 				<tr>
 					<?php
 					print "<td width='1%' align='right' class='textHeaderDark' style='" . get_checkbox_style() . "'><input type='checkbox' style='margin: 0px;' name='all' title='Select All' onClick='SelectAllGraphs(\"graph_\",this.checked)'></td><td class='textSubHeaderDark'><strong>Select All</strong></td>\n";
@@ -648,7 +648,7 @@ case 'list':
 	?>
 	<tr class='rowSubHeader'>
 		<td colspan='3'>
-			<table width='100%' cellspacing='0' cellpadding='3' border='0'>
+			<table width='100%' cellspacing='0' cellpadding='3' style='border-width:0px'>
 				<tr>
 					<?php
 					print "<td width='1%' align='right' class='textHeaderDark' style='" . get_checkbox_style() . "'><input type='checkbox' style='margin: 0px;' name='all' title='Select All' onClick='SelectAllGraphs(\"graph_\",this.checked)'></td><td class='textSubHeaderDark'><strong>Select All</strong></td>\n";
@@ -660,7 +660,7 @@ case 'list':
 	</table>
 	<table align='center' width='100%'>
 		<tr>
-			<td width='1'><img src='images/arrow.gif' alt='' align='absmiddle'>&nbsp;</td>
+			<td width='1'><img src='images/arrow.gif' alt='' align='middle'>&nbsp;</td>
 			<td><input type='image' src='images/button_view.gif' alt='View'></td>
 		</tr>
 	</table>

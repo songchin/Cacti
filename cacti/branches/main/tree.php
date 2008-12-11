@@ -399,8 +399,8 @@ function tree_edit() {
 
 		?>
 		<td>
-		<a href='tree.php?action=edit&id=<?php print $_GET["id"];?>&subaction=expand_all'><img src='images/button_expand_all.gif' border='0' alt='Expand All'></a>
-		<a href='tree.php?action=edit&id=<?php print $_GET["id"];?>&subaction=colapse_all'><img src='images/button_colapse_all.gif' border='0' alt='Colapse All'></a>
+		<a href='tree.php?action=edit&id=<?php print $_GET["id"];?>&subaction=expand_all'><img src='images/button_expand_all.gif' style='border-width:0px;' alt='Expand All'></a>
+		<a href='tree.php?action=edit&id=<?php print $_GET["id"];?>&subaction=colapse_all'><img src='images/button_colapse_all.gif' style='border-width:0px;' alt='Colapse All'></a>
 		</td>
 		<?php
 
@@ -437,7 +437,7 @@ function tree() {
 				<a class="linkEditMain" style='display:block;' href="tree.php?action=edit&id=<?php print $tree["id"];?>"><?php print $tree["name"];?></a>
 			</td>
 			<td align="right">
-				<a href="tree.php?action=remove&id=<?php print $tree["id"];?>"><img src="images/delete_icon.gif" width="10" height="10" border="0" alt="Delete"></a>
+				<a href="tree.php?action=remove&id=<?php print $tree["id"];?>"><img id="buttonSmall" src="images/delete_icon.gif" alt="Delete"></a>
 			</td>
 		</tr>
 	<?php

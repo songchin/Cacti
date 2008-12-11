@@ -78,7 +78,7 @@ api_plugin_hook('page_head');
 <div id='wrapper' style='opacity:0;'>
 	<div id='menu'>
 		<?php draw_menu();?>
-		<table align='center' style='margin-top:10px;'><tr><td><a href='<?php echo $config['url_path']; ?>about.php'><img src="<?php echo $config['url_path']; ?>images/cacti_logo.gif" align="absmiddle" alt="Cacti" style='border-width:0px;'></a></td></tr></table>
+		<table align='center' style='margin-top:10px;'><tr><td><a href='<?php echo $config['url_path']; ?>about.php'><img src="<?php echo $config['url_path']; ?>images/cacti_logo.gif" align="middle" alt="Cacti" style='border-width:0px;'></a></td></tr></table>
 	</div>
 	<div id='vsplitter' onMouseout='doneDivResize()' onMouseover='doDivResize(this,event)' onMousemove='doDivResize(this,event)'>
 		<div id='vsplitter_toggle' onClick='vSplitterToggle()' title='ToggleMenu'></div>

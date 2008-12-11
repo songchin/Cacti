@@ -230,7 +230,7 @@ function form_actions() {
 		print "<tr><td bgcolor='#" . $colors["form_alternate1"]. "'><span class='textError'>You must select at least one CDEF.</span></td></tr>\n";
 		$save_html = "";
 	}else{
-		$save_html = "<input type='image' src='images/button_yes.gif' alt='Save' align='absmiddle'>";
+		$save_html = "<input type='image' src='images/button_yes.gif' alt='Save' align='middle'>";
 	}
 
 	print "	<tr>
@@ -238,7 +238,7 @@ function form_actions() {
 				<input type='hidden' name='action' value='actions'>
 				<input type='hidden' name='selected_items' value='" . (isset($cdef_array) ? serialize($cdef_array) : '') . "'>
 				<input type='hidden' name='drp_action' value='" . $_POST["drp_action"] . "'>
-				<a href='cdef.php'><img src='images/button_no.gif' alt='Cancel' align='absmiddle' border='0'></a>
+				<a href='cdef.php'><img src='images/button_no.gif' alt='Cancel' align='middle' border='0'></a>
 				$save_html
 			</td>
 		</tr>
@@ -436,11 +436,11 @@ function cdef_edit() {
 					<em><?php $cdef_item_type = $cdef_item["type"]; print $cdef_item_types[$cdef_item_type];?></em>: <strong><?php print get_cdef_item_name($cdef_item["id"]);?></strong>
 				</td>
 				<td>
-					<a href="cdef.php?action=item_movedown&id=<?php print $cdef_item["id"];?>&cdef_id=<?php print $cdef["id"];?>"><img src="images/move_down.gif" style='border-width:0px;' alt="Move Down"></a>
-					<a href="cdef.php?action=item_moveup&id=<?php print $cdef_item["id"];?>&cdef_id=<?php print $cdef["id"];?>"><img src="images/move_up.gif" style='border-width:0px;' alt="Move Up"></a>
+					<a href="cdef.php?action=item_movedown&id=<?php print $cdef_item["id"];?>&cdef_id=<?php print $cdef["id"];?>"><img id="buttonSmall" src="images/move_down.gif" alt="Move Down"></a>
+					<a href="cdef.php?action=item_moveup&id=<?php print $cdef_item["id"];?>&cdef_id=<?php print $cdef["id"];?>"><img id="buttonSmall" src="images/move_up.gif" alt="Move Up"></a>
 				</td>
 				<td align="right">
-					<a href="cdef.php?action=item_remove&id=<?php print $cdef_item["id"];?>&cdef_id=<?php print $cdef["id"];?>"><img src="images/delete_icon.gif" width="10" height="10" style='border-width:0px;' alt="Delete"></a>
+					<a href="cdef.php?action=item_remove&id=<?php print $cdef_item["id"];?>&cdef_id=<?php print $cdef["id"];?>"><img id="buttonSmall" src="images/delete_icon.gif" alt="Delete"></a>
 				</td>
 			</tr>
 		<?php

@@ -650,7 +650,7 @@ function template_edit() {
 
 	/* jQuery stuff */
 	$().ready(function() {
-	
+
 		/* Hide "Uptime Goes Backwards" if snmp_version has been set to "None" */
 		$("#snmp_version").change(function () {
 				/* get PHP constants into javascript namespace */
@@ -672,12 +672,12 @@ function template_edit() {
 						$("#reindex_method option[value=" + reindex_reboot + "]").removeAttr("disabled");
 						$("#reindex_method option[value=" + reindex_reboot + "]").attr('title', '');
 						/* select this again as default reindex method */
-						/* TODO: this ignores the default reindex method of the associated host template 
+						/* TODO: this ignores the default reindex method of the associated host template
 						   to get it, an AJAX call is required */
 						$("#reindex_method option[value=" + reindex_reboot + "]").attr('selected', 'true');
 			}
 		});
-		
+
 	});
 
 	-->
@@ -732,7 +732,7 @@ function template_edit() {
 						<strong><?php print $i;?>)</strong> <?php print $item["name"];?>
 					</td>
 					<td align='right' nowrap>
-						<a href='host_templates.php?action=item_remove_gt&id=<?php print $item["id"];?>&host_template_id=<?php print $_GET["id"];?>'><img src='images/delete_icon_large.gif' title='Delete Graph Template Association' alt='Delete Graph Template Association' border='0' align='absmiddle'></a>
+						<a href='host_templates.php?action=item_remove_gt&id=<?php print $item["id"];?>&host_template_id=<?php print $_GET["id"];?>'><img id="buttonSmall" src='images/delete_icon_large.gif' title='Delete Graph Template Association' alt='Delete'></a>
 					</td>
 				</tr>
 				<?php
@@ -747,7 +747,7 @@ function template_edit() {
 						<?php form_dropdown("graph_template_id",$available_graph_templates,"name","id","","","");?>
 					</td>
 					<td align="right">
-						&nbsp;<input type="submit" Value="Add" name="add_gt_y" align="absmiddle">
+						&nbsp;<input type="submit" Value="Add" name="add_gt_y" align="middle">
 					</td>
 				</table>
 			</td>
@@ -804,7 +804,7 @@ function template_edit() {
 					<?php form_dropdown("reindex_method_host_template_".$_GET["id"]."_query_".$item["id"]."_method_".$item["reindex_method"],$reindex_types,"","",$item["reindex_method"],"","","","");?>
 				</td>
 				<td align='right'>
-					<a href='host_templates.php?action=item_remove_dq&id=<?php print $item["id"];?>&host_template_id=<?php print $_GET["id"];?>'><img src='images/delete_icon_large.gif' title='Delete Data Query Association' alt='Delete Data Query Association' border='0' align='absmiddle'></a>
+					<a href='host_templates.php?action=item_remove_dq&id=<?php print $item["id"];?>&host_template_id=<?php print $_GET["id"];?>'><img id='buttonSmall' src='images/delete_icon_large.gif' title='Delete Data Query Association' alt='Delete'></a>
 				</td>
 			</tr>
 			<?php

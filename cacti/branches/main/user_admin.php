@@ -564,7 +564,7 @@ function graph_perms_edit() {
 					$i++;
 					print "	<tr>
 							<td><span style='font-weight: bold; color: " . (($policy["policy_graphs"] == "1") ? "red" : "blue") . ";'>$i)</span> " . $item["title_cache"] . "</td>
-							<td align='right'><a href='user_admin.php?action=perm_remove&type=graph&id=" . $item["local_graph_id"] . "&user_id=" . $_GET["id"] . "'><img src='images/delete_icon.gif' width='10' height='10' border='0' alt='Delete'></a>&nbsp;</td>
+							<td align='right'><a href='user_admin.php?action=perm_remove&type=graph&id=" . $item["local_graph_id"] . "&user_id=" . $_GET["id"] . "'><img id='buttonSmall' src='images/delete_icon.gif' alt='Delete'></a>&nbsp;</td>
 						</tr>\n";
 				}
 				}else{ print "<tr><td><em>No Graphs</em></td></tr>";
@@ -622,7 +622,7 @@ function graph_perms_edit() {
 						$i++;
 						print "	<tr>
 							<td><span style='font-weight: bold; color: " . (($policy["policy_hosts"] == "1") ? "red" : "blue") . ";'>$i)</span> " . $item["name"] . "</td>
-							<td align='right'><a href='user_admin.php?action=perm_remove&type=host&id=" . $item["id"] . "&user_id=" . $_GET["id"] . "'><img src='images/delete_icon.gif' width='10' height='10' border='0' alt='Delete'></a>&nbsp;</td>
+							<td align='right'><a href='user_admin.php?action=perm_remove&type=host&id=" . $item["id"] . "&user_id=" . $_GET["id"] . "'><img id='buttonSmall' src='images/delete_icon.gif' alt='Delete'></a>&nbsp;</td>
 						</tr>\n";
 					}
 				}else{
@@ -682,7 +682,7 @@ function graph_perms_edit() {
 					$i++;
 					print "	<tr>
 							<td><span style='font-weight: bold; color: " . (($policy["policy_graph_templates"] == "1") ? "red" : "blue") . ";'>$i)</span> " . $item["name"] . "</td>
-							<td align='right'><a href='user_admin.php?action=perm_remove&type=graph_template&id=" . $item["id"] . "&user_id=" . $_GET["id"] . "'><img src='images/delete_icon.gif' width='10' height='10' border='0' alt='Delete'></a>&nbsp;</td>
+							<td align='right'><a href='user_admin.php?action=perm_remove&type=graph_template&id=" . $item["id"] . "&user_id=" . $_GET["id"] . "'><img id='buttonSmall' src='images/delete_icon.gif' alt='Delete'></a>&nbsp;</td>
 						</tr>\n";
 				}
 				}else{ print "<tr><td><em>No Graph Templates</em></td></tr>";
@@ -741,7 +741,7 @@ function graph_perms_edit() {
 					$i++;
 					print "	<tr>
 							<td><span style='font-weight: bold; color: " . (($policy["policy_trees"] == "1") ? "red" : "blue") . ";'>$i)</span> " . $item["name"] . "</td>
-							<td align='right'><a href='user_admin.php?action=perm_remove&type=tree&id=" . $item["id"] . "&user_id=" . $_GET["id"] . "'><img src='images/delete_icon.gif' width='10' height='10' border='0' alt='Delete'></a>&nbsp;</td>
+							<td align='right'><a href='user_admin.php?action=perm_remove&type=tree&id=" . $item["id"] . "&user_id=" . $_GET["id"] . "'><img id='buttonSmall' src='images/delete_icon.gif' alt='Delete'></a>&nbsp;</td>
 						</tr>\n";
 				}
 				}else{ print "<tr><td><em>No Trees</em></td></tr>";
