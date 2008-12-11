@@ -762,8 +762,8 @@ function grow_right_pane_tree($tree_id, $leaf_id, $host_group_data) {
 							<input type="checkbox" name="thumbnails" id="thumbnails" onChange="if (this.checked == true) this.value='dogs'; else this.value='cats';submit()" <?php print (($_REQUEST['thumbnails'] == "dogs") ? "checked":"");?>>
 						</td>
 						<td style='white-space:nowrap;' nowrap>
-							&nbsp;<input type="image" src="images/button_go.gif" alt="Go" border="0" align="absmiddle">
-							<input type="image" src="images/button_clear.gif" name="clear" alt="Clear" border="0" align="absmiddle">
+							&nbsp;<input type="image" src="images/button_go.gif" alt="Go" style='border-width:0px;' align="absmiddle">
+							<input type="image" src="images/button_clear.gif" name="clear" alt="Clear" style='border-width:0px;' align="absmiddle">
 						</td>
 					</tr>
 				</table>

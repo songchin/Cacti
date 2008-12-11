@@ -62,7 +62,7 @@ function html_start_box($title, $width, $background_color, $cell_padding, $align
 					<table width="100%" cellpadding="<?php print $cell_padding;?>" cellspacing="0">
 						<tr>
 							<?php if ($collapsing) {?><td class="textHeaderDark" width="9">
-								<img id="<?php print $item_id . '_twisty';?>" src="<?php print $config['url_path']; ?>images/tw_open.gif" alt="Filter" border="0" align="absmiddle">
+								<img id="<?php print $item_id . '_twisty';?>" src="<?php print $config['url_path']; ?>images/tw_open.gif" alt="Filter" style='border-width:0px;' align="absmiddle">
 							</td><?php } ?>
 							<td onMouseDown='return false' class="textHeaderDark"><?php print $title;?>
 							</td>
@@ -78,7 +78,7 @@ function html_start_box($title, $width, $background_color, $cell_padding, $align
 			</tr>
 			<?php }?><tr style='border: 0px;' id='<?php print $item_id;?>'>
 				<td>
-					<table width="100%" cellpadding="<?php print $cell_padding;?>" cellspacing="0" border="0"><?php
+					<table width="100%" cellpadding="<?php print $cell_padding;?>" cellspacing="0" style='border-width:0px;'><?php
 }
 
 function html_start_box_dq($query_name, $query_id, $host_id, $colspan, $width, $background_color, $cell_padding, $align) {
@@ -96,7 +96,7 @@ function html_start_box_dq($query_name, $query_id, $host_id, $colspan, $width, $
 	}
 
 	?>
-		<table class='startBoxHeader' cellpadding="0" cellspacing="0" border="0" width="100%">
+		<table class='startBoxHeader' cellpadding="0" cellspacing="0" style='border-width:0px;' width="100%">
 			<tr class='rowHeader'>
 				<td style='padding: 3px;' colspan='<?php print $colspan+1;?>'>
 					<table cellspacing='0' cellpadding='0' width='100%' >
@@ -113,7 +113,7 @@ function html_start_box_dq($query_name, $query_id, $host_id, $colspan, $width, $
 			</tr>
 			<tr style='border: 0px;' id='<?php print $item_id;?>'>
 				<td>
-					<table width="100%" cellpadding="<?php print $cell_padding;?>" cellspacing="0" border="0"><?php
+					<table width="100%" cellpadding="<?php print $cell_padding;?>" cellspacing="0" style='border-width:0px;'><?php
 }
 
 /* html_end_box - draws the end of an HTML box
@@ -389,16 +389,16 @@ function html_nav_bar($background_color, $colspan, $current_page, $rows_per_page
 			<table width='100%' cellspacing='0' cellpadding='3' border='0'>
 				<tr>
 					<td align='left' class='textHeaderDark' width='15%'>
-						<?php if ($current_page > 1) { 
-							print "<strong><a class='linkOverDark' href='" . str_replace("<PAGE>", ($current_page-1), $nav_url) . "'> &lt;&lt; Previous</a></strong>"; 
+						<?php if ($current_page > 1) {
+							print "<strong><a class='linkOverDark' href='" . str_replace("<PAGE>", ($current_page-1), $nav_url) . "'> &lt;&lt; Previous</a></strong>";
 						} ?>
 					</td>
 					<td align='center' class='textHeaderDark' width='70%'>
 						Showing Rows <?php print (($rows_per_page*($current_page-1))+1);?> to <?php print ((($total_rows < $rows_per_page) || ($total_rows < ($rows_per_page*$current_page))) ? $total_rows : ($rows_per_page*$current_page));?> of <?php print $total_rows;?>
 					</td>
 					<td align='right' class='textHeaderDark' width='15%'>
-						<?php if (($current_page * $rows_per_page) < $total_rows) { 
-							print "<strong><a class='linkOverDark' href='" . str_replace("<PAGE>", ($current_page+1), $nav_url) . "'> Next &gt;&gt; </a></strong>"; 
+						<?php if (($current_page * $rows_per_page) < $total_rows) {
+							print "<strong><a class='linkOverDark' href='" . str_replace("<PAGE>", ($current_page+1), $nav_url) . "'> Next &gt;&gt; </a></strong>";
 						} ?>
 					</td>
 				</tr>
@@ -687,10 +687,10 @@ function html_create_nav($current_page, $max_pages, $rows_per_page, $total_rows,
 					<tr>
 						<td align='left' class='textHeaderDark' width='15%'>";
 							if ($current_page > 1) {
-								$nav .= "<strong>"; 
-								$nav .= "<a class='linkOverDark' href='" . $base_url . $page_var . "=" . ($current_page-1) . "'>"; 
-								$nav .= "&lt; &lt; Previous"; 
-								$nav .= "</a></strong>"; 
+								$nav .= "<strong>";
+								$nav .= "<a class='linkOverDark' href='" . $base_url . $page_var . "=" . ($current_page-1) . "'>";
+								$nav .= "&lt; &lt; Previous";
+								$nav .= "</a></strong>";
 							}
 							$nav .= "
 						</td>\n
@@ -701,9 +701,9 @@ function html_create_nav($current_page, $max_pages, $rows_per_page, $total_rows,
 							if (($current_page * $rows_per_page) < $total_rows) {
 								$nav .= "<strong>";
 								$nav .= "<a class='linkOverDark' href='" . $base_url . $page_var . "=" . ($current_page+1) . "'>";
-								$nav .= "Next &gt;&gt;"; 
+								$nav .= "Next &gt;&gt;";
 								$nav .= "</a></strong>";
-							} 
+							}
 							$nav .= "
 						</td>\n
 					</tr>

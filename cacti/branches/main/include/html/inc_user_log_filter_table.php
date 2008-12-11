@@ -38,9 +38,9 @@
 						<input type="text" name="filter" size="20" value="<?php print $_REQUEST["filter"];?>">
 					</td>
 					<td nowrap style='white-space: nowrap;'>
-						&nbsp;<input type="submit" Value="Go" name="go" border="0" align="middle">
-						<input type="submit" Value="Clear" name="clear_x" border="0" align="middle">
-						<input type="submit" Value="Purge" name="purge_x" border="0" align="middle">
+						&nbsp;<input type="submit" Value="Go" name="go" style='border-width:0px;' align="middle">
+						<input type="submit" Value="Clear" name="clear_x" style='border-width:0px;' align="middle">
+						<input type="submit" Value="Purge" name="purge_x" style='border-width:0px;' align="middle">
 					</td>
 				</tr>
 			</table>

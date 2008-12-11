@@ -35,7 +35,7 @@ html_start_box("<strong>About Cacti</strong>", "100%", $colors["header"], "3", "
 </tr>
 <tr>
 	<td valign="top" class="textArea">
-		<a href="http://www.cacti.net/"><img align="right" src="images/cacti_about_logo.gif" border="0" alt="raXnet"></a>
+		<a href="http://www.cacti.net/"><img align="right" src="images/cacti_about_logo.gif" style='border-width:0px;' alt="raXnet"></a>
 
 		Cacti is designed to be a complete graphing solution based on the RRDTool's framework. Its goal is to make a
 		network administrator's job easier by taking care of all the necessary details necessary to create
