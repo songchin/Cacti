@@ -34,14 +34,14 @@ $page_title = api_plugin_hook_function('page_title', 'Cacti');
 <head>
 	<title><?php echo $page_title; ?></title>
 	<meta http-equiv="Content-Type" content="text/html;charset=utf-8" >
-	<link href="<?php echo $config['url_path']; ?>include/main.css" rel="stylesheet">
-	<link href="<?php echo $config['url_path']; ?>include/jquery.autocomplete.css" rel="stylesheet">
+	<link type="text/css" href="<?php echo $config['url_path']; ?>include/main.css" rel="stylesheet">
+	<link type="text/css" href="<?php echo $config['url_path']; ?>include/jquery.autocomplete.css" rel="stylesheet">
 	<link href="<?php echo $config['url_path']; ?>images/favicon.ico" rel="shortcut icon">
 	<script type="text/javascript" src="<?php echo $config['url_path']; ?>include/layout.js"></script>
 	<script type="text/javascript" src="<?php echo $config['url_path']; ?>include/jquery/jquery.js"></script>
-	<script type="text/javascript" src="<?php echo $config['url_path']; ?>include/jquery/jquery.autocomplete.js"></script>;
-	<script type="text/javascript" src="<?php echo $config['url_path']; ?>include/jquery/jquery.bgiframe.js"></script>;
-	<script type="text/javascript" src="<?php echo $config['url_path']; ?>include/jquery/jquery.ajaxQueue.js"></script>;
+	<script type="text/javascript" src="<?php echo $config['url_path']; ?>include/jquery/jquery.autocomplete.js"></script>
+	<script type="text/javascript" src="<?php echo $config['url_path']; ?>include/jquery/jquery.bgiframe.js"></script>
+	<script type="text/javascript" src="<?php echo $config['url_path']; ?>include/jquery/jquery.ajaxQueue.js"></script>
 <?php if (isset($refresh)) { print "\t<meta http-equiv=refresh content=\"" . $refresh["seconds"] . "; url='" . $refresh["page"] . "'\">\n"; }
 
 api_plugin_hook('page_head');
@@ -50,7 +50,7 @@ api_plugin_hook('page_head');
 </head>
 <body id='body' onResize='pageResize()' onLoad='pageInitialize()'>
 <div id='header'>
-	<div id=logobar' class='logobar'></div>
+	<div id='logobar' class='logobar'></div>
 	<div id='navbar' class='navbar'>
 		<div id='navbar_l'>
 			<ul>
