@@ -48,13 +48,19 @@
 }
 
 .ac_field{
-	background-image:url(../images/filter.gif);
+	padding: 1px;
+	border:thin solid #ABADB3;
+	background-image:url('../images/filter.gif');
+	background-color:#FFFFFF;
 	background-position:right center;
 	background-repeat:no-repeat;
 }
 
 .ac_field_busy{
-	background-image:url(../images/indicator.gif);
+	padding: 1px;
+	border:thin solid #ABADB3;
+	background-image:url('../images/indicator.gif');
+	background-color:#FFFFFF;
 	background-position:right center;
 	background-repeat:no-repeat;
 }
