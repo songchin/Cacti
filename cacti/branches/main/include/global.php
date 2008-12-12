@@ -83,6 +83,7 @@ $no_http_header_files = array(
 	"perms_add.php",
 	"tree_add.php",
 	"user_copy.php",
+	"repair_database.php"
 );
 
 $colors = array();
