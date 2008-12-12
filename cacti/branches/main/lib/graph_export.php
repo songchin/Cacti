@@ -1718,10 +1718,10 @@ define("HTML_HEADER_TREE",
 			<table width='100%' cellspacing='0' cellpadding='0'>
 				<tr>
 					<td nowrap>
-						&nbsp;<a href='http://www.cacti.net/'><img src='tab_cacti.gif' alt='Cacti - http://www.cacti.net/' align='absmiddle' border='0'></a>
+						&nbsp;<a href='http://www.cacti.net/'><img src='tab_cacti.gif' alt='Cacti - http://www.cacti.net/' align='middle' border='0'></a>
 					</td>
 					<td align='right'>
-						<img src='cacti_backdrop.gif' align='absmiddle'>
+						<img src='cacti_backdrop.gif' align='middle'>
 					</td>
 				</tr>
 			</table>

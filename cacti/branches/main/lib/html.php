@@ -62,7 +62,7 @@ function html_start_box($title, $width, $background_color, $cell_padding, $align
 					<table width="100%" cellpadding="<?php print $cell_padding;?>" cellspacing="0">
 						<tr>
 							<?php if ($collapsing) {?><td class="textHeaderDark" width="9">
-								<img id="<?php print $item_id . '_twisty';?>" src="<?php print $config['url_path']; ?>images/tw_open.gif" alt="Filter" style='border-width:0px;' align="absmiddle">
+								<img id="<?php print $item_id . '_twisty';?>" src="<?php print $config['url_path']; ?>images/tw_open.gif" alt="Filter" align="middle">
 							</td><?php } ?>
 							<td onMouseDown='return false' class="textHeaderDark"><?php print $title;?>
 							</td>
@@ -96,7 +96,7 @@ function html_start_box_dq($query_name, $query_id, $host_id, $colspan, $width, $
 	}
 
 	?>
-		<table class='startBoxHeader' cellpadding="0" cellspacing="0" style='border-width:0px;' width="100%">
+		<table class='startBoxHeader' cellpadding="0" cellspacing="0" border="0" width="100%">
 			<tr class='rowHeader'>
 				<td style='padding: 3px;' colspan='<?php print $colspan+1;?>'>
 					<table cellspacing='0' cellpadding='0' width='100%' >
@@ -105,7 +105,7 @@ function html_start_box_dq($query_name, $query_id, $host_id, $colspan, $width, $
 								<strong>Data Query</strong> [<?php print $query_name; ?>]
 							</td>
 							<td align='right' nowrap>
-								<a href='graphs_new.php?action=query_reload&id=<?php print $query_id;?>&host_id=<?php print $host_id;?>'><img src='images/reload_icon_small.gif' alt='Reload Associated Query' title='Reload Associated Query' border='0' align='absmiddle'></a>
+								<a href='graphs_new.php?action=query_reload&id=<?php print $query_id;?>&host_id=<?php print $host_id;?>'><img id='buttonSmall' src='images/reload_icon_small.gif' alt='Reload' title='Reload Associated Query' align='middle'></a>
 							</td>
 						</tr>
 					</table>
@@ -214,10 +214,10 @@ function html_graph_area(&$graph_array, $no_graphs_message = "", $extra_url_args
 								<?php print (read_graph_config_option("show_graph_title") == "on" ? "<p style='font-size: 10;' align='center'><strong>" . $graph["title_cache"] . "</strong></p>" : "");?>
 							</td>
 							<td valign='top' style='align: left; padding: 3px;' class='noprint'>
-								<a href='graph.php?action=zoom&local_graph_id=<?php print $graph["local_graph_id"];?>&rra_id=0&<?php print $extra_url_args;?>'><img src='images/graph_zoom.gif' border='0' alt='Zoom Graph' title='Zoom Graph' style='padding: 3px;'></a><br>
-								<a href='graph_xport.php?local_graph_id=<?php print $graph["local_graph_id"];?>&rra_id=0&<?php print $extra_url_args;?>'><img src='images/graph_query.png' border='0' alt='CSV Export' title='CSV Export' style='padding: 3px;'></a><br>
-								<a href='graph.php?action=properties&local_graph_id=<?php print $graph["local_graph_id"];?>&rra_id=0&<?php print $extra_url_args;?>'><img src='images/graph_properties.gif' border='0' alt='Graph Source/Properties' title='Graph Source/Properties' style='padding: 3px;'></a><br>
-								<a href='#page_top'><img src='images/graph_page_top.gif' border='0' alt='Page Top' title='Page Top' style='padding: 3px;'></a><br>
+								<a href='graph.php?action=zoom&local_graph_id=<?php print $graph["local_graph_id"];?>&rra_id=0&<?php print $extra_url_args;?>'><img src='images/graph_zoom.gif' alt='Zoom Graph' title='Zoom Graph' style='border-width:0px;padding:3px;'></a><br>
+								<a href='graph_xport.php?local_graph_id=<?php print $graph["local_graph_id"];?>&rra_id=0&<?php print $extra_url_args;?>'><img src='images/graph_query.png' alt='CSV Export' title='CSV Export' style='border-width:0px;padding: 3px;'></a><br>
+								<a href='graph.php?action=properties&local_graph_id=<?php print $graph["local_graph_id"];?>&rra_id=0&<?php print $extra_url_args;?>'><img src='images/graph_properties.gif' alt='Properties' title='Graph Source/Properties' style='border-width:0px;padding:3px;'></a><br>
+								<a href='#page_top'><img src='images/graph_page_top.gif' alt='Page Top' title='Page Top' style='border-width:0px;padding:3px;'></a><br>
 							</td>
 						</tr>
 					</table>
@@ -332,10 +332,10 @@ function html_graph_thumbnail_area(&$graph_array, $no_graphs_message = "", $extr
 							<?php print (read_graph_config_option("show_graph_title") == "on" ? "<p style='font-size: 10;' align='center'><strong>" . $graph["title_cache"] . "</strong></p>" : "");?>
 						</td>
 						<td valign='top' style='align: left; padding: 3px;'>
-							<a href='graph.php?action=zoom&local_graph_id=<?php print $graph["local_graph_id"];?>&rra_id=0&<?php print $extra_url_args;?>'><img src='images/graph_zoom.gif' border='0' alt='Zoom Graph' title='Zoom Graph' style='padding: 3px;'></a><br>
-							<a href='graph_xport.php?local_graph_id=<?php print $graph["local_graph_id"];?>&rra_id=0&<?php print $extra_url_args;?>'><img src='images/graph_query.png' border='0' alt='CSV Export' title='CSV Export' style='padding: 3px;'></a><br>
-							<a href='graph.php?action=properties&local_graph_id=<?php print $graph["local_graph_id"];?>&rra_id=0&<?php print $extra_url_args;?>'><img src='images/graph_properties.gif' border='0' alt='Graph Source/Properties' title='Graph Source/Properties' style='padding: 3px;'></a><br>
-							<a href='#page_top'><img src='images/graph_page_top.gif' border='0' alt='Page Top' title='Page Top' style='padding: 3px;'></a><br>
+							<a href='graph.php?action=zoom&local_graph_id=<?php print $graph["local_graph_id"];?>&rra_id=0&<?php print $extra_url_args;?>'><img src='images/graph_zoom.gif' alt='Zoom Graph' title='Zoom Graph' style='border-width:0px;padding:3px;'></a><br>
+							<a href='graph_xport.php?local_graph_id=<?php print $graph["local_graph_id"];?>&rra_id=0&<?php print $extra_url_args;?>'><img src='images/graph_query.png' alt='CSV Export' title='CSV Export' style='border-width:0px;padding:3px;'></a><br>
+							<a href='graph.php?action=properties&local_graph_id=<?php print $graph["local_graph_id"];?>&rra_id=0&<?php print $extra_url_args;?>'><img src='images/graph_properties.gif' alt='Graph Source/Properties' title='Graph Source/Properties' style='border-width:0px;padding:3px;'></a><br>
+							<a href='#page_top'><img src='images/graph_page_top.gif' alt='Page Top' title='Page Top' style='border-width:0px;padding:3px;'></a><br>
 						</td>
 					</tr>
 				</table>
@@ -799,9 +799,9 @@ function draw_graph_items_list($item_list, $filename, $url_data, $disable_contro
 		print "<td style='$this_row_style'>" . $item["hex"] . "</td>\n";
 
 		if ($disable_controls == false) {
-			print "<td><a href='$filename?action=item_movedown&id=" . $item["id"] . "&$url_data'><img src='images/move_down.gif' border='0' alt='Move Down'></a>
-					<a href='$filename?action=item_moveup&id=" . $item["id"] . "&$url_data'><img src='images/move_up.gif' border='0' alt='Move Up'></a></td>\n";
-			print "<td align='right'><a href='$filename?action=item_remove&id=" . $item["id"] . "&$url_data'><img src='images/delete_icon.gif' width='10' height='10' border='0' alt='Delete'></a></td>\n";
+			print "<td><a href='$filename?action=item_movedown&id=" . $item["id"] . "&$url_data'><img id='buttonSmall' src='images/move_down.gif' alt='Move Down'></a>
+					<a href='$filename?action=item_moveup&id=" . $item["id"] . "&$url_data'><img id='buttonSmall' src='images/move_up.gif' alt='Move Up'></a></td>\n";
+			print "<td align='right'><a href='$filename?action=item_remove&id=" . $item["id"] . "&$url_data'><img id='buttonSmall' src='images/delete_icon.gif' alt='Delete'></a></td>\n";
 		}
 
 		print "</tr>";
@@ -818,7 +818,7 @@ function draw_header_tab($name, $title, $location, $image = "") {
 	if ($image == "") {
 		return "<li id=\"tab_" . html_escape($name) . "\"" . (html_selected_tab($name, $location) ? "class=\"selected\"" : "class=\"notselected\"") . "><a href=\"javascript:navigation_select('" . html_escape($name) . "','" . html_escape($location) . "')\" title=\"" . html_escape($title) . "\">" . html_escape($title) . "</a></li>\n";
 	}else{
-		return "<li id=\"tab_" . html_escape($name) . "\"" . (html_selected_tab($name, $location) ? "class=\"selected\"" : "class=\"notselected\"") . "><a href=\"javascript:navigation_select('" . html_escape($name) . "','" . html_escape($location) . "')\" title=\"" . html_escape($title) . "\"><img border='0' src='$image' align='absmiddle'></a></li>\n";
+		return "<li id=\"tab_" . html_escape($name) . "\"" . (html_selected_tab($name, $location) ? "class=\"selected\"" : "class=\"notselected\"") . "><a href=\"javascript:navigation_select('" . html_escape($name) . "','" . html_escape($location) . "')\" title=\"" . html_escape($title) . "\"><img style='border-width:0px;' src='$image' align='middle'></a></li>\n";
 	}
 }
 
@@ -1033,7 +1033,7 @@ function draw_actions_dropdown($actions_array) {
 	<table align='center' width='100%'>
 		<tr>
 			<td width='1' valign='top'>
-				<img src='<?php echo $config['url_path']; ?>images/arrow.gif' alt='' align='absmiddle'>&nbsp;
+				<img src='<?php echo $config['url_path']; ?>images/arrow.gif' alt='' align='middle'>&nbsp;
 			</td>
 			<td align='right'>
 				Choose an action:
