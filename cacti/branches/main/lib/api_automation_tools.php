@@ -523,10 +523,6 @@ function displaySNMPValues($values, $hostId, $field, $quietMode = FALSE) {
 }
 
 function displaySNMPValuesExtended($hostId, $fields, $snmpQueryId, $quietMode = FALSE) {
-	if (!$quietMode) {
-		echo "Known values for $fields for host $hostId: (name)\n";
-	}
-
 	$exit_code = 1; # assume an error until we've printed sth
 
 	$req_fields = array();
@@ -560,14 +556,20 @@ function displaySNMPValuesExtended($hostId, $fields, $snmpQueryId, $quietMode = 
 				$req_fields[$field_name]["length"] = $quietMode ? 0 : max(strlen($field_array["name"]), strlen($field_name));
 
 				if (!isset ($total_rows)) {
-					$total_rows = db_fetch_cell("SELECT count(*) FROM host_snmp_cache WHERE host_id=" . $hostId . " and snmp_query_id=" . $snmpQueryId . " AND field_name='$field_name'");
+					$total_rows = db_fetch_cell("SELECT COUNT(*) FROM host_snmp_cache WHERE host_id=" . $hostId . " AND snmp_query_id=" . $snmpQueryId . " AND field_name='$field_name'");
 				}
 			}
 		}
 
 		if (!isset ($total_rows)) {
-			echo "ERROR: No cached SNMP values found for this SNMP Query\n";
-			return (1);
+			if (!sizeof($req_fields)) {
+				echo "ERROR: Invalid --snmp-field-spec (found: " . $fields . ") given\n";
+				echo "Try --list-snmp-fields\n";
+				return (1);
+			} else {
+				echo "ERROR: No cached SNMP values found for this SNMP Query\n";
+				return (1);
+			}
 		}
 
 		$snmp_query_graphs = db_fetch_assoc("SELECT snmp_query_graph.id,snmp_query_graph.name FROM snmp_query_graph WHERE snmp_query_graph.snmp_query_id=" . $snmpQueryId . " ORDER BY snmp_query_graph.name");
@@ -577,10 +579,14 @@ function displaySNMPValuesExtended($hostId, $fields, $snmpQueryId, $quietMode = 
 		$sql_order = "";
 
 		/* get the unique field values from the database */
-		$field_names = db_fetch_assoc("SELECT DISTINCT field_name
-											FROM host_snmp_cache
-											WHERE host_id=" . $hostId . "
-											AND snmp_query_id=" . $snmpQueryId .
+		$field_names = db_fetch_assoc("SELECT DISTINCT " .
+											"field_name " .
+										"FROM " .
+											"host_snmp_cache " .
+										"WHERE " .
+											"host_id=" . $hostId . 
+										" AND " .
+											"snmp_query_id=" . $snmpQueryId .
 											$query_FieldSpec);
 
 		/* build magic query */
@@ -595,12 +601,12 @@ function displaySNMPValuesExtended($hostId, $fields, $snmpQueryId, $quietMode = 
 			return (1);
 		}
 
-		$sql_query .= " FROM host_snmp_cache
-			WHERE host_id=" . $hostId .
-		" AND snmp_query_id=" . $snmpQueryId .
-		$query_FieldSpec .
-		" GROUP BY host_id, snmp_query_id, snmp_index " .
-		$sql_order;
+		$sql_query .= 	" FROM host_snmp_cache " .
+						"WHERE host_id=" . $hostId .
+						" AND snmp_query_id=" . $snmpQueryId .
+						$query_FieldSpec .
+						" GROUP BY host_id, snmp_query_id, snmp_index " .
+						$sql_order;
 
 		$snmp_query_indexes = db_fetch_assoc($sql_query);
 
@@ -608,8 +614,6 @@ function displaySNMPValuesExtended($hostId, $fields, $snmpQueryId, $quietMode = 
 			print "This data query returned 0 rows, perhaps there was a problem executing this data query.\n";
 			return (1);
 		}
-
-#		$fields = array_rekey($field_names, "field_name", "field_name");
 
 		if (sizeof($snmp_query_indexes) > 0) {
 			foreach ($snmp_query_indexes as $row) {
@@ -625,6 +629,11 @@ function displaySNMPValuesExtended($hostId, $fields, $snmpQueryId, $quietMode = 
 		}
 
 		if (!$quietMode) {
+			if ($fields === "") {
+				echo "Known values for host-id $hostId:\n";
+			} else {
+				echo "Known values for host-id $hostId: ($fields)\n";
+			}
 			# now print headers: field identifier and field names
 			reset($req_fields);
 			while (list ($field_name, $field_array) = each($req_fields)) {

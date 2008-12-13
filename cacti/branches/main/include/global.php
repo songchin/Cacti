@@ -80,6 +80,7 @@ $no_http_header_files = array(
 	"device_list.php",
 	"host_template_list.php",
 	"graph_add.php",
+	"graph_list.php",
 	"perms_add.php",
 	"tree_add.php",
 	"user_copy.php",
