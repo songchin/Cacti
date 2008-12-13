@@ -615,7 +615,21 @@ function host_edit() {
 			graphs_new();
 
 			break;
-		case "":
+		case "datasources":
+			include_once(CACTI_BASE_PATH . "/lib/form_data_sources.php");
+			include_once(CACTI_BASE_PATH . "/lib/utility.php");
+			include_once(CACTI_BASE_PATH . "/lib/api_graph.php");
+			include_once(CACTI_BASE_PATH . "/lib/api_data_source.php");
+			include_once(CACTI_BASE_PATH . "/lib/template.php");
+			include_once(CACTI_BASE_PATH . "/lib/html_form_template.php");
+			include_once(CACTI_BASE_PATH . "/lib/rrd.php");
+			include_once(CACTI_BASE_PATH . "/lib/data_query.php");
+
+			data_source();
+
+			break;
+		case "graphs":
+
 			break;
 		default:
 			host_display_general($host, $host_text);

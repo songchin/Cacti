@@ -210,13 +210,13 @@ function html_graph_area(&$graph_array, $no_graphs_message = "", $extra_url_args
 					<table align='center' cellpadding='0'>
 						<tr>
 							<td align='center'>
-								<a href='graph.php?action=view&local_graph_id=<?php print $graph["local_graph_id"];?>&rra_id=all'><img class='graphimage' id='graph_<?php print $graph["local_graph_id"] ?>' src='graph_image.php?local_graph_id=<?php print $graph["local_graph_id"];?>&rra_id=0<?php print (($extra_url_args == "") ? "" : "&$extra_url_args");?>' border='0' alt='<?php print $graph["title_cache"];?>'></a>
+								<a href='graph.php?action=view&local_graph_id=<?php print $graph["local_graph_id"];?>&rra_id=all'><img class='graphimage' id='graph_<?php print $graph["local_graph_id"] ?>' src='<?php print htmlspecialchars("graph_image.php?local_graph_id=" . $graph["local_graph_id"] . "&rra_id=0" . (($extra_url_args == "") ? "" : "&$extra_url_args"));?>' border='0' alt='<?php print $graph["title_cache"];?>'></a>
 								<?php print (read_graph_config_option("show_graph_title") == "on" ? "<p style='font-size: 10;' align='center'><strong>" . $graph["title_cache"] . "</strong></p>" : "");?>
 							</td>
 							<td valign='top' style='align: left; padding: 3px;' class='noprint'>
-								<a href='graph.php?action=zoom&local_graph_id=<?php print $graph["local_graph_id"];?>&rra_id=0&<?php print $extra_url_args;?>'><img src='images/graph_zoom.gif' alt='Zoom Graph' title='Zoom Graph' style='border-width:0px;padding:3px;'></a><br>
-								<a href='graph_xport.php?local_graph_id=<?php print $graph["local_graph_id"];?>&rra_id=0&<?php print $extra_url_args;?>'><img src='images/graph_query.png' alt='CSV Export' title='CSV Export' style='border-width:0px;padding: 3px;'></a><br>
-								<a href='graph.php?action=properties&local_graph_id=<?php print $graph["local_graph_id"];?>&rra_id=0&<?php print $extra_url_args;?>'><img src='images/graph_properties.gif' alt='Properties' title='Graph Source/Properties' style='border-width:0px;padding:3px;'></a><br>
+								<a href='<?php print htmlspecialchars("graph.php?action=zoom&local_graph_id=" . $graph["local_graph_id"] . "&rra_id=0&" . $extra_url_args);?>'><img src='images/graph_zoom.gif' alt='Zoom Graph' title='Zoom Graph' style='border-width:0px;padding:3px;'></a><br>
+								<a href='<?php print htmlspecialchars("graph_xport.php?local_graph_id=" . $graph["local_graph_id"] . "&rra_id=0&" . $extra_url_args);?>'><img src='images/graph_query.png' alt='CSV Export' title='CSV Export' style='border-width:0px;padding: 3px;'></a><br>
+								<a href='<?php print htmlspecialchars("graph.php?action=properties&local_graph_id=" . $graph["local_graph_id"] . "&rra_id=0&" . $extra_url_args);?>'><img src='images/graph_properties.gif' alt='Properties' title='Graph Source/Properties' style='border-width:0px;padding:3px;'></a><br>
 								<a href='#page_top'><img src='images/graph_page_top.gif' alt='Page Top' title='Page Top' style='border-width:0px;padding:3px;'></a><br>
 							</td>
 						</tr>
@@ -328,13 +328,13 @@ function html_graph_thumbnail_area(&$graph_array, $no_graphs_message = "", $extr
 				<table align='center' cellpadding='0'>
 					<tr>
 						<td align='center'>
-							<a href='graph.php?action=view&rra_id=all&local_graph_id=<?php print $graph["local_graph_id"];?>'><img class='graphimage' id='graph_<?php print $graph["local_graph_id"] ?>' src='graph_image.php?local_graph_id=<?php print $graph["local_graph_id"];?>&rra_id=0&graph_height=<?php print read_graph_config_option("default_height");?>&graph_width=<?php print read_graph_config_option("default_width");?>&graph_nolegend=true<?php print (($extra_url_args == "") ? "" : "&$extra_url_args");?>' border='0' alt='<?php print $graph["title_cache"];?>'></a>
+							<a href='<?php print htmlspecialchars("graph.php?action=view&rra_id=all&local_graph_id=" . $graph["local_graph_id"]);?>'><img class='graphimage' id='graph_<?php print $graph["local_graph_id"] ?>' src='<?php print htmlspecialchars("graph_image.php?local_graph_id=". $graph["local_graph_id"] . "&rra_id=0&graph_height=" . read_graph_config_option("default_height") . "&graph_width=" . read_graph_config_option("default_width") . "&graph_nolegend=true" . (($extra_url_args == "") ? "" : "&$extra_url_args"));?>' border='0' alt='<?php print $graph["title_cache"];?>'></a>
 							<?php print (read_graph_config_option("show_graph_title") == "on" ? "<p style='font-size: 10;' align='center'><strong>" . $graph["title_cache"] . "</strong></p>" : "");?>
 						</td>
 						<td valign='top' style='align: left; padding: 3px;'>
-							<a href='graph.php?action=zoom&local_graph_id=<?php print $graph["local_graph_id"];?>&rra_id=0&<?php print $extra_url_args;?>'><img src='images/graph_zoom.gif' alt='Zoom Graph' title='Zoom Graph' style='border-width:0px;padding:3px;'></a><br>
-							<a href='graph_xport.php?local_graph_id=<?php print $graph["local_graph_id"];?>&rra_id=0&<?php print $extra_url_args;?>'><img src='images/graph_query.png' alt='CSV Export' title='CSV Export' style='border-width:0px;padding:3px;'></a><br>
-							<a href='graph.php?action=properties&local_graph_id=<?php print $graph["local_graph_id"];?>&rra_id=0&<?php print $extra_url_args;?>'><img src='images/graph_properties.gif' alt='Graph Source/Properties' title='Graph Source/Properties' style='border-width:0px;padding:3px;'></a><br>
+							<a href='<?php print htmlspecialchars("graph.php?action=zoom&local_graph_id=" . $graph["local_graph_id"] . "&rra_id=0&" . $extra_url_args);?>'><img src='images/graph_zoom.gif' alt='Zoom Graph' title='Zoom Graph' style='border-width:0px;padding:3px;'></a><br>
+							<a href='<?php print htmlspecialchars("graph_xport.php?local_graph_id=" . $graph["local_graph_id"] . "&rra_id=0&" . $extra_url_args);?>'><img src='images/graph_query.png' alt='CSV Export' title='CSV Export' style='border-width:0px;padding:3px;'></a><br>
+							<a href='<?php print htmlspecialchars("graph.php?action=properties&local_graph_id=" . $graph["local_graph_id"] . "&rra_id=0&" . $extra_url_args);?>'><img src='images/graph_properties.gif' alt='Graph Source/Properties' title='Graph Source/Properties' style='border-width:0px;padding:3px;'></a><br>
 							<a href='#page_top'><img src='images/graph_page_top.gif' alt='Page Top' title='Page Top' style='border-width:0px;padding:3px;'></a><br>
 						</td>
 					</tr>

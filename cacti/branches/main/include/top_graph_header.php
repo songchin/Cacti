@@ -24,7 +24,6 @@
 
 include_once(CACTI_BASE_PATH . "/lib/time.php");
 
-
 $using_guest_account = false;
 $show_console_tab = true;
 
@@ -110,7 +109,7 @@ $page_title = api_plugin_hook_function('page_title', 'Cacti');
 			print "<meta http-equiv=refresh content='" . $refresh . "'>\r\n";		}
 	}
 	?>
-	<link href="<?php echo $config['url_path']; ?>include/main.css" rel="stylesheet">
+	<link type="text/css" href="<?php echo $config['url_path']; ?>include/main.css" rel="stylesheet"/>
 	<link href="<?php echo $config['url_path']; ?>images/favicon.ico" rel="shortcut icon"/>
 	<script type="text/javascript" src="<?php echo $config['url_path']; ?>include/layout.js"></script>
 	<script type="text/javascript" src="<?php echo $config['url_path']; ?>include/treeview/ua.js"></script>
@@ -123,7 +122,7 @@ $page_title = api_plugin_hook_function('page_title', 'Cacti');
 </head>
 <body class='body' onResize='pageResize()' onLoad='pageInitialize()'>
 <div id='header'>
-	<div id=logobar'></div>
+	<div id='logobar'></div>
 	<div id='navbar'>
 		<div id='navbar_l'>
 			<ul>
@@ -159,7 +158,7 @@ $page_title = api_plugin_hook_function('page_title', 'Cacti');
 <div id='wrapper' style='opacity:0;'>
 	<?php if ((read_graph_config_option("default_tree_view_mode") == "2") && (($_REQUEST["action"] == "tree") || ((isset($_REQUEST["view_type"]) ? $_REQUEST["view_type"] : "") == "tree"))) { ?>
 	<div id='graph_tree'>
-		<table border=0 cellpadding=0 cellspacing=0><tr><td><font size=-2><a style="font-size:7pt;text-decoration:none;color:silver" href="http://www.treemenu.net/" target=_blank></a></font></td></tr></table>
+		<table border=0 cellpadding=0 cellspacing=0><tr><td><a style="font-size:7pt;text-decoration:none;color:silver" href="http://www.treemenu.net/" target=_blank></a></td></tr></table>
 		<?php grow_dhtml_trees(); ?>
 		<script type="text/javascript">initializeDocument();</script>
 

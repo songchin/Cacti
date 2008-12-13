@@ -978,7 +978,7 @@ function graph_edit() {
 		<table width="100%" align="center">
 			<tr>
 				<td align="center" class="textInfo" colspan="2">
-					<img src="graph_image.php?action=edit&local_graph_id=<?php print $_GET["id"];?>&rra_id=<?php print read_graph_config_option("default_rra_id");?>" alt="">
+					<img src="<?php print htmlspecialchars("graph_image.php?action=edit&local_graph_id=" . $_GET["id"] . "&rra_id=" . read_graph_config_option("default_rra_id"));?>" alt="">
 				</td>
 				<?php
 				if ((isset($_SESSION["graph_debug_mode"])) && (isset($_GET["id"]))) {

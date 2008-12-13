@@ -26,6 +26,7 @@ $guest_account = true;
 include("./include/auth.php");
 include_once(CACTI_BASE_PATH . "/lib/html_tree.php");
 include_once(CACTI_BASE_PATH . "/lib/timespan_settings.php");
+include_once(CACTI_BASE_PATH . "/lib/form_graph_view.php");
 include_once(CACTI_BASE_PATH . "/include/top_graph_header.php");
 
 /* ================= input validation ================= */
@@ -250,15 +251,11 @@ case 'preview':
 	<?php
 
 	/* include graph view filter selector */
-	html_graph_start_box(3, FALSE);
-	include(CACTI_BASE_PATH . "/include/html/inc_graph_view_filter_table.php");
-	html_graph_end_box(FALSE);
+	graph_view_filter_table();
 
 	/* include time span selector */
 	if (read_graph_config_option("timespan_sel") == "on") {
-		html_graph_start_box(3, FALSE);
-		include(CACTI_BASE_PATH . "/include/html/inc_timespan_selector.php");
-		html_graph_end_box();
+		graph_view_timespan_selector();
 	}
 
 	/* do some fancy navigation url construction so we don't have to try and rebuild the url string */
@@ -398,7 +395,7 @@ case 'list':
 	</script>
 
 	<tr class='rowGraphFilter noprint'>
-		<form name="form_graph_list" method="POST" onSubmit='form_graph(document.graphs,document.form_graph_list)'>
+		<form name="form_graph_list" action="graph_view.php" method="POST" onSubmit='form_graph(document.graphs,document.form_graph_list)'>
 		<input type='hidden' name='graph_list' value='<?php print $graph_list_text; ?>'>
 		<input type='hidden' name='graph_add' value=''>
 		<input type='hidden' name='graph_remove' value=''>
@@ -430,8 +427,8 @@ case 'list':
 										"FROM host " .
 										"INNER JOIN graph_local " .
 										"ON host.id=graph_local.host_id " .
-	                                    (($_REQUEST["graph_template_id"] > 0) ? " WHERE graph_template_id=" . $_REQUEST["graph_template_id"] :"") .
-                                        " ORDER BY name");
+										(($_REQUEST["graph_template_id"] > 0) ? " WHERE graph_template_id=" . $_REQUEST["graph_template_id"] :"") .
+										" ORDER BY name");
 							}
 
 							if (sizeof($hosts) > 0) {
