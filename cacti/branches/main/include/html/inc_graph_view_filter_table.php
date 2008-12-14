@@ -3,7 +3,7 @@
 			<form name="form_graph_view" method="post">
 			<table width="100%" cellpadding="0" cellspacing="0">
 				<tr class="rowGraphFilter noprint">
-					<td nowrap style='white-space: nowrap;' width="40">
+					<td style='white-space:nowrap;width:40px;'>
 						&nbsp;<strong>Host:</strong>&nbsp;
 					</td>
 					<td width="1">
@@ -41,7 +41,7 @@
 							?>
 						</select>
 					</td>
-					<td nowrap style='white-space: nowrap;' width="70">
+					<td style='white-space:nowrap;width:70px;'>
 						&nbsp;<strong>Template:</strong>&nbsp;
 					</td>
 					<td width="1">
@@ -78,7 +78,7 @@
 							?>
 						</select>
 					</td>
-					<td nowrap style='white-space: nowrap;' width="50">
+					<td style='white-space:nowrap;width:50px;'>
 						&nbsp;<strong>Search:</strong>&nbsp;
 					</td>
 					<td width="1">

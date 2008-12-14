@@ -27,6 +27,8 @@ include_once(CACTI_BASE_PATH . "/lib/utility.php");
 include_once(CACTI_BASE_PATH . "/lib/api_data_source.php");
 include_once(CACTI_BASE_PATH . "/lib/form_host.php");
 include_once(CACTI_BASE_PATH . "/lib/form_graphs_new.php");
+include_once(CACTI_BASE_PATH . "/lib/form_graphs.php");
+include_once(CACTI_BASE_PATH . "/lib/form_data_sources.php");
 include_once(CACTI_BASE_PATH . "/lib/api_tree.php");
 include_once(CACTI_BASE_PATH . "/lib/html_tree.php");
 include_once(CACTI_BASE_PATH . "/lib/api_graph.php");
@@ -39,15 +41,6 @@ include_once(CACTI_BASE_PATH . "/lib/ping.php");
 include_once(CACTI_BASE_PATH . "/lib/api_device.php");
 
 define("MAX_DISPLAY_PAGES", 21);
-
-$device_actions = array(
-	1 => "Delete",
-	2 => "Enable",
-	3 => "Disable",
-	4 => "Change SNMP Options",
-	5 => "Clear Statistics",
-	6 => "Change Availability Options"
-	);
 
 $device_actions = api_plugin_hook_function('device_action_array', $device_actions);
 

@@ -34,17 +34,6 @@ include_once(CACTI_BASE_PATH . "/lib/data_query.php");
 
 define("MAX_DISPLAY_PAGES", 21);
 
-$ds_actions = array(
-	1 => "Delete",
-	2 => "Change Data Template",
-	3 => "Change Host",
-	8 => "Reapply Suggested Names",
-	4 => "Duplicate",
-	5 => "Convert to Data Template",
-	6 => "Enable",
-	7 => "Disable"
-	);
-
 /* set default action */
 if (!isset($_REQUEST["action"])) { $_REQUEST["action"] = ""; }
 

@@ -22,6 +22,19 @@
  +-------------------------------------------------------------------------+
 */
 
+function api_tree_add_tree_names_to_actions_array() {
+	/* add a list of tree names to the actions dropdown */
+	$trees = db_fetch_assoc("select id,name from graph_tree order by name");
+
+	if (sizeof($trees) > 0) {
+		foreach ($trees as $tree) {
+			$actions{"tr_" . $tree["id"]} = "Place on a Tree (" . $tree["name"] . ")";
+		}
+	}
+
+	return $actions;
+}
+
 function api_tree_item_save($id, $tree_id, $type, $parent_tree_item_id, $title, $local_graph_id, $rra_id,
 	$host_id, $host_grouping_type, $sort_children_type, $propagate_changes) {
 	global $config;

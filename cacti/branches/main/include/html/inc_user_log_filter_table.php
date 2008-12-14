@@ -3,7 +3,7 @@
 			<form name="form_userlog">
 			<table cellpadding="0" cellspacing="0">
 				<tr>
-					<td nowrap style='white-space: nowrap;' width="50">
+					<td style='white-space:nowrap;width:50px;'>
 						Username:&nbsp;
 					</td>
 					<td width="1">
@@ -21,7 +21,7 @@
 							?>
 						</select>
 					</td>
-					<td nowrap style='white-space: nowrap;' width="50">
+					<td style='white-space:nowrap;width:50px;'>
 						&nbsp;Result:&nbsp;
 					</td>
 					<td width="1">
@@ -31,13 +31,13 @@
 							<option value="0"<?php if ($_REQUEST['result'] == '0') {?> selected<?php }?>>Failed</option>
 						</select>
 					</td>
-					<td nowrap style='white-space: nowrap;' width="50">
+					<td style='white-space:nowrap;width:50px;'>
 						&nbsp;Search:&nbsp;
 					</td>
 					<td width="1">
 						<input type="text" name="filter" size="20" value="<?php print $_REQUEST["filter"];?>">
 					</td>
-					<td nowrap style='white-space: nowrap;'>
+					<td style='white-space:nowrap;width:160px;'>
 						&nbsp;<input type="submit" Value="Go" name="go" align="middle">
 						<input type="submit" Value="Clear" name="clear_x" align="middle">
 						<input type="submit" Value="Purge" name="purge_x" align="middle">

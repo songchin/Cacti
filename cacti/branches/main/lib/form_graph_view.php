@@ -32,7 +32,7 @@ function graph_view_filter_table() {
 			<form name="form_graph_view" method="post" action="graph_view.php">
 			<table width="100%" cellpadding="0" cellspacing="0">
 				<tr class="rowGraphFilter noprint">
-					<td nowrap style='white-space: nowrap;' width="1">
+					<td style='white-space:nowrap;width:1px;'>
 						&nbsp;<strong>Host:</strong>&nbsp;
 					</td>
 					<td width="1">
@@ -46,7 +46,7 @@ function graph_view_filter_table() {
 						<input class="ac_field" type="text" id="host" size="30" value="<?php print $hostname; ?>">
 						<input type="hidden" id="host_id">
 					</td>
-					<td nowrap style='white-space: nowrap;' width="1">
+					<td style='white-space:nowrap;width:1px;'>
 						&nbsp;<strong>Template:</strong>&nbsp;
 					</td>
 					<td width="1">
@@ -81,7 +81,7 @@ function graph_view_filter_table() {
 							?>
 						</select>
 					</td>
-					<td nowrap style='white-space: nowrap;' width="50">
+					<td style='white-space:nowrap;width:50px;'>
 						&nbsp;<strong>Search:</strong>&nbsp;
 					</td>
 					<td width="1">
@@ -164,10 +164,10 @@ function graph_view_timespan_selector() {
 			<form name="form_timespan_selector" method="post" action="graph_view.php">
 			<table width="100%" cellpadding="0" cellspacing="0">
 				<tr class="rowGraphFilter">
-					<td nowrap style='white-space:nowrap;' width='55'>
+					<td style='white-space:nowrap;width:55px;'>
 						&nbsp;<strong>Presets:</strong>&nbsp;
 					</td>
-					<td nowrap style='white-space:nowrap;' width='130'>
+					<td style='white-space:nowrap;width:130px;'>
 						<select name='predefined_timespan' onChange="applyTimespanFilterChange(document.form_timespan_selector)"><?php
 							if ($_SESSION["custom"]) {
 								$graph_timespans[GT_CUSTOM] = "Custom";
@@ -190,21 +190,21 @@ function graph_view_timespan_selector() {
 							?>
 						</select>
 					</td>
-					<td nowrap style='white-space:nowrap;' width='30'>
+					<td style='white-space:nowrap;width:30px;'>
 						&nbsp;<strong>From:</strong>&nbsp;
 					</td>
-					<td width='140' nowrap style='white-space:nowrap;'>
+					<td style='white-space:nowrap;width:140px;'>
 						<input type='text' name='date1' id='date1' title='Graph Begin Timestamp' size='14' value='<?php print (isset($_SESSION["sess_current_date1"]) ? $_SESSION["sess_current_date1"] : "");?>'>
 						&nbsp;<input type='image' style='border-width:0px;vertical-align:middle;align:middle;padding-bottom:5px;' src='images/calendar.gif' alt='Start' title='Start Date Selector' onclick='return showCalendar("date1");'>&nbsp;
 					</td>
-					<td nowrap style='white-space:nowrap;' width='20'>
+					<td style='white-space:nowrap;width:20px;'>
 						&nbsp;<strong>To:</strong>&nbsp;
 					</td>
-					<td width='140' nowrap style='white-space:nowrap;'>
+					<td style='white-space:nowrap;width:140px;'>
 						<input type='text' name='date2' id='date2' title='Graph End Timestamp' size='14' value='<?php print (isset($_SESSION["sess_current_date2"]) ? $_SESSION["sess_current_date2"] : "");?>'>
 						&nbsp;<input type='image' style='border-width:0px;vertical-align:middle;align:middle;padding-bottom:5px;' src='images/calendar.gif' alt='End' title='End Date Selector' onclick='return showCalendar("date2");'>
 					</td>
-					<td width='120' nowrap style='white-space:nowrap;'>
+					<td style='white-space:nowrap;width:120px;'>
 						&nbsp;&nbsp;<input style='border-width:0px;vertical-align:middle;align:middle;padding-bottom:5px;' type='image' name='move_left' src='images/move_left.gif' alt='Left' title='Shift Left'>
 						<select name='predefined_timeshift' title='Define Shifting Interval' onChange="applyTimespanFilterChange(document.form_timespan_selector)"><?php
 							$start_val = 1;
@@ -218,7 +218,7 @@ function graph_view_timespan_selector() {
 						</select>
 						<input style='border-width:0px;vertical-align:middle;align:middle;padding-bottom:5px;' type='image' name='move_right' src='images/move_right.gif' alt='Right' title='Shift Right'>
 					</td>
-					<td nowrap style='white-space:nowrap;'>
+					<td style='white-space:nowrap;width:120px;'>
 						&nbsp;<input type='submit' value='Refresh' name='button_refresh'>
 						<input type='submit' value='Clear' name='button_clear_x'>
 					</td>
@@ -247,7 +247,7 @@ function graph_view_search_filter() {	global $graphs_per_page;
 						<td width="130" nowrap="" style="white-space: nowrap;">
 							<input size='30' style='width:100;' name='filter' value='<?php print clean_html_output(get_request_var_request("filter"));?>'>
 						</td>
-						<td nowrap style='white-space:nowrap;' width="80">
+						<td style='white-space:nowrap;width:80px;'>
 							&nbsp;<strong>Graphs/Page:</strong>&nbsp;
 						</td>
 						<td width="1">

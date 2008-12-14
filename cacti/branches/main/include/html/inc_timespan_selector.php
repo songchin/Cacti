@@ -58,10 +58,10 @@
 			<form name="form_timespan_selector" method="post">
 			<table width="100%" cellpadding="0" cellspacing="0">
 				<tr class="rowGraphFilter">
-					<td nowrap style='white-space: nowrap;' width='55'>
+					<td style='white-space:nowrap;width:55px;'>
 						&nbsp;<strong>Presets:</strong>&nbsp;
 					</td>
-					<td nowrap style='white-space: nowrap;' width='130'>
+					<td style='white-space:nowrap;width:130px;'>
 						<select name='predefined_timespan' onChange="applyTimespanFilterChange(document.form_timespan_selector)">
 							<?php
 							if ($_SESSION["custom"]) {
@@ -85,21 +85,21 @@
 							?>
 						</select>
 					</td>
-					<td nowrap style='white-space: nowrap;' width='30'>
+					<td style='white-space:nowrap;width:30px;'>
 						&nbsp;<strong>From:</strong>&nbsp;
 					</td>
-					<td width='150' nowrap style='white-space: nowrap;'>
+					<td style='white-space:nowrap;width:150px;'>
 						<input type='text' name='date1' id='date1' title='Graph Begin Timestamp' size='14' value='<?php print (isset($_SESSION["sess_current_date1"]) ? $_SESSION["sess_current_date1"] : "");?>'>
 						&nbsp;<input style='border-width:0px;padding-bottom:4px;' type='image' src='images/calendar.gif' alt='Start' title='Start date selector' align='middle' onclick="return showCalendar('date1');">&nbsp;
 					</td>
-					<td nowrap style='white-space: nowrap;' width='20'>
+					<td style='white-space:nowrap;width:20px;'>
 						&nbsp;<strong>To:</strong>&nbsp;
 					</td>
-					<td width='150' nowrap style='white-space: nowrap;'>
+					<td style='white-space:nowrap;width:150px;'>
 						<input type='text' name='date2' id='date2' title='Graph End Timestamp' size='14' value='<?php print (isset($_SESSION["sess_current_date2"]) ? $_SESSION["sess_current_date2"] : "");?>'>
 						&nbsp;<input style='border-width:0px;padding-bottom:4px;' type='image' src='images/calendar.gif' alt='End date selector' title='End date selector' align='middle' onclick="return showCalendar('date2');">
 					</td>
-					<td width='130' nowrap style='white-space: nowrap;'>
+					<td style='white-space:nowrap;width:130px;'>
 						&nbsp;&nbsp;<input style='border-width:0px;padding-bottom:4px;' type='image' name='move_left' src='images/move_left.gif' alt='Left' align='middle' title='Shift Left'>
 						<select name='predefined_timeshift' title='Define Shifting Interval' onChange="applyTimespanFilterChange(document.form_timespan_selector)">
 							<?php
@@ -114,7 +114,7 @@
 						</select>
 						<input style='border-width:0px;padding-bottom:4px;' type='image' name='move_right' src='images/move_right.gif' alt='Right' align='middle' title='Shift Right'>
 					</td>
-					<td nowrap style='white-space: nowrap;'>
+					<td style='white-space:nowrap;width:130px;'>
 						&nbsp;<input type='submit' value='Refresh' name='button_refresh'>
 						<input type='submit' value='Clear' name='button_clear_x'>
 					</td>

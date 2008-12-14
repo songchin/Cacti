@@ -732,7 +732,7 @@ function template_edit() {
 						<strong><?php print $i;?>)</strong> <?php print $item["name"];?>
 					</td>
 					<td align='right' nowrap>
-						<a href='host_templates.php?action=item_remove_gt&id=<?php print $item["id"];?>&host_template_id=<?php print $_GET["id"];?>'><img id="buttonSmall" src='images/delete_icon_large.gif' title='Delete Graph Template Association' alt='Delete'></a>
+						<a href='host_templates.php?action=item_remove_gt&id=<?php print $item["id"];?>&host_template_id=<?php print $_GET["id"];?>'><img class="buttonSmall" src='images/delete_icon_large.gif' title='Delete Graph Template Association' alt='Delete'></a>
 					</td>
 				</tr>
 				<?php
@@ -804,7 +804,7 @@ function template_edit() {
 					<?php form_dropdown("reindex_method_host_template_".$_GET["id"]."_query_".$item["id"]."_method_".$item["reindex_method"],$reindex_types,"","",$item["reindex_method"],"","","","");?>
 				</td>
 				<td align='right'>
-					<a href='host_templates.php?action=item_remove_dq&id=<?php print $item["id"];?>&host_template_id=<?php print $_GET["id"];?>'><img id='buttonSmall' src='images/delete_icon_large.gif' title='Delete Data Query Association' alt='Delete'></a>
+					<a href='host_templates.php?action=item_remove_dq&id=<?php print $item["id"];?>&host_template_id=<?php print $_GET["id"];?>'><img class='buttonSmall' src='images/delete_icon_large.gif' title='Delete Data Query Association' alt='Delete'></a>
 				</td>
 			</tr>
 			<?php

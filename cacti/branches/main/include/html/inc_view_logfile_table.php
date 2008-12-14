@@ -3,7 +3,7 @@
 			<form name="form_logfile">
 			<table cellpadding="1" cellspacing="0">
 				<tr>
-					<td nowrap style='white-space: nowrap;' width="80">
+					<td style='white-space:nowrap;width:80px;'>
 						Tail Lines:&nbsp;
 					</td>
 					<td width="1">
@@ -15,7 +15,7 @@
 							?>
 						</select>
 					</td>
-					<td nowrap style='white-space: nowrap;' width="100">
+					<td style='white-space:nowrap;width:100px;'>
 						&nbsp;Message Type:&nbsp;
 					</td>
 					<td width="1">
@@ -28,14 +28,14 @@
 							<option value="5"<?php if ($_REQUEST['message_type'] == '5') {?> selected<?php }?>>SQL Calls</option>
 						</select>
 					</td>
-					<td nowrap style='white-space: nowrap;'>
+					<td style='white-space:nowrap;width:180px;'>
 						&nbsp;<input type="submit" Value="Go" name="go" align="middle">
 						<input type="submit" Value="Clear" name="clear_x" align="middle">
 						<input type="submit" Value="Purge" name="purge_x" align="middle">
 					</td>
 				</tr>
 				<tr>
-					<td nowrap style='white-space: nowrap;' width="80">
+					<td style='white-space:nowrap;width:80px;'>
 						Refresh:&nbsp;
 					</td>
 					<td width="1">
@@ -47,7 +47,7 @@
 							?>
 						</select>
 					</td>
-					<td nowrap style='white-space: nowrap;' width="100">
+					<td style='white-space:nowrap;width:100px;'>
 						&nbsp;Display Order:&nbsp;
 					</td>
 					<td width="1">
@@ -60,7 +60,7 @@
 			</table>
 			<table cellpadding="1" cellspacing="0">
 				<tr>
-					<td nowrap style='white-space: nowrap;' width="80">
+					<td style='white-space:nowrap;width:80px;'>
 						Search:&nbsp;
 					</td>
 					<td width="1">

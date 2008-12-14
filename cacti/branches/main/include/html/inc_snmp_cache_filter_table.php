@@ -3,7 +3,7 @@
 			<form name="form_snmpcache">
 			<table cellpadding="0" cellspacing="0">
 				<tr>
-					<td nowrap style='white-space: nowrap;' width="50">
+					<td style='white-space:nowrap;width:50px;'>
 						Host:&nbsp;
 					</td>
 					<td width="1">
@@ -39,7 +39,7 @@
 							?>
 						</select>
 					</td>
-					<td nowrap style='white-space: nowrap;' width="90">
+					<td style='white-space:nowrap;width:90px;'>
 						&nbsp;Query Name:&nbsp;
 					</td>
 					<td width="1">
@@ -72,13 +72,13 @@
 							?>
 						</select>
 					</td>
-					<td nowrap style='white-space: nowrap;' width="50">
+					<td style='white-space:nowrap;width:50px;'>
 						&nbsp;Search:&nbsp;
 					</td>
 					<td width="1">
 						<input type="text" name="filter" size="20" value="<?php print $_REQUEST["filter"];?>">
 					</td>
-					<td nowrap style='white-space: nowrap;'>
+					<td style='white-space:nowrap;width:120px;'>
 						&nbsp;<input type="submit" Value="Go" name="go" align="middle">
 						<input type="submit" Value="Clear" name="clear_x" align="middle">
 					</td>

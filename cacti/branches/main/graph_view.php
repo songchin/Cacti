@@ -474,7 +474,7 @@ case 'list':
 			<input type='hidden' name='graph_remove' value=''>
 			<table width="100%" cellpadding="0" cellspacing="0">
 				<tr>
-					<td nowrap style='white-space:nowrap;' width="1">
+					<td style='white-space:nowrap;width:1px;'>
 						&nbsp;<strong>Host:</strong>&nbsp;
 					</td>
 					<td width="1">
@@ -488,7 +488,7 @@ case 'list':
 						<input class="ac_field" type="text" id="host" size="30" value="<?php print $hostname; ?>">
 						<input type="hidden" id="host_id">
 					</td>
-					<td nowrap style='white-space:nowrap;' width="1">
+					<td style='white-space:nowrap;width:1px;'>
 						&nbsp;<strong>Template:</strong>&nbsp;
 					</td>
 					<td width="1">
@@ -524,7 +524,7 @@ case 'list':
 							?>
 						</select>
 					</td>
-					<td nowrap style='white-space:nowrap;' width="1">
+					<td style='white-space:nowrap;width:1px;'>
 						&nbsp;<strong>Search:</strong>&nbsp;
 					</td>
 					<td width="1">

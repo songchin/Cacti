@@ -124,24 +124,24 @@ function color() {
 	html_start_box("<strong>Colors</strong>", "100%", $colors["header"], "3", "center", "color.php?action=edit");
 
 	print "<tr class='rowSubHeader'>";
-		DrawMatrixHeaderItem("Hex Value",$colors["header_text"],1);
-		DrawMatrixHeaderItem("Color",$colors["header_text"],1);
-		DrawMatrixHeaderItem("&nbsp;",$colors["header_text"],1);
+		DrawMatrixHeaderItem("Hex",    $colors["header_text"], 1, "center");
+		DrawMatrixHeaderItem("Color",  $colors["header_text"], 1, "center");
+		DrawMatrixHeaderItem("&nbsp;", $colors["header_text"], 1);
 
-		DrawMatrixHeaderItem("&nbsp;",$colors["header_text"],1);
-		DrawMatrixHeaderItem("Hex Value",$colors["header_text"],1);
-		DrawMatrixHeaderItem("Color",$colors["header_text"],1);
-		DrawMatrixHeaderItem("&nbsp;",$colors["header_text"],1);
+		DrawMatrixHeaderItem("&nbsp;", $colors["header_text"], 1);
+		DrawMatrixHeaderItem("Hex",    $colors["header_text"], 1, "center");
+		DrawMatrixHeaderItem("Color",  $colors["header_text"], 1, "center");
+		DrawMatrixHeaderItem("&nbsp;", $colors["header_text"], 1);
 
-		DrawMatrixHeaderItem("&nbsp;",$colors["header_text"],1);
-		DrawMatrixHeaderItem("Hex Value",$colors["header_text"],1);
-		DrawMatrixHeaderItem("Color",$colors["header_text"],1);
-		DrawMatrixHeaderItem("&nbsp;",$colors["header_text"],1);
+		DrawMatrixHeaderItem("&nbsp;", $colors["header_text"], 1);
+		DrawMatrixHeaderItem("Hex",    $colors["header_text"], 1, "center");
+		DrawMatrixHeaderItem("Color",  $colors["header_text"], 1, "center");
+		DrawMatrixHeaderItem("&nbsp;", $colors["header_text"], 1);
 
-		DrawMatrixHeaderItem("&nbsp;",$colors["header_text"],1);
-		DrawMatrixHeaderItem("Hex Value",$colors["header_text"],1);
-		DrawMatrixHeaderItem("Color",$colors["header_text"],1);
-		DrawMatrixHeaderItem("&nbsp;",$colors["header_text"],1);
+		DrawMatrixHeaderItem("&nbsp;", $colors["header_text"], 1);
+		DrawMatrixHeaderItem("Hex",    $colors["header_text"], 1, "center");
+		DrawMatrixHeaderItem("Color",  $colors["header_text"], 1, "center");
+		DrawMatrixHeaderItem("&nbsp;", $colors["header_text"], 1);
 	print "</tr>";
 
 	$color_list = db_fetch_assoc("select * from colors order by hex");
@@ -154,32 +154,32 @@ function color() {
 				form_alternate_row_color($color["id"], true);
 					?>
 					<td width='1'>
-						<a class="linkEditMain" style='display:block;' href="color.php?action=edit&id=<?php print $color["id"];?>"><?php print $color["hex"];?></a>
+						<a class="linkEditMain" style='display:block;' href="<?php print htmlspecialchars("color.php?action=edit&id=" . $color["id"]);?>"><?php print $color["hex"];?></a>
 					</td>
 					<td bgcolor="#<?php print $color["hex"];?>" width="10%">&nbsp;</td>
 					<td align="right">
-						<a href="color.php?action=remove&id=<?php print $color["id"];?>"><img id="buttonSmall" src="images/delete_icon.gif" alt="Delete"></a>
+						<a href="<?php print htmlspecialchars("color.php?action=remove&id=" . $color["id"]);?>"><img class="buttonSmall" src="images/delete_icon.gif" alt="Delete"></a>
 					</td>
 				<?php	$j=1;
 			}elseif (($j % 4 == 2) || ($j % 4 == 3)) {
 					?>
 					<td></td>
 					<td width='1'>
-						<a class="linkEditMain" style='display:block;' href="color.php?action=edit&id=<?php print $color["id"];?>"><?php print $color["hex"];?></a>
+						<a class="linkEditMain" style='display:block;' href="<?php print htmlspecialchars("color.php?action=edit&id=" . $color["id"]);?>"><?php print $color["hex"];?></a>
 					</td>
 					<td bgcolor="#<?php print $color["hex"];?>" width="10%">&nbsp;</td>
 					<td align="right">
-						<a href="color.php?action=remove&id=<?php print $color["id"];?>"><img id="buttonSmall" src="images/delete_icon.gif" alt="Delete"></a>
+						<a href="<?php print htmlspecialchars("color.php?action=remove&id=" . $color["id"]);?>"><img class="buttonSmall" src="images/delete_icon.gif" alt="Delete"></a>
 					</td>
 				<?php	$j=$j++;
 			} else { ?>
 					<td></td>
 					<td width='1'>
-						<a class="linkEditMain" style='display:block;' href="color.php?action=edit&id=<?php print $color["id"];?>"><?php print $color["hex"];?></a>
+						<a class="linkEditMain" style='display:block;' href="<?php print htmlspecialchars("color.php?action=edit&id=" . $color["id"]);?>"><?php print $color["hex"];?></a>
 					</td>
 					<td bgcolor="#<?php print $color["hex"];?>" width="10%">&nbsp;</td>
 					<td align="right">
-						<a href="color.php?action=remove&id=<?php print $color["id"];?>"><img id="buttonSmall" src="images/delete_icon.gif" alt="Delete"></a>
+						<a href="<?php print htmlspecialchars("color.php?action=remove&id=" . $color["id"]);?>"><img class="buttonSmall" src="images/delete_icon.gif" alt="Delete"></a>
 					</td>
 				</tr>
 			<?php

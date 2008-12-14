@@ -10,7 +10,7 @@
 			<form name="form_graph_items">
 			<table cellpadding="0" cellspacing="0">
 				<tr width="100%">
-					<td nowrap style='white-space: nowrap;' width="50">
+					<td style='white-space:nowrap;width:50px;'>
 						Host:&nbsp;
 					</td>
 					<td>
@@ -31,7 +31,7 @@
 					</td>
 				</tr>
 				<tr>
-					<td nowrap style='white-space: nowrap;' width="100">
+					<td style='white-space:nowrap;width:100px;'>
 						Data Template:&nbsp;
 					</td>
 					<td>

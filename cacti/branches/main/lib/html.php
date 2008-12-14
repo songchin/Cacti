@@ -105,7 +105,7 @@ function html_start_box_dq($query_name, $query_id, $host_id, $colspan, $width, $
 								<strong>Data Query</strong> [<?php print $query_name; ?>]
 							</td>
 							<td align='right' nowrap>
-								<a href='graphs_new.php?action=query_reload&id=<?php print $query_id;?>&host_id=<?php print $host_id;?>'><img id='buttonSmall' src='images/reload_icon_small.gif' alt='Reload' title='Reload Associated Query' align='middle'></a>
+								<a href='graphs_new.php?action=query_reload&id=<?php print $query_id;?>&host_id=<?php print $host_id;?>'><img class='buttonSmall' src='images/reload_icon_small.gif' alt='Reload' title='Reload Associated Query' align='middle'></a>
 							</td>
 						</tr>
 					</table>
@@ -390,7 +390,7 @@ function html_nav_bar($background_color, $colspan, $current_page, $rows_per_page
 				<tr>
 					<td align='left' class='textHeaderDark' width='15%'>
 						<?php if ($current_page > 1) {
-							print "<strong><a class='linkOverDark' href='" . htmlspecialchars(str_replace("<PAGE>", ($current_page-1), $nav_url)) . "'> &lt;&lt; Previous</a></strong>";
+							print "<strong><a class='linkOverDark' href='" . htmlspecialchars(str_replace("<PAGE>", ($current_page-1), $nav_url)) . "'>&lt;&lt;&nbsp;Previous</a></strong>";
 						} ?>
 					</td>
 					<td align='center' class='textHeaderDark' width='70%'>
@@ -398,7 +398,7 @@ function html_nav_bar($background_color, $colspan, $current_page, $rows_per_page
 					</td>
 					<td align='right' class='textHeaderDark' width='15%'>
 						<?php if (($current_page * $rows_per_page) < $total_rows) {
-							print "<strong><a class='linkOverDark' href='" . htmlspecialchars(str_replace("<PAGE>", ($current_page+1), $nav_url)) . "'> Next &gt;&gt; </a></strong>";
+							print "<strong><a class='linkOverDark' href='" . htmlspecialchars(str_replace("<PAGE>", ($current_page+1), $nav_url)) . "'>Next&gt;&gt;</a></strong>";
 						} ?>
 					</td>
 				</tr>
@@ -689,7 +689,7 @@ function html_create_nav($current_page, $max_pages, $rows_per_page, $total_rows,
 							if ($current_page > 1) {
 								$nav .= "<strong>";
 								$nav .= "<a class='linkOverDark' href='" . $base_url . $page_var . "=" . ($current_page-1) . "'>";
-								$nav .= "&lt; &lt; Previous";
+								$nav .= "&lt;&lt;&nbsp;Previous";
 								$nav .= "</a></strong>";
 							}
 							$nav .= "
@@ -940,7 +940,7 @@ function draw_menu($user_menu = "") {
 			$ani  = "onClick='changeMenuState(\"" . $id . "\")'";
 			$ani2 = "onload='changeMenuState(\"" . $id . "\", true)'";
 
-			print "\t\t\t<tr class='menuMain' nowrap $ani>
+			print "\t\t\t<tr class='menuMain' style='white-space:nowrap' $ani>
 				<td onMouseDown='return false' valign='middle'>
 					<img id='tw_" . $id . "' src='images/tw_open.gif' align='absmiddle' alt='Menu Item'>$header_name
 					<img style='display:none;' src='images/transparent_pixel.gif' $ani2>
@@ -1053,8 +1053,8 @@ function draw_actions_dropdown($actions_array) {
  * Deprecated functions
  */
 
-function DrawMatrixHeaderItem($matrix_name, $matrix_text_color, $column_span = 1) { ?>
-		<td height="1" colspan="<?php print $column_span;?>">
+function DrawMatrixHeaderItem($matrix_name, $matrix_text_color, $column_span = 1, $align = "left") { ?>
+		<td height="1" align="<?php print $align;?>" colspan="<?php print $column_span;?>">
 			<strong><font color="#<?php print $matrix_text_color;?>"><?php print $matrix_name;?></font></strong>
 		</td>
 <?php }

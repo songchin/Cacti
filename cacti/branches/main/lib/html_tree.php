@@ -245,8 +245,8 @@ function grow_edit_graph_tree($tree_id, $user_id, $options) {
 				print "<td bgcolor='#$row_color' width='80'></td>\n";
 			}else{
 				print "<td bgcolor='#$row_color' width='80' align='center'>\n
-					<a href='" . htmlspecialchars("tree.php?action=item_movedown&id=" . $leaf["id"] . "&tree_id=" . $_GET["id"]) . "'><img id='buttonSmall' src='images/move_down.gif' alt=''' alt='Move Down'></a>\n
-					<a href='" . htmlspecialchars("tree.php?action=item_moveup&id=" . $leaf["id"] . "&tree_id=" . $_GET["id"]) . "'><img id='buttonSmall' src='images/move_up.gif' alt='' alt='Move Up'></a>\n
+					<a href='" . htmlspecialchars("tree.php?action=item_movedown&id=" . $leaf["id"] . "&tree_id=" . $_GET["id"]) . "'><img class='buttonSmall' src='images/move_down.gif' alt=''' alt='Move Down'></a>\n
+					<a href='" . htmlspecialchars("tree.php?action=item_moveup&id=" . $leaf["id"] . "&tree_id=" . $_GET["id"]) . "'><img class='buttonSmall' src='images/move_up.gif' alt='' alt='Move Up'></a>\n
 					</td>\n";
 			}
 
@@ -880,7 +880,7 @@ function grow_right_pane_tree($tree_id, $leaf_id, $host_group_data) {
 					<table width='100%' cellspacing='0' cellpadding='0' border='0'>
 						<tr>
 							<td align='left' style='width:100px;' class='textHeaderDark'>";
-								if ($_REQUEST["page"] > 1) { $nav .= "<strong><a class='linkOverDark' href='" . htmlspecialchars("graph_view.php?action=tree&tree_id=" . $tree_id . "&leaf_id=" . $leaf_id  . (isset($_REQUEST["host_group_data"]) ? "&host_group_data=" . $_REQUEST["host_group_data"] : "") . "&page=" . ($_REQUEST["page"]-1)) . "'>&lt;&lt;Previous</a></strong>"; }
+								if ($_REQUEST["page"] > 1) { $nav .= "<strong><a class='linkOverDark' href='" . htmlspecialchars("graph_view.php?action=tree&tree_id=" . $tree_id . "&leaf_id=" . $leaf_id  . (isset($_REQUEST["host_group_data"]) ? "&host_group_data=" . $_REQUEST["host_group_data"] : "") . "&page=" . ($_REQUEST["page"]-1)) . "'>&lt;&lt;&nbsp;Previous</a></strong>"; }
 							$nav .= "</td>\n
 							<td align='center' class='textHeaderDark'>
 								Showing Graphs " . (($_REQUEST["graphs"]*($_REQUEST["page"]-1))+1) . " to " . ((($total_rows < read_graph_config_option("treeview_graphs_per_page")) || ($total_rows < ($_REQUEST["graphs"]*$_REQUEST["page"]))) ? $total_rows : ($_REQUEST["graphs"]*$_REQUEST["page"])) . " of $total_rows [$url_page_select]

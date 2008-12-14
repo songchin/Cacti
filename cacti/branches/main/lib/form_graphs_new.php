@@ -400,7 +400,7 @@ function graphs_new() {
 	<table width="100%" cellpadding="0" align="center">
 		<tr>
 			<?php if (!isset($_REQUEST["tab"])) { ?>
-			<td nowrap style='white-space: nowrap;' width="55" class="textGraphFilter">
+			<td style='white-space:nowrap;width:55px;' class='textGraphFilter'>
 				&nbsp;Host:&nbsp;
 			</td>
 			<td width="1">
@@ -419,7 +419,7 @@ function graphs_new() {
 			<?php }else{ ?>
 			<div><input type='hidden' name='host_id' id='host_id' value='<?php print $_REQUEST["host_id"];?>'></div>
 			<?php } ?>
-			<td nowrap style='white-space: nowrap;' width="55" class="textGraphFilter">
+			<td style='white-space:nowrap;width:55px;' class='textGraphFilter'>
 				&nbsp;Types:&nbsp;
 			</td>
 			<td width="1">
@@ -445,7 +445,7 @@ function graphs_new() {
 				?>
 				</select>
 			</td>
-			<td nowrap style='white-space: nowrap;' class="textInfo" align="center" valign="top">
+			<td style="white-space:nowrap;" class="textInfo" align="center" valign="top">
 				<?php if (!isset($_REQUEST["tab"])) { ?><span style="white-space: nowrap; color: #c16921;">*</span><a href="host.php?action=edit&id=<?php print $_REQUEST["host_id"];?>">Edit this Host</a><br><?php } ?>
 				<span style="white-space: nowrap; color: #c16921;">*</span><a href="host.php?action=edit">Create New Host</a><br>
 				<?php api_plugin_hook('graphs_new_top_links'); ?>
@@ -455,13 +455,13 @@ function graphs_new() {
 	<?php if ($_REQUEST["graph_type"] > 0) {?>
 	<table width="100%" cellpadding="0" align="center">
 		<tr>
-			<td nowrap style='white-space: nowrap;' width="55" class="textGraphFilter">
+			<td style='white-space:nowrap;width:55px;' class='textGraphFilter'>
 				&nbsp;Search:&nbsp;
 			</td>
-			<td nowrap style='white-space: nowrap;' width="200">
+			<td style='white-space:nowrap;width:200px;'>
 				<input type="text" name="filter" size="30" width="200" value="<?php print $_REQUEST["filter"];?>">
 			</td>
-			<td align="left" nowrap style='white-space: nowrap;'>
+			<td align="left" style='white-space:nowrap;width:120px;'>
 				&nbsp;<input type="submit" name="go" value="Go" align="middle">
 				<input type="submit" name="clear_x" value="Clear" align="middle">
 			</td>

@@ -42,7 +42,7 @@
 
 						</select>
 					</td>
-					<td nowrap style='white-space: nowrap;'>
+					<td style='white-space:nowrap;width:120px;'>
 						&nbsp;<input type="submit" Value="Go" name="go" align="middle">
 						<input type="submit" Value="Clear" name="clear_x" align="middle">
 					</td>
@@ -72,7 +72,7 @@
 							?>
 						</select>
 					</td>
-					<td nowrap style='white-space: nowrap;' width="50">
+					<td nowrap style='white-space:nowrap;width:50px;'>
 						&nbsp;Rows:&nbsp;
 					</td>
 					<td width="1">

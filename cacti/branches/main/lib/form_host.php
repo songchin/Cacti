@@ -23,23 +23,6 @@
 */
 
 /* --------------------------
-    Global Form Functions
-   -------------------------- */
-
-function add_tree_names_to_actions_array() {
-	global $device_actions;
-
-	/* add a list of tree names to the actions dropdown */
-	$trees = db_fetch_assoc("select id,name from graph_tree order by name");
-
-	if (sizeof($trees) > 0) {
-		foreach ($trees as $tree) {
-			$device_actions{"tr_" . $tree["id"]} = "Place on a Tree (" . $tree["name"] . ")";
-		}
-	}
-}
-
-/* --------------------------
     The Save Function
    -------------------------- */
 
@@ -356,7 +339,7 @@ function api_host_form_actions() {
 	include_once(CACTI_BASE_PATH . "/include/top_header.php");
 
 	/* add a list of tree names to the actions dropdown */
-	add_tree_names_to_actions_array();
+	$device_actions = array_merge($device_actions, api_tree_add_tree_names_to_actions_array());
 
 	html_start_box("<strong>" . $device_actions{$_POST["drp_action"]} . "</strong>", "60%", $colors["header_panel"], "3", "center", "");
 
@@ -629,6 +612,18 @@ function host_edit() {
 
 			break;
 		case "graphs":
+			include_once(CACTI_BASE_PATH . "/lib/form_graphs.php");
+			include_once(CACTI_BASE_PATH . "/lib/utility.php");
+			include_once(CACTI_BASE_PATH . "/lib/api_graph.php");
+			include_once(CACTI_BASE_PATH . "/lib/api_tree.php");
+			include_once(CACTI_BASE_PATH . "/lib/api_data_source.php");
+			include_once(CACTI_BASE_PATH . "/lib/template.php");
+			include_once(CACTI_BASE_PATH . "/lib/html_tree.php");
+			include_once(CACTI_BASE_PATH . "/lib/html_form_template.php");
+			include_once(CACTI_BASE_PATH . "/lib/rrd.php");
+			include_once(CACTI_BASE_PATH . "/lib/data_query.php");
+
+			graph();
 
 			break;
 		default:
@@ -1105,7 +1100,7 @@ function host_display_general($host, $host_text) {
 					<?php print (($is_being_graphed == true) ? "<span style='color:green;'>Is Being Graphed</span> (<a href='graphs.php?action=graph_edit&id=" . db_fetch_cell("select id from graph_local where graph_template_id=" . $item["id"] . " and host_id=" . $_GET["id"] . " limit 0,1") . "'>Edit</a>)" : "<span style='color: #484848;'>Not Being Graphed</span>");?>
 				</td>
 				<td align='right' nowrap>
-					<a href='host.php?action=gt_remove&id=<?php print $item["id"];?>&host_id=<?php print $_GET["id"];?>'><img id='buttonSmall' src='images/delete_icon_large.gif' title='Delete Graph Template Association' alt='Delete'></a>
+					<a href='host.php?action=gt_remove&id=<?php print $item["id"];?>&host_id=<?php print $_GET["id"];?>'><img class='buttonSmall' src='images/delete_icon_large.gif' title='Delete Graph Template Association' alt='Delete'></a>
 				</td>
 			</tr>
 			<?php
@@ -1406,7 +1401,7 @@ function host() {
 	html_end_box(false);
 
 	/* add a list of tree names to the actions dropdown */
-	add_tree_names_to_actions_array();
+	$device_actions = array_merge($device_actions, api_tree_add_tree_names_to_actions_array());
 
 	/* draw the dropdown containing a list of available actions for this form */
 	draw_actions_dropdown($device_actions);

@@ -22,6 +22,38 @@
  +-------------------------------------------------------------------------+
 */
 
+$graph_actions = array(
+	1 => "Delete",
+	2 => "Change Graph Template",
+	5 => "Change Host",
+	6 => "Reapply Suggested Names",
+	7 => "Resize Graphs",
+	3 => "Duplicate",
+	8 => "Enable Graph Export",
+	9 => "Disable Graph Export",
+	4 => "Convert to Graph Template"
+	);
+
+$device_actions = array(
+	1 => "Delete",
+	2 => "Enable",
+	3 => "Disable",
+	4 => "Change SNMP Options",
+	5 => "Clear Statistics",
+	6 => "Change Availability Options"
+	);
+
+$ds_actions = array(
+	1 => "Delete",
+	2 => "Change Data Template",
+	3 => "Change Host",
+	8 => "Reapply Suggested Names",
+	4 => "Duplicate",
+	5 => "Convert to Data Template",
+	6 => "Enable",
+	7 => "Disable"
+	);
+
 $messages = array(
 	1  => array(
 		"message" => 'Save Successful.',

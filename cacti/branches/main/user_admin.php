@@ -564,7 +564,7 @@ function graph_perms_edit() {
 					$i++;
 					print "	<tr>
 							<td><span style='font-weight: bold; color: " . (($policy["policy_graphs"] == "1") ? "red" : "blue") . ";'>$i)</span> " . $item["title_cache"] . "</td>
-							<td align='right'><a href='user_admin.php?action=perm_remove&type=graph&id=" . $item["local_graph_id"] . "&user_id=" . $_GET["id"] . "'><img id='buttonSmall' src='images/delete_icon.gif' alt='Delete'></a>&nbsp;</td>
+							<td align='right'><a href='user_admin.php?action=perm_remove&type=graph&id=" . $item["local_graph_id"] . "&user_id=" . $_GET["id"] . "'><img class='buttonSmall' src='images/delete_icon.gif' alt='Delete'></a>&nbsp;</td>
 						</tr>\n";
 				}
 				}else{ print "<tr><td><em>No Graphs</em></td></tr>";
@@ -1075,7 +1075,7 @@ function user() {
 
 			form_alternate_row_color('line' . $user["id"], true);
 			form_selectable_cell("<a class='linkEditMain' href='user_admin.php?action=user_edit&id=" . $user["id"] . "'>" .
-			(strlen(get_request_var_request("filter")) ? eregi_replace("(" . preg_quote(get_request_var_request("filter")) . ")", "<span style='background-color: #F8D93D;'>\\1</span>",  $user["username"]) : $user["username"])
+			(strlen(get_request_var_request("filter")) ? eregi_replace("(" . preg_quote(get_request_var_request("filter")) . ")", "<span style='background-color: #F8D93D;'>\\1</span>",  $user["username"]) : $user["username"]) . "</a>"
 			, $user["id"]);
 			form_selectable_cell((strlen(get_request_var_request("filter")) ? eregi_replace("(" . preg_quote(get_request_var_request("filter")) . ")", "<span style='background-color: #F8D93D;'>\\1</span>",  $user["full_name"]) : $user["full_name"]), $user["id"]);
 			form_selectable_cell($enabled, $user["id"]);

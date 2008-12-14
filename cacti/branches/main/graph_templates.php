@@ -329,7 +329,7 @@ function item() {
 				<a class="linkEditMain" href="graph_templates_inputs.php?action=input_edit&id=<?php print $item["id"];?>&graph_template_id=<?php print $_GET["id"];?>"><?php print $item["name"];?></a>
 			</td>
 			<td align="right">
-				<a href="graph_templates_inputs.php?action=input_remove&id=<?php print $item["id"];?>&graph_template_id=<?php print $_GET["id"];?>"><img id="buttonSmall" src="images/delete_icon.gif" alt="Delete"></a>
+				<a href="graph_templates_inputs.php?action=input_remove&id=<?php print $item["id"];?>&graph_template_id=<?php print $_GET["id"];?>"><img class="buttonSmall" src="images/delete_icon.gif" alt="Delete"></a>
 			</td>
 		</tr>
 	<?php

@@ -78,7 +78,7 @@ case 'changepassword':
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html;charset=utf-8" >
-	<link href="include/main.css" rel="stylesheet">
+	<link href="include/main.css" rel="stylesheet" type="text/css">
 	<title>Login to cacti</title>
 	<STYLE TYPE="text/css">
 	<!--

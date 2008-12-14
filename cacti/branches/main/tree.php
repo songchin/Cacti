@@ -437,7 +437,7 @@ function tree() {
 				<a class="linkEditMain" style='display:block;' href="tree.php?action=edit&id=<?php print $tree["id"];?>"><?php print $tree["name"];?></a>
 			</td>
 			<td align="right">
-				<a href="tree.php?action=remove&id=<?php print $tree["id"];?>"><img id="buttonSmall" src="images/delete_icon.gif" alt="Delete"></a>
+				<a href="tree.php?action=remove&id=<?php print $tree["id"];?>"><img class="buttonSmall" src="images/delete_icon.gif" alt="Delete"></a>
 			</td>
 		</tr>
 	<?php

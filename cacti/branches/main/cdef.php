@@ -430,17 +430,17 @@ function cdef_edit() {
 			form_alternate_row_color($cdef_item["id"], true);
 				?>
 				<td>
-					<a class="linkEditMain" style='display:block;' href="cdef.php?action=item_edit&id=<?php print $cdef_item["id"];?>&cdef_id=<?php print $cdef["id"];?>">Item #<?php print $i;?></a>
+					<a class="linkEditMain" style='display:block;' href="<?php print htmlspecialchars("cdef.php?action=item_edit&id=" . $cdef_item["id"] . "&cdef_id=" . $cdef["id"]);?>">Item #<?php print $i;?></a>
 				</td>
 				<td>
 					<em><?php $cdef_item_type = $cdef_item["type"]; print $cdef_item_types[$cdef_item_type];?></em>: <strong><?php print get_cdef_item_name($cdef_item["id"]);?></strong>
 				</td>
 				<td>
-					<a href="cdef.php?action=item_movedown&id=<?php print $cdef_item["id"];?>&cdef_id=<?php print $cdef["id"];?>"><img id="buttonSmall" src="images/move_down.gif" alt="Move Down"></a>
-					<a href="cdef.php?action=item_moveup&id=<?php print $cdef_item["id"];?>&cdef_id=<?php print $cdef["id"];?>"><img id="buttonSmall" src="images/move_up.gif" alt="Move Up"></a>
+					<a href="<?php print htmlspecialchars("cdef.php?action=item_movedown&id=" . $cdef_item["id"] . "&cdef_id=" . $cdef["id"]);?>"><img class="buttonSmall" src="images/move_down.gif" alt="Move Down"></a>
+					<a href="<?php print htmlspecialchars("cdef.php?action=item_moveup&id=" . $cdef_item["id"] . "&cdef_id=" . $cdef["id"]);?>"><img class="buttonSmall" src="images/move_up.gif" alt="Move Up"></a>
 				</td>
 				<td align="right">
-					<a href="cdef.php?action=item_remove&id=<?php print $cdef_item["id"];?>&cdef_id=<?php print $cdef["id"];?>"><img id="buttonSmall" src="images/delete_icon.gif" alt="Delete"></a>
+					<a href="<?php print htmlspecialchars("cdef.php?action=item_remove&id=" . $cdef_item["id"] . "&cdef_id=" . $cdef["id"]);?>"><img class="buttonSmall" src="images/delete_icon.gif" alt="Delete"></a>
 				</td>
 			</tr>
 		<?php
@@ -527,7 +527,7 @@ function cdef() {
 	if (sizeof($cdef_list) > 0) {
 		foreach ($cdef_list as $cdef) {
 			form_alternate_row_color('line' . $cdef["id"], true, true);
-			form_selectable_cell("<a class='linkEditMain' href='cdef.php?action=edit&id=" . $cdef["id"] . "'>" . (strlen($_REQUEST["filter"]) ? eregi_replace("(" . preg_quote($_REQUEST["filter"]) . ")", "<span style='background-color: #F8D93D;'>\\1</span>", $cdef["name"]) : $cdef["name"]) . "</a>", $cdef["id"]);
+			form_selectable_cell("<a class='linkEditMain' href='" . htmlspecialchars("cdef.php?action=edit&id=" . $cdef["id"]) . "'>" . (strlen($_REQUEST["filter"]) ? eregi_replace("(" . preg_quote($_REQUEST["filter"]) . ")", "<span style='background-color: #F8D93D;'>\\1</span>", $cdef["name"]) : $cdef["name"]) . "</a>", $cdef["id"]);
 			form_checkbox_cell($cdef["name"], $cdef["id"]);
 			form_end_row();
 		}

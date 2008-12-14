@@ -503,7 +503,7 @@ function data_query_item_edit() {
 								<a href="data_queries.php?action=item_moveup_dssv&snmp_query_graph_id=<?php print $_GET["id"];?>&id=<?php print $suggested_value["id"];?>&snmp_query_id=<?php print $_GET["snmp_query_id"];?>&data_template_id=<?php print $data_template["id"];?>&field_name=<?php print $suggested_value["field_name"];?>"><img src="images/move_up.gif" alt="Move Up"></a>
 							</td>
 							<td align="right">
-								<a href="data_queries.php?action=item_remove_dssv&snmp_query_graph_id=<?php print $_GET["id"];?>&id=<?php print $suggested_value["id"];?>&snmp_query_id=<?php print $_GET["snmp_query_id"];?>&data_template_id=<?php print $data_template["id"];?>"><img id="buttonSmall" src="images/delete_icon.gif" alt="Delete"></a>
+								<a href="data_queries.php?action=item_remove_dssv&snmp_query_graph_id=<?php print $_GET["id"];?>&id=<?php print $suggested_value["id"];?>&snmp_query_id=<?php print $_GET["snmp_query_id"];?>&data_template_id=<?php print $data_template["id"];?>"><img class="buttonSmall" src="images/delete_icon.gif" alt="Delete"></a>
 							</td>
 						</tr>
 						<?php
@@ -567,7 +567,7 @@ function data_query_item_edit() {
 						<a href="data_queries.php?action=item_moveup_gsv&snmp_query_graph_id=<?php print $_GET["id"];?>&id=<?php print $suggested_value["id"];?>&snmp_query_id=<?php print $_GET["snmp_query_id"];?>&field_name=<?php print $suggested_value["field_name"];?>"><img src="images/move_up.gif" alt="Move Up"></a>
 					</td>
 					<td align="right">
-						<a href="data_queries.php?action=item_remove_gsv&snmp_query_graph_id=<?php print $_GET["id"];?>&id=<?php print $suggested_value["id"];?>&snmp_query_id=<?php print $_GET["snmp_query_id"];?>"><img id="buttonSmall" src="images/delete_icon.gif" alt="Delete"></a>
+						<a href="data_queries.php?action=item_remove_gsv&snmp_query_graph_id=<?php print $_GET["id"];?>&id=<?php print $suggested_value["id"];?>&snmp_query_id=<?php print $_GET["snmp_query_id"];?>"><img class="buttonSmall" src="images/delete_icon.gif" alt="Delete"></a>
 					</td>
 				</tr>
 				<?php
@@ -684,7 +684,7 @@ function data_query_edit() {
 						<?php print $snmp_query_graph["graph_template_name"];?>
 					</td>
 					<td align="right">
-						<a href="data_queries.php?action=item_remove&id=<?php print $snmp_query_graph["id"];?>&snmp_query_id=<?php print $snmp_query["id"];?>"><img id="buttonSmall" src="images/delete_icon.gif" alt="Delete"></a>
+						<a href="data_queries.php?action=item_remove&id=<?php print $snmp_query_graph["id"];?>&snmp_query_id=<?php print $snmp_query["id"];?>"><img class="buttonSmall" src="images/delete_icon.gif" alt="Delete"></a>
 					</td>
 				</tr>
 				<?php

@@ -401,7 +401,7 @@ function data_edit() {
 			form_alternate_row_color();
 				?>
 				<td>
-					<a class="linkEditMain" href="data_input.php?action=field_edit&id=<?php print $field["id"];?>&data_input_id=<?php print $_GET["id"];?>"><?php print $field["data_name"];?></a>
+					<a class="linkEditMain" href="<?php print htmlspecialchars("data_input.php?action=field_edit&id=" . $field["id"] . "&data_input_id=" . $_GET["id"]);?>"><?php print $field["data_name"];?></a>
 				</td>
 				<td>
 					<?php print $field["sequence"]; if ($field["sequence"] == "0") { print " (Not In Use)"; }?>
@@ -410,7 +410,7 @@ function data_edit() {
 					<?php print $field["name"];?>
 				</td>
 				<td align="right">
-					<a href="data_input.php?action=field_remove&id=<?php print $field["id"];?>&data_input_id=<?php print $_GET["id"];?>"><img id="buttonSmall" src="images/delete_icon.gif" alt="Delete"></a>
+					<a href="<?php print htmlspecialchars("data_input.php?action=field_remove&id=" . $field["id"] . "&data_input_id=" . $_GET["id"]);?>"><img class="buttonSmall" src="images/delete_icon.gif" alt="Delete"></a>
 				</td>
 			</tr>
 		<?php
@@ -434,7 +434,7 @@ function data_edit() {
 			form_alternate_row_color();
 				?>
 				<td>
-					<a class="linkEditMain" href="data_input.php?action=field_edit&id=<?php print $field["id"];?>&data_input_id=<?php print $_GET["id"];?>"><?php print $field["data_name"];?></a>
+					<a class="linkEditMain" href="<?php print htmlspecialchars("data_input.php?action=field_edit&id=" . $field["id"] . "&data_input_id=". $_GET["id"]);?>"><?php print $field["data_name"];?></a>
 				</td>
 				<td>
 					<?php print $field["sequence"]; if ($field["sequence"] == "0") { print " (Not In Use)"; }?>
@@ -446,7 +446,7 @@ function data_edit() {
 					<?php print html_boolean_friendly($field["update_rra"]);?>
 				</td>
 				<td align="right">
-					<a href="data_input.php?action=field_remove&id=<?php print $field["id"];?>&data_input_id=<?php print $_GET["id"];?>"><img id="buttonSmall" src="images/delete_icon.gif" alt="Delete"></a>
+					<a href="<?php print htmlspecialchars("data_input.php?action=field_remove&id=" . $field["id"] . "&data_input_id=" . $_GET["id"]);?>"><img class="buttonSmall" src="images/delete_icon.gif" alt="Delete"></a>
 				</td>
 			</tr>
 		<?php
@@ -543,7 +543,7 @@ function data() {
 		foreach ($data_inputs as $data_input) {
 			/* hide system types */
 			form_alternate_row_color('line' . $data_input["id"], true, true);
-			form_selectable_cell("<a class='linkEditMain' href='data_input.php?action=edit&id=" . $data_input["id"] . "'>" . (strlen($_REQUEST["filter"]) ? eregi_replace("(" . preg_quote($_REQUEST["filter"]) . ")", "<span style='background-color: #F8D93D;'>\\1</span>", $data_input["name"]) : $data_input["name"]) . "</a>", $data_input["id"]);
+			form_selectable_cell("<a class='linkEditMain' href='" . htmlspecialchars("data_input.php?action=edit&id=" . $data_input["id"]) . "'>" . (strlen($_REQUEST["filter"]) ? eregi_replace("(" . preg_quote($_REQUEST["filter"]) . ")", "<span style='background-color: #F8D93D;'>\\1</span>", $data_input["name"]) : $data_input["name"]) . "</a>", $data_input["id"]);
 			form_selectable_cell($input_types{$data_input["type_id"]}, $data_input["id"]);
 			form_checkbox_cell($data_input["name"], $data_input["id"]);
 			form_end_row();

@@ -198,7 +198,7 @@ function rra() {
 				<?php print $rra["timespan"];?>
 			</td>
 			<td align="right">
-				<a href="rra.php?action=remove&id=<?php print $rra["id"];?>"><img id="buttonSmall" src="images/delete_icon.gif" alt="Delete"></a>
+				<a href="rra.php?action=remove&id=<?php print $rra["id"];?>"><img class="buttonSmall" src="images/delete_icon.gif" alt="Delete"></a>
 			</td>
 		</tr>
 	<?php

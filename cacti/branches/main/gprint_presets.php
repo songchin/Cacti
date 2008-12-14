@@ -152,7 +152,7 @@ function gprint_presets() {
 				<a class="linkEditMain" style='display:block;' href="gprint_presets.php?action=edit&id=<?php print $template["id"];?>"><?php print $template["name"];?></a>
 			</td>
 			<td align="right">
-				<a href="gprint_presets.php?action=remove&id=<?php print $template["id"];?>"><img id="buttonSmall" src="images/delete_icon.gif" alt="Delete"></a>
+				<a href="gprint_presets.php?action=remove&id=<?php print $template["id"];?>"><img class="buttonSmall" src="images/delete_icon.gif" alt="Delete"></a>
 			</td>
 		</tr>
 		<?php

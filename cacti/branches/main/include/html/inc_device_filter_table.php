@@ -3,7 +3,7 @@
 			<form name="form_devices">
 			<table cellpadding="0" cellspacing="0">
 				<tr>
-					<td nowrap style='white-space: nowrap;' width="55">
+					<td style='white-space:nowrap;width:55px;'>
 						Type:&nbsp;
 					</td>
 					<td width="1">
@@ -21,7 +21,7 @@
 							?>
 						</select>
 					</td>
-					<td nowrap style='white-space: nowrap;' width="50">
+					<td style='white-space:nowrap;width:50px;'>
 						&nbsp;Status:&nbsp;
 					</td>
 					<td width="1">
@@ -36,7 +36,7 @@
 							<option value="0"<?php if ($_REQUEST["status"] == "0") {?> selected<?php }?>>Unknown</option>
 						</select>
 					</td>
-					<td nowrap style='white-space: nowrap;' width="50">
+					<td style='white-space:nowrap;width:50px;'>
 						&nbsp;Rows:&nbsp;
 					</td>
 					<td width="1">
@@ -55,7 +55,7 @@
 			</table>
 			<table cellpadding="0" cellspacing="0">
 				<tr>
-					<td nowrap style='white-space: nowrap;' width="55">
+					<td style='white-space:nowrap;width:55px;'>
 						Search:&nbsp;
 					</td>
 					<td width="1">
