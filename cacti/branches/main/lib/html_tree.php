@@ -83,7 +83,7 @@ function grow_graph_tree($tree_id, $start_branch, $user_id, $options) {
 
 	html_graph_start_box(0, true);
 
-	print "<tr class='rowHeader'><td colspan='30'><table cellspacing='0' cellpadding='3' width='100%'><tr><td class='textHeaderDark'><strong><a class='linkOverDark' href='" . htmlspecialchars("graph_view.php?action=tree&tree_id=" . $_SESSION["sess_view_tree_id"]) . "'>[root]</a> - " . db_fetch_cell("select name from graph_tree where id=" . $_SESSION["sess_view_tree_id"]) . "</strong></td></tr></table></td></tr>";
+	print "<tr class='rowHeader'><td colspan='30'><table cellspacing='0' cellpadding='3' width='100%'><tr><td class='textHeaderDark'><strong><a class='linkOverDark' href='" . htmlspecialchars("graph_view.php?action=tree&tree_id=" . $_SESSION["sess_view_tree_id"]) . "'>[root]</a> - " . db_fetch_cell("select name from graph_tree where id=" . $_SESSION["sess_view_tree_id"]) . "</strong></td></tr></table></td></tr>\n";
 
 	$i = 0;
 
@@ -176,7 +176,7 @@ function grow_graph_tree($tree_id, $start_branch, $user_id, $options) {
 	}
 	}
 
-	print "</tr></table></td></tr>";
+	print "</tr></table></td></tr>\n";
 
 	html_graph_end_box();
 }
@@ -382,7 +382,7 @@ function grow_dropdown_tree($tree_id, $form_name, $selected_tree_item_id) {
 		order by graph_tree_items.order_key");
 
 	print "<select name='$form_name'>\n";
-	print "<option value='0'>[root]</option>\n";
+	print "\t\t\t\t\t\t\t<option value='0'>[root]</option>\n";
 
 	if (sizeof($tree) > 0) {
 	foreach ($tree as $leaf) {
@@ -395,7 +395,7 @@ function grow_dropdown_tree($tree_id, $form_name, $selected_tree_item_id) {
 			$html_selected = "";
 		}
 
-		print "<option value='" . $leaf["id"] . "'$html_selected>$indent " . $leaf["title"] . "</option>\n";
+		print "\t\t\t\t\t\t\t<option value='" . $leaf["id"] . "'$html_selected>$indent " . $leaf["title"] . "</option>\n";
 	}
 	}
 
@@ -409,15 +409,15 @@ function grow_dhtml_trees() {
 	include_once(CACTI_BASE_PATH . "/lib/data_query.php");
 
 	?>
-	<script type="text/javascript">
-	<!--
-	USETEXTLINKS = 1
-	STARTALLOPEN = 0
-	USEFRAMES = 0
-	USEICONS = 0
-	WRAPTEXT = 1
-	PERSERVESTATE = 1
-	HIGHLIGHT = 1
+<script type="text/javascript">
+		<!--
+			USETEXTLINKS = 1
+			STARTALLOPEN = 0
+			USEFRAMES = 0
+			USEICONS = 0
+			WRAPTEXT = 1
+			PERSERVESTATE = 1
+			HIGHLIGHT = 1
 	<?php
 	/* get current time */
 	list($micro,$seconds) = split(" ", microtime());
@@ -443,9 +443,8 @@ function grow_dhtml_trees() {
 		print $dhtml_tree[$i];
 	}
 	?>
-	//-->
-	</script>
-	<?php
+		//-->
+		</script><?php
 }
 
 function create_dhtml_tree() {
@@ -457,8 +456,8 @@ function create_dhtml_tree() {
 
 	$dhtml_tree[0] = $start;
 	$dhtml_tree[1] = read_graph_config_option("expand_hosts");
-	$dhtml_tree[2] = "foldersTree = gFld(\"\", \"\")\n";
-	$dhtml_tree[3] = "foldersTree.xID = \"root\"\n";
+	$dhtml_tree[2] = "\t\tfoldersTree = gFld(\"\", \"\")\n";
+	$dhtml_tree[3] = "\t\t\tfoldersTree.xID = \"root\"\n";
 	$i = 3;
 
 	$tree_list = get_graph_tree_array();
@@ -497,9 +496,9 @@ function create_dhtml_tree() {
 				and graph_tree_items.local_graph_id = 0
 				order by graph_tree_items.order_key");
 
-			$dhtml_tree[$i] = "ou0 = insFld(foldersTree, gFld(\"" . $tree["name"] . "\", \"graph_view.php?action=tree&tree_id=" . $tree["id"] . "\"))\n";
+			$dhtml_tree[$i] = "\t\t\tou0 = insFld(foldersTree, gFld(\"" . $tree["name"] . "\", \"graph_view.php?action=tree&tree_id=" . $tree["id"] . "\"))\n";
 			$i++;
-			$dhtml_tree[$i] = "ou0.xID = \"tree_" . $tree["id"] . "\"\n";
+			$dhtml_tree[$i] = "\t\t\tou0.xID = \"tree_" . $tree["id"] . "\"\n";
 
 			if (sizeof($hierarchy) > 0) {
 				foreach ($hierarchy as $leaf) {
@@ -507,9 +506,9 @@ function create_dhtml_tree() {
 					$tier = tree_tier($leaf["order_key"]);
 
 					if ($leaf["host_id"] > 0) {
-						$dhtml_tree[$i] = "ou" . ($tier) . " = insFld(ou" . abs(($tier-1)) . ", gFld(\"<strong>Host:<\/strong> " . addslashes($leaf["hostname"]) . "\", \"graph_view.php?action=tree&tree_id=" . $tree["id"] . "&leaf_id=" . $leaf["id"] . "\"))\n";
+						$dhtml_tree[$i] = "\t\t\tou" . ($tier) . " = insFld(ou" . abs(($tier-1)) . ", gFld(\"<strong>Host:<\/strong> " . addslashes($leaf["hostname"]) . "\", \"graph_view.php?action=tree&tree_id=" . $tree["id"] . "&leaf_id=" . $leaf["id"] . "\"))\n";
 						$i++;
-						$dhtml_tree[$i] = "ou" . ($tier) . ".xID = \"tree_" . $tree["id"] . "_leaf_" . $leaf["id"] . "\"\n";
+						$dhtml_tree[$i] = "\t\t\tou" . ($tier) . ".xID = \"tree_" . $tree["id"] . "_leaf_" . $leaf["id"] . "\"\n";
 
 						if (read_graph_config_option("expand_hosts") == "on") {
 							if ($leaf["host_grouping_type"] == HOST_GROUPING_GRAPH_TEMPLATE) {
@@ -526,9 +525,9 @@ function create_dhtml_tree() {
 								if (sizeof($graph_templates) > 0) {
 									foreach ($graph_templates as $graph_template) {
 										$i++;
-										$dhtml_tree[$i] = "ou" . ($tier+1) . " = insFld(ou" . ($tier) . ", gFld(\" " . addslashes($graph_template["name"]) . "\", \"graph_view.php?action=tree&tree_id=" . $tree["id"] . "&leaf_id=" . $leaf["id"] . "&host_group_data=graph_template:" . $graph_template["id"] . "\"))\n";
+										$dhtml_tree[$i] = "\t\t\tou" . ($tier+1) . " = insFld(ou" . ($tier) . ", gFld(\" " . addslashes($graph_template["name"]) . "\", \"graph_view.php?action=tree&tree_id=" . $tree["id"] . "&leaf_id=" . $leaf["id"] . "&host_group_data=graph_template:" . $graph_template["id"] . "\"))\n";
 										$i++;
-										$dhtml_tree[$i] = "ou" . ($tier+1) . ".xID = \"tree_" . $tree["id"] . "_leaf_" . $leaf["id"] . "_hgd_gt_" . $graph_template["id"] . "\"\n";
+										$dhtml_tree[$i] = "\t\t\tou" . ($tier+1) . ".xID = \"tree_" . $tree["id"] . "_leaf_" . $leaf["id"] . "_hgd_gt_" . $graph_template["id"] . "\"\n";
 									}
 								}
 							}else if ($leaf["host_grouping_type"] == HOST_GROUPING_DATA_QUERY_INDEX) {
@@ -559,16 +558,16 @@ function create_dhtml_tree() {
 										if ((($data_query["id"] == 0) && ($non_template_graphs > 0)) ||
 											(($data_query["id"] > 0) && (sizeof($sort_field_data) > 0))) {
 											$i++;
-											$dhtml_tree[$i] = "ou" . ($tier+1) . " = insFld(ou" . ($tier) . ", gFld(\" " . addslashes($data_query["name"]) . "\", \"graph_view.php?action=tree&tree_id=" . $tree["id"] . "&leaf_id=" . $leaf["id"] . "&host_group_data=data_query:" . $data_query["id"] . "\"))\n";
+											$dhtml_tree[$i] = "\t\t\tou" . ($tier+1) . " = insFld(ou" . ($tier) . ", gFld(\" " . addslashes($data_query["name"]) . "\", \"graph_view.php?action=tree&tree_id=" . $tree["id"] . "&leaf_id=" . $leaf["id"] . "&host_group_data=data_query:" . $data_query["id"] . "\"))\n";
 											$i++;
-											$dhtml_tree[$i] = "ou" . ($tier+1) . ".xID = \"tree_" . $tree["id"] . "_leaf_" . $leaf["id"] . "_hgd_dq_" . $data_query["id"] . "\"\n";
+											$dhtml_tree[$i] = "\t\t\tou" . ($tier+1) . ".xID = \"tree_" . $tree["id"] . "_leaf_" . $leaf["id"] . "_hgd_dq_" . $data_query["id"] . "\"\n";
 
 											if ($data_query["id"] > 0) {
 												while (list($snmp_index, $sort_field_value) = each($sort_field_data)) {
 													$i++;
-													$dhtml_tree[$i] = "ou" . ($tier+2) . " = insFld(ou" . ($tier+1) . ", gFld(\" " . addslashes($sort_field_value) . "\", \"graph_view.php?action=tree&tree_id=" . $tree["id"] . "&leaf_id=" . $leaf["id"] . "&host_group_data=data_query_index:" . $data_query["id"] . ":" . urlencode($snmp_index) . "\"))\n";
+													$dhtml_tree[$i] = "\t\t\tou" . ($tier+2) . " = insFld(ou" . ($tier+1) . ", gFld(\" " . addslashes($sort_field_value) . "\", \"graph_view.php?action=tree&tree_id=" . $tree["id"] . "&leaf_id=" . $leaf["id"] . "&host_group_data=data_query_index:" . $data_query["id"] . ":" . urlencode($snmp_index) . "\"))\n";
 													$i++;
-													$dhtml_tree[$i] = "ou" . ($tier+2) . ".xID = \"tree_" . $tree["id"] . "_leaf_" . $leaf["id"] . "_hgd_dqi" . $data_query["id"] . "_" . urlencode($snmp_index) . "\"\n";
+													$dhtml_tree[$i] = "\t\t\tou" . ($tier+2) . ".xID = \"tree_" . $tree["id"] . "_leaf_" . $leaf["id"] . "_hgd_dqi" . $data_query["id"] . "_" . urlencode($snmp_index) . "\"\n";
 												}
 											}
 										}
@@ -577,9 +576,9 @@ function create_dhtml_tree() {
 							}
 						}
 					}else{
-						$dhtml_tree[$i] = "ou" . ($tier) . " = insFld(ou" . abs(($tier-1)) . ", gFld(\"" . addslashes($leaf["title"]) . "\", \"graph_view.php?action=tree&tree_id=" . $tree["id"] . "&leaf_id=" . $leaf["id"] . "\"))\n";
+						$dhtml_tree[$i] = "\t\t\tou" . ($tier) . " = insFld(ou" . abs(($tier-1)) . ", gFld(\"" . addslashes($leaf["title"]) . "\", \"graph_view.php?action=tree&tree_id=" . $tree["id"] . "&leaf_id=" . $leaf["id"] . "\"))\n";
 						$i++;
-						$dhtml_tree[$i] = "ou" . ($tier) . ".xID = \"tree_" . $tree["id"] . "_leaf_" . $leaf["id"] . "\"\n";
+						$dhtml_tree[$i] = "\t\t\tou" . ($tier) . ".xID = \"tree_" . $tree["id"] . "_leaf_" . $leaf["id"] . "\"\n";
 					}
 				}
 			}
@@ -876,25 +875,25 @@ function grow_right_pane_tree($tree_id, $leaf_id, $host_group_data) {
 	if ($total_rows > $_REQUEST["graphs"]) {
 		$url_page_select = get_page_list($_REQUEST["page"], MAX_DISPLAY_PAGES, $_REQUEST["graphs"], $total_rows, "graph_view.php?action=tree&tree_id=" . $tree_id . "&leaf_id=" . $leaf_id . (isset($_REQUEST["host_group_data"]) ? "&host_group_data=" . $_REQUEST["host_group_data"] : "") . "&filter=" . $_REQUEST["filter"]);
 
-		$nav = "<tr bgcolor='#" . $colors["header"] . "'>
+		$nav = "\t\t\t<tr class='rowHeader'>
 				<td colspan='11'>
 					<table width='100%' cellspacing='0' cellpadding='0' border='0'>
 						<tr>
-							<td align='left' class='textHeaderDark'>
-								<strong>&lt;&lt; "; if ($_REQUEST["page"] > 1) { $nav .= "<a class='linkOverDark' href='" . htmlspecialchars("graph_view.php?action=tree&tree_id=" . $tree_id . "&leaf_id=" . $leaf_id  . (isset($_REQUEST["host_group_data"]) ? "&host_group_data=" . $_REQUEST["host_group_data"] : "") . "&page=" . ($_REQUEST["page"]-1)) . "'>"; } $nav .= "Previous"; if ($_REQUEST["page"] > 1) { $nav .= "</a>"; } $nav .= "</strong>
-							</td>\n
+							<td align='left' style='width:100px;' class='textHeaderDark'>";
+								if ($_REQUEST["page"] > 1) { $nav .= "<strong><a class='linkOverDark' href='" . htmlspecialchars("graph_view.php?action=tree&tree_id=" . $tree_id . "&leaf_id=" . $leaf_id  . (isset($_REQUEST["host_group_data"]) ? "&host_group_data=" . $_REQUEST["host_group_data"] : "") . "&page=" . ($_REQUEST["page"]-1)) . "'>&lt;&lt;Previous</a></strong>"; }
+							$nav .= "</td>\n
 							<td align='center' class='textHeaderDark'>
 								Showing Graphs " . (($_REQUEST["graphs"]*($_REQUEST["page"]-1))+1) . " to " . ((($total_rows < read_graph_config_option("treeview_graphs_per_page")) || ($total_rows < ($_REQUEST["graphs"]*$_REQUEST["page"]))) ? $total_rows : ($_REQUEST["graphs"]*$_REQUEST["page"])) . " of $total_rows [$url_page_select]
 							</td>\n
-							<td align='right' class='textHeaderDark'>
-								<strong>"; if (($_REQUEST["page"] * $_REQUEST["graphs"]) < $total_rows) { $nav .= "<a class='linkOverDark' href='" . htmlspecialchars("graph_view.php?action=tree&tree_id=" . $tree_id . "&leaf_id=" . $leaf_id  . (isset($_REQUEST["host_group_data"]) ? "&host_group_data=" . $_REQUEST["host_group_data"] : "") . "&page=" . ($_REQUEST["page"]+1)) . "'>"; } $nav .= "Next"; if (($_REQUEST["page"] * $_REQUEST["graphs"]) < $total_rows) { $nav .= "</a>"; } $nav .= " &gt;&gt;</strong>
-							</td>\n
+							<td align='right' style='width:100px;' class='textHeaderDark'>";
+								if (($_REQUEST["page"] * $_REQUEST["graphs"]) < $total_rows) { $nav .= "<strong><a class='linkOverDark' href='" . htmlspecialchars("graph_view.php?action=tree&tree_id=" . $tree_id . "&leaf_id=" . $leaf_id  . (isset($_REQUEST["host_group_data"]) ? "&host_group_data=" . $_REQUEST["host_group_data"] : "") . "&page=" . ($_REQUEST["page"]+1)) . "'>Next &gt;&gt;</a></strong>"; }
+							$nav .= "</td>\n
 						</tr>
 					</table>
 				</td>
 			</tr>\n";
 	}else{
-		$nav = "<tr bgcolor='#" . $colors["header"] . "'>
+		$nav = "<tr class='rowHeader'>
 				<td colspan='11'>
 					<table width='100%' cellspacing='0' cellpadding='0' border='0'>
 						<tr>
@@ -910,7 +909,7 @@ function grow_right_pane_tree($tree_id, $leaf_id, $host_group_data) {
 	print $nav;
 
 	/* start graph display */
-	print "<tr bgcolor='#" . $colors["header_panel"] . "'><td width='390' colspan='10' class='textHeaderDark'>$title</td></tr>";
+	print "\t\t\t<tr class='rowSubHeaderAlt'><td width='390' colspan='10' class='textHeaderDark'>$title</td></tr>";
 
 	$i = $_REQUEST["graphs"] * ($_REQUEST["page"] - 1);
 	$last_graph = $i + $_REQUEST["graphs"];
@@ -929,7 +928,7 @@ function grow_right_pane_tree($tree_id, $leaf_id, $host_group_data) {
 
 	print $nav;
 
-	print "</table>";
+	print "</table>\n";
 }
 
 function find_first_folder_url() {
@@ -958,9 +957,9 @@ function find_first_folder_url() {
 			order by graph_tree_items.order_key");
 
 		if (sizeof($hierarchy) > 0) {
-			return "graph_view.php?action=tree&tree_id=$use_tree_id&leaf_id=" . $hierarchy[0]["id"] . "&select_first=true";
+			return htmlspecialchars("graph_view.php?action=tree&tree_id=$use_tree_id&leaf_id=" . $hierarchy[0]["id"] . "&select_first=true");
 		}else{
-			return "graph_view.php?action=tree&tree_id=$use_tree_id&select_first=true";
+			return htmlspecialchars("graph_view.php?action=tree&tree_id=$use_tree_id&select_first=true");
 		}
 	}
 
@@ -1055,7 +1054,7 @@ function draw_tree_graph_row($already_open, $graph_counter, $next_leaf_type, $cu
 
 	/* if we are at the end of the graph group, end the nested table */
 	if ($next_leaf_type != "graph") {
-		print "</tr></table></td>";
+		print "</tr></table></td>\n";
 		print "</tr></table></td></tr>\n";
 
 		$already_open = false;
@@ -1104,7 +1103,7 @@ function draw_tree_dropdown($current_tree_id) {
 							<select name='cbo_tree_id' onChange='window.location=document.form_tree_id.cbo_tree_id.options[document.form_tree_id.cbo_tree_id.selectedIndex].value'>\n";
 
 		foreach ($tree_list as $tree) {
-			$html .= "<option value='graph_view.php?action=tree&tree_id=" . $tree["id"] . "'";
+			$html .= "\t\t\t\t\t\t\t<option value='graph_view.php?action=tree&tree_id=" . $tree["id"] . "'";
 				if ($_SESSION["sess_view_tree_id"] == $tree["id"]) { $html .= " selected"; }
 				$html .= ">" . $tree["name"] . "</option>\n";
 			}

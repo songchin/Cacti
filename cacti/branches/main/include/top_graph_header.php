@@ -63,7 +63,7 @@ if (!isset($_REQUEST["action"])) {
 
 /* need to correct $_SESSION["sess_nav_level_cache"] in zoom view */
 if ($_REQUEST["action"] == "zoom") {
-	$_SESSION["sess_nav_level_cache"][2]["url"] = "graph.php?local_graph_id=" . $_REQUEST["local_graph_id"] . "&rra_id=all";
+	$_SESSION["sess_nav_level_cache"][2]["url"] = htmlspecialchars("graph.php?local_graph_id=" . $_REQUEST["local_graph_id"] . "&rra_id=all");
 }
 
 /* set the default action if none has been set */
@@ -110,11 +110,15 @@ $page_title = api_plugin_hook_function('page_title', 'Cacti');
 	}
 	?>
 	<link type="text/css" href="<?php echo $config['url_path']; ?>include/main.css" rel="stylesheet"/>
+	<link type="text/css" href="<?php echo $config['url_path']; ?>include/jquery.autocomplete.css" rel="stylesheet">
 	<link href="<?php echo $config['url_path']; ?>images/favicon.ico" rel="shortcut icon"/>
 	<script type="text/javascript" src="<?php echo $config['url_path']; ?>include/layout.js"></script>
 	<script type="text/javascript" src="<?php echo $config['url_path']; ?>include/treeview/ua.js"></script>
 	<script type="text/javascript" src="<?php echo $config['url_path']; ?>include/treeview/ftiens4.js"></script>
 	<script type="text/javascript" src="<?php echo $config['url_path']; ?>include/jquery/jquery.js"></script>
+	<script type="text/javascript" src="<?php echo $config['url_path']; ?>include/jquery/jquery.autocomplete.js"></script>
+	<script type="text/javascript" src="<?php echo $config['url_path']; ?>include/jquery/jquery.bgiframe.js"></script>
+	<script type="text/javascript" src="<?php echo $config['url_path']; ?>include/jquery/jquery.ajaxQueue.js"></script>
 	<script type="text/javascript" src="<?php echo $config['url_path']; ?>include/jscalendar/calendar.js"></script>
 	<script type="text/javascript" src="<?php echo $config['url_path']; ?>include/jscalendar/lang/calendar-en.js"></script>
 	<script type="text/javascript" src="<?php echo $config['url_path']; ?>include/jscalendar/calendar-setup.js"></script>
@@ -127,8 +131,7 @@ $page_title = api_plugin_hook_function('page_title', 'Cacti');
 		<div id='navbar_l'>
 			<ul>
 				<?php echo draw_header_tab("console", "Console", $config['url_path'] . "index.php");?>
-				<?php echo draw_header_tab("graphs", "Graphs", $config['url_path'] . "graph_view.php");?>
-				<?php api_plugin_hook('top_graph_header_tabs'); ?>
+				<?php echo draw_header_tab("graphs", "Graphs", $config['url_path'] . "graph_view.php");?><?php api_plugin_hook('top_graph_header_tabs');?>
 			</ul>
 		</div>
 		<div id='navbar_r'>
@@ -144,24 +147,17 @@ $page_title = api_plugin_hook_function('page_title', 'Cacti');
 		<div style='float:left'>
 			<?php draw_navigation_text();?>
 		</div>
-		<div style='float:right'>
-			<?php
-			if (read_config_option("auth_method") != 0) {
-				$date = date_time_format();
-
-				?><strong><?php echo date("D, " . $date . " T");?></strong>&nbsp;&nbsp;&nbsp;
-				Logged in as <strong><?php print db_fetch_cell("select username from user_auth where id=" . $_SESSION["sess_user_id"]);?></strong> (<a href="<?php echo $config['url_path']; ?>logout.php">Logout</a>)
-			<?php } ?>
+		<div style='float:right'><?php
+			if (read_config_option("auth_method") != 0) { $date = date_time_format();?><strong><?php echo date("D, " . $date . " T");?></strong>&nbsp;&nbsp;&nbsp;Logged in as <strong><?php print db_fetch_cell("select username from user_auth where id=" . $_SESSION["sess_user_id"]);?></strong> (<a href="<?php echo $config['url_path']; ?>logout.php">Logout</a>)<?php } ?>
 		</div>
 	</div>
 </div>
 <div id='wrapper' style='opacity:0;'>
 	<?php if ((read_graph_config_option("default_tree_view_mode") == "2") && (($_REQUEST["action"] == "tree") || ((isset($_REQUEST["view_type"]) ? $_REQUEST["view_type"] : "") == "tree"))) { ?>
-	<div id='graph_tree'>
+<div id='graph_tree'>
 		<table border=0 cellpadding=0 cellspacing=0><tr><td><a style="font-size:7pt;text-decoration:none;color:silver" href="http://www.treemenu.net/" target=_blank></a></td></tr></table>
 		<?php grow_dhtml_trees(); ?>
 		<script type="text/javascript">initializeDocument();</script>
-
 		<?php if (isset($_GET["select_first"])) { ?>
 		<script type="text/javascript">
 		var obj;
@@ -174,13 +170,12 @@ $page_title = api_plugin_hook_function('page_title', 'Cacti');
 		}
 
 		clickOnLink(2,'','main');
-		</script>
-		<?php } ?>
+		</script><?php } ?>
 	</div>
 	<div id='vsplitter' onMouseout='doneDivResize()' onMouseover='doDivResize(this,event)' onMousemove='doDivResize(this,event)'>
 		<div id='vsplitter_toggle' onClick='vSplitterToggle()' title='ToggleMenu'></div>
 	</div>
 	<div id='graph_tree_content'>
 	<?php }else{ ?>
-	<div id='graph_content'>
+<div id='graph_content'>
 	<?php } ?>

@@ -23,6 +23,8 @@
 */
 
 function graph_view_filter_table() {
+	global $current_user;
+
 	html_graph_start_box(3, FALSE);
 	?>
 	<tr class="rowGraphFilter noprint">
@@ -35,9 +37,7 @@ function graph_view_filter_table() {
 					</td>
 					<td width="1">
 						<select name="host_id" onChange="applyGraphPreviewFilterChange(document.form_graph_view)">
-							<option value="0"<?php if ($_REQUEST["host_id"] == "0") {?> selected<?php }?>>Any</option>
-
-							<?php
+							<option value="0"<?php if ($_REQUEST["host_id"] == "0") {?> selected<?php }?>>Any</option><?php
 							if (read_config_option("auth_method") != 0) {
 								/* get policy information for the sql where clause */
 								$sql_where = get_graph_permissions_sql($current_user["policy_graphs"], $current_user["policy_hosts"], $current_user["policy_graph_templates"]);
@@ -62,7 +62,7 @@ function graph_view_filter_table() {
 
 							if (sizeof($hosts) > 0) {
 							foreach ($hosts as $host) {
-								print "<option value='" . $host["id"] . "'"; if ($_REQUEST["host_id"] == $host["id"]) { print " selected"; } print ">" . $host["name"] . "</option>\n";
+								print "\t\t\t\t\t\t\t<option value='" . $host["id"] . "'"; if ($_REQUEST["host_id"] == $host["id"]) { print " selected"; } print ">" . $host["name"] . "</option>\n";
 							}
 							}
 							?>
@@ -73,9 +73,7 @@ function graph_view_filter_table() {
 					</td>
 					<td width="1">
 						<select name="graph_template_id" onChange="applyGraphPreviewFilterChange(document.form_graph_view)">
-							<option value="0"<?php if ($_REQUEST["graph_template_id"] == "0") {?> selected<?php }?>>Any</option>
-
-							<?php
+							<option value="0"<?php if ($_REQUEST["graph_template_id"] == "0") {?> selected<?php }?>>Any</option><?php
 							if (read_config_option("auth_method") != 0) {
 								$graph_templates = db_fetch_assoc("SELECT DISTINCT graph_templates.* " .
 										"FROM (graph_templates_graph,graph_local) " .
@@ -99,7 +97,7 @@ function graph_view_filter_table() {
 
 							if (sizeof($graph_templates) > 0) {
 							foreach ($graph_templates as $template) {
-								print "<option value='" . $template["id"] . "'"; if ($_REQUEST["graph_template_id"] == $template["id"]) { print " selected"; } print ">" . $template["name"] . "</option>\n";
+								print "\t\t\t\t\t\t\t<option value='" . $template["id"] . "'"; if ($_REQUEST["graph_template_id"] == $template["id"]) { print " selected"; } print ">" . $template["name"] . "</option>\n";
 							}
 							}
 							?>
@@ -192,8 +190,7 @@ function graph_view_timespan_selector() {
 						&nbsp;<strong>Presets:</strong>&nbsp;
 					</td>
 					<td nowrap style='white-space:nowrap;' width='130'>
-						<select name='predefined_timespan' onChange="applyTimespanFilterChange(document.form_timespan_selector)">
-							<?php
+						<select name='predefined_timespan' onChange="applyTimespanFilterChange(document.form_timespan_selector)"><?php
 							if ($_SESSION["custom"]) {
 								$graph_timespans[GT_CUSTOM] = "Custom";
 								$start_val = 0;
@@ -209,7 +206,7 @@ function graph_view_timespan_selector() {
 
 							if (sizeof($graph_timespans) > 0) {
 								for ($value=$start_val; $value < $end_val; $value++) {
-									print "<option value='$value'"; if ($_SESSION["sess_current_timespan"] == $value) { print " selected"; } print ">" . title_trim($graph_timespans[$value], 40) . "</option>\n";
+									print "\t\t\t\t\t\t\t<option value='$value'"; if ($_SESSION["sess_current_timespan"] == $value) { print " selected"; } print ">" . title_trim($graph_timespans[$value], 40) . "</option>\n";
 								}
 							}
 							?>
@@ -218,31 +215,30 @@ function graph_view_timespan_selector() {
 					<td nowrap style='white-space:nowrap;' width='30'>
 						&nbsp;<strong>From:</strong>&nbsp;
 					</td>
-					<td width='150' nowrap style='white-space:nowrap;'>
+					<td width='140' nowrap style='white-space:nowrap;'>
 						<input type='text' name='date1' id='date1' title='Graph Begin Timestamp' size='14' value='<?php print (isset($_SESSION["sess_current_date1"]) ? $_SESSION["sess_current_date1"] : "");?>'>
-						&nbsp;<input style='border-width:0px;padding-bottom:4px;' type='image' src='images/calendar.gif' alt='Start' title='Start date selector' align='middle' onclick="return showCalendar('date1');">&nbsp;
+						&nbsp;<input type='image' style='border-width:0px;vertical-align:middle;align:middle;padding-bottom:5px;' src='images/calendar.gif' alt='Start' title='Start Date Selector' onclick='return showCalendar("date1");'>&nbsp;
 					</td>
 					<td nowrap style='white-space:nowrap;' width='20'>
 						&nbsp;<strong>To:</strong>&nbsp;
 					</td>
-					<td width='150' nowrap style='white-space:nowrap;'>
+					<td width='140' nowrap style='white-space:nowrap;'>
 						<input type='text' name='date2' id='date2' title='Graph End Timestamp' size='14' value='<?php print (isset($_SESSION["sess_current_date2"]) ? $_SESSION["sess_current_date2"] : "");?>'>
-						&nbsp;<input style='border-width:0px;padding-bottom:4px;' type='image' src='images/calendar.gif' alt='End date selector' title='End date selector' align='middle' onclick="return showCalendar('date2');">
+						&nbsp;<input type='image' style='border-width:0px;vertical-align:middle;align:middle;padding-bottom:5px;' src='images/calendar.gif' alt='End' title='End Date Selector' onclick='return showCalendar("date2");'>
 					</td>
-					<td width='130' nowrap style='white-space:nowrap;'>
-						&nbsp;&nbsp;<input style='border-width:0px;padding-bottom:4px;' type='image' name='move_left' src='images/move_left.gif' alt='Left' align='middle' title='Shift Left'>
-						<select name='predefined_timeshift' title='Define Shifting Interval' onChange="applyTimespanFilterChange(document.form_timespan_selector)">
-							<?php
+					<td width='120' nowrap style='white-space:nowrap;'>
+						&nbsp;&nbsp;<input style='border-width:0px;vertical-align:middle;align:middle;padding-bottom:5px;' type='image' name='move_left' src='images/move_left.gif' alt='Left' title='Shift Left'>
+						<select name='predefined_timeshift' title='Define Shifting Interval' onChange="applyTimespanFilterChange(document.form_timespan_selector)"><?php
 							$start_val = 1;
 							$end_val = sizeof($graph_timeshifts)+1;
 							if (sizeof($graph_timeshifts) > 0) {
 								for ($shift_value=$start_val; $shift_value < $end_val; $shift_value++) {
-									print "<option value='$shift_value'"; if ($_SESSION["sess_current_timeshift"] == $shift_value) { print " selected"; } print ">" . title_trim($graph_timeshifts[$shift_value], 40) . "</option>\n";
+									print "\t\t\t\t\t\t\t<option value='$shift_value'"; if ($_SESSION["sess_current_timeshift"] == $shift_value) { print " selected"; } print ">" . title_trim($graph_timeshifts[$shift_value], 40) . "</option>\n";
 								}
 							}
 							?>
 						</select>
-						<input style='border-width:0px;padding-bottom:4px;' type='image' name='move_right' src='images/move_right.gif' alt='Right' align='middle' title='Shift Right'>
+						<input style='border-width:0px;vertical-align:middle;align:middle;padding-bottom:5px;' type='image' name='move_right' src='images/move_right.gif' alt='Right' title='Shift Right'>
 					</td>
 					<td nowrap style='white-space:nowrap;'>
 						&nbsp;<input type='submit' value='Refresh' name='button_refresh'>
@@ -281,7 +277,7 @@ function graph_view_search_filter() {	global $graphs_per_page;
 								<?php
 								if (sizeof($graphs_per_page) > 0) {
 								foreach ($graphs_per_page as $key => $value) {
-									print "<option value='" . $key . "'"; if ($_REQUEST["graphs"] == $key) { print " selected"; } print ">" . $value . "</option>\n";
+									print "\t\t\t\t\t\t\t<option value='" . $key . "'"; if ($_REQUEST["graphs"] == $key) { print " selected"; } print ">" . $value . "</option>\n";
 								}
 								}
 								?>

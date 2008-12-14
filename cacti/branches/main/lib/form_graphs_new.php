@@ -824,7 +824,7 @@ function graphs_new() {
 			if (sizeof($data_query_graphs) == 1) {
 				form_hidden_box("sgg_" . $snmp_query["id"] . "' id='sgg_" . $snmp_query["id"], $data_query_graphs[0]["id"], "");
 			}elseif (sizeof($data_query_graphs) > 1) {
-				print "	<table align='center' width='100%'>
+				print "<table align='center' width='100%'>
 						<tr>
 							<td width='1' valign='top'>
 								<img src='images/arrow.gif' alt='' align='middle'>&nbsp;

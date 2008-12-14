@@ -135,12 +135,12 @@ function html_graph_start_box($cellpadding = 3, $leading_br = true) {
 		print "<br>\n";
 	}
 
-	print "<table width='100%' style='background-color: #f5f5f5; border: 1px solid #bbbbbb;' align='center' cellpadding='$cellpadding'>\n";
+	print "\t<table width='100%' style='border: 1px solid #bbbbbb;' align='center' cellpadding='$cellpadding'>\n";
 }
 
 /* html_graph_end_box - draws the end of an HTML graph view box */
 function html_graph_end_box() {
-	print "</table>";
+	print "</table>\n";
 }
 
 /* html_graph_area - draws an area the contains full sized graphs
@@ -175,7 +175,7 @@ function html_graph_area(&$graph_array, $no_graphs_message = "", $extra_url_args
 				}
 
 				if ($print) {
-					print "<tr bgcolor='#a9b7cb'>
+					print "\t\t<tr class='rowSubHeader'>
 						<td colspan='3' class='textHeaderDark'>
 							<strong>Graph Template:</strong> " . $graph["graph_template_name"] . "
 						</td>
@@ -195,9 +195,9 @@ function html_graph_area(&$graph_array, $no_graphs_message = "", $extra_url_args
 				}
 
 				if ($print) {
-					print "<tr bgcolor='#a9b7cb'><td colspan='3' class='textHeaderDark'><strong>Data Query:</strong> " . $graph["data_query_name"] . "</td></tr>";
+					print "\t\t\t<tr class='rowSubHeaderAlt'><td colspan='3' class='textHeaderDark'><strong>Data Query:</strong> " . $graph["data_query_name"] . "</td></tr>";
 				}
-				print "<tr bgcolor='#a9b7cb'>
+				print "<tr>
 					<td colspan='3' class='textHeaderDark'>
 						" . $graph["sort_field_value"]. "
 					</td>
@@ -270,14 +270,14 @@ function html_graph_thumbnail_area(&$graph_array, $no_graphs_message = "", $extr
 				if ($print) {
 					if (!$start) {
 						while($i % read_graph_config_option("num_columns") != 0) {
-							print "<td align='center' width='" . ceil(100 / read_graph_config_option("num_columns")) . "%'></td>";
+							print "\t\t\t<td align='center' width='" . ceil(100 / read_graph_config_option("num_columns")) . "%'></td>";
 							$i++;
 						}
-						print "</tr>";
+						print "\t\t</tr>\t";
 					}
 
-					print "<tr style='background-color:#a9b7cb;'>
-						<td style='background-color:#a9b7cb;' colspan='" . read_graph_config_option("num_columns") . "' class='textHeaderDark'>
+					print "\t\t<tr class='rowSubHeader'>
+						<td colspan='" . read_graph_config_option("num_columns") . "' class='textHeaderDark'>
 							<strong>Graph Template:</strong> " . $graph["graph_template_name"] . "
 						</td>
 					</tr>";
@@ -306,13 +306,13 @@ function html_graph_thumbnail_area(&$graph_array, $no_graphs_message = "", $extr
 						print "</tr>";
 					}
 
-					print "<tr style='background-color:#a9b7cb;'>
-							<td style='background-color:#a9b7cb;' colspan='" . read_graph_config_option("num_columns") . "' class='textHeaderDark'><strong>Data Query:</strong> " . $graph["data_query_name"] . "</td>
+					print "\t\t\t<tr style='rowSubHeaderAlt'>
+							<td colspan='" . read_graph_config_option("num_columns") . "' class='textHeaderDark'><strong>Data Query:</strong> " . $graph["data_query_name"] . "</td>
 						</tr>";
 					$i = 0;
 				}
 				print "<tr style='background-color:#a9b7cb;'>
-					<td style='background-color:#a9b7cb;' colspan='" . read_graph_config_option("num_columns") . "' class='textHeaderDark'>
+					<td colspan='" . read_graph_config_option("num_columns") . "' class='textHeaderDark'>
 						" . $graph["sort_field_value"]. "
 					</td>
 				</tr>";
@@ -348,7 +348,7 @@ function html_graph_thumbnail_area(&$graph_array, $no_graphs_message = "", $extr
 			if (($i % read_graph_config_option("num_columns") == 0) && ($k < $num_graphs)) {
 				$i=0;
 				$j++;
-				print "</tr><tr style='background-color: #" . ($j % 2 == 0 ? "F2F2F2" : "FFFFFF") . ";'>";
+				print "</tr>\n";
 				$start = true;
 			}
 		}
@@ -359,7 +359,7 @@ function html_graph_thumbnail_area(&$graph_array, $no_graphs_message = "", $extr
 				$i++;
 			}
 
-			print "</tr>";
+			print "</tr>\n";
 		}
 	}else{
 		if ($no_graphs_message != "") {
@@ -390,7 +390,7 @@ function html_nav_bar($background_color, $colspan, $current_page, $rows_per_page
 				<tr>
 					<td align='left' class='textHeaderDark' width='15%'>
 						<?php if ($current_page > 1) {
-							print "<strong><a class='linkOverDark' href='" . str_replace("<PAGE>", ($current_page-1), $nav_url) . "'> &lt;&lt; Previous</a></strong>";
+							print "<strong><a class='linkOverDark' href='" . htmlspecialchars(str_replace("<PAGE>", ($current_page-1), $nav_url)) . "'> &lt;&lt; Previous</a></strong>";
 						} ?>
 					</td>
 					<td align='center' class='textHeaderDark' width='70%'>
@@ -398,7 +398,7 @@ function html_nav_bar($background_color, $colspan, $current_page, $rows_per_page
 					</td>
 					<td align='right' class='textHeaderDark' width='15%'>
 						<?php if (($current_page * $rows_per_page) < $total_rows) {
-							print "<strong><a class='linkOverDark' href='" . str_replace("<PAGE>", ($current_page+1), $nav_url) . "'> Next &gt;&gt; </a></strong>";
+							print "<strong><a class='linkOverDark' href='" . htmlspecialchars(str_replace("<PAGE>", ($current_page+1), $nav_url)) . "'> Next &gt;&gt; </a></strong>";
 						} ?>
 					</td>
 				</tr>
@@ -602,7 +602,7 @@ function html_header_checkbox($header_items, $form_action = "", $resizable = fal
 function html_create_list($form_data, $column_display, $column_id, $form_previous_value) {
 	if (empty($column_display)) {
 		foreach (array_keys($form_data) as $id) {
-			print '<option value="' . $id . '"';
+			print '\t\t\t\t\t\t\t<option value="' . $id . '"';
 
 			if ($form_previous_value == $id) {
 			print " selected";
@@ -613,7 +613,7 @@ function html_create_list($form_data, $column_display, $column_id, $form_previou
 	}else{
 		if (sizeof($form_data) > 0) {
 			foreach ($form_data as $row) {
-				print "<option value='$row[$column_id]'";
+				print "\t\t\t\t\t\t\t<option value='$row[$column_id]'";
 
 				if ($form_previous_value == $row[$column_id]) {
 					print " selected";
@@ -816,9 +816,9 @@ function draw_graph_items_list($item_list, $filename, $url_data, $disable_contro
 function draw_header_tab($name, $title, $location, $image = "") {
 	global $config;
 	if ($image == "") {
-		return "<li id=\"tab_" . html_escape($name) . "\"" . (html_selected_tab($name, $location) ? "class=\"selected\"" : "class=\"notselected\"") . "><a href=\"javascript:navigation_select('" . html_escape($name) . "','" . html_escape($location) . "')\" title=\"" . html_escape($title) . "\">" . html_escape($title) . "</a></li>\n";
+		return "<li id=\"tab_" . html_escape($name) . "\"" . (html_selected_tab($name, htmlspecialchars($location)) ? "class=\"selected\"" : "class=\"notselected\"") . "><a href=\"javascript:navigation_select('" . html_escape($name) . "','" . htmlspecialchars($location) . "')\" title=\"" . html_escape($title) . "\">" . html_escape($title) . "</a></li>\n";
 	}else{
-		return "<li id=\"tab_" . html_escape($name) . "\"" . (html_selected_tab($name, $location) ? "class=\"selected\"" : "class=\"notselected\"") . "><a href=\"javascript:navigation_select('" . html_escape($name) . "','" . html_escape($location) . "')\" title=\"" . html_escape($title) . "\"><img style='border-width:0px;' src='$image' align='middle'></a></li>\n";
+		return "<li id=\"tab_" . html_escape($name) . "\"" . (html_selected_tab($name, htmlspecialchars($location)) ? "class=\"selected\"" : "class=\"notselected\"") . "><a href=\"javascript:navigation_select('" . html_escape($name) . "','" . htmlspecialchars($location) . "')\" title=\"" . html_escape($title) . "\"><img style='border-width:0px;' src='$image' align='middle'></a></li>\n";
 	}
 }
 

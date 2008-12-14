@@ -64,14 +64,8 @@ api_plugin_hook('page_head');
 		<div style='float:left'>
 			<?php print draw_navigation_text() . "\n";?>
 		</div>
-		<div style='float:right'>
-			<?php
-			if (read_config_option("auth_method") != 0) {
-				$date = date_time_format();
-
-				?><strong><?php echo date("D, " . $date . " T");?></strong>&nbsp;&nbsp;&nbsp;
-				Logged in as <strong><?php print db_fetch_cell("select username from user_auth where id=" . $_SESSION["sess_user_id"]);?></strong> (<a href="<?php echo $config['url_path']; ?>logout.php">Logout</a>)
-			<?php } ?>
+		<div style='float:right'><?php
+			if (read_config_option("auth_method") != 0) { $date = date_time_format();?><strong><?php echo date("D, " . $date . " T");?></strong>&nbsp;&nbsp;&nbsp;Logged in as <strong><?php print db_fetch_cell("select username from user_auth where id=" . $_SESSION["sess_user_id"]);?></strong> (<a href="<?php echo $config['url_path']; ?>logout.php">Logout</a>)<?php } ?>
 		</div>
 	</div>
 </div>

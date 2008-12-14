@@ -380,66 +380,55 @@ case 'list':
 	if (empty($_REQUEST["graph_template_id"])) { $_REQUEST["graph_template_id"] = 0; }
 	if (empty($_REQUEST["filter"])) { $_REQUEST["filter"] = ""; }
 	?>
-	<script type="text/javascript">
-	<!--
-	function applyGraphListFilterChange(objForm) {
-		strURL = 'graph_view.php?action=list&page=1';
-		strURL = strURL + '&host_id=' + objForm.host_id.value;
-		strURL = strURL + '&graph_template_id=' + objForm.graph_template_id.value;
-		strURL = strURL + '&filter=' + objForm.filter.value;
-		strURL = strURL + url_graph('');
-		document.location = strURL;
-		return false;
-	}
-	-->
-	</script>
 
 	<tr class='rowGraphFilter noprint'>
-		<form name="form_graph_list" action="graph_view.php" method="POST" onSubmit='form_graph(document.graphs,document.form_graph_list)'>
-		<input type='hidden' name='graph_list' value='<?php print $graph_list_text; ?>'>
-		<input type='hidden' name='graph_add' value=''>
-		<input type='hidden' name='graph_remove' value=''>
 		<td>
+			<script type="text/javascript">
+			<!--
+			$().ready(function() {
+				$("#host").autocomplete("./lib/ajax/get_hosts_brief.php", { max: 8, highlight: false, scroll: true, scrollHeight: 300 });
+				$("#host").result(function(event, data, formatted) {
+					if (data) {
+						$(this).parent().find("#host_id").val(data[1]);
+						applyGraphListFilterChange(document.form_graph_list);
+					}else{
+						$(this).parent().find("#host_id").val(0);
+					}
+				});
+			});
+
+			function applyGraphListFilterChange(objForm) {
+				strURL = 'graph_view.php?action=list&page=1';
+				strURL = strURL + '&host_id=' + objForm.host_id.value;
+				strURL = strURL + '&graph_template_id=' + objForm.graph_template_id.value;
+				strURL = strURL + '&filter=' + objForm.filter.value;
+				strURL = strURL + url_graph('');
+				document.location = strURL;
+				return false;
+			}
+			-->
+			</script>
+			<form name="form_graph_list" action="graph_view.php" method="POST" onSubmit='form_graph(document.chk,document.form_graph_list)'>
+			<input type='hidden' name='graph_list' value='<?php print $graph_list_text; ?>'>
+			<input type='hidden' name='graph_add' value=''>
+			<input type='hidden' name='graph_remove' value=''>
 			<table width="100%" cellpadding="0" cellspacing="0">
 				<tr>
-					<td nowrap style='white-space: nowrap; color: #FFFFFF;' width="40">
+					<td nowrap style='white-space:nowrap;' width="1">
 						&nbsp;<strong>Host:</strong>&nbsp;
 					</td>
 					<td width="1">
-						<select name="host_id" onChange="applyGraphListFilterChange(document.form_graph_list)">
-							<option value="0"<?php if ($_REQUEST["host_id"] == "0") {?> selected<?php }?>>Any</option>
-							<?php
-							if (read_config_option("auth_method") != 0) {
-								/* get policy information for the sql where clause */
-								$sql_where = get_graph_permissions_sql($current_user["policy_graphs"], $current_user["policy_hosts"], $current_user["policy_graph_templates"]);
-
-								$hosts = db_fetch_assoc("SELECT DISTINCT host.id, host.description as name
-									FROM (graph_templates_graph,graph_local)
-									LEFT JOIN host ON (host.id=graph_local.host_id)
-									LEFT JOIN graph_templates ON (graph_templates.id=graph_local.graph_template_id)
-									LEFT JOIN user_auth_perms ON ((graph_templates_graph.local_graph_id=user_auth_perms.item_id and user_auth_perms.type=" . PERM_GRAPHS . " and user_auth_perms.user_id=" . $_SESSION["sess_user_id"] . ") OR (host.id=user_auth_perms.item_id and user_auth_perms.type=" . PERM_HOSTS . " and user_auth_perms.user_id=" . $_SESSION["sess_user_id"] . ") OR (graph_templates.id=user_auth_perms.item_id and user_auth_perms.type=" . PERM_GRAPH_TEMPLATES . " and user_auth_perms.user_id=" . $_SESSION["sess_user_id"] . "))
-									WHERE graph_templates_graph.local_graph_id=graph_local.id  and graph_local.host_id > 0 " .
-									(($_REQUEST["graph_template_id"] > 0) ? " and graph_local.graph_template_id=" . $_REQUEST["graph_template_id"] : "") . " " .
-									(empty($sql_where) ? "" : "and $sql_where") . " " .
-									"ORDER BY name");
-							}else{
-								$hosts = db_fetch_assoc("SELECT DISTINCT host.id, host.description as name " .
-										"FROM host " .
-										"INNER JOIN graph_local " .
-										"ON host.id=graph_local.host_id " .
-										(($_REQUEST["graph_template_id"] > 0) ? " WHERE graph_template_id=" . $_REQUEST["graph_template_id"] :"") .
-										" ORDER BY name");
-							}
-
-							if (sizeof($hosts) > 0) {
-							foreach ($hosts as $host) {
-								print "<option value='" . $host["id"] . "'"; if ($_REQUEST["host_id"] == $host["id"]) { print " selected"; } print ">" . $host["name"] . "</option>\n";
-							}
-							}
-							?>
-						</select>
+						<?php
+						if (isset($_REQUEST["host_id"])) {
+							$hostname = db_fetch_cell("SELECT description as name FROM host WHERE id=".$_REQUEST["host_id"]." ORDER BY description,hostname");
+						} else {
+							$hostname = "";
+						}
+						?>
+						<input class="ac_field" type="text" id="host" size="30" value="<?php print $hostname; ?>">
+						<input type="hidden" id="host_id">
 					</td>
-					<td nowrap style='white-space: nowrap; color: #FFFFFF;' width="70">
+					<td nowrap style='white-space:nowrap;' width="1">
 						&nbsp;<strong>Template:</strong>&nbsp;
 					</td>
 					<td width="1">
@@ -475,7 +464,7 @@ case 'list':
 							?>
 						</select>
 					</td>
-					<td nowrap style='white-space: nowrap; color: #FFFFFF;' width="50">
+					<td nowrap style='white-space:nowrap;' width="1">
 						&nbsp;<strong>Search:</strong>&nbsp;
 					</td>
 					<td width="1">
@@ -487,8 +476,8 @@ case 'list':
 					</td>
 				</tr>
 			</table>
+			</form>
 		</td>
-		</form>
 	</tr>
 	<?php
 	html_graph_end_box(TRUE);
@@ -541,14 +530,14 @@ case 'list':
 		var strURL = '';
 		var strAdd = '';
 		var strDel = '';
-		for(var i = 0; i < document.graphs.elements.length; i++) {
-			if (document.graphs.elements[i].name.substring(0,5) == 'graph') {
-				if (document.graphs.elements[i].name != 'graph_list') {
-					if (document.graphs.elements[i].checked) {
-						strAdd = strAdd + document.graphs.elements[i].value + ',';
+		for(var i = 0; i < document.chk.elements.length; i++) {
+			if (document.chk.elements[i].name.substring(0,5) == 'graph') {
+				if (document.chk.elements[i].name != 'graph_list') {
+					if (document.chk.elements[i].checked) {
+						strAdd = strAdd + document.chk.elements[i].value + ',';
 					} else {
-						if (document.graphs.elements[i].value != '') {
-							strDel = strDel + document.graphs.elements[i].value + ',';
+						if (document.chk.elements[i].value != '') {
+							strDel = strDel + document.chk.elements[i].value + ',';
 						}
 					}
 				}
@@ -588,11 +577,11 @@ case 'list':
 	</script>
 	<?php
 
-	html_graph_start_box(1, TRUE);
+	html_graph_start_box(1, FALSE);
 	?>
 	<tr class='rowHeader noprint'>
-		<form name='graphs' id='graphs' action='graph_view.php' method='get' onSubmit='form_graph(document.graphs,document.graphs)'>
 		<td colspan='3'>
+			<form name='chk' id='chk' action='graph_view.php' method='get' onSubmit='form_graph(document.chk,document.chk)'>
 			<table width='100%' cellspacing='0' cellpadding='3' style='border-width:0px;'>
 				<tr>
 					<td align='left' class='textHeaderDark'>
@@ -613,7 +602,7 @@ case 'list':
 			<table width='100%' cellspacing='0' cellpadding='3' style='border-width:0px;'>
 				<tr>
 					<?php
-					print "<td width='1%' align='right' class='textHeaderDark' style='" . get_checkbox_style() . "'><input type='checkbox' style='margin: 0px;' name='all' title='Select All' onClick='SelectAllGraphs(\"graph_\",this.checked)'></td><td class='textSubHeaderDark'><strong>Select All</strong></td>\n";
+					print "<td width='1%' align='right' class='textHeaderDark' style='" . get_checkbox_style() . "'><input type='checkbox' style='margin: 0px;' name='all' title='Select All' onClick='SelectAll(\"chk_\",this.checked)'></td><td class='textSubHeaderDark'><strong>Select All</strong></td>\n";
 					?>
 				</tr>
 			</table>
@@ -624,19 +613,16 @@ case 'list':
 	$i = 0;
 	if (sizeof($graphs) > 0) {
 		foreach ($graphs as $graph) {
-			form_alternate_row_color();
-
-			print "<td width='1%'>";
-			print "<input type='checkbox' name='graph_" . $graph["local_graph_id"] . "' id='graph_" . $graph["local_graph_id"] . "' value='" . $graph["local_graph_id"] . "'";
+			form_alternate_row_color('line' . $graph["local_graph_id"], true, true);
 			if (isset($graph_list[$graph["local_graph_id"]])) {
-				print " checked";
+				$checked = true;
+			}else{
+				$checked = false;
 			}
-			print ">\n";
-			print "</td>\n";
-
-			print "<td><strong><a href='graph.php?local_graph_id=" . $graph["local_graph_id"] . "&rra_id=all'>" . $graph["title_cache"] . "</a></strong></td>\n";
-			print "<td>" . $graph["height"] . "x" . $graph["width"] . "</td>\n";
-			print "</tr>";
+			form_checkbox_cell($graph["title_cache"], $graph["local_graph_id"]);
+			form_selectable_cell("<strong><a href='" . htmlspecialchars("graph.php?local_graph_id=" . $graph["local_graph_id"] . "&rra_id=all") . "'>" . $graph["title_cache"] . "</a></strong>", $graph["local_graph_id"], "", "", $checked);
+			form_selectable_cell($graph["height"] . "x" . $graph["width"], $graph["local_graph_id"]);
+			form_end_row();
 
 			$i++;
 		}
@@ -658,7 +644,7 @@ case 'list':
 	<table align='center' width='100%'>
 		<tr>
 			<td width='1'><img src='images/arrow.gif' alt='' align='middle'>&nbsp;</td>
-			<td><input type='image' src='images/button_view.gif' alt='View'></td>
+			<td><input type='submit' title='View Graphs' value='View Graphs' alt='View'></td>
 		</tr>
 	</table>
 	<input type='hidden' name='page' value='1'>

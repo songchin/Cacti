@@ -531,8 +531,10 @@ function doneDivResize(){
 	overVSplit = false;
 
 	if (resizedDiv == true) {
-		createCookieElement("menu", "vsplitter_last", parseInt(document.getElementById("vsplitter").style.marginLeft));
-		resizedDiv = false;
+		if (document.getElementById("vsplitter")) {
+			createCookieElement("menu", "vsplitter_last", parseInt(document.getElementById("vsplitter").style.marginLeft));
+			resizedDiv = false;
+		}
 	}
 
 }
@@ -728,33 +730,35 @@ function vSplitterPos() {
 	menuWidth  = divSt - 5;
 	marginLeft = divSt + 2;
 
-	if (vSplitterClosed == 1) {
-		if (document.getElementById("menu") != null) {
-			document.getElementById("vsplitter").style.marginLeft = "0px";
-			document.getElementById("menu").style.width           = "0px";
-			document.getElementById("menu").style.marginLeft      = "-200px";
-			document.getElementById("content").style.left         = "2px";
-			document.getElementById("content").style.width        = parseInt(clWidth - 20) + "px"
+	if (document.getElementById("vsplitter")) {
+		if (vSplitterClosed == 1) {
+			if (document.getElementById("menu") != null) {
+				document.getElementById("vsplitter").style.marginLeft = "0px";
+				document.getElementById("menu").style.width           = "0px";
+				document.getElementById("menu").style.marginLeft      = "-200px";
+				document.getElementById("content").style.left         = "2px";
+				document.getElementById("content").style.width        = parseInt(clWidth - 20) + "px"
+			}else{
+				document.getElementById("vsplitter").style.marginLeft     = "0px";
+				document.getElementById("graph_tree").style.width         = "0px";
+				document.getElementById("graph_tree").style.marginLeft    = "-200px";
+				document.getElementById("graph_tree_content").style.left  = "2px";
+				document.getElementById("graph_tree_content").style.width = parseInt(clWidth - 20) + "px"
+			}
 		}else{
-			document.getElementById("vsplitter").style.marginLeft     = "0px";
-			document.getElementById("graph_tree").style.width         = "0px";
-			document.getElementById("graph_tree").style.marginLeft    = "-200px";
-			document.getElementById("graph_tree_content").style.left  = "2px";
-			document.getElementById("graph_tree_content").style.width = parseInt(clWidth - 20) + "px"
-		}
-	}else{
-		if (document.getElementById("menu") != null) {
-			document.getElementById("vsplitter").style.marginLeft = divSt      + "px";
-			document.getElementById("menu").style.width           = menuWidth  + "px";
-			document.getElementById("menu").style.marginLeft      = "0px";
-			document.getElementById("content").style.left         = marginLeft + "px";
-			document.getElementById("content").style.width        = parseInt(clWidth - divSt - 20) + "px"
-		}else{
-			document.getElementById("vsplitter").style.marginLeft     = divSt      + "px";
-			document.getElementById("graph_tree").style.width         = menuWidth  + "px";
-			document.getElementById("graph_tree").style.marginLeft    = "0px";
-			document.getElementById("graph_tree_content").style.left  = marginLeft + "px";
-			document.getElementById("graph_tree_content").style.width = parseInt(clWidth - divSt - 20) + "px"
+			if (document.getElementById("menu") != null) {
+				document.getElementById("vsplitter").style.marginLeft = divSt      + "px";
+				document.getElementById("menu").style.width           = menuWidth  + "px";
+				document.getElementById("menu").style.marginLeft      = "0px";
+				document.getElementById("content").style.left         = marginLeft + "px";
+				document.getElementById("content").style.width        = parseInt(clWidth - divSt - 20) + "px"
+			}else{
+				document.getElementById("vsplitter").style.marginLeft     = divSt      + "px";
+				document.getElementById("graph_tree").style.width         = menuWidth  + "px";
+				document.getElementById("graph_tree").style.marginLeft    = "0px";
+				document.getElementById("graph_tree_content").style.left  = marginLeft + "px";
+				document.getElementById("graph_tree_content").style.width = parseInt(clWidth - divSt - 20) + "px"
+			}
 		}
 	}
 
@@ -811,7 +815,11 @@ function transitionPage() {
 			document.getElementById("graph_tree_content").style.opacity = 0;
 			document.getElementById("wrapper").style.opacity            = 1;
 			transition = setInterval(function() { fadeIn(document.getElementById("graph_tree_content")) }, 25);
-		}else{
+		}else if (document.getElementById("graph_content")) {
+			document.getElementById("graph_content").style.opacity      = 0;
+			document.getElementById("wrapper").style.opacity            = 1;
+			transition = setInterval(function() { fadeIn(document.getElementById("graph_content")) }, 25);
+		}else {
 			document.getElementById("menu").style.opacity    = 1;
 			document.getElementById("content").style.opacity = 0;
 			document.getElementById("wrapper").style.opacity = 1;

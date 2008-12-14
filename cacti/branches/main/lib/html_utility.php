@@ -89,20 +89,20 @@ function form_alternate_row_color($row_id = "", $hover = false, $row_select = fa
 
 	if (is_numeric($row_id)) {
 		if ($hover) {
-			print "<tr id='row_$row_id' class='$class' onMouseOver=(this.className='rowSelected') onMouseOut=(this.className='$class')>\n";
+			print "<tr id='row_$row_id' class='$class' onMouseOver='(this.className=\"rowSelected\")' onMouseOut='(this.className=\"$class\")'>\n";
 		}else{
 			print "<tr id='row_$row_id' class='$class'>\n";
 		}
 	}else{
 		if (strlen($row_id)) {
 			if ($hover) {
-				print "<tr id='$row_id' class='$class' $row_select onMouseOver=(this.className='rowSelected') onMouseOut=(this.className='$class')>\n";
+				print "<tr id='$row_id' class='$class' onMouseOver='(this.className=\"rowSelected\")' onMouseOut='(this.className=\"$class\")'>\n";
 			}else{
 				print "<tr id='$row_id' class='$class'>\n";
 			}
 		}else{
 			if ($hover) {
-				print "<tr id='row_$alt_row_id' class='$class' onmouseover=(this.className='rowSelected') onmouseout=(this.className='$class')>\n";
+				print "<tr id='row_$alt_row_id' class='$class' onmouseover='this.className=\"rowSelected\"' onmouseout='(this.className=\"$class\")'>\n";
 			}else{
 				print "<tr id='row_$alt_row_id' class='$class'>\n";
 			}
@@ -121,9 +121,9 @@ function form_selectable_cell($contents, $id, $width="", $style="") {
 
 /* form_checkbox_cell - format's a tables checkbox form element so that the cacti js actions work on it
    @arg $title - the text that will be displayed if your hover over the checkbox */
-function form_checkbox_cell($title, $id) {
+function form_checkbox_cell($title, $id, $checked = false) {
 	print "\t<td onClick='select_line($id,true)' style='" . get_checkbox_style() . "' width='1%' align='center'>\n";
-	print "\t\t<input type='checkbox' style='margin: 0px;' id='chk_" . $id . "' name='chk_" . $id . "'>\n";
+	print "\t\t<input type='checkbox' title='$title' style='margin: 0px;' id='chk_" . $id . "' name='chk_" . $id . "'" . ($checked ? " checked" : "") . ">\n";
 	print "\t</td>\n";
 }
 
@@ -342,9 +342,9 @@ function get_page_list($current_page, $pages_per_screen, $rows_per_page, $total_
 	for ($page_number=0; (($page_number+$start_page) <= $end_page); $page_number++) {
 		if ($page_number < $pages_per_screen) {
 			if ($current_page == ($page_number + $start_page)) {
-				$url_page_select .= "<strong><a class='linkOverDark' href='$url&" . $page_var . "=" . ($page_number + $start_page) . "'>" . ($page_number + $start_page) . "</a></strong>";
+				$url_page_select .= "<strong><a class='linkOverDark' href='" . htmlspecialchars("$url&" . $page_var . "=" . ($page_number + $start_page)) . "'>" . ($page_number + $start_page) . "</a></strong>";
 			}else{
-				$url_page_select .= "<a class='linkOverDark' href='$url&" . $page_var . "=" . ($page_number + $start_page) . "'>" . ($page_number + $start_page) . "</a>";
+				$url_page_select .= "<a class='linkOverDark' href='" . htmlspecialchars("$url&" . $page_var . "=" . ($page_number + $start_page)) . "'>" . ($page_number + $start_page) . "</a>";
 			}
 		}
 
@@ -361,7 +361,7 @@ function get_page_list($current_page, $pages_per_screen, $rows_per_page, $total_
 }
 
 
-/* clean_html_output - Remove all known cross site script (xss) attack vectors from user input 
+/* clean_html_output - Remove all known cross site script (xss) attack vectors from user input
    @arg $data - User input to process
    @returns - Cleaned user input
 */
@@ -370,7 +370,7 @@ function clean_html_output($data) {
 	this prevents some character re-spacing such as <java\0script>
 	note that you have to handle splits with \n, \r, and \t later since they *are* allowed in some inputs */
 	$data = preg_replace('/([\x00-\x08,\x0b-\x0c,\x0e-\x19])/', '', $data);
-	
+
 	/* straight replacements, the user should never need these since they're normal characters
 	this prevents like <IMG SRC=&#X40&#X61&#X76&#X61&#X73&#X63&#X72&#X69&#X70&#X74&#X3A&#X61&#X6C&#X65&#X72&#X74&#X28&#X27&#X58&#X53&#X53&#X27&#X29> */
 	$search = "abcdefghijklmnopqrstuvwxyz";
@@ -381,11 +381,11 @@ function clean_html_output($data) {
 		/* ;? matches the ;, which is optional
 		0{0,7} matches any padded zeros, which are optional and go up to 8 chars */
 		/* &#x0040 @ search for the hex values */
-		$data = preg_replace('/(&#[xX]0{0,8}'.dechex(ord($search[$i])).';?)/i', $search[$i], $data); 
+		$data = preg_replace('/(&#[xX]0{0,8}'.dechex(ord($search[$i])).';?)/i', $search[$i], $data);
 		/* &#00064 @ 0{0,7} matches '0' zero to seven times */
 		$data = preg_replace('/(&#0{0,8}'.ord($search[$i]).';?)/', $search[$i], $data);
 	}
-	
+
 	/* defined keywords to process for removal */
 	$keywords = Array(
 		"javascript",
@@ -487,8 +487,8 @@ function clean_html_output($data) {
 		"onsubmit",
 		"onunload"
 	);
-	
-	$found = true; 
+
+	$found = true;
 	while ($found == true) {
 		$data_before = $data;
 		for ($i = 0; $i < sizeof($keywords); $i++) {
