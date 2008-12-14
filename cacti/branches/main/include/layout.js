@@ -826,17 +826,15 @@ function pageInitialize() {
 }
 
 function sizeContentDivs() {
-	if (browser != "IE") {
-		top    = document.getElementById("wrapper").offsetTop;
-	 	bottom = document.getElementById("wrapper").clientHeight;
+	var top    = document.getElementById("wrapper").offsetTop;
+	var bottom = document.getElementById("wrapper").clientHeight;
 
-		if (document.getElementById("content")) {
-			document.getElementById("content").style.height = parseInt(bottom-top) + "px";
-		}else if(document.getElementById("graph_tree_content")) {
-			document.getElementById("graph_tree_content").style.height = parseInt(bottom-top) + "px";
-		}else{
-			document.getElementById("graph_content").style.height = parseInt(bottom-top) + "px";
-		}
+	if (document.getElementById("content")) {
+		document.getElementById("content").style.height = parseInt(bottom-top) + "px";
+	}else if(document.getElementById("graph_tree_content")) {
+		document.getElementById("graph_tree_content").style.height = parseInt(bottom-top) + "px";
+	}else{
+		document.getElementById("graph_content").style.height = parseInt(bottom-top) + "px";
 	}
 }
 
@@ -904,6 +902,7 @@ function fixBrowserQuirks() {
 
 			if (myDiv.scrollHeight > window_height) {
 				myDiv.style.paddingRight = "30px";
+				myDiv.style.marginRight = "30px";
 				myDiv.style.overflowX   = "hidden";
 			}
 		}else if (document.getElementById("graph_tree")) {
