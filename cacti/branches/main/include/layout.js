@@ -792,6 +792,9 @@ function pageResize() {
 
 	/* fix browser quirks */
 	fixBrowserQuirks();
+
+	/* size the content divs */
+	sizeContentDivs();
 }
 
 function pageInitialize() {
@@ -815,8 +818,24 @@ function pageInitialize() {
 	/* run page onLoad functions */
 	runOnLoadFunctions();
 
+	/* size the content divs */
+	sizeContentDivs();
+
 	/* restore the page visibility */
 	transitionPage();
+}
+
+function sizeContentDivs() {
+	top = document.getElementById("wrapper").offsetTop;
+	bottom = document.getElementById("wrapper").clientHeight;
+
+	if (document.getElementById("content")) {
+		document.getElementById("content").style.height = parseInt(bottom-top) + "px";
+	}else if(document.getElementById("graph_tree_content")) {
+		document.getElementById("graph_tree_content").style.height = parseInt(bottom-top) + "px";
+	}else{
+		document.getElementById("graph_content").style.height = parseInt(bottom-top) + "px";
+	}
 }
 
 function transitionPage() {
