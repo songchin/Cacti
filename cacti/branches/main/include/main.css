@@ -105,6 +105,7 @@ td {
 	padding-left: 10px;
 	padding-right: 8px;
 	width: auto;
+	height: 86%;
 }
 
 #graph_tree {
@@ -134,6 +135,7 @@ td {
 	padding-left: 8px;
 	padding-right: 8px;
 	width: auto;
+	height: 86%;
 }
 
 #graph_content {
@@ -149,6 +151,7 @@ td {
 	padding-left: 5px;
 	padding-right: 18px;
 	width: 98.5%;
+	height: 86%;
 }
 
 /* menu classes */
