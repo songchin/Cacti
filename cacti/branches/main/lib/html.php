@@ -135,7 +135,7 @@ function html_graph_start_box($cellpadding = 3, $leading_br = true) {
 		print "<br>\n";
 	}
 
-	print "\t<table width='100%' style='border: 1px solid #bbbbbb;' align='center' cellpadding='$cellpadding'>\n";
+	print "\t<table width='100%' style='border: 1px solid #6A6A6A;padding:0px;' align='center' cellspacing=0 cellpadding='$cellpadding'>\n";
 }
 
 /* html_graph_end_box - draws the end of an HTML graph view box */

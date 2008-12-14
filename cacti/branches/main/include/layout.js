@@ -241,7 +241,18 @@ function SelectAll(prefix, checkbox_state) {
 			}
 		}
 	}
+}
 
+function SetSelections() {
+	for (var i = 0; i < document.chk.elements.length; i++) {
+		lineid = document.getElementById('line'+ document.chk.elements[i].name.substr(4));
+
+		if (document.chk.elements[i].checked) {
+			if ( lineid ) { lineid.style.backgroundColor = 'khaki'; }
+		}else{
+			if ( lineid ) { lineid.style.backgroundColor = ''; }
+		}
+	}
 }
 
 function SelectAllGraphs(prefix, checkbox_state) {

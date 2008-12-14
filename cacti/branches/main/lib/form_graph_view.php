@@ -32,43 +32,21 @@ function graph_view_filter_table() {
 			<form name="form_graph_view" method="post" action="graph_view.php">
 			<table width="100%" cellpadding="0" cellspacing="0">
 				<tr class="rowGraphFilter noprint">
-					<td nowrap style='white-space: nowrap;' width="40">
+					<td nowrap style='white-space: nowrap;' width="1">
 						&nbsp;<strong>Host:</strong>&nbsp;
 					</td>
 					<td width="1">
-						<select name="host_id" onChange="applyGraphPreviewFilterChange(document.form_graph_view)">
-							<option value="0"<?php if ($_REQUEST["host_id"] == "0") {?> selected<?php }?>>Any</option><?php
-							if (read_config_option("auth_method") != 0) {
-								/* get policy information for the sql where clause */
-								$sql_where = get_graph_permissions_sql($current_user["policy_graphs"], $current_user["policy_hosts"], $current_user["policy_graph_templates"]);
-
-								$hosts = db_fetch_assoc("SELECT DISTINCT host.id, host.description as name " .
-										"FROM (graph_templates_graph,graph_local) " .
-										"LEFT JOIN host ON (host.id=graph_local.host_id) " .
-										"LEFT JOIN graph_templates ON (graph_templates.id=graph_local.graph_template_id) " .
-										"LEFT JOIN user_auth_perms ON ((graph_templates_graph.local_graph_id=user_auth_perms.item_id and user_auth_perms.type=1 and user_auth_perms.user_id=" . $_SESSION["sess_user_id"] . ") OR (host.id=user_auth_perms.item_id and user_auth_perms.type=3 and user_auth_perms.user_id=" . $_SESSION["sess_user_id"] . ") OR (graph_templates.id=user_auth_perms.item_id and user_auth_perms.type=4 and user_auth_perms.user_id=" . $_SESSION["sess_user_id"] . ")) " .
-										"WHERE graph_templates_graph.local_graph_id=graph_local.id  and graph_local.host_id > 0 " .
-										(($_REQUEST["graph_template_id"] > 0) ? " and graph_local.graph_template_id=" . $_REQUEST["graph_template_id"] :"") .
-										(empty($sql_where) ? "" : "and $sql_where") .
-										" ORDER BY name");
-							}else{
-								$hosts = db_fetch_assoc("SELECT DISTINCT host.id, host.description as name " .
-										"FROM host " .
-										"INNER JOIN graph_local " .
-										"ON host.id=graph_local.host_id" .
-										(($_REQUEST["graph_template_id"] > 0) ? " WHERE graph_template_id=" . $_REQUEST["graph_template_id"] :"") .
-										" ORDER BY name");
-							}
-
-							if (sizeof($hosts) > 0) {
-							foreach ($hosts as $host) {
-								print "\t\t\t\t\t\t\t<option value='" . $host["id"] . "'"; if ($_REQUEST["host_id"] == $host["id"]) { print " selected"; } print ">" . $host["name"] . "</option>\n";
-							}
-							}
-							?>
-						</select>
+						<?php
+						if (isset($_REQUEST["host_id"])) {
+							$hostname = db_fetch_cell("SELECT description as name FROM host WHERE id=".$_REQUEST["host_id"]." ORDER BY description,hostname");
+						} else {
+							$hostname = "";
+						}
+						?>
+						<input class="ac_field" type="text" id="host" size="30" value="<?php print $hostname; ?>">
+						<input type="hidden" id="host_id">
 					</td>
-					<td nowrap style='white-space: nowrap;' width="70">
+					<td nowrap style='white-space: nowrap;' width="1">
 						&nbsp;<strong>Template:</strong>&nbsp;
 					</td>
 					<td width="1">

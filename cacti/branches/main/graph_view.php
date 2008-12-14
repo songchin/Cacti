@@ -238,6 +238,18 @@ case 'preview':
 	<script type="text/javascript">
 	<!--
 
+	$().ready(function() {
+		$("#host").autocomplete("./lib/ajax/get_hosts_brief.php", { max: 8, highlight: false, scroll: true, scrollHeight: 300 });
+		$("#host").result(function(event, data, formatted) {
+			if (data) {
+				$(this).parent().find("#host_id").val(data[1]);
+				applyGraphPreviewFilterChange(document.form_graph_view);
+			}else{
+				$(this).parent().find("#host_id").val(0);
+			}
+		});
+	});
+
 	function applyGraphPreviewFilterChange(objForm) {
 		strURL = '?action=preview';
 		strURL = strURL + '&host_id=' + objForm.host_id.value;
@@ -376,9 +388,6 @@ case 'list':
 	/* display graph view filter selector */
 	html_graph_start_box(3, FALSE);
 
-	if (empty($_REQUEST["host_id"])) { $_REQUEST["host_id"] = 0; }
-	if (empty($_REQUEST["graph_template_id"])) { $_REQUEST["graph_template_id"] = 0; }
-	if (empty($_REQUEST["filter"])) { $_REQUEST["filter"] = ""; }
 	?>
 
 	<tr class='rowGraphFilter noprint'>
@@ -406,6 +415,57 @@ case 'list':
 				document.location = strURL;
 				return false;
 			}
+
+			function url_graph(strNavURL) {
+				var strURL = '';
+				var strAdd = '';
+				var strDel = '';
+				for(var i = 0; i < document.chk.elements.length; i++) {
+					if (document.chk.elements[i].name.substring(0,4) == 'chk_') {
+						if (document.chk.elements[i].name != 'graph_list') {
+							if (document.chk.elements[i].checked) {
+								strAdd = strAdd + document.chk.elements[i].name.substring(4) + ',';
+							} else {
+								if (document.chk.elements[i].value != '') {
+									strDel = strDel + document.chk.elements[i].name.substring(4) + ',';
+								}
+							}
+						}
+					}
+				}
+				strAdd = strAdd.substring(0,strAdd.length - 1);
+				strDel = strDel.substring(0,strDel.length - 1);
+				strURL = '&graph_add=' + strAdd + '&graph_remove=' + strDel;
+				return strNavURL + strURL;
+			}
+			function url_go(strURL) {
+				document.location = strURL;
+				return false;
+			}
+			function form_graph(objForm,objFormSubmit) {
+				var strAdd = '';
+				var strDel = '';
+				for(var i = 0; i < objForm.elements.length; i++) {
+					if (objForm.elements[i].name.substring(0,4) == 'chk_') {
+						if (objForm.elements[i].name != 'graph_list') {
+							if (objForm.elements[i].checked) {
+								strAdd = strAdd + objForm.elements[i].name.substring(4) + ',';
+							} else {
+								if (objForm.elements[i].value != '') {
+									strDel = strDel + objForm.elements[i].name.substring(4) + ',';
+								}
+							}
+						}
+					}
+				}
+				strAdd = strAdd.substring(0,strAdd.length - 1);
+				strDel = strDel.substring(0,strDel.length - 1);
+				objFormSubmit.graph_add.value = strAdd;
+				objFormSubmit.graph_remove.value = strDel;
+			}
+
+			registerOnLoadFunction("graph_view", "SetSelections();");
+
 			-->
 			</script>
 			<form name="form_graph_list" action="graph_view.php" method="POST" onSubmit='form_graph(document.chk,document.form_graph_list)'>
@@ -523,86 +583,34 @@ case 'list':
 		order by graph_templates_graph.title_cache
 		limit " . (ROWS_PER_PAGE*($_REQUEST["page"]-1)) . "," . ROWS_PER_PAGE);
 	?>
-
-	<script type='text/javascript'>
-	<!--
-	function url_graph(strNavURL) {
-		var strURL = '';
-		var strAdd = '';
-		var strDel = '';
-		for(var i = 0; i < document.chk.elements.length; i++) {
-			if (document.chk.elements[i].name.substring(0,5) == 'graph') {
-				if (document.chk.elements[i].name != 'graph_list') {
-					if (document.chk.elements[i].checked) {
-						strAdd = strAdd + document.chk.elements[i].value + ',';
-					} else {
-						if (document.chk.elements[i].value != '') {
-							strDel = strDel + document.chk.elements[i].value + ',';
-						}
-					}
-				}
-			}
-		}
-		strAdd = strAdd.substring(0,strAdd.length - 1);
-		strDel = strDel.substring(0,strDel.length - 1);
-		strURL = '&graph_add=' + strAdd + '&graph_remove=' + strDel;
-		return strNavURL + strURL;
-	}
-	function url_go(strURL) {
-		document.location = strURL;
-		return false;
-	}
-	function form_graph(objForm,objFormSubmit) {
-		var strAdd = '';
-		var strDel = '';
-		for(var i = 0; i < objForm.elements.length; i++) {
-			if (objForm.elements[i].name.substring(0,5) == 'graph') {
-				if (objForm.elements[i].name != 'graph_list') {
-					if (objForm.elements[i].checked) {
-						strAdd = strAdd + objForm.elements[i].value + ',';
-					} else {
-						if (objForm.elements[i].value != '') {
-							strDel = strDel + objForm.elements[i].value + ',';
-						}
-					}
-				}
-			}
-		}
-		strAdd = strAdd.substring(0,strAdd.length - 1);
-		strDel = strDel.substring(0,strDel.length - 1);
-		objFormSubmit.graph_add.value = strAdd;
-		objFormSubmit.graph_remove.value = strDel;
-	}
-	-->
-	</script>
+	<form name='chk' id='chk' action='graph_view.php' method='get' onSubmit='form_graph(document.chk,document.chk)'>
 	<?php
 
-	html_graph_start_box(1, FALSE);
+	html_graph_start_box(3, FALSE);
 	?>
 	<tr class='rowHeader noprint'>
 		<td colspan='3'>
-			<form name='chk' id='chk' action='graph_view.php' method='get' onSubmit='form_graph(document.chk,document.chk)'>
-			<table width='100%' cellspacing='0' cellpadding='3' style='border-width:0px;'>
+			<table width='100%' cellspacing='0' cellpadding='0' style='border-width:0px;'>
 				<tr>
 					<td align='left' class='textHeaderDark'>
-						<strong>&lt;&lt; <?php if ($_REQUEST["page"] > 1) { print "<a class='linkOverDark' href='" . str_replace("<PAGE>", ($_REQUEST["page"]-1), $nav_url) . "' onClick='return url_go(url_graph(\"" . str_replace("<PAGE>", ($_REQUEST["page"]-1), $nav_url) . "\"))'>"; } print "Previous"; if ($_REQUEST["page"] > 1) { print "</a>"; } ?></strong>
+						<strong>&nbsp;&lt;&lt; <?php if ($_REQUEST["page"] > 1) { print "<a class='linkOverDark' href='" . htmlspecialchars(str_replace("<PAGE>", ($_REQUEST["page"]-1), $nav_url)) . "' onClick='return url_go(url_graph(\"" . htmlspecialchars(str_replace("<PAGE>", ($_REQUEST["page"]-1), $nav_url)) . "\"))'>"; } print "Previous"; if ($_REQUEST["page"] > 1) { print "</a>"; } ?></strong>
 					</td>
 					<td align='center' class='textHeaderDark'>
 						Showing Rows <?php print ((ROWS_PER_PAGE*($_REQUEST["page"]-1))+1);?> to <?php print ((($total_rows < ROWS_PER_PAGE) || ($total_rows < (ROWS_PER_PAGE*$_REQUEST["page"]))) ? $total_rows : (ROWS_PER_PAGE*$_REQUEST["page"]));?> of <?php print $total_rows;?>
 					</td>
 					<td align='right' class='textHeaderDark'>
-						<strong><?php if (($_REQUEST["page"] * ROWS_PER_PAGE) < $total_rows) { print "<a class='linkOverDark' href='" . str_replace("<PAGE>", ($_REQUEST["page"]+1), $nav_url) . "' onClick='return url_go(url_graph(\"" . str_replace("<PAGE>", ($_REQUEST["page"]+1), $nav_url) . "\"))'>"; } print "Next"; if (($_REQUEST["page"] * ROWS_PER_PAGE) < $total_rows) { print "</a>"; } ?> &gt;&gt;</strong>
+						<strong><?php if (($_REQUEST["page"] * ROWS_PER_PAGE) < $total_rows) { print "<a class='linkOverDark' href='" . htmlspecialchars(str_replace("<PAGE>", ($_REQUEST["page"]+1), $nav_url)) . "' onClick='return url_go(url_graph(\"" . htmlspecialchars(str_replace("<PAGE>", ($_REQUEST["page"]+1), $nav_url)) . "\"))'>"; } print "Next"; if (($_REQUEST["page"] * ROWS_PER_PAGE) < $total_rows) { print "</a>"; } ?> &gt;&gt;&nbsp;</strong>
 					</td>
 				</tr>
 			</table>
 		</td>
 	</tr>
-	<tr class='rowSubHeader'>
+	<tr class='rowSubHeader noprint'>
 		<td colspan='3'>
-			<table width='100%' cellspacing='0' cellpadding='3' style='border-width:0px;'>
+			<table width='100%' cellspacing='0' cellpadding='0' style='border-width:0px;'>
 				<tr>
 					<?php
-					print "<td width='1%' align='right' class='textHeaderDark' style='" . get_checkbox_style() . "'><input type='checkbox' style='margin: 0px;' name='all' title='Select All' onClick='SelectAll(\"chk_\",this.checked)'></td><td class='textSubHeaderDark'><strong>Select All</strong></td>\n";
+					print "<td width='1%' align='left' class='textHeaderDark' style='padding:2px;'><input type='checkbox' style='margin: 0px;' name='all' title='Select All' onClick='SelectAll(\"chk_\",this.checked)'></td><td class='textSubHeaderDark'><strong>Select All</strong></td>\n";
 					?>
 				</tr>
 			</table>
@@ -610,7 +618,6 @@ case 'list':
 	</tr>
 	<?php
 
-	$i = 0;
 	if (sizeof($graphs) > 0) {
 		foreach ($graphs as $graph) {
 			form_alternate_row_color('line' . $graph["local_graph_id"], true, true);
@@ -619,29 +626,25 @@ case 'list':
 			}else{
 				$checked = false;
 			}
-			form_checkbox_cell($graph["title_cache"], $graph["local_graph_id"]);
-			form_selectable_cell("<strong><a href='" . htmlspecialchars("graph.php?local_graph_id=" . $graph["local_graph_id"] . "&rra_id=all") . "'>" . $graph["title_cache"] . "</a></strong>", $graph["local_graph_id"], "", "", $checked);
+			form_checkbox_cell($graph["title_cache"], $graph["local_graph_id"], $checked);
+			form_selectable_cell("<strong><a href='" . htmlspecialchars("graph.php?local_graph_id=" . $graph["local_graph_id"] . "&rra_id=all") . "'>" . $graph["title_cache"] . "</a></strong>", $graph["local_graph_id"]);
 			form_selectable_cell($graph["height"] . "x" . $graph["width"], $graph["local_graph_id"]);
 			form_end_row();
-
-			$i++;
 		}
 	}
-
 	?>
 	<tr class='rowSubHeader'>
 		<td colspan='3'>
-			<table width='100%' cellspacing='0' cellpadding='3' style='border-width:0px'>
-				<tr>
-					<?php
-					print "<td width='1%' align='right' class='textHeaderDark' style='" . get_checkbox_style() . "'><input type='checkbox' style='margin: 0px;' name='all' title='Select All' onClick='SelectAllGraphs(\"graph_\",this.checked)'></td><td class='textSubHeaderDark'><strong>Select All</strong></td>\n";
+			<table width='100%' cellspacing='0' cellpadding='0' style='border-width:0px'>
+				<tr><?php
+					print "<td width='1%' align='right' class='textHeaderDark' style='padding:2px;'><input type='checkbox' style='margin: 0px;' name='all' title='Select All' onClick='SelectAll(\"chk_\",this.checked)'></td><td class='textSubHeaderDark'><strong>Select All</strong></td>\n";
 					?>
 				</tr>
 			</table>
 		</td>
 	</tr>
-	</table>
-	<table align='center' width='100%'>
+	<?php html_graph_end_box(FALSE);?>
+	<table align='center' style='background-color:#FFFFFF;' width='100%'>
 		<tr>
 			<td width='1'><img src='images/arrow.gif' alt='' align='middle'>&nbsp;</td>
 			<td><input type='submit' title='View Graphs' value='View Graphs' alt='View'></td>
