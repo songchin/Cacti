@@ -399,8 +399,8 @@ function tree_edit() {
 
 		?>
 		<td>
-		<a href='tree.php?action=edit&id=<?php print $_GET["id"];?>&subaction=expand_all'><img src='images/button_expand_all.gif' style='border-width:0px;' alt='Expand All'></a>
-		<a href='tree.php?action=edit&id=<?php print $_GET["id"];?>&subaction=colapse_all'><img src='images/button_colapse_all.gif' style='border-width:0px;' alt='Colapse All'></a>
+		<a href='<?php print htmlspecialchars("tree.php?action=edit&id=" . $_GET["id"] . "&subaction=expand_all");?>'><img src='images/button_expand_all.gif' style='border-width:0px;' alt='Expand All'></a>
+		<a href='<?php print htmlspecialchars("tree.php?action=edit&id=" . $_GET["id"] . "&subaction=colapse_all");?>'><img src='images/button_colapse_all.gif' style='border-width:0px;' alt='Colapse All'></a>
 		</td>
 		<?php
 
@@ -434,10 +434,10 @@ function tree() {
 		form_alternate_row_color($tree["id"], true);
 			?>
 			<td>
-				<a class="linkEditMain" style='display:block;' href="tree.php?action=edit&id=<?php print $tree["id"];?>"><?php print $tree["name"];?></a>
+				<a class="linkEditMain" style='display:block;' href="<?php print htmlspecialchars("tree.php?action=edit&id=" . $tree["id"]);?>"><?php print $tree["name"];?></a>
 			</td>
 			<td align="right">
-				<a href="tree.php?action=remove&id=<?php print $tree["id"];?>"><img class="buttonSmall" src="images/delete_icon.gif" alt="Delete"></a>
+				<a href="<?php print htmlspecialchars("tree.php?action=remove&id=" . $tree["id"]);?>"><img class="buttonSmall" src="images/delete_icon.gif" alt="Delete"></a>
 			</td>
 		</tr>
 	<?php

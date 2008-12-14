@@ -942,7 +942,7 @@ function draw_menu($user_menu = "") {
 
 			print "\t\t\t<tr class='menuMain' style='white-space:nowrap' $ani>
 				<td onMouseDown='return false' valign='middle'>
-					<img id='tw_" . $id . "' src='images/tw_open.gif' align='absmiddle' alt='Menu Item'>$header_name
+					<img id='tw_" . $id . "' src='images/tw_open.gif' class='buttonSmall' alt='Menu Item'>$header_name
 					<img style='display:none;' src='images/transparent_pixel.gif' $ani2>
 				</td>
 			</tr>

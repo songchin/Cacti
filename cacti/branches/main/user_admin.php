@@ -564,7 +564,7 @@ function graph_perms_edit() {
 					$i++;
 					print "	<tr>
 							<td><span style='font-weight: bold; color: " . (($policy["policy_graphs"] == "1") ? "red" : "blue") . ";'>$i)</span> " . $item["title_cache"] . "</td>
-							<td align='right'><a href='user_admin.php?action=perm_remove&type=graph&id=" . $item["local_graph_id"] . "&user_id=" . $_GET["id"] . "'><img class='buttonSmall' src='images/delete_icon.gif' alt='Delete'></a>&nbsp;</td>
+							<td align='right'><a href='" . htmlspecialchars("user_admin.php?action=perm_remove&type=graph&id=" . $item["local_graph_id"] . "&user_id=" . $_GET["id"]) . "'><img class='buttonSmall' src='images/delete_icon.gif' alt='Delete'></a>&nbsp;</td>
 						</tr>\n";
 				}
 				}else{ print "<tr><td><em>No Graphs</em></td></tr>";
@@ -622,7 +622,7 @@ function graph_perms_edit() {
 						$i++;
 						print "	<tr>
 							<td><span style='font-weight: bold; color: " . (($policy["policy_hosts"] == "1") ? "red" : "blue") . ";'>$i)</span> " . $item["name"] . "</td>
-							<td align='right'><a href='user_admin.php?action=perm_remove&type=host&id=" . $item["id"] . "&user_id=" . $_GET["id"] . "'><img id='buttonSmall' src='images/delete_icon.gif' alt='Delete'></a>&nbsp;</td>
+							<td align='right'><a href='" . htmlspecialchars("user_admin.php?action=perm_remove&type=host&id=" . $item["id"] . "&user_id=" . $_GET["id"]) . "'><img id='buttonSmall' src='images/delete_icon.gif' alt='Delete'></a>&nbsp;</td>
 						</tr>\n";
 					}
 				}else{
@@ -682,7 +682,7 @@ function graph_perms_edit() {
 					$i++;
 					print "	<tr>
 							<td><span style='font-weight: bold; color: " . (($policy["policy_graph_templates"] == "1") ? "red" : "blue") . ";'>$i)</span> " . $item["name"] . "</td>
-							<td align='right'><a href='user_admin.php?action=perm_remove&type=graph_template&id=" . $item["id"] . "&user_id=" . $_GET["id"] . "'><img id='buttonSmall' src='images/delete_icon.gif' alt='Delete'></a>&nbsp;</td>
+							<td align='right'><a href='" . htmlspecialchars("user_admin.php?action=perm_remove&type=graph_template&id=" . $item["id"] . "&user_id=" . $_GET["id"]) . "'><img id='buttonSmall' src='images/delete_icon.gif' alt='Delete'></a>&nbsp;</td>
 						</tr>\n";
 				}
 				}else{ print "<tr><td><em>No Graph Templates</em></td></tr>";
@@ -741,7 +741,7 @@ function graph_perms_edit() {
 					$i++;
 					print "	<tr>
 							<td><span style='font-weight: bold; color: " . (($policy["policy_trees"] == "1") ? "red" : "blue") . ";'>$i)</span> " . $item["name"] . "</td>
-							<td align='right'><a href='user_admin.php?action=perm_remove&type=tree&id=" . $item["id"] . "&user_id=" . $_GET["id"] . "'><img id='buttonSmall' src='images/delete_icon.gif' alt='Delete'></a>&nbsp;</td>
+							<td align='right'><a href='" . htmlspecialchars("user_admin.php?action=perm_remove&type=tree&id=" . $item["id"] . "&user_id=" . $_GET["id"]) . "'><img id='buttonSmall' src='images/delete_icon.gif' alt='Delete'></a>&nbsp;</td>
 						</tr>\n";
 				}
 				}else{ print "<tr><td><em>No Trees</em></td></tr>";
@@ -936,15 +936,15 @@ function user_edit() {
 			<tr>
 				<td width='1'></td>
 				<td <?php print (((get_request_var("action") == "user_realms_edit") || (get_request_var("action") == "user_edit")) ? "bgcolor='silver'" : "bgcolor='#DFDFDF'");?> nowrap='nowrap' width='150' align='center' class='tab'>
-					<span class='textHeader'><a href='user_admin.php?action=user_realms_edit&id=<?php print $_GET["id"];?>'>Realm Permissions</a></span>
+					<span class='textHeader'><a href='<?php print htmlspecialchars("user_admin.php?action=user_realms_edit&id=" . $_GET["id"]);?>'>Realm Permissions</a></span>
 				</td>
 				<td width='1'></td>
 				<td <?php print ((get_request_var("action") == "graph_perms_edit") ? "bgcolor='silver'" : "bgcolor='#DFDFDF'");?> nowrap='nowrap' width='150' align='center' class='tab'>
-					<span class='textHeader'><a href='user_admin.php?action=graph_perms_edit&id=<?php print $_GET["id"];?>'>Graph Permissions</a></span>
+					<span class='textHeader'><a href='<?php print htmlspecialchars("user_admin.php?action=graph_perms_edit&id=" . $_GET["id"]);?>'>Graph Permissions</a></span>
 				</td>
 				<td width='1'></td>
 				<td <?php print ((get_request_var("action") == "graph_settings_edit") ? "bgcolor='silver'" : "bgcolor='#DFDFDF'");?> nowrap='nowrap' width='130' align='center' class='tab'>
-					<span class='textHeader'><a href='user_admin.php?action=graph_settings_edit&id=<?php print $_GET["id"];?>'>Graph Settings</a></span>
+					<span class='textHeader'><a href='<?php print htmlspecialchars("user_admin.php?action=graph_settings_edit&id=" . $_GET["id"]);?>'>Graph Settings</a></span>
 				</td>
 				<?php api_plugin_hook('user_admin_tab');?>
 				<td></td>
@@ -1074,7 +1074,7 @@ function user() {
 			}
 
 			form_alternate_row_color('line' . $user["id"], true);
-			form_selectable_cell("<a class='linkEditMain' href='user_admin.php?action=user_edit&id=" . $user["id"] . "'>" .
+			form_selectable_cell("<a class='linkEditMain' href='" . htmlspecialchars("user_admin.php?action=user_edit&id=" . $user["id"]) . "'>" .
 			(strlen(get_request_var_request("filter")) ? eregi_replace("(" . preg_quote(get_request_var_request("filter")) . ")", "<span style='background-color: #F8D93D;'>\\1</span>",  $user["username"]) : $user["username"]) . "</a>"
 			, $user["id"]);
 			form_selectable_cell((strlen(get_request_var_request("filter")) ? eregi_replace("(" . preg_quote(get_request_var_request("filter")) . ")", "<span style='background-color: #F8D93D;'>\\1</span>",  $user["full_name"]) : $user["full_name"]), $user["id"]);

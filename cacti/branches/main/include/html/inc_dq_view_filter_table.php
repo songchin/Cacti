@@ -1,6 +1,6 @@
 	<tr class="rowAlternate2 noprint">
 		<td class="noprint">
-			<form name="form_graph_id">
+			<form name="form_graph_id" action="data_queries.php">
 			<table cellpadding="0" cellspacing="0">
 				<tr class="noprint">
 					<td style='white-space:nowrap;width:50px;'>

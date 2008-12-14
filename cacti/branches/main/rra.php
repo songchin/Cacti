@@ -186,7 +186,7 @@ function rra() {
 		form_alternate_row_color($rra["id"], true);
 			?>
 			<td>
-				<a class="linkEditMain" href="rra.php?action=edit&id=<?php print $rra["id"];?>"><?php print $rra["name"];?></a>
+				<a class="linkEditMain" href="<?php print htmlspecialchars("rra.php?action=edit&id=" . $rra["id"]);?>"><?php print $rra["name"];?></a>
 			</td>
 			<td>
 				<?php print $rra["steps"];?>
@@ -198,7 +198,7 @@ function rra() {
 				<?php print $rra["timespan"];?>
 			</td>
 			<td align="right">
-				<a href="rra.php?action=remove&id=<?php print $rra["id"];?>"><img class="buttonSmall" src="images/delete_icon.gif" alt="Delete"></a>
+				<a href="<?php print htmlspecialchars("rra.php?action=remove&id=" . $rra["id"]);?>"><img class="buttonSmall" src="images/delete_icon.gif" alt="Delete"></a>
 			</td>
 		</tr>
 	<?php

@@ -899,35 +899,24 @@ function fixBrowserQuirks() {
 	if (browser == "IE") {
 		if (document.getElementById("content") != null) {
 			myDiv = document.getElementById("content");
-
-			if (myDiv.scrollHeight > window_height) {
-				myDiv.style.paddingRight = "30px";
-				myDiv.style.marginRight = "30px";
-				myDiv.style.overflowX   = "hidden";
-			}
 		}else if (document.getElementById("graph_tree")) {
 			myDiv = document.getElementById("graph_tree_content");
+		}
 
-			if (myDiv.scrollHeight > window_height) {
-				myDiv.style.paddingRight = "25px";
-				myDiv.style.overflowX   = "hidden";
-			}
+		if (myDiv.scrollHeight > window_height) {
+			myDiv.style.paddingRight = "30px";
+			myDiv.style.overflowX   = "hidden";
 		}
 	}else if (browser == "FF") {
 		if (document.getElementById("content") != null) {
 			myDiv = document.getElementById("content");
-
-			if ((myDiv.scrollHeight + 60) <= window_height) {
-				myDiv.style.paddingRight = "0px";
-				myDiv.style.overflowX   = "hidden";
-			}
 		}else if (document.getElementById("graph_tree")) {
 			myDiv = document.getElementById("graph_tree_content");
+		}
 
-			if (myDiv.scrollHeight <= window_height) {
-				myDiv.style.paddingRight = "0px";
-				myDiv.style.overflowX   = "hidden";
-			}
+		if (myDiv.scrollHeight <= window_height) {
+			myDiv.style.paddingRight = "10px";
+			myDiv.style.overflowX   = "hidden";
 		}
 	}
 }
