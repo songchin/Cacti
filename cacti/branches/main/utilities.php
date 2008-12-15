@@ -536,9 +536,59 @@ function utilities_view_user_log() {
 	<?php
 
 	html_start_box("<strong>User Login History</strong>", "100%", $colors["header"], "3", "center", "", true);
+	?>
+	<tr class='rowAlternate2'>
+		<td>
+			<form name="form_userlog">
+			<table cellpadding="0" cellspacing="0">
+				<tr>
+					<td style='white-space:nowrap;width:50px;'>
+						Username:&nbsp;
+					</td>
+					<td width="1">
+						<select name="username" onChange="applyViewLogFilterChange(document.form_userlog)">
+							<option value="-1"<?php if ($_REQUEST["username"] == "-1") {?> selected<?php }?>>All</option>
+							<option value="-2"<?php if ($_REQUEST["username"] == "-2") {?> selected<?php }?>>Deleted/Invalid</option>
+							<?php
+							$users = db_fetch_assoc("SELECT DISTINCT username FROM user_auth ORDER BY username");
 
-	include(CACTI_BASE_PATH . "/include/html/inc_user_log_filter_table.php");
-
+							if (sizeof($users) > 0) {
+							foreach ($users as $user) {
+								print "<option value='" . $user["username"] . "'"; if ($_REQUEST["username"] == $user["username"]) { print " selected"; } print ">" . $user["username"] . "</option>\n";
+							}
+							}
+							?>
+						</select>
+					</td>
+					<td style='white-space:nowrap;width:50px;'>
+						&nbsp;Result:&nbsp;
+					</td>
+					<td width="1">
+						<select name="result" onChange="applyViewLogFilterChange(document.form_userlog)">
+							<option value="-1"<?php if ($_REQUEST['result'] == '-1') {?> selected<?php }?>>Any</option>
+							<option value="1"<?php if ($_REQUEST['result'] == '1') {?> selected<?php }?>>Success</option>
+							<option value="0"<?php if ($_REQUEST['result'] == '0') {?> selected<?php }?>>Failed</option>
+						</select>
+					</td>
+					<td style='white-space:nowrap;width:50px;'>
+						&nbsp;Search:&nbsp;
+					</td>
+					<td width="1">
+						<input type="text" name="filter" size="20" value="<?php print $_REQUEST["filter"];?>">
+					</td>
+					<td style='white-space:nowrap;width:160px;'>
+						&nbsp;<input type="submit" Value="Go" name="go" align="middle">
+						<input type="submit" Value="Clear" name="clear_x" align="middle">
+						<input type="submit" Value="Purge" name="purge_x" align="middle">
+					</td>
+				</tr>
+			</table>
+			<div><input type='hidden' name='page' value='1'></div>
+			<div><input type='hidden' name='action' value='view_user_log'></div>
+			</form>
+		</td>
+	</tr>
+	<?php
 	html_end_box(false);
 
 	$sql_where = "";
@@ -745,9 +795,83 @@ function utilities_view_logfile() {
 	<?php
 
 	html_start_box("<strong>Log File Filters</strong>", "100%", $colors["header"], "3", "center", "", true);
-
-	include(CACTI_BASE_PATH . "/include/html/inc_view_logfile_table.php");
-
+	?>
+	<tr class='rowAlternate2'>
+		<td>
+			<form name="form_logfile">
+			<table cellpadding="1" cellspacing="0">
+				<tr>
+					<td style='white-space:nowrap;width:80px;'>
+						Tail Lines:&nbsp;
+					</td>
+					<td width="1">
+						<select name="tail_lines" onChange="applyViewLogFilterChange(document.form_logfile)">
+							<?php
+							foreach($log_tail_lines AS $tail_lines => $display_text) {
+								print "<option value='" . $tail_lines . "'"; if ($_REQUEST["tail_lines"] == $tail_lines) { print " selected"; } print ">" . $display_text . "</option>\n";
+							}
+							?>
+						</select>
+					</td>
+					<td style='white-space:nowrap;width:100px;'>
+						&nbsp;Message Type:&nbsp;
+					</td>
+					<td width="1">
+						<select name="message_type" onChange="applyViewLogFilterChange(document.form_logfile)">
+							<option value="-1"<?php if ($_REQUEST['message_type'] == '-1') {?> selected<?php }?>>All</option>
+							<option value="1"<?php if ($_REQUEST['message_type'] == '1') {?> selected<?php }?>>Stats</option>
+							<option value="2"<?php if ($_REQUEST['message_type'] == '2') {?> selected<?php }?>>Warnings</option>
+							<option value="3"<?php if ($_REQUEST['message_type'] == '3') {?> selected<?php }?>>Errors</option>
+							<option value="4"<?php if ($_REQUEST['message_type'] == '4') {?> selected<?php }?>>Debug</option>
+							<option value="5"<?php if ($_REQUEST['message_type'] == '5') {?> selected<?php }?>>SQL Calls</option>
+						</select>
+					</td>
+					<td style='white-space:nowrap;width:180px;'>
+						&nbsp;<input type="submit" Value="Go" name="go" align="middle">
+						<input type="submit" Value="Clear" name="clear_x" align="middle">
+						<input type="submit" Value="Purge" name="purge_x" align="middle">
+					</td>
+				</tr>
+				<tr>
+					<td style='white-space:nowrap;width:80px;'>
+						Refresh:&nbsp;
+					</td>
+					<td width="1">
+						<select name="refresh" onChange="applyViewLogFilterChange(document.form_logfile)">
+							<?php
+							foreach($page_refresh_interval AS $seconds => $display_text) {
+								print "<option value='" . $seconds . "'"; if ($_REQUEST["refresh"] == $seconds) { print " selected"; } print ">" . $display_text . "</option>\n";
+							}
+							?>
+						</select>
+					</td>
+					<td style='white-space:nowrap;width:100px;'>
+						&nbsp;Display Order:&nbsp;
+					</td>
+					<td width="1">
+						<select name="reverse" onChange="applyViewLogFilterChange(document.form_logfile)">
+							<option value="1"<?php if ($_REQUEST['reverse'] == '1') {?> selected<?php }?>>Newest First</option>
+							<option value="2"<?php if ($_REQUEST['reverse'] == '2') {?> selected<?php }?>>Oldest First</option>
+						</select>
+					</td>
+				</tr>
+			</table>
+			<table cellpadding="1" cellspacing="0">
+				<tr>
+					<td style='white-space:nowrap;width:80px;'>
+						Search:&nbsp;
+					</td>
+					<td width="1">
+						<input type="text" name="filter" size="75" value="<?php print $_REQUEST["filter"];?>">
+					</td>
+				</tr>
+			</table>
+			<div><input type='hidden' name='page' value='1'></div>
+			<div><input type='hidden' name='action' value='view_logfile'></div>
+			</form>
+		</td>
+	</tr>
+	<?php
 	html_end_box(false);
 
 	/* read logfile into an array and display */
@@ -935,9 +1059,99 @@ function utilities_view_snmp_cache() {
 	<?php
 
 	html_start_box("<strong>SNMP Cache Items</strong>", "100%", $colors["header"], "3", "center", "", true);
-
-	include(CACTI_BASE_PATH . "/include/html/inc_snmp_cache_filter_table.php");
-
+	?>
+	<tr class='rowAlternate2'>
+		<td>
+			<form name="form_snmpcache">
+			<table cellpadding="0" cellspacing="0">
+				<tr>
+					<td style='white-space:nowrap;width:50px;'>
+						Host:&nbsp;
+					</td>
+					<td width="1">
+						<select name="host_id" onChange="applyViewSNMPFilterChange(document.form_snmpcache)">
+							<option value="-1"<?php if ($_REQUEST["host_id"] == "-1") {?> selected<?php }?>>Any</option>
+							<option value="0"<?php if ($_REQUEST["host_id"] == "0") {?> selected<?php }?>>None</option>
+							<?php
+							if ($_REQUEST["snmp_query_id"] == -1) {
+								$hosts = db_fetch_assoc("SELECT DISTINCT
+											host.id,
+											host.description,
+											host.hostname
+											FROM (host_snmp_cache,snmp_query,host)
+											WHERE host_snmp_cache.host_id=host.id
+											AND host_snmp_cache.snmp_query_id=snmp_query.id
+											ORDER by host.description");
+							}else{
+								$hosts = db_fetch_assoc("SELECT DISTINCT
+											host.id,
+											host.description,
+											host.hostname
+											FROM (host_snmp_cache,snmp_query,host)
+											WHERE host_snmp_cache.host_id=host.id
+											AND host_snmp_cache.snmp_query_id=snmp_query.id
+											AND host_snmp_cache.snmp_query_id='" . $_REQUEST["snmp_query_id"] . "'
+											ORDER by host.description");
+							}
+							if (sizeof($hosts) > 0) {
+							foreach ($hosts as $host) {
+								print "<option value='" . $host["id"] . "'"; if ($_REQUEST["host_id"] == $host["id"]) { print " selected"; } print ">" . $host["description"] . "</option>\n";
+							}
+							}
+							?>
+						</select>
+					</td>
+					<td style='white-space:nowrap;width:90px;'>
+						&nbsp;Query Name:&nbsp;
+					</td>
+					<td width="1">
+						<select name="snmp_query_id" onChange="applyViewSNMPFilterChange(document.form_snmpcache)">
+							<option value="-1"<?php if ($_REQUEST["host_id"] == "-1") {?> selected<?php }?>>Any</option>
+							<?php
+							if ($_REQUEST["host_id"] == -1) {
+								$snmp_queries = db_fetch_assoc("SELECT DISTINCT
+											snmp_query.id,
+											snmp_query.name
+											FROM (host_snmp_cache,snmp_query,host)
+											WHERE host_snmp_cache.host_id=host.id
+											AND host_snmp_cache.snmp_query_id=snmp_query.id
+											ORDER by snmp_query.name");
+							}else{
+								$snmp_queries = db_fetch_assoc("SELECT DISTINCT
+											snmp_query.id,
+											snmp_query.name
+											FROM (host_snmp_cache,snmp_query,host)
+											WHERE host_snmp_cache.host_id=host.id
+											AND host_snmp_cache.host_id='" . $_REQUEST["host_id"] . "'
+											AND host_snmp_cache.snmp_query_id=snmp_query.id
+											ORDER by snmp_query.name");
+							}
+							if (sizeof($snmp_queries) > 0) {
+							foreach ($snmp_queries as $snmp_query) {
+								print "<option value='" . $snmp_query["id"] . "'"; if ($_REQUEST["snmp_query_id"] == $snmp_query["id"]) { print " selected"; } print ">" . $snmp_query["name"] . "</option>\n";
+							}
+							}
+							?>
+						</select>
+					</td>
+					<td style='white-space:nowrap;width:50px;'>
+						&nbsp;Search:&nbsp;
+					</td>
+					<td width="1">
+						<input type="text" name="filter" size="20" value="<?php print $_REQUEST["filter"];?>">
+					</td>
+					<td style='white-space:nowrap;width:120px;'>
+						&nbsp;<input type="submit" Value="Go" name="go" align="middle">
+						<input type="submit" Value="Clear" name="clear_x" align="middle">
+					</td>
+				</tr>
+			</table>
+			<div><input type='hidden' name='page' value='1'></div>
+			<div><input type='hidden' name='action' value='view_snmp_cache'></div>
+			</form>
+		</td>
+	</tr>
+	<?php
 	html_end_box(false);
 
 	$sql_where = "";
@@ -1105,9 +1319,59 @@ function utilities_view_poller_cache() {
 	<?php
 
 	html_start_box("<strong>Poller Cache Items</strong>", "100%", $colors["header"], "3", "center", "", true);
+	?>
+	<tr class='rowAlternate2'>
+		<td>
+			<form name="form_pollercache">
+			<table cellpadding="0" cellspacing="0">
+				<tr>
+					<td style='white-space:nowrap;width:50px;'>
+						Host:&nbsp;
+					</td>
+					<td width="1">
+						<select name="host_id" onChange="applyPItemFilterChange(document.form_pollercache)">
+							<option value="-1"<?php if ($_REQUEST["host_id"] == "-1") {?> selected<?php }?>>Any</option>
+							<option value="0"<?php if ($_REQUEST["host_id"] == "0") {?> selected<?php }?>>None</option>
+							<?php
+							$hosts = db_fetch_assoc("select id,description,hostname from host order by description");
 
-	include(CACTI_BASE_PATH . "/include/html/inc_poller_item_filter_table.php");
-
+							if (sizeof($hosts) > 0) {
+							foreach ($hosts as $host) {
+								print "<option value='" . $host["id"] . "'"; if ($_REQUEST["host_id"] == $host["id"]) { print " selected"; } print ">" . $host["description"] . "</option>\n";
+							}
+							}
+							?>
+						</select>
+					</td>
+					<td style='white-space:nowrap;width:50px;'>
+						&nbsp;Action:&nbsp;
+					</td>
+					<td width="1">
+						<select name="poller_action" onChange="applyPItemFilterChange(document.form_pollercache)">
+							<option value="-1"<?php if ($_REQUEST['poller_action'] == '-1') {?> selected<?php }?>>Any</option>
+							<option value="0"<?php if ($_REQUEST['poller_action'] == '0') {?> selected<?php }?>>SNMP</option>
+							<option value="1"<?php if ($_REQUEST['poller_action'] == '1') {?> selected<?php }?>>Script</option>
+							<option value="2"<?php if ($_REQUEST['poller_action'] == '2') {?> selected<?php }?>>Script Server</option>
+						</select>
+					</td>
+					<td style='white-space:nowrap;width:50px;'>
+						&nbsp;Search:&nbsp;
+					</td>
+					<td width="1">
+						<input type="text" name="filter" size="40" value="<?php print $_REQUEST["filter"];?>">
+					</td>
+					<td style='white-space:nowrap;width:120px;'>
+						&nbsp;<input type="submit" Value="Go" name="go" align="middle">
+						<input type="submit" Value="Clear" name="clear_x" align="middle">
+					</td>
+				</tr>
+			</table>
+			<div><input type='hidden' name='page' value='1'></div>
+			<div><input type='hidden' name='action' value='view_poller_cache'></div>
+			</form>
+		</td>
+	</tr>
+	<?php
 	html_end_box(false);
 
 	/* form the 'where' clause for our main sql query */

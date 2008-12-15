@@ -670,9 +670,29 @@ function template() {
 
 
 	html_start_box("<strong>Data Templates</strong>", "100%", $colors["header"], "3", "center", "data_templates.php?action=template_edit", true);
-
-	include(CACTI_BASE_PATH . "/include/html/inc_data_template_filter_table.php");
-
+	?>
+	<tr class='rowAlternate2'>
+		<td>
+			<form name="form_data_template">
+			<table cellpadding="0" cellspacing="0">
+				<tr>
+					<td style='white-space:nowrap;width:50px;'>
+						Search:&nbsp;
+					</td>
+					<td width="1">
+						<input type="text" name="filter" size="40" value="<?php print $_REQUEST["filter"];?>">
+					</td>
+					<td style='white-space:nowrap;width:120px;'>
+						&nbsp;<input type="submit" Value="Go" name="go" align="middle">
+						<input type="submit" Value="Clear" name="clear_x" align="middle">
+					</td>
+				</tr>
+			</table>
+			<div><input type='hidden' name='page' value='1'></div>
+			</form>
+		</td>
+	</tr>
+	<?php
 	html_end_box(false);
 
 	/* form the 'where' clause for our main sql query */

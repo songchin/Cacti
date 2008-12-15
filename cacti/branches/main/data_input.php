@@ -502,9 +502,29 @@ function data() {
 	load_current_session_value("page", "sess_data_input_current_page", "1");
 
 	html_start_box("<strong>Data Input Methods</strong>", "100%", $colors["header"], "3", "center", "data_input.php?action=edit", true);
-
-	include(CACTI_BASE_PATH . "/include/html/inc_dq_view_filter_table.php");
-
+	?>
+	<tr class="rowAlternate2 noprint">
+		<td class="noprint">
+			<form name="form_graph_id" action="data_queries.php">
+			<table cellpadding="0" cellspacing="0">
+				<tr class="noprint">
+					<td style='white-space:nowrap;width:50px;'>
+						Search:&nbsp;
+					</td>
+					<td width="1">
+						<input type="text" name="filter" size="40" value="<?php print $_REQUEST["filter"];?>">
+					</td>
+					<td style='white-space:nowrap;width:120px;'>
+						&nbsp;<input type="submit" Value="Go" name="go" align="middle">
+						<input type="submit" Value="Clear" name="clear_x" align="middle">
+					</td>
+				</tr>
+			</table>
+			<div><input type='hidden' name='page' value='1'></div>
+			</form>
+		</td>
+	</tr>
+	<?php
 	html_end_box(FALSE);
 
 	html_start_box("", "100%", $colors["header"], "3", "center", "");
