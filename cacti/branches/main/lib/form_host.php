@@ -1474,7 +1474,7 @@ function host() {
 	html_end_box(false);
 
 	/* add a list of tree names to the actions dropdown */
-	$device_actions = array_merge($device_actions, api_tree_add_tree_names_to_actions_array());
+	$device_actions = $device_actions + api_tree_add_tree_names_to_actions_array();
 
 	/* draw the dropdown containing a list of available actions for this form */
 	draw_actions_dropdown($device_actions);
