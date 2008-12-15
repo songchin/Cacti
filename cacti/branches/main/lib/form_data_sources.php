@@ -988,37 +988,37 @@ function data_source() {
 
 	/* if the user pushed the 'clear' button */
 	if (isset($_REQUEST["clear_x"])) {
-		kill_session_var("sess_ds_current_page");
-		kill_session_var("sess_ds_filter");
-		kill_session_var("sess_ds_sort_column");
-		kill_session_var("sess_ds_sort_direction");
-		kill_session_var("sess_ds_rows");
-		kill_session_var("sess_ds_host_id");
-		kill_session_var("sess_ds_template_id");
-		kill_session_var("sess_ds_method_id");
+//		kill_session_var("sess_ds_current_page");
+//		kill_session_var("sess_ds_filter");
+//		kill_session_var("sess_ds_sort_column");
+//		kill_session_var("sess_ds_sort_direction");
+//		kill_session_var("sess_ds_rows");
+//		kill_session_var("sess_ds_host_id");
+//		kill_session_var("sess_ds_template_id");
+//		kill_session_var("sess_ds_method_id");
 
-		unset($_REQUEST["page"]);
-		unset($_REQUEST["filter"]);
-		unset($_REQUEST["sort_column"]);
-		unset($_REQUEST["sort_direction"]);
-		unset($_REQUEST["rows"]);
-		unset($_REQUEST["host_id"]);
-		unset($_REQUEST["template_id"]);
-		unset($_REQUEST["method_id"]);
+//		unset($_REQUEST["page"]);
+//		unset($_REQUEST["filter"]);
+//		unset($_REQUEST["sort_column"]);
+//		unset($_REQUEST["sort_direction"]);
+//		unset($_REQUEST["rows"]);
+//		unset($_REQUEST["host_id"]);
+//		unset($_REQUEST["template_id"]);
+//		unset($_REQUEST["method_id"]);
 
 		$_REQUEST["page"] = 1;
-	}
+	}else{
+		/* let's see if someone changed an important setting */
+		$changed  = FALSE;
+		$changed += check_changed("filter",      "sess_ds_filter");
+		$changed += check_changed("rows",        "sess_ds_rows");
+		$changed += check_changed("host_id",     "sess_ds_host_id");
+		$changed += check_changed("template_id", "sess_ds_template_id");
+		$changed += check_changed("method_id",   "sess_ds_method_id");
 
-	/* let's see if someone changed an important setting */
-	$changed  = FALSE;
-	$changed += check_changed("filter",      "sess_ds_filter");
-	$changed += check_changed("rows",        "sess_ds_rows");
-	$changed += check_changed("host_id",     "sess_ds_host_id");
-	$changed += check_changed("template_id", "sess_ds_template_id");
-	$changed += check_changed("method_id",   "sess_ds_method_id");
-
-	if ($changed) {
-		$_REQUEST["page"] = "1";
+		if ($changed) {
+			$_REQUEST["page"] = "1";
+		}
 	}
 
 	/* remember these search fields in session vars so we don't have to keep passing them around */
@@ -1031,10 +1031,13 @@ function data_source() {
 	load_current_session_value("template_id", "sess_ds_template_id", "-1");
 	load_current_session_value("method_id", "sess_ds_method_id", "-1");
 
+	if ($_REQUEST["rows"] == '-1') $_REQUEST["rows"] = read_config_option("num_rows_data_source");
+
 	$host = db_fetch_row("select hostname from host where id=" . $_REQUEST["host_id"]);
 
 	?>
 	<script type="text/javascript">
+	<!--
 	$().ready(function() {
 		$("#host").autocomplete("./lib/ajax/get_hosts_brief.php", { max: 8, highlight: false, scroll: true, scrollHeight: 300 });
 		$("#host").result(function(event, data, formatted) {
@@ -1047,6 +1050,14 @@ function data_source() {
 		});
 	});
 
+	function clearDSFilterChange(objForm) {		<?php print (isset($_REQUEST["tab"]) ? "strURL = '?host_id=" . $_REQUEST["host_id"] . "&id=" . $_REQUEST["host_id"] . "&action=edit&action=edit&tab=" . $_REQUEST["tab"] . "';" : "strURL = '?host_id=-1';");?>
+		strURL = strURL + '&filter=';
+		strURL = strURL + '&rows=-1';
+		strURL = strURL + '&template_id=-1';
+		strURL = strURL + '&method_id=-1';
+		document.location = strURL;
+	}
+
 	function applyDSFilterChange(objForm) {
 		if (objForm.host_id.value) {
 			strURL = '?host_id=' + objForm.host_id.value;
@@ -1058,9 +1069,10 @@ function data_source() {
 		strURL = strURL + '&rows=' + objForm.rows.value;
 		strURL = strURL + '&template_id=' + objForm.template_id.value;
 		strURL = strURL + '&method_id=' + objForm.method_id.value;
+		<?php print (isset($_REQUEST["tab"]) ? "strURL = strURL + '&id=' + objForm.host_id.value + '&action=edit&action=edit&tab=" . $_REQUEST["tab"] . "';" : "");?>
 		document.location = strURL;
 	}
-
+	-->
 	</script>
 	<?php
 	html_start_box("<strong>Data Sources</strong> [host: " . (empty($host["hostname"]) ? "No Host" : $host["hostname"]) . "]", "100%", $colors["header"], "3", "center", "data_sources.php?action=data_source_edit&host_id=" . $_REQUEST["host_id"], true);
@@ -1070,8 +1082,8 @@ function data_source() {
 			<form name="form_data_sources" autocomplete="off">
 			<table cellpadding="1" cellspacing="0">
 				<tr>
-					<td width="50">
-						Host:&nbsp;
+					<td width="55">
+						&nbsp;Host:&nbsp;
 					</td>
 					<td width="1">
 						<?php
@@ -1084,7 +1096,7 @@ function data_source() {
 						<input class="ac_field" type="text" id="host" size="30" value="<?php print $hostname; ?>">
 						<input type="hidden" id="host_id">
 					</td>
-					<td width="50">
+					<td width="55">
 						&nbsp;Template:&nbsp;
 					</td>
 					<td width="1">
@@ -1110,13 +1122,13 @@ function data_source() {
 						</select>
 					</td>
 					<td style='white-space:nowrap;width:120px;'>
-						&nbsp;<input type="submit" Value="Go" name="go" align="middle">
-						<input type="submit" Value="Clear" name="clear_x" align="middle">
+						&nbsp;<input type="submit" value="Go" name="go" align="middle">
+						<input type="button" value="Clear" name="clear" align="middle" onClick="clearDSFilterChange(document.form_data_sources)">
 					</td>
 				</tr>
 				<tr>
-					<td width="50">
-						Method:&nbsp;
+					<td width="55">
+						&nbsp;Method:&nbsp;
 					</td>
 					<td width="1">
 						<select name="method_id" onChange="applyDSFilterChange(document.form_data_sources)">
@@ -1139,7 +1151,7 @@ function data_source() {
 							?>
 						</select>
 					</td>
-					<td nowrap style='white-space:nowrap;width:50px;'>
+					<td style='white-space:nowrap;width:55px;'>
 						&nbsp;Rows:&nbsp;
 					</td>
 					<td width="1">
@@ -1158,15 +1170,22 @@ function data_source() {
 			</table>
 			<table cellpadding="1" cellspacing="0">
 				<tr>
-					<td width="50">
-						Search:&nbsp;
+					<td width="55">
+						&nbsp;Search:&nbsp;
 					</td>
 					<td width="1">
 						<input type="text" name="filter" size="40" value="<?php print $_REQUEST["filter"];?>">
 					</td>
 				</tr>
 			</table>
-			<div><input type='hidden' name='page' value='1'></div>
+			<input type='hidden' name='page' value='1'>
+			<?php
+			if (isset($_REQUEST["tab"])) {
+				print "<input type='hidden' name='tab' value='" . $_REQUEST["tab"] . "'>\n";
+				print "<input type='hidden' name='id' value='" . $_REQUEST["id"] . "'>\n";
+				print "<input type='hidden' name='action' value='edit'>\n";
+			}
+			?>
 			</form>
 		</td>
 	</tr>
@@ -1281,12 +1300,12 @@ function data_source() {
 			$poller_interval    = ((isset($poller_intervals[$data_source["local_data_id"]])) ? $poller_intervals[$data_source["local_data_id"]] : 0);
 
 			form_alternate_row_color('line' . $data_source["local_data_id"], true, true);
-			form_selectable_cell("<a class='linkEditMain' href='data_sources.php?action=data_source_edit&id=" . $data_source["local_data_id"] . "' title='" . htmlspecialchars($data_source["name_cache"]) . "'>" . (($_REQUEST["filter"] != "") ? eregi_replace("(" . preg_quote($_REQUEST["filter"]) . ")", "<span style='background-color: #F8D93D;'>\\1</span>", title_trim(htmlentities($data_source["name_cache"]), read_config_option("max_title_data_source"))) : title_trim(htmlentities($data_source["name_cache"]), read_config_option("max_title_data_source"))) . "</a>", $data_source["local_data_id"]);
+			form_selectable_cell("<a class='linkEditMain' href='" . htmlspecialchars("data_sources.php?action=data_source_edit&id=" . $data_source["local_data_id"]) . "' title='" . htmlspecialchars($data_source["name_cache"]) . "'>" . (($_REQUEST["filter"] != "") ? eregi_replace("(" . preg_quote($_REQUEST["filter"]) . ")", "<span style='background-color: #F8D93D;'>\\1</span>", title_trim(htmlentities($data_source["name_cache"]), read_config_option("max_title_data_source"))) : title_trim(htmlentities($data_source["name_cache"]), read_config_option("max_title_data_source"))) . "</a>", $data_source["local_data_id"]);
 			form_selectable_cell($data_source['local_data_id'], $data_source['local_data_id']);
-			form_selectable_cell((($_REQUEST["filter"] != "") ? eregi_replace("(" . preg_quote($_REQUEST["filter"]) . ")", "<span style='background-color: #F8D93D;'>\\1</span>", $data_input_name) : $data_input_name) . "</a>", $data_source["local_data_id"]);
+			form_selectable_cell((($_REQUEST["filter"] != "") ? eregi_replace("(" . preg_quote($_REQUEST["filter"]) . ")", "<span style='background-color: #F8D93D;'>\\1</span>", $data_input_name) : $data_input_name), $data_source["local_data_id"]);
 			form_selectable_cell(get_poller_interval($poller_interval), $data_source["local_data_id"]);
 			form_selectable_cell(($data_source['active'] == "on" ? "Yes" : "No"), $data_source["local_data_id"]);
-			form_selectable_cell((($_REQUEST["filter"] != "") ? eregi_replace("(" . preg_quote($_REQUEST["filter"]) . ")", "<span style='background-color: #F8D93D;'>\\1</span>", $data_source['data_template_name']) : $data_source['data_template_name']) . "</a>", $data_source["local_data_id"]);
+			form_selectable_cell((($_REQUEST["filter"] != "") ? eregi_replace("(" . preg_quote($_REQUEST["filter"]) . ")", "<span style='background-color: #F8D93D;'>\\1</span>", $data_source['data_template_name']) : $data_source['data_template_name']), $data_source["local_data_id"]);
 			form_checkbox_cell($data_source["name_cache"], $data_source["local_data_id"]);
 			form_end_row();
 		}

@@ -70,7 +70,7 @@ function html_start_box($title, $width, $background_color, $cell_padding, $align
 								<img style='display:none;' src="<?php print $config['url_path']; ?>images/transparent_pixel.gif" alt='' <?php print $ani2;?>>
 							</td><?php } if ($add_text != "") {?>
 							<td class="textHeaderDark" align="right">
-								<strong><a class="linkOverDark" <?php print $ani3;?> href="<?php print $add_text;?>">Add</a>&nbsp;</strong>
+								<strong><a class="linkOverDark" href="<?php print htmlspecialchars($add_text);?>">Add</a>&nbsp;</strong>
 							</td>
 						<?php }?></tr>
 					</table>
@@ -428,7 +428,7 @@ function html_header_sort($header_items, $sort_column, $sort_direction, $last_it
 		$new_sort_direction = "ASC";
 	}
 
-	print "\t\t<table class='resizable' cellpadding='3px' cellspacing='0px' width='100%'><thead><tr class='rowSubHeader'>\n";
+	print "\t\t<table class='resizable' cellpadding='3px' cellspacing='0px' width='100%'><tr class='rowSubHeader'>\n";
 
 	$i = 1;
 	$rand_id = 0;
@@ -455,14 +455,14 @@ function html_header_sort($header_items, $sort_column, $sort_direction, $last_it
 			$width = html_get_column_width($pathname, $db_column);
 
 			print "\t\t\t<th style='width: $width;' id='$db_column' onMousemove='doColResize(this, event)' onMouseover='doColResize(this, event)' onMouseout='doneColResize()' class='texSubHeaderDark' " . ((($i) == count($header_items)) ? "colspan='$last_item_colspan'" : "") . " class='textSubHeaderDark'>";
-			print "\n\t\t\t\t<a style='display:block;' href=" . $_SERVER["PHP_SELF"] . "?sort_column=" . $db_column . "&sort_direction=" . $direction . ">" . $display_text . "</a>";
+			print "\n\t\t\t\t<a style='display:block;' href=" . htmlspecialchars($_SERVER["PHP_SELF"] . "?sort_column=" . $db_column . "&sort_direction=" . $direction) . ">" . $display_text . "</a>";
 			print "\n\t\t\t</th>\n";
 		}
 
 		$i++;
 	}
 
-	print "\t\t</tr></thead>\n";
+	print "\t\t</tr>\n";
 }
 
 /* html_header_sort_checkbox - draws a header row with a 'select all' checkbox in the last cell
@@ -491,7 +491,7 @@ function html_header_sort_checkbox($header_items, $sort_column, $sort_direction,
 	/* default to the 'current' file */
 	if ($form_action == "") { $form_action = basename($_SERVER["PHP_SELF"]); }
 
-	print "\t\t<table class='resizable' cellpadding='3px' cellspacing='0px' width='100%'><thead><tr class='rowSubHeader'>\n";
+	print "\t\t<table class='resizable' cellpadding='3px' cellspacing='0px' width='100%'><tr class='rowSubHeader'>\n";
 
 	$rand_id  = 0;
 	$pathname = html_get_php_pathname();
@@ -519,13 +519,13 @@ function html_header_sort_checkbox($header_items, $sort_column, $sort_direction,
 			$width = html_get_column_width($pathname, $db_column);
 
 			print "\t\t\t<th style='width: $width;' id='$db_column' onMousemove='doColResize(this,event)' onMouseover='doColResize(this,event)' onMouseout='doneColResize()' class='textSubHeaderDark'>";
-			print "\n\t\t\t\t<a class='$sort_class' style='display:block;' href=" . $_SERVER["PHP_SELF"] . "?sort_column=" . $db_column . "&sort_direction=" . $direction . ">" . $display_text . "</a>";
+			print "\n\t\t\t\t<a class='$sort_class' style='display:block;' href=" . htmlspecialchars($_SERVER["PHP_SELF"] . "?sort_column=" . $db_column . "&sort_direction=" . $direction) . ">" . $display_text . "</a>";
 			print "\n\t\t\t</th>\n";
 		}
 	}
 
 	print "\t\t\t<th id='rand_$rand_id' style='width: 14px;' class='textSubHeaderDark'><input type='checkbox' style='width: 14px; margin: 0px;' name='all' title='Select All' onClick='SelectAll(\"chk_\",this.checked)'></th>\n<form name='chk' method='post' action='$form_action'>\n";
-	print "\t\t</tr></thead>\n";
+	print "\t\t</tr>\n";
 }
 
 /* html_header - draws a header row suitable for display inside of a box element
@@ -537,9 +537,9 @@ function html_header($header_items, $last_item_colspan = 1, $resizable = true) {
 	if ($resizable) {
 		$pathname = html_get_php_pathname();
 
-		print "\t\t<table class='resizable' cellpadding='3px' cellspacing='0px' width='100%'><thead><tr class='rowSubHeader'>\n";
+		print "\t\t<table class='resizable' cellpadding='3px' cellspacing='0px' width='100%'><tr class='rowSubHeader'>\n";
 	}else{
-		print "\t\t<table cellpadding='3px' cellspacing='0px' width='100%'><thead><tr class='rowSubHeader'>\n";
+		print "\t\t<table cellpadding='3px' cellspacing='0px' width='100%'><tr class='rowSubHeader'>\n";
 	}
 
 	for ($i=0; $i<count($header_items); $i++) {
@@ -552,7 +552,7 @@ function html_header($header_items, $last_item_colspan = 1, $resizable = true) {
 		}
 	}
 
-	print "\t\t</tr></thead>\n";
+	print "\t\t</tr>\n";
 }
 
 /* html_header_checkbox - draws a header row with a 'select all' checkbox in the last cell
@@ -568,9 +568,9 @@ function html_header_checkbox($header_items, $form_action = "", $resizable = fal
 	if ($resizable) {
 		$pathname = html_get_php_pathname();
 
-		print "\t\t<table class='resizable' cellpadding='3px' cellspacing='0px' width='100%'><thead><tr class='rowSubHeader'>\n";
+		print "\t\t<table class='resizable' cellpadding='3px' cellspacing='0px' width='100%'><tr class='rowSubHeader'>\n";
 	}else{
-		print "\t\t<table cellpadding='3px' cellspacing='0px' width='100%'><thead><tr class='rowSubHeader'>\n";
+		print "\t\t<table cellpadding='3px' cellspacing='0px' width='100%'><tr class='rowSubHeader'>\n";
 	}
 
 	for ($i=0; $i<count($header_items); $i++) {
@@ -584,7 +584,7 @@ function html_header_checkbox($header_items, $form_action = "", $resizable = fal
 	}
 
 	print "\t\t\t<th id='rand_$i' style='width: 14px' class='textSubHeaderDark'><input type='checkbox' style='margin: 0px;' name='all' title='Select All' onClick='SelectAll(\"chk_\",this.checked)'></th>\n<form name='chk' method='post' action='$form_action'>\n";
-	print "\t\t</tr></thead>\n";
+	print "\t\t</tr>\n";
 }
 
 /* html_create_list - draws the items for an html dropdown given an array of data
@@ -602,7 +602,7 @@ function html_header_checkbox($header_items, $form_action = "", $resizable = fal
 function html_create_list($form_data, $column_display, $column_id, $form_previous_value) {
 	if (empty($column_display)) {
 		foreach (array_keys($form_data) as $id) {
-			print '\t\t\t\t\t\t\t<option value="' . $id . '"';
+			print "\t\t\t\t\t\t\t<option value='" . $id . "'";
 
 			if ($form_previous_value == $id) {
 			print " selected";
@@ -681,7 +681,7 @@ function html_create_nav($current_page, $max_pages, $rows_per_page, $total_rows,
 
 	$url_page_select = get_page_list($current_page, $max_pages, $rows_per_page, $total_rows, $base_url, $page_var);
 
-	$nav = "<tr class='rowHeader'>
+	$nav = "		<tr class='rowHeader'>
 			<td colspan='$columns'>
 				<table width='100%' cellspacing='0' cellpadding='0' border='0'>
 					<tr>

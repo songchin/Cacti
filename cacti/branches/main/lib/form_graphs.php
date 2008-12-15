@@ -1042,6 +1042,8 @@ function graph() {
 	load_current_session_value("rows", "sess_graph_rows", read_config_option("num_rows_graph"));
 	load_current_session_value("template_id", "sess_graph_template_id", "-1");
 
+	if ($_REQUEST["rows"] == '-1') $_REQUEST["rows"] = read_config_option("num_rows_graph");
+
 	?>
 	<script type="text/javascript">
 	<!--
@@ -1057,6 +1059,14 @@ function graph() {
 		});
 	});
 
+	function clearGraphsFilterChange(objForm) {
+		<?php print (isset($_REQUEST["tab"]) ? "strURL = '?host_id=" . $_REQUEST["host_id"] . "&id=" . $_REQUEST["host_id"] . "&action=edit&action=edit&tab=" . $_REQUEST["tab"] . "';" : "strURL = '?host_id=-1';");?>
+		strURL = strURL + '&filter=';
+		strURL = strURL + '&rows=-1';
+		strURL = strURL + '&template_id=-1';
+		document.location = strURL;
+	}
+
 	function applyGraphsFilterChange(objForm) {
 		if (objForm.host_id.value) {
 			strURL = '?host_id=' + objForm.host_id.value;
@@ -1066,9 +1076,9 @@ function graph() {
 		}
 		strURL = strURL + '&rows=' + objForm.rows.value;
 		strURL = strURL + '&template_id=' + objForm.template_id.value;
+		<?php print (isset($_REQUEST["tab"]) ? "strURL = strURL + '&id=' + objForm.host_id.value + '&action=edit&action=edit&tab=" . $_REQUEST["tab"] . "';" : "");?>
 		document.location = strURL;
 	}
-
 	-->
 	</script>
 	<?php
@@ -1081,7 +1091,7 @@ function graph() {
 			<table cellpadding="1" cellspacing="0">
 				<tr>
 					<td width="50">
-						Host:&nbsp;
+						&nbsp;Host:&nbsp;
 					</td>
 					<td width="1">
 						<?php
@@ -1127,14 +1137,14 @@ function graph() {
 					</td>
 					<td style='white-space:nowrap;width:120px;'>
 						&nbsp;<input type="submit" Value="Go" name="go" align="middle">
-						<input type="submit" Value="Clear" name="clear_x" align="middle">
+						<input type="button" Value="Clear" name="clear_x" align="middle" onClick="clearGraphsFilterChange(document.form_graph_id)">
 					</td>
 				</tr>
 			</table>
 			<table cellpadding="1" cellspacing="0">
 				<tr>
 					<td style='white-space:nowrap;width:50px;'>
-						Rows:&nbsp;
+						&nbsp;Rows:&nbsp;
 					</td>
 					<td width="1">
 						<select name="rows" onChange="applyGraphsFilterChange(document.form_graph_id)">
@@ -1156,7 +1166,14 @@ function graph() {
 					</td>
 				</tr>
 			</table>
-			<div><input type='hidden' name='page' value='1'></div>
+			<input type='hidden' name='page' value='1'>
+			<?php
+			if (isset($_REQUEST["tab"])) {
+				print "<input type='hidden' name='tab' value='" . $_REQUEST["tab"] . "'>\n";
+				print "<input type='hidden' name='id' value='" . $_REQUEST["id"] . "'>\n";
+				print "<input type='hidden' name='action' value='edit'>\n";
+			}
+			?>
 			</form>
 		</td>
 	</tr>

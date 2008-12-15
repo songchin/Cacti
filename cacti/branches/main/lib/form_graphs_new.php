@@ -396,82 +396,84 @@ function graphs_new() {
 	html_start_box("<strong>" . $host["description"] . "(" . $host["hostname"] . ")</strong>" . db_fetch_cell("select name from host_template where id=" . $host["host_template_id"]), "100%", $colors["header"], "3", "center", "");
 
 	?>
-	<form name="form_graphs_new">
-	<table width="100%" cellpadding="0" align="center">
-		<tr>
-			<?php if (!isset($_REQUEST["tab"])) { ?>
-			<td style='white-space:nowrap;width:55px;' class='textGraphFilter'>
-				&nbsp;Host:&nbsp;
-			</td>
-			<td width="1">
-				<select name="host_id" onChange="applyGraphsNewFilterChange(document.form_graphs_new)">
-				<?php
-				$hosts = db_fetch_assoc("select id,CONCAT_WS('',description,' (',hostname,')') as name from host order by description,hostname");
+	<tr class='rowAlternate2'>
+		<td>
+			<form name="form_graphs_new">
+			<table cellpadding="0" align="left">
+				<tr>
+					<?php if (!isset($_REQUEST["tab"])) { ?>
+					<td style='white-space:nowrap;width:55px;' class='textGraphFilter'>
+						&nbsp;Host:&nbsp;
+					</td>
+					<td width="1">
+						<select name="host_id" onChange="applyGraphsNewFilterChange(document.form_graphs_new)">
+						<?php
+						$hosts = db_fetch_assoc("select id,CONCAT_WS('',description,' (',hostname,')') as name from host order by description,hostname");
 
-				if (sizeof($hosts) > 0) {
-				foreach ($hosts as $item) {
-					print "<option value='" . $item["id"] . "'"; if ($_REQUEST["host_id"] == $item["id"]) { print " selected"; } print ">" . $item["name"] . "</option>\n";
-				}
-				}
-				?>
-				</select>
-			</td>
-			<?php }else{ ?>
-			<div><input type='hidden' name='host_id' id='host_id' value='<?php print $_REQUEST["host_id"];?>'></div>
-			<?php } ?>
-			<td style='white-space:nowrap;width:55px;' class='textGraphFilter'>
-				&nbsp;Types:&nbsp;
-			</td>
-			<td width="1">
-				<select name="graph_type" onChange="applyGraphsNewFilterChange(document.form_graphs_new)">
-				<option value="-2"<?php if ($_REQUEST["graph_type"] == "-2") {?> selected<?php }?>>All</option>
-				<option value="-1"<?php if ($_REQUEST["graph_type"] == "-1") {?> selected<?php }?>>Graph Template Based</option>
-				<?php
+						if (sizeof($hosts) > 0) {
+						foreach ($hosts as $item) {
+							print "<option value='" . $item["id"] . "'"; if ($_REQUEST["host_id"] == $item["id"]) { print " selected"; } print ">" . $item["name"] . "</option>\n";
+						}
+						}
+						?>
+						</select>
+					</td>
+					<?php }else{ ?>
+					<div><input type='hidden' name='host_id' id='host_id' value='<?php print $_REQUEST["host_id"];?>'></div>
+					<?php } ?>
+					<td style='white-space:nowrap;width:55px;' class='textGraphFilter'>
+						&nbsp;Types:&nbsp;
+					</td>
+					<td width="1">
+						<select name="graph_type" onChange="applyGraphsNewFilterChange(document.form_graphs_new)">
+						<option value="-2"<?php if ($_REQUEST["graph_type"] == "-2") {?> selected<?php }?>>All</option>
+						<option value="-1"<?php if ($_REQUEST["graph_type"] == "-1") {?> selected<?php }?>>Graph Template Based</option>
+						<?php
 
-				$snmp_queries = db_fetch_assoc("SELECT
-					snmp_query.id,
-					snmp_query.name,
-					snmp_query.xml_path
-					FROM (snmp_query,host_snmp_query)
-					WHERE host_snmp_query.snmp_query_id=snmp_query.id
-					AND host_snmp_query.host_id=" . $host["id"] . "
-					ORDER BY snmp_query.name");
+						$snmp_queries = db_fetch_assoc("SELECT
+							snmp_query.id,
+							snmp_query.name,
+							snmp_query.xml_path
+							FROM (snmp_query,host_snmp_query)
+							WHERE host_snmp_query.snmp_query_id=snmp_query.id
+							AND host_snmp_query.host_id=" . $host["id"] . "
+							ORDER BY snmp_query.name");
 
-				if (sizeof($snmp_queries) > 0) {
-				foreach ($snmp_queries as $query) {
-					print "<option value='" . $query["id"] . "'"; if ($_REQUEST["graph_type"] == $query["id"]) { print " selected"; } print ">" . $query["name"] . "</option>\n";
-				}
-				}
-				?>
-				</select>
-			</td>
-			<td style="white-space:nowrap;" class="textInfo" align="center" valign="top">
-				<?php if (!isset($_REQUEST["tab"])) { ?><span style="white-space: nowrap; color: #c16921;">*</span><a href="host.php?action=edit&id=<?php print $_REQUEST["host_id"];?>">Edit this Host</a><br><?php } ?>
-				<span style="white-space: nowrap; color: #c16921;">*</span><a href="host.php?action=edit">Create New Host</a><br>
-				<?php api_plugin_hook('graphs_new_top_links'); ?>
-			</td>
-		</tr>
-	</table>
-	<?php if ($_REQUEST["graph_type"] > 0) {?>
-	<table width="100%" cellpadding="0" align="center">
-		<tr>
-			<td style='white-space:nowrap;width:55px;' class='textGraphFilter'>
-				&nbsp;Search:&nbsp;
-			</td>
-			<td style='white-space:nowrap;width:200px;'>
-				<input type="text" name="filter" size="30" width="200" value="<?php print $_REQUEST["filter"];?>">
-			</td>
-			<td align="left" style='white-space:nowrap;width:120px;'>
-				&nbsp;<input type="submit" name="go" value="Go" align="middle">
-				<input type="submit" name="clear_x" value="Clear" align="middle">
-			</td>
-		</tr>
-	</table>
-	<?php }else{
-		form_hidden_box("filter", $_REQUEST["filter"], "");
-	}?>
-	</form>
-
+						if (sizeof($snmp_queries) > 0) {
+						foreach ($snmp_queries as $query) {
+							print "<option value='" . $query["id"] . "'"; if ($_REQUEST["graph_type"] == $query["id"]) { print " selected"; } print ">" . $query["name"] . "</option>\n";
+						}
+						}
+						?>
+						</select>
+					</td>
+					<td style="white-space:nowrap;" class="textInfo" align="center" valign="top">
+						<?php if (!isset($_REQUEST["tab"])) { ?><span style="white-space: nowrap; color: #c16921;">*</span><a href="host.php?action=edit&id=<?php print $_REQUEST["host_id"];?>">Edit this Host</a><br><?php } ?>
+						<?php api_plugin_hook('graphs_new_top_links'); ?>
+					</td>
+				</tr>
+			</table>
+			<?php if ($_REQUEST["graph_type"] > 0) {?>
+			<table width="100%" cellpadding="0" align="center">
+				<tr>
+					<td style='white-space:nowrap;width:55px;' class='textGraphFilter'>
+						&nbsp;Search:&nbsp;
+					</td>
+					<td style='white-space:nowrap;width:200px;'>
+						<input type="text" name="filter" size="30" width="200" value="<?php print $_REQUEST["filter"];?>">
+					</td>
+					<td align="left" style='white-space:nowrap;width:120px;'>
+						&nbsp;<input type="submit" name="go" value="Go" align="middle">
+						<input type="submit" name="clear_x" value="Clear" align="middle">
+					</td>
+				</tr>
+			</table>
+			<?php }else{
+				form_hidden_box("filter", $_REQUEST["filter"], "");
+			}?>
+			</form>
+		</td>
+	</tr>
 	<form name="chk" method="post" action="<?php print $file2;?>">
 	<?php
 

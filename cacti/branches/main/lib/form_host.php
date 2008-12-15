@@ -536,6 +536,7 @@ function host_edit() {
 
 	/* ================= input validation ================= */
 	input_validate_input_number(get_request_var("id"));
+	input_validate_input_number(get_request_var("host_id"));
 	/* ==================================================== */
 
 	display_output_messages();
@@ -548,12 +549,13 @@ function host_edit() {
 		"meta" => "Metadata"
 	);
 
-	if (!empty($_GET["id"])) {
-		$host         = db_fetch_row("select * from host where id=" . $_GET["id"]);
+	if (!empty($_REQUEST["id"])) {
+		$host         = db_fetch_row("select * from host where id=" . $_REQUEST["id"]);
 		$host_text    = "<strong>" . $host["description"] . "(" . $host["hostname"] . ")</strong>";
 		$header_label = "[edit: " . $host["description"] . "]";
-	}elseif (!empty($_GET["host_id"])) {		$_GET["id"]   = $_GET["host_id"];
-		$host         = db_fetch_row("select * from host where id=" . $_GET["id"]);
+	}elseif (!empty($_GET["host_id"])) {
+		$_REQUEST["id"]   = $_REQUEST["host_id"];
+		$host         = db_fetch_row("select * from host where id=" . $_REQUEST["id"]);
 		$host_text    = "<strong>" . $host["description"] . "(" . $host["hostname"] . ")</strong>";
 		$header_label = "[edit: " . $host["description"] . "]";
 	}else{
@@ -563,12 +565,12 @@ function host_edit() {
 	}
 
 	/* set the default settings category */
-	if (!isset($_GET["tab"])) {
+	if (!isset($_REQUEST["tab"])) {
 		/* there is no selected tab; select the first one */
 		$current_tab = array_keys($host_tabs);
 		$current_tab = $current_tab[0];
 	}else{
-		$current_tab = $_GET["tab"];
+		$current_tab = $_REQUEST["tab"];
 	}
 
 	/* draw the categories tabs on the top of the page */
@@ -577,7 +579,7 @@ function host_edit() {
 
 	if (sizeof($host_tabs) > 0) {
 	foreach (array_keys($host_tabs) as $tab_short_name) {
-		print "<div class='tabDefault'><a " . (($tab_short_name == $current_tab) ? "class='tabSelected'" : "class='tabDefault'") . " href='host.php?action=edit" . (isset($_GET['id']) ? "&id=" . $_GET['id'] . "&host_id=" . $_GET['id']: "") . "&tab=$tab_short_name'>$host_tabs[$tab_short_name]</a></div>";
+		print "<div class='tabDefault'><a " . (($tab_short_name == $current_tab) ? "class='tabSelected'" : "class='tabDefault'") . " href='" . htmlspecialchars("host.php?action=edit" . (isset($_REQUEST['id']) ? "&id=" . $_REQUEST['id'] . "&host_id=" . $_REQUEST['id']: "") . "&tab=$tab_short_name") . "'>$host_tabs[$tab_short_name]</a></div>";
 	}
 	}
 	print "</div></td></tr></table>";
@@ -631,7 +633,6 @@ function host_edit() {
 
 			break;
 	}
-
 }
 
 function host_display_general($host, $host_text) {
