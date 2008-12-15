@@ -24,7 +24,7 @@
 ?>
 	</div>
 </div>
-<div id='footer'></div>
+<div id='footer'><br/></div>
 </body>
 </html>
 
