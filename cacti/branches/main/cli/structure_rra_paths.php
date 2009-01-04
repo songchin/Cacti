@@ -104,7 +104,7 @@ foreach ($rrd_info as $info) {
 		/* see if we can create the dirctory for the new file */
 		if (mkdir($new_base_path, 0775)) {
 			echo "NOTE: New Directory '$new_base_path' Created for RRD Files\n";
-			if ($config["cacti_server_os"] != "win32") {
+			if (CACTI_SERVER_OS != "win32") {
 				if (chown($new_base_path, $owner_id) && chgrp($new_base_path, $group_id)) {
 					echo "NOTE: New Directory '$new_base_path' Permissions Set\n";
 				} else {
@@ -140,7 +140,7 @@ foreach ($rrd_info as $info) {
 		$done_count++;
 
 		echo "NOTE: Copy Complete for File '" . $info["rrd_path"] . "'\n";
-		if ($config["cacti_server_os"] != "win32") {
+		if (CACTI_SERVER_OS != "win32") {
 			if (chown($new_rrd_path, $owner_id) && chgrp($new_rrd_path, $group_id)) {
 				echo "NOTE: Permissions set for '$new_rrd_path'\n";
 			}else{
