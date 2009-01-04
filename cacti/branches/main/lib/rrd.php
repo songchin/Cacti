@@ -95,6 +95,9 @@ function rrdtool_execute($command_line, $log_to_stdout, $output_flag, &$rrd_stru
 		if (sizeof($rrd_struc) == 0) {
 			session_write_close();
 			$fp = popen(read_config_option("path_rrdtool") . escape_command(" $command_line"), "r");
+			if (!$fp) {
+				unset($fp);
+			}
 		}else{
 			$i = 0;
 
@@ -129,6 +132,9 @@ function rrdtool_execute($command_line, $log_to_stdout, $output_flag, &$rrd_stru
 		if (sizeof($rrd_struc) == 0) {
 			session_write_close();
 			$fp = popen(read_config_option("path_rrdtool") . escape_command(" $command_line"), "rb");
+			if (!$fp) {
+				unset($fp);
+			}
 		}else{
 			$i = 0;
 
