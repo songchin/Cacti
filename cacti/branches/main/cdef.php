@@ -45,16 +45,6 @@ switch ($_REQUEST["action"]) {
 		form_actions();
 
 		break;
-	case 'item_movedown':
-		item_movedown();
-
-		header("Location: cdef.php?action=edit&id=" . $_GET["cdef_id"]);
-		break;
-	case 'item_moveup':
-		item_moveup();
-
-		header("Location: cdef.php?action=edit&id=" . $_GET["cdef_id"]);
-		break;
 	case 'item_remove':
 		item_remove();
 
@@ -253,24 +243,6 @@ function form_actions() {
     CDEF Item Functions
    -------------------------- */
 
-function item_movedown() {
-	/* ================= input validation ================= */
-	input_validate_input_number(get_request_var("id"));
-	input_validate_input_number(get_request_var("cdef_id"));
-	/* ==================================================== */
-
-	move_item_down("cdef_items", $_GET["id"], "cdef_id=" . $_GET["cdef_id"]);
-}
-
-function item_moveup() {
-	/* ================= input validation ================= */
-	input_validate_input_number(get_request_var("id"));
-	input_validate_input_number(get_request_var("cdef_id"));
-	/* ==================================================== */
-
-	move_item_up("cdef_items", $_GET["id"], "cdef_id=" . $_GET["cdef_id"]);
-}
-
 function item_remove() {
 	/* ================= input validation ================= */
 	input_validate_input_number(get_request_var("id"));
@@ -414,9 +386,9 @@ function cdef_edit() {
 		draw_cdef_preview($_GET["id"]);
 		html_end_box();
 
-		html_start_box("<strong>CDEF Items</strong>", "100%", $colors["header"], "3", "center", "cdef.php?action=item_edit&cdef_id=" . $cdef["id"]);
+		html_start_box("<strong>CDEF Items</strong>", "100%", $colors["header"], "3", "center", "cdef.php?action=item_edit&cdef_id=" . $cdef["id"], false, "cdef");
 
-		print "<tr class='rowSubHeader'>";
+		print "<tr class='rowSubHeader nodrag nodrop'>";
 			DrawMatrixHeaderItem("Item",$colors["header_text"],1);
 			DrawMatrixHeaderItem("Item Value",$colors["header_text"],1);
 			DrawMatrixHeaderItem("&nbsp;",$colors["header_text"],2);
@@ -430,14 +402,10 @@ function cdef_edit() {
 			form_alternate_row_color($cdef_item["id"], true);
 				?>
 				<td>
-					<a class="linkEditMain" style='display:block;' href="<?php print htmlspecialchars("cdef.php?action=item_edit&id=" . $cdef_item["id"] . "&cdef_id=" . $cdef["id"]);?>">Item #<?php print $i;?></a>
+					<a class="linkEditMain" href="<?php print htmlspecialchars("cdef.php?action=item_edit&id=" . $cdef_item["id"] . "&cdef_id=" . $cdef["id"]);?>">Item #<?php print $i;?></a>
 				</td>
 				<td>
 					<em><?php $cdef_item_type = $cdef_item["type"]; print $cdef_item_types[$cdef_item_type];?></em>: <strong><?php print get_cdef_item_name($cdef_item["id"]);?></strong>
-				</td>
-				<td>
-					<a href="<?php print htmlspecialchars("cdef.php?action=item_movedown&id=" . $cdef_item["id"] . "&cdef_id=" . $cdef["id"]);?>"><img class="buttonSmall" src="images/move_down.gif" alt="Move Down"></a>
-					<a href="<?php print htmlspecialchars("cdef.php?action=item_moveup&id=" . $cdef_item["id"] . "&cdef_id=" . $cdef["id"]);?>"><img class="buttonSmall" src="images/move_up.gif" alt="Move Up"></a>
 				</td>
 				<td align="right">
 					<a href="<?php print htmlspecialchars("cdef.php?action=item_remove&id=" . $cdef_item["id"] . "&cdef_id=" . $cdef["id"]);?>"><img class="buttonSmall" src="images/delete_icon.gif" alt="Delete"></a>
@@ -449,8 +417,17 @@ function cdef_edit() {
 		}
 		html_end_box();
 	}
-
 	form_save_button_alt();
+?>
+<script type="text/javascript">
+	$('#cdef').tableDnD({
+		onDrop: function(table, row) {
+			$('#AjaxResult').load("lib/ajax/jquery.tablednd/cdef.ajax.php?id=<?php print $_GET["id"];?>&"+$.tableDnD.serialize());
+		}
+	});
+</script>
+<?php
+
 }
 
 function cdef() {

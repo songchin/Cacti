@@ -1,12 +1,11 @@
 Cacti CHANGELOG
-
--bug#0000157: Dual pane tree should have the option of not rendering all trees in one page 
+-bug#0000157: Dual pane tree should have the option of not rendering all trees in one page
 -bug#0000486: RRA template edit allows invalid XFF values
 -bug#0000626: Setting "Default Graph Tree" does not work with dual pane
 -bug#0000828: Truncated IOS description in |query_ifAlias|
--bug#0000909: ALL_DATA_SOURCES_NODUPS breaks graphing when using "Consolidation Function" MAX 
+-bug#0000909: ALL_DATA_SOURCES_NODUPS breaks graphing when using "Consolidation Function" MAX
 -bug#0000943: scripts/ping.pl has incorrect response when "icmp hop redirect" occurs
--bug#0000948: Exporting graphs to a local path does not work correctly 
+-bug#0000948: Exporting graphs to a local path does not work correctly
 -bug#0000986: Graphs that are done by graph type are not exported when using the tree view
 -bug#0001022: strip_quotes incorrectly parsing script output
 -bug#0001085: LDAP enabled status not maintained on upgrade from 0.8.6j to 0.8.7
@@ -18,8 +17,8 @@ Cacti CHANGELOG
 -bug#0001138: Lack of error checking causes graphs to not update when rrdtool crashes
 -bug#0001141: Script server appears broken for "index" and "query" requests (Documentation Fix)
 -bug#0001145: Save Failed error when changing Graph Details
--bug#0001147: Cactid doesn't trim white space from data template OIDs 
--bug#0001153: Undefined variable: local_graph_id in graphs.php on line 201 
+-bug#0001147: Cactid doesn't trim white space from data template OIDs
+-bug#0001153: Undefined variable: local_graph_id in graphs.php on line 201
 -bug#0001160: In Suggested Values editor, name and field are reversed. Include column headers
 -bug#0001166: Installer does not properly handle disabled guest_user conversion
 -bug#0001174: Unidentified index warning
@@ -27,7 +26,7 @@ Cacti CHANGELOG
 -bug#0001176: Problem validating IPv6 addresses
 -bug#0001180: Graph Export to CSV failed by using IE 6 SP2
 -bug#0001182: Subdirectories are not secure and allow browsing
--bug#0001188: no graph export in tree mode 
+-bug#0001188: no graph export in tree mode
 -bug#0001191: Faulty IP address validation by ping.php script
 -bug#0001194: RRDtool URL is incorrect on the about page
 -bug#0001204: since upgrade to 0.87b the hosts with ip address with 255 are down and have no datas
@@ -38,44 +37,45 @@ Cacti CHANGELOG
 -bug#0001216: CSV Export for zoomed graph, results in Validation error
 -bug#0001217: Default Graph Tree is not reflected in Left Pane of the graph page
 -bug#0001223: Missing Hard return on last GPRINT causes bad formatting
--bug#0001228: LDAP server port not honored 
+-bug#0001228: LDAP server port not honored
 -bug#0001230: poller stops updating rrd files
 -bug#0001236: set 'stats_recache' to zero when no re-index is present
 -bug#0001238: Guest user has access to change password
--bug#0001239: Using the TOTAL_ALL_DATA_SOURCES in a graph where all item are using the MAX CF yields an invalid(empty) CDEF 
+-bug#0001239: Using the TOTAL_ALL_DATA_SOURCES in a graph where all item are using the MAX CF yields an invalid(empty) CDEF
 -bug#0001240: SNMP string cleanup removes too many '=' signs
 -bug#0001244: missing closing </form> on host.php
 -bug#0001247: snmp ping won't work for snmp v3
--bug#0001256: Spine-poller.c : Bug in size string sysUptime 
+-bug#0001256: Spine-poller.c : Bug in size string sysUptime
 -bug#0001258: "Remove Verification" is an ambiguous definition, leads to data loss
 -bug#0001259: LDAP Authentication using Solaris 10 standard ldap client fails
 -bug#0001262: Do not allow deletion of Graph Export User
--bug#0001264: CDEFs can't recognize |query_*| 
+-bug#0001264: CDEFs can't recognize |query_*|
 -bug#0001268: resource/snmp_queries/net-snmp_disk.xml has incorrect name for "Percent Available"
 -bug#0001273: Escape windows paths to accomodate spaces
 -bug#0001281: ICMP Ping fails if an octet == 255
 -bug#0001283: graph_image.php causes PHP Notice errors on view
--bug#0001286: poller_item cache is not updated when "Data Input Method" is changed 
+-bug#0001286: poller_item cache is not updated when "Data Input Method" is changed
 -bug#0001288: A host with ICMP ping selected as method does not properly perform ping
 -bug#0001291: Reapply Suggested Names fails on Script Queries
--bug#0001293: When Creating Data Query Graphs, Performing Search will Cause List to Disappear 
+-bug#0001293: When Creating Data Query Graphs, Performing Search will Cause List to Disappear
 -bug#0001294: Stack overflow if database is not correctly initialized
 -bug#0001295: Division by zero when rrd_step < poller_interval
--bug#0001296: add_graphs.php does not add the graph template to the host 
+-bug#0001296: add_graphs.php does not add the graph template to the host
 -bug#0001299: When creating graphs the entire poller cache is recreated for a host
 -bug#0001306: Empty COMMENT + <HR> gives you a blank legend line (was: Add Blank Line to Graph via Pull down menu)
--bug#0001314: Use Data Query variables as HRULE input for graph templates  
+-bug#0001314: Use Data Query variables as HRULE input for graph templates
 -bug#0001318: Graph Export with 1 minute poller re-exports graphs 5 times
 -bug#0001320: Invalid PHP_SELF Path
 -bug#0001326: If a user's password contains a single quote the login fails
 -bug#0001342: VRULE printed as HRULE on graph_templates.php graph template item list
 -bug#0001351: Deleting 1000 graphs along with their Data Sources crashes the Server
--bug#0001359: Better error checking in rrd.php  
--bug: IE generates errors on both the host and graph settings pages
+-bug#0001359: Better error checking in rrd.php
 -feature: Pagainate Treeview Dual Pane
 -feature: Allow user to specify maximum graphs per page from Treeview Dual Pane
 -feature: Allow Treeview Dual Pane to be filtered for graph titles
 -feature: Allow the user to add or remove graph text from page for searching with the browser
+-feature: jQuery "TableDnd" used for cdef item sort (courtesy Browniebraun)
+-bug: IE generates errors on both the host and graph settings pages
 -bug: Host save failed in FireFox 3 for non-SNMP V3 hosts, complaining about "password mismatch"
 -bug: remove graph permissions if graph is removed
 -bug: remove host permissions if host is removed
@@ -118,7 +118,7 @@ Cacti CHANGELOG
 -feature#0001122: Propagate Host Template changes to related hosts
 -feature#0001111: add remove-device.php cli script, replace numerical constants for permission handling by PERM_*
 -feature#0001111: add remove-graph.php cli script
--feature#0001082: Mirror Graph Rename based on template function to work with Data Sources 
+-feature#0001082: Mirror Graph Rename based on template function to work with Data Sources
 -feature#0001030: Lower limit and upper limit |query_*| variable support for Graph Templates
 -feature#0000954: implement --alt-y-grid graph option
 -feature#0000967: Option to force users to use SSL

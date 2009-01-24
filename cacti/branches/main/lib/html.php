@@ -30,8 +30,9 @@
    @arg $cell_padding - the amount of cell padding to use inside of the box
    @arg $align - the HTML alignment to use for the box (center, left, or right)
    @arg $add_text - the url to use when the user clicks 'Add' in the upper-right
-     corner of the box ("" for no 'Add' link) */
-function html_start_box($title, $width, $background_color, $cell_padding, $align, $add_text = "", $collapsing = false) {
+     corner of the box ("" for no 'Add' link)
+   @arg $table_id - the table id to make the table addressable by jQuery's table DND plugin */
+function html_start_box($title, $width, $background_color, $cell_padding, $align, $add_text = "", $collapsing = false, $table_id = '') {
 	global $colors, $config;
 
 	$temp_string = str_replace("strong", "", $title);
@@ -54,6 +55,8 @@ function html_start_box($title, $width, $background_color, $cell_padding, $align
 		$ani2 = "";
 		$ani3 = "";
 	}
+
+	$table_id = ($table_id != '') ? "id=\"$table_id\"" : "";
 
 	?>
 		<table class="startBoxHeader" align="<?php print $align;?>" width="<?php print $width;?>" cellpadding=0 cellspacing=0>
@@ -78,7 +81,7 @@ function html_start_box($title, $width, $background_color, $cell_padding, $align
 			</tr>
 			<?php }?><tr style='border: 0px;' id='<?php print $item_id;?>'>
 				<td>
-					<table width="100%" cellpadding="<?php print $cell_padding;?>" cellspacing="0" style='border-width:0px;'><?php
+					<table <?php print $table_id;?> width="100%" cellpadding="<?php print $cell_padding;?>" cellspacing="0" style='border-width:0px;'><?php
 }
 
 function html_start_box_dq($query_name, $query_id, $host_id, $colspan, $width, $background_color, $cell_padding, $align) {

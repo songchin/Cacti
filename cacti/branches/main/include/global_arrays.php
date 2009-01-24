@@ -463,6 +463,7 @@ $user_auth_realms = array(
 $user_auth_realm_filenames = array(
 	"about.php" => 8,
 	"cdef.php" => 14,
+	"cdef.ajax.php" => 14,
 	"color.php" => 5,
 	"data_input.php" => 2,
 	"data_sources.php" => 3,
@@ -494,7 +495,7 @@ $user_auth_realm_filenames = array(
 	"email_templates.php" => 8,
 	"event_queue.php" => 8,
 	"smtp_queue.php" => 8,
-	"logout.php" => 7
+	"logout.php" => 7,
 	);
 
 $hash_type_codes = array(
