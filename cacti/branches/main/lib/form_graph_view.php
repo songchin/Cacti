@@ -162,7 +162,7 @@ function graph_view_timespan_selector() {
 	<tr class="rowGraphFilter noprint">
 		<td class="noprint">
 			<form name="form_timespan_selector" method="post" action="graph_view.php">
-			<table width="100%" cellpadding="0" cellspacing="0">
+			<table cellpadding="0" cellspacing="0">
 				<tr class="rowGraphFilter">
 					<td style='white-space:nowrap;width:55px;'>
 						&nbsp;<strong>Presets:</strong>&nbsp;
@@ -218,7 +218,7 @@ function graph_view_timespan_selector() {
 						</select>
 						<input style='border-width:0px;vertical-align:middle;align:middle;padding-bottom:5px;' type='image' name='move_right' src='images/move_right.gif' alt='Right' title='Shift Right'>
 					</td>
-					<td style='white-space:nowrap;width:120px;'>
+					<td style='white-space:nowrap;width:130px;'>
 						&nbsp;<input type='submit' value='Refresh' name='button_refresh'>
 						<input type='submit' value='Clear' name='button_clear_x'>
 					</td>
