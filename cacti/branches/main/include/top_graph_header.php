@@ -174,7 +174,7 @@ $page_title = api_plugin_hook_function('page_title', 'Cacti');
 		</script><?php } ?>
 	</div>
 	<div id='vsplitter' onMouseout='doneDivResize()' onMouseover='doDivResize(this,event)' onMousemove='doDivResize(this,event)'>
-		<div id='vsplitter_toggle' onClick='vSplitterToggle()' title='ToggleMenu'></div>
+		<div id='vsplitter_toggle' onClick='vSplitterToggle()' onMouseover='vSplitterEm()' onMouseout='vSplitterUnEm()' title='Hide/Unhide Menu'></div>
 	</div>
 	<div id='graph_tree_content'>
 	<?php }else{ ?>
