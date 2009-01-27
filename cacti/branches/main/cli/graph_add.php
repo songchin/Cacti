@@ -72,7 +72,7 @@ if (sizeof($parms)) {
 	$templateId 	= 0;
 	$hostTemplateId = 0;
 	$force      	= 0;
-	
+
 	$listGraphTemplates 	= FALSE;
 	$listSNMPFields  		= FALSE;
 	$listSNMPValues  		= FALSE;
@@ -181,7 +181,7 @@ if (sizeof($parms)) {
 			break;
 		case "--list-graph-templates":
 			$listGraphTemplates = TRUE;
-			
+
 			break;
 		case "--version":
 		case "-V":
@@ -415,6 +415,7 @@ if (sizeof($parms)) {
 			echo "NOTE: Not Adding Graph - this graph already exists - graph-id: ($existsAlready) - data-source-id: ($dataSourceId)\n";
 			exit(1);
 		}else{
+			$dataSourceId = "";
 			$returnArray = create_complete_graph_from_template($templateId, $hostId, "", $values["cg"]);
 		}
 
