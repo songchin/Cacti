@@ -205,14 +205,11 @@ function item_edit() {
 	load_current_session_value("host_id", "sess_ds_host_id", "-1");
 	load_current_session_value("data_template_id", "sess_data_template_id", "-1");
 
-	$host = db_fetch_row("select hostname from host where id=" . $_REQUEST["host_id"]);
+	$id = (!empty($_REQUEST["id"]) ? "&id=" . $_REQUEST["id"] : "");
+	$host = db_fetch_row("select hostname from host where id=" . get_request_var_request("host_id"));
 
 	html_start_box("<strong>Data Sources</strong> [host: " . (empty($host["hostname"]) ? "No Host" : $host["hostname"]) . "]", "100%", $colors["header"], "3", "center", "");
 
-	$id = "";
-	if (!empty($_REQUEST["id"])) {
-		$id = "&id=" . $_REQUEST["id"];
-	}
 	?>
 	<tr>
 		<td>
