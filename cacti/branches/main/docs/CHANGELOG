@@ -75,6 +75,7 @@ Cacti CHANGELOG
 -bug#0001378: ping.pl script fails when using tcp:hostname    
 -bug#0001382: cdef.php error due to wrong function name
 -bug#0001383: syntax error in lib/rrd.php with PHP 4.4.4
+-bug#0001385: LDAP Error: Group DN could not be found
 -feature: Pagainate Treeview Dual Pane
 -feature: Allow user to specify maximum graphs per page from Treeview Dual Pane
 -feature: Allow Treeview Dual Pane to be filtered for graph titles
