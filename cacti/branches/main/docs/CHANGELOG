@@ -76,6 +76,7 @@ Cacti CHANGELOG
 -bug#0001382: cdef.php error due to wrong function name
 -bug#0001383: syntax error in lib/rrd.php with PHP 4.4.4
 -bug#0001385: LDAP Error: Group DN could not be found
+-bug#0001391: parsing snmp string with "=" ?? --> WARNING: Result from SNMP not valid
 -bug#0001392: Problem on CDEF function ALL|SIMILAR_DATA_SOURCES_(NO)?DUPS
 -feature: Pagainate Treeview Dual Pane
 -feature: Allow user to specify maximum graphs per page from Treeview Dual Pane
