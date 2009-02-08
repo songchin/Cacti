@@ -732,7 +732,7 @@ function grow_right_pane_tree($tree_id, $leaf_id, $host_group_data) {
 
 	if (($leaf_type == "header") || (empty($leaf_id))) {
 		if (strlen($_REQUEST["filter"])) {
-			$sql_where = (empty($sql_where) ? "" : "AND (title_cache LIKE '%" . $_REQUEST["filter"] . "%' OR title LIKE '%" . $_REQUEST["filter"] . "%')");
+			$sql_where = (empty($sql_where) ? "" : "AND (title_cache LIKE '%" . $_REQUEST["filter"] . "%' OR graph_templates_graph.title LIKE '%" . $_REQUEST["filter"] . "%')");
 		}
 
 		$graph_list = db_fetch_assoc("SELECT
