@@ -477,11 +477,13 @@ table.resizable th {
 	font-size: 10px;
 	color: #FFFFFF;
 	font-weight: bold;
+	white-space: nowrap;
 }
 
 .textSubHeaderDark a, .textSubHeaderDark a:visited, .textSubHeaderDark a:hover {
 	color: #FFFFFF;
 	text-decoration: none;
+	white-space: nowrap;
 }
 .textSubSortHeaderDark, .textSubSortHeaderDark:visited {
 	background: #1F2328 url('../images/rowSubHeader.png') repeat-x scroll top left;

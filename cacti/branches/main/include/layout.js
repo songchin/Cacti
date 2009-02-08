@@ -576,8 +576,8 @@ function MouseDown(event) {
 		objTh = getParentNode(objTh,"TH");
 
 		if (objTh == null) return;
-		objTable      = getParentNode(objTh,"TABLE");
 
+		objTable      = getParentNode(objTh,"TABLE");
 		objThWidth    = parseInt(objTh.style.width);
 
 		if (objThWidth > 0) {
@@ -724,6 +724,14 @@ function setFocus() {
 	if ((!found) && (hfound)) {
 		inputs[hid_count].focus();
 	}
+}
+
+function vSplitterEm() {
+	document.getElementById("vsplitter_toggle").style.backgroundColor = 'yellow';
+}
+
+function vSplitterUnEm() {
+	document.getElementById("vsplitter_toggle").style.backgroundColor = 'white';
 }
 
 function vSplitterPos() {
