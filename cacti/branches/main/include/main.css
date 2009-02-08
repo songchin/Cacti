@@ -171,6 +171,45 @@ td {
 	z-index: 1;
 }
 
+/* php info section */
+.center h2 {
+	background: #001A6E url('../images/rowSubHeader2.png') repeat-x scroll top left;
+	align: left;
+	text-align: left;
+	font-size: 12px;
+	margin: 0px;
+	padding: 4px;
+	border-width: 0px;
+	color: #FFFFFF;
+}
+
+.center table {
+	width: 100%;
+	border: 0px;
+	margin: 0px;
+	padding:0px;
+}
+
+.center th {
+	background: #001A6E url('../images/rowSubHeader.png') repeat-x scroll top left;
+	align: left;
+	text-align: left;
+	padding: 4px;
+	margin: 0px;
+	border-width: thin;
+	color: #FFFFFF;
+}
+
+.center td.e {
+	width:10%;
+	font-size: 11px;
+	font-weight: bold;
+}
+
+.center td.v {
+	font-size: 11px;
+}
+
 .menuMain td {
 	background: #001A6E url('../images/rowHeader.png') repeat-x scroll top left;
 	color: #FFFFFF;

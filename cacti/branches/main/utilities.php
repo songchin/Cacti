@@ -120,11 +120,9 @@ switch ($_REQUEST["action"]) {
 		include_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
 		break;
 	case 'view_tech':
-		$php_info = utilities_php_modules();
-
 		include_once(CACTI_BASE_PATH . "/include/top_header.php");
 
-		utilities_view_tech($php_info);
+		utilities_view_tech();
 
 		include_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
 		break;
@@ -145,7 +143,6 @@ switch ($_REQUEST["action"]) {
    ----------------------- */
 
 function utilities_php_modules() {
-
 	/*
 	   Gather phpinfo into a string variable - This has to be done before
 	   any headers are sent to the browser, as we are going to do some
@@ -165,30 +162,32 @@ function utilities_php_modules() {
 	$php_info = preg_replace('/\<\/a\>/', '<hr>', $php_info);
 	$php_info = preg_replace('/\<img.*\>/U', '', $php_info);
 	$php_info = preg_replace('/\<\/?address\>/', '', $php_info);
+	$php_info = str_replace("<hr>", "", $php_info);
+	$php_info = str_replace("<br />", "", $php_info);
+	$php_info = str_replace("<h2>", "<h2><strong>Module Name: </strong>", $php_info);
+	$php_info = str_replace("cellpadding=\"3\"", "cellspacing=\"0\" cellpadding=\"3\"", $php_info);
 
 	return $php_info;
 }
 
-
 function memory_bytes($val) {
-    $val = trim($val);
-    $last = strtolower($val{strlen($val)-1});
-    switch($last) {
-        // The 'G' modifier is available since PHP 5.1.0
-        case 'g':
-            $val *= 1024;
-        case 'm':
-            $val *= 1024;
-        case 'k':
-            $val *= 1024;
-    }
+	$val  = trim($val);
+	$last = strtolower($val{strlen($val)-1});
+	switch($last) {
+	// The 'G' modifier is available since PHP 5.1.0
+	case 'g':
+		$val *= 1024;
+	case 'm':
+		$val *= 1024;
+	case 'k':
+		$val *= 1024;
+	}
 
-    return $val;
+	return $val;
 }
 
 
 function memory_readable($val) {
-
 	if ($val < 1024) {
 		$val_label = "bytes";
 	}elseif ($val < 1048576) {
@@ -202,26 +201,93 @@ function memory_readable($val) {
 		$val /= 1073741824;
 	}
 
-    return $val . $val_label;
+	return $val . $val_label;
 }
 
 
-function utilities_view_tech($php_info = "") {
+function utilities_view_tech() {
 	global $colors, $config, $rrdtool_versions, $poller_options, $input_types;
 
 	/* Remove all cached settings, cause read of database */
 	kill_session_var("sess_config_array");
 
-	/* Get table status */
-	$table_status = db_fetch_assoc("SHOW TABLE STATUS");
+	$tabs = array(
+		"general" => "General",
+		"database" => "DB Info",
+		"process" => "DB Processes",
+		"php" => "PHP Info"
+	);
+
+	/* set the default settings category */
+	if (!isset($_REQUEST["tab"])) {
+		/* there is no selected tab; select the first one */
+		$current_tab = array_keys($tabs);
+		$current_tab = $current_tab[0];
+	}else{
+		$current_tab = $_REQUEST["tab"];
+	}
+
+	/* draw the categories tabs on the top of the page */
+	print "<table width='100%' cellspacing='0' cellpadding='0' align='center'><tr>";
+	print "<td><div class='tabs'>";
+
+	if (sizeof($tabs) > 0) {
+	foreach (array_keys($tabs) as $tab_short_name) {
+		print "<div class='tabDefault'><a " . (($tab_short_name == $current_tab) ? "class='tabSelected'" : "class='tabDefault'") . " href='" . htmlspecialchars("utilities.php?action=view_tech&tab=$tab_short_name") . "'>$tabs[$tab_short_name]</a></div>";
+	}
+	}
+	print "</div></td></tr></table>";
+
+	if (!isset($_REQUEST["tab"])) {
+		$_REQUEST["tab"] = "general";
+	}
+
+	switch ($_REQUEST["tab"]) {
+		case "general":
+			display_general();
+
+			break;
+		case "database":
+			display_database();
+
+			break;
+		case "process":
+			display_database_processes();
+
+			break;
+		case "php":
+			display_php();
+
+			break;
+		default:
+
+			break;
+	}
+}
+
+function display_php() {
+	global $colors, $config, $rrdtool_versions, $poller_options, $input_types;
+
+	$php_info = utilities_php_modules();
+
+	html_start_box("<strong>PHP Module Information</strong>", "100%", $colors["header"], "3", "center", "");
+	print "<tr>\n";
+	print "<td style='padding:0px;margin:0px;'>" . $php_info . "</td>\n";
+	print "</tr>\n";
+
+	html_end_box();
+}
+
+function display_general() {
+	global $colors, $config, $rrdtool_versions, $poller_options, $input_types;
 
 	/* Get poller stats */
 	$poller_item = db_fetch_assoc("SELECT action, count(action) as total FROM poller_item GROUP BY action");
 
 	/* Get system stats */
-	$host_count = db_fetch_cell("SELECT COUNT(*) FROM host");
+	$host_count  = db_fetch_cell("SELECT COUNT(*) FROM host");
 	$graph_count = db_fetch_cell("SELECT COUNT(*) FROM graph_local");
-	$data_count = db_fetch_assoc("SELECT i.type_id, COUNT(i.type_id) AS total FROM data_template_data AS d, data_input AS i WHERE d.data_input_id = i.id AND local_data_id <> 0 GROUP BY i.type_id");
+	$data_count  = db_fetch_assoc("SELECT i.type_id, COUNT(i.type_id) AS total FROM data_template_data AS d, data_input AS i WHERE d.data_input_id = i.id AND local_data_id <> 0 GROUP BY i.type_id");
 
 	/* Get RRDtool version */
 	$rrdtool_version = "Unknown";
@@ -243,14 +309,8 @@ function utilities_view_tech($php_info = "") {
 
 	/* Get SNMP cli version */
 	$snmp_version = read_config_option("snmp_version");
-	if ((file_exists(read_config_option("path_snmpget"))) && (($config["cacti_server_os"] == "unix") || (is_executable(read_config_option("path_snmpget"))))) {
-
-		$out_array = array();
-		exec(read_config_option("path_snmpget") . " -V 2>&1", $out_array);
-
-		if (sizeof($out_array) > 0) {
-			$snmp_version = $out_array[0];
-		}
+	if ((file_exists(read_config_option("path_snmpget"))) && (is_executable(read_config_option("path_snmpget")))) {
+		$snmp_version = trim(shell_exec(read_config_option("path_snmpget") . " -V 2>&1"));
 	}
 
 	/* Check RRDTool issues */
@@ -264,39 +324,39 @@ function utilities_view_tech($php_info = "") {
 	}
 
 	/* Display tech information */
-	html_start_box("<strong>Technical Support</strong>", "100%", $colors["header"], "3", "center", "");
+	html_start_box("<strong>General Technical Support Information</strong>", "100%", $colors["header"], "3", "center", "");
 	html_header(array("General Information"), 2);
 	print "<tr class='rowAlternate1'>\n";
-	print "		<td class='textAreaNotes'>Date</td>\n";
+	print "		<td style='width:20%;' class='textAreaNotes'>Date</td>\n";
 	print "		<td class='textAreaNotes'>" . date("r") . "</td>\n";
 	print "</tr>\n";
 	print "<tr class='rowAlternate2'>\n";
-	print "		<td class='textAreaNotes'>Cacti Version</td>\n";
+	print "		<td style='width:20%;' class='textAreaNotes'>Cacti Version</td>\n";
 	print "		<td class='textAreaNotes'>" . CACTI_VERSION . "</td>\n";
 	print "</tr>\n";
 	print "<tr class='rowAlternate1'>\n";
-	print "		<td class='textAreaNotes'>Cacti OS</td>\n";
+	print "		<td style='width:20%;' class='textAreaNotes'>Cacti OS</td>\n";
 	print "		<td>" . CACTI_SERVER_OS . "</td>\n";
 	print "</tr>\n";
 	print "<tr class='rowAlternate2'>\n";
-	print "		<td class='textAreaNotes'>SNMP Version</td>\n";
+	print "		<td style='width:20%;' class='textAreaNotes'>SNMP Version</td>\n";
 	print "		<td>" . $snmp_version . "</td>\n";
 	print "</tr>\n";
 
 	print "<tr class='rowAlternate1'>\n";
-	print "		<td class='textAreaNotes'>RRDTool Version</td>\n";
+	print "		<td style='width:20%;' class='textAreaNotes'>RRDTool Version</td>\n";
 	print "		<td class='textAreaNotes'>" . $rrdtool_versions[$rrdtool_version] . " " . $rrdtool_error . "</td>\n";
 	print "</tr>\n";
 	print "<tr class='rowAlternate2'>\n";
-	print "		<td class='textAreaNotes'>Hosts</td>\n";
+	print "		<td style='width:20%;' class='textAreaNotes'>Hosts</td>\n";
 	print "		<td class='textAreaNotes'>" . $host_count . "</td>\n";
 	print "</tr>\n";
 	print "<tr class='rowAlternate1'>\n";
-	print "		<td class='textAreaNotes'>Graphs</td>\n";
+	print "		<td style='width:20%;' class='textAreaNotes'>Graphs</td>\n";
 	print "		<td class='textAreaNotes'>" . $graph_count . "</td>\n";
 	print "</tr>\n";
 	print "<tr class='rowAlternate2'>\n";
-	print "		<td class='textAreaNotes'>Data Sources</td>\n";
+	print "		<td style='width:20%;' class='textAreaNotes'>Data Sources</td>\n";
 	print "		<td class='textAreaNotes'>";
 	$data_total = 0;
 	if (sizeof($data_count)) {
@@ -319,16 +379,16 @@ function utilities_view_tech($php_info = "") {
 
 	html_header(array("Poller Information"), 2);
 	print "<tr class='rowAlternate1'>\n";
-	print "		<td class='textAreaNotes'>Interval</td>\n";
+	print "		<td style='width:20%;' class='textAreaNotes'>Interval</td>\n";
 	print "		<td class='textAreaNotes'>" . read_config_option("poller_interval") . "</td>\n";
 	print "</tr>\n";
 	print "<tr class='rowAlternate2'>\n";
-	print "		<td class='textAreaNotes'>Type</td>\n";
+	print "		<td style='width:20%;' class='textAreaNotes'>Type</td>\n";
 	print "		<td class='textAreaNotes'>" . $poller_options[read_config_option("poller_type")] . " " . $spine_version . "</td>\n";
 	print "</tr>\n";
 
 	print "<tr class='rowAlternate1'>\n";
-	print "		<td class='textAreaNotes'>Items</td>\n";
+	print "		<td style='width:20%;' class='textAreaNotes'>Items</td>\n";
 	print "		<td class='textAreaNotes'>";
 	$total = 0;
 	if (sizeof($poller_item)) {
@@ -344,46 +404,46 @@ function utilities_view_tech($php_info = "") {
 	print "</tr>\n";
 
 	print "<tr class='rowAlternate2'>\n";
-	print "		<td class='textAreaNotes'>Concurrent Processes</td>\n";
+	print "		<td style='width:20%;' class='textAreaNotes'>Concurrent Processes</td>\n";
 	print "		<td class='textAreaNotes'>" . read_config_option("concurrent_processes") . "</td>\n";
 	print "</tr>\n";
 
 	print "<tr class='rowAlternate1'>\n";
-	print "		<td class='textAreaNotes'>Max Threads</td>\n";
+	print "		<td style='width:20%;' class='textAreaNotes'>Max Threads</td>\n";
 	print "		<td class='textAreaNotes'>" . read_config_option("max_threads") . "</td>\n";
 	print "</tr>\n";
 
 	print "<tr class='rowAlternate2'>\n";
-	print "		<td class='textAreaNotes'>PHP Servers</td>\n";
+	print "		<td style='width:20%;' class='textAreaNotes'>PHP Servers</td>\n";
 	print "		<td class='textAreaNotes'>" . read_config_option("php_servers") . "</td>\n";
 	print "</tr>\n";
 
 	print "<tr class='rowAlternate1'>\n";
-	print "		<td class='textAreaNotes'>Script Timeout</td>\n";
+	print "		<td style='width:20%;' class='textAreaNotes'>Script Timeout</td>\n";
 	print "		<td class='textAreaNotes'>" . read_config_option("script_timeout") . "</td>\n";
 	print "</tr>\n";
 
 	print "<tr class='rowAlternate2'>\n";
-	print "		<td class='textAreaNotes'>Max OID</td>\n";
+	print "		<td style='width:20%;' class='textAreaNotes'>Max OID</td>\n";
 	print "		<td class='textAreaNotes'>" . read_config_option("max_get_size") . "</td>\n";
 	print "</tr>\n";
 
 	print "<tr class='rowAlternate1'>\n";
-	print "		<td class='textAreaNotes'>Last Run Statistics</td>\n";
+	print "		<td style='width:20%;' class='textAreaNotes'>Last Run Statistics</td>\n";
 	print "		<td class='textAreaNotes'>" . read_config_option("stats_poller") . "</td>\n";
 	print "</tr>\n";
 
 	html_header(array("PHP Information"), 2);
 	print "<tr class='rowAlternate1'>\n";
-	print "		<td class='textAreaNotes'>PHP Version</td>\n";
+	print "		<td style='width:20%;' class='textAreaNotes'>PHP Version</td>\n";
 	print "		<td class='textAreaNotes'>" . phpversion() . "</td>\n";
 	print "</tr>\n";
 	print "<tr class='rowAlternate2'>\n";
-	print "		<td class='textAreaNotes'>PHP OS</td>\n";
+	print "		<td style='width:20%;' class='textAreaNotes'>PHP OS</td>\n";
 	print "		<td class='textAreaNotes'>" . PHP_OS . "</td>\n";
 	print "</tr>\n";
 	print "<tr class='rowAlternate1'>\n";
-	print "		<td class='textAreaNotes'>PHP uname</td>\n";
+	print "		<td style='width:20%;' class='textAreaNotes'>PHP uname</td>\n";
 	print "		<td class='textAreaNotes'>";
 	if (function_exists("php_uname")) {
 		print php_uname();
@@ -393,7 +453,7 @@ function utilities_view_tech($php_info = "") {
 	print "</td>\n";
 	print "</tr>\n";
 	print "<tr class='rowAlternate2'>\n";
-	print "		<td class='textAreaNotes'>PHP SNMP</td>\n";
+	print "		<td style='width:20%;' class='textAreaNotes'>PHP SNMP</td>\n";
 	print "		<td class='textAreaNotes'>";
 	if (function_exists("snmpget")) {
 		print "Installed";
@@ -403,11 +463,11 @@ function utilities_view_tech($php_info = "") {
 	print "</td>\n";
 	print "</tr>\n";
 	print "<tr class='rowAlternate1'>\n";
-	print "		<td class='textAreaNotes'>max_execution_time</td>\n";
+	print "		<td style='width:20%;' class='textAreaNotes'>max_execution_time</td>\n";
 	print "		<td class='textAreaNotes'>" . ini_get("max_execution_time") . "</td>\n";
 	print "</tr>\n";
 	print "<tr class='rowAlternate2'>\n";
-	print "		<td class='textAreaNotes'>memory_limit</td>\n";
+	print "		<td style='width:20%;' class='textAreaNotes'>memory_limit</td>\n";
 	print "		<td class='textAreaNotes'>" . ini_get("memory_limit");
 
 	/* Calculate memory suggestion based off of data source count */
@@ -428,48 +488,75 @@ function utilities_view_tech($php_info = "") {
 	print "</td>\n";
 	print "</tr>\n";
 
-	html_header(array("MySQL Table Information"), 2);
-	print "<tr class='rowAlternate1'>\n";
-	print "		<td class='textAreaNotes' colspan='2' align='center'>";
+	html_end_box();
+}
+
+function display_database() {
+	global $colors, $config, $rrdtool_versions, $poller_options, $input_types;
+
+	/* Get table status */
+	$table_status = db_fetch_assoc("SHOW TABLE STATUS");
+
+	$display_array = array("Name", "Engine", "Version", "Row Format", "Rows", "Average Length", "Data Length", "Index Length", "Auto Increment", "Collation", "Comment");
+
+	html_start_box("<strong>MySQL Table Information</strong>", "100%", $colors["header"], "3", "center", "");
+	html_header($display_array);
 	if (sizeof($table_status) > 0) {
-		print "<table border='1' cellpadding='2' cellspacing='0'>\n";
-		print "<tr>\n";
-		print "  <th>Name</th>\n";
-		print "  <th>Rows</th>\n";
-		print "  <th>Engine</th>\n";
-		print "  <th>Collation</th>\n";
-		print "  <th>Check Status</th>\n";
-		print "</tr>\n";
 		foreach ($table_status as $item) {
 			form_alternate_row_color();
-			print "  <td>" . $item["Name"] . "</td>\n";
-			print "  <td>" . $item["Rows"] . "</td>\n";
+			print "<td>" . $item["Name"] . "</td>\n";
 			if (isset($item["Engine"])) {
 				print "  <td>" . $item["Engine"] . "</td>\n";
 			}else{
 				print "  <td>Unknown</td>\n";
 			}
+			print "<td>" . $item["Version"] . "</td>\n";
+			print "<td>" . $item["Row_format"] . "</td>\n";
+			print "<td>" . $item["Rows"] . "</td>\n";
+			print "<td>" . $item["Avg_row_length"] . "</td>\n";
+			print "<td>" . $item["Data_length"] . "</td>\n";
+			print "<td>" . $item["Index_length"] . "</td>\n";
+			print "<td>" . $item["Auto_increment"] . "</td>\n";
 			if (isset($item["Collation"])) {
 				print "  <td>" . $item["Collation"] . "</td>\n";
 			} else {
 				print "  <td>Unknown</td>\n";
 			}
-			print "  <td>" . db_fetch_cell("CHECK TABLE " . $item["Name"], "Msg_text") . "</td>\n";
+			print "<td>" . db_fetch_cell("CHECK TABLE " . $item["Name"], "Msg_text") . "</td>\n";
 			print "</tr>\n";
 		}
-		print "</table>\n";
 	}else{
 		print "Unable to retrieve table status";
 	}
+	html_end_box();
+}
 
-	print "</td>\n";
-	print "</tr>\n";
+function display_database_processes() {
+	global $colors, $config, $rrdtool_versions, $poller_options, $input_types;
 
-	html_header(array("PHP Module Information"), 2);
-	print "<tr class='rowAlternate1'>\n";
-	print "		<td class='textAreaNotes' colspan='2'>" . $php_info . "</td>\n";
-	print "</tr>\n";
+	/* Get table status */
+	$db_processes = db_fetch_assoc("SHOW PROCESSLIST");
 
+	$display_array = array("Id", "User", "Host", "Database", "Command", "Time", "State", "Info");
+
+	html_start_box("<strong>MySQL Process Information</strong>", "100%", $colors["header"], "3", "center", "");
+	html_header($display_array);
+	if (sizeof($db_processes) > 0) {
+		foreach ($db_processes as $item) {
+			form_alternate_row_color();
+			print "<td>" . $item["Id"] . "</td>\n";
+			print "<td>" . $item["User"] . "</td>\n";
+			print "<td>" . $item["Host"] . "</td>\n";
+			print "<td>" . $item["db"] . "</td>\n";
+			print "<td>" . $item["Command"] . "</td>\n";
+			print "<td>" . $item["Time"] . "</td>\n";
+			print "<td>" . $item["State"] . "</td>\n";
+			print "<td>" . $item["Info"] . "</td>\n";
+			print "</tr>\n";
+		}
+	}else{
+		print "Unable to retrieve process status";
+	}
 	html_end_box();
 }
 
