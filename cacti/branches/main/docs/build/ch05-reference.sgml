@@ -1070,7 +1070,7 @@ WARNING: Do not interrupt this script.  Rebuilding the Poller Cache can take qui
 			<para>If you feel the need for manual re-indexing, you may run it from cli.
 			Calling the script with the parameter <userinput>--help</userinput> yields</para>
 			<screen><prompt>shell&gt;</prompt>php -q poller_reindex_hosts.php --help
-Cacti Reindex Host Script 1.2, Copyright 2007-2008 - The Cacti Group
+Cacti Reindex Host Script 1.2, Copyright 2004-2009 - The Cacti Group
 
 usage: poller_reindex_hosts.php --id=[host_id|All] [--qid=[ID|All]] [--host-descr=[description]]
                            [-d] [-h] [--help] [-v] [--version]
