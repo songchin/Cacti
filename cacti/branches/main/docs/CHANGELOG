@@ -82,7 +82,8 @@ Cacti CHANGELOG
 -bug#0001388: Spine uses illegal flag for ping on Mac OS X 
 -bug#0001391: parsing snmp string with "=" ?? --> WARNING: Result from SNMP not valid
 -bug#0001392: Problem on CDEF function ALL|SIMILAR_DATA_SOURCES_(NO)?DUPS
--feature: Pagainate Treeview Dual Pane
+-bug#0001404: timeout in "function ping_icmp" (lib/ping.php)
+-feature: Paginate Treeview Dual Pane
 -feature: Allow user to specify maximum graphs per page from Treeview Dual Pane
 -feature: Allow Treeview Dual Pane to be filtered for graph titles
 -feature: Allow the user to add or remove graph text from page for searching with the browser
