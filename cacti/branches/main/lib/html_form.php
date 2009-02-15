@@ -70,10 +70,13 @@ function draw_edit_form($array) {
 				print "<td width='" . ((isset($config_array["left_column_width"])) ? $config_array["left_column_width"] : "50%") . "'>\n<font class='textEditTitle'>" . $field_array["friendly_name"] . "</font><br>\n";
 
 				if (isset($field_array["sub_checkbox"])) {
-					form_checkbox($field_array["sub_checkbox"]["name"], $field_array["sub_checkbox"]["value"],
-						$field_array["sub_checkbox"]["friendly_name"], "",
-							((isset($check_array["on_change"])) ? $check_array["on_change"] : ""),
-							((isset($field_array["form_id"])) ? $field_array["form_id"] : ""));
+					form_checkbox($field_array["sub_checkbox"]["name"],
+						$field_array["sub_checkbox"]["value"],
+						$field_array["sub_checkbox"]["friendly_name"],
+						((isset($field_array["default"])) ? $field_array["default"] : ""),
+						((isset($field_array["form_id"])) ? $field_array["form_id"] : ""),
+						((isset($field_array["class"])) ? $field_array["class"] : ""),
+						((isset($field_array["on_change"])) ? $field_array["on_change"] : ""));
 				}
 
 				print ((isset($field_array["description"])) ? $field_array["description"] : "") . "</td>\n";
@@ -101,7 +104,9 @@ function draw_edit_control($field_name, &$field_array) {
 			((isset($field_array["default"])) ? $field_array["default"] : ""),
 			$field_array["max_length"],
 			((isset($field_array["size"])) ? $field_array["size"] : "40"), "text",
-			((isset($field_array["form_id"])) ? $field_array["form_id"] : ""));
+			((isset($field_array["form_id"])) ? $field_array["form_id"] : ""),
+			((isset($field_array["class"])) ? $field_array["class"] : ""),
+			((isset($field_array["on_change"])) ? $field_array["on_change"] : ""));
 
 		break;
 	case 'filepath':
@@ -195,7 +200,9 @@ function draw_edit_control($field_name, &$field_array) {
 		break;
 	case 'checkbox_group':
 		while (list($check_name, $check_array) = each($field_array["items"])) {
-			form_checkbox($check_name, $check_array["value"], $check_array["friendly_name"],
+			form_checkbox($check_name,
+				$check_array["value"],
+				$check_array["friendly_name"],
 				((isset($check_array["default"])) ? $check_array["default"] : ""),
 				((isset($check_array["form_id"])) ? $check_array["form_id"] : ""),
 				((isset($field_array["class"])) ? $field_array["class"] : ""),
@@ -359,9 +366,11 @@ function form_dirpath_box($form_name, $form_previous_value, $form_default_value,
    @arg $type - the type of textbox, either 'text' or 'password'
    @arg $current_id - used to determine if a current value for this form element
      exists or not. a $current_id of '0' indicates that no current value exists,
-     a non-zero value indicates that a current value does exist */
-function form_text_box($form_name, $form_previous_value, $form_default_value, $form_max_length, $form_size = 30, $type = "text", $current_id = 0) {
-	if (($form_previous_value == "") && (empty($current_id))) {
+     a non-zero value indicates that a current value does exist
+   @arg $clasee - specify a css class
+   @arg $on_change - specify a javascript onchange action */
+   function form_text_box($form_name, $form_previous_value, $form_default_value, $form_max_length, $form_size = 30, $type = "text", $current_id = 0, $class = "", $on_change = "") {
+   	if (($form_previous_value == "") && (empty($current_id))) {
 		$form_previous_value = $form_default_value;
 	}
 
@@ -369,7 +378,7 @@ function form_text_box($form_name, $form_previous_value, $form_default_value, $f
 
 	if (isset($_SESSION["sess_error_fields"])) {
 		if (!empty($_SESSION["sess_error_fields"][$form_name])) {
-			print "class='txtErrorTextBox'";
+			print " class='txtErrorTextBox'";
 			unset($_SESSION["sess_error_fields"][$form_name]);
 		}
 	}
@@ -380,7 +389,15 @@ function form_text_box($form_name, $form_previous_value, $form_default_value, $f
 		}
 	}
 
-	print " id='$form_name' name='$form_name' size='$form_size'" . (!empty($form_max_length) ? " maxlength='$form_max_length'" : "") . " value='" . htmlspecialchars($form_previous_value, ENT_QUOTES) . "'>\n";
+	if (strlen($class)) {
+		$class = " class='$class' ";
+	}
+
+	if (strlen($on_change)) {
+		$on_change = " onChange='$on_change' ";
+	}
+
+	print " id='$form_name' name='$form_name' " . $on_change . $class ." size='$form_size'" . (!empty($form_max_length) ? " maxlength='$form_max_length'" : "") . " value='" . htmlspecialchars($form_previous_value, ENT_QUOTES) . "'>\n";
 }
 
 /* form_autocomplete_box - draws a standard html textbox as an autocomplete type
@@ -456,7 +473,7 @@ function form_hidden_box($form_name, $form_previous_value, $form_default_value, 
    @arg $form_none_entry - the name to use for a default 'none' element in the dropdown
    @arg $form_default_value - the value of this form element to use if there is
      no current value available
-   @arg $css_class - any css that needs to be applied to this form element
+   @arg $class - any css that needs to be applied to this form element
    @arg $on_change - onChange modifier */
 function form_dropdown($form_name, $form_data, $column_display, $column_id, $form_previous_value, $form_none_entry, $form_default_value, $class = "", $on_change = "") {
 	if ($form_previous_value == "") {
@@ -497,7 +514,9 @@ function form_dropdown($form_name, $form_data, $column_display, $column_id, $for
    @arg $on_change - specify a javascript onchange action
    @arg $current_id - used to determine if a current value for this form element
      exists or not. a $current_id of '0' indicates that no current value exists,
-     a non-zero value indicates that a current value does exist */
+     a non-zero value indicates that a current value does exist
+   @arg $class - specify a css class
+   @arg $on_change - specify a javascript onchange action */
 function form_checkbox($form_name, $form_previous_value, $form_caption, $form_default_value, $current_id = 0, $class = "", $on_change = "") {
 	if (($form_previous_value == "") && (empty($current_id))) {
 		$form_previous_value = $form_default_value;
@@ -532,7 +551,9 @@ function form_checkbox($form_name, $form_previous_value, $form_caption, $form_de
    @arg $form_current_value - the current value of this form element (element id)
    @arg $form_caption - the text to display to the right of the checkbox
    @arg $form_default_value - the value of this form element to use if there is
-     no current value available */
+     no current value available
+   @arg $class - specify a css class
+   @arg $on_change - specify a javascript onchange action */
 function form_radio_button($form_name, $form_previous_value, $form_current_value, $form_caption, $form_default_value, $class = "", $on_change = "") {
 	if ($form_previous_value == "") {
 		$form_previous_value = $form_default_value;
@@ -569,7 +590,9 @@ function form_radio_button($form_name, $form_previous_value, $form_current_value
    @arg $form_rows - the number of rows in the text area box
    @arg $form_columns - the number of columns in the text area box
    @arg $form_default_value - the value of this form element to use if there is
-     no current value available */
+     no current value available
+   @arg $class - specify a css class
+   @arg $on_change - specify a javascript onchange action */
 function form_text_area($form_name, $form_previous_value, $form_rows, $form_columns, $form_default_value, $class = "", $on_change = "") {
 	if ($form_previous_value == "") {
 		$form_previous_value = $form_default_value;
@@ -600,7 +623,9 @@ function form_text_area($form_name, $form_previous_value, $form_rows, $form_colu
    @arg $sql_previous_values - an array containing keys that should be marked as selected.
      it must be formatted like:
      $array[0][$column_id] = key
-   @arg $column_id - the name of the key used to reference the keys above */
+   @arg $column_id - the name of the key used to reference the keys above
+   @arg $class - specify a css class
+   @arg $on_change - specify a javascript onchange action */
 function form_multi_dropdown($form_name, $array_display, $sql_previous_values, $column_id, $class = "", $on_change = "") {
 	if (strlen($class)) {
 		$class = " class='$class' ";
@@ -639,7 +664,9 @@ function form_multi_dropdown($form_name, $array_display, $sql_previous_values, $
    @arg $form_previous_value - the current value of this form element
    @arg $form_none_entry - the name to use for a default 'none' element in the dropdown
    @arg $form_default_value - the value of this form element to use if there is
-     no current value available */
+     no current value available
+   @arg $class - specify a css class
+   @arg $on_change - specify a javascript onchange action */
 function form_color_dropdown($form_name, $form_previous_value, $form_none_entry, $form_default_value, $class = "", $on_change = "") {
 	if ($form_previous_value == "") {
 		$form_previous_value = $form_default_value;

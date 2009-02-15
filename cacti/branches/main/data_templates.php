@@ -450,8 +450,9 @@ function template_edit() {
 			$form_array[$field_name]["sub_checkbox"] = array(
 				"name" => "t_" . $field_name,
 				"friendly_name" => "Use Per-Data Source Value (Ignore this Value)",
-				"value" => (isset($template_data{"t_" . $field_name}) ? $template_data{"t_" . $field_name} : "")
-				);
+				"value" => (isset($template_data{"t_" . $field_name}) ? $template_data{"t_" . $field_name} : ""),
+				"class" => (isset($form_array[$field_name]["class"]) ? $form_array[$field_name]["class"] : "")
+			);
 		}
 
 		$form_array[$field_name]["value"] = (isset($template_data[$field_name]) ? $template_data[$field_name] : "");
@@ -532,8 +533,9 @@ function template_edit() {
 		$form_array[$field_name]["sub_checkbox"] = array(
 			"name" => "t_" . $field_name,
 			"friendly_name" => "Use Per-Data Source Value (Ignore this Value)",
-			"value" => (isset($template_rrd) ? $template_rrd{"t_" . $field_name} : "")
-			);
+			"value" => (isset($template_rrd) ? $template_rrd{"t_" . $field_name} : ""),
+			"class" => (isset($form_array[$field_name]["class"]) ? $form_array[$field_name]["class"] : "")
+		);
 	}
 
 	draw_edit_form(
@@ -590,41 +592,8 @@ function template_edit() {
 	}
 
 	form_save_button_alt("return");
-?>
-<script type="text/javascript">
-<!--
 
-changeDataSourceTypeId();
-
-function setComputeFields(type) {
-
-	switch(type) {
-	case "5":
-		document.getElementById('t_rrd_minimum').style.display="none";
-		document.getElementById('rrd_minimum').style.display="none";
-		document.getElementById('t_rrd_maximum').style.display="none";
-		document.getElementById('rrd_maximum').style.display="none";
-		document.getElementById('t_rrd_compute_rpn').style.display="";
-		document.getElementById('rrd_compute_rpn').style.display="";
-		break;
-	default:
-		document.getElementById('t_rrd_minimum').style.display="";
-		document.getElementById('rrd_minimum').style.display="";
-		document.getElementById('t_rrd_maximum').style.display="";
-		document.getElementById('rrd_maximum').style.display="";
-		document.getElementById('t_rrd_compute_rpn').style.display="none";
-		document.getElementById('rrd_compute_rpn').style.display="none";
-		break;
-	}
-}
-
-function changeDataSourceTypeId() {
-	//alert("Selected Data Source Type is '" + document.getElementById('data_source_type_id').value + "'");
-	setComputeFields(document.getElementById('data_source_type_id').value)
-}
--->
-</script>
-<?php
+	include_once(CACTI_BASE_PATH . "/lib/jquery/data_source_item.js");
 }
 
 function template() {

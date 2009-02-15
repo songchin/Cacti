@@ -388,8 +388,9 @@ function template_edit() {
 		$form_array[$field_name]["sub_checkbox"] = array(
 			"name" => "t_" . $field_name,
 			"friendly_name" => "Use Per-Graph Value (Ignore this Value)",
-			"value" => (isset($template_graph) ? $template_graph{"t_" . $field_name} : "")
-			);
+			"value" => (isset($template_graph) ? $template_graph{"t_" . $field_name} : ""),
+			"class" => (isset($form_array[$field_name]["class"]) ? $form_array[$field_name]["class"] : "")
+		);
 	}
 
 	draw_edit_form(
