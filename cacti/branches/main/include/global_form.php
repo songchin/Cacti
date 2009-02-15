@@ -298,13 +298,13 @@ $struct_data_source_item = array(
 		"description" => "How data is represented in the RRA."
 		),
 	"rrd_compute_rpn" => array(
-		"friendly_name" => "RPN for a COMPUTE DS Item Type (RRDTool 1.2.x only)",
+		"friendly_name" => "RPN for a COMPUTE DS Item Type (RRDTool 1.2.x and above)",
 		"method" => "textbox",
 		"max_length" => "150",
 		"size" => "30",
 		"default" => "",
 		"description" => "When using a COMPUTE data source type, please enter the RPN for it here.<br>" .
-						 "Available for RRDTool 1.2.x only"
+						 "Available for RRDTool 1.2.x and above"
 		),
 	"rrd_heartbeat" => array(
 		"friendly_name" => "Heartbeat",
