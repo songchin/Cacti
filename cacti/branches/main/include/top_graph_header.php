@@ -141,6 +141,7 @@ $page_title = api_plugin_hook_function('page_title', 'Cacti');
 				<?php echo draw_header_tab("tree", "Tree", $config['url_path'] . "graph_view.php?action=tree", $config['url_path'] . "images/tab_mode_tree_new.gif");?>
 				<?php echo draw_header_tab("list", "List", $config['url_path'] . "graph_view.php?action=list", $config['url_path'] . "images/tab_mode_list_new.gif");?>
 				<?php echo draw_header_tab("preview", "Preview", $config['url_path'] . "graph_view.php?action=preview", $config['url_path'] . "images/tab_mode_preview_new.gif");?>
+				<li id="tab_help" class="notselected"><a href="<?php echo pagehelp_url()?>" target="_blank" title="Help">Help</a></li>
 			</ul>
 		</div>
 	</div>

@@ -61,6 +61,11 @@ api_plugin_hook('page_head');
 				<?php api_plugin_hook('top_header_tabs'); ?>
 			</ul>
 		</div>
+		<div id='navbar_r'>
+			<ul>
+				<li id="tab_help" class="notselected"><a href="<?php echo pagehelp_url()?>" target="_blank" title="Help">Help</a></li>
+			</ul>
+		</div>
 	</div>
 	<div id='navbrcrumb'>
 		<div style='float:left'>

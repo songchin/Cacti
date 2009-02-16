@@ -128,6 +128,7 @@ error_reporting(E_ALL);
 
 /* current cacti version */
 define("CACTI_VERSION", "0.8.8");
+define('CACTI_WIKI_URL', "http://docs.cacti.net/wiki/doku.php/manual:087");
 
 /* include base modules */
 include(CACTI_BASE_PATH . "/lib/adodb/adodb.inc.php");
