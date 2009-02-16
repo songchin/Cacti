@@ -376,7 +376,7 @@ function api_host_form_actions() {
 					$form_array += array($field_name => $fields_host_edit[$field_name]);
 
 					$form_array[$field_name]["value"] = "";
-					$form_array[$field_name]["description"] = "";
+#					$form_array[$field_name]["description"] = "";
 					$form_array[$field_name]["form_id"] = 0;
 					$form_array[$field_name]["sub_checkbox"] = array(
 						"name" => "t_" . $field_name,
@@ -407,7 +407,7 @@ function api_host_form_actions() {
 					$form_array += array($field_name => $fields_host_edit[$field_name]);
 
 					$form_array[$field_name]["value"] = "";
-					$form_array[$field_name]["description"] = "";
+#					$form_array[$field_name]["description"] = "";
 					$form_array[$field_name]["form_id"] = 0;
 					$form_array[$field_name]["sub_checkbox"] = array(
 						"name" => "t_" . $field_name,

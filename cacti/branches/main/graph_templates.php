@@ -384,7 +384,7 @@ function template_edit() {
 
 		$form_array[$field_name]["value"] = (isset($template_graph) ? $template_graph[$field_name] : "");
 		$form_array[$field_name]["form_id"] = (isset($template_graph) ? $template_graph["id"] : "0");
-		$form_array[$field_name]["description"] = "";
+#		$form_array[$field_name]["description"] = "";
 		$form_array[$field_name]["sub_checkbox"] = array(
 			"name" => "t_" . $field_name,
 			"friendly_name" => "Use Per-Graph Value (Ignore this Value)",
@@ -405,6 +405,8 @@ function template_edit() {
 	html_end_box();
 
 	form_save_button_alt();
+
+	include_once(CACTI_BASE_PATH . "/lib/jquery/field_description_hover.js");
 
 //Now we need some javascript to make it dynamic
 ?>

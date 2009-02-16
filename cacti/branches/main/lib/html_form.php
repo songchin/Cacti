@@ -67,9 +67,18 @@ function draw_edit_form($array) {
 					form_alternate_row_color('row_' . $field_name);
 				}
 
-				print "<td width='" . ((isset($config_array["left_column_width"])) ? $config_array["left_column_width"] : "50%") . "'>\n<font class='textEditTitle'>" . $field_array["friendly_name"] . "</font><br>\n";
-
 				if (isset($field_array["sub_checkbox"])) {
+					/* print description as a hover */
+					$width = ((isset($config_array["left_column_width"])) ? $config_array["left_column_width"] : "50%");
+					print "<td width='" . $width . "' class='hover'>\n";
+					print "<font class='textEditTitle'>" . $field_array["friendly_name"] . "</font><br>\n";
+					$title = "";
+					if (isset($field_array["description"])) {
+						if (strlen($field_array["description"])) {
+							print "<span class='description'>" . $field_array["description"] . "<br/></span>";
+						}
+					}
+
 					form_checkbox($field_array["sub_checkbox"]["name"],
 						$field_array["sub_checkbox"]["value"],
 						$field_array["sub_checkbox"]["friendly_name"],
@@ -77,9 +86,13 @@ function draw_edit_form($array) {
 						((isset($field_array["form_id"])) ? $field_array["form_id"] : ""),
 						((isset($field_array["class"])) ? $field_array["class"] : ""),
 						((isset($field_array["on_change"])) ? $field_array["on_change"] : ""));
-				}
 
-				print ((isset($field_array["description"])) ? $field_array["description"] : "") . "</td>\n";
+					print "</td>\n";
+				} else {
+					print "<td width='" . ((isset($config_array["left_column_width"])) ? $config_array["left_column_width"] : "50%") . "'>\n<font class='textEditTitle'>" . $field_array["friendly_name"] . "</font><br>\n";
+					print ((isset($field_array["description"])) ? $field_array["description"] : "");
+					print "</td>\n";
+				}
 
 				print "<td>";
 

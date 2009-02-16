@@ -770,9 +770,9 @@ function data_source_edit() {
 		while (list($field_name, $field_array) = each($struct_data_source)) {
 			$form_array += array($field_name => $struct_data_source[$field_name]);
 
-			if (!(($use_data_template == false) || (!empty($data_template_data{"t_" . $field_name})) || ($field_array["flags"] == "NOTEMPLATE"))) {
-				$form_array[$field_name]["description"] = "";
-			}
+#			if (!(($use_data_template == false) || (!empty($data_template_data{"t_" . $field_name})) || ($field_array["flags"] == "NOTEMPLATE"))) {
+#				$form_array[$field_name]["description"] = "";
+#			}
 
 			$form_array[$field_name]["value"] = (isset($data[$field_name]) ? $data[$field_name] : "");
 			$form_array[$field_name]["form_id"] = (empty($data["id"]) ? "0" : $data["id"]);
@@ -864,9 +864,9 @@ function data_source_edit() {
 		while (list($field_name, $field_array) = each($struct_data_source_item)) {
 			$form_array += array($field_name => $struct_data_source_item[$field_name]);
 
-			if (!(($use_data_template == false) || ($rrd_template{"t_" . $field_name} == "on"))) {
-				$form_array[$field_name]["description"] = "";
-			}
+#			if (!(($use_data_template == false) || ($rrd_template{"t_" . $field_name} == "on"))) {
+#				$form_array[$field_name]["description"] = "";
+#			}
 
 			$form_array[$field_name]["value"] = (isset($rrd) ? $rrd[$field_name] : "");
 

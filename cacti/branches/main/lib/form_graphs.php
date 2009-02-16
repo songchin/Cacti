@@ -923,7 +923,7 @@ function graph_edit() {
 
 			if (!(($use_graph_template == false) || ($graphs_template{"t_" . $field_name} == "on"))) {
 				$form_array[$field_name]["method"] = "template_" . $form_array[$field_name]["method"];
-				$form_array[$field_name]["description"] = "";
+#				$form_array[$field_name]["description"] = "";
 			}
 		}
 
