@@ -573,7 +573,7 @@ function template_edit() {
 			}
 
 			form_alternate_row_color(); ?>
-				<td width="50%">
+				<td width="50%" class='template_checkbox'>
 					<strong><?php print $field["name"];?></strong><br>
 					<?php form_checkbox("t_value_" . $field["data_name"], $data_input_data["t_value"], "Use Per-Data Source Value (Ignore this Value)", "", "", $_GET["id"]);?>
 				</td>
