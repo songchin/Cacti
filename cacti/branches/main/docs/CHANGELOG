@@ -8,6 +8,7 @@ Cacti CHANGELOG
 -bug#0001306: Empty COMMENT + <HR> gives you a blank legend line (was: Add Blank Line to Graph via Pull down menu)
 -bug#0001359: Better error checking in rrd.php
 -bug#0001404: timeout in "function ping_icmp" (lib/ping.php)
+-bug#0001405: Spaces in DS when .rrd file is created, so it fails
 -bug: remove graph permissions if graph is removed
 -bug: remove host permissions if host is removed
 -bug: add_tree.php did not allow nodes with propagating sort options
