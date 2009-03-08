@@ -240,7 +240,7 @@ td {
 
 .menuSubMain li {
 	display: block;
-	padding: 2px 0px 2px 0px;
+	padding: 0px 0px 0px 0px;
 	color: #FFFFFF;
 	cursor: pointer;
 }
@@ -575,9 +575,10 @@ table.resizable th {
 	color:#FFFFFF;
 	display:block;
 	float:left;
-	margin-right: 4px;
+	margin-right:4px;
 	font-size:13px;
-	font-weight: bold;
+	font-weight:bold;
+	font-family:Arial,Verdana,Helvetica,sans-serif;
 	height:14px;
 	line-height:16px;
 	text-decoration: none;
@@ -593,7 +594,8 @@ table.resizable th {
 	float:left;
 	margin-right: 4px;
 	font-size:13px;
-	font-weight: bold;
+	font-weight:bold;
+	font-family:Arial,Verdana,Helvetica,sans-serif;
 	height:14px;
 	line-height:16px;
 	text-decoration: none;

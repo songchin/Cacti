@@ -427,42 +427,43 @@ function html_header_sort($header_items, $sort_column, $sort_direction, $last_it
 	/* reverse the sort direction */
 	if ($sort_direction == "ASC") {
 		$new_sort_direction = "DESC";
+		$selected_sort_class = "sort_asc";
 	}else{
 		$new_sort_direction = "ASC";
+		$selected_sort_class = "sort_desc";
 	}
 
 	print "\t\t<table class='resizable' cellpadding='3px' cellspacing='0px' width='100%'><tr class='rowSubHeader'>\n";
 
-	$i = 1;
-	$rand_id = 0;
-
+	$rand_id  = 0;
 	$pathname = html_get_php_pathname();
 
-	foreach ($header_items as $db_column => $display_array) {
+	foreach($header_items as $db_column => $display_array) {
 		/* by default, you will always sort ascending, with the exception of an already sorted column */
 		if ($sort_column == $db_column) {
-			$direction = $new_sort_direction;
-			$display_text = $display_array[0] . "**";
+			$direction    = $new_sort_direction;
+			$display_text = $display_array[0];
+			$sort_class   = $selected_sort_class;
 		}else{
 			$display_text = $display_array[0];
-			$direction = $display_array[1];
+			$direction    = $display_array[1];
+			$sort_class   = "";
 		}
+
 
 		if (($db_column == "") || (substr_count($db_column, "nosort"))) {
 			$width = html_get_column_width($pathname, "rand_$rand_id");
 
-			print "\t\t\t<th style='width: $width;' id='rand_$rand_id' onMousemove='doColResize(this, event)' onMouseover='doColResize(this, event)' onMouseout='doneColResize()' class='texSubHeaderDark' " . ((($i+1) == count($header_items)) ? "colspan='$last_item_colspan' " : "") . " class='textSubHeaderDark'>" . $display_text . "</th>\n";
+			print "\t\t\t<th style='width:$width;' id='rand_$rand_id' onMousemove='doColResize(this,event)' onMouseover='doColResize(this,event)' onMouseout='doneColResize()' class='textSubHeaderDark'>" . $display_text . "</th>\n";
 
 			$rand_id++;
 		}else{
 			$width = html_get_column_width($pathname, $db_column);
 
-			print "\t\t\t<th style='width: $width;' id='$db_column' onMousemove='doColResize(this, event)' onMouseover='doColResize(this, event)' onMouseout='doneColResize()' class='texSubHeaderDark' " . ((($i) == count($header_items)) ? "colspan='$last_item_colspan'" : "") . " class='textSubHeaderDark'>";
-			print "\n\t\t\t\t<a style='display:block;' href=" . htmlspecialchars($_SERVER["PHP_SELF"] . "?sort_column=" . $db_column . "&sort_direction=" . $direction) . ">" . $display_text . "</a>";
+			print "\t\t\t<th style='width: $width;' id='$db_column' onMousemove='doColResize(this,event)' onMouseover='doColResize(this,event)' onMouseout='doneColResize()' class='textSubHeaderDark'>";
+			print "\n\t\t\t\t<a class='$sort_class' style='display:block;' href=" . htmlspecialchars($_SERVER["PHP_SELF"] . "?sort_column=" . $db_column . "&sort_direction=" . $direction) . ">" . $display_text . "</a>";
 			print "\n\t\t\t</th>\n";
 		}
-
-		$i++;
 	}
 
 	print "\t\t</tr>\n";
