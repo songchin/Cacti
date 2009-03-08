@@ -819,24 +819,24 @@ function draw_graph_items_list($item_list, $filename, $url_data, $disable_contro
 function draw_header_tab($name, $title, $location, $image = "") {
 	global $config;
 	if ($image == "") {
-		return "<li id=\"tab_" . html_escape($name) . "\"" . (html_selected_tab($name, htmlspecialchars($location)) ? "class=\"selected\"" : "class=\"notselected\"") . "><a href=\"javascript:navigation_select('" . html_escape($name) . "','" . htmlspecialchars($location) . "')\" title=\"" . html_escape($title) . "\">" . html_escape($title) . "</a></li>\n";
+		return "<li id=\"tab_" . html_escape($name) . "\"" . (html_selected_tab($name, $location) ? "class=\"selected\"" : "class=\"notselected\"") . "><a href=\"javascript:navigation_select('" . html_escape($name) . "','" . htmlspecialchars($location) . "')\" title=\"" . html_escape($title) . "\">" . html_escape($title) . "</a></li>\n";
 	}else{
-		return "<li id=\"tab_" . html_escape($name) . "\"" . (html_selected_tab($name, htmlspecialchars($location)) ? "class=\"selected\"" : "class=\"notselected\"") . "><a href=\"javascript:navigation_select('" . html_escape($name) . "','" . htmlspecialchars($location) . "')\" title=\"" . html_escape($title) . "\"><img style='border-width:0px;' src='$image' align='middle'></a></li>\n";
+		return "<li id=\"tab_" . html_escape($name) . "\"" . (html_selected_tab($name, $location) ? "class=\"selected\"" : "class=\"notselected\"") . "><a href=\"javascript:navigation_select('" . html_escape($name) . "','" . htmlspecialchars($location) . "')\" title=\"" . html_escape($title) . "\"><img style='border-width:0px;' src='$image' align='middle'></a></li>\n";
 	}
 }
 
 function html_selected_tab($name, $location) {
 	if (isset($_COOKIE["navbar_id"])) {
 		if ($name == "graphs") {
-			switch($_COOKIE["navbar_id"]) {
-				case "list":
-				case "preview":
-				case "tree":
-				case "graphs":
-					return true;
+			if (substr_count($_SERVER["REQUEST_URI"], "graph_view.php")) {
+				switch($_COOKIE["navbar_id"]) {
+					case "list":
+					case "preview":
+					case "tree":
+					case "graphs":
+						return true;
+				}
 			}
-		}else if ($name == $_COOKIE["navbar_id"]) {
-			return true;
 		}else if (substr_count($_SERVER["REQUEST_URI"], $location)) {
 			return true;
 		}

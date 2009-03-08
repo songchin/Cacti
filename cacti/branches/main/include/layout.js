@@ -909,6 +909,8 @@ function fixBrowserQuirks() {
 			myDiv = document.getElementById("content");
 		}else if (document.getElementById("graph_tree")) {
 			myDiv = document.getElementById("graph_tree_content");
+		}else if (document.getElementById("graph_content")) {
+			myDiv = document.getElementById("graph_content");
 		}
 
 		if (myDiv.scrollHeight > window_height) {
@@ -920,6 +922,8 @@ function fixBrowserQuirks() {
 			myDiv = document.getElementById("content");
 		}else if (document.getElementById("graph_tree")) {
 			myDiv = document.getElementById("graph_tree_content");
+		}else if (document.getElementById("graph_content")) {
+			myDiv = document.getElementById("graph_content");
 		}
 
 		if (myDiv.scrollHeight <= window_height) {

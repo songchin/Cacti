@@ -35,7 +35,87 @@ function api_plugin_hook ($name) {
 			}
 			$function = $hdata['function'];
 			if (function_exists($function)) {
-				$function($data);
+				if ($name == 'top_header_tabs' || $name == 'top_graph_header_tabs') {
+					ob_start();
+					$function($data);
+					$output = ob_get_contents();
+					$new_output = "";
+
+					if (substr_count(strtolower($output), "<li")) {
+						/* revised content */
+						ob_end_flush();
+					}else{
+						$out_array = explode("<", $output);
+
+						$selected  = false;
+						$alt_text  = "";
+						$href_text = "";
+						$anchor    = false;
+						$img       = false;
+						if (sizeof($out_array)) {
+						foreach($out_array as $element) {
+							$attribs   = explode(" ", $element);
+							if (sizeof($attribs)) {
+								switch(strtolower($attribs[0])) {
+								case "a":
+									$anchor = true;
+									$img    = false;
+									break;
+								case "img":
+									$anchor = false;
+									$img    = true;
+									break;
+								case "/a>":
+									if ($href_text) {
+										$new_output .= "<li class=\"" . ($selected ? "selected":"notselected") . "\"><a title=\"" . $alt_text . "\" href=\"" . $href_text . "\">" . $alt_text . "</a></li>";
+										$alt_text  = "";
+										$href_text = "";
+										$selected  = false;
+										$img       = false;
+										$anchor    = false;
+									}
+									break;
+								}
+
+								if ($img || $anchor) {
+									if (substr_count(strtolower($element), "src=") && $img) {
+										if (substr_count($element, "_down.")) {
+											$selected = true;
+										}
+									}
+
+									if (substr_count(strtolower($element), "alt=") && $img) {
+										$pos      = strpos($element, "alt=");
+										$alt_text = substr($element,$pos+4);
+										$delim    = substr($alt_text,0,1);
+										$pos      = strpos($alt_text,$delim,2);
+										$alt_text = substr($alt_text,1,$pos-1);
+									}
+
+									if (substr_count(strtolower($element), "href=") && $anchor) {
+										$pos = strpos($element, "href=");
+										$href_text = substr($element,$pos+5);
+										$delim     = substr($href_text,0,1);
+										$pos       = strpos($href_text,$delim,2);
+										$href_text = substr($href_text,1,$pos-1);
+									}
+								}
+							}
+						}
+						}
+
+						if ($href_text) {
+							$new_output .= "<li class=\"" . ($selected ? "selected":"notselected") . "\"><a title=\"" . $alt_text . "\" href=\"" . $href_text . "\">" . $alt_text . "</a></li>";
+						}
+
+						ob_clean();
+						if ($new_output != "") {
+							echo $new_output;
+						}
+					}
+				}else{
+					$function($data);
+				}
 			}
 		}
 	}
@@ -71,7 +151,6 @@ function api_plugin_hook_function ($name, $parm=NULL) {
 
 function api_plugin_db_table_create ($plugin, $table, $data) {
 	global $config, $database_default;
-
 	include_once(CACTI_BASE_PATH . "/lib/database.php");
 
 	$result = db_fetch_assoc("show tables from `" . $database_default . "`") or die (mysql_error());
@@ -180,7 +259,6 @@ function api_plugin_db_add_column ($plugin, $table, $column) {
 	// Example: api_plugin_db_add_column ('thold', 'plugin_config', array('name' => 'test' . rand(1, 200), 'type' => 'varchar (255)', 'NULL' => false));
 
 	global $config, $database_default;
-
 	include_once(CACTI_BASE_PATH . '/lib/database.php');
 
 	$result = db_fetch_assoc('show columns from `' . $table . '`') or die (mysql_error());
@@ -215,7 +293,6 @@ function api_plugin_db_add_column ($plugin, $table, $column) {
 
 function api_plugin_install ($plugin) {
 	global $config;
-
 	include_once(CACTI_BASE_PATH . "/plugins/$plugin/setup.php");
 
 	$exists = db_fetch_assoc("SELECT id FROM plugin_config WHERE directory = '$plugin'", false);
@@ -251,21 +328,15 @@ function api_plugin_install ($plugin) {
 
 function api_plugin_uninstall ($plugin) {
 	global $config;
-
 	include_once(CACTI_BASE_PATH . "/plugins/$plugin/setup.php");
-
 	// Run the Plugin's Uninstall Function first
 	$function = 'plugin_' . $plugin . '_uninstall';
-
 	if (function_exists($function)) {
 		$function();
 	}
-
 	api_plugin_remove_hooks ($plugin);
 	api_plugin_remove_realms ($plugin);
-
 	db_execute("DELETE FROM plugin_config WHERE directory = '$plugin'");
-
 	api_plugin_db_changes_remove ($plugin);
 }
 
@@ -333,7 +404,7 @@ function api_plugin_register_realm ($plugin, $file, $display, $admin = false) {
 			$user_id = db_fetch_assoc("SELECT id FROM user_auth WHERE username = 'admin'", false);
 			if (count($user_id)) {
 				$user_id = $user_id[0]['id'];
-				$exists  = db_fetch_assoc("SELECT realm_id FROM user_auth_realm WHERE user_id = $user_id and realm_id = $realm_id", false);
+				$exists = db_fetch_assoc("SELECT realm_id FROM user_auth_realm WHERE user_id = $user_id and realm_id = $realm_id", false);
 				if (!count($exists)) {
 					db_execute("INSERT INTO user_auth_realm (user_id, realm_id) VALUES ($user_id, $realm_id)");
 				}
@@ -353,7 +424,7 @@ function api_plugin_remove_realms ($plugin) {
 
 function api_plugin_load_realms () {
 	global $user_auth_realms, $user_auth_realm_filenames;
-	$plugin_realms = db_fetch_assoc("SELECT * FROM plugin_realms", false);
+	$plugin_realms = db_fetch_assoc("SELECT * FROM plugin_realms ORDER BY plugin, display", false);
 	if (count($plugin_realms)) {
 		foreach ($plugin_realms as $plugin_realm) {
 			$plugin_files = explode(',', $plugin_realm['file']);
@@ -369,7 +440,7 @@ function api_plugin_user_realm_auth ($filename = '') {
 	global $user_realms, $user_auth_realms, $user_auth_realm_filenames;
 	/* list all realms that this user has access to */
 	if (!isset($user_realms)) {
-		if (read_config_option('global_auth') == 'on' || read_config_option('auth_method') == 1) {
+		if (read_config_option('global_auth') == 'on' || read_config_option('auth_method') != 0) {
 			$user_realms = db_fetch_assoc("select realm_id from user_auth_realm where user_id=" . $_SESSION["sess_user_id"], false);
 			$user_realms = array_rekey($user_realms, "realm_id", "realm_id");
 		}else{

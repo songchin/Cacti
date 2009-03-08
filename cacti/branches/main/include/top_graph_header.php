@@ -132,15 +132,18 @@ $page_title = api_plugin_hook_function('page_title', 'Cacti');
 		<div id='navbar_l'>
 			<ul>
 				<?php echo draw_header_tab("console", "Console", $config['url_path'] . "index.php");?>
-				<?php echo draw_header_tab("graphs", "Graphs", $config['url_path'] . "graph_view.php");?><?php api_plugin_hook('top_graph_header_tabs');?>
+				<?php echo draw_header_tab("graphs", "Graphs", $config['url_path'] . "graph_view.php");?>
+				<?php api_plugin_hook('top_graph_header_tabs');?>
 			</ul>
 		</div>
 		<div id='navbar_r'>
 			<ul>
+				<?php if (substr_count($_SERVER["REQUEST_URI"], "graph_view.php")) { ?>
 				<?php echo draw_header_tab("graph_settings", "Settings", $config['url_path'] . "graph_settings.php");?>
 				<?php echo draw_header_tab("tree", "Tree", $config['url_path'] . "graph_view.php?action=tree", $config['url_path'] . "images/tab_mode_tree_new.gif");?>
 				<?php echo draw_header_tab("list", "List", $config['url_path'] . "graph_view.php?action=list", $config['url_path'] . "images/tab_mode_list_new.gif");?>
 				<?php echo draw_header_tab("preview", "Preview", $config['url_path'] . "graph_view.php?action=preview", $config['url_path'] . "images/tab_mode_preview_new.gif");?>
+				<?php }else{ api_plugin_hook('top_graph_header_tabs_right'); }?>
 				<li id="tab_help" class="notselected"><a href="<?php echo pagehelp_url()?>" target="_blank" title="Help">Help</a></li>
 			</ul>
 		</div>
