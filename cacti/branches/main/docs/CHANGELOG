@@ -11,6 +11,7 @@ Cacti CHANGELOG
 -bug#0001405: Spaces in DS when .rrd file is created, so it fails
 -bug#0001407: Place graph thumbnail into div to lower page length changes on load graphs
 -bug#0001411: Graph Search Trouble with Cacti 8.7d 
+-bug#0001346: Strip out noisy 'No Such Instance currently exists at this OID' 
 -bug: remove graph permissions if graph is removed
 -bug: remove host permissions if host is removed
 -bug: add_tree.php did not allow nodes with propagating sort options
