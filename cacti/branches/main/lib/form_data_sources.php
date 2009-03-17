@@ -666,6 +666,7 @@ function data_source_edit() {
 	}
 
 	include_once(CACTI_BASE_PATH . "/include/top_header.php");
+	include_once(CACTI_BASE_PATH . "/lib/jquery/fastpath_links.js");
 
 	if (!empty($_GET["id"])) {
 		?>
@@ -675,15 +676,16 @@ function data_source_edit() {
 					<?php print get_data_source_title($_GET["id"]);?>
 				</td>
 				<td class="textInfo" align="right" valign="top">
-					<span style="color: #c16921;">*<a href='data_sources.php?action=data_source_toggle_status&id=<?php print (isset($_GET["id"]) ? $_GET["id"] : 0);?>&newstate=<?php print (($data["active"] == "on") ? "0" : "1");?>'><strong><?php print (($data["active"] == "on") ? "Disable" : "Enable");?></strong> Data Source.<br></a>
-					<span style="color: #c16921;">*<a href='data_sources.php?action=data_source_edit&id=<?php print (isset($_GET["id"]) ? $_GET["id"] : 0);?>&debug=<?php print (isset($_SESSION["ds_debug_mode"]) ? "0" : "1");?>'>Turn <strong><?php print (isset($_SESSION["ds_debug_mode"]) ? "Off" : "On");?></strong> Data Source Debug Mode.<br></a>
-					<span style="color: #c16921;">*<a href='data_sources.php?action=data_source_edit&id=<?php print (isset($_GET["id"]) ? $_GET["id"] : 0);?>&info=<?php print (isset($_SESSION["ds_info_mode"]) ? "0" : "1");?>'>Turn <strong><?php print (isset($_SESSION["ds_info_mode"]) ? "Off" : "On");?></strong> RRD File Information Mode.<br></a>
+					<a href="#" class="toggle_fastpath_links">Show&nbsp;/&nbsp;Hide Fastpaths<br/></a>
+					<a class="fastpath_links" href='data_sources.php?action=data_source_toggle_status&id=<?php print (isset($_GET["id"]) ? $_GET["id"] : 0);?>&newstate=<?php print (($data["active"] == "on") ? "0" : "1");?>'><strong><?php print (($data["active"] == "on") ? "Disable" : "Enable");?></strong> Data Source.<br/></a>
+					<a class="fastpath_links" href='data_sources.php?action=data_source_edit&id=<?php print (isset($_GET["id"]) ? $_GET["id"] : 0);?>&debug=<?php print (isset($_SESSION["ds_debug_mode"]) ? "0" : "1");?>'>Turn <strong><?php print (isset($_SESSION["ds_debug_mode"]) ? "Off" : "On");?></strong> Data Source Debug Mode.<br/></a>
+					<a class="fastpath_links" href='data_sources.php?action=data_source_edit&id=<?php print (isset($_GET["id"]) ? $_GET["id"] : 0);?>&info=<?php print (isset($_SESSION["ds_info_mode"]) ? "0" : "1");?>'>Turn <strong><?php print (isset($_SESSION["ds_info_mode"]) ? "Off" : "On");?></strong> RRD File Information Mode.<br/></a>
 					<?php
 						if (!empty($data_template["id"])) {
-							?><span style="color: #c16921;">*<a href='data_templates.php?action=template_edit&id=<?php print (isset($data_template["id"]) ? $data_template["id"] : "0");?>'>Edit Data Template.</a><br><?php
+							?><a class="fastpath_links" href='data_templates.php?action=template_edit&id=<?php print (isset($data_template["id"]) ? $data_template["id"] : "0");?>'>Edit Data Template.<br/></a><?php
 						}
 						if (!empty($_GET["host_id"]) || !empty($data_local["host_id"])) {
-							?><span style="color: #c16921;">*<a href='host.php?action=edit&id=<?php print (isset($_GET["host_id"]) ? $_GET["host_id"] : $data_local["host_id"]);?>'>Edit Host.</a><?php
+							?><a class="fastpath_links" href='host.php?action=edit&id=<?php print (isset($_GET["host_id"]) ? $_GET["host_id"] : $data_local["host_id"]);?>'>Edit Host.</a><?php
 						}
 					?>
 				</td>
