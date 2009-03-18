@@ -674,6 +674,9 @@ void poll_host(int host_id) {
 		/* initialize all the memory to insure we don't get issues */
 		memset(snmp_oids, 0, sizeof(snmp_oids_t)*host->max_oids);
 
+		/* log an informative message */
+		SPINE_LOG_MEDIUM(("Host[%i] NOTE: There are '%i' Polling Items for this Host", host_id, num_rows));
+
 		i = 0;
 		while ((i < num_rows) && (!host->ignore_host)) {
 			if (!host->ignore_host) {
@@ -1102,6 +1105,7 @@ char *exec_poll(host_t *current_host, char *command) {
 	extern int active_scripts;
 	int cmd_fd;
 	int pid;
+	int close_fd = TRUE;
 	FILE *fd;
 	int bytes_read;
 	fd_set fds;
@@ -1169,6 +1173,7 @@ char *exec_poll(host_t *current_host, char *command) {
 			case EBADF:
 				SPINE_LOG(("Host[%i] ERROR: One or more of the file descriptor sets specified a file descriptor that is not a valid open file descriptor.", current_host->id));
 				SET_UNDEFINED(result_string);
+				close_fd = FALSE;
 				break;
 			case EAGAIN:
 			case EINTR:
@@ -1189,15 +1194,18 @@ char *exec_poll(host_t *current_host, char *command) {
 				}else{
 					SPINE_LOG(("WARNING: A script timed out while processing EINTR's."));
 					SET_UNDEFINED(result_string);
+					close_fd = FALSE;
 				}
 				break;
 			case EINVAL:
 				SPINE_LOG(("Host[%i] ERROR: Possible invalid timeout specified in select() statement.", current_host->id));
 				SET_UNDEFINED(result_string);
+				close_fd = FALSE;
 				break;
 			default:
 				SPINE_LOG(("Host[%i] ERROR: The script/command select() failed", current_host->id));
 				SET_UNDEFINED(result_string);
+				close_fd = FALSE;
 				break;
 			}
 		case 0:
@@ -1206,6 +1214,8 @@ char *exec_poll(host_t *current_host, char *command) {
 			#ifdef USING_NIFTY
 			pid = nft_pchild(cmd_fd);
 			kill(pid, SIGTERM);
+			#else
+			close_fd = FALSE;
 			#endif
 
 			SET_UNDEFINED(result_string);
@@ -1225,7 +1235,10 @@ char *exec_poll(host_t *current_host, char *command) {
 		#ifdef USING_NIFTY
 		nft_pclose(cmd_fd);
 		#else
-		pclose(fd);
+		/* we leave the old fd open if it timed out */
+		if (close_fd) {
+			pclose(fd);
+		}
 		#endif
 	}else{
 		SPINE_LOG(("Host[%i] ERROR: Problem executing POPEN [%s]: '%s'", current_host->id, current_host->hostname, command));
