@@ -733,7 +733,7 @@ function draw_graph_items_list($item_list, $filename, $url_data, $disable_contro
 
 	include(CACTI_BASE_PATH . "/include/global_arrays.php");
 
-	html_header(array("Graph Item", "Data Source", "Graph Item Type", "CF Type", "CDEF", "GPRINT Type", "Item Color"), 4, true, 'graph_item');
+	html_header(array("Graph Item", "Data Source", "Graph Item Type", "CF Type", "CDEF", "GPRINT Type", "Item Color"), 3, true, 'graph_item');
 
 	$group_counter = 0; $_graph_type_name = ""; $i = 0;
 	$alternate_color_1 = $colors["alternate"]; $alternate_color_2 = $colors["alternate"];
@@ -806,9 +806,7 @@ function draw_graph_items_list($item_list, $filename, $url_data, $disable_contro
 		print "<td style='$this_row_style'>" . $item["hex"] . "</td>\n";
 
 		if ($disable_controls == false) {
-			print "<td><a href='$filename?action=item_movedown&id=" . $item["id"] . "&$url_data'><img id='buttonSmall' src='images/move_down.gif' alt='Move Down'></a>
-					<a href='$filename?action=item_moveup&id=" . $item["id"] . "&$url_data'><img id='buttonSmall' src='images/move_up.gif' alt='Move Up'></a></td>\n";
-			print "<td align='right'><a href='$filename?action=item_remove&id=" . $item["id"] . "&$url_data'><img id='buttonSmall' src='images/delete_icon.gif' alt='Delete'></a></td>\n";
+			print "<td align='right'><a href='$filename?action=item_remove&id=" . $item["id"] . "&$url_data'><img id='buttonSmall' class='buttonSmall' src='images/delete_icon.gif' title='Delete Graph Template Item' alt='Delete'></a></td>\n";
 		}
 
 		print "</tr>";
