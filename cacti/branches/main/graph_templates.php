@@ -405,6 +405,16 @@ function template_edit() {
 	html_end_box();
 
 	form_save_button_alt();
+?>
+<script type="text/javascript">
+	$('#graph_item').tableDnD({
+		onDrop: function(table, row) {
+//			alert($.tableDnD.serialize());
+			$('#AjaxResult').load("lib/ajax/jquery.tablednd/graph_item.ajax.php?id=<?php print $_GET["id"];?>&"+$.tableDnD.serialize());
+		}
+	});
+</script>
+<?php
 
 	include_once(CACTI_BASE_PATH . "/lib/jquery/field_description_hover.js");
 

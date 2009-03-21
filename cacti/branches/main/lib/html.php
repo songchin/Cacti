@@ -535,15 +535,17 @@ function html_header_sort_checkbox($header_items, $sort_column, $sort_direction,
 /* html_header - draws a header row suitable for display inside of a box element
    @arg $header_items - an array containing a list of items to be included in the header
    @arg $last_item_colspan - the TD 'colspan' to apply to the last cell in the row */
-function html_header($header_items, $last_item_colspan = 1, $resizable = true) {
+function html_header($header_items, $last_item_colspan = 1, $resizable = true, $table_id = '') {
 	global $colors;
+
+	$table_id = ($table_id != '') ? "id=\"$table_id\"" : "";
 
 	if ($resizable) {
 		$pathname = html_get_php_pathname();
 
-		print "\t\t<table class='resizable' cellpadding='3px' cellspacing='0px' width='100%'><tr class='rowSubHeader'>\n";
+		print "\t\t<table $table_id class='resizable' cellpadding='3px' cellspacing='0px' width='100%'><tr class='rowSubHeader nodrag nodrop'>\n";
 	}else{
-		print "\t\t<table cellpadding='3px' cellspacing='0px' width='100%'><tr class='rowSubHeader'>\n";
+		print "\t\t<table $table_id cellpadding='3px' cellspacing='0px' width='100%'><tr class='rowSubHeader nodrag nodrop'>\n";
 	}
 
 	for ($i=0; $i<count($header_items); $i++) {
@@ -731,7 +733,7 @@ function draw_graph_items_list($item_list, $filename, $url_data, $disable_contro
 
 	include(CACTI_BASE_PATH . "/include/global_arrays.php");
 
-	html_header(array("Graph Item", "Data Source", "Graph Item Type", "CF Type", "CDEF", "GPRINT Type", "Item Color"), 4, true);
+	html_header(array("Graph Item", "Data Source", "Graph Item Type", "CF Type", "CDEF", "GPRINT Type", "Item Color"), 4, true, 'graph_item');
 
 	$group_counter = 0; $_graph_type_name = ""; $i = 0;
 	$alternate_color_1 = $colors["alternate"]; $alternate_color_2 = $colors["alternate"];
@@ -762,9 +764,10 @@ function draw_graph_items_list($item_list, $filename, $url_data, $disable_contro
 
 		/* alternating row color */
 		if ($use_custom_row_color == false) {
-			form_alternate_row_color();
+#			form_alternate_row_color();
+			form_alternate_row_color($item["id"], true);
 		}else{
-			print "<tr bgcolor='#$custom_row_color'>";
+			print "<tr id='row_".$item["id"]."' bgcolor='#$custom_row_color'>";
 		}
 
 		print "<td>";

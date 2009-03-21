@@ -476,6 +476,7 @@ $user_auth_realm_filenames = array(
 	"graph_templates.php" => 10,
 	"graph_templates_inputs.php" => 10,
 	"graph_templates_items.php" => 10,
+	"graph_item.ajax.php" => 10,
 	"graph_view.php" => 7,
 	"graphs.php" => 5,
 	"graphs_items.php" => 5,
