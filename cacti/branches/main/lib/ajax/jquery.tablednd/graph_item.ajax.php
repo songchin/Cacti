@@ -36,7 +36,7 @@ require('./include/auth.php');
 	$old_order = array();
 	$new_order = $_REQUEST['graph_item'];
 
-	$sql = "SELECT id, sequence FROM graph_templates_item WHERE graph_template_id = " . $_GET['id'];
+	$sql = "SELECT id, sequence FROM graph_templates_item WHERE graph_template_id = " . $_GET['id'] . " and local_graph_id=0";
 	$graph_templates_items = db_fetch_assoc($sql);
 
 	if(sizeof($graph_templates_items)>0) {
@@ -46,11 +46,21 @@ require('./include/auth.php');
 	}else {
 		exit;
 	}
-	if(sizeof(array_diff($new_order, $old_order))>0) exit;
+
+	if(sizeof(array_diff($new_order, $old_order)) > 0) exit;
+
+	# compute difference of arrays
+	$diff = array_diff_assoc($new_order, $old_order);
+	# nothing to do?
+	if(sizeof($diff) == 0) exit;
 /* ==================================================== */
 
-foreach($new_order as $sequence => $graph_templates_item_id) {
+foreach($diff as $sequence => $graph_templates_item_id) {
+	# update the template item itself
 	$sql = "UPDATE graph_templates_item SET sequence = $sequence WHERE id = $graph_templates_item_id";
+	db_execute($sql);
+	# update all items referring the template item
+	$sql = "UPDATE graph_templates_item SET sequence = $sequence WHERE local_graph_template_item_id = $graph_templates_item_id";
 	db_execute($sql);
 }
 ?>
