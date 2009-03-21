@@ -733,7 +733,10 @@ function draw_graph_items_list($item_list, $filename, $url_data, $disable_contro
 
 	include(CACTI_BASE_PATH . "/include/global_arrays.php");
 
-	html_header(array("Graph Item", "Data Source", "Graph Item Type", "CF Type", "CDEF", "GPRINT Type", "Item Color"), 3, true, 'graph_item');
+	$header_items = array("Graph Item", "Data Source", "Graph Item Type", "CF Type", "CDEF", "GPRINT Type", "Item Color");
+	$last_item_colspan = 3;
+
+	html_header($header_items, $last_item_colspan, true, 'graph_item');
 
 	$group_counter = 0; $_graph_type_name = ""; $i = 0;
 	$alternate_color_1 = $colors["alternate"]; $alternate_color_2 = $colors["alternate"];
@@ -801,12 +804,12 @@ function draw_graph_items_list($item_list, $filename, $url_data, $disable_contro
 		print "<td style='$this_row_style'>" . $graph_item_types{$item["graph_type_id"]} . "</td>\n";
 		print "<td style='$this_row_style'>" . $consolidation_functions{$item["consolidation_function_id"]} . "</td>\n";
 		print "<td style='$this_row_style'>" . ((strlen($item["cdef_name"]) > 0) ? substr($item["cdef_name"],0,30) : "None") . "</td>\n";
-		print "<td style='$this_row_style'>" . substr($item["gprint_name"],0,30) . "</td>\n";
+		print "<td style='$this_row_style'>" . ((strlen($item["cdef_name"]) > 0) ? substr($item["gprint_name"],0,30) : "None") . "</td>\n";
 		print "<td" . ((!empty($item["hex"])) ? " bgcolor='#" . $item["hex"] . "'" : "") . " width='1%'>&nbsp;</td>\n";
 		print "<td style='$this_row_style'>" . $item["hex"] . "</td>\n";
 
 		if ($disable_controls == false) {
-			print "<td align='right'><a href='$filename?action=item_remove&id=" . $item["id"] . "&$url_data'><img id='buttonSmall' class='buttonSmall' src='images/delete_icon.gif' title='Delete Graph Template Item' alt='Delete'></a></td>\n";
+			print "<td align='right'><a href='$filename?action=item_remove&id=" . $item["id"] . "&$url_data'><img id='buttonSmall' class='buttonSmall' src='images/delete_icon.gif' title='Delete this Item' alt='Delete'></a></td>\n";
 		}
 
 		print "</tr>";
@@ -814,7 +817,7 @@ function draw_graph_items_list($item_list, $filename, $url_data, $disable_contro
 		$i++;
 	}
 	}else{
-		print "<tr bgcolor='#" . $colors["form_alternate2"] . "'><td colspan='7'><em>No Items</em></td></tr>";
+		print "<tr bgcolor='#" . $colors["form_alternate2"] . "'><td colspan='" . (sizeof($header_items)+$last_item_colspan-1) . "'><em>No Items</em></td></tr>";
 	}
 }
 

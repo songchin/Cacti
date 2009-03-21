@@ -801,7 +801,7 @@ function graph_edit() {
 					<?php print get_graph_title($_GET["id"]);?>
 				</td>
 				<td class="textInfo" align="right" valign="top">
-					<a href="#" class="toggle_fastpath_links">Show&nbsp;/&nbsp;Hide Fastpaths<br/></a>
+					<a href="#" class="toggle_fastpath_links">Show&nbsp;/&nbsp;More Options ...<br/></a>
 					<a class="fastpath_links" href='graphs.php?action=graph_edit&id=<?php print (isset($_GET["id"]) ? $_GET["id"] : 0);?>&debug=<?php print (isset($_SESSION["graph_debug_mode"]) ? "0" : "1");?>'>Turn <strong><?php print (isset($_SESSION["graph_debug_mode"]) ? "Off" : "On");?></strong> Graph Debug Mode.<br/></a>
 					<?php
 						if (!empty($graphs["graph_template_id"])) {
@@ -951,6 +951,17 @@ function graph_edit() {
 
 	form_hidden_box("rrdtool_version", read_config_option("rrdtool_version"), "");
 	form_save_button_alt();
+?>
+<script type="text/javascript">
+	$('#graph_item').tableDnD({
+		onDrop: function(table, row) {
+//			alert("lib/ajax/jquery.tablednd/graph_item.ajax.php?id=<?php print $_GET["id"];?>&"+$.tableDnD.serialize());
+			$('#AjaxResult').load("lib/ajax/jquery.tablednd/graph_item.ajax.php?id=<?php print $_GET["id"];?>&"+$.tableDnD.serialize());
+//			location.reload();
+		}
+	});
+</script>
+<?php
 
 //Now we need some javascript to make it dynamic
 ?>

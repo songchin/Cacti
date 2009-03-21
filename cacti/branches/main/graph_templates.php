@@ -410,7 +410,7 @@ function template_edit() {
 	$('#graph_item').tableDnD({
 		onDrop: function(table, row) {
 //			alert($.tableDnD.serialize());
-			$('#AjaxResult').load("lib/ajax/jquery.tablednd/graph_item.ajax.php?id=<?php print $_GET["id"];?>&"+$.tableDnD.serialize());
+			$('#AjaxResult').load("lib/ajax/jquery.tablednd/graph_templates_item.ajax.php?id=<?php print $_GET["id"];?>&"+$.tableDnD.serialize());
 		}
 	});
 </script>

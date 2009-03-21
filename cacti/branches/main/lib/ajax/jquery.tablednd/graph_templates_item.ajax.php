@@ -36,7 +36,7 @@ require('./include/auth.php');
 	$old_order = array();
 	$new_order = $_REQUEST['graph_item'];
 
-	$sql = "SELECT id, sequence FROM graph_templates_item WHERE local_graph_id = " . $_GET['id'] . " and graph_template_id=0";
+	$sql = "SELECT id, sequence FROM graph_templates_item WHERE graph_template_id = " . $_GET['id'] . " and local_graph_id=0";
 	$graph_templates_items = db_fetch_assoc($sql);
 
 	if(sizeof($graph_templates_items)>0) {
@@ -52,11 +52,6 @@ require('./include/auth.php');
 	# compute difference of arrays
 	$diff = array_diff_assoc($new_order, $old_order);
 	# nothing to do?
-print "<pre>";
-print_r($old_order);
-print_r($new_order);
-print_r($diff);
-print "</pre>";
 
 	if(sizeof($diff) == 0) exit;
 /* ==================================================== */
