@@ -454,15 +454,16 @@ function html_header_sort($header_items, $sort_column, $sort_direction, $last_it
 		if (($db_column == "") || (substr_count($db_column, "nosort"))) {
 			$width = html_get_column_width($pathname, "rand_$rand_id");
 
-			print "\t\t\t<th style='width:$width;' id='rand_$rand_id' onMousemove='doColResize(this,event)' onMouseover='doColResize(this,event)' onMouseout='doneColResize()' class='textSubHeaderDark'>" . $display_text . "</th>\n";
+			print "\t\t\t<th style='width:$width;' id='rand_$rand_id'" . ((($rand_id+1) == count($header_items)) ? "colspan='$last_item_colspan' " : "") . " onMousemove='doColResize(this,event)' onMouseover='doColResize(this,event)' onMouseout='doneColResize()' class='textSubHeaderDark'>" . $display_text . "</th>\n";
 
 			$rand_id++;
 		}else{
 			$width = html_get_column_width($pathname, $db_column);
 
-			print "\t\t\t<th style='width: $width;' id='$db_column' onMousemove='doColResize(this,event)' onMouseover='doColResize(this,event)' onMouseout='doneColResize()' class='textSubHeaderDark'>";
+			print "\t\t\t<th style='width: $width;' id='$db_column'" . ((($rand_id+1) == count($header_items)) ? "colspan='$last_item_colspan' " : "") . " onMousemove='doColResize(this,event)' onMouseover='doColResize(this,event)' onMouseout='doneColResize()' class='textSubHeaderDark'>";
 			print "\n\t\t\t\t<a class='$sort_class' style='display:block;' href=" . htmlspecialchars($_SERVER["PHP_SELF"] . "?sort_column=" . $db_column . "&sort_direction=" . $direction) . ">" . $display_text . "</a>";
 			print "\n\t\t\t</th>\n";
+			$rand_id++;
 		}
 	}
 
