@@ -527,7 +527,7 @@ function data() {
 	<?php
 	html_end_box(FALSE);
 
-	html_start_box("", "100%", $colors["header"], "3", "center", "");
+	html_start_box("", "100%", $colors["header"], "0", "center", "");
 
 	/* form the 'where' clause for our main sql query */
 	$sql_where = "WHERE (data_input.name like '%%" . $_REQUEST["filter"] . "%%')";
@@ -568,6 +568,8 @@ function data() {
 			form_checkbox_cell($data_input["name"], $data_input["id"]);
 			form_end_row();
 		}
+
+		form_end_table();
 
 		print $nav;
 	}else{

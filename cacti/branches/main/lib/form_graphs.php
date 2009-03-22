@@ -1222,7 +1222,7 @@ function graph() {
 		$sql_where .= " AND graph_templates_graph.graph_template_id=" . $_REQUEST["template_id"];
 	}
 
-	html_start_box("", "100%", $colors["header"], "3", "center", "");
+	html_start_box("", "100%", $colors["header"], "0", "center", "");
 
 	$total_rows = db_fetch_cell("SELECT
 		COUNT(graph_templates_graph.id)
@@ -1271,6 +1271,8 @@ function graph() {
 			form_checkbox_cell($graph["title_cache"], $graph["local_graph_id"]);
 			form_end_row();
 		}
+
+		form_end_table();
 
 		/* put the nav bar on the bottom as well */
 		print $nav;

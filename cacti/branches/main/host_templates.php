@@ -907,7 +907,7 @@ function template() {
 	/* form the 'where' clause for our main sql query */
 	$sql_where = "WHERE (host_template.name LIKE '%%" . $_REQUEST["filter"] . "%%')";
 
-	html_start_box("", "100%", $colors["header"], "3", "center", "");
+	html_start_box("", "100%", $colors["header"], "0", "center", "");
 
 	$total_rows = db_fetch_cell("SELECT
 		COUNT(host_template.id)
@@ -938,6 +938,9 @@ function template() {
 			form_checkbox_cell($template["name"], $template["id"]);
 			form_end_row();
 		}
+
+		form_end_table();
+
 		/* put the nav bar on the bottom as well */
 		print $nav;
 	}else{

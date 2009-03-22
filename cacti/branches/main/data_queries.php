@@ -763,7 +763,7 @@ function data_query() {
 	<?php
 	html_end_box(false);
 
-	html_start_box("", "100%", $colors["header"], "3", "center", "");
+	html_start_box("", "100%", $colors["header"], "0", "center", "");
 
 	/* form the 'where' clause for our main sql query */
 	if (strlen($_REQUEST["filter"])) {

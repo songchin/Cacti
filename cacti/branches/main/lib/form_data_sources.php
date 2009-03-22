@@ -843,7 +843,7 @@ function data_source_edit() {
 			}
 		}
 
-		html_start_box("", "100%", $colors["header"], "2", "center", "");
+		html_start_box("", "100%", $colors["header"], "0", "center", "");
 
 		print "	<tr class='rowHeader'>
 				<td class='textHeaderDark'>
@@ -1277,7 +1277,7 @@ function data_source() {
 
 	$data_sources = db_fetch_assoc($dssql);
 
-	html_start_box("", "100%", $colors["header"], "3", "center", "");
+	html_start_box("", "100%", $colors["header"], "0", "center", "");
 
 	/* generate page list navigation */
 	$nav = html_create_nav($_REQUEST["page"], MAX_DISPLAY_PAGES, $_REQUEST["rows"], $total_rows, 7, "data_sources.php");
@@ -1311,6 +1311,8 @@ function data_source() {
 			form_checkbox_cell($data_source["name_cache"], $data_source["local_data_id"]);
 			form_end_row();
 		}
+
+		form_end_table();
 
 		/* put the nav bar on the bottom as well */
 		print $nav;

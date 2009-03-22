@@ -389,7 +389,7 @@ function html_nav_bar($background_color, $colspan, $current_page, $rows_per_page
 	?>
 	<tr class='rowHeader noprint'>
 		<td colspan='<?php print $colspan;?>'>
-			<table width='100%' cellspacing='0' cellpadding='3' border='0'>
+			<table width='100%' cellspacing='0' cellpadding='0' border='0' style='border-width:0px;'>
 				<tr>
 					<td align='left' class='textHeaderDark' width='15%'>
 						<?php if ($current_page > 1) {
@@ -433,7 +433,7 @@ function html_header_sort($header_items, $sort_column, $sort_direction, $last_it
 		$selected_sort_class = "sort_desc";
 	}
 
-	print "\t\t<table class='resizable' cellpadding='3px' cellspacing='0px' width='100%'><tr class='rowSubHeader'>\n";
+	print "\t\t<table class='resizable' cellpadding='3' cellspacing='0' width='100%'><tr class='rowSubHeader'>\n";
 
 	$rand_id  = 0;
 	$pathname = html_get_php_pathname();
@@ -496,7 +496,7 @@ function html_header_sort_checkbox($header_items, $sort_column, $sort_direction,
 	/* default to the 'current' file */
 	if ($form_action == "") { $form_action = basename($_SERVER["PHP_SELF"]); }
 
-	print "\t\t<table class='resizable' cellpadding='3px' cellspacing='0px' width='100%'><tr class='rowSubHeader'>\n";
+	print "\t\t<table class='resizable' cellpadding='3' cellspacing='0' width='100%'><tr class='rowSubHeader'>\n";
 
 	$rand_id  = 0;
 	$pathname = html_get_php_pathname();
@@ -544,9 +544,9 @@ function html_header($header_items, $last_item_colspan = 1, $resizable = true, $
 	if ($resizable) {
 		$pathname = html_get_php_pathname();
 
-		print "\t\t<table $table_id class='resizable' cellpadding='3px' cellspacing='0px' width='100%'><tr class='rowSubHeader nodrag nodrop'>\n";
+		print "\t\t<table $table_id class='resizable' cellpadding='3' cellspacing='0' width='100%'><tr class='rowSubHeader nodrag nodrop'>\n";
 	}else{
-		print "\t\t<table $table_id cellpadding='3px' cellspacing='0px' width='100%'><tr class='rowSubHeader nodrag nodrop'>\n";
+		print "\t\t<table $table_id cellpadding='3' cellspacing='0' width='100%'><tr class='rowSubHeader nodrag nodrop'>\n";
 	}
 
 	for ($i=0; $i<count($header_items); $i++) {
@@ -575,9 +575,9 @@ function html_header_checkbox($header_items, $form_action = "", $resizable = fal
 	if ($resizable) {
 		$pathname = html_get_php_pathname();
 
-		print "\t\t<table class='resizable' cellpadding='3px' cellspacing='0px' width='100%'><tr class='rowSubHeader'>\n";
+		print "\t\t<table class='resizable' cellpadding='3' cellspacing='0' width='100%'><tr class='rowSubHeader'>\n";
 	}else{
-		print "\t\t<table cellpadding='3px' cellspacing='0px' width='100%'><tr class='rowSubHeader'>\n";
+		print "\t\t<table cellpadding='3' cellspacing='0' width='100%'><tr class='rowSubHeader'>\n";
 	}
 
 	for ($i=0; $i<count($header_items); $i++) {
@@ -716,7 +716,8 @@ function html_create_nav($current_page, $max_pages, $rows_per_page, $total_rows,
 					</tr>
 				</table>
 			</td>
-		</tr>\n";
+		</tr>
+	</table>\n";
 
 	return $nav;
 }

@@ -1610,7 +1610,8 @@ function get_graph_tree_array($return_sql = false, $force_refresh = false) {
 
 	/* build tree array */
 	if (!isset($_SESSION["tree_array"]) || ($force_refresh) ||
-		(($_SESSION["tree_update_time"] + read_graph_config_option("page_refresh")) < time())) {
+		(isset($_SESSION["tree_update_time"]) &&
+		(($_SESSION["tree_update_time"] + read_graph_config_option("page_refresh")) < time()))) {
 
 		if (read_config_option("auth_method") != 0) {
 			$current_user = db_fetch_row("select policy_trees from user_auth where id=" . $_SESSION["sess_user_id"]);

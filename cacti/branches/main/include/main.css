@@ -448,6 +448,9 @@ a:hover {
 
 .rowGraphFilter {
 	background: #757575 url('../images/rowGraphFilter.png') repeat-x scroll top left;
+	color: #FFFFFF;
+	font-weight: Bold;
+	font-size: 14px;
 }
 
 .rowAlternate1 {
@@ -486,6 +489,7 @@ a:hover {
 .textHeaderDark {
 	font-size: 12px;
 	color: #FFFFFF;
+	padding: 3px;
 }
 
 table.resizable {
@@ -514,6 +518,7 @@ table.resizable th {
 	border-right: 2px ridge #A5A5A5;
 	text-align: left;
 	font-size: 10px;
+	padding: 3px;
 	color: #FFFFFF;
 	font-weight: bold;
 	white-space: nowrap;

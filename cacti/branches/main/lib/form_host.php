@@ -1401,7 +1401,7 @@ function host() {
 		$sql_where .= (strlen($sql_where) ? " and host.host_template_id=" . $_REQUEST["template_id"] : "where host.host_template_id=" . $_REQUEST["template_id"]);
 	}
 
-	html_start_box("", "100%", $colors["header"], "3", "center", "");
+	html_start_box("", "100%", $colors["header"], "0", "center", "");
 
 	$total_rows = db_fetch_cell("select
 		COUNT(host.id)
