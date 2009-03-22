@@ -312,7 +312,6 @@ function changeMenuState(id, initialize) {
 			createCookieElement("menu", id, "o");
 
 			/* set the display properly */
-			document.getElementById("tw_"+id).src = "images/tw_open.gif";
 			object.style.height = object.scrollHeight + "px";
 		}else{
 			createCookieElement("menu", id, "c");
@@ -324,13 +323,11 @@ function changeMenuState(id, initialize) {
 				createCookieElement("menu", id, "c");
 
 				/* set the display properly */
-				document.getElementById("tw_"+id).src = "images/tw_close.gif";
 				object.style.height = "0px";
 			}else{
 				createCookieElement("menu", id, "o");
 
 				/* set the display properly */
-				document.getElementById("tw_"+id).src = "images/tw_open.gif";
 				object.style.height = object.scrollHeight + "px";
 			}
 		}else{
@@ -348,8 +345,6 @@ function closeMenu(id) {
 		closeMe = setInterval(function() { moveUp(element) }, 10);
 		aniInProgress = false;
 	}
-
-	document.getElementById("tw_"+id).src = "images/tw_close.gif";
 }
 
 function openMenu(id) {
@@ -360,8 +355,6 @@ function openMenu(id) {
 		openMe  = setInterval(function() { moveDown(element) }, 10);
 		aniInProgress = false;
 	}
-
-	document.getElementById("tw_"+id).src = "images/tw_open.gif";
 }
 
 function moveUp(object) {
