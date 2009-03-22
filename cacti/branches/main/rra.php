@@ -170,7 +170,7 @@ function rra() {
 		"rows" => array("Rows", "ASC"),
 		"timespan" => array("Timespan", "ASC"));
 
-	html_header_sort($display_text, $_REQUEST["sort_column"], $_REQUEST["sort_direction"], 4);
+	html_header_sort($display_text, $_REQUEST["sort_column"], $_REQUEST["sort_direction"], 2);
 
 	$rras = db_fetch_assoc("SELECT
 		id,

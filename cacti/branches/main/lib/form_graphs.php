@@ -956,7 +956,7 @@ function graph_edit() {
 	$('#graph_item').tableDnD({
 		onDrop: function(table, row) {
 //			alert("lib/ajax/jquery.tablednd/graph_item.ajax.php?id=<?php print $_GET["id"];?>&"+$.tableDnD.serialize());
-			$('#AjaxResult').load("lib/ajax/jquery.tablednd/graph_item.ajax.php?id=<?php print $_GET["id"];?>&"+$.tableDnD.serialize());
+			$('#AjaxResult').load("lib/ajax/jquery.tablednd/graphs_item.ajax.php?id=<?php print $_GET["id"];?>&"+$.tableDnD.serialize());
 //			location.reload();
 		}
 	});
