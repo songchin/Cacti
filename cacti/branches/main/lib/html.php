@@ -65,12 +65,12 @@ function html_start_box($title, $width, $background_color, $cell_padding, $align
 					<table width="100%" cellpadding="<?php print $cell_padding;?>" cellspacing="0">
 						<tr>
 							<?php if ($collapsing) {?><td class="textHeaderDark" width="9">
-								<img id="<?php print $item_id . '_twisty';?>" src="<?php print $config['url_path']; ?>images/tw_open.gif" alt="Filter" align="middle">
+								<img id="<?php print $item_id . '_twisty';?>" src="<?php print URL_PATH; ?>images/tw_open.gif" alt="Filter" align="middle">
 							</td><?php } ?>
 							<td onMouseDown='return false' class="textHeaderDark"><?php print $title;?>
 							</td>
 							<?php if ($collapsing) {?><td class="textHeaderDark" width="1">
-								<img style='display:none;' src="<?php print $config['url_path']; ?>images/transparent_pixel.gif" alt='' <?php print $ani2;?>>
+								<img style='display:none;' src="<?php print URL_PATH; ?>images/transparent_pixel.gif" alt='' <?php print $ani2;?>>
 							</td><?php } if ($add_text != "") {?>
 							<td class="textHeaderDark" align="right">
 								<strong><a class="linkOverDark" href="<?php print htmlspecialchars($add_text);?>">Add</a>&nbsp;</strong>
@@ -952,8 +952,8 @@ function draw_menu($user_menu = "") {
 
 			print "\t\t\t<tr class='menuMain' style='white-space:nowrap' $ani>
 				<td onMouseDown='return false' valign='middle'>
-					<img id='tw_" . $id . "' src='images/tw_open.gif' class='buttonSmall' alt='Menu Item'>$header_name
-					<img style='display:none;' src='images/transparent_pixel.gif' $ani2>
+					<img id='tw_" . $id . "' src='" . URL_PATH . "images/tw_open.gif' class='buttonSmall' alt='Menu Item'>$header_name
+					<img style='display:none;' src='" . URL_PATH . "images/transparent_pixel.gif' $ani2>
 				</td>
 			</tr>
 			<tr class='mainMenu' id='menu_$id'>
@@ -979,7 +979,7 @@ function draw_menu($user_menu = "") {
 					}
 
 					while (list($item_sub_url, $item_sub_title) = each($item_title)) {
-						$item_sub_url = $config['url_path'] . $item_sub_url;
+						$item_sub_url = URL_PATH . $item_sub_url;
 
 						/* indent sub-items */
 						if ($i > 0) {
@@ -990,7 +990,7 @@ function draw_menu($user_menu = "") {
 
 						/* do not put a line between each sub-item */
 						if (($i == 0) || ($draw_sub_items == false)) {
-							$background = $config['url_path'] . "images/menu_line.gif";
+							$background = URL_PATH . "images/menu_line.gif";
 						}else{
 							$background = "";
 						}
@@ -1019,7 +1019,7 @@ function draw_menu($user_menu = "") {
 			}else{
 				if ((isset($user_realms[$current_realm_id])) || (!isset($user_auth_realm_filenames{basename($item_url)}))) {
 					/* draw normal (non sub-item) menu item */
-					$item_url = $config['url_path'] . $item_url;
+					$item_url = URL_PATH . $item_url;
 					if (basename($_SERVER["PHP_SELF"]) == basename($item_url)) {
 						print "\t\t\t\t\t\t<li class='menuSubMainSelected'><a href='$item_url'>$item_title</a></li>\n";
 					}else{
@@ -1043,7 +1043,7 @@ function draw_actions_dropdown($actions_array) {
 	<table align='center' width='100%'>
 		<tr>
 			<td width='1' valign='top'>
-				<img src='<?php echo $config['url_path']; ?>images/arrow.gif' alt='' align='middle'>&nbsp;
+				<img src='<?php echo URL_PATH; ?>images/arrow.gif' alt='' align='middle'>&nbsp;
 			</td>
 			<td align='right'>
 				Choose an action:

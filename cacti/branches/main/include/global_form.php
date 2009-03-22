@@ -520,13 +520,13 @@ $struct_graph_item = array(
 		"friendly_name" => "Data Source",
 		"method" => "drop_sql",
 		"sql" => "select
-			CONCAT_WS('',case when host.description is null then 'No Host' when host.description is not null then host.description end,' - ',data_template_data.name,' (',data_template_rrd.data_source_name,')') as name,
+			CONCAT_WS('', CASE WHEN host.description IS NULL THEN 'No Host' WHEN host.description IS NOT NULL THEN host.description end,' - ',data_template_data.name,' (',data_template_rrd.data_source_name,')') AS name,
 			data_template_rrd.id
-			from (data_template_data,data_template_rrd,data_local)
-			left join host on (data_local.host_id=host.id)
-			where data_template_rrd.local_data_id=data_local.id
-			and data_template_data.local_data_id=data_local.id
-			order by name",
+			FROM (data_template_data,data_template_rrd,data_local)
+			LEFT JOIN host ON (data_local.host_id=host.id)
+			WHERE data_template_rrd.local_data_id=data_local.id
+			AND data_template_data.local_data_id=data_local.id
+			ORDER BY name",
 		"default" => "0",
 		"none_value" => "None",
 		"description" => "The data source to use for this graph item."

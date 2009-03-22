@@ -752,8 +752,8 @@ function form_confirm_buttons($action_url, $cancel_url) {
  ?>
 	<tr>
 		<td bgcolor="#E1E1E1">
-			<a href="<?php print $cancel_url;?>"><img src="?php print $config['url_path'] ?>images/button_cancel.gif" style='border-width:0px;' alt="Cancel" align="absmiddle"></a>
-			<a href="<?php print $action_url . "&confirm=yes";?>"><img src="?php print $config['url_path'] ?>images/button_delete.gif" style='border-width:0px;' alt="Delete" align="absmiddle"></a>
+			<a href="<?php print $cancel_url;?>"><img src="<?php print URL_PATH; ?>images/button_cancel.gif" style='border-width:0px;' alt="Cancel" align="absmiddle"></a>
+			<a href="<?php print $action_url . "&confirm=yes";?>"><img src="<?php print URL_PATH ?>images/button_delete.gif" style='border-width:0px;' alt="Delete" align="absmiddle"></a>
 		</td>
 	</tr>
 <?php }
@@ -785,8 +785,8 @@ function form_save_button($cancel_url, $force_type = "", $key_field = "id") {
 		<tr>
 			<td bgcolor="#f5f5f5" align="right">
 				<input type='hidden' name='action' value='save'>
-				<a href='<?php print $cancel_url;?>'><img src='<?php echo $config['url_path']; ?>images/button_cancel2.gif' alt='Cancel' align='absmiddle' border='0'></a>
-				<input type='image' src='<?php echo $config['url_path']; ?>images/<?php print $img;?>' alt='<?php print $alt;?>' align='absmiddle'>
+				<a href='<?php print $cancel_url;?>'><img src='<?php echo URL_PATH; ?>images/button_cancel2.gif' alt='Cancel' align='absmiddle' border='0'></a>
+				<input type='image' src='<?php echo URL_PATH; ?>images/<?php print $img;?>' alt='<?php print $alt;?>' align='absmiddle'>
 			</td>
 		</tr>
 	</table>

@@ -109,20 +109,20 @@ $page_title = api_plugin_hook_function('page_title', 'Cacti');
 			print "<meta http-equiv=refresh content='" . $refresh . "'>\r\n";		}
 	}
 	?>
-	<link type="text/css" href="<?php echo $config['url_path']; ?>include/main.css" rel="stylesheet"/>
-	<link type="text/css" href="<?php echo $config['url_path']; ?>include/jquery.autocomplete.css" rel="stylesheet">
-	<link href="<?php echo $config['url_path']; ?>images/favicon.ico" rel="shortcut icon"/>
-	<script type="text/javascript" src="<?php echo $config['url_path']; ?>include/layout.js"></script>
-	<script type="text/javascript" src="<?php echo $config['url_path']; ?>include/treeview/ua.js"></script>
-	<script type="text/javascript" src="<?php echo $config['url_path']; ?>include/treeview/ftiens4.js"></script>
-	<script type="text/javascript" src="<?php echo $config['url_path']; ?>include/jquery/jquery.js"></script>
-	<script type="text/javascript" src="<?php echo $config['url_path']; ?>include/jquery/jquery.autocomplete.js"></script>
-	<script type="text/javascript" src="<?php echo $config['url_path']; ?>include/jquery/jquery.bgiframe.js"></script>
-	<script type="text/javascript" src="<?php echo $config['url_path']; ?>include/jquery/jquery.ajaxQueue.js"></script>
-	<script type="text/javascript" src="<?php echo $config['url_path']; ?>include/jquery/jquery.tablednd.js"></script>
-	<script type="text/javascript" src="<?php echo $config['url_path']; ?>include/jscalendar/calendar.js"></script>
-	<script type="text/javascript" src="<?php echo $config['url_path']; ?>include/jscalendar/lang/calendar-en.js"></script>
-	<script type="text/javascript" src="<?php echo $config['url_path']; ?>include/jscalendar/calendar-setup.js"></script>
+	<link type="text/css" href="<?php echo URL_PATH; ?>include/main.css" rel="stylesheet"/>
+	<link type="text/css" href="<?php echo URL_PATH; ?>include/jquery.autocomplete.css" rel="stylesheet">
+	<link href="<?php echo URL_PATH; ?>images/favicon.ico" rel="shortcut icon"/>
+	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/layout.js"></script>
+	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/treeview/ua.js"></script>
+	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/treeview/ftiens4.js"></script>
+	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/jquery/jquery.js"></script>
+	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/jquery/jquery.autocomplete.js"></script>
+	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/jquery/jquery.bgiframe.js"></script>
+	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/jquery/jquery.ajaxQueue.js"></script>
+	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/jquery/jquery.tablednd.js"></script>
+	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/jscalendar/calendar.js"></script>
+	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/jscalendar/lang/calendar-en.js"></script>
+	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/jscalendar/calendar-setup.js"></script>
 	<?php api_plugin_hook('page_head'); ?>
 </head>
 <body class='body' onResize='pageResize()' onLoad='pageInitialize()'>
@@ -131,18 +131,18 @@ $page_title = api_plugin_hook_function('page_title', 'Cacti');
 	<div id='navbar'>
 		<div id='navbar_l'>
 			<ul>
-				<?php echo draw_header_tab("console", "Console", $config['url_path'] . "index.php");?>
-				<?php echo draw_header_tab("graphs", "Graphs", $config['url_path'] . "graph_view.php");?>
+				<?php echo draw_header_tab("console", "Console", URL_PATH . "index.php");?>
+				<?php echo draw_header_tab("graphs", "Graphs", URL_PATH . "graph_view.php");?>
 				<?php api_plugin_hook('top_graph_header_tabs');?>
 			</ul>
 		</div>
 		<div id='navbar_r'>
 			<ul>
 				<?php if (substr_count($_SERVER["REQUEST_URI"], "graph_view.php")) { ?>
-				<?php echo draw_header_tab("graph_settings", "Settings", $config['url_path'] . "graph_settings.php");?>
-				<?php echo draw_header_tab("tree", "Tree", $config['url_path'] . "graph_view.php?action=tree", $config['url_path'] . "images/tab_mode_tree_new.gif");?>
-				<?php echo draw_header_tab("list", "List", $config['url_path'] . "graph_view.php?action=list", $config['url_path'] . "images/tab_mode_list_new.gif");?>
-				<?php echo draw_header_tab("preview", "Preview", $config['url_path'] . "graph_view.php?action=preview", $config['url_path'] . "images/tab_mode_preview_new.gif");?>
+				<?php echo draw_header_tab("graph_settings", "Settings", URL_PATH . "graph_settings.php");?>
+				<?php echo draw_header_tab("tree", "Tree", URL_PATH . "graph_view.php?action=tree", URL_PATH . "images/tab_mode_tree_new.gif");?>
+				<?php echo draw_header_tab("list", "List", URL_PATH . "graph_view.php?action=list", URL_PATH . "images/tab_mode_list_new.gif");?>
+				<?php echo draw_header_tab("preview", "Preview", URL_PATH . "graph_view.php?action=preview", URL_PATH . "images/tab_mode_preview_new.gif");?>
 				<?php }else{ api_plugin_hook('top_graph_header_tabs_right'); }?>
 				<li id="tab_help" class="notselected"><a href="<?php echo pagehelp_url()?>" target="_blank" title="Help">Help</a></li>
 			</ul>
@@ -153,7 +153,7 @@ $page_title = api_plugin_hook_function('page_title', 'Cacti');
 			<?php draw_navigation_text();?>
 		</div>
 		<div style='float:right'><?php
-			if (read_config_option("auth_method") != 0) { $date = date_time_format();?><strong><?php echo date("D, " . $date . " T");?></strong>&nbsp;&nbsp;&nbsp;Logged in as <strong><?php print db_fetch_cell("select username from user_auth where id=" . $_SESSION["sess_user_id"]);?></strong> (<a href="<?php echo $config['url_path']; ?>logout.php">Logout</a>)<?php } ?>
+			if (read_config_option("auth_method") != 0) { $date = date_time_format();?><strong><?php echo date("D, " . $date . " T");?></strong>&nbsp;&nbsp;&nbsp;Logged in as <strong><?php print db_fetch_cell("select username from user_auth where id=" . $_SESSION["sess_user_id"]);?></strong> (<a href="<?php echo URL_PATH; ?>logout.php">Logout</a>)<?php } ?>
 		</div>
 	</div>
 </div>

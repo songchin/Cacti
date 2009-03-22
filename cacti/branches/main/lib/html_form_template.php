@@ -110,47 +110,50 @@ function draw_nontemplated_fields_graph_item($graph_template_id, $local_graph_id
 	$draw_any_items = false;
 
 	/* fetch information about the graph template */
-	$input_item_list = db_fetch_assoc("select * from graph_template_input where graph_template_id=$graph_template_id order by column_name,name");
+	$input_item_list = db_fetch_assoc("SELECT *
+		FROM graph_template_input
+		WHERE graph_template_id=$graph_template_id
+		ORDER BY column_name,name");
 
 	/* modifications to the default graph items array */
 	if (!empty($local_graph_id)) {
-		$host_id = db_fetch_cell("select host_id from graph_local where id=$local_graph_id");
+		$host_id = db_fetch_cell("SELECT host_id FROM graph_local WHERE id=$local_graph_id");
 
-		$struct_graph_item["task_item_id"]["sql"] = "select
+		$struct_graph_item["task_item_id"]["sql"] = "SELECT
 			CONCAT_WS('',
-			case
-			when host.description is null then 'No Host - '
-			when host.description is not null then ''
-			end,data_template_data.name_cache,' (',data_template_rrd.data_source_name,')') as name,
+			CASE
+			WHEN host.description IS NULL THEN 'No Host - '
+			WHEN host.description IS NOT NULL THEN ''
+			end,data_template_data.name_cache,' (',data_template_rrd.data_source_name,')') AS name,
 			data_template_rrd.id
-			from (data_template_data,data_template_rrd,data_local)
-			left join host on (data_local.host_id=host.id)
-			where data_template_rrd.local_data_id=data_local.id
-			and data_template_data.local_data_id=data_local.id
-			" . (empty($host_id) ? "" : " and data_local.host_id=$host_id") . "
-			order by name";
+			FROM (data_template_data,data_template_rrd,data_local)
+			LEFT JOIN host ON (data_local.host_id=host.id)
+			WHERE data_template_rrd.local_data_id=data_local.id
+			AND data_template_data.local_data_id=data_local.id
+			" . (empty($host_id) ? "" : " AND data_local.host_id=$host_id") . "
+			ORDER BY name";
 	}
 
 	if (sizeof($input_item_list) > 0) {
 		foreach ($input_item_list as $item) {
 			if (!empty($local_graph_id)) {
-				$current_def_value = db_fetch_row("select
+				$current_def_value = db_fetch_row("SELECT
 					graph_templates_item." . $item["column_name"] . ",
 					graph_templates_item.id
-					from (graph_templates_item,graph_template_input_defs)
-					where graph_template_input_defs.graph_template_item_id=graph_templates_item.local_graph_template_item_id
-					and graph_template_input_defs.graph_template_input_id=" . $item["id"] . "
-					and graph_templates_item.local_graph_id=$local_graph_id
-					limit 0,1");
+					FROM (graph_templates_item,graph_template_input_defs)
+					WHERE graph_template_input_defs.graph_template_item_id=graph_templates_item.local_graph_template_item_id
+					AND graph_template_input_defs.graph_template_input_id=" . $item["id"] . "
+					AND graph_templates_item.local_graph_id=$local_graph_id
+					LIMIT 0,1");
 			}else{
-				$current_def_value = db_fetch_row("select
+				$current_def_value = db_fetch_row("SELECT
 					graph_templates_item." . $item["column_name"] . ",
 					graph_templates_item.id
-					from (graph_templates_item,graph_template_input_defs)
-					where graph_template_input_defs.graph_template_item_id=graph_templates_item.id
-					and graph_template_input_defs.graph_template_input_id=" . $item["id"] . "
-					and graph_templates_item.graph_template_id=" . $graph_template_id . "
-					limit 0,1");
+					FROM (graph_templates_item,graph_template_input_defs)
+					WHERE graph_template_input_defs.graph_template_item_id=graph_templates_item.id
+					AND graph_template_input_defs.graph_template_input_id=" . $item["id"] . "
+					AND graph_templates_item.graph_template_id=" . $graph_template_id . "
+					LIMIT 0,1");
 			}
 
 			/* find our field name */

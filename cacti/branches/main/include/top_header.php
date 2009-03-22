@@ -34,15 +34,15 @@ $page_title = api_plugin_hook_function('page_title', 'Cacti');
 <head>
 	<title><?php echo $page_title; ?></title>
 	<meta http-equiv="Content-Type" content="text/html;charset=utf-8" >
-	<link type="text/css" href="<?php echo $config['url_path']; ?>include/main.css" rel="stylesheet">
-	<link type="text/css" href="<?php echo $config['url_path']; ?>include/jquery.autocomplete.css" rel="stylesheet">
-	<link href="<?php echo $config['url_path']; ?>images/favicon.ico" rel="shortcut icon">
-	<script type="text/javascript" src="<?php echo $config['url_path']; ?>include/layout.js"></script>
-	<script type="text/javascript" src="<?php echo $config['url_path']; ?>include/jquery/jquery.js"></script>
-	<script type="text/javascript" src="<?php echo $config['url_path']; ?>include/jquery/jquery.autocomplete.js"></script>
-	<script type="text/javascript" src="<?php echo $config['url_path']; ?>include/jquery/jquery.bgiframe.js"></script>
-	<script type="text/javascript" src="<?php echo $config['url_path']; ?>include/jquery/jquery.ajaxQueue.js"></script>
-	<script type="text/javascript" src="<?php echo $config['url_path']; ?>include/jquery/jquery.tablednd.js"></script>
+	<link type="text/css" href="<?php echo URL_PATH; ?>include/main.css" rel="stylesheet">
+	<link type="text/css" href="<?php echo URL_PATH; ?>include/jquery.autocomplete.css" rel="stylesheet">
+	<link href="<?php echo URL_PATH; ?>images/favicon.ico" rel="shortcut icon">
+	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/layout.js"></script>
+	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/jquery/jquery.js"></script>
+	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/jquery/jquery.autocomplete.js"></script>
+	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/jquery/jquery.bgiframe.js"></script>
+	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/jquery/jquery.ajaxQueue.js"></script>
+	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/jquery/jquery.tablednd.js"></script>
 
 <?php if (isset($refresh)) { print "\t<meta http-equiv=refresh content=\"" . $refresh["seconds"] . "; url='" . $refresh["page"] . "'\">\n"; }
 
@@ -56,8 +56,8 @@ api_plugin_hook('page_head');
 	<div id='navbar' class='navbar'>
 		<div id='navbar_l'>
 			<ul>
-				<?php echo draw_header_tab("console", "Console", $config['url_path'] . "index.php");?>
-				<?php echo draw_header_tab("graphs", "Graphs", $config['url_path'] . "graph_view.php");?>
+				<?php echo draw_header_tab("console", "Console", URL_PATH . "index.php");?>
+				<?php echo draw_header_tab("graphs", "Graphs", URL_PATH . "graph_view.php");?>
 				<?php api_plugin_hook('top_header_tabs'); ?>
 			</ul>
 		</div>
@@ -72,14 +72,14 @@ api_plugin_hook('page_head');
 			<?php print draw_navigation_text() . "\n";?>
 		</div>
 		<div style='float:right'><?php
-			if (read_config_option("auth_method") != 0) { $date = date_time_format();?><strong><?php echo date("D, " . $date . " T");?></strong>&nbsp;&nbsp;&nbsp;Logged in as <strong><?php print db_fetch_cell("select username from user_auth where id=" . $_SESSION["sess_user_id"]);?></strong> (<a href="<?php echo $config['url_path']; ?>logout.php">Logout</a>)<?php } ?>
+			if (read_config_option("auth_method") != 0) { $date = date_time_format();?><strong><?php echo date("D, " . $date . " T");?></strong>&nbsp;&nbsp;&nbsp;Logged in as <strong><?php print db_fetch_cell("select username from user_auth where id=" . $_SESSION["sess_user_id"]);?></strong> (<a href="<?php echo URL_PATH; ?>logout.php">Logout</a>)<?php } ?>
 		</div>
 	</div>
 </div>
 <div id='wrapper' style='opacity:0;'>
 	<div id='menu'>
 		<?php draw_menu();?>
-		<table align='center' style='margin-top:10px;'><tr><td><a href='<?php echo $config['url_path']; ?>about.php'><img src="<?php echo $config['url_path']; ?>images/cacti_logo.gif" align="middle" alt="Cacti" style='border-width:0px;'></a></td></tr></table>
+		<table align='center' style='margin-top:10px;'><tr><td><a href='<?php echo URL_PATH; ?>about.php'><img src="<?php echo URL_PATH; ?>images/cacti_logo.gif" align="middle" alt="Cacti" style='border-width:0px;'></a></td></tr></table>
 	</div>
 	<div id='vsplitter' onMouseout='doneDivResize()' onMouseover='doDivResize(this,event)' onMousemove='doDivResize(this,event)'>
 		<div id='vsplitter_toggle' onClick='vSplitterToggle()' onMouseover='vSplitterEm()' onMouseout='vSplitterUnEm()' title='Hide/Unhide Menu'></div>

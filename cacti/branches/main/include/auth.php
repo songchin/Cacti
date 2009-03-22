@@ -75,7 +75,7 @@ if (read_config_option("auth_method") != 0) {
 			<html>
 			<head>
 				<title>Cacti</title>
-				<link href="<?php echo $config['url_path']; ?>include/main.css" rel="stylesheet">
+				<link href="<?php echo URL_PATH; ?>include/main.css" rel="stylesheet">
 			</style>
 			</head>
 
@@ -83,7 +83,7 @@ if (read_config_option("auth_method") != 0) {
 
 			<table width="450" align='center'>
 				<tr>
-					<td colspan='2'><img src='<?php echo $config['url_path']; ?>images/auth_deny.gif' style='border-width:0px;' alt='Access Denied'></td>
+					<td colspan='2'><img src='<?php echo URL_PATH; ?>images/auth_deny.gif' style='border-width:0px;' alt='Access Denied'></td>
 				</tr>
 				<tr><td></td></tr>
 				<tr>
@@ -91,7 +91,7 @@ if (read_config_option("auth_method") != 0) {
 					need access to this particular section, please contact the Cacti administrator.</td>
 				</tr>
 				<tr>
-					<td class='textArea' colspan='2' align='center'>( <a href='' onclick='javascript: history.back();'>Return</a> | <a href='<?php echo $config['url_path']; ?>index.php'>Login</a> )</td>
+					<td class='textArea' colspan='2' align='center'>( <a href='' onclick='javascript: history.back();'>Return</a> | <a href='<?php echo URL_PATH; ?>index.php'>Login</a> )</td>
 				</tr>
 			</table>
 
