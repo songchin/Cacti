@@ -789,7 +789,7 @@ function user_realms_edit() {
 	</table>
 	<?php
 
-	html_start_box("", "100%", $colors["header"], "3", "center", "");
+	html_start_box("", "100%", $colors["header"], "0", "center", "");
 
 	print "	<tr class='rowHeader'>
 			<td class='textHeaderDark'><strong>Realm Permissions</strong></td>
@@ -1014,7 +1014,7 @@ function user() {
 	<tr class='rowAlternate2'>
 		<td>
 			<form name="form_user_admin">
-			<table width="100%" cellpadding="0" cellspacing="0">
+			<table cellpadding="0" cellspacing="0">
 				<tr>
 					<td style='white-space:nowrap;width:50px;'>
 						Search:&nbsp;
@@ -1042,7 +1042,7 @@ function user() {
 		$sql_where = "";
 	}
 
-	html_start_box("", "100%", $colors["header"], "3", "center", "");
+	html_start_box("", "100%", $colors["header"], "0", "center", "");
 
 	$total_rows = db_fetch_cell("SELECT
 		COUNT(user_auth.id)
@@ -1109,6 +1109,8 @@ function user() {
 			form_checkbox_cell($user["username"], $user["id"]);
 			form_end_row();
 		}
+
+		form_end_table();
 
 		print $nav;
 	}else{
