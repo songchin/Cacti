@@ -638,7 +638,6 @@ function template() {
 	load_current_session_value("sort_column", "sess_data_template_sort_column", "name");
 	load_current_session_value("sort_direction", "sess_data_template_sort_direction", "ASC");
 
-
 	html_start_box("<strong>Data Templates</strong>", "100%", $colors["header"], "3", "center", "data_templates.php?action=template_edit", true);
 	?>
 	<tr class='rowAlternate2'>

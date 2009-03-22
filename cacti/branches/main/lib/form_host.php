@@ -742,7 +742,8 @@ function host_display_general($host, $host_text) {
 			</tr>
 		</table>
 		<?php
-	}else{		html_start_box($host_text, "100%", $colors["header"], "3", "center", "", false);
+	}else{
+		html_start_box($host_text, "100%", $colors["header"], "3", "center", "", false);
 	}
 
 	html_end_box(FALSE);

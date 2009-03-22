@@ -27,8 +27,11 @@
    -------------------------- */
 
 function api_graphs_new_form_save() {
-	if (substr_count($_SERVER["REQUEST_URI"], "/host.php")) {		$file = "host.php?action=edit&tab=newgraphs&id=" . $_REQUEST["host_id"];
-	}else{		$file = "graphs_new.php?host_id=". $_REQUEST["host_id"];	}
+	if (substr_count($_SERVER["REQUEST_URI"], "/host.php")) {
+		$file = "host.php?action=edit&tab=newgraphs&id=" . $_REQUEST["host_id"];
+	}else{
+		$file = "graphs_new.php?host_id=". $_REQUEST["host_id"];
+	}
 
 
 	if (isset($_POST["save_component_graph"])) {

@@ -232,7 +232,8 @@ function graph_view_timespan_selector() {
 	html_graph_end_box(FALSE);
 }
 
-function graph_view_search_filter() {	global $graphs_per_page;
+function graph_view_search_filter() {
+	global $graphs_per_page;
 
 	html_graph_start_box(3, FALSE);
 	?>

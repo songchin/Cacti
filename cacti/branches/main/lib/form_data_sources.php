@@ -1052,7 +1052,8 @@ function data_source() {
 		});
 	});
 
-	function clearDSFilterChange(objForm) {		<?php print (isset($_REQUEST["tab"]) ? "strURL = '?host_id=" . $_REQUEST["host_id"] . "&id=" . $_REQUEST["host_id"] . "&action=edit&action=edit&tab=" . $_REQUEST["tab"] . "';" : "strURL = '?host_id=-1';");?>
+	function clearDSFilterChange(objForm) {
+		<?php print (isset($_REQUEST["tab"]) ? "strURL = '?host_id=" . $_REQUEST["host_id"] . "&id=" . $_REQUEST["host_id"] . "&action=edit&action=edit&tab=" . $_REQUEST["tab"] . "';" : "strURL = '?host_id=-1';");?>
 		strURL = strURL + '&filter=';
 		strURL = strURL + '&rows=-1';
 		strURL = strURL + '&template_id=-1';
