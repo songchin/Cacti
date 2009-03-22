@@ -689,27 +689,50 @@ function setFocus() {
 	inputs = document.getElementsByTagName("input");
 	found  = false;
 	hfound = false;
+	x      = 0;
 
-	for (var i=0; i < inputs.length; i++) {
-		switch (inputs[i].type) {
-		case "image":
-		case "text":
-		case "password":
-		case "file":
-		case "button":
-			inputs[i].focus();
-			found = true;
+	while (true) {
+		if (x == 0) {
+			for (var i=0; i < inputs.length; i++) {
+				switch (inputs[i].type) {
+				case "text":
+					inputs[i].focus();
+					found = true;
 
-			break;
-		case "hidden":
-			hid_count = i;
-			hfound    = true;
+					break;
+				}
 
-			break;
-		default:
+				if (found) {
+					break;
+				}
+			}
+		}else{
+			for (var i=0; i < inputs.length; i++) {
+				switch (inputs[i].type) {
+				case "image":
+				case "password":
+				case "file":
+				case "button":
+					inputs[i].focus();
+					found = true;
+
+					break;
+				case "hidden":
+					hid_count = i;
+					hfound    = true;
+
+					break;
+				default:
+				}
+
+				if (found) {
+					break;
+				}
+			}
 		}
 
-		if (found) {
+		x++;
+		if (x > 1 || found) {
 			break;
 		}
 	}

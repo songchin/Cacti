@@ -35,6 +35,19 @@
 function html_start_box($title, $width, $background_color, $cell_padding, $align, $add_text = "", $collapsing = false, $table_id = '') {
 	global $colors, $config;
 
+	if ($add_text != "") {
+		?>
+		<script type="text/javascript">
+		<!--
+		function addObject() {
+			document.location = '<?php echo $add_text;?>';
+			return false;
+		}
+		-->
+		</script>
+		<?php
+	}
+
 	$temp_string = str_replace("strong", "", $title);
 	if (strpos($temp_string, "[")) {
 		$temp_string = substr($temp_string, 0, strpos($temp_string, "[")-1);
@@ -60,22 +73,28 @@ function html_start_box($title, $width, $background_color, $cell_padding, $align
 
 	?>
 		<table class="startBoxHeader" align="<?php print $align;?>" width="<?php print $width;?>" cellpadding=0 cellspacing=0>
-			<?php if ($title != "") {?><tr class="rowHeader" <?php print $ani;?>>
+			<?php if ($title != "") {?><tr class="rowHeader">
 				<td colspan="100">
-					<table width="100%" cellpadding="<?php print $cell_padding;?>" cellspacing="0">
+					<table width="100%" cellpadding="0" cellspacing="0">
 						<tr>
-							<?php if ($collapsing) {?><td class="textHeaderDark" width="9">
-								<img id="<?php print $item_id . '_twisty';?>" src="<?php print URL_PATH; ?>images/tw_open.gif" alt="Filter" align="middle">
-							</td><?php } ?>
-							<td onMouseDown='return false' class="textHeaderDark"><?php print $title;?>
-							</td>
-							<?php if ($collapsing) {?><td class="textHeaderDark" width="1">
-								<img style='display:none;' src="<?php print URL_PATH; ?>images/transparent_pixel.gif" alt='' <?php print $ani2;?>>
-							</td><?php } if ($add_text != "") {?>
-							<td class="textHeaderDark" align="right">
-								<strong><a class="linkOverDark" href="<?php print htmlspecialchars($add_text);?>">Add</a>&nbsp;</strong>
-							</td>
-						<?php }?></tr>
+							<td>
+								<table width="100%" cellpadding="0" cellspacing="0" <?php print $ani;?>>
+									<tr>
+										<?php if ($collapsing) {?><td class="textHeaderDark" width="9">
+											<img id="<?php print $item_id . '_twisty';?>" src="<?php print URL_PATH; ?>images/tw_open.gif" alt="Filter" align="middle">
+										</td><?php } ?>
+										<td onMouseDown='return false' class="textHeaderDark"><?php print $title;?>
+										</td>
+										<?php if ($collapsing) {?><td class="textHeaderDark" width="1">
+											<img style='display:none;' src="<?php print URL_PATH; ?>images/transparent_pixel.gif" alt='' <?php print $ani2;?>>
+										</td><?php }?>
+									</tr>
+								</table>
+							</td><?php if ($add_text != "") {?>
+							<td width='1px' class="textHeaderDark" align="right">
+								<input type='button' onClick='addObject()' style='font-size:10px;' value='Add'>
+							</td><?php }?>
+						</tr>
 					</table>
 				</td>
 			</tr>
@@ -952,7 +971,7 @@ function draw_menu($user_menu = "") {
 
 			print "\t\t\t<tr class='menuMain' style='white-space:nowrap' $ani>
 				<td onMouseDown='return false' valign='middle'>
-					<img id='tw_" . $id . "' src='" . URL_PATH . "images/tw_open.gif' class='buttonSmall' alt='Menu Item'>$header_name
+					$header_name
 					<img style='display:none;' src='" . URL_PATH . "images/transparent_pixel.gif' $ani2>
 				</td>
 			</tr>
