@@ -36,6 +36,7 @@ Cacti CHANGELOG
 -feature#0001408: Hide templated input fields
 -feature#0001409: Add context sensitive page help linking to cacti dokuwiki
 -feature#0001438: Allow for drag and drop reordering of graph template items
+-feature#0001439: New pseudo variable |host_template|, support all pseudo variable derived from host table
 -feature: jQuery "TableDnd" used for cdef item sort (courtesy Browniebraun)
 -feature: Default Script Server/Script Queries now accept host specific ping_retries, max_oids
 -feature: Support for new variables |host_ping_retries| and |host_max_oids|
