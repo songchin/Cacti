@@ -242,7 +242,7 @@ function data_source_form_actions() {
 	if (isset($_POST["selected_items"])) {
 		$selected_items = unserialize(stripslashes($_POST["selected_items"]));
 
-		if ($_POST["drp_action"] == "1") { /* delete */
+		if ($_POST["drp_action"] == DS_ACTION_DELETE) { /* delete */
 			if (!isset($_POST["delete_type"])) { $_POST["delete_type"] = 1; }
 
 			switch ($_POST["delete_type"]) {
@@ -283,7 +283,7 @@ function data_source_form_actions() {
 
 					api_data_source_remove($selected_items[$i]);
 				}
-		}elseif ($_POST["drp_action"] == "2") { /* change graph template */
+		}elseif ($_POST["drp_action"] == DS_ACTION_CHANGE_TEMPLATE) { /* change graph template */
 			for ($i=0;($i<count($selected_items));$i++) {
 				/* ================= input validation ================= */
 				input_validate_input_number($selected_items[$i]);
@@ -292,7 +292,7 @@ function data_source_form_actions() {
 
 				change_data_template($selected_items[$i], $_POST["data_template_id"]);
 			}
-		}elseif ($_POST["drp_action"] == "3") { /* change host */
+		}elseif ($_POST["drp_action"] == DS_ACTION_CHANGE_HOST) { /* change host */
 			for ($i=0;($i<count($selected_items));$i++) {
 				/* ================= input validation ================= */
 				input_validate_input_number($selected_items[$i]);
@@ -303,7 +303,7 @@ function data_source_form_actions() {
 				push_out_host($_POST["host_id"], $selected_items[$i]);
 				update_data_source_title_cache($selected_items[$i]);
 			}
-		}elseif ($_POST["drp_action"] == "4") { /* duplicate */
+		}elseif ($_POST["drp_action"] == DS_ACTION_DUPLICATE) { /* duplicate */
 			for ($i=0;($i<count($selected_items));$i++) {
 				/* ================= input validation ================= */
 				input_validate_input_number($selected_items[$i]);
@@ -311,7 +311,7 @@ function data_source_form_actions() {
 
 				duplicate_data_source($selected_items[$i], 0, $_POST["title_format"]);
 			}
-		}elseif ($_POST["drp_action"] == "5") { /* data source -> data template */
+		}elseif ($_POST["drp_action"] == DS_ACTION_CONVERT_TO_TEMPLATE) { /* data source -> data template */
 			for ($i=0;($i<count($selected_items));$i++) {
 				/* ================= input validation ================= */
 				input_validate_input_number($selected_items[$i]);
@@ -319,15 +319,15 @@ function data_source_form_actions() {
 
 				data_source_to_data_template($selected_items[$i], $_POST["title_format"]);
 			}
-		}elseif ($_POST["drp_action"] == "6") { /* data source enable */
+		}elseif ($_POST["drp_action"] == DS_ACTION_ENABLE) { /* data source enable */
 			for ($i=0;($i<count($selected_items));$i++) {
 				api_data_source_enable($selected_items[$i]);
 			}
-		}elseif ($_POST["drp_action"] == "7") { /* data source disable */
+		}elseif ($_POST["drp_action"] == DS_ACTION_DISABLE) { /* data source disable */
 			for ($i=0;($i<count($selected_items));$i++) {
 				api_data_source_disable($selected_items[$i]);
 			}
-		}elseif ($_POST["drp_action"] == "8") { /* reapply suggested data source naming */
+		}elseif ($_POST["drp_action"] == DS_ACTION_REAPPLY_SUGGESTED_NAMES) { /* reapply suggested data source naming */
 			for ($i=0;($i<count($selected_items));$i++) {
 				/* ================= input validation ================= */
 				input_validate_input_number($selected_items[$i]);
@@ -365,7 +365,7 @@ function data_source_form_actions() {
 	print "<form action='data_sources.php' method='post'>\n";
 
 	if (sizeof($ds_array)) {
-		if ($_POST["drp_action"] == "1") { /* delete */
+		if ($_POST["drp_action"] == DS_ACTION_DELETE) { /* delete */
 			$graphs = array();
 
 			/* find out which (if any) graphs are using this data source, so we can tell the user */
@@ -406,7 +406,7 @@ function data_source_form_actions() {
 					</td>
 				</tr>\n
 				";
-		}elseif ($_POST["drp_action"] == "2") { /* change graph template */
+		}elseif ($_POST["drp_action"] == DS_ACTION_CHANGE_TEMPLATE) { /* change graph template */
 			print "	<tr>
 					<td class='textArea'>
 						<p>Choose a data template and click save to change the data template for
@@ -417,7 +417,7 @@ function data_source_form_actions() {
 					</td>
 				</tr>\n
 				";
-		}elseif ($_POST["drp_action"] == "3") { /* change host */
+		}elseif ($_POST["drp_action"] == DS_ACTION_CHANGE_HOST) { /* change host */
 			print "	<tr>
 					<td class='textArea'>
 						<p>Choose a new host for these data sources:</p>
@@ -426,7 +426,7 @@ function data_source_form_actions() {
 					</td>
 				</tr>\n
 				";
-		}elseif ($_POST["drp_action"] == "4") { /* duplicate */
+		}elseif ($_POST["drp_action"] == DS_ACTION_DUPLICATE) { /* duplicate */
 			print "	<tr>
 					<td class='textArea'>
 						<p>When you click save, the following data sources will be duplicated. You can
@@ -436,7 +436,7 @@ function data_source_form_actions() {
 					</td>
 				</tr>\n
 				";
-		}elseif ($_POST["drp_action"] == "5") { /* data source -> data template */
+		}elseif ($_POST["drp_action"] == DS_ACTION_CONVERT_TO_TEMPLATE) { /* data source -> data template */
 			print "	<tr>
 					<td class='textArea'>
 						<p>When you click save, the following data sources will be converted into data templates.
@@ -446,7 +446,7 @@ function data_source_form_actions() {
 					</td>
 				</tr>\n
 				";
-		}elseif ($_POST["drp_action"] == "6") { /* data source enable */
+		}elseif ($_POST["drp_action"] == DS_ACTION_ENABLE) { /* data source enable */
 			print "	<tr>
 					<td class='textArea'>
 						<p>When you click yes, the following data sources will be enabled.</p>
@@ -454,7 +454,7 @@ function data_source_form_actions() {
 					</td>
 				</tr>\n
 				";
-		}elseif ($_POST["drp_action"] == "7") { /* data source disable */
+		}elseif ($_POST["drp_action"] == DS_ACTION_DISABLE) { /* data source disable */
 			print "	<tr>
 					<td class='textArea'>
 						<p>When you click yes, the following data sources will be disabled.</p>
@@ -462,7 +462,7 @@ function data_source_form_actions() {
 					</td>
 				</tr>\n
 				";
-		}elseif ($_POST["drp_action"] == "8") { /* reapply suggested data source naming */
+		}elseif ($_POST["drp_action"] == DS_ACTION_REAPPLY_SUGGESTED_NAMES) { /* reapply suggested data source naming */
 			print "	<tr>
 					<td class='textArea' bgcolor='#" . $colors["form_alternate1"]. "'>
 						<p>When you click yes, the following data sources will will have their suggested naming conventions

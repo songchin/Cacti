@@ -13,7 +13,8 @@ Cacti CHANGELOG
 -bug#0001407: Place graph thumbnail into div to lower page length changes on load graphs
 -bug#0001411: Graph Search Trouble with Cacti 8.7d 
 -bug#0001413: strip_quotes fails 
--bug#0001426: multiple form opening due to bug in draw_edit_form() 
+-bug#0001426: multiple form opening due to bug in draw_edit_form()
+-bug#0001432: array_merge breaks dropdown handling with hardcoded (array-)keys
 -bug: remove graph permissions if graph is removed
 -bug: remove host permissions if host is removed
 -bug: add_tree.php did not allow nodes with propagating sort options

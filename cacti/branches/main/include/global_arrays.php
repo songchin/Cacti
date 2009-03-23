@@ -23,35 +23,35 @@
 */
 
 $graph_actions = array(
-	1 => "Delete",
-	2 => "Change Graph Template",
-	5 => "Change Host",
-	6 => "Reapply Suggested Names",
-	7 => "Resize Graphs",
-	3 => "Duplicate",
-	8 => "Enable Graph Export",
-	9 => "Disable Graph Export",
-	4 => "Convert to Graph Template"
+	GRAPH_ACTION_DELETE 					=> "Delete",
+	GRAPH_ACTION_CHANGE_TEMPLATE 			=> "Change Graph Template",
+	GRAPH_ACTION_DUPLICATE 					=> "Duplicate",
+	GRAPH_ACTION_CONVERT_TO_TEMPLATE 		=> "Convert to Graph Template",
+	GRAPH_ACTION_CHANGE_HOST 				=> "Change Host",
+	GRAPH_ACTION_REAPPLY_SUGGESTED_NAMES 	=> "Reapply Suggested Names",
+	GRAPH_ACTION_RESIZE 					=> "Resize Graphs",
+	GRAPH_ACTION_ENABLE_EXPORT 				=> "Enable Graph Export",
+	GRAPH_ACTION_DISABLE_EXPORT 			=> "Disable Graph Export",
 	);
 
 $device_actions = array(
-	1 => "Delete",
-	2 => "Enable",
-	3 => "Disable",
-	4 => "Change SNMP Options",
-	5 => "Clear Statistics",
-	6 => "Change Availability Options"
+	DEVICE_ACTION_DELETE 						=> "Delete",
+	DEVICE_ACTION_ENABLE 						=> "Enable",
+	DEVICE_ACTION_DISABLE 						=> "Disable",
+	DEVICE_ACTION_CHANGE_SNMP_OPTIONS 			=> "Change SNMP Options",
+	DEVICE_ACTION_CLEAR_STATISTICS 				=> "Clear Statistics",
+	DEVICE_ACTION_CHANGE_AVAILABILITY_OPTIONS 	=> "Change Availability Options"
 	);
 
 $ds_actions = array(
-	1 => "Delete",
-	2 => "Change Data Template",
-	3 => "Change Host",
-	8 => "Reapply Suggested Names",
-	4 => "Duplicate",
-	5 => "Convert to Data Template",
-	6 => "Enable",
-	7 => "Disable"
+	DS_ACTION_DELETE 					=> "Delete",
+	DS_ACTION_CHANGE_TEMPLATE 			=> "Change Data Template",
+	DS_ACTION_DUPLICATE 				=> "Duplicate",
+	DS_ACTION_CONVERT_TO_TEMPLATE 		=> "Convert to Data Template",
+	DS_ACTION_CHANGE_HOST 				=> "Change Host",
+	DS_ACTION_REAPPLY_SUGGESTED_NAMES 	=> "Reapply Suggested Names",
+	DS_ACTION_ENABLE 					=> "Enable",
+	DS_ACTION_DISABLE 					=> "Disable"
 	);
 
 $messages = array(

@@ -173,13 +173,13 @@ function api_host_form_save() {
    ------------------------ */
 
 function api_host_form_actions() {
-	global $colors, $device_actions, $fields_host_edit;
+	global $colors, $device_actions, $fields_host_edit, $fields_host_edit_availability;
 
 	/* if we are to save this form, instead of display it */
 	if (isset($_POST["selected_items"])) {
 		$selected_items = unserialize(stripslashes($_POST["selected_items"]));
 
-		if ($_POST["drp_action"] == "2") { /* Enable Selected Devices */
+		if ($_POST["drp_action"] == DEVICE_ACTION_ENABLE) { /* Enable Selected Devices */
 			for ($i=0;($i<count($selected_items));$i++) {
 				/* ================= input validation ================= */
 				input_validate_input_number($selected_items[$i]);
@@ -196,7 +196,7 @@ function api_host_form_actions() {
 					}
 				}
 			}
-		}elseif ($_POST["drp_action"] == "3") { /* Disable Selected Devices */
+		}elseif ($_POST["drp_action"] == DEVICE_ACTION_DISABLE) { /* Disable Selected Devices */
 			for ($i=0;($i<count($selected_items));$i++) {
 				/* ================= input validation ================= */
 				input_validate_input_number($selected_items[$i]);
@@ -208,7 +208,7 @@ function api_host_form_actions() {
 				db_execute("delete from poller_item where host_id='" . $selected_items[$i] . "'");
 				db_execute("delete from poller_reindex where host_id='" . $selected_items[$i] . "'");
 			}
-		}elseif ($_POST["drp_action"] == "4") { /* change snmp options */
+		}elseif ($_POST["drp_action"] == DEVICE_ACTION_CHANGE_SNMP_OPTIONS) { /* change snmp options */
 			for ($i=0;($i<count($selected_items));$i++) {
 				/* ================= input validation ================= */
 				input_validate_input_number($selected_items[$i]);
@@ -223,7 +223,7 @@ function api_host_form_actions() {
 
 				push_out_host($selected_items[$i]);
 			}
-		}elseif ($_POST["drp_action"] == "5") { /* Clear Statisitics for Selected Devices */
+		}elseif ($_POST["drp_action"] == DEVICE_ACTION_CLEAR_STATISTICS) { /* Clear Statisitics for Selected Devices */
 			for ($i=0;($i<count($selected_items));$i++) {
 				/* ================= input validation ================= */
 				input_validate_input_number($selected_items[$i]);
@@ -233,7 +233,7 @@ function api_host_form_actions() {
 						total_polls = '0', failed_polls = '0',	availability = '100.00'
 						where id = '" . $selected_items[$i] . "'");
 			}
-		}elseif ($_POST["drp_action"] == "6") { /* change availability options */
+		}elseif ($_POST["drp_action"] == DEVICE_ACTION_CHANGE_AVAILABILITY_OPTIONS) { /* change availability options */
 			for ($i=0;($i<count($selected_items));$i++) {
 				/* ================= input validation ================= */
 				input_validate_input_number($selected_items[$i]);
@@ -248,7 +248,7 @@ function api_host_form_actions() {
 
 				push_out_host($selected_items[$i]);
 			}
-		}elseif ($_POST["drp_action"] == "1") { /* delete */
+		}elseif ($_POST["drp_action"] == DEVICE_ACTION_DELETE) { /* delete */
 			if (!isset($_POST["delete_type"])) { $_POST["delete_type"] = 2; }
 
 			$data_sources_to_act_on = array();
@@ -346,34 +346,33 @@ function api_host_form_actions() {
 	print "<form action='host.php' method='post'>\n";
 
 	if (sizeof($host_array)) {
-		if ($_POST["drp_action"] == "2") { /* Enable Devices */
+		if ($_POST["drp_action"] == DEVICE_ACTION_ENABLE) { /* Enable Devices */
 			print "	<tr>
 					<td colspan='2' class='textArea'>
 						<p>To enable the following devices, press the \"yes\" button below.</p>
 						<p>$host_list</p>
 					</td>
 					</tr>";
-		}elseif ($_POST["drp_action"] == "3") { /* Disable Devices */
+		}elseif ($_POST["drp_action"] == DEVICE_ACTION_DISABLE) { /* Disable Devices */
 			print "	<tr>
 					<td colspan='2' class='textArea'>
 						<p>To disable the following devices, press the \"yes\" button below.</p>
 						<p>$host_list</p>
 					</td>
 					</tr>";
-		}elseif ($_POST["drp_action"] == "4") { /* change snmp options */
+		}elseif ($_POST["drp_action"] == DEVICE_ACTION_CHANGE_SNMP_OPTIONS) { /* change snmp options */
 			print "	<tr>
 					<td colspan='2' class='textArea'>
 						<p>To change SNMP parameters for the following devices, check the box next to the fields
-						you want to update, fill in the new value, and click Save.</p>
+						you want to update, fill in the new value, and click yes.</p>
 						<p>$host_list</p>
 					</td>
 					</tr>";
 
 			$form_array = array();
-			while (list($field_name, $field_array) = each($fields_host_edit)) {
-				if ((ereg("^snmp_", $field_name)) ||
-					($field_name == "max_oids")) {
-					$form_array += array($field_name => $fields_host_edit[$field_name]);
+			while (list($field_name, $field_array) = each($fields_host_edit_availability)) {
+				if (ereg("(^snmp_|max_oids)", $field_name)) {
+					$form_array += array($field_name => $fields_host_edit_availability[$field_name]);
 
 					$form_array[$field_name]["value"] = "";
 #					$form_array[$field_name]["description"] = "";
@@ -392,19 +391,19 @@ function api_host_form_actions() {
 					"fields" => $form_array
 					)
 				);
-		}elseif ($_POST["drp_action"] == "6") { /* change availability options */
+		}elseif ($_POST["drp_action"] == DEVICE_ACTION_CHANGE_AVAILABILITY_OPTIONS) { /* change availability options */
 			print "	<tr>
 					<td colspan='2' class='textArea'>
-						<p>To change SNMP parameters for the following devices, check the box next to the fields
-						you want to update, fill in the new value, and click Save.</p>
+						<p>To change availability parameters for the following devices, check the box next to the fields
+						you want to update, fill in the new value, and click yes.</p>
 						<p>$host_list</p>
 					</td>
 					</tr>";
 
 			$form_array = array();
-			while (list($field_name, $field_array) = each($fields_host_edit)) {
-				if (ereg("(availability_method|ping_method|ping_port)", $field_name)) {
-					$form_array += array($field_name => $fields_host_edit[$field_name]);
+			while (list($field_name, $field_array) = each($fields_host_edit_availability)) {
+				if (!ereg("(^snmp_|max_oids)", $field_name)) {
+					$form_array += array($field_name => $fields_host_edit_availability[$field_name]);
 
 					$form_array[$field_name]["value"] = "";
 #					$form_array[$field_name]["description"] = "";
@@ -423,14 +422,14 @@ function api_host_form_actions() {
 					"fields" => $form_array
 					)
 				);
-		}elseif ($_POST["drp_action"] == "5") { /* Clear Statisitics for Selected Devices */
+		}elseif ($_POST["drp_action"] == DEVICE_ACTION_CLEAR_STATISTICS) { /* Clear Statisitics for Selected Devices */
 			print "	<tr>
 					<td colspan='2' class='textArea'>
 						<p>To clear the counters for the following devices, press the \"yes\" button below.</p>
 						<p>$host_list</p>
 					</td>
 					</tr>";
-		}elseif ($_POST["drp_action"] == "1") { /* delete */
+		}elseif ($_POST["drp_action"] == DEVICE_ACTION_DELETE) { /* delete */
 			print "	<tr>
 					<td class='textArea'>
 						<p>Are you sure you want to delete the following devices?</p>

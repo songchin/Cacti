@@ -772,7 +772,7 @@ $fields_host_edit_availability = array(
 		"max_length" => "10",
 		"size" => "15"
 		),
-	"spacer1" => array(
+	"snmp_spacer" => array(
 		"method" => "spacer",
 		"friendly_name" => "SNMP Options"
 		),
@@ -942,7 +942,7 @@ $fields_host_template_edit = array(
 		"max_length" => "10",
 		"size" => "15"
 		),
-	"spacer1" => array(
+	"snmp_spacer" => array(
 		"method" => "spacer",
 		"friendly_name" => "SNMP Options"
 		),
