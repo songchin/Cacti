@@ -163,7 +163,11 @@ function substitute_script_query_path($path) {
 function substitute_host_data($string, $l_escape_string, $r_escape_string, $host_id) {
 	if (!isset($_SESSION["sess_host_cache_array"][$host_id])) {
 		$host = db_fetch_row("select * from host where id=$host_id");
-		$host["template"] = db_fetch_cell("SELECT name FROM host_template WHERE id=" . $host["host_template_id"]);
+		if ($host["host_template_id"] == 0) {
+			$host["template"] = "None";
+		} else {
+			$host["template"] = db_fetch_cell("SELECT name FROM host_template WHERE id=" . $host["host_template_id"]);
+		}
 		$_SESSION["sess_host_cache_array"][$host_id] = $host;
 	}
 
