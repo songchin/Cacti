@@ -723,7 +723,7 @@ $fields_host_edit = array(
 
 /* file: host.php, action: edit */
 $fields_host_edit_availability = array(
-	"avalaibility_header" => array(
+	"availability_header" => array(
 		"method" => "spacer",
 		"friendly_name" => "Availability/Reachability Options"
 		),
