@@ -173,7 +173,7 @@ function substitute_host_data($string, $l_escape_string, $r_escape_string, $host
 
 	# substitute all given host fields
 	foreach ($_SESSION["sess_host_cache_array"][$host_id] as $key => $value) {
-		$string = str_replace($l_escape_string . "host_" . $key . $r_escape_string, $_SESSION["sess_host_cache_array"][$host_id][$key], $string);
+		$string = str_replace($l_escape_string . "host_" . $key . $r_escape_string, $value, $string);
 	}
 
 	$temp = api_plugin_hook_function('substitute_host_data', array('string' => $string, 'l_escape_string' => $l_escape_string, 'r_escape_string' => $r_escape_string, 'host_id' => $host_id));
