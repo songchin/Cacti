@@ -19,6 +19,7 @@ Cacti CHANGELOG
 -bug: remove host permissions if host is removed
 -bug: add_tree.php did not allow nodes with propagating sort options
 -bug: when adding a tree node via the api numeric and natural were reversed
+-bug: Some snmp agents don't getnext on '.1' and need another oid '.1.3'
 -documentation: Explaining Cacti Special Data Sources used on CDEFs, lots of CDEF examples using Special data Sources
 -documentation: Documentation of specific rrdtool feature
 -documentation: Use of SNMP exec option up to net-snmp 5.3
