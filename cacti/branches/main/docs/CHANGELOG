@@ -15,6 +15,7 @@ Cacti CHANGELOG
 -bug#0001413: strip_quotes fails 
 -bug#0001426: multiple form opening due to bug in draw_edit_form()
 -bug#0001443: format_snmp_string can return a number with a leading space 
+-bug#0001446: Wrong dates override in CSV export 
 -bug#0001432: array_merge breaks dropdown handling with hardcoded (array-)keys
 -bug#0001429: PHP does not support SNMP V3 Contexts and Cacti needs to act accordingly
 -bug: remove graph permissions if graph is removed
