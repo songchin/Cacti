@@ -517,7 +517,7 @@ table.resizable th {
 	background: #1F2328 url('../images/rowSubHeader.png') repeat-x scroll top left;
 	border-right: 2px ridge #A5A5A5;
 	text-align: left;
-	font-size: 10px;
+	font-size: 12px;
 	padding: 3px;
 	color: #FFFFFF;
 	font-weight: bold;
@@ -555,7 +555,7 @@ table.resizable th {
 }
 
 .textAreaNotes {
-	font-size: 10px;
+	font-size: 12px;
 	font-family: Arial, Verdana, Helvetica, sans-serif;
 }
 
