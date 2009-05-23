@@ -47,6 +47,7 @@ switch (get_request_var_request("action")) {
 		perm_remove();
 
 		break;
+	case 'user_edit':
 	case 'user_realms_edit':
 	case 'graph_settings_edit':
 	case 'graph_perms_edit':
@@ -462,9 +463,9 @@ function form_save() {
 	}elseif (isset($_POST["save_component_graph_settings"])) {
 		header("Location: user_admin.php?action=graph_settings_edit&id=" . (empty($user_id) ? $_POST["id"] : $user_id));
 	}elseif (isset($_POST["save_component_user"])) {
-		header("Location: user_admin.php?action=user_realms_edit&id=" . (empty($user_id) ? $_POST["id"] : $user_id));
+		header("Location: user_admin.php?action=user_edit&id=" . (empty($user_id) ? $_POST["id"] : $user_id));
 	}else{
-		header(api_plugin_hook_function('user_admin_save_location', "Location: user_admin.php?action=user_realms_edit&id=" . (empty($user_id) ? $_POST["id"] : $user_id)));
+		header(api_plugin_hook_function('user_admin_save_location', "Location: user_admin.php?action=user_edit&id=" . (empty($user_id) ? $_POST["id"] : $user_id)));
 	}
 }
 
@@ -888,51 +889,52 @@ function user_edit() {
 
 	api_plugin_hook_function('user_admin_edit', (isset($user) ? get_request_var("id") : 0));
 
-	html_start_box("<strong>User Management</strong> $header_label", "100%", $colors["header"], "3", "center", "", true);
-
-	draw_edit_form(array(
-		"config" => array("form_name" => "chk"),
-		"fields" => inject_form_variables($fields_user_user_edit_host, (isset($user) ? $user : array()))
-		));
-
-	html_end_box();
-
 	$user_tabs = array(
+		"user_edit" => array("name" => "General Settings", "title" => "General Settings are common settings for all users."),
 		"user_realms_edit" => array("name" => "Realm Permissions", "title" => "Realm permissions control which sections of Cacti this user will have access to."),
 		"graph_perms_edit" => array("name" => "Graph Permissions", "title" => "Graph policies will be evaluated in the order shown until a match is found."),
 		"graph_settings_edit" => array("name" => "Graph Settings", "title" => "Graph settings control how graphs are displayed for this user."));
 
-	if (!empty($_GET["id"])) {
-		/* draw the categories tabs on the top of the page */
-		/* set the default settings category */
-		if (!isset($_GET["action"])) {
-			/* there is no selected tab; select the first one */
-			$current_tab = array_keys($user_tabs);
-			$current_tab = $current_tab[0];
-		}else{
-			$current_tab = $_GET["action"];
-		}
-
-		print "<table width='100%' cellspacing='0' cellpadding='0' align='center'><tr>";
-		print "<td><div class='tabs'>";
-
-		if (sizeof($user_tabs)) {
-		foreach (array_keys($user_tabs) as $tab_short_name) {
-			print "<div title='" . $user_tabs[$tab_short_name]["title"] . "' class='tabDefault'><a " . (($tab_short_name == $current_tab) ? "class='tabSelected'" : "class='tabDefault'") . " href='" . htmlspecialchars("user_admin.php?action=shift&action=" . $tab_short_name) . "&id=" . $_GET["id"] . "'>" . $user_tabs[$tab_short_name]["name"] . "</a></div>";
-		}
-		}
-
-		print "</div></td></tr></table>\n";
+	/* draw the categories tabs on the top of the page */
+	/* set the default settings category */
+	if (!isset($_GET["action"])) {
+		/* there is no selected tab; select the first one */
+		$current_tab = array_keys($user_tabs);
+		$current_tab = $current_tab[0];
+	}else{
+		$current_tab = $_GET["action"];
 	}
+
+	print "<table width='100%' cellspacing='0' cellpadding='0' align='center'><tr>";
+	print "<td><div class='tabs'>";
+
+	if (sizeof($user_tabs)) {
+	foreach (array_keys($user_tabs) as $tab_short_name) {
+		print "<div title='" . $user_tabs[$tab_short_name]["title"] . "' class='tabDefault'><a " . (($tab_short_name == $current_tab) ? "class='tabSelected'" : "class='tabDefault'") . " href='" . htmlspecialchars("user_admin.php?action=shift&action=" . $tab_short_name) . "&id=" . $_GET["id"] . "'>" . $user_tabs[$tab_short_name]["name"] . "</a></div>";
+
+		if (empty($_GET["id"])) break;
+	}
+	}
+
+	print "</div></td></tr></table>\n";
 
 	if (get_request_var("action") == "graph_settings_edit") {
 		graph_settings_edit();
+	}elseif (get_request_var("action") == "user_edit") {
+		html_start_box("<strong>General Settings</strong>", "100%", $colors["header"], "3", "center");
+
+		draw_edit_form(array(
+			"config" => array("form_name" => "chk"),
+			"fields" => inject_form_variables($fields_user_user_edit_host, (isset($user) ? $user : array()))
+		));
+
+		html_end_box();
 	}elseif (get_request_var("action") == "user_realms_edit") {
 		user_realms_edit();
 	}elseif (get_request_var("action") == "graph_perms_edit") {
 		graph_perms_edit();
 	}else{
-		if (api_plugin_hook_function('user_admin_run_action', get_request_var_request("action"))) {
+		if (!api_plugin_hook_function('user_admin_run_action', get_request_var_request("action"))) {
 			user_realms_edit();
 		}
 	}
@@ -981,7 +983,7 @@ function user() {
 	load_current_session_value("sort_column", "sess_user_admin_sort_column", "username");
 	load_current_session_value("sort_direction", "sess_user_admin_sort_direction", "ASC");
 
-	html_start_box("<strong>User Management</strong>", "100%", $colors["header"], "3", "center", "user_admin.php?action=user_realm_edit", true);
+	html_start_box("<strong>User Management</strong>", "100%", $colors["header"], "3", "center", "user_admin.php?action=user_edit", true);
 	?>
 	<tr class='rowAlternate2'>
 		<td>
@@ -1066,7 +1068,7 @@ function user() {
 			}
 
 			form_alternate_row_color('line' . $user["id"], true);
-			form_selectable_cell("<a class='linkEditMain' href='" . htmlspecialchars("user_admin.php?action=user_realm_edit&id=" . $user["id"]) . "'>" .
+			form_selectable_cell("<a class='linkEditMain' href='" . htmlspecialchars("user_admin.php?action=user_edit&id=" . $user["id"]) . "'>" .
 			(strlen(get_request_var_request("filter")) ? eregi_replace("(" . preg_quote(get_request_var_request("filter")) . ")", "<span style='background-color: #F8D93D;'>\\1</span>",  $user["username"]) : $user["username"]) . "</a>"
 			, $user["id"]);
 			form_selectable_cell((strlen(get_request_var_request("filter")) ? eregi_replace("(" . preg_quote(get_request_var_request("filter")) . ")", "<span style='background-color: #F8D93D;'>\\1</span>",  $user["full_name"]) : $user["full_name"]), $user["id"]);
