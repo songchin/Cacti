@@ -712,7 +712,6 @@ function setFocus() {
 				case "image":
 				case "password":
 				case "file":
-				case "button":
 					inputs[i].focus();
 					found = true;
 
