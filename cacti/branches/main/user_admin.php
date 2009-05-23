@@ -918,9 +918,7 @@ function user_edit() {
 
 	print "</div></td></tr></table>\n";
 
-	if (get_request_var("action") == "graph_settings_edit") {
-		graph_settings_edit();
-	}elseif (get_request_var("action") == "user_edit") {
+	if (get_request_var("action") == "user_edit") {
 		html_start_box("<strong>General Settings</strong>", "100%", $colors["header"], "3", "center");
 
 		draw_edit_form(array(
@@ -929,16 +927,30 @@ function user_edit() {
 		));
 
 		html_end_box();
-	}elseif (get_request_var("action") == "user_realms_edit") {
-		user_realms_edit();
-	}elseif (get_request_var("action") == "graph_perms_edit") {
-		graph_perms_edit();
 	}else{
-		if (!api_plugin_hook_function('user_admin_run_action', get_request_var_request("action"))) {
+		print "<span style='display:none;'>";
+
+		html_start_box("", "100%", $colors["header"], "3", "center");
+		draw_edit_form(array(
+			"config" => array("form_name" => "chk"),
+			"fields" => inject_form_variables($fields_user_user_edit_host, (isset($user) ? $user : array()))
+		));
+		html_end_box();
+
+		print "</span>";
+
+		if (get_request_var("action") == "graph_settings_edit") {
+			graph_settings_edit();
+		}elseif (get_request_var("action") == "user_realms_edit") {
 			user_realms_edit();
+		}elseif (get_request_var("action") == "graph_perms_edit") {
+			graph_perms_edit();
+		}else{
+			if (!api_plugin_hook_function('user_admin_run_action', get_request_var_request("action"))) {
+				user_realms_edit();
+			}
 		}
 	}
-
 	form_save_button_alt("return!user_admin.php");
 }
 
