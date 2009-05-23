@@ -848,12 +848,19 @@ function form_save_button_alt($cancel_action = "", $action = "save", $force_type
 		$sname = "create";
 		$salt  = "Create";
 	}
+
+	if (substr_count($cancel_action, "!")) {
+		$url = form_cancel_action_compose($cancel_action);
+	}else{
+		$url = $_SERVER['HTTP_REFERER'];
+	}
+
 	?>
 	<table align='center' width='100%' style='background-color: #ffffff; border: 1px solid #bbbbbb;'>
 		<tr>
 			<td bgcolor="#f5f5f5" align="right">
 				<input type='hidden' name='action' value='<?php print $action;?>'>
-				<input type='button' value='<?php print $calt;?>' onClick='window.location.assign("<?php print htmlspecialchars($_SERVER['HTTP_REFERER']);?>")' name='cancel'>
+				<input type='button' value='<?php print $calt;?>' onClick='window.location.assign("<?php print htmlspecialchars($url);?>")' name='cancel'>
 				<input type='submit' value='<?php print $salt;?>' name='<?php print $sname;?>'>
 			</td>
 		</tr>
@@ -862,6 +869,40 @@ function form_save_button_alt($cancel_action = "", $action = "save", $force_type
 	<?php
 }
 
+
+/* form_cancel_action_compose - determine if the user has chosen to cancel, and if the user
+   has selected "cancel", where to goto.  the default will be to goto the current
+   page with no action (aka continue) */
+function form_cancel_action_compose($cancel_action) {
+	global $url_path;
+
+	$vars        = explode("|", $cancel_action);
+	$uri         = $_SERVER["REQUEST_URI"];
+	$uri_request = "";
+	$url         = "";
+
+	if (sizeof($vars)) {
+	foreach($vars as $var) {
+		$request = explode("!", $var);
+
+		if ($request[0] == "url") {
+			$url = $request[1];
+		}elseif ($request[0] == "path") {
+			$url = $request[1];
+		}elseif (strlen($uri_request)) {
+			$uri_request .= "&" . $request[0] . "=" . $request[1];
+		}else{
+			$uri_request .= "?" . $request[0] . "=" . $request[1];
+		}
+	}
+	}
+
+	if ((isset($url)) && (strlen($url))) {
+		return html_simple_decode($url_path . $url . $uri_request);
+	}elseif ((isset($uri)) && (strlen($uri))) {
+		return $url_path . $uri . $uri_request;
+	}
+}
 
 /* form_return_button_alt - draws a return button at the bottom of
      an html edit form

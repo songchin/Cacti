@@ -580,7 +580,7 @@ function host_edit() {
 	foreach (array_keys($host_tabs) as $tab_short_name) {
 		print "<div class='tabDefault'><a " . (($tab_short_name == $current_tab) ? "class='tabSelected'" : "class='tabDefault'") . " href='" . htmlspecialchars("host.php?action=edit" . (isset($_REQUEST['id']) ? "&id=" . $_REQUEST['id'] . "&host_id=" . $_REQUEST['id']: "") . "&tab=$tab_short_name") . "'>$host_tabs[$tab_short_name]</a></div>";
 
-		if (!isset($_REQUEST["host_id"])) break;
+		if (!isset($_REQUEST["id"])) break;
 	}
 	}
 	print "</div></td></tr></table>";

@@ -333,7 +333,7 @@ function item_edit() {
 
 	html_end_box();
 
-	form_save_button_alt("action!edit|id!" . $_GET["cdef_id"]);
+	form_save_button_alt("path!cdef.php|action!edit|id!" . $_GET["cdef_id"]);
 }
 
 /* ---------------------
@@ -417,7 +417,7 @@ function cdef_edit() {
 		}
 		html_end_box();
 	}
-	form_save_button_alt();
+	form_save_button_alt("path!cdef.php");
 ?>
 <script type="text/javascript">
 	$('#cdef').tableDnD({

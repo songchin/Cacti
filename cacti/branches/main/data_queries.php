@@ -594,7 +594,7 @@ function data_query_item_edit() {
 		html_end_box();
 	}
 
-	form_save_button_alt("action!edit|id!" . $_GET["snmp_query_id"]);
+	form_save_button_alt("path!data_queries.php|action!edit|id!" . $_GET["snmp_query_id"]);
 }
 
 /* ---------------------
@@ -697,7 +697,7 @@ function data_query_edit() {
 		}
 	}
 
-	form_save_button_alt();
+	form_save_button_alt("path!data_queries.php");
 }
 
 function data_query() {

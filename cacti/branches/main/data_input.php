@@ -343,7 +343,7 @@ function field_edit() {
 
 	html_end_box();
 
-	form_save_button_alt("action!edit|id!" . $_GET["data_input_id"]);
+	form_save_button_alt("path!data_input.php|action!edit|id!" . $_GET["data_input_id"]);
 }
 
 /* -----------------------
@@ -457,7 +457,7 @@ function data_edit() {
 		html_end_box();
 	}
 
-	form_save_button_alt();
+	form_save_button_alt("url!data_input.php");
 }
 
 function data() {

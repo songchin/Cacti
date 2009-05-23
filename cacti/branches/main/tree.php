@@ -290,7 +290,7 @@ function item_edit() {
 
 	html_end_box();
 
-	form_save_button_alt("action!edit|id!" . $_GET["tree_id"]);
+	form_save_button_alt("path!tree.php|action!edit|id!" . $_GET["tree_id"]);
 }
 
 function item_moveup() {
@@ -414,7 +414,7 @@ function tree_edit() {
 		html_end_box();
 	}
 
-	form_save_button_alt();
+	form_save_button_alt("path!tree.php");
 }
 
 function tree() {

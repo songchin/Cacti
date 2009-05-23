@@ -348,7 +348,7 @@ function item_edit() {
 
 	html_end_box();
 
-	form_save_button_alt("action!graph_edit|id!" . $_REQUEST["local_graph_id"]);
+	form_save_button_alt("path!graphs.php|action!graph_edit|id!" . $_REQUEST["local_graph_id"]);
 }
 
 //Now we need some javascript to make it dynamic

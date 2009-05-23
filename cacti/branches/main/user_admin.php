@@ -965,7 +965,7 @@ function user_edit() {
 		}
 	}
 
-	form_save_button_alt();
+	form_save_button_alt("path!user_admin.php");
 }
 
 function user() {
