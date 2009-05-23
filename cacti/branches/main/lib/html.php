@@ -32,14 +32,18 @@
    @arg $add_text - the url to use when the user clicks 'Add' in the upper-right
      corner of the box ("" for no 'Add' link)
    @arg $table_id - the table id to make the table addressable by jQuery's table DND plugin */
-function html_start_box($title, $width, $background_color, $cell_padding, $align, $add_text = "", $collapsing = false, $table_id = '') {
+function html_start_box($title, $width, $background_color, $cell_padding, $align, $add_text = "", $collapsing = false, $table_id = "") {
 	global $colors, $config;
+	static $form_number = 0;
+	$form_number++;
+
+	$function_name = "addObject" . $form_number . "()";
 
 	if ($add_text != "") {
 		?>
 		<script type="text/javascript">
 		<!--
-		function addObject() {
+		function <?php print $function_name;?> {
 			document.location = '<?php echo $add_text;?>';
 			return false;
 		}
@@ -92,7 +96,7 @@ function html_start_box($title, $width, $background_color, $cell_padding, $align
 								</table>
 							</td><?php if ($add_text != "") {?>
 							<td width='1px' class="textHeaderDark" align="right">
-								<input type='button' onClick='addObject()' style='font-size:10px;' value='Add'>
+								<input type='button' onClick='<?php print $function_name;?>' style='font-size:10px;' value='Add'>
 							</td><?php }?>
 						</tr>
 					</table>
