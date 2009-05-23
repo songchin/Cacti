@@ -725,7 +725,7 @@ function utilities_view_user_log() {
 		}
 	}
 
-	html_start_box("", "100%", $colors["header"], "3", "center", "");
+	html_start_box("", "100%", $colors["header"], "0", "center", "");
 
 	$total_rows = db_fetch_cell("SELECT
 		COUNT(*)
@@ -986,7 +986,7 @@ function utilities_view_logfile() {
 		$start_string = "<strong>Log File</strong> [Total Lines: " . sizeof($logcontents) . " - All Items Shown]";
 	}
 
-	html_start_box($start_string, "100%", $colors["header"], "3", "center", "");
+	html_start_box($start_string, "100%", $colors["header"], "0", "center", "");
 
 	$i = 0;
 	$j = 0;
@@ -1280,7 +1280,7 @@ function utilities_view_snmp_cache() {
 			OR host_snmp_cache.oid LIKE '%%" . $_REQUEST["filter"] . "%%')";
 	}
 
-	html_start_box("", "100%", $colors["header"], "3", "center", "");
+	html_start_box("", "100%", $colors["header"], "0", "center", "");
 
 	$total_rows = db_fetch_cell("SELECT
 		COUNT(*)
@@ -1498,7 +1498,7 @@ function utilities_view_poller_cache() {
 			OR poller_item.rrd_path  LIKE '%%" . $_REQUEST["filter"] . "%%')";
 	}
 
-	html_start_box("", "100%", $colors["header"], "3", "center", "");
+	html_start_box("", "100%", $colors["header"], "0", "center", "");
 
 	$total_rows = db_fetch_cell("SELECT
 		COUNT(*)
