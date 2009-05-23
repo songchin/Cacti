@@ -826,7 +826,7 @@ function form_save_button_alt($cancel_action = "", $action = "save", $force_type
 
 	$calt = "Cancel";
 
-	if ((empty($force_type)) || ($cancel_action == "return")) {
+	if ((empty($force_type)) || (substr_count($cancel_action,"return"))) {
 		if (empty($_GET[$key_field])) {
 			$sname = "create";
 			$salt  = "Create";
@@ -835,7 +835,7 @@ function form_save_button_alt($cancel_action = "", $action = "save", $force_type
 			$salt  = "Save";
 		}
 
-		if ($cancel_action == "return") {
+		if (substr_count($cancel_action,"return")) {
 			$calt   = "Return";
 			$action = "save";
 		}else{
@@ -887,7 +887,7 @@ function form_cancel_action_compose($cancel_action) {
 
 		if ($request[0] == "url") {
 			$url = $request[1];
-		}elseif ($request[0] == "path") {
+		}elseif ($request[0] == "path" || $request[0] == "return") {
 			$url = $request[1];
 		}elseif (strlen($uri_request)) {
 			$uri_request .= "&" . $request[0] . "=" . $request[1];
