@@ -849,6 +849,10 @@ function pageInitialize() {
 }
 
 function sizeContentDivs() {
+	if (browser == "IE") {
+		document.getElementById("wrapper").style.top = "4.3em";
+	}
+
 	var top    = document.getElementById("wrapper").offsetTop;
 	var bottom = document.getElementById("wrapper").clientHeight;
 
