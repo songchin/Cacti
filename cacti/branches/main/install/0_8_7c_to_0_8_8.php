@@ -24,8 +24,8 @@
 
 function upgrade_to_0_8_8() {
 
-	/* 
-	 * Authenication System upgrade 
+	/*
+	 * Authenication System upgrade
 	 */
 	/* Create new tables */
 	db_install_execute("0.8.8","
@@ -106,10 +106,11 @@ function upgrade_to_0_8_8() {
 		) TYPE=MyISAM");
 	/* Upgrade current users and permissions */
 
+	/* add the poller id for hosts to allow for multiple pollers */
+	db_install_execute("0.8.8", "ALTER TABLE `host`, ADD COLUMN `poller_id` SMALLINT(5) UNSIGNED NOT NULL DEFAULT '0' AFTER id, ADD INDEX `poller_id`(`poller_id`);");
 
-
-
-
+	/* add the poller id for hosts to allow for multiple pollers */
+	db_install_execute("0.8.8", "ALTER TABLE `poller`, ADD COLUMN `disabled` CHAR(2) DEFAULT '' AFTER `id`, ADD COLUMN `description` VARCHAR(45) NOT NULL DEFAULT '' AFTER `disabled`;");
 
 	/* add rrd_compute_rpn for data source items */
 	db_install_execute("0.8.8", "ALTER TABLE `data_template_rrd` ADD COLUMN `t_rrd_compute_rpn` CHAR(2) DEFAULT NULL AFTER `rrd_minimum`, ADD COLUMN `rrd_compute_rpn` VARCHAR(150) DEFAULT '' AFTER `t_rrd_compute_rpn`;");
@@ -119,8 +120,8 @@ function upgrade_to_0_8_8() {
 
 	/* increase size for upper/lower limit for use with |query_*| variables */
 	db_install_execute("0.8.8", "ALTER TABLE `graph_templates_graph` MODIFY `lower_limit` VARCHAR(255)");
-	db_install_execute("0.8.8", "ALTER TABLE `graph_templates_graph` MODIFY `upper_limit` VARCHAR(255)"); 
-	
+	db_install_execute("0.8.8", "ALTER TABLE `graph_templates_graph` MODIFY `upper_limit` VARCHAR(255)");
+
 	/* add some fields required for hosts to table host_template */
 	db_install_execute("0.8.8", "ALTER TABLE `host_template` ADD COLUMN `snmp_community` VARCHAR(100) DEFAULT NULL AFTER `name`");
 	db_install_execute("0.8.8", "ALTER TABLE `host_template` ADD COLUMN `snmp_version` TINYINT(1) UNSIGNED NOT NULL DEFAULT '1' AFTER `snmp_community`");
@@ -178,11 +179,11 @@ function upgrade_to_0_8_8() {
 				" `ping_timeout` = $ping_timeout," .
 				" `ping_retries` = $ping_retries," .
 				" `max_oids` = $max_oids");
-	
+
 	/* add reindexing to host_template_snmp_query */
 	db_install_execute("0.8.8", "ALTER TABLE `host_template_snmp_query` ADD COLUMN `reindex_method` TINYINT(3) UNSIGNED NOT NULL DEFAULT '0' AFTER `snmp_query_id`");
 	db_install_execute("0.8.8", "UPDATE `host_template_snmp_query` SET `reindex_method` = '1'");
-	/* 
+	/*
 	 * Plugin Architecture
 	 */
 	/* Create new tables */

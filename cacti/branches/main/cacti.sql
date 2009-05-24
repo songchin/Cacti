@@ -1981,6 +1981,7 @@ INSERT INTO graph_tree_items VALUES (7,1,0,0,'',1,'00100000000000000000000000000
 
 CREATE TABLE host (
   id mediumint(8) unsigned NOT NULL auto_increment,
+  poller_id smallint(5) unsigned NOT NULL default '0',
   host_template_id mediumint(8) unsigned NOT NULL default '0',
   description varchar(150) NOT NULL default '',
   hostname varchar(250) default NULL,
@@ -2186,9 +2187,9 @@ INSERT INTO host_template_snmp_query VALUES (7,8,1);
 INSERT INTO host_template_snmp_query VALUES (7,9,1);
 INSERT INTO host_template_snmp_query VALUES (8,6,1);
 
--- 
+--
 -- Table structure for table `plugin_config`
--- 
+--
 
 CREATE TABLE `plugin_config` (
   `id` int(8) NOT NULL auto_increment,
@@ -2203,9 +2204,9 @@ CREATE TABLE `plugin_config` (
   KEY `directory` (`directory`)
 ) TYPE=MyISAM;
 
--- 
+--
 -- Table structure for table `plugin_db_changes`
--- 
+--
 
 CREATE TABLE `plugin_db_changes` (
   `id` int(10) NOT NULL auto_increment,
@@ -2218,9 +2219,9 @@ CREATE TABLE `plugin_db_changes` (
   KEY `method` (`method`)
 ) TYPE=MyISAM;
 
--- 
+--
 -- Table structure for table `plugin_hooks`
--- 
+--
 
 CREATE TABLE `plugin_hooks` (
   `id` int(8) NOT NULL auto_increment,
@@ -2241,9 +2242,9 @@ CREATE TABLE `plugin_hooks` (
 INSERT INTO `plugin_hooks` VALUES (1, 'internal', 'config_arrays', '', 'plugin_config_arrays', 1);
 INSERT INTO `plugin_hooks` VALUES (2, 'internal', 'draw_navigation_text', '', 'plugin_draw_navigation_text', 1);
 
--- 
+--
 -- Table structure for table `plugin_realms`
--- 
+--
 
 CREATE TABLE `plugin_realms` (
   `id` int(8) NOT NULL auto_increment,
@@ -2267,6 +2268,8 @@ INSERT INTO `plugin_realms` VALUES (1, 'internal', 'plugins.php', 'Plugin Manage
 
 CREATE TABLE poller (
   id smallint(5) unsigned NOT NULL auto_increment,
+  disabled char(2) default '',
+  description varchar(45) NOT NULL default '',
   hostname varchar(250) NOT NULL default '',
   ip_address int(11) unsigned NOT NULL default '0',
   last_update datetime NOT NULL default '0000-00-00 00:00:00',
@@ -2870,9 +2873,9 @@ CREATE TABLE version (
 INSERT INTO version VALUES ('new_install');
 
 
--- 
+--
 -- Table structure for table `log`
--- 
+--
 
 CREATE TABLE `log` (
   `id` bigint(20) unsigned NOT NULL default '0',
