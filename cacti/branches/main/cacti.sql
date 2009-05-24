@@ -2016,7 +2016,8 @@ CREATE TABLE host (
   failed_polls int(12) unsigned default '0',
   availability decimal(8,5) NOT NULL default '100.00000',
   PRIMARY KEY  (id),
-  KEY disabled (disabled)
+  KEY disabled (disabled),
+  KEY poller_id (poller_id)
 ) TYPE=MyISAM;
 
 --
@@ -2346,8 +2347,10 @@ CREATE TABLE poller_output (
   local_data_id mediumint(8) unsigned NOT NULL default '0',
   rrd_name varchar(19) NOT NULL default '',
   time datetime NOT NULL default '0000-00-00 00:00:00',
+  poller_id smallint(5) NOT NULL default '0',
   output text NOT NULL,
-  PRIMARY KEY  (local_data_id,rrd_name,time)
+  PRIMARY KEY  (local_data_id,rrd_name,time),
+  KEY poller_id (poller_id)
 ) TYPE=MyISAM;
 
 --
