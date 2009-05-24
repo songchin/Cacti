@@ -130,7 +130,7 @@ function api_host_form_save() {
 
 		$host_template["notes"] = ""; /* no support for notes in a host template */
 		$host_template["disabled"] = ""; /* no support for disabling in a host template */
-		$host_id = api_device_save($_POST["id"], $_POST["template_id"], $_POST["description"],
+		$host_id = api_device_save($_POST["id"], $_POST["poller_id"], $_POST["template_id"], $_POST["description"],
 			$_POST["hostname"], $host_template["snmp_community"], $host_template["snmp_version"],
 			$host_template["snmp_username"], $host_template["snmp_password"],
 			$host_template["snmp_port"], $host_template["snmp_timeout"],
@@ -148,7 +148,7 @@ function api_host_form_save() {
 		if ($_POST["snmp_version"] == 3 && ($_POST["snmp_password"] != $_POST["snmp_password_confirm"])) {
 			raise_message(4);
 		}else{
-			$host_id = api_device_save($_POST["id"], $_POST["template_id"], $_POST["description"],
+			$host_id = api_device_save($_POST["id"], $_POST["poller_id"], $_POST["template_id"], $_POST["description"],
 				trim($_POST["hostname"]), $_POST["snmp_community"], $_POST["snmp_version"],
 				$_POST["snmp_username"], $_POST["snmp_password"],
 				$_POST["snmp_port"], $_POST["snmp_timeout"],

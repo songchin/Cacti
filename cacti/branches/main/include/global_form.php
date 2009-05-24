@@ -682,6 +682,14 @@ $fields_host_edit = array(
 		"value" => "|arg1:hostname|",
 		"max_length" => "250",
 		),
+	"poller_id" => array(
+		"method" => "drop_sql",
+		"friendly_name" => "Poller",
+		"description" => "Choose which poller will be the polling of this device.",
+		"value" => "|arg1:poller_id|",
+		"none_value" => "Default",
+		"sql" => "select id,description as name from poller order by name",
+		),
 	"host_template_id" => array(
 		"method" => "drop_sql",
 		"friendly_name" => "Host Template",

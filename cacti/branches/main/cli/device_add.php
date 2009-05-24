@@ -70,7 +70,7 @@ if (sizeof($parms)) {
 				echo "ERROR: You must supply a valid [hostname|IP address] for all hosts!\n";
 				exit(1);
 			}
-	
+
 			break;
 		case "--template":
 			$template_id = $value;
@@ -78,10 +78,14 @@ if (sizeof($parms)) {
 				echo "ERROR: You must supply a numeric host template id for all hosts!\n";
 				exit(1);
 			}
-	
+
 			break;
 		case "--community":
 			$snmp_community = trim($value);
+
+			break;
+		case "--poller":
+			$poller_id = trim($value);
 
 			break;
 		case "--version":
@@ -265,19 +269,17 @@ if (sizeof($parms)) {
 		}
 	}
 
-
-
-	/* 
-	 * handle display options 
+	/*
+	 * handle display options
 	 */
 	if ($displayCommunities) {
 		displayCommunities($quietMode);
 		exit(0);
 	}
 
-	/* 
-	 * verify required parameters 
-	 * for update / insert options 
+	/*
+	 * verify required parameters
+	 * for update / insert options
 	 */
 	if (!isset($description)) {
 		echo "ERROR: You must supply a description for all hosts!\n";
@@ -294,10 +296,16 @@ if (sizeof($parms)) {
 		exit(1);
 	}
 
+	/*
+	 * set the default poller id if none was specified
+	 */
+	if (!isset($poller_id)) {
+		$poller_id = 0;
+	}
 
-	/* 
+	/*
 	 * verify valid host template and get a name for it
-	 * pay attention to template_id 0 for "None" 
+	 * pay attention to template_id 0 for "None"
 	 */
 	if ($template_id == 0) { /* allow for a template of "None" */
 		$host_template["name"] = "None";
@@ -309,8 +317,8 @@ if (sizeof($parms)) {
 		}
 	}
 
-	/* 
-	 * update host hostname|ip for a given description 
+	/*
+	 * update host hostname|ip for a given description
 	 */
 	$hosts = db_fetch_row("SELECT id, hostname FROM host WHERE description = " . $description);
 	if (isset($hosts["id"])) {
@@ -319,8 +327,8 @@ if (sizeof($parms)) {
 		exit(1);
 	}
 
-	/* 
-	 * update host description for given hostname|ip 
+	/*
+	 * update host description for given hostname|ip
 	 */
 	$addresses = db_fetch_row("SELECT id, hostname, description FROM host WHERE hostname = " . $ip);
 	if (isset($addresses["id"])) {
@@ -329,11 +337,9 @@ if (sizeof($parms)) {
 		exit(1);
 	}
 
-
-
 	/*
 	 * now, either fetch host_template parameters for given template_id
-	 * or use Cacti system defaults 
+	 * or use Cacti system defaults
 	 */
 	if ($template_id != 0) { /* fetch values from a valid host_template */
 		$host_template = db_fetch_row("SELECT
@@ -376,9 +382,9 @@ if (sizeof($parms)) {
 		$host_template["max_oids"]				= read_config_option("max_get_size");
 	}
 
-	/* 
-	 * if any value was given as a parameter, 
-	 * replace host_template or default setting by this one 
+	/*
+	 * if any value was given as a parameter,
+	 * replace host_template or default setting by this one
 	 */
 	if (isset($snmp_community)) 		{$host_template["snmp_community"]			= $snmp_community;}
 	if (isset($snmp_ver)) 				{$host_template["snmp_version"]				= $snmp_ver;}
@@ -400,7 +406,6 @@ if (sizeof($parms)) {
 	$host_template["notes"]		= (isset($notes)) ? $notes : "";
 	$host_template["disabled"]	= (isset($disabled)) ? disabled : "";
 
-
 	/*
 	 * perform some nice printout
 	 */
@@ -421,7 +426,7 @@ if (sizeof($parms)) {
 			break;
 	}
 	if (($host_template["availability_method"] == AVAIL_SNMP_AND_PING) ||
-	    ($host_template["availability_method"] == AVAIL_PING)) {
+		($host_template["availability_method"] == AVAIL_PING)) {
 		switch($host_template["ping_method"]) {
 			case PING_ICMP:
 				echo ", Ping Method ICMP, Retries " . $host_template["ping_retries"] . ", Ping Timeout " . $host_template["ping_timeout"];
@@ -435,8 +440,8 @@ if (sizeof($parms)) {
 		}
 	}
 	if (($host_template["availability_method"] == AVAIL_SNMP_AND_PING) ||
-	    ($host_template["availability_method"] == AVAIL_SNMP)) {
-		echo ", SNMP V" . $host_template["snmp_version"] . ", SNMP Port " . $host_template["snmp_port"] . ", SNMP Timeout " . $host_template["snmp_timeout"]; 
+		($host_template["availability_method"] == AVAIL_SNMP)) {
+		echo ", SNMP V" . $host_template["snmp_version"] . ", SNMP Port " . $host_template["snmp_port"] . ", SNMP Timeout " . $host_template["snmp_timeout"];
 		switch($host_template["snmp_version"]) {
 			case 1:
 			case 2:
@@ -447,16 +452,16 @@ if (sizeof($parms)) {
 				break;
 		}
 	}
-		   
+
 	echo "\n";
-	
-	
+
+
 	/*
-	 * last, but not least, add this host along with all 
+	 * last, but not least, add this host along with all
 	 * graph templates and data queries
-	 * associated to the given host template id 
+	 * associated to the given host template id
 	 */
-	$host_id = api_device_save(0, $template_id, $description,
+	$host_id = api_device_save(0, $poller_id, $template_id, $description,
 		$ip, $host_template["snmp_community"], $host_template["snmp_version"],
 		$host_template["snmp_username"], $host_template["snmp_password"],
 		$host_template["snmp_port"], $host_template["snmp_timeout"],
@@ -480,7 +485,7 @@ if (sizeof($parms)) {
 }
 
 function display_help() {
-	echo "Add Device Script 1.1, Copyright 2008 - The Cacti Group\n\n";
+	echo "Add Device Script 1.2, Copyright 2008-2009 - The Cacti Group\n\n";
 	echo "A simple command line utility to add a device in Cacti\n\n";
 	echo "usage: add_device.php --description=[description] --ip=[IP] --template=[ID] [--notes=\"[]\"] [--disabled]\n";
 	echo "    [--avail=[ping]] --ping_method=[icmp] --ping_port=[N/A, 1-65534] --ping_retries=[2]  --ping_timeout=[500]\n";
@@ -495,6 +500,7 @@ function display_help() {
 	echo "                   For a host_template = 0 (NONE), Cacti default settings are used.\n";
 	echo "                   Optionally overwrite by any of the following:\n";
 	echo "Optional:\n";
+	echo "    --poller       0, defines which Cacti poller will be handles the polling of this device.\n";
 	echo "    --notes        General information about this host.  Must be enclosed using double quotes.\n";
 	echo "    --disable      1 to add this host but to disable checks and 0 to enable it\n";
 	echo "    --avail        pingsnmp, [ping][none, snmp, pingsnmp]\n";

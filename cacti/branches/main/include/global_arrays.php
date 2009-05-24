@@ -356,7 +356,8 @@ $menu = array(
 		"graphs.php" => "Graph Management",
 		"tree.php" => "Graph Trees",
 		"data_sources.php" => "Data Sources",
-		"host.php" => 'Devices'
+		"host.php" => 'Devices',
+		"pollers.php" => 'Pollers'
 		),
 	"Data Collection" => array(
 		"data_queries.php" => "Data Queries",
@@ -483,6 +484,7 @@ $user_auth_realm_filenames = array(
 	"graphs_item.ajax.php" => 5,
 	"graphs_new.php" => 5,
 	"host.php" => 3,
+	"pollers.php" => 3,
 	"host_templates.php" => 12,
 	"index.php" => 8,
 	"rra.php" => 9,
