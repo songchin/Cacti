@@ -458,7 +458,12 @@ function strip_newlines($string) {
    @arg $output - (bool) whether to output the log line to the browser using print() or not
    @arg $environ - (string) tell's from where the script was called from */
 function cacti_log($string, $output = false, $environ = "CMDPHP") {
-	global $config;
+	global $config, $poller_id;
+
+	/* if the poller id is not set, assume 0 */
+	if ($poller_id == "") {
+		$poller_id = "0";
+	}
 
 	/* fill in the current date for printing in the log */
 	$date = date("m/d/Y h:i:s A");
@@ -469,7 +474,7 @@ function cacti_log($string, $output = false, $environ = "CMDPHP") {
 
 	/* format the message */
 	if (($environ != "SYSTEM") && ($environ != "EXPORT") && ($environ != "RECACHE") && ($environ != "AUTH")) {
-		$message = "$date - " . $environ . ": Poller[0] " . $string . "\n";
+		$message = "$date - " . $environ . ": Poller[$poller_id] " . $string . "\n";
 	}else {
 		$message = "$date - " . $environ . " " . $string . "\n";
 	}

@@ -66,8 +66,14 @@ $polling_items = array();
 /* determine how often the poller runs from settings */
 $polling_interval = read_config_option("poller_interval");
 
-/* check arguments */
-if ( $_SERVER["argc"] == 1 ) {
+/* process calling arguments */
+$parms = $_SERVER["argv"];
+array_shift($parms);
+
+/* initialize the poller id to 0 */
+$poller_id = 0;
+
+if (sizeof($parms) == 0) {
 	if (isset($polling_interval)) {
 		$polling_items = db_fetch_assoc("SELECT * FROM poller_item WHERE rrd_next_step<=0 ORDER by host_id");
 		$script_server_calls = db_fetch_cell("SELECT count(*) from poller_item WHERE (action=2 AND rrd_next_step<=0)");
@@ -93,73 +99,133 @@ if ( $_SERVER["argc"] == 1 ) {
 	}
 }else{
 	$print_data_to_stdout = false;
-	if ($_SERVER["argc"] == "3") {
-		if ($_SERVER["argv"][1] <= $_SERVER["argv"][2]) {
-			/* address potential exploits */
-			input_validate_input_number($_SERVER["argv"][1]);
-			input_validate_input_number($_SERVER["argv"][2]);
 
-			$hosts = db_fetch_assoc("
-					SELECT * FROM host
-					WHERE (disabled = ''
-					AND id >= " . $_SERVER["argv"][1] . "
-					AND id <= " . $_SERVER["argv"][2] . ")
-					ORDER by id");
-			$hosts      = array_rekey($hosts,"id",$host_struc);
-			$host_count = sizeof($hosts);
+	foreach($parms as $parameter) {
+		@list($arg, $value) = @explode("=", $parameter);
 
-			if (isset($polling_interval)) {
-				$polling_items = db_fetch_assoc("SELECT *
-					FROM poller_item
-					WHERE (host_id >= " . $_SERVER["argv"][1] . "
-					AND host_id <= " .    $_SERVER["argv"][2] . "
-					AND rrd_next_step <= 0)
-					ORDER by host_id");
+		switch ($arg) {
+		case "--poller":
+			$poller_id = $value;
 
-				$script_server_calls = db_fetch_cell("SELECT count(*)
-					FROM poller_item
-					WHERE (action=2
-					AND host_id >= " . $_SERVER["argv"][1] . "
-					AND host_id <= " . $_SERVER["argv"][2] . "
-					AND rrd_next_step <= 0)");
+			input_validate_input_number($poller_id);
 
-				/* setup next polling interval */
-				db_execute("UPDATE poller_item
-					SET rrd_next_step = rrd_next_step - " . $polling_interval . "
-					WHERE (host_id >= " . $_SERVER["argv"][1] . "
-					AND host_id <= " . $_SERVER["argv"][2] . ")");
+			break;
+		case "--first":
+			$first = $value;
 
-				db_execute("UPDATE poller_item
-					SET rrd_next_step = rrd_step - " . $polling_interval . "
-					WHERE (rrd_next_step < 0
-					AND host_id >= " . $_SERVER["argv"][1] . "
-					AND host_id <= " . $_SERVER["argv"][2] . ")");
-			}else{
-				$polling_items = db_fetch_assoc("SELECT * from poller_item" .
-						" WHERE (host_id >= " .	$_SERVER["argv"][1] . " and host_id <= " .
-						$_SERVER["argv"][2] . ") ORDER by host_id");
+			input_validate_input_number($first);
 
-				$script_server_calls = db_fetch_cell("SELECT count(*) from poller_item " .
-						"WHERE (action=2 AND (host_id >= " .
-						$_SERVER["argv"][1] .
-						" and host_id <= " .
-						$_SERVER["argv"][2] . "))");
-			}
-		}else{
-			print "ERROR: Invalid Arguments.  The first argument must be less than or equal to the first.\n";
-			print "USAGE: CMD.PHP [[first_host] [second_host]]\n";
-			cacti_log("ERROR: Invalid Arguments.  This rist argument must be less than or equal to the first.");
+			break;
+		case "--last":
+			$last = $value;
+
+			input_validate_input_number($last);
+
+			break;
+		case "--stdout":
+			$print_data_to_stdout = TRUE;
+
+			break;
+		case "--version":
+		case "-V":
+		case "-H":
+		case "--help":
+			display_help();
+			exit(0);
+		default:
+			echo "ERROR: Invalid Argument: ($arg)\n\n";
+			display_help();
+			exit(1);
+		}
+	}
+
+	/* if the user did not specify hosts, assumed ordered arguments */
+	if (!isset($first) || !isset($last)) {
+		if ($_SERVER["argc"] != 3) {
+			cacti_log("ERROR: Invalid Number of Arguments.  You must specify 0 or 2 arguments.",$print_data_to_stdout);
 
 			/* record the process as having completed */
-			record_cmdphp_done();
+			record_cmdphp_done($poller_id);
 			exit("-1");
+		}else{
+			$first = $_SERVER["argv"][1];
+			$last  = $_SERVER["argv"][2];
+
+			input_validate_input_number($first);
+			input_validate_input_number($last);
 		}
-	}else{
-		cacti_log("ERROR: Invalid Number of Arguments.  You must specify 0 or 2 arguments.",$print_data_to_stdout);
+	}
+
+	/* if both are not specified by this time, it's an error */
+	if (!isset($first) && !isset($last)) {
+		cacti_log("ERROR: You must specific both the first and last host ids.", $print_data_to_stdout);
 
 		/* record the process as having completed */
-		record_cmdphp_done();
+		record_cmdphp_done($poller_id);
 		exit("-1");
+	}
+
+	/* check additional boundary conditions */
+	if ($first > $last) {
+		cacti_log("ERROR: The first host id must be less than the second host id.", $print_data_to_stdout);
+
+		/* record the process as having completed */
+		record_cmdphp_done($poller_id);
+		exit("-1");
+	}
+
+	$hosts = db_fetch_assoc("SELECT *
+		FROM host
+		WHERE disabled = '' " .
+		($poller_id == 0 ? "" : "AND poller_id=$poller_id") . "
+		AND id>=$first
+		AND id<=$last
+		ORDER by id");
+	$hosts      = array_rekey($hosts, "id", $host_struc);
+	$host_count = sizeof($hosts);
+
+	if (isset($polling_interval)) {
+		$polling_items = db_fetch_assoc("SELECT *
+			FROM poller_item
+			WHERE host_id>=$first
+			AND host_id<=$last" .
+			($poller_id == 0 ? "" : " AND poller_id=$poller_id") . "
+			AND rrd_next_step<=0
+			ORDER by host_id");
+
+		$script_server_calls = db_fetch_cell("SELECT count(*)
+			FROM poller_item
+			WHERE action=2
+			AND host_id>=$first
+			AND host_id<=$last
+			AND rrd_next_step<=0" .
+			($poller_id == 0 ? "" : " AND poller_id=$poller_id"));
+
+		/* setup next polling interval */
+		db_execute("UPDATE poller_item
+			SET rrd_next_step=rrd_next_step-" . $polling_interval . "
+			WHERE host_id>=$first
+			AND host_id<=$last" .
+			($poller_id == 0 ? "" : " AND poller_id=$poller_id"));
+
+		db_execute("UPDATE poller_item
+			SET rrd_next_step=rrd_step-" . $polling_interval . "
+			WHERE rrd_next_step<0
+			AND host_id>=$first
+			AND host_id<=$last" .
+			($poller_id == 0 ? "" : " AND poller_id=$poller_id"));
+	}else{
+		$polling_items = db_fetch_assoc("SELECT * FROM poller_item
+				WHERE host_id>=$first
+				AND host_id<=$last" .
+				($poller_id == 0 ? "" : " AND poller_id=$poller_id") . "
+				ORDER by host_id");
+
+		$script_server_calls = db_fetch_cell("SELECT count(*) FROM poller_item
+				WHERE action=2
+				AND host_id>=$first
+				AND host_id<=$last" .
+				($poller_id == 0 ? "" : " AND poller_id=$poller_id"));
 	}
 }
 
@@ -267,15 +333,15 @@ if ((sizeof($polling_items) > 0) && (read_config_option("poller_enabled") == "on
 						/* assert the result with the expected value in the db; recache if the assert fails */
 						if (($index_item["op"] == "=") && ($index_item["assert_value"] != trim($output))) {
 							cacti_log("ASSERT: '" . $index_item["assert_value"] . "=" . trim($output) . "' failed. Recaching host '" . $item["hostname"] . "', data query #" . $index_item["data_query_id"], $print_data_to_stdout);
-							db_execute("replace into poller_command (poller_id, time, action, command) values (0, NOW(), " . POLLER_COMMAND_REINDEX . ", '" . $item["host_id"] . ":" . $index_item["data_query_id"] . "')");
+							db_execute("replace into poller_command (poller_id, time, action, command) values ($poller_id, NOW(), " . POLLER_COMMAND_REINDEX . ", '" . $item["host_id"] . ":" . $index_item["data_query_id"] . "')");
 							$assert_fail = true;
 						}else if (($index_item["op"] == ">") && ($index_item["assert_value"] < trim($output))) {
 							cacti_log("ASSERT: '" . $index_item["assert_value"] . ">" . trim($output) . "' failed. Recaching host '" . $item["hostname"] . "', data query #" . $index_item["data_query_id"], $print_data_to_stdout);
-							db_execute("replace into poller_command (poller_id, time, action, command) values (0, NOW(), " . POLLER_COMMAND_REINDEX . ", '" . $item["host_id"] . ":" . $index_item["data_query_id"] . "')");
+							db_execute("replace into poller_command (poller_id, time, action, command) values ($poller_id, NOW(), " . POLLER_COMMAND_REINDEX . ", '" . $item["host_id"] . ":" . $index_item["data_query_id"] . "')");
 							$assert_fail = true;
 						}else if (($index_item["op"] == "<") && ($index_item["assert_value"] > trim($output))) {
 							cacti_log("ASSERT: '" . $index_item["assert_value"] . "<" . trim($output) . "' failed. Recaching host '" . $item["hostname"] . "', data query #" . $index_item["data_query_id"], $print_data_to_stdout);
-							db_execute("replace into poller_command (poller_id, time, action, command) values (0, NOW(), " . POLLER_COMMAND_REINDEX . ", '" . $item["host_id"] . ":" . $index_item["data_query_id"] . "')");
+							db_execute("replace into poller_command (poller_id, time, action, command) values ($poller_id, NOW(), " . POLLER_COMMAND_REINDEX . ", '" . $item["host_id"] . ":" . $index_item["data_query_id"] . "')");
 							$assert_fail = true;
 						}
 
@@ -394,10 +460,10 @@ if ((sizeof($polling_items) > 0) && (read_config_option("poller_enabled") == "on
 			if (isset($output)) {
 				/* insert a U in place of the actual value if the snmp agent restarts */
 				if (($set_spike_kill) && (!substr_count($output, ":"))) {
-					db_execute("insert into poller_output (local_data_id,rrd_name,time,output) values (" . $item["local_data_id"] . ",'" . $item["rrd_name"] . "','$host_update_time','" . addslashes("U") . "')");
+					db_execute("insert into poller_output (local_data_id, poller_id, rrd_name, time, output) values (" . $item["local_data_id"] . ", $poller_id, '" . $item["rrd_name"] . "','$host_update_time','" . addslashes("U") . "')");
 				/* otherwise, just insert the value received from the poller */
 				}else{
-					db_execute("insert into poller_output (local_data_id, rrd_name, time, output) values (" . $item["local_data_id"] . ", '" . $item["rrd_name"] . "', '$host_update_time', '" . addslashes($output) . "')");
+					db_execute("insert into poller_output (local_data_id, poller_id, rrd_name, time, output) values (" . $item["local_data_id"] . ", $poller_id, '" . $item["rrd_name"] . "', '$host_update_time', '" . addslashes($output) . "')");
 				}
 			}
 		} /* Next Cache Item */
@@ -418,22 +484,41 @@ if ((sizeof($polling_items) > 0) && (read_config_option("poller_enabled") == "on
 		list($micro,$seconds) = split(" ", microtime());
 		$end = $seconds + $micro;
 
-		cacti_log(sprintf("Time: %01.4f s, " .
-			"Theads: N/A, " .
-			"Hosts: %s",
-			round($end-$start,4),
-			$host_count),$print_data_to_stdout);
+		if ($poller_id > 0) {
+			cacti_log(sprintf("Poller: %s, Time: %01.4f s, " .
+				"Theads: N/A, " .
+				"Hosts: %s",
+				$poller_id,
+				round($end-$start,4),
+				$host_count),$print_data_to_stdout);
+		}else{
+			cacti_log(sprintf("Time: %01.4f s, " .
+				"Theads: N/A, " .
+				"Hosts: %s",
+				round($end-$start,4),
+				$host_count),$print_data_to_stdout);
+		}
 	}
 }else if (read_config_option('log_verbosity') >= POLLER_VERBOSITY_MEDIUM) {
 	cacti_log("NOTE: There are no items in your poller for this polling cycle!", TRUE, "POLLER");
 }
 
 /* record the process as having completed */
-record_cmdphp_done();
+record_cmdphp_done($poller_id);
 
-function record_cmdphp_done() {
+function record_cmdphp_done($poller_id) {
 	/* let the poller server know about cmd.php being finished */
-	db_execute("insert into poller_time (poller_id, start_time, end_time) values (0, NOW(), NOW())");
+	db_execute("insert into poller_time (poller_id, start_time, end_time) values ($poller_id, NOW(), NOW())");
+}
+
+function display_help() {
+	echo "Cacti cmd.php Data Collector, Copyright 2007-2009 - The Cacti Group\n\n";
+	echo "The slower, yet easier to run Data Collector for Cacti\n\n";
+	echo "usage: cmd.php [--poller=n] [--first=n] [--last=n]\n\n";
+	echo "Optional:\n";
+	echo "    --poller=n     0, Defines which Cacti poller will be handles the polling of this device.\n";
+	echo "    --first=n      0, Defines the first host for this Data Collector to be polled.\n";
+	echo "    --last=n       0, Defines the last host for this Data Collector to be polled.\n";
 }
 
 ?>
