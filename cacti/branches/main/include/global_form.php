@@ -687,7 +687,7 @@ $fields_host_edit = array(
 		"friendly_name" => "Poller",
 		"description" => "Choose which poller will be the polling of this device.",
 		"value" => "|arg1:poller_id|",
-		"none_value" => "Default",
+		"none_value" => "System Default",
 		"sql" => "select id,description as name from poller order by name",
 		),
 	"host_template_id" => array(

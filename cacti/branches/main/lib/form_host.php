@@ -248,6 +248,21 @@ function api_host_form_actions() {
 
 				push_out_host($selected_items[$i]);
 			}
+		}elseif ($_POST["drp_action"] == DEVICE_ACTION_CHANGE_POLLER) { /* change poller */
+			for ($i=0;($i<count($selected_items));$i++) {
+				/* ================= input validation ================= */
+				input_validate_input_number($selected_items[$i]);
+				/* ==================================================== */
+
+				reset($fields_host_edit);
+				while (list($field_name, $field_array) = each($fields_host_edit)) {
+					if (isset($_POST["$field_name"])) {
+						db_execute("update host set $field_name = '" . $_POST[$field_name] . "' where id='" . $selected_items[$i] . "'");
+					}
+				}
+
+				push_out_host($selected_items[$i]);
+			}
 		}elseif ($_POST["drp_action"] == DEVICE_ACTION_DELETE) { /* delete */
 			if (!isset($_POST["delete_type"])) { $_POST["delete_type"] = 2; }
 
@@ -364,7 +379,7 @@ function api_host_form_actions() {
 			print "	<tr>
 					<td colspan='2' class='textArea'>
 						<p>To change SNMP parameters for the following devices, check the box next to the fields
-						you want to update, fill in the new value, and click yes.</p>
+						you want to update, fill in the new value, and click \"yes\".</p>
 						<p>$host_list</p>
 					</td>
 					</tr>";
@@ -375,7 +390,6 @@ function api_host_form_actions() {
 					$form_array += array($field_name => $fields_host_edit_availability[$field_name]);
 
 					$form_array[$field_name]["value"] = "";
-#					$form_array[$field_name]["description"] = "";
 					$form_array[$field_name]["form_id"] = 0;
 					$form_array[$field_name]["sub_checkbox"] = array(
 						"name" => "t_" . $field_name,
@@ -406,7 +420,6 @@ function api_host_form_actions() {
 					$form_array += array($field_name => $fields_host_edit_availability[$field_name]);
 
 					$form_array[$field_name]["value"] = "";
-#					$form_array[$field_name]["description"] = "";
 					$form_array[$field_name]["form_id"] = 0;
 					$form_array[$field_name]["sub_checkbox"] = array(
 						"name" => "t_" . $field_name,
@@ -440,6 +453,25 @@ function api_host_form_actions() {
 					</td>
 				</tr>\n
 				";
+		}elseif ($_POST["drp_action"] == DEVICE_ACTION_CHANGE_POLLER) { /* Change Poller */
+			print "	<tr>
+					<td colspan='2' class='textArea'>
+						<p>Select the new poller below for the host(s) below and select 'yes' to continue, or 'no' to return.</p>
+						<p>$host_list</p>
+					</td>
+					</tr>";
+
+			$form_array = array();
+			$field_name = "poller_id";
+			$form_array += array($field_name => $fields_host_edit["poller_id"]);
+			$form_array[$field_name]["description"] = "Please select the new poller for the selected device(s).";
+
+			draw_edit_form(
+				array(
+					"config" => array("no_form_tag" => true),
+					"fields" => $form_array
+					)
+				);
 		}elseif (ereg("^tr_([0-9]+)$", $_POST["drp_action"], $matches)) { /* place on tree */
 			print "	<tr>
 					<td class='textArea'>
@@ -1223,6 +1255,7 @@ function host() {
 	input_validate_input_number(get_request_var_request("page"));
 	input_validate_input_number(get_request_var_request("status"));
 	input_validate_input_number(get_request_var_request("rows"));
+	input_validate_input_number(get_request_var_request("poller"));
 	/* ==================================================== */
 
 	/* clean up search string */
@@ -1247,6 +1280,7 @@ function host() {
 		kill_session_var("sess_device_template_id");
 		kill_session_var("sess_host_status");
 		kill_session_var("sess_host_rows");
+		kill_session_var("sess_host_poller");
 		kill_session_var("sess_host_sort_column");
 		kill_session_var("sess_host_sort_direction");
 
@@ -1254,6 +1288,7 @@ function host() {
 		unset($_REQUEST["filter"]);
 		unset($_REQUEST["template_id"]);
 		unset($_REQUEST["status"]);
+		unset($_REQUEST["poller"]);
 		unset($_REQUEST["rows"]);
 		unset($_REQUEST["sort_column"]);
 		unset($_REQUEST["sort_direction"]);
@@ -1263,6 +1298,7 @@ function host() {
 	$changed  = FALSE;
 	$changed += check_changed("filter",      "sess_ds_filter");
 	$changed += check_changed("rows",        "sess_ds_rows");
+	$changed += check_changed("poller",      "sess_ds_poller");
 	$changed += check_changed("host_id",     "sess_ds_host_id");
 	$changed += check_changed("template_id", "sess_ds_template_id");
 
@@ -1276,6 +1312,7 @@ function host() {
 	load_current_session_value("template_id", "sess_device_template_id", "-1");
 	load_current_session_value("status", "sess_host_status", "-1");
 	load_current_session_value("rows", "sess_host_rows", read_config_option("num_rows_device"));
+	load_current_session_value("poller", "sess_host_poller", "-1");
 	load_current_session_value("sort_column", "sess_host_sort_column", "description");
 	load_current_session_value("sort_direction", "sess_host_sort_direction", "ASC");
 
@@ -1287,6 +1324,7 @@ function host() {
 		strURL = '?status=' + objForm.status.value;
 		strURL = strURL + '&template_id=' + objForm.template_id.value;
 		strURL = strURL + '&rows=' + objForm.rows.value;
+		strURL = strURL + '&poller=' + objForm.poller.value;
 		strURL = strURL + '&filter=' + objForm.filter.value;
 		document.location = strURL;
 	}
@@ -1355,7 +1393,25 @@ function host() {
 			<table cellpadding="0" cellspacing="0">
 				<tr>
 					<td style='white-space:nowrap;width:55px;'>
-						Search:&nbsp;
+						Poller:&nbsp;
+					</td>
+					<td width="1">
+						<select name="poller" onChange="applyViewDeviceFilterChange(document.form_devices)">
+							<option value="-1"<?php if ($_REQUEST["template_id"] == "-1") {?> selected<?php }?>>All</option>
+							<option value="0"<?php if ($_REQUEST["template_id"] == "0") {?> selected<?php }?>>System Default</option>
+							<?php
+							$pollers = db_fetch_assoc("select id,description AS name from poller order by description");
+
+							if (sizeof($pollers)) {
+							foreach ($pollers as $poller) {
+								print "<option value='" . $poller["id"] . "'"; if ($_REQUEST["poller"] == $poller["id"]) { print " selected"; } print ">" . $poller["name"] . "</option>\n";
+							}
+							}
+							?>
+						</select>
+					</td>
+					<td style='white-space:nowrap;width:55px;'>
+						&nbsp;Search:&nbsp;
 					</td>
 					<td width="1">
 						<input type="text" name="filter" size="20" value="<?php print $_REQUEST["filter"];?>">
@@ -1415,8 +1471,10 @@ function host() {
 	$host_graphs       = array_rekey(db_fetch_assoc("SELECT host_id, count(*) as graphs FROM graph_local GROUP BY host_id"), "host_id", "graphs");
 	$host_data_sources = array_rekey(db_fetch_assoc("SELECT host_id, count(*) as data_sources FROM data_local GROUP BY host_id"), "host_id", "data_sources");
 
-	$sql_query = "SELECT *
+	$sql_query = "SELECT host.*, poller.description AS poller
 		FROM host
+		LEFT JOIN poller
+		ON host.poller_id=poller.id
 		$sql_where
 		ORDER BY " . $sortby . " " . $_REQUEST["sort_direction"] . "
 		LIMIT " . ($_REQUEST["rows"]*($_REQUEST["page"]-1)) . "," . $_REQUEST["rows"];
@@ -1432,6 +1490,7 @@ function host() {
 
 	$display_text = array(
 		"description" => array("Description", "ASC"),
+		"poller_id" => array("Poller", "ASC"),
 		"id" => array("ID", "ASC"),
 		"nosort1" => array("Graphs", "ASC"),
 		"nosort2" => array("Data Sources", "ASC"),
@@ -1447,8 +1506,9 @@ function host() {
 	if (sizeof($hosts) > 0) {
 		foreach ($hosts as $host) {
 			form_alternate_row_color('line' . $host["id"], true, true);
-			form_selectable_cell("<a class='linkEditMain' href='host.php?action=edit&id=" . $host["id"] . "'>" .
+			form_selectable_cell("<a style='white-space:nowrap;' class='linkEditMain' href='host.php?action=edit&id=" . $host["id"] . "'>" .
 				(strlen($_REQUEST["filter"]) ? eregi_replace("(" . preg_quote($_REQUEST["filter"]) . ")", "<span style='background-color: #F8D93D;'>\\1</span>", $host["description"]) : $host["description"]) . "</a>", $host["id"]);
+			form_selectable_cell(($host["poller_id"] == 0 ? "System Default" : ($host["poller"] == '' ? "Unknown" : $host["poller"])), $host["id"]);
 			form_selectable_cell(round(($host["id"]), 2), $host["id"]);
 			form_selectable_cell((isset($host_graphs[$host["id"]]) ? $host_graphs[$host["id"]] : 0), $host["id"]);
 			form_selectable_cell((isset($host_data_sources[$host["id"]]) ? $host_data_sources[$host["id"]] : 0), $host["id"]);
