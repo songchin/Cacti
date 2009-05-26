@@ -468,7 +468,7 @@ function cdef() {
 	load_current_session_value("sort_column", "sess_cdef_sort_column", "name");
 	load_current_session_value("sort_direction", "sess_cdef_sort_direction", "ASC");
 
-	html_start_box("<strong>CDEF's</strong>", "100%", $colors["header"], "3", "center", "cdef.php?action=edit");
+	html_start_box("<strong>CDEF's</strong>", "100%", $colors["header"], "3", "center", "cdef.php?action=edit", true);
 	?>
 	<tr class='rowAlternate2'>
 		<td>

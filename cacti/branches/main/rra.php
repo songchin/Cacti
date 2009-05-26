@@ -247,7 +247,7 @@ function rra() {
 	load_current_session_value("sort_column", "sess_rra_sort_column", "name");
 	load_current_session_value("sort_direction", "sess_rra_sort_direction", "ASC");
 
-	html_start_box("<strong>Round Robin Archives</strong>", "100%", $colors["header"], "3", "center", "rra.php?action=edit");
+	html_start_box("<strong>Round Robin Archives</strong>", "100%", $colors["header"], "3", "center", "rra.php?action=edit", true);
 	?>
 	<tr class='rowAlternate2'>
 		<td>
