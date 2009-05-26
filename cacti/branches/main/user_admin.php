@@ -565,7 +565,7 @@ function graph_perms_edit() {
 					foreach ($graphs as $item) {
 						form_alternate_row_color("graph" . $item["id"], true);
 						print "<td><strong>" . $item["name"] . "</strong>" . (($policy["policy_graphs"] == "1") ? " - No Access" : " - Accessible") . "</td>
-								<td align='right'><a href='" . htmlspecialchars("user_admin.php?action=perm_remove&type=graph&id=" . $item["id"] . "&user_id=" . $_GET["id"]) . "'><img class='buttonSmall' src='images/delete_icon.gif' alt='Delete'></a>&nbsp;</td>\n";
+								<td align='right'><a href='" . htmlspecialchars("user_admin.php?action=perm_remove&type=graph&id=" . $item["id"] . "&user_id=" . $_GET["id"]) . "'><img class='buttonSmall' src='images/delete_icon.gif' alt='Delete' align='absmiddle'></a>&nbsp;</td>\n";
 						form_end_row();
 					}
 				}else{ print "<tr><td><em>No Graphs</em></td></tr>";
@@ -620,7 +620,7 @@ function graph_perms_edit() {
 					foreach ($hosts as $item) {
 						form_alternate_row_color("host" . $item["id"], true);
 						print "<td><strong>" . $item["name"] . "</strong>" . (($policy["policy_hosts"] == "1") ? " - No Access" : " - Accessible") . "</td>
-								<td align='right'><a href='" . htmlspecialchars("user_admin.php?action=perm_remove&type=host&id=" . $item["id"] . "&user_id=" . $_GET["id"]) . "'><img class='buttonSmall' src='images/delete_icon.gif' alt='Delete'></a>&nbsp;</td>\n";
+								<td align='right'><a href='" . htmlspecialchars("user_admin.php?action=perm_remove&type=host&id=" . $item["id"] . "&user_id=" . $_GET["id"]) . "'><img class='buttonSmall' src='images/delete_icon.gif' alt='Delete' align='absmiddle'></a>&nbsp;</td>\n";
 						form_end_row();
 					}
 				}else{
@@ -676,7 +676,7 @@ function graph_perms_edit() {
 					foreach ($graph_templates as $item) {
 						form_alternate_row_color("templates" . $item["id"], true);
 						print "<td><strong>" . $item["name"] . "</strong>" . (($policy["policy_graph_templates"] == "1") ? " - No Access" : " - Accessible") . "</td>
-								<td align='right'><a href='" . htmlspecialchars("user_admin.php?action=perm_remove&type=graph_template&id=" . $item["id"] . "&user_id=" . $_GET["id"]) . "'><img class='buttonSmall' src='images/delete_icon.gif' alt='Delete'></a>&nbsp;</td>\n";
+								<td align='right'><a href='" . htmlspecialchars("user_admin.php?action=perm_remove&type=graph_template&id=" . $item["id"] . "&user_id=" . $_GET["id"]) . "'><img class='buttonSmall' src='images/delete_icon.gif' alt='Delete' align='absmiddle'></a>&nbsp;</td>\n";
 						form_end_row();
 					}
 				}else{
@@ -731,7 +731,7 @@ function graph_perms_edit() {
 					foreach ($trees as $item) {
 						form_alternate_row_color("tree" . $item["id"], true);
 						print "<td><strong>" . $item["name"] . "</strong>" . (($policy["policy_trees"] == "1") ? " - No Access" : " - Accessible") . "</td>
-							<td align='right'><a href='" . htmlspecialchars("user_admin.php?action=perm_remove&type=tree&id=" . $item["id"] . "&user_id=" . $_GET["id"]) . "'><img class='buttonSmall' src='images/delete_icon.gif' alt='Delete'></a>&nbsp;</td>\n";
+							<td align='right'><a href='" . htmlspecialchars("user_admin.php?action=perm_remove&type=tree&id=" . $item["id"] . "&user_id=" . $_GET["id"]) . "'><img class='buttonSmall' src='images/delete_icon.gif' alt='Delete' align='absmiddle'></a>&nbsp;</td>\n";
 						form_end_row();
 					}
 				}else{

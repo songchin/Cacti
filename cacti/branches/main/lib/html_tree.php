@@ -245,13 +245,13 @@ function grow_edit_graph_tree($tree_id, $user_id, $options) {
 				print "<td bgcolor='#$row_color' width='80'></td>\n";
 			}else{
 				print "<td bgcolor='#$row_color' width='80' align='center'>\n
-					<a href='" . htmlspecialchars("tree.php?action=item_movedown&id=" . $leaf["id"] . "&tree_id=" . $_GET["id"]) . "'><img class='buttonSmall' src='images/move_down.gif' alt=''' alt='Move Down'></a>\n
-					<a href='" . htmlspecialchars("tree.php?action=item_moveup&id=" . $leaf["id"] . "&tree_id=" . $_GET["id"]) . "'><img class='buttonSmall' src='images/move_up.gif' alt='' alt='Move Up'></a>\n
+					<a href='" . htmlspecialchars("tree.php?action=item_movedown&id=" . $leaf["id"] . "&tree_id=" . $_GET["id"]) . "'><img class='buttonSmall' src='images/move_down.gif' alt='Move Down' align='absmiddle'></a>\n
+					<a href='" . htmlspecialchars("tree.php?action=item_moveup&id=" . $leaf["id"] . "&tree_id=" . $_GET["id"]) . "'><img class='buttonSmall' src='images/move_up.gif' alt='Move Up' align='absmiddle'></a>\n
 					</td>\n";
 			}
 
 			print 	"<td bgcolor='#$row_color' align='right'>\n
-				<a href='". htmlspecialchars("tree.php?action=item_remove&id=" . $leaf["id"] . "&tree_id=$tree_id") . "'><img id='buttonSmall' src='images/delete_icon.gif' alt='Delete'></a>\n
+				<a href='". htmlspecialchars("tree.php?action=item_remove&id=" . $leaf["id"] . "&tree_id=$tree_id") . "'><img class='buttonSmall' src='images/delete_icon.gif' alt='Delete' align='absmiddle'></a>\n
 				</td></tr>\n";
 		}
 	}

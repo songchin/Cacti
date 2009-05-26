@@ -87,50 +87,32 @@ function api_host_form_save() {
 	/* save basic host information during first run, host_template should have bee selected */
 	if (isset($_POST["save_basic_host"])) {
 		/* host template was given, so fetch defaults from it */
-		if ($_POST["template_id"] != 0) {
-			$host_template = db_fetch_row("SELECT
-				host_template.id,
-				host_template.name,
-				host_template.snmp_community,
-				host_template.snmp_version,
-				host_template.snmp_username,
-				host_template.snmp_password,
-				host_template.snmp_port,
-				host_template.snmp_timeout,
-				host_template.availability_method,
-				host_template.ping_method,
-				host_template.ping_port,
-				host_template.ping_timeout,
-				host_template.ping_retries,
-				host_template.snmp_auth_protocol,
-				host_template.snmp_priv_passphrase,
-				host_template.snmp_priv_protocol,
-				host_template.snmp_context,
-				host_template.max_oids
+		if ($_POST["host_template_id"] != 0) {
+			$host_template = db_fetch_row("SELECT *
 				FROM host_template
-				WHERE id=" . $_POST["template_id"]);
+				WHERE id=" . $_POST["host_template_id"]);
 		} else { /* no host template given, so fetch system defaults */
-			$host_template["snmp_community"]		= read_config_option("snmp_community");
-			$host_template["snmp_version"]			= read_config_option("snmp_ver");
-			$host_template["snmp_username"]			= read_config_option("snmp_username");
-			$host_template["snmp_password"]			= read_config_option("snmp_password");
-			$host_template["snmp_port"]				= read_config_option("snmp_port");
-			$host_template["snmp_timeout"]			= read_config_option("snmp_timeout");
-			$host_template["availability_method"]	= read_config_option("availability_method");
-			$host_template["ping_method"]			= read_config_option("ping_method");
-			$host_template["ping_port"]				= read_config_option("ping_port");
-			$host_template["ping_timeout"]			= read_config_option("ping_timeout");
-			$host_template["ping_retries"]			= read_config_option("ping_retries");
-			$host_template["snmp_auth_protocol"]	= read_config_option("snmp_auth_protocol");
-			$host_template["snmp_priv_passphrase"]	= read_config_option("snmp_priv_passphrase");
-			$host_template["snmp_priv_protocol"]	= read_config_option("snmp_priv_protocol");
-			$host_template["snmp_context"]			= read_config_option("snmp_context");
-			$host_template["max_oids"]				= read_config_option("max_get_size");
+			$host_template["snmp_community"]        = read_config_option("snmp_community");
+			$host_template["snmp_version"]          = read_config_option("snmp_ver");
+			$host_template["snmp_username"]         = read_config_option("snmp_username");
+			$host_template["snmp_password"]         = read_config_option("snmp_password");
+			$host_template["snmp_port"]             = read_config_option("snmp_port");
+			$host_template["snmp_timeout"]          = read_config_option("snmp_timeout");
+			$host_template["availability_method"]   = read_config_option("availability_method");
+			$host_template["ping_method"]           = read_config_option("ping_method");
+			$host_template["ping_port"]             = read_config_option("ping_port");
+			$host_template["ping_timeout"]          = read_config_option("ping_timeout");
+			$host_template["ping_retries"]          = read_config_option("ping_retries");
+			$host_template["snmp_auth_protocol"]    = read_config_option("snmp_auth_protocol");
+			$host_template["snmp_priv_passphrase"]  = read_config_option("snmp_priv_passphrase");
+			$host_template["snmp_priv_protocol"]    = read_config_option("snmp_priv_protocol");
+			$host_template["snmp_context"]          = read_config_option("snmp_context");
+			$host_template["max_oids"]              = read_config_option("max_get_size");
 		}
 
-		$host_template["notes"] = ""; /* no support for notes in a host template */
+		$host_template["notes"]    = ""; /* no support for notes in a host template */
 		$host_template["disabled"] = ""; /* no support for disabling in a host template */
-		$host_id = api_device_save($_POST["id"], $_POST["poller_id"], $_POST["template_id"], $_POST["description"],
+		$host_id = api_device_save($_POST["id"], $_POST["poller_id"], $_POST["host_template_id"], $_POST["description"],
 			$_POST["hostname"], $host_template["snmp_community"], $host_template["snmp_version"],
 			$host_template["snmp_username"], $host_template["snmp_password"],
 			$host_template["snmp_port"], $host_template["snmp_timeout"],
@@ -148,7 +130,7 @@ function api_host_form_save() {
 		if ($_POST["snmp_version"] == 3 && ($_POST["snmp_password"] != $_POST["snmp_password_confirm"])) {
 			raise_message(4);
 		}else{
-			$host_id = api_device_save($_POST["id"], $_POST["poller_id"], $_POST["template_id"], $_POST["description"],
+			$host_id = api_device_save($_POST["id"], $_POST["poller_id"], $_POST["host_template_id"], $_POST["description"],
 				trim($_POST["hostname"]), $_POST["snmp_community"], $_POST["snmp_version"],
 				$_POST["snmp_username"], $_POST["snmp_password"],
 				$_POST["snmp_port"], $_POST["snmp_timeout"],
@@ -160,7 +142,7 @@ function api_host_form_save() {
 				$_POST["snmp_priv_protocol"], $_POST["snmp_context"], $_POST["max_oids"]);
 		}
 
-		if ((is_error_message()) || ($_POST["template_id"] != $_POST["_template_id"]) || $reindex_performed) {
+		if ((is_error_message()) || ($_POST["host_template_id"] != $_POST["_host_template_id"]) || $reindex_performed) {
 			header("Location: host.php?action=edit&id=" . (empty($host_id) ? $_POST["id"] : $host_id));
 		}else{
 			header("Location: host.php");
@@ -784,9 +766,9 @@ function host_display_general($host, $host_text) {
 	html_start_box("<strong>General Settings</strong>", "100%", $colors["header"], "3", "center", "", true);
 
 	/* preserve the host template id if passed in via a GET variable */
-	if (!empty($_GET["template_id"])) {
-		$fields_host_edit["template_id"]["value"] = $_GET["template_id"];
-		$fields_host_edit["template_id"]["method"] = "hidden";
+	if (!empty($_GET["host_template_id"])) {
+		$fields_host_edit["host_template_id"]["value"] = $_GET["host_template_id"];
+		$fields_host_edit["host_template_id"]["method"] = "hidden";
 	}
 
 	/* draw basic fields only on first run for a new host */
@@ -796,10 +778,12 @@ function host_display_general($host, $host_text) {
 		));
 
 	/* for a given host, display all availability options as well */
-	draw_edit_form(array(
-		"config" => array("form_name" => "chk"),
-		"fields" => inject_form_variables($fields_host_edit_availability, (is_array($host) ? $host : array()))
-		));
+	if (isset($host["id"])) {
+		draw_edit_form(array(
+			"config" => array("form_name" => "chk"),
+			"fields" => inject_form_variables($fields_host_edit_availability, (is_array($host) ? $host : array()))
+			));
+	}
 
 	html_end_box(!isset($host["id"]));
 
@@ -1132,7 +1116,7 @@ function host_display_general($host, $host_text) {
 					<?php print (($is_being_graphed == true) ? "<span style='color:green;'>Is Being Graphed</span> (<a href='graphs.php?action=graph_edit&id=" . db_fetch_cell("select id from graph_local where graph_template_id=" . $item["id"] . " and host_id=" . $_GET["id"] . " limit 0,1") . "'>Edit</a>)" : "<span style='color: #484848;'>Not Being Graphed</span>");?>
 				</td>
 				<td align='right' nowrap>
-					<a href='host.php?action=gt_remove&id=<?php print $item["id"];?>&host_id=<?php print $_GET["id"];?>'><img class='buttonSmall' src='images/delete_icon_large.gif' title='Delete Graph Template Association' alt='Delete'></a>
+					<a href='host.php?action=gt_remove&id=<?php print $item["id"];?>&host_id=<?php print $_GET["id"];?>'><img class='buttonSmall' src='images/delete_icon_large.gif' title='Delete Graph Template Association' alt='Delete' align='absmiddle'></a>
 				</td>
 			</tr>
 			<?php
@@ -1214,8 +1198,8 @@ function host_display_general($host, $host_text) {
 					<?php print (($status == "success") ? "<span style='color: green;'>Success</span>" : "<span style='color: green;'>Fail</span>");?> [<?php print $num_dq_items;?> Item<?php print ($num_dq_items == 1 ? "" : "s");?>, <?php print $num_dq_rows;?> Row<?php print ($num_dq_rows == 1 ? "" : "s");?>]
 				</td>
 				<td align='right' nowrap>
-					<a href='host.php?action=query_reload&id=<?php print $item["id"];?>&host_id=<?php print $_GET["id"];?>'><img id='buttonSmall' src='images/reload_icon_small.gif' title='Reload Data Query' alt='Reload' align='middle'></a>&nbsp;
-					<a href='host.php?action=query_remove&id=<?php print $item["id"];?>&host_id=<?php print $_GET["id"];?>'><img id='buttonSmall' src='images/delete_icon_large.gif' title='Delete Data Query Association' alt='Delete'></a>
+					<a href='host.php?action=query_reload&id=<?php print $item["id"];?>&host_id=<?php print $_GET["id"];?>'><img class='buttonSmall' src='images/reload_icon_small.gif' title='Reload Data Query' alt='Reload' align='absmiddle'></a>&nbsp;
+					<a href='host.php?action=query_remove&id=<?php print $item["id"];?>&host_id=<?php print $_GET["id"];?>'><img class='buttonSmall' src='images/delete_icon_large.gif' title='Delete Data Query Association' alt='Delete' align='absmiddle'></a>
 				</td>
 			</tr>
 			<?php
@@ -1451,7 +1435,7 @@ function host() {
 	if ($_REQUEST["template_id"] == "-1") {
 		/* Show all items */
 	}elseif ($_REQUEST["template_id"] == "0") {
-		$sql_where .= (strlen($sql_where) ? " and host.host_template_id=0" : "where host.template_id=0");
+		$sql_where .= (strlen($sql_where) ? " and host.host_template_id=0" : "where host.host_template_id=0");
 	}elseif (!empty($_REQUEST["template_id"])) {
 		$sql_where .= (strlen($sql_where) ? " and host.host_template_id=" . $_REQUEST["template_id"] : "where host.host_template_id=" . $_REQUEST["template_id"]);
 	}

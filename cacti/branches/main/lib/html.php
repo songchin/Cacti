@@ -131,7 +131,7 @@ function html_start_box_dq($query_name, $query_id, $host_id, $colspan, $width, $
 								<strong>Data Query</strong> [<?php print $query_name; ?>]
 							</td>
 							<td align='right' nowrap>
-								<a href='graphs_new.php?action=query_reload&id=<?php print $query_id;?>&host_id=<?php print $host_id;?>'><img class='buttonSmall' src='images/reload_icon_small.gif' alt='Reload' title='Reload Associated Query' align='middle'></a>
+								<a href='graphs_new.php?action=query_reload&id=<?php print $query_id;?>&host_id=<?php print $host_id;?>'><img class='buttonSmall' src='images/reload_icon_small.gif' alt='Reload' title='Reload Associated Query' align='absmiddle'></a>
 							</td>
 						</tr>
 					</table>
@@ -834,7 +834,7 @@ function draw_graph_items_list($item_list, $filename, $url_data, $disable_contro
 		print "<td style='$this_row_style'>" . $item["hex"] . "</td>\n";
 
 		if ($disable_controls == false) {
-			print "<td align='right'><a href='$filename?action=item_remove&id=" . $item["id"] . "&$url_data'><img id='buttonSmall' class='buttonSmall' src='images/delete_icon.gif' title='Delete this Item' alt='Delete'></a></td>\n";
+			print "<td align='right'><a href='$filename?action=item_remove&id=" . $item["id"] . "&$url_data'><img id='buttonSmall' class='buttonSmall' src='images/delete_icon.gif' title='Delete this Item' alt='Delete' align='absmiddle'></a></td>\n";
 		}
 
 		print "</tr>";
