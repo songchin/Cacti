@@ -173,7 +173,6 @@ function set_config_option($config_name, $value) {
    @returns - the current value of the configuration option */
 function read_config_option($config_name, $force = FALSE) {
 	global $config;
-
 	if (isset($_SESSION["sess_config_array"])) {
 		$config_array = $_SESSION["sess_config_array"];
 	}else if (isset($config["config_options_array"])) {
@@ -1752,7 +1751,7 @@ function draw_navigation_text() {
 		"index.php:login" => array("title" => "Console", "mapping" => "", "url" => URL_PATH . "index.php", "level" => "0"),
 		"rra.php:" => array("title" => "Round Robin Archives", "mapping" => "index.php:", "url" => "rra.php", "level" => "1"),
 		"rra.php:edit" => array("title" => "(Edit)", "mapping" => "index.php:,rra.php:", "url" => "", "level" => "2"),
-		"rra.php:remove" => array("title" => "(Remove)", "mapping" => "index.php:,rra.php:", "url" => "", "level" => "2"),
+		"rra.php:actions" => array("title" => "Actions", "mapping" => "index.php:,rra.php:", "url" => "", "level" => "2"),
 		"settings.php:" => array("title" => "Cacti Settings", "mapping" => "index.php:", "url" => "settings.php", "level" => "1"),
 		"settings.php:shift" => array("title" => "Cacti Settings", "mapping" => "index.php:", "url" => "settings.php", "level" => "1"),
 		"templates_export.php:" => array("title" => "Export Templates", "mapping" => "index.php:", "url" => "templates_export.php", "level" => "1"),
