@@ -1027,7 +1027,11 @@ function graph() {
 		kill_session_var("sess_graph_filter");
 		kill_session_var("sess_graph_sort_column");
 		kill_session_var("sess_graph_sort_direction");
-		kill_session_var("sess_graph_host_id");
+
+		if (!substr_count($_SERVER["REQUEST_URI"], "/host.php")) {
+			kill_session_var("sess_graph_host_id");
+		}
+
 		kill_session_var("sess_graph_rows");
 		kill_session_var("sess_graph_template_id");
 
@@ -1035,7 +1039,11 @@ function graph() {
 		unset($_REQUEST["filter"]);
 		unset($_REQUEST["sort_column"]);
 		unset($_REQUEST["sort_direction"]);
-		unset($_REQUEST["host_id"]);
+
+		if (!substr_count($_SERVER["REQUEST_URI"], "/host.php")) {
+			unset($_REQUEST["host_id"]);
+		}
+
 		unset($_REQUEST["rows"]);
 		unset($_REQUEST["template_id"]);
 	}

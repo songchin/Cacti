@@ -990,23 +990,31 @@ function data_source() {
 
 	/* if the user pushed the 'clear' button */
 	if (isset($_REQUEST["clear_x"])) {
-//		kill_session_var("sess_ds_current_page");
-//		kill_session_var("sess_ds_filter");
-//		kill_session_var("sess_ds_sort_column");
-//		kill_session_var("sess_ds_sort_direction");
-//		kill_session_var("sess_ds_rows");
-//		kill_session_var("sess_ds_host_id");
-//		kill_session_var("sess_ds_template_id");
-//		kill_session_var("sess_ds_method_id");
+		kill_session_var("sess_ds_current_page");
+		kill_session_var("sess_ds_filter");
+		kill_session_var("sess_ds_sort_column");
+		kill_session_var("sess_ds_sort_direction");
+		kill_session_var("sess_ds_rows");
 
-//		unset($_REQUEST["page"]);
-//		unset($_REQUEST["filter"]);
-//		unset($_REQUEST["sort_column"]);
-//		unset($_REQUEST["sort_direction"]);
-//		unset($_REQUEST["rows"]);
-//		unset($_REQUEST["host_id"]);
-//		unset($_REQUEST["template_id"]);
-//		unset($_REQUEST["method_id"]);
+		if (!substr_count($_SERVER["REQUEST_URI"], "/host.php")) {
+			kill_session_var("sess_ds_host_id");
+		}
+
+		kill_session_var("sess_ds_template_id");
+		kill_session_var("sess_ds_method_id");
+
+		unset($_REQUEST["page"]);
+		unset($_REQUEST["filter"]);
+		unset($_REQUEST["sort_column"]);
+		unset($_REQUEST["sort_direction"]);
+		unset($_REQUEST["rows"]);
+
+		if (!substr_count($_SERVER["REQUEST_URI"], "/host.php")) {
+			unset($_REQUEST["host_id"]);
+		}
+
+		unset($_REQUEST["template_id"]);
+		unset($_REQUEST["method_id"]);
 
 		$_REQUEST["page"] = 1;
 	}else{
