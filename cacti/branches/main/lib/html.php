@@ -124,7 +124,7 @@ function html_start_box_dq($query_name, $query_id, $host_id, $colspan, $width, $
 	?>
 		<table class='startBoxHeader' cellpadding="0" cellspacing="0" border="0" width="100%">
 			<tr class='rowHeader'>
-				<td style='padding: 3px;' colspan='<?php print $colspan+1;?>'>
+				<td style='padding:0px 5px 0px 5px;' colspan='<?php print $colspan+1;?>'>
 					<table cellspacing='0' cellpadding='0' width='100%' >
 						<tr>
 							<td class='textHeaderDark'>
@@ -138,7 +138,7 @@ function html_start_box_dq($query_name, $query_id, $host_id, $colspan, $width, $
 				</td>
 			</tr>
 			<tr style='border: 0px;' id='<?php print $item_id;?>'>
-				<td>
+				<td colspan='<?php print $colspan+1;?>'>
 					<table width="100%" cellpadding="<?php print $cell_padding;?>" cellspacing="0" style='border-width:0px;'><?php
 }
 

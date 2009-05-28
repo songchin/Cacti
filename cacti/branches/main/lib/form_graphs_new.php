@@ -596,7 +596,9 @@ function graphs_new() {
 		foreach ($snmp_queries as $snmp_query) {
 			unset($total_rows);
 
-			if (!$changed) {
+			if (isset($_REQUEST["page" . $snmp_query["id"]])) {
+				$page = $_REQUEST["page" . $snmp_query["id"]];
+			}elseif (!$changed) {
 				$page = $_REQUEST["page" . $snmp_query["id"]];
 			}else{
 				$page = 1;
@@ -658,7 +660,7 @@ function graphs_new() {
 				print "//-->\n</script>\n";
 			}
 
-			html_start_box_dq($snmp_query["name"], $snmp_query["id"], $host["id"], $num_input_fields+1, "100%", $colors["header"], "3", "center");
+			html_start_box_dq($snmp_query["name"], $snmp_query["id"], $host["id"], $num_input_fields+1, "100%", $colors["header"], "0", "center");
 
 			if ($xml_array != false) {
 				$html_dq_header = "";
@@ -742,7 +744,7 @@ function graphs_new() {
 
 					$total_rows = sizeof(db_fetch_assoc($rows_query));
 
-					if (($page) * $row_limit > $total_rows) {
+					if (($page-1) * $row_limit > $total_rows) {
 						$page = 1;
 						$_REQUEST["page" . $query["id"]] = $page;
 						load_current_session_value("page" . $query["id"], "sess_graphs_new_page" . $query["id"], "1");
@@ -767,7 +769,7 @@ function graphs_new() {
 						if ($field_array["direction"] == "input") {
 							foreach($field_names as $row) {
 								if ($row["field_name"] == $field_name) {
-									$html_dq_header .= "<td height='1'><strong><font color='#" . $colors["header_text"] . "'>" . $field_array["name"] . "</font></strong></td>\n";
+									$html_dq_header .= "<td height='1' style='padding:0px 5px 0px 5px;'><strong><font color='#" . $colors["header_text"] . "'>" . $field_array["name"] . "</font></strong></td>\n";
 									break;
 								}
 							}
@@ -792,7 +794,7 @@ function graphs_new() {
 					foreach($snmp_query_indexes as $row) {
 						$query_row = $snmp_query["id"] . "_" . encode_data_query_index($row["snmp_index"]);
 
-						print "<tr id='line$query_row' bgcolor='#" . (($row_counter % 2 == 0) ? "ffffff" : $colors["light"]) . "'>"; $i++;
+						form_alternate_row_color("line" . $query_row, true);
 
 						$column_counter = 0;
 						reset($xml_array["fields"]);
@@ -800,9 +802,9 @@ function graphs_new() {
 							if ($field_array["direction"] == "input") {
 								if (in_array($field_name, $fields)) {
 									if (isset($row[$field_name])) {
-										print "<td style='line-height: 1.5em;' onClick='dq_select_line(" . $snmp_query["id"] . ",\"" . encode_data_query_index($row["snmp_index"]) . "\");'><span id='text$query_row" . "_" . $column_counter . "'>" . (strlen($_REQUEST["filter"]) ? eregi_replace("(" . preg_quote($_REQUEST["filter"]) . ")", "<span style='background-color: #F8D93D;'>\\1</span>", $row[$field_name]) : $row[$field_name]) . "</span></td>";
+										print "<td style='line-height: 1.5em;padding:0px 5px 0px 5px;' onClick='dq_select_line(" . $snmp_query["id"] . ",\"" . encode_data_query_index($row["snmp_index"]) . "\");'><span id='text$query_row" . "_" . $column_counter . "'>" . (strlen($_REQUEST["filter"]) ? eregi_replace("(" . preg_quote($_REQUEST["filter"]) . ")", "<span style='background-color: #F8D93D;'>\\1</span>", $row[$field_name]) : $row[$field_name]) . "</span></td>";
 									}else{
-										print "<td style='line-height: 1.5em;' onClick='dq_select_line(" . $snmp_query["id"] . ",\"" . encode_data_query_index($row["snmp_index"]) . "\");'><span id='text$query_row" . "_" . $column_counter . "'></span></td>";
+										print "<td style='line-height: 1.5em;padding:0px 5px 0px 5px;' onClick='dq_select_line(" . $snmp_query["id"] . ",\"" . encode_data_query_index($row["snmp_index"]) . "\");'><span id='text$query_row" . "_" . $column_counter . "'></span></td>";
 									}
 
 									$column_counter++;
@@ -829,14 +831,16 @@ function graphs_new() {
 				print "<tr class='rowAlternate1'><td colspan='2' style='color: red; font-size: 12px; font-weight: bold;'>Error in data query.</td></tr>\n";
 			}
 
-			html_end_box(FALSE);
-
 			/* draw the graph template drop down here */
 			$data_query_graphs = db_fetch_assoc("select snmp_query_graph.id,snmp_query_graph.name from snmp_query_graph where snmp_query_graph.snmp_query_id=" . $snmp_query["id"] . " order by snmp_query_graph.name");
 
 			if (sizeof($data_query_graphs) == 1) {
+				html_end_box();
+
 				form_hidden_box("sgg_" . $snmp_query["id"] . "' id='sgg_" . $snmp_query["id"], $data_query_graphs[0]["id"], "");
 			}elseif (sizeof($data_query_graphs) > 1) {
+				html_end_box(FALSE);
+
 				print "<table align='center' width='100%'>
 						<tr>
 							<td width='1' valign='top'>
