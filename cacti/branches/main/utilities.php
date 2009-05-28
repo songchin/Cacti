@@ -769,7 +769,7 @@ function utilities_view_user_log() {
 
 	if (sizeof($user_log) > 0) {
 		foreach ($user_log as $item) {
-			form_alternate_row_color();
+			form_alternate_row_color($item["username"] . strtotime($item["time"]), true);
 			?>
 			<td width='35%'>
 				<?php print (strlen(get_request_var_request("filter")) ? (eregi_replace("(" . preg_quote(get_request_var_request("filter")) . ")", "<span style='background-color: #F8D93D;'>\\1</span>", $item["username"])) : $item["username"]);?>
@@ -1372,10 +1372,10 @@ function utilities_view_poller_cache() {
 
 	/* if the user pushed the 'clear' button */
 	if (isset($_REQUEST["clear_x"])) {
-		kill_session_var("sess_poller_current_page");
-		kill_session_var("sess_poller_host_id");
-		kill_session_var("sess_poller_poller_action");
-		kill_session_var("sess_poller_filter");
+		kill_session_var("sess_poller_cache_current_page");
+		kill_session_var("sess_poller_cache_host_id");
+		kill_session_var("sess_poller_cache_poller_action");
+		kill_session_var("sess_poller_cache_filter");
 
 		unset($_REQUEST["page"]);
 		unset($_REQUEST["filter"]);
@@ -1383,19 +1383,19 @@ function utilities_view_poller_cache() {
 		unset($_REQUEST["poller_action"]);
 	}
 
-	if ((!empty($_SESSION["sess_poller_action"])) && (!empty($_REQUEST["poller_action"]))) {
-		if ($_SESSION["sess_poller_poller_action"] != $_REQUEST["poller_action"]) {
+	if ((!empty($_SESSION["sess_poller_cache_action"])) && (!empty($_REQUEST["poller_action"]))) {
+		if ($_SESSION["sess_poller_cache_poller_action"] != $_REQUEST["poller_action"]) {
 			$_REQUEST["page"] = 1;
 		}
 	}
 
 	/* remember these search fields in session vars so we don't have to keep passing them around */
-	load_current_session_value("page", "sess_poller_current_page", "1");
-	load_current_session_value("host_id", "sess_poller_host_id", "-1");
-	load_current_session_value("poller_action", "sess_poller_poller_action", "-1");
-	load_current_session_value("filter", "sess_poller_filter", "");
-	load_current_session_value("sort_column", "sess_poller_sort_column", "data_template_data.name_cache");
-	load_current_session_value("sort_direction", "sess_poller_sort_direction", "ASC");
+	load_current_session_value("page", "sess_poller_cache_current_page", "1");
+	load_current_session_value("host_id", "sess_poller_cache_host_id", "-1");
+	load_current_session_value("poller_action", "sess_poller_cache_poller_action", "-1");
+	load_current_session_value("filter", "sess_poller_cache_filter", "");
+	load_current_session_value("sort_column", "sess_poller_cache_sort_column", "data_template_data.name_cache");
+	load_current_session_value("sort_direction", "sess_poller_cache_sort_direction", "ASC");
 
 	$_REQUEST['page_referrer'] = 'view_poller_cache';
 	load_current_session_value('page_referrer', 'page_referrer', 'view_poller_cache');

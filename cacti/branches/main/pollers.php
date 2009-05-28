@@ -314,7 +314,7 @@ function poller() {
 	/* remember these search fields in session vars so we don't have to keep passing them around */
 	load_current_session_value("page", "sess_poller_current_page", "1");
 	load_current_session_value("filter", "sess_poller_filter", "");
-	load_current_session_value("sort_column", "sess_poller_sort_column", "descriptin");
+	load_current_session_value("sort_column", "sess_poller_sort_column", "description");
 	load_current_session_value("sort_direction", "sess_poller_sort_direction", "ASC");
 
 	display_output_messages();
