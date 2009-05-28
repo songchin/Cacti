@@ -276,7 +276,7 @@ function rra() {
 	/* form the 'where' clause for our main sql query */
 	$sql_where = "WHERE (rra.name LIKE '%%" . $_REQUEST["filter"] . "%%')";
 
-	html_start_box("", "100%", $colors["header"], "3", "center", "");
+	html_start_box("", "100%", $colors["header"], "0", "center", "");
 
 	$total_rows = db_fetch_cell("SELECT
 		COUNT(rra.id)
@@ -315,6 +315,9 @@ function rra() {
 			form_checkbox_cell($rra["name"], $rra["id"]);
 			form_end_row();
 		}
+
+		form_end_table();
+
 		print $nav;
 	}else{
 		print "<tr><td><em>No RRAs</em></td></tr>\n";

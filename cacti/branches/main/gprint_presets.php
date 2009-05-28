@@ -261,7 +261,7 @@ function gprint_presets() {
 	/* form the 'where' clause for our main sql query */
 	$sql_where = "WHERE (name LIKE '%%" . $_REQUEST["filter"] . "%%')";
 
-	html_start_box("", "100%", $colors["header"], "3", "center", "");
+	html_start_box("", "100%", $colors["header"], "0", "center", "");
 
 	$total_rows = db_fetch_cell("SELECT
 		COUNT(id)
@@ -292,6 +292,9 @@ function gprint_presets() {
 			form_checkbox_cell($template["name"], $template["id"]);
 			form_end_row();
 		}
+
+		form_end_table();
+
 		print $nav;
 	}else{
 		print "<tr><td><em>No Items</em></td></tr>\n";
