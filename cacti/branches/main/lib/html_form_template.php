@@ -162,6 +162,13 @@ function draw_nontemplated_fields_graph_item($graph_template_id, $local_graph_id
 
 			$form_array += array($form_field_name => $struct_graph_item{$item["column_name"]});
 
+			/* change drop_sql's to callbacks */
+			if ($form_array[$form_field_name]["method"] == "drop_sql") {
+				$form_array[$form_field_name]["method"]     = "drop_sqlcb";
+				$form_array[$form_field_name]["text_value"] = $current_def_value[$item["column_name"]];
+				$form_array[$form_field_name]["sql_id"]     = "data_template_rrd.id";
+			}
+
 			/* modifications to the default form array */
 			$form_array[$form_field_name]["friendly_name"] = $item["name"];
 			$form_array[$form_field_name]["value"] = $current_def_value{$item["column_name"]};

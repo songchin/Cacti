@@ -814,7 +814,6 @@ function graph_edit() {
 				</td>
 			</tr>
 		</table>
-		<br>
 		<?php
 	}
 

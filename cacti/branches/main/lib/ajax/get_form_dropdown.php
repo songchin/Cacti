@@ -27,33 +27,33 @@ include_once(dirname(__FILE__) . "/../../lib/functions.php");
 
 /* input validation */
 if (isset($_REQUEST["q"])) {
-	$q = strtolower(sanitize_search_string(get_request_var("q")));
+	$q = sanitize_search_string(get_request_var("q"));
 } else return;
 
-$host_perms = db_fetch_cell("SELECT policy_hosts FROM user_auth WHERE id=" . get_request_var("id",0));
+if (isset($_REQUEST["sql"])) {
+	$sql = base64_decode(get_request_var("sql"));
+} else return;
 
-if ($host_perms == 1) {
-	$sql = "SELECT id, description as name
-		FROM host
-		WHERE (hostname LIKE '%$q%'
-		OR description LIKE '%$q%')
-		AND id NOT IN (SELECT item_id FROM user_auth_perms WHERE user_auth_perms.type=3 AND user_auth_perms.user_id=". get_request_var("id",0) . ")
-		ORDER BY description,hostname";
+if ($asname_pos = strpos(strtoupper($sql), "AS NAME")) {
+	$name_qry = substr($sql, 6, $asname_pos-6);
+	cacti_log($name_qry);
 }else{
-	$sql = "SELECT id, description as name
-		FROM host
-		WHERE (hostname LIKE '%$q%'
-		OR description LIKE '%$q%')
-		AND id IN (SELECT item_id FROM user_auth_perms WHERE user_auth_perms.type=3 AND user_auth_perms.user_id=". get_request_var("id",0) . ")
-		ORDER BY description,hostname";
+	$name_qry = "name";
 }
 
+if ($where_pos = strpos(strtoupper($sql), "WHERE")) {
+	$sql = substr($sql, 0, $where_pos+5) . " LOWER($name_qry) LIKE '%$q%' AND " . substr($sql, $where_pos+5);
+}elseif ($orderby_pos = strpos(strtoupper($form_data), "ORDER BY")) {
+	$sql = substr($sql, 0, $orderby_pos) . " AND LOWER($name_qry) LIKE '%$q%' " . substr($sql, $orderby_pos);
+}else{
+	$sql = $sql . " AND LOWER($name_qry) LIKE '%$s%'";
+}
 
-$hosts = db_fetch_assoc($sql);
+$entries = db_fetch_assoc($sql);
 
-if (sizeof($hosts) > 0) {
-	foreach ($hosts as $host) {
-		print $host["name"] . "|" . $host["id"] . "\n";
+if (sizeof($entries) > 0) {
+	foreach ($entries as $entry) {
+		print $entry["name"] . "|" . $entry["id"] . "\n";
 	}
 }
 

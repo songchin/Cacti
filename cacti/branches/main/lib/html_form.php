@@ -170,10 +170,19 @@ function draw_edit_control($field_name, &$field_array) {
 	case 'drop_sql':
 		form_dropdown($field_name,
 			db_fetch_assoc($field_array["sql"]), "name", "id", $field_array["value"],
-				((isset($field_array["none_value"])) ? $field_array["none_value"] : ""),
-				((isset($field_array["default"])) ? $field_array["default"] : ""),
-				((isset($field_array["class"])) ? $field_array["class"] : ""),
-				((isset($field_array["on_change"])) ? $field_array["on_change"] : ""));
+			((isset($field_array["none_value"])) ? $field_array["none_value"] : ""),
+			((isset($field_array["default"])) ? $field_array["default"] : ""),
+			((isset($field_array["class"])) ? $field_array["class"] : ""),
+			((isset($field_array["on_change"])) ? $field_array["on_change"] : ""));
+
+		break;
+	case 'drop_sqlcb':
+		form_dropdown_cb($field_name,
+			$field_array["sql"], $field_array["sql_id"], $field_array["value"],
+			((isset($field_array["text_value"])) ? $field_array["text_value"] : ""),
+			((isset($field_array["none_value"])) ? $field_array["none_value"] : "0"),
+			((isset($field_array["default"])) ? $field_array["default"] : ""),
+			((isset($field_array["on_change"])) ? $field_array["on_change"] : ""));
 
 		break;
 	case 'drop_multi':
@@ -515,6 +524,54 @@ function form_dropdown($form_name, $form_data, $column_display, $column_id, $for
 	html_create_list($form_data, $column_display, $column_id, htmlspecialchars($form_previous_value, ENT_QUOTES));
 
 	print "</select>\n";
+}
+
+/* form_dropdown_cb - draws an ajax html dropdown box
+   @arg $form_name - the name of the form
+   @arg $form_sql - the name of this form element
+   @arg $form_sql_id - sql syntax for the dropdown array
+   @arg $form_previous_value - the current value of this form element
+   @arg $form_sql_id - the sql column id
+   @arg $form_previous_text - the current text value of this form element
+   @arg $form_none_entry - the name to use for a default 'none' element in the dropdown
+   @arg $form_default_value - the value of this form element to use if there is
+     no current value available
+   @arg $on_change - onChange modifier */
+function form_dropdown_cb($form_name, $form_sql, $form_sql_id, $form_previous_value, $form_previous_text, $form_none_entry, $form_default_value, $on_change = "") {
+	if ($form_previous_value == "") {
+		$form_previous_value = $form_default_value;
+		$form_previous_text  = $form_none_entry;
+	}else{
+		if ($where_pos = strpos(strtoupper($form_sql), "WHERE")) {
+			$new_form_sql = substr($form_sql, 0, $where_pos+5) . " $form_sql_id=" . $form_previous_value . " AND " . substr($form_sql, $where_pos+5);
+		}elseif ($orderby_pos = strpos(strtoupper($form_data), "ORDER BY")) {
+			$new_form_sql = substr($form_sql, 0, $orderby_pos) . " AND $form_sql_id=" . $form_previous_value . " " . substr($form_sql, $orderby_pos);
+		}else{
+			$new_form_sql = $form_sql . " AND $form_sql_id=" . $form_previous_value;
+		}
+
+		$previous_row = db_fetch_row($new_form_sql);
+		$form_previous_text = $previous_row["name"];
+	}
+
+	?>
+	<script type="text/javascript">
+	<!--
+	$().ready(function() {
+		$("#<?php print $form_name . '_cb';?>").autocomplete("./lib/ajax/get_form_dropdown.php?sql=<?php print base64_encode($form_sql);?>", { max: 24, highlight: false, scroll: true, scrollHeight: 300 });
+		$("#<?php print $form_name . '_cb';?>").result(function(event, data, formatted) {
+			if (data) {
+				$(this).parent().find("#<?php print $form_name;?>").val(data[1]);
+			}else{
+				$(this).parent().find("#<?php print $form_name;?>").val(0);
+			}
+		});
+	});
+	-->
+	</script>
+	<input class="ac_field" type="text" id="<?php print $form_name . '_cb';?>" size="70" value="<?php print $form_previous_text; ?>">
+	<input type="hidden" id="<?php print $form_name;?>" value='<?php print $form_previous_value;?>'>
+	<?php
 }
 
 /* form_text_box - draws a standard html checkbox

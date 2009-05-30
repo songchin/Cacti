@@ -32,13 +32,25 @@ if (isset($_REQUEST["q"])) {
 	return;
 }
 
-$sql = "SELECT
-	local_graph_id AS id,
-	title_cache AS name
-	FROM graph_templates_graph
-	WHERE local_graph_id > 0
-	AND local_graph_id NOT IN (SELECT item_id FROM user_auth_perms WHERE user_auth_perms.type=1 AND user_auth_perms.user_id=". get_request_var("id",0) . ")
-	ORDER BY title_cache";
+$graph_perms = db_fetch_cell("SELECT policy_graphs FROM user_auth WHERE id=" . get_request_var("id",0));
+
+if ($graph_perms == 1) {
+	$sql = "SELECT
+		local_graph_id AS id,
+		title_cache AS name
+		FROM graph_templates_graph
+		WHERE local_graph_id > 0
+		AND local_graph_id NOT IN (SELECT item_id FROM user_auth_perms WHERE user_auth_perms.type=1 AND user_auth_perms.user_id=". get_request_var("id",0) . ")
+		ORDER BY title_cache";
+}else{
+	$sql = "SELECT
+		local_graph_id AS id,
+		title_cache AS name
+		FROM graph_templates_graph
+		WHERE local_graph_id > 0
+		AND local_graph_id IN (SELECT item_id FROM user_auth_perms WHERE user_auth_perms.type=1 AND user_auth_perms.user_id=". get_request_var("id",0) . ")
+		ORDER BY title_cache";
+}
 
 $graphs = db_fetch_assoc($sql);
 

@@ -30,17 +30,29 @@ if (isset($_REQUEST["q"])) {
 	$q = strtolower(sanitize_search_string(get_request_var("q")));
 } else return;
 
-$sql = "SELECT id, CONCAT_WS('',description,' (',hostname,')') as name 
-	FROM host 
-	WHERE hostname LIKE '%$q%' 
-	OR description LIKE '%$q%'
-	ORDER BY description,hostname";
+$host_perms = db_fetch_cell("SELECT policy_hosts FROM user_auth WHERE id=" . get_request_var("id",0));
+
+if ($host_perms == 1) {
+	$sql = "SELECT id, CONCAT_WS('',description,' (',hostname,')') as name
+		FROM host
+		WHERE (hostname LIKE '%$q%'
+		OR description LIKE '%$q%')
+		AND id NOT IN (SELECT item_id FROM user_auth_perms WHERE user_auth_perms.type=3 AND user_auth_perms.user_id=". get_request_var("id",0) . ")
+		ORDER BY description,hostname";
+}else{
+	$sql = "SELECT id, CONCAT_WS('',description,' (',hostname,')') as name
+		FROM host
+		WHERE (hostname LIKE '%$q%'
+		OR description LIKE '%$q%')
+		AND id IN (SELECT item_id FROM user_auth_perms WHERE user_auth_perms.type=3 AND user_auth_perms.user_id=". get_request_var("id",0) . ")
+		ORDER BY description,hostname";
+}
 
 $hosts = db_fetch_assoc($sql);
 
 if (sizeof($hosts) > 0) {
 	foreach ($hosts as $host) {
-		print title_trim($host["name"], 40) . "|" . $host["id"] . "\n";
+		print $host["name"] . "|" . $host["id"] . "\n";
 	}
 }
 

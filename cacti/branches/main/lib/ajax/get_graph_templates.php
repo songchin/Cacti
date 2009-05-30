@@ -28,32 +28,33 @@ include_once(dirname(__FILE__) . "/../../lib/functions.php");
 /* input validation */
 if (isset($_REQUEST["q"])) {
 	$q = strtolower(sanitize_search_string(get_request_var("q")));
-} else return;
-
-$host_perms = db_fetch_cell("SELECT policy_hosts FROM user_auth WHERE id=" . get_request_var("id",0));
-
-if ($host_perms == 1) {
-	$sql = "SELECT id, description as name
-		FROM host
-		WHERE (hostname LIKE '%$q%'
-		OR description LIKE '%$q%')
-		AND id NOT IN (SELECT item_id FROM user_auth_perms WHERE user_auth_perms.type=3 AND user_auth_perms.user_id=". get_request_var("id",0) . ")
-		ORDER BY description,hostname";
-}else{
-	$sql = "SELECT id, description as name
-		FROM host
-		WHERE (hostname LIKE '%$q%'
-		OR description LIKE '%$q%')
-		AND id IN (SELECT item_id FROM user_auth_perms WHERE user_auth_perms.type=3 AND user_auth_perms.user_id=". get_request_var("id",0) . ")
-		ORDER BY description,hostname";
+} else {
+	return;
 }
 
+$template_perms = db_fetch_cell("SELECT policy_graph_templates FROM user_auth WHERE id=" . get_request_var("id",0));
 
-$hosts = db_fetch_assoc($sql);
+if ($template_perms == 1) {
+	$sql = "SELECT
+		id,
+		name
+		FROM graph_templates
+		WHERE id NOT IN (SELECT item_id FROM user_auth_perms WHERE user_auth_perms.type=4 AND user_auth_perms.user_id=". get_request_var("id",0) . ")
+		ORDER BY name";
+}else{
+	$sql = "SELECT
+		id,
+		name
+		FROM graph_templates
+		WHERE id IN (SELECT item_id FROM user_auth_perms WHERE user_auth_perms.type=4 AND user_auth_perms.user_id=". get_request_var("id",0) . ")
+		ORDER BY name";
+}
 
-if (sizeof($hosts) > 0) {
-	foreach ($hosts as $host) {
-		print $host["name"] . "|" . $host["id"] . "\n";
+$templates = db_fetch_assoc($sql);
+
+if (sizeof($templates) > 0) {
+	foreach ($templates as $template) {
+		print $template["name"] . "|" . $template["id"] . "\n";
 	}
 }
 

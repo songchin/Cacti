@@ -223,6 +223,7 @@ $struct_data_source = array(
 		"friendly_name" => "Data Source Path",
 		"method" => "textbox",
 		"max_length" => "255",
+		"size" => "70",
 		"default" => "",
 		"description" => "The full path to the RRD file.",
 		"flags" => "NOTEMPLATE"
@@ -270,6 +271,7 @@ $struct_data_source_item = array(
 		"friendly_name" => "Internal Data Source Name",
 		"method" => "textbox",
 		"max_length" => "19",
+		"size" => "20",
 		"default" => "",
 		"description" => "Choose unique name to represent this piece of data inside of the rrd file."
 		),
@@ -357,6 +359,7 @@ $struct_graph = array(
 		"friendly_name" => "Title (--title)",
 		"method" => "textbox",
 		"max_length" => "255",
+		"size" => "70",
 		"default" => "",
 		"description" => "The name that is printed on the graph."
 		),
@@ -372,6 +375,7 @@ $struct_graph = array(
 		"method" => "textbox",
 		"max_length" => "50",
 		"default" => "120",
+		"size" => "10",
 		"description" => "The height (in pixels) that the graph is."
 		),
 	"width" => array(
@@ -379,6 +383,7 @@ $struct_graph = array(
 		"method" => "textbox",
 		"max_length" => "50",
 		"default" => "500",
+		"size" => "10",
 		"description" => "The width (in pixels) that the graph is."
 		),
 	"slope_mode" => array(
@@ -472,6 +477,7 @@ $struct_graph = array(
 		"method" => "textbox",
 		"max_length" => "50",
 		"default" => "100",
+		"size" => "10",
 		"description" => "The maximum vertical value for the rrd graph."
 		),
 	"lower_limit" => array(
@@ -479,6 +485,7 @@ $struct_graph = array(
 		"method" => "textbox",
 		"max_length" => "255",
 		"default" => "0",
+		"size" => "10",
 		"description" => "The minimum vertical value for the rrd graph."
 		),
 	"base_value" => array(
@@ -486,6 +493,7 @@ $struct_graph = array(
 		"method" => "textbox",
 		"max_length" => "50",
 		"default" => "1000",
+		"size" => "10",
 		"description" => "Should be set to 1024 for memory and 1000 for traffic measurements."
 		),
 	"unit_value" => array(
@@ -493,6 +501,7 @@ $struct_graph = array(
 		"method" => "textbox",
 		"max_length" => "50",
 		"default" => "",
+		"size" => "30",
 		"description" => "Sets the xponent value on the Y-axis for numbers. Note: This option was
 			added in rrdtool 1.0.36 and depricated in 1.2.x.  In RRDtool 1.2.x, this value is replaced by the --y-grid option.
 			In this option, Y-axis grid lines appear at each grid step interval.  Labels are placed every label factor lines."
@@ -502,6 +511,7 @@ $struct_graph = array(
 		"method" => "textbox",
 		"max_length" => "50",
 		"default" => "",
+		"size" => "30",
 		"description" => "What unit cacti should use on the Y-axis. Use 3 to display everything in 'k' or -6
 			to display everything in 'u' (micro)."
 		),
@@ -510,6 +520,7 @@ $struct_graph = array(
 		"method" => "textbox",
 		"max_length" => "255",
 		"default" => "",
+		"size" => "30",
 		"description" => "The label vertically printed to the left of the graph."
 		)
 	);
@@ -572,6 +583,7 @@ $struct_graph_item = array(
 		"method" => "textbox",
 		"max_length" => "50",
 		"default" => "",
+		"size" => "10",
 		"description" => "The value of an HRULE or VRULE graph item."
 		),
 	"gprint_id" => array(
@@ -609,6 +621,7 @@ $fields_graph_template_template_edit = array(
 		"description" => "The name given to this graph template.",
 		"value" => "|arg1:name|",
 		"max_length" => "150",
+		"size" => "70",
 		),
 	"graph_template_id" => array(
 		"method" => "hidden_zero",
@@ -674,6 +687,7 @@ $fields_host_edit = array(
 		"description" => "Give this host a meaningful description.",
 		"value" => "|arg1:description|",
 		"max_length" => "250",
+		"size" => "70"
 		),
 	"hostname" => array(
 		"method" => "textbox",
@@ -681,6 +695,7 @@ $fields_host_edit = array(
 		"description" => "Fully qualified hostname or IP address for this device.",
 		"value" => "|arg1:hostname|",
 		"max_length" => "250",
+		"size" => "70"
 		),
 	"poller_id" => array(
 		"method" => "drop_sql",
@@ -900,6 +915,7 @@ $fields_host_template_edit = array(
 		"description" => "A useful name for this host template.",
 		"value" => "|arg1:name|",
 		"max_length" => "255",
+		"size" => "70"
 		),
 	"avalaibility_header" => array(
 		"method" => "spacer",
@@ -1070,6 +1086,7 @@ $fields_rra_edit = array(
 		"description" => "How data is to be entered in RRA's.",
 		"value" => "|arg1:name|",
 		"max_length" => "100",
+		"size" => "50"
 		),
 	"consolidation_function_id" => array(
 		"method" => "drop_multi",
@@ -1084,6 +1101,7 @@ $fields_rra_edit = array(
 		"description" => "The amount of unknown data that can still be regarded as known.",
 		"value" => "|arg1:x_files_factor|",
 		"max_length" => "10",
+		"size" => "10"
 		),
 	"steps" => array(
 		"method" => "textbox",
@@ -1091,6 +1109,7 @@ $fields_rra_edit = array(
 		"description" => "How many data points are needed to put data into the RRA.",
 		"value" => "|arg1:steps|",
 		"max_length" => "8",
+		"size" => "10"
 		),
 	"rows" => array(
 		"method" => "textbox",
@@ -1098,6 +1117,7 @@ $fields_rra_edit = array(
 		"description" => "How many generations data is kept in the RRA.",
 		"value" => "|arg1:rows|",
 		"max_length" => "12",
+		"size" => "10"
 		),
 	"timespan" => array(
 		"method" => "textbox",
@@ -1105,6 +1125,7 @@ $fields_rra_edit = array(
 		"description" => "How many seconds to display in graph for this RRA.",
 		"value" => "|arg1:timespan|",
 		"max_length" => "12",
+		"size" => "10"
 		),
 	"id" => array(
 		"method" => "hidden_zero",
@@ -1124,6 +1145,7 @@ $fields_data_query_edit = array(
 		"description" => "A name for this data query.",
 		"value" => "|arg1:name|",
 		"max_length" => "100",
+		"size" => "50"
 		),
 	"description" => array(
 		"method" => "textbox",
@@ -1131,6 +1153,7 @@ $fields_data_query_edit = array(
 		"description" => "A description for this data query.",
 		"value" => "|arg1:description|",
 		"max_length" => "255",
+		"size" => "70"
 		),
 	"xml_path" => array(
 		"method" => "textbox",
@@ -1139,6 +1162,7 @@ $fields_data_query_edit = array(
 		"value" => "|arg1:xml_path|",
 		"default" => "<path_cacti>/resource/",
 		"max_length" => "255",
+		"size" => "70"
 		),
 	"data_input_id" => array(
 		"method" => "drop_sql",
@@ -1165,6 +1189,7 @@ $fields_data_query_item_edit = array(
 		"description" => "A name for this associated graph.",
 		"value" => "|arg1:name|",
 		"max_length" => "100",
+		"size" => "50"
 		),
 	"graph_template_id" => array(
 		"method" => "drop_sql",
@@ -1199,6 +1224,7 @@ $fields_tree_edit = array(
 		"description" => "A useful name for this graph tree.",
 		"value" => "|arg1:name|",
 		"max_length" => "255",
+		"size" => "70"
 		),
 	"sort_type" => array(
 		"method" => "drop_array",
@@ -1224,21 +1250,24 @@ $fields_user_user_edit_host = array(
 		"friendly_name" => "User Name",
 		"description" => "The login name for this user.",
 		"value" => "|arg1:username|",
-		"max_length" => "255"
+		"max_length" => "255",
+		"size" => "70"
 		),
 	"full_name" => array(
 		"method" => "textbox",
 		"friendly_name" => "Full Name",
 		"description" => "A more descriptive name for this user, that can include spaces or special characters.",
 		"value" => "|arg1:full_name|",
-		"max_length" => "255"
+		"max_length" => "255",
+		"size" => "70"
 		),
 	"password" => array(
 		"method" => "textbox_password",
 		"friendly_name" => "Password",
 		"description" => "Enter the password for this user twice. Remember that passwords are case sensitive!",
 		"value" => "",
-		"max_length" => "255"
+		"max_length" => "255",
+		"size" => "70"
 		),
 	"enabled" => array(
 		"method" => "checkbox",
