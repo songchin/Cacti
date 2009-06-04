@@ -1274,6 +1274,7 @@ function host() {
 	input_validate_input_number(get_request_var_request("status"));
 	input_validate_input_number(get_request_var_request("rows"));
 	input_validate_input_number(get_request_var_request("poller"));
+	input_validate_input_number(get_request_var_request("site"));
 	/* ==================================================== */
 
 	/* clean up search string */
@@ -1299,6 +1300,7 @@ function host() {
 		kill_session_var("sess_host_status");
 		kill_session_var("sess_host_rows");
 		kill_session_var("sess_host_poller");
+		kill_session_var("sess_host_site");
 		kill_session_var("sess_host_sort_column");
 		kill_session_var("sess_host_sort_direction");
 
@@ -1307,6 +1309,7 @@ function host() {
 		unset($_REQUEST["template_id"]);
 		unset($_REQUEST["status"]);
 		unset($_REQUEST["poller"]);
+		unset($_REQUEST["site"]);
 		unset($_REQUEST["rows"]);
 		unset($_REQUEST["sort_column"]);
 		unset($_REQUEST["sort_direction"]);
@@ -1314,11 +1317,13 @@ function host() {
 
 	/* let's see if someone changed an important setting */
 	$changed  = FALSE;
-	$changed += check_changed("filter",      "sess_ds_filter");
-	$changed += check_changed("rows",        "sess_ds_rows");
-	$changed += check_changed("poller",      "sess_ds_poller");
+	$changed += check_changed("filter",      "sess_device_filter");
+	$changed += check_changed("template_id", "sess_device_template_id");
+	$changed += check_changed("status",      "sess_host_status");
+	$changed += check_changed("rows",        "sess_host_rows");
+	$changed += check_changed("poller",      "sess_host_poller");
+	$changed += check_changed("site",        "sess_host_site");
 	$changed += check_changed("host_id",     "sess_ds_host_id");
-	$changed += check_changed("template_id", "sess_ds_template_id");
 
 	if ($changed) {
 		$_REQUEST["page"] = "1";
@@ -1331,6 +1336,7 @@ function host() {
 	load_current_session_value("status", "sess_host_status", "-1");
 	load_current_session_value("rows", "sess_host_rows", read_config_option("num_rows_device"));
 	load_current_session_value("poller", "sess_host_poller", "-1");
+	load_current_session_value("site", "sess_host_site", "-1");
 	load_current_session_value("sort_column", "sess_host_sort_column", "description");
 	load_current_session_value("sort_direction", "sess_host_sort_direction", "ASC");
 
@@ -1343,6 +1349,7 @@ function host() {
 		strURL = strURL + '&template_id=' + objForm.template_id.value;
 		strURL = strURL + '&rows=' + objForm.rows.value;
 		strURL = strURL + '&poller=' + objForm.poller.value;
+		strURL = strURL + '&site=' + objForm.site.value;
 		strURL = strURL + '&filter=' + objForm.filter.value;
 		document.location = strURL;
 	}
@@ -1356,7 +1363,7 @@ function host() {
 	<tr class='rowAlternate2'>
 		<td>
 			<form name="form_devices">
-			<table cellpadding="0" cellspacing="0">
+			<table cellpadding="0" cellspacing="1">
 				<tr>
 					<td style='white-space:nowrap;width:55px;'>
 						Type:&nbsp;
@@ -1408,15 +1415,33 @@ function host() {
 					</td>
 				</tr>
 			</table>
-			<table cellpadding="0" cellspacing="0">
+			<table cellpadding="0" cellspacing="1">
 				<tr>
 					<td style='white-space:nowrap;width:55px;'>
-						Poller:&nbsp;
+						Site:&nbsp;
+					</td>
+					<td width="1">
+						<select name="site" onChange="applyViewDeviceFilterChange(document.form_devices)">
+							<option value="-1"<?php if ($_REQUEST["site"] == "-1") {?> selected<?php }?>>All</option>
+							<option value="0"<?php if ($_REQUEST["site"] == "0") {?> selected<?php }?>>Not Defined</option>
+							<?php
+							$sites = db_fetch_assoc("select id,name from sites order by name");
+
+							if (sizeof($sites)) {
+							foreach ($sites as $site) {
+								print "<option value='" . $site["id"] . "'"; if ($_REQUEST["site"] == $site["id"]) { print " selected"; } print ">" . $site["name"] . "</option>\n";
+							}
+							}
+							?>
+						</select>
+					</td>
+					<td style='white-space:nowrap;width:55px;'>
+						&nbsp;Poller:&nbsp;
 					</td>
 					<td width="1">
 						<select name="poller" onChange="applyViewDeviceFilterChange(document.form_devices)">
-							<option value="-1"<?php if ($_REQUEST["template_id"] == "-1") {?> selected<?php }?>>All</option>
-							<option value="0"<?php if ($_REQUEST["template_id"] == "0") {?> selected<?php }?>>System Default</option>
+							<option value="-1"<?php if ($_REQUEST["poller"] == "-1") {?> selected<?php }?>>All</option>
+							<option value="0"<?php if ($_REQUEST["poller"] == "0") {?> selected<?php }?>>System Default</option>
 							<?php
 							$pollers = db_fetch_assoc("select id,description AS name from poller order by description");
 
@@ -1474,6 +1499,22 @@ function host() {
 		$sql_where .= (strlen($sql_where) ? " and host.host_template_id=" . $_REQUEST["template_id"] : "where host.host_template_id=" . $_REQUEST["template_id"]);
 	}
 
+	if ($_REQUEST["poller"] == "-1") {
+		/* Show all items */
+	}elseif ($_REQUEST["poller"] == "0") {
+		$sql_where .= (strlen($sql_where) ? " and host.poller_id=0" : "where host.poller_id=0");
+	}elseif (!empty($_REQUEST["poller"])) {
+		$sql_where .= (strlen($sql_where) ? " and host.poller_id=" . $_REQUEST["poller"] : "where host.poller_id=" . $_REQUEST["poller"]);
+	}
+
+	if ($_REQUEST["site"] == "-1") {
+		/* Show all items */
+	}elseif ($_REQUEST["site"] == "0") {
+		$sql_where .= (strlen($sql_where) ? " and host.site_id=0" : "where host.site_id=0");
+	}elseif (!empty($_REQUEST["site"])) {
+		$sql_where .= (strlen($sql_where) ? " and host.site_id=" . $_REQUEST["site"] : "where host.site_id=" . $_REQUEST["site"]);
+	}
+
 	html_start_box("", "100%", $colors["header"], "0", "center", "");
 
 	$total_rows = db_fetch_cell("select
@@ -1489,10 +1530,12 @@ function host() {
 	$host_graphs       = array_rekey(db_fetch_assoc("SELECT host_id, count(*) as graphs FROM graph_local GROUP BY host_id"), "host_id", "graphs");
 	$host_data_sources = array_rekey(db_fetch_assoc("SELECT host_id, count(*) as data_sources FROM data_local GROUP BY host_id"), "host_id", "data_sources");
 
-	$sql_query = "SELECT host.*, poller.description AS poller
+	$sql_query = "SELECT host.*, poller.description AS poller, sites.name AS site
 		FROM host
 		LEFT JOIN poller
 		ON host.poller_id=poller.id
+		LEFT JOIN sites
+		ON host.site_id=sites.id
 		$sql_where
 		ORDER BY " . $sortby . " " . $_REQUEST["sort_direction"] . "
 		LIMIT " . ($_REQUEST["rows"]*($_REQUEST["page"]-1)) . "," . $_REQUEST["rows"];
@@ -1508,13 +1551,14 @@ function host() {
 
 	$display_text = array(
 		"description" => array("Description", "ASC"),
-		"poller_id" => array("Poller", "ASC"),
+		"site" => array("Site", "ASC"),
+		"poller" => array("Poller", "ASC"),
+		"hostname" => array("Hostname", "ASC"),
 		"id" => array("ID", "ASC"),
 		"nosort1" => array("Graphs", "ASC"),
 		"nosort2" => array("Data Sources", "ASC"),
 		"status" => array("Status", "ASC"),
 		"status_event_count" => array("Event Count", "ASC"),
-		"hostname" => array("Hostname", "ASC"),
 		"cur_time" => array("Current (ms)", "DESC"),
 		"avg_time" => array("Average (ms)", "DESC"),
 		"availability" => array("Availability", "ASC"));
@@ -1526,13 +1570,14 @@ function host() {
 			form_alternate_row_color('line' . $host["id"], true, true);
 			form_selectable_cell("<a style='white-space:nowrap;' class='linkEditMain' href='host.php?action=edit&id=" . $host["id"] . "'>" .
 				(strlen($_REQUEST["filter"]) ? eregi_replace("(" . preg_quote($_REQUEST["filter"]) . ")", "<span style='background-color: #F8D93D;'>\\1</span>", $host["description"]) : $host["description"]) . "</a>", $host["id"]);
-			form_selectable_cell(($host["poller_id"] == 0 ? "System Default" : ($host["poller"] == '' ? "Unknown" : $host["poller"])), $host["id"]);
+			form_selectable_cell(($host["site"] == 0 ? "Not Defined" : ($host["site"] == '' ? "Unknown" : $host["site"])), $host["id"]);
+			form_selectable_cell(($host["poller"] == 0 ? "System Default" : ($host["poller"] == '' ? "Unknown" : $host["poller"])), $host["id"]);
+			form_selectable_cell((strlen($_REQUEST["filter"]) ? eregi_replace("(" . preg_quote($_REQUEST["filter"]) . ")", "<span style='background-color: #F8D93D;'>\\1</span>", $host["hostname"]) : $host["hostname"]), $host["id"]);
 			form_selectable_cell(round(($host["id"]), 2), $host["id"]);
 			form_selectable_cell((isset($host_graphs[$host["id"]]) ? $host_graphs[$host["id"]] : 0), $host["id"]);
 			form_selectable_cell((isset($host_data_sources[$host["id"]]) ? $host_data_sources[$host["id"]] : 0), $host["id"]);
 			form_selectable_cell(get_colored_device_status(($host["disabled"] == "on" ? true : false), $host["status"]), $host["id"]);
 			form_selectable_cell(round(($host["status_event_count"]), 2), $host["id"]);
-			form_selectable_cell((strlen($_REQUEST["filter"]) ? eregi_replace("(" . preg_quote($_REQUEST["filter"]) . ")", "<span style='background-color: #F8D93D;'>\\1</span>", $host["hostname"]) : $host["hostname"]), $host["id"]);
 			form_selectable_cell(round(($host["cur_time"]), 2), $host["id"]);
 			form_selectable_cell(round(($host["avg_time"]), 2), $host["id"]);
 			form_selectable_cell(round($host["availability"], 2), $host["id"]);
