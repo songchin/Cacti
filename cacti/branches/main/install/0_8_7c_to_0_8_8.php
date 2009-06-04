@@ -143,6 +143,31 @@ function upgrade_to_0_8_8() {
 	db_install_execute("0.8.8", "ALTER TABLE `host_template` ADD COLUMN `ping_retries` INT(12) UNSIGNED DEFAULT '2' AFTER `ping_timeout`");
 	db_install_execute("0.8.8", "ALTER TABLE `host_template` ADD COLUMN `max_oids` INT(12) UNSIGNED DEFAULT '10' AFTER `ping_retries`");
 
+	/* create a sites table */
+	db_install_execute("0.8.8", "CREATE TABLE  `sites` (
+			`id` int(10) unsigned NOT NULL auto_increment,
+			`name` varchar(100) NOT NULL default '',
+			`address1` varchar(100) default '',
+			`address2` varchar(100) default '',
+			`city` varchar(50) default '',
+			`state` varchar(20) default '',
+			`postal_code` varchar(20) default '',
+			`country` varchar(30) default '',
+			`timezone` varchar(40) default '',
+			`alternate_id` varchar(30) default '',
+			`notes` text,
+			PRIMARY KEY  (`id`),
+			KEY `name` (`name`),
+			KEY `city` (`city`),
+			KEY `state` (`state`),
+			KEY `postal_code` (`postal_code`),
+			KEY `country` (`country`),
+			KEY `alternate_id` (`alternate_id`)
+			) ENGINE=MyISAM;");
+
+	/* add a site column to the host table */
+	db_install_execute("0.8.8", "ALTER TABLE `host`, ADD COLUMN `site_id` INT(10) UNSIGNED NOT NULL DEFAULT '0' AFTER id, ADD INDEX `site_id`(`site_id`);");
+
 	/*
 	 * now update current entries of table host_template
 	 * make sure to use current global default settings in order not to change

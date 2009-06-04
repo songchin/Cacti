@@ -1981,6 +1981,7 @@ INSERT INTO graph_tree_items VALUES (7,1,0,0,'',1,'00100000000000000000000000000
 
 CREATE TABLE host (
   id mediumint(8) unsigned NOT NULL auto_increment,
+  site_id int(10) unsigned NOT NULL default '0',
   poller_id smallint(5) unsigned NOT NULL default '0',
   host_template_id mediumint(8) unsigned NOT NULL default '0',
   description varchar(150) NOT NULL default '',
@@ -2017,14 +2018,15 @@ CREATE TABLE host (
   availability decimal(8,5) NOT NULL default '100.00000',
   PRIMARY KEY  (id),
   KEY disabled (disabled),
-  KEY poller_id (poller_id)
+  KEY poller_id (poller_id),
+  KEY site_id (site_id)
 ) TYPE=MyISAM;
 
 --
 -- Dumping data for table `host`
 --
 
-INSERT INTO `host` VALUES (1, 0, 8, 'Localhost', '127.0.0.1', '', 'public', 0, '', '', 'MD5', '', 'DES', '', 161, 500, 3, 2, 23, 400, 1, 10, '', 0, 0, '0000-00-00 00:00:00', '0000-00-00 00:00:00', '', 9.99999, 0.00000, 0.00000, 0.00000, 0, 0, 100.00000);
+INSERT INTO `host` VALUES (1, 0, 0, 8, 'Localhost', '127.0.0.1', '', 'public', 0, '', '', 'MD5', '', 'DES', '', 161, 500, 3, 2, 23, 400, 1, 10, '', 0, 0, '0000-00-00 00:00:00', '0000-00-00 00:00:00', '', 9.99999, 0.00000, 0.00000, 0.00000, 0, 0, 100.00000);
 
 --
 -- Table structure for table `host_graph`
@@ -2490,6 +2492,36 @@ CREATE TABLE settings_tree (
 
 --
 -- Dumping data for table `settings_tree`
+--
+
+
+--
+-- Table structure for table `sites`
+--
+
+CREATE TABLE  `sites` (
+  `id` int(10) unsigned NOT NULL auto_increment,
+  `name` varchar(100) NOT NULL default '',
+  `address1` varchar(100) default '',
+  `address2` varchar(100) default '',
+  `city` varchar(50) default '',
+  `state` varchar(20) default NULL,
+  `postal_code` varchar(20) default '',
+  `country` varchar(30) default '',
+  `timezone` varchar(40) default '',
+  `alternate_id` varchar(30) default '',
+  `notes` text,
+  PRIMARY KEY  (`id`),
+  KEY `name` (`name`),
+  KEY `city` (`city`),
+  KEY `state` (`state`),
+  KEY `postal_code` (`postal_code`),
+  KEY `country` (`country`),
+  KEY `alternate_id` (`alternate_id`)
+) ENGINE=MyISAM;
+
+--
+-- Dumping data for table `sites`
 --
 
 

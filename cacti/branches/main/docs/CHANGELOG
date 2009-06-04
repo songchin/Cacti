@@ -58,6 +58,8 @@ Cacti CHANGELOG
 -feature: api_plugin_db_table_create allows for multi-column indices and more than one key per table
 -feature: Add Tab's to the Utilities View Tech Page
 -feature: Add Process Status Information to the View Tech Page
+-feature: Adding multiple poller process support
+-feature: Adding the site object for devices and plugins
 
 0.8.7d
 -bug#0001336: Allow to specify on_change handler for checkbox_group

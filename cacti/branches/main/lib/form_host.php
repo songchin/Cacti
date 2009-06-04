@@ -245,6 +245,21 @@ function api_host_form_actions() {
 
 				push_out_host($selected_items[$i]);
 			}
+		}elseif ($_POST["drp_action"] == DEVICE_ACTION_CHANGE_SITE) { /* change site */
+			for ($i=0;($i<count($selected_items));$i++) {
+				/* ================= input validation ================= */
+				input_validate_input_number($selected_items[$i]);
+				/* ==================================================== */
+
+				reset($fields_host_edit);
+				while (list($field_name, $field_array) = each($fields_host_edit)) {
+					if (isset($_POST["$field_name"])) {
+						db_execute("update host set $field_name = '" . $_POST[$field_name] . "' where id='" . $selected_items[$i] . "'");
+					}
+				}
+
+				push_out_host($selected_items[$i]);
+			}
 		}elseif ($_POST["drp_action"] == DEVICE_ACTION_DELETE) { /* delete */
 			if (!isset($_POST["delete_type"])) { $_POST["delete_type"] = 2; }
 
@@ -438,7 +453,7 @@ function api_host_form_actions() {
 		}elseif ($_POST["drp_action"] == DEVICE_ACTION_CHANGE_POLLER) { /* Change Poller */
 			print "	<tr>
 					<td colspan='2' class='textArea'>
-						<p>Select the new poller below for the host(s) below and select 'yes' to continue, or 'no' to return.</p>
+						<p>Select the new poller below for the devices(s) below and select 'yes' to continue, or 'no' to return.</p>
 						<p>$host_list</p>
 					</td>
 					</tr>";
@@ -447,6 +462,25 @@ function api_host_form_actions() {
 			$field_name = "poller_id";
 			$form_array += array($field_name => $fields_host_edit["poller_id"]);
 			$form_array[$field_name]["description"] = "Please select the new poller for the selected device(s).";
+
+			draw_edit_form(
+				array(
+					"config" => array("no_form_tag" => true),
+					"fields" => $form_array
+					)
+				);
+		}elseif ($_POST["drp_action"] == DEVICE_ACTION_CHANGE_SITE) { /* Change Site */
+			print "	<tr>
+					<td colspan='2' class='textArea'>
+						<p>Select the new site for the devices(s) below and select 'yes' to continue, or 'no' to return.</p>
+						<p>$host_list</p>
+					</td>
+					</tr>";
+
+			$form_array = array();
+			$field_name = "site_id";
+			$form_array += array($field_name => $fields_host_edit["site_id"]);
+			$form_array[$field_name]["description"] = "Please select the new site for the selected device(s).";
 
 			draw_edit_form(
 				array(

@@ -675,6 +675,90 @@ $fields_graph_template_input_edit = array(
 		)
 	);
 
+	/* file: sites.php, action: edit */
+	$fields_site_edit = array(
+	"spacer0" => array(
+		"method" => "spacer",
+		"friendly_name" => "Site Information"
+		),
+	"name" => array(
+		"method" => "textbox",
+		"friendly_name" => "Name",
+		"value" => "|arg1:name|",
+		"size" => "50",
+		"max_length" => "100"
+		),
+	"alternate_id" => array(
+		"method" => "textbox",
+		"friendly_name" => "Alternate Name",
+		"value" => "|arg1:alternate_id|",
+		"size" => "50",
+		"max_length" => "30"
+		),
+	"address1" => array(
+		"method" => "textbox",
+		"friendly_name" => "Address1",
+		"value" => "|arg1:address1|",
+		"size" => "70",
+		"max_length" => "100"
+		),
+	"address2" => array(
+		"method" => "textbox",
+		"friendly_name" => "Address2",
+		"value" => "|arg1:address2|",
+		"size" => "70",
+		"max_length" => "100"
+		),
+	"city" => array(
+		"method" => "textbox",
+		"friendly_name" => "City",
+		"value" => "|arg1:city|",
+		"size" => "20",
+		"max_length" => "30"
+		),
+	"state" => array(
+		"method" => "textbox",
+		"friendly_name" => "State",
+		"value" => "|arg1:state|",
+		"size" => "10",
+		"max_length" => "20"
+		),
+	"postal_code" => array(
+		"method" => "textbox",
+		"friendly_name" => "Postal/Zip Code",
+		"value" => "|arg1:postal_code|",
+		"size" => "10",
+		"max_length" => "20"
+		),
+	"country" => array(
+		"method" => "textbox",
+		"friendly_name" => "Country",
+		"value" => "|arg1:country|",
+		"size" => "20",
+		"max_length" => "30"
+		),
+	"notes" => array(
+		"method" => "textarea",
+		"friendly_name" => "Site Notes",
+		"textarea_rows" => "3",
+		"textarea_cols" => "70",
+		"value" => "|arg1:notes|",
+		"max_length" => "255"
+		),
+	"id" => array(
+		"method" => "hidden_zero",
+		"value" => "|arg1:id|"
+		),
+	"_id" => array(
+		"method" => "hidden_zero",
+		"value" => "|arg1:id|"
+		),
+	"save_component_site" => array(
+		"method" => "hidden",
+		"value" => "1"
+		)
+	);
+
 /* file: host.php, action: edit */
 $fields_host_edit = array(
 	"host_header" => array(
@@ -704,6 +788,14 @@ $fields_host_edit = array(
 		"value" => "|arg1:poller_id|",
 		"none_value" => "System Default",
 		"sql" => "select id,description as name from poller order by name",
+		),
+	"site_id" => array(
+		"method" => "drop_sql",
+		"friendly_name" => "Site",
+		"description" => "Choose the site that is to be associated with this device.",
+		"value" => "|arg1:site_id|",
+		"none_value" => "N/A",
+		"sql" => "select id,name from sites order by name",
 		),
 	"host_template_id" => array(
 		"method" => "drop_sql",

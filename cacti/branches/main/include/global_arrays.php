@@ -41,7 +41,8 @@ $device_actions = array(
 	DEVICE_ACTION_CHANGE_SNMP_OPTIONS => "Change SNMP Options",
 	DEVICE_ACTION_CLEAR_STATISTICS => "Clear Statistics",
 	DEVICE_ACTION_CHANGE_AVAILABILITY_OPTIONS => "Change Availability Options",
-	DEVICE_ACTION_CHANGE_POLLER => "Change Poller"
+	DEVICE_ACTION_CHANGE_POLLER => "Change Poller",
+	DEVICE_ACTION_CHANGE_SITE => "Change Site"
 	);
 
 $ds_actions = array(
@@ -357,6 +358,7 @@ $menu = array(
 		"graphs.php" => "Graph Management",
 		"tree.php" => "Graph Trees",
 		"data_sources.php" => "Data Sources",
+		"sites.php" => 'Sites',
 		"host.php" => 'Devices',
 		"pollers.php" => 'Pollers'
 		),
@@ -485,6 +487,7 @@ $user_auth_realm_filenames = array(
 	"graphs_item.ajax.php" => 5,
 	"graphs_new.php" => 5,
 	"host.php" => 3,
+	"sites.php" => 3,
 	"pollers.php" => 3,
 	"host_templates.php" => 12,
 	"index.php" => 8,
