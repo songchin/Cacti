@@ -307,7 +307,7 @@ function rra() {
 
 	if (sizeof($rra_list) > 0) {
 		foreach ($rra_list as $rra) {
-			form_alternate_row_color('line' . $rra["id"], true, true);
+			form_alternate_row_color('line' . $rra["id"], true);
 			form_selectable_cell("<a class='linkEditMain' href='" . htmlspecialchars("rra.php?action=edit&id=" . $rra["id"]) . "'>" . (strlen($_REQUEST["filter"]) ? eregi_replace("(" . preg_quote($_REQUEST["filter"]) . ")", "<span style='background-color: #F8D93D;'>\\1</span>", $rra["name"]) : $rra["name"]) . "</a>", $rra["id"]);
 			form_selectable_cell($rra["steps"], $rra["id"]);
 			form_selectable_cell($rra["rows"], $rra["id"]);

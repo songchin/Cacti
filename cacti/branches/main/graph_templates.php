@@ -324,15 +324,15 @@ function item() {
 	if (sizeof($template_item_list) > 0) {
 	foreach ($template_item_list as $item) {
 		form_alternate_row_color();
-	?>
+		?>
 			<td>
 				<a class="linkEditMain" href="graph_templates_inputs.php?action=input_edit&id=<?php print $item["id"];?>&graph_template_id=<?php print $_GET["id"];?>"><?php print $item["name"];?></a>
 			</td>
 			<td align="right">
-				<a href="graph_templates_inputs.php?action=input_remove&id=<?php print $item["id"];?>&graph_template_id=<?php print $_GET["id"];?>"><img class="buttonSmall" src="images/delete_icon.gif" alt="Delete" align='absmiddle'></a>
+				<a href="graph_templates_inputs.php?action=input_remove&id=<?php print $item["id"];?>&graph_template_id=<?php print $_GET["id"];?>"><img class="buttonSmall" src="images/delete_icon.gif" alt="Delete" align='middle'></a>
 			</td>
-		</tr>
-	<?php
+		<?php
+		form_end_row();
 	}
 	}else{
 		print "<tr class='rowAlternate1'><td colspan='2'><em>No Inputs</em></td></tr>";
@@ -548,7 +548,7 @@ function template() {
 
 	if (sizeof($template_list) > 0) {
 		foreach ($template_list as $template) {
-			form_alternate_row_color('line' . $template["id"], true, true);
+			form_alternate_row_color('line' . $template["id"], true);
 			form_selectable_cell("<a class='linkEditMain' href='graph_templates.php?action=template_edit&id=" . $template["id"] . "'>" . (strlen($_REQUEST["filter"]) ? eregi_replace("(" . preg_quote($_REQUEST["filter"]) . ")", "<span style='background-color: #F8D93D;'>\\1</span>", $template["name"]) : $template["name"]) . "</a>", $template["id"]);
 			form_checkbox_cell($template["name"], $template["id"]);
 			form_end_row();

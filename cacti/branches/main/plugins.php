@@ -153,17 +153,17 @@ function plugins_show_current () {
 
 			print "<table width='100%'>";
 			html_header(array((isset($cinfo[$plugin]['name']) ? $cinfo[$plugin]['name'] : $plugin)), 2);
-			form_alternate_row_color($colors['alternate'],$colors['light'], 0);
+			form_alternate_row_color();
 			print "<td width='50%'><strong>Directory:</strong></td><td>$plugin</td>";
-			form_alternate_row_color($colors['alternate'],$colors['light'], 0);
+			form_alternate_row_color();
 			print '<td><strong>Version:</strong></td><td>' . (isset($cinfo[$plugin]['version']) ? $cinfo[$plugin]['version'] : '') . '</td>';
-			form_alternate_row_color($colors['alternate'],$colors['light'], 0);
+			form_alternate_row_color();
 			print '<td><strong>Author:</strong></td><td>' . (isset($cinfo[$plugin]['author']) && $cinfo[$plugin]['author'] != '' ? (isset($cinfo[$plugin]['email']) && $cinfo[$plugin]['email'] != '' ? "<a href='" . htmlspecialchars("mailto:" . $cinfo[$plugin]['email']) . "'>" . $cinfo[$plugin]['author'] . '</a>'  : $cinfo[$plugin]['author']) : '') . '</td>';
-			form_alternate_row_color($colors['alternate'],$colors['light'], 0);
+			form_alternate_row_color();
 			print '<td><strong>Home Page:</strong></td><td>' . (isset($cinfo[$plugin]['webpage']) && $cinfo[$plugin]['webpage'] != '' ? "<a href='" . htmlspecialchars($cinfo[$plugin]['webpage']) . "'>" . $cinfo[$plugin]['webpage'] . '</a>' : '') . '</td>';
-			form_alternate_row_color($colors['alternate'],$colors['light'], 0);
+			form_alternate_row_color();
 			print '<td><strong>Status:</strong></td><td>' . $status_names[$cinfo[$plugin]['status']] . '</td>';
-			form_alternate_row_color($colors['alternate'],$colors['light'], 0);
+			form_alternate_row_color();
 
 			$links = array('install' => 'Install', 'uninstall' => 'Uninstall', 'enable' => 'Enable', 'disable' => 'Disable', 'check' => 'Check');
 
@@ -256,17 +256,17 @@ function plugins_show_uninstalled () {
 
 			print "<table width='100%'>";
 			html_header(array((isset($cinfo[$plugin]['name']) ? $cinfo[$plugin]['name'] : $plugin)), 2);
-			form_alternate_row_color($colors['alternate'],$colors['light'], 0);
+			form_alternate_row_color();
 			print "<td width='50%'><strong>Directory:</strong></td><td>$plugin</td>";
-			form_alternate_row_color($colors['alternate'],$colors['light'], 0);
+			form_alternate_row_color();
 			print '<td><strong>Version:</strong></td><td>' . (isset($cinfo[$plugin]['version']) ? $cinfo[$plugin]['version'] : '') . '</td>';
-			form_alternate_row_color($colors['alternate'],$colors['light'], 0);
+			form_alternate_row_color();
 			print '<td><strong>Author:</strong></td><td>' . (isset($cinfo[$plugin]['author']) && $cinfo[$plugin]['author'] != '' ? (isset($cinfo[$plugin]['email']) && $cinfo[$plugin]['email'] != '' ? "<a href='" . htmlspecialchars("mailto:" . $cinfo[$plugin]['email']) . "'>" . $cinfo[$plugin]['author'] . '</a>'  : $cinfo[$plugin]['author']) : '') . '</td>';
-			form_alternate_row_color($colors['alternate'],$colors['light'], 0);
+			form_alternate_row_color();
 			print '<td><strong>Home Page:</strong></td><td>' . (isset($cinfo[$plugin]['homepage']) && $cinfo[$plugin]['homepage'] != '' ? "<a href='" . htmlspecialchars($cinfo[$plugin]['homepage']) . "'>" . $cinfo[$plugin]['homepage'] . '</a>' : '') . '</td>';
-			form_alternate_row_color($colors['alternate'],$colors['light'], 0);
+			form_alternate_row_color();
 			print '<td><strong>Status:</strong></td><td>' . $status_names[$cinfo[$plugin]['status']] . '</td>';
-			form_alternate_row_color($colors['alternate'],$colors['light'], 0);
+			form_alternate_row_color();
 
 			$links = array('install' => 'Install', 'uninstall' => 'Uninstall', 'enable' => 'Enable', 'disable' => 'Disable', 'check' => 'Check');
 

@@ -69,40 +69,42 @@ function inject_form_variables(&$form_array, $arg1 = array(), $arg2 = array(), $
 }
 
 /* form_alternate_row_color - starts an HTML row with an alternating color scheme
-   @arg $row_color1 - the first color to use
-   @arg $row_color2 - the second color to use
-   @arg $row_value - the value of the row which will be used to evaluate which color
-     to display for this particular row. must be an integer
-   @arg $row_id - used to allow js and ajax actions on this object
-   @returns - the background color used for this particular row */
-function form_alternate_row_color($row_id = "", $hover = false, $row_select = false) {
+   @arg $row_id 	- used to allow js and ajax actions on this object
+   @arg $hover		- use onMouse events
+   @arg $row_class 	- additional class attributes, e.g. "nodrag nodrop"
+   @returns 		- the background color used for this particular row */
+function form_alternate_row_color($row_id = "", $hover = false, $row_class = "") {
 	static $class_int  = 1;
 	static $alt_row_id = 0;
 
+	if (strlen($row_class)) $row_class = " " . $row_class;
+
 	if ($class_int == 1) {
-		$class = "rowAlternate1";
+		$class = "rowAlternate1" . $row_class;
 	}else{
-		$class = "rowAlternate2";
+		$class = "rowAlternate2" . $row_class;
 	}
+
+	$class_hover = "rowSelected" . $row_class;
 
 	$class_int = ($class_int + 1) % 2;
 
 	if (is_numeric($row_id)) {
 		if ($hover) {
-			print "<tr id='row_$row_id' class='$class' onMouseOver='(this.className=\"rowSelected\")' onMouseOut='(this.className=\"$class\")'>\n";
+			print "<tr id='row_$row_id' class='$class' onMouseOver='(this.className=\"$class_hover\")' onMouseOut='(this.className=\"$class\")'>\n";
 		}else{
 			print "<tr id='row_$row_id' class='$class'>\n";
 		}
 	}else{
 		if (strlen($row_id)) {
 			if ($hover) {
-				print "<tr id='$row_id' class='$class' onMouseOver='(this.className=\"rowSelected\")' onMouseOut='(this.className=\"$class\")'>\n";
+				print "<tr id='$row_id' class='$class' onMouseOver='(this.className=\"$class_hover\")' onMouseOut='(this.className=\"$class\")'>\n";
 			}else{
 				print "<tr id='$row_id' class='$class'>\n";
 			}
 		}else{
 			if ($hover) {
-				print "<tr id='row_$alt_row_id' class='$class' onmouseover='this.className=\"rowSelected\"' onmouseout='(this.className=\"$class\")'>\n";
+				print "<tr id='row_$alt_row_id' class='$class' onmouseover='this.className=\"$class_hover\"' onmouseout='(this.className=\"$class\")'>\n";
 			}else{
 				print "<tr id='row_$alt_row_id' class='$class'>\n";
 			}

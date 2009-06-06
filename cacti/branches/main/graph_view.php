@@ -620,7 +620,7 @@ case 'list':
 
 	if (sizeof($graphs) > 0) {
 		foreach ($graphs as $graph) {
-			form_alternate_row_color('line' . $graph["local_graph_id"], true, true);
+			form_alternate_row_color('line' . $graph["local_graph_id"], true);
 			if (isset($graph_list[$graph["local_graph_id"]])) {
 				$checked = true;
 			}else{
