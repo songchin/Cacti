@@ -637,10 +637,9 @@ function site() {
 
 		html_header_sort_checkbox($display_text, $_REQUEST["sort_column"], $_REQUEST["sort_direction"]);
 
-		$i = 0;
 		if (sizeof($sites) > 0) {
 			foreach ($sites as $site) {
-				form_alternate_row_color($site["id"], true); $i++;
+				form_alternate_row_color($site["id"], true);
 				form_selectable_cell("<a class='linkEditMain' href='sites.php?action=edit&id=" . $site["id"] . "'>" .
 					(strlen($_REQUEST["filter"]) ? eregi_replace("(" . preg_quote($_REQUEST["filter"]) . ")", "<span style='background-color: #F8D93D;'>\\1</span>", $site["name"]) : $site["name"]) . "</a>", $site["id"], "20%");
 				form_selectable_cell($site["address1"], $site["id"]);
