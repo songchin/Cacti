@@ -222,9 +222,9 @@ function input_edit() {
 		}
 		?>
 		</td>
-	</tr>
 
 	<?php
+	form_end_row();
 	html_end_box();
 
 	form_hidden_box("any_selected_item", $any_selected_item, "");

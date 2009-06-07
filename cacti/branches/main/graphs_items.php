@@ -215,7 +215,7 @@ function item_edit() {
 		<td>
 			<form name="form_graph_items">
 			<table cellpadding="0" cellspacing="0">
-				<tr width="100%">
+				<tr>
 					<td style='white-space:nowrap;width:50px;'>
 						Host:&nbsp;
 					</td>

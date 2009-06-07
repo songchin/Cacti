@@ -1150,10 +1150,10 @@ function host_display_general($host, $host_text) {
 					<?php print (($is_being_graphed == true) ? "<span style='color:green;'>Is Being Graphed</span> (<a href='graphs.php?action=graph_edit&id=" . db_fetch_cell("select id from graph_local where graph_template_id=" . $item["id"] . " and host_id=" . $_GET["id"] . " limit 0,1") . "'>Edit</a>)" : "<span style='color: #484848;'>Not Being Graphed</span>");?>
 				</td>
 				<td align='right' nowrap>
-					<a href='host.php?action=gt_remove&id=<?php print $item["id"];?>&host_id=<?php print $_GET["id"];?>'><img class='buttonSmall' src='images/delete_icon_large.gif' title='Delete Graph Template Association' alt='Delete' align='absmiddle'></a>
+					<a href='host.php?action=gt_remove&id=<?php print $item["id"];?>&host_id=<?php print $_GET["id"];?>'><img class='buttonSmall' src='images/delete_icon_large.gif' title='Delete Graph Template Association' alt='Delete' align='middle'></a>
 				</td>
-			</tr>
 			<?php
+			form_end_row();
 		}
 		}else{ print "<tr><td><em>No associated graph templates.</em></td></tr>"; }
 
@@ -1161,17 +1161,18 @@ function host_display_general($host, $host_text) {
 		?>
 			<td colspan="4">
 				<table cellspacing="0" cellpadding="1" width="100%">
+					<tr>
 					<td nowrap>Add Graph Template:&nbsp;
 						<?php form_dropdown("graph_template_id",$available_graph_templates,"name","id","","","");?>
 					</td>
 					<td align="right">
 						&nbsp;<input type="submit" value="Add" name="add_gt_y" align="middle">
 					</td>
+					</tr>
 				</table>
 			</td>
-		</tr>
-
 		<?php
+		form_end_row();
 		html_end_box(FALSE);
 
 		html_start_box("<strong>Associated Data Queries</strong>", "100%", $colors["header"], "3", "center", "", true);
@@ -1232,11 +1233,11 @@ function host_display_general($host, $host_text) {
 					<?php print (($status == "success") ? "<span style='color: green;'>Success</span>" : "<span style='color: green;'>Fail</span>");?> [<?php print $num_dq_items;?> Item<?php print ($num_dq_items == 1 ? "" : "s");?>, <?php print $num_dq_rows;?> Row<?php print ($num_dq_rows == 1 ? "" : "s");?>]
 				</td>
 				<td align='right' nowrap>
-					<a href='host.php?action=query_reload&id=<?php print $item["id"];?>&host_id=<?php print $_GET["id"];?>'><img class='buttonSmall' src='images/reload_icon_small.gif' title='Reload Data Query' alt='Reload' align='absmiddle'></a>&nbsp;
-					<a href='host.php?action=query_remove&id=<?php print $item["id"];?>&host_id=<?php print $_GET["id"];?>'><img class='buttonSmall' src='images/delete_icon_large.gif' title='Delete Data Query Association' alt='Delete' align='absmiddle'></a>
+					<a href='host.php?action=query_reload&id=<?php print $item["id"];?>&host_id=<?php print $_GET["id"];?>'><img class='buttonSmall' src='images/reload_icon_small.gif' title='Reload Data Query' alt='Reload' align='middle'></a>&nbsp;
+					<a href='host.php?action=query_remove&id=<?php print $item["id"];?>&host_id=<?php print $_GET["id"];?>'><img class='buttonSmall' src='images/delete_icon_large.gif' title='Delete Data Query Association' alt='Delete' align='middle'></a>
 				</td>
-			</tr>
 			<?php
+			form_end_row();
 		}
 		}else{ print "<tr><td><em>No associated data queries.</em></td></tr>"; }
 
@@ -1245,6 +1246,7 @@ function host_display_general($host, $host_text) {
 		?>
 			<td colspan="5">
 				<table cellspacing="0" cellpadding="1" width="100%">
+					<tr>
 					<td nowrap>Add Data Query:&nbsp;
 						<?php form_dropdown("snmp_query_id",$available_data_queries,"name","id","","","");?>
 					</td>
@@ -1254,11 +1256,11 @@ function host_display_general($host, $host_text) {
 					<td align="right">
 						&nbsp;<input type="submit" value="Add" name="add_dq_y" align="middle">
 					</td>
+					</tr>
 				</table>
 			</td>
-		</tr>
-
 		<?php
+		form_end_row();
 		html_end_box();
 	}
 

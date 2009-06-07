@@ -799,8 +799,8 @@ function utilities_view_user_log() {
 			<td width='15%'>
 				<?php print (strlen(get_request_var_request("filter")) ? (eregi_replace("(" . preg_quote(get_request_var_request("filter")) . ")", "<span style='background-color: #F8D93D;'>\\1</span>", $item["ip"])) : $item["ip"]);?>
 			</td>
-			</tr>
 			<?php
+			form_end_row();
 		}
 	}
 
@@ -1318,8 +1318,8 @@ function utilities_view_snmp_cache() {
 			Host: <?php print (strlen(get_request_var_request("filter")) ? (eregi_replace("(" . preg_quote(get_request_var_request("filter")) . ")", "<span style='background-color: #F8D93D;'>\\1</span>", $item["description"])) : $item["description"]);?>
 			, SNMP Query: <?php print (strlen(get_request_var_request("filter")) ? (eregi_replace("(" . preg_quote(get_request_var_request("filter")) . ")", "<span style='background-color: #F8D93D;'>\\1</span>", $item["name"])) : $item["name"]);?>
 		</td>
-		</tr>
 		<?php
+		form_end_row();
 		form_alternate_row_color();
 		?>
 		<td>
@@ -1327,15 +1327,15 @@ function utilities_view_snmp_cache() {
 			, Field Name: <?php print (strlen(get_request_var_request("filter")) ? (eregi_replace("(" . preg_quote(get_request_var_request("filter")) . ")", "<span style='background-color: #F8D93D;'>\\1</span>", $item["field_name"])) : $item["field_name"]);?>
 			, Field Value: <?php print (strlen(get_request_var_request("filter")) ? (eregi_replace("(" . preg_quote(get_request_var_request("filter")) . ")", "<span style='background-color: #F8D93D;'>\\1</span>", $item["field_value"])) : $item["field_value"]);?>
 		</td>
-		</tr>
 		<?php
+		form_end_row();
 		form_alternate_row_color();
 		?>
 		<td>
 			OID: <?php print (strlen(get_request_var_request("filter")) ? (eregi_replace("(" . preg_quote(get_request_var_request("filter")) . ")", "<span style='background-color: #F8D93D;'>\\1</span>", $item["oid"])) : $item["oid"]);?>
 		</td>
-		</tr>
 		<?php
+		form_end_row();
 	}
 	}
 
@@ -1567,9 +1567,8 @@ function utilities_view_poller_cache() {
 			print $details;
 			?>
 			</td>
-		</tr>
 		<?php
-
+		form_end_row();
 		form_alternate_row_color();
 		?>
 			<td>
@@ -1577,8 +1576,8 @@ function utilities_view_poller_cache() {
 			<td>
 				RRD: <?php print $item["rrd_path"];?>
 			</td>
-		</tr>
 		<?php
+		form_end_row();
 	}
 	}
 

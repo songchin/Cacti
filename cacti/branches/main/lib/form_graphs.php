@@ -726,11 +726,13 @@ function graph_diff() {
 		print "</tr>";
 	}
 	}else{
-		form_alternate_row_color(); ?>
+		form_alternate_row_color();
+		?>
 			<td colspan="7">
 				<em>No Items</em>
 			</td>
-		</tr><?php
+		<?php
+		form_end_row();
 	}
 	html_end_box();
 

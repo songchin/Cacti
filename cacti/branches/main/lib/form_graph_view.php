@@ -242,10 +242,10 @@ function graph_view_search_filter() {
 			<form name="form_graph_view" method="post" action="graph_view.php">
 				<table cellspacing="0" cellpadding="0">
 					<tr>
-						<td width="55" nowrap="" style="white-space:nowrap;">
+						<td width="55" style="white-space:nowrap;">
 							<strong>&nbsp;Search:</strong>&nbsp;
 						</td>
-						<td width="130" nowrap="" style="white-space: nowrap;">
+						<td width="130" style="white-space: nowrap;">
 							<input size='30' style='width:100;' name='filter' value='<?php print clean_html_output(get_request_var_request("filter"));?>'>
 						</td>
 						<td style='white-space:nowrap;width:80px;'>

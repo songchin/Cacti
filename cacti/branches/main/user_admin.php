@@ -549,7 +549,7 @@ function graph_perms_edit() {
 	?>
 	<form name="user_admin" action="user_admin.php" method="post">
 
-	<tr bgcolor="#<?php print $colors["form_alternate1"];?>">
+	<tr bgcolor="#<?php print $colors['form_alternate1'];?>">
 		<td style='width:100px;white-space:nowrap;'>
 			<font class="textEditTitle" title="The default allow/deny graph policy for this user">Default Policy</font>
 		</td>
@@ -604,7 +604,7 @@ function graph_perms_edit() {
 		ORDER BY host.description,host.hostname");
 
 	?>
-	<tr bgcolor="#<?php print $colors["form_alternate1"];?>">
+	<tr bgcolor="#<?php print $colors['form_alternate1'];?>">
 		<td style='width:100px;white-space:nowrap;'>
 			<font class="textEditTitle" title="The default allow/deny graph policy for this user">Default Policy</font>
 		</td>
@@ -660,7 +660,7 @@ function graph_perms_edit() {
 		ORDER BY graph_templates.name");
 
 	?>
-	<tr bgcolor="#<?php print $colors["form_alternate1"];?>">
+	<tr bgcolor="#<?php print $colors['form_alternate1'];?>">
 		<td style='width:100px;white-space:nowrap;'>
 			<font class="textEditTitle" title="The default allow/deny graph policy for this user">Default Policy</font>
 		</td>
@@ -715,7 +715,7 @@ function graph_perms_edit() {
 		ORDER BY graph_tree.name");
 
 	?>
-	<tr bgcolor="#<?php print $colors["form_alternate1"];?>">
+	<tr bgcolor="#<?php print $colors['form_alternate1'];?>">
 		<td style='width:100px;white-space:nowrap;'>
 			<font class="textEditTitle" title="The default allow/deny graph policy for this user">Default Policy</font>
 		</td>
@@ -781,7 +781,7 @@ function user_realms_edit() {
 		<td colspan="2" width="100%">
 			<table width="100%">
 				<tr>
-					<td align="top" width="50%">
+					<td valign="top" width="50%">
 						<?php
 						$i = 0;
 						while (list($realm_id, $realm_name) = each($user_auth_realms)) {

@@ -410,10 +410,10 @@ function data_edit() {
 					<?php print $field["name"];?>
 				</td>
 				<td align="right">
-					<a href="<?php print htmlspecialchars("data_input.php?action=field_remove&id=" . $field["id"] . "&data_input_id=" . $_GET["id"]);?>"><img class="buttonSmall" src="images/delete_icon.gif" alt="Delete" align='absmiddle'></a>
+					<a href="<?php print htmlspecialchars("data_input.php?action=field_remove&id=" . $field["id"] . "&data_input_id=" . $_GET["id"]);?>"><img class="buttonSmall" src="images/delete_icon.gif" alt="Delete" align='middle'></a>
 				</td>
-			</tr>
 		<?php
+		form_end_row();
 		}
 		}else{
 			print "<tr><td><em>No Input Fields</em></td></tr>";
@@ -446,10 +446,10 @@ function data_edit() {
 					<?php print html_boolean_friendly($field["update_rra"]);?>
 				</td>
 				<td align="right">
-					<a href="<?php print htmlspecialchars("data_input.php?action=field_remove&id=" . $field["id"] . "&data_input_id=" . $_GET["id"]);?>"><img class="buttonSmall" src="images/delete_icon.gif" alt="Delete" align='absmiddle'></a>
+					<a href="<?php print htmlspecialchars("data_input.php?action=field_remove&id=" . $field["id"] . "&data_input_id=" . $_GET["id"]);?>"><img class="buttonSmall" src="images/delete_icon.gif" alt="Delete" align='middle'></a>
 				</td>
-			</tr>
 		<?php
+		form_end_row();
 		}
 		}else{
 			print "<tr><td><em>No Output Fields</em></td></tr>";

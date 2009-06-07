@@ -485,6 +485,7 @@ function site_filter() {	global $item_rows;
 						}
 						}
 						?>
+						</select>
 					</td>
 					<td nowrap style='white-space: nowrap;' width="70">
 						&nbsp;Host Template:
@@ -504,6 +505,7 @@ function site_filter() {	global $item_rows;
 						}
 						}
 						?>
+						</select>
 					</td>
 				</tr>
 			<?php }?>

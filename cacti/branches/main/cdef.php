@@ -296,8 +296,10 @@ function item_edit() {
 				?>
 			</select>
 		</td>
-	</tr>
-	<?php form_alternate_row_color(); ?>
+	<?php
+	form_end_row;
+	form_alternate_row_color();
+	?>
 		<td width="50%">
 			<font class="textEditTitle">CDEF Item Value</font><br>
 			Enter a value for this CDEF item.
@@ -323,8 +325,8 @@ function item_edit() {
 			}
 			?>
 		</td>
-	</tr>
 	<?php
+	form_end_row();
 
 	form_hidden_box("id", (isset($_GET["id"]) ? $_GET["id"] : "0"), "");
 	form_hidden_box("type", $current_type, "");
@@ -408,10 +410,10 @@ function cdef_edit() {
 					<em><?php $cdef_item_type = $cdef_item["type"]; print $cdef_item_types[$cdef_item_type];?></em>: <strong><?php print get_cdef_item_name($cdef_item["id"]);?></strong>
 				</td>
 				<td align="right">
-					<a href="<?php print htmlspecialchars("cdef.php?action=item_remove&id=" . $cdef_item["id"] . "&cdef_id=" . $cdef["id"]);?>"><img class="buttonSmall" src="images/delete_icon.gif" alt="Delete" align='absmiddle'></a>
+					<a href="<?php print htmlspecialchars("cdef.php?action=item_remove&id=" . $cdef_item["id"] . "&cdef_id=" . $cdef["id"]);?>"><img class="buttonSmall" src="images/delete_icon.gif" alt="Delete" align='middle'></a>
 				</td>
-			</tr>
 		<?php
+		form_end_row();
 		$i++;
 		}
 		}

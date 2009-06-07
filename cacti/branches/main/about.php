@@ -43,7 +43,7 @@ html_start_box("<strong>About Cacti</strong>", "100%", $colors["header"], "3", "
 
 		<p>Please see the <a href="http://www.cacti.net/">official Cacti website</a> for information, support, and updates.</p>
 
-		<p><strong>Current Cacti Developers</strong><br>
+		<p><strong>Current Cacti Developers</strong><br></p>
 		<ul type="disc">
 			<li><strong>Ian Berry</strong> (raX) is original creator of Cacti which was first released to the world in 2001. He remained the sole
 				developer for over two years, writing code, supporting users, and keeping the project active. Today, Ian continues
@@ -61,9 +61,8 @@ html_start_box("<strong>About Cacti</strong>", "100%", $colors["header"], "3", "
 			<li><strong>Reinhard Scheck</strong> (gandalf) joined the Cacti team in June of 2007.  Reinhard is focusing on howto's and graph presentation as well as being the 'European Arm' of the Cacti Group.
 			</li>
 		</ul>
-		</p>
 
-		<p><strong>Thanks</a></strong><br>
+		<p><strong>Thanks</strong><br></p>
 		<ul type="disc">
 			<li>A very special thanks to <a href="http://tobi.oetiker.ch/"><strong>Tobi Oetiker</strong></a>,
 				the creator of <a href="http://www.rrdtool.org/">RRDTool</a> and the very popular
@@ -79,9 +78,8 @@ html_start_box("<strong>About Cacti</strong>", "100%", $colors["header"], "3", "
 				wishlist or donated money to the project.</li>
 
 		</ul>
-		</p>
 
-		<p><strong>License</strong><br>
+		<p><strong>License</strong><br></p>
 
 		<p>Cacti is licensed under the GNU GPL:</p>
 
@@ -95,7 +93,7 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.</tt></p>
 
-		<p><strong>Cacti Variables</a></strong><span style="font-family: monospace; font-size: 10px;"><br>
+		<p><strong>Cacti Variables</strong><span style="font-family: monospace; font-size: 10px;"><br>
 		<strong>Operating System:</strong> <?php print CACTI_SERVER_OS;?><br>
 		<strong>PHP SNMP Support:</strong> <?php print PHP_SNMP_SUPPORT ? "yes" : "no";?><br>
 		</span></p>
