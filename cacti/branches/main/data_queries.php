@@ -279,50 +279,12 @@ function form_actions() {
     Data Query Graph Functions
    ---------------------------- */
 
-function data_query_item_movedown_gsv() {
-	/* ================= input validation ================= */
-	input_validate_input_number(get_request_var("id"));
-	input_validate_input_number(get_request_var("snmp_query_graph_id"));
-	/* ==================================================== */
-
-	move_item_down("snmp_query_graph_sv", $_GET["id"], "snmp_query_graph_id=" . $_GET["snmp_query_graph_id"] . " and field_name='" . $_GET["field_name"] . "'");
-}
-
-function data_query_item_moveup_gsv() {
-	/* ================= input validation ================= */
-	input_validate_input_number(get_request_var("id"));
-	input_validate_input_number(get_request_var("snmp_query_graph_id"));
-	/* ==================================================== */
-
-	move_item_up("snmp_query_graph_sv", $_GET["id"], "snmp_query_graph_id=" . $_GET["snmp_query_graph_id"] . " and field_name='" . $_GET["field_name"] . "'");
-}
-
 function data_query_item_remove_gsv() {
 	/* ================= input validation ================= */
 	input_validate_input_number(get_request_var("id"));
 	/* ==================================================== */
 
 	db_execute("delete from snmp_query_graph_sv where id=" . $_GET["id"]);
-}
-
-function data_query_item_movedown_dssv() {
-	/* ================= input validation ================= */
-	input_validate_input_number(get_request_var("id"));
-	input_validate_input_number(get_request_var("data_template_id"));
-	input_validate_input_number(get_request_var("snmp_query_graph_id"));
-	/* ==================================================== */
-
-	move_item_down("snmp_query_graph_rrd_sv", $_GET["id"], "data_template_id=" . $_GET["data_template_id"] . " and snmp_query_graph_id=" . $_GET["snmp_query_graph_id"] . " and field_name='" . $_GET["field_name"] . "'");
-}
-
-function data_query_item_moveup_dssv() {
-	/* ================= input validation ================= */
-	input_validate_input_number(get_request_var("id"));
-	input_validate_input_number(get_request_var("data_template_id"));
-	input_validate_input_number(get_request_var("snmp_query_graph_id"));
-	/* ==================================================== */
-
-	move_item_up("snmp_query_graph_rrd_sv", $_GET["id"], "data_template_id=" . $_GET["data_template_id"] . " and snmp_query_graph_id=" . $_GET["snmp_query_graph_id"] . " and field_name='" . $_GET["field_name"] . "'");
 }
 
 function data_query_item_remove_dssv() {
@@ -474,7 +436,6 @@ function data_query_item_edit() {
 
 				$header_items = array("Data Template Field Name", "Suggested Value");
 				html_header($header_items, 2, true, 'data_template_suggested_values_' . $data_template["id"]);
-#print "<pre>"; print_r($_REQUEST); print "</pre>";
 
 				if (sizeof($suggested_values) > 0) {
 					foreach ($suggested_values as $suggested_value) {
@@ -496,7 +457,7 @@ function data_query_item_edit() {
 					print "</tr>\n";
 				}
 
-				form_alternate_row_color(0, false, "nodrag nodrop");
+				form_alternate_row_color("nodrag", false, "nodrag nodrop");
 				?>
 					<td>
 						<input type="text" name="svds_<?php print $data_template["id"];?>_field" size="15">
@@ -511,6 +472,14 @@ function data_query_item_edit() {
 				form_end_row();
 				print "</table>\n";
 			}
+			/* we need a new javascript for each table */
+			print("	<script type='text/javascript'>
+					$('#data_template_suggested_values_" . $data_template["id"] . "').tableDnD({
+							onDrop: function(table, row) {
+							$('#AjaxResult').load(\"lib/ajax/jquery.tablednd/data_query_dt_sv.ajax.php?dt_id=" . $data_template["id"] . "&gt_id=" . $_GET["id"] . "&\"+$.tableDnD.serialize());
+							}
+						});
+					</script>\n");
 		}
 
 		/* suggested values for graphs templates */
@@ -551,7 +520,7 @@ function data_query_item_edit() {
 			print "</tr>\n";
 		}
 
-		form_alternate_row_color(0, false, "nodrag nodrop");
+		form_alternate_row_color("nodrag", false, "nodrag nodrop");
 		?>
 			<td>
 				<input type="text" name="svg_field" size="15">
@@ -572,17 +541,10 @@ function data_query_item_edit() {
 	form_save_button_alt("path!data_queries.php|action!edit|id!" . $_GET["snmp_query_id"]);
 ?>
 <script type="text/javascript">
-	$('#data_template_suggested_values_<?php print $data_template["id"];?>').tableDnD({
-		onDrop: function(table, row) {
-			alert($.tableDnD.serialize());
-//			$('#AjaxResult').load("lib/ajax/jquery.tablednd/data_query_dt_sv.ajax.php?id=<?php print $data_template["id"];?>&"+$.tableDnD.serialize());
-		}
-	});
-
 	$('#graph_template_suggested_values_<?php print $_GET["id"];?>').tableDnD({
 		onDrop: function(table, row) {
-			alert($.tableDnD.serialize());
-//			$('#AjaxResult').load("lib/ajax/jquery.tablednd/data_query_gt_sv.ajax.php?id=<?php print $_GET["id"];?>&"+$.tableDnD.serialize());
+//			alert("lib/ajax/jquery.tablednd/data_query_gt_sv.ajax.php?gt_id=<?php print $_GET["id"];?>&"+$.tableDnD.serialize());
+			$('#AjaxResult').load("lib/ajax/jquery.tablednd/data_query_gt_sv.ajax.php?gt_id=<?php print $_GET["id"];?>&"+$.tableDnD.serialize());
 		}
 	});
 </script>
