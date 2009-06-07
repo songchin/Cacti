@@ -732,10 +732,10 @@ function template_edit() {
 						<strong><?php print $i;?>)</strong> <?php print $item["name"];?>
 					</td>
 					<td align='right' nowrap>
-						<a href='<?php print htmlspecialchars("host_templates.php?action=item_remove_gt&id=" . $item["id"] . "&host_template_id=" . $_GET["id"]);?>'><img class="buttonSmall" src='images/delete_icon_large.gif' title='Delete Graph Template Association' alt='Delete' align='absmiddle'></a>
+						<a href='<?php print htmlspecialchars("host_templates.php?action=item_remove_gt&id=" . $item["id"] . "&host_template_id=" . $_GET["id"]);?>'><img class="buttonSmall" src='images/delete_icon_large.gif' title='Delete Graph Template Association' alt='Delete' align='middle'></a>
 					</td>
-				</tr>
 				<?php
+				form_end_row();
 			}
 		}else{ print "<tr><td><em>No associated graph templates.</em></td></tr>"; }
 
@@ -743,17 +743,19 @@ function template_edit() {
 		?>
 			<td colspan="2">
 				<table cellspacing="0" cellpadding="1" width="100%">
+					<tr>
 					<td nowrap>Add Graph Template:&nbsp;
 						<?php form_dropdown("graph_template_id",$available_graph_templates,"name","id","","","");?>
 					</td>
 					<td align="right">
 						&nbsp;<input type="submit" Value="Add" name="add_gt_y" align="middle">
 					</td>
+					</tr>
 				</table>
 			</td>
-		</tr>
 
 		<?php
+		form_end_row();
 		html_end_box(FALSE);
 
 		html_start_box("<strong>Associated Data Queries</strong>", "100%", $colors["header"], "3", "center", "", true);
@@ -804,10 +806,10 @@ function template_edit() {
 					<?php form_dropdown("reindex_method_host_template_".$_GET["id"]."_query_".$item["id"]."_method_".$item["reindex_method"],$reindex_types,"","",$item["reindex_method"],"","","","");?>
 				</td>
 				<td align='right'>
-					<a href='<?php print htmlspecialchars("host_templates.php?action=item_remove_dq&id=" . $item["id"] . "&host_template_id=" . $_GET["id"]);?>'><img class='buttonSmall' src='images/delete_icon_large.gif' title='Delete Data Query Association' alt='Delete' align='absmiddle'></a>
+					<a href='<?php print htmlspecialchars("host_templates.php?action=item_remove_dq&id=" . $item["id"] . "&host_template_id=" . $_GET["id"]);?>'><img class='buttonSmall' src='images/delete_icon_large.gif' title='Delete Data Query Association' alt='Delete' align='middle'></a>
 				</td>
-			</tr>
 			<?php
+			form_end_row();
 		}
 		}else{ print "<tr><td><em>No associated data queries.</em></td></tr>"; }
 
@@ -815,6 +817,7 @@ function template_edit() {
 		?>
 			<td colspan="5">
 				<table cellspacing="0" cellpadding="1" width="100%">
+					<tr>
 					<td nowrap>Add Data Query:&nbsp;
 						<?php form_dropdown("snmp_query_id",$available_data_queries,"name","id","","","");?>
 					</td>
@@ -824,11 +827,11 @@ function template_edit() {
 					<td align="right">
 						&nbsp;<input type="submit" value="Add" name="add_dq_y" align="middle">
 					</td>
+					</tr>
 				</table>
 			</td>
-		</tr>
-
 		<?php
+		form_end_row();
 		html_end_box(TRUE);
 	}
 
