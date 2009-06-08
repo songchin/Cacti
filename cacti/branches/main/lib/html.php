@@ -446,6 +446,7 @@ function html_nav_bar($background_color, $colspan, $current_page, $rows_per_page
    @arg $last_item_colspan - the TD 'colspan' to apply to the last cell in the row */
 function html_header_sort($header_items, $sort_column, $sort_direction, $last_item_colspan = 1) {
 	global $colors;
+	static $rand_id = 0;
 
 	/* reverse the sort direction */
 	if ($sort_direction == "ASC") {
@@ -458,7 +459,6 @@ function html_header_sort($header_items, $sort_column, $sort_direction, $last_it
 
 	print "\t\t<table class='resizable' cellpadding='3' cellspacing='0' width='100%'><tr class='rowSubHeader'>\n";
 
-	$rand_id  = 0;
 	$pathname = html_get_php_pathname();
 
 	foreach($header_items as $db_column => $display_array) {
@@ -475,9 +475,9 @@ function html_header_sort($header_items, $sort_column, $sort_direction, $last_it
 
 
 		if (($db_column == "") || (substr_count($db_column, "nosort"))) {
-			$width = html_get_column_width($pathname, "rand_$rand_id");
+			$width = html_get_column_width($pathname, "hhs_$rand_id");
 
-			print "\t\t\t<th nowrap style='width:$width;white-space:nowrap;' id='rand_$rand_id'" . ((($rand_id+1) == count($header_items)) ? "colspan='$last_item_colspan' " : "") . " onMousemove='doColResize(this,event)' onMouseover='doColResize(this,event)' onMouseout='doneColResize()' class='textSubHeaderDark'>" . $display_text . "</th>\n";
+			print "\t\t\t<th nowrap style='width:$width;white-space:nowrap;' id='hhs_$rand_id'" . ((($rand_id+1) == count($header_items)) ? "colspan='$last_item_colspan' " : "") . " onMousemove='doColResize(this,event)' onMouseover='doColResize(this,event)' onMouseout='doneColResize()' class='textSubHeaderDark'>" . $display_text . "</th>\n";
 
 			$rand_id++;
 		}else{
@@ -486,7 +486,6 @@ function html_header_sort($header_items, $sort_column, $sort_direction, $last_it
 			print "\t\t\t<th nowrap style='width:$width;white-space:nowrap;' id='$db_column'" . ((($rand_id+1) == count($header_items)) ? "colspan='$last_item_colspan' " : "") . " onMousemove='doColResize(this,event)' onMouseover='doColResize(this,event)' onMouseout='doneColResize()' class='textSubHeaderDark'>";
 			print "\n\t\t\t\t<a class='$sort_class' style='display:block;' href=" . htmlspecialchars($_SERVER["PHP_SELF"] . "?sort_column=" . $db_column . "&sort_direction=" . $direction) . ">" . $display_text . "</a>";
 			print "\n\t\t\t</th>\n";
-			$rand_id++;
 		}
 	}
 
@@ -506,6 +505,7 @@ function html_header_sort($header_items, $sort_column, $sort_direction, $last_it
    @arg $form_action - the url to post the 'select all' form to */
 function html_header_sort_checkbox($header_items, $sort_column, $sort_direction, $form_action = "") {
 	global $colors;
+	static $rand_id = 0;
 
 	/* reverse the sort direction */
 	if ($sort_direction == "ASC") {
@@ -521,7 +521,6 @@ function html_header_sort_checkbox($header_items, $sort_column, $sort_direction,
 
 	print "\t\t<table class='resizable' cellpadding='3' cellspacing='0' width='100%'><tr class='rowSubHeader'>\n";
 
-	$rand_id  = 0;
 	$pathname = html_get_php_pathname();
 
 	foreach($header_items as $db_column => $display_array) {
@@ -538,9 +537,9 @@ function html_header_sort_checkbox($header_items, $sort_column, $sort_direction,
 
 
 		if (($db_column == "") || (substr_count($db_column, "nosort"))) {
-			$width = html_get_column_width($pathname, "rand_$rand_id");
+			$width = html_get_column_width($pathname, "hhscrand_$rand_id");
 
-			print "\t\t\t<th nowrap style='width:$width;white-space:nowrap;' id='rand_$rand_id' onMousemove='doColResize(this,event)' onMouseover='doColResize(this,event)' onMouseout='doneColResize()' class='textSubHeaderDark'>" . $display_text . "</th>\n";
+			print "\t\t\t<th nowrap style='width:$width;white-space:nowrap;' id='hhsc_$rand_id' onMousemove='doColResize(this,event)' onMouseover='doColResize(this,event)' onMouseout='doneColResize()' class='textSubHeaderDark'>" . $display_text . "</th>\n";
 
 			$rand_id++;
 		}else{
@@ -552,7 +551,7 @@ function html_header_sort_checkbox($header_items, $sort_column, $sort_direction,
 		}
 	}
 
-	print "\t\t\t<th id='rand_$rand_id' style='width: 14px;' class='textSubHeaderDark'><input type='checkbox' style='width: 14px; margin: 0px;' name='all' title='Select All' onClick='SelectAll(\"chk_\",this.checked)'></th>\n<form name='chk' method='post' action='$form_action'>\n";
+	print "\t\t\t<th id='hhsc_$rand_id' style='width: 14px;' class='textSubHeaderDark'><input type='checkbox' style='width: 14px; margin: 0px;' name='all' title='Select All' onClick='SelectAll(\"chk_\",this.checked)'></th>\n<form name='chk' method='post' action='$form_action'>\n";
 	print "\t\t</tr>\n";
 }
 
@@ -561,6 +560,7 @@ function html_header_sort_checkbox($header_items, $sort_column, $sort_direction,
    @arg $last_item_colspan - the TD 'colspan' to apply to the last cell in the row */
 function html_header($header_items, $last_item_colspan = 1, $resizable = true, $table_id = '') {
 	global $colors;
+	static $rand_id = 0;
 
 	$table_id = ($table_id != '') ? "id=\"$table_id\"" : "";
 
@@ -574,12 +574,13 @@ function html_header($header_items, $last_item_colspan = 1, $resizable = true, $
 
 	for ($i=0; $i<count($header_items); $i++) {
 		if ($resizable) {
-			$width = html_get_column_width($pathname, "rand_$i");
+			$width = html_get_column_width($pathname, "hh_$rand_id");
 
-			print "\t\t\t<th id='rand_$i' style='width: $width;' onMousemove='doColResize(this,event)' onMouseover='doColResize(this,event)' onMouseout='doneColResize()' " . ((($i+1) == count($header_items)) ? "colspan='$last_item_colspan' " : "") . " class='textSubHeaderDark'>" . $header_items[$i] . "</th>\n";
+			print "\t\t\t<th id='hh_$rand_id' style='width: $width;' onMousemove='doColResize(this,event)' onMouseover='doColResize(this,event)' onMouseout='doneColResize()' " . ((($i+1) == count($header_items)) ? "colspan='$last_item_colspan' " : "") . " class='textSubHeaderDark'>" . $header_items[$i] . "</th>\n";
 		}else{
-			print "\t\t\t<th id='rand_$i' " . ((($i+1) == count($header_items)) ? "colspan='$last_item_colspan' " : "") . " class='textSubHeaderDark'>" . $header_items[$i] . "</th>\n";
+			print "\t\t\t<th id='hh_$rand_id' " . ((($i+1) == count($header_items)) ? "colspan='$last_item_colspan' " : "") . " class='textSubHeaderDark'>" . $header_items[$i] . "</th>\n";
 		}
+		$rand_id++;
 	}
 
 	print "\t\t</tr>\n";
@@ -591,6 +592,7 @@ function html_header($header_items, $last_item_colspan = 1, $resizable = true, $
    @arg $form_action - the url to post the 'select all' form to */
 function html_header_checkbox($header_items, $form_action = "", $resizable = false) {
 	global $colors;
+	static $rand_id = 0;
 
 	/* default to the 'current' file */
 	if ($form_action == "") { $form_action = basename($_SERVER["PHP_SELF"]); }
@@ -605,15 +607,16 @@ function html_header_checkbox($header_items, $form_action = "", $resizable = fal
 
 	for ($i=0; $i<count($header_items); $i++) {
 		if ($resizable) {
-			$width = html_get_column_width($pathname, "rand_$i");
+			$width = html_get_column_width($pathname, "hhc_$rand_id");
 
-			print "\t\t\t<th id='rand_$i' style='width: $width;' onMousemove='doColResize(this,event)' onMouseover='doColResize(this,event)' onMouseout='doneColResize()' class='textSubHeaderDark'>" . $header_items[$i] . "</th>\n";
+			print "\t\t\t<th id='hhc_$rand_id' style='width: $width;' onMousemove='doColResize(this,event)' onMouseover='doColResize(this,event)' onMouseout='doneColResize()' class='textSubHeaderDark'>" . $header_items[$i] . "</th>\n";
 		}else{
-			print "\t\t\t<th id='rand_$i' class='textSubHeaderDark'>" . $header_items[$i] . "</th>\n";
+			print "\t\t\t<th id='hhc_$rand_id' class='textSubHeaderDark'>" . $header_items[$i] . "</th>\n";
 		}
+		$rand_id++;
 	}
 
-	print "\t\t\t<th id='rand_$i' style='width: 14px' class='textSubHeaderDark'><input type='checkbox' style='margin: 0px;' name='all' title='Select All' onClick='SelectAll(\"chk_\",this.checked)'></th>\n<form name='chk' method='post' action='$form_action'>\n";
+	print "\t\t\t<th id='hhc_$rand_id' style='width: 14px' class='textSubHeaderDark'><input type='checkbox' style='margin: 0px;' name='all' title='Select All' onClick='SelectAll(\"chk_\",this.checked)'></th>\n<form name='chk' method='post' action='$form_action'>\n";
 	print "\t\t</tr>\n";
 }
 

@@ -297,7 +297,7 @@ function item_edit() {
 			</select>
 		</td>
 	<?php
-	form_end_row;
+	form_end_row();
 	form_alternate_row_color();
 	?>
 		<td width="50%">
