@@ -381,6 +381,8 @@ function template_edit() {
 	}
 
 	html_start_box("<strong>Host Templates</strong> $header_label", "100%", $colors["header"], "3", "center", "", true);
+	$header_items = array("Field", "Value");
+	html_header($header_items, 1, true, 'host_template');
 
 	draw_edit_form(array(
 		"config" => array(),

@@ -378,6 +378,8 @@ function data_edit() {
 	}
 
 	html_start_box("<strong>Data Input Methods</strong> $header_label", "100%", $colors["header"], "3", "center", "");
+	$header_items = array("Field", "Value");
+	html_header($header_items, 1, true, 'data_input');
 
 	draw_edit_form(array(
 		"config" => array(),
@@ -388,11 +390,8 @@ function data_edit() {
 
 	if (!empty($_GET["id"])) {
 		html_start_box("<strong>Input Fields</strong>", "100%", $colors["header"], "3", "center", "data_input.php?action=field_edit&type=in&data_input_id=" . $_GET["id"]);
-		print "<tr class='rowSubHeader'>";
-			DrawMatrixHeaderItem("Name",$colors["header_text"],1);
-			DrawMatrixHeaderItem("Field Order",$colors["header_text"],1);
-			DrawMatrixHeaderItem("Friendly Name",$colors["header_text"],2);
-		print "</tr>";
+		$header_items = array("Name", "Field Order", "Friendly Name");
+		html_header($header_items, 2, true, 'data_input_fields');
 
 		$fields = db_fetch_assoc("select id,data_name,name,sequence from data_input_fields where data_input_id=" . $_GET["id"] . " and input_output='in' order by sequence, data_name");
 
@@ -421,12 +420,8 @@ function data_edit() {
 		html_end_box();
 
 		html_start_box("<strong>Output Fields</strong>", "100%", $colors["header"], "3", "center", "data_input.php?action=field_edit&type=out&data_input_id=" . $_GET["id"]);
-		print "<tr class='rowSubHeader'>";
-			DrawMatrixHeaderItem("Name",$colors["header_text"],1);
-			DrawMatrixHeaderItem("Field Order",$colors["header_text"],1);
-			DrawMatrixHeaderItem("Friendly Name",$colors["header_text"],1);
-			DrawMatrixHeaderItem("Update RRA",$colors["header_text"],2);
-		print "</tr>";
+		$header_items = array("Name", "Field Order", "Friendly Name", "Update RRA");
+		html_header($header_items, 2, true, 'data_output_fields');
 
 		$fields = db_fetch_assoc("select id,name,data_name,update_rra,sequence from data_input_fields where data_input_id=" . $_GET["id"] . " and input_output='out' order by sequence, data_name");
 		if (sizeof($fields) > 0) {

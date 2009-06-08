@@ -696,6 +696,8 @@ function data_source_edit() {
 	}
 
 	html_start_box("<strong>Data Template Selection</strong> $header_label", "100%", $colors["header"], "3", "center", "");
+	$header_items = array("Field", "Value");
+	html_header($header_items, 1, true, 'template');
 
 	$form_array = array(
 		"data_template_id" => array(

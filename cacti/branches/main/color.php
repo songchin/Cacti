@@ -107,6 +107,8 @@ function color_edit() {
 	}
 
 	html_start_box("<strong>Colors</strong> $header_label", "100%", $colors["header"], "3", "center", "");
+	$header_items = array("Field", "Value");
+	html_header($header_items, 2, true, 'color');
 
 	draw_edit_form(array(
 		"config" => array(),

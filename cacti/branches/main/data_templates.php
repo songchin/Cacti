@@ -425,6 +425,8 @@ function template_edit() {
 	}
 
 	html_start_box("<strong>Data Template</strong> $header_label", "100%", $colors["header"], "3", "center", "");
+	$header_items = array("Field", "Value");
+	html_header($header_items, 2, true, 'data_template');
 
 	draw_edit_form(array(
 		"config" => array(),
@@ -434,6 +436,8 @@ function template_edit() {
 	html_end_box();
 
 	html_start_box("<strong>Data Source</strong>", "100%", $colors["header"], "3", "center", "", true);
+	$header_items = array("Field", "Value");
+	html_header($header_items, 2, true, 'data_source');
 
 	/* make sure 'data source path' doesn't show up for a template... we should NEVER template this field */
 	unset($struct_data_source["data_source_path"]);
@@ -513,6 +517,8 @@ function template_edit() {
 				" . (!empty($_GET["id"]) ? "<strong><a class='linkOverDark' href='data_templates.php?action=rrd_add&id=" . $_GET["id"] . "'>New</a>&nbsp;</strong>" : "") . "
 			</td>
 		</tr>\n";
+	$header_items = array("Field", "Value");
+	html_header($header_items, 2, true, 'data_source_item');
 
 	/* data input fields list */
 	if ((empty($template_data["data_input_id"])) ||
@@ -560,6 +566,8 @@ function template_edit() {
 		$fields = db_fetch_assoc("select * from data_input_fields where data_input_id=" . $template_data["data_input_id"] . " and input_output='in' order by sequence");
 
 		html_start_box("<strong>Custom Data</strong> [data input: " . db_fetch_cell("select name from data_input where id=" . $template_data["data_input_id"]) . "]", "100%", $colors["header"], "3", "center", "", true);
+		$header_items = array("Field", "Value");
+		html_header($header_items, 2, true, 'data_source_custom_data');
 
 		/* loop through each field found */
 		if (sizeof($fields) > 0) {
@@ -573,7 +581,7 @@ function template_edit() {
 			}
 
 			form_alternate_row_color(); ?>
-				<td width="50%" class='template_checkbox'>
+				<td class='template_checkbox'>
 					<strong><?php print $field["name"];?></strong><br>
 					<?php form_checkbox("t_value_" . $field["data_name"], $data_input_data["t_value"], "Use Per-Data Source Value (Ignore this Value)", "", "", $_GET["id"]);?>
 				</td>

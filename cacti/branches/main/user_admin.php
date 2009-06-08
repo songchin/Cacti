@@ -824,13 +824,8 @@ function graph_settings_edit() {
 	html_start_box("<strong>Graph Settings</strong>", "100%", $colors["header"], "3", "center", "");
 
 	while (list($tab_short_name, $tab_fields) = each($settings_graphs)) {
-		?>
-		<tr class='rowSubHeader'>
-			<td colspan='2' class='textSubHeaderDark' style='padding: 3px;'>
-				<?php print $tabs_graphs[$tab_short_name];?>
-			</td>
-		</tr>
-		<?php
+		$header_items = array($tabs_graphs[$tab_short_name], "&nbsp;");
+		html_header($header_items, 1, true, $tabs_graphs[$tab_short_name]);
 
 		$form_array = array();
 
@@ -920,6 +915,8 @@ function user_edit() {
 
 	if (get_request_var("action") == "user_edit") {
 		html_start_box("<strong>General Settings</strong>", "100%", $colors["header"], "3", "center");
+		$header_items = array("Field", "Value");
+		html_header($header_items, 2, true, 'settings_general');
 
 		draw_edit_form(array(
 			"config" => array("form_name" => "chk"),

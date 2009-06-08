@@ -198,6 +198,8 @@ function rra_edit() {
 	}
 
 	html_start_box("<strong>Round Robin Archives</strong> $header_label", "100%", $colors["header"], "3", "center", "");
+	$header_items = array("Field", "Value");
+	html_header($header_items, 2, true, 'rra');
 
 	draw_edit_form(array(
 		"config" => array(),

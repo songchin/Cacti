@@ -386,6 +386,8 @@ function tree_edit() {
 	}
 
 	html_start_box("<strong>Graph Trees</strong> $header_label", "100%", $colors["header"], "3", "center", "", true);
+	$header_items = array("Field", "Value");
+	html_header($header_items, 1, true, 'template');
 
 	draw_edit_form(array(
 		"config" => array(),
@@ -404,11 +406,8 @@ function tree_edit() {
 		</td>
 		<?php
 
-		print "<tr class='rowSubHeader'>";
-			DrawMatrixHeaderItem("Item",$colors["header_text"],1);
-			DrawMatrixHeaderItem("Value",$colors["header_text"],1);
-			DrawMatrixHeaderItem("&nbsp;",$colors["header_text"],2);
-		print "</tr>";
+		$header_items = array("Item", "Value", "&nbsp;");
+		html_header($header_items, 2, true, 'tree');
 
 		grow_edit_graph_tree($_GET["id"], "", "");
 		html_end_box();

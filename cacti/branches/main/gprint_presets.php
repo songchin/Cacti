@@ -183,6 +183,8 @@ function gprint_presets_edit() {
 	}
 
 	html_start_box("<strong>GPRINT Presets</strong> $header_label", "100%", $colors["header"], "3", "center", "");
+	$header_items = array("Field", "Value");
+	html_header($header_items, 2, true, 'gprint_preset');
 
 	draw_edit_form(array(
 		"config" => array(),

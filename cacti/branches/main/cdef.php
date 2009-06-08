@@ -375,6 +375,8 @@ function cdef_edit() {
 	}
 
 	html_start_box("<strong>CDEF's</strong> $header_label", "100%", $colors["header"], "3", "center", "");
+	$header_items = array("Field", "Value");
+	html_header($header_items, 2, true, 'cdef');
 
 	draw_edit_form(array(
 		"config" => array(),
@@ -389,12 +391,8 @@ function cdef_edit() {
 		html_end_box();
 
 		html_start_box("<strong>CDEF Items</strong>", "100%", $colors["header"], "3", "center", "cdef.php?action=item_edit&cdef_id=" . $cdef["id"], false, "cdef");
-
-		print "<tr class='rowSubHeader nodrag nodrop'>";
-			DrawMatrixHeaderItem("Item",$colors["header_text"],1);
-			DrawMatrixHeaderItem("Item Value",$colors["header_text"],1);
-			DrawMatrixHeaderItem("&nbsp;",$colors["header_text"],2);
-		print "</tr>";
+		$header_items = array("Item", "Item Value");
+		html_header($header_items, 2, true, 'cdef_item');
 
 		$cdef_items = db_fetch_assoc("select * from cdef_items where cdef_id=" . $_GET["id"] . " order by sequence");
 

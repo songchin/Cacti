@@ -367,6 +367,8 @@ function template_edit() {
 	}
 
 	html_start_box("<strong>Template</strong> $header_label", "100%", $colors["header"], "3", "center", "");
+	$header_items = array("Field", "Value");
+	html_header($header_items, 1, true, 'template');
 
 	draw_edit_form(array(
 		"config" => array(),
@@ -376,6 +378,8 @@ function template_edit() {
 	html_end_box();
 
 	html_start_box("<strong>Graph Template</strong>", "100%", $colors["header"], "3", "center", "");
+	$header_items = array("Field", "Value");
+	html_header($header_items, 1, true, 'graph_template');
 
 	$form_array = array();
 

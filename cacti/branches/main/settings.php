@@ -80,6 +80,8 @@ default:
 	print "</div></td></tr></table>\n";
 
 	html_start_box("<strong>Cacti Settings (" . $tabs[$current_tab] . ")</strong>", "100%", $colors["header"], "3", "center", "");
+	$header_items = array("Field", "Value");
+	html_header($header_items, 2, true, 'settings');
 
 	$form_array = array();
 

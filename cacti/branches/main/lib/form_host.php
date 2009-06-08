@@ -798,6 +798,8 @@ function host_display_general($host, $host_text) {
 	html_end_box(FALSE);
 
 	html_start_box("<strong>General Settings</strong>", "100%", $colors["header"], "3", "center", "", true);
+	$header_items = array("Field", "Value");
+	html_header($header_items, 1, true, 'host');
 
 	/* preserve the host template id if passed in via a GET variable */
 	if (!empty($_GET["host_template_id"])) {

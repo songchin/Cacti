@@ -332,6 +332,8 @@ function data_query_item_edit() {
 	$header_label = "[edit: " . $snmp_query["name"] . "]";
 
 	html_start_box("<strong>Associated Graph/Data Templates</strong> $header_label", "100%", $colors["header"], "3", "center", "");
+	$header_items = array("Field", "Value");
+	html_header($header_items, 1, true, 'assoc_templates');
 
 	draw_edit_form(array(
 		"config" => array(),
@@ -586,6 +588,8 @@ function data_query_edit() {
 	}
 
 	html_start_box("<strong>Data Queries</strong> $header_label", "100%", $colors["header"], "3", "center", "");
+	$header_items = array("Field", "Value");
+	html_header($header_items, 1, true, 'data_query');
 
 	draw_edit_form(array(
 		"config" => array(),
@@ -611,12 +615,8 @@ function data_query_edit() {
 
 		if ($xml_file_exists == true) {
 			html_start_box("<strong>Associated Graph Templates</strong>", "100%", $colors["header"], "3", "center", "data_queries.php?action=item_edit&snmp_query_id=" . $snmp_query["id"]);
-
-			print "	<tr class='rowSubHeader'>
-					<td><span style='color: white; font-weight: bold;'>Name</span></td>
-					<td><span style='color: white; font-weight: bold;'>Graph Template Name</span></td>
-					<td></td>
-				</tr>";
+			$header_items = array("Name", "Graph Template Name");
+			html_header($header_items, 2, true, 'assoc_graph_templates');
 
 			$snmp_query_graphs = db_fetch_assoc("select
 				snmp_query_graph.id,
