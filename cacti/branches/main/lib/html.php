@@ -477,13 +477,13 @@ function html_header_sort($header_items, $sort_column, $sort_direction, $last_it
 		if (($db_column == "") || (substr_count($db_column, "nosort"))) {
 			$width = html_get_column_width($pathname, "hhs_$rand_id");
 
-			print "\t\t\t<th nowrap style='width:$width;white-space:nowrap;' id='hhs_$rand_id'" . ((($rand_id+1) == count($header_items)) ? "colspan='$last_item_colspan' " : "") . " onMousemove='doColResize(this,event)' onMouseover='doColResize(this,event)' onMouseout='doneColResize()' class='textSubHeaderDark'>" . $display_text . "</th>\n";
+			print "\t\t\t<th nowrap style='width:$width;white-space:nowrap;' id='hhs_$rand_id'" . ((($rand_id+1) == count($header_items)) ? "colspan='$last_item_colspan' " : "") . " onMousemove='doColResize(this,event)' onMouseover='doColResize(this,event)' onMouseup='doneColResize()' class='textSubHeaderDark'>" . $display_text . "</th>\n";
 
 			$rand_id++;
 		}else{
 			$width = html_get_column_width($pathname, $db_column);
 
-			print "\t\t\t<th nowrap style='width:$width;white-space:nowrap;' id='$db_column'" . ((($rand_id+1) == count($header_items)) ? "colspan='$last_item_colspan' " : "") . " onMousemove='doColResize(this,event)' onMouseover='doColResize(this,event)' onMouseout='doneColResize()' class='textSubHeaderDark'>";
+			print "\t\t\t<th nowrap style='width:$width;white-space:nowrap;' id='$db_column'" . ((($rand_id+1) == count($header_items)) ? "colspan='$last_item_colspan' " : "") . " onMousemove='doColResize(this,event)' onMouseover='doColResize(this,event)' onMouseup='doneColResize()' class='textSubHeaderDark'>";
 			print "\n\t\t\t\t<a class='$sort_class' style='display:block;' href=" . htmlspecialchars($_SERVER["PHP_SELF"] . "?sort_column=" . $db_column . "&sort_direction=" . $direction) . ">" . $display_text . "</a>";
 			print "\n\t\t\t</th>\n";
 		}
@@ -539,13 +539,13 @@ function html_header_sort_checkbox($header_items, $sort_column, $sort_direction,
 		if (($db_column == "") || (substr_count($db_column, "nosort"))) {
 			$width = html_get_column_width($pathname, "hhscrand_$rand_id");
 
-			print "\t\t\t<th nowrap style='width:$width;white-space:nowrap;' id='hhsc_$rand_id' onMousemove='doColResize(this,event)' onMouseover='doColResize(this,event)' onMouseout='doneColResize()' class='textSubHeaderDark'>" . $display_text . "</th>\n";
+			print "\t\t\t<th nowrap style='width:$width;white-space:nowrap;' id='hhsc_$rand_id' onMousemove='doColResize(this,event)' onMouseover='doColResize(this,event)' onMouseup='doneColResize()' class='textSubHeaderDark'>" . $display_text . "</th>\n";
 
 			$rand_id++;
 		}else{
 			$width = html_get_column_width($pathname, $db_column);
 
-			print "\t\t\t<th nowrap style='width:$width;white-space:nowrap;' id='$db_column' onMousemove='doColResize(this,event)' onMouseover='doColResize(this,event)' onMouseout='doneColResize()' class='textSubHeaderDark'>";
+			print "\t\t\t<th nowrap style='width:$width;white-space:nowrap;' id='$db_column' onMousemove='doColResize(this,event)' onMouseover='doColResize(this,event)' onMouseup='doneColResize()' class='textSubHeaderDark'>";
 			print "\n\t\t\t\t<a class='$sort_class' style='display:block;' href=" . htmlspecialchars($_SERVER["PHP_SELF"] . "?sort_column=" . $db_column . "&sort_direction=" . $direction) . ">" . $display_text . "</a>";
 			print "\n\t\t\t</th>\n";
 		}
@@ -576,7 +576,7 @@ function html_header($header_items, $last_item_colspan = 1, $resizable = true, $
 		if ($resizable) {
 			$width = html_get_column_width($pathname, "hh_$rand_id");
 
-			print "\t\t\t<th id='hh_$rand_id' style='width: $width;' onMousemove='doColResize(this,event)' onMouseover='doColResize(this,event)' onMouseout='doneColResize()' " . ((($i+1) == count($header_items)) ? "colspan='$last_item_colspan' " : "") . " class='textSubHeaderDark'>" . $header_items[$i] . "</th>\n";
+			print "\t\t\t<th id='hh_$rand_id' style='width: $width;' onMousemove='doColResize(this,event)' onMouseover='doColResize(this,event)' onMouseup='doneColResize()' " . ((($i+1) == count($header_items)) ? "colspan='$last_item_colspan' " : "") . " class='textSubHeaderDark'>" . $header_items[$i] . "</th>\n";
 		}else{
 			print "\t\t\t<th id='hh_$rand_id' " . ((($i+1) == count($header_items)) ? "colspan='$last_item_colspan' " : "") . " class='textSubHeaderDark'>" . $header_items[$i] . "</th>\n";
 		}
@@ -609,7 +609,7 @@ function html_header_checkbox($header_items, $form_action = "", $resizable = fal
 		if ($resizable) {
 			$width = html_get_column_width($pathname, "hhc_$rand_id");
 
-			print "\t\t\t<th id='hhc_$rand_id' style='width: $width;' onMousemove='doColResize(this,event)' onMouseover='doColResize(this,event)' onMouseout='doneColResize()' class='textSubHeaderDark'>" . $header_items[$i] . "</th>\n";
+			print "\t\t\t<th id='hhc_$rand_id' style='width: $width;' onMousemove='doColResize(this,event)' onMouseover='doColResize(this,event)' onMouseup='doneColResize()' class='textSubHeaderDark'>" . $header_items[$i] . "</th>\n";
 		}else{
 			print "\t\t\t<th id='hhc_$rand_id' class='textSubHeaderDark'>" . $header_items[$i] . "</th>\n";
 		}
