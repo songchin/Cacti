@@ -353,9 +353,8 @@ function api_host_form_actions() {
 	/* add a list of tree names to the actions dropdown */
 	$device_actions = array_merge($device_actions, api_tree_add_tree_names_to_actions_array());
 
+	print "<form method='post' action='" .  basename($_SERVER["PHP_SELF"]) . "' name='host_edit_actions'>\n";
 	html_start_box("<strong>" . $device_actions{$_POST["drp_action"]} . "</strong>", "60%", $colors["header_panel"], "3", "center", "");
-
-	print "<form action='host.php' method='post'>\n";
 
 	if (sizeof($host_array)) {
 		if ($_POST["drp_action"] == DEVICE_ACTION_ENABLE) { /* Enable Devices */
@@ -690,7 +689,6 @@ function host_display_general($host, $host_text) {
 	if (isset($host["id"])) {
 		html_start_box($host_text, "100%", $colors["header"], "3", "center", "", true);
 		?>
-		<table width="100%" align="center">
 			<tr>
 				<?php if (($host["availability_method"] == AVAIL_SNMP) ||
 					($host["availability_method"] == AVAIL_SNMP_AND_PING) ||
@@ -789,7 +787,6 @@ function host_display_general($host, $host_text) {
 				</td>
 				<?php } ?>
 			</tr>
-		</table>
 		<?php
 	}else{
 		html_start_box($host_text, "100%", $colors["header"], "3", "center", "", false);
@@ -797,9 +794,10 @@ function host_display_general($host, $host_text) {
 
 	html_end_box(FALSE);
 
+	print "<form method='post' action='" .  basename($_SERVER["PHP_SELF"]) . "' name='host_edit_settings'>\n";
 	html_start_box("<strong>General Settings</strong>", "100%", $colors["header"], "3", "center", "", true);
 	$header_items = array("Field", "Value");
-	html_header($header_items, 1, true, 'host');
+	html_header_only($header_items, 1, true, 'host');
 
 	/* preserve the host template id if passed in via a GET variable */
 	if (!empty($_GET["host_template_id"])) {
@@ -1105,7 +1103,7 @@ function host_display_general($host, $host_text) {
 	if (isset($host["id"])) {
 		html_start_box("<strong>Associated Graph Templates</strong>", "100%", $colors["header"], "3", "center", "", true);
 
-		html_header(array("Graph Template Name", "Status"), 2);
+		html_header_only(array("Graph Template Name", "Status"), 2);
 
 		$selected_graph_templates = db_fetch_assoc("select
 			graph_templates.id,
@@ -1139,7 +1137,7 @@ function host_display_general($host, $host_text) {
 		if (sizeof($selected_graph_templates) > 0) {
 		foreach ($selected_graph_templates as $item) {
 			$i++;
-			form_alternate_row_color();
+			form_alternate_row_color("graph_template" . $i);
 
 			/* get status information for this graph template */
 			$is_being_graphed = (sizeof(db_fetch_assoc("select id from graph_local where graph_template_id=" . $item["id"] . " and host_id=" . $_GET["id"])) > 0) ? true : false;
@@ -1152,14 +1150,14 @@ function host_display_general($host, $host_text) {
 					<?php print (($is_being_graphed == true) ? "<span style='color:green;'>Is Being Graphed</span> (<a href='graphs.php?action=graph_edit&id=" . db_fetch_cell("select id from graph_local where graph_template_id=" . $item["id"] . " and host_id=" . $_GET["id"] . " limit 0,1") . "'>Edit</a>)" : "<span style='color: #484848;'>Not Being Graphed</span>");?>
 				</td>
 				<td align='right' nowrap>
-					<a href='host.php?action=gt_remove&id=<?php print $item["id"];?>&host_id=<?php print $_GET["id"];?>'><img class='buttonSmall' src='images/delete_icon_large.gif' title='Delete Graph Template Association' alt='Delete' align='middle'></a>
+					<a href='host.php?action=gt_remove&amp;id=<?php print $item["id"];?>&amp;host_id=<?php print $_GET["id"];?>'><img class='buttonSmall' src='images/delete_icon_large.gif' title='Delete Graph Template Association' alt='Delete' align='middle'></a>
 				</td>
 			<?php
 			form_end_row();
 		}
 		}else{ print "<tr><td><em>No associated graph templates.</em></td></tr>"; }
 
-		form_alternate_row_color();
+		form_alternate_row_color("gt_host" . $host["id"]);
 		?>
 			<td colspan="4">
 				<table cellspacing="0" cellpadding="1" width="100%">
@@ -1179,7 +1177,7 @@ function host_display_general($host, $host_text) {
 
 		html_start_box("<strong>Associated Data Queries</strong>", "100%", $colors["header"], "3", "center", "", true);
 
-		html_header(array("Data Query Name", "Debugging", "Re-Index Method", "Status"), 2);
+		html_header_only(array("Data Query Name", "Debugging", "Re-Index Method", "Status"), 2);
 
 		$selected_data_queries = db_fetch_assoc("select
 			snmp_query.id,
@@ -1213,7 +1211,7 @@ function host_display_general($host, $host_text) {
 		if (sizeof($selected_data_queries) > 0) {
 		foreach ($selected_data_queries as $item) {
 			$i++;
-			form_alternate_row_color();
+			form_alternate_row_color("selected_data_queries" . $i);
 
 			/* get status information for this data query */
 			$num_dq_items = sizeof(db_fetch_assoc("select snmp_index from host_snmp_cache where host_id=" . $_GET["id"] . " and snmp_query_id=" . $item["id"]));
@@ -1226,7 +1224,7 @@ function host_display_general($host, $host_text) {
 					<strong><?php print $i;?>)</strong> <?php print $item["name"];?>
 				</td>
 				<td>
-					(<a href="host.php?action=query_verbose&id=<?php print $item["id"];?>&host_id=<?php print $_GET["id"];?>">Verbose Query</a>)
+					(<a href="host.php?action=query_verbose&amp;id=<?php print $item["id"];?>&amp;host_id=<?php print $_GET["id"];?>">Verbose Query</a>)
 				</td>
 				<td>
 					<?php form_dropdown("reindex_method_host_".$_GET["id"]."_query_".$item["id"]."_method_".$item["reindex_method"],$reindex_types,"","",$item["reindex_method"],"","","","");?>
@@ -1235,15 +1233,15 @@ function host_display_general($host, $host_text) {
 					<?php print (($status == "success") ? "<span style='color: green;'>Success</span>" : "<span style='color: green;'>Fail</span>");?> [<?php print $num_dq_items;?> Item<?php print ($num_dq_items == 1 ? "" : "s");?>, <?php print $num_dq_rows;?> Row<?php print ($num_dq_rows == 1 ? "" : "s");?>]
 				</td>
 				<td align='right' nowrap>
-					<a href='host.php?action=query_reload&id=<?php print $item["id"];?>&host_id=<?php print $_GET["id"];?>'><img class='buttonSmall' src='images/reload_icon_small.gif' title='Reload Data Query' alt='Reload' align='middle'></a>&nbsp;
-					<a href='host.php?action=query_remove&id=<?php print $item["id"];?>&host_id=<?php print $_GET["id"];?>'><img class='buttonSmall' src='images/delete_icon_large.gif' title='Delete Data Query Association' alt='Delete' align='middle'></a>
+					<a href='host.php?action=query_reload&amp;id=<?php print $item["id"];?>&amp;host_id=<?php print $_GET["id"];?>'><img class='buttonSmall' src='images/reload_icon_small.gif' title='Reload Data Query' alt='Reload' align='middle'></a>&nbsp;
+					<a href='host.php?action=query_remove&amp;id=<?php print $item["id"];?>&amp;host_id=<?php print $_GET["id"];?>'><img class='buttonSmall' src='images/delete_icon_large.gif' title='Delete Data Query Association' alt='Delete' align='middle'></a>
 				</td>
 			<?php
 			form_end_row();
 		}
 		}else{ print "<tr><td><em>No associated data queries.</em></td></tr>"; }
 
-		form_alternate_row_color();
+		form_alternate_row_color("dq_host" . $host["id"]);
 
 		?>
 			<td colspan="5">
@@ -1366,7 +1364,7 @@ function host() {
 	?>
 	<tr class='rowAlternate2'>
 		<td>
-			<form name="form_devices">
+			<form action="host.php" name="form_devices" method="post">
 			<table cellpadding="0" cellspacing="1">
 				<tr>
 					<td style='white-space:nowrap;width:55px;'>
@@ -1552,6 +1550,7 @@ function host() {
 	$nav = html_create_nav($_REQUEST["page"], MAX_DISPLAY_PAGES, $_REQUEST["rows"], $total_rows, 11, "host.php");
 
 	print $nav;
+	html_end_box(false);
 
 	$display_text = array(
 		"description" => array("Description", "ASC"),
@@ -1572,7 +1571,7 @@ function host() {
 	if (sizeof($hosts) > 0) {
 		foreach ($hosts as $host) {
 			form_alternate_row_color('line' . $host["id"], true);
-			form_selectable_cell("<a style='white-space:nowrap;' class='linkEditMain' href='host.php?action=edit&id=" . $host["id"] . "'>" .
+			form_selectable_cell("<a style='white-space:nowrap;' class='linkEditMain' href='" . htmlspecialchars("host.php?action=edit&id=" . $host["id"]) . "'>" .
 				(strlen($_REQUEST["filter"]) ? eregi_replace("(" . preg_quote($_REQUEST["filter"]) . ")", "<span style='background-color: #F8D93D;'>\\1</span>", $host["description"]) : $host["description"]) . "</a>", $host["id"]);
 			form_selectable_cell(($host["site"] == 0 ? "Not Defined" : ($host["site"] == '' ? "Unknown" : $host["site"])), $host["id"]);
 			form_selectable_cell(($host["poller"] == 0 ? "System Default" : ($host["poller"] == '' ? "Unknown" : $host["poller"])), $host["id"]);
@@ -1597,15 +1596,13 @@ function host() {
 		print "<tr><td><em>No Hosts</em></td></tr>";
 	}
 
-	html_end_box(false);
+	print "</table>\n</form>\n";	# end form and table of html_header_sort_checkbox
 
 	/* add a list of tree names to the actions dropdown */
 	$device_actions = array_merge($device_actions, api_tree_add_tree_names_to_actions_array());
 
 	/* draw the dropdown containing a list of available actions for this form */
 	draw_actions_dropdown($device_actions);
-
-	print "</form>\n";
 }
 
 ?>

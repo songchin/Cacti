@@ -441,7 +441,7 @@ $struct_graph = array(
 		"method" => "checkbox",
 		"default" => "",
 		"description" => "Use SI Units for Logarithmic Scaling instead of using exponential notation (not available for rrdtool-1.0.x).<br>
-			Note: Linear graphs use SI notation by default."
+			<strong>Note:</strong> Linear graphs use SI notation by default."
 		),
 	"auto_scale_rigid" => array(
 		"friendly_name" => "Rigid Boundaries Mode (--rigid)",
@@ -455,7 +455,7 @@ $struct_graph = array(
 		"default" => "",
 		"description" => "The algorithm ensures that you always have a grid, that there are enough but not too many grid lines,
 			and that the grid is metric. This parameter will also ensure that you
-			get enough decimals displayed. <strong>Note</strong> This parameter may interfere with --alt-autoscale options."
+			get enough decimals displayed.<br/><strong>Note:</strong> This parameter may interfere with --alt-autoscale options."
 		),
 	"auto_padding" => array(
 		"friendly_name" => "Auto Padding",

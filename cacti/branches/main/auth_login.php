@@ -252,6 +252,8 @@ function auth_display_custom_error_message($message) {
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html;charset=utf-8" >
+	<meta http-equiv="Content-Script-Type" content="text/javascript" >
+	<meta http-equiv="Content-Style-Type" content="text/css">
 	<link type="text/css" href="include/main.css" rel="stylesheet">
 	<title>Login to Cacti</title>
 	<STYLE TYPE="text/css">

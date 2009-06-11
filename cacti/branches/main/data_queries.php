@@ -332,18 +332,21 @@ function data_query_item_edit() {
 	$header_label = "[edit: " . $snmp_query["name"] . "]";
 
 	html_start_box("<strong>Associated Graph/Data Templates</strong> $header_label", "100%", $colors["header"], "3", "center", "");
+	print "<tr>\n";
 	$header_items = array("Field", "Value");
 	html_header($header_items, 1, true, 'assoc_templates');
+	print "</tr>\n";
 
 	draw_edit_form(array(
 		"config" => array(),
 		"fields" => inject_form_variables($fields_data_query_item_edit, (isset($snmp_query_item) ? $snmp_query_item : array()), $_GET)
 		));
 
-	html_end_box();
+	print "</table>\n";
+	html_end_box(true);
 
 	if (!empty($snmp_query_item["id"])) {
-		html_start_box("<strong>Associated Data Templates</strong>", "100%", $colors["header"], "3", "center", "");
+		html_start_box("<strong>Associated Data Templates</strong>", "100%", $colors["header"], "3", "center", "", false, "assoc_data_templates");
 
 		$data_templates = db_fetch_assoc("select
 			data_template.id,
@@ -406,9 +409,9 @@ function data_query_item_edit() {
 						form_checkbox("dsdt_" . $data_template["id"] . "_" . $data_template_rrd["id"] . "_check", $old_value, "", "", "", $_GET["id"]); print "<br>";
 						print "</td>\n";
 						form_end_row();
-						form_end_row();
 					}
 				}
+				print "</table>\n";
 			}
 		}
 
@@ -421,6 +424,10 @@ function data_query_item_edit() {
 		/* suggested values for data templates */
 		if (sizeof($data_templates) > 0) {
 			foreach ($data_templates as $data_template) {
+
+				$header_items = array("Data Template - " . $data_template["name"], "&nbsp;");
+				html_header($header_items, 2, true, 'data_template_suggested_values_' . $data_template["id"]);
+
 				$suggested_values = db_fetch_assoc("select
 					text,
 					field_name,
@@ -429,15 +436,6 @@ function data_query_item_edit() {
 					where snmp_query_graph_id=" . $_GET["id"] . "
 					and data_template_id=" . $data_template["id"] . "
 					order by field_name,sequence");
-
-				print "	<tr class='rowHeader'>
-							<td style='padding: 3px;'><span style='color: white; font-weight: bold;'>Data Template - " . $data_template["name"] . "</span></td>
-							<td></td>
-							<td></td>
-						</tr>";
-
-				$header_items = array("Data Template Field Name", "Suggested Value");
-				html_header($header_items, 2, true, 'data_template_suggested_values_' . $data_template["id"]);
 
 				if (sizeof($suggested_values) > 0) {
 					foreach ($suggested_values as $suggested_value) {
@@ -455,11 +453,9 @@ function data_query_item_edit() {
 						<?php
 						form_end_row();
 					}
-
-					print "</tr>\n";
 				}
 
-				form_alternate_row_color("nodrag", false, "nodrag nodrop");
+				form_alternate_row_color("nodrag" . $data_template["id"], false, "nodrag nodrop");
 				?>
 					<td>
 						<input type="text" name="svds_<?php print $data_template["id"];?>_field" size="15">
@@ -473,15 +469,16 @@ function data_query_item_edit() {
 				<?php
 				form_end_row();
 				print "</table>\n";
+
+				/* we need a new javascript for each table */
+				print("	<script type='text/javascript'>
+						$('#data_template_suggested_values_" . $data_template["id"] . "').tableDnD({
+								onDrop: function(table, row) {
+								$('#AjaxResult').load(\"lib/ajax/jquery.tablednd/data_query_dt_sv.ajax.php?dt_id=" . $data_template["id"] . "&gt_id=" . $_GET["id"] . "&\"+$.tableDnD.serialize());
+								}
+							});
+						</script>\n");
 			}
-			/* we need a new javascript for each table */
-			print("	<script type='text/javascript'>
-					$('#data_template_suggested_values_" . $data_template["id"] . "').tableDnD({
-							onDrop: function(table, row) {
-							$('#AjaxResult').load(\"lib/ajax/jquery.tablednd/data_query_dt_sv.ajax.php?dt_id=" . $data_template["id"] . "&gt_id=" . $_GET["id"] . "&\"+$.tableDnD.serialize());
-							}
-						});
-					</script>\n");
 		}
 
 		/* suggested values for graphs templates */
@@ -493,13 +490,7 @@ function data_query_item_edit() {
 			where snmp_query_graph_id=" . $_GET["id"] . "
 			order by field_name,sequence");
 
-		print "	<tr class='rowHeader'>
-					<td style='padding: 3px;'><span style='color: white; font-weight: bold;'>Graph Template - " . db_fetch_cell("select name from graph_templates where id=" . $snmp_query_item["graph_template_id"]) . "</span></td>
-					<td></td>
-					<td></td>
-				</tr>";
-
-		$header_items = array("Graph Template Field Name", "Suggested Value");
+		$header_items = array("Graph Template - " . db_fetch_cell("select name from graph_templates where id=" . $snmp_query_item["graph_template_id"]), "&nbsp;");
 		html_header($header_items, 2, true, 'graph_template_suggested_values_' . $_GET["id"]);
 
 		if (sizeof($suggested_values) > 0) {
@@ -517,9 +508,17 @@ function data_query_item_edit() {
 					</td>
 				<?php
 				form_end_row();
+				?>
+<script type="text/javascript">
+	$('#graph_template_suggested_values_<?php print $_GET["id"];?>').tableDnD({
+		onDrop: function(table, row) {
+//			alert("lib/ajax/jquery.tablednd/data_query_gt_sv.ajax.php?gt_id=<?php print $_GET["id"];?>&"+$.tableDnD.serialize());
+			$('#AjaxResult').load("lib/ajax/jquery.tablednd/data_query_gt_sv.ajax.php?gt_id=<?php print $_GET["id"];?>&"+$.tableDnD.serialize());
+		}
+	});
+</script>
+				<?php
 			}
-
-			print "</tr>\n";
 		}
 
 		form_alternate_row_color("nodrag", false, "nodrag nodrop");
@@ -536,21 +535,10 @@ function data_query_item_edit() {
 		<?php
 		form_end_row();
 		print "</table>\n";
-
 		html_end_box();
 	}
 
 	form_save_button_alt("path!data_queries.php|action!edit|id!" . $_GET["snmp_query_id"]);
-?>
-<script type="text/javascript">
-	$('#graph_template_suggested_values_<?php print $_GET["id"];?>').tableDnD({
-		onDrop: function(table, row) {
-//			alert("lib/ajax/jquery.tablednd/data_query_gt_sv.ajax.php?gt_id=<?php print $_GET["id"];?>&"+$.tableDnD.serialize());
-			$('#AjaxResult').load("lib/ajax/jquery.tablednd/data_query_gt_sv.ajax.php?gt_id=<?php print $_GET["id"];?>&"+$.tableDnD.serialize());
-		}
-	});
-</script>
-<?php
 }
 
 /* ---------------------

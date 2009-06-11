@@ -198,14 +198,17 @@ function rra_edit() {
 	}
 
 	html_start_box("<strong>Round Robin Archives</strong> $header_label", "100%", $colors["header"], "3", "center", "");
+	print "<tr>\n";
 	$header_items = array("Field", "Value");
 	html_header($header_items, 2, true, 'rra');
+	print "</tr>\n";
 
 	draw_edit_form(array(
 		"config" => array(),
 		"fields" => inject_form_variables($fields_rra_edit, (isset($rra) ? $rra : array()))
 		));
 
+	print "</table>\n";
 	html_end_box();
 
 	form_save_button_alt();
@@ -253,7 +256,7 @@ function rra() {
 	?>
 	<tr class='rowAlternate2'>
 		<td>
-			<form name="form_rra">
+			<form name='form_rra' action="<?php print basename($_SERVER['PHP_SELF']);?>" method="post">
 			<table cellpadding="0" cellspacing="0">
 				<tr>
 					<td style='white-space:nowrap;width:50px;'>
@@ -324,6 +327,7 @@ function rra() {
 	}else{
 		print "<tr><td><em>No RRAs</em></td></tr>\n";
 	}
+	print "</table>";
 	html_end_box(false);
 
 	/* draw the dropdown containing a list of available actions for this form */

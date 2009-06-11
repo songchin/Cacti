@@ -676,28 +676,28 @@ function data_source_edit() {
 					<?php print get_data_source_title($_GET["id"]);?>
 				</td>
 				<td class="textInfo" align="right" valign="top">
-					<a href="#" class="toggle_fastpath_links">Show&nbsp;/&nbsp;Hide Fastpaths<br/></a>
-					<a class="fastpath_links" href='data_sources.php?action=data_source_toggle_status&id=<?php print (isset($_GET["id"]) ? $_GET["id"] : 0);?>&newstate=<?php print (($data["active"] == "on") ? "0" : "1");?>'><strong><?php print (($data["active"] == "on") ? "Disable" : "Enable");?></strong> Data Source.<br/></a>
-					<a class="fastpath_links" href='data_sources.php?action=data_source_edit&id=<?php print (isset($_GET["id"]) ? $_GET["id"] : 0);?>&debug=<?php print (isset($_SESSION["ds_debug_mode"]) ? "0" : "1");?>'>Turn <strong><?php print (isset($_SESSION["ds_debug_mode"]) ? "Off" : "On");?></strong> Data Source Debug Mode.<br/></a>
-					<a class="fastpath_links" href='data_sources.php?action=data_source_edit&id=<?php print (isset($_GET["id"]) ? $_GET["id"] : 0);?>&info=<?php print (isset($_SESSION["ds_info_mode"]) ? "0" : "1");?>'>Turn <strong><?php print (isset($_SESSION["ds_info_mode"]) ? "Off" : "On");?></strong> RRD File Information Mode.<br/></a>
+					<a href="#" class="toggle_fastpath_links">Show&nbsp;/&nbsp;Hide Fastpaths<br></a>
+					<a class="fastpath_links" href='data_sources.php?action=data_source_toggle_status&amp;id=<?php print (isset($_GET["id"]) ? $_GET["id"] : 0);?>&amp;newstate=<?php print (($data["active"] == "on") ? "0" : "1");?>'><strong><?php print (($data["active"] == "on") ? "Disable" : "Enable");?></strong> Data Source.<br></a>
+					<a class="fastpath_links" href='data_sources.php?action=data_source_edit&amp;id=<?php print (isset($_GET["id"]) ? $_GET["id"] : 0);?>&amp;debug=<?php print (isset($_SESSION["ds_debug_mode"]) ? "0" : "1");?>'>Turn <strong><?php print (isset($_SESSION["ds_debug_mode"]) ? "Off" : "On");?></strong> Data Source Debug Mode.<br></a>
+					<a class="fastpath_links" href='data_sources.php?action=data_source_edit&amp;id=<?php print (isset($_GET["id"]) ? $_GET["id"] : 0);?>&amp;info=<?php print (isset($_SESSION["ds_info_mode"]) ? "0" : "1");?>'>Turn <strong><?php print (isset($_SESSION["ds_info_mode"]) ? "Off" : "On");?></strong> RRD File Information Mode.<br></a>
 					<?php
 						if (!empty($data_template["id"])) {
-							?><a class="fastpath_links" href='data_templates.php?action=template_edit&id=<?php print (isset($data_template["id"]) ? $data_template["id"] : "0");?>'>Edit Data Template.<br/></a><?php
+							?><a class="fastpath_links" href='data_templates.php?action=template_edit&amp;id=<?php print (isset($data_template["id"]) ? $data_template["id"] : "0");?>'>Edit Data Template.<br></a><?php
 						}
 						if (!empty($_GET["host_id"]) || !empty($data_local["host_id"])) {
-							?><a class="fastpath_links" href='host.php?action=edit&id=<?php print (isset($_GET["host_id"]) ? $_GET["host_id"] : $data_local["host_id"]);?>'>Edit Host.</a><?php
+							?><a class="fastpath_links" href='host.php?action=edit&amp;id=<?php print (isset($_GET["host_id"]) ? $_GET["host_id"] : $data_local["host_id"]);?>'>Edit Host.</a><?php
 						}
 					?>
 				</td>
 			</tr>
 		</table>
-		<br>
 		<?php
 	}
 
+	print "<form method='post' action='" .  basename($_SERVER["PHP_SELF"]) . "' name='data_source_edit'>\n";
 	html_start_box("<strong>Data Template Selection</strong> $header_label", "100%", $colors["header"], "3", "center", "");
 	$header_items = array("Field", "Value");
-	html_header($header_items, 1, true, 'template');
+	html_header_only($header_items, 1, true, 'template');
 
 	$form_array = array(
 		"data_template_id" => array(
@@ -716,7 +716,7 @@ function data_source_edit() {
 			"id" => (isset($_GET["host_id"]) ? $_GET["host_id"] : $data_local["host_id"]),
 			"name" => db_fetch_cell("SELECT CONCAT_WS('',description,' (',hostname,')') FROM host WHERE id=" . (isset($_GET['host_id']) ? $_GET['host_id'] : $data_local["host_id"]))
 			),
-		"_data_template_id" => array(
+		"_data_template_id" => array(	/* TODO: input id's must NOT start with an underscore */
 			"method" => "hidden",
 			"value" => (isset($data_template) ? $data_template["id"] : "0")
 			),
@@ -761,9 +761,9 @@ function data_source_edit() {
 		draw_nontemplated_fields_data_source_item($data["data_template_id"], $template_data_rrds, "|field|_|id|", "<strong>Data Source Item Fields</strong>", true, true, true, 0);
 		draw_nontemplated_fields_custom_data($data["id"], "value_|id|", "<strong>Custom Data</strong>", true, true, 0);
 
-		form_hidden_box("save_component_data","1","");
-
 		html_end_box();
+
+		form_hidden_box("save_component_data","1","");
 	}
 
 	if (((isset($_GET["id"])) || (isset($_GET["new"]))) && (empty($data["data_template_id"]))) {
@@ -943,8 +943,8 @@ function data_source_edit() {
 
 	form_save_button_alt();
 
-	include_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
 	include_once(CACTI_BASE_PATH . "/lib/jquery/data_source_item.js");
+	include_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
 }
 
 function get_poller_interval($seconds) {
@@ -1092,7 +1092,7 @@ function data_source() {
 	?>
 	<tr class='rowAlternate2'>
 		<td>
-			<form name="form_data_sources" autocomplete="off">
+			<form action="data_sources.php" name="form_data_sources" autocomplete="off">
 			<table cellpadding="1" cellspacing="0">
 				<tr>
 					<td width="55">
@@ -1294,6 +1294,7 @@ function data_source() {
 	$nav = html_create_nav($_REQUEST["page"], MAX_DISPLAY_PAGES, $_REQUEST["rows"], $total_rows, 7, "data_sources.php");
 
 	print $nav;
+	html_end_box(false);
 
 	$display_text = array(
 		"name_cache" => array("Name", "ASC"),
@@ -1323,20 +1324,16 @@ function data_source() {
 			form_end_row();
 		}
 
-		form_end_table();
-
 		/* put the nav bar on the bottom as well */
 		print $nav;
 	}else{
 		print "<tr><td><em>No Data Sources</em></td></tr>";
 	}
 
-	html_end_box(false);
+	print "</table>\n</form>\n";	# end form and table of html_header_sort_checkbox
 
 	/* draw the dropdown containing a list of available actions for this form */
 	draw_actions_dropdown($ds_actions);
-
-	print "</form>\n";
 }
 
 ?>

@@ -112,9 +112,12 @@ function form_save() {
 		}
 	}elseif (isset($_POST["save_component_tree_item"])) {
 		$tree_item_id = api_tree_item_save($_POST["id"], $_POST["graph_tree_id"], $_POST["type"], $_POST["parent_item_id"],
-			(isset($_POST["title"]) ? $_POST["title"] : ""), (isset($_POST["local_graph_id"]) ? $_POST["local_graph_id"] : "0"),
-			(isset($_POST["rra_id"]) ? $_POST["rra_id"] : "0"), (isset($_POST["host_id"]) ? $_POST["host_id"] : "0"),
-			(isset($_POST["host_grouping_type"]) ? $_POST["host_grouping_type"] : "1"), (isset($_POST["sort_children_type"]) ? $_POST["sort_children_type"] : "1"),
+			(isset($_POST["title"]) ? $_POST["title"] : ""),
+			(isset($_POST["local_graph_id"]) ? $_POST["local_graph_id"] : "0"),
+			(isset($_POST["rra_id"]) ? $_POST["rra_id"] : "0"),
+			(isset($_POST["host_id"]) ? $_POST["host_id"] : "0"),
+			(isset($_POST["host_grouping_type"]) ? $_POST["host_grouping_type"] : "1"),
+			(isset($_POST["sort_children_type"]) ? $_POST["sort_children_type"] : "1"),
 			(isset($_POST["propagate_changes"]) ? true : false));
 
 		if (is_error_message()) {
@@ -156,11 +159,11 @@ function item_edit() {
 
 	$tree_sort_type = db_fetch_cell("select sort_type from graph_tree where id='" . $_GET["tree_id"] . "'");
 
-	html_start_box("<strong>Tree Items</strong>", "100%", $colors["header"], "3", "center", "");
-
 	print "<form action='tree.php' name='form_tree' method='post'>\n";
 
-	form_alternate_row_color(); ?>
+	html_start_box("<strong>Tree Items</strong>", "100%", $colors["header"], "3", "center", "");
+
+	form_alternate_row_color("parent_item"); ?>
 		<td width="50%">
 			<font class="textEditTitle">Parent Item</font><br>
 			Choose the parent for this header/graph.
@@ -169,7 +172,7 @@ function item_edit() {
 			<?php grow_dropdown_tree($_GET["tree_id"], "parent_item_id", (isset($_GET["parent_id"]) ? $_GET["parent_id"] : get_parent_id($tree_item["id"], "graph_tree_items", "graph_tree_id=" . $_GET["tree_id"])));?>
 		</td>
 	</tr>
-	<?php form_alternate_row_color(); ?>
+	<?php form_alternate_row_color("tree_item"); ?>
 		<td width="50%">
 			<font class="textEditTitle">Tree Item Type</font><br>
 			Choose what type of tree item this is.
@@ -178,7 +181,7 @@ function item_edit() {
 			<select name="type_select" onChange="window.location=document.form_tree.type_select.options[document.form_tree.type_select.selectedIndex].value">
 				<?php
 				while (list($var, $val) = each($tree_item_types)) {
-					print "<option value='tree.php?action=item_edit" . (isset($_GET["id"]) ? "&id=" . $_GET["id"] : "") . (isset($_GET["parent_id"]) ? "&parent_id=" . $_GET["parent_id"] : "") . "&tree_id=" . $_GET["tree_id"] . "&type_select=$var'"; if ($var == $current_type) { print " selected"; } print ">$val</option>\n";
+					print "<option value='" . htmlspecialchars("tree.php?action=item_edit" . (isset($_GET["id"]) ? "&id=" . $_GET["id"] : "") . (isset($_GET["parent_id"]) ? "&parent_id=" . $_GET["parent_id"] : "") . "&tree_id=" . $_GET["tree_id"] . "&type_select=" . $var) . "'"; if ($var == $current_type) { print " selected"; } print ">$val</option>\n";
 				}
 				?>
 			</select>
@@ -199,7 +202,7 @@ function item_edit() {
 			$default_sorting_type = TREE_ORDERING_NONE;
 		}
 
-		form_alternate_row_color(); ?>
+		form_alternate_row_color("item_title"); ?>
 			<td width="50%">
 				<font class="textEditTitle">Title</font><br>
 				If this item is a header, enter a title here.
@@ -211,7 +214,7 @@ function item_edit() {
 		<?php
 		/* don't allow the user to change the tree item ordering if a tree order has been specified */
 		if ($tree_sort_type == TREE_ORDERING_NONE) {
-			form_alternate_row_color(); ?>
+			form_alternate_row_color("sorting_type"); ?>
 				<td width="50%">
 					<font class="textEditTitle">Sorting Type</font><br>
 					Choose how children of this branch will be sorted.
@@ -224,7 +227,7 @@ function item_edit() {
 		}
 
 		if ((!empty($_GET["id"])) && ($tree_sort_type == TREE_ORDERING_NONE)) {
-			form_alternate_row_color(); ?>
+			form_alternate_row_color("propagate"); ?>
 				<td width="50%">
 					<font class="textEditTitle">Propagate Changes</font><br>
 					Propagate all options on this form (except for 'Title') to all child 'Header' items.
@@ -237,7 +240,7 @@ function item_edit() {
 		}
 		break;
 	case TREE_ITEM_TYPE_GRAPH:
-		form_alternate_row_color(); ?>
+		form_alternate_row_color("graph"); ?>
 			<td width="50%">
 				<font class="textEditTitle">Graph</font><br>
 				Choose a graph from this list to add it to the tree.
@@ -246,7 +249,7 @@ function item_edit() {
 				<?php form_dropdown("local_graph_id", db_fetch_assoc("select graph_templates_graph.local_graph_id as id,graph_templates_graph.title_cache as name from (graph_templates_graph,graph_local) where graph_local.id=graph_templates_graph.local_graph_id and local_graph_id != 0 order by title_cache"), "name", "id", (isset($tree_item["local_graph_id"]) ? $tree_item["local_graph_id"] : ""), "", "");?>
 			</td>
 		</tr>
-		<?php form_alternate_row_color(); ?>
+		<?php form_alternate_row_color("rra"); ?>
 			<td width="50%">
 				<font class="textEditTitle">Round Robin Archive</font><br>
 				Choose a round robin archive to control how this graph is displayed.
@@ -258,7 +261,7 @@ function item_edit() {
 		<?php
 		break;
 	case TREE_ITEM_TYPE_HOST:
-		form_alternate_row_color(); ?>
+		form_alternate_row_color("host"); ?>
 			<td width="50%">
 				<font class="textEditTitle">Host</font><br>
 				Choose a host here to add it to the tree.
@@ -267,7 +270,7 @@ function item_edit() {
 				<?php form_dropdown("host_id", db_fetch_assoc("select id,CONCAT_WS('',description,' (',hostname,')') as name from host order by description,hostname"), "name", "id", (isset($tree_item["host_id"]) ? $tree_item["host_id"] : ""), "", "");?>
 			</td>
 		</tr>
-		<?php form_alternate_row_color(); ?>
+		<?php form_alternate_row_color("graph_grouping"); ?>
 			<td width="50%">
 				<font class="textEditTitle">Graph Grouping Style</font><br>
 				Choose how graphs are grouped when drawn for this particular host on the tree.
@@ -279,16 +282,13 @@ function item_edit() {
 		<?php
 		break;
 	}
-	?>
-	</tr>
-	<?php
+
+	html_end_box();
 
 	form_hidden_box("id", (isset($_GET["id"]) ? $_GET["id"] : "0"), "");
 	form_hidden_box("graph_tree_id", $_GET["tree_id"], "");
 	form_hidden_box("type", $current_type, "");
 	form_hidden_box("save_component_tree_item", "1", "");
-
-	html_end_box();
 
 	form_save_button_alt("path!tree.php|action!edit|id!" . $_GET["tree_id"]);
 }
@@ -385,9 +385,10 @@ function tree_edit() {
 		$header_label = "[new]";
 	}
 
+	print "<form method='post' action='" .  basename($_SERVER["PHP_SELF"]) . "' name='tree_edit'>\n";
 	html_start_box("<strong>Graph Trees</strong> $header_label", "100%", $colors["header"], "3", "center", "", true);
 	$header_items = array("Field", "Value");
-	html_header($header_items, 1, true, 'template');
+	html_header_only($header_items, 1, true, 'template');
 
 	draw_edit_form(array(
 		"config" => array(),
@@ -400,14 +401,16 @@ function tree_edit() {
 		html_start_box("<strong>Tree Items</strong>", "100%", $colors["header"], "3", "center", "tree.php?action=item_edit&tree_id=" . $tree["id"] . "&parent_id=0");
 
 		?>
+		<tr>
 		<td>
 		<a href='<?php print htmlspecialchars("tree.php?action=edit&id=" . $_GET["id"] . "&subaction=expand_all");?>'><img src='images/button_expand_all.gif' style='border-width:0px;' alt='Expand All'></a>
 		<a href='<?php print htmlspecialchars("tree.php?action=edit&id=" . $_GET["id"] . "&subaction=colapse_all");?>'><img src='images/button_colapse_all.gif' style='border-width:0px;' alt='Colapse All'></a>
 		</td>
+		</tr>
 		<?php
 
-		$header_items = array("Item", "Value", "&nbsp;");
-		html_header($header_items, 2, true, 'tree');
+		$header_items = array("Item", "Value");
+		html_header_only($header_items, 3, true, 'tree');
 
 		grow_edit_graph_tree($_GET["id"], "", "");
 		html_end_box();

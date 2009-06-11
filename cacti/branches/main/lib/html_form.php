@@ -43,16 +43,16 @@ function draw_edit_form($array) {
 		}
 	}
 
-	$i = 0;
+#	$i = 0;
 	if (sizeof($fields_array) > 0) {
 		while (list($field_name, $field_array) = each($fields_array)) {
-			if ($i == 0) {
-				if (!isset($config_array["no_form_tag"])) {
-					print "<form method='post' action='" . ((isset($config_array["post_to"])) ? $config_array["post_to"] : basename($_SERVER["PHP_SELF"])) . "'" . ((isset($config_array["form_name"])) ? " name='" . $config_array["form_name"] . "'" : "") . ">\n";
-				}
-			}
+#			if ($i == 0) {
+#				if (!isset($config_array["no_form_tag"])) {
+#					print "<form method='post' action='" . ((isset($config_array["post_to"])) ? $config_array["post_to"] : basename($_SERVER["PHP_SELF"])) . "'" . ((isset($config_array["form_name"])) ? " name='" . $config_array["form_name"] . "'" : "") . ">\n";
+#				}
+#			}
 
-			if ($field_array["method"] == "hidden") {
+			if ($field_array["method"] == "hidden") { /* TODO: input type=hidden is not allowed inside a <table> but outside e.g. a <td> */
 				form_hidden_box($field_name, $field_array["value"], ((isset($field_array["default"])) ? $field_array["default"] : ""));
 			}elseif ($field_array["method"] == "hidden_zero") {
 				form_hidden_box($field_name, $field_array["value"], "0");
@@ -70,6 +70,12 @@ function draw_edit_form($array) {
 					$width = ((isset($config_array["left_column_width"])) ? (" width='" . $config_array["left_column_width"] . "'") : "");
 					print "<td" . $width . " class='template_checkbox'>\n";
 					print "<font class='textEditTitle'>" . $field_array["friendly_name"] . "</font><br>\n";
+
+					if (isset($field_array["description"])) {
+						if (strlen($field_array["description"])) {
+							print "<div>" . $field_array["description"] . "</div>";
+						}
+					}
 
 					form_checkbox($field_array["sub_checkbox"]["name"],
 						$field_array["sub_checkbox"]["value"],
@@ -91,17 +97,10 @@ function draw_edit_form($array) {
 
 				draw_edit_control($field_name, $field_array);
 
-				if (isset($field_array["sub_checkbox"])) {
-					if (isset($field_array["description"])) {
-						if (strlen($field_array["description"])) {
-							print "<br/><div style='float:left'>" . $field_array["description"] . "<br/></div>";
-						}
-					}
-				}
 				print "</td>\n</tr>\n";
 			}
 
-			$i++;
+#			$i++;
 		}
 	}
 }
@@ -443,7 +442,7 @@ function form_autocomplete_box($form_name, $callback_function, $id, $name, $form
 	});
 	</script>';
 
-	print "<input class='ac_field' type='textbox'";
+	print "<input class='ac_field' type='text'";
 
 	if (isset($_SESSION["sess_error_fields"])) {
 		if (!empty($_SESSION["sess_error_fields"][$form_name])) {

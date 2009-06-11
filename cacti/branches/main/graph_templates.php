@@ -391,7 +391,7 @@ function template_edit() {
 #		$form_array[$field_name]["description"] = "";
 		$form_array[$field_name]["sub_checkbox"] = array(
 			"name" => "t_" . $field_name,
-			"friendly_name" => "Use Per-Graph Value (Ignore this Value)",
+			"friendly_name" => "<em>Use Per-Graph Value (Ignore this Value)</em>",
 			"value" => (isset($template_graph) ? $template_graph{"t_" . $field_name} : ""),
 			"class" => (isset($form_array[$field_name]["class"]) ? $form_array[$field_name]["class"] : "")
 		);

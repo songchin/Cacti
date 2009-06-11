@@ -453,7 +453,7 @@ function template_edit() {
 #			$form_array[$field_name]["description"] = "";
 			$form_array[$field_name]["sub_checkbox"] = array(
 				"name" => "t_" . $field_name,
-				"friendly_name" => "Use Per-Data Source Value (Ignore this Value)",
+				"friendly_name" => "<em>Use Per-Data Source Value (Ignore this Value)</em>",
 				"value" => (isset($template_data{"t_" . $field_name}) ? $template_data{"t_" . $field_name} : ""),
 				"class" => (isset($form_array[$field_name]["class"]) ? $form_array[$field_name]["class"] : "")
 			);
@@ -538,7 +538,7 @@ function template_edit() {
 		$form_array[$field_name]["value"] = (isset($template_rrd) ? $template_rrd[$field_name] : "");
 		$form_array[$field_name]["sub_checkbox"] = array(
 			"name" => "t_" . $field_name,
-			"friendly_name" => "Use Per-Data Source Value (Ignore this Value)",
+			"friendly_name" => "<em>Use Per-Data Source Value (Ignore this Value)</em>",
 			"value" => (isset($template_rrd) ? $template_rrd{"t_" . $field_name} : ""),
 			"class" => (isset($form_array[$field_name]["class"]) ? $form_array[$field_name]["class"] : "")
 		);
@@ -583,7 +583,7 @@ function template_edit() {
 			form_alternate_row_color(); ?>
 				<td class='template_checkbox'>
 					<strong><?php print $field["name"];?></strong><br>
-					<?php form_checkbox("t_value_" . $field["data_name"], $data_input_data["t_value"], "Use Per-Data Source Value (Ignore this Value)", "", "", $_GET["id"]);?>
+					<?php form_checkbox("t_value_" . $field["data_name"], $data_input_data["t_value"], "<em>Use Per-Data Source Value (Ignore this Value)</em>", "", "", $_GET["id"]);?>
 				</td>
 				<td>
 					<?php form_text_box("value_" . $field["data_name"],$old_value,"","");?>

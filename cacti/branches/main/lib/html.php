@@ -95,7 +95,7 @@ function html_start_box($title, $width, $background_color, $cell_padding, $align
 									</tr>
 								</table>
 							</td><?php if ($add_text != "") {?>
-							<td width='1px' class="textHeaderDark" align="right">
+							<td style='width:1px' class="textHeaderDark" align="right">
 								<input type='button' onClick='<?php print $function_name;?>' style='font-size:10px;' value='Add'>
 							</td><?php }?>
 						</tr>
@@ -551,7 +551,7 @@ function html_header_sort_checkbox($header_items, $sort_column, $sort_direction,
 		}
 	}
 
-	print "\t\t\t<th id='hhsc_$rand_id' style='width: 14px;' class='textSubHeaderDark'><input type='checkbox' style='width: 14px; margin: 0px;' name='all' title='Select All' onClick='SelectAll(\"chk_\",this.checked)'></th>\n<form name='chk' method='post' action='$form_action'>\n";
+	print "\t\t\t<th id='hhsc_$rand_id' style='width: 14px;' class='textSubHeaderDark'><input type='checkbox' style='width: 14px; margin: 0px;' name='all' title='Select All' onClick='SelectAll(\"chk_\",this.checked)'><form name='chk' method='post' action='$form_action'></th>\n";
 	print "\t\t</tr>\n";
 }
 

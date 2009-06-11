@@ -402,12 +402,12 @@ function graphs_new() {
 	</script>
 	<?php
 
-	html_start_box("<strong>" . $host["description"] . "(" . $host["hostname"] . ")</strong>" . db_fetch_cell("select name from host_template where id=" . $host["host_template_id"]), "100%", $colors["header"], "3", "center", "");
+	html_start_box("<strong>" . $host["description"] . "(" . $host["hostname"] . ")</strong> " . db_fetch_cell("select name from host_template where id=" . $host["host_template_id"]), "100%", $colors["header"], "3", "center", "");
 
 	?>
 	<tr class='rowAlternate2'>
 		<td>
-			<form name="form_graphs_new">
+			<form name="form_graphs_new" method="post" action="<?php print $file2;?>">
 			<table cellpadding="0" align="left">
 				<tr>
 					<?php if (!isset($_REQUEST["tab"])) { ?>
@@ -427,8 +427,6 @@ function graphs_new() {
 						?>
 						</select>
 					</td>
-					<?php }else{ ?>
-					<div><input type='hidden' name='host_id' id='host_id' value='<?php print $_REQUEST["host_id"];?>'></div>
 					<?php } ?>
 					<td style='white-space:nowrap;width:55px;' class='textGraphFilter'>
 						&nbsp;Type:&nbsp;
@@ -485,7 +483,6 @@ function graphs_new() {
 			</form>
 		</td>
 	</tr>
-	<form name="chk" method="post" action="<?php print $file2;?>">
 	<?php
 
 	html_end_box(false);
@@ -502,13 +499,8 @@ function graphs_new() {
 		}
 	}
 
+	print "<form name='chk' method='post' action='" . $file2 . "'>";
 	if ($_REQUEST["graph_type"] < 0) {
-		html_start_box("<strong>Graph Templates</strong>", "100%", $colors["header"], "3", "center", "");
-
-		print "	<tr class='rowSubHeader'>
-				<td class='textSubHeaderDark'>Graph Template Name</td>
-				<td class='rowSubHeader' width='1%' align='center' style='" . get_checkbox_style() . "'><input type='checkbox' style='margin: 0px;' name='all_cg' title='Select All' onClick='SelectAll(\"cg\",this.checked);gt_update_selection_indicators();'></td>\n
-			</tr>\n";
 
 		$graph_templates = db_fetch_assoc("SELECT
 			graph_templates.id AS graph_template_id,
@@ -526,8 +518,6 @@ function graphs_new() {
 			AND graph_local.host_id=" . $host["id"] . "
 			GROUP BY graph_local.graph_template_id");
 
-		print "<script type='text/javascript'>\nvar gt_created_graphs = new Array()\n</script>\n";
-
 		if (sizeof($template_graphs) > 0) {
 			print "<script type='text/javascript'>\n<!--\n";
 			print "var gt_created_graphs = new Array(";
@@ -541,7 +531,18 @@ function graphs_new() {
 
 			print ")\n";
 			print "//-->\n</script>\n";
+		} else {
+			print "<script type='text/javascript'>\nvar gt_created_graphs = new Array()\n</script>\n";
 		}
+
+		print "<script type='text/javascript'>gt_update_deps(1);</script>\n";
+		print "<script type='text/javascript'>\nvar created_graphs = new Array()\n</script>\n";
+
+		html_start_box("<strong>Graph Templates</strong>", "100%", $colors["header"], "3", "center", "");
+		print "	<tr class='rowSubHeader'>
+				<td class='textSubHeaderDark'>Graph Template Name</td>
+				<td class='rowSubHeader' width='1%' align='center' style='" . get_checkbox_style() . "'><input type='checkbox' style='margin: 0px;' name='all_cg' title='Select All' onClick='SelectAll(\"cg\",this.checked);gt_update_selection_indicators();'></td>\n
+			</tr>\n";
 
 		/* create a row for each graph template associated with the host template */
 		if (sizeof($graph_templates) > 0) {
@@ -551,7 +552,7 @@ function graphs_new() {
 			print "<tr id='gt_line$query_row' bgcolor='#" . (($i % 2 == 0) ? "ffffff" : $colors["light"]) . "'>"; $i++;
 
 			print "		<td onClick='gt_select_line(" . $graph_template["graph_template_id"] . ");'><span id='gt_text$query_row" . "_0'>
-						<span id='gt_text$query_row" . "_0'><strong>Create:</strong> " . $graph_template["graph_template_name"] . "</span>
+						<strong>Create:</strong> " . $graph_template["graph_template_name"] . "</span>
 					</td>
 					<td align='right'>
 						<input type='checkbox' name='cg_$query_row' id='cg_$query_row' onClick='gt_update_selection_indicators();'>
@@ -559,8 +560,6 @@ function graphs_new() {
 				</tr>";
 		}
 		}
-
-		print "<script type='text/javascript'>gt_update_deps(1);</script>\n";
 
 		$available_graph_templates = db_fetch_assoc("SELECT
 			graph_templates.id, graph_templates.name
@@ -589,8 +588,6 @@ function graphs_new() {
 			AND host_snmp_query.host_id=" . $host["id"] .
 			($_REQUEST["graph_type"] != -2 ? " AND snmp_query.id=" . $_REQUEST["graph_type"] : '') . "
 			ORDER BY snmp_query.name");
-
-		print "<script type='text/javascript'>\nvar created_graphs = new Array()\n</script>\n";
 
 		if (sizeof($snmp_queries) > 0) {
 		foreach ($snmp_queries as $snmp_query) {
@@ -769,7 +766,8 @@ function graphs_new() {
 						if ($field_array["direction"] == "input") {
 							foreach($field_names as $row) {
 								if ($row["field_name"] == $field_name) {
-									$html_dq_header .= "<td height='1' style='padding:0px 5px 0px 5px;'><strong><font color='#" . $colors["header_text"] . "'>" . $field_array["name"] . "</font></strong></td>\n";
+#									$html_dq_header .= "<td height='1' style='padding:0px 5px 0px 5px;' onMousemove='doColResize(this,event)' onMouseover='doColResize(this,event)' onMouseup='doneColResize()'><strong><font color='#" . $colors["header_text"] . "'>" . $field_array["name"] . "</font></strong></td>\n";
+									$html_dq_header .= "<th style='padding:0px 5px 0px 5px;' onMousemove='doColResize(this,event)' onMouseover='doColResize(this,event)' onMouseup='doneColResize()' class='textSubHeaderDark'><strong><font color='#" . $colors["header_text"] . "'>" . $field_array["name"] . "</font></strong></th>\n";
 									break;
 								}
 							}
@@ -778,7 +776,7 @@ function graphs_new() {
 
 					if (!sizeof($snmp_query_indexes)) {
 						print "<tr class='rowAlternate1'><td>This data query returned 0 rows, perhaps there was a problem executing this
-							data query. You can <a href='host.php?action=query_verbose&id=" . $snmp_query["id"] . "&host_id=" . $host["id"] . "'>run this data
+							data query. You can <a href='" . htmlspecialchars("host.php?action=query_verbose&id=" . $snmp_query["id"] . "&host_id=" . $host["id"]) . "'>run this data
 							query in debug mode</a> to get more information.</td></tr>\n";
 					}else{
 						print "<tr class='rowSubHeader'>
@@ -837,7 +835,7 @@ function graphs_new() {
 			if (sizeof($data_query_graphs) == 1) {
 				html_end_box();
 
-				form_hidden_box("sgg_" . $snmp_query["id"] . "' id='sgg_" . $snmp_query["id"], $data_query_graphs[0]["id"], "");
+				form_hidden_box("sgg_" . $snmp_query["id"], $data_query_graphs[0]["id"], "");
 			}elseif (sizeof($data_query_graphs) > 1) {
 				html_end_box(FALSE);
 

@@ -70,7 +70,7 @@ function draw_nontemplated_fields_graph($graph_template_id, &$values_array, $fie
 		}else{
 			if (($draw_any_items == false) && ($header_title != "")) {
 				$header_items = array($header_title, "");
-				html_header($header_items, 1, true, 'template_graph');
+				html_header_only($header_items, 1, true, 'template_graph');
 			}
 
 			$draw_any_items = true;
@@ -181,7 +181,7 @@ function draw_nontemplated_fields_graph_item($graph_template_id, $local_graph_id
 			}else{
 				if (($draw_any_items == false) && ($header_title != "")) {
 					$header_items = array($header_title, "");
-					html_header($header_items, 1, true, 'template_graph_item');
+					html_header_only($header_items, 1, true, 'template_graph_item');
 				}
 
 				$draw_any_items = true;
@@ -266,7 +266,7 @@ function draw_nontemplated_fields_data_source($data_template_id, $local_data_id,
 		}else{
 			if (($draw_any_items == false) && ($header_title != "")) {
 				$header_items = array($header_title, "");
-				html_header($header_items, 1, true, 'template_data_source');
+				html_header_only($header_items, 1, true, 'template_data_source');
 			}
 
 			$draw_any_items = true;
@@ -368,10 +368,10 @@ function draw_nontemplated_fields_data_source_item($data_template_id, &$values_a
 			}else{
 				if (($draw_any_items == false) && ($draw_title_for_each_item == false) && ($header_title != "")) {
 					$header_items = array($header_title, "");
-					html_header($header_items, 1, true, 'template_data_source_item');
+					html_header_only($header_items, 1, true, 'template_data_source_item');
 				}elseif (($draw_any_items == false) && ($draw_title_for_each_item == true) && ($header_title != "")) {
 					$header_items = array($header_title ." [" . $rrd["data_source_name"] . "]", "");
-					html_header($header_items, 1, true, 'template_data_source_item');
+					html_header_only($header_items, 1, true, 'template_data_source_item');
 				}
 
 				$draw_any_items = true;
@@ -455,7 +455,7 @@ function draw_nontemplated_fields_custom_data($data_template_data_id, $field_nam
 		}else{
 			if (($draw_any_items == false) && ($header_title != "")) {
 				$header_items = array($header_title, "");
-				html_header($header_items, 1, true, 'template_custom_data');
+				html_header_only($header_items, 1, true, 'template_custom_data');
 			}
 
 			if ($alternate_colors == true) {
