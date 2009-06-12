@@ -455,7 +455,7 @@ $struct_graph = array(
 		"default" => "",
 		"description" => "The algorithm ensures that you always have a grid, that there are enough but not too many grid lines,
 			and that the grid is metric. This parameter will also ensure that you
-			get enough decimals displayed.<br/><strong>Note:</strong> This parameter may interfere with --alt-autoscale options."
+			get enough decimals displayed.<br><strong>Note:</strong> This parameter may interfere with --alt-autoscale options."
 		),
 	"auto_padding" => array(
 		"friendly_name" => "Auto Padding",

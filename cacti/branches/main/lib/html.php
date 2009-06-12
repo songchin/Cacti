@@ -767,6 +767,7 @@ function draw_graph_items_list($item_list, $filename, $url_data, $disable_contro
 	$header_items = array("Graph Item", "Data Source", "Graph Item Type", "CF Type", "CDEF", "GPRINT Type", "Item Color");
 	$last_item_colspan = 3;
 
+	print "<tr><td>";
 	html_header($header_items, $last_item_colspan, true, 'graph_item');
 
 	$group_counter = 0; $_graph_type_name = ""; $i = 0;
@@ -805,7 +806,7 @@ function draw_graph_items_list($item_list, $filename, $url_data, $disable_contro
 		}
 
 		print "<td>";
-		if ($disable_controls == false) { print "<a href='$filename?action=item_edit&id=" . $item["id"] . "&$url_data'>"; }
+		if ($disable_controls == false) { print "<a href='" . htmlspecialchars("$filename?action=item_edit&id=" . $item["id"] . "&$url_data") ."'>"; }
 		print "<strong>Item # " . ($i+1) . "</strong>";
 		if ($disable_controls == false) { print "</a>"; }
 		print "</td>\n";
@@ -840,7 +841,7 @@ function draw_graph_items_list($item_list, $filename, $url_data, $disable_contro
 		print "<td style='$this_row_style'>" . $item["hex"] . "</td>\n";
 
 		if ($disable_controls == false) {
-			print "<td align='right'><a href='$filename?action=item_remove&id=" . $item["id"] . "&$url_data'><img id='buttonSmall' class='buttonSmall' src='images/delete_icon.gif' title='Delete this Item' alt='Delete' align='absmiddle'></a></td>\n";
+			print "<td align='right'><a href='" . htmlspecialchars("$filename?action=item_remove&id=" . $item["id"] . "&$url_data") . "'><img id='buttonSmall" . $item["id"] . "' class='buttonSmall' src='images/delete_icon.gif' title='Delete this Item' alt='Delete' align='middle'></a></td>\n";
 		}
 
 		print "</tr>";
@@ -850,6 +851,8 @@ function draw_graph_items_list($item_list, $filename, $url_data, $disable_contro
 	}else{
 		print "<tr bgcolor='#" . $colors["form_alternate2"] . "'><td colspan='" . (sizeof($header_items)+$last_item_colspan-1) . "'><em>No Items</em></td></tr>";
 	}
+
+	print "</table></td></tr>";
 }
 
 function draw_header_tab($name, $title, $location, $image = "") {
