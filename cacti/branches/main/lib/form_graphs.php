@@ -820,9 +820,10 @@ function graph_edit() {
 	}
 
 	print "<form method='post' action='" .  basename($_SERVER["PHP_SELF"]) . "' name='graph_edit'>\n";
-	html_start_box("<strong>Graph Template Selection</strong> $header_label", "100%", $colors["header"], "3", "center", "");
+	html_start_box("<strong>Graph Template Selection</strong> $header_label", "100%", $colors["header"], 0, "center", "");
 	$header_items = array("Field", "Value");
-	html_header_only($header_items, 1, true, 'template');
+	print "<tr><td>";
+	html_header($header_items, 1, true, 'template');
 
 	$form_array = array(
 		"graph_template_id" => array(
@@ -870,13 +871,14 @@ function graph_edit() {
 			)
 		);
 
+	print "</table></td></tr>";		/* end of html_header */
 	html_end_box();
 
 
 #	print "<form method='post' action='graphs.php'>\n";
 	/* only display the "inputs" area if we are using a graph template for this graph */
 	if (!empty($graphs["graph_template_id"])) {
-		html_start_box("<strong>Supplemental Graph Template Data</strong>", "100%", $colors["header"], "3", "center", "");
+		html_start_box("<strong>Supplemental Graph Template Data</strong>", "100%", $colors["header"], "0", "center", "");
 
 		draw_nontemplated_fields_graph($graphs["graph_template_id"], $graphs, "|field|", "<strong>Graph Fields</strong>", true, true, 0);
 		draw_nontemplated_fields_graph_item($graphs["graph_template_id"], $_GET["id"], "|field|_|id|", "<strong>Graph Item Fields</strong>", true);
@@ -917,10 +919,10 @@ function graph_edit() {
 	}
 
 	if (((isset($_GET["id"])) || (isset($_GET["new"]))) && (empty($graphs["graph_template_id"]))) {
-		html_start_box("<strong>Graph Configuration</strong>", "100%", $colors["header"], "3", "center", "");
-#		print "<tr><td></td></tr></table>";
-#		$header_items = array("Field", "Value");
-#		html_header_only($header_items, 1, true, 'template');
+		html_start_box("<strong>Graph Configuration</strong>", "100%", $colors["header"], "0", "center", "");
+		$header_items = array("Field", "Value");
+		print "<tr><td>";
+		html_header($header_items, 1, true, 'template');
 
 		$form_array = array();
 
@@ -945,6 +947,7 @@ function graph_edit() {
 				)
 			);
 
+		print "</table></td></tr>";		/* end of html_header */
 		html_end_box();
 	}
 

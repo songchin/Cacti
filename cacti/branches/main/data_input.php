@@ -377,8 +377,10 @@ function data_edit() {
 		$header_label = "[new]";
 	}
 
-	html_start_box("<strong>Data Input Methods</strong> $header_label", "100%", $colors["header"], "3", "center", "");
+	print "<form method='post' action='" .  basename($_SERVER["PHP_SELF"]) . "' name='data_input_edit'>\n";
+	html_start_box("<strong>Data Input Methods</strong> $header_label", "100%", $colors["header"], 0, "center", "");
 	$header_items = array("Field", "Value");
+	print "<tr><td>";
 	html_header($header_items, 1, true, 'data_input');
 
 	draw_edit_form(array(
@@ -386,18 +388,20 @@ function data_edit() {
 		"fields" => inject_form_variables($fields_data_input_edit, (isset($data_input) ? $data_input : array()))
 		));
 
+	print "</table></td></tr>";		/* end of html_header */
 	html_end_box();
 
 	if (!empty($_GET["id"])) {
-		html_start_box("<strong>Input Fields</strong>", "100%", $colors["header"], "3", "center", "data_input.php?action=field_edit&type=in&data_input_id=" . $_GET["id"]);
+		html_start_box("<strong>Input Fields</strong>", "100%", $colors["header"], 0, "center", "data_input.php?action=field_edit&type=in&data_input_id=" . $_GET["id"]);
 		$header_items = array("Name", "Field Order", "Friendly Name");
+		print "<tr><td>";
 		html_header($header_items, 2, true, 'data_input_fields');
 
 		$fields = db_fetch_assoc("select id,data_name,name,sequence from data_input_fields where data_input_id=" . $_GET["id"] . " and input_output='in' order by sequence, data_name");
 
 		if (sizeof($fields) > 0) {
 		foreach ($fields as $field) {
-			form_alternate_row_color();
+			form_alternate_row_color("input_fields" . $field["id"]);
 				?>
 				<td>
 					<a class="linkEditMain" href="<?php print htmlspecialchars("data_input.php?action=field_edit&id=" . $field["id"] . "&data_input_id=" . $_GET["id"]);?>"><?php print $field["data_name"];?></a>
@@ -417,16 +421,18 @@ function data_edit() {
 		}else{
 			print "<tr><td><em>No Input Fields</em></td></tr>";
 		}
+		print "</table></td></tr>";		/* end of html_header */
 		html_end_box();
 
-		html_start_box("<strong>Output Fields</strong>", "100%", $colors["header"], "3", "center", "data_input.php?action=field_edit&type=out&data_input_id=" . $_GET["id"]);
+		html_start_box("<strong>Output Fields</strong>", "100%", $colors["header"], 0, "center", "data_input.php?action=field_edit&type=out&data_input_id=" . $_GET["id"]);
 		$header_items = array("Name", "Field Order", "Friendly Name", "Update RRA");
+		print "<tr><td>";
 		html_header($header_items, 2, true, 'data_output_fields');
 
 		$fields = db_fetch_assoc("select id,name,data_name,update_rra,sequence from data_input_fields where data_input_id=" . $_GET["id"] . " and input_output='out' order by sequence, data_name");
 		if (sizeof($fields) > 0) {
 		foreach ($fields as $field) {
-			form_alternate_row_color();
+			form_alternate_row_color("output_fields" . $field["id"]);
 				?>
 				<td>
 					<a class="linkEditMain" href="<?php print htmlspecialchars("data_input.php?action=field_edit&id=" . $field["id"] . "&data_input_id=". $_GET["id"]);?>"><?php print $field["data_name"];?></a>
@@ -449,6 +455,7 @@ function data_edit() {
 		}else{
 			print "<tr><td><em>No Output Fields</em></td></tr>";
 		}
+		print "</table></td></tr>";		/* end of html_header */
 		html_end_box();
 	}
 
@@ -547,6 +554,7 @@ function data() {
 	$nav = html_create_nav($_REQUEST["page"], MAX_DISPLAY_PAGES, read_config_option("num_rows_device"), $total_rows, 7, "data_input.php");
 
 	print $nav;
+	html_end_box(FALSE);
 
 	$display_text = array(
 		"name" => array("Name", "ASC"),
@@ -564,19 +572,14 @@ function data() {
 			form_end_row();
 		}
 
-		form_end_table();
-
 		print $nav;
 	}else{
 		print "<tr><td><em>No Data Input Methods</em></td></tr>";
 	}
 
-	html_end_box(FALSE);
+	print "</table>\n</form>\n";	# end form and table of html_header_sort_checkbox
 
 	/* draw the dropdown containing a list of available actions for this form */
 	draw_actions_dropdown($di_actions);
-
-	print "</form>\n";
-
 }
 ?>

@@ -264,14 +264,19 @@ function poller_edit() {
 		$_GET["id"] = 0;
 	}
 
-	html_start_box("<strong>Pollers</strong> $header_label", "100%", $colors["header"], "3", "center", "", true);
+	print "<form method='post' action='" .  basename($_SERVER["PHP_SELF"]) . "' name='poller_edit'>\n";
+	html_start_box("<strong>Pollers</strong> $header_label", "100%", $colors["header"], 0, "center", "", true);
+	$header_items = array("Field", "Value");
+	print "<tr><td>";
+	html_header($header_items, 1, true, 'poller_edit');
 
 	draw_edit_form(array(
 		"config" => array(),
 		"fields" => inject_form_variables($fields_poller_edit, (isset($poller) ? $poller : array()))
 		));
 
-	html_end_box(FALSE);
+	print "</table></td></tr>";		/* end of html_header */
+	html_end_box();
 
 	form_save_button_alt();
 }
@@ -323,7 +328,7 @@ function poller() {
 	?>
 	<tr class='rowAlternate2'>
 		<td>
-			<form name="form_pollers">
+			<form name="form_pollers" action="pollers.php">
 			<table cellpadding="0" cellspacing="0">
 				<tr>
 					<td style='white-space:nowrap;width:50px;'>
@@ -365,6 +370,7 @@ function poller() {
 	$nav = html_create_nav($_REQUEST["page"], MAX_DISPLAY_PAGES, read_config_option("num_rows_device"), $total_rows, 7, "pollers.php");
 
 	print $nav;
+	html_end_box(false);
 
 	$display_text = array(
 		"description" => array("Description", "ASC"),
@@ -389,18 +395,15 @@ function poller() {
 			form_end_row();
 		}
 
-		form_end_table();
-
 		/* put the nav bar on the bottom as well */
 		print $nav;
 	}else{
 		print "<tr><td><em>No Pollers Defined</em></td></tr>\n";
 	}
-	html_end_box(false);
+
+	print "</table>\n</form>\n";	# end form and table of html_header_sort_checkbox
 
 	/* draw the dropdown containing a list of available actions for this form */
 	draw_actions_dropdown($poller_actions);
-
-	print "</form>\n";
 }
 ?>

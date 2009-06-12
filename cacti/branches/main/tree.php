@@ -388,13 +388,15 @@ function tree_edit() {
 	print "<form method='post' action='" .  basename($_SERVER["PHP_SELF"]) . "' name='tree_edit'>\n";
 	html_start_box("<strong>Graph Trees</strong> $header_label", "100%", $colors["header"], "3", "center", "", true);
 	$header_items = array("Field", "Value");
-	html_header_only($header_items, 1, true, 'template');
+	print "<tr><td>";
+	html_header($header_items, 1, true, 'template');
 
 	draw_edit_form(array(
 		"config" => array(),
 		"fields" => inject_form_variables($fields_tree_edit, (isset($tree) ? $tree : array()))
 		));
 
+	print "</table></td></tr>";		/* end of html_header */
 	html_end_box(FALSE);
 
 	if (!empty($_GET["id"])) {
@@ -410,9 +412,11 @@ function tree_edit() {
 		<?php
 
 		$header_items = array("Item", "Value");
-		html_header_only($header_items, 3, true, 'tree');
+		print "<tr><td>";
+		html_header($header_items, 3, true, 'tree');
 
 		grow_edit_graph_tree($_GET["id"], "", "");
+		print "</table></td></tr>";		/* end of html_header */
 		html_end_box();
 	}
 

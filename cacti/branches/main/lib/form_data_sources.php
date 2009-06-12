@@ -695,9 +695,10 @@ function data_source_edit() {
 	}
 
 	print "<form method='post' action='" .  basename($_SERVER["PHP_SELF"]) . "' name='data_source_edit'>\n";
-	html_start_box("<strong>Data Template Selection</strong> $header_label", "100%", $colors["header"], "3", "center", "");
+	html_start_box("<strong>Data Template Selection</strong> $header_label", "100%", $colors["header"], 0, "center", "");
 	$header_items = array("Field", "Value");
-	html_header_only($header_items, 1, true, 'template');
+	print "<tr><td>";
+	html_header($header_items, 1, true, 'template');
 
 	$form_array = array(
 		"data_template_id" => array(
@@ -749,6 +750,7 @@ function data_source_edit() {
 			)
 		);
 
+	print "</table></td></tr>";		/* end of html_header */
 	html_end_box();
 
 	/* only display the "inputs" area if we are using a data template for this data source */

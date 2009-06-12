@@ -397,19 +397,24 @@ function site_edit() {
 		$header_label = "[new]";
 	}
 
-	html_start_box("<strong>Site</strong> $header_label", "100%", $colors["header"], "3", "center", "");
+	print "<form method='post' action='" .  basename($_SERVER["PHP_SELF"]) . "' name='site_edit'>\n";
+	html_start_box("<strong>Site</strong> $header_label", "100%", $colors["header"], 0, "center", "");
+	$header_items = array("Field", "Value");
+	print "<tr><td>";
+	html_header($header_items, 1, true, 'site_edit');
 
 	draw_edit_form(array(
 		"config" => array("form_name" => "chk"),
 		"fields" => inject_form_variables($fields_site_edit, (isset($site) ? $site : array()))
 		));
 
+	print "</table></td></tr>";		/* end of html_header */
 	html_end_box();
 
 	form_save_button_alt();
 }
 
-function site_filter() {	global $item_rows;
+function site_filter() {	global $item_rows, $colors;
 	?>
 	<script type="text/javascript">
 	<!--
@@ -429,9 +434,10 @@ function site_filter() {	global $item_rows;
 	}
 	-->
 	</script>
+	<?php html_start_box("<strong>Site Filters</strong>", "100%", $colors["header"], "3", "center", "sites.php?action=edit", true);?>
 	<tr class='rowAlternate2'>
 		<td>
-			<form name="form_sites">
+			<form method='post' action='<?php print basename($_SERVER["PHP_SELF"]);?>' name='site_edit'>
 			<table cellpadding="1" cellspacing="0">
 				<tr>
 					<td nowrap style='white-space: nowrap;' width="55">
@@ -522,6 +528,7 @@ function site_filter() {	global $item_rows;
 		</td>
 	</tr>
 	<?php
+	html_end_box(false);
 }
 
 function site() {
@@ -596,9 +603,7 @@ function site() {
 	load_current_session_value("sort_column", "sess_sites_sort_column", "name");
 	load_current_session_value("sort_direction", "sess_sites_sort_direction", "ASC");
 
-	html_start_box("<strong>Site Filters</strong>", "100%", $colors["header"], "3", "center", "sites.php?action=edit", true);
 	site_filter();
-	html_end_box(false);
 
 	html_start_box("", "100%", $colors["header"], "0", "center", "");
 
@@ -629,6 +634,7 @@ function site() {
 		$nav = html_create_nav($_REQUEST["page"], MAX_DISPLAY_PAGES, read_config_option("num_rows_device"), $total_rows, 9, "sites.php");
 
 		print $nav;
+		html_end_box(false);
 
 		$display_text = array(
 			"name" => array("Site Name", "ASC"),
@@ -642,7 +648,7 @@ function site() {
 		if (sizeof($sites) > 0) {
 			foreach ($sites as $site) {
 				form_alternate_row_color($site["id"], true);
-				form_selectable_cell("<a class='linkEditMain' href='sites.php?action=edit&id=" . $site["id"] . "'>" .
+				form_selectable_cell("<a class='linkEditMain' href='" . htmlspecialchars("sites.php?action=edit&id=" . $site["id"]) . "'>" .
 					(strlen($_REQUEST["filter"]) ? eregi_replace("(" . preg_quote($_REQUEST["filter"]) . ")", "<span style='background-color: #F8D93D;'>\\1</span>", $site["name"]) : $site["name"]) . "</a>", $site["id"], "20%");
 				form_selectable_cell($site["address1"], $site["id"]);
 				form_selectable_cell($site["city"], $site["id"]);
@@ -652,18 +658,17 @@ function site() {
 				form_end_row();
 			}
 
-			form_end_table();
-
 			/* put the nav bar on the bottom as well */
 			print $nav;
 		}else{
 			print "<tr><td><em>No Sites</em></td></tr>";
 		}
-		html_end_box(false);
+		print "</table>\n</form>\n";	# end form and table of html_header_sort_checkbox
 	}else{
 		$nav = html_create_nav($_REQUEST["page"], MAX_DISPLAY_PAGES, read_config_option("num_rows_device"), $total_rows, 10, "sites.php");
 
 		print $nav;
+		html_end_box(false);
 
 		$display_text = array(
 			"name" => array("Site Name", "ASC"),
@@ -692,14 +697,12 @@ function site() {
 				form_end_row();
 			}
 
-			form_end_table();
-
 			/* put the nav bar on the bottom as well */
 			print $nav;
 		}else{
 			print "<tr><td><em>No Sites</em></td></tr>";
 		}
-		html_end_box(false);
+		print "</table>\n</form>\n";	# end form and table of html_header_sort_checkbox
 	}
 
 	/* draw the dropdown containing a list of available actions for this form */

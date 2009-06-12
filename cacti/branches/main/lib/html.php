@@ -131,7 +131,7 @@ function html_start_box_dq($query_name, $query_id, $host_id, $colspan, $width, $
 								<strong>Data Query</strong> [<?php print $query_name; ?>]
 							</td>
 							<td align='right' nowrap>
-								<a href='graphs_new.php?action=query_reload&id=<?php print $query_id;?>&host_id=<?php print $host_id;?>'><img class='buttonSmall' src='images/reload_icon_small.gif' alt='Reload' title='Reload Associated Query' align='middle'></a>
+								<a href='graphs_new.php?action=query_reload&amp;id=<?php print $query_id;?>&amp;host_id=<?php print $host_id;?>'><img class='buttonSmall' src='images/reload_icon_small.gif' alt='Reload' title='Reload Associated Query' align='middle'></a>
 							</td>
 						</tr>
 					</table>
@@ -484,7 +484,7 @@ function html_header_sort($header_items, $sort_column, $sort_direction, $last_it
 			$width = html_get_column_width($pathname, $db_column);
 
 			print "\t\t\t<th nowrap style='width:$width;white-space:nowrap;' id='$db_column'" . ((($rand_id+1) == count($header_items)) ? "colspan='$last_item_colspan' " : "") . " onMousemove='doColResize(this,event)' onMouseover='doColResize(this,event)' onMouseup='doneColResize()' class='textSubHeaderDark'>";
-			print "\n\t\t\t\t<a class='$sort_class' style='display:block;' href=" . htmlspecialchars($_SERVER["PHP_SELF"] . "?sort_column=" . $db_column . "&sort_direction=" . $direction) . ">" . $display_text . "</a>";
+			print "\n\t\t\t\t<a class='$sort_class' style='display:block;' href='" . htmlspecialchars($_SERVER["PHP_SELF"] . "?sort_column=" . $db_column . "&sort_direction=" . $direction) . "'>" . $display_text . "</a>";
 			print "\n\t\t\t</th>\n";
 		}
 	}
@@ -519,7 +519,9 @@ function html_header_sort_checkbox($header_items, $sort_column, $sort_direction,
 	/* default to the 'current' file */
 	if ($form_action == "") { $form_action = basename($_SERVER["PHP_SELF"]); }
 
-	print "\t\t<table class='resizable' cellpadding='3' cellspacing='0' width='100%'><tr class='rowSubHeader'>\n";
+	print "<form name='chk' method='post' action='$form_action'>\n";	# properly place form outside table
+	print "\t<table class='resizable' cellpadding='3' cellspacing='0' width='100%'>\n";
+	print "\t\t<tr class='rowSubHeader'>\n";
 
 	$pathname = html_get_php_pathname();
 
@@ -546,12 +548,12 @@ function html_header_sort_checkbox($header_items, $sort_column, $sort_direction,
 			$width = html_get_column_width($pathname, $db_column);
 
 			print "\t\t\t<th nowrap style='width:$width;white-space:nowrap;' id='$db_column' onMousemove='doColResize(this,event)' onMouseover='doColResize(this,event)' onMouseup='doneColResize()' class='textSubHeaderDark'>";
-			print "\n\t\t\t\t<a class='$sort_class' style='display:block;' href=" . htmlspecialchars($_SERVER["PHP_SELF"] . "?sort_column=" . $db_column . "&sort_direction=" . $direction) . ">" . $display_text . "</a>";
+			print "\n\t\t\t\t<a class='$sort_class' style='display:block;' href='" . htmlspecialchars($_SERVER["PHP_SELF"] . "?sort_column=" . $db_column . "&sort_direction=" . $direction) . "'>" . $display_text . "</a>";
 			print "\n\t\t\t</th>\n";
 		}
 	}
 
-	print "\t\t\t<th id='hhsc_$rand_id' style='width: 14px;' class='textSubHeaderDark'><input type='checkbox' style='width: 14px; margin: 0px;' name='all' title='Select All' onClick='SelectAll(\"chk_\",this.checked)'><form name='chk' method='post' action='$form_action'></th>\n";
+	print "\t\t\t<th id='hhsc_$rand_id' style='width: 14px;' class='textSubHeaderDark'><input type='checkbox' style='width: 14px; margin: 0px;' name='all' title='Select All' onClick='SelectAll(\"chk_\",this.checked)'></th>\n";
 	print "\t\t</tr>\n";
 }
 
@@ -697,6 +699,7 @@ function html_split_string($string, $length = 70, $forgiveness = 10) {
 }
 
 /* html_create_nav - creates page select navigation html
+ * 					creates a table inside of a row
    @arg $current_page - the current page displayed
    @arg $max_pages - the maxium number of pages to show on a page
    @arg $rows_per_page - the number of rows to display per page
@@ -714,7 +717,8 @@ function html_create_nav($current_page, $max_pages, $rows_per_page, $total_rows,
 
 	$url_page_select = get_page_list($current_page, $max_pages, $rows_per_page, $total_rows, $base_url, $page_var);
 
-	$nav = "		<tr class='rowHeader'>
+	$nav = "
+		<tr class='rowHeader'>
 			<td colspan='$columns'>
 				<table width='100%' cellspacing='0' cellpadding='0' border='0'>
 					<tr>
@@ -742,8 +746,7 @@ function html_create_nav($current_page, $max_pages, $rows_per_page, $total_rows,
 					</tr>
 				</table>
 			</td>
-		</tr>
-	</table>\n";
+		</tr>\n";
 
 	return $nav;
 }
@@ -979,7 +982,7 @@ function draw_menu($user_menu = "") {
 			print "\t\t\t<tr class='menuMain' style='white-space:nowrap' $ani>
 				<td onMouseDown='return false' valign='middle'>
 					$header_name
-					<img style='display:none;' src='" . URL_PATH . "images/transparent_pixel.gif' $ani2>
+					<img style='display:none;' alt='' src='" . URL_PATH . "images/transparent_pixel.gif' $ani2>
 				</td>
 			</tr>
 			<tr class='mainMenu' id='menu_$id'>

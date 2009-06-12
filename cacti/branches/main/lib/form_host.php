@@ -795,9 +795,10 @@ function host_display_general($host, $host_text) {
 	html_end_box(FALSE);
 
 	print "<form method='post' action='" .  basename($_SERVER["PHP_SELF"]) . "' name='host_edit_settings'>\n";
-	html_start_box("<strong>General Settings</strong>", "100%", $colors["header"], "3", "center", "", true);
+	html_start_box("<strong>General Settings</strong>", "100%", $colors["header"], 0, "center", "", true);
 	$header_items = array("Field", "Value");
-	html_header_only($header_items, 1, true, 'host');
+	print "<tr><td>";
+	html_header($header_items, 1, true, 'host');
 
 	/* preserve the host template id if passed in via a GET variable */
 	if (!empty($_GET["host_template_id"])) {
@@ -819,6 +820,7 @@ function host_display_general($host, $host_text) {
 			));
 	}
 
+	print "</table></td></tr>";		/* end of html_header */
 	html_end_box(!isset($host["id"]));
 
 	/* javascript relates to availability options, so include it only for existing hosts */
@@ -1101,9 +1103,9 @@ function host_display_general($host, $host_text) {
 	}
 
 	if (isset($host["id"])) {
-		html_start_box("<strong>Associated Graph Templates</strong>", "100%", $colors["header"], "3", "center", "", true);
-
-		html_header_only(array("Graph Template Name", "Status"), 2);
+		html_start_box("<strong>Associated Graph Templates</strong>", "100%", $colors["header"], 0, "center", "", true);
+		print "<tr><td>";
+		html_header(array("Graph Template Name", "Status"), 2);
 
 		$selected_graph_templates = db_fetch_assoc("select
 			graph_templates.id,
@@ -1173,11 +1175,12 @@ function host_display_general($host, $host_text) {
 			</td>
 		<?php
 		form_end_row();
+		print "</table></td></tr>";		/* end of html_header */
 		html_end_box(FALSE);
 
-		html_start_box("<strong>Associated Data Queries</strong>", "100%", $colors["header"], "3", "center", "", true);
-
-		html_header_only(array("Data Query Name", "Debugging", "Re-Index Method", "Status"), 2);
+		html_start_box("<strong>Associated Data Queries</strong>", "100%", $colors["header"], 0, "center", "", true);
+		print "<tr><td>";
+		html_header(array("Data Query Name", "Debugging", "Re-Index Method", "Status"), 2);
 
 		$selected_data_queries = db_fetch_assoc("select
 			snmp_query.id,
@@ -1261,6 +1264,7 @@ function host_display_general($host, $host_text) {
 			</td>
 		<?php
 		form_end_row();
+		print "</table></td></tr>";		/* end of html_header */
 		html_end_box();
 	}
 

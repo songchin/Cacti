@@ -331,22 +331,25 @@ function data_query_item_edit() {
 	$snmp_query = db_fetch_row("select name,xml_path from snmp_query where id=" . $_GET["snmp_query_id"]);
 	$header_label = "[edit: " . $snmp_query["name"] . "]";
 
-	html_start_box("<strong>Associated Graph/Data Templates</strong> $header_label", "100%", $colors["header"], "3", "center", "");
-	print "<tr>\n";
+	print "<form method='post' action='" .  basename($_SERVER["PHP_SELF"]) . "' name='data_query_item_edit'>\n";
+	html_start_box("<strong>Associated Graph/Data Templates</strong> $header_label", "100%", $colors["header"], 0, "center", "");
 	$header_items = array("Field", "Value");
+	print "<tr><td>";
 	html_header($header_items, 1, true, 'assoc_templates');
-	print "</tr>\n";
 
 	draw_edit_form(array(
 		"config" => array(),
 		"fields" => inject_form_variables($fields_data_query_item_edit, (isset($snmp_query_item) ? $snmp_query_item : array()), $_GET)
 		));
 
-	print "</table>\n";
+	print "</table></td></tr>";		/* end of html_header */
 	html_end_box(true);
 
 	if (!empty($snmp_query_item["id"])) {
-		html_start_box("<strong>Associated Data Templates</strong>", "100%", $colors["header"], "3", "center", "", false, "assoc_data_templates");
+		html_start_box("<strong>Associated Data Templates</strong>", "100%", $colors["header"], "0", "center", "", false, "assoc_data_templates");
+		$header_items = array("Data Source Name", "Associated XML Field", "Use this Field");
+		print "<tr><td>";
+		html_header($header_items, 1, true, 'data_templates');
 
 		$data_templates = db_fetch_assoc("select
 			data_template.id,
@@ -369,9 +372,6 @@ function data_query_item_edit() {
 							<td></td>
 						</tr>";
 
-				$header_items = array("Data Source Name", "Associated XML Field", "Use this Field");
-				html_header($header_items, 1, true, 'data_template_' . $data_template["id"]);
-
 				$data_template_rrds = db_fetch_assoc("select
 					data_template_rrd.id,
 					data_template_rrd.data_source_name,
@@ -391,7 +391,7 @@ function data_query_item_edit() {
 							$old_value = "on";
 						}
 
-						form_alternate_row_color();
+						form_alternate_row_color("data_template_rrd" . $data_template_rrd["id"]);
 						print "<td>\n";
 						print $data_template_rrd["data_source_name"];
 						print "</td>\n<td>";
@@ -411,13 +411,13 @@ function data_query_item_edit() {
 						form_end_row();
 					}
 				}
-				print "</table>\n";
 			}
 		}
 
+		print "</table></td></tr>";		/* end of html_header */
 		html_end_box();
 
-		html_start_box("<strong>Suggested Values</strong>", "100%", $colors["header"], "3", "center", "");
+		html_start_box("<strong>Suggested Values: Data Templates</strong>", "100%", $colors["header"], 0, "center", "");
 
 		reset($data_templates);
 
@@ -426,6 +426,7 @@ function data_query_item_edit() {
 			foreach ($data_templates as $data_template) {
 
 				$header_items = array("Data Template - " . $data_template["name"], "&nbsp;");
+				print "<tr><td>";
 				html_header($header_items, 2, true, 'data_template_suggested_values_' . $data_template["id"]);
 
 				$suggested_values = db_fetch_assoc("select
@@ -468,9 +469,14 @@ function data_query_item_edit() {
 					</td>
 				<?php
 				form_end_row();
-				print "</table>\n";
+				print "</table></td></tr>";		/* end of html_header */
+			}
+		}
+		html_end_box(false);
 
-				/* we need a new javascript for each table */
+		/* we need a new javascript for each table */
+		if (sizeof($data_templates) > 0) {
+			foreach ($data_templates as $data_template) {
 				print("	<script type='text/javascript'>
 						$('#data_template_suggested_values_" . $data_template["id"] . "').tableDnD({
 								onDrop: function(table, row) {
@@ -481,6 +487,8 @@ function data_query_item_edit() {
 			}
 		}
 
+
+
 		/* suggested values for graphs templates */
 		$suggested_values = db_fetch_assoc("select
 			text,
@@ -490,7 +498,9 @@ function data_query_item_edit() {
 			where snmp_query_graph_id=" . $_GET["id"] . "
 			order by field_name,sequence");
 
+		html_start_box("<strong>Suggested Values: Graph Templates</strong>", "100%", $colors["header"], 0, "center", "");
 		$header_items = array("Graph Template - " . db_fetch_cell("select name from graph_templates where id=" . $snmp_query_item["graph_template_id"]), "&nbsp;");
+		print "<tr><td>";
 		html_header($header_items, 2, true, 'graph_template_suggested_values_' . $_GET["id"]);
 
 		if (sizeof($suggested_values) > 0) {
@@ -508,16 +518,6 @@ function data_query_item_edit() {
 					</td>
 				<?php
 				form_end_row();
-				?>
-<script type="text/javascript">
-	$('#graph_template_suggested_values_<?php print $_GET["id"];?>').tableDnD({
-		onDrop: function(table, row) {
-//			alert("lib/ajax/jquery.tablednd/data_query_gt_sv.ajax.php?gt_id=<?php print $_GET["id"];?>&"+$.tableDnD.serialize());
-			$('#AjaxResult').load("lib/ajax/jquery.tablednd/data_query_gt_sv.ajax.php?gt_id=<?php print $_GET["id"];?>&"+$.tableDnD.serialize());
-		}
-	});
-</script>
-				<?php
 			}
 		}
 
@@ -534,9 +534,19 @@ function data_query_item_edit() {
 			</td>
 		<?php
 		form_end_row();
-		print "</table>\n";
+		print "</table></td></tr>";
 		html_end_box();
 	}
+	?>
+<script type="text/javascript">
+	$('#graph_template_suggested_values_<?php print $_GET["id"];?>').tableDnD({
+		onDrop: function(table, row) {
+			alert("lib/ajax/jquery.tablednd/data_query_gt_sv.ajax.php?gt_id=<?php print $_GET["id"];?>&"+$.tableDnD.serialize());
+			$('#AjaxResult').load("lib/ajax/jquery.tablednd/data_query_gt_sv.ajax.php?gt_id=<?php print $_GET["id"];?>&"+$.tableDnD.serialize());
+		}
+	});
+</script>
+	<?php
 
 	form_save_button_alt("path!data_queries.php|action!edit|id!" . $_GET["snmp_query_id"]);
 }
@@ -575,8 +585,10 @@ function data_query_edit() {
 		$header_label = "[new]";
 	}
 
-	html_start_box("<strong>Data Queries</strong> $header_label", "100%", $colors["header"], "3", "center", "");
+	print "<form method='post' action='" .  basename($_SERVER["PHP_SELF"]) . "' name='data_query_edit'>\n";
+	html_start_box("<strong>Data Queries</strong> $header_label", "100%", $colors["header"], 0, "center", "");
 	$header_items = array("Field", "Value");
+	print "<tr><td>";
 	html_header($header_items, 1, true, 'data_query');
 
 	draw_edit_form(array(
@@ -584,6 +596,7 @@ function data_query_edit() {
 		"fields" => inject_form_variables($fields_data_query_edit, (isset($snmp_query) ? $snmp_query : array()))
 		));
 
+	print "</table></td></tr>";		/* end of html_header */
 	html_end_box();
 
 	if (!empty($snmp_query["id"])) {
@@ -602,8 +615,9 @@ function data_query_edit() {
 		html_end_box();
 
 		if ($xml_file_exists == true) {
-			html_start_box("<strong>Associated Graph Templates</strong>", "100%", $colors["header"], "3", "center", "data_queries.php?action=item_edit&snmp_query_id=" . $snmp_query["id"]);
+			html_start_box("<strong>Associated Graph Templates</strong>", "100%", $colors["header"], "0", "center", "data_queries.php?action=item_edit&snmp_query_id=" . $snmp_query["id"]);
 			$header_items = array("Name", "Graph Template Name");
+			print "<tr><td>";
 			html_header($header_items, 2, true, 'assoc_graph_templates');
 
 			$snmp_query_graphs = db_fetch_assoc("select
@@ -617,7 +631,7 @@ function data_query_edit() {
 
 			if (sizeof($snmp_query_graphs) > 0) {
 			foreach ($snmp_query_graphs as $snmp_query_graph) {
-				form_alternate_row_color($snmp_query["id"], true);
+				form_alternate_row_color("id" . $snmp_query["id"] . "_" . $snmp_query_graph["id"], true);
 				?>
 					<td>
 						<strong><a href="<?php print htmlspecialchars("data_queries.php?action=item_edit&id=". $snmp_query_graph["id"] . "&snmp_query_id=" . $snmp_query["id"]);?>"><?php print $snmp_query_graph["name"];?></a></strong>
@@ -635,6 +649,7 @@ function data_query_edit() {
 				print "<tr><td><em>No Graph Templates Defined.</em></td></tr>";
 			}
 
+			print "</table></td></tr>";		/* end of html_header */
 			html_end_box();
 		}
 	}
@@ -732,6 +747,7 @@ function data_query() {
 	$nav = html_create_nav($_REQUEST["page"], MAX_DISPLAY_PAGES, read_config_option("num_rows_device"), $total_rows, 7, "data_queries.php");
 
 	print $nav;
+	html_end_box(false);
 
 	$display_text = array(
 		"name" => array("Name", "ASC"),
@@ -748,14 +764,12 @@ function data_query() {
 			form_end_row();
 		}
 
-		form_end_table();
-
 		print $nav;
 	}else{
 		print "<tr><td><em>No Data Queries</em></td></tr>";
 	}
 
-	html_end_box(false);
+	print "</table>\n</form>\n";	# end form and table of html_header_sort_checkbox
 
 	/* draw the dropdown containing a list of available actions for this form */
 	draw_actions_dropdown($dq_actions);
