@@ -563,6 +563,17 @@ $settings = array(
 			"default" => "30",
 			"array" => $item_rows
 			),
+		"sites_header" => array(
+			"friendly_name" => "Sites",
+			"method" => "spacer",
+			),
+		"num_rows_sites" => array(
+			"friendly_name" => "Rows Per Page",
+			"description" => "The number of rows to display on a single page for sites.",
+			"method" => "drop_array",
+			"default" => "30",
+			"array" => $item_rows
+			),
 		"logmgmt_header" => array(
 			"friendly_name" => "Log Management",
 			"method" => "spacer",
