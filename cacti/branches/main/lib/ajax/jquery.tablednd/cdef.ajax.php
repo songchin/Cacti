@@ -27,14 +27,15 @@ require('./include/auth.php');
 
 /* ================= Input validation ================= */
 	input_validate_input_number(get_request_var("id"));
+/* ================= Input validation ================= */
 
-	if(!isset($_REQUEST['cdef']) || !is_array($_REQUEST['cdef'])) exit;
+	if(!isset($_REQUEST['cdef_item']) || !is_array($_REQUEST['cdef_item'])) exit;
 	/* cdef table contains one row defined as "nodrag&nodrop" */
-	unset($_REQUEST['cdef'][0]);
+	unset($_REQUEST['cdef_item'][0]);
 
 	/* delivered cdef ids has to be exactly the same like we have stored */
 	$old_order = array();
-	$new_order = $_REQUEST['cdef'];
+	$new_order = $_REQUEST['cdef_item'];
 
 	$sql = "SELECT id, sequence FROM cdef_items WHERE cdef_id = " . $_GET['id'];
 	$cdef_items = db_fetch_assoc($sql);

@@ -94,7 +94,7 @@ $settings = array(
 			),
 		"path_cactilog" => array(
 			"friendly_name" => "Cacti Log File Path",
-			"description" => "The path to your Cacti log file (if blank, defaults to <path_cacti>/log/cacti.log)",
+			"description" => "The path to your Cacti log file (if blank, defaults to &lt;path_cacti&gt;/log/cacti.log)",
 			"method" => "filepath",
 			"default" => CACTI_BASE_PATH . "/log/cacti.log",
 			"max_length" => "255"
@@ -881,14 +881,14 @@ $settings = array(
 			),
 		"ldap_mode" => array(
 			"friendly_name" => "Mode",
-		"description" => "Mode which cacti will attempt to authenicate against the LDAP server.<blockquote><i>No Searching</i> - No Distinguished Name (DN) searching occurs, just attempt to bind with the provided Distinguished Name (DN) format.<br><br><i>Anonymous Searching</i> - Attempts to search for username against LDAP directory via anonymous binding to locate the users Distinguished Name (DN).<br><br><i>Specific Searching</i> - Attempts search for username against LDAP directory via Specific Distinguished Name (DN) and Specific Password for binding to locate the users Distinguished Name (DN).",
+		"description" => "Mode which cacti will attempt to authenicate against the LDAP server.<blockquote><i>No Searching</i> - No Distinguished Name (DN) searching occurs, just attempt to bind with the provided Distinguished Name (DN) format.<br><br><i>Anonymous Searching</i> - Attempts to search for username against LDAP directory via anonymous binding to locate the users Distinguished Name (DN).<br><br><i>Specific Searching</i> - Attempts search for username against LDAP directory via Specific Distinguished Name (DN) and Specific Password for binding to locate the users Distinguished Name (DN).</blockquote>",
 			"method" => "drop_array",
 			"default" => "0",
 			"array" => $ldap_modes
 			),
 		"ldap_dn" => array(
 			"friendly_name" => "Distinguished Name (DN)",
-			"description" => "Distinguished Name syntax, such as for windows: <i>\"&lt;username&gt;@win2kdomain.local\"</i> or for OpenLDAP: <i>\"uid=&lt;username&gt;,ou=people,dc=domain,dc=local\"</i>.   \"&lt;username&gt\" is replaced with the username that was supplied at the login prompt.  This is only used when in \"No Searching\" mode.",
+			"description" => "Distinguished Name syntax, such as <blockquote>for windows: <br><i>\"&lt;username&gt;@win2kdomain.local\"</i> or <br><br>for OpenLDAP: <br><i>\"uid=&lt;username&gt;,ou=people,dc=domain,dc=local\"</i>.   <br><br>\"&lt;username&gt\" is replaced with the username that was supplied at the login prompt.  This is only used when in \"No Searching\" mode.</blockquote>",
 			"method" => "textbox",
 			"max_length" => "255"
 			),
@@ -927,13 +927,13 @@ $settings = array(
 			),
 		"ldap_search_base" => array(
 			"friendly_name" => "Search Base",
-			"description" => "Search base for searching the LDAP directory, such as <i>\"dc=win2kdomain,dc=local\"</i> or <i>\"ou=people,dc=domain,dc=local\"</i>.",
+			"description" => "Search base for searching the LDAP directory, such as <br><i>\"dc=win2kdomain,dc=local\"</i> <br>or <br><i>\"ou=people,dc=domain,dc=local\"</i>.",
 			"method" => "textbox",
 			"max_length" => "255"
 			),
 		"ldap_search_filter" => array(
 			"friendly_name" => "Search Filter",
-			"description" => "Search filter to use to locate the user in the LDAP directory, such as for windows: <i>\"(&amp;(objectclass=user)(objectcategory=user)(userPrincipalName=&lt;username&gt;*))\"</i> or for OpenLDAP: <i>\"(&(objectClass=account)(uid=&lt;username&gt))\"</i>.  \"&lt;username&gt\" is replaced with the username that was supplied at the login prompt. ",
+			"description" => "Search filter to use to locate the user in the LDAP directory, such as <br>for windows: <br><i>\"(&amp;(objectclass=user)(objectcategory=user)(userPrincipalName=&lt;username&gt;*))\"</i> or <br>for OpenLDAP: <br><i>\"(&(objectClass=account)(uid=&lt;username&gt))\"</i>.  <br>\"&lt;username&gt\" is replaced with the username that was supplied at the login prompt. ",
 			"method" => "textbox",
 			"max_length" => "255"
 			),

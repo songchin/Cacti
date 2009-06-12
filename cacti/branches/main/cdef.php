@@ -270,6 +270,7 @@ function item_edit() {
 	draw_cdef_preview($_GET["cdef_id"]);
 	html_end_box();
 
+	print "<form action='cdef.php' name='form_cdef' method='post'>\n";
 	html_start_box("<strong>CDEF Items</strong> [edit: " . db_fetch_cell("select name from cdef where id=" . $_GET["cdef_id"]) . "]", "100%", $colors["header"], "3", "center", "");
 
 	if (isset($_GET["type_select"])) {
@@ -280,9 +281,7 @@ function item_edit() {
 		$current_type = "1";
 	}
 
-	print "<form action='cdef.php' name='form_cdef' method='post'>\n";
-
-	form_alternate_row_color(); ?>
+	form_alternate_row_color("cdef_item_type"); ?>
 		<td width="50%">
 			<font class="textEditTitle">CDEF Item Type</font><br>
 			Choose what type of CDEF item this is.
@@ -291,14 +290,14 @@ function item_edit() {
 			<select name="type_select" onChange="window.location=document.form_cdef.type_select.options[document.form_cdef.type_select.selectedIndex].value">
 				<?php
 				while (list($var, $val) = each($cdef_item_types)) {
-					print "<option value='cdef.php?action=item_edit" . (isset($_GET["id"]) ? "&id=" . $_GET["id"] : "") . "&cdef_id=" . $_GET["cdef_id"] . "&type_select=$var'"; if ($var == $current_type) { print " selected"; } print ">$val</option>\n";
+					print "<option value='" . htmlspecialchars("cdef.php?action=item_edit" . (isset($_GET["id"]) ? "&id=" . $_GET["id"] : "") . "&cdef_id=" . $_GET["cdef_id"] . "&type_select=$var") . "'"; if ($var == $current_type) { print " selected"; } print ">$val</option>\n";
 				}
 				?>
 			</select>
 		</td>
 	<?php
 	form_end_row();
-	form_alternate_row_color();
+	form_alternate_row_color("cdem_item_value");
 	?>
 		<td width="50%">
 			<font class="textEditTitle">CDEF Item Value</font><br>
@@ -328,12 +327,12 @@ function item_edit() {
 	<?php
 	form_end_row();
 
+	html_end_box();
+
 	form_hidden_box("id", (isset($_GET["id"]) ? $_GET["id"] : "0"), "");
 	form_hidden_box("type", $current_type, "");
 	form_hidden_box("cdef_id", $_GET["cdef_id"], "");
 	form_hidden_box("save_component_item", "1", "");
-
-	html_end_box();
 
 	form_save_button_alt("path!cdef.php|action!edit|id!" . $_GET["cdef_id"]);
 }
@@ -374,15 +373,18 @@ function cdef_edit() {
 		$header_label = "[new]";
 	}
 
-	html_start_box("<strong>CDEF's</strong> $header_label", "100%", $colors["header"], "3", "center", "");
+	print "<form method='post' action='" .  basename($_SERVER["PHP_SELF"]) . "' name='cdef_edit'>\n";
+	html_start_box("<strong>CDEF's</strong> $header_label", "100%", $colors["header"], 0, "center", "");
 	$header_items = array("Field", "Value");
-	html_header($header_items, 2, true, 'cdef');
+	print "<tr><td>";
+	html_header($header_items, 2, true, 'header_cdef_edit');
 
 	draw_edit_form(array(
 		"config" => array(),
 		"fields" => inject_form_variables($fields_cdef_edit, (isset($cdef) ? $cdef : array()))
 		));
 
+	print "</table></td></tr>";		/* end of html_header */
 	html_end_box();
 
 	if (!empty($_GET["id"])) {
@@ -390,37 +392,39 @@ function cdef_edit() {
 		draw_cdef_preview($_GET["id"]);
 		html_end_box();
 
-		html_start_box("<strong>CDEF Items</strong>", "100%", $colors["header"], "3", "center", "cdef.php?action=item_edit&cdef_id=" . $cdef["id"], false, "cdef");
+		html_start_box("<strong>CDEF Items</strong>", "100%", $colors["header"], 0, "center", "cdef.php?action=item_edit&cdef_id=" . $cdef["id"], false, "cdef");
 		$header_items = array("Item", "Item Value");
+		print "<tr><td>";
 		html_header($header_items, 2, true, 'cdef_item');
 
 		$cdef_items = db_fetch_assoc("select * from cdef_items where cdef_id=" . $_GET["id"] . " order by sequence");
 
 		$i = 0;
 		if (sizeof($cdef_items) > 0) {
-		foreach ($cdef_items as $cdef_item) {
-			form_alternate_row_color($cdef_item["id"], true);
-				?>
-				<td>
-					<a class="linkEditMain" href="<?php print htmlspecialchars("cdef.php?action=item_edit&id=" . $cdef_item["id"] . "&cdef_id=" . $cdef["id"]);?>">Item #<?php print $i;?></a>
-				</td>
-				<td>
-					<em><?php $cdef_item_type = $cdef_item["type"]; print $cdef_item_types[$cdef_item_type];?></em>: <strong><?php print get_cdef_item_name($cdef_item["id"]);?></strong>
-				</td>
-				<td align="right">
-					<a href="<?php print htmlspecialchars("cdef.php?action=item_remove&id=" . $cdef_item["id"] . "&cdef_id=" . $cdef["id"]);?>"><img class="buttonSmall" src="images/delete_icon.gif" alt="Delete" align='middle'></a>
-				</td>
-		<?php
-		form_end_row();
-		$i++;
+			foreach ($cdef_items as $cdef_item) {
+				form_alternate_row_color($cdef_item["id"], true);
+					?>
+					<td>
+						<a class="linkEditMain" href="<?php print htmlspecialchars("cdef.php?action=item_edit&id=" . $cdef_item["id"] . "&cdef_id=" . $cdef["id"]);?>">Item #<?php print $i;?></a>
+					</td>
+					<td>
+						<em><?php $cdef_item_type = $cdef_item["type"]; print $cdef_item_types[$cdef_item_type];?></em>: <strong><?php print get_cdef_item_name($cdef_item["id"]);?></strong>
+					</td>
+					<td align="right">
+						<a href="<?php print htmlspecialchars("cdef.php?action=item_remove&id=" . $cdef_item["id"] . "&cdef_id=" . $cdef["id"]);?>"><img class="buttonSmall" src="images/delete_icon.gif" alt="Delete" align='middle'></a>
+					</td>
+			<?php
+			form_end_row();
+			$i++;
+			}
 		}
-		}
+		print "</table></td></tr>";		/* end of html_header */
 		html_end_box();
 	}
 	form_save_button_alt("path!cdef.php");
 ?>
 <script type="text/javascript">
-	$('#cdef').tableDnD({
+	$('#cdef_item').tableDnD({
 		onDrop: function(table, row) {
 			$('#AjaxResult').load("lib/ajax/jquery.tablednd/cdef.ajax.php?id=<?php print $_GET["id"];?>&"+$.tableDnD.serialize());
 		}
@@ -472,7 +476,7 @@ function cdef() {
 	?>
 	<tr class='rowAlternate2'>
 		<td>
-			<form name="form_cdef">
+			<form name="form_cdef" action="cdef.php">
 			<table cellpadding="0" cellspacing="0">
 				<tr>
 					<td style='white-space:nowrap;width:50px;'>
@@ -515,6 +519,7 @@ function cdef() {
 	$nav = html_create_nav($_REQUEST["page"], MAX_DISPLAY_PAGES, read_config_option("num_rows_device"), $total_rows, 11, "cdef.php?filter=" . $_REQUEST["filter"]);
 
 	print $nav;
+	html_end_box(false);
 
 	$display_text = array(
 		"name" => array("CDEF Title", "ASC"));
@@ -535,11 +540,10 @@ function cdef() {
 	}else{
 		print "<tr><td><em>No CDEFs</em></td></tr>\n";
 	}
-	html_end_box(false);
+
+	print "</table>\n</form>\n";	# end form and table of html_header_sort_checkbox
 
 	/* draw the dropdown containing a list of available actions for this form */
 	draw_actions_dropdown($cdef_actions);
-
-	print "</form>\n";
 }
 ?>

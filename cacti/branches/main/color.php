@@ -106,15 +106,18 @@ function color_edit() {
 		$header_label = "[new]";
 	}
 
-	html_start_box("<strong>Colors</strong> $header_label", "100%", $colors["header"], "3", "center", "");
+	print "<form method='post' action='" .  basename($_SERVER["PHP_SELF"]) . "' name='color_edit'>\n";
+	html_start_box("<strong>Colors</strong> $header_label", "100%", $colors["header"], 0, "center", "");
 	$header_items = array("Field", "Value");
-	html_header($header_items, 2, true, 'color');
+	print "<tr><td>";
+	html_header($header_items, 2, true, 'header_color_edit');
 
 	draw_edit_form(array(
 		"config" => array(),
 		"fields" => inject_form_variables($fields_color_edit, (isset($color) ? $color : array()))
 		));
 
+	print "</table></td></tr>";		/* end of html_header */
 	html_end_box();
 
 	form_save_button_alt();

@@ -457,7 +457,7 @@ function html_header_sort($header_items, $sort_column, $sort_direction, $last_it
 		$selected_sort_class = "sort_desc";
 	}
 
-	print "\t\t<table class='resizable' cellpadding='3' cellspacing='0' width='100%'><tr class='rowSubHeader'>\n";
+	print "\t\t<table class='resizable startBoxHeader' cellpadding='3' cellspacing='0' width='100%'><tr class='rowSubHeader'>\n";
 
 	$pathname = html_get_php_pathname();
 
@@ -520,7 +520,7 @@ function html_header_sort_checkbox($header_items, $sort_column, $sort_direction,
 	if ($form_action == "") { $form_action = basename($_SERVER["PHP_SELF"]); }
 
 	print "<form name='chk' method='post' action='$form_action'>\n";	# properly place form outside table
-	print "\t<table class='resizable' cellpadding='3' cellspacing='0' width='100%'>\n";
+	print "\t<table class='resizable startBoxHeader' cellpadding='3' cellspacing='0' width='100%'>\n";
 	print "\t\t<tr class='rowSubHeader'>\n";
 
 	$pathname = html_get_php_pathname();
@@ -569,7 +569,7 @@ function html_header($header_items, $last_item_colspan = 1, $resizable = true, $
 	if ($resizable) {
 		$pathname = html_get_php_pathname();
 
-		print "\t\t<table $table_id class='resizable' cellpadding='3' cellspacing='0' width='100%'><tr class='rowSubHeader nodrag nodrop'>\n";
+		print "\t\t<table $table_id class='resizable startBoxHeader' cellpadding='3' cellspacing='0' width='100%'><tr class='rowSubHeader nodrag nodrop'>\n";
 	}else{
 		print "\t\t<table $table_id cellpadding='3' cellspacing='0' width='100%'><tr class='rowSubHeader nodrag nodrop'>\n";
 	}

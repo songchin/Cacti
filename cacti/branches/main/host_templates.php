@@ -380,8 +380,10 @@ function template_edit() {
 		$_GET["id"] = 0;
 	}
 
-	html_start_box("<strong>Host Templates</strong> $header_label", "100%", $colors["header"], "3", "center", "", true);
+	print "<form method='post' action='" .  basename($_SERVER["PHP_SELF"]) . "' name='host_template_edit'>\n";
+	html_start_box("<strong>Host Templates</strong> $header_label", "100%", $colors["header"], "0", "center", "", true);
 	$header_items = array("Field", "Value");
+	print "<tr><td>";
 	html_header($header_items, 1, true, 'host_template');
 
 	draw_edit_form(array(
@@ -389,7 +391,8 @@ function template_edit() {
 		"fields" => inject_form_variables($fields_host_template_edit, (isset($host_template) ? $host_template : array()))
 		));
 
-	html_end_box(FALSE);
+	print "</table></td></tr>";		/* end of html_header */
+	html_end_box();
 
 	?>
 	<script type="text/javascript">
@@ -727,7 +730,7 @@ function template_edit() {
 		$i = 0;
 		if (sizeof($selected_graph_templates) > 0) {
 			foreach ($selected_graph_templates as $item) {
-				form_alternate_row_color($_GET["id"], true);
+				form_alternate_row_color("selected_graph_template" . $item["id"], true);
 				$i++;
 				?>
 					<td style="padding: 4px;">
@@ -741,7 +744,7 @@ function template_edit() {
 			}
 		}else{ print "<tr><td><em>No associated graph templates.</em></td></tr>"; }
 
-		form_alternate_row_color($_GET["id"], true);
+		form_alternate_row_color("add_template" . $_GET["id"], true);
 		?>
 			<td colspan="2">
 				<table cellspacing="0" cellpadding="1" width="100%">
@@ -760,8 +763,8 @@ function template_edit() {
 		form_end_row();
 		html_end_box(FALSE);
 
-		html_start_box("<strong>Associated Data Queries</strong>", "100%", $colors["header"], "3", "center", "", true);
-
+		html_start_box("<strong>Associated Data Queries</strong>", "100%", $colors["header"], "0", "center", "", true);
+		print "<tr><td>";
 		html_header(array("Data Query Name", "Re-Index Method"), 2);
 
 		$selected_data_queries = db_fetch_assoc("SELECT
@@ -798,7 +801,7 @@ function template_edit() {
 		$i = 0;
 		if (sizeof($selected_data_queries) > 0) {
 		foreach ($selected_data_queries as $item) {
-			form_alternate_row_color($_GET["id"], true);
+			form_alternate_row_color("selected_data_query" . $item["id"], true);
 			$i++;
 			?>
 				<td style="padding: 4px;">
@@ -815,7 +818,7 @@ function template_edit() {
 		}
 		}else{ print "<tr><td><em>No associated data queries.</em></td></tr>"; }
 
-		form_alternate_row_color();
+		form_alternate_row_color("add_data_query" . $_GET["id"], true);
 		?>
 			<td colspan="5">
 				<table cellspacing="0" cellpadding="1" width="100%">
@@ -834,6 +837,7 @@ function template_edit() {
 			</td>
 		<?php
 		form_end_row();
+		print "</table></td></tr>";		/* end of html_header */
 		html_end_box(TRUE);
 	}
 
@@ -887,7 +891,7 @@ function template() {
 	?>
 	<tr class='rowAlternate2'>
 		<td>
-			<form name="form_graph_template">
+			<form name="form_host_template" action="host_templates.php">
 			<table cellpadding="0" cellspacing="0">
 				<tr>
 					<td style='white-space:nowrap;width:50px;'>
@@ -930,6 +934,7 @@ function template() {
 	$nav = html_create_nav($_REQUEST["page"], MAX_DISPLAY_PAGES, read_config_option("num_rows_device"), $total_rows, 7, "host_templates.php");
 
 	print $nav;
+	html_end_box(false);
 
 	$display_text = array(
 		"name" => array("Template Title", "ASC"));
@@ -944,18 +949,15 @@ function template() {
 			form_end_row();
 		}
 
-		form_end_table();
-
 		/* put the nav bar on the bottom as well */
 		print $nav;
 	}else{
 		print "<tr><td><em>No Host Templates</em></td></tr>\n";
 	}
-	html_end_box(false);
+
+	print "</table>\n</form>\n";	# end form and table of html_header_sort_checkbox
 
 	/* draw the dropdown containing a list of available actions for this form */
 	draw_actions_dropdown($host_actions);
-
-	print "</form>\n";
 }
 ?>

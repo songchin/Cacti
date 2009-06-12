@@ -309,7 +309,7 @@ function item() {
 		$header_label = "[edit: " . db_fetch_cell("select name from graph_templates where id=" . $_GET["id"]) . "]";
 	}
 
-	html_start_box("<strong>Graph Template Items</strong> $header_label", "100%", $colors["header"], "3", "center", "graph_templates_items.php?action=item_edit&graph_template_id=" . $_GET["id"]);
+	html_start_box("<strong>Graph Template Items</strong> $header_label", "100%", $colors["header"], "0", "center", "graph_templates_items.php?action=item_edit&graph_template_id=" . $_GET["id"]);
 	draw_graph_items_list($template_item_list, "graph_templates_items.php", "graph_template_id=" . $_GET["id"], false);
 	html_end_box(false);
 
@@ -368,7 +368,7 @@ function template_edit() {
 		$header_label = "[new]";
 	}
 
-	html_start_box("<strong>Template</strong> $header_label", "100%", $colors["header"], "3", "center", "");
+	html_start_box("<strong>Template</strong> $header_label", "100%", $colors["header"], "0", "center", "");
 	$header_items = array("Field", "Value");
 	print "<tr><td>";
 	html_header($header_items, 1, true, 'header_template');
@@ -381,7 +381,7 @@ function template_edit() {
 	print "</table></td></tr>";		/* end of html_header */
 	html_end_box();
 
-	html_start_box("<strong>Graph Template</strong>", "100%", $colors["header"], "3", "center", "");
+	html_start_box("<strong>Graph Template</strong>", "100%", $colors["header"], "0", "center", "");
 	$header_items = array("Field", "Value");
 	print "<tr><td>";
 	html_header($header_items, 1, true, 'header_graph_template');

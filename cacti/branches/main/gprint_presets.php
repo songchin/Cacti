@@ -182,15 +182,18 @@ function gprint_presets_edit() {
 		$header_label = "[new]";
 	}
 
-	html_start_box("<strong>GPRINT Presets</strong> $header_label", "100%", $colors["header"], "3", "center", "");
+	print "<form method='post' action='" .  basename($_SERVER["PHP_SELF"]) . "' name='gprint_edit'>\n";
+	html_start_box("<strong>GPRINT Presets</strong> $header_label", "100%", $colors["header"], 0, "center", "");
 	$header_items = array("Field", "Value");
-	html_header($header_items, 2, true, 'gprint_preset');
+	print "<tr><td>";
+	html_header($header_items, 2, true, 'header_gprint_preset');
 
 	draw_edit_form(array(
 		"config" => array(),
 		"fields" => inject_form_variables($fields_grprint_presets_edit, (isset($gprint_preset) ? $gprint_preset : array()))
 		));
 
+	print "</table></td></tr>";		/* end of html_header */
 	html_end_box();
 
 	form_save_button_alt();
@@ -238,7 +241,7 @@ function gprint_presets() {
 	?>
 	<tr class='rowAlternate2'>
 		<td>
-			<form name="form_gprint">
+			<form name="form_gprint" action="gprint_presets.php">
 			<table cellpadding="0" cellspacing="0">
 				<tr>
 					<td style='white-space:nowrap;width:50px;'>
@@ -281,6 +284,7 @@ function gprint_presets() {
 	/* generate page list navigation */
 	$nav = html_create_nav($_REQUEST["page"], MAX_DISPLAY_PAGES, read_config_option("num_rows_device"), $total_rows, 11, "gprint_presets.php?filter=" . $_REQUEST["filter"]);
 	print $nav;
+	html_end_box(false);
 
 	$display_text = array(
 		"name" => array("Name", "ASC"));
@@ -295,16 +299,13 @@ function gprint_presets() {
 			form_end_row();
 		}
 
-		form_end_table();
-
 		print $nav;
 	}else{
 		print "<tr><td><em>No Items</em></td></tr>\n";
 	}
-	html_end_box(false);
+
+	print "</table>\n</form>\n";	# end form and table of html_header_sort_checkbox
 
 	/* draw the dropdown containing a list of available actions for this form */
 	draw_actions_dropdown($gprint_actions);
-
-	print "</form>\n";
 }

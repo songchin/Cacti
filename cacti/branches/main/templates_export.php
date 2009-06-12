@@ -80,7 +80,7 @@ function export() {
 	}
 
 	?>
-	<form name="form_graph_id">
+	<form name="form_graph_id" action="templates_export.php">
 	<table width='100%' style='background-color: #f5f5f5; border: 1px solid #bbbbbb;' align='center'>
 		<tr>
 			<td class="textArea" style="padding: 3px;">
@@ -102,7 +102,7 @@ function export() {
 
 	html_start_box("<strong>Export Template</strong> [" . $export_types{$_REQUEST["export_type"]}["name"] . "]", "100%", $colors["header"], "3", "center", "");
 
-	form_alternate_row_color(); ?>
+	form_alternate_row_color("item"); ?>
 		<td width="50%">
 			<font class="textEditTitle"><?php print $export_types{$_REQUEST["export_type"]}["name"];?> to Export</font><br>
 			Choose the exact item to export to XML.
@@ -112,7 +112,7 @@ function export() {
 		</td>
 	</tr>
 
-	<?php form_alternate_row_color(); ?>
+	<?php form_alternate_row_color("dependencies"); ?>
 		<td width="50%">
 			<font class="textEditTitle">Include Dependencies</font><br>
 			Some templates rely on other items in Cacti to function properly. It is highly recommended that you select
@@ -123,7 +123,7 @@ function export() {
 		</td>
 	</tr>
 
-	<?php form_alternate_row_color(); ?>
+	<?php form_alternate_row_color("format"); ?>
 		<td width="50%">
 			<font class="textEditTitle">Output Format</font><br>
 			Choose the format to output the resulting XML file in.
@@ -138,10 +138,10 @@ function export() {
 	</tr>
 	<?php
 
+	html_end_box();
+
 	form_hidden_box("export_type", $_REQUEST["export_type"], "");
 	form_hidden_box("save_component_export","1","");
-
-	html_end_box();
 
 	form_save_button_alt("url!" . (isset($_SERVER["HTTP_REFERER"]) ? $_SERVER["HTTP_REFERER"] : ""));
 }

@@ -140,7 +140,7 @@ function import() {
 
 	html_start_box("<strong>Import Templates</strong>", "100%", $colors["header"], "3", "center", "");
 
-	form_alternate_row_color(); ?>
+	form_alternate_row_color("file"); ?>
 		<td width="50%">
 			<font class="textEditTitle">Import Template from Local File</font><br>
 			If the XML file containing template data is located on your local machine, select it here.
@@ -150,7 +150,7 @@ function import() {
 		</td>
 	</tr>
 
-	<?php form_alternate_row_color(); ?>
+	<?php form_alternate_row_color("text"); ?>
 		<td width="50%">
 			<font class="textEditTitle">Import Template from Text</font><br>
 			If you have the XML file containing template data as text, you can paste it into this box to
@@ -161,14 +161,14 @@ function import() {
 		</td>
 	</tr>
 
-	<?php form_alternate_row_color(); ?>
+	<?php form_alternate_row_color("rra"); ?>
 		<td width="50%">
 			<font class="textEditTitle">Import RRA Settings</font><br>
 			Choose whether to allow Cacti to import custom RRA settings from imported templates or whether to use the defaults for this installation.
 		</td>
 		<td>
 			<?php
-			form_radio_button("import_rra", 1, 1, "Use defaults for this installation (Recommended)", 1); echo "<br />";
+			form_radio_button("import_rra", 1, 1, "Use defaults for this installation (Recommended)", 1); echo "<br>";
 			form_radio_button("import_rra", 1, 2, "Use custom RRA settings from the template", 1);
 			?>
 		</td>
@@ -176,9 +176,9 @@ function import() {
 
 	<?php
 
-	form_hidden_box("save_component_import","1","");
-
 	html_end_box();
+
+	form_hidden_box("save_component_import","1","");
 
 	form_save_button_alt("url!" . (isset($_SERVER["HTTP_REFERER"]) ? $_SERVER["HTTP_REFERER"] : ""));
 }
