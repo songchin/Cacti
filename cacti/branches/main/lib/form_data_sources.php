@@ -757,7 +757,7 @@ function data_source_edit() {
 	if (!empty($data["data_template_id"])) {
 		$template_data_rrds = db_fetch_assoc("select * from data_template_rrd where local_data_id=" . $_GET["id"] . " order by data_source_name");
 
-		html_start_box("<strong>Supplemental Data Template Data</strong>", "100%", $colors["header"], "3", "center", "");
+		html_start_box("<strong>Supplemental Data Template Data</strong>", "100%", $colors["header"], 0, "center", "");
 
 		draw_nontemplated_fields_data_source($data["data_template_id"], $data["local_data_id"], $data, "|field|", "<strong>Data Source Fields</strong>", true, true, 0);
 		draw_nontemplated_fields_data_source_item($data["data_template_id"], $template_data_rrds, "|field|_|id|", "<strong>Data Source Item Fields</strong>", true, true, true, 0);

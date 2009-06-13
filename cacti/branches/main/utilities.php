@@ -324,7 +324,8 @@ function display_general() {
 	}
 
 	/* Display tech information */
-	html_start_box("<strong>General Technical Support Information</strong>", "100%", $colors["header"], "3", "center", "");
+	html_start_box("<strong>General Technical Support Information</strong>", "100%", $colors["header"], 0, "center", "");
+	print "<tr><td>";
 	html_header(array("General Information"), 2);
 	print "<tr class='rowAlternate1'>\n";
 	print "		<td style='width:20%;' class='textAreaNotes'>Date</td>\n";
@@ -368,8 +369,6 @@ function display_general() {
 	}else{
 		print "<font color='red'>0</font>";
 	}
-	print "</td>\n";
-	print "</tr>\n";
 
 	$spine_version = "";
 	if ($poller_options[read_config_option("poller_type")] == "spine") {
@@ -377,6 +376,8 @@ function display_general() {
 		$spine_version = substr($spine_output, 6, 6);
 	}
 
+	print "</table></td></tr>";		/* end of html_header */
+	print "<tr><td>";
 	html_header(array("Poller Information"), 2);
 	print "<tr class='rowAlternate1'>\n";
 	print "		<td style='width:20%;' class='textAreaNotes'>Interval</td>\n";
@@ -433,6 +434,8 @@ function display_general() {
 	print "		<td class='textAreaNotes'>" . read_config_option("stats_poller") . "</td>\n";
 	print "</tr>\n";
 
+	print "</table></td></tr>";		/* end of html_header */
+	print "<tr><td>";
 	html_header(array("PHP Information"), 2);
 	print "<tr class='rowAlternate1'>\n";
 	print "		<td style='width:20%;' class='textAreaNotes'>PHP Version</td>\n";
@@ -485,8 +488,7 @@ function display_general() {
 	if (memory_bytes(ini_get('memory_limit')) < $memory_suggestion) {
 		print "<br><font color='red'>It is highly suggested that you alter you php.ini memory_limit to " . memory_readable($memory_suggestion) . " or higher.  This suggested memory value is calculated based on the number of data source present and is only to be used as a suggestion, actual values may vary system to system based on requirements.</font><br>";
 	}
-	print "</td>\n";
-	print "</tr>\n";
+	print "</table></td></tr>";		/* end of html_header */
 
 	html_end_box();
 }
@@ -499,11 +501,12 @@ function display_database() {
 
 	$display_array = array("Name", "Engine", "Version", "Row Format", "Rows", "Average Length", "Data Length", "Index Length", "Auto Increment", "Collation", "Comment");
 
-	html_start_box("<strong>MySQL Table Information</strong>", "100%", $colors["header"], "3", "center", "");
+	html_start_box("<strong>MySQL Table Information</strong>", "100%", $colors["header"], 0, "center", "");
+	print "<tr><td>";
 	html_header($display_array);
 	if (sizeof($table_status) > 0) {
-		foreach ($table_status as $item) {
-			form_alternate_row_color();
+		foreach ($table_status as $item) { #print "<pre>"; print_r($item); print "</pre>";
+			form_alternate_row_color("row_" . $item["Name"]);
 			print "<td>" . $item["Name"] . "</td>\n";
 			if (isset($item["Engine"])) {
 				print "  <td>" . $item["Engine"] . "</td>\n";
@@ -528,6 +531,7 @@ function display_database() {
 	}else{
 		print "Unable to retrieve table status";
 	}
+	print "</table></td></tr>";		/* end of html_header */
 	html_end_box();
 }
 
@@ -539,11 +543,12 @@ function display_database_processes() {
 
 	$display_array = array("Id", "User", "Host", "Database", "Command", "Time", "State", "Info");
 
-	html_start_box("<strong>MySQL Process Information</strong>", "100%", $colors["header"], "3", "center", "");
+	html_start_box("<strong>MySQL Process Information</strong>", "100%", $colors["header"], 0, "center", "");
+	print "<tr><td>";
 	html_header($display_array);
 	if (sizeof($db_processes) > 0) {
 		foreach ($db_processes as $item) {
-			form_alternate_row_color();
+			form_alternate_row_color("row_" . $item["Id"]);
 			print "<td>" . $item["Id"] . "</td>\n";
 			print "<td>" . $item["User"] . "</td>\n";
 			print "<td>" . $item["Host"] . "</td>\n";
@@ -557,6 +562,7 @@ function display_database_processes() {
 	}else{
 		print "Unable to retrieve process status";
 	}
+	print "</table></td></tr>";		/* end of html_header */
 	html_end_box();
 }
 
@@ -638,7 +644,7 @@ function utilities_view_user_log() {
 	?>
 	<tr class='rowAlternate2'>
 		<td>
-			<form name="form_userlog">
+			<form name="form_userlog" action="utilites.php">
 			<table cellpadding="0" cellspacing="0">
 				<tr>
 					<td style='white-space:nowrap;width:50px;'>
@@ -756,6 +762,7 @@ function utilities_view_user_log() {
 	$nav = html_create_nav($_REQUEST["page"], MAX_DISPLAY_PAGES, read_config_option("num_rows_data_source"), $total_rows, 7, "utilities.php?action=view_user_log");
 
 	print $nav;
+	html_end_box();
 
 	$display_text = array(
 		"username" => array("Username", "ASC"),
@@ -805,8 +812,8 @@ function utilities_view_user_log() {
 	}
 
 	print $nav;
+	print "</table>\n</form>\n";	# end form and table of html_header_sort_checkbox
 
-	html_end_box();
 }
 
 function utilities_clear_user_log() {
@@ -897,7 +904,7 @@ function utilities_view_logfile() {
 	?>
 	<tr class='rowAlternate2'>
 		<td>
-			<form name="form_logfile">
+			<form name="form_logfile" action="utilities.php">
 			<table cellpadding="1" cellspacing="0">
 				<tr>
 					<td style='white-space:nowrap;width:80px;'>
@@ -1161,7 +1168,7 @@ function utilities_view_snmp_cache() {
 	?>
 	<tr class='rowAlternate2'>
 		<td>
-			<form name="form_snmpcache">
+			<form name="form_snmpcache" action="utilities.php">
 			<table cellpadding="0" cellspacing="0">
 				<tr>
 					<td style='white-space:nowrap;width:50px;'>
@@ -1307,6 +1314,7 @@ function utilities_view_snmp_cache() {
 	$nav = html_create_nav($_REQUEST["page"], MAX_DISPLAY_PAGES, read_config_option("num_rows_data_source"), $total_rows, 7, "utilities.php?action=view_snmp_cache");
 
 	print $nav;
+	html_end_box();
 
 	html_header(array("Details"));
 
@@ -1340,8 +1348,8 @@ function utilities_view_snmp_cache() {
 	}
 
 	print $nav;
+	print "</table>\n</form>\n";	# end form and table of html_header_sort_checkbox
 
-	html_end_box();
 }
 
 function utilities_view_poller_cache() {
@@ -1530,6 +1538,7 @@ function utilities_view_poller_cache() {
 	$nav = html_create_nav($_REQUEST["page"], MAX_DISPLAY_PAGES, read_config_option("num_rows_data_source"), $total_rows, 7, "utilities.php?action=view_poller_cache");
 
 	print $nav;
+	html_end_box();
 
 	$display_text = array(
 		"data_template_data.name_cache" => array("Data Source Name", "ASC"),
@@ -1582,22 +1591,19 @@ function utilities_view_poller_cache() {
 	}
 
 	print $nav;
+	print "</table>\n</form>\n";	# end form and table of html_header_sort_checkbox
 
-	html_end_box();
 }
 
 function utilities() {
 	global $colors;
 
-	html_start_box("<strong>Cacti System Utilities</strong>", "100%", $colors["header"], "3", "center", "");
+	html_start_box("<strong>Cacti System Utilities</strong>", "100%", $colors["header"], 0, "center", "");
 
-	?>
-	<colgroup span="3">
-		<col valign="top" width="20"></col>
-		<col valign="top" width="10"></col>
-	</colgroup>
 
-	<?php html_header(array("Technical Support"), 2); ?>
+	print "<tr><td>";
+	html_header(array("Technical Support"), 2); ?>
+
 	<tr class="rowAlternate1">
 		<td class="textAreaNotes">
 			<a href='utilities.php?action=view_tech'>Technical Support</a>
@@ -1607,7 +1613,10 @@ function utilities() {
 		</td>
 	</tr>
 
-	<?php html_header(array("Log Administration"), 2);?>
+	<?php
+	print "</table></td></tr>";		/* end of html_header */
+	print "<tr><td>";
+	html_header(array("Log Administration"), 2);?>
 
 	<tr class="rowAlternate1">
 		<td class="textAreaNotes">
@@ -1626,7 +1635,10 @@ function utilities() {
 		</td>
 	</tr>
 
-	<?php html_header(array("Poller Cache Administration"), 2); ?>
+	<?php
+	print "</table></td></tr>";		/* end of html_header */
+	print "<tr><td>";
+	html_header(array("Poller Cache Administration"), 2); ?>
 
 	<tr class="rowAlternate1">
 		<td class="textAreaNotes">
@@ -1654,6 +1666,8 @@ function utilities() {
 	</tr>
 
 	<?php
+
+	print "</table></td></tr>";		/* end of html_header */
 
 	api_plugin_hook('utilities_list');
 

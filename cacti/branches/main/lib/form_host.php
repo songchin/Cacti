@@ -1551,7 +1551,7 @@ function host() {
 	$hosts = db_fetch_assoc($sql_query);
 
 	/* generate page list navigation */
-	$nav = html_create_nav($_REQUEST["page"], MAX_DISPLAY_PAGES, $_REQUEST["rows"], $total_rows, 11, "host.php");
+	$nav = html_create_nav($_REQUEST["page"], MAX_DISPLAY_PAGES, $_REQUEST["rows"], $total_rows, 13, "host.php");
 
 	print $nav;
 	html_end_box(false);

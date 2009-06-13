@@ -534,6 +534,7 @@ function graph_perms_edit() {
 	</script>
 	<?php
 
+	#print "<form method='post' action='" .  basename($_SERVER["PHP_SELF"]) . "' name='user_admin'>\n";
 	/* box: graph permissions */
 	html_start_box("<strong>Graph Permissions (By Graph)</strong>", "100%", $colors["header"], "3", "center", "");
 
@@ -547,7 +548,6 @@ function graph_perms_edit() {
 		ORDER BY graph_templates_graph.title_cache");
 
 	?>
-	<form name="user_admin" action="user_admin.php" method="post">
 
 	<tr bgcolor="#<?php print $colors['form_alternate1'];?>">
 		<td style='width:100px;white-space:nowrap;'>
@@ -821,11 +821,12 @@ function graph_settings_edit() {
 	input_validate_input_number(get_request_var("id"));
 	/* ==================================================== */
 
-	html_start_box("<strong>Graph Settings</strong>", "100%", $colors["header"], "3", "center", "");
+	html_start_box("<strong>Graph Settings</strong>", "100%", $colors["header"], 0, "center", "");
 
 	while (list($tab_short_name, $tab_fields) = each($settings_graphs)) {
 		$header_items = array($tabs_graphs[$tab_short_name], "&nbsp;");
-		html_header($header_items, 1, true, $tabs_graphs[$tab_short_name]);
+		print "<tr><td>";
+		html_header($header_items, 1, true, $tab_short_name);
 
 		$form_array = array();
 
@@ -857,6 +858,7 @@ function graph_settings_edit() {
 				"fields" => $form_array
 				)
 			);
+		print "</table></td></tr>";		/* end of html_header */
 	}
 
 	html_end_box();
@@ -905,7 +907,7 @@ function user_edit() {
 
 	if (sizeof($user_tabs)) {
 	foreach (array_keys($user_tabs) as $tab_short_name) {
-		print "<div title='" . $user_tabs[$tab_short_name]["title"] . "' class='tabDefault'><a " . (($tab_short_name == $current_tab) ? "class='tabSelected'" : "class='tabDefault'") . " href='" . htmlspecialchars("user_admin.php?action=shift&action=" . $tab_short_name) . "&id=" . $_GET["id"] . "'>" . $user_tabs[$tab_short_name]["name"] . "</a></div>";
+		print "<div title='" . $user_tabs[$tab_short_name]["title"] . "' class='tabDefault'><a " . (($tab_short_name == $current_tab) ? "class='tabSelected'" : "class='tabDefault'") . " href='" . htmlspecialchars("user_admin.php?action=shift&action=" . $tab_short_name . "&id=" . $_GET["id"]) . "'>" . $user_tabs[$tab_short_name]["name"] . "</a></div>";
 
 		if (empty($_GET["id"])) break;
 	}
@@ -913,28 +915,30 @@ function user_edit() {
 
 	print "</div></td></tr></table>\n";
 
+	print "<form method='post' action='" .  basename($_SERVER["PHP_SELF"]) . "' name='user_edit'>\n";
 	if (get_request_var("action") == "user_edit") {
-		html_start_box("<strong>General Settings</strong>", "100%", $colors["header"], "3", "center");
+		html_start_box("<strong>General Settings</strong>", "100%", $colors["header"], 0, "center");
 		$header_items = array("Field", "Value");
+		print "<tr><td>";
 		html_header($header_items, 2, true, 'settings_general');
 
 		draw_edit_form(array(
 			"config" => array("form_name" => "chk"),
 			"fields" => inject_form_variables($fields_user_user_edit_host, (isset($user) ? $user : array()))
 		));
-
+		print "</table></td></tr>";		/* end of html_header */
 		html_end_box();
 	}else{
-		print "<span style='display:none;'>";
-
-		html_start_box("", "100%", $colors["header"], "3", "center");
-		draw_edit_form(array(
-			"config" => array("form_name" => "chk"),
-			"fields" => inject_form_variables($fields_user_user_edit_host, (isset($user) ? $user : array()))
-		));
-		html_end_box();
-
-		print "</span>";
+#		print "<span style='display:none;'>";
+#
+#		html_start_box("", "100%", $colors["header"], "3", "center");
+#		draw_edit_form(array(
+#			"config" => array("form_name" => "chk"),
+#			"fields" => inject_form_variables($fields_user_user_edit_host, (isset($user) ? $user : array()))
+#		));
+#		html_end_box();
+#
+#		print "</span>";
 
 		if (get_request_var("action") == "graph_settings_edit") {
 			graph_settings_edit();
@@ -996,7 +1000,7 @@ function user() {
 	?>
 	<tr class='rowAlternate2'>
 		<td>
-			<form name="form_user_admin">
+			<form name="form_user_admin" action="user_admin.php">
 			<table cellpadding="0" cellspacing="0">
 				<tr>
 					<td style='white-space:nowrap;width:50px;'>
@@ -1052,6 +1056,7 @@ function user() {
 	$nav = html_create_nav($_REQUEST["page"], MAX_DISPLAY_PAGES, read_config_option("num_rows_device"), $total_rows, 7, "user_admin.php");
 
 	print $nav;
+	html_end_box(false);
 
 	$display_text = array(
 		"username" => array("User Name", "ASC"),
@@ -1093,15 +1098,13 @@ function user() {
 			form_end_row();
 		}
 
-		form_end_table();
-
 		print $nav;
 	}else{
 		print "<tr><td><em>No Users</em></td></tr>";
 	}
-	html_end_box(false);
+
+	print "</table>\n</form>\n";	# end form and table of html_header_sort_checkbox
 
 	draw_actions_dropdown($user_actions);
-
 }
 ?>
