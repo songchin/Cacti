@@ -111,9 +111,9 @@ $page_title = api_plugin_hook_function('page_title', 'Cacti');
 	?>
 	<meta http-equiv="Content-Script-Type" content="text/javascript" >
 	<meta http-equiv="Content-Style-Type" content="text/css">
-	<link type="text/css" href="<?php echo URL_PATH; ?>include/main.css" rel="stylesheet"/>
+	<link type="text/css" href="<?php echo URL_PATH; ?>include/main.css" rel="stylesheet">
 	<link type="text/css" href="<?php echo URL_PATH; ?>include/jquery.autocomplete.css" rel="stylesheet">
-	<link href="<?php echo URL_PATH; ?>images/favicon.ico" rel="shortcut icon"/>
+	<link href="<?php echo URL_PATH; ?>images/favicon.ico" rel="shortcut icon">
 	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/layout.js"></script>
 	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/treeview/ua.js"></script>
 	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/treeview/ftiens4.js"></script>
@@ -122,6 +122,7 @@ $page_title = api_plugin_hook_function('page_title', 'Cacti');
 	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/jquery/jquery.bgiframe.js"></script>
 	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/jquery/jquery.ajaxQueue.js"></script>
 	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/jquery/jquery.tablednd.js"></script>
+	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/jquery/jquery.dropdown.js"></script>
 	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/jscalendar/calendar.js"></script>
 	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/jscalendar/lang/calendar-en.js"></script>
 	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/jscalendar/calendar-setup.js"></script>
@@ -133,18 +134,18 @@ $page_title = api_plugin_hook_function('page_title', 'Cacti');
 	<div id='navbar'>
 		<div id='navbar_l'>
 			<ul>
-				<?php echo draw_header_tab("console", "Console", URL_PATH . "index.php");?>
-				<?php echo draw_header_tab("graphs", "Graphs", URL_PATH . "graph_view.php");?>
+				<?php echo draw_header_tab("console", _("Console"), URL_PATH . "index.php");?>
+				<?php echo draw_header_tab("graphs", _("Graphs"), URL_PATH . "graph_view.php");?>
 				<?php api_plugin_hook('top_graph_header_tabs');?>
 			</ul>
 		</div>
 		<div id='navbar_r'>
 			<ul>
 				<?php if (substr_count($_SERVER["REQUEST_URI"], "graph_view.php")) { ?>
-				<?php echo draw_header_tab("graph_settings", "Settings", URL_PATH . "graph_settings.php");?>
-				<?php echo draw_header_tab("tree", "Tree", URL_PATH . "graph_view.php?action=tree", URL_PATH . "images/tab_mode_tree_new.gif");?>
-				<?php echo draw_header_tab("list", "List", URL_PATH . "graph_view.php?action=list", URL_PATH . "images/tab_mode_list_new.gif");?>
-				<?php echo draw_header_tab("preview", "Preview", URL_PATH . "graph_view.php?action=preview", URL_PATH . "images/tab_mode_preview_new.gif");?>
+				<?php echo draw_header_tab("graph_settings", _("Settings"), URL_PATH . "graph_settings.php");?>
+				<?php echo draw_header_tab("tree", _("Tree"), URL_PATH . "graph_view.php?action=tree", URL_PATH . "images/tab_mode_tree_new.gif");?>
+				<?php echo draw_header_tab("list", _("List"), URL_PATH . "graph_view.php?action=list", URL_PATH . "images/tab_mode_list_new.gif");?>
+				<?php echo draw_header_tab("preview", _("Preview"), URL_PATH . "graph_view.php?action=preview", URL_PATH . "images/tab_mode_preview_new.gif");?>
 				<?php }else{ api_plugin_hook('top_graph_header_tabs_right'); }?>
 				<li id="tab_help" class="notselected"><a href="<?php echo pagehelp_url()?>" target="_blank" title="Help">Help</a></li>
 			</ul>
@@ -157,6 +158,14 @@ $page_title = api_plugin_hook_function('page_title', 'Cacti');
 		<div style='float:right'><?php
 			if (read_config_option("auth_method") != 0) { $date = date_time_format();?><strong><?php echo date("D, " . $date . " T");?></strong>&nbsp;&nbsp;&nbsp;Logged in as <strong><?php print db_fetch_cell("select username from user_auth where id=" . $_SESSION["sess_user_id"]);?></strong> (<a href="<?php echo URL_PATH; ?>logout.php">Logout</a>)<?php } ?>
 		</div>
+		<?php if(read_config_option('i18n_support') != 0) {?>
+		<div id="codelist" class='languages' style="float:right; list-style:none; display:inline;">
+			<span id="loading" style="display:none;"><img src="<?php echo URL_PATH; ?>images/load_small.gif" align="top" alt="loading" style='border-width:0px;'>LOADING</span>
+			<ul class="down-list" style="list-style:none; display:inline;">
+				<li><img src="<?php echo URL_PATH; ?>images/flag_icons/<?php print strtolower(substr((getenv('LC_ALL')),0,2));?>.gif" align="top" alt="loading" style='border-width:0px;'><a href="#">&nbsp;<?php print $lang2locale[(getenv('LANG'))]['language'];?></a></li>
+			</ul>
+		</div>
+		<?php }?>
 	</div>
 </div>
 <div id='wrapper' style='opacity:0;'>

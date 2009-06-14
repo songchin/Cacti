@@ -996,7 +996,7 @@ function user() {
 	load_current_session_value("sort_column", "sess_user_admin_sort_column", "username");
 	load_current_session_value("sort_direction", "sess_user_admin_sort_direction", "ASC");
 
-	html_start_box("<strong>User Management</strong>", "100%", $colors["header"], "3", "center", "user_admin.php?action=user_edit", true);
+	html_start_box("<strong>" . _('User Management') . "</strong>", "100%", $colors["header"], "3", "center", "user_admin.php?action=user_edit", true);
 	?>
 	<tr class='rowAlternate2'>
 		<td>
@@ -1010,8 +1010,8 @@ function user() {
 						<input type="text" name="filter" size="40" value="<?php print $_REQUEST["filter"];?>">
 					</td>
 					<td style='white-space:nowrap;width:120px;'>
-						&nbsp;<input type="submit" Value="Go" name="go" align="middle">
-						<input type="submit" Value="Clear" name="clear_x" align="middle">
+						&nbsp;<input type="submit" Value="<?php echo _('Go');?>" name="go" align="middle">
+						<input type="submit" Value="<?php echo _('Clear');?>" name="clear_x" align="middle">
 					</td>
 				</tr>
 			</table>
@@ -1059,12 +1059,12 @@ function user() {
 	html_end_box(false);
 
 	$display_text = array(
-		"username" => array("User Name", "ASC"),
-		"full_name" => array("Full Name", "ASC"),
-		"enabled" => array("Enabled", "ASC"),
-		"realm" => array("Realm", "ASC"),
-		"policy_graphs" => array("Default Graph Policy", "ASC"),
-		"dtime" => array("Last Login", "DESC"));
+		"username" => array( _("User Name"), "ASC"),
+		"full_name" => array( _("Full Name"), "ASC"),
+		"enabled" => array( _("Enabled"), "ASC"),
+		"realm" => array( _("Realm"), "ASC"),
+		"policy_graphs" => array( _("Default Graph Policy"), "ASC"),
+		"dtime" => array( _("Last Login"), "DESC"));
 
 	html_header_sort_checkbox($display_text, get_request_var_request("sort_column"), get_request_var_request("sort_direction"));
 
@@ -1076,9 +1076,9 @@ function user() {
 				$last_login = strftime("%A, %B %d, %Y %H:%M:%S ", strtotime($user["dtime"]));;
 			}
 			if ($user["enabled"] == "on") {
-				$enabled = "Yes";
+				$enabled = _("Yes");
 			}else{
-				$enabled = "No";
+				$enabled = _("No");
 			}
 
 			form_alternate_row_color('line' . $user["id"], true);
@@ -1089,9 +1089,9 @@ function user() {
 			form_selectable_cell($enabled, $user["id"]);
 			form_selectable_cell($auth_realms[$user["realm"]], $user["id"]);
 			if ($user["policy_graphs"] == "1") {
-				form_selectable_cell("ALLOW", $user["id"]);
+				form_selectable_cell( _("ALLOW"), $user["id"]);
 			}else{
-				form_selectable_cell("DENY", $user["id"]);
+				form_selectable_cell( _("DENY"), $user["id"]);
 			}
 			form_selectable_cell($last_login, $user["id"]);
 			form_checkbox_cell($user["username"], $user["id"]);
@@ -1100,7 +1100,7 @@ function user() {
 
 		print $nav;
 	}else{
-		print "<tr><td><em>No Users</em></td></tr>";
+		print "<tr><td><em>" . _("No Users") ."</em></td></tr>";
 	}
 
 	print "</table>\n</form>\n";	# end form and table of html_header_sort_checkbox

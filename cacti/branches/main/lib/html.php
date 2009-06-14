@@ -858,9 +858,9 @@ function draw_graph_items_list($item_list, $filename, $url_data, $disable_contro
 function draw_header_tab($name, $title, $location, $image = "") {
 	global $config;
 	if ($image == "") {
-		return "<li id=\"tab_" . html_escape($name) . "\"" . (html_selected_tab($name, $location) ? "class=\"selected\"" : "class=\"notselected\"") . "><a href=\"javascript:navigation_select('" . html_escape($name) . "','" . htmlspecialchars($location) . "')\" title=\"" . html_escape($title) . "\">" . html_escape($title) . "</a></li>\n";
+		return "<li id=\"tab_" . html_escape($name) . "\"" . (html_selected_tab($name, $location) ? " class=\"selected\"" : " class=\"notselected\"") . "><a href=\"javascript:navigation_select('" . html_escape($name) . "','" . htmlspecialchars($location) . "')\" title=\"" . html_escape($title) . "\">" . html_escape($title) . "</a></li>\n";
 	}else{
-		return "<li id=\"tab_" . html_escape($name) . "\"" . (html_selected_tab($name, $location) ? "class=\"selected\"" : "class=\"notselected\"") . "><a href=\"javascript:navigation_select('" . html_escape($name) . "','" . htmlspecialchars($location) . "')\" title=\"" . html_escape($title) . "\"><img style='border-width:0px;' src='$image' align='middle'></a></li>\n";
+		return "<li id=\"tab_" . html_escape($name) . "\"" . (html_selected_tab($name, $location) ? " class=\"selected\"" : " class=\"notselected\"") . "><a href=\"javascript:navigation_select('" . html_escape($name) . "','" . htmlspecialchars($location) . "')\" title=\"" . html_escape($title) . "\"><img style='border-width:0px;' src='$image' alt='$title' align='middle'></a></li>\n";
 	}
 }
 
@@ -889,7 +889,7 @@ function html_selected_tab($name, $location) {
 }
 
 function html_escape($html) {
-	return htmlentities($html, ENT_QUOTES);
+	return htmlentities($html, ENT_QUOTES, 'UTF-8');
 }
 
 /* html_get_php_pathname() - extracts the name of the php file without the

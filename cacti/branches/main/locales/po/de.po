@@ -1,0 +1,174 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: German Language File - Cacti 0.8.8\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2009-06-09 20:52+0100\n"
+"PO-Revision-Date: \n"
+"Last-Translator: Andreas Braun <browniebraun@cacti.cc>\n"
+"Language-Team: Andreas Braun <browniebraun@cacti.cc>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-Language: German\n"
+"X-Poedit-Country: GERMANY\n"
+"X-Poedit-Basepath: c:\\Apache2\\htdocs\\cacti\\branches\\main\n"
+"X-Poedit-SearchPath-0: .\n"
+
+#: user_admin.php:995
+msgid "User Management"
+msgstr "Benutzer Verwaltung"
+
+#: user_admin.php:1009
+msgid "Go"
+msgstr ""
+
+#: user_admin.php:1010
+msgid "Clear"
+msgstr "Löschen"
+
+#: user_admin.php:1057
+msgid "User Name"
+msgstr "Benutzername"
+
+#: user_admin.php:1058
+msgid "Full Name"
+msgstr "Vollständiger Name"
+
+#: user_admin.php:1059
+msgid "Enabled"
+msgstr "Aktiviert"
+
+#: user_admin.php:1060
+msgid "Realm"
+msgstr "Bereich"
+
+#: user_admin.php:1061
+msgid "Default Graph Policy"
+msgstr "Standard Grafik-Regelwerk"
+
+#: user_admin.php:1062
+msgid "Last Login"
+msgstr "Letzte Anmeldung"
+
+#: user_admin.php:1074
+msgid "Yes"
+msgstr "Ja"
+
+#: user_admin.php:1076
+msgid "No"
+msgstr "Nein"
+
+#: user_admin.php:1087
+msgid "ALLOW"
+msgstr "ZUGELASSEN"
+
+#: user_admin.php:1089
+msgid "DENY"
+msgstr "VERWEIGERT"
+
+#: user_admin.php:1100
+msgid "No Users"
+msgstr "Keine Benutzer"
+
+#: include/top_graph_header.php:135
+#: include/top_header.php:60
+msgid "Console"
+msgstr "Konsole"
+
+#: include/top_graph_header.php:136
+#: include/top_header.php:61
+msgid "Graphs"
+msgstr "Diagramme"
+
+#: include/top_graph_header.php:143
+msgid "Settings"
+msgstr "Einstellungen"
+
+#: include/top_graph_header.php:144
+msgid "Tree"
+msgstr ""
+
+#: include/top_graph_header.php:145
+msgid "List"
+msgstr ""
+
+#: include/top_graph_header.php:146
+msgid "Preview"
+msgstr ""
+
+#: include/top_header.php:67
+msgid "Help"
+msgstr "Hilfe"
+
+#: include/top_header.php:76
+msgid "Logged in as"
+msgstr "angemeldet als"
+
+#: include/top_header.php:76
+msgid "Logout"
+msgstr "Abmelden"
+
+#: include/top_header.php:96
+msgid "Hide/Unhide Menu"
+msgstr "Menü ein-/ausblenden"
+
+#: lib/ldap.php:303
+msgid "No username defined"
+msgstr "Kein Benutzername definiert"
+
+#: lib/log/update.php:158
+msgid "Log control removed "
+msgstr ""
+
+#: lib/log/update.php:162
+msgid "Log control removed log entries older than "
+msgstr ""
+
+#: lib/log/update.php:167
+msgid "Log control suspended logging due to the log being full.  Please purge your logs manually."
+msgstr ""
+
+#: lib/log/update.php:173
+msgid "The cacti log control mechanism is set to None.  This is not recommended, please purge your logs on a manual basis."
+msgstr ""
+
+#: lib/log/update.php:355
+msgid "EMERGENCY"
+msgstr ""
+
+#: lib/log/update.php:358
+msgid "ALERT"
+msgstr "ALARM"
+
+#: lib/log/update.php:361
+msgid "CRITICAL"
+msgstr "KRITISCH"
+
+#: lib/log/update.php:364
+msgid "ERROR"
+msgstr "FEHLER"
+
+#: lib/log/update.php:367
+msgid "WARNING"
+msgstr "WARNUNG"
+
+#: lib/log/update.php:370
+msgid "NOTICE"
+msgstr "HINWEIS"
+
+#: lib/log/update.php:373
+msgid "INFO"
+msgstr "INFORMATION"
+
+#: lib/log/update.php:376
+msgid "DEBUG"
+msgstr ""
+
+#: lib/log/update.php:379
+msgid "DEV"
+msgstr ""
+
+#: lib/log/update.php:382
+msgid "UNKNOWN"
+msgstr "UNBEKANNT"
+

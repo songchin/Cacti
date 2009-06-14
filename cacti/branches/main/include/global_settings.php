@@ -299,6 +299,13 @@ $settings = array(
 			"description" => "Prompt user before item deletion.",
 			"default" => "on",
 			"method" => "checkbox"
+			),
+		"i18n_support" => array(
+			"friendly_name" => "Enable Language Support",
+			"description" => "Choose \"enable\" to allow the location of Cacti. The strict mode requires that the requested language will also be supported by all plugins being installed at your system. If that's not the fact everything will be displayed in English.",
+			"method" => "drop_array",
+			"default" => "0",
+			"array" => $i18n_modes
 			)
 		),
 	"export" => array(

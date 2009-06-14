@@ -299,6 +299,11 @@ $rrdtool_versions = array(
 	"rrd-1.2.x" => "RRDTool 1.2.x",
 	"rrd-1.3.x" => "RRDTool 1.3.x");
 
+$i18n_modes = array(
+	0 => "disabled",
+	1 => "enabled",
+	2 => "enabled (strict mode)");
+
 $cdef_item_types = array(
 	1 => "Function",
 	2 => "Operator",

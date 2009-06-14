@@ -139,10 +139,15 @@ include(CACTI_BASE_PATH . "/lib/database.php");
 /* connect to the database server */
 db_connect_real($database_hostname, $database_username, $database_password, $database_default, $database_type, $database_port);
 
+/* initilize php session */
+session_name($cacti_session_name);
+session_start();
+
 /* include additional modules */
 include_once(CACTI_BASE_PATH . "/lib/functions.php");
 include_once(CACTI_BASE_PATH . "/lib/plugins.php");
 include_once(CACTI_BASE_PATH . "/include/global_constants.php");
+include_once(CACTI_BASE_PATH . "/include/global_language.php");
 include_once(CACTI_BASE_PATH . "/include/global_arrays.php");
 include_once(CACTI_BASE_PATH . "/include/global_settings.php");
 include_once(CACTI_BASE_PATH . "/include/global_form.php");
@@ -179,10 +184,6 @@ if ((!in_array(basename($_SERVER["PHP_SELF"]), $no_http_header_files, true)) && 
 	header("Pragma: no-cache");
 	/* prevent IE from silently rejects cookies sent from third party sites. */
 	header('P3P: CP="CAO PSA OUR"');
-
-	/* initilize php session */
-	session_name($cacti_session_name);
-	session_start();
 
 	/* detect and handle get_magic_quotes */
 	if (!get_magic_quotes_gpc()) {

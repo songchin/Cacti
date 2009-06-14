@@ -356,6 +356,11 @@ td {
 	padding: 15px 15px 15px 35px;
 }
 
+.down-list li {
+	list-style:none; 
+	display:inline;
+}
+
 /* login/logout class information */
 #authBody {
 }
