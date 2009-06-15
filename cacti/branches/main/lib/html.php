@@ -92,9 +92,6 @@ function html_start_box($title, $width, $background_color, $cell_padding, $align
 										</td><?php } ?>
 										<td onMouseDown='return false' class="textHeaderDark"><?php print $title;?>
 										</td>
-										<?php if ($collapsing) {?><td class="textHeaderDark" width="1">
-											<img style='display:none;' src="<?php print URL_PATH; ?>images/transparent_pixel.gif" alt=''>
-										</td><?php }?>
 									</tr>
 								</table>
 							</td><?php if ($add_text != "") {?>
@@ -988,10 +985,7 @@ function draw_menu($user_menu = "") {
 			-->
 			</script>
 			<?php
-			print "<div id='mm_$id' onMouseDown='return false' class='menuMain' style='white-space:nowrap' $ani>
-					$header_name
-					<img style='display:none;' alt='' src='" . URL_PATH . "images/transparent_pixel.gif'>
-				</div>
+			print "<div id='mm_$id' onMouseDown='return false' class='menuMain' style='white-space:nowrap' $ani>$header_name</div>
 				<div>
 				<ul id='ul_$id' class='menuSubMain'>";
 		}

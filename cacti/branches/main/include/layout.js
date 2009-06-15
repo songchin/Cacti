@@ -916,7 +916,7 @@ function runOnLoadFunctions() {
 
 		if (myPage == valArray[0]) {
 			eval(valArray[1]);
-		}else if (document.getElementById["content"] && valArray[0] == "menu") {
+		}else if (document.getElementById("content") && valArray[0] == "menu") {
 			eval(valArray[1]);
 		}
 	}
