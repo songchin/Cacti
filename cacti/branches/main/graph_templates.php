@@ -565,6 +565,8 @@ function template() {
 			form_end_row();
 		}
 
+		form_end_table();
+
 		print $nav;
 	}else{
 		print "<tr><td><em>No Graph Templates</em></td></tr>\n";

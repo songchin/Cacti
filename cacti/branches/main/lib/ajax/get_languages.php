@@ -35,7 +35,7 @@ return;
 $dhandle = opendir(CACTI_BASE_PATH . "/locales");
 $supported_languages["cacti"]["us"] = "English";
 while (false !== ($dirname = readdir($dhandle))) {
-	$catalogue = CACTI_BASE_PATH . "/locales/" . $dirname . "/LC_MESSAGES/cacti.mo";
+	$catalogue = CACTI_BASE_PATH . "/locales/" . $dirname . "/LC_MESSAGES/cacti.mo"; 
 	if(file_exists($catalogue)) {
 		$dirname = strtolower(substr($dirname, 3, 2));
 		if(isset($lang2locale[$dirname])) {
@@ -77,7 +77,7 @@ if(read_config_option('i18n_support') == 2){
 				/* no language support */
 				$supported_languages["cacti"] = array();
 				$supported_languages["cacti"]["us"] = "English";
-				break;
+				break; 
 			}
 		}
 	}
@@ -87,12 +87,11 @@ $location = $_GET['location'];
 $location .= (strpos($location, '?')) ? '&' : '?';
 
 ?>
-<span id="loading" style="display:none;"><img src="<?php echo URL_PATH; ?>images/load_small.gif" align="top" alt="loading" style='border-width:0px;'>LOADING</span>
 <ul class="down-list" style="list-style:none; display:inline;">
 <?php
 if(sizeof($supported_languages["cacti"])>0) {
 	foreach($supported_languages["cacti"] as $code => $language) {
-		?><li><img src="<?php echo URL_PATH; ?>images/flag_icons/<?php print $code;?>.gif" align="top" alt="loading" style='border-width:0px; display:inline;'><a href="<?php print $location . "language=" . $code; ?>">&nbsp;<?php print $language;?></a>&nbsp;&nbsp;</li><?php
+		?><li><img src="<?php echo URL_PATH; ?>images/flag_icons/<?php print $code;?>.gif" align="top" alt="loading" style='border-width:0px;'><a href="<?php print $location . "language=" . $code; ?>">&nbsp;<?php print $language;?></a>&nbsp;&nbsp;</li><?php
 	}
 }else{
 	$system_language = getenv('LANG');

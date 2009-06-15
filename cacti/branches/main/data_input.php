@@ -572,6 +572,8 @@ function data() {
 			form_end_row();
 		}
 
+		form_end_table();
+
 		print $nav;
 	}else{
 		print "<tr><td><em>No Data Input Methods</em></td></tr>";

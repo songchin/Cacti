@@ -1326,6 +1326,8 @@ function data_source() {
 			form_end_row();
 		}
 
+		form_end_table();
+
 		/* put the nav bar on the bottom as well */
 		print $nav;
 	}else{

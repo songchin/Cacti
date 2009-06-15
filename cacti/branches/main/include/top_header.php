@@ -53,7 +53,7 @@ api_plugin_hook('page_head');
 
  ?>
 </head>
-<body id='body' onResize='pageResize()' onLoad='pageInitialize()'>
+<body id='body' onLoad='pageInitialize()'>
 <div id='header'>
 	<div id='logobar' class='logobar'></div>
 	<div id='navbar' class='navbar'>

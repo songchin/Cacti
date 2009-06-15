@@ -65,17 +65,20 @@ function html_start_box($title, $width, $background_color, $cell_padding, $align
 
 	if ($collapsing) {
 		$ani  = "style=\"cursor:pointer;\" onClick=\"htmlStartBoxFilterChange('" . $item_id . "')\"";
-		$ani2 = "onload=\"htmlStartBoxFilterChange('" . $item_id . "', true)\"";
 		$ani3 = "onClick=\"htmlStartBoxFilterChange('" . $item_id . "')\"";
 	}else{
 		$ani  = "";
-		$ani2 = "";
 		$ani3 = "";
 	}
 
 	$table_id = ($table_id != '') ? "id=\"$table_id\"" : "";
 
 	?>
+		<script type="text/javascript">
+		<!--
+			registerOnLoadFunction("<?php print basename($_SERVER['PHP_SELF']);?>", "htmlStartBoxFilterChange('<?php print $item_id;?>', true)");
+		-->
+		</script>
 		<table class="startBoxHeader" align="<?php print $align;?>" width="<?php print $width;?>" cellpadding=0 cellspacing=0>
 			<?php if ($title != "") {?><tr class="rowHeader">
 				<td colspan="100">
@@ -90,7 +93,7 @@ function html_start_box($title, $width, $background_color, $cell_padding, $align
 										<td onMouseDown='return false' class="textHeaderDark"><?php print $title;?>
 										</td>
 										<?php if ($collapsing) {?><td class="textHeaderDark" width="1">
-											<img style='display:none;' src="<?php print URL_PATH; ?>images/transparent_pixel.gif" alt='' <?php print $ani2;?>>
+											<img style='display:none;' src="<?php print URL_PATH; ?>images/transparent_pixel.gif" alt=''>
 										</td><?php }?>
 									</tr>
 								</table>
@@ -477,13 +480,13 @@ function html_header_sort($header_items, $sort_column, $sort_direction, $last_it
 		if (($db_column == "") || (substr_count($db_column, "nosort"))) {
 			$width = html_get_column_width($pathname, "hhs_$rand_id");
 
-			print "\t\t\t<th nowrap style='width:$width;white-space:nowrap;' id='hhs_$rand_id'" . ((($rand_id+1) == count($header_items)) ? "colspan='$last_item_colspan' " : "") . " onMousemove='doColResize(this,event)' onMouseover='doColResize(this,event)' onMouseup='doneColResize()' class='textSubHeaderDark'>" . $display_text . "</th>\n";
+			print "\t\t\t<th nowrap style='width:$width;white-space:nowrap;' id='hhs_$rand_id'" . ((($rand_id+1) == count($header_items)) ? "colspan='$last_item_colspan' " : "") . " onMouseDown='return false' onMousemove='doColResize(this,event)' onMouseover='doColResize(this,event)' onMouseup='doneColResize()' class='textSubHeaderDark'>" . $display_text . "</th>\n";
 
 			$rand_id++;
 		}else{
 			$width = html_get_column_width($pathname, $db_column);
 
-			print "\t\t\t<th nowrap style='width:$width;white-space:nowrap;' id='$db_column'" . ((($rand_id+1) == count($header_items)) ? "colspan='$last_item_colspan' " : "") . " onMousemove='doColResize(this,event)' onMouseover='doColResize(this,event)' onMouseup='doneColResize()' class='textSubHeaderDark'>";
+			print "\t\t\t<th nowrap style='width:$width;white-space:nowrap;' id='$db_column'" . ((($rand_id+1) == count($header_items)) ? "colspan='$last_item_colspan' " : "") . " onMouseDown='return false' onMousemove='doColResize(this,event)' onMouseover='doColResize(this,event)' onMouseup='doneColResize()' class='textSubHeaderDark'>";
 			print "\n\t\t\t\t<a class='$sort_class' style='display:block;' href='" . htmlspecialchars($_SERVER["PHP_SELF"] . "?sort_column=" . $db_column . "&sort_direction=" . $direction) . "'>" . $display_text . "</a>";
 			print "\n\t\t\t</th>\n";
 		}
@@ -541,13 +544,13 @@ function html_header_sort_checkbox($header_items, $sort_column, $sort_direction,
 		if (($db_column == "") || (substr_count($db_column, "nosort"))) {
 			$width = html_get_column_width($pathname, "hhscrand_$rand_id");
 
-			print "\t\t\t<th nowrap style='width:$width;white-space:nowrap;' id='hhsc_$rand_id' onMousemove='doColResize(this,event)' onMouseover='doColResize(this,event)' onMouseup='doneColResize()' class='textSubHeaderDark'>" . $display_text . "</th>\n";
+			print "\t\t\t<th nowrap style='width:$width;white-space:nowrap;' id='hhsc_$rand_id' onMouseDown='return false' onMousemove='doColResize(this,event)' onMouseover='doColResize(this,event)' onMouseup='doneColResize()' class='textSubHeaderDark'>" . $display_text . "</th>\n";
 
 			$rand_id++;
 		}else{
 			$width = html_get_column_width($pathname, $db_column);
 
-			print "\t\t\t<th nowrap style='width:$width;white-space:nowrap;' id='$db_column' onMousemove='doColResize(this,event)' onMouseover='doColResize(this,event)' onMouseup='doneColResize()' class='textSubHeaderDark'>";
+			print "\t\t\t<th nowrap style='width:$width;white-space:nowrap;' id='$db_column' onMouseDown='return false' onMousemove='doColResize(this,event)' onMouseover='doColResize(this,event)' onMouseup='doneColResize()' class='textSubHeaderDark'>";
 			print "\n\t\t\t\t<a class='$sort_class' style='display:block;' href='" . htmlspecialchars($_SERVER["PHP_SELF"] . "?sort_column=" . $db_column . "&sort_direction=" . $direction) . "'>" . $display_text . "</a>";
 			print "\n\t\t\t</th>\n";
 		}
@@ -578,7 +581,7 @@ function html_header($header_items, $last_item_colspan = 1, $resizable = true, $
 		if ($resizable) {
 			$width = html_get_column_width($pathname, "hh_$rand_id");
 
-			print "\t\t\t<th id='hh_$rand_id' style='width: $width;' onMousemove='doColResize(this,event)' onMouseover='doColResize(this,event)' onMouseup='doneColResize()' " . ((($i+1) == count($header_items)) ? "colspan='$last_item_colspan' " : "") . " class='textSubHeaderDark'>" . $header_items[$i] . "</th>\n";
+			print "\t\t\t<th id='hh_$rand_id' style='width: $width;' onMouseDown='return false' onMousemove='doColResize(this,event)' onMouseover='doColResize(this,event)' onMouseup='doneColResize()' " . ((($i+1) == count($header_items)) ? "colspan='$last_item_colspan' " : "") . " class='textSubHeaderDark'>" . $header_items[$i] . "</th>\n";
 		}else{
 			print "\t\t\t<th id='hh_$rand_id' " . ((($i+1) == count($header_items)) ? "colspan='$last_item_colspan' " : "") . " class='textSubHeaderDark'>" . $header_items[$i] . "</th>\n";
 		}
@@ -611,7 +614,7 @@ function html_header_checkbox($header_items, $form_action = "", $resizable = fal
 		if ($resizable) {
 			$width = html_get_column_width($pathname, "hhc_$rand_id");
 
-			print "\t\t\t<th id='hhc_$rand_id' style='width: $width;' onMousemove='doColResize(this,event)' onMouseover='doColResize(this,event)' onMouseup='doneColResize()' class='textSubHeaderDark'>" . $header_items[$i] . "</th>\n";
+			print "\t\t\t<th id='hhc_$rand_id' style='width: $width;' onMouseDown='return false' onMousemove='doColResize(this,event)' onMouseover='doColResize(this,event)' onMouseup='doneColResize()' class='textSubHeaderDark'>" . $header_items[$i] . "</th>\n";
 		}else{
 			print "\t\t\t<th id='hhc_$rand_id' class='textSubHeaderDark'>" . $header_items[$i] . "</th>\n";
 		}
@@ -953,7 +956,6 @@ function draw_menu($user_menu = "") {
 		$user_realms = $user_auth_realms;
 	}
 
-	print "<table cellpadding='0' cellspacing='0' border='0' width='100%'>\n";
 	$first_ul = true;
 
 	/* loop through each header */
@@ -972,25 +974,26 @@ function draw_menu($user_menu = "") {
 
 		if ($show_header_items == true) {
 			if (!$first_ul) {
-				print "\t\t\t\t\t</ul>\n\t\t\t\t</td>\n\t\t\t</tr>\n";
+				print "</ul></div>";
 			}else{
 				$first_ul = false;
 			}
 
 			$id = clean_up_name(strtolower($header_name));
-
 			$ani  = "onClick='changeMenuState(\"" . $id . "\")'";
-			$ani2 = "onload='changeMenuState(\"" . $id . "\", true)'";
-
-			print "\t\t\t<tr class='menuMain' style='white-space:nowrap' $ani>
-				<td onMouseDown='return false' valign='middle'>
+			?>
+			<script type="text/javascript">
+			<!--
+				registerOnLoadFunction("menu", "changeMenuState('<?php print $id;?>', true)");
+			-->
+			</script>
+			<?php
+			print "<div id='mm_$id' onMouseDown='return false' class='menuMain' style='white-space:nowrap' $ani>
 					$header_name
-					<img style='display:none;' alt='' src='" . URL_PATH . "images/transparent_pixel.gif' $ani2>
-				</td>
-			</tr>
-			<tr class='mainMenu' id='menu_$id'>
-				<td>
-					<ul id='ul_$id' class='menuSubMain'>\n";
+					<img style='display:none;' alt='' src='" . URL_PATH . "images/transparent_pixel.gif'>
+				</div>
+				<div>
+				<ul id='ul_$id' class='menuSubMain'>";
 		}
 
 		/* pass 2: loop through each top level item and render it */
@@ -1039,9 +1042,9 @@ function draw_menu($user_menu = "") {
 						that is contained in the sub-items array */
 						if (($i == 0) || ($draw_sub_items)) {
 							if (basename($_SERVER["PHP_SELF"]) == basename($item_sub_url)) {
-								print "\t\t\t\t\t\t<li class='menuSubMainSelected'><a href='$item_sub_url'>$prepend_string$item_sub_title</a></li>\n";
+								print "<li class='menuSubMainSelected'><a href='$item_sub_url'>$prepend_string$item_sub_title</a></li>";
 							}else{
-								print "\t\t\t\t\t\t<li><a href='$item_sub_url'>$prepend_string$item_sub_title</a></li>\n";
+								print "<li><a href='$item_sub_url'>$prepend_string$item_sub_title</a></li>";
 							}
 						}
 
@@ -1053,16 +1056,16 @@ function draw_menu($user_menu = "") {
 					/* draw normal (non sub-item) menu item */
 					$item_url = URL_PATH . $item_url;
 					if (basename($_SERVER["PHP_SELF"]) == basename($item_url)) {
-						print "\t\t\t\t\t\t<li class='menuSubMainSelected'><a href='$item_url'>$item_title</a></li>\n";
+						print "<li class='menuSubMainSelected'><a href='$item_url'>$item_title</a></li>";
 					}else{
-						print "\t\t\t\t\t\t<li><a href='$item_url'>$item_title</a></li>\n";
+						print "<li><a href='$item_url'>$item_title</a></li>";
 					}
 				}
 			}
 		}
 	}
 
-	print "\t\t\t\t\t</ul>\n\t\t\t\t</td>\n\t\t\t</tr>\n\t\t</table>\n";
+	print "</ul></div>";
 }
 
 /* draw_actions_dropdown - draws a table the allows the user to select an action to perform

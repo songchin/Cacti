@@ -399,7 +399,8 @@ var iEdgeThreshold  = 10;
 var aniInProgress   = false;
 var vSplitterClosed = false;
 var creatingCookie  = false;
-var browser         = "Unknwn";
+var browser         = "Unknown";
+var browserVersion  = 0;
 var windowOnLoadReg = new Array();
 var windowOnLoadCt  = 0;
 
@@ -849,19 +850,18 @@ function pageInitialize() {
 }
 
 function sizeContentDivs() {
-	if (browser == "IE") {
-		document.getElementById("wrapper").style.top = "4.3em";
-	}
-
 	var top    = document.getElementById("wrapper").offsetTop;
 	var bottom = document.getElementById("wrapper").clientHeight;
 
-	if (document.getElementById("content")) {
-		document.getElementById("content").style.height = parseInt(bottom-top) + "px";
-	}else if(document.getElementById("graph_tree_content")) {
-		document.getElementById("graph_tree_content").style.height = parseInt(bottom-top) + "px";
-	}else{
-		document.getElementById("graph_content").style.height = parseInt(bottom-top) + "px";
+	/* IE6 will enter infinite loop here */
+	if (browser != "IE" && browserVersion != 6) {
+		if (document.getElementById("content")) {
+			document.getElementById("content").style.height = parseInt(bottom-top) + "px";
+		}else if(document.getElementById("graph_tree_content")) {
+			document.getElementById("graph_tree_content").style.height = parseInt(bottom-top) + "px";
+		}else{
+			document.getElementById("graph_content").style.height = parseInt(bottom-top) + "px";
+		}
 	}
 }
 
@@ -916,6 +916,8 @@ function runOnLoadFunctions() {
 
 		if (myPage == valArray[0]) {
 			eval(valArray[1]);
+		}else if (document.getElementById["content"] && valArray[0] == "menu") {
+			eval(valArray[1]);
 		}
 	}
 }
@@ -953,8 +955,15 @@ function fixBrowserQuirks() {
 }
 
 function detectBrowser() {
-	if (navigator.userAgent.indexOf('MSIE') >= 0) {
+	if (navigator.userAgent.indexOf('MSIE 6.0') >= 0) {
 		browser = "IE";
+		browserVersion = 6;
+	}else if (navigator.userAgent.indexOf('MSIE 7.0') >= 0) {
+		browser = "IE";
+		browserVersion = 7;
+	}else if (navigator.userAgent.indexOf('MSIE 8.0') >= 0) {
+		browser = "IE";
+		browserVersion = 8;
 	}else if (navigator.userAgent.indexOf('Mozilla') >= 0) {
 		browser = "FF";
 	}else if (navigator.userAgent.indexOf('Opera') >= 0) {

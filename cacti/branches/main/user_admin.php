@@ -1098,6 +1098,8 @@ function user() {
 			form_end_row();
 		}
 
+		form_end_table();
+
 		print $nav;
 	}else{
 		print "<tr><td><em>" . _("No Users") ."</em></td></tr>";
