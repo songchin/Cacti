@@ -20,16 +20,16 @@
  +-------------------------------------------------------------------------+
  | http://www.cacti.net/                                                   |
  +-------------------------------------------------------------------------+
-*/
+ */
 
 /* default language of Cacti */
 # should be setup in global settings
 $cacti_lang = "en";
 
 
-/* An array that will contains all used textdomains 
-   will be needed for plugin wrappers and can be used 
-   to display system information */
+/* An array that will contains all used textdomains
+ will be needed for plugin wrappers and can be used
+ to display system information */
 $cacti_textdomains = array();
 
 
@@ -41,13 +41,13 @@ $lang2locale = get_list_of_locales();
 /* user requests another language */
 if(isset($_GET['language']) && isset($lang2locale[$_GET['language']])) {
 	$cacti_lang = $_GET['language'];
-	$_SESSION['language'] = $cacti_lang; 
+	$_SESSION['language'] = $cacti_lang;
 
-/* language definition stored in the SESSION */
+	/* language definition stored in the SESSION */
 }elseif(isset($_SESSION['language']) && isset($lang2locale[$_SESSION['language']])){
 	$cacti_lang = $_SESSION['language'];
 
-/* detect browser settings if user did not setup language via GUI */
+	/* detect browser settings if user did not setup language via GUI */
 }elseif(isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
 	$accepted = $_SERVER['HTTP_ACCEPT_LANGUAGE'];
 	$accepted = str_replace(strstr($accepted, ','), '', $accepted);
@@ -60,11 +60,11 @@ if(isset($_GET['language']) && isset($lang2locale[$_GET['language']])) {
 
 /* use fallback if i18n is disabled (default) or English is requested */
 if (read_config_option('i18n_support') == 0 || $cacti_lang == "en" || $cacti_lang == "us") {
-	
+
 	setlocale(LC_ALL, array("us_EN", "us"));
 	putenv("LC_ALL=us_EN");
 	putenv("LANG=en");
-	
+
 	load_fallback_procedure();
 	return;
 }
@@ -95,11 +95,11 @@ if(sizeof($plugins)>0) {
 			$cacti_textdomains[$plugin]['path2catalogue'] = $path2catalogue;
 		}
 	}
-	
+
 	/* if i18n support is set to strict mode then check if all plugins support the requested language */
 	if(read_config_option('i18n_support') == 2) {
 		if(sizeof($plugins) != (sizeof($cacti_textdomains)-1)) {
-			
+
 			load_fallback_procedure();
 			return;
 		}
@@ -126,7 +126,7 @@ if($ls !== false) {
 /* determine whether or not we need to emulate gettext */
 if (!function_exists("_")) {
 
-	/* use php-gettext */	
+	/* use php-gettext */
 	require(CACTI_BASE_PATH . "/include/gettext/streams.php");
 	require(CACTI_BASE_PATH . "/include/gettext/gettext.php");
 
@@ -135,9 +135,9 @@ if (!function_exists("_")) {
 	$l10n = new gettext_reader($input);
 
 	load_i18n_gettext_wrappers();
-	
+
 } else {
-	
+
 	/* use native support of gettext */
 	foreach($cacti_textdomains as $domain => $paths) {
 		bindtextdomain($domain, $paths['path2locales']);
@@ -153,21 +153,43 @@ load_i18n_plugin_wrappes();
 
 
 
+function __() {
+
+	/* this should not happen */
+	if (func_num_args() < 1) return false;
+
+	$args = func_get_args();
+	/* convert pure text strings */
+	if (func_num_args() == 1) {
+		return _($args[0]);
+	}
+
+	/*
+	 * in case we have variables to be replaced,
+	 * get function arguments */
+
+	/* get gettext string */
+	$args[0] = _($args[0]);
+
+	/* process return string against input arguments */
+	return call_user_func_array("sprintf", $args);
+}
+
 
 
 /**
  * load_fallback_procedure()
- * Load wrapper package if native language has to be used 
+ * Load wrapper package if native language has to be used
  */
 function load_fallback_procedure(){
 	global $cacti_textdomains;
-		
+
 	/* load wrappers if native gettext is not available */
 	if(!function_exists('_')) load_i18n_fallback_wrappers();
 
 	/* load wrappers for Cacti Plugins */
 	load_i18n_plugin_wrappes();
-	
+
 	/* reset variables */
 	$cacti_textdomains = array();
 
@@ -178,7 +200,7 @@ function load_fallback_procedure(){
 /**
  * load_i18n_gettext_wrappers()
  * Create wrappers for Cacti if php-gettext will be use to
- * emulate native gettext support 
+ * emulate native gettext support
  */
 function load_i18n_gettext_wrappers(){
 
@@ -196,10 +218,10 @@ function load_i18n_gettext_wrappers(){
 		global $l10n;
 		return $l10n->ngettext($single, $plural, $number);
 	}
-	
+
 	function dgettext($domain, $text) {
-		global $cacti_textdomains; 
-		
+		global $cacti_textdomains;
+
 		if(isset($cacti_textdomains[$domain])) {
 			$input = new FileReader($cacti_textdomains[$domain]['path2catalogue']);
 			$l10n = new gettext_reader($input);
@@ -208,10 +230,10 @@ function load_i18n_gettext_wrappers(){
 			return $text;
 		}
 	}
-	
+
 	function dngettext($domain, $single, $plural, $number) {
 		global $cacti_textdomains;
-		
+
 		if(isset($cacti_textdomains[$domain])) {
 			$input = new FileReader($cacti_textdomains[$domain]['path2catalogue']);
 			$l10n = new gettext_reader($input);
@@ -226,7 +248,7 @@ function load_i18n_gettext_wrappers(){
 
 /**
  * load_i18n_fallback_wrappers()
- * 
+ *
  * Create wrappers for Cacti if fallback is necessary
  */
 function load_i18n_fallback_wrappers(){
@@ -242,11 +264,11 @@ function load_i18n_fallback_wrappers(){
 	function ngettext($single, $plural, $number) {
 		return ($number == 1) ? $single : $plural;
 	}
-	
+
 	function dgettext($domain, $text){
 		return $text;
 	}
-	
+
 	function dngettext($domain, $single, $plural, $number){
 		return ($number == 1) ? $single : $plural;
 	}
@@ -255,15 +277,15 @@ function load_i18n_fallback_wrappers(){
 
 /**
  * load_i18n_plugin_wrappes()
- * 
- * Create standard wrappers for Cacti plugins 
+ *
+ * Create standard wrappers for Cacti plugins
  */
 function load_i18n_plugin_wrappes(){
 
 	function _p($text, $domain) {
 		return dgettext($domain, $text);
 	}
-	
+
 	function _pngettext($single, $plural, $number, $domain) {
 		return dngettext($domain, $single, $plural, $number);
 	}
@@ -340,7 +362,7 @@ function get_list_of_locales(){
 	"tr" 		=> array("language"=>"Turkish", 				"locale" => array("tr_TR.UTF-8","Turkish_Turkey.1254")),
 	"uk" 		=> array("language"=>"Ukrainian", 				"locale" => array("uk_UA.UTF-8","Ukrainian_Ukraine.1251")),
 	"vi" 		=> array("language"=>"Vietnamese", 				"locale" => array("vi_VN.UTF-8","Vietnamese_Viet Nam.1258")));
-	
+
 	return $lang2locale;
 }
 ?>

@@ -23,22 +23,22 @@
 */
 
 $log_control_options = array(
-	LOG_MSG_ASNEEDED => "Overwrite events as needed",
-	LOG_MSG_DAYSOLD => "Overwrite events older than the maximum days",
-	LOG_MSG_STOPLOG => "Stop logging if maximum log size is exceeded",
-	LOG_MSG_NONE => "None (Not Recommended)"
+	LOG_MSG_ASNEEDED 	=> __("Overwrite events as needed"),
+	LOG_MSG_DAYSOLD 	=> __("Overwrite events older than the maximum days"),
+	LOG_MSG_STOPLOG 	=> __("Stop logging if maximum log size is exceeded"),
+	LOG_MSG_NONE 		=> __("None (Not Recommended)")
 );
 
 $log_level = array(
-	SEV_DEV => "(0) Developer Debug",
-	SEV_DEBUG => "(1) Debug",
-	SEV_INFO => "(2) Informational",
-	SEV_NOTICE => "(3) Notice ",
-	SEV_WARNING => "(4) Warning",
-	SEV_ERROR => "(5) Error",
-	SEV_CRITICAL => "(6) Critical",
-	SEV_ALERT => "(7) Alert",
-	SEV_EMERGENCY => "(8) Emergency"
+	SEV_DEV 		=> "(0) " . __("Developer Debug"),
+	SEV_DEBUG 		=> "(1) " . __("Debug"),
+	SEV_INFO 		=> "(2) " . __("Informational"),
+	SEV_NOTICE 		=> "(3) " . __("Notice "),
+	SEV_WARNING 	=> "(4) " . __("Warning"),
+	SEV_ERROR 		=> "(5) " . __("Error"),
+	SEV_CRITICAL	=> "(6) " . __("Critical"),
+	SEV_ALERT 		=> "(7) " . __("Alert"),
+	SEV_EMERGENCY 	=> "(8) " . __("Emergency")
 	);
 
 if (CACTI_SERVER_OS == "unix") {

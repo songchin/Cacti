@@ -134,20 +134,20 @@ $page_title = api_plugin_hook_function('page_title', 'Cacti');
 	<div id='navbar'>
 		<div id='navbar_l'>
 			<ul>
-				<?php echo draw_header_tab("console", _("Console"), URL_PATH . "index.php");?>
-				<?php echo draw_header_tab("graphs", _("Graphs"), URL_PATH . "graph_view.php");?>
+				<?php echo draw_header_tab("console", __("Console"), URL_PATH . "index.php");?>
+				<?php echo draw_header_tab("graphs", __("Graphs"), URL_PATH . "graph_view.php");?>
 				<?php api_plugin_hook('top_graph_header_tabs');?>
 			</ul>
 		</div>
 		<div id='navbar_r'>
 			<ul>
 				<?php if (substr_count($_SERVER["REQUEST_URI"], "graph_view.php")) { ?>
-				<?php echo draw_header_tab("graph_settings", _("Settings"), URL_PATH . "graph_settings.php");?>
-				<?php echo draw_header_tab("tree", _("Tree"), URL_PATH . "graph_view.php?action=tree", URL_PATH . "images/tab_mode_tree_new.gif");?>
-				<?php echo draw_header_tab("list", _("List"), URL_PATH . "graph_view.php?action=list", URL_PATH . "images/tab_mode_list_new.gif");?>
-				<?php echo draw_header_tab("preview", _("Preview"), URL_PATH . "graph_view.php?action=preview", URL_PATH . "images/tab_mode_preview_new.gif");?>
+				<?php echo draw_header_tab("graph_settings", __("Settings"), URL_PATH . "graph_settings.php");?>
+				<?php echo draw_header_tab("tree", __("Tree"), URL_PATH . "graph_view.php?action=tree", URL_PATH . "images/tab_mode_tree_new.gif");?>
+				<?php echo draw_header_tab("list", __("List"), URL_PATH . "graph_view.php?action=list", URL_PATH . "images/tab_mode_list_new.gif");?>
+				<?php echo draw_header_tab("preview", __("Preview"), URL_PATH . "graph_view.php?action=preview", URL_PATH . "images/tab_mode_preview_new.gif");?>
 				<?php }else{ api_plugin_hook('top_graph_header_tabs_right'); }?>
-				<li id="tab_help" class="notselected"><a href="<?php echo pagehelp_url()?>" target="_blank" title="Help">Help</a></li>
+				<li id="tab_help" class="notselected"><a href="<?php echo pagehelp_url()?>" target="_blank" title="<?php print __("Help");?>"><?php print __("Help");?></a></li>
 			</ul>
 		</div>
 	</div>
@@ -156,13 +156,13 @@ $page_title = api_plugin_hook_function('page_title', 'Cacti');
 			<?php draw_navigation_text();?>
 		</div>
 		<div style='float:right'><?php
-			if (read_config_option("auth_method") != 0) { $date = date_time_format();?><strong><?php echo date("D, " . $date . " T");?></strong>&nbsp;&nbsp;&nbsp;Logged in as <strong><?php print db_fetch_cell("select username from user_auth where id=" . $_SESSION["sess_user_id"]);?></strong> (<a href="<?php echo URL_PATH; ?>logout.php">Logout</a>)<?php } ?>
+			if (read_config_option("auth_method") != 0) { $date = date_time_format();?><strong><?php echo date("D, " . $date . " T");?></strong>&nbsp;&nbsp;&nbsp;<?php print __("Logged in as");?> <strong><?php print db_fetch_cell("select username from user_auth where id=" . $_SESSION["sess_user_id"]);?></strong> (<a href="<?php echo URL_PATH; ?>logout.php"><?php print __("Logout");?></a>)<?php } ?>
 		</div>
 		<?php if(read_config_option('i18n_support') != 0) {?>
 		<div id="codelist" class='languages' style="float:right; list-style:none; display:inline;">
-			<span id="loading" style="display:none;"><img src="<?php echo URL_PATH; ?>images/load_small.gif" align="top" alt="loading" style='border-width:0px;'>LOADING</span>
+			<span id="loading" style="display:none;"><img src="<?php echo URL_PATH; ?>images/load_small.gif" align="top" alt="<?php print __("loading");?>" style='border-width:0px;'>LOADING</span>
 			<ul class="down-list" style="list-style:none; display:inline;">
-				<li><img src="<?php echo URL_PATH; ?>images/flag_icons/<?php print strtolower(substr((getenv('LC_ALL')),0,2));?>.gif" align="top" alt="loading" style='border-width:0px;'><a href="#">&nbsp;<?php print $lang2locale[(getenv('LANG'))]['language'];?></a></li>
+				<li><img src="<?php echo URL_PATH; ?>images/flag_icons/<?php print strtolower(substr((getenv('LC_ALL')),0,2));?>.gif" align="top" alt="<?php print __("loading");?>" style='border-width:0px;'><a href="#">&nbsp;<?php print $lang2locale[(getenv('LANG'))]['language'];?></a></li>
 			</ul>
 		</div>
 		<?php }?>
@@ -189,7 +189,7 @@ $page_title = api_plugin_hook_function('page_title', 'Cacti');
 		</script><?php } ?>
 	</div>
 	<div id='vsplitter' onMouseout='doneDivResize()' onMouseover='doDivResize(this,event)' onMousemove='doDivResize(this,event)'>
-		<div id='vsplitter_toggle' onClick='vSplitterToggle()' onMouseover='vSplitterEm()' onMouseout='vSplitterUnEm()' title='Hide/Unhide Menu'></div>
+		<div id='vsplitter_toggle' onClick='vSplitterToggle()' onMouseover='vSplitterEm()' onMouseout='vSplitterUnEm()' title='<?php print __("Hide/Unhide Menu");?>'></div>
 	</div>
 	<div id='graph_tree_content'>
 	<?php }else{ ?>
