@@ -159,6 +159,115 @@ function read_default_config_option($config_name) {
 	}
 }
 
+/* set_user_config_option - sets/updates a cacti config option with the given value.
+   @arg $config_name - the name of the configuration setting as specified $settings array
+   @arg $value       - the values to be saveda
+   @arg $category    - setting category
+   @arg $user_id     - user id *optional*
+   @arg $plugin_id   - plugin id *optional*
+   @returns          - void */
+function set_user_config_option($config_name, $value, $category = "SYSTEM", $user_id = 0, $plugin_id = 0) {
+	
+	/* get the session user id if one is not passed */
+	if ((empty($user_id)) || (! is_numeric($user_id))) {
+		if (isset($_SESSION["sess_user_id"])) {
+			$user_id = $_SESSION["sess_user_id"];
+		}else{
+			return false;
+		}
+	}
+
+	/* sanity checks  */
+	if (! is_numeric($plugin_id)) {
+		return false;
+	}
+	if (empty($category)) {
+		$category = "SYSTEM";
+	}
+
+	/* setup sql statement */
+	$sql = "REPLACE INTO auth_data SET ";
+	$sql .= "name = '" . $config_name . "', ";
+	$sql .= "value = '" . $value . "', ";
+	$sql .= "control_id = " . $user_id . ", ";
+	$sql .= "plugin_id = " . $plugin_id . ", ";
+	$sql .= "category = '" . $category . "', ";
+	$sql .= "updated_when = now(), ";
+	$sql .= "updated_by = 'SYSTEM'";
+
+	return db_execute($sql);
+}
+
+/* read_user_config_option - finds the current value of a Cacti configuration setting
+   @arg $config_name - the name of the user configuration setting 
+   @arg $category - setting category
+   @arg $user_id - user id *optional*
+   @arg $plugin_id = plugin id *optional*
+   @returns - the current value of the configuration option */
+function read_user_config_option($config_name, $category = "SYSTEM", $user_id = 0, $plugin_id = 0) {
+	
+	/* get the session user id if one is not passed */
+	if ((empty($user_id)) || (! is_numeric($user_id))) {
+		if (isset($_SESSION["sess_user_id"])) {
+			$user_id = $_SESSION["sess_user_id"];
+		}else{
+			return false;
+		}
+	}
+
+	/* sanity checks  */
+	if (! is_numeric($plugin_id)) {
+		return false;
+	}
+	if (empty($category)) {
+		$category = "SYSTEM";
+	}
+
+	/* setup sql statement */
+	$sql = "SELECT value FROM auth_data WHERE ";
+	$sql .= "name = '" . $config_name . "' AND ";
+	$sql .= "control_id = " . $user_id . " AND ";
+	$sql .= "plugin_id = " . $plugin_id . " AND ";
+	$sql .= "category = '" . $category . "'";
+
+	return db_fetch_cell($sql);
+}
+
+/* delete_user_config_option - removes user configuration option
+   @arg $config_name - the name of the user configuration setting 
+   @arg $category - setting category
+   @arg $user_id - user id *optional*
+   @arg $plugin_id = plugin id *optional*
+   @returns  */
+function remove_user_config_option($config_name, $category = "SYSTEM", $user_id = 0, $plugin_id = 0) {
+	
+	/* get the session user id if one is not passed */
+	if ((empty($user_id)) || (! is_numeric($user_id))) {
+		if (isset($_SESSION["sess_user_id"])) {
+			$user_id = $_SESSION["sess_user_id"];
+		}else{
+			return false;
+		}
+	}
+
+	/* sanity checks  */
+	if (! is_numeric($plugin_id)) {
+		return false;
+	}
+	if (empty($category)) {
+		$category = "SYSTEM";
+	}
+
+	/* setup sql statement */
+	$sql = "DELETE FROM auth_data WHERE ";
+	$sql .= "name = '" . $config_name . "' AND ";
+	$sql .= "control_id = " . $user_id . " AND ";
+	$sql .= "plugin_id = " . $plugin_id . " AND ";
+	$sql .= "category = '" . $category . "'";
+
+	return db_execute($sql);
+}
+
 /* set_config_option - sets/updates a cacti config option with the given value.
    @arg $config_name - the name of the configuration setting as specified $settings array
    @arg $value       - the values to be saved
