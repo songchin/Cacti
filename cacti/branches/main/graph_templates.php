@@ -31,8 +31,8 @@ include_once(CACTI_BASE_PATH . "/lib/html_tree.php");
 define("MAX_DISPLAY_PAGES", 21);
 
 $graph_actions = array(
-	1 => "Delete",
-	2 => "Duplicate"
+	1 => __("Delete"),
+	2 => __("Duplicate")
 	);
 
 /* set default action */
@@ -236,8 +236,7 @@ function form_actions() {
 		if ($_POST["drp_action"] == "1") { /* delete */
 			print "	<tr>
 					<td class='textArea'>
-						<p>Are you sure you want to delete the following graph templates? Any graphs attached
-						to these templates will become individual graphs.</p>
+						<p>" . __("Are you sure you want to delete the following graph templates? Any graphs attached to these templates will become individual graphs.") . "</p>
 						<p>$graph_list</p>
 					</td>
 				</tr>\n
@@ -245,10 +244,9 @@ function form_actions() {
 		}elseif ($_POST["drp_action"] == "2") { /* duplicate */
 			print "	<tr>
 					<td class='textArea'>
-						<p>When you click save, the following graph templates will be duplicated. You can
-						optionally change the title format for the new graph templates.</p>
+						<p>" . __("When you click save, the following graph templates will be duplicated. You can optionally change the title format for the new graph templates.") . "</p>
 						<p>$graph_list</p>
-						<p><strong>Title Format:</strong><br>"; form_text_box("title_format", "<template_title> (1)", "", "255", "30", "text"); print "</p>
+						<p><strong>" . __("Title Format:") . "</strong><br>"; form_text_box("title_format", "<template_title> (1)", "", "255", "30", "text"); print "</p>
 					</td>
 				</tr>\n
 				";
@@ -256,7 +254,7 @@ function form_actions() {
 	} else {
 		print "	<tr>
 				<td class='textArea'>
-					<p>You must first select a Graph Template.  Please select 'Return' to return to the previous menu.</p>
+					<p>" . __("You must first select a Graph Template.  Please select 'Return' to return to the previous menu.") . "</p>
 				</td>
 			</tr>\n";
 	}
@@ -282,7 +280,7 @@ function item() {
 	if (empty($_GET["id"])) {
 		$template_item_list = array();
 
-		$header_label = "[new]";
+		$header_label = __("[new]");
 	}else{
 		$template_item_list = db_fetch_assoc("select
 			graph_templates_item.id,
@@ -306,17 +304,17 @@ function item() {
 			and graph_templates_item.local_graph_id=0
 			order by graph_templates_item.sequence");
 
-		$header_label = "[edit: " . db_fetch_cell("select name from graph_templates where id=" . $_GET["id"]) . "]";
+		$header_label = __("[edit: ") . db_fetch_cell("select name from graph_templates where id=" . $_GET["id"]) . "]";
 	}
 
-	html_start_box("<strong>Graph Template Items</strong> $header_label", "100%", $colors["header"], "0", "center", "graph_templates_items.php?action=item_edit&graph_template_id=" . $_GET["id"]);
+	html_start_box("<strong>" . __("Graph Template Items") . "</strong> $header_label", "100%", $colors["header"], "0", "center", "graph_templates_items.php?action=item_edit&graph_template_id=" . $_GET["id"]);
 	draw_graph_items_list($template_item_list, "graph_templates_items.php", "graph_template_id=" . $_GET["id"], false);
 	html_end_box(false);
 
-	html_start_box("<strong>Graph Item Inputs</strong>", "100%", $colors["header"], "3", "center", "graph_templates_inputs.php?action=input_edit&graph_template_id=" . $_GET["id"]);
+	html_start_box("<strong>" . __("Graph Item Inputs") . "</strong>", "100%", $colors["header"], "3", "center", "graph_templates_inputs.php?action=input_edit&graph_template_id=" . $_GET["id"]);
 
 	print "<tr class='rowSubHeader'>";
-		DrawMatrixHeaderItem("Name",$colors["header_text"],2);
+		DrawMatrixHeaderItem(__("Name"), $colors["header_text"], 2);
 	print "</tr>";
 
 	$template_item_list = db_fetch_assoc("select id,name from graph_template_input where graph_template_id=" . $_GET["id"] . " order by name");
@@ -329,13 +327,13 @@ function item() {
 				<a class="linkEditMain" href='<?php print htmlspecialchars("graph_templates_inputs.php?action=input_edit&id=" . $item["id"] . "&graph_template_id=" . $_GET["id"]);?>'><?php print $item["name"];?></a>
 			</td>
 			<td align="right">
-				<a href='<?php print htmlspecialchars("graph_templates_inputs.php?action=input_remove&id=" . $item["id"] . "&graph_template_id=" . $_GET["id"]);?>'><img class="buttonSmall" src="images/delete_icon.gif" alt="Delete" align='middle'></a>
+				<a href='<?php print htmlspecialchars("graph_templates_inputs.php?action=input_remove&id=" . $item["id"] . "&graph_template_id=" . $_GET["id"]);?>'><img class="buttonSmall" src="images/delete_icon.gif" alt="<?php print __("Delete");?>" align='middle'></a>
 			</td>
 		<?php
 		form_end_row();
 	}
 	}else{
-		print "<tr class='rowAlternate1'><td colspan='2'><em>No Inputs</em></td></tr>";
+		print "<tr class='rowAlternate1'><td colspan='2'><em>" . __("No Inputs") . "</em></td></tr>";
 	}
 
 	html_end_box();
@@ -363,13 +361,13 @@ function template_edit() {
 		$template = db_fetch_row("select * from graph_templates where id=" . $_GET["id"]);
 		$template_graph = db_fetch_row("select * from graph_templates_graph where graph_template_id=" . $_GET["id"] . " and local_graph_id=0");
 
-		$header_label = "[edit: " . $template["name"] . "]";
+		$header_label = __("[edit: ") . $template["name"] . "]";
 	}else{
-		$header_label = "[new]";
+		$header_label = __("[new]");
 	}
 
-	html_start_box("<strong>Template</strong> $header_label", "100%", $colors["header"], "0", "center", "");
-	$header_items = array("Field", "Value");
+	html_start_box("<strong>" . __("Template") . "</strong> $header_label", "100%", $colors["header"], "0", "center", "");
+	$header_items = array(__("Field"), __("Value"));
 	print "<tr><td>";
 	html_header($header_items, 1, true, 'header_template');
 
@@ -381,8 +379,8 @@ function template_edit() {
 	print "</table></td></tr>";		/* end of html_header */
 	html_end_box();
 
-	html_start_box("<strong>Graph Template</strong>", "100%", $colors["header"], "0", "center", "");
-	$header_items = array("Field", "Value");
+	html_start_box("<strong>" . __("Graph Template") . "</strong>", "100%", $colors["header"], "0", "center", "");
+	$header_items = array(__("Field"), __("Value"));
 	print "<tr><td>";
 	html_header($header_items, 1, true, 'header_graph_template');
 
@@ -396,7 +394,7 @@ function template_edit() {
 #		$form_array[$field_name]["description"] = "";
 		$form_array[$field_name]["sub_checkbox"] = array(
 			"name" => "t_" . $field_name,
-			"friendly_name" => "<em>Use Per-Graph Value (Ignore this Value)</em>",
+			"friendly_name" => "<em>" . __("Use Per-Graph Value (Ignore this Value)") . "</em>",
 			"value" => (isset($template_graph) ? $template_graph{"t_" . $field_name} : ""),
 			"class" => (isset($form_array[$field_name]["class"]) ? $form_array[$field_name]["class"] : "")
 		);
@@ -503,7 +501,7 @@ function template() {
 	load_current_session_value("sort_column", "sess_graph_template_sort_column", "name");
 	load_current_session_value("sort_direction", "sess_graph_template_sort_direction", "ASC");
 
-	html_start_box("<strong>Graph Templates</strong>", "100%", $colors["header"], "3", "center", "graph_templates.php?action=template_edit", true);
+	html_start_box("<strong>" . __("Graph Templates") . "</strong>", "100%", $colors["header"], "3", "center", "graph_templates.php?action=template_edit", true);
 	?>
 	<tr class='rowAlternate2'>
 		<td>
@@ -511,14 +509,14 @@ function template() {
 			<table cellpadding="0" cellspacing="0">
 				<tr>
 					<td style='white-space:nowrap;width:50px;'>
-						Search:&nbsp;
+						<?php print __("Search:");?>&nbsp;
 					</td>
 					<td width="1">
 						<input type="text" name="filter" size="40" value="<?php print $_REQUEST["filter"];?>">
 					</td>
 					<td style='white-space:nowrap;width:120px;'>
-						&nbsp;<input type="submit" Value="Go" name="go" align="middle">
-						<input type="submit" Value="Clear" name="clear_x" align="middle">
+						&nbsp;<input type="submit" Value="<?php print __("Go");?>" name="go" align="middle">
+						<input type="submit" Value="<?php print __("Clear");?>" name="clear_x" align="middle">
 					</td>
 				</tr>
 			</table>
@@ -553,7 +551,7 @@ function template() {
 	html_end_box(false);
 
 	$display_text = array(
-		"name" => array("Template Title", "ASC"));
+		"name" => array(__("Template Title"), "ASC"));
 
 	html_header_sort_checkbox($display_text, $_REQUEST["sort_column"], $_REQUEST["sort_direction"]);
 
@@ -569,7 +567,7 @@ function template() {
 
 		print $nav;
 	}else{
-		print "<tr><td><em>No Graph Templates</em></td></tr>\n";
+		print "<tr><td><em>" . __("No Graph Templates") . "</em></td></tr>\n";
 	}
 
 	print "</table>\n</form>\n";	# end form and table of html_header_sort_checkbox

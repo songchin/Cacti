@@ -88,7 +88,7 @@ $xport_array = rrdtool_function_xport($_GET["local_graph_id"], $_GET["rra_id"], 
 if (is_array($xport_array["meta"])) {
 	$filename = $xport_array["meta"]["title_cache"] . ".csv";
 } else {
-	$filename = "graph_export.csv";
+	$filename = __("graph_export.csv");
 }
 
 header("Content-type: application/vnd.ms-excel");

@@ -75,21 +75,21 @@ function form_save() {
 					"color_id" => "0",
 					"graph_type_id" => "9",
 					"consolidation_function_id" => "4",
-					"text_format" => "Current:",
+					"text_format" => __("Current:"),
 					"hard_return" => ""
 					),
 				1 => array(
 					"color_id" => "0",
 					"graph_type_id" => "9",
 					"consolidation_function_id" => "1",
-					"text_format" => "Average:",
+					"text_format" => __("Average:"),
 					"hard_return" => ""
 					),
 				2 => array(
 					"color_id" => "0",
 					"graph_type_id" => "9",
 					"consolidation_function_id" => "3",
-					"text_format" => "Maximum:",
+					"text_format" => __("Maximum:"),
 					"hard_return" => "on"
 					));
 		}
@@ -208,7 +208,7 @@ function item_edit() {
 	$id = (!empty($_REQUEST["id"]) ? "&id=" . $_REQUEST["id"] : "");
 	$host = db_fetch_row("select hostname from host where id=" . get_request_var_request("host_id"));
 
-	html_start_box("<strong>Data Sources</strong> [host: " . (empty($host["hostname"]) ? "No Host" : $host["hostname"]) . "]", "100%", $colors["header"], "3", "center", "");
+	html_start_box("<strong>" . __("Data Sources") . "</strong> " . __("[host: ") . (empty($host["hostname"]) ? __("No Host") : $host["hostname"]) . "]", "100%", $colors["header"], "3", "center", "");
 
 	?>
 	<tr>
@@ -217,7 +217,7 @@ function item_edit() {
 			<table cellpadding="0" cellspacing="0">
 				<tr>
 					<td style='white-space:nowrap;width:50px;'>
-						Host:&nbsp;
+						<?php print __("Host");?>:&nbsp;
 					</td>
 					<td>
 						<select name="cbo_host_id" onChange="window.location=document.form_graph_items.cbo_host_id.options[document.form_graph_items.cbo_host_id.selectedIndex].value">
@@ -238,7 +238,7 @@ function item_edit() {
 				</tr>
 				<tr>
 					<td style='white-space:nowrap;width:100px;'>
-						Data Template:&nbsp;
+						<?php print __("Data Template:");?>&nbsp;
 					</td>
 					<td>
 						<select name="cbo_data_template_id" onChange="window.location=document.form_graph_items.cbo_data_template_id.options[document.form_graph_items.cbo_data_template_id.selectedIndex].value">
@@ -285,9 +285,9 @@ function item_edit() {
 		$host_id = db_fetch_cell("select host_id from graph_local where id=" . $_REQUEST["local_graph_id"]);
 	}
 
-	$header_label = "[edit graph: " . db_fetch_cell("select title_cache from graph_templates_graph where local_graph_id=" . $_REQUEST["local_graph_id"]) . "]";
+	$header_label = __("[edit graph: ") . db_fetch_cell("select title_cache from graph_templates_graph where local_graph_id=" . $_REQUEST["local_graph_id"]) . "]";
 
-	html_start_box("<strong>Graph Items</strong> $header_label", "100%", $colors["header"], "3", "center", "");
+	html_start_box("<strong>" . __("Graph Items") . "</strong> $header_label", "100%", $colors["header"], "3", "center", "");
 
 	/* by default, select the LAST DS chosen to make everyone's lives easier */
 	if (!empty($_REQUEST["local_graph_id"])) {

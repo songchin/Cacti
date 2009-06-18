@@ -28,41 +28,41 @@ include_once(CACTI_BASE_PATH . "/lib/utility.php");
 define("MAX_DISPLAY_PAGES", 21);
 
 $poller_actions = array(
-	1 => "Delete",
-	2 => "Duplicate"
+	1 => __("Delete"),
+	2 => __("Duplicate")
 	);
 
 /* file: pollers.php, action: edit */
 $fields_poller_edit = array(
 	"host_header" => array(
 		"method" => "spacer",
-		"friendly_name" => "General Poller Options"
+		"friendly_name" => __("General Poller Options")
 		),
 	"description" => array(
 		"method" => "textbox",
-		"friendly_name" => "Description",
-		"description" => "Give this poller a meaningful description.",
+		"friendly_name" => __("Description"),
+		"description" => __("Give this poller a meaningful description."),
 		"value" => "|arg1:description|",
 		"max_length" => "250",
 		),
 	"hostname" => array(
 		"method" => "textbox",
-		"friendly_name" => "Hostname",
-		"description" => "Fully qualified hostname of the poller device.",
+		"friendly_name" => __("Hostname"),
+		"description" => __("Fully qualified hostname of the poller device."),
 		"value" => "|arg1:hostname|",
 		"max_length" => "250",
 		),
 	"ip_address" => array(
 		"method" => "textbox",
-		"friendly_name" => "IP Address",
-		"description" => "The IP Address of this poller for status checking.",
+		"friendly_name" => __("IP Address"),
+		"description" => __("The IP Address of this poller for status checking."),
 		"value" => "|arg1:ip_address|",
 		"max_length" => "250",
 		),
 	"disabled" => array(
 		"method" => "checkbox",
-		"friendly_name" => "Disabled",
-		"description" => "Check this box if you wish for this poller to be disabled.",
+		"friendly_name" => __("Disabled"),
+		"description" => __("Check this box if you wish for this poller to be disabled."),
 		"value" => "|arg1:disabled|",
 		"default" => "",
 		"form_id" => false
@@ -193,8 +193,7 @@ function form_actions() {
 		if ($_POST["drp_action"] == "1") { /* delete */
 			print "	<tr>
 					<td class='textArea'>
-						<p>Are you sure you want to delete the following pollers? All devices currently attached
-						this these pollers will be reassigned to the default poller.</p>
+						<p>". __("Are you sure you want to delete the following pollers? All devices currently attached this these pollers will be reassigned to the default poller.") . "</p>
 						<p>$poller_list</p>
 					</td>
 				</tr>\n
@@ -202,8 +201,7 @@ function form_actions() {
 		}elseif ($_POST["drp_action"] == "2") { /* disable */
 			print "	<tr>
 					<td class='textArea'>
-						<p>Are you sure you want to disable the following pollers?  Add devices currently attached
-						to these pollers will no longer have their graphs updated.</p>
+						<p>" . __("Are you sure you want to disable the following pollers?  Add devices currently attached to these pollers will no longer have their graphs updated.") . "</p>
 						<p>$poller_list</p>
 					</td>
 				</tr>\n
@@ -212,7 +210,7 @@ function form_actions() {
 	} else {
 		print "	<tr>
 				<td class='textArea'>
-					<p>You must first select a Poller.  Please select 'Return' to return to the previous menu.</p>
+					<p>" . __("You must first select a Poller.  Please select 'Return' to return to the previous menu.") . "</p>
 				</td>
 			</tr>\n";
 	}
@@ -258,15 +256,15 @@ function poller_edit() {
 
 	if (!empty($_GET["id"])) {
 		$poller = db_fetch_row("select * from poller where id=" . $_GET["id"]);
-		$header_label = "[edit: " . $poller["description"] . "]";
+		$header_label = __("[edit: ") . $poller["description"] . "]";
 	}else{
-		$header_label = "[new]";
+		$header_label = __("[new]");
 		$_GET["id"] = 0;
 	}
 
 	print "<form method='post' action='" .  basename($_SERVER["PHP_SELF"]) . "' name='poller_edit'>\n";
-	html_start_box("<strong>Pollers</strong> $header_label", "100%", $colors["header"], 0, "center", "", true);
-	$header_items = array("Field", "Value");
+	html_start_box("<strong>" . __("Pollers") . "</strong> $header_label", "100%", $colors["header"], 0, "center", "", true);
+	$header_items = array(__("Field"), __("Value"));
 	print "<tr><td>";
 	html_header($header_items, 1, true, 'poller_edit');
 
@@ -324,7 +322,7 @@ function poller() {
 
 	display_output_messages();
 
-	html_start_box("<strong>Pollers</strong>", "100%", $colors["header"], "3", "center", "pollers.php?action=edit", true);
+	html_start_box("<strong>" . __("Pollers") . "</strong>", "100%", $colors["header"], "3", "center", "pollers.php?action=edit", true);
 	?>
 	<tr class='rowAlternate2'>
 		<td>
@@ -332,14 +330,14 @@ function poller() {
 			<table cellpadding="0" cellspacing="0">
 				<tr>
 					<td style='white-space:nowrap;width:50px;'>
-						Search:&nbsp;
+						<?php print __("Search:");?>&nbsp;
 					</td>
 					<td width="1">
 						<input type="text" name="filter" size="40" value="<?php print $_REQUEST["filter"];?>">
 					</td>
 					<td style='white-space:nowrap;width:120px;'>
-						&nbsp;<input type="submit" Value="Go" name="go" align="middle">
-						<input type="submit" Value="Clear" name="clear_x" align="middle">
+						&nbsp;<input type="submit" Value="<?php print __("Go");?>" name="go" align="middle">
+						<input type="submit" Value="<?php print __("Clear");?>" name="clear_x" align="middle">
 					</td>
 				</tr>
 			</table>
@@ -373,11 +371,11 @@ function poller() {
 	html_end_box(false);
 
 	$display_text = array(
-		"description" => array("Description", "ASC"),
-		"id" => array("ID", "ASC"),
-		"hostname" => array("Hostname", "ASC"),
-		"nosort1" => array("Status", ""),
-		"last_update" => array("Last Updated", "ASC"));
+		"description" => array(__("Description"), "ASC"),
+		"id" => array(__("ID"), "ASC"),
+		"hostname" => array(__("Hostname"), "ASC"),
+		"nosort1" => array(__("Status"), ""),
+		"last_update" => array(__("Last Updated"), "ASC"));
 
 	html_header_sort_checkbox($display_text, $_REQUEST["sort_column"], $_REQUEST["sort_direction"]);
 
@@ -398,7 +396,7 @@ function poller() {
 		/* put the nav bar on the bottom as well */
 		print $nav;
 	}else{
-		print "<tr><td><em>No Pollers Defined</em></td></tr>\n";
+		print "<tr><td><em>" . __("No Pollers Defined") . "</em></td></tr>\n";
 	}
 
 	print "</table>\n</form>\n";	# end form and table of html_header_sort_checkbox

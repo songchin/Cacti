@@ -87,7 +87,7 @@ function settings() {
 
 	/* Find out whether this user has right here */
 	if($current_user["graph_settings"] == "") {
-		print "<strong><font size='+1' color='#FF0000'>YOU DO NOT HAVE RIGHTS TO CHANGE GRAPH SETTINGS</font></strong>";
+		print "<strong><font size='+1' color='#FF0000'>" . __("YOU DO NOT HAVE RIGHTS TO CHANGE GRAPH SETTINGS") . "</font></strong>";
 		include_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
 		exit;
 	}
@@ -102,7 +102,7 @@ function settings() {
 		$settings_graphs["tree"]["default_tree_id"]["sql"] = get_graph_tree_array(true);
 	}
 
-	html_start_box("<strong>Graph Settings</strong>", "100%", $colors["header_panel"], "3", "center", "");
+	html_start_box("<strong>" . __("Graph Settings") . "</strong>", "100%", $colors["header_panel"], "3", "center", "");
 
 	print "<form method='post' action='graph_settings.php'>\n";
 

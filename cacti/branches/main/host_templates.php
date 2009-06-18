@@ -28,8 +28,8 @@ include_once(CACTI_BASE_PATH . "/lib/utility.php");
 define("MAX_DISPLAY_PAGES", 21);
 
 $host_actions = array(
-	1 => "Delete",
-	2 => "Duplicate"
+	1 => __("Delete"),
+	2 => __("Duplicate")
 	);
 
 /* set default action */
@@ -160,7 +160,7 @@ function form_save() {
 						/* notify the user of changes to hosts */
 						debug_log_clear("host_template");
 						$template_name = db_fetch_cell("SELECT name FROM graph_templates WHERE id = " . $_POST["graph_template_id"]);
-						debug_log_insert("host_template", "Adding Graph Template: " . $template_name . " to ");
+						debug_log_insert("host_template", __("Adding Graph Template: ") . $template_name . " to ");
 
 						foreach($new_gt_host_entries as $entry) {
 							/* add the Graph Template */
@@ -201,7 +201,7 @@ function form_save() {
 						/* notify the user of changes to hosts */
 						debug_log_clear("host_template");
 						$template_name = db_fetch_cell("SELECT name FROM snmp_query WHERE id = " . $_POST["snmp_query_id"]);
-						debug_log_insert("host_template", "Adding Data Query: " . $template_name . " to ");
+						debug_log_insert("host_template", __("Adding Data Query: ") . $template_name . " to ");
 
 						foreach($new_dq_host_entries as $entry) {
 							/* add the Data Query */
@@ -290,8 +290,7 @@ function form_actions() {
 		if ($_POST["drp_action"] == "1") { /* delete */
 			print "	<tr>
 					<td class='textArea'>
-						<p>Are you sure you want to delete the following host templates? All devices currently attached
-						this these host templates will lose their template assocation.</p>
+						<p>" . __("Are you sure you want to delete the following host templates? All devices currently attached this these host templates will lose their template assocation.") . "</p>
 						<p>$host_list</p>
 					</td>
 				</tr>\n
@@ -299,10 +298,9 @@ function form_actions() {
 		}elseif ($_POST["drp_action"] == "2") { /* duplicate */
 			print "	<tr>
 					<td class='textArea'>
-						<p>When you click save, the following host templates will be duplicated. You can
-						optionally change the title format for the new host templates.</p>
+						<p>" . __("When you click save, the following host templates will be duplicated. You can optionally change the title format for the new host templates.") . "</p>
 						<p>$host_list</p>
-						<p><strong>Title Format:</strong><br>"; form_text_box("title_format", "<template_title> (1)", "", "255", "30", "text"); print "</p>
+						<p><strong>" . __("Title Format:") . "</strong><br>"; form_text_box("title_format", "<template_title> (1)", "", "255", "30", "text"); print "</p>
 					</td>
 				</tr>\n
 				";
@@ -310,7 +308,7 @@ function form_actions() {
 	} else {
 		print "	<tr>
 				<td class='textArea'>
-					<p>You must first select a Device Template.  Please select 'Return' to return to the previous menu.</p>
+					<p>" . __("You must first select a Device Template.  Please select 'Return' to return to the previous menu.") . "</p>
 				</td>
 			</tr>\n";
 	}
@@ -374,15 +372,15 @@ function template_edit() {
 
 	if (!empty($_GET["id"])) {
 		$host_template = db_fetch_row("select * from host_template where id=" . $_GET["id"]);
-		$header_label = "[edit: " . $host_template["name"] . "]";
+		$header_label = __("[edit: ") . $host_template["name"] . "]";
 	}else{
-		$header_label = "[new]";
+		$header_label = __("[new]");
 		$_GET["id"] = 0;
 	}
 
 	print "<form method='post' action='" .  basename($_SERVER["PHP_SELF"]) . "' name='host_template_edit'>\n";
-	html_start_box("<strong>Host Templates</strong> $header_label", "100%", $colors["header"], "0", "center", "", true);
-	$header_items = array("Field", "Value");
+	html_start_box("<strong>" . __("Host Templates") . "</strong> $header_label", "100%", $colors["header"], "0", "center", "", true);
+	$header_items = array(__("Field"), __("Value"));
 	print "<tr><td>";
 	html_header($header_items, 1, true, 'host_template');
 
@@ -514,19 +512,19 @@ function template_edit() {
 				var d=document.createElement('option');
 
 				a.value="0";
-				a.text="None";
+				a.text="<?php print __("None");?>";
 				addSelectItem(a,am);
 
 				b.value="1";
-				b.text="Ping and SNMP";
+				b.text="<?php print __("Ping and SNMP");?>";
 				addSelectItem(b,am);
 
 				c.value="2";
-				c.text="SNMP";
+				c.text="<?php print __("SNMP");?>";
 				addSelectItem(c,am);
 
 				d.value="3";
-				d.text="Ping";
+				d.text="<?php print __("Ping");?>";
 				addSelectItem(d,am);
 
 				/* restore the correct index number */
@@ -670,7 +668,7 @@ function template_edit() {
 						$("#reindex_method option[value=" + reindex_none + "]").attr('selected', 'true');
 						/* disable SNMP options: "Uptime Goes Backwards" never works with pure Script Data Queries */
 						$("#reindex_method option[value=" + reindex_reboot + "]").attr('disabled', 'true');
-						$("#reindex_method option[value=" + reindex_reboot + "]").attr('title', 'Disabled due to SNMP settings');
+						$("#reindex_method option[value=" + reindex_reboot + "]").attr('title', '<?php print __("Disabled due to SNMP settings");?>');
 						break;
 					default:
 						/* "Uptime Goes Backwards" is allowed again */
@@ -690,10 +688,10 @@ function template_edit() {
 	<?php
 
 	if (!empty($_GET["id"])) {
-		html_start_box("<strong>Associated Graph Templates</strong>", "100%", $colors["header"], "2", "center", "", true);
+		html_start_box("<strong>" . __("Associated Graph Templates") . "</strong>", "100%", $colors["header"], "2", "center", "", true);
 
 		print "	<tr class='rowSubHeader'>
-				<td><span style='color: white; font-weight: bold;'>Graph Template Name</span></td>
+				<td><span style='color: white; font-weight: bold;'>" . __("Graph Template Name") . "</span></td>
 				<td></td>
 			</tr>";
 
@@ -737,23 +735,25 @@ function template_edit() {
 						<strong><?php print $i;?>)</strong> <?php print $item["name"];?>
 					</td>
 					<td align='right' nowrap>
-						<a href='<?php print htmlspecialchars("host_templates.php?action=item_remove_gt&id=" . $item["id"] . "&host_template_id=" . $_GET["id"]);?>'><img class="buttonSmall" src='images/delete_icon_large.gif' title='Delete Graph Template Association' alt='Delete' align='middle'></a>
+						<a href='<?php print htmlspecialchars("host_templates.php?action=item_remove_gt&id=" . $item["id"] . "&host_template_id=" . $_GET["id"]);?>'><img class="buttonSmall" src='images/delete_icon_large.gif' title='<?php print __("Delete Graph Template Association");?>' alt='<?php print __("Delete");?>' align='middle'></a>
 					</td>
 				<?php
 				form_end_row();
 			}
-		}else{ print "<tr><td><em>No associated graph templates.</em></td></tr>"; }
+		}else{
+			print "<tr><td><em>" . __("No associated graph templates.") . "</em></td></tr>";
+		}
 
 		form_alternate_row_color("add_template" . $_GET["id"], true);
 		?>
 			<td colspan="2">
 				<table cellspacing="0" cellpadding="1" width="100%">
 					<tr>
-					<td nowrap>Add Graph Template:&nbsp;
+					<td nowrap><?php print __("Add Graph Template:");?>&nbsp;
 						<?php form_dropdown("graph_template_id",$available_graph_templates,"name","id","","","");?>
 					</td>
 					<td align="right">
-						&nbsp;<input type="submit" Value="Add" name="add_gt_y" align="middle">
+						&nbsp;<input type="submit" Value="<?php print __("Add");?>" name="add_gt_y" align="middle">
 					</td>
 					</tr>
 				</table>
@@ -763,9 +763,9 @@ function template_edit() {
 		form_end_row();
 		html_end_box(FALSE);
 
-		html_start_box("<strong>Associated Data Queries</strong>", "100%", $colors["header"], "0", "center", "", true);
+		html_start_box("<strong>" . __("Associated Data Queries") . "</strong>", "100%", $colors["header"], "0", "center", "", true);
 		print "<tr><td>";
-		html_header(array("Data Query Name", "Re-Index Method"), 2);
+		html_header(array(__("Data Query Name"), __("Re-Index Method")), 2);
 
 		$selected_data_queries = db_fetch_assoc("SELECT
 			snmp_query.id,
@@ -800,37 +800,39 @@ function template_edit() {
 
 		$i = 0;
 		if (sizeof($selected_data_queries) > 0) {
-		foreach ($selected_data_queries as $item) {
-			form_alternate_row_color("selected_data_query" . $item["id"], true);
-			$i++;
-			?>
-				<td style="padding: 4px;">
-					<strong><?php print $i;?>)</strong> <?php print $item["name"];?>
-				</td>
-				<td>
-					<?php form_dropdown("reindex_method_host_template_".$_GET["id"]."_query_".$item["id"]."_method_".$item["reindex_method"],$reindex_types,"","",$item["reindex_method"],"","","","");?>
-				</td>
-				<td align='right'>
-					<a href='<?php print htmlspecialchars("host_templates.php?action=item_remove_dq&id=" . $item["id"] . "&host_template_id=" . $_GET["id"]);?>'><img class='buttonSmall' src='images/delete_icon_large.gif' title='Delete Data Query Association' alt='Delete' align='middle'></a>
-				</td>
-			<?php
-			form_end_row();
+			foreach ($selected_data_queries as $item) {
+				form_alternate_row_color("selected_data_query" . $item["id"], true);
+				$i++;
+				?>
+					<td style="padding: 4px;">
+						<strong><?php print $i;?>)</strong> <?php print $item["name"];?>
+					</td>
+					<td>
+						<?php form_dropdown("reindex_method_host_template_".$_GET["id"]."_query_".$item["id"]."_method_".$item["reindex_method"],$reindex_types,"","",$item["reindex_method"],"","","","");?>
+					</td>
+					<td align='right'>
+						<a href='<?php print htmlspecialchars("host_templates.php?action=item_remove_dq&id=" . $item["id"] . "&host_template_id=" . $_GET["id"]);?>'><img class='buttonSmall' src='images/delete_icon_large.gif' title='Delete Data Query Association' alt='Delete' align='middle'></a>
+					</td>
+				<?php
+				form_end_row();
+			}
+		}else{
+			print "<tr><td><em>" . __("No associated data queries.") . "</em></td></tr>";
 		}
-		}else{ print "<tr><td><em>No associated data queries.</em></td></tr>"; }
 
 		form_alternate_row_color("add_data_query" . $_GET["id"], true);
 		?>
 			<td colspan="5">
 				<table cellspacing="0" cellpadding="1" width="100%">
 					<tr>
-					<td nowrap>Add Data Query:&nbsp;
+					<td nowrap><?php print __("Add Data Query:");?>&nbsp;
 						<?php form_dropdown("snmp_query_id",$available_data_queries,"name","id","","","");?>
 					</td>
-					<td nowrap>Re-Index Method:&nbsp;
+					<td nowrap><?php print __("Re-Index Method:");>&nbsp;
 						<?php form_dropdown("reindex_method",$reindex_types,"","","1","","");?>
 					</td>
 					<td align="right">
-						&nbsp;<input type="submit" value="Add" name="add_dq_y" align="middle">
+						&nbsp;<input type="submit" value="<?php print __("Add");?>" name="add_dq_y" align="middle">
 					</td>
 					</tr>
 				</table>
@@ -887,7 +889,7 @@ function template() {
 
 	display_output_messages();
 
-	html_start_box("<strong>Host Templates</strong>", "100%", $colors["header"], "3", "center", "host_templates.php?action=edit", true);
+	html_start_box("<strong>" . __("Host Templates") . "</strong>", "100%", $colors["header"], "3", "center", "host_templates.php?action=edit", true);
 	?>
 	<tr class='rowAlternate2'>
 		<td>
@@ -895,14 +897,14 @@ function template() {
 			<table cellpadding="0" cellspacing="0">
 				<tr>
 					<td style='white-space:nowrap;width:50px;'>
-						Search:&nbsp;
+						<?php print __("Search:");?>&nbsp;
 					</td>
 					<td width="1">
 						<input type="text" name="filter" size="40" value="<?php print $_REQUEST["filter"];?>">
 					</td>
 					<td style='white-space:nowrap;width:120px;'>
-						&nbsp;<input type="submit" Value="Go" name="go" align="middle">
-						<input type="submit" Value="Clear" name="clear_x" align="middle">
+						&nbsp;<input type="submit" Value="<?php print __("Go");?>" name="go" align="middle">
+						<input type="submit" Value="<?php print __("Clear");?>" name="clear_x" align="middle">
 					</td>
 				</tr>
 			</table>
@@ -937,7 +939,7 @@ function template() {
 	html_end_box(false);
 
 	$display_text = array(
-		"name" => array("Template Title", "ASC"));
+		"name" => array(__("Template Title"), "ASC"));
 
 	html_header_sort_checkbox($display_text, $_REQUEST["sort_column"], $_REQUEST["sort_direction"]);
 
@@ -954,7 +956,7 @@ function template() {
 		/* put the nav bar on the bottom as well */
 		print $nav;
 	}else{
-		print "<tr><td><em>No Host Templates</em></td></tr>\n";
+		print "<tr><td><em>" . __("No Host Templates") . "</em></td></tr>\n";
 	}
 
 	print "</table>\n</form>\n";	# end form and table of html_header_sort_checkbox

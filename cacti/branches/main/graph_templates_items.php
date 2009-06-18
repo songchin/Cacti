@@ -88,21 +88,21 @@ function form_save() {
 					"color_id" => "0",
 					"graph_type_id" => "9",
 					"consolidation_function_id" => "4",
-					"text_format" => "Current:",
+					"text_format" => __("Current:"),
 					"hard_return" => ""
 					),
 				1 => array(
 					"color_id" => "0",
 					"graph_type_id" => "9",
 					"consolidation_function_id" => "1",
-					"text_format" => "Average:",
+					"text_format" => __("Average:"),
 					"hard_return" => ""
 					),
 				2 => array(
 					"color_id" => "0",
 					"graph_type_id" => "9",
 					"consolidation_function_id" => "3",
-					"text_format" => "Maximum:",
+					"text_format" => __("Maximum:"),
 					"hard_return" => "on"
 					));
 		}
@@ -171,7 +171,7 @@ function form_save() {
 
 							db_execute("replace into graph_template_input (hash,graph_template_id,name,column_name) values (
 								'" . get_hash_graph_template(0, "graph_template_input") . "'," . $save["graph_template_id"] . ",
-								'Data Source [$ds_name]','task_item_id')");
+								__('Data Source') . ' [$ds_name]','task_item_id')");
 
 							$graph_template_input_id = db_fetch_insert_id();
 
@@ -298,9 +298,9 @@ function item_edit() {
 	input_validate_input_number(get_request_var("graph_template_id"));
 	/* ==================================================== */
 
-	$header_label = "[edit graph: " . db_fetch_cell("select name from graph_templates where id=" . $_GET["graph_template_id"]) . "]";
+	$header_label = __("[edit graph: ") . db_fetch_cell("select name from graph_templates where id=" . $_GET["graph_template_id"]) . "]";
 
-	html_start_box("<strong>Graph Template Items</strong> $header_label", "100%", $colors["header"], "3", "center", "");
+	html_start_box("<strong>" . __("Graph Template Items") . "</strong> $header_label", "100%", $colors["header"], "3", "center", "");
 
 	if (!empty($_GET["id"])) {
 		$template_item = db_fetch_row("select * from graph_templates_item where id=" . $_GET["id"]);

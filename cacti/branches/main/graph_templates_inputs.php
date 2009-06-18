@@ -130,7 +130,7 @@ function input_remove() {
 
 	if ((read_config_option("deletion_verification") == "on") && (!isset($_GET["confirm"]))) {
 		include(CACTI_BASE_PATH . "/include/top_header.php");
-		form_confirm("Are You Sure?", "Are you sure you want to delete the input item <strong>'" . db_fetch_cell("select name from graph_template_input where id=" . $_GET["id"]) . "'</strong>? NOTE: Deleting this item will NOT affect graphs that use this template.", "graph_templates.php?action=template_edit&id=" . $_GET["graph_template_id"], "graph_templates_inputs.php?action=input_remove&id=" . $_GET["id"] . "&graph_template_id=" . $_GET["graph_template_id"]);
+		form_confirm(__("Are You Sure?"), __("Are you sure you want to delete the input item") . " <strong>'" . db_fetch_cell("select name from graph_template_input where id=" . $_GET["id"]) . "'</strong>? NOTE: Deleting this item will NOT affect graphs that use this template.", "graph_templates.php?action=template_edit&id=" . $_GET["graph_template_id"], "graph_templates_inputs.php?action=input_remove&id=" . $_GET["id"] . "&graph_template_id=" . $_GET["graph_template_id"]);
 		include(CACTI_BASE_PATH . "/include/bottom_footer.php");
 		exit;
 	}
@@ -149,7 +149,7 @@ function input_edit() {
 	input_validate_input_number(get_request_var("graph_template_id"));
 	/* ==================================================== */
 
-	$header_label = "[edit graph: " . db_fetch_cell("select name from graph_templates where id=" . $_GET["graph_template_id"]) . "]";
+	$header_label = __("[edit graph: ") . db_fetch_cell("select name from graph_templates where id=" . $_GET["graph_template_id"]) . "]";
 
 	/* get a list of all graph item field names and populate an array for user display */
 	while (list($field_name, $field_array) = each($struct_graph_item)) {
@@ -162,7 +162,7 @@ function input_edit() {
 		$graph_template_input = db_fetch_row("select * from graph_template_input where id=" . $_GET["id"]);
 	}
 
-	html_start_box("<strong>Graph Item Inputs</strong> $header_label", "100%", $colors["header"], "3", "center", "");
+	html_start_box("<strong>" . __("Graph Item Inputs") . "</strong> $header_label", "100%", $colors["header"], "3", "center", "");
 
 	draw_edit_form(array(
 		"config" => array(),
@@ -189,8 +189,8 @@ function input_edit() {
 
 	form_alternate_row_color(); ?>
 		<td width="50%">
-			<font class="textEditTitle">Associated Graph Items</font><br>
-			Select the graph items that you want to accept user input for.
+			<font class="textEditTitle"><?php print __("Associated Graph Items");?></font><br>
+			<?php print __("Select the graph items that you want to accept user input for.");?>
 		</td>
 		<td>
 		<?php
@@ -218,7 +218,7 @@ function input_edit() {
 			$i++;
 		}
 		}else{
-			print "<em>No Items</em>";
+			print "<em>" . __("No Items") . "</em>";
 		}
 		?>
 		</td>

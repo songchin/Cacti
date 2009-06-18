@@ -29,14 +29,14 @@ $plugins = plugins_retrieve_list ();
 
 /* tab information */
 $ptabs = array(
-	'current' => 'Installed',
-	'uninstalled' => 'Uninstalled',
+	'current' => __('Installed'),
+	'uninstalled' => __('Uninstalled'),
 );
 
 
 $ptabs = api_plugin_hook_function ('plugin_management_tabs', $ptabs);
 
-$status_names = array('Not Installed', 'Active', 'Awaiting Configuration', 'Awaiting Upgrade', 'Installed');
+$status_names = array(__('Not Installed'), __('Active'), __('Awaiting Configuration'), __('Awaiting Upgrade'), __('Installed'));
 
 /* set the default settings category */
 if (!isset($_GET['tab'])) {
@@ -88,7 +88,7 @@ include(CACTI_BASE_PATH . "/include/top_header.php");
 
 plugins_draw_tabs ($ptabs, $current_tab);
 
-html_start_box('<strong>Plugins (' . $ptabs[$current_tab] . ')</strong>', '100%', $colors['header'], '3', 'center', '');
+html_start_box('<strong>' . __('Plugins') . ' (' . $ptabs[$current_tab] . ')</strong>', '100%', $colors['header'], '3', 'center', '');
 print "<tr><td><table width='100%'>";
 
 switch ($current_tab) {
@@ -154,36 +154,36 @@ function plugins_show_current () {
 			print "<table width='100%'>";
 			html_header(array((isset($cinfo[$plugin]['name']) ? $cinfo[$plugin]['name'] : $plugin)), 2);
 			form_alternate_row_color();
-			print "<td width='50%'><strong>Directory:</strong></td><td>$plugin</td>";
+			print "<td width='50%'><strong>" . __("Directory:") . "</strong></td><td>$plugin</td>";
 			form_alternate_row_color();
-			print '<td><strong>Version:</strong></td><td>' . (isset($cinfo[$plugin]['version']) ? $cinfo[$plugin]['version'] : '') . '</td>';
+			print '<td><strong>' . __("Version:") . '</strong></td><td>' . (isset($cinfo[$plugin]['version']) ? $cinfo[$plugin]['version'] : '') . '</td>';
 			form_alternate_row_color();
-			print '<td><strong>Author:</strong></td><td>' . (isset($cinfo[$plugin]['author']) && $cinfo[$plugin]['author'] != '' ? (isset($cinfo[$plugin]['email']) && $cinfo[$plugin]['email'] != '' ? "<a href='" . htmlspecialchars("mailto:" . $cinfo[$plugin]['email']) . "'>" . $cinfo[$plugin]['author'] . '</a>'  : $cinfo[$plugin]['author']) : '') . '</td>';
+			print '<td><strong>' . __("Author:") . '</strong></td><td>' . (isset($cinfo[$plugin]['author']) && $cinfo[$plugin]['author'] != '' ? (isset($cinfo[$plugin]['email']) && $cinfo[$plugin]['email'] != '' ? "<a href='" . htmlspecialchars("mailto:" . $cinfo[$plugin]['email']) . "'>" . $cinfo[$plugin]['author'] . '</a>'  : $cinfo[$plugin]['author']) : '') . '</td>';
 			form_alternate_row_color();
-			print '<td><strong>Home Page:</strong></td><td>' . (isset($cinfo[$plugin]['webpage']) && $cinfo[$plugin]['webpage'] != '' ? "<a href='" . htmlspecialchars($cinfo[$plugin]['webpage']) . "'>" . $cinfo[$plugin]['webpage'] . '</a>' : '') . '</td>';
+			print '<td><strong>' . __("Home Page:") . '</strong></td><td>' . (isset($cinfo[$plugin]['webpage']) && $cinfo[$plugin]['webpage'] != '' ? "<a href='" . htmlspecialchars($cinfo[$plugin]['webpage']) . "'>" . $cinfo[$plugin]['webpage'] . '</a>' : '') . '</td>';
 			form_alternate_row_color();
-			print '<td><strong>Status:</strong></td><td>' . $status_names[$cinfo[$plugin]['status']] . '</td>';
+			print '<td><strong>' . __("Status:") . '</strong></td><td>' . $status_names[$cinfo[$plugin]['status']] . '</td>';
 			form_alternate_row_color();
 
-			$links = array('install' => 'Install', 'uninstall' => 'Uninstall', 'enable' => 'Enable', 'disable' => 'Disable', 'check' => 'Check');
+			$links = array('install' => __('Install'), 'uninstall' => __('Uninstall'), 'enable' => __('Enable'), 'disable' => __('Disable'), 'check' => __('Check'));
 
 			switch ($cinfo[$plugin]['status']) {
 				case 0:	//Not Installed
-					$links['install'] = "<a href='" . htmlspecialchars("plugins.php?mode=install&id=" . $plugin) . "'><b>Install</b></a>";
+					$links['install'] = "<a href='" . htmlspecialchars("plugins.php?mode=install&id=" . $plugin) . "'><b>" . __("Install") . "</b></a>";
 					break;
 				case 1:	// Currently Active
-					$links['uninstall'] = "<a href='" . htmlspecialchars("plugins.php?mode=uninstall&id=" . $plugin) . "'><b>Uninstall</b></a>";
-					$links['disable'] = "<a href='" . htmlspecialchars("plugins.php?mode=disable&id=" . $plugin) . "'><b>Disable</b></a>";
+					$links['uninstall'] = "<a href='" . htmlspecialchars("plugins.php?mode=uninstall&id=" . $plugin) . "'><b>" . __("Uninstall") . "</b></a>";
+					$links['disable'] = "<a href='" . htmlspecialchars("plugins.php?mode=disable&id=" . $plugin) . "'><b>" . __("Disable") . "</b></a>";
 					break;
 				case 2:	// Needs Configuring
-					$links['check'] = "<a href='" . htmlspecialchars("plugins.php?mode=check&id=" . $plugin) . "'><b>Check</b></a>";
+					$links['check'] = "<a href='" . htmlspecialchars("plugins.php?mode=check&id=" . $plugin) . "'><b>" . __("Check") . "</b></a>";
 					break;
 				case 3:	// Needs Upgrade
-					$links['check'] = "<a href='" . htmlspecialchars("plugins.php?mode=check&id=" . $plugin) . "'><b>Check</b></a>";
+					$links['check'] = "<a href='" . htmlspecialchars("plugins.php?mode=check&id=" . $plugin) . "'><b>" . __("Check") . "</b></a>";
 					break;
 				case 4:	// Installed but not active
-					$links['uninstall'] = "<a href='" . htmlspecialchars("plugins.php?mode=uninstall&id=" . $plugin) . "'><b>Uninstall</b></a>";
-					$links['enable'] = "<a href='" . htmlspecialchars("plugins.php?mode=enable&id=" . $plugin) . "'><b>Enable</b></a>";
+					$links['uninstall'] = "<a href='" . htmlspecialchars("plugins.php?mode=uninstall&id=" . $plugin) . "'><b>" . __("Uninstall") . "</b></a>";
+					$links['enable'] = "<a href='" . htmlspecialchars("plugins.php?mode=enable&id=" . $plugin) . "'><b>" . __("Enable") . "</b></a>";
 					break;
 			}
 
@@ -257,35 +257,35 @@ function plugins_show_uninstalled () {
 			print "<table width='100%'>";
 			html_header(array((isset($cinfo[$plugin]['name']) ? $cinfo[$plugin]['name'] : $plugin)), 2);
 			form_alternate_row_color();
-			print "<td width='50%'><strong>Directory:</strong></td><td>$plugin</td>";
+			print "<td width='50%'><strong>" . __("Directory:") . "</strong></td><td>$plugin</td>";
 			form_alternate_row_color();
-			print '<td><strong>Version:</strong></td><td>' . (isset($cinfo[$plugin]['version']) ? $cinfo[$plugin]['version'] : '') . '</td>';
+			print '<td><strong>' . __("Version:") . '</strong></td><td>' . (isset($cinfo[$plugin]['version']) ? $cinfo[$plugin]['version'] : '') . '</td>';
 			form_alternate_row_color();
-			print '<td><strong>Author:</strong></td><td>' . (isset($cinfo[$plugin]['author']) && $cinfo[$plugin]['author'] != '' ? (isset($cinfo[$plugin]['email']) && $cinfo[$plugin]['email'] != '' ? "<a href='" . htmlspecialchars("mailto:" . $cinfo[$plugin]['email']) . "'>" . $cinfo[$plugin]['author'] . '</a>'  : $cinfo[$plugin]['author']) : '') . '</td>';
+			print '<td><strong>' . __("Author:") . '</strong></td><td>' . (isset($cinfo[$plugin]['author']) && $cinfo[$plugin]['author'] != '' ? (isset($cinfo[$plugin]['email']) && $cinfo[$plugin]['email'] != '' ? "<a href='" . htmlspecialchars("mailto:" . $cinfo[$plugin]['email']) . "'>" . $cinfo[$plugin]['author'] . '</a>'  : $cinfo[$plugin]['author']) : '') . '</td>';
 			form_alternate_row_color();
-			print '<td><strong>Home Page:</strong></td><td>' . (isset($cinfo[$plugin]['homepage']) && $cinfo[$plugin]['homepage'] != '' ? "<a href='" . htmlspecialchars($cinfo[$plugin]['homepage']) . "'>" . $cinfo[$plugin]['homepage'] . '</a>' : '') . '</td>';
+			print '<td><strong>' . __("Home Page:") . '</strong></td><td>' . (isset($cinfo[$plugin]['homepage']) && $cinfo[$plugin]['homepage'] != '' ? "<a href='" . htmlspecialchars($cinfo[$plugin]['homepage']) . "'>" . $cinfo[$plugin]['homepage'] . '</a>' : '') . '</td>';
 			form_alternate_row_color();
-			print '<td><strong>Status:</strong></td><td>' . $status_names[$cinfo[$plugin]['status']] . '</td>';
+			print '<td><strong>' . __("Status:") . '</strong></td><td>' . $status_names[$cinfo[$plugin]['status']] . '</td>';
 			form_alternate_row_color();
 
-			$links = array('install' => 'Install', 'uninstall' => 'Uninstall', 'enable' => 'Enable', 'disable' => 'Disable', 'check' => 'Check');
+			$links = array('install' => __('Install'), 'uninstall' => __('Uninstall'), 'enable' => __('Enable'), 'disable' => __('Disable'), 'check' => __('Check'));
 
 			switch ($cinfo[$plugin]['status']) {
 				case 0:	//Not Installed
-					$links['install'] = "<a href='" . htmlspecialchars("plugins.php?mode=install&id=" . $plugin . "&tab=uninstalled") . "'><b>Install</b></a>";
+					$links['install'] = "<a href='" . htmlspecialchars("plugins.php?mode=install&id=" . $plugin . "&tab=uninstalled") . "'><b>" . __("Install") . "</b></a>";
 					break;
 				case 1:	// Currently Active
-					$links['uninstall'] = "<a href='" . htmlspecialchars("plugins.php?mode=uninstall&id=" . $plugin . "&tab=uninstalled") . "'><b>Uninstall</b></a>";
-					$links['disable'] = "<a href='" . htmlspecialchars("plugins.php?mode=disable&id=" . $plugin . "&tab=uninstalled") . "'><b>Disable</b></a>";
+					$links['uninstall'] = "<a href='" . htmlspecialchars("plugins.php?mode=uninstall&id=" . $plugin . "&tab=uninstalled") . "'><b>" . __("Uninstall") . "</b></a>";
+					$links['disable'] = "<a href='" . htmlspecialchars("plugins.php?mode=disable&id=" . $plugin . "&tab=uninstalled") . "'><b>" . __("Disable") . "</b></a>";
 					break;
 				case 2:	// Needs Configuring
-					$links['check'] = "<a href='" . htmlspecialchars("plugins.php?mode=check&id=" . $plugin . "&tab=uninstalled") . "'><b>Check</b></a>";
+					$links['check'] = "<a href='" . htmlspecialchars("plugins.php?mode=check&id=" . $plugin . "&tab=uninstalled") . "'><b>" . __("Check") . "</b></a>";
 					break;
 				case 3:	// Needs Upgrade
-					$links['check'] = "<a href='" . htmlspecialchars("plugins.php?mode=check&id=" . $plugin . "&tab=uninstalled") . "'><b>Check</b></a>";
+					$links['check'] = "<a href='" . htmlspecialchars("plugins.php?mode=check&id=" . $plugin . "&tab=uninstalled") . "'><b>" . __("Check") . "</b></a>";
 					break;
 				case 4:	// Installed but not active
-					$links['enable'] = "<a href='" . htmlspecialchars("plugins.php?mode=enable&id=" . $plugin . "&tab=uninstalled") . "'><b>Enable</b></a>";
+					$links['enable'] = "<a href='" . htmlspecialchars("plugins.php?mode=enable&id=" . $plugin . "&tab=uninstalled") . "'><b>" . __("Enable") . "</b></a>";
 					break;
 			}
 
@@ -308,7 +308,7 @@ function plugins_show_uninstalled () {
 		}
 	}
 	} else {
-		print '<center>There are no Uninstalled Plugins</center>';
+		print '<center>' . __("There are no Uninstalled Plugins") . '</center>';
 	}
 	if ($x == 1)
 		print '</td><td></td></tr>';

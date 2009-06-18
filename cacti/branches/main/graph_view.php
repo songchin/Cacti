@@ -60,7 +60,7 @@ if (!isset($_REQUEST["action"])) { $_REQUEST["action"] = ""; }
 switch ($_REQUEST["action"]) {
 case 'tree':
 	if ((read_config_option("auth_method") != 0) && (empty($current_user["show_tree"]))) {
-		print "<strong><font size='+1' color='FF0000'>YOU DO NOT HAVE RIGHTS FOR TREE VIEW</font></strong>"; exit;
+		print "<strong><font size='+1' color='FF0000'>" __("YOU DO NOT HAVE RIGHTS FOR TREE VIEW") . "</font></strong>"; exit;
 	}
 
 	/* if cacti's builtin authentication is turned on then make sure to take
@@ -94,7 +94,7 @@ case 'tree':
 			$access_denied = !(is_tree_allowed($_SESSION["sess_view_tree_id"]));
 
 			if ($access_denied == true) {
-				print "<strong><font size='+1' color='FF0000'>ACCESS DENIED</font></strong>"; exit;
+				print "<strong><font size='+1' color='FF0000'>" . __("ACCESS DENIED") . "</font></strong>"; exit;
 			}
 		}
 
@@ -123,7 +123,7 @@ case 'preview':
 	$sql_or = ""; $sql_where = ""; $sql_join = "";
 
 	if ((read_config_option("auth_method") != 0) && (empty($current_user["show_preview"]))) {
-		print "<strong><font size='+1' color='FF0000'>YOU DO NOT HAVE RIGHTS FOR PREVIEW VIEW</font></strong>"; exit;
+		print "<strong><font size='+1' color='FF0000'>" . __("YOU DO NOT HAVE RIGHTS FOR PREVIEW VIEW") . "</font></strong>"; exit;
 	}
 
 	/* if the user pushed the 'clear' button */
@@ -297,7 +297,7 @@ case 'list':
 	define("ROWS_PER_PAGE", read_graph_config_option("list_graphs_per_page"));
 
 	if ((read_config_option("auth_method") != 0) && (empty($current_user["show_list"]))) {
-		print "<strong><font size='+1' color='FF0000'>YOU DO NOT HAVE RIGHTS FOR LIST VIEW</font></strong>"; exit;
+		print "<strong><font size='+1' color='FF0000'>" . __("YOU DO NOT HAVE RIGHTS FOR LIST VIEW") . "</font></strong>"; exit;
 	}
 
 	/* ================= input validation ================= */
@@ -525,14 +525,14 @@ case 'list':
 						</select>
 					</td>
 					<td style='white-space:nowrap;width:1px;'>
-						&nbsp;<strong>Search:</strong>&nbsp;
+						&nbsp;<strong><?php print __("Search:");?></strong>&nbsp;
 					</td>
 					<td width="1">
 						<input type="text" name="filter" size="40" value="<?php print $_REQUEST["filter"];?>">
 					</td>
 					<td>
-						&nbsp;<input type="submit" value="Go" name="go">
-						<input type="submit" value="Clear" name="clear_x">
+						&nbsp;<input type="submit" value="<?php print __("Go");?>" name="go">
+						<input type="submit" value="<?php print __("Clear");?>" name="clear_x">
 					</td>
 				</tr>
 			</table>
@@ -647,7 +647,7 @@ case 'list':
 	<table align='center' style='background-color:#FFFFFF;' width='100%'>
 		<tr>
 			<td width='1'><img src='images/arrow.gif' alt='' align='middle'>&nbsp;</td>
-			<td><input type='submit' title='View Graphs' value='View Graphs' alt='View'></td>
+			<td><input type='submit' title='<?php print __("View Graphs");?>' value='<?php print __("View Graphs");?>' alt='<?php print __("View");?>'></td>
 		</tr>
 	</table>
 	<input type='hidden' name='page' value='1'>

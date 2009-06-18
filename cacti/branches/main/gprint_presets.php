@@ -25,7 +25,7 @@
 include("./include/auth.php");
 
 $gprint_actions = array(
-	1 => "Delete"
+	1 => __("Delete")
 	);
 
 define("MAX_DISPLAY_PAGES", 21);
@@ -103,7 +103,7 @@ function form_actions() {
 	if ($_POST["drp_action"] == "1") { /* delete */
 		print "	<tr>
 				<td class='textArea' bgcolor='#" . $colors["form_alternate1"]. "'>
-					<p>Are you sure you want to delete the following GPRINT presets?</p>
+					<p>" . __("Are you sure you want to delete the following GPRINT presets?") . "</p>
 					<p>$gprint_list</p>
 				</td>
 			</tr>\n
@@ -111,10 +111,10 @@ function form_actions() {
 	}
 
 	if (!isset($gprint_array)) {
-		print "<tr><td bgcolor='#" . $colors["form_alternate1"]. "'><span class='textError'>You must select at least one GPRINT preset.</span></td></tr>\n";
+		print "<tr><td bgcolor='#" . $colors["form_alternate1"]. "'><span class='textError'>" . __("You must select at least one GPRINT preset.") . "</span></td></tr>\n";
 		$save_html = "";
 	}else{
-		$save_html = "<input type='image' src='images/button_yes.gif' alt='Save' align='middle'>";
+		$save_html = "<input type='image' src='images/button_yes.gif' alt='" . __("Save") . "' align='middle'>";
 	}
 
 	print "	<tr>
@@ -122,7 +122,7 @@ function form_actions() {
 				<input type='hidden' name='action' value='actions'>
 				<input type='hidden' name='selected_items' value='" . (isset($gprint_array) ? serialize($gprint_array) : '') . "'>
 				<input type='hidden' name='drp_action' value='" . $_POST["drp_action"] . "'>
-				<a href='gprint_presets.php'><img src='images/button_no.gif' alt='Cancel' align='middle' border='0'></a>
+				<a href='gprint_presets.php'><img src='images/button_no.gif' alt='" . __("Cancel") . "' align='middle' border='0'></a>
 				$save_html
 			</td>
 		</tr>
@@ -177,14 +177,14 @@ function gprint_presets_edit() {
 
 	if (!empty($_GET["id"])) {
 		$gprint_preset = db_fetch_row("select * from graph_templates_gprint where id=" . $_GET["id"]);
-		$header_label = "[edit: " . $gprint_preset["name"] . "]";
+		$header_label = __("[edit: ") . $gprint_preset["name"] . "]";
 	}else{
-		$header_label = "[new]";
+		$header_label = __("[new]");
 	}
 
 	print "<form method='post' action='" .  basename($_SERVER["PHP_SELF"]) . "' name='gprint_edit'>\n";
-	html_start_box("<strong>GPRINT Presets</strong> $header_label", "100%", $colors["header"], 0, "center", "");
-	$header_items = array("Field", "Value");
+	html_start_box("<strong>" . __("GPRINT Presets") . "</strong> $header_label", "100%", $colors["header"], 0, "center", "");
+	$header_items = array(__("Field"), __("Value"));
 	print "<tr><td>";
 	html_header($header_items, 2, true, 'header_gprint_preset');
 
@@ -237,7 +237,7 @@ function gprint_presets() {
 	load_current_session_value("sort_column", "sess_gprint_sort_column", "name");
 	load_current_session_value("sort_direction", "sess_gprint_sort_direction", "ASC");
 
-	html_start_box("<strong>GPRINT Presets</strong>", "100%", $colors["header"], "3", "center", "gprint_presets.php?action=edit", true);
+	html_start_box("<strong>" . __("GPRINT Presets") . "</strong>", "100%", $colors["header"], "3", "center", "gprint_presets.php?action=edit", true);
 	?>
 	<tr class='rowAlternate2'>
 		<td>
@@ -251,8 +251,8 @@ function gprint_presets() {
 						<input type="text" name="filter" size="40" value="<?php print $_REQUEST["filter"];?>">
 					</td>
 					<td style='white-space:nowrap;width:120px;'>
-						&nbsp;<input type="submit" Value="Go" name="go" align="middle">
-						<input type="submit" Value="Clear" name="clear_x" align="middle">
+						&nbsp;<input type="submit" Value="<?php print __("Go");?>" name="go" align="middle">
+						<input type="submit" Value="<?php print __("Clear");?>" name="clear_x" align="middle">
 					</td>
 				</tr>
 			</table>
@@ -287,7 +287,7 @@ function gprint_presets() {
 	html_end_box(false);
 
 	$display_text = array(
-		"name" => array("Name", "ASC"));
+		"name" => array(__("Name"), "ASC"));
 
 	html_header_sort_checkbox($display_text, $_REQUEST["sort_column"], $_REQUEST["sort_direction"]);
 
@@ -301,7 +301,7 @@ function gprint_presets() {
 
 		print $nav;
 	}else{
-		print "<tr><td><em>No Items</em></td></tr>\n";
+		print "<tr><td><em>" . __("No Items") . "</em></td></tr>\n";
 	}
 
 	print "</table>\n</form>\n";	# end form and table of html_header_sort_checkbox
