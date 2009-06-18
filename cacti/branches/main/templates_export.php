@@ -84,7 +84,7 @@ function export() {
 	<table width='100%' style='background-color: #f5f5f5; border: 1px solid #bbbbbb;' align='center'>
 		<tr>
 			<td class="textArea" style="padding: 3px;">
-				What would you like to export?&nbsp;
+				<?php print __("What would you like to export?");?>&nbsp;
 
 				<select name="cbo_graph_id" onChange="window.location=document.form_graph_id.cbo_graph_id.options[document.form_graph_id.cbo_graph_id.selectedIndex].value">
 					<?php
@@ -100,12 +100,12 @@ function export() {
 	<form action="templates_export.php" method="post">
 	<?php
 
-	html_start_box("<strong>Export Template</strong> [" . $export_types{$_REQUEST["export_type"]}["name"] . "]", "100%", $colors["header"], "3", "center", "");
+	html_start_box("<strong>" . __("Export Template") . "</strong> [" . $export_types{$_REQUEST["export_type"]}["name"] . "]", "100%", $colors["header"], "3", "center", "");
 
 	form_alternate_row_color("item"); ?>
 		<td width="50%">
-			<font class="textEditTitle"><?php print $export_types{$_REQUEST["export_type"]}["name"];?> to Export</font><br>
-			Choose the exact item to export to XML.
+			<font class="textEditTitle"><?php print $export_types{$_REQUEST["export_type"]}["name"];?> <?php print __("to Export");?></font><br>
+			<?php print __("Choose the exact item to export to XML.");?>
 		</td>
 		<td>
 			<?php form_dropdown("export_item_id",db_fetch_assoc($export_types{$_REQUEST["export_type"]}["dropdown_sql"]),"name","id","","","0");?>
@@ -114,25 +114,24 @@ function export() {
 
 	<?php form_alternate_row_color("dependencies"); ?>
 		<td width="50%">
-			<font class="textEditTitle">Include Dependencies</font><br>
-			Some templates rely on other items in Cacti to function properly. It is highly recommended that you select
-			this box or the resulting import may fail.
+			<font class="textEditTitle"><?php print __("Include Dependencies");?></font><br>
+			<?php print __("Some templates rely on other items in Cacti to function properly. It is highly recommended that you select this box or the resulting import may fail.");?>
 		</td>
 		<td>
-			<?php form_checkbox("include_deps", "on", "Include Dependencies", "on", "", true);?>
+			<?php form_checkbox("include_deps", "on", __("Include Dependencies"), "on", "", true);?>
 		</td>
 	</tr>
 
 	<?php form_alternate_row_color("format"); ?>
 		<td width="50%">
-			<font class="textEditTitle">Output Format</font><br>
-			Choose the format to output the resulting XML file in.
+			<font class="textEditTitle"><?php print __("Output Format");?></font><br>
+			<?php print __("Choose the format to output the resulting XML file in.");?>
 		</td>
 		<td>
 			<?php
-			form_radio_button("output_format", "3", "1", "Output to the Browser (within Cacti)","1",true); print "<br>";
-			form_radio_button("output_format", "3", "2", "Output to the Browser (raw XML)","1",true); print "<br>";
-			form_radio_button("output_format", "3", "3", "Save File Locally","1",true);
+			form_radio_button("output_format", "3", "1", __("Output to the Browser (within Cacti)"),"1",true); print "<br>";
+			form_radio_button("output_format", "3", "2", __("Output to the Browser (raw XML)"),"1",true); print "<br>";
+			form_radio_button("output_format", "3", "3", __("Save File Locally"),"1",true);
 			?>
 		</td>
 	</tr>

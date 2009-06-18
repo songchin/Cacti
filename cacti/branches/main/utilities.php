@@ -164,7 +164,7 @@ function utilities_php_modules() {
 	$php_info = preg_replace('/\<\/?address\>/', '', $php_info);
 	$php_info = str_replace("<hr>", "", $php_info);
 	$php_info = str_replace("<br />", "", $php_info);
-	$php_info = str_replace("<h2>", "<h2><strong>Module Name: </strong>", $php_info);
+	$php_info = str_replace("<h2>", "<h2><strong>" . __("Module Name:") . " </strong>", $php_info);
 	$php_info = str_replace("cellpadding=\"3\"", "cellspacing=\"0\" cellpadding=\"3\"", $php_info);
 
 	return $php_info;
@@ -212,11 +212,11 @@ function utilities_view_tech() {
 	kill_session_var("sess_config_array");
 
 	$tabs = array(
-		"general" => "General",
-		"database" => "DB Info",
-		"process" => "DB Processes",
-		"php" => "PHP Info",
-		"i18n" => "Languages"
+		"general" => __("General"),
+		"database" => __("DB Info"),
+		"process" => __("DB Processes"),
+		"php" => __("PHP Info"),
+		"i18n" => __("Languages")
 	);
 
 	/* set the default settings category */
@@ -273,7 +273,7 @@ function display_php() {
 
 	$php_info = utilities_php_modules();
 
-	html_start_box("<strong>PHP Module Information</strong>", "100%", $colors["header"], "3", "center", "");
+	html_start_box("<strong>" . __("PHP Module Information") . "</strong>", "100%", $colors["header"], "3", "center", "");
 	print "<tr>\n";
 	print "<td style='padding:0px;margin:0px;'>" . $php_info . "</td>\n";
 	print "</tr>\n";
@@ -293,7 +293,7 @@ function display_general() {
 	$data_count  = db_fetch_assoc("SELECT i.type_id, COUNT(i.type_id) AS total FROM data_template_data AS d, data_input AS i WHERE d.data_input_id = i.id AND local_data_id <> 0 GROUP BY i.type_id");
 
 	/* Get RRDtool version */
-	$rrdtool_version = "Unknown";
+	$rrdtool_version = __("Unknown");
 	if ((file_exists(read_config_option("path_rrdtool"))) && ((function_exists('is_executable')) && (is_executable(read_config_option("path_rrdtool"))))) {
 
 		$out_array = array();
@@ -319,48 +319,48 @@ function display_general() {
 	/* Check RRDTool issues */
 	$rrdtool_error = "";
 	if ($rrdtool_version != read_config_option("rrdtool_version")) {
-		$rrdtool_error .= "<br><font color='red'>ERROR: Installed RRDTool version does not match configured version.<br>Please visit the <a href='settings.php?tab=general'>Configuration Settings</a> and select the correct RRDTool Utility Version.</font><br>";
+		$rrdtool_error .= "<br><font color='red'>" . __("ERROR: Installed RRDTool version does not match configured version.<br>Please visit the") . " <a href='settings.php?tab=general'> " . __("Configuration Settings</a> and select the correct RRDTool Utility Version.") . "</font><br>";
 	}
 	$graph_gif_count = db_fetch_cell("SELECT COUNT(*) FROM graph_templates_graph WHERE image_format_id = 2");
 	if (($graph_gif_count > 0) && (read_config_option("rrdtool_version") != "rrd-1.0.x")) {
-		$rrdtool_error .= "<br><font color='red'>ERROR: RRDTool 1.2.x does not support the GIF images format, but " . $graph_gif_count . " graph(s) and/or templates have GIF set as the image format.</font><br>";
+		$rrdtool_error .= "<br><font color='red'>" . __(snprintf("ERROR: RRDTool 1.2.x does not support the GIF images format, but %s graph(s) and/or templates have GIF set as the image format.", $graph_gif_count)) . "</font><br>";
 	}
 
 	/* Display tech information */
-	html_start_box("<strong>General Technical Support Information</strong>", "100%", $colors["header"], 0, "center", "");
+	html_start_box("<strong>" . __("General Technical Support Information") . "</strong>", "100%", $colors["header"], 0, "center", "");
 	print "<tr><td>";
-	html_header(array("General Information"), 2);
+	html_header(array(__("General Information")), 2);
 	print "<tr class='rowAlternate1'>\n";
-	print "		<td style='width:20%;' class='textAreaNotes'>Date</td>\n";
+	print "		<td style='width:20%;' class='textAreaNotes'>" . __("Date") . "</td>\n";
 	print "		<td class='textAreaNotes'>" . date("r") . "</td>\n";
 	print "</tr>\n";
 	print "<tr class='rowAlternate2'>\n";
-	print "		<td style='width:20%;' class='textAreaNotes'>Cacti Version</td>\n";
+	print "		<td style='width:20%;' class='textAreaNotes'>" . __("Cacti Version") . "</td>\n";
 	print "		<td class='textAreaNotes'>" . CACTI_VERSION . "</td>\n";
 	print "</tr>\n";
 	print "<tr class='rowAlternate1'>\n";
-	print "		<td style='width:20%;' class='textAreaNotes'>Cacti OS</td>\n";
+	print "		<td style='width:20%;' class='textAreaNotes'>" . __("Cacti OS") . "</td>\n";
 	print "		<td>" . CACTI_SERVER_OS . "</td>\n";
 	print "</tr>\n";
 	print "<tr class='rowAlternate2'>\n";
-	print "		<td style='width:20%;' class='textAreaNotes'>SNMP Version</td>\n";
+	print "		<td style='width:20%;' class='textAreaNotes'>" . __("SNMP Version") . "</td>\n";
 	print "		<td>" . $snmp_version . "</td>\n";
 	print "</tr>\n";
 
 	print "<tr class='rowAlternate1'>\n";
-	print "		<td style='width:20%;' class='textAreaNotes'>RRDTool Version</td>\n";
+	print "		<td style='width:20%;' class='textAreaNotes'>" . __("RRDTool Version") . "</td>\n";
 	print "		<td class='textAreaNotes'>" . $rrdtool_versions[$rrdtool_version] . " " . $rrdtool_error . "</td>\n";
 	print "</tr>\n";
 	print "<tr class='rowAlternate2'>\n";
-	print "		<td style='width:20%;' class='textAreaNotes'>Hosts</td>\n";
+	print "		<td style='width:20%;' class='textAreaNotes'>" . __("Hosts") . "</td>\n";
 	print "		<td class='textAreaNotes'>" . $host_count . "</td>\n";
 	print "</tr>\n";
 	print "<tr class='rowAlternate1'>\n";
-	print "		<td style='width:20%;' class='textAreaNotes'>Graphs</td>\n";
+	print "		<td style='width:20%;' class='textAreaNotes'>" . __("Graphs") . "</td>\n";
 	print "		<td class='textAreaNotes'>" . $graph_count . "</td>\n";
 	print "</tr>\n";
 	print "<tr class='rowAlternate2'>\n";
-	print "		<td style='width:20%;' class='textAreaNotes'>Data Sources</td>\n";
+	print "		<td style='width:20%;' class='textAreaNotes'>" . __("Data Sources") . "</td>\n";
 	print "		<td class='textAreaNotes'>";
 	$data_total = 0;
 	if (sizeof($data_count)) {
@@ -368,7 +368,7 @@ function display_general() {
 			print $input_types[$item["type_id"]] . ": " . $item["total"] . "<br>";
 			$data_total += $item["total"];
 		}
-		print "Total: " . $data_total;
+		print __("Total:") . " " . $data_total;
 	}else{
 		print "<font color='red'>0</font>";
 	}
@@ -381,18 +381,18 @@ function display_general() {
 
 	print "</table></td></tr>";		/* end of html_header */
 	print "<tr><td>";
-	html_header(array("Poller Information"), 2);
+	html_header(array(__("Poller Information")), 2);
 	print "<tr class='rowAlternate1'>\n";
-	print "		<td style='width:20%;' class='textAreaNotes'>Interval</td>\n";
+	print "		<td style='width:20%;' class='textAreaNotes'>" . __("Interval") . "</td>\n";
 	print "		<td class='textAreaNotes'>" . read_config_option("poller_interval") . "</td>\n";
 	print "</tr>\n";
 	print "<tr class='rowAlternate2'>\n";
-	print "		<td style='width:20%;' class='textAreaNotes'>Type</td>\n";
+	print "		<td style='width:20%;' class='textAreaNotes'>" . __("Type"). "</td>\n";
 	print "		<td class='textAreaNotes'>" . $poller_options[read_config_option("poller_type")] . " " . $spine_version . "</td>\n";
 	print "</tr>\n";
 
 	print "<tr class='rowAlternate1'>\n";
-	print "		<td style='width:20%;' class='textAreaNotes'>Items</td>\n";
+	print "		<td style='width:20%;' class='textAreaNotes'>" . __("Items") . "</td>\n";
 	print "		<td class='textAreaNotes'>";
 	$total = 0;
 	if (sizeof($poller_item)) {
@@ -400,9 +400,9 @@ function display_general() {
 			print "Action[" . $item["action"] . "]: " . $item["total"] . "<br>";
 			$total += $item["total"];
 		}
-		print "Total: " . $total;
+		print __("Total:") . " " . $total;
 	}else{
-		print "<font color='red'>No items to poll</font>";
+		print "<font color='red'>" . __("No items to poll") . "</font>";
 	}
 	print "</td>\n";
 	print "</tr>\n";
@@ -571,10 +571,10 @@ function display_database_processes() {
 
 function display_languages() {
 	global $colors, $config, $cacti_textdomains, $lang2locale, $i18n_modes;
-	
+
 	$loaded_extensions = get_loaded_extensions();
-	$gettext = (in_array("gettext", $loaded_extensions)) ? "native" : "emulated"; 
-	
+	$gettext = (in_array("gettext", $loaded_extensions)) ? "native" : "emulated";
+
 	$locale = getenv("LC_ALL") ? getenv("LC_ALL") : "<i>undefined</i>";
 	$language = getenv("LANG") ? "{$lang2locale[getenv("LANG")]["language"]} (" . getenv("LANG") .")" : "<i>undefined</i>";
 
@@ -583,7 +583,7 @@ function display_languages() {
 	$dhandle = opendir(CACTI_BASE_PATH . "/locales");
 	$supported_languages["cacti"] = "English, ";
 	while (false !== ($dirname = readdir($dhandle))) {
-		$catalogue = CACTI_BASE_PATH . "/locales/" . $dirname . "/LC_MESSAGES/cacti.mo"; 
+		$catalogue = CACTI_BASE_PATH . "/locales/" . $dirname . "/LC_MESSAGES/cacti.mo";
 		if(file_exists($catalogue)) {
 			$dirname = substr($dirname, 0, -3);
 			if(isset($lang2locale[$dirname])) {
@@ -592,7 +592,7 @@ function display_languages() {
 		}
 	}
 	$supported_languages["cacti"] = substr($supported_languages["cacti"], 0, -2);
-	
+
 	/* ... and do the same for all installed plugins */
 	$plugins = db_fetch_assoc("SELECT `directory` FROM `plugin_config`");
 
@@ -616,7 +616,7 @@ function display_languages() {
 			$supported_languages[$plugin] = substr($supported_languages[$plugin], 0, -2);
 		}
 	}
-	
+
 
 	html_start_box("<strong>Language Information</strong>", "100%", $colors["header"], "3", "center", "");
 	html_header(array("General Information"), 2);

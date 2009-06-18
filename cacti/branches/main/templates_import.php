@@ -88,24 +88,24 @@ function import() {
 	<?php
 
 	if ((isset($_SESSION["import_debug_info"])) && (is_array($_SESSION["import_debug_info"]))) {
-		html_start_box("<strong>Import Results</strong>", "100%", "aaaaaa", "3", "center", "");
+		html_start_box("<strong>" . __("Import Results") . "</strong>", "100%", "aaaaaa", "3", "center", "");
 
-		print "<tr class='rowAlternate1'><td><p class='textArea'>Cacti has imported the following items:</p>";
+		print "<tr class='rowAlternate1'><td><p class='textArea'>" . __("Cacti has imported the following items:") . "</p>";
 
 		while (list($type, $type_array) = each($_SESSION["import_debug_info"])) {
 			print "<p><strong>" . $hash_type_names[$type] . "</strong></p>";
 
 			while (list($index, $vals) = each($type_array)) {
 				if ($vals["result"] == "success") {
-					$result_text = "<span style='color: green;'>[success]</span>";
+					$result_text = "<span style='color: green;'>" . __("[success]") . "</span>";
 				}else{
-					$result_text = "<span style='color: red;'>[fail]</span>";
+					$result_text = "<span style='color: red;'>" . __("[fail]") . "</span>";
 				}
 
 				if ($vals["type"] == "update") {
-					$type_text = "<span style='color: gray;'>[update]</span>";
+					$type_text = "<span style='color: gray;'>" . __("[update]") . "</span>";
 				}else{
-					$type_text = "<span style='color: blue;'>[new]</span>";
+					$type_text = "<span style='color: blue;'>" . __("[new]") . "</span>";
 				}
 
 				print "<span style='font-family: monospace;'>$result_text " . $vals["title"] . " $type_text</span><br>\n";
@@ -114,9 +114,9 @@ function import() {
 				if ((isset($vals["dep"])) && (sizeof($vals["dep"]) > 0)) {
 					while (list($dep_hash, $dep_status) = each($vals["dep"])) {
 						if ($dep_status == "met") {
-							$dep_status_text = "<span style='color: navy;'>Found Dependency:</span>";
+							$dep_status_text = "<span style='color: navy;'>" . __("Found Dependency:") . "</span>";
 						}else{
-							$dep_status_text = "<span style='color: red;'>Unmet Dependency:</span>";
+							$dep_status_text = "<span style='color: red;'>" . __("Unmet Dependency:") . "</span>";
 							$there_are_dep_errors = true;
 						}
 
@@ -138,12 +138,12 @@ function import() {
 		kill_session_var("import_debug_info");
 	}
 
-	html_start_box("<strong>Import Templates</strong>", "100%", $colors["header"], "3", "center", "");
+	html_start_box("<strong>" . __("Import Templates") . "</strong>", "100%", $colors["header"], "3", "center", "");
 
 	form_alternate_row_color("file"); ?>
 		<td width="50%">
-			<font class="textEditTitle">Import Template from Local File</font><br>
-			If the XML file containing template data is located on your local machine, select it here.
+			<font class="textEditTitle"><?php print __("Import Template from Local File");?></font><br>
+			<?php print __("If the XML file containing template data is located on your local machine, select it here.");?>
 		</td>
 		<td>
 			<input type="file" name="import_file">
@@ -152,9 +152,8 @@ function import() {
 
 	<?php form_alternate_row_color("text"); ?>
 		<td width="50%">
-			<font class="textEditTitle">Import Template from Text</font><br>
-			If you have the XML file containing template data as text, you can paste it into this box to
-			import it.
+			<font class="textEditTitle"><?php print __("Import Template from Text");?></font><br>
+			<?php print __("If you have the XML file containing template data as text, you can paste it into this box to import it.");?>
 		</td>
 		<td>
 			<?php form_text_area("import_text", "", "10	", "50", "");?>
@@ -163,13 +162,13 @@ function import() {
 
 	<?php form_alternate_row_color("rra"); ?>
 		<td width="50%">
-			<font class="textEditTitle">Import RRA Settings</font><br>
-			Choose whether to allow Cacti to import custom RRA settings from imported templates or whether to use the defaults for this installation.
+			<font class="textEditTitle"><?php print __("Import RRA Settings");?></font><br>
+			<?php print __("Choose whether to allow Cacti to import custom RRA settings from imported templates or whether to use the defaults for this installation.");?>
 		</td>
 		<td>
 			<?php
-			form_radio_button("import_rra", 1, 1, "Use defaults for this installation (Recommended)", 1); echo "<br>";
-			form_radio_button("import_rra", 1, 2, "Use custom RRA settings from the template", 1);
+			form_radio_button("import_rra", 1, 1, __("Use defaults for this installation (Recommended)"), 1); echo "<br>";
+			form_radio_button("import_rra", 1, 2, __("Use custom RRA settings from the template"), 1);
 			?>
 		</td>
 	</tr>

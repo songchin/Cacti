@@ -161,12 +161,12 @@ function item_edit() {
 
 	print "<form action='tree.php' name='form_tree' method='post'>\n";
 
-	html_start_box("<strong>Tree Items</strong>", "100%", $colors["header"], "3", "center", "");
+	html_start_box("<strong>" . __("Tree Items") . "</strong>", "100%", $colors["header"], "3", "center", "");
 
 	form_alternate_row_color("parent_item"); ?>
 		<td width="50%">
-			<font class="textEditTitle">Parent Item</font><br>
-			Choose the parent for this header/graph.
+			<font class="textEditTitle"><?php print __("Parent Item");?></font><br>
+			<?php print __("Choose the parent for this header/graph.");?>
 		</td>
 		<td>
 			<?php grow_dropdown_tree($_GET["tree_id"], "parent_item_id", (isset($_GET["parent_id"]) ? $_GET["parent_id"] : get_parent_id($tree_item["id"], "graph_tree_items", "graph_tree_id=" . $_GET["tree_id"])));?>
@@ -174,8 +174,8 @@ function item_edit() {
 	</tr>
 	<?php form_alternate_row_color("tree_item"); ?>
 		<td width="50%">
-			<font class="textEditTitle">Tree Item Type</font><br>
-			Choose what type of tree item this is.
+			<font class="textEditTitle"><?php print __("Tree Item Type");?></font><br>
+			<?php print __("Choose what type of tree item this is.");?>
 		</td>
 		<td>
 			<select name="type_select" onChange="window.location=document.form_tree.type_select.options[document.form_tree.type_select.selectedIndex].value">
@@ -188,7 +188,7 @@ function item_edit() {
 		</td>
 	</tr>
 	<tr class='rowSubHeader'>
-		<td colspan="2" class='textSubHeaderDark'>Tree Item Value</td>
+		<td colspan="2" class='textSubHeaderDark'><?php print __("Tree Item Value");?></td>
 	</tr>
 	<?php
 	switch ($current_type) {
@@ -204,8 +204,8 @@ function item_edit() {
 
 		form_alternate_row_color("item_title"); ?>
 			<td width="50%">
-				<font class="textEditTitle">Title</font><br>
-				If this item is a header, enter a title here.
+				<font class="textEditTitle"><?php print __("Title");?></font><br>
+				<?php print __("If this item is a header, enter a title here.");?>
 			</td>
 			<td>
 				<?php form_text_box("title", (isset($tree_item["title"]) ? $tree_item["title"] : ""), "", "255", 30, "text", (isset($_GET["id"]) ? $_GET["id"] : "0"));?>
@@ -216,8 +216,8 @@ function item_edit() {
 		if ($tree_sort_type == TREE_ORDERING_NONE) {
 			form_alternate_row_color("sorting_type"); ?>
 				<td width="50%">
-					<font class="textEditTitle">Sorting Type</font><br>
-					Choose how children of this branch will be sorted.
+					<font class="textEditTitle"><?php print __("Sorting Type");?></font><br>
+					<?php print __("Choose how children of this branch will be sorted.");?>
 				</td>
 				<td>
 					<?php form_dropdown("sort_children_type", $tree_sort_types, "", "", (isset($tree_item["sort_children_type"]) ? $tree_item["sort_children_type"] : $default_sorting_type), "", "");?>
@@ -229,11 +229,11 @@ function item_edit() {
 		if ((!empty($_GET["id"])) && ($tree_sort_type == TREE_ORDERING_NONE)) {
 			form_alternate_row_color("propagate"); ?>
 				<td width="50%">
-					<font class="textEditTitle">Propagate Changes</font><br>
-					Propagate all options on this form (except for 'Title') to all child 'Header' items.
+					<font class="textEditTitle"><?php print __("Propagate Changes");?></font><br>
+					<?php print __("Propagate all options on this form (except for 'Title') to all child 'Header' items.");?>
 				</td>
 				<td>
-					<?php form_checkbox("propagate_changes", "", "Propagate Changes", "", "", "", 0);?>
+					<?php form_checkbox("propagate_changes", "", __("Propagate Changes"), "", "", "", 0);?>
 				</td>
 			</tr>
 			<?php
@@ -242,8 +242,8 @@ function item_edit() {
 	case TREE_ITEM_TYPE_GRAPH:
 		form_alternate_row_color("graph"); ?>
 			<td width="50%">
-				<font class="textEditTitle">Graph</font><br>
-				Choose a graph from this list to add it to the tree.
+				<font class="textEditTitle"><?php print __("Graph");?></font><br>
+				<?php print __("Choose a graph from this list to add it to the tree.");?>
 			</td>
 			<td>
 				<?php form_dropdown("local_graph_id", db_fetch_assoc("select graph_templates_graph.local_graph_id as id,graph_templates_graph.title_cache as name from (graph_templates_graph,graph_local) where graph_local.id=graph_templates_graph.local_graph_id and local_graph_id != 0 order by title_cache"), "name", "id", (isset($tree_item["local_graph_id"]) ? $tree_item["local_graph_id"] : ""), "", "");?>
@@ -251,8 +251,8 @@ function item_edit() {
 		</tr>
 		<?php form_alternate_row_color("rra"); ?>
 			<td width="50%">
-				<font class="textEditTitle">Round Robin Archive</font><br>
-				Choose a round robin archive to control how this graph is displayed.
+				<font class="textEditTitle"><?php print __("Round Robin Archive");?></font><br>
+				<?php print __("Choose a round robin archive to control how this graph is displayed.");?>
 			</td>
 			<td>
 				<?php form_dropdown("rra_id", db_fetch_assoc("select id,name from rra order by timespan"), "name", "id", (isset($tree_item["rra_id"]) ? $tree_item["rra_id"] : ""), "", "");?>
@@ -263,8 +263,8 @@ function item_edit() {
 	case TREE_ITEM_TYPE_HOST:
 		form_alternate_row_color("host"); ?>
 			<td width="50%">
-				<font class="textEditTitle">Host</font><br>
-				Choose a host here to add it to the tree.
+				<font class="textEditTitle"><?php print __("Host");?></font><br>
+				<?php print __("Choose a host here to add it to the tree.");?>
 			</td>
 			<td>
 				<?php form_dropdown("host_id", db_fetch_assoc("select id,CONCAT_WS('',description,' (',hostname,')') as name from host order by description,hostname"), "name", "id", (isset($tree_item["host_id"]) ? $tree_item["host_id"] : ""), "", "");?>
@@ -272,8 +272,8 @@ function item_edit() {
 		</tr>
 		<?php form_alternate_row_color("graph_grouping"); ?>
 			<td width="50%">
-				<font class="textEditTitle">Graph Grouping Style</font><br>
-				Choose how graphs are grouped when drawn for this particular host on the tree.
+				<font class="textEditTitle"><?php print __("Graph Grouping Style");?></font><br>
+				<?php print __("Choose how graphs are grouped when drawn for this particular host on the tree.");?>
 			</td>
 			<td>
 				<?php form_dropdown("host_grouping_type", $host_group_types, "", "", (isset($tree_item["host_grouping_type"]) ? $tree_item["host_grouping_type"] : "1"), "", "");?>
@@ -323,15 +323,15 @@ function item_remove() {
 		$graph_tree_item = db_fetch_row("select title,local_graph_id,host_id from graph_tree_items where id=" . $_GET["id"]);
 
 		if (!empty($graph_tree_item["local_graph_id"])) {
-			$text = "Are you sure you want to delete the graph item <strong>'" . db_fetch_cell("select title_cache from graph_templates_graph where local_graph_id=" . $graph_tree_item["local_graph_id"]) . "'</strong>?";
+			$text = __("Are you sure you want to delete the graph item") . " <strong>'" . db_fetch_cell("select title_cache from graph_templates_graph where local_graph_id=" . $graph_tree_item["local_graph_id"]) . "'</strong>?";
 		}elseif ($graph_tree_item["title"] != "") {
-			$text = "Are you sure you want to delete the header item <strong>'" . $graph_tree_item["title"] . "'</strong>?";
+			$text = __("Are you sure you want to delete the header item") . " <strong>'" . $graph_tree_item["title"] . "'</strong>?";
 		}elseif (!empty($graph_tree_item["host_id"])) {
-			$text = "Are you sure you want to delete the host item <strong>'" . db_fetch_cell("select CONCAT_WS('',description,' (',hostname,')') as hostname from host where id=" . $graph_tree_item["host_id"]) . "'</strong>?";
+			$text = __("Are you sure you want to delete the host item") . " <strong>'" . db_fetch_cell("select CONCAT_WS('',description,' (',hostname,')') as hostname from host where id=" . $graph_tree_item["host_id"]) . "'</strong>?";
 		}
 
 		include(CACTI_BASE_PATH . "/include/top_header.php");
-		form_confirm("Are You Sure?", $text, "tree.php?action=edit&id=" . $_GET["tree_id"], "tree.php?action=item_remove&id=" . $_GET["id"] . "&tree_id=" . $_GET["tree_id"]);
+		form_confirm(__("Are You Sure?"), $text, "tree.php?action=edit&id=" . $_GET["tree_id"], "tree.php?action=item_remove&id=" . $_GET["id"] . "&tree_id=" . $_GET["tree_id"]);
 		include(CACTI_BASE_PATH . "/include/bottom_footer.php");
 		exit;
 	}
@@ -355,7 +355,7 @@ function tree_remove() {
 
 	if ((read_config_option("deletion_verification") == "on") && (!isset($_GET["confirm"]))) {
 		include(CACTI_BASE_PATH . "/include/top_header.php");
-		form_confirm("Are You Sure?", "Are you sure you want to delete the tree <strong>'" . db_fetch_cell("select name from graph_tree where id=" . $_GET["id"]) . "'</strong>?", "tree.php", "tree.php?action=remove&id=" . $_GET["id"]);
+		form_confirm(__("Are You Sure?"), __("Are you sure you want to delete the tree") . " <strong>'" . db_fetch_cell("select name from graph_tree where id=" . $_GET["id"]) . "'</strong>?", "tree.php", "tree.php?action=remove&id=" . $_GET["id"]);
 		include(CACTI_BASE_PATH . "/include/bottom_footer.php");
 		exit;
 	}
@@ -380,14 +380,14 @@ function tree_edit() {
 
 	if (!empty($_GET["id"])) {
 		$tree = db_fetch_row("select * from graph_tree where id=" . $_GET["id"]);
-		$header_label = "[edit: " . $tree["name"] . "]";
+		$header_label = __("[edit: ") . $tree["name"] . "]";
 	}else{
-		$header_label = "[new]";
+		$header_label = __("[new]");
 	}
 
 	print "<form method='post' action='" .  basename($_SERVER["PHP_SELF"]) . "' name='tree_edit'>\n";
-	html_start_box("<strong>Graph Trees</strong> $header_label", "100%", $colors["header"], "3", "center", "", true);
-	$header_items = array("Field", "Value");
+	html_start_box("<strong>" . __("Graph Trees") . "</strong> $header_label", "100%", $colors["header"], "3", "center", "", true);
+	$header_items = array(__("Field"), __("Value"));
 	print "<tr><td>";
 	html_header($header_items, 1, true, 'template');
 
@@ -400,18 +400,18 @@ function tree_edit() {
 	html_end_box(FALSE);
 
 	if (!empty($_GET["id"])) {
-		html_start_box("<strong>Tree Items</strong>", "100%", $colors["header"], "3", "center", "tree.php?action=item_edit&tree_id=" . $tree["id"] . "&parent_id=0");
+		html_start_box("<strong>" . __("Tree Items") . "</strong>", "100%", $colors["header"], "3", "center", "tree.php?action=item_edit&tree_id=" . $tree["id"] . "&parent_id=0");
 
 		?>
 		<tr>
 		<td>
-		<a href='<?php print htmlspecialchars("tree.php?action=edit&id=" . $_GET["id"] . "&subaction=expand_all");?>'><img src='images/button_expand_all.gif' style='border-width:0px;' alt='Expand All'></a>
-		<a href='<?php print htmlspecialchars("tree.php?action=edit&id=" . $_GET["id"] . "&subaction=colapse_all");?>'><img src='images/button_colapse_all.gif' style='border-width:0px;' alt='Colapse All'></a>
+		<a href='<?php print htmlspecialchars("tree.php?action=edit&id=" . $_GET["id"] . "&subaction=expand_all");?>'><img src='images/button_expand_all.gif' style='border-width:0px;' alt='<?php print __("Expand All");?>'></a>
+		<a href='<?php print htmlspecialchars("tree.php?action=edit&id=" . $_GET["id"] . "&subaction=colapse_all");?>'><img src='images/button_colapse_all.gif' style='border-width:0px;' alt='<?php print __("Colapse All");?>'></a>
 		</td>
 		</tr>
 		<?php
 
-		$header_items = array("Item", "Value");
+		$header_items = array(__("Item"), __("Value"));
 		print "<tr><td>";
 		html_header($header_items, 3, true, 'tree');
 
@@ -426,10 +426,10 @@ function tree_edit() {
 function tree() {
 	global $colors;
 
-	html_start_box("<strong>Graph Trees</strong>", "100%", $colors["header"], "3", "center", "tree.php?action=edit");
+	html_start_box("<strong>" . __("Graph Trees") . "</strong>", "100%", $colors["header"], "3", "center", "tree.php?action=edit");
 
 	print "<tr class='rowSubHeader'>";
-		DrawMatrixHeaderItem("Name",$colors["header_text"],1);
+		DrawMatrixHeaderItem(__("Name"),$colors["header_text"],1);
 		DrawMatrixHeaderItem("&nbsp;",$colors["header_text"],1);
 	print "</tr>";
 
@@ -443,13 +443,13 @@ function tree() {
 				<a class="linkEditMain" style='display:block;' href="<?php print htmlspecialchars("tree.php?action=edit&id=" . $tree["id"]);?>"><?php print $tree["name"];?></a>
 			</td>
 			<td align="right">
-				<a href="<?php print htmlspecialchars("tree.php?action=remove&id=" . $tree["id"]);?>"><img class="buttonSmall" src="images/delete_icon.gif" alt="Delete" align='middle'></a>
+				<a href="<?php print htmlspecialchars("tree.php?action=remove&id=" . $tree["id"]);?>"><img class="buttonSmall" src="images/delete_icon.gif" alt="<?php print __("Delete");?>" align='middle'></a>
 			</td>
 		</tr>
 	<?php
 	}
 	}else{
-		print "<tr><td><em>No Graphs Trees</em></td></tr>\n";
+		print "<tr><td><em>" . __("No Graphs Trees") . "</em></td></tr>\n";
 	}
 	html_end_box();
 }
