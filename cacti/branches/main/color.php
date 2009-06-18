@@ -101,14 +101,14 @@ function color_edit() {
 
 	if (!empty($_GET["id"])) {
 		$color = db_fetch_row("select * from colors where id=" . $_GET["id"]);
-		$header_label = "[edit: " . $color["hex"] . "]";
+		$header_label = __("[edit: ") . $color["hex"] . "]";
 	}else{
-		$header_label = "[new]";
+		$header_label = __("[new]");
 	}
 
 	print "<form method='post' action='" .  basename($_SERVER["PHP_SELF"]) . "' name='color_edit'>\n";
-	html_start_box("<strong>Colors</strong> $header_label", "100%", $colors["header"], 0, "center", "");
-	$header_items = array("Field", "Value");
+	html_start_box("<strong>" . __("Colors") . "</strong> $header_label", "100%", $colors["header"], 0, "center", "");
+	$header_items = array(__("Field"), __("Value"));
 	print "<tr><td>";
 	html_header($header_items, 2, true, 'header_color_edit');
 
@@ -126,26 +126,26 @@ function color_edit() {
 function color() {
 	global $colors;
 
-	html_start_box("<strong>Colors</strong>", "100%", $colors["header"], "3", "center", "color.php?action=edit");
+	html_start_box("<strong>" . __("Colors") . "</strong>", "100%", $colors["header"], "3", "center", "color.php?action=edit");
 
 	print "<tr class='rowSubHeader'>";
-		DrawMatrixHeaderItem("Hex",    $colors["header_text"], 1, "center");
-		DrawMatrixHeaderItem("Color",  $colors["header_text"], 1, "center");
+		DrawMatrixHeaderItem(__("Hex"),    $colors["header_text"], 1, "center");
+		DrawMatrixHeaderItem(__("Color"),  $colors["header_text"], 1, "center");
 		DrawMatrixHeaderItem("&nbsp;", $colors["header_text"], 1);
 
 		DrawMatrixHeaderItem("&nbsp;", $colors["header_text"], 1);
-		DrawMatrixHeaderItem("Hex",    $colors["header_text"], 1, "center");
-		DrawMatrixHeaderItem("Color",  $colors["header_text"], 1, "center");
+		DrawMatrixHeaderItem(__("Hex"),    $colors["header_text"], 1, "center");
+		DrawMatrixHeaderItem(__("Color"),  $colors["header_text"], 1, "center");
 		DrawMatrixHeaderItem("&nbsp;", $colors["header_text"], 1);
 
 		DrawMatrixHeaderItem("&nbsp;", $colors["header_text"], 1);
-		DrawMatrixHeaderItem("Hex",    $colors["header_text"], 1, "center");
-		DrawMatrixHeaderItem("Color",  $colors["header_text"], 1, "center");
+		DrawMatrixHeaderItem(__("Hex"),    $colors["header_text"], 1, "center");
+		DrawMatrixHeaderItem(__("Color"),  $colors["header_text"], 1, "center");
 		DrawMatrixHeaderItem("&nbsp;", $colors["header_text"], 1);
 
 		DrawMatrixHeaderItem("&nbsp;", $colors["header_text"], 1);
-		DrawMatrixHeaderItem("Hex",    $colors["header_text"], 1, "center");
-		DrawMatrixHeaderItem("Color",  $colors["header_text"], 1, "center");
+		DrawMatrixHeaderItem(__("Hex"),    $colors["header_text"], 1, "center");
+		DrawMatrixHeaderItem(__("Color"),  $colors["header_text"], 1, "center");
 		DrawMatrixHeaderItem("&nbsp;", $colors["header_text"], 1);
 	print "</tr>";
 
@@ -163,7 +163,7 @@ function color() {
 					</td>
 					<td bgcolor="#<?php print $color['hex'];?>" width="10%">&nbsp;</td>
 					<td align="right">
-						<a href="<?php print htmlspecialchars("color.php?action=remove&id=" . $color["id"]);?>"><img class="buttonSmall" src="images/delete_icon.gif" alt="Delete" align='middle'></a>
+						<a href="<?php print htmlspecialchars("color.php?action=remove&id=" . $color["id"]);?>"><img class="buttonSmall" src="images/delete_icon.gif" alt="<?php print __("Delete");?>" align='middle'></a>
 					</td>
 				<?php	$j=1;
 			}elseif (($j % 4 == 2) || ($j % 4 == 3)) {
@@ -174,7 +174,7 @@ function color() {
 					</td>
 					<td bgcolor="#<?php print $color['hex'];?>" width="10%">&nbsp;</td>
 					<td align="right">
-						<a href="<?php print htmlspecialchars("color.php?action=remove&id=" . $color["id"]);?>"><img class="buttonSmall" src="images/delete_icon.gif" alt="Delete" align='middle'></a>
+						<a href="<?php print htmlspecialchars("color.php?action=remove&id=" . $color["id"]);?>"><img class="buttonSmall" src="images/delete_icon.gif" alt="<?php print __("Delete");?>" align='middle'></a>
 					</td>
 				<?php	$j=$j++;
 			} else { ?>
@@ -184,7 +184,7 @@ function color() {
 					</td>
 					<td bgcolor="#<?php print $color['hex'];?>" width="10%">&nbsp;</td>
 					<td align="right">
-						<a href="<?php print htmlspecialchars("color.php?action=remove&id=" . $color["id"]);?>"><img class="buttonSmall" src="images/delete_icon.gif" alt="Delete" align='middle'></a>
+						<a href="<?php print htmlspecialchars("color.php?action=remove&id=" . $color["id"]);?>"><img class="buttonSmall" src="images/delete_icon.gif" alt="<?php print __("Delete");?>" align='middle'></a>
 					</td>
 			<?php
 			form_end_row();

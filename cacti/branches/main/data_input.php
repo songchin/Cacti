@@ -205,7 +205,7 @@ function form_actions() {
 			print "
 				<tr>
 					<td class='textArea'>
-						<p>Are you sure you want to delete the following data input methods?</p>
+						<p>" . __("Are you sure you want to delete the following data input methods?") . "</p>
 						<p>$di_list</p>
 					</td>
 				</tr>\n";
@@ -213,7 +213,7 @@ function form_actions() {
 	} else {
 		print "	<tr>
 				<td class='textArea'>
-					<p>You must first select a Data Input Method.  Please select 'Return' to return to the previous menu.</p>
+					<p>" . __("You must first select a Data Input Method.  Please select 'Return' to return to the previous menu.") . "</p>
 				</td>
 			</tr>\n";
 	}
@@ -243,7 +243,7 @@ function field_remove() {
 
 	if ((read_config_option("deletion_verification") == "on") && (!isset($_GET["confirm"]))) {
 		include(CACTI_BASE_PATH . "/include/top_header.php");
-		form_confirm("Are You Sure?", "Are you sure you want to delete the field <strong>'" . db_fetch_cell("select name from data_input_fields where id=" . $_GET["id"]) . "'</strong>?", "data_input.php?action=edit&id=" . $_GET["data_input_id"], "data_input.php?action=field_remove&id=" . $_GET["id"] . "&data_input_id=" . $_GET["data_input_id"]);
+		form_confirm(__("Are You Sure?"), __("Are you sure you want to delete the field") ." <strong>'" . db_fetch_cell("select name from data_input_fields where id=" . $_GET["id"]) . "'</strong>?", "data_input.php?action=edit&id=" . $_GET["data_input_id"], "data_input.php?action=field_remove&id=" . $_GET["id"] . "&data_input_id=" . $_GET["data_input_id"]);
 		include(CACTI_BASE_PATH . "/include/bottom_footer.php");
 		exit;
 	}
@@ -306,11 +306,11 @@ function field_edit() {
 
 	/* if there are no input fields to choose from, complain */
 	if ((!isset($array_field_names)) && (isset($_GET["type"]) ? $_GET["type"] == "in" : false) && ($data_input["type_id"] == "1")) {
-		display_custom_error_message("This script appears to have no input values, therefore there is nothing to add.");
+		display_custom_error_message(__("This script appears to have no input values, therefore there is nothing to add."));
 		return;
 	}
 
-	html_start_box("<strong>$header_name Fields</strong> [edit: " . $data_input["name"] . "]", "100%", $colors["header"], "3", "center", "");
+	html_start_box("<strong>$header_name " . __("Fields") . "</strong> " . __("[edit: ") . $data_input["name"] . "]", "100%", $colors["header"], "3", "center", "");
 
 	$form_array = array();
 
@@ -378,8 +378,8 @@ function data_edit() {
 	}
 
 	print "<form method='post' action='" .  basename($_SERVER["PHP_SELF"]) . "' name='data_input_edit'>\n";
-	html_start_box("<strong>Data Input Methods</strong> $header_label", "100%", $colors["header"], 0, "center", "");
-	$header_items = array("Field", "Value");
+	html_start_box("<strong>" . __("Data Input Methods") . "</strong> $header_label", "100%", $colors["header"], 0, "center", "");
+	$header_items = array(__("Field"), __("Value"));
 	print "<tr><td>";
 	html_header($header_items, 1, true, 'data_input');
 
@@ -392,8 +392,8 @@ function data_edit() {
 	html_end_box();
 
 	if (!empty($_GET["id"])) {
-		html_start_box("<strong>Input Fields</strong>", "100%", $colors["header"], 0, "center", "data_input.php?action=field_edit&type=in&data_input_id=" . $_GET["id"]);
-		$header_items = array("Name", "Field Order", "Friendly Name");
+		html_start_box("<strong>" . __("Input Fields") . "</strong>", "100%", $colors["header"], 0, "center", "data_input.php?action=field_edit&type=in&data_input_id=" . $_GET["id"]);
+		$header_items = array(__("Name"), __("Field Order"), __("Friendly Name"));
 		print "<tr><td>";
 		html_header($header_items, 2, true, 'data_input_fields');
 
@@ -413,19 +413,19 @@ function data_edit() {
 					<?php print $field["name"];?>
 				</td>
 				<td align="right">
-					<a href="<?php print htmlspecialchars("data_input.php?action=field_remove&id=" . $field["id"] . "&data_input_id=" . $_GET["id"]);?>"><img class="buttonSmall" src="images/delete_icon.gif" alt="Delete" align='middle'></a>
+					<a href="<?php print htmlspecialchars("data_input.php?action=field_remove&id=" . $field["id"] . "&data_input_id=" . $_GET["id"]);?>"><img class="buttonSmall" src="images/delete_icon.gif" alt="<?php print __("Delete");?>" align='middle'></a>
 				</td>
 		<?php
 		form_end_row();
 		}
 		}else{
-			print "<tr><td><em>No Input Fields</em></td></tr>";
+			print "<tr><td><em>" . __("No Input Fields") . "</em></td></tr>";
 		}
 		print "</table></td></tr>";		/* end of html_header */
 		html_end_box();
 
-		html_start_box("<strong>Output Fields</strong>", "100%", $colors["header"], 0, "center", "data_input.php?action=field_edit&type=out&data_input_id=" . $_GET["id"]);
-		$header_items = array("Name", "Field Order", "Friendly Name", "Update RRA");
+		html_start_box("<strong>" . __("Output Fields"). "</strong>", "100%", $colors["header"], 0, "center", "data_input.php?action=field_edit&type=out&data_input_id=" . $_GET["id"]);
+		$header_items = array(__("Name"), __("Field Order"), __("Friendly Name"), __("Update RRA"));
 		print "<tr><td>";
 		html_header($header_items, 2, true, 'data_output_fields');
 
@@ -438,7 +438,7 @@ function data_edit() {
 					<a class="linkEditMain" href="<?php print htmlspecialchars("data_input.php?action=field_edit&id=" . $field["id"] . "&data_input_id=". $_GET["id"]);?>"><?php print $field["data_name"];?></a>
 				</td>
 				<td>
-					<?php print $field["sequence"]; if ($field["sequence"] == "0") { print " (Not In Use)"; }?>
+					<?php print $field["sequence"]; if ($field["sequence"] == "0") { print __(" (Not In Use)"); }?>
 				</td>
 				<td>
 					<?php print $field["name"];?>
@@ -447,13 +447,13 @@ function data_edit() {
 					<?php print html_boolean_friendly($field["update_rra"]);?>
 				</td>
 				<td align="right">
-					<a href="<?php print htmlspecialchars("data_input.php?action=field_remove&id=" . $field["id"] . "&data_input_id=" . $_GET["id"]);?>"><img class="buttonSmall" src="images/delete_icon.gif" alt="Delete" align='middle'></a>
+					<a href="<?php print htmlspecialchars("data_input.php?action=field_remove&id=" . $field["id"] . "&data_input_id=" . $_GET["id"]);?>"><img class="buttonSmall" src="images/delete_icon.gif" alt="<?php print __("Delete");?>" align='middle'></a>
 				</td>
 		<?php
 		form_end_row();
 		}
 		}else{
-			print "<tr><td><em>No Output Fields</em></td></tr>";
+			print "<tr><td><em>" . __("No Output Fields") . "</em></td></tr>";
 		}
 		print "</table></td></tr>";		/* end of html_header */
 		html_end_box();
@@ -503,7 +503,7 @@ function data() {
 	load_current_session_value("sort_direction", "sess_data_input_sort_direction", "ASC");
 	load_current_session_value("page", "sess_data_input_current_page", "1");
 
-	html_start_box("<strong>Data Input Methods</strong>", "100%", $colors["header"], "3", "center", "data_input.php?action=edit", true);
+	html_start_box("<strong>" . __("Data Input Methods") . "</strong>", "100%", $colors["header"], "3", "center", "data_input.php?action=edit", true);
 	?>
 	<tr class="rowAlternate2 noprint">
 		<td class="noprint">
@@ -517,8 +517,8 @@ function data() {
 						<input type="text" name="filter" size="40" value="<?php print $_REQUEST["filter"];?>">
 					</td>
 					<td style='white-space:nowrap;width:120px;'>
-						&nbsp;<input type="submit" Value="Go" name="go" align="middle">
-						<input type="submit" Value="Clear" name="clear_x" align="middle">
+						&nbsp;<input type="submit" Value="<?php print __("Go");?>" name="go" align="middle">
+						<input type="submit" Value="<?php print __("Clear");?>" name="clear_x" align="middle">
 					</td>
 				</tr>
 			</table>
@@ -557,8 +557,8 @@ function data() {
 	html_end_box(FALSE);
 
 	$display_text = array(
-		"name" => array("Name", "ASC"),
-		"type_id" => array("Data Input Method", "ASC"));
+		"name" => array(__("Name"), "ASC"),
+		"type_id" => array(__("Data Input Method"), "ASC"));
 
 	html_header_sort_checkbox($display_text, $_REQUEST["sort_column"], $_REQUEST["sort_direction"]);
 
@@ -576,7 +576,7 @@ function data() {
 
 		print $nav;
 	}else{
-		print "<tr><td><em>No Data Input Methods</em></td></tr>";
+		print "<tr><td><em>" . __("No Data Input Methods") . "</em></td></tr>";
 	}
 
 	print "</table>\n</form>\n";	# end form and table of html_header_sort_checkbox

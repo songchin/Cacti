@@ -101,28 +101,28 @@ case 'changepassword':
 				<?php if ($bad_password == true) {?>
 				<tr><td></td></tr>
 				<tr>
-					<td colspan="2"><font color="#FF0000"><strong>Your passwords do not match, please retype:</strong></font></td>
+					<td colspan="2"><font color="#FF0000"><strong><?php print __("Your passwords do not match, please retype:");?></strong></font></td>
 				</tr>
 				<?php }?>
 				<tr><td></td></tr>
 				<tr>
 					<td colspan="2">
-						<strong><font color="#FF0000">*** Forced Password Change ***</font></strong><br><br>
-						Please enter a new password for cacti:
+						<strong><font color="#FF0000"><?php print __("*** Forced Password Change ***");?></font></strong><br><br>
+						<?php print __("Please enter a new password for cacti:");?>
 					</td>
 				</tr>
 				<tr><td></td></tr>
 				<tr>
-					<td>Password:</td>
+					<td><?php print __("Password:");?></td>
 					<td><input type="password" name="password" size="40"></td>
 				</tr>
 				<tr>
-					<td>Confirm:</td>
+					<td><?php print __("Confirm:");?></td>
 					<td><input type="password" name="confirm" size="40"></td>
 				</tr>
 				<tr><td></td></tr>
 				<tr>
-					<td><input type="submit" value="Save"></td>
+					<td><input type="submit" value="<?php print __("Save");?>"></td>
 				</tr>
 			</table>
 			<input type="hidden" name="action" value="changepassword">

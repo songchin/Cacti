@@ -151,8 +151,6 @@ if (!function_exists("_")) {
 /* load wrappers for Cacti plugins */
 load_i18n_plugin_wrappes();
 
-
-
 function __() {
 
 	/* this should not happen */
@@ -174,8 +172,6 @@ function __() {
 	/* process return string against input arguments */
 	return call_user_func_array("sprintf", $args);
 }
-
-
 
 /**
  * load_fallback_procedure()

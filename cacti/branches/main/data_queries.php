@@ -28,7 +28,7 @@ include_once(CACTI_BASE_PATH . "/lib/data_query.php");
 define("MAX_DISPLAY_PAGES", 21);
 
 $dq_actions = array(
-	1 => "Delete"
+	1 => __("Delete")
 	);
 
 /* set default action */
@@ -251,7 +251,7 @@ function form_actions() {
 			print "
 				<tr>
 					<td class='textArea'>
-						<p>Are you sure you want to delete the following data queries?</p>
+						<p>" . __("Are you sure you want to delete the following data queries?") . "</p>
 						<p><ul>$dq_list</ul></p>
 					</td>
 				</tr>\n";
@@ -259,7 +259,7 @@ function form_actions() {
 	} else {
 		print "	<tr>
 				<td class='textArea'>
-					<p>You must first select a Data Query.  Please select 'Return' to return to the previous menu.</p>
+					<p>" . __("You must first select a Data Query.  Please select 'Return' to return to the previous menu.") . "</p>
 				</td>
 			</tr>\n";
 	}
@@ -303,7 +303,7 @@ function data_query_item_remove() {
 
 	if ((read_config_option("deletion_verification") == "on") && (!isset($_GET["confirm"]))) {
 		include(CACTI_BASE_PATH . "/include/top_header.php");
-		form_confirm("Are You Sure?", "Are you sure you want to delete the Data Query Graph <strong>'" . db_fetch_cell("select name from snmp_query_graph where id=" . $_GET["id"]) . "'</strong>?", "data_queries.php?action=edit&id=" . $_GET["snmp_query_id"], "data_queries.php?action=item_remove&id=" . $_GET["id"] . "&snmp_query_id=" . $_GET["snmp_query_id"]);
+		form_confirm(__("Are You Sure?"), __("Are you sure you want to delete the Data Query Graph") . " <strong>'" . db_fetch_cell("select name from snmp_query_graph where id=" . $_GET["id"]) . "'</strong>?", "data_queries.php?action=edit&id=" . $_GET["snmp_query_id"], "data_queries.php?action=item_remove&id=" . $_GET["id"] . "&snmp_query_id=" . $_GET["snmp_query_id"]);
 		include(CACTI_BASE_PATH . "/include/bottom_footer.php");
 		exit;
 	}
@@ -329,11 +329,11 @@ function data_query_item_edit() {
 	}
 
 	$snmp_query = db_fetch_row("select name,xml_path from snmp_query where id=" . $_GET["snmp_query_id"]);
-	$header_label = "[edit: " . $snmp_query["name"] . "]";
+	$header_label = __("[edit: ") . $snmp_query["name"] . "]";
 
 	print "<form method='post' action='" .  basename($_SERVER["PHP_SELF"]) . "' name='data_query_item_edit'>\n";
-	html_start_box("<strong>Associated Graph/Data Templates</strong> $header_label", "100%", $colors["header"], 0, "center", "");
-	$header_items = array("Field", "Value");
+	html_start_box("<strong>" . __("Associated Graph/Data Templates") . "</strong> $header_label", "100%", $colors["header"], 0, "center", "");
+	$header_items = array(__("Field"), __("Value"));
 	print "<tr><td>";
 	html_header($header_items, 1, true, 'assoc_templates');
 
@@ -346,8 +346,8 @@ function data_query_item_edit() {
 	html_end_box(true);
 
 	if (!empty($snmp_query_item["id"])) {
-		html_start_box("<strong>Associated Data Templates</strong>", "100%", $colors["header"], "0", "center", "", false, "assoc_data_templates");
-		$header_items = array("Data Source Name", "Associated XML Field", "Use this Field");
+		html_start_box("<strong>" . __("Associated Data Templates") . "</strong>", "100%", $colors["header"], "0", "center", "", false, "assoc_data_templates");
+		$header_items = array(__("Data Source Name"), __("Associated XML Field"), __("Use this Field"));
 		print "<tr><td>";
 		html_header($header_items, 1, true, 'data_templates');
 
@@ -417,7 +417,7 @@ function data_query_item_edit() {
 		print "</table></td></tr>";		/* end of html_header */
 		html_end_box();
 
-		html_start_box("<strong>Suggested Values: Data Templates</strong>", "100%", $colors["header"], 0, "center", "");
+		html_start_box("<strong>" . __("Suggested Values: Data Templates") . "</strong>", "100%", $colors["header"], 0, "center", "");
 
 		reset($data_templates);
 
@@ -425,7 +425,7 @@ function data_query_item_edit() {
 		if (sizeof($data_templates) > 0) {
 			foreach ($data_templates as $data_template) {
 
-				$header_items = array("Data Template - " . $data_template["name"], "&nbsp;");
+				$header_items = array(__("Data Template") . " - " . $data_template["name"], "&nbsp;");
 				print "<tr><td>";
 				html_header($header_items, 2, true, 'data_template_suggested_values_' . $data_template["id"]);
 
@@ -449,7 +449,7 @@ function data_query_item_edit() {
 								<?php print $suggested_value["text"];?>
 							</td>
 							<td align="right">
-								<a href="<?php print htmlspecialchars("data_queries.php?action=item_remove_dssv&snmp_query_graph_id=" . $_GET["id"] . "&id=" . $suggested_value["id"] . "&snmp_query_id=" . $_GET["snmp_query_id"]. "&data_template_id=" . $data_template["id"]);?>"><img class="buttonSmall" src="images/delete_icon.gif" alt="Delete" align='middle'></a>
+								<a href="<?php print htmlspecialchars("data_queries.php?action=item_remove_dssv&snmp_query_graph_id=" . $_GET["id"] . "&id=" . $suggested_value["id"] . "&snmp_query_id=" . $_GET["snmp_query_id"]. "&data_template_id=" . $data_template["id"]);?>"><img class="buttonSmall" src="images/delete_icon.gif" alt="<?php print __("Delete");?>" align='middle'></a>
 							</td>
 						<?php
 						form_end_row();
@@ -465,7 +465,7 @@ function data_query_item_edit() {
 						<input type="text" name="svds_<?php print $data_template["id"];?>_text" size="30">
 					</td>
 					<td align="right">
-						<input type="submit" value="Add" name="svds_<?php print $data_template["id"];?>_x">
+						<input type="submit" value="<?php print __("Add");?>" name="svds_<?php print $data_template["id"];?>_x">
 					</td>
 				<?php
 				form_end_row();
@@ -498,8 +498,8 @@ function data_query_item_edit() {
 			where snmp_query_graph_id=" . $_GET["id"] . "
 			order by field_name,sequence");
 
-		html_start_box("<strong>Suggested Values: Graph Templates</strong>", "100%", $colors["header"], 0, "center", "");
-		$header_items = array("Graph Template - " . db_fetch_cell("select name from graph_templates where id=" . $snmp_query_item["graph_template_id"]), "&nbsp;");
+		html_start_box("<strong>" . __("Suggested Values: Graph Templates") . "</strong>", "100%", $colors["header"], 0, "center", "");
+		$header_items = array(__("Graph Template") . " - " . db_fetch_cell("select name from graph_templates where id=" . $snmp_query_item["graph_template_id"]), "&nbsp;");
 		print "<tr><td>";
 		html_header($header_items, 2, true, 'graph_template_suggested_values_' . $_GET["id"]);
 
@@ -514,7 +514,7 @@ function data_query_item_edit() {
 						<?php print $suggested_value["text"];?>
 					</td>
 					<td align="right">
-						<a href="<?php print htmlspecialchars("data_queries.php?action=item_remove_gsv&snmp_query_graph_id=" . $_GET["id"] . "&id=" . $suggested_value["id"] . "&snmp_query_id=" . $_GET["snmp_query_id"]);?>"><img class="buttonSmall" src="images/delete_icon.gif" alt="Delete" align='middle'></a>
+						<a href="<?php print htmlspecialchars("data_queries.php?action=item_remove_gsv&snmp_query_graph_id=" . $_GET["id"] . "&id=" . $suggested_value["id"] . "&snmp_query_id=" . $_GET["snmp_query_id"]);?>"><img class="buttonSmall" src="images/delete_icon.gif" alt="<?php print __("Delete");?>" align='middle'></a>
 					</td>
 				<?php
 				form_end_row();
@@ -530,7 +530,7 @@ function data_query_item_edit() {
 				<input type="text" name="svg_text" size="30">
 			</td>
 			<td align="right">
-				<input type="submit" value="Add" name="svg_x">
+				<input type="submit" value="<?php print __("Add");?>" name="svg_x">
 			</td>
 		<?php
 		form_end_row();
@@ -586,8 +586,8 @@ function data_query_edit() {
 	}
 
 	print "<form method='post' action='" .  basename($_SERVER["PHP_SELF"]) . "' name='data_query_edit'>\n";
-	html_start_box("<strong>Data Queries</strong> $header_label", "100%", $colors["header"], 0, "center", "");
-	$header_items = array("Field", "Value");
+	html_start_box("<strong>" . __("Data Queries") . "</strong> $header_label", "100%", $colors["header"], 0, "center", "");
+	$header_items = array(__("Field"), __("Value"));
 	print "<tr><td>";
 	html_header($header_items, 1, true, 'data_query');
 
@@ -603,10 +603,10 @@ function data_query_edit() {
 		$xml_filename = str_replace("<path_cacti>", CACTI_BASE_PATH, $snmp_query["xml_path"]);
 
 		if ((file_exists($xml_filename)) && (is_file($xml_filename))) {
-			$text = "<font color='#0d7c09'><strong>Successfully located XML file</strong></font>";
+			$text = "<font color='#0d7c09'><strong>" . __("Successfully located XML file") . "</strong></font>";
 			$xml_file_exists = true;
 		}else{
-			$text = "<font color='#ff0000'><strong>Could not locate XML file.</strong></font>";
+			$text = "<font color='#ff0000'><strong>" . __("Could not locate XML file.") . "</strong></font>";
 			$xml_file_exists = false;
 		}
 
@@ -615,8 +615,8 @@ function data_query_edit() {
 		html_end_box();
 
 		if ($xml_file_exists == true) {
-			html_start_box("<strong>Associated Graph Templates</strong>", "100%", $colors["header"], "0", "center", "data_queries.php?action=item_edit&snmp_query_id=" . $snmp_query["id"]);
-			$header_items = array("Name", "Graph Template Name");
+			html_start_box("<strong>" . __("Associated Graph Templates") . "</strong>", "100%", $colors["header"], "0", "center", "data_queries.php?action=item_edit&snmp_query_id=" . $snmp_query["id"]);
+			$header_items = array(__("Name"), __("Graph Template Name"));
 			print "<tr><td>";
 			html_header($header_items, 2, true, 'assoc_graph_templates');
 
@@ -640,13 +640,13 @@ function data_query_edit() {
 						<?php print $snmp_query_graph["graph_template_name"];?>
 					</td>
 					<td align="right">
-						<a href="<?php print htmlspecialchars("data_queries.php?action=item_remove&id=" . $snmp_query_graph["id"] . "&snmp_query_id=" . $snmp_query["id"]);?>"><img class="buttonSmall" src="images/delete_icon.gif" alt="Delete" align='middle'></a>
+						<a href="<?php print htmlspecialchars("data_queries.php?action=item_remove&id=" . $snmp_query_graph["id"] . "&snmp_query_id=" . $snmp_query["id"]);?>"><img class="buttonSmall" src="images/delete_icon.gif" alt="<?php print __("Delete");?>" align='middle'></a>
 					</td>
 				<?php
 				form_end_row();
 			}
 			}else{
-				print "<tr><td><em>No Graph Templates Defined.</em></td></tr>";
+				print "<tr><td><em>" . __("No Graph Templates Defined.") . "</em></td></tr>";
 			}
 
 			print "</table></td></tr>";		/* end of html_header */
@@ -694,7 +694,7 @@ function data_query() {
 	load_current_session_value("page", "sess_data_queries_current_page", "1");
 	load_current_session_value("filter", "sess_data_queries_filter", "");
 
-	html_start_box("<strong>Data Queries</strong>", "100%", $colors["header"], "3", "center", "data_queries.php?action=edit", true);
+	html_start_box("<strong>" . __("Data Queries") . "</strong>", "100%", $colors["header"], "3", "center", "data_queries.php?action=edit", true);
 	?>
 	<tr class="rowAlternate2 noprint">
 		<td class="noprint">
@@ -708,8 +708,8 @@ function data_query() {
 						<input type="text" name="filter" size="40" value="<?php print $_REQUEST["filter"];?>">
 					</td>
 					<td style='white-space:nowrap;width:120px;'>
-						&nbsp;<input type="submit" Value="Go" name="go" align="middle">
-						<input type="submit" Value="Clear" name="clear_x" align="middle">
+						&nbsp;<input type="submit" Value="<?php print __("Go");?>" name="go" align="middle">
+						<input type="submit" Value="<?php print __("Clear");?>" name="clear_x" align="middle">
 					</td>
 				</tr>
 			</table>
@@ -750,8 +750,8 @@ function data_query() {
 	html_end_box(false);
 
 	$display_text = array(
-		"name" => array("Name", "ASC"),
-		"data_input_method" => array("Data Input Method", "ASC"));
+		"name" => array(__("Name"), "ASC"),
+		"data_input_method" => array(__("Data Input Method"), "ASC"));
 
 	html_header_sort_checkbox($display_text, $_REQUEST["sort_column"], $_REQUEST["sort_direction"]);
 
@@ -768,7 +768,7 @@ function data_query() {
 
 		print $nav;
 	}else{
-		print "<tr><td><em>No Data Queries</em></td></tr>";
+		print "<tr><td><em>" . __("No Data Queries") . "</em></td></tr>";
 	}
 
 	print "</table>\n</form>\n";	# end form and table of html_header_sort_checkbox

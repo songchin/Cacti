@@ -31,8 +31,8 @@ include_once(CACTI_BASE_PATH . "/lib/template.php");
 define("MAX_DISPLAY_PAGES", 21);
 
 $ds_actions = array(
-	1 => "Delete",
-	2 => "Duplicate"
+	1 => __("Delete"),
+	2 => __("Duplicate")
 	);
 
 /* set default action */
@@ -323,8 +323,7 @@ function form_actions() {
 		if ($_POST["drp_action"] == "1") { /* delete */
 			print "	<tr>
 					<td class='textArea'>
-						<p>Are you sure you want to delete the following data templates? Any data sources attached
-						to these templates will become individual data sources.</p>
+						<p>" . __("Are you sure you want to delete the following data templates? Any data sources attached to these templates will become individual data sources.") . "</p>
 						<p>$ds_list</p>
 					</td>
 				</tr>\n
@@ -332,10 +331,9 @@ function form_actions() {
 		}elseif ($_POST["drp_action"] == "2") { /* duplicate */
 			print "	<tr>
 					<td class='textArea'>
-						<p>When you click save, the following data templates will be duplicated. You can
-						optionally change the title format for the new data templates.</p>
+						<p>" . __("When you click save, the following data templates will be duplicated. You can optionally change the title format for the new data templates.") . "</p>
 						<p>$ds_list</p>
-						<p><strong>Title Format:</strong><br>"; form_text_box("title_format", "<template_title> (1)", "", "255", "30", "text"); print "</p>
+						<p><strong>" . __("Title Format:") . "</strong><br>"; form_text_box("title_format", "<template_title> (1)", "", "255", "30", "text"); print "</p>
 					</td>
 				</tr>\n
 				";
@@ -343,7 +341,7 @@ function form_actions() {
 	} else {
 		print "	<tr>
 				<td class='textArea'>
-					<p>You must first select a Data Template.  Please select 'Return' to return to the previous menu.</p>
+					<p>" . __("You must first select a Data Template.  Please select 'Return' to return to the previous menu.") . "</p>
 				</td>
 			</tr>\n";
 	}
@@ -419,14 +417,14 @@ function template_edit() {
 		$template_data = db_fetch_row("select * from data_template_data where data_template_id=" . $_GET["id"] . " and local_data_id=0");
 		$template = db_fetch_row("select * from data_template where id=" . $_GET["id"]);
 
-		$header_label = "[edit: " . $template["name"] . "]";
+		$header_label = __("[edit: ") . $template["name"] . "]";
 	}else{
-		$header_label = "[new]";
+		$header_label = __("[new]");
 	}
 
 	print "<form method='post' action='" .  basename($_SERVER["PHP_SELF"]) . "' name='data_template_edit'>\n";
-	html_start_box("<strong>Data Template</strong> $header_label", "100%", $colors["header"], 0, "center", "");
-	$header_items = array("Field", "Value");
+	html_start_box("<strong>" . __("Data Template") . "</strong> $header_label", "100%", $colors["header"], 0, "center", "");
+	$header_items = array(__("Field"), __("Value"));
 	print "<tr><td>";
 	html_header($header_items, 2, true, 'header_data_template');
 
@@ -438,8 +436,8 @@ function template_edit() {
 	print "</table></td></tr>";		/* end of html_header */
 	html_end_box();
 
-	html_start_box("<strong>Data Source</strong>", "100%", $colors["header"], 0, "center", "", true);
-	$header_items = array("Field", "Value");
+	html_start_box("<strong>" . __("Data Source") . "</strong>", "100%", $colors["header"], 0, "center", "", true);
+	$header_items = array(__("Field"), __("Value"));
 	print "<tr><td>";
 	html_header($header_items, 2, true, 'header_data_source');
 
@@ -452,12 +450,12 @@ function template_edit() {
 		$form_array += array($field_name => $struct_data_source[$field_name]);
 
 		if ($field_array["flags"] == "ALWAYSTEMPLATE") {
-			$form_array[$field_name]["description"] = "<em>This field is always templated.</em>";
+			$form_array[$field_name]["description"] = "<em>" . __("This field is always templated.") . "</em>";
 		}else{
 #			$form_array[$field_name]["description"] = "";
 			$form_array[$field_name]["sub_checkbox"] = array(
 				"name" => "t_" . $field_name,
-				"friendly_name" => "<em>Use Per-Data Source Value (Ignore this Value)</em>",
+				"friendly_name" => "<em>" . __("Use Per-Data Source Value (Ignore this Value)") . "</em>",
 				"value" => (isset($template_data{"t_" . $field_name}) ? $template_data{"t_" . $field_name} : ""),
 				"class" => (isset($form_array[$field_name]["class"]) ? $form_array[$field_name]["class"] : "")
 			);
@@ -502,7 +500,7 @@ function template_edit() {
 
 			foreach ($template_data_rrds as $template_data_rrd) {
 				$i++;
-				print "<div class='tabDefault'><a " . (($template_data_rrd["id"] == $_GET["view_rrd"]) ? "class='tabSelected'" : "class='tabDefault'") . " style='margin-right:0; padding-left: 4px; ; padding: 5px 8px 6px 8px;' href='" . htmlspecialchars("data_templates.php?action=template_edit&id=" . $_GET["id"] . "&view_rrd=" . $template_data_rrd["id"]) . "'>$i: " . $template_data_rrd["data_source_name"] . "</a><a " . (($template_data_rrd["id"] == $_GET["view_rrd"]) ? "class='tabSelected'" : "class='tabDefault'") . " style='margin-left:0; padding: 6px 8px 5px 8px' href='" . htmlspecialchars("data_templates.php?action=rrd_remove&id=" . $template_data_rrd["id"] . "&data_template_id=" . $_GET["id"]) . "'><img class='buttonSmall' src='images/delete_icon.gif' alt='Delete' align='absmiddle'></a></div>";
+				print "<div class='tabDefault'><a " . (($template_data_rrd["id"] == $_GET["view_rrd"]) ? "class='tabSelected'" : "class='tabDefault'") . " style='margin-right:0; padding-left: 4px; ; padding: 5px 8px 6px 8px;' href='" . htmlspecialchars("data_templates.php?action=template_edit&id=" . $_GET["id"] . "&view_rrd=" . $template_data_rrd["id"]) . "'>$i: " . $template_data_rrd["data_source_name"] . "</a><a " . (($template_data_rrd["id"] == $_GET["view_rrd"]) ? "class='tabSelected'" : "class='tabDefault'") . " style='margin-left:0; padding: 6px 8px 5px 8px' href='" . htmlspecialchars("data_templates.php?action=rrd_remove&id=" . $template_data_rrd["id"] . "&data_template_id=" . $_GET["id"]) . "'><img class='buttonSmall' src='images/delete_icon.gif' alt='<?php print __("Delete");?>' align='absmiddle'></a></div>";
 			}
 
 			print "</div></td></tr></table>\n";
@@ -522,7 +520,7 @@ function template_edit() {
 				" . (!empty($_GET["id"]) ? "<strong><a class='linkOverDark' href='" . htmlspecialchars("data_templates.php?action=rrd_add&id=" . $_GET["id"]) . "'>New</a>&nbsp;</strong>" : "") . "
 			</td>
 		</tr>\n";
-	$header_items = array("Field", "Value");
+	$header_items = array(__("Field"), __("Value"));
 	print "<tr><td colspan=2>";
 	html_header($header_items, 3, true, 'data_source_item');
 
@@ -544,7 +542,7 @@ function template_edit() {
 		$form_array[$field_name]["value"] = (isset($template_rrd) ? $template_rrd[$field_name] : "");
 		$form_array[$field_name]["sub_checkbox"] = array(
 			"name" => "t_" . $field_name,
-			"friendly_name" => "<em>Use Per-Data Source Value (Ignore this Value)</em>",
+			"friendly_name" => "<em>" . __("Use Per-Data Source Value (Ignore this Value)") . "</em>",
 			"value" => (isset($template_rrd) ? $template_rrd{"t_" . $field_name} : ""),
 			"class" => (isset($form_array[$field_name]["class"]) ? $form_array[$field_name]["class"] : "")
 		);
@@ -572,8 +570,8 @@ function template_edit() {
 		/* get each INPUT field for this data input source */
 		$fields = db_fetch_assoc("select * from data_input_fields where data_input_id=" . $template_data["data_input_id"] . " and input_output='in' order by sequence");
 
-		html_start_box("<strong>Custom Data</strong> [data input: " . db_fetch_cell("select name from data_input where id=" . $template_data["data_input_id"]) . "]", "100%", $colors["header"], 0, "center", "", true);
-		$header_items = array("Field", "Value");
+		html_start_box("<strong>" . __("Custom Data") . "</strong> [data input: " . db_fetch_cell("select name from data_input where id=" . $template_data["data_input_id"]) . "]", "100%", $colors["header"], 0, "center", "", true);
+		$header_items = array(__("Field"), __("Value"));
 		print "<tr><td>";
 		html_header($header_items, 2, true, 'data_source_custom_data');
 
@@ -601,7 +599,7 @@ function template_edit() {
 			form_end_row();
 		}
 		}else{
-			print "<tr><td><em>No Input Fields for the Selected Data Input Source</em></td></tr>";
+			print "<tr><td><em>" . __("No Input Fields for the Selected Data Input Source") . "</em></td></tr>";
 		}
 
 		print "</table></td></tr>";		/* end of html_header */
@@ -669,8 +667,8 @@ function template() {
 						<input type="text" name="filter" size="40" value="<?php print $_REQUEST["filter"];?>">
 					</td>
 					<td style='white-space:nowrap;width:120px;'>
-						&nbsp;<input type="submit" Value="Go" name="go" align="middle">
-						<input type="submit" Value="Clear" name="clear_x" align="middle">
+						&nbsp;<input type="submit" Value="<?php print __("Go");?>" name="go" align="middle">
+						<input type="submit" Value="<?php print __("Clear");?>" name="clear_x" align="middle">
 					</td>
 				</tr>
 			</table>
@@ -711,9 +709,9 @@ function template() {
 	html_end_box(false);
 
 	$display_text = array(
-		"name" => array("Template Name", "ASC"),
-		"data_input_method" => array("Data Input Method", "ASC"),
-		"active" => array("Status", "ASC"));
+		"name" => array(__("Template Name"), "ASC"),
+		"data_input_method" => array(__("Data Input Method"), "ASC"),
+		"active" => array(__("Status"), "ASC"));
 
 	html_header_sort_checkbox($display_text, $_REQUEST["sort_column"], $_REQUEST["sort_direction"]);
 
@@ -721,8 +719,8 @@ function template() {
 		foreach ($template_list as $template) {
 			form_alternate_row_color('line' . $template["id"], true);
 			form_selectable_cell("<a class='linkEditMain' href='" . htmlspecialchars("data_templates.php?action=template_edit&id=" . $template["id"]) . "'>" . (strlen($_REQUEST["filter"]) ? eregi_replace("(" . preg_quote($_REQUEST["filter"]) . ")", "<span style='background-color: #F8D93D;'>\\1</span>", $template["name"]) : $template["name"]) . "</a>", $template["id"]);
-			form_selectable_cell((empty($template["data_input_method"]) ? "<em>None</em>": $template["data_input_method"]), $template["id"]);
-			form_selectable_cell((($template["active"] == "on") ? "Active" : "Disabled"), $template["id"]);
+			form_selectable_cell((empty($template["data_input_method"]) ? "<em>" . __("None") . "</em>": $template["data_input_method"]), $template["id"]);
+			form_selectable_cell((($template["active"] == "on") ? __("Active") : __("Disabled")), $template["id"]);
 			form_checkbox_cell($template["name"], $template["id"]);
 			form_end_row();
 		}
@@ -732,7 +730,7 @@ function template() {
 		/* put the nav bar on the bottom as well */
 		print $nav;
 	}else{
-		print "<tr><td><em>No Data Templates</em></td></tr>\n";
+		print "<tr><td><em>" . __("No Data Templates") . "</em></td></tr>\n";
 	}
 
 	print "</table>\n</form>\n";	# end form and table of html_header_sort_checkbox

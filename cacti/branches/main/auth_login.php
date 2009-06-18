@@ -41,7 +41,7 @@ if (read_config_option("auth_method") == "2") {
 		/* No user - Bad juju! */
 		$username = "";
 		cacti_log("ERROR: No username passed with Web Basic Authentication enabled.", false, "AUTH");
-		auth_display_custom_error_message("Web Basic Authentication configured, but no username was passed from the web server.  Please make sure you have authentication enabled on the web server.");
+		auth_display_custom_error_message(_("Web Basic Authentication configured, but no username was passed from the web server.  Please make sure you have authentication enabled on the web server."));
 		exit;
 	}
 }else{
@@ -94,7 +94,7 @@ if ($action == 'login') {
 				/* Error searching */
 				cacti_log("LOGIN: LDAP Error: " . $ldap_dn_search_response["error_text"], false, "AUTH");
 				$ldap_error = true;
-				$ldap_error_message = "LDAP Search Error: " . $ldap_dn_search_response["error_text"];
+				$ldap_error_message = __("LDAP Search Error: ") . $ldap_dn_search_response["error_text"];
 				$user_auth = false;
 				$user = array();
 			}
@@ -115,7 +115,7 @@ if ($action == 'login') {
 					/* error */
 					cacti_log("LOGIN: LDAP Error: " . $ldap_auth_response["error_text"], false, "AUTH");
 					$ldap_error = true;
-					$ldap_error_message = "LDAP Error: " . $ldap_auth_response["error_text"];
+					$ldap_error_message = __("LDAP Error: ") . $ldap_auth_response["error_text"];
 					$user_auth = false;
 					$user = array();
 				}
@@ -144,7 +144,7 @@ if ($action == 'login') {
 		}else{
 			/* error */
 			cacti_log("LOGIN: Template user '" . read_config_option("user_template") . "' does not exist.", false, "AUTH");
-			auth_display_custom_error_message("Template user '" . read_config_option("user_template") . "' does not exist.");
+			auth_display_custom_error_message(__("Template user '") . read_config_option("user_template") . __("' does not exist."));
 			exit;
 		}
 	}
@@ -159,7 +159,7 @@ if ($action == 'login') {
 			$guest_user = true;
 		}else{
 			/* error */
-			auth_display_custom_error_message("Guest user \"" . read_config_option("guest_user") . "\" does not exist.");
+			auth_display_custom_error_message(__("Guest user \"") . read_config_option("guest_user") . __("\" does not exist."));
 			cacti_log("LOGIN: Unable to locate guest user '" . read_config_option("guest_user") . "'", false, "AUTH");
 			exit;
 		}
@@ -173,7 +173,7 @@ if ($action == 'login') {
 		$user_enabled = $user["enabled"];
 		if ($user_enabled != "on") {
 			/* Display error */
-			auth_display_custom_error_message("Access Denied, user account disabled.");
+			auth_display_custom_error_message(__("Access Denied, user account disabled."));
 			exit;
 		}
 
@@ -220,7 +220,7 @@ if ($action == 'login') {
 	}else{
 		if ((!$guest_user) && ($user_auth)) {
 			/* No guest account defined */
-			auth_display_custom_error_message("Access Denied, please contact you Cacti Administrator.");
+			auth_display_custom_error_message(__("Access Denied, please contact you Cacti Administrator."));
 			cacti_log("LOGIN: Access Denied, No guest enabled or template user to copy", false, "AUTH");
 			exit;
 		}else{
@@ -285,43 +285,43 @@ function auth_display_custom_error_message($message) {
 				if ($action == "login") {?>
 				<tr><td></td></tr>
 				<tr>
-					<td colspan="2"><font color="#FF0000"><strong>Invalid User Name/Password Please Retype</strong></font></td>
+					<td colspan="2"><font color="#FF0000"><strong><?php print __("Invalid User Name/Password Please Retype");?></strong></font></td>
 				</tr>
 				<?php }
 				if ($user_enabled == "0") {?>
 				<tr><td></td></tr>
 				<tr>
-					<td colspan="2"><font color="#FF0000"><strong>User Account Disabled</strong></font></td>
+					<td colspan="2"><font color="#FF0000"><strong><?php print __("User Account Disabled");?></strong></font></td>
 				</tr>
 				<?php } } ?>
 				<tr><td></td></tr>
 				<tr>
-					<td colspan="2">Please enter your Cacti user name and password below:</td>
+					<td colspan="2"><?php print __("Please enter your Cacti user name and password below:");?></td>
 				</tr>
 				<tr><td></td></tr>
 				<tr>
-					<td>User Name:</td>
+					<td><?php print __("User Name:");?></td>
 					<td><input type="text" name="login_username" size="40" style="width: 295px;" value="<?php print $username; ?>"></td>
 				</tr>
 				<tr>
-					<td>Password:</td>
+					<td><?php print __("Password:");?></td>
 					<td><input type="password" name="login_password" size="40" style="width: 295px;"></td>
 				</tr>
 				<?php
 				if (read_config_option("auth_method") == "3") {?>
 				<tr>
-					<td>Realm:</td>
+					<td><?php print __("Realm:");?></td>
 					<td>
 						<select name="realm" style="width: 295px;">
-							<option value="local">Local</option>
-							<option value="ldap" selected>LDAP</option>
+							<option value="local"><?php print __("Local");?></option>
+							<option value="ldap" selected><?php print __("LDAP");?></option>
 						</select>
 					</td>
 				</tr>
 				<?php }?>
 				<tr><td></td></tr>
 				<tr>
-					<td><input type="submit" value="Login"></td>
+					<td><input type="submit" value="<?php print __("Login");?>"></td>
 				</tr>
 			</table>
 			<?php api_plugin_hook("login_after"); ?>
