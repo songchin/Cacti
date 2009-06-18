@@ -27,7 +27,7 @@ include("./include/auth.php");
 define("MAX_DISPLAY_PAGES", 21);
 
 $site_actions = array(
-	1 => "Delete"
+	1 => __("Delete")
 	);
 
 /* set default action */
@@ -132,7 +132,7 @@ function form_actions() {
 	if ($_POST["drp_action"] == "1") { /* delete */
 		print "	<tr>
 				<td class='textArea'>
-					<p>Are you sure you want to delete the following site(s)?</p>
+					<p>" . __("Are you sure you want to delete the following site(s)?") . "</p>
 					<p>$site_list</p>";
 					print "</td></tr>
 				</td>
@@ -141,7 +141,7 @@ function form_actions() {
 	}
 
 	if (!isset($site_array)) {
-		print "<tr><td class='textArea'><span class='textError'>You must select at least one site.</span></td></tr>\n";
+		print "<tr><td class='textArea'><span class='textError'>" . __("You must select at least one site.") . "</span></td></tr>\n";
 		form_return_button_alt();
 	}else{
 		form_yesno_button_alt(serialize($site_array), $_POST["drp_action"]);
@@ -152,7 +152,7 @@ function form_actions() {
 				<input type='hidden' name='action' value='actions'>
 				<input type='hidden' name='selected_items' value='" . (isset($site_array) ? serialize($site_array) : '') . "'>
 				<input type='hidden' name='drp_action' value='" . $_POST["drp_action"] . "'>
-				<a href='sites.php'><img src='images/button_no.gif' alt='Cancel' align='absmiddle' border='0'></a>
+				<a href='sites.php'><img src='images/button_no.gif' alt='" . __("Cancel") . "' align='absmiddle' border='0'></a>
 				$save_html
 			</td>
 		</tr>
@@ -279,7 +279,7 @@ function api_site_remove($id) {
 	if ($devices == 0) {
 		db_execute("DELETE FROM sites WHERE id='" . $id . "'");
 	}else{
-		$_SESSION["sess_messages"] = "Some sites not removed as they contain devices!";
+		$_SESSION["sess_messages"] = __("Some sites not removed as they contain devices!");
 	}
 }
 
@@ -299,7 +299,7 @@ function site_remove() {
 	if ($devices == 0) {
 		if ((read_config_option("remove_verification") == "on") && (!isset($_GET["confirm"]))) {
 			include("./include/top_header.php");
-			form_confirm("Are You Sure?", "Are you sure you want to delete the site <strong>'" . db_fetch_cell("select description from host where id=" . $_GET["device_id"]) . "'</strong>?", "sites.php", "sites.php?action=remove&id=" . $_GET["id"]);
+			form_confirm(__("Are You Sure?"), __("Are you sure you want to delete the site") . " <strong>'" . db_fetch_cell("select description from host where id=" . $_GET["device_id"]) . "'</strong>?", "sites.php", "sites.php?action=remove&id=" . $_GET["id"]);
 			include("./include/bottom_footer.php");
 			exit;
 		}
@@ -308,7 +308,7 @@ function site_remove() {
 			api_site_remove($_GET["id"]);
 		}
 	}else{
-		display_custom_error_message("You can not delete this site while there are devices associated with it");
+		display_custom_error_message(__("You can not delete this site while there are devices associated with it."));
 	}
 }
 
@@ -398,8 +398,8 @@ function site_edit() {
 	}
 
 	print "<form method='post' action='" .  basename($_SERVER["PHP_SELF"]) . "' name='site_edit'>\n";
-	html_start_box("<strong>Site</strong> $header_label", "100%", $colors["header"], 0, "center", "");
-	$header_items = array("Field", "Value");
+	html_start_box("<strong>" . __("Site") . "</strong> $header_label", "100%", $colors["header"], 0, "center", "");
+	$header_items = array(__("Field"), __("Value"));
 	print "<tr><td>";
 	html_header($header_items, 1, true, 'site_edit');
 
@@ -434,20 +434,20 @@ function site_filter() {	global $item_rows, $colors;
 	}
 	-->
 	</script>
-	<?php html_start_box("<strong>Site Filters</strong>", "100%", $colors["header"], "3", "center", "sites.php?action=edit", true);?>
+	<?php html_start_box("<strong>" . __("Site Filters") . "</strong>", "100%", $colors["header"], "3", "center", "sites.php?action=edit", true);?>
 	<tr class='rowAlternate2'>
 		<td>
 			<form method='post' action='<?php print basename($_SERVER["PHP_SELF"]);?>' name='site_edit'>
 			<table cellpadding="1" cellspacing="0">
 				<tr>
 					<td nowrap style='white-space: nowrap;' width="55">
-						&nbsp;Search:&nbsp;
+						&nbsp;<?php print __("Search:");?>&nbsp;
 					</td>
 					<td width="1">
 						<input type="text" name="filter" size="20" value="<?php print $_REQUEST["filter"];?>">
 					</td>
 					<td style='white-space:nowrap;width:50px;'>
-						&nbsp;Rows:&nbsp;
+						&nbsp;<?php print __("Rows:");?>&nbsp;
 					</td>
 					<td width="1">
 						<select name="rows" onChange="applySiteFilterChange(document.form_sites)">
@@ -465,11 +465,11 @@ function site_filter() {	global $item_rows, $colors;
 						&nbsp;<input type="checkbox" id="detail" name="detail" <?php if (($_REQUEST["detail"] == "true") || ($_REQUEST["detail"] == "on")) print ' checked="true"';?> onClick="applySiteFilterChange(document.form_sites)">
 					</td>
 					<td>
-						<label for="detail">Show Device Details</label>
+						<label for="detail"><?php print __("Show Device Details");?></label>
 					</td>
 					<td style='white-space:nowrap;width:120px;'>
-						&nbsp;<input type="submit" Value="Go" name="go" align="middle">
-						<input type="submit" Value="Clear" name="clear_x" align="middle">
+						&nbsp;<input type="submit" Value="<?php print __("Go");?>" name="go" align="middle">
+						<input type="submit" Value="<?php print __("Clear");?>" name="clear_x" align="middle">
 					</td>
 				</tr>
 			<?php
@@ -478,11 +478,11 @@ function site_filter() {	global $item_rows, $colors;
 			<table cellpadding="1" cellspacing="0">
 				<tr>
 					<td nowrap style='white-space: nowrap;' width="55">
-						&nbsp;Site:
+						&nbsp;<?php print __("Site:");?>
 					</td>
 					<td width="1">
 						<select name="site_id" onChange="applySiteFilterChange(document.form_sites)">
-						<option value="-1"<?php if ($_REQUEST["site_id"] == "-1") {?> selected<?php }?>>Any</option>
+						<option value="-1"<?php if ($_REQUEST["site_id"] == "-1") {?> selected<?php }?>><?php print __("Any");?></option>
 						<?php
 						$sites = db_fetch_assoc("SELECT * FROM sites ORDER BY sites.name");
 						if (sizeof($sites) > 0) {
@@ -494,11 +494,11 @@ function site_filter() {	global $item_rows, $colors;
 						</select>
 					</td>
 					<td nowrap style='white-space: nowrap;' width="70">
-						&nbsp;Host Template:
+						&nbsp;<?php print __("Host Template:");?>
 					</td>
 					<td width="1">
 						<select name="host_template_id" onChange="applySiteFilterChange(document.form_sites)">
-						<option value="-1"<?php if ($_REQUEST["host_template_id"] == "-1") {?> selected<?php }?>>Any</option>
+						<option value="-1"<?php if ($_REQUEST["host_template_id"] == "-1") {?> selected<?php }?>><?php print __("Any");?></option>
 						<?php
 						$host_templates = db_fetch_assoc("SELECT DISTINCT host_template.id,
 							host_template.name
@@ -637,11 +637,11 @@ function site() {
 		html_end_box(false);
 
 		$display_text = array(
-			"name" => array("Site Name", "ASC"),
-			"address1" => array("Address", "ASC"),
-			"city" => array("City", "ASC"),
-			"state" => array("State", "DESC"),
-			"country" => array("Country", "DESC"));
+			"name" => array(__("Site Name"), "ASC"),
+			"address1" => array(__("Address"), "ASC"),
+			"city" => array(__("City"), "ASC"),
+			"state" => array(__("State"), "DESC"),
+			"country" => array(__("Country"), "DESC"));
 
 		html_header_sort_checkbox($display_text, $_REQUEST["sort_column"], $_REQUEST["sort_direction"]);
 
@@ -661,7 +661,7 @@ function site() {
 			/* put the nav bar on the bottom as well */
 			print $nav;
 		}else{
-			print "<tr><td><em>No Sites</em></td></tr>";
+			print "<tr><td><em>" . __("No Sites") . "</em></td></tr>";
 		}
 		print "</table>\n</form>\n";	# end form and table of html_header_sort_checkbox
 	}else{
@@ -671,13 +671,13 @@ function site() {
 		html_end_box(false);
 
 		$display_text = array(
-			"name" => array("Site Name", "ASC"),
-			"host_template_name" => array("Device Type", "ASC"),
-			"total_devices" => array("Devices", "DESC"),
-			"address1" => array("Address", "ASC"),
-			"city" => array("City", "ASC"),
-			"state" => array("State", "DESC"),
-			"country" => array("Country", "DESC"));
+			"name" => array(__("Site Name"), "ASC"),
+			"host_template_name" => array(__("Device Type"), "ASC"),
+			"total_devices" => array(__("Devices"), "DESC"),
+			"address1" => array(__("Address"), "ASC"),
+			"city" => array(__("City"), "ASC"),
+			"state" => array(__("State"), "DESC"),
+			"country" => array(__("Country"), "DESC"));
 
 		html_header_sort_checkbox($display_text, $_REQUEST["sort_column"], $_REQUEST["sort_direction"]);
 
@@ -700,7 +700,7 @@ function site() {
 			/* put the nav bar on the bottom as well */
 			print $nav;
 		}else{
-			print "<tr><td><em>No Sites</em></td></tr>";
+			print "<tr><td><em>" . __("No Sites") . "</em></td></tr>";
 		}
 		print "</table>\n</form>\n";	# end form and table of html_header_sort_checkbox
 	}

@@ -25,7 +25,7 @@
 include("./include/auth.php");
 
 $rra_actions = array(
-	1 => "Delete"
+	1 => __("Delete")
 	);
 
 define("MAX_DISPLAY_PAGES", 21);
@@ -104,7 +104,7 @@ function form_actions() {
 	if ($_POST["drp_action"] == "1") { /* delete */
 		print "	<tr>
 				<td class='textArea' bgcolor='#" . $colors["form_alternate1"]. "'>
-					<p>Are you sure you want to delete the following RRAs?</p>
+					<p>" . __("Are you sure you want to delete the following RRAs?") . "</p>
 					<p>$rra_list</p>
 				</td>
 			</tr>\n
@@ -112,10 +112,10 @@ function form_actions() {
 	}
 
 	if (!isset($rra_array)) {
-		print "<tr><td bgcolor='#" . $colors["form_alternate1"]. "'><span class='textError'>You must select at least one RRA.</span></td></tr>\n";
+		print "<tr><td bgcolor='#" . $colors["form_alternate1"]. "'><span class='textError'>" . __("You must select at least one RRA.") . "</span></td></tr>\n";
 		$save_html = "";
 	}else{
-		$save_html = "<input type='image' src='images/button_yes.gif' alt='Save' align='middle'>";
+		$save_html = "<input type='image' src='images/button_yes.gif' alt='" . __("Save") . "' align='middle'>";
 	}
 
 	print "	<tr>
@@ -123,7 +123,7 @@ function form_actions() {
 				<input type='hidden' name='action' value='actions'>
 				<input type='hidden' name='selected_items' value='" . (isset($rra_array) ? serialize($rra_array) : '') . "'>
 				<input type='hidden' name='drp_action' value='" . $_POST["drp_action"] . "'>
-				<a href='rra.php'><img src='images/button_no.gif' alt='Cancel' align='middle' border='0'></a>
+				<a href='rra.php'><img src='images/button_no.gif' alt='" . __("Cancel") . "' align='middle' border='0'></a>
 				$save_html
 			</td>
 		</tr>
@@ -198,7 +198,7 @@ function rra_edit() {
 	}
 
 	print "<form method='post' action='" .  basename($_SERVER["PHP_SELF"]) . "' name='rra_edit'>\n";
-	html_start_box("<strong>Round Robin Archives</strong> $header_label", "100%", $colors["header"], 0, "center", "");
+	html_start_box("<strong>" . __("Round Robin Archives") . "</strong> $header_label", "100%", $colors["header"], 0, "center", "");
 	$header_items = array("Field", "Value");
 	print "<tr><td>";
 	html_header($header_items, 2, true, 'header_rra_edit');
@@ -252,7 +252,7 @@ function rra() {
 	load_current_session_value("sort_column", "sess_rra_sort_column", "name");
 	load_current_session_value("sort_direction", "sess_rra_sort_direction", "ASC");
 
-	html_start_box("<strong>Round Robin Archives</strong>", "100%", $colors["header"], "3", "center", "rra.php?action=edit", true);
+	html_start_box("<strong>" . __("Round Robin Archives") . "</strong>", "100%", $colors["header"], "3", "center", "rra.php?action=edit", true);
 	?>
 	<tr class='rowAlternate2'>
 		<td>
@@ -260,14 +260,14 @@ function rra() {
 			<table cellpadding="0" cellspacing="0">
 				<tr>
 					<td style='white-space:nowrap;width:50px;'>
-						Search:&nbsp;
+						<?php print __("Search:");?>&nbsp;
 					</td>
 					<td width="1">
 						<input type="text" name="filter" size="40" value="<?php print $_REQUEST["filter"];?>">
 					</td>
 					<td style='white-space:nowrap;width:120px;'>
-						&nbsp;<input type="submit" Value="Go" name="go" align="middle">
-						<input type="submit" Value="Clear" name="clear_x" align="middle">
+						&nbsp;<input type="submit" Value="<?php print __("Go");?>" name="go" align="middle">
+						<input type="submit" Value="<?php print __("Clear");?>" name="clear_x" align="middle">
 					</td>
 				</tr>
 			</table>
@@ -304,10 +304,10 @@ function rra() {
 	html_end_box(false);
 
 	$display_text = array(
-		"name" => array("Name", "ASC"),
-		"steps" => array("Steps", "ASC"),
-		"rows" => array("Rows", "ASC"),
-		"timespan" => array("Timespan", "ASC"));
+		"name" => array(__("Name"), "ASC"),
+		"steps" => array(__("Steps"), "ASC"),
+		"rows" => array(__("Rows"), "ASC"),
+		"timespan" => array(__("Timespan"), "ASC"));
 
 	html_header_sort_checkbox($display_text, $_REQUEST["sort_column"], $_REQUEST["sort_direction"]);
 
@@ -324,7 +324,7 @@ function rra() {
 
 		print $nav;
 	}else{
-		print "<tr><td><em>No RRAs</em></td></tr>\n";
+		print "<tr><td><em>" . __("No RRAs") . "</em></td></tr>\n";
 	}
 
 	print "</table>\n</form>\n";	# end form and table of html_header_sort_checkbox

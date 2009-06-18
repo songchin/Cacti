@@ -24,7 +24,7 @@
 
 /* do NOT run this script through a web browser */
 if (!isset($_SERVER["argv"][0]) || isset($_SERVER['REQUEST_METHOD'])  || isset($_SERVER['REMOTE_ADDR'])) {
-   die("<br><strong>This script is only meant to run at the command line.</strong>");
+   die("<br><strong>" . __("This script is only meant to run at the command line.") . "</strong>");
 }
 
 $no_http_headers = true;
@@ -113,7 +113,7 @@ while (1) {
 			if (sizeof($command_array)) {
 				/* user has requested to quit */
 				if (substr_count($command_array[0], "quit")) {
-					fputs(STDOUT, "PHP Script Server Shutdown request received, exiting\n");
+					fputs(STDOUT, __("PHP Script Server Shutdown request received, exiting\n"));
 					if (read_config_option("log_verbosity") == POLLER_VERBOSITY_DEBUG) {
 						cacti_log("DEBUG: PHP Script Server Shutdown request received, exiting", false, "PHPSVR");
 					}
@@ -187,13 +187,13 @@ while (1) {
 					}
 				} else {
 					cacti_log("WARNING: Function does not exist", false, "PHPSVR");
-					fputs(STDOUT, "WARNING: Function does not exist\n");
+					fputs(STDOUT, __("WARNING: Function does not exist\n"));
 				}
 			}
 		}
 	}else{
 		cacti_log("ERROR: Input Expected, Script Server Terminating", false, "PHPSVR");
-		fputs(STDOUT, "ERROR: Input Expected, Script Server Terminating\n");
+		fputs(STDOUT, __("ERROR: Input Expected, Script Server Terminating\n"));
 		exit (-1);
 	}
 

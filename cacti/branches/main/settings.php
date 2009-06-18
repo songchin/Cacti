@@ -80,8 +80,8 @@ default:
 	print "</div></td></tr></table>\n";
 
 	print "<form method='post' action='" .  basename($_SERVER["PHP_SELF"]) . "' name='settings'>\n";
-	html_start_box("<strong>Cacti Settings (" . $tabs[$current_tab] . ")</strong>", "100%", $colors["header"], 0, "center", "");
-	$header_items = array("Field", "Value");
+	html_start_box("<strong>" . __("Cacti Settings") . " (" . $tabs[$current_tab] . ")</strong>", "100%", $colors["header"], 0, "center", "");
+	$header_items = array(__("Field"), __("Value"));
 	print "<tr><td>";
 	html_header($header_items, 2, true, 'settings');
 
