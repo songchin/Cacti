@@ -25,25 +25,23 @@
 include("./include/auth.php");
 include(CACTI_BASE_PATH . "/include/top_header.php");
 
-html_start_box("<strong>About Cacti</strong>", "100%", $colors["header"], "3", "center", "");
+html_start_box("<strong>" . __("About Cacti") . "</strong>", "100%", $colors["header"], "3", "center", "");
 ?>
 
 <tr class='rowSubHeader'>
 	<td class='textSubHeaderDark' colspan="2">
-		<strong>Version <?php print CACTI_VERSION;?></strong>
+		<strong><?php print __("Version");?> <?php print CACTI_VERSION;?></strong>
 	</td>
 </tr>
 <tr>
 	<td valign="top" class="textArea">
 		<a href="http://www.cacti.net/"><img align="right" src="images/cacti_about_logo.gif" style='border-width:0px;' alt="raXnet"></a>
 
-		Cacti is designed to be a complete graphing solution based on the RRDTool's framework. Its goal is to make a
-		network administrator's job easier by taking care of all the necessary details necessary to create
-		meaningful graphs.
+		<?php print __("Cacti is designed to be a complete graphing solution based on the RRDTool's framework. Its goal is to make a network administrator's job easier by taking care of all the necessary details necessary to create meaningful graphs.");?>
 
-		<p>Please see the <a href="http://www.cacti.net/">official Cacti website</a> for information, support, and updates.</p>
+		<p><?php print __("Please see the");?> <a href="http://www.cacti.net/"><?php print __("official Cacti website");?></a> <?php print __("for information, support, and updates.");?></p>
 
-		<p><strong>Current Cacti Developers</strong><br></p>
+		<p><strong><?php print __("Current Cacti Developers");?></strong><br></p>
 		<ul type="disc">
 			<li><strong>Ian Berry</strong> (raX) is original creator of Cacti which was first released to the world in 2001. He remained the sole
 				developer for over two years, writing code, supporting users, and keeping the project active. Today, Ian continues
@@ -79,23 +77,17 @@ html_start_box("<strong>About Cacti</strong>", "100%", $colors["header"], "3", "
 
 		</ul>
 
-		<p><strong>License</strong><br></p>
+		<p><strong><?php print __("License");?></strong><br></p>
 
-		<p>Cacti is licensed under the GNU GPL:</p>
+		<p><?php print __("Cacti is licensed under the GNU GPL:");?></p>
 
-		<p><tt>This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or (at your option) any later version.</tt></p>
+		<p><tt><?php print __("This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.");?></tt></p>
 
-<p><tt>This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.</tt></p>
+		<p><tt><?php print __("This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.");?></tt></p>
 
-		<p><strong>Cacti Variables</strong><span style="font-family: monospace; font-size: 10px;"><br>
-		<strong>Operating System:</strong> <?php print CACTI_SERVER_OS;?><br>
-		<strong>PHP SNMP Support:</strong> <?php print PHP_SNMP_SUPPORT ? "yes" : "no";?><br>
+		<p><strong><?php print __("Cacti Variables");?></strong><span style="font-family: monospace; font-size: 10px;"><br>
+		<strong><?php print __("Operating System:");?></strong> <?php print CACTI_SERVER_OS;?><br>
+		<strong><?php print __("PHP SNMP Support:");?></strong> <?php print PHP_SNMP_SUPPORT ? "yes" : "no";?><br>
 		</span></p>
 	</td>
 </tr>

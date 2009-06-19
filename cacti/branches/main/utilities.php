@@ -323,7 +323,7 @@ function display_general() {
 	}
 	$graph_gif_count = db_fetch_cell("SELECT COUNT(*) FROM graph_templates_graph WHERE image_format_id = 2");
 	if (($graph_gif_count > 0) && (read_config_option("rrdtool_version") != "rrd-1.0.x")) {
-		$rrdtool_error .= "<br><font color='red'>" . __(snprintf("ERROR: RRDTool 1.2.x does not support the GIF images format, but %s graph(s) and/or templates have GIF set as the image format.", $graph_gif_count)) . "</font><br>";
+		$rrdtool_error .= "<br><font color='red'>" . sprintf(__("ERROR: RRDTool 1.2.x does not support the GIF images format, but %s graph(s) and/or templates have GIF set as the image format."), $graph_gif_count) . "</font><br>";
 	}
 
 	/* Display tech information */
@@ -408,63 +408,63 @@ function display_general() {
 	print "</tr>\n";
 
 	print "<tr class='rowAlternate2'>\n";
-	print "		<td style='width:20%;' class='textAreaNotes'>Concurrent Processes</td>\n";
+	print "		<td style='width:20%;' class='textAreaNotes'>" . __("Concurrent Processes") . "</td>\n";
 	print "		<td class='textAreaNotes'>" . read_config_option("concurrent_processes") . "</td>\n";
 	print "</tr>\n";
 
 	print "<tr class='rowAlternate1'>\n";
-	print "		<td style='width:20%;' class='textAreaNotes'>Max Threads</td>\n";
+	print "		<td style='width:20%;' class='textAreaNotes'>" . __("Max Threads") . "</td>\n";
 	print "		<td class='textAreaNotes'>" . read_config_option("max_threads") . "</td>\n";
 	print "</tr>\n";
 
 	print "<tr class='rowAlternate2'>\n";
-	print "		<td style='width:20%;' class='textAreaNotes'>PHP Servers</td>\n";
+	print "		<td style='width:20%;' class='textAreaNotes'>" . __("PHP Servers") . "</td>\n";
 	print "		<td class='textAreaNotes'>" . read_config_option("php_servers") . "</td>\n";
 	print "</tr>\n";
 
 	print "<tr class='rowAlternate1'>\n";
-	print "		<td style='width:20%;' class='textAreaNotes'>Script Timeout</td>\n";
+	print "		<td style='width:20%;' class='textAreaNotes'>" . __("Script Timeout") . "</td>\n";
 	print "		<td class='textAreaNotes'>" . read_config_option("script_timeout") . "</td>\n";
 	print "</tr>\n";
 
 	print "<tr class='rowAlternate2'>\n";
-	print "		<td style='width:20%;' class='textAreaNotes'>Max OID</td>\n";
+	print "		<td style='width:20%;' class='textAreaNotes'>" . __("Max OID") . "</td>\n";
 	print "		<td class='textAreaNotes'>" . read_config_option("max_get_size") . "</td>\n";
 	print "</tr>\n";
 
 	print "<tr class='rowAlternate1'>\n";
-	print "		<td style='width:20%;' class='textAreaNotes'>Last Run Statistics</td>\n";
+	print "		<td style='width:20%;' class='textAreaNotes'>" . __("Last Run Statistics") . "</td>\n";
 	print "		<td class='textAreaNotes'>" . read_config_option("stats_poller") . "</td>\n";
 	print "</tr>\n";
 
 	print "</table></td></tr>";		/* end of html_header */
 	print "<tr><td>";
-	html_header(array("PHP Information"), 2);
+	html_header(array(__("PHP Information")), 2);
 	print "<tr class='rowAlternate1'>\n";
-	print "		<td style='width:20%;' class='textAreaNotes'>PHP Version</td>\n";
+	print "		<td style='width:20%;' class='textAreaNotes'>" . __("PHP Version") . "</td>\n";
 	print "		<td class='textAreaNotes'>" . phpversion() . "</td>\n";
 	print "</tr>\n";
 	print "<tr class='rowAlternate2'>\n";
-	print "		<td style='width:20%;' class='textAreaNotes'>PHP OS</td>\n";
+	print "		<td style='width:20%;' class='textAreaNotes'>" . __("PHP OS") . "</td>\n";
 	print "		<td class='textAreaNotes'>" . PHP_OS . "</td>\n";
 	print "</tr>\n";
 	print "<tr class='rowAlternate1'>\n";
-	print "		<td style='width:20%;' class='textAreaNotes'>PHP uname</td>\n";
+	print "		<td style='width:20%;' class='textAreaNotes'>" . __("PHP uname") . "</td>\n";
 	print "		<td class='textAreaNotes'>";
 	if (function_exists("php_uname")) {
 		print php_uname();
 	}else{
-		print "N/A";
+		print __("N/A");
 	}
 	print "</td>\n";
 	print "</tr>\n";
 	print "<tr class='rowAlternate2'>\n";
-	print "		<td style='width:20%;' class='textAreaNotes'>PHP SNMP</td>\n";
+	print "		<td style='width:20%;' class='textAreaNotes'>" . __("PHP SNMP") . "</td>\n";
 	print "		<td class='textAreaNotes'>";
 	if (function_exists("snmpget")) {
-		print "Installed";
+		print __("Installed");
 	} else {
-		print "Not Installed";
+		print __("Not Installed");
 	}
 	print "</td>\n";
 	print "</tr>\n";
@@ -489,7 +489,7 @@ function display_general() {
 	/* Suggest values in 8M increments */
 	$memory_suggestion = round($memory_suggestion / 8388608) * 8388608;
 	if (memory_bytes(ini_get('memory_limit')) < $memory_suggestion) {
-		print "<br><font color='red'>It is highly suggested that you alter you php.ini memory_limit to " . memory_readable($memory_suggestion) . " or higher.  This suggested memory value is calculated based on the number of data source present and is only to be used as a suggestion, actual values may vary system to system based on requirements.</font><br>";
+		print "<br><font color='red'>" . sprintf(__("It is highly suggested that you alter you php.ini memory_limit to %s or higher.  This suggested memory value is calculated based on the number of data source present and is only to be used as a suggestion, actual values may vary system to system based on requirements."), memory_readable($memory_suggestion)) . "</font><br>";
 	}
 	print "</table></td></tr>";		/* end of html_header */
 
@@ -502,9 +502,9 @@ function display_database() {
 	/* Get table status */
 	$table_status = db_fetch_assoc("SHOW TABLE STATUS");
 
-	$display_array = array("Name", "Engine", "Version", "Row Format", "Rows", "Average Length", "Data Length", "Index Length", "Auto Increment", "Collation", "Comment");
+	$display_array = array(__("Name"), __("Engine"), __("Version"), __("Row Format"), __("Rows"), __("Average Length"), __("Data Length"), __("Index Length"), __("Auto Increment"), __("Collation"), __("Comment"));
 
-	html_start_box("<strong>MySQL Table Information</strong>", "100%", $colors["header"], 0, "center", "");
+	html_start_box("<strong>" . __("MySQL Table Information") . "</strong>", "100%", $colors["header"], 0, "center", "");
 	print "<tr><td>";
 	html_header($display_array);
 	if (sizeof($table_status) > 0) {
@@ -514,7 +514,7 @@ function display_database() {
 			if (isset($item["Engine"])) {
 				print "  <td>" . $item["Engine"] . "</td>\n";
 			}else{
-				print "  <td>Unknown</td>\n";
+				print "  <td>" . __("Unknown") . "</td>\n";
 			}
 			print "<td>" . $item["Version"] . "</td>\n";
 			print "<td>" . $item["Row_format"] . "</td>\n";
@@ -526,13 +526,13 @@ function display_database() {
 			if (isset($item["Collation"])) {
 				print "  <td>" . $item["Collation"] . "</td>\n";
 			} else {
-				print "  <td>Unknown</td>\n";
+				print "  <td>". __("Unknown") . "</td>\n";
 			}
 			print "<td>" . db_fetch_cell("CHECK TABLE " . $item["Name"], "Msg_text") . "</td>\n";
 			print "</tr>\n";
 		}
 	}else{
-		print "Unable to retrieve table status";
+		print __("Unable to retrieve table status");
 	}
 	print "</table></td></tr>";		/* end of html_header */
 	html_end_box();
@@ -544,9 +544,9 @@ function display_database_processes() {
 	/* Get table status */
 	$db_processes = db_fetch_assoc("SHOW PROCESSLIST");
 
-	$display_array = array("Id", "User", "Host", "Database", "Command", "Time", "State", "Info");
+	$display_array = array(__("ID"), __("User"), __("Host"), __("Database"), __("Command"), __("Time"), __("State"), __("Info"));
 
-	html_start_box("<strong>MySQL Process Information</strong>", "100%", $colors["header"], 0, "center", "");
+	html_start_box("<strong>" . __("MySQL Process Information") . "</strong>", "100%", $colors["header"], 0, "center", "");
 	print "<tr><td>";
 	html_header($display_array);
 	if (sizeof($db_processes) > 0) {
@@ -563,7 +563,7 @@ function display_database_processes() {
 			print "</tr>\n";
 		}
 	}else{
-		print "Unable to retrieve process status";
+		print __("Unable to retrieve process status");
 	}
 	print "</table></td></tr>";		/* end of html_header */
 	html_end_box();
@@ -573,15 +573,14 @@ function display_languages() {
 	global $colors, $config, $cacti_textdomains, $lang2locale, $i18n_modes;
 
 	$loaded_extensions = get_loaded_extensions();
-	$gettext = (in_array("gettext", $loaded_extensions)) ? "native" : "emulated";
+	$gettext = (in_array("gettext", $loaded_extensions)) ? __("native") : __("emulated");
 
-	$locale = getenv("LC_ALL") ? getenv("LC_ALL") : "<i>undefined</i>";
-	$language = getenv("LANG") ? "{$lang2locale[getenv("LANG")]["language"]} (" . getenv("LANG") .")" : "<i>undefined</i>";
-
+	$locale = getenv("LC_ALL") ? getenv("LC_ALL") : "<i>" . __("undefined") . "</i>";
+	$language = getenv("LANG") ? "{$lang2locale[getenv("LANG")]["language"]} (" . getenv("LANG") .")" : "<i>" . __("undefined") . "</i>";
 
 	/* create a list of all languages this Cacti system supports ... */
 	$dhandle = opendir(CACTI_BASE_PATH . "/locales");
-	$supported_languages["cacti"] = "English, ";
+	$supported_languages["cacti"] = __("English") . ", ";
 	while (false !== ($dirname = readdir($dhandle))) {
 		$catalogue = CACTI_BASE_PATH . "/locales/" . $dirname . "/LC_MESSAGES/cacti.mo";
 		if(file_exists($catalogue)) {
@@ -601,7 +600,7 @@ function display_languages() {
 
 			$plugin = $plugin["directory"];
 			$dhandle = @opendir(CACTI_BASE_PATH . "/plugins/" . $plugin . "/locales");
-			$supported_languages[$plugin] = "English, ";
+			$supported_languages[$plugin] = __("English") . ", ";
 			if($dhandle) {
 				while (false !== ($dirname = readdir($dhandle))) {
 					$catalogue = CACTI_BASE_PATH . "/plugins/" . $plugin . "/locales/" . $dirname . "/LC_MESSAGES/" . $plugin . ".mo";
@@ -618,29 +617,29 @@ function display_languages() {
 	}
 
 
-	html_start_box("<strong>Language Information</strong>", "100%", $colors["header"], "3", "center", "");
-	html_header(array("General Information"), 2);
+	html_start_box("<strong>" . __("Language Information") . "</strong>", "100%", $colors["header"], "3", "center", "");
+	html_header(array(__("General Information")), 2);
 	print "<tr class='rowAlternate2'>\n";
-	print "		<td style='width:20%;' class='textAreaNotes'>Language Mode</td>\n";
+	print "		<td style='width:20%;' class='textAreaNotes'>" . __("Language Mode") . "</td>\n";
 	print "		<td class='textAreaNotes'>" . $i18n_modes[read_config_option('i18n_support')] . "</td>\n";
 	print "</tr>\n";
 	print "<tr class='rowAlternate1'>\n";
-	print "		<td style='width:20%;' class='textAreaNotes'>Gettext Support</td>\n";
+	print "		<td style='width:20%;' class='textAreaNotes'>" . __("Gettext Support") . "</td>\n";
 	print "		<td class='textAreaNotes'>" . $gettext . "</td>\n";
 	print "</tr>\n";
 	print "<tr class='rowAlternate2'>\n";
-	print "		<td style='width:20%;' class='textAreaNotes'>Current Language</td>\n";
+	print "		<td style='width:20%;' class='textAreaNotes'>" . __("Current Language") . "</td>\n";
 	print "		<td class='textAreaNotes'>". $language . "</td>\n";
 	print "</tr>\n";
 	print "<tr class='rowAlternate1'>\n";
-	print "		<td style='width:20%;' class='textAreaNotes'>Default Language</td>\n";
+	print "		<td style='width:20%;' class='textAreaNotes'>" . __("Default Language") . "</td>\n";
 	print "		<td class='textAreaNotes'>English</td>\n";
 	print "</tr>\n";
 	print "<tr class='rowAlternate2'>\n";
-	print "		<td style='width:20%;' class='textAreaNotes'>Current Locale</td>\n";
+	print "		<td style='width:20%;' class='textAreaNotes'>" . __("Current Locale") . "</td>\n";
 	print "		<td class='textAreaNotes'>". $locale . "</td>\n";
 	print "</tr>\n";
-	html_header(array("Supported Languages"), 2);
+	html_header(array(__("Supported Languages")), 2);
 	$i = 0;
 	if(sizeof($supported_languages)>0) {
 		foreach($supported_languages as $domain => $languages) {
@@ -653,10 +652,10 @@ function display_languages() {
 		}
 	}else {
 			print "<tr class='rowAlternate1'>\n";
-			print "		<td class='textAreaNotes'><i>no languages supported.</i></td>\n";
+			print "		<td class='textAreaNotes'><i>" . __("no languages supported."). "</i></td>\n";
 			print "</tr>\n";
 	}
-	html_header(array("Loaded Language Files"), 2);
+	html_header(array(__("Loaded Language Files")), 2);
 	$i = 0;
 	if(sizeof($cacti_textdomains)>0) {
 		foreach($cacti_textdomains as $domain => $paths) {
@@ -669,7 +668,7 @@ function display_languages() {
 		}
 	}else {
 			print "<tr class='rowAlternate1'>\n";
-			print "		<td class='textAreaNotes'><i>No Languages File Loaded.</i></td>\n";
+			print "		<td class='textAreaNotes'><i>" . __("No Languages File Loaded.") . "</i></td>\n";
 			print "</tr>\n";
 	}
 	html_end_box();
@@ -749,7 +748,7 @@ function utilities_view_user_log() {
 	</script>
 	<?php
 
-	html_start_box("<strong>User Login History</strong>", "100%", $colors["header"], "3", "center", "", true);
+	html_start_box("<strong>" . __("User Login History") . "</strong>", "100%", $colors["header"], "3", "center", "", true);
 	?>
 	<tr class='rowAlternate2'>
 		<td>
@@ -757,12 +756,12 @@ function utilities_view_user_log() {
 			<table cellpadding="0" cellspacing="0">
 				<tr>
 					<td style='white-space:nowrap;width:50px;'>
-						Username:&nbsp;
+						<?php print __("Username:");?>&nbsp;
 					</td>
 					<td width="1">
 						<select name="username" onChange="applyViewLogFilterChange(document.form_userlog)">
-							<option value="-1"<?php if ($_REQUEST["username"] == "-1") {?> selected<?php }?>>All</option>
-							<option value="-2"<?php if ($_REQUEST["username"] == "-2") {?> selected<?php }?>>Deleted/Invalid</option>
+							<option value="-1"<?php if ($_REQUEST["username"] == "-1") {?> selected<?php }?>><?php print __("All");?></option>
+							<option value="-2"<?php if ($_REQUEST["username"] == "-2") {?> selected<?php }?>><?php print __("Deleted/Invalid");?></option>
 							<?php
 							$users = db_fetch_assoc("SELECT DISTINCT username FROM user_auth ORDER BY username");
 
@@ -775,25 +774,25 @@ function utilities_view_user_log() {
 						</select>
 					</td>
 					<td style='white-space:nowrap;width:50px;'>
-						&nbsp;Result:&nbsp;
+						&nbsp;<?php print __("Result:");?>&nbsp;
 					</td>
 					<td width="1">
 						<select name="result" onChange="applyViewLogFilterChange(document.form_userlog)">
-							<option value="-1"<?php if ($_REQUEST['result'] == '-1') {?> selected<?php }?>>Any</option>
-							<option value="1"<?php if ($_REQUEST['result'] == '1') {?> selected<?php }?>>Success</option>
-							<option value="0"<?php if ($_REQUEST['result'] == '0') {?> selected<?php }?>>Failed</option>
+							<option value="-1"<?php if ($_REQUEST['result'] == '-1') {?> selected<?php }?>><?php print __("Any");?></option>
+							<option value="1"<?php if ($_REQUEST['result'] == '1') {?> selected<?php }?>><?php print __("Success");?></option>
+							<option value="0"<?php if ($_REQUEST['result'] == '0') {?> selected<?php }?>><?php print __("Failed");?></option>
 						</select>
 					</td>
 					<td style='white-space:nowrap;width:50px;'>
-						&nbsp;Search:&nbsp;
+						&nbsp;<?php print __("Search:");?>&nbsp;
 					</td>
 					<td width="1">
 						<input type="text" name="filter" size="20" value="<?php print $_REQUEST["filter"];?>">
 					</td>
 					<td style='white-space:nowrap;width:160px;'>
-						&nbsp;<input type="submit" Value="Go" name="go" align="middle">
-						<input type="submit" Value="Clear" name="clear_x" align="middle">
-						<input type="submit" Value="Purge" name="purge_x" align="middle">
+						&nbsp;<input type="submit" Value="<?php print __("Go");?>" name="go" align="middle">
+						<input type="submit" Value="<?php print __("Clear");?>" name="clear_x" align="middle">
+						<input type="submit" Value="<?php print __("Purge");?>" name="purge_x" align="middle">
 					</td>
 				</tr>
 			</table>
@@ -874,12 +873,12 @@ function utilities_view_user_log() {
 	html_end_box();
 
 	$display_text = array(
-		"username" => array("Username", "ASC"),
-		"full_name" => array("Full Name", "ASC"),
-		"realm" => array("Authentication Realm", "ASC"),
-		"time" => array("Date", "ASC"),
-		"result" => array("Result", "DESC"),
-		"ip" => array("IP Address", "DESC"));
+		"username" => array(__("Username"), "ASC"),
+		"full_name" => array(__("Full Name"), "ASC"),
+		"realm" => array(__("Authentication Realm"), "ASC"),
+		"time" => array(__("Date"), "ASC"),
+		"result" => array(__("Result"), "DESC"),
+		"ip" => array(__("IP Address"), "DESC"));
 
 	html_header_sort($display_text, $_REQUEST["sort_column"], $_REQUEST["sort_direction"]);
 
@@ -894,7 +893,7 @@ function utilities_view_user_log() {
 				<?php if (isset($item["full_name"])) {
 						print (strlen(get_request_var_request("filter")) ? (eregi_replace("(" . preg_quote(get_request_var_request("filter")) . ")", "<span style='background-color: #F8D93D;'>\\1</span>", $item["full_name"])) : $item["full_name"]);
 					}else{
-						print "(User Removed)";
+						print "(" . __("User Removed") . ")";
 					}
 				?>
 			</td>
@@ -902,7 +901,7 @@ function utilities_view_user_log() {
 				<?php if (isset($auth_realms[$item["realm"]])) {
 						print (strlen(get_request_var_request("filter")) ? (eregi_replace("(" . preg_quote(get_request_var_request("filter")) . ")", "<span style='background-color: #F8D93D;'>\\1</span>", $auth_realms[$item["realm"]])) : $auth_realms[$item["realm"]]);
 					}else{
-						print "N/A";
+						print __("N/A");
 					}
 				?>
 			</td>
@@ -910,7 +909,7 @@ function utilities_view_user_log() {
 				<?php print (strlen(get_request_var_request("filter")) ? (eregi_replace("(" . preg_quote(get_request_var_request("filter")) . ")", "<span style='background-color: #F8D93D;'>\\1</span>", $item["time"])) : $item["time"]);?>
 			</td>
 			<td width='10%'>
-				<?php print $item["result"] == 0 ? "Failed" : "Success";?>
+				<?php print $item["result"] == 0 ? __("Failed") : __("Success");?>
 			</td>
 			<td width='15%'>
 				<?php print (strlen(get_request_var_request("filter")) ? (eregi_replace("(" . preg_quote(get_request_var_request("filter")) . ")", "<span style='background-color: #F8D93D;'>\\1</span>", $item["ip"])) : $item["ip"]);?>
@@ -1009,7 +1008,7 @@ function utilities_view_logfile() {
 	</script>
 	<?php
 
-	html_start_box("<strong>Log File Filters</strong>", "100%", $colors["header"], "3", "center", "", true);
+	html_start_box("<strong>" . __("Log File Filters") . "</strong>", "100%", $colors["header"], "3", "center", "", true);
 	?>
 	<tr class='rowAlternate2'>
 		<td>
@@ -1017,7 +1016,7 @@ function utilities_view_logfile() {
 			<table cellpadding="1" cellspacing="0">
 				<tr>
 					<td style='white-space:nowrap;width:80px;'>
-						Tail Lines:&nbsp;
+						<?php print __("Tail Lines:");?>&nbsp;
 					</td>
 					<td width="1">
 						<select name="tail_lines" onChange="applyViewLogFilterChange(document.form_logfile)">
@@ -1029,27 +1028,27 @@ function utilities_view_logfile() {
 						</select>
 					</td>
 					<td style='white-space:nowrap;width:100px;'>
-						&nbsp;Message Type:&nbsp;
+						&nbsp;<?php print __("Message Type:");?>&nbsp;
 					</td>
 					<td width="1">
 						<select name="message_type" onChange="applyViewLogFilterChange(document.form_logfile)">
-							<option value="-1"<?php if ($_REQUEST['message_type'] == '-1') {?> selected<?php }?>>All</option>
-							<option value="1"<?php if ($_REQUEST['message_type'] == '1') {?> selected<?php }?>>Stats</option>
-							<option value="2"<?php if ($_REQUEST['message_type'] == '2') {?> selected<?php }?>>Warnings</option>
-							<option value="3"<?php if ($_REQUEST['message_type'] == '3') {?> selected<?php }?>>Errors</option>
-							<option value="4"<?php if ($_REQUEST['message_type'] == '4') {?> selected<?php }?>>Debug</option>
-							<option value="5"<?php if ($_REQUEST['message_type'] == '5') {?> selected<?php }?>>SQL Calls</option>
+							<option value="-1"<?php if ($_REQUEST['message_type'] == '-1') {?> selected<?php }?>><?php print __("All");?></option>
+							<option value="1"<?php if ($_REQUEST['message_type'] == '1') {?> selected<?php }?>><?php print __("Stats");?></option>
+							<option value="2"<?php if ($_REQUEST['message_type'] == '2') {?> selected<?php }?>><?php print __("Warnings");?></option>
+							<option value="3"<?php if ($_REQUEST['message_type'] == '3') {?> selected<?php }?>><?php print __("Errors");?></option>
+							<option value="4"<?php if ($_REQUEST['message_type'] == '4') {?> selected<?php }?>><?php print __("Debug");?></option>
+							<option value="5"<?php if ($_REQUEST['message_type'] == '5') {?> selected<?php }?>><?php print __("SQL Calls");?></option>
 						</select>
 					</td>
 					<td style='white-space:nowrap;width:180px;'>
-						&nbsp;<input type="submit" Value="Go" name="go" align="middle">
-						<input type="submit" Value="Clear" name="clear_x" align="middle">
-						<input type="submit" Value="Purge" name="purge_x" align="middle">
+						&nbsp;<input type="submit" Value="<?php print __("Go");?>" name="go" align="middle">
+						<input type="submit" Value="<?php print __("Clear");?>" name="clear_x" align="middle">
+						<input type="submit" Value="<?php print __("Purge");?>" name="purge_x" align="middle">
 					</td>
 				</tr>
 				<tr>
 					<td style='white-space:nowrap;width:80px;'>
-						Refresh:&nbsp;
+						<?php print __("Refresh:");?>&nbsp;
 					</td>
 					<td width="1">
 						<select name="refresh" onChange="applyViewLogFilterChange(document.form_logfile)">
@@ -1061,12 +1060,12 @@ function utilities_view_logfile() {
 						</select>
 					</td>
 					<td style='white-space:nowrap;width:100px;'>
-						&nbsp;Display Order:&nbsp;
+						&nbsp;<?php print __("Display Order:");?>&nbsp;
 					</td>
 					<td width="1">
 						<select name="reverse" onChange="applyViewLogFilterChange(document.form_logfile)">
-							<option value="1"<?php if ($_REQUEST['reverse'] == '1') {?> selected<?php }?>>Newest First</option>
-							<option value="2"<?php if ($_REQUEST['reverse'] == '2') {?> selected<?php }?>>Oldest First</option>
+							<option value="1"<?php if ($_REQUEST['reverse'] == '1') {?> selected<?php }?>><?php print __("Newest First");?></option>
+							<option value="2"<?php if ($_REQUEST['reverse'] == '2') {?> selected<?php }?>><?php print __("Oldest First");?></option>
 						</select>
 					</td>
 				</tr>
@@ -1074,7 +1073,7 @@ function utilities_view_logfile() {
 			<table cellpadding="1" cellspacing="0">
 				<tr>
 					<td style='white-space:nowrap;width:80px;'>
-						Search:&nbsp;
+						<?php print __("Search:");?>&nbsp;
 					</td>
 					<td width="1">
 						<input type="text" name="filter" size="75" value="<?php print $_REQUEST["filter"];?>">
@@ -1097,9 +1096,9 @@ function utilities_view_logfile() {
 	}
 
 	if ($_REQUEST["message_type"] > 0) {
-		$start_string = "<strong>Log File</strong> [Total Lines: " . sizeof($logcontents) . " - Non-Matching Items Hidden]";
+		$start_string = "<strong>" . __("Log File") . "</strong> [" . __("Total Lines:") . " " . sizeof($logcontents) . " - " . __("Non-Matching Items Hidden") . "]";
 	}else{
-		$start_string = "<strong>Log File</strong> [Total Lines: " . sizeof($logcontents) . " - All Items Shown]";
+		$start_string = "<strong>" . __("Log File") . "</strong> [" . __("Total Lines:") . " " . sizeof($logcontents) . " - " . __("All Items Shown") . "]";
 	}
 
 	html_start_box($start_string, "100%", $colors["header"], "0", "center", "");
@@ -1170,7 +1169,7 @@ function utilities_view_logfile() {
 			?>
 			<tr bgcolor='#EACC00'>
 				<td>
-					<?php print ">>>>  LINE LIMIT OF 1000 LINES REACHED!!  <<<<";?>
+					<?php print ">>>>  " . __("LINE LIMIT OF 1000 LINES REACHED!!") . "  <<<<";?>
 				</td>
 			</tr>
 			<?php
@@ -1200,19 +1199,19 @@ function utilities_clear_logfile() {
 		$logfile = "./log/cacti.log";
 	}
 
-	html_start_box("<strong>Clear Cacti Log File</strong>", "100%", $colors["header"], "1", "center", "");
+	html_start_box("<strong>" . __("Clear Cacti Log File") . "</strong>", "100%", $colors["header"], "1", "center", "");
 	if (file_exists($logfile)) {
 		if (is_writable($logfile)) {
 			$timestamp = date("m/d/Y h:i:s A");
 			$log_fh = fopen($logfile, "w");
 			fwrite($log_fh, $timestamp . " - WEBUI: Cacti Log Cleared from Web Management Interface\n");
 			fclose($log_fh);
-			print "<tr><td>Cacti Log File Cleared</td></tr>";
+			print "<tr><td>" . __("Cacti Log File Cleared") . "</td></tr>";
 		}else{
-			print "<tr><td><font color='red'><b>Error: Unable to clear log, no write permissions.<b></font></td></tr>";
+			print "<tr><td><font color='red'><b>" . __("Error: Unable to clear log, no write permissions.") . "<b></font></td></tr>";
 		}
 	}else{
-		print "<tr><td><font color='red'><b>Error: Unable to clear log, file does not exist.</b></font></td></tr>";
+		print "<tr><td><font color='red'><b>" . __("Error: Unable to clear log, file does not exist.") . "</b></font></td></tr>";
 	}
 	html_end_box();
 }
@@ -1273,7 +1272,7 @@ function utilities_view_snmp_cache() {
 	</script>
 	<?php
 
-	html_start_box("<strong>SNMP Cache Items</strong>", "100%", $colors["header"], "3", "center", "", true);
+	html_start_box("<strong>" . __("SNMP Cache Items") . "</strong>", "100%", $colors["header"], "3", "center", "", true);
 	?>
 	<tr class='rowAlternate2'>
 		<td>
@@ -1281,12 +1280,12 @@ function utilities_view_snmp_cache() {
 			<table cellpadding="0" cellspacing="0">
 				<tr>
 					<td style='white-space:nowrap;width:50px;'>
-						Host:&nbsp;
+						<?php print __("Host:");?>&nbsp;
 					</td>
 					<td width="1">
 						<select name="host_id" onChange="applyViewSNMPFilterChange(document.form_snmpcache)">
-							<option value="-1"<?php if ($_REQUEST["host_id"] == "-1") {?> selected<?php }?>>Any</option>
-							<option value="0"<?php if ($_REQUEST["host_id"] == "0") {?> selected<?php }?>>None</option>
+							<option value="-1"<?php if ($_REQUEST["host_id"] == "-1") {?> selected<?php }?>><?php print __("Any");?></option>
+							<option value="0"<?php if ($_REQUEST["host_id"] == "0") {?> selected<?php }?>><?php print __("None");?></option>
 							<?php
 							if ($_REQUEST["snmp_query_id"] == -1) {
 								$hosts = db_fetch_assoc("SELECT DISTINCT
@@ -1317,11 +1316,11 @@ function utilities_view_snmp_cache() {
 						</select>
 					</td>
 					<td style='white-space:nowrap;width:90px;'>
-						&nbsp;Query Name:&nbsp;
+						&nbsp;<?php print __("Query Name:");?>&nbsp;
 					</td>
 					<td width="1">
 						<select name="snmp_query_id" onChange="applyViewSNMPFilterChange(document.form_snmpcache)">
-							<option value="-1"<?php if ($_REQUEST["host_id"] == "-1") {?> selected<?php }?>>Any</option>
+							<option value="-1"<?php if ($_REQUEST["host_id"] == "-1") {?> selected<?php }?>><?php print __("Any");?></option>
 							<?php
 							if ($_REQUEST["host_id"] == -1) {
 								$snmp_queries = db_fetch_assoc("SELECT DISTINCT
@@ -1350,14 +1349,14 @@ function utilities_view_snmp_cache() {
 						</select>
 					</td>
 					<td style='white-space:nowrap;width:50px;'>
-						&nbsp;Search:&nbsp;
+						&nbsp;<?php print __("Search:");?>&nbsp;
 					</td>
 					<td width="1">
 						<input type="text" name="filter" size="20" value="<?php print $_REQUEST["filter"];?>">
 					</td>
 					<td style='white-space:nowrap;width:120px;'>
-						&nbsp;<input type="submit" Value="Go" name="go" align="middle">
-						<input type="submit" Value="Clear" name="clear_x" align="middle">
+						&nbsp;<input type="submit" Value="<?php print __("Go");?>" name="go" align="middle">
+						<input type="submit" Value="<?php print __("Clear");?>" name="clear_x" align="middle">
 					</td>
 				</tr>
 			</table>
@@ -1425,31 +1424,31 @@ function utilities_view_snmp_cache() {
 	print $nav;
 	html_end_box();
 
-	html_header(array("Details"));
+	html_header(array(__("Details")));
 
 	if (sizeof($snmp_cache) > 0) {
 	foreach ($snmp_cache as $item) {
 		form_alternate_row_color();
 		?>
 		<td>
-			Host: <?php print (strlen(get_request_var_request("filter")) ? (eregi_replace("(" . preg_quote(get_request_var_request("filter")) . ")", "<span style='background-color: #F8D93D;'>\\1</span>", $item["description"])) : $item["description"]);?>
-			, SNMP Query: <?php print (strlen(get_request_var_request("filter")) ? (eregi_replace("(" . preg_quote(get_request_var_request("filter")) . ")", "<span style='background-color: #F8D93D;'>\\1</span>", $item["name"])) : $item["name"]);?>
+			<?php print __("Host:");?> <?php print (strlen(get_request_var_request("filter")) ? (eregi_replace("(" . preg_quote(get_request_var_request("filter")) . ")", "<span style='background-color: #F8D93D;'>\\1</span>", $item["description"])) : $item["description"]);?>
+			, <?php print __("SNMP Query:");?> <?php print (strlen(get_request_var_request("filter")) ? (eregi_replace("(" . preg_quote(get_request_var_request("filter")) . ")", "<span style='background-color: #F8D93D;'>\\1</span>", $item["name"])) : $item["name"]);?>
 		</td>
 		<?php
 		form_end_row();
 		form_alternate_row_color();
 		?>
 		<td>
-			Index: <?php print $item["snmp_index"];?>
-			, Field Name: <?php print (strlen(get_request_var_request("filter")) ? (eregi_replace("(" . preg_quote(get_request_var_request("filter")) . ")", "<span style='background-color: #F8D93D;'>\\1</span>", $item["field_name"])) : $item["field_name"]);?>
-			, Field Value: <?php print (strlen(get_request_var_request("filter")) ? (eregi_replace("(" . preg_quote(get_request_var_request("filter")) . ")", "<span style='background-color: #F8D93D;'>\\1</span>", $item["field_value"])) : $item["field_value"]);?>
+			<?php print __("Index:");?> <?php print $item["snmp_index"];?>
+			, <?php print __("Field Name:");?> <?php print (strlen(get_request_var_request("filter")) ? (eregi_replace("(" . preg_quote(get_request_var_request("filter")) . ")", "<span style='background-color: #F8D93D;'>\\1</span>", $item["field_name"])) : $item["field_name"]);?>
+			, <?php print __("Field Value:");?> <?php print (strlen(get_request_var_request("filter")) ? (eregi_replace("(" . preg_quote(get_request_var_request("filter")) . ")", "<span style='background-color: #F8D93D;'>\\1</span>", $item["field_value"])) : $item["field_value"]);?>
 		</td>
 		<?php
 		form_end_row();
 		form_alternate_row_color();
 		?>
 		<td>
-			OID: <?php print (strlen(get_request_var_request("filter")) ? (eregi_replace("(" . preg_quote(get_request_var_request("filter")) . ")", "<span style='background-color: #F8D93D;'>\\1</span>", $item["oid"])) : $item["oid"]);?>
+			<?php print __("OID:");?> <?php print (strlen(get_request_var_request("filter")) ? (eregi_replace("(" . preg_quote(get_request_var_request("filter")) . ")", "<span style='background-color: #F8D93D;'>\\1</span>", $item["oid"])) : $item["oid"]);?>
 		</td>
 		<?php
 		form_end_row();
@@ -1534,7 +1533,7 @@ function utilities_view_poller_cache() {
 	</script>
 	<?php
 
-	html_start_box("<strong>Poller Cache Items</strong>", "100%", $colors["header"], "3", "center", "", true);
+	html_start_box("<strong>" . __("Poller Cache Items") . "</strong>", "100%", $colors["header"], "3", "center", "", true);
 	?>
 	<tr class='rowAlternate2'>
 		<td>
@@ -1542,12 +1541,12 @@ function utilities_view_poller_cache() {
 			<table cellpadding="0" cellspacing="0">
 				<tr>
 					<td style='white-space:nowrap;width:50px;'>
-						Host:&nbsp;
+						<?php print __("Host:");?>&nbsp;
 					</td>
 					<td width="1">
 						<select name="host_id" onChange="applyPItemFilterChange(document.form_pollercache)">
-							<option value="-1"<?php if ($_REQUEST["host_id"] == "-1") {?> selected<?php }?>>Any</option>
-							<option value="0"<?php if ($_REQUEST["host_id"] == "0") {?> selected<?php }?>>None</option>
+							<option value="-1"<?php if ($_REQUEST["host_id"] == "-1") {?> selected<?php }?>><?php print __("Any");?></option>
+							<option value="0"<?php if ($_REQUEST["host_id"] == "0") {?> selected<?php }?>><?php print __("None");?></option>
 							<?php
 							$hosts = db_fetch_assoc("select id,description,hostname from host order by description");
 
@@ -1560,25 +1559,25 @@ function utilities_view_poller_cache() {
 						</select>
 					</td>
 					<td style='white-space:nowrap;width:50px;'>
-						&nbsp;Action:&nbsp;
+						&nbsp;<?php print __("Action:");?>&nbsp;
 					</td>
 					<td width="1">
 						<select name="poller_action" onChange="applyPItemFilterChange(document.form_pollercache)">
-							<option value="-1"<?php if ($_REQUEST['poller_action'] == '-1') {?> selected<?php }?>>Any</option>
-							<option value="0"<?php if ($_REQUEST['poller_action'] == '0') {?> selected<?php }?>>SNMP</option>
-							<option value="1"<?php if ($_REQUEST['poller_action'] == '1') {?> selected<?php }?>>Script</option>
-							<option value="2"<?php if ($_REQUEST['poller_action'] == '2') {?> selected<?php }?>>Script Server</option>
+							<option value="-1"<?php if ($_REQUEST['poller_action'] == '-1') {?> selected<?php }?>><?php print __("Any");?></option>
+							<option value="0"<?php if ($_REQUEST['poller_action'] == '0') {?> selected<?php }?>><?php print __("SNMP");?></option>
+							<option value="1"<?php if ($_REQUEST['poller_action'] == '1') {?> selected<?php }?>><?php print __("Script");?></option>
+							<option value="2"<?php if ($_REQUEST['poller_action'] == '2') {?> selected<?php }?>><?php print __("Script Server");?></option>
 						</select>
 					</td>
 					<td style='white-space:nowrap;width:50px;'>
-						&nbsp;Search:&nbsp;
+						&nbsp;<?php print __("Search:");?>&nbsp;
 					</td>
 					<td width="1">
 						<input type="text" name="filter" size="40" value="<?php print $_REQUEST["filter"];?>">
 					</td>
 					<td style='white-space:nowrap;width:120px;'>
-						&nbsp;<input type="submit" Value="Go" name="go" align="middle">
-						<input type="submit" Value="Clear" name="clear_x" align="middle">
+						&nbsp;<input type="submit" Value="<?php print __("Go");?>" name="go" align="middle">
+						<input type="submit" Value="<?php print __("Clear");?>" name="clear_x" align="middle">
 					</td>
 				</tr>
 			</table>
@@ -1650,8 +1649,8 @@ function utilities_view_poller_cache() {
 	html_end_box();
 
 	$display_text = array(
-		"data_template_data.name_cache" => array("Data Source Name", "ASC"),
-		"" => array("Details", "ASC"));
+		"data_template_data.name_cache" => array(__("Data Source Name"), "ASC"),
+		"" => array(__("Details"), "ASC"));
 
 	html_header_sort($display_text, $_REQUEST["sort_column"], $_REQUEST["sort_direction"]);
 
@@ -1668,18 +1667,19 @@ function utilities_view_poller_cache() {
 			if ($item["action"] == 0) {
 				if ($item["snmp_version"] != 3) {
 					$details =
-						"SNMP Version: " . $item["snmp_version"] . ", " .
-						"Community: " . $item["snmp_community"] . ", " .
-						"OID: " . (strlen(get_request_var_request("filter")) ? (eregi_replace("(" . preg_quote(get_request_var_request("filter")) . ")", "<span style='background-color: #F8D93D;'>\\1</span>", $item["arg1"])) : $item["arg1"]);
+						__("SNMP Version:") . " " . $item["snmp_version"] . ", " .
+						__("Community:") . " " . $item["snmp_community"] . ", " .
+						__("OID:") . " " . (strlen(get_request_var_request("filter")) ? (eregi_replace("(" . preg_quote(get_request_var_request("filter")) . ")", "<span style='background-color: #F8D93D;'>\\1</span>", $item["arg1"])) : $item["arg1"]);
 				}else{
 					$details =
-						"SNMP Version: " . $item["snmp_version"] . ", " .
-						"User: " . $item["snmp_username"] . ", OID: " . $item["arg1"];
+						__("SNMP Version:") . " " . $item["snmp_version"] . ", " .
+						__("User:") . " " . $item["snmp_username"] . ", " .
+						__("OID:") . " " . $item["arg1"];
 				}
 			}elseif ($item["action"] == 1) {
-					$details = "Script: " . (strlen(get_request_var_request("filter")) ? (eregi_replace("(" . preg_quote(get_request_var_request("filter")) . ")", "<span style='background-color: #F8D93D;'>\\1</span>", $item["arg1"])) : $item["arg1"]);
+					$details = __("Script:") . " " . (strlen(get_request_var_request("filter")) ? (eregi_replace("(" . preg_quote(get_request_var_request("filter")) . ")", "<span style='background-color: #F8D93D;'>\\1</span>", $item["arg1"])) : $item["arg1"]);
 			}else{
-					$details = "Script Server: " . (strlen(get_request_var_request("filter")) ? (eregi_replace("(" . preg_quote(get_request_var_request("filter")) . ")", "<span style='background-color: #F8D93D;'>\\1</span>", $item["arg1"])) : $item["arg1"]);
+					$details = __("Script Server:") . " " . (strlen(get_request_var_request("filter")) ? (eregi_replace("(" . preg_quote(get_request_var_request("filter")) . ")", "<span style='background-color: #F8D93D;'>\\1</span>", $item["arg1"])) : $item["arg1"]);
 			}
 
 			print $details;
@@ -1707,70 +1707,70 @@ function utilities_view_poller_cache() {
 function utilities() {
 	global $colors;
 
-	html_start_box("<strong>Cacti System Utilities</strong>", "100%", $colors["header"], 0, "center", "");
+	html_start_box("<strong>" . __("Cacti System Utilities") . "</strong>", "100%", $colors["header"], 0, "center", "");
 
 
 	print "<tr><td>";
-	html_header(array("Technical Support"), 2); ?>
+	html_header(array(__("Technical Support")), 2); ?>
 
 	<tr class="rowAlternate1">
 		<td class="textAreaNotes">
-			<a href='utilities.php?action=view_tech'>Technical Support</a>
+			<a href='utilities.php?action=view_tech'><?php print __("Technical Support");?></a>
 		</td>
 		<td class="textAreaNotes">
-			Cacti technical support page.  Used by developers and technical support persons to assist with issues in Cacti.  Includes checks for common configuration issues.
+			<?php print __("Cacti technical support page.  Used by developers and technical support persons to assist with issues in Cacti.  Includes checks for common configuration issues.");?>
 		</td>
 	</tr>
 
 	<?php
 	print "</table></td></tr>";		/* end of html_header */
 	print "<tr><td>";
-	html_header(array("Log Administration"), 2);?>
+	html_header(array(__("Log Administration")), 2);?>
 
 	<tr class="rowAlternate1">
 		<td class="textAreaNotes">
-			<a href='utilities.php?action=view_logfile'>View Cacti Log File</a>
+			<a href='utilities.php?action=view_logfile'><?php print __("View Cacti Log File");?></a>
 		</td>
 		<td class="textAreaNotes">
-			The Cacti Log File stores statistic, error and other message depending on system settings.  This information can be used to identify problems with the poller and application.
+			<?php print __("The Cacti Log File stores statistic, error and other message depending on system settings.  This information can be used to identify problems with the poller and application.");?>
 		</td>
 	</tr>
 	<tr class="rowAlternate2">
 		<td class="textAreaNotes">
-			<a href='utilities.php?action=view_user_log'>View User Log</a>
+			<a href='utilities.php?action=view_user_log'><?php print __("View User Log");?></a>
 		</td>
 		<td class="textAreaNotes">
-			Allows Administrators to browse the user log.  Administrators can filter and export the log as well.
+			<?php print __("Allows Administrators to browse the user log.  Administrators can filter and export the log as well.");?>
 		</td>
 	</tr>
 
 	<?php
 	print "</table></td></tr>";		/* end of html_header */
 	print "<tr><td>";
-	html_header(array("Poller Cache Administration"), 2); ?>
+	html_header(array(__("Poller Cache Administration")), 2); ?>
 
 	<tr class="rowAlternate1">
 		<td class="textAreaNotes">
-			<a href='utilities.php?action=view_poller_cache'>View Poller Cache</a>
+			<a href='utilities.php?action=view_poller_cache'><?php print __("View Poller Cache");?></a>
 		</td>
 		<td class="textAreaNotes">
-			This is the data that is being passed to the poller each time it runs. This data is then in turn executed/interpreted and the results are fed into the rrd files for graphing or the database for display.
+			<?php print __("This is the data that is being passed to the poller each time it runs. This data is then in turn executed/interpreted and the results are fed into the rrd files for graphing or the database for display.");?>
 		</td>
 	</tr>
 	<tr class="rowAlternate2">
 		<td class="textAreaNotes">
-			<a href='utilities.php?action=view_snmp_cache'>View SNMP Cache</a>
+			<a href='utilities.php?action=view_snmp_cache'><?php print __("View SNMP Cache");?></a>
 		</td>
 		<td class="textAreaNotes">
-			The SNMP cache stores information gathered from SNMP queries. It is used by cacti to determine the OID to use when gathering information from an SNMP-enabled host.
+			<?php print __("The SNMP cache stores information gathered from SNMP queries. It is used by cacti to determine the OID to use when gathering information from an SNMP-enabled host.");?>
 		</td>
 	</tr>
 	<tr class="rowAlternate1">
 		<td class="textAreaNotes">
-			<a href='utilities.php?action=clear_poller_cache'>Rebuild Poller Cache</a>
+			<a href='utilities.php?action=clear_poller_cache'><?php print __("Rebuild Poller Cache");?></a>
 		</td>
 		<td class="textAreaNotes">
-			The poller cache will be cleared and re-generated if you select this option. Sometimes host/data source data can get out of sync with the cache in which case it makes sense to clear the cache and start over.
+			<?php print __("The poller cache will be cleared and re-generated if you select this option. Sometimes host/data source data can get out of sync with the cache in which case it makes sense to clear the cache and start over.");?>
 		</td>
 	</tr>
 
