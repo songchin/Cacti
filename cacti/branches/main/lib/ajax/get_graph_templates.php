@@ -32,21 +32,21 @@ if (isset($_REQUEST["q"])) {
 	return;
 }
 
-$template_perms = db_fetch_cell("SELECT policy_graph_templates FROM user_auth WHERE id=" . get_request_var("id",0));
+$template_perms = db_fetch_cell("SELECT policy_graph_templates FROM user_auth WHERE id=" . $_SESSION["sess_user_id"]);
 
 if ($template_perms == 1) {
 	$sql = "SELECT
 		id,
 		name
 		FROM graph_templates
-		WHERE id NOT IN (SELECT item_id FROM user_auth_perms WHERE user_auth_perms.type=4 AND user_auth_perms.user_id=". get_request_var("id",0) . ")
+		WHERE id NOT IN (SELECT item_id FROM user_auth_perms WHERE user_auth_perms.type=4 AND user_auth_perms.user_id=". $_SESSION["sess_user_id"] . ")
 		ORDER BY name";
 }else{
 	$sql = "SELECT
 		id,
 		name
 		FROM graph_templates
-		WHERE id IN (SELECT item_id FROM user_auth_perms WHERE user_auth_perms.type=4 AND user_auth_perms.user_id=". get_request_var("id",0) . ")
+		WHERE id IN (SELECT item_id FROM user_auth_perms WHERE user_auth_perms.type=4 AND user_auth_perms.user_id=". $_SESSION["sess_user_id"] . ")
 		ORDER BY name";
 }
 
