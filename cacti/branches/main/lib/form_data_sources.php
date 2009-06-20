@@ -453,7 +453,7 @@ function data_source_form_actions() {
 		}elseif ($_POST["drp_action"] == DS_ACTION_DISABLE) { /* data source disable */
 			print "	<tr>
 					<td class='textArea'>
-						<p>" . __"When you click yes, the following data sources will be disabled.") . "</p>
+						<p>" . __("When you click yes, the following data sources will be disabled.") . "</p>
 						<p>$ds_list</p>
 					</td>
 				</tr>\n
@@ -673,7 +673,7 @@ function data_source_edit() {
 				<td class="textInfo" align="right" valign="top">
 					<a href="#" class="toggle_fastpath_links"><?php print __("Show");?>&nbsp;/&nbsp;<?php print __("Hide Fastpaths");?><br></a>
 					<a class="fastpath_links" href='data_sources.php?action=data_source_toggle_status&amp;id=<?php print (isset($_GET["id"]) ? $_GET["id"] : 0);?>&amp;newstate=<?php print (($data["active"] == "on") ? "0" : "1");?>'><strong><?php print (($data["active"] == "on") ? __("Disable") : __("Enable"));?></strong> <?php print __("Data Source");?>.<br></a>
-					<a class="fastpath_links" href='data_sources.php?action=data_source_edit&amp;id=<?php print (isset($_GET["id"]) ? $_GET["id"] : 0);?>&amp;debug=<?php print (isset($_SESSION["ds_debug_mode"]) ? "0" : "1");?>'><?php print __("Turn");?> <strong><?php print (isset($_SESSION["ds_debug_mode"]) ? __("Off" : __("On"));?></strong> <?php print __("Data Source Debug Mode");?>.<br></a>
+					<a class="fastpath_links" href='data_sources.php?action=data_source_edit&amp;id=<?php print (isset($_GET["id"]) ? $_GET["id"] : 0);?>&amp;debug=<?php print (isset($_SESSION["ds_debug_mode"]) ? "0" : "1");?>'><?php print __("Turn");?> <strong><?php print (isset($_SESSION["ds_debug_mode"]) ? __("Off") : __("On"));?></strong> <?php print __("Data Source Debug Mode");?>.<br></a>
 					<a class="fastpath_links" href='data_sources.php?action=data_source_edit&amp;id=<?php print (isset($_GET["id"]) ? $_GET["id"] : 0);?>&amp;info=<?php print (isset($_SESSION["ds_info_mode"]) ? "0" : "1");?>'><?php print __("Turn");?> <strong><?php print (isset($_SESSION["ds_info_mode"]) ? __("Off") : __("On"));?></strong> <?php print __("RRD File Information Mode");?>.<br></a>
 					<?php
 						if (!empty($data_template["id"])) {
