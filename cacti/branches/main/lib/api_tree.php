@@ -28,7 +28,7 @@ function api_tree_add_tree_names_to_actions_array() {
 
 	if (sizeof($trees) > 0) {
 		foreach ($trees as $tree) {
-			$actions{"tr_" . $tree["id"]} = "Place on a Tree (" . $tree["name"] . ")";
+			$actions{"tr_" . $tree["id"]} = __("Place on a Tree") . " (" . $tree["name"] . ")";
 		}
 	}
 

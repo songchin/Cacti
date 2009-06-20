@@ -33,7 +33,7 @@ function graph_view_filter_table() {
 			<table width="100%" cellpadding="0" cellspacing="0">
 				<tr class="rowGraphFilter noprint">
 					<td style='white-space:nowrap;width:1px;'>
-						&nbsp;<strong>Host:</strong>&nbsp;
+						&nbsp;<strong><?php print __("Host:");?></strong>&nbsp;
 					</td>
 					<td width="1">
 						<?php
@@ -47,11 +47,11 @@ function graph_view_filter_table() {
 						<input type="hidden" id="host_id">
 					</td>
 					<td style='white-space:nowrap;width:1px;'>
-						&nbsp;<strong>Template:</strong>&nbsp;
+						&nbsp;<strong><?php print __("Template:");?></strong>&nbsp;
 					</td>
 					<td width="1">
 						<select name="graph_template_id" onChange="applyGraphPreviewFilterChange(document.form_graph_view)">
-							<option value="0"<?php if ($_REQUEST["graph_template_id"] == "0") {?> selected<?php }?>>Any</option><?php
+							<option value="0"<?php if ($_REQUEST["graph_template_id"] == "0") {?> selected<?php }?>><?php print __("Any");?></option><?php
 							if (read_config_option("auth_method") != 0) {
 								$graph_templates = db_fetch_assoc("SELECT DISTINCT graph_templates.* " .
 										"FROM (graph_templates_graph,graph_local) " .
@@ -82,14 +82,14 @@ function graph_view_filter_table() {
 						</select>
 					</td>
 					<td style='white-space:nowrap;width:50px;'>
-						&nbsp;<strong>Search:</strong>&nbsp;
+						&nbsp;<strong><?php print __("Search:");?></strong>&nbsp;
 					</td>
 					<td width="1">
 						<input type="text" name="filter" size="40" value="<?php print $_REQUEST["filter"];?>">
 					</td>
 					<td>
-						&nbsp;<input type="submit" Value="Go" name="go" align="middle">
-						<input type="submit" Value="Clear" name="clear_x" align="middle">
+						&nbsp;<input type="submit" Value="<?php print __("Go");?>" name="go" align="middle">
+						<input type="submit" Value="<?php print __("Clear");?>" name="clear_x" align="middle">
 					</td>
 				</tr>
 			</table>
@@ -165,12 +165,12 @@ function graph_view_timespan_selector() {
 			<table cellpadding="0" cellspacing="0">
 				<tr class="rowGraphFilter">
 					<td style='white-space:nowrap;width:55px;'>
-						&nbsp;<strong>Presets:</strong>&nbsp;
+						&nbsp;<strong><?php print __("Presets:");?></strong>&nbsp;
 					</td>
 					<td style='white-space:nowrap;width:130px;'>
 						<select name='predefined_timespan' onChange="applyTimespanFilterChange(document.form_timespan_selector)"><?php
 							if ($_SESSION["custom"]) {
-								$graph_timespans[GT_CUSTOM] = "Custom";
+								$graph_timespans[GT_CUSTOM] = __("Custom");
 								$start_val = 0;
 								$end_val = sizeof($graph_timespans);
 							} else {
@@ -191,22 +191,22 @@ function graph_view_timespan_selector() {
 						</select>
 					</td>
 					<td style='white-space:nowrap;width:30px;'>
-						&nbsp;<strong>From:</strong>&nbsp;
+						&nbsp;<strong><?php print __("From:");?></strong>&nbsp;
 					</td>
 					<td style='white-space:nowrap;width:140px;'>
-						<input type='text' name='date1' id='date1' title='Graph Begin Timestamp' size='14' value='<?php print (isset($_SESSION["sess_current_date1"]) ? $_SESSION["sess_current_date1"] : "");?>'>
-						&nbsp;<input type='image' style='border-width:0px;vertical-align:middle;align:middle;padding-bottom:5px;' src='images/calendar.gif' alt='Start' title='Start Date Selector' onclick='return showCalendar("date1");'>&nbsp;
+						<input type='text' name='date1' id='date1' title='<?php print __("Graph Begin Timestamp");?>' size='14' value='<?php print (isset($_SESSION["sess_current_date1"]) ? $_SESSION["sess_current_date1"] : "");?>'>
+						&nbsp;<input type='image' style='border-width:0px;vertical-align:middle;align:middle;padding-bottom:5px;' src='images/calendar.gif' alt='<?php print __("Start");/>' title='<?php print __("Start Date Selector");?>' onclick='return showCalendar("date1");'>&nbsp;
 					</td>
 					<td style='white-space:nowrap;width:20px;'>
-						&nbsp;<strong>To:</strong>&nbsp;
+						&nbsp;<strong><?php print __("To:");?></strong>&nbsp;
 					</td>
 					<td style='white-space:nowrap;width:140px;'>
-						<input type='text' name='date2' id='date2' title='Graph End Timestamp' size='14' value='<?php print (isset($_SESSION["sess_current_date2"]) ? $_SESSION["sess_current_date2"] : "");?>'>
-						&nbsp;<input type='image' style='border-width:0px;vertical-align:middle;align:middle;padding-bottom:5px;' src='images/calendar.gif' alt='End' title='End Date Selector' onclick='return showCalendar("date2");'>
+						<input type='text' name='date2' id='date2' title='<?php print __("Graph End Timestamp");?>' size='14' value='<?php print (isset($_SESSION["sess_current_date2"]) ? $_SESSION["sess_current_date2"] : "");?>'>
+						&nbsp;<input type='image' style='border-width:0px;vertical-align:middle;align:middle;padding-bottom:5px;' src='images/calendar.gif' alt='<?php print __("End");?>' title='<?php print __("End Date Selector");?>' onclick='return showCalendar("date2");'>
 					</td>
 					<td style='white-space:nowrap;width:120px;'>
-						&nbsp;&nbsp;<input style='border-width:0px;vertical-align:middle;align:middle;padding-bottom:5px;' type='image' name='move_left' src='images/move_left.gif' alt='Left' title='Shift Left'>
-						<select name='predefined_timeshift' title='Define Shifting Interval' onChange="applyTimespanFilterChange(document.form_timespan_selector)"><?php
+						&nbsp;&nbsp;<input style='border-width:0px;vertical-align:middle;align:middle;padding-bottom:5px;' type='image' name='move_left' src='images/move_left.gif' alt='<?php print __("Left");?>' title='<?php print __("Shift Left");?>'>
+						<select name='predefined_timeshift' title='<?php print __("Define Shifting Interval");?>' onChange="applyTimespanFilterChange(document.form_timespan_selector)"><?php
 							$start_val = 1;
 							$end_val = sizeof($graph_timeshifts)+1;
 							if (sizeof($graph_timeshifts) > 0) {
@@ -216,11 +216,11 @@ function graph_view_timespan_selector() {
 							}
 							?>
 						</select>
-						<input style='border-width:0px;vertical-align:middle;align:middle;padding-bottom:5px;' type='image' name='move_right' src='images/move_right.gif' alt='Right' title='Shift Right'>
+						<input style='border-width:0px;vertical-align:middle;align:middle;padding-bottom:5px;' type='image' name='move_right' src='images/move_right.gif' alt='<?php print __("Right");?>' title='<?php print __("Shift Right");?>'>
 					</td>
 					<td style='white-space:nowrap;width:130px;'>
-						&nbsp;<input type='submit' value='Refresh' name='button_refresh'>
-						<input type='submit' value='Clear' name='button_clear_x'>
+						&nbsp;<input type='submit' value='<?php print __("Refresh");?>' name='button_refresh'>
+						<input type='submit' value='<?php print __("Clear");?>' name='button_clear_x'>
 					</td>
 				</tr>
 			</table>
@@ -243,13 +243,13 @@ function graph_view_search_filter() {
 				<table cellspacing="0" cellpadding="0">
 					<tr>
 						<td width="55" style="white-space:nowrap;">
-							<strong>&nbsp;Search:</strong>&nbsp;
+							<strong>&nbsp;<?php print __("Search:");?></strong>&nbsp;
 						</td>
 						<td width="130" style="white-space: nowrap;">
 							<input size='30' style='width:100;' name='filter' value='<?php print clean_html_output(get_request_var_request("filter"));?>'>
 						</td>
 						<td style='white-space:nowrap;width:80px;'>
-							&nbsp;<strong>Graphs/Page:</strong>&nbsp;
+							&nbsp;<strong><?php print __("Graphs/Page:");?></strong>&nbsp;
 						</td>
 						<td width="1">
 							<select name="graphs" onChange="submit()">
@@ -263,14 +263,14 @@ function graph_view_search_filter() {
 							</select>
 						</td>
 						<td width="40">
-							<label for="thumbnails"><strong>&nbsp;Thumbnails:&nbsp;</strong></label>
+							<label for="thumbnails"><strong>&nbsp;<?php print __("Thumbnails:");?>&nbsp;</strong></label>
 						</td>
 						<td>
 							<input type="checkbox" name="thumbnails" id="thumbnails" onChange="if (this.checked == true) this.value='dogs'; else this.value='cats';submit()" <?php print (($_REQUEST['thumbnails'] == "dogs") ? "checked":"");?>>
 						</td>
 						<td style='white-space:nowrap;' nowrap>
-							&nbsp;<input type='submit' value='Refresh' name='refresh'>
-							<input type='submit' value='Clear' name='clear_x'>
+							&nbsp;<input type='submit' value='<?php print __("Refresh");?>' name='refresh'>
+							<input type='submit' value='<?php print __("Clear");?>' name='clear_x'>
 						</td>
 					</tr>
 				</table>

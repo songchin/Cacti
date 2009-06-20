@@ -143,7 +143,7 @@ function &data_template_to_xml($data_template_id) {
 	$data_input_data = db_fetch_assoc("select * from data_input_data where data_template_data_id=" . $data_template_data["id"]);
 
 	if ((empty($data_template["id"])) || (empty($data_template_data["id"]))) {
-		return "Invalid data template.";
+		return __("Invalid data template.");
 	}
 
 	$xml_text .= "<hash_" . $hash["data_template"] . ">\n\t<name>" . xml_character_encode($data_template["name"]) . "</name>\n\t<ds>\n";
@@ -316,7 +316,7 @@ function &cdef_to_xml($cdef_id) {
 	$cdef_items = db_fetch_assoc("select * from cdef_items where cdef_id=$cdef_id order by sequence");
 
 	if (empty($cdef["id"])) {
-		return "Invalid CDEF.";
+		return __("Invalid CDEF.");
 	}
 
 	$xml_text .= "<hash_" . $hash["cdef"] . ">\n";
@@ -368,7 +368,7 @@ function &gprint_preset_to_xml($gprint_preset_id) {
 	$graph_templates_gprint = db_fetch_row("select * from graph_templates_gprint where id=$gprint_preset_id");
 
 	if (empty($graph_templates_gprint["id"])) {
-		return "Invalid GPRINT preset.";
+		return __("Invalid GPRINT preset.");
 	}
 
 	$xml_text .= "<hash_$hash>\n";
@@ -396,7 +396,7 @@ function &round_robin_archive_to_xml($round_robin_archive_id) {
 	$rra_cf = db_fetch_assoc("select * from rra_cf where rra_id=$round_robin_archive_id");
 
 	if (empty($rra["id"])) {
-		return "Invalid round robin archive.";
+		return __("Invalid round robin archive.");
 	}
 
 	$xml_text .= "<hash_$hash>\n";
@@ -445,7 +445,7 @@ function &host_template_to_xml($host_template_id) {
 	$host_template_snmp_query = db_fetch_assoc("select * from host_template_snmp_query where host_template_id=$host_template_id");
 
 	if (empty($host_template["id"])) {
-		return "Invalid host template.";
+		return __("Invalid host template.");
 	}
 
 	$xml_text .= "<hash_$hash>\n";
@@ -509,7 +509,7 @@ function &data_query_to_xml($data_query_id) {
 	$snmp_query_graph = db_fetch_assoc("select * from snmp_query_graph where snmp_query_id=$data_query_id");
 
 	if (empty($snmp_query["id"])) {
-		return "Invalid data query.";
+		return __("Invalid Data Query.");
 	}
 
 	$xml_text .= "<hash_" . $hash["data_query"] . ">\n";

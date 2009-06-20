@@ -26,7 +26,7 @@
 function getHostTemplates() {
 	$tmpArray = db_fetch_assoc("select id, name from host_template order by id");
 
-	$host_templates[0] = "None";
+	$host_templates[0] = __("None");
 
 	if (sizeof($tmpArray)) {
 		foreach ($tmpArray as $template) {
@@ -334,7 +334,7 @@ function getGraphTemplatesByHostTemplate($host_template_id) {
 
 function displayQueryTypes($types, $quietMode = FALSE) {
 	if (!$quietMode) {
-		echo "Known SNMP Query Types: (id, name)\n";
+		echo __("Known SNMP Query Types: (id, name)") . "\n";
 	}
 
 	while (list($id, $name) = each ($types)) {
@@ -348,7 +348,7 @@ function displayQueryTypes($types, $quietMode = FALSE) {
 
 function displayHostTemplates($host_templates, $quietMode = FALSE) {
 	if (!$quietMode) {
-		echo "Valid Host Templates: (id, name)\n";
+		echo __("Valid Host Templates: (id, name)") . "\n";
 	}
 
 	if (sizeof($host_templates)) {
@@ -364,7 +364,7 @@ function displayHostTemplates($host_templates, $quietMode = FALSE) {
 
 function displayCommunities($quietMode = FALSE) {
 	if (!$quietMode) {
-		echo "Known communities are: (community)\n";
+		echo __("Known communities are: (community)") . "\n";
 	}
 
 	$communities = db_fetch_assoc("SELECT DISTINCT
@@ -385,7 +385,7 @@ function displayCommunities($quietMode = FALSE) {
 
 function displaySNMPFields($fields, $hostId, $quietMode = FALSE) {
 	if (!$quietMode) {
-		echo "Known SNMP Fields for host-id $hostId: (name)\n";
+		echo __("Known SNMP Fields for host-id $hostId: (name)") . "\n";
 	}
 
 	while (list($field, $values) = each ($fields)) {
@@ -399,7 +399,7 @@ function displaySNMPFields($fields, $hostId, $quietMode = FALSE) {
 
 function displaySNMPValues($values, $hostId, $field, $quietMode = FALSE) {
 	if (!$quietMode) {
-		echo "Known values for $field for host $hostId: (name)\n";
+		echo __("Known values for $field for host $hostId: (name)") . "\n";
 	}
 
 	while (list($value, $foo) = each($values)) {
@@ -452,11 +452,11 @@ function displaySNMPValuesExtended($hostId, $fields, $snmpQueryId, $quietMode = 
 
 		if (!isset ($total_rows)) {
 			if (!sizeof($req_fields)) {
-				echo "ERROR: Invalid --snmp-field-spec (found: " . $fields . ") given\n";
-				echo "Try --list-snmp-fields\n";
+				echo printf(__("ERROR: Invalid --snmp-field-spec (found: %s) given"), $fields) . "\n";
+				echo __("Try --list-snmp-fields") . "\n";
 				return (1);
 			} else {
-				echo "ERROR: No cached SNMP values found for this SNMP Query\n";
+				echo __("ERROR: No cached SNMP values found for this SNMP Query") . "\n";
 				return (1);
 			}
 		}
@@ -486,7 +486,7 @@ function displaySNMPValuesExtended($hostId, $fields, $snmpQueryId, $quietMode = 
 				$sql_query .= ", MAX(CASE WHEN field_name='$field_name' THEN field_value ELSE NULL END) AS '$field_name'";
 			}
 		} else {
-			echo "ERROR: No SNMP field names found for this SNMP Query\n";
+			echo __("ERROR: No SNMP field names found for this SNMP Query") . "\n";
 			return (1);
 		}
 
@@ -500,7 +500,7 @@ function displaySNMPValuesExtended($hostId, $fields, $snmpQueryId, $quietMode = 
 		$snmp_query_indexes = db_fetch_assoc($sql_query);
 
 		if (!sizeof($snmp_query_indexes)) {
-			print "This data query returned 0 rows, perhaps there was a problem executing this data query.\n";
+			print __("This data query returned 0 rows, perhaps there was a problem executing this data query.") . "\n";
 			return (1);
 		}
 
@@ -519,9 +519,9 @@ function displaySNMPValuesExtended($hostId, $fields, $snmpQueryId, $quietMode = 
 
 		if (!$quietMode) {
 			if ($fields === "") {
-				echo "Known values for host-id $hostId:\n";
+				echo __("Known values for host-id") . " " . $hostId . ":\n";
 			} else {
-				echo "Known values for host-id $hostId: ($fields)\n";
+				echo __("Known values for host-id") . " " . $hostId . ": (" . $fields . ")\n";
 			}
 			# now print headers: field identifier and field names
 			reset($req_fields);
@@ -570,7 +570,7 @@ function displaySNMPValuesExtended($hostId, $fields, $snmpQueryId, $quietMode = 
 
 function displaySNMPQueries($queries, $quietMode = FALSE) {
 	if (!$quietMode) {
-		echo "Known SNMP Queries:(id, name)\n";
+		echo __("Known SNMP Queries:(id, name)") . "\n";
 	}
 
 	while (list($id, $name) = each ($queries)) {
@@ -584,7 +584,7 @@ function displaySNMPQueries($queries, $quietMode = FALSE) {
 
 function displayInputFields($input_fields, $quietMode = FALSE) {
 	if (!$quietMode) {
-		echo "Known Input Fields:(name, default, description)\n";
+		echo __("Known Input Fields: (name, default, description)") . "\n";
 	}
 
 	if (sizeof($input_fields)) {
@@ -600,7 +600,7 @@ function displayInputFields($input_fields, $quietMode = FALSE) {
 
 function displayGraphTemplates($templates, $quietMode = FALSE) {
 	if (!$quietMode) {
-		echo "Known Graph Templates:(id, name)\n";
+		echo __("Known Graph Templates: (id, name)") . "\n";
 	}
 
 	while (list($id, $name) = each ($templates)) {
@@ -614,7 +614,7 @@ function displayGraphTemplates($templates, $quietMode = FALSE) {
 
 function displayHosts($hosts, $quietMode = FALSE) {
 	if (!$quietMode) {
-		echo "Known Hosts: (id, hostname, template, description)\n";
+		echo __("Known Hosts: (id, hostname, template, description)") . "\n";
 	}
 
 	if (sizeof($hosts)) {
@@ -632,7 +632,7 @@ function displayTrees($quietMode = FALSE) {
 	global $tree_sort_types;
 
 	if (!$quietMode) {
-		echo "Known Trees:\nid\tsort method\t\t\tname\n";
+		echo __("Known Trees: (id, sort method, name") . "\n";
 	}
 
 	$trees = db_fetch_assoc("SELECT
@@ -659,8 +659,7 @@ function displayTreeNodes($tree_id, $quietMode = FALSE) {
 	global $tree_sort_types, $tree_item_types, $host_group_types;
 
 	if (!$quietMode) {
-		echo "Known Tree Nodes:\n";
-		echo "type\tid\ttext\n";
+		echo __("Known Tree Nodes: (type, id, text)") . "\n";
 	}
 
 	$nodes = db_fetch_assoc("SELECT
@@ -734,7 +733,7 @@ function displayTreeNodes($tree_id, $quietMode = FALSE) {
 
 function displayRRAs($quietMode = FALSE) {
 	if (!$quietMode) {
-		echo "Known RRAs:\nid\tsteps\trows\ttimespan\tname\n";
+		echo __("Known RRAs: (id, steps, rows, timespan, name)") . "\n";
 	}
 
 	$rras = db_fetch_assoc("SELECT
@@ -764,7 +763,7 @@ function displayRRAs($quietMode = FALSE) {
 function displayHostGraphs($host_id, $quietMode = FALSE) {
 
 	if (!$quietMode) {
-		echo "Known Host Graphs: (id, name, template)\n";
+		echo __("Known Host Graphs: (id, name, template)") . "\n";
 	}
 
 	$graphs = db_fetch_assoc("SELECT
@@ -793,7 +792,7 @@ function displayHostGraphs($host_id, $quietMode = FALSE) {
 
 function displayUsers($quietMode = FALSE) {
 	if (!$quietMode) {
-		echo "Known Users:\nid\tusername\tfull_name\n";
+		echo __("Known Users: (id, username, full_name)") . "\n";
 	}
 
 	$groups = db_fetch_assoc("SELECT
