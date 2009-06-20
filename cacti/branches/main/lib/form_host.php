@@ -360,22 +360,21 @@ function api_host_form_actions() {
 		if ($_POST["drp_action"] == DEVICE_ACTION_ENABLE) { /* Enable Devices */
 			print "	<tr>
 					<td colspan='2' class='textArea'>
-						<p>To enable the following devices, press the \"yes\" button below.</p>
+						<p>" . __("To enable the following devices, press the \"yes\" button below.") . "</p>
 						<p>$host_list</p>
 					</td>
 					</tr>";
 		}elseif ($_POST["drp_action"] == DEVICE_ACTION_DISABLE) { /* Disable Devices */
 			print "	<tr>
 					<td colspan='2' class='textArea'>
-						<p>To disable the following devices, press the \"yes\" button below.</p>
+						<p>" . __("To disable the following devices, press the \"yes\" button below.") . "</p>
 						<p>$host_list</p>
 					</td>
 					</tr>";
 		}elseif ($_POST["drp_action"] == DEVICE_ACTION_CHANGE_SNMP_OPTIONS) { /* change snmp options */
 			print "	<tr>
 					<td colspan='2' class='textArea'>
-						<p>To change SNMP parameters for the following devices, check the box next to the fields
-						you want to update, fill in the new value, and click \"yes\".</p>
+						<p>" . __("To change SNMP parameters for the following devices, check the box next to the fields you want to update, fill in the new value, and click \"yes\".") . "</p>
 						<p>$host_list</p>
 					</td>
 					</tr>";
@@ -389,7 +388,7 @@ function api_host_form_actions() {
 					$form_array[$field_name]["form_id"] = 0;
 					$form_array[$field_name]["sub_checkbox"] = array(
 						"name" => "t_" . $field_name,
-						"friendly_name" => "Update this Field",
+						"friendly_name" => __("Update this Field"),
 						"value" => ""
 						);
 				}
@@ -404,8 +403,7 @@ function api_host_form_actions() {
 		}elseif ($_POST["drp_action"] == DEVICE_ACTION_CHANGE_AVAILABILITY_OPTIONS) { /* change availability options */
 			print "	<tr>
 					<td colspan='2' class='textArea'>
-						<p>To change availability parameters for the following devices, check the box next to the fields
-						you want to update, fill in the new value, and click yes.</p>
+						<p>" . __("To change availability parameters for the following devices, check the box next to the fields you want to update, fill in the new value, and click yes.") . "</p>
 						<p>$host_list</p>
 					</td>
 					</tr>";
@@ -419,7 +417,7 @@ function api_host_form_actions() {
 					$form_array[$field_name]["form_id"] = 0;
 					$form_array[$field_name]["sub_checkbox"] = array(
 						"name" => "t_" . $field_name,
-						"friendly_name" => "Update this Field",
+						"friendly_name" => __("Update this Field"),
 						"value" => ""
 						);
 				}
@@ -434,17 +432,17 @@ function api_host_form_actions() {
 		}elseif ($_POST["drp_action"] == DEVICE_ACTION_CLEAR_STATISTICS) { /* Clear Statisitics for Selected Devices */
 			print "	<tr>
 					<td colspan='2' class='textArea'>
-						<p>To clear the counters for the following devices, press the \"yes\" button below.</p>
+						<p>" . __("To clear the counters for the following devices, press the \"yes\" button below.") . "</p>
 						<p>$host_list</p>
 					</td>
 					</tr>";
 		}elseif ($_POST["drp_action"] == DEVICE_ACTION_DELETE) { /* delete */
 			print "	<tr>
 					<td class='textArea'>
-						<p>Are you sure you want to delete the following devices?</p>
+						<p>" . __("Are you sure you want to delete the following devices?") . "</p>
 						<p>$host_list</p>";
-						form_radio_button("delete_type", "2", "1", "Leave all graphs and data sources untouched.  Data sources will be disabled however.", "1"); print "<br>";
-						form_radio_button("delete_type", "2", "2", "Delete all associated <strong>graphs</strong> and <strong>data sources</strong>.", "1"); print "<br>";
+						form_radio_button("delete_type", "2", "1", __("Leave all graphs and data sources untouched.  Data sources will be disabled however."), "1"); print "<br>";
+						form_radio_button("delete_type", "2", "2", __("Delete all associated <strong>graphs</strong> and <strong>data sources</strong>."), "1"); print "<br>";
 						print "</td></tr>
 					</td>
 				</tr>\n
@@ -452,7 +450,7 @@ function api_host_form_actions() {
 		}elseif ($_POST["drp_action"] == DEVICE_ACTION_CHANGE_POLLER) { /* Change Poller */
 			print "	<tr>
 					<td colspan='2' class='textArea'>
-						<p>Select the new poller below for the devices(s) below and select 'yes' to continue, or 'no' to return.</p>
+						<p>" . __("Select the new poller below for the devices(s) below and select 'yes' to continue, or 'no' to return.") . "</p>
 						<p>$host_list</p>
 					</td>
 					</tr>";
@@ -460,7 +458,7 @@ function api_host_form_actions() {
 			$form_array = array();
 			$field_name = "poller_id";
 			$form_array += array($field_name => $fields_host_edit["poller_id"]);
-			$form_array[$field_name]["description"] = "Please select the new poller for the selected device(s).";
+			$form_array[$field_name]["description"] = __("Please select the new poller for the selected device(s).");
 
 			draw_edit_form(
 				array(
@@ -471,7 +469,7 @@ function api_host_form_actions() {
 		}elseif ($_POST["drp_action"] == DEVICE_ACTION_CHANGE_SITE) { /* Change Site */
 			print "	<tr>
 					<td colspan='2' class='textArea'>
-						<p>Select the new site for the devices(s) below and select 'yes' to continue, or 'no' to return.</p>
+						<p>" . __("Select the new site for the devices(s) below and select 'yes' to continue, or 'no' to return.") . "</p>
 						<p>$host_list</p>
 					</td>
 					</tr>";
@@ -479,7 +477,7 @@ function api_host_form_actions() {
 			$form_array = array();
 			$field_name = "site_id";
 			$form_array += array($field_name => $fields_host_edit["site_id"]);
-			$form_array[$field_name]["description"] = "Please select the new site for the selected device(s).";
+			$form_array[$field_name]["description"] = __("Please select the new site for the selected device(s).");
 
 			draw_edit_form(
 				array(
@@ -490,10 +488,9 @@ function api_host_form_actions() {
 		}elseif (ereg("^tr_([0-9]+)$", $_POST["drp_action"], $matches)) { /* place on tree */
 			print "	<tr>
 					<td class='textArea'>
-						<p>When you click save, the following hosts will be placed under the branch selected
-						below.</p>
+						<p>" . __("When you click save, the following hosts will be placed under the branch selected below.") . "</p>
 						<p>$host_list</p>
-						<p><strong>Destination Branch:</strong><br>"; grow_dropdown_tree($matches[1], "tree_item_id", "0"); print "</p>
+						<p><strong>" . __("Destination Branch:") . "</strong><br>"; grow_dropdown_tree($matches[1], "tree_item_id", "0"); print "</p>
 					</td>
 				</tr>\n
 				<input type='hidden' name='tree_id' value='" . $matches[1] . "'>\n
@@ -507,7 +504,7 @@ function api_host_form_actions() {
 	} else {
 		print "	<tr>
 				<td class='textArea'>
-					<p>You must first select a Device.  Please select 'Return' to return to the previous menu.</p>
+					<p>" . __("You must first select a Device.  Please select 'Return' to return to the previous menu.") . "</p>
 				</td>
 			</tr>\n";
 	}
@@ -567,7 +564,7 @@ function host_remove() {
 
 	if ((read_config_option("deletion_verification") == "on") && (!isset($_GET["confirm"]))) {
 		include(CACTI_BASE_PATH . "/include/top_header.php");
-		form_confirm("Are You Sure?", "Are you sure you want to delete the host <strong>'" . db_fetch_cell("select description from host where id=" . $_GET["id"]) . "'</strong>?", "host.php", "host.php?action=remove&id=" . $_GET["id"]);
+		form_confirm(__("Are You Sure?"), __("Are you sure you want to delete the host") . " <strong>'" . db_fetch_cell("select description from host where id=" . $_GET["id"]) . "'</strong>?", "host.php", "host.php?action=remove&id=" . $_GET["id"]);
 		include(CACTI_BASE_PATH . "/include/bottom_footer.php");
 		exit;
 	}
@@ -588,25 +585,24 @@ function host_edit() {
 	display_output_messages();
 
 	$host_tabs = array(
-		"general" => "General",
-		"newgraphs" => "New Graphs",
-		"graphs" => "Graphs",
-		"datasources" => "Data Sources",
-		"meta" => "Metadata"
+		"general" => __("General"),
+		"newgraphs" => __("New Graphs"),
+		"graphs" => __("Graphs"),
+		"datasources" => __("Data Sources")
 	);
 
 	if (!empty($_REQUEST["id"])) {
 		$host         = db_fetch_row("select * from host where id=" . $_REQUEST["id"]);
 		$host_text    = "<strong>" . $host["description"] . "(" . $host["hostname"] . ")</strong>";
-		$header_label = "[edit: " . $host["description"] . "]";
+		$header_label = __("[edit: ") . $host["description"] . "]";
 	}elseif (!empty($_GET["host_id"])) {
 		$_REQUEST["id"]   = $_REQUEST["host_id"];
 		$host         = db_fetch_row("select * from host where id=" . $_REQUEST["id"]);
 		$host_text    = "<strong>" . $host["description"] . "(" . $host["hostname"] . ")</strong>";
-		$header_label = "[edit: " . $host["description"] . "]";
+		$header_label = __("[edit: ") . $host["description"] . "]";
 	}else{
-		$header_label = "[new]";
-		$host_text    = "New Host";
+		$header_label = __("[new]");
+		$host_text    = __("New Host");
 		$host         = "";
 	}
 
@@ -742,11 +738,11 @@ function host_display_general($host, $host_text) {
 							$hours     = intval($remainder / (60*60*100));
 							$remainder = $remainder % (60*60*100);
 							$minutes   = intval($remainder / (60*100));
-							print "<strong>Uptime: </strong> $snmp_uptime";
+							print "<strong>" . __("Uptime:")   . " </strong> $snmp_uptime";
 							print "&nbsp;($days days, $hours hours, $minutes minutes)<br>\n";
-							print "<strong>Hostname: </strong> $snmp_hostname<br>\n";
-							print "<strong>Location: </strong> $snmp_location<br>\n";
-							print "<strong>Contact: </strong> $snmp_contact<br>\n";
+							print "<strong>" . __("Hostname:") . " </strong> $snmp_hostname<br>\n";
+							print "<strong>" . __("Location:") . " </strong> $snmp_location<br>\n";
+							print "<strong>" . __("Contact:")  . " </strong> $snmp_contact<br>\n";
 						}
 					}
 					?>
@@ -795,8 +791,8 @@ function host_display_general($host, $host_text) {
 	html_end_box(FALSE);
 
 	print "<form method='post' action='" .  basename($_SERVER["PHP_SELF"]) . "' name='host_edit_settings'>\n";
-	html_start_box("<strong>General Settings</strong>", "100%", $colors["header"], 0, "center", "", true);
-	$header_items = array("Field", "Value");
+	html_start_box("<strong>" __("General Settings") . "</strong>", "100%", $colors["header"], 0, "center", "", true);
+	$header_items = array(__("Field"), __("Value"));
 	print "<tr><td>";
 	html_header($header_items, 1, true, 'host');
 
@@ -1095,7 +1091,7 @@ function host_display_general($host, $host_text) {
 	<?php
 
 	if ((isset($_GET["display_dq_details"])) && (isset($_SESSION["debug_log"]["data_query"]))) {
-		html_start_box("<strong>Data Query Debug Information</strong>", "100%", $colors["header"], "3", "center", "");
+		html_start_box("<strong>" . __("Data Query Debug Information") . "</strong>", "100%", $colors["header"], "3", "center", "");
 
 		print "<tr><td><span style='font-family: monospace;'>" . debug_log_return("data_query") . "</span></td></tr>";
 
@@ -1103,9 +1099,9 @@ function host_display_general($host, $host_text) {
 	}
 
 	if (isset($host["id"])) {
-		html_start_box("<strong>Associated Graph Templates</strong>", "100%", $colors["header"], 0, "center", "", true);
+		html_start_box("<strong>". __("Associated Graph Templates") . "</strong>", "100%", $colors["header"], 0, "center", "", true);
 		print "<tr><td>";
-		html_header(array("Graph Template Name", "Status"), 2);
+		html_header(array(__("Graph Template Name"), __("Status")), 2);
 
 		$selected_graph_templates = db_fetch_assoc("select
 			graph_templates.id,
@@ -1149,26 +1145,28 @@ function host_display_general($host, $host_text) {
 					<strong><?php print $i;?>)</strong> <?php print $item["name"];?>
 				</td>
 				<td>
-					<?php print (($is_being_graphed == true) ? "<span style='color:green;'>Is Being Graphed</span> (<a href='graphs.php?action=graph_edit&id=" . db_fetch_cell("select id from graph_local where graph_template_id=" . $item["id"] . " and host_id=" . $_GET["id"] . " limit 0,1") . "'>Edit</a>)" : "<span style='color: #484848;'>Not Being Graphed</span>");?>
+					<?php print (($is_being_graphed == true) ? "<span style='color:green;'>" . __("Is Being Graphed") . "</span> (<a href='graphs.php?action=graph_edit&id=" . db_fetch_cell("select id from graph_local where graph_template_id=" . $item["id"] . " and host_id=" . $_GET["id"] . " limit 0,1") . "'>" . __("Edit") . "</a>)" : "<span style='color: #484848;'>" . __("Not Being Graphed") . "</span>");?>
 				</td>
 				<td align='right' nowrap>
-					<a href='host.php?action=gt_remove&amp;id=<?php print $item["id"];?>&amp;host_id=<?php print $_GET["id"];?>'><img class='buttonSmall' src='images/delete_icon_large.gif' title='Delete Graph Template Association' alt='Delete' align='middle'></a>
+					<a href='host.php?action=gt_remove&amp;id=<?php print $item["id"];?>&amp;host_id=<?php print $_GET["id"];?>'><img class='buttonSmall' src='images/delete_icon_large.gif' title='<?php print __("Delete Graph Template Association");?>' alt='<?php print __("Delete");?>' align='middle'></a>
 				</td>
 			<?php
 			form_end_row();
 		}
-		}else{ print "<tr><td><em>No associated graph templates.</em></td></tr>"; }
+		}else{
+			print "<tr><td><em>" . __("No Associated Graph Templates.") . "</em></td></tr>";
+		}
 
 		form_alternate_row_color("gt_host" . $host["id"]);
 		?>
 			<td colspan="4">
 				<table cellspacing="0" cellpadding="1" width="100%">
 					<tr>
-					<td nowrap>Add Graph Template:&nbsp;
+					<td nowrap><?php print __("Add Graph Template:");?>&nbsp;
 						<?php form_dropdown("graph_template_id",$available_graph_templates,"name","id","","","");?>
 					</td>
 					<td align="right">
-						&nbsp;<input type="submit" value="Add" name="add_gt_y" align="middle">
+						&nbsp;<input type="submit" value="<?php print __("Add");?>" name="add_gt_y" align="middle">
 					</td>
 					</tr>
 				</table>
@@ -1178,9 +1176,9 @@ function host_display_general($host, $host_text) {
 		print "</table></td></tr>";		/* end of html_header */
 		html_end_box(FALSE);
 
-		html_start_box("<strong>Associated Data Queries</strong>", "100%", $colors["header"], 0, "center", "", true);
+		html_start_box("<strong>" . __("Associated Data Queries") . "</strong>", "100%", $colors["header"], 0, "center", "", true);
 		print "<tr><td>";
-		html_header(array("Data Query Name", "Debugging", "Re-Index Method", "Status"), 2);
+		html_header(array(__("Data Query Name"), __("Debugging"), __("Re-Index Method"), __("Status")), 2);
 
 		$selected_data_queries = db_fetch_assoc("select
 			snmp_query.id,
@@ -1212,37 +1210,39 @@ function host_display_general($host, $host_text) {
 
 		$i = 0;
 		if (sizeof($selected_data_queries) > 0) {
-		foreach ($selected_data_queries as $item) {
-			$i++;
-			form_alternate_row_color("selected_data_queries" . $i);
+			foreach ($selected_data_queries as $item) {
+				$i++;
+				form_alternate_row_color("selected_data_queries" . $i);
 
-			/* get status information for this data query */
-			$num_dq_items = sizeof(db_fetch_assoc("select snmp_index from host_snmp_cache where host_id=" . $_GET["id"] . " and snmp_query_id=" . $item["id"]));
-			$num_dq_rows = sizeof(db_fetch_assoc("select snmp_index from host_snmp_cache where host_id=" . $_GET["id"] . " and snmp_query_id=" . $item["id"] . " group by snmp_index"));
+				/* get status information for this data query */
+				$num_dq_items = sizeof(db_fetch_assoc("select snmp_index from host_snmp_cache where host_id=" . $_GET["id"] . " and snmp_query_id=" . $item["id"]));
+				$num_dq_rows = sizeof(db_fetch_assoc("select snmp_index from host_snmp_cache where host_id=" . $_GET["id"] . " and snmp_query_id=" . $item["id"] . " group by snmp_index"));
 
-			$status = "success";
+				$status = "success";
 
-			?>
-				<td style="padding: 4px;">
-					<strong><?php print $i;?>)</strong> <?php print $item["name"];?>
-				</td>
-				<td>
-					(<a href="host.php?action=query_verbose&amp;id=<?php print $item["id"];?>&amp;host_id=<?php print $_GET["id"];?>">Verbose Query</a>)
-				</td>
-				<td>
-					<?php form_dropdown("reindex_method_host_".$_GET["id"]."_query_".$item["id"]."_method_".$item["reindex_method"],$reindex_types,"","",$item["reindex_method"],"","","","");?>
-				</td>
-				<td>
-					<?php print (($status == "success") ? "<span style='color: green;'>Success</span>" : "<span style='color: green;'>Fail</span>");?> [<?php print $num_dq_items;?> Item<?php print ($num_dq_items == 1 ? "" : "s");?>, <?php print $num_dq_rows;?> Row<?php print ($num_dq_rows == 1 ? "" : "s");?>]
-				</td>
-				<td align='right' nowrap>
-					<a href='host.php?action=query_reload&amp;id=<?php print $item["id"];?>&amp;host_id=<?php print $_GET["id"];?>'><img class='buttonSmall' src='images/reload_icon_small.gif' title='Reload Data Query' alt='Reload' align='middle'></a>&nbsp;
-					<a href='host.php?action=query_remove&amp;id=<?php print $item["id"];?>&amp;host_id=<?php print $_GET["id"];?>'><img class='buttonSmall' src='images/delete_icon_large.gif' title='Delete Data Query Association' alt='Delete' align='middle'></a>
-				</td>
-			<?php
-			form_end_row();
+				?>
+					<td style="padding: 4px;">
+						<strong><?php print $i;?>)</strong> <?php print $item["name"];?>
+					</td>
+					<td>
+						(<a href="host.php?action=query_verbose&amp;id=<?php print $item["id"];?>&amp;host_id=<?php print $_GET["id"];?>"><?php print __("Verbose Query");?></a>)
+					</td>
+					<td>
+						<?php form_dropdown("reindex_method_host_".$_GET["id"]."_query_".$item["id"]."_method_".$item["reindex_method"],$reindex_types,"","",$item["reindex_method"],"","","","");?>
+					</td>
+					<td>
+						<?php print (($status == "success") ? "<span style='color: green;'>" . __("Success") . "</span>" : "<span style='color: green;'>" . __("Fail") . "</span>");?> [<?php print $num_dq_items;?> <?php print __n("Item", $num_dq_items);?>, <?php print $num_dq_rows;?> <?php print __n("Row", $num_dq_rows);?>]
+					</td>
+					<td align='right' nowrap>
+						<a href='host.php?action=query_reload&amp;id=<?php print $item["id"];?>&amp;host_id=<?php print $_GET["id"];?>'><img class='buttonSmall' src='images/reload_icon_small.gif' title='<?php print __("Reload Data Query");?>' alt='<?php print __("Reload");?>' align='middle'></a>&nbsp;
+						<a href='host.php?action=query_remove&amp;id=<?php print $item["id"];?>&amp;host_id=<?php print $_GET["id"];?>'><img class='buttonSmall' src='images/delete_icon_large.gif' title='<?php print __("Delete Data Query Association");?>' alt='<?php print __("Delete");?>' align='middle'></a>
+					</td>
+				<?php
+				form_end_row();
+			}
+		}else{
+			print "<tr><td><em>". __("No associated data queries.") . "</em></td></tr>";
 		}
-		}else{ print "<tr><td><em>No associated data queries.</em></td></tr>"; }
 
 		form_alternate_row_color("dq_host" . $host["id"]);
 
@@ -1250,14 +1250,14 @@ function host_display_general($host, $host_text) {
 			<td colspan="5">
 				<table cellspacing="0" cellpadding="1" width="100%">
 					<tr>
-					<td nowrap>Add Data Query:&nbsp;
+					<td nowrap><?php print __("Add Data Query:");?>&nbsp;
 						<?php form_dropdown("snmp_query_id",$available_data_queries,"name","id","","","");?>
 					</td>
-					<td nowrap>Re-Index Method:&nbsp;
+					<td nowrap><?php print __("Re-Index Method:");?>&nbsp;
 						<?php form_dropdown("reindex_method",$reindex_types,"","","1","","");?>
 					</td>
 					<td align="right">
-						&nbsp;<input type="submit" value="Add" name="add_dq_y" align="middle">
+						&nbsp;<input type="submit" value="<?php print __("Add");?>" name="add_dq_y" align="middle">
 					</td>
 					</tr>
 				</table>
@@ -1364,7 +1364,7 @@ function host() {
 	</script>
 	<?php
 
-	html_start_box("<strong>Devices</strong>", "100%", $colors["header"], "3", "center", "host.php?action=edit&template_id=" . $_REQUEST["template_id"] . "&status=" . $_REQUEST["status"], true);
+	html_start_box("<strong>" . __("Devices") . "</strong>", "100%", $colors["header"], "3", "center", "host.php?action=edit&template_id=" . $_REQUEST["template_id"] . "&status=" . $_REQUEST["status"], true);
 	?>
 	<tr class='rowAlternate2'>
 		<td>
@@ -1376,8 +1376,8 @@ function host() {
 					</td>
 					<td width="1">
 						<select name="template_id" onChange="applyViewDeviceFilterChange(document.form_devices)">
-							<option value="-1"<?php if ($_REQUEST["template_id"] == "-1") {?> selected<?php }?>>Any</option>
-							<option value="0"<?php if ($_REQUEST["template_id"] == "0") {?> selected<?php }?>>None</option>
+							<option value="-1"<?php if ($_REQUEST["template_id"] == "-1") {?> selected<?php }?>><?php print __("Any");?></option>
+							<option value="0"<?php if ($_REQUEST["template_id"] == "0") {?> selected<?php }?>><?php print __("None");?></option>
 							<?php
 							$host_templates = db_fetch_assoc("select id,name from host_template order by name");
 
@@ -1394,22 +1394,22 @@ function host() {
 					</td>
 					<td width="1">
 						<select name="status" onChange="applyViewDeviceFilterChange(document.form_devices)">
-							<option value="-1"<?php if ($_REQUEST["status"] == "-1") {?> selected<?php }?>>Any</option>
-							<option value="-3"<?php if ($_REQUEST["status"] == "-3") {?> selected<?php }?>>Enabled</option>
-							<option value="-2"<?php if ($_REQUEST["status"] == "-2") {?> selected<?php }?>>Disabled</option>
-							<option value="-4"<?php if ($_REQUEST["status"] == "-4") {?> selected<?php }?>>Not Up</option>
-							<option value="3"<?php if ($_REQUEST["status"] == "3") {?> selected<?php }?>>Up</option>
-							<option value="1"<?php if ($_REQUEST["status"] == "1") {?> selected<?php }?>>Down</option>
-							<option value="2"<?php if ($_REQUEST["status"] == "2") {?> selected<?php }?>>Recovering</option>
-							<option value="0"<?php if ($_REQUEST["status"] == "0") {?> selected<?php }?>>Unknown</option>
+							<option value="-1"<?php if ($_REQUEST["status"] == "-1") {?> selected<?php }?>><?php print __("Any");?></option>
+							<option value="-3"<?php if ($_REQUEST["status"] == "-3") {?> selected<?php }?>><?php print __("Enabled");?></option>
+							<option value="-2"<?php if ($_REQUEST["status"] == "-2") {?> selected<?php }?>><?php print __("Disabled");?></option>
+							<option value="-4"<?php if ($_REQUEST["status"] == "-4") {?> selected<?php }?>><?php print __("Not Up");?></option>
+							<option value="3"<?php if ($_REQUEST["status"] == "3") {?> selected<?php }?>><?php print __("Up");?></option>
+							<option value="1"<?php if ($_REQUEST["status"] == "1") {?> selected<?php }?>><?php print __("Down");?></option>
+							<option value="2"<?php if ($_REQUEST["status"] == "2") {?> selected<?php }?>><?php print __("Recovering");?></option>
+							<option value="0"<?php if ($_REQUEST["status"] == "0") {?> selected<?php }?>><?php print __("Unknown");?></option>
 						</select>
 					</td>
 					<td style='white-space:nowrap;width:50px;'>
-						&nbsp;Rows:&nbsp;
+						&nbsp;<?php print __("Rows:");?>&nbsp;
 					</td>
 					<td width="1">
 						<select name="rows" onChange="applyViewDeviceFilterChange(document.form_devices)">
-							<option value="-1"<?php if ($_REQUEST["rows"] == "-1") {?> selected<?php }?>>Default</option>
+							<option value="-1"<?php if ($_REQUEST["rows"] == "-1") {?> selected<?php }?>><?php print __("Default");?></option>
 							<?php
 							if (sizeof($item_rows) > 0) {
 							foreach ($item_rows as $key => $value) {
@@ -1424,12 +1424,12 @@ function host() {
 			<table cellpadding="0" cellspacing="1">
 				<tr>
 					<td style='white-space:nowrap;width:55px;'>
-						Site:&nbsp;
+						<?php print __("Site:");?>&nbsp;
 					</td>
 					<td width="1">
 						<select name="site" onChange="applyViewDeviceFilterChange(document.form_devices)">
-							<option value="-1"<?php if ($_REQUEST["site"] == "-1") {?> selected<?php }?>>All</option>
-							<option value="0"<?php if ($_REQUEST["site"] == "0") {?> selected<?php }?>>Not Defined</option>
+							<option value="-1"<?php if ($_REQUEST["site"] == "-1") {?> selected<?php }?>><?php print __("All");?></option>
+							<option value="0"<?php if ($_REQUEST["site"] == "0") {?> selected<?php }?>><?php print __("Not Defined");?></option>
 							<?php
 							$sites = db_fetch_assoc("select id,name from sites order by name");
 
@@ -1442,12 +1442,12 @@ function host() {
 						</select>
 					</td>
 					<td style='white-space:nowrap;width:55px;'>
-						&nbsp;Poller:&nbsp;
+						&nbsp;<?php print __("Poller:");?>&nbsp;
 					</td>
 					<td width="1">
 						<select name="poller" onChange="applyViewDeviceFilterChange(document.form_devices)">
-							<option value="-1"<?php if ($_REQUEST["poller"] == "-1") {?> selected<?php }?>>All</option>
-							<option value="0"<?php if ($_REQUEST["poller"] == "0") {?> selected<?php }?>>System Default</option>
+							<option value="-1"<?php if ($_REQUEST["poller"] == "-1") {?> selected<?php }?>><?php print __("All");?></option>
+							<option value="0"<?php if ($_REQUEST["poller"] == "0") {?> selected<?php }?>><?php print __("System Default");?></option>
 							<?php
 							$pollers = db_fetch_assoc("select id,description AS name from poller order by description");
 
@@ -1460,14 +1460,14 @@ function host() {
 						</select>
 					</td>
 					<td style='white-space:nowrap;width:55px;'>
-						&nbsp;Search:&nbsp;
+						&nbsp;<?php print __("Search:");?>&nbsp;
 					</td>
 					<td width="1">
 						<input type="text" name="filter" size="20" value="<?php print $_REQUEST["filter"];?>">
 					</td>
 					<td nowrap>
-						&nbsp;<input type="submit" Value="Go" name="go" align="middle">
-						<input type="submit" Value="Clear" name="clear_x" align="middle">
+						&nbsp;<input type="submit" Value="<?php print __("Go");?>" name="go" align="middle">
+						<input type="submit" Value="<?php print __("Clear");?>" name="clear_x" align="middle">
 					</td>
 				</tr>
 			</table>
@@ -1557,18 +1557,18 @@ function host() {
 	html_end_box(false);
 
 	$display_text = array(
-		"description" => array("Description", "ASC"),
-		"site" => array("Site", "ASC"),
-		"poller" => array("Poller", "ASC"),
-		"host.hostname" => array("Hostname", "ASC"),
-		"id" => array("ID", "ASC"),
-		"nosort1" => array("Graphs", "ASC"),
-		"nosort2" => array("Data Sources", "ASC"),
-		"status" => array("Status", "ASC"),
-		"status_event_count" => array("Event Count", "ASC"),
-		"cur_time" => array("Current (ms)", "DESC"),
-		"avg_time" => array("Average (ms)", "DESC"),
-		"availability" => array("Availability", "ASC"));
+		"description" => array(__("Description"), "ASC"),
+		"site" => array(__("Site"), "ASC"),
+		"poller" => array(__("Poller"), "ASC"),
+		"host.hostname" => array(__("Hostname"), "ASC"),
+		"id" => array(__("ID"), "ASC"),
+		"nosort1" => array(__("Graphs"), "ASC"),
+		"nosort2" => array(__("Data Sources"), "ASC"),
+		"status" => array(__("Status"), "ASC"),
+		"status_event_count" => array(__("Event Count"), "ASC"),
+		"cur_time" => array(__("Current (ms)"), "DESC"),
+		"avg_time" => array(__("Average (ms)"), "DESC"),
+		"availability" => array(__("Availability"), "ASC"));
 
 	html_header_sort_checkbox($display_text, $_REQUEST["sort_column"], $_REQUEST["sort_direction"]);
 
@@ -1577,8 +1577,8 @@ function host() {
 			form_alternate_row_color('line' . $host["id"], true);
 			form_selectable_cell("<a style='white-space:nowrap;' class='linkEditMain' href='" . htmlspecialchars("host.php?action=edit&id=" . $host["id"]) . "'>" .
 				(strlen($_REQUEST["filter"]) ? eregi_replace("(" . preg_quote($_REQUEST["filter"]) . ")", "<span style='background-color: #F8D93D;'>\\1</span>", $host["description"]) : $host["description"]) . "</a>", $host["id"]);
-			form_selectable_cell(($host["site"] == 0 ? "Not Defined" : ($host["site"] == '' ? "Unknown" : $host["site"])), $host["id"]);
-			form_selectable_cell(($host["poller"] == 0 ? "System Default" : ($host["poller"] == '' ? "Unknown" : $host["poller"])), $host["id"]);
+			form_selectable_cell(($host["site"] == 0 ? __("Not Defined") : ($host["site"] == '' ? __("Unknown") : $host["site"])), $host["id"]);
+			form_selectable_cell(($host["poller"] == 0 ? __("System Default") : ($host["poller"] == '' ? __("Unknown") : $host["poller"])), $host["id"]);
 			form_selectable_cell((strlen($_REQUEST["filter"]) ? eregi_replace("(" . preg_quote($_REQUEST["filter"]) . ")", "<span style='background-color: #F8D93D;'>\\1</span>", $host["hostname"]) : $host["hostname"]), $host["id"]);
 			form_selectable_cell(round(($host["id"]), 2), $host["id"]);
 			form_selectable_cell((isset($host_graphs[$host["id"]]) ? $host_graphs[$host["id"]] : 0), $host["id"]);
@@ -1597,7 +1597,7 @@ function host() {
 		/* put the nav bar on the bottom as well */
 		print $nav;
 	}else{
-		print "<tr><td><em>No Hosts</em></td></tr></table>";
+		print "<tr><td><em>" . __("No Hosts") . "</em></td></tr></table>";
 	}
 
 	print "</table></form>\n";	# end form and table of html_header_sort_checkbox
