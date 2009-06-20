@@ -1560,7 +1560,7 @@ function host() {
 		"description" => array("Description", "ASC"),
 		"site" => array("Site", "ASC"),
 		"poller" => array("Poller", "ASC"),
-		"hostname" => array("Hostname", "ASC"),
+		"host.hostname" => array("Hostname", "ASC"),
 		"id" => array("ID", "ASC"),
 		"nosort1" => array("Graphs", "ASC"),
 		"nosort2" => array("Data Sources", "ASC"),
