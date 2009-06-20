@@ -128,10 +128,10 @@ function html_start_box_dq($query_name, $query_id, $host_id, $colspan, $width, $
 					<table cellspacing='0' cellpadding='0' width='100%' >
 						<tr>
 							<td class='textHeaderDark'>
-								<strong>Data Query</strong> [<?php print $query_name; ?>]
+								<strong><?php print __("Data Query");?></strong> [<?php print $query_name; ?>]
 							</td>
 							<td align='right' nowrap>
-								<a href='graphs_new.php?action=query_reload&amp;id=<?php print $query_id;?>&amp;host_id=<?php print $host_id;?>'><img class='buttonSmall' src='images/reload_icon_small.gif' alt='Reload' title='Reload Associated Query' align='middle'></a>
+								<a href='graphs_new.php?action=query_reload&amp;id=<?php print $query_id;?>&amp;host_id=<?php print $host_id;?>'><img class='buttonSmall' src='images/reload_icon_small.gif' alt='<?php print __("Reload");?>' title='<?php print __("Reload Associated Query");?>' align='middle'></a>
 							</td>
 						</tr>
 					</table>
@@ -203,7 +203,7 @@ function html_graph_area(&$graph_array, $no_graphs_message = "", $extra_url_args
 				if ($print) {
 					print "\t\t<tr class='rowSubHeader'>
 						<td colspan='3' class='textHeaderDark'>
-							<strong>Graph Template:</strong> " . $graph["graph_template_name"] . "
+							<strong>" . __("Graph Template:") . "</strong> " . $graph["graph_template_name"] . "
 						</td>
 					</tr>";
 				}
@@ -221,7 +221,7 @@ function html_graph_area(&$graph_array, $no_graphs_message = "", $extra_url_args
 				}
 
 				if ($print) {
-					print "\t\t\t<tr class='rowSubHeaderAlt'><td colspan='3' class='textHeaderDark'><strong>Data Query:</strong> " . $graph["data_query_name"] . "</td></tr>";
+					print "\t\t\t<tr class='rowSubHeaderAlt'><td colspan='3' class='textHeaderDark'><strong>" . __("Data Query:") . "</strong> " . $graph["data_query_name"] . "</td></tr>";
 				}
 				print "<tr>
 					<td colspan='3' class='textHeaderDark'>
@@ -240,10 +240,10 @@ function html_graph_area(&$graph_array, $no_graphs_message = "", $extra_url_args
 								<?php print (read_graph_config_option("show_graph_title") == "on" ? "<p style='font-size: 10;' align='center'><strong>" . $graph["title_cache"] . "</strong></p>" : "");?>
 							</td>
 							<td valign='top' style='align: left; padding: 3px;' class='noprint'>
-								<a href='<?php print htmlspecialchars("graph.php?action=zoom&local_graph_id=" . $graph["local_graph_id"] . "&rra_id=0&" . $extra_url_args);?>'><img src='images/graph_zoom.gif' alt='Zoom Graph' title='Zoom Graph' style='border-width:0px;padding:3px;'></a><br>
-								<a href='<?php print htmlspecialchars("graph_xport.php?local_graph_id=" . $graph["local_graph_id"] . "&rra_id=0&" . $extra_url_args);?>'><img src='images/graph_query.png' alt='CSV Export' title='CSV Export' style='border-width:0px;padding: 3px;'></a><br>
-								<a href='<?php print htmlspecialchars("graph.php?action=properties&local_graph_id=" . $graph["local_graph_id"] . "&rra_id=0&" . $extra_url_args);?>'><img src='images/graph_properties.gif' alt='Properties' title='Graph Source/Properties' style='border-width:0px;padding:3px;'></a><br>
-								<a href='#page_top'><img src='images/graph_page_top.gif' alt='Page Top' title='Page Top' style='border-width:0px;padding:3px;'></a><br>
+								<a href='<?php print htmlspecialchars("graph.php?action=zoom&local_graph_id=" . $graph["local_graph_id"] . "&rra_id=0&" . $extra_url_args);?>'><img src='images/graph_zoom.gif' alt='<?php print __("Zoom Graph");?>' title='<?php print __("Zoom Graph");?>' style='border-width:0px;padding:3px;'></a><br>
+								<a href='<?php print htmlspecialchars("graph_xport.php?local_graph_id=" . $graph["local_graph_id"] . "&rra_id=0&" . $extra_url_args);?>'><img src='images/graph_query.png' alt='<?php print __("CSV Export");?>' title='<?php print __("CSV Export");?>' style='border-width:0px;padding: 3px;'></a><br>
+								<a href='<?php print htmlspecialchars("graph.php?action=properties&local_graph_id=" . $graph["local_graph_id"] . "&rra_id=0&" . $extra_url_args);?>'><img src='images/graph_properties.gif' alt='<?php print __("Properties");?>' title='<?php print __("Graph Source/Properties");?>' style='border-width:0px;padding:3px;'></a><br>
+								<a href='#page_top'><img src='images/graph_page_top.gif' alt='<?php print __("Page Top");?>' title='<?php print __("Page Top");?>' style='border-width:0px;padding:3px;'></a><br>
 							</td>
 						</tr>
 					</table>
@@ -304,7 +304,7 @@ function html_graph_thumbnail_area(&$graph_array, $no_graphs_message = "", $extr
 
 					print "\t\t<tr class='rowSubHeader'>
 						<td colspan='" . read_graph_config_option("num_columns") . "' class='textHeaderDark'>
-							<strong>Graph Template:</strong> " . $graph["graph_template_name"] . "
+							<strong>" . __("Graph Template:") . "</strong> " . $graph["graph_template_name"] . "
 						</td>
 					</tr>";
 					$i = 0;
@@ -333,7 +333,7 @@ function html_graph_thumbnail_area(&$graph_array, $no_graphs_message = "", $extr
 					}
 
 					print "\t\t\t<tr style='rowSubHeaderAlt'>
-							<td colspan='" . read_graph_config_option("num_columns") . "' class='textHeaderDark'><strong>Data Query:</strong> " . $graph["data_query_name"] . "</td>
+							<td colspan='" . read_graph_config_option("num_columns") . "' class='textHeaderDark'><strong>" . __("Data Query:") . "</strong> " . $graph["data_query_name"] . "</td>
 						</tr>";
 					$i = 0;
 				}
@@ -358,10 +358,10 @@ function html_graph_thumbnail_area(&$graph_array, $no_graphs_message = "", $extr
 							<?php print (read_graph_config_option("show_graph_title") == "on" ? "<p style='font-size: 10;' align='center'><strong>" . $graph["title_cache"] . "</strong></p>" : "");?>
 						</td>
 						<td valign='top' style='align: left; padding: 3px;'>
-							<a href='<?php print htmlspecialchars("graph.php?action=zoom&local_graph_id=" . $graph["local_graph_id"] . "&rra_id=0&" . $extra_url_args);?>'><img src='images/graph_zoom.gif' alt='Zoom Graph' title='Zoom Graph' style='border-width:0px;padding:3px;'></a><br>
-							<a href='<?php print htmlspecialchars("graph_xport.php?local_graph_id=" . $graph["local_graph_id"] . "&rra_id=0&" . $extra_url_args);?>'><img src='images/graph_query.png' alt='CSV Export' title='CSV Export' style='border-width:0px;padding:3px;'></a><br>
-							<a href='<?php print htmlspecialchars("graph.php?action=properties&local_graph_id=" . $graph["local_graph_id"] . "&rra_id=0&" . $extra_url_args);?>'><img src='images/graph_properties.gif' alt='Graph Source/Properties' title='Graph Source/Properties' style='border-width:0px;padding:3px;'></a><br>
-							<a href='#page_top'><img src='images/graph_page_top.gif' alt='Page Top' title='Page Top' style='border-width:0px;padding:3px;'></a><br>
+							<a href='<?php print htmlspecialchars("graph.php?action=zoom&local_graph_id=" . $graph["local_graph_id"] . "&rra_id=0&" . $extra_url_args);?>'><img src='images/graph_zoom.gif' alt='<?php print __("Zoom Graph");?>' title='<?php print __("Zoom Graph");?>' style='border-width:0px;padding:3px;'></a><br>
+							<a href='<?php print htmlspecialchars("graph_xport.php?local_graph_id=" . $graph["local_graph_id"] . "&rra_id=0&" . $extra_url_args);?>'><img src='images/graph_query.png' alt='<?php print __("CSV Export");?>' title='<?php print __("CSV Export");?>' style='border-width:0px;padding:3px;'></a><br>
+							<a href='<?php print htmlspecialchars("graph.php?action=properties&local_graph_id=" . $graph["local_graph_id"] . "&rra_id=0&" . $extra_url_args);?>'><img src='images/graph_properties.gif' alt='<?php print __("Graph Source/Properties");?>' title='<?php print __("Graph Source/Properties");?>' style='border-width:0px;padding:3px;'></a><br>
+							<a href='#page_top'><img src='images/graph_page_top.gif' alt='<?php print __("Page Top");?>' title='<?php print __("Page Top");?>' style='border-width:0px;padding:3px;'></a><br>
 						</td>
 					</tr>
 				</table>
@@ -416,15 +416,15 @@ function html_nav_bar($background_color, $colspan, $current_page, $rows_per_page
 				<tr>
 					<td align='left' class='textHeaderDark' width='15%'>
 						<?php if ($current_page > 1) {
-							print "<strong><a class='linkOverDark' href='" . htmlspecialchars(str_replace("<PAGE>", ($current_page-1), $nav_url)) . "'>&lt;&lt;&nbsp;Previous</a></strong>";
+							print "<strong><a class='linkOverDark' href='" . htmlspecialchars(str_replace("<PAGE>", ($current_page-1), $nav_url)) . "'>&lt;&lt;&nbsp;" . __("Previous") . "</a></strong>";
 						} ?>
 					</td>
 					<td align='center' class='textHeaderDark' width='70%'>
-						Showing Rows <?php print (($rows_per_page*($current_page-1))+1);?> to <?php print ((($total_rows < $rows_per_page) || ($total_rows < ($rows_per_page*$current_page))) ? $total_rows : ($rows_per_page*$current_page));?> of <?php print $total_rows;?>
+						<?php print __("Showing Rows");?> <?php print (($rows_per_page*($current_page-1))+1);?> <?php print __("to");?> <?php print ((($total_rows < $rows_per_page) || ($total_rows < ($rows_per_page*$current_page))) ? $total_rows : ($rows_per_page*$current_page));?> <?php print __("of");?> <?php print $total_rows;?>
 					</td>
 					<td align='right' class='textHeaderDark' width='15%'>
 						<?php if (($current_page * $rows_per_page) < $total_rows) {
-							print "<strong><a class='linkOverDark' href='" . htmlspecialchars(str_replace("<PAGE>", ($current_page+1), $nav_url)) . "'>Next&gt;&gt;</a></strong>";
+							print "<strong><a class='linkOverDark' href='" . htmlspecialchars(str_replace("<PAGE>", ($current_page+1), $nav_url)) . "'>" . __("Next") . "&gt;&gt;</a></strong>";
 						} ?>
 					</td>
 				</tr>
@@ -726,19 +726,19 @@ function html_create_nav($current_page, $max_pages, $rows_per_page, $total_rows,
 							if ($current_page > 1) {
 								$nav .= "<strong>";
 								$nav .= "<a class='linkOverDark' href='" . $base_url . $page_var . "=" . ($current_page-1) . "'>";
-								$nav .= "&lt;&lt;&nbsp;Previous";
+								$nav .= "&lt;&lt;&nbsp;" . __("Previous");
 								$nav .= "</a></strong>";
 							}
 							$nav .= "
 						</td>\n
 						<td align='center' class='textHeaderDark' width='70%'>
-							Showing Rows " . (($rows_per_page*($current_page-1))+1) . " to " . ((($total_rows < $rows_per_page) || ($total_rows < ($rows_per_page*$current_page))) ? $total_rows : ($rows_per_page*$current_page)) . " of $total_rows [$url_page_select]
+							" . __("Showing Rows") . " " . (($rows_per_page*($current_page-1))+1) . " " . __("to") . " " . ((($total_rows < $rows_per_page) || ($total_rows < ($rows_per_page*$current_page))) ? $total_rows : ($rows_per_page*$current_page)) . " " . __("of") . " $total_rows [$url_page_select]
 						</td>\n
 						<td align='right' class='textHeaderDark' width='15%'>";
 							if (($current_page * $rows_per_page) < $total_rows) {
 								$nav .= "<strong>";
 								$nav .= "<a class='linkOverDark' href='" . $base_url . $page_var . "=" . ($current_page+1) . "'>";
-								$nav .= "Next &gt;&gt;";
+								$nav .= __("Next") . " &gt;&gt;";
 								$nav .= "</a></strong>";
 							}
 							$nav .= "
@@ -764,7 +764,7 @@ function draw_graph_items_list($item_list, $filename, $url_data, $disable_contro
 
 	include(CACTI_BASE_PATH . "/include/global_arrays.php");
 
-	$header_items = array("Graph Item", "Data Source", "Graph Item Type", "CF Type", "CDEF", "GPRINT Type", "Item Color");
+	$header_items = array(__("Graph Item"), __("Data Source"), __("Graph Item Type"), __("CF Type"), __("CDEF"), __("GPRINT Type"), __("Item Color"));
 	$last_item_colspan = 3;
 
 	print "<tr><td>";
@@ -811,7 +811,7 @@ function draw_graph_items_list($item_list, $filename, $url_data, $disable_contro
 		if ($disable_controls == false) { print "</a>"; }
 		print "</td>\n";
 
-		if (empty($item["data_source_name"])) { $item["data_source_name"] = "No Task"; }
+		if (empty($item["data_source_name"])) { $item["data_source_name"] = __("No Task"); }
 
 		switch (true) {
 		case ereg("(AREA|STACK|GPRINT|LINE[123])", $_graph_type_name):
@@ -835,8 +835,8 @@ function draw_graph_items_list($item_list, $filename, $url_data, $disable_contro
 		print "<td style='$this_row_style'>" . htmlspecialchars($matrix_title) . $hard_return . "</td>\n";
 		print "<td style='$this_row_style'>" . $graph_item_types{$item["graph_type_id"]} . "</td>\n";
 		print "<td style='$this_row_style'>" . $consolidation_functions{$item["consolidation_function_id"]} . "</td>\n";
-		print "<td style='$this_row_style'>" . ((strlen($item["cdef_name"]) > 0) ? substr($item["cdef_name"],0,30) : "None") . "</td>\n";
-		print "<td style='$this_row_style'>" . ((strlen($item["cdef_name"]) > 0) ? substr($item["gprint_name"],0,30) : "None") . "</td>\n";
+		print "<td style='$this_row_style'>" . ((strlen($item["cdef_name"]) > 0) ? substr($item["cdef_name"],0,30) : __("None")) . "</td>\n";
+		print "<td style='$this_row_style'>" . ((strlen($item["cdef_name"]) > 0) ? substr($item["gprint_name"],0,30) : __("None")) . "</td>\n";
 		print "<td" . ((!empty($item["hex"])) ? " bgcolor='#" . $item["hex"] . "'" : "") . " width='1%'>&nbsp;</td>\n";
 		print "<td style='$this_row_style'>" . $item["hex"] . "</td>\n";
 
@@ -849,7 +849,7 @@ function draw_graph_items_list($item_list, $filename, $url_data, $disable_contro
 		$i++;
 	}
 	}else{
-		print "<tr bgcolor='#" . $colors["form_alternate2"] . "'><td colspan='" . (sizeof($header_items)+$last_item_colspan-1) . "'><em>No Items</em></td></tr>";
+		print "<tr bgcolor='#" . $colors["form_alternate2"] . "'><td colspan='" . (sizeof($header_items)+$last_item_colspan-1) . "'><em>" . __("No Items") . "</em></td></tr>";
 	}
 
 	print "</table></td></tr>";
@@ -1075,11 +1075,11 @@ function draw_actions_dropdown($actions_array) {
 				<img src='<?php echo URL_PATH; ?>images/arrow.gif' alt='' align='middle'>&nbsp;
 			</td>
 			<td align='right'>
-				Choose an action:
+				<?php print __("Choose an action:");?>
 				<?php form_dropdown("drp_action",$actions_array,"","","1","","");?>
 			</td>
 			<td width='1' align='right'>
-				<input type='submit' value='Go' name='go'>
+				<input type='submit' value='<?php print __("Go");?>' name='go'>
 			</td>
 		</tr>
 	</table>
