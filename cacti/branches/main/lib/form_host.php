@@ -690,7 +690,7 @@ function host_display_general($host, $host_text) {
 					($host["availability_method"] == AVAIL_SNMP_AND_PING) ||
 					($host["availability_method"] == AVAIL_SNMP_OR_PING)) { ?>
 				<td class="textInfo">
-					SNMP Information<br>
+					<?php print __("SNMP Information");?><br>
 					<span style="font-size: 11px; font-weight: normal;">
 					<?php
 					if ((($host["snmp_community"] == "") && ($host["snmp_username"] == "")) ||
@@ -772,14 +772,14 @@ function host_display_general($host, $host_text) {
 
 				?>
 				<td class="textInfo" style="vertical-align:top;">
-					Ping Results<br>
+					<?php print __("Ping Results");?><br>
 					<span style="font-size: 10px; <?php print $font . $color;?>;">
 					<?php print $ping->ping_response; ?>
 					</span>
 				</td>
 				<?php }else if ($host["availability_method"] == AVAIL_NONE) { ?>
 				<td class="textInfo">
-					No Availability Check In Use<br>
+					<?php print __("No Availability Check In Use");?><br>
 				</td>
 				<?php } ?>
 			</tr>
@@ -1372,7 +1372,7 @@ function host() {
 			<table cellpadding="0" cellspacing="1">
 				<tr>
 					<td style='white-space:nowrap;width:55px;'>
-						Type:&nbsp;
+						<?php print __("Type:");?>&nbsp;
 					</td>
 					<td width="1">
 						<select name="template_id" onChange="applyViewDeviceFilterChange(document.form_devices)">
@@ -1390,7 +1390,7 @@ function host() {
 						</select>
 					</td>
 					<td style='white-space:nowrap;width:50px;'>
-						&nbsp;Status:&nbsp;
+						&nbsp;<?php print __("Status:");?>&nbsp;
 					</td>
 					<td width="1">
 						<select name="status" onChange="applyViewDeviceFilterChange(document.form_devices)">
