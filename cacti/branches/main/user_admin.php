@@ -1107,8 +1107,9 @@ function user() {
 		print "<tr><td><em>" . __("No Users") ."</em></td></tr>";
 	}
 
-	print "</table>\n</form>\n";	# end form and table of html_header_sort_checkbox
+	print "</table>\n";	# end table of html_header_sort_checkbox
 
 	draw_actions_dropdown($user_actions);
+	print "</form>\n";	# end form of html_header_sort_checkbox
 }
 ?>

@@ -1298,13 +1298,14 @@ function graph() {
 		print "<tr><td><em>No Graphs Found</em></td></tr>";
 	}
 
-	print "</table>\n</form>\n";	# end form and table of html_header_sort_checkbox
+	print "</table>\n";	# end table of html_header_sort_checkbox
 
 	/* add a list of tree names to the actions dropdown */
 	$graph_actions = array_merge($graph_actions, api_tree_add_tree_names_to_actions_array());
 
 	/* draw the dropdown containing a list of available actions for this form */
 	draw_actions_dropdown($graph_actions);
+	print "</form>\n";	# end form of html_header_sort_checkbox
 }
 
 ?>

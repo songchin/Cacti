@@ -399,9 +399,10 @@ function poller() {
 		print "<tr><td><em>" . __("No Pollers Defined") . "</em></td></tr>\n";
 	}
 
-	print "</table>\n</form>\n";	# end form and table of html_header_sort_checkbox
+	print "</table>\n";	# end table of html_header_sort_checkbox
 
 	/* draw the dropdown containing a list of available actions for this form */
 	draw_actions_dropdown($poller_actions);
+	print "</form>\n";	# end form of html_header_sort_checkbox
 }
 ?>

@@ -140,23 +140,21 @@ function form_actions() {
 			";
 	}
 
+	print "	<tr>
+			<td colspan='2' align='right'>
+				<input type='hidden' name='action' value='actions'>
+				<input type='hidden' name='selected_items' value='" . (isset($site_array) ? serialize($site_array) : '') . "'>
+				<input type='hidden' name='drp_action' value='" . $_POST["drp_action"] . "'>
+			</td>
+		</tr>
+		";
+
 	if (!isset($site_array)) {
 		print "<tr><td class='textArea'><span class='textError'>" . __("You must select at least one site.") . "</span></td></tr>\n";
 		form_return_button_alt();
 	}else{
 		form_yesno_button_alt(serialize($site_array), $_POST["drp_action"]);
 	}
-
-	print "	<tr>
-			<td colspan='2' align='right'>
-				<input type='hidden' name='action' value='actions'>
-				<input type='hidden' name='selected_items' value='" . (isset($site_array) ? serialize($site_array) : '') . "'>
-				<input type='hidden' name='drp_action' value='" . $_POST["drp_action"] . "'>
-				<a href='sites.php'><img src='images/button_no.gif' alt='" . __("Cancel") . "' align='absmiddle' border='0'></a>
-				$save_html
-			</td>
-		</tr>
-		";
 
 	html_end_box();
 
@@ -663,7 +661,7 @@ function site() {
 		}else{
 			print "<tr><td><em>" . __("No Sites") . "</em></td></tr>";
 		}
-		print "</table>\n</form>\n";	# end form and table of html_header_sort_checkbox
+		print "</table>\n";	# end table of html_header_sort_checkbox
 	}else{
 		$nav = html_create_nav($_REQUEST["page"], MAX_DISPLAY_PAGES, read_config_option("num_rows_device"), $total_rows, 10, "sites.php");
 
@@ -702,11 +700,12 @@ function site() {
 		}else{
 			print "<tr><td><em>" . __("No Sites") . "</em></td></tr>";
 		}
-		print "</table>\n</form>\n";	# end form and table of html_header_sort_checkbox
+		print "</table>\n";	# end table of html_header_sort_checkbox
 	}
 
 	/* draw the dropdown containing a list of available actions for this form */
 	draw_actions_dropdown($site_actions);
+	print "</form>\n";	# end form of html_header_sort_checkbox
 }
 
 ?>
