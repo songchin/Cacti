@@ -60,7 +60,7 @@ if (!isset($_REQUEST["action"])) { $_REQUEST["action"] = ""; }
 switch ($_REQUEST["action"]) {
 case 'tree':
 	if ((read_config_option("auth_method") != 0) && (empty($current_user["show_tree"]))) {
-		print "<strong><font size='+1' color='FF0000'>" __("YOU DO NOT HAVE RIGHTS FOR TREE VIEW") . "</font></strong>"; exit;
+		print "<strong><font size='+1' color='FF0000'>" . __("YOU DO NOT HAVE RIGHTS FOR TREE VIEW") . "</font></strong>"; exit;
 	}
 
 	/* if cacti's builtin authentication is turned on then make sure to take

@@ -31,16 +31,18 @@ if(!isset($_GET['location'])) {
 return;
 }
 
+/* rebuild $lang2locale array to find country and language codes easier */
+$locations = array();
+foreach($lang2locale as $locale => $properties) {
+	$locations[$properties['filename']] = array("flag" => $properties["country"], "language" => $properties["language"], "locale" => $locale);
+}
+
 /* create a list of all languages this Cacti system supports ... */
-$dhandle = opendir(CACTI_BASE_PATH . "/locales");
-$supported_languages["cacti"]["us"] = "English";
-while (false !== ($dirname = readdir($dhandle))) {
-	$catalogue = CACTI_BASE_PATH . "/locales/" . $dirname . "/LC_MESSAGES/cacti.mo"; 
-	if(file_exists($catalogue)) {
-		$dirname = strtolower(substr($dirname, 3, 2));
-		if(isset($lang2locale[$dirname])) {
-			$supported_languages["cacti"][$dirname] = $lang2locale[$dirname]['language'];
-		}
+$dhandle = opendir(CACTI_BASE_PATH . "/locales/LC_MESSAGES");
+$supported_languages["cacti"][] = "english_dummy";
+while (false !== ($filename = readdir($dhandle))) {
+	if(isset($locations[$filename])) {
+		$supported_languages["cacti"][] = $filename;
 	}
 }
 
@@ -53,16 +55,12 @@ if(read_config_option('i18n_support') == 2){
 		foreach($plugins as $plugin) {
 
 			$plugin = $plugin["directory"];
-			$dhandle = @opendir(CACTI_BASE_PATH . "/plugins/" . $plugin . "/locales");
-			$supported_languages[$plugin]["us"] = "English";
+			$dhandle = @opendir(CACTI_BASE_PATH . "/plugins/" . $plugin . "/locales/LC_MESSAGES");
+			$supported_languages[$plugin][] = "english_dummy";
 			if($dhandle) {
-				while (false !== ($dirname = readdir($dhandle))) {
-					$catalogue = CACTI_BASE_PATH . "/plugins/" . $plugin . "/locales/" . $dirname . "/LC_MESSAGES/" . $plugin . ".mo";
-					if(file_exists($catalogue)) {
-						$dirname = strtolower($dirname, 3, 2);
-						if(isset($lang2locale[$dirname])) {
-							$supported_languages[$plugin][$dirname]= $lang2locale[$dirname]['language'];
-						}
+				while (false !== ($filename = readdir($dhandle))) {
+					if(isset($locations[$filename])) {
+						$supported_languages[$plugin][]= $filename;
 					}
 				}
 				/* remove all languages which will not be supported by the plugin */
@@ -76,7 +74,7 @@ if(read_config_option('i18n_support') == 2){
 			}else {
 				/* no language support */
 				$supported_languages["cacti"] = array();
-				$supported_languages["cacti"]["us"] = "English";
+				$supported_languages["cacti"][] = "english_dummy";
 				break; 
 			}
 		}
@@ -90,12 +88,9 @@ $location .= (strpos($location, '?')) ? '&' : '?';
 <ul class="down-list" style="list-style:none; display:inline;">
 <?php
 if(sizeof($supported_languages["cacti"])>0) {
-	foreach($supported_languages["cacti"] as $code => $language) {
-		?><li><img src="<?php echo URL_PATH; ?>images/flag_icons/<?php print $code;?>.gif" align="top" alt="loading" style='border-width:0px;'><a href="<?php print $location . "language=" . $code; ?>">&nbsp;<?php print $language;?></a>&nbsp;&nbsp;</li><?php
+	foreach($supported_languages["cacti"] as $lang) {
+		?><li><img src="<?php echo URL_PATH; ?>images/flag_icons/<?php print $locations[$lang]["flag"];?>.gif" align="top" alt="loading" style='border-width:0px;'><a href="<?php print $location . "language=" . $locations[$lang]["locale"]; ?>">&nbsp;<?php print $locations[$lang]["language"];?></a>&nbsp;&nbsp;</li><?php	
 	}
-}else{
-	$system_language = getenv('LANG');
-	print "<li><a href=\"" . $location . "language=" . $system_language . "\">" . $lang2locale[$system_language]['language'] . "</a></li>";
 }
 ?>
 </ul>

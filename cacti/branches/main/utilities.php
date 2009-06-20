@@ -570,24 +570,24 @@ function display_database_processes() {
 }
 
 function display_languages() {
-	global $colors, $config, $cacti_textdomains, $lang2locale, $i18n_modes;
+	global $colors, $config, $cacti_textdomains, $lang2locale, $i18n_modes, $cacti_locale;
 
 	$loaded_extensions = get_loaded_extensions();
-	$gettext = (in_array("gettext", $loaded_extensions)) ? __("native") : __("emulated");
 
-	$locale = getenv("LC_ALL") ? getenv("LC_ALL") : "<i>" . __("undefined") . "</i>";
-	$language = getenv("LANG") ? "{$lang2locale[getenv("LANG")]["language"]} (" . getenv("LANG") .")" : "<i>" . __("undefined") . "</i>";
+	$language = $lang2locale[$cacti_locale]["language"];
+
+	/* rebuild $lang2locale array to find country and language codes easier */
+	$locations = array();
+	foreach($lang2locale as $locale => $properties) {
+		$locations[$properties['filename']] = $properties["language"];
+	}
 
 	/* create a list of all languages this Cacti system supports ... */
-	$dhandle = opendir(CACTI_BASE_PATH . "/locales");
-	$supported_languages["cacti"] = __("English") . ", ";
-	while (false !== ($dirname = readdir($dhandle))) {
-		$catalogue = CACTI_BASE_PATH . "/locales/" . $dirname . "/LC_MESSAGES/cacti.mo";
-		if(file_exists($catalogue)) {
-			$dirname = substr($dirname, 0, -3);
-			if(isset($lang2locale[$dirname])) {
-				$supported_languages["cacti"] .= $lang2locale[$dirname]['language'] . ", ";
-			}
+	$dhandle = opendir(CACTI_BASE_PATH . "/locales/LC_MESSAGES");
+	$supported_languages["cacti"] = "English, ";
+	while (false !== ($filename = readdir($dhandle))) {
+		if(isset($locations[$filename])) {
+			$supported_languages["cacti"] .= $locations[$filename] . ", ";
 		}
 	}
 	$supported_languages["cacti"] = substr($supported_languages["cacti"], 0, -2);
@@ -599,16 +599,12 @@ function display_languages() {
 		foreach($plugins as $plugin) {
 
 			$plugin = $plugin["directory"];
-			$dhandle = @opendir(CACTI_BASE_PATH . "/plugins/" . $plugin . "/locales");
-			$supported_languages[$plugin] = __("English") . ", ";
+			$dhandle = @opendir(CACTI_BASE_PATH . "/plugins/" . $plugin . "/locales/LC_MESSAGES");
+			$supported_languages[$plugin] = "English, ";
 			if($dhandle) {
-				while (false !== ($dirname = readdir($dhandle))) {
-					$catalogue = CACTI_BASE_PATH . "/plugins/" . $plugin . "/locales/" . $dirname . "/LC_MESSAGES/" . $plugin . ".mo";
-					if(file_exists($catalogue)) {
-						$dirname = substr($dirname, 0, -3);
-						if(isset($lang2locale[$dirname])) {
-							$supported_languages[$plugin] .= $lang2locale[$dirname]['language'] . ", ";
-						}
+				while (false !== ($filename = readdir($dhandle))) {
+					if(isset($locations[$filename])) {
+						$supported_languages[$plugin] .= $locations[$filename] . ", ";
 					}
 				}
 			}
@@ -619,25 +615,17 @@ function display_languages() {
 
 	html_start_box("<strong>" . __("Language Information") . "</strong>", "100%", $colors["header"], "3", "center", "");
 	html_header(array(__("General Information")), 2);
+	print "<tr class='rowAlternate1'>\n";
+	print "		<td style='width:20%;' class='textAreaNotes'>Current Language</td>\n";
+	print "		<td class='textAreaNotes'>". $language . "</td>\n";
+	print "</tr>\n";
 	print "<tr class='rowAlternate2'>\n";
-	print "		<td style='width:20%;' class='textAreaNotes'>" . __("Language Mode") . "</td>\n";
+	print "		<td style='width:20%;' class='textAreaNotes'>Language Mode</td>\n";
 	print "		<td class='textAreaNotes'>" . $i18n_modes[read_config_option('i18n_support')] . "</td>\n";
 	print "</tr>\n";
 	print "<tr class='rowAlternate1'>\n";
-	print "		<td style='width:20%;' class='textAreaNotes'>" . __("Gettext Support") . "</td>\n";
-	print "		<td class='textAreaNotes'>" . $gettext . "</td>\n";
-	print "</tr>\n";
-	print "<tr class='rowAlternate2'>\n";
-	print "		<td style='width:20%;' class='textAreaNotes'>" . __("Current Language") . "</td>\n";
-	print "		<td class='textAreaNotes'>". $language . "</td>\n";
-	print "</tr>\n";
-	print "<tr class='rowAlternate1'>\n";
-	print "		<td style='width:20%;' class='textAreaNotes'>" . __("Default Language") . "</td>\n";
+	print "		<td style='width:20%;' class='textAreaNotes'>Default Language</td>\n";
 	print "		<td class='textAreaNotes'>English</td>\n";
-	print "</tr>\n";
-	print "<tr class='rowAlternate2'>\n";
-	print "		<td style='width:20%;' class='textAreaNotes'>" . __("Current Locale") . "</td>\n";
-	print "		<td class='textAreaNotes'>". $locale . "</td>\n";
 	print "</tr>\n";
 	html_header(array(__("Supported Languages")), 2);
 	$i = 0;

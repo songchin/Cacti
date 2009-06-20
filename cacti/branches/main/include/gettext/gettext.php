@@ -318,7 +318,7 @@ class gettext_reader {
    * @param string number
    * @return translated plural form
    */
-  function ngettext($single, $plural, $number) {
+  function _ngettext($single, $plural, $number) {
     if ($this->short_circuit) {
       if ($number != 1)
         return $plural;

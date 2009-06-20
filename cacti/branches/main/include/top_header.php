@@ -24,7 +24,7 @@
 
 include_once(CACTI_BASE_PATH . "/lib/time.php");
 
-global $colors, $config;
+global $colors, $config, $data_source_types, $cacti_locale, $cacti_country, $lang2locale;
 
 $page_title = api_plugin_hook_function('page_title', 'Cacti');
 
@@ -75,13 +75,13 @@ api_plugin_hook('page_head');
 			<?php print draw_navigation_text() . "\n";?>
 		</div>
 		<div style='float:right'><?php
-			if (read_config_option("auth_method") != 0) { $date = date_time_format();?><strong><?php echo date("D, " . $date . " T");?></strong>&nbsp;&nbsp;&nbsp;<?php echo __("Logged in as");?>&nbsp;<strong><?php print db_fetch_cell("select username from user_auth where id=" . $_SESSION["sess_user_id"]);?></strong> (<a href="<?php echo URL_PATH; ?>logout.php"><?php echo __("Logout"); ?></a>)<?php } ?>
+			if (read_config_option("auth_method") != 0) { $date = date_time_format();?><strong><?php echo __date("D, " . $date . " T");?></strong>&nbsp;&nbsp;&nbsp;<?php echo __("Logged in as");?>&nbsp;<strong><?php print db_fetch_cell("select username from user_auth where id=" . $_SESSION["sess_user_id"]);?></strong> (<a href="<?php echo URL_PATH; ?>logout.php"><?php echo __("Logout"); ?></a>)<?php } ?>
 		</div>
 		<?php if(read_config_option('i18n_support') != 0) {?>
 		<div id="codelist" class='languages' style="float:right; list-style:none; display:inline;">
 			<span id="loading" style="display:none;"><img src="<?php echo URL_PATH; ?>images/load_small.gif" align="top" alt="<?php print __("loading");?>" style='border-width:0px;'>LOADING</span>
 			<ul class="down-list" style="list-style:none; display:inline;">
-				<li><img src="<?php echo URL_PATH; ?>images/flag_icons/<?php print strtolower(substr((getenv('LC_ALL')),0,2));?>.gif" align="top" alt="<?php print __("loading");?>" style='border-width:0px;'><a href="#">&nbsp;<?php print $lang2locale[(getenv('LANG'))]['language'];?></a></li>
+				<li><img src="<?php echo URL_PATH; ?>images/flag_icons/<?php print $cacti_country;?>.gif" align="top" alt="<?php print __("loading");?>" style='border-width:0px;'><a href="#">&nbsp;<?php print $lang2locale[$cacti_locale]['language'];?></a></li>
 			</ul>
 		</div>
 		<?php }?>

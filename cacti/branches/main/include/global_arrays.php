@@ -703,5 +703,104 @@ $graph_datechar = array(
 	GDC_SLASH => "/",
 	GDC_DOT => "."
 	);
+$i18n_months = array(
+	"January"	=> __("__January_"),
+	"February"	=> __("__February_"),
+	"March"		=> __("__March_"),
+	"Arpil"		=> __("__April_"),
+	"May"		=> __("__May_"),
+	"June"		=> __("__June_"),
+	"July"		=> __("__July_"),
+	"August"	=> __("__August_"),
+	"September"	=> __("__September_"),
+	"October"	=> __("__October_"),
+	"November"	=> __("__November_"),
+	"December"	=> __("__December_"),
+	);
+
+$i18n_months_short = array(
+	"Jan"	=> __("_Jan_"),
+	"Feb"	=> __("_Feb_"),
+	"Mar"	=> __("_Mar_"),
+	"Arp"	=> __("_Apr_"),
+	"May"	=> __("_May_"),
+	"Jun"	=> __("_Jun_"),
+	"Jul"	=> __("_Jul_"),
+	"Aug"	=> __("_Aug_"),
+	"Sep"	=> __("_Sep_"),
+	"Oct"	=> __("_Oct_"),
+	"Nov"	=> __("_Nov_"),
+	"Dec"	=> __("_Dec_"),
+	);
+
+$i18n_weekdays = array(
+	"Sunday"	=> __("Sunday"), 
+	"Monday"	=> __("Monday"),
+	"Tuesday"	=> __("Tuesday"),
+	"Wednesday"	=> __("Wednesday"),
+	"Thursday"	=> __("Thursday"),
+	"Friday"	=> __("Friday"),
+	"Saturday"	=> __("Saturday")
+	);
+
+$i18n_weekdays_short = array(
+	"Sun"	=> __("Sun"), 
+	"Mon"	=> __("Mon"),
+	"Tue"	=> __("Tue"),
+	"Wed"	=> __("Wed"),
+	"Thu"	=> __("Thu"),
+	"Fri"	=> __("Fri"),
+	"Sat"	=> __("Sat")
+	);
+
+$lang2locale = array(
+	"sq" 		=> array("language"=>__("Albanian"), 				"country" => "al", "filename" => "albanian_albania.mo"),
+	"ar"		=> array("language"=>__("Arabic"), 					"country" => "sa", "filename" => "arabic_saudi_arabia.mo"),
+	"hy"		=> array("language"=>__("Armenian"),				"country" => "am", "filename" => "armenian_armenia.mo"),
+	"be"		=> array("language"=>__("Belarusian"),				"country" => "by", "filename" => "belarusian_belarus.mo"),
+	"bg"		=> array("language"=>__("Bulgarian"),				"country" => "bg", "filename" => "bulgarian_bulgaria.mo"),
+	"zh" 		=> array("language"=>__("Chinese"), 				"country" => "cn", "filename" => "chinese_china.mo"),
+	"zh-cn"		=> array("language"=>__("Chinese (China)"),			"country" => "cn", "filename" => "chinese_china.mo"),
+	"zh-hk"		=> array("language"=>__("Chinese (Hong Kong)"),		"country" => "hk", "filename" => "chinese_hong_kong.mo"),
+	"zh-sg"		=> array("language"=>__("Chinese (Singapore)"),		"country" => "sg", "filename" => "chinese_singapore.mo"),
+	"zh-tw"		=> array("language"=>__("Chinese (Taiwan)"),		"country" => "tw", "filename" => "chinese_taiwan.mo"),
+	"hr" 		=> array("language"=>__("Croatian"), 				"country" => "hr", "filename" => "croatian_croatia.mo"),
+	"cs"		=> array("language"=>__("Czech"),					"country" => "cz", "filename" => "czech_czech_republic.mo"),
+	"da" 		=> array("language"=>__("Danish"), 					"country" => "dk", "filename" => "danish_denmark.mo"),
+	"nl" 		=> array("language"=>__("Dutch"), 					"country" => "nl", "filename" => "dutch_netherlands.mo"),
+	"en"		=> array("language"=>__("English"),					"country" => "us", "filename" => "english_dummy"),
+	"et"		=> array("language"=>__("Estonian"), 				"country" => "ee", "filename" => "estonian_estonia.mo"),
+	"fi" 		=> array("language"=>__("Finnish"), 				"country" => "fi", "filename" => "finnish_finland.mo"),
+	"fr" 		=> array("language"=>__("French"), 					"country" => "fr", "filename" => "french_france.mo"),
+	"de"		=> array("language"=>__("German"),					"country" => "de", "filename" => "german_germany.mo"),
+	"el" 		=> array("language"=>__("Greek"), 					"country" => "gr", "filename" => "greek_greece.mo"),
+	"iw" 		=> array("language"=>__("Hebrew"), 					"country" => "il", "filename" => "hebrew_israel.mo"),
+	"hi" 		=> array("language"=>__("Hindi"), 					"country" => "in", "filename" => "hindi_india.mo"),
+	"hu" 		=> array("language"=>__("Hungarian"),				"country" => "hu", "filename" => "hungarian_hungary.mo"),
+	"is" 		=> array("language"=>__("Icelandic"),				"country" => "is", "filename" => "icelandic_iceland.mo"),
+	"id" 		=> array("language"=>__("Indonesian"), 				"country" => "id", "filename" => "indonesian_indonesia.mo"),
+	"ga" 		=> array("language"=>__("Irish"), 					"country" => "ie", "filename" => "irish_ireland.mo"),
+	"it" 		=> array("language"=>__("Italian"), 				"country" => "it", "filename" => "italian_italy.mo"),
+	"ja" 		=> array("language"=>__("Japanese"), 				"country" => "jp", "filename" => "japanese_japan.mo"),
+	"ko" 		=> array("language"=>__("Korean"), 					"country" => "kr", "filename" => "korean_korea.mo"),
+	"lv" 		=> array("language"=>__("Lativan"),					"country" => "lv", "filename" => "latvian_latvia.mo"),
+	"lt"		=> array("language"=>__("Lithuanian"), 				"country" => "lt", "filename" => "lithuanian_lithuania.mo"),
+	"mk"		=> array("language"=>__("Macedonian"), 				"country" => "mk", "filename" => "macedonian_macedonia.mo"),
+	"ms"		=> array("language"=>__("Malay"), 					"country" => "my", "filename" => "malay_malaysia.mo"),
+	"mt"		=> array("language"=>__("Maltese"), 				"country" => "lt", "filename" => "maltese_malta.mo"),
+	"no"		=> array("language"=>__("Norwegian"), 				"country" => "no", "filename" => "norwegian_norway.mo"),
+	"pl"		=> array("language"=>__("Polish"), 					"country" => "pl", "filename" => "polish_poland.mo"),
+	"pt"		=> array("language"=>__("Portuguese"),				"country" => "pt", "filename" => "portuguese_portugal.mo"),
+	"ro"		=> array("language"=>__("Romanian"), 				"country" => "ro", "filename" => "romanian_romania.mo"),
+	"ru"		=> array("language"=>__("Russian"), 				"country" => "ru", "filename" => "russian_russia.mo"),
+	"sr"		=> array("language"=>__("Serbian"), 				"country" => "rs", "filename" => "serbian_serbia.mo"),
+	"sk"		=> array("language"=>__("Slovak"), 					"country" => "sk", "filename" => "slovak_slovakia.mo"),
+	"sl"		=> array("language"=>__("Slovenian"), 				"country" => "si", "filename" => "slovenian_slovenia.mo"),
+	"es"		=> array("language"=>__("Spanish"), 				"country" => "es", "filename" => "spanish_spain.mo"),
+	"sv"		=> array("language"=>__("Swedish"),					"country" => "se", "filename" => "swedish_sweden.mo"),
+	"th"		=> array("language"=>__("Thai"), 					"country" => "th", "filename" => "thai_thailand.mo"),
+	"tr"		=> array("language"=>__("Turkish"), 				"country" => "tr", "filename" => "turkish_turkey.mo"),
+	"uk"		=> array("language"=>__("Vietnamese"), 				"country" => "vn", "filename" => "vietnamese_vietnam.mo")
+);
 
 ?>

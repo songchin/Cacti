@@ -828,7 +828,7 @@ function template_edit() {
 					<td nowrap><?php print __("Add Data Query:");?>&nbsp;
 						<?php form_dropdown("snmp_query_id",$available_data_queries,"name","id","","","");?>
 					</td>
-					<td nowrap><?php print __("Re-Index Method:");>&nbsp;
+					<td nowrap><?php print __("Re-Index Method:");?>&nbsp;
 						<?php form_dropdown("reindex_method",$reindex_types,"","","1","","");?>
 					</td>
 					<td align="right">
