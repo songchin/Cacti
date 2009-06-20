@@ -139,7 +139,7 @@ if (sizeof($parms)) {
 			display_help();
 			exit(0);
 		default:
-			echo "ERROR: Invalid Argument: ($arg)\n\n";
+			printf(__("ERROR: Invalid Argument: (%s)\n\n"), $arg);
 			display_help();
 			exit(1);
 		}
@@ -152,8 +152,8 @@ if (sizeof($parms)) {
 
 	if ($displayNodes) {
 		if (!isset($treeId)) {
-			echo "ERROR: You must supply a tree_id before you can list its nodes\n";
-			echo "Try --list-trees\n";
+			echo __("ERROR: You must supply a tree_id before you can list its nodes") . "\n";
+			echo __("Try --list-trees") . "\n";
 			exit(1);
 		}
 
@@ -168,8 +168,8 @@ if (sizeof($parms)) {
 
 	if ($displayGraphs) {
 		if (!isset($hostId) || $hostId == 0) {
-			echo "ERROR: You must supply a host_id before you can list its graphs\n";
-			echo "Try --list-hosts\n";
+			echo __("ERROR: You must supply a host_id before you can list its graphs") . "\n";
+			echo __("Try --list-hosts") . "\n";
 			exit(1);
 		}
 
@@ -180,7 +180,7 @@ if (sizeof($parms)) {
 	if ($type == 'tree') {
 		# Add a new tree
 		if (empty($name)) {
-			echo "ERROR: You must supply a name with --name\n";
+			echo __("ERROR: You must supply a name with --name") . "\n";
 			display_help();
 			exit(1);
 		}
@@ -195,14 +195,14 @@ if (sizeof($parms)) {
 			$sortMethod == "natural") {
 			$treeOpts["sort_type"] = $sortMethods[$sortMethod];
 		} else {
-			echo "ERROR: Invalid sort-method: ($sortMethod)\n";
+			printf(__("ERROR: Invalid sort-method: (%s)\n"), $sortMethod);
 			display_help();
 			exit(1);
 		}
 
 		$existsAlready = db_fetch_cell("select id from graph_tree where name = '$name'");
 		if ($existsAlready) {
-			echo "ERROR: Not adding tree - it already exists - tree-id: ($existsAlready)\n";
+			printf(__("ERROR: Not adding tree - it already exists - tree-id: (%s)\n"), $existsAlready);
 			exit(1);
 		}
 
@@ -210,7 +210,7 @@ if (sizeof($parms)) {
 
 		sort_tree(SORT_TYPE_TREE, $treeId, $treeOpts["sort_type"]);
 
-		echo "Tree Created - tree-id: ($treeId)\n";
+		printf(__("Tree Created - tree-id: (%d)\n"), $treeId);
 
 		exit(0);
 	} elseif ($type == 'node') {
@@ -220,13 +220,13 @@ if (sizeof($parms)) {
 			$nodeType == "host") {
 			$itemType = $nodeTypes[$nodeType];
 		} else {
-			echo "ERROR: Invalid node-type: ($nodeType)\n";
+			printf(__("ERROR: Invalid node-type: (%d)"), $nodeType);
 			display_help();
 			exit(1);
 		}
 
 		if (!is_numeric($parentNode)) {
-			echo "ERROR: parent-node $parentNode must be numeric > 0\n";
+			printf(__("ERROR: parent-node %s must be numeric > 0\n"), $parentNode);
 			display_help();
 			exit(1);
 		} elseif ($parentNode > 0 ) {
@@ -236,7 +236,7 @@ if (sizeof($parms)) {
 				AND id=$parentNode");
 
 			if (!isset($parentNodeExists)) {
-				echo "ERROR: parent-node $parentNode does not exist\n";
+				printf(__("ERROR: parent-node %s does not exist\n"), $parentNode);
 				exit(1);
 			}
 		}
@@ -244,7 +244,7 @@ if (sizeof($parms)) {
 		if ($nodeType == 'header') {
 			# Header --name must be given
 			if (empty($name)) {
-				echo "ERROR: You must supply a name with --name\n";
+				echo __("ERROR: You must supply a name with --name") . "\n";
 				display_help();
 				exit(1);
 			}
@@ -262,14 +262,14 @@ if (sizeof($parms)) {
 
 			# verify rra-id
 			if (!is_numeric($rra_id)) {
-				echo "ERROR: rra-id $rra_id must be numeric > 0\n";
+				printf(__("ERROR: rra-id %s must be numeric > 0\n"), $rra_id);
 				display_help();
 				exit(1);
 			} elseif ($rra_id > 0 ) {
 				$rraExists = db_fetch_cell("SELECT id FROM rra WHERE id=$rra_id");
 
 				if (!isset($rraExists)) {
-					echo "ERROR: rra-id $rra_id does not exist\n";
+					printf(__("ERROR: rra-id %d does not exist\n"), $rra_id);
 					exit(1);
 				}
 			}
@@ -280,12 +280,12 @@ if (sizeof($parms)) {
 			$name           = '';
 
 			if (!isset($hosts[$hostId])) {
-				echo "ERROR: No such host-id ($hostId) exists. Try --list-hosts\n";
+				printf(__("ERROR: No such host-id (%d) exists. Try --list-hosts\n"), $hostId);
 				exit(1);
 			}
 
 			if ($hostGroupStyle != 1 && $hostGroupStyle != 2) {
-				echo "ERROR: Host Group Style must be 1 or 2 (Graph Template or Data Query Index)\n";
+				echo __("ERROR: Host Group Style must be 1 or 2 (Graph Template or Data Query Index)") . "\n";
 				display_help();
 				exit(1);
 			}
@@ -294,11 +294,11 @@ if (sizeof($parms)) {
 		# $nodeId could be a Header Node, a Graph Node, or a Host node.
 		$nodeId = api_tree_item_save(0, $treeId, $itemType, $parentNode, $name, $graphId, $rra_id, $hostId, $hostGroupStyle, $sortMethods[$sortMethod], false);
 
-		echo "Added Node node-id: ($nodeId)\n";
+		printf(__("Added Node node-id: (%d)\n"), $nodeId);
 
 		exit(0);
 	} else {
-		echo "ERROR: Unknown type: ($type)\n";
+		printf(__("ERROR: Unknown type: (%s)\n"), $type);
 		display_help();
 		exit(1);
 	}
@@ -308,32 +308,32 @@ if (sizeof($parms)) {
 }
 
 function display_help() {
-	echo "Add Tree Script 1.0, Copyright 2007 - The Cacti Group\n\n";
-	echo "A simple command line utility to add objects to a tree in Cacti\n\n";
-	echo "usage: add_tree.php  --type=[tree|node] [type-options] [--quiet]\n\n";
-	echo "Tree options:\n";
-	echo "    --name=[Tree Name]\n";
-	echo "    --sort-method=[manual|alpha|natural|numeric]\n\n";
-	echo "Node options:\n";
-	echo "    --node-type=[header|host|graph]\n";
-	echo "    --tree-id=[ID]\n";
-	echo "    [--parent-node=[ID] [Node Type Options]]\n\n";
-	echo "Header node options:\n";
-	echo "    --name=[Name]\n\n";
-	echo "Host node options:\n";
-	echo "    --host-id=[ID]\n";
-	echo "    [--host-group-style=[1|2]]\n";
-	echo "    (host group styles:\n";
-	echo "     1 = Graph Template,\n";
-	echo "     2 = Data Query Index)\n\n";
-	echo "Graph node options:\n";
-	echo "    --graph-id=[ID]\n";
-	echo "    [--rra-id=[ID]]\n\n";
-	echo "List Options:\n";
-	echo "    --list-trees\n";
-	echo "    --list-nodes --tree-id=[ID]\n";
-	echo "    --list-rras\n";
-	echo "    --list-graphs --host-id=[ID]\n";
+	echo __("Add Tree Script 1.0, Copyright 2007 - The Cacti Group") . "\n\n";
+	echo __("A simple command line utility to add objects to a tree in Cacti") . "\n\n";
+	echo __("usage: add_tree.php  --type=[tree|node] [type-options] [--quiet]") . "\n\n";
+	echo __("Tree options:") . "\n";
+	echo __("    --name=[Tree Name]") . "\n";
+	echo __("    --sort-method=[manual|alpha|natural|numeric]") . "\n\n";
+	echo __("Node options:") . "\n";
+	echo __("    --node-type=[header|host|graph]") . "\n";
+	echo __("    --tree-id=[ID]") . "\n";
+	echo __("    [--parent-node=[ID] [Node Type Options]]") . "\n\n";
+	echo __("Header node options:") . "\n";
+	echo __("    --name=[Name]") . "\n\n";
+	echo __("Host node options:") . "\n";
+	echo __("    --host-id=[ID]") . "\n";
+	echo __("    [--host-group-style=[1|2]]") . "\n";
+	echo __("    (host group styles:") . "\n";
+	echo __("     1 = Graph Template,") . "\n";
+	echo __("     2 = Data Query Index)") . "\n\n";
+	echo __("Graph node options:") . "\n";
+	echo __("    --graph-id=[ID]") . "\n";
+	echo __("    [--rra-id=[ID]]") . "\n\n";
+	echo __("List Options:") . "\n";
+	echo __("    --list-trees") . "\n";
+	echo __("    --list-nodes --tree-id=[ID]") . "\n";
+	echo __("    --list-rras") . "\n";
+	echo __("    --list-graphs --host-id=[ID]") . "\n";
 }
 
 ?>

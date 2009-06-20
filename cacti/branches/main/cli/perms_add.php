@@ -69,7 +69,7 @@ if (sizeof($parms) == 0) {
 			if ( ($value == "graph") || ($value == "tree") || ($value == "host") || ($value == "graph_template")) {
 				$itemType = $itemTypes[$value];
 			}else{
-				echo "ERROR: Invalid Item Type: ($value)\n\n";
+				printf(__("ERROR: Invalid Item Type: (%s)\n\n"), $value);
 				display_help();
 				exit(1);
 			}
@@ -114,7 +114,7 @@ if (sizeof($parms) == 0) {
 			display_help();
 			exit(0);
 		default:
-			echo "ERROR: Invalid Argument: ($arg)\n\n";
+			printf(__("ERROR: Invalid Argument: (%s)\n\n"), $arg);
 			display_help();
 			exit(1);
 		}
@@ -137,8 +137,8 @@ if (sizeof($parms) == 0) {
 
 	if ($displayGraphs) {
 		if (!isset($hostId) || ($hostId === 0) || (!db_fetch_cell("SELECT id FROM host WHERE id=$hostId"))) {
-			echo "ERROR: You must supply a valid host_id before you can list its graphs\n";
-			echo "Try --list-hosts\n";
+			echo __("ERROR: You must supply a valid host_id before you can list its graphs") . "\n";
+			echo __("Try --list-hosts") . "\n";
 			display_help();
 			exit(1);
 		} else {
@@ -161,7 +161,7 @@ if (sizeof($parms) == 0) {
 		if ( db_fetch_cell("SELECT id FROM user_auth WHERE id=$userId") ) {
 			array_push($userIds, $userId);
 		} else {
-			echo "ERROR: Invalid Userid: ($value)\n\n";
+			printf(__("ERROR: Invalid Userid: (%d)\n\n"), $value);
 			display_help();
 			exit(1);
 		}
@@ -170,13 +170,13 @@ if (sizeof($parms) == 0) {
 
 	/* verify --item-id */
 	if ($itemType == 0) {
-		echo "ERROR: --item-type missing. Please specify.\n\n";
+		echo __("ERROR: --item-type missing. Please specify.") . "\n\n";
 		display_help();
 		exit(1);
 	}
 
 	if ($itemId == 0) {
-		echo "ERROR: --item-id missing. Please specify.\n\n";
+		echo __("ERROR: --item-id missing. Please specify.") . "\n\n";
 		display_help();
 		exit(1);
 	}
@@ -184,28 +184,28 @@ if (sizeof($parms) == 0) {
 	switch ($itemType) {
 		case PERM_GRAPHS: /* graph */
 			if ( !db_fetch_cell("SELECT local_graph_id FROM graph_templates_graph WHERE local_graph_id=$itemId") ) {
-				echo "ERROR: Invalid Graph item id: ($itemId)\n\n";
+				printf(__("ERROR: Invalid Graph item id: (%d)\n\n"), $itemId);
 				display_help();
 				exit(1);
 			}
 			break;
 		case PERM_TREES: /* tree */
 			if ( !db_fetch_cell("SELECT id FROM graph_tree WHERE id=$itemId") ) {
-				echo "ERROR: Invalid Tree item id: ($itemId)\n\n";
+				printf(__("ERROR: Invalid Tree item id: (%d)\n\n"), $itemId);
 				display_help();
 				exit(1);
 			}
 			break;
 		case PERM_HOSTS: /* host */
 			if ( !db_fetch_cell("SELECT id FROM host WHERE id=$itemId") ) {
-				echo "ERROR: Invalid Host item id: ($itemId)\n\n";
+				printf(__("ERROR: Invalid Host item id: (%d)\n\n"), $itemId);
 				display_help();
 				exit(1);
 			}
 			break;
 		case PERM_GRAPH_TEMPLATES: /* graph_template */
 			if ( !db_fetch_cell("SELECT id FROM graph_templates WHERE id=$itemId") ) {
-				print "ERROR: Invalid Graph Template item id: ($itemId)\n\n";
+				printf(__("ERROR: Invalid Graph Template item id: (%d)\n\n"), $itemId);
 				display_help();
 				exit(1);
 			}
@@ -219,17 +219,17 @@ if (sizeof($parms) == 0) {
 }
 
 function display_help() {
-	echo "Add Permissions Script 1.0, Copyright 2007 - The Cacti Group\n\n";
-	echo "A simple command line utility to add permissions to tree items in Cacti\n\n";
-	echo "usage: add_perms.php [ --user-id=[ID] ]\n";
-	echo "    --item-type=[graph|tree|host|graph_template]\n";
-	echo "    --item-id [--quiet]\n\n";
-	echo "Where item-id is the id of the object of type item-type\n";
-	echo "List Options:\n";
-	echo "    --list-users\n";
-	echo "    --list-trees\n";
-	echo "    --list-graph-templates\n";
-	echo "    --list-graphs --host-id=[ID]\n";
+	echo __("Add Permissions Script 1.0, Copyright 2007 - The Cacti Group") . "\n\n";
+	echo __("A simple command line utility to add permissions to tree items in Cacti") . "\n\n";
+	echo __("usage: add_perms.php [ --user-id=[ID] ]") . "\n";
+	echo __("    --item-type=[graph|tree|host|graph_template]") . "\n";
+	echo __("    --item-id [--quiet]") . "\n\n";
+	echo __("Where item-id is the id of the object of type item-type") . "\n";
+	echo __("List Options:") . "\n";
+	echo __("    --list-users") . "\n";
+	echo __("    --list-trees") . "\n";
+	echo __("    --list-graph-templates") . "\n";
+	echo __("    --list-graphs --host-id=[ID]") . "\n";
 }
 
 ?>

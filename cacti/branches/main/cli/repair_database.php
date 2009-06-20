@@ -65,27 +65,30 @@ foreach($parms as $parameter) {
 		display_help();
 		exit;
 	default:
-		print "ERROR: Invalid Parameter " . $parameter . "\n\n";
+		printf(__("ERROR: Invalid Parameter %s"), $parameter);
 		display_help();
 		exit;
 	}
 }
-echo "Repairing All Cacti Database Tables\n";
+echo __("Repairing All Cacti Database Tables") . "\n";
 
 $tables = db_fetch_assoc("SHOW TABLES FROM " . $database_default);
 
-if (sizeof($tables)) {	foreach($tables AS $table) {		echo "Repairing Table -> '" . $table['Tables_in_' . $database_default] . "'";		$status = db_execute("REPAIR TABLE " . $table['Tables_in_' . $database_default] . $form);
-		echo ($status == 0 ? " Failed" : " Successful") . "\n";
+if (sizeof($tables)) {
+	foreach($tables AS $table) {
+		printf(__("Repairing Table -> '%s'"), $table['Tables_in_' . $database_default]);
+		$status = db_execute("REPAIR TABLE " . $table['Tables_in_' . $database_default] . $form);
+		echo ($status == 0 ? __(" Failed") : __(" Successful")) . "\n";
 	}
 }
 
 /*	display_help - displays the usage of the function */
 function display_help () {
-	print "Cacti Database Repair Tool v1.0, Copyright 2007 - The Cacti Group\n\n";
-	print "usage: repair_database.php [-d] [-h] [--form] [--help] [-v] [-V] [--version]\n\n";
-	print "-form            - Force rebuilding the indexes from the database creation syntax\n";
-	print "-d               - Display verbose output during execution\n";
-	print "-v -V --version  - Display this help message\n";
-	print "-h --help        - display this help message\n";
+	echo __("Cacti Database Repair Tool v1.0, Copyright 2007 - The Cacti Group") . "\n\n";
+	echo __("usage: repair_database.php [-d] [-h] [--form] [--help] [-v] [-V] [--version]") . "\n\n";
+	echo __("-form            - Force rebuilding the indexes from the database creation syntax") . "\n";
+	echo __("-d               - Display verbose output during execution") . "\n";
+	echo __("-v -V --version  - Display this help message") . "\n";
+	echo __("-h --help        - display this help message") . "\n";
 }
 ?>

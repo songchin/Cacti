@@ -80,7 +80,7 @@ if (sizeof($parms)) {
 	$host_name = db_fetch_cell("SELECT hostname FROM host WHERE id = " . $host_id);
 	if (!isset($host_name)) {
 		printf(__("ERROR: Unknown Host Id (%d)\n"), $host_id);
-		echo __("Try php -q device_list.php\n");
+		echo __("Try php -q device_list.php") . "\n";
 		exit(1);
 	}
 	
@@ -130,7 +130,7 @@ if (sizeof($parms)) {
 	api_device_remove($host_id);
 
 	if (is_error_message()) {
-		echo __(". ERROR: Failed to remove this device\n");
+		echo __(". ERROR: Failed to remove this device") . "\n";
 		exit(1);
 	} else {
 		echo __(". Success - removed device-id: ") . ($host_id);
@@ -142,13 +142,13 @@ if (sizeof($parms)) {
 }
 
 function display_help() {
-	echo __("Remove Device Script 1.0, Copyright 2008 - The Cacti Group\n\n");
-	echo __("A simple command line utility to remove a device from Cacti\n\n");
-	echo __("usage: remove_device.php --host-id=[ID]\n\n");
-	echo __("Required:\n");
-	echo __("    --host-id		the numerical id of the host\n\n");
-	echo __("Optional:\n");
-	echo __("    --force		delete all graphs, graph permissions, host permissions and data sources\n\n");
+	echo __("Remove Device Script 1.0, Copyright 2008 - The Cacti Group") . "\n\n";
+	echo __("A simple command line utility to remove a device from Cacti") . "\n\n";
+	echo __("usage: remove_device.php --host-id=[ID]") . "\n\n";
+	echo __("Required:") . "\n";
+	echo __("    --host-id		the numerical id of the host") . "\n\n";
+	echo __("Optional:") . "\n";
+	echo __("    --force		delete all graphs, graph permissions, host permissions and data sources") . "\n\n";
 }
 
 ?>

@@ -60,7 +60,7 @@ if (sizeof($parms)) {
 
 			break;
 		default:
-			echo "ERROR: Invalid Argument: ($arg)\n\n";
+			printf(__("ERROR: Invalid Argument: (%s)\n\n"), $arg);
 			display_help();
 			exit(1);
 		}
@@ -78,11 +78,11 @@ if (sizeof($parms)) {
 }
 
 function display_help() {
-	echo "List Host Template Script 1.0, Copyright 2009 - The Cacti Group\n\n";
-	echo "A simple command line utility to list host templates in Cacti\n\n";
-	echo "usage: php -q host_template_list.php \n";
-	echo "Optional:\n";
-	echo "    --quiet - batch mode value return\n\n";
+	echo __("List Host Template Script 1.0, Copyright 2009 - The Cacti Group") . "\n\n";
+	echo __("A simple command line utility to list host templates in Cacti") . "\n\n";
+	echo __("usage: php -q host_template_list.php ") . "\n";
+	echo __("Optional:") . "\n";
+	echo __("    --quiet - batch mode value return") . "\n\n";
 }
 
 ?>

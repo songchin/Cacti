@@ -31,8 +31,8 @@ if (!isset($_SERVER['argv'][0]) || isset($_SERVER['REQUEST_METHOD'])  || isset($
 ini_set('max_execution_time', '0');
 
 include(dirname(__FILE__)."/../include/global.php");
-include_once($config["base_path"]."/lib/data_query.php");
-include_once($config["base_path"]."/lib/utility.php");
+include_once(CACTI_BASE_PATH."/lib/data_query.php");
+include_once(CACTI_BASE_PATH."/lib/utility.php");
 
 /* UPDATE THIS FOR NEW VERSIONS!! */
 $includes = array(
@@ -71,16 +71,16 @@ $old_version_index = (isset($includes[$old_cacti_version]) ? $old_cacti_version 
 
 /* do a version check */
 if ($old_cacti_version == $config['cacti_version']) {
-	print "Your Cacti is already up to date.\n";
+	echo __("Your Cacti is already up to date.") . "\n";
 	exit;
 } else if ($old_cacti_version < 0.7) {
-	print 'You are attempting to install cacti ' . $config['cacti_version'] . " onto a 0.6.x database.\nTo continue, you must create a new database, import 'cacti.sql' into it,\nand 	update 'include/config.php' to point to the new database.\n";
+	printf(__("You are attempting to install cacti %s onto a 0.6.x database.\nTo continue, you must create a new database, import 'cacti.sql' into it,\nand 	update 'include/config.php' to point to the new database.\n"), $config['cacti_version']);
 	exit;
 } else if (empty($old_cacti_version)) {
-	print "You have created a new database, but have not yet imported the 'cacti.sql' file.\n";
+	echo __("You have created a new database, but have not yet imported the 'cacti.sql' file.") . "\n";
 	exit;
 } else if ($old_version_index == '') {
-	print "Invalid Cacti version $old_cacti_version, cannot upgrade to " . $config['cacti_version'] . "\n";
+	printf(__("Invalid Cacti version %1s, cannot upgrade to %2s\n"), $old_cacti_version, $config['cacti_version']);
 	exit;
 }
 
@@ -88,7 +88,7 @@ if ($old_cacti_version == $config['cacti_version']) {
 $start = FALSE;
 foreach ($includes as $v => $file) {
 	if ($file != '' && $start) {
-		print "Upgrading to " . $v . "\n";
+		printf(__("Upgrading to %s \n"), $v);
 		include($config["base_path"] . '/install/' . $file);
 		$func = "upgrade_to_" . str_replace('.', '_', $v);
 		$func();
@@ -118,7 +118,7 @@ function db_install_errors ($cacti_version) {
 			if (isset($sc[$cacti_version])) {
 				foreach ($sc[$cacti_version] as $value => $sql) {
 					if ($value == 0) {
-						print "    DB Error: $sql\n";
+						printf(__("    DB Error: %s\n"), $sql);
 					}
 				}
 			}

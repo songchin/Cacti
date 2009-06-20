@@ -55,7 +55,7 @@ if (sizeof($parms)) {
 		case "--host-id":
 			$host_id = trim($value);
 			if (!is_numeric($host_id)) {
-				echo "ERROR: You must supply a valid host-id to run this script!\n";
+				echo __("ERROR: You must supply a valid host-id to run this script!") . "\n";
 				exit(1);
 			}
 	
@@ -63,7 +63,7 @@ if (sizeof($parms)) {
 		case "--graph-template-id":
 			$graph_template_id = $value;
 			if (!is_numeric($graph_template_id)) {
-				echo "ERROR: You must supply a numeric graph-template-id for all hosts!\n";
+				echo __("ERROR: You must supply a numeric graph-template-id for all hosts!") . "\n";
 				exit(1);
 			}
 	
@@ -81,7 +81,7 @@ if (sizeof($parms)) {
 			$quietMode = TRUE;
 			break;
 		default:
-			echo "ERROR: Invalid Argument: ($arg)\n\n";
+			printf(__("ERROR: Invalid Argument: (%s)\n\n"), $arg);
 			display_help();
 			exit(1);
 		}
@@ -99,12 +99,12 @@ if (sizeof($parms)) {
 	 * for update / insert options 
 	 */
 	if (!isset($host_id)) {
-		echo "ERROR: You must supply a valid host-id for all hosts!\n";
+		echo __("ERROR: You must supply a valid host-id for all hosts!") . "\n";
 		exit(1);
 	}
 
 	if (!isset($graph_template_id)) {
-		echo "ERROR: You must supply a valid data-query-id for all hosts!\n";
+		echo __("ERROR: You must supply a valid data-query-id for all hosts!") . "\n";
 		exit(1);
 	}
 
@@ -113,7 +113,7 @@ if (sizeof($parms)) {
 	 */
 	$host_name = db_fetch_cell("SELECT hostname FROM host WHERE id = " . $host_id);
 	if (!isset($host_name)) {
-		echo "ERROR: Unknown Host Id ($host_id)\n";
+		printf(__("ERROR: Unknown Host Id (%d)\n"), $host_id);
 		exit(1);
 	}
 
@@ -122,7 +122,7 @@ if (sizeof($parms)) {
 	 */
 	$graph_template_name = db_fetch_cell("SELECT name FROM graph_templates WHERE id = " . $graph_template_id);
 	if (!isset($graph_template_name)) {
-		echo "ERROR: Unknown Graph Template Id ($graph_template_id)\n";
+		printf(__("ERROR: Unknown Graph Template Id (%d)\n"), $graph_template_id);
 		exit(1);
 	}
 
@@ -130,17 +130,17 @@ if (sizeof($parms)) {
 	$exists_already = db_fetch_cell("SELECT host_id FROM host_graph WHERE graph_template_id=$graph_template_id AND host_id=$host_id");
 	if ((isset($exists_already)) &&
 		($exists_already > 0)) {
-		echo "ERROR: Graph Template is already associated for host: ($host_id: $host_name) - graph-template: ($graph_template_id: $graph_template_name)\n";
+		printf(__("ERROR: Graph Template is already associated for host: (%1d: %2s) - graph-template: (%3d: %4s)\n"), $host_id, $host_name, $graph_template_id, $graph_template_name);
 		exit(1);
 	}else{
 		db_execute("replace into host_graph (host_id,graph_template_id) values (" . $host_id . "," . $graph_template_id . ")");
 	}
 
 	if (is_error_message()) {
-		echo "ERROR: Failed to add this graph template for host: ($host_id: $host_name) - graph-template: ($graph_template_id: $graph_template_name)\n";
+		printf(__("ERROR: Failed to add this graph template for host: (%1d: %2s) - graph-template: (%3d: %4s)\n"), $host_id, $host_name, $graph_template_id, $graph_template_name);
 		exit(1);
 	} else {
-		echo "Success: Graph Template associated for host: ($host_id: $host_name) - graph-template: ($graph_template_id: $graph_template_name)\n";
+		printf(__("Success: Graph Template associated for host: (%1d: %2s) - graph-template: (%3d: %4s)\n"), $host_id, $host_name, $graph_template_id, $graph_template_name);
 		exit(0);
 	}
 }else{
@@ -149,16 +149,16 @@ if (sizeof($parms)) {
 }
 
 function display_help() {
-	echo "Add Graph Template Script 1.0, Copyright 2008 - The Cacti Group\n\n";
-	echo "A simple command line utility to associate a graph template with a host in Cacti\n\n";
-	echo "usage: add_graph_template.php --host-id=[ID] --graph-template-id=[ID]\n";
-	echo "    [--quiet]\n\n";
-	echo "Required:\n";
-	echo "    --host-id             the numerical ID of the host\n";
-	echo "    --graph_template-id   the numerical ID of the graph template to be added\n\n";
-	echo "List Options:\n";
-	echo "    --list-graph-templates\n";
-	echo "    --quiet - batch mode value return\n\n";
+	echo __("Add Graph Template Script 1.0, Copyright 2008 - The Cacti Group") . "\n\n";
+	echo __("A simple command line utility to associate a graph template with a host in Cacti") . "\n\n";
+	echo __("usage: add_graph_template.php --host-id=[ID] --graph-template-id=[ID]") . "\n";
+	echo __("    [--quiet]") . "\n\n";
+	echo __("Required:") . "\n";
+	echo __("    --host-id             the numerical ID of the host") . "\n";
+	echo __("    --graph_template-id   the numerical ID of the graph template to be added") . "\n\n";
+	echo __("List Options:") . "\n";
+	echo __("    --list-graph-templates") . "\n";
+	echo __("    --quiet - batch mode value return") . "\n\n";
 }
 
 ?>

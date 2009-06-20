@@ -41,7 +41,7 @@ array_shift($parms);
 
 /* utility requires input parameters */
 if (sizeof($parms) == 0) {
-	print "ERROR: You must supply input parameters\n\n";
+	echo __("ERROR: You must supply input parameters") . "\n\n";
 	display_help();
 	exit;
 }
@@ -54,7 +54,7 @@ foreach($parms as $parameter) {
 	@list($arg, $value) = @explode("=", $parameter);
 
 	switch ($arg) {
-	case "-id":
+	case "-host-id":
 		$host_id = $value;
 		break;
 	case "-s":
@@ -76,7 +76,7 @@ foreach($parms as $parameter) {
 		display_help();
 		exit;
 	default:
-		print "ERROR: Invalid Parameter " . $parameter . "\n\n";
+		printf(__("ERROR: Invalid Parameter %s\n\n"), $parameter);
 		display_help();
 		exit;
 	}
@@ -92,11 +92,15 @@ if (strlen($filter)) {
 
 if ($host_id == "All") {
 	/* Act on all graphs */
-}elseif (substr_count($host_id, "|")) {	$hosts = explode("|", $host_id);
+}elseif (substr_count($host_id, "|")) {
+	$hosts = explode("|", $host_id);
 	$host_str = "";
 
-	foreach($hosts as $host) {		if (strlen($host_str)) {			$host_str .= ", '" . $host . "'";
-		}else{			$host_str .= "'" . $host . "'";
+	foreach($hosts as $host) {
+		if (strlen($host_str)) {
+			$host_str .= ", '" . $host . "'";
+		}else{
+			$host_str .= "'" . $host . "'";
 		}
 	}
 
@@ -105,7 +109,8 @@ if ($host_id == "All") {
 	$sql_where .= " AND graph_local.host_id=0";
 }elseif (!empty($host_id)) {
 	$sql_where .= " AND graph_local.host_id=" . $host_id;
-}else{	print "ERROR: You must specify either a host_id or 'All' to proceed.\n";
+}else{
+	echo __("ERROR: You must specify either a host_id or 'All' to proceed.") . "\n";
 	display_help();
 	exit;
 }
@@ -124,7 +129,7 @@ $graph_list = db_fetch_assoc("SELECT
 	$sql_where");
 
 /* issue warnings and start message if applicable */
-print "WARNING: Do not interrupt this script.  Interrupting during rename can cause issues\n";
+echo __("WARNING: Do not interrupt this script.  Interrupting during rename can cause issues") . "\n";
 debug("There are '" . sizeof($graph_list) . "' Graphs to rename");
 
 $i = 1;
@@ -139,20 +144,20 @@ foreach ($graph_list as $graph) {
 
 /*	display_help - displays the usage of the function */
 function display_help () {
-	print "Cacti Reapply Graph Names Script 1.0, Copyright 2007 - The Cacti Group\n\n";
-	print "usage: poller_graphs_reapply_names.php -id=[host_id|All][host_id1|host_id2|...] [-s=[search_string] [-d] [-h] [--help] [-v] [--version]\n\n";
-	print "-id=host_id   - The host_id or 'All' or a pipe delimited list of host_id's\n";
-	print "-s=search_str - A graph template name or graph title to search for\n";
-	print "-d            - Display verbose output during execution\n";
-	print "-v --version  - Display this help message\n";
-	print "-h --help     - Display this help message\n";
+	echo __("Cacti Reapply Graph Names Script 1.0, Copyright 2007 - The Cacti Group") . "\n\n";
+	echo __("usage: poller_graphs_reapply_names.php -id=[host_id|All][host_id1|host_id2|...] [-s=[search_string] [-d] [-h] [--help] [-v] [--version]") . "\n\n";
+	echo __("-id=host_id   - The host_id or 'All' or a pipe delimited list of host_id's") . "\n";
+	echo __("-s=search_str - A graph template name or graph title to search for") . "\n";
+	echo __("-d            - Display verbose output during execution") . "\n";
+	echo __("-v --version  - Display this help message") . "\n";
+	echo __("-h --help     - Display this help message") . "\n";
 }
 
 function debug($message) {
 	global $debug;
 
 	if ($debug) {
-		print("DEBUG: " . $message . "\n");
+		print("DEBUG: " . $message . "") . "\n";
 	}
 }
 

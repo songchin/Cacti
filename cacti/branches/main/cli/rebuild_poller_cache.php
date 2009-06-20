@@ -58,7 +58,7 @@ foreach($parms as $parameter) {
 		display_help();
 		exit;
 	default:
-		print "ERROR: Invalid Parameter " . $parameter . "\n\n";
+		printf(__("ERROR: Invalid Parameter %s"), $parameter);
 		display_help();
 		exit;
 	}
@@ -83,7 +83,7 @@ $current_ds = 1;
 $total_ds = sizeof($poller_data);
 
 /* issue warnings and start message if applicable */
-print "WARNING: Do not interrupt this script.  Rebuilding the Poller Cache can take quite some time\n";
+echo __("WARNING: Do not interrupt this script.  Rebuilding the Poller Cache can take quite some time") . "\n";
 debug("There are '" . sizeof($poller_data) . "' data source elements to update.");
 
 /* start rebuilding the poller cache */
@@ -95,7 +95,7 @@ if (sizeof($poller_data) > 0) {
 		$current_ds++;
 	}
 }
-if (!$debug) print "\n";
+if (!$debug) print "") . "\n";
 
 /* poller cache rebuilt, restore runtime parameters */
 ini_set("max_execution_time", $max_execution);
@@ -103,18 +103,18 @@ ini_set("memory_limit", $max_memory);
 
 /*	display_help - displays the usage of the function */
 function display_help () {
-	print "Cacti Rebuild Poller Cache Script 1.0, Copyright 2007 - The Cacti Group\n\n";
-	print "usage: rebuild_poller_cache.php [-d] [-h] [--help] [-v] [--version]\n\n";
-	print "-d            - Display verbose output during execution\n";
-	print "-v --version  - Display this help message\n";
-	print "-h --help     - Display this help message\n";
+	echo __("Cacti Rebuild Poller Cache Script 1.0, Copyright 2007 - The Cacti Group") . "\n\n";
+	echo __("usage: rebuild_poller_cache.php [-d] [-h] [--help] [-v] [--version]") . "\n\n";
+	echo __("-d            - Display verbose output during execution") . "\n";
+	echo __("-v --version  - Display this help message") . "\n";
+	echo __("-h --help     - Display this help message") . "\n";
 }
 
 function debug($message) {
 	global $debug;
 
 	if ($debug) {
-		print("DEBUG: " . $message . "\n");
+		print("DEBUG: " . $message . "") . "\n";
 	}
 }
 

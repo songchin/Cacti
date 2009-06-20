@@ -82,7 +82,7 @@ if (sizeof($parms)) {
 
 			break;
 		default:
-			echo "ERROR: Invalid Argument: ($arg)\n\n";
+			printf(__("ERROR: Invalid Argument: (%s)\n\n"), $arg);
 			display_help();
 			exit(1);
 		}
@@ -95,8 +95,8 @@ if (sizeof($parms)) {
 	 */
 	if ($displayGraphs) {
 		if (!isset($hostId)) {
-			echo "ERROR: You must supply a host_id before you can list its graphs\n";
-			echo "Try --list-hosts\n";
+			echo __("ERROR: You must supply a host_id before you can list its graphs") . "\n";
+			echo __("Try --list-hosts") . "\n";
 			exit(1);
 		}
 
@@ -108,8 +108,8 @@ if (sizeof($parms)) {
 	/* Verify the graph's existance */
 	$graph_exists = db_fetch_cell("SELECT id FROM graph_local WHERE id=$graphId");
 	if (empty($graph_exists)) {
-		echo "ERROR: Unknown Graph ID ($graphId)\n";
-		echo "Try --list-graphs\n";
+		printf(__("ERROR: Unknown Graph ID (%d)\n"), $graphId);
+		echo __("Try --list-graphs") . "\n";
 		exit(1);
 	}
 	
@@ -128,23 +128,23 @@ if (sizeof($parms)) {
 			AND graph_templates_item.local_graph_id=" . $graphId . "
 			AND data_template_data.local_data_id > 0");
 
-		echo "Removing graph and all resources for graph id " . $graphId;
+		echo __("Removing graph and all resources for graph id ") . $graphId;
 		if (sizeof($data_sources) > 0) {
 			foreach ($data_sources as $data_source) {
 				api_data_source_remove($data_source["local_data_id"]);
 			}
 		}
 	} else {
-		echo "Removing graph but keeping resources for graph id " . $graphId;
+		echo __("Removing graph but keeping resources for graph id ") . $graphId;
 	}
 
 	api_graph_remove($graphId);
 
 	if (is_error_message()) {
-		echo ". ERROR: Failed to remove this graph\n";
+		echo __(". ERROR: Failed to remove this graph") . "\n";
 		exit(1);
 	} else {
-		echo ". Success - removed graph-id: ($graphId)\n";
+		printf(__(". Success - removed graph-id: (%d)"), $graphId);
 		exit(0);
 	}
 }else{
@@ -153,16 +153,16 @@ if (sizeof($parms)) {
 }
 
 function display_help() {
-	echo "Remove Graph Script 1.0, Copyright 2008 - The Cacti Group\n\n";
-	echo "A simple command line utility to remove a graph from Cacti\n\n";
-	echo "usage: remove_graph.php --graph-id=[ID]\n\n";
-	echo "Required:\n";
-	echo "    --graph-id                the numerical id of the graph\n\n";
-	echo "Optional:\n";
-	echo "    --force                   delete all related data sources\n\n";
-	echo "List Options:\n";
-	echo "    --list-graphs --host-id   list available graphs for a specific host\n";
-	echo "    --quiet                   batch mode value return\n\n";
+	echo __("Remove Graph Script 1.0, Copyright 2008 - The Cacti Group") . "\n\n";
+	echo __("A simple command line utility to remove a graph from Cacti") . "\n\n";
+	echo __("usage: remove_graph.php --graph-id=[ID]") . "\n\n";
+	echo __("Required:") . "\n";
+	echo __("    --graph-id                the numerical id of the graph") . "\n\n";
+	echo __("Optional:") . "\n";
+	echo __("    --force                   delete all related data sources") . "\n\n";
+	echo __("List Options:") . "\n";
+	echo __("    --list-graphs --host-id   list available graphs for a specific host") . "\n";
+	echo __("    --quiet                   batch mode value return") . "\n\n";
 }
 
 ?>

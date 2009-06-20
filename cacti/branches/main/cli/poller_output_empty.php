@@ -58,7 +58,7 @@ foreach($parms as $parameter) {
 		display_help();
 		exit;
 	default:
-		print "ERROR: Invalid Parameter " . $parameter . "\n\n";
+		printf(__("ERROR: Invalid Parameter %s\n\n"), $parameter);
 		display_help();
 		exit;
 	}
@@ -77,16 +77,16 @@ while (db_fetch_cell("SELECT count(*) FROM poller_output") > 0) {
 	$rrds_processed = $rrds_processed + process_poller_output($rrdtool_pipe, FALSE);
 }
 
-echo "There were $rrds_processed, RRD updates made this pass\n";
+printf(__("There were %d rrds_processed, RRD updates made this pass\n"), $rrds_processed);
 
 rrd_close($rrdtool_pipe);
 
 /*	display_help - displays the usage of the function */
 function display_help () {
-	print "Cacti Empty Poller Output Table Script 1.0, Copyright 2007 - The Cacti Group\n\n";
-	print "usage: poller_output_empty.php [-h] [--help] [-v] [--version]\n\n";
-	print "-v --version  - Display this help message\n";
-	print "-h --help     - Display this help message\n";
+	echo __("Cacti Empty Poller Output Table Script 1.0, Copyright 2007 - The Cacti Group") . "\n\n";
+	echo __("usage: poller_output_empty.php [-h] [--help] [-v] [--version]") . "\n\n";
+	echo __("-v --version  - Display this help message") . "\n";
+	echo __("-h --help     - Display this help message") . "\n";
 }
 
 ?>

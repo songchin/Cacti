@@ -59,7 +59,7 @@ if (sizeof($parms)) {
 		case "--description":
 			$description = trim($value);
 			if ($description == "") {
-				echo __("ERROR: You must supply a valid description!\n");
+				echo __("ERROR: You must supply a valid description!") . "\n";
 				exit(1);
 			}
 
@@ -67,7 +67,7 @@ if (sizeof($parms)) {
 		case "--ip":
 			$ip = trim($value);
 			if ($ip == "") {
-				echo __("ERROR: You must supply a valid [hostname|IP address] for all hosts!\n");
+				echo __("ERROR: You must supply a valid [hostname|IP address] for all hosts!") . "\n";
 				exit(1);
 			}
 
@@ -75,7 +75,7 @@ if (sizeof($parms)) {
 		case "--template":
 			$template_id = $value;
 			if (!is_numeric($template_id)) {
-				echo __("ERROR: You must supply a numeric host template id for all hosts!\n");
+				echo __("ERROR: You must supply a numeric host template id for all hosts!") . "\n";
 				exit(1);
 			}
 
@@ -156,7 +156,7 @@ if (sizeof($parms)) {
 			if (is_numeric($value) && ($value > 0) && ($value <= 20000)) {
 				$snmp_timeout     = $value;
 			}else{
-				echo __("ERROR: Invalid SNMP Timeout.  Valid values are from 1 to 20000\n");
+				echo __("ERROR: Invalid SNMP Timeout.  Valid values are from 1 to 20000") . "\n";
 				display_help();
 				exit(1);
 			}
@@ -282,17 +282,17 @@ if (sizeof($parms)) {
 	 * for update / insert options
 	 */
 	if (!isset($description)) {
-		echo __("ERROR: You must supply a description for all hosts!\n");
+		echo __("ERROR: You must supply a description for all hosts!") . "\n";
 		exit(1);
 	}
 
 	if (!isset($ip)) {
-		echo __("ERROR: You must supply a valid [hostname|IP address] for all hosts!\n");
+		echo __("ERROR: You must supply a valid [hostname|IP address] for all hosts!") . "\n";
 		exit(1);
 	}
 
 	if (!isset($template_id)) {
-		echo __("ERROR: You must supply a valid host template id for all hosts!\n");
+		echo __("ERROR: You must supply a valid host template id for all hosts!") . "\n";
 		exit(1);
 	}
 
@@ -473,7 +473,7 @@ if (sizeof($parms)) {
 		$host_template["snmp_priv_protocol"], $host_template["snmp_context"], $host_template["max_oids"]);
 
 	if (is_error_message()) {
-		echo __("ERROR: Failed to add this device\n");
+		echo __("ERROR: Failed to add this device") . "\n";
 		exit(1);
 	} else {
 		printf(__("Success - new device-id: (%d)\n", $host_id));
@@ -485,43 +485,43 @@ if (sizeof($parms)) {
 }
 
 function display_help() {
-	echo __("Add Device Script 1.2, Copyright 2008-2009 - The Cacti Group\n\n");
-	echo __("A simple command line utility to add a device in Cacti\n\n");
-	echo __("usage: add_device.php --description=[description] --ip=[IP] --template=[ID] [--notes=\"[]\"] [--disabled]\n");
-	echo __("    [--avail=[ping]] --ping_method=[icmp] --ping_port=[N/A, 1-65534] --ping_retries=[2]  --ping_timeout=[500]\n");
-	echo __("    [--version=[1|2|3]] [--community=] [--port=161] [--timeout=500]\n");
-	echo __("    [--username= --password=] [--authproto=] [--privpass= --privproto=] [--context=]\n");
-	echo __("    [--quiet]\n\n");
-	echo __("Required:\n");
-	echo __("    --description  the name that will be displayed by Cacti in the graphs\n");
-	echo __("    --ip           self explanatory (can also be a FQDN)\n");
-	echo __("    --template     denotes the host_template to be used (read below to get a list of templates)\n");
-	echo __("                   In case a host_template is given, all values are fetched from this one.\n");
-	echo __("                   For a host_template = 0 (NONE), Cacti default settings are used.\n");
-	echo __("                   Optionally overwrite by any of the following:\n");
-	echo __("Optional:\n");
-	echo __("    --poller       0, defines which Cacti poller will be handles the polling of this device.\n");
-	echo __("    --notes        General information about this host.  Must be enclosed using double quotes.\n");
-	echo __("    --disable      1 to add this host but to disable checks and 0 to enable it\n");
-	echo __("    --avail        pingsnmp, [ping][none, snmp, pingsnmp]\n");
-	echo __("    --ping_method  tcp, icmp|tcp|udp\n");
-	echo __("    --ping_port    23, port used for tcp|udp pings [1-65534]\n");
-	echo __("    --ping_retries 2, the number of time to attempt to communicate with a host\n");
-	echo __("    --ping_timeout 500, ping timeout\n");
-	echo __("    --version      1, 1|2|3, snmp version\n");
-	echo __("    --community    '', snmp community string for snmpv1 and snmpv2.  Leave blank for no community\n");
-	echo __("    --port         161, snmp port\n");
-	echo __("    --timeout      500, snmp timeout\n");
-	echo __("    --username     '', snmp username for snmpv3\n");
-	echo __("    --password     '', snmp password for snmpv3\n");
-	echo __("    --authproto    '', snmp authentication protocol for snmpv3 [MD5|SHA]\n");
-	echo __("    --privpass     '', snmp privacy passphrase for snmpv3\n");
-	echo __("    --privproto    '', snmp privacy protocol for snmpv3 [DES|AES]\n");
-	echo __("    --context      '', snmp context for snmpv3\n");
-	echo __("    --max_oids     10, 1-60, the number of OID's that can be obtained in a single SNMP Get request\n\n");
-	echo __("List Options:\n");
-	echo __("    --list-communities\n");
-	echo __("    --quiet - batch mode value return\n\n");
+	echo __("Add Device Script 1.2, Copyright 2008-2009 - The Cacti Group") . "\n\n";
+	echo __("A simple command line utility to add a device in Cacti") . "\n\n";
+	echo __("usage: add_device.php --description=[description] --ip=[IP] --template=[ID] [--notes=\"[]\"] [--disabled]") . "\n";
+	echo __("    [--avail=[ping]] --ping_method=[icmp] --ping_port=[N/A, 1-65534] --ping_retries=[2]  --ping_timeout=[500]") . "\n";
+	echo __("    [--version=[1|2|3]] [--community=] [--port=161] [--timeout=500]") . "\n";
+	echo __("    [--username= --password=] [--authproto=] [--privpass= --privproto=] [--context=]") . "\n";
+	echo __("    [--quiet]") . "\n\n";
+	echo __("Required:") . "\n";
+	echo __("    --description  the name that will be displayed by Cacti in the graphs") . "\n";
+	echo __("    --ip           self explanatory (can also be a FQDN)") . "\n";
+	echo __("    --template     denotes the host_template to be used (read below to get a list of templates)") . "\n";
+	echo __("                   In case a host_template is given, all values are fetched from this one.") . "\n";
+	echo __("                   For a host_template = 0 (NONE), Cacti default settings are used.") . "\n";
+	echo __("                   Optionally overwrite by any of the following:") . "\n";
+	echo __("Optional:") . "\n";
+	echo __("    --poller       0, defines which Cacti poller will be handles the polling of this device.") . "\n";
+	echo __("    --notes        General information about this host.  Must be enclosed using double quotes.") . "\n";
+	echo __("    --disable      1 to add this host but to disable checks and 0 to enable it") . "\n";
+	echo __("    --avail        pingsnmp, [ping][none, snmp, pingsnmp]") . "\n";
+	echo __("    --ping_method  tcp, icmp|tcp|udp") . "\n";
+	echo __("    --ping_port    23, port used for tcp|udp pings [1-65534]") . "\n";
+	echo __("    --ping_retries 2, the number of time to attempt to communicate with a host") . "\n";
+	echo __("    --ping_timeout 500, ping timeout") . "\n";
+	echo __("    --version      1, 1|2|3, snmp version") . "\n";
+	echo __("    --community    '', snmp community string for snmpv1 and snmpv2.  Leave blank for no community") . "\n";
+	echo __("    --port         161, snmp port") . "\n";
+	echo __("    --timeout      500, snmp timeout") . "\n";
+	echo __("    --username     '', snmp username for snmpv3") . "\n";
+	echo __("    --password     '', snmp password for snmpv3") . "\n";
+	echo __("    --authproto    '', snmp authentication protocol for snmpv3 [MD5|SHA]") . "\n";
+	echo __("    --privpass     '', snmp privacy passphrase for snmpv3") . "\n";
+	echo __("    --privproto    '', snmp privacy protocol for snmpv3 [DES|AES]") . "\n";
+	echo __("    --context      '', snmp context for snmpv3") . "\n";
+	echo __("    --max_oids     10, 1-60, the number of OID's that can be obtained in a single SNMP Get request") . "\n\n";
+	echo __("List Options:") . "\n";
+	echo __("    --list-communities") . "\n";
+	echo __("    --quiet - batch mode value return") . "\n\n";
 }
 
 ?>

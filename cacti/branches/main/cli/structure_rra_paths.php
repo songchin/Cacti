@@ -52,7 +52,7 @@ if (sizeof($parms)) {
 			display_help();
 			exit(0);
 		default:
-			echo "ERROR: Invalid Argument: ($arg)\n\n";
+			printf(__("ERROR: Invalid Argument: (%s)\n\n"), $arg);
 			display_help();
 			exit(1);
 		}
@@ -60,7 +60,7 @@ if (sizeof($parms)) {
 }
 
 if ($proceed == FALSE) {
-	echo "\nFATAL: You Must Explicitally Instruct This Script to Proceed with the '--proceed' Option\n\n";
+	echo "\n" . __("FATAL: You Must Explicitally Instruct This Script to Proceed with the '--proceed' Option") . "\n\n";
 	display_help();
 	exit -1;
 }
@@ -78,7 +78,7 @@ if ($poller_running == "1") {
 	/* turn on the poller */
 	enable_poller();
 
-	echo "FATAL: The Poller is Currently Running\n";
+	echo __("FATAL: The Poller is Currently Running") . "\n";
 	exit -4;
 }
 
@@ -103,15 +103,15 @@ foreach ($rrd_info as $info) {
 	if (!is_dir($new_base_path)) {
 		/* see if we can create the dirctory for the new file */
 		if (mkdir($new_base_path, 0775)) {
-			echo "NOTE: New Directory '$new_base_path' Created for RRD Files\n";
+			printf(__("NOTE: New Directory '%s' Created for RRD Files\n"), $new_base_path);
 			if (CACTI_SERVER_OS != "win32") {
 				if (chown($new_base_path, $owner_id) && chgrp($new_base_path, $group_id)) {
-					echo "NOTE: New Directory '$new_base_path' Permissions Set\n";
+					printf(__("NOTE: New Directory '%s' Permissions Set\n"), $new_base_path);
 				} else {
 					/* turn on the poller */
 					enable_poller();
 
-					echo "FATAL: Could not Set Permissions for Directory '$new_base_path'\n";
+					printf(__("FATAL: Could not Set Permissions for Directory '%s'\n"), $new_base_path);
 					exit -5;
 				}
 			}
@@ -119,7 +119,7 @@ foreach ($rrd_info as $info) {
 			/* turn on the poller */
 			enable_poller();
 
-			echo "FATAL: Could NOT Make New Directory '$new_base_path'\n";
+			printf(__("FATAL: Could NOT Make New Directory '$new_base_path'\n"), $new_base_path);
 			exit -1;
 		}
 	}
@@ -128,26 +128,26 @@ foreach ($rrd_info as $info) {
 	if ($old_rrd_path == $new_rrd_path) {
 		$ignore_count++;
 
-		echo "NOTE: File '$old_rrd_path' is Already Structured, Ignoring\n";
+		printf(__("NOTE: File '%s' is Already Structured, Ignoring\n"), $old_rrd_path);
 	} elseif (!file_exists($old_rrd_path)) {
 		$warn_count++;
 
-		echo "WARNING: Legacy RRA Path '$old_rrd_path' Does not exist, Skipping\n";
+		printf(__("WARNING: Legacy RRA Path '%s' Does not exist, Skipping\n"), $old_rrd_path);
 
 		/* alter database */
 		update_database($info);
 	} elseif (copy($old_rrd_path, $new_rrd_path)) {
 		$done_count++;
 
-		echo "NOTE: Copy Complete for File '" . $info["rrd_path"] . "'\n";
+		printf(__("NOTE: Copy Complete for File '%a'\n"), $info["rrd_path"]);
 		if (CACTI_SERVER_OS != "win32") {
 			if (chown($new_rrd_path, $owner_id) && chgrp($new_rrd_path, $group_id)) {
-				echo "NOTE: Permissions set for '$new_rrd_path'\n";
+				printf(__("NOTE: Permissions set for '%s'\n"), $new_rrd_path);
 			}else{
 				/* turn on the poller */
 				enable_poller();
 
-				echo "FATAL: Could not Set Permissions for File '$new_rrd_path'\n";
+				printf(__("FATAL: Could not Set Permissions for File '%s'\n"), $new_rrd_path);
 				exit -6;
 			}
 		}
@@ -156,19 +156,19 @@ foreach ($rrd_info as $info) {
 		update_database($info);
 
 		if (unlink($old_rrd_path)) {
-			echo "NOTE: Old File '$old_rrd_path' Removed\n";
+			printf(__("NOTE: Old File '%s' Removed\n"), $new_rrd_path);
 		} else {
 			/* turn on the poller */
 			enable_poller();
 
-			echo "FATAL: Old File '$old_rrd_path' Could not be removed\n";
+			printf(__("FATAL: Old File '%s' Could not be removed\n"), $old_rrd_path);
 			exit -2;
 		}
 	} else {
 		/* turn on the poller */
 		enable_poller();
 
-		echo "FATAL: Could not Copy RRD File '$old_rrd_path' to '$new_rrd_path'\n";
+		printf(__("FATAL: Could not Copy RRD File '%1s' to '%2s'\n"), $old_rrd_path, $new_rrd_path);
 		exit -3;
 	}
 }
@@ -176,7 +176,7 @@ foreach ($rrd_info as $info) {
 /* finally re-enable the poller */
 enable_poller();
 
-echo "NOTE: Process Complete, '$done_count' Completed, '$warn_count' Skipped, '$ignore_count' Previously Structured\n";
+printf(__("NOTE: Process Complete, '%1d' Completed, '%2d' Skipped, '%3d' Previously Structured\n"), $done_count, $warn_count, $ignore_count);
 
 /* update database */
 function update_database($info) {
@@ -192,7 +192,7 @@ function update_database($info) {
 		SET data_source_path='<path_rra>/" . $info["host_id"] . "/" . $info["local_data_id"] . ".rrd'
 		WHERE local_data_id=" . $info["local_data_id"]);
 
-	echo "NOTE: Database Changes Complete for File '" . $info["rrd_path"] . "'\n";
+	printf(__("NOTE: Database Changes Complete for File '%s'"), $info["rrd_path"]);
 }
 
 /* turn on the poller */
@@ -206,30 +206,30 @@ function disable_poller() {
 }
 
 function display_help() {
-	echo "Structured RRA Paths Utility, Copyright 2008 - The Cacti Group\n\n";
-	echo "A simple command line utility that converts a Cacti system from using\n";
-	echo "legacy RRA paths to using structured RRA paths with the following\n";
-	echo "naming convention: <path_rra>/host_id/local_data_id.rrd\n\n";
-	echo "This utility is designed for very large Cacti systems.\n\n";
-	echo "The utility follows the process below:\n";
-	echo "  1) Disables the Cacti Poller\n";
-	echo "  2) Checks for a Running Poller.\n\n";
-	echo "If it Finds a Running Poller, it will:\n";
-	echo "  1) Re-enable the Poller\n";
-	echo "  2) Exit\n\n";
-	echo "Else, it will:\n";
-	echo "  1) Enable Structured Paths in the Console (Settings->Paths)\n\n";
-	echo "Then, for Each File, it will:\n";
-	echo "  1) Create the Structured Path, if Necessary\n";
-	echo "  2) Copy the File to the Strucured Path Using the New Name\n";
-	echo "  3) Alter the two Database Tables Required\n";
-	echo "  4) Remove the Old File\n\n";
-	echo "Once all Files are Complete, it will\n";
-	echo "  1) Re-enable the Cacti Poller\n\n";
-	echo "If the utility encounters a problem along the way, it will:\n";
-	echo "  1) Re-enable the poller\n";
-	echo "  2) Exit\n\n";
-	echo "usage: structure_rra_paths.php --proceed [--help | -H | --version | -V]\n\n";
+	echo __("Structured RRA Paths Utility, Copyright 2008 - The Cacti Group") . "\n\n";
+	echo __("A simple command line utility that converts a Cacti system from using") . "\n";
+	echo __("legacy RRA paths to using structured RRA paths with the following") . "\n";
+	echo __("naming convention: <path_rra>/host_id/local_data_id.rrd") . "\n\n";
+	echo __("This utility is designed for very large Cacti systems.") . "\n\n";
+	echo __("The utility follows the process below:") . "\n";
+	echo __("  1) Disables the Cacti Poller") . "\n";
+	echo __("  2) Checks for a Running Poller.") . "\n\n";
+	echo __("If it Finds a Running Poller, it will:") . "\n";
+	echo __("  1) Re-enable the Poller") . "\n";
+	echo __("  2) Exit") . "\n\n";
+	echo __("Else, it will:") . "\n";
+	echo __("  1) Enable Structured Paths in the Console (Settings->Paths)") . "\n\n";
+	echo __("Then, for Each File, it will:") . "\n";
+	echo __("  1) Create the Structured Path, if Necessary") . "\n";
+	echo __("  2) Copy the File to the Strucured Path Using the New Name") . "\n";
+	echo __("  3) Alter the two Database Tables Required") . "\n";
+	echo __("  4) Remove the Old File") . "\n\n";
+	echo __("Once all Files are Complete, it will") . "\n";
+	echo __("  1) Re-enable the Cacti Poller") . "\n\n";
+	echo __("If the utility encounters a problem along the way, it will:") . "\n";
+	echo __("  1) Re-enable the poller") . "\n";
+	echo __("  2) Exit") . "\n\n";
+	echo __("usage: structure_rra_paths.php --proceed [--help | -H | --version | -V]") . "\n\n";
 }
 
 ?>

@@ -76,7 +76,7 @@ if (sizeof($parms)) {
 				display_help($me);
 				exit (0);
 			case "--dry-run" :
-				$dry_run = __("DRY RUN >>>\n");
+				$dry_run = __("DRY RUN >>>") . "\n";
 
 				break;
 			default :
@@ -94,13 +94,13 @@ if (sizeof($parms)) {
 
 	if (isset ($host_id) && ($host_id > 0)) {
 		if (!isset($snmp_field) || ($snmp_field === 0)) {
-			echo __("ERROR: You must supply a valid --snmp-field\n");
-			echo __("Try php -q graph_list.php --list-snmp-fields\n");
+			echo __("ERROR: You must supply a valid --snmp-field") . "\n";
+			echo __("Try php -q graph_list.php --list-snmp-fields") . "\n";
 			exit (1);
 		}
 		if (!isset($snmp_value) || ($snmp_value === 0)) {
-			echo __("ERROR: You must supply a valid --snmp-value\n");
-			echo __("Try php -q graph_list.php --list-snmp-values\n");
+			echo __("ERROR: You must supply a valid --snmp-value") . "\n";
+			echo __("Try php -q graph_list.php --list-snmp-values") . "\n";
 			exit (1);
 		}
 		$data_sources = db_fetch_assoc("SELECT data_local.id " .
@@ -181,7 +181,7 @@ function remove_data_source($data_source_id, $dry_run) {
 	}
 
 	if (is_error_message()) {
-		echo __(" - ERROR: Failed to remove this data source\n");
+		echo __(" - ERROR: Failed to remove this data source") . "\n";
 		exit (1);
 	} else {
 		printf(__(" - SUCCESS: Removed data-source-id: (%d)\n"), $data_source_id);
@@ -189,18 +189,18 @@ function remove_data_source($data_source_id, $dry_run) {
 }
 
 function display_help($me) {
-	echo __("Remove Data Source Script 1.0, Copyright 2009 - The Cacti Group\n\n");
-	echo __("A simple command line utility to remove a data source from Cacti\n\n");
+	echo __("Remove Data Source Script 1.0, Copyright 2009 - The Cacti Group") . "\n\n";
+	echo __("A simple command line utility to remove a data source from Cacti") . "\n\n";
 	printf(__("usage: %s [--data-source-id=[ID]|--host-id=[ID]] [--dry-run]\n\n"), $me);
-	echo __("Required is either of:\n");
-	echo __("    --data-source-id=[id]  the numerical id of the graph\n");
-	echo __("    --host-id=[id]         the numerical id of the host\n\n");
-	echo __("When using a host-id, the following is required (ds graphs only!):\n");
-	echo __("    --snmp-field=[field]   snmp-field to be checked\n");
-	echo __("    --snmp-value=[value]   snmp-value to be checked\n\n");
-	echo __("Optional:\n");
-	echo __("    --dry-run              produce list output only, do NOT remove anything\n\n");
+	echo __("Required is either of:") . "\n";
+	echo __("    --data-source-id=[id]  the numerical id of the graph") . "\n";
+	echo __("    --host-id=[id]         the numerical id of the host") . "\n\n";
+	echo __("When using a host-id, the following is required (ds graphs only!):") . "\n";
+	echo __("    --snmp-field=[field]   snmp-field to be checked") . "\n";
+	echo __("    --snmp-value=[value]   snmp-value to be checked") . "\n\n";
+	echo __("Optional:") . "\n";
+	echo __("    --dry-run              produce list output only, do NOT remove anything") . "\n\n";
 	printf(__("e.g. php -q %s --host-id=[ID] --snmp-field=ifOperStatus --snmp-value=DOWN\n"), $me);
-	echo __("to remove all data sources and graphs for interfaces with ifOperStatus = DOWN\n\n");
+	echo __("to remove all data sources and graphs for interfaces with ifOperStatus = DOWN") . "\n\n";
 }
 ?>

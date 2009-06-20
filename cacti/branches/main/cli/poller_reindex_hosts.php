@@ -42,7 +42,7 @@ array_shift($parms);
 
 /* utility requires input parameters */
 if (sizeof($parms) == 0) {
-	print "ERROR: You must supply input parameters\n\n";
+	print "ERROR: You must supply input parameters") . "\n\n";
 	display_help();
 	exit;
 }
@@ -57,7 +57,7 @@ foreach($parms as $parameter) {
 
 	switch ($arg) {
 	case "-id":
-	case "--id":
+	case "--host-id":
 		$host_id = $value;
 		break;
 	case "-qid":
@@ -79,7 +79,7 @@ foreach($parms as $parameter) {
 		display_help();
 		exit;
 	default:
-		print "ERROR: Invalid Parameter " . $parameter . "\n\n";
+		printf(__("ERROR: Invalid Parameter %s\n\n"), $parameter);
 		display_help();
 		exit;
 	}
@@ -91,7 +91,7 @@ if ($host_id == "All") {
 }else if (is_numeric($host_id)) {
 	$sql_where = " WHERE host_id = '$host_id'";
 }else{
-	print "ERROR: You must specify either a host_id or 'All' to proceed.\n";
+	echo __("ERROR: You must specify either a host_id or 'All' to proceed.") . "\n";
 	display_help();
 	exit;
 }
@@ -110,7 +110,7 @@ if (strlen($host_descr)) {
 }
 
 /* issue warnings and start message if applicable */
-print "WARNING: Do not interrupt this script.  Reindexing can take quite some time\n";
+echo __("WARNING: Do not interrupt this script.  Reindexing can take quite some time") . "\n";
 debug("There are '" . sizeof($data_queries) . "' data queries to run");
 
 $i = 1;
@@ -126,22 +126,22 @@ if (sizeof($data_queries)) {
 
 /*	display_help - displays the usage of the function */
 function display_help () {
-	print "Cacti Reindex Host Script 1.2, Copyright 2004-2009 - The Cacti Group\n\n";
-	print "usage: poller_reindex_hosts.php --id=[host_id|All] [--qid=[ID|All]] [--host-descr=[description]]\n";
-	print "                           [-d] [-h] [--help] [-v] [--version]\n\n";
-	print "--id=host_id             - The host_id to have data queries reindexed or 'All' to reindex all hosts\n";
-	print "--qid=query_id           - Only index on a specific data query id; defaults to 'All'\n";
-	print "--host-descr=description - The host description to filter by (SQL filters acknowledged)\n";
-	print "--debug                  - Display verbose output during execution\n";
-	print "-v --version             - Display this help message\n";
-	print "-h --help                - Display this help message\n";
+	echo __("Cacti Reindex Host Script 1.2, Copyright 2004-2009 - The Cacti Group") . "\n\n";
+	echo __("usage: poller_reindex_hosts.php --host-id=[ID|All] [--qid=[ID|All]] [--host-descr=[description]]") . "\n";
+	echo __("                           [-d] [-h] [--help] [-v] [--version]") . "\n\n";
+	echo __("--host-id=[ID]             - The host_id to have data queries reindexed or 'All' to reindex all hosts") . "\n";
+	echo __("--qid=query_id           - Only index on a specific data query id; defaults to 'All'") . "\n";
+	echo __("--host-descr=description - The host description to filter by (SQL filters acknowledged)") . "\n";
+	echo __("--debug                  - Display verbose output during execution") . "\n";
+	echo __("-v --version             - Display this help message") . "\n";
+	echo __("-h --help                - Display this help message") . "\n";
 }
 
 function debug($message) {
 	global $debug;
 
 	if ($debug) {
-		print("DEBUG: " . $message . "\n");
+		print("DEBUG: " . $message . "") . "\n";
 	}
 }
 

@@ -55,7 +55,7 @@ if (sizeof($parms)) {
 		case "--host-id":
 			$host_id = trim($value);
 			if (!is_numeric($host_id)) {
-				echo __("ERROR: You must supply a valid host-id to run this script!\n");
+				echo __("ERROR: You must supply a valid host-id to run this script!") . "\n";
 				exit(1);
 			}
 	
@@ -63,7 +63,7 @@ if (sizeof($parms)) {
 		case "--data-query-id":
 			$data_query_id = $value;
 			if (!is_numeric($data_query_id)) {
-				echo __("ERROR: You must supply a numeric data-query-id for all hosts!\n");
+				echo __("ERROR: You must supply a numeric data-query-id for all hosts!") . "\n";
 				exit(1);
 			}
 	
@@ -88,7 +88,7 @@ if (sizeof($parms)) {
 						$reindex_method = DATA_QUERY_AUTOINDEX_FIELD_VERIFICATION;
 						break;
 					default:
-						echo __("ERROR: You must supply a valid reindex method for all hosts!\n");
+						echo __("ERROR: You must supply a valid reindex method for all hosts!") . "\n";
 						exit(1);
 				}
 			}
@@ -111,17 +111,17 @@ if (sizeof($parms)) {
 	 * for update / insert options 
 	 */
 	if (!isset($host_id)) {
-		echo __("ERROR: You must supply a valid host-id for all hosts!\n");
+		echo __("ERROR: You must supply a valid host-id for all hosts!") . "\n";
 		exit(1);
 	}
 
 	if (!isset($data_query_id)) {
-		echo __("ERROR: You must supply a valid data-query-id for all hosts!\n");
+		echo __("ERROR: You must supply a valid data-query-id for all hosts!") . "\n";
 		exit(1);
 	}
 
 	if (!isset($reindex_method)) {
-		echo __("ERROR: You must supply a valid reindex-method for all hosts!\n");
+		echo __("ERROR: You must supply a valid reindex-method for all hosts!") . "\n";
 		exit(1);
 	}
 
@@ -175,18 +175,18 @@ if (sizeof($parms)) {
 }
 
 function display_help() {
-	echo __("Add Data Query Script 1.0, Copyright 2009 - The Cacti Group\n\n");
-	echo __("A simple command line utility to add a data query to an existing device in Cacti\n\n");
-	echo __("usage: data_query_add.php --host-id=[ID] --data-query-id=[dq_id] --reindex-method=[method] [--quiet]\n\n");
-	echo __("Required:\n");
-	echo __("    --host-id         the numerical ID of the host\n");
-	echo __("    --data-query-id   the numerical ID of the data_query to be added\n");
-	echo __("    --reindex-method  the reindex method to be used for that data query\n");
-	echo __("                      0|None   = no reindexing\n");
-	echo __("                      1|Uptime = Uptime goes Backwards\n");
-	echo __("                      2|Index  = Index Count Changed\n");
-	echo __("                      3|Fields = Verify all Fields\n");
-	echo __("If the data query was already associated, it will be reindexed.\n\n");
+	echo __("Add Data Query Script 1.0, Copyright 2009 - The Cacti Group") . "\n\n";
+	echo __("A simple command line utility to add a data query to an existing device in Cacti") . "\n\n";
+	echo __("usage: data_query_add.php --host-id=[ID] --data-query-id=[dq_id] --reindex-method=[method] [--quiet]") . "\n\n";
+	echo __("Required:") . "\n";
+	echo __("    --host-id         the numerical ID of the host") . "\n";
+	echo __("    --data-query-id   the numerical ID of the data_query to be added") . "\n";
+	echo __("    --reindex-method  the reindex method to be used for that data query") . "\n";
+	echo __("                      0|None   = no reindexing") . "\n";
+	echo __("                      1|Uptime = Uptime goes Backwards") . "\n";
+	echo __("                      2|Index  = Index Count Changed") . "\n";
+	echo __("                      3|Fields = Verify all Fields") . "\n";
+	echo __("If the data query was already associated, it will be reindexed.") . "\n\n";
 }
 
 ?>
