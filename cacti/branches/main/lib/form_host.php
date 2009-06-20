@@ -791,7 +791,7 @@ function host_display_general($host, $host_text) {
 	html_end_box(FALSE);
 
 	print "<form method='post' action='" .  basename($_SERVER["PHP_SELF"]) . "' name='host_edit_settings'>\n";
-	html_start_box("<strong>" __("General Settings") . "</strong>", "100%", $colors["header"], 0, "center", "", true);
+	html_start_box("<strong>" . __("General Settings") . "</strong>", "100%", $colors["header"], 0, "center", "", true);
 	$header_items = array(__("Field"), __("Value"));
 	print "<tr><td>";
 	html_header($header_items, 1, true, 'host');
