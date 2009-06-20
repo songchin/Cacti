@@ -62,7 +62,7 @@ if (sizeof($parms)) {
 		case "--template":
 			$host["host_template_id"] = $value;
 			if (!is_numeric($host["host_template_id"])) {
-				echo "ERROR: You must supply a numeric host template id for all hosts!\n";
+				echo __("ERROR: You must supply a numeric host template id for all hosts!\n");
 				exit(1);
 			}
 	
@@ -75,7 +75,7 @@ if (sizeof($parms)) {
 			if (is_numeric($value) && ($value == 1 || $value == 2 || $value == 3)) {
 				$host["snmp_version"] = $value;
 			}else{
-				echo "ERROR: Invalid SNMP Version: ($value)\n\n";
+				printf(__("ERROR: Invalid SNMP Version: (%d)\n\n"), $value);
 				display_help();
 				exit(1);
 			}
@@ -92,7 +92,7 @@ if (sizeof($parms)) {
 			} elseif (is_numeric($value) && ($value == 0)) {
 				$host["disabled"]  = '""';
 			} else {
-				echo "ERROR: Invalid disabled flag ($disabled)\n";
+				printf(__("ERROR: Invalid disabled flag (%s)\n"), $disabled);
 				exit(1);
 			}
 
@@ -108,7 +108,7 @@ if (sizeof($parms)) {
 		case "--authproto":
 			$host["snmp_auth_protocol"] = trim($value);
 			if (($host["snmp_auth_protocol"] != "MD5") && ($host["snmp_auth_protocol"] != "SHA")) {
-				echo "ERROR: Invalid SNMP AuthProto: ($value)\n\n";
+				printf(__("ERROR: Invalid SNMP AuthProto: (%s)\n\n"), $value);
 				display_help();
 				exit(1);
 			}
@@ -117,7 +117,7 @@ if (sizeof($parms)) {
 		case "--privproto":
 			$host["snmp_priv_protocol"] = trim($value);
 			if (($host["snmp_priv_protocol"] != "DES") && ($host["snmp_priv_protocol"] != "AES")) {
-				echo "ERROR: Invalid SNMP PrivProto: ($value)\n\n";
+				printf(__("ERROR: Invalid SNMP PrivProto: (%s)\n\n"), $value);
 				display_help();
 				exit(1);
 			}
@@ -135,7 +135,7 @@ if (sizeof($parms)) {
 			if (is_numeric($value) && ($value > 0)) {
 				$host["snmp_port"]     = $value;
 			}else{
-				echo "ERROR: Invalid SNMP Port: ($value)\n\n";
+				printf(__("ERROR: Invalid SNMP Port: (%d)\n\n"), $value);
 				display_help();
 				exit(1);
 			}
@@ -145,7 +145,7 @@ if (sizeof($parms)) {
 			if (is_numeric($value) && ($value > 0) && ($value <= 20000)) {
 				$host["snmp_timeout"]     = $value;
 			}else{
-				echo "ERROR: Invalid SNMP Timeout.  Valid values are from 1 to 20000\n";
+				echo __("ERROR: Invalid SNMP Timeout.  Valid values are from 1 to 20000\n");
 				display_help();
 				exit(1);
 			}
@@ -170,7 +170,7 @@ if (sizeof($parms)) {
 
 				break;
 			default:
-				echo "ERROR: Invalid Availability Parameter: ($value)\n\n";
+				printf(__("ERROR: Invalid Availability Parameter: (%s)\n\n"), $value);
 				display_help();
 				exit(1);
 			}
@@ -192,7 +192,7 @@ if (sizeof($parms)) {
 
 				break;
 			default:
-				echo "ERROR: Invalid Ping Method: ($value)\n\n";
+				printf(__("ERROR: Invalid Ping Method: (%s)\n\n"), $value);
 				display_help();
 				exit(1);
 			}
@@ -203,7 +203,7 @@ if (sizeof($parms)) {
 			if (is_numeric($value) && ($value > 0)) {
 				$host["ping_port"] = $value;
 			}else{
-				echo "ERROR: Invalid Ping Port: ($value)\n\n";
+				printf(__("ERROR: Invalid Ping Port: (%d)\n\n"), $value);
 				display_help();
 				exit(1);
 			}
@@ -213,7 +213,7 @@ if (sizeof($parms)) {
 			if (is_numeric($value) && ($value > 0)) {
 				$host["ping_retries"] = $value;
 			}else{
-				echo "ERROR: Invalid Ping Retries: ($value)\n\n";
+				printf(__("ERROR: Invalid Ping Retries: (%d)\n\n"), $value);
 				display_help();
 				exit(1);
 			}
@@ -223,7 +223,7 @@ if (sizeof($parms)) {
 			if (is_numeric($value) && ($value > 0)) {
 				$host["ping_timeout"] = $value;
 			}else{
-				echo "ERROR: Invalid Ping Timeout: ($value)\n\n";
+				printf(__("ERROR: Invalid Ping Timeout: (%d)\n\n"), $value);
 				display_help();
 				exit(1);
 			}
@@ -233,7 +233,7 @@ if (sizeof($parms)) {
 			if (is_numeric($value) && ($value > 0)) {
 				$host["max_oids"] = $value;
 			}else{
-				echo "ERROR: Invalid Max OIDS: ($value)\n\n";
+				printf(__("ERROR: Invalid Max OIDS: (%d)\n\n"), $value);
 				display_help();
 				exit(1);
 			}
@@ -250,7 +250,7 @@ if (sizeof($parms)) {
 
 			break;
 		default:
-			echo "ERROR: Invalid Argument: ($arg)\n\n";
+			printf(__("ERROR: Invalid Argument: (%s)\n\n"), $arg);
 			display_help();
 			exit(1);
 		}
@@ -267,37 +267,37 @@ if (sizeof($parms)) {
 }
 
 function display_help() {
-	echo "Device List Script 1.0, Copyright 2009 - The Cacti Group\n\n";
-	echo "A simple command line utility to list device(s) in Cacti\n\n";
-	echo "usage: device_list.php [--description=] [--ip=] [--template=] [--notes=\"[]\"] [--disabled=]\n";
-	echo "    [--avail=] [--ping_method=] [--ping_port=] [--ping_retries=]  [--ping_timeout=]\n";
-	echo "    [--version=] [--community=] [--port=] [--timeout=]\n";
-	echo "    [--username=] [--password=] [--authproto=] [--privpass=] [--privproto=] [--context=]\n";
-	echo "    [--quiet]\n\n";
-	echo "All Parameters are optional. Any parameters given must match\n";
-	echo "Optional:\n";
-	echo "    --description  the name that will be displayed by Cacti in the graphs\n";
-	echo "    --ip           self explanatory (can also be a FQDN)\n";
-	echo "    --template     numeric host_template id\n";
-	echo "    --notes        General information about this host.  Must be enclosed using double quotes.\n";
-	echo "    --disabled     1 for disabled hosts, 0 for enabled hosts\n";
-	echo "    --avail        [pingsnmp], [ping], [none], [snmp]\n";
-	echo "    --ping_method  [tcp], [icmp], [udp]\n";
-	echo "    --ping_port    port used for tcp|udp pings [1-65534]\n";
-	echo "    --ping_retries the number of time to attempt to communicate with a host\n";
-	echo "    --ping_timeout ping timeout\n";
-	echo "    --version      1|2|3, snmp version\n";
-	echo "    --community    snmp community string for snmpv1 and snmpv2\n";
-	echo "    --port         snmp port\n";
-	echo "    --timeout      snmp timeout\n";
-	echo "    --username     snmp username for snmpv3\n";
-	echo "    --password     snmp password for snmpv3\n";
-	echo "    --authproto    snmp authentication protocol for snmpv3 [MD5|SHA]\n";
-	echo "    --privpass     snmp privacy passphrase for snmpv3\n";
-	echo "    --privproto    snmp privacy protocol for snmpv3 [DES|AES]\n";
-	echo "    --context      snmp context for snmpv3\n";
-	echo "    --max_oids     the number of OID's that can be obtained in a single SNMP Get request\n\n";
-	echo "    --quiet        batch mode value return\n\n";
+	echo __("Device List Script 1.0, Copyright 2009 - The Cacti Group\n\n");
+	echo __("A simple command line utility to list device(s) in Cacti\n\n");
+	echo __("usage: device_list.php [--description=] [--ip=] [--template=] [--notes=\"[]\"] [--disabled=]\n");
+	echo __("    [--avail=] [--ping_method=] [--ping_port=] [--ping_retries=]  [--ping_timeout=]\n");
+	echo __("    [--version=] [--community=] [--port=] [--timeout=]\n");
+	echo __("    [--username=] [--password=] [--authproto=] [--privpass=] [--privproto=] [--context=]\n");
+	echo __("    [--quiet]\n\n");
+	echo __("All Parameters are optional. Any parameters given must match\n");
+	echo __("Optional:\n");
+	echo __("    --description  the name that will be displayed by Cacti in the graphs\n");
+	echo __("    --ip           self explanatory (can also be a FQDN)\n");
+	echo __("    --template     numeric host_template id\n");
+	echo __("    --notes        General information about this host.  Must be enclosed using double quotes.\n");
+	echo __("    --disabled     1 for disabled hosts, 0 for enabled hosts\n");
+	echo __("    --avail        [pingsnmp], [ping], [none], [snmp]\n");
+	echo __("    --ping_method  [tcp], [icmp], [udp]\n");
+	echo __("    --ping_port    port used for tcp|udp pings [1-65534]\n");
+	echo __("    --ping_retries the number of time to attempt to communicate with a host\n");
+	echo __("    --ping_timeout ping timeout\n");
+	echo __("    --version      1|2|3, snmp version\n");
+	echo __("    --community    snmp community string for snmpv1 and snmpv2\n");
+	echo __("    --port         snmp port\n");
+	echo __("    --timeout      snmp timeout\n");
+	echo __("    --username     snmp username for snmpv3\n");
+	echo __("    --password     snmp password for snmpv3\n");
+	echo __("    --authproto    snmp authentication protocol for snmpv3 [MD5|SHA]\n");
+	echo __("    --privpass     snmp privacy passphrase for snmpv3\n");
+	echo __("    --privproto    snmp privacy protocol for snmpv3 [DES|AES]\n");
+	echo __("    --context      snmp context for snmpv3\n");
+	echo __("    --max_oids     the number of OID's that can be obtained in a single SNMP Get request\n\n");
+	echo __("    --quiet        batch mode value return\n\n");
 }
 
 ?>

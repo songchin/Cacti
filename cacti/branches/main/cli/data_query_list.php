@@ -60,7 +60,7 @@ if (sizeof($parms)) {
 			$quietMode = TRUE;
 			break;
 		default:
-			echo "ERROR: Invalid Argument: ($arg)\n\n";
+			printf(__("ERROR: Invalid Argument: (%s)\n\n"), $arg);
 			display_help();
 			exit(1);
 		}
@@ -78,18 +78,18 @@ if (sizeof($parms)) {
 }
 
 function display_help() {
-	echo "List Data Query Script 1.0, Copyright 2009 - The Cacti Group\n\n";
-	echo "A simple command line utility to list data queries in Cacti\n\n";
-	echo "usage: data_query_list.php [--host-id=] [--data-query-id=] [--reindex-method=] [--quiet]\n\n";
-	echo "Optional:\n";
-	echo "    --host-id         the numerical ID of the host\n";
-	echo "    --data-query-id   the numerical ID of the data_query to be added\n";
-	echo "    --reindex-method  the reindex method to be used for that data query\n";
-	echo "                      0|None   = no reindexing\n";
-	echo "                      1|Uptime = Uptime goes Backwards\n";
-	echo "                      2|Index  = Index Count Changed\n";
-	echo "                      3|Fields = Verify all Fields\n";
-	echo "    --quiet - batch mode value return\n\n";
+	echo __("List Data Query Script 1.0, Copyright 2009 - The Cacti Group\n\n");
+	echo __("A simple command line utility to list data queries in Cacti\n\n");
+	echo __("usage: data_query_list.php [--host-id=] [--data-query-id=] [--reindex-method=] [--quiet]\n\n");
+	echo __("Optional:\n");
+	echo __("    --host-id         the numerical ID of the host\n");
+	echo __("    --data-query-id   the numerical ID of the data_query to be added\n");
+	echo __("    --reindex-method  the reindex method to be used for that data query\n");
+	echo __("                      0|None   = no reindexing\n");
+	echo __("                      1|Uptime = Uptime goes Backwards\n");
+	echo __("                      2|Index  = Index Count Changed\n");
+	echo __("                      3|Fields = Verify all Fields\n");
+	echo __("    --quiet - batch mode value return\n\n");
 }
 
 ?>

@@ -55,7 +55,7 @@ if (sizeof($parms)) {
 		case "--host-id":
 			$host_id = trim($value);
 			if (!is_numeric($host_id)) {
-				echo "ERROR: You must supply a valid host-id to run this script!\n";
+				echo __("ERROR: You must supply a valid host-id to run this script!\n");
 				exit(1);
 			}
 	
@@ -63,7 +63,7 @@ if (sizeof($parms)) {
 		case "--data-query-id":
 			$data_query_id = $value;
 			if (!is_numeric($data_query_id)) {
-				echo "ERROR: You must supply a numeric data-query-id for all hosts!\n";
+				echo __("ERROR: You must supply a numeric data-query-id for all hosts!\n");
 				exit(1);
 			}
 	
@@ -88,7 +88,7 @@ if (sizeof($parms)) {
 						$reindex_method = DATA_QUERY_AUTOINDEX_FIELD_VERIFICATION;
 						break;
 					default:
-						echo "ERROR: You must supply a valid reindex method for all hosts!\n";
+						echo __("ERROR: You must supply a valid reindex method for all hosts!\n");
 						exit(1);
 				}
 			}
@@ -100,7 +100,7 @@ if (sizeof($parms)) {
 			display_help();
 			exit(0);
 		default:
-			echo "ERROR: Invalid Argument: ($arg)\n\n";
+			printf(__("ERROR: Invalid Argument: (%s)\n\n"), $arg) ;
 			display_help();
 			exit(1);
 		}
@@ -111,17 +111,17 @@ if (sizeof($parms)) {
 	 * for update / insert options 
 	 */
 	if (!isset($host_id)) {
-		echo "ERROR: You must supply a valid host-id for all hosts!\n";
+		echo __("ERROR: You must supply a valid host-id for all hosts!\n");
 		exit(1);
 	}
 
 	if (!isset($data_query_id)) {
-		echo "ERROR: You must supply a valid data-query-id for all hosts!\n";
+		echo __("ERROR: You must supply a valid data-query-id for all hosts!\n");
 		exit(1);
 	}
 
 	if (!isset($reindex_method)) {
-		echo "ERROR: You must supply a valid reindex-method for all hosts!\n";
+		echo __("ERROR: You must supply a valid reindex-method for all hosts!\n");
 		exit(1);
 	}
 
@@ -131,7 +131,7 @@ if (sizeof($parms)) {
 	 */
 	$host_name = db_fetch_cell("SELECT hostname FROM host WHERE id = " . $host_id);
 	if (!isset($host_name)) {
-		echo "ERROR: Unknown Host Id ($host_id)\n";
+		printf(__("ERROR: Unknown Host Id (%d)\n"), $host_id);
 		exit(1);
 	}
 
@@ -140,7 +140,7 @@ if (sizeof($parms)) {
 	 */
 	$data_query_name = db_fetch_cell("SELECT name FROM snmp_query WHERE id = " . $data_query_id);
 	if (!isset($data_query_name)) {
-		echo "ERROR: Unknown Data Query Id ($data_query_id)\n";
+		printf(__("ERROR: Unknown Data Query Id (%d)\n"), $data_query_id);
 		exit(1);
 	}
 	
@@ -150,7 +150,7 @@ if (sizeof($parms)) {
 	$exists_already = db_fetch_cell("SELECT host_id FROM host_snmp_query WHERE host_id=$host_id AND snmp_query_id=$data_query_id AND reindex_method=$reindex_method");
 	if ((isset($exists_already)) &&
 		($exists_already > 0)) {
-		echo "ERROR: Data Query is already associated for host: ($host_id: $host_name) data query ($data_query_id: $data_query_name) reindex method ($reindex_method: $reindex_types[$reindex_method])\n";
+		       printf(__("ERROR: Data Query is already associated for host: (%1d: %2s) data query (%3d: %4s) reindex method (%5s: %6s)\n"), $host_id, $host_name, $data_query_id, $data_query_name, $reindex_method, $reindex_types[$reindex_method]);
 		exit(1);
 	}else{
 		db_execute("REPLACE INTO host_snmp_query (host_id,snmp_query_id,reindex_method) " .
@@ -163,10 +163,10 @@ if (sizeof($parms)) {
 	}
 
 	if (is_error_message()) {
-		echo "ERROR: Failed to add this data query for host ($host_id: $host_name) data query ($data_query_id: $data_query_name) reindex method ($reindex_method: $reindex_types[$reindex_method])\n";
+		printf(__("ERROR: Failed to add this data query for host (%1d: %2s) data query (%3d: %4s) reindex method (%5s: %6s)\n"), $host_id, $host_name, $data_query_id, $data_query_name, $reindex_method, $reindex_types[$reindex_method]);
 		exit(1);
 	} else {
-		echo "Success - Host ($host_id: $host_name) data query ($data_query_id: $data_query_name) reindex method ($reindex_method: $reindex_types[$reindex_method])\n";
+		printf(__("Success - Host (%1d: %2s) data query (%3d: %4s) reindex method (%5s: %6s)\n"), $host_id, $host_name, $data_query_id, $data_query_name, $reindex_method, $reindex_types[$reindex_method]);
 		exit(0);
 	}
 }else{
@@ -175,18 +175,18 @@ if (sizeof($parms)) {
 }
 
 function display_help() {
-	echo "Add Data Query Script 1.0, Copyright 2009 - The Cacti Group\n\n";
-	echo "A simple command line utility to add a data query to an existing device in Cacti\n\n";
-	echo "usage: data_query_add.php --host-id=[ID] --data-query-id=[dq_id] --reindex-method=[method] [--quiet]\n\n";
-	echo "Required:\n";
-	echo "    --host-id         the numerical ID of the host\n";
-	echo "    --data-query-id   the numerical ID of the data_query to be added\n";
-	echo "    --reindex-method  the reindex method to be used for that data query\n";
-	echo "                      0|None   = no reindexing\n";
-	echo "                      1|Uptime = Uptime goes Backwards\n";
-	echo "                      2|Index  = Index Count Changed\n";
-	echo "                      3|Fields = Verify all Fields\n";
-	echo "If the data query was already associated, it will be reindexed.\n\n";
+	echo __("Add Data Query Script 1.0, Copyright 2009 - The Cacti Group\n\n");
+	echo __("A simple command line utility to add a data query to an existing device in Cacti\n\n");
+	echo __("usage: data_query_add.php --host-id=[ID] --data-query-id=[dq_id] --reindex-method=[method] [--quiet]\n\n");
+	echo __("Required:\n");
+	echo __("    --host-id         the numerical ID of the host\n");
+	echo __("    --data-query-id   the numerical ID of the data_query to be added\n");
+	echo __("    --reindex-method  the reindex method to be used for that data query\n");
+	echo __("                      0|None   = no reindexing\n");
+	echo __("                      1|Uptime = Uptime goes Backwards\n");
+	echo __("                      2|Index  = Index Count Changed\n");
+	echo __("                      3|Fields = Verify all Fields\n");
+	echo __("If the data query was already associated, it will be reindexed.\n\n");
 }
 
 ?>

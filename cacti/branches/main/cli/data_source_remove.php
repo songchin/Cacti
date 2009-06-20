@@ -76,11 +76,11 @@ if (sizeof($parms)) {
 				display_help($me);
 				exit (0);
 			case "--dry-run" :
-				$dry_run = "DRY RUN >>> ";
+				$dry_run = __("DRY RUN >>>\n");
 
 				break;
 			default :
-				echo "ERROR: Invalid Argument: ($arg)\n\n";
+				printf(__("ERROR: Invalid Argument: (%s)\n\n"), $arg);
 				display_help($me);
 				exit (1);
 		}
@@ -94,13 +94,13 @@ if (sizeof($parms)) {
 
 	if (isset ($host_id) && ($host_id > 0)) {
 		if (!isset($snmp_field) || ($snmp_field === 0)) {
-			echo "ERROR: You must supply a valid --snmp-field\n";
-			echo "Try php -q graph_list.php --list-snmp-fields\n";
+			echo __("ERROR: You must supply a valid --snmp-field\n");
+			echo __("Try php -q graph_list.php --list-snmp-fields\n");
 			exit (1);
 		}
 		if (!isset($snmp_value) || ($snmp_value === 0)) {
-			echo "ERROR: You must supply a valid --snmp-value\n";
-			echo "Try php -q graph_list.php --list-snmp-values\n";
+			echo __("ERROR: You must supply a valid --snmp-value\n");
+			echo __("Try php -q graph_list.php --list-snmp-values\n");
 			exit (1);
 		}
 		$data_sources = db_fetch_assoc("SELECT data_local.id " .
@@ -114,13 +114,15 @@ if (sizeof($parms)) {
 				"ORDER BY  data_local.id");
 
 		if (sizeof($data_sources) > 0) {
-			echo $dry_run . "Removing all Data Sources for Host=" . $host_id . ", SNMP Field=" . $snmp_field . ", SNMP Value=" . $snmp_value ."\n";
+			echo $dry_run;
+		       	printf(__("Removing all Data Sources for Host=%1s, SNMP Field=%2s, SNMP Value=%3d\n"), $host_id, $snmp_field, $snmp_value);
 			$i = 0;
 			foreach ($data_sources as $data_source) {
 				remove_data_source($data_source["id"], $dry_run);
 				$i++;
 			}
-			echo $dry_run . "Removed $i Data Sources for Host=" . $host_id . ", SNMP Field=" . $snmp_field . ", SNMP Value=" . $snmp_value ."\n";
+			echo $dry_run;
+			printf(__("Removed %4d Data Sources for Host=%1s, SNMP Field=%2s, SNMP Value=%3d\n"), $host_id, $snmp_field, $snmp_value, $i);
 		}
 		exit (0);
 	}
@@ -135,11 +137,11 @@ if (sizeof($parms)) {
 
 function remove_data_source($data_source_id, $dry_run) {
 	
-	$dry_run ? $dry_run = "DRY RUN >>> " : $dry_run = "";
+	$dry_run ? $dry_run = __("DRY RUN >>>\n") : $dry_run = "";
 	
 	/* Verify the data source's existance */
 	if (!db_fetch_cell("SELECT id FROM data_local WHERE id=$data_source_id")) {
-		echo "ERROR: Unknown Data Source ID ($data_source_id)\n";
+		printf(__("ERROR: Unknown Data Source ID (%d)\n"), $data_source_id);
 		exit (1);
 	}
 
@@ -156,11 +158,12 @@ function remove_data_source($data_source_id, $dry_run) {
 			"GROUP BY graph_templates_graph.local_graph_id");
 
 	if (sizeof($graphs) > 0) {
-		echo $dry_run . "Delete Graph(s): ";
+		echo $dry_run;
+		echo __("Delete Graph(s): ");
 		foreach ($graphs as $graph) {
 
 			if ($dry_run) {
-				echo "Graph: " . $graph["local_graph_id"] . " ";
+				printf(__("Graph: %d"), $graph["local_graph_id"]);
 			} else {
 				echo $graph["local_graph_id"] . " ";
 				api_graph_remove($graph["local_graph_id"]);
@@ -170,33 +173,34 @@ function remove_data_source($data_source_id, $dry_run) {
 	}
 
 	if ($dry_run) {
-		echo $dry_run . "Data Source: " . $data_source_id;
+		echo $dry_run;
+		printf(__("Data Source: %d"), $data_source_id);
 	} else {
-		echo "Delete Data Source: " . $data_source_id;
+		printf(__("Delete Data Source: %d", $data_source_id));
 		api_data_source_remove($data_source_id);
 	}
 
 	if (is_error_message()) {
-		echo " - ERROR: Failed to remove this data source\n";
+		echo __(" - ERROR: Failed to remove this data source\n");
 		exit (1);
 	} else {
-		echo " - SUCCESS: Removed data-source-id: ($data_source_id)\n";
+		printf(__(" - SUCCESS: Removed data-source-id: (%d)\n"), $data_source_id);
 	}
 }
 
 function display_help($me) {
-	echo "Remove Data Source Script 1.0, Copyright 2009 - The Cacti Group\n\n";
-	echo "A simple command line utility to remove a data source from Cacti\n\n";
-	echo "usage: $me [--data-source-id=[ID]|--host-id=[ID]] [--dry-run]\n\n";
-	echo "Required is either of:\n";
-	echo "    --data-source-id=[id]  the numerical id of the graph\n";
-	echo "    --host-id=[id]         the numerical id of the host\n\n";
-	echo "When using a host-id, the following is required (ds graphs only!):\n";
-	echo "    --snmp-field=[field]   snmp-field to be checked\n";
-	echo "    --snmp-value=[value]   snmp-value to be checked\n\n";
-	echo "Optional:\n";
-	echo "    --dry-run              produce list output only, do NOT remove anything\n\n";
-	echo "e.g. php -q $me --host-id=[ID] --snmp-field=ifOperStatus --snmp-value=DOWN\n";
-	echo "to remove all data sources and graphs for interfaces with ifOperStatus = DOWN\n\n";
+	echo __("Remove Data Source Script 1.0, Copyright 2009 - The Cacti Group\n\n");
+	echo __("A simple command line utility to remove a data source from Cacti\n\n");
+	printf(__("usage: %s [--data-source-id=[ID]|--host-id=[ID]] [--dry-run]\n\n"), $me);
+	echo __("Required is either of:\n");
+	echo __("    --data-source-id=[id]  the numerical id of the graph\n");
+	echo __("    --host-id=[id]         the numerical id of the host\n\n");
+	echo __("When using a host-id, the following is required (ds graphs only!):\n");
+	echo __("    --snmp-field=[field]   snmp-field to be checked\n");
+	echo __("    --snmp-value=[value]   snmp-value to be checked\n\n");
+	echo __("Optional:\n");
+	echo __("    --dry-run              produce list output only, do NOT remove anything\n\n");
+	printf(__("e.g. php -q %s --host-id=[ID] --snmp-field=ifOperStatus --snmp-value=DOWN\n"), $me);
+	echo __("to remove all data sources and graphs for interfaces with ifOperStatus = DOWN\n\n");
 }
 ?>
