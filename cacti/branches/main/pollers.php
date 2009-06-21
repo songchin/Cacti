@@ -201,7 +201,7 @@ function form_actions() {
 		}elseif ($_POST["drp_action"] == "2") { /* disable */
 			print "	<tr>
 					<td class='textArea'>
-						<p>" . __("Are you sure you want to disable the following pollers?  Add devices currently attached to these pollers will no longer have their graphs updated.") . "</p>
+						<p>" . __("Are you sure you want to disable the following pollers? All devices currently attached to these pollers will no longer have their graphs updated.") . "</p>
 						<p>$poller_list</p>
 					</td>
 				</tr>\n

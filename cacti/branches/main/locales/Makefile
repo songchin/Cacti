@@ -1,4 +1,4 @@
-all: update-mo
+all: update-pot-po update-mo
 
 update-pot-po: update-pot update-po
 

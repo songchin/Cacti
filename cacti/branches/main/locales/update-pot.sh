@@ -1,3 +1,2 @@
 #!/bin/sh
-
-xgettext -k_ `find ../ -name \*.php` -o po/cacti.pot
+xgettext -k__ `find ../ -name \*.php` -o po/cacti.pot

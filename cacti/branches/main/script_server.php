@@ -113,7 +113,7 @@ while (1) {
 			if (sizeof($command_array)) {
 				/* user has requested to quit */
 				if (substr_count($command_array[0], "quit")) {
-					fputs(STDOUT, __("PHP Script Server Shutdown request received, exiting\n"));
+					fputs(STDOUT, "PHP Script Server Shutdown request received, exiting\n");
 					if (read_config_option("log_verbosity") == POLLER_VERBOSITY_DEBUG) {
 						cacti_log("DEBUG: PHP Script Server Shutdown request received, exiting", false, "PHPSVR");
 					}

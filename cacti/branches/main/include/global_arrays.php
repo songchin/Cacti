@@ -379,7 +379,7 @@ $custom_data_source_types = array(
 	);
 
 $menu = array(
-	"Management" => array(
+	__("Management") => array(
 		"graphs.php" => __("Graph Management"),
 		"tree.php" => __("Graph Trees"),
 		"data_sources.php" => __("Data Sources"),
@@ -387,29 +387,29 @@ $menu = array(
 		"host.php" => __("Devices"),
 		"pollers.php" => __("Pollers"),
 		),
-	"Data Collection" => array(
+	__("Data Collection") => array(
 		"data_queries.php" => __("Data Queries"),
 		"data_input.php" => __("Data Input Methods"),
 		),
-	"Templates" => array(
+	__("Templates") => array(
 		"graph_templates.php" => __("Graph Templates"),
 		"host_templates.php" => __("Host Templates"),
 		"data_templates.php" => __("Data Templates"),
 		),
-	"Presets" => array(
+	__("Presets") => array(
 		"cdef.php" => __("CDEFs"),
 		"color.php" => __("Colors"),
 		"gprint_presets.php" => __("GPRINT Presets"),
 		"rra.php" => __("RRAs"),
 		),
-	"Import/Export" => array(
+	__("Import/Export") => array(
 		"templates_import.php" => __("Import Templates"),
 		"templates_export.php" => __("Export Templates"),
 		),
-	"Configuration"  => array(
+	__("Configuration")  => array(
 		"settings.php" => __("Settings"),
 		),
-	"Utilities" => array(
+	__("Utilities") => array(
 		"utilities.php" => __("System Utilities"),
 		"user_admin.php" => __("User Management"),
 		"logout.php" => __("Logout User"),
@@ -734,7 +734,7 @@ $i18n_months_short = array(
 	);
 
 $i18n_weekdays = array(
-	"Sunday"	=> __("Sunday"), 
+	"Sunday"	=> __("Sunday"),
 	"Monday"	=> __("Monday"),
 	"Tuesday"	=> __("Tuesday"),
 	"Wednesday"	=> __("Wednesday"),
@@ -744,7 +744,7 @@ $i18n_weekdays = array(
 	);
 
 $i18n_weekdays_short = array(
-	"Sun"	=> __("Sun"), 
+	"Sun"	=> __("Sun"),
 	"Mon"	=> __("Mon"),
 	"Tue"	=> __("Tue"),
 	"Wed"	=> __("Wed"),

@@ -319,7 +319,7 @@ function display_general() {
 	/* Check RRDTool issues */
 	$rrdtool_error = "";
 	if ($rrdtool_version != read_config_option("rrdtool_version")) {
-		$rrdtool_error .= "<br><font color='red'>" . __("ERROR: Installed RRDTool version does not match configured version.<br>Please visit the") . " <a href='settings.php?tab=general'> " . __("Configuration Settings</a> and select the correct RRDTool Utility Version.") . "</font><br>";
+		$rrdtool_error .= "<br><font color='red'>" . __("ERROR: Installed RRDTool version does not match configured version.") . "<br>" . __("Please visit the") . " <a href='settings.php?tab=general'> " . __("Configuration Settings") . "</a>" . __("and select the correct RRDTool Utility Version.") . "</font><br>";
 	}
 	$graph_gif_count = db_fetch_cell("SELECT COUNT(*) FROM graph_templates_graph WHERE image_format_id = 2");
 	if (($graph_gif_count > 0) && (read_config_option("rrdtool_version") != "rrd-1.0.x")) {
@@ -616,16 +616,16 @@ function display_languages() {
 	html_start_box("<strong>" . __("Language Information") . "</strong>", "100%", $colors["header"], "3", "center", "");
 	html_header(array(__("General Information")), 2);
 	print "<tr class='rowAlternate1'>\n";
-	print "		<td style='width:20%;' class='textAreaNotes'>Current Language</td>\n";
+	print "		<td style='width:20%;' class='textAreaNotes'>" . __("Current Language") . "</td>\n";
 	print "		<td class='textAreaNotes'>". $language . "</td>\n";
 	print "</tr>\n";
 	print "<tr class='rowAlternate2'>\n";
-	print "		<td style='width:20%;' class='textAreaNotes'>Language Mode</td>\n";
+	print "		<td style='width:20%;' class='textAreaNotes'>" . __("Language Mode") . "</td>\n";
 	print "		<td class='textAreaNotes'>" . $i18n_modes[read_config_option('i18n_support')] . "</td>\n";
 	print "</tr>\n";
 	print "<tr class='rowAlternate1'>\n";
-	print "		<td style='width:20%;' class='textAreaNotes'>Default Language</td>\n";
-	print "		<td class='textAreaNotes'>English</td>\n";
+	print "		<td style='width:20%;' class='textAreaNotes'>" . __("Default Language") . "</td>\n";
+	print "		<td class='textAreaNotes'>" . __("English") . "</td>\n";
 	print "</tr>\n";
 	html_header(array(__("Supported Languages")), 2);
 	$i = 0;
@@ -1196,10 +1196,9 @@ function utilities_clear_logfile() {
 			fclose($log_fh);
 			print "<tr><td>" . __("Cacti Log File Cleared") . "</td></tr>";
 		}else{
-			print "<tr><td><font color='red'><b>" . __("Error: Unable to clear log, no write permissions.") . "<b></font></td></tr>";
-		}
+			print "<tr><td><font color='red'><b>" . __("Error: Unable to clear log, ") . __("no write permissions.") . "<b></font></td></tr>";		}
 	}else{
-		print "<tr><td><font color='red'><b>" . __("Error: Unable to clear log, file does not exist.") . "</b></font></td></tr>";
+		print "<tr><td><font color='red'><b>" . __("Error: Unable to clear log, ") . __("file does not exist.") . "</b></font></td></tr>";
 	}
 	html_end_box();
 }
