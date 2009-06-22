@@ -4,11 +4,12 @@ $(document).ready(function(){
 		function () {
 			$.ajax({
 					method: "get",url: "./lib/ajax/get_languages.php?location=" + window.location,
-					beforeSend: function(){$("#loading").show("fast");$("#codelist").hide("fast");},
-					complete: function(){ $("#loading").hide("middle");},
+					beforeSend: function(){$("#loading").fadeIn(200);},
+					complete: function(){$("#loading").fadeOut(400); },
 					success: function(html){
-					$("#codelist").show("fast");
+					$("#codelist").hide();
 					$("#codelist").html(html);
+					$("#codelist").fadeIn(400);
 					 }
 				 });
 		}

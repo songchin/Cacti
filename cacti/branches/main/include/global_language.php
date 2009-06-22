@@ -22,17 +22,21 @@
  +-------------------------------------------------------------------------+
 */
 
+/* use a fallback if i18n is disabled (default) */
+if (read_config_option('i18n_support') == 0) {
+	load_fallback_procedure();
+	return;
+}
+
 /* default localization of Cacti */
 $cacti_locale = "en";
 $cacti_country = "us";
-
 
 /* an array that will contains all textdomains being in use. */ 
 $cacti_textdomains = array();
 
 /* get a list of locale settings */
 $lang2locale = get_list_of_locales();
-
 
 /* determine whether or not we can support the language */
 /* user requests another language */
@@ -41,11 +45,22 @@ if (isset($_GET['language']) && isset($lang2locale[$_GET['language']])) {
 	$cacti_country = $lang2locale[$_GET['language']]['country'];
 	$_SESSION['language'] = $cacti_locale;
 	
+	/* save user customized language setting */
+	set_user_config_option('language', $cacti_locale);
+	
 /* language definition stored in the SESSION */
 }elseif (isset($_SESSION['language']) && isset($lang2locale[$_SESSION['language']])){
 	$cacti_locale = $_SESSION['language'];
 	$cacti_country = $lang2locale[$_SESSION['language']]['country'];
 
+/* look up for user customized language setting stored in Cacti DB */   
+}elseif ($user_locale = read_user_config_option('language')) {
+	if(isset($lang2locale[$user_locale])) {
+		$cacti_locale = $user_locale;
+		$cacti_country = $lang2locale[$cacti_locale]['country'];
+		$_SESSION['language'] = $cacti_locale;
+	}
+	
 /* detect browser settings if user did not setup language via GUI */
 }elseif (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
 	$accepted = $_SERVER['HTTP_ACCEPT_LANGUAGE'];
@@ -59,14 +74,6 @@ if (isset($_GET['language']) && isset($lang2locale[$_GET['language']])) {
 		$cacti_country = $lang2locale[$accepted]['country'];	
 	}
 }
-
-
-/* use a fallback if i18n is disabled (default) or English is requested */
-if (read_config_option('i18n_support') == 0 || $cacti_locale == "en") {
-	load_fallback_procedure();
-	return;
-}
-
 
 /* define the path to the language file */
 $path2catalogue = CACTI_BASE_PATH . "/locales/LC_MESSAGES/" . $lang2locale[$cacti_locale]['filename'];
