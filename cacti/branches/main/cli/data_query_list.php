@@ -37,7 +37,7 @@ include_once(CACTI_BASE_PATH."/lib/data_query.php");
 
 /* process calling arguments */
 $parms = $_SERVER["argv"];
-array_shift($parms);
+$me = array_shift($parms);
 
 if (sizeof($parms)) {
 	$quietMode	= FALSE;
@@ -54,14 +54,14 @@ if (sizeof($parms)) {
 		case "-V":
 		case "-H":
 		case "--help":
-			display_help();
+			display_help($me);
 			exit(0);
 		case "--quiet":
 			$quietMode = TRUE;
 			break;
 		default:
 			printf(__("ERROR: Invalid Argument: (%s)\n\n"), $arg);
-			display_help();
+			display_help($me);
 			exit(1);
 		}
 	}
@@ -77,19 +77,19 @@ if (sizeof($parms)) {
 	exit(0);
 }
 
-function display_help() {
-	echo __("List Data Query Script 1.0, Copyright 2009 - The Cacti Group") . "\n\n";
+function display_help($me) {
+	echo __("List Data Query Script 1.0") . ", " . __("Copyright 2004-2009 - The Cacti Group") . "\n";
 	echo __("A simple command line utility to list data queries in Cacti") . "\n\n";
-	echo __("usage: data_query_list.php [--host-id=] [--data-query-id=] [--reindex-method=] [--quiet]") . "\n\n";
+	echo __("usage: ") . $me . " [--device-id=] [--data-query-id=] [--reindex-method=] [--quiet]\n\n";
 	echo __("Optional:") . "\n";
-	echo __("    --host-id         the numerical ID of the host") . "\n";
-	echo __("    --data-query-id   the numerical ID of the data_query to be added") . "\n";
-	echo __("    --reindex-method  the reindex method to be used for that data query") . "\n";
-	echo __("                      0|None   = no reindexing") . "\n";
-	echo __("                      1|Uptime = Uptime goes Backwards") . "\n";
-	echo __("                      2|Index  = Index Count Changed") . "\n";
-	echo __("                      3|Fields = Verify all Fields") . "\n";
-	echo __("    --quiet - batch mode value return") . "\n\n";
+	echo "   --device-id      " . __("the numerical ID of the device") . "\n";
+	echo "   --data-query-id  " . __("the numerical ID of the data_query to be added") . "\n";
+	echo "   --reindex-method " . __("the reindex method to be used for that data query") . "\n";
+	echo "          0|None    " . __("no reindexing") . "\n";
+	echo "          1|Uptime  " . __("Uptime goes Backwards") . "\n";
+	echo "          2|Index   " . __("Index Count Changed") . "\n";
+	echo "          3|Fields  " . __("Verify all Fields") . "\n";
+	echo "   --quiet          " . __("batch mode value return") . "\n\n";
 }
 
 ?>

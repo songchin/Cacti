@@ -37,7 +37,7 @@ include_once(CACTI_BASE_PATH."/lib/data_query.php");
 
 /* process calling arguments */
 $parms = $_SERVER["argv"];
-array_shift($parms);
+$me = array_shift($parms);
 
 if (sizeof($parms)) {
 	unset($host_id);
@@ -52,21 +52,21 @@ if (sizeof($parms)) {
 			$debug = TRUE;
 
 			break;
-		case "--host-id":
+		case "--device-id":
 			$host_id = trim($value);
 			if (!is_numeric($host_id)) {
-				echo __("ERROR: You must supply a valid host-id to run this script!") . "\n";
+				echo __("ERROR: You must supply a valid device-id to run this script!\n");
 				exit(1);
 			}
-	
+
 			break;
 		case "--data-query-id":
 			$data_query_id = $value;
 			if (!is_numeric($data_query_id)) {
-				echo __("ERROR: You must supply a numeric data-query-id for all hosts!") . "\n";
+				echo __("ERROR: You must supply a numeric data-query-id for all devices!\n");
 				exit(1);
 			}
-	
+
 			break;
 		case "--reindex-method":
 			if (is_numeric($value) &&
@@ -88,7 +88,7 @@ if (sizeof($parms)) {
 						$reindex_method = DATA_QUERY_AUTOINDEX_FIELD_VERIFICATION;
 						break;
 					default:
-						echo __("ERROR: You must supply a valid reindex method for all hosts!") . "\n";
+						echo __("ERROR: You must supply a valid reindex method for all devices!\n");
 						exit(1);
 				}
 			}
@@ -97,36 +97,36 @@ if (sizeof($parms)) {
 		case "-V":
 		case "-H":
 		case "--help":
-			display_help();
+			display_help($me);
 			exit(0);
 		default:
 			printf(__("ERROR: Invalid Argument: (%s)\n\n"), $arg) ;
-			display_help();
+			display_help($me);
 			exit(1);
 		}
 	}
 
-	/* 
-	 * verify required parameters 
-	 * for update / insert options 
+	/*
+	 * verify required parameters
+	 * for update / insert options
 	 */
 	if (!isset($host_id)) {
-		echo __("ERROR: You must supply a valid host-id for all hosts!") . "\n";
+		echo __("ERROR: You must supply a valid device-id for all devices!\n");
 		exit(1);
 	}
 
 	if (!isset($data_query_id)) {
-		echo __("ERROR: You must supply a valid data-query-id for all hosts!") . "\n";
+		echo __("ERROR: You must supply a valid data-query-id for all devices!\n");
 		exit(1);
 	}
 
 	if (!isset($reindex_method)) {
-		echo __("ERROR: You must supply a valid reindex-method for all hosts!") . "\n";
+		echo __("ERROR: You must supply a valid reindex-method for all devices!\n");
 		exit(1);
 	}
 
 
-	/* 
+	/*
 	 * verify valid host id and get a name for it
 	 */
 	$host_name = db_fetch_cell("SELECT hostname FROM host WHERE id = " . $host_id);
@@ -135,7 +135,7 @@ if (sizeof($parms)) {
 		exit(1);
 	}
 
-	/* 
+	/*
 	 * verify valid data query and get a name for it
 	 */
 	$data_query_name = db_fetch_cell("SELECT name FROM snmp_query WHERE id = " . $data_query_id);
@@ -143,14 +143,14 @@ if (sizeof($parms)) {
 		printf(__("ERROR: Unknown Data Query Id (%d)\n"), $data_query_id);
 		exit(1);
 	}
-	
+
 	/*
-	 * Now, add the data query and run it once to get the cache filled 
+	 * Now, add the data query and run it once to get the cache filled
 	 */
 	$exists_already = db_fetch_cell("SELECT host_id FROM host_snmp_query WHERE host_id=$host_id AND snmp_query_id=$data_query_id AND reindex_method=$reindex_method");
 	if ((isset($exists_already)) &&
 		($exists_already > 0)) {
-		       printf(__("ERROR: Data Query is already associated for host: (%1d: %2s) data query (%3d: %4s) reindex method (%5s: %6s)\n"), $host_id, $host_name, $data_query_id, $data_query_name, $reindex_method, $reindex_types[$reindex_method]);
+		       printf(__("ERROR: Data Query is already associated for device: (%1d: %2s) data query (%3d: %4s) reindex method (%5s: %6s)\n"), $host_id, $host_name, $data_query_id, $data_query_name, $reindex_method, $reindex_types[$reindex_method]);
 		exit(1);
 	}else{
 		db_execute("REPLACE INTO host_snmp_query (host_id,snmp_query_id,reindex_method) " .
@@ -163,29 +163,29 @@ if (sizeof($parms)) {
 	}
 
 	if (is_error_message()) {
-		printf(__("ERROR: Failed to add this data query for host (%1d: %2s) data query (%3d: %4s) reindex method (%5s: %6s)\n"), $host_id, $host_name, $data_query_id, $data_query_name, $reindex_method, $reindex_types[$reindex_method]);
+		printf(__("ERROR: Failed to add this data query for device (%1d: %2s) data query (%3d: %4s) reindex method (%5s: %6s)\n"), $host_id, $host_name, $data_query_id, $data_query_name, $reindex_method, $reindex_types[$reindex_method]);
 		exit(1);
 	} else {
-		printf(__("Success - Host (%1d: %2s) data query (%3d: %4s) reindex method (%5s: %6s)\n"), $host_id, $host_name, $data_query_id, $data_query_name, $reindex_method, $reindex_types[$reindex_method]);
+		printf(__("Success - Device (%1d: %2s) data query (%3d: %4s) reindex method (%5s: %6s)\n"), $host_id, $host_name, $data_query_id, $data_query_name, $reindex_method, $reindex_types[$reindex_method]);
 		exit(0);
 	}
 }else{
-	display_help();
+	display_help($me);
 	exit(0);
 }
 
-function display_help() {
-	echo __("Add Data Query Script 1.0, Copyright 2009 - The Cacti Group") . "\n\n";
+function display_help($me) {
+	echo __("Add Data Query Script 1.0") . ", " . __("Copyright 2004-2009 - The Cacti Group") . "\n";
 	echo __("A simple command line utility to add a data query to an existing device in Cacti") . "\n\n";
-	echo __("usage: data_query_add.php --host-id=[ID] --data-query-id=[dq_id] --reindex-method=[method] [--quiet]") . "\n\n";
+	echo __("usage: ") . $me . " --device-id=[ID] --data-query-id=[dq_id] --reindex-method=[method] [--quiet]\n\n";
 	echo __("Required:") . "\n";
-	echo __("    --host-id         the numerical ID of the host") . "\n";
-	echo __("    --data-query-id   the numerical ID of the data_query to be added") . "\n";
-	echo __("    --reindex-method  the reindex method to be used for that data query") . "\n";
-	echo __("                      0|None   = no reindexing") . "\n";
-	echo __("                      1|Uptime = Uptime goes Backwards") . "\n";
-	echo __("                      2|Index  = Index Count Changed") . "\n";
-	echo __("                      3|Fields = Verify all Fields") . "\n";
+	echo "   --device-id      " . __("the numerical ID of the device") . "\n";
+	echo "   --data-query-id  " . __("the numerical ID of the data_query to be added") . "\n";
+	echo "   --reindex-method " . __("the reindex method to be used for that data query") . "\n";
+	echo "          0|None    " . __("no reindexing") . "\n";
+	echo "          1|Uptime  " . __("Uptime goes Backwards") . "\n";
+	echo "          2|Index   " . __("Index Count Changed") . "\n";
+	echo "          3|Fields  " . __("Verify all Fields") . "\n";
 	echo __("If the data query was already associated, it will be reindexed.") . "\n\n";
 }
 
