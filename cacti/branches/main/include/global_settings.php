@@ -115,7 +115,7 @@ $settings = array(
 			),
 		"extended_paths" => array(
 			"friendly_name" => __("Structured RRA Path (/host_id/local_data_id.rrd)"),
-			"description" => __("Use a seperate subfolder for each hosts RRD files."),
+			"description" => __("Use a seperate subfolder for each devices RRD files."),
 			"method" => "checkbox"
  			)
 		),
@@ -206,28 +206,28 @@ $settings = array(
 			),
 		"snmp_ver" => array(
 			"friendly_name" => __("SNMP Version"),
-			"description" => __("Default SNMP version for all new hosts."),
+			"description" => __("Default SNMP version for all new devices."),
 			"method" => "drop_array",
 			"default" => "1",
 			"array" => $snmp_versions,
 			),
 		"snmp_community" => array(
 			"friendly_name" => __("SNMP Community"),
-			"description" => __("Default SNMP read community for all new hosts."),
+			"description" => __("Default SNMP read community for all new devices."),
 			"method" => "textbox",
 			"default" => "public",
 			"max_length" => "100",
 			),
 		"snmp_username" => array(
 			"friendly_name" => __("SNMP Username (v3)"),
-			"description" => __("The SNMP v3 Username for polling hosts."),
+			"description" => __("The SNMP v3 Username for polling devices."),
 			"method" => "textbox",
 			"default" => "",
 			"max_length" => "100",
 			),
 		"snmp_password" => array(
 			"friendly_name" => __("SNMP Password (v3)"),
-			"description" => __("The SNMP v3 Password for polling hosts."),
+			"description" => __("The SNMP v3 Password for polling devices."),
 			"method" => "textbox_password",
 			"default" => "",
 			"max_length" => "100",
@@ -271,7 +271,7 @@ $settings = array(
 			),
 		"snmp_retries" => array(
 			"friendly_name" => __("SNMP Retries"),
-			"description" => __("The number times the SNMP poller will attempt to reach the host before failing."),
+			"description" => __("The number times the SNMP poller will attempt to reach the device before failing."),
 			"method" => "textbox",
 			"default" => "3",
 			"max_length" => "10",
@@ -358,8 +358,8 @@ $settings = array(
 			"default" => "1"
 			),
 		"export_tree_expand_hosts" => array(
-			"friendly_name" => __("Expand Tree Hosts"),
-			"description" => __("This settings determines if the tree hosts will be expanded or not.  If set to expanded, each host will have a sub-folder containing either data templates or data query items."),
+			"friendly_name" => __("Expand Tree devices"),
+			"description" => __("This settings determines if the tree devices will be expanded or not.  If set to expanded, each device will have a sub-folder containing either data templates or data query items."),
 			"method" => "drop_array",
 			"default" => "off",
 			"array" => array(
@@ -745,12 +745,12 @@ $settings = array(
 			"size" => "5"
 			),
 		"availability_header" => array(
-			"friendly_name" => __("Host Availability Settings"),
+			"friendly_name" => __("Device Availability Settings"),
 			"method" => "spacer",
 			),
 		"availability_method" => array(
-			"friendly_name" => __("Downed Host Detection"),
-			"description" => __("The method Cacti will use to determine if a host is available for polling.  <br><i>NOTE: It is recommended that, at a minimum, SNMP always be selected.</i>"),
+			"friendly_name" => __("Downed Device Detection"),
+			"description" => __("The method Cacti will use to determine if a device is available for polling.  <br><i>NOTE: It is recommended that, at a minimum, SNMP always be selected.</i>"),
 			"method" => "drop_array",
 			"default" => AVAIL_SNMP,
 			"array" => $availability_options,
@@ -764,7 +764,7 @@ $settings = array(
 			),
 		"ping_port" => array(
 			"friendly_name" => __("Ping Port"),
-			"description" => __("When choosing either TCP or UDP Ping, which port should be checked for availability of the host prior to polling."),
+			"description" => __("When choosing either TCP or UDP Ping, which port should be checked for availability of the device prior to polling."),
 			"method" => "textbox",
 			"default" => "23",
 			"max_length" => "10",
@@ -772,7 +772,7 @@ $settings = array(
 			),
 		"ping_timeout" => array(
 			"friendly_name" => __("Ping Timeout Value"),
-			"description" => __("The timeout value to use for host ICMP and UDP pinging.  This host SNMP timeout value applies for SNMP pings."),
+			"description" => __("The timeout value to use for device ICMP and UDP pinging.  This device SNMP timeout value applies for SNMP pings."),
 			"method" => "textbox",
 			"default" => "400",
 			"max_length" => "10",
@@ -780,19 +780,19 @@ $settings = array(
 			),
 		"ping_retries" => array(
 			"friendly_name" => __("Ping Retry Count"),
-			"description" => __("The number of times Cacti will attempt to ping a host before failing."),
+			"description" => __("The number of times Cacti will attempt to ping a device before failing."),
 			"method" => "textbox",
 			"default" => "1",
 			"max_length" => "10",
 			"size" => "5"
 			),
 		"updown_header" => array(
-			"friendly_name" => __("Host Up/Down Settings"),
+			"friendly_name" => __("Device Up/Down Settings"),
 			"method" => "spacer",
 			),
 		"ping_failure_count" => array(
 			"friendly_name" => __("Failure Count"),
-			"description" => __("The number of polling intervals a host must be down before logging an error and reporting host as down."),
+			"description" => __("The number of polling intervals a device must be down before logging an error and reporting device as down."),
 			"method" => "textbox",
 			"default" => "2",
 			"max_length" => "10",
@@ -800,7 +800,7 @@ $settings = array(
 			),
 		"ping_recovery_count" => array(
 			"friendly_name" => __("Recovery Count"),
-			"description" => __("The number of polling intervals a host must remain up before returning host to an up status and issuing a notice."),
+			"description" => __("The number of polling intervals a device must remain up before returning device to an up status and issuing a notice."),
 			"method" => "textbox",
 			"default" => "3",
 			"max_length" => "10",
@@ -1116,8 +1116,8 @@ $settings_graphs = array(
 			"default" => "200"
 			),
 		"expand_hosts" => array(
-			"friendly_name" => __("Expand Hosts"),
-			"description" => __("Choose whether to expand the graph templates used for a host on the dual pane tree."),
+			"friendly_name" => __("Expand Devices"),
+			"description" => __("Choose whether to expand the graph templates used for a device on the dual pane tree."),
 			"method" => "checkbox",
 			"default" => ""
 			),

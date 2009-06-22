@@ -38,12 +38,12 @@ include_once(CACTI_BASE_PATH . "/lib/data_query.php");
 
 /* process calling arguments */
 $parms = $_SERVER["argv"];
-array_shift($parms);
+$me = array_shift($parms);
 
 /* utility requires input parameters */
 if (sizeof($parms) == 0) {
-	print "ERROR: You must supply input parameters") . "\n\n";
-	display_help();
+	echo __("ERROR: You must supply input parameters") . "\n\n";
+	display_help($me);
 	exit;
 }
 
@@ -57,7 +57,7 @@ foreach($parms as $parameter) {
 
 	switch ($arg) {
 	case "-id":
-	case "--host-id":
+	case "--id":
 		$host_id = $value;
 		break;
 	case "-qid":
@@ -76,23 +76,23 @@ foreach($parms as $parameter) {
 	case "-v":
 	case "--version":
 	case "--help":
-		display_help();
+		display_help($me);
 		exit;
 	default:
-		printf(__("ERROR: Invalid Parameter %s\n\n"), $parameter);
-		display_help();
+		echo __("ERROR: Invalid Parameter ") . $parameter . "\n\n";
+		display_help($me);
 		exit;
 	}
 }
 
-/* determine the hosts to reindex */
+/* determine the devices to reindex */
 if ($host_id == "All") {
 	$sql_where = "";
 }else if (is_numeric($host_id)) {
 	$sql_where = " WHERE host_id = '$host_id'";
 }else{
-	echo __("ERROR: You must specify either a host_id or 'All' to proceed.") . "\n";
-	display_help();
+	echo __("ERROR: You must specify either a device-id or 'All' to proceed.") . "\n";
+	display_help($me);
 	exit;
 }
 
@@ -101,7 +101,7 @@ if ($query_id != "") {
 	$sql_where .= (strlen($sql_where) ? " AND snmp_query_id=$query_id": " WHERE snmp_query_id=$query_id");
 }
 
-/* allow for additional filtering on host description */
+/* allow for additional filtering on device description */
 if (strlen($host_descr)) {
 	$sql_where .= (strlen($sql_where) ? " AND host.description like '%%" . $host_descr . "%%' AND host.id=host_snmp_query.host_id" : " WHERE host.description like '%%" . $host_descr . "%%' AND host.id=host_snmp_query.host_id");
 	$data_queries = db_fetch_assoc("SELECT host_id, snmp_query_id FROM host_snmp_query,host" . $sql_where);
@@ -117,31 +117,31 @@ $i = 1;
 if (sizeof($data_queries)) {
 	foreach ($data_queries as $data_query) {
 		if (!$debug) print ".";
-		debug("Data query number '" . $i . "' host: '".$data_query["host_id"]."' SNMP Query Id: '".$data_query["snmp_query_id"]."' starting");
+		debug("Data query number '" . $i . "' device: '".$data_query["device_id"]."' SNMP Query Id: '".$data_query["snmp_query_id"]."' starting");
 		run_data_query($data_query["host_id"], $data_query["snmp_query_id"]);
-		debug("Data query number '" . $i . "' host: '".$data_query["host_id"]."' SNMP Query Id: '".$data_query["snmp_query_id"]."' ending");
+		debug("Data query number '" . $i . "' device: '".$data_query["host_id"]."' SNMP Query Id: '".$data_query["snmp_query_id"]."' ending");
 		$i++;
 	}
 }
 
 /*	display_help - displays the usage of the function */
-function display_help () {
-	echo __("Cacti Reindex Host Script 1.2, Copyright 2004-2009 - The Cacti Group") . "\n\n";
-	echo __("usage: poller_reindex_hosts.php --host-id=[ID|All] [--qid=[ID|All]] [--host-descr=[description]]") . "\n";
-	echo __("                           [-d] [-h] [--help] [-v] [--version]") . "\n\n";
-	echo __("--host-id=[ID]             - The host_id to have data queries reindexed or 'All' to reindex all hosts") . "\n";
-	echo __("--qid=query_id           - Only index on a specific data query id; defaults to 'All'") . "\n";
-	echo __("--host-descr=description - The host description to filter by (SQL filters acknowledged)") . "\n";
-	echo __("--debug                  - Display verbose output during execution") . "\n";
-	echo __("-v --version             - Display this help message") . "\n";
-	echo __("-h --help                - Display this help message") . "\n";
+function display_help($me) {
+	echo __("Cacti Reindex Device Script 1.2") . ", " . __("Copyright 2004-2009 - The Cacti Group") . "\n";
+	echo __("usage: ") . $me . " --id=[device-id|All] [--qid=[ID|All]] [--host-descr=[description]]\n";
+	echo "              [-d] [-h] [--help] [-v] [--version]\n\n";
+	echo "   --id          " . __("The device-id to have data queries reindexed or 'All' to reindex all devices") . "\n";
+	echo "   --qid         " . __("Only index on a specific data query id; defaults to 'All'") . "\n";
+	echo "   --host-descr  " . __("The device description to filter by (SQL filters acknowledged)") . "\n";
+	echo "   --debug       " . __("Display verbose output during execution") . "\n";
+	echo "   -v --version  " . __("Display this help message") . "\n";
+	echo "   -h --help     " . __("Display this help message") . "\n";
 }
 
 function debug($message) {
 	global $debug;
 
 	if ($debug) {
-		print("DEBUG: " . $message . "") . "\n";
+		print("DEBUG: " . $message . "\n");
 	}
 }
 

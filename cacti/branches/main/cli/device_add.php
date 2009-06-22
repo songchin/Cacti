@@ -42,7 +42,7 @@ include_once(CACTI_BASE_PATH."/lib/api_device.php");
 
 /* process calling arguments */
 $parms = $_SERVER["argv"];
-array_shift($parms);
+$me = array_shift($parms);
 
 if (sizeof($parms)) {
 	$displayCommunities   = FALSE;
@@ -67,7 +67,7 @@ if (sizeof($parms)) {
 		case "--ip":
 			$ip = trim($value);
 			if ($ip == "") {
-				echo __("ERROR: You must supply a valid [hostname|IP address] for all hosts!") . "\n";
+				echo __("ERROR: You must supply a valid [hostname|IP address] for all devices!\n");
 				exit(1);
 			}
 
@@ -75,7 +75,7 @@ if (sizeof($parms)) {
 		case "--template":
 			$template_id = $value;
 			if (!is_numeric($template_id)) {
-				echo __("ERROR: You must supply a numeric host template id for all hosts!") . "\n";
+				echo __("ERROR: You must supply a numeric device template id for all devices!\n");
 				exit(1);
 			}
 
@@ -93,7 +93,7 @@ if (sizeof($parms)) {
 				$snmp_ver = $value;
 			}else{
 				printf(__("ERROR: Invalid SNMP Version: (%d)\n\n"), $value);
-				display_help();
+				display_help($me);
 				exit(1);
 			}
 
@@ -124,7 +124,7 @@ if (sizeof($parms)) {
 			$snmp_auth_protocol = trim($value);
 			if (($snmp_auth_protocol != "MD5") || ($snmp_auth_protocol != "SHA")) {
 				printf(__("ERROR: Invalid SNMP AuthProto: (%s)\n\n"), $value);
-				display_help();
+				display_help($me);
 				exit(1);
 			}
 
@@ -133,7 +133,7 @@ if (sizeof($parms)) {
 			$snmp_priv_protocol = trim($value);
 			if (($snmp_priv_protocol != "DES") || ($snmp_priv_protocol != "AES")) {
 				printf(__("ERROR: Invalid SNMP PrivProto: (%s)\n\n"), $value);
-				display_help();
+				display_help($me);
 				exit(1);
 			}
 
@@ -147,7 +147,7 @@ if (sizeof($parms)) {
 				$snmp_port     = $value;
 			}else{
 				printf(__("ERROR: Invalid SNMP Port: (%d)\n\n"), $value);
-				display_help();
+				display_help($me);
 				exit(1);
 			}
 
@@ -157,7 +157,7 @@ if (sizeof($parms)) {
 				$snmp_timeout     = $value;
 			}else{
 				echo __("ERROR: Invalid SNMP Timeout.  Valid values are from 1 to 20000") . "\n";
-				display_help();
+				display_help($me);
 				exit(1);
 			}
 
@@ -182,7 +182,7 @@ if (sizeof($parms)) {
 				break;
 			default:
 				printf(__("ERROR: Invalid Availability Parameter: (%s)\n\n"), $value);
-				display_help();
+				display_help($me);
 				exit(1);
 			}
 
@@ -203,7 +203,7 @@ if (sizeof($parms)) {
 				break;
 			default:
 				printf(__("ERROR: Invalid Ping Method: (%s)\n\n"), $value);
-				display_help();
+				display_help($me);
 				exit(1);
 			}
 
@@ -213,7 +213,7 @@ if (sizeof($parms)) {
 				$ping_port = $value;
 			}else{
 				printf(__("ERROR: Invalid Ping Port: (%d)\n\n"), $value);
-				display_help();
+				display_help($me);
 				exit(1);
 			}
 
@@ -223,7 +223,7 @@ if (sizeof($parms)) {
 				$ping_retries = $value;
 			}else{
 				printf(__("ERROR: Invalid Ping Retries: (%d)\n\n"), $value);
-				display_help();
+				display_help($me);
 				exit(1);
 			}
 
@@ -233,7 +233,7 @@ if (sizeof($parms)) {
 				$ping_timeout = $value;
 			}else{
 				printf(__("ERROR: Invalid Ping Timeout: (%d)\n\n"), $value);
-				display_help();
+				display_help($me);
 				exit(1);
 			}
 
@@ -243,7 +243,7 @@ if (sizeof($parms)) {
 				$max_oids = $value;
 			}else{
 				printf(__("ERROR: Invalid Max OIDS: (%d)\n\n"), $value);
-				display_help();
+				display_help($me);
 				exit(1);
 			}
 
@@ -252,7 +252,7 @@ if (sizeof($parms)) {
 		case "-V":
 		case "-H":
 		case "--help":
-			display_help();
+			display_help($me);
 			exit(0);
 		case "--list-communities":
 			$displayCommunities = TRUE;
@@ -264,7 +264,7 @@ if (sizeof($parms)) {
 			break;
 		default:
 			printf(__("ERROR: Invalid Argument: (%s)\n\n"), $arg);
-			display_help();
+			display_help($me);
 			exit(1);
 		}
 	}
@@ -282,17 +282,17 @@ if (sizeof($parms)) {
 	 * for update / insert options
 	 */
 	if (!isset($description)) {
-		echo __("ERROR: You must supply a description for all hosts!") . "\n";
+		echo __("ERROR: You must supply a description for all devices!\n");
 		exit(1);
 	}
 
 	if (!isset($ip)) {
-		echo __("ERROR: You must supply a valid [hostname|IP address] for all hosts!") . "\n";
+		echo __("ERROR: You must supply a valid [hostname|IP address] for all devices!\n");
 		exit(1);
 	}
 
 	if (!isset($template_id)) {
-		echo __("ERROR: You must supply a valid host template id for all hosts!") . "\n";
+		echo __("ERROR: You must supply a valid device template id for all devices!\n");
 		exit(1);
 	}
 
@@ -304,7 +304,7 @@ if (sizeof($parms)) {
 	}
 
 	/*
-	 * verify valid host template and get a name for it
+	 * verify valid device template and get a name for it
 	 * pay attention to template_id 0 for "None"
 	 */
 	if ($template_id == 0) { /* allow for a template of "None" */
@@ -323,17 +323,17 @@ if (sizeof($parms)) {
 	$hosts = db_fetch_row("SELECT id, hostname FROM host WHERE description = " . $description);
 	if (isset($hosts["id"])) {
 		db_execute("UPDATE host SET hostname='$ip' WHERE id=" . $hosts["id"]);
-		printf(__("Updated host (%1s) with new hostname='%2s', device-id: (%3d)\n"), $description, $ip, $hosts["id"]);
+		printf(__("Updated device (%1s) with new hostname='%2s', device-id: (%3d)\n"), $description, $ip, $hosts["id"]);
 		exit(1);
 	}
 
 	/*
-	 * update host description for given hostname|ip
+	 * update device description for given hostname|ip
 	 */
 	$addresses = db_fetch_row("SELECT id, hostname, description FROM host WHERE hostname = " . $ip);
 	if (isset($addresses["id"])) {
 		db_execute("UPDATE host SET description = '$description' WHERE id = " . $addresses["id"]);
-		printf(__("Updated hostname (%2s) with new description='%1s', device-id: (%3d)\n"), $description, $ip, $addresses["id"]);
+		printf(__("Updated device (%2s) with new description='%1s', device-id: (%3d)\n"), $description, $ip, $addresses["id"]);
 		exit(1);
 	}
 
@@ -413,16 +413,16 @@ if (sizeof($parms)) {
 
 	switch($host_template["availability_method"]) {
 		case AVAIL_NONE:
-			echo __(", Availability Method None");
+			echo ", " . __("Availability Method None");
 			break;
 		case AVAIL_SNMP_AND_PING:
-			echo __(", Availability Method SNMP and PING");
+			echo ", " . __("Availability Method SNMP and PING");
 			break;
 		case AVAIL_SNMP:
-			echo __(", Availability Method SNMP");
+			echo ", " . __("Availability Method SNMP");
 			break;
 		case AVAIL_PING:
-			echo __(", Availability Method PING");
+			echo ", " . __("Availability Method PING");
 			break;
 	}
 	if (($host_template["availability_method"] == AVAIL_SNMP_AND_PING) ||
@@ -457,9 +457,9 @@ if (sizeof($parms)) {
 
 
 	/*
-	 * last, but not least, add this host along with all
+	 * last, but not least, add this device along with all
 	 * graph templates and data queries
-	 * associated to the given host template id
+	 * associated to the given device template id
 	 */
 	$host_id = api_device_save(0, $poller_id, $template_id, $description,
 		$ip, $host_template["snmp_community"], $host_template["snmp_version"],
@@ -480,48 +480,49 @@ if (sizeof($parms)) {
 		exit(0);
 	}
 }else{
-	display_help();
+	display_help($me);
 	exit(0);
 }
 
-function display_help() {
-	echo __("Add Device Script 1.2, Copyright 2008-2009 - The Cacti Group") . "\n\n";
+function display_help($me) {
+	echo __("Add Device Script 1.2") . ", " . __("Copyright 2004-2009 - The Cacti Group") . "\n";
 	echo __("A simple command line utility to add a device in Cacti") . "\n\n";
-	echo __("usage: add_device.php --description=[description] --ip=[IP] --template=[ID] [--notes=\"[]\"] [--disabled]") . "\n";
-	echo __("    [--avail=[ping]] --ping_method=[icmp] --ping_port=[N/A, 1-65534] --ping_retries=[2]  --ping_timeout=[500]") . "\n";
-	echo __("    [--version=[1|2|3]] [--community=] [--port=161] [--timeout=500]") . "\n";
-	echo __("    [--username= --password=] [--authproto=] [--privpass= --privproto=] [--context=]") . "\n";
-	echo __("    [--quiet]") . "\n\n";
+	echo __("usage: ") . $me . " --description=[description] --ip=[IP] --template=[ID] [--notes=\"[]\"] [--disabled]\n";
+	echo "    [--avail=[ping]] --ping_method=[icmp] --ping_port=[N/A, 1-65534] --ping_retries=[2]  --ping_timeout=[500]\n";
+	echo "    [--version=[1|2|3]] [--community=] [--port=161] [--timeout=500]\n";
+	echo "    [--username= --password=] [--authproto=] [--privpass= --privproto=] [--context=]\n";
+	echo "    [--quiet]\n\n";
 	echo __("Required:") . "\n";
-	echo __("    --description  the name that will be displayed by Cacti in the graphs") . "\n";
-	echo __("    --ip           self explanatory (can also be a FQDN)") . "\n";
-	echo __("    --template     denotes the host_template to be used (read below to get a list of templates)") . "\n";
-	echo __("                   In case a host_template is given, all values are fetched from this one.") . "\n";
-	echo __("                   For a host_template = 0 (NONE), Cacti default settings are used.") . "\n";
-	echo __("                   Optionally overwrite by any of the following:") . "\n";
+	echo "   --device-id      " . __("the numerical ID of the device") . "\n";
+	echo "    --description   " . __("the name that will be displayed by Cacti in the graphs") . "\n";
+	echo "    --ip            " . __("self explanatory (can also be a FQDN)") . "\n";
+	echo "    --template      " . __("denotes the device template to be used (read below to get a list of templates)") . "\n";
+	echo "                    " . __("In case a device template is given, all values are fetched from this one.") . "\n";
+	echo "                    " . __("For a device template = 0 (NONE), Cacti default settings are used.") . "\n";
+	echo "                    " . __("Optionally overwrite by any of the following:") . "\n";
 	echo __("Optional:") . "\n";
-	echo __("    --poller       0, defines which Cacti poller will be handles the polling of this device.") . "\n";
-	echo __("    --notes        General information about this host.  Must be enclosed using double quotes.") . "\n";
-	echo __("    --disable      1 to add this host but to disable checks and 0 to enable it") . "\n";
-	echo __("    --avail        pingsnmp, [ping][none, snmp, pingsnmp]") . "\n";
-	echo __("    --ping_method  tcp, icmp|tcp|udp") . "\n";
-	echo __("    --ping_port    23, port used for tcp|udp pings [1-65534]") . "\n";
-	echo __("    --ping_retries 2, the number of time to attempt to communicate with a host") . "\n";
-	echo __("    --ping_timeout 500, ping timeout") . "\n";
-	echo __("    --version      1, 1|2|3, snmp version") . "\n";
-	echo __("    --community    '', snmp community string for snmpv1 and snmpv2.  Leave blank for no community") . "\n";
-	echo __("    --port         161, snmp port") . "\n";
-	echo __("    --timeout      500, snmp timeout") . "\n";
-	echo __("    --username     '', snmp username for snmpv3") . "\n";
-	echo __("    --password     '', snmp password for snmpv3") . "\n";
-	echo __("    --authproto    '', snmp authentication protocol for snmpv3 [MD5|SHA]") . "\n";
-	echo __("    --privpass     '', snmp privacy passphrase for snmpv3") . "\n";
-	echo __("    --privproto    '', snmp privacy protocol for snmpv3 [DES|AES]") . "\n";
-	echo __("    --context      '', snmp context for snmpv3") . "\n";
-	echo __("    --max_oids     10, 1-60, the number of OID's that can be obtained in a single SNMP Get request") . "\n\n";
+	echo "    --poller        0,  " . __("defines which Cacti poller will be handles the polling of this device.") . "\n";
+	echo "    --notes             " .    __("General information about this device. Must be enclosed using double quotes.") . "\n";
+	echo "    --disable       1   " . __("to add this device but to disable checks and 0 to enable it") . "\n";
+	echo "    --avail         pingsnmp, [ping][none, snmp, pingsnmp] " . __("device availability check") . "\n";
+	echo "      --ping_method   tcp, icmp|tcp|udp " . __("if ping selected") . "\n";
+	echo "      --ping_port     23,  " . __("port used for tcp|udp pings [1-65534]") . "\n";
+	echo "      --ping_retries  2,   " . __("the number of time to attempt to communicate with a device") . "\n";
+	echo "      --ping_timeout  500, " . __("ping timeout") . "\n";
+	echo "    --version       1, 1|2|3, " . __("snmp version") . "\n";
+	echo "    --community     '',  " . __("snmp community string for snmpv1 and snmpv2.  Leave blank for no community") . "\n";
+	echo "    --port          161, " . __("snmp port") . "\n";
+	echo "    --timeout       500, " . __("snmp timeout") . "\n";
+	echo "    --username      '',  " . __("snmp username for snmpv3") . "\n";
+	echo "    --password      '',  " . __("snmp password for snmpv3") . "\n";
+	echo "    --authproto     '',  " . __("snmp authentication protocol for snmpv3 [MD5|SHA]") . "\n";
+	echo "    --privpass      '',  " . __("snmp privacy passphrase for snmpv3") . "\n";
+	echo "    --privproto     '',  " . __("snmp privacy protocol for snmpv3 [DES|AES]") . "\n";
+	echo "    --context       '',  " . __("snmp context for snmpv3") . "\n";
+	echo "    --max_oids      10,  " . __("the number of OID's that can be obtained in a single SNMP Get request [1-60]") . "\n\n";
 	echo __("List Options:") . "\n";
-	echo __("    --list-communities") . "\n";
-	echo __("    --quiet - batch mode value return") . "\n\n";
+	echo "    --list-communities     " . __("list community strings used") . "\n";
+	echo "    --quiet                " . __("batch mode value return") . "\n\n";
 }
 
 ?>

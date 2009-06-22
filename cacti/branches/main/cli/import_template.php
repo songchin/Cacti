@@ -35,7 +35,7 @@ include_once("../lib/import.php");
 
 /* process calling arguments */
 $parms = $_SERVER["argv"];
-array_shift($parms);
+$me = array_shift($parms);
 
 if (sizeof($parms)) {
 	$filename = "";
@@ -53,6 +53,12 @@ if (sizeof($parms)) {
 				$import_custom_rra_settings = true;
 
 				break;
+			case "--version":
+			case "-V":
+			case "-H":
+			case "--help":
+				display_help($me);
+				exit(0);
 			default:
 				printf(__("ERROR: Invalid Argument: (%s)\n\n"), $arg);
 				exit(1);
@@ -84,7 +90,7 @@ if (sizeof($parms)) {
 					}else{
 						$type_text = __(" [new]");
 					}
-					echo __("   $result_text " . $vals["title"] . " $type_text") . "\n";
+					echo "   $result_text " . $vals["title"] . " $type_text" . "\n";
 
 					$dep_text = ""; $errors = false;
 					if ((isset($vals["dep"])) && (sizeof($vals["dep"]) > 0)) {
@@ -115,21 +121,23 @@ if (sizeof($parms)) {
 		}
 	} else {
 		echo __("ERROR: no filename specified") . "\n\n";
-		display_help();
+		display_help($me);
 		exit(1);
 	}
 } else {
 	echo __("ERROR: no parameters given") . "\n\n";
-	display_help();
+	display_help($me);
 	exit(1);
 }
 
-function display_help() {
-	echo __("Add Graphs Script 1.0, Copyright 2009 - The Cacti Group") . "\n\n";
+function display_help($me) {
+	echo __("Add Graphs Script 1.0") . ", " . __("Copyright 2004-2009 - The Cacti Group") . "\n";
 	echo __("A simple command line utility to import a Template into Cacti") . "\n\n";
-	echo __("usage: import_template.php --filename=[filename] [--with-rras]") . "\n";
+	echo __("usage: ") . $me . " --filename=[filename] [--with-rras] [-h] [--help] [-v] [--version]\n";
 	echo __("Required:") . "\n";
-	echo __("    --filename     the name of the XML file to import") . "\n";
+	echo "   --filename     " . __("the name of the XML file to import") . "\n";
 	echo __("Optional:") . "\n";
-	echo __("    --with-rras    also import custom RRA definitions from the template") . "\n";
+	echo "   --with-rras    " . __("also import custom RRA definitions from the template") . "\n";
+	echo "   -v --version   " . __("Display this help message") . "\n";
+	echo "   -h --help      " . __("Display this help message") . "\n";
 }

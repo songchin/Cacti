@@ -34,7 +34,7 @@ include(dirname(__FILE__) . "/../include/global.php");
 
 /* process calling arguments */
 $parms = $_SERVER["argv"];
-array_shift($parms);
+$me = array_shift($parms);
 
 if (sizeof($parms)) {
 	foreach($parms as $parameter) {
@@ -49,11 +49,11 @@ if (sizeof($parms)) {
 		case "-V":
 		case "-H":
 		case "--help":
-			display_help();
+			display_help($me);
 			exit(0);
 		default:
 			printf(__("ERROR: Invalid Argument: (%s)\n\n"), $arg);
-			display_help();
+			display_help($me);
 			exit(1);
 		}
 	}
@@ -61,7 +61,7 @@ if (sizeof($parms)) {
 
 if ($proceed == FALSE) {
 	echo "\n" . __("FATAL: You Must Explicitally Instruct This Script to Proceed with the '--proceed' Option") . "\n\n";
-	display_help();
+	display_help($me);
 	exit -1;
 }
 
@@ -205,17 +205,17 @@ function disable_poller() {
 	set_config_option('poller_enabled', '');
 }
 
-function display_help() {
-	echo __("Structured RRA Paths Utility, Copyright 2008 - The Cacti Group") . "\n\n";
+function display_help($me) {
+	echo __("Structured RRA Paths Utility") . ", " . __("Copyright 2004-2009 - The Cacti Group") . "\n";
 	echo __("A simple command line utility that converts a Cacti system from using") . "\n";
 	echo __("legacy RRA paths to using structured RRA paths with the following") . "\n";
-	echo __("naming convention: <path_rra>/host_id/local_data_id.rrd") . "\n\n";
+	echo __("naming convention: <path_rra>/device-id/local_data_id.rrd") . "\n\n";
 	echo __("This utility is designed for very large Cacti systems.") . "\n\n";
 	echo __("The utility follows the process below:") . "\n";
 	echo __("  1) Disables the Cacti Poller") . "\n";
 	echo __("  2) Checks for a Running Poller.") . "\n\n";
 	echo __("If it Finds a Running Poller, it will:") . "\n";
-	echo __("  1) Re-enable the Poller") . "\n";
+	echo __("  1) Re-enable the Cacti Poller") . "\n";
 	echo __("  2) Exit") . "\n\n";
 	echo __("Else, it will:") . "\n";
 	echo __("  1) Enable Structured Paths in the Console (Settings->Paths)") . "\n\n";
@@ -227,9 +227,9 @@ function display_help() {
 	echo __("Once all Files are Complete, it will") . "\n";
 	echo __("  1) Re-enable the Cacti Poller") . "\n\n";
 	echo __("If the utility encounters a problem along the way, it will:") . "\n";
-	echo __("  1) Re-enable the poller") . "\n";
+	echo __("  1) Re-enable the Cacti Poller") . "\n";
 	echo __("  2) Exit") . "\n\n";
-	echo __("usage: structure_rra_paths.php --proceed [--help | -H | --version | -V]") . "\n\n";
+	echo __("usage: ") . $me . " --proceed [--help | -H | --version | -V]\n\n";
 }
 
 ?>

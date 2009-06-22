@@ -2,5 +2,5 @@
 for po in po/*.po
 do
     echo -n "$po ... "
-    msgmerge $po po/cacti.pot -o $po
+    msgmerge --sort-output $po po/cacti.pot -o $po
 done

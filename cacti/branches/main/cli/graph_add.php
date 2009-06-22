@@ -44,7 +44,7 @@ include_once(CACTI_BASE_PATH."/lib/api_device.php");
 
 /* process calling arguments */
 $parms = $_SERVER["argv"];
-array_shift($parms);
+$me = array_shift($parms);
 
 if (sizeof($parms)) {
 	/* setup defaults */
@@ -101,7 +101,7 @@ if (sizeof($parms)) {
 			$hostTemplateId = $value;
 
 			break;
-		case "--host-id":
+		case "--device-id":
 			$hostId = $value;
 
 			break;
@@ -187,17 +187,17 @@ if (sizeof($parms)) {
 		case "-V":
 		case "-H":
 		case "--help":
-			display_help();
+			display_help($me);
 			exit(0);
 		default:
 			printf(__("ERROR: Invalid Argument: (%s)\n\n"), $arg);
-			display_help();
+			display_help($me);
 			exit(1);
 		}
 	}
 
 	if ($listGraphTemplates) {
-		/* is a Host Template Id is given, print the related Graph Templates */
+		/* is a device Template Id is given, print the related Graph Templates */
 		if ($hostTemplateId > 0) {
 			$graphTemplates = getGraphTemplatesByHostTemplate($hostTemplateId);
 			if (!sizeof($graphTemplates)) {
@@ -282,9 +282,9 @@ if (sizeof($parms)) {
 		}
 	}
 
-	/* Verify the host's existance */
+	/* Verify the device's existance */
 	if (!isset($hosts[$hostId]) || $hostId == 0) {
-		printf(__("ERROR: Unknown Host ID (%d)\n"), $hostId);
+		printf(__("ERROR: Unknown device-id (%d)\n"), $hostId);
 		echo __("Try php -q device_list.php") . "\n";
 		exit(1);
 	}
@@ -302,7 +302,7 @@ if (sizeof($parms)) {
 	/* More sanity checking */
 	if ($dsGraph["snmpField"] != "") {
 		if (!isset($snmpFields[$dsGraph["snmpField"]])) {
-			printf(__("ERROR: Unknown snmp-field %1s for host %2d\n"), $dsGraph["snmpField"], $hostId);
+			printf(__("ERROR: Unknown snmp-field %1s for device %2d\n"), $dsGraph["snmpField"], $hostId);
 			echo __("Try --list-snmp-fields") . "\n";
 			exit(1);
 		}
@@ -344,8 +344,8 @@ if (sizeof($parms)) {
 	}
 
 	if ((!isset($templateId)) || (!isset($hostId))) {
-		echo __("ERROR: Must have at least a host-id and a graph-template-id") . "\n\n";
-		display_help();
+		echo __("ERROR: Must have at least a device-id and a graph-template-id") . "\n\n";
+		display_help($me);
 		exit(1);
 	}
 
@@ -437,14 +437,14 @@ if (sizeof($parms)) {
 			}
 		}
 
-		/* add this graph template to the list of associated graph templates for this host */
+		/* add this graph template to the list of associated graph templates for this device */
 		db_execute("replace into host_graph (host_id,graph_template_id) values (" . $hostId . "," . $templateId . ")");
 
 		printf(__("Graph Added - graph-id: (%1d) - data-source-ids: (%2d)\n"), $returnArray["local_graph_id"], $dataSourceId);
 	}elseif ($graph_type == "ds") {
 		if (($dsGraph["snmpQueryId"] == "") || ($dsGraph["snmpQueryType"] == "") || ($dsGraph["snmpField"] == "") || ($dsGraph["snmpValue"] == "")) {
 			echo __("ERROR: For graph-type of 'ds' you must supply more options") . "\n";
-			display_help();
+			display_help($me);
 			exit(1);
 		}
 
@@ -524,8 +524,8 @@ if (sizeof($parms)) {
 				printf(__("Graph Added - graph-id: (%1d) - data-source-ids: (%2d)\n"), $returnArray["local_graph_id"], $dataSourceId);
 			}
 		}else{
-			printf(__("ERROR: Could not find snmp-field %1s (%2d) for host-id %3d (%4s)\n"), $dsGraph["snmpField"], $dsGraph["snmpValue"], $hostId, $hosts[$hostId]["hostname"]);
-			printf(__("Try --host-id=%s --list-snmp-fields\n"), $hostId);
+			printf(__("ERROR: Could not find snmp-field %1s (%2d) for device-id %3d (%4s)\n"), $dsGraph["snmpField"], $dsGraph["snmpValue"], $hostId, $hosts[$hostId]["hostname"]);
+			printf(__("Try --device-id=%s --list-snmp-fields\n"), $hostId);
 			exit(1);
 		}
 	}else{
@@ -535,40 +535,39 @@ if (sizeof($parms)) {
 
 	exit(0);
 }else{
-	display_help();
+	display_help($me);
 	exit(1);
 }
 
-function display_help() {
-	echo __("Add Graphs Script 1.2, Copyright 2008 - The Cacti Group") . "\n\n";
+function display_help($me) {
+	echo __("Add Graphs Script 1.2") . ", " . __("Copyright 2004-2009 - The Cacti Group") . "\n";
 	echo __("A simple command line utility to add graphs in Cacti") . "\n\n";
-	echo __("usage: add_graphs.php --graph-type=[cg|ds] --graph-template-id=[ID]") . "\n";
-	echo __("    --host-id=[ID] [--graph-title=title] [graph options] [--force] [--quiet]") . "\n\n";
+	echo __("usage: ") . $me . " --graph-type=[cg|ds] --graph-template-id=[ID]\n";
+	echo "    --device-id=[ID] [--graph-title=title] [graph options] [--force] [--quiet]\n\n";
 	echo __("For cg graphs:") . "\n";
-	echo __("    [--input-fields=\"[data-template-id:]field-name=value ...\"] [--force]") . "\n\n";
-	echo __("    --input-fields  If your data template allows for custom input data, you may specify that") . "\n";
-	echo __("                    here.  The data template id is optional and applies where two input fields") . "\n";
-	echo __("                    have the same name.") . "\n";
-	echo __("    --force         If you set this flag, then new cg graphs will be created, even though they") . "\n";
-	echo __("                    may already exist") . "\n\n";
+	echo "  [--input-fields=\ [data-template-id:]field-name=value ...\"] [--force]\n\n";
+	echo "   --input-fields   " . __("If your data template allows for custom input data, you may specify that") . "\n";
+	echo "                    " . __("here.  The data template id is optional and applies where two input fields") . "\n";
+	echo "                    " . __("have the same name.") . "\n";
+	echo "   --force          " . __("If you set this flag, then new cg graphs will be created, even though they") . "\n";
+	echo "                    " . __("may already exist") . "\n\n";
 	echo __("For ds graphs:") . "\n";
-	echo __("    --snmp-query-id=[ID] --snmp-query-type-id=[ID] --snmp-field=[SNMP Field] --snmp-value=[SNMP Value]") . "\n\n";
-	echo __("    [--graph-title=]       Defaults to what ever is in the graph template/data-source template.") . "\n\n";
-	echo __("    [--reindex-method=]    the reindex method to be used for that data query") . "\n";
-	echo __("                           if data query already exists, the reindex method will not be changed") . "\n";
-	echo __("                    0|None   = no reindexing") . "\n";
-	echo __("                    1|Uptime = Uptime goes Backwards (Default)") . "\n";
-	echo __("                    2|Index  = Index Count Changed") . "\n";
-	echo __("                    3|Fields = Verify all Fields") . "\n";
+	echo "   --snmp-query-id=[ID] --snmp-query-type-id=[ID] --snmp-field=[SNMP Field] --snmp-value=[SNMP Value]\n\n";
+	echo "  [--graph-title=]  " . __("Defaults to what ever is in the graph template/data-source template.") . "\n\n";
+	echo "   --reindex-method " . __("the reindex method to be used for that data query") . "\n";
+	echo "            0|None  " . __("no reindexing") . "\n";
+	echo "            1|Uptime" . __("Uptime goes Backwards") . "\n";
+	echo "            2|Index " . __("Index Count Changed") . "\n";
+	echo "            3|Fields" . __("Verify all Fields") . "\n";
 	echo __("List Options:") . "\n";
-	echo __("    --list-graph-templates [--host_template=[ID]]") . "\n";
-	echo __("    --list-input-fields --graph-template-id=[ID]") . "\n";
+	echo "   --list-graph-templates [--host_template=[ID]]\n";
+	echo "   --list-input-fields --graph-template-id=[ID]\n";
 	echo __("More list Options for 'ds' graphs only:") . "\n";
-	echo __("    --list-query-types  --snmp-query-id=[ID]") . "\n";
-	echo __("    --list-snmp-fields  --host-id=[ID]") . "\n";
-	echo __("    --list-snmp-values  --host-id=[ID] --snmp-query-id=[ID]") . "\n";
-	echo __("    --list-snmp-values  --host-id=[ID] --snmp-query-id=[ID] --snmp-field-spec=[field1[,field2]...[,fieldn]]") . "\n";
-	echo __("    --list-snmp-values  --host-id=[ID] --snmp-field=[Field]") . "\n\n";
+	echo "   --list-query-types  --snmp-query-id=[ID]\n";
+	echo "   --list-snmp-fields  --device-id=[ID]\n";
+	echo "   --list-snmp-values  --device-id=[ID] --snmp-query-id=[ID]\n";
+	echo "   --list-snmp-values  --device-id=[ID] --snmp-query-id=[ID] --snmp-field-spec=[field1[,field2]...[,fieldn]]\n";
+	echo "   --list-snmp-values  --device-id=[ID] --snmp-field=[Field]\n\n";
 	echo __("'cg' graphs are for things like CPU temp/fan speed, while ") . "\n";
 	echo __("'ds' graphs are for data-source based graphs (interface stats etc.)") . "\n";
 }

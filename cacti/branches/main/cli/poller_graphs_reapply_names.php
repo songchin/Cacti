@@ -37,12 +37,12 @@ include_once(CACTI_BASE_PATH . "/lib/api_graph.php");
 
 /* process calling arguments */
 $parms = $_SERVER["argv"];
-array_shift($parms);
+$me = array_shift($parms);
 
 /* utility requires input parameters */
 if (sizeof($parms) == 0) {
 	echo __("ERROR: You must supply input parameters") . "\n\n";
-	display_help();
+	display_help($me);
 	exit;
 }
 
@@ -64,20 +64,20 @@ foreach($parms as $parameter) {
 		$debug = TRUE;
 		break;
 	case "-h":
-		display_help();
+		display_help($me);
 		exit;
 	case "-v":
-		display_help();
+		display_help($me);
 		exit;
 	case "--version":
-		display_help();
+		display_help($me);
 		exit;
 	case "--help":
-		display_help();
+		display_help($me);
 		exit;
 	default:
 		printf(__("ERROR: Invalid Parameter %s\n\n"), $parameter);
-		display_help();
+		display_help($me);
 		exit;
 	}
 }
@@ -110,8 +110,8 @@ if ($host_id == "All") {
 }elseif (!empty($host_id)) {
 	$sql_where .= " AND graph_local.host_id=" . $host_id;
 }else{
-	echo __("ERROR: You must specify either a host_id or 'All' to proceed.") . "\n";
-	display_help();
+	echo __("ERROR: You must specify either a device-id or 'All' to proceed.") . "\n";
+	display_help($me);
 	exit;
 }
 
@@ -143,14 +143,15 @@ foreach ($graph_list as $graph) {
 }
 
 /*	display_help - displays the usage of the function */
-function display_help () {
-	echo __("Cacti Reapply Graph Names Script 1.0, Copyright 2007 - The Cacti Group") . "\n\n";
-	echo __("usage: poller_graphs_reapply_names.php -id=[host_id|All][host_id1|host_id2|...] [-s=[search_string] [-d] [-h] [--help] [-v] [--version]") . "\n\n";
-	echo __("-id=host_id   - The host_id or 'All' or a pipe delimited list of host_id's") . "\n";
-	echo __("-s=search_str - A graph template name or graph title to search for") . "\n";
-	echo __("-d            - Display verbose output during execution") . "\n";
-	echo __("-v --version  - Display this help message") . "\n";
-	echo __("-h --help     - Display this help message") . "\n";
+function display_help($me) {
+	echo __("Cacti Reapply Graph Names Script 1.0") . ", " . __("Copyright 2004-2009 - The Cacti Group") . "\n";
+	echo __("usage: ") . $me . " -id=[device-id|All][device-id1|device-id2|...]\n";
+	echo "         [-s=[search_string] [-d] [-h] [--help] [-v] [--version]\n\n";
+	echo "   -id           " . __("The device-id or 'All' or a pipe delimited list of device-id's") . "\n";
+	echo "   -s            " . __("A graph template name or graph title to search for") . "\n";
+	echo "   -d            " . __("Display verbose output during execution") . "\n";
+	echo "   -v --version  " . __("Display this help message") . "\n";
+	echo "   -h --help     " . __("Display this help message") . "\n";
 }
 
 function debug($message) {

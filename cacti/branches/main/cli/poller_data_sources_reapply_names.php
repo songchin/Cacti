@@ -37,12 +37,12 @@ include_once(CACTI_BASE_PATH."/lib/api_data_source.php");
 
 /* process calling arguments */
 $parms = $_SERVER["argv"];
-array_shift($parms);
+$me = array_shift($parms);
 
 /* utility requires input parameters */
 if (sizeof($parms) == 0) {
 	echo __("ERROR: You must supply input parameters") . "\n\n";
-	display_help();
+	display_help($me);
 	exit;
 }
 
@@ -71,11 +71,11 @@ foreach ($parms as $parameter) {
 		case "-v" :
 		case "--verbose" :
 		case "--version" :
-			display_help();
+			display_help($me);
 			exit;
 		default :
 			printf(__("ERROR: Invalid Parameter %s\n\n"), $parameter);
-			display_help();
+			display_help($me);
 			exit;
 	}
 }
@@ -113,8 +113,8 @@ elseif ($host_id == "0") {
 elseif (!empty ($host_id)) {
 	$sql_where .= " AND data_local.host_id=" . $host_id;
 } else {
-	echo __("ERROR: You must specify either a host_id or 'All' to proceed.") . "\n";
-	display_help();
+	echo __("ERROR: You must specify either a device-id or 'All' to proceed.") . "\n";
+	display_help($me);
 	exit;
 }
 
@@ -149,14 +149,15 @@ foreach ($data_source_list as $data_source) {
 }
 
 /*	display_help - displays the usage of the function */
-function display_help() {
-	echo __("Cacti Reapply Data Sources Names Script 1.0, Copyright 2008 - The Cacti Group") . "\n\n";
-	echo __("usage: poller_data_sources_reapply_names.php --host-id=[ID|All][host_id1|host_id2|...] [--filter=[search_string] [--debug] [-h] [--help] [-v] [--version]") . "\n\n";
-	echo __("--host-id=[ID]      - The host_id or 'All' or a pipe delimited list of host_id's") . "\n";
-	echo __("--filter=search_str - A data template name or data source title to search for") . "\n";
-	echo __("--debug             - Display verbose output during execution") . "\n";
-	echo __("-v --version        - Display this help message") . "\n";
-	echo __("-h --help           - Display this help message") . "\n";
+function display_help($me) {
+	echo __("Cacti Reapply Data Sources Names Script 1.0") . ", " . __("Copyright 2004-2009 - The Cacti Group") . "\n";
+	echo __("usage: ") . $me . " --id=[host_id|All][host_id1|host_id2|...]\n";
+	echo "       [--filter=[search_string] [--debug] [-h] [--help] [-v] [--version]\n\n";
+	echo "   --id          " . __("The device_id or 'All' or a pipe delimited list of host_id's") . "\n";
+	echo "   --filter      " . __("A data template name or data source title to search for") . "\n";
+	echo "   --debug       " . __("Display verbose output during execution") . "\n";
+	echo "   -v --version  " . __("Display this help message") . "\n";
+	echo "   -h --help     " . __("Display this help message") . "\n";
 }
 
 function debug($message) {

@@ -34,7 +34,7 @@ include_once(CACTI_BASE_PATH . "/lib/utility.php");
 
 /* process calling arguments */
 $parms = $_SERVER["argv"];
-array_shift($parms);
+$me = array_shift($parms);
 
 $debug = FALSE;
 
@@ -46,20 +46,20 @@ foreach($parms as $parameter) {
 		$debug = TRUE;
 		break;
 	case "-h":
-		display_help();
+		display_help($me);
 		exit;
 	case "-v":
-		display_help();
+		display_help($me);
 		exit;
 	case "--version":
-		display_help();
+		display_help($me);
 		exit;
 	case "--help":
-		display_help();
+		display_help($me);
 		exit;
 	default:
 		printf(__("ERROR: Invalid Parameter %s"), $parameter);
-		display_help();
+		display_help($me);
 		exit;
 	}
 }
@@ -95,19 +95,19 @@ if (sizeof($poller_data) > 0) {
 		$current_ds++;
 	}
 }
-if (!$debug) print "") . "\n";
+if (!$debug) print "\n";
 
 /* poller cache rebuilt, restore runtime parameters */
 ini_set("max_execution_time", $max_execution);
 ini_set("memory_limit", $max_memory);
 
 /*	display_help - displays the usage of the function */
-function display_help () {
-	echo __("Cacti Rebuild Poller Cache Script 1.0, Copyright 2007 - The Cacti Group") . "\n\n";
-	echo __("usage: rebuild_poller_cache.php [-d] [-h] [--help] [-v] [--version]") . "\n\n";
-	echo __("-d            - Display verbose output during execution") . "\n";
-	echo __("-v --version  - Display this help message") . "\n";
-	echo __("-h --help     - Display this help message") . "\n";
+function display_help($me) {
+	echo __("Cacti Rebuild Poller Cache Script 1.0") . ", " . __("Copyright 2004-2009 - The Cacti Group") . "\n";
+	echo __("usage: ") . $me . " [-d] [-h] [--help] [-v] [--version]\n\n";
+	echo "   -d            " . __("Display verbose output during execution") . "\n";
+	echo "   -v --version  " . __("Display this help message") . "\n";
+	echo "   -h --help     " . __("Display this help message") . "\n";
 }
 
 function debug($message) {

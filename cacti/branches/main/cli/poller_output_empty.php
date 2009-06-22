@@ -39,27 +39,27 @@ include_once(CACTI_BASE_PATH . "/lib/rrd.php");
 
 /* process calling arguments */
 $parms = $_SERVER["argv"];
-array_shift($parms);
+$me = array_shift($parms);
 
 foreach($parms as $parameter) {
 	@list($arg, $value) = @explode("=", $parameter);
 
 	switch ($arg) {
 	case "-h":
-		display_help();
+		display_help($me);
 		exit;
 	case "-v":
-		display_help();
+		display_help($me);
 		exit;
 	case "--version":
-		display_help();
+		display_help($me);
 		exit;
 	case "--help":
-		display_help();
+		display_help($me);
 		exit;
 	default:
 		printf(__("ERROR: Invalid Parameter %s\n\n"), $parameter);
-		display_help();
+		display_help($me);
 		exit;
 	}
 }
@@ -82,11 +82,11 @@ printf(__("There were %d rrds_processed, RRD updates made this pass\n"), $rrds_p
 rrd_close($rrdtool_pipe);
 
 /*	display_help - displays the usage of the function */
-function display_help () {
-	echo __("Cacti Empty Poller Output Table Script 1.0, Copyright 2007 - The Cacti Group") . "\n\n";
-	echo __("usage: poller_output_empty.php [-h] [--help] [-v] [--version]") . "\n\n";
-	echo __("-v --version  - Display this help message") . "\n";
-	echo __("-h --help     - Display this help message") . "\n";
+function display_help($me) {
+	echo __("Cacti Empty Poller Output Table Script 1.0") . ", " . __("Copyright 2004-2009 - The Cacti Group") . "\n";
+	echo __("usage: ") . $me . " [-h] [--help] [-v] [--version]\n\n";
+	echo "   -v --version  " . __("Display this help message") . "\n";
+	echo "   -h --help     " . __("Display this help message") . "\n";
 }
 
 ?>

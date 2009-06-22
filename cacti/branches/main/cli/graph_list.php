@@ -36,7 +36,7 @@ include_once(CACTI_BASE_PATH."/lib/data_query.php");
 
 /* process calling arguments */
 $parms = $_SERVER["argv"];
-array_shift($parms);
+$me = array_shift($parms);
 
 if (sizeof($parms)) {
 	/* setup defaults */
@@ -53,7 +53,7 @@ if (sizeof($parms)) {
 	$ds_graph["snmpQueryType"]  = "";
 	$ds_graph["snmpField"]      = "";
 	$ds_graph["snmpValue"]      = "";
-	
+
 	$listGraphTemplates 		= FALSE;
 	$listSNMPFields  			= FALSE;
 	$listSNMPValues  			= FALSE;
@@ -69,7 +69,7 @@ if (sizeof($parms)) {
 			$graph_type = strtolower(trim($value));
 			if (($graph_type != "cg") && ($graph_type != "ds")) {
 				printf(__("ERROR: Invalid Graph Type: (%s)\n\n"), $value);
-				display_help();
+				display_help($me);
 				exit(1);
 			}
 
@@ -82,7 +82,7 @@ if (sizeof($parms)) {
 			$host_template_id = $value;
 
 			break;
-		case "--host-id":
+		case "--device-id":
 			$host_id = $value;
 
 			break;
@@ -128,7 +128,7 @@ if (sizeof($parms)) {
 			break;
 		case "--list-graph-templates":
 			$listGraphTemplates = TRUE;
-			
+
 			break;
 		case "--quiet":
 			$quietMode = TRUE;
@@ -138,11 +138,11 @@ if (sizeof($parms)) {
 		case "-V":
 		case "-H":
 		case "--help":
-			display_help();
+			display_help($me);
 			exit(0);
 		default:
 			printf(__("ERROR: Invalid Argument: (%s)\n\n"), $arg);
-			display_help();
+			display_help($me);
 			exit(1);
 		}
 	}
@@ -151,11 +151,11 @@ if (sizeof($parms)) {
 		$graph_templates = array();
 		if (isset($host_template_id) && !($host_template_id === 0)) {
 			if (db_fetch_cell("SELECT id FROM host_template WHERE id=$host_template_id")) {
-				/* if a Host Template Id is given, print the related Graph Templates */
+				/* if a device Template Id is given, print the related Graph Templates */
 				$graph_templates = getGraphTemplatesByHostTemplate($host_template_id);
 			} else {
 				printf(__("ERROR: Invalid host-template-id (%d) given\n"), $host_template_id);
-				echo __("Try -php -q host_template_list.php") . "\n";
+				echo __("Try -php -q device_template_list.php") . "\n";
 				exit(1);
 			}
 		} else {
@@ -181,7 +181,7 @@ if (sizeof($parms)) {
 	if ($listQueryTypes) {
 		if ($graph_type != "ds") {
 			printf(__("ERROR: Invalid Graph Type: (%s); expecting: ds\n\n"), $value);
-			display_help();
+			display_help($me);
 			exit(1);
 		}
 		if (isset($ds_graph["snmpQueryId"]) && !($ds_graph["snmpQueryId"] === 0) && (db_fetch_cell("SELECT id FROM snmp_query WHERE id=" . $ds_graph["snmpQueryId"]))) {
@@ -198,7 +198,7 @@ if (sizeof($parms)) {
 	if ($listSNMPFields) {
 		if ($graph_type != "ds") {
 			printf(__("ERROR: Invalid Graph Type: (%s); expecting: ds\n\n"), $value);
-			display_help();
+			display_help($me);
 			exit(1);
 		}
 		if (isset($host_id) && !($host_id === 0) && (db_fetch_cell("SELECT id FROM host WHERE id=$host_id"))) {
@@ -206,7 +206,7 @@ if (sizeof($parms)) {
 			displaySNMPFields($snmpFields, $host_id, $quietMode);
 			exit(0);
 		} else {
-			echo __("ERROR: You must supply a valid --host-id before you can list its SNMP fields") . "\n";
+			echo __("ERROR: You must supply a valid --device-id before you can list its SNMP fields") . "\n";
 			echo __("Try php -q device_list.php") . "\n";
 			exit(1);
 		}
@@ -215,14 +215,14 @@ if (sizeof($parms)) {
 	if ($listSNMPValues)  {
 		if ($graph_type != "ds") {
 			printf(__("ERROR: Invalid Graph Type: (%s); expecting: ds\n\n"), $value);
-			display_help();
+			display_help($me);
 			exit(1);
 		}
 		if (isset($host_id) && !($host_id === 0) && (db_fetch_cell("SELECT id FROM host WHERE id=$host_id"))) {
-		
+
 			$snmpValues = array();
 			if ($ds_graph["snmpField"] != "") {
-				/* snmp field(s) given: --list-snmp-values --host-id=[ID] --snmp-field=[Field] [--snmp-query-id=[ID]]*/
+				/* snmp field(s) given: --list-snmp-values --device-id=[ID] --snmp-field=[Field] [--snmp-query-id=[ID]]*/
 				/* get fields for query id (if any) */
 				$snmpFields = getSNMPFields($host_id, $ds_graph["snmpQueryId"]);
 				if (!isset($snmpFields[$ds_graph["snmpField"]])) {
@@ -241,41 +241,41 @@ if (sizeof($parms)) {
 					echo __("Try --list-snmp-queries or --list-snmp-fields") . "\n";
 					exit (1);
 				} else {
-					/* snmp query id given, no snmp field(s), optional snmp field spec */	
+					/* snmp query id given, no snmp field(s), optional snmp field spec */
 					$rc = displaySNMPValuesExtended($host_id, $ds_graph["snmpFieldSpec"], $ds_graph["snmpQueryId"], $quietMode);
 					exit ($rc);
 				}
 			}
 		} else {
-			echo __("ERROR: You must supply a valid --host-id before you can list its SNMP values") . "\n";
+			echo __("ERROR: You must supply a valid --device-id before you can list its SNMP values") . "\n";
 			echo __("Try php -q device_list.php") . "\n";
 			exit(1);
 		}
 	}
-	
+
 	/* nothing to do */
 	echo __("ERROR: No valid list option given") . "\n\n";
-	display_help();
+	display_help($me);
 	exit(1);
 }else{
-	display_help();
+	display_help($me);
 	exit(1);
 }
 
-function display_help() {
-	echo __("List Graphs Script 1.0, Copyright 2009 - The Cacti Group") . "\n\n";
+function display_help($me) {
+	echo __("List Graphs Script 1.0") . ", " . __("Copyright 2004-2009 - The Cacti Group") . "\n";
 	echo __("A simple command line utility to list graphs in Cacti") . "\n\n";
-	echo __("usage: graph_list.php --graph-type=[cg|ds] --graph-template-id=[ID] --host-id=[ID]") . "\n\n";
+	echo __("usage: ") . $me . " --graph-type=[cg|ds] --graph-template-id=[ID] --device-id=[ID]\n\n";
 	echo __("Options:") . "\n";
-	echo __("    --list-graph-templates [--host-template-id=[ID]]") . "\n";
-	echo __("    --list-input-fields     --graph-template-id=[ID]") . "\n";
+	echo "   --list-graph-templates [--host-template-id=[ID]]\n";
+	echo "   --list-input-fields  --graph-template-id=[ID]\n";
 	echo __("More list Options for 'ds' graphs only:") . "\n";
-	echo __("    --list-query-types      --snmp-query-id=[ID]") . "\n";
-	echo __("    --list-snmp-fields      --host-id=[ID] [--snmp-query-id=[ID]]") . "\n";
-	echo __("    --list-snmp-values      --host-id=[ID]  --snmp-query-id=[ID]") . "\n";
-	echo __("    --list-snmp-values      --host-id=[ID]  --snmp-query-id=[ID]  --snmp-field-spec=[field1[,field2]...[,fieldn]]") . "\n";
-	echo __("    --list-snmp-values      --host-id=[ID]  --snmp-field=[Field] [--snmp-query-id=[ID]]") . "\n\n";
-	echo __("    --quiet                 batch mode value return") . "\n\n";
+	echo "   --list-query-types   --snmp-query-id=[ID]\n";
+	echo "   --list-snmp-fields   --device-id=[ID] [--snmp-query-id=[ID]]\n";
+	echo "   --list-snmp-values   --device-id=[ID]  --snmp-query-id=[ID]\n";
+	echo "   --list-snmp-values   --device-id=[ID]  --snmp-query-id=[ID]  --snmp-field-spec=[field1[,field2]...[,fieldn]]\n";
+	echo "   --list-snmp-values   --device-id=[ID]  --snmp-field=[Field] [--snmp-query-id=[ID]]\n\n";
+	echo "   --quiet              " . __("batch mode value return") . "\n\n";
 	echo __("'cg' graphs are for things like CPU temp/fan speed, while ") . "\n";
 	echo __("'ds' graphs are for data-source based graphs (interface stats etc.)") . "\n";
 }

@@ -35,10 +35,10 @@ include_once(CACTI_BASE_PATH."/lib/api_automation_tools.php");
 
 /* process calling arguments */
 $parms = $_SERVER["argv"];
-array_shift($parms);
+$me = array_shift($parms);
 
 if (sizeof($parms) == 0) {
-	display_help();
+	display_help($me);
 
 	exit(1);
 }else{
@@ -70,7 +70,7 @@ if (sizeof($parms) == 0) {
 				$itemType = $itemTypes[$value];
 			}else{
 				printf(__("ERROR: Invalid Item Type: (%s)\n\n"), $value);
-				display_help();
+				display_help($me);
 				exit(1);
 			}
 
@@ -79,7 +79,7 @@ if (sizeof($parms) == 0) {
 			$itemId = $value;
 
 			break;
-		case "--host-id":
+		case "--device-id":
 			$hostId = $value;
 
 			break;
@@ -111,11 +111,11 @@ if (sizeof($parms) == 0) {
 		case "-V":
 		case "-H":
 		case "--help":
-			display_help();
+			display_help($me);
 			exit(0);
 		default:
 			printf(__("ERROR: Invalid Argument: (%s)\n\n"), $arg);
-			display_help();
+			display_help($me);
 			exit(1);
 		}
 	}
@@ -137,9 +137,9 @@ if (sizeof($parms) == 0) {
 
 	if ($displayGraphs) {
 		if (!isset($hostId) || ($hostId === 0) || (!db_fetch_cell("SELECT id FROM host WHERE id=$hostId"))) {
-			echo __("ERROR: You must supply a valid host_id before you can list its graphs") . "\n";
-			echo __("Try --list-hosts") . "\n";
-			display_help();
+			echo __("ERROR: You must supply a valid device-id before you can list its graphs") . "\n";
+			echo __("Try php -q device_list.php") . "\n";
+			display_help($me);
 			exit(1);
 		} else {
 			displayHostGraphs($hostId, $quietMode);
@@ -162,7 +162,7 @@ if (sizeof($parms) == 0) {
 			array_push($userIds, $userId);
 		} else {
 			printf(__("ERROR: Invalid Userid: (%d)\n\n"), $value);
-			display_help();
+			display_help($me);
 			exit(1);
 		}
 	}
@@ -171,13 +171,13 @@ if (sizeof($parms) == 0) {
 	/* verify --item-id */
 	if ($itemType == 0) {
 		echo __("ERROR: --item-type missing. Please specify.") . "\n\n";
-		display_help();
+		display_help($me);
 		exit(1);
 	}
 
 	if ($itemId == 0) {
 		echo __("ERROR: --item-id missing. Please specify.") . "\n\n";
-		display_help();
+		display_help($me);
 		exit(1);
 	}
 
@@ -185,28 +185,28 @@ if (sizeof($parms) == 0) {
 		case PERM_GRAPHS: /* graph */
 			if ( !db_fetch_cell("SELECT local_graph_id FROM graph_templates_graph WHERE local_graph_id=$itemId") ) {
 				printf(__("ERROR: Invalid Graph item id: (%d)\n\n"), $itemId);
-				display_help();
+				display_help($me);
 				exit(1);
 			}
 			break;
 		case PERM_TREES: /* tree */
 			if ( !db_fetch_cell("SELECT id FROM graph_tree WHERE id=$itemId") ) {
 				printf(__("ERROR: Invalid Tree item id: (%d)\n\n"), $itemId);
-				display_help();
+				display_help($me);
 				exit(1);
 			}
 			break;
-		case PERM_HOSTS: /* host */
+		case PERM_HOSTS: /* device */
 			if ( !db_fetch_cell("SELECT id FROM host WHERE id=$itemId") ) {
-				printf(__("ERROR: Invalid Host item id: (%d)\n\n"), $itemId);
-				display_help();
+				printf(__("ERROR: Invalid device item id: (%d)\n\n"), $itemId);
+				display_help($me);
 				exit(1);
 			}
 			break;
 		case PERM_GRAPH_TEMPLATES: /* graph_template */
 			if ( !db_fetch_cell("SELECT id FROM graph_templates WHERE id=$itemId") ) {
 				printf(__("ERROR: Invalid Graph Template item id: (%d)\n\n"), $itemId);
-				display_help();
+				display_help($me);
 				exit(1);
 			}
 			break;
@@ -218,18 +218,19 @@ if (sizeof($parms) == 0) {
 	}
 }
 
-function display_help() {
-	echo __("Add Permissions Script 1.0, Copyright 2007 - The Cacti Group") . "\n\n";
+function display_help($me) {
+	echo __("Add Permissions Script 1.0") . ", " . __("Copyright 2004-2009 - The Cacti Group") . "\n";
 	echo __("A simple command line utility to add permissions to tree items in Cacti") . "\n\n";
-	echo __("usage: add_perms.php [ --user-id=[ID] ]") . "\n";
-	echo __("    --item-type=[graph|tree|host|graph_template]") . "\n";
-	echo __("    --item-id [--quiet]") . "\n\n";
-	echo __("Where item-id is the id of the object of type item-type") . "\n";
+	echo __("usage: ") . $me . "  [ --user-id=[ID] ]\n";
+	echo "   --item-type=[graph|tree|host|graph_template]\n";
+	echo "   --item-id [--quiet]\n\n";
+	echo __("Where %s1 is the id of the object of type %s2", "item-id", "item-type") . "\n";
 	echo __("List Options:") . "\n";
-	echo __("    --list-users") . "\n";
-	echo __("    --list-trees") . "\n";
-	echo __("    --list-graph-templates") . "\n";
-	echo __("    --list-graphs --host-id=[ID]") . "\n";
+	echo "   --list-users\n";
+	echo "   --list-trees\n";
+	echo "   --list-graph-templates\n";
+	echo "   --list-graphs --device-id=[ID]\n";
+	echo "   --quiet          " . __("batch mode value return") . "\n\n";
 }
 
 ?>

@@ -39,7 +39,7 @@ include_once(CACTI_BASE_PATH."/lib/api_graph.php");
 
 /* process calling arguments */
 $parms = $_SERVER["argv"];
-array_shift($parms);
+$me = array_shift($parms);
 
 if (sizeof($parms)) {
 	$displayGraphs  = FALSE;
@@ -55,13 +55,13 @@ if (sizeof($parms)) {
 			$debug = TRUE;
 
 			break;
-		case "--host-id":
+		case "--device-id":
 			$hostId = $value;
 
 			break;
 		case "--graph-id":
 			$graphId = $value;
-	
+
 			break;
 		case "--force":
 			$force = TRUE;
@@ -71,7 +71,7 @@ if (sizeof($parms)) {
 		case "-V":
 		case "-H":
 		case "--help":
-			display_help();
+			display_help($me);
 			exit(0);
 		case "--list-graphs":
 			$displayGraphs = TRUE;
@@ -83,20 +83,20 @@ if (sizeof($parms)) {
 			break;
 		default:
 			printf(__("ERROR: Invalid Argument: (%s)\n\n"), $arg);
-			display_help();
+			display_help($me);
 			exit(1);
 		}
 	}
 
 
 
-	/* 
-	 * handle display options 
+	/*
+	 * handle display options
 	 */
 	if ($displayGraphs) {
 		if (!isset($hostId)) {
-			echo __("ERROR: You must supply a host_id before you can list its graphs") . "\n";
-			echo __("Try --list-hosts") . "\n";
+			echo __("ERROR: You must supply a device-id before you can list its graphs") . "\n";
+			echo __("Try --list-devices") . "\n";
 			exit(1);
 		}
 
@@ -112,10 +112,10 @@ if (sizeof($parms)) {
 		echo __("Try --list-graphs") . "\n";
 		exit(1);
 	}
-	
-	
+
+
 	/*
-	 * get the data sources and graphs to act on 
+	 * get the data sources and graphs to act on
 	 * (code stolen from graphs.php)
 	 */
 	if ($force) {
@@ -148,21 +148,21 @@ if (sizeof($parms)) {
 		exit(0);
 	}
 }else{
-	display_help();
+	display_help($me);
 	exit(0);
 }
 
-function display_help() {
-	echo __("Remove Graph Script 1.0, Copyright 2008 - The Cacti Group") . "\n\n";
+function display_help($me) {
+	echo __("Remove Graph Script 1.0") . ", " . __("Copyright 2004-2009 - The Cacti Group\n");
 	echo __("A simple command line utility to remove a graph from Cacti") . "\n\n";
-	echo __("usage: remove_graph.php --graph-id=[ID]") . "\n\n";
-	echo __("Required:") . "\n";
-	echo __("    --graph-id                the numerical id of the graph") . "\n\n";
-	echo __("Optional:") . "\n";
-	echo __("    --force                   delete all related data sources") . "\n\n";
-	echo __("List Options:") . "\n";
-	echo __("    --list-graphs --host-id   list available graphs for a specific host") . "\n";
-	echo __("    --quiet                   batch mode value return") . "\n\n";
+	echo __("usage: ") . $me . " --graph-id=[ID]\n\n";
+	echo __("Required:\n");
+	echo "   --graph-id      " . __("the numerical id of the graph") . "\n\n";
+	echo __("Optional:\n");
+	echo "   --force         " . __("delete all related data sources") . "\n\n";
+	echo __("List Options:\n");
+	echo "   --list-graphs --device-id " . __("list available graphs for a specific device") . "\n";
+	echo "   --quiet         " . __("batch mode value return") . "\n\n";
 }
 
 ?>

@@ -37,7 +37,7 @@ include_once(CACTI_BASE_PATH.'/lib/tree.php');
 
 /* process calling arguments */
 $parms = $_SERVER["argv"];
-array_shift($parms);
+$me = array_shift($parms);
 
 if (sizeof($parms)) {
 	/* setup defaults */
@@ -62,7 +62,8 @@ if (sizeof($parms)) {
 	$displayRRAs    = FALSE;
 	$displayGraphs  = FALSE;
 
-	$hosts          = getHosts();
+	$host			= array();
+	$hosts          = getHosts($host);
 
 	foreach($parms as $parameter) {
 		@list($arg, $value) = @explode("=", $parameter);
@@ -100,7 +101,7 @@ if (sizeof($parms)) {
 			$rra_id = $value;
 
 			break;
-		case "--host-id":
+		case "--device-id":
 			$hostId = $value;
 
 			break;
@@ -124,7 +125,7 @@ if (sizeof($parms)) {
 			$displayGraphs = TRUE;
 
 			break;
-		case "--host-group-style":
+		case "--device-group-style":
 			$hostGroupStyle = trim($value);
 
 			break;
@@ -136,11 +137,11 @@ if (sizeof($parms)) {
 		case "-V":
 		case "-H":
 		case "--help":
-			display_help();
+			display_help($me);
 			exit(0);
 		default:
 			printf(__("ERROR: Invalid Argument: (%s)\n\n"), $arg);
-			display_help();
+			display_help($me);
 			exit(1);
 		}
 	}
@@ -168,8 +169,8 @@ if (sizeof($parms)) {
 
 	if ($displayGraphs) {
 		if (!isset($hostId) || $hostId == 0) {
-			echo __("ERROR: You must supply a host_id before you can list its graphs") . "\n";
-			echo __("Try --list-hosts") . "\n";
+			echo __("ERROR: You must supply a device-id before you can list its graphs") . "\n";
+			echo __("Try php -q device_list.php") . "\n";
 			exit(1);
 		}
 
@@ -181,7 +182,7 @@ if (sizeof($parms)) {
 		# Add a new tree
 		if (empty($name)) {
 			echo __("ERROR: You must supply a name with --name") . "\n";
-			display_help();
+			display_help($me);
 			exit(1);
 		}
 
@@ -196,7 +197,7 @@ if (sizeof($parms)) {
 			$treeOpts["sort_type"] = $sortMethods[$sortMethod];
 		} else {
 			printf(__("ERROR: Invalid sort-method: (%s)\n"), $sortMethod);
-			display_help();
+			display_help($me);
 			exit(1);
 		}
 
@@ -221,13 +222,13 @@ if (sizeof($parms)) {
 			$itemType = $nodeTypes[$nodeType];
 		} else {
 			printf(__("ERROR: Invalid node-type: (%d)"), $nodeType);
-			display_help();
+			display_help($me);
 			exit(1);
 		}
 
 		if (!is_numeric($parentNode)) {
 			printf(__("ERROR: parent-node %s must be numeric > 0\n"), $parentNode);
-			display_help();
+			display_help($me);
 			exit(1);
 		} elseif ($parentNode > 0 ) {
 			$parentNodeExists = db_fetch_cell("SELECT id
@@ -245,7 +246,7 @@ if (sizeof($parms)) {
 			# Header --name must be given
 			if (empty($name)) {
 				echo __("ERROR: You must supply a name with --name") . "\n";
-				display_help();
+				display_help($me);
 				exit(1);
 			}
 
@@ -263,7 +264,7 @@ if (sizeof($parms)) {
 			# verify rra-id
 			if (!is_numeric($rra_id)) {
 				printf(__("ERROR: rra-id %s must be numeric > 0\n"), $rra_id);
-				display_help();
+				display_help($me);
 				exit(1);
 			} elseif ($rra_id > 0 ) {
 				$rraExists = db_fetch_cell("SELECT id FROM rra WHERE id=$rra_id");
@@ -280,13 +281,13 @@ if (sizeof($parms)) {
 			$name           = '';
 
 			if (!isset($hosts[$hostId])) {
-				printf(__("ERROR: No such host-id (%d) exists. Try --list-hosts\n"), $hostId);
+				printf(__("ERROR: No such device-id (%d) exists. Try php -q device_list.php\n"), $hostId);
 				exit(1);
 			}
 
 			if ($hostGroupStyle != 1 && $hostGroupStyle != 2) {
 				echo __("ERROR: Host Group Style must be 1 or 2 (Graph Template or Data Query Index)") . "\n";
-				display_help();
+				display_help($me);
 				exit(1);
 			}
 		}
@@ -299,41 +300,40 @@ if (sizeof($parms)) {
 		exit(0);
 	} else {
 		printf(__("ERROR: Unknown type: (%s)\n"), $type);
-		display_help();
+		display_help($me);
 		exit(1);
 	}
 } else {
-	display_help();
+	display_help($me);
 	exit(0);
 }
 
-function display_help() {
-	echo __("Add Tree Script 1.0, Copyright 2007 - The Cacti Group") . "\n\n";
+function display_help($me) {
+	echo __("Add Tree Script 1.0") . ", " . __("Copyright 2004-2009 - The Cacti Group") . "\n";
 	echo __("A simple command line utility to add objects to a tree in Cacti") . "\n\n";
-	echo __("usage: add_tree.php  --type=[tree|node] [type-options] [--quiet]") . "\n\n";
+	echo __("usage: ") . $me . "  --type=[tree|node] [type-options] [--quiet]\n\n";
 	echo __("Tree options:") . "\n";
-	echo __("    --name=[Tree Name]") . "\n";
-	echo __("    --sort-method=[manual|alpha|natural|numeric]") . "\n\n";
+	echo "   --name=[Tree Name]  " . __("name of the Tree") . "\n";
+	echo "   --sort-method=[manual|alpha|natural|numeric]  " . __("Sort Method") . "\n\n";
 	echo __("Node options:") . "\n";
-	echo __("    --node-type=[header|host|graph]") . "\n";
-	echo __("    --tree-id=[ID]") . "\n";
-	echo __("    [--parent-node=[ID] [Node Type Options]]") . "\n\n";
+	echo "   --node-type=[header|device|graph]  " . __("Node Type [header|device|graph]") . "\n";
+	echo "   --tree-id=[ID]      " . __("Id of Tree") . "\n";
+	echo "  [--parent-node=[ID] [Node Type Options]]  " . __("Parent Node Id") . "\n\n";
 	echo __("Header node options:") . "\n";
-	echo __("    --name=[Name]") . "\n\n";
-	echo __("Host node options:") . "\n";
-	echo __("    --host-id=[ID]") . "\n";
-	echo __("    [--host-group-style=[1|2]]") . "\n";
-	echo __("    (host group styles:") . "\n";
-	echo __("     1 = Graph Template,") . "\n";
-	echo __("     2 = Data Query Index)") . "\n\n";
+	echo "   --name=[Name]       " . __("Header Node Name") . "\n\n";
+	echo __("Device node options:") . "\n";
+	echo "   --device-id=[ID]    " . __("Device Node Id") . "\n";
+	echo "  [--device-group-style=[1|2]]  " . __("Device Group Style:") . "\n";
+	echo "     1 = " . __("Graph Template") . "\n";
+	echo "     2 = " . __("Data Query Index") . "\n\n";
 	echo __("Graph node options:") . "\n";
-	echo __("    --graph-id=[ID]") . "\n";
-	echo __("    [--rra-id=[ID]]") . "\n\n";
+	echo "   --graph-id=[ID]     " . __("Graph Id") . "\n";
+	echo "  [--rra-id=[ID]]      " . __("RRA Id") . "\n\n";
 	echo __("List Options:") . "\n";
-	echo __("    --list-trees") . "\n";
-	echo __("    --list-nodes --tree-id=[ID]") . "\n";
-	echo __("    --list-rras") . "\n";
-	echo __("    --list-graphs --host-id=[ID]") . "\n";
+	echo "   --list-trees" . "\n";
+	echo "   --list-nodes --tree-id=[ID]" . "\n";
+	echo "   --list-rras" . "\n";
+	echo "   --list-graphs --device-id=[ID]" . "\n";
 }
 
 ?>

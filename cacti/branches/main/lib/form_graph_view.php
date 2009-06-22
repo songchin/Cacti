@@ -195,7 +195,7 @@ function graph_view_timespan_selector() {
 					</td>
 					<td style='white-space:nowrap;width:140px;'>
 						<input type='text' name='date1' id='date1' title='<?php print __("Graph Begin Timestamp");?>' size='14' value='<?php print (isset($_SESSION["sess_current_date1"]) ? $_SESSION["sess_current_date1"] : "");?>'>
-						&nbsp;<input type='image' style='border-width:0px;vertical-align:middle;align:middle;padding-bottom:5px;' src='images/calendar.gif' alt='<?php print __("Start");/>' title='<?php print __("Start Date Selector");?>' onclick='return showCalendar("date1");'>&nbsp;
+						&nbsp;<input type='image' style='border-width:0px;vertical-align:middle;align:middle;padding-bottom:5px;' src='images/calendar.gif' alt='<?php print __("Start");?>' title='<?php print __("Start Date Selector");?>' onclick='return showCalendar("date1");'>&nbsp;
 					</td>
 					<td style='white-space:nowrap;width:20px;'>
 						&nbsp;<strong><?php print __("To:");?></strong>&nbsp;

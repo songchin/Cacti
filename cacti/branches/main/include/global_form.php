@@ -753,12 +753,12 @@ $fields_graph_template_input_edit = array(
 $fields_host_edit = array(
 	"host_header" => array(
 		"method" => "spacer",
-		"friendly_name" => __("General Host Options"),
+		"friendly_name" => __("General Device Options"),
 		),
 	"description" => array(
 		"method" => "textbox",
 		"friendly_name" => __("Description"),
-		"description" => __("Give this host a meaningful description."),
+		"description" => __("Give this device a meaningful description."),
 		"value" => "|arg1:description|",
 		"max_length" => "250",
 		"size" => "70"
@@ -789,8 +789,8 @@ $fields_host_edit = array(
 		),
 	"host_template_id" => array(
 		"method" => "drop_sql",
-		"friendly_name" => __("Host Template"),
-		"description" => __("Choose what type of host, host template this is. The host template will govern what kinds of data should be gathered from this type of host."),
+		"friendly_name" => __("Device Template"),
+		"description" => __("Choose what type of device, device template this is. The device template will govern what kinds of data should be gathered from this type of device."),
 		"value" => "|arg1:host_template_id|",
 		"none_value" => "None",
 		"sql" => "select id,name from host_template order by name",
@@ -798,7 +798,7 @@ $fields_host_edit = array(
 	"notes" => array(
 		"method" => "textarea",
 		"friendly_name" => __("Notes"),
-		"description" => __("Enter notes to this host."),
+		"description" => __("Enter notes to this device."),
 		"class" => "textAreaNotes",
 		"value" => "|arg1:notes|",
 		"textarea_rows" => "5",
@@ -806,8 +806,8 @@ $fields_host_edit = array(
 		),
 	"disabled" => array(
 		"method" => "checkbox",
-		"friendly_name" => __("Disable Host"),
-		"description" => __("Check this box to disable all checks for this host."),
+		"friendly_name" => __("Disable Device"),
+		"description" => __("Check this box to disable all checks for this device."),
 		"value" => "|arg1:disabled|",
 		"default" => "",
 		"form_id" => false
@@ -834,7 +834,7 @@ $fields_host_edit_availability = array(
 		),
 	"availability_method" => array(
 		"friendly_name" => __("Downed Device Detection"),
-		"description" => __("The method Cacti will use to determine if a host is available for polling.") . "<br>" .
+		"description" => __("The method Cacti will use to determine if a device is available for polling.") . "<br>" .
 						"<i>" . __("NOTE:") . " " . __("It is recommended that, at a minimum, SNMP always be selected.") . "</i>",
 		"on_change" => "changeHostForm()",
 		"value" => "|arg1:availability_method|",
@@ -863,7 +863,7 @@ $fields_host_edit_availability = array(
 		),
 	"ping_timeout" => array(
 		"friendly_name" => __("Ping Timeout Value"),
-		"description" => __("The timeout value to use for host ICMP and UDP pinging. This host SNMP timeout value applies for SNMP pings."),
+		"description" => __("The timeout value to use for device ICMP and UDP pinging. This device SNMP timeout value applies for SNMP pings."),
 		"method" => "textbox",
 		"value" => "|arg1:ping_timeout|",
 		"default" => read_config_option("ping_timeout"),
@@ -991,12 +991,12 @@ $fields_host_edit_availability = array(
 $fields_host_template_edit = array(
 	"host_header" => array(
 		"method" => "spacer",
-		"friendly_name" => __("General Host Template Options"),
+		"friendly_name" => __("General Device Template Options"),
 		),
 	"name" => array(
 		"method" => "textbox",
 		"friendly_name" => __("Name"),
-		"description" => __("A useful name for this host template."),
+		"description" => __("A useful name for this device template."),
 		"value" => "|arg1:name|",
 		"max_length" => "255",
 		"size" => "70"
@@ -1007,7 +1007,7 @@ $fields_host_template_edit = array(
 		),
 	"availability_method" => array(
 		"friendly_name" => __("Downed Device Detection"),
-		"description" => __("The method Cacti will use to determine if a host is available for polling.  <br><i>NOTE: It is recommended that, at a minimum, SNMP always be selected.</i>"),
+		"description" => __("The method Cacti will use to determine if a device is available for polling.  <br><i>NOTE: It is recommended that, at a minimum, SNMP always be selected.</i>"),
 		"on_change" => "changeHostForm()",
 		"value" => "|arg1:availability_method|",
 		"method" => "drop_array",
@@ -1035,7 +1035,7 @@ $fields_host_template_edit = array(
 		),
 	"ping_timeout" => array(
 		"friendly_name" => __("Ping Timeout Value"),
-		"description" => __("The timeout value to use for host ICMP and UDP pinging. This host SNMP timeout value applies for SNMP pings."),
+		"description" => __("The timeout value to use for device ICMP and UDP pinging. This device SNMP timeout value applies for SNMP pings."),
 		"method" => "textbox",
 		"value" => "|arg1:ping_timeout|",
 		"default" => read_config_option("ping_timeout"),
@@ -1044,7 +1044,7 @@ $fields_host_template_edit = array(
 		),
 	"ping_retries" => array(
 		"friendly_name" => __("Ping Retry Count"),
-		"description" => __("The number of times Cacti will attempt to ping a host before failing."),
+		"description" => __("The number of times Cacti will attempt to ping a device before failing."),
 		"method" => "textbox",
 		"value" => "|arg1:ping_retries|",
 		"default" => read_config_option("ping_retries"),
@@ -1252,7 +1252,7 @@ $fields_data_query_edit = array(
 	"data_input_id" => array(
 		"method" => "drop_sql",
 		"friendly_name" => __("Data Input Method"),
-		"description" => __("Choose what type of host, host template this is. The host template will govern what kinds of data should be gathered from this type of host."),
+		"description" => __("Choose what type of device, device template this is. The device template will govern what kinds of data should be gathered from this type of device."),
 		"value" => "|arg1:data_input_id|",
 		"sql" => "select id,name from data_input where (type_id=3 or type_id=4 or type_id=5 or type_id=6) order by name",
 		),
@@ -1279,7 +1279,7 @@ $fields_data_query_item_edit = array(
 	"graph_template_id" => array(
 		"method" => "drop_sql",
 		"friendly_name" => __("Graph Template"),
-		"description" => __("Choose what type of host, host template this is. The host template will govern what kinds of data should be gathered from this type of host."),
+		"description" => __("Choose what type of device, device template this is. The device template will govern what kinds of data should be gathered from this type of device."),
 		"value" => "|arg1:graph_template_id|",
 		"sql" => "select id,name from graph_templates order by name",
 		),
@@ -1476,7 +1476,7 @@ $export_types = array(
 		"dropdown_sql" => "select id,name from data_template order by name"
 		),
 	"host_template" => array(
-		"name" => __("Host Template"),
+		"name" => __("Device Template"),
 		"title_sql" => "select name from host_template where id=|id|",
 		"dropdown_sql" => "select id,name from host_template order by name"
 		),
