@@ -153,10 +153,10 @@ function display_help($me) {
 	echo __("A simple command line utility to associate a graph template with a device in Cacti") . "\n\n";
 	echo __("usage: ") . $me . " --device-id=[ID] --graph-template-id=[ID]\n";
 	echo "    [--quiet]\n\n";
-	echo __("Required:\n");
+	echo __("Required:") . "\n";
 	echo "   --device-id          " . __("the numerical ID of the device") . "\n";
 	echo "   --graph_template-id  " . __("the numerical ID of the graph template to be added") . "\n\n";
-	echo __("List Options:\n");
+	echo __("List Options:") . "\n";
 	echo "   --list-graph-templates\n";
 	echo "   --quiet              " . __("batch mode value return") . "\n\n";
 }

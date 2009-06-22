@@ -55,7 +55,7 @@ if (sizeof($parms)) {
 		case "--device-id":
 			$host_id = trim($value);
 			if (!is_numeric($host_id)) {
-				echo __("ERROR: You must supply a valid device-id to run this script!\n");
+				echo __("ERROR: You must supply a valid device-id to run this script!") . "\n";
 				exit(1);
 			}
 
@@ -63,7 +63,7 @@ if (sizeof($parms)) {
 		case "--data-query-id":
 			$data_query_id = $value;
 			if (!is_numeric($data_query_id)) {
-				echo __("ERROR: You must supply a numeric data-query-id for all devices!\n");
+				echo __("ERROR: You must supply a numeric data-query-id for all devices!") . "\n";
 				exit(1);
 			}
 
@@ -88,7 +88,7 @@ if (sizeof($parms)) {
 						$reindex_method = DATA_QUERY_AUTOINDEX_FIELD_VERIFICATION;
 						break;
 					default:
-						echo __("ERROR: You must supply a valid reindex method for all devices!\n");
+						echo __("ERROR: You must supply a valid reindex method for all devices!") . "\n";
 						exit(1);
 				}
 			}
@@ -111,17 +111,17 @@ if (sizeof($parms)) {
 	 * for update / insert options
 	 */
 	if (!isset($host_id)) {
-		echo __("ERROR: You must supply a valid device-id for all devices!\n");
+		echo __("ERROR: You must supply a valid device-id for all devices!") . "\n";
 		exit(1);
 	}
 
 	if (!isset($data_query_id)) {
-		echo __("ERROR: You must supply a valid data-query-id for all devices!\n");
+		echo __("ERROR: You must supply a valid data-query-id for all devices!") . "\n";
 		exit(1);
 	}
 
 	if (!isset($reindex_method)) {
-		echo __("ERROR: You must supply a valid reindex-method for all devices!\n");
+		echo __("ERROR: You must supply a valid reindex-method for all devices!") . "\n";
 		exit(1);
 	}
 

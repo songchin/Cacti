@@ -156,7 +156,7 @@ function display_help ($me) {
 	echo __("Optional:") . "\n";
 	echo "   -d                      " . __("Display verbose output during execution") . "\n";
 	echo "   -v --version            " . __("Display this help message") . "\n";
-	echo "   -h --help               " . __("Display this help message\n");
+	echo "   -h --help               " . __("Display this help message") . "\n";
 	echo __("List Options:") . "\n\n";
 	echo "   --list-device-templates " . __("Lists all available Device Templates") . "\n\n";
 }

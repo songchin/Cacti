@@ -153,14 +153,14 @@ if (sizeof($parms)) {
 }
 
 function display_help($me) {
-	echo __("Remove Graph Script 1.0") . ", " . __("Copyright 2004-2009 - The Cacti Group\n");
+	echo __("Remove Graph Script 1.0") . ", " . __("Copyright 2004-2009 - The Cacti Group") . "\n";
 	echo __("A simple command line utility to remove a graph from Cacti") . "\n\n";
 	echo __("usage: ") . $me . " --graph-id=[ID]\n\n";
-	echo __("Required:\n");
+	echo __("Required:") . "\n";
 	echo "   --graph-id      " . __("the numerical id of the graph") . "\n\n";
-	echo __("Optional:\n");
+	echo __("Optional:") . "\n";
 	echo "   --force         " . __("delete all related data sources") . "\n\n";
-	echo __("List Options:\n");
+	echo __("List Options:") . "\n";
 	echo "   --list-graphs --device-id " . __("list available graphs for a specific device") . "\n";
 	echo "   --quiet         " . __("batch mode value return") . "\n\n";
 }

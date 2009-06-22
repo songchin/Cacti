@@ -62,7 +62,7 @@ if (sizeof($parms)) {
 		case "--template":
 			$host["host_template_id"] = $value;
 			if (!is_numeric($host["host_template_id"])) {
-				echo __("ERROR: You must supply a numeric device template id for all devices!\n");
+				echo __("ERROR: You must supply a numeric device template id for all devices!") . "\n";
 				exit(1);
 			}
 

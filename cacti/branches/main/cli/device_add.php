@@ -67,7 +67,7 @@ if (sizeof($parms)) {
 		case "--ip":
 			$ip = trim($value);
 			if ($ip == "") {
-				echo __("ERROR: You must supply a valid [hostname|IP address] for all devices!\n");
+				echo __("ERROR: You must supply a valid [hostname|IP address] for all devices!") . "\n";
 				exit(1);
 			}
 
@@ -75,7 +75,7 @@ if (sizeof($parms)) {
 		case "--template":
 			$template_id = $value;
 			if (!is_numeric($template_id)) {
-				echo __("ERROR: You must supply a numeric device template id for all devices!\n");
+				echo __("ERROR: You must supply a numeric device template id for all devices!") . "\n";
 				exit(1);
 			}
 
@@ -282,17 +282,17 @@ if (sizeof($parms)) {
 	 * for update / insert options
 	 */
 	if (!isset($description)) {
-		echo __("ERROR: You must supply a description for all devices!\n");
+		echo __("ERROR: You must supply a description for all devices!") . "\n";
 		exit(1);
 	}
 
 	if (!isset($ip)) {
-		echo __("ERROR: You must supply a valid [hostname|IP address] for all devices!\n");
+		echo __("ERROR: You must supply a valid [hostname|IP address] for all devices!") . "\n";
 		exit(1);
 	}
 
 	if (!isset($template_id)) {
-		echo __("ERROR: You must supply a valid device template id for all devices!\n");
+		echo __("ERROR: You must supply a valid device template id for all devices!") . "\n";
 		exit(1);
 	}
 
