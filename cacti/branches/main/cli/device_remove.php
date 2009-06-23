@@ -79,7 +79,7 @@ if (sizeof($parms)) {
 	 */
 	$host_name = db_fetch_cell("SELECT hostname FROM host WHERE id = " . $host_id);
 	if (!isset($host_name)) {
-		printf(__("ERROR: Unknown Device Id (%d)\n"), $host_id);
+		printf(__("ERROR: Unknown Device ID (%d)\n"), $host_id);
 		echo __("Try php -q device_list.php") . "\n";
 		exit(1);
 	}

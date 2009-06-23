@@ -107,7 +107,7 @@ if (sizeof($parms)) {
 			if (is_numeric($value) && ($value == 1 || $value == 0)) {
 				$disabled  = $value;
 			} else {
-				printf(__("ERROR: Invalid disabled flag (%d)\n\n"), $disabled);
+				printf(__("ERROR: Invalid Disabled Flag (%d)\n\n"), $disabled);
 				exit(1);
 			}
 

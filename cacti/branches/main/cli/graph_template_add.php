@@ -113,7 +113,7 @@ if (sizeof($parms)) {
 	 */
 	$host_name = db_fetch_cell("SELECT hostname FROM host WHERE id = " . $host_id);
 	if (!isset($host_name)) {
-		printf(__("ERROR: Unknown device-id (%d)\n"), $host_id);
+		printf(__("ERROR: Unknown Device ID (%d)\n"), $host_id);
 		exit(1);
 	}
 
@@ -122,7 +122,7 @@ if (sizeof($parms)) {
 	 */
 	$graph_template_name = db_fetch_cell("SELECT name FROM graph_templates WHERE id = " . $graph_template_id);
 	if (!isset($graph_template_name)) {
-		printf(__("ERROR: Unknown Graph Template Id (%d)\n"), $graph_template_id);
+		printf(__("ERROR: Unknown Graph Template ID (%d)\n"), $graph_template_id);
 		exit(1);
 	}
 

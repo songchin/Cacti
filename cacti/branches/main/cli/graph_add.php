@@ -284,7 +284,7 @@ if (sizeof($parms)) {
 
 	/* Verify the device's existance */
 	if (!isset($hosts[$hostId]) || $hostId == 0) {
-		printf(__("ERROR: Unknown device-id (%d)\n"), $hostId);
+		printf(__("ERROR: Unknown Device ID (%d)\n"), $hostId);
 		echo __("Try php -q device_list.php") . "\n";
 		exit(1);
 	}
@@ -338,7 +338,7 @@ if (sizeof($parms)) {
 	}
 
 	if (!isset($graphTemplates[$templateId])) {
-		printf(__("ERROR: Unknown graph-template-id (%d)\n"), $templateId);
+		printf(__("ERROR: Unknown Graph Template ID (%d)\n"), $templateId);
 		echo __("Try --list-graph-templates") . "\n";
 		exit(1);
 	}

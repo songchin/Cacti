@@ -92,7 +92,7 @@ if (sizeof($parms)) {
 			} elseif (is_numeric($value) && ($value == 0)) {
 				$host["disabled"]  = '""';
 			} else {
-				printf(__("ERROR: Invalid disabled flag (%s)\n"), $disabled);
+				printf(__("ERROR: Invalid disabled flag (%d)\n"), $disabled);
 				exit(1);
 			}
 

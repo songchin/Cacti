@@ -65,7 +65,7 @@ foreach($parms as $parameter) {
 		display_help($me);
 		exit;
 	default:
-		printf(__("ERROR: Invalid Parameter %s"), $parameter);
+		printf(__("ERROR: Invalid Parameter %s\n\n"), $parameter);
 		display_help($me);
 		exit;
 	}
