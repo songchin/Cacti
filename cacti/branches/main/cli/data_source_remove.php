@@ -76,7 +76,7 @@ if (sizeof($parms)) {
 				display_help($me);
 				exit (0);
 			case "--dry-run" :
-				$dry_run = __("DRY RUN >>>") . "\n";
+				$dry_run = __("DRY RUN >>>");
 
 				break;
 			default :
@@ -137,7 +137,7 @@ if (sizeof($parms)) {
 
 function remove_data_source($data_source_id, $dry_run) {
 
-	$dry_run ? $dry_run = __("DRY RUN >>>\n") : $dry_run = "";
+	$dry_run ? $dry_run = __("DRY RUN >>>") : $dry_run = "";
 
 	/* Verify the data source's existance */
 	if (!db_fetch_cell("SELECT id FROM data_local WHERE id=$data_source_id")) {
@@ -158,7 +158,7 @@ function remove_data_source($data_source_id, $dry_run) {
 			"GROUP BY graph_templates_graph.local_graph_id");
 
 	if (sizeof($graphs) > 0) {
-		echo $dry_run;
+		echo $dry_run . "\n";
 		echo __("Delete Graph(s): ");
 		foreach ($graphs as $graph) {
 
@@ -173,7 +173,7 @@ function remove_data_source($data_source_id, $dry_run) {
 	}
 
 	if ($dry_run) {
-		echo $dry_run;
+		echo $dry_run . "\n";
 		printf(__("Data Source: %d"), $data_source_id);
 	} else {
 		printf(__("Delete Data Source: %d", $data_source_id));
