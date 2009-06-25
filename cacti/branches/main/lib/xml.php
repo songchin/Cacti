@@ -88,6 +88,7 @@ function rrdxport2array($data) {
 		if ((substr(trim($array[0]),0,1)) == "<") {
 			/* continue */
 		}else{
+			$new_array = array();
 			foreach($array as $element) {
 				if ((substr(trim($element),0,1)) == "<") {
 					$new_array[] = $element;
@@ -106,7 +107,7 @@ function rrdxport2array($data) {
 	$p = xml_parser_create();
 	xml_parser_set_option($p, XML_OPTION_SKIP_WHITE, 1);
 	xml_parser_set_option($p, XML_OPTION_CASE_FOLDING, 0);
-	xml_parse_into_struct($p, $data, $vals);
+	xml_parse_into_struct($p, $data, $vals, $index);
 	xml_parser_free($p);
 
 	$tree = array();
