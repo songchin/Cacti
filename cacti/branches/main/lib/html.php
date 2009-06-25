@@ -337,11 +337,17 @@ function html_graph_thumbnail_area(&$graph_array, $no_graphs_message = "", $extr
 						</tr>";
 					$i = 0;
 				}
-				print "<tr style='background-color:#a9b7cb;'>
-					<td colspan='" . read_graph_config_option("num_columns") . "' class='textHeaderDark'>
-						" . $graph["sort_field_value"]. "
-					</td>
-				</tr>";
+
+				if (!isset($prev_sort_field_value) || $prev_sort_field_value != $graph["sort_field_value"]){
+					$prev_sort_field_value = $graph["sort_field_value"];
+					print "<tr style='background-color:#a9b7cb;'>
+						<td style='background-color:#a9b7cb;' colspan='" . read_graph_config_option("num_columns") . "' class='textHeaderDark'>
+							" . $graph["sort_field_value"] . "
+						</td>
+					</tr>";
+					$i = 0;
+					$j = 0;
+				}
 			}
 
 			if ($i == 0) {
