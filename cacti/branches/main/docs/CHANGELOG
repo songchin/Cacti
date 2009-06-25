@@ -18,6 +18,7 @@ Cacti CHANGELOG
 -bug#0001446: Wrong dates override in CSV export 
 -bug#0001432: array_merge breaks dropdown handling with hardcoded (array-)keys
 -bug#0001429: PHP does not support SNMP V3 Contexts and Cacti needs to act accordingly
+-bug#0001469: Tree is not being expanded if user followed link outside of cacti
 -bug: remove graph permissions if graph is removed
 -bug: remove host permissions if host is removed
 -bug: add_tree.php did not allow nodes with propagating sort options
