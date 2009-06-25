@@ -1156,7 +1156,7 @@ function graph() {
 
 							if (sizeof($templates) > 0) {
 							foreach ($templates as $template) {
-								print "<option value=' " . $template["id"] . "'"; if ($_REQUEST["template_id"] == $template["id"]) { print " selected"; } print ">" . title_trim($template["name"], 40) . "</option>\n";
+								print "<option value='" . $template["id"] . "'"; if ($_REQUEST["template_id"] == $template["id"]) { print " selected"; } print ">" . title_trim($template["name"], 40) . "</option>\n";
 							}
 							}
 							?>
