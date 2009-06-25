@@ -38,6 +38,7 @@ $cacti_textdomains = array();
 /* get a list of locale settings */
 $lang2locale = get_list_of_locales();
 
+
 /* determine whether or not we can support the language */
 /* user requests another language */
 if (isset($_GET['language']) && isset($lang2locale[$_GET['language']])) {
@@ -45,7 +46,7 @@ if (isset($_GET['language']) && isset($lang2locale[$_GET['language']])) {
 	$cacti_country = $lang2locale[$_GET['language']]['country'];
 	$_SESSION['language'] = $cacti_locale;
 	
-	/* save user customized language setting */
+	/* save customized language setting (authenticated users only) */
 	set_user_config_option('language', $cacti_locale);
 	
 /* language definition stored in the SESSION */
@@ -61,8 +62,8 @@ if (isset($_GET['language']) && isset($lang2locale[$_GET['language']])) {
 		$_SESSION['language'] = $cacti_locale;
 	}
 	
-/* detect browser settings if user did not setup language via GUI */
-}elseif (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
+/* detect browser settings if auto detection is enabled */
+}elseif (read_config_option('i18n_auto_detection') && isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
 	$accepted = $_SERVER['HTTP_ACCEPT_LANGUAGE'];
 	$accepted = strtolower(str_replace(strstr($accepted, ','), '', $accepted));
 	
@@ -73,7 +74,18 @@ if (isset($_GET['language']) && isset($lang2locale[$_GET['language']])) {
 		$cacti_locale = $accepted;
 		$cacti_country = $lang2locale[$accepted]['country'];	
 	}
+
+/* use the default language defined under "general" */
+}else {
+	$accepted = read_config_option("i18n_default_language");
+
+	if (isset($lang2locale[$accepted])) {
+		$cacti_locale = $accepted;
+		$cacti_country = $lang2locale[$accepted]['country'];	
+	}
 }
+
+
 
 /* define the path to the language file */
 $path2catalogue = CACTI_BASE_PATH . "/locales/LC_MESSAGES/" . $lang2locale[$cacti_locale]['filename'];
@@ -137,9 +149,11 @@ foreach($cacti_textdomains as $domain => $paths) {
 load_i18n_gettext_wrappers();
 
 
+
 /**
- * load_fallback_procedure()
- * Load wrapper package if native language has to be used 
+ * load_fallback_procedure - loads wrapper package if native language (English) has to be used 
+ * 
+ * @return 
  */
 function load_fallback_procedure(){
 	global $cacti_textdomains, $cacti_locale, $cacti_country;
@@ -148,7 +162,7 @@ function load_fallback_procedure(){
 	load_i18n_fallback_wrappers();
 
 	/* reset variables */
-	$_SESSION['language'] = "en";
+	$_SESSION['language'] = "";
 
 	$cacti_textdomains = array();
 	$cacti_locale = "en";
@@ -156,8 +170,11 @@ function load_fallback_procedure(){
 }
 
 
+
 /**
- * load_i18n_gettext_wrappers()
+ * load_i18n_gettext_wrappers - creates all wrappers to translate strings by using php-gettext
+ * 
+ * @return 
  */
 function load_i18n_gettext_wrappers(){
 
@@ -246,8 +263,11 @@ function load_i18n_gettext_wrappers(){
 }
 
 
+
 /**
- * load_i18n_fallback_wrappers()
+ * load_i18n_fallback_wrappers - creates special wrappers to leave the native language untouched
+ * 
+ * @return 
  */
 function load_i18n_fallback_wrappers(){
 
@@ -295,6 +315,11 @@ function load_i18n_fallback_wrappers(){
 
 
 
+/**
+ * get_list_of_locales - returns the default settings being used for l10n
+ * 
+ * @return - a multi-dimensional array with the locale code as main key 
+ */
 function get_list_of_locales(){
 	$lang2locale = array(
 	"sq" 		=> array("language"=>"Albanian", 				"country" => "al", "filename" => "albanian_albania.mo"),
@@ -345,5 +370,32 @@ function get_list_of_locales(){
 	"tr"		=> array("language"=>"Turkish", 				"country" => "tr", "filename" => "turkish_turkey.mo"),
 	"uk"		=> array("language"=>"Vietnamese", 				"country" => "vn", "filename" => "vietnamese_vietnam.mo"));
 	return $lang2locale;
+}
+
+
+/**
+ * get_installed_locales - finds all installed locales 
+ * 
+ * @return - an associative array of all installed locales (e.g. "en" => "English") 
+ */
+function get_installed_locales(){
+	global $lang2locale;
+
+	$locations = array();
+	$supported_languages["en"] = $lang2locale["en"]["language"];
+
+	foreach($lang2locale as $locale => $properties) {
+		$locations[$properties["filename"]] = array("locale" => $locale, "language" => $properties["language"]);
+	}
+
+	/* create a list of all languages this Cacti system supports ... */
+	$dhandle = opendir(CACTI_BASE_PATH . "/locales/LC_MESSAGES");
+	while (false !== ($filename = readdir($dhandle))) {
+		if(isset($locations[$filename])) {
+			$supported_languages[$locations[$filename]["locale"]] = $locations[$filename]["language"];
+		}
+	}
+
+	return $supported_languages;
 }
 ?>

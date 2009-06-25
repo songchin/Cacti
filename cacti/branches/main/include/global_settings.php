@@ -301,11 +301,25 @@ $settings = array(
 			"method" => "checkbox"
 			),
 		"i18n_support" => array(
-			"friendly_name" => __("Enable Language Support"),
-			"description" => __("Choose \"enable\" to allow the location of Cacti. The strict mode requires that the requested language will also be supported by all plugins being installed at your system. If that's not the fact everything will be displayed in English."),
+			"friendly_name" => __("Language Support"),
+			"description" => __("Choose \"enabled\" to allow the localization of Cacti. The strict mode requires that the requested language will also be supported by all plugins being installed at your system. If that's not the fact everything will be displayed in English."),
 			"method" => "drop_array",
 			"default" => "0",
 			"array" => $i18n_modes
+			),
+		"i18n_default_language" => array(
+			"friendly_name" => __("Default language"),
+			"description" => __("Default language for this system."),
+			"method" => "drop_array",
+			"default" => "us",
+			"array" => get_installed_locales()
+			),
+		"i18n_auto_detection" => array(
+			"friendly_name" => __("Auto detection"),
+			"description" => __("Allow to automatically determine the \"default\" language of the user and provide it at login time if that language is supported by Cacti. If disabled, the default language will be in force until the user elects another language. "),
+			"method" => "drop_array",
+			"default" => "0",
+			"array" => array( "0" => __("Disabled"), "1" => __("Enabled"))
 			)
 		),
 	"export" => array(
@@ -884,7 +898,7 @@ $settings = array(
 			"description" => __("Enable or Disable LDAP referrals.  If disabled, it may increase the speed of searches."),
 			"method" => "drop_array",
 			"default" => "0",
-			"array" => array( "0" => __("Disabled"), "1" => "Enable")
+			"array" => array( "0" => __("Disabled"), "1" => __("Enabled"))
 			),
 		"ldap_mode" => array(
 			"friendly_name" => __("Mode"),
