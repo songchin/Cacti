@@ -28,20 +28,20 @@ function run_data_query($host_id, $snmp_query_id) {
 	include_once(CACTI_BASE_PATH . "/lib/poller.php");
 	include_once(CACTI_BASE_PATH . "/lib/utility.php");
 
-	debug_log_insert("data_query", "Running data query [$snmp_query_id].");
+	debug_log_insert("data_query", __("Running data query") . " [$snmp_query_id].");
 	$type_id = db_fetch_cell("select data_input.type_id from (snmp_query,data_input) where snmp_query.data_input_id=data_input.id and snmp_query.id=$snmp_query_id");
 
 	if ($type_id == DATA_INPUT_TYPE_SNMP_QUERY) {
-		debug_log_insert("data_query", "Found type = '3' [snmp query].");
+		debug_log_insert("data_query", __("Found type") . " = '3' [snmp query].");
 		$result = query_snmp_host($host_id, $snmp_query_id);
 	}elseif ($type_id == DATA_INPUT_TYPE_SCRIPT_QUERY) {
-		debug_log_insert("data_query", "Found type = '4 '[script query].");
+		debug_log_insert("data_query", __("Found type") . " = '4 '[script query].");
 		$result = query_script_host($host_id, $snmp_query_id);
 	}elseif ($type_id == DATA_INPUT_TYPE_QUERY_SCRIPT_SERVER) {
-		debug_log_insert("data_query", "Found type = '6 '[script query].");
+		debug_log_insert("data_query", __("Found type") . " = '6 '[script query].");
 		$result = query_script_host($host_id, $snmp_query_id);
 	}else{
-		debug_log_insert("data_query", "Unknown type = '$type_id'");
+		debug_log_insert("data_query", __("Unknown type") . " = '$type_id'");
 	}
 
 	/* update the sort cache */
@@ -68,11 +68,11 @@ function get_data_query_array($snmp_query_id) {
 	$xml_file_path = str_replace("<path_cacti>", CACTI_BASE_PATH, $xml_file_path);
 
 	if (!file_exists($xml_file_path)) {
-		debug_log_insert("data_query", "Could not find data query XML file at '$xml_file_path'");
+		debug_log_insert("data_query", __("Could not find data query XML file at") . " '$xml_file_path'");
 		return false;
 	}
 
-	debug_log_insert("data_query", "Found data query XML file at '$xml_file_path'");
+	debug_log_insert("data_query", __("Found data query XML file at") . " '$xml_file_path'");
 
 	$data = implode("",file($xml_file_path));
 	return xml2array($data);
@@ -83,11 +83,11 @@ function query_script_host($host_id, $snmp_query_id) {
 
 	/* invalid xml check */
 	if ((!is_array($script_queries)) || (sizeof($script_queries) == 0)) {
-		debug_log_insert("data_query", "Error parsing XML file into an array.");
+		debug_log_insert("data_query", __("Error parsing XML file into an array."));
 		return false;
 	}
 
-	debug_log_insert("data_query", "XML file parsed ok.");
+	debug_log_insert("data_query", __("XML file parsed ok."));
 
 	if (isset($script_queries["script_server"])) {
 		$script_queries["script_path"] = "|path_php_binary| -q " . $script_queries["script_path"];
@@ -98,7 +98,7 @@ function query_script_host($host_id, $snmp_query_id) {
 	/* fetch specified index at specified OID */
 	$script_index_array = exec_into_array($script_path);
 
-	debug_log_insert("data_query", "Executing script for list of indexes '$script_path'");
+	debug_log_insert("data_query", __("Executing script for list of indexes") . " '$script_path'");
 
 	db_execute("delete from host_snmp_cache where host_id=$host_id and snmp_query_id=$snmp_query_id");
 
@@ -108,7 +108,7 @@ function query_script_host($host_id, $snmp_query_id) {
 
 			$script_data_array = exec_into_array($script_path);
 
-			debug_log_insert("data_query", "Executing script query '$script_path'");
+			debug_log_insert("data_query", __("Executing script query") . " '$script_path'");
 
 			for ($i=0;($i<sizeof($script_data_array));$i++) {
 				if (preg_match("/(.*)" . preg_quote($script_queries["output_delimeter"]) . "(.*)/", $script_data_array[$i], $matches)) {
@@ -119,7 +119,7 @@ function query_script_host($host_id, $snmp_query_id) {
 						(host_id,snmp_query_id,field_name,field_value,snmp_index,oid)
 						values ($host_id,$snmp_query_id,'$field_name','$field_value','$script_index','')");
 
-					debug_log_insert("data_query", "Found item [$field_name='$field_value'] index: $script_index");
+					debug_log_insert("data_query", sprintf(__("Found item [%s='%s'] index: %s"), $field_name, $field_value, $script_index));
 				}
 			}
 		}
@@ -171,7 +171,7 @@ function query_snmp_host($host_id, $snmp_query_id) {
 		$host["snmp_auth_protocol"], $host["snmp_priv_passphrase"], $host["snmp_priv_protocol"],
 		$host["snmp_context"], $host["snmp_port"], $host["snmp_timeout"], $host["ping_retries"], $host["max_oids"], SNMP_WEBUI);
 
-	debug_log_insert("data_query", printf(__("Executing SNMP walk for list of indexes @ '%s'"), $snmp_queries["oid_index"]));
+	debug_log_insert("data_query", sprintf(__("Executing SNMP walk for list of indexes @ '%s'"), $snmp_queries["oid_index"]));
 
 	/* no data found; get out */
 	if (!$snmp_indexes) {
@@ -180,7 +180,7 @@ function query_snmp_host($host_id, $snmp_query_id) {
 	} else {
 		/* show list of indices found */
 		for ($i=0; $i<sizeof($snmp_indexes); $i++) {
-			debug_log_insert("data_query", printf(__("Index found at OID: '%s' value: '%s'"), $snmp_indexes[$i]["oid"], $snmp_indexes[$i]["value"]));
+			debug_log_insert("data_query", sprintf(__("Index found at OID: '%s' value: '%s'"), $snmp_indexes[$i]["oid"], $snmp_indexes[$i]["value"]));
 		}
 	}
 
@@ -193,7 +193,7 @@ function query_snmp_host($host_id, $snmp_query_id) {
 
 		for ($i=0; $i<sizeof($snmp_indexes); $i++) {
 			$snmp_indexes[$i]["value"] = ereg_replace($index_parse_regexp, "\\1", $snmp_indexes[$i]["oid"]);
-			debug_log_insert("data_query", printf(__("index_parse at OID: '%s' results: '%s'"), $snmp_indexes[$i]["oid"], $snmp_indexes[$i]["value"]));
+			debug_log_insert("data_query", sprintf(__("index_parse at OID: '%s' results: '%s'"), $snmp_indexes[$i]["oid"], $snmp_indexes[$i]["value"]));
 		}
 	}
 
@@ -202,14 +202,14 @@ function query_snmp_host($host_id, $snmp_query_id) {
 	while (list($field_name, $field_array) = each($snmp_queries["fields"])) {
 		if ((!isset($field_array["oid"])) && ($field_array["source"] == "index")) {
 			for ($i=0; $i<sizeof($snmp_indexes); $i++) {
-				debug_log_insert("data_query", printf(__("Inserting index data for field '%s' [value='%s']"), $field_name, $snmp_indexes[$i]["value"]));
+				debug_log_insert("data_query", sprintf(__("Inserting index data for field '%s' [value='%s']"), $field_name, $snmp_indexes[$i]["value"]));
 
 				db_execute("replace into host_snmp_cache
 					(host_id, snmp_query_id, field_name, field_value, snmp_index, oid)
 					values ('$host_id','$snmp_query_id','$field_name','" . $snmp_indexes[$i]["value"] . "','" . $snmp_indexes[$i]["value"] . "','')");
 			}
 		}else if (($field_array["method"] == "get") && ($field_array["direction"] == "input")) {
-			debug_log_insert("data_query", printf(__("Located input field '%s' [get]"), $field_name));
+			debug_log_insert("data_query", sprintf(__("Located input field '%s' [get]"), $field_name));
 
 			if ($field_array["source"] == "value") {
 				for ($i=0; $i<sizeof($snmp_indexes); $i++) {
@@ -220,7 +220,7 @@ function query_snmp_host($host_id, $snmp_query_id) {
 						$host["snmp_auth_protocol"], $host["snmp_priv_passphrase"], $host["snmp_priv_protocol"],
 						$host["snmp_context"], $host["snmp_port"], $host["snmp_timeout"], SNMP_WEBUI);
 
-					debug_log_insert("data_query", printf(__("Executing SNMP get for data @ '%s' [value='%s']"), $oid, $value));
+					debug_log_insert("data_query", sprintf(__("Executing SNMP get for data @ '%s' [value='%s']"), $oid, $value));
 
 					db_execute("replace into host_snmp_cache
 						(host_id,snmp_query_id,field_name,field_value,snmp_index,oid)
@@ -228,7 +228,7 @@ function query_snmp_host($host_id, $snmp_query_id) {
 				}
 			}
 		}else if (($field_array["method"] == "walk") && ($field_array["direction"] == "input")) {
-			debug_log_insert("data_query", printf(__("Located input field '%s' [walk]"), $field_name));
+			debug_log_insert("data_query", sprintf(__("Located input field '%s' [walk]"), $field_name));
 
 			$snmp_data = array();
 			$snmp_data = cacti_snmp_walk($host["hostname"], $host["snmp_community"], $field_array["oid"],
@@ -236,7 +236,7 @@ function query_snmp_host($host_id, $snmp_query_id) {
 				$host["snmp_auth_protocol"], $host["snmp_priv_passphrase"], $host["snmp_priv_protocol"],
 				$host["snmp_context"], $host["snmp_port"], $host["snmp_timeout"], $host["ping_retries"], $host["max_oids"], SNMP_WEBUI);
 
-			debug_log_insert("data_query", printf(__("Executing SNMP walk for data @ '%s'"), $field_array["oid"]));
+			debug_log_insert("data_query", sprintf(__("Executing SNMP walk for data @ '%s'"), $field_array["oid"]));
 
 			if ($field_array["source"] == "value") {
 				for ($i=0; $i<sizeof($snmp_data); $i++) {
@@ -259,7 +259,7 @@ function query_snmp_host($host_id, $snmp_query_id) {
 						}
 					}
 
-					debug_log_insert("data_query", printf(__("Found item [$field_name='%s'] index: %s [from value]"), $snmp_data[$i]["value"], $snmp_index));
+					debug_log_insert("data_query", sprintf(__("Found item [$field_name='%s'] index: %s [from value]"), $snmp_data[$i]["value"], $snmp_index));
 
 					db_execute("replace into host_snmp_cache
 						(host_id,snmp_query_id,field_name,field_value,snmp_index,oid)
@@ -283,7 +283,7 @@ function query_snmp_host($host_id, $snmp_query_id) {
 
 					$oid = $field_array["oid"] .  "." . $value;
 
-					debug_log_insert("data_query", printf(__("Found item [%s='%s'] index: %s [from regexp oid parse]"), $field_name, $value, $snmp_index));
+					debug_log_insert("data_query", sprintf(__("Found item [%s='%s'] index: %s [from regexp oid parse]"), $field_name, $value, $snmp_index));
 
 					db_execute("replace into host_snmp_cache
 						(host_id,snmp_query_id,field_name,field_value,snmp_index,oid)
@@ -295,7 +295,7 @@ function query_snmp_host($host_id, $snmp_query_id) {
 					$snmp_index = ereg_replace($index_parse_regexp, "\\1", $snmp_data[$i]["oid"]);
 					$oid = $field_array["oid"] .  "." . $value;
 
-					debug_log_insert("data_query", printf(__("Found item [%s='%s'] index: %s [from regexp value parse]"), $field_name, $value, $snmp_index));
+					debug_log_insert("data_query", sprintf(__("Found item [%s='%s'] index: %s [from regexp value parse]"), $field_name, $value, $snmp_index));
 
 					db_execute("replace into host_snmp_cache
 						(host_id,snmp_query_id,field_name,field_value,snmp_index,oid)
