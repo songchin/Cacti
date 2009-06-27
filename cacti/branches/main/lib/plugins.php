@@ -456,18 +456,12 @@ function api_plugin_user_realm_auth ($filename = '') {
 
 function plugin_config_arrays () {
 	global $menu;
-	$menu['Configuration']['plugins.php'] = 'Plugin Management';
+	$menu[__('Configuration')]['plugins.php'] = __('Plugin Management');
 	api_plugin_load_realms ();
 }
 
 function plugin_draw_navigation_text ($nav) {
-	$nav["plugins.php:"] = array("title" => "Plugin Management", "mapping" => "index.php:", "url" => "plugins.php", "level" => "1");
+	$nav["plugins.php:"] = array("title" => __("Plugin Management"), "mapping" => "index.php:", "url" => "plugins.php", "level" => "1");
 	return $nav;
 }
-
-
-
-
-
-
 
