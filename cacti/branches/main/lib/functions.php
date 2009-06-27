@@ -1199,9 +1199,16 @@ function stri_replace($find, $replace, $string) {
    @arg $string - the string to modify/clean
    @returns - the modified string */
 function clean_up_name($string) {
+	static $counter = 0;
+
 	$string = preg_replace("/[\s\.]+/", "_", $string);
 	$string = preg_replace("/[^a-zA-Z0-9_]+/", "", $string);
 	$string = preg_replace("/_{2,}/", "_", $string);
+
+	if ($string == '') {
+		$string = 'foreign_string' . $counter;
+		$counter++;
+	}
 
 	return $string;
 }
@@ -1211,9 +1218,16 @@ function clean_up_name($string) {
    @arg $string - the string to modify/clean
    @returns - the modified string */
 function clean_up_file_name($string) {
+	static $fncounter = 0;
+
 	$string = preg_replace("/[\s\.]+/", "_", $string);
 	$string = preg_replace("/[^a-zA-Z0-9_-]+/", "", $string);
 	$string = preg_replace("/_{2,}/", "_", $string);
+
+	if ($string == '') {
+		$string = 'foreign_file_name' . $fncounter;
+		$fncounter++;
+	}
 
 	return $string;
 }
