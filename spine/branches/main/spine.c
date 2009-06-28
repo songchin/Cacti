@@ -186,6 +186,17 @@ int main(int argc, char *argv[]) {
 	/* set the default exit code */
 	set.exit_code = 0;
 
+	/* we attempt to support scripts better in cygwin */
+	#if defined(__CYGWIN__)
+    if (file_exists("./sh.exe")) {
+		set.cygwinshloc = 0;
+		printf("NOTE: The Shell Command Exists in the current directory\n");
+    }else{
+   		set.cygwinshloc = 1;
+		printf("NOTE: The Shell Command Exists in the /bin directory\n");
+    }
+	#endif
+
 	/* get static defaults for system */
 	config_defaults();
 
@@ -718,7 +729,7 @@ static void display_help(void) {
 		0 /* ENDMARKER */
 	};
 
-	printf("SPINE %s  Copyright 2002-2008 by The Cacti Group\n\n", VERSION);
+	printf("SPINE %s  Copyright 2002-2009 by The Cacti Group\n\n", VERSION);
 
 	for (p = helptext; *p; p++) {
 		puts(*p);	/* automatically adds a newline */
