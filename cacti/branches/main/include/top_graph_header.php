@@ -105,8 +105,12 @@ $page_title = api_plugin_hook_function('page_title', 'Cacti');
 		if ($_SESSION["custom"]) {
 			print "<meta http-equiv=refresh content='99999'>\r\n";
 		}else{
-			$refresh = api_plugin_hook_function('top_graph_refresh', read_graph_config_option('page_refresh'));
-			print "<meta http-equiv=refresh content='" . $refresh . "'>\r\n";		}
+			$refresh = api_plugin_hook_function('top_graph_refresh', '0');
+
+			if ($refresh > 0) {
+				print "<meta http-equiv=refresh content='" . $refresh . "'>\r\n";		
+			}
+		}
 	}
 	?>
 	<meta http-equiv="Content-Type" content="text/html;charset=utf-8" >
@@ -116,8 +120,6 @@ $page_title = api_plugin_hook_function('page_title', 'Cacti');
 	<link type="text/css" href="<?php echo URL_PATH; ?>include/jquery.autocomplete.css" rel="stylesheet">
 	<link href="<?php echo URL_PATH; ?>images/favicon.ico" rel="shortcut icon">
 	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/layout.js"></script>
-	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/treeview/ua.js"></script>
-	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/treeview/ftiens4.js"></script>
 	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/jquery/jquery.js"></script>
 	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/jquery/jquery.autocomplete.js"></script>
 	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/jquery/jquery.bgiframe.js"></script>
@@ -176,7 +178,7 @@ $page_title = api_plugin_hook_function('page_title', 'Cacti');
 </div>
 <div id='wrapper' style='opacity:0;'>
 	<?php if ((read_graph_config_option("default_tree_view_mode") == "2") && (($_REQUEST["action"] == "tree") || ((isset($_REQUEST["view_type"]) ? $_REQUEST["view_type"] : "") == "tree"))) { ?>
-<div id='graph_tree'>
+	<div id='graph_tree'>
 		<div class="tree">&nbsp;</div>
 	</div>
 	<div id='vsplitter' onMouseout='doneDivResize()' onMouseover='doDivResize(this,event)' onMousemove='doDivResize(this,event)'>
