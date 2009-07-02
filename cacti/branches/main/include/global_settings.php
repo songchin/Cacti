@@ -1108,13 +1108,6 @@ $settings_graphs = array(
 			"sql" => "select id,name from graph_tree order by name",
 			"default" => "0"
 			),
-		"default_tree_view_mode" => array(
-			"friendly_name" => __("Default Tree View Mode"),
-			"description" => __("The default mode that will be used when viewing tree mode."),
-			"method" => "drop_array",
-			"array" => $graph_tree_views,
-			"default" => "2"
-			),
 		"treeview_graphs_per_page" => array(
 			"friendly_name" => __("Graphs Per-Page"),
 			"description" => __("The number of graphs to display on one page in preview mode."),

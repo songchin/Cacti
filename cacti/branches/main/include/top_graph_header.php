@@ -80,8 +80,7 @@ if ((!ereg('^(tree|list|preview)$', $_REQUEST["action"])) &&
 }
 
 /* setup tree selection defaults if the user has not been here before */
-if ((read_graph_config_option("default_tree_view_mode") == "2") &&
-	($_REQUEST["action"] == "tree") &&
+if (($_REQUEST["action"] == "tree") &&
 	(!isset($_GET["leaf_id"])) &&
 	(!isset($_SESSION["sess_has_viewed_graphs"]))) {
 
@@ -177,7 +176,7 @@ $page_title = api_plugin_hook_function('page_title', 'Cacti');
 	</div>
 </div>
 <div id='wrapper' style='opacity:0;'>
-	<?php if ((read_graph_config_option("default_tree_view_mode") == "2") && (($_REQUEST["action"] == "tree") || ((isset($_REQUEST["view_type"]) ? $_REQUEST["view_type"] : "") == "tree"))) { ?>
+	<?php if (($_REQUEST["action"] == "tree") || ((isset($_REQUEST["view_type"]) ? $_REQUEST["view_type"] : "") == "tree")) { ?>
 	<div id='graph_tree'>
 		<div class="tree">&nbsp;</div>
 	</div>

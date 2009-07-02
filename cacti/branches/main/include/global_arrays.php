@@ -269,11 +269,6 @@ $graph_views = array(1 =>
 	__("Preview View"),
 	);
 
-$graph_tree_views = array(1 =>
-	__("Single Pane"),
-	__("Dual Pane"),
-	);
-
 $auth_methods = array(
 	0 => __("None"),
 	1 => __("Builtin Authentication"),
