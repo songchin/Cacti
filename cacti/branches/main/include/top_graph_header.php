@@ -135,7 +135,7 @@ $page_title = api_plugin_hook_function('page_title', 'Cacti');
 	<script type="text/javascript" src="<?php echo URL_PATH; ?>/include/jstree/cactiTree.js"></script>
 	<?php api_plugin_hook('page_head'); ?>
 </head>
-<body class='body' onResize='pageResize()' onLoad='pageInitialize()'>
+<body class='body' onLoad='pageInitialize()'>
 <div id='header'>
 	<div id='logobar'></div>
 	<div id='navbar'>

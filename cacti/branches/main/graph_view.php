@@ -78,14 +78,6 @@ case 'tree':
 	$tree_dropdown_html = draw_tree_dropdown((isset($_GET["tree_id"]) ? $_GET["tree_id"] : "0"));
 
 	/* don't even print the table if there is not >1 tree */
-	if ((!empty($tree_dropdown_html)) && (read_graph_config_option("default_tree_view_mode") == "1")) {
-		print "
-		<table width='100%' style='background-color: #f5f5f5; border: 1px solid #bbbbbb;' align='center' cellpadding='3'>
-			<tr>
-				$tree_dropdown_html
-			</tr>
-		</table>\n";
-	}
 
 	if (isset($_SESSION["sess_view_tree_id"])) {
 		if (read_config_option("auth_method") != 0) {
@@ -96,12 +88,6 @@ case 'tree':
 			if ($access_denied == true) {
 				print "<strong><font size='+1' color='FF0000'>" . __("ACCESS DENIED") . "</font></strong>"; exit;
 			}
-		}
-
-		if (read_graph_config_option("default_tree_view_mode") == "1") {
-			grow_graph_tree($_SESSION["sess_view_tree_id"], (!empty($start_branch) ? $start_branch : 0), isset($_SESSION["sess_user_id"]) ? $_SESSION["sess_user_id"] : 0, $tree_parameters);
-		}elseif (read_graph_config_option("default_tree_view_mode") == "2") {
-			grow_right_pane_tree((isset($_GET["tree_id"]) ? $_GET["tree_id"] : 0), (isset($_GET["leaf_id"]) ? $_GET["leaf_id"] : 0), (isset($_GET["host_group_data"]) ? urldecode($_GET["host_group_data"]) : 0));
 		}
 	}
 

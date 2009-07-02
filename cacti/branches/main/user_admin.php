@@ -817,7 +817,7 @@ function user_realms_edit() {
 }
 
 function graph_settings_edit() {
-	global $settings_graphs, $tabs_graphs, $colors, $graph_views, $graph_tree_views;
+	global $settings_graphs, $tabs_graphs, $colors, $graph_views;
 
 	/* ================= input validation ================= */
 	input_validate_input_number(get_request_var("id"));
