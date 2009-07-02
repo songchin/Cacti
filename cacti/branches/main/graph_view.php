@@ -279,7 +279,7 @@ case 'preview':
 
 	$nav_url = ereg_replace("((\?|&)host_id=[0-9]+|(\?|&)filter=[a-zA-Z0-9]*)", "", $nav_url);
 
-	html_graph_start_box(2, false);
+	html_graph_start_box(0, false);
 	html_nav_bar($colors["header_panel"], read_graph_config_option("num_columns"), $_REQUEST["page"], ROWS_PER_PAGE, $total_rows, $nav_url);
 
 	if (read_graph_config_option("thumbnail_section_preview") == "on") {
@@ -386,7 +386,7 @@ case 'list':
 	}
 
 	/* display graph view filter selector */
-	html_graph_start_box(3, FALSE);
+	html_graph_start_box(0, FALSE);
 
 	?>
 
@@ -586,7 +586,7 @@ case 'list':
 	<form name='chk' id='chk' action='graph_view.php' method='get' onSubmit='form_graph(document.chk,document.chk)'>
 	<?php
 
-	html_graph_start_box(3, FALSE);
+	html_graph_start_box(0, FALSE);
 	?>
 	<tr class='rowHeader noprint'>
 		<td colspan='3'>

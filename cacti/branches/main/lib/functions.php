@@ -1289,6 +1289,10 @@ function get_graph_title($local_graph_id) {
 	}
 }
 
+function get_host_description($host_id) {
+	return db_fetch_cell("SELECT description FROM host WHERE id=$host_id");
+}
+
 /* generate_data_source_path - creates a new data source path from scratch using the first data source
      item name and updates the database with the new value
    @arg $local_data_id - (int) the ID of the data source to generate a new path for

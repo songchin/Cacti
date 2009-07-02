@@ -343,4 +343,155 @@ function sql_sanitize($value) {
 	return $value;
 }
 
+/* sql_column_exists - checks if a named column exists in the table specified
+   @arg $table_name - table to check
+   @arg $column_name - column name
+   @return true or false; */
+function sql_column_exists($table_name, $column_name, $db_conn = "") {
+	global $cnn_id;
+
+	/* check for a connection being passed, if not use legacy behavior */
+	if (!$db_conn) {
+		$db_conn = $cnn_id;
+	}
+
+	$columns = $db_conn->MetaColumns($table_name, false);
+	foreach ($columns as $column) {
+		if ($column_name === $column->name) {
+			return true;
+		}
+	}
+
+	return false;
+}
+
+/* sql_function_timestamp - abstracts timestamp function across databases
+   @return - fixed value */
+function sql_function_timestamp($db_conn = "") {
+	global $cnn_id;
+
+	/* check for a connection being passed, if not use legacy behavior */
+	if (!$db_conn) {
+		$db_conn = $cnn_id;
+	}
+
+	if (isset($db_conn->sysTimeStamp)) {
+		return $db_conn->sysTimeStamp;
+	}
+
+	return "'".date('Y-m-d H:i:s')."'";
+}
+
+/* sql_function_substr - abstracts substring function across databases
+   @return - fixed value */
+function sql_function_substr($db_conn = "") {
+	global $cnn_id;
+
+	/* check for a connection being passed, if not use legacy behavior */
+	if (!$db_conn) {
+		$db_conn = $cnn_id;
+	}
+
+	if (isset($db_conn->substr)) {
+		return $db_conn->substr;
+	}
+
+	switch($db_conn->databaseType) {
+		case 'oci805':
+		case 'oci8':
+		case 'oci8po':
+		case 'oracle':
+			return 'substr';
+			break;
+		case 'postgres64':
+		case 'postgres7':
+		case 'postgres':
+			return 'substr';
+			break;
+		case 'db2':
+		case 'fbsql':
+		case 'firebird':
+		case 'ibase':
+			default:
+			return 'substr';
+	}
+}
+
+/* sql_function_concat - abstracts concatenation function across databases
+   @return - fixed value */
+function sql_function_concat($db_conn = "") {
+	global $cnn_id;
+
+	/* check for a connection being passed, if not use legacy behavior */
+	if (!$db_conn) {
+		$db_conn = $cnn_id;
+	}
+
+	if (method_exists($db_conn, 'Concat')) {
+		$args = func_get_args();
+		return call_user_func_array(array(&$db_conn, 'Concat'), $args);
+	}
+    
+	return "concat('".implode("','", func_get_args())."')";
+}
+
+/* sql_function_replace - abstracts replace function across databases
+   @return - fixed value */
+function sql_function_replace($db_conn = "") {
+	global $cnn_id;
+
+	/* check for a connection being passed, if not use legacy behavior */
+	if (!$db_conn) {
+		$db_conn = $cnn_id;
+	}
+
+	switch($db_conn->databaseType) {
+		case 'mssql':
+		case 'mssqlpo':
+			return 'replace';
+			break;
+		case 'mysql':
+		case 'mysqli':
+		case 'mysqlt':
+			return 'replace';
+			break;
+		case 'oci805':
+		case 'oci8':
+		case 'oci8po':
+		case 'oracle':
+			return 'replace';
+			break;
+		case 'postgres64':
+		case 'postgres7':
+		case 'postgres':
+			return 'replace';
+			break;
+		case 'db2':
+		case 'firebird':
+		case 'ibase':
+		default:
+			return 'replace';
+	}
+}
+
+/* sql_function_dateformat - abstracts dateformat function across databases
+   @return - fixed value */
+function sql_function_dateformat($fmt, $col = false) {
+	global $cnn_id;
+
+	/* check for a connection being passed, if not use legacy behavior */
+	if (!$db_conn) {
+		$db_conn = $cnn_id;
+	}
+
+	if (method_exists($db_conn, 'SQLDate')) {
+		return call_user_func_array(array(&$db_conn, 'SQLDate'), array($fmt,$col));
+	}
+
+	switch($db_conn->databaseType) {
+		default:
+			return 'date_format';
+	}
+}
+
 ?>

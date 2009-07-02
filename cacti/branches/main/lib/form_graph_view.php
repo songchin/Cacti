@@ -25,7 +25,7 @@
 function graph_view_filter_table() {
 	global $current_user;
 
-	html_graph_start_box(3, FALSE);
+	html_graph_start_box(0, FALSE);
 	?>
 	<tr class="rowGraphFilter noprint">
 		<td class="noprint">
@@ -33,7 +33,7 @@ function graph_view_filter_table() {
 			<table width="100%" cellpadding="0" cellspacing="0">
 				<tr class="rowGraphFilter noprint">
 					<td style='white-space:nowrap;width:1px;'>
-						&nbsp;<strong><?php print __("Host:");?></strong>&nbsp;
+						&nbsp;<?php print __("Host:");?>&nbsp;
 					</td>
 					<td width="1">
 						<?php
@@ -47,7 +47,7 @@ function graph_view_filter_table() {
 						<input type="hidden" id="host_id">
 					</td>
 					<td style='white-space:nowrap;width:1px;'>
-						&nbsp;<strong><?php print __("Template:");?></strong>&nbsp;
+						&nbsp;<?php print __("Template:");?>&nbsp;
 					</td>
 					<td width="1">
 						<select name="graph_template_id" onChange="applyGraphPreviewFilterChange(document.form_graph_view)">
@@ -82,7 +82,7 @@ function graph_view_filter_table() {
 						</select>
 					</td>
 					<td style='white-space:nowrap;width:50px;'>
-						&nbsp;<strong><?php print __("Search:");?></strong>&nbsp;
+						&nbsp;<?php print __("Search:");?>&nbsp;
 					</td>
 					<td width="1">
 						<input type="text" name="filter" size="40" value="<?php print $_REQUEST["filter"];?>">
@@ -157,15 +157,15 @@ function graph_view_timespan_selector() {
 	-->
 	</script>
 	<?php
-	html_graph_start_box(3, FALSE);
+	html_graph_start_box(0, FALSE);
 	?>
 	<tr class="rowGraphFilter noprint">
 		<td class="noprint">
 			<form name="form_timespan_selector" method="post" action="graph_view.php">
-			<table cellpadding="0" cellspacing="0">
+			<table border="0" cellpadding="0" cellspacing="0">
 				<tr class="rowGraphFilter">
 					<td style='white-space:nowrap;width:55px;'>
-						&nbsp;<strong><?php print __("Presets:");?></strong>&nbsp;
+						&nbsp;<?php print __("Presets:");?>&nbsp;
 					</td>
 					<td style='white-space:nowrap;width:130px;'>
 						<select name='predefined_timespan' onChange="applyTimespanFilterChange(document.form_timespan_selector)"><?php
@@ -191,17 +191,17 @@ function graph_view_timespan_selector() {
 						</select>
 					</td>
 					<td style='white-space:nowrap;width:30px;'>
-						&nbsp;<strong><?php print __("From:");?></strong>&nbsp;
+						&nbsp;<?php print __("From:");?>&nbsp;
 					</td>
 					<td style='white-space:nowrap;width:140px;'>
-						<input type='text' name='date1' id='date1' title='<?php print __("Graph Begin Timestamp");?>' size='14' value='<?php print (isset($_SESSION["sess_current_date1"]) ? $_SESSION["sess_current_date1"] : "");?>'>
+						<input type='text' name='date1' id='date1' title='<?php print __("Graph Begin Timestamp");?>' size='16' value='<?php print (isset($_SESSION["sess_current_date1"]) ? $_SESSION["sess_current_date1"] : "");?>'>
 						&nbsp;<input type='image' style='border-width:0px;vertical-align:middle;align:middle;padding-bottom:5px;' src='images/calendar.gif' alt='<?php print __("Start");?>' title='<?php print __("Start Date Selector");?>' onclick='return showCalendar("date1");'>&nbsp;
 					</td>
 					<td style='white-space:nowrap;width:20px;'>
-						&nbsp;<strong><?php print __("To:");?></strong>&nbsp;
+						&nbsp;<?php print __("To:");?>&nbsp;
 					</td>
 					<td style='white-space:nowrap;width:140px;'>
-						<input type='text' name='date2' id='date2' title='<?php print __("Graph End Timestamp");?>' size='14' value='<?php print (isset($_SESSION["sess_current_date2"]) ? $_SESSION["sess_current_date2"] : "");?>'>
+						<input type='text' name='date2' id='date2' title='<?php print __("Graph End Timestamp");?>' size='16' value='<?php print (isset($_SESSION["sess_current_date2"]) ? $_SESSION["sess_current_date2"] : "");?>'>
 						&nbsp;<input type='image' style='border-width:0px;vertical-align:middle;align:middle;padding-bottom:5px;' src='images/calendar.gif' alt='<?php print __("End");?>' title='<?php print __("End Date Selector");?>' onclick='return showCalendar("date2");'>
 					</td>
 					<td style='white-space:nowrap;width:120px;'>
@@ -235,7 +235,7 @@ function graph_view_timespan_selector() {
 function graph_view_search_filter() {
 	global $graphs_per_page;
 
-	html_graph_start_box(3, FALSE);
+	html_graph_start_box(0, FALSE);
 	?>
 	<tr class="rowGraphFilter noprint">
 		<td class="noprint">
@@ -243,30 +243,30 @@ function graph_view_search_filter() {
 				<table cellspacing="0" cellpadding="0">
 					<tr>
 						<td width="55" style="white-space:nowrap;">
-							<strong>&nbsp;<?php print __("Search:");?></strong>&nbsp;
+							&nbsp;<?php print __("Search:");?>&nbsp;
 						</td>
 						<td width="130" style="white-space: nowrap;">
 							<input size='30' style='width:100;' name='filter' value='<?php print clean_html_output(get_request_var_request("filter"));?>'>
 						</td>
 						<td style='white-space:nowrap;width:80px;'>
-							&nbsp;<strong><?php print __("Graphs/Page:");?></strong>&nbsp;
+							&nbsp;<?php print __("Graphs/Page:");?>&nbsp;
 						</td>
 						<td width="1">
 							<select name="graphs" onChange="submit()">
 								<?php
 								if (sizeof($graphs_per_page) > 0) {
 								foreach ($graphs_per_page as $key => $value) {
-									print "\t\t\t\t\t\t\t<option value='" . $key . "'"; if ($_REQUEST["graphs"] == $key) { print " selected"; } print ">" . $value . "</option>\n";
+									print "\t\t\t\t\t\t\t<option value='" . $key . "'"; if ((isset($_REQUEST["graphs"])) && ($_REQUEST["graphs"] == $key)) { print " selected"; } print ">" . $value . "</option>\n";
 								}
 								}
 								?>
 							</select>
 						</td>
 						<td width="40">
-							<label for="thumbnails"><strong>&nbsp;<?php print __("Thumbnails:");?>&nbsp;</strong></label>
+							<label for="thumbnails">&nbsp;<?php print __("Thumbnails:");?>&nbsp;</label>
 						</td>
 						<td>
-							<input type="checkbox" name="thumbnails" id="thumbnails" onChange="if (this.checked == true) this.value='dogs'; else this.value='cats';submit()" <?php print (($_REQUEST['thumbnails'] == "dogs") ? "checked":"");?>>
+							<input type="checkbox" name="thumbnails" id="thumbnails" onChange="if (this.checked == true) this.value='dogs'; else this.value='cats';submit()" <?php print ((isset($_REQUEST['thumbnails'])) && ($_REQUEST['thumbnails'] == "dogs") ? "checked":"");?>>
 						</td>
 						<td style='white-space:nowrap;' nowrap>
 							&nbsp;<input type='submit' value='<?php print __("Refresh");?>' name='refresh'>

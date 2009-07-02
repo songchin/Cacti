@@ -127,6 +127,11 @@ $page_title = api_plugin_hook_function('page_title', 'Cacti');
 	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/jscalendar/calendar.js"></script>
 	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/jscalendar/lang/calendar-en.js"></script>
 	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/jscalendar/calendar-setup.js"></script>
+	<!--// Testing 123-->
+	<link rel="stylesheet" type="text/css" href="<?php echo URL_PATH; ?>/include/jstree/tree_component.css" />
+	<script type="text/javascript" src="<?php echo URL_PATH; ?>/include/jstree/css.js"></script>
+	<script type="text/javascript" src="<?php echo URL_PATH; ?>/include/jstree/tree_component.js"></script>
+	<script type="text/javascript" src="<?php echo URL_PATH; ?>/include/jstree/cactiTree.js"></script>
 	<?php api_plugin_hook('page_head'); ?>
 </head>
 <body class='body' onResize='pageResize()' onLoad='pageInitialize()'>
@@ -172,27 +177,22 @@ $page_title = api_plugin_hook_function('page_title', 'Cacti');
 <div id='wrapper' style='opacity:0;'>
 	<?php if ((read_graph_config_option("default_tree_view_mode") == "2") && (($_REQUEST["action"] == "tree") || ((isset($_REQUEST["view_type"]) ? $_REQUEST["view_type"] : "") == "tree"))) { ?>
 <div id='graph_tree'>
-		<table border=0 cellpadding=0 cellspacing=0><tr><td><a style="font-size:7pt;text-decoration:none;color:silver" href="http://www.treemenu.net/" target=_blank></a></td></tr></table>
-		<?php grow_dhtml_trees(); ?>
-		<script type="text/javascript">initializeDocument();</script>
-		<?php if (isset($_GET["select_first"])) { ?>
-		<script type="text/javascript">
-		var obj;
-		obj = findObj(1);
-
-		if (obj) {
-			if (!obj.isOpen) {
-				clickOnNode(1);
-			}
-		}
-
-		clickOnLink(2,'','main');
-		</script><?php } ?>
+		<div class="tree">&nbsp;</div>
 	</div>
 	<div id='vsplitter' onMouseout='doneDivResize()' onMouseover='doDivResize(this,event)' onMousemove='doDivResize(this,event)'>
 		<div id='vsplitter_toggle' onClick='vSplitterToggle()' onMouseover='vSplitterEm()' onMouseout='vSplitterUnEm()' title='<?php print __("Hide/Unhide Menu");?>'></div>
 	</div>
 	<div id='graph_tree_content'>
+		<div id='graph_tree_filter'>
+			<?php
+			if (read_graph_config_option("timespan_sel") == "on") {
+				graph_view_timespan_selector();
+			}
+
+			graph_view_search_filter();?>
+		</div>
+		<div id='graphs'>
+		</div>
 	<?php }else{ ?>
 <div id='graph_content'>
 	<?php } ?>

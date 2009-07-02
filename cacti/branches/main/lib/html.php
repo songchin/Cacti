@@ -161,7 +161,7 @@ function html_graph_start_box($cellpadding = 3, $leading_br = true) {
 		print "<br>\n";
 	}
 
-	print "\t<table width='100%' style='border: 1px solid #6A6A6A;padding:0px;' align='center' cellspacing=0 cellpadding='$cellpadding'>\n";
+	print "\t<table width='100%' style='border: 1px solid #DFDFDF;padding:0px;' align='center' cellspacing=0 cellpadding='$cellpadding'>\n";
 }
 
 /* html_graph_end_box - draws the end of an HTML graph view box */
@@ -221,7 +221,7 @@ function html_graph_area(&$graph_array, $no_graphs_message = "", $extra_url_args
 				}
 
 				if ($print) {
-					print "\t\t\t<tr class='rowSubHeaderAlt'><td colspan='3' class='textHeaderDark'><strong>" . __("Data Query:") . "</strong> " . $graph["data_query_name"] . "</td></tr>";
+					print "\t\t\t<tr class='rowSubHeaderAlt'><td colspan='3' class='textHeaderLight'><strong>" . __("Data Query:") . "</strong> " . $graph["data_query_name"] . "</td></tr>";
 				}
 				print "<tr>
 					<td colspan='3' class='textHeaderDark'>

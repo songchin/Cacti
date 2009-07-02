@@ -447,14 +447,15 @@ a:hover {
 }
 
 .rowSubHeaderAlt {
+	color: #FFFFFF;
 	background: #2D2D2D url('../images/rowSubHeaderAlt.png') repeat-x scroll top left;
 }
 
 .rowGraphFilter {
-	background: #757575 url('../images/rowGraphFilter.png') repeat-x scroll top left;
-	color: #FFFFFF;
-	font-weight: Bold;
-	font-size: 14px;
+	background: #FFFFFF url('../images/rowGraphFilter.png') repeat-x scroll top left;
+	color: #000000;
+	font-weight: normal;
+	font-size: 8px;
 }
 
 .rowAlternate1 {
@@ -493,6 +494,12 @@ a:hover {
 .textHeaderDark {
 	font-size: 12px;
 	color: #FFFFFF;
+	padding: 3px;
+}
+
+.textHeaderLight {
+	font-size: 12px;
+	color: #000000;
 	padding: 3px;
 }
 
