@@ -152,7 +152,16 @@ function graph_view_timespan_selector() {
 	function applyTimespanFilterChange(objForm) {
 		strURL = '?predefined_timespan=' + objForm.predefined_timespan.value;
 		strURL = strURL + '&predefined_timeshift=' + objForm.predefined_timeshift.value;
-		document.location = strURL;
+		$.get("lib/ajax/get_graph_tree_content.php" + strURL, function (data) {
+			$("#graphs").html(data);
+		});
+	}
+
+	function clearTimespanFilter(objForm) {
+		strURL = '?button_clear_x=true';
+		$.get("lib/ajax/get_graph_tree_content.php" + strURL, function (data) {
+			$("#graphs").html(data);
+		});
 	}
 	-->
 	</script>
@@ -219,8 +228,8 @@ function graph_view_timespan_selector() {
 						<input style='border-width:0px;vertical-align:middle;align:middle;padding-bottom:5px;' type='image' name='move_right' src='images/move_right.gif' alt='<?php print __("Right");?>' title='<?php print __("Shift Right");?>'>
 					</td>
 					<td style='white-space:nowrap;width:130px;'>
-						&nbsp;<input type='submit' value='<?php print __("Refresh");?>' name='button_refresh'>
-						<input type='submit' value='<?php print __("Clear");?>' name='button_clear_x'>
+						&nbsp;<input type='button' value='<?php print __("Refresh");?>' name='button_refresh' onclick='applyTimespanFilterChange(document.form_timespan_selector)'>
+						<input type='button' value='<?php print __("Clear");?>' name='button_clear_x' onclick='clearTimespanFilter()'>
 					</td>
 				</tr>
 			</table>

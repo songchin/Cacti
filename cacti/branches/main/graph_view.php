@@ -461,7 +461,7 @@ case 'list':
 			<table width="100%" cellpadding="0" cellspacing="0">
 				<tr>
 					<td style='white-space:nowrap;width:1px;'>
-						&nbsp;<strong>Host:</strong>&nbsp;
+						&nbsp;Host:&nbsp;
 					</td>
 					<td width="1">
 						<?php
@@ -475,7 +475,7 @@ case 'list':
 						<input type="hidden" id="host_id">
 					</td>
 					<td style='white-space:nowrap;width:1px;'>
-						&nbsp;<strong>Template:</strong>&nbsp;
+						&nbsp;Template:&nbsp;
 					</td>
 					<td width="1">
 						<select name="graph_template_id" onChange="applyGraphListFilterChange(document.form_graph_list)">
@@ -511,7 +511,7 @@ case 'list':
 						</select>
 					</td>
 					<td style='white-space:nowrap;width:1px;'>
-						&nbsp;<strong><?php print __("Search:");?></strong>&nbsp;
+						&nbsp;<?php print __("Search:");?>&nbsp;
 					</td>
 					<td width="1">
 						<input type="text" name="filter" size="40" value="<?php print $_REQUEST["filter"];?>">

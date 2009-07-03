@@ -203,7 +203,7 @@ function html_graph_area(&$graph_array, $no_graphs_message = "", $extra_url_args
 				if ($print) {
 					print "\t\t<tr class='rowSubHeader'>
 						<td colspan='3' class='textHeaderDark'>
-							<strong>" . __("Graph Template:") . "</strong> " . $graph["graph_template_name"] . "
+							" . __("Graph Template:") . " " . $graph["graph_template_name"] . "
 						</td>
 					</tr>";
 				}
@@ -333,7 +333,7 @@ function html_graph_thumbnail_area(&$graph_array, $no_graphs_message = "", $extr
 					}
 
 					print "\t\t\t<tr style='rowSubHeaderAlt'>
-							<td colspan='" . read_graph_config_option("num_columns") . "' class='textHeaderDark'>" . __("Data Query:") . " " . $graph["data_query_name"] . "</td>
+							<td colspan='" . read_graph_config_option("num_columns") . "' class='textHeaderLight'>" . __("Data Query:") . " " . $graph["data_query_name"] . "</td>
 						</tr>";
 					$i = 0;
 				}
