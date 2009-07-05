@@ -1106,7 +1106,7 @@ function get_graph_tree_content($tree_id, $leaf_id, $host_group_data) {
 
 	if (($leaf_type == "header") || (empty($leaf_id))) {
 		if (strlen($_REQUEST["filter"])) {
-			$sql_where = (empty($sql_where) ? "" : "AND (title_cache LIKE '%" . $_REQUEST["filter"] . "%' OR graph_templates_graph.title LIKE '%" . $_REQUEST["filter"] . "%')");
+			$sql_where = "AND (title_cache LIKE '%" . $_REQUEST["filter"] . "%' OR graph_templates_graph.title LIKE '%" . $_REQUEST["filter"] . "%')";
 		}
 
 		$graph_list = db_fetch_assoc("SELECT
@@ -1146,35 +1146,35 @@ function get_graph_tree_content($tree_id, $leaf_id, $host_group_data) {
 				"name" => "(No Graph Template)"
 				));
 
-				if (sizeof($graph_templates) > 0) {
-					foreach ($graph_templates as $graph_template) {
-						if (strlen($_REQUEST["filter"])) {
-							$sql_where = (empty($sql_where) ? "" : "AND (title_cache LIKE '%" . $_REQUEST["filter"] . "%')");
-						}
+			if (sizeof($graph_templates) > 0) {
+				foreach ($graph_templates as $graph_template) {
+					if (strlen($_REQUEST["filter"])) {
+						$sql_where = "AND (title_cache LIKE '%" . $_REQUEST["filter"] . "%')";
+					}
 
-						$graphs = db_fetch_assoc("SELECT
-					graph_templates_graph.title_cache,
-					graph_templates_graph.local_graph_id
-					FROM (graph_local,graph_templates_graph)
-					$sql_join
-					WHERE graph_local.id=graph_templates_graph.local_graph_id
-					AND graph_local.graph_template_id=" . $graph_template["id"] . "
-					AND graph_local.host_id=" . $leaf["host_id"] . "
-					$sql_where
-					ORDER BY graph_templates_graph.title_cache");
+					$graphs = db_fetch_assoc("SELECT
+						graph_templates_graph.title_cache,
+						graph_templates_graph.local_graph_id
+						FROM (graph_local,graph_templates_graph)
+						$sql_join
+						WHERE graph_local.id=graph_templates_graph.local_graph_id
+						AND graph_local.graph_template_id=" . $graph_template["id"] . "
+						AND graph_local.host_id=" . $leaf["host_id"] . "
+						$sql_where
+						ORDER BY graph_templates_graph.title_cache");
 
 					/* let's sort the graphs naturally */
-					usort($graphs, 'naturally_sort_graphs');
-
 					if (sizeof($graphs)) {
+						usort($graphs, 'naturally_sort_graphs');
+
 						foreach ($graphs as $graph) {
 							$graph["graph_template_name"] = $graph_template["name"];
 							array_push($graph_list, $graph);
 						}
 					}
-					}
 				}
-				/* data query index grouping */
+			}
+			/* data query index grouping */
 		}elseif ($leaf["host_grouping_type"] == HOST_GROUPING_DATA_QUERY_INDEX) {
 			$data_queries = db_fetch_assoc("SELECT
 				snmp_query.id,
@@ -1200,26 +1200,26 @@ function get_graph_tree_content($tree_id, $leaf_id, $host_group_data) {
 					$sort_field_data = get_formatted_data_query_indexes($leaf["host_id"], $data_query["id"]);
 
 					if (strlen($_REQUEST["filter"])) {
-						$sql_where = (empty($sql_where) ? "" : "AND (title_cache LIKE '%" . $_REQUEST["filter"] . "%')");
+						$sql_where = "AND (title_cache LIKE '%" . $_REQUEST["filter"] . "%')";
 					}
 
 					/* grab a list of all graphs for this host/data query combination */
 					$graphs = db_fetch_assoc("SELECT
-					graph_templates_graph.title_cache,
-					graph_templates_graph.local_graph_id,
-					graph_local.snmp_index
-					FROM (graph_local, graph_templates_graph)
-					$sql_join
-					WHERE graph_local.id=graph_templates_graph.local_graph_id
-					AND graph_local.snmp_query_id=" . $data_query["id"] . "
-					AND graph_local.host_id=" . $leaf["host_id"] . "
-					" . (empty($data_query_index) ? "" : "and graph_local.snmp_index='$data_query_index'") . "
-					$sql_where
-					GROUP BY graph_templates_graph.local_graph_id
-					ORDER BY graph_templates_graph.title_cache");
+						graph_templates_graph.title_cache,
+						graph_templates_graph.local_graph_id,
+						graph_local.snmp_index
+						FROM (graph_local, graph_templates_graph)
+						$sql_join
+						WHERE graph_local.id=graph_templates_graph.local_graph_id
+						AND graph_local.snmp_query_id=" . $data_query["id"] . "
+						AND graph_local.host_id=" . $leaf["host_id"] . "
+						" . (empty($data_query_index) ? "" : "and graph_local.snmp_index='$data_query_index'") . "
+						$sql_where
+						GROUP BY graph_templates_graph.local_graph_id
+						ORDER BY graph_templates_graph.title_cache");
 
 					/* re-key the results on data query index */
-					if (sizeof($graphs) > 0) {
+					if (sizeof($graphs)) {
 						/* let's sort the graphs naturally */
 						usort($graphs, 'naturally_sort_graphs');
 
