@@ -22,20 +22,70 @@
  +-------------------------------------------------------------------------+
 */
 
-function graph_view_filter_table() {
+function graph_view_filter_table($mode = "mode") {
 	global $current_user;
+	global $graphs_per_page;
+
+	?>
+	<script type='text/javascript'>
+	<!--
+
+	$().ready(function() {
+		$("#host").autocomplete("./lib/ajax/get_hosts_brief.php", { max: 8, highlight: false, scroll: true, scrollHeight: 300 });
+		$("#host").result(function(event, data, formatted) {
+			if (data) {
+				$(this).parent().find("#host_id").val(data[1]);
+				applyGraphFilter(document.form_graph_view);
+			}else{
+				$(this).parent().find("#host_id").val(0);
+			}
+		});
+	});
+
+	function applyGraphFilter(objForm) {
+		strURL = '?host_id=' + objForm.host_id.value;
+		strURL = strURL + '&graph_template_id=' + objForm.graph_template_id.value;
+		strURL = strURL + '&filter=' + objForm.filter.value;
+		<?php if ($mode == 'tree') { ?>
+		$.get("lib/ajax/get_graph_tree_content.php" + strURL, function (data) {
+			$("#graphs").html(data);
+		});
+		<?php }else{ ;?>
+		$.get("lib/ajax/get_graph_preview_content.php" + strURL, function (data) {
+			$("#graph_content").html(data);
+		});
+		<?php } ;?>
+	}
+
+	function clearGraphFilter(objForm) {
+		strURL = '?clear_filter=true';
+		<?php if ($mode == 'tree') { ?>
+		$.get("lib/ajax/get_graph_tree_content.php" + strURL, function (data) {
+			$("#graphs").html(data);
+		});
+		<?php }else{ ;?>
+		$.get("lib/ajax/get_graph_preview_content.php" + strURL, function (data) {
+			$("#graph_content").html(data);
+		});
+		<?php } ;?>
+	}
+
+	-->
+	</script>
+	<?php
 
 	html_graph_start_box(0, FALSE);
+
 	?>
 	<tr class="rowGraphFilter noprint">
 		<td class="noprint">
 			<form name="form_graph_view" method="post" action="graph_view.php">
-			<table width="100%" cellpadding="0" cellspacing="0">
+			<table border="0" cellpadding="0" cellspacing="0">
 				<tr class="rowGraphFilter noprint">
-					<td style='white-space:nowrap;width:1px;'>
+					<td style='white-space:nowrap;width:55px;'>
 						&nbsp;<?php print __("Host:");?>&nbsp;
 					</td>
-					<td width="1">
+					<td style='white-space:nowrap;width:1px;'>
 						<?php
 						if (isset($_REQUEST["host_id"])) {
 							$hostname = db_fetch_cell("SELECT description as name FROM host WHERE id=".$_REQUEST["host_id"]." ORDER BY description,hostname");
@@ -49,8 +99,8 @@ function graph_view_filter_table() {
 					<td style='white-space:nowrap;width:1px;'>
 						&nbsp;<?php print __("Template:");?>&nbsp;
 					</td>
-					<td width="1">
-						<select name="graph_template_id" onChange="applyGraphPreviewFilterChange(document.form_graph_view)">
+					<td style='white-space:nowrap;width:1px;'>
+						<select name="graph_template_id" onChange="applyGraphFilter(document.form_graph_view)">
 							<option value="0"<?php if ($_REQUEST["graph_template_id"] == "0") {?> selected<?php }?>><?php print __("Any");?></option><?php
 							if (read_config_option("auth_method") != 0) {
 								$graph_templates = db_fetch_assoc("SELECT DISTINCT graph_templates.* " .
@@ -84,12 +134,12 @@ function graph_view_filter_table() {
 					<td style='white-space:nowrap;width:50px;'>
 						&nbsp;<?php print __("Search:");?>&nbsp;
 					</td>
-					<td width="1">
-						<input type="text" name="filter" size="40" value="<?php print $_REQUEST["filter"];?>">
+					<td style='white-space:nowrap;width:1px;'>
+						<input type='text' name='filter' size='40' onChange='applyGraphFilter(document.form_graph_view)' value='<?php print $_REQUEST["filter"];?>'>
 					</td>
-					<td>
-						&nbsp;<input type="submit" Value="<?php print __("Go");?>" name="go" align="middle">
-						<input type="submit" Value="<?php print __("Clear");?>" name="clear_x" align="middle">
+					<td style='white-space:nowrap;width:1px;'>
+						&nbsp;<input type='button' Value='<?php print __("Go");?>' name='go' onClick='applyGraphFilter(document.form_graph_view)'>
+						<input type='button' Value='<?php print __("Clear");?>' name='clear_x' onClick='clearGraphFilter(document.form_graph_view)'>
 					</td>
 				</tr>
 			</table>
@@ -100,7 +150,7 @@ function graph_view_filter_table() {
 	html_graph_end_box(FALSE);
 }
 
-function graph_view_timespan_selector() {
+function graph_view_timespan_selector($mode = "tree") {
 	global $graph_timespans, $graph_timeshifts, $colors, $config;
 
 	?>
@@ -149,19 +199,54 @@ function graph_view_timespan_selector() {
 		calendar = null;
 	}
 
+	request_type = 'preset';
+
 	function applyTimespanFilterChange(objForm) {
-		strURL = '?predefined_timespan=' + objForm.predefined_timespan.value;
-		strURL = strURL + '&predefined_timeshift=' + objForm.predefined_timeshift.value;
+		if (request_type == 'preset') {
+			strURL = '?predefined_timespan=' + objForm.predefined_timespan.value;
+		}else{
+			strURL = '?date1=' + objForm.date1.value;
+			strURL = strURL + '&date2=' + objForm.date2.value;
+		}
+		<?php if ($mode == 'tree') { ?>
 		$.get("lib/ajax/get_graph_tree_content.php" + strURL, function (data) {
 			$("#graphs").html(data);
 		});
+		<?php }else{ ;?>
+		$.get("lib/ajax/get_graph_preview_content.php" + strURL, function (data) {
+			$("#graph_content").html(data);
+		});
+		<?php } ;?>
 	}
 
 	function clearTimespanFilter(objForm) {
 		strURL = '?button_clear_x=true';
+		<?php if ($mode == 'tree') { ?>
 		$.get("lib/ajax/get_graph_tree_content.php" + strURL, function (data) {
 			$("#graphs").html(data);
 		});
+		<?php }else{ ;?>
+		$.get("lib/ajax/get_graph_preview_content.php" + strURL, function (data) {
+			$("#graph_content").html(data);
+		});
+		<?php } ;?>
+	}
+
+	function timeShift(objForm, direction) {
+		strURL = '?move_' + direction + '=true';
+		strURL = strURL + '&predefined_timeshift=' + objForm.predefined_timeshift.value;
+		strURL = strURL + '&date1=' + objForm.date1.value;
+		strURL = strURL + '&date2=' + objForm.date2.value;
+
+		<?php if ($mode == 'tree') { ?>
+		$.get("lib/ajax/get_graph_tree_content.php" + strURL, function (data) {
+			$("#graphs").html(data);
+		});
+		<?php }else{ ;?>
+		$.get("lib/ajax/get_graph_preview_content.php" + strURL, function (data) {
+			$("#graph_content").html(data);
+		});
+		<?php } ;?>
 	}
 
 	-->
@@ -178,7 +263,7 @@ function graph_view_timespan_selector() {
 						&nbsp;<?php print __("Presets:");?>&nbsp;
 					</td>
 					<td style='white-space:nowrap;width:130px;'>
-						<select name='predefined_timespan' onChange="applyTimespanFilterChange(document.form_timespan_selector)"><?php
+						<select name='predefined_timespan' onChange='request_type="preset";applyTimespanFilterChange(document.form_timespan_selector)'><?php
 							if ($_SESSION["custom"]) {
 								$graph_timespans[GT_CUSTOM] = __("Custom");
 								$start_val = 0;
@@ -215,8 +300,8 @@ function graph_view_timespan_selector() {
 						&nbsp;<input type='image' style='border-width:0px;vertical-align:middle;align:middle;padding-bottom:5px;' src='images/calendar.gif' alt='<?php print __("End");?>' title='<?php print __("End Date Selector");?>' onclick='return showCalendar("date2");'>
 					</td>
 					<td style='white-space:nowrap;width:120px;'>
-						&nbsp;&nbsp;<input style='border-width:0px;vertical-align:middle;align:middle;padding-bottom:5px;' type='image' name='move_left' src='images/move_left.gif' alt='<?php print __("Left");?>' title='<?php print __("Shift Left");?>'>
-						<select name='predefined_timeshift' title='<?php print __("Define Shifting Interval");?>' onChange="applyTimespanFilterChange(document.form_timespan_selector)"><?php
+						&nbsp;&nbsp;<img onMouseOver='this.style.cursor="pointer"' onClick='return timeShift(document.form_timespan_selector, "left")' style='border-width:0px;vertical-align:middle;align:middle;padding-bottom:5px;' type='image' name='move_left' src='images/move_left.gif' alt='<?php print __("Left");?>' title='<?php print __("Shift Left");?>'>
+						<select name='predefined_timeshift' title='<?php print __("Define Shifting Interval");?>'<?php
 							$start_val = 1;
 							$end_val = sizeof($graph_timeshifts)+1;
 							if (sizeof($graph_timeshifts) > 0) {
@@ -226,10 +311,10 @@ function graph_view_timespan_selector() {
 							}
 							?>
 						</select>
-						<input style='border-width:0px;vertical-align:middle;align:middle;padding-bottom:5px;' type='image' name='move_right' src='images/move_right.gif' alt='<?php print __("Right");?>' title='<?php print __("Shift Right");?>'>
+						<img onMouseOver='this.style.cursor="pointer"' onClick='return timeShift(document.form_timespan_selector, "right")' style='border-width:0px;vertical-align:middle;align:middle;padding-bottom:5px;' type='image' name='move_right' src='images/move_right.gif' alt='<?php print __("Right");?>' title='<?php print __("Shift Right");?>'>
 					</td>
 					<td style='white-space:nowrap;width:130px;'>
-						&nbsp;<input type='button' value='<?php print __("Refresh");?>' name='button_refresh' onclick='applyTimespanFilterChange(document.form_timespan_selector)'>
+						&nbsp;<input type='button' value='<?php print __("Refresh");?>' name='button_refresh' onclick='request_type="daterange";applyTimespanFilterChange(document.form_timespan_selector)'>
 						<input type='button' value='<?php print __("Clear");?>' name='button_clear_x' onclick='clearTimespanFilter()'>
 					</td>
 				</tr>
@@ -280,6 +365,7 @@ function graph_view_search_filter() {
 							&nbsp;<?php print __("Search:");?>&nbsp;
 						</td>
 						<td width="130" style="white-space: nowrap;">
+							<input type='text' style='display:none;' name='workaround'>
 							<input size='30' style='width:100;' name='filter' value='<?php print clean_html_output(get_request_var_request("filter"));?>' onChange='applyFilter(document.form_graph_view)'>
 						</td>
 						<td style='white-space:nowrap;width:80px;'>

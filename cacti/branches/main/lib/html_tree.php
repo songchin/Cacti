@@ -1047,7 +1047,6 @@ function get_graph_tree_content($tree_id, $leaf_id, $host_group_data) {
 	if (!empty($host_name)) { $title .= $title_delimeter . "<strong>Host:</strong> $host_name"; $title_delimeter = "-> "; }
 	if (!empty($host_group_data_name)) { $title .= $title_delimeter . " $host_group_data_name"; $title_delimeter = "-> "; }
 
-	print_r($_REQUEST);
 	/* ================= input validation ================= */
 	input_validate_input_number(get_request_var_request("graphs"));
 	input_validate_input_number(get_request_var_request("page"));

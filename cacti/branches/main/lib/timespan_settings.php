@@ -60,7 +60,7 @@ finalize_timespan($timespan);
 /* initialize the timespan selector for first use */
 function initialize_timespan(&$timespan) {
 	/* initialize the default timespan if not set */
-	if ((!isset($_SESSION["sess_current_timespan"])) || (isset($_POST["button_clear_x"]))) {
+	if ((!isset($_SESSION["sess_current_timespan"])) || (isset($_REQUEST["button_clear_x"]))) {
 		$_SESSION["sess_current_timespan"] = read_graph_config_option("default_timespan");
 		$_REQUEST["predefined_timespan"] = read_graph_config_option("default_timespan");
 		$_SESSION["custom"] = 0;
@@ -122,30 +122,30 @@ function process_html_variables() {
 /* when a span time preselection has been defined update the span time fields */
 /* someone hit a button and not a dropdown */
 function process_user_input(&$timespan, $timeshift) {
-	if (isset($_POST["date1"])) {
+	if (isset($_REQUEST["date1"])) {
 		/* the dates have changed, therefore, I am now custom */
-		if (($_SESSION["sess_current_date1"] != $_POST["date1"]) || ($_SESSION["sess_current_date2"] != $_POST["date2"])) {
-			$timespan["current_value_date1"] = $_POST["date1"];
+		if (($_SESSION["sess_current_date1"] != $_REQUEST["date1"]) || ($_SESSION["sess_current_date2"] != $_REQUEST["date2"])) {
+			$timespan["current_value_date1"] = $_REQUEST["date1"];
 			$timespan["begin_now"] =strtotime($timespan["current_value_date1"]);
-			$timespan["current_value_date2"] = $_POST["date2"];
+			$timespan["current_value_date2"] = $_REQUEST["date2"];
 			$timespan["end_now"]=strtotime($timespan["current_value_date2"]);
 			$_SESSION["sess_current_timespan"] = GT_CUSTOM;
 			$_SESSION["custom"] = 1;
-			$_POST["predefined_timespan"] = GT_CUSTOM;
+			$_REQUEST["predefined_timespan"] = GT_CUSTOM;
 		}else {
 			/* the default button wasn't pushed */
-			if (!isset($_POST["button_clear_x"])) {
-				$timespan["current_value_date1"] = $_POST["date1"];
-				$timespan["current_value_date2"] = $_POST["date2"];
+			if (!isset($_REQUEST["button_clear_x"])) {
+				$timespan["current_value_date1"] = $_REQUEST["date1"];
+				$timespan["current_value_date2"] = $_REQUEST["date2"];
 				$timespan["begin_now"] = $_SESSION["sess_current_timespan_begin_now"];
 				$timespan["end_now"] = $_SESSION["sess_current_timespan_end_now"];
 
 				/* time shifter: shift left                                           */
-				if (isset($_POST["move_left_x"])) {
+				if (isset($_REQUEST["move_left"])) {
 					shift_time($timespan, "-", $timeshift);
 				}
 				/* time shifter: shift right                                          */
-				if (isset($_POST["move_right_x"])) {
+				if (isset($_REQUEST["move_right"])) {
 					shift_time($timespan, "+", $timeshift);
 				}
 
@@ -243,7 +243,7 @@ function set_timeshift() {
 	# no current timeshift: get default timeshift
 	if ((!isset($_SESSION["sess_current_timeshift"])) ||
 		(read_graph_config_option("timespan_sel") == "") ||
-		(isset($_POST["button_clear_x"]))
+		(isset($_REQUEST["button_clear_x"]))
 		) {
 		$_SESSION["sess_current_timeshift"] = read_graph_config_option("default_timeshift");
 		$_REQUEST["predefined_timeshift"] = read_graph_config_option("default_timeshift");

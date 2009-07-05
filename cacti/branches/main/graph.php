@@ -59,7 +59,7 @@ if (read_config_option("auth_method") != 0) {
 	$access_denied = !(is_graph_allowed($_GET["local_graph_id"]));
 
 	if ($access_denied == true) {
-		print "<strong><font size='+1' color='FF0000'>" __("ACCESS DENIED") . "</font></strong>"; exit;
+		print "<strong><font size='+1' color='FF0000'>" . __("ACCESS DENIED") . "</font></strong>"; exit;
 	}
 }
 
