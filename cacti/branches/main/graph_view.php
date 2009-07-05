@@ -63,6 +63,10 @@ case 'tree':
 		print "<strong><font size='+1' color='FF0000'>" . __("YOU DO NOT HAVE RIGHTS FOR TREE VIEW") . "</font></strong>"; exit;
 	}
 
+	?>
+	<script type="text/javascript" src="<?php echo URL_PATH; ?>/include/jstree/cactiTree.js"></script>
+	<?php
+
 	/* if cacti's builtin authentication is turned on then make sure to take
 	graph permissions into account here. if a user does not have rights to a
 	particular graph; do not show it. they will get an access denied message
@@ -70,10 +74,6 @@ case 'tree':
 
 	$access_denied = false;
 	$tree_parameters = array();
-
-	if ((!isset($_GET["tree_id"])) && (isset($_SESSION['dhtml_tree']))) {
-		unset($_SESSION["dhtml_tree"]);
-	}
 
 	/* don't even print the table if there is not >1 tree */
 	if (isset($_SESSION["sess_view_tree_id"])) {
@@ -126,11 +126,6 @@ case 'list':
 		$_REQUEST["page"] = "1";
 	}
 
-	load_current_session_value("host_id", "sess_graph_view_list_host", "0");
-	load_current_session_value("graph_template_id", "sess_graph_view_list_graph_template", "0");
-	load_current_session_value("filter", "sess_graph_view_list_filter", "");
-	load_current_session_value("page", "sess_graph_view_list_current_page", "");
-
 	/* if the user pushed the 'clear' button */
 	if (isset($_REQUEST["clear_x"])) {
 		kill_session_var("sess_graph_view_list_current_page");
@@ -147,6 +142,11 @@ case 'list':
 		unset($_REQUEST["graph_remove"]);
 
 	}
+
+	load_current_session_value("host_id", "sess_graph_view_list_host", "0");
+	load_current_session_value("graph_template_id", "sess_graph_view_list_graph_template", "0");
+	load_current_session_value("filter", "sess_graph_view_list_filter", "");
+	load_current_session_value("page", "sess_graph_view_list_current_page", "");
 
 	/* make sure we have a page set */
 	if (! isset($_REQUEST["page"])) {
@@ -249,10 +249,17 @@ case 'list':
 				strURL = '&graph_add=' + strAdd + '&graph_remove=' + strDel;
 				return strNavURL + strURL;
 			}
+
 			function url_go(strURL) {
 				document.location = strURL;
 				return false;
 			}
+
+			function clearFilter(objForm) {
+				strURL = 'graph_view.php?action=list&clear_x=true';
+				document.location = strURL;
+			}
+
 			function form_graph(objForm,objFormSubmit) {
 				var strAdd = '';
 				var strDel = '';
@@ -273,13 +280,14 @@ case 'list':
 				strDel = strDel.substring(0,strDel.length - 1);
 				objFormSubmit.graph_add.value = strAdd;
 				objFormSubmit.graph_remove.value = strDel;
+				document.form_graph_list.submit();
 			}
 
 			registerOnLoadFunction("graph_view", "SetSelections();");
 
 			-->
 			</script>
-			<form name="form_graph_list" action="graph_view.php" method="POST" onSubmit='form_graph(document.chk,document.form_graph_list)'>
+			<form name="form_graph_list" action="graph_view.php" method="post" onSubmit='form_graph(document.chk,document.form_graph_list)'>
 			<input type='hidden' name='graph_list' value='<?php print $graph_list_text; ?>'>
 			<input type='hidden' name='graph_add' value=''>
 			<input type='hidden' name='graph_remove' value=''>
@@ -343,7 +351,7 @@ case 'list':
 					</td>
 					<td>
 						&nbsp;<input type="submit" value="<?php print __("Go");?>" name="go">
-						<input type="submit" value="<?php print __("Clear");?>" name="clear_x">
+						<input type="button" value="<?php print __("Clear");?>" name="clear" onClick='clearFilter(document.form_graph_list)'>
 					</td>
 				</tr>
 			</table>

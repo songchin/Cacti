@@ -358,7 +358,7 @@ function graph_view_search_filter() {
 	?>
 	<tr class="rowGraphFilter noprint">
 		<td class="noprint">
-			<form name="form_graph_view" method="post" action="graph_view.php">
+			<form name="form_graph_view" method="get" action="graph_view.php">
 				<table cellspacing="0" cellpadding="0">
 					<tr>
 						<td width="55" style="white-space:nowrap;">

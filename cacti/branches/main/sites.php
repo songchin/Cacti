@@ -412,8 +412,10 @@ function site_edit() {
 	form_save_button_alt();
 }
 
-function site_filter() {	global $item_rows, $colors;
-	?>
+function site_filter() {
+	global $item_rows, $colors;
+
+	?>
 	<script type="text/javascript">
 	<!--
 	function applySiteFilterChange(objForm) {

@@ -128,11 +128,9 @@ $page_title = api_plugin_hook_function('page_title', 'Cacti');
 	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/jscalendar/calendar.js"></script>
 	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/jscalendar/lang/calendar-en.js"></script>
 	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/jscalendar/calendar-setup.js"></script>
-	<!--// Testing 123-->
 	<link rel="stylesheet" type="text/css" href="<?php echo URL_PATH; ?>/include/jstree/tree_component.css" />
 	<script type="text/javascript" src="<?php echo URL_PATH; ?>/include/jstree/css.js"></script>
 	<script type="text/javascript" src="<?php echo URL_PATH; ?>/include/jstree/tree_component.js"></script>
-	<script type="text/javascript" src="<?php echo URL_PATH; ?>/include/jstree/cactiTree.js"></script>
 	<?php api_plugin_hook('page_head'); ?>
 </head>
 <body class='body' onLoad='pageInitialize()'>
