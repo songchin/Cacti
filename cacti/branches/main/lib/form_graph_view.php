@@ -163,6 +163,7 @@ function graph_view_timespan_selector() {
 			$("#graphs").html(data);
 		});
 	}
+
 	-->
 	</script>
 	<?php
@@ -244,6 +245,30 @@ function graph_view_timespan_selector() {
 function graph_view_search_filter() {
 	global $graphs_per_page;
 
+	?>
+	<script type='text/javascript'>
+	<!--
+
+	function applyFilter(objForm) {
+		strURL = '?filter=' + objForm.filter.value;
+		strURL = strURL + '&graphs=' + objForm.graphs.value;
+		strURL = strURL + '&thumbnails=' + objForm.thumbnails.checked;
+		$.get("lib/ajax/get_graph_tree_content.php" + strURL, function (data) {
+			$("#graphs").html(data);
+		});
+	}
+
+	function clearFilter(objForm) {
+		strURL = '?clear_filter=true';
+		$.get("lib/ajax/get_graph_tree_content.php" + strURL, function (data) {
+			$("#graphs").html(data);
+		});
+	}
+
+	-->
+	</script>
+	<?php
+
 	html_graph_start_box(0, FALSE);
 	?>
 	<tr class="rowGraphFilter noprint">
@@ -255,13 +280,13 @@ function graph_view_search_filter() {
 							&nbsp;<?php print __("Search:");?>&nbsp;
 						</td>
 						<td width="130" style="white-space: nowrap;">
-							<input size='30' style='width:100;' name='filter' value='<?php print clean_html_output(get_request_var_request("filter"));?>'>
+							<input size='30' style='width:100;' name='filter' value='<?php print clean_html_output(get_request_var_request("filter"));?>' onChange='applyFilter(document.form_graph_view)'>
 						</td>
 						<td style='white-space:nowrap;width:80px;'>
 							&nbsp;<?php print __("Graphs/Page:");?>&nbsp;
 						</td>
 						<td width="1">
-							<select name="graphs" onChange="submit()">
+							<select name="graphs" onChange="applyFilter(document.form_graph_view)">
 								<?php
 								if (sizeof($graphs_per_page) > 0) {
 								foreach ($graphs_per_page as $key => $value) {
@@ -275,11 +300,11 @@ function graph_view_search_filter() {
 							<label for="thumbnails">&nbsp;<?php print __("Thumbnails:");?>&nbsp;</label>
 						</td>
 						<td>
-							<input type="checkbox" name="thumbnails" id="thumbnails" onChange="if (this.checked == true) this.value='dogs'; else this.value='cats';submit()" <?php print ((isset($_REQUEST['thumbnails'])) && ($_REQUEST['thumbnails'] == "dogs") ? "checked":"");?>>
+							<input type="checkbox" name="thumbnails" id="thumbnails" onChange="applyFilter(document.form_graph_view);" <?php print ((isset($_REQUEST['thumbnails'])) && ($_REQUEST['thumbnails'] == "true") ? "checked":"");?>>
 						</td>
 						<td style='white-space:nowrap;' nowrap>
-							&nbsp;<input type='submit' value='<?php print __("Refresh");?>' name='refresh'>
-							<input type='submit' value='<?php print __("Clear");?>' name='clear_x'>
+							&nbsp;<input type='button' value='<?php print __("Refresh");?>' name='refresh' onClick='applyFilter(document.form_graph_view)'>
+							<input type='button' value='<?php print __("Clear");?>' name='clear_x' onClick='clearFilter(document.form_graph_view)'>
 						</td>
 					</tr>
 				</table>

@@ -221,9 +221,9 @@ function html_graph_area(&$graph_array, $no_graphs_message = "", $extra_url_args
 				}
 
 				if ($print) {
-					print "\t\t\t<tr class='rowSubHeaderAlt'><td colspan='3' class='textHeaderLight'>" . __("Data Query:") . " " . $graph["data_query_name"] . "</td></tr>";
+					print "\t\t\t<tr class='rowSubHeaderAlt'><td colspan='3' class='textHeaderLight'><strong>" . __("Data Query:") . "</strong> " . $graph["data_query_name"] . "</td></tr>";
 				}
-				print "<tr>
+				print "<tr class='rowSubHeader'>
 					<td colspan='3' class='textHeaderDark'>
 						" . $graph["sort_field_value"]. "
 					</td>
@@ -332,16 +332,16 @@ function html_graph_thumbnail_area(&$graph_array, $no_graphs_message = "", $extr
 						print "</tr>";
 					}
 
-					print "\t\t\t<tr style='rowSubHeaderAlt'>
-							<td colspan='" . read_graph_config_option("num_columns") . "' class='textHeaderLight'>" . __("Data Query:") . " " . $graph["data_query_name"] . "</td>
+					print "\t\t\t<tr class='rowSubHeaderAlt'>
+							<td colspan='" . read_graph_config_option("num_columns") . "' class='textHeaderLight'><strong>" . __("Data Query:") . "</strong> " . $graph["data_query_name"] . "</td>
 						</tr>";
 					$i = 0;
 				}
 
 				if (!isset($prev_sort_field_value) || $prev_sort_field_value != $graph["sort_field_value"]){
 					$prev_sort_field_value = $graph["sort_field_value"];
-					print "<tr style='background-color:#a9b7cb;'>
-						<td style='background-color:#a9b7cb;' colspan='" . read_graph_config_option("num_columns") . "' class='textHeaderDark'>
+					print "<tr class='rowSubHeader'>
+						<td colspan='" . read_graph_config_option("num_columns") . "' class='textHeaderDark'>
 							" . $graph["sort_field_value"] . "
 						</td>
 					</tr>";

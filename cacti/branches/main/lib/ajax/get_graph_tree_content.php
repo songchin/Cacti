@@ -43,7 +43,12 @@ $tree_id         = 0;
 $leaf_id         = 0;
 $host_group_type = array('na', 0);
 
+if (!isset($_REQUEST["id"])) {	if (isset($_SESSION["sess_graph_navigation"])) {		$_REQUEST["id"] = $_SESSION["sess_graph_navigation"];
+	}
+}
+
 if (isset($_REQUEST["id"])) {
+	$_SESSION["sess_graph_navigation"] = $_REQUEST["id"];
 	$id_array = explode("_", $_REQUEST["id"]);
 	$type     = "";
 

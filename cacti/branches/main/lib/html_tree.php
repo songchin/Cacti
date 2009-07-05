@@ -990,6 +990,7 @@ function get_graph_tree_content($tree_id, $leaf_id, $host_group_data) {
 	include_once(CACTI_BASE_PATH . "/lib/data_query.php");
 	include_once(CACTI_BASE_PATH . "/lib/tree.php");
 	include_once(CACTI_BASE_PATH . "/lib/html_utility.php");
+	include_once(CACTI_BASE_PATH . "/lib/form_graph_view.php");
 	define("MAX_DISPLAY_PAGES", 21);
 
 	if (empty($tree_id)) { return; }
@@ -1041,18 +1042,19 @@ function get_graph_tree_content($tree_id, $leaf_id, $host_group_data) {
 		$data_query_index = $host_group_data_array[2];
 	}
 
-	if (!empty($tree_name)) { $title .= $title_delimeter . "Tree: $tree_name"; $title_delimeter = "-> "; }
-	if (!empty($leaf_name)) { $title .= $title_delimeter . "Leaf: $leaf_name"; $title_delimeter = "-> "; }
-	if (!empty($host_name)) { $title .= $title_delimeter . "Host: $host_name"; $title_delimeter = "-> "; }
+	if (!empty($tree_name)) { $title .= $title_delimeter . "<strong>Tree:</strong> $tree_name"; $title_delimeter = "-> "; }
+	if (!empty($leaf_name)) { $title .= $title_delimeter . "<strong.Leaf:</strong> $leaf_name"; $title_delimeter = "-> "; }
+	if (!empty($host_name)) { $title .= $title_delimeter . "<strong>Host:</strong> $host_name"; $title_delimeter = "-> "; }
 	if (!empty($host_group_data_name)) { $title .= $title_delimeter . " $host_group_data_name"; $title_delimeter = "-> "; }
 
+	print_r($_REQUEST);
 	/* ================= input validation ================= */
 	input_validate_input_number(get_request_var_request("graphs"));
 	input_validate_input_number(get_request_var_request("page"));
 	/* ==================================================== */
 
 	/* if the user pushed the 'clear' button */
-	if (isset($_REQUEST["button_clear_x"])) {
+	if (isset($_REQUEST["clear_filter"])) {
 		kill_session_var("sess_graph_view_graphs");
 		kill_session_var("sess_graph_view_filter");
 		kill_session_var("sess_graph_view_page");
@@ -1098,7 +1100,7 @@ function get_graph_tree_content($tree_id, $leaf_id, $host_group_data) {
 	load_current_session_value("page",   "sess_graph_view_page",   "1");
 	load_current_session_value("graphs", "sess_graph_view_graphs", read_graph_config_option("treeview_graphs_per_page"));
 	load_current_session_value("filter", "sess_graph_view_filter", "");
-	load_current_session_value("thumbnails", "sess_graph_view_thumbnails", "");
+	load_current_session_value("thumbnails", "sess_graph_view_thumbnails", (read_graph_config_option("thumbnail_section_tree_2") == "on" ? "true":""));
 
 	$graph_list = array();
 
@@ -1243,23 +1245,42 @@ function get_graph_tree_content($tree_id, $leaf_id, $host_group_data) {
 
 	$total_rows = sizeof($graph_list);
 
+	if (read_graph_config_option("timespan_sel") == "on") {
+		graph_view_timespan_selector();
+	}
+
+	graph_view_search_filter();
+
+	?>
+	<script type='text/javascript'>
+	<!--
+	function pageChange(page) {
+		strURL = '?page=' + page;
+		$.get("lib/ajax/get_graph_tree_content.php" + strURL, function (data) {
+			$("#graphs").html(data);
+		});
+	}
+	-->
+	</script>
+	<?php
+
 	print "<table cellpadding='0' cellspacing='0' style='width:100%;border:1px solid #BEBEBE;'>\n";
 	/* generate page list */
 	if ($total_rows > $_REQUEST["graphs"]) {
-		$url_page_select = get_page_list($_REQUEST["page"], MAX_DISPLAY_PAGES, $_REQUEST["graphs"], $total_rows, "graph_view.php?action=tree&tree_id=" . $tree_id . "&leaf_id=" . $leaf_id . (isset($_REQUEST["host_group_data"]) ? "&host_group_data=" . $_REQUEST["host_group_data"] : ""));
+		$url_page_select = get_page_list($_REQUEST["page"], MAX_DISPLAY_PAGES, $_REQUEST["graphs"], $total_rows, "pageChange");
 
 		$nav = "\t\t\t<tr class='rowHeader'>
 				<td colspan='11'>
 					<table width='100%' cellspacing='0' cellpadding='0' border='0'>
 						<tr>
 							<td align='left' style='width:100px;' class='textHeaderDark'>";
-		if ($_REQUEST["page"] > 1) { $nav .= "<strong><a class='linkOverDark' href='" . htmlspecialchars("graph_view.php?action=tree&tree_id=" . $tree_id . "&leaf_id=" . $leaf_id  . (isset($_REQUEST["host_group_data"]) ? "&host_group_data=" . $_REQUEST["host_group_data"] : "") . "&page=" . ($_REQUEST["page"]-1)) . "'>&lt;&lt;&nbsp;Previous</a></strong>"; }
+		if ($_REQUEST["page"] > 1) { $nav .= "<strong><a class='linkOverDark' href='#' onClick='pageChange(" . ($_REQUEST["page"]-1) . ")'>&lt;&lt;&nbsp;Previous</a></strong>"; }
 		$nav .= "</td>\n
 							<td align='center' class='textHeaderDark'>
 								Showing Graphs " . (($_REQUEST["graphs"]*($_REQUEST["page"]-1))+1) . " to " . ((($total_rows < read_graph_config_option("treeview_graphs_per_page")) || ($total_rows < ($_REQUEST["graphs"]*$_REQUEST["page"]))) ? $total_rows : ($_REQUEST["graphs"]*$_REQUEST["page"])) . " of $total_rows [$url_page_select]
 							</td>\n
 							<td align='right' style='width:100px;' class='textHeaderDark'>";
-		if (($_REQUEST["page"] * $_REQUEST["graphs"]) < $total_rows) { $nav .= "<strong><a class='linkOverDark' href='" . htmlspecialchars("graph_view.php?action=tree&tree_id=" . $tree_id . "&leaf_id=" . $leaf_id  . (isset($_REQUEST["host_group_data"]) ? "&host_group_data=" . $_REQUEST["host_group_data"] : "") . "&page=" . ($_REQUEST["page"]+1)) . "'>Next &gt;&gt;</a></strong>"; }
+		if (($_REQUEST["page"] * $_REQUEST["graphs"]) < $total_rows) { $nav .= "<strong><a class='linkOverDark' href='#' onClick='pageChange(" . ($_REQUEST["page"]+1) . ")'>Next &gt;&gt;</a></strong>"; }
 		$nav .= "</td>\n
 						</tr>
 					</table>
@@ -1293,7 +1314,7 @@ function get_graph_tree_content($tree_id, $leaf_id, $host_group_data) {
 		$i++;
 	}
 
-	if (read_graph_config_option("thumbnail_section_tree_2") == "on") {
+	if ($_REQUEST["thumbnails"] == "true") {
 		html_graph_thumbnail_area($new_graph_list, "", "view_type=tree&graph_start=" . get_current_graph_start() . "&graph_end=" . get_current_graph_end());
 	}else{
 		html_graph_area($new_graph_list, "", "view_type=tree&graph_start=" . get_current_graph_start() . "&graph_end=" . get_current_graph_end());

@@ -107,7 +107,7 @@ $page_title = api_plugin_hook_function('page_title', 'Cacti');
 			$refresh = api_plugin_hook_function('top_graph_refresh', '0');
 
 			if ($refresh > 0) {
-				print "<meta http-equiv=refresh content='" . $refresh . "'>\r\n";		
+				print "<meta http-equiv=refresh content='" . $refresh . "'>\r\n";
 			}
 		}
 	}
@@ -185,12 +185,6 @@ $page_title = api_plugin_hook_function('page_title', 'Cacti');
 	</div>
 	<div id='graph_tree_content'>
 		<div id='graph_tree_filter'>
-			<?php
-			if (read_graph_config_option("timespan_sel") == "on") {
-				graph_view_timespan_selector();
-			}
-
-			graph_view_search_filter();?>
 		</div>
 		<div id='graphs'>
 		</div>

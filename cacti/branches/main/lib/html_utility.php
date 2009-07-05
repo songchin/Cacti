@@ -344,9 +344,17 @@ function get_page_list($current_page, $pages_per_screen, $rows_per_page, $total_
 	for ($page_number=0; (($page_number+$start_page) <= $end_page); $page_number++) {
 		if ($page_number < $pages_per_screen) {
 			if ($current_page == ($page_number + $start_page)) {
-				$url_page_select .= "<strong><a class='linkOverDark' href='" . htmlspecialchars("$url&" . $page_var . "=" . ($page_number + $start_page)) . "'>" . ($page_number + $start_page) . "</a></strong>";
+				if (substr_count($url, ".php")) {
+					$url_page_select .= "<strong><a class='linkOverDark' href='" . htmlspecialchars("$url&" . $page_var . "=" . ($page_number + $start_page)) . "'>" . ($page_number + $start_page) . "</a></strong>";
+				}else{
+					$url_page_select .= "<strong><a class='linkOverDark' href='#' onClick='" . $url . "(" . ($page_number + $start_page) . ")'>" . ($page_number + $start_page) . "</a></strong>";
+				}
 			}else{
-				$url_page_select .= "<a class='linkOverDark' href='" . htmlspecialchars("$url&" . $page_var . "=" . ($page_number + $start_page)) . "'>" . ($page_number + $start_page) . "</a>";
+				if (substr_count($url, ".php")) {
+					$url_page_select .= "<a class='linkOverDark' href='" . htmlspecialchars("$url&" . $page_var . "=" . ($page_number + $start_page)) . "'>" . ($page_number + $start_page) . "</a>";
+				}else{
+					$url_page_select .= "<a class='linkOverDark' href='#' onClick='" . $url . "(" . ($page_number + $start_page) . ")'>" . ($page_number + $start_page) . "</a>";
+				}
 			}
 		}
 
