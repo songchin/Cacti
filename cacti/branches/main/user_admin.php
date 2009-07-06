@@ -347,6 +347,14 @@ function form_save() {
 			$add_button_clicked = true;
 		}
 
+		db_execute("UPDATE user_auth
+			SET
+				policy_graphs=" . get_request_var_post("policy_graphs") . ",
+				policy_trees="  . get_request_var_post("policy_trees"). ",
+				policy_hosts="  . get_request_var_post("policy_hosts"). ",
+				policy_graph_templates=" . get_request_var_post("policy_graph_templates") . "
+			WHERE id=" . get_request_var_post("id"));
+
 		if ($add_button_clicked == true) {
 			header("Location: user_admin.php?action=graph_perms_edit&id=" . get_request_var_post("id"));
 			exit;
@@ -760,6 +768,7 @@ function graph_perms_edit() {
 	</table>
 	<?php
 
+	form_hidden_box("id", $_REQUEST["id"], "");
 	form_hidden_box("save_component_graph_perms","1","");
 }
 
