@@ -72,6 +72,9 @@ if (isset($_REQUEST["clear_filter"])) {
 	kill_session_var("sess_graph_view_host");
 	kill_session_var("sess_graph_view_graphs");
 	kill_session_var("sess_graph_view_thumbnails");
+	kill_session_var("sess_graph_view_list_graph_list");
+	kill_session_var("sess_graph_view_list_graph_add");
+	kill_session_var("sess_graph_view_list_graph_remove");
 
 	unset($_REQUEST["page"]);
 	unset($_REQUEST["filter"]);
@@ -84,9 +87,13 @@ if (isset($_REQUEST["clear_filter"])) {
 	unset($_REQUEST["graph_remove"]);
 }
 
-/* reset the page counter to '1' if a search in initiated */
-if (isset($_REQUEST["filter"])) {
-	$_REQUEST["page"] = "1";
+/* save selected graphs into url, for backward compatibility */
+if (!empty($_REQUEST["graph_list"])) {
+	foreach (explode(",",$_REQUEST["graph_list"]) as $item) {
+		$graph_list[$item] = 1;
+	}
+}else{
+	$graph_list = array();
 }
 
 load_current_session_value("host_id", "sess_graph_view_host", "0");
@@ -95,6 +102,9 @@ load_current_session_value("filter", "sess_graph_view_filter", "");
 load_current_session_value("page", "sess_graph_view_current_page", "1");
 load_current_session_value("thumbnails", "sess_graph_view_thumbnails", "on");
 load_current_session_value("graphs", "sess_graph_view_graphs", read_graph_config_option("preview_graphs_per_page"));
+load_current_session_value("graph_list", "sess_graph_view_list_graph_list", "");
+load_current_session_value("graph_add", "sess_graph_view_list_graph_add", "");
+load_current_session_value("graph_remove", "sess_graph_view_list_graph_remove", "");
 
 /* graph permissions */
 if (read_config_option("auth_method") != 0) {
@@ -108,46 +118,40 @@ if (read_config_option("auth_method") != 0) {
 	$sql_join = "";
 }
 /* the user select a bunch of graphs of the 'list' view and wants them dsplayed here */
-if (isset($_REQUEST["style"])) {
-	if ($_REQUEST["style"] == "selective") {
+if (isset($_REQUEST["list"])) {
+	if (is_array($_REQUEST["graph_list"])) {
+		$graph_list = $_REQUEST["graph_list"];
+	}
 
-		/* process selected graphs */
-		if (! empty($_REQUEST["graph_list"])) {
-			foreach (explode(",",$_REQUEST["graph_list"]) as $item) {
-				$graph_list[$item] = 1;
-			}
-		}else{
-			$graph_list = array();
+	if (!empty($_REQUEST["graph_add"])) {
+		foreach (explode(",",$_REQUEST["graph_add"]) as $item) {
+			$graph_list[$item] = 1;
 		}
-		if (! empty($_REQUEST["graph_add"])) {
-			foreach (explode(",",$_REQUEST["graph_add"]) as $item) {
-				$graph_list[$item] = 1;
-			}
+	}
+	/* remove items */
+	if (!empty($_REQUEST["graph_remove"])) {
+		foreach (explode(",",$_REQUEST["graph_remove"]) as $item) {
+			unset($graph_list[$item]);
 		}
-		/* remove items */
-		if (! empty($_REQUEST["graph_remove"])) {
-			foreach (explode(",",$_REQUEST["graph_remove"]) as $item) {
-				unset($graph_list[$item]);
-			}
-		}
+	}
+	$_SESSION["sess_graph_view_list_graph_list"] = $graph_list;
 
-		$i = 0;
-		foreach ($graph_list as $item => $value) {
-			$graph_array[$i] = $item;
-			$i++;
-		}
+	$i = 0;
+	foreach ($graph_list as $item => $value) {
+		$graph_array[$i] = $item;
+		$i++;
+	}
 
-		if ((isset($graph_array)) && (sizeof($graph_array) > 0)) {
-			/* build sql string including each graph the user checked */
-			$sql_or = "AND " . array_to_sql_or($graph_array, "graph_templates_graph.local_graph_id");
+	if ((isset($graph_array)) && (sizeof($graph_array) > 0)) {
+		/* build sql string including each graph the user checked */
+		$sql_or = "AND " . array_to_sql_or($graph_array, "graph_templates_graph.local_graph_id");
 
-			/* clear the filter vars so they don't affect our results */
-			$_REQUEST["filter"]  = "";
-			$_REQUEST["host_id"] = "0";
+		/* clear the filter vars so they don't affect our results */
+		$_REQUEST["filter"]  = "";
+		$_REQUEST["host_id"] = "0";
 
-			/* Fix to avoid error in 'preview' after selection in 'list' : Notice: Undefined index: rra_id in C:\apache2\htdocs\cacti\graph_view.php on line 142 */
-			$set_rra_id = empty($rra_id) ? read_graph_config_option("default_rra_id") : $_REQUEST["rra_id"];
-		}
+		/* Fix to avoid error in 'preview' after selection in 'list' : Notice: Undefined index: rra_id in C:\apache2\htdocs\cacti\graph_view.php on line 142 */
+		$set_rra_id = empty($rra_id) ? read_graph_config_option("default_rra_id") : $_REQUEST["rra_id"];
 	}
 }
 
