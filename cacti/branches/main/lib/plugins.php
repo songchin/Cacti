@@ -465,3 +465,127 @@ function plugin_draw_navigation_text ($nav) {
 	return $nav;
 }
 
+function api_plugin_upgrade_table ($plugin, $table, $data) {
+	global $config, $database_default;
+	include_once($config['library_path'] . '/database.php');
+	$result = db_fetch_assoc('SHOW tables FROM `' . $database_default . '`') or die (mysql_error());
+	$tables = array();
+	foreach($result as $index => $arr) {
+		foreach ($arr as $t) {
+			$tables[] = $t;
+		}
+	}
+	if (in_array($table, $tables)) {
+		$cols = array();
+		$result = db_fetch_assoc("SHOW columns FROM $table") or die ('ERROR: Can not display columns!');
+		foreach($result as $index => $t) {
+			$cols[$t['Field']] = $t;
+		}
+		foreach ($data['columns'] as $column) {
+			if (isset($column['name'])) {
+				if (isset($cols[$column['name']])) {
+					$c = $cols[$column['name']];
+					$ok = true;
+					if (strstr($c['Type'], 'unsigned')) {
+						$c['unsigned'] = true;
+						$c['Type'] = trim(str_replace('unsigned', '', $c['Type']));
+					}
+					$c['Type'] = str_replace(' ', '', $c['Type']);
+					$column['type'] = str_replace(' ', '', $column['type']);
+					if (strtolower($column['type']) != strtolower($c['Type'])) {
+						$ok = FALSE;
+					}
+					if (($column['NULL'] == FALSE && $c['Null'] != 'NO') || ($column['NULL'] == TRUE && $c['Null'] != 'YES')) {
+						$ok = FALSE;
+					}
+					if (isset($column['auto_increment']) && ($column['auto_increment'] == 1 && isset($c['Extra']) && $c['Extra'] != 'auto_increment')) {
+						$ok = FALSE;
+					} else if (isset($c['Extra']) && $c['Extra'] == 'auto_increment' && !isset($column['auto_increment'])) {
+						$ok = FALSE;
+					}
+					if (isset($column['unsigned']) && $column['unsigned'] != $c['unsigned']) {
+						$ok = FALSE;
+					}
+					if (isset($column['default']) && $column['default'] != $c['Default']) {
+						$ok = FALSE;
+					}
+					if (!$ok) {
+						$sql = 'ALTER TABLE `' . $table . '` CHANGE `' . $column['name'] . '` `' . $column['name'] . '`';
+						if (isset($column['type']))
+							$sql .= ' ' . $column['type'];
+						if (isset($column['unsigned']))
+							$sql .= ' unsigned';
+						if (isset($column['NULL']) && $column['NULL'] == FALSE)
+							$sql .= ' NOT NULL';
+						if (isset($column['NULL']) && $column['NULL'] == true && !isset($column['default']))
+							$sql .= ' default NULL';
+						if (isset($column['default']))
+							$sql .= ' default ' . (is_numeric($column['default']) ? $column['default'] : "'" . $column['default'] . "'");
+						if (isset($column['auto_increment']))
+							$sql .= ' auto_increment';
+						if (isset($column['after']))
+							$sql .= ' AFTER ' . $column['after'];
+						db_execute($sql);
+					}
+				} else {
+					// Column does not exist
+					api_plugin_db_add_column ($plugin, $table, $column);
+				}
+			}
+		}
+		// Find extra columns in the Database
+		foreach ($cols as $c) {
+			$found = FALSE;
+			foreach ($data['columns'] as $d) {
+				if ($c['Field'] == $d['name']) {
+					$found = true;
+				}
+			}
+			if ($found == FALSE) {
+				// Extra Column in the Table
+				//db_execute('ALTER TABLE `' . $table . '` DROP `' . $c['Field'] . '`');
+			}
+		}
+		// Check for Primary
+		$result = db_fetch_assoc('SHOW INDEX FROM `' . $table . '`') or die (mysql_error());
+		if (isset($data['primary'])) {
+			foreach ($data['keys'] as $d) {
+				$found = FALSE;
+				foreach($result as $index) {
+					if ($index['Column_name'] == $d['name'] && $index['Key_name'] == 'PRIMARY') {
+						$found = true;
+					}
+				}
+				if (!$found) {
+					db_execute('ALTER TABLE `' . $table . '` ADD PRIMARY KEY ( `' . $d['name'] . '` )');
+				}
+			}
+		}
+		// Check Indexes
+		foreach ($data['keys'] as $d) {
+			$found = FALSE;
+			foreach($result as $index) {
+				if ($index['Column_name'] == $d['name'] && $d['name'] == $index['Key_name']) {
+					// INDEX exists, and its not PRIMARY
+					$found = true;
+				}
+			}
+			if (!$found) {
+				if (isset($d['unique']) && $d['unique']) {
+					db_execute('ALTER TABLE `' . $table . '` ADD UNIQUE ( `' . $d['name'] . '` )');
+				} else {
+					db_execute('ALTER TABLE `' . $table . '` ADD INDEX ( `' . $d['name'] . '` )');
+				}
+			}
+		}
+		// Check Type
+		$result = db_fetch_row('SHOW TABLE STATUS FROM `' . $database_default . '` WHERE Name LIKE \'' . $table . '\'') or die (mysql_error());
+		if (isset($result['Engine']) && strtolower($data['type']) != strtolower($result['Engine'])) {
+			// Wrong Type
+			db_execute('ALTER TABLE `' . $table . '` ENGINE = ' . $data['type']);
+		}
+	} else {
+		// Table does not exist, so create it
+		api_plugin_db_table_create ($plugin, $table, $data);
+	}
+}
