@@ -219,7 +219,7 @@ html_graph_start_box(0, FALSE);
 				</td>
 				<td width="1">
 					<select name="graph_template_id" onChange="applyGraphListFilterChange(document.form_graph_list)">
-						<option value="0"<?php print $_REQUEST["filter"];?><?php if ($_REQUEST["host_id"] == "0") {?> selected<?php }?>>Any</option>
+						<option value="0"<?php print $_REQUEST["filter"];?><?php if ($_REQUEST["host_id"] == "0") {?> selected<?php }?>><?php print __("Any");?></option>
 						<?php
 						if (read_config_option("auth_method") != 0) {
 							$graph_templates = db_fetch_assoc("SELECT DISTINCT graph_templates.*
@@ -354,7 +354,7 @@ if ($total_rows > $_REQUEST["graphs"]) {
 				<table width='100%' cellspacing='0' cellpadding='0' border='0'>
 					<tr>
 						<td align='center' class='textHeaderDark'>
-							Showing All Graphs" . (strlen($_REQUEST["filter"]) ? " [ Filter '" . $_REQUEST["filter"] . "' Applied ]" : "") . "
+							" . __("Showing All Graphs") . (strlen($_REQUEST["filter"]) ? " [ " . __("Filter") . " '" . $_REQUEST["filter"] . "' " . __("Applied") . " ]" : "") . "
 						</td>
 					</tr>
 				</table>

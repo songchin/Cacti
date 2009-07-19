@@ -34,7 +34,8 @@ function &graph_template_to_xml($graph_template_id) {
 	$graph_template_inputs = db_fetch_assoc("select * from graph_template_input where graph_template_id=$graph_template_id");
 
 	if ((empty($graph_template["id"])) || (empty($graph_template_graph["id"]))) {
-		return "Invalid graph template.";
+		$err_msg = "Invalid graph template.";
+		return $err_msg;
 	}
 
 	$xml_text .= "<hash_" . $hash["graph_template"] . ">\n\t<name>" . xml_character_encode($graph_template["name"]) . "</name>\n\t<graph>\n";
@@ -143,7 +144,8 @@ function &data_template_to_xml($data_template_id) {
 	$data_input_data = db_fetch_assoc("select * from data_input_data where data_template_data_id=" . $data_template_data["id"]);
 
 	if ((empty($data_template["id"])) || (empty($data_template_data["id"]))) {
-		return __("Invalid data template.");
+		$err_msg = "Invalid data template.";
+		return $err_msg;
 	}
 
 	$xml_text .= "<hash_" . $hash["data_template"] . ">\n\t<name>" . xml_character_encode($data_template["name"]) . "</name>\n\t<ds>\n";
@@ -255,7 +257,8 @@ function &data_input_method_to_xml($data_input_id) {
 	$data_input_fields = db_fetch_assoc("select * from data_input_fields where data_input_id=$data_input_id");
 
 	if (empty($data_input["id"])) {
-		return "Invalid data input method.";
+		$err_msg = "Invalid data input method.";
+		return $err_msg;
 	}
 
 	$xml_text .= "<hash_" . $hash["data_input_method"] . ">\n";
@@ -316,7 +319,8 @@ function &cdef_to_xml($cdef_id) {
 	$cdef_items = db_fetch_assoc("select * from cdef_items where cdef_id=$cdef_id order by sequence");
 
 	if (empty($cdef["id"])) {
-		return __("Invalid CDEF.");
+		$err_msg = "Invalid CDEF.";
+		return $err_msg;
 	}
 
 	$xml_text .= "<hash_" . $hash["cdef"] . ">\n";
@@ -368,7 +372,8 @@ function &gprint_preset_to_xml($gprint_preset_id) {
 	$graph_templates_gprint = db_fetch_row("select * from graph_templates_gprint where id=$gprint_preset_id");
 
 	if (empty($graph_templates_gprint["id"])) {
-		return __("Invalid GPRINT preset.");
+		$err_msg = "Invalid GPRINT preset.";
+		return $err_msg;
 	}
 
 	$xml_text .= "<hash_$hash>\n";
@@ -396,7 +401,8 @@ function &round_robin_archive_to_xml($round_robin_archive_id) {
 	$rra_cf = db_fetch_assoc("select * from rra_cf where rra_id=$round_robin_archive_id");
 
 	if (empty($rra["id"])) {
-		return __("Invalid round robin archive.");
+		$err_msg = "Invalid round robin archive.";
+		return $err_msg;
 	}
 
 	$xml_text .= "<hash_$hash>\n";
@@ -445,7 +451,8 @@ function &host_template_to_xml($host_template_id) {
 	$host_template_snmp_query = db_fetch_assoc("select * from host_template_snmp_query where host_template_id=$host_template_id");
 
 	if (empty($host_template["id"])) {
-		return __("Invalid host template.");
+		$err_msg = "Invalid host template.";
+		return $err_msg;
 	}
 
 	$xml_text .= "<hash_$hash>\n";
@@ -509,7 +516,8 @@ function &data_query_to_xml($data_query_id) {
 	$snmp_query_graph = db_fetch_assoc("select * from snmp_query_graph where snmp_query_id=$data_query_id");
 
 	if (empty($snmp_query["id"])) {
-		return __("Invalid Data Query.");
+		$err_msg = "Invalid Data Query.";
+		return $err_msg;
 	}
 
 	$xml_text .= "<hash_" . $hash["data_query"] . ">\n";

@@ -191,7 +191,7 @@ $settings = array(
 			"description" => __("The type of SNMP you have installed.  Required if you are using SNMP v2c or don't have embedded SNMP support in PHP."),
 			"method" => "drop_array",
 			"default" => "net-snmp",
-			"array" => $snmp_implimentations,
+			"array" => $snmp_implementations,
 			),
 		"rrdtool_version" => array(
 			"friendly_name" => __("RRDTool Utility Version"),

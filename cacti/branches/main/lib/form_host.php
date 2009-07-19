@@ -1231,7 +1231,7 @@ function host_display_general($host, $host_text) {
 						<?php form_dropdown("reindex_method_host_".$_GET["id"]."_query_".$item["id"]."_method_".$item["reindex_method"],$reindex_types,"","",$item["reindex_method"],"","","","");?>
 					</td>
 					<td>
-						<?php print (($status == "success") ? "<span style='color: green;'>" . __("Success") . "</span>" : "<span style='color: green;'>" . __("Fail") . "</span>");?> [<?php print $num_dq_items;?> <?php print __n("Item", $num_dq_items);?>, <?php print $num_dq_rows;?> <?php print __n("Row", $num_dq_rows);?>]
+						<?php print (($status == "success") ? "<span style='color: green;'>" . __("Success") . "</span>" : "<span style='color: green;'>" . __("Fail") . "</span>");?> [<?php print $num_dq_items;?> <?php print __("Item", $num_dq_items);?>, <?php print $num_dq_rows;?> <?php print __("Row", $num_dq_rows);?>]
 					</td>
 					<td align='right' nowrap>
 						<a href='host.php?action=query_reload&amp;id=<?php print $item["id"];?>&amp;host_id=<?php print $_GET["id"];?>'><img class='buttonSmall' src='images/reload_icon_small.gif' title='<?php print __("Reload Data Query");?>' alt='<?php print __("Reload");?>' align='middle'></a>&nbsp;

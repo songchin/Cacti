@@ -164,10 +164,10 @@ $page_title = api_plugin_hook_function('page_title', 'Cacti');
 			if (read_config_option("auth_method") != 0) { $date = date_time_format();?><strong><?php echo __date("D, " . $date . " T");?></strong>&nbsp;&nbsp;&nbsp;<?php print __("Logged in as");?> <strong><?php print db_fetch_cell("select username from user_auth where id=" . $_SESSION["sess_user_id"]);?></strong> (<a href="<?php echo URL_PATH; ?>logout.php"><?php print __("Logout");?></a>)<?php } ?>
 		</div>
 		<?php if(read_config_option('i18n_support') != 0) {?>
-		<div id="codelist" class='languages' style="float:right; list-style:none; display:inline;">
+		<div id="codelist" style="float:right; list-style:none; display:inline;">
 			<span id="loading" style="display:none;"><img src="<?php echo URL_PATH; ?>images/load_small.gif" align="top" alt="<?php print __("loading");?>" style='border-width:0px;'>LOADING</span>
 			<ul class="down-list" style="list-style:none; display:inline;">
-				<li><img src="<?php echo URL_PATH; ?>images/flag_icons/<?php print $cacti_country;?>.gif" align="top" alt="<?php print __("loading");?>" style='border-width:0px;'><a href="#">&nbsp;<?php print $lang2locale[$cacti_locale]['language'];?></a></li>
+				<li><a href="#" class='languages'><img src="<?php echo URL_PATH; ?>images/flag_icons/<?php print $cacti_country;?>.gif" align="top" alt="<?php print __("loading");?>" style='border-width:0px;'>&nbsp;<?php print $lang2locale[$cacti_locale]['language'];?></a></li>
 			</ul>
 		</div>
 		<?php }?>

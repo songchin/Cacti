@@ -2001,10 +2001,18 @@ function get_associated_rras($local_graph_id) {
    @returns - the url requested by the browser */
 function get_browser_query_string() {
 	if (!empty($_SERVER["REQUEST_URI"])) {
-		return basename($_SERVER["REQUEST_URI"]);
+		$browser_query_string = basename($_SERVER["REQUEST_URI"]);
 	}else{
-		return basename($_SERVER["PHP_SELF"]) . (empty($_SERVER["QUERY_STRING"]) ? "" : "?" . $_SERVER["QUERY_STRING"]);
+		$browser_query_string = basename($_SERVER["PHP_SELF"]) . (empty($_SERVER["QUERY_STRING"]) ? "" : "?" . $_SERVER["QUERY_STRING"]);
 	}
+	
+	/* remove the language parameter if it is included */
+	if(strpos($browser_query_string, "language=") !== FALSE) {
+		$param_language = substr($browser_query_string, strpos($browser_query_string, "language="), 11);
+		$browser_query_string = str_replace(array( "?" . $param_language . "&", "?" . $param_language, "&" . $param_language), array( "?", "", ""), $browser_query_string);
+	}
+
+	return $browser_query_string;
 }
 
 /* get_hash_graph_template - returns the current unique hash for a graph template

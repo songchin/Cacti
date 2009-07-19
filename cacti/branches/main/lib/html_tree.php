@@ -1273,13 +1273,13 @@ function get_graph_tree_content($tree_id, $leaf_id, $host_group_data) {
 					<table width='100%' cellspacing='0' cellpadding='0' border='0'>
 						<tr>
 							<td align='left' style='width:100px;' class='textHeaderDark'>";
-		if ($_REQUEST["page"] > 1) { $nav .= "<strong><a class='linkOverDark' href='#' onClick='pageChange(" . ($_REQUEST["page"]-1) . ")'>&lt;&lt;&nbsp;Previous</a></strong>"; }
+		if ($_REQUEST["page"] > 1) { $nav .= "<strong><a class='linkOverDark' href='#' onClick='pageChange(" . ($_REQUEST["page"]-1) . ")'>&lt;&lt;&nbsp;" . __("Previous") . "</a></strong>"; }
 		$nav .= "</td>\n
 							<td align='center' class='textHeaderDark'>
-								Showing Graphs " . (($_REQUEST["graphs"]*($_REQUEST["page"]-1))+1) . " to " . ((($total_rows < read_graph_config_option("treeview_graphs_per_page")) || ($total_rows < ($_REQUEST["graphs"]*$_REQUEST["page"]))) ? $total_rows : ($_REQUEST["graphs"]*$_REQUEST["page"])) . " of $total_rows [$url_page_select]
+								" . __("Showing Graphs") . " " . (($_REQUEST["graphs"]*($_REQUEST["page"]-1))+1) . " " . __("to") . " " . ((($total_rows < read_graph_config_option("treeview_graphs_per_page")) || ($total_rows < ($_REQUEST["graphs"]*$_REQUEST["page"]))) ? $total_rows : ($_REQUEST["graphs"]*$_REQUEST["page"])) . " " . __("of") . " $total_rows [$url_page_select]
 							</td>\n
 							<td align='right' style='width:100px;' class='textHeaderDark'>";
-		if (($_REQUEST["page"] * $_REQUEST["graphs"]) < $total_rows) { $nav .= "<strong><a class='linkOverDark' href='#' onClick='pageChange(" . ($_REQUEST["page"]+1) . ")'>Next &gt;&gt;</a></strong>"; }
+		if (($_REQUEST["page"] * $_REQUEST["graphs"]) < $total_rows) { $nav .= "<strong><a class='linkOverDark' href='#' onClick='pageChange(" . ($_REQUEST["page"]+1) . ")'>". __("Next") . " &gt;&gt;</a></strong>"; }
 		$nav .= "</td>\n
 						</tr>
 					</table>
@@ -1291,7 +1291,7 @@ function get_graph_tree_content($tree_id, $leaf_id, $host_group_data) {
 					<table width='100%' cellspacing='0' cellpadding='0' border='0'>
 						<tr>
 							<td align='center' class='textHeaderDark'>
-								Showing All Graphs" . (strlen($_REQUEST["filter"]) ? " [ Filter '" . $_REQUEST["filter"] . "' Applied ]" : "") . "
+								" . __("Showing All Graphs") . (strlen($_REQUEST["filter"]) ? " [ " . __("Filter") . " '" . $_REQUEST["filter"] . "' ". __("Applied") . " ]" : "") . "
 							</td>
 						</tr>
 					</table>
@@ -1490,7 +1490,7 @@ function draw_tree_dropdown($current_tree_id) {
 				<table width='100%' cellspacing='0' cellpadding='0'>\n
 					<tr>\n
 						<td width='200' class='textHeader'>\n
-							&nbsp;&nbsp;Select a Graph Hierarchy:&nbsp;\n
+							&nbsp;&nbsp;" . __("Select a Graph Hierarchy") . ":&nbsp;\n
 						</td>\n
 						<td bgcolor='#" . $colors["panel"] . "'>\n
 							<select name='cbo_tree_id' onChange='window.location=document.form_tree_id.cbo_tree_id.options[document.form_tree_id.cbo_tree_id.selectedIndex].value'>\n";

@@ -300,7 +300,7 @@ function cacti_ldap_search_dn($username,$ldap_dn = "",$ldap_host = "",$ldap_port
 	if (empty($username)) {
 		$output["dn"] = "";
 		$output["error_num"] = "1";
-		$output["error_text"] = _("No username defined");
+		$output["error_text"] = "No username defined";
 		cacti_log("LDAP_SEARCH: No username defined", false, "AUTH");
 		return $output;
 	}

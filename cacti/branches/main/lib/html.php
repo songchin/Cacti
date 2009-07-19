@@ -88,7 +88,7 @@ function html_start_box($title, $width, $background_color, $cell_padding, $align
 								<table width="100%" cellpadding="0" cellspacing="0" <?php print $ani;?>>
 									<tr>
 										<?php if ($collapsing) {?><td class="textHeaderDark" width="9">
-											<img id="<?php print $item_id . '_twisty';?>" src="<?php print URL_PATH; ?>images/tw_open.gif" alt="Filter" align="middle">
+											<img id="<?php print $item_id . '_twisty';?>" src="<?php print URL_PATH; ?>images/tw_open.gif" alt="<?php print __("Filter");?>" align="middle">
 										</td><?php } ?>
 										<td onMouseDown='return false' class="textHeaderDark"><?php print $title;?>
 										</td>

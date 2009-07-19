@@ -481,7 +481,7 @@ function item() {
 	if (empty($_GET["id"])) {
 		$template_item_list = array();
 
-		$header_label = "[new]";
+		$header_label = __("[new]");
 	}else{
 		$template_item_list = db_fetch_assoc("select
 			graph_templates_item.id,
@@ -503,7 +503,7 @@ function item() {
 			order by graph_templates_item.sequence");
 
 		$host_id = db_fetch_cell("select host_id from graph_local where id=" . $_GET["id"]);
-		$header_label = "[edit: " . get_graph_title($_GET["id"]) . "]";
+		$header_label = __("[edit: %s]", get_graph_title($_GET["id"]));
 	}
 
 	$graph_template_id = db_fetch_cell("select graph_template_id from graph_local where id=" . $_GET["id"]);
@@ -682,7 +682,7 @@ function graph_diff() {
 
 		/* draw the TD that shows the user whether we are going to: KEEP, ADD, or DROP the item */
 		print "<td width='1%' bgcolor='#$action_column_color' style='font-weight: bold; color: white;'>" . $graph_item_actions[$mode] . "</td>";
-		print "<td style='$action_css'><strong>Item # " . $i . "</strong></td>\n";
+		print "<td style='$action_css'><strong>" . __("Item") . " # " . $i . "</strong></td>\n";
 
 		if (empty($graph_preview_item_values["task_item_id"])) { $graph_preview_item_values["task_item_id"] = "No Task"; }
 

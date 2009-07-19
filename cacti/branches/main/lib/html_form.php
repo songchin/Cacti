@@ -319,13 +319,13 @@ function form_filepath_box($form_name, $form_previous_value, $form_default_value
 	}
 
 	if (is_file($form_previous_value)) {
-		$extra_data = "<span style='color:green'><br>[OK: FILE FOUND]</span>";
+		$extra_data = "<span style='color:green'><br>[" . __("OK: FILE FOUND") . "]</span>";
 	}else if (is_dir($form_previous_value)) {
-		$extra_data = "<span style='color:red'><br>[ERROR: IS DIR]</span>";
+		$extra_data = "<span style='color:red'><br>[" . __("ERROR: IS DIR") . "]</span>";
 	}else if (strlen($form_previous_value) == 0) {
 		$extra_data = "";
 	}else{
-		$extra_data = "<span style='color:red'><br>[ERROR: FILE NOT FOUND]</span>";
+		$extra_data = "<span style='color:red'><br>[" . __("ERROR: FILE NOT FOUND") . "]</span>";
 	}
 
 	print " id='$form_name' name='$form_name' size='$form_size'" . (!empty($form_max_length) ? " maxlength='$form_max_length'" : "") . " value='" . htmlspecialchars($form_previous_value, ENT_QUOTES) . "'>" . $extra_data;
@@ -364,13 +364,13 @@ function form_dirpath_box($form_name, $form_previous_value, $form_default_value,
 	}
 
 	if (is_dir($form_previous_value)) {
-		$extra_data = "<span style='color:green'><br>[OK: DIR FOUND]";
+		$extra_data = "<span style='color:green'><br>[" . __("OK: DIR FOUND") . "]</span>";
 	}else if (is_file($form_previous_value)) {
-		$extra_data = "<span style='color:red'><br>[ERROR: IS FILE]";
+		$extra_data = "<span style='color:red'><br>[" . __("ERROR: IS FILE") . "]</span>";
 	}else if (strlen($form_previous_value) == 0) {
 		$extra_data = "";
 	}else{
-		$extra_data = "<span style='color:red'><br>[ERROR: DIR NOT FOUND]";
+		$extra_data = "<span style='color:red'><br>[" . __("ERROR: DIR NOT FOUND") . "]</span>";
 	}
 
 	print " id='$form_name' name='$form_name' size='$form_size'" . (!empty($form_max_length) ? " maxlength='$form_max_length'" : "") . " value='" . htmlspecialchars($form_previous_value, ENT_QUOTES) . "'>" . $extra_data;
@@ -809,8 +809,8 @@ function form_confirm_buttons($action_url, $cancel_url) {
  ?>
 	<tr>
 		<td bgcolor="#E1E1E1">
-			<a href="<?php print $cancel_url;?>"><img src="<?php print URL_PATH; ?>images/button_cancel.gif" style='border-width:0px;' alt="Cancel" align="absmiddle"></a>
-			<a href="<?php print $action_url . "&confirm=yes";?>"><img src="<?php print URL_PATH ?>images/button_delete.gif" style='border-width:0px;' alt="Delete" align="absmiddle"></a>
+			<a href="<?php print $cancel_url;?>"><img src="<?php print URL_PATH; ?>images/button_cancel.gif" style='border-width:0px;' alt="<?php print __("Cancel");?>" align="absmiddle"></a>
+			<a href="<?php print $action_url . "&confirm=yes";?>"><img src="<?php print URL_PATH ?>images/button_delete.gif" style='border-width:0px;' alt="<?php print __("Delete");?>" align="absmiddle"></a>
 		</td>
 	</tr>
 <?php }
@@ -842,7 +842,7 @@ function form_save_button($cancel_url, $force_type = "", $key_field = "id") {
 		<tr>
 			<td bgcolor="#f5f5f5" align="right">
 				<input type='hidden' name='action' value='save'>
-				<a href='<?php print $cancel_url;?>'><img src='<?php echo URL_PATH; ?>images/button_cancel2.gif' alt='Cancel' align='middle' border='0'></a>
+				<a href='<?php print $cancel_url;?>'><img src='<?php echo URL_PATH; ?>images/button_cancel2.gif' alt='<?php print __("Cancel");?>' align='middle' border='0'></a>
 				<input type='image' src='<?php echo URL_PATH; ?>images/<?php print $img;?>' alt='<?php print $alt;?>' align='middle'>
 			</td>
 		</tr>
@@ -881,29 +881,29 @@ function form_confirm_alt($title_text, $body_text, $cancel_url, $action_url) { ?
 function form_save_button_alt($cancel_action = "", $action = "save", $force_type = "", $key_field = "id") {
 	global $config;
 
-	$calt = "Cancel";
+	$calt = __("Cancel");
 
 	if ((empty($force_type)) || (substr_count($cancel_action,"return"))) {
 		if (empty($_GET[$key_field])) {
 			$sname = "create";
-			$salt  = "Create";
+			$salt  = __("Create");
 		}else{
 			$sname = "save";
-			$salt  = "Save";
+			$salt  = __("Save");
 		}
 
 		if (substr_count($cancel_action,"return")) {
-			$calt   = "Return";
+			$calt   = __("Return");
 			$action = "save";
 		}else{
-			$calt   = "Cancel";
+			$calt   = __("Cancel");
 		}
 	}elseif ($force_type == "save") {
 		$sname = "save";
-		$salt  = "Save";
+		$salt  = __("Save");
 	}elseif ($force_type == "create") {
 		$sname = "create";
-		$salt  = "Create";
+		$salt  = __("Create");
 	}
 
 	if (substr_count($cancel_action, "!")) {
@@ -969,7 +969,7 @@ function form_return_button_alt() {
 	?>
 	<tr>
 		<td bgcolor="#f5f5f5" align="right">
-			<input type='button' value='Return' onClick='window.location.assign("<?php print htmlspecialchars($_SERVER['HTTP_REFERER']);?>")' name='cancel'>
+			<input type='button' value='<?php print __("Return");?>' onClick='window.location.assign("<?php print htmlspecialchars($_SERVER['HTTP_REFERER']);?>")' name='cancel'>
 		</td>
 	</tr>
 	</form>
@@ -989,8 +989,8 @@ function form_yesno_button_alt($host_list, $drp_action = "none") {
 			<div><input type='hidden' name='action' value='actions'></div>
 			<div><input type='hidden' name='selected_items' value='<?php print $host_list;?>'></div>
 			<div><input type='hidden' name='drp_action' value='<?php print $drp_action;?>'></div>
-			<input type='button' value='No' onClick='window.location.assign("<?php print htmlspecialchars($_SERVER['HTTP_REFERER']);?>")' name='cancel'>
-			<input type='submit' value='Yes' name='yes'>
+			<input type='button' value='<?php print __("No");?>' onClick='window.location.assign("<?php print htmlspecialchars($_SERVER['HTTP_REFERER']);?>")' name='cancel'>
+			<input type='submit' value='<?php print __("Yes");?>' name='yes'>
 		</td>
 	</tr>
 	</form>
@@ -1004,8 +1004,8 @@ function form_confirm_buttons_alt() {
 	?>
 	<tr>
 		<td bgcolor="#E1E1E1">
-			<input type='submit' value='Cancel' name='cancel'>
-			<input type='submit' value='Delete' name='delete'>
+			<input type='submit' value='<?php print __("Cancel");?>' name='cancel'>
+			<input type='submit' value='<?php print __("Delete");?>' name='delete'>
 		</td>
 	</tr>
 <?php }

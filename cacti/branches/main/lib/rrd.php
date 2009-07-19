@@ -842,15 +842,15 @@ function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rr
 	if ((isset($graph_data_array["graph_start"])) && (isset($graph_data_array["graph_end"]))) {
 		if (($graph_data_array["graph_start"] < 0) && ($graph_data_array["graph_end"] < 0)) {
 			if (read_config_option("rrdtool_version") != "rrd-1.0.x") {
-				$graph_legend .= "COMMENT:\"From " . str_replace(":", "\:", date($graph_date, time()+$graph_data_array["graph_start"])) . " To " . str_replace(":", "\:", date($graph_date, time()+$graph_data_array["graph_end"])) . "\\c\"" . RRD_NL . "COMMENT:\"  \\n\"" . RRD_NL;
+				$graph_legend .= "COMMENT:\"" . __("From") . " " . str_replace(":", "\:", date($graph_date, time()+$graph_data_array["graph_start"])) . " " . __("To") . " " . str_replace(":", "\:", date($graph_date, time()+$graph_data_array["graph_end"])) . "\\c\"" . RRD_NL . "COMMENT:\"  \\n\"" . RRD_NL;
 			}else {
-				$graph_legend .= "COMMENT:\"From " . date($graph_date, time()+$graph_data_array["graph_start"]) . " To " . date($graph_date, time()+$graph_data_array["graph_end"]) . "\\c\"" . RRD_NL . "COMMENT:\"  \\n\"" . RRD_NL;
+				$graph_legend .= "COMMENT:\"" . __("From") . " " . date($graph_date, time()+$graph_data_array["graph_start"]) . " " . __("To") . " " . date($graph_date, time()+$graph_data_array["graph_end"]) . "\\c\"" . RRD_NL . "COMMENT:\"  \\n\"" . RRD_NL;
 			}
 		}else if (($graph_data_array["graph_start"] >= 0) && ($graph_data_array["graph_end"] >= 0)) {
 			if (read_config_option("rrdtool_version") != "rrd-1.0.x") {
-				$graph_legend .= "COMMENT:\"From " . str_replace(":", "\:", date($graph_date, $graph_data_array["graph_start"])) . " To " . str_replace(":", "\:", date($graph_date, $graph_data_array["graph_end"])) . "\\c\"" . RRD_NL . "COMMENT:\"  \\n\"" . RRD_NL;
+				$graph_legend .= "COMMENT:\"" . __("From") . " " . str_replace(":", "\:", date($graph_date, $graph_data_array["graph_start"])) . " " . __("To") . " " . str_replace(":", "\:", date($graph_date, $graph_data_array["graph_end"])) . "\\c\"" . RRD_NL . "COMMENT:\"  \\n\"" . RRD_NL;
 			}else {
-				$graph_legend .= "COMMENT:\"From " . date($graph_date, $graph_data_array["graph_start"]) . " To " . date($graph_date, $graph_data_array["graph_end"]) . "\\c\"" . RRD_NL . "COMMENT:\"  \\n\"" . RRD_NL;
+				$graph_legend .= "COMMENT:\"" . __("From") . " " . date($graph_date, $graph_data_array["graph_start"]) . " " . __("To") . " " . date($graph_date, $graph_data_array["graph_end"]) . "\\c\"" . RRD_NL . "COMMENT:\"  \\n\"" . RRD_NL;
 			}
 		}
 	}
@@ -2124,16 +2124,16 @@ function rrdtool_cacti_compare($data_source_id) {
 	/* reformat time-since-epoch to a more human readable format */
 	$date_fmt = date("D, " . date_time_format() . " T", $rrd_dump["last_update"]);
 
-	html_start_box("<strong>Compare Cacti to current RRD File </strong> [$cacti_file]", "100%", $colors["header"], "3", "center", "");
+	html_start_box("<strong>" . __("Compare Cacti to current RRD File") . " </strong> [$cacti_file]", "100%", $colors["header"], "3", "center", "");
 
 	/* -----------------------------------------------------------------------------------
 	 * header information
 	   -----------------------------------------------------------------------------------*/
 	$display_text = array(
-		"Cacti Step Size",
-		"RRD File Step Size",
-		"RRD File Version",
-		"RRD File Last Update");
+		__("Cacti Step Size"),
+		__("RRD File Step Size"),
+		__("RRD File Version"),
+		__("RRD File Last Update"));
 
 	html_header($display_text, 1, false);
 	form_alternate_row_color();
@@ -2149,15 +2149,15 @@ function rrdtool_cacti_compare($data_source_id) {
 	 * data source information
 	   -----------------------------------------------------------------------------------*/
 	$display_text = array(
-		"Name",
-		"Cacti DS Type",
-		"Cacti Heartbeat",
-		"Cacti Min",
-		"Cacti Max",
-		"RRD File DS Type",
-		"RRD File Heartbeat",
-		"RRD File Min",
-		"RRD File Max");
+		__("Name"),
+		__("Cacti DS Type"),
+		__("Cacti Heartbeat"),
+		__("Cacti Min"),
+		__("Cacti Max"),
+		__("RRD File DS Type"),
+		__("RRD File Heartbeat"),
+		__("RRD File Min"),
+		__("RRD File Max"));
 
 	html_header($display_text, 1, false);
 	/* print all data sources known to cacti and add those from matching rrd file */
@@ -2221,14 +2221,14 @@ function rrdtool_cacti_compare($data_source_id) {
 	 * RRA information
 	   -----------------------------------------------------------------------------------*/
 	$display_text = array(
-		"Cacti CF",
-		"Cacti xff",
-		"Cacti Steps",
-		"Cacti Rows",
-		"RRD File CF",
-		"RRD File xff",
-		"RRD File Steps",
-		"RRD File Rows");
+		__("Cacti CF"),
+		__("Cacti xff"),
+		__("Cacti Steps"),
+		__("Cacti Rows"),
+		__("RRD File CF"),
+		__("RRD File xff"),
+		__("RRD File Steps"),
+		__("RRD File Rows"));
 
 	html_header($display_text, 1, false);
 	/* print all RRAs known to cacti and add those from matching rrd file */

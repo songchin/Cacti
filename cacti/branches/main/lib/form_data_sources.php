@@ -390,7 +390,7 @@ function data_source_form_actions() {
 						if (sizeof($graphs) > 0) {
 							form_alternate_row_color();
 
-							print "<td class='textArea'><p class='textArea'>The following graphs are using these data sources:</p>\n";
+							print "<td class='textArea'><p class='textArea'>" . __("The following graphs are using these data sources:") . "</p>\n";
 
 							foreach ($graphs as $graph) {
 								print "<strong>" . $graph["title_cache"] . "</strong><br>\n";

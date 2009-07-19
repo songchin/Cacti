@@ -452,7 +452,7 @@ function displaySNMPValuesExtended($hostId, $fields, $snmpQueryId, $quietMode = 
 
 		if (!isset ($total_rows)) {
 			if (!sizeof($req_fields)) {
-				echo printf(__("ERROR: Invalid --snmp-field-spec (found: %s) given"), $fields) . "\n";
+				echo __("ERROR: Invalid --snmp-field-spec (found: %s) given", $fields) . "\n";
 				echo __("Try --list-snmp-fields") . "\n";
 				return (1);
 			} else {

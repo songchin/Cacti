@@ -158,9 +158,9 @@ function html_boolean($html_boolean) {
      checkbox */
 function html_boolean_friendly($html_boolean) {
 	if ($html_boolean == "on") {
-		return "Selected";
+		return __("Selected");
 	}else{
-		return "Not Selected";
+		return __("Not Selected");
 	}
 }
 
@@ -267,19 +267,19 @@ function get_colored_device_status($disabled, $status) {
 		);
 
 	if ($disabled) {
-		return "<span style='color: #$disabled_color'>Disabled</span>";
+		return "<span style='color: #$disabled_color'>" . __("Disabled") . "</span>";
 	}else{
 		switch ($status) {
 			case HOST_DOWN:
-				return "<span style='color: #" . $status_colors[HOST_DOWN] . "'>Down</span>"; break;
+				return "<span style='color: #" . $status_colors[HOST_DOWN] . "'>" . __("Down") . "</span>"; break;
 			case HOST_RECOVERING:
-				return "<span style='color: #" . $status_colors[HOST_RECOVERING] . "'>Recovering</span>"; break;
+				return "<span style='color: #" . $status_colors[HOST_RECOVERING] . "'>" . __("Recovering") . "</span>"; break;
 			case HOST_UP:
-				return "<span style='color: #" . $status_colors[HOST_UP] . "'>Up</span>"; break;
+				return "<span style='color: #" . $status_colors[HOST_UP] . "'>" . __("Up") . "</span>"; break;
 			case HOST_ERROR:
-				return "<span style='color: #" . $status_colors[HOST_ERROR] . "'>Error</span>"; break;
+				return "<span style='color: #" . $status_colors[HOST_ERROR] . "'>" . __("Error")  . "</span>"; break;
 			default:
-				return "<span style='color: #0000ff'>Unknown</span>"; break;
+				return "<span style='color: #0000ff'>" . __("Unknown") . "</span>"; break;
 		}
 	}
 }

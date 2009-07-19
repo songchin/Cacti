@@ -27,10 +27,6 @@ include_once(dirname(__FILE__) . "/../../lib/functions.php");
 
 sleep(1);
 
-if(!isset($_GET['location'])) {
-return;
-}
-
 /* rebuild $lang2locale array to find country and language codes easier */
 $locations = array();
 foreach($lang2locale as $locale => $properties) {
@@ -75,13 +71,17 @@ if(read_config_option('i18n_support') == 2){
 				/* no language support */
 				$supported_languages["cacti"] = array();
 				$supported_languages["cacti"][] = "english_dummy";
-				break; 
+				break;
 			}
 		}
 	}
 }
 
-$location = $_GET['location'];
+$location = $_SERVER['HTTP_REFERER'];
+
+/* clean up from an existing language parameter */
+$search = "language=" . $cacti_locale;
+$location = str_replace(array( "?" . $search . "&", "?" . $search, "&" . $search), array( "?", "", ""), $location);
 $location .= (strpos($location, '?')) ? '&' : '?';
 
 ?>
@@ -89,7 +89,7 @@ $location .= (strpos($location, '?')) ? '&' : '?';
 <?php
 if(sizeof($supported_languages["cacti"])>0) {
 	foreach($supported_languages["cacti"] as $lang) {
-		?><li><img src="<?php echo URL_PATH; ?>images/flag_icons/<?php print $locations[$lang]["flag"];?>.gif" align="top" alt="loading" style='border-width:0px;'><a href="<?php print $location . "language=" . $locations[$lang]["locale"]; ?>">&nbsp;<?php print $locations[$lang]["language"];?></a>&nbsp;&nbsp;</li><?php	
+		?><li><a href="<?php print $location . "language=" . $locations[$lang]["locale"]; ?>"><img src="<?php echo URL_PATH; ?>images/flag_icons/<?php print $locations[$lang]["flag"];?>.gif" align="top" alt="loading" style='border-width:0px;'>&nbsp;<?php print $locations[$lang]["language"];?></a>&nbsp;&nbsp;</li><?php
 	}
 }
 ?>

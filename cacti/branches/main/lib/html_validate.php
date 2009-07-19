@@ -47,7 +47,7 @@ function die_html_input_error() {
 	<table width="100%" align="center">
 		<tr>
 			<td>
-				Validation error.
+				<?php print __("Validation error.") ?>
 			</td>
 		</tr>
 	</table>

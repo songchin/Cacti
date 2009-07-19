@@ -155,22 +155,22 @@ function log_maintain ($print_data_to_stdout) {
 		case SYSLOG_MNG_ASNEEDED:
 			$records_to_delete = $total_records - $syslog_size;
 			db_execute("DELETE FROM log ORDER BY logdate LIMIT " . $records_to_delete);
-			log_save(_("Log control removed " . $records_to_delete . " log entires."), SEV_NOTICE, FACIL_POLLER, "", 0, 0, $print_data_to_stdout);
+			log_save("Log control removed " . $records_to_delete . " log entires.", SEV_NOTICE, FACIL_POLLER, "", 0, 0, $print_data_to_stdout);
 			break;
 		case SYSLOG_MNG_DAYSOLD:
 			db_execute("delete from log where logdate <= '" . date("Y-m-d H:i:s", strtotime("-" . $syslog_maxdays * 24 * 3600 . " Seconds"))."'");
-			log_save(_("Log control removed log entries older than " . $syslog_maxdays . " days."), SEV_NOTICE, FACIL_POLLER, "", 0, 0, $print_data_to_stdout);
+			log_save("Log control removed log entries older than " . $syslog_maxdays . " days.", SEV_NOTICE, FACIL_POLLER, "", 0, 0, $print_data_to_stdout);
 
 			break;
 		case SYSLOG_MNG_STOPLOG:
 			if (read_config_option("log_status") != "suspended") {
-				log_save(_("Log control suspended logging due to the log being full.  Please purge your logs manually."), SEV_CRITICAL,FACIL_POLLER, "", 0, 0, 0, $print_data_to_stdout);
+				log_save("Log control suspended logging due to the log being full.  Please purge your logs manually.", SEV_CRITICAL,FACIL_POLLER, "", 0, 0, 0, $print_data_to_stdout);
 				db_execute("REPLACE INTO settings (name,value) VALUES('log_status','suspended')");
 			}
 
 			break;
 		case SYSLOG_MNG_NONE:
-			log_save(_("The cacti log control mechanism is set to None.  This is not recommended, please purge your logs on a manual basis."), SEV_WARNING, FACIL_POLLER, "", 0, 0, $print_data_to_stdout);
+			log_save("The cacti log control mechanism is set to None.  This is not recommended, please purge your logs on a manual basis.", SEV_WARNING, FACIL_POLLER, "", 0, 0, $print_data_to_stdout);
 			break;
 		}
 	}
@@ -352,34 +352,34 @@ function log_get_facility ($facility) {
 function log_get_severity ($severity) {
 	switch ($severity) {
 		case SEV_EMERGENCY:
-			return _("EMERGENCY");
+			return "EMERGENCY";
 			break;
 		case SEV_ALERT:
-			return _("ALERT");
+			return "ALERT";
 			break;
 		case SEV_CRITICAL:
-			return _("CRITICAL");
+			return "CRITICAL";
 			break;
 		case SEV_ERROR:
-			return _("ERROR");
+			return "ERROR";
 			break;
 		case SEV_WARNING:
-			return _("WARNING");
+			return "WARNING";
 			break;
 		case SEV_NOTICE:
-			return _("NOTICE");
+			return "NOTICE";
 			break;
 		case SEV_INFO:
-			return _("INFO");
+			return "INFO";
 			break;
 		case SEV_DEBUG:
-			return _("DEBUG");
+			return "DEBUG";
 			break;
 		case SEV_DEV:
-			return _("DEV");
+			return "DEV";
 			break;
 		default:
-			return _("UNKNOWN");
+			return "UNKNOWN";
 			break;
 	}
 }

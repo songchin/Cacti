@@ -301,7 +301,7 @@ $ldap_modes = array(
 	2 => __("Specific Searching"),
 	);
 
-$snmp_implimentations = array(
+$snmp_implementations = array(
 	"ucd-snmp" => __("UCD-SNMP 4.x"),
 	"net-snmp" => __("NET-SNMP 5.x"),
 	);
@@ -312,9 +312,9 @@ $rrdtool_versions = array(
 	"rrd-1.3.x" => "RRDTool 1.3.x");
 
 $i18n_modes = array(
-	0 => __("disabled"),
-	1 => __("enabled"),
-	2 => __("enabled (strict mode)"),
+	0 => __("Disabled"),
+	1 => __("Enabled"),
+	2 => __("Enabled (strict mode)"),
 	);
 
 $cdef_item_types = array(

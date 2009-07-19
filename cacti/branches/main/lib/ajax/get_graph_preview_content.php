@@ -216,13 +216,13 @@ if ($total_rows > $_REQUEST["graphs"]) {
 				<table width='100%' cellspacing='0' cellpadding='0' border='0'>
 					<tr>
 						<td align='left' style='width:100px;' class='textHeaderDark'>";
-	if ($_REQUEST["page"] > 1) { $nav .= "<strong><a class='linkOverDark' href='#' onClick='pageChange(" . ($_REQUEST["page"]-1) . ")'>&lt;&lt;&nbsp;Previous</a></strong>"; }
+	if ($_REQUEST["page"] > 1) { $nav .= "<strong><a class='linkOverDark' href='#' onClick='pageChange(" . ($_REQUEST["page"]-1) . ")'>&lt;&lt;&nbsp;" . __("Previous") . "</a></strong>"; }
 	$nav .= "</td>\n
 						<td align='center' class='textHeaderDark'>
-							Showing Graphs " . (($_REQUEST["graphs"]*($_REQUEST["page"]-1))+1) . " to " . ((($total_rows < $_REQUEST["graphs"]) || ($total_rows < ($_REQUEST["graphs"]*$_REQUEST["page"]))) ? $total_rows : ($_REQUEST["graphs"]*$_REQUEST["page"])) . " of $total_rows [$url_page_select]
+							" . __("Showing Graphs") . (($_REQUEST["graphs"]*($_REQUEST["page"]-1))+1) . " " . __("to") . " " . ((($total_rows < $_REQUEST["graphs"]) || ($total_rows < ($_REQUEST["graphs"]*$_REQUEST["page"]))) ? $total_rows : ($_REQUEST["graphs"]*$_REQUEST["page"])) . " " . __("of") . " $total_rows [$url_page_select]
 						</td>\n
 						<td align='right' style='width:100px;' class='textHeaderDark'>";
-	if (($_REQUEST["page"] * $_REQUEST["graphs"]) < $total_rows) { $nav .= "<strong><a class='linkOverDark' href='#' onClick='pageChange(" . ($_REQUEST["page"]+1) . ")'>Next &gt;&gt;</a></strong>"; }
+	if (($_REQUEST["page"] * $_REQUEST["graphs"]) < $total_rows) { $nav .= "<strong><a class='linkOverDark' href='#' onClick='pageChange(" . ($_REQUEST["page"]+1) . ")'>" . __("Next") . "&gt;&gt;</a></strong>"; }
 	$nav .= "</td>\n
 					</tr>
 				</table>
@@ -234,7 +234,7 @@ if ($total_rows > $_REQUEST["graphs"]) {
 				<table width='100%' cellspacing='0' cellpadding='0' border='0'>
 					<tr>
 						<td align='center' class='textHeaderDark'>
-							Showing All Graphs" . (strlen($_REQUEST["filter"]) ? " [ Filter '" . $_REQUEST["filter"] . "' Applied ]" : "") . "
+							" . __("Showing All Graphs") . (strlen($_REQUEST["filter"]) ? " [ " . __("Filter") . " '" . $_REQUEST["filter"] . "' " . __("Applied") . " ]" : "") . "
 						</td>
 					</tr>
 				</table>

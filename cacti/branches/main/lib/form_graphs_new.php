@@ -225,7 +225,7 @@ function host_new_graphs($host_id, $host_template_id, $selected_graphs_array) {
 			if ($form_type == "cg") {
 				$graph_template_id = $form_id1;
 
-				html_start_box("<strong>Create Graph from '" . db_fetch_cell("select name from graph_templates where id=$graph_template_id") . "'", "100%", $colors["header"], "3", "center", "");
+				html_start_box("<strong>" . __("Create Graph from '%s'", db_fetch_cell("select name from graph_templates where id=$graph_template_id")), "100%", $colors["header"], "3", "center", "");
 			}elseif ($form_type == "sg") {
 				while (list($form_id2, $form_array3) = each($form_array2)) {
 					/* ================= input validation ================= */
@@ -429,12 +429,12 @@ function graphs_new() {
 					</td>
 					<?php } ?>
 					<td style='white-space:nowrap;width:55px;' class='textGraphFilter'>
-						&nbsp;Type:&nbsp;
+						&nbsp;<?php print __("Type:");?>&nbsp;
 					</td>
 					<td width="1">
 						<select name="graph_type" onChange="applyGraphsNewFilterChange(document.form_graphs_new)">
-						<option value="-2"<?php if ($_REQUEST["graph_type"] == "-2") {?> selected<?php }?>>All</option>
-						<option value="-1"<?php if ($_REQUEST["graph_type"] == "-1") {?> selected<?php }?>>Graph Template Based</option>
+						<option value="-2"<?php if ($_REQUEST["graph_type"] == "-2") {?> selected<?php }?>><?php print __("All");?></option>
+						<option value="-1"<?php if ($_REQUEST["graph_type"] == "-1") {?> selected<?php }?>><?php print __("Graph Template Based");?></option>
 						<?php
 
 						$snmp_queries = db_fetch_assoc("SELECT
@@ -455,7 +455,7 @@ function graphs_new() {
 						</select>
 					</td>
 					<td style="white-space:nowrap;width:1%;" class="textInfo" align="center" valign="top">
-						<?php if (!isset($_REQUEST["tab"])) { ?><span style="white-space: nowrap; color: #c16921;">*</span><a href="host.php?action=edit&id=<?php print $_REQUEST["host_id"];?>">Edit this Host</a><br><?php } ?>
+						<?php if (!isset($_REQUEST["tab"])) { ?><span style="white-space: nowrap; color: #c16921;">*</span><a href="host.php?action=edit&id=<?php print $_REQUEST["host_id"];?>"><?php print __("Edit this Host");?></a><br><?php } ?>
 						<?php api_plugin_hook('graphs_new_top_links'); ?>
 					</td>
 				</tr>
@@ -470,8 +470,8 @@ function graphs_new() {
 						<input type="text" name="filter" size="30" width="200" value="<?php print $_REQUEST["filter"];?>">
 					</td>
 					<td align="left" style='white-space:nowrap;width:120px;'>
-						&nbsp;<input type="submit" name="go" value="Go" align="middle">
-						<input type="submit" name="clear_x" value="Clear" align="middle">
+						&nbsp;<input type="submit" name="go" value="<?php print __("Go");?>" align="middle">
+						<input type="submit" name="clear_x" value="<?php print __("Clear");?>" align="middle">
 						<input type="hidden" name="action" value="edit">
 						<input type="hidden" name="tab" value="newgraphs">
 					</td>
@@ -538,10 +538,10 @@ function graphs_new() {
 		print "<script type='text/javascript'>gt_update_deps(1);</script>\n";
 		print "<script type='text/javascript'>\nvar created_graphs = new Array()\n</script>\n";
 
-		html_start_box("<strong>Graph Templates</strong>", "100%", $colors["header"], "3", "center", "");
+		html_start_box("<strong>" . __("Graph Templates") . "</strong>", "100%", $colors["header"], "3", "center", "");
 		print "	<tr class='rowSubHeader'>
-				<td class='textSubHeaderDark'>Graph Template Name</td>
-				<td class='rowSubHeader' width='1%' align='center' style='" . get_checkbox_style() . "'><input type='checkbox' style='margin: 0px;' name='all_cg' title='Select All' onClick='SelectAll(\"cg\",this.checked);gt_update_selection_indicators();'></td>\n
+				<td class='textSubHeaderDark'>" . __("Graph Template Name") . "</td>
+				<td class='rowSubHeader' width='1%' align='center' style='" . get_checkbox_style() . "'><input type='checkbox' style='margin: 0px;' name='all_cg' title='" . __("Select All") . "' onClick='SelectAll(\"cg\",this.checked);gt_update_selection_indicators();'></td>\n
 			</tr>\n";
 
 		/* create a row for each graph template associated with the host template */
@@ -552,7 +552,7 @@ function graphs_new() {
 			print "<tr id='gt_line$query_row' bgcolor='#" . (($i % 2 == 0) ? "ffffff" : $colors["light"]) . "'>"; $i++;
 
 			print "		<td onClick='gt_select_line(" . $graph_template["graph_template_id"] . ");'><span id='gt_text$query_row" . "_0'>
-						<strong>Create:</strong> " . $graph_template["graph_template_name"] . "</span>
+						<strong>" . __("Create:") . "</strong> " . $graph_template["graph_template_name"] . "</span>
 					</td>
 					<td align='right'>
 						<input type='checkbox' name='cg_$query_row' id='cg_$query_row' onClick='gt_update_selection_indicators();'>
@@ -570,7 +570,7 @@ function graphs_new() {
 		/* create a row at the bottom that lets the user create any graph they choose */
 		print "	<tr bgcolor='#" . (($i % 2 == 0) ? "ffffff" : $colors["light"]) . "'>
 				<td colspan='2' width='60' nowrap>
-					<strong>Create:</strong>&nbsp;";
+					<strong>" . __("Create:") . "</strong>&nbsp;";
 					form_dropdown("cg_g", $available_graph_templates, "name", "id", "", "(Select a graph type to create)", "", "textArea");
 		print "		</td>
 			</tr>";
@@ -775,13 +775,12 @@ function graphs_new() {
 					}
 
 					if (!sizeof($snmp_query_indexes)) {
-						print "<tr class='rowAlternate1'><td>This data query returned 0 rows, perhaps there was a problem executing this
-							data query. You can <a href='" . htmlspecialchars("host.php?action=query_verbose&id=" . $snmp_query["id"] . "&host_id=" . $host["id"]) . "'>run this data
-							query in debug mode</a> to get more information.</td></tr>\n";
+						print "<tr class='rowAlternate1'><td>" . __("This data query returned 0 rows, perhaps there was a problem executing this
+							data query. You can %1$srun this data query in debug mode%2$s to get more information.", "<a href='" . htmlspecialchars("host.php?action=query_verbose&id=" . $snmp_query["id"] . "&host_id=" . $host["id"]) . "'>", "</a>") . "</td></tr>\n";
 					}else{
 						print "<tr class='rowSubHeader'>
 								$html_dq_header
-								<td class='rowSubHeader' width='1%' align='center' style='" . get_checkbox_style() . "'><input type='checkbox' style='margin: 0px;' name='all_" . $snmp_query["id"] . "' title='Select All' onClick='SelectAll(\"sg_" . $snmp_query["id"] . "\",this.checked);dq_update_selection_indicators();'></td>\n
+								<td class='rowSubHeader' width='1%' align='center' style='" . get_checkbox_style() . "'><input type='checkbox' style='margin: 0px;' name='all_" . $snmp_query["id"] . "' title='" . __("Select All") ."' onClick='SelectAll(\"sg_" . $snmp_query["id"] . "\",this.checked);dq_update_selection_indicators();'></td>\n
 							</tr>\n";
 					}
 
@@ -823,10 +822,10 @@ function graphs_new() {
 						print $nav;
 					}
 				}else{
-					print "<tr class='rowAlternate1'><td colspan='2' style='color: red; font-size: 12px; font-weight: bold;'>Search Returned no Rows.</td></tr>\n";
+					print "<tr class='rowAlternate1'><td colspan='2' style='color: red; font-size: 12px; font-weight: bold;'>" . __("Search Returned no Rows.") . "</td></tr>\n";
 				}
 			}else{
-				print "<tr class='rowAlternate1'><td colspan='2' style='color: red; font-size: 12px; font-weight: bold;'>Error in data query.</td></tr>\n";
+				print "<tr class='rowAlternate1'><td colspan='2' style='color: red; font-size: 12px; font-weight: bold;'>" . __("Error in data query.") . "</td></tr>\n";
 			}
 
 			/* draw the graph template drop down here */
@@ -845,7 +844,7 @@ function graphs_new() {
 								<img src='images/arrow.gif' alt='' align='middle'>&nbsp;
 							</td>
 							<td align='right'>
-								<span style='font-size: 12px; font-style: italic;'>Select a graph type:</span>&nbsp;
+								<span style='font-size: 12px; font-style: italic;'>" . __("Select a graph type:") . "</span>&nbsp;
 								<select name='sgg_" . $snmp_query["id"] . "' id='sgg_" . $snmp_query["id"] . "' onChange='dq_update_deps(" . $snmp_query["id"] . "," . $column_counter . ");'>
 									"; html_create_list($data_query_graphs,"name","id","0"); print "
 								</select>

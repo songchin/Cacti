@@ -281,7 +281,7 @@ function duplicate_graph($_local_graph_id, $_graph_template_id, $graph_title) {
 
 		$local_graph_id = sql_save($save, "graph_local");
 
-		$graph_template_graph["title"] = str_replace("<graph_title>", $graph_template_graph["title"], $graph_title);
+		$graph_template_graph["title"] = str_replace(__("<graph_title>"), $graph_template_graph["title"], $graph_title);
 	}elseif (!empty($_graph_template_id)) {
 		$graph_template = db_fetch_row("select * from graph_templates where id=$_graph_template_id");
 		$graph_template_graph = db_fetch_row("select * from graph_templates_graph where graph_template_id=$_graph_template_id and local_graph_id=0");
@@ -291,7 +291,7 @@ function duplicate_graph($_local_graph_id, $_graph_template_id, $graph_title) {
 		/* create new entry: graph_templates */
 		$save["id"] = 0;
 		$save["hash"] = get_hash_graph_template(0);
-		$save["name"] = str_replace("<template_title>", $graph_template["name"], $graph_title);
+		$save["name"] = str_replace(__("<template_title>"), $graph_template["name"], $graph_title);
 
 		$graph_template_id = sql_save($save, "graph_templates");
 	}
@@ -387,7 +387,7 @@ function duplicate_data_source($_local_data_id, $_data_template_id, $data_source
 
 		$local_data_id = sql_save($save, "data_local");
 
-		$data_template_data["name"] = str_replace("<ds_title>", $data_template_data["name"], $data_source_title);
+		$data_template_data["name"] = str_replace(__("<ds_title>"), $data_template_data["name"], $data_source_title);
 	}elseif (!empty($_data_template_id)) {
 		$data_template = db_fetch_row("select * from data_template where id=$_data_template_id");
 		$data_template_data = db_fetch_row("select * from data_template_data where data_template_id=$_data_template_id and local_data_id=0");
@@ -399,7 +399,7 @@ function duplicate_data_source($_local_data_id, $_data_template_id, $data_source
 		/* create new entry: data_template */
 		$save["id"] = 0;
 		$save["hash"] = get_hash_data_template(0);
-		$save["name"] = str_replace("<template_title>", $data_template["name"], $data_source_title);
+		$save["name"] = str_replace(__("<template_title>"), $data_template["name"], $data_source_title);
 
 		$data_template_id = sql_save($save, "data_template");
 	}
@@ -475,7 +475,7 @@ function duplicate_host_template($_host_template_id, $host_template_title) {
 	$host_template_data_queries = db_fetch_assoc("select * from host_template_snmp_query where host_template_id=$_host_template_id");
 
 	/* substitute the title variable */
-	$host_template["name"] = str_replace("<template_title>", $host_template["name"], $host_template_title);
+	$host_template["name"] = str_replace(__("<template_title>"), $host_template["name"], $host_template_title);
 
 	/* create new entry: host_template */
 	$save["id"] = 0;
@@ -512,7 +512,7 @@ function duplicate_cdef($_cdef_id, $cdef_title) {
 	$cdef_items = db_fetch_assoc("select * from cdef_items where cdef_id=$_cdef_id");
 
 	/* substitute the title variable */
-	$cdef["name"] = str_replace("<cdef_title>", $cdef["name"], $cdef_title);
+	$cdef["name"] = str_replace(__("<cdef_title>"), $cdef["name"], $cdef_title);
 
 	/* create new entry: host_template */
 	$save["id"] = 0;
