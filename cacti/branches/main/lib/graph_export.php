@@ -1623,11 +1623,6 @@ function create_export_directory_structure($cacti_root_path, $dir) {
 	copy("$cacti_root_path/include/treeview/ftv2vertline.gif", "$treeview_dir/ftv2vertline.gif");
 }
 
-function get_host_description($host_id) {
-	$host = db_fetch_row("SELECT description FROM host WHERE id='".$host_id."'");
-	return $host["description"];
-}
-
 function get_host_id($tree_item_id) {
 	$graph_tree_item=db_fetch_row("SELECT host_id FROM graph_tree_items WHERE id='".$tree_item_id."'");
 	return $graph_tree_item["host_id"];
