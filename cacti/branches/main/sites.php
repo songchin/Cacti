@@ -200,7 +200,7 @@ function site_export() {
 
 	$sql_where = "";
 
-	$sites = site_get_site_records($sql_where, FALSE);
+	$sites = site_get_site_records($sql_where, "", FALSE);
 
 	if ($_REQUEST["detail"] == "false") {
 		$xport_array = array();
@@ -310,7 +310,7 @@ function site_remove() {
 	}
 }
 
-function site_get_site_records(&$sql_where, $apply_limits = TRUE) {
+function site_get_site_records(&$sql_where, $rows = 30, $apply_limits = TRUE) {
 	/* create SQL where clause */
 	$device_type_info = db_fetch_row("SELECT * FROM host_template WHERE id='" . $_REQUEST["host_template_id"] . "'");
 
@@ -349,7 +349,7 @@ function site_get_site_records(&$sql_where, $apply_limits = TRUE) {
 			ORDER BY " . $_REQUEST["sort_column"] . " " . $_REQUEST["sort_direction"];
 
 		if ($apply_limits) {
-			$query_string .= " LIMIT " . (read_config_option("num_rows_sites")*($_REQUEST["page"]-1)) . "," . read_config_option("num_rows_sites");
+			$query_string .= " LIMIT " . ($rows*($_REQUEST["page"]-1)) . "," . $rows;
 		}
 	}else{
 		$query_string ="SELECT sites.id,
@@ -370,7 +370,7 @@ function site_get_site_records(&$sql_where, $apply_limits = TRUE) {
 			ORDER BY " . $_REQUEST["sort_column"] . " " . $_REQUEST["sort_direction"];
 
 		if ($apply_limits) {
-			$query_string .= " LIMIT " . (read_config_option("num_rows_sites")*($_REQUEST["page"]-1)) . "," . read_config_option("num_rows_sites");
+			$query_string .= " LIMIT " . ($rows*($_REQUEST["page"]-1)) . "," . $rows;
 		}
 	}
 
@@ -595,6 +595,7 @@ function site() {
 
 	/* remember these search fields in session vars so we don't have to keep passing them around */
 	load_current_session_value("page", "sess_sites_current_page", "1");
+	load_current_session_value("rows", "sess_sites_rows", "-1");
 	load_current_session_value("detail", "sess_sites_detail", "false");
 	load_current_session_value("site_id", "sess_sites_site_id", "-1");
 	load_current_session_value("host_template_id", "sess_sites_host_template_id", "-1");
@@ -609,7 +610,13 @@ function site() {
 
 	$sql_where = "";
 
-	$sites = site_get_site_records($sql_where);
+	if (get_request_var_request("rows") == "-1") {
+		$rows = read_config_option("num_rows_device");
+	}else{
+		$rows = get_request_var_request("rows");
+	}
+
+	$sites = site_get_site_records($sql_where, $rows);
 
 	if ($_REQUEST["detail"] == "false") {
 		$total_rows = db_fetch_cell("SELECT
@@ -624,12 +631,6 @@ function site() {
 			RIGHT JOIN sites ON (host.site_id=sites.id)
 			$sql_where
 			GROUP BY sites.name, host_template.id"));
-	}
-
-	if (get_request_var_request("rows") == "-1") {
-		$rows = read_config_option("num_rows_device");
-	}else{
-		$rows = get_request_var_request("rows");
 	}
 
 	/* generate page list */
