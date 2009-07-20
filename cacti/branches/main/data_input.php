@@ -463,10 +463,11 @@ function data_edit() {
 }
 
 function data() {
-	global $colors, $input_types, $di_actions;
+	global $colors, $input_types, $di_actions, $item_rows;
 
 	/* ================= input validation ================= */
 	input_validate_input_number(get_request_var_request("page"));
+	input_validate_input_number(get_request_var_request("rows"));
 	/* ==================================================== */
 
 	/* clean up search string */
@@ -486,28 +487,42 @@ function data() {
 
 	/* if the user pushed the 'clear' button */
 	if (isset($_REQUEST["clear_x"])) {
+		kill_session_var("sess_data_input_current_page");
+		kill_session_var("sess_data_input_rows");
 		kill_session_var("sess_data_input_filter");
 		kill_session_var("sess_data_input_sort_column");
 		kill_session_var("sess_data_input_sort_direction");
 
 		unset($_REQUEST["page"]);
+		unset($_REQUEST["rows"]);
 		unset($_REQUEST["filter"]);
 		unset($_REQUEST["sort_column"]);
 		unset($_REQUEST["sort_direction"]);
-		$_REQUEST["page"] = 1;
 	}
 
+	?>
+	<script type="text/javascript">
+	<!--
+	function applyFilterChange(objForm) {
+		strURL = '?rows=' + objForm.rows.value;
+		document.location = strURL;
+	}
+	-->
+	</script>
+	<?php
+
 	/* remember these search fields in session vars so we don't have to keep passing them around */
+	load_current_session_value("page", "sess_data_input_current_page", "1");
+	load_current_session_value("rows", "sess_data_input_rows", "-1");
 	load_current_session_value("filter", "sess_data_input_filter", "");
 	load_current_session_value("sort_column", "sess_data_input_sort_column", "name");
 	load_current_session_value("sort_direction", "sess_data_input_sort_direction", "ASC");
-	load_current_session_value("page", "sess_data_input_current_page", "1");
 
 	html_start_box("<strong>" . __("Data Input Methods") . "</strong>", "100%", $colors["header"], "3", "center", "data_input.php?action=edit", true);
 	?>
 	<tr class="rowAlternate2 noprint">
 		<td class="noprint">
-			<form name="form_graph_id" action="data_queries.php">
+			<form name="form_graph_id" action="data_input.php">
 			<table cellpadding="0" cellspacing="0">
 				<tr class="noprint">
 					<td style='white-space:nowrap;width:50px;'>
@@ -515,6 +530,21 @@ function data() {
 					</td>
 					<td width="1">
 						<input type="text" name="filter" size="40" value="<?php print $_REQUEST["filter"];?>">
+					</td>
+					<td style='white-space:nowrap;width:50px;'>
+						&nbsp;<?php print __("Rows:");?>&nbsp;
+					</td>
+					<td width="1">
+						<select name="rows" onChange="applyFilterChange(document.form_graph_id)">
+							<option value="-1"<?php if ($_REQUEST["rows"] == "-1") {?> selected<?php }?>>Default</option>
+							<?php
+							if (sizeof($item_rows) > 0) {
+							foreach ($item_rows as $key => $value) {
+								print "<option value='" . $key . "'"; if ($_REQUEST["rows"] == $key) { print " selected"; } print ">" . $value . "</option>\n";
+							}
+							}
+							?>
+						</select>
 					</td>
 					<td style='white-space:nowrap;width:120px;'>
 						&nbsp;<input type="submit" Value="<?php print __("Go");?>" name="go" align="middle">
@@ -544,14 +574,20 @@ function data() {
 		FROM data_input
 		$sql_where");
 
+	if (get_request_var_request("rows") == "-1") {
+		$rows = read_config_option("num_rows_device");
+	}else{
+		$rows = get_request_var_request("rows");
+	}
+
 	$data_inputs = db_fetch_assoc("SELECT *
 		FROM data_input
 		$sql_where
 		ORDER BY " . $_REQUEST['sort_column'] . " " . $_REQUEST['sort_direction'] . "
-		LIMIT " . (read_config_option("num_rows_device")*($_REQUEST["page"]-1)) . "," . read_config_option("num_rows_device"));
+		LIMIT " . ($rows*($_REQUEST["page"]-1)) . "," . $rows);
 
 	/* generate page list navigation */
-	$nav = html_create_nav($_REQUEST["page"], MAX_DISPLAY_PAGES, read_config_option("num_rows_device"), $total_rows, 7, "data_input.php");
+	$nav = html_create_nav($_REQUEST["page"], MAX_DISPLAY_PAGES, $rows, $total_rows, 7, "data_input.php");
 
 	print $nav;
 	html_end_box(FALSE);

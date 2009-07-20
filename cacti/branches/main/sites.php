@@ -626,8 +626,14 @@ function site() {
 			GROUP BY sites.name, host_template.id"));
 	}
 
+	if (get_request_var_request("rows") == "-1") {
+		$rows = read_config_option("num_rows_device");
+	}else{
+		$rows = get_request_var_request("rows");
+	}
+
 	/* generate page list */
-	$url_page_select = str_replace("&page", "?page", get_page_list($_REQUEST["page"], MAX_DISPLAY_PAGES, read_config_option("num_rows_device"), $total_rows, "sites.php"));
+	$url_page_select = str_replace("&page", "?page", get_page_list($_REQUEST["page"], MAX_DISPLAY_PAGES, $rows, $total_rows, "sites.php"));
 
 	if ($_REQUEST["detail"] == "false") {
 		/* generate page list navigation */

@@ -658,7 +658,12 @@ function data_query_edit() {
 }
 
 function data_query() {
-	global $colors, $dq_actions;
+	global $colors, $dq_actions, $item_rows;
+
+	/* ================= input validation ================= */
+	input_validate_input_number(get_request_var_request("page"));
+	input_validate_input_number(get_request_var_request("rows"));
+	/* ==================================================== */
 
 	/* clean up search string */
 	if (isset($_REQUEST["filter"])) {
@@ -677,22 +682,36 @@ function data_query() {
 
 	/* if the user pushed the 'clear' button */
 	if (isset($_REQUEST["clear_x"])) {
+		kill_session_var("sess_data_queries_current_page");
+		kill_session_var("sess_data_queries_rows");
 		kill_session_var("sess_data_queries_filter");
 		kill_session_var("sess_data_queries_sort_column");
 		kill_session_var("sess_data_queries_sort_direction");
 
 		unset($_REQUEST["page"]);
+		unset($_REQUEST["rows"]);
 		unset($_REQUEST["filter"]);
 		unset($_REQUEST["sort_column"]);
 		unset($_REQUEST["sort_direction"]);
-		$_REQUEST["page"] = 1;
 	}
 
+	?>
+	<script type="text/javascript">
+	<!--
+	function applyFilterChange(objForm) {
+		strURL = '?rows=' + objForm.rows.value;
+		document.location = strURL;
+	}
+	-->
+	</script>
+	<?php
+
 	/* remember these search fields in session vars so we don't have to keep passing them around */
+	load_current_session_value("page", "sess_data_queries_current_page", "1");
+	load_current_session_value("rows", "sess_data_queries_rows", "-1");
+	load_current_session_value("filter", "sess_data_queries_filter", "");
 	load_current_session_value("sort_column", "sess_data_queries_sort_column", "name");
 	load_current_session_value("sort_direction", "sess_data_queries_sort_direction", "ASC");
-	load_current_session_value("page", "sess_data_queries_current_page", "1");
-	load_current_session_value("filter", "sess_data_queries_filter", "");
 
 	html_start_box("<strong>" . __("Data Queries") . "</strong>", "100%", $colors["header"], "3", "center", "data_queries.php?action=edit", true);
 	?>
@@ -706,6 +725,21 @@ function data_query() {
 					</td>
 					<td width="1">
 						<input type="text" name="filter" size="40" value="<?php print $_REQUEST["filter"];?>">
+					</td>
+					<td style='white-space:nowrap;width:50px;'>
+						&nbsp;<?php print __("Rows:");?>&nbsp;
+					</td>
+					<td width="1">
+						<select name="rows" onChange="applyFilterChange(document.form_graph_id)">
+							<option value="-1"<?php if ($_REQUEST["rows"] == "-1") {?> selected<?php }?>>Default</option>
+							<?php
+							if (sizeof($item_rows) > 0) {
+							foreach ($item_rows as $key => $value) {
+								print "<option value='" . $key . "'"; if ($_REQUEST["rows"] == $key) { print " selected"; } print ">" . $value . "</option>\n";
+							}
+							}
+							?>
+						</select>
 					</td>
 					<td style='white-space:nowrap;width:120px;'>
 						&nbsp;<input type="submit" Value="<?php print __("Go");?>" name="go" align="middle">
@@ -734,6 +768,12 @@ function data_query() {
 		FROM snmp_query INNER JOIN data_input ON (snmp_query.data_input_id=data_input.id)
 		$sql_where");
 
+	if (get_request_var_request("rows") == "-1") {
+		$rows = read_config_option("num_rows_device");
+	}else{
+		$rows = get_request_var_request("rows");
+	}
+
 	$snmp_queries = db_fetch_assoc("SELECT
 		snmp_query.id,
 		snmp_query.name,
@@ -741,10 +781,10 @@ function data_query() {
 		FROM snmp_query INNER JOIN data_input ON (snmp_query.data_input_id=data_input.id)
 		$sql_where
 		ORDER BY " . $_REQUEST['sort_column'] . " " . $_REQUEST['sort_direction'] . "
-		LIMIT " . (read_config_option("num_rows_device")*($_REQUEST["page"]-1)) . "," . read_config_option("num_rows_device"));
+		LIMIT " . ($rows*($_REQUEST["page"]-1)) . "," . $rows);
 
 	/* generate page list navigation */
-	$nav = html_create_nav($_REQUEST["page"], MAX_DISPLAY_PAGES, read_config_option("num_rows_device"), $total_rows, 7, "data_queries.php");
+	$nav = html_create_nav($_REQUEST["page"], MAX_DISPLAY_PAGES, $rows, $total_rows, 7, "data_queries.php");
 
 	print $nav;
 	html_end_box(false);

@@ -424,43 +424,43 @@ function form_save() {
 			}else{
 				raise_message(2);
 			}
+		}
+	}else if (isset($_POST["save_component_realm_perms"])) {
+		$user_id = get_request_var_post("id");
+		db_execute("DELETE FROM user_auth_realm WHERE user_id = " . $user_id);
 
-			if (isset($_POST["save_component_realm_perms"])) {
-				db_execute("DELETE FROM user_auth_realm WHERE user_id = " . $user_id);
-
-				while (list($var, $val) = each($_POST)) {
-					if (eregi("^[section]", $var)) {
-						if (substr($var, 0, 7) == "section") {
-						    db_execute("REPLACE INTO user_auth_realm (user_id,realm_id) VALUES (" . $user_id . "," . substr($var, 7) . ")");
-						}
-					}
+		while (list($var, $val) = each($_POST)) {
+			if (eregi("^[section]", $var)) {
+				if (substr($var, 0, 7) == "section") {
+				    db_execute("REPLACE INTO user_auth_realm (user_id,realm_id) VALUES (" . $user_id . "," . substr($var, 7) . ")");
 				}
-			}elseif (isset($_POST["save_component_graph_settings"])) {
-				while (list($tab_short_name, $tab_fields) = each($settings_graphs)) {
-					while (list($field_name, $field_array) = each($tab_fields)) {
-						if ((isset($field_array["items"])) && (is_array($field_array["items"]))) {
-							while (list($sub_field_name, $sub_field_array) = each($field_array["items"])) {
-								db_execute("REPLACE INTO settings_graphs (user_id,name,value) VALUES (" . (!empty($user_id) ? $user_id : get_request_var_post("id")) . ",'$sub_field_name', '" . get_request_var_post($sub_field_name, "") . "')");
-							}
-						}else{
-							db_execute("REPLACE INTO settings_graphs (user_id,name,value) VALUES (" . (!empty($user_id) ? $user_id : $_POST["id"]) . ",'$field_name', '" . get_request_var_post($field_name) . "')");
-						}
-					}
-				}
-
-				/* reset local settings cache so the user sees the new settings */
-				kill_session_var("sess_graph_config_array");
-			}elseif (isset($_POST["save_component_graph_perms"])) {
-				db_execute("UPDATE user_auth SET
-					policy_graphs = " . get_request_var_post("policy_graphs") . ",
-					policy_trees = " . get_request_var_post("policy_trees") . ",
-					policy_hosts = " . get_request_var_post("policy_hosts") . ",
-					policy_graph_templates = " . get_request_var_post("policy_graph_templates") . "
-					WHERE id = " . get_request_var_post("id"));
-			} else {
-				api_plugin_hook('user_admin_user_save');
 			}
 		}
+	}elseif (isset($_POST["save_component_graph_settings"])) {
+		$user_id = get_request_var_post("id");
+		while (list($tab_short_name, $tab_fields) = each($settings_graphs)) {
+			while (list($field_name, $field_array) = each($tab_fields)) {
+				if ((isset($field_array["items"])) && (is_array($field_array["items"]))) {
+					while (list($sub_field_name, $sub_field_array) = each($field_array["items"])) {
+						db_execute("REPLACE INTO settings_graphs (user_id,name,value) VALUES (" . (!empty($user_id) ? $user_id : get_request_var_post("id")) . ",'$sub_field_name', '" . get_request_var_post($sub_field_name, "") . "')");
+					}
+				}else{
+					db_execute("REPLACE INTO settings_graphs (user_id,name,value) VALUES (" . (!empty($user_id) ? $user_id : $_POST["id"]) . ",'$field_name', '" . get_request_var_post($field_name) . "')");
+				}
+			}
+		}
+
+		/* reset local settings cache so the user sees the new settings */
+		kill_session_var("sess_graph_config_array");
+	}elseif (isset($_POST["save_component_graph_perms"])) {
+		db_execute("UPDATE user_auth SET
+			policy_graphs = " . get_request_var_post("policy_graphs") . ",
+			policy_trees = " . get_request_var_post("policy_trees") . ",
+			policy_hosts = " . get_request_var_post("policy_hosts") . ",
+			policy_graph_templates = " . get_request_var_post("policy_graph_templates") . "
+			WHERE id = " . get_request_var_post("id"));
+	} else {
+		api_plugin_hook('user_admin_user_save');
 	}
 
 	/* redirect to the appropriate page */
@@ -822,6 +822,7 @@ function user_realms_edit() {
 	<?php
 	html_end_box();
 
+	form_hidden_box("id", $_REQUEST["id"], "");
 	form_hidden_box("save_component_realm_perms","1","");
 }
 
