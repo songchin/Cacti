@@ -25,10 +25,10 @@
 include("./include/auth.php");
 include_once(CACTI_BASE_PATH . "/lib/utility.php");
 include_once(CACTI_BASE_PATH . "/lib/api_data_source.php");
-include_once(CACTI_BASE_PATH . "/lib/form_host.php");
-include_once(CACTI_BASE_PATH . "/lib/form_graphs_new.php");
-include_once(CACTI_BASE_PATH . "/lib/form_graphs.php");
-include_once(CACTI_BASE_PATH . "/lib/form_data_sources.php");
+include_once(CACTI_BASE_PATH . "/lib/host_form.php");
+include_once(CACTI_BASE_PATH . "/lib/graphs_new_form.php");
+include_once(CACTI_BASE_PATH . "/lib/graphs_form.php");
+include_once(CACTI_BASE_PATH . "/lib/data_sources_form.php");
 include_once(CACTI_BASE_PATH . "/lib/api_tree.php");
 include_once(CACTI_BASE_PATH . "/lib/html_tree.php");
 include_once(CACTI_BASE_PATH . "/lib/api_graph.php");
