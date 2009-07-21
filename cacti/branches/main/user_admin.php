@@ -875,6 +875,7 @@ function graph_settings_edit() {
 
 	html_end_box();
 
+	form_hidden_box("id", $_REQUEST["id"], "");
 	form_hidden_box("save_component_graph_settings","1","");
 }
 

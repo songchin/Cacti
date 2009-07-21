@@ -43,28 +43,32 @@ function graph_view_filter_table($mode = "mode") {
 	});
 
 	function applyGraphFilter(objForm) {
+		<?php if ($mode == 'tree') { ?>
 		strURL = '?host_id=' + objForm.host_id.value;
 		strURL = strURL + '&graph_template_id=' + objForm.graph_template_id.value;
 		strURL = strURL + '&filter=' + objForm.filter.value;
-		<?php if ($mode == 'tree') { ?>
 		$.get("lib/ajax/get_graph_tree_content.php" + strURL, function (data) {
 			$("#graphs").html(data);
 		});
 		<?php }else{ ;?>
-		$.get("lib/ajax/get_graph_preview_content.php" + strURL, function (data) {
+		strURL = '?action=ajax_preview&host_id=' + objForm.host_id.value;
+		strURL = strURL + '&graph_template_id=' + objForm.graph_template_id.value;
+		strURL = strURL + '&filter=' + objForm.filter.value;
+		$.get("graph_view.php" + strURL, function (data) {
 			$("#graph_content").html(data);
 		});
 		<?php } ;?>
 	}
 
 	function clearGraphFilter(objForm) {
-		strURL = '?clear_filter=true';
 		<?php if ($mode == 'tree') { ?>
+		strURL = '?clear_filter=true';
 		$.get("lib/ajax/get_graph_tree_content.php" + strURL, function (data) {
 			$("#graphs").html(data);
 		});
 		<?php }else{ ;?>
-		$.get("lib/ajax/get_graph_preview_content.php" + strURL, function (data) {
+		strURL = '?action=ajax_preview&clear_filter=true';
+		$.get("graph_view.php" + strURL, function (data) {
 			$("#graph_content").html(data);
 		});
 		<?php } ;?>
@@ -202,48 +206,58 @@ function graph_view_timespan_selector($mode = "tree") {
 	request_type = 'preset';
 
 	function applyTimespanFilterChange(objForm) {
+		<?php if ($mode == 'tree') { ?>
 		if (request_type == 'preset') {
 			strURL = '?predefined_timespan=' + objForm.predefined_timespan.value;
 		}else{
 			strURL = '?date1=' + objForm.date1.value;
 			strURL = strURL + '&date2=' + objForm.date2.value;
 		}
-		<?php if ($mode == 'tree') { ?>
 		$.get("lib/ajax/get_graph_tree_content.php" + strURL, function (data) {
 			$("#graphs").html(data);
 		});
 		<?php }else{ ;?>
-		$.get("lib/ajax/get_graph_preview_content.php" + strURL, function (data) {
+		if (request_type == 'preset') {
+			strURL = '?action=ajax_preview&predefined_timespan=' + objForm.predefined_timespan.value;
+		}else{
+			strURL = '?action=ajax_preview&date1=' + objForm.date1.value;
+			strURL = strURL + '&date2=' + objForm.date2.value;
+		}
+		$.get("graph_view.php" + strURL, function (data) {
 			$("#graph_content").html(data);
 		});
 		<?php } ;?>
 	}
 
 	function clearTimespanFilter(objForm) {
-		strURL = '?button_clear_x=true';
 		<?php if ($mode == 'tree') { ?>
+		strURL = '?button_clear_x=true';
 		$.get("lib/ajax/get_graph_tree_content.php" + strURL, function (data) {
 			$("#graphs").html(data);
 		});
 		<?php }else{ ;?>
-		$.get("lib/ajax/get_graph_preview_content.php" + strURL, function (data) {
+		strURL = '?action=ajax_preview&button_clear_x=true';
+		$.get("graph_view.php" + strURL, function (data) {
 			$("#graph_content").html(data);
 		});
 		<?php } ;?>
 	}
 
 	function timeShift(objForm, direction) {
+		<?php if ($mode == 'tree') { ?>
 		strURL = '?move_' + direction + '=true';
 		strURL = strURL + '&predefined_timeshift=' + objForm.predefined_timeshift.value;
 		strURL = strURL + '&date1=' + objForm.date1.value;
 		strURL = strURL + '&date2=' + objForm.date2.value;
-
-		<?php if ($mode == 'tree') { ?>
 		$.get("lib/ajax/get_graph_tree_content.php" + strURL, function (data) {
 			$("#graphs").html(data);
 		});
 		<?php }else{ ;?>
-		$.get("lib/ajax/get_graph_preview_content.php" + strURL, function (data) {
+		strURL = '?action=ajax_preview&move_' + direction + '=true';
+		strURL = strURL + '&predefined_timeshift=' + objForm.predefined_timeshift.value;
+		strURL = strURL + '&date1=' + objForm.date1.value;
+		strURL = strURL + '&date2=' + objForm.date2.value;
+		$.get("graph_view.php" + strURL, function (data) {
 			$("#graph_content").html(data);
 		});
 		<?php } ;?>

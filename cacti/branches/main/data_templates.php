@@ -189,7 +189,6 @@ function form_save() {
 
 		if (!is_error_message()) {
 			$save3["data_template_id"] = $data_template_id;
-			print_r($save3);
 			$data_template_rrd_id = sql_save($save3, "data_template_rrd");
 
 			if ($data_template_rrd_id) {

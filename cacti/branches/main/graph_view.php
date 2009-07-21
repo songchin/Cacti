@@ -23,10 +23,29 @@
 */
 
 $guest_account = true;
-include("./include/auth.php");
+include_once("./include/auth.php");
 include_once(CACTI_BASE_PATH . "/lib/html_tree.php");
 include_once(CACTI_BASE_PATH . "/lib/timespan_settings.php");
 include_once(CACTI_BASE_PATH . "/lib/form_graph_view.php");
+
+if (isset($_REQUEST["action"])) {
+switch($_REQUEST["action"]){
+	case "ajax_list":
+		include_once(CACTI_BASE_PATH . "/lib/ajax/get_graph_list_content.php");
+		get_graph_list_content();
+		exit;
+		break;
+
+	case "ajax_preview":
+		include_once(CACTI_BASE_PATH . "/lib/ajax/get_graph_preview_content.php");
+		get_graph_preview_content();
+		exit;
+		break;
+
+	default:
+}
+}
+
 include_once(CACTI_BASE_PATH . "/include/top_graph_header.php");
 
 /* ================= input validation ================= */
@@ -95,7 +114,7 @@ case 'preview':
 	<!--
 
 	$().ready(function() {
-		$.get("lib/ajax/get_graph_preview_content.php", function (data) {
+		$.get("graph_view.php?action=ajax_preview", function (data) {
 			$("#graph_content").html(data);
 		});
 	});
@@ -111,7 +130,7 @@ case 'list':
 	<!--
 
 	$().ready(function() {
-		$.get("lib/ajax/get_graph_list_content.php", function (data) {
+		$.get("graph_view.php?action=ajax_list", function (data) {
 			$("#graph_content").html(data);
 			SetSelections();
 		});

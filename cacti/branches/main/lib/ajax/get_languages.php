@@ -25,7 +25,7 @@ $no_http_headers = true;
 include(dirname(__FILE__) . "/../../include/global.php");
 include_once(dirname(__FILE__) . "/../../lib/functions.php");
 
-sleep(1);
+//sleep(1);
 
 /* rebuild $lang2locale array to find country and language codes easier */
 $locations = array();
