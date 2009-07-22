@@ -990,7 +990,7 @@ function get_graph_tree_content($tree_id, $leaf_id, $host_group_data) {
 	include_once(CACTI_BASE_PATH . "/lib/data_query.php");
 	include_once(CACTI_BASE_PATH . "/lib/tree.php");
 	include_once(CACTI_BASE_PATH . "/lib/html_utility.php");
-	include_once(CACTI_BASE_PATH . "/lib/form_graph_view.php");
+	include_once(CACTI_BASE_PATH . "/lib/graph_view/graph_view_form.php");
 	define("MAX_DISPLAY_PAGES", 21);
 
 	if (empty($tree_id)) { return; }

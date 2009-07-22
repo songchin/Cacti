@@ -26,22 +26,20 @@ $guest_account = true;
 include_once("./include/auth.php");
 include_once(CACTI_BASE_PATH . "/lib/html_tree.php");
 include_once(CACTI_BASE_PATH . "/lib/timespan_settings.php");
-include_once(CACTI_BASE_PATH . "/lib/form_graph_view.php");
+include_once(CACTI_BASE_PATH . "/lib/graph_view/graph_view_form.php");
 
 if (isset($_REQUEST["action"])) {
 switch($_REQUEST["action"]){
 	case "ajax_list":
-		include_once(CACTI_BASE_PATH . "/lib/ajax/get_graph_list_content.php");
 		get_graph_list_content();
 		exit;
-		break;
 
+		break;
 	case "ajax_preview":
-		include_once(CACTI_BASE_PATH . "/lib/ajax/get_graph_preview_content.php");
 		get_graph_preview_content();
 		exit;
-		break;
 
+		break;
 	default:
 }
 }
