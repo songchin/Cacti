@@ -64,15 +64,15 @@ api_plugin_hook('page_head');
 				<?php api_plugin_hook('top_header_tabs'); ?>
 			</ul>
 		</div>
-		<div id='navbar_r'>
-			<ul>
-				<li id="tab_help" class="notselected"><a href="<?php echo pagehelp_url()?>" target="_blank" title="<?php echo __("Help");?>"><?php echo __("Help");?></a></li>
-			</ul>
-		</div>
 	</div>
 	<div id='navbrcrumb'>
 		<div style='float:left'>
 			<?php print draw_navigation_text() . "\n";?>
+		</div>
+		<div style='float:right'>
+			<a href="<?php echo pagehelp_url()?>" target="_blank">
+			<img src='images/information.png' title="<?php print __("Help");?>" alt="<?php print __("Help");?>" style="border-width: 0px;" align="top">
+			</a>
 		</div>
 		<div style='float:right'><?php
 			if (read_config_option("auth_method") != 0) { $date = date_time_format();?><strong><?php echo __date("D, " . $date . " T");?></strong>&nbsp;&nbsp;&nbsp;<?php echo __("Logged in as");?>&nbsp;<strong><?php print db_fetch_cell("select username from user_auth where id=" . $_SESSION["sess_user_id"]);?></strong> (<a href="<?php echo URL_PATH; ?>logout.php"><?php echo __("Logout"); ?></a>)<?php } ?>

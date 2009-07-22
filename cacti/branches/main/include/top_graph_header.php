@@ -152,13 +152,17 @@ $page_title = api_plugin_hook_function('page_title', 'Cacti');
 				<?php echo draw_header_tab("list", __("List"), URL_PATH . "graph_view.php?action=list", URL_PATH . "images/tab_mode_list_new.gif");?>
 				<?php echo draw_header_tab("preview", __("Preview"), URL_PATH . "graph_view.php?action=preview", URL_PATH . "images/tab_mode_preview_new.gif");?>
 				<?php }else{ api_plugin_hook('top_graph_header_tabs_right'); }?>
-				<li id="tab_help" class="notselected"><a href="<?php echo pagehelp_url()?>" target="_blank" title="<?php print __("Help");?>"><?php print __("Help");?></a></li>
 			</ul>
 		</div>
 	</div>
 	<div id='navbrcrumb'>
 		<div style='float:left'>
 			<?php draw_navigation_text();?>
+		</div>
+		<div style='float:right'>
+			<a href="<?php echo pagehelp_url()?>" target="_blank">
+			<img src='images/information.png' title="<?php print __("Help");?>" alt="<?php print __("Help");?>" style="border-width: 0px;" align="top">
+			</a>
 		</div>
 		<div style='float:right'><?php
 			if (read_config_option("auth_method") != 0) { $date = date_time_format();?><strong><?php echo __date("D, " . $date . " T");?></strong>&nbsp;&nbsp;&nbsp;<?php print __("Logged in as");?> <strong><?php print db_fetch_cell("select username from user_auth where id=" . $_SESSION["sess_user_id"]);?></strong> (<a href="<?php echo URL_PATH; ?>logout.php"><?php print __("Logout");?></a>)<?php } ?>
