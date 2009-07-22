@@ -213,6 +213,10 @@ $snmp_priv_protocols = array(
 	"AES128" => __("AES"),
 	);
 
+$banned_snmp_strings = array(
+	"End of MIB",
+	"No Such");
+
 $logfile_options = array(1 =>
 	__("Logfile Only"),
 	__("Logfile and Syslog/Eventlog"),
