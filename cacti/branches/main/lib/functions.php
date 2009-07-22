@@ -2005,7 +2005,7 @@ function get_browser_query_string() {
 	}else{
 		$browser_query_string = basename($_SERVER["PHP_SELF"]) . (empty($_SERVER["QUERY_STRING"]) ? "" : "?" . $_SERVER["QUERY_STRING"]);
 	}
-	
+
 	/* remove the language parameter if it is included */
 	if(strpos($browser_query_string, "language=") !== FALSE) {
 		$param_language = substr($browser_query_string, strpos($browser_query_string, "language="), 11);
@@ -2230,119 +2230,6 @@ function sanitize_search_string($string) {
 	$string = str_replace('*', ' ', $string);
 
 	return $string;
-}
-
-/* pagehelp_url - determines the URL for a context sensitive help page*/
-function pagehelp_url() {
-	global $config;
-
-	$pagehelp_url = array(
-		"about.php:" 								=> "",
-		"cdef.php:" 								=> ":6_reference.2_cdef#cdefs",
-		"cdef.php:actions" 							=> ":6_reference.2_cdef#cdefs",
-		"cdef.php:edit" 							=> ":6_reference.2_cdef#cdefs",
-		"cdef.php:item_edit" 						=> ":6_reference.2_cdef#cdefs",
-		"cdef.php:remove" 							=> ":6_reference.2_cdef#cdefs",
-		"color.php:" 								=> "",
-		"color.php:edit" 							=> "",
-		"data_input.php:" 							=> ":3a_advanced_topics.1_data_input_methods#data_input_methods",
-		"data_input.php:actions" 					=> ":3a_advanced_topics.1_data_input_methods#data_input_methods",
-		"data_input.php:edit" 						=> ":3a_advanced_topics.1_data_input_methods#data_input_methods",
-		"data_input.php:field_edit" 				=> ":3a_advanced_topics.1_data_input_methods#data_input_methods",
-		"data_input.php:field_remove" 				=> ":3a_advanced_topics.1_data_input_methods#data_input_methods",
-		"data_input.php:remove" 					=> ":3a_advanced_topics.1_data_input_methods#data_input_methods",
-		"data_queries.php:" 						=> ":3a_advanced_topics.3_data_queries#data_queries",
-		"data_queries.php:actions" 					=> ":3a_advanced_topics.3_data_queries#data_queries",
-		"data_queries.php:edit" 					=> ":3a_advanced_topics.3_data_queries#data_queries",
-		"data_queries.php:item_edit" 				=> ":3a_advanced_topics.3_data_queries#data_queries",
-		"data_queries.php:item_remove" 				=> ":3a_advanced_topics.3_data_queries#data_queries",
-		"data_sources.php:" 						=> ":3_templates.1_data_template#data_templates",
-		"data_sources.php:actions" 					=> ":3_templates.1_data_template#data_templates",
-		"data_sources.php:data_source_edit" 		=> ":3_templates.1_data_template#data_templates",
-		"data_sources.php:ds_edit" 					=> ":3_templates.1_data_template#data_templates",
-		"data_sources.php:ds_toggle_status" 		=> ":3_templates.1_data_template#data_templates",
-		"data_templates.php:" 						=> ":3_templates.1_data_template#data_templates",
-		"data_templates.php:actions" 				=> ":3_templates.1_data_template#data_templates",
-		"data_templates.php:template_edit" 			=> ":3_templates.1_data_template#data_templates",
-		"gprint_presets.php:" 						=> ":6_reference#gprint_presets",
-		"gprint_presets.php:edit" 					=> ":6_reference#gprint_presets",
-		"gprint_presets.php:remove" 				=> ":6_reference#gprint_presets",
-		"graph.php:" 								=> "",
-		"graph.php:properties" 						=> "",
-		"graph.php:view" 							=> "",
-		"graph.php:zoom" 							=> "",
-		"graph_settings.php:" 						=> "",
-		"graphs_items.php:item_edit" 				=> "",
-		"graphs_new.php:" 							=> "",
-		"graphs_new.php:save" 						=> "",
-		"graphs.php:" 								=> "",
-		"graphs.php:actions" 						=> "",
-		"graphs.php:graph_diff" 					=> "",
-		"graphs.php:graph_edit" 					=> "",
-		"graph_templates_inputs.php:input_edit" 	=> ":3_templates.2_graph_template#graph_templates",
-		"graph_templates_inputs.php:input_remove" 	=> ":3_templates.2_graph_template#graph_templates",
-		"graph_templates_items.php:item_edit" 		=> ":3_templates.2_graph_template#graph_templates",
-		"graph_templates.php:" 						=> ":3_templates.2_graph_template#graph_templates",
-		"graph_templates.php:actions" 				=> ":3_templates.2_graph_template#graph_templates",
-		"graph_templates.php:actions" 				=> ":3_templates.2_graph_template#graph_templates",
-		"graph_templates.php:template_edit" 		=> ":3_templates.2_graph_template#graph_templates",
-		"graph_view.php:" 							=> ":2_basics.3_using_graphs_tab#using_graphs_tab",
-		"graph_view.php:list" 						=> ":2_basics.3_using_graphs_tab#the_list_mode",
-		"graph_view.php:preview" 					=> ":2_basics.3_using_graphs_tab#the_preview_mode",
-		"graph_view.php:tree" 						=> ":2_basics.3_using_graphs_tab#the_tree_mode",
-		"host.php:" 								=> ":2_basics.1_first_graph#creating_a_new_device",
-		"host.php:actions" 							=> ":2_basics.1_first_graph#creating_a_new_device",
-		"host.php:edit" 							=> ":2_basics.1_first_graph#creating_a_new_device",
-		"host_templates.php:" 						=> ":3_templates.3_host_templates#host_templates",
-		"host_templates.php:actions" 				=> ":3_templates.3_host_templates#host_templates",
-		"host_templates.php:edit" 					=> ":3_templates.3_host_templates#host_templates",
-		"index.php:" 								=> ":2_basics.0_principles_of_operation#basics",
-		"index.php:login" 							=> ":2_basics.0_principles_of_operation#basics",
-		"rra.php:" 									=> "",
-		"rra.php:edit" 								=> "",
-		"rra.php:remove" 							=> "",
-		"settings.php:" 							=> "",
-		"settings.php:shift" 						=> "",
-		"sites.php:"	 							=> "",
-		"templates_export.php:" 					=> ":3_templates.4_import_templates#export_templates",
-		"templates_export.php:save" 				=> ":3_templates.4_import_templates#export_templates",
-		"templates_import.php:" 					=> ":3_templates.4_import_templates#import_templates",
-		"tree.php:" 								=> ":2_basics.3_using_graphs_tab#creating_a_graph_tree",
-		"tree.php:edit" 							=> ":2_basics.3_using_graphs_tab#creating_a_graph_tree",
-		"tree.php:item_edit" 						=> ":2_basics.3_using_graphs_tab#creating_a_graph_tree",
-		"tree.php:item_remove" 						=> ":2_basics.3_using_graphs_tab#creating_a_graph_tree",
-		"tree.php:remove" 							=> ":2_basics.3_using_graphs_tab#creating_a_graph_tree",
-		"user_admin.php:" 							=> ":2_basics.4_user_management#user_management",
-		"user_admin.php:actions" 					=> ":2_basics.4_user_management#user_management",
-		"user_admin.php:graph_perms_edit" 			=> ":2_basics:4_user_management.1_edit_existing_user#graph_permissions",
-		"user_admin.php:graph_settings_edit" 		=> ":2_basics:4_user_management.1_edit_existing_user#graph_settings",
-		"user_admin.php:user_edit" 					=> ":2_basics.4_user_management#user_management",
-		"user_admin.php:user_realms_edit" 			=> ":2_basics:4_user_management.1_edit_existing_user#realm_permissions",
-		"utilities.php:" 							=> "",
-		"utilities.php:clear_logfile" 				=> "",
-		"utilities.php:clear_poller_cache" 			=> "",
-		"utilities.php:clear_user_log" 				=> "",
-		"utilities.php:view_logfile" 				=> "",
-		"utilities.php:view_poller_cache" 			=> "",
-		"utilities.php:view_snmp_cache" 			=> "",
-		"utilities.php:view_tech" 					=> "",
-		"utilities.php:view_user_log" 				=> "",
-	);
-
-	$current_page = basename($_SERVER["PHP_SELF"]);
-
-	input_validate_input_regex(get_request_var_request("action"), "^([a-zA-Z0-9_-]+)$");
-
-	$current_action = (isset($_REQUEST["action"]) ? $_REQUEST["action"] : "");
-
-	/* find the current page in the big array */
-	$idx = $current_page . ":" . $current_action;
-	if (isset($pagehelp_url[$idx])) {
-		$help = $pagehelp_url[$idx];
-	} else {
-		$help = "";
-	}
-	return CACTI_WIKI_URL . $help;
 }
 
 ?>
