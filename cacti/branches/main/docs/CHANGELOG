@@ -32,6 +32,7 @@ Cacti CHANGELOG
 -bug#0001476: Mark stacked columns in rrdtool_function_xport() output 
 -bug#0001477: Spelling error in a variable in html_tree.php
 -bug#0001478: Combo boxes on Graph Management page produce URLs with leading spaces
+-bug#0001506: Reindexing fails in snmp.php
 -bug: remove graph permissions if graph is removed
 -bug: remove host permissions if host is removed
 -bug: add_tree.php did not allow nodes with propagating sort options
