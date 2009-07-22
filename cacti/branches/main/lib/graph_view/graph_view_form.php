@@ -44,10 +44,10 @@ function graph_view_filter_table($mode = "mode") {
 
 	function applyGraphFilter(objForm) {
 		<?php if ($mode == 'tree') { ?>
-		strURL = '?host_id=' + objForm.host_id.value;
+		strURL = '?action=ajax_tree_graphs&host_id=' + objForm.host_id.value;
 		strURL = strURL + '&graph_template_id=' + objForm.graph_template_id.value;
 		strURL = strURL + '&filter=' + objForm.filter.value;
-		$.get("lib/ajax/get_graph_tree_content.php" + strURL, function (data) {
+		$.get("graph_view.php" + strURL, function (data) {
 			$("#graphs").html(data);
 		});
 		<?php }else{ ;?>
@@ -62,8 +62,8 @@ function graph_view_filter_table($mode = "mode") {
 
 	function clearGraphFilter(objForm) {
 		<?php if ($mode == 'tree') { ?>
-		strURL = '?clear_filter=true';
-		$.get("lib/ajax/get_graph_tree_content.php" + strURL, function (data) {
+		strURL = '?action=ajax_tree_graphs&clear_filter=true';
+		$.get("graph_view.php" + strURL, function (data) {
 			$("#graphs").html(data);
 		});
 		<?php }else{ ;?>
@@ -774,6 +774,200 @@ function get_graph_preview_content () {
 	html_graph_end_box();
 }
 
+function get_graph_tree_items() {
+	include_once(dirname(__FILE__) . "/../../lib/html_tree.php");
+
+	/* Make sure nothing is cached */
+	header("Cache-Control: must-revalidate");
+	header("Cache-Control: post-check=0, pre-check=0", false);
+	header("Pragma: no-cache");
+	header("Expires: ". gmdate("D, d M Y H:i:s", mktime(date("H"), date("i"), date("s"), date("m")-1, date("d"), date("Y")))." GMT");
+	header("Last-Modified: ". gmdate("D, d M Y H:i:s")." GMT");
+
+	switch($_REQUEST["type"]) {
+	case "list":
+		/* parse the id string
+		 * prototypes:
+		 * tree_id, tree_id_leaf_id, tree_id_leaf_id_hgd_dq
+		 * tree_id_leaf_id_hgd_dqi, tree_id_leaf_id_hgd_gt
+		 */
+		$tree_id         = 0;
+		$leaf_id         = 0;
+		$host_group_type = array('na', 0);
+
+		if (isset($_REQUEST["id"])) {
+			$id_array = explode("_", $_REQUEST["id"]);
+			$type     = "";
+
+			if (sizeof($id_array)) {
+				foreach($id_array as $part) {
+					if (is_numeric($part)) {
+						switch($type) {
+							case "tree":
+								$tree_id = $part;
+								break;
+							case "leaf":
+								$leaf_id = $part;
+								break;
+							case "dqi":
+								$host_group_type = array("dqi", $part);
+								break;
+							case "dq":
+								$host_group_type = array("dq", $part);
+								break;
+							case "gt":
+								$host_group_type = array("gt", $part);
+								break;
+							default:
+								break;
+						}
+					}else{
+						$type = trim($part);
+					}
+				}
+			}
+		}
+
+		cacti_log("tree_id: '" . $tree_id . ", leaf_id: '" . $leaf_id . ", hgt: '" . $host_group_type[0] . "," . $host_group_type[1] . "'", false);
+		$tree_items = get_tree_leaf_items($tree_id, $leaf_id, $host_group_type);
+
+		if (sizeof($tree_items)) {
+			$total_items = sizeof($tree_items);
+
+			$i = 0;
+			echo "[\n";
+			foreach($tree_items as $item) {
+				$node_id  = "tree_" . $item["tree_id"];
+				$node_id .= "_leaf_" . $item["leaf_id"];
+				switch ($item["type"]) {
+					case "tree":
+						$children = true;
+						$icon     = "";
+						break;
+					case "graph":
+						$children = false;
+						$icon     = "./images/tree_icons/graph.gif";
+						break;
+					case "host":
+						if (read_graph_config_option("expand_hosts") == "on") {
+							$children = true;
+						}else{
+							$children = false;
+						}
+						$icon     = "./images/tree_icons/host.gif";
+						break;
+					case "header":
+						$children = true;
+						$icon     = "";
+						break;
+					case "dq":
+						$children = true;
+						$icon     = "";
+						$node_id .= "_" . $item["type"] . "_" . $item["id"];
+						$icon     = "./images/tree_icons/dataquery.png";
+						break;
+					case "dqi":
+						$children = false;
+						$icon     = "";
+						$node_id .= "_" . $item["type"] . "_" . $item["id"];
+						break;
+					case "gt":
+						$children = false;
+						$node_id .= "_" . $item["type"] . "_" . $item["id"];
+						$icon     = "./images/tree_icons/template.png";
+						break;
+					default:
+				}
+				echo "{\n";
+				echo "\tattributes: {\n";
+				echo "\t\tid :  '" . $node_id . "'\n";
+				echo "\t},\n";
+				if($children) echo "\tstate: 'closed', \n";
+				echo "\tdata: {\n";
+				echo "\t\t'en' : { title : '".$item["name"] ."'" . ($icon != '' ? ", icon : '" . $icon . "'" : "") ." }";
+				echo "\n";
+				echo "\t}\n";
+				echo "}";
+				if(++$i < $total_items) echo ",";
+				echo "\n";
+			}
+		}
+		echo "\n]";
+		break;
+	case "loadfile":
+		break;
+	case "savefile":
+		break;
+	}
+
+	exit();
+}
+
+function get_graph_tree_graphs() {
+	include_once(dirname(__FILE__) . "/../../lib/html_tree.php");
+	include_once(CACTI_BASE_PATH . "/lib/timespan_settings.php");
+
+	/* Make sure nothing is cached */
+	header("Cache-Control: must-revalidate");
+	header("Cache-Control: post-check=0, pre-check=0", false);
+	header("Pragma: no-cache");
+	header("Expires: ". gmdate("D, d M Y H:i:s", mktime(date("H"), date("i"), date("s"), date("m")-1, date("d"), date("Y")))." GMT");
+	header("Last-Modified: ". gmdate("D, d M Y H:i:s")." GMT");
+
+	/* parse the id string
+	 * prototypes:
+	 * tree_id, tree_id_leaf_id, tree_id_leaf_id_hgd_dq
+	 * tree_id_leaf_id_hgd_dqi, tree_id_leaf_id_hgd_gt
+	 */
+	$tree_id         = 0;
+	$leaf_id         = 0;
+	$host_group_type = array('na', 0);
+
+	if (!isset($_REQUEST["id"])) {
+		if (isset($_SESSION["sess_graph_navigation"])) {
+			$_REQUEST["id"] = $_SESSION["sess_graph_navigation"];
+		}
+	}
+
+	if (isset($_REQUEST["id"])) {
+		$_SESSION["sess_graph_navigation"] = $_REQUEST["id"];
+		$id_array = explode("_", $_REQUEST["id"]);
+		$type     = "";
+
+		if (sizeof($id_array)) {
+			foreach($id_array as $part) {
+				if (is_numeric($part)) {
+					switch($type) {
+						case "tree":
+							$tree_id = $part;
+							break;
+						case "leaf":
+							$leaf_id = $part;
+							break;
+						case "dqi":
+							$host_group_type = array("dqi", $part);
+							break;
+						case "dq":
+							$host_group_type = array("dq", $part);
+							break;
+						case "gt":
+							$host_group_type = array("gt", $part);
+							break;
+						default:
+							break;
+					}
+				}else{
+					$type = trim($part);
+				}
+			}
+		}
+	}
+
+	get_graph_tree_content($tree_id, $leaf_id, $host_group_type);
+
+	exit();
+}
+
 function graph_view_timespan_selector($mode = "tree") {
 	global $graph_timespans, $graph_timeshifts, $colors, $config;
 
@@ -828,12 +1022,12 @@ function graph_view_timespan_selector($mode = "tree") {
 	function applyTimespanFilterChange(objForm) {
 		<?php if ($mode == 'tree') { ?>
 		if (request_type == 'preset') {
-			strURL = '?predefined_timespan=' + objForm.predefined_timespan.value;
+			strURL = '?action=ajax_tree_graphs&predefined_timespan=' + objForm.predefined_timespan.value;
 		}else{
-			strURL = '?date1=' + objForm.date1.value;
+			strURL = '?action=ajax_tree_graphs&date1=' + objForm.date1.value;
 			strURL = strURL + '&date2=' + objForm.date2.value;
 		}
-		$.get("lib/ajax/get_graph_tree_content.php" + strURL, function (data) {
+		$.get("graph_view.php" + strURL, function (data) {
 			$("#graphs").html(data);
 		});
 		<?php }else{ ;?>
@@ -851,8 +1045,8 @@ function graph_view_timespan_selector($mode = "tree") {
 
 	function clearTimespanFilter(objForm) {
 		<?php if ($mode == 'tree') { ?>
-		strURL = '?button_clear_x=true';
-		$.get("lib/ajax/get_graph_tree_content.php" + strURL, function (data) {
+		strURL = '?action=ajax_tree_graphs&button_clear_x=true';
+		$.get("graph_view.php" + strURL, function (data) {
 			$("#graphs").html(data);
 		});
 		<?php }else{ ;?>
@@ -865,11 +1059,11 @@ function graph_view_timespan_selector($mode = "tree") {
 
 	function timeShift(objForm, direction) {
 		<?php if ($mode == 'tree') { ?>
-		strURL = '?move_' + direction + '=true';
+		strURL = '?action=ajax_tree_graphs&move_' + direction + '=true';
 		strURL = strURL + '&predefined_timeshift=' + objForm.predefined_timeshift.value;
 		strURL = strURL + '&date1=' + objForm.date1.value;
 		strURL = strURL + '&date2=' + objForm.date2.value;
-		$.get("lib/ajax/get_graph_tree_content.php" + strURL, function (data) {
+		$.get("graph_view.php" + strURL, function (data) {
 			$("#graphs").html(data);
 		});
 		<?php }else{ ;?>
@@ -969,17 +1163,17 @@ function graph_view_search_filter() {
 	<!--
 
 	function applyFilter(objForm) {
-		strURL = '?filter=' + objForm.filter.value;
+		strURL = '?action=ajax_tree_graphs&filter=' + objForm.filter.value;
 		strURL = strURL + '&graphs=' + objForm.graphs.value;
 		strURL = strURL + '&thumbnails=' + objForm.thumbnails.checked;
-		$.get("lib/ajax/get_graph_tree_content.php" + strURL, function (data) {
+		$.get("graph_view.php" + strURL, function (data) {
 			$("#graphs").html(data);
 		});
 	}
 
 	function clearFilter(objForm) {
-		strURL = '?clear_filter=true';
-		$.get("lib/ajax/get_graph_tree_content.php" + strURL, function (data) {
+		strURL = '?action=ajax_tree_graphs&clear_filter=true';
+		$.get("graph_view.php" + strURL, function (data) {
 			$("#graphs").html(data);
 		});
 	}

@@ -1254,8 +1254,8 @@ function get_graph_tree_content($tree_id, $leaf_id, $host_group_data) {
 	<script type='text/javascript'>
 	<!--
 	function pageChange(page) {
-		strURL = '?page=' + page;
-		$.get("lib/ajax/get_graph_tree_content.php" + strURL, function (data) {
+		strURL = '?action=ajax_tree_graphs&page=' + page;
+		$.get("graph_view.php" + strURL, function (data) {
 			$("#graphs").html(data);
 		});
 	}

@@ -40,11 +40,19 @@ switch($_REQUEST["action"]){
 		exit;
 
 		break;
+	case "ajax_tree_items":
+		get_graph_tree_items();
+		exit;
+
+		break;
+	case "ajax_tree_graphs":
+		get_graph_tree_graphs();
+		exit;
+
+		break;
 	default:
 }
 }
-
-include_once(CACTI_BASE_PATH . "/include/top_graph_header.php");
 
 /* ================= input validation ================= */
 input_validate_input_number(get_request_var("branch_id"));
@@ -72,10 +80,27 @@ if (ereg("action=(tree|preview|list)", get_browser_query_string())) {
 }
 
 /* set default action */
-if (!isset($_REQUEST["action"])) { $_REQUEST["action"] = ""; }
+if (!isset($_REQUEST["action"])) { 
+	switch (read_graph_config_option("default_view_mode")) {
+	case "1":
+		$_REQUEST["action"] = "tree";
+
+		break;
+	case "2":
+		$_REQUEST["action"] = "list";
+
+		break;
+	case "3":
+		$_REQUEST["action"] = "preview";
+
+		break;
+	}
+}
 
 switch ($_REQUEST["action"]) {
 case 'tree':
+	include_once(CACTI_BASE_PATH . "/include/top_graph_header.php");
+
 	if ((read_config_option("auth_method") != 0) && (empty($current_user["show_tree"]))) {
 		print "<strong><font size='+1' color='FF0000'>" . __("YOU DO NOT HAVE RIGHTS FOR TREE VIEW") . "</font></strong>"; exit;
 	}
@@ -107,6 +132,8 @@ case 'tree':
 
 	break;
 case 'preview':
+	include_once(CACTI_BASE_PATH . "/include/top_graph_header.php");
+
 	?>
 	<script type='text/javascript'>
 	<!--
@@ -122,6 +149,7 @@ case 'preview':
 
 	break;
 case 'list':
+	include_once(CACTI_BASE_PATH . "/include/top_graph_header.php");
 
 	?>
 	<script type='text/javascript'>
