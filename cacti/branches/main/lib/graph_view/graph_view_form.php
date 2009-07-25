@@ -1128,8 +1128,8 @@ function graph_view_timespan_selector($mode = "tree") {
 						&nbsp;<input type='image' style='border-width:0px;vertical-align:middle;align:middle;padding-bottom:5px;' src='images/calendar.gif' alt='<?php print __("End");?>' title='<?php print __("End Date Selector");?>' onclick='return showCalendar("date2");'>
 					</td>
 					<td style='white-space:nowrap;width:120px;'>
-						&nbsp;&nbsp;<img onMouseOver='this.style.cursor="pointer"' onClick='return timeShift(document.form_timespan_selector, "left")' style='border-width:0px;vertical-align:middle;align:middle;padding-bottom:5px;' type='image' name='move_left' src='images/move_left.gif' alt='<?php print __("Left");?>' title='<?php print __("Shift Left");?>'>
-						<select name='predefined_timeshift' title='<?php print __("Define Shifting Interval");?>'<?php
+						&nbsp;&nbsp;<img onMouseOver='this.style.cursor="pointer"' onClick='return timeShift(document.form_timespan_selector, "left")' style='border-width:0px;vertical-align:middle;align:middle;padding-bottom:5px;' name='move_left' src='images/move_left.gif' alt='<?php print __("Left");?>' title='<?php print __("Shift Left");?>'>
+						<select name='predefined_timeshift' title='<?php print __("Define Shifting Interval");?>'><?php
 							$start_val = 1;
 							$end_val = sizeof($graph_timeshifts)+1;
 							if (sizeof($graph_timeshifts) > 0) {
@@ -1139,7 +1139,7 @@ function graph_view_timespan_selector($mode = "tree") {
 							}
 							?>
 						</select>
-						<img onMouseOver='this.style.cursor="pointer"' onClick='return timeShift(document.form_timespan_selector, "right")' style='border-width:0px;vertical-align:middle;align:middle;padding-bottom:5px;' type='image' name='move_right' src='images/move_right.gif' alt='<?php print __("Right");?>' title='<?php print __("Shift Right");?>'>
+						<img onMouseOver='this.style.cursor="pointer"' onClick='return timeShift(document.form_timespan_selector, "right")' style='border-width:0px;vertical-align:middle;align:middle;padding-bottom:5px;' name='move_right' src='images/move_right.gif' alt='<?php print __("Right");?>' title='<?php print __("Shift Right");?>'>
 					</td>
 					<td style='white-space:nowrap;width:130px;'>
 						&nbsp;<input type='button' value='<?php print __("Refresh");?>' name='button_refresh' onclick='request_type="daterange";applyTimespanFilterChange(document.form_timespan_selector)'>
