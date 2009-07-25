@@ -1609,8 +1609,8 @@ function create_export_directory_structure($cacti_root_path, $dir) {
 	copy("$cacti_root_path/images/shadow_gray.gif", "$dir/shadow_gray.gif");
 
 	/* java scripts for the tree */
-	copy("$cacti_root_path/include/treeview/ftiens4_export.js", "$treeview_dir/ftiens4.js");
-	copy("$cacti_root_path/include/treeview/ua.js", "$treeview_dir/ua.js");
+	copy("$cacti_root_path/include/js/treeview/ftiens4_export.js", "$treeview_dir/ftiens4.js");
+	copy("$cacti_root_path/include/js/treeview/ua.js", "$treeview_dir/ua.js");
 
 	/* images for the tree */
 	copy("$cacti_root_path/include/treeview/ftv2blank.gif", "$treeview_dir/ftv2blank.gif");

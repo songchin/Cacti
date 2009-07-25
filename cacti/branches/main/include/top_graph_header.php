@@ -118,19 +118,19 @@ $page_title = api_plugin_hook_function('page_title', 'Cacti');
 	<link type="text/css" href="<?php echo URL_PATH; ?>include/main.css" rel="stylesheet">
 	<link type="text/css" href="<?php echo URL_PATH; ?>include/jquery.autocomplete.css" rel="stylesheet">
 	<link href="<?php echo URL_PATH; ?>images/favicon.ico" rel="shortcut icon">
-	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/layout.js"></script>
-	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/jquery/jquery.js"></script>
-	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/jquery/jquery.autocomplete.js"></script>
-	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/jquery/jquery.bgiframe.js"></script>
-	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/jquery/jquery.ajaxQueue.js"></script>
-	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/jquery/jquery.tablednd.js"></script>
-	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/jquery/jquery.dropdown.js"></script>
-	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/jscalendar/calendar.js"></script>
-	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/jscalendar/lang/calendar-en.js"></script>
-	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/jscalendar/calendar-setup.js"></script>
-	<link rel="stylesheet" type="text/css" href="<?php echo URL_PATH; ?>/include/jstree/tree_component.css" />
-	<script type="text/javascript" src="<?php echo URL_PATH; ?>/include/jstree/css.js"></script>
-	<script type="text/javascript" src="<?php echo URL_PATH; ?>/include/jstree/tree_component.js"></script>
+	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/js/layout.js"></script>
+	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/js/jquery/jquery.js"></script>
+	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/js/jquery/jquery.autocomplete.js"></script>
+	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/js/jquery/jquery.bgiframe.js"></script>
+	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/js/jquery/jquery.ajaxQueue.js"></script>
+	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/js/jquery/jquery.tablednd.js"></script>
+	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/js/jquery/jquery.dropdown.js"></script>
+	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/js/jscalendar/calendar.js"></script>
+	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/js/jscalendar/lang/calendar-en.js"></script>
+	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/js/jscalendar/calendar-setup.js"></script>
+	<link rel="stylesheet" type="text/css" href="<?php echo URL_PATH; ?>/include/js/jstree/tree_component.css" />
+	<script type="text/javascript" src="<?php echo URL_PATH; ?>/include/js/jstree/css.js"></script>
+	<script type="text/javascript" src="<?php echo URL_PATH; ?>/include/js/jstree/tree_component.js"></script>
 	<?php api_plugin_hook('page_head'); ?>
 </head>
 <body class='body' onLoad='pageInitialize()'>

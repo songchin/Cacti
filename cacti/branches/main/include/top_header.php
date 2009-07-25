@@ -39,13 +39,13 @@ $page_title = api_plugin_hook_function('page_title', 'Cacti');
 	<link type="text/css" href="<?php echo URL_PATH; ?>include/main.css" rel="stylesheet">
 	<link type="text/css" href="<?php echo URL_PATH; ?>include/jquery.autocomplete.css" rel="stylesheet">
 	<link href="<?php echo URL_PATH; ?>images/favicon.ico" rel="shortcut icon">
-	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/layout.js"></script>
-	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/jquery/jquery.js"></script>
-	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/jquery/jquery.autocomplete.js"></script>
-	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/jquery/jquery.bgiframe.js"></script>
-	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/jquery/jquery.ajaxQueue.js"></script>
-	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/jquery/jquery.tablednd.js"></script>
-	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/jquery/jquery.dropdown.js"></script>
+	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/js/layout.js"></script>
+	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/js/jquery/jquery.js"></script>
+	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/js/jquery/jquery.autocomplete.js"></script>
+	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/js/jquery/jquery.bgiframe.js"></script>
+	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/js/jquery/jquery.ajaxQueue.js"></script>
+	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/js/jquery/jquery.tablednd.js"></script>
+	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/js/jquery/jquery.dropdown.js"></script>
 
 <?php if (isset($refresh)) { print "\t<meta http-equiv=refresh content=\"" . $refresh["seconds"] . "; url='" . $refresh["page"] . "'\">\n"; }
 
@@ -66,10 +66,10 @@ api_plugin_hook('page_head');
 		</div>
 	</div>
 	<div id='navbrcrumb'>
-		<div style='float:left'>
+		<div style='float:left;'>
 			<?php print draw_navigation_text() . "\n";?>
 		</div>
-		<div style='float:right'>
+		<div style='float:right;'>
 			<a href="<?php echo CACTI_WIKI_URL . basename($_SERVER["PHP_SELF"]);?>" target="_blank">
 			<img src='images/information.png' title="<?php print __("Help");?>" alt="<?php print __("Help");?>" style="border-width: 0px;" align="top">
 			</a>

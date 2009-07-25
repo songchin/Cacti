@@ -226,7 +226,7 @@ case 'zoom':
 	</tr>
 	<?php
 
-	include(CACTI_BASE_PATH . "/include/zoom.js");
+	include(CACTI_BASE_PATH . "/include/js/zoom.js");
 
 	break;
 case 'properties':

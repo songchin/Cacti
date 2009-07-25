@@ -80,7 +80,7 @@ if (ereg("action=(tree|preview|list)", get_browser_query_string())) {
 }
 
 /* set default action */
-if (!isset($_REQUEST["action"])) { 
+if (!isset($_REQUEST["action"])) {
 	switch (read_graph_config_option("default_view_mode")) {
 	case "1":
 		$_REQUEST["action"] = "tree";
@@ -106,7 +106,7 @@ case 'tree':
 	}
 
 	?>
-	<script type="text/javascript" src="<?php echo URL_PATH; ?>/include/jstree/cactiTree.js"></script>
+	<script type="text/javascript" src="<?php echo URL_PATH; ?>/include/js/jstree/cactiTree.js"></script>
 	<?php
 
 	/* if cacti's builtin authentication is turned on then make sure to take
