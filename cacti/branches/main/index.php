@@ -31,17 +31,24 @@ api_plugin_hook('console_before');
 <table width="100%" align="center">
 	<tr>
 		<td class="textHeader">
-			<strong>You are now logged into <a href="about.php">Cacti</a>. You can follow these basic steps to get
-			started.</strong>
+			<strong><?php print __('You are now logged into <a href="about.php">Cacti</a>. You can follow these basic steps to get
+			started.');?></strong>
 
 			<ul>
-				<li><a href="host.php">Create devices</a> for network</li>
-				<li><a href="graphs_new.php">Create graphs</a> for your new devices</li>
-				<li><a href="graph_view.php">View</a> your new graphs</li>
+				<li><strong><?php print __('<a href="host.php">Create devices</a> for network');?></strong></li>
+				<li><strong><?php print __('<a href="graphs_new.php">Create graphs</a> for your new devices');?></strong></li>
+				<li><strong><?php print __('<a href="graph_view.php">View</a> your new graphs');?></strong></li>
 			</ul>
+			<strong>
+			<?php print __('Find help for each page when clicking the');?>
+			<a href="<?php echo CACTI_WIKI_URL . basename($_SERVER["PHP_SELF"]);?>" target="_blank">
+			<img src='images/information.png' title="<?php print __("Help");?>" alt="<?php print __("Help");?>" style="border-width: 0px;" align="top">
+			</a>
+			<?php print __('icon on the upper right.');?>
+			</strong>
 		</td>
 		<td class="textHeader" align="right" valign="top">
-			<strong>Version <?php print CACTI_VERSION;?></strong>
+			<strong><?php print __('Version') . " " . CACTI_VERSION;?></strong>
 		</td>
 	</tr>
 </table>
