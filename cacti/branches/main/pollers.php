@@ -130,9 +130,9 @@ function form_save() {
 		}
 
 		if (is_error_message() || empty($_POST["id"])) {
-			header("Location: poller.php?action=edit&id=" . (empty($poller_id) ? $_POST["id"] : $poller_id));
+			header("Location: pollers.php?action=edit&id=" . (empty($poller_id) ? $_POST["id"] : $poller_id));
 		}else{
-			header("Location: poller.php");
+			header("Location: pollers.php");
 		}
 	}
 }
@@ -162,7 +162,7 @@ function form_actions() {
 			}
 		}
 
-		header("Location: poller.php");
+		header("Location: pollers.php");
 		exit;
 	}
 
