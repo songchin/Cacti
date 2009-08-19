@@ -279,5 +279,9 @@ function upgrade_to_0_8_8() {
 	/* data templates, HOST MIB */
 	/* host templates */
 
+	/* enable lossless reindexing in Cacti */
+	db_install_execute("0.8.8", "ALTER TABLE host_snmp_cache ADD COLUMN present tinyint NOT NULL DEFAULT '1' AFTER `oid`, ADD INDEX present USING BTREE (present)");
+	db_install_execute("0.8.8", "ALTER TABLE poller_item ADD COLUMN present tinyint NOT NULL DEFAULT '1' AFTER `action`, ADD INDEX present USING BTREE (present)");
+	db_install_execute("0.8.8", "ALTER TABLE poller_reindex ADD COLUMN present tinyint NOT NULL DEFAULT '1' AFTER `action`, ADD INDEX present USING BTREE (present)");
 }
 ?>

@@ -83,6 +83,7 @@ Cacti CHANGELOG
 -feature: Add Process Status Information to the View Tech Page
 -feature: Adding multiple poller process support
 -feature: Adding the site object for devices and plugins
+-feature: Make reindexing and repopulating the poller cache a lossless process, reduce time to index by 66%
 
 0.8.7d
 -bug#0001336: Allow to specify on_change handler for checkbox_group
