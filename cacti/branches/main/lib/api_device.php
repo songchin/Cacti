@@ -169,16 +169,16 @@ function api_device_save($id, $poller_id, $host_template_id, $description, $host
 					"id " .
 					"FROM host " .
 					"WHERE id=$id " .
-					"AND snmp_version=$snmp_version " .
-					"AND snmp_community=$snmp_community " .
-					"AND snmp_username=$snmp_username " .
-					"AND snmp_password=$snmp_password " .
-					"AND snmp_auth_protocol=$snmp_auth_protocol " .
-					"AND snmp_priv_passphrase=$snmp_priv_passphrase " .
-					"AND snmp_priv_protocol=$snmp_priv_protocol " .
-					"AND snmp_context=$snmp_context " .
-					"AND snmp_port=$snmp_port " .
-					"AND snmp_timeout=$snmp_timeout "));
+					"AND snmp_version='$snmp_version' " .
+					"AND snmp_community='$snmp_community' " .
+					"AND snmp_username='$snmp_username' " .
+					"AND snmp_password='$snmp_password' " .
+					"AND snmp_auth_protocol='$snmp_auth_protocol' " .
+					"AND snmp_priv_passphrase='$snmp_priv_passphrase' " .
+					"AND snmp_priv_protocol='$snmp_priv_protocol' " .
+					"AND snmp_context='$snmp_context' " .
+					"AND snmp_port='$snmp_port' " .
+					"AND snmp_timeout='$snmp_timeout' "));
 
 			if ($snmp_changed) {
 				/* fecth all existing snmp queries */

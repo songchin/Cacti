@@ -67,7 +67,7 @@ function get_data_query_array($snmp_query_id) {
 	/* load the array into memory if it hasn't been done yet */
 	if (!isset($data_query_xml_arrays[$snmp_query_id])) {
 		$xml_file_path = db_fetch_cell("select xml_path from snmp_query where id=$snmp_query_id");
-		$xml_file_path = str_replace("<path_cacti>", $config["base_path"], $xml_file_path);
+		$xml_file_path = str_replace("<path_cacti>", CACTI_BASE_PATH, $xml_file_path);
 	
 		if (!file_exists($xml_file_path)) {
 			debug_log_insert("data_query", "Could not find data query XML file at '$xml_file_path'");
