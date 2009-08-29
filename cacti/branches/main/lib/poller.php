@@ -81,7 +81,7 @@ function exec_poll_php($command, $using_proc_function, $pipes, $proc_fd) {
 		}
 	/* execute the old fashion way */
 	}else{
-   		/* formulate command */
+		/* formulate command */
 		$command = read_config_option("path_php_binary") . " " . $command;
 
 		if (function_exists("popen")) {
@@ -191,7 +191,7 @@ function update_reindex_cache($host_id, $data_query_id) {
 					$host["snmp_timeout"],
 					SNMP_POLLER);
 
-				array_push($recache_stack, "insert into poller_reindex (host_id,data_query_id,action,op,assert_value,arg1) values ($host_id,$data_query_id,0,'<','$assert_value','$oid_uptime')");
+				$recache_stack[] = "('$host_id', '$data_query_id', '0', '<', '$assert_value', '$oid_uptime', '1')";
 			}
 
 			break;
@@ -202,11 +202,11 @@ function update_reindex_cache($host_id, $data_query_id) {
 
 			if ($data_query_type == DATA_INPUT_TYPE_SNMP_QUERY) {
 				if (isset($data_query_xml["oid_num_indexes"])) {
-					array_push($recache_stack, "insert into poller_reindex (host_id, data_query_id, action, op, assert_value, arg1) values ($host_id, $data_query_id, 0, '=', '$assert_value', '" . $data_query_xml["oid_num_indexes"] . "')");
+					$recache_stack[] = "($host_id, $data_query_id, 0, '=', '$assert_value', '" . $data_query_xml["oid_num_indexes"] . "', '1')";
 				}
 			}else if ($data_query_type == DATA_INPUT_TYPE_SCRIPT_QUERY) {
 				if (isset($data_query_xml["arg_num_indexes"])) {
-					array_push($recache_stack, "insert into poller_reindex (host_id, data_query_id, action, op, assert_value, arg1) values ($host_id, $data_query_id, 1, '=', '$assert_value', '" . get_script_query_path((isset($data_query_xml["arg_prepend"]) ? $data_query_xml["arg_prepend"] . " ": "") . $data_query_xml["arg_num_indexes"], $data_query_xml["script_path"], $host_id) . "')");
+					$recache_stack[] = "($host_id, $data_query_id, 1, '=', '$assert_value', '" . get_script_query_path((isset($data_query_xml["arg_prepend"]) ? $data_query_xml["arg_prepend"] . " ": "") . $data_query_xml["arg_num_indexes"], $data_query_xml["script_path"], $host_id) . "', '1')";
 				}
 			}
 
@@ -219,9 +219,9 @@ function update_reindex_cache($host_id, $data_query_id) {
 					$assert_value = $index["field_value"];
 
 					if ($data_query_type == DATA_INPUT_TYPE_SNMP_QUERY) {
-						array_push($recache_stack, "insert into poller_reindex (host_id, data_query_id, action, op, assert_value, arg1) values ($host_id, $data_query_id, 0, '=', '$assert_value', '" . $data_query_xml["fields"]{$data_query["sort_field"]}["oid"] . "." . $index["snmp_index"] . "')");
+						$recache_stack[] = "($host_id, $data_query_id, 0, '=', '$assert_value', '" . $data_query_xml["fields"]{$data_query["sort_field"]}["oid"] . "." . $index["snmp_index"] . "', '1')";
 					}else if ($data_query_type == DATA_INPUT_TYPE_SCRIPT_QUERY) {
-						array_push($recache_stack, "insert into poller_reindex (host_id, data_query_id, action, op, assert_value, arg1) values ($host_id, $data_query_id, 1, '=', '$assert_value', '" . get_script_query_path((isset($data_query_xml["arg_prepend"]) ? $data_query_xml["arg_prepend"] . " ": "") . $data_query_xml["arg_get"] . " " . $data_query_xml["fields"]{$data_query["sort_field"]}["query_name"] . " " . $index["snmp_index"], $data_query_xml["script_path"], $host_id) . "')");
+						$recache_stack[] = "('$host_id', '$data_query_id', '1', '=', '$assert_value', '" . get_script_query_path((isset($data_query_xml["arg_prepend"]) ? $data_query_xml["arg_prepend"] . " ": "") . $data_query_xml["arg_get"] . " " . $data_query_xml["fields"]{$data_query["sort_field"]}["query_name"] . " " . $index["snmp_index"], $data_query_xml["script_path"], $host_id) . "', '1')";
 					}
 				}
 			}
@@ -229,12 +229,56 @@ function update_reindex_cache($host_id, $data_query_id) {
 			break;
 	}
 
-	/* save the delete for last since we need to reference this table in the code above */
-	db_execute("delete from poller_reindex where host_id=$host_id and data_query_id=$data_query_id");
-
-	for ($i=0; $i<count($recache_stack); $i++) {
-		db_execute($recache_stack[$i]);
+	if (sizeof($recache_stack)) {
+		poller_update_poller_reindex_from_buffer($host_id, $data_query_id, $recache_stack);
 	}
+}
+
+function poller_update_poller_reindex_from_buffer($host_id, $data_query_id, &$recache_stack) {
+	/* set all fields present value to 0, to mark the outliers when we are all done */
+	db_execute("UPDATE poller_reindex SET present=0 WHERE host_id='$host_id' AND data_query_id='$data_query_id'");
+
+	/* setup the database call */
+	$sql_prefix   = "INSERT INTO poller_reindex (host_id, data_query_id, action, op, assert_value, arg1, present) VALUES";
+	$sql_suffix   = " ON DUPLICATE KEY UPDATE action=VALUES(action), op=VALUES(op), assert_value=VALUES(assert_value), present=VALUES(present)";
+
+	/* use a reasonable insert buffer, the default is 1MByte */
+	$max_packet   = 256000;
+
+	/* setup somme defaults */
+	$overhead     = strlen($sql_prefix) + strlen($sql_suffix);
+	$buf_len      = 0;
+	$buf_count    = 0;
+	$buffer       = "";
+
+	foreach($recache_stack AS $record) {
+		if ($buf_count == 0) {
+			$delim = " ";
+		} else {
+			$delim = ", ";
+		}
+
+		$buffer .= $delim . $record;
+
+		$buf_len += strlen($record);
+
+		if (($overhead + $buf_len) > ($max_packet - 1024)) {
+			db_execute($sql_prefix . $buffer . $sql_suffix);
+
+			$buffer    = "";
+			$buf_len   = 0;
+			$buf_count = 0;
+		} else {
+			$buf_count++;
+		}
+	}
+
+	if ($buf_count > 0) {
+		db_execute($sql_prefix . $buffer . $sql_suffix);
+	}
+
+	/* remove stale records from the poller reindex */
+	db_execute("DELETE FROM poller_reindex WHERE host_id='$host_id' AND data_query_id='$data_query_id' AND present='0'");
 }
 
 /* process_poller_output - grabs data from the 'poller_output' table and feeds the *completed*

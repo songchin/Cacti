@@ -120,30 +120,81 @@ function update_poller_cache($local_data_id, $commit = false) {
 
 			$poller_items[] = api_poller_cache_item_add($data_source["host_id"], array(), $local_data_id, $data_input["rrd_step"], $action, $data_source_item_name, 1, addslashes($script_path));
 		}else if ($data_input["type_id"] == DATA_INPUT_TYPE_SNMP) { /* snmp */
-			$host_fields = array_rekey(db_fetch_assoc("select
+			/* get the host override fields */
+			$data_template_id = db_fetch_cell("SELECT data_template_id FROM data_template_data WHERE local_data_id=$local_data_id");
+
+			/* get host fields first */
+			$host_fields = array_rekey(db_fetch_assoc("SELECT
 				data_input_fields.type_code,
 				data_input_data.value
-				from data_input_fields left join data_input_data
-				on (data_input_fields.id=data_input_data.data_input_field_id and data_input_data.data_template_data_id=" . $data_input["data_template_data_id"] . ")
-				where (data_input_fields.type_code='snmp_oid'
-					or data_input_fields.type_code='hostname'
-					or data_input_fields.type_code='snmp_community'
-					or data_input_fields.type_code='snmp_username'
-					or data_input_fields.type_code='snmp_password'
-					or data_input_fields.type_code='snmp_auth_protocol'
-					or data_input_fields.type_code='snmp_priv_passphrase'
-					or data_input_fields.type_code='snmp_priv_protocol'
-					or data_input_fields.type_code='snmp_context'
-					or data_input_fields.type_code='snmp_version'
-					or data_input_fields.type_code='snmp_port'
-					or data_input_fields.type_code='snmp_timeout')
-				and data_input_data.value != ''"), "type_code", "value");
+				FROM data_input_fields
+				LEFT JOIN data_input_data
+				ON (data_input_fields.id=data_input_data.data_input_field_id and data_input_data.data_template_data_id=" . $data_input["data_template_data_id"] . ")
+				WHERE ((type_code LIKE 'snmp_%') OR (type_code='hostname'))
+				AND data_input_data.value != ''"), "type_code", "value");
+
+			$data_template_fields = array_rekey(db_fetch_assoc("SELECT
+				data_input_fields.type_code,
+				data_input_data.value
+				FROM data_input_fields
+				LEFT JOIN data_input_data
+				ON (data_input_fields.id=data_input_data.data_input_field_id and data_input_data.data_template_data_id=$data_template_id)
+				WHERE (type_code LIKE 'snmp_%')
+				AND data_template_data_id=$data_template_id
+				AND data_input_data.value != ''"), "type_code", "value");
+
+			if (sizeof($host_fields)) {
+				if (sizeof($data_template_fields)) {
+				foreach($data_template_fields as $key => $value) {
+					if (!isset($host_fields[$key])) {
+						$host_fields[$key] = $value;
+					}
+				}
+				}
+			} else {
+				$host_fields = $data_template_fields;
+			}
 
 			$data_template_rrd_id = db_fetch_cell("select id from data_template_rrd where local_data_id=$local_data_id");
 
 			$poller_items[] = api_poller_cache_item_add($data_source["host_id"], $host_fields, $local_data_id, $data_input["rrd_step"], 0, get_data_source_item_name($data_template_rrd_id), 1, (isset($host_fields["snmp_oid"]) ? $host_fields["snmp_oid"] : ""));
 		}else if ($data_input["type_id"] == DATA_INPUT_TYPE_SNMP_QUERY) { /* snmp query */
 			$snmp_queries = get_data_query_array($data_source["snmp_query_id"]);
+
+			/* get the host override fields */
+			$data_template_id = db_fetch_cell("SELECT data_template_id FROM data_template_data WHERE local_data_id=$local_data_id");
+
+			/* get host fields first */
+			$host_fields = array_rekey(db_fetch_assoc("SELECT
+				data_input_fields.type_code,
+				data_input_data.value
+				FROM data_input_fields
+				LEFT JOIN data_input_data
+				ON (data_input_fields.id=data_input_data.data_input_field_id and data_input_data.data_template_data_id=" . $data_input["data_template_data_id"] . ")
+				WHERE (type_code LIKE 'snmp_%')
+				AND data_input_data.value != ''"), "type_code", "value");
+
+			$data_template_fields = array_rekey(db_fetch_assoc("SELECT
+				data_input_fields.type_code,
+				data_input_data.value
+				FROM data_input_fields
+				LEFT JOIN data_input_data
+				ON (data_input_fields.id=data_input_data.data_input_field_id and data_input_data.data_template_data_id=$data_template_id)
+				WHERE ((type_code LIKE 'snmp_%') OR (type_code='hostname'))
+				AND data_template_data_id=$data_template_id
+				AND data_input_data.value != ''"), "type_code", "value");
+
+			if (sizeof($host_fields)) {
+				if (sizeof($data_template_fields)) {
+				foreach($data_template_fields as $key => $value) {
+					if (!isset($host_fields[$key])) {
+						$host_fields[$key] = $value;
+					}
+				}
+				}
+			} else {
+				$host_fields = $data_template_fields;
+			}
 
 			if (sizeof($outputs) > 0) {
 			foreach ($outputs as $output) {
@@ -156,12 +207,48 @@ function update_poller_cache($local_data_id, $commit = false) {
 				}
 
 				if (!empty($oid)) {
-					$poller_items[] = api_poller_cache_item_add($data_source["host_id"], array(), $local_data_id, $data_input["rrd_step"], 0, get_data_source_item_name($output["data_template_rrd_id"]), sizeof($outputs), $oid);
+					$poller_items[] = api_poller_cache_item_add($data_source["host_id"], $host_fields, $local_data_id, $data_input["rrd_step"], 0, get_data_source_item_name($output["data_template_rrd_id"]), sizeof($outputs), $oid);
 				}
 			}
 			}
 		}else if (($data_input["type_id"] == DATA_INPUT_TYPE_SCRIPT_QUERY) || ($data_input["type_id"] == DATA_INPUT_TYPE_QUERY_SCRIPT_SERVER)) { /* script query */
 			$script_queries = get_data_query_array($data_source["snmp_query_id"]);
+
+			/* get the host override fields */
+			$data_template_id = db_fetch_cell("SELECT data_template_id FROM data_template_data WHERE local_data_id=$local_data_id");
+
+			/* get host fields first */
+			$host_fields = array_rekey(db_fetch_assoc("SELECT
+				data_input_fields.type_code,
+				data_input_data.value
+				FROM data_input_fields
+				LEFT JOIN data_input_data
+				ON (data_input_fields.id=data_input_data.data_input_field_id and data_input_data.data_template_data_id=" . $data_input["data_template_data_id"] . ")
+				WHERE (type_code LIKE 'snmp_%')
+				AND data_input_data.value != ''"), "type_code", "value");
+
+			$data_template_fields = array_rekey(db_fetch_assoc("SELECT
+				data_input_fields.type_code,
+				data_input_data.value
+				FROM data_input_fields
+				LEFT JOIN data_input_data
+				ON (data_input_fields.id=data_input_data.data_input_field_id and data_input_data.data_template_data_id=$data_template_id)
+				WHERE ((type_code LIKE 'snmp_%') OR (type_code='hostname'))
+				AND data_template_data_id=$data_template_id
+				AND data_input_data.value != ''"), "type_code", "value");
+
+
+			if (sizeof($host_fields)) {
+				if (sizeof($data_template_fields)) {
+				foreach($data_template_fields as $key => $value) {
+					if (!isset($host_fields[$key])) {
+						$host_fields[$key] = $value;
+					}
+				}
+				}
+			} else {
+				$host_fields = $data_template_fields;
+			}
 
 			if (sizeof($outputs) > 0) {
 				foreach ($outputs as $output) {
@@ -182,7 +269,7 @@ function update_poller_cache($local_data_id, $commit = false) {
 					}
 
 					if (isset($script_path)) {
-						$poller_items[] = api_poller_cache_item_add($data_source["host_id"], array(), $local_data_id, $data_input["rrd_step"], $action, get_data_source_item_name($output["data_template_rrd_id"]), sizeof($outputs), addslashes($script_path));
+						$poller_items[] = api_poller_cache_item_add($data_source["host_id"], $host_fields, $local_data_id, $data_input["rrd_step"], $action, get_data_source_item_name($output["data_template_rrd_id"]), sizeof($outputs), addslashes($script_path));
 					}
 				}
 			}
@@ -290,38 +377,50 @@ function push_out_host($host_id, $local_data_id = 0, $data_template_id = 0) {
 	/* ok here's the deal: first we need to find every data source that uses this host.
 	then we go through each of those data sources, finding each one using a data input method
 	with "special fields". if we find one, fill it will the data here from this host */
+	/* setup the poller items array */
+	$poller_items   = array();
+	$local_data_ids = array();
+	$hosts          = array();
+	$sql_where      = "";
 
-	if (!empty($data_template_id)) {
-		$hosts = db_fetch_assoc("select host_id from data_local where data_template_id=$data_template_id group by host_id");
+	/* setup the sql where, and if using a host, get it's host information */
+	if ($host_id != 0) {
+		/* get all information about this host so we can write it to the data source */
+		$hosts[$host_id] = db_fetch_row("select * from host where id=$host_id");
 
-		if (sizeof($hosts) > 0) {
-		foreach ($hosts as $host) {
-			push_out_host($host["host_id"]);
-		}
-		}
+		$sql_where .= " AND data_local.host_id=$host_id";
 	}
 
-	if (empty($host_id)) { return 0; }
+	/* sql where fom local_data_id */
+	if ($local_data_id != 0) {
+		$sql_where .= " AND data_local.id=$local_data_id";
+	}
 
-	/* get all information about this host so we can write it to the data source */
-	$host = db_fetch_row("select * from host where id=$host_id");
+	/* sql where fom data_template_id */
+	if ($data_template_id != 0) {
+		$sql_where .= " AND data_template_data.data_template_id=$data_template_id";
+	}
 
-	/* setup the poller items array */
-	$poller_items = array();
-
-	$data_sources = db_fetch_assoc("select
+	$data_sources = db_fetch_assoc("SELECT
 		data_template_data.id,
 		data_template_data.data_input_id,
 		data_template_data.local_data_id,
-		data_template_data.local_data_template_data_id
-		from (data_local,data_template_data)
-		where " . (empty($local_data_id) ? "data_local.host_id=$host_id" : "data_local.id=$local_data_id") . "
-		and data_local.id=data_template_data.local_data_id
-		and data_template_data.data_input_id>0");
+		data_template_data.local_data_template_data_id,
+		data_local.host_id
+		FROM (data_local, data_template_data)
+		WHERE data_local.id=data_template_data.local_data_id
+		AND data_template_data.data_input_id>0
+		$sql_where");
 
 	/* loop through each matching data source */
 	if (sizeof($data_sources) > 0) {
 	foreach ($data_sources as $data_source) {
+		/* set the host information */
+		if (!isset($hosts[$data_source["host_id"]])) {
+			$hosts[$data_source["host_id"]] = db_fetch_row("select * from host where id=" . $data_source["host_id"]);
+		}
+		$host = $hosts[$data_source["host_id"]];
+
 		/* get field information from the data template */
 		if (!isset($template_fields{$data_source["local_data_template_data_id"]})) {
 			$template_fields{$data_source["local_data_template_data_id"]} = db_fetch_assoc("select
@@ -356,7 +455,9 @@ function push_out_host($host_id, $local_data_id = 0, $data_template_id = 0) {
 	}
 	}
 
-	poller_update_poller_cache_from_buffer($local_data_ids, &$poller_items);
+	if (sizeof($local_data_ids)) {
+		poller_update_poller_cache_from_buffer($local_data_ids, &$poller_items);
+	}
 }
 
 function duplicate_graph($_local_graph_id, $_graph_template_id, $graph_title) {
