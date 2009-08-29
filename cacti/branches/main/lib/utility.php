@@ -139,7 +139,7 @@ function update_poller_cache($local_data_id, $commit = false) {
 				FROM data_input_fields
 				LEFT JOIN data_input_data
 				ON (data_input_fields.id=data_input_data.data_input_field_id and data_input_data.data_template_data_id=$data_template_id)
-				WHERE (type_code LIKE 'snmp_%')
+				WHERE ((type_code LIKE 'snmp_%') OR (type_code='hostname'))
 				AND data_template_data_id=$data_template_id
 				AND data_input_data.value != ''"), "type_code", "value");
 
@@ -151,7 +151,7 @@ function update_poller_cache($local_data_id, $commit = false) {
 					}
 				}
 				}
-			} else {
+			} elseif (sizeof($data_template_fields)) {
 				$host_fields = $data_template_fields;
 			}
 
@@ -171,7 +171,7 @@ function update_poller_cache($local_data_id, $commit = false) {
 				FROM data_input_fields
 				LEFT JOIN data_input_data
 				ON (data_input_fields.id=data_input_data.data_input_field_id and data_input_data.data_template_data_id=" . $data_input["data_template_data_id"] . ")
-				WHERE (type_code LIKE 'snmp_%')
+				WHERE ((type_code LIKE 'snmp_%') OR (type_code='hostname'))
 				AND data_input_data.value != ''"), "type_code", "value");
 
 			$data_template_fields = array_rekey(db_fetch_assoc("SELECT
@@ -192,7 +192,7 @@ function update_poller_cache($local_data_id, $commit = false) {
 					}
 				}
 				}
-			} else {
+			} elseif (sizeof($data_template_fields)) {
 				$host_fields = $data_template_fields;
 			}
 
@@ -224,7 +224,7 @@ function update_poller_cache($local_data_id, $commit = false) {
 				FROM data_input_fields
 				LEFT JOIN data_input_data
 				ON (data_input_fields.id=data_input_data.data_input_field_id and data_input_data.data_template_data_id=" . $data_input["data_template_data_id"] . ")
-				WHERE (type_code LIKE 'snmp_%')
+				WHERE ((type_code LIKE 'snmp_%') OR (type_code='hostname'))
 				AND data_input_data.value != ''"), "type_code", "value");
 
 			$data_template_fields = array_rekey(db_fetch_assoc("SELECT
@@ -237,7 +237,6 @@ function update_poller_cache($local_data_id, $commit = false) {
 				AND data_template_data_id=$data_template_id
 				AND data_input_data.value != ''"), "type_code", "value");
 
-
 			if (sizeof($host_fields)) {
 				if (sizeof($data_template_fields)) {
 				foreach($data_template_fields as $key => $value) {
@@ -246,7 +245,7 @@ function update_poller_cache($local_data_id, $commit = false) {
 					}
 				}
 				}
-			} else {
+			} elseif (sizeof($data_template_fields)) {
 				$host_fields = $data_template_fields;
 			}
 
@@ -344,6 +343,9 @@ function poller_update_poller_cache_from_buffer($local_data_ids, &$poller_items)
 	$buffer       = "";
 
 	foreach($poller_items AS $record) {
+		/* take care of invalid entries */
+		if (strlen($record) == 0) continue;
+
 		if ($buf_count == 0) {
 			$delim = " ";
 		} else {

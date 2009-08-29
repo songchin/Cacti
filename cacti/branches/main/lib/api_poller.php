@@ -57,11 +57,11 @@ function api_poller_cache_item_add($host_id, $host_field_override, $local_data_i
 	if (isset($host["id"]) || (isset($host_id))) {
 		if (isset($host)) {
 			if ($host["disabled"] == "on") {
-				return true;
+				return;
 			}
 		} else {
 			if ($poller_action_id == 0) {
-				return true;
+				return;
 			}
 
 			$host["id"] = 0;
@@ -82,7 +82,7 @@ function api_poller_cache_item_add($host_id, $host_field_override, $local_data_i
 		if ($poller_action_id == 0) {
 			if (($host["snmp_version"] < 1) || ($host["snmp_version"] > 3) ||
 				($host["snmp_community"] == "" && $host["snmp_version"] != 3)) {
-				return true;
+				return;
 			}
 		}
 
