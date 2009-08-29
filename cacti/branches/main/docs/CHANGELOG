@@ -65,6 +65,7 @@ Cacti CHANGELOG
 -feature#0001438: Allow for drag and drop reordering of graph template items
 -feature#0001439: New pseudo variable |host_template|, support all pseudo variable derived from host table
 -feature#0001450: Template import script
+-feature#0001525: add rebuild_poller_cache --host-id=[ID]
 -feature: jQuery "TableDnd" used for cdef item sort (courtesy Browniebraun)
 -feature: jQuery "TableDnd" for Graph Template Item
 -feature: jQuery "TableDnd" for Data Queries Suggested Values

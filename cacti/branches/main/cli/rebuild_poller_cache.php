@@ -36,26 +36,32 @@ include_once(CACTI_BASE_PATH . "/lib/utility.php");
 $parms = $_SERVER["argv"];
 $me = array_shift($parms);
 
-$debug = FALSE;
+$debug   = FALSE;
+$host_id = 0;
 
 foreach($parms as $parameter) {
 	@list($arg, $value) = @explode("=", $parameter);
 
 	switch ($arg) {
 	case "-d":
+	case "--debug":
 		$debug = TRUE;
 		break;
+	case "--host-id":
+		$host_id = trim($value);
+
+		if (!is_numeric($host_id)) {
+			echo __("ERROR: You must supply a valid host-id to run this script!\n");
+			exit(1);
+		}
+
+		break;
 	case "-h":
-		display_help($me);
-		exit;
 	case "-v":
-		display_help($me);
-		exit;
 	case "--version":
-		display_help($me);
-		exit;
 	case "--help":
 		display_help($me);
+
 		exit;
 	default:
 		printf(__("ERROR: Invalid Parameter %s\n\n"), $parameter);
@@ -66,24 +72,24 @@ foreach($parms as $parameter) {
 
 /* obtain timeout settings */
 $max_execution = ini_get("max_execution_time");
-$max_memory = ini_get("memory_limit");
 
 /* set new timeout */
 ini_set("max_execution_time", "0");
 
-/* clear the poller cache first */
-db_execute("truncate table poller_item");
-
 /* get the data_local Id's for the poller cache */
-$poller_data  = db_fetch_assoc("select id from data_local");
-$poller_items = array();
+if ($host_id > 0) {
+	$poller_data  = db_fetch_assoc("SELECT id FROM data_local WHERE host_id=$host_id");
+} else {
+	$poller_data  = db_fetch_assoc("SELECT id FROM data_local");
+}
 
 /* initialize some variables */
 $current_ds = 1;
-$total_ds = sizeof($poller_data);
+$total_ds   = sizeof($poller_data);
 
 /* setting local_data_ids to an empty array saves time during updates */
 $local_data_ids = array();
+$poller_items   = array();
 
 /* issue warnings and start message if applicable */
 echo __("WARNING: Do not interrupt this script.  Rebuilding the Poller Cache can take quite some time") . "\n";
@@ -105,12 +111,11 @@ if (!$debug) print "\n";
 
 /* poller cache rebuilt, restore runtime parameters */
 ini_set("max_execution_time", $max_execution);
-ini_set("memory_limit", $max_memory);
 
 /*	display_help - displays the usage of the function */
 function display_help($me) {
 	echo __("Cacti Rebuild Poller Cache Script 1.0") . ", " . __("Copyright 2004-2009 - The Cacti Group") . "\n";
-	echo __("usage: ") . $me . " [-d] [-h] [--help] [-v] [--version]\n\n";
+	echo __("usage: ") . $me . " [--host-id=ID] [-d | --debug] [-h | --help | -v | --version]\n\n";
 	echo "   -d            " . __("Display verbose output during execution") . "\n";
 	echo "   -v --version  " . __("Display this help message") . "\n";
 	echo "   -h --help     " . __("Display this help message") . "\n";
