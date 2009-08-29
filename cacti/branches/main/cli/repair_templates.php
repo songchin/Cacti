@@ -76,7 +76,8 @@ if ($execute) {
 
 $damaged_template_ids = db_fetch_assoc("SELECT DISTINCT data_template_id FROM data_template_rrd WHERE hash='' AND local_data_id=0");
 if (sizeof($damaged_template_ids)) {
-	foreach($damaged_template_ids as $id) {		$template_name = db_fetch_cell("SELECT name FROM data_template WHERE id=" . $id["data_template_id"]);
+	foreach($damaged_template_ids as $id) {
+		$template_name = db_fetch_cell("SELECT name FROM data_template WHERE id=" . $id["data_template_id"]);
 		echo "NOTE: Data Template '$template_name' is Damaged and can be repaired\n";
 	}
 
@@ -100,7 +101,8 @@ $damaged_templates = array();
 /* repair graph templates */
 if ($execute) {
 	echo "NOTE: Repairing Graph Templates\n";
-} else {	echo "NOTE: Performing Check of Graph Templates\n";
+} else {
+	echo "NOTE: Performing Check of Graph Templates\n";
 }
 
 $damaged_template_ids = db_fetch_assoc("SELECT DISTINCT graph_template_id FROM graph_template_input WHERE hash=''");
@@ -120,7 +122,8 @@ if (sizeof($damaged_template_ids)) {
 			}
 		}
 	}
-} else {	echo "NOTE: No Damaged Graph Templates Found\n";
+} else {
+	echo "NOTE: No Damaged Graph Templates Found\n";
 }
 
 
