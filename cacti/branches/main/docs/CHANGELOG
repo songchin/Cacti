@@ -6,6 +6,7 @@ Cacti CHANGELOG
 -bug#0001452: Missing "<" and ">" in "Collection Methods=>Data Input Methods=>"Input String", When Import Template 
 -bug#0001125: XML parse error on template import with degree symbol 
 -bug#0001366: Exported data templates do not import the special characters properly 
+-bug#0001528: ICMP Ping availabilty broken in UI for Windows Servers using IIS
 -bug#0001044: Creating a DS, Output field can't be selected for DT with a DIM when "Use Per-Data Source Value" is on
 -bug#0001147: Cactid doesn't trim white space from data template OIDs
 -bug#0001160: In Suggested Values editor, name and field are reversed. Include column headers
