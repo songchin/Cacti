@@ -105,7 +105,7 @@ if (sizeof($poller_data) > 0) {
 		$current_ds++;
 	}
 
-	poller_update_poller_cache_from_buffer($local_data_ids, &$poller_items);
+	poller_update_poller_cache_from_buffer($local_data_ids, $poller_items);
 }
 if (!$debug) print "\n";
 

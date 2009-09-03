@@ -32,7 +32,7 @@ function repopulate_poller_cache() {
 			$poller_items = array_merge($poller_items, update_poller_cache($data["id"]));
 		}
 
-		poller_update_poller_cache_from_buffer($local_data_ids, &$poller_items);
+		poller_update_poller_cache_from_buffer($local_data_ids, $poller_items);
 
 	}
 }
@@ -49,7 +49,7 @@ function update_poller_cache_from_query($host_id, $data_query_id) {
 			$poller_items = array_merge($poller_items, update_poller_cache($data["id"]));
 		}
 
-		poller_update_poller_cache_from_buffer($local_data_ids, &$poller_items);
+		poller_update_poller_cache_from_buffer($local_data_ids, $poller_items);
 	}
 }
 
@@ -276,7 +276,7 @@ function update_poller_cache($local_data_id, $commit = false) {
 	}
 
 	if ($commit) {
-		poller_update_poller_cache_from_buffer((array)$local_data_id, &$poller_items);
+		poller_update_poller_cache_from_buffer((array)$local_data_id, $poller_items);
 	} else {
 		return $poller_items;
 	}
@@ -297,7 +297,7 @@ function push_out_data_input_method($data_input_id) {
 	}
 	}
 
-	poller_update_poller_cache_from_buffer($local_data_ids, &$poller_items);
+	poller_update_poller_cache_from_buffer($local_data_ids, $poller_items);
 }
 
 function poller_update_poller_cache_from_buffer($local_data_ids, &$poller_items) {
@@ -458,7 +458,7 @@ function push_out_host($host_id, $local_data_id = 0, $data_template_id = 0) {
 	}
 
 	if (sizeof($local_data_ids)) {
-		poller_update_poller_cache_from_buffer($local_data_ids, &$poller_items);
+		poller_update_poller_cache_from_buffer($local_data_ids, $poller_items);
 	}
 }
 
@@ -735,14 +735,14 @@ function duplicate_cdef($_cdef_id, $cdef_title) {
 	if (sizeof($cdef_items) > 0) {
 		foreach ($cdef_items as $cdef_item) {
 			unset($save);
-	
+
 			$save["id"] = 0;
 			$save["hash"] = get_hash_cdef(0, "cdef_item");
 			$save["cdef_id"] = $cdef_id;
 			$save["sequence"] = $cdef_item["sequence"];
 			$save["type"] = $cdef_item["type"];
 			$save["value"] = $cdef_item["value"];
-	
+
 			sql_save($save, "cdef_items");
 		}
 	}

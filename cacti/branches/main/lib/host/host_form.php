@@ -180,7 +180,7 @@ function api_host_form_actions() {
 					}
 				}
 
-				poller_update_poller_cache_from_buffer($local_data_ids, &$poller_items);
+				poller_update_poller_cache_from_buffer($local_data_ids, $poller_items);
 			}
 		}elseif ($_POST["drp_action"] == DEVICE_ACTION_DISABLE) { /* Disable Selected Devices */
 			for ($i=0;($i<count($selected_items));$i++) {
