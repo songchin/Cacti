@@ -869,18 +869,18 @@ function transitionPage() {
 	if (browser != "IE") {
 		if (document.getElementById("graph_tree")) {
 			document.getElementById("graph_tree").style.opacity         = 1;
-			document.getElementById("graph_tree_content").style.opacity = 0;
+			document.getElementById("graph_tree_content").style.opacity = 1;
 			document.getElementById("wrapper").style.opacity            = 1;
-			transition = setInterval(function() { fadeIn(document.getElementById("graph_tree_content")) }, 25);
+//			transition = setInterval(function() { fadeIn(document.getElementById("graph_tree_content")) }, 25);
 		}else if (document.getElementById("graph_content")) {
-			document.getElementById("graph_content").style.opacity      = 0;
+			document.getElementById("graph_content").style.opacity      = 1;
 			document.getElementById("wrapper").style.opacity            = 1;
-			transition = setInterval(function() { fadeIn(document.getElementById("graph_content")) }, 25);
+//			transition = setInterval(function() { fadeIn(document.getElementById("graph_content")) }, 25);
 		}else {
 			document.getElementById("menu").style.opacity    = 1;
-			document.getElementById("content").style.opacity = 0;
+			document.getElementById("content").style.opacity = 1;
 			document.getElementById("wrapper").style.opacity = 1;
-			transition = setInterval(function() { fadeIn(document.getElementById("content")) }, 25);
+//			transition = setInterval(function() { fadeIn(document.getElementById("content")) }, 25);
 		}
 	}
 }
