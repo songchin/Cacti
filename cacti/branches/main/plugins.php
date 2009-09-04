@@ -24,15 +24,14 @@
 
 include('./include/auth.php');
 
-
-$plugins = plugins_retrieve_list ();
+$plugins = plugins_retrieve_list();
 
 /* tab information */
 $ptabs = array(
-	'current' => __('Installed'),
-	'uninstalled' => __('Uninstalled'),
+	'all'       => __('All'),
+	'current'   => __('Installed'),
+	'uninstalled' => __('Uninstalled')
 );
-
 
 $ptabs = api_plugin_hook_function ('plugin_management_tabs', $ptabs);
 
@@ -47,7 +46,9 @@ if (!isset($_GET['tab'])) {
 	$current_tab = $_GET['tab'];
 }
 
-$modes = array('install', 'uninstall', 'disable', 'enable', 'check');
+load_current_session_value('tab', 'sess_plugins_tab', 'all');
+
+$modes = array('all', 'install', 'uninstall', 'disable', 'enable', 'check');
 
 // Check to see if we are installing, etc...
 if (isset($_GET['mode']) && in_array($_GET['mode'], $modes)  && isset($_GET['id'])) {
@@ -59,13 +60,13 @@ if (isset($_GET['mode']) && in_array($_GET['mode'], $modes)  && isset($_GET['id'
 	switch ($mode) {
 		case 'install':
 			api_plugin_install($id);
-			$plugins = plugins_retrieve_list ();
+			$plugins = plugins_retrieve_list();
 			break;
 		case 'uninstall':
 			if (!in_array($id, $plugins))
 				break;
 			api_plugin_uninstall($id);
-			$plugins = plugins_retrieve_list ();
+			$plugins = plugins_retrieve_list();
 			break;
 		case 'disable':
 			if (!in_array($id, $plugins))
@@ -89,25 +90,26 @@ include(CACTI_BASE_PATH . "/include/top_header.php");
 plugins_draw_tabs ($ptabs, $current_tab);
 
 html_start_box('<strong>' . __('Plugins') . ' (' . $ptabs[$current_tab] . ')</strong>', '100%', $colors['header'], '3', 'center', '');
+
 print "<tr><td><table width='100%'>";
 
 switch ($current_tab) {
+	case 'all':
+		plugins_show('all');
+		break;
 	case 'current':
-		plugins_show_current();
+		plugins_show('current');
 		break;
 	case 'uninstalled':
-		plugins_show_uninstalled ();
+		plugins_show('uninstalled');
 		break;
 	default:
-		print '<br><br><br>';
+		api_plugin_hook_function('plugin_management_tab_content', $current_tab);
 }
 
 html_end_box();
+
 include(CACTI_BASE_PATH . "/include/bottom_footer.php");
-
-
-
-
 
 function plugins_draw_tabs ($tabs, $current_tab) {
 	/* draw the categories tabs on the top of the page */
@@ -121,7 +123,7 @@ function plugins_draw_tabs ($tabs, $current_tab) {
 	print "</div></td></tr></table>\n";
 }
 
-function plugins_retrieve_list () {
+function plugins_retrieve_list() {
 	$plugins = array();
 	$temp = db_fetch_assoc('SELECT directory FROM plugin_config ORDER BY name');
 	foreach ($temp as $t) {
@@ -130,89 +132,7 @@ function plugins_retrieve_list () {
 	return $plugins;
 }
 
-function plugins_show_current () {
-	global $plugins, $colors, $plugin_architecture, $config, $status_names;
-
-	$cinfo = array();
-	sort($plugins);
-	$cinfo = plugins_get_plugin_info ();
-
-	print "<table width='100%' cellspacing=0 cellpadding=3>";
-	$x = 0;
-
-	foreach ($plugins as $plugin) {
-		if (isset($cinfo[$plugin])) {
-
-			if ($x == 0) {
-				print "<tr><td width='50%'>";
-			} else {
-				print '</td><td>';
-			}
-			if (!isset($info[$plugin]['version']))
-				$info[$plugin]['version'] = '';
-
-			print "<table width='100%'>";
-			html_header(array((isset($cinfo[$plugin]['name']) ? $cinfo[$plugin]['name'] : $plugin)), 2);
-			form_alternate_row_color();
-			print "<td width='50%'><strong>" . __("Directory:") . "</strong></td><td>$plugin</td>";
-			form_alternate_row_color();
-			print '<td><strong>' . __("Version:") . '</strong></td><td>' . (isset($cinfo[$plugin]['version']) ? $cinfo[$plugin]['version'] : '') . '</td>';
-			form_alternate_row_color();
-			print '<td><strong>' . __("Author:") . '</strong></td><td>' . (isset($cinfo[$plugin]['author']) && $cinfo[$plugin]['author'] != '' ? (isset($cinfo[$plugin]['email']) && $cinfo[$plugin]['email'] != '' ? "<a href='" . htmlspecialchars("mailto:" . $cinfo[$plugin]['email']) . "'>" . $cinfo[$plugin]['author'] . '</a>'  : $cinfo[$plugin]['author']) : '') . '</td>';
-			form_alternate_row_color();
-			print '<td><strong>' . __("Home Page:") . '</strong></td><td>' . (isset($cinfo[$plugin]['webpage']) && $cinfo[$plugin]['webpage'] != '' ? "<a href='" . htmlspecialchars($cinfo[$plugin]['webpage']) . "'>" . $cinfo[$plugin]['webpage'] . '</a>' : '') . '</td>';
-			form_alternate_row_color();
-			print '<td><strong>' . __("Status:") . '</strong></td><td>' . $status_names[$cinfo[$plugin]['status']] . '</td>';
-			form_alternate_row_color();
-
-			$links = array('install' => __('Install'), 'uninstall' => __('Uninstall'), 'enable' => __('Enable'), 'disable' => __('Disable'), 'check' => __('Check'));
-
-			switch ($cinfo[$plugin]['status']) {
-				case 0:	//Not Installed
-					$links['install'] = "<a href='" . htmlspecialchars("plugins.php?mode=install&id=" . $plugin) . "'><b>" . __("Install") . "</b></a>";
-					break;
-				case 1:	// Currently Active
-					$links['uninstall'] = "<a href='" . htmlspecialchars("plugins.php?mode=uninstall&id=" . $plugin) . "'><b>" . __("Uninstall") . "</b></a>";
-					$links['disable'] = "<a href='" . htmlspecialchars("plugins.php?mode=disable&id=" . $plugin) . "'><b>" . __("Disable") . "</b></a>";
-					break;
-				case 2:	// Needs Configuring
-					$links['check'] = "<a href='" . htmlspecialchars("plugins.php?mode=check&id=" . $plugin) . "'><b>" . __("Check") . "</b></a>";
-					break;
-				case 3:	// Needs Upgrade
-					$links['check'] = "<a href='" . htmlspecialchars("plugins.php?mode=check&id=" . $plugin) . "'><b>" . __("Check") . "</b></a>";
-					break;
-				case 4:	// Installed but not active
-					$links['uninstall'] = "<a href='" . htmlspecialchars("plugins.php?mode=uninstall&id=" . $plugin) . "'><b>" . __("Uninstall") . "</b></a>";
-					$links['enable'] = "<a href='" . htmlspecialchars("plugins.php?mode=enable&id=" . $plugin) . "'><b>" . __("Enable") . "</b></a>";
-					break;
-			}
-
-			print '<td></td><td>';
-			$c = 1;
-			foreach ($links as $temp => $link) {
-				print $link;
-				if ($c < count($links))
-					print ' | ';
-				$c++;
-			}
-
-			print '</td>';
-			print '</tr></table>';
-			if ($x == 1) {
-				print '</td></tr>';
-			}
-			$x++;
-			if ($x > 1) $x = 0;
-		}
-	}
-	if ($x == 1)
-		print '</td><td></td></tr>';
-	print '</table>';
-	html_end_box(TRUE);
-}
-
-
-function plugins_show_uninstalled () {
+function plugins_show($status = 'all') {
 	global $plugins, $colors, $plugin_architecture, $config, $status_names;
 
 	$cinfo = array();
@@ -222,103 +142,206 @@ function plugins_show_uninstalled () {
 	$x = 0;
 
 	$newplugins = array();
-	$cinfo = array ();
+	$debug_log  = array();
+	$cinfo      = plugins_get_plugin_info();
 
-	$path = CACTI_BASE_PATH . '/plugins/';
-	$dh   = opendir($path);
+	$path       = CACTI_BASE_PATH . '/plugins/';
+	$dh         = opendir($path);
 
+	/* validate contents of the plugin directory */
 	while (($file = readdir($dh)) !== false) {
-		if (is_dir("$path/$file")) {
-			if (file_exists("$path/$file/setup.php") && !in_array($file, $plugins)) {
-				include_once("$path/$file/setup.php");
-				if (function_exists('plugin_' . $file . '_install') && function_exists('plugin_' . $file . '_version')) {
-					$function = 'plugin_' . $file . '_version';
-					$cinfo[$file] = $function();
-					$cinfo[$file]['status'] = 0;
+		/* only scan directories */
+		if (is_dir("$path/$file") && $file != "." && $file != "..") {
+			/* is a plugin directory */
+			if (file_exists("$path/$file/setup.php")) {
+				/* the plugin is not installed */
+				if (!in_array($file, $plugins)) {
+					/* check for a plugin that conflicts with an installed plugin */
+					$plugin_functions = plugins_scan_functions("$path/$file/setup.php");
+
+					if (sizeof($plugin_functions)) {
+					foreach($plugin_functions as $plugin_function) {
+						if (function_exists($plugin_function)) {
+							$debug_log[] = __("Plugin Directory <strong>'$file'</strong> Can not be installed, as it contains a duplicate previously declared function");
+							break 2;
+						}
+					}
+					}
+
+					if (in_array('plugin_' . $file . '_install', $plugin_functions)) {
+						include_once("$path/$file/setup.php");
+						if (function_exists('plugin_' . $file . '_version')) {
+							$function     = 'plugin_' . $file . '_version';
+							$cinfo[$file] = $function();
+							$newplugins[] = $file;
+							$cinfo[$file]['status'] = 0;
+						}else{
+							$cinfo['version']  = __('Unknown');
+							$cinfo['author']   = __('Unknown');
+							$cinfo['homepage'] = __('Unknown');
+							$newplugins[]      = $file;
+							$cinfo[$file]['status']   = 0;
+
+							$debug_log[] = __("Plugin <strong>'$file'</strong> appears to lack a required version function");
+						}
+					}elseif (in_array('plugin_init_' . $file, $plugin_functions)) {
+						$debug_log[] = __("Plugin <strong>'$file'</strong> appears by a PIA 1.x Plugin and is not supported");
+					}else{
+						$debug_log[] = __("Plugin <strong>'$file'</strong> does not appear to have an install function");
+					}
+				}else{
 					$newplugins[] = $file;
 				}
+			}else{
+				$debug_log[] = __("Plugin Directory <strong>'$file'</strong> does not appear to be a plugin directory");
 			}
 		}
 	}
 	closedir($dh);
 
 	if (count($newplugins)) {
-	foreach ($newplugins as $plugin) {
-		if (isset($cinfo[$plugin])) {
-
-			if ($x == 0) {
-				print "<tr><td width='50%'>";
-			} else {
-				print '</td><td>';
-			}
-			if (!isset($info[$plugin]['version']))
-				$info[$plugin]['version'] = '';
-
-			print "<table width='100%'>";
-			html_header(array((isset($cinfo[$plugin]['name']) ? $cinfo[$plugin]['name'] : $plugin)), 2);
-			form_alternate_row_color();
-			print "<td width='50%'><strong>" . __("Directory:") . "</strong></td><td>$plugin</td>";
-			form_alternate_row_color();
-			print '<td><strong>' . __("Version:") . '</strong></td><td>' . (isset($cinfo[$plugin]['version']) ? $cinfo[$plugin]['version'] : '') . '</td>';
-			form_alternate_row_color();
-			print '<td><strong>' . __("Author:") . '</strong></td><td>' . (isset($cinfo[$plugin]['author']) && $cinfo[$plugin]['author'] != '' ? (isset($cinfo[$plugin]['email']) && $cinfo[$plugin]['email'] != '' ? "<a href='" . htmlspecialchars("mailto:" . $cinfo[$plugin]['email']) . "'>" . $cinfo[$plugin]['author'] . '</a>'  : $cinfo[$plugin]['author']) : '') . '</td>';
-			form_alternate_row_color();
-			print '<td><strong>' . __("Home Page:") . '</strong></td><td>' . (isset($cinfo[$plugin]['homepage']) && $cinfo[$plugin]['homepage'] != '' ? "<a href='" . htmlspecialchars($cinfo[$plugin]['homepage']) . "'>" . $cinfo[$plugin]['homepage'] . '</a>' : '') . '</td>';
-			form_alternate_row_color();
-			print '<td><strong>' . __("Status:") . '</strong></td><td>' . $status_names[$cinfo[$plugin]['status']] . '</td>';
-			form_alternate_row_color();
-
-			$links = array('install' => __('Install'), 'uninstall' => __('Uninstall'), 'enable' => __('Enable'), 'disable' => __('Disable'), 'check' => __('Check'));
-
-			switch ($cinfo[$plugin]['status']) {
-				case 0:	//Not Installed
-					$links['install'] = "<a href='" . htmlspecialchars("plugins.php?mode=install&id=" . $plugin . "&tab=uninstalled") . "'><b>" . __("Install") . "</b></a>";
-					break;
-				case 1:	// Currently Active
-					$links['uninstall'] = "<a href='" . htmlspecialchars("plugins.php?mode=uninstall&id=" . $plugin . "&tab=uninstalled") . "'><b>" . __("Uninstall") . "</b></a>";
-					$links['disable'] = "<a href='" . htmlspecialchars("plugins.php?mode=disable&id=" . $plugin . "&tab=uninstalled") . "'><b>" . __("Disable") . "</b></a>";
-					break;
-				case 2:	// Needs Configuring
-					$links['check'] = "<a href='" . htmlspecialchars("plugins.php?mode=check&id=" . $plugin . "&tab=uninstalled") . "'><b>" . __("Check") . "</b></a>";
-					break;
-				case 3:	// Needs Upgrade
-					$links['check'] = "<a href='" . htmlspecialchars("plugins.php?mode=check&id=" . $plugin . "&tab=uninstalled") . "'><b>" . __("Check") . "</b></a>";
-					break;
-				case 4:	// Installed but not active
-					$links['enable'] = "<a href='" . htmlspecialchars("plugins.php?mode=enable&id=" . $plugin . "&tab=uninstalled") . "'><b>" . __("Enable") . "</b></a>";
-					break;
+		foreach ($newplugins as $plugin) {
+			$show = true;
+			switch($status) {
+			case 'all':
+				break;
+			case 'current':
+				if (!isset($cinfo[$plugin]['status']) || $cinfo[$plugin]['status'] == 0) {
+					$show = false;
+				}
+				break;
+			case 'uninstalled':
+				if ($cinfo[$plugin]['status'] != 0) {
+					$show = false;
+				}
+				break;
+			default:
+				break;
 			}
 
-			print '<td></td><td>';
-			$c = 1;
-			foreach ($links as $temp => $link) {
-				print $link;
-				if ($c < count($links))
-					print ' | ';
-				$c++;
-			}
+			if ($show) {
+				if (isset($cinfo[$plugin])) {
+					if ($x == 0) {
+						print "<tr><td width='50%'>";
+					} else {
+						print '</td><td>';
+					}
 
-			print '</td>';
-			print '</tr></table>';
-			if ($x == 1) {
-				print '</td></tr>';
+					if (!isset($info[$plugin]['version'])) {
+						$info[$plugin]['version'] = '';
+					}
+
+					print "<table width='100%'>";
+					html_header(array((isset($cinfo[$plugin]['name']) ? $cinfo[$plugin]['name'] : $plugin)), 2);
+					form_alternate_row_color();
+					print "<td width='50%'><strong>" . __("Directory:") . "</strong></td><td>$plugin</td>";
+					form_alternate_row_color();
+					print '<td><strong>' . __("Version:") . '</strong></td><td>' . (isset($cinfo[$plugin]['version']) ? $cinfo[$plugin]['version'] : '') . '</td>';
+					form_alternate_row_color();
+					print '<td><strong>' . __("Author:") . '</strong></td><td>' . (isset($cinfo[$plugin]['author']) && $cinfo[$plugin]['author'] != '' ? (isset($cinfo[$plugin]['email']) && $cinfo[$plugin]['email'] != '' ? "<a href='" . htmlspecialchars("mailto:" . $cinfo[$plugin]['email']) . "'>" . $cinfo[$plugin]['author'] . '</a>'  : $cinfo[$plugin]['author']) : '') . '</td>';
+					form_alternate_row_color();
+					print '<td><strong>' . __("Home Page:") . '</strong></td><td>' . (isset($cinfo[$plugin]['homepage']) && $cinfo[$plugin]['homepage'] != '' ? "<a href='" . htmlspecialchars($cinfo[$plugin]['homepage']) . "'>" . $cinfo[$plugin]['homepage'] . '</a>' : '') . '</td>';
+					form_alternate_row_color();
+					print '<td><strong>' . __("Status:") . '</strong></td><td>' . $status_names[$cinfo[$plugin]['status']] . '</td>';
+					form_alternate_row_color();
+
+					$links = array('install' => __('Install'), 'uninstall' => __('Uninstall'), 'enable' => __('Enable'), 'disable' => __('Disable'), 'check' => __('Check'));
+
+					switch ($cinfo[$plugin]['status']) {
+						case 0:	//Not Installed
+							$links['install'] = "<a href='" . htmlspecialchars("plugins.php?mode=install&id=$plugin") . "'><b>Install</b></a>";
+							break;
+						case 1:	// Currently Active
+							$links['uninstall'] = "<a href='" . htmlspecialchars("plugins.php?mode=uninstall&id=$plugin") . "'><b>Uninstall</b></a>";
+							$links['disable'] = "<a href='" . htmlspecialchars("plugins.php?mode=disable&id=$plugin") . "'><b>Disable</b></a>";
+							break;
+						case 2:	// Needs Configuring
+							$links['check'] = "<a href='" . htmlspecialchars("plugins.php?mode=check&id=$plugin") . "'><b>Check</b></a>";
+							break;
+						case 3:	// Needs Upgrade
+							$links['check'] = "<a href='" . htmlspecialchars("plugins.php?mode=check&id=$plugin") . "'><b>Check</b></a>";
+							break;
+						case 4:	// Installed but not active
+							$links['enable'] = "<a href='" . htmlspecialchars("plugins.php?mode=enable&id=$plugin") . "'><b>Enable</b></a>";
+							$links['uninstall'] = "<a href='" . htmlspecialchars("plugins.php?mode=uninstall&id=$plugin") . "'><b>Uninstall</b></a>";
+							break;
+					}
+
+					print '<td></td><td>';
+					$c = 1;
+					foreach ($links as $temp => $link) {
+						print $link;
+						if ($c < count($links))
+							print ' | ';
+						$c++;
+					}
+
+					print '</td>';
+					print '</tr></table>';
+					if ($x == 1) {
+						print '</td></tr>';
+					}
+					$x++;
+					if ($x > 1) $x = 0;
+				}
 			}
-			$x++;
-			if ($x > 1) $x = 0;
 		}
-	}
 	} else {
 		print '<center>' . __("There are no Uninstalled Plugins") . '</center>';
 	}
-	if ($x == 1)
+
+	if ($x == 1) {
 		print '</td><td></td></tr>';
+	}
+
 	print '</table>';
-	html_end_box(TRUE);
+
+	html_end_box(FALSE);
+
+	if (sizeof($debug_log)) {
+		html_start_box('<strong>' . __('Plugin Warnings') . '</strong>', '100%', $colors['header'], '3', 'center', '');
+
+		foreach($debug_log as $message) {
+			echo "<tr><td class='textHeaderLight'>" . $message . "</td></tr>";
+		}
+
+		html_end_box();
+	}
 }
 
-function plugins_get_plugin_info () {
+function plugins_scan_functions($file) {
+	$array = file($file);
+	if (sizeof($array)) {
+	foreach($array as $line) {
+		$line = plugins_remove_spaces($line);
+
+		if (strtolower(substr($line, 0, 8)) == "function") {
+			$parts   = explode(" ", $line);
+			$prefunc = $parts[1];
+			$posit   = strpos($prefunc, "(");
+			if ($posit != 0) {
+				$prefunc = substr($prefunc, 0, $posit);
+			}
+			$functions[] = trim($prefunc);
+		}
+	}
+	}
+
+	return $functions;
+}
+
+function plugins_remove_spaces($string) {
+	while ( true ) {
+		$string = str_replace("  ", " ", $string);
+		if (!substr_count($string, "  ")) break;
+	}
+
+	return trim($string);
+}
+
+function plugins_get_plugin_info() {
 	$cinfo = array();
-	$info = db_fetch_assoc('SELECT * from plugin_config');
+	$info  = db_fetch_assoc('SELECT * from plugin_config');
 	if (is_array($info)) {
 		foreach($info as $inf) {
 			$cinfo[$inf['directory']] = $inf;
@@ -327,5 +350,3 @@ function plugins_get_plugin_info () {
 	}
 	return $cinfo;
 }
-
-
