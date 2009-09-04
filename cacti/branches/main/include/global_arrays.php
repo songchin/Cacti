@@ -804,5 +804,3 @@ $lang2locale = array(
 	"tr"		=> array("language"=>__("Turkish"), 				"country" => "tr", "filename" => "turkish_turkey.mo"),
 	"uk"		=> array("language"=>__("Vietnamese"), 				"country" => "vn", "filename" => "vietnamese_vietnam.mo")
 );
-
-?>

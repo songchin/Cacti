@@ -214,5 +214,3 @@ function settings() {
 
 	form_save_button_alt("", "save", "save");
 }
-
-?>

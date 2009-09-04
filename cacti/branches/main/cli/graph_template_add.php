@@ -160,5 +160,3 @@ function display_help($me) {
 	echo "   --list-graph-templates\n";
 	echo "   --quiet              " . __("batch mode value return") . "\n\n";
 }
-
-?>

@@ -101,5 +101,3 @@ if (read_config_option("auth_method") != 0) {
 		}
 	}
 }
-
-?>

@@ -32,7 +32,7 @@ if (read_config_option('i18n_support') == 0) {
 $cacti_locale = "en";
 $cacti_country = "us";
 
-/* an array that will contains all textdomains being in use. */ 
+/* an array that will contains all textdomains being in use. */
 $cacti_textdomains = array();
 
 /* get a list of locale settings */
@@ -45,34 +45,34 @@ if (isset($_GET['language']) && isset($lang2locale[$_GET['language']])) {
 	$cacti_locale = $_GET['language'];
 	$cacti_country = $lang2locale[$_GET['language']]['country'];
 	$_SESSION['language'] = $cacti_locale;
-	
+
 	/* save customized language setting (authenticated users only) */
 	set_user_config_option('language', $cacti_locale);
-	
+
 /* language definition stored in the SESSION */
 }elseif (isset($_SESSION['language']) && isset($lang2locale[$_SESSION['language']])){
 	$cacti_locale = $_SESSION['language'];
 	$cacti_country = $lang2locale[$_SESSION['language']]['country'];
 
-/* look up for user customized language setting stored in Cacti DB */   
+/* look up for user customized language setting stored in Cacti DB */
 }elseif ($user_locale = read_user_config_option('language')) {
 	if(isset($lang2locale[$user_locale])) {
 		$cacti_locale = $user_locale;
 		$cacti_country = $lang2locale[$cacti_locale]['country'];
 		$_SESSION['language'] = $cacti_locale;
 	}
-	
+
 /* detect browser settings if auto detection is enabled */
 }elseif (read_config_option('i18n_auto_detection') && isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
 	$accepted = $_SERVER['HTTP_ACCEPT_LANGUAGE'];
 	$accepted = strtolower(str_replace(strstr($accepted, ','), '', $accepted));
-	
-	$accepted = (isset($lang2locale[$accepted])) ? $accepted 
+
+	$accepted = (isset($lang2locale[$accepted])) ? $accepted
 												 : str_replace(strstr($accepted, '-'), '', $accepted);
-	
+
 	if (isset($lang2locale[$accepted])) {
 		$cacti_locale = $accepted;
-		$cacti_country = $lang2locale[$accepted]['country'];	
+		$cacti_country = $lang2locale[$accepted]['country'];
 	}
 
 /* use the default language defined under "general" */
@@ -81,7 +81,7 @@ if (isset($_GET['language']) && isset($lang2locale[$_GET['language']])) {
 
 	if (isset($lang2locale[$accepted])) {
 		$cacti_locale = $accepted;
-		$cacti_country = $lang2locale[$accepted]['country'];	
+		$cacti_country = $lang2locale[$accepted]['country'];
 	}
 }
 
@@ -113,7 +113,7 @@ if(sizeof($plugins)>0) {
 			$cacti_textdomains[$plugin]['path2catalogue'] = $path2catalogue;
 		}
 	}
-	
+
 	/* if i18n support is set to strict mode then check if all plugins support the requested language */
 	if(read_config_option('i18n_support') == 2) {
 		if(sizeof($plugins) != (sizeof($cacti_textdomains)-1)) {
@@ -124,24 +124,24 @@ if(sizeof($plugins)>0) {
 }
 
 
-/* load php-gettext class */	
+/* load php-gettext class */
 require(CACTI_BASE_PATH . "/include/gettext/streams.php");
 require(CACTI_BASE_PATH . "/include/gettext/gettext.php");
 
 
-/* prefetch all language files to work in memory only, 
+/* prefetch all language files to work in memory only,
    die if one of the language files is corrupted */
 $l10n = array();
 
 foreach($cacti_textdomains as $domain => $paths) {
 	$input = new FileReader($cacti_textdomains[$domain]['path2catalogue']);
 	if($input == false) {
-		die("Unable to read file: " . $cacti_textdomains[$domain]['path2catalogue']);	
+		die("Unable to read file: " . $cacti_textdomains[$domain]['path2catalogue']);
 	}
-	
+
 	$l10n[$domain] = new gettext_reader($input);
 	if($l10n[$domain] == false) {
-		die("Invalid language file: " . $cacti_textdomains[$domain]['path2catalogue']);	
+		die("Invalid language file: " . $cacti_textdomains[$domain]['path2catalogue']);
 	}
 }
 
@@ -151,9 +151,9 @@ load_i18n_gettext_wrappers();
 
 
 /**
- * load_fallback_procedure - loads wrapper package if native language (English) has to be used 
- * 
- * @return 
+ * load_fallback_procedure - loads wrapper package if native language (English) has to be used
+ *
+ * @return
  */
 function load_fallback_procedure(){
 	global $cacti_textdomains, $cacti_locale, $cacti_country;
@@ -173,8 +173,8 @@ function load_fallback_procedure(){
 
 /**
  * load_i18n_gettext_wrappers - creates all wrappers to translate strings by using php-gettext
- * 
- * @return 
+ *
+ * @return
  */
 function load_i18n_gettext_wrappers(){
 
@@ -185,7 +185,7 @@ function load_i18n_gettext_wrappers(){
 		}else {
 			return $text;
 		}
-		
+
 	}
 
 
@@ -193,7 +193,7 @@ function load_i18n_gettext_wrappers(){
 		global $l10n;
 		return $l10n->_ngettext($single, $plural, $number);
 	}
-	
+
 
 	function __() {
 		global $l10n;
@@ -204,38 +204,38 @@ function load_i18n_gettext_wrappers(){
 		/* this should not happen */
 		if ($num < 1) {
 			return false;
-		
+
 		/* convert pure text strings */
 		}elseif ($num == 1) {
 			return __gettext($args[0]);
-		
+
 		/* convert pure text strings by using a different textdomain */
 		}elseif ($num == 2 && isset($l10n[$args[1]])) {
 			return __gettext($args[0], $args[1]);
-		
+
 		/* convert stings including one or more placeholders */
 		}else {
-			
-			/* only the last argument is allowed to initiate 
+
+			/* only the last argument is allowed to initiate
 			the use of a different textdomain */
 
 			/* get gettext string */
-			$args[0] = isset($l10n[$args[$num-1]]) 	? __gettext($args[0], $args[$num-1]) 
+			$args[0] = isset($l10n[$args[$num-1]]) 	? __gettext($args[0], $args[$num-1])
 													: __gettext($args[0]);
 
 			/* process return string against input arguments */
 			return call_user_func_array("sprintf", $args);
 		}
-	}	
+	}
 
 
 	function __date($format, $timestamp = false, $domain = "cacti") {
-	
+
 		global $i18n_date_placeholders;
-	
+
 		if (!$timestamp) {
 			$timestamp = time();
-		}	
+		}
 
 		/* placeholders will allow to fill in the translated weekdays, month and so on.. */
 		$i18n_date_placeholders = array(
@@ -243,20 +243,20 @@ function load_i18n_gettext_wrappers(){
 			"#2" => str_replace("_", "", __( "_"  . date("M", $timestamp) . "_", $domain)),
 			"#3" => str_replace("_", "", __( "__" . date("F", $timestamp) . "_", $domain)),
 			"#4" => __(date("l", $timestamp), $domain)
-		);	
+		);
 
-		/* if defined exchange the format string for the configured locale */ 
+		/* if defined exchange the format string for the configured locale */
 		$format = __gettext($format, $domain);
-		
+
 		/* replace special date chars by placeholders */
 		$format = str_replace(array("D", "M", "F", "l"), array("#1", "#2", "#3", "#4"), $format);
-		
+
 		/* get date string included placeholders */
 		$date = date($format, $timestamp);
-		
+
 		/* fill in specific translations */
 		$date = str_replace(array_keys($i18n_date_placeholders), array_values($i18n_date_placeholders), $date);
-	
+
 		return $date;
 	}
 
@@ -266,8 +266,8 @@ function load_i18n_gettext_wrappers(){
 
 /**
  * load_i18n_fallback_wrappers - creates special wrappers to leave the native language untouched
- * 
- * @return 
+ *
+ * @return
  */
 function load_i18n_fallback_wrappers(){
 
@@ -287,19 +287,19 @@ function load_i18n_fallback_wrappers(){
 		/* this should not happen */
 		if ($num < 1) {
 			return false;
-		
+
 		/* convert pure text strings */
 		}elseif ($num == 1) {
 			return $args[0];
-		
+
 		/* convert pure text strings by using a different textdomain */
 		}elseif ($num == 2 && isset($l10n[$args[1]])) {
 			return $args[0];
-		
+
 		/* convert stings including one or more placeholders */
 		}else {
-			
-			/* only the last argument is allowed to initiate 
+
+			/* only the last argument is allowed to initiate
 			the use of a different textdomain */
 
 			/* process return string against input arguments */
@@ -308,7 +308,7 @@ function load_i18n_fallback_wrappers(){
 	}
 
 	function __date($format, $timestamp = false, $domain = "cacti") {
-		if (!$timestamp) {$timestamp = time();}	
+		if (!$timestamp) {$timestamp = time();}
 		return date($format, $timestamp);
 	}
 }
@@ -317,8 +317,8 @@ function load_i18n_fallback_wrappers(){
 
 /**
  * get_list_of_locales - returns the default settings being used for l10n
- * 
- * @return - a multi-dimensional array with the locale code as main key 
+ *
+ * @return - a multi-dimensional array with the locale code as main key
  */
 function get_list_of_locales(){
 	$lang2locale = array(
@@ -374,9 +374,9 @@ function get_list_of_locales(){
 
 
 /**
- * get_installed_locales - finds all installed locales 
- * 
- * @return - an associative array of all installed locales (e.g. "en" => "English") 
+ * get_installed_locales - finds all installed locales
+ *
+ * @return - an associative array of all installed locales (e.g. "en" => "English")
  */
 function get_installed_locales(){
 	global $lang2locale;
@@ -398,4 +398,3 @@ function get_installed_locales(){
 
 	return $supported_languages;
 }
-?>

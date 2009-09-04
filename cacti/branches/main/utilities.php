@@ -1769,5 +1769,3 @@ function utilities() {
 
 	html_end_box();
 }
-
-?>

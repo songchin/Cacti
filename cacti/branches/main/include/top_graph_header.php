@@ -192,4 +192,4 @@ $page_title = api_plugin_hook_function('page_title', 'Cacti');
 		</div>
 	<?php }else{ ?>
 <div id='graph_content'>
-	<?php } ?>
+	<?php }

@@ -520,5 +520,3 @@ function display_help() {
 	echo "    --first=n      0, Defines the first host for this Data Collector to be polled.\n";
 	echo "    --last=n       0, Defines the last host for this Data Collector to be polled.\n";
 }
-
-?>

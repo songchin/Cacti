@@ -402,6 +402,5 @@ function changeColorId() {
 }
 </script>
 <?php
-
 }
-?>
+

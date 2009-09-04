@@ -81,5 +81,3 @@ if (!empty($_GET["show_source"])) {
 }
 
 print rrdtool_function_graph($_GET["local_graph_id"], (array_key_exists("rra_id", $_GET) ? $_GET["rra_id"] : null), $graph_data_array);
-
-?>

@@ -524,5 +524,3 @@ function display_help($me) {
 	echo "    --list-communities     " . __("list community strings used") . "\n";
 	echo "    --quiet                " . __("batch mode value return") . "\n\n";
 }
-
-?>

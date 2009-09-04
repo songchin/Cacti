@@ -497,5 +497,3 @@ function display_help() {
 	echo "    --force        Override poller overrun detection and force a poller run\n";
 	echo "    --debug|-d     Output debug information.  Similar to cacti's DEBUG logging level.\n\n";
 }
-
-?>

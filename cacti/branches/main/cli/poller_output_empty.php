@@ -88,5 +88,3 @@ function display_help($me) {
 	echo "   -v --version  " . __("Display this help message") . "\n";
 	echo "   -h --help     " . __("Display this help message") . "\n";
 }
-
-?>

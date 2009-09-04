@@ -61,5 +61,3 @@ if (read_config_option("auth_method") == "2") {
 	header("Location: index.php");
 	exit;
 }
-
-?>

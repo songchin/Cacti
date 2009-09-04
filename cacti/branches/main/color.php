@@ -200,5 +200,3 @@ function color() {
 	}
 	html_end_box();
 }
-
-?>

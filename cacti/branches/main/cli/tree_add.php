@@ -335,5 +335,3 @@ function display_help($me) {
 	echo "   --list-rras" . "\n";
 	echo "   --list-graphs --device-id=[ID]" . "\n";
 }
-
-?>

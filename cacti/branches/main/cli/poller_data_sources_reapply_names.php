@@ -167,4 +167,3 @@ function debug($message) {
 		print ("DEBUG: " . $message . "") . "\n";
 	}
 }
-?>

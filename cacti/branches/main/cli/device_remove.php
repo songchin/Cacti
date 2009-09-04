@@ -150,5 +150,3 @@ function display_help($me) {
 	echo __("Optional:") . "\n";
 	echo "   --force       " . __("delete all graphs, graph permissions, device permissions and data sources") . "\n\n";
 }
-
-?>

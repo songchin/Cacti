@@ -109,5 +109,3 @@ if ($recached_hosts > 0) {
 
 /* insert poller stats into the settings table */
 db_execute("replace into settings (name,value) values ('stats_recache','$recache_stats')");
-
-?>

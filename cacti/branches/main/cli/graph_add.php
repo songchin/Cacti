@@ -571,5 +571,3 @@ function display_help($me) {
 	echo __("'cg' graphs are for things like CPU temp/fan speed, while ") . "\n";
 	echo __("'ds' graphs are for data-source based graphs (interface stats etc.)") . "\n";
 }
-
-?>

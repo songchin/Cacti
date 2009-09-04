@@ -333,4 +333,3 @@ function rra() {
 	draw_actions_dropdown($rra_actions);
 	print "</form>\n";	# end form of html_header_sort_checkbox
 }
-

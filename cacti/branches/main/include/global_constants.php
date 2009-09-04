@@ -218,6 +218,3 @@ define("PERM_GRAPH_TEMPLATES", 4);
 define('OPER_MODE_NATIVE', 0);
 define('OPER_MODE_RESKIN', 1);
 define('OPER_MODE_IFRAME_NONAV', 2);
-
-
-?>

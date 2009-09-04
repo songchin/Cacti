@@ -611,5 +611,3 @@ function template() {
 	draw_actions_dropdown($graph_actions);
 	print "</form>\n";	# end form of html_header_sort_checkbox
 }
-
-?>

@@ -96,4 +96,4 @@ api_plugin_hook('page_head');
 		<div id='vsplitter_toggle' onClick='vSplitterToggle()' onMouseover='vSplitterEm()' onMouseout='vSplitterUnEm()' title='<?php echo __("Hide/Unhide Menu");?>'></div>
 	</div>
 	<div id='content'>
-	<?php display_output_messages();?>
+	<?php display_output_messages();

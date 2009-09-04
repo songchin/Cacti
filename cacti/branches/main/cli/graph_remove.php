@@ -164,5 +164,3 @@ function display_help($me) {
 	echo "   --list-graphs --device-id " . __("list available graphs for a specific device") . "\n";
 	echo "   --quiet         " . __("batch mode value return") . "\n\n";
 }
-
-?>

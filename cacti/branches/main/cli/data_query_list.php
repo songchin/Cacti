@@ -91,5 +91,3 @@ function display_help($me) {
 	echo "          3|Fields  " . __("Verify all Fields") . "\n";
 	echo "   --quiet          " . __("batch mode value return") . "\n\n";
 }
-
-?>

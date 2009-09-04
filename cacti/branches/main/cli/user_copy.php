@@ -66,6 +66,3 @@ if (! isset($user_auth)) {
 }
 
 echo __("User copied...") . "\n";
-
-
-?>

@@ -265,5 +265,3 @@ case 'properties':
 print "</table>";
 
 include_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
-
-?>

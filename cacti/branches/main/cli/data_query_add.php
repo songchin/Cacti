@@ -188,5 +188,3 @@ function display_help($me) {
 	echo "          3|Fields  " . __("Verify all Fields") . "\n";
 	echo __("If the data query was already associated, it will be reindexed.") . "\n\n";
 }
-
-?>

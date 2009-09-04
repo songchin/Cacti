@@ -232,5 +232,3 @@ function display_help($me) {
 	echo "   --list-graphs --device-id=[ID]\n";
 	echo "   --quiet          " . __("batch mode value return") . "\n\n";
 }
-
-?>

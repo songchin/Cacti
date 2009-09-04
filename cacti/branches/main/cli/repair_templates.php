@@ -134,4 +134,3 @@ function display_help () {
 	print "--execute        - Perform the repair\n";
 	print "--help           - display this help message\n";
 }
-?>

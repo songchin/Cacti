@@ -94,4 +94,3 @@ html_start_box("<strong>" . __("About Cacti") . "</strong>", "100%", $colors["he
 <?php
 html_end_box();
 include(CACTI_BASE_PATH . "/include/bottom_footer.php");
-?>

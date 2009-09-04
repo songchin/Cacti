@@ -232,4 +232,3 @@ if ((bool)ini_get("register_globals")) {
 
 	unset($input);
 }
-

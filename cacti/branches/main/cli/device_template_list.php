@@ -84,5 +84,3 @@ function display_help($me) {
 	echo __("Optional:") . "\n";
 	echo "   --quiet  " . __("batch mode value return") . "\n\n";
 }
-
-?>

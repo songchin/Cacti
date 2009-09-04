@@ -203,4 +203,3 @@ function display_help($me) {
 	printf(__("e.g. php -q %s --device-id=[ID] --snmp-field=ifOperStatus --snmp-value=DOWN\n"), $me);
 	echo __("to remove all data sources and graphs for interfaces with ifOperStatus = DOWN") . "\n\n";
 }
-?>

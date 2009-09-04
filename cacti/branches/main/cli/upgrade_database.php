@@ -137,6 +137,3 @@ function db_install_execute($cacti_version, $sql) {
 
 	$_SESSION["sess_sql_install_cache"] = $sql_install_cache;
 }
-
-
-

@@ -453,4 +453,3 @@ function tree() {
 	}
 	html_end_box();
 }
- ?>

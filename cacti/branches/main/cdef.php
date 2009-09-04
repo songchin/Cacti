@@ -546,4 +546,3 @@ function cdef() {
 	draw_actions_dropdown($cdef_actions);
 	print "</form>\n";	# end form of html_header_sort_checkbox
 }
-?>

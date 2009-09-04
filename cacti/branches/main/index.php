@@ -58,5 +58,3 @@ api_plugin_hook('console_before');
 api_plugin_hook('console_after');
 
 include(CACTI_BASE_PATH . "/include/bottom_footer.php");
-
-?>

@@ -231,5 +231,3 @@ function display_help($me) {
 	echo __("  2) Exit") . "\n\n";
 	echo __("usage: ") . $me . " --proceed [--help | -H | --version | -V]\n\n";
 }
-
-?>
