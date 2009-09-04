@@ -104,5 +104,3 @@ function upgrade_to_0_8_3() {
 		KEY `local_data_id` (`local_data_id`)
 		) TYPE=MyISAM;");
 }
-
-?>

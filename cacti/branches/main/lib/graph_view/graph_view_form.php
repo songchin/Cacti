@@ -1229,4 +1229,3 @@ function graph_view_search_filter() {
 
 	html_graph_end_box();
 }
-?>

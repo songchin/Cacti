@@ -365,6 +365,3 @@ function log_get_html_css_class($severity) {
 			break;
 	}
 }
-
-
-?>

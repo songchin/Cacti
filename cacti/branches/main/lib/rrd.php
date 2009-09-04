@@ -2284,4 +2284,3 @@ function rrdtool_cacti_compare($data_source_id) {
 	html_end_box();
 
 }
-?>

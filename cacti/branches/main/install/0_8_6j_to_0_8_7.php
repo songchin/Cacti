@@ -171,4 +171,3 @@ function upgrade_to_0_8_7() {
 	/* rename cactid path to spine path */
 	db_install_execute("0.8.7", "UPDATE settings SET name='path_spine' WHERE name='path_cactid'");
 }
-?>

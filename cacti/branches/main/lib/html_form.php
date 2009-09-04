@@ -1017,5 +1017,3 @@ function html_simple_decode($string) {
 		return str_replace("&amp;", "&", str_replace("&quot;", "\"", str_replace("&#039;", "'", $string)));
 	}
 }
-
-?>

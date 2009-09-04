@@ -290,5 +290,3 @@ function is_tree_allowed($tree_id) {
 		return false;
 	}
 }
-
-?>

@@ -517,5 +517,3 @@ function snmp_get_method($version = 1) {
 		return SNMP_METHOD_BINARY;
 	}
 }
-
-?>

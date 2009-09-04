@@ -419,5 +419,3 @@ function delete_branch($tree_item_id) {
 		}
 	}
 }
-
-?>

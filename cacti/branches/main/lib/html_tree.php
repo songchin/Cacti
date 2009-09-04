@@ -1514,5 +1514,3 @@ function draw_tree_dropdown($current_tree_id) {
 function naturally_sort_graphs($a, $b) {
 	return strnatcasecmp($a['title_cache'], $b['title_cache']);
 }
-
-?>

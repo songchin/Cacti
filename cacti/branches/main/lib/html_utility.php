@@ -526,5 +526,3 @@ function clean_html_output($data) {
 	}
 	return $data;
 }
-
-?>

@@ -68,16 +68,16 @@ function get_data_query_array($snmp_query_id) {
 	if (!isset($data_query_xml_arrays[$snmp_query_id])) {
 		$xml_file_path = db_fetch_cell("select xml_path from snmp_query where id=$snmp_query_id");
 		$xml_file_path = str_replace("<path_cacti>", CACTI_BASE_PATH, $xml_file_path);
-	
+
 		if (!file_exists($xml_file_path)) {
 			debug_log_insert("data_query", "Could not find data query XML file at '$xml_file_path'");
 			return false;
 		}
-	
+
 		debug_log_insert("data_query", "Found data query XML file at '$xml_file_path'");
-	
+
 		$data = implode("",file($xml_file_path));
-	
+
 		$xml_data = xml2array($data);
 
 		/* store the array value to the global array for future reference */
@@ -726,5 +726,3 @@ function get_script_query_path($args, $script_path, $host_id) {
 	/* get a complete path for out target script */
 	return substitute_script_query_path($script_path) . " $extra_arguments";
 }
-
-?>

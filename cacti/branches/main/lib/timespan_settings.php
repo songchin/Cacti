@@ -252,5 +252,3 @@ function set_timeshift() {
 
 	return $timeshift = $graph_timeshifts[$_SESSION["sess_current_timeshift"]];
 }
-
-?>

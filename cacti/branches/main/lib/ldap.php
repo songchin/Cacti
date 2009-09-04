@@ -507,6 +507,3 @@ function cacti_ldap_search_dn($username,$ldap_dn = "",$ldap_host = "",$ldap_port
 	return $output;
 
 }
-
-?>
-

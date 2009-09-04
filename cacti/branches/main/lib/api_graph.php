@@ -151,5 +151,3 @@ function api_get_graphs_from_datasource($local_data_id) {
 		WHERE graph_templates_graph.local_graph_id>0
 		AND data_template_rrd.local_data_id=$local_data_id"), "id", "name");
 }
-
-?>

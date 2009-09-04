@@ -38,5 +38,3 @@ function upgrade_to_0_8_1() {
 		}
 	}
 }
-
-?>

@@ -28,4 +28,3 @@ function upgrade_to_0_8_7b() {
 	/* make CLI more responsive */
 	db_install_execute("0.8.7b", "ALTER TABLE `data_input_data` ADD INDEX `t_value`(`t_value`)");
 }
-?>

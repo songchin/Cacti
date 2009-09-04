@@ -206,5 +206,3 @@ function substitute_snmp_query_data($string, $host_id, $snmp_query_id, $snmp_ind
 
 	return $string;
 }
-
-?>

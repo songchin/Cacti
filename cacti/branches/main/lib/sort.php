@@ -91,6 +91,3 @@ function usort_alphabetic($a, $b) {
 function usort_natural($a, $b) {
 	return strnatcmp($a, $b);
 }
-
-
-?>

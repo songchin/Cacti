@@ -97,8 +97,3 @@ function auth_control_data_get($data, $category = "SYSTEM", $plugin_id = 0, $con
 	return db_fetch_assoc($sql);
 
 }
-
-
-
-
-?>

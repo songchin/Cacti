@@ -222,5 +222,3 @@ function api_device_save($id, $poller_id, $host_template_id, $description, $host
 
 	return $host_id;
 }
-
-?>

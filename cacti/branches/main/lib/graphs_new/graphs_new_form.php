@@ -881,5 +881,3 @@ function graphs_new() {
 	print "<script type='text/javascript'>dq_update_selection_indicators();</script>\n";
 	print "<script type='text/javascript'>gt_update_selection_indicators();</script>\n";
 }
-
-?>

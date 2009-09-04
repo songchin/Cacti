@@ -30,5 +30,3 @@ function upgrade_to_0_8_2() {
 	db_install_execute("0.8.2", "UPDATE snmp_query_graph_sv set text = REPLACE(text,'ifAlias','ifName') where (snmp_query_graph_id=1 or snmp_query_graph_id=13 or snmp_query_graph_id=14 or snmp_query_graph_id=16 or snmp_query_graph_id=9 or snmp_query_graph_id=2 or snmp_query_graph_id=3 or snmp_query_graph_id=4);");
 	db_install_execute("0.8.2", "UPDATE host set disabled = '';");
 }
-
-?>

@@ -379,5 +379,3 @@ function process_poller_output($rrdtool_pipe, $remainder = FALSE) {
 
 	return $rrds_processed;
 }
-
-?>

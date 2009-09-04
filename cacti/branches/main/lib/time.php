@@ -234,9 +234,9 @@ function shift_time(&$span, $direction, $shift_size) {
  */
 function date_time_format() {
 	global $config;
-	
+
 	$graph_date = "";
-	
+
 	/* setup date format */
 	$date_fmt = read_graph_config_option("default_date_format");
 	$datechar = read_graph_config_option("default_datechar");
@@ -269,4 +269,3 @@ function date_time_format() {
 	}
 	return $graph_date;
 }
-?>

@@ -1861,5 +1861,3 @@ define("HTML_FOOTER_CLASSIC", "
 	</body>
 	</html>"
 );
-
-?>

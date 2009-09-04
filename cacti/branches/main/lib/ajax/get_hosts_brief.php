@@ -56,5 +56,3 @@ if (sizeof($hosts) > 0) {
 		print $host["name"] . "|" . $host["id"] . "\n";
 	}
 }
-
-?>

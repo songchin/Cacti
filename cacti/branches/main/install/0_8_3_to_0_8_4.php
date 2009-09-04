@@ -798,5 +798,3 @@ function upgrade_to_0_8_4() {
 		db_execute("update rra set hash='" . get_hash_round_robin_archive($item[$i]["id"]) . "' where id=" . $item[$i]["id"] . ";");
 	}
 }
-
-?>

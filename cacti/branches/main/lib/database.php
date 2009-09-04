@@ -431,7 +431,7 @@ function sql_function_concat($db_conn = "") {
 		$args = func_get_args();
 		return call_user_func_array(array(&$db_conn, 'Concat'), $args);
 	}
-    
+
 	return "concat('".implode("','", func_get_args())."')";
 }
 
@@ -493,5 +493,3 @@ function sql_function_dateformat($fmt, $col = false) {
 			return 'date_format';
 	}
 }
-
-?>

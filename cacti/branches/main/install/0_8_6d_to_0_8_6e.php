@@ -47,34 +47,33 @@ function upgrade_to_0_8_6e() {
 	db_install_execute("0.8.6e", "ALTER TABLE `data_template_rrd` ADD KEY local_data_template_rrd_id (local_data_template_rrd_id);");
 	db_install_execute("0.8.6e", "ALTER TABLE `data_input_fields` ADD KEY type_code (type_code);");
 
-    /* remove NVA indexes from database */
-    db_install_execute("0.8.6e", "ALTER TABLE `cdef` DROP INDEX ID, DROP INDEX id_2;");
-    db_install_execute("0.8.6e", "ALTER TABLE `cdef_items` DROP INDEX ID;");
-    db_install_execute("0.8.6e", "ALTER TABLE `colors` DROP INDEX ID, DROP INDEX id_2;");
-    db_install_execute("0.8.6e", "ALTER TABLE `data_input` DROP INDEX ID, DROP INDEX id_2;");
-    db_install_execute("0.8.6e", "ALTER TABLE `data_input_data` DROP INDEX data_input_field_id");
-    db_install_execute("0.8.6e", "ALTER TABLE `data_input_fields` DROP INDEX ID, DROP INDEX id_2;");
-    db_install_execute("0.8.6e", "ALTER TABLE `data_local` DROP INDEX id, DROP INDEX id_2;");
-    db_install_execute("0.8.6e", "ALTER TABLE `data_template` DROP INDEX id, DROP INDEX id_2;");
-    db_install_execute("0.8.6e", "ALTER TABLE `data_template_data` DROP INDEX id, DROP INDEX id_2;");
-    db_install_execute("0.8.6e", "ALTER TABLE `data_template_rrd` DROP INDEX id, DROP INDEX id_2;");
-    db_install_execute("0.8.6e", "ALTER TABLE `graph_local` DROP INDEX id, DROP INDEX id_2;");
-    db_install_execute("0.8.6e", "ALTER TABLE `graph_template_input` DROP INDEX id, DROP INDEX id_2, DROP INDEX id_3;");
-    db_install_execute("0.8.6e", "ALTER TABLE `graph_templates` DROP INDEX id, DROP INDEX id_2;");
-    db_install_execute("0.8.6e", "ALTER TABLE `graph_templates_gprint` DROP INDEX id, DROP INDEX id_2;");
-    db_install_execute("0.8.6e", "ALTER TABLE `graph_templates_graph` DROP INDEX id, DROP INDEX id_2;");
-    db_install_execute("0.8.6e", "ALTER TABLE `graph_templates_item` DROP INDEX id, DROP INDEX id_2;");
-    db_install_execute("0.8.6e", "ALTER TABLE `graph_tree` DROP INDEX id, DROP INDEX id_2;");
-    db_install_execute("0.8.6e", "ALTER TABLE `graph_tree_items` DROP INDEX ID, DROP INDEX id_2;");
-    db_install_execute("0.8.6e", "ALTER TABLE `host` DROP INDEX id, DROP INDEX id_2;");
-    db_install_execute("0.8.6e", "ALTER TABLE `host_template` DROP INDEX id, DROP INDEX id_2;");
-    db_install_execute("0.8.6e", "ALTER TABLE `rra` DROP INDEX id, DROP INDEX id_2;");
-    db_install_execute("0.8.6e", "ALTER TABLE `settings` DROP INDEX Name, DROP INDEX name_2;");
-    db_install_execute("0.8.6e", "ALTER TABLE `settings_graphs` DROP INDEX user_id;");
-    db_install_execute("0.8.6e", "ALTER TABLE `snmp_query` DROP INDEX id, DROP INDEX id_2;");
-    db_install_execute("0.8.6e", "ALTER TABLE `snmp_query_graph` DROP INDEX id, DROP INDEX id_2;");
-    db_install_execute("0.8.6e", "ALTER TABLE `snmp_query_graph_rrd_sv` DROP INDEX id, DROP INDEX id_2;");
-    db_install_execute("0.8.6e", "ALTER TABLE `snmp_query_graph_sv` DROP INDEX id, DROP INDEX id_2;");
-    db_install_execute("0.8.6e", "ALTER TABLE `user_auth` DROP INDEX ID, DROP INDEX id_2;");
- }
-?>
+	/* remove NVA indexes from database */
+	db_install_execute("0.8.6e", "ALTER TABLE `cdef` DROP INDEX ID, DROP INDEX id_2;");
+	db_install_execute("0.8.6e", "ALTER TABLE `cdef_items` DROP INDEX ID;");
+	db_install_execute("0.8.6e", "ALTER TABLE `colors` DROP INDEX ID, DROP INDEX id_2;");
+	db_install_execute("0.8.6e", "ALTER TABLE `data_input` DROP INDEX ID, DROP INDEX id_2;");
+	db_install_execute("0.8.6e", "ALTER TABLE `data_input_data` DROP INDEX data_input_field_id");
+	db_install_execute("0.8.6e", "ALTER TABLE `data_input_fields` DROP INDEX ID, DROP INDEX id_2;");
+	db_install_execute("0.8.6e", "ALTER TABLE `data_local` DROP INDEX id, DROP INDEX id_2;");
+	db_install_execute("0.8.6e", "ALTER TABLE `data_template` DROP INDEX id, DROP INDEX id_2;");
+	db_install_execute("0.8.6e", "ALTER TABLE `data_template_data` DROP INDEX id, DROP INDEX id_2;");
+	db_install_execute("0.8.6e", "ALTER TABLE `data_template_rrd` DROP INDEX id, DROP INDEX id_2;");
+	db_install_execute("0.8.6e", "ALTER TABLE `graph_local` DROP INDEX id, DROP INDEX id_2;");
+	db_install_execute("0.8.6e", "ALTER TABLE `graph_template_input` DROP INDEX id, DROP INDEX id_2, DROP INDEX id_3;");
+	db_install_execute("0.8.6e", "ALTER TABLE `graph_templates` DROP INDEX id, DROP INDEX id_2;");
+	db_install_execute("0.8.6e", "ALTER TABLE `graph_templates_gprint` DROP INDEX id, DROP INDEX id_2;");
+	db_install_execute("0.8.6e", "ALTER TABLE `graph_templates_graph` DROP INDEX id, DROP INDEX id_2;");
+	db_install_execute("0.8.6e", "ALTER TABLE `graph_templates_item` DROP INDEX id, DROP INDEX id_2;");
+	db_install_execute("0.8.6e", "ALTER TABLE `graph_tree` DROP INDEX id, DROP INDEX id_2;");
+	db_install_execute("0.8.6e", "ALTER TABLE `graph_tree_items` DROP INDEX ID, DROP INDEX id_2;");
+	db_install_execute("0.8.6e", "ALTER TABLE `host` DROP INDEX id, DROP INDEX id_2;");
+	db_install_execute("0.8.6e", "ALTER TABLE `host_template` DROP INDEX id, DROP INDEX id_2;");
+	db_install_execute("0.8.6e", "ALTER TABLE `rra` DROP INDEX id, DROP INDEX id_2;");
+	db_install_execute("0.8.6e", "ALTER TABLE `settings` DROP INDEX Name, DROP INDEX name_2;");
+	db_install_execute("0.8.6e", "ALTER TABLE `settings_graphs` DROP INDEX user_id;");
+	db_install_execute("0.8.6e", "ALTER TABLE `snmp_query` DROP INDEX id, DROP INDEX id_2;");
+	db_install_execute("0.8.6e", "ALTER TABLE `snmp_query_graph` DROP INDEX id, DROP INDEX id_2;");
+	db_install_execute("0.8.6e", "ALTER TABLE `snmp_query_graph_rrd_sv` DROP INDEX id, DROP INDEX id_2;");
+	db_install_execute("0.8.6e", "ALTER TABLE `snmp_query_graph_sv` DROP INDEX id, DROP INDEX id_2;");
+	db_install_execute("0.8.6e", "ALTER TABLE `user_auth` DROP INDEX ID, DROP INDEX id_2;");
+}

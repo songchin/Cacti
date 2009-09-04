@@ -530,5 +530,3 @@ function log_get_last_function () {
 		return $backtrace[2]["function"];
 	}
 }
-
-?>

@@ -918,5 +918,3 @@ function xml_character_decode($text) {
 		return strtr($text, $trans_tbl);
 	}
 }
-
-?>

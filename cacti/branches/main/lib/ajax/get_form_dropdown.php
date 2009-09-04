@@ -56,5 +56,3 @@ if (sizeof($entries) > 0) {
 		print $entry["name"] . "|" . $entry["id"] . "\n";
 	}
 }
-
-?>

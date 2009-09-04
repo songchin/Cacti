@@ -2231,5 +2231,3 @@ function sanitize_search_string($string) {
 
 	return $string;
 }
-
-?>

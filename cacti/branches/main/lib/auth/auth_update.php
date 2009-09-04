@@ -64,5 +64,3 @@ function auth_control_data_save($data, $category = "SYSTEM", $enable_user_edit =
 	return db_execute($sql);
 
 }
-
-?>

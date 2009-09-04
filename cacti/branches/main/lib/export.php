@@ -831,5 +831,3 @@ function xml_character_encode($text) {
 		return $text;
 	}
 }
-
-?>

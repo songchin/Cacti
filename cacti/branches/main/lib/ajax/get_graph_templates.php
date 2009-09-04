@@ -57,5 +57,3 @@ if (sizeof($templates) > 0) {
 		print $template["name"] . "|" . $template["id"] . "\n";
 	}
 }
-
-?>

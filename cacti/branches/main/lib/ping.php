@@ -776,5 +776,3 @@ class Net_Ping
 		}
 	}
 }
-
-?>

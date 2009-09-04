@@ -59,5 +59,3 @@ if (sizeof($graphs) > 0) {
 		print $graph["name"] . "|" . $graph["id"] . "\n";
 	}
 }
-
-?>

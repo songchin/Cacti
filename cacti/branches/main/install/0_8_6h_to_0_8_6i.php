@@ -51,4 +51,3 @@ function upgrade_to_0_8_6i() {
 		db_install_execute("0.8.6i", "REPLACE INTO `data_input_fields` VALUES (0, 'fc64b99742ec417cc424dbf8c7692d36',1,'SNMP Port','snmp_port','in','',0,'snmp_port','','');");
 	}
 }
-?>

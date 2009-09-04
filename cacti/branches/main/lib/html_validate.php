@@ -56,5 +56,3 @@ function die_html_input_error() {
 	include_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
 	exit;
 }
-
-?>

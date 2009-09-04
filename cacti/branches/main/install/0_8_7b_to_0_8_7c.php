@@ -81,4 +81,3 @@ function upgrade_to_0_8_7c() {
 	/* Correct issue where rrd_next_step goes large in a positive way instead of the way it should go */
 	db_install_execute("0.8.7c", "ALTER TABLE `poller_item` MODIFY COLUMN `rrd_step` MEDIUMINT(8) NOT NULL DEFAULT 300");
 }
-?>

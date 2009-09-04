@@ -1102,7 +1102,8 @@ function DrawMatrixHeaderItem($matrix_name, $matrix_text_color, $column_span = 1
 		<td height="1" align="<?php print $align;?>" colspan="<?php print $column_span;?>">
 			<strong><font color="#<?php print $matrix_text_color;?>"><?php print $matrix_name;?></font></strong>
 		</td>
-<?php }
+<?php
+}
 
 function form_area($text) { ?>
 	<tr>
@@ -1110,6 +1111,5 @@ function form_area($text) { ?>
 			<?php print $text;?>
 		</td>
 	</tr>
-<?php }
-
-?>
+<?php
+}

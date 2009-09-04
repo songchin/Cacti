@@ -80,4 +80,3 @@ if (isset($_REQUEST["id"])) {
 get_graph_tree_content($tree_id, $leaf_id, $host_group_type);
 
 exit();
-?>
