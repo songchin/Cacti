@@ -146,7 +146,7 @@ function import() {
 			<?php print __("If the XML file containing template data is located on your local machine, select it here.");?>
 		</td>
 		<td>
-			<input type="file" name="import_file">
+			<input type="file" size="60" name="import_file">
 		</td>
 	</tr>
 
@@ -155,8 +155,8 @@ function import() {
 			<font class="textEditTitle"><?php print __("Import Template from Text");?></font><br>
 			<?php print __("If you have the XML file containing template data as text, you can paste it into this box to import it.");?>
 		</td>
-		<td>
-			<?php form_text_area("import_text", "", "10	", "50", "");?>
+		<td style="padding-right:10px;">
+			<?php form_text_area("import_text", "", "10	", "60", "");?>
 		</td>
 	</tr>
 
