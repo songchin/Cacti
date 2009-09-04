@@ -1066,10 +1066,8 @@ function graph() {
 	load_current_session_value("sort_column", "sess_graph_sort_column", "title_cache");
 	load_current_session_value("sort_direction", "sess_graph_sort_direction", "ASC");
 	load_current_session_value("host_id", "sess_graph_host_id", "-1");
-	load_current_session_value("rows", "sess_graph_rows", read_config_option("num_rows_graph"));
+	load_current_session_value("rows", "sess_graph_rows", "-1");
 	load_current_session_value("template_id", "sess_graph_template_id", "-1");
-
-	if ($_REQUEST["rows"] == '-1') $_REQUEST["rows"] = read_config_option("num_rows_graph");
 
 	?>
 	<script type="text/javascript">
@@ -1087,23 +1085,23 @@ function graph() {
 	});
 
 	function clearGraphsFilterChange(objForm) {
-		<?php print (isset($_REQUEST["tab"]) ? "strURL = '?host_id=" . $_REQUEST["host_id"] . "&amp;id=" . $_REQUEST["host_id"] . "&amp;action=edit&amp;action=edit&amp;tab=" . $_REQUEST["tab"] . "';" : "strURL = '?host_id=-1';");?>
-		strURL = strURL + '&amp;filter=';
-		strURL = strURL + '&amp;rows=-1';
-		strURL = strURL + '&amp;template_id=-1';
+		<?php print (isset($_REQUEST["tab"]) ? "strURL = '?host_id=" . $_REQUEST["host_id"] . "&id=" . $_REQUEST["host_id"] . "&action=edit&amp;action=edit&tab=" . $_REQUEST["tab"] . "';" : "strURL = '?host_id=-1';");?>
+		strURL = strURL + '&filter=';
+		strURL = strURL + '&rows=-1';
+		strURL = strURL + '&template_id=-1';
 		document.location = strURL;
 	}
 
 	function applyGraphsFilterChange(objForm) {
 		if (objForm.host_id.value) {
 			strURL = '?host_id=' + objForm.host_id.value;
-			strURL = strURL + '&amp;filter=' + objForm.filter.value;
+			strURL = strURL + '&filter=' + objForm.filter.value;
 		}else{
 			strURL = '?filter=' + objForm.filter.value;
 		}
-		strURL = strURL + '&amp;rows=' + objForm.rows.value;
-		strURL = strURL + '&amp;template_id=' + objForm.template_id.value;
-		<?php print (isset($_REQUEST["tab"]) ? "strURL = strURL + '&amp;id=' + objForm.host_id.value + '&amp;action=edit&amp;action=edit&amp;tab=" . $_REQUEST["tab"] . "';" : "");?>
+		strURL = strURL + '&rows=' + objForm.rows.value;
+		strURL = strURL + '&template_id=' + objForm.template_id.value;
+		<?php print (isset($_REQUEST["tab"]) ? "strURL = strURL + '&id=' + objForm.host_id.value + '&action=edit&action=edit&tab=" . $_REQUEST["tab"] . "';" : "");?>
 		document.location = strURL;
 	}
 	-->
@@ -1233,6 +1231,12 @@ function graph() {
 
 	html_start_box("", "100%", $colors["header"], "0", "center", "");
 
+	if (get_request_var_request("rows") == "-1") {
+		$rows = read_config_option("num_rows_graph");
+	}else{
+		$rows = get_request_var_request("rows");
+	}
+
 	$total_rows = db_fetch_cell("SELECT
 		COUNT(graph_templates_graph.id)
 		FROM (graph_local,graph_templates_graph)
@@ -1253,10 +1257,10 @@ function graph() {
 		WHERE graph_local.id=graph_templates_graph.local_graph_id
 		$sql_where
 		ORDER BY " . $_REQUEST['sort_column'] . " " . $_REQUEST['sort_direction'] .
-		" LIMIT " . ($_REQUEST["rows"]*($_REQUEST["page"]-1)) . "," . $_REQUEST["rows"]);
+		" LIMIT " . ($rows*($_REQUEST["page"]-1)) . "," . $rows);
 
 	/* generate page list navigation */
-	$nav = html_create_nav($_REQUEST["page"], MAX_DISPLAY_PAGES, $_REQUEST["rows"], $total_rows, 7, "graphs.php");
+	$nav = html_create_nav($_REQUEST["page"], MAX_DISPLAY_PAGES, $rows, $total_rows, 7, "graphs.php");
 
 	print $nav;
 	html_end_box(false);

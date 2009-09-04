@@ -1344,7 +1344,7 @@ function host() {
 	load_current_session_value("filter", "sess_device_filter", "");
 	load_current_session_value("template_id", "sess_device_template_id", "-1");
 	load_current_session_value("status", "sess_host_status", "-1");
-	load_current_session_value("rows", "sess_host_rows", read_config_option("num_rows_device"));
+	load_current_session_value("rows", "sess_host_rows", "-1");
 	load_current_session_value("poller", "sess_host_poller", "-1");
 	load_current_session_value("site", "sess_host_site", "-1");
 	load_current_session_value("sort_column", "sess_host_sort_column", "description");
@@ -1532,6 +1532,12 @@ function host() {
 		from host
 		$sql_where");
 
+	if (get_request_var_request("rows") == "-1") {
+		$rows = read_config_option("num_rows_device");
+	}else{
+		$rows = get_request_var_request("rows");
+	}
+
 	$sortby = $_REQUEST["sort_column"];
 	if ($sortby=="hostname") {
 		$sortby = "INET_ATON(hostname)";
@@ -1548,14 +1554,14 @@ function host() {
 		ON host.site_id=sites.id
 		$sql_where
 		ORDER BY " . $sortby . " " . $_REQUEST["sort_direction"] . "
-		LIMIT " . ($_REQUEST["rows"]*($_REQUEST["page"]-1)) . "," . $_REQUEST["rows"];
+		LIMIT " . ($rows*($_REQUEST["page"]-1)) . "," . $rows;
 
 	//print $sql_query;
 
 	$hosts = db_fetch_assoc($sql_query);
 
 	/* generate page list navigation */
-	$nav = html_create_nav($_REQUEST["page"], MAX_DISPLAY_PAGES, $_REQUEST["rows"], $total_rows, 13, "host.php");
+	$nav = html_create_nav($_REQUEST["page"], MAX_DISPLAY_PAGES, $rows, $total_rows, 13, "host.php");
 
 	print $nav;
 	html_end_box(false);

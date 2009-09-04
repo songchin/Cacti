@@ -1035,12 +1035,10 @@ function data_source() {
 	load_current_session_value("filter", "sess_ds_filter", "");
 	load_current_session_value("sort_column", "sess_ds_sort_column", "name_cache");
 	load_current_session_value("sort_direction", "sess_ds_sort_direction", "ASC");
-	load_current_session_value("rows", "sess_ds_rows", read_config_option("num_rows_data_source"));
+	load_current_session_value("rows", "sess_ds_rows", "-1");
 	load_current_session_value("host_id", "sess_ds_host_id", "-1");
 	load_current_session_value("template_id", "sess_ds_template_id", "-1");
 	load_current_session_value("method_id", "sess_ds_method_id", "-1");
-
-	if ($_REQUEST["rows"] == '-1') $_REQUEST["rows"] = read_config_option("num_rows_data_source");
 
 	$host = db_fetch_row("select hostname from host where id=" . $_REQUEST["host_id"]);
 
@@ -1245,6 +1243,12 @@ function data_source() {
 		$sql_where2 .= " AND data_template_data.data_input_id=" . $_REQUEST["method_id"];
 	}
 
+	if (get_request_var_request("rows") == "-1") {
+		$rows = read_config_option("num_rows_data_source");
+	}else{
+		$rows = get_request_var_request("rows");
+	}
+
 	$total_rows = sizeof(db_fetch_assoc("SELECT
 		data_local.id
 		FROM (data_local,data_template_data)
@@ -1280,14 +1284,14 @@ function data_source() {
 		WHERE data_local.id=data_template_data.local_data_id
 		$sql_where1
 		ORDER BY ". $_REQUEST['sort_column'] . " " . $_REQUEST['sort_direction'] .
-		" LIMIT " . ($_REQUEST["rows"]*($_REQUEST["page"]-1)) . "," . $_REQUEST["rows"];
+		" LIMIT " . ($rows*($_REQUEST["page"]-1)) . "," . $rows;
 
 	$data_sources = db_fetch_assoc($dssql);
 
 	html_start_box("", "100%", $colors["header"], "0", "center", "");
 
 	/* generate page list navigation */
-	$nav = html_create_nav($_REQUEST["page"], MAX_DISPLAY_PAGES, $_REQUEST["rows"], $total_rows, 7, "data_sources.php");
+	$nav = html_create_nav($_REQUEST["page"], MAX_DISPLAY_PAGES, $rows, $total_rows, 7, "data_sources.php");
 
 	print $nav;
 	html_end_box(false);
