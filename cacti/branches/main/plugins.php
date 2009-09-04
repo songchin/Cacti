@@ -231,6 +231,12 @@ function plugins_show($status = 'all') {
 						$info[$plugin]['version'] = '';
 					}
 
+					if (!isset($cinfo[$plugin]['webpage'])) {
+						if (isset($cinfo[$plugin]['homepage'])) {
+							$cinfo[$plugin]['webpage'] = $cinfo[$plugin]['homepage'];
+						}
+					}
+
 					print "<table width='100%'>";
 					html_header(array((isset($cinfo[$plugin]['name']) ? $cinfo[$plugin]['name'] : $plugin)), 2);
 					form_alternate_row_color();
@@ -240,7 +246,7 @@ function plugins_show($status = 'all') {
 					form_alternate_row_color();
 					print '<td><strong>' . __("Author:") . '</strong></td><td>' . (isset($cinfo[$plugin]['author']) && $cinfo[$plugin]['author'] != '' ? (isset($cinfo[$plugin]['email']) && $cinfo[$plugin]['email'] != '' ? "<a href='" . htmlspecialchars("mailto:" . $cinfo[$plugin]['email']) . "'>" . $cinfo[$plugin]['author'] . '</a>'  : $cinfo[$plugin]['author']) : '') . '</td>';
 					form_alternate_row_color();
-					print '<td><strong>' . __("Home Page:") . '</strong></td><td>' . (isset($cinfo[$plugin]['homepage']) && $cinfo[$plugin]['homepage'] != '' ? "<a href='" . htmlspecialchars($cinfo[$plugin]['homepage']) . "'>" . $cinfo[$plugin]['homepage'] . '</a>' : '') . '</td>';
+					print '<td><strong>' . __("Home Page:") . '</strong></td><td>' . (isset($cinfo[$plugin]['webpage']) && $cinfo[$plugin]['webpage'] != '' ? "<a href='" . htmlspecialchars($cinfo[$plugin]['webpage']) . "'>" . $cinfo[$plugin]['webpage'] . '</a>' : '') . '</td>';
 					form_alternate_row_color();
 					print '<td><strong>' . __("Status:") . '</strong></td><td>' . $status_names[$cinfo[$plugin]['status']] . '</td>';
 					form_alternate_row_color();
