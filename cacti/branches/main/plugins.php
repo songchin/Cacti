@@ -38,15 +38,8 @@ $ptabs = api_plugin_hook_function ('plugin_management_tabs', $ptabs);
 $status_names = array(__('Not Installed'), __('Active'), __('Awaiting Configuration'), __('Awaiting Upgrade'), __('Installed'));
 
 /* set the default settings category */
-if (!isset($_GET['tab'])) {
-	/* there is no selected tab; select the first one */
-	$current_tab = array_keys($ptabs);
-	$current_tab = $current_tab[0];
-}else{
-	$current_tab = $_GET['tab'];
-}
-
 load_current_session_value('tab', 'sess_plugins_tab', 'all');
+$current_tab = $_REQUEST['tab'];
 
 $modes = array('all', 'install', 'uninstall', 'disable', 'enable', 'check');
 
@@ -71,12 +64,12 @@ if (isset($_GET['mode']) && in_array($_GET['mode'], $modes)  && isset($_GET['id'
 		case 'disable':
 			if (!in_array($id, $plugins))
 				break;
-			api_plugin_disable ($id);
+			api_plugin_disable($id);
 			break;
 		case 'enable':
 			if (!in_array($id, $plugins))
 				break;
-			api_plugin_enable ($id);
+			api_plugin_enable($id);
 			break;
 		case 'check':
 			if (!in_array($id, $plugins))
@@ -87,7 +80,7 @@ if (isset($_GET['mode']) && in_array($_GET['mode'], $modes)  && isset($_GET['id'
 
 include(CACTI_BASE_PATH . "/include/top_header.php");
 
-plugins_draw_tabs ($ptabs, $current_tab);
+plugins_draw_tabs($ptabs, $current_tab);
 
 html_start_box('<strong>' . __('Plugins') . ' (' . $ptabs[$current_tab] . ')</strong>', '100%', $colors['header'], '3', 'center', '');
 
@@ -162,8 +155,8 @@ function plugins_show($status = 'all') {
 					if (sizeof($plugin_functions)) {
 					foreach($plugin_functions as $plugin_function) {
 						if (function_exists($plugin_function)) {
-							$debug_log[] = __("Plugin Directory <strong>'$file'</strong> Can not be installed, as it contains a duplicate previously declared function");
-							break 2;
+							$debug_log[] = __("Plugin Directory <strong>'$file'</strong> Can not be installed, as it contains function '$plugin_function' which is already defined");
+							break;
 						}
 					}
 					}
@@ -182,12 +175,12 @@ function plugins_show($status = 'all') {
 							$newplugins[]      = $file;
 							$cinfo[$file]['status']   = 0;
 
-							$debug_log[] = __("Plugin <strong>'$file'</strong> appears to lack a required version function");
+							$debug_log[] = __("Plugin Directory <strong>'$file'</strong> appears to lack a required version function");
 						}
 					}elseif (in_array('plugin_init_' . $file, $plugin_functions)) {
-						$debug_log[] = __("Plugin <strong>'$file'</strong> appears by a PIA 1.x Plugin and is not supported");
+						$debug_log[] = __("Plugin Directory <strong>'$file'</strong> appears by a PIA 1.x Plugin and is not supported");
 					}else{
-						$debug_log[] = __("Plugin <strong>'$file'</strong> does not appear to have an install function");
+						$debug_log[] = __("Plugin Directory <strong>'$file'</strong> does not appear valid and may be renamed plugin directory");
 					}
 				}else{
 					$newplugins[] = $file;
@@ -342,7 +335,7 @@ function plugins_remove_spaces($string) {
 		if (!substr_count($string, "  ")) break;
 	}
 
-	return trim($string);
+	return $string;
 }
 
 function plugins_get_plugin_info() {
