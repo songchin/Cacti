@@ -196,42 +196,38 @@ function form_actions() {
 
 	print "<form action='cdef.php' method='post'>\n";
 
-	if ($_POST["drp_action"] == "1") { /* delete */
-		print "	<tr>
-				<td class='textArea' bgcolor='#" . $colors["form_alternate1"]. "'>
-					<p>" . __("Are you sure you want to delete the following CDEFs?") . "</p>
-					<p>$cdef_list</p>
-				</td>
-			</tr>\n
-			";
-	}elseif ($_POST["drp_action"] == "2") { /* duplicate */
-		print "	<tr>
-				<td class='textArea' bgcolor='#" . $colors["form_alternate1"]. "'>
-					<p>" . __("When you click save, the following CDEFs will be duplicated. You can optionally change the title format for the new CDEFs.") . "</p>
-					<p>$cdef_list</p>
-					<p><strong>" . __("Title Format:") . "</strong><br>"; form_text_box("title_format", "<cdef_title> (1)", "", "255", "30", "text"); print "</p>
-				</td>
-			</tr>\n
-			";
+	if (isset($cdef_array)) {
+		if ($_POST["drp_action"] == "1") { /* delete */
+			print "	<tr>
+					<td class='textArea' bgcolor='#" . $colors["form_alternate1"]. "'>
+						<p>" . __("Are you sure you want to delete the following CDEFs?") . "</p>
+						<p><ul>$cdef_list</ul></p>
+					</td>
+				</tr>\n
+				";
+		}elseif ($_POST["drp_action"] == "2") { /* duplicate */
+			print "	<tr>
+					<td class='textArea' bgcolor='#" . $colors["form_alternate1"]. "'>
+						<p>" . __("When you click save, the following CDEFs will be duplicated. You can optionally change the title format for the new CDEFs.") . "</p>
+						<p><ul>$cdef_list</ul></p>
+						<p><strong>" . __("Title Format:") . "</strong><br>"; form_text_box("title_format", "<cdef_title> (1)", "", "255", "30", "text"); print "</p>
+					</td>
+				</tr>\n
+				";
+		}
+	}else{
+		print "<tr><td bgcolor='#" . $colors["form_alternate1"]. "'><span class='textError'>" . __("You must select at least one CDEF.") . "</span></td></tr>\n";
 	}
+
+	print "<div><input type='hidden' name='action' value='actions'></div>";
+	print "<div><input type='hidden' name='selected_items' value='" . (isset($cdef_array) ? serialize($cdef_array) : '') . "'></div>";
+	print "<div><input type='hidden' name='drp_action' value='" . $_POST["drp_action"] . "'></div>";
 
 	if (!isset($cdef_array)) {
-		print "<tr><td bgcolor='#" . $colors["form_alternate1"]. "'><span class='textError'>" . __("You must select at least one CDEF.") . "</span></td></tr>\n";
-		$save_html = "";
+		form_return_button_alt();
 	}else{
-		$save_html = "<input type='image' src='images/button_yes.gif' alt='" . __("Save") . "' align='middle'>";
+		form_yesno_button_alt(serialize($cdef_array), $_POST["drp_action"]);
 	}
-
-	print "	<tr>
-			<td align='right' bgcolor='#eaeaea'>
-				<input type='hidden' name='action' value='actions'>
-				<input type='hidden' name='selected_items' value='" . (isset($cdef_array) ? serialize($cdef_array) : '') . "'>
-				<input type='hidden' name='drp_action' value='" . $_POST["drp_action"] . "'>
-				<a href='cdef.php'><img src='images/button_no.gif' alt='" . __("Cancel") . "' align='middle' border='0'></a>
-				$save_html
-			</td>
-		</tr>
-		";
 
 	html_end_box();
 

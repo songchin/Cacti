@@ -100,33 +100,29 @@ function form_actions() {
 
 	print "<form action='gprint_presets.php' method='post'>\n";
 
-	if ($_POST["drp_action"] == "1") { /* delete */
-		print "	<tr>
-				<td class='textArea' bgcolor='#" . $colors["form_alternate1"]. "'>
-					<p>" . __("Are you sure you want to delete the following GPRINT presets?") . "</p>
-					<p>$gprint_list</p>
-				</td>
-			</tr>\n
-			";
+	if (isset($gprint_array)) {
+		if ($_POST["drp_action"] == "1") { /* delete */
+			print "	<tr>
+					<td class='textArea' bgcolor='#" . $colors["form_alternate1"]. "'>
+						<p>" . __("Are you sure you want to delete the following GPRINT presets?") . "</p>
+						<p><ul>$gprint_list</ul></p>
+					</td>
+				</tr>\n
+				";
+		}
+	}else{
+		print "<tr><td bgcolor='#" . $colors["form_alternate1"]. "'><span class='textError'>" . __("You must select at least one GPRINT preset.") . "</span></td></tr>\n";
 	}
+
+	print "<div><input type='hidden' name='action' value='actions'></div>";
+	print "<div><input type='hidden' name='selected_items' value='" . (isset($gprint_array) ? serialize($gprint_array) : '') . "'></div>";
+	print "<div><input type='hidden' name='drp_action' value='" . $_POST["drp_action"] . "'></div>";
 
 	if (!isset($gprint_array)) {
-		print "<tr><td bgcolor='#" . $colors["form_alternate1"]. "'><span class='textError'>" . __("You must select at least one GPRINT preset.") . "</span></td></tr>\n";
-		$save_html = "";
+		form_return_button_alt();
 	}else{
-		$save_html = "<input type='image' src='images/button_yes.gif' alt='" . __("Save") . "' align='middle'>";
+		form_yesno_button_alt(serialize($gprint_array), $_POST["drp_action"]);
 	}
-
-	print "	<tr>
-			<td align='right' bgcolor='#eaeaea'>
-				<input type='hidden' name='action' value='actions'>
-				<input type='hidden' name='selected_items' value='" . (isset($gprint_array) ? serialize($gprint_array) : '') . "'>
-				<input type='hidden' name='drp_action' value='" . $_POST["drp_action"] . "'>
-				<a href='gprint_presets.php'><img src='images/button_no.gif' alt='" . __("Cancel") . "' align='middle' border='0'></a>
-				$save_html
-			</td>
-		</tr>
-		";
 
 	html_end_box();
 

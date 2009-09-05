@@ -135,7 +135,7 @@ function form_save() {
 			}
 		}
 
-		if (is_error_message() || empty($_POST["id"])) {
+		if (is_error_message()) {
 			header("Location: pollers.php?action=edit&id=" . (empty($poller_id) ? $_POST["id"] : $poller_id));
 		}else{
 			header("Location: pollers.php");
@@ -200,7 +200,7 @@ function form_actions() {
 			print "	<tr>
 					<td class='textArea'>
 						<p>". __("Are you sure you want to delete the following pollers? All devices currently attached this these pollers will be reassigned to the default poller.") . "</p>
-						<p>$poller_list</p>
+						<p><ul>$poller_list</ul></p>
 					</td>
 				</tr>\n
 				";
@@ -208,7 +208,7 @@ function form_actions() {
 			print "	<tr>
 					<td class='textArea'>
 						<p>" . __("Are you sure you want to disable the following pollers? All devices currently attached to these pollers will no longer have their graphs updated.") . "</p>
-						<p>$poller_list</p>
+						<p><ul>$poller_list</ul></p>
 					</td>
 				</tr>\n
 				";
