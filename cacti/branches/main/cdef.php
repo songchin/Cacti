@@ -160,6 +160,10 @@ function form_actions() {
 			/* do a referential integrity check */
 			if (sizeof($selected_items)) {
 			foreach($selected_items as $cdef_id) {
+				/* ================= input validation ================= */
+				input_validate_input_number($cdef_id);
+				/* ==================================================== */
+
 				if (sizeof(db_fetch_assoc("SELECT * FROM graph_templates_item WHERE cdef_id=$cdef_id LIMIT 1"))) {
 					$bad_ids[] = $cdef_id;
 				}else{

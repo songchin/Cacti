@@ -74,6 +74,10 @@ function form_actions() {
 			/* do a referential integrity check */
 			if (sizeof($selected_items)) {
 			foreach($selected_items as $gprint_id) {
+				/* ================= input validation ================= */
+				input_validate_input_number($gprint_id);
+				/* ==================================================== */
+
 				if (sizeof(db_fetch_assoc("SELECT * FROM graph_templates_item WHERE gprint_id=$gprint_id LIMIT 1"))) {
 					$bad_ids[] = $gprint_id;
 				}else{

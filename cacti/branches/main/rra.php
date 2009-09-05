@@ -74,6 +74,10 @@ function form_actions() {
 			/* do a referential integrity check */
 			if (sizeof($selected_items)) {
 			foreach($selected_items as $rra_id) {
+				/* ================= input validation ================= */
+				input_validate_input_number($rra_id);
+				/* ==================================================== */
+
 				if (sizeof(db_fetch_assoc("SELECT * FROM data_template_data_rra WHERE rra_id=$rra_id LIMIT 1"))) {
 					$bad_ids[] = $rra_id;
 				}else{

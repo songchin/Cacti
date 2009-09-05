@@ -155,9 +155,37 @@ function form_actions() {
 		$selected_items = unserialize(stripslashes($_POST["selected_items"]));
 
 		if ($_POST["drp_action"] == "1") { /* delete */
-			db_execute("delete from poller where " . array_to_sql_or($selected_items, "id"));
-			db_execute("update poller_item set poller_id=0 where " . array_to_sql_or($selected_items, "poller_id"));
-			db_execute("update host set poller_id=0 where " . array_to_sql_or($selected_items, "poller_id"));
+			/* do a referential integrity check */
+			if (sizeof($selected_items)) {
+			foreach($selected_items as $poller_id) {
+				/* ================= input validation ================= */
+				input_validate_input_number($poller_id);
+				/* ==================================================== */
+
+				if (sizeof(db_fetch_assoc("SELECT * FROM host WHERE poller_id=$poller_id LIMIT 1"))) {
+					$bad_ids[] = $poller_id;
+				}else{
+					$poller_ids[] = $poller_id;
+				}
+			}
+			}
+
+			if (isset($bad_ids)) {
+				$message = "";
+				foreach($bad_ids as $poller_id) {
+					$message .= (strlen($message) ? "<br>":"") . "<i>Poller " . $rra_id . " is in use and can not be removed</i>\n";
+				}
+
+				$_SESSION['sess_message_poller_ref_int'] = array('message' => "<font size=-2>$message</font>", 'type' => 'info');
+
+				raise_message('poller_ref_int');
+			}
+
+			if (sizeof($poller_ids)) {
+				db_execute("delete from poller where " . array_to_sql_or($poller_ids, "id"));
+				db_execute("update poller_item set poller_id=0 where " . array_to_sql_or($poller_ids, "poller_id"));
+				db_execute("update host set poller_id=0 where " . array_to_sql_or($poller_ids, "poller_id"));
+			}
 		}elseif ($_POST["drp_action"] == "2") { /* disable */
 			for ($i=0;($i<count($selected_items));$i++) {
 				/* ================= input validation ================= */
