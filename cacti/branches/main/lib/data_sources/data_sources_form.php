@@ -661,7 +661,39 @@ function data_source_edit() {
 	}
 
 	include_once(CACTI_BASE_PATH . "/include/top_header.php");
-	include_once(CACTI_BASE_PATH . "/lib/jquery/fastpath_links.js");
+
+	?>
+	<script type="text/javascript">
+	<!--
+	var disabled = true;
+
+	$().ready(function() {
+		$("input").attr("disabled","disabled")
+	});
+
+	function changeDSState() {
+		if (disabled) {
+			$("input").removeAttr("disabled");
+			disabled = false;
+		}else{
+			$("input").attr("disabled","disabled")
+			disabled = true;
+		}
+	}
+	-->
+	</script>
+	<?php
+
+	$tip_text  = "<tr><td align=\\'right\\'><a class=\\'popup_item\\' id=\\'changeDSState\\' onClick=\\'changeDSState()\\' href=\\'#\\'>Unlock/Lock</a></td></tr>";
+	$tip_text .= "<tr><td align=\\'right\\'><a class=\\'popup_item\\' href=\\'" . htmlspecialchars('data_sources.php?action=data_source_toggle_status&id=' . (isset($_GET["id"]) ? $_GET["id"] : 0) . '&newstate=' . (($data["active"] == "on") ? "0" : "1")) . "\\'>" . (($data["active"] == "on") ? __("Disable") : __("Enable")) . "</a></td></tr>";
+	$tip_text .= "<tr><td align=\\'right\\'><a class=\\'popup_item\\' href=\\'" . htmlspecialchars('data_sources.php?action=data_source_edit&id=' . (isset($_GET["id"]) ? $_GET["id"] : 0) . '&debug=' . (isset($_SESSION["ds_debug_mode"]) ? "0" : "1")) . "\\'>" . __("Turn") . " <strong>" . (isset($_SESSION["ds_debug_mode"]) ? __("Off") : __("On")) . "</strong> " . __("Debug Mode") . "</a></td></tr>";
+	$tip_text .= "<tr><td align=\\'right\\'><a class=\\'popup_item\\' href=\\'" . htmlspecialchars('data_sources.php?action=data_source_edit&id=' . (isset($_GET["id"]) ? $_GET["id"] : 0) . '&info=' . (isset($_SESSION["ds_info_mode"]) ? "0" : "1")) . "\\'>" . __("Turn") . " <strong>" . (isset($_SESSION["ds_info_mode"]) ? __("Off") : __("On")) . "</strong> " . __("RRD Info Mode") . "</a><td></tr>";
+	if (!empty($data_template["id"])) {
+		$tip_text .= "<tr><td align=\\'right\\'><a class=\\'popup_item\\' href=" . htmlspecialchars('data_templates.php?action=template_edit&id=' . (isset($data_template["id"]) ? $data_template["id"] : "0")) . "\\'>" . __("Edit Data Template") . "<br></a></td></td>";
+	}
+	if (!empty($_GET["host_id"]) || !empty($data_local["host_id"])) {
+		$tip_text .= "<tr><td align=\\'right\\'><a class=\\'popup_item\\' href=\\'" . htmlspecialchars('host.php?action=edit&id=' . (isset($_GET["host_id"]) ? $_GET["host_id"] : $data_local["host_id"])) . "\\'>" . __("Edit Host") . "</a></td></tr>";
+	}
 
 	if (!empty($_GET["id"])) {
 		?>
@@ -670,20 +702,7 @@ function data_source_edit() {
 				<td class="textInfo" colspan="2" valign="top">
 					<?php print get_data_source_title($_GET["id"]);?>
 				</td>
-				<td class="textInfo" align="right" valign="top">
-					<a href="#" class="toggle_fastpath_links"><?php print __("Show");?>&nbsp;/&nbsp;<?php print __("Hide Fastpaths");?><br></a>
-					<a class="fastpath_links" href='data_sources.php?action=data_source_toggle_status&amp;id=<?php print (isset($_GET["id"]) ? $_GET["id"] : 0);?>&amp;newstate=<?php print (($data["active"] == "on") ? "0" : "1");?>'><strong><?php print (($data["active"] == "on") ? __("Disable") : __("Enable"));?></strong> <?php print __("Data Source");?>.<br></a>
-					<a class="fastpath_links" href='data_sources.php?action=data_source_edit&amp;id=<?php print (isset($_GET["id"]) ? $_GET["id"] : 0);?>&amp;debug=<?php print (isset($_SESSION["ds_debug_mode"]) ? "0" : "1");?>'><?php print __("Turn");?> <strong><?php print (isset($_SESSION["ds_debug_mode"]) ? __("Off") : __("On"));?></strong> <?php print __("Data Source Debug Mode");?>.<br></a>
-					<a class="fastpath_links" href='data_sources.php?action=data_source_edit&amp;id=<?php print (isset($_GET["id"]) ? $_GET["id"] : 0);?>&amp;info=<?php print (isset($_SESSION["ds_info_mode"]) ? "0" : "1");?>'><?php print __("Turn");?> <strong><?php print (isset($_SESSION["ds_info_mode"]) ? __("Off") : __("On"));?></strong> <?php print __("RRD File Information Mode");?>.<br></a>
-					<?php
-						if (!empty($data_template["id"])) {
-							?><a class="fastpath_links" href='data_templates.php?action=template_edit&amp;id=<?php print (isset($data_template["id"]) ? $data_template["id"] : "0");?>'><?php print __("Edit Data Template");?>.<br></a><?php
-						}
-						if (!empty($_GET["host_id"]) || !empty($data_local["host_id"])) {
-							?><a class="fastpath_links" href='host.php?action=edit&amp;id=<?php print (isset($_GET["host_id"]) ? $_GET["host_id"] : $data_local["host_id"]);?>'><?php print __("Edit Host");?>.</a><?php
-						}
-					?>
-				</td>
+				<td align="right"><a id='tooltip' class='popup_anchor' href='#' onMouseOver="Tip('<?php print $tip_text;?>', BGCOLOR, '#EEEEEE', FIX, ['tooltip', -20, 0], STICKY, true, SHADOW, true, CLICKCLOSE, true, FADEOUT, 400, WIDTH, 125, TEXTALIGN, 'right', BORDERCOLOR, '#F5F5F5')" onMouseOut="UnTip()">Data Source Options</a></td>
 			</tr>
 		</table>
 		<?php
@@ -697,12 +716,12 @@ function data_source_edit() {
 
 	$form_array = array(
 		"data_template_id" => array(
-			"method" => "drop_sql",
+			"method" => "autocomplete",
+			"callback_function" => "./lib/ajax/get_data_templates.php",
 			"friendly_name" => __("Selected Data Template"),
 			"description" => __("The name given to this data template."),
-			"value" => (isset($data_template) ? $data_template["id"] : "0"),
-			"none_value" => __("None"),
-			"sql" => "select id,name from data_template order by name"
+			"id" => (isset($data_template) ? $data_template["id"] : "0"),
+			"name" => db_fetch_cell("SELECT name FROM data_template WHERE id=" . (isset($data_template) ? $data_template['id'] : "0"))
 			),
 		"host_id" => array(
 			"method" => "autocomplete",
