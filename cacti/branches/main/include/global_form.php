@@ -666,7 +666,7 @@ $fields_graph_template_input_edit = array(
 	);
 
 	/* file: sites.php, action: edit */
-	$fields_site_edit = array(
+$fields_site_edit = array(
 	"spacer0" => array(
 		"method" => "spacer",
 		"friendly_name" => __("Site Information"),

@@ -1083,6 +1083,7 @@ function data_source() {
 	-->
 	</script>
 	<?php
+
 	html_start_box("<strong>" . __("Data Sources") . "</strong> " . __("[host:") . " " . (empty($host["hostname"]) ? __("No Host") : $host["hostname"]) . "]", "100%", $colors["header"], "3", "center", "data_sources.php?action=data_source_edit&host_id=" . $_REQUEST["host_id"], true);
 	?>
 	<tr class='rowAlternate2'>

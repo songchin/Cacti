@@ -1168,6 +1168,12 @@ function graph() {
 			</table>
 			<table cellpadding="1" cellspacing="0">
 				<tr>
+					<td width="50">
+						&nbsp;<?php print __("Search:");?>&nbsp;
+					</td>
+					<td>
+						<input type="text" name="filter" size="40" value="<?php print $_REQUEST["filter"];?>">
+					</td>
 					<td style='white-space:nowrap;width:50px;'>
 						&nbsp;<?php print __("Rows:");?>&nbsp;
 					</td>
@@ -1182,12 +1188,6 @@ function graph() {
 							}
 							?>
 						</select>
-					</td>
-					<td width="50">
-						&nbsp;<?php print __("Search:");?>&nbsp;
-					</td>
-					<td>
-						<input type="text" name="filter" size="40" value="<?php print $_REQUEST["filter"];?>">
 					</td>
 				</tr>
 			</table>

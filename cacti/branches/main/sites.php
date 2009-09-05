@@ -444,7 +444,7 @@ function site_filter() {
 						&nbsp;<?php print __("Search:");?>&nbsp;
 					</td>
 					<td width="1">
-						<input type="text" name="filter" size="20" value="<?php print $_REQUEST["filter"];?>">
+						<input type="text" name="filter" size="40" value="<?php print $_REQUEST["filter"];?>">
 					</td>
 					<td style='white-space:nowrap;width:50px;'>
 						&nbsp;<?php print __("Rows:");?>&nbsp;
