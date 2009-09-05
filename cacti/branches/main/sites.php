@@ -460,7 +460,7 @@ function site_filter() {
 	<?php html_start_box("<strong>" . __("Site Filters") . "</strong>", "100%", $colors["header"], "3", "center", "sites.php?action=edit", true);?>
 	<tr class='rowAlternate2'>
 		<td>
-			<form method='post' action='<?php print basename($_SERVER["PHP_SELF"]);?>' name='site_edit'>
+			<form method='get' action='<?php print basename($_SERVER["PHP_SELF"]);?>' name='site_edit'>
 			<table cellpadding="1" cellspacing="0">
 				<tr>
 					<td nowrap style='white-space: nowrap;' width="55">
@@ -473,7 +473,7 @@ function site_filter() {
 						&nbsp;<?php print __("Rows:");?>&nbsp;
 					</td>
 					<td width="1">
-						<select name="rows" onChange="applySiteFilterChange(document.form_sites)">
+						<select name="rows" onChange="applySiteFilterChange(document.site_edit)">
 							<option value="-1"<?php if ($_REQUEST["rows"] == "-1") {?> selected<?php }?>>Default</option>
 							<?php
 							if (sizeof($item_rows) > 0) {
@@ -585,7 +585,7 @@ function site() {
 	}
 
 	/* if the user pushed the 'clear' button */
-	if (isset($_REQUEST["clear_sites_x"])) {
+	if (isset($_REQUEST["clear_x"])) {
 		kill_session_var("sess_sites_current_page");
 		kill_session_var("sess_sites_detail");
 		kill_session_var("sess_sites_site_id");

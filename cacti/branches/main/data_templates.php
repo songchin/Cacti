@@ -647,6 +647,7 @@ function template() {
 	<!--
 	function applyFilterChange(objForm) {
 		strURL = '?rows=' + objForm.rows.value;
+		strURL = strURL + '&filter=' + objForm.filter.value;
 		document.location = strURL;
 	}
 	-->
