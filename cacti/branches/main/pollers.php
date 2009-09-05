@@ -65,7 +65,7 @@ $fields_poller_edit = array(
 		"description" => __("Check this box if you wish for this poller to be disabled."),
 		"value" => "|arg1:disabled|",
 		"default" => "",
-		"form_id" => false
+		"form_id" => "|arg1:id|"
 		),
 	"id" => array(
 		"method" => "hidden_zero",
@@ -110,10 +110,16 @@ switch ($_REQUEST["action"]) {
    -------------------------- */
 
 function form_save() {
-
 	/* save the poller */
 	if (isset($_POST["save_component_poller"])) {
 		$save["id"]          = $_POST["id"];
+
+		if (isset($_POST["disabled"])) {
+			$_POST["disabled"] = "";
+		}else{
+			$_POST["disabled"] = "on";
+		}
+
 		$save["disabled"]    = form_input_validate($_POST["disabled"], "disabled", "", false, 3);
 		$save["description"] = form_input_validate($_POST["description"], "description", "", false, 3);
 		$save["hostname"]    = form_input_validate($_POST["hostname"], "hostname", "", true, 3);
@@ -142,7 +148,7 @@ function form_save() {
    ------------------------ */
 
 function form_actions() {
-	global $colors, $host_actions;
+	global $colors, $poller_actions;
 
 	/* if we are to save this form, instead of display it */
 	if (isset($_POST["selected_items"])) {
@@ -187,7 +193,7 @@ function form_actions() {
 
 	html_start_box("<strong>" . $poller_actions{$_POST["drp_action"]} . "</strong>", "60%", $colors["header_panel"], "3", "center", "");
 
-	print "<form action='host_templates.php' method='post'>\n";
+	print "<form action='pollers.php' method='post'>\n";
 
 	if (sizeof($poller_array)) {
 		if ($_POST["drp_action"] == "1") { /* delete */
@@ -284,6 +290,7 @@ function poller() {
 
 	/* ================= input validation ================= */
 	input_validate_input_number(get_request_var_request("page"));
+	input_validate_input_number(get_request_var_request("rows"));
 	/* ==================================================== */
 
 	/* clean up search string */
@@ -304,18 +311,32 @@ function poller() {
 	/* if the user pushed the 'clear' button */
 	if (isset($_REQUEST["clear_x"])) {
 		kill_session_var("sess_poller_current_page");
+		kill_session_var("sess_poller_rows");
 		kill_session_var("sess_poller_filter");
 		kill_session_var("sess_poller_sort_column");
 		kill_session_var("sess_poller_sort_direction");
 
 		unset($_REQUEST["page"]);
+		unset($_REQUEST["rows"]);
 		unset($_REQUEST["filter"]);
 		unset($_REQUEST["sort_column"]);
 		unset($_REQUEST["sort_direction"]);
 	}
 
+	?>
+	<script type="text/javascript">
+	<!--
+	function applyFilterChange(objForm) {
+		strURL = '?rows=' + objForm.rows.value;
+		document.location = strURL;
+	}
+	-->
+	</script>
+	<?php
+
 	/* remember these search fields in session vars so we don't have to keep passing them around */
 	load_current_session_value("page", "sess_poller_current_page", "1");
+	load_current_session_value("rows", "sess_poller_rows", "-1");
 	load_current_session_value("filter", "sess_poller_filter", "");
 	load_current_session_value("sort_column", "sess_poller_sort_column", "description");
 	load_current_session_value("sort_direction", "sess_poller_sort_direction", "ASC");
@@ -334,6 +355,21 @@ function poller() {
 					</td>
 					<td width="1">
 						<input type="text" name="filter" size="40" value="<?php print $_REQUEST["filter"];?>">
+					</td>
+					<td style='white-space:nowrap;width:50px;'>
+						&nbsp;<?php print __("Rows:");?>&nbsp;
+					</td>
+					<td width="1">
+						<select name="rows" onChange="applyFilterChange(document.form_pollers)">
+							<option value="-1"<?php if ($_REQUEST["rows"] == "-1") {?> selected<?php }?>>Default</option>
+							<?php
+							if (sizeof($item_rows) > 0) {
+							foreach ($item_rows as $key => $value) {
+								print "<option value='" . $key . "'"; if ($_REQUEST["rows"] == $key) { print " selected"; } print ">" . $value . "</option>\n";
+							}
+							}
+							?>
+						</select>
 					</td>
 					<td style='white-space:nowrap;width:120px;'>
 						&nbsp;<input type="submit" Value="<?php print __("Go");?>" name="go" align="middle">
@@ -358,14 +394,20 @@ function poller() {
 		FROM poller
 		$sql_where");
 
+	if (get_request_var_request("rows") == "-1") {
+		$rows = read_config_option("num_rows_device");
+	}else{
+		$rows = get_request_var_request("rows");
+	}
+
 	$poller_list = db_fetch_assoc("SELECT *
 		FROM poller
 		$sql_where
 		ORDER BY " . $_REQUEST['sort_column'] . " " . $_REQUEST['sort_direction'] .
-		" LIMIT " . (read_config_option("num_rows_device")*($_REQUEST["page"]-1)) . "," . read_config_option("num_rows_device"));
+		" LIMIT " . ($rows*($_REQUEST["page"]-1)) . "," . $rows);
 
 	/* generate page list navigation */
-	$nav = html_create_nav($_REQUEST["page"], MAX_DISPLAY_PAGES, read_config_option("num_rows_device"), $total_rows, 7, "pollers.php");
+	$nav = html_create_nav($_REQUEST["page"], MAX_DISPLAY_PAGES, $rows, $total_rows, 7, "pollers.php");
 
 	print $nav;
 	html_end_box(false);
@@ -392,6 +434,8 @@ function poller() {
 			form_checkbox_cell($poller["description"], $poller["id"]);
 			form_end_row();
 		}
+
+		form_end_table();
 
 		/* put the nav bar on the bottom as well */
 		print $nav;

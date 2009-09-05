@@ -721,38 +721,51 @@ function html_create_nav($current_page, $max_pages, $rows_per_page, $total_rows,
 		$base_url .= "?";
 	}
 
-	$url_page_select = get_page_list($current_page, $max_pages, $rows_per_page, $total_rows, $base_url, $page_var);
+	if ($total_rows > 0) {
+		$url_page_select = get_page_list($current_page, $max_pages, $rows_per_page, $total_rows, $base_url, $page_var);
 
-	$nav = "
-		<tr class='rowHeader'>
-			<td colspan='$columns'>
-				<table width='100%' cellspacing='0' cellpadding='0' border='0'>
-					<tr>
-						<td align='left' class='textHeaderDark' width='15%'>";
-							if ($current_page > 1) {
-								$nav .= "<strong>";
-								$nav .= "<a class='linkOverDark' href='" . $base_url . $page_var . "=" . ($current_page-1) . "'>";
-								$nav .= "&lt;&lt;&nbsp;" . __("Previous");
-								$nav .= "</a></strong>";
-							}
-							$nav .= "
-						</td>\n
-						<td align='center' class='textHeaderDark' width='70%'>
-							" . __("Showing Rows") . " " . (($rows_per_page*($current_page-1))+1) . " " . __("to") . " " . ((($total_rows < $rows_per_page) || ($total_rows < ($rows_per_page*$current_page))) ? $total_rows : ($rows_per_page*$current_page)) . " " . __("of") . " $total_rows [$url_page_select]
-						</td>\n
-						<td align='right' class='textHeaderDark' width='15%'>";
-							if (($current_page * $rows_per_page) < $total_rows) {
-								$nav .= "<strong>";
-								$nav .= "<a class='linkOverDark' href='" . $base_url . $page_var . "=" . ($current_page+1) . "'>";
-								$nav .= __("Next") . " &gt;&gt;";
-								$nav .= "</a></strong>";
-							}
-							$nav .= "
-						</td>\n
-					</tr>
-				</table>
-			</td>
-		</tr>\n";
+		$nav = "
+			<tr class='rowHeader'>
+				<td colspan='$columns'>
+					<table width='100%' cellspacing='0' cellpadding='0' border='0'>
+						<tr>
+							<td align='left' class='textHeaderDark' width='15%'>";
+								if ($current_page > 1) {
+									$nav .= "<strong>";
+									$nav .= "<a class='linkOverDark' href='" . $base_url . $page_var . "=" . ($current_page-1) . "'>";
+									$nav .= "&lt;&lt;&nbsp;" . __("Previous");
+									$nav .= "</a></strong>";
+								}
+								$nav .= "
+							</td>\n
+							<td align='center' class='textHeaderDark' width='70%'>
+								" . __("Showing Rows") . " " . (($rows_per_page*($current_page-1))+1) . " " . __("to") . " " . ((($total_rows < $rows_per_page) || ($total_rows < ($rows_per_page*$current_page))) ? $total_rows : ($rows_per_page*$current_page)) . " " . __("of") . " $total_rows [$url_page_select]
+							</td>\n
+							<td align='right' class='textHeaderDark' width='15%'>";
+								if (($current_page * $rows_per_page) < $total_rows) {
+									$nav .= "<strong>";
+									$nav .= "<a class='linkOverDark' href='" . $base_url . $page_var . "=" . ($current_page+1) . "'>";
+									$nav .= __("Next") . " &gt;&gt;";
+									$nav .= "</a></strong>";
+								}
+								$nav .= "
+							</td>\n
+						</tr>
+					</table>
+				</td>
+			</tr>\n";
+	}else{
+		$nav = "
+			<tr class='rowHeader'>
+				<td colspan='$columns'>
+					<table width='100%' cellspacing='0' cellpadding='0' border='0'>
+						<tr>
+							<td align='center' class='textHeaderDark' width='15%'>Showing All Rows</td>
+						</tr>
+					</table>
+				</td>
+			</tr>\n";
+	}
 
 	return $nav;
 }

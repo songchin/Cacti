@@ -318,6 +318,8 @@ function get_current_graph_end() {
 function get_page_list($current_page, $pages_per_screen, $rows_per_page, $total_rows, $url, $page_var = "page") {
 	$url_page_select = "";
 
+	if ($total_rows == 0) return "";
+
 	$total_pages = ceil($total_rows / $rows_per_page);
 
 	$start_page = max(1, ($current_page - floor(($pages_per_screen - 1) / 2)));
