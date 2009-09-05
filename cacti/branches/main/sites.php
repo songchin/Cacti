@@ -92,12 +92,36 @@ function form_actions() {
 		$selected_items = unserialize(stripslashes($_POST["selected_items"]));
 
 		if ($_POST["drp_action"] == "1") { /* delete */
-			for ($i=0; $i<count($selected_items); $i++) {
+			/* do a referential integrity check */
+			if (sizeof($selected_items)) {
+			foreach($selected_items as $site_id) {
 				/* ================= input validation ================= */
-				input_validate_input_number($selected_items[$i]);
+				input_validate_input_number($site_id);
 				/* ==================================================== */
 
-				api_site_remove($selected_items[$i]);
+				if (sizeof(db_fetch_assoc("SELECT * FROM host WHERE site_id=$site_id LIMIT 1"))) {
+					$bad_ids[] = $site_id;
+				}else{
+					$site_ids[] = $site_id;
+				}
+			}
+			}
+
+			if (isset($bad_ids)) {
+				$message = "";
+				foreach($bad_ids as $rra_id) {
+					$message .= (strlen($message) ? "<br>":"") . "<i>Site " . $rra_id . " is in use and can not be removed</i>\n";
+				}
+
+				$_SESSION['sess_message_site_ref_int'] = array('message' => "<font size=-2>$message</font>", 'type' => 'info');
+
+				raise_message('site_ref_int');
+			}
+
+			if (isset($site_ids)) {
+			foreach($site_ids as $id) {
+				api_site_remove($id);
+			}
 			}
 		}
 
@@ -129,28 +153,26 @@ function form_actions() {
 
 	print "<form action='sites.php' method='post'>\n";
 
-	if ($_POST["drp_action"] == "1") { /* delete */
-		print "	<tr>
-				<td class='textArea'>
-					<p>" . __("Are you sure you want to delete the following site(s)?") . "</p>
-					<p>$site_list</p>";
-					print "</td></tr>
-				</td>
-			</tr>\n
-			";
+	if (isset($site_array)) {
+		if ($_POST["drp_action"] == "1") { /* delete */
+			print "	<tr>
+					<td class='textArea'>
+						<p>" . __("Are you sure you want to delete the following site(s)?") . "</p>
+						<p><ul>$site_list</ul></p>";
+						print "</td></tr>
+					</td>
+				</tr>\n
+				";
+		}
+
+		print "<div><input type='hidden' name='action' value='actions'></div>";
+		print "<div><input type='hidden' name='selected_items' value='" . (isset($site_array) ? serialize($site_array) : '') . "'></div>";
+		print "<div><input type='hidden' name='drp_action' value='" . $_POST["drp_action"] . "'></div>";
+	}else{
+		print "<tr><td class='textArea'><span class='textError'>" . __("You must select at least one site.") . "</span></td></tr>\n";
 	}
 
-	print "	<tr>
-			<td colspan='2' align='right'>
-				<input type='hidden' name='action' value='actions'>
-				<input type='hidden' name='selected_items' value='" . (isset($site_array) ? serialize($site_array) : '') . "'>
-				<input type='hidden' name='drp_action' value='" . $_POST["drp_action"] . "'>
-			</td>
-		</tr>
-		";
-
 	if (!isset($site_array)) {
-		print "<tr><td class='textArea'><span class='textError'>" . __("You must select at least one site.") . "</span></td></tr>\n";
 		form_return_button_alt();
 	}else{
 		form_yesno_button_alt(serialize($site_array), $_POST["drp_action"]);
