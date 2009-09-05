@@ -89,7 +89,15 @@ function color_remove() {
 	input_validate_input_number(get_request_var("id"));
 	/* ==================================================== */
 
-	db_execute("delete from colors where id=" . $_GET["id"]);
+	if (sizeof(db_fetch_assoc("SELECT * FROM graph_templates_item WHERE color_id=" . get_request_var("id") . " LIMIT 1"))) {
+		$message = "<i>Color " . get_request_var("id") . " is in use and can not be removed</i>\n";
+
+		$_SESSION['sess_message_color_ref_int'] = array('message' => "<font size=-2>$message</font>", 'type' => 'info');
+
+		raise_message('color_ref_int');
+	}else{
+		db_execute("delete from colors where id=" . $_GET["id"]);
+	}
 }
 
 function color_edit() {
