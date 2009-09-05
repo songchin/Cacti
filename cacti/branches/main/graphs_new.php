@@ -23,7 +23,7 @@
 */
 
 include("./include/auth.php");
-include_once(CACTI_BASE_PATH . "/lib/form_graphs_new.php");
+include_once(CACTI_BASE_PATH . "/lib/graphs_new/graphs_new_form.php");
 include_once(CACTI_BASE_PATH . "/lib/data_query.php");
 include_once(CACTI_BASE_PATH . "/lib/utility.php");
 include_once(CACTI_BASE_PATH . "/lib/sort.php");
