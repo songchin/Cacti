@@ -157,8 +157,32 @@ function form_actions() {
 		$selected_items = unserialize(stripslashes($_POST["selected_items"]));
 
 		if ($_POST["drp_action"] == "1") { /* delete */
-			db_execute("delete from cdef where " . array_to_sql_or($selected_items, "id"));
-			db_execute("delete from cdef_items where " . array_to_sql_or($selected_items, "cdef_id"));
+			/* do a referential integrity check */
+			if (sizeof($selected_items)) {
+			foreach($selected_items as $cdef_id) {
+				if (sizeof(db_fetch_assoc("SELECT * FROM graph_templates_item WHERE cdef_id=$cdef_id LIMIT 1"))) {
+					$bad_ids[] = $cdef_id;
+				}else{
+					$cdef_ids[] = $cdef_id;
+				}
+			}
+			}
+
+			if (isset($bad_ids)) {
+				$message = "";
+				foreach($bad_ids as $cdef_id) {
+					$message .= (strlen($message) ? "<br>":"") . "<i>CDEF " . $cdef_id . " is in use and can not be removed</i>\n";
+				}
+
+				$_SESSION['sess_message_cdef_ref_int'] = array('message' => "<font size=-2>$message</font>", 'type' => 'info');
+
+				raise_message('cdef_ref_int');
+			}
+
+			if (isset($cdef_ids)) {
+				db_execute("delete from cdef where " . array_to_sql_or($cdef_ids, "id"));
+				db_execute("delete from cdef_items where " . array_to_sql_or($cdef_ids, "cdef_id"));
+			}
 		}elseif ($_POST["drp_action"] == "2") { /* duplicate */
 			for ($i=0;($i<count($selected_items));$i++) {
 				/* ================= input validation ================= */

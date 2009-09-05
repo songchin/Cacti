@@ -71,7 +71,31 @@ function form_actions() {
 		$selected_items = unserialize(stripslashes($_POST["selected_items"]));
 
 		if ($_POST["drp_action"] == "1") { /* delete */
-			db_execute("delete from graph_templates_gprint where " . array_to_sql_or($selected_items, "id"));
+			/* do a referential integrity check */
+			if (sizeof($selected_items)) {
+			foreach($selected_items as $gprint_id) {
+				if (sizeof(db_fetch_assoc("SELECT * FROM graph_templates_item WHERE gprint_id=$gprint_id LIMIT 1"))) {
+					$bad_ids[] = $gprint_id;
+				}else{
+					$gprint_ids[] = $gprint_id;
+				}
+			}
+			}
+
+			if (isset($bad_ids)) {
+				$message = "";
+				foreach($bad_ids as $gprint_id) {
+					$message .= (strlen($message) ? "<br>":"") . "<i>GPrint " . $gprint_id . " is in use and can not be removed</i>\n";
+				}
+
+				$_SESSION['sess_message_gprint_ref_int'] = array('message' => "<font size=-2>$message</font>", 'type' => 'info');
+
+				raise_message('gprint_ref_int');
+			}
+
+			if (isset($gprint_ids)) {
+				db_execute("delete from graph_templates_gprint where " . array_to_sql_or($selected_items, "id"));
+			}
 		}
 		header("Location: gprint_presets.php");
 		exit;

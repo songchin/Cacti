@@ -64,15 +64,39 @@ switch ($_REQUEST["action"]) {
    ------------------------ */
 
 function form_actions() {
-	global $colors, $rra_actions;
+	global $colors, $rra_actions, $messages;
 
 	/* if we are to save this form, instead of display it */
 	if (isset($_POST["selected_items"])) {
 		$selected_items = unserialize(stripslashes($_POST["selected_items"]));
 
 		if ($_POST["drp_action"] == "1") { /* delete */
-			db_execute("delete from rra where " . array_to_sql_or($selected_items, "id"));
-			db_execute("delete from rra_cf where " . array_to_sql_or($selected_items, "rra_id"));
+			/* do a referential integrity check */
+			if (sizeof($selected_items)) {
+			foreach($selected_items as $rra_id) {
+				if (sizeof(db_fetch_assoc("SELECT * FROM data_template_data_rra WHERE rra_id=$rra_id LIMIT 1"))) {
+					$bad_ids[] = $rra_id;
+				}else{
+					$rra_ids[] = $rra_id;
+				}
+			}
+			}
+
+			if (isset($bad_ids)) {
+				$message = "";
+				foreach($bad_ids as $rra_id) {
+					$message .= (strlen($message) ? "<br>":"") . "<i>RRA " . $rra_id . " is in use and can not be removed</i>\n";
+				}
+
+				$_SESSION['sess_message_rra_ref_int'] = array('message' => "<font size=-2>$message</font>", 'type' => 'info');
+
+				raise_message('rra_ref_int');
+			}
+
+			if (isset($rra_ids)) {
+				db_execute("delete from rra where " . array_to_sql_or($rra_ids, "id"));
+				db_execute("delete from rra_cf where " . array_to_sql_or($rra_ids, "rra_id"));
+			}
 		}
 		header("Location: rra.php");
 		exit;

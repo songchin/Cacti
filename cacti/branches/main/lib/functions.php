@@ -396,7 +396,11 @@ function is_error_message() {
 	if (isset($_SESSION["sess_messages"])) {
 		if (is_array($_SESSION["sess_messages"])) {
 			foreach (array_keys($_SESSION["sess_messages"]) as $current_message_id) {
-				if ($messages[$current_message_id]["type"] == "error") { return true; }
+				if (isset($messages[$current_message_id])) {
+					if ($messages[$current_message_id]["type"] == "error") { return true; }
+				}elseif (isset($_SESSION["sess_message_" . $current_message_id])) {
+					if($_SESSION["sess_message_" . $current_message_id]["type"] == "error") { return true; }
+				}
 			}
 		}
 	}
@@ -456,7 +460,13 @@ function display_output_messages() {
 
 		if (is_array($_SESSION["sess_messages"])) {
 			foreach (array_keys($_SESSION["sess_messages"]) as $current_message_id) {
-				eval ('$message = "' . $messages[$current_message_id]["message"] . '";');
+				if (isset($messages[$current_message_id])) {
+					$message = $messages[$current_message_id]["message"];
+				}elseif (isset($_SESSION["sess_message_" . $current_message_id])) {
+					$messages[$current_message_id] = $_SESSION["sess_message_" . $current_message_id];
+					$message = $messages[$current_message_id]["message"];
+					unset($_SESSION["sess_message_" . $current_message_id]);
+				}
 
 				switch ($messages[$current_message_id]["type"]) {
 				case 'info':
