@@ -697,11 +697,11 @@ function host_display_general($host, $host_text) {
 					($host["availability_method"] == AVAIL_SNMP_OR_PING)) { ?>
 				<td class="textInfo">
 					<?php print __("SNMP Information");?><br>
-					<span style="font-size: 11px; font-weight: normal;">
+					<span class="normal">
 					<?php
 					if ((($host["snmp_community"] == "") && ($host["snmp_username"] == "")) ||
 						($host["snmp_version"] == 0)) {
-						print "<span style='color: #ab3f1e; font-weight: bold;'>SNMP not in use</span>\n";
+						print "<span class=\"info\">SNMP not in use</span>\n";
 					}else{
 						$snmp_system = cacti_snmp_get($host["hostname"], $host["snmp_community"], ".1.3.6.1.2.1.1.1.0", $host["snmp_version"],
 							$host["snmp_username"], $host["snmp_password"],
@@ -716,7 +716,7 @@ function host_display_general($host, $host_text) {
 						}
 
 						if ($snmp_system == "") {
-							print "<span style='color: #ff0000; font-weight: bold;'>SNMP error</span>\n";
+							print "<span class=\"warning\">SNMP error</span>\n";
 						}else{
 							$snmp_uptime   = cacti_snmp_get($host["hostname"], $host["snmp_community"], ".1.3.6.1.2.1.1.3.0", $host["snmp_version"],
 								$host["snmp_username"], $host["snmp_password"],
@@ -768,18 +768,16 @@ function host_display_general($host, $host_text) {
 					if ($ping->ping($host["availability_method"], $host["ping_method"],
 						$host["ping_timeout"], $host["ping_retries"])) {
 						$host_down = false;
-						$color     = "color:#000000";
-						$font      = "font-weight: normal;";
-					}else{
+						$ping_class = "ping";
+						}else{
 						$host_down = true;
-						$color     = "color:#ff0000";
-						$font      = "font-weight:bold;";
-					}
+						$ping_class = "ping_warning";
+						}
 
 				?>
 				<td class="textInfo" style="vertical-align:top;">
 					<?php print __("Ping Results");?><br>
-					<span style="font-size: 10px; <?php print $font . $color;?>;">
+					<span class="<?php $ping_class ?>">
 					<?php print $ping->ping_response; ?>
 					</span>
 				</td>
@@ -1099,7 +1097,7 @@ function host_display_general($host, $host_text) {
 	if ((isset($_GET["display_dq_details"])) && (isset($_SESSION["debug_log"]["data_query"]))) {
 		html_start_box("<strong>" . __("Data Query Debug Information") . "</strong>", "100%", $colors["header"], "3", "center", "", true);
 
-		print "<tr><td><span style='font-family: monospace;'>" . debug_log_return("data_query") . "</span></td></tr>";
+		print "<tr><td><span class=\"log\">" . debug_log_return("data_query") . "</span></td></tr>";
 
 		html_end_box(false);
 	}
@@ -1151,7 +1149,7 @@ function host_display_general($host, $host_text) {
 					<strong><?php print $i;?>)</strong> <?php print $item["name"];?>
 				</td>
 				<td>
-					<?php print (($is_being_graphed == true) ? "<span style='color:green;'>" . __("Is Being Graphed") . "</span> (<a href='" . htmlspecialchars("graphs.php?action=graph_edit&id=" . db_fetch_cell("select id from graph_local where graph_template_id=" . $item["id"] . " and host_id=" . $_GET["id"] . " limit 0,1")) . "'>" . __("Edit") . "</a>)" : "<span style='color: #484848;'>" . __("Not Being Graphed") . "</span>");?>
+					<?php print (($is_being_graphed == true) ? "<span class=\"success\">" . __("Is Being Graphed") . "</span> (<a href='graphs.php?action=graph_edit&id=" . db_fetch_cell("select id from graph_local where graph_template_id=" . $item["id"] . " and host_id=" . $_GET["id"] . " limit 0,1") . "'>" . __("Edit") . "</a>)" : "<span class=\"unknown\">" . __("Not Being Graphed") . "</span>");?>
 				</td>
 				<td align='right' nowrap>
 					<a href='host.php?action=gt_remove&amp;id=<?php print $item["id"];?>&amp;host_id=<?php print $_GET["id"];?>'><img class='buttonSmall' src='images/delete_icon_large.gif' title='<?php print __("Delete Graph Template Association");?>' alt='<?php print __("Delete");?>' align='middle'></a>
@@ -1237,7 +1235,7 @@ function host_display_general($host, $host_text) {
 						<?php form_dropdown("reindex_method_host_".$_GET["id"]."_query_".$item["id"]."_method_".$item["reindex_method"],$reindex_types,"","",$item["reindex_method"],"","","","");?>
 					</td>
 					<td>
-						<?php print (($status == "success") ? "<span style='color: green;'>" . __("Success") . "</span>" : "<span style='color: green;'>" . __("Fail") . "</span>");?> [<?php print $num_dq_items;?> <?php print __("Item", $num_dq_items);?>, <?php print $num_dq_rows;?> <?php print __("Row", $num_dq_rows);?>]
+						<?php print (($status == "success") ? "<span class=\"success\">" . __("Success") . "</span>" : "<span class=\"fail\">" . __("Fail") . "</span>");?> [<?php print $num_dq_items;?> <?php print __("Item", $num_dq_items);?>, <?php print $num_dq_rows;?> <?php print __("Row", $num_dq_rows);?>]
 					</td>
 					<td align='right' nowrap>
 						<a href='host.php?action=query_reload&amp;id=<?php print $item["id"];?>&amp;host_id=<?php print $_GET["id"];?>'><img class='buttonSmall' src='images/reload_icon_small.gif' title='<?php print __("Reload Data Query");?>' alt='<?php print __("Reload");?>' align='middle'></a>&nbsp;
@@ -1588,10 +1586,10 @@ function host() {
 		foreach ($hosts as $host) {
 			form_alternate_row_color('line' . $host["id"], true);
 			form_selectable_cell("<a style='white-space:nowrap;' class='linkEditMain' href='" . htmlspecialchars("host.php?action=edit&id=" . $host["id"]) . "'>" .
-				(strlen($_REQUEST["filter"]) ? eregi_replace("(" . preg_quote($_REQUEST["filter"]) . ")", "<span style='background-color: #F8D93D;'>\\1</span>", $host["description"]) : $host["description"]) . "</a>", $host["id"]);
+				(strlen($_REQUEST["filter"]) ? eregi_replace("(" . preg_quote($_REQUEST["filter"]) . ")", "<span class=\"filter\">\\1</span>", $host["description"]) : $host["description"]) . "</a>", $host["id"]);
 			form_selectable_cell(($host["site"] == 0 ? __("Not Defined") : ($host["site"] == '' ? __("Unknown") : $host["site"])), $host["id"]);
 			form_selectable_cell(($host["poller"] == 0 ? __("System Default") : ($host["poller"] == '' ? __("Unknown") : $host["poller"])), $host["id"]);
-			form_selectable_cell((strlen($_REQUEST["filter"]) ? eregi_replace("(" . preg_quote($_REQUEST["filter"]) . ")", "<span style='background-color: #F8D93D;'>\\1</span>", $host["hostname"]) : $host["hostname"]), $host["id"]);
+			form_selectable_cell((strlen($_REQUEST["filter"]) ? eregi_replace("(" . preg_quote($_REQUEST["filter"]) . ")", "<span class=\"filter\">\\1</span>", $host["hostname"]) : $host["hostname"]), $host["id"]);
 			form_selectable_cell(round(($host["id"]), 2), $host["id"]);
 			form_selectable_cell((isset($host_graphs[$host["id"]]) ? $host_graphs[$host["id"]] : 0), $host["id"]);
 			form_selectable_cell((isset($host_data_sources[$host["id"]]) ? $host_data_sources[$host["id"]] : 0), $host["id"]);

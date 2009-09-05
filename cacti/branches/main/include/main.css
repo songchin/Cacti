@@ -655,6 +655,46 @@ table.resizable th {
 	border-bottom:0px;
 	background-color:#E16769;
 }
+span.normal {
+	font-size:11px;
+	font-weight:normal;
+}
+span.info {
+	color: #ab3f1e; 
+	font-weight: bold;
+}
+span.log {
+	font-family: monospace;
+}
+span.warning {
+	color: #ff0000; 
+	font-weight: bold;
+}
+span.ping {
+	font-size:10px;
+	color: #000000;
+	font-weight: normal;
+}
+span.ping_warning {
+	font-size:10px;
+	color: #ff0000;
+	font-weight: bold;
+}
+span.success {
+	color: green;
+}
+span.unknown {
+	color: #484848;
+}
+span.fail {
+	color: #ff0000;
+}
+span.filter {
+	background-color: #f8d93d;
+}
+tr.highlight {
+	background-color: khaki;
+}
 
 /* The main calendar widget.  DIV containing a table. */
 div.calendar { position: relative; }
