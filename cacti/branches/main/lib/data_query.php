@@ -127,7 +127,7 @@ function query_script_host($host_id, $snmp_query_id) {
 
 					$output_array[] = data_query_format_record($host_id, $snmp_query_id, $field_name, $field_value, $script_index, '');
 
-					debug_log_insert("data_query", __("Found item [%1$s='%2$s'] index: %3$s", $field_name, $field_value, $script_index));
+					debug_log_insert("data_query", __("Found item [%s='%s'] index: %s", $field_name, $field_value, $script_index));
 				}
 			}
 		}
