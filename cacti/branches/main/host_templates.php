@@ -244,12 +244,40 @@ function form_actions() {
 		$selected_items = unserialize(stripslashes($_POST["selected_items"]));
 
 		if ($_POST["drp_action"] == "1") { /* delete */
-			db_execute("delete from host_template where " . array_to_sql_or($selected_items, "id"));
-			db_execute("delete from host_template_snmp_query where " . array_to_sql_or($selected_items, "host_template_id"));
-			db_execute("delete from host_template_graph where " . array_to_sql_or($selected_items, "host_template_id"));
+			/* do a referential integrity check */
+			if (sizeof($selected_items)) {
+			foreach($selected_items as $template_id) {
+				/* ================= input validation ================= */
+				input_validate_input_number($template_id);
+				/* ==================================================== */
 
-			/* "undo" any device that is currently using this template */
-			db_execute("update host set host_template_id=0 where " . array_to_sql_or($selected_items, "host_template_id"));
+				if (sizeof(db_fetch_assoc("SELECT * FROM host WHERE host_template_id=$template_id LIMIT 1"))) {
+					$bad_ids[] = $template_id;
+				}else{
+					$template_ids[] = $template_id;
+				}
+			}
+			}
+
+			if (isset($bad_ids)) {
+				$message = "";
+				foreach($bad_ids as $template_id) {
+					$message .= (strlen($message) ? "<br>":"") . "<i>Host Template " . $template_id . " is in use and can not be removed</i>\n";
+				}
+
+				$_SESSION['sess_message_dt_ref_int'] = array('message' => "<font size=-2>$message</font>", 'type' => 'info');
+
+				raise_message('dt_ref_int');
+			}
+
+			if (isset($template_ids)) {
+				db_execute("delete from host_template where " . array_to_sql_or($template_ids, "id"));
+				db_execute("delete from host_template_snmp_query where " . array_to_sql_or($template_ids, "host_template_id"));
+				db_execute("delete from host_template_graph where " . array_to_sql_or($template_ids, "host_template_id"));
+
+				/* "undo" any device that is currently using this template */
+				db_execute("update host set host_template_id=0 where " . array_to_sql_or($template_ids, "host_template_id"));
+			}
 		}elseif ($_POST["drp_action"] == "2") { /* duplicate */
 			for ($i=0;($i<count($selected_items));$i++) {
 				/* ================= input validation ================= */

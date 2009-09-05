@@ -263,24 +263,52 @@ function form_actions() {
 		$selected_items = unserialize(stripslashes($_POST["selected_items"]));
 
 		if ($_POST["drp_action"] == "1") { /* delete */
-			$data_template_datas = db_fetch_assoc("select id from data_template_data where " . array_to_sql_or($selected_items, "data_template_id") . " and local_data_id=0");
+			/* do a referential integrity check */
+			if (sizeof($selected_items)) {
+			foreach($selected_items as $template_id) {
+				/* ================= input validation ================= */
+				input_validate_input_number($template_id);
+				/* ==================================================== */
 
-			if (sizeof($data_template_datas) > 0) {
-			foreach ($data_template_datas as $data_template_data) {
-				db_execute("delete from data_template_data_rra where data_template_data_id=" . $data_template_data["id"]);
+				if (sizeof(db_fetch_assoc("SELECT * FROM data_template_data WHERE data_template_id=$template_id LIMIT 1"))) {
+					$bad_ids[] = $template_id;
+				}else{
+					$template_ids[] = $template_id;
+				}
 			}
 			}
 
-			db_execute("delete from data_template_data where " . array_to_sql_or($selected_items, "data_template_id") . " and local_data_id=0");
-			db_execute("delete from data_template_rrd where " . array_to_sql_or($selected_items, "data_template_id") . " and local_data_id=0");
-			db_execute("delete from snmp_query_graph_rrd where " . array_to_sql_or($selected_items, "data_template_id"));
-			db_execute("delete from snmp_query_graph_rrd_sv where " . array_to_sql_or($selected_items, "data_template_id"));
-			db_execute("delete from data_template where " . array_to_sql_or($selected_items, "id"));
+			if (isset($bad_ids)) {
+				$message = "";
+				foreach($bad_ids as $template_id) {
+					$message .= (strlen($message) ? "<br>":"") . "<i>Data Template " . $template_id . " is in use and can not be removed</i>\n";
+				}
 
-			/* "undo" any graph that is currently using this template */
-			db_execute("update data_template_data set local_data_template_data_id=0,data_template_id=0 where " . array_to_sql_or($selected_items, "data_template_id"));
-			db_execute("update data_template_rrd set local_data_template_rrd_id=0,data_template_id=0 where " . array_to_sql_or($selected_items, "data_template_id"));
-			db_execute("update data_local set data_template_id=0 where " . array_to_sql_or($selected_items, "data_template_id"));
+				$_SESSION['sess_message_dt_ref_int'] = array('message' => "<font size=-2>$message</font>", 'type' => 'info');
+
+				raise_message('dt_ref_int');
+			}
+
+			if (isset($template_ids)) {
+				$data_template_datas = db_fetch_assoc("select id from data_template_data where " . array_to_sql_or($template_ids, "data_template_id") . " and local_data_id=0");
+
+				if (sizeof($data_template_datas) > 0) {
+				foreach ($data_template_datas as $data_template_data) {
+					db_execute("delete from data_template_data_rra where data_template_data_id=" . $data_template_data["id"]);
+				}
+				}
+
+				db_execute("delete from data_template_data where " . array_to_sql_or($template_ids, "data_template_id") . " and local_data_id=0");
+				db_execute("delete from data_template_rrd where " . array_to_sql_or($template_ids, "data_template_id") . " and local_data_id=0");
+				db_execute("delete from snmp_query_graph_rrd where " . array_to_sql_or($template_ids, "data_template_id"));
+				db_execute("delete from snmp_query_graph_rrd_sv where " . array_to_sql_or($template_ids, "data_template_id"));
+				db_execute("delete from data_template where " . array_to_sql_or($template_ids, "id"));
+
+				/* "undo" any graph that is currently using this template */
+				db_execute("update data_template_data set local_data_template_data_id=0,data_template_id=0 where " . array_to_sql_or($template_ids, "data_template_id"));
+				db_execute("update data_template_rrd set local_data_template_rrd_id=0,data_template_id=0 where " . array_to_sql_or($template_ids, "data_template_id"));
+				db_execute("update data_local set data_template_id=0 where " . array_to_sql_or($template_ids, "data_template_id"));
+			}
 		}elseif ($_POST["drp_action"] == "2") { /* duplicate */
 			for ($i=0;($i<count($selected_items));$i++) {
 				/* ================= input validation ================= */
