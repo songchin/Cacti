@@ -525,7 +525,7 @@ function draw_custom_data_row($field_name, $data_input_field_id, $data_template_
 			group by host_snmp_cache.field_name");
 
 		if (sizeof($index_type) == 0) {
-			print "<em>" . __("Data query data sources must be created through %1$sNew Graphs%2$s.", "<a href='graphs_new.php'>", "</a>") . "</em>\n";
+			print "<em>" . __("Data query data sources must be created through %sNew Graphs%s.", "<a href='graphs_new.php'>", "</a>") . "</em>\n";
 		}else{
 			form_dropdown($field_name, $index_type, "field_name", "field_name", $current_value, "", "", "");
 		}
@@ -540,7 +540,7 @@ function draw_custom_data_row($field_name, $data_input_field_id, $data_template_
 			group by snmp_query_graph.id");
 
 		if (sizeof($output_type) == 0) {
-			print "<em>" . __("Data query data sources must be created through %1$sNew Graphs%2$s.", "<a href='graphs_new.php'>", "<a href='graphs_new.php'>") . "</em>\n";
+			print "<em>" . __("Data query data sources must be created through %sNew Graphs%s.", "<a href='graphs_new.php'>", "<a href='graphs_new.php'>") . "</em>\n";
 		}else{
 			form_dropdown($field_name, $output_type, "name", "id", $current_value, "", "", "");
 		}

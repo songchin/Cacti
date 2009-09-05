@@ -31,6 +31,7 @@
    @arg $align - the HTML alignment to use for the box (center, left, or right)
    @arg $add_text - the url to use when the user clicks 'Add' in the upper-right
      corner of the box ("" for no 'Add' link)
+   @arg $collapsing - tells wether or not the table collapses
    @arg $table_id - the table id to make the table addressable by jQuery's table DND plugin */
 function html_start_box($title, $width, $background_color, $cell_padding, $align, $add_text = "", $collapsing = false, $table_id = "") {
 	global $colors, $config;

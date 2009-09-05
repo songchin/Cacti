@@ -1097,11 +1097,11 @@ function host_display_general($host, $host_text) {
 	<?php
 
 	if ((isset($_GET["display_dq_details"])) && (isset($_SESSION["debug_log"]["data_query"]))) {
-		html_start_box("<strong>" . __("Data Query Debug Information") . "</strong>", "100%", $colors["header"], "3", "center", "");
+		html_start_box("<strong>" . __("Data Query Debug Information") . "</strong>", "100%", $colors["header"], "3", "center", "", true);
 
 		print "<tr><td><span style='font-family: monospace;'>" . debug_log_return("data_query") . "</span></td></tr>";
 
-		html_end_box();
+		html_end_box(false);
 	}
 
 	if (isset($host["id"])) {
