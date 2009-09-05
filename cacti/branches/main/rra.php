@@ -354,15 +354,11 @@ function rra() {
 		$rows = get_request_var_request("rows");
 	}
 
-	$rra_list = db_fetch_assoc("SELECT
-		id,
-		name,
-		rows,
-		steps,
-		timespan
+	$rra_list = db_fetch_assoc("SELECT *
 		FROM rra
 		$sql_where
-		ORDER BY " . $_REQUEST['sort_column'] . " " . $_REQUEST['sort_direction']);
+		ORDER BY " . $_REQUEST['sort_column'] . " " . $_REQUEST['sort_direction'] .
+		" LIMIT " . ($rows*($_REQUEST["page"]-1)) . "," . $rows);
 
 	/* generate page list navigation */
 	$nav = html_create_nav($_REQUEST["page"], MAX_DISPLAY_PAGES, $rows, $total_rows, 11, "rra.php?filter=" . $_REQUEST["filter"]);
