@@ -108,6 +108,8 @@ function form_alternate_row_color($row_id = "", $hover = false, $row_class = "")
 			}else{
 				print "<tr id='row_$alt_row_id' class='$class'>\n";
 			}
+
+			$alt_row_id++;
 		}
 	}
 }

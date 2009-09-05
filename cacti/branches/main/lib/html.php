@@ -732,7 +732,7 @@ function html_create_nav($current_page, $max_pages, $rows_per_page, $total_rows,
 							<td align='left' class='textHeaderDark' width='15%'>";
 								if ($current_page > 1) {
 									$nav .= "<strong>";
-									$nav .= "<a class='linkOverDark' href='" . $base_url . $page_var . "=" . ($current_page-1) . "'>";
+									$nav .= "<a class='linkOverDark' href='" . htmlspecialchars($base_url . $page_var . "=" . ($current_page-1)) . "'>";
 									$nav .= "&lt;&lt;&nbsp;" . __("Previous");
 									$nav .= "</a></strong>";
 								}
@@ -744,7 +744,7 @@ function html_create_nav($current_page, $max_pages, $rows_per_page, $total_rows,
 							<td align='right' class='textHeaderDark' width='15%'>";
 								if (($current_page * $rows_per_page) < $total_rows) {
 									$nav .= "<strong>";
-									$nav .= "<a class='linkOverDark' href='" . $base_url . $page_var . "=" . ($current_page+1) . "'>";
+									$nav .= "<a class='linkOverDark' href='" . htmlspecialchars($base_url . $page_var . "=" . ($current_page+1)) . "'>";
 									$nav .= __("Next") . " &gt;&gt;";
 									$nav .= "</a></strong>";
 								}

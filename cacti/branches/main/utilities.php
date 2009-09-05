@@ -319,7 +319,7 @@ function display_general() {
 	/* Check RRDTool issues */
 	$rrdtool_error = "";
 	if ($rrdtool_version != read_config_option("rrdtool_version")) {
-		$rrdtool_error .= "<br><font color='red'>" . __("ERROR: Installed RRDTool version does not match configured version.") . "<br>" . __("Please visit the") . " <a href='settings.php?tab=general'> " . __("Configuration Settings") . "</a>" . __("and select the correct RRDTool Utility Version.") . "</font><br>";
+		$rrdtool_error .= "<br><font color='red'>" . __("ERROR: Installed RRDTool version does not match configured version.") . "<br>" . __("Please visit the") . " <a href='" . htmlspecialchars("settings.php?tab=general") . "'> " . __("Configuration Settings") . "</a>" . __("and select the correct RRDTool Utility Version.") . "</font><br>";
 	}
 	$graph_gif_count = db_fetch_cell("SELECT COUNT(*) FROM graph_templates_graph WHERE image_format_id = 2");
 	if (($graph_gif_count > 0) && (read_config_option("rrdtool_version") != "rrd-1.0.x")) {
@@ -940,7 +940,7 @@ function utilities_view_user_log() {
 		print "<tr><td><em>" . __("No User Log Records") . "</em></td></tr>\n";
 	}
 
-	print "</table>\n</form>\n";	# end form and table of html_header_sort_checkbox
+	print "</table>\n";
 }
 
 function utilities_clear_user_log() {
@@ -1495,7 +1495,7 @@ function utilities_view_snmp_cache() {
 		print "<tr><td><em>" . __("No SNMP Records") . "</em></td></tr>\n";
 	}
 
-	print "</table>\n</form>\n";	# end form and table of html_header_sort_checkbox
+	print "</table>\n";
 }
 
 function utilities_view_poller_cache() {
@@ -1595,7 +1595,7 @@ function utilities_view_poller_cache() {
 	?>
 	<tr class='rowAlternate2'>
 		<td>
-			<form name="form_pollercache">
+			<form name="form_pollercache" action="utilities.php">
 			<table cellpadding="0" cellspacing="0">
 				<tr>
 					<td style='white-space:nowrap;width:50px;'>
@@ -1630,6 +1630,7 @@ function utilities_view_poller_cache() {
 				</tr>
 			</table>
 			<table cellpadding="0" cellspacing="0" border="0">
+				<tr>
 					<td style='white-space:nowrap;width:50px;'>
 						&nbsp;<?php print __("Search:");?>&nbsp;
 					</td>
@@ -1737,7 +1738,7 @@ function utilities_view_poller_cache() {
 			form_alternate_row_color();
 				?>
 				<td width="375">
-					<a class="linkEditMain" href="<?php print htmlspecialchars("data_sources.php?action=ds_edit&id=" . $item["local_data_id"]);?>"><?php print eregi_replace("(" . preg_quote($_REQUEST["filter"]) . ")", "<span style='background-color: #F8D93D;'>\\1</span>", $item["name_cache"]);?></a>
+					<a class="linkEditMain" href="<?php print htmlspecialchars("data_sources.php?action=ds_edit&id=" . $item["local_data_id"]);?>"><?php print (strlen($_REQUEST["filter"]) ? eregi_replace("(" . preg_quote($_REQUEST["filter"]) . ")", "<span style='background-color: #F8D93D;'>\\1</span>", $item["name_cache"]) : $item["name_cache"]);?></a>
 				</td>
 
 				<td>
@@ -1783,8 +1784,7 @@ function utilities_view_poller_cache() {
 		print "<tr><td><em>" . __("No Records Found") . "</em></td></tr>\n";
 	}
 
-	print "</table>\n</form>\n";	# end form and table of html_header_sort_checkbox
-
+	print "</table>\n";
 }
 
 function utilities() {
@@ -1798,7 +1798,7 @@ function utilities() {
 
 	<tr class="rowAlternate1">
 		<td class="textAreaNotes">
-			<a href='utilities.php?action=view_tech'><?php print __("Technical Support");?></a>
+			<a href='<?php print htmlspecialchars("utilities.php?action=view_tech");?>'><?php print __("Technical Support");?></a>
 		</td>
 		<td class="textAreaNotes">
 			<?php print __("Cacti technical support page.  Used by developers and technical support persons to assist with issues in Cacti.  Includes checks for common configuration issues.");?>
@@ -1812,7 +1812,7 @@ function utilities() {
 
 	<tr class="rowAlternate1">
 		<td class="textAreaNotes">
-			<a href='utilities.php?action=view_logfile'><?php print __("View Cacti Log File");?></a>
+			<a href='<?php print htmlspecialchars("utilities.php?action=view_logfile");?>'><?php print __("View Cacti Log File");?></a>
 		</td>
 		<td class="textAreaNotes">
 			<?php print __("The Cacti Log File stores statistic, error and other message depending on system settings.  This information can be used to identify problems with the poller and application.");?>
@@ -1820,7 +1820,7 @@ function utilities() {
 	</tr>
 	<tr class="rowAlternate2">
 		<td class="textAreaNotes">
-			<a href='utilities.php?action=view_user_log'><?php print __("View User Log");?></a>
+			<a href='<?php print htmlspecialchars("utilities.php?action=view_user_log");?>'><?php print __("View User Log");?></a>
 		</td>
 		<td class="textAreaNotes">
 			<?php print __("Allows Administrators to browse the user log.  Administrators can filter and export the log as well.");?>
@@ -1834,7 +1834,7 @@ function utilities() {
 
 	<tr class="rowAlternate1">
 		<td class="textAreaNotes">
-			<a href='utilities.php?action=view_poller_cache'><?php print __("View Poller Cache");?></a>
+			<a href='<?php print htmlspecialchars("utilities.php?action=view_poller_cache");?>'><?php print __("View Poller Cache");?></a>
 		</td>
 		<td class="textAreaNotes">
 			<?php print __("This is the data that is being passed to the poller each time it runs. This data is then in turn executed/interpreted and the results are fed into the rrd files for graphing or the database for display.");?>
@@ -1842,7 +1842,7 @@ function utilities() {
 	</tr>
 	<tr class="rowAlternate2">
 		<td class="textAreaNotes">
-			<a href='utilities.php?action=view_snmp_cache'><?php print __("View SNMP Cache");?></a>
+			<a href='<?php print htmlspecialchars("utilities.php?action=view_snmp_cache");?>'><?php print __("View SNMP Cache");?></a>
 		</td>
 		<td class="textAreaNotes">
 			<?php print __("The SNMP cache stores information gathered from SNMP queries. It is used by cacti to determine the OID to use when gathering information from an SNMP-enabled host.");?>
@@ -1850,7 +1850,7 @@ function utilities() {
 	</tr>
 	<tr class="rowAlternate1">
 		<td class="textAreaNotes">
-			<a href='utilities.php?action=clear_poller_cache'><?php print __("Rebuild Poller Cache");?></a>
+			<a href='<?php print htmlspecialchars("utilities.php?action=clear_poller_cache");?>'><?php print __("Rebuild Poller Cache");?></a>
 		</td>
 		<td class="textAreaNotes">
 			<?php print __("The poller cache will be cleared and re-generated if you select this option. Sometimes host/data source data can get out of sync with the cache in which case it makes sense to clear the cache and start over.");?>
