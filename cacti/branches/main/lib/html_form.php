@@ -904,6 +904,12 @@ function form_save_button_alt($cancel_action = "", $action = "save", $force_type
 	}elseif ($force_type == "create") {
 		$sname = "create";
 		$salt  = __("Create");
+	}elseif ($force_type == "import") {
+		$sname = "create";
+		$salt  = __("Import");
+	}elseif ($force_type == "export") {
+		$sname = "create";
+		$salt  = __("Export");
 	}
 
 	if (substr_count($cancel_action, "!")) {
@@ -917,7 +923,7 @@ function form_save_button_alt($cancel_action = "", $action = "save", $force_type
 		<tr>
 			<td bgcolor="#f5f5f5" align="right">
 				<input type='hidden' name='action' value='<?php print $action;?>'>
-				<input id='cancel' type='button' value='<?php print $calt;?>' onClick='window.location.assign("<?php print htmlspecialchars($url);?>")' name='cancel'>
+				<?php if ($force_type != "import" && $force_type != "export") { ?><input id='cancel' type='button' value='<?php print $calt;?>' onClick='window.location.assign("<?php print htmlspecialchars($url);?>")' name='cancel'><?php } ?>
 				<input id='<?php print $sname;?>' type='submit' value='<?php print $salt;?>' name='<?php print $sname;?>'>
 			</td>
 		</tr>

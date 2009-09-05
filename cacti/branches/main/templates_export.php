@@ -142,5 +142,5 @@ function export() {
 	form_hidden_box("export_type", $_REQUEST["export_type"], "");
 	form_hidden_box("save_component_export","1","");
 
-	form_save_button_alt("url!" . (isset($_SERVER["HTTP_REFERER"]) ? $_SERVER["HTTP_REFERER"] : ""));
+	form_save_button_alt("", "save", "export");
 }

@@ -89,7 +89,7 @@ function import() {
 	<?php
 
 	if ((isset($_SESSION["import_debug_info"])) && (is_array($_SESSION["import_debug_info"]))) {
-		html_start_box("<strong>" . __("Import Results") . "</strong>", "100%", "aaaaaa", "3", "center", "");
+		html_start_box("<strong>" . __("Import Results") . "</strong>", "100%", "aaaaaa", "3", "center", "", true);
 
 		print "<tr class='rowAlternate1'><td><p class='textArea'>" . __("Cacti has imported the following items:") . "</p>";
 
@@ -134,7 +134,7 @@ function import() {
 
 		print "</td></tr>";
 
-		html_end_box();
+		html_end_box(false);
 
 		kill_session_var("import_debug_info");
 	}
@@ -180,5 +180,5 @@ function import() {
 
 	form_hidden_box("save_component_import","1","");
 
-	form_save_button_alt("url!" . (isset($_SERVER["HTTP_REFERER"]) ? $_SERVER["HTTP_REFERER"] : ""));
+	form_save_button_alt("", "save", "import");
 }
