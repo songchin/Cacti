@@ -434,7 +434,12 @@ function cdef_edit() {
 }
 
 function cdef() {
-	global $colors, $cdef_actions;
+	global $colors, $cdef_actions, $item_rows;
+
+	/* ================= input validation ================= */
+	input_validate_input_number(get_request_var_request("page"));
+	input_validate_input_number(get_request_var_request("rows"));
+	/* ==================================================== */
 
 	/* clean up search string */
 	if (isset($_REQUEST["filter"])) {
@@ -454,19 +459,33 @@ function cdef() {
 	/* if the user pushed the 'clear' button */
 	if (isset($_REQUEST["clear_x"])) {
 		kill_session_var("sess_cdef_current_page");
+		kill_session_var("sess_cdef_rows");
 		kill_session_var("sess_cdef_filter");
 		kill_session_var("sess_cdef_sort_column");
 		kill_session_var("sess_cdef_sort_direction");
 
 		unset($_REQUEST["page"]);
+		unset($_REQUEST["rows"]);
 		unset($_REQUEST["filter"]);
 		unset($_REQUEST["sort_column"]);
 		unset($_REQUEST["sort_direction"]);
 
 	}
 
+	?>
+	<script type="text/javascript">
+	<!--
+	function applyFilterChange(objForm) {
+		strURL = '?rows=' + objForm.rows.value;
+		document.location = strURL;
+	}
+	-->
+	</script>
+	<?php
+
 	/* remember these search fields in session vars so we don't have to keep passing them around */
 	load_current_session_value("page", "sess_cdef_current_page", "1");
+	load_current_session_value("rows", "sess_cdef_rows", "-1");
 	load_current_session_value("filter", "sess_cdef_filter", "");
 	load_current_session_value("sort_column", "sess_cdef_sort_column", "name");
 	load_current_session_value("sort_direction", "sess_cdef_sort_direction", "ASC");
@@ -483,6 +502,21 @@ function cdef() {
 					</td>
 					<td width="1">
 						<input type="text" name="filter" size="40" value="<?php print $_REQUEST["filter"];?>">
+					</td>
+					<td style='white-space:nowrap;width:50px;'>
+						&nbsp;<?php print __("Rows:");?>&nbsp;
+					</td>
+					<td width="1">
+						<select name="rows" onChange="applyFilterChange(document.form_cdef)">
+							<option value="-1"<?php if ($_REQUEST["rows"] == "-1") {?> selected<?php }?>>Default</option>
+							<?php
+							if (sizeof($item_rows) > 0) {
+							foreach ($item_rows as $key => $value) {
+								print "<option value='" . $key . "'"; if ($_REQUEST["rows"] == $key) { print " selected"; } print ">" . $value . "</option>\n";
+							}
+							}
+							?>
+						</select>
 					</td>
 					<td style='white-space:nowrap;width:120px;'>
 						&nbsp;<input type="submit" Value="<?php print __("Go");?>" name="go" align="middle">
@@ -507,15 +541,21 @@ function cdef() {
 		FROM cdef
 		$sql_where");
 
+	if (get_request_var_request("rows") == "-1") {
+		$rows = read_config_option("num_rows_device");
+	}else{
+		$rows = get_request_var_request("rows");
+	}
+
 	$cdef_list = db_fetch_assoc("SELECT
 		cdef.id,cdef.name
 		FROM cdef
 		$sql_where
 		ORDER BY " . $_REQUEST['sort_column'] . " " . $_REQUEST['sort_direction'] .
-		" LIMIT " . (read_config_option("num_rows_device")*($_REQUEST["page"]-1)) . "," . read_config_option("num_rows_device"));
+		" LIMIT " . ($rows*($_REQUEST["page"]-1)) . "," . $rows);
 
 	/* generate page list navigation */
-	$nav = html_create_nav($_REQUEST["page"], MAX_DISPLAY_PAGES, read_config_option("num_rows_device"), $total_rows, 11, "cdef.php?filter=" . $_REQUEST["filter"]);
+	$nav = html_create_nav($_REQUEST["page"], MAX_DISPLAY_PAGES, $rows, $total_rows, 11, "cdef.php?filter=" . $_REQUEST["filter"]);
 
 	print $nav;
 	html_end_box(false);
