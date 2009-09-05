@@ -84,7 +84,7 @@ html_start_box("<strong>" . __("About Cacti") . "</strong>", "100%", $colors["he
 
 		<p><tt><?php print __("This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.");?></tt></p>
 
-		<p><strong><?php print __("Cacti Variables");?></strong><span style="font-family: monospace; font-size: 10px;"><br>
+		<p><strong><?php print __("Cacti Variables");?></strong><span class="log"><br>
 		<strong><?php print __("Operating System:");?></strong> <?php print CACTI_SERVER_OS;?><br>
 		<strong><?php print __("PHP SNMP Support:");?></strong> <?php print PHP_SNMP_SUPPORT ? "yes" : "no";?><br>
 		</span></p>

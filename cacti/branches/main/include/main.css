@@ -466,11 +466,15 @@ a:hover {
 .rowHeader {
 	background: #001A6E url('../images/rowHeader.png') repeat-x scroll top left;
 }
-
+.rowHeader td span {
+	color: white; font-weight: bold;
+}
 .rowSubHeader {
 	background: #1F2328 url('../images/rowSubHeader.png') repeat-x scroll top left;
 }
-
+.rowSubHeader td span {
+	color: white; font-weight: bold;
+}
 .rowSubHeaderAlt {
 	color: #FFFFFF;
 	background: #DCE7F5 url('../images/rowSubHeaderAlt.png') repeat-x scroll top left;
@@ -665,6 +669,7 @@ span.info {
 }
 span.log {
 	font-family: monospace;
+	font-size:10px;
 }
 span.warning {
 	color: #ff0000; 
@@ -688,6 +693,12 @@ span.unknown {
 }
 span.fail {
 	color: #ff0000;
+}
+span.new {
+	color: blue;
+}
+span.dependant {
+	color: navy;
 }
 span.filter {
 	background-color: #f8d93d;

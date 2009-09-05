@@ -98,30 +98,30 @@ function import() {
 
 			while (list($index, $vals) = each($type_array)) {
 				if ($vals["result"] == "success") {
-					$result_text = "<span style='color: green;'>" . __("[success]") . "</span>";
+					$result_text = "<span class=\"success\">" . __("[success]") . "</span>";
 				}else{
-					$result_text = "<span style='color: red;'>" . __("[fail]") . "</span>";
+					$result_text = "<span class=\"fail\">" . __("[fail]") . "</span>";
 				}
 
 				if ($vals["type"] == "update") {
-					$type_text = "<span style='color: gray;'>" . __("[update]") . "</span>";
+					$type_text = "<span class=\"unknown\">" . __("[update]") . "</span>";
 				}else{
-					$type_text = "<span style='color: blue;'>" . __("[new]") . "</span>";
+					$type_text = "<span class=\"new\">" . __("[new]") . "</span>";
 				}
 
-				print "<span style='font-family: monospace;'>$result_text " . $vals["title"] . " $type_text</span><br>\n";
+				print "<span class=\"log\">$result_text " . $vals["title"] . " $type_text</span><br>\n";
 
 				$dep_text = ""; $there_are_dep_errors = false;
 				if ((isset($vals["dep"])) && (sizeof($vals["dep"]) > 0)) {
 					while (list($dep_hash, $dep_status) = each($vals["dep"])) {
 						if ($dep_status == "met") {
-							$dep_status_text = "<span style='color: navy;'>" . __("Found Dependency:") . "</span>";
+							$dep_status_text = "<span class=\"dependant\">" . __("Found Dependency:") . "</span>";
 						}else{
-							$dep_status_text = "<span style='color: red;'>" . __("Unmet Dependency:") . "</span>";
+							$dep_status_text = "<span class=\"fail\">" . __("Unmet Dependency:") . "</span>";
 							$there_are_dep_errors = true;
 						}
 
-						$dep_text .= "<span style='font-family: monospace;'>&nbsp;&nbsp;&nbsp;+ $dep_status_text " . hash_to_friendly_name($dep_hash, true) . "</span><br>\n";
+						$dep_text .= "<span class=\"log\">&nbsp;&nbsp;&nbsp;+ $dep_status_text " . hash_to_friendly_name($dep_hash, true) . "</span><br>\n";
 					}
 				}
 

@@ -679,7 +679,7 @@ function site() {
 			foreach ($sites as $site) {
 				form_alternate_row_color($site["id"], true);
 				form_selectable_cell("<a class='linkEditMain' href='" . htmlspecialchars("sites.php?action=edit&id=" . $site["id"]) . "'>" .
-					(strlen($_REQUEST["filter"]) ? eregi_replace("(" . preg_quote($_REQUEST["filter"]) . ")", "<span style='background-color: #F8D93D;'>\\1</span>", $site["name"]) : $site["name"]) . "</a>", $site["id"], "20%");
+					(strlen($_REQUEST["filter"]) ? eregi_replace("(" . preg_quote($_REQUEST["filter"]) . ")", "<span class=\"filter\">\\1</span>", $site["name"]) : $site["name"]) . "</a>", $site["id"], "20%");
 				form_selectable_cell($site["address1"], $site["id"]);
 				form_selectable_cell($site["city"], $site["id"]);
 				form_selectable_cell($site["state"], $site["id"]);
@@ -718,8 +718,8 @@ function site() {
 			foreach ($sites as $site) {
 				form_alternate_row_color($site["id"], true); $i++;
 				form_selectable_cell("<a class='linkEditMain' href='sites.php?action=edit&id=" . $site["id"] . "'>" .
-					(strlen($_REQUEST["filter"]) ? eregi_replace("(" . preg_quote($_REQUEST["filter"]) . ")", "<span style='background-color: #F8D93D;'>\\1</span>", $site["name"]) : $site["name"]) . "</a>", $site["id"], "20%");
-				form_selectable_cell(eregi_replace("(" . preg_quote($_REQUEST["filter"]) . ")", "<span style='background-color: #F8D93D;'>\\1</span>", $site["host_template_name"]), $site["id"]);
+					(strlen($_REQUEST["filter"]) ? eregi_replace("(" . preg_quote($_REQUEST["filter"]) . ")", "<span class=\"filter\">\\1</span>", $site["name"]) : $site["name"]) . "</a>", $site["id"], "20%");
+				form_selectable_cell(eregi_replace("(" . preg_quote($_REQUEST["filter"]) . ")", "<span class=\"filter\">\\1</span>", $site["host_template_name"]), $site["id"]);
 				form_selectable_cell($site["total_devices"], $site["id"]);
 				form_selectable_cell($site["address1"], $site["id"]);
 				form_selectable_cell($site["city"], $site["id"]);

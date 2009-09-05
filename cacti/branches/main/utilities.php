@@ -902,11 +902,11 @@ function utilities_view_user_log() {
 			form_alternate_row_color($item["username"] . strtotime($item["time"]), true);
 			?>
 			<td width='35%'>
-				<?php print (strlen(get_request_var_request("filter")) ? (eregi_replace("(" . preg_quote(get_request_var_request("filter")) . ")", "<span style='background-color: #F8D93D;'>\\1</span>", $item["username"])) : $item["username"]);?>
+				<?php print (strlen(get_request_var_request("filter")) ? (eregi_replace("(" . preg_quote(get_request_var_request("filter")) . ")", "<span class=\"filter\">\\1</span>", $item["username"])) : $item["username"]);?>
 			</td>
 			<td width='20%'>
 				<?php if (isset($item["full_name"])) {
-						print (strlen(get_request_var_request("filter")) ? (eregi_replace("(" . preg_quote(get_request_var_request("filter")) . ")", "<span style='background-color: #F8D93D;'>\\1</span>", $item["full_name"])) : $item["full_name"]);
+						print (strlen(get_request_var_request("filter")) ? (eregi_replace("(" . preg_quote(get_request_var_request("filter")) . ")", "<span class=\"filter\">\\1</span>", $item["full_name"])) : $item["full_name"]);
 					}else{
 						print "(" . __("User Removed") . ")";
 					}
@@ -914,20 +914,20 @@ function utilities_view_user_log() {
 			</td>
 			<td width='20%'>
 				<?php if (isset($auth_realms[$item["realm"]])) {
-						print (strlen(get_request_var_request("filter")) ? (eregi_replace("(" . preg_quote(get_request_var_request("filter")) . ")", "<span style='background-color: #F8D93D;'>\\1</span>", $auth_realms[$item["realm"]])) : $auth_realms[$item["realm"]]);
+						print (strlen(get_request_var_request("filter")) ? (eregi_replace("(" . preg_quote(get_request_var_request("filter")) . ")", "<span class=\"filter\">\\1</span>", $auth_realms[$item["realm"]])) : $auth_realms[$item["realm"]]);
 					}else{
 						print __("N/A");
 					}
 				?>
 			</td>
 			<td width='20%'>
-				<?php print (strlen(get_request_var_request("filter")) ? (eregi_replace("(" . preg_quote(get_request_var_request("filter")) . ")", "<span style='background-color: #F8D93D;'>\\1</span>", $item["time"])) : $item["time"]);?>
+				<?php print (strlen(get_request_var_request("filter")) ? (eregi_replace("(" . preg_quote(get_request_var_request("filter")) . ")", "<span class=\"filter\">\\1</span>", $item["time"])) : $item["time"]);?>
 			</td>
 			<td width='10%'>
 				<?php print $item["result"] == 0 ? __("Failed") : __("Success");?>
 			</td>
 			<td width='15%'>
-				<?php print (strlen(get_request_var_request("filter")) ? (eregi_replace("(" . preg_quote(get_request_var_request("filter")) . ")", "<span style='background-color: #F8D93D;'>\\1</span>", $item["ip"])) : $item["ip"]);?>
+				<?php print (strlen(get_request_var_request("filter")) ? (eregi_replace("(" . preg_quote(get_request_var_request("filter")) . ")", "<span class=\"filter\">\\1</span>", $item["ip"])) : $item["ip"]);?>
 			</td>
 			<?php
 			form_end_row();
@@ -1471,8 +1471,8 @@ function utilities_view_snmp_cache() {
 			form_alternate_row_color();
 			?>
 			<td>
-				<?php print __("Host:");?> <?php print (strlen(get_request_var_request("filter")) ? (eregi_replace("(" . preg_quote(get_request_var_request("filter")) . ")", "<span style='background-color: #F8D93D;'>\\1</span>", $item["description"])) : $item["description"]);?>
-				, <?php print __("SNMP Query:");?> <?php print (strlen(get_request_var_request("filter")) ? (eregi_replace("(" . preg_quote(get_request_var_request("filter")) . ")", "<span style='background-color: #F8D93D;'>\\1</span>", $item["name"])) : $item["name"]);?>
+				<?php print __("Host:");?> <?php print (strlen(get_request_var_request("filter")) ? (eregi_replace("(" . preg_quote(get_request_var_request("filter")) . ")", "<span class=\"filter\">\\1</span>", $item["description"])) : $item["description"]);?>
+				, <?php print __("SNMP Query:");?> <?php print (strlen(get_request_var_request("filter")) ? (eregi_replace("(" . preg_quote(get_request_var_request("filter")) . ")", "<span class=\"filter\">\\1</span>", $item["name"])) : $item["name"]);?>
 			</td>
 			<?php
 			form_end_row();
@@ -1480,9 +1480,9 @@ function utilities_view_snmp_cache() {
 			?>
 			<td>
 				<?php print __("Index:");?> <?php print $item["snmp_index"];?>
-				, <?php print __("Field Name:");?> <?php print (strlen(get_request_var_request("filter")) ? (eregi_replace("(" . preg_quote(get_request_var_request("filter")) . ")", "<span style='background-color: #F8D93D;'>\\1</span>", $item["field_name"])) : $item["field_name"]);?>
-				, <?php print __("Field Value:");?> <?php print (strlen(get_request_var_request("filter")) ? (eregi_replace("(" . preg_quote(get_request_var_request("filter")) . ")", "<span style='background-color: #F8D93D;'>\\1</span>", $item["field_value"])) : $item["field_value"]);?>
-				, <?php print __("OID:");?> <?php print (strlen(get_request_var_request("filter")) ? (eregi_replace("(" . preg_quote(get_request_var_request("filter")) . ")", "<span style='background-color: #F8D93D;'>\\1</span>", $item["oid"])) : $item["oid"]);?>
+				, <?php print __("Field Name:");?> <?php print (strlen(get_request_var_request("filter")) ? (eregi_replace("(" . preg_quote(get_request_var_request("filter")) . ")", "<span class=\"filter\">\\1</span>", $item["field_name"])) : $item["field_name"]);?>
+				, <?php print __("Field Value:");?> <?php print (strlen(get_request_var_request("filter")) ? (eregi_replace("(" . preg_quote(get_request_var_request("filter")) . ")", "<span class=\"filter\">\\1</span>", $item["field_value"])) : $item["field_value"]);?>
+				, <?php print __("OID:");?> <?php print (strlen(get_request_var_request("filter")) ? (eregi_replace("(" . preg_quote(get_request_var_request("filter")) . ")", "<span class=\"filter\">\\1</span>", $item["oid"])) : $item["oid"]);?>
 			</td>
 			<?php
 			form_end_row();
@@ -1738,7 +1738,7 @@ function utilities_view_poller_cache() {
 			form_alternate_row_color();
 				?>
 				<td width="375">
-					<a class="linkEditMain" href="<?php print htmlspecialchars("data_sources.php?action=ds_edit&id=" . $item["local_data_id"]);?>"><?php print (strlen($_REQUEST["filter"]) ? eregi_replace("(" . preg_quote($_REQUEST["filter"]) . ")", "<span style='background-color: #F8D93D;'>\\1</span>", $item["name_cache"]) : $item["name_cache"]);?></a>
+					<a class="linkEditMain" href="<?php print htmlspecialchars("data_sources.php?action=ds_edit&id=" . $item["local_data_id"]);?>"><?php print (strlen($_REQUEST["filter"]) ? eregi_replace("(" . preg_quote($_REQUEST["filter"]) . ")", "<span class=\"filter\">\\1</span>", $item["name_cache"]) : $item["name_cache"]);?></a>
 				</td>
 
 				<td>
@@ -1748,7 +1748,7 @@ function utilities_view_poller_cache() {
 						$details =
 							__("SNMP Version:") . " " . $item["snmp_version"] . ", " .
 							__("Community:") . " " . $item["snmp_community"] . ", " .
-							__("OID:") . " " . (strlen(get_request_var_request("filter")) ? (eregi_replace("(" . preg_quote(get_request_var_request("filter")) . ")", "<span style='background-color: #F8D93D;'>\\1</span>", $item["arg1"])) : $item["arg1"]);
+							__("OID:") . " " . (strlen(get_request_var_request("filter")) ? (eregi_replace("(" . preg_quote(get_request_var_request("filter")) . ")", "<span class=\"filter\">\\1</span>", $item["arg1"])) : $item["arg1"]);
 					}else{
 						$details =
 							__("SNMP Version:") . " " . $item["snmp_version"] . ", " .
@@ -1756,9 +1756,9 @@ function utilities_view_poller_cache() {
 							__("OID:") . " " . $item["arg1"];
 					}
 				}elseif ($item["action"] == 1) {
-						$details = __("Script:") . " " . (strlen(get_request_var_request("filter")) ? (eregi_replace("(" . preg_quote(get_request_var_request("filter")) . ")", "<span style='background-color: #F8D93D;'>\\1</span>", $item["arg1"])) : $item["arg1"]);
+						$details = __("Script:") . " " . (strlen(get_request_var_request("filter")) ? (eregi_replace("(" . preg_quote(get_request_var_request("filter")) . ")", "<span class=\"filter\">\\1</span>", $item["arg1"])) : $item["arg1"]);
 				}else{
-						$details = __("Script Server:") . " " . (strlen(get_request_var_request("filter")) ? (eregi_replace("(" . preg_quote(get_request_var_request("filter")) . ")", "<span style='background-color: #F8D93D;'>\\1</span>", $item["arg1"])) : $item["arg1"]);
+						$details = __("Script Server:") . " " . (strlen(get_request_var_request("filter")) ? (eregi_replace("(" . preg_quote(get_request_var_request("filter")) . ")", "<span class=\"filter\">\\1</span>", $item["arg1"])) : $item["arg1"]);
 				}
 
 				print $details;

@@ -692,7 +692,7 @@ function template_edit() {
 		html_start_box("<strong>" . __("Associated Graph Templates") . "</strong>", "100%", $colors["header"], "2", "center", "", true);
 
 		print "	<tr class='rowSubHeader'>
-				<td><span style='color: white; font-weight: bold;'>" . __("Graph Template Name") . "</span></td>
+				<td><span>" . __("Graph Template Name") . "</span></td>
 				<td></td>
 			</tr>";
 
@@ -984,7 +984,7 @@ function template() {
 	if (sizeof($template_list) > 0) {
 		foreach ($template_list as $template) {
 			form_alternate_row_color('line' . $template["id"], true);
-			form_selectable_cell("<a class='linkEditMain' href='" . htmlspecialchars("host_templates.php?action=edit&id=" . $template["id"]) . "'>" . (strlen($_REQUEST["filter"]) ? eregi_replace("(" . preg_quote($_REQUEST["filter"]) . ")", "<span style='background-color: #F8D93D;'>\\1</span>", $template["name"]) : $template["name"]) . "</a>", $template["id"]);
+			form_selectable_cell("<a class='linkEditMain' href='" . htmlspecialchars("host_templates.php?action=edit&id=" . $template["id"]) . "'>" . (strlen($_REQUEST["filter"]) ? eregi_replace("(" . preg_quote($_REQUEST["filter"]) . ")", "<span class=\"filter\">\\1</span>", $template["name"]) : $template["name"]) . "</a>", $template["id"]);
 			form_checkbox_cell($template["name"], $template["id"]);
 			form_end_row();
 		}

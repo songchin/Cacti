@@ -1098,9 +1098,9 @@ function user() {
 
 			form_alternate_row_color('line' . $user["id"], true);
 			form_selectable_cell("<a class='linkEditMain' href='" . htmlspecialchars("user_admin.php?action=user_edit&id=" . $user["id"]) . "'>" .
-			(strlen(get_request_var_request("filter")) ? eregi_replace("(" . preg_quote(get_request_var_request("filter")) . ")", "<span style='background-color: #F8D93D;'>\\1</span>",  $user["username"]) : $user["username"]) . "</a>"
+			(strlen(get_request_var_request("filter")) ? eregi_replace("(" . preg_quote(get_request_var_request("filter")) . ")", "<span class=\"filter\">\\1</span>",  $user["username"]) : $user["username"]) . "</a>"
 			, $user["id"]);
-			form_selectable_cell((strlen(get_request_var_request("filter")) ? eregi_replace("(" . preg_quote(get_request_var_request("filter")) . ")", "<span style='background-color: #F8D93D;'>\\1</span>",  $user["full_name"]) : $user["full_name"]), $user["id"]);
+			form_selectable_cell((strlen(get_request_var_request("filter")) ? eregi_replace("(" . preg_quote(get_request_var_request("filter")) . ")", "<span class=\"filter\">\\1</span>",  $user["full_name"]) : $user["full_name"]), $user["id"]);
 			form_selectable_cell($enabled, $user["id"]);
 			form_selectable_cell($auth_realms[$user["realm"]], $user["id"]);
 			if ($user["policy_graphs"] == "1") {

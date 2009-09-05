@@ -456,7 +456,7 @@ function poller() {
 	if (sizeof($poller_list) > 0) {
 		foreach ($poller_list as $poller) {
 			form_alternate_row_color('line' . $poller["id"], true);
-			form_selectable_cell("<a class='linkEditMain' href='" . htmlspecialchars("pollers.php?action=edit&id=" . $poller["id"]) . "'>" . (strlen($_REQUEST["filter"]) ? eregi_replace("(" . preg_quote($_REQUEST["filter"]) . ")", "<span style='background-color: #F8D93D;'>\\1</span>", $poller["description"]) : $poller["description"]) . "</a>", $poller["id"]);
+			form_selectable_cell("<a class='linkEditMain' href='" . htmlspecialchars("pollers.php?action=edit&id=" . $poller["id"]) . "'>" . (strlen($_REQUEST["filter"]) ? eregi_replace("(" . preg_quote($_REQUEST["filter"]) . ")", "<span class=\"filter\">\\1</span>", $poller["description"]) : $poller["description"]) . "</a>", $poller["id"]);
 			form_selectable_cell($poller["id"], $poller["id"]);
 			form_selectable_cell($poller["hostname"], $poller["id"]);
 			form_selectable_cell($status, $poller["id"]);
