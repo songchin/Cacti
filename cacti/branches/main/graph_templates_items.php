@@ -201,11 +201,10 @@ function form_save() {
 
 		if (is_error_message()) {
 			header("Location: graph_templates_items.php?action=item_edit&graph_template_item_id=" . (empty($graph_template_item_id) ? $_POST["graph_template_item_id"] : $graph_template_item_id) . "&id=" . $_POST["graph_template_id"]);
-			exit;
 		}else{
 			header("Location: graph_templates.php?action=template_edit&id=" . $_POST["graph_template_id"]);
-			exit;
 		}
+		exit;
 	}
 }
 

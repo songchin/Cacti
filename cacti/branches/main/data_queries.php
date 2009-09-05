@@ -134,6 +134,7 @@ function form_save() {
 		}else{
 			header("Location: data_queries.php");
 		}
+		exit;
 	}elseif (isset($_POST["save_component_snmp_query_item"])) {
 		/* ================= input validation ================= */
 		input_validate_input_number(get_request_var_post("id"));
@@ -197,6 +198,7 @@ function form_save() {
 		}else{
 			header("Location: data_queries.php?action=edit&id=" . $_POST["snmp_query_id"]);
 		}
+		exit;
 	}
 }
 

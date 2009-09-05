@@ -180,11 +180,10 @@ function form_save() {
 
 		if (is_error_message()) {
 			header("Location: gprint_presets.php?action=edit&id=" . (empty($gprint_preset_id) ? $_POST["id"] : $gprint_preset_id));
-			exit;
 		}else{
 			header("Location: gprint_presets.php");
-			exit;
 		}
+		exit;
 	}
 }
 

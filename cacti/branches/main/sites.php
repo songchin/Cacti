@@ -77,6 +77,7 @@ function form_save() {
 		}else{
 			header("Location: sites.php");
 		}
+		exit;
 	}
 }
 
@@ -686,6 +687,8 @@ function site() {
 				form_checkbox_cell($site["name"], $site["id"]);
 				form_end_row();
 			}
+
+			form_end_table();
 
 			/* put the nav bar on the bottom as well */
 			print $nav;

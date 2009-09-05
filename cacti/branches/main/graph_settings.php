@@ -69,6 +69,7 @@ function form_save() {
 	kill_session_var("sess_graph_config_array");
 
 	header("Location: " . $_POST["referer"]);
+	exit;
 }
 
 /* --------------------------

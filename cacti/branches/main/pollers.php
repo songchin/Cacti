@@ -140,6 +140,7 @@ function form_save() {
 		}else{
 			header("Location: pollers.php");
 		}
+		exit;
 	}
 }
 

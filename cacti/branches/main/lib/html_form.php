@@ -917,8 +917,8 @@ function form_save_button_alt($cancel_action = "", $action = "save", $force_type
 		<tr>
 			<td bgcolor="#f5f5f5" align="right">
 				<input type='hidden' name='action' value='<?php print $action;?>'>
-				<input type='button' value='<?php print $calt;?>' onClick='window.location.assign("<?php print htmlspecialchars($url);?>")' name='cancel'>
-				<input type='submit' value='<?php print $salt;?>' name='<?php print $sname;?>'>
+				<input id='cancel' type='button' value='<?php print $calt;?>' onClick='window.location.assign("<?php print htmlspecialchars($url);?>")' name='cancel'>
+				<input id='<?php print $sname;?>' type='submit' value='<?php print $salt;?>' name='<?php print $sname;?>'>
 			</td>
 		</tr>
 	</table>

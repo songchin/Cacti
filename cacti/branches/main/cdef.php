@@ -117,6 +117,7 @@ function form_save() {
 		}else{
 			header("Location: cdef.php");
 		}
+		exit;
 	}elseif (isset($_POST["save_component_item"])) {
 		$sequence = get_sequence($_POST["id"], "sequence", "cdef_items", "cdef_id=" . $_POST["cdef_id"]);
 
@@ -142,6 +143,7 @@ function form_save() {
 		}else{
 			header("Location: cdef.php?action=edit&id=" . $_POST["cdef_id"]);
 		}
+		exit;
 	}
 }
 

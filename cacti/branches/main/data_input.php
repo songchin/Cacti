@@ -113,6 +113,7 @@ function form_save() {
 		}else{
 			header("Location: data_input.php");
 		}
+		exit;
 	}elseif (isset($_POST["save_component_field"])) {
 		/* ================= input validation ================= */
 		input_validate_input_number(get_request_var_post("id"));
@@ -151,6 +152,7 @@ function form_save() {
 		}else{
 			header("Location: data_input.php?action=edit&id=" . $_POST["data_input_id"]);
 		}
+		exit;
 	}
 }
 

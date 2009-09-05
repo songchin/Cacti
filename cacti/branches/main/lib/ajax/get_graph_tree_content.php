@@ -44,7 +44,9 @@ $tree_id         = 0;
 $leaf_id         = 0;
 $host_group_type = array('na', 0);
 
-if (!isset($_REQUEST["id"])) {	if (isset($_SESSION["sess_graph_navigation"])) {		$_REQUEST["id"] = $_SESSION["sess_graph_navigation"];
+if (!isset($_REQUEST["id"])) {
+	if (isset($_SESSION["sess_graph_navigation"])) {
+		$_REQUEST["id"] = $_SESSION["sess_graph_navigation"];
 	}
 }
 
@@ -53,7 +55,11 @@ if (isset($_REQUEST["id"])) {
 	$id_array = explode("_", $_REQUEST["id"]);
 	$type     = "";
 
-	if (sizeof($id_array)) {		foreach($id_array as $part) {			if (is_numeric($part)) {				switch($type) {					case "tree":
+	if (sizeof($id_array)) {
+		foreach($id_array as $part) {
+			if (is_numeric($part)) {
+				switch($type) {
+					case "tree":
 						$tree_id = $part;
 						break;
 					case "leaf":
@@ -71,7 +77,8 @@ if (isset($_REQUEST["id"])) {
 					default:
 						break;
 				}
-			}else{				$type = trim($part);
+			}else{
+				$type = trim($part);
 			}
 		}
 	}

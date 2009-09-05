@@ -78,6 +78,7 @@ function form_save() {
 			header("Location: color.php");
 		}
 	}
+	exit;
 }
 
 /* -----------------------

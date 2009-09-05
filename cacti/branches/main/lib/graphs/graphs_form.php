@@ -168,6 +168,7 @@ function form_save() {
 	}else{
 		header("Location: graphs.php");
 	}
+	exit;
 }
 
 /* ------------------------
@@ -792,6 +793,7 @@ function graph_edit() {
 
 	$().ready(function() {
 		$("input").attr("disabled","disabled")
+		$("#cancel").removeAttr("disabled");
 	});
 
 	function changeGraphState() {
@@ -800,6 +802,7 @@ function graph_edit() {
 			disabled = false;
 		}else{
 			$("input").attr("disabled","disabled")
+			$("#cancel").removeAttr("disabled");
 			disabled = true;
 		}
 	}
@@ -1130,7 +1133,7 @@ function graph() {
 	?>
 	<tr class='rowAlternate2'>
 		<td>
-			<form name="form_graph_id" action="graphs.php" autocomplete="off">
+			<form name="form_graph_id" action="graphs.php">
 			<table cellpadding="1" cellspacing="0">
 				<tr>
 					<td width="50">

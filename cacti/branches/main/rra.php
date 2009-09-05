@@ -200,6 +200,7 @@ function form_save() {
 		}else{
 			header("Location: rra.php");
 		}
+		exit;
 	}
 }
 

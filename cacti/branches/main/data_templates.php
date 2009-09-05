@@ -377,6 +377,7 @@ function template_rrd_remove() {
 	}
 
 	header("Location: data_templates.php?action=template_edit&id=" . $_GET["data_template_id"]);
+	exit;
 }
 
 function template_rrd_add() {
@@ -402,6 +403,7 @@ function template_rrd_add() {
 	}
 
 	header("Location: data_templates.php?action=template_edit&id=" . $_GET["id"] . "&view_rrd=$data_template_rrd_id");
+	exit;
 }
 
 function template_edit() {

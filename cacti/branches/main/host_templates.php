@@ -228,6 +228,7 @@ function form_save() {
 		}else{
 			header("Location: host_templates.php");
 		}
+		exit;
 	}
 }
 

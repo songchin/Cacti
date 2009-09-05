@@ -54,12 +54,14 @@ function api_graphs_new_form_save() {
 		}
 
 		header("Location: " . $file);
+		exit;
 	}
 
 	if (isset($_POST["save_component_new_graphs"])) {
 		host_new_graphs_save();
 
 		header("Location: " . $file);
+		exit;
 	}
 }
 

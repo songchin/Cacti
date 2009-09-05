@@ -229,6 +229,7 @@ function data_source_form_save() {
 	}else{
 		header("Location: data_sources.php");
 	}
+	exit;
 }
 
 /* ------------------------
@@ -503,6 +504,7 @@ function data_source_toggle_status() {
 	}
 
 	header("Location: " . $_SERVER["HTTP_REFERER"]);
+	exit;
 }
 
 function data_source_data_edit() {
@@ -594,6 +596,7 @@ function data_source_rrd_remove() {
 	db_execute("update graph_templates_item set task_item_id=0 where task_item_id=" . $_GET["id"]);
 
 	header("Location: data_sources.php?action=data_source_edit&id=" . $_GET["local_data_id"]);
+	exit;
 }
 
 function data_source_rrd_add() {
@@ -606,6 +609,7 @@ function data_source_rrd_add() {
 	$data_template_rrd_id = db_fetch_insert_id();
 
 	header("Location: data_sources.php?action=data_source_edit&id=" . $_GET["id"] . "&view_rrd=$data_template_rrd_id");
+	exit;
 }
 
 function data_source_edit() {
@@ -669,11 +673,13 @@ function data_source_edit() {
 
 	$().ready(function() {
 		$("input").attr("disabled","disabled")
+		$("#cancel").removeAttr("disabled");
 	});
 
 	function changeDSState() {
 		if (disabled) {
 			$("input").removeAttr("disabled");
+			$("#cancel").removeAttr("disabled");
 			disabled = false;
 		}else{
 			$("input").attr("disabled","disabled")

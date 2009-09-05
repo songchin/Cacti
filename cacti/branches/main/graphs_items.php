@@ -132,11 +132,10 @@ function form_save() {
 
 		if (is_error_message()) {
 			header("Location: graphs.php?action=item_edit&graph_template_item_id=" . (empty($graph_template_item_id) ? $_POST["graph_template_item_id"] : $graph_template_item_id) . "&id=" . $_POST["local_graph_id"]);
-			exit;
 		}else{
 			header("Location: graphs.php?action=graph_edit&id=" . $_POST["local_graph_id"]);
-			exit;
 		}
+		exit;
 	}
 }
 

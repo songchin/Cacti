@@ -49,7 +49,11 @@ case "list":
 		$id_array = explode("_", $_REQUEST["id"]);
 		$type     = "";
 
-		if (sizeof($id_array)) {			foreach($id_array as $part) {				if (is_numeric($part)) {					switch($type) {						case "tree":
+		if (sizeof($id_array)) {
+			foreach($id_array as $part) {
+				if (is_numeric($part)) {
+					switch($type) {
+						case "tree":
 							$tree_id = $part;
 							break;
 						case "leaf":
@@ -67,7 +71,8 @@ case "list":
 						default:
 							break;
 					}
-				}else{					$type = trim($part);
+				}else{
+					$type = trim($part);
 				}
 			}
 		}
@@ -81,9 +86,11 @@ case "list":
 
 		$i = 0;
 		echo "[\n";
-		foreach($tree_items as $item) {			$node_id  = "tree_" . $item["tree_id"];
+		foreach($tree_items as $item) {
+			$node_id  = "tree_" . $item["tree_id"];
 			$node_id .= "_leaf_" . $item["leaf_id"];
-			switch ($item["type"]) {				case "tree":
+			switch ($item["type"]) {
+				case "tree":
 					$children = true;
 					$icon     = "";
 					break;
@@ -92,8 +99,10 @@ case "list":
 					$icon     = "./images/tree_icons/graph.gif";
 					break;
 				case "host":
-					if (read_graph_config_option("expand_hosts") == "on") {						$children = true;
-					}else{						$children = false;
+					if (read_graph_config_option("expand_hosts") == "on") {
+						$children = true;
+					}else{
+						$children = false;
 					}
 					$icon     = "./images/tree_icons/host.gif";
 					break;

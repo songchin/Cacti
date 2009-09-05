@@ -161,6 +161,7 @@ function form_save() {
 	}else{
 		header("Location: graph_templates.php");
 	}
+	exit;
 }
 
 /* ------------------------

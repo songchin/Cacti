@@ -73,6 +73,7 @@ function form_save() {
 		}
 
 		header("Location: templates_import.php");
+		exit;
 	}
 }
 

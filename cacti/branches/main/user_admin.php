@@ -475,6 +475,7 @@ function form_save() {
 	}else{
 		header(api_plugin_hook_function('user_admin_save_location', "Location: user_admin.php?action=user_edit&id=" . (empty($user_id) ? $_POST["id"] : $user_id)));
 	}
+	exit;
 }
 
 /* --------------------------
@@ -498,6 +499,7 @@ function perm_remove() {
 	}
 
 	header("Location: user_admin.php?action=graph_perms_edit&id=" . get_request_var("user_id"));
+	exit;
 }
 
 function graph_perms_edit() {
