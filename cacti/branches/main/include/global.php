@@ -101,11 +101,8 @@ define("PHP_SNMP_SUPPORT", function_exists("snmpget"));
 
 /* used for includes */
 define("CACTI_BASE_PATH", strtr(ereg_replace("(.*)[\\\/]include", "\\1", dirname(__FILE__)), "\\", "/"));
-$config["rra_path"] = CACTI_BASE_PATH . '/rra';
 
-define('URL_PATH', '');
-$config['url_path'] = '';
-#define('URL_PATH', $config['url_path']);
+define('URL_PATH', $config['url_path']);
 
 /* colors */
 $colors["dark_outline"] = "454E53";
