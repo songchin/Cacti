@@ -40,6 +40,5 @@ $database_port = "3306";
 */
 
 $config['url_path'] = "";
-$config["rra_path"] = CACTI_BASE_PATH . '/rra';
 
 ?>
