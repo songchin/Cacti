@@ -162,12 +162,36 @@ function form_actions() {
 		$selected_items = unserialize(stripslashes($_POST["selected_items"]));
 
 		if ($_POST["drp_action"] == "1") { /* delete */
-			for ($i=0;($i<count($selected_items));$i++) {
+			/* do a referential integrity check */
+			if (sizeof($selected_items)) {
+			foreach($selected_items as $data_input_id) {
 				/* ================= input validation ================= */
-				input_validate_input_number($selected_items[$i]);
+				input_validate_input_number($data_input_id);
 				/* ==================================================== */
 
-				data_remove($selected_items[$i]);
+				if (sizeof(db_fetch_assoc("SELECT * FROM data_template_data WHERE data_input_id=$data_input_id LIMIT 1"))) {
+					$bad_ids[] = $data_input_id;
+				}else{
+					$data_input_ids[] = $data_input_id;
+				}
+			}
+			}
+
+			if (isset($bad_ids)) {
+				$message = "";
+				foreach($bad_ids as $data_input_id) {
+					$message .= (strlen($message) ? "<br>":"") . "<i>Data Input Method " . $data_input_id . " is in use and can not be removed</i>\n";
+				}
+
+				$_SESSION['sess_message_data_input_ref_int'] = array('message' => "<font size=-2>$message</font>", 'type' => 'info');
+
+				raise_message('data_input_ref_int');
+			}
+
+			if (isset($data_input_ids)) {
+			foreach($data_input_ids as $data_input_id) {
+				data_remove($data_input_id);
+			}
 			}
 		}
 
