@@ -368,7 +368,7 @@ function template_edit() {
 	html_header($header_items, 1, true, 'header_template');
 
 	draw_edit_form(array(
-		"config" => array(),
+		"config" => array("no_form_tag" => true),
 		"fields" => inject_form_variables($fields_graph_template_template_edit, (isset($template) ? $template : array()), (isset($template_graph) ? $template_graph : array()))
 		));
 
@@ -398,15 +398,14 @@ function template_edit() {
 
 	draw_edit_form(
 		array(
-			"config" => array(
-				),
+			"config" => array("no_form_tag" => true),
 			"fields" => $form_array
 			)
 		);
 
 	print "</table></td></tr>";		/* end of html_header */
-	html_end_box(false);
 	form_hidden_box("rrdtool_version", read_config_option("rrdtool_version"), "");
+	html_end_box(false);
 
 	form_save_button_alt("return");
 //	form_save_button_alt();
@@ -544,10 +543,10 @@ function template() {
 					<td style='white-space:nowrap;width:120px;'>
 						&nbsp;<input type="submit" Value="<?php print __("Go");?>" name="go" align="middle">
 						<input type="submit" Value="<?php print __("Clear");?>" name="clear_x" align="middle">
+						<div><input type='hidden' name='page' value='1'></div>
 					</td>
 				</tr>
 			</table>
-			<div><input type='hidden' name='page' value='1'></div>
 			</form>
 		</td>
 	</tr>

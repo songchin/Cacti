@@ -1113,7 +1113,7 @@ function data_source() {
 	?>
 	<tr class='rowAlternate2'>
 		<td>
-			<form action="data_sources.php" name="form_data_sources" autocomplete="off">
+			<form action="data_sources.php" name="form_data_sources">
 			<table cellpadding="1" cellspacing="0">
 				<tr>
 					<td width="55">

@@ -43,14 +43,14 @@ function draw_edit_form($array) {
 		}
 	}
 
-#	$i = 0;
+	$i = 0;
 	if (sizeof($fields_array) > 0) {
 		while (list($field_name, $field_array) = each($fields_array)) {
-#			if ($i == 0) {
-#				if (!isset($config_array["no_form_tag"])) {
-#					print "<form method='post' action='" . ((isset($config_array["post_to"])) ? $config_array["post_to"] : basename($_SERVER["PHP_SELF"])) . "'" . ((isset($config_array["form_name"])) ? " name='" . $config_array["form_name"] . "'" : "") . ">\n";
-#				}
-#			}
+			if ($i == 0) {
+				if (!isset($config_array["no_form_tag"])) {
+					print "<form method='post' action='" . ((isset($config_array["post_to"])) ? $config_array["post_to"] : basename($_SERVER["PHP_SELF"])) . "'" . ((isset($config_array["form_name"])) ? " name='" . $config_array["form_name"] . "'" : "") . ">\n";
+				}
+			}
 
 			if ($field_array["method"] == "hidden") { /* TODO: input type=hidden is not allowed inside a <table> but outside e.g. a <td> */
 				form_hidden_box($field_name, $field_array["value"], ((isset($field_array["default"])) ? $field_array["default"] : ""));
@@ -100,7 +100,7 @@ function draw_edit_form($array) {
 				print "</td>\n</tr>\n";
 			}
 
-#			$i++;
+			$i++;
 		}
 	}
 }
