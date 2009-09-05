@@ -70,7 +70,7 @@ api_plugin_hook('page_head');
 			<?php print draw_navigation_text() . "\n";?>
 		</div>
 		<div style='float:right;'>
-			<a href="<?php echo CACTI_WIKI_URL . basename($_SERVER["PHP_SELF"]);?>" target="_blank">
+			<a href="<?php echo CACTI_WIKI_URL . rtrim(basename($_SERVER["PHP_SELF"]), ".php");?>" target="_blank">
 			<img src='images/information.png' title="<?php print __("Help");?>" alt="<?php print __("Help");?>" style="border-width: 0px;" align="top">
 			</a>
 		</div>
