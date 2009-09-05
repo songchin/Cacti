@@ -172,25 +172,53 @@ function form_actions() {
 		$selected_items = unserialize(stripslashes($_POST["selected_items"]));
 
 		if ($_POST["drp_action"] == "1") { /* delete */
-			db_execute("delete from graph_templates where " . array_to_sql_or($selected_items, "id"));
+			/* do a referential integrity check */
+			if (sizeof($selected_items)) {
+			foreach($selected_items as $template_id) {
+				/* ================= input validation ================= */
+				input_validate_input_number($template_id);
+				/* ==================================================== */
 
-			$graph_template_input = db_fetch_assoc("select id from graph_template_input where " . array_to_sql_or($selected_items, "graph_template_id"));
-
-			if (sizeof($graph_template_input) > 0) {
-			foreach ($graph_template_input as $item) {
-				db_execute("delete from graph_template_input_defs where graph_template_input_id=" . $item["id"]);
+				if (sizeof(db_fetch_assoc("SELECT * FROM graph_templates_graph WHERE graph_template_id=$template_id LIMIT 1"))) {
+					$bad_ids[] = $template_id;
+				}else{
+					$template_ids[] = $template_id;
+				}
 			}
 			}
 
-			db_execute("delete from graph_template_input where " . array_to_sql_or($selected_items, "graph_template_id"));
-			db_execute("delete from graph_templates_graph where " . array_to_sql_or($selected_items, "graph_template_id") . " and local_graph_id=0");
-			db_execute("delete from graph_templates_item where " . array_to_sql_or($selected_items, "graph_template_id") . " and local_graph_id=0");
-			db_execute("delete from host_template_graph where " . array_to_sql_or($selected_items, "graph_template_id"));
+			if (isset($bad_ids)) {
+				$message = "";
+				foreach($bad_ids as $template_id) {
+					$message .= (strlen($message) ? "<br>":"") . "<i>Graph Template " . $template_id . " is in use and can not be removed</i>\n";
+				}
 
-			/* "undo" any graph that is currently using this template */
-			db_execute("update graph_templates_graph set local_graph_template_graph_id=0,graph_template_id=0 where " . array_to_sql_or($selected_items, "graph_template_id"));
-			db_execute("update graph_templates_item set local_graph_template_item_id=0,graph_template_id=0 where " . array_to_sql_or($selected_items, "graph_template_id"));
-			db_execute("update graph_local set graph_template_id=0 where " . array_to_sql_or($selected_items, "graph_template_id"));
+				$_SESSION['sess_message_gt_ref_int'] = array('message' => "<font size=-2>$message</font>", 'type' => 'info');
+
+				raise_message('gt_ref_int');
+			}
+
+			if (isset($template_ids)) {
+				db_execute("delete from graph_templates where " . array_to_sql_or($template_ids, "id"));
+
+				$graph_template_input = db_fetch_assoc("select id from graph_template_input where " . array_to_sql_or($template_ids, "graph_template_id"));
+
+				if (sizeof($graph_template_input) > 0) {
+				foreach ($graph_template_input as $item) {
+					db_execute("delete from graph_template_input_defs where graph_template_input_id=" . $item["id"]);
+				}
+				}
+
+				db_execute("delete from graph_template_input where " . array_to_sql_or($template_ids, "graph_template_id"));
+				db_execute("delete from graph_templates_graph where " . array_to_sql_or($template_ids, "graph_template_id") . " and local_graph_id=0");
+				db_execute("delete from graph_templates_item where " . array_to_sql_or($template_ids, "graph_template_id") . " and local_graph_id=0");
+				db_execute("delete from host_template_graph where " . array_to_sql_or($template_ids, "graph_template_id"));
+
+				/* "undo" any graph that is currently using this template */
+				db_execute("update graph_templates_graph set local_graph_template_graph_id=0,graph_template_id=0 where " . array_to_sql_or($template_ids, "graph_template_id"));
+				db_execute("update graph_templates_item set local_graph_template_item_id=0,graph_template_id=0 where " . array_to_sql_or($template_ids, "graph_template_id"));
+				db_execute("update graph_local set graph_template_id=0 where " . array_to_sql_or($template_ids, "graph_template_id"));
+			}
 		}elseif ($_POST["drp_action"] == "2") { /* duplicate */
 			for ($i=0;($i<count($selected_items));$i++) {
 				/* ================= input validation ================= */
@@ -499,6 +527,7 @@ function template() {
 	<!--
 	function applyFilterChange(objForm) {
 		strURL = '?rows=' + objForm.rows.value;
+		strURL = strURL + '&filter=' + objForm.filter.value;
 		document.location = strURL;
 	}
 	-->
@@ -516,7 +545,7 @@ function template() {
 	?>
 	<tr class='rowAlternate2'>
 		<td>
-			<form name="form_graph_template" method='post' action='<?php print basename($_SERVER["PHP_SELF"]);?>'>
+			<form name="form_graph_template" method='request' action='<?php print basename($_SERVER["PHP_SELF"]);?>'>
 			<table cellpadding="0" cellspacing="0">
 				<tr>
 					<td style='white-space:nowrap;width:50px;'>
