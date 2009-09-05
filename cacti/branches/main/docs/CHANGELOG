@@ -88,6 +88,11 @@ Cacti CHANGELOG
 -feature: Make reindexing and repopulating the poller cache a lossless process, reduce time to index by 66%
 -feature: Add logging to the script server in case of a script crash to aid in debugging
 -feature: Add common warning messages to Plugin Management page
+-feature: When editing Graph Templates offer Save and Return to allow in place editing
+-feature: Allow Debug Area on Verbose Query to Collapse
+-feature: Disable Graph and Data Source Editing by Default and Provide an Unlock Button to Allow Editing
+-feature: Added Referential Integrity checks throughout the code to minimize breaking templates
+-feature: Improve Accuracy of Page Counters
 
 0.8.7d
 -bug#0001336: Allow to specify on_change handler for checkbox_group
