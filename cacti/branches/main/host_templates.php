@@ -720,7 +720,7 @@ function template_edit() {
 		html_start_box("<strong>" . __("Associated Graph Templates") . "</strong>", "100%", $colors["header"], "2", "center", "", true);
 
 		print "	<tr class='rowSubHeader'>
-				<td><span>" . __("Graph Template Name") . "</span></td>
+				<td><span style='color: white; font-weight: bold;'>" . __("Graph Template Name") . "</span></td>
 				<td></td>
 			</tr>";
 
@@ -985,18 +985,18 @@ function template() {
 		FROM host_template
 		$sql_where");
 
-	$template_list = db_fetch_assoc("SELECT
-		host_template.id,host_template.name
-		FROM host_template
-		$sql_where
-		ORDER BY " . $_REQUEST['sort_column'] . " " . $_REQUEST['sort_direction'] .
-		" LIMIT " . (read_config_option("num_rows_device")*($_REQUEST["page"]-1)) . "," . read_config_option("num_rows_device"));
-
 	if (get_request_var_request("rows") == "-1") {
 		$rows = read_config_option("num_rows_device");
 	}else{
 		$rows = get_request_var_request("rows");
 	}
+
+	$template_list = db_fetch_assoc("SELECT
+		host_template.id,host_template.name
+		FROM host_template
+		$sql_where
+		ORDER BY " . $_REQUEST['sort_column'] . " " . $_REQUEST['sort_direction'] .
+		" LIMIT " . ($rows*($_REQUEST["page"]-1)) . "," . $rows);
 
 	/* generate page list navigation */
 	$nav = html_create_nav($_REQUEST["page"], MAX_DISPLAY_PAGES, $rows, $total_rows, 7, "host_templates.php");
@@ -1012,7 +1012,7 @@ function template() {
 	if (sizeof($template_list) > 0) {
 		foreach ($template_list as $template) {
 			form_alternate_row_color('line' . $template["id"], true);
-			form_selectable_cell("<a class='linkEditMain' href='" . htmlspecialchars("host_templates.php?action=edit&id=" . $template["id"]) . "'>" . (strlen($_REQUEST["filter"]) ? eregi_replace("(" . preg_quote($_REQUEST["filter"]) . ")", "<span class=\"filter\">\\1</span>", $template["name"]) : $template["name"]) . "</a>", $template["id"]);
+			form_selectable_cell("<a class='linkEditMain' href='" . htmlspecialchars("host_templates.php?action=edit&id=" . $template["id"]) . "'>" . (strlen($_REQUEST["filter"]) ? eregi_replace("(" . preg_quote($_REQUEST["filter"]) . ")", "<span style='background-color: #F8D93D;'>\\1</span>", $template["name"]) : $template["name"]) . "</a>", $template["id"]);
 			form_checkbox_cell($template["name"], $template["id"]);
 			form_end_row();
 		}
