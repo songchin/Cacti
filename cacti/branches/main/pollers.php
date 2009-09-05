@@ -181,7 +181,7 @@ function form_actions() {
 				raise_message('poller_ref_int');
 			}
 
-			if (sizeof($poller_ids)) {
+			if (isset($poller_ids)) {
 				db_execute("delete from poller where " . array_to_sql_or($poller_ids, "id"));
 				db_execute("update poller_item set poller_id=0 where " . array_to_sql_or($poller_ids, "poller_id"));
 				db_execute("update host set poller_id=0 where " . array_to_sql_or($poller_ids, "poller_id"));
