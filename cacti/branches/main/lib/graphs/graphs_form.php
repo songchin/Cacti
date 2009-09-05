@@ -785,7 +785,36 @@ function graph_edit() {
 		}
 	}
 
-	include_once(CACTI_BASE_PATH . "/lib/jquery/fastpath_links.js");
+	?>
+	<script type="text/javascript">
+	<!--
+	var disabled = true;
+
+	$().ready(function() {
+		$("input").attr("disabled","disabled")
+	});
+
+	function changeGraphState() {
+		if (disabled) {
+			$("input").removeAttr("disabled");
+			disabled = false;
+		}else{
+			$("input").attr("disabled","disabled")
+			disabled = true;
+		}
+	}
+	-->
+	</script>
+	<?php
+
+	$tip_text  = "<tr><td align=\\'right\\'><a class=\\'popup_item\\' id=\\'changeGraphState\\' onClick=\\'changeGraphState()\\' href=\\'#\\'>Unlock/Lock</a></td></tr>";
+	$tip_text .= "<tr><td align=\\'right\\'><a class=\\'popup_item\\' href=\\'" . htmlspecialchars('graphs.php?action=graph_edit&id=' . (isset($_GET["id"]) ? $_GET["id"] : 0) . "&debug=" . (isset($_SESSION["graph_debug_mode"]) ? "0" : "1")) . "\\'>" . __("Turn") . " <strong>" . (isset($_SESSION["graph_debug_mode"]) ? __("Off") : __("On")) . "</strong> " . __("Debug Mode") . "</a></td></tr>";
+	if (!empty($graphs["graph_template_id"])) {
+		$tip_text .= "<tr><td align=\\'right\\'><a class=\\'popup_item\\' href=\\'" . htmlspecialchars('graph_templates.php?action=template_edit&id=' . (isset($graphs["graph_template_id"]) ? $graphs["graph_template_id"] : "0")) . "\\'>" . __("Edit Template") . "</a></td></tr>";
+	}
+	if (!empty($_GET["host_id"]) || !empty($host_id)) {
+		$tip_text .= "<tr><td align=\\'right\\'><a class=\\'popup_item\\' href=\\'" . htmlspecialchars('host.php?action=edit&id=' . (isset($_GET["host_id"]) ? $_GET["host_id"] : $host_id)) . "\\'>" . __("Edit Host") . "</a></td></tr>";
+	}
 
 	if (!empty($_GET["id"])) {
 		?>
@@ -794,18 +823,7 @@ function graph_edit() {
 				<td class="textInfo" colspan="2" valign="top">
 					<?php print get_graph_title($_GET["id"]);?>
 				</td>
-				<td class="textInfo" align="right" valign="top">
-					<a href="#" class="toggle_fastpath_links">Show&nbsp;/&nbsp;<?php print __("More Options ...");?><br></a>
-					<a class="fastpath_links" href='graphs.php?action=graph_edit&amp;id=<?php print (isset($_GET["id"]) ? $_GET["id"] : 0);?>&amp;debug=<?php print (isset($_SESSION["graph_debug_mode"]) ? "0" : "1");?>'><?php print __("Turn");?> <strong><?php print (isset($_SESSION["graph_debug_mode"]) ? __("Off") : __("On"));?></strong> <?php print __("Graph Debug Mode");?>.<br></a>
-					<?php
-						if (!empty($graphs["graph_template_id"])) {
-							?><a class="fastpath_links" href='graph_templates.php?action=template_edit&amp;id=<?php print (isset($graphs["graph_template_id"]) ? $graphs["graph_template_id"] : "0");?>'><?php print __("Edit Graph Template");?>.<br></a><?php
-						}
-						if (!empty($_GET["host_id"]) || !empty($host_id)) {
-							?><a class="fastpath_links" href='host.php?action=edit&amp;id=<?php print (isset($_GET["host_id"]) ? $_GET["host_id"] : $host_id);?>'><?php print __("Edit Host");?>.<br></a><?php
-						}
-					?>
-				</td>
+				<td style="white-space:nowrap;" align="right" width="1"><a id='tooltip' class='popup_anchor' href='#' onMouseOver="Tip('<?php print $tip_text;?>', BGCOLOR, '#EEEEEE', FIX, ['tooltip', -45, 0], STICKY, true, SHADOW, true, CLICKCLOSE, true, FADEOUT, 400, WIDTH, 115, TEXTALIGN, 'right', BORDERCOLOR, '#F5F5F5')" onMouseOut="UnTip()">Graph Options</a></td>
 			</tr>
 		</table>
 		<?php
@@ -819,12 +837,12 @@ function graph_edit() {
 
 	$form_array = array(
 		"graph_template_id" => array(
-			"method" => "drop_sql",
+			"method" => "autocomplete",
+			"callback_function" => "./lib/ajax/get_graph_templates.php",
 			"friendly_name" => __("Selected Graph Template"),
-			"description" => __("Choose a graph template to apply to this graph. Please note that graph data may be lost if you change the graph template after one is already applied."),
-			"value" => (isset($graphs) ? $graphs["graph_template_id"] : "0"),
-			"none_value" => __("None"),
-			"sql" => "select graph_templates.id,graph_templates.name from graph_templates order by name"
+			"description" => __("Choose a graph template to apply to this graph.  Please note that graph data may be lost if you change the graph template after one is already applied."),
+			"id" => (isset($graphs) ? $graphs["graph_template_id"] : "0"),
+			"name" => db_fetch_cell("SELECT name FROM graph_templates WHERE id=" . (isset($graphs) ? $graphs["graph_template_id"] : "0"))
 			),
 		"host_id" => array(
 			"method" => "autocomplete",

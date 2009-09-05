@@ -51,9 +51,10 @@ $page_title = api_plugin_hook_function('page_title', 'Cacti');
 
 api_plugin_hook('page_head');
 
- ?>
+?>
 </head>
 <body id='body' onLoad='pageInitialize()'>
+<script type="text/javascript" src="<?php echo URL_PATH; ?>/include/js/wztooltip/wz_tooltip.js"></script>
 <div id='header'>
 	<div id='logobar' class='logobar'></div>
 	<div id='navbar' class='navbar'>

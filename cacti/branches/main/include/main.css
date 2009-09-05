@@ -425,6 +425,31 @@ a:hover {
 	text-decoration: underline;
 }
 
+.popup_item, .popup_item:visited, .popup_item:active {
+	text-decoration: none;
+	background-color:#F5F5F5;
+	display:block;
+}
+
+.popup_item:hover {
+	text-decoration:none;
+	background-color:#E7E9F2;
+	display:block;
+}
+
+.popup_anchor, .popup_anchor:visited, .popup_anchor:active {
+	text-decoration: none;
+	padding:2px;
+	display:block;
+}
+
+.popup_anchor:hover {
+	text-decoration:none;
+	padding:2px;
+	background-color:#E7E9F2;
+	display:block;
+}
+
 /* form constructor styles */
 .startBoxHeader {
 	border-left: 1px solid #708DE2;
