@@ -591,8 +591,8 @@ if ($_REQUEST["step"] == "4") {
 						$upgrade_results = "";
 						$failed_sql_query = false;
 
-						$fail_text = "<span style='color: red; font-weight: bold; font-size: 12px;'>[Fail]</span>&nbsp;";
-						$success_text = "<span style='color: green; font-weight: bold; font-size: 12px;'>[Success]</span>&nbsp;";
+						$fail_text = "<span class=\"warning\">[Fail]</span>&nbsp;";
+						$success_text = "<span class=\"success\">[Success]</span>&nbsp;";
 
 						if (isset($_SESSION["sess_sql_install_cache"])) {
 							while (list($index, $arr1) = each($_SESSION["sess_sql_install_cache"])) {
@@ -640,7 +640,7 @@ if ($_REQUEST["step"] == "4") {
 
 						<p>See the sample crontab entry below with the change made in red. Your crontab line will look slightly different based upon your setup.</p>
 
-						<p><tt>*/5 * * * * cactiuser php /var/www/html/cacti/<span style='font-weight: bold; color: red;'>poller.php</span> &gt; /dev/null 2&gt;&amp;1</tt></p>
+						<p><tt>*/5 * * * * cactiuser php /var/www/html/cacti/<span class="warning">poller.php</span> &gt; /dev/null 2&gt;&amp;1</tt></p>
 
 						<p>Once you have made this change, please click Next to continue.</p>
 
