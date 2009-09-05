@@ -424,7 +424,7 @@ function template_edit() {
 	}
 
 	print "<form method='post' action='" .  basename($_SERVER["PHP_SELF"]) . "' name='data_template_edit'>\n";
-	html_start_box("<strong>" . __("Data Template") . "</strong> $header_label", "100%", $colors["header"], 0, "center", "");
+	html_start_box("<strong>" . __("Data Template") . "</strong> $header_label", "100%", $colors["header"], 0, "center", "", true);
 	$header_items = array(__("Field"), __("Value"));
 	print "<tr><td>";
 	html_header($header_items, 2, true, 'header_data_template');
@@ -435,7 +435,7 @@ function template_edit() {
 		));
 
 	print "</table></td></tr>";		/* end of html_header */
-	html_end_box();
+	html_end_box(false);
 
 	html_start_box("<strong>" . __("Data Source") . "</strong>", "100%", $colors["header"], 0, "center", "", true);
 	$header_items = array(__("Field"), __("Value"));
@@ -511,18 +511,9 @@ function template_edit() {
 		}
 	}
 
-	html_start_box("", "100%", $colors["header"], "0", "center", "");
+	html_start_box("<strong>" . __("Data Source Items") . "</strong>", "100%", $colors["header"], "3", "center", "data_templates.php?action=rrd_add&id=" . $_GET["id"], true);
 
-	print "	<tr class='rowHeader'>
-			<td class='textHeaderDark'>
-				<strong>Data Source Item</strong> [" . (isset($template_rrd) ? $template_rrd["data_source_name"] : "") . "]
-			</td>
-			<td class='textHeaderDark' align='right'>
-				" . (!empty($_GET["id"]) ? "<strong><a class='linkOverDark' href='" . htmlspecialchars("data_templates.php?action=rrd_add&id=" . $_GET["id"]) . "'>New</a>&nbsp;</strong>" : "") . "
-			</td>
-		</tr>\n";
 	$header_items = array(__("Field"), __("Value"));
-	print "<tr><td colspan=2>";
 	html_header($header_items, 3, true, 'data_source_item');
 
 	/* data input fields list */
@@ -564,7 +555,7 @@ function template_edit() {
 		);
 
 	print "</table></td></tr>";		/* end of html_header */
-	html_end_box();
+	html_end_box(false);
 
 	$i = 0;
 	if (!empty($_GET["id"])) {
@@ -604,7 +595,7 @@ function template_edit() {
 		}
 
 		print "</table></td></tr>";		/* end of html_header */
-		html_end_box();
+		html_end_box(false);
 	}
 
 	form_save_button_alt("return");
