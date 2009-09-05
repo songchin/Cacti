@@ -760,7 +760,7 @@ function html_create_nav($current_page, $max_pages, $rows_per_page, $total_rows,
 				<td colspan='$columns'>
 					<table width='100%' cellspacing='0' cellpadding='0' border='0'>
 						<tr>
-							<td align='center' class='textHeaderDark' width='15%'>Showing All Rows</td>
+							<td align='center' class='textHeaderDark' width='15%'>No Rows Found</td>
 						</tr>
 					</table>
 				</td>

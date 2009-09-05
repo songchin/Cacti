@@ -286,7 +286,7 @@ function poller_edit() {
 }
 
 function poller() {
-	global $colors, $poller_actions;
+	global $colors, $poller_actions, $item_rows;
 
 	/* ================= input validation ================= */
 	input_validate_input_number(get_request_var_request("page"));
@@ -351,7 +351,7 @@ function poller() {
 			<table cellpadding="0" cellspacing="0">
 				<tr>
 					<td style='white-space:nowrap;width:50px;'>
-						<?php print __("Search:");?>&nbsp;
+						&nbsp;<?php print __("Search:");?>&nbsp;
 					</td>
 					<td width="1">
 						<input type="text" name="filter" size="40" value="<?php print $_REQUEST["filter"];?>">

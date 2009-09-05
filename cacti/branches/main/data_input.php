@@ -526,7 +526,7 @@ function data() {
 			<table cellpadding="0" cellspacing="0">
 				<tr class="noprint">
 					<td style='white-space:nowrap;width:50px;'>
-						Search:&nbsp;
+						&nbsp;<?php print __("Search:");?>&nbsp;
 					</td>
 					<td width="1">
 						<input type="text" name="filter" size="40" value="<?php print $_REQUEST["filter"];?>">

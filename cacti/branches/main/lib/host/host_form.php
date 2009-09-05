@@ -1376,7 +1376,7 @@ function host() {
 			<table cellpadding="0" cellspacing="1">
 				<tr>
 					<td style='white-space:nowrap;width:55px;'>
-						<?php print __("Type:");?>&nbsp;
+						&nbsp;<?php print __("Type:");?>&nbsp;
 					</td>
 					<td width="1">
 						<select name="template_id" onChange="applyViewDeviceFilterChange(document.form_devices)">
@@ -1428,7 +1428,7 @@ function host() {
 			<table cellpadding="0" cellspacing="1">
 				<tr>
 					<td style='white-space:nowrap;width:55px;'>
-						<?php print __("Site:");?>&nbsp;
+						&nbsp;<?php print __("Site:");?>&nbsp;
 					</td>
 					<td width="1">
 						<select name="site" onChange="applyViewDeviceFilterChange(document.form_devices)">
