@@ -259,29 +259,20 @@ function load_current_session_value($request_var_name, $session_var_name, $defau
    @arg $status - the status type of the device as defined in global_constants.php
    @returns - a string containing html that represents the device's current status */
 function get_colored_device_status($disabled, $status) {
-	$disabled_color = "a1a1a1";
-
-	$status_colors = array(
-		HOST_DOWN => "ff0000",
-		HOST_ERROR => "750F7D",
-		HOST_RECOVERING => "ff8f1e",
-		HOST_UP => "198e32"
-		);
-
 	if ($disabled) {
-		return "<span style='color: #$disabled_color'>" . __("Disabled") . "</span>";
+		return "<span class=\"disabled\"" . __("Disabled") . "</span>";
 	}else{
 		switch ($status) {
 			case HOST_DOWN:
-				return "<span style='color: #" . $status_colors[HOST_DOWN] . "'>" . __("Down") . "</span>"; break;
+				return "<span class=\"down\">" . __("Down") . "</span>"; break;
 			case HOST_RECOVERING:
-				return "<span style='color: #" . $status_colors[HOST_RECOVERING] . "'>" . __("Recovering") . "</span>"; break;
+				return "<span class=\"recovering\">" . __("Recovering") . "</span>"; break;
 			case HOST_UP:
-				return "<span style='color: #" . $status_colors[HOST_UP] . "'>" . __("Up") . "</span>"; break;
+				return "<span class=\"up\">" . __("Up") . "</span>"; break;
 			case HOST_ERROR:
-				return "<span style='color: #" . $status_colors[HOST_ERROR] . "'>" . __("Error")  . "</span>"; break;
+				return "<span class=\"error\">" . __("Error")  . "</span>"; break;
 			default:
-				return "<span style='color: #0000ff'>" . __("Unknown") . "</span>"; break;
+				return "<span class=\"new\">" . __("Unknown") . "</span>"; break;
 		}
 	}
 }

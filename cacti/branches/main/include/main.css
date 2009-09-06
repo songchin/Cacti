@@ -703,9 +703,24 @@ span.dependant {
 span.filter {
 	background-color: #f8d93d;
 }
+span.disabled {
+	color: #a1a1a1;
+}
+span.down {
+	color: #ff0000;
+}
+span.error {
+	color: #750f7d;
+}
+span.recovering {
+	color: #ff8f1e;
+}
+span.up {
+	color: 198e32;
+}
 tr.highlight {
 	background-color: khaki;
-}
+}								                );
 
 /* The main calendar widget.  DIV containing a table. */
 div.calendar { position: relative; }
