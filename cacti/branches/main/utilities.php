@@ -319,11 +319,11 @@ function display_general() {
 	/* Check RRDTool issues */
 	$rrdtool_error = "";
 	if ($rrdtool_version != read_config_option("rrdtool_version")) {
-		$rrdtool_error .= "<br><font color='red'>" . __("ERROR: Installed RRDTool version does not match configured version.") . "<br>" . __("Please visit the") . " <a href='" . htmlspecialchars("settings.php?tab=general") . "'> " . __("Configuration Settings") . "</a>" . __("and select the correct RRDTool Utility Version.") . "</font><br>";
+		$rrdtool_error .= "<br><span class='warning'>" . __("ERROR: Installed RRDTool version does not match configured version.") . "<br>" . __("Please visit the") . " <a href='" . htmlspecialchars("settings.php?tab=general") . "'> " . __("Configuration Settings") . "</a>" . __("and select the correct RRDTool Utility Version.") . "</span><br>";
 	}
 	$graph_gif_count = db_fetch_cell("SELECT COUNT(*) FROM graph_templates_graph WHERE image_format_id = 2");
 	if (($graph_gif_count > 0) && (read_config_option("rrdtool_version") != "rrd-1.0.x")) {
-		$rrdtool_error .= "<br><font color='red'>" . sprintf(__("ERROR: RRDTool 1.2.x does not support the GIF images format, but %s graph(s) and/or templates have GIF set as the image format."), $graph_gif_count) . "</font><br>";
+		$rrdtool_error .= "<br><span class='warning'>" . sprintf(__("ERROR: RRDTool 1.2.x does not support the GIF images format, but %s graph(s) and/or templates have GIF set as the image format."), $graph_gif_count) . "</span><br>";
 	}
 
 	/* Display tech information */
@@ -331,37 +331,37 @@ function display_general() {
 	print "<tr><td>";
 	html_header(array(__("General Information")), 2);
 	print "<tr class='rowAlternate1'>\n";
-	print "		<td style='width:20%;' class='textAreaNotes'>" . __("Date") . "</td>\n";
-	print "		<td class='textAreaNotes'>" . date("r") . "</td>\n";
+	print "		<td class='textAreaNotes e'>" . __("Date") . "</td>\n";
+	print "		<td class='textAreaNotes v'>\n";
 	print "</tr>\n";
 	print "<tr class='rowAlternate2'>\n";
-	print "		<td style='width:20%;' class='textAreaNotes'>" . __("Cacti Version") . "</td>\n";
-	print "		<td class='textAreaNotes'>" . CACTI_VERSION . "</td>\n";
+	print "		<td class='textAreaNotes e'>" . __("Cacti Version") . "</td>\n";
+	print "		<td class='textAreaNotes v'>" . CACTI_VERSION . "</td>\n";
 	print "</tr>\n";
 	print "<tr class='rowAlternate1'>\n";
-	print "		<td style='width:20%;' class='textAreaNotes'>" . __("Cacti OS") . "</td>\n";
+	print "		<td class='textAreaNotes e'>" . __("Cacti OS") . "</td>\n";
 	print "		<td>" . CACTI_SERVER_OS . "</td>\n";
 	print "</tr>\n";
 	print "<tr class='rowAlternate2'>\n";
-	print "		<td style='width:20%;' class='textAreaNotes'>" . __("SNMP Version") . "</td>\n";
+	print "		<td class='textAreaNotes e'>" . __("SNMP Version") . "</td>\n";
 	print "		<td>" . $snmp_version . "</td>\n";
 	print "</tr>\n";
 
 	print "<tr class='rowAlternate1'>\n";
-	print "		<td style='width:20%;' class='textAreaNotes'>" . __("RRDTool Version") . "</td>\n";
-	print "		<td class='textAreaNotes'>" . $rrdtool_versions[$rrdtool_version] . " " . $rrdtool_error . "</td>\n";
+	print "		<td class='textAreaNotes e'>" . __("RRDTool Version") . "</td>\n";
+	print "		<td class='textAreaNotes v'>" . $rrdtool_versions[$rrdtool_version] . " " . $rrdtool_error . "</td>\n";
 	print "</tr>\n";
 	print "<tr class='rowAlternate2'>\n";
-	print "		<td style='width:20%;' class='textAreaNotes'>" . __("Hosts") . "</td>\n";
-	print "		<td class='textAreaNotes'>" . $host_count . "</td>\n";
+	print "		<td class='textAreaNotes e'>" . __("Hosts") . "</td>\n";
+	print "		<td class='textAreaNotes v'>" . $host_count . "</td>\n";
 	print "</tr>\n";
 	print "<tr class='rowAlternate1'>\n";
-	print "		<td style='width:20%;' class='textAreaNotes'>" . __("Graphs") . "</td>\n";
-	print "		<td class='textAreaNotes'>" . $graph_count . "</td>\n";
+	print "		<td class='textAreaNotes e'>" . __("Graphs") . "</td>\n";
+	print "		<td class='textAreaNotes v'>" . $graph_count . "</td>\n";
 	print "</tr>\n";
 	print "<tr class='rowAlternate2'>\n";
-	print "		<td style='width:20%;' class='textAreaNotes'>" . __("Data Sources") . "</td>\n";
-	print "		<td class='textAreaNotes'>";
+	print "		<td class='textAreaNotes e'>" . __("Data Sources") . "</td>\n";
+	print "		<td class='textAreaNotes v'>";
 	$data_total = 0;
 	if (sizeof($data_count)) {
 		foreach ($data_count as $item) {
@@ -370,7 +370,7 @@ function display_general() {
 		}
 		print __("Total:") . " " . $data_total;
 	}else{
-		print "<font color='red'>0</font>";
+		print "<span class='warning'>0</span>";
 	}
 
 	$spine_version = "";
@@ -383,17 +383,17 @@ function display_general() {
 	print "<tr><td>";
 	html_header(array(__("Poller Information")), 2);
 	print "<tr class='rowAlternate1'>\n";
-	print "		<td style='width:20%;' class='textAreaNotes'>" . __("Interval") . "</td>\n";
-	print "		<td class='textAreaNotes'>" . read_config_option("poller_interval") . "</td>\n";
+	print "		<td class='textAreaNotes e'>" . __("Interval") . "</td>\n";
+	print "		<td class='textAreaNotes v'>" . read_config_option("poller_interval") . "</td>\n";
 	print "</tr>\n";
 	print "<tr class='rowAlternate2'>\n";
-	print "		<td style='width:20%;' class='textAreaNotes'>" . __("Type"). "</td>\n";
-	print "		<td class='textAreaNotes'>" . $poller_options[read_config_option("poller_type")] . " " . $spine_version . "</td>\n";
+	print "		<td class='textAreaNotes e'>" . __("Type"). "</td>\n";
+	print "		<td class='textAreaNotes v'>" . $poller_options[read_config_option("poller_type")] . " " . $spine_version . "</td>\n";
 	print "</tr>\n";
 
 	print "<tr class='rowAlternate1'>\n";
-	print "		<td style='width:20%;' class='textAreaNotes'>" . __("Items") . "</td>\n";
-	print "		<td class='textAreaNotes'>";
+	print "		<td class='textAreaNotes e'>" . __("Items") . "</td>\n";
+	print "		<td class='textAreaNotes v'>";
 	$total = 0;
 	if (sizeof($poller_item)) {
 		foreach ($poller_item as $item) {
@@ -402,55 +402,55 @@ function display_general() {
 		}
 		print __("Total:") . " " . $total;
 	}else{
-		print "<font color='red'>" . __("No items to poll") . "</font>";
+		print "<span class='warning'>" . __("No items to poll") . "</span>";
 	}
 	print "</td>\n";
 	print "</tr>\n";
 
 	print "<tr class='rowAlternate2'>\n";
-	print "		<td style='width:20%;' class='textAreaNotes'>" . __("Concurrent Processes") . "</td>\n";
-	print "		<td class='textAreaNotes'>" . read_config_option("concurrent_processes") . "</td>\n";
+	print "		<td class='textAreaNotes e'>" . __("Concurrent Processes") . "</td>\n";
+	print "		<td class='textAreaNotes v'>" . read_config_option("concurrent_processes") . "</td>\n";
 	print "</tr>\n";
 
 	print "<tr class='rowAlternate1'>\n";
-	print "		<td style='width:20%;' class='textAreaNotes'>" . __("Max Threads") . "</td>\n";
-	print "		<td class='textAreaNotes'>" . read_config_option("max_threads") . "</td>\n";
+	print "		<td class='textAreaNotes e'>" . __("Max Threads") . "</td>\n";
+	print "		<td class='textAreaNotes v'>" . read_config_option("max_threads") . "</td>\n";
 	print "</tr>\n";
 
 	print "<tr class='rowAlternate2'>\n";
-	print "		<td style='width:20%;' class='textAreaNotes'>" . __("PHP Servers") . "</td>\n";
-	print "		<td class='textAreaNotes'>" . read_config_option("php_servers") . "</td>\n";
+	print "		<td class='textAreaNotes e'>" . __("PHP Servers") . "</td>\n";
+	print "		<td class='textAreaNotes v'>" . read_config_option("php_servers") . "</td>\n";
 	print "</tr>\n";
 
 	print "<tr class='rowAlternate1'>\n";
-	print "		<td style='width:20%;' class='textAreaNotes'>" . __("Script Timeout") . "</td>\n";
-	print "		<td class='textAreaNotes'>" . read_config_option("script_timeout") . "</td>\n";
+	print "		<td class='textAreaNotes e'>" . __("Script Timeout") . "</td>\n";
+	print "		<td class='textAreaNotes v'>" . read_config_option("script_timeout") . "</td>\n";
 	print "</tr>\n";
 
 	print "<tr class='rowAlternate2'>\n";
-	print "		<td style='width:20%;' class='textAreaNotes'>" . __("Max OID") . "</td>\n";
-	print "		<td class='textAreaNotes'>" . read_config_option("max_get_size") . "</td>\n";
+	print "		<td class='textAreaNotes e'>" . __("Max OID") . "</td>\n";
+	print "		<td class='textAreaNotes v'>" . read_config_option("max_get_size") . "</td>\n";
 	print "</tr>\n";
 
 	print "<tr class='rowAlternate1'>\n";
-	print "		<td style='width:20%;' class='textAreaNotes'>" . __("Last Run Statistics") . "</td>\n";
-	print "		<td class='textAreaNotes'>" . read_config_option("stats_poller") . "</td>\n";
+	print "		<td class='textAreaNotes e'>" . __("Last Run Statistics") . "</td>\n";
+	print "		<td class='textAreaNotes v'>" . read_config_option("stats_poller") . "</td>\n";
 	print "</tr>\n";
 
 	print "</table></td></tr>";		/* end of html_header */
 	print "<tr><td>";
 	html_header(array(__("PHP Information")), 2);
 	print "<tr class='rowAlternate1'>\n";
-	print "		<td style='width:20%;' class='textAreaNotes'>" . __("PHP Version") . "</td>\n";
-	print "		<td class='textAreaNotes'>" . phpversion() . "</td>\n";
+	print "		<td class='textAreaNotes e'>" . __("PHP Version") . "</td>\n";
+	print "		<td class='textAreaNotes v'>" . phpversion() . "</td>\n";
 	print "</tr>\n";
 	print "<tr class='rowAlternate2'>\n";
-	print "		<td style='width:20%;' class='textAreaNotes'>" . __("PHP OS") . "</td>\n";
-	print "		<td class='textAreaNotes'>" . PHP_OS . "</td>\n";
+	print "		<td class='textAreaNotes e'>" . __("PHP OS") . "</td>\n";
+	print "		<td class='textAreaNotes v'>" . PHP_OS . "</td>\n";
 	print "</tr>\n";
 	print "<tr class='rowAlternate1'>\n";
-	print "		<td style='width:20%;' class='textAreaNotes'>" . __("PHP uname") . "</td>\n";
-	print "		<td class='textAreaNotes'>";
+	print "		<td class='textAreaNotes e'>" . __("PHP uname") . "</td>\n";
+	print "		<td class='textAreaNotes v'>";
 	if (function_exists("php_uname")) {
 		print php_uname();
 	}else{
@@ -459,8 +459,8 @@ function display_general() {
 	print "</td>\n";
 	print "</tr>\n";
 	print "<tr class='rowAlternate2'>\n";
-	print "		<td style='width:20%;' class='textAreaNotes'>" . __("PHP SNMP") . "</td>\n";
-	print "		<td class='textAreaNotes'>";
+	print "		<td class='textAreaNotes e'>" . __("PHP SNMP") . "</td>\n";
+	print "		<td class='textAreaNotes v'>";
 	if (function_exists("snmpget")) {
 		print __("Installed");
 	} else {
@@ -469,12 +469,12 @@ function display_general() {
 	print "</td>\n";
 	print "</tr>\n";
 	print "<tr class='rowAlternate1'>\n";
-	print "		<td style='width:20%;' class='textAreaNotes'>max_execution_time</td>\n";
-	print "		<td class='textAreaNotes'>" . ini_get("max_execution_time") . "</td>\n";
+	print "		<td class='textAreaNotes e'>max_execution_time</td>\n";
+	print "		<td class='textAreaNotes v'>" . ini_get("max_execution_time") . "</td>\n";
 	print "</tr>\n";
 	print "<tr class='rowAlternate2'>\n";
-	print "		<td style='width:20%;' class='textAreaNotes'>memory_limit</td>\n";
-	print "		<td class='textAreaNotes'>" . ini_get("memory_limit");
+	print "		<td class='textAreaNotes e'>memory_limit</td>\n";
+	print "		<td class='textAreaNotes v'>" . ini_get("memory_limit");
 
 	/* Calculate memory suggestion based off of data source count */
 	$memory_suggestion = $data_total * 32768;
@@ -489,7 +489,7 @@ function display_general() {
 	/* Suggest values in 8M increments */
 	$memory_suggestion = round($memory_suggestion / 8388608) * 8388608;
 	if (memory_bytes(ini_get('memory_limit')) < $memory_suggestion) {
-		print "<br><font color='red'>" . sprintf(__("It is highly suggested that you alter you php.ini memory_limit to %s or higher.  This suggested memory value is calculated based on the number of data source present and is only to be used as a suggestion, actual values may vary system to system based on requirements."), memory_readable($memory_suggestion)) . "</font><br>";
+		print "<br><span class='warning'>" . sprintf(__("It is highly suggested that you alter you php.ini memory_limit to %s or higher.  This suggested memory value is calculated based on the number of data source present and is only to be used as a suggestion, actual values may vary system to system based on requirements."), memory_readable($memory_suggestion)) . "</font><br>";
 	}
 	print "</table></td></tr>";		/* end of html_header */
 
@@ -616,16 +616,16 @@ function display_languages() {
 	html_start_box("<strong>" . __("Language Information") . "</strong>", "100%", $colors["header"], "3", "center", "");
 	html_header(array(__("General Information")), 2);
 	print "<tr class='rowAlternate1'>\n";
-	print "		<td style='width:20%;' class='textAreaNotes'>" . __("Current Language") . "</td>\n";
-	print "		<td class='textAreaNotes'>". $language . "</td>\n";
+	print "		<td class='textAreaNotes e'>" . __("Current Language") . "</td>\n";
+	print "		<td class='textAreaNotes v'>". $language . "</td>\n";
 	print "</tr>\n";
 	print "<tr class='rowAlternate2'>\n";
-	print "		<td style='width:20%;' class='textAreaNotes'>" . __("Language Mode") . "</td>\n";
-	print "		<td class='textAreaNotes'>" . $i18n_modes[read_config_option('i18n_support')] . "</td>\n";
+	print "		<td class='textAreaNotes e'>" . __("Language Mode") . "</td>\n";
+	print "		<td class='textAreaNotes v'>" . $i18n_modes[read_config_option('i18n_support')] . "</td>\n";
 	print "</tr>\n";
 	print "<tr class='rowAlternate1'>\n";
-	print "		<td style='width:20%;' class='textAreaNotes'>" . __("Default Language") . "</td>\n";
-	print "		<td class='textAreaNotes'>" . __("English") . "</td>\n";
+	print "		<td class='textAreaNotes e'>" . __("Default Language") . "</td>\n";
+	print "		<td class='textAreaNotes v'>" . __("English") . "</td>\n";
 	print "</tr>\n";
 	html_header(array(__("Supported Languages")), 2);
 	$i = 0;
@@ -633,14 +633,14 @@ function display_languages() {
 		foreach($supported_languages as $domain => $languages) {
 			$class_int = $i % 2 +1;
 			print "<tr class='rowAlternate" . $class_int . "'>\n";
-			print "		<td style='width:20%;' class='textAreaNotes'>" . ucfirst($domain) . "</td>\n";
-			print "		<td class='textAreaNotes'>". $languages . "</td>\n";
+			print "		<td class='textAreaNotes e'>" . ucfirst($domain) . "</td>\n";
+			print "		<td class='textAreaNotes v'>". $languages . "</td>\n";
 			print "</tr>\n";
 			$i++;
 		}
 	}else {
 			print "<tr class='rowAlternate1'>\n";
-			print "		<td class='textAreaNotes'><i>" . __("no languages supported."). "</i></td>\n";
+			print "		<td class='textAreaNotes v'><i>" . __("no languages supported."). "</i></td>\n";
 			print "</tr>\n";
 	}
 	html_header(array(__("Loaded Language Files")), 2);
@@ -649,14 +649,14 @@ function display_languages() {
 		foreach($cacti_textdomains as $domain => $paths) {
 			$class_int = $i % 2 +1;
 			print "<tr class='rowAlternate" . $class_int . "'>\n";
-			print "		<td style='width:20%;' class='textAreaNotes'>" . ucfirst($domain) . "</td>\n";
-			print "		<td class='textAreaNotes'>". $paths['path2catalogue'] . "</td>\n";
+			print "		<td class='textAreaNotes e'>" . ucfirst($domain) . "</td>\n";
+			print "		<td class='textAreaNotes v'>". $paths['path2catalogue'] . "</td>\n";
 			print "</tr>\n";
 			$i++;
 		}
 	}else {
 			print "<tr class='rowAlternate1'>\n";
-			print "		<td class='textAreaNotes'><i>" . __("No Languages File Loaded.") . "</i></td>\n";
+			print "		<td class='textAreaNotes v'><i>" . __("No Languages File Loaded.") . "</i></td>\n";
 			print "</tr>\n";
 	}
 	html_end_box();
@@ -1033,7 +1033,7 @@ function utilities_view_logfile() {
 			<form name="form_logfile" action="utilities.php">
 			<table cellpadding="1" cellspacing="0">
 				<tr>
-					<td style='white-space:nowrap;width:80px;'>
+					<td class="nw80">
 						&nbsp;<?php print __("Tail Lines:");?>&nbsp;
 					</td>
 					<td class="w1">
@@ -1058,14 +1058,14 @@ function utilities_view_logfile() {
 							<option value="5"<?php if ($_REQUEST['message_type'] == '5') {?> selected<?php }?>><?php print __("SQL Calls");?></option>
 						</select>
 					</td>
-					<td style='white-space:nowrap;width:180px;'>
+					<td class="nw200">
 						&nbsp;<input type="submit" Value="<?php print __("Go");?>" name="go" align="middle">
 						<input type="submit" Value="<?php print __("Clear");?>" name="clear_x" align="middle">
 						<input type="submit" Value="<?php print __("Purge");?>" name="purge_x" align="middle">
 					</td>
 				</tr>
 				<tr>
-					<td style='white-space:nowrap;width:80px;'>
+					<td class="nw80">
 						&nbsp;<?php print __("Refresh:");?>&nbsp;
 					</td>
 					<td class="w1">
@@ -1090,7 +1090,7 @@ function utilities_view_logfile() {
 			</table>
 			<table cellpadding="1" cellspacing="0">
 				<tr>
-					<td style='white-space:nowrap;width:80px;'>
+					<td class="nw80">
 						&nbsp;<?php print __("Search:");?>&nbsp;
 					</td>
 					<td class="w1">
@@ -1226,9 +1226,9 @@ function utilities_clear_logfile() {
 			fclose($log_fh);
 			print "<tr><td>" . __("Cacti Log File Cleared") . "</td></tr>";
 		}else{
-			print "<tr><td><font color='red'><b>" . __("Error: Unable to clear log, ") . __("no write permissions.") . "<b></font></td></tr>";		}
+			print "<tr><td><span class='warning'><b>" . __("Error: Unable to clear log, ") . __("no write permissions.") . "<b></span></td></tr>";		}
 	}else{
-		print "<tr><td><font color='red'><b>" . __("Error: Unable to clear log, ") . __("file does not exist.") . "</b></font></td></tr>";
+		print "<tr><td><span class='warning'><b>" . __("Error: Unable to clear log, ") . __("file does not exist.") . "</b></span></td></tr>";
 	}
 	html_end_box();
 }
@@ -1330,7 +1330,7 @@ function utilities_view_snmp_cache() {
 						<input class="ac_field" type="text" id="host" size="30" value="<?php print $hostname; ?>">
 						<input type="hidden" id="host_id">
 					</td>
-					<td style='white-space:nowrap;width:90px;'>
+					<td class="nw90">
 						&nbsp;<?php print __("Query Name:");?>&nbsp;
 					</td>
 					<td class="w1">
