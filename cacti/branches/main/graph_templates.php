@@ -89,6 +89,8 @@ function form_save() {
 		$save1["id"] = $_POST["graph_template_id"];
 		$save1["hash"] = get_hash_graph_template($_POST["graph_template_id"]);
 		$save1["name"] = form_input_validate($_POST["name"], "name", "", false, 3);
+		$save1["description"] = form_input_validate($_POST["description"], "description", "", true, 3);
+		$save1["image"] = form_input_validate($_POST["image"], "image", "", true, 3);
 
 		$save2["id"] = $_POST["graph_template_graph_id"];
 		$save2["local_graph_template_graph_id"] = 0;
@@ -598,8 +600,7 @@ function template() {
 		$rows = get_request_var_request("rows");
 	}
 
-	$template_list = db_fetch_assoc("SELECT
-		graph_templates.id,graph_templates.name
+	$template_list = db_fetch_assoc("SELECT *
 		FROM graph_templates
 		$sql_where
 		ORDER BY " . $_REQUEST['sort_column'] . " " . $_REQUEST['sort_direction'] .
@@ -612,7 +613,10 @@ function template() {
 	html_end_box(false);
 
 	$display_text = array(
-		"name" => array(__("Template Title"), "ASC"));
+		"name" => array(__("Template Title"), "ASC"),
+		"description" => array(__("Description"), "ASC"),
+		"nosort" => array(__("Image"), "")
+	);
 
 	html_header_sort_checkbox($display_text, $_REQUEST["sort_column"], $_REQUEST["sort_direction"]);
 
@@ -620,6 +624,8 @@ function template() {
 		foreach ($template_list as $template) {
 			form_alternate_row_color('line' . $template["id"], true);
 			form_selectable_cell("<a class='linkEditMain' href='" . htmlspecialchars("graph_templates.php?action=template_edit&id=" . $template["id"]) . "'>" . (strlen($_REQUEST["filter"]) ? eregi_replace("(" . preg_quote($_REQUEST["filter"]) . ")", "<span class=\"filter\">\\1</span>", $template["name"]) : $template["name"]) . "</a>", $template["id"]);
+			form_selectable_cell("<a class='linkEditMain' href='" . htmlspecialchars("graph_templates.php?action=template_edit&id=" . $template["id"]) . "'>" . (strlen($_REQUEST["filter"]) ? eregi_replace("(" . preg_quote($_REQUEST["filter"]) . ")", "<span class=\"filter\">\\1</span>", $template["description"]) : $template["description"]) . "</a>", $template["id"]);
+			form_selectable_cell("<img src='" . URL_PATH . "/images/tree_icons/" . $template["image"] . "'>", $template["id"]);
 			form_checkbox_cell($template["name"], $template["id"]);
 			form_end_row();
 		}

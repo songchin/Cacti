@@ -176,6 +176,11 @@ function draw_edit_control($field_name, &$field_array) {
 			((isset($field_array["on_change"])) ? $field_array["on_change"] : ""));
 
 		break;
+	case 'drop_image':
+		form_dropdown_image($field_name,
+			$field_array["path"], $field_array["value"], $field_array["default"], (isset($field_array["width"]) ? $field_array["width"]: ""));
+
+		break;
 	case 'drop_sqlcb':
 		form_dropdown_cb($field_name,
 			$field_array["sql"], $field_array["sql_id"], $field_array["value"],
@@ -524,6 +529,54 @@ function form_dropdown($form_name, $form_data, $column_display, $column_id, $for
 	html_create_list($form_data, $column_display, $column_id, htmlspecialchars($form_previous_value, ENT_QUOTES));
 
 	print "</select>\n";
+}
+
+function form_dropdown_image($form_name, $form_path, $form_previous_value, $form_default_value, $form_width = "120") {
+	if ($form_previous_value == "") {
+		$form_previous_value = $form_default_value;
+	}
+
+	if (isset($_SESSION["sess_field_values"])) {
+		if (!empty($_SESSION["sess_field_values"][$form_name])) {
+			$form_previous_value = $_SESSION["sess_field_values"][$form_name];
+		}
+	}
+
+	print "<select id='$form_name' style='width:" . $form_width . "px;' name='$form_name'>";
+
+	if (!empty($form_none_entry)) {
+		print "<option style='width:" . $form_width . "px;' value='0'" . (empty($form_previous_value) ? " selected" : "") . ">&nbsp;$form_none_entry&nbsp;</option>\n";
+	}
+
+	$path       = CACTI_BASE_PATH . "/". $form_path;
+	$imgpath    = URL_PATH . "/" . $form_path;
+	$dh         = opendir($path);
+
+	/* validate contents of the plugin directory */
+	if (is_resource($dh)) {
+		while (($file = readdir($dh)) !== false) {
+			if ($file != "." && $file != ".." && !is_dir("$path/$file")) {
+				if (sizeof(getimagesize($path . "/" . $file))) {
+					$title = ucfirst(str_replace("_", " ", str_replace(".gif", "", str_replace(".jpg", "", str_replace(".png", "", $file)))));
+					print "<option style='width:" . $form_width . "px;' title='" . $imgpath . "/" . $file . "' value='$file'" . (($form_previous_value == $file) ? " selected" : "") . ">&nbsp;" . $title . "&nbsp;</option>\n";
+				}
+			}
+		}
+		closedir($dh);
+	}
+
+	print "</select>\n";
+
+	?>
+	<script type="text/javascript">
+	<!--
+	$().ready(function(arg) {
+		$("#<?php print $form_name;?>").msDropDown();
+		$("#designhtml select").msDropDown();
+		$("#dynamic").msDropDown();
+	});
+	-->
+	</script><?php
 }
 
 /* form_dropdown_cb - draws an ajax html dropdown box

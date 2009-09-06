@@ -283,4 +283,14 @@ function upgrade_to_0_8_8() {
 	db_install_execute("0.8.8", "ALTER TABLE host_snmp_cache ADD COLUMN present tinyint NOT NULL DEFAULT '1' AFTER `oid`, ADD INDEX present USING BTREE (present)");
 	db_install_execute("0.8.8", "ALTER TABLE poller_item ADD COLUMN present tinyint NOT NULL DEFAULT '1' AFTER `action`, ADD INDEX present USING BTREE (present)");
 	db_install_execute("0.8.8", "ALTER TABLE poller_reindex ADD COLUMN present tinyint NOT NULL DEFAULT '1' AFTER `action`, ADD INDEX present USING BTREE (present)");
+
+	/* add image storage to graph templates, data queries, and host templates */
+	db_install_execute("0.8.8", "ALTER TABLE `data_template` ADD COLUMN `description` varchar(255) NOT NULL AFTER `name`;");
+	db_install_execute("0.8.8", "ALTER TABLE `graph_templates` ADD COLUMN `description` varchar(255) NOT NULL AFTER `name`;");
+	db_install_execute("0.8.8", "ALTER TABLE `graph_templates` ADD COLUMN `image` varchar(64) NOT NULL AFTER `description`");
+	db_install_execute("0.8.8", "ALTER TABLE `snmp_query` ADD COLUMN `description` varchar(255) NOT NULL AFTER `name`;");
+	db_install_execute("0.8.8", "ALTER TABLE `snmp_query` ADD COLUMN `image` varchar(64) NOT NULL AFTER `description`;");
+	db_install_execute("0.8.8", "ALTER TABLE `host_template` ADD COLUMN `description` varchar(255) NOT NULL AFTER `name`;");
+	db_install_execute("0.8.8", "ALTER TABLE `host_template` ADD COLUMN `image` varchar(64) NOT NULL AFTER `description`;");
 }
+

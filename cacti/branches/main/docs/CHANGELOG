@@ -94,6 +94,9 @@ Cacti CHANGELOG
 -feature: Added Referential Integrity checks throughout the code to minimize breaking templates
 -feature: Improve Accuracy of Page Counters
 -feature: Revamped Colors Interface with Import/Export Capabilities
+-feature: Add Description column to Graph Templates, Host Templates, Data Templates, and Data Queries
+-feature: Add Image column to Graph Templates, Host Templates, and Data Queries
+-feature: Add New Form Object Drop Image to support new Tree Design and Plugins
 
 0.8.7d
 -bug#0001336: Allow to specify on_change handler for checkbox_group

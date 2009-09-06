@@ -613,6 +613,23 @@ $fields_graph_template_template_edit = array(
 		"max_length" => "150",
 		"size" => "70",
 		),
+	"description" => array(
+		"method" => "textarea",
+		"friendly_name" => __("Description"),
+		"description" => __("Additional details relative this template."),
+		"value" => "|arg1:description|",
+		"textarea_rows" => "5",
+		"textarea_cols" => "60"
+		),
+	"image" => array(
+		"method" => "drop_image",
+		"path" => "images/tree_icons",
+		"friendly_name" => __("Image"),
+		"description" => __("A useful icon to use to associate with this host template."),
+		"default" => "graph.gif",
+		"width" => "120",
+		"value" => "|arg1:image|"
+		),
 	"graph_template_id" => array(
 		"method" => "hidden_zero",
 		"value" => "|arg2:graph_template_id|"
@@ -1001,6 +1018,22 @@ $fields_host_template_edit = array(
 		"max_length" => "255",
 		"size" => "70"
 		),
+	"description" => array(
+		"method" => "textarea",
+		"friendly_name" => __("Description"),
+		"description" => __("Additional details relative this template."),
+		"value" => "|arg1:description|",
+		"textarea_rows" => "5",
+		"textarea_cols" => "60"
+		),
+	"image" => array(
+		"method" => "drop_image",
+		"path" => "images/tree_icons",
+		"friendly_name" => __("Image"),
+		"description" => __("A useful icon to use to associate with this host template."),
+		"default" => "host.gif",
+		"value" => "|arg1:image|"
+		),
 	"avalaibility_header" => array(
 		"method" => "spacer",
 		"friendly_name" => __("Availability/Reachability Options"),
@@ -1239,6 +1272,14 @@ $fields_data_query_edit = array(
 		"value" => "|arg1:description|",
 		"max_length" => "255",
 		"size" => "70"
+		),
+	"image" => array(
+		"method" => "drop_image",
+		"path" => "images/tree_icons",
+		"friendly_name" => __("Image"),
+		"description" => __("A useful icon to use to associate with this host template."),
+		"default" => "dataquery.png",
+		"value" => "|arg1:image|"
 		),
 	"xml_path" => array(
 		"method" => "textbox",

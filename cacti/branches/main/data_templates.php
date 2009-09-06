@@ -749,6 +749,7 @@ function template() {
 	$template_list = db_fetch_assoc("SELECT
 		data_template.id,
 		data_template.name,
+		data_template.description,
 		data_input.name AS data_input_method,
 		data_template_data.active AS active
 		FROM (data_template,data_template_data)
@@ -767,6 +768,7 @@ function template() {
 
 	$display_text = array(
 		"name" => array(__("Template Name"), "ASC"),
+		"description" => array(__("Description"), "ASC"),
 		"data_input_method" => array(__("Data Input Method"), "ASC"),
 		"active" => array(__("Status"), "ASC"));
 
@@ -776,6 +778,7 @@ function template() {
 		foreach ($template_list as $template) {
 			form_alternate_row_color('line' . $template["id"], true);
 			form_selectable_cell("<a class='linkEditMain' href='" . htmlspecialchars("data_templates.php?action=template_edit&id=" . $template["id"]) . "'>" . (strlen($_REQUEST["filter"]) ? eregi_replace("(" . preg_quote($_REQUEST["filter"]) . ")", "<span class=\"filter\">\\1</span>", $template["name"]) : $template["name"]) . "</a>", $template["id"]);
+			form_selectable_cell("<a class='linkEditMain' href='" . htmlspecialchars("data_templates.php?action=template_edit&id=" . $template["id"]) . "'>" . (strlen($_REQUEST["filter"]) ? eregi_replace("(" . preg_quote($_REQUEST["filter"]) . ")", "<span class=\"filter\">\\1</span>", $template["description"]) : $template["description"]) . "</a>", $template["id"]);
 			form_selectable_cell((empty($template["data_input_method"]) ? "<em>" . __("None") . "</em>": $template["data_input_method"]), $template["id"]);
 			form_selectable_cell((($template["active"] == "on") ? __("Active") : __("Disabled")), $template["id"]);
 			form_checkbox_cell($template["name"], $template["id"]);

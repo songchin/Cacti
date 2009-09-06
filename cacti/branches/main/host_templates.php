@@ -111,6 +111,8 @@ function form_save() {
 		$save["id"] 					= $_POST["id"];
 		$save["hash"]					= get_hash_host_template($_POST["id"]);
 		$save["name"]					= form_input_validate($_POST["name"], "name", "", false, 3);
+		$save["description"]			= form_input_validate($_POST["description"], "description", "", true, 3);
+		$save["image"]					= form_input_validate($_POST["image"], "image", "", true, 3);
 		$save["snmp_version"]			= form_input_validate($_POST["snmp_version"], "snmp_version", "", true, 3);
 		$save["snmp_community"]			= form_input_validate($_POST["snmp_community"], "snmp_community", "", true, 3);
 		$save["snmp_username"]			= form_input_validate($_POST["snmp_username"], "snmp_username", "", true, 3);
@@ -976,7 +978,12 @@ function template() {
 	html_end_box(false);
 
 	/* form the 'where' clause for our main sql query */
-	$sql_where = "WHERE (host_template.name LIKE '%%" . $_REQUEST["filter"] . "%%')";
+	if (strlen($_REQUEST["filter"])) {
+		$sql_where = "WHERE (host_template.name LIKE '%%" . $_REQUEST["filter"] . "%%')
+			OR (host_template.description LIKE '%%" . $_REQUEST["filter"] . "%%')";
+	}else{
+		$sql_where = "";
+	}
 
 	html_start_box("", "100%", $colors["header"], "0", "center", "");
 
@@ -991,8 +998,7 @@ function template() {
 		$rows = get_request_var_request("rows");
 	}
 
-	$template_list = db_fetch_assoc("SELECT
-		host_template.id,host_template.name
+	$template_list = db_fetch_assoc("SELECT *
 		FROM host_template
 		$sql_where
 		ORDER BY " . $_REQUEST['sort_column'] . " " . $_REQUEST['sort_direction'] .
@@ -1005,7 +1011,10 @@ function template() {
 	html_end_box(false);
 
 	$display_text = array(
-		"name" => array(__("Template Title"), "ASC"));
+		"name" => array(__("Template Title"), "ASC"),
+		"description" => array(__("Description"), "ASC"),
+		"nosort" => array(__("Image"), "")
+	);
 
 	html_header_sort_checkbox($display_text, $_REQUEST["sort_column"], $_REQUEST["sort_direction"]);
 
@@ -1013,6 +1022,8 @@ function template() {
 		foreach ($template_list as $template) {
 			form_alternate_row_color('line' . $template["id"], true);
 			form_selectable_cell("<a class='linkEditMain' href='" . htmlspecialchars("host_templates.php?action=edit&id=" . $template["id"]) . "'>" . (strlen($_REQUEST["filter"]) ? eregi_replace("(" . preg_quote($_REQUEST["filter"]) . ")", "<span class=\"filter\">\\1</span>", $template["name"]) : $template["name"]) . "</a>", $template["id"]);
+			form_selectable_cell("<a class='linkEditMain' href='" . htmlspecialchars("host_templates.php?action=edit&id=" . $template["id"]) . "'>" . (strlen($_REQUEST["filter"]) ? eregi_replace("(" . preg_quote($_REQUEST["filter"]) . ")", "<span class=\"filter\">\\1</span>", $template["description"]) : $template["description"]) . "</a>", $template["id"]);
+			form_selectable_cell("<img src='" . URL_PATH . "/images/tree_icons/" . $template["image"] . "'>", $template["id"]);
 			form_checkbox_cell($template["name"], $template["id"]);
 			form_end_row();
 		}

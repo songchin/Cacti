@@ -116,7 +116,9 @@ $page_title = api_plugin_hook_function('page_title', 'Cacti');
 	<meta http-equiv="Content-Script-Type" content="text/javascript" >
 	<meta http-equiv="Content-Style-Type" content="text/css">
 	<link type="text/css" href="<?php echo URL_PATH; ?>include/main.css" rel="stylesheet">
+	<link type="text/css" href="<?php echo URL_PATH; ?>include/dd.css" rel="stylesheet">
 	<link type="text/css" href="<?php echo URL_PATH; ?>include/jquery.autocomplete.css" rel="stylesheet">
+	<link rel="stylesheet" type="text/css" href="<?php echo URL_PATH; ?>/include/js/jstree/tree_component.css" />
 	<link href="<?php echo URL_PATH; ?>images/favicon.ico" rel="shortcut icon">
 	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/js/layout.js"></script>
 	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/js/jquery/jquery.js"></script>
@@ -125,10 +127,10 @@ $page_title = api_plugin_hook_function('page_title', 'Cacti');
 	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/js/jquery/jquery.ajaxQueue.js"></script>
 	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/js/jquery/jquery.tablednd.js"></script>
 	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/js/jquery/jquery.dropdown.js"></script>
+	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/js/jquery/jquery.dd.js"></script>
 	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/js/jscalendar/calendar.js"></script>
 	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/js/jscalendar/lang/calendar-en.js"></script>
 	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/js/jscalendar/calendar-setup.js"></script>
-	<link rel="stylesheet" type="text/css" href="<?php echo URL_PATH; ?>/include/js/jstree/tree_component.css" />
 	<script type="text/javascript" src="<?php echo URL_PATH; ?>/include/js/jstree/css.js"></script>
 	<script type="text/javascript" src="<?php echo URL_PATH; ?>/include/js/jstree/tree_component.js"></script>
 	<?php api_plugin_hook('page_head'); ?>
