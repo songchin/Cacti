@@ -304,8 +304,8 @@ function htmlStartBoxFilterChange(id, initialize) {
 }
 
 function changeMenuState(id, initialize) {
-	filter = readCookieElement("menu", id);
-	object = document.getElementById("ul_"+id);
+	var filter = readCookieElement("menu", id);
+	var object = document.getElementById("ul_"+id);
 
 	if (filter == "o") {
 		if (initialize != null) {
@@ -423,7 +423,7 @@ function findPos(obj) {
 		curleft = obj.offsetLeft;
 		curtop  = obj.offsetTop;
 
-		while (obj = obj.offsetParent) {
+		while (obj == obj.offsetParent) {
 			curleft += obj.offsetLeft;
 			curtop  += obj.offsetTop;
 		}
@@ -499,7 +499,7 @@ function initColumnWidths() {
 }
 
 function getBaseName() {
-	pathname = location.pathname;
+	var pathname = location.pathname;
 
 	while (pathname.indexOf("/") >= 0) {
 		pathname = pathname.substring(pathname.indexOf("/")+1);
@@ -687,10 +687,10 @@ function MouseUp(event) {
 
 /* page load functions */
 function setFocus() {
-	inputs = document.getElementsByTagName("input");
-	found  = false;
-	hfound = false;
-	x      = 0;
+	var inputs = document.getElementsByTagName("input");
+	var found  = false;
+	var hfound = false;
+	var x      = 0;
 
 	while (true) {
 		if (x == 0) {
@@ -751,7 +751,10 @@ function vSplitterUnEm() {
 }
 
 function vSplitterPos() {
-	var divSt   = parseInt(readCookieElement("menu", "vsplitter_last"), 10);
+	var divSt        = parseInt(readCookieElement("menu", "vsplitter_last"), 10);
+	var vertical_pos = 0;
+	var marginLeft;
+	var menuWidth;
 
 	/* let's see how wide the page is */
 	var clWidth = document.getElementById("wrapper").clientWidth;
@@ -909,9 +912,10 @@ function registerOnLoadFunction(page, function_name) {
 }
 
 function runOnLoadFunctions() {
-	myPage = getBaseName();
+	var myPage = getBaseName();
+	var valArray = "";
 
-	for (i = 0; i < windowOnLoadCt; i++) {
+	for (var i = 0; i < windowOnLoadCt; i++) {
 		valArray = windowOnLoadReg[i].split(":");
 
 		if (myPage == valArray[0]) {
@@ -923,7 +927,8 @@ function runOnLoadFunctions() {
 }
 
 function fixBrowserQuirks() {
-	window_height = document.getElementById("wrapper").clientHeight;
+	var window_height = document.getElementById("wrapper").clientHeight;
+	var myDiv;
 
 	if (browser == "IE") {
 		if (document.getElementById("content") != null) {
@@ -1000,7 +1005,7 @@ function readCookie(name) {
 	for (var i=0; i < ca.length; i++) {
 		var c = ca[i];
 
-		while (c.charAt(0)==' ') {
+		while (c.charAt(0) == ' ') {
 			c = c.substring(1, c.length);
 		}
 
@@ -1021,6 +1026,7 @@ function readCookieElement(name, element) {
 	var elements       = readCookie(name);
 	var search_for     = element + "@@";
 	var return_value   = null;
+	var end_location   = 0;
 
 	if (elements) {
 		var start_location = elements.indexOf(search_for);
@@ -1060,8 +1066,10 @@ function appendCookieElement(name, element, value) {
 }
 
 function updateCookieElement(name, element, value) {
-	var elements     = readCookie(name);
-	var new_elements = "";
+	var elements       = readCookie(name);
+	var new_elements   = "";
+	var remainder      = "";
+	var start_location = 0;
 
 	if (elements) {
 		start_location = elements.indexOf(element + "@@");
