@@ -319,13 +319,13 @@ function form_filepath_box($form_name, $form_previous_value, $form_default_value
 	}
 
 	if (is_file($form_previous_value)) {
-		$extra_data = "<span style='color:green'><br>[" . __("OK: FILE FOUND") . "]</span>";
+		$extra_data = "<span class=\"success\"><br>[" . __("OK: FILE FOUND") . "]</span>";
 	}else if (is_dir($form_previous_value)) {
-		$extra_data = "<span style='color:red'><br>[" . __("ERROR: IS DIR") . "]</span>";
+		$extra_data = "<span class=\"warning\"><br>[" . __("ERROR: IS DIR") . "]</span>";
 	}else if (strlen($form_previous_value) == 0) {
 		$extra_data = "";
 	}else{
-		$extra_data = "<span style='color:red'><br>[" . __("ERROR: FILE NOT FOUND") . "]</span>";
+		$extra_data = "<span class=\"warning\"><br>[" . __("ERROR: FILE NOT FOUND") . "]</span>";
 	}
 
 	print " id='$form_name' name='$form_name' size='$form_size'" . (!empty($form_max_length) ? " maxlength='$form_max_length'" : "") . " value='" . htmlspecialchars($form_previous_value, ENT_QUOTES) . "'>" . $extra_data;
@@ -364,13 +364,13 @@ function form_dirpath_box($form_name, $form_previous_value, $form_default_value,
 	}
 
 	if (is_dir($form_previous_value)) {
-		$extra_data = "<span style='color:green'><br>[" . __("OK: DIR FOUND") . "]</span>";
+		$extra_data = "<span class=\"success\"><br>[" . __("OK: DIR FOUND") . "]</span>";
 	}else if (is_file($form_previous_value)) {
-		$extra_data = "<span style='color:red'><br>[" . __("ERROR: IS FILE") . "]</span>";
+		$extra_data = "<span class=\"warning\"><br>[" . __("ERROR: IS FILE") . "]</span>";
 	}else if (strlen($form_previous_value) == 0) {
 		$extra_data = "";
 	}else{
-		$extra_data = "<span style='color:red'><br>[" . __("ERROR: DIR NOT FOUND") . "]</span>";
+		$extra_data = "<span class=\"warning\"><br>[" . __("ERROR: DIR NOT FOUND") . "]</span>";
 	}
 
 	print " id='$form_name' name='$form_name' size='$form_size'" . (!empty($form_max_length) ? " maxlength='$form_max_length'" : "") . " value='" . htmlspecialchars($form_previous_value, ENT_QUOTES) . "'>" . $extra_data;
