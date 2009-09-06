@@ -1829,6 +1829,7 @@ function draw_navigation_text() {
 		"cdef.php:remove" => array("title" => __("(Remove)"), "mapping" => "index.php:,cdef.php:", "url" => "", "level" => "2"),
 		"color.php:" => array("title" => __("Colors"), "mapping" => "index.php:", "url" => "color.php", "level" => "1"),
 		"color.php:edit" => array("title" => __("(Edit)"), "mapping" => "index.php:,color.php:", "url" => "", "level" => "2"),
+		"color.php:import" => array("title" => __("Colors"), "mapping" => "index.php:", "url" => "color.php", "level" => "1"),
 		"data_input.php:actions" => array("title" => __("Actions"), "mapping" => "index.php:,data_input.php:", "url" => "", "level" => "2"),
 		"data_input.php:" => array("title" => __("Data Input Methods"), "mapping" => "index.php:", "url" => "data_input.php", "level" => "1"),
 		"data_input.php:edit" => array("title" => __("(Edit)"), "mapping" => "index.php:,data_input.php:", "url" => "", "level" => "2"),

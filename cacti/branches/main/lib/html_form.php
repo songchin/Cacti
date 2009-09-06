@@ -912,10 +912,12 @@ function form_save_button_alt($cancel_action = "", $action = "save", $force_type
 		$salt  = __("Export");
 	}
 
-	if (substr_count($cancel_action, "!")) {
-		$url = form_cancel_action_compose($cancel_action);
-	}else{
-		$url = $_SERVER['HTTP_REFERER'];
+	if ($force_type != "import" && $force_type != "export") {
+		if (substr_count($cancel_action, "!")) {
+			$url = form_cancel_action_compose($cancel_action);
+		}else{
+			$url = $_SERVER['HTTP_REFERER'];
+		}
 	}
 
 	?>

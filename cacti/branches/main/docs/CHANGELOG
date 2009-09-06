@@ -93,6 +93,7 @@ Cacti CHANGELOG
 -feature: Disable Graph and Data Source Editing by Default and Provide an Unlock Button to Allow Editing
 -feature: Added Referential Integrity checks throughout the code to minimize breaking templates
 -feature: Improve Accuracy of Page Counters
+-feature: Revamped Colors Interface with Import/Export Capabilities
 
 0.8.7d
 -bug#0001336: Allow to specify on_change handler for checkbox_group
