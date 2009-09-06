@@ -288,7 +288,6 @@ function upgrade_to_0_8_8() {
 	db_install_execute("0.8.8", "ALTER TABLE `data_template` ADD COLUMN `description` varchar(255) NOT NULL AFTER `name`;");
 	db_install_execute("0.8.8", "ALTER TABLE `graph_templates` ADD COLUMN `description` varchar(255) NOT NULL AFTER `name`;");
 	db_install_execute("0.8.8", "ALTER TABLE `graph_templates` ADD COLUMN `image` varchar(64) NOT NULL AFTER `description`");
-	db_install_execute("0.8.8", "ALTER TABLE `snmp_query` ADD COLUMN `description` varchar(255) NOT NULL AFTER `name`;");
 	db_install_execute("0.8.8", "ALTER TABLE `snmp_query` ADD COLUMN `image` varchar(64) NOT NULL AFTER `description`;");
 	db_install_execute("0.8.8", "ALTER TABLE `host_template` ADD COLUMN `description` varchar(255) NOT NULL AFTER `name`;");
 	db_install_execute("0.8.8", "ALTER TABLE `host_template` ADD COLUMN `image` varchar(64) NOT NULL AFTER `description`;");

@@ -191,6 +191,14 @@ $fields_data_template_template_edit = array(
 		"value" => "|arg1:name|",
 		"max_length" => "150",
 		),
+	"description" => array(
+		"method" => "textarea",
+		"friendly_name" => __("Description"),
+		"description" => __("Additional details relative this template."),
+		"value" => "|arg1:description|",
+		"textarea_rows" => "5",
+		"textarea_cols" => "60"
+		),
 	"data_template_id" => array(
 		"method" => "hidden_zero",
 		"value" => "|arg2:data_template_id|"
@@ -1266,12 +1274,12 @@ $fields_data_query_edit = array(
 		"size" => "50"
 		),
 	"description" => array(
-		"method" => "textbox",
+		"method" => "textarea",
 		"friendly_name" => __("Description"),
-		"description" => __("A description for this data query."),
+		"description" => __("Additional details relative this template."),
 		"value" => "|arg1:description|",
-		"max_length" => "255",
-		"size" => "70"
+		"textarea_rows" => "5",
+		"textarea_cols" => "60"
 		),
 	"image" => array(
 		"method" => "drop_image",
