@@ -92,6 +92,7 @@ function form_save() {
 		$save1["id"] = $_POST["data_template_id"];
 		$save1["hash"] = get_hash_data_template($_POST["data_template_id"]);
 		$save1["name"] = form_input_validate($_POST["template_name"], "template_name", "", false, 3);
+		$save1["description"] = form_input_validate($_POST["description"], "description", "", true, 3);
 
 		/* save: data_template_data */
 		$save2["id"] = $_POST["data_template_data_id"];
@@ -731,7 +732,15 @@ function template() {
 	html_end_box(false);
 
 	/* form the 'where' clause for our main sql query */
-	$sql_where = "where (data_template.name like '%%" . $_REQUEST["filter"] . "%%')";
+	if ($_REQUEST["filter"] != "") {
+		$sql_where = "WHERE ((data_template.name like '%%" . $_REQUEST["filter"] . "%%')
+			OR (data_templates.description LIKE '%%" . $_REQUEST["filter"] . "%%'))
+			AND data_template_data.local_data_id = 0
+			AND data_template.id = data_template_data.data_template_id";
+	}else{
+		$sql_where = "WHERE data_template_data.local_data_id = 0
+			AND data_template.id = data_template_data.data_template_id";
+	}
 
 	html_start_box("", "100%", $colors["header"], "0", "center", "");
 
@@ -755,8 +764,6 @@ function template() {
 		FROM (data_template,data_template_data)
 		LEFT JOIN data_input ON (data_template_data.data_input_id = data_input.id)
 		$sql_where
-		AND data_template.id = data_template_data.data_template_id
-		AND data_template_data.local_data_id = 0
 		ORDER BY " . $_REQUEST['sort_column'] . " " . $_REQUEST['sort_direction'] .
 		" LIMIT " . ($rows*($_REQUEST["page"]-1)) . "," . $rows);
 
