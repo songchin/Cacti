@@ -470,13 +470,20 @@ function html_header_sort($header_items, $sort_column, $sort_direction, $last_it
 
 	foreach($header_items as $db_column => $display_array) {
 		/* by default, you will always sort ascending, with the exception of an already sorted column */
+		$align = "left";
 		if ($sort_column == $db_column) {
 			$direction    = $new_sort_direction;
 			$display_text = $display_array[0];
+			if (isset($display_array[2])) {
+				$align = $display_array[2];
+			}
 			$sort_class   = $selected_sort_class;
 		}else{
 			$display_text = $display_array[0];
 			$direction    = $display_array[1];
+			if (isset($display_array[2])) {
+				$align = $display_array[2];
+			}
 			$sort_class   = "";
 		}
 
@@ -484,7 +491,7 @@ function html_header_sort($header_items, $sort_column, $sort_direction, $last_it
 		if (($db_column == "") || (substr_count($db_column, "nosort"))) {
 			$width = html_get_column_width($pathname, "hhs_$rand_id");
 
-			print "\t\t\t<th nowrap style='width:$width;white-space:nowrap;' id='hhs_$rand_id'" . ((($rand_id+1) == count($header_items)) ? "colspan='$last_item_colspan' " : "") . " onMouseDown='return false' onMousemove='doColResize(this,event)' onMouseover='doColResize(this,event)' onMouseup='doneColResize()' class='textSubHeaderDark'>" . $display_text . "</th>\n";
+			print "\t\t\t<th nowrap style='text-align:$align;width:$width;white-space:nowrap;' id='hhs_$rand_id'" . ((($rand_id+1) == count($header_items)) ? "colspan='$last_item_colspan' " : "") . " onMouseDown='return false' onMousemove='doColResize(this,event)' onMouseover='doColResize(this,event)' onMouseup='doneColResize()' class='textSubHeaderDark'>" . $display_text . "</th>\n";
 
 			$rand_id++;
 		}else{
@@ -534,13 +541,20 @@ function html_header_sort_checkbox($header_items, $sort_column, $sort_direction,
 
 	foreach($header_items as $db_column => $display_array) {
 		/* by default, you will always sort ascending, with the exception of an already sorted column */
+		$align = "left";
 		if ($sort_column == $db_column) {
 			$direction    = $new_sort_direction;
 			$display_text = $display_array[0];
+			if (isset($display_array[2])) {
+				$align = $display_array[2];
+			}
 			$sort_class   = $selected_sort_class;
 		}else{
 			$display_text = $display_array[0];
 			$direction    = $display_array[1];
+			if (isset($display_array[2])) {
+				$align = $display_array[2];
+			}
 			$sort_class   = "";
 		}
 
@@ -548,7 +562,7 @@ function html_header_sort_checkbox($header_items, $sort_column, $sort_direction,
 		if (($db_column == "") || (substr_count($db_column, "nosort"))) {
 			$width = html_get_column_width($pathname, "hhscrand_$rand_id");
 
-			print "\t\t\t<th nowrap style='width:$width;white-space:nowrap;' id='hhsc_$rand_id' onMouseDown='return false' onMousemove='doColResize(this,event)' onMouseover='doColResize(this,event)' onMouseup='doneColResize()' class='textSubHeaderDark'>" . $display_text . "</th>\n";
+			print "\t\t\t<th nowrap style='text-align:$align;width:$width;white-space:nowrap;' id='hhsc_$rand_id' onMouseDown='return false' onMousemove='doColResize(this,event)' onMouseover='doColResize(this,event)' onMouseup='doneColResize()' class='textSubHeaderDark'>" . $display_text . "</th>\n";
 
 			$rand_id++;
 		}else{
@@ -608,7 +622,6 @@ function html_header_checkbox($header_items, $form_action = "", $resizable = fal
 
 	if ($resizable) {
 		$pathname = html_get_php_pathname();
-
 		print "\t\t<table class='resizable' cellpadding='3' cellspacing='0' width='100%'><tr class='rowSubHeader'>\n";
 	}else{
 		print "\t\t<table cellpadding='3' cellspacing='0' width='100%'><tr class='rowSubHeader'>\n";
@@ -617,7 +630,6 @@ function html_header_checkbox($header_items, $form_action = "", $resizable = fal
 	for ($i=0; $i<count($header_items); $i++) {
 		if ($resizable) {
 			$width = html_get_column_width($pathname, "hhc_$rand_id");
-
 			print "\t\t\t<th id='hhc_$rand_id' style='width: $width;' onMouseDown='return false' onMousemove='doColResize(this,event)' onMouseover='doColResize(this,event)' onMouseup='doneColResize()' class='textSubHeaderDark'>" . $header_items[$i] . "</th>\n";
 		}else{
 			print "\t\t\t<th id='hhc_$rand_id' class='textSubHeaderDark'>" . $header_items[$i] . "</th>\n";
