@@ -585,7 +585,12 @@ function template() {
 	html_end_box(false);
 
 	/* form the 'where' clause for our main sql query */
-	$sql_where = "WHERE (graph_templates.name LIKE '%%" . $_REQUEST["filter"] . "%%')";
+	if ($_REQUEST["filter"] != "") {
+		$sql_where = "WHERE (graph_templates.name LIKE '%%" . $_REQUEST["filter"] . "%%')
+			OR graph_templates.description LIKE '%%" . $_REQUEST["filter"] . "%%'";
+	}else{
+		$sql_where = "";
+	}
 
 	html_start_box("", "100%", $colors["header"], "0", "center", "");
 
@@ -625,7 +630,7 @@ function template() {
 			form_alternate_row_color('line' . $template["id"], true);
 			form_selectable_cell("<a class='linkEditMain' href='" . htmlspecialchars("graph_templates.php?action=template_edit&id=" . $template["id"]) . "'>" . (strlen($_REQUEST["filter"]) ? eregi_replace("(" . preg_quote($_REQUEST["filter"]) . ")", "<span class=\"filter\">\\1</span>", $template["name"]) : $template["name"]) . "</a>", $template["id"]);
 			form_selectable_cell("<a class='linkEditMain' href='" . htmlspecialchars("graph_templates.php?action=template_edit&id=" . $template["id"]) . "'>" . (strlen($_REQUEST["filter"]) ? eregi_replace("(" . preg_quote($_REQUEST["filter"]) . ")", "<span class=\"filter\">\\1</span>", $template["description"]) : $template["description"]) . "</a>", $template["id"]);
-			form_selectable_cell("<img src='" . URL_PATH . "/images/tree_icons/" . $template["image"] . "'>", $template["id"]);
+			form_selectable_cell("<img src='" . $template["image"] . "'>", $template["id"]);
 			form_checkbox_cell($template["name"], $template["id"]);
 			form_end_row();
 		}

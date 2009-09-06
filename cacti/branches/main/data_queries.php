@@ -805,7 +805,9 @@ function data_query() {
 
 	/* form the 'where' clause for our main sql query */
 	if (strlen($_REQUEST["filter"])) {
-		$sql_where = "where (snmp_query.name like '%%" . $_REQUEST["filter"] . "%%' OR data_input.name like '%%" . $_REQUEST["filter"] . "%%')";
+		$sql_where = "WHERE (snmp_query.name LIKE '%%" . $_REQUEST["filter"] . "%%'
+			OR data_input.name LIKE '%%" . $_REQUEST["filter"] . "%%')
+			OR snmp_query.description LIKE '%%" . $_REQUEST["filter"] . "%%'";
 	}else{
 		$sql_where = "";
 	}
@@ -825,6 +827,7 @@ function data_query() {
 		snmp_query.id,
 		snmp_query.name,
 		snmp_query.description,
+		snmp_query.image,
 		data_input.name AS data_input_method
 		FROM snmp_query INNER JOIN data_input ON (snmp_query.data_input_id=data_input.id)
 		$sql_where
@@ -840,6 +843,7 @@ function data_query() {
 	$display_text = array(
 		"name" => array(__("Name"), "ASC"),
 		"description" => array(__("Description"), "ASC"),
+		"nosort" => array(__("Image"), ""),
 		"data_input_method" => array(__("Data Input Method"), "ASC"));
 
 	html_header_sort_checkbox($display_text, $_REQUEST["sort_column"], $_REQUEST["sort_direction"]);
@@ -849,6 +853,7 @@ function data_query() {
 			form_alternate_row_color('line' . $snmp_query["id"], true);
 			form_selectable_cell("<a class='linkEditMain' href='" . htmlspecialchars("data_queries.php?action=edit&id=" . $snmp_query["id"]) . "'>" . (strlen($_REQUEST["filter"]) ? eregi_replace("(" . preg_quote($_REQUEST["filter"]) . ")", "<span class=\"filter\">\\1</span>", $snmp_query["name"]) : $snmp_query["name"]) . "</a>", $snmp_query["id"]);
 			form_selectable_cell("<a class='linkEditMain' href='" . htmlspecialchars("data_queries.php?action=edit&id=" . $snmp_query["id"]) . "'>" . (strlen($_REQUEST["filter"]) ? eregi_replace("(" . preg_quote($_REQUEST["filter"]) . ")", "<span class=\"filter\">\\1</span>", $snmp_query["description"]) : $snmp_query["description"]) . "</a>", $snmp_query["id"]);
+			form_selectable_cell("<img src='" . $snmp_query["image"] . "'>", $snmp_query["id"]);
 			form_selectable_cell((strlen($_REQUEST["filter"]) ? eregi_replace("(" . preg_quote($_REQUEST["filter"]) . ")", "<span class=\"filter\">\\1</span>", $snmp_query["data_input_method"]) : $snmp_query["data_input_method"]), $snmp_query["id"]);
 			form_checkbox_cell($snmp_query["name"], $snmp_query["id"]);
 			form_end_row();

@@ -544,21 +544,23 @@ function form_dropdown_image($form_name, $form_path, $form_previous_value, $form
 
 	print "<select id='$form_name' style='width:" . $form_width . "px;' name='$form_name'>";
 
-	if (!empty($form_none_entry)) {
-		print "<option style='width:" . $form_width . "px;' value='0'" . (empty($form_previous_value) ? " selected" : "") . ">&nbsp;$form_none_entry&nbsp;</option>\n";
-	}
+	$form_none_entry = ucfirst(str_replace("_", " ", str_replace(".gif", "", str_replace(".jpg", "", str_replace(".png", "", $form_default_value)))));
 
 	$path       = CACTI_BASE_PATH . "/". $form_path;
-	$imgpath    = URL_PATH . "/" . $form_path;
-	$dh         = opendir($path);
+	$imgpath    = URL_PATH . $form_path;
 
+	if (!empty($form_none_entry)) {
+		print "<option style='width:" . $form_width . "px;' title='" . $imgpath . "/" . $form_previous_value . "' value='" . $imgpath . "/" . $form_previous_value . "'" . (empty($form_previous_value) ? " selected" : "") . ">&nbsp;$form_none_entry&nbsp;</option>\n";
+	}
+
+	$dh = opendir($path);
 	/* validate contents of the plugin directory */
 	if (is_resource($dh)) {
 		while (($file = readdir($dh)) !== false) {
 			if ($file != "." && $file != ".." && !is_dir("$path/$file")) {
 				if (sizeof(getimagesize($path . "/" . $file))) {
 					$title = ucfirst(str_replace("_", " ", str_replace(".gif", "", str_replace(".jpg", "", str_replace(".png", "", $file)))));
-					print "<option style='width:" . $form_width . "px;' title='" . $imgpath . "/" . $file . "' value='$file'" . (($form_previous_value == $file) ? " selected" : "") . ">&nbsp;" . $title . "&nbsp;</option>\n";
+					print "<option style='width:" . $form_width . "px;' title='" . $imgpath . "/" . $file . "' value='" . $imgpath . "/" . $file . "'" . (($form_previous_value == ($imgpath . "/" . $file)) ? " selected" : "") . ">&nbsp;" . $title . "&nbsp;</option>\n";
 				}
 			}
 		}
