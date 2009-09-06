@@ -716,7 +716,15 @@ span.recovering {
 	color: #ff8f1e;
 }
 span.up {
-	color: 198e32;
+	color: #198e32;
+}
+span.tabedit {
+	white-space: nowrap; 
+	color: #c16921;
+}
+span.italic {
+	font-size: 12px; 
+	font-style: italic;
 }
 tr.highlight {
 	background-color: khaki;

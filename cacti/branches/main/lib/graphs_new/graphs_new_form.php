@@ -457,7 +457,7 @@ function graphs_new() {
 						</select>
 					</td>
 					<td style="white-space:nowrap;width:1%;" class="textInfo" align="center" valign="top">
-						<?php if (!isset($_REQUEST["tab"])) { ?><span style="white-space: nowrap; color: #c16921;">*</span><a href="host.php?action=edit&id=<?php print $_REQUEST["host_id"];?>"><?php print __("Edit this Host");?></a><br><?php } ?>
+						<?php if (!isset($_REQUEST["tab"])) { ?><span class="tabedit">*</span><a href="host.php?action=edit&id=<?php print $_REQUEST["host_id"];?>"><?php print __("Edit this Host");?></a><br><?php } ?>
 						<?php api_plugin_hook('graphs_new_top_links'); ?>
 					</td>
 				</tr>
@@ -846,7 +846,7 @@ function graphs_new() {
 								<img src='images/arrow.gif' alt='' align='middle'>&nbsp;
 							</td>
 							<td align='right'>
-								<span style='font-size: 12px; font-style: italic;'>" . __("Select a graph type:") . "</span>&nbsp;
+								<span class=\"italic\">" . __("Select a graph type:") . "</span>&nbsp;
 								<select name='sgg_" . $snmp_query["id"] . "' id='sgg_" . $snmp_query["id"] . "' onChange='dq_update_deps(" . $snmp_query["id"] . "," . $column_counter . ");'>
 									"; html_create_list($data_query_graphs,"name","id","0"); print "
 								</select>
