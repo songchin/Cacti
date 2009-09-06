@@ -413,7 +413,7 @@ function graphs_new() {
 			<table cellpadding="0" align="left">
 				<tr>
 					<?php if (!isset($_REQUEST["tab"])) { ?>
-					<td style='white-space:nowrap;width:55px;' class='textGraphFilter'>
+					<td class="nw50" class='textGraphFilter'>
 						&nbsp;Host:&nbsp;
 					</td>
 					<td width="1">
@@ -430,7 +430,7 @@ function graphs_new() {
 						</select>
 					</td>
 					<?php } ?>
-					<td style='white-space:nowrap;width:55px;' class='textGraphFilter'>
+					<td class="nw50" class='textGraphFilter'>
 						&nbsp;<?php print __("Type:");?>&nbsp;
 					</td>
 					<td width="1">
@@ -465,13 +465,13 @@ function graphs_new() {
 			<?php if ($_REQUEST["graph_type"] > 0) {?>
 			<table cellpadding="0" align="left">
 				<tr>
-					<td style='white-space:nowrap;width:55px;' class='textGraphFilter'>
+					<td class="nw50" class='textGraphFilter'>
 						&nbsp;Search:&nbsp;
 					</td>
-					<td style='white-space:nowrap;width:200px;'>
+					<td class="nw200">
 						<input type="text" name="filter" size="30" width="200" value="<?php print $_REQUEST["filter"];?>">
 					</td>
-					<td align="left" style='white-space:nowrap;width:120px;'>
+					<td align="left" class="nw120">
 						&nbsp;<input type="submit" name="go" value="<?php print __("Go");?>" align="middle">
 						<input type="submit" name="clear_x" value="<?php print __("Clear");?>" align="middle">
 						<input type="hidden" name="action" value="edit">

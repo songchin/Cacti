@@ -562,33 +562,33 @@ function color() {
 			<form name="form_color" method="get" action="color.php">
 			<table cellpadding="0" cellspacing="0">
 				<tr>
-					<td style='white-space:nowrap;width:50px;'>
+					<td class="nw50">
 						&nbsp;<?php print __("Search:");?>&nbsp;
 					</td>
-					<td width="1">
+					<td class="w1">
 						<input type="text" name="filter" size="20" value="<?php print $_REQUEST["filter"];?>">
 					</td>
-					<td style='white-space:nowrap;width:30px;'>
+					<td class="nw30">
 						&nbsp;<?php print __("Red:");?>&nbsp;
 					</td>
-					<td width="1">
+					<td class="w1">
 						<select name="rorder" onChange="applyFilterChange(document.form_color)">
 							<option value="-1"<?php if ($_REQUEST["rorder"] == "-1") {?> selected<?php }?>><?php print __("None");?></option>
 							<option value="a"<?php if ($_REQUEST["rorder"] == "a") {?> selected<?php }?>><?php print __("Acending");?></option>
 							<option value="d"<?php if ($_REQUEST["rorder"] == "d") {?> selected<?php }?>><?php print __("Descending");?></option>
 						</select>
 					</td>
-					<td style='white-space:nowrap;width:30px;'>
+					<td class="nw30">
 						&nbsp;<?php print __("Green:");?>&nbsp;
 					</td>
-					<td width="1">
+					<td class="w1">
 						<select name="gorder" onChange="applyFilterChange(document.form_color)">
 							<option value="-1"<?php if ($_REQUEST["gorder"] == "-1") {?> selected<?php }?>><?php print __("None");?></option>
 							<option value="a"<?php if ($_REQUEST["gorder"] == "a") {?> selected<?php }?>><?php print __("Acending");?></option>
 							<option value="d"<?php if ($_REQUEST["gorder"] == "d") {?> selected<?php }?>><?php print __("Descending");?></option>
 						</select>
 					</td>
-					<td style='white-space:nowrap;width:30px;'>
+					<td class="nw30">
 						&nbsp;<?php print __("Blue:");?>&nbsp;
 					</td>
 					<td width="1">
@@ -598,7 +598,7 @@ function color() {
 							<option value="d"<?php if ($_REQUEST["border"] == "d") {?> selected<?php }?>><?php print __("Descending");?></option>
 						</select>
 					</td>
-					<td style='white-space:nowrap;width:30px;'>
+					<td class="nw30">
 						&nbsp;<?php print __("Columns:");?>&nbsp;
 					</td>
 					<td width="1">
@@ -613,7 +613,7 @@ function color() {
 							<option value="10"<?php if ($_REQUEST["columns"] == "10") {?> selected<?php }?>>10 Columns</option>
 						</select>
 					</td>
-					<td style='white-space:nowrap;width:120px;'>
+					<td class="nw120">
 						&nbsp;<input type="submit" Value="<?php print __("Go");?>" name="go" align="middle">
 						<input type="submit" Value="<?php print __("Import");?>" name="import_x" align="middle">
 						<input type="submit" Value="<?php print __("Export");?>" name="export_x" align="middle">

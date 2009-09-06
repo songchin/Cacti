@@ -10,7 +10,6 @@
 form {
 	margin: 0px;
 }
-
 input {
 	margin: 0px;
 	padding: 0px;
@@ -34,7 +33,29 @@ td {
 	font-family: Arial, Verdana, Helvetica, sans-serif;
 	font-size: 12px;
 }
-
+td.w1 {
+	width=1px;
+}
+td.nw30 {
+	white-space:nowrap;
+	width:30px;	
+}
+td.nw50 {
+	white-space:nowrap;
+	width:50px;	
+}
+td.nw100 {
+	white-space:nowrap;
+	width:100px;	
+}
+td.nw120 {
+	white-space:nowrap;
+	width:120px;	
+}
+td.nw200 {
+	white-space:nowrap;
+	width:200px;	
+}
 /* main navigation constructor classes */
 #navbrcrumb {
 	background: #363636 url('../images/navbar.png') repeat-x scroll top left;

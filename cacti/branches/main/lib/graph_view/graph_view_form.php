@@ -86,7 +86,7 @@ function graph_view_filter_table($mode = "mode") {
 			<form name="form_graph_view" method="post" action="graph_view.php">
 			<table border="0" cellpadding="0" cellspacing="0">
 				<tr class="rowGraphFilter noprint">
-					<td style='white-space:nowrap;width:55px;'>
+					<td class="nw50">
 						&nbsp;<?php print __("Host:");?>&nbsp;
 					</td>
 					<td style='white-space:nowrap;width:1px;'>
@@ -135,7 +135,7 @@ function graph_view_filter_table($mode = "mode") {
 							?>
 						</select>
 					</td>
-					<td style='white-space:nowrap;width:50px;'>
+					<td class="nw50">
 						&nbsp;<?php print __("Search:");?>&nbsp;
 					</td>
 					<td style='white-space:nowrap;width:1px;'>
@@ -333,7 +333,7 @@ function get_graph_list_content() {
 					<td style='white-space:nowrap;width:1px;'>
 						&nbsp;Host:&nbsp;
 					</td>
-					<td width="1">
+					<td class="w1">
 						<?php
 						if (isset($_REQUEST["host_id"])) {
 							$hostname = db_fetch_cell("SELECT description as name FROM host WHERE id=".$_REQUEST["host_id"]." ORDER BY description,hostname");
@@ -347,7 +347,7 @@ function get_graph_list_content() {
 					<td style='white-space:nowrap;width:1px;'>
 						&nbsp;Template:&nbsp;
 					</td>
-					<td width="1">
+					<td class="w1">
 						<select name="graph_template_id" onChange="applyGraphListFilterChange(document.form_graph_list)">
 							<option value="0"<?php print $_REQUEST["filter"];?><?php if ($_REQUEST["host_id"] == "0") {?> selected<?php }?>><?php print __("Any");?></option>
 							<?php
@@ -380,10 +380,10 @@ function get_graph_list_content() {
 							?>
 						</select>
 					</td>
-					<td style='white-space:nowrap;width:80px;'>
+					<td class="nw100">
 						&nbsp;<?php print __("Graphs/Page:");?>&nbsp;
 					</td>
-					<td width="1">
+					<td class="w1">
 						<select name="graphs" onChange="applyGraphListFilterChange(document.form_graph_list)">
 							<?php
 							if (sizeof($graphs_per_page) > 0) {
@@ -397,7 +397,7 @@ function get_graph_list_content() {
 					<td style='white-space:nowrap;width:1px;'>
 						&nbsp;<?php print __("Search:");?>&nbsp;
 					</td>
-					<td width="1">
+					<td class="w1">
 						<input type="text" name="filter" size="40" value="<?php print $_REQUEST["filter"];?>">
 					</td>
 					<td>
@@ -1087,10 +1087,10 @@ function graph_view_timespan_selector($mode = "tree") {
 			<form name="form_timespan_selector" method="post" action="graph_view.php">
 			<table border="0" cellpadding="0" cellspacing="0">
 				<tr class="rowGraphFilter">
-					<td style='white-space:nowrap;width:55px;'>
+					<td class="nw50">
 						&nbsp;<?php print __("Presets:");?>&nbsp;
 					</td>
-					<td style='white-space:nowrap;width:130px;'>
+					<td class="nw120">
 						<select name='predefined_timespan' onChange='request_type="preset";applyTimespanFilterChange(document.form_timespan_selector)'><?php
 							if ($_SESSION["custom"]) {
 								$graph_timespans[GT_CUSTOM] = __("Custom");
@@ -1141,7 +1141,7 @@ function graph_view_timespan_selector($mode = "tree") {
 						</select>
 						<img onMouseOver='this.style.cursor="pointer"' onClick='return timeShift(document.form_timespan_selector, "right")' style='border-width:0px;vertical-align:middle;align:middle;padding-bottom:5px;' name='move_right' src='images/move_right.gif' alt='<?php print __("Right");?>' title='<?php print __("Shift Right");?>'>
 					</td>
-					<td style='white-space:nowrap;width:130px;'>
+					<td class="nw120">
 						&nbsp;<input type='button' value='<?php print __("Refresh");?>' name='button_refresh' onclick='request_type="daterange";applyTimespanFilterChange(document.form_timespan_selector)'>
 						<input type='button' value='<?php print __("Clear");?>' name='button_clear_x' onclick='clearTimespanFilter()'>
 					</td>
@@ -1189,17 +1189,17 @@ function graph_view_search_filter() {
 			<form name="form_graph_view" method="get" action="graph_view.php">
 				<table cellspacing="0" cellpadding="0">
 					<tr>
-						<td width="55" style="white-space:nowrap;">
+						<td class="nw50">
 							&nbsp;<?php print __("Search:");?>&nbsp;
 						</td>
-						<td width="130" style="white-space: nowrap;">
+						<td class="nw120">
 							<input type='text' style='display:none;' name='workaround'>
 							<input size='30' style='width:100;' name='filter' value='<?php print clean_html_output(get_request_var_request("filter"));?>' onChange='applyFilter(document.form_graph_view)'>
 						</td>
-						<td style='white-space:nowrap;width:80px;'>
+						<td class="nw100">
 							&nbsp;<?php print __("Graphs/Page:");?>&nbsp;
 						</td>
-						<td width="1">
+						<td class="w1">
 							<select name="graphs" onChange="applyFilter(document.form_graph_view)">
 								<?php
 								if (sizeof($graphs_per_page) > 0) {

@@ -749,10 +749,10 @@ function utilities_view_user_log() {
 			<form name="form_userlog" action="utilities.php">
 			<table cellpadding="0" cellspacing="0">
 				<tr>
-					<td style='white-space:nowrap;width:50px;'>
+					<td class="nw50">
 						&nbsp;<?php print __("Username:");?>&nbsp;
 					</td>
-					<td width="1">
+					<td class="w1">
 						<select name="username" onChange="applyViewLogFilterChange(document.form_userlog)">
 							<option value="-1"<?php if ($_REQUEST["username"] == "-1") {?> selected<?php }?>><?php print __("All");?></option>
 							<option value="-2"<?php if ($_REQUEST["username"] == "-2") {?> selected<?php }?>><?php print __("Deleted/Invalid");?></option>
@@ -767,20 +767,20 @@ function utilities_view_user_log() {
 							?>
 						</select>
 					</td>
-					<td style='white-space:nowrap;width:50px;'>
+					<td class="nw50">
 						&nbsp;<?php print __("Result:");?>&nbsp;
 					</td>
-					<td width="1">
+					<td class="w1">
 						<select name="result" onChange="applyViewLogFilterChange(document.form_userlog)">
 							<option value="-1"<?php if ($_REQUEST['result'] == '-1') {?> selected<?php }?>><?php print __("Any");?></option>
 							<option value="1"<?php if ($_REQUEST['result'] == '1') {?> selected<?php }?>><?php print __("Success");?></option>
 							<option value="0"<?php if ($_REQUEST['result'] == '0') {?> selected<?php }?>><?php print __("Failed");?></option>
 						</select>
 					</td>
-					<td style='white-space:nowrap;width:50px;'>
+					<td class="nw50">
 						&nbsp;<?php print __("Rows:");?>&nbsp;
 					</td>
-					<td width="1">
+					<td class="w1">
 						<select name="rows" onChange="applyViewLogFilterChange(document.form_userlog)">
 							<option value="-1"<?php if ($_REQUEST["rows"] == "-1") {?> selected<?php }?>>Default</option>
 							<?php
@@ -792,13 +792,13 @@ function utilities_view_user_log() {
 							?>
 						</select>
 					</td>
-					<td style='white-space:nowrap;width:50px;'>
+					<td class="nw50">
 						&nbsp;<?php print __("Search:");?>&nbsp;
 					</td>
-					<td width="1">
+					<td class="w1">
 						<input type="text" name="filter" size="20" value="<?php print $_REQUEST["filter"];?>">
 					</td>
-					<td style='white-space:nowrap;width:160px;'>
+					<td class="nw120">
 						&nbsp;<input type="submit" Value="<?php print __("Go");?>" name="go" align="middle">
 						<input type="submit" Value="<?php print __("Clear");?>" name="clear_x" align="middle">
 						<input type="submit" Value="<?php print __("Purge");?>" name="purge_x" align="middle">
@@ -1036,7 +1036,7 @@ function utilities_view_logfile() {
 					<td style='white-space:nowrap;width:80px;'>
 						&nbsp;<?php print __("Tail Lines:");?>&nbsp;
 					</td>
-					<td width="1">
+					<td class="w1">
 						<select name="tail_lines" onChange="applyViewLogFilterChange(document.form_logfile)">
 							<?php
 							foreach($log_tail_lines AS $tail_lines => $display_text) {
@@ -1045,10 +1045,10 @@ function utilities_view_logfile() {
 							?>
 						</select>
 					</td>
-					<td style='white-space:nowrap;width:100px;'>
+					<td class="nw100">
 						&nbsp;<?php print __("Message Type:");?>&nbsp;
 					</td>
-					<td width="1">
+					<td class="w1">
 						<select name="message_type" onChange="applyViewLogFilterChange(document.form_logfile)">
 							<option value="-1"<?php if ($_REQUEST['message_type'] == '-1') {?> selected<?php }?>><?php print __("All");?></option>
 							<option value="1"<?php if ($_REQUEST['message_type'] == '1') {?> selected<?php }?>><?php print __("Stats");?></option>
@@ -1068,7 +1068,7 @@ function utilities_view_logfile() {
 					<td style='white-space:nowrap;width:80px;'>
 						&nbsp;<?php print __("Refresh:");?>&nbsp;
 					</td>
-					<td width="1">
+					<td class="w1">
 						<select name="refresh" onChange="applyViewLogFilterChange(document.form_logfile)">
 							<?php
 							foreach($page_refresh_interval AS $seconds => $display_text) {
@@ -1077,10 +1077,10 @@ function utilities_view_logfile() {
 							?>
 						</select>
 					</td>
-					<td style='white-space:nowrap;width:100px;'>
+					<td class="nw100">
 						&nbsp;<?php print __("Display Order:");?>&nbsp;
 					</td>
-					<td width="1">
+					<td class="w1">
 						<select name="reverse" onChange="applyViewLogFilterChange(document.form_logfile)">
 							<option value="1"<?php if ($_REQUEST['reverse'] == '1') {?> selected<?php }?>><?php print __("Newest First");?></option>
 							<option value="2"<?php if ($_REQUEST['reverse'] == '2') {?> selected<?php }?>><?php print __("Oldest First");?></option>
@@ -1093,7 +1093,7 @@ function utilities_view_logfile() {
 					<td style='white-space:nowrap;width:80px;'>
 						&nbsp;<?php print __("Search:");?>&nbsp;
 					</td>
-					<td width="1">
+					<td class="w1">
 						<input type="text" name="filter" size="75" value="<?php print $_REQUEST["filter"];?>">
 					</td>
 				</tr>
@@ -1316,10 +1316,10 @@ function utilities_view_snmp_cache() {
 			<form name="form_snmpcache" action="utilities.php">
 			<table cellpadding="0" cellspacing="0">
 				<tr>
-					<td style='white-space:nowrap;width:50px;'>
+					<td class="nw50">
 						&nbsp;<?php print __("Host:");?>&nbsp;
 					</td>
-					<td width="1">
+					<td class="w1">
 						<?php
 						if (isset($_REQUEST["host_id"])) {
 							$hostname = db_fetch_cell("SELECT description as name FROM host WHERE id=".$_REQUEST["host_id"]." ORDER BY description,hostname");
@@ -1333,7 +1333,7 @@ function utilities_view_snmp_cache() {
 					<td style='white-space:nowrap;width:90px;'>
 						&nbsp;<?php print __("Query Name:");?>&nbsp;
 					</td>
-					<td width="1">
+					<td class="w1">
 						<select name="snmp_query_id" onChange="applyViewSNMPFilterChange(document.form_snmpcache)">
 							<option value="-1"<?php if ($_REQUEST["host_id"] == "-1") {?> selected<?php }?>><?php print __("Any");?></option>
 							<?php
@@ -1363,7 +1363,7 @@ function utilities_view_snmp_cache() {
 							?>
 						</select>
 					</td>
-					<td style='white-space:nowrap;width:120px;'>
+					<td class="nw120">
 						&nbsp;<input type="submit" Value="<?php print __("Go");?>" name="go" align="middle">
 						<input type="submit" Value="<?php print __("Clear");?>" name="clear_x" align="middle">
 					</td>
@@ -1371,16 +1371,16 @@ function utilities_view_snmp_cache() {
 			</table>
 			<table cellpadding="0" cellspacing="0" border="0">
 				<tr>
-					<td style='white-space:nowrap;width:50px;'>
+					<td class="nw50">
 						&nbsp;<?php print __("Search:");?>&nbsp;
 					</td>
-					<td width="1">
+					<td class="w1">
 						<input type="text" name="filter" size="40" value="<?php print $_REQUEST["filter"];?>">
 					</td>
-					<td style='white-space:nowrap;width:50px;'>
+					<td class="nw50">
 						&nbsp;<?php print __("Rows:");?>&nbsp;
 					</td>
-					<td width="1">
+					<td class="w1">
 						<select name="rows" onChange="applyViewSNMPFilterChange(document.form_snmpcache)">
 							<option value="-1"<?php if ($_REQUEST["rows"] == "-1") {?> selected<?php }?>>Default</option>
 							<?php
@@ -1598,10 +1598,10 @@ function utilities_view_poller_cache() {
 			<form name="form_pollercache" action="utilities.php">
 			<table cellpadding="0" cellspacing="0">
 				<tr>
-					<td style='white-space:nowrap;width:50px;'>
+					<td class="nw50">
 						&nbsp;<?php print __("Host:");?>&nbsp;
 					</td>
-					<td width="1">
+					<td class="w1">
 						<?php
 						if (isset($_REQUEST["host_id"])) {
 							$hostname = db_fetch_cell("SELECT description as name FROM host WHERE id=".$_REQUEST["host_id"]." ORDER BY description,hostname");
@@ -1612,10 +1612,10 @@ function utilities_view_poller_cache() {
 						<input class="ac_field" type="text" id="host" size="30" value="<?php print $hostname; ?>">
 						<input type="hidden" id="host_id">
 					</td>
-					<td style='white-space:nowrap;width:50px;'>
+					<td class="nw50">
 						&nbsp;<?php print __("Action:");?>&nbsp;
 					</td>
-					<td width="1">
+					<td class="w1">
 						<select name="poller_action" onChange="applyPItemFilterChange(document.form_pollercache)">
 							<option value="-1"<?php if ($_REQUEST['poller_action'] == '-1') {?> selected<?php }?>><?php print __("Any");?></option>
 							<option value="0"<?php if ($_REQUEST['poller_action'] == '0') {?> selected<?php }?>><?php print __("SNMP");?></option>
@@ -1623,7 +1623,7 @@ function utilities_view_poller_cache() {
 							<option value="2"<?php if ($_REQUEST['poller_action'] == '2') {?> selected<?php }?>><?php print __("Script Server");?></option>
 						</select>
 					</td>
-					<td style='white-space:nowrap;width:120px;'>
+					<td class="nw120">
 						&nbsp;<input type="submit" Value="<?php print __("Go");?>" name="go" align="middle">
 						<input type="submit" Value="<?php print __("Clear");?>" name="clear_x" align="middle">
 					</td>
@@ -1631,16 +1631,16 @@ function utilities_view_poller_cache() {
 			</table>
 			<table cellpadding="0" cellspacing="0" border="0">
 				<tr>
-					<td style='white-space:nowrap;width:50px;'>
+					<td class="nw50">
 						&nbsp;<?php print __("Search:");?>&nbsp;
 					</td>
-					<td width="1">
+					<td class="w1">
 						<input type="text" name="filter" size="40" value="<?php print $_REQUEST["filter"];?>">
 					</td>
-					<td style='white-space:nowrap;width:50px;'>
+					<td class="nw50">
 						&nbsp;<?php print __("Rows:");?>&nbsp;
 					</td>
-					<td width="1">
+					<td class="w1">
 						<select name="rows" onChange="applyPItemFilterChange(document.form_pollercache)">
 							<option value="-1"<?php if ($_REQUEST["rows"] == "-1") {?> selected<?php }?>>Default</option>
 							<?php

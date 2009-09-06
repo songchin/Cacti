@@ -287,13 +287,13 @@ function gprint_presets() {
 			<form name="form_gprint" action="gprint_presets.php">
 			<table cellpadding="0" cellspacing="0">
 				<tr>
-					<td style='white-space:nowrap;width:50px;'>
+					<td class="nw50">
 						&nbsp;<?php print __("Search:");?>&nbsp;
 					</td>
 					<td width="1">
 						<input type="text" name="filter" size="40" value="<?php print $_REQUEST["filter"];?>">
 					</td>
-					<td style='white-space:nowrap;width:50px;'>
+					<td class="nw50">
 						&nbsp;<?php print __("Rows:");?>&nbsp;
 					</td>
 					<td width="1">
@@ -308,7 +308,7 @@ function gprint_presets() {
 							?>
 						</select>
 					</td>
-					<td style='white-space:nowrap;width:120px;'>
+					<td class="nw120">
 						&nbsp;<input type="submit" Value="<?php print __("Go");?>" name="go" align="middle">
 						<input type="submit" Value="<?php print __("Clear");?>" name="clear_x" align="middle">
 					</td>

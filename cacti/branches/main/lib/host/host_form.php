@@ -1375,10 +1375,10 @@ function host() {
 			<form action="host.php" name="form_devices" method="post">
 			<table cellpadding="0" cellspacing="1">
 				<tr>
-					<td style='white-space:nowrap;width:55px;'>
+					<td class="nw50">
 						&nbsp;<?php print __("Type:");?>&nbsp;
 					</td>
-					<td width="1">
+					<td class="w1">
 						<select name="template_id" onChange="applyViewDeviceFilterChange(document.form_devices)">
 							<option value="-1"<?php if ($_REQUEST["template_id"] == "-1") {?> selected<?php }?>><?php print __("Any");?></option>
 							<option value="0"<?php if ($_REQUEST["template_id"] == "0") {?> selected<?php }?>><?php print __("None");?></option>
@@ -1393,10 +1393,10 @@ function host() {
 							?>
 						</select>
 					</td>
-					<td style='white-space:nowrap;width:50px;'>
+					<td class="nw50">
 						&nbsp;<?php print __("Status:");?>&nbsp;
 					</td>
-					<td width="1">
+					<td class="w1">
 						<select name="status" onChange="applyViewDeviceFilterChange(document.form_devices)">
 							<option value="-1"<?php if ($_REQUEST["status"] == "-1") {?> selected<?php }?>><?php print __("Any");?></option>
 							<option value="-3"<?php if ($_REQUEST["status"] == "-3") {?> selected<?php }?>><?php print __("Enabled");?></option>
@@ -1408,10 +1408,10 @@ function host() {
 							<option value="0"<?php if ($_REQUEST["status"] == "0") {?> selected<?php }?>><?php print __("Unknown");?></option>
 						</select>
 					</td>
-					<td style='white-space:nowrap;width:50px;'>
+					<td class="nw50">
 						&nbsp;<?php print __("Rows:");?>&nbsp;
 					</td>
-					<td width="1">
+					<td class="w1">
 						<select name="rows" onChange="applyViewDeviceFilterChange(document.form_devices)">
 							<option value="-1"<?php if ($_REQUEST["rows"] == "-1") {?> selected<?php }?>><?php print __("Default");?></option>
 							<?php
@@ -1427,10 +1427,10 @@ function host() {
 			</table>
 			<table cellpadding="0" cellspacing="1">
 				<tr>
-					<td style='white-space:nowrap;width:55px;'>
+					<td class="nw50">
 						&nbsp;<?php print __("Site:");?>&nbsp;
 					</td>
-					<td width="1">
+					<td class="w1">
 						<select name="site" onChange="applyViewDeviceFilterChange(document.form_devices)">
 							<option value="-1"<?php if ($_REQUEST["site"] == "-1") {?> selected<?php }?>><?php print __("All");?></option>
 							<option value="0"<?php if ($_REQUEST["site"] == "0") {?> selected<?php }?>><?php print __("Not Defined");?></option>
@@ -1445,10 +1445,10 @@ function host() {
 							?>
 						</select>
 					</td>
-					<td style='white-space:nowrap;width:55px;'>
+					<td class="nw50">
 						&nbsp;<?php print __("Poller:");?>&nbsp;
 					</td>
-					<td width="1">
+					<td class="w1">
 						<select name="poller" onChange="applyViewDeviceFilterChange(document.form_devices)">
 							<option value="-1"<?php if ($_REQUEST["poller"] == "-1") {?> selected<?php }?>><?php print __("All");?></option>
 							<option value="0"<?php if ($_REQUEST["poller"] == "0") {?> selected<?php }?>><?php print __("System Default");?></option>
@@ -1463,10 +1463,10 @@ function host() {
 							?>
 						</select>
 					</td>
-					<td style='white-space:nowrap;width:55px;'>
+					<td class="nw50">
 						&nbsp;<?php print __("Search:");?>&nbsp;
 					</td>
-					<td width="1">
+					<td class="w1">
 						<input type="text" name="filter" size="20" value="<?php print $_REQUEST["filter"];?>">
 					</td>
 					<td nowrap>

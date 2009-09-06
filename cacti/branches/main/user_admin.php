@@ -561,7 +561,7 @@ function graph_perms_edit() {
 	?>
 
 	<tr bgcolor="#<?php print $colors['form_alternate1'];?>">
-		<td style='width:100px;white-space:nowrap;'>
+		<td class="nw100">
 			<font class="textEditTitle" title="The default allow/deny graph policy for this user"><?php print __("Default Policy");?></font>
 		</td>
 		<td align="left">
@@ -617,7 +617,7 @@ function graph_perms_edit() {
 
 	?>
 	<tr bgcolor="#<?php print $colors['form_alternate1'];?>">
-		<td style='width:100px;white-space:nowrap;'>
+		<td class="nw100">
 			<font class="textEditTitle" title="<?php print __("The default allow/deny graph policy for this user");?>"><?php print __("Default Policy");?></font>
 		</td>
 		<td align="left">
@@ -673,7 +673,7 @@ function graph_perms_edit() {
 
 	?>
 	<tr bgcolor="#<?php print $colors['form_alternate1'];?>">
-		<td style='width:100px;white-space:nowrap;'>
+		<td class="nw100">
 			<font class="textEditTitle" title="<?php print __("The default allow/deny graph policy for this user");?>"><?php print __("Default Policy");?></font>
 		</td>
 		<td align="left">
@@ -728,7 +728,7 @@ function graph_perms_edit() {
 
 	?>
 	<tr bgcolor="#<?php print $colors['form_alternate1'];?>">
-		<td style='width:100px;white-space:nowrap;'>
+		<td class="nw100">
 			<font class="textEditTitle" title="<?php print __("The default allow/deny graph policy for this user");?>"><?php print __("Default Policy");?></font>
 		</td>
 		<td align="left">
@@ -1018,13 +1018,13 @@ function user() {
 			<form name="form_user_admin" action="user_admin.php">
 			<table cellpadding="0" cellspacing="0">
 				<tr>
-					<td style='white-space:nowrap;width:50px;'>
+					<td class="nw50">
 						<?php print __("Search:");?>&nbsp;
 					</td>
-					<td width="1">
+					<td class="w1">
 						<input type="text" name="filter" size="40" value="<?php print $_REQUEST["filter"];?>">
 					</td>
-					<td style='white-space:nowrap;width:120px;'>
+					<td class="nw120">
 						&nbsp;<input type="submit" Value="<?php echo __('Go');?>" name="go" align="middle">
 						<input type="submit" Value="<?php echo __('Clear');?>" name="clear_x" align="middle">
 					</td>

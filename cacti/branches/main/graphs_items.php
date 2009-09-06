@@ -215,7 +215,7 @@ function item_edit() {
 			<form name="form_graph_items">
 			<table cellpadding="0" cellspacing="0">
 				<tr>
-					<td style='white-space:nowrap;width:50px;'>
+					<td class="nw50">
 						<?php print __("Host");?>:&nbsp;
 					</td>
 					<td>
@@ -236,7 +236,7 @@ function item_edit() {
 					</td>
 				</tr>
 				<tr>
-					<td style='white-space:nowrap;width:100px;'>
+					<td class="nw100">
 						<?php print __("Data Template:");?>&nbsp;
 					</td>
 					<td>

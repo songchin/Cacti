@@ -708,7 +708,7 @@ function data_source_edit() {
 				<td class="textInfo" colspan="2" valign="top">
 					<?php print get_data_source_title($_GET["id"]);?>
 				</td>
-				<td style="white-space:nowrap;" align="right" width="1"><a id='tooltip' class='popup_anchor' href='#' onMouseOver="Tip('<?php print $tip_text;?>', BGCOLOR, '#EEEEEE', FIX, ['tooltip', -20, 0], STICKY, true, SHADOW, true, CLICKCLOSE, true, FADEOUT, 400, WIDTH, 125, TEXTALIGN, 'right', BORDERCOLOR, '#F5F5F5')" onMouseOut="UnTip()">Data Source Options</a></td>
+				<td style="white-space:nowrap;" align="right" class="w1"><a id='tooltip' class='popup_anchor' href='#' onMouseOver="Tip('<?php print $tip_text;?>', BGCOLOR, '#EEEEEE', FIX, ['tooltip', -20, 0], STICKY, true, SHADOW, true, CLICKCLOSE, true, FADEOUT, 400, WIDTH, 125, TEXTALIGN, 'right', BORDERCOLOR, '#F5F5F5')" onMouseOut="UnTip()">Data Source Options</a></td>
 			</tr>
 		</table>
 		<?php
@@ -1116,10 +1116,10 @@ function data_source() {
 			<form action="data_sources.php" name="form_data_sources">
 			<table cellpadding="1" cellspacing="0">
 				<tr>
-					<td width="55">
+					<td class="nw50">
 						&nbsp;<?php print __("Host:");?>&nbsp;
 					</td>
-					<td width="1">
+					<td class="w1">
 						<?php
 						if (isset($_REQUEST["host_id"])) {
 							$hostname = db_fetch_cell("SELECT description as name FROM host WHERE id=".$_REQUEST["host_id"]." ORDER BY description,hostname");
@@ -1130,10 +1130,10 @@ function data_source() {
 						<input class="ac_field" type="text" id="host" size="30" value="<?php print $hostname; ?>">
 						<input type="hidden" id="host_id">
 					</td>
-					<td width="55">
+					<td class="nw50">
 						&nbsp;<?php print __("Template:");?>&nbsp;
 					</td>
-					<td width="1">
+					<td class="w1">
 						<select name="template_id" onChange="applyDSFilterChange(document.form_data_sources)">
 							<option value="-1"<?php if ($_REQUEST["template_id"] == "-1") {?> selected<?php }?>><?php print __("Any");?></option>
 							<option value="0"<?php if ($_REQUEST["template_id"] == "0") {?> selected<?php }?>><?php print __("None");?></option>
@@ -1154,16 +1154,16 @@ function data_source() {
 							?>
 						</select>
 					</td>
-					<td style='white-space:nowrap;width:120px;'>
+					<td class="nw120">
 						&nbsp;<input type="submit" value="<?php print __("Go");?>" name="go" align="middle">
 						<input type="button" value="<?php print __("Clear");?>" name="clear" align="middle" onClick="clearDSFilterChange(document.form_data_sources)">
 					</td>
 				</tr>
 				<tr>
-					<td width="55">
+					<td class="nw50">
 						&nbsp;<?php print __("Method:");?>&nbsp;
 					</td>
-					<td width="1">
+					<td class="w1">
 						<select name="method_id" onChange="applyDSFilterChange(document.form_data_sources)">
 							<option value="-1"<?php if ($_REQUEST["method_id"] == "-1") {?> selected<?php }?>><?php print __("Any");?></option>
 							<option value="0"<?php if ($_REQUEST["method_id"] == "0") {?> selected<?php }?>><?php print __("None");?></option>
@@ -1184,10 +1184,10 @@ function data_source() {
 							?>
 						</select>
 					</td>
-					<td style='white-space:nowrap;width:55px;'>
+					<td class="nw50">
 						&nbsp;<?php print __("Rows:");?>&nbsp;
 					</td>
-					<td width="1">
+					<td class="w1">
 						<select name="rows" onChange="applyDSFilterChange(document.form_data_sources)">
 							<option value="-1"<?php if ($_REQUEST["rows"] == "-1") {?> selected<?php }?>><?php print __("Default");?></option>
 							<?php
@@ -1203,10 +1203,10 @@ function data_source() {
 			</table>
 			<table cellpadding="1" cellspacing="0">
 				<tr>
-					<td width="55">
+					<td class="nw50">
 						&nbsp;<?php print __("Search:");?>&nbsp;
 					</td>
-					<td width="1">
+					<td class="w1">
 						<input type="text" name="filter" size="40" value="<?php print $_REQUEST["filter"];?>">
 					</td>
 				</tr>

@@ -380,16 +380,16 @@ function poller() {
 			<form name="form_pollers" action="pollers.php">
 			<table cellpadding="0" cellspacing="0">
 				<tr>
-					<td style='white-space:nowrap;width:50px;'>
+					<td class="nw50">
 						&nbsp;<?php print __("Search:");?>&nbsp;
 					</td>
-					<td width="1">
+					<td class="w1">
 						<input type="text" name="filter" size="40" value="<?php print $_REQUEST["filter"];?>">
 					</td>
-					<td style='white-space:nowrap;width:50px;'>
+					<td class="nw50">
 						&nbsp;<?php print __("Rows:");?>&nbsp;
 					</td>
-					<td width="1">
+					<td class="w1">
 						<select name="rows" onChange="applyFilterChange(document.form_pollers)">
 							<option value="-1"<?php if ($_REQUEST["rows"] == "-1") {?> selected<?php }?>>Default</option>
 							<?php
@@ -401,7 +401,7 @@ function poller() {
 							?>
 						</select>
 					</td>
-					<td style='white-space:nowrap;width:120px;'>
+					<td class="nw120">
 						&nbsp;<input type="submit" Value="<?php print __("Go");?>" name="go" align="middle">
 						<input type="submit" Value="<?php print __("Clear");?>" name="clear_x" align="middle">
 					</td>
