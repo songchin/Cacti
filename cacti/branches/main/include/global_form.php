@@ -1039,6 +1039,7 @@ $fields_host_template_edit = array(
 		"path" => "images/tree_icons",
 		"friendly_name" => __("Image"),
 		"description" => __("A useful icon to use to associate with this host template."),
+		"width" => "120",
 		"default" => "host.gif",
 		"value" => "|arg1:image|"
 		),
@@ -1287,6 +1288,7 @@ $fields_data_query_edit = array(
 		"friendly_name" => __("Image"),
 		"description" => __("A useful icon to use to associate with this host template."),
 		"default" => "dataquery.png",
+		"width" => "120",
 		"value" => "|arg1:image|"
 		),
 	"xml_path" => array(
