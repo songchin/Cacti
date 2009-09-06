@@ -192,7 +192,7 @@ function import_processor($import_data) {
 					$existing_hex_id   = db_fetch_cell("SELECT id FROM colors WHERE hex='" . $parts[$hex_col] . "'");
 					$existing_color_id = db_fetch_cell("SELECT id FROM colors WHERE id='" . $parts[$id_col] . "'");
 
-					if ($existsing_hex_id == "" && $existing_color_id == "") {
+					if ($existing_hex_id == "" && $existing_color_id == "") {
 						/* insert using the given color id */
 						db_execute("INSERT INTO color (id, hex) VALUES (" . $parts[$id_col] . ", '" . $parts[$hex_col] . "')");
 						array_push($message, "NOTE: ID:'" . $parts[$id_col] . "', Hex:'" . $parts[$hex_col] . "', Added as New");
