@@ -635,6 +635,7 @@ CREATE TABLE data_template (
   id mediumint(8) unsigned NOT NULL auto_increment,
   hash varchar(32) NOT NULL default '',
   name varchar(150) NOT NULL default '',
+  description varchar(255) NOT NULL default '',
   PRIMARY KEY  (id)
 ) TYPE=MyISAM;
 
@@ -1459,6 +1460,8 @@ CREATE TABLE graph_templates (
   id mediumint(8) unsigned NOT NULL auto_increment,
   hash char(32) NOT NULL default '',
   name char(255) NOT NULL default '',
+  description varchar(255) NOT NULL default '',
+  image varchar(64) NOT NULL default '',
   PRIMARY KEY  (id),
   KEY name (name)
 ) TYPE=MyISAM COMMENT='Contains each graph template name.';
@@ -2099,6 +2102,8 @@ CREATE TABLE host_template (
   id mediumint(8) unsigned NOT NULL auto_increment,
   hash varchar(32) NOT NULL default '',
   name varchar(100) NOT NULL default '',
+  description varchar(255) NOT NULL default '',
+  image varchar(64) NOT NULL default '',
   snmp_community varchar(100) default NULL,
   snmp_version tinyint(1) unsigned NOT NULL default '1',
   snmp_username varchar(50) default NULL,
@@ -2535,6 +2540,7 @@ CREATE TABLE snmp_query (
   xml_path varchar(255) NOT NULL default '',
   name varchar(100) NOT NULL default '',
   description varchar(255) default NULL,
+  image varchar(64) NOT NULL default '',
   graph_template_id mediumint(8) unsigned NOT NULL default '0',
   data_input_id mediumint(8) unsigned NOT NULL default '0',
   PRIMARY KEY  (id),
