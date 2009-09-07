@@ -455,7 +455,7 @@ $rrd_fetch_cache = array();
    @returns - (array) an array containing all data in this data source broken down
      by each data source item. the maximum of all data source items is included in
      an item called 'ninety_fifth_percentile_maximum' */
-function &rrdtool_function_fetch($local_data_id, $start_time, $end_time, $resolution = 0, $show_unknown = 0) {
+function rrdtool_function_fetch($local_data_id, $start_time, $end_time, $resolution = 0, $show_unknown = 0) {
 	global $rrd_fetch_cache;
 
 	if (empty($local_data_id)) {

@@ -22,7 +22,7 @@
  +-------------------------------------------------------------------------+
 */
 
-function &graph_template_to_xml($graph_template_id) {
+function graph_template_to_xml($graph_template_id) {
 	global $struct_graph, $fields_graph_template_input_edit, $struct_graph_item;
 
 	$hash["graph_template"] = get_hash_version("graph_template") . get_hash_graph_template($graph_template_id);
@@ -133,7 +133,7 @@ function &graph_template_to_xml($graph_template_id) {
 	return $xml_text;
 }
 
-function &data_template_to_xml($data_template_id) {
+function data_template_to_xml($data_template_id) {
 	global $struct_data_source, $struct_data_source_item;
 
 	$hash["data_template"] = get_hash_version("data_template") . get_hash_data_template($data_template_id);
@@ -248,7 +248,7 @@ function &data_template_to_xml($data_template_id) {
 	return $xml_text;
 }
 
-function &data_input_method_to_xml($data_input_id) {
+function data_input_method_to_xml($data_input_id) {
 	global $fields_data_input_edit, $fields_data_input_field_edit, $fields_data_input_field_edit_1;
 
 	/* aggregate field arrays */
@@ -307,7 +307,7 @@ function &data_input_method_to_xml($data_input_id) {
 	return $xml_text;
 }
 
-function &cdef_to_xml($cdef_id) {
+function cdef_to_xml($cdef_id) {
 	global $fields_cdef_edit;
 
 	$fields_cdef_item_edit = array(
@@ -367,7 +367,7 @@ function &cdef_to_xml($cdef_id) {
 	return $xml_text;
 }
 
-function &gprint_preset_to_xml($gprint_preset_id) {
+function gprint_preset_to_xml($gprint_preset_id) {
 	global $fields_grprint_presets_edit;
 
 	$hash = get_hash_version("gprint_preset") . get_hash_gprint($gprint_preset_id);
@@ -395,7 +395,7 @@ function &gprint_preset_to_xml($gprint_preset_id) {
 	return $xml_text;
 }
 
-function &round_robin_archive_to_xml($round_robin_archive_id) {
+function round_robin_archive_to_xml($round_robin_archive_id) {
 	global $fields_rra_edit;
 
 	$hash = get_hash_version("round_robin_archive") . get_hash_round_robin_archive($round_robin_archive_id);
@@ -444,7 +444,7 @@ function &round_robin_archive_to_xml($round_robin_archive_id) {
 	return $xml_text;
 }
 
-function &host_template_to_xml($host_template_id) {
+function host_template_to_xml($host_template_id) {
 	global $fields_host_template_edit;
 
 	$hash = get_hash_version("host_template") . get_hash_host_template($host_template_id);
@@ -510,7 +510,7 @@ function &host_template_to_xml($host_template_id) {
 	return $xml_text;
 }
 
-function &data_query_to_xml($data_query_id) {
+function data_query_to_xml($data_query_id) {
 	global $fields_data_query_edit, $fields_data_query_item_edit;
 
 	$hash["data_query"] = get_hash_version("data_query") . get_hash_data_query($data_query_id);

@@ -22,7 +22,7 @@
  +-------------------------------------------------------------------------+
 */
 
-function &import_xml_data(&$xml_data, $import_custom_rra_settings) {
+function import_xml_data(&$xml_data, $import_custom_rra_settings) {
 	global $config, $hash_type_codes, $hash_version_codes;
 
 	include_once(CACTI_BASE_PATH . "/lib/xml.php");
@@ -104,7 +104,7 @@ function &import_xml_data(&$xml_data, $import_custom_rra_settings) {
 	return $info_array;
 }
 
-function &xml_to_graph_template($hash, &$xml_array, &$hash_cache) {
+function xml_to_graph_template($hash, &$xml_array, &$hash_cache) {
 	global $struct_graph, $struct_graph_item, $fields_graph_template_input_edit, $hash_version_codes;
 
 	/* import into: graph_templates */
@@ -240,7 +240,7 @@ function &xml_to_graph_template($hash, &$xml_array, &$hash_cache) {
 	return $hash_cache;
 }
 
-function &xml_to_data_template($hash, &$xml_array, &$hash_cache, $import_custom_rra_settings) {
+function xml_to_data_template($hash, &$xml_array, &$hash_cache, $import_custom_rra_settings) {
 	global $struct_data_source, $struct_data_source_item;
 
 	/* import into: data_template */
@@ -377,7 +377,7 @@ function &xml_to_data_template($hash, &$xml_array, &$hash_cache, $import_custom_
 	return $hash_cache;
 }
 
-function &xml_to_data_query($hash, &$xml_array, &$hash_cache) {
+function xml_to_data_query($hash, &$xml_array, &$hash_cache) {
 	global $fields_data_query_edit, $fields_data_query_item_edit;
 
 	/* import into: snmp_query */
@@ -506,7 +506,7 @@ function &xml_to_data_query($hash, &$xml_array, &$hash_cache) {
 	return $hash_cache;
 }
 
-function &xml_to_gprint_preset($hash, &$xml_array, &$hash_cache) {
+function xml_to_gprint_preset($hash, &$xml_array, &$hash_cache) {
 	global $fields_grprint_presets_edit;
 
 	/* import into: graph_templates_gprint */
@@ -534,7 +534,7 @@ function &xml_to_gprint_preset($hash, &$xml_array, &$hash_cache) {
 	return $hash_cache;
 }
 
-function &xml_to_round_robin_archive($hash, &$xml_array, &$hash_cache) {
+function xml_to_round_robin_archive($hash, &$xml_array, &$hash_cache) {
 	global $fields_rra_edit;
 
 	/* import into: rra */
@@ -571,7 +571,7 @@ function &xml_to_round_robin_archive($hash, &$xml_array, &$hash_cache) {
 	return $hash_cache;
 }
 
-function &xml_to_host_template($hash, &$xml_array, &$hash_cache) {
+function xml_to_host_template($hash, &$xml_array, &$hash_cache) {
 	global $fields_host_template_edit;
 
 	/* import into: graph_templates_gprint */
@@ -633,7 +633,7 @@ function &xml_to_host_template($hash, &$xml_array, &$hash_cache) {
 	return $hash_cache;
 }
 
-function &xml_to_cdef($hash, &$xml_array, &$hash_cache) {
+function xml_to_cdef($hash, &$xml_array, &$hash_cache) {
 	global $fields_cdef_edit;
 
 	$fields_cdef_item_edit = array(
@@ -696,7 +696,7 @@ function &xml_to_cdef($hash, &$xml_array, &$hash_cache) {
 	return $hash_cache;
 }
 
-function &xml_to_data_input_method($hash, &$xml_array, &$hash_cache) {
+function xml_to_data_input_method($hash, &$xml_array, &$hash_cache) {
 	global $fields_data_input_edit, $fields_data_input_field_edit, $fields_data_input_field_edit_1;
 
 	/* aggregate field arrays */
