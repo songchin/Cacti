@@ -29,7 +29,7 @@ include_once(CACTI_BASE_PATH . "/lib/template.php");
 if (!isset($_REQUEST["action"])) { $_REQUEST["action"] = ""; }
 
 
-switch ($_REQUEST["action"]) {
+switch (get_request_var_request("action")) {
 	case 'save':
 		form_save();
 
@@ -80,7 +80,7 @@ function form_save() {
 
 		$items[0] = array();
 
-		if ($graph_item_types{$_POST["graph_type_id"]} == "LEGEND") {
+		if ($graph_item_types{get_request_var_post("graph_type_id")} == "LEGEND") {
 			/* this can be a major time saver when creating lots of graphs with the typical
 			GPRINT LAST/AVERAGE/MAX legends */
 			$items = array(
@@ -224,7 +224,7 @@ function item_movedown() {
 	$next_id = get_graph_parent($_GET["id"], "next");
 
 	if ((!empty($next_id)) && (isset($arr{$_GET["id"]}))) {
-		move_graph_group($_GET["id"], $arr, $next_id, "next");
+		move_graph_group(get_request_var("id"), $arr, $next_id, "next");
 	}elseif (ereg("(GPRINT|VRULE|HRULE|COMMENT)", $graph_item_types{db_fetch_cell("select graph_type_id from graph_templates_item where id=" . $_GET["id"])})) {
 		/* this is so we know the "other" graph item to propagate the changes to */
 		$next_item = get_item("graph_templates_item", "sequence", $_GET["id"], "graph_template_id=" . $_GET["graph_template_id"] . " and local_graph_id=0", "next");
@@ -248,7 +248,7 @@ function item_moveup() {
 	$next_id = get_graph_parent($_GET["id"], "previous");
 
 	if ((!empty($next_id)) && (isset($arr{$_GET["id"]}))) {
-		move_graph_group($_GET["id"], $arr, $next_id, "previous");
+		move_graph_group(get_request_var("id"), $arr, $next_id, "previous");
 	}elseif (ereg("(GPRINT|VRULE|HRULE|COMMENT)", $graph_item_types{db_fetch_cell("select graph_type_id from graph_templates_item where id=" . $_GET["id"])})) {
 		/* this is so we know the "other" graph item to propagate the changes to */
 		$last_item = get_item("graph_templates_item", "sequence", $_GET["id"], "graph_template_id=" . $_GET["graph_template_id"] . " and local_graph_id=0", "previous");
@@ -366,7 +366,7 @@ function item_edit() {
 	html_end_box();
 
 	form_hidden_box("graph_template_item_id", (isset($template_item) ? $template_item["id"] : "0"), "");
-	form_hidden_box("graph_template_id", $_GET["graph_template_id"], "0");
+	form_hidden_box("graph_template_id", get_request_var("graph_template_id"), "0");
 	form_hidden_box("sequence", (isset($template_item) ? $template_item["sequence"] : "0"), "");
 	form_hidden_box("_graph_type_id", (isset($template_item) ? $template_item["graph_type_id"] : "0"), "");
 	form_hidden_box("_task_item_id", (isset($template_item) ? $template_item["task_item_id"] : "0"), "");

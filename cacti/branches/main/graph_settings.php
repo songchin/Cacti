@@ -28,7 +28,7 @@ include("./include/auth.php");
 /* set default action */
 if (!isset($_REQUEST["action"])) { $_REQUEST["action"] = ""; }
 
-switch ($_REQUEST["action"]) {
+switch (get_request_var_request("action")) {
 	case 'save':
 		form_save();
 
@@ -68,7 +68,7 @@ function form_save() {
 	/* reset local settings cache so the user sees the new settings */
 	kill_session_var("sess_graph_config_array");
 
-	header("Location: " . $_POST["referer"]);
+	header("Location: " . get_request_var_post("referer"));
 	exit;
 }
 

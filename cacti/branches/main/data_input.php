@@ -34,7 +34,7 @@ $di_actions = array(
 /* set default action */
 if (!isset($_REQUEST["action"])) { $_REQUEST["action"] = ""; }
 
-switch ($_REQUEST["action"]) {
+switch (get_request_var_request("action")) {
 	case 'save':
 		form_save();
 
@@ -99,7 +99,7 @@ function form_save() {
 				if (!empty($_POST["id"])) {
 					db_execute("update data_input_fields set sequence=0 where data_input_id=" . $_POST["id"]);
 
-					generate_data_input_field_sequences($_POST["input_string"], $_POST["id"]);
+					generate_data_input_field_sequences(get_request_var_post("input_string"), get_request_var_post("id"));
 				}
 
 				push_out_data_input_method($data_input_id);
@@ -163,7 +163,7 @@ function form_actions() {
 	if (isset($_POST["selected_items"])) {
 		$selected_items = unserialize(stripslashes($_POST["selected_items"]));
 
-		if ($_POST["drp_action"] == "1") { /* delete */
+		if (get_request_var_post("drp_action") == "1") { /* delete */
 			/* do a referential integrity check */
 			if (sizeof($selected_items)) {
 			foreach($selected_items as $data_input_id) {
@@ -220,12 +220,12 @@ function form_actions() {
 
 	include_once(CACTI_BASE_PATH . "/include/top_header.php");
 
-	html_start_box("<strong>" . $di_actions{$_POST["drp_action"]} . "</strong>", "60%", $colors["header_panel"], "3", "center", "");
+	html_start_box("<strong>" . $di_actions{get_request_var_post("drp_action")} . "</strong>", "60%", $colors["header_panel"], "3", "center", "");
 
 	print "<form action='data_input.php' method='post'>\n";
 
 	if (sizeof($di_array)) {
-		if ($_POST["drp_action"] == "1") { /* delete */
+		if (get_request_var_post("drp_action") == "1") { /* delete */
 			$graphs = array();
 
 			print "
@@ -247,7 +247,7 @@ function form_actions() {
 	if (!sizeof($di_array)) {
 		form_return_button_alt();
 	}else{
-		form_yesno_button_alt(serialize($di_array), $_POST["drp_action"]);
+		form_yesno_button_alt(serialize($di_array), get_request_var_post("drp_action"));
 	}
 
 	html_end_box();
@@ -321,7 +321,7 @@ function field_edit() {
 	$data_input = db_fetch_row("select type_id,name from data_input where id=" . $_GET["data_input_id"]);
 
 	/* obtain a list of available fields for this given field type (input/output) */
-	if (($current_field_type == "in") && (preg_match_all("/<([_a-zA-Z0-9]+)>/", db_fetch_cell("select input_string from data_input where id=" . ($_GET["data_input_id"] ? $_GET["data_input_id"] : $field["data_input_id"])), $matches))) {
+	if (($current_field_type == "in") && (preg_match_all("/<([_a-zA-Z0-9]+)>/", db_fetch_cell("select input_string from data_input where id=" . (get_request_var("data_input_id") ? get_request_var("data_input_id") : $field["data_input_id"])), $matches))) {
 		for ($i=0; ($i < count($matches[1])); $i++) {
 			if (in_array($matches[1][$i], $registered_cacti_names) == false) {
 				$current_field_name = $matches[1][$i];
@@ -369,7 +369,7 @@ function field_edit() {
 
 	html_end_box();
 
-	form_save_button_alt("path!data_input.php|action!edit|id!" . $_GET["data_input_id"]);
+	form_save_button_alt("path!data_input.php|action!edit|id!" . get_request_var("data_input_id"));
 }
 
 /* -----------------------
@@ -563,11 +563,11 @@ function data() {
 					</td>
 					<td width="1">
 						<select name="rows" onChange="applyFilterChange(document.form_graph_id)">
-							<option value="-1"<?php if ($_REQUEST["rows"] == "-1") {?> selected<?php }?>>Default</option>
+							<option value="-1"<?php if (get_request_var_request("rows") == "-1") {?> selected<?php }?>>Default</option>
 							<?php
 							if (sizeof($item_rows) > 0) {
 							foreach ($item_rows as $key => $value) {
-								print "<option value='" . $key . "'"; if ($_REQUEST["rows"] == $key) { print " selected"; } print ">" . $value . "</option>\n";
+								print "<option value='" . $key . "'"; if (get_request_var_request("rows") == $key) { print " selected"; } print ">" . $value . "</option>\n";
 							}
 							}
 							?>
@@ -610,8 +610,8 @@ function data() {
 	$data_inputs = db_fetch_assoc("SELECT *
 		FROM data_input
 		$sql_where
-		ORDER BY " . $_REQUEST['sort_column'] . " " . $_REQUEST['sort_direction'] . "
-		LIMIT " . ($rows*($_REQUEST["page"]-1)) . "," . $rows);
+		ORDER BY " . get_request_var_request('sort_column') . " " . get_request_var_request('sort_direction') . "
+		LIMIT " . ($rows*(get_request_var_request("page")-1)) . "," . $rows);
 
 	/* generate page list navigation */
 	$nav = html_create_nav($_REQUEST["page"], MAX_DISPLAY_PAGES, $rows, $total_rows, 7, "data_input.php");
@@ -623,7 +623,7 @@ function data() {
 		"name" => array(__("Name"), "ASC"),
 		"type_id" => array(__("Data Input Method"), "ASC"));
 
-	html_header_sort_checkbox($display_text, $_REQUEST["sort_column"], $_REQUEST["sort_direction"]);
+	html_header_sort_checkbox($display_text, get_request_var_request("sort_column"), get_request_var_request("sort_direction"));
 
 	if (sizeof($data_inputs) > 0) {
 		foreach ($data_inputs as $data_input) {

@@ -105,7 +105,7 @@ function graph_view_filter_table($mode = "mode") {
 					</td>
 					<td style='white-space:nowrap;width:1px;'>
 						<select name="graph_template_id" onChange="applyGraphFilter(document.form_graph_view)">
-							<option value="0"<?php if ($_REQUEST["graph_template_id"] == "0") {?> selected<?php }?>><?php print __("Any");?></option><?php
+							<option value="0"<?php if (get_request_var_request("graph_template_id") == "0") {?> selected<?php }?>><?php print __("Any");?></option><?php
 							if (read_config_option("auth_method") != 0) {
 								$graph_templates = db_fetch_assoc("SELECT DISTINCT graph_templates.* " .
 										"FROM (graph_templates_graph,graph_local) " .
@@ -129,7 +129,7 @@ function graph_view_filter_table($mode = "mode") {
 
 							if (sizeof($graph_templates) > 0) {
 							foreach ($graph_templates as $template) {
-								print "\t\t\t\t\t\t\t<option value='" . $template["id"] . "'"; if ($_REQUEST["graph_template_id"] == $template["id"]) { print " selected"; } print ">" . $template["name"] . "</option>\n";
+								print "\t\t\t\t\t\t\t<option value='" . $template["id"] . "'"; if (get_request_var_request("graph_template_id") == $template["id"]) { print " selected"; } print ">" . $template["name"] . "</option>\n";
 							}
 							}
 							?>
@@ -206,7 +206,7 @@ function get_graph_list_content() {
 
 	/* save selected graphs into url, for backward compatibility */
 	if (!empty($_REQUEST["graph_list"])) {
-		foreach (explode(",",$_REQUEST["graph_list"]) as $item) {
+		foreach (explode(",",get_request_var_request("graph_list")) as $item) {
 			$graph_list[$item] = 1;
 		}
 	}else{
@@ -222,18 +222,18 @@ function get_graph_list_content() {
 	load_current_session_value("graph_add", "sess_graph_view_list_graph_add", "");
 	load_current_session_value("graph_remove", "sess_graph_view_list_graph_remove", "");
 
-	if (is_array($_REQUEST["graph_list"])) {
+	if (is_array(get_request_var_request("graph_list"))) {
 		$graph_list = $_REQUEST["graph_list"];
 	}
 
 	if (!empty($_REQUEST["graph_add"])) {
-		foreach (explode(",",$_REQUEST["graph_add"]) as $item) {
+		foreach (explode(",",get_request_var_request("graph_add")) as $item) {
 			$graph_list[$item] = 1;
 		}
 	}
 	/* remove items */
 	if (!empty($_REQUEST["graph_remove"])) {
-		foreach (explode(",",$_REQUEST["graph_remove"]) as $item) {
+		foreach (explode(",",get_request_var_request("graph_remove")) as $item) {
 			unset($graph_list[$item]);
 		}
 	}
@@ -349,7 +349,7 @@ function get_graph_list_content() {
 					</td>
 					<td class="w1">
 						<select name="graph_template_id" onChange="applyGraphListFilterChange(document.form_graph_list)">
-							<option value="0"<?php print $_REQUEST["filter"];?><?php if ($_REQUEST["host_id"] == "0") {?> selected<?php }?>><?php print __("Any");?></option>
+							<option value="0"<?php print get_request_var_request("filter");?><?php if (get_request_var_request("host_id") == "0") {?> selected<?php }?>><?php print __("Any");?></option>
 							<?php
 							if (read_config_option("auth_method") != 0) {
 								$graph_templates = db_fetch_assoc("SELECT DISTINCT graph_templates.*
@@ -374,7 +374,7 @@ function get_graph_list_content() {
 
 							if (sizeof($graph_templates) > 0) {
 							foreach ($graph_templates as $template) {
-								print "<option value='" . $template["id"] . "'"; if ($_REQUEST["graph_template_id"] == $template["id"]) { print " selected"; } print ">" . $template["name"] . "</option>\n";
+								print "<option value='" . $template["id"] . "'"; if (get_request_var_request("graph_template_id") == $template["id"]) { print " selected"; } print ">" . $template["name"] . "</option>\n";
 							}
 							}
 							?>
@@ -436,7 +436,7 @@ function get_graph_list_content() {
 		$sql_where
 		" . (empty($sql_where) ? "where" : "and") . " graph_templates_graph.local_graph_id > 0
 		and graph_templates_graph.local_graph_id=graph_local.id
-		and graph_templates_graph.title_cache like '%" . $_REQUEST["filter"] . "%'
+		and graph_templates_graph.title_cache like '%" . get_request_var_request("filter") . "%'
 		" . (empty($_REQUEST["host_id"]) ? "" : " and graph_local.host_id=" . $_REQUEST["host_id"]) . "
 		" . (empty($_REQUEST["graph_template_id"]) ? "" : " and graph_local.graph_template_id=" . $_REQUEST["graph_template_id"]);
 
@@ -451,14 +451,14 @@ function get_graph_list_content() {
 		$sql_base
 		group by graph_templates_graph.local_graph_id
 		order by graph_templates_graph.title_cache
-		limit " . ($_REQUEST["graphs"]*($_REQUEST["page"]-1)) . "," . $_REQUEST["graphs"]);
+		limit " . (get_request_var_request("graphs")*(get_request_var_request("page")-1)) . "," . get_request_var_request("graphs"));
 	?>
 	<form name='chk' id='chk' action='graph_view.php' method='get' onSubmit='form_graph(document.chk,document.chk)'>
 	<?php
 
 	html_graph_start_box(0, FALSE);
 
-	if ($total_rows > $_REQUEST["graphs"]) {
+	if ($total_rows > get_request_var_request("graphs")) {
 		$url_page_select = get_page_list($_REQUEST["page"], MAX_DISPLAY_PAGES, $_REQUEST["graphs"], $total_rows, "pageChange");
 
 		$nav = "\t\t\t<tr class='rowHeader'>
@@ -469,7 +469,7 @@ function get_graph_list_content() {
 		if ($_REQUEST["page"] > 1) { $nav .= "<strong><a class='linkOverDark' href='#' onClick='pageChange(" . ($_REQUEST["page"]-1) . ")'>&lt;&lt;&nbsp;Previous</a></strong>"; }
 		$nav .= "</td>\n
 							<td align='center' class='textHeaderDark'>
-								Showing Graphs " . (($_REQUEST["graphs"]*($_REQUEST["page"]-1))+1) . " to " . ((($total_rows < $_REQUEST["graphs"]) || ($total_rows < ($_REQUEST["graphs"]*$_REQUEST["page"]))) ? $total_rows : ($_REQUEST["graphs"]*$_REQUEST["page"])) . " of $total_rows [$url_page_select]
+								Showing Graphs " . ((get_request_var_request("graphs")*(get_request_var_request("page")-1))+1) . " to " . ((($total_rows < get_request_var_request("graphs")) || ($total_rows < (get_request_var_request("graphs")*get_request_var_request("page")))) ? $total_rows : (get_request_var_request("graphs")*get_request_var_request("page"))) . " of $total_rows [$url_page_select]
 							</td>\n
 							<td align='right' style='width:100px;' class='textHeaderDark'>";
 		if (($_REQUEST["page"] * $_REQUEST["graphs"]) < $total_rows) { $nav .= "<strong><a class='linkOverDark' href='#' onClick='pageChange(" . ($_REQUEST["page"]+1) . ")'>Next &gt;&gt;</a></strong>"; }
@@ -484,7 +484,7 @@ function get_graph_list_content() {
 					<table width='100%' cellspacing='0' cellpadding='0' border='0'>
 						<tr>
 							<td align='center' class='textHeaderDark'>
-								" . __("Showing All Graphs") . (strlen($_REQUEST["filter"]) ? " [ " . __("Filter") . " '" . $_REQUEST["filter"] . "' " . __("Applied") . " ]" : "") . "
+								" . __("Showing All Graphs") . (strlen(get_request_var_request("filter")) ? " [ " . __("Filter") . " '" . get_request_var_request("filter") . "' " . __("Applied") . " ]" : "") . "
 							</td>
 						</tr>
 					</table>
@@ -608,7 +608,7 @@ function get_graph_preview_content () {
 
 	/* save selected graphs into url, for backward compatibility */
 	if (!empty($_REQUEST["graph_list"])) {
-		foreach (explode(",",$_REQUEST["graph_list"]) as $item) {
+		foreach (explode(",",get_request_var_request("graph_list")) as $item) {
 			$graph_list[$item] = 1;
 		}
 	}else{
@@ -638,18 +638,18 @@ function get_graph_preview_content () {
 	}
 	/* the user select a bunch of graphs of the 'list' view and wants them dsplayed here */
 	if (isset($_REQUEST["list"])) {
-		if (is_array($_REQUEST["graph_list"])) {
+		if (is_array(get_request_var_request("graph_list"))) {
 			$graph_list = $_REQUEST["graph_list"];
 		}
 
 		if (!empty($_REQUEST["graph_add"])) {
-			foreach (explode(",",$_REQUEST["graph_add"]) as $item) {
+			foreach (explode(",",get_request_var_request("graph_add")) as $item) {
 				$graph_list[$item] = 1;
 			}
 		}
 		/* remove items */
 		if (!empty($_REQUEST["graph_remove"])) {
-			foreach (explode(",",$_REQUEST["graph_remove"]) as $item) {
+			foreach (explode(",",get_request_var_request("graph_remove")) as $item) {
 				unset($graph_list[$item]);
 			}
 		}
@@ -679,7 +679,7 @@ function get_graph_preview_content () {
 		$sql_where
 		" . (empty($sql_where) ? "WHERE" : "AND") . "   graph_templates_graph.local_graph_id > 0
 		AND graph_templates_graph.local_graph_id=graph_local.id
-		AND graph_templates_graph.title_cache like '%%" . $_REQUEST["filter"] . "%%'
+		AND graph_templates_graph.title_cache like '%%" . get_request_var_request("filter") . "%%'
 		" . (empty($_REQUEST["host_id"]) ? "" : " and graph_local.host_id=" . $_REQUEST["host_id"]) . "
 		" . (empty($_REQUEST["graph_template_id"]) ? "" : " and graph_local.graph_template_id=" . $_REQUEST["graph_template_id"]) . "
 		$sql_or";
@@ -699,7 +699,7 @@ function get_graph_preview_content () {
 		$sql_base
 		GROUP BY graph_templates_graph.local_graph_id
 		ORDER BY graph_templates_graph.title_cache
-		LIMIT " . ($_REQUEST["graphs"]*($_REQUEST["page"]-1)) . "," . $_REQUEST["graphs"]);
+		LIMIT " . (get_request_var_request("graphs")*(get_request_var_request("page")-1)) . "," . get_request_var_request("graphs"));
 
 	/* include graph view filter selector */
 	graph_view_filter_table("preview");
@@ -727,7 +727,7 @@ function get_graph_preview_content () {
 	print "<table cellpadding='0' cellspacing='0' style='width:100%;border:1px solid #BEBEBE;'>\n";
 	/* generate page list */
 
-	if ($total_rows > $_REQUEST["graphs"]) {
+	if ($total_rows > get_request_var_request("graphs")) {
 		$url_page_select = get_page_list($_REQUEST["page"], MAX_DISPLAY_PAGES, $_REQUEST["graphs"], $total_rows, "pageChange");
 
 		$nav = "\t\t\t<tr class='rowHeader'>
@@ -738,7 +738,7 @@ function get_graph_preview_content () {
 		if ($_REQUEST["page"] > 1) { $nav .= "<strong><a class='linkOverDark' href='#' onClick='pageChange(" . ($_REQUEST["page"]-1) . ")'>&lt;&lt;&nbsp;" . __("Previous") . "</a></strong>"; }
 		$nav .= "</td>\n
 							<td align='center' class='textHeaderDark'>
-								" . __("Showing Graphs") . (($_REQUEST["graphs"]*($_REQUEST["page"]-1))+1) . " " . __("to") . " " . ((($total_rows < $_REQUEST["graphs"]) || ($total_rows < ($_REQUEST["graphs"]*$_REQUEST["page"]))) ? $total_rows : ($_REQUEST["graphs"]*$_REQUEST["page"])) . " " . __("of") . " $total_rows [$url_page_select]
+								" . __("Showing Graphs") . ((get_request_var_request("graphs")*(get_request_var_request("page")-1))+1) . " " . __("to") . " " . ((($total_rows < get_request_var_request("graphs")) || ($total_rows < (get_request_var_request("graphs")*get_request_var_request("page")))) ? $total_rows : (get_request_var_request("graphs")*get_request_var_request("page"))) . " " . __("of") . " $total_rows [$url_page_select]
 							</td>\n
 							<td align='right' style='width:100px;' class='textHeaderDark'>";
 		if (($_REQUEST["page"] * $_REQUEST["graphs"]) < $total_rows) { $nav .= "<strong><a class='linkOverDark' href='#' onClick='pageChange(" . ($_REQUEST["page"]+1) . ")'>" . __("Next") . "&gt;&gt;</a></strong>"; }
@@ -753,7 +753,7 @@ function get_graph_preview_content () {
 					<table width='100%' cellspacing='0' cellpadding='0' border='0'>
 						<tr>
 							<td align='center' class='textHeaderDark'>
-								" . __("Showing All Graphs") . (strlen($_REQUEST["filter"]) ? " [ " . __("Filter") . " '" . $_REQUEST["filter"] . "' " . __("Applied") . " ]" : "") . "
+								" . __("Showing All Graphs") . (strlen(get_request_var_request("filter")) ? " [ " . __("Filter") . " '" . get_request_var_request("filter") . "' " . __("Applied") . " ]" : "") . "
 							</td>
 						</tr>
 					</table>
@@ -784,7 +784,7 @@ function get_graph_tree_items() {
 	header("Expires: ". gmdate("D, d M Y H:i:s", mktime(date("H"), date("i"), date("s"), date("m")-1, date("d"), date("Y")))." GMT");
 	header("Last-Modified: ". gmdate("D, d M Y H:i:s")." GMT");
 
-	switch($_REQUEST["type"]) {
+	switch(get_request_var_request("type")) {
 	case "list":
 		/* parse the id string
 		 * prototypes:

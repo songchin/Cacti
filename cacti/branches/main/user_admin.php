@@ -770,7 +770,7 @@ function graph_perms_edit() {
 	</table>
 	<?php
 
-	form_hidden_box("id", $_REQUEST["id"], "");
+	form_hidden_box("id", get_request_var_request("id"), "");
 	form_hidden_box("save_component_graph_perms","1","");
 }
 
@@ -824,7 +824,7 @@ function user_realms_edit() {
 	<?php
 	html_end_box();
 
-	form_hidden_box("id", $_REQUEST["id"], "");
+	form_hidden_box("id", get_request_var_request("id"), "");
 	form_hidden_box("save_component_realm_perms","1","");
 }
 
@@ -849,14 +849,14 @@ function graph_settings_edit() {
 
 			if ((isset($field_array["items"])) && (is_array($field_array["items"]))) {
 				while (list($sub_field_name, $sub_field_array) = each($field_array["items"])) {
-					if (graph_config_value_exists($sub_field_name, $_GET["id"])) {
+					if (graph_config_value_exists($sub_field_name, get_request_var("id"))) {
 						$form_array[$field_name]["items"][$sub_field_name]["form_id"] = 1;
 					}
 
 					$form_array[$field_name]["items"][$sub_field_name]["value"] =  db_fetch_cell("SELECT value FROM settings_graphs WHERE name = '" . $sub_field_name . "' AND user_id = " . get_request_var("id"));
 				}
 			}else{
-				if (graph_config_value_exists($field_name, $_GET["id"])) {
+				if (graph_config_value_exists($field_name, get_request_var("id"))) {
 					$form_array[$field_name]["form_id"] = 1;
 				}
 
@@ -877,7 +877,7 @@ function graph_settings_edit() {
 
 	html_end_box();
 
-	form_hidden_box("id", $_REQUEST["id"], "");
+	form_hidden_box("id", get_request_var_request("id"), "");
 	form_hidden_box("save_component_graph_settings","1","");
 }
 
@@ -922,7 +922,7 @@ function user_edit() {
 
 	if (sizeof($user_tabs)) {
 	foreach (array_keys($user_tabs) as $tab_short_name) {
-		print "<div title='" . $user_tabs[$tab_short_name]["title"] . "' class='tabDefault'><a " . (($tab_short_name == $current_tab) ? "class='tabSelected'" : "class='tabDefault'") . " href='" . htmlspecialchars("user_admin.php?action=shift&action=" . $tab_short_name . "&id=" . $_GET["id"]) . "'>" . $user_tabs[$tab_short_name]["name"] . "</a></div>";
+		print "<div title='" . $user_tabs[$tab_short_name]["title"] . "' class='tabDefault'><a " . (($tab_short_name == $current_tab) ? "class='tabSelected'" : "class='tabDefault'") . " href='" . htmlspecialchars("user_admin.php?action=shift&action=" . $tab_short_name . "&id=" . get_request_var("id")) . "'>" . $user_tabs[$tab_short_name]["name"] . "</a></div>";
 
 		if (empty($_GET["id"])) break;
 	}
@@ -1038,7 +1038,7 @@ function user() {
 	html_end_box(false);
 
 	/* form the 'where' clause for our main sql query */
-	if (strlen($_REQUEST["filter"])) {
+	if (strlen(get_request_var_request("filter"))) {
 		$sql_where = "WHERE (user_auth.username LIKE '%" . get_request_var_request("filter") . "%' OR user_auth.full_name LIKE '%" . get_request_var_request("filter") . "%')";
 	}else{
 		$sql_where = "";

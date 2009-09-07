@@ -280,15 +280,15 @@ function set_tree_visibility_status() {
 				$_SESSION[$variable] = true;
 			}
 		}
-	}else if (($_REQUEST["subaction"] == "expand_all") ||
-	($_REQUEST["subaction"] == "colapse_all")) {
+	}else if ((get_request_var_request("subaction") == "expand_all") ||
+	(get_request_var_request("subaction") == "colapse_all")) {
 
 		$headers = db_fetch_assoc("SELECT graph_tree_id, order_key FROM graph_tree_items WHERE host_id='0' AND local_graph_id='0' AND graph_tree_id='" . $_REQUEST["id"] . "'");
 
 		foreach ($headers as $header) {
 			$variable = "sess_tree_leaf_expand_" . $header["graph_tree_id"] . "_" . tree_tier_string($header["order_key"]);
 
-			if ($_REQUEST["subaction"] == "expand_all") {
+			if (get_request_var_request("subaction") == "expand_all") {
 				$_SESSION[$variable] = true;
 			}else{
 				$_SESSION[$variable] = false;
@@ -1104,7 +1104,7 @@ function get_graph_tree_content($tree_id, $leaf_id, $host_group_data) {
 	$graph_list = array();
 
 	if (($leaf_type == "header") || (empty($leaf_id))) {
-		if (strlen($_REQUEST["filter"])) {
+		if (strlen(get_request_var_request("filter"))) {
 			$sql_where = "AND (title_cache LIKE '%" . $_REQUEST["filter"] . "%' OR graph_templates_graph.title LIKE '%" . $_REQUEST["filter"] . "%')";
 		}
 
@@ -1147,7 +1147,7 @@ function get_graph_tree_content($tree_id, $leaf_id, $host_group_data) {
 
 			if (sizeof($graph_templates) > 0) {
 				foreach ($graph_templates as $graph_template) {
-					if (strlen($_REQUEST["filter"])) {
+					if (strlen(get_request_var_request("filter"))) {
 						$sql_where = "AND (title_cache LIKE '%" . $_REQUEST["filter"] . "%')";
 					}
 
@@ -1198,7 +1198,7 @@ function get_graph_tree_content($tree_id, $leaf_id, $host_group_data) {
 					/* fetch a list of field names that are sorted by the preferred sort field */
 					$sort_field_data = get_formatted_data_query_indexes($leaf["host_id"], $data_query["id"]);
 
-					if (strlen($_REQUEST["filter"])) {
+					if (strlen(get_request_var_request("filter"))) {
 						$sql_where = "AND (title_cache LIKE '%" . $_REQUEST["filter"] . "%')";
 					}
 
@@ -1265,7 +1265,7 @@ function get_graph_tree_content($tree_id, $leaf_id, $host_group_data) {
 
 	print "<table cellpadding='0' cellspacing='0' style='width:100%;border:1px solid #BEBEBE;'>\n";
 	/* generate page list */
-	if ($total_rows > $_REQUEST["graphs"]) {
+	if ($total_rows > get_request_var_request("graphs")) {
 		$url_page_select = get_page_list($_REQUEST["page"], MAX_DISPLAY_PAGES, $_REQUEST["graphs"], $total_rows, "pageChange");
 
 		$nav = "\t\t\t<tr class='rowHeader'>
@@ -1276,7 +1276,7 @@ function get_graph_tree_content($tree_id, $leaf_id, $host_group_data) {
 		if ($_REQUEST["page"] > 1) { $nav .= "<strong><a class='linkOverDark' href='#' onClick='pageChange(" . ($_REQUEST["page"]-1) . ")'>&lt;&lt;&nbsp;" . __("Previous") . "</a></strong>"; }
 		$nav .= "</td>\n
 							<td align='center' class='textHeaderDark'>
-								" . __("Showing Graphs") . " " . (($_REQUEST["graphs"]*($_REQUEST["page"]-1))+1) . " " . __("to") . " " . ((($total_rows < read_graph_config_option("treeview_graphs_per_page")) || ($total_rows < ($_REQUEST["graphs"]*$_REQUEST["page"]))) ? $total_rows : ($_REQUEST["graphs"]*$_REQUEST["page"])) . " " . __("of") . " $total_rows [$url_page_select]
+								" . __("Showing Graphs") . " " . ((get_request_var_request("graphs")*(get_request_var_request("page")-1))+1) . " " . __("to") . " " . ((($total_rows < read_graph_config_option("treeview_graphs_per_page")) || ($total_rows < (get_request_var_request("graphs")*get_request_var_request("page")))) ? $total_rows : (get_request_var_request("graphs")*get_request_var_request("page"))) . " " . __("of") . " $total_rows [$url_page_select]
 							</td>\n
 							<td align='right' style='width:100px;' class='textHeaderDark'>";
 		if (($_REQUEST["page"] * $_REQUEST["graphs"]) < $total_rows) { $nav .= "<strong><a class='linkOverDark' href='#' onClick='pageChange(" . ($_REQUEST["page"]+1) . ")'>". __("Next") . " &gt;&gt;</a></strong>"; }
@@ -1291,7 +1291,7 @@ function get_graph_tree_content($tree_id, $leaf_id, $host_group_data) {
 					<table width='100%' cellspacing='0' cellpadding='0' border='0'>
 						<tr>
 							<td align='center' class='textHeaderDark'>
-								" . __("Showing All Graphs") . (strlen($_REQUEST["filter"]) ? " [ " . __("Filter") . " '" . $_REQUEST["filter"] . "' ". __("Applied") . " ]" : "") . "
+								" . __("Showing All Graphs") . (strlen(get_request_var_request("filter")) ? " [ " . __("Filter") . " '" . get_request_var_request("filter") . "' ". __("Applied") . " ]" : "") . "
 							</td>
 						</tr>
 					</table>
@@ -1313,7 +1313,7 @@ function get_graph_tree_content($tree_id, $leaf_id, $host_group_data) {
 		$i++;
 	}
 
-	if ($_REQUEST["thumbnails"] == "true") {
+	if (get_request_var_request("thumbnails") == "true") {
 		html_graph_thumbnail_area($new_graph_list, "", "view_type=tree&graph_start=" . get_current_graph_start() . "&graph_end=" . get_current_graph_end());
 	}else{
 		html_graph_area($new_graph_list, "", "view_type=tree&graph_start=" . get_current_graph_start() . "&graph_end=" . get_current_graph_end());

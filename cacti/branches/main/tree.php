@@ -35,7 +35,7 @@ input_validate_input_number(get_request_var_post('parent_item_id'));
 /* set default action */
 if (!isset($_REQUEST["action"])) { $_REQUEST["action"] = ""; }
 
-switch ($_REQUEST["action"]) {
+switch (get_request_var_request("action")) {
 	case 'save':
 		form_save();
 
@@ -99,7 +99,7 @@ function form_save() {
 				raise_message(1);
 
 				/* sort the tree using the algorithm chosen by the user */
-				sort_tree(SORT_TYPE_TREE, $tree_id, $_POST["sort_type"]);
+				sort_tree(SORT_TYPE_TREE, $tree_id, get_request_var_post("sort_type"));
 			}else{
 				raise_message(2);
 			}
@@ -288,11 +288,11 @@ function item_edit() {
 	html_end_box();
 
 	form_hidden_box("id", (isset($_GET["id"]) ? $_GET["id"] : "0"), "");
-	form_hidden_box("graph_tree_id", $_GET["tree_id"], "");
+	form_hidden_box("graph_tree_id", get_request_var("tree_id"), "");
 	form_hidden_box("type", $current_type, "");
 	form_hidden_box("save_component_tree_item", "1", "");
 
-	form_save_button_alt("path!tree.php|action!edit|id!" . $_GET["tree_id"]);
+	form_save_button_alt("path!tree.php|action!edit|id!" . get_request_var("tree_id"));
 }
 
 function item_moveup() {
@@ -339,7 +339,7 @@ function item_remove() {
 	}
 
 	if ((read_config_option("deletion_verification") == "") || (isset($_GET["confirm"]))) {
-		delete_branch($_GET["id"]);
+		delete_branch(get_request_var("id"));
 	}
 
 	header("Location: tree.php?action=edit&id=" . $_GET["tree_id"]); exit;
@@ -417,7 +417,7 @@ function tree_edit() {
 		print "<tr><td>";
 		html_header($header_items, 3, true, 'tree');
 
-		grow_edit_graph_tree($_GET["id"], "", "");
+		grow_edit_graph_tree(get_request_var("id"), "", "");
 		print "</table></td></tr>";		/* end of html_header */
 		html_end_box();
 	}

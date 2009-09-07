@@ -36,7 +36,7 @@ $host_actions = array(
 if (!isset($_REQUEST["action"])) { $_REQUEST["action"] = ""; }
 
 
-switch ($_REQUEST["action"]) {
+switch (get_request_var_request("action")) {
 	case 'save':
 		form_save();
 
@@ -140,7 +140,7 @@ function form_save() {
 					/* ================= input validation ================= */
 					input_validate_input_number(get_request_var_post("graph_template_id"));
 					/* ==================================================== */
-					db_execute("replace into host_template_graph (host_template_id,graph_template_id) values($host_template_id," . $_POST["graph_template_id"] . ")");
+					db_execute("replace into host_template_graph (host_template_id,graph_template_id) values($host_template_id," . get_request_var_post("graph_template_id") . ")");
 					/* associate this new Graph Template with all hosts that are using the current Host Template
 					   but leave those hosts that have this template already */
 					$new_gt_host_entries = db_fetch_assoc("
@@ -168,7 +168,7 @@ function form_save() {
 							/* add the Graph Template */
 							db_execute("REPLACE INTO host_graph ( host_id, graph_template_id )
 									VALUES (" . $entry["host_id"] . ","
-											  . $_POST["graph_template_id"] . "
+											  . get_request_var_post("graph_template_id") . "
 											)"
 									);
 							debug_log_insert("host_template", $entry["hostname"] . ", " . $entry["description"]);
@@ -180,7 +180,7 @@ function form_save() {
 					input_validate_input_number(get_request_var_post("snmp_query_id"));
 					input_validate_input_number(get_request_var_post("reindex_method"));
 					/* ==================================================== */
-					db_execute("replace into host_template_snmp_query (host_template_id,snmp_query_id, reindex_method) values($host_template_id," . $_POST["snmp_query_id"] . ", " . $_POST["reindex_method"] . ")");
+					db_execute("replace into host_template_snmp_query (host_template_id,snmp_query_id, reindex_method) values($host_template_id," . get_request_var_post("snmp_query_id") . ", " . get_request_var_post("reindex_method") . ")");
 					/* associate this new Data Query with all hosts that are using the current Host Template
 					   but leave those hosts that have this Data Query already.
 					   Reindex all those Hosts */
@@ -209,12 +209,12 @@ function form_save() {
 							/* add the Data Query */
 							db_execute("REPLACE INTO host_snmp_query (host_id,snmp_query_id,reindex_method)
 										VALUES (". $entry["host_id"] . ","
-												 . $_POST["snmp_query_id"] . ","
-												 . $_POST["reindex_method"] . "
+												 . get_request_var_post("snmp_query_id") . ","
+												 . get_request_var_post("reindex_method") . "
 												)"
 										);
 							/* recache snmp data */
-							run_data_query($entry["host_id"], $_POST["snmp_query_id"]);
+							run_data_query($entry["host_id"], get_request_var_post("snmp_query_id"));
 							debug_log_insert("host_template", $entry["hostname"] . ", " . $entry["description"]);
 						}
 					}
@@ -245,7 +245,7 @@ function form_actions() {
 	if (isset($_POST["selected_items"])) {
 		$selected_items = unserialize(stripslashes($_POST["selected_items"]));
 
-		if ($_POST["drp_action"] == "1") { /* delete */
+		if (get_request_var_post("drp_action") == "1") { /* delete */
 			/* do a referential integrity check */
 			if (sizeof($selected_items)) {
 			foreach($selected_items as $template_id) {
@@ -280,13 +280,13 @@ function form_actions() {
 				/* "undo" any device that is currently using this template */
 				db_execute("update host set host_template_id=0 where " . array_to_sql_or($template_ids, "host_template_id"));
 			}
-		}elseif ($_POST["drp_action"] == "2") { /* duplicate */
+		}elseif (get_request_var_post("drp_action") == "2") { /* duplicate */
 			for ($i=0;($i<count($selected_items));$i++) {
 				/* ================= input validation ================= */
 				input_validate_input_number($selected_items[$i]);
 				/* ==================================================== */
 
-				duplicate_host_template($selected_items[$i], $_POST["title_format"]);
+				duplicate_host_template($selected_items[$i], get_request_var_post("title_format"));
 			}
 		}
 
@@ -313,12 +313,12 @@ function form_actions() {
 
 	include_once(CACTI_BASE_PATH . "/include/top_header.php");
 
-	html_start_box("<strong>" . $host_actions{$_POST["drp_action"]} . "</strong>", "60%", $colors["header_panel"], "3", "center", "");
+	html_start_box("<strong>" . $host_actions{get_request_var_post("drp_action")} . "</strong>", "60%", $colors["header_panel"], "3", "center", "");
 
 	print "<form action='host_templates.php' method='post'>\n";
 
 	if (sizeof($host_array)) {
-		if ($_POST["drp_action"] == "1") { /* delete */
+		if (get_request_var_post("drp_action") == "1") { /* delete */
 			print "	<tr>
 					<td class='textArea'>
 						<p>" . __("Are you sure you want to delete the following host templates? All devices currently attached this these host templates will lose their template assocation.") . "</p>
@@ -326,7 +326,7 @@ function form_actions() {
 					</td>
 				</tr>\n
 				";
-		}elseif ($_POST["drp_action"] == "2") { /* duplicate */
+		}elseif (get_request_var_post("drp_action") == "2") { /* duplicate */
 			print "	<tr>
 					<td class='textArea'>
 						<p>" . __("When you click save, the following host templates will be duplicated. You can optionally change the title format for the new host templates.") . "</p>
@@ -347,7 +347,7 @@ function form_actions() {
 	if (!sizeof($host_array)) {
 		form_return_button_alt();
 	}else{
-		form_yesno_button_alt(serialize($host_array), $_POST["drp_action"]);
+		form_yesno_button_alt(serialize($host_array), get_request_var_post("drp_action"));
 	}
 
 	html_end_box();
@@ -775,7 +775,7 @@ function template_edit() {
 			print "<tr><td><em>" . __("No associated graph templates.") . "</em></td></tr>";
 		}
 
-		form_alternate_row_color("add_template" . $_GET["id"], true);
+		form_alternate_row_color("add_template" . get_request_var("id"), true);
 		?>
 			<td colspan="2">
 				<table cellspacing="0" cellpadding="1" width="100%">
@@ -839,7 +839,7 @@ function template_edit() {
 						<strong><?php print $i;?>)</strong> <?php print $item["name"];?>
 					</td>
 					<td>
-						<?php form_dropdown("reindex_method_host_template_".$_GET["id"]."_query_".$item["id"]."_method_".$item["reindex_method"],$reindex_types,"","",$item["reindex_method"],"","","","");?>
+						<?php form_dropdown("reindex_method_host_template_".get_request_var("id")."_query_".$item["id"]."_method_".$item["reindex_method"],$reindex_types,"","",$item["reindex_method"],"","","","");?>
 					</td>
 					<td align='right'>
 						<a href='<?php print htmlspecialchars("host_templates.php?action=item_remove_dq&id=" . $item["id"] . "&host_template_id=" . $_GET["id"]);?>'><img class='buttonSmall' src='images/delete_icon_large.gif' title='Delete Data Query Association' alt='Delete' align='middle'></a>
@@ -851,7 +851,7 @@ function template_edit() {
 			print "<tr><td><em>" . __("No associated data queries.") . "</em></td></tr>";
 		}
 
-		form_alternate_row_color("add_data_query" . $_GET["id"], true);
+		form_alternate_row_color("add_data_query" . get_request_var("id"), true);
 		?>
 			<td colspan="5">
 				<table cellspacing="0" cellpadding="1" width="100%">
@@ -954,11 +954,11 @@ function template() {
 					</td>
 					<td width="1">
 						<select name="rows" onChange="applyFilterChange(document.form_host_template)">
-							<option value="-1"<?php if ($_REQUEST["rows"] == "-1") {?> selected<?php }?>>Default</option>
+							<option value="-1"<?php if (get_request_var_request("rows") == "-1") {?> selected<?php }?>>Default</option>
 							<?php
 							if (sizeof($item_rows) > 0) {
 							foreach ($item_rows as $key => $value) {
-								print "<option value='" . $key . "'"; if ($_REQUEST["rows"] == $key) { print " selected"; } print ">" . $value . "</option>\n";
+								print "<option value='" . $key . "'"; if (get_request_var_request("rows") == $key) { print " selected"; } print ">" . $value . "</option>\n";
 							}
 							}
 							?>
@@ -978,9 +978,9 @@ function template() {
 	html_end_box(false);
 
 	/* form the 'where' clause for our main sql query */
-	if (strlen($_REQUEST["filter"])) {
+	if (strlen(get_request_var_request("filter"))) {
 		$sql_where = "WHERE (host_template.name LIKE '%%" . $_REQUEST["filter"] . "%%')
-			OR (host_template.description LIKE '%%" . $_REQUEST["filter"] . "%%')";
+			OR (host_template.description LIKE '%%" . get_request_var_request("filter") . "%%')";
 	}else{
 		$sql_where = "";
 	}
@@ -1001,8 +1001,8 @@ function template() {
 	$template_list = db_fetch_assoc("SELECT *
 		FROM host_template
 		$sql_where
-		ORDER BY " . $_REQUEST['sort_column'] . " " . $_REQUEST['sort_direction'] .
-		" LIMIT " . ($rows*($_REQUEST["page"]-1)) . "," . $rows);
+		ORDER BY " . get_request_var_request('sort_column') . " " . get_request_var_request('sort_direction') .
+		" LIMIT " . ($rows*(get_request_var_request("page")-1)) . "," . $rows);
 
 	/* generate page list navigation */
 	$nav = html_create_nav($_REQUEST["page"], MAX_DISPLAY_PAGES, $rows, $total_rows, 7, "host_templates.php");
@@ -1016,7 +1016,7 @@ function template() {
 		"nosort" => array(__("Image"), "")
 	);
 
-	html_header_sort_checkbox($display_text, $_REQUEST["sort_column"], $_REQUEST["sort_direction"]);
+	html_header_sort_checkbox($display_text, get_request_var_request("sort_column"), get_request_var_request("sort_direction"));
 
 	if (sizeof($template_list) > 0) {
 		foreach ($template_list as $template) {

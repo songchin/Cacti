@@ -41,7 +41,7 @@ $graph_actions = api_plugin_hook_function('graphs_action_array', $graph_actions)
 /* set default action */
 if (!isset($_REQUEST["action"])) { $_REQUEST["action"] = ""; }
 
-switch ($_REQUEST["action"]) {
+switch (get_request_var_request("action")) {
 	case 'save':
 		form_save();
 

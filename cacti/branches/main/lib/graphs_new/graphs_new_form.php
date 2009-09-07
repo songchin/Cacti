@@ -40,7 +40,7 @@ function api_graphs_new_form_save() {
 			if (preg_match('/^cg_(\d+)$/', $var, $matches)) {
 				$selected_graphs["cg"]{$matches[1]}{$matches[1]} = true;
 			}elseif (preg_match('/^cg_g$/', $var)) {
-				if ($_POST["cg_g"] > 0) {
+				if (get_request_var_post("cg_g") > 0) {
 					$selected_graphs["cg"]{$_POST["cg_g"]}{$_POST["cg_g"]} = true;
 				}
 			}elseif (preg_match('/^sg_(\d+)_([a-f0-9]{32})$/', $var, $matches)) {
@@ -49,7 +49,7 @@ function api_graphs_new_form_save() {
 		}
 
 		if (isset($selected_graphs)) {
-			host_new_graphs($_POST["host_id"], $_POST["host_template_id"], $selected_graphs);
+			host_new_graphs(get_request_var_post("host_id"), get_request_var_post("host_template_id"), $selected_graphs);
 			exit;
 		}
 
@@ -90,7 +90,7 @@ function draw_edit_form_row($field_array, $field_name, $previous_value) {
    ------------------- */
 
 function api_graphs_new_reload_query() {
-	run_data_query($_GET["host_id"], $_GET["id"]);
+	run_data_query(get_request_var("host_id"), get_request_var("id"));
 }
 
 /* -------------------
@@ -180,7 +180,7 @@ function host_new_graphs_save() {
 
 				/* lastly push host-specific information to our data sources */
 				foreach($return_array["local_data_id"] as $item) {
-					push_out_host($_POST["host_id"], $item);
+					push_out_host(get_request_var_post("host_id"), $item);
 				}
 			}elseif ($current_form_type == "sg") {
 				while (list($snmp_index, $true) = each($snmp_index_array)) {
@@ -192,7 +192,7 @@ function host_new_graphs_save() {
 
 					/* lastly push host-specific information to our data sources */
 					foreach($return_array["local_data_id"] as $item) {
-						push_out_host($_POST["host_id"], $item);
+						push_out_host(get_request_var_post("host_id"), $item);
 					}
 				}
 			}
@@ -423,7 +423,7 @@ function graphs_new() {
 
 						if (sizeof($hosts) > 0) {
 						foreach ($hosts as $item) {
-							print "<option value='" . $item["id"] . "'"; if ($_REQUEST["host_id"] == $item["id"]) { print " selected"; } print ">" . $item["name"] . "</option>\n";
+							print "<option value='" . $item["id"] . "'"; if (get_request_var_request("host_id") == $item["id"]) { print " selected"; } print ">" . $item["name"] . "</option>\n";
 						}
 						}
 						?>
@@ -435,8 +435,8 @@ function graphs_new() {
 					</td>
 					<td width="1">
 						<select name="graph_type" onChange="applyGraphsNewFilterChange(document.form_graphs_new)">
-						<option value="-2"<?php if ($_REQUEST["graph_type"] == "-2") {?> selected<?php }?>><?php print __("All");?></option>
-						<option value="-1"<?php if ($_REQUEST["graph_type"] == "-1") {?> selected<?php }?>><?php print __("Graph Template Based");?></option>
+						<option value="-2"<?php if (get_request_var_request("graph_type") == "-2") {?> selected<?php }?>><?php print __("All");?></option>
+						<option value="-1"<?php if (get_request_var_request("graph_type") == "-1") {?> selected<?php }?>><?php print __("Graph Template Based");?></option>
 						<?php
 
 						$snmp_queries = db_fetch_assoc("SELECT
@@ -450,7 +450,7 @@ function graphs_new() {
 
 						if (sizeof($snmp_queries) > 0) {
 						foreach ($snmp_queries as $query) {
-							print "<option value='" . $query["id"] . "'"; if ($_REQUEST["graph_type"] == $query["id"]) { print " selected"; } print ">" . $query["name"] . "</option>\n";
+							print "<option value='" . $query["id"] . "'"; if (get_request_var_request("graph_type") == $query["id"]) { print " selected"; } print ">" . $query["name"] . "</option>\n";
 						}
 						}
 						?>
@@ -462,7 +462,7 @@ function graphs_new() {
 					</td>
 				</tr>
 			</table>
-			<?php if ($_REQUEST["graph_type"] > 0) {?>
+			<?php if (get_request_var_request("graph_type") > 0) {?>
 			<table cellpadding="0" align="left">
 				<tr>
 					<td class="nw50" class='textGraphFilter'>
@@ -480,7 +480,7 @@ function graphs_new() {
 				</tr>
 			</table>
 			<?php }else{
-				form_hidden_box("filter", $_REQUEST["filter"], "");
+				form_hidden_box("filter", get_request_var_request("filter"), "");
 			}?>
 			</form>
 		</td>
@@ -493,16 +493,16 @@ function graphs_new() {
 
 	$i = 0;
 
-	if ($_REQUEST["graph_type"] > 0) {
-		load_current_session_value("page" . $_REQUEST["graph_type"], "sess_graphs_new_page" . $_REQUEST["graph_type"], "1");
-	}else if ($_REQUEST["graph_type"] == -2) {
+	if (get_request_var_request("graph_type") > 0) {
+		load_current_session_value("page" . get_request_var_request("graph_type"), "sess_graphs_new_page" . get_request_var_request("graph_type"), "1");
+	}else if (get_request_var_request("graph_type") == -2) {
 		foreach($snmp_queries as $query) {
 			load_current_session_value("page" . $query["id"], "sess_graphs_new_page" . $query["id"], "1");
 		}
 	}
 
 	print "<form name='chk' method='post' action='" . $file2 . "'>";
-	if ($_REQUEST["graph_type"] < 0) {
+	if (get_request_var_request("graph_type") < 0) {
 
 		$graph_templates = db_fetch_assoc("SELECT
 			graph_templates.id AS graph_template_id,
@@ -669,11 +669,11 @@ function graphs_new() {
 
 				/* if there is a where clause, get the matching snmp_indexes */
 				$sql_where = "";
-				if (strlen($_REQUEST["filter"])) {
+				if (strlen(get_request_var_request("filter"))) {
 					$sql_where = "";
 					$indexes = db_fetch_assoc("SELECT DISTINCT snmp_index
 						FROM host_snmp_cache
-						WHERE field_value LIKE '%%" . $_REQUEST["filter"] . "%%'
+						WHERE field_value LIKE '%%" . get_request_var_request("filter") . "%%'
 						AND snmp_query_id=" . $snmp_query["id"] . "
 						AND host_id=" . $host["id"]);
 
@@ -690,8 +690,8 @@ function graphs_new() {
 					}
 				}
 
-				if ((strlen($_REQUEST["filter"]) == 0) ||
-					((strlen($_REQUEST["filter"])) && (sizeof($indexes)))) {
+				if ((strlen(get_request_var_request("filter")) == 0) ||
+					((strlen(get_request_var_request("filter"))) && (sizeof($indexes)))) {
 					/* determine the sort order */
 					if (isset($xml_array["index_order_type"])) {
 						if ($xml_array["index_order_type"] == "numeric") {

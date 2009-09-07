@@ -29,7 +29,7 @@ include_once(CACTI_BASE_PATH . "/lib/timespan_settings.php");
 include_once(CACTI_BASE_PATH . "/lib/graph_view/graph_view_form.php");
 
 if (isset($_REQUEST["action"])) {
-switch($_REQUEST["action"]){
+switch(get_request_var_request("action")){
 	case "ajax_list":
 		get_graph_list_content();
 		exit;
@@ -66,11 +66,11 @@ input_validate_input_regex(get_request_var_request('graph_remove'), "^([\,0-9]+)
 /* ==================================================== */
 
 if (isset($_GET["hide"])) {
-	if (($_GET["hide"] == "0") || ($_GET["hide"] == "1")) {
+	if ((get_request_var("hide") == "0") || (get_request_var("hide") == "1")) {
 		/* only update expand/contract info is this user has rights to keep their own settings */
 		if ((isset($current_user)) && ($current_user["graph_settings"] == "on")) {
 			db_execute("delete from settings_tree where graph_tree_item_id=" . $_GET["branch_id"] . " and user_id=" . $_SESSION["sess_user_id"]);
-			db_execute("insert into settings_tree (graph_tree_item_id,user_id,status) values (" . $_GET["branch_id"] . "," . $_SESSION["sess_user_id"] . "," . $_GET["hide"] . ")");
+			db_execute("insert into settings_tree (graph_tree_item_id,user_id,status) values (" . get_request_var("branch_id") . "," . $_SESSION["sess_user_id"] . "," . get_request_var("hide") . ")");
 		}
 	}
 }
@@ -97,7 +97,7 @@ if (!isset($_REQUEST["action"])) {
 	}
 }
 
-switch ($_REQUEST["action"]) {
+switch (get_request_var_request("action")) {
 case 'tree':
 	include_once(CACTI_BASE_PATH . "/include/top_graph_header.php");
 

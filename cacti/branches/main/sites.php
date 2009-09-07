@@ -33,7 +33,7 @@ $site_actions = array(
 /* set default action */
 if (!isset($_REQUEST["action"])) { $_REQUEST["action"] = ""; }
 
-switch ($_REQUEST["action"]) {
+switch (get_request_var_request("action")) {
 	case 'save':
 		form_save();
 
@@ -69,8 +69,8 @@ switch ($_REQUEST["action"]) {
 function form_save() {
 	if ((isset($_POST["save_component_site"])) && (empty($_POST["add_dq_y"]))) {
 		$id = api_site_save($_POST["id"], $_POST["name"], $_POST["alternate_id"], $_POST["address1"],
-		$_POST["address2"], $_POST["city"], $_POST["state"], $_POST["postal_code"],
-		$_POST["country"], $_POST["notes"]);
+		get_request_var_post("address2"), get_request_var_post("city"), get_request_var_post("state"), get_request_var_post("postal_code"),
+		get_request_var_post("country"), get_request_var_post("notes"));
 
 		if ((is_error_message()) || ($_POST["id"] != $_POST["_id"])) {
 			header("Location: sites.php?action=edit&id=" . (empty($id) ? $_POST["id"] : $id));
@@ -92,7 +92,7 @@ function form_actions() {
 	if (isset($_POST["selected_items"])) {
 		$selected_items = unserialize(stripslashes($_POST["selected_items"]));
 
-		if ($_POST["drp_action"] == "1") { /* delete */
+		if (get_request_var_post("drp_action") == "1") { /* delete */
 			/* do a referential integrity check */
 			if (sizeof($selected_items)) {
 			foreach($selected_items as $site_id) {
@@ -150,12 +150,12 @@ function form_actions() {
 
 	include_once("./include/top_header.php");
 
-	html_start_box("<strong>" . $site_actions{$_POST["drp_action"]} . "</strong>", "60%", $colors["header_panel"], "3", "center", "");
+	html_start_box("<strong>" . $site_actions{get_request_var_post("drp_action")} . "</strong>", "60%", $colors["header_panel"], "3", "center", "");
 
 	print "<form action='sites.php' method='post'>\n";
 
 	if (isset($site_array)) {
-		if ($_POST["drp_action"] == "1") { /* delete */
+		if (get_request_var_post("drp_action") == "1") { /* delete */
 			print "	<tr>
 					<td class='textArea'>
 						<p>" . __("Are you sure you want to delete the following site(s)?") . "</p>
@@ -176,7 +176,7 @@ function form_actions() {
 	if (!isset($site_array)) {
 		form_return_button_alt();
 	}else{
-		form_yesno_button_alt(serialize($site_array), $_POST["drp_action"]);
+		form_yesno_button_alt(serialize($site_array), get_request_var_post("drp_action"));
 	}
 
 	html_end_box();
@@ -225,7 +225,7 @@ function site_export() {
 
 	$sites = site_get_site_records($sql_where, "", FALSE);
 
-	if ($_REQUEST["detail"] == "false") {
+	if (get_request_var_request("detail") == "false") {
 		$xport_array = array();
 		array_push($xport_array, '"name","total_devices","total_device_errors",' .
 			'"total_macs","total_ips","total_oper_ports",' .
@@ -326,7 +326,7 @@ function site_remove() {
 		}
 
 		if ((read_config_option("remove_verification") == "") || (isset($_GET["confirm"]))) {
-			api_site_remove($_GET["id"]);
+			api_site_remove(get_request_var("id"));
 		}
 	}else{
 		display_custom_error_message(__("You can not delete this site while there are devices associated with it."));
@@ -340,12 +340,12 @@ function site_get_site_records(&$sql_where, $rows = 30, $apply_limits = TRUE) {
 	$sql_where = "";
 
 	/* form the 'where' clause for our main sql query */
-	if (strlen($_REQUEST["filter"])) {
-		if ($_REQUEST["detail"] == "false") {
+	if (strlen(get_request_var_request("filter"))) {
+		if (get_request_var_request("detail") == "false") {
 			$sql_where = "WHERE (sites.name LIKE '%%" . $_REQUEST["filter"] . "%%')";
 		}else{
 			$sql_where = "WHERE (host_template.name LIKE '%%" . $_REQUEST["filter"] . "%%' OR " .
-				"sites.name LIKE '%%" . $_REQUEST["filter"] . "%%')";
+				"sites.name LIKE '%%" . get_request_var_request("filter") . "%%')";
 		}
 	}
 
@@ -365,11 +365,11 @@ function site_get_site_records(&$sql_where, $rows = 30, $apply_limits = TRUE) {
 		}
 	}
 
-	if ($_REQUEST["detail"] == "false") {
+	if (get_request_var_request("detail") == "false") {
 		$query_string = "SELECT *
 			FROM sites
 			$sql_where
-			ORDER BY " . $_REQUEST["sort_column"] . " " . $_REQUEST["sort_direction"];
+			ORDER BY " . get_request_var_request("sort_column") . " " . get_request_var_request("sort_direction");
 
 		if ($apply_limits) {
 			$query_string .= " LIMIT " . ($rows*($_REQUEST["page"]-1)) . "," . $rows;
@@ -390,7 +390,7 @@ function site_get_site_records(&$sql_where, $rows = 30, $apply_limits = TRUE) {
 			RIGHT JOIN sites ON (host.site_id=sites.id)
 			$sql_where
 			GROUP BY sites.name, host_template.name
-			ORDER BY " . $_REQUEST["sort_column"] . " " . $_REQUEST["sort_direction"];
+			ORDER BY " . get_request_var_request("sort_column") . " " . get_request_var_request("sort_direction");
 
 		if ($apply_limits) {
 			$query_string .= " LIMIT " . ($rows*($_REQUEST["page"]-1)) . "," . $rows;
@@ -474,18 +474,18 @@ function site_filter() {
 					</td>
 					<td class="w1">
 						<select name="rows" onChange="applySiteFilterChange(document.site_edit)">
-							<option value="-1"<?php if ($_REQUEST["rows"] == "-1") {?> selected<?php }?>>Default</option>
+							<option value="-1"<?php if (get_request_var_request("rows") == "-1") {?> selected<?php }?>>Default</option>
 							<?php
 							if (sizeof($item_rows) > 0) {
 							foreach ($item_rows as $key => $value) {
-								print "<option value='" . $key . "'"; if ($_REQUEST["rows"] == $key) { print " selected"; } print ">" . $value . "</option>\n";
+								print "<option value='" . $key . "'"; if (get_request_var_request("rows") == $key) { print " selected"; } print ">" . $value . "</option>\n";
 							}
 							}
 							?>
 						</select>
 					</td>
 					<td>
-						&nbsp;<input type="checkbox" id="detail" name="detail" <?php if (($_REQUEST["detail"] == "true") || ($_REQUEST["detail"] == "on")) print ' checked="true"';?> onClick="applySiteFilterChange(document.form_sites)">
+						&nbsp;<input type="checkbox" id="detail" name="detail" <?php if ((get_request_var_request("detail") == "true") || (get_request_var_request("detail") == "on")) print ' checked="true"';?> onClick="applySiteFilterChange(document.form_sites)">
 					</td>
 					<td>
 						<label for="detail"><?php print __("Show Device Details");?></label>
@@ -496,7 +496,7 @@ function site_filter() {
 					</td>
 				</tr>
 			<?php
-			if (!($_REQUEST["detail"] == "false")) { ?>
+			if (!(get_request_var_request("detail") == "false")) { ?>
 			</table>
 			<table cellpadding="1" cellspacing="0">
 				<tr>
@@ -505,12 +505,12 @@ function site_filter() {
 					</td>
 					<td class="w1">
 						<select name="site_id" onChange="applySiteFilterChange(document.form_sites)">
-						<option value="-1"<?php if ($_REQUEST["site_id"] == "-1") {?> selected<?php }?>><?php print __("Any");?></option>
+						<option value="-1"<?php if (get_request_var_request("site_id") == "-1") {?> selected<?php }?>><?php print __("Any");?></option>
 						<?php
 						$sites = db_fetch_assoc("SELECT * FROM sites ORDER BY sites.name");
 						if (sizeof($sites) > 0) {
 						foreach ($sites as $site) {
-							print '<option value="' . $site["id"] . '"'; if ($_REQUEST["site_id"] == $site["id"]) { print " selected"; } print ">" . $site["name"] . "</option>";
+							print '<option value="' . $site["id"] . '"'; if (get_request_var_request("site_id") == $site["id"]) { print " selected"; } print ">" . $site["name"] . "</option>";
 						}
 						}
 						?>
@@ -521,7 +521,7 @@ function site_filter() {
 					</td>
 					<td class="w1">
 						<select name="host_template_id" onChange="applySiteFilterChange(document.form_sites)">
-						<option value="-1"<?php if ($_REQUEST["host_template_id"] == "-1") {?> selected<?php }?>><?php print __("Any");?></option>
+						<option value="-1"<?php if (get_request_var_request("host_template_id") == "-1") {?> selected<?php }?>><?php print __("Any");?></option>
 						<?php
 						$host_templates = db_fetch_assoc("SELECT DISTINCT host_template.id,
 							host_template.name
@@ -530,7 +530,7 @@ function site_filter() {
 							ORDER BY host_template.name");
 						if (sizeof($host_templates) > 0) {
 						foreach ($host_templates as $host_template) {
-							print '<option value="' . $host_template["id"] . '"'; if ($_REQUEST["host_template_id"] == $host_template["id"]) { print " selected"; } print ">" . $host_template["name"] . "</option>";
+							print '<option value="' . $host_template["id"] . '"'; if (get_request_var_request("host_template_id") == $host_template["id"]) { print " selected"; } print ">" . $host_template["name"] . "</option>";
 						}
 						}
 						?>
@@ -543,7 +543,7 @@ function site_filter() {
 				<input type='hidden' name='page' value='1'>
 				<input type='hidden' name='report' value='sites'>
 				<?php
-				if ($_REQUEST["detail"] == "false") { ?>
+				if (get_request_var_request("detail") == "false") { ?>
 				<input type='hidden' name='hidden_host_template_id' value='-1'>
 				<?php }?>
 			</div>
@@ -641,7 +641,7 @@ function site() {
 
 	$sites = site_get_site_records($sql_where, $rows);
 
-	if ($_REQUEST["detail"] == "false") {
+	if (get_request_var_request("detail") == "false") {
 		$total_rows = db_fetch_cell("SELECT
 			COUNT(sites.id)
 			FROM sites
@@ -659,7 +659,7 @@ function site() {
 	/* generate page list */
 	$url_page_select = str_replace("&page", "?page", get_page_list($_REQUEST["page"], MAX_DISPLAY_PAGES, $rows, $total_rows, "sites.php"));
 
-	if ($_REQUEST["detail"] == "false") {
+	if (get_request_var_request("detail") == "false") {
 		/* generate page list navigation */
 		$nav = html_create_nav($_REQUEST["page"], MAX_DISPLAY_PAGES, read_config_option("num_rows_device"), $total_rows, 9, "sites.php");
 
@@ -673,7 +673,7 @@ function site() {
 			"state" => array(__("State"), "DESC"),
 			"country" => array(__("Country"), "DESC"));
 
-		html_header_sort_checkbox($display_text, $_REQUEST["sort_column"], $_REQUEST["sort_direction"]);
+		html_header_sort_checkbox($display_text, get_request_var_request("sort_column"), get_request_var_request("sort_direction"));
 
 		if (sizeof($sites) > 0) {
 			foreach ($sites as $site) {
@@ -711,7 +711,7 @@ function site() {
 			"state" => array(__("State"), "DESC"),
 			"country" => array(__("Country"), "DESC"));
 
-		html_header_sort_checkbox($display_text, $_REQUEST["sort_column"], $_REQUEST["sort_direction"]);
+		html_header_sort_checkbox($display_text, get_request_var_request("sort_column"), get_request_var_request("sort_direction"));
 
 		$i = 0;
 		if (sizeof($sites) > 0) {

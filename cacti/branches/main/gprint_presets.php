@@ -33,7 +33,7 @@ define("MAX_DISPLAY_PAGES", 21);
 /* set default action */
 if (!isset($_REQUEST["action"])) { $_REQUEST["action"] = ""; }
 
-switch ($_REQUEST["action"]) {
+switch (get_request_var_request("action")) {
 	case 'save':
 		form_save();
 
@@ -70,7 +70,7 @@ function form_actions() {
 	if (isset($_POST["selected_items"])) {
 		$selected_items = unserialize(stripslashes($_POST["selected_items"]));
 
-		if ($_POST["drp_action"] == "1") { /* delete */
+		if (get_request_var_post("drp_action") == "1") { /* delete */
 			/* do a referential integrity check */
 			if (sizeof($selected_items)) {
 			foreach($selected_items as $gprint_id) {
@@ -124,12 +124,12 @@ function form_actions() {
 
 	include_once("./include/top_header.php");
 
-	html_start_box("<strong>" . $gprint_actions{$_POST["drp_action"]} . "</strong>", "60%", $colors["header_panel"], "3", "center", "");
+	html_start_box("<strong>" . $gprint_actions{get_request_var_post("drp_action")} . "</strong>", "60%", $colors["header_panel"], "3", "center", "");
 
 	print "<form action='gprint_presets.php' method='post'>\n";
 
 	if (isset($gprint_array)) {
-		if ($_POST["drp_action"] == "1") { /* delete */
+		if (get_request_var_post("drp_action") == "1") { /* delete */
 			print "	<tr>
 					<td class='textArea' bgcolor='#" . $colors["form_alternate1"]. "'>
 						<p>" . __("Are you sure you want to delete the following GPRINT presets?") . "</p>
@@ -149,7 +149,7 @@ function form_actions() {
 	if (!isset($gprint_array)) {
 		form_return_button_alt();
 	}else{
-		form_yesno_button_alt(serialize($gprint_array), $_POST["drp_action"]);
+		form_yesno_button_alt(serialize($gprint_array), get_request_var_post("drp_action"));
 	}
 
 	html_end_box();
@@ -298,11 +298,11 @@ function gprint_presets() {
 					</td>
 					<td width="1">
 						<select name="rows" onChange="applyFilterChange(document.form_gprint)">
-							<option value="-1"<?php if ($_REQUEST["rows"] == "-1") {?> selected<?php }?>>Default</option>
+							<option value="-1"<?php if (get_request_var_request("rows") == "-1") {?> selected<?php }?>>Default</option>
 							<?php
 							if (sizeof($item_rows) > 0) {
 							foreach ($item_rows as $key => $value) {
-								print "<option value='" . $key . "'"; if ($_REQUEST["rows"] == $key) { print " selected"; } print ">" . $value . "</option>\n";
+								print "<option value='" . $key . "'"; if (get_request_var_request("rows") == $key) { print " selected"; } print ">" . $value . "</option>\n";
 							}
 							}
 							?>
@@ -342,7 +342,7 @@ function gprint_presets() {
 		name
 		FROM graph_templates_gprint
 		$sql_where
-		ORDER BY " . $_REQUEST['sort_column'] . " " . $_REQUEST['sort_direction']);
+		ORDER BY " . get_request_var_request('sort_column') . " " . get_request_var_request('sort_direction'));
 
 	/* generate page list navigation */
 	$nav = html_create_nav($_REQUEST["page"], MAX_DISPLAY_PAGES, $rows, $total_rows, 11, "gprint_presets.php?filter=" . $_REQUEST["filter"]);
@@ -353,7 +353,7 @@ function gprint_presets() {
 	$display_text = array(
 		"name" => array(__("Name"), "ASC"));
 
-	html_header_sort_checkbox($display_text, $_REQUEST["sort_column"], $_REQUEST["sort_direction"]);
+	html_header_sort_checkbox($display_text, get_request_var_request("sort_column"), get_request_var_request("sort_direction"));
 
 	if (sizeof($template_list) > 0) {
 		foreach ($template_list as $template) {

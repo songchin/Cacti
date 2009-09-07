@@ -308,24 +308,24 @@ if ($old_cacti_version == "new_install") {
 if (empty($_REQUEST["step"])) {
 	$_REQUEST["step"] = 1;
 }else{
-	if ($_REQUEST["step"] == "1") {
+	if (get_request_var_request("step") == "1") {
 		$_REQUEST["step"] = "2";
-	}elseif (($_REQUEST["step"] == "2") && ($_REQUEST["install_type"] == "1")) {
+	}elseif ((get_request_var_request("step") == "2") && (get_request_var_request("install_type") == "1")) {
 		$_REQUEST["step"] = "3";
-	}elseif (($_REQUEST["step"] == "2") && ($_REQUEST["install_type"] == "3")) {
+	}elseif ((get_request_var_request("step") == "2") && (get_request_var_request("install_type") == "3")) {
 		$_REQUEST["step"] = "8";
-	}elseif (($_REQUEST["step"] == "8") && ($old_version_index <= array_search("0.8.5a", $cacti_versions))) {
+	}elseif ((get_request_var_request("step") == "8") && ($old_version_index <= array_search("0.8.5a", $cacti_versions))) {
 		$_REQUEST["step"] = "9";
-	}elseif ($_REQUEST["step"] == "8") {
+	}elseif (get_request_var_request("step") == "8") {
 		$_REQUEST["step"] = "3";
-	}elseif ($_REQUEST["step"] == "9") {
+	}elseif (get_request_var_request("step") == "9") {
 		$_REQUEST["step"] = "3";
-	}elseif ($_REQUEST["step"] == "3") {
+	}elseif (get_request_var_request("step") == "3") {
 		$_REQUEST["step"] = "4";
 	}
 }
 
-if ($_REQUEST["step"] == "4") {
+if (get_request_var_request("step") == "4") {
 	include_once(CACTI_BASE_PATH . "/lib/data_query.php");
 	include_once(CACTI_BASE_PATH . "/lib/utility.php");
 
@@ -334,7 +334,7 @@ if ($_REQUEST["step"] == "4") {
 	/* get all items on the form and write values for them  */
 	while (list($name, $array) = each($input)) {
 		if (isset($_POST[$name])) {
-			db_execute("replace into settings (name,value) values ('$name','" . $_POST[$name] . "')");
+			db_execute("replace into settings (name,value) values ('$name','" . get_request_var_post($name) . "')");
 		}
 	}
 
@@ -359,7 +359,7 @@ if ($_REQUEST["step"] == "4") {
 
 	header ("Location: ../index.php");
 	exit;
-}elseif (($_REQUEST["step"] == "8") && ($_REQUEST["install_type"] == "3")) {
+}elseif ((get_request_var_request("step") == "8") && (get_request_var_request("install_type") == "3")) {
 	/* if the version is not found, die */
 	if (!is_int($old_version_index)) {
 		print "	<p style='font-family: Verdana, Arial; font-size: 16px; font-weight: bold; color: red;'>Error</p>
@@ -478,7 +478,7 @@ if ($_REQUEST["step"] == "4") {
 				</tr>
 				<tr>
 					<td width="100%" style="font-size: 12px;">
-						<?php if ($_REQUEST["step"] == "1") { ?>
+						<?php if (get_request_var_request("step") == "1") { ?>
 
 						<p>Thanks for taking the time to download and install cacti, the complete graphing
 						solution for your network. Before you can start making cool graphs, there are a few
@@ -503,7 +503,7 @@ if ($_REQUEST["step"] == "4") {
 						MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 						GNU General Public License for more details.</p>
 
-						<?php }elseif ($_REQUEST["step"] == "2") { ?>
+						<?php }elseif (get_request_var_request("step") == "2") { ?>
 
 						<p>Please select the type of installation</p>
 
@@ -524,7 +524,7 @@ if ($_REQUEST["step"] == "4") {
 							print "Server Operating System Type: " . CACTI_SERVER_OS . "<br>"; ?>
 						</p>
 
-						<?php }elseif ($_REQUEST["step"] == "3") { ?>
+						<?php }elseif (get_request_var_request("step") == "3") { ?>
 
 						<p>Make sure all of these values are correct before continuing.</p>
 						<?php
@@ -582,7 +582,7 @@ if ($_REQUEST["step"] == "4") {
 						is an upgrade. You can change any of the settings on this screen at a later
 						time by going to "Cacti Settings" from within Cacti.</p>
 
-						<?php }elseif ($_REQUEST["step"] == "8") { ?>
+						<?php }elseif (get_request_var_request("step") == "8") { ?>
 
 						<p>Upgrade results:</p>
 
@@ -632,7 +632,7 @@ if ($_REQUEST["step"] == "4") {
 						print $upgrade_results;
 						?>
 
-						<?php }elseif ($_REQUEST["step"] == "9") { ?>
+						<?php }elseif (get_request_var_request("step") == "9") { ?>
 
 						<p style='font-size: 16px; font-weight: bold; color: red;'>Important Upgrade Notice</p>
 
@@ -646,7 +646,7 @@ if ($_REQUEST["step"] == "4") {
 
 						<?php }?>
 
-						<p align="right"><input type="image" src="install_<?php if ($_REQUEST["step"] == "3") {?>finish<?php }else{?>next<?php }?>.gif" alt="<?php if ($_REQUEST["step"] == "3"){?>Finish<?php }else{?>Next<?php }?>"></p>
+						<p align="right"><input type="image" src="install_<?php if (get_request_var_request("step") == "3") {?>finish<?php }else{?>next<?php }?>.gif" alt="<?php if (get_request_var_request("step") == "3"){?>Finish<?php }else{?>Next<?php }?>"></p>
 					</td>
 				</tr>
 			</table>

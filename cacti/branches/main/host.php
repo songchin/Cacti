@@ -49,7 +49,7 @@ if (!isset($_REQUEST["action"])) { $_REQUEST["action"] = ""; }
 
 //print_r($_REQUEST);
 
-switch ($_REQUEST["action"]) {
+switch (get_request_var_request("action")) {
 	case 'save':
 		if (isset($_REQUEST["save_component_graph"])) {
 			api_graphs_new_form_save();

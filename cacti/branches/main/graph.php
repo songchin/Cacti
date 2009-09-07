@@ -42,7 +42,7 @@ if (!isset($_GET['rra_id'])) {
 	$_GET['rra_id'] = 'all';
 }
 
-if ($_GET["rra_id"] == "all") {
+if (get_request_var("rra_id") == "all") {
 	$sql_where = " where id is not null";
 }else{
 	$sql_where = " where id=" . $_GET["rra_id"];
@@ -65,7 +65,7 @@ if (read_config_option("auth_method") != 0) {
 
 $graph_title = get_graph_title($_GET["local_graph_id"]);
 
-if ($_REQUEST["view_type"] == "tree") {
+if (get_request_var_request("view_type") == "tree") {
 	print "<table width='100%' style='background-color: #ffffff; border: 1px solid #ffffff;' align='center' cellpadding='3'>";
 }else{
 	print "<table width='100%' style='background-color: #f5f5f5; border: 1px solid #bbbbbb;' align='center' cellpadding='3'>";
@@ -73,7 +73,7 @@ if ($_REQUEST["view_type"] == "tree") {
 
 $rras = get_associated_rras($_GET["local_graph_id"]);
 
-switch ($_REQUEST["action"]) {
+switch (get_request_var_request("action")) {
 case 'view':
 	?>
 	<tr class='rowSubHeader'>
@@ -153,7 +153,7 @@ case 'zoom':
 	}
 
 	if (isset($_GET["graph_start"])) {
-		if (($graph_end - $_GET["graph_start"])>$max_timespan) {
+		if (($graph_end - get_request_var("graph_start"))>$max_timespan) {
 			$graph_start = $now - $max_timespan;
 		}else {
 			$graph_start = $_GET["graph_start"];

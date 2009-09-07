@@ -75,7 +75,7 @@ function initialize_timespan(&$timespan) {
 /* preformat for timespan selector */
 function process_html_variables() {
 	if (isset($_REQUEST["predefined_timespan"])) {
-		if (!is_numeric($_REQUEST["predefined_timespan"])) {
+		if (!is_numeric(get_request_var_request("predefined_timespan"))) {
 			if (isset($_SESSION["sess_current_timespan"])) {
 				if ($_SESSION["custom"]) {
 					$_REQUEST["predefined_timespan"] = GT_CUSTOM;
@@ -100,7 +100,7 @@ function process_html_variables() {
 
 	# process timeshift
 	if (isset($_REQUEST["predefined_timeshift"])) {
-		if (!is_numeric($_REQUEST["predefined_timeshift"])) {
+		if (!is_numeric(get_request_var_request("predefined_timeshift"))) {
 			if (isset($_SESSION["sess_current_timeshift"])) {
 				$_REQUEST["predefined_timeshift"] = $_SESSION["sess_current_timeshift"];
 			}else {

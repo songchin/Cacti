@@ -34,7 +34,7 @@ $dq_actions = array(
 /* set default action */
 if (!isset($_REQUEST["action"])) { $_REQUEST["action"] = ""; }
 
-switch ($_REQUEST["action"]) {
+switch (get_request_var_request("action")) {
 	case 'save':
 		form_save();
 
@@ -175,7 +175,7 @@ function form_save() {
 						/* suggested values -- data templates */
 						$sequence = get_sequence(0, "sequence", "snmp_query_graph_rrd_sv", "snmp_query_graph_id=" . $_POST["id"]  . " and data_template_id=" . $matches[1] . " and field_name='" . $_POST{"svds_" . $matches[1] . "_field"} . "'");
 						$hash = get_hash_data_query(0, "data_query_sv_data_source");
-						db_execute("insert into snmp_query_graph_rrd_sv (hash,snmp_query_graph_id,data_template_id,sequence,field_name,text) values ('$hash'," . $_POST["id"] . "," . $matches[1] . ",$sequence,'" . $_POST{"svds_" . $matches[1] . "_field"} . "','" . $_POST{"svds_" . $matches[1] . "_text"} . "')");
+						db_execute("insert into snmp_query_graph_rrd_sv (hash,snmp_query_graph_id,data_template_id,sequence,field_name,text) values ('$hash'," . get_request_var_post("id") . "," . $matches[1] . ",$sequence,'" . $_POST{"svds_" . $matches[1] . "_field"} . "','" . $_POST{"svds_" . $matches[1] . "_text"} . "')");
 
 						$redirect_back = true;
 						clear_messages();
@@ -183,7 +183,7 @@ function form_save() {
 						/* suggested values -- graph templates */
 						$sequence = get_sequence(0, "sequence", "snmp_query_graph_sv", "snmp_query_graph_id=" . $_POST["id"] . " and field_name='" . $_POST{"svg_field"} . "'");
 						$hash = get_hash_data_query(0, "data_query_sv_graph");
-						db_execute("insert into snmp_query_graph_sv (hash,snmp_query_graph_id,sequence,field_name,text) values ('$hash'," . $_POST["id"] . ",$sequence,'" . $_POST{"svg_field"} . "','" . $_POST{"svg_text"} . "')");
+						db_execute("insert into snmp_query_graph_sv (hash,snmp_query_graph_id,sequence,field_name,text) values ('$hash'," . get_request_var_post("id") . ",$sequence,'" . $_POST{"svg_field"} . "','" . $_POST{"svg_text"} . "')");
 
 						$redirect_back = true;
 						clear_messages();
@@ -210,7 +210,7 @@ function form_actions() {
 	if (isset($_POST["selected_items"])) {
 		$selected_items = unserialize(stripslashes($_POST["selected_items"]));
 
-		if ($_POST["drp_action"] == "1") { /* delete */
+		if (get_request_var_post("drp_action") == "1") { /* delete */
 			/* do a referential integrity check */
 			if (sizeof($selected_items)) {
 			foreach($selected_items as $query_id) {
@@ -280,12 +280,12 @@ function form_actions() {
 
 	include_once(CACTI_BASE_PATH . "/include/top_header.php");
 
-	html_start_box("<strong>" . $dq_actions{$_POST["drp_action"]} . "</strong>", "60%", $colors["header_panel"], "3", "center", "");
+	html_start_box("<strong>" . $dq_actions{get_request_var_post("drp_action")} . "</strong>", "60%", $colors["header_panel"], "3", "center", "");
 
 	print "<form action='data_queries.php' method='post'>\n";
 
 	if (sizeof($dq_array)) {
-		if ($_POST["drp_action"] == "1") { /* delete */
+		if (get_request_var_post("drp_action") == "1") { /* delete */
 			$graphs = array();
 
 			print "
@@ -307,7 +307,7 @@ function form_actions() {
 	if (!sizeof($dq_array)) {
 		form_return_button_alt();
 	}else{
-		form_yesno_button_alt(serialize($dq_array), $_POST["drp_action"]);
+		form_yesno_button_alt(serialize($dq_array), get_request_var_post("drp_action"));
 	}
 
 	html_end_box();
@@ -454,7 +454,7 @@ function data_query_item_edit() {
 
 						form_dropdown("dsdt_" . $data_template["id"] . "_" . $data_template_rrd["id"] . "_snmp_field_output",$xml_outputs,"","",$data_template_rrd["snmp_field_name"],"","");
 						print "</td>\n<td align='right'>";
-						form_checkbox("dsdt_" . $data_template["id"] . "_" . $data_template_rrd["id"] . "_check", $old_value, "", "", "", $_GET["id"]); print "<br>";
+						form_checkbox("dsdt_" . $data_template["id"] . "_" . $data_template_rrd["id"] . "_check", $old_value, "", "", "", get_request_var("id")); print "<br>";
 						print "</td>\n";
 						form_end_row();
 					}
@@ -547,7 +547,7 @@ function data_query_item_edit() {
 		html_start_box("<strong>" . __("Suggested Values: Graph Templates") . "</strong>", "100%", $colors["header"], 0, "center", "");
 		$header_items = array(__("Graph Template") . " - " . db_fetch_cell("select name from graph_templates where id=" . $snmp_query_item["graph_template_id"]), "&nbsp;");
 		print "<tr><td>";
-		html_header($header_items, 2, true, 'graph_template_suggested_values_' . $_GET["id"]);
+		html_header($header_items, 2, true, 'graph_template_suggested_values_' . get_request_var("id"));
 
 		if (sizeof($suggested_values) > 0) {
 			foreach ($suggested_values as $suggested_value) {
@@ -585,7 +585,7 @@ function data_query_item_edit() {
 	}
 	?>
 <script type="text/javascript">
-	$('#graph_template_suggested_values_<?php print $_GET["id"];?>').tableDnD({
+	$('#graph_template_suggested_values_<?php print get_request_var("id");?>').tableDnD({
 		onDrop: function(table, row) {
 			alert("lib/ajax/jquery.tablednd/data_query_gt_sv.ajax.php?gt_id=<?php print $_GET["id"];?>&"+$.tableDnD.serialize());
 			$('#AjaxResult').load("lib/ajax/jquery.tablednd/data_query_gt_sv.ajax.php?gt_id=<?php print $_GET["id"];?>&"+$.tableDnD.serialize());
@@ -594,7 +594,7 @@ function data_query_item_edit() {
 </script>
 	<?php
 
-	form_save_button_alt("path!data_queries.php|action!edit|id!" . $_GET["snmp_query_id"]);
+	form_save_button_alt("path!data_queries.php|action!edit|id!" . get_request_var("snmp_query_id"));
 }
 
 /* ---------------------
@@ -778,11 +778,11 @@ function data_query() {
 					</td>
 					<td width="1">
 						<select name="rows" onChange="applyFilterChange(document.form_graph_id)">
-							<option value="-1"<?php if ($_REQUEST["rows"] == "-1") {?> selected<?php }?>>Default</option>
+							<option value="-1"<?php if (get_request_var_request("rows") == "-1") {?> selected<?php }?>>Default</option>
 							<?php
 							if (sizeof($item_rows) > 0) {
 							foreach ($item_rows as $key => $value) {
-								print "<option value='" . $key . "'"; if ($_REQUEST["rows"] == $key) { print " selected"; } print ">" . $value . "</option>\n";
+								print "<option value='" . $key . "'"; if (get_request_var_request("rows") == $key) { print " selected"; } print ">" . $value . "</option>\n";
 							}
 							}
 							?>
@@ -804,10 +804,10 @@ function data_query() {
 	html_start_box("", "100%", $colors["header"], "0", "center", "");
 
 	/* form the 'where' clause for our main sql query */
-	if (strlen($_REQUEST["filter"])) {
+	if (strlen(get_request_var_request("filter"))) {
 		$sql_where = "WHERE (snmp_query.name LIKE '%%" . $_REQUEST["filter"] . "%%'
-			OR data_input.name LIKE '%%" . $_REQUEST["filter"] . "%%')
-			OR snmp_query.description LIKE '%%" . $_REQUEST["filter"] . "%%'";
+			OR data_input.name LIKE '%%" . get_request_var_request("filter") . "%%')
+			OR snmp_query.description LIKE '%%" . get_request_var_request("filter") . "%%'";
 	}else{
 		$sql_where = "";
 	}
@@ -831,8 +831,8 @@ function data_query() {
 		data_input.name AS data_input_method
 		FROM snmp_query INNER JOIN data_input ON (snmp_query.data_input_id=data_input.id)
 		$sql_where
-		ORDER BY " . $_REQUEST['sort_column'] . " " . $_REQUEST['sort_direction'] . "
-		LIMIT " . ($rows*($_REQUEST["page"]-1)) . "," . $rows);
+		ORDER BY " . get_request_var_request('sort_column') . " " . get_request_var_request('sort_direction') . "
+		LIMIT " . ($rows*(get_request_var_request("page")-1)) . "," . $rows);
 
 	/* generate page list navigation */
 	$nav = html_create_nav($_REQUEST["page"], MAX_DISPLAY_PAGES, $rows, $total_rows, 7, "data_queries.php");
@@ -846,7 +846,7 @@ function data_query() {
 		"nosort" => array(__("Image"), ""),
 		"data_input_method" => array(__("Data Input Method"), "ASC"));
 
-	html_header_sort_checkbox($display_text, $_REQUEST["sort_column"], $_REQUEST["sort_direction"]);
+	html_header_sort_checkbox($display_text, get_request_var_request("sort_column"), get_request_var_request("sort_direction"));
 
 	if (sizeof($snmp_queries) > 0) {
 		foreach ($snmp_queries as $snmp_query) {

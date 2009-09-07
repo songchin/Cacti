@@ -29,7 +29,7 @@ define("COLOR_COLUMNS", 5);
 /* set default action */
 if (!isset($_REQUEST["action"])) { $_REQUEST["action"] = ""; }
 
-switch ($_REQUEST["action"]) {
+switch (get_request_var_request("action")) {
 	case 'save':
 	case 'import':
 		form_save();
@@ -353,8 +353,8 @@ function import_colors() {
 		</td>
 		<td width="1">
 			<select name="method">
-				<option value="merge"<?php if ($_REQUEST["method"] == "merge") {?> selected<?php }?>><?php print __("Merge (default)");?></option>
-				<option value="reorder"<?php if ($_REQUEST["method"] == "reorder") {?> selected<?php }?>><?php print __("Reorder");?></option>
+				<option value="merge"<?php if (get_request_var_request("method") == "merge") {?> selected<?php }?>><?php print __("Merge (default)");?></option>
+				<option value="reorder"<?php if (get_request_var_request("method") == "reorder") {?> selected<?php }?>><?php print __("Reorder");?></option>
 			</select>
 		</td><?php
 
@@ -573,9 +573,9 @@ function color() {
 					</td>
 					<td class="w1">
 						<select name="rorder" onChange="applyFilterChange(document.form_color)">
-							<option value="-1"<?php if ($_REQUEST["rorder"] == "-1") {?> selected<?php }?>><?php print __("None");?></option>
-							<option value="a"<?php if ($_REQUEST["rorder"] == "a") {?> selected<?php }?>><?php print __("Acending");?></option>
-							<option value="d"<?php if ($_REQUEST["rorder"] == "d") {?> selected<?php }?>><?php print __("Descending");?></option>
+							<option value="-1"<?php if (get_request_var_request("rorder") == "-1") {?> selected<?php }?>><?php print __("None");?></option>
+							<option value="a"<?php if (get_request_var_request("rorder") == "a") {?> selected<?php }?>><?php print __("Acending");?></option>
+							<option value="d"<?php if (get_request_var_request("rorder") == "d") {?> selected<?php }?>><?php print __("Descending");?></option>
 						</select>
 					</td>
 					<td class="nw30">
@@ -583,9 +583,9 @@ function color() {
 					</td>
 					<td class="w1">
 						<select name="gorder" onChange="applyFilterChange(document.form_color)">
-							<option value="-1"<?php if ($_REQUEST["gorder"] == "-1") {?> selected<?php }?>><?php print __("None");?></option>
-							<option value="a"<?php if ($_REQUEST["gorder"] == "a") {?> selected<?php }?>><?php print __("Acending");?></option>
-							<option value="d"<?php if ($_REQUEST["gorder"] == "d") {?> selected<?php }?>><?php print __("Descending");?></option>
+							<option value="-1"<?php if (get_request_var_request("gorder") == "-1") {?> selected<?php }?>><?php print __("None");?></option>
+							<option value="a"<?php if (get_request_var_request("gorder") == "a") {?> selected<?php }?>><?php print __("Acending");?></option>
+							<option value="d"<?php if (get_request_var_request("gorder") == "d") {?> selected<?php }?>><?php print __("Descending");?></option>
 						</select>
 					</td>
 					<td class="nw30">
@@ -593,9 +593,9 @@ function color() {
 					</td>
 					<td width="1">
 						<select name="border" onChange="applyFilterChange(document.form_color)">
-							<option value="-1"<?php if ($_REQUEST["border"] == "-1") {?> selected<?php }?>><?php print __("None");?></option>
-							<option value="a"<?php if ($_REQUEST["border"] == "a") {?> selected<?php }?>><?php print __("Acending");?></option>
-							<option value="d"<?php if ($_REQUEST["border"] == "d") {?> selected<?php }?>><?php print __("Descending");?></option>
+							<option value="-1"<?php if (get_request_var_request("border") == "-1") {?> selected<?php }?>><?php print __("None");?></option>
+							<option value="a"<?php if (get_request_var_request("border") == "a") {?> selected<?php }?>><?php print __("Acending");?></option>
+							<option value="d"<?php if (get_request_var_request("border") == "d") {?> selected<?php }?>><?php print __("Descending");?></option>
 						</select>
 					</td>
 					<td class="nw30">
@@ -603,14 +603,14 @@ function color() {
 					</td>
 					<td width="1">
 						<select name="columns" onChange="applyFilterChange(document.form_color)">
-							<option value="-1"<?php if ($_REQUEST["columns"] == "-1") {?> selected<?php }?>><?php print __("Default");?></option>
-							<option value="4"<?php if ($_REQUEST["columns"] == "4") {?> selected<?php }?>>4 Columns</option>
-							<option value="5"<?php if ($_REQUEST["columns"] == "5") {?> selected<?php }?>>5 Columns</option>
-							<option value="6"<?php if ($_REQUEST["columns"] == "6") {?> selected<?php }?>>6 Columns</option>
-							<option value="7"<?php if ($_REQUEST["columns"] == "7") {?> selected<?php }?>>7 Columns</option>
-							<option value="8"<?php if ($_REQUEST["columns"] == "8") {?> selected<?php }?>>8 Columns</option>
-							<option value="9"<?php if ($_REQUEST["columns"] == "9") {?> selected<?php }?>>9 Columns</option>
-							<option value="10"<?php if ($_REQUEST["columns"] == "10") {?> selected<?php }?>>10 Columns</option>
+							<option value="-1"<?php if (get_request_var_request("columns") == "-1") {?> selected<?php }?>><?php print __("Default");?></option>
+							<option value="4"<?php if (get_request_var_request("columns") == "4") {?> selected<?php }?>>4 Columns</option>
+							<option value="5"<?php if (get_request_var_request("columns") == "5") {?> selected<?php }?>>5 Columns</option>
+							<option value="6"<?php if (get_request_var_request("columns") == "6") {?> selected<?php }?>>6 Columns</option>
+							<option value="7"<?php if (get_request_var_request("columns") == "7") {?> selected<?php }?>>7 Columns</option>
+							<option value="8"<?php if (get_request_var_request("columns") == "8") {?> selected<?php }?>>8 Columns</option>
+							<option value="9"<?php if (get_request_var_request("columns") == "9") {?> selected<?php }?>>9 Columns</option>
+							<option value="10"<?php if (get_request_var_request("columns") == "10") {?> selected<?php }?>>10 Columns</option>
 						</select>
 					</td>
 					<td class="nw120">
@@ -632,7 +632,7 @@ function color() {
 	print "<tr class='rowSubHeader'>";
 	$i = 0;
 
-	while ($i < $_REQUEST["columns"]) {
+	while ($i < get_request_var_request("columns")) {
 		DrawMatrixHeaderItem(__("Hex"),    $colors["header_text"], 1, "center");
 		DrawMatrixHeaderItem(__("Color"),  $colors["header_text"], 1, "center");
 		DrawMatrixHeaderItem("&nbsp;", $colors["header_text"], 1);
@@ -642,21 +642,21 @@ function color() {
 	print "</tr>";
 
 	$order_by = "";
-	if ($_REQUEST["rorder"] == 'a') {
+	if (get_request_var_request("rorder") == 'a') {
 		$order_by = "ORDER BY substring(hex,1,2) ASC";
-	}elseif ($_REQUEST["rorder"] == 'd') {
+	}elseif (get_request_var_request("rorder") == 'd') {
 		$order_by = "ORDER BY substring(hex,1,2) DESC";
 	}
 
-	if ($_REQUEST["gorder"] == 'a') {
+	if (get_request_var_request("gorder") == 'a') {
 		$order_by .= (strlen($order_by) ? ",":"ORDER BY") . " substring(hex,3,2) ASC";
-	}elseif ($_REQUEST["gorder"] == 'd') {
+	}elseif (get_request_var_request("gorder") == 'd') {
 		$order_by .= (strlen($order_by) ? ",":"ORDER BY") . " substring(hex,3,2) DESC";
 	}
 
-	if ($_REQUEST["border"] == 'a') {
+	if (get_request_var_request("border") == 'a') {
 		$order_by .= (strlen($order_by) ? ",":"ORDER BY") . " substring(hex,5,2) ASC";
-	}elseif ($_REQUEST["border"] == 'd') {
+	}elseif (get_request_var_request("border") == 'd') {
 		$order_by .= (strlen($order_by) ? ",":"ORDER BY") . " substring(hex,5,2) DESC";
 	}
 
@@ -672,7 +672,7 @@ function color() {
 		$j=0; ## even/odd counter
 		foreach ($color_list as $color) {
 			$j++;
-			if ($j % $_REQUEST["columns"] == 1) {
+			if ($j % get_request_var_request("columns") == 1) {
 				form_alternate_row_color();
 					?>
 					<td id="<?php print $color['hex'] . '_hex';?>" width='1'>

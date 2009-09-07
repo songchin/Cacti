@@ -88,6 +88,7 @@ $fields_data_input_edit = array(
 		"description" => __("The data that is sent to the script, which includes the complete path to the script and input sources in &lt;&gt; brackets."),
 		"value" => "|arg1:input_string|",
 		"max_length" => "255",
+		"size" => "120"
 		),
 	"id" => array(
 		"method" => "hidden_zero",

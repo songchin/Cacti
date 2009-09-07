@@ -38,7 +38,7 @@ $graph_actions = array(
 /* set default action */
 if (!isset($_REQUEST["action"])) { $_REQUEST["action"] = ""; }
 
-switch ($_REQUEST["action"]) {
+switch (get_request_var_request("action")) {
 	case 'save':
 		form_save();
 
@@ -173,7 +173,7 @@ function form_actions() {
 	if (isset($_POST["selected_items"])) {
 		$selected_items = unserialize(stripslashes($_POST["selected_items"]));
 
-		if ($_POST["drp_action"] == "1") { /* delete */
+		if (get_request_var_post("drp_action") == "1") { /* delete */
 			/* do a referential integrity check */
 			if (sizeof($selected_items)) {
 			foreach($selected_items as $template_id) {
@@ -221,13 +221,13 @@ function form_actions() {
 				db_execute("update graph_templates_item set local_graph_template_item_id=0,graph_template_id=0 where " . array_to_sql_or($template_ids, "graph_template_id"));
 				db_execute("update graph_local set graph_template_id=0 where " . array_to_sql_or($template_ids, "graph_template_id"));
 			}
-		}elseif ($_POST["drp_action"] == "2") { /* duplicate */
+		}elseif (get_request_var_post("drp_action") == "2") { /* duplicate */
 			for ($i=0;($i<count($selected_items));$i++) {
 				/* ================= input validation ================= */
 				input_validate_input_number($selected_items[$i]);
 				/* ==================================================== */
 
-				duplicate_graph(0, $selected_items[$i], $_POST["title_format"]);
+				duplicate_graph(0, $selected_items[$i], get_request_var_post("title_format"));
 			}
 		}
 
@@ -254,12 +254,12 @@ function form_actions() {
 
 	include_once(CACTI_BASE_PATH . "/include/top_header.php");
 
-	html_start_box("<strong>" . $graph_actions{$_POST["drp_action"]} . "</strong>", "60%", $colors["header_panel"], "3", "center", "");
+	html_start_box("<strong>" . $graph_actions{get_request_var_post("drp_action")} . "</strong>", "60%", $colors["header_panel"], "3", "center", "");
 
 	print "<form action='graph_templates.php' method='post'>\n";
 
 	if (sizeof($graph_array)) {
-		if ($_POST["drp_action"] == "1") { /* delete */
+		if (get_request_var_post("drp_action") == "1") { /* delete */
 			print "	<tr>
 					<td class='textArea'>
 						<p>" . __("Are you sure you want to delete the following graph templates? Any graphs attached to these templates will become individual graphs.") . "</p>
@@ -267,7 +267,7 @@ function form_actions() {
 					</td>
 				</tr>\n
 				";
-		}elseif ($_POST["drp_action"] == "2") { /* duplicate */
+		}elseif (get_request_var_post("drp_action") == "2") { /* duplicate */
 			print "	<tr>
 					<td class='textArea'>
 						<p>" . __("When you click save, the following graph templates will be duplicated. You can optionally change the title format for the new graph templates.") . "</p>
@@ -288,7 +288,7 @@ function form_actions() {
 	if (!sizeof($graph_array)) {
 		form_return_button_alt();
 	}else{
-		form_yesno_button_alt(serialize($graph_array), $_POST["drp_action"]);
+		form_yesno_button_alt(serialize($graph_array), get_request_var_post("drp_action"));
 	}
 
 	html_end_box();
@@ -561,11 +561,11 @@ function template() {
 					</td>
 					<td width="1">
 						<select name="rows" onChange="applyFilterChange(document.form_graph_template)">
-							<option value="-1"<?php if ($_REQUEST["rows"] == "-1") {?> selected<?php }?>>Default</option>
+							<option value="-1"<?php if (get_request_var_request("rows") == "-1") {?> selected<?php }?>>Default</option>
 							<?php
 							if (sizeof($item_rows) > 0) {
 							foreach ($item_rows as $key => $value) {
-								print "<option value='" . $key . "'"; if ($_REQUEST["rows"] == $key) { print " selected"; } print ">" . $value . "</option>\n";
+								print "<option value='" . $key . "'"; if (get_request_var_request("rows") == $key) { print " selected"; } print ">" . $value . "</option>\n";
 							}
 							}
 							?>
@@ -587,7 +587,7 @@ function template() {
 	/* form the 'where' clause for our main sql query */
 	if ($_REQUEST["filter"] != "") {
 		$sql_where = "WHERE (graph_templates.name LIKE '%%" . $_REQUEST["filter"] . "%%')
-			OR graph_templates.description LIKE '%%" . $_REQUEST["filter"] . "%%'";
+			OR graph_templates.description LIKE '%%" . get_request_var_request("filter") . "%%'";
 	}else{
 		$sql_where = "";
 	}
@@ -608,8 +608,8 @@ function template() {
 	$template_list = db_fetch_assoc("SELECT *
 		FROM graph_templates
 		$sql_where
-		ORDER BY " . $_REQUEST['sort_column'] . " " . $_REQUEST['sort_direction'] .
-		" LIMIT " . ($rows*($_REQUEST["page"]-1)) . "," . $rows);
+		ORDER BY " . get_request_var_request('sort_column') . " " . get_request_var_request('sort_direction') .
+		" LIMIT " . ($rows*(get_request_var_request("page")-1)) . "," . $rows);
 
 	/* generate page list navigation */
 	$nav = html_create_nav($_REQUEST["page"], MAX_DISPLAY_PAGES, $rows, $total_rows, 7, "graph_templates.php");
@@ -623,7 +623,7 @@ function template() {
 		"nosort" => array(__("Image"), "")
 	);
 
-	html_header_sort_checkbox($display_text, $_REQUEST["sort_column"], $_REQUEST["sort_direction"]);
+	html_header_sort_checkbox($display_text, get_request_var_request("sort_column"), get_request_var_request("sort_direction"));
 
 	if (sizeof($template_list) > 0) {
 		foreach ($template_list as $template) {

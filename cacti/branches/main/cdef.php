@@ -36,7 +36,7 @@ $cdef_actions = array(
 /* set default action */
 if (!isset($_REQUEST["action"])) { $_REQUEST["action"] = ""; }
 
-switch ($_REQUEST["action"]) {
+switch (get_request_var_request("action")) {
 	case 'save':
 		form_save();
 
@@ -158,7 +158,7 @@ function form_actions() {
 	if (isset($_POST["selected_items"])) {
 		$selected_items = unserialize(stripslashes($_POST["selected_items"]));
 
-		if ($_POST["drp_action"] == "1") { /* delete */
+		if (get_request_var_post("drp_action") == "1") { /* delete */
 			/* do a referential integrity check */
 			if (sizeof($selected_items)) {
 			foreach($selected_items as $cdef_id) {
@@ -189,13 +189,13 @@ function form_actions() {
 				db_execute("delete from cdef where " . array_to_sql_or($cdef_ids, "id"));
 				db_execute("delete from cdef_items where " . array_to_sql_or($cdef_ids, "cdef_id"));
 			}
-		}elseif ($_POST["drp_action"] == "2") { /* duplicate */
+		}elseif (get_request_var_post("drp_action") == "2") { /* duplicate */
 			for ($i=0;($i<count($selected_items));$i++) {
 				/* ================= input validation ================= */
 				input_validate_input_number($selected_items[$i]);
 				/* ==================================================== */
 
-				duplicate_cdef($selected_items[$i], $_POST["title_format"]);
+				duplicate_cdef($selected_items[$i], get_request_var_post("title_format"));
 			}
 		}
 
@@ -222,12 +222,12 @@ function form_actions() {
 
 	include_once("./include/top_header.php");
 
-	html_start_box("<strong>" . $cdef_actions{$_POST["drp_action"]} . "</strong>", "60%", $colors["header_panel"], "3", "center", "");
+	html_start_box("<strong>" . $cdef_actions{get_request_var_post("drp_action")} . "</strong>", "60%", $colors["header_panel"], "3", "center", "");
 
 	print "<form action='cdef.php' method='post'>\n";
 
 	if (isset($cdef_array)) {
-		if ($_POST["drp_action"] == "1") { /* delete */
+		if (get_request_var_post("drp_action") == "1") { /* delete */
 			print "	<tr>
 					<td class='textArea' bgcolor='#" . $colors["form_alternate1"]. "'>
 						<p>" . __("Are you sure you want to delete the following CDEFs?") . "</p>
@@ -235,7 +235,7 @@ function form_actions() {
 					</td>
 				</tr>\n
 				";
-		}elseif ($_POST["drp_action"] == "2") { /* duplicate */
+		}elseif (get_request_var_post("drp_action") == "2") { /* duplicate */
 			print "	<tr>
 					<td class='textArea' bgcolor='#" . $colors["form_alternate1"]. "'>
 						<p>" . __("When you click save, the following CDEFs will be duplicated. You can optionally change the title format for the new CDEFs.") . "</p>
@@ -256,7 +256,7 @@ function form_actions() {
 	if (!isset($cdef_array)) {
 		form_return_button_alt();
 	}else{
-		form_yesno_button_alt(serialize($cdef_array), $_POST["drp_action"]);
+		form_yesno_button_alt(serialize($cdef_array), get_request_var_post("drp_action"));
 	}
 
 	html_end_box();
@@ -292,7 +292,7 @@ function item_edit() {
 	}
 
 	html_start_box("", "100%", "aaaaaa", "3", "center", "");
-	draw_cdef_preview($_GET["cdef_id"]);
+	draw_cdef_preview(get_request_var("cdef_id"));
 	html_end_box();
 
 	print "<form action='cdef.php' name='form_cdef' method='post'>\n";
@@ -356,10 +356,10 @@ function item_edit() {
 
 	form_hidden_box("id", (isset($_GET["id"]) ? $_GET["id"] : "0"), "");
 	form_hidden_box("type", $current_type, "");
-	form_hidden_box("cdef_id", $_GET["cdef_id"], "");
+	form_hidden_box("cdef_id", get_request_var("cdef_id"), "");
 	form_hidden_box("save_component_item", "1", "");
 
-	form_save_button_alt("path!cdef.php|action!edit|id!" . $_GET["cdef_id"]);
+	form_save_button_alt("path!cdef.php|action!edit|id!" . get_request_var("cdef_id"));
 }
 
 /* ---------------------
@@ -414,7 +414,7 @@ function cdef_edit() {
 
 	if (!empty($_GET["id"])) {
 		html_start_box("", "100%", "aaaaaa", "3", "center", "");
-		draw_cdef_preview($_GET["id"]);
+		draw_cdef_preview(get_request_var("id"));
 		html_end_box();
 
 		html_start_box("<strong>" . __("CDEF Items") . "</strong>", "100%", $colors["header"], 0, "center", "cdef.php?action=item_edit&cdef_id=" . $cdef["id"], false, "cdef");
@@ -535,11 +535,11 @@ function cdef() {
 					</td>
 					<td class="w1">
 						<select name="rows" onChange="applyFilterChange(document.form_cdef)">
-							<option value="-1"<?php if ($_REQUEST["rows"] == "-1") {?> selected<?php }?>>Default</option>
+							<option value="-1"<?php if (get_request_var_request("rows") == "-1") {?> selected<?php }?>>Default</option>
 							<?php
 							if (sizeof($item_rows) > 0) {
 							foreach ($item_rows as $key => $value) {
-								print "<option value='" . $key . "'"; if ($_REQUEST["rows"] == $key) { print " selected"; } print ">" . $value . "</option>\n";
+								print "<option value='" . $key . "'"; if (get_request_var_request("rows") == $key) { print " selected"; } print ">" . $value . "</option>\n";
 							}
 							}
 							?>
@@ -578,8 +578,8 @@ function cdef() {
 		cdef.id,cdef.name
 		FROM cdef
 		$sql_where
-		ORDER BY " . $_REQUEST['sort_column'] . " " . $_REQUEST['sort_direction'] .
-		" LIMIT " . ($rows*($_REQUEST["page"]-1)) . "," . $rows);
+		ORDER BY " . get_request_var_request('sort_column') . " " . get_request_var_request('sort_direction') .
+		" LIMIT " . ($rows*(get_request_var_request("page")-1)) . "," . $rows);
 
 	/* generate page list navigation */
 	$nav = html_create_nav($_REQUEST["page"], MAX_DISPLAY_PAGES, $rows, $total_rows, 11, "cdef.php?filter=" . $_REQUEST["filter"]);
@@ -590,7 +590,7 @@ function cdef() {
 	$display_text = array(
 		"name" => array(__("CDEF Title"), "ASC"));
 
-	html_header_sort_checkbox($display_text, $_REQUEST["sort_column"], $_REQUEST["sort_direction"]);
+	html_header_sort_checkbox($display_text, get_request_var_request("sort_column"), get_request_var_request("sort_direction"));
 
 	if (sizeof($cdef_list) > 0) {
 		foreach ($cdef_list as $cdef) {

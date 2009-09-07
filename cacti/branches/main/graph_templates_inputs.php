@@ -29,7 +29,7 @@ include_once(CACTI_BASE_PATH . "/lib/template.php");
 if (!isset($_REQUEST["action"])) { $_REQUEST["action"] = ""; }
 
 
-switch ($_REQUEST["action"]) {
+switch (get_request_var_request("action")) {
 	case 'save':
 		form_save();
 
@@ -213,7 +213,7 @@ function input_edit() {
 			}
 
 			$name = "$start_bold Item #" . ($i+1) . ": " . $graph_item_types{$item["graph_type_id"]} . " (" . $consolidation_functions{$item["consolidation_function_id"]} . ")$end_bold";
-			form_checkbox("i_" . $item["graph_templates_item_id"], $old_value, $name, "", "", $_GET["graph_template_id"]); print "<br>";
+			form_checkbox("i_" . $item["graph_templates_item_id"], $old_value, $name, "", "", get_request_var("graph_template_id")); print "<br>";
 
 			$i++;
 		}

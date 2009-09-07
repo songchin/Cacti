@@ -27,7 +27,7 @@ include("./include/auth.php");
 /* set default action */
 if (!isset($_REQUEST["action"])) { $_REQUEST["action"] = ""; }
 
-switch ($_REQUEST["action"]) {
+switch (get_request_var_request("action")) {
 case 'save':
 	while (list($field_name, $field_array) = each($settings{$_POST["tab"]})) {
 		if (($field_array["method"] == "header") || ($field_array["method"] == "spacer" )){

@@ -38,7 +38,7 @@ function form_save() {
 
 		$local_graph_id = sql_save($save, "graph_local");
 
-		change_graph_template($local_graph_id, $_POST["graph_template_id"], true);
+		change_graph_template($local_graph_id, get_request_var_post("graph_template_id"), true);
 
 		/* update the title cache */
 		update_graph_title_cache($local_graph_id);
@@ -109,7 +109,7 @@ function form_save() {
 		}
 
 		if ((!is_error_message()) && ($_POST["graph_template_id"] != $_POST["_graph_template_id"])) {
-			change_graph_template($local_graph_id, $_POST["graph_template_id"], true);
+			change_graph_template($local_graph_id, get_request_var_post("graph_template_id"), true);
 		}elseif (!empty($_POST["graph_template_id"])) {
 			update_graph_data_query_cache($local_graph_id);
 		}
@@ -152,13 +152,13 @@ function form_save() {
 	}
 
 	if (isset($_POST["save_component_graph_diff"])) {
-		if ($_POST["type"] == "1") {
+		if (get_request_var_post("type") == "1") {
 			$intrusive = true;
-		}elseif ($_POST["type"] == "2") {
+		}elseif (get_request_var_post("type") == "2") {
 			$intrusive = false;
 		}
 
-		change_graph_template($_POST["local_graph_id"], $_POST["graph_template_id"], $intrusive);
+		change_graph_template(get_request_var_post("local_graph_id"), get_request_var_post("graph_template_id"), $intrusive);
 	}
 
 	if ((isset($_POST["save_component_graph_new"])) && (empty($_POST["graph_template_id"]))) {
@@ -181,7 +181,7 @@ function form_actions() {
 	if (isset($_POST["selected_items"])) {
 		$selected_items = unserialize(stripslashes($_POST["selected_items"]));
 
-		if ($_POST["drp_action"] == GRAPH_ACTION_DELETE) { /* delete */
+		if (get_request_var_post("drp_action") == GRAPH_ACTION_DELETE) { /* delete */
 			for ($i=0;($i<count($selected_items));$i++) {
 				/* ================= input validation ================= */
 				input_validate_input_number($selected_items[$i]);
@@ -189,7 +189,7 @@ function form_actions() {
 
 				if (!isset($_POST["delete_type"])) { $_POST["delete_type"] = 1; }
 
-				switch ($_POST["delete_type"]) {
+				switch (get_request_var_post("delete_type")) {
 					case '2': /* delete all data sources referenced by this graph */
 						$data_sources = db_fetch_assoc("SELECT " .
 								"data_template_data.local_data_id " .
@@ -214,32 +214,32 @@ function form_actions() {
 
 				api_graph_remove($selected_items[$i]);
 			}
-		}elseif ($_POST["drp_action"] == GRAPH_ACTION_CHANGE_TEMPLATE) { /* change graph template */
+		}elseif (get_request_var_post("drp_action") == GRAPH_ACTION_CHANGE_TEMPLATE) { /* change graph template */
 			for ($i=0;($i<count($selected_items));$i++) {
 				/* ================= input validation ================= */
 				input_validate_input_number($selected_items[$i]);
 				input_validate_input_number(get_request_var_post("graph_template_id"));
 				/* ==================================================== */
 
-				change_graph_template($selected_items[$i], $_POST["graph_template_id"], true);
+				change_graph_template($selected_items[$i], get_request_var_post("graph_template_id"), true);
 			}
-		}elseif ($_POST["drp_action"] == GRAPH_ACTION_DUPLICATE) { /* duplicate */
+		}elseif (get_request_var_post("drp_action") == GRAPH_ACTION_DUPLICATE) { /* duplicate */
 			for ($i=0;($i<count($selected_items));$i++) {
 				/* ================= input validation ================= */
 				input_validate_input_number($selected_items[$i]);
 				/* ==================================================== */
 
-				duplicate_graph($selected_items[$i], 0, $_POST["title_format"]);
+				duplicate_graph($selected_items[$i], 0, get_request_var_post("title_format"));
 			}
-		}elseif ($_POST["drp_action"] == GRAPH_ACTION_CONVERT_TO_TEMPLATE) { /* graph -> graph template */
+		}elseif (get_request_var_post("drp_action") == GRAPH_ACTION_CONVERT_TO_TEMPLATE) { /* graph -> graph template */
 			for ($i=0;($i<count($selected_items));$i++) {
 				/* ================= input validation ================= */
 				input_validate_input_number($selected_items[$i]);
 				/* ==================================================== */
 
-				graph_to_graph_template($selected_items[$i], $_POST["title_format"]);
+				graph_to_graph_template($selected_items[$i], get_request_var_post("title_format"));
 			}
-		}elseif (ereg("^tr_([0-9]+)$", $_POST["drp_action"], $matches)) { /* place on tree */
+		}elseif (ereg("^tr_([0-9]+)$", get_request_var_post("drp_action"), $matches)) { /* place on tree */
 			for ($i=0;($i<count($selected_items));$i++) {
 				/* ================= input validation ================= */
 				input_validate_input_number($selected_items[$i]);
@@ -247,9 +247,9 @@ function form_actions() {
 				input_validate_input_number(get_request_var_post("tree_item_id"));
 				/* ==================================================== */
 
-				api_tree_item_save(0, $_POST["tree_id"], TREE_ITEM_TYPE_GRAPH, $_POST["tree_item_id"], "", $selected_items[$i], read_graph_config_option("default_rra_id"), 0, 0, 0, false);
+				api_tree_item_save(0, get_request_var_post("tree_id"), TREE_ITEM_TYPE_GRAPH, get_request_var_post("tree_item_id"), "", $selected_items[$i], read_graph_config_option("default_rra_id"), 0, 0, 0, false);
 			}
-		}elseif ($_POST["drp_action"] == GRAPH_ACTION_CHANGE_HOST) { /* change host */
+		}elseif (get_request_var_post("drp_action") == GRAPH_ACTION_CHANGE_HOST) { /* change host */
 			for ($i=0;($i<count($selected_items));$i++) {
 				/* ================= input validation ================= */
 				input_validate_input_number($selected_items[$i]);
@@ -259,7 +259,7 @@ function form_actions() {
 				db_execute("update graph_local set host_id=" . $_POST["host_id"] . " where id=" . $selected_items[$i]);
 				update_graph_title_cache($selected_items[$i]);
 			}
-		}elseif ($_POST["drp_action"] == GRAPH_ACTION_REAPPLY_SUGGESTED_NAMES) { /* reapply suggested naming */
+		}elseif (get_request_var_post("drp_action") == GRAPH_ACTION_REAPPLY_SUGGESTED_NAMES) { /* reapply suggested naming */
 			for ($i=0;($i<count($selected_items));$i++) {
 				/* ================= input validation ================= */
 				input_validate_input_number($selected_items[$i]);
@@ -268,22 +268,22 @@ function form_actions() {
 				api_reapply_suggested_graph_title($selected_items[$i]);
 				update_graph_title_cache($selected_items[$i]);
 			}
-		}elseif ($_POST["drp_action"] == GRAPH_ACTION_RESIZE) { /* resize graphs */
+		}elseif (get_request_var_post("drp_action") == GRAPH_ACTION_RESIZE) { /* resize graphs */
 			for ($i=0;($i<count($selected_items));$i++) {
 				/* ================= input validation ================= */
 				input_validate_input_number($selected_items[$i]);
 				/* ==================================================== */
 
-				api_resize_graphs($selected_items[$i], $_POST['graph_width'], $_POST['graph_height']);
+				api_resize_graphs($selected_items[$i], get_request_var_post('graph_width'), get_request_var_post('graph_height'));
 			}
-		}elseif ($_POST["drp_action"] == GRAPH_ACTION_ENABLE_EXPORT) { /* enable graph export */
+		}elseif (get_request_var_post("drp_action") == GRAPH_ACTION_ENABLE_EXPORT) { /* enable graph export */
 			for ($i=0;($i<count($selected_items));$i++) {
 				/* ================= input validation ================= */
 				input_validate_input_number($selected_items[$i]);
 				/* ==================================================== */
 				db_execute("UPDATE graph_templates_graph SET export='on' WHERE local_graph_id=" . $selected_items[$i]);
 			}
-		}elseif ($_POST["drp_action"] == GRAPH_ACTION_DISABLE_EXPORT) { /* disable graph export */
+		}elseif (get_request_var_post("drp_action") == GRAPH_ACTION_DISABLE_EXPORT) { /* disable graph export */
 			for ($i=0;($i<count($selected_items));$i++) {
 				/* ================= input validation ================= */
 				input_validate_input_number($selected_items[$i]);
@@ -291,7 +291,7 @@ function form_actions() {
 				db_execute("UPDATE graph_templates_graph SET export='' WHERE local_graph_id=" . $selected_items[$i]);
 			}
 		} else {
-			api_plugin_hook_function('graphs_action_execute', $_POST['drp_action']);
+			api_plugin_hook_function('graphs_action_execute', get_request_var_post('drp_action'));
 		}
 
 		header("Location: graphs.php");
@@ -320,12 +320,12 @@ function form_actions() {
 	/* add a list of tree names to the actions dropdown */
 	$graph_actions = array_merge($graph_actions, api_tree_add_tree_names_to_actions_array());
 
-	html_start_box("<strong>" . $graph_actions{$_POST["drp_action"]} . "</strong>", "60%", $colors["header_panel"], "3", "center", "");
+	html_start_box("<strong>" . $graph_actions{get_request_var_post("drp_action")} . "</strong>", "60%", $colors["header_panel"], "3", "center", "");
 
 	print "<form action='graphs.php' method='post'>\n";
 
 	if (sizeof($graph_array)) {
-		if ($_POST["drp_action"] == GRAPH_ACTION_DELETE) { /* delete */
+		if (get_request_var_post("drp_action") == GRAPH_ACTION_DELETE) { /* delete */
 			$graphs = array();
 
 			/* find out which (if any) data sources are being used by this graph, so we can tell the user */
@@ -363,7 +363,7 @@ function form_actions() {
 					</td>
 				</tr>\n
 				";
-		}elseif ($_POST["drp_action"] == GRAPH_ACTION_CHANGE_TEMPLATE) { /* change graph template */
+		}elseif (get_request_var_post("drp_action") == GRAPH_ACTION_CHANGE_TEMPLATE) { /* change graph template */
 			print "	<tr>
 					<td class='textArea'>
 						<p>" . __("Choose a graph template and click save to change the graph template for the following graphs. Be aware that all warnings will be suppressed during the conversion, so graph data loss is possible.") . "</p>
@@ -372,7 +372,7 @@ function form_actions() {
 					</td>
 				</tr>\n
 				";
-		}elseif ($_POST["drp_action"] == GRAPH_ACTION_DUPLICATE) { /* duplicate */
+		}elseif (get_request_var_post("drp_action") == GRAPH_ACTION_DUPLICATE) { /* duplicate */
 			print "	<tr>
 					<td class='textArea'>
 						<p>" . __("When you click save, the following graphs will be duplicated. You can optionally change the title format for the new graphs.") . "</p>
@@ -381,7 +381,7 @@ function form_actions() {
 					</td>
 				</tr>\n
 				";
-		}elseif ($_POST["drp_action"] == GRAPH_ACTION_CONVERT_TO_TEMPLATE) { /* graph -> graph template */
+		}elseif (get_request_var_post("drp_action") == GRAPH_ACTION_CONVERT_TO_TEMPLATE) { /* graph -> graph template */
 			print "	<tr>
 					<td class='textArea'>
 						<p>" . __("When you click save, the following graphs will be converted into graph templates.  You can optionally change the title format for the new graph templates.") . "</p>
@@ -390,7 +390,7 @@ function form_actions() {
 					</td>
 				</tr>\n
 				";
-		}elseif (ereg("^tr_([0-9]+)$", $_POST["drp_action"], $matches)) { /* place on tree */
+		}elseif (ereg("^tr_([0-9]+)$", get_request_var_post("drp_action"), $matches)) { /* place on tree */
 			print "	<tr>
 					<td class='textArea'>
 						<p>" . __("When you click save, the following graphs will be placed under the branch selected below.") . "</p>
@@ -400,7 +400,7 @@ function form_actions() {
 				</tr>\n
 				<input type='hidden' name='tree_id' value='" . $matches[1] . "'>\n
 				";
-		}elseif ($_POST["drp_action"] == GRAPH_ACTION_CHANGE_HOST) { /* change host */
+		}elseif (get_request_var_post("drp_action") == GRAPH_ACTION_CHANGE_HOST) { /* change host */
 			print "	<tr>
 					<td class='textArea'>
 						<p>" . __("Choose a new host for these graphs:") . "</p>
@@ -409,7 +409,7 @@ function form_actions() {
 					</td>
 				</tr>\n
 				";
-		}elseif ($_POST["drp_action"] == GRAPH_ACTION_REAPPLY_SUGGESTED_NAMES) { /* reapply suggested naming to host */
+		}elseif (get_request_var_post("drp_action") == GRAPH_ACTION_REAPPLY_SUGGESTED_NAMES) { /* reapply suggested naming to host */
 			print "	<tr>
 					<td class='textArea'>
 						<p>" . __("When you click save, the following graphs will have their suggested naming conventions recalculated and applied to the graphs.") . "</p>
@@ -417,7 +417,7 @@ function form_actions() {
 					</td>
 				</tr>\n
 				";
-		}elseif ($_POST["drp_action"] == GRAPH_ACTION_RESIZE) { /* reapply suggested naming to host */
+		}elseif (get_request_var_post("drp_action") == GRAPH_ACTION_RESIZE) { /* reapply suggested naming to host */
 			print "	<tr>
 					<td class='textArea'>
 						<p>" . __("When you click save, the following graphs will be resized per your specifications.") . "</p>
@@ -427,7 +427,7 @@ function form_actions() {
 					</td>
 				</tr>\n
 				";
-		}elseif ($_POST["drp_action"] == GRAPH_ACTION_ENABLE_EXPORT) { /* enable graph export */
+		}elseif (get_request_var_post("drp_action") == GRAPH_ACTION_ENABLE_EXPORT) { /* enable graph export */
 			print "	<tr>
 					<td class='textArea'>
 						<p>" . __("When you click save, the following graphs will be enabled for graph export.") . "</p>
@@ -435,7 +435,7 @@ function form_actions() {
 					</td>
 				</tr>\n
 				";
-		}elseif ($_POST["drp_action"] == GRAPH_ACTION_DISABLE_EXPORT) { /* disable graph export */
+		}elseif (get_request_var_post("drp_action") == GRAPH_ACTION_DISABLE_EXPORT) { /* disable graph export */
 			print "	<tr>
 					<td class='textArea'>
 						<p>" . __("When you click save, the following graphs will be disabled for graph export.") . "</p>
@@ -460,7 +460,7 @@ function form_actions() {
 	if (!sizeof($graph_array)) {
 		form_return_button_alt();
 	}else{
-		form_yesno_button_alt(serialize($graph_array), $_POST["drp_action"]);
+		form_yesno_button_alt(serialize($graph_array), get_request_var_post("drp_action"));
 	}
 
 	html_end_box();
@@ -748,7 +748,7 @@ function graph_diff() {
 	<input type="hidden" name="graph_template_id" value="<?php print $_GET["graph_template_id"];?>">
 	<?php
 
-	form_save_button_alt("action!graph_edit|id!" . $_GET["id"]);
+	form_save_button_alt("action!graph_edit|id!" . get_request_var("id"));
 }
 
 function graph_edit() {
@@ -779,9 +779,9 @@ function graph_edit() {
 
 	/* handle debug mode */
 	if (isset($_GET["debug"])) {
-		if ($_GET["debug"] == "0") {
+		if (get_request_var("debug") == "0") {
 			kill_session_var("graph_debug_mode");
-		}elseif ($_GET["debug"] == "1") {
+		}elseif (get_request_var("debug") == "1") {
 			$_SESSION["graph_debug_mode"] = true;
 		}
 	}
@@ -824,7 +824,7 @@ function graph_edit() {
 		<table width="100%" align="center">
 			<tr>
 				<td class="textInfo" colspan="2" valign="top">
-					<?php print get_graph_title($_GET["id"]);?>
+					<?php print get_graph_title(get_request_var("id"));?>
 				</td>
 				<td style="white-space:nowrap;" align="right" width="1"><a id='tooltip' class='popup_anchor' href='#' onMouseOver="Tip('<?php print $tip_text;?>', BGCOLOR, '#EEEEEE', FIX, ['tooltip', -45, 0], STICKY, true, SHADOW, true, CLICKCLOSE, true, FADEOUT, 400, WIDTH, 115, TEXTALIGN, 'right', BORDERCOLOR, '#F5F5F5')" onMouseOut="UnTip()">Graph Options</a></td>
 			</tr>
@@ -894,7 +894,7 @@ function graph_edit() {
 		html_start_box("<strong>" . __("Supplemental Graph Template Data") . "</strong>", "100%", $colors["header"], "0", "center", "");
 
 		draw_nontemplated_fields_graph($graphs["graph_template_id"], $graphs, "|field|", "<strong>" . __("Graph Fields") . "</strong>", true, true, 0);
-		draw_nontemplated_fields_graph_item($graphs["graph_template_id"], $_GET["id"], "|field|_|id|", "<strong>" . __("Graph Item Fields") ."</strong>", true);
+		draw_nontemplated_fields_graph_item($graphs["graph_template_id"], get_request_var("id"), "|field|_|id|", "<strong>" . __("Graph Item Fields") ."</strong>", true);
 
 		html_end_box();
 	}
@@ -918,10 +918,10 @@ function graph_edit() {
 					?>
 					<td>
 						<span class="textInfo"><?php print __("RRDTool Command:");?></span><br>
-						<pre><?php print rrdtool_function_graph($_GET["id"], 1, $graph_data_array);?></pre>
+						<pre><?php print rrdtool_function_graph(get_request_var("id"), 1, $graph_data_array);?></pre>
 						<span class="textInfo"><?php print __("RRDTool Says:");?></span><br>
 						<?php unset($graph_data_array["print_source"]);?>
-						<pre><?php print rrdtool_function_graph($_GET["id"], 1, $graph_data_array);?></pre>
+						<pre><?php print rrdtool_function_graph(get_request_var("id"), 1, $graph_data_array);?></pre>
 					</td>
 					<?php
 				}
@@ -1154,8 +1154,8 @@ function graph() {
 					</td>
 					<td width="1">
 						<select name="template_id" onChange="applyGraphsFilterChange(document.form_graph_id)">
-							<option value="-1"<?php if ($_REQUEST["template_id"] == "-1") {?> selected<?php }?>><?php print __("Any");?></option>
-							<option value="0"<?php if ($_REQUEST["template_id"] == "0") {?> selected<?php }?>><?php print __("None");?></option>
+							<option value="-1"<?php if (get_request_var_request("template_id") == "-1") {?> selected<?php }?>><?php print __("Any");?></option>
+							<option value="0"<?php if (get_request_var_request("template_id") == "0") {?> selected<?php }?>><?php print __("None");?></option>
 							<?php
 							if (read_config_option("auth_method") != 0) {
 								$templates = db_fetch_assoc("SELECT DISTINCT graph_templates.id, graph_templates.name
@@ -1175,7 +1175,7 @@ function graph() {
 
 							if (sizeof($templates) > 0) {
 							foreach ($templates as $template) {
-								print "<option value='" . $template["id"] . "'"; if ($_REQUEST["template_id"] == $template["id"]) { print " selected"; } print ">" . title_trim($template["name"], 40) . "</option>\n";
+								print "<option value='" . $template["id"] . "'"; if (get_request_var_request("template_id") == $template["id"]) { print " selected"; } print ">" . title_trim($template["name"], 40) . "</option>\n";
 							}
 							}
 							?>
@@ -1200,11 +1200,11 @@ function graph() {
 					</td>
 					<td width="1">
 						<select name="rows" onChange="applyGraphsFilterChange(document.form_graph_id)">
-							<option value="-1"<?php if ($_REQUEST["rows"] == "-1") {?> selected<?php }?>><?php print __("Default");?></option>
+							<option value="-1"<?php if (get_request_var_request("rows") == "-1") {?> selected<?php }?>><?php print __("Default");?></option>
 							<?php
 							if (sizeof($item_rows) > 0) {
 							foreach ($item_rows as $key => $value) {
-								print "<option value='" . $key . "'"; if ($_REQUEST["rows"] == $key) { print " selected"; } print ">" . $value . "</option>\n";
+								print "<option value='" . $key . "'"; if (get_request_var_request("rows") == $key) { print " selected"; } print ">" . $value . "</option>\n";
 							}
 							}
 							?>
@@ -1227,24 +1227,24 @@ function graph() {
 	html_end_box(false);
 
 	/* form the 'where' clause for our main sql query */
-	if (strlen($_REQUEST["filter"])) {
+	if (strlen(get_request_var_request("filter"))) {
 		$sql_where = "AND (graph_templates_graph.title_cache like '%%" . $_REQUEST["filter"] . "%%'" .
-			" OR graph_templates.name like '%%" . $_REQUEST["filter"] . "%%')";
+			" OR graph_templates.name like '%%" . get_request_var_request("filter") . "%%')";
 	}else{
 		$sql_where = "";
 	}
 
-	if ($_REQUEST["host_id"] == "-1") {
+	if (get_request_var_request("host_id") == "-1") {
 		/* Show all items */
-	}elseif ($_REQUEST["host_id"] == "0") {
+	}elseif (get_request_var_request("host_id") == "0") {
 		$sql_where .= " AND graph_local.host_id=0";
 	}elseif (!empty($_REQUEST["host_id"])) {
 		$sql_where .= " AND graph_local.host_id=" . $_REQUEST["host_id"];
 	}
 
-	if ($_REQUEST["template_id"] == "-1") {
+	if (get_request_var_request("template_id") == "-1") {
 		/* Show all items */
-	}elseif ($_REQUEST["template_id"] == "0") {
+	}elseif (get_request_var_request("template_id") == "0") {
 		$sql_where .= " AND graph_templates_graph.graph_template_id=0";
 	}elseif (!empty($_REQUEST["template_id"])) {
 		$sql_where .= " AND graph_templates_graph.graph_template_id=" . $_REQUEST["template_id"];
@@ -1277,8 +1277,8 @@ function graph() {
 		LEFT JOIN graph_templates ON (graph_local.graph_template_id=graph_templates.id)
 		WHERE graph_local.id=graph_templates_graph.local_graph_id
 		$sql_where
-		ORDER BY " . $_REQUEST['sort_column'] . " " . $_REQUEST['sort_direction'] .
-		" LIMIT " . ($rows*($_REQUEST["page"]-1)) . "," . $rows);
+		ORDER BY " . get_request_var_request('sort_column') . " " . get_request_var_request('sort_direction') .
+		" LIMIT " . ($rows*(get_request_var_request("page")-1)) . "," . $rows);
 
 	/* generate page list navigation */
 	$nav = html_create_nav($_REQUEST["page"], MAX_DISPLAY_PAGES, $rows, $total_rows, 7, "graphs.php");
@@ -1292,7 +1292,7 @@ function graph() {
 		"name" => array(__("Template Name"), "ASC"),
 		"height" => array(__("Size"), "ASC"));
 
-	html_header_sort_checkbox($display_text, $_REQUEST["sort_column"], $_REQUEST["sort_direction"]);
+	html_header_sort_checkbox($display_text, get_request_var_request("sort_column"), get_request_var_request("sort_direction"));
 
 	if (sizeof($graph_list) > 0) {
 		foreach ($graph_list as $graph) {

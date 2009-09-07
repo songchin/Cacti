@@ -35,7 +35,7 @@ define("MAX_DISPLAY_PAGES", 21);
 /* set default action */
 if (!isset($_REQUEST["action"])) { $_REQUEST["action"] = ""; }
 
-switch ($_REQUEST["action"]) {
+switch (get_request_var_request("action")) {
 	case 'save':
 		api_graphs_new_form_save();
 

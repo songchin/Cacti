@@ -28,7 +28,7 @@ include_once(CACTI_BASE_PATH . "/lib/import.php");
 /* set default action */
 if (!isset($_REQUEST["action"])) { $_REQUEST["action"] = ""; }
 
-switch ($_REQUEST["action"]) {
+switch (get_request_var_request("action")) {
 	case 'save':
 		form_save();
 
@@ -60,7 +60,7 @@ function form_save() {
 			header("Location: templates_import.php"); exit;
 		}
 
-		if ($_POST["import_rra"] == "1") {
+		if (get_request_var_post("import_rra") == "1") {
 			$import_custom_rra_settings = false;
 		}else{
 			$import_custom_rra_settings = true;

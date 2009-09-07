@@ -28,7 +28,7 @@ include_once(CACTI_BASE_PATH . "/lib/export.php");
 /* set default action */
 if (!isset($_REQUEST["action"])) { $_REQUEST["action"] = ""; }
 
-switch ($_REQUEST["action"]) {
+switch (get_request_var_request("action")) {
 	case 'save':
 		form_save();
 
@@ -52,14 +52,14 @@ function form_save() {
 	if (isset($_POST["save_component_export"])) {
 		$xml_data = get_item_xml($_POST["export_type"], $_POST["export_item_id"], (((isset($_POST["include_deps"]) ? $_POST["include_deps"] : "") == "") ? false : true));
 
-		if ($_POST["output_format"] == "1") {
+		if (get_request_var_post("output_format") == "1") {
 			include_once(CACTI_BASE_PATH . "/include/top_header.php");
 			print "<table width='100%' align='center'><tr><td><pre>" . htmlspecialchars($xml_data) . "</pre></td></tr></table>";
 			include_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
-		}elseif ($_POST["output_format"] == "2") {
+		}elseif (get_request_var_post("output_format") == "2") {
 			header("Content-type: application/xml");
 			print $xml_data;
-		}elseif ($_POST["output_format"] == "3") {
+		}elseif (get_request_var_post("output_format") == "3") {
 			header("Content-type: application/xml");
 			header("Content-Disposition: attachment; filename=cacti_" . $_POST["export_type"] . "_" . strtolower(clean_up_file_name(db_fetch_cell(str_replace("|id|", $_POST["export_item_id"], $export_types{$_POST["export_type"]}["title_sql"])))) . ".xml");
 			print $xml_data;
@@ -89,7 +89,7 @@ function export() {
 				<select name="cbo_graph_id" onChange="window.location=document.form_graph_id.cbo_graph_id.options[document.form_graph_id.cbo_graph_id.selectedIndex].value">
 					<?php
 					while (list($key, $array) = each($export_types)) {
-						print "<option value='templates_export.php?export_type=$key'"; if ($_REQUEST["export_type"] == $key) { print " selected"; } print ">" . $array["name"] . "</option>\n";
+						print "<option value='templates_export.php?export_type=$key'"; if (get_request_var_request("export_type") == $key) { print " selected"; } print ">" . $array["name"] . "</option>\n";
 					}
 					?>
 				</select>
@@ -100,7 +100,7 @@ function export() {
 	<form action="templates_export.php" method="post">
 	<?php
 
-	html_start_box("<strong>" . __("Export Template") . "</strong> [" . $export_types{$_REQUEST["export_type"]}["name"] . "]", "100%", $colors["header"], "3", "center", "");
+	html_start_box("<strong>" . __("Export Template") . "</strong> [" . $export_types{get_request_var_request("export_type")}["name"] . "]", "100%", $colors["header"], "3", "center", "");
 
 	form_alternate_row_color("item"); ?>
 		<td width="50%">
@@ -108,7 +108,7 @@ function export() {
 			<?php print __("Choose the exact item to export to XML.");?>
 		</td>
 		<td>
-			<?php form_dropdown("export_item_id",db_fetch_assoc($export_types{$_REQUEST["export_type"]}["dropdown_sql"]),"name","id","","","0");?>
+			<?php form_dropdown("export_item_id",db_fetch_assoc($export_types{get_request_var_request("export_type")}["dropdown_sql"]),"name","id","","","0");?>
 		</td>
 	</tr>
 
@@ -139,7 +139,7 @@ function export() {
 
 	html_end_box();
 
-	form_hidden_box("export_type", $_REQUEST["export_type"], "");
+	form_hidden_box("export_type", get_request_var_request("export_type"), "");
 	form_hidden_box("save_component_export","1","");
 
 	form_save_button_alt("", "save", "export");
