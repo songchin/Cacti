@@ -158,7 +158,7 @@ if (sizeof($parms)) {
 			exit(1);
 		}
 
-		displayTreeNodes($treeId, $quietMode);
+		displayTreeNodes($treeId, $nodeType, $parentNode, $quietMode);
 		exit(0);
 	}
 
