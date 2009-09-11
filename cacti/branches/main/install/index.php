@@ -27,6 +27,9 @@ include("../include/global.php");
 /* allow the upgrade script to run for as long as it needs to */
 ini_set("max_execution_time", "0");
 
+/* let's not repopulate the poller cache unless we have to */
+$repopulate = false;
+
 /* verify all required php extensions */
 if (!verify_php_extensions()) {exit;}
 
@@ -326,6 +329,8 @@ if (empty($_REQUEST["step"])) {
 }
 
 if (get_request_var_request("step") == "4") {
+	global $repopulate;
+
 	include_once(CACTI_BASE_PATH . "/lib/data_query.php");
 	include_once(CACTI_BASE_PATH . "/lib/utility.php");
 
@@ -350,9 +355,11 @@ if (get_request_var_request("step") == "4") {
 		run_data_query($host_id, 6);
 	}
 
-	/* it's always a good idea to re-populate the poller cache to make sure everything is refreshed and
-	up-to-date */
-	repopulate_poller_cache();
+	/* it's not always a good idea to re-populate the poller cache to make sure everything is
+	refreshed and up-to-date */
+	if ($repopulate) {
+		repopulate_poller_cache();
+	}
 
 	db_execute("delete from version");
 	db_execute("insert into version (cacti) values ('" . CACTI_VERSION . "')");

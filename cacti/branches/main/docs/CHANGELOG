@@ -100,6 +100,7 @@ Cacti CHANGELOG
 -feature: Add Image column to Graph Templates, Host Templates, and Data Queries
 -feature: Add New Form Object Drop Image to support new Tree Design and Plugins
 -feature: Add Alignment Attribute to Sortable Header Columns
+-feature: Do not repopulate the poller cache unless its required
 
 0.8.7d
 -bug#0001336: Allow to specify on_change handler for checkbox_group
