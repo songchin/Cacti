@@ -1,0 +1,33 @@
+--------------------------------------------------------------------
+Lossless Reindexing Patch for Cacti 0.8.7e
+--------------------------------------------------------------------
+
+Description:
+--------------------------------------------------------------------
+This patch allows for a 66% increase in reindex performance and also
+does reindexing a lossless manner.  It is important for large sites
+with numerous indexed values.  It works optimally with SNMP v2 devices
+but will also work well with other classes of devices.
+
+This patch is made available for 0.8.7, but not in the mainline code.
+It is already incorporated into the 0.8.8 core.
+
+Installation:
+--------------------------------------------------------------------
+There are essentially two steps to installing this patch.  The first
+is to apply the database changes in the install directory.  You can
+do this by running the following command:
+
+mysql cacti < install.sql
+
+The second step is to choose your fileset to use.  It will either be
+the PIA version or the Non-PIA version of Cacti.  You will simply 
+copy the appropriate files over your existing files.
+
+Notes:
+--------------------------------------------------------------------
+This patch is designed for 0.8.7e of Cacti and no other release.
+It is also only compatible with only PIA 2.5.
+There are no User Interface changes with this patch.  It's all
+plumbing.
+
