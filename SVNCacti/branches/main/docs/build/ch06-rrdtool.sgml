@@ -1,0 +1,25 @@
+<part id="rrdtool">
+	<title>RRDTool</title>
+	<chapter id="rrdtool-create">
+		<title>Create RRDTOOL files (RRD files)</title>
+		<sect1 id="rrdtool-create-default">
+			<title>Explaining the Default Setup of RRD files</title>
+			<para></para>
+		</sect1>
+		<sect1 id="rrdtool-create-no-consolidation">
+			<title>Create RRD files without Consolidation</title>
+			<para></para>
+		</sect1>
+		<sect1 id="rrdtool-create-month">
+			<title>Create RRD files holding Details for one Month</title>
+			<para></para>
+		</sect1>
+	</chapter>
+	<chapter id="rrdtool-consolidate">
+		<title>Understand Consolidation</title>
+		<sect1 id="rrdtool-consolidate-default">
+			<title>Explaining Basic Principles of Consolidation</title>
+			<para></para>
+		</sect1>
+	</chapter>
+</part>
