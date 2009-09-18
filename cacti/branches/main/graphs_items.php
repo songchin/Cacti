@@ -207,7 +207,7 @@ function item_edit() {
 	$id = (!empty($_REQUEST["id"]) ? "&id=" . $_REQUEST["id"] : "");
 	$host = db_fetch_row("select hostname from host where id=" . get_request_var_request("host_id"));
 
-	html_start_box("<strong>" . __("Data Sources") . "</strong> " . __("[host: ") . (empty($host["hostname"]) ? __("No Host") : $host["hostname"]) . "]", "100%", $colors["header"], "3", "center", "");
+	html_start_box("<strong>" . __("Data Sources") . "</strong> " . __("[host: ") . (empty($host["hostname"]) ? __("No Host") : $host["hostname"]) . "]", "100", $colors["header"], "3", "center", "");
 
 	?>
 	<tr>
@@ -286,7 +286,7 @@ function item_edit() {
 
 	$header_label = __("[edit graph: ") . db_fetch_cell("select title_cache from graph_templates_graph where local_graph_id=" . $_REQUEST["local_graph_id"]) . "]";
 
-	html_start_box("<strong>" . __("Graph Items") . "</strong> $header_label", "100%", $colors["header"], "3", "center", "");
+	html_start_box("<strong>" . __("Graph Items") . "</strong> $header_label", "100", $colors["header"], "3", "center", "");
 
 	/* by default, select the LAST DS chosen to make everyone's lives easier */
 	if (!empty($_REQUEST["local_graph_id"])) {

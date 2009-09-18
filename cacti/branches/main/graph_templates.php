@@ -333,11 +333,11 @@ function item() {
 		$header_label = __("[edit: ") . db_fetch_cell("select name from graph_templates where id=" . $_GET["id"]) . "]";
 	}
 
-	html_start_box("<strong>" . __("Graph Template Items") . "</strong> $header_label", "100%", $colors["header"], "0", "center", "graph_templates_items.php?action=item_edit&graph_template_id=" . $_GET["id"], true);
+	html_start_box("<strong>" . __("Graph Template Items") . "</strong> $header_label", "100", $colors["header"], "0", "center", "graph_templates_items.php?action=item_edit&graph_template_id=" . $_GET["id"], true);
 	draw_graph_items_list($template_item_list, "graph_templates_items.php", "graph_template_id=" . $_GET["id"], false);
 	html_end_box(false);
 
-	html_start_box("<strong>" . __("Graph Item Inputs") . "</strong>", "100%", $colors["header"], "3", "center", "graph_templates_inputs.php?action=input_edit&graph_template_id=" . $_GET["id"], true);
+	html_start_box("<strong>" . __("Graph Item Inputs") . "</strong>", "100", $colors["header"], "3", "center", "graph_templates_inputs.php?action=input_edit&graph_template_id=" . $_GET["id"], true);
 
 	print "<tr class='rowSubHeader'>";
 		DrawMatrixHeaderItem(__("Name"), $colors["header_text"], 2);
@@ -392,7 +392,7 @@ function template_edit() {
 		$header_label = __("[new]");
 	}
 
-	html_start_box("<strong>" . __("Template") . "</strong> $header_label", "100%", $colors["header"], "0", "center", "", true);
+	html_start_box("<strong>" . __("Template") . "</strong> $header_label", "100", $colors["header"], "0", "center", "", true);
 	$header_items = array(__("Field"), __("Value"));
 	print "<tr><td>";
 	html_header($header_items, 1, true, 'header_template');
@@ -405,7 +405,7 @@ function template_edit() {
 	print "</table></td></tr>";		/* end of html_header */
 	html_end_box(false);
 
-	html_start_box("<strong>" . __("Graph Template") . "</strong>", "100%", $colors["header"], "0", "center", "", true);
+	html_start_box("<strong>" . __("Graph Template") . "</strong>", "100", $colors["header"], "0", "center", "", true);
 	$header_items = array(__("Field"), __("Value"));
 	print "<tr><td>";
 	html_header($header_items, 1, true, 'header_graph_template');
@@ -543,7 +543,7 @@ function template() {
 	load_current_session_value("sort_column", "sess_graph_template_sort_column", "name");
 	load_current_session_value("sort_direction", "sess_graph_template_sort_direction", "ASC");
 
-	html_start_box("<strong>" . __("Graph Templates") . "</strong>", "100%", $colors["header"], "3", "center", "graph_templates.php?action=template_edit", true);
+	html_start_box("<strong>" . __("Graph Templates") . "</strong>", "100", $colors["header"], "3", "center", "graph_templates.php?action=template_edit", true);
 	?>
 	<tr class='rowAlternate2'>
 		<td>
@@ -592,7 +592,7 @@ function template() {
 		$sql_where = "";
 	}
 
-	html_start_box("", "100%", $colors["header"], "0", "center", "");
+	html_start_box("", "100", $colors["header"], "0", "center", "");
 
 	$total_rows = db_fetch_cell("SELECT
 		COUNT(graph_templates.id)

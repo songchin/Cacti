@@ -103,7 +103,7 @@ function settings() {
 		$settings_graphs["tree"]["default_tree_id"]["sql"] = get_graph_tree_array(true);
 	}
 
-	html_start_box("<strong>" . __("Graph Settings") . "</strong>", "100%", $colors["header_panel"], "3", "center", "");
+	html_start_box("<strong>" . __("Graph Settings") . "</strong>", "100", $colors["header_panel"], "3", "center", "");
 
 	print "<form method='post' action='graph_settings.php'>\n";
 

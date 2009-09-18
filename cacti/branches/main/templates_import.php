@@ -89,7 +89,7 @@ function import() {
 	<?php
 
 	if ((isset($_SESSION["import_debug_info"])) && (is_array($_SESSION["import_debug_info"]))) {
-		html_start_box("<strong>" . __("Import Results") . "</strong>", "100%", "aaaaaa", "3", "center", "", true);
+		html_start_box("<strong>" . __("Import Results") . "</strong>", "100", "aaaaaa", "3", "center", "", true);
 
 		print "<tr class='rowAlternate1'><td><p class='textArea'>" . __("Cacti has imported the following items:") . "</p>";
 
@@ -139,7 +139,7 @@ function import() {
 		kill_session_var("import_debug_info");
 	}
 
-	html_start_box("<strong>" . __("Import Templates") . "</strong>", "100%", $colors["header"], "3", "center", "");
+	html_start_box("<strong>" . __("Import Templates") . "</strong>", "100", $colors["header"], "3", "center", "");
 
 	form_alternate_row_color("file"); ?>
 		<td width="50%">

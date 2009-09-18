@@ -206,7 +206,7 @@ function gprint_presets_edit() {
 	}
 
 	print "<form method='post' action='" .  basename($_SERVER["PHP_SELF"]) . "' name='gprint_edit'>\n";
-	html_start_box("<strong>" . __("GPRINT Presets") . "</strong> $header_label", "100%", $colors["header"], 0, "center", "");
+	html_start_box("<strong>" . __("GPRINT Presets") . "</strong> $header_label", "100", $colors["header"], 0, "center", "");
 	$header_items = array(__("Field"), __("Value"));
 	print "<tr><td>";
 	html_header($header_items, 2, true, 'header_gprint_preset');
@@ -280,7 +280,7 @@ function gprint_presets() {
 	load_current_session_value("sort_column", "sess_gprint_sort_column", "name");
 	load_current_session_value("sort_direction", "sess_gprint_sort_direction", "ASC");
 
-	html_start_box("<strong>" . __("GPRINT Presets") . "</strong>", "100%", $colors["header"], "3", "center", "gprint_presets.php?action=edit", true);
+	html_start_box("<strong>" . __("GPRINT Presets") . "</strong>", "100", $colors["header"], "3", "center", "gprint_presets.php?action=edit", true);
 	?>
 	<tr class='rowAlternate2'>
 		<td>
@@ -324,7 +324,7 @@ function gprint_presets() {
 	/* form the 'where' clause for our main sql query */
 	$sql_where = "WHERE (name LIKE '%%" . $_REQUEST["filter"] . "%%')";
 
-	html_start_box("", "100%", $colors["header"], "0", "center", "");
+	html_start_box("", "100", $colors["header"], "0", "center", "");
 
 	$total_rows = db_fetch_cell("SELECT
 		COUNT(id)

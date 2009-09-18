@@ -410,7 +410,7 @@ function template_edit() {
 	}
 
 	print "<form method='post' action='" .  basename($_SERVER["PHP_SELF"]) . "' name='host_template_edit'>\n";
-	html_start_box("<strong>" . __("Host Templates") . "</strong> $header_label", "100%", $colors["header"], "0", "center", "", true);
+	html_start_box("<strong>" . __("Host Templates") . "</strong> $header_label", "100", $colors["header"], "0", "center", "", true);
 	$header_items = array(__("Field"), __("Value"));
 	print "<tr><td>";
 	html_header($header_items, 1, true, 'host_template');
@@ -719,7 +719,7 @@ function template_edit() {
 	<?php
 
 	if (!empty($_GET["id"])) {
-		html_start_box("<strong>" . __("Associated Graph Templates") . "</strong>", "100%", $colors["header"], "2", "center", "", true);
+		html_start_box("<strong>" . __("Associated Graph Templates") . "</strong>", "100", $colors["header"], "2", "center", "", true);
 
 		print "	<tr class='rowSubHeader'>
 			<td><span>" . __("Graph Template Name") . "</span></td>
@@ -794,7 +794,7 @@ function template_edit() {
 		form_end_row();
 		html_end_box(FALSE);
 
-		html_start_box("<strong>" . __("Associated Data Queries") . "</strong>", "100%", $colors["header"], "0", "center", "", true);
+		html_start_box("<strong>" . __("Associated Data Queries") . "</strong>", "100", $colors["header"], "0", "center", "", true);
 		print "<tr><td>";
 		html_header(array(__("Data Query Name"), __("Re-Index Method")), 2);
 
@@ -936,7 +936,7 @@ function template() {
 
 	display_output_messages();
 
-	html_start_box("<strong>" . __("Host Templates") . "</strong>", "100%", $colors["header"], "3", "center", "host_templates.php?action=edit", true);
+	html_start_box("<strong>" . __("Host Templates") . "</strong>", "100", $colors["header"], "3", "center", "host_templates.php?action=edit", true);
 	?>
 	<tr class='rowAlternate2'>
 		<td>
@@ -985,7 +985,7 @@ function template() {
 		$sql_where = "";
 	}
 
-	html_start_box("", "100%", $colors["header"], "0", "center", "");
+	html_start_box("", "100", $colors["header"], "0", "center", "");
 
 	$total_rows = db_fetch_cell("SELECT
 		COUNT(host_template.id)

@@ -54,7 +54,7 @@ function form_save() {
 
 		if (get_request_var_post("output_format") == "1") {
 			include_once(CACTI_BASE_PATH . "/include/top_header.php");
-			print "<table width='100%' align='center'><tr><td><pre>" . htmlspecialchars($xml_data) . "</pre></td></tr></table>";
+			print "<table class='wp100 center'><tr><td><pre>" . htmlspecialchars($xml_data) . "</pre></td></tr></table>";
 			include_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
 		}elseif (get_request_var_post("output_format") == "2") {
 			header("Content-type: application/xml");
@@ -100,7 +100,7 @@ function export() {
 	<form action="templates_export.php" method="post">
 	<?php
 
-	html_start_box("<strong>" . __("Export Template") . "</strong> [" . $export_types{get_request_var_request("export_type")}["name"] . "]", "100%", $colors["header"], "3", "center", "");
+	html_start_box("<strong>" . __("Export Template") . "</strong> [" . $export_types{get_request_var_request("export_type")}["name"] . "]", "100", $colors["header"], "3", "center", "");
 
 	form_alternate_row_color("item"); ?>
 		<td width="50%">
