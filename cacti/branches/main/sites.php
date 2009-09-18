@@ -419,7 +419,7 @@ function site_edit() {
 	}
 
 	print "<form method='post' action='" .  basename($_SERVER["PHP_SELF"]) . "' name='site_edit'>\n";
-	html_start_box("<strong>" . __("Site") . "</strong> $header_label", "100%", $colors["header"], 0, "center", "");
+	html_start_box("<strong>" . __("Site") . "</strong> $header_label", "100", $colors["header"], 0, "center", "");
 	$header_items = array(__("Field"), __("Value"));
 	print "<tr><td>";
 	html_header($header_items, 1, true, 'site_edit');
@@ -457,7 +457,7 @@ function site_filter() {
 	}
 	-->
 	</script>
-	<?php html_start_box("<strong>" . __("Site Filters") . "</strong>", "100%", $colors["header"], "3", "center", "sites.php?action=edit", true);?>
+	<?php html_start_box("<strong>" . __("Site Filters") . "</strong>", "100", $colors["header"], "3", "center", "sites.php?action=edit", true);?>
 	<tr class='rowAlternate2'>
 		<td>
 			<form method='get' action='<?php print basename($_SERVER["PHP_SELF"]);?>' name='site_edit'>
@@ -629,7 +629,7 @@ function site() {
 
 	site_filter();
 
-	html_start_box("", "100%", $colors["header"], "0", "center", "");
+	html_start_box("", "100", $colors["header"], "0", "center", "");
 
 	$sql_where = "";
 

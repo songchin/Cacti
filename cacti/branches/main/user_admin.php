@@ -547,7 +547,7 @@ function graph_perms_edit() {
 
 	#print "<form method='post' action='" .  basename($_SERVER["PHP_SELF"]) . "' name='user_admin'>\n";
 	/* box: graph permissions */
-	html_start_box("<strong>" . __("Graph Permissions (By Graph)") . "</strong>", "100%", $colors["header"], "3", "center", "");
+	html_start_box("<strong>" . __("Graph Permissions (By Graph)") . "</strong>", "100", $colors["header"], "3", "center", "");
 
 	$graphs = db_fetch_assoc("SELECT
 		graph_templates_graph.local_graph_id AS id,
@@ -605,7 +605,7 @@ function graph_perms_edit() {
 	<?php
 
 	/* box: device permissions */
-	html_start_box("<strong>" . __("Graph Permissions (By Device)") . "</strong>", "100%", $colors["header"], "3", "center", "");
+	html_start_box("<strong>" . __("Graph Permissions (By Device)") . "</strong>", "100", $colors["header"], "3", "center", "");
 
 	$hosts = db_fetch_assoc("SELECT
 		host.id,
@@ -661,7 +661,7 @@ function graph_perms_edit() {
 	<?php
 
 	/* box: graph template permissions */
-	html_start_box("<strong>" . __("Graph Permissions (By Graph Template)") . "</strong>", "100%", $colors["header"], "3", "center", "");
+	html_start_box("<strong>" . __("Graph Permissions (By Graph Template)") . "</strong>", "100", $colors["header"], "3", "center", "");
 
 	$graph_templates = db_fetch_assoc("SELECT
 		graph_templates.id,
@@ -716,7 +716,7 @@ function graph_perms_edit() {
 	<?php
 
 	/* box: tree permissions */
-	html_start_box("<strong>" . __("Tree Permissions") . "</strong>", "100%", $colors["header"], "3", "center", "");
+	html_start_box("<strong>" . __("Tree Permissions") . "</strong>", "100", $colors["header"], "3", "center", "");
 
 	$trees = db_fetch_assoc("SELECT
 		graph_tree.id,
@@ -781,7 +781,7 @@ function user_realms_edit() {
 	input_validate_input_number(get_request_var("id"));
 	/* ==================================================== */
 
-	html_start_box("", "100%", $colors["header"], "0", "center", "");
+	html_start_box("", "100", $colors["header"], "0", "center", "");
 
 	print "	<tr class='rowHeader'>
 			<td class='textHeaderDark'><strong>" . __("Realm Permissions") . "</strong></td>
@@ -835,7 +835,7 @@ function graph_settings_edit() {
 	input_validate_input_number(get_request_var("id"));
 	/* ==================================================== */
 
-	html_start_box("<strong>" . __("Graph Settings") . "</strong>", "100%", $colors["header"], 0, "center", "");
+	html_start_box("<strong>" . __("Graph Settings") . "</strong>", "100", $colors["header"], 0, "center", "");
 
 	while (list($tab_short_name, $tab_fields) = each($settings_graphs)) {
 		$header_items = array($tabs_graphs[$tab_short_name], "&nbsp;");
@@ -932,7 +932,7 @@ function user_edit() {
 
 	print "<form method='post' action='" .  basename($_SERVER["PHP_SELF"]) . "' name='user_edit'>\n";
 	if (get_request_var("action") == "user_edit") {
-		html_start_box("<strong>" . __("General Settings") . "</strong>", "100%", $colors["header"], 0, "center");
+		html_start_box("<strong>" . __("General Settings") . "</strong>", "100", $colors["header"], 0, "center");
 		$header_items = array(__("Field"), __("Value"));
 		print "<tr><td>";
 		html_header($header_items, 2, true, 'settings_general');
@@ -1011,7 +1011,7 @@ function user() {
 	load_current_session_value("sort_column", "sess_user_admin_sort_column", "username");
 	load_current_session_value("sort_direction", "sess_user_admin_sort_direction", "ASC");
 
-	html_start_box("<strong>" . __('User Management') . "</strong>", "100%", $colors["header"], "3", "center", "user_admin.php?action=user_edit", true);
+	html_start_box("<strong>" . __('User Management') . "</strong>", "100", $colors["header"], "3", "center", "user_admin.php?action=user_edit", true);
 	?>
 	<tr class='rowAlternate2'>
 		<td>
@@ -1044,7 +1044,7 @@ function user() {
 		$sql_where = "";
 	}
 
-	html_start_box("", "100%", $colors["header"], "0", "center", "");
+	html_start_box("", "100", $colors["header"], "0", "center", "");
 
 	$total_rows = db_fetch_cell("SELECT
 		COUNT(user_auth.id)

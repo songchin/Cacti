@@ -82,7 +82,7 @@ include(CACTI_BASE_PATH . "/include/top_header.php");
 
 plugins_draw_tabs($ptabs, $current_tab);
 
-html_start_box('<strong>' . __('Plugins') . ' (' . $ptabs[$current_tab] . ')</strong>', '100%', $colors['header'], '3', 'center', '');
+html_start_box('<strong>' . __('Plugins') . ' (' . $ptabs[$current_tab] . ')</strong>', '100', $colors['header'], '3', 'center', '');
 
 print "<tr><td><table width='100%'>";
 
@@ -298,7 +298,7 @@ function plugins_show($status = 'all') {
 	html_end_box(FALSE);
 
 	if (sizeof($debug_log)) {
-		html_start_box('<strong>' . __('Plugin Warnings') . '</strong>', '100%', $colors['header'], '3', 'center', '');
+		html_start_box('<strong>' . __('Plugin Warnings') . '</strong>', '100', $colors['header'], '3', 'center', '');
 
 		foreach($debug_log as $message) {
 			echo "<tr><td class='textHeaderLight'>" . $message . "</td></tr>";

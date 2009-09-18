@@ -223,7 +223,7 @@ function rra_edit() {
 	}
 
 	print "<form method='post' action='" .  basename($_SERVER["PHP_SELF"]) . "' name='rra_edit'>\n";
-	html_start_box("<strong>" . __("Round Robin Archives") . "</strong> $header_label", "100%", $colors["header"], 0, "center", "");
+	html_start_box("<strong>" . __("Round Robin Archives") . "</strong> $header_label", "100", $colors["header"], 0, "center", "");
 	$header_items = array("Field", "Value");
 	print "<tr><td>";
 	html_header($header_items, 2, true, 'header_rra_edit');
@@ -297,7 +297,7 @@ function rra() {
 	load_current_session_value("sort_column", "sess_rra_sort_column", "name");
 	load_current_session_value("sort_direction", "sess_rra_sort_direction", "ASC");
 
-	html_start_box("<strong>" . __("Round Robin Archives") . "</strong>", "100%", $colors["header"], "3", "center", "rra.php?action=edit", true);
+	html_start_box("<strong>" . __("Round Robin Archives") . "</strong>", "100", $colors["header"], "3", "center", "rra.php?action=edit", true);
 	?>
 	<tr class='rowAlternate2'>
 		<td>
@@ -341,7 +341,7 @@ function rra() {
 	/* form the 'where' clause for our main sql query */
 	$sql_where = "WHERE (rra.name LIKE '%%" . $_REQUEST["filter"] . "%%')";
 
-	html_start_box("", "100%", $colors["header"], "0", "center", "");
+	html_start_box("", "100", $colors["header"], "0", "center", "");
 
 	$total_rows = db_fetch_cell("SELECT
 		COUNT(rra.id)

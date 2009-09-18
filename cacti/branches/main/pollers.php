@@ -298,7 +298,7 @@ function poller_edit() {
 	}
 
 	print "<form method='post' action='" .  basename($_SERVER["PHP_SELF"]) . "' name='poller_edit'>\n";
-	html_start_box("<strong>" . __("Pollers") . "</strong> $header_label", "100%", $colors["header"], 0, "center", "", true);
+	html_start_box("<strong>" . __("Pollers") . "</strong> $header_label", "100", $colors["header"], 0, "center", "", true);
 	$header_items = array(__("Field"), __("Value"));
 	print "<tr><td>";
 	html_header($header_items, 1, true, 'poller_edit');
@@ -373,7 +373,7 @@ function poller() {
 
 	display_output_messages();
 
-	html_start_box("<strong>" . __("Pollers") . "</strong>", "100%", $colors["header"], "3", "center", "pollers.php?action=edit", true);
+	html_start_box("<strong>" . __("Pollers") . "</strong>", "100", $colors["header"], "3", "center", "pollers.php?action=edit", true);
 	?>
 	<tr class='rowAlternate2'>
 		<td>
@@ -417,7 +417,7 @@ function poller() {
 	/* form the 'where' clause for our main sql query */
 	$sql_where = "WHERE (poller.description LIKE '%%" . $_REQUEST["filter"] . "%%')";
 
-	html_start_box("", "100%", $colors["header"], "0", "center", "");
+	html_start_box("", "100", $colors["header"], "0", "center", "");
 
 	$total_rows = db_fetch_cell("SELECT
 		COUNT(*)

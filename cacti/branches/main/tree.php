@@ -163,7 +163,7 @@ function item_edit() {
 
 	print "<form action='tree.php' name='form_tree' method='post'>\n";
 
-	html_start_box("<strong>" . __("Tree Items") . "</strong>", "100%", $colors["header"], "3", "center", "");
+	html_start_box("<strong>" . __("Tree Items") . "</strong>", "100", $colors["header"], "3", "center", "");
 
 	form_alternate_row_color("parent_item"); ?>
 		<td width="50%">
@@ -388,7 +388,7 @@ function tree_edit() {
 	}
 
 	print "<form method='post' action='" .  basename($_SERVER["PHP_SELF"]) . "' name='tree_edit'>\n";
-	html_start_box("<strong>" . __("Graph Trees") . "</strong> $header_label", "100%", $colors["header"], "3", "center", "", true);
+	html_start_box("<strong>" . __("Graph Trees") . "</strong> $header_label", "100", $colors["header"], "3", "center", "", true);
 	$header_items = array(__("Field"), __("Value"));
 	print "<tr><td>";
 	html_header($header_items, 1, true, 'template');
@@ -402,7 +402,7 @@ function tree_edit() {
 	html_end_box(FALSE);
 
 	if (!empty($_GET["id"])) {
-		html_start_box("<strong>" . __("Tree Items") . "</strong>", "100%", $colors["header"], "3", "center", "tree.php?action=item_edit&tree_id=" . $tree["id"] . "&parent_id=0");
+		html_start_box("<strong>" . __("Tree Items") . "</strong>", "100", $colors["header"], "3", "center", "tree.php?action=item_edit&tree_id=" . $tree["id"] . "&parent_id=0");
 
 		?>
 		<tr>
@@ -428,7 +428,7 @@ function tree_edit() {
 function tree() {
 	global $colors;
 
-	html_start_box("<strong>" . __("Graph Trees") . "</strong>", "100%", $colors["header"], "3", "center", "tree.php?action=edit");
+	html_start_box("<strong>" . __("Graph Trees") . "</strong>", "100", $colors["header"], "3", "center", "tree.php?action=edit");
 
 	print "<tr class='rowSubHeader'>";
 		DrawMatrixHeaderItem(__("Name"),$colors["header_text"],1);
