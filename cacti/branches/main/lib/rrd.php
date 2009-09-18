@@ -2124,7 +2124,7 @@ function rrdtool_cacti_compare($data_source_id) {
 	/* reformat time-since-epoch to a more human readable format */
 	$date_fmt = date("D, " . date_time_format() . " T", $rrd_dump["last_update"]);
 
-	html_start_box("<strong>" . __("Compare Cacti to current RRD File") . " </strong> [$cacti_file]", "100%", $colors["header"], "3", "center", "");
+	html_start_box("<strong>" . __("Compare Cacti to current RRD File") . " </strong> [$cacti_file]", "100", $colors["header"], "3", "center", "");
 
 	/* -----------------------------------------------------------------------------------
 	 * header information

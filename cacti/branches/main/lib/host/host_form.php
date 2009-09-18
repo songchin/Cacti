@@ -360,7 +360,7 @@ function api_host_form_actions() {
 	$device_actions = array_merge($device_actions, api_tree_add_tree_names_to_actions_array());
 
 	print "<form method='post' action='" .  basename($_SERVER["PHP_SELF"]) . "' name='host_edit_actions'>\n";
-	html_start_box("<strong>" . $device_actions{get_request_var_post("drp_action")} . "</strong>", "60%", $colors["header_panel"], "3", "center", "");
+	html_start_box("<strong>" . $device_actions{get_request_var_post("drp_action")} . "</strong>", "60", $colors["header_panel"], "3", "center", "");
 
 	if (sizeof($host_array)) {
 		if (get_request_var_post("drp_action") == DEVICE_ACTION_ENABLE) { /* Enable Devices */
@@ -689,7 +689,7 @@ function host_display_general($host, $host_text) {
 	global $colors, $fields_host_edit, $fields_host_edit_availability, $reindex_types;
 
 	if (isset($host["id"])) {
-		html_start_box($host_text, "100%", $colors["header"], "3", "center", "", true);
+		html_start_box($host_text, "100", $colors["header"], "3", "center", "", true);
 		?>
 			<tr>
 				<?php if (($host["availability_method"] == AVAIL_SNMP) ||
@@ -789,13 +789,13 @@ function host_display_general($host, $host_text) {
 			</tr>
 		<?php
 	}else{
-		html_start_box($host_text, "100%", $colors["header"], "3", "center", "", false);
+		html_start_box($host_text, "100", $colors["header"], "3", "center", "", false);
 	}
 
 	html_end_box(FALSE);
 
 	print "<form method='post' action='" .  basename($_SERVER["PHP_SELF"]) . "' name='host_edit_settings'>\n";
-	html_start_box("<strong>" . __("General Settings") . "</strong>", "100%", $colors["header"], 0, "center", "", true);
+	html_start_box("<strong>" . __("General Settings") . "</strong>", "100", $colors["header"], 0, "center", "", true);
 	$header_items = array(__("Field"), __("Value"));
 	print "<tr><td>";
 	html_header($header_items, 1, true, 'host');
@@ -1095,7 +1095,7 @@ function host_display_general($host, $host_text) {
 	<?php
 
 	if ((isset($_GET["display_dq_details"])) && (isset($_SESSION["debug_log"]["data_query"]))) {
-		html_start_box("<strong>" . __("Data Query Debug Information") . "</strong>", "100%", $colors["header"], "3", "center", "", true);
+		html_start_box("<strong>" . __("Data Query Debug Information") . "</strong>", "100", $colors["header"], "3", "center", "", true);
 
 		print "<tr><td><span class=\"log\">" . debug_log_return("data_query") . "</span></td></tr>";
 
@@ -1103,7 +1103,7 @@ function host_display_general($host, $host_text) {
 	}
 
 	if (isset($host["id"])) {
-		html_start_box("<strong>". __("Associated Graph Templates") . "</strong>", "100%", $colors["header"], 0, "center", "", true);
+		html_start_box("<strong>". __("Associated Graph Templates") . "</strong>", "100", $colors["header"], 0, "center", "", true);
 		print "<tr><td>";
 		html_header(array(__("Graph Template Name"), __("Status")), 2);
 
@@ -1180,7 +1180,7 @@ function host_display_general($host, $host_text) {
 		print "</table></td></tr>";		/* end of html_header */
 		html_end_box(FALSE);
 
-		html_start_box("<strong>" . __("Associated Data Queries") . "</strong>", "100%", $colors["header"], 0, "center", "", true);
+		html_start_box("<strong>" . __("Associated Data Queries") . "</strong>", "100", $colors["header"], 0, "center", "", true);
 		print "<tr><td>";
 		html_header(array(__("Data Query Name"), __("Debugging"), __("Re-Index Method"), __("Status")), 2);
 
@@ -1368,7 +1368,7 @@ function host() {
 	</script>
 	<?php
 
-	html_start_box("<strong>" . __("Devices") . "</strong>", "100%", $colors["header"], "3", "center", "host.php?action=edit&template_id=" . $_REQUEST["template_id"] . "&status=" . $_REQUEST["status"], true);
+	html_start_box("<strong>" . __("Devices") . "</strong>", "100", $colors["header"], "3", "center", "host.php?action=edit&template_id=" . $_REQUEST["template_id"] . "&status=" . $_REQUEST["status"], true);
 	?>
 	<tr class='rowAlternate2'>
 		<td>
@@ -1525,7 +1525,7 @@ function host() {
 		$sql_where .= (strlen($sql_where) ? " and host.site_id=" . $_REQUEST["site"] : "where host.site_id=" . $_REQUEST["site"]);
 	}
 
-	html_start_box("", "100%", $colors["header"], "0", "center", "");
+	html_start_box("", "100", $colors["header"], "0", "center", "");
 
 	$total_rows = db_fetch_cell("select
 		COUNT(host.id)

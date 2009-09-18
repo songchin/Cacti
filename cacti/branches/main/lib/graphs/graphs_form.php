@@ -320,7 +320,7 @@ function form_actions() {
 	/* add a list of tree names to the actions dropdown */
 	$graph_actions = array_merge($graph_actions, api_tree_add_tree_names_to_actions_array());
 
-	html_start_box("<strong>" . $graph_actions{get_request_var_post("drp_action")} . "</strong>", "60%", $colors["header_panel"], "3", "center", "");
+	html_start_box("<strong>" . $graph_actions{get_request_var_post("drp_action")} . "</strong>", "60", $colors["header_panel"], "3", "center", "");
 
 	print "<form action='graphs.php' method='post'>\n";
 
@@ -515,7 +515,7 @@ function item() {
 		$add_text = "";
 	}
 
-	html_start_box("<strong>" . __("Graph Items") . "</strong> $header_label", "100%", $colors["header"], "3", "center", $add_text);
+	html_start_box("<strong>" . __("Graph Items") . "</strong> $header_label", "100", $colors["header"], "3", "center", $add_text);
 	draw_graph_items_list($template_item_list, "graphs_items.php", "local_graph_id=" . $_GET["id"], (empty($graph_template_id) ? false : true));
 	html_end_box();
 }
@@ -589,7 +589,7 @@ function graph_diff() {
 	<br>
 	<?php
 
-	html_start_box("<strong>" . __("Graph Preview") . "</strong>", "100%", $colors["header"], "3", "center", "");
+	html_start_box("<strong>" . __("Graph Preview") . "</strong>", "100", $colors["header"], "3", "center", "");
 
 	$graph_item_actions = array("normal" => "", "add" => "+", "delete" => "-");
 
@@ -833,7 +833,7 @@ function graph_edit() {
 	}
 
 	print "<form method='post' action='" .  basename($_SERVER["PHP_SELF"]) . "' name='graph_edit'>\n";
-	html_start_box("<strong>" . __("Graph Template Selection") . "</strong> $header_label", "100%", $colors["header"], 0, "center", "");
+	html_start_box("<strong>" . __("Graph Template Selection") . "</strong> $header_label", "100", $colors["header"], 0, "center", "");
 	$header_items = array(__("Field"), __("Value"));
 	print "<tr><td>";
 	html_header($header_items, 1, true, 'template');
@@ -891,7 +891,7 @@ function graph_edit() {
 #	print "<form method='post' action='graphs.php'>\n";
 	/* only display the "inputs" area if we are using a graph template for this graph */
 	if (!empty($graphs["graph_template_id"])) {
-		html_start_box("<strong>" . __("Supplemental Graph Template Data") . "</strong>", "100%", $colors["header"], "0", "center", "");
+		html_start_box("<strong>" . __("Supplemental Graph Template Data") . "</strong>", "100", $colors["header"], "0", "center", "");
 
 		draw_nontemplated_fields_graph($graphs["graph_template_id"], $graphs, "|field|", "<strong>" . __("Graph Fields") . "</strong>", true, true, 0);
 		draw_nontemplated_fields_graph_item($graphs["graph_template_id"], get_request_var("id"), "|field|_|id|", "<strong>" . __("Graph Item Fields") ."</strong>", true);
@@ -932,7 +932,7 @@ function graph_edit() {
 	}
 
 	if (((isset($_GET["id"])) || (isset($_GET["new"]))) && (empty($graphs["graph_template_id"]))) {
-		html_start_box("<strong>" . __("Graph Configuration") . "</strong>", "100%", $colors["header"], "0", "center", "");
+		html_start_box("<strong>" . __("Graph Configuration") . "</strong>", "100", $colors["header"], "0", "center", "");
 		$header_items = array(__("Field"), __("Value"));
 		print "<tr><td>";
 		html_header($header_items, 1, true, 'template');
@@ -1129,7 +1129,7 @@ function graph() {
 	</script>
 	<?php
 
-	html_start_box("<strong>" . __("Graph Management") . "</strong>", "100%", $colors["header"], "3", "center", "graphs.php?action=graph_edithost_id=" . $_REQUEST["host_id"], true);
+	html_start_box("<strong>" . __("Graph Management") . "</strong>", "100", $colors["header"], "3", "center", "graphs.php?action=graph_edithost_id=" . $_REQUEST["host_id"], true);
 	?>
 	<tr class='rowAlternate2'>
 		<td>
@@ -1250,7 +1250,7 @@ function graph() {
 		$sql_where .= " AND graph_templates_graph.graph_template_id=" . $_REQUEST["template_id"];
 	}
 
-	html_start_box("", "100%", $colors["header"], "0", "center", "");
+	html_start_box("", "100", $colors["header"], "0", "center", "");
 
 	if (get_request_var_request("rows") == "-1") {
 		$rows = read_config_option("num_rows_graph");

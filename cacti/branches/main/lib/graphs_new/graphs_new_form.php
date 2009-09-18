@@ -227,7 +227,7 @@ function host_new_graphs($host_id, $host_template_id, $selected_graphs_array) {
 			if ($form_type == "cg") {
 				$graph_template_id = $form_id1;
 
-				html_start_box("<strong>" . __("Create Graph from '%s'", db_fetch_cell("select name from graph_templates where id=$graph_template_id")), "100%", $colors["header"], "3", "center", "");
+				html_start_box("<strong>" . __("Create Graph from '%s'", db_fetch_cell("select name from graph_templates where id=$graph_template_id")), "100", $colors["header"], "3", "center", "");
 			}elseif ($form_type == "sg") {
 				while (list($form_id2, $form_array3) = each($form_array2)) {
 					/* ================= input validation ================= */
@@ -248,7 +248,7 @@ function host_new_graphs($host_id, $host_template_id, $selected_graphs_array) {
 				}
 
 				/* DRAW: Data Query */
-				html_start_box("<strong>Create $num_graphs Graph" . (($num_graphs>1) ? "s" : "") . " from '" . db_fetch_cell("select name from snmp_query where id=$snmp_query_id") . "'", "100%", $colors["header"], "3", "center", "");
+				html_start_box("<strong>Create $num_graphs Graph" . (($num_graphs>1) ? "s" : "") . " from '" . db_fetch_cell("select name from snmp_query where id=$snmp_query_id") . "'", "100", $colors["header"], "3", "center", "");
 			}
 
 			/* ================= input validation ================= */
@@ -404,7 +404,7 @@ function graphs_new() {
 	</script>
 	<?php
 
-	html_start_box("<strong>" . $host["description"] . "(" . $host["hostname"] . ")</strong> " . db_fetch_cell("select name from host_template where id=" . $host["host_template_id"]), "100%", $colors["header"], "3", "center", "");
+	html_start_box("<strong>" . $host["description"] . "(" . $host["hostname"] . ")</strong> " . db_fetch_cell("select name from host_template where id=" . $host["host_template_id"]), "100", $colors["header"], "3", "center", "");
 
 	?>
 	<tr class='rowAlternate2'>
@@ -540,7 +540,7 @@ function graphs_new() {
 		print "<script type='text/javascript'>gt_update_deps(1);</script>\n";
 		print "<script type='text/javascript'>\nvar created_graphs = new Array()\n</script>\n";
 
-		html_start_box("<strong>" . __("Graph Templates") . "</strong>", "100%", $colors["header"], "3", "center", "");
+		html_start_box("<strong>" . __("Graph Templates") . "</strong>", "100", $colors["header"], "3", "center", "");
 		print "	<tr class='rowSubHeader'>
 				<td class='textSubHeaderDark'>" . __("Graph Template Name") . "</td>
 				<td class='rowSubHeader' width='1%' align='center' style='" . get_checkbox_style() . "'><input type='checkbox' style='margin: 0px;' name='all_cg' title='" . __("Select All") . "' onClick='SelectAll(\"cg\",this.checked);gt_update_selection_indicators();'></td>\n
@@ -659,7 +659,7 @@ function graphs_new() {
 				print "//-->\n</script>\n";
 			}
 
-			html_start_box_dq($snmp_query["name"], $snmp_query["id"], $host["id"], $num_input_fields+1, "100%", $colors["header"], "0", "center");
+			html_start_box_dq($snmp_query["name"], $snmp_query["id"], $host["id"], $num_input_fields+1, "100", $colors["header"], "0", "center");
 
 			if ($xml_array != false) {
 				$html_dq_header = "";
