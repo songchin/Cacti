@@ -194,7 +194,7 @@ function form_actions() {
 
 	include_once(CACTI_BASE_PATH . "/include/top_header.php");
 
-	html_start_box("<strong>" . $user_actions[get_request_var_post("drp_action")] . "</strong>", "60%", $colors["header_panel"], "3", "center", "");
+	html_start_box("<strong>" . $user_actions[get_request_var_post("drp_action")] . "</strong>", "60", $colors["header_panel"], "3", "center", "");
 
 	print "<form action='user_admin.php' method='post'>\n";
 
