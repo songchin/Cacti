@@ -828,14 +828,20 @@ tr.highlight {
 	width:200px;	
 }
 
-.w15p {
+.wp15 {
 	width:15%;
 }
-.w30p {
+.wp30 {
 	width:30%;
 }
-.w70p {
-	widht:70%;
+.wp60 {
+	width:60%;
+}
+.wp70 {
+	width:70%;
+}
+.wp100 {
+	width:100%;
 }
 /* The main calendar widget.  DIV containing a table. */
 div.calendar { position: relative; }

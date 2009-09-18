@@ -453,7 +453,7 @@ function template_edit() {
 	}
 
 	print "<form method='post' action='" .  basename($_SERVER["PHP_SELF"]) . "' name='data_template_edit'>\n";
-	html_start_box("<strong>" . __("Data Template") . "</strong> $header_label", "100%", $colors["header"], 0, "center", "", true);
+	html_start_box("<strong>" . __("Data Template") . "</strong> $header_label", "100", $colors["header"], 0, "center", "", true);
 	$header_items = array(__("Field"), __("Value"));
 	print "<tr><td>";
 	html_header($header_items, 2, true, 'header_data_template');
@@ -466,7 +466,7 @@ function template_edit() {
 	print "</table></td></tr>";		/* end of html_header */
 	html_end_box(false);
 
-	html_start_box("<strong>" . __("Data Source") . "</strong>", "100%", $colors["header"], 0, "center", "", true);
+	html_start_box("<strong>" . __("Data Source") . "</strong>", "100", $colors["header"], 0, "center", "", true);
 	$header_items = array(__("Field"), __("Value"));
 	print "<tr><td>";
 	html_header($header_items, 2, true, 'header_data_source');
@@ -540,7 +540,7 @@ function template_edit() {
 		}
 	}
 
-	html_start_box("<strong>" . __("Data Source Items") . "</strong>", "100%", $colors["header"], "3", "center", "data_templates.php?action=rrd_add&id=" . $_GET["id"], true);
+	html_start_box("<strong>" . __("Data Source Items") . "</strong>", "100", $colors["header"], "3", "center", "data_templates.php?action=rrd_add&id=" . $_GET["id"], true);
 
 	$header_items = array(__("Field"), __("Value"));
 	html_header($header_items, 3, true, 'data_source_item');
@@ -591,7 +591,7 @@ function template_edit() {
 		/* get each INPUT field for this data input source */
 		$fields = db_fetch_assoc("select * from data_input_fields where data_input_id=" . $template_data["data_input_id"] . " and input_output='in' order by sequence");
 
-		html_start_box("<strong>" . __("Custom Data") . "</strong> [data input: " . db_fetch_cell("select name from data_input where id=" . $template_data["data_input_id"]) . "]", "100%", $colors["header"], 0, "center", "", true);
+		html_start_box("<strong>" . __("Custom Data") . "</strong> [data input: " . db_fetch_cell("select name from data_input where id=" . $template_data["data_input_id"]) . "]", "100", $colors["header"], 0, "center", "", true);
 		$header_items = array(__("Field"), __("Value"));
 		print "<tr><td>";
 		html_header($header_items, 2, true, 'data_source_custom_data');
@@ -690,7 +690,7 @@ function template() {
 	load_current_session_value("sort_column", "sess_data_template_sort_column", "name");
 	load_current_session_value("sort_direction", "sess_data_template_sort_direction", "ASC");
 
-	html_start_box("<strong>Data Templates</strong>", "100%", $colors["header"], "3", "center", "data_templates.php?action=template_edit", true);
+	html_start_box("<strong>Data Templates</strong>", "100", $colors["header"], "3", "center", "data_templates.php?action=template_edit", true);
 	?>
 	<tr class='rowAlternate2'>
 		<td>
@@ -742,7 +742,7 @@ function template() {
 			AND data_template.id = data_template_data.data_template_id";
 	}
 
-	html_start_box("", "100%", $colors["header"], "0", "center", "");
+	html_start_box("", "100", $colors["header"], "0", "center", "");
 
 	$total_rows = db_fetch_cell("SELECT
 		COUNT(data_template.id)

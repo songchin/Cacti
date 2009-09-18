@@ -80,7 +80,7 @@ function html_start_box($title, $width, $background_color, $cell_padding, $align
 			registerOnLoadFunction("<?php print basename($_SERVER['PHP_SELF']);?>", "htmlStartBoxFilterChange('<?php print $item_id;?>', true)");
 		-->
 		</script>
-		<table class="startBoxHeader <?php print "nw$width;"?> startBox0" >
+		<table class="startBoxHeader <?php print "wp$width"?> startBox0" >
 			<?php if ($title != "") {?><tr class="rowHeader">
 				<td colspan="100">
 					<table class="startBox0">
@@ -131,7 +131,7 @@ function html_start_box_dq($query_name, $query_id, $host_id, $colspan, $width, $
 							<td class='textHeaderDark'>
 								<strong><?php print __("Data Query");?></strong> [<?php print $query_name; ?>]
 							</td>
-							<td align='right' nowrap>
+							<td class='right nw'>
 								<a href='graphs_new.php?action=query_reload&amp;id=<?php print $query_id;?>&amp;host_id=<?php print $host_id;?>'><img class='buttonSmall' src='images/reload_icon_small.gif' alt='<?php print __("Reload");?>' title='<?php print __("Reload Associated Query");?>' align='middle'></a>
 							</td>
 						</tr>
@@ -233,10 +233,10 @@ function html_graph_area(&$graph_array, $no_graphs_message = "", $extra_url_args
 
 			?>
 			<tr align='center' style='background-color: #<?php print ($i % 2 == 0 ? "f9f9f9" : "ffffff");?>;'>
-				<td align='center'>
-					<table align='center' cellpadding='0'>
+				<td class='center'>
+					<table class='center' cellpadding='0'>
 						<tr>
-							<td align='center'>
+							<td class='center'>
 								<div style="min-height: <?php echo (1.6 * read_config_option("export_default_height")) . "px"?>;"><a href='graph.php?action=view&local_graph_id=<?php print $graph["local_graph_id"];?>&rra_id=all'><img class='graphimage' id='graph_<?php print $graph["local_graph_id"] ?>' src='<?php print htmlspecialchars("graph_image.php?local_graph_id=" . $graph["local_graph_id"] . "&rra_id=0" . (($extra_url_args == "") ? "" : "&$extra_url_args"));?>' border='0' alt='<?php print $graph["title_cache"];?>'></a></div>
 								<?php print (read_graph_config_option("show_graph_title") == "on" ? "<p style='font-size: 10;' align='center'><strong>" . $graph["title_cache"] . "</strong></p>" : "");?>
 							</td>
@@ -360,7 +360,7 @@ function html_graph_thumbnail_area(&$graph_array, $no_graphs_message = "", $extr
 			<td align='center' width='<?php print ceil(100 / read_graph_config_option("num_columns"));?>%'>
 				<table align='center' cellpadding='0'>
 					<tr>
-						<td align='center'>
+						<td class='center'>
 							<a href='<?php print htmlspecialchars("graph.php?action=view&rra_id=all&local_graph_id=" . $graph["local_graph_id"]);?>'><img class='graphimage' id='graph_<?php print $graph["local_graph_id"] ?>' src='<?php print htmlspecialchars("graph_image.php?local_graph_id=". $graph["local_graph_id"] . "&rra_id=0&graph_height=" . read_graph_config_option("default_height") . "&graph_width=" . read_graph_config_option("default_width") . "&graph_nolegend=true" . (($extra_url_args == "") ? "" : "&$extra_url_args"));?>' border='0' alt='<?php print $graph["title_cache"];?>'></a>
 							<?php print (read_graph_config_option("show_graph_title") == "on" ? "<p style='font-size: 10;' align='center'><strong>" . $graph["title_cache"] . "</strong></p>" : "");?>
 						</td>
@@ -421,15 +421,15 @@ function html_nav_bar($background_color, $colspan, $current_page, $rows_per_page
 		<td colspan='<?php print $colspan;?>'>
 			<table class="startBox0">
 				<tr>
-					<td align='left' class='textHeaderDark w15p'>
+					<td class='textHeaderDark wp15 right'>
 						<?php if ($current_page > 1) {
 							print "<strong><a class='linkOverDark' href='" . htmlspecialchars(str_replace("<PAGE>", ($current_page-1), $nav_url)) . "'>&lt;&lt;&nbsp;" . __("Previous") . "</a></strong>";
 						} ?>
 					</td>
-					<td align='center' class='textHeaderDark w70p'>
+					<td class='textHeaderDark wp70 center'>
 						<?php print __("Showing Rows");?> <?php print (($rows_per_page*($current_page-1))+1);?> <?php print __("to");?> <?php print ((($total_rows < $rows_per_page) || ($total_rows < ($rows_per_page*$current_page))) ? $total_rows : ($rows_per_page*$current_page));?> <?php print __("of");?> <?php print $total_rows;?>
 					</td>
-					<td align='right' class='textHeaderDark w15p'>
+					<td class='textHeaderDark wp15 right'>
 						<?php if (($current_page * $rows_per_page) < $total_rows) {
 							print "<strong><a class='linkOverDark' href='" . htmlspecialchars(str_replace("<PAGE>", ($current_page+1), $nav_url)) . "'>" . __("Next") . "&gt;&gt;</a></strong>";
 						} ?>
@@ -491,7 +491,7 @@ function html_header_sort($header_items, $sort_column, $sort_direction, $last_it
 		if (($db_column == "") || (substr_count($db_column, "nosort"))) {
 			$width = html_get_column_width($pathname, "hhs_$rand_id");
 
-			print "\t\t\t<th nowrap style='text-align:$align;width:$width;white-space:nowrap;' id='hhs_$rand_id'" . ((($rand_id+1) == count($header_items)) ? "colspan='$last_item_colspan' " : "") . " onMouseDown='return false' onMousemove='doColResize(this,event)' onMouseover='doColResize(this,event)' onMouseup='doneColResize()' class='textSubHeaderDark'>" . $display_text . "</th>\n";
+			print "\t\t\t<th class='$align wp$width' id='hhs_$rand_id'" . ((($rand_id+1) == count($header_items)) ? "colspan='$last_item_colspan' " : "") . " onMouseDown='return false' onMousemove='doColResize(this,event)' onMouseover='doColResize(this,event)' onMouseup='doneColResize()' class='textSubHeaderDark'>" . $display_text . "</th>\n";
 
 			$rand_id++;
 		}else{
@@ -562,13 +562,13 @@ function html_header_sort_checkbox($header_items, $sort_column, $sort_direction,
 		if (($db_column == "") || (substr_count($db_column, "nosort"))) {
 			$width = html_get_column_width($pathname, "hhscrand_$rand_id");
 
-			print "\t\t\t<th id='hhsc_$rand_id' onMouseDown='return false' onMousemove='doColResize(this,event)' onMouseover='doColResize(this,event)' onMouseup='doneColResize()' class='textSubHeaderDark $align nw$width'>" . $display_text . "</th>\n";
+			print "\t\t\t<th id='hhsc_$rand_id' onMouseDown='return false' onMousemove='doColResize(this,event)' onMouseover='doColResize(this,event)' onMouseup='doneColResize()' class='textSubHeaderDark $align wp$width'>" . $display_text . "</th>\n";
 
 			$rand_id++;
 		}else{
 			$width = html_get_column_width($pathname, $db_column);
 
-			print "\t\t\t<th id='$db_column' onMouseDown='return false' onMousemove='doColResize(this,event)' onMouseover='doColResize(this,event)' onMouseup='doneColResize()' class='textSubHeaderDark nw$width'>";
+			print "\t\t\t<th id='$db_column' onMouseDown='return false' onMousemove='doColResize(this,event)' onMouseover='doColResize(this,event)' onMouseup='doneColResize()' class='textSubHeaderDark wp$width'>";
 			print "\n\t\t\t\t<a class='$sort_class' style='display:block;' href='" . htmlspecialchars($_SERVER["PHP_SELF"] . "?sort_column=" . $db_column . "&sort_direction=" . $direction) . "'>" . $display_text . "</a>";
 			print "\n\t\t\t</th>\n";
 		}
@@ -742,7 +742,7 @@ function html_create_nav($current_page, $max_pages, $rows_per_page, $total_rows,
 				<td colspan='$columns'>
 					<table class='startBox0'>
 						<tr>
-							<td align='left' class='textHeaderDark w15p'>";
+							<td class='textHeaderDark wp15 left'>";
 								if ($current_page > 1) {
 									$nav .= "<strong>";
 									$nav .= "<a class='linkOverDark' href='" . htmlspecialchars($base_url . $page_var . "=" . ($current_page-1)) . "'>";
@@ -751,10 +751,10 @@ function html_create_nav($current_page, $max_pages, $rows_per_page, $total_rows,
 								}
 								$nav .= "
 							</td>\n
-							<td align='center' class='textHeaderDark w70p'>
+							<td class='textHeaderDark wp70 center'>
 								" . __("Showing Rows") . " " . (($rows_per_page*($current_page-1))+1) . " " . __("to") . " " . ((($total_rows < $rows_per_page) || ($total_rows < ($rows_per_page*$current_page))) ? $total_rows : ($rows_per_page*$current_page)) . " " . __("of") . " $total_rows [$url_page_select]
 							</td>\n
-							<td align='right' class='textHeaderDark w15p'>";
+							<td class='textHeaderDark wp15 right'>";
 								if (($current_page * $rows_per_page) < $total_rows) {
 									$nav .= "<strong>";
 									$nav .= "<a class='linkOverDark' href='" . htmlspecialchars($base_url . $page_var . "=" . ($current_page+1)) . "'>";
@@ -773,7 +773,7 @@ function html_create_nav($current_page, $max_pages, $rows_per_page, $total_rows,
 				<td colspan='$columns'>
 					<table class='startBox0'>
 						<tr>
-							<td align='center' class='textHeaderDark w15p'>No Rows Found</td>
+							<td class='textHeaderDark wp15 center'>No Rows Found</td>
 						</tr>
 					</table>
 				</td>
@@ -1106,11 +1106,11 @@ function draw_actions_dropdown($actions_array) {
 			<td width='1' valign='top'>
 				<img src='<?php echo URL_PATH; ?>images/arrow.gif' alt='' align='middle'>&nbsp;
 			</td>
-			<td align='right'>
+			<td class='right'>
 				<?php print __("Choose an action:");?>
 				<?php form_dropdown("drp_action",$actions_array,"","","1","","");?>
 			</td>
-			<td width='1' align='right'>
+			<td class='nw1 right'>
 				<input type='submit' value='<?php print __("Go");?>' name='go'>
 			</td>
 		</tr>

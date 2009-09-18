@@ -336,7 +336,7 @@ function field_edit() {
 		return;
 	}
 
-	html_start_box("<strong>$header_name " . __("Fields") . "</strong> " . __("[edit: ") . $data_input["name"] . "]", "100%", $colors["header"], "3", "center", "");
+	html_start_box("<strong>$header_name " . __("Fields") . "</strong> " . __("[edit: ") . $data_input["name"] . "]", "100", $colors["header"], "3", "center", "");
 
 	$form_array = array();
 
@@ -404,7 +404,7 @@ function data_edit() {
 	}
 
 	print "<form method='post' action='" .  basename($_SERVER["PHP_SELF"]) . "' name='data_input_edit'>\n";
-	html_start_box("<strong>" . __("Data Input Methods") . "</strong> $header_label", "100%", $colors["header"], 0, "center", "");
+	html_start_box("<strong>" . __("Data Input Methods") . "</strong> $header_label", "100", $colors["header"], 0, "center", "");
 	$header_items = array(__("Field"), __("Value"));
 	print "<tr><td>";
 	html_header($header_items, 1, true, 'data_input');
@@ -418,7 +418,7 @@ function data_edit() {
 	html_end_box();
 
 	if (!empty($_GET["id"])) {
-		html_start_box("<strong>" . __("Input Fields") . "</strong>", "100%", $colors["header"], 0, "center", "data_input.php?action=field_edit&type=in&data_input_id=" . $_GET["id"]);
+		html_start_box("<strong>" . __("Input Fields") . "</strong>", "100", $colors["header"], 0, "center", "data_input.php?action=field_edit&type=in&data_input_id=" . $_GET["id"]);
 		$header_items = array(__("Name"), __("Field Order"), __("Friendly Name"));
 		print "<tr><td>";
 		html_header($header_items, 2, true, 'data_input_fields');
@@ -450,7 +450,7 @@ function data_edit() {
 		print "</table></td></tr>";		/* end of html_header */
 		html_end_box();
 
-		html_start_box("<strong>" . __("Output Fields"). "</strong>", "100%", $colors["header"], 0, "center", "data_input.php?action=field_edit&type=out&data_input_id=" . $_GET["id"]);
+		html_start_box("<strong>" . __("Output Fields"). "</strong>", "100", $colors["header"], 0, "center", "data_input.php?action=field_edit&type=out&data_input_id=" . $_GET["id"]);
 		$header_items = array(__("Name"), __("Field Order"), __("Friendly Name"), __("Update RRA"));
 		print "<tr><td>";
 		html_header($header_items, 2, true, 'data_output_fields');
@@ -545,7 +545,7 @@ function data() {
 	load_current_session_value("sort_column", "sess_data_input_sort_column", "name");
 	load_current_session_value("sort_direction", "sess_data_input_sort_direction", "ASC");
 
-	html_start_box("<strong>" . __("Data Input Methods") . "</strong>", "100%", $colors["header"], "3", "center", "data_input.php?action=edit", true);
+	html_start_box("<strong>" . __("Data Input Methods") . "</strong>", "100", $colors["header"], "3", "center", "data_input.php?action=edit", true);
 	?>
 	<tr class="rowAlternate2 noprint">
 		<td class="noprint">
@@ -586,7 +586,7 @@ function data() {
 	<?php
 	html_end_box(FALSE);
 
-	html_start_box("", "100%", $colors["header"], "0", "center", "");
+	html_start_box("", "100", $colors["header"], "0", "center", "");
 
 	/* form the 'where' clause for our main sql query */
 	$sql_where = "WHERE (data_input.name like '%%" . $_REQUEST["filter"] . "%%')";

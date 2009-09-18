@@ -25,7 +25,7 @@
 include("./include/auth.php");
 include(CACTI_BASE_PATH . "/include/top_header.php");
 
-html_start_box("<strong>" . __("About Cacti") . "</strong>", "100%", $colors["header"], "3", "center", "");
+html_start_box("<strong>" . __("About Cacti") . "</strong>", "100", $colors["header"], "3", "center", "");
 ?>
 
 <tr class='rowSubHeader'>

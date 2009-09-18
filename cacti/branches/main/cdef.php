@@ -291,12 +291,12 @@ function item_edit() {
 		$values[$current_type] = $cdef["value"];
 	}
 
-	html_start_box("", "100%", "aaaaaa", "3", "center", "");
+	html_start_box("", "100", "aaaaaa", "3", "center", "");
 	draw_cdef_preview(get_request_var("cdef_id"));
 	html_end_box();
 
 	print "<form action='cdef.php' name='form_cdef' method='post'>\n";
-	html_start_box("<strong>" . __("CDEF Items") . "</strong> [edit: " . db_fetch_cell("select name from cdef where id=" . $_GET["cdef_id"]) . "]", "100%", $colors["header"], "3", "center", "");
+	html_start_box("<strong>" . __("CDEF Items") . "</strong> [edit: " . db_fetch_cell("select name from cdef where id=" . $_GET["cdef_id"]) . "]", "100", $colors["header"], "3", "center", "");
 
 	if (isset($_GET["type_select"])) {
 		$current_type = $_GET["type_select"];
@@ -399,7 +399,7 @@ function cdef_edit() {
 	}
 
 	print "<form method='post' action='" .  basename($_SERVER["PHP_SELF"]) . "' name='cdef_edit'>\n";
-	html_start_box("<strong>". __("CDEF's") . "</strong> $header_label", "100%", $colors["header"], 0, "center", "");
+	html_start_box("<strong>". __("CDEF's") . "</strong> $header_label", "100", $colors["header"], 0, "center", "");
 	$header_items = array(__("Field"), __("Value"));
 	print "<tr><td>";
 	html_header($header_items, 2, true, 'header_cdef_edit');
@@ -413,11 +413,11 @@ function cdef_edit() {
 	html_end_box();
 
 	if (!empty($_GET["id"])) {
-		html_start_box("", "100%", "aaaaaa", "3", "center", "");
+		html_start_box("", "100", "aaaaaa", "3", "center", "");
 		draw_cdef_preview(get_request_var("id"));
 		html_end_box();
 
-		html_start_box("<strong>" . __("CDEF Items") . "</strong>", "100%", $colors["header"], 0, "center", "cdef.php?action=item_edit&cdef_id=" . $cdef["id"], false, "cdef");
+		html_start_box("<strong>" . __("CDEF Items") . "</strong>", "100", $colors["header"], 0, "center", "cdef.php?action=item_edit&cdef_id=" . $cdef["id"], false, "cdef");
 		$header_items = array(__("Item"), __("Item Value"));
 		print "<tr><td>";
 		html_header($header_items, 2, true, 'cdef_item');
@@ -517,7 +517,7 @@ function cdef() {
 	load_current_session_value("sort_column", "sess_cdef_sort_column", "name");
 	load_current_session_value("sort_direction", "sess_cdef_sort_direction", "ASC");
 
-	html_start_box("<strong>" . __("CDEF's") . "</strong>", "100%", $colors["header"], "3", "center", "cdef.php?action=edit", true);
+	html_start_box("<strong>" . __("CDEF's") . "</strong>", "100", $colors["header"], "3", "center", "cdef.php?action=edit", true);
 	?>
 	<tr class='rowAlternate2'>
 		<td>
@@ -561,7 +561,7 @@ function cdef() {
 	/* form the 'where' clause for our main sql query */
 	$sql_where = "WHERE (cdef.name LIKE '%%" . $_REQUEST["filter"] . "%%')";
 
-	html_start_box("", "100%", $colors["header"], "0", "center", "");
+	html_start_box("", "100", $colors["header"], "0", "center", "");
 
 	$total_rows = db_fetch_cell("SELECT
 		COUNT(cdef.id)
