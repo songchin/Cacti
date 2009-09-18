@@ -80,15 +80,15 @@ function html_start_box($title, $width, $background_color, $cell_padding, $align
 			registerOnLoadFunction("<?php print basename($_SERVER['PHP_SELF']);?>", "htmlStartBoxFilterChange('<?php print $item_id;?>', true)");
 		-->
 		</script>
-		<table class="startBoxHeader" align="<?php print $align;?>" width="<?php print $width;?>" cellpadding=0 cellspacing=0>
+		<table class="startBoxHeader <?php print "nw$width;"?> startBox0" >
 			<?php if ($title != "") {?><tr class="rowHeader">
 				<td colspan="100">
-					<table width="100%" cellpadding="0" cellspacing="0">
+					<table class="startBox0">
 						<tr>
 							<td>
-								<table width="100%" cellpadding="0" cellspacing="0" <?php print $ani;?>>
+								<table class="startBox0" <?php print $ani;?>>
 									<tr>
-										<?php if ($collapsing) {?><td class="textHeaderDark" width="9">
+										<?php if ($collapsing) {?><td class="textHeaderDark nw9">
 											<img id="<?php print $item_id . '_twisty';?>" src="<?php print URL_PATH; ?>images/tw_open.gif" alt="<?php print __("Filter");?>" align="middle">
 										</td><?php } ?>
 										<td onMouseDown='return false' class="textHeaderDark"><?php print $title;?>
@@ -96,7 +96,7 @@ function html_start_box($title, $width, $background_color, $cell_padding, $align
 									</tr>
 								</table>
 							</td><?php if ($add_text != "") {?>
-							<td style='width:1px' class="textHeaderDark" align="right">
+							<td class="textHeaderDark w1 right">
 								<input type='button' onClick='<?php print $function_name;?>' style='font-size:10px;' value='Add'>
 							</td><?php }?>
 						</tr>
@@ -105,7 +105,7 @@ function html_start_box($title, $width, $background_color, $cell_padding, $align
 			</tr>
 			<?php }?><tr style='border: 0px;' id='<?php print $item_id;?>'>
 				<td>
-					<table <?php print $table_id;?> width="100%" cellpadding="<?php print $cell_padding;?>" cellspacing="0" style='border-width:0px;'><?php
+					<table <?php print $table_id;?> class="startBox<?php print $cell_padding;?>"><?php
 }
 
 function html_start_box_dq($query_name, $query_id, $host_id, $colspan, $width, $background_color, $cell_padding, $align) {
@@ -123,10 +123,10 @@ function html_start_box_dq($query_name, $query_id, $host_id, $colspan, $width, $
 	}
 
 	?>
-		<table class='startBoxHeader' cellpadding="0" cellspacing="0" border="0" width="100%">
+		<table class='startBoxHeader startBox0'>
 			<tr class='rowHeader'>
 				<td style='padding:0px 5px 0px 5px;' colspan='<?php print $colspan+1;?>'>
-					<table cellspacing='0' cellpadding='0' width='100%' >
+					<table class="startBox0" >
 						<tr>
 							<td class='textHeaderDark'>
 								<strong><?php print __("Data Query");?></strong> [<?php print $query_name; ?>]
@@ -140,7 +140,7 @@ function html_start_box_dq($query_name, $query_id, $host_id, $colspan, $width, $
 			</tr>
 			<tr style='border: 0px;' id='<?php print $item_id;?>'>
 				<td colspan='<?php print $colspan+1;?>'>
-					<table width="100%" cellpadding="<?php print $cell_padding;?>" cellspacing="0" style='border-width:0px;'><?php
+					<table class="startBox<?php print $cell_padding;?>"><?php
 }
 
 /* html_end_box - draws the end of an HTML box
@@ -162,7 +162,7 @@ function html_graph_start_box($cellpadding = 3, $leading_br = true) {
 		print "<br>\n";
 	}
 
-	print "\t<table width='100%' style='border: 1px solid #DFDFDF;padding:0px;' align='center' cellspacing=0 cellpadding='$cellpadding'>\n";
+	print "\t<table class='startBox1' cellpadding='$cellpadding'>\n";
 }
 
 /* html_graph_end_box - draws the end of an HTML graph view box */
@@ -419,17 +419,17 @@ function html_nav_bar($background_color, $colspan, $current_page, $rows_per_page
 	?>
 	<tr class='rowHeader noprint'>
 		<td colspan='<?php print $colspan;?>'>
-			<table width='100%' cellspacing='0' cellpadding='0' border='0' style='border-width:0px;'>
+			<table class="startBox0">
 				<tr>
-					<td align='left' class='textHeaderDark' width='15%'>
+					<td align='left' class='textHeaderDark w15p'>
 						<?php if ($current_page > 1) {
 							print "<strong><a class='linkOverDark' href='" . htmlspecialchars(str_replace("<PAGE>", ($current_page-1), $nav_url)) . "'>&lt;&lt;&nbsp;" . __("Previous") . "</a></strong>";
 						} ?>
 					</td>
-					<td align='center' class='textHeaderDark' width='70%'>
+					<td align='center' class='textHeaderDark w70p'>
 						<?php print __("Showing Rows");?> <?php print (($rows_per_page*($current_page-1))+1);?> <?php print __("to");?> <?php print ((($total_rows < $rows_per_page) || ($total_rows < ($rows_per_page*$current_page))) ? $total_rows : ($rows_per_page*$current_page));?> <?php print __("of");?> <?php print $total_rows;?>
 					</td>
-					<td align='right' class='textHeaderDark' width='15%'>
+					<td align='right' class='textHeaderDark w15p'>
 						<?php if (($current_page * $rows_per_page) < $total_rows) {
 							print "<strong><a class='linkOverDark' href='" . htmlspecialchars(str_replace("<PAGE>", ($current_page+1), $nav_url)) . "'>" . __("Next") . "&gt;&gt;</a></strong>";
 						} ?>
@@ -464,7 +464,7 @@ function html_header_sort($header_items, $sort_column, $sort_direction, $last_it
 		$selected_sort_class = "sort_desc";
 	}
 
-	print "\t\t<table class='resizable startBoxHeader' cellpadding='3' cellspacing='0' width='100%'><tr class='rowSubHeader'>\n";
+	print "\t\t<table class='resizable startBoxHeader startBox3'><tr class='rowSubHeader'>\n";
 
 	$pathname = html_get_php_pathname();
 
@@ -534,7 +534,7 @@ function html_header_sort_checkbox($header_items, $sort_column, $sort_direction,
 	if ($form_action == "") { $form_action = basename($_SERVER["PHP_SELF"]); }
 
 	print "<form name='chk' method='post' action='$form_action'>\n";	# properly place form outside table
-	print "\t<table class='resizable startBoxHeader' cellpadding='3' cellspacing='0' width='100%'>\n";
+	print "\t<table class='resizable startBoxHeader startBox3'>\n";
 	print "\t\t<tr class='rowSubHeader'>\n";
 
 	$pathname = html_get_php_pathname();
@@ -562,19 +562,19 @@ function html_header_sort_checkbox($header_items, $sort_column, $sort_direction,
 		if (($db_column == "") || (substr_count($db_column, "nosort"))) {
 			$width = html_get_column_width($pathname, "hhscrand_$rand_id");
 
-			print "\t\t\t<th nowrap style='text-align:$align;width:$width;white-space:nowrap;' id='hhsc_$rand_id' onMouseDown='return false' onMousemove='doColResize(this,event)' onMouseover='doColResize(this,event)' onMouseup='doneColResize()' class='textSubHeaderDark'>" . $display_text . "</th>\n";
+			print "\t\t\t<th id='hhsc_$rand_id' onMouseDown='return false' onMousemove='doColResize(this,event)' onMouseover='doColResize(this,event)' onMouseup='doneColResize()' class='textSubHeaderDark $align nw$width'>" . $display_text . "</th>\n";
 
 			$rand_id++;
 		}else{
 			$width = html_get_column_width($pathname, $db_column);
 
-			print "\t\t\t<th nowrap style='width:$width;white-space:nowrap;' id='$db_column' onMouseDown='return false' onMousemove='doColResize(this,event)' onMouseover='doColResize(this,event)' onMouseup='doneColResize()' class='textSubHeaderDark'>";
+			print "\t\t\t<th id='$db_column' onMouseDown='return false' onMousemove='doColResize(this,event)' onMouseover='doColResize(this,event)' onMouseup='doneColResize()' class='textSubHeaderDark nw$width'>";
 			print "\n\t\t\t\t<a class='$sort_class' style='display:block;' href='" . htmlspecialchars($_SERVER["PHP_SELF"] . "?sort_column=" . $db_column . "&sort_direction=" . $direction) . "'>" . $display_text . "</a>";
 			print "\n\t\t\t</th>\n";
 		}
 	}
 
-	print "\t\t\t<th id='hhsc_$rand_id' style='width: 14px;' class='textSubHeaderDark'><input type='checkbox' style='width: 14px; margin: 0px;' name='all' title='Select All' onClick='SelectAll(\"chk_\",this.checked)'></th>\n";
+	print "\t\t\t<th id='hhsc_$rand_id' class='textSubHeaderDark nw14'><input type='checkbox' style='margin: 0px;' name='all' title='Select All' onClick='SelectAll(\"chk_\",this.checked)'></th>\n";
 	print "\t\t</tr>\n";
 }
 
@@ -590,9 +590,9 @@ function html_header($header_items, $last_item_colspan = 1, $resizable = true, $
 	if ($resizable) {
 		$pathname = html_get_php_pathname();
 
-		print "\t\t<table $table_id class='resizable startBoxHeader' cellpadding='3' cellspacing='0' width='100%'><tr class='rowSubHeader nodrag nodrop'>\n";
+		print "\t\t<table $table_id class='resizable startBoxHeader startBox3><tr class='rowSubHeader nodrag nodrop'>\n";
 	}else{
-		print "\t\t<table $table_id cellpadding='3' cellspacing='0' width='100%'><tr class='rowSubHeader nodrag nodrop'>\n";
+		print "\t\t<table $table_id class=\"startBox3\"><tr class='rowSubHeader nodrag nodrop'>\n";
 	}
 
 	for ($i=0; $i<count($header_items); $i++) {
@@ -622,9 +622,9 @@ function html_header_checkbox($header_items, $form_action = "", $resizable = fal
 
 	if ($resizable) {
 		$pathname = html_get_php_pathname();
-		print "\t\t<table class='resizable' cellpadding='3' cellspacing='0' width='100%'><tr class='rowSubHeader'>\n";
+		print "\t\t<table class='resizable startBox0'><tr class='rowSubHeader'>\n";
 	}else{
-		print "\t\t<table cellpadding='3' cellspacing='0' width='100%'><tr class='rowSubHeader'>\n";
+		print "\t\t<table class='startBox0'><tr class='rowSubHeader'>\n";
 	}
 
 	for ($i=0; $i<count($header_items); $i++) {
@@ -637,7 +637,7 @@ function html_header_checkbox($header_items, $form_action = "", $resizable = fal
 		$rand_id++;
 	}
 
-	print "\t\t\t<th id='hhc_$rand_id' style='width: 14px' class='textSubHeaderDark'><input type='checkbox' style='margin: 0px;' name='all' title='Select All' onClick='SelectAll(\"chk_\",this.checked)'></th>\n<form name='chk' method='post' action='$form_action'>\n";
+	print "\t\t\t<th id='hhc_$rand_id' class='textSubHeaderDark nw14'><input type='checkbox' style='margin: 0px;' name='all' title='Select All' onClick='SelectAll(\"chk_\",this.checked)'></th>\n<form name='chk' method='post' action='$form_action'>\n";
 	print "\t\t</tr>\n";
 }
 
@@ -740,9 +740,9 @@ function html_create_nav($current_page, $max_pages, $rows_per_page, $total_rows,
 		$nav = "
 			<tr class='rowHeader'>
 				<td colspan='$columns'>
-					<table width='100%' cellspacing='0' cellpadding='0' border='0'>
+					<table class='startBox0'>
 						<tr>
-							<td align='left' class='textHeaderDark' width='15%'>";
+							<td align='left' class='textHeaderDark w15p'>";
 								if ($current_page > 1) {
 									$nav .= "<strong>";
 									$nav .= "<a class='linkOverDark' href='" . htmlspecialchars($base_url . $page_var . "=" . ($current_page-1)) . "'>";
@@ -751,10 +751,10 @@ function html_create_nav($current_page, $max_pages, $rows_per_page, $total_rows,
 								}
 								$nav .= "
 							</td>\n
-							<td align='center' class='textHeaderDark' width='70%'>
+							<td align='center' class='textHeaderDark w70p'>
 								" . __("Showing Rows") . " " . (($rows_per_page*($current_page-1))+1) . " " . __("to") . " " . ((($total_rows < $rows_per_page) || ($total_rows < ($rows_per_page*$current_page))) ? $total_rows : ($rows_per_page*$current_page)) . " " . __("of") . " $total_rows [$url_page_select]
 							</td>\n
-							<td align='right' class='textHeaderDark' width='15%'>";
+							<td align='right' class='textHeaderDark w15p'>";
 								if (($current_page * $rows_per_page) < $total_rows) {
 									$nav .= "<strong>";
 									$nav .= "<a class='linkOverDark' href='" . htmlspecialchars($base_url . $page_var . "=" . ($current_page+1)) . "'>";
@@ -771,9 +771,9 @@ function html_create_nav($current_page, $max_pages, $rows_per_page, $total_rows,
 		$nav = "
 			<tr class='rowHeader'>
 				<td colspan='$columns'>
-					<table width='100%' cellspacing='0' cellpadding='0' border='0'>
+					<table class='startBox0'>
 						<tr>
-							<td align='center' class='textHeaderDark' width='15%'>No Rows Found</td>
+							<td align='center' class='textHeaderDark w15p'>No Rows Found</td>
 						</tr>
 					</table>
 				</td>
@@ -1017,7 +1017,7 @@ function draw_menu($user_menu = "") {
 			-->
 			</script>
 			<?php
-			print "<div id='mm_$id' onMouseDown='return false' class='menuMain' style='white-space:nowrap' $ani>$header_name</div>
+			print "<div id='mm_$id' onMouseDown='return false' class='menuMain nw' $ani>$header_name</div>
 				<div>
 				<ul id='ul_$id' class='menuSubMain'>";
 		}
@@ -1101,7 +1101,7 @@ function draw_menu($user_menu = "") {
 function draw_actions_dropdown($actions_array) {
 	global $config;
 	?>
-	<table align='center' width='100%'>
+	<table class='startBox0 center'>
 		<tr>
 			<td width='1' valign='top'>
 				<img src='<?php echo URL_PATH; ?>images/arrow.gif' alt='' align='middle'>&nbsp;

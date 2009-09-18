@@ -33,37 +33,6 @@ td {
 	font-family: Arial, Verdana, Helvetica, sans-serif;
 	font-size: 12px;
 }
-td.w1 {
-	width:1px;
-}
-td.nw30 {
-	white-space:nowrap;
-	width:30px;	
-}
-td.nw50 {
-	white-space:nowrap;
-	width:50px;	
-}
-td.nw80 {
-	white-space:nowrap;
-	width:80px
-}
-td.nw90 {
-	white-space:nowrap;
-	width:90px
-}
-td.nw100 {
-	white-space:nowrap;
-	width:100px;	
-}
-td.nw120 {
-	white-space:nowrap;
-	width:120px;	
-}
-td.nw200 {
-	white-space:nowrap;
-	width:200px;	
-}
 /* main navigation constructor classes */
 #navbrcrumb {
 	background: #363636 url('../images/navbar.png') repeat-x scroll top left;
@@ -486,6 +455,26 @@ a:hover {
 	border-bottom: 1px solid #401A6E;
 	height: 15px;
 }
+.startBox0 {
+	border-width: 0;
+	border-spacing: 0px;
+	padding: 0px;
+        border-collapse: collapse;
+	width: 100%;
+}
+.startBox1 {
+	border: 1px solid #DFDFDF;
+	border-spacing: 0px;
+	padding: 0px;
+        border-collapse: collapse;
+	width: 100%;
+	text-align: center;
+}
+.startBox3 {
+	border-spacing: 0px;
+	padding: 0px 3px 0px 3px;
+	width: 100%;
+}
 
 .startBoxContent {
 	border: 1px solid #708DE2;
@@ -596,6 +585,10 @@ table.resizable th {
 .textSubHeaderDark a, .textSubHeaderDark a:visited, .textSubHeaderDark a:hover {
 	color: #FFFFFF;
 	text-decoration: none;
+	white-space: nowrap;
+}
+.textSubHeaderDark th {
+	width: auto; 
 	white-space: nowrap;
 }
 .textSubSortHeaderDark, .textSubSortHeaderDark:visited {
@@ -776,6 +769,74 @@ tr.highlight {
 	background-color: khaki;
 }								                );
 
+/* Alignment and Size */
+
+.center {
+	text-align: center;
+}
+.left {
+	text-align: left;
+}
+.right {
+	text-align: right;
+}
+.nwauto {
+	width: auto; 
+	white-space: nowrap;
+}
+.w1 {
+	width:1px;
+	white-space:nowrap;
+}
+.nw {
+	white-space:nowrap;
+}
+.nw9 {
+	white-space:nowrap;
+	width:9px;	
+}
+.nw14 {
+	white-space:nowrap;
+	width:14px;	
+}
+.nw30 {
+	white-space:nowrap;
+	width:30px;	
+}
+.nw50 {
+	white-space:nowrap;
+	width:50px;	
+}
+.nw80 {
+	white-space:nowrap;
+	width:80px
+}
+.nw90 {
+	white-space:nowrap;
+	width:90px
+}
+.nw100 {
+	white-space:nowrap;
+	width:100px;	
+}
+.nw120 {
+	white-space:nowrap;
+	width:120px;	
+}
+.nw200 {
+	white-space:nowrap;
+	width:200px;	
+}
+
+.w15p {
+	width:15%;
+}
+.w30p {
+	width:30%;
+}
+.w70p {
+	widht:70%;
+}
 /* The main calendar widget.  DIV containing a table. */
 div.calendar { position: relative; }
 
