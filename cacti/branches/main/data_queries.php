@@ -652,7 +652,7 @@ function data_query_edit() {
 			$text = "<font color='#0d7c09'><strong>" . __("Successfully located XML file") . "</strong></font>";
 			$xml_file_exists = true;
 		}else{
-			$text = "<font color='#ff0000'><strong>" . __("Could not locate XML file.") . "</strong></font>";
+			$text = "<span class='warning'" . __("Could not locate XML file.") . "</span>";
 			$xml_file_exists = false;
 		}
 

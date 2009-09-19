@@ -893,9 +893,9 @@ function form_save_button($cancel_url, $force_type = "", $key_field = "id") {
 		$alt = "Create";
 	}
 	?>
-	<table align='center' width='100%' style='background-color: #ffffff; border: 1px solid #bbbbbb;'>
+	<table class='saveBox'>
 		<tr>
-			<td bgcolor="#f5f5f5" align="right">
+			<td>
 				<input type='hidden' name='action' value='save'>
 				<a href='<?php print $cancel_url;?>'><img src='<?php echo URL_PATH; ?>images/button_cancel2.gif' alt='<?php print __("Cancel");?>' align='middle' border='0'></a>
 				<input type='image' src='<?php echo URL_PATH; ?>images/<?php print $img;?>' alt='<?php print $alt;?>' align='middle'>

@@ -496,6 +496,7 @@ a:hover {
 	border: 1px solid #ffffff; 
 	text-align: center;
 	padding: 3px;
+	margin-bottom: 5px;
 }
 .topBoxAlt {
 	width: 100%; 
@@ -503,6 +504,15 @@ a:hover {
 	border: 1px solid #bbbbbb; 
 	text-align: center;
 	padding: 3px;
+	margin-bottom: 5px;
+}
+.topBoxError {
+        width: 100%;
+        background-color: #ffffff;
+        border: 1px solid #ff0000;
+        text-align: center;
+        padding: 3px;
+	margin-bottom: 5px;
 }
 .mono {
 	padding: 3px; 

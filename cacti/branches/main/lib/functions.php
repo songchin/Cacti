@@ -471,7 +471,7 @@ function display_output_messages() {
 				switch ($messages[$current_message_id]["type"]) {
 				case 'info':
 					if ($error_message == false) {
-						print "<table align='center' width='100%' style='margin-bottom: 5px; border: 1px solid #bbbbbb;'>";
+						print "<table class='topBoxAlt'>";
 						print "<tr class='rowAlternate1'><td class='textInfo'>$message</td></tr>";
 						print "</table>";
 
@@ -480,7 +480,7 @@ function display_output_messages() {
 					}
 					break;
 				case 'error':
-					print "<table align='center' width='100%' style='margin-bottom: 5px; border: 1px solid #ff0000;'>";
+					print "<table class='topBoxError'>";
 					print "<tr class='rowAlternate1'><td class='textError'>" . __("Error:") . " $message</td></tr>";
 					print "</table><br>";
 					break;
@@ -498,7 +498,7 @@ function display_output_messages() {
      the pre-defined error messages
    @arg $text - the actual text of the error message to display */
 function display_custom_error_message($message) {
-	print "<table align='center' width='100%' style='background-color: #ffffff; border: 1px solid #ff0000;'>";
+	print "<table class='topBoxError'>";
 	print "<tr><td bgcolor='#f5f5f5'><p class='textError'>" . __("Error:") . " $message</p></td></tr>";
 	print "</table><br>";
 }
