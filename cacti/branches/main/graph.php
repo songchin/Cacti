@@ -66,9 +66,9 @@ if (read_config_option("auth_method") != 0) {
 $graph_title = get_graph_title($_GET["local_graph_id"]);
 
 if (get_request_var_request("view_type") == "tree") {
-	print "<table width='100%' style='background-color: #ffffff; border: 1px solid #ffffff;' align='center' cellpadding='3'>";
+	print "<table class='topBox'>";
 }else{
-	print "<table width='100%' style='background-color: #f5f5f5; border: 1px solid #bbbbbb;' align='center' cellpadding='3'>";
+	print "<table class='topBoxAlt'>";
 }
 
 $rras = get_associated_rras($_GET["local_graph_id"]);

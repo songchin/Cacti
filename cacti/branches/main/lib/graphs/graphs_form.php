@@ -579,7 +579,7 @@ function graph_diff() {
 	}
 
 	?>
-	<table style="background-color: #f5f5f5; border: 1px solid #aaaaaa;" width="100%" align="center">
+	<table class='topBoxAlt'>
 		<tr>
 			<td class="textArea">
 				<?php print __("The template you have selected requires some changes to be made to the structure of your graph. Below is a preview of your graph along with changes that need to be completed as shown in the left-hand column.");?>
@@ -731,7 +731,7 @@ function graph_diff() {
 
 	?>
 	<form action="graphs.php" method="post">
-	<table style="background-color: #f5f5f5; border: 1px solid #aaaaaa;" width="100%" align="center">
+	<table class='topBoxAlt'>
 		<tr>
 			<td class="textArea">
 				<input type='radio' name='type' value='1' checked>&nbsp;<?php print $user_message;?><br>

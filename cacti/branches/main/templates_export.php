@@ -81,7 +81,7 @@ function export() {
 
 	?>
 	<form name="form_graph_id" action="templates_export.php">
-	<table width='100%' style='background-color: #f5f5f5; border: 1px solid #bbbbbb;' align='center'>
+	<table class='topBoxAlt'>
 		<tr>
 			<td class="textArea" style="padding: 3px;">
 				<?php print __("What would you like to export?");?>&nbsp;

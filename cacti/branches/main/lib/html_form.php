@@ -976,9 +976,9 @@ function form_save_button_alt($cancel_action = "", $action = "save", $force_type
 	}
 
 	?>
-	<table align='center' width='100%' style='background-color: #ffffff; border: 1px solid #bbbbbb;'>
+	<table class='saveBox'>
 		<tr>
-			<td bgcolor="#f5f5f5" align="right">
+			<td>
 				<input type='hidden' name='action' value='<?php print $action;?>'>
 				<?php if ($force_type != "import" && $force_type != "export") { ?><input id='cancel' type='button' value='<?php print $calt;?>' onClick='window.location.assign("<?php print htmlspecialchars($url);?>")' name='cancel'><?php } ?>
 				<input id='<?php print $sname;?>' type='submit' value='<?php print $salt;?>' name='<?php print $sname;?>'>

@@ -869,9 +869,9 @@ function graphs_new() {
 	if (!empty($debug_log)) {
 		debug_log_clear("new_graphs");
 		?>
-		<table width='100%' style='background-color: #f5f5f5; border: 1px solid #bbbbbb;' align='center'>
+		<table class='topBoxAlt'>
 			<tr>
-				<td style="padding: 3px; font-family: monospace;">
+				<td class='mono'>
 					<?php print $debug_log;?>
 				</td>
 			</tr>
