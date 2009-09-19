@@ -33,6 +33,9 @@ td {
 	font-family: Arial, Verdana, Helvetica, sans-serif;
 	font-size: 12px;
 }
+img {
+	border: 0px;
+}
 /* main navigation constructor classes */
 #navbrcrumb {
 	background: #363636 url('../images/navbar.png') repeat-x scroll top left;
@@ -185,14 +188,25 @@ td {
 
 .center th {
 	background: #001a6e url('../images/rowSubHeader.png') repeat-x scroll top left;
-	align: left;
+	vertical-align: left;
 	text-align: left;
 	padding: 4px;
 	margin: 0px;
 	border-width: thin;
 	color: #ffffff;
 }
-
+.center td {
+	vertical-align: middle;
+	text-align: center;
+}
+.right td {
+	vertical-align: right;
+	text-align: right;
+}
+.left td {
+	vertical-align: left;
+	text-align: left;
+}
 .center td.e {
 	width:10%;
 	font-size: 11px;
@@ -812,12 +826,15 @@ tr.highlight {
 
 .center {
 	text-align: center;
+	vertical-align: middle;
 }
 .left {
 	text-align: left;
+	vertical-align: left;
 }
 .right {
 	text-align: right;
+	vertical-align: right;
 }
 .nwauto {
 	width: auto; 
@@ -866,7 +883,10 @@ tr.highlight {
 	white-space:nowrap;
 	width:200px;	
 }
-
+.nw295 {
+	white-space:nowrap;
+	width:295px;	
+}
 .wp15 {
 	width:15%;
 }

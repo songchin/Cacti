@@ -33,8 +33,8 @@ $page_title = api_plugin_hook_function('page_title', 'Cacti');
 <html>
 <head>
 	<title><?php echo $page_title; ?></title>
-	<meta http-equiv="Content-Type" content="text/html;charset=utf-8" >
-	<meta http-equiv="Content-Script-Type" content="text/javascript" >
+	<meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+	<meta http-equiv="Content-Script-Type" content="text/javascript">
 	<meta http-equiv="Content-Style-Type" content="text/css">
 	<link type="text/css" href="<?php echo URL_PATH; ?>include/main.css" rel="stylesheet">
 	<link type="text/css" href="<?php echo URL_PATH; ?>include/jquery.autocomplete.css" rel="stylesheet">
@@ -74,7 +74,7 @@ api_plugin_hook('page_head');
 		</div>
 		<div style='float:right;'>
 			<a href="<?php echo CACTI_WIKI_URL . rtrim(basename($_SERVER["PHP_SELF"]), ".php");?>" target="_blank">
-			<img src='images/information.png' title="<?php print __("Help");?>" alt="<?php print __("Help");?>" style="border-width: 0px;" align="top">
+			<img src='images/information.png' title="<?php print __("Help");?>" alt="<?php print __("Help");?>" align="top">
 			</a>
 		</div>
 		<div style='float:right'><?php
@@ -82,9 +82,9 @@ api_plugin_hook('page_head');
 		</div>
 		<?php if(read_config_option('i18n_support') != 0) {?>
 		<div id="codelist" style="float:right; list-style:none; display:inline;">
-			<span id="loading" style="display:none;"><img src="<?php echo URL_PATH; ?>images/load_small.gif" align="top" alt="<?php print __("loading");?>" style='border-width:0px;'>LOADING</span>
+			<span id="loading" style="display:none;"><img src="<?php echo URL_PATH; ?>images/load_small.gif" align="top" alt="<?php print __("loading");?>">LOADING</span>
 			<ul class="down-list" style="list-style:none; display:inline;">
-				<li><a href="#" class='languages'><img src="<?php echo URL_PATH; ?>images/flag_icons/<?php print $cacti_country;?>.gif" align="top" alt="<?php print __("loading");?>" style='border-width:0px;'>&nbsp;<?php print $lang2locale[$cacti_locale]['language'];?></a></li>
+				<li><a href="#" class='languages'><img src="<?php echo URL_PATH; ?>images/flag_icons/<?php print $cacti_country;?>.gif" align="top" alt="<?php print __("loading");?>">&nbsp;<?php print $lang2locale[$cacti_locale]['language'];?></a></li>
 			</ul>
 		</div>
 		<?php }?>
@@ -93,7 +93,7 @@ api_plugin_hook('page_head');
 <div id='wrapper' style='opacity:0;'>
 	<div id='menu'>
 		<?php draw_menu();?>
-		<table align='center' style='margin-top:10px;'><tr><td><a href='<?php echo URL_PATH; ?>about.php'><img src="<?php echo URL_PATH; ?>images/cacti_logo.gif" align="middle" alt="Cacti" style='border-width:0px;'></a></td></tr></table>
+		<table align='center' style='margin-top:10px;'><tr><td><a href='<?php echo URL_PATH; ?>about.php'><img src="<?php echo URL_PATH; ?>images/cacti_logo.gif" align="middle" alt="Cacti"></a></td></tr></table>
 	</div>
 	<div id='vsplitter' onMouseout='doneDivResize()' onMouseover='doDivResize(this,event)' onMousemove='doDivResize(this,event)'>
 		<div id='vsplitter_toggle' onClick='vSplitterToggle()' onMouseover='vSplitterEm()' onMouseout='vSplitterUnEm()' title='<?php echo __("Hide/Unhide Menu");?>'></div>

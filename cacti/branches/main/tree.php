@@ -442,7 +442,7 @@ function tree() {
 		form_alternate_row_color($tree["id"], true);
 			?>
 			<td>
-				<a class="linkEditMain" style='display:block;' href="<?php print htmlspecialchars("tree.php?action=edit&id=" . $tree["id"]);?>"><?php print $tree["name"];?></a>
+				<a class="linkEditMain" href="<?php print htmlspecialchars("tree.php?action=edit&id=" . $tree["id"]);?>"><?php print $tree["name"];?></a>
 			</td>
 			<td align="right">
 				<a href="<?php print htmlspecialchars("tree.php?action=remove&id=" . $tree["id"]);?>"><img class="buttonSmall" src="images/delete_icon.gif" alt="<?php print __("Delete");?>" align='middle'></a>

@@ -676,7 +676,7 @@ function color() {
 				form_alternate_row_color();
 					?>
 					<td id="<?php print $color['hex'] . '_hex';?>" width='1'>
-						<a class="linkEditMain" style='display:block;' href="<?php print htmlspecialchars("color.php?action=edit&id=" . $color["id"]);?>"><?php print $color["hex"];?></a>
+						<a class="linkEditMain" href="<?php print htmlspecialchars("color.php?action=edit&id=" . $color["id"]);?>"><?php print $color["hex"];?></a>
 					</td>
 					<td bgcolor="#<?php print $color['hex'];?>" onClick="toggleSelect('<?php print $color['hex'];?>')" width="10%">&nbsp;</td>
 					<td id="<?php print $color['hex'] . '_check';?>" align="center">
@@ -686,7 +686,7 @@ function color() {
 			}elseif ($j != $_REQUEST["columns"]) {
 					?>
 					<td id="<?php print $color['hex'] . '_hex';?>" width='1'>
-						<a class="linkEditMain" style='display:block;' href="<?php print htmlspecialchars("color.php?action=edit&id=" . $color["id"]);?>"><?php print $color["hex"];?></a>
+						<a class="linkEditMain" href="<?php print htmlspecialchars("color.php?action=edit&id=" . $color["id"]);?>"><?php print $color["hex"];?></a>
 					</td>
 					<td bgcolor="#<?php print $color['hex'];?>" onClick="toggleSelect('<?php print $color['hex'];?>')" width="10%">&nbsp;</td>
 					<td id="<?php print $color['hex'] . '_check';?>" align="center">
@@ -695,7 +695,7 @@ function color() {
 				<?php	$j=$j++;
 			} else { ?>
 					<td id="<?php print $color['hex'] . '_hex';?>" width='1'>
-						<a class="linkEditMain" style='display:block;' href="<?php print htmlspecialchars("color.php?action=edit&id=" . $color["id"]);?>"><?php print $color["hex"];?></a>
+						<a class="linkEditMain" href="<?php print htmlspecialchars("color.php?action=edit&id=" . $color["id"]);?>"><?php print $color["hex"];?></a>
 					</td>
 					<td bgcolor="#<?php print $color['hex'];?>" onClick="toggleSelect('<?php print $color['hex'];?>')" width="10%">&nbsp;</td>
 					<td id="<?php print $color['hex'] . '_check';?>" align="center">

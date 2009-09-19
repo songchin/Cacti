@@ -164,7 +164,7 @@ $page_title = api_plugin_hook_function('page_title', 'Cacti');
 		</div>
 		<div style='float:right'>
 			<a href="<?php echo CACTI_WIKI_URL . rtrim(basename($_SERVER["PHP_SELF"]), ".php");?>" target="_blank">
-			<img src='images/information.png' title="<?php print __("Help");?>" alt="<?php print __("Help");?>" style="border-width: 0px;" align="top">
+			<img src='images/information.png' title="<?php print __("Help");?>" alt="<?php print __("Help");?>" align="top">
 			</a>
 		</div>
 		<div style='float:right'><?php
@@ -172,9 +172,9 @@ $page_title = api_plugin_hook_function('page_title', 'Cacti');
 		</div>
 		<?php if(read_config_option('i18n_support') != 0) {?>
 		<div id="codelist" style="float:right; list-style:none; display:inline;">
-			<span id="loading" style="display:none;"><img src="<?php echo URL_PATH; ?>images/load_small.gif" align="top" alt="<?php print __("loading");?>" style='border-width:0px;'>LOADING</span>
+			<span id="loading" style="display:none;"><img src="<?php echo URL_PATH; ?>images/load_small.gif" align="top" alt="<?php print __("loading");?>">LOADING</span>
 			<ul class="down-list" style="list-style:none; display:inline;">
-				<li><a href="#" class='languages'><img src="<?php echo URL_PATH; ?>images/flag_icons/<?php print $cacti_country;?>.gif" align="top" alt="<?php print __("loading");?>" style='border-width:0px;'>&nbsp;<?php print $lang2locale[$cacti_locale]['language'];?></a></li>
+				<li><a href="#" class='languages'><img src="<?php echo URL_PATH; ?>images/flag_icons/<?php print $cacti_country;?>.gif" align="top" alt="<?php print __("loading");?>">&nbsp;<?php print $lang2locale[$cacti_locale]['language'];?></a></li>
 			</ul>
 		</div>
 		<?php }?>

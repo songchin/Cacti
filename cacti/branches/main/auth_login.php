@@ -301,18 +301,18 @@ function auth_display_custom_error_message($message) {
 				<tr><td></td></tr>
 				<tr>
 					<td><?php print __("User Name:");?></td>
-					<td><input type="text" name="login_username" size="40" style="width: 295px;" value="<?php print $username; ?>"></td>
+					<td><input type="text" name="login_username" size="40" class='nw295' value="<?php print $username; ?>"></td>
 				</tr>
 				<tr>
 					<td><?php print __("Password:");?></td>
-					<td><input type="password" name="login_password" size="40" style="width: 295px;"></td>
+					<td><input type="password" name="login_password" size="40" class='nw295'></td>
 				</tr>
 				<?php
 				if (read_config_option("auth_method") == "3") {?>
 				<tr>
 					<td><?php print __("Realm:");?></td>
 					<td>
-						<select name="realm" style="width: 295px;">
+						<select name="realm" class='nw295'>
 							<option value="local"><?php print __("Local");?></option>
 							<option value="ldap" selected><?php print __("LDAP");?></option>
 						</select>
