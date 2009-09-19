@@ -1101,16 +1101,16 @@ function draw_menu($user_menu = "") {
 function draw_actions_dropdown($actions_array) {
 	global $config;
 	?>
-	<table class='startBox0 center'>
+	<table class='saveBoxAction'>
 		<tr>
-			<td width='1' valign='top'>
+			<td class='w1 left' valign='top'>
 				<img src='<?php echo URL_PATH; ?>images/arrow.gif' alt='' align='middle'>&nbsp;
 			</td>
 			<td class='right'>
 				<?php print __("Choose an action:");?>
 				<?php form_dropdown("drp_action",$actions_array,"","","1","","");?>
 			</td>
-			<td class='nw1 right'>
+			<td class='w1 right'>
 				<input type='submit' value='<?php print __("Go");?>' name='go'>
 			</td>
 		</tr>
