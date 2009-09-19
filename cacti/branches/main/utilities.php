@@ -275,7 +275,7 @@ function display_php() {
 
 	html_start_box("<strong>" . __("PHP Module Information") . "</strong>", "100", $colors["header"], "3", "center", "");
 	print "<tr>\n";
-	print "<td style='padding:0px;margin:0px;'>" . $php_info . "</td>\n";
+	print "<td class='textAreaNotes left'>" . $php_info . "</td>\n";
 	print "</tr>\n";
 
 	html_end_box();
@@ -329,7 +329,8 @@ function display_general() {
 	/* Display tech information */
 	html_start_box("<strong>" . __("General Technical Support Information") . "</strong>", "100", $colors["header"], 0, "center", "");
 	print "<tr><td>";
-	html_header(array(__("General Information")), 2);
+	/* html_header is resizable by default, need to pass 'false' */
+	html_header(array(__("General Information")), 2, false);
 	print "<tr class='rowAlternate1'>\n";
 	print "		<td class='textAreaNotes e'>" . __("Date") . "</td>\n";
 	print "		<td class='textAreaNotes v'>\n";
@@ -381,7 +382,8 @@ function display_general() {
 
 	print "</table></td></tr>";		/* end of html_header */
 	print "<tr><td>";
-	html_header(array(__("Poller Information")), 2);
+	/* html_header is resizable by default, need to pass 'false' */
+	html_header(array(__("Poller Information")), 2, false);
 	print "<tr class='rowAlternate1'>\n";
 	print "		<td class='textAreaNotes e'>" . __("Interval") . "</td>\n";
 	print "		<td class='textAreaNotes v'>" . read_config_option("poller_interval") . "</td>\n";
@@ -439,7 +441,8 @@ function display_general() {
 
 	print "</table></td></tr>";		/* end of html_header */
 	print "<tr><td>";
-	html_header(array(__("PHP Information")), 2);
+	/* html_header is resizable by default, need to pass 'false' */
+	html_header(array(__("PHP Information")), 2, false);
 	print "<tr class='rowAlternate1'>\n";
 	print "		<td class='textAreaNotes e'>" . __("PHP Version") . "</td>\n";
 	print "		<td class='textAreaNotes v'>" . phpversion() . "</td>\n";
@@ -614,7 +617,8 @@ function display_languages() {
 
 
 	html_start_box("<strong>" . __("Language Information") . "</strong>", "100", $colors["header"], "3", "center", "");
-	html_header(array(__("General Information")), 2);
+	/* html_header is resizable by default, need to pass 'false' */
+	html_header(array(__("General Information")), 2, false);
 	print "<tr class='rowAlternate1'>\n";
 	print "		<td class='textAreaNotes e'>" . __("Current Language") . "</td>\n";
 	print "		<td class='textAreaNotes v'>". $language . "</td>\n";
@@ -627,7 +631,8 @@ function display_languages() {
 	print "		<td class='textAreaNotes e'>" . __("Default Language") . "</td>\n";
 	print "		<td class='textAreaNotes v'>" . __("English") . "</td>\n";
 	print "</tr>\n";
-	html_header(array(__("Supported Languages")), 2);
+	/* html_header is resizable by default, need to pass 'false' */	
+	html_header(array(__("Supported Languages")), 2, false);
 	$i = 0;
 	if(sizeof($supported_languages)>0) {
 		foreach($supported_languages as $domain => $languages) {
@@ -643,7 +648,8 @@ function display_languages() {
 			print "		<td class='textAreaNotes v'><i>" . __("no languages supported."). "</i></td>\n";
 			print "</tr>\n";
 	}
-	html_header(array(__("Loaded Language Files")), 2);
+	/* html_header is resizable by default, need to pass 'false' */
+	html_header(array(__("Loaded Language Files")), 2, false);
 	$i = 0;
 	if(sizeof($cacti_textdomains)>0) {
 		foreach($cacti_textdomains as $domain => $paths) {
@@ -1794,7 +1800,8 @@ function utilities() {
 
 
 	print "<tr><td>";
-	html_header(array(__("Technical Support")), 2); ?>
+	/* html_header is resizable by default, need to pass 'false' */
+	html_header(array(__("Technical Support")), 2, false); ?>
 
 	<tr class="rowAlternate1">
 		<td class="textAreaNotes">
@@ -1808,7 +1815,8 @@ function utilities() {
 	<?php
 	print "</table></td></tr>";		/* end of html_header */
 	print "<tr><td>";
-	html_header(array(__("Log Administration")), 2);?>
+	/* html_header is resizable by default, need to pass 'false' */
+	html_header(array(__("Log Administration")), 2, false);?>
 
 	<tr class="rowAlternate1">
 		<td class="textAreaNotes">
@@ -1830,7 +1838,8 @@ function utilities() {
 	<?php
 	print "</table></td></tr>";		/* end of html_header */
 	print "<tr><td>";
-	html_header(array(__("Poller Cache Administration")), 2); ?>
+	/* html_header is resizable by default, need to pass 'false' */
+	html_header(array(__("Poller Cache Administration")), 2, false); ?>
 
 	<tr class="rowAlternate1">
 		<td class="textAreaNotes">
