@@ -83,7 +83,7 @@ function export() {
 	<form name="form_graph_id" action="templates_export.php">
 	<table class='topBoxAlt'>
 		<tr>
-			<td class="textArea" style="padding: 3px;">
+			<td class="textArea">
 				<?php print __("What would you like to export?");?>&nbsp;
 
 				<select name="cbo_graph_id" onChange="window.location=document.form_graph_id.cbo_graph_id.options[document.form_graph_id.cbo_graph_id.selectedIndex].value">
