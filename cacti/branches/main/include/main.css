@@ -2,7 +2,7 @@
 #body {
 	margin:  0px;
 	padding: 0px;
-	background-color: #FFFFFF;
+	background-color: #ffffff;
 	overflow: hidden;
 	font-family: Arial, Verdana, Helvetica, sans-serif;
 }
@@ -37,7 +37,7 @@ td {
 #navbrcrumb {
 	background: #363636 url('../images/navbar.png') repeat-x scroll top left;
 	clear:both;
-	color:#C1C1C1;
+	color:#c1c1c1;
 	font-size: 9px;
 	margin: 0px;
 	padding: 0px;
@@ -51,13 +51,13 @@ td {
 }
 
 #navbrcrumb div a {
-	color: #E1E1E1;
+	color: #e1e1e1;
 	text-decoration: none;
 }
 
 #navbrcrumb div a:hover {
 	text-decoration: none;
-	color: #FFFFFF;
+	color: #ffffff;
 }
 
 #wrapper {
@@ -92,7 +92,7 @@ td {
 }
 
 #content {
-	background: #FFFFFF url('../images/shadow.gif') repeat-x scroll top left;
+	background: #ffffff url('../images/shadow.gif') repeat-x scroll top left;
 	position: fixed;
 	overflow: auto;
 	overflow-x: hidden;
@@ -106,7 +106,7 @@ td {
 }
 
 #graph_tree {
-	background: #FEFEFE url('../images/shadow.gif') repeat-x scroll top left;
+	background: #fefefe url('../images/shadow.gif') repeat-x scroll top left;
 	float: left;
 	position: fixed;
 	left: 0;
@@ -120,7 +120,7 @@ td {
 }
 
 #graph_tree_content {
-	background: #FFFFFF url('../images/shadow.gif') repeat-x scroll top right;
+	background: #ffffff url('../images/shadow.gif') repeat-x scroll top right;
 	float: none;
 	position: fixed;
 	overflow: auto;
@@ -134,7 +134,7 @@ td {
 }
 
 #graph_content {
-	background: #FFFFFF url('../images/shadow.gif') repeat-x scroll top right;
+	background: #ffffff url('../images/shadow.gif') repeat-x scroll top right;
 	float: none;
 	position: fixed;
 	left: 0;
@@ -150,7 +150,7 @@ td {
 
 /* menu classes */
 #menu {
-	background: #F5F5F5 url('../images/shadow.gif') repeat-x scroll top left;
+	background: #f5f5f5 url('../images/shadow.gif') repeat-x scroll top left;
 	float: left;
 	position: fixed;
 	left: 0;
@@ -166,14 +166,14 @@ td {
 
 /* php info section */
 .center h2 {
-	background: #001A6E url('../images/rowSubHeader2.png') repeat-x scroll top left;
+	background: #001a6e url('../images/rowSubHeader2.png') repeat-x scroll top left;
 	align: left;
 	text-align: left;
 	font-size: 12px;
 	margin: 0px;
 	padding: 4px;
 	border-width: 0px;
-	color: #FFFFFF;
+	color: #ffffff;
 }
 
 .center table {
@@ -184,13 +184,13 @@ td {
 }
 
 .center th {
-	background: #001A6E url('../images/rowSubHeader.png') repeat-x scroll top left;
+	background: #001a6e url('../images/rowSubHeader.png') repeat-x scroll top left;
 	align: left;
 	text-align: left;
 	padding: 4px;
 	margin: 0px;
 	border-width: thin;
-	color: #FFFFFF;
+	color: #ffffff;
 }
 
 .center td.e {
@@ -210,8 +210,8 @@ td {
 }
 
 .menuMain {
-	background: #001A6E url('../images/rowHeader.png') repeat-x scroll top left;
-	color: #FFFFFF;
+	background: #001a6e url('../images/rowHeader.png') repeat-x scroll top left;
+	color: #ffffff;
 	cursor: pointer;
 	white-space: nowrap;
 	padding: 3px;
@@ -232,13 +232,13 @@ td {
 .menuSubMain li {
 	display: block;
 	padding: 0px 0px 0px 0px;
-	color: #FFFFFF;
+	color: #ffffff;
 	cursor: pointer;
 	white-space: nowrap;
 }
 
 .menuSubMain a {
-	color: blue;
+	color: #0000ff;
 	border: 0px;
 	padding: 2px 0px 2px 0px;
 	text-decoration: none;
@@ -246,12 +246,12 @@ td {
 }
 
 .menuSubMain li a:hover {
-	background-color: #E7E9F2;
+	background-color: #e7e9f2;
 	text-decoration: none;
 }
 
 .menuSubMainSelected {
-	background-color: #E1E1E1;
+	background-color: #e1e1e1;
 }
 
 #header {
@@ -267,7 +267,7 @@ td {
 
 /* header tabs */
 #header div#navbar {
-	background: #3F4D6B url("../images/header_backdrop.gif") right -8px no-repeat;
+	background: #3f4d6b url("../images/header_backdrop.gif") right -8px no-repeat;
 	position: relative;
 	top: 0px; left: 0px;
 	padding: 0;
@@ -392,7 +392,7 @@ td {
 
 /* links */
 a, a:active, a:visited {
-	color: blue;
+	color: #0000ff;
 	text-decoration: none;
 }
 
@@ -402,36 +402,36 @@ a:hover {
 }
 
 .linkEditMain, .linkEditMain:visited, .linkEditMain:active {
-	color: blue;
+	color: #0000ff;
 	text-decoration: none;
 	font-weight: bold;
 }
 
 .linkEditMain:hover {
-	color: blue;
+	color: #0000ff;
 	text-decoration: underline;
 	font-weight: bold;
 }
 
 .linkOverDark, .linkOverDark:visited, .linkOverDark:active {
-	color: white;
+	color: #ffffff;
 	text-decoration: none;
 }
 
 .linkOverDark:hover {
-	color: white;
+	color: #ffffff;
 	text-decoration: underline;
 }
 
 .popup_item, .popup_item:visited, .popup_item:active {
 	text-decoration: none;
-	background-color:#F5F5F5;
+	background-color:#f5f5f5;
 	display:block;
 }
 
 .popup_item:hover {
 	text-decoration:none;
-	background-color:#E7E9F2;
+	background-color:#e7e9f2;
 	display:block;
 }
 
@@ -444,15 +444,15 @@ a:hover {
 .popup_anchor:hover {
 	text-decoration:none;
 	padding:2px;
-	background-color:#E7E9F2;
+	background-color:#e7e9f2;
 	display:block;
 }
 
 /* form constructor styles */
 .startBoxHeader {
-	border-left: 1px solid #708DE2;
-	border-right: 1px solid #708DE2;
-	border-bottom: 1px solid #401A6E;
+	border-left: 1px solid #708de2;
+	border-right: 1px solid #708de2;
+	border-bottom: 1px solid #401a6e;
 	height: 15px;
 }
 .startBox0 {
@@ -463,7 +463,7 @@ a:hover {
 	width: 100%;
 }
 .startBox1 {
-	border: 1px solid #DFDFDF;
+	border: 1px solid #dfdfdf;
 	border-spacing: 0px;
 	padding: 0px;
         border-collapse: collapse;
@@ -477,8 +477,8 @@ a:hover {
 }
 
 .startBoxContent {
-	border: 1px solid #708DE2;
-	background-color: #E7E9F2;
+	border: 1px solid #708de2;
+	background-color: #e7e9f2;
 }
 .saveBox {
 	width: 100%;
@@ -509,41 +509,43 @@ a:hover {
 	font-family: monospace;
 }
 .rowHeader {
-	background: #001A6E url('../images/rowHeader.png') repeat-x scroll top left;
+	background: #001a6e url('../images/rowHeader.png') repeat-x scroll top left;
 }
 .rowHeader td span {
-	color: white; font-weight: bold;
+	color: #ffffff; 
+	font-weight: bold;
 }
 .rowSubHeader {
-	background: #1F2328 url('../images/rowSubHeader.png') repeat-x scroll top left;
+	background: #1f2328 url('../images/rowSubHeader.png') repeat-x scroll top left;
 }
 .rowSubHeader td span {
-	color: white; font-weight: bold;
+	color: #ffffff; 
+	font-weight: bold;
 }
 .rowSubHeaderAlt {
-	color: #FFFFFF;
-	background: #DCE7F5 url('../images/rowSubHeaderAlt.png') repeat-x scroll top left;
+	color: #ffffff;
+	background: #dce7f5 url('../images/rowSubHeaderAlt.png') repeat-x scroll top left;
 }
 
 .rowGraphFilter {
-	background: #FFFFFF url('../images/rowGraphFilter.png') repeat-x scroll top left;
+	background: #ffffff url('../images/rowGraphFilter.png') repeat-x scroll top left;
 	color: #000000;
 	font-weight: normal;
 	font-size: 8px;
 }
 
 .rowAlternate1 {
-	background-color: #F5F5F5;
+	background-color: #f5f5f5;
 	font-size: 10px;
 }
 
 .rowAlternate2 {
-	background-color: #E7E9F2;
+	background-color: #e7e9f2;
 	font-size: 10px;
 }
 
 .rowSelected {
-	background-color: #F5F5D2;
+	background-color: #f5f5d2;
 	font-size: 10px;
 }
 
@@ -557,7 +559,7 @@ a:hover {
 .textInfo {
 	font-size: 12px;
 	font-weight: bold;
-	color: black;
+	color: #000000;
 }
 
 .textHeader {
@@ -567,7 +569,7 @@ a:hover {
 
 .textHeaderDark {
 	font-size: 12px;
-	color: #FFFFFF;
+	color: #ffffff;
 	padding: 3px;
 }
 
@@ -599,18 +601,18 @@ table.resizable th {
 }
 
 .textSubHeaderDark, .textSubHeaderDark:visited {
-	background: #1F2328 url('../images/rowSubHeader.png') repeat-x scroll top left;
-	border-right: 2px ridge #A5A5A5;
+	background: #1f2328 url('../images/rowSubHeader.png') repeat-x scroll top left;
+	border-right: 2px ridge #a5a5a5;
 	text-align: left;
 	font-size: 12px;
 	padding: 3px;
-	color: #FFFFFF;
+	color: #ffffff;
 	font-weight: bold;
 	white-space: nowrap;
 }
 
 .textSubHeaderDark a, .textSubHeaderDark a:visited, .textSubHeaderDark a:hover {
-	color: #FFFFFF;
+	color: #ffffff;
 	text-decoration: none;
 	white-space: nowrap;
 }
@@ -619,24 +621,24 @@ table.resizable th {
 	white-space: nowrap;
 }
 .textSubSortHeaderDark, .textSubSortHeaderDark:visited {
-	background: #1F2328 url('../images/rowSubHeader.png') repeat-x scroll top left;
+	background: #1f2328 url('../images/rowSubHeader.png') repeat-x scroll top left;
 	border-right: 2px groove #000000;
 	text-align: left;
 	font-size: 10px;
-	color: #FFFFFF;
+	color: #ffffff;
 	font-weight: bold;
 }
 
 .textRowSubHeaderDark {
 	text-align: left;
 	font-size: 10px;
-	color: #FFFFFF;
-	background: #1F2328 url('../images/rowSubHeader.png') repeat-x scroll top left;
+	color: #ffffff;
+	background: #1f2328 url('../images/rowSubHeader.png') repeat-x scroll top left;
 }
 
 .textArea {
 	font-size: 10px;
-	background-color: #F5F5F5;
+	background-color: #f5f5f5;
 }
 
 .textGraphFilter {
@@ -676,14 +678,14 @@ table.resizable th {
 
 /* error classes */
 .txtErrorTextBox {
-	border: 2px solid #FF0000;
+	border: 2px solid #ff0000;
 }
 
 /* tabs */
 .tabs a.tabSelected {
 	border:0px;
 	border-bottom:0px;
-	color:#FFFFFF;
+	color:#ffffff;
 	display:block;
 	float:left;
 	margin-right:4px;
@@ -700,7 +702,7 @@ table.resizable th {
 .tabs a.tabDefault {
 	border:0px;
 	border-bottom:0px;
-	color:#FFFFFF;
+	color:#ffffff;
 	display:block;
 	float:left;
 	margin-right: 4px;
@@ -717,13 +719,13 @@ table.resizable th {
 .tabs a.tabDefault:hover {
 	background-position:0px -25px;
 	border-bottom:0px;
-	background-color:#E16769;
+	background-color:#e16769;
 }
 
 .tabs a.tabSelected:hover {
 	background-position:0px -25px;
 	border-bottom:0px;
-	background-color:#E16769;
+	background-color:#e16769;
 }
 span.normal {
 	font-size:11px;
@@ -752,7 +754,7 @@ span.ping_warning {
 	font-weight: bold;
 }
 span.success {
-	color: green;
+	color: #008000;
 }
 span.unknown {
 	color: #484848;
@@ -761,10 +763,10 @@ span.fail {
 	color: #ff0000;
 }
 span.new {
-	color: blue;
+	color: #0000ff;
 }
 span.dependant {
-	color: navy;
+	color: #000080;
 }
 span.filter {
 	background-color: #f8d93d;
@@ -793,7 +795,7 @@ span.italic {
 	font-style: italic;
 }
 tr.highlight {
-	background-color: khaki;
+	background-color: #f0e68c;
 }								                );
 
 /* Alignment and Size */
