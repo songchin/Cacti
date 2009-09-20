@@ -1023,15 +1023,15 @@ function eraseCookie(name) {
 
 /* cookie container functions */
 function readCookieElement(name, element) {
-	var elements       = readCookie(name);
+	elements           = readCookie(name);
 	var search_for     = element + "@@";
 	var return_value   = null;
-	var end_location   = 0;
+	var end_location   = -1;
 
 	if (elements) {
 		var start_location = elements.indexOf(search_for);
 
-		if (start_location >= 0) {
+		if (start_location > 0) {
 			end_location = elements.indexOf("!", start_location);
 
 			if (end_location > 0) {
