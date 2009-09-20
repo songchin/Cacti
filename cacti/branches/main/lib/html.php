@@ -587,7 +587,7 @@ function html_header_sort_checkbox($header_items, $sort_column, $sort_direction,
    @arg $trclass - optional class extension for table row
    @arg $thclass - optional class extension for table header cell
  */
-function html_header($header_items, $last_item_colspan = 1, $resizable = false, $table_id = '', $tclass, $trclass, $thclass) {
+function html_header($header_items, $last_item_colspan = 1, $resizable = false, $table_id = '', $tclass = '', $trclass = '', $thclass = '') {
 	global $colors;
 	static $rand_id = 0;
 
@@ -624,7 +624,7 @@ function html_header($header_items, $last_item_colspan = 1, $resizable = false, 
    @arg $trclass - optional class extension for table row
    @arg $thclass - optional class extension for table header cell 
  */
-function html_header_checkbox($header_items, $form_action = "", $resizable = false, $tclass, $trclass, $thclass) {
+function html_header_checkbox($header_items, $form_action = "", $resizable = false, $tclass = '', $trclass= '', $thclass = '') {
 	global $colors;
 	static $rand_id = 0;
 
