@@ -580,8 +580,14 @@ function html_header_sort_checkbox($header_items, $sort_column, $sort_direction,
 
 /* html_header - draws a header row suitable for display inside of a box element
    @arg $header_items - an array containing a list of items to be included in the header
-   @arg $last_item_colspan - the TD 'colspan' to apply to the last cell in the row */
-function html_header($header_items, $last_item_colspan = 1, $resizable = true, $table_id = '') {
+   @arg $last_item_colspan - the TD 'colspan' to apply to the last cell in the row 
+   @arg $resizable - allow for the table to be resized via javascript
+   @arg $table_id - table_id
+   @arg $tclass - optional class extension for table
+   @arg $trclass - optional class extension for table row
+   @arg $thclass - optional class extension for table header cell
+ */
+function html_header($header_items, $last_item_colspan = 1, $resizable = false, $table_id = '', $tclass, $trclass, $thclass) {
 	global $colors;
 	static $rand_id = 0;
 
@@ -590,18 +596,18 @@ function html_header($header_items, $last_item_colspan = 1, $resizable = true, $
 	if ($resizable) {
 		$pathname = html_get_php_pathname();
 
-		print "\t\t<table $table_id class='resizable startBoxHeader startBox3><tr class='rowSubHeader nodrag nodrop'>\n";
+		print "\t\t<table $table_id class='resizable startBoxHeader startBox1 $tclass'><tr class='rowSubHeader nodrag nodrop $trclass'>\n";
 	}else{
-		print "\t\t<table $table_id class=\"startBox3\"><tr class='rowSubHeader nodrag nodrop'>\n";
+		print "\t\t<table $table_id class='startBoxHeader $tclass'><tr class='rowSubHeader nodrag nodrop $trclass'>\n";
 	}
 
 	for ($i=0; $i<count($header_items); $i++) {
 		if ($resizable) {
 			$width = html_get_column_width($pathname, "hh_$rand_id");
 
-			print "\t\t\t<th id='hh_$rand_id' style='width: $width;' onMouseDown='return false' onMousemove='doColResize(this,event)' onMouseover='doColResize(this,event)' onMouseup='doneColResize()' " . ((($i+1) == count($header_items)) ? "colspan='$last_item_colspan' " : "") . " class='textSubHeaderDark'>" . $header_items[$i] . "</th>\n";
+			print "\t\t\t<th id='hh_$rand_id' style='width: $width;' onMouseDown='return false' onMousemove='doColResize(this,event)' onMouseover='doColResize(this,event)' onMouseup='doneColResize()' " . ((($i+1) == count($header_items)) ? "colspan='$last_item_colspan' " : "") . " class='textSubHeaderDark $thclass'>" . $header_items[$i] . "</th>\n";
 		}else{
-			print "\t\t\t<th id='hh_$rand_id' " . ((($i+1) == count($header_items)) ? "colspan='$last_item_colspan' " : "") . " class='textSubHeaderDark'>" . $header_items[$i] . "</th>\n";
+			print "\t\t\t<th id='hh_$rand_id' " . ((($i+1) == count($header_items)) ? "colspan='$last_item_colspan' " : "") . " class='textSubHeaderDark $thclass'>" . $header_items[$i] . "</th>\n";
 		}
 		$rand_id++;
 	}
@@ -612,8 +618,13 @@ function html_header($header_items, $last_item_colspan = 1, $resizable = true, $
 /* html_header_checkbox - draws a header row with a 'select all' checkbox in the last cell
      suitable for display inside of a box element
    @arg $header_items - an array containing a list of items to be included in the header
-   @arg $form_action - the url to post the 'select all' form to */
-function html_header_checkbox($header_items, $form_action = "", $resizable = false) {
+   @arg $form_action - the url to post the 'select all' form to 
+   @arg $resizable - allow for the table to be resized via javascript
+   @arg $tclass - optional class extension for table
+   @arg $trclass - optional class extension for table row
+   @arg $thclass - optional class extension for table header cell 
+ */
+function html_header_checkbox($header_items, $form_action = "", $resizable = false, $tclass, $trclass, $thclass) {
 	global $colors;
 	static $rand_id = 0;
 
@@ -622,17 +633,17 @@ function html_header_checkbox($header_items, $form_action = "", $resizable = fal
 
 	if ($resizable) {
 		$pathname = html_get_php_pathname();
-		print "\t\t<table class='resizable startBox0'><tr class='rowSubHeader'>\n";
+		print "\t\t<table class='resizable startBox0 $tclass'><tr class='rowSubHeader $trclass'>\n";
 	}else{
-		print "\t\t<table class='startBox0'><tr class='rowSubHeader'>\n";
+		print "\t\t<table class='startBox0 $tclass'><tr class='rowSubHeader $trclass'>\n";
 	}
 
 	for ($i=0; $i<count($header_items); $i++) {
 		if ($resizable) {
 			$width = html_get_column_width($pathname, "hhc_$rand_id");
-			print "\t\t\t<th id='hhc_$rand_id' style='width: $width;' onMouseDown='return false' onMousemove='doColResize(this,event)' onMouseover='doColResize(this,event)' onMouseup='doneColResize()' class='textSubHeaderDark'>" . $header_items[$i] . "</th>\n";
+			print "\t\t\t<th id='hhc_$rand_id' style='width: $width;' onMouseDown='return false' onMousemove='doColResize(this,event)' onMouseover='doColResize(this,event)' onMouseup='doneColResize()' class='textSubHeaderDark $thclass'>" . $header_items[$i] . "</th>\n";
 		}else{
-			print "\t\t\t<th id='hhc_$rand_id' class='textSubHeaderDark'>" . $header_items[$i] . "</th>\n";
+			print "\t\t\t<th id='hhc_$rand_id' class='textSubHeaderDark $thclass'>" . $header_items[$i] . "</th>\n";
 		}
 		$rand_id++;
 	}
