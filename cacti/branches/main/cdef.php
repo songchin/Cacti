@@ -595,7 +595,7 @@ function cdef() {
 	if (sizeof($cdef_list) > 0) {
 		foreach ($cdef_list as $cdef) {
 			form_alternate_row_color('line' . $cdef["id"], true);
-			form_selectable_cell("<a class='linkEditMain' href='" . htmlspecialchars("cdef.php?action=edit&id=" . $cdef["id"]) . "'>" . (strlen($_REQUEST["filter"]) ? eregi_replace("(" . preg_quote($_REQUEST["filter"]) . ")", "<span class=\"filter\">\\1</span>", $cdef["name"]) : $cdef["name"]) . "</a>", $cdef["id"]);
+			form_selectable_cell("<a class='linkEditMain' href='" . htmlspecialchars("cdef.php?action=edit&id=" . $cdef["id"]) . "'>" . (strlen($_REQUEST["filter"]) ? preg_replace("/(" . preg_quote($_REQUEST["filter"]) . ")/i", "<span class=\"filter\">\\1</span>", $cdef["name"]) : $cdef["name"]) . "</a>", $cdef["id"]);
 			form_checkbox_cell($cdef["name"], $cdef["id"]);
 			form_end_row();
 		}
