@@ -457,7 +457,7 @@ function color_edit() {
 	html_start_box("<strong>" . __("Colors") . "</strong> $header_label", "100", $colors["header"], 0, "center", "");
 	$header_items = array(__("Field"), __("Value"));
 	print "<tr><td>";
-	html_header($header_items, 2, true, 'header_color_edit');
+	html_header($header_items, 2, false, 'header_color_edit','left wp60');
 
 	draw_edit_form(array(
 		"config" => array(),

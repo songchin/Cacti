@@ -383,7 +383,7 @@ function data_query_item_edit() {
 	html_start_box("<strong>" . __("Associated Graph/Data Templates") . "</strong> $header_label", "100", $colors["header"], 0, "center", "");
 	$header_items = array(__("Field"), __("Value"));
 	print "<tr><td>";
-	html_header($header_items, 1, true, 'assoc_templates');
+	html_header($header_items, 1, false, 'assoc_templates', 'left wp100');
 
 	draw_edit_form(array(
 		"config" => array(),
@@ -397,7 +397,7 @@ function data_query_item_edit() {
 		html_start_box("<strong>" . __("Associated Data Templates") . "</strong>", "100", $colors["header"], "0", "center", "", false, "assoc_data_templates");
 		$header_items = array(__("Data Source Name"), __("Associated XML Field"), __("Use this Field"));
 		print "<tr><td>";
-		html_header($header_items, 1, true, 'data_templates');
+		html_header($header_items, 1, false, 'data_templates', 'left wp60');
 
 		$data_templates = db_fetch_assoc("select
 			data_template.id,
@@ -475,7 +475,7 @@ function data_query_item_edit() {
 
 				$header_items = array(__("Data Template") . " - " . $data_template["name"], "&nbsp;");
 				print "<tr><td>";
-				html_header($header_items, 2, true, 'data_template_suggested_values_' . $data_template["id"]);
+				html_header($header_items, 2, true, 'data_template_suggested_values_' . $data_template["id"], 'left wp60');
 
 				$suggested_values = db_fetch_assoc("select
 					text,
@@ -547,7 +547,7 @@ function data_query_item_edit() {
 		html_start_box("<strong>" . __("Suggested Values: Graph Templates") . "</strong>", "100", $colors["header"], 0, "center", "");
 		$header_items = array(__("Graph Template") . " - " . db_fetch_cell("select name from graph_templates where id=" . $snmp_query_item["graph_template_id"]), "&nbsp;");
 		print "<tr><td>";
-		html_header($header_items, 2, true, 'graph_template_suggested_values_' . get_request_var("id"));
+		html_header($header_items, 2, true, 'graph_template_suggested_values_' . get_request_var("id"), 'left wp60');
 
 		if (sizeof($suggested_values) > 0) {
 			foreach ($suggested_values as $suggested_value) {
@@ -635,7 +635,7 @@ function data_query_edit() {
 	html_start_box("<strong>" . __("Data Queries") . "</strong> $header_label", "100", $colors["header"], 0, "center", "");
 	$header_items = array(__("Field"), __("Value"));
 	print "<tr><td>";
-	html_header($header_items, 1, true, 'data_query');
+	html_header($header_items, 1, false, 'data_query', 'left wp100');
 
 	draw_edit_form(array(
 		"config" => array(),
@@ -664,7 +664,7 @@ function data_query_edit() {
 			html_start_box("<strong>" . __("Associated Graph Templates") . "</strong>", "100", $colors["header"], "0", "center", "data_queries.php?action=item_edit&snmp_query_id=" . $snmp_query["id"]);
 			$header_items = array(__("Name"), __("Graph Template Name"));
 			print "<tr><td>";
-			html_header($header_items, 2, true, 'assoc_graph_templates');
+			html_header($header_items, 2, true, 'assoc_graph_templates', 'left wp60');
 
 			$snmp_query_graphs = db_fetch_assoc("select
 				snmp_query_graph.id,

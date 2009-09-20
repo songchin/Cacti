@@ -402,7 +402,7 @@ function cdef_edit() {
 	html_start_box("<strong>". __("CDEF's") . "</strong> $header_label", "100", $colors["header"], 0, "center", "");
 	$header_items = array(__("Field"), __("Value"));
 	print "<tr><td>";
-	html_header($header_items, 2, true, 'header_cdef_edit');
+	html_header($header_items, 2, false, 'header_cdef_edit','left wp100');
 
 	draw_edit_form(array(
 		"config" => array(),
@@ -420,7 +420,7 @@ function cdef_edit() {
 		html_start_box("<strong>" . __("CDEF Items") . "</strong>", "100", $colors["header"], 0, "center", "cdef.php?action=item_edit&cdef_id=" . $cdef["id"], false, "cdef");
 		$header_items = array(__("Item"), __("Item Value"));
 		print "<tr><td>";
-		html_header($header_items, 2, true, 'cdef_item');
+		html_header($header_items, 2, true, 'cdef_item','left wp100');
 
 		$cdef_items = db_fetch_assoc("select * from cdef_items where cdef_id=" . $_GET["id"] . " order by sequence");
 

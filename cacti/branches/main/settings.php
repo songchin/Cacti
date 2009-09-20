@@ -83,7 +83,7 @@ default:
 	html_start_box("<strong>" . __("Cacti Settings") . " (" . $tabs[$current_tab] . ")</strong>", "100", $colors["header"], 0, "center", "");
 	$header_items = array(__("Field"), __("Value"));
 	print "<tr><td>";
-	html_header($header_items, 2, true, 'settings');
+	html_header($header_items, 2, false, 'settings','left wp100');
 
 	$form_array = array();
 
