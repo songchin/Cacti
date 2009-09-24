@@ -236,7 +236,7 @@ function grow_edit_graph_tree($tree_id, $user_id, $options) {
 					#				print "<td bgcolor='#$row_color' bgcolor='#" . $colors["panel"] . "'>$transparent_indent<a href='" . htmlspecialchars("tree.php?action=edit&id=" . $_GET["id"] . "&leaf_id=" . $leaf["id"] . "&subaction=change") . "'><img src='" . $icon . "' alt='' border='0'></a><a href='" . htmlspecialchars("tree.php?action=item_edit&tree_id=" . $_GET["id"] . "&id=" . $leaf["id"]) . "'>&nbsp;<strong>" . $leaf["title"] . "</strong></a> (<a href='tree.php?action=item_edit&tree_id=" . $_GET["id"] . "&parent_id=" . $leaf["id"] . "'>Add</a>)</td>\n";
 					#				print "<td bgcolor='#$row_color' bgcolor='#" . $colors["panel"] . "'>Heading</td>";
 					print "<tr>";
-					print "<td bgcolor='#$row_color'>$transparent_indent<a href='" . htmlspecialchars("tree.php?action=edit&id=" . $_GET["id"] . "&leaf_id=" . $leaf["id"] . "&subaction=change") . "'><img src='" . $icon . "' alt='' border='0'></a><a href='" . htmlspecialchars("tree.php?action=item_edit&tree_id=" . $_GET["id"] . "&id=" . $leaf["id"]) . "'>&nbsp;<strong>" . $leaf["title"] . "</strong></a> (<a href='" . htmlspecialchars("tree.php?action=item_edit&tree_id=" . $_GET["id"] . "&parent_id=" . $leaf["id"]) . "'>Add</a>)</td>\n";
+					print "<td bgcolor='#$row_color'>$transparent_indent<a href='" . htmlspecialchars("tree.php?action=edit&id=" . $_GET["id"] . "&leaf_id=" . $leaf["id"] . "&subaction=change") . "'><img src='" . $icon . "' alt=''></a><a href='" . htmlspecialchars("tree.php?action=item_edit&tree_id=" . $_GET["id"] . "&id=" . $leaf["id"]) . "'>&nbsp;<strong>" . $leaf["title"] . "</strong></a> (<a href='" . htmlspecialchars("tree.php?action=item_edit&tree_id=" . $_GET["id"] . "&parent_id=" . $leaf["id"]) . "'>Add</a>)</td>\n";
 					print "<td bgcolor='#$row_color'>Heading</td>";
 				}
 			}elseif ($leaf["host_id"] > 0) {
@@ -1382,7 +1382,7 @@ function draw_tree_header_row($tree_id, $tree_item_id, $current_tier, $current_t
 
 		print "<td bgcolor='" . $colors["panel"] . "' align='center' width='1%'><a
 			href='" . htmlspecialchars("graph_view.php?action=tree&tree_id=$tree_id&hide=$other_status&branch_id=$tree_item_id") . "'>
-			<img src='images/$ec_icon.gif' alt='' style='border-width:0px;'></a></td>\n";
+			<img src='images/$ec_icon.gif' alt=''></a></td>\n";
 	}elseif (!($use_expand_contract) && (!empty($current_title))) {
 		print "<td bgcolor='" . $colors["panel"] . "' width='10'></td>\n";
 	}

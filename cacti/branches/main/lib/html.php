@@ -241,10 +241,10 @@ function html_graph_area(&$graph_array, $no_graphs_message = "", $extra_url_args
 								<?php print (read_graph_config_option("show_graph_title") == "on" ? "<p style='font-size: 10;' align='center'><strong>" . $graph["title_cache"] . "</strong></p>" : "");?>
 							</td>
 							<td valign='top' style='align: left; padding: 3px;' class='noprint'>
-								<a href='<?php print htmlspecialchars("graph.php?action=zoom&local_graph_id=" . $graph["local_graph_id"] . "&rra_id=0&" . $extra_url_args);?>'><img src='images/graph_zoom.gif' alt='<?php print __("Zoom Graph");?>' title='<?php print __("Zoom Graph");?>' style='border-width:0px;padding:3px;'></a><br>
-								<a href='<?php print htmlspecialchars("graph_xport.php?local_graph_id=" . $graph["local_graph_id"] . "&rra_id=0&" . $extra_url_args);?>'><img src='images/graph_query.png' alt='<?php print __("CSV Export");?>' title='<?php print __("CSV Export");?>' style='border-width:0px;padding: 3px;'></a><br>
-								<a href='<?php print htmlspecialchars("graph.php?action=properties&local_graph_id=" . $graph["local_graph_id"] . "&rra_id=0&" . $extra_url_args);?>'><img src='images/graph_properties.gif' alt='<?php print __("Properties");?>' title='<?php print __("Graph Source/Properties");?>' style='border-width:0px;padding:3px;'></a><br>
-								<a href='#page_top'><img src='images/graph_page_top.gif' alt='<?php print __("Page Top");?>' title='<?php print __("Page Top");?>' style='border-width:0px;padding:3px;'></a><br>
+								<a href='<?php print htmlspecialchars("graph.php?action=zoom&local_graph_id=" . $graph["local_graph_id"] . "&rra_id=0&" . $extra_url_args);?>'><img src='images/graph_zoom.gif' alt='<?php print __("Zoom Graph");?>' title='<?php print __("Zoom Graph");?>' class='img_info'></a><br>
+								<a href='<?php print htmlspecialchars("graph_xport.php?local_graph_id=" . $graph["local_graph_id"] . "&rra_id=0&" . $extra_url_args);?>'><img src='images/graph_query.png' alt='<?php print __("CSV Export");?>' title='<?php print __("CSV Export");?>' class='img_info'></a><br>
+								<a href='<?php print htmlspecialchars("graph.php?action=properties&local_graph_id=" . $graph["local_graph_id"] . "&rra_id=0&" . $extra_url_args);?>'><img src='images/graph_properties.gif' alt='<?php print __("Properties");?>' title='<?php print __("Graph Source/Properties");?>' class='img_info'></a><br>
+								<a href='#page_top'><img src='images/graph_page_top.gif' alt='<?php print __("Page Top");?>' title='<?php print __("Page Top");?>' class='img_info'></a><br>
 							</td>
 						</tr>
 					</table>
@@ -365,10 +365,10 @@ function html_graph_thumbnail_area(&$graph_array, $no_graphs_message = "", $extr
 							<?php print (read_graph_config_option("show_graph_title") == "on" ? "<p style='font-size: 10;' align='center'><strong>" . $graph["title_cache"] . "</strong></p>" : "");?>
 						</td>
 						<td valign='top' style='align: left; padding: 3px;'>
-							<a href='<?php print htmlspecialchars("graph.php?action=zoom&local_graph_id=" . $graph["local_graph_id"] . "&rra_id=0&" . $extra_url_args);?>'><img src='images/graph_zoom.gif' alt='<?php print __("Zoom Graph");?>' title='<?php print __("Zoom Graph");?>' style='border-width:0px;padding:3px;'></a><br>
-							<a href='<?php print htmlspecialchars("graph_xport.php?local_graph_id=" . $graph["local_graph_id"] . "&rra_id=0&" . $extra_url_args);?>'><img src='images/graph_query.png' alt='<?php print __("CSV Export");?>' title='<?php print __("CSV Export");?>' style='border-width:0px;padding:3px;'></a><br>
-							<a href='<?php print htmlspecialchars("graph.php?action=properties&local_graph_id=" . $graph["local_graph_id"] . "&rra_id=0&" . $extra_url_args);?>'><img src='images/graph_properties.gif' alt='<?php print __("Graph Source/Properties");?>' title='<?php print __("Graph Source/Properties");?>' style='border-width:0px;padding:3px;'></a><br>
-							<a href='#page_top'><img src='images/graph_page_top.gif' alt='<?php print __("Page Top");?>' title='<?php print __("Page Top");?>' style='border-width:0px;padding:3px;'></a><br>
+							<a href='<?php print htmlspecialchars("graph.php?action=zoom&local_graph_id=" . $graph["local_graph_id"] . "&rra_id=0&" . $extra_url_args);?>'><img src='images/graph_zoom.gif' alt='<?php print __("Zoom Graph");?>' title='<?php print __("Zoom Graph");?>' class='img_info'></a><br>
+							<a href='<?php print htmlspecialchars("graph_xport.php?local_graph_id=" . $graph["local_graph_id"] . "&rra_id=0&" . $extra_url_args);?>'><img src='images/graph_query.png' alt='<?php print __("CSV Export");?>' title='<?php print __("CSV Export");?>' class='img_info'></a><br>
+							<a href='<?php print htmlspecialchars("graph.php?action=properties&local_graph_id=" . $graph["local_graph_id"] . "&rra_id=0&" . $extra_url_args);?>'><img src='images/graph_properties.gif' alt='<?php print __("Graph Source/Properties");?>' title='<?php print __("Graph Source/Properties");?>' class='img_info'></a><br>
+							<a href='#page_top'><img src='images/graph_page_top.gif' alt='<?php print __("Page Top");?>' title='<?php print __("Page Top");?>' class='img_info'></a><br>
 						</td>
 					</tr>
 				</table>
@@ -903,7 +903,7 @@ function draw_header_tab($name, $title, $location, $image = "") {
 	if ($image == "") {
 		return "<li id=\"tab_" . html_escape($name) . "\"" . (html_selected_tab($name, $location) ? " class=\"selected\"" : " class=\"notselected\"") . "><a href=\"javascript:navigation_select('" . html_escape($name) . "','" . htmlspecialchars($location) . "')\" title=\"" . html_escape($title) . "\">" . html_escape($title) . "</a></li>\n";
 	}else{
-		return "<li id=\"tab_" . html_escape($name) . "\"" . (html_selected_tab($name, $location) ? " class=\"selected\"" : " class=\"notselected\"") . "><a href=\"javascript:navigation_select('" . html_escape($name) . "','" . htmlspecialchars($location) . "')\" title=\"" . html_escape($title) . "\"><img style='border-width:0px;' src='$image' alt='$title' align='middle'></a></li>\n";
+		return "<li id=\"tab_" . html_escape($name) . "\"" . (html_selected_tab($name, $location) ? " class=\"selected\"" : " class=\"notselected\"") . "><a href=\"javascript:navigation_select('" . html_escape($name) . "','" . htmlspecialchars($location) . "')\" title=\"" . html_escape($title) . "\"><img src='$image' alt='$title' align='middle'></a></li>\n";
 	}
 }
 

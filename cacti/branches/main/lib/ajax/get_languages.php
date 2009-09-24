@@ -89,7 +89,7 @@ $location .= (strpos($location, '?')) ? '&' : '?';
 <?php
 if(sizeof($supported_languages["cacti"])>0) {
 	foreach($supported_languages["cacti"] as $lang) {
-		?><li><a href="<?php print $location . "language=" . $locations[$lang]["locale"]; ?>"><img src="<?php echo URL_PATH; ?>images/flag_icons/<?php print $locations[$lang]["flag"];?>.gif" align="top" alt="loading" style='border-width:0px;'>&nbsp;<?php print $locations[$lang]["language"];?></a>&nbsp;&nbsp;</li><?php
+		?><li><a href="<?php print $location . "language=" . $locations[$lang]["locale"]; ?>"><img src="<?php echo URL_PATH; ?>images/flag_icons/<?php print $locations[$lang]["flag"];?>.gif" align="top" alt="loading">&nbsp;<?php print $locations[$lang]["language"];?></a>&nbsp;&nbsp;</li><?php
 	}
 }
 ?>

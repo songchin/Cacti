@@ -407,8 +407,8 @@ function tree_edit() {
 		?>
 		<tr>
 		<td>
-		<a href='<?php print htmlspecialchars("tree.php?action=edit&id=" . $_GET["id"] . "&subaction=expand_all");?>'><img src='images/button_expand_all.gif' style='border-width:0px;' alt='<?php print __("Expand All");?>'></a>
-		<a href='<?php print htmlspecialchars("tree.php?action=edit&id=" . $_GET["id"] . "&subaction=colapse_all");?>'><img src='images/button_colapse_all.gif' style='border-width:0px;' alt='<?php print __("Colapse All");?>'></a>
+		<a href='<?php print htmlspecialchars("tree.php?action=edit&id=" . $_GET["id"] . "&subaction=expand_all");?>'><img src='images/button_expand_all.gif' alt='<?php print __("Expand All");?>'></a>
+		<a href='<?php print htmlspecialchars("tree.php?action=edit&id=" . $_GET["id"] . "&subaction=colapse_all");?>'><img src='images/button_colapse_all.gif' alt='<?php print __("Collapse All");?>'></a>
 		</td>
 		</tr>
 		<?php

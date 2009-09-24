@@ -20,13 +20,11 @@ tr {
 	font-family: Arial, Verdana, Helvetica, sans-serif;
 	font-size: 12px;
 }
-
 th {
 	overflow: hidden;
 	font-family: Arial, Verdana, Helvetica, sans-serif;
 	font-size: 12px;
 }
-
 td {
 	overflow: hidden;
 	line-height: 1.5em;
@@ -36,6 +34,18 @@ td {
 img {
 	border: 0px;
 }
+
+img_info {
+	border: 0px;
+	padding: 3px;
+}
+img_filter {
+	border-width: 0px;
+	vertical-align: middle;
+	text-align: middle;
+	padding-bottom: 5px;
+}
+
 /* main navigation constructor classes */
 #navbrcrumb {
 	background: #363636 url('../images/navbar.png') repeat-x scroll top left;

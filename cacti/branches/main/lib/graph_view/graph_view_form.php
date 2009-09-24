@@ -1118,17 +1118,17 @@ function graph_view_timespan_selector($mode = "tree") {
 					</td>
 					<td style='white-space:nowrap;width:140px;'>
 						<input type='text' name='date1' id='date1' title='<?php print __("Graph Begin Timestamp");?>' size='16' value='<?php print (isset($_SESSION["sess_current_date1"]) ? $_SESSION["sess_current_date1"] : "");?>'>
-						&nbsp;<input type='image' style='border-width:0px;vertical-align:middle;align:middle;padding-bottom:5px;' src='images/calendar.gif' alt='<?php print __("Start");?>' title='<?php print __("Start Date Selector");?>' onclick='return showCalendar("date1");'>&nbsp;
+						&nbsp;<input type='image' class='img_filter' src='images/calendar.gif' alt='<?php print __("Start");?>' title='<?php print __("Start Date Selector");?>' onclick='return showCalendar("date1");'>&nbsp;
 					</td>
 					<td style='white-space:nowrap;width:20px;'>
 						&nbsp;<?php print __("To:");?>&nbsp;
 					</td>
 					<td style='white-space:nowrap;width:140px;'>
 						<input type='text' name='date2' id='date2' title='<?php print __("Graph End Timestamp");?>' size='16' value='<?php print (isset($_SESSION["sess_current_date2"]) ? $_SESSION["sess_current_date2"] : "");?>'>
-						&nbsp;<input type='image' style='border-width:0px;vertical-align:middle;align:middle;padding-bottom:5px;' src='images/calendar.gif' alt='<?php print __("End");?>' title='<?php print __("End Date Selector");?>' onclick='return showCalendar("date2");'>
+						&nbsp;<input type='image' class='img_filter' src='images/calendar.gif' alt='<?php print __("End");?>' title='<?php print __("End Date Selector");?>' onclick='return showCalendar("date2");'>
 					</td>
 					<td style='white-space:nowrap;width:120px;'>
-						&nbsp;&nbsp;<img onMouseOver='this.style.cursor="pointer"' onClick='return timeShift(document.form_timespan_selector, "left")' style='border-width:0px;vertical-align:middle;align:middle;padding-bottom:5px;' name='move_left' src='images/move_left.gif' alt='<?php print __("Left");?>' title='<?php print __("Shift Left");?>'>
+						&nbsp;&nbsp;<img onMouseOver='this.style.cursor="pointer"' onClick='return timeShift(document.form_timespan_selector, "left")' class='img_filter' name='move_left' src='images/move_left.gif' alt='<?php print __("Left");?>' title='<?php print __("Shift Left");?>'>
 						<select name='predefined_timeshift' title='<?php print __("Define Shifting Interval");?>'><?php
 							$start_val = 1;
 							$end_val = sizeof($graph_timeshifts)+1;
@@ -1139,7 +1139,7 @@ function graph_view_timespan_selector($mode = "tree") {
 							}
 							?>
 						</select>
-						<img onMouseOver='this.style.cursor="pointer"' onClick='return timeShift(document.form_timespan_selector, "right")' style='border-width:0px;vertical-align:middle;align:middle;padding-bottom:5px;' name='move_right' src='images/move_right.gif' alt='<?php print __("Right");?>' title='<?php print __("Shift Right");?>'>
+						<img onMouseOver='this.style.cursor="pointer"' onClick='return timeShift(document.form_timespan_selector, "right")' class='img_filter' name='move_right' src='images/move_right.gif' alt='<?php print __("Right");?>' title='<?php print __("Shift Right");?>'>
 					</td>
 					<td class="nw120">
 						&nbsp;<input type='button' value='<?php print __("Refresh");?>' name='button_refresh' onclick='request_type="daterange";applyTimespanFilterChange(document.form_timespan_selector)'>

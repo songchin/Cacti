@@ -864,8 +864,8 @@ function form_confirm_buttons($action_url, $cancel_url) {
  ?>
 	<tr>
 		<td bgcolor="#E1E1E1">
-			<a href="<?php print $cancel_url;?>"><img src="<?php print URL_PATH; ?>images/button_cancel.gif" style='border-width:0px;' alt="<?php print __("Cancel");?>" align="absmiddle"></a>
-			<a href="<?php print $action_url . "&confirm=yes";?>"><img src="<?php print URL_PATH ?>images/button_delete.gif" style='border-width:0px;' alt="<?php print __("Delete");?>" align="absmiddle"></a>
+			<a href="<?php print $cancel_url;?>"><img src="<?php print URL_PATH; ?>images/button_cancel.gif" alt="<?php print __("Cancel");?>" align="absmiddle"></a>
+			<a href="<?php print $action_url . "&confirm=yes";?>"><img src="<?php print URL_PATH ?>images/button_delete.gif" alt="<?php print __("Delete");?>" align="absmiddle"></a>
 		</td>
 	</tr>
 <?php }
