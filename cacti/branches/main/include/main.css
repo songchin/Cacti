@@ -10,6 +10,7 @@
 form {
 	margin: 0px;
 }
+
 input {
 	margin: 0px;
 	padding: 0px;
@@ -209,8 +210,14 @@ img_filter {
 	vertical-align: middle;
 	text-align: center;
 }
+
+.center {
+	vertical-align: middle;
+	text-align: center;
+}
+
 .right td {
-	vertical-align: right; 
+	vertical-align: right;
 	text-align: right;
 }
 .left td {
@@ -483,20 +490,20 @@ a:hover {
 	border-width: 0;
 	border-spacing: 0px;
 	padding: 0px;
-        border-collapse: collapse;
+	border-collapse: collapse;
 	width: 100%;
 }
 .startBox1 {
 	border: 1px solid #dfdfdf;
 	border-spacing: 0px;
 	padding: 0px;
-        border-collapse: collapse;
+	border-collapse: collapse;
 	width: 100%;
 	text-align: center;
 }
 .startBox3 {
 	border-spacing: 0px;
-	padding: 0px 3px 0px 3px;
+	padding: 0px;
 	width: 100%;
 }
 
@@ -506,7 +513,7 @@ a:hover {
 }
 .saveBox {
 	width: 100%;
-	background-color: #ffffff; 
+	background-color: #ffffff;
 	border: 1px solid #bbbbbb;
 	text-align: center;
 }
@@ -516,7 +523,7 @@ a:hover {
 }
 .saveBoxAction {
 	width: 100%;
-	background-color: #ffffff; 
+	background-color: #ffffff;
 	border: 1px solid #ffffff;
 	text-align: center;
 }
@@ -525,17 +532,17 @@ a:hover {
 	text-align: right;
 }
 .topBox {
-	width: 100%; 
-	background-color: #ffffff; 
-	border: 1px solid #ffffff; 
+	width: 100%;
+	background-color: #ffffff;
+	border: 1px solid #ffffff;
 	text-align: center;
 	padding: 3px;
 	margin-bottom: 5px;
 }
 .topBoxAlt {
-	width: 100%; 
-	background-color: #f5f5f5; 
-	border: 1px solid #bbbbbb; 
+	width: 100%;
+	background-color: #f5f5f5;
+	border: 1px solid #bbbbbb;
 	text-align: center;
 	padding: 3px;
 	margin-bottom: 5px;
@@ -549,21 +556,21 @@ a:hover {
 	margin-bottom: 5px;
 }
 .mono {
-	padding: 3px; 
+	padding: 3px;
 	font-family: monospace;
 }
 .rowHeader {
 	background: #001a6e url('../images/rowHeader.png') repeat-x scroll top left;
 }
 .rowHeader td span {
-	color: #ffffff; 
+	color: #ffffff;
 	font-weight: bold;
 }
 .rowSubHeader {
 	background: #1f2328 url('../images/rowSubHeader.png') repeat-x scroll top left;
 }
 .rowSubHeader td span {
-	color: #ffffff; 
+	color: #ffffff;
 	font-weight: bold;
 }
 .rowSubHeaderAlt {
@@ -583,9 +590,17 @@ a:hover {
 	font-size: 10px;
 }
 
+.rowAlternate1 td {
+	padding: 0px 3px 0px 3px;
+}
+
 .rowAlternate2 {
 	background-color: #e7e9f2;
 	font-size: 10px;
+}
+
+.rowAlternate2 td {
+	padding: 0px 3px 0px 3px;
 }
 
 .rowSelected {
@@ -661,7 +676,7 @@ table.resizable th {
 	white-space: nowrap;
 }
 .textSubHeaderDark th {
-	width: auto; 
+	width: auto;
 	white-space: nowrap;
 }
 .textSubSortHeaderDark, .textSubSortHeaderDark:visited {
@@ -776,7 +791,7 @@ span.normal {
 	font-weight:normal;
 }
 span.info {
-	color: #ab3f1e; 
+	color: #ab3f1e;
 	font-weight: bold;
 }
 span.log {
@@ -784,7 +799,7 @@ span.log {
 	font-size:10px;
 }
 span.warning {
-	color: #ff0000; 
+	color: #ff0000;
 	font-weight: bold;
 }
 span.ping {
@@ -831,11 +846,11 @@ span.up {
 	color: #198e32;
 }
 span.tabedit {
-	white-space: nowrap; 
+	white-space: nowrap;
 	color: #c16921;
 }
 span.italic {
-	font-size: 12px; 
+	font-size: 12px;
 	font-style: italic;
 }
 tr.highlight {
@@ -857,7 +872,7 @@ tr.highlight {
 	vertical-align: right;
 }
 .nwauto {
-	width: auto; 
+	width: auto;
 	white-space: nowrap;
 }
 .w1 {
@@ -869,19 +884,19 @@ tr.highlight {
 }
 .nw9 {
 	white-space:nowrap;
-	width:9px;	
+	width:9px;
 }
 .nw14 {
 	white-space:nowrap;
-	width:14px;	
+	width:14px;
 }
 .nw30 {
 	white-space:nowrap;
-	width:30px;	
+	width:30px;
 }
 .nw50 {
 	white-space:nowrap;
-	width:50px;	
+	width:50px;
 }
 .nw80 {
 	white-space:nowrap;
@@ -893,19 +908,19 @@ tr.highlight {
 }
 .nw100 {
 	white-space:nowrap;
-	width:100px;	
+	width:100px;
 }
 .nw120 {
 	white-space:nowrap;
-	width:120px;	
+	width:120px;
 }
 .nw200 {
 	white-space:nowrap;
-	width:200px;	
+	width:200px;
 }
 .nw295 {
 	white-space:nowrap;
-	width:295px;	
+	width:295px;
 }
 .wp15 {
 	width:15%;
