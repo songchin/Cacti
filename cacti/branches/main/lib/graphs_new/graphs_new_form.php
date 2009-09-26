@@ -777,8 +777,7 @@ function graphs_new() {
 					}
 
 					if (!sizeof($snmp_query_indexes)) {
-						print "<tr class='rowAlternate1'><td>" . __("This data query returned 0 rows, perhaps there was a problem executing this
-							data query. You can %srun this data query in debug mode%2$s to get more information.", "<a href='" . htmlspecialchars("host.php?action=query_verbose&id=" . $snmp_query["id"] . "&host_id=" . $host["id"]) . "'>", "</a>") . "</td></tr>\n";
+						print "<tr class='rowAlternate1'><td>" . __("This data query returned 0 rows, perhaps there was a problem executing this data query. You can %s run this data query in debug mode %s to get more information.", "<a href='" . htmlspecialchars("host.php?action=query_verbose&id=" . $snmp_query["id"] . "&host_id=" . $host["id"]) . "'>", "</a>") . "</td></tr>\n";
 					}else{
 						print "<tr class='rowSubHeader'>
 								$html_dq_header

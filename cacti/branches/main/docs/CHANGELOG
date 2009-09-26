@@ -8,7 +8,6 @@ Cacti CHANGELOG
 -bug#0001182: Subdirectories are not secure and allow browsing
 -bug#0001306: Empty COMMENT + <HR> gives you a blank legend line (was: Add Blank Line to Graph via Pull down menu)
 -bug#0001335: <oid_index_parse> does not work as expected; requires changes to XML for e.g. EMC Cellera
--bug#0001341: SNMP query: add oid_suffix for weird SNMP queries 
 -bug#0001359: Better error checking in rrd.php
 -bug#0001366: Exported data templates do not import the special characters properly 
 -bug#0001429: PHP does not support SNMP V3 Contexts and Cacti needs to act accordingly
@@ -31,6 +30,7 @@ Cacti CHANGELOG
 -documentation: Use of SNMP exec option up to net-snmp 5.3
 -feature#0000967: Option to force users to use SSL
 -feature#0000954: implement --alt-y-grid graph option
+-feature#0001009: XML Syntax enhancements (as a dup of 1225 only)
 -feature#0001030: Lower limit and upper limit |query_*| variable support for Graph Templates
 -feature#0001111: add remove-device.php cli script, replace numerical constants for permission handling by PERM_*
 -feature#0001122: Propagate Host Template changes to related hosts
@@ -38,16 +38,20 @@ Cacti CHANGELOG
 -feature#0001124: Devices/Host Templates - remove already associated objects from dropdown selector
 -feature#0001179: Visual Fix for CACTI Graphs View Interface(list,preview)
 -feature#0001185: Mass enable/disable graph export per graph from Graph Management
+-feature#0001225: HowTo use the index at an arbitrary place in the OID field: introduces <rewrite_index>, <rewrite_value> to XML
 -feature#0001290: Modify how 'Index Count Changed' re-index is used
 -feature#0001332: non SNMP Hosts' Reindex Method should not default to "Uptime goes backwards"
 -feature#0001350: Compare Cacti Data Source Info to current RRD File Info
 -feature#0001406: Dynamically display field description for templates
 -feature#0001408: Hide templated input fields
 -feature#0001409: Add context sensitive page help linking to cacti dokuwiki
+-feature#0001341: SNMP query: add oid_suffix for weird SNMP queries 
 -feature#0001438: Allow for drag and drop reordering of graph template items
 -feature#0001439: New pseudo variable |host_template|, support all pseudo variable derived from host table
+-feature#0001483: (OID|VALUE)/REGEXP for get input fields 
 -feature#0001450: Template import script
 -feature#0001525: add rebuild_poller_cache --host-id=[ID]
+-feature#0001542: Rewriting SNMP values of data queries
 -feature: jQuery "TableDnd" used for cdef item sort (courtesy Browniebraun)
 -feature: jQuery "TableDnd" for Graph Template Item
 -feature: jQuery "TableDnd" for Data Queries Suggested Values
