@@ -336,16 +336,20 @@ function process_poller_output($rrdtool_pipe, $remainder = FALSE) {
 					where data_template_rrd.data_input_field_id=data_input_fields.id
 					and data_template_rrd.local_data_id=" . $item["local_data_id"]), "data_name", "data_source_name");
 
-				for ($i=0; $i<count($values); $i++) {
-					if (preg_match("/^([a-zA-Z0-9_\.-]+):([eE0-9\+\.-]+)$/", $values[$i], $matches)) {
-						if (isset($rrd_field_names{$matches[1]})) {
+				if (sizeof($values)) {
+				foreach($values as $value) {
+					$matches = explode(":", $value);
+
+					if (sizeof($matches) == 2) {
+						if (isset($rrd_field_names{$matches[0]})) {
 							if (read_config_option("log_verbosity") == POLLER_VERBOSITY_DEBUG) {
-								cacti_log("Parsed MULTI output field '" . $matches[0] . "' [map " . $matches[1] . "->" . $rrd_field_names{$matches[1]} . "]" , true, "POLLER");
+								cacti_log("Parsed MULTI output field '" . $matches[0] . ":" . $matches[1] . "' [map " . $matches[0] . "->" . $rrd_field_names{$matches[0]} . "]" , true, "POLLER");
 							}
 
-							$rrd_update_array{$item["rrd_path"]}["times"][$unix_time]{$rrd_field_names{$matches[1]}} = $matches[2];
+							$rrd_update_array{$item["rrd_path"]}["times"][$unix_time]{$rrd_field_names{$matches[0]}} = $matches[1];
 						}
 					}
+				}
 				}
 			}
 
