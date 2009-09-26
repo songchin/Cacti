@@ -2,52 +2,29 @@ Cacti CHANGELOG
 -bug#0001085: LDAP enabled status not maintained on upgrade from 0.8.6j to 0.8.7
 -bug#0001100: spine hangs on unreachable hosts
 -bug#0001105: add_graphs.php --list-snmp-values for all available host snmp-fields
--bug#0001522: Special(?) charakters break parsing of template data.
--bug#0001452: Missing "<" and ">" in "Collection Methods=>Data Input Methods=>"Input String", When Import Template 
 -bug#0001125: XML parse error on template import with degree symbol 
--bug#0001366: Exported data templates do not import the special characters properly 
--bug#0001528: ICMP Ping availabilty broken in UI for Windows Servers using IIS
--bug#0001549: Database crashes with use of array_to_sql_or
--bug#0001044: Creating a DS, Output field can't be selected for DT with a DIM when "Use Per-Data Source Value" is on
 -bug#0001147: Cactid doesn't trim white space from data template OIDs
 -bug#0001160: In Suggested Values editor, name and field are reversed. Include column headers
 -bug#0001182: Subdirectories are not secure and allow browsing
 -bug#0001306: Empty COMMENT + <HR> gives you a blank legend line (was: Add Blank Line to Graph via Pull down menu)
 -bug#0001341: SNMP query: add oid_suffix for weird SNMP queries 
 -bug#0001345: Overwriting $snmp_index in query_snmp_host() breaks SNMP Data query if using get method
--bug#0001346: Strip out noisy 'No Such Instance currently exists at this OID' 
 -bug#0001359: Better error checking in rrd.php
--bug#0001404: timeout in "function ping_icmp" (lib/ping.php)
--bug#0001405: Spaces in DS when .rrd file is created, so it fails
--bug#0001407: Place graph thumbnail into div to lower page length changes on load graphs
--bug#0001410: Thumbnail Columns is not honored for host display with snmp index group style
--bug#0001411: Graph Search Trouble with Cacti 8.7d 
--bug#0001413: strip_quotes fails 
--bug#0001426: multiple form opening due to bug in draw_edit_form()
+-bug#0001366: Exported data templates do not import the special characters properly 
 -bug#0001429: PHP does not support SNMP V3 Contexts and Cacti needs to act accordingly
 -bug#0001432: array_merge breaks dropdown handling with hardcoded (array-)keys
--bug#0001436: CSV Export Start Date and End Date are always 1970-01-01 01:00:00 
--bug#0001443: format_snmp_string can return a number with a leading space 
--bug#0001446: Wrong dates override in CSV export 
--bug#0001456: oid_uptime is not parsed correctly 
--bug#0001460: Skiping input parameters in data_query_field_list() may lead to SQL errors
+-bug#0001452: Missing "<" and ">" in "Collection Methods=>Data Input Methods=>"Input String", When Import Template 
 -bug#0001461: (Data Query) Export/Import fails 
--bug#0001464: Typo in install/index.php 
--bug#0001467: Customisable oid index parse regexp for weird MIBs
--bug#0001468: Tree is not expanded correctly
--bug#0001469: Tree is not being expanded if user followed link outside of cacti
--bug#0001476: Mark stacked columns in rrdtool_function_xport() output 
--bug#0001477: Spelling error in a variable in html_tree.php
--bug#0001478: Combo boxes on Graph Management page produce URLs with leading spaces
 -bug#0001506: Reindexing fails in snmp.php
+-bug#0001522: Special(?) charakters break parsing of template data.
+-bug#0001528: ICMP Ping availabilty broken in UI for Windows Servers using IIS
 -bug#0001535: Tree Automation Difficult Due to Lack of Parent ID in Tree Nodes 
+-bug#0001549: Database crashes with use of array_to_sql_or
 -bug: remove graph permissions if graph is removed
 -bug: remove host permissions if host is removed
 -bug: add_tree.php did not allow nodes with propagating sort options
 -bug: when adding a tree node via the api numeric and natural were reversed
 -bug: Some snmp agents don't getnext on '.1' and need another oid '.1.3'
--bug: SNMP v3 Password issue caused by Firefox's Password AutoFill
--bug: Strip Quotes does not properly remove the letter 'U'
 -bug: Remove call pass by reference from function declarations
 -documentation: Explaining Cacti Special Data Sources used on CDEFs, lots of CDEF examples using Special data Sources
 -documentation: Documentation of specific rrdtool feature
@@ -102,6 +79,36 @@ Cacti CHANGELOG
 -feature: Add New Form Object Drop Image to support new Tree Design and Plugins
 -feature: Add Alignment Attribute to Sortable Header Columns
 -feature: Do not repopulate the poller cache unless its required
+
+0.8.7e
+
+-bug#0001044: Creating a DS, Output field can't be selected for DT with a DIM when "Use Per-Data Source Value" is on
+-bug#0001341: SNMP query: add oid_suffix for weird SNMP queries 
+-bug#0001345: Overwriting $snmp_index in query_snmp_host() breaks SNMP Data query if using get method
+-bug#0001346: Strip out noisy 'No Such Instance currently exists at this OID' 
+-bug#0001404: timeout in "function ping_icmp" (lib/ping.php)
+-bug#0001405: Spaces in DS when .rrd file is created, so it fails
+-bug#0001407: Place graph thumbnail into div to lower page length changes on load graphs
+-bug#0001410: Thumbnail Columns is not honored for host display with snmp index group style
+-bug#0001411: Graph searching issue
+-bug#0001413: strip_quotes fails 
+-bug#0001426: multiple form opening due to bug in draw_edit_form() 
+-bug#0001436: CSV Export Start Date and End Date are always 1970-01-01 01:00:00 
+-bug#0001443: format_snmp_string can return a number with a leading space 
+-bug#0001446: Wrong dates override in CSV export 
+-bug#0001456: oid_uptime is not parsed correctly 
+-bug#0001460: Skiping input parameters in data_query_field_list() may lead to SQL errors
+-bug#0001464: Typo in install/index.php 
+-bug#0001467: Customisable oid index parse regexp for weird MIBs
+-bug#0001468: Tree is not expanded correctly
+-bug#0001469: Tree is not being expanded if user followed link outside of cacti
+-bug#0001476: Mark stacked columns in rrdtool_function_xport() output 
+-bug#0001477: Spelling error in a variable in html_tree.php
+-bug#0001478: Combo boxes on Graph Management page produce URLs with leading spaces
+-bug: Top Graph Header Breaks When Plugins Used
+-bug: SNMP v3 Password issue caused by Firefox's Password AutoFill
+-bug: Strip Quotes does not properly handle the value 'U'
+-bug: Changes to the graph tree would not show up immediately for current user
 
 0.8.7d
 -bug#0001336: Allow to specify on_change handler for checkbox_group
