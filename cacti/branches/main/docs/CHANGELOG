@@ -7,8 +7,8 @@ Cacti CHANGELOG
 -bug#0001160: In Suggested Values editor, name and field are reversed. Include column headers
 -bug#0001182: Subdirectories are not secure and allow browsing
 -bug#0001306: Empty COMMENT + <HR> gives you a blank legend line (was: Add Blank Line to Graph via Pull down menu)
+-bug#0001335: <oid_index_parse> does not work as expected; requires changes to XML for e.g. EMC Cellera
 -bug#0001341: SNMP query: add oid_suffix for weird SNMP queries 
--bug#0001345: Overwriting $snmp_index in query_snmp_host() breaks SNMP Data query if using get method
 -bug#0001359: Better error checking in rrd.php
 -bug#0001366: Exported data templates do not import the special characters properly 
 -bug#0001429: PHP does not support SNMP V3 Contexts and Cacti needs to act accordingly

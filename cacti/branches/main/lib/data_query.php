@@ -282,12 +282,6 @@ function query_snmp_host($host_id, $snmp_query_id) {
 						$snmp_index = $snmp_data[$i]["value"];
 					}
 
-					/* correct bogus index value */
-					/* found in some devices such as an EMC Cellera */
-					if ($snmp_index == 0) {
-						$snmp_index = 1;
-					}
-
 					$oid = $field_array["oid"] .  "." . $value;
 
 					debug_log_insert("data_query", __("Found item [%s='%s'] index: %s [from regexp oid parse]", $field_name, $value, $snmp_index));
