@@ -143,10 +143,13 @@ if (sizeof($parms)) {
 						$dsGraph["reindex_method"] = DATA_QUERY_AUTOINDEX_BACKWARDS_UPTIME;
 						break;
 					case "index":
-						$dsGraph["reindex_method"] = DATA_QUERY_AUTOINDEX_INDEX_NUM_CHANGE;
+						$dsGraph["reindex_method"] = DATA_QUERY_AUTOINDEX_INDEX_COUNT_CHANGE;
 						break;
 					case "fields":
 						$dsGraph["reindex_method"] = DATA_QUERY_AUTOINDEX_FIELD_VERIFICATION;
+						break;
+					case "value":
+						$dsGraph["reindex_method"] = DATA_QUERY_AUTOINDEX_VALUE_CHANGE;
 						break;
 					default:
 						echo __("ERROR: You must supply a valid reindex method for this graph!") . "\n";
@@ -555,10 +558,11 @@ function display_help($me) {
 	echo "   --snmp-query-id=[ID] --snmp-query-type-id=[ID] --snmp-field=[SNMP Field] --snmp-value=[SNMP Value]\n\n";
 	echo "  [--graph-title=]  " . __("Defaults to what ever is in the graph template/data-source template.") . "\n\n";
 	echo "   --reindex-method " . __("the reindex method to be used for that data query") . "\n";
-	echo "            0|None  " . __("no reindexing") . "\n";
-	echo "            1|Uptime" . __("Uptime goes Backwards") . "\n";
-	echo "            2|Index " . __("Index Count Changed") . "\n";
-	echo "            3|Fields" . __("Verify all Fields") . "\n";
+	echo "            0|None   " . __("no reindexing") . "\n";
+	echo "            1|Uptime " . __("Uptime goes Backwards") . "\n";
+	echo "            2|Index  " . __("Index Count Changed") . "\n";
+	echo "            3|Fields " . __("Verify all Fields") . "\n";
+	echo "            4|Value  " . __("Re-Index Value Changed") . "\n";
 	echo __("List Options:") . "\n";
 	echo "   --list-graph-templates [--host_template=[ID]]\n";
 	echo "   --list-input-fields --graph-template-id=[ID]\n";

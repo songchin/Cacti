@@ -154,7 +154,8 @@ $input_types = array(
 $reindex_types = array(
 	DATA_QUERY_AUTOINDEX_NONE => __("None"),
 	DATA_QUERY_AUTOINDEX_BACKWARDS_UPTIME => __("Uptime Goes Backwards"),
-	DATA_QUERY_AUTOINDEX_INDEX_NUM_CHANGE => __("Index Count Changed"),
+	DATA_QUERY_AUTOINDEX_INDEX_COUNT_CHANGE => __("Index Count Changed"),
+	DATA_QUERY_AUTOINDEX_VALUE_CHANGE => __("Index Value Changed"),
 	DATA_QUERY_AUTOINDEX_FIELD_VERIFICATION => __("Verify All Fields"),
 	);
 

@@ -38,6 +38,7 @@ Cacti CHANGELOG
 -feature#0001124: Devices/Host Templates - remove already associated objects from dropdown selector
 -feature#0001179: Visual Fix for CACTI Graphs View Interface(list,preview)
 -feature#0001185: Mass enable/disable graph export per graph from Graph Management
+-feature#0001290: Modify how 'Index Count Changed' re-index is used
 -feature#0001332: non SNMP Hosts' Reindex Method should not default to "Uptime goes backwards"
 -feature#0001350: Compare Cacti Data Source Info to current RRD File Info
 -feature#0001406: Dynamically display field description for templates
@@ -97,7 +98,7 @@ Cacti CHANGELOG
 -bug#0001443: format_snmp_string can return a number with a leading space 
 -bug#0001446: Wrong dates override in CSV export 
 -bug#0001456: oid_uptime is not parsed correctly 
--bug#0001460: Skiping input parameters in data_query_field_list() may lead to SQL errors
+-bug#0001460: Skipping input parameters in data_query_field_list() may lead to SQL errors
 -bug#0001464: Typo in install/index.php 
 -bug#0001467: Customisable oid index parse regexp for weird MIBs
 -bug#0001468: Tree is not expanded correctly

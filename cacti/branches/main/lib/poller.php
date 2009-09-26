@@ -195,10 +195,25 @@ function update_reindex_cache($host_id, $data_query_id) {
 			}
 
 			break;
-		case DATA_QUERY_AUTOINDEX_INDEX_NUM_CHANGE:
+		case DATA_QUERY_AUTOINDEX_INDEX_COUNT_CHANGE:
 			/* this method requires that some command/oid can be used to determine the
 			 * current number of indexes in the data query */
 			$assert_value = sizeof(db_fetch_assoc("select snmp_index from host_snmp_cache where host_id=$host_id and snmp_query_id=$data_query_id group by snmp_index"));
+
+			if ($data_query_type == DATA_INPUT_TYPE_SNMP_QUERY) {
+				if (isset($data_query_xml["oid_num_indexes"])) {
+					$recache_stack[] = "($host_id, $data_query_id, 0, '=', '$assert_value', '" . $data_query_xml["oid_num_indexes"] . "', '1')";
+				}
+			}else if ($data_query_type == DATA_INPUT_TYPE_SCRIPT_QUERY) {
+				if (isset($data_query_xml["arg_num_indexes"])) {
+					$recache_stack[] = "($host_id, $data_query_id, 1, '=', '$assert_value', '" . get_script_query_path((isset($data_query_xml["arg_prepend"]) ? $data_query_xml["arg_prepend"] . " ": "") . $data_query_xml["arg_num_indexes"], $data_query_xml["script_path"], $host_id) . "', '1')";
+				}
+			}
+
+			break;
+		case DATA_QUERY_AUTOINDEX_VALUE_CHANGE:
+			/* this method uses the value of the index OID to determine if a re-index is required */
+			$assert_value = db_fetch_cell("select assert_value from poller_reindex where host_id=$host_id and data_query_id=$data_query_id");
 
 			if ($data_query_type == DATA_INPUT_TYPE_SNMP_QUERY) {
 				if (isset($data_query_xml["oid_num_indexes"])) {

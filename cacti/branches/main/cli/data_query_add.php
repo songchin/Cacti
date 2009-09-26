@@ -82,10 +82,13 @@ if (sizeof($parms)) {
 						$reindex_method = DATA_QUERY_AUTOINDEX_BACKWARDS_UPTIME;
 						break;
 					case "index":
-						$reindex_method = DATA_QUERY_AUTOINDEX_INDEX_NUM_CHANGE;
+						$reindex_method = DATA_QUERY_AUTOINDEX_INDEX_COUNT_CHANGE;
 						break;
 					case "fields":
 						$reindex_method = DATA_QUERY_AUTOINDEX_FIELD_VERIFICATION;
+						break;
+					case "value":
+						$reindex_method = DATA_QUERY_AUTOINDEX_VALUE_CHANGE;
 						break;
 					default:
 						echo __("ERROR: You must supply a valid reindex method for all devices!") . "\n";
@@ -182,9 +185,10 @@ function display_help($me) {
 	echo "   --device-id      " . __("the numerical ID of the device") . "\n";
 	echo "   --data-query-id  " . __("the numerical ID of the data_query to be added") . "\n";
 	echo "   --reindex-method " . __("the reindex method to be used for that data query") . "\n";
-	echo "          0|None    " . __("no reindexing") . "\n";
-	echo "          1|Uptime  " . __("Uptime goes Backwards") . "\n";
-	echo "          2|Index   " . __("Index Count Changed") . "\n";
-	echo "          3|Fields  " . __("Verify all Fields") . "\n";
+	echo "          0|None  " . __("no reindexing") . "\n";
+	echo "          1|Uptime" . __("Uptime goes Backwards") . "\n";
+	echo "          2|index " . __("Index Count Changed") . "\n";
+	echo "          3|Fields" . __("Verify all Fields") . "\n";
+	echo "          4|Value " . __("Re-Index Value Changed") . "\n";
 	echo __("If the data query was already associated, it will be reindexed.") . "\n\n";
 }
