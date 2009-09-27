@@ -223,7 +223,7 @@ function query_snmp_host($host_id, $snmp_query_id) {
 				debug_log_insert("data_query", __("Inserting index data for field '%s' [value='%s']", $field_name, $snmp_indexes[$i]["value"]));
 				$values[] = array( "value" => $snmp_indexes[$i]["value"], "index" => $snmp_indexes[$i]["value"], "oid" => $oid);
 			}
-		}else if (($field_array["method"] == "get") && ($field_array["direction"] == "input")) {
+		}elseif (($field_array["method"] == "get") && ($field_array["direction"] == "input")) {
 			debug_log_insert("data_query", __("Located input field '%s' [get]", $field_name));
 
 			$rewritten_indexes = array();
@@ -237,7 +237,7 @@ function query_snmp_host($host_id, $snmp_query_id) {
 					if (isset($rewritten_indexes[$snmp_indexes[$i]["value"]])) {
 						$oid_suffix = $rewritten_indexes[$snmp_indexes[$i]["value"]];
 					}else{
-						debug_log_insert("data_query", "Could not load rewritten index value for original index '" . $snmp_indexes[$i]["value"] . "'");
+						debug_log_insert("data_query", "Cannot load rewritten index value for original index='" . $snmp_indexes[$i]["value"] . "'");
 						continue;
 					}
 					$oid .= "." . $oid_suffix;
@@ -263,8 +263,15 @@ function query_snmp_host($host_id, $snmp_query_id) {
 
 				$values[] = array( "value" => $value, "index" => $snmp_indexes[$i]["value"], "oid" => $oid);
 			}
-		} else if (($field_array["method"] == "walk") && ($field_array["direction"] == "input")) {
+		} elseif (($field_array["method"] == "walk") && ($field_array["direction"] == "input")) {
 			debug_log_insert("data_query", __("Located input field '%s' [walk]", $field_name));
+			if (isset($field_array["rewrite_index"])) {
+				debug_log_insert("data_query", __("ERROR: rewrite_index is not allowed for method=walk"));
+				continue;
+			} elseif (isset($field_array["oid_suffix"])) {
+				debug_log_insert("data_query", __("ERROR: oid_suffix is not allowed for method=walk"));
+				continue;
+			}
 
 			$snmp_data = array();
 			$snmp_data = cacti_snmp_walk($host["hostname"], $host["snmp_community"], $field_array["oid"],
@@ -300,7 +307,7 @@ function query_snmp_host($host_id, $snmp_query_id) {
 
 					$values[] = array( "value" => $snmp_data[$i]["value"], "index" => $snmp_index, "oid" => $oid);
 				}
-			}elseif (substr($field_array["source"], 0, 11) == "OID/REGEXP:") {
+			} elseif (substr($field_array["source"], 0, 11) == "OID/REGEXP:") {
 				for ($i=0; $i<sizeof($snmp_data); $i++) {
 					$value = ereg_replace(str_replace("OID/REGEXP:", "", $field_array["source"]), "\\1", $snmp_data[$i]["oid"]);
 
