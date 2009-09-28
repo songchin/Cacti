@@ -173,22 +173,22 @@ function upgrade_to_0_8_8() {
 	 * make sure to use current global default settings in order not to change
 	 * current behaviour when creating new hosts from those templates
 	 */
-	$snmp_community	= read_config_option("snmp_community");
-	$snmp_version = read_config_option("snmp_ver");
-	$snmp_username = read_config_option("snmp_username");
-	$snmp_password = read_config_option("snmp_password");
-	$snmp_auth_protocol = read_config_option("snmp_auth_protocol");
-	$snmp_priv_passphrase = read_config_option("snmp_priv_passphrase");
-	$snmp_priv_protocol = read_config_option("snmp_priv_protocol");
-	$snmp_context = read_config_option("snmp_context");
-	$snmp_port = read_config_option("snmp_port");
-	$snmp_timeout = read_config_option("snmp_timeout");
-	$availability_method = read_config_option("availability_method");
-	$ping_method = read_config_option("ping_method");
-	$ping_port = read_config_option("ping_port");
-	$ping_timeout = read_config_option("ping_timeout");
-	$ping_retries = read_config_option("ping_retries");
-	$max_oids = read_config_option("max_get_size");
+	$snmp_community	= read_config_option("snmp_community", true);
+	$snmp_version = read_config_option("snmp_ver", true);
+	$snmp_username = read_config_option("snmp_username", true);
+	$snmp_password = read_config_option("snmp_password", true);
+	$snmp_auth_protocol = read_config_option("snmp_auth_protocol", true);
+	$snmp_priv_passphrase = read_config_option("snmp_priv_passphrase", true);
+	$snmp_priv_protocol = read_config_option("snmp_priv_protocol", true);
+	$snmp_context = read_config_option("snmp_context", true);
+	$snmp_port = read_config_option("snmp_port", true);
+	$snmp_timeout = read_config_option("snmp_timeout", true);
+	$availability_method = read_config_option("availability_method", true);
+	$ping_method = read_config_option("ping_method", true);
+	$ping_port = read_config_option("ping_port", true);
+	$ping_timeout = read_config_option("ping_timeout", true);
+	$ping_retries = read_config_option("ping_retries", true);
+	$max_oids = read_config_option("max_get_size", true);
 
 	db_install_execute("0.8.8", "UPDATE `host_template` " .
 			"SET  `snmp_community` = '" . $snmp_community . "' ," .
@@ -251,8 +251,8 @@ function upgrade_to_0_8_8() {
 		  KEY `hook` (`hook`),
 		  KEY `status` (`status`)
 		) TYPE=MyISAM");
-	db_install_execute("0.8.8", "INSERT INTO `plugin_hooks` VALUES (1, 'internal', 'config_arrays', '', 'plugin_config_arrays', 1");
-	db_install_execute("0.8.8", "INSERT INTO `plugin_hooks` VALUES (2, 'internal', 'draw_navigation_text', '', 'plugin_draw_navigation_text', 1");
+	db_install_execute("0.8.8", "INSERT INTO `plugin_hooks` VALUES (1, 'internal', 'config_arrays', '', 'plugin_config_arrays', 1)");
+	db_install_execute("0.8.8", "INSERT INTO `plugin_hooks` VALUES (2, 'internal', 'draw_navigation_text', '', 'plugin_draw_navigation_text', 1)");
 
 	db_install_execute("0.8.8","
 		CREATE TABLE `plugin_realms` (
@@ -263,7 +263,7 @@ function upgrade_to_0_8_8() {
 		  PRIMARY KEY  (`id`),
 		  KEY `plugin` (`plugin`)
 		) TYPE=MyISAM");
-	db_install_execute("0.8.8", "INSERT INTO `plugin_realms` VALUES (1, 'internal', 'plugins.php', 'Plugin Management'");
+	db_install_execute("0.8.8", "INSERT INTO `plugin_realms` VALUES (1, 'internal', 'plugins.php', 'Plugin Management')");
 
 	/* wrong lower limit for generic OID graph template */
 	db_install_execute("0.8.8", "UPDATE graph_templates_graph SET lower_limit='0', vertical_label='' WHERE id=47");
