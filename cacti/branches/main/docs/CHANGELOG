@@ -4,6 +4,7 @@ Cacti CHANGELOG
 -bug#0001105: add_graphs.php --list-snmp-values for all available host snmp-fields
 -bug#0001125: XML parse error on template import with degree symbol 
 -bug#0001147: Cactid doesn't trim white space from data template OIDs
+-bug#0001159: Template names are confusing/archaic.
 -bug#0001160: In Suggested Values editor, name and field are reversed. Include column headers
 -bug#0001182: Subdirectories are not secure and allow browsing
 -bug#0001306: Empty COMMENT + <HR> gives you a blank legend line (was: Add Blank Line to Graph via Pull down menu)

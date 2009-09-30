@@ -269,15 +269,48 @@ function upgrade_to_0_8_8() {
 	db_install_execute("0.8.8", "UPDATE graph_templates_graph SET lower_limit='0', vertical_label='' WHERE id=47");
 
 	/* rename templates */
-	/* graph templates, ucd/net */
-	db_install_execute("0.8.8", "UPDATE graph_templates SET name='SNMP - Available Disk Space' WHERE name='ucd/net Available Disk Space'");
-	db_install_execute("0.8.8", "UPDATE graph_templates SET name='SNMP - CPU Usage' WHERE name='ucd/net CPU Usage'");
-	db_install_execute("0.8.8", "UPDATE graph_templates SET name='SNMP - Available Disk Space' WHERE name='ucd/net Available Disk Space'");
-	db_install_execute("0.8.8", "UPDATE graph_templates SET name='SNMP - Available Disk Space' WHERE name='ucd/net Available Disk Space'");
-	/* graph templates, HOST MIB */
-	/* data templates, ucd/net */
-	/* data templates, HOST MIB */
-	/* host templates */
+	/* graph templates */
+	db_install_execute("0.8.8", "UPDATE graph_templates SET name='UCD-SNMP - diskTable - Hard Drive Space' where name='ucd/net - Available Disk Space'");
+	db_install_execute("0.8.8", "UPDATE graph_templates SET name='UCD-SNMP - systemStats - CPU Usage' where name='ucd/net - CPU Usage'");
+	db_install_execute("0.8.8", "UPDATE graph_templates SET name='Linux Localhost - ICMP - Ping Host' where name='Unix - Ping Latency'");
+	db_install_execute("0.8.8", "UPDATE graph_templates SET name='Linux Localhost - ps ax - Processes' where name='Unix - Processes'");
+	db_install_execute("0.8.8", "UPDATE graph_templates SET name='Linux Localhost - Uptime - Load Average' where name='Unix - Load Average'");
+	db_install_execute("0.8.8", "UPDATE graph_templates SET name='Linux Localhost - who - Logged in Users' where name='Unix - Logged in Users'");
+	db_install_execute("0.8.8", "UPDATE graph_templates SET name='UCD-SNMP - loadTable - Load Average' where name='ucd/net - Load Average'");
+	db_install_execute("0.8.8", "UPDATE graph_templates SET name='Linux Localhost - meminfo - Memory' where name='Linux - Memory Usage'");
+	db_install_execute("0.8.8", "UPDATE graph_templates SET name='UCD-SNMP - memory - Memory Usage' where name='ucd/net - Memory Usage'");
+	db_install_execute("0.8.8", "UPDATE graph_templates SET name='Linux Localhost - df - Hard Drive Space' where name='Unix - Available Disk Space'");
+	db_install_execute("0.8.8", "UPDATE graph_templates SET name='HOST-RESSOURCES - hrStorageTable - Hard Drive Space' where name='Host MIB - Available Disk Space'");
+	db_install_execute("0.8.8", "UPDATE graph_templates SET name='HOST-RESSOURCES - hrProcessorTable - CPU Utilization' where name='Host MIB - CPU Utilization'");
+	db_install_execute("0.8.8", "UPDATE graph_templates SET name='HOST-RESSOURCES - hrSystemNumUsers - Logged in Users' where name='Host MIB - Logged in Users'");
+	db_install_execute("0.8.8", "UPDATE graph_templates SET name='HOST-RESSOURCES - hrSystemProcesses - Processes' where name='Host MIB - Processes'");
+	/* data templates */
+	db_install_execute("0.8.8", "UPDATE data_template SET name='UCD-SNMP - diskTable - Hard Drive Space'  WHERE name='ucd/net - Hard Drive Space'");
+	db_install_execute("0.8.8", "UPDATE data_template SET name='UCD-SNMP - systemStats - CPU Usage: System'  WHERE name='ucd/net - CPU Usage - System'");
+	db_install_execute("0.8.8", "UPDATE data_template SET name='UCD-SNMP - systemStats - CPU Usage: User'  WHERE name='ucd/net - CPU Usage - User'");
+	db_install_execute("0.8.8", "UPDATE data_template SET name='UCD-SNMP - systemStats - CPU Usage: Nice'  WHERE name='ucd/net - CPU Usage - Nice'");
+	db_install_execute("0.8.8", "UPDATE data_template SET name='Linux Localhost - Uptime - Load Average'  WHERE name='Unix - Load Average'");
+	db_install_execute("0.8.8", "UPDATE data_template SET name='Linux Localhost - meminfo - Memory: Free'  WHERE name='Linux - Memory - Free'");
+	db_install_execute("0.8.8", "UPDATE data_template SET name='Linux Localhost - meminfo - Memory: Free Swap'  WHERE name='Linux - Memory - Free Swap'");
+	db_install_execute("0.8.8", "UPDATE data_template SET name='Linux Localhost - ps ax - Processes'  WHERE name='Unix - Processes'");
+	db_install_execute("0.8.8", "UPDATE data_template SET name='Linux Localhost - who - Logged in Users'  WHERE name='Unix - Logged in Users'");
+	db_install_execute("0.8.8", "UPDATE data_template SET name='Linux Localhost - ICMP - Ping Host'  WHERE name='Unix - Ping Host'");
+	db_install_execute("0.8.8", "UPDATE data_template SET name='UCD-SNMP - loadTable - Load Average: 1 Minute'  WHERE name='ucd/net - Load Average - 1 Minute'");
+	db_install_execute("0.8.8", "UPDATE data_template SET name='UCD-SNMP - loadTable - Load Average: 5 Minutes'  WHERE name='ucd/net - Load Average - 5 Minute'");
+	db_install_execute("0.8.8", "UPDATE data_template SET name='UCD-SNMP - loadTable - Load Average: 15 Minutes'  WHERE name='ucd/net - Load Average - 15 Minute'");
+	db_install_execute("0.8.8", "UPDATE data_template SET name='UCD-SNMP - memory - Buffers'  WHERE name='ucd/net - Memory - Buffers'");
+	db_install_execute("0.8.8", "UPDATE data_template SET name='UCD-SNMP - memory - Free'  WHERE name='ucd/net - Memory - Free'");
+	db_install_execute("0.8.8", "UPDATE data_template SET name='Linux Localhost - df - Hard Drive Space'  WHERE name='Unix - Hard Drive Space'");
+	db_install_execute("0.8.8", "UPDATE data_template SET name='HOST-RESSOURCES - hrStorageTable - Hard Drive Space'  WHERE name='Host MIB - Hard Drive Space'");
+	db_install_execute("0.8.8", "UPDATE data_template SET name='HOST-RESSOURCES - hrProcessorTable - CPU Utilization'  WHERE name='Host MIB - CPU Utilization'");
+	db_install_execute("0.8.8", "UPDATE data_template SET name='HOST-RESSOURCES - hrSystemProcesses - Processes'  WHERE name='Host MIB - Processes'");
+	db_install_execute("0.8.8", "UPDATE data_template SET name='HOST-RESSOURCES - hrSystemNumUsers - Logged in Users'  WHERE name='Host MIB - Logged in Users'");
+	db_install_execute("0.8.8", "UPDATE data_template SET name='UCD-SNMP - memory - Cache'  WHERE name='ucd/net - Memory - Cache'");
+	/* data queries */
+	db_install_execute("0.8.8", "UPDATE snmp_query SET name='UCD-SNMP - diskTable - Hard Drive Space' where name='ucd/net -  Get Monitored Partitions'");
+	db_install_execute("0.8.8", "UPDATE snmp_query SET name='Linux Localhost - df - Hard Drive Space' where name='Unix - Get Mounted Partitions'");
+	db_install_execute("0.8.8", "UPDATE snmp_query SET name='HOST-RESSOURCES - hrStorageTable - Hard Drive Space' where name='SNMP - Get Mounted Partitions'");
+	db_install_execute("0.8.8", "UPDATE snmp_query SET name='HOST-RESSOURCES - hrProcessorTable - CPU Utilization' where name='SNMP - Get Processor Information'");
 
 	/* enable lossless reindexing in Cacti */
 	db_install_execute("0.8.8", "ALTER TABLE host_snmp_cache ADD COLUMN present tinyint NOT NULL DEFAULT '1' AFTER `oid`, ADD INDEX present USING BTREE (present)");
@@ -294,8 +327,20 @@ function upgrade_to_0_8_8() {
 
 
 	/* Add SNMPv3 Context to SNMP Input Methods */
-	db_install_execute("0.8.8", "INSERT INTO data_input_fields VALUES (DEFAULT, '8e42450d52c46ebe76a57d7e51321d36',1,'SNMP Context (v3)','snmp_context','in','',0,'snmp_context','','')");
-	db_install_execute("0.8.8", "INSERT INTO data_input_fields VALUES (DEFAULT, 'b5ce68ca4e9e36d221459758ede01484',2,'SNMP Context (v3)','snmp_context','in','',0,'snmp_context','','')");
+	/* first we must see if the user was smart enough to add it themselves */
+	$context1 = db_fetch_row("SELECT id FROM data_input_fields WHERE data_input_id=1 AND data_name='snmp_context' AND input_output='in' AND type_code='snmp_context'");
+	if ($context1 > 0) {
+		# nop
+	} else {
+		db_install_execute("0.8.8", "INSERT INTO data_input_fields VALUES (DEFAULT, '8e42450d52c46ebe76a57d7e51321d36',1,'SNMP Context (v3)','snmp_context','in','',0,'snmp_context','','')");
+	}
+	$context2 = db_fetch_row("SELECT id FROM data_input_fields WHERE data_input_id=2 AND data_name='snmp_context' AND input_output='in' AND type_code='snmp_context'");
+	if ($context2 > 0) {
+		# nop
+	} else {
+		db_install_execute("0.8.8", "INSERT INTO data_input_fields VALUES (DEFAULT, 'b5ce68ca4e9e36d221459758ede01484',2,'SNMP Context (v3)','snmp_context','in','',0,'snmp_context','','')");
+	}
+
 	db_install_execute("0.8.8", "UPDATE data_input_fields SET name='SNMP Authentication Protocol (v3)' WHERE name='SNMP Authenticaion Protocol (v3)'");
 
 }
