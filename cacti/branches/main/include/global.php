@@ -133,22 +133,38 @@ define('CACTI_WIKI_URL', "http://docs.cacti.net/reference:088:");
 /* include base modules */
 include(CACTI_BASE_PATH . "/lib/adodb/adodb.inc.php");
 include(CACTI_BASE_PATH . "/lib/database.php");
+# required for early_environment_checks()
+include_once(CACTI_BASE_PATH . "/lib/functions.php");
+
+/* check that the absolute necessary mysql PHP module is loaded  (install checks the rest), and report back if not */
+/* also checks memory_limit - the ADODB call below will hit low memory_limits */
+early_environment_checks();
 
 /* connect to the database server */
 db_connect_real($database_hostname, $database_username, $database_password, $database_default, $database_type, $database_port);
+
+/* Check that the database has tables in it - can't use db_fetch_assoc because that uses read_config_option! */
+$result = mysql_query("show tables from $database_default");
+if(mysql_num_rows($result) == 0) {
+	$database_empty = true;
+} else {
+	$database_empty = false;
+}
 
 /* initilize php session */
 session_name($cacti_session_name);
 session_start();
 
 /* include additional modules */
-include_once(CACTI_BASE_PATH . "/lib/functions.php");
 include_once(CACTI_BASE_PATH . "/lib/plugins.php");
 include_once(CACTI_BASE_PATH . "/include/global_constants.php");
 include_once(CACTI_BASE_PATH . "/include/global_language.php");
 include_once(CACTI_BASE_PATH . "/include/global_arrays.php");
 include_once(CACTI_BASE_PATH . "/include/global_settings.php");
-include_once(CACTI_BASE_PATH . "/include/global_form.php");
+if(!$database_empty) {
+	// avoid running read_config_option against an empty DB - this isn't needed during the install process anyway
+	include_once(CACTI_BASE_PATH . "/include/global_form.php");
+}
 include_once(CACTI_BASE_PATH . "/lib/html.php");
 include_once(CACTI_BASE_PATH . "/lib/html_form.php");
 include_once(CACTI_BASE_PATH . "/lib/html_utility.php");
