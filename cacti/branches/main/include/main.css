@@ -608,6 +608,10 @@ a:hover {
 	font-size: 10px;
 }
 
+.rowSelected td {
+	padding: 0px 3px 0px 3px;
+}
+
 /* text styles */
 .textError {
 	font-size: 12px;
