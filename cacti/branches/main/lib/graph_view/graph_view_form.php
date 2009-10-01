@@ -89,7 +89,7 @@ function graph_view_filter_table($mode = "mode") {
 					<td class="nw50">
 						&nbsp;<?php print __("Host:");?>&nbsp;
 					</td>
-					<td style='white-space:nowrap;width:1px;'>
+					<td class='w1'>
 						<?php
 						if (isset($_REQUEST["host_id"])) {
 							$hostname = db_fetch_cell("SELECT description as name FROM host WHERE id=".$_REQUEST["host_id"]." ORDER BY description,hostname");
@@ -100,10 +100,10 @@ function graph_view_filter_table($mode = "mode") {
 						<input class="ac_field" type="text" id="host" size="30" value="<?php print $hostname; ?>">
 						<input type="hidden" id="host_id">
 					</td>
-					<td style='white-space:nowrap;width:1px;'>
+					<td class='w1'
 						&nbsp;<?php print __("Template:");?>&nbsp;
 					</td>
-					<td style='white-space:nowrap;width:1px;'>
+					<td class='w1'>
 						<select name="graph_template_id" onChange="applyGraphFilter(document.form_graph_view)">
 							<option value="0"<?php if (get_request_var_request("graph_template_id") == "0") {?> selected<?php }?>><?php print __("Any");?></option><?php
 							if (read_config_option("auth_method") != 0) {
@@ -138,10 +138,10 @@ function graph_view_filter_table($mode = "mode") {
 					<td class="nw50">
 						&nbsp;<?php print __("Search:");?>&nbsp;
 					</td>
-					<td style='white-space:nowrap;width:1px;'>
+					<td class='w1'>
 						<input type='text' name='filter' size='40' onChange='applyGraphFilter(document.form_graph_view)' value='<?php print $_REQUEST["filter"];?>'>
 					</td>
-					<td style='white-space:nowrap;width:1px;'>
+					<td class='w1'>
 						&nbsp;<input type='button' Value='<?php print __("Go");?>' name='go' onClick='applyGraphFilter(document.form_graph_view)'>
 						<input type='button' Value='<?php print __("Clear");?>' name='clear_x' onClick='clearGraphFilter(document.form_graph_view)'>
 					</td>
@@ -330,7 +330,7 @@ function get_graph_list_content() {
 			<input type='hidden' name='graph_remove' value=''>
 			<table width="100%" cellpadding="0" cellspacing="0">
 				<tr>
-					<td style='white-space:nowrap;width:1px;'>
+					<td class='w1'>
 						&nbsp;Host:&nbsp;
 					</td>
 					<td class="w1">
@@ -344,10 +344,10 @@ function get_graph_list_content() {
 						<input class="ac_field" type="text" id="host" size="30" value="<?php print $hostname; ?>">
 						<input type="hidden" id="host_id">
 					</td>
-					<td style='white-space:nowrap;width:1px;'>
+					<td class='w1'>
 						&nbsp;Template:&nbsp;
 					</td>
-					<td class="w1">
+					<td class='w1'>
 						<select name="graph_template_id" onChange="applyGraphListFilterChange(document.form_graph_list)">
 							<option value="0"<?php print get_request_var_request("filter");?><?php if (get_request_var_request("host_id") == "0") {?> selected<?php }?>><?php print __("Any");?></option>
 							<?php
@@ -394,7 +394,7 @@ function get_graph_list_content() {
 							?>
 						</select>
 					</td>
-					<td style='white-space:nowrap;width:1px;'>
+					<td class='w1'>
 						&nbsp;<?php print __("Search:");?>&nbsp;
 					</td>
 					<td class="w1">
@@ -1113,21 +1113,21 @@ function graph_view_timespan_selector($mode = "tree") {
 							?>
 						</select>
 					</td>
-					<td style='white-space:nowrap;width:30px;'>
+					<td class='nw30'>
 						&nbsp;<?php print __("From:");?>&nbsp;
 					</td>
-					<td style='white-space:nowrap;width:140px;'>
+					<td class='nw140'>
 						<input type='text' name='date1' id='date1' title='<?php print __("Graph Begin Timestamp");?>' size='16' value='<?php print (isset($_SESSION["sess_current_date1"]) ? $_SESSION["sess_current_date1"] : "");?>'>
 						&nbsp;<input type='image' class='img_filter' src='images/calendar.gif' alt='<?php print __("Start");?>' title='<?php print __("Start Date Selector");?>' onclick='return showCalendar("date1");'>&nbsp;
 					</td>
-					<td style='white-space:nowrap;width:20px;'>
+					<td class='nw30'>
 						&nbsp;<?php print __("To:");?>&nbsp;
 					</td>
-					<td style='white-space:nowrap;width:140px;'>
+					<td class='nw140'>
 						<input type='text' name='date2' id='date2' title='<?php print __("Graph End Timestamp");?>' size='16' value='<?php print (isset($_SESSION["sess_current_date2"]) ? $_SESSION["sess_current_date2"] : "");?>'>
 						&nbsp;<input type='image' class='img_filter' src='images/calendar.gif' alt='<?php print __("End");?>' title='<?php print __("End Date Selector");?>' onclick='return showCalendar("date2");'>
 					</td>
-					<td style='white-space:nowrap;width:120px;'>
+					<td class='nw140'>
 						&nbsp;&nbsp;<img onMouseOver='this.style.cursor="pointer"' onClick='return timeShift(document.form_timespan_selector, "left")' class='img_filter' name='move_left' src='images/move_left.gif' alt='<?php print __("Left");?>' title='<?php print __("Shift Left");?>'>
 						<select name='predefined_timeshift' title='<?php print __("Define Shifting Interval");?>'><?php
 							$start_val = 1;
@@ -1216,7 +1216,7 @@ function graph_view_search_filter() {
 						<td>
 							<input type="checkbox" name="thumbnails" id="thumbnails" onChange="applyFilter(document.form_graph_view);" <?php print ((isset($_REQUEST['thumbnails'])) && ($_REQUEST['thumbnails'] == "true") ? "checked":"");?>>
 						</td>
-						<td style='white-space:nowrap;' nowrap>
+						<td class='nw'>
 							&nbsp;<input type='button' value='<?php print __("Refresh");?>' name='refresh' onClick='applyFilter(document.form_graph_view)'>
 							<input type='button' value='<?php print __("Clear");?>' name='clear_x' onClick='clearFilter(document.form_graph_view)'>
 						</td>
