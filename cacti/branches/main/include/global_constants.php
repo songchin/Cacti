@@ -101,6 +101,10 @@ define("GRAPH_ITEM_TYPE_STACK",   8);
 define("GRAPH_ITEM_TYPE_GPRINT",  9);
 define("GRAPH_ITEM_TYPE_LEGEND", 10);
 
+define("IMAGE_TYPE_PNG", 1);
+define("IMAGE_TYPE_GIF", 2);
+define("IMAGE_TYPE_SVG", 3);
+
 define("POLLER_ACTION_SNMP", 0);
 define("POLLER_ACTION_SCRIPT", 1);
 define("POLLER_ACTION_SCRIPT_PHP", 2);

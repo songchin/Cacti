@@ -191,10 +191,11 @@ $graph_item_types = array(
 	GRAPH_ITEM_TYPE_LEGEND  => "LEGEND",
 	);
 
-$image_types = array(1 =>
-	"PNG",
-	"GIF",
-	"SVG");
+$image_types = array(
+	IMAGE_TYPE_PNG 	=> "PNG",
+	IMAGE_TYPE_GIF	=> "GIF",
+	IMAGE_TYPE_SVG	=> "SVG",
+	);
 
 $snmp_versions = array(0 =>
 	__("Not In Use"),

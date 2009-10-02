@@ -376,7 +376,7 @@ $struct_graph = array(
 		"friendly_name" => __("Image Format (--imgformat)"),
 		"method" => "drop_array",
 		"array" => $image_types,
-		"default" => "1",
+		"default" => IMAGE_TYPE_PNG,
 		"description" => __("The type of graph that is generated; PNG, GIF or SVG.  The selection of graph image type is very RRDtool dependent."),
 		),
 	"height" => array(
