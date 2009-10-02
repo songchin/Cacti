@@ -877,7 +877,7 @@ function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rr
 	}
 
 	/* Replace "|query_*|" in the graph command to replace e.g. vertical_label.  */
-	$graph_opts = rrd_substitute_host_query_data($graph_opts, $graph, $graph_item);
+	$graph_opts = rrd_substitute_host_query_data($graph_opts, $graph, NULL);
 
 	/* rrdtool 1.2.x, 1.3.x does not provide smooth lines, let's force it */
 	if (read_config_option("rrdtool_version") != "rrd-1.0.x") {
