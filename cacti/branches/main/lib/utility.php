@@ -199,7 +199,19 @@ function update_poller_cache($local_data_id, $commit = false) {
 			if (sizeof($outputs) > 0) {
 			foreach ($outputs as $output) {
 				if (isset($snmp_queries["fields"]{$output["snmp_field_name"]}["oid"])) {
-					$oid = $snmp_queries["fields"]{$output["snmp_field_name"]}["oid"] . "." . $data_source["snmp_index"];
+					$oid_suffix = $data_source["snmp_index"];
+					if(isset($snmp_queries["fields"]{$output["snmp_field_name"]}["rewrite_index"])){
+						$oid_suffix = data_query_rewrite_indexes($errmsg, $data_source["host_id"], $data_source["snmp_query_id"], $snmp_queries["fields"]{$output["snmp_field_name"]}["rewrite_index"], $oid_suffix);
+						if($oid_suffix == NULL){ // rewriting index failed for some reason
+							if(sizeof($errmsg)){
+								foreach($errmsg as $message){
+									cacti_log(__("Field '%s':", $output["snmp_field_name"]) . $message, false, "POLLER");
+								}
+							}
+							continue;
+						}
+					}
+					$oid = $snmp_queries["fields"]{$output["snmp_field_name"]}["oid"] . "." . $oid_suffix;
 
 					if (isset($snmp_queries["fields"]{$output["snmp_field_name"]}["oid_suffix"])) {
 						$oid .= "." . $snmp_queries["fields"]{$output["snmp_field_name"]}["oid_suffix"];

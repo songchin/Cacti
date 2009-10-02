@@ -216,6 +216,12 @@ function query_snmp_host($host_id, $snmp_query_id) {
 	rewrite_snmp_enum_value(NULL);
 
 	while (list($field_name, $field_array) = each($snmp_queries["fields"])) {
+		if ($field_array["direction"] == "input" && $field_array["method"] != "get" &&
+			(isset($field_array["rewrite_index"]) || isset($field_array["oid_suffix"]) )){
+			#$field_array["method"] = "get";
+			debug_log_insert("data_query", __("FIXME: wrong 'method' defined for '%s' while using 'rewrite_index' or 'oid_suffix'. Please change XML to use 'get' instead.", $field_name));
+		}
+
 		$values = array();
 
 		if ((!isset($field_array["oid"])) && ($field_array["source"] == "index")) {
@@ -228,8 +234,12 @@ function query_snmp_host($host_id, $snmp_query_id) {
 
 			$rewritten_indexes = array();
 			if (isset($field_array["rewrite_index"])) {
-				$rewritten_indexes = data_query_rewrite_indexes($host_id, $snmp_query_id, $field_array["rewrite_index"], $snmp_indexes, $fields_processed);
-			}
+				$rewritten_indexes = data_query_rewrite_indexes($errmsg, $host_id, $snmp_query_id, $field_array["rewrite_index"], $snmp_indexes, $fields_processed);
+				if(sizeof($errmsg)){
+					foreach($errmsg as $message){
+						debug_log_insert("data_query", "Field '$field_name'" . $message);
+					}
+				}			}
 
 			for ($i=0; $i<sizeof($snmp_indexes); $i++) {
 				$oid = $field_array["oid"];
@@ -237,7 +247,7 @@ function query_snmp_host($host_id, $snmp_query_id) {
 					if (isset($rewritten_indexes[$snmp_indexes[$i]["value"]])) {
 						$oid_suffix = $rewritten_indexes[$snmp_indexes[$i]["value"]];
 					}else{
-						debug_log_insert("data_query", "Cannot load rewritten index value for original index='" . $snmp_indexes[$i]["value"] . "'");
+						// we failed to build rewritten index. warnings are sent already, just skip this index silently
 						continue;
 					}
 					$oid .= "." . $oid_suffix;
@@ -265,13 +275,6 @@ function query_snmp_host($host_id, $snmp_query_id) {
 			}
 		} elseif (($field_array["method"] == "walk") && ($field_array["direction"] == "input")) {
 			debug_log_insert("data_query", __("Located input field '%s' [walk]", $field_name));
-			if (isset($field_array["rewrite_index"])) {
-				debug_log_insert("data_query", __("ERROR: rewrite_index is not allowed for method=walk"));
-				continue;
-			} elseif (isset($field_array["oid_suffix"])) {
-				debug_log_insert("data_query", __("ERROR: oid_suffix is not allowed for method=walk"));
-				continue;
-			}
 
 			$snmp_data = array();
 			$snmp_data = cacti_snmp_walk($host["hostname"], $host["snmp_community"], $field_array["oid"],
@@ -317,7 +320,7 @@ function query_snmp_host($host_id, $snmp_query_id) {
 						$snmp_index = $snmp_data[$i]["value"];
 					}
 
-					$oid = $field_array["oid"] .  "." . $value;
+					$oid = $field_array["oid"] . "." . $value;
 
 					debug_log_insert("data_query", __("Found item [%s='%s'] index: %s [from regexp oid parse]", $field_name, $value, $snmp_index));
 
@@ -766,14 +769,17 @@ function get_script_query_path($args, $script_path, $host_id) {
 }
 
 /* data_query_rewrite_indexes - returns array of rewritten indexes
+	@arg $errmsg 			- array that will contain warnings if any
 	@arg $host_id
 	@arg $snmp_query_id
 	@arg $rewrite_index 	- value of <rewrite_index> from data query XML
 	@arg $snmp_indexes 		- array of snmp indexes as it used in query_snmp_host() or single index
-	@arg $fields_processed 	- array of field names that are processed already in query_snmp_host(),
-							  refusing non-processed fields to be used as index rewrite source
-	@returns 				- (array) of original snmp indexed associated with rewritten ones */
-function data_query_rewrite_indexes($host_id, $snmp_query_id, $rewrite_index, $snmp_indexes, $fields_processed = FALSE) {
+	@arg $fields_processed  - array of field names that are already processed in query_snmp_host(),
+							  refusing non-processed (e.g. stale) fields to be used as index rewrite source
+	@returns 				- (array) of original snmp indexes associated with rewritten ones
+*/
+function data_query_rewrite_indexes(&$errmsg, $host_id, $snmp_query_id, $rewrite_index, $snmp_indexes, $fields_processed = FALSE) {
+	$errmsg = array();
 	$oid_items = explode(".", $rewrite_index);
 	$chain_indexes = array();
 
@@ -783,7 +789,7 @@ function data_query_rewrite_indexes($host_id, $snmp_query_id, $rewrite_index, $s
 			if (preg_match("/^\|query_([^|]+)\|$/", $item, $matches)) {
 				$iv = mysql_escape_string($matches[1]);
 				if (is_array($fields_processed) && !in_array($iv, $fields_processed)) {
-					debug_log_insert("data_query", __("Field '%s' has not been processed yet, cannot be used as index source", $iv));
+					$errmsg[] = __("rewrite_index='%s': '%s' is not processed yet, cannot use it as index source", $rewrite_index, $iv);
 					continue;
 				}
 
@@ -803,39 +809,40 @@ function data_query_rewrite_indexes($host_id, $snmp_query_id, $rewrite_index, $s
 	}
 
 	$out = array();
+	/* do we work on an array of snmp_indexes or on a single index only? */
 	$numeric_output = FALSE;
 	if (!is_array($snmp_indexes)) {
 		$snmp_indexes = array(array("value" => $snmp_indexes));
 		$numeric_output = TRUE;
 	}
 
-	for ($i=0; $i<sizeof($snmp_indexes); $i++) {
-		$num_index = $snmp_indexes[$i];
+	foreach ($snmp_indexes as $i => $num_index) {
 		if(is_array($num_index)){
 			$num_index = $num_index["value"];
 		}
 
 		$index = $rewrite_index;
 		foreach ($chain_indexes as $key => $values) {
-			if (isset($values[$snmp_indexes[$i]["value"]])) {
+			if (isset($values[$snmp_indexes[$i]["value"]]) && is_numeric($values[$snmp_indexes[$i]["value"]])) {
 				$index = str_replace("|query_$key|", trim($values[$snmp_indexes[$i]["value"]]), $index);
 			} else {
-				debug_log_insert("data_query", __("Cannot load value of '%s' index %s as index for '%s'", $key, $snmp_indexes[$i]["value"], $field_name));
+				$errmsg[] = "@'" . $snmp_indexes[$i]["value"] . "': " . __("cannot load value of '%s'", $key);
 			}
 		}
 
 		$index = str_replace("|index|", trim($snmp_indexes[$i]["value"]), $index);
 		if (!preg_match("/^[0-9.]*$/", $index)) {
-			debug_log_insert("data_query", __("Some parts of rewrite_index field can not be parsed: ") . '$index');
+			$errmsg[] = "@'" . $snmp_indexes[$i]["value"] ."': " . __("some portions of rewrite_index field were not parsed: '%s'", $index);
 			continue;
-		}
-		if ($numeric_output) {
-			return $index;
 		}
 		$out[$snmp_indexes[$i]["value"]] = $index;
 	}
 
-	return $out;
+	if($numeric_output){
+		return NULL;
+	} else {
+		return $out;
+	}
 }
 
 /* rewrite_snmp_enum_value - returns rewritten $value based on rewrite map
@@ -862,11 +869,11 @@ function rewrite_snmp_enum_value($field_name, $value=NULL, $map=NULL) {
 		foreach ($map as $src => $dst) {
 			if (preg_match('/^REGEXP(NC)?:(.*)$/', $src, $matches)) {
 				if($matches[1] == "NC")
-					$src = '/' . str_replace('/', '\/', $matches[2]) .  '/i';
+					$src = '/' . str_replace('/', '\/', $matches[2]) . '/i';
 				else
-					$src = '/' . str_replace('/', '\/', $matches[1]) .  '/';
+					$src = '/' . str_replace('/', '\/', $matches[1]) . '/';
 			} else {
-				$src = '/^' . str_replace('/^', '\/', $src) .  '$/';
+				$src = '/^' . str_replace('/^', '\/', $src) . '$/';
 			}
 			$mapcache[$field_name][$src] = $dst;
 		}
