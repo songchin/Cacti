@@ -87,7 +87,7 @@ function graph_view_filter_table($mode = "mode") {
 			<table border="0" cellpadding="0" cellspacing="0">
 				<tr class="rowGraphFilter noprint">
 					<td class="nw50">
-						&nbsp;<?php print __("Host:");?>&nbsp;
+						&nbsp;<?php print __("Device:");?>&nbsp;
 					</td>
 					<td class='w1'>
 						<?php
@@ -100,7 +100,7 @@ function graph_view_filter_table($mode = "mode") {
 						<input class="ac_field" type="text" id="host" size="30" value="<?php print $hostname; ?>">
 						<input type="hidden" id="host_id">
 					</td>
-					<td class='w1'
+					<td class='w1'>
 						&nbsp;<?php print __("Template:");?>&nbsp;
 					</td>
 					<td class='w1'>
@@ -155,6 +155,8 @@ function graph_view_filter_table($mode = "mode") {
 }
 
 function get_graph_list_content() {
+	global $graphs_per_page;
+
 	/* Make sure nothing is cached */
 	header("Cache-Control: must-revalidate");
 	header("Cache-Control: post-check=0, pre-check=0", false);
@@ -331,7 +333,7 @@ function get_graph_list_content() {
 			<table width="100%" cellpadding="0" cellspacing="0">
 				<tr>
 					<td class='w1'>
-						&nbsp;Host:&nbsp;
+						&nbsp;<?php print __("Device:");?>&nbsp;
 					</td>
 					<td class="w1">
 						<?php
@@ -345,7 +347,7 @@ function get_graph_list_content() {
 						<input type="hidden" id="host_id">
 					</td>
 					<td class='w1'>
-						&nbsp;Template:&nbsp;
+						&nbsp;<?php print __("Template:");?>&nbsp;
 					</td>
 					<td class='w1'>
 						<select name="graph_template_id" onChange="applyGraphListFilterChange(document.form_graph_list)">
@@ -695,7 +697,8 @@ function get_graph_preview_content () {
 
 	$graphs = db_fetch_assoc("SELECT
 		graph_templates_graph.local_graph_id,
-		graph_templates_graph.title_cache
+		graph_templates_graph.title_cache,
+		graph_templates_graph.image_format_id
 		$sql_base
 		GROUP BY graph_templates_graph.local_graph_id
 		ORDER BY graph_templates_graph.title_cache

@@ -106,7 +106,7 @@ case 'tree':
 	}
 
 	?>
-	<script type="text/javascript" src="<?php echo URL_PATH; ?>/include/js/jstree/cactiTree.js"></script>
+	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/js/jstree/cactiTree.js"></script>
 	<?php
 
 	/* if cacti's builtin authentication is turned on then make sure to take

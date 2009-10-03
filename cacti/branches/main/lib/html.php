@@ -237,8 +237,32 @@ function html_graph_area(&$graph_array, $no_graphs_message = "", $extra_url_args
 					<table class='center' cellpadding='0'>
 						<tr>
 							<td class='center'>
-								<div style="min-height: <?php echo (1.6 * read_config_option("export_default_height")) . "px"?>;"><a href='graph.php?action=view&local_graph_id=<?php print $graph["local_graph_id"];?>&rra_id=all'><img class='graphimage' id='graph_<?php print $graph["local_graph_id"] ?>' src='<?php print htmlspecialchars("graph_image.php?local_graph_id=" . $graph["local_graph_id"] . "&rra_id=0" . (($extra_url_args == "") ? "" : "&$extra_url_args"));?>' border='0' alt='<?php print $graph["title_cache"];?>'></a></div>
-								<?php print (read_graph_config_option("show_graph_title") == "on" ? "<p style='font-size: 10;' align='center'><strong>" . $graph["title_cache"] . "</strong></p>" : "");?>
+								<?php
+								if ($graph["image_format_id"] == IMAGE_TYPE_PNG || $graph["image_format_id"] == IMAGE_TYPE_GIF) {
+									?>
+									<div style="min-height: <?php echo (1.6 * read_config_option("export_default_height")) . "px"?>;">
+									<a href='<?php print htmlspecialchars("graph.php?action=view&local_graph_id=" . $graph["local_graph_id"] . "&rra_id=all");?>'>
+										<img class='graphimage' id='graph_<?php print $graph["local_graph_id"] ?>'
+											src='<?php print htmlspecialchars("graph_image.php?local_graph_id=" . $graph["local_graph_id"] . "&rra_id=0" . (($extra_url_args == "") ? "" : "&$extra_url_args"));?>'
+											border='0' alt='<?php print $graph["title_cache"];?>'>
+									</a></div>
+									<?php
+								} elseif ($graph["image_format_id"] == IMAGE_TYPE_SVG) {
+									?>
+									<div style="min-height: <?php echo (1.6 * read_config_option("export_default_height")) . "px"?>;">
+									<a href='<?php print htmlspecialchars("graph.php?action=view&local_graph_id=" . $graph["local_graph_id"] . "&rra_id=all");?>'>
+										<object class='graphimage' id='graph_<?php print $graph["local_graph_id"] ?>'
+											type='svg+xml'
+											data='<?php print htmlspecialchars("graph_image.php?local_graph_id=" . $graph["local_graph_id"] . "&rra_id=0" . (($extra_url_args == "") ? "" : "&$extra_url_args"));?>'
+											border='0'>
+											Can't display SVG
+										</object>;
+									</a></div>
+									<?php
+									#print "<object class='graphimage' id='graph_" . $graph["local_graph_id"] . "' type='svg+xml' data='" . htmlspecialchars("graph_image.php?action=view&local_graph_id=" . $graph["local_graph_id"] . "&rra_id=" . $rra["id"]) . "' border='0'>Can't display SVG</object>";
+								}
+								print (read_graph_config_option("show_graph_title") == "on" ? "<p style='font-size: 10;' align='center'><strong>" . $graph["title_cache"] . "</strong></p>" : "");
+								?>
 							</td>
 							<td valign='top' style='align: left; padding: 3px;' class='noprint'>
 								<a href='<?php print htmlspecialchars("graph.php?action=zoom&local_graph_id=" . $graph["local_graph_id"] . "&rra_id=0&" . $extra_url_args);?>'><img src='images/graph_zoom.gif' alt='<?php print __("Zoom Graph");?>' title='<?php print __("Zoom Graph");?>' class='img_info'></a><br>
@@ -362,7 +386,30 @@ function html_graph_thumbnail_area(&$graph_array, $no_graphs_message = "", $extr
 					<tr>
 						<td class='center'>
 							<a href='<?php print htmlspecialchars("graph.php?action=view&rra_id=all&local_graph_id=" . $graph["local_graph_id"]);?>'><img class='graphimage' id='graph_<?php print $graph["local_graph_id"] ?>' src='<?php print htmlspecialchars("graph_image.php?local_graph_id=". $graph["local_graph_id"] . "&rra_id=0&graph_height=" . read_graph_config_option("default_height") . "&graph_width=" . read_graph_config_option("default_width") . "&graph_nolegend=true" . (($extra_url_args == "") ? "" : "&$extra_url_args"));?>' border='0' alt='<?php print $graph["title_cache"];?>'></a>
-							<?php print (read_graph_config_option("show_graph_title") == "on" ? "<p style='font-size: 10;' align='center'><strong>" . $graph["title_cache"] . "</strong></p>" : "");?>
+							<?php
+							if ($graph["image_format_id"] == IMAGE_TYPE_PNG || $graph["image_format_id"] == IMAGE_TYPE_GIF) {
+								?>
+								<a href='<?php print htmlspecialchars("graph.php?action=view&local_graph_id=" . $graph["local_graph_id"] . "&rra_id=all");?>'>
+									<img class='graphimage' id='graph_<?php print $graph["local_graph_id"] ?>'
+										src='<?php print htmlspecialchars("graph_image.php?local_graph_id=" . $graph["local_graph_id"] . "&rra_id=0&graph_height=" . read_graph_config_option("default_height") . "&graph_width=" . read_graph_config_option("default_width") . "&graph_nolegend=true" . (($extra_url_args == "") ? "" : "&$extra_url_args"));?>'
+										border='0' alt='<?php print $graph["title_cache"];?>'>
+								</a>
+								<?php
+							} else if ($graph["image_format_id"] == IMAGE_TYPE_SVG) {
+								?>
+								<a href='<?php print htmlspecialchars("graph.php?action=view&local_graph_id=" . $graph["local_graph_id"] . "&rra_id=all");?>'>
+									<object class='graphimage' id='graph_<?php print $graph["local_graph_id"] ?>'
+										type='svg+xml'
+										data='<?php print htmlspecialchars("graph_image.php?local_graph_id=" . $graph["local_graph_id"] . "&rra_id=0&graph_height=" . read_graph_config_option("default_height") . "&graph_width=" . read_graph_config_option("default_width") . "&graph_nolegend=true" . (($extra_url_args == "") ? "" : "&$extra_url_args"));?>'
+										border='0'>
+										Can't display SVG
+									</object>;
+								</a>
+								<?php
+								#print "<object class='graphimage' id='graph_" . $graph["local_graph_id"] . "' type='svg+xml' data='" . htmlspecialchars("graph_image.php?action=view&local_graph_id=" . $graph["local_graph_id"] . "&rra_id=" . $rra["id"]) . "' border='0'>Can't display SVG</object>";
+							}
+							print (read_graph_config_option("show_graph_title") == "on" ? "<p style='font-size: 10;' align='center'><strong>" . $graph["title_cache"] . "</strong></p>" : "");
+							?>
 						</td>
 						<td valign='top' style='align: left; padding: 3px;'>
 							<a href='<?php print htmlspecialchars("graph.php?action=zoom&local_graph_id=" . $graph["local_graph_id"] . "&rra_id=0&" . $extra_url_args);?>'><img src='images/graph_zoom.gif' alt='<?php print __("Zoom Graph");?>' title='<?php print __("Zoom Graph");?>' class='img_info'></a><br>
@@ -580,7 +627,7 @@ function html_header_sort_checkbox($header_items, $sort_column, $sort_direction,
 
 /* html_header - draws a header row suitable for display inside of a box element
    @arg $header_items - an array containing a list of items to be included in the header
-   @arg $last_item_colspan - the TD 'colspan' to apply to the last cell in the row 
+   @arg $last_item_colspan - the TD 'colspan' to apply to the last cell in the row
    @arg $resizable - allow for the table to be resized via javascript
    @arg $table_id - table_id
    @arg $tclass - optional class extension for table
@@ -618,11 +665,11 @@ function html_header($header_items, $last_item_colspan = 1, $resizable = false, 
 /* html_header_checkbox - draws a header row with a 'select all' checkbox in the last cell
      suitable for display inside of a box element
    @arg $header_items - an array containing a list of items to be included in the header
-   @arg $form_action - the url to post the 'select all' form to 
+   @arg $form_action - the url to post the 'select all' form to
    @arg $resizable - allow for the table to be resized via javascript
    @arg $tclass - optional class extension for table
    @arg $trclass - optional class extension for table row
-   @arg $thclass - optional class extension for table header cell 
+   @arg $thclass - optional class extension for table header cell
  */
 function html_header_checkbox($header_items, $form_action = "", $resizable = false, $tclass = '', $trclass= '', $thclass = '') {
 	global $colors;

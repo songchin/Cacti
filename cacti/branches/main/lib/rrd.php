@@ -88,6 +88,7 @@ function rrdtool_execute($command_line, $log_to_stdout, $output_flag, $rrd_struc
 	if (($output_flag == RRDTOOL_OUTPUT_STDERR) && (!isset($rrd_struc["fd"]) || (sizeof($rrd_struc["fd"]) == 0))) {
 		$command_line .= " 2>&1";
 	}
+	cacti_log("CACTI2RRD: " . read_config_option("path_rrdtool") . " $command_line", true, "TEST");
 
 	/* use popen to eliminate the zombie issue */
 	if (CACTI_SERVER_OS == "unix") {
@@ -112,7 +113,7 @@ function rrdtool_execute($command_line, $log_to_stdout, $output_flag, $rrd_struc
 					$rrd_struc = rrd_init();
 
 					if ($i > 4) {
-						cacti_log("FATAL: RRDtool Restart Attempts Exceeded.  Giving up on command.");
+						cacti_log("FATAL: RRDtool Restart Attempts Exceeded. Giving up on command.");
 
 						break;
 					}else{
@@ -185,11 +186,15 @@ function rrdtool_execute($command_line, $log_to_stdout, $output_flag, $rrd_struc
 				$output = fgets($fp, 1000000);
 
 				if (substr($output, 1, 3) == "PNG") {
-					return "OK";
+					return __("PNG Output OK");
 				}
 
 				if (substr($output, 0, 5) == "GIF87") {
-					return "OK";
+					return __("GIF Output OK");
+				}
+
+				if (substr($output, 0, 5) == "<?xml") {
+					return __("SVG/XML Output OK");
 				}
 
 				print $output;
@@ -198,7 +203,13 @@ function rrdtool_execute($command_line, $log_to_stdout, $output_flag, $rrd_struc
 			break;
 		case RRDTOOL_OUTPUT_GRAPH_DATA:
 			if (isset($fp)) {
-				return fpassthru($fp);
+				#return fpassthru($fp); /* TODO: this fails for SVG; still not clear, why (gandalf) */
+				$line = "";
+				while (!feof($fp)) {
+					$line .= fgets($fp, 4096);
+				}
+
+				return $line;
 			}
 
 			break;
@@ -718,8 +729,12 @@ function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rr
 	$last_graph_type = "";
 
 	/* do query_ substitions for upper and lower limit */
-	$graph["lower_limit"] = rrd_substitute_host_query_data($graph["lower_limit"], $graph, null);
-	$graph["upper_limit"] = rrd_substitute_host_query_data($graph["upper_limit"], $graph, null);
+	if (isset($graph["lower_limit"])) {
+		$graph["lower_limit"] = rrd_substitute_host_query_data($graph["lower_limit"], $graph, null);
+	}
+	if (isset($graph["upper_limit"])) {
+		$graph["upper_limit"] = rrd_substitute_host_query_data($graph["upper_limit"], $graph, null);
+	}
 
 	if ($graph["auto_scale"] == "on") {
 		switch ($graph["auto_scale_opts"]) {
@@ -751,8 +766,12 @@ function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rr
 				break;
 		}
 	}else{
-		$scale =  "--upper-limit=" . $graph["upper_limit"] . RRD_NL;
-		$scale .= "--lower-limit=" . $graph["lower_limit"] . RRD_NL;
+		if ( is_numeric($graph["upper_limit"])) {
+			$scale .= "--upper-limit=" . $graph["upper_limit"] . RRD_NL;
+		}
+		if ( is_numeric($graph["lower_limit"])) {
+			$scale .= "--lower-limit=" . $graph["lower_limit"] . RRD_NL;
+		}
 	}
 
 	if ($graph["auto_scale_log"] == "on") {
@@ -1428,7 +1447,7 @@ function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rr
 		$graph_opts = $graph_array['graph_opts'];
 	}
 
-	/* either print out the source or pass the source onto rrdtool to get us a nice PNG */
+	/* either print out the source or pass the source onto rrdtool to get us a nice graph */
 	if (isset($graph_data_array["print_source"])) {
 		print "<PRE>" . read_config_option("path_rrdtool") . " graph $graph_opts$graph_defs$txt_graph_items</PRE>";
 	}else{
@@ -1443,7 +1462,6 @@ function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rr
 			}else{
 				$output_flag = RRDTOOL_OUTPUT_GRAPH_DATA;
 			}
-
 			$output = rrdtool_execute("graph $graph_opts$graph_defs$txt_graph_items", false, $output_flag, $rrd_struc);
 
 			api_plugin_hook_function('rrdtool_function_graph_set_file', array('output' => $output, 'local_graph_id' => $local_graph_id, 'rra_id' => $rra_id));

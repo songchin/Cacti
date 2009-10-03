@@ -39,7 +39,19 @@ input_validate_input_number(get_request_var("local_graph_id"));
 input_validate_input_number(get_request_var("rra_id"));
 /* ==================================================== */
 
-header("Content-type: image/png");
+#header("Content-type: image/png");
+/* print correct header */
+$image_format_id = db_fetch_cell("SELECT
+		graph_templates_graph.image_format_id
+		FROM graph_templates_graph
+		WHERE graph_templates_graph.local_graph_id=" . $_GET["local_graph_id"]);
+if ($image_format_id == IMAGE_TYPE_PNG) {
+	header("Content-type: image/png");
+} else if ($image_format_id == IMAGE_TYPE_GIF) {
+	header("Content-type: image/gif");
+} else if ($image_format_id == IMAGE_TYPE_SVG) {
+	header("Content-type: image/svg+xml; charset=utf-8");
+}
 
 /* flush the headers now */
 ob_end_clean();

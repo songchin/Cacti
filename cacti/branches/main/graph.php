@@ -89,10 +89,20 @@ case 'view':
 		?>
 		<tr>
 			<td align='center'>
-				<table width='1' cellpadding='0'>
+				<table cellpadding='0'>
 					<tr>
 						<td>
-							<img class='graphimage' id='graph_<?php print $_GET["local_graph_id"] ?>' src='<?php print htmlspecialchars("graph_image.php?action=view&local_graph_id=" . $_GET["local_graph_id"] . "&rra_id=" . $rra["id"]);?>' border='0' alt='<?php print $graph_title;?>'>
+							<?php
+							$image_format_id = db_fetch_cell("SELECT
+										graph_templates_graph.image_format_id
+										FROM graph_templates_graph
+										WHERE graph_templates_graph.local_graph_id=" . $_GET["local_graph_id"]);
+							if ($image_format_id == IMAGE_TYPE_PNG || $image_format_id == IMAGE_TYPE_GIF) {
+								print "<img class='graphimage' id='graph_" . $_GET["local_graph_id"] ."' src='" . htmlspecialchars("graph_image.php?action=view&local_graph_id=" . $_GET["local_graph_id"] . "&rra_id=" . $rra["id"]) . "' border='0' alt='" . $graph_title . "'>";
+							} else if ($image_format_id == IMAGE_TYPE_SVG) {
+								print "<object class='graphimage' id='graph_" . $_GET["local_graph_id"] . "' type='svg+xml' data='" . htmlspecialchars("graph_image.php?action=view&local_graph_id=" . $_GET["local_graph_id"] . "&rra_id=" . $rra["id"]) . "' border='0'>Can't display SVG</object>";
+							}
+							?>
 						</td>
 						<td valign='top' style='padding: 3px;' class='noprint'>
 							<a href='<?php print htmlspecialchars("graph.php?action=zoom&local_graph_id=" . $_GET["local_graph_id"] . "&rra_id=" . $rra["id"] . "&view_type=" . $_REQUEST["view_type"]);?>'><img src='images/graph_zoom.gif' alt='<?php print __("Zoom Graph");?>' title='<?php print __("Zoom Graph");?>' class='img_info'></a><br>
@@ -205,10 +215,20 @@ case 'zoom':
 	</STYLE>
 	<tr>
 		<td align='center'>
-			<table width='1' cellpadding='0'>
+			<table cellpadding='0'>
 				<tr>
 					<td>
-						<img id='zoomGraphImage' src='<?php print htmlspecialchars("graph_image.php?action=zoom&local_graph_id=" . $_GET["local_graph_id"] . "&rra_id=" . $_GET["rra_id"] . "&view_type=" . $_REQUEST["view_type"] . "&graph_start=" . $graph_start . "&graph_end=" . $graph_end . "&graph_height=" . $graph_height . "&graph_width=" . $graph_width . "&title_font_size=" . $title_font_size);?>' border='0' alt='<?php print $graph_title;?>'>
+						<?php
+						$image_format_id = db_fetch_cell("SELECT
+									graph_templates_graph.image_format_id
+									FROM graph_templates_graph
+									WHERE graph_templates_graph.local_graph_id=" . $_GET["local_graph_id"]);
+						if ($image_format_id == IMAGE_TYPE_PNG || $image_format_id == IMAGE_TYPE_GIF) {
+							print "<img class='graphimage' id='zoomGraphImage' src='" . htmlspecialchars("graph_image.php?action=zoom&local_graph_id=" . $_GET["local_graph_id"] . "&rra_id=" . $rra["id"] . "&view_type=" . $_REQUEST["view_type"] . "&graph_start=" . $graph_start . "&graph_end=" . $graph_end . "&graph_height=" . $graph_height . "&graph_width=" . $graph_width . "&title_font_size=" . $title_font_size) . "' border='0' alt='" . $graph_title . "'>";
+						} else if ($image_format_id == IMAGE_TYPE_SVG) {
+							print "<object class='graphimage' id='zoomGraphImage' type='svg+xml' data='" . htmlspecialchars("graph_image.php?action=zoom&local_graph_id=" . $_GET["local_graph_id"] . "&rra_id=" . $rra["id"] . "&view_type=" . $_REQUEST["view_type"] . "&graph_start=" . $graph_start . "&graph_end=" . $graph_end . "&graph_height=" . $graph_height . "&graph_width=" . $graph_width . "&title_font_size=" . $title_font_size) . "' border='0'>Can't display SVG</object>";
+						}
+						?>
 					</td>
 					<td valign='top' style='padding: 3px;' class='noprint'>
 						<a href='<?php print htmlspecialchars("graph.php?action=properties&local_graph_id=" . $_GET["local_graph_id"] . "&rra_id=" . $_GET["rra_id"] . "&view_type=" . $_REQUEST["view_type"] . "&graph_start=" . $graph_start . "&graph_end=" . $graph_end);?>'><img src='images/graph_properties.gif' alt='<?php print __("Properties");?>' title='<?php print __("Graph Source/Properties");?>' class='img_info'></a>
@@ -238,10 +258,20 @@ case 'properties':
 	</tr>
 	<tr>
 		<td align='center'>
-			<table width='1' cellpadding='0'>
+			<table cellpadding='0'>
 				<tr>
 					<td>
-						<img src='<?php print htmlspecialchars("graph_image.php?action=properties&local_graph_id=" . $_GET["local_graph_id"] . "&rra_id=" . $_GET["rra_id"] . "&graph_start=" . (isset($_GET["graph_start"]) ? $_GET["graph_start"] : 0) . "&graph_end=" . (isset($_GET["graph_end"]) ? $_GET["graph_end"] : 0));?>' border='0' alt='<?php print $graph_title;?>'>
+						<?php
+						$image_format_id = db_fetch_cell("SELECT
+									graph_templates_graph.image_format_id
+									FROM graph_templates_graph
+									WHERE graph_templates_graph.local_graph_id=" . $_GET["local_graph_id"]);
+						if ($image_format_id == IMAGE_TYPE_PNG || $image_format_id == IMAGE_TYPE_GIF) {
+							print "<img class='graphimage' id='graph_" . $_GET["local_graph_id"] ."' src='" . htmlspecialchars("graph_image.php?action=properties&local_graph_id=" . $_GET["local_graph_id"] . "&rra_id=" . $_GET["rra_id"] . "&graph_start=" . (isset($_GET["graph_start"]) ? $_GET["graph_start"] : 0) . "&graph_end=" . (isset($_GET["graph_end"]) ? $_GET["graph_end"] : 0)) . "' border='0' alt='" . $graph_title . "'>";
+						} else if ($image_format_id == IMAGE_TYPE_SVG) {
+							print "<object class='graphimage' id='graph_" . $_GET["local_graph_id"] . "' type='svg+xml' data='" . htmlspecialchars("graph_image.php?action=view&local_graph_id=" . $_GET["local_graph_id"] . "&rra_id=" . $_GET["rra_id"] . "&graph_start=" . (isset($_GET["graph_start"]) ? $_GET["graph_start"] : 0) . "&graph_end=" . (isset($_GET["graph_end"]) ? $_GET["graph_end"] : 0)) . "' border='0'>Can't display SVG</object>";
+						}
+						?>
 					</td>
 					<td valign='top' style='padding: 3px;'>
 						<a href='<?php print htmlspecialchars("graph.php?action=zoom&local_graph_id=" . $_GET["local_graph_id"] . "&rra_id=" . $_GET["rra_id"] . "&view_type=" . $_REQUEST["view_type"]);?>'><img src='images/graph_zoom.gif' alt='<?php print __("Zoom Graph");?>' title='<?php print __("Zoom Graph");?>' class='img_info'></a><br>

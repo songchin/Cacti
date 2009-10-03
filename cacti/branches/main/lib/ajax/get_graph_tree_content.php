@@ -24,8 +24,8 @@
 
 $no_http_headers = true;
 include(dirname(__FILE__) . "/../../include/global.php");
-include_once(dirname(__FILE__) . "/../../lib/functions.php");
-include_once(dirname(__FILE__) . "/../../lib/html_tree.php");
+include_once(CACTI_BASE_PATH . "/lib/functions.php");
+include_once(CACTI_BASE_PATH . "/lib/html_tree.php");
 include_once(CACTI_BASE_PATH . "/lib/timespan_settings.php");
 
 /* Make sure nothing is cached */

@@ -1114,7 +1114,8 @@ function get_graph_tree_content($tree_id, $leaf_id, $host_group_data) {
 			graph_tree_items.local_graph_id,
 			graph_tree_items.rra_id,
 			graph_tree_items.order_key,
-			graph_templates_graph.title_cache as title_cache
+			graph_templates_graph.title_cache as title_cache,
+			graph_templates_graph.image_format_id
 			FROM (graph_tree_items,graph_local)
 			LEFT JOIN graph_templates_graph ON (graph_tree_items.local_graph_id=graph_templates_graph.local_graph_id AND graph_tree_items.local_graph_id>0)
 			$sql_join
@@ -1153,7 +1154,8 @@ function get_graph_tree_content($tree_id, $leaf_id, $host_group_data) {
 
 					$graphs = db_fetch_assoc("SELECT
 						graph_templates_graph.title_cache,
-						graph_templates_graph.local_graph_id
+						graph_templates_graph.local_graph_id,
+						graph_templates_graph.image_format_id
 						FROM (graph_local,graph_templates_graph)
 						$sql_join
 						WHERE graph_local.id=graph_templates_graph.local_graph_id
@@ -1206,6 +1208,7 @@ function get_graph_tree_content($tree_id, $leaf_id, $host_group_data) {
 					$graphs = db_fetch_assoc("SELECT
 						graph_templates_graph.title_cache,
 						graph_templates_graph.local_graph_id,
+						graph_templates_graph.image_format_id,
 						graph_local.snmp_index
 						FROM (graph_local, graph_templates_graph)
 						$sql_join
@@ -1223,7 +1226,11 @@ function get_graph_tree_content($tree_id, $leaf_id, $host_group_data) {
 						usort($graphs, 'naturally_sort_graphs');
 
 						foreach ($graphs as $graph) {
-							$snmp_index_to_graph{$graph["snmp_index"]}{$graph["local_graph_id"]} = $graph["title_cache"];
+							$snmp_index_to_graph{$graph["snmp_index"]} = array(
+								"local_graph_id"	=> $graph["local_graph_id"],
+								"title_cache"		=> $graph["title_cache"],
+								"image_format_id"	=> $graph["image_format_id"],
+							);
 						}
 					}
 
@@ -1231,9 +1238,16 @@ function get_graph_tree_content($tree_id, $leaf_id, $host_group_data) {
 					while (list($snmp_index, $sort_field_value) = each($sort_field_data)) {
 						/* render each graph for the current data query index */
 						if (isset($snmp_index_to_graph[$snmp_index])) {
-							while (list($local_graph_id, $graph_title) = each($snmp_index_to_graph[$snmp_index])) {
+							#while (list($local_graph_id, $graph_title) = each($snmp_index_to_graph[$snmp_index])) {
+							foreach ($snmp_index_to_graph as $graph) {
 								/* reformat the array so it's compatable with the html_graph* area functions */
-								array_push($graph_list, array("data_query_name" => $data_query["name"], "sort_field_value" => $sort_field_value, "local_graph_id" => $local_graph_id, "title_cache" => $graph_title));
+								array_push($graph_list, array(
+									"data_query_name" 	=> $data_query["name"],
+									"sort_field_value" 	=> $sort_field_value,
+									"local_graph_id" 	=> $graph["local_graph_id"],
+									"title_cache" 		=> $graph["title_cache"],
+									"image_format_id" 	=> $graph["image_format_id"],
+								));
 							}
 						}
 					}
