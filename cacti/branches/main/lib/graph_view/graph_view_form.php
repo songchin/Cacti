@@ -25,6 +25,7 @@
 function graph_view_filter_table($mode = "mode") {
 	global $current_user;
 	global $graphs_per_page;
+	global $colors;
 
 	?>
 	<script type='text/javascript'>
@@ -78,7 +79,7 @@ function graph_view_filter_table($mode = "mode") {
 	</script>
 	<?php
 
-	html_graph_start_box(0, FALSE);
+	html_start_box("", "100", $colors["header"], "0", "center", "");
 
 	?>
 	<tr class="rowGraphFilter noprint">
@@ -156,6 +157,7 @@ function graph_view_filter_table($mode = "mode") {
 
 function get_graph_list_content() {
 	global $graphs_per_page;
+	global $colors;
 
 	/* Make sure nothing is cached */
 	header("Cache-Control: must-revalidate");
@@ -242,7 +244,7 @@ function get_graph_list_content() {
 	$_SESSION["sess_graph_view_list_graph_list"] = $graph_list;
 
 	/* display graph view filter selector */
-	html_graph_start_box(0, FALSE);
+	html_start_box("", "100", $colors["header"], "0", "center", "");
 
 	?>
 
@@ -458,7 +460,7 @@ function get_graph_list_content() {
 	<form name='chk' id='chk' action='graph_view.php' method='get' onSubmit='form_graph(document.chk,document.chk)'>
 	<?php
 
-	html_graph_start_box(0, FALSE);
+	html_start_box("", "100", $colors["header"], "0", "center", "");
 
 	if ($total_rows > get_request_var_request("graphs")) {
 		$url_page_select = get_page_list($_REQUEST["page"], MAX_DISPLAY_PAGES, $_REQUEST["graphs"], $total_rows, "pageChange");
@@ -551,6 +553,7 @@ function get_graph_list_content() {
 }
 
 function get_graph_preview_content () {
+	global $colors;
 	/* Make sure nothing is cached */
 	header("Cache-Control: must-revalidate");
 	header("Cache-Control: post-check=0, pre-check=0", false);
@@ -725,7 +728,7 @@ function get_graph_preview_content () {
 	</script>
 	<?php
 
-	html_graph_start_box(0, false);
+	html_start_box("", "100", $colors["header"], "0", "center", "");
 
 	print "<table cellpadding='0' cellspacing='0' style='width:100%;border:1px solid #BEBEBE;'>\n";
 	/* generate page list */
@@ -1083,7 +1086,7 @@ function graph_view_timespan_selector($mode = "tree") {
 	-->
 	</script>
 	<?php
-	html_graph_start_box(0, FALSE);
+	html_start_box("", "100", $colors["header"], "0", "center", "");
 	?>
 	<tr class="rowGraphFilter noprint">
 		<td class="noprint">
@@ -1160,6 +1163,7 @@ function graph_view_timespan_selector($mode = "tree") {
 
 function graph_view_search_filter() {
 	global $graphs_per_page;
+	global $colors;
 
 	?>
 	<script type='text/javascript'>
@@ -1185,7 +1189,7 @@ function graph_view_search_filter() {
 	</script>
 	<?php
 
-	html_graph_start_box(0, FALSE);
+	html_start_box("", "100", $colors["header"], "0", "center", "");
 	?>
 	<tr class="rowGraphFilter noprint">
 		<td class="noprint">

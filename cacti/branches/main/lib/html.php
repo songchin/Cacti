@@ -643,7 +643,7 @@ function html_header($header_items, $last_item_colspan = 1, $resizable = false, 
 	if ($resizable) {
 		$pathname = html_get_php_pathname();
 
-		print "\t\t<table $table_id class='resizable startBoxHeader startBox1 $tclass'><tr class='rowSubHeader nodrag nodrop $trclass'>\n";
+		print "\t\t<table $table_id class='resizable startBoxHeader startBox3 $tclass'><tr class='rowSubHeader nodrag nodrop $trclass'>\n";
 	}else{
 		print "\t\t<table $table_id class='startBoxHeader $tclass'><tr class='rowSubHeader nodrag nodrop $trclass'>\n";
 	}

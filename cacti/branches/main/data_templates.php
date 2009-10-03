@@ -734,7 +734,7 @@ function template() {
 	/* form the 'where' clause for our main sql query */
 	if ($_REQUEST["filter"] != "") {
 		$sql_where = "WHERE ((data_template.name like '%%" . $_REQUEST["filter"] . "%%')
-			OR (data_templates.description LIKE '%%" . get_request_var_request("filter") . "%%'))
+			OR (data_template.description LIKE '%%" . get_request_var_request("filter") . "%%'))
 			AND data_template_data.local_data_id = 0";
 	}else{
 		$sql_where = "WHERE data_template_data.local_data_id = 0";
