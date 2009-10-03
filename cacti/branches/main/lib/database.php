@@ -265,13 +265,13 @@ function array_to_sql_or($array, $sql_column) {
 
 		for ($i=0;($i<count($array));$i++) {
 			if (is_int($array[$i])) {
-				$sql_or .= ($i == 0) ? "":"," . $array[$i];
+				$sql_or .= ($i == 0) ? $array[$i]	: "," . $array[$i];
 			}else{
-				$sql_or .= ($i == 0) ? "'":",'" . $array[$i] . "'";
+				$sql_or .= ($i == 0) ? $array[$i]	: ",'" . $array[$i] . "'";
 			}
 		}
 
-		$sql_or .= ")";
+		$sql_or .= "))";
 
 		return $sql_or;
 	}
