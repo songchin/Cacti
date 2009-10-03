@@ -614,7 +614,7 @@ function display_languages() {
 
 
 	html_start_box("<strong>" . __("Language Information") . "</strong>", "100", $colors["header"], "3", "center", "");
-	html_header(array(__("General Information")), 2,'','','left',''); 
+	html_header(array(__("General Information")), 2,'','','left','');
 	print "<tr class='rowAlternate1'>\n";
 	print "		<td class='textAreaNotes e'>" . __("Current Language") . "</td>\n";
 	print "		<td class='textAreaNotes v'>". $language . "</td>\n";
@@ -627,7 +627,7 @@ function display_languages() {
 	print "		<td class='textAreaNotes e'>" . __("Default Language") . "</td>\n";
 	print "		<td class='textAreaNotes v'>" . __("English") . "</td>\n";
 	print "</tr>\n";
-	/* html_header is resizable by default, need to pass 'false' */	
+	/* html_header is resizable by default, need to pass 'false' */
 	html_header(array(__("Supported Languages")), 2,'','','left wp100');
 	$i = 0;
 	if(sizeof($supported_languages)>0) {

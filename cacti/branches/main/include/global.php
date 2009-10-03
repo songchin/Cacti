@@ -133,12 +133,11 @@ define('CACTI_WIKI_URL', "http://docs.cacti.net/reference:088:");
 /* include base modules */
 include(CACTI_BASE_PATH . "/lib/adodb/adodb.inc.php");
 include(CACTI_BASE_PATH . "/lib/database.php");
-# required for early_environment_checks()
-include_once(CACTI_BASE_PATH . "/lib/functions.php");
 
 /* check that the absolute necessary mysql PHP module is loaded  (install checks the rest), and report back if not */
-/* also checks memory_limit - the ADODB call below will hit low memory_limits */
-early_environment_checks();
+if (!function_exists('mysql_data_seek')) {
+	die ("\n\nNo 'mysql' PHP extension is loaded. This is required by Cacti. Check your php.ini file.\n");
+}
 
 /* connect to the database server */
 db_connect_real($database_hostname, $database_username, $database_password, $database_default, $database_type, $database_port);
@@ -156,6 +155,7 @@ session_name($cacti_session_name);
 session_start();
 
 /* include additional modules */
+include_once(CACTI_BASE_PATH . "/lib/functions.php");
 include_once(CACTI_BASE_PATH . "/lib/plugins.php");
 include_once(CACTI_BASE_PATH . "/include/global_constants.php");
 include_once(CACTI_BASE_PATH . "/include/global_language.php");
