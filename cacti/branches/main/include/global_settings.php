@@ -79,7 +79,7 @@ $settings = array(
 		"path_rrdtool_default_font" => array(
 			"friendly_name" => __("RRDTool Default Font Path"),
 			"description" => __("The path to the rrdtool default true type font for version 1.2 and above."),
-			"method" => "filepath",
+			"method" => "font",
 			"max_length" => "255"
 			),
 		"path_php_binary" => array(
@@ -628,7 +628,7 @@ $settings = array(
 		"title_font" => array(
 			"friendly_name" => __("Title Font File"),
 			"description" => __("The font file to use for Graph Titles"),
-			"method" => "filepath",
+			"method" => "font",
 			"max_length" => "100"
 			),
 		"legend_size" => array(
@@ -642,7 +642,7 @@ $settings = array(
 		"legend_font" => array(
 			"friendly_name" => __("Legend Font File"),
 			"description" => __("The font file to be used for Graph Legend items"),
-			"method" => "filepath",
+			"method" => "font",
 			"max_length" => "100"
 			),
 		"axis_size" => array(
@@ -656,7 +656,7 @@ $settings = array(
 		"axis_font" => array(
 			"friendly_name" => __("Axis Font File"),
 			"description" => __("The font file to be used for Graph Axis items"),
-			"method" => "filepath",
+			"method" => "font",
 			"max_length" => "100"
 			),
 		"unit_size" => array(
@@ -670,7 +670,7 @@ $settings = array(
 		"unit_font" => array(
 			"friendly_name" => __("Unit Font File"),
 			"description" => __("The font file to be used for Graph Unit items"),
-			"method" => "filepath",
+			"method" => "font",
 			"max_length" => "100"
 			)
 		),
@@ -1171,7 +1171,7 @@ $settings_graphs = array(
 		"title_font" => array(
 			"friendly_name" => __("Title Font File"),
 			"description" => __("The font file to use for Graph Titles"),
-			"method" => "filepath",
+			"method" => "font",
 			"max_length" => "100"
 			),
 		"legend_size" => array(
@@ -1184,7 +1184,7 @@ $settings_graphs = array(
 		"legend_font" => array(
 			"friendly_name" => __("Legend Font File"),
 			"description" => __("The font file to be used for Graph Legend items"),
-			"method" => "filepath",
+			"method" => "font",
 			"max_length" => "100"
 			),
 		"axis_size" => array(
@@ -1197,7 +1197,7 @@ $settings_graphs = array(
 		"axis_font" => array(
 			"friendly_name" => __("Axis Font File"),
 			"description" => __("The font file to be used for Graph Axis items"),
-			"method" => "filepath",
+			"method" => "font",
 			"max_length" => "100"
 			),
 		"unit_size" => array(
@@ -1210,7 +1210,7 @@ $settings_graphs = array(
 		"unit_font" => array(
 			"friendly_name" => __("Unit Font File"),
 			"description" => __("The font file to be used for Graph Unit items"),
-			"method" => "filepath",
+			"method" => "font",
 			"max_length" => "100"
 			)
 		)
