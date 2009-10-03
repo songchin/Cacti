@@ -1882,6 +1882,7 @@ function draw_navigation_text() {
 		"sites.php:edit" => array("title" => __("(Edit)"), "mapping" => "index.php:,sites.php:", "url" => "", "level" => "2"),
 		"host.php:actions" => array("title" => __("Actions"), "mapping" => "index.php:,host.php:", "url" => "", "level" => "2"),
 		"host.php:" => array("title" => __("Devices"), "mapping" => "index.php:", "url" => "host.php", "level" => "1"),
+		"host.php:save" => array("title" => __("Devices"), "mapping" => "index.php:", "url" => "host.php", "level" => "1"),
 		"host.php:edit" => array("title" => __("(Edit)"), "mapping" => "index.php:,host.php:", "url" => "", "level" => "2"),
 		"pollers.php:actions" => array("title" => __("Actions"), "mapping" => "index.php:,pollers.php:", "url" => "", "level" => "2"),
 		"pollers.php:" => array("title" => __("Pollers"), "mapping" => "index.php:", "url" => "pollers.php", "level" => "1"),

@@ -353,10 +353,8 @@ function data_source_form_actions() {
 			/* ==================================================== */
 
 			$ds_list .= "<li>" . get_data_source_title($matches[1]) . "<br>";
-			$ds_array[$i] = $matches[1];
+			$ds_array[$i++] = $matches[1];
 		}
-
-		$i++;
 	}
 
 	include_once(CACTI_BASE_PATH . "/include/top_header.php");

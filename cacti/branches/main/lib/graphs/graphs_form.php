@@ -309,10 +309,8 @@ function form_actions() {
 			/* ==================================================== */
 
 			$graph_list .= "<li>" . get_graph_title($matches[1]) . "<br>";
-			$graph_array[$i] = $matches[1];
+			$graph_array[$i++] = $matches[1];
 		}
-
-		$i++;
 	}
 
 	include_once(CACTI_BASE_PATH . "/include/top_header.php");

@@ -44,6 +44,7 @@ function draw_nontemplated_fields_graph($graph_template_id, &$values_array, $fie
 	/* fetch information about the graph template */
 	$graph_template = db_fetch_row("select * from graph_templates_graph where graph_template_id=$graph_template_id and local_graph_id=0");
 
+	reset($struct_graph);
 	while (list($field_name, $field_array) = each($struct_graph)) {
 		/* find our field name */
 		$form_field_name = str_replace("|field|", $field_name, $field_name_format);
@@ -236,6 +237,7 @@ function draw_nontemplated_fields_data_source($data_template_id, $local_data_id,
 	/* fetch information about the data template */
 	$data_template = db_fetch_row("select * from data_template_data where data_template_id=$data_template_id and local_data_id=0");
 
+	reset($struct_data_source);
 	while (list($field_name, $field_array) = each($struct_data_source)) {
 		/* find our field name */
 		$form_field_name = str_replace("|field|", $field_name, $field_name_format);
