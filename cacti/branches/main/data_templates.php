@@ -735,19 +735,18 @@ function template() {
 	if ($_REQUEST["filter"] != "") {
 		$sql_where = "WHERE ((data_template.name like '%%" . $_REQUEST["filter"] . "%%')
 			OR (data_templates.description LIKE '%%" . get_request_var_request("filter") . "%%'))
-			AND data_template_data.local_data_id = 0
-			AND data_template.id = data_template_data.data_template_id";
+			AND data_template_data.local_data_id = 0";
 	}else{
-		$sql_where = "WHERE data_template_data.local_data_id = 0
-			AND data_template.id = data_template_data.data_template_id";
+		$sql_where = "WHERE data_template_data.local_data_id = 0";
 	}
 
 	html_start_box("", "100", $colors["header"], "0", "center", "");
 
-	$total_rows = db_fetch_cell("SELECT
-		COUNT(data_template.id)
-		FROM data_template
-		$sql_where");
+	$total_rows = db_fetch_cell("SELECT " .
+		"COUNT(data_template.id) " .
+		"FROM data_template " .
+		"LEFT JOIN data_template_data ON (data_template.id = data_template_data.data_template_id) " .
+		$sql_where);
 
 	if (get_request_var_request("rows") == "-1") {
 		$rows = read_config_option("num_rows_device");
@@ -755,16 +754,17 @@ function template() {
 		$rows = get_request_var_request("rows");
 	}
 
-	$template_list = db_fetch_assoc("SELECT
-		data_template.id,
-		data_template.name,
-		data_template.description,
-		data_input.name AS data_input_method,
-		data_template_data.active AS active
-		FROM (data_template,data_template_data)
-		LEFT JOIN data_input ON (data_template_data.data_input_id = data_input.id)
-		$sql_where
-		ORDER BY " . get_request_var_request('sort_column') . " " . get_request_var_request('sort_direction') .
+	$template_list = db_fetch_assoc("SELECT " .
+		"data_template.id, " .
+		"data_template.name, " .
+		"data_template.description, " .
+		"data_input.name AS data_input_method, " .
+		"data_template_data.active AS active " .
+		"FROM data_template " .
+		"LEFT JOIN data_template_data ON (data_template.id = data_template_data.data_template_id) " .
+		"LEFT JOIN data_input ON (data_template_data.data_input_id = data_input.id) " .
+		$sql_where .
+		" ORDER BY " . get_request_var_request('sort_column') . " " . get_request_var_request('sort_direction') .
 		" LIMIT " . ($rows*(get_request_var_request("page")-1)) . "," . $rows);
 
 	/* generate page list navigation */
