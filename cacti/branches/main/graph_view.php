@@ -60,9 +60,9 @@ input_validate_input_number(get_request_var("hide"));
 input_validate_input_number(get_request_var("tree_id"));
 input_validate_input_number(get_request_var("leaf_id"));
 input_validate_input_number(get_request_var("rra_id"));
-input_validate_input_regex(get_request_var_request('graph_list'), "^([\,0-9]+)$");
-input_validate_input_regex(get_request_var_request('graph_add'), "^([\,0-9]+)$");
-input_validate_input_regex(get_request_var_request('graph_remove'), "^([\,0-9]+)$");
+input_validate_input_regex(get_request_var_request('graph_list'), "/^([\,0-9]+)$/");
+input_validate_input_regex(get_request_var_request('graph_add'), "/^([\,0-9]+)$/");
+input_validate_input_regex(get_request_var_request('graph_remove'), "/^([\,0-9]+)$/");
 /* ==================================================== */
 
 if (isset($_GET["hide"])) {

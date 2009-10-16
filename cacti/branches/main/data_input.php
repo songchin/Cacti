@@ -118,7 +118,7 @@ function form_save() {
 		/* ================= input validation ================= */
 		input_validate_input_number(get_request_var_post("id"));
 		input_validate_input_number(get_request_var_post("data_input_id"));
-		input_validate_input_regex(get_request_var_post("input_output"), "^(in|out)$");
+		input_validate_input_regex(get_request_var_post("input_output"), "/^(in|out)$/");
 		/* ==================================================== */
 
 		$save["id"] = $_POST["id"];
@@ -299,7 +299,7 @@ function field_edit() {
 	/* ================= input validation ================= */
 	input_validate_input_number(get_request_var("id"));
 	input_validate_input_number(get_request_var("data_input_id"));
-	input_validate_input_regex(get_request_var("type"), "^(in|out)$");
+	input_validate_input_regex(get_request_var("type"), "/^(in|out)$/");
 	/* ==================================================== */
 
 	if (!empty($_GET["id"])) {

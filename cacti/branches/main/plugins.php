@@ -45,7 +45,7 @@ $modes = array('all', 'install', 'uninstall', 'disable', 'enable', 'check');
 
 // Check to see if we are installing, etc...
 if (isset($_GET['mode']) && in_array($_GET['mode'], $modes)  && isset($_GET['id'])) {
-	input_validate_input_regex(get_request_var('id'), '^([a-zA-Z0-9]+)$');
+	input_validate_input_regex(get_request_var('id'), '/^([a-zA-Z0-9]+)$/');
 
 	$mode = $_GET['mode'];
 	$id = sanitize_search_string($_GET['id']);

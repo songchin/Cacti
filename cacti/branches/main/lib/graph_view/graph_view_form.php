@@ -173,9 +173,9 @@ function get_graph_list_content() {
 	/* ================= input validation ================= */
 	input_validate_input_number(get_request_var_request("host_id"));
 	input_validate_input_number(get_request_var_request("graph_template_id"));
-	input_validate_input_regex(get_request_var_request('graph_list'), "^([\,0-9]+)$");
-	input_validate_input_regex(get_request_var_request('graph_add'), "^([\,0-9]+)$");
-	input_validate_input_regex(get_request_var_request('graph_remove'), "^([\,0-9]+)$");
+	input_validate_input_regex(get_request_var_request('graph_list'), "/^([\,0-9]+)$/");
+	input_validate_input_regex(get_request_var_request('graph_add'), "/^([\,0-9]+)$/");
+	input_validate_input_regex(get_request_var_request('graph_remove'), "/^([\,0-9]+)$/");
 	/* ==================================================== */
 
 	/* clean up search string */

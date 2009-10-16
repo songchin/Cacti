@@ -33,9 +33,9 @@ include_once(CACTI_BASE_PATH . "/lib/html_tree.php");
 include_once(CACTI_BASE_PATH . "/include/top_graph_header.php");
 
 /* ================= input validation ================= */
-input_validate_input_regex(get_request_var_request("rra_id"), "^([0-9]+|all)$");
+input_validate_input_regex(get_request_var_request("rra_id"), "/^([0-9]+|all)$/");
 input_validate_input_number(get_request_var("local_graph_id"));
-input_validate_input_regex(get_request_var_request("view_type"), "^([a-zA-Z0-9]+)$");
+input_validate_input_regex(get_request_var_request("view_type"), "/^([a-zA-Z0-9]+)$/");
 /* ==================================================== */
 
 if (!isset($_GET['rra_id'])) {
