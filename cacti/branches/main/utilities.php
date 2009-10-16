@@ -300,11 +300,11 @@ function display_general() {
 		exec(read_config_option("path_rrdtool"), $out_array);
 
 		if (sizeof($out_array) > 0) {
-			if (ereg("^RRDtool 1\.3", $out_array[0])) {
+			if (preg_match("/^RRDtool 1\.3/", $out_array[0])) {
 				$rrdtool_version = "rrd-1.3.x";
-			}else if (ereg("^RRDtool 1\.2\.", $out_array[0])) {
+			}else if (preg_match("/^RRDtool 1\.2\./", $out_array[0])) {
 				$rrdtool_version = "rrd-1.2.x";
-			}else if (ereg("^RRDtool 1\.0\.", $out_array[0])) {
+			}else if (preg_match("/^RRDtool 1\.0\./", $out_array[0])) {
 				$rrdtool_version = "rrd-1.0.x";
 			}
 		}

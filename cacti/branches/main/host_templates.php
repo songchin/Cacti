@@ -87,7 +87,7 @@ function form_save() {
 	 */
 	$reindex_performed = false;
 	while (list($var,$val) = each($_POST)) {
-		if (ereg("^reindex_method_host_template_([0-9]+)_query_([0-9]+)_method_([0-9]+)$", $var, $matches)) {
+		if (preg_match("/^reindex_method_host_template_([0-9]+)_query_([0-9]+)_method_([0-9]+)$/", $var, $matches)) {
 			/* ================= input validation ================= */
 			input_validate_input_number(get_request_var_post("id"));
 			input_validate_input_number($matches[1]); # host_template
@@ -299,7 +299,7 @@ function form_actions() {
 
 	/* loop through each of the host templates selected on the previous page and get more info about them */
 	while (list($var,$val) = each($_POST)) {
-		if (ereg("^chk_([0-9]+)$", $var, $matches)) {
+		if (preg_match("/^chk_([0-9]+)$/", $var, $matches)) {
 			/* ================= input validation ================= */
 			input_validate_input_number($matches[1]);
 			/* ==================================================== */

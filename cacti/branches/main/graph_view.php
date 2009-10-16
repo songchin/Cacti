@@ -75,7 +75,7 @@ if (isset($_GET["hide"])) {
 	}
 }
 
-if (ereg("action=(tree|preview|list)", get_browser_query_string())) {
+if (preg_match("/action=(tree|preview|list)/", get_browser_query_string())) {
 	$_SESSION["sess_graph_view_url_cache"] = get_browser_query_string();
 }
 
