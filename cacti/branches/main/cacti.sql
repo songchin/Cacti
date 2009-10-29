@@ -643,47 +643,47 @@ CREATE TABLE data_template (
 -- Dumping data for table `data_template`
 --
 
-INSERT INTO data_template VALUES (3,'c8a8f50f5f4a465368222594c5709ede', 'UCD-SNMP - diskTable - Hard Drive Space', '');
-INSERT INTO data_template VALUES (4,'cdfed2d401723d2f41fc239d4ce249c7','UCD-SNMP - systemStats - CPU Usage: System', '');
-INSERT INTO data_template VALUES (5,'a27e816377d2ac6434a87c494559c726','UCD-SNMP - systemStats - CPU Usage: User', '');
-INSERT INTO data_template VALUES (6,'c06c3d20eccb9598939dc597701ff574','UCD-SNMP - systemStats - CPU Usage: Nice', '');
-INSERT INTO data_template VALUES (7,'a14f2d6f233b05e64263ff03a5b0b386','Karlnet - Noise Level', '');
-INSERT INTO data_template VALUES (8,'def1a9019d888ed2ad2e106aa9595ede','Karlnet - Signal Level', '');
-INSERT INTO data_template VALUES (9,'513a99ae3c9c4413609c1534ffc36eab','Karlnet - Wireless Transmits', '');
-INSERT INTO data_template VALUES (10,'77404ae93c9cc410f1c2c717e7117378','Karlnet - Wireless Re-Transmits', '');
-INSERT INTO data_template VALUES (11,'9e72511e127de200733eb502eb818e1d','Linux Localhost - Uptime - Load Average', '');
-INSERT INTO data_template VALUES (13,'dc33aa9a8e71fb7c61ec0e7a6da074aa','Linux Localhost - meminfo - Memory: Free', '');
-INSERT INTO data_template VALUES (15,'41f55087d067142d702dd3c73c98f020','Linux Localhost - meminfo - Memory: Free Swap', '');
-INSERT INTO data_template VALUES (16,'9b8c92d3c32703900ff7dd653bfc9cd8','Linux Localhost - ps ax - Processes', '');
-INSERT INTO data_template VALUES (17,'c221c2164c585b6da378013a7a6a2c13','Linux Localhost - who - Logged in Users', '');
-INSERT INTO data_template VALUES (18,'a30a81cb1de65b52b7da542c8df3f188','Linux Localhost - ICMP - Ping Host', '');
-INSERT INTO data_template VALUES (19,'0de466a1b81dfe581d44ac014b86553a','Netware - Total Users', '');
-INSERT INTO data_template VALUES (20,'bbe2da0708103029fbf949817d3a4537','Netware - Total Logins', '');
-INSERT INTO data_template VALUES (22,'e4ac5d5fe73e3c773671c6d0498a8d9d','Netware - File System Reads', '');
-INSERT INTO data_template VALUES (23,'f29f8c998425eedd249be1e7caf90ceb','Netware - File System Writes', '');
-INSERT INTO data_template VALUES (24,'7a6216a113e19881e35565312db8a371','Netware - Cache Checks', '');
-INSERT INTO data_template VALUES (25,'1dbd1251c8e94b334c0e6aeae5ca4b8d','Netware - Cache Hits', '');
-INSERT INTO data_template VALUES (26,'1a4c5264eb27b5e57acd3160af770a61','Netware - Open Files', '');
-INSERT INTO data_template VALUES (27,'e9def3a0e409f517cb804dfeba4ccd90','Cisco Router - 5 Minute CPU', '');
-INSERT INTO data_template VALUES (30,'9b82d44eb563027659683765f92c9757','UCD-SNMP - loadTable - Load Average: 1 Minute', '');
-INSERT INTO data_template VALUES (31,'87847714d19f405ff3c74f3341b3f940','UCD-SNMP - loadTable - Load Average: 5 Minute', '');
-INSERT INTO data_template VALUES (32,'308ac157f24e2763f8cd828a80b3e5ff','UCD-SNMP - loadTable - Load Average: 15 Minute', '');
-INSERT INTO data_template VALUES (33,'797a3e92b0039841b52e441a2823a6fb','UCD-SNMP - memory - Buffers', '');
-INSERT INTO data_template VALUES (34,'fa15932d3cab0da2ab94c69b1a9f5ca7','UCD-SNMP - memory - Free', '');
-INSERT INTO data_template VALUES (35,'6ce4ab04378f9f3b03ee0623abb6479f','Netware - Volumes', '');
-INSERT INTO data_template VALUES (36,'03060555fab086b8412bbf9951179cd9','Netware - Directory Entries', '');
-INSERT INTO data_template VALUES (37,'e4ac6919d4f6f21ec5b281a1d6ac4d4e','Linux Localhost - df - Hard Drive Space', '');
-INSERT INTO data_template VALUES (38,'36335cd98633963a575b70639cd2fdad','Interface - Errors/Discards', '');
-INSERT INTO data_template VALUES (39,'2f654f7d69ac71a5d56b1db8543ccad3','Interface - Unicast Packets', '');
-INSERT INTO data_template VALUES (40,'c84e511401a747409053c90ba910d0fe','Interface - Non-Unicast Packets', '');
-INSERT INTO data_template VALUES (41,'6632e1e0b58a565c135d7ff90440c335','Interface - Traffic', '');
-INSERT INTO data_template VALUES (42,'1d17325f416b262921a0b55fe5f7e31d','Netware - CPU Utilization', '');
-INSERT INTO data_template VALUES (43,'d814fa3b79bd0f8933b6e0834d3f16d0','HOST-RESSOURCES - hrStorageTable - Hard Drive Space', '');
-INSERT INTO data_template VALUES (44,'f6e7d21c19434666bbdac00ccef9932f','HOST-RESSOURCES - hrProcessorTable - CPU Utilization', '');
-INSERT INTO data_template VALUES (45,'f383db441d1c246cff8482f15e184e5f','HOST-RESSOURCES - hrSystemProcesses - Processes', '');
-INSERT INTO data_template VALUES (46,'2ef027cc76d75720ee5f7a528f0f1fda','HOST-RESSOURCES - hrSystemNumUsers - Logged in Users', '');
-INSERT INTO data_template VALUES (47,'a274deec1f78654dca6c446ba75ebca4','UCD-SNMP - memory - Cache', '');
-INSERT INTO data_template VALUES (48,'d429e4a6019c91e6e84562593c1968ca','SNMP - Generic OID Template', '');
+INSERT INTO data_template VALUES (3,'c8a8f50f5f4a465368222594c5709ede','UCD-SNMP - diskTable - Hard Drive Space');
+INSERT INTO data_template VALUES (4,'cdfed2d401723d2f41fc239d4ce249c7','UCD-SNMP - systemStats - CPU Usage: System');
+INSERT INTO data_template VALUES (5,'a27e816377d2ac6434a87c494559c726','UCD-SNMP - systemStats - CPU Usage: User');
+INSERT INTO data_template VALUES (6,'c06c3d20eccb9598939dc597701ff574','UCD-SNMP - systemStats - CPU Usage: Nice');
+INSERT INTO data_template VALUES (7,'a14f2d6f233b05e64263ff03a5b0b386','Karlnet - Noise Level');
+INSERT INTO data_template VALUES (8,'def1a9019d888ed2ad2e106aa9595ede','Karlnet - Signal Level');
+INSERT INTO data_template VALUES (9,'513a99ae3c9c4413609c1534ffc36eab','Karlnet - Wireless Transmits');
+INSERT INTO data_template VALUES (10,'77404ae93c9cc410f1c2c717e7117378','Karlnet - Wireless Re-Transmits');
+INSERT INTO data_template VALUES (11,'9e72511e127de200733eb502eb818e1d','Linux Localhost - Uptime - Load Average');
+INSERT INTO data_template VALUES (13,'dc33aa9a8e71fb7c61ec0e7a6da074aa','Linux Localhost - meminfo - Memory: Free');
+INSERT INTO data_template VALUES (15,'41f55087d067142d702dd3c73c98f020','Linux Localhost - meminfo - Memory: Free Swap');
+INSERT INTO data_template VALUES (16,'9b8c92d3c32703900ff7dd653bfc9cd8','Linux Localhost - ps ax - Processes');
+INSERT INTO data_template VALUES (17,'c221c2164c585b6da378013a7a6a2c13','Linux Localhost - who - Logged in Users');
+INSERT INTO data_template VALUES (18,'a30a81cb1de65b52b7da542c8df3f188','Linux Localhost - ICMP - Ping Host');
+INSERT INTO data_template VALUES (19,'0de466a1b81dfe581d44ac014b86553a','Netware - Total Users');
+INSERT INTO data_template VALUES (20,'bbe2da0708103029fbf949817d3a4537','Netware - Total Logins');
+INSERT INTO data_template VALUES (22,'e4ac5d5fe73e3c773671c6d0498a8d9d','Netware - File System Reads');
+INSERT INTO data_template VALUES (23,'f29f8c998425eedd249be1e7caf90ceb','Netware - File System Writes');
+INSERT INTO data_template VALUES (24,'7a6216a113e19881e35565312db8a371','Netware - Cache Checks');
+INSERT INTO data_template VALUES (25,'1dbd1251c8e94b334c0e6aeae5ca4b8d','Netware - Cache Hits');
+INSERT INTO data_template VALUES (26,'1a4c5264eb27b5e57acd3160af770a61','Netware - Open Files');
+INSERT INTO data_template VALUES (27,'e9def3a0e409f517cb804dfeba4ccd90','Cisco Router - 5 Minute CPU');
+INSERT INTO data_template VALUES (30,'9b82d44eb563027659683765f92c9757','UCD-SNMP - loadTable - Load Average: 1 Minute');
+INSERT INTO data_template VALUES (31,'87847714d19f405ff3c74f3341b3f940','UCD-SNMP - loadTable - Load Average: 5 Minute');
+INSERT INTO data_template VALUES (32,'308ac157f24e2763f8cd828a80b3e5ff','UCD-SNMP - loadTable - Load Average: 15 Minute');
+INSERT INTO data_template VALUES (33,'797a3e92b0039841b52e441a2823a6fb','UCD-SNMP - memory - Buffers');
+INSERT INTO data_template VALUES (34,'fa15932d3cab0da2ab94c69b1a9f5ca7','UCD-SNMP - memory - Free');
+INSERT INTO data_template VALUES (35,'6ce4ab04378f9f3b03ee0623abb6479f','Netware - Volumes');
+INSERT INTO data_template VALUES (36,'03060555fab086b8412bbf9951179cd9','Netware - Directory Entries');
+INSERT INTO data_template VALUES (37,'e4ac6919d4f6f21ec5b281a1d6ac4d4e','Linux Localhost - df - Hard Drive Space');
+INSERT INTO data_template VALUES (38,'36335cd98633963a575b70639cd2fdad','Interface - Errors/Discards');
+INSERT INTO data_template VALUES (39,'2f654f7d69ac71a5d56b1db8543ccad3','Interface - Unicast Packets');
+INSERT INTO data_template VALUES (40,'c84e511401a747409053c90ba910d0fe','Interface - Non-Unicast Packets');
+INSERT INTO data_template VALUES (41,'6632e1e0b58a565c135d7ff90440c335','Interface - Traffic');
+INSERT INTO data_template VALUES (42,'1d17325f416b262921a0b55fe5f7e31d','Netware - CPU Utilization');
+INSERT INTO data_template VALUES (43,'d814fa3b79bd0f8933b6e0834d3f16d0','HOST-RESSOURCES - hrStorageTable - Hard Drive Space');
+INSERT INTO data_template VALUES (44,'f6e7d21c19434666bbdac00ccef9932f','HOST-RESSOURCES - hrProcessorTable - CPU Utilization');
+INSERT INTO data_template VALUES (45,'f383db441d1c246cff8482f15e184e5f','HOST-RESSOURCES - hrSystemProcesses - Processes');
+INSERT INTO data_template VALUES (46,'2ef027cc76d75720ee5f7a528f0f1fda','HOST-RESSOURCES - hrSystemNumUsers - Logged in Users');
+INSERT INTO data_template VALUES (47,'a274deec1f78654dca6c446ba75ebca4','UCD-SNMP - memory - Cache');
+INSERT INTO data_template VALUES (48,'d429e4a6019c91e6e84562593c1968ca','SNMP - Generic OID Template');
 
 --
 -- Table structure for table `data_template_data`
@@ -1470,39 +1470,82 @@ CREATE TABLE graph_templates (
 -- Dumping data for table `graph_templates`
 --
 
-INSERT INTO graph_templates VALUES (2,'5deb0d66c81262843dce5f3861be9966','Interface - Traffic (bits/sec)', '', '');
-INSERT INTO graph_templates VALUES (3,'abb5e813c9f1e8cd6fc1e393092ef8cb','ucd/net - Available Disk Space', '', '');
-INSERT INTO graph_templates VALUES (4,'e334bdcf821cd27270a4cc945e80915e','ucd/net - CPU Usage', '', '');
-INSERT INTO graph_templates VALUES (5,'280e38336d77acde4672879a7db823f3','Karlnet - Wireless Levels', '', '');
-INSERT INTO graph_templates VALUES (6,'3109d88e6806d2ce50c025541b542499','Karlnet - Wireless Transmissions', '', '');
-INSERT INTO graph_templates VALUES (7,'cf96dfb22b58e08bf101ca825377fa4b','Unix - Ping Latency', '', '');
-INSERT INTO graph_templates VALUES (8,'9fe8b4da353689d376b99b2ea526cc6b','Unix - Processes', '', '');
-INSERT INTO graph_templates VALUES (9,'fe5edd777a76d48fc48c11aded5211ef','Unix - Load Average', '', '');
-INSERT INTO graph_templates VALUES (10,'63610139d44d52b195cc375636653ebd','Unix - Logged in Users', '', '');
-INSERT INTO graph_templates VALUES (11,'5107ec0206562e77d965ce6b852ef9d4','ucd/net - Load Average', '', '');
-INSERT INTO graph_templates VALUES (12,'6992ed4df4b44f3d5595386b8298f0ec','Linux - Memory Usage', '', '');
-INSERT INTO graph_templates VALUES (13,'be275639d5680e94c72c0ebb4e19056d','ucd/net - Memory Usage', '', '');
-INSERT INTO graph_templates VALUES (14,'f17e4a77b8496725dc924b8c35b60036','Netware - File System Cache', '', '');
-INSERT INTO graph_templates VALUES (15,'46bb77f4c0c69671980e3c60d3f22fa9','Netware - CPU Utilization', '', '');
-INSERT INTO graph_templates VALUES (16,'8e77a3036312fd0fda32eaea2b5f141b','Netware - File System Activity', '', '');
-INSERT INTO graph_templates VALUES (17,'5892c822b1bb2d38589b6c27934b9936','Netware - Logged In Users', '', '');
-INSERT INTO graph_templates VALUES (18,'9a5e6d7781cc1bd6cf24f64dd6ffb423','Cisco - CPU Usage', '', '');
-INSERT INTO graph_templates VALUES (19,'0dd0438d5e6cad6776f79ecaa96fb708','Netware - Volume Information', '', '');
-INSERT INTO graph_templates VALUES (20,'b18a3742ebea48c6198412b392d757fc','Netware - Directory Information', '', '');
-INSERT INTO graph_templates VALUES (21,'8e7c8a511652fe4a8e65c69f3d34779d','Unix - Available Disk Space', '', '');
-INSERT INTO graph_templates VALUES (22,'06621cd4a9289417cadcb8f9b5cfba80','Interface - Errors/Discards', '', '');
-INSERT INTO graph_templates VALUES (23,'e0d1625a1f4776a5294583659d5cee15','Interface - Unicast Packets', '', '');
-INSERT INTO graph_templates VALUES (24,'10ca5530554da7b73dc69d291bf55d38','Interface - Non-Unicast Packets', '', '');
-INSERT INTO graph_templates VALUES (25,'df244b337547b434b486662c3c5c7472','Interface - Traffic (bytes/sec)', '', '');
-INSERT INTO graph_templates VALUES (26,'7489e44466abee8a7d8636cb2cb14a1a','Host MIB - Available Disk Space', '', '');
-INSERT INTO graph_templates VALUES (27,'c6bb62bedec4ab97f9db9fd780bd85a6','Host MIB - CPU Utilization', '', '');
-INSERT INTO graph_templates VALUES (28,'e8462bbe094e4e9e814d4e681671ea82','Host MIB - Logged in Users', '', '');
-INSERT INTO graph_templates VALUES (29,'62205afbd4066e5c4700338841e3901e','Host MIB - Processes', '', '');
-INSERT INTO graph_templates VALUES (30,'e3780a13b0f7a3f85a44b70cd4d2fd36','Netware - Open Files', '', '');
-INSERT INTO graph_templates VALUES (31,'1742b2066384637022d178cc5072905a','Interface - Traffic (bits/sec, 95th Percentile)', '', '');
-INSERT INTO graph_templates VALUES (32,'13b47e10b2d5db45707d61851f69c52b','Interface - Traffic (bits/sec, Total Bandwidth)', '', '');
-INSERT INTO graph_templates VALUES (33,'8ad6790c22b693680e041f21d62537ac','Interface - Traffic (bytes/sec, Total Bandwidth)', '', '');
-INSERT INTO graph_templates VALUES (34,'010b90500e1fc6a05abfd542940584d0','SNMP - Generic OID Template', '', '');
+INSERT INTO graph_templates VALUES (2,'5deb0d66c81262843dce5f3861be9966','Interface - Traffic (bits/sec)');
+INSERT INTO graph_templates VALUES (3,'abb5e813c9f1e8cd6fc1e393092ef8cb','ucd/net - Available Disk Space');
+INSERT INTO graph_templates VALUES (4,'e334bdcf821cd27270a4cc945e80915e','ucd/net - CPU Usage');
+INSERT INTO graph_templates VALUES (5,'280e38336d77acde4672879a7db823f3','Karlnet - Wireless Levels');
+INSERT INTO graph_templates VALUES (6,'3109d88e6806d2ce50c025541b542499','Karlnet - Wireless Transmissions');
+INSERT INTO graph_templates VALUES (7,'cf96dfb22b58e08bf101ca825377fa4b','Unix - Ping Latency');
+INSERT INTO graph_templates VALUES (8,'9fe8b4da353689d376b99b2ea526cc6b','Unix - Processes');
+INSERT INTO graph_templates VALUES (9,'fe5edd777a76d48fc48c11aded5211ef','Unix - Load Average');
+INSERT INTO graph_templates VALUES (10,'63610139d44d52b195cc375636653ebd','Unix - Logged in Users');
+INSERT INTO graph_templates VALUES (11,'5107ec0206562e77d965ce6b852ef9d4','ucd/net - Load Average');
+INSERT INTO graph_templates VALUES (12,'6992ed4df4b44f3d5595386b8298f0ec','Linux - Memory Usage');
+INSERT INTO graph_templates VALUES (13,'be275639d5680e94c72c0ebb4e19056d','ucd/net - Memory Usage');
+INSERT INTO graph_templates VALUES (14,'f17e4a77b8496725dc924b8c35b60036','Netware - File System Cache');
+INSERT INTO graph_templates VALUES (15,'46bb77f4c0c69671980e3c60d3f22fa9','Netware - CPU Utilization');
+INSERT INTO graph_templates VALUES (16,'8e77a3036312fd0fda32eaea2b5f141b','Netware - File System Activity');
+INSERT INTO graph_templates VALUES (17,'5892c822b1bb2d38589b6c27934b9936','Netware - Logged In Users');
+INSERT INTO graph_templates VALUES (18,'9a5e6d7781cc1bd6cf24f64dd6ffb423','Cisco - CPU Usage');
+INSERT INTO graph_templates VALUES (19,'0dd0438d5e6cad6776f79ecaa96fb708','Netware - Volume Information');
+INSERT INTO graph_templates VALUES (20,'b18a3742ebea48c6198412b392d757fc','Netware - Directory Information');
+INSERT INTO graph_templates VALUES (21,'8e7c8a511652fe4a8e65c69f3d34779d','Unix - Available Disk Space');
+INSERT INTO graph_templates VALUES (22,'06621cd4a9289417cadcb8f9b5cfba80','Interface - Errors/Discards');
+INSERT INTO graph_templates VALUES (23,'e0d1625a1f4776a5294583659d5cee15','Interface - Unicast Packets');
+INSERT INTO graph_templates VALUES (24,'10ca5530554da7b73dc69d291bf55d38','Interface - Non-Unicast Packets');
+INSERT INTO graph_templates VALUES (25,'df244b337547b434b486662c3c5c7472','Interface - Traffic (bytes/sec)');
+INSERT INTO graph_templates VALUES (26,'7489e44466abee8a7d8636cb2cb14a1a','Host MIB - Available Disk Space');
+INSERT INTO graph_templates VALUES (27,'c6bb62bedec4ab97f9db9fd780bd85a6','Host MIB - CPU Utilization');
+INSERT INTO graph_templates VALUES (28,'e8462bbe094e4e9e814d4e681671ea82','Host MIB - Logged in Users');
+INSERT INTO graph_templates VALUES (29,'62205afbd4066e5c4700338841e3901e','Host MIB - Processes');
+INSERT INTO graph_templates VALUES (30,'e3780a13b0f7a3f85a44b70cd4d2fd36','Netware - Open Files');
+INSERT INTO graph_templates VALUES (31,'1742b2066384637022d178cc5072905a','Interface - Traffic (bits/sec, 95th Percentile)');
+INSERT INTO graph_templates VALUES (32,'13b47e10b2d5db45707d61851f69c52b','Interface - Traffic (bits/sec, Total Bandwidth)');
+INSERT INTO graph_templates VALUES (33,'8ad6790c22b693680e041f21d62537ac','Interface - Traffic (bytes/sec, Total Bandwidth)');
+INSERT INTO graph_templates VALUES (34,'010b90500e1fc6a05abfd542940584d0','SNMP - Generic OID Template');
+
+INSERT INTO data_template VALUES (3,'c8a8f50f5f4a465368222594c5709ede','UCD-SNMP - diskTable - Hard Drive Space');
+INSERT INTO data_template VALUES (4,'cdfed2d401723d2f41fc239d4ce249c7','UCD-SNMP - systemStats - CPU Usage: System');
+INSERT INTO data_template VALUES (5,'a27e816377d2ac6434a87c494559c726','UCD-SNMP - systemStats - CPU Usage: User');
+INSERT INTO data_template VALUES (6,'c06c3d20eccb9598939dc597701ff574','UCD-SNMP - systemStats - CPU Usage: Nice');
+INSERT INTO data_template VALUES (7,'a14f2d6f233b05e64263ff03a5b0b386','Karlnet - Noise Level');
+INSERT INTO data_template VALUES (8,'def1a9019d888ed2ad2e106aa9595ede','Karlnet - Signal Level');
+INSERT INTO data_template VALUES (9,'513a99ae3c9c4413609c1534ffc36eab','Karlnet - Wireless Transmits');
+INSERT INTO data_template VALUES (10,'77404ae93c9cc410f1c2c717e7117378','Karlnet - Wireless Re-Transmits');
+INSERT INTO data_template VALUES (11,'9e72511e127de200733eb502eb818e1d','Linux Localhost - Uptime - Load Average');
+INSERT INTO data_template VALUES (13,'dc33aa9a8e71fb7c61ec0e7a6da074aa','Linux Localhost - meminfo - Memory: Free');
+INSERT INTO data_template VALUES (15,'41f55087d067142d702dd3c73c98f020','Linux Localhost - meminfo - Memory: Free Swap');
+INSERT INTO data_template VALUES (16,'9b8c92d3c32703900ff7dd653bfc9cd8','Linux Localhost - ps ax - Processes');
+INSERT INTO data_template VALUES (17,'c221c2164c585b6da378013a7a6a2c13','Linux Localhost - who - Logged in Users');
+INSERT INTO data_template VALUES (18,'a30a81cb1de65b52b7da542c8df3f188','Linux Localhost - ICMP - Ping Host');
+INSERT INTO data_template VALUES (19,'0de466a1b81dfe581d44ac014b86553a','Netware - Total Users');
+INSERT INTO data_template VALUES (20,'bbe2da0708103029fbf949817d3a4537','Netware - Total Logins');
+INSERT INTO data_template VALUES (22,'e4ac5d5fe73e3c773671c6d0498a8d9d','Netware - File System Reads');
+INSERT INTO data_template VALUES (23,'f29f8c998425eedd249be1e7caf90ceb','Netware - File System Writes');
+INSERT INTO data_template VALUES (24,'7a6216a113e19881e35565312db8a371','Netware - Cache Checks');
+INSERT INTO data_template VALUES (25,'1dbd1251c8e94b334c0e6aeae5ca4b8d','Netware - Cache Hits');
+INSERT INTO data_template VALUES (26,'1a4c5264eb27b5e57acd3160af770a61','Netware - Open Files');
+INSERT INTO data_template VALUES (27,'e9def3a0e409f517cb804dfeba4ccd90','Cisco Router - 5 Minute CPU');
+INSERT INTO data_template VALUES (30,'9b82d44eb563027659683765f92c9757','UCD-SNMP - loadTable - Load Average: 1 Minute');
+INSERT INTO data_template VALUES (31,'87847714d19f405ff3c74f3341b3f940','UCD-SNMP - loadTable - Load Average: 5 Minute');
+INSERT INTO data_template VALUES (32,'308ac157f24e2763f8cd828a80b3e5ff','UCD-SNMP - loadTable - Load Average: 15 Minute');
+INSERT INTO data_template VALUES (33,'797a3e92b0039841b52e441a2823a6fb','UCD-SNMP - memory - Buffers');
+INSERT INTO data_template VALUES (34,'fa15932d3cab0da2ab94c69b1a9f5ca7','UCD-SNMP - memory - Free');
+INSERT INTO data_template VALUES (35,'6ce4ab04378f9f3b03ee0623abb6479f','Netware - Volumes');
+INSERT INTO data_template VALUES (36,'03060555fab086b8412bbf9951179cd9','Netware - Directory Entries');
+INSERT INTO data_template VALUES (37,'e4ac6919d4f6f21ec5b281a1d6ac4d4e','Linux Localhost - df - Hard Drive Space');
+INSERT INTO data_template VALUES (38,'36335cd98633963a575b70639cd2fdad','Interface - Errors/Discards');
+INSERT INTO data_template VALUES (39,'2f654f7d69ac71a5d56b1db8543ccad3','Interface - Unicast Packets');
+INSERT INTO data_template VALUES (40,'c84e511401a747409053c90ba910d0fe','Interface - Non-Unicast Packets');
+INSERT INTO data_template VALUES (41,'6632e1e0b58a565c135d7ff90440c335','Interface - Traffic');
+INSERT INTO data_template VALUES (42,'1d17325f416b262921a0b55fe5f7e31d','Netware - CPU Utilization');
+INSERT INTO data_template VALUES (43,'d814fa3b79bd0f8933b6e0834d3f16d0','HOST-RESSOURCES - hrStorageTable - Hard Drive Space');
+INSERT INTO data_template VALUES (44,'f6e7d21c19434666bbdac00ccef9932f','HOST-RESSOURCES - hrProcessorTable - CPU Utilization');
+INSERT INTO data_template VALUES (45,'f383db441d1c246cff8482f15e184e5f','HOST-RESSOURCES - hrSystemProcesses - Processes');
+INSERT INTO data_template VALUES (46,'2ef027cc76d75720ee5f7a528f0f1fda','HOST-RESSOURCES - hrSystemNumUsers - Logged in Users');
+INSERT INTO data_template VALUES (47,'a274deec1f78654dca6c446ba75ebca4','UCD-SNMP - memory - Cache');
+INSERT INTO data_template VALUES (48,'d429e4a6019c91e6e84562593c1968ca','SNMP - Generic OID Template');
+
 
 --
 -- Table structure for table `graph_templates_gprint`
@@ -2128,13 +2171,13 @@ CREATE TABLE host_template (
 -- Dumping data for table `host_template`
 --
 
-INSERT INTO host_template VALUES (1,'4855b0e3e553085ed57219690285f91f','Generic SNMP-enabled Host', '', '', 'public', 0, '', '', 'MD5', '', 'DES', '', 161, 500, 3, 2, 23, 400, 1, 10);
-INSERT INTO host_template VALUES (3,'07d3fe6a52915f99e642d22e27d967a4','ucd/net SNMP Host', '', '', 'public', 0, '', '', 'MD5', '', 'DES', '', 161, 500, 3, 2, 23, 400, 1, 10);
-INSERT INTO host_template VALUES (4,'4e5dc8dd115264c2e9f3adb725c29413','Karlnet Wireless Bridge', '', '', 'public', 0, '', '', 'MD5', '', 'DES', '', 161, 500, 3, 2, 23, 400, 1, 10);
-INSERT INTO host_template VALUES (5,'cae6a879f86edacb2471055783bec6d0','Cisco Router', '', '', 'public', 0, '', '', 'MD5', '', 'DES', '', 161, 500, 3, 2, 23, 400, 1, 10);
-INSERT INTO host_template VALUES (6,'9ef418b4251751e09c3c416704b01b01','Netware 4/5 Server', '', '', 'public', 0, '', '', 'MD5', '', 'DES', '', 161, 500, 3, 2, 23, 400, 1, 10);
-INSERT INTO host_template VALUES (7,'5b8300be607dce4f030b026a381b91cd','Windows 2000/XP Host', '', '', 'public', 0, '', '', 'MD5', '', 'DES', '', 161, 500, 3, 2, 23, 400, 1, 10);
-INSERT INTO host_template VALUES (8,'2d3e47f416738c2d22c87c40218cc55e','Local Linux Machine', '', '', 'public', 0, '', '', 'MD5', '', 'DES', '', 161, 500, 3, 2, 23, 400, 1, 10);
+INSERT INTO host_template VALUES (1,'4855b0e3e553085ed57219690285f91f','Generic SNMP-enabled Host', 'public', 0, '', '', 'MD5', '', 'DES', '', 161, 500, 3, 2, 23, 400, 1, 10);
+INSERT INTO host_template VALUES (3,'07d3fe6a52915f99e642d22e27d967a4','ucd/net SNMP Host', 'public', 0, '', '', 'MD5', '', 'DES', '', 161, 500, 3, 2, 23, 400, 1, 10);
+INSERT INTO host_template VALUES (4,'4e5dc8dd115264c2e9f3adb725c29413','Karlnet Wireless Bridge', 'public', 0, '', '', 'MD5', '', 'DES', '', 161, 500, 3, 2, 23, 400, 1, 10);
+INSERT INTO host_template VALUES (5,'cae6a879f86edacb2471055783bec6d0','Cisco Router', 'public', 0, '', '', 'MD5', '', 'DES', '', 161, 500, 3, 2, 23, 400, 1, 10);
+INSERT INTO host_template VALUES (6,'9ef418b4251751e09c3c416704b01b01','Netware 4/5 Server', 'public', 0, '', '', 'MD5', '', 'DES', '', 161, 500, 3, 2, 23, 400, 1, 10);
+INSERT INTO host_template VALUES (7,'5b8300be607dce4f030b026a381b91cd','Windows 2000/XP Host', 'public', 0, '', '', 'MD5', '', 'DES', '', 161, 500, 3, 2, 23, 400, 1, 10);
+INSERT INTO host_template VALUES (8,'2d3e47f416738c2d22c87c40218cc55e','Local Linux Machine', 'public', 0, '', '', 'MD5', '', 'DES', '', 161, 500, 3, 2, 23, 400, 1, 10);
 
 --
 -- Table structure for table `host_template_graph`
@@ -2554,14 +2597,14 @@ CREATE TABLE snmp_query (
 -- Dumping data for table `snmp_query`
 --
 
-INSERT INTO snmp_query VALUES (1,'d75e406fdeca4fcef45b8be3a9a63cbc','<path_cacti>/resource/snmp_queries/interface.xml','SNMP - Interface Statistics','Queries a host for a list of monitorable interfaces', '',0,2);
-INSERT INTO snmp_query VALUES (2,'3c1b27d94ad208a0090f293deadde753','<path_cacti>/resource/snmp_queries/net-snmp_disk.xml','UCD-SNMP - diskTable - Hard Drive Space','Retrieves a list of monitored partitions/disks from a net-snmp enabled host.', '',0,2);
-INSERT INTO snmp_query VALUES (3,'59aab7b0feddc7860002ed9303085ba5','<path_cacti>/resource/snmp_queries/kbridge.xml','Karlnet - Wireless Bridge Statistics','Gets information about the wireless connectivity of each station from a Karlnet bridge.', '',0,2);
-INSERT INTO snmp_query VALUES (4,'ad06f46e22e991cb47c95c7233cfaee8','<path_cacti>/resource/snmp_queries/netware_disk.xml','Netware - Get Available Volumes','Retrieves a list of volumes from a Netware server.', '',0,2);
-INSERT INTO snmp_query VALUES (6,'8ffa36c1864124b38bcda2ae9bd61f46','<path_cacti>/resource/script_queries/unix_disk.xml','Linux Localhost - df - Hard Drive Space','Queries a list of mounted partitions on a unix-based host with the', '',0,11);
-INSERT INTO snmp_query VALUES (7,'30ec734bc0ae81a3d995be82c73f46c1','<path_cacti>/resource/snmp_queries/netware_cpu.xml','Netware - Get Processor Information','Gets information about running processors in a Netware server', '',0,2);
-INSERT INTO snmp_query VALUES (8,'9343eab1f4d88b0e61ffc9d020f35414','<path_cacti>/resource/script_server/host_disk.xml','HOST-RESSOURCES - hrStorageTable - Hard Drive Space','Gets a list of partitions using SNMP', '',0,12);
-INSERT INTO snmp_query VALUES (9,'0d1ab53fe37487a5d0b9e1d3ee8c1d0d','<path_cacti>/resource/script_server/host_cpu.xml','HOST-RESSOURCES - hrProcessorTable - CPU Utilization','Gets usage for each processor in the system using the host MIB.', '',0,12);
+INSERT INTO snmp_query VALUES (1,'d75e406fdeca4fcef45b8be3a9a63cbc','<path_cacti>/resource/snmp_queries/interface.xml','SNMP - Interface Statistics','Queries a host for a list of monitorable interfaces',0,2);
+INSERT INTO snmp_query VALUES (2,'3c1b27d94ad208a0090f293deadde753','<path_cacti>/resource/snmp_queries/net-snmp_disk.xml','UCD-SNMP - diskTable - Hard Drive Space','Retrieves a list of monitored partitions/disks from a net-snmp enabled host.',0,2);
+INSERT INTO snmp_query VALUES (3,'59aab7b0feddc7860002ed9303085ba5','<path_cacti>/resource/snmp_queries/kbridge.xml','Karlnet - Wireless Bridge Statistics','Gets information about the wireless connectivity of each station from a Karlnet bridge.',0,2);
+INSERT INTO snmp_query VALUES (4,'ad06f46e22e991cb47c95c7233cfaee8','<path_cacti>/resource/snmp_queries/netware_disk.xml','Netware - Get Available Volumes','Retrieves a list of volumes from a Netware server.',0,2);
+INSERT INTO snmp_query VALUES (6,'8ffa36c1864124b38bcda2ae9bd61f46','<path_cacti>/resource/script_queries/unix_disk.xml','Linux Localhost - df - Hard Drive Space','Queries a list of mounted partitions on a unix-based host with the',0,11);
+INSERT INTO snmp_query VALUES (7,'30ec734bc0ae81a3d995be82c73f46c1','<path_cacti>/resource/snmp_queries/netware_cpu.xml','Netware - Get Processor Information','Gets information about running processors in a Netware server',0,2);
+INSERT INTO snmp_query VALUES (8,'9343eab1f4d88b0e61ffc9d020f35414','<path_cacti>/resource/script_server/host_disk.xml','HOST-RESSOURCES - hrStorageTable - Hard Drive Space','Gets a list of partitions using SNMP',0,12);
+INSERT INTO snmp_query VALUES (9,'0d1ab53fe37487a5d0b9e1d3ee8c1d0d','<path_cacti>/resource/script_server/host_cpu.xml','HOST-RESSOURCES - hrProcessorTable - CPU Utilization','Gets usage for each processor in the system using the host MIB.',0,12);
 
 --
 -- Table structure for table `snmp_query_graph`
