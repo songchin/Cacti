@@ -572,14 +572,12 @@ function display_database_processes() {
 function display_languages() {
 	global $colors, $config, $cacti_textdomains, $lang2locale, $i18n_modes, $cacti_locale;
 
-	$loaded_extensions = get_loaded_extensions();
-
 	$language = $lang2locale[$cacti_locale]["language"];
 
 	/* rebuild $lang2locale array to find country and language codes easier */
 	$locations = array();
 	foreach($lang2locale as $locale => $properties) {
-		$locations[$properties['filename']] = $properties["language"];
+		$locations[$properties['filename'] . ".mo"] = $properties["language"];
 	}
 
 	/* create a list of all languages this Cacti system supports ... */
@@ -658,7 +656,7 @@ function display_languages() {
 		}
 	}else {
 			print "<tr class='rowAlternate1'>\n";
-			print "		<td class='textAreaNotes v'><i>" . __("No Languages File Loaded.") . "</i></td>\n";
+			print "		<td class='textAreaNotes v'><i>" . __("No Language Files Loaded.") . "</i></td>\n";
 			print "</tr>\n";
 	}
 	html_end_box();

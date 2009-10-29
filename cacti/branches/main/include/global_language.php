@@ -88,10 +88,13 @@ if (isset($_GET['language']) && isset($lang2locale[$_GET['language']])) {
 
 
 /* define the path to the language file */
-$path2catalogue = CACTI_BASE_PATH . "/locales/LC_MESSAGES/" . $lang2locale[$cacti_locale]['filename'];
+$path2catalogue = CACTI_BASE_PATH . "/locales/LC_MESSAGES/" . $lang2locale[$cacti_locale]['filename'] . ".mo";
+
+/* define the path to the language file of the DHTML calendar */
+$path2calendar = CACTI_BASE_PATH . "/include/js/jscalendar/lang/" . $lang2locale[$cacti_locale]['filename'] . ".js";
 
 /* use fallback procedure if requested language is not available */
-if (file_exists($path2catalogue)) {
+if (file_exists($path2catalogue) & file_exists($path2calendar)) {
 	$cacti_textdomains['cacti']['path2locales'] = CACTI_BASE_PATH . "/locales";
 	$cacti_textdomains['cacti']['path2catalogue'] = $path2catalogue;
 }else {
@@ -106,7 +109,7 @@ if(sizeof($plugins)>0) {
 	foreach($plugins as $plugin) {
 
 		$plugin = $plugin['directory'];
-		$path2catalogue =  CACTI_BASE_PATH . "/plugins/" . $plugin . "/locales/LC_MESSAGES/" . $lang2locale[$cacti_locale]['filename'];
+		$path2catalogue =  CACTI_BASE_PATH . "/plugins/" . $plugin . "/locales/LC_MESSAGES/" . $lang2locale[$cacti_locale]['filename'] . ".mo";
 
 		if(file_exists($path2catalogue)) {
 			$cacti_textdomains[$plugin]['path2locales'] = CACTI_BASE_PATH . "/plugins/" . $plugin . "/locales";
@@ -322,53 +325,54 @@ function load_i18n_fallback_wrappers(){
  */
 function get_list_of_locales(){
 	$lang2locale = array(
-	"sq" 		=> array("language"=>"Albanian", 				"country" => "al", "filename" => "albanian_albania.mo"),
-	"ar"		=> array("language"=>"Arabic", 					"country" => "sa", "filename" => "arabic_saudi_arabia.mo"),
+	"sq" 		=> array("language"=>"Albanian", 				"country" => "al", "filename" => "albanian_albania"),
+	"ar"		=> array("language"=>"Arabic", 					"country" => "sa", "filename" => "arabic_saudi_arabia"),
 	"hy"		=> array("language"=>"Armenian",				"country" => "am", "filename" => "armenian_armenia.mo"),
-	"be"		=> array("language"=>"Belarusian",				"country" => "by", "filename" => "belarusian_belarus.mo"),
-	"bg"		=> array("language"=>"Bulgarian",				"country" => "bg", "filename" => "bulgarian_bulgaria.mo"),
-	"zh" 		=> array("language"=>"Chinese", 				"country" => "cn", "filename" => "chinese_china.mo"),
-	"zh-cn"		=> array("language"=>"Chinese (China)",			"country" => "cn", "filename" => "chinese_china.mo"),
-	"zh-hk"		=> array("language"=>"Chinese (Hong Kong)",		"country" => "hk", "filename" => "chinese_hong_kong.mo"),
-	"zh-sg"		=> array("language"=>"Chinese (Singapore)",		"country" => "sg", "filename" => "chinese_singapore.mo"),
-	"zh-tw"		=> array("language"=>"Chinese (Taiwan)",		"country" => "tw", "filename" => "chinese_taiwan.mo"),
-	"hr" 		=> array("language"=>"Croatian", 				"country" => "hr", "filename" => "croatian_croatia.mo"),
-	"cs"		=> array("language"=>"Czech",					"country" => "cz", "filename" => "czech_czech_republic.mo"),
-	"da" 		=> array("language"=>"Danish", 					"country" => "dk", "filename" => "danish_denmark.mo"),
-	"nl" 		=> array("language"=>"Dutch", 					"country" => "nl", "filename" => "dutch_netherlands.mo"),
-	"en"		=> array("language"=>"English",					"country" => "us", "filename" => "english_dummy"),
-	"et"		=> array("language"=>"Estonian", 				"country" => "ee", "filename" => "estonian_estonia.mo"),
-	"fi" 		=> array("language"=>"Finnish", 				"country" => "fi", "filename" => "finnish_finland.mo"),
-	"fr" 		=> array("language"=>"French", 					"country" => "fr", "filename" => "french_france.mo"),
-	"de"		=> array("language"=>"German",					"country" => "de", "filename" => "german_germany.mo"),
-	"el" 		=> array("language"=>"Greek", 					"country" => "gr", "filename" => "greek_greece.mo"),
-	"iw" 		=> array("language"=>"Hebrew", 					"country" => "il", "filename" => "hebrew_israel.mo"),
-	"hi" 		=> array("language"=>"Hindi", 					"country" => "in", "filename" => "hindi_india.mo"),
-	"hu" 		=> array("language"=>"Hungarian",				"country" => "hu", "filename" => "hungarian_hungary.mo"),
-	"is" 		=> array("language"=>"Icelandic",				"country" => "is", "filename" => "icelandic_iceland.mo"),
-	"id" 		=> array("language"=>"Indonesian", 				"country" => "id", "filename" => "indonesian_indonesia.mo"),
-	"ga" 		=> array("language"=>"Irish", 					"country" => "ie", "filename" => "irish_ireland.mo"),
-	"it" 		=> array("language"=>"Italian", 				"country" => "it", "filename" => "italian_italy.mo"),
-	"ja" 		=> array("language"=>"Japanese", 				"country" => "jp", "filename" => "japanese_japan.mo"),
-	"ko" 		=> array("language"=>"Korean", 					"country" => "kr", "filename" => "korean_korea.mo"),
-	"lv" 		=> array("language"=>"Lativan",					"country" => "lv", "filename" => "latvian_latvia.mo"),
-	"lt"		=> array("language"=>"Lithuanian", 				"country" => "lt", "filename" => "lithuanian_lithuania.mo"),
-	"mk"		=> array("language"=>"Macedonian", 				"country" => "mk", "filename" => "macedonian_macedonia.mo"),
-	"ms"		=> array("language"=>"Malay", 					"country" => "my", "filename" => "malay_malaysia.mo"),
-	"mt"		=> array("language"=>"Maltese", 				"country" => "lt", "filename" => "maltese_malta.mo"),
-	"no"		=> array("language"=>"Norwegian", 				"country" => "no", "filename" => "norwegian_norway.mo"),
-	"pl"		=> array("language"=>"Polish", 					"country" => "pl", "filename" => "polish_poland.mo"),
-	"pt"		=> array("language"=>"Portuguese",				"country" => "pt", "filename" => "portuguese_portugal.mo"),
-	"ro"		=> array("language"=>"Romanian", 				"country" => "ro", "filename" => "romanian_romania.mo"),
-	"ru"		=> array("language"=>"Russian", 				"country" => "ru", "filename" => "russian_russia.mo"),
-	"sr"		=> array("language"=>"Serbian", 				"country" => "rs", "filename" => "serbian_serbia.mo"),
-	"sk"		=> array("language"=>"Slovak", 					"country" => "sk", "filename" => "slovak_slovakia.mo"),
-	"sl"		=> array("language"=>"Slovenian", 				"country" => "si", "filename" => "slovenian_slovenia.mo"),
-	"es"		=> array("language"=>"Spanish", 				"country" => "es", "filename" => "spanish_spain.mo"),
-	"sv"		=> array("language"=>"Swedish",					"country" => "se", "filename" => "swedish_sweden.mo"),
-	"th"		=> array("language"=>"Thai", 					"country" => "th", "filename" => "thai_thailand.mo"),
-	"tr"		=> array("language"=>"Turkish", 				"country" => "tr", "filename" => "turkish_turkey.mo"),
-	"uk"		=> array("language"=>"Vietnamese", 				"country" => "vn", "filename" => "vietnamese_vietnam.mo"));
+	"be"		=> array("language"=>"Belarusian",				"country" => "by", "filename" => "belarusian_belarus"),
+	"bg"		=> array("language"=>"Bulgarian",				"country" => "bg", "filename" => "bulgarian_bulgaria"),
+	"zh" 		=> array("language"=>"Chinese", 				"country" => "cn", "filename" => "chinese_china"),
+	"zh-cn"		=> array("language"=>"Chinese (Simplified)",	"country" => "cn", "filename" => "chinese_china_simplified"),
+	"zh-hk"		=> array("language"=>"Chinese (Hong Kong)",		"country" => "hk", "filename" => "chinese_hong_kong"),
+	"zh-sg"		=> array("language"=>"Chinese (Singapore)",		"country" => "sg", "filename" => "chinese_singapore"),
+	"zh-tw"		=> array("language"=>"Chinese (Taiwan)",		"country" => "tw", "filename" => "chinese_taiwan"),
+	"hr" 		=> array("language"=>"Croatian", 				"country" => "hr", "filename" => "croatian_croatia"),
+	"cs"		=> array("language"=>"Czech",					"country" => "cz", "filename" => "czech_czech_republic"),
+	"da" 		=> array("language"=>"Danish", 					"country" => "dk", "filename" => "danish_denmark"),
+	"nl" 		=> array("language"=>"Dutch", 					"country" => "nl", "filename" => "dutch_netherlands"),
+	"en"		=> array("language"=>"English",					"country" => "us", "filename" => "english_usa"),
+	"et"		=> array("language"=>"Estonian", 				"country" => "ee", "filename" => "estonian_estonia"),
+	"fi" 		=> array("language"=>"Finnish", 				"country" => "fi", "filename" => "finnish_finland"),
+	"fr" 		=> array("language"=>"French", 					"country" => "fr", "filename" => "french_france"),
+	"de"		=> array("language"=>"German",					"country" => "de", "filename" => "german_germany"),
+	"el" 		=> array("language"=>"Greek", 					"country" => "gr", "filename" => "greek_greece"),
+	"iw" 		=> array("language"=>"Hebrew", 					"country" => "il", "filename" => "hebrew_israel"),
+	"hi" 		=> array("language"=>"Hindi", 					"country" => "in", "filename" => "hindi_india"),
+	"hu" 		=> array("language"=>"Hungarian",				"country" => "hu", "filename" => "hungarian_hungary"),
+	"is" 		=> array("language"=>"Icelandic",				"country" => "is", "filename" => "icelandic_iceland"),
+	"id" 		=> array("language"=>"Indonesian", 				"country" => "id", "filename" => "indonesian_indonesia"),
+	"ga" 		=> array("language"=>"Irish", 					"country" => "ie", "filename" => "irish_ireland"),
+	"it" 		=> array("language"=>"Italian", 				"country" => "it", "filename" => "italian_italy"),
+	"ja" 		=> array("language"=>"Japanese", 				"country" => "jp", "filename" => "japanese_japan"),
+	"ko" 		=> array("language"=>"Korean", 					"country" => "kr", "filename" => "korean_korea"),
+	"lv" 		=> array("language"=>"Lativan",					"country" => "lv", "filename" => "latvian_latvia"),
+	"lt"		=> array("language"=>"Lithuanian", 				"country" => "lt", "filename" => "lithuanian_lithuania"),
+	"mk"		=> array("language"=>"Macedonian", 				"country" => "mk", "filename" => "macedonian_macedonia"),
+	"ms"		=> array("language"=>"Malay", 					"country" => "my", "filename" => "malay_malaysia"),
+	"mt"		=> array("language"=>"Maltese", 				"country" => "lt", "filename" => "maltese_malta"),
+	"no"		=> array("language"=>"Norwegian", 				"country" => "no", "filename" => "norwegian_norway"),
+	"pl"		=> array("language"=>"Polish", 					"country" => "pl", "filename" => "polish_poland"),
+	"pt"		=> array("language"=>"Portuguese",				"country" => "pt", "filename" => "portuguese_portugal"),
+	"pt-br"		=> array("language"=>"Portuguese (Brazil)",		"country" => "br", "filename" => "portuguese_brazil"),
+	"ro"		=> array("language"=>"Romanian", 				"country" => "ro", "filename" => "romanian_romania"),
+	"ru"		=> array("language"=>"Russian", 				"country" => "ru", "filename" => "russian_russia"),
+	"sr"		=> array("language"=>"Serbian", 				"country" => "rs", "filename" => "serbian_serbia"),
+	"sk"		=> array("language"=>"Slovak", 					"country" => "sk", "filename" => "slovak_slovakia"),
+	"sl"		=> array("language"=>"Slovenian", 				"country" => "si", "filename" => "slovenian_slovenia"),
+	"es"		=> array("language"=>"Spanish", 				"country" => "es", "filename" => "spanish_spain"),
+	"sv"		=> array("language"=>"Swedish",					"country" => "se", "filename" => "swedish_sweden"),
+	"th"		=> array("language"=>"Thai", 					"country" => "th", "filename" => "thai_thailand"),
+	"tr"		=> array("language"=>"Turkish", 				"country" => "tr", "filename" => "turkish_turkey"),
+	"uk"		=> array("language"=>"Vietnamese", 				"country" => "vn", "filename" => "vietnamese_vietnam"));
 	return $lang2locale;
 }
 
@@ -385,13 +389,15 @@ function get_installed_locales(){
 	$supported_languages["en"] = $lang2locale["en"]["language"];
 
 	foreach($lang2locale as $locale => $properties) {
-		$locations[$properties["filename"]] = array("locale" => $locale, "language" => $properties["language"]);
+		$locations[$properties["filename"] . ".mo"] = array("locale" => $locale, "language" => $properties["language"]);
 	}
 
 	/* create a list of all languages this Cacti system supports ... */
 	$dhandle = opendir(CACTI_BASE_PATH . "/locales/LC_MESSAGES");
 	while (false !== ($filename = readdir($dhandle))) {
-		if(isset($locations[$filename])) {
+		/* check if language file for DHTML calendar is also available */
+		$path2calendar = CACTI_BASE_PATH . "/include/js/jscalendar/lang/" . str_replace(".mo", ".js", $filename);
+		if(isset($locations[$filename]) & file_exists($path2calendar)) {
 			$supported_languages[$locations[$filename]["locale"]] = $locations[$filename]["language"];
 		}
 	}

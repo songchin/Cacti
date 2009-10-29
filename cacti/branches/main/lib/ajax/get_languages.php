@@ -25,19 +25,19 @@ $no_http_headers = true;
 include(dirname(__FILE__) . "/../../include/global.php");
 include_once(dirname(__FILE__) . "/../../lib/functions.php");
 
-//sleep(1);
-
 /* rebuild $lang2locale array to find country and language codes easier */
 $locations = array();
 foreach($lang2locale as $locale => $properties) {
-	$locations[$properties['filename']] = array("flag" => $properties["country"], "language" => $properties["language"], "locale" => $locale);
+	$locations[$properties['filename'] . ".mo"] = array("flag" => $properties["country"], "language" => $properties["language"], "locale" => $locale);
 }
 
 /* create a list of all languages this Cacti system supports ... */
 $dhandle = opendir(CACTI_BASE_PATH . "/locales/LC_MESSAGES");
-$supported_languages["cacti"][] = "english_dummy";
+$supported_languages["cacti"][] = "english_usa.mo";
 while (false !== ($filename = readdir($dhandle))) {
-	if(isset($locations[$filename])) {
+	/* language file for the DHTML calendar has to be available too */
+	$path2calendar = "../../include/js/jscalendar/lang/" . str_replace(".mo", ".js", $filename);
+	if(isset($locations[$filename]) & file_exists($path2calendar)) {
 		$supported_languages["cacti"][] = $filename;
 	}
 }
@@ -52,7 +52,7 @@ if(read_config_option('i18n_support') == 2){
 
 			$plugin = $plugin["directory"];
 			$dhandle = @opendir(CACTI_BASE_PATH . "/plugins/" . $plugin . "/locales/LC_MESSAGES");
-			$supported_languages[$plugin][] = "english_dummy";
+			$supported_languages[$plugin][] = "english_usa.mo";
 			if($dhandle) {
 				while (false !== ($filename = readdir($dhandle))) {
 					if(isset($locations[$filename])) {
@@ -70,7 +70,7 @@ if(read_config_option('i18n_support') == 2){
 			}else {
 				/* no language support */
 				$supported_languages["cacti"] = array();
-				$supported_languages["cacti"][] = "english_dummy";
+				$supported_languages["cacti"][] = "english_usa.mo";
 				break;
 			}
 		}

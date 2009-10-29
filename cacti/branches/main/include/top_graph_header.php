@@ -129,7 +129,7 @@ $page_title = api_plugin_hook_function('page_title', 'Cacti');
 	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/js/jquery/jquery.dropdown.js"></script>
 	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/js/jquery/jquery.dd.js"></script>
 	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/js/jscalendar/calendar.js"></script>
-	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/js/jscalendar/lang/calendar-en.js"></script>
+	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/js/jscalendar/lang/<?php print (read_config_option('i18n_support') != 0) ? $lang2locale[$cacti_locale]['filename'] : "english_usa";?>.js"></script>
 	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/js/jscalendar/calendar-setup.js"></script>
 	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/js/jstree/css.js"></script>
 	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/js/jstree/tree_component.js"></script>
