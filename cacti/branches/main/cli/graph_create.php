@@ -61,8 +61,6 @@ if (sizeof($parms)) {
 	$input_fields  = array();
 	$values["cg"]  = array();
 
-	$host			= array();
-	$hosts          = getHosts($host);
 	$graphTemplates = getGraphTemplates();
 
 	$graphTitle = "";
@@ -286,7 +284,8 @@ if (sizeof($parms)) {
 	}
 
 	/* Verify the device's existance */
-	if (!isset($hosts[$hostId]) || $hostId == 0) {
+	$host_exists = db_fetch_cell("SELECT COUNT(*) FROM host WHERE id=" . $hostId);
+	if (($host_exists > 0) || $hostId == 0) {
 		printf(__("ERROR: Unknown Device ID (%d)\n"), $hostId);
 		echo __("Try php -q device_list.php") . "\n";
 		exit(1);

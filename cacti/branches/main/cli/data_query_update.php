@@ -39,6 +39,7 @@ include_once(CACTI_BASE_PATH."/lib/data_query.php");
 $parms = $_SERVER["argv"];
 $me = array_shift($parms);
 $debug		= FALSE;	# no debug mode
+$delimiter 	= ':';		# default delimiter, if not given by user
 $quietMode 	= FALSE;	# be verbose by default
 $device 	= array();
 $dq			= array();
@@ -49,8 +50,9 @@ if (sizeof($parms)) {
 		@list($arg, $value) = @explode("=", $parameter);
 
 		switch ($arg) {
-		case "-d":
+			case "-d":
 			case "--debug":			$debug 							= TRUE; 		break;
+			case "--delim":			$delimiter						= trim($value);	break;
 			case "--device-id":		$device["id"] 					= trim($value);	break;
 			case "--site-id":		$device["site_id"] 				= trim($value);	break;
 			case "--poller-id":		$device["poller_id"]			= trim($value);	break;
@@ -77,15 +79,51 @@ if (sizeof($parms)) {
 			case "--max-oids":		$device["max_oids"] 			= trim($value);	break;
 			case "--data-query-id":	$dq["snmp_query_id"] 			= trim($value);	break;
 			case "--reindex-method":$dq["reindex_method"] 			= trim($value);	break;
-		case "-V":
-		case "-H":
-		case "--help":
+			case "-V":
+			case "-H":
+			case "--help":
 			case "--version":		display_help($me);								exit(0);
 			case "--quiet":			$quietMode = TRUE;								break;
 			default:				print __("ERROR: Invalid Argument: (%s)\n\n", $arg); display_help($me); exit(1);
 		}
 	}
 
+	# split old/new values for data queries only, makes no sense for device, as this is data_query_update.php
+	# seems to be a bit overdesigned this way, because currently only reindex method is eligible
+	foreach($dq as $key => $value) {
+		# now split each parameter using the default or the given delimiter
+		@list($old{$key}, $new{$key}) = @explode($delimiter, $dq{$key});
+		# unset, if parm left empty but allow for "empty" input
+		if (!strlen($old{$key})) {
+			unset($old{$key});
+		} elseif (($old{$key} === "''") || ($old{$key} === '""')) {
+			$old{$key} = '';
+		}
+		if (!strlen($new{$key})) {
+			unset($new{$key});
+		} elseif (($new{$key} === "''") || ($new{$key} === '""')) {
+			$new{$key} = '';
+		}
+	}
+
+	# we do not want to change the dq["snmp_query_id"] because that's the autoincremented table index
+	if (isset($new["snmp_query_id"])) {
+		echo(__("ERROR: Update of data query id not permitted\n"));
+		exit(1);
+	}
+
+	# verify new parameters, this currently only matches reindex method
+	if (!sizeof($new)) {
+		print __("ERROR: No Update Parameters found\n");
+		exit(1);
+	}
+
+	# at least, the old data query id has to be given
+	if (!isset($old["snmp_query_id"])) {
+		print __("ERROR: No matching Data Query found\n");
+		print __("Try php -q data_query_list.php") . "\n";
+		exit(1);
+	}
 
 	if (sizeof($device)) {
 		# verify the parameters given
@@ -97,9 +135,19 @@ if (sizeof($parms)) {
 		}
 	}
 
-	if (sizeof($dq)) {
+	if (sizeof($old)) {
 		# verify the parameters given
-		$verify = verifyDataQuery($dq, true);
+		$verify = verifyDataQuery($old, true);
+		if (isset($verify["err_msg"])) {
+			print $verify["err_msg"] . "\n\n";
+			display_help($me);
+			exit(1);
+		}
+	}
+
+	if (sizeof($new)) {
+		# verify the parameters given
+		$verify = verifyDataQuery($new, true);
 		if (isset($verify["err_msg"])) {
 			print $verify["err_msg"] . "\n\n";
 			display_help($me);
@@ -111,34 +159,84 @@ if (sizeof($parms)) {
 	$devices = getDevices($device);
 
 	if (!sizeof($devices)) {
-	$data_queries = getSNMPQueries();
-	displaySNMPQueries($data_queries, $quietMode);
-	} else {
-		$columns = array();
-		if (isset($dq["snmp_query_id"])) {
-			$data_queries = getSNMPQueriesByDevices($devices, $dq["snmp_query_id"], $columns);
-		} else {
-			$data_queries = getSNMPQueriesByDevices($devices, '', $columns);
-		}
-		$title = __("List of Data Queries for given Devices");
-		# these are the table columns for display
-		displayGenericArray($data_queries, $columns, $title, $quietMode);
+		print __("ERROR: No matching Devices found\n");
+		print __("Try php -q device_list.php") . "\n";
+		exit(1);
 	}
-}else{
-	$data_queries = getSNMPQueries();
-	displaySNMPQueries($data_queries, $quietMode);
+
+	# restrict further processing to those hosts only, that are associated with the given data query
+	$sql = "SELECT host.id, " .
+			"host.hostname, " .
+			"host_snmp_query.reindex_method " .
+			"FROM host_snmp_query " .
+			"LEFT JOIN host ON (host_snmp_query.host_id = host.id) ".
+			"WHERE " . str_replace("id", "host_id", array_to_sql_or($devices, "id")) . " " .
+			"AND snmp_query_id=" . $old["snmp_query_id"];
+	if ($debug) {
+		print $sql . "\n";
+	}
+	$verified_devices = db_fetch_assoc($sql);
+
+	/* build raw SQL update command */
+	$sql_upd1 = "UPDATE host_snmp_query SET ";
+	$sql_upd2 = "";
+	$sql_upd3 = " WHERE " . str_replace("id", "host_id", array_to_sql_or($verified_devices, "id")) . " AND snmp_query_id=" . $old["snmp_query_id"];
+
+	# verify each parameter given and append it to the SQL update command
+	$first = true;
+	reset($new);
+	while (list($parm, $value) = each($new)) {
+		$sql_upd2 .= ($first ? " " : ", ");
+		$sql_upd2 .= $parm . "='" . $value . "'"; # TODO: relies on data type conversion, else tics would matter
+		$first = false;
+	}
+
+	# update everything
+	if (sizeof($verified_devices)) {
+		if ($debug) {
+			print $sql_upd1 . $sql_upd2 . $sql_upd3 . "\n";
+		} else {
+			$ok = db_execute($sql_upd1 . $sql_upd2 . $sql_upd3);
+			# add the snmp query name for printout
+			$old["snmp_query_name"] = db_fetch_cell("SELECT name FROM snmp_query WHERE id=" . $old["snmp_query_id"]);
+
+			if ($ok) {
+
+				if (!$quietMode) {
+					echo __("Data Query (%s: %s) reindex method (%s: %s) updated for %s Device(s)", $old["snmp_query_id"], $old["snmp_query_name"], $new["reindex_method"], $reindex_types{$new["reindex_method"]}, sizeof($verified_devices)) . "\n";
+				}
+
+				foreach ($verified_devices as $verified_device) {
+					/* recache snmp data */
+					run_data_query($verified_device["id"], $old["snmp_query_id"]);
+					if (!$quietMode) {
+						if (is_error_message()) {
+							echo __("ERROR: Rerun of this data query failed for device (%s: %s) data query (%s: %s) reindex method (%s: %s)", $verified_device["id"], $verified_device["hostname"], $old["snmp_query_id"], $old["snmp_query_name"], $new["reindex_method"], $reindex_types[$new["reindex_method"]]) . "\n";
+						} else {
+							echo __("Data Query (%s: %s) reindex method (%s: %s) rerun for Device (%s: %s)", $old["snmp_query_id"], $old["snmp_query_name"], $new["reindex_method"], $reindex_types{$new["reindex_method"]}, $verified_device["id"], $verified_device["hostname"]) . "\n";
+						}
+					}
+				}
+			} else {
+				echo __("ERROR: Failed to update Data Query (%s: %s) reindex method (%s: %s) for %s Device(s)", $old["snmp_query_id"], $old["snmp_query_name"], $new["reindex_method"], $reindex_types{$new["reindex_method"]}, sizeof($verified_devices)) . "\n";
+			}
+		}
+	}
 }
 
 function display_help($me) {
-	echo __("List Data Query Script 1.0") . ", " . __("Copyright 2004-2009 - The Cacti Group") . "\n";
-	echo __("A simple command line utility to list data queries in Cacti") . "\n\n";
+	echo __("Update Data Query Script 1.0") . ", " . __("Copyright 2004-2009 - The Cacti Group") . "\n";
+	echo __("A simple command line utility to update data queries in Cacti") . "\n\n";
 	echo __("usage: ") . $me . " [--data-query-id=] [--reindex-method=] [--device-id=] [--site-id=] [--poller-id=]\n";
 	echo "       [--description=] [--ip=] [--template=] [--notes=\"[]\"] [--disabled]\n";
 	echo "       [--avail=[pingsnmp]] [--ping-method=[tcp] --ping-port=[N/A, 1-65534]] --ping-retries=[2] --ping-timeout=[500]\n";
 	echo "       [--version=1] [--community=] [--port=161] [--timeout=500]\n";
 	echo "       [--username= --password=] [--authproto=] [--privpass= --privproto=] [--context=]\n";
-	echo "       [--quiet]\n\n";
-	echo __("Optional:") . "\n";
+	echo "       [--quiet] [-d] [--delim]\n\n";
+	echo __("Required:") . "\n";
+	echo "   " . __("Values are given in format [<old>][:<new>]") . "\n";
+	#echo "   " . __("If <old> is given, all hosts matching the selection will be acted upon. Multiple <old> parameters are allowed") . "\n";
+	#echo "   " . __("All new values must be seperated by a delimiter (defaults to ':') from <old>. Multiple <new> parameters are allowed") . "\n";
 	echo "   --data-query-id  " . __("the numerical ID of the data_query to be listed") . "\n";
 	echo "   --reindex-method " . __("the reindex method to be used for that data query") . "\n";
 	echo "          0|none  " . __("no reindexing") . "\n";
@@ -146,6 +244,7 @@ function display_help($me) {
 	echo "          2|index " . __("Index Count Changed") . "\n";
 	echo "          3|fields" . __("Verify all Fields") . "\n";
 	echo "          4|value " . __("Re-Index Value Changed") . "\n";
+	echo __("Optional:") . "\n";
 	echo "   --device-id                 " . __("the numerical ID of the device") . "\n";
 	echo "   --site-id                   " . __("the numerical ID of the site") . "\n";
 	echo "   --poller-id                 " . __("the numerical ID of the poller") . "\n";
@@ -173,15 +272,12 @@ function display_help($me) {
 	echo "   --privproto                 " . __("snmp privacy protocol for snmpv3") . " [".SNMP_PRIV_PROTOCOL_DES."|".SNMP_PRIV_PROTOCOL_AES128."]\n";
 	echo "   --context                   " . __("snmp context for snmpv3") . "\n";
 	echo "   --max-oids                  " . __("the number of OID's that can be obtained in a single SNMP Get request") . " [1-60]\n";
-	#echo "   -d                          " . __("Debug Mode, no updates made, but printing the SQL for updates") . "\n";
-	echo "   --quiet          " . __("batch mode value return") . "\n\n";
+	echo "   --delim           :         " . __("sets the delimiter") . "\n";
+	echo "   -d                          " . __("Debug Mode, no updates made, but printing the SQL for updates") . "\n";
+	echo "   --quiet                     " . __("batch mode value return") . "\n\n";
 	echo __("Examples:") . "\n";
-	echo "   php -q " . $me . " \n";
-	echo "   " . __("  lists all available data queries") . "\n";
-	echo "   php -q " . $me . "  --device-id=5\n";
-	echo "   " . __("  lists all data queries associated with device id 5") . "\n";
-	echo "   php -q " . $me . "  --template=8\n";
-	echo "   " . __("  lists all data queries associated with the devices associated with device template id 8") . "\n";
-	echo "   php -q " . $me . "  data-query-id=1 --template=8\n";
-	echo "   " . __("  same as above, but only listing data query id 1") . "\n";
+	echo "   php -q " . $me . "  --data-query-id=3 --reindex-method=:index --device-id=5\n";
+	echo "   " . __("  changes reindex method of data query id 3 on device id 5 to 'index'") . "\n";
+	echo "   php -q " . $me . "  --data-query-id=3 --reindex-method=uptime:index --template=8\n";
+	echo "   " . __("  same as above, but updating for old reindex method of 'uptime' only, working on all devices associated with template id of 8") . "\n";
 }

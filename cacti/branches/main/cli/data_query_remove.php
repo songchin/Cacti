@@ -33,7 +33,8 @@ $no_http_headers = true;
 
 include(dirname(__FILE__)."/../include/global.php");
 include_once(CACTI_BASE_PATH."/lib/api_automation_tools.php");
-include_once(CACTI_BASE_PATH."/lib/data_query.php");
+include_once(CACTI_BASE_PATH."/lib/api_device.php");
+#include_once(CACTI_BASE_PATH."/lib/data_query.php");
 
 /* process calling arguments */
 $parms = $_SERVER["argv"];
@@ -49,7 +50,7 @@ if (sizeof($parms)) {
 		@list($arg, $value) = @explode("=", $parameter);
 
 		switch ($arg) {
-		case "-d":
+			case "-d":
 			case "--debug":			$debug 							= TRUE; 		break;
 			case "--device-id":		$device["id"] 					= trim($value);	break;
 			case "--site-id":		$device["site_id"] 				= trim($value);	break;
@@ -76,10 +77,10 @@ if (sizeof($parms)) {
 			case "--ping-timeout":	$device["ping_timeout"] 		= trim($value);	break;
 			case "--max-oids":		$device["max_oids"] 			= trim($value);	break;
 			case "--data-query-id":	$dq["snmp_query_id"] 			= trim($value);	break;
-			case "--reindex-method":$dq["reindex_method"] 			= trim($value);	break;
-		case "-V":
-		case "-H":
-		case "--help":
+			#case "--reindex-method":$dq["reindex_method"] 			= trim($value);	break;
+			case "-V":
+			case "-H":
+			case "--help":
 			case "--version":		display_help($me);								exit(0);
 			case "--quiet":			$quietMode = TRUE;								break;
 			default:				print __("ERROR: Invalid Argument: (%s)\n\n", $arg); display_help($me); exit(1);
@@ -107,45 +108,49 @@ if (sizeof($parms)) {
 		}
 	}
 
+	if (!isset($dq["snmp_query_id"])) {
+		print __("ERROR: No matching Data Query found\n");
+		print __("Try php -q data_query_list.php") . "\n";
+		exit(1);
+	}
+
 	/* get devices matching criteria */
 	$devices = getDevices($device);
 
 	if (!sizeof($devices)) {
-	$data_queries = getSNMPQueries();
-	displaySNMPQueries($data_queries, $quietMode);
-	} else {
-		$columns = array();
-		if (isset($dq["snmp_query_id"])) {
-			$data_queries = getSNMPQueriesByDevices($devices, $dq["snmp_query_id"], $columns);
-		} else {
-			$data_queries = getSNMPQueriesByDevices($devices, '', $columns);
+		print __("ERROR: No matching Devices found\n");
+		print __("Try php -q device_list.php") . "\n";
+		exit(1);
+	}
+
+	if (isset($dq["snmp_query_id"])) {
+		foreach ($devices as $device) {
+			api_device_dq_remove($device["id"], $dq["snmp_query_id"]);
+			echo __("Data Query (%s) removed from Device (%s: %s)", $dq["snmp_query_id"], $device["id"], $device["hostname"]) . "\n";
 		}
-		$title = __("List of Data Queries for given Devices");
-		# these are the table columns for display
-		displayGenericArray($data_queries, $columns, $title, $quietMode);
 	}
 }else{
-	$data_queries = getSNMPQueries();
-	displaySNMPQueries($data_queries, $quietMode);
+	display_help($me);
+	exit(1);
 }
 
 function display_help($me) {
-	echo __("List Data Query Script 1.0") . ", " . __("Copyright 2004-2009 - The Cacti Group") . "\n";
-	echo __("A simple command line utility to list data queries in Cacti") . "\n\n";
-	echo __("usage: ") . $me . " [--data-query-id=] [--reindex-method=] [--device-id=] [--site-id=] [--poller-id=]\n";
+	echo __("Remove Data Query Script 1.0") . ", " . __("Copyright 2004-2009 - The Cacti Group") . "\n";
+	echo __("A simple command line utility to remove data queries from devices in Cacti") . "\n\n";
+	echo __("usage: ") . $me . " [--data-query-id=] [--device-id=] [--site-id=] [--poller-id=]\n";
 	echo "       [--description=] [--ip=] [--template=] [--notes=\"[]\"] [--disabled]\n";
 	echo "       [--avail=[pingsnmp]] [--ping-method=[tcp] --ping-port=[N/A, 1-65534]] --ping-retries=[2] --ping-timeout=[500]\n";
 	echo "       [--version=1] [--community=] [--port=161] [--timeout=500]\n";
 	echo "       [--username= --password=] [--authproto=] [--privpass= --privproto=] [--context=]\n";
-	echo "       [--quiet]\n\n";
+	echo "       [--quiet] [-d]\n\n";
 	echo __("Optional:") . "\n";
 	echo "   --data-query-id  " . __("the numerical ID of the data_query to be listed") . "\n";
-	echo "   --reindex-method " . __("the reindex method to be used for that data query") . "\n";
-	echo "          0|none  " . __("no reindexing") . "\n";
-	echo "          1|uptime" . __("Uptime goes Backwards") . "\n";
-	echo "          2|index " . __("Index Count Changed") . "\n";
-	echo "          3|fields" . __("Verify all Fields") . "\n";
-	echo "          4|value " . __("Re-Index Value Changed") . "\n";
+	#echo "   --reindex-method " . __("the reindex method to be used for that data query") . "\n";
+	#echo "          0|none  " . __("no reindexing") . "\n";
+	#echo "          1|uptime" . __("Uptime goes Backwards") . "\n";
+	#echo "          2|index " . __("Index Count Changed") . "\n";
+	#echo "          3|fields" . __("Verify all Fields") . "\n";
+	#echo "          4|value " . __("Re-Index Value Changed") . "\n";
 	echo "   --device-id                 " . __("the numerical ID of the device") . "\n";
 	echo "   --site-id                   " . __("the numerical ID of the site") . "\n";
 	echo "   --poller-id                 " . __("the numerical ID of the poller") . "\n";
@@ -174,14 +179,10 @@ function display_help($me) {
 	echo "   --context                   " . __("snmp context for snmpv3") . "\n";
 	echo "   --max-oids                  " . __("the number of OID's that can be obtained in a single SNMP Get request") . " [1-60]\n";
 	#echo "   -d                          " . __("Debug Mode, no updates made, but printing the SQL for updates") . "\n";
-	echo "   --quiet          " . __("batch mode value return") . "\n\n";
+	echo "   --quiet                     " . __("batch mode value return") . "\n\n";
 	echo __("Examples:") . "\n";
-	echo "   php -q " . $me . " \n";
-	echo "   " . __("  lists all available data queries") . "\n";
-	echo "   php -q " . $me . "  --device-id=5\n";
-	echo "   " . __("  lists all data queries associated with device id 5") . "\n";
-	echo "   php -q " . $me . "  --template=8\n";
-	echo "   " . __("  lists all data queries associated with the devices associated with device template id 8") . "\n";
-	echo "   php -q " . $me . "  data-query-id=1 --template=8\n";
-	echo "   " . __("  same as above, but only listing data query id 1") . "\n";
+	echo "   php -q " . $me . "  --data-query-id=3 --device-id=5\n";
+	echo "   " . __("  removes data query id 3 from device id 5") . "\n";
+	echo "   php -q " . $me . "  --data-query-id=3 --template=8\n";
+	echo "   " . __("  same as above, but performed for all devices associated with device template id 8") . "\n";
 }

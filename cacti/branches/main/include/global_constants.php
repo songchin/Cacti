@@ -105,6 +105,14 @@ define("IMAGE_TYPE_PNG", 1);
 define("IMAGE_TYPE_GIF", 2);
 define("IMAGE_TYPE_SVG", 3);
 
+define("SNMP_AUTH_PROTOCOL_NONE", 	'');
+define("SNMP_AUTH_PROTOCOL_MD5", 	'MD5');
+define("SNMP_AUTH_PROTOCOL_SHA", 	'SHA');
+
+define("SNMP_PRIV_PROTOCOL_NONE", 	'');
+define("SNMP_PRIV_PROTOCOL_DES", 	'DES');
+define("SNMP_PRIV_PROTOCOL_AES128", 'AES');
+
 define("POLLER_ACTION_SNMP", 0);
 define("POLLER_ACTION_SCRIPT", 1);
 define("POLLER_ACTION_SCRIPT_PHP", 2);

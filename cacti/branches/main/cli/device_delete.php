@@ -53,7 +53,11 @@ if (sizeof($parms)) {
 
 			break;
 		case "--device-id":
-			$host_id = $value;
+			$device_id = $value;
+			if (!is_numeric($device_id)) {
+				echo __("ERROR: You must supply a numeric device id!") . "\n";
+				exit(1);
+			}
 
 			break;
 		case "--force":
@@ -67,7 +71,7 @@ if (sizeof($parms)) {
 			display_help($me);
 			exit(0);
 		default:
-			printf(__("ERROR: Invalid Argument: (%s)\n\n"), $arg);
+			echo __("ERROR: Invalid Argument: (%d)", $arg) . "\n";
 			display_help($me);
 			exit(1);
 		}
@@ -75,11 +79,11 @@ if (sizeof($parms)) {
 
 
 	/*
-	 * verify valid host id and get a name for it
+	 * verify valid device id and get a name for it
 	 */
-	$host_name = db_fetch_cell("SELECT hostname FROM host WHERE id = " . $host_id);
-	if (!isset($host_name)) {
-		printf(__("ERROR: Unknown Device ID (%d)\n"), $host_id);
+	$device_name = db_fetch_cell("SELECT hostname FROM host WHERE id = " . $device_id);
+	if (!isset($device_name)) {
+		echo __("ERROR: Unknown Device ID (%s)", $device_id) . "\n";
 		echo __("Try php -q device_list.php") . "\n";
 		exit(1);
 	}
@@ -95,7 +99,7 @@ if (sizeof($parms)) {
 	$data_sources = db_fetch_assoc("select
 		data_local.id as local_data_id
 		from data_local
-		where data_local.host_id =" . $host_id);
+		where data_local.host_id =" . $device_id);
 
 	if (sizeof($data_sources) > 0) {
 		foreach ($data_sources as $data_source) {
@@ -107,7 +111,7 @@ if (sizeof($parms)) {
 		$graphs = db_fetch_assoc("select
 			graph_local.id as local_graph_id
 			from graph_local
-			where graph_local.host_id =" . $host_id);
+			where graph_local.host_id =" . $device_id);
 
 		if (sizeof($graphs) > 0) {
 			foreach ($graphs as $graph) {
@@ -120,20 +124,20 @@ if (sizeof($parms)) {
 		/* delete graphs/data sources tied to this device */
 		api_data_source_remove_multi($data_sources_to_act_on);
 		api_graph_remove_multi($graphs_to_act_on);
-		echo __("Removing device and all resources for host_id ") . $host_id;
+		echo __("Removing device and all resources for host_id ") . $device_id . "\n";
 	} else {
 		/* leave graphs and data_sources in place, but disable the data sources */
 		api_data_source_disable_multi($data_sources_to_act_on);
-		echo __("Removing device but keeping resources for host_id ") . $host_id;
+		echo __("Removing device but keeping resources for host_id ") . $device_id . "\n";
 	}
 
-	api_device_remove($host_id);
+	api_device_remove($device_id);
 
 	if (is_error_message()) {
 		echo __(". ERROR: Failed to remove this device") . "\n";
 		exit(1);
 	} else {
-		echo __(". Success - removed device-id: ") . ($host_id);
+		echo __(". Success - removed device-id: ") . ($device_id) . "\n";
 		exit(0);
 	}
 }else{

@@ -62,9 +62,6 @@ if (sizeof($parms)) {
 	$displayRRAs    = FALSE;
 	$displayGraphs  = FALSE;
 
-	$host			= array();
-	$hosts          = getHosts($host);
-
 	foreach($parms as $parameter) {
 		@list($arg, $value) = @explode("=", $parameter);
 
@@ -280,7 +277,8 @@ if (sizeof($parms)) {
 			$rra_id         = 0;
 			$name           = '';
 
-			if (!isset($hosts[$hostId])) {
+			$host_exists = db_fetch_cell("SELECT COUNT(*) FROM host WHERE id=" . $hostId);
+			if (($host_exists > 0) || $hostId == 0) {
 				printf(__("ERROR: No such device-id (%d) exists. Try php -q device_list.php\n"), $hostId);
 				exit(1);
 			}

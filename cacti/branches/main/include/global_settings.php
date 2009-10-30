@@ -236,7 +236,7 @@ $settings = array(
 			"method" => "drop_array",
 			"friendly_name" => __("SNMP Auth Protocol (v3)"),
 			"description" => __("Choose the SNMPv3 Authorization Protocol."),
-			"default" => "MD5",
+			"default" => SNMP_AUTH_PROTOCOL_MD5,
 			"array" => $snmp_auth_protocols,
 			),
 		"snmp_priv_passphrase" => array(
@@ -250,7 +250,7 @@ $settings = array(
 			"method" => "drop_array",
 			"friendly_name" => __("SNMP Privacy Protocol (v3)"),
 			"description" => __("Choose the SNMPv3 Privacy Protocol."),
-			"default" => "DES",
+			"default" => SNMP_PRIV_PROTOCOL_DES,
 			"array" => $snmp_priv_protocols,
 			),
 		"snmp_timeout" => array(

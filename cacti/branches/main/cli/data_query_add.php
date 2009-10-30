@@ -38,139 +38,146 @@ include_once(CACTI_BASE_PATH."/lib/data_query.php");
 /* process calling arguments */
 $parms = $_SERVER["argv"];
 $me = array_shift($parms);
+$debug		= FALSE;	# no debug mode
+$quietMode 	= FALSE;	# be verbose by default
+$device 	= array();
+$dq			= array();
+$error		= '';
 
 if (sizeof($parms)) {
-	unset($host_id);
-	unset($data_query_id);
-	unset($reindex_method);
 
 	foreach($parms as $parameter) {
 		@list($arg, $value) = @explode("=", $parameter);
 
 		switch ($arg) {
 		case "-d":
-			$debug = TRUE;
-
-			break;
-		case "--device-id":
-			$host_id = trim($value);
-			if (!is_numeric($host_id)) {
-				echo __("ERROR: You must supply a valid device-id to run this script!") . "\n";
-				exit(1);
-			}
-
-			break;
-		case "--data-query-id":
-			$data_query_id = $value;
-			if (!is_numeric($data_query_id)) {
-				echo __("ERROR: You must supply a numeric data-query-id for all devices!") . "\n";
-				exit(1);
-			}
-
-			break;
-		case "--reindex-method":
-			if (is_numeric($value) &&
-				($value >= DATA_QUERY_AUTOINDEX_NONE) &&
-				($value <= DATA_QUERY_AUTOINDEX_FIELD_VERIFICATION)) {
-				$reindex_method = $value;
-			} else {
-				switch (strtolower($value)) {
-					case "none":
-						$reindex_method = DATA_QUERY_AUTOINDEX_NONE;
-						break;
-					case "uptime":
-						$reindex_method = DATA_QUERY_AUTOINDEX_BACKWARDS_UPTIME;
-						break;
-					case "index":
-						$reindex_method = DATA_QUERY_AUTOINDEX_INDEX_COUNT_CHANGE;
-						break;
-					case "fields":
-						$reindex_method = DATA_QUERY_AUTOINDEX_FIELD_VERIFICATION;
-						break;
-					case "value":
-						$reindex_method = DATA_QUERY_AUTOINDEX_VALUE_CHANGE;
-						break;
-					default:
-						echo __("ERROR: You must supply a valid reindex method for all devices!") . "\n";
-						exit(1);
-				}
-			}
-			break;
-		case "--version":
+			case "--debug":			$debug 							= TRUE; 		break;
+			case "--device-id":		$device["id"] 					= trim($value);	break;
+			case "--site-id":		$device["site_id"] 				= trim($value);	break;
+			case "--poller-id":		$device["poller_id"]			= trim($value);	break;
+			case "--description":	$device["description"] 			= trim($value);	break;
+			case "--ip":			$device["hostname"] 			= trim($value);	break;
+			case "--template":		$device["host_template_id"]	 	= trim($value);	break;
+			case "--community":		$device["snmp_community"] 		= trim($value);	break;
+			case "--version":		$device["snmp_version"] 		= trim($value);	break;
+			case "--notes":			$device["notes"] 				= trim($value);	break;
+			case "--disabled":		$device["disabled"] 			= trim($value);	break;
+			case "--username":		$device["snmp_username"] 		= trim($value);	break;
+			case "--password":		$device["snmp_password"] 		= trim($value);	break;
+			case "--authproto":		$device["snmp_auth_protocol"]	= trim($value);	break;
+			case "--privproto":		$device["snmp_priv_protocol"] 	= trim($value);	break;
+			case "--privpass":		$device["snmp_priv_passphrase"] = trim($value);	break;
+			case "--context":		$device["snmp_context"] 		= trim($value);	break;
+			case "--port":			$device["snmp_port"] 			= trim($value);	break;
+			case "--timeout":		$device["snmp_timeout"] 		= trim($value);	break;
+			case "--avail":			$device["availability_method"] 	= trim($value);	break;
+			case "--ping-method":	$device["ping_method"] 			= trim($value);	break;
+			case "--ping-port":		$device["ping_port"] 			= trim($value);	break;
+			case "--ping-retries":	$device["ping_retries"] 		= trim($value);	break;
+			case "--ping-timeout":	$device["ping_timeout"] 		= trim($value);	break;
+			case "--max-oids":		$device["max_oids"] 			= trim($value);	break;
+			case "--data-query-id":	$dq["snmp_query_id"] 			= trim($value);	break;
+			case "--reindex-method":$dq["reindex_method"] 			= trim($value);	break;
 		case "-V":
 		case "-H":
 		case "--help":
-			display_help($me);
-			exit(0);
-		default:
-			printf(__("ERROR: Invalid Argument: (%s)\n\n"), $arg) ;
-			display_help($me);
-			exit(1);
+			case "--version":		display_help($me);								exit(0);
+			case "--quiet":			$quietMode = TRUE;								break;
+			default:				print __("ERROR: Invalid Argument: (%s)\n\n", $arg); display_help($me); exit(1);
 		}
 	}
 
 	/*
 	 * verify required parameters
-	 * for update / insert options
 	 */
-	if (!isset($host_id)) {
-		echo __("ERROR: You must supply a valid device-id for all devices!") . "\n";
-		exit(1);
-	}
-
-	if (!isset($data_query_id)) {
+	if (!isset($dq["snmp_query_id"])) {
 		echo __("ERROR: You must supply a valid data-query-id for all devices!") . "\n";
 		exit(1);
 	}
 
-	if (!isset($reindex_method)) {
+	if (!isset($dq["reindex_method"])) {
 		echo __("ERROR: You must supply a valid reindex-method for all devices!") . "\n";
 		exit(1);
 	}
 
+	# at least one matching criteria for host(s) has to be defined
+	if (!sizeof($device)) {
+		print __("ERROR: No device matching criteria found\n");
+		exit(1);
+	}
 
-	/*
-	 * verify valid host id and get a name for it
-	 */
-	$host_name = db_fetch_cell("SELECT hostname FROM host WHERE id = " . $host_id);
-	if (!isset($host_name)) {
-		printf(__("ERROR: Unknown Host Id (%d)\n"), $host_id);
+	# now verify the parameters given
+	$verify = verifyDevice($device, true);
+	if (isset($verify["err_msg"])) {
+		print $verify["err_msg"] . "\n\n";
+		display_help($me);
+		exit(1);
+	}
+
+	if (sizeof($dq)) {
+		# verify the parameters given
+		$verify = verifyDataQuery($dq, true);
+		if (isset($verify["err_msg"])) {
+			print $verify["err_msg"] . "\n\n";
+			display_help($me);
+			exit(1);
+		}
+	}
+
+	/* get devices matching criteria */
+	$devices = getDevices($device);
+	if (!sizeof($devices)) {
+		print __("ERROR: No matching Devices found\n");
+		print __("Try php -q device_list.php") . "\n";
 		exit(1);
 	}
 
 	/*
 	 * verify valid data query and get a name for it
 	 */
-	$data_query_name = db_fetch_cell("SELECT name FROM snmp_query WHERE id = " . $data_query_id);
+	$data_query_name = db_fetch_cell("SELECT name FROM snmp_query WHERE id = " . $dq["snmp_query_id"]);
 	if (!isset($data_query_name)) {
-		printf(__("ERROR: Unknown Data Query Id (%d)\n"), $data_query_id);
+		echo __("ERROR: Unknown Data Query Id (%s)", $dq["snmp_query_id"]) . "\n";
 		exit(1);
 	}
 
 	/*
 	 * Now, add the data query and run it once to get the cache filled
 	 */
-	$exists_already = db_fetch_cell("SELECT host_id FROM host_snmp_query WHERE host_id=$host_id AND snmp_query_id=$data_query_id AND reindex_method=$reindex_method");
-	if ((isset($exists_already)) &&
-		($exists_already > 0)) {
-		       printf(__("ERROR: Data Query is already associated for device: (%1d: %2s) data query (%3d: %4s) reindex method (%5s: %6s)\n"), $host_id, $host_name, $data_query_id, $data_query_name, $reindex_method, $reindex_types[$reindex_method]);
-		exit(1);
+	foreach ($devices as $device) {
+		$current_reindex_method = db_fetch_cell("SELECT reindex_method FROM host_snmp_query WHERE host_id=" . $device["id"] .
+										" AND snmp_query_id=" . $dq["snmp_query_id"]);
+		if (isset($current_reindex_method)) {
+			echo __("ERROR: Data Query is already associated for device: (%s: %s) data query (%s: %s) using reindex method of (%s: %s)", $device["id"], $device["hostname"], $dq["snmp_query_id"], $data_query_name, $current_reindex_method, $reindex_types{$current_reindex_method}) . "\n";
+			continue;
 	}else{
-		db_execute("REPLACE INTO host_snmp_query (host_id,snmp_query_id,reindex_method) " .
-				   "VALUES (". $host_id . ","
-							 . $data_query_id . ","
-							 . $reindex_method . "
-							)");
+			$sql = "REPLACE INTO host_snmp_query " .
+					"(host_id,snmp_query_id,reindex_method) " .
+					"VALUES (".
+						$device["id"] . "," .
+						$dq["snmp_query_id"] . "," .
+						$dq["reindex_method"] .
+					")";
+			if ($debug) {
+				print $sql . "\n";
+			} else {
+				# update of sort_field and title are done later in update_data_query_sort_cache via run_data_query
+				$ok = db_execute($sql);
+				if (!$quietMode) {
+					if ($ok) {
 		/* recache snmp data */
-		run_data_query($host_id, $data_query_id);
-	}
-
+						run_data_query($device["id"], $dq["snmp_query_id"]);
 	if (is_error_message()) {
-		printf(__("ERROR: Failed to add this data query for device (%1d: %2s) data query (%3d: %4s) reindex method (%5s: %6s)\n"), $host_id, $host_name, $data_query_id, $data_query_name, $reindex_method, $reindex_types[$reindex_method]);
-		exit(1);
+							echo __("ERROR: Failed to add this data query for device (%s: %s) data query (%s: %s) reindex method (%s: %s)", $device["id"], $device["hostname"], $dq["snmp_query_id"], $data_query_name, $dq["reindex_method"], $reindex_types[$dq["reindex_method"]]) . "\n";
 	} else {
-		printf(__("Success - Device (%1d: %2s) data query (%3d: %4s) reindex method (%5s: %6s)\n"), $host_id, $host_name, $data_query_id, $data_query_name, $reindex_method, $reindex_types[$reindex_method]);
-		exit(0);
+							echo __("Success - Device (%s: %s) data query (%s: %s) reindex method (%s: %s)", $device["id"], $device["hostname"], $dq["snmp_query_id"], $data_query_name, $dq["reindex_method"], $reindex_types{$dq["reindex_method"]}) . "\n";
+						}
+					} else {
+						echo __("ERROR: Failed to add this data query for device (%s: %s) data query (%s: %s) reindex method (%s: %s)", $device["id"], $device["hostname"], $dq["snmp_query_id"], $data_query_name, $dq["reindex_method"], $reindex_types[$dq["reindex_method"]]) . "\n";
+					}
+				}
+			}
+		}
 	}
 }else{
 	display_help($me);
@@ -180,15 +187,54 @@ if (sizeof($parms)) {
 function display_help($me) {
 	echo __("Add Data Query Script 1.0") . ", " . __("Copyright 2004-2009 - The Cacti Group") . "\n";
 	echo __("A simple command line utility to add a data query to an existing device in Cacti") . "\n\n";
-	echo __("usage: ") . $me . " --device-id=[ID] --data-query-id=[dq_id] --reindex-method=[method] [--quiet]\n\n";
+	echo __("usage: ") . $me . " --data-query-id=[dq_id] --reindex-method=[method] [--device-id=] [--site-id=] [--poller-id=]\n";
+	echo "       [--description=] [--ip=] [--template=] [--notes=\"[]\"] [--disabled]\n";
+	echo "       [--avail=[pingsnmp]] [--ping-method=[tcp] --ping-port=[N/A, 1-65534]] --ping-retries=[2] --ping-timeout=[500]\n";
+	echo "       [--version=1] [--community=] [--port=161] [--timeout=500]\n";
+	echo "       [--username= --password=] [--authproto=] [--privpass= --privproto=] [--context=]\n";
+	echo "       [--quiet] [-d]\n\n";
 	echo __("Required:") . "\n";
-	echo "   --device-id      " . __("the numerical ID of the device") . "\n";
 	echo "   --data-query-id  " . __("the numerical ID of the data_query to be added") . "\n";
 	echo "   --reindex-method " . __("the reindex method to be used for that data query") . "\n";
-	echo "          0|None  " . __("no reindexing") . "\n";
-	echo "          1|Uptime" . __("Uptime goes Backwards") . "\n";
+	echo "          0|none  " . __("no reindexing") . "\n";
+	echo "          1|uptime" . __("Uptime goes Backwards") . "\n";
 	echo "          2|index " . __("Index Count Changed") . "\n";
-	echo "          3|Fields" . __("Verify all Fields") . "\n";
-	echo "          4|Value " . __("Re-Index Value Changed") . "\n";
-	echo __("If the data query was already associated, it will be reindexed.") . "\n\n";
+	echo "          3|fields" . __("Verify all Fields") . "\n";
+	echo "          4|value " . __("Re-Index Value Changed") . "\n";
+	echo __("At least one device related parameter is required. The given data query will be added to all matching devices.") . "\n";
+	echo __("Optional:") . "\n";
+	echo "   --device-id                 " . __("the numerical ID of the device") . "\n";
+	echo "   --site-id                   " . __("the numerical ID of the site") . "\n";
+	echo "   --poller-id                 " . __("the numerical ID of the poller") . "\n";
+	echo "   --description               " . __("the name that will be displayed by Cacti in the graphs") . "\n";
+	echo "   --ip                        " . __("self explanatory (can also be a FQDN)") . "\n";
+	echo "   --template                  " . __("denotes the device template to be used") . "\n";
+	echo "                               " . __("In case a device template is given, all values are fetched from this one.") . "\n";
+	echo "                               " . __("For a device template=0 (NONE), Cacti default settings are used.") . "\n";
+	echo "                               " . __("Optionally overwrite by any of the following:") . "\n";
+	echo "   --notes                     " . __("General information about this device. Must be enclosed using double quotes.") . "\n";
+	echo "   --disable                   " . __("to add this device but to disable checks and 0 to enable it") . " [0|1]\n";
+	echo "   --avail                     " . __("device availability check") . " [ping][none, snmp, pingsnmp]\n";
+	echo "     --ping-method             " . __("if ping selected") . " [icmp|tcp|udp]\n";
+	echo "     --ping-port               " . __("port used for tcp|udp pings") . " [1-65534]\n";
+	echo "     --ping-retries            " . __("the number of time to attempt to communicate with a device") . "\n";
+	echo "     --ping-timeout            " . __("ping timeout") . "\n";
+	echo "   --version                   " . __("snmp version") . " [1|2|3]\n";
+	echo "   --community                 " . __("snmp community string for snmpv1 and snmpv2. Leave blank for no community") . "\n";
+	echo "   --port                      " . __("snmp port") . "\n";
+	echo "   --timeout                   " . __("snmp timeout") . "\n";
+	echo "   --username                  " . __("snmp username for snmpv3") . "\n";
+	echo "   --password                  " . __("snmp password for snmpv3") . "\n";
+	echo "   --authproto                 " . __("snmp authentication protocol for snmpv3") . " [".SNMP_AUTH_PROTOCOL_MD5."|".SNMP_AUTH_PROTOCOL_SHA."]\n";
+	echo "   --privpass                  " . __("snmp privacy passphrase for snmpv3") . "\n";
+	echo "   --privproto                 " . __("snmp privacy protocol for snmpv3") . " [".SNMP_PRIV_PROTOCOL_DES."|".SNMP_PRIV_PROTOCOL_AES128."]\n";
+	echo "   --context                   " . __("snmp context for snmpv3") . "\n";
+	echo "   --max-oids                  " . __("the number of OID's that can be obtained in a single SNMP Get request") . " [1-60]\n";
+	echo "   -d                          " . __("Debug Mode, no updates made, but printing the SQL for updates") . "\n";
+	echo "   --quiet                     " . __("batch mode value return") . "\n\n";
+	echo __("Examples:") . "\n";
+	echo "   php -q " . $me . " --device-id=1 --data-query-id=1 --reindex-method=index\n";
+	echo "   " . __("  adds data query id 1 to the device id 1 using reindex method of 'index'") . "\n";
+	echo "   php -q " . $me . "  --data-query-id=5 --reindex-method=uptime --template=3\n";
+	echo "   " . __("  adds data query id 5 using reindex method of 'uptime' to all devices related to device template id 3") . "\n";
 }

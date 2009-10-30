@@ -37,23 +37,38 @@ function getHostTemplates() {
 	return $host_templates;
 }
 
-/* getHosts				get all matching hosts for given selection criteria
+/* getDevices				get all matching hosts for given selection criteria
  * @arg $input_parms	array of selection criteria
  * returns				array of hosts, indexed by host_id
  */
-function getHosts($input_parms) {
+function getDevices($input_parms) {
 	$hosts    = array();
 
 	$sql_where = "";
+
+	if (isset($input_parms["id"])) {
+		strlen($sql_where) ? ($sql_where .= ' AND ') : ($sql_where .= ' WHERE ');
+		$sql_where .= 'id = ' . $input_parms["id"] . ' ';
+	}
+
+	if (isset($input_parms["site_id"])) {
+		strlen($sql_where) ? ($sql_where .= ' AND ') : ($sql_where .= ' WHERE ');
+		$sql_where .= 'site_id = ' . $input_parms["site_id"] . ' ';
+	}
+
+	if (isset($input_parms["poller_id"])) {
+		strlen($sql_where) ? ($sql_where .= ' AND ') : ($sql_where .= ' WHERE ');
+		$sql_where .= 'poller_id = ' . $input_parms["poller_id"] . ' ';
+	}
 
 	if (isset($input_parms["description"])) {
 		strlen($sql_where) ? ($sql_where .= ' AND ') : ($sql_where .= ' WHERE ');
 		$sql_where .= 'description like "%%' . $input_parms["description"] . '%%" ';
 	}
 
-	if (isset($input_parms["ip"])) {
+	if (isset($input_parms["hostname"])) {
 		strlen($sql_where) ? ($sql_where .= ' AND ') : ($sql_where .= ' WHERE ');
-		$sql_where .= 'hostname like "%%' . $input_parms["ip"] . '%%" ';
+		$sql_where .= 'hostname like "%%' . $input_parms["hostname"] . '%%" ';
 	}
 
 	if (isset($input_parms["host_template_id"])) {
@@ -88,7 +103,7 @@ function getHosts($input_parms) {
 
 	if (isset($input_parms["snmp_auth_protocol"])) {
 		strlen($sql_where) ? ($sql_where .= ' AND ') : ($sql_where .= ' WHERE ');
-		$sql_where .= 'snmp_auth_protocol = ' . $input_parms["snmp_auth_protocol"] . ' ';
+		$sql_where .= 'snmp_auth_protocol = "' . $input_parms["snmp_auth_protocol"] . '" ';
 	}
 
 	if (isset($input_parms["snmp_priv_passphrase"])) {
@@ -98,7 +113,7 @@ function getHosts($input_parms) {
 
 	if (isset($input_parms["snmp_priv_protocol"])) {
 		strlen($sql_where) ? ($sql_where .= ' AND ') : ($sql_where .= ' WHERE ');
-		$sql_where .= 'snmp_priv_protocol = ' . $input_parms["snmp_priv_protocol"] . ' ';
+		$sql_where .= 'snmp_priv_protocol = "' . $input_parms["snmp_priv_protocol"] . '" ';
 	}
 
 	if (isset($input_parms["snmp_context"])) {
@@ -157,16 +172,9 @@ function getHosts($input_parms) {
 					"host " .
 				$sql_where .
 				"ORDER BY id");
-	//print $sql_stmt ."\n";
-	$tmpArray = db_fetch_assoc($sql_stmt);
+	#print $sql_stmt ."\n";
 
-	if (sizeof($tmpArray)) {
-		foreach ($tmpArray as $host) {
-			$hosts[$host["id"]] = $host;
-		}
-	}
-
-	return $hosts;
+	return db_fetch_assoc($sql_stmt);
 }
 
 function getInputFields($templateId) {
@@ -203,6 +211,66 @@ function getInputFields($templateId) {
 	}
 
 	return $fields;
+}
+
+/* displayGenericArray	- column-save printout of arrays
+ * @arg $data			- the array to be printed; fields of each array item must relate to $req_fields
+ * @arg $req_fields		- an array of fields to be printed;
+ * 							index = field name;
+ * 							"desc" = human readable description
+ * @arg $title			- optional title of printout; skipped in quietMode
+ * @arg $quietMode		- optionally suppress title printout
+ * returns				  true, if anything has been printed
+ */
+function displayGenericArray($data, $req_fields=array(), $title="", $quietMode=FALSE) {
+	$exit_code = false; # assume an error until we've printed sth
+	$pad = 2;		# default padding size
+
+	if (sizeof($data) && sizeof($req_fields)) {
+		# determine length of each data field
+		reset($req_fields);
+		foreach($req_fields as $key => $value) {
+			if(!isset($req_fields{$key}["desc"])) {	# if no explicit field description given, use field name as description
+				$req_fields{$key}["desc"] = $key;
+			}
+			# default field length equals length of header description
+			$req_fields{$key}["length"] = strlen($req_fields{$key}["desc"]);
+
+			foreach ($data as $row) {				# see, whether any data field is longer than the corresponding header
+				if (isset($row{$key}))
+					$req_fields{$key}["length"] = max($req_fields{$key}["length"],strlen($row{$key}));
+			}
+		}
+
+		if (!$quietMode) {
+			if ($title === "") {
+				#
+			} else {
+				echo $title . "\n";
+			}
+			# now print headers: field identifier and field names
+			reset($req_fields);
+			foreach($req_fields as $item) {
+				print(str_pad($item["desc"], $item["length"]+$pad));
+			}
+			print "\n";
+		}
+
+		# and data, finally
+		if (sizeof($data) > 0) {
+			foreach ($data as $row) {
+				reset($req_fields);
+				while (list ($field_name, $field_array) = each($req_fields)) {
+					if (isset($row[$field_name])) {
+						print(str_pad($row[$field_name], $req_fields[$field_name]["length"]+$pad));
+						$exit_code = true;
+					}
+				}
+				print "\n";
+			}
+		}
+	}
+	return $exit_code;
 }
 
 function getAddresses() {
@@ -280,6 +348,52 @@ function getSNMPQueries() {
 	}
 
 	return $queries;
+}
+
+function getSNMPQueriesByDevices($devices, $snmp_query_id='', &$header) {
+	global $reindex_types;
+
+	$header = array();	# provides header info for printout
+	$sql_where = "";
+
+	if (sizeof($devices)) {
+		$sql_where .= ((strlen($sql_where) === 0) ? "WHERE " : "AND ") . str_replace("id", "host_id", array_to_sql_or($devices, "id")) . " ";
+	}
+	if ($snmp_query_id != '') {
+		$sql_where .= ((strlen($sql_where) === 0) ? "WHERE " : "AND ") . " snmp_query.id =" . $snmp_query_id . " ";
+	}
+	$sql = "SELECT " .
+				"host.id as host_id, " .
+				"host.hostname as hostname, " .
+				"snmp_query.id as snmp_query_id, " .
+				"snmp_query.name as snmp_query_name, " .
+				"host_snmp_query.sort_field, " .
+				"host_snmp_query.title_format, " .
+				"host_snmp_query.reindex_method " .
+				"FROM host " .
+				"LEFT JOIN host_snmp_query ON (host.id = host_snmp_query.host_id) " .
+				"LEFT JOIN snmp_query ON (host_snmp_query.snmp_query_id = snmp_query.id) " .
+				$sql_where .
+				"ORDER by host.id, snmp_query.id";
+	#print $sql . "\n";
+
+	$tmpArray = db_fetch_assoc($sql);
+	if (sizeof($tmpArray)) {
+		foreach ($tmpArray as $key => $value) {	# recode reindex type in a human readable fashion
+			$tmpArray{$key}["human_reindex_method"] = $reindex_types[$tmpArray{$key}["reindex_method"]];
+		}
+		# provide human readable column headers
+		$header["host_id"]["desc"] 				= __("Host Id");
+		$header["hostname"]["desc"] 			= __("Hostname");
+		$header["snmp_query_id"]["desc"] 		= __("Query Id");
+		$header["snmp_query_name"]["desc"] 		= __("Query Name");
+		$header["sort_field"]["desc"] 			= __("Sort Field");
+		$header["title_format"]["desc"] 		= __("Title Format");
+		$header["reindex_method"]["desc"] 		= __("#");
+		$header["human_reindex_method"]["desc"] = __("Reindex Method");
+	}
+
+	return $tmpArray;
 }
 
 function getSNMPQueryTypes($snmpQueryId) {
@@ -612,7 +726,7 @@ function displayGraphTemplates($templates, $quietMode = FALSE) {
 	}
 }
 
-function displayHosts($hosts, $quietMode = FALSE) {
+function displayDevices($hosts, $quietMode = FALSE) {
 	if (!$quietMode) {
 		echo __("Known Hosts: (id, hostname, template, description)") . "\n";
 	}
@@ -861,4 +975,306 @@ function displayUsers($quietMode = FALSE) {
 	}
 }
 
+/*
+ * verifyDevice		- verifies all array items for a host array
+ * 					  recodes the host array, if necessary
+ * @arg $host		- host array (part of host table)
+ * @arg $ri_check	- request a referential integrity test
+ * returns			- if ok, returns true with array recoded; otherwise array containg error message
+ */
+function verifyDevice(&$host, $ri_check=false) {
+
+	foreach($host as $key => $value) {
+
+		switch ($key) {
+			case "id":
+				if (!(((string) $value) === ((string)(int) $value))) {
+					$check["err_msg"] = __("ERROR: Id must be integer (%s)", $value);
+					return $check;
+				} elseif ($ri_check) {
+					$match = db_fetch_cell("SELECT COUNT(*) FROM host WHERE id=" . $value);
+					if ($match == 0) {
+						$check["err_msg"] = __("ERROR: This host id does not exist (%s)", $value);
+						return $check;
+					}
+				}
+				break;
+			case "site_id":
+				if (!(((string) $value) === ((string)(int) $value))) {
+					$check["err_msg"] = __("ERROR: Site Id must be integer (%s)", $value);
+					return $check;
+				} elseif ($ri_check) {
+					$match = db_fetch_cell("SELECT COUNT(*) FROM sites WHERE id=" . $value);
+					if ($match == 0) {
+						$check["err_msg"] = __("ERROR: This site id does not exist (%s)", $value);
+						return $check;
+					}
+				}
+				break;
+			case "poller_id":
+				if (!(((string) $value) === ((string)(int) $value))) {
+					$check["err_msg"] = __("ERROR: Poller Id must be integer (%s)", $value);
+					return $check;
+				} elseif ($ri_check) {
+					$match = db_fetch_cell("SELECT COUNT(*) FROM poller WHERE id=" . $value);
+					if ($match == 0) {
+						$check["err_msg"] = __("ERROR: This poller id does not exist (%s)", $value);
+						return $check;
+					}
+				}
+				break;
+			case "host_template_id":
+				if (!(((string) $value) === ((string)(int) $value))) {
+					$check["err_msg"] = __("ERROR: Host Template Id must be integer (%s)", $value);
+					return $check;
+				} elseif ($ri_check) {
+					$match = db_fetch_cell("SELECT COUNT(*) FROM host_template WHERE id=" . $value);
+					if ($match == 0) {
+						$check["err_msg"] = __("ERROR: This host template id does not exist (%s)", $value);
+						return $check;
+					}
+				}
+				break;
+			case "description":
+				break;
+			case "hostname":
+				break;
+			case "notes":
+				break;
+			case "snmp_community":
+				break;
+			case "snmp_version":
+				if (($value == 1 || $value == 2 || $value == 3)) {
+					#
+				}else{
+					$check["err_msg"] = __("ERROR: Invalid SNMP Version: (%s)", $value);
+					return $check;
+				}
+				break;
+			case "snmp_username":
+				break;
+			case "snmp_password":
+				break;
+			case "snmp_auth_protocol":
+				if (strtoupper($value) == SNMP_AUTH_PROTOCOL_MD5) {
+					$host{$key} = SNMP_AUTH_PROTOCOL_MD5;
+				} elseif (strtoupper($value) == SNMP_AUTH_PROTOCOL_SHA) {
+					$host{$key} = SNMP_AUTH_PROTOCOL_SHA;
+				} elseif (strtoupper($value) == SNMP_AUTH_PROTOCOL_NONE) {
+					$host{$key} = SNMP_AUTH_PROTOCOL_NONE;
+				} else {
+					$check["err_msg"] = __("ERROR: Invalid SNMP Authentication Protocol: (%s)", $value);
+					return $check;
+				}
+
+				break;
+			case "snmp_priv_passphrase":
+				break;
+			case "snmp_priv_protocol":
+				if (strtoupper($value) == SNMP_PRIV_PROTOCOL_DES) {
+					$host{$key} = SNMP_PRIV_PROTOCOL_DES;
+				} elseif (strtoupper($value) == SNMP_PRIV_PROTOCOL_AES128) {
+					$host{$key} = SNMP_PRIV_PROTOCOL_AES128;
+				} elseif (strtoupper($value) == SNMP_PRIV_PROTOCOL_NONE) {
+					$host{$key} = SNMP_PRIV_PROTOCOL_NONE;
+				} else {
+					$check["err_msg"] = __("ERROR: Invalid SNMP Privacy Protocol: (%s)", $value);
+					return $check;
+				}
+
+				break;
+			case "snmp_context":
+				break;
+			case "snmp_port":
+				if ($value > 0) {
+					# fine
+				}else{
+					$check["err_msg"] = __("ERROR: Invalid SNMP Port: (%s)", $value);
+					return $check;
+				}
+				break;
+			case "snmp_timeout":
+				if (($value > 0) && ($value <= 20000)) {
+					# fine
+				}else{
+					$check["err_msg"] = __("ERROR: Invalid SNMP Timeout: (%s). Valid values are from 1 to 20000", $value);
+					return $check;
+				}
+				break;
+			case "availability_method":
+				switch(strtolower($value)) {
+					case "none":
+						$availability_method = '0'; /* tried to use AVAIL_NONE, but then ereg failes on validation, sigh */
+						break;
+					case "ping":
+						$availability_method = AVAIL_PING;
+						break;
+					case "snmp":
+						$availability_method = AVAIL_SNMP;
+						break;
+					case "pingsnmp":
+						$availability_method = AVAIL_SNMP_AND_PING;
+						break;
+					default:
+						$check["err_msg"] = __("ERROR: Invalid Availability Parameter: (%s)", $value);
+						return $check;
+				}
+				$host{$key} = $availability_method;
+				break;
+			case "ping_method":
+				switch(strtolower($value)) {
+					case "icmp":
+						$ping_method = PING_ICMP;
+						break;
+					case "tcp":
+						$ping_method = PING_TCP;
+						break;
+					case "udp":
+						$ping_method = PING_UDP;
+						break;
+					default:
+						$check["err_msg"] = __("ERROR: Invalid Ping Method: (%s)", $value);
+						return $check;
+				}
+				$host{$key} = $ping_method;
+				break;
+			case "ping_port":
+				if ($value > 0) {
+					# fine
+				}else{
+					$check["err_msg"] = __("ERROR: Invalid Ping Port: (%s)", $value);
+					return $check;
+				}
+				break;
+			case "ping_timeout":
+				if ($value > 0) {
+					# fine
+				}else{
+					$check["err_msg"] = __("ERROR: Invalid Ping Timeout: (%s)", $value);
+					return $check;
+				}
+				break;
+			case "ping_retries":
+				if ($value > 0) {
+					# fine
+				}else{
+					$check["err_msg"] = __("ERROR: Invalid Ping Retries: (%s)", $value);
+					return $check;
+				}
+				break;
+			case "max_oids":
+				if ($value > 0) {
+					# fine
+				}else{
+					$check["err_msg"] = __("ERROR: Invalid Max OIDs: (%s)", $value);
+					return $check;
+				}
+				break;
+			case "disabled":
+				switch ($value) {
+					case 1:
+					case 'on':
+					case "'on'":
+						$host["disabled"]  = '"on"';
+						break;
+					case 0:
+					case '':
+					case "''":
+					case 'off':
+					case "'off'":
+						$host["disabled"]  = '""';
+						break;
+					default:
+						$check["err_msg"] = __("ERROR: Invalid disabled flag (%s)", $value);
+						return $check;
+				}
+				break;
+			default:
+				# host array may contain "unknown" columns due to extensions made by any plugin
+				# in future, a validation hook may be implemented here
+				/* TODO: validation hook */
+		}
+	}
+
+	# everything's fine
+	return true;
+}
+
+/*
+ * verifyDataQuery	- verifies all array items for a data query array
+ * 					  recodes the array, if necessary
+ * @arg $data_query	- data query array (part of host_snmp_query)
+ * @arg $ri_check	- request a referential integrity test
+ * returns			- if ok, returns true with array recoded; otherwise array containg error message
+ */
+function verifyDataQuery(&$data_query, $ri_check=false) {
+
+	foreach($data_query as $key => $value) {
+
+		switch ($key) {
+			case "host_id":
+				if (!(((string) $value) === ((string)(int) $value))) {
+					$check["err_msg"] = __("ERROR: Id must be integer (%s)", $value);
+					return $check;
+				} elseif ($ri_check) {
+					$match = db_fetch_cell("SELECT COUNT(*) FROM host WHERE id=" . $value);
+					if ($match == 0) {
+						$check["err_msg"] = __("ERROR: This host id does not exist (%s)", $value);
+						return $check;
+					}
+				}
+				break;
+			case "snmp_query_id":
+				if (!(((string) $value) === ((string)(int) $value))) {
+					$check["err_msg"] = __("ERROR: SNMP query id must be integer (%s)", $value);
+					return $check;
+				} elseif ($ri_check) {
+					$match = db_fetch_cell("SELECT COUNT(*) FROM snmp_query WHERE id=" . $value);
+					if ($match == 0) {
+						$check["err_msg"] = __("ERROR: This SNMP query id does not exist (%s)", $value);
+						return $check;
+					}
+				}
+				break;
+			case "sort_field":
+				break;
+			case "title_format":
+				break;
+			case "reindex_method":
+				if ((((string) $value) === ((string)(int) $value)) &&
+					($value >= DATA_QUERY_AUTOINDEX_NONE) &&
+					($value <= DATA_QUERY_AUTOINDEX_VALUE_CHANGE)) {
+					$data_query["reindex_method"] = $value;
+				} else {
+					switch (strtolower($value)) {
+						case "none":
+							$data_query["reindex_method"] = DATA_QUERY_AUTOINDEX_NONE;
+							break;
+						case "uptime":
+							$data_query["reindex_method"] = DATA_QUERY_AUTOINDEX_BACKWARDS_UPTIME;
+							break;
+						case "index":
+							$data_query["reindex_method"] = DATA_QUERY_AUTOINDEX_INDEX_COUNT_CHANGE;
+							break;
+						case "fields":
+							$data_query["reindex_method"] = DATA_QUERY_AUTOINDEX_FIELD_VERIFICATION;
+							break;
+						case "value":
+							$data_query["reindex_method"] = DATA_QUERY_AUTOINDEX_VALUE_CHANGE;
+							break;
+						default:
+							$check["err_msg"] = __("ERROR: You must supply a valid reindex method for all devices!") . "\n";
+							return $check;
+					}
+				}
+			default:
+				# host array may contain "unknown" columns due to extensions made by any plugin
+				# in future, a validation hook may be implemented here
+				/* TODO: validation hook */
+		}
+	}
+
+	# everything's fine
+	return true;
+}
 ?>
