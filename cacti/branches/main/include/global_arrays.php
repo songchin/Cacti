@@ -382,21 +382,21 @@ $custom_data_source_types = array(
 
 $menu = array(
 	__("Management") => array(
-		"graphs.php" => __("Graph Management"),
-		"tree.php" => __("Graph Trees"),
-		"data_sources.php" => __("Data Sources"),
 		"sites.php" => __("Sites"),
 		"host.php" => __("Devices"),
-		"pollers.php" => __("Pollers"),
+		"tree.php" => __("Trees"),
+		"graphs.php" => __("Graphs"),
+		"data_sources.php" => __("Data Sources"),
 		),
 	__("Data Collection") => array(
+		"pollers.php" => __("Pollers"),
 		"data_queries.php" => __("Data Queries"),
 		"data_input.php" => __("Data Input Methods"),
 		),
 	__("Templates") => array(
-		"graph_templates.php" => __("Graph Templates"),
-		"host_templates.php" => __("Host Templates"),
-		"data_templates.php" => __("Data Templates"),
+		"graph_templates.php" => __("Graph"),
+		"host_templates.php" => __("Host"),
+		"data_templates.php" => __("Data Source"),
 		),
 	__("Presets") => array(
 		"cdef.php" => __("CDEFs"),
