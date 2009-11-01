@@ -21,7 +21,7 @@
  +-------------------------------------------------------------------------+
  | http://www.cacti.net/                                                   |
  +-------------------------------------------------------------------------+
-*/
+ */
 
 /* do NOT run this script through a web browser */
 if (!isset($_SERVER["argv"][0]) || isset($_SERVER['REQUEST_METHOD'])  || isset($_SERVER['REMOTE_ADDR'])) {
@@ -40,127 +40,201 @@ include_once(CACTI_BASE_PATH."/lib/api_graph.php");
 /* process calling arguments */
 $parms = $_SERVER["argv"];
 $me = array_shift($parms);
+$debug		= FALSE;	# no debug mode
+$quietMode 	= FALSE;	# be verbose by default
+$device 	= array();
+$force		= FALSE;
 
 if (sizeof($parms)) {
-	$displayGraphs  = FALSE;
-	$quietMode		= FALSE;
-	$force			= FALSE;
-	$hostId         = 0;
 
 	foreach($parms as $parameter) {
 		@list($arg, $value) = @explode("=", $parameter);
 
-		switch ($arg) {
-		case "-d":
-			$debug = TRUE;
+		switch($arg) {
+			case "-d":
+			case "--debug":			$debug 							= TRUE; 		break;
 
-			break;
-		case "--device-id":
-			$hostId = $value;
+			# to select the devices to act on, at least one parameter must be given to specify device list
+			case "--device-id":		$device["id"] 					= trim($value);	break;
+			case "--site-id":		$device["site_id"] 				= trim($value);	break;
+			case "--poller-id":		$device["poller_id"]			= trim($value);	break;
+			case "--description":	$device["description"] 			= trim($value);	break;
+			case "--ip":			$device["hostname"] 			= trim($value);	break;
+			case "--host_template_id":
+			case "--template":		$device["host_template_id"]	 	= trim($value);	break;
+			case "--community":		$device["snmp_community"] 		= trim($value);	break;
+			case "--version":		$device["snmp_version"] 		= trim($value);	break;
+			case "--notes":			$device["notes"] 				= trim($value);	break;
+			case "--disabled":		$device["disabled"] 			= trim($value);	break;
+			case "--username":		$device["snmp_username"] 		= trim($value);	break;
+			case "--password":		$device["snmp_password"] 		= trim($value);	break;
+			case "--authproto":		$device["snmp_auth_protocol"]	= trim($value);	break;
+			case "--privproto":		$device["snmp_priv_protocol"] 	= trim($value);	break;
+			case "--privpass":		$device["snmp_priv_passphrase"] = trim($value);	break;
+			case "--context":		$device["snmp_context"] 		= trim($value);	break;
+			case "--port":			$device["snmp_port"] 			= trim($value);	break;
+			case "--timeout":		$device["snmp_timeout"] 		= trim($value);	break;
+			case "--avail":			$device["availability_method"] 	= trim($value);	break;
+			case "--ping-method":	$device["ping_method"] 			= trim($value);	break;
+			case "--ping-port":		$device["ping_port"] 			= trim($value);	break;
+			case "--ping-retries":	$device["ping_retries"] 		= trim($value);	break;
+			case "--ping-timeout":	$device["ping_timeout"] 		= trim($value);	break;
+			case "--max-oids":		$device["max_oids"] 			= trim($value);	break;
 
-			break;
-		case "--graph-id":
-			$graphId = $value;
+			# various paramaters specifying graphs
+			#case "--graph-type":	$graph_type 					= strtolower(trim($value));	break;
+			case "--graph-template-id":	$graph_template_id 			= trim($value);	break;
+			case "--graph-id":		$graph_id 						= trim($value);	break;
+			case "--force":			$force 							= TRUE;			break;
 
-			break;
-		case "--force":
-			$force = TRUE;
+			case "--snmp-query-id":	$ds_graph["snmpQueryId"] 		= trim($value);	break;
+			case "--snmp-query-type-id":$ds_graph["snmpQueryType"] 	= trim($value);	break;
+			case "--snmp-field":	$ds_graph["snmpField"] 			= trim($value);	break;
+			case "--snmp-field-spec":$ds_graph["snmpFieldSpec"] 	= trim($value);	break;
+			case "--snmp-value":	$ds_graph["snmpValue"] 			= trim($value);	break;
 
-			break;
-		case "--version":
-		case "-V":
-		case "-H":
-		case "--help":
-			display_help($me);
-			exit(0);
-		case "--list-graphs":
-			$displayGraphs = TRUE;
-
-			break;
-		case "--quiet":
-			$quietMode = TRUE;
-
-			break;
-		default:
-			printf(__("ERROR: Invalid Argument: (%s)\n\n"), $arg);
-			display_help($me);
-			exit(1);
+			# miscellaneous
+			case "-V":
+			case "-H":
+			case "--help":
+			case "--version":		display_help($me);								exit(0);
+			case "--quiet":			$quietMode = TRUE;								break;
+			default:				echo __("ERROR: Invalid Argument: (%s)", $arg) . "\n\n"; display_help($me); exit(1);
 		}
 	}
 
 
-
-	/*
-	 * handle display options
-	 */
-	if ($displayGraphs) {
-		if (!isset($hostId)) {
-			echo __("ERROR: You must supply a device-id before you can list its graphs") . "\n";
-			echo __("Try --list-devices") . "\n";
+	if (isset($graph_id)) {	# delete a single graph
+		/* Verify the graph's existance */
+		$graph_exists = db_fetch_cell("SELECT id FROM graph_local WHERE id=$graph_id");
+		if (empty($graph_exists)) {
+			echo __("ERROR: Unknown Graph ID (%d)", $graph_id) . "\n";
+			echo __("Try --list-graphs") . "\n";
 			exit(1);
+		} else {
+			graph_remove($graph_id, $force);
 		}
 
-		displayHostGraphs($hostId, $quietMode);
-		exit(0);
+
+	} else {				# delete graphs related to the given device and/or graph template
+		$selection = "";
+		if (sizeof($device)) {
+			# verify the parameters given
+			$verify = verifyDevice($device, true);
+			if (isset($verify["err_msg"])) {
+				print $verify["err_msg"] . "\n\n";
+				display_help($me);
+				exit(1);
+			}
+			/* get devices matching criteria */
+			$devices = getDevices($device);
+			if (!sizeof($devices)) {
+				print __("ERROR: No matching Devices found\n");
+				print __("Try php -q device_list.php") . "\n";
+				exit(1);
+			}
+			/* form a valid sql statement for host_id */
+			$selection = "WHERE " . str_replace("id", "host_id", array_to_sql_or($devices, "id")) . " ";
+		}
+
+		if (isset($graph_template_id) && !($graph_template_id === 0) && (db_fetch_cell("SELECT id FROM graph_templates WHERE id=$graph_template_id"))) {
+			/* form a valid sql statement for host_id */
+			$selection .= (strlen($selection) ? " AND " : " WHERE ") . " graph_templates.id=" . $graph_template_id;
+		}
+
+		$graphs = getGraphs($selection, $columns);
+		foreach ($graphs as $graph) {
+			graph_remove($graph["local_graph_id"], $force);
+		}
 	}
 
 
-	/* Verify the graph's existance */
-	$graph_exists = db_fetch_cell("SELECT id FROM graph_local WHERE id=$graphId");
-	if (empty($graph_exists)) {
-		printf(__("ERROR: Unknown Graph ID (%d)\n"), $graphId);
-		echo __("Try --list-graphs") . "\n";
-		exit(1);
-	}
+}else{
+	display_help($me);
+	exit(0);
+}
 
 
-	/*
-	 * get the data sources and graphs to act on
-	 * (code stolen from graphs.php)
-	 */
-	if ($force) {
+function graph_remove ($id, $delete_ds) {
+
+	# get the data sources and graphs to act on
+	if ($delete_ds) {
 		/* delete all data sources referenced by this graph */
 		$data_sources = db_fetch_assoc("SELECT
 			data_template_data.local_data_id
 			FROM (data_template_rrd,data_template_data,graph_templates_item)
 			WHERE graph_templates_item.task_item_id=data_template_rrd.id
 			AND data_template_rrd.local_data_id=data_template_data.local_data_id
-			AND graph_templates_item.local_graph_id=" . $graphId . "
+			AND graph_templates_item.local_graph_id=" . $id . "
 			AND data_template_data.local_data_id > 0");
 
-		echo __("Removing graph and all resources for graph id ") . $graphId;
+		echo __("Removing graph and all resources for graph id ") . $id;
 		if (sizeof($data_sources) > 0) {
 			foreach ($data_sources as $data_source) {
 				api_data_source_remove($data_source["local_data_id"]);
 			}
 		}
 	} else {
-		echo __("Removing graph but keeping resources for graph id ") . $graphId;
+		echo __("Removing graph but keeping resources for graph id ") . $id;
 	}
 
-	api_graph_remove($graphId);
+	api_graph_remove($id);
 
 	if (is_error_message()) {
 		echo __(". ERROR: Failed to remove this graph") . "\n";
-		exit(1);
 	} else {
-		printf(__(". Success - removed graph-id: (%d)"), $graphId);
-		exit(0);
+		echo __(". Success - removed graph-id: (%d)", $id) . "\n";
 	}
-}else{
-	display_help($me);
-	exit(0);
 }
 
+
+
 function display_help($me) {
-	echo __("Remove Graph Script 1.0") . ", " . __("Copyright 2004-2009 - The Cacti Group") . "\n";
+	echo __("Delete Graph Script 1.1") . ", " . __("Copyright 2004-2009 - The Cacti Group") . "\n";
 	echo __("A simple command line utility to remove a graph from Cacti") . "\n\n";
-	echo __("usage: ") . $me . " --graph-id=[ID]\n\n";
-	echo __("Required:") . "\n";
-	echo "   --graph-id      " . __("the numerical id of the graph") . "\n\n";
+	echo __("usage: ") . $me . " [--graph-id=] [ --graph-template-id=] [--device-id=] [--site-id=] [--poller-id=]\n";
+	echo "       [--description=] [--ip=] [--template=] [--notes=\"[]\"] [--disabled]\n";
+	echo "       [--avail=[pingsnmp]] [--ping-method=[tcp] --ping-port=[N/A, 1-65534]] --ping-retries=[2] --ping-timeout=[500]\n";
+	echo "       [--version=1] [--community=] [--port=161] [--timeout=500]\n";
+	echo "       [--username= --password=] [--authproto=] [--privpass= --privproto=] [--context=]\n";
+	echo "       [--quiet] [-d]\n\n";
 	echo __("Optional:") . "\n";
-	echo "   --force         " . __("delete all related data sources") . "\n\n";
-	echo __("List Options:") . "\n";
-	echo "   --list-graphs --device-id " . __("list available graphs for a specific device") . "\n";
-	echo "   --quiet         " . __("batch mode value return") . "\n\n";
+	echo "   --graph-id          " . __("the numerical ID of the graph") . "\n";
+	echo "   --graph-template-id " . __("the numerical ID of the graph template") . "\n";
+	echo "   --device-id         " . __("the numerical ID of the device") . "\n";
+	echo "   --site-id           " . __("the numerical ID of the site") . "\n";
+	echo "   --poller-id         " . __("the numerical ID of the poller") . "\n";
+	echo "   --description       " . __("the name that will be displayed by Cacti in the graphs") . "\n";
+	echo "   --ip                " . __("self explanatory (can also be a FQDN)") . "\n";
+	echo "   --template          " . __("denotes the device template to be used") . "\n";
+	echo "                       " . __("In case a device template is given, all values are fetched from this one.") . "\n";
+	echo "                       " . __("For a device template=0 (NONE), Cacti default settings are used.") . "\n";
+	echo "                       " . __("Optionally overwrite by any of the following:") . "\n";
+	echo "   --notes             " . __("General information about this device. Must be enclosed using double quotes.") . "\n";
+	echo "   --disable           " . __("to add this device but to disable checks and 0 to enable it") . " [0|1]\n";
+	echo "   --avail             " . __("device availability check") . " [ping][none, snmp, pingsnmp]\n";
+	echo "     --ping-method     " . __("if ping selected") . " [icmp|tcp|udp]\n";
+	echo "     --ping-port       " . __("port used for tcp|udp pings") . " [1-65534]\n";
+	echo "     --ping-retries    " . __("the number of time to attempt to communicate with a device") . "\n";
+	echo "     --ping-timeout    " . __("ping timeout") . "\n";
+	echo "   --version           " . __("snmp version") . " [1|2|3]\n";
+	echo "   --community         " . __("snmp community string for snmpv1 and snmpv2. Leave blank for no community") . "\n";
+	echo "   --port              " . __("snmp port") . "\n";
+	echo "   --timeout           " . __("snmp timeout") . "\n";
+	echo "   --username          " . __("snmp username for snmpv3") . "\n";
+	echo "   --password          " . __("snmp password for snmpv3") . "\n";
+	echo "   --authproto         " . __("snmp authentication protocol for snmpv3") . " [".SNMP_AUTH_PROTOCOL_MD5."|".SNMP_AUTH_PROTOCOL_SHA."]\n";
+	echo "   --privpass          " . __("snmp privacy passphrase for snmpv3") . "\n";
+	echo "   --privproto         " . __("snmp privacy protocol for snmpv3") . " [".SNMP_PRIV_PROTOCOL_DES."|".SNMP_PRIV_PROTOCOL_AES128."]\n";
+	echo "   --context           " . __("snmp context for snmpv3") . "\n";
+	echo "   --max-oids          " . __("the number of OID's that can be obtained in a single SNMP Get request") . " [1-60]\n";
+	#echo "   -d                  " . __("Debug Mode, no updates made, but printing the SQL for updates") . "\n";
+	echo "   --force             " . __("delete all related data sources") . "\n\n";
+	echo __("Examples:") . "\n";
+	echo "   php -q " . $me . " --device-id=1\n";
+	echo "   " . __("  removes all graphs from device id 1") . "\n";
+	echo "   php -q " . $me . " --device-id=1 --graph-template-id=11 --force\n";
+	echo "   " . __("  removes all graphs related to graph template id 11 and associated data sources from device id 1") . "\n";
+	echo "   php -q " . $me . " --graph-template-id=11 --force\n";
+	echo "   " . __("  same as above, but for all devices") . "\n";
 }

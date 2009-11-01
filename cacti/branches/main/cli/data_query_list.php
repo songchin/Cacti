@@ -21,7 +21,7 @@
  +-------------------------------------------------------------------------+
  | http://www.cacti.net/                                                   |
  +-------------------------------------------------------------------------+
-*/
+ */
 
 /* do NOT run this script through a web browser */
 if (!isset($_SERVER["argv"][0]) || isset($_SERVER['REQUEST_METHOD'])  || isset($_SERVER['REMOTE_ADDR'])) {
@@ -49,7 +49,7 @@ if (sizeof($parms)) {
 		@list($arg, $value) = @explode("=", $parameter);
 
 		switch ($arg) {
-		case "-d":
+			case "-d":
 			case "--debug":			$debug 							= TRUE; 		break;
 			case "--device-id":		$device["id"] 					= trim($value);	break;
 			case "--site-id":		$device["site_id"] 				= trim($value);	break;
@@ -77,12 +77,12 @@ if (sizeof($parms)) {
 			case "--max-oids":		$device["max_oids"] 			= trim($value);	break;
 			case "--data-query-id":	$dq["snmp_query_id"] 			= trim($value);	break;
 			case "--reindex-method":$dq["reindex_method"] 			= trim($value);	break;
-		case "-V":
-		case "-H":
-		case "--help":
+			case "-V":
+			case "-H":
+			case "--help":
 			case "--version":		display_help($me);								exit(0);
 			case "--quiet":			$quietMode = TRUE;								break;
-			default:				print __("ERROR: Invalid Argument: (%s)\n\n", $arg); display_help($me); exit(1);
+			default:				echo __("ERROR: Invalid Argument: (%s)", $arg) . "\n\n"; display_help($me); exit(1);
 		}
 	}
 
@@ -111,8 +111,8 @@ if (sizeof($parms)) {
 	$devices = getDevices($device);
 
 	if (!sizeof($devices)) {
-	$data_queries = getSNMPQueries();
-	displaySNMPQueries($data_queries, $quietMode);
+		$data_queries = getSNMPQueries();
+		displaySNMPQueries($data_queries, $quietMode);
 	} else {
 		$columns = array();
 		if (isset($dq["snmp_query_id"])) {

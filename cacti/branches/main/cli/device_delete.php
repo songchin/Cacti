@@ -21,7 +21,7 @@
  +-------------------------------------------------------------------------+
  | http://www.cacti.net/                                                   |
  +-------------------------------------------------------------------------+
-*/
+ */
 
 /* do NOT run this script through a web browser */
 if (!isset($_SERVER["argv"][0]) || isset($_SERVER['REQUEST_METHOD'])  || isset($_SERVER['REMOTE_ADDR'])) {
@@ -48,32 +48,21 @@ if (sizeof($parms)) {
 		@list($arg, $value) = @explode("=", $parameter);
 
 		switch ($arg) {
-		case "-d":
-			$debug = TRUE;
+			case "-d":
+			case "--debug":			$debug 							= TRUE; 		break;
 
-			break;
-		case "--device-id":
-			$device_id = $value;
-			if (!is_numeric($device_id)) {
-				echo __("ERROR: You must supply a numeric device id!") . "\n";
-				exit(1);
-			}
+			# to select the devices to act on, at least one parameter must be given
+			case "--device-id":		$device["id"] 					= trim($value);	break;
 
-			break;
-		case "--force":
-			$force = TRUE;
+			case "--force":			$force 							= TRUE;			break;
 
-			break;
-		case "--version":
-		case "-V":
-		case "-H":
-		case "--help":
-			display_help($me);
-			exit(0);
-		default:
-			echo __("ERROR: Invalid Argument: (%d)", $arg) . "\n";
-			display_help($me);
-			exit(1);
+			# miscellaneous
+			case "-V":
+			case "-H":
+			case "--help":
+			case "--version":		display_help($me);								exit(0);
+			case "--quiet":			$quietMode = TRUE;								break;
+			default:				echo __("ERROR: Invalid Argument: (%s)", $arg) . "\n\n"; display_help($me); exit(1);
 		}
 	}
 

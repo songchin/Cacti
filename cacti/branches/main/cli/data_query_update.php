@@ -21,7 +21,7 @@
  +-------------------------------------------------------------------------+
  | http://www.cacti.net/                                                   |
  +-------------------------------------------------------------------------+
-*/
+ */
 
 /* do NOT run this script through a web browser */
 if (!isset($_SERVER["argv"][0]) || isset($_SERVER['REQUEST_METHOD'])  || isset($_SERVER['REMOTE_ADDR'])) {
@@ -84,7 +84,7 @@ if (sizeof($parms)) {
 			case "--help":
 			case "--version":		display_help($me);								exit(0);
 			case "--quiet":			$quietMode = TRUE;								break;
-			default:				print __("ERROR: Invalid Argument: (%s)\n\n", $arg); display_help($me); exit(1);
+			default:				echo __("ERROR: Invalid Argument: (%s)", $arg) . "\n\n"; display_help($me); exit(1);
 		}
 	}
 

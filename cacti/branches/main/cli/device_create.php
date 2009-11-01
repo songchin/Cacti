@@ -21,7 +21,7 @@
  +-------------------------------------------------------------------------+
  | http://www.cacti.net/                                                   |
  +-------------------------------------------------------------------------+
-*/
+ */
 
 /* do NOT run this script through a web browser */
 if (!isset($_SERVER["argv"][0]) || isset($_SERVER['REQUEST_METHOD'])  || isset($_SERVER['REMOTE_ADDR'])) {
@@ -53,7 +53,7 @@ if (sizeof($parms)) {
 	foreach($parms as $parameter) {
 		@list($arg, $value) = @explode("=", $parameter);
 		switch ($arg) {
-		case "-d":
+			case "-d":
 			case "--debug":			$debug 							= TRUE; 		break;
 			#case "--delim":			$delimiter						= trim($value);	break;
 			#case "--device-id":		$device["id"] 					= trim($value);	break;
@@ -80,13 +80,13 @@ if (sizeof($parms)) {
 			case "--ping-retries":	$device["ping_retries"] 		= trim($value);	break;
 			case "--ping-timeout":	$device["ping_timeout"] 		= trim($value);	break;
 			case "--max-oids":		$device["max_oids"] 			= trim($value);	break;
-		case "-V":
-		case "-H":
-		case "--help":
+			case "-V":
+			case "-H":
+			case "--help":
 			case "--version":		display_help($me);								exit(0);
 			case "--quiet":			$quietMode = TRUE;								break;
-			default:				print __("ERROR: Invalid Argument: (%s)\n\n", $arg); display_help($me); exit(1);
-	}
+			default:				echo __("ERROR: Invalid Argument: (%s)", $arg) . "\n\n"; display_help($me); exit(1);
+		}
 	}
 	#print "parms: "; print_r($device);
 
@@ -200,52 +200,52 @@ if (sizeof($parms)) {
 	/*
 	 * perform some nice printout
 
-	echo printf(__("Adding %1s (%2s) as '%3s'"), $device["description"], $device["hostname"], $device_template["name"]);
+	 echo printf(__("Adding %1s (%2s) as '%3s'"), $device["description"], $device["hostname"], $device_template["name"]);
 
-	switch($device_template["availability_method"]) {
+	 switch($device_template["availability_method"]) {
 		case AVAIL_NONE:
-			echo ", " . __("Availability Method None");
-			break;
+		echo ", " . __("Availability Method None");
+		break;
 		case AVAIL_SNMP_AND_PING:
-			echo ", " . __("Availability Method SNMP and PING");
-			break;
+		echo ", " . __("Availability Method SNMP and PING");
+		break;
 		case AVAIL_SNMP:
-			echo ", " . __("Availability Method SNMP");
-			break;
+		echo ", " . __("Availability Method SNMP");
+		break;
 		case AVAIL_PING:
-			echo ", " . __("Availability Method PING");
-			break;
-	}
-	if (($device_template["availability_method"] == AVAIL_SNMP_AND_PING) ||
+		echo ", " . __("Availability Method PING");
+		break;
+		}
+		if (($device_template["availability_method"] == AVAIL_SNMP_AND_PING) ||
 		($device_template["availability_method"] == AVAIL_PING)) {
 		switch($device_template["ping_method"]) {
-			case PING_ICMP:
-				printf(__(", Ping Method ICMP, Retries %1d, Ping Timeout %2d"), $device_template["ping_retries"], $device_template["ping_timeout"]);
-				break;
-			case PING_UDP:
-				printf(__(", Ping Method UDP, UDP Port %1d, Retries %2d, Ping Timeout %3d"), $device_template["ping_port"], $device_template["ping_retries"], $device_template["ping_timeout"]);
-				break;
-			case PING_TCP:
-				printf(__(", Ping Method TCP, TCP Port %1d, Retries %2d, Ping Timeout %3d"), $device_template["ping_port"], $device_template["ping_retries"], $device_template["ping_timeout"]);
-				break;
+		case PING_ICMP:
+		printf(__(", Ping Method ICMP, Retries %1d, Ping Timeout %2d"), $device_template["ping_retries"], $device_template["ping_timeout"]);
+		break;
+		case PING_UDP:
+		printf(__(", Ping Method UDP, UDP Port %1d, Retries %2d, Ping Timeout %3d"), $device_template["ping_port"], $device_template["ping_retries"], $device_template["ping_timeout"]);
+		break;
+		case PING_TCP:
+		printf(__(", Ping Method TCP, TCP Port %1d, Retries %2d, Ping Timeout %3d"), $device_template["ping_port"], $device_template["ping_retries"], $device_template["ping_timeout"]);
+		break;
 		}
-	}
-	if (($device_template["availability_method"] == AVAIL_SNMP_AND_PING) ||
+		}
+		if (($device_template["availability_method"] == AVAIL_SNMP_AND_PING) ||
 		($device_template["availability_method"] == AVAIL_SNMP)) {
 		printf(__(", SNMP V%1s, SNMP Port %2d, SNMP Timeout %3d"), $device_template["snmp_version"], $device_template["snmp_port"], $device_template["snmp_timeout"]);
 		switch($device_template["snmp_version"]) {
-			case 1:
-			case 2:
-				printf(__(", Community %s"), $device_template["snmp_community"]);
-				break;
-			case 3:
-				printf(__(", AuthProto %1s, AuthPass %2s, PrivProto %3s, PrivPass %4s, Context %5s"), $device_template["snmp_auth_protocol"], $device_template["snmp_password"], $device_template["snmp_priv_protocol"], $device_template["snmp_priv_passphrase"], $device_template["snmp_context"]);
-				break;
+		case 1:
+		case 2:
+		printf(__(", Community %s"), $device_template["snmp_community"]);
+		break;
+		case 3:
+		printf(__(", AuthProto %1s, AuthPass %2s, PrivProto %3s, PrivPass %4s, Context %5s"), $device_template["snmp_auth_protocol"], $device_template["snmp_password"], $device_template["snmp_priv_protocol"], $device_template["snmp_priv_passphrase"], $device_template["snmp_context"]);
+		break;
 		}
-	}
+		}
 
-	echo "\n";
-	*/
+		echo "\n";
+		*/
 
 	/*
 	 * last, but not least, add this device along with all
@@ -265,30 +265,30 @@ if (sizeof($parms)) {
 		$device_template['snmp_priv_protocol'].", ". $device_template['snmp_context'].", ". $device_template['max_oids'].")\n");
 	} else {
 		$device_id = api_device_save(0, $device["site_id"], $device["poller_id"], $device["host_template_id"],
-			$device["description"], $device["hostname"],
-			$device_template["snmp_community"], $device_template["snmp_version"],
-			$device_template["snmp_username"], $device_template["snmp_password"],
-			$device_template["snmp_port"], $device_template["snmp_timeout"],
-			$device_template["disabled"],
-			$device_template["availability_method"], $device_template["ping_method"],
-			$device_template["ping_port"], $device_template["ping_timeout"],
-			$device_template["ping_retries"], $device_template["notes"],
-			$device_template["snmp_auth_protocol"], $device_template["snmp_priv_passphrase"],
-			$device_template["snmp_priv_protocol"], $device_template["snmp_context"], $device_template["max_oids"]);
+		$device["description"], $device["hostname"],
+		$device_template["snmp_community"], $device_template["snmp_version"],
+		$device_template["snmp_username"], $device_template["snmp_password"],
+		$device_template["snmp_port"], $device_template["snmp_timeout"],
+		$device_template["disabled"],
+		$device_template["availability_method"], $device_template["ping_method"],
+		$device_template["ping_port"], $device_template["ping_timeout"],
+		$device_template["ping_retries"], $device_template["notes"],
+		$device_template["snmp_auth_protocol"], $device_template["snmp_priv_passphrase"],
+		$device_template["snmp_priv_protocol"], $device_template["snmp_context"], $device_template["max_oids"]);
 
-	if (is_error_message()) {
-		echo __("ERROR: Failed to add this device") . "\n";
+		if (is_error_message()) {
+			echo __("ERROR: Failed to add this device") . "\n";
 			print_r($_SESSION["sess_messages"]); global $messages;
-				foreach (array_keys($_SESSION["sess_messages"]) as $current_message_id) {
-					if (isset($messages[$current_message_id])) {
-						print_r($messages[$current_message_id]);
-					}
+			foreach (array_keys($_SESSION["sess_messages"]) as $current_message_id) {
+				if (isset($messages[$current_message_id])) {
+					print_r($messages[$current_message_id]);
 				}
-		exit(1);
-	} else {
+			}
+			exit(1);
+		} else {
 			echo __("Success - new device-id: (%d)", $device_id) . "\n";
-		exit(0);
-	}
+			exit(0);
+		}
 	}
 }else{
 	display_help($me);

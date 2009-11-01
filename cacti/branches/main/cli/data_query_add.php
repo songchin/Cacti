@@ -21,7 +21,7 @@
  +-------------------------------------------------------------------------+
  | http://www.cacti.net/                                                   |
  +-------------------------------------------------------------------------+
-*/
+ */
 
 /* do NOT run this script through a web browser */
 if (!isset($_SERVER["argv"][0]) || isset($_SERVER['REQUEST_METHOD'])  || isset($_SERVER['REMOTE_ADDR'])) {
@@ -50,7 +50,7 @@ if (sizeof($parms)) {
 		@list($arg, $value) = @explode("=", $parameter);
 
 		switch ($arg) {
-		case "-d":
+			case "-d":
 			case "--debug":			$debug 							= TRUE; 		break;
 			case "--device-id":		$device["id"] 					= trim($value);	break;
 			case "--site-id":		$device["site_id"] 				= trim($value);	break;
@@ -78,18 +78,16 @@ if (sizeof($parms)) {
 			case "--max-oids":		$device["max_oids"] 			= trim($value);	break;
 			case "--data-query-id":	$dq["snmp_query_id"] 			= trim($value);	break;
 			case "--reindex-method":$dq["reindex_method"] 			= trim($value);	break;
-		case "-V":
-		case "-H":
-		case "--help":
+			case "-V":
+			case "-H":
+			case "--help":
 			case "--version":		display_help($me);								exit(0);
 			case "--quiet":			$quietMode = TRUE;								break;
-			default:				print __("ERROR: Invalid Argument: (%s)\n\n", $arg); display_help($me); exit(1);
+			default:				echo __("ERROR: Invalid Argument: (%s)", $arg) . "\n\n"; display_help($me); exit(1);
 		}
 	}
 
-	/*
-	 * verify required parameters
-	 */
+	# verify required parameters
 	if (!isset($dq["snmp_query_id"])) {
 		echo __("ERROR: You must supply a valid data-query-id for all devices!") . "\n";
 		exit(1);
@@ -132,25 +130,21 @@ if (sizeof($parms)) {
 		exit(1);
 	}
 
-	/*
-	 * verify valid data query and get a name for it
-	 */
+	/* verify valid data query and get a name for it */
 	$data_query_name = db_fetch_cell("SELECT name FROM snmp_query WHERE id = " . $dq["snmp_query_id"]);
 	if (!isset($data_query_name)) {
 		echo __("ERROR: Unknown Data Query Id (%s)", $dq["snmp_query_id"]) . "\n";
 		exit(1);
 	}
 
-	/*
-	 * Now, add the data query and run it once to get the cache filled
-	 */
+	/* Now, add the data query and run it once to get the cache filled */
 	foreach ($devices as $device) {
 		$current_reindex_method = db_fetch_cell("SELECT reindex_method FROM host_snmp_query WHERE host_id=" . $device["id"] .
 										" AND snmp_query_id=" . $dq["snmp_query_id"]);
 		if (isset($current_reindex_method)) {
 			echo __("ERROR: Data Query is already associated for device: (%s: %s) data query (%s: %s) using reindex method of (%s: %s)", $device["id"], $device["hostname"], $dq["snmp_query_id"], $data_query_name, $current_reindex_method, $reindex_types{$current_reindex_method}) . "\n";
 			continue;
-	}else{
+		}else{
 			$sql = "REPLACE INTO host_snmp_query " .
 					"(host_id,snmp_query_id,reindex_method) " .
 					"VALUES (".
@@ -165,11 +159,11 @@ if (sizeof($parms)) {
 				$ok = db_execute($sql);
 				if (!$quietMode) {
 					if ($ok) {
-		/* recache snmp data */
+						/* recache snmp data */
 						run_data_query($device["id"], $dq["snmp_query_id"]);
-	if (is_error_message()) {
+						if (is_error_message()) {
 							echo __("ERROR: Failed to add this data query for device (%s: %s) data query (%s: %s) reindex method (%s: %s)", $device["id"], $device["hostname"], $dq["snmp_query_id"], $data_query_name, $dq["reindex_method"], $reindex_types[$dq["reindex_method"]]) . "\n";
-	} else {
+						} else {
 							echo __("Success - Device (%s: %s) data query (%s: %s) reindex method (%s: %s)", $device["id"], $device["hostname"], $dq["snmp_query_id"], $data_query_name, $dq["reindex_method"], $reindex_types{$dq["reindex_method"]}) . "\n";
 						}
 					} else {

@@ -21,7 +21,7 @@
  +-------------------------------------------------------------------------+
  | http://www.cacti.net/                                                   |
  +-------------------------------------------------------------------------+
-*/
+ */
 
 /* do NOT run this script through a web browser */
 if (!isset($_SERVER["argv"][0]) || isset($_SERVER['REQUEST_METHOD'])  || isset($_SERVER['REMOTE_ADDR'])) {
@@ -49,7 +49,7 @@ if (sizeof($parms)) {
 	foreach($parms as $parameter) {
 		@list($arg, $value) = @explode("=", $parameter);
 		switch ($arg) {
-		case "-d":
+			case "-d":
 			case "--debug":			$debug 							= TRUE; 		break;
 			#case "--delim":			$delimiter						= trim($value);	break;
 			case "--device-id":		$device["id"] 					= trim($value);	break;
@@ -77,33 +77,35 @@ if (sizeof($parms)) {
 			case "--ping-timeout":	$device["ping_timeout"] 		= trim($value);	break;
 			case "--max-oids":		$device["max_oids"] 			= trim($value);	break;
 			case "--list-communities":	$displayCommunities 		= TRUE;			break;
+
+			# miscellaneous
 			case "-V":
 			case "-H":
 			case "--help":
 			case "--version":		display_help($me);								exit(0);
 			case "--quiet":			$quietMode = TRUE;								break;
-			default:				print __("ERROR: Invalid Argument: (%s)\n\n", $arg); display_help($me); exit(1);
-			}
-			}
+			default:				echo __("ERROR: Invalid Argument: (%s)", $arg) . "\n\n"; display_help($me); exit(1);
+		}
+	}
 	#print "parms: "; print_r($device);
 	# handle display options
 	if ($displayCommunities) {
 		displayCommunities($quietMode);
 		exit(0);
-			}
+	}
 	# at least one matching criteria has to be defined
 	if (!sizeof($device)) {
 		print __("ERROR: No device matching criteria found\n");
-				exit(1);
-			}
+		exit(1);
+	}
 
 	# now verify the parameters given
 	$verify = verifyDevice($device, true);
 	if (isset($verify["err_msg"])) {
 		print $verify["err_msg"] . "\n\n";
-			display_help($me);
-			exit(1);
-		}
+		display_help($me);
+		exit(1);
+	}
 
 	/* get devices matching criteria */
 	$devices = getDevices($device);

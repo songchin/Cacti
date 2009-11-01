@@ -177,6 +177,43 @@ function getDevices($input_parms) {
 	return db_fetch_assoc($sql_stmt);
 }
 
+/* getGraphs				- get all Graphs related to a given device selection
+ * @arg $device_selection	- sql selection of device(s), empty for all devices
+ * 							  e.g. WHERE host_id = <id>
+ * 							       WHERE (host_id IN (...))
+ */
+function getGraphs($device_selection, &$header) {
+	$sql = "SELECT " .
+			"graph_local.id as local_graph_id, " .
+			"graph_local.host_id, " .
+			"host.hostname, " .
+			"graph_templates.id as gt_id, " .
+			"graph_templates.name, " .
+			"graph_templates_graph.title_cache  " .
+			"FROM graph_local " .
+			"LEFT JOIN graph_templates_graph ON (graph_local.id=graph_templates_graph.local_graph_id) " .
+			"LEFT JOIN graph_templates ON (graph_local.graph_template_id=graph_templates.id) " .
+			"LEFT JOIN host ON (graph_local.host_id=host.id) " .
+			$device_selection .
+			" ORDER BY host_id ASC, gt_id ASC";
+
+	$tmpArray = db_fetch_assoc($sql);
+
+	if (sizeof($tmpArray)) {
+		# provide human readable column headers
+		$header["local_graph_id"]["desc"]		= __("Local Graph Id");
+		$header["host_id"]["desc"] 				= __("Host Id");
+		$header["hostname"]["desc"] 			= __("Hostname");
+		$header["gt_id"]["desc"]		 		= __("Graph Template Id");
+		$header["name"]["desc"]			 		= __("Graph Template Name");
+		$header["title_cache"]["desc"] 			= __("Graph Title");
+	}
+
+	return $tmpArray;
+}
+
+
+
 function getInputFields($templateId) {
 	$fields    = array();
 
@@ -1267,6 +1304,7 @@ function verifyDataQuery(&$data_query, $ri_check=false) {
 							return $check;
 					}
 				}
+				break;
 			default:
 				# host array may contain "unknown" columns due to extensions made by any plugin
 				# in future, a validation hook may be implemented here
@@ -1276,5 +1314,192 @@ function verifyDataQuery(&$data_query, $ri_check=false) {
 
 	# everything's fine
 	return true;
+}
+
+/*
+ * verifyDQGraph	- verifies all array items for a graph array to create a Data Query based Graph
+ * 					  recodes the dqGraph array, if necessary
+ * @arg $dqGraph	- dqGraph array (part of  table)
+ * @arg $ri_check	- request a referential integrity test
+ * returns			- if ok, returns true with array recoded; otherwise array containg error message
+ */
+function verifyDQGraph(&$dqGraph, $ri_check=false) {
+
+	if (($dqGraph["snmp_query_id"] == "") ||
+		($dqGraph["snmp_query_graph_id"] == "") ||
+		($dqGraph["snmp_field"] == "") ||
+		($dqGraph["snmp_value"] == "") ||
+		($dqGraph["host_id"] == "") ||
+		($dqGraph["graph_template_id"] == "")) {
+		$check["err_msg"] = __("ERROR: For graph type of 'ds' you must supply more options") . "\n";
+		return $check;
+	}
+
+	foreach($dqGraph as $key => $value) {
+
+		switch ($key) {
+			case "host_id":
+				if (!(((string) $value) === ((string)(int) $value))) {
+					$check["err_msg"] = __("ERROR: Device id must be integer (%s)", $value);
+					return $check;
+				} elseif ($ri_check) {
+					$match = db_fetch_cell("SELECT COUNT(*) FROM host WHERE id=" . $value);
+					if ($match == 0) {
+						$check["err_msg"] = __("ERROR: This Host id does not exist (%s)", $value);
+						return $check;
+					}
+				}
+				break;
+			case "graph_template_id":
+				if (!(((string) $value) === ((string)(int) $value))) {
+					$check["err_msg"] = __("ERROR: Graph template id must be integer (%s)", $value);
+					return $check;
+				} elseif ($ri_check) {
+					$match = db_fetch_cell("SELECT COUNT(*) FROM graph_templates WHERE id=" . $value);
+					if ($match == 0) {
+						$check["err_msg"] = __("ERROR: This Graph template id does not exist (%s)", $value);
+						return $check;
+					}
+				}
+				break;
+			case "snmp_query_id":
+				if (!(((string) $value) === ((string)(int) $value))) {
+					$check["err_msg"] = __("ERROR: SNMP query id must be integer (%s)", $value);
+					return $check;
+				} elseif ($ri_check) {
+					$match = db_fetch_cell("SELECT COUNT(*) FROM snmp_query WHERE id=" . $value);
+					if ($match == 0) {
+						$check["err_msg"] = __("ERROR: This SNMP query id does not exist (%s)", $value);
+						return $check;
+					}
+				}
+				break;
+			case "snmp_query_graph_id":
+				if (!(((string) $value) === ((string)(int) $value))) {
+					$check["err_msg"] = __("ERROR: SNMP query type id must be integer (%s)", $value);
+					return $check;
+				} elseif ($ri_check) {
+					$match = db_fetch_cell("SELECT COUNT(*)	FROM snmp_query_graph WHERE id=" . $value .
+											" AND snmp_query_id=" . $dqGraph["snmp_query_id"] .
+											" AND graph_template_id=" . $dqGraph["graph_template_id"]);
+					if ($match == 0) {
+						$check["err_msg"] = __("ERROR: This SNMP query type id does not exist (%s) for SNMP query %s, graph template id %s", $value, $dqGraph["snmp_query_id"], $dqGraph["graph_template_id"]);
+						return $check;
+					}
+				}
+				break;
+			case "snmp-field":
+				if ($ri_check) {
+					$match = db_fetch_cell("SELECT COUNT(*)	FROM host_snmp_cache WHERE host_id=" . $dqGraph["host_id"] .
+											" AND snmp_query_id=" . $dqGraph["snmp_query_id"] .
+											" AND field_name='" . $value . "'");
+					if ($match == 0) {
+						$check["err_msg"] = __("ERROR: This SNMP field name does not exist (%s) for SNMP query %s, host id %s", $value, $dqGraph["snmp_query_id"], $dqGraph["host_id"]);
+						return $check;
+					}
+				}
+				break;
+			case "snmp-value":
+				if ($ri_check) {
+					$match = db_fetch_cell("SELECT COUNT(*)	FROM host_snmp_cache WHERE host_id=" . $dqGraph["host_id"] .
+											" AND snmp_query_id=" . $dqGraph["snmp_query_id"] .
+											" AND field_name='" . $dqGraph["snmp-field"] . "'" .
+											" AND field_value='" . $value . "'");
+					if ($match == 0) {
+						$check["err_msg"] = __("ERROR: This SNMP field value does not exist (%s) for SNMP query %s, host id %s, SNMP field %s", $value, $dqGraph["snmp_query_id"], $dqGraph["host_id"], $dqGraph["snmp-field"]);
+						return $check;
+					}
+				}
+				break;
+			case "reindex-method":
+				if ((((string) $value) === ((string)(int) $value)) &&
+					($value >= DATA_QUERY_AUTOINDEX_NONE) &&
+					($value <= DATA_QUERY_AUTOINDEX_VALUE_CHANGE)) {
+					$dqGraph["reindex_method"] = $value;
+				} else {
+					switch (strtolower($value)) {
+						case "none":
+							$dqGraph["reindex_method"] = DATA_QUERY_AUTOINDEX_NONE;
+							break;
+						case "uptime":
+							$dqGraph["reindex_method"] = DATA_QUERY_AUTOINDEX_BACKWARDS_UPTIME;
+							break;
+						case "index":
+							$dqGraph["reindex_method"] = DATA_QUERY_AUTOINDEX_INDEX_COUNT_CHANGE;
+							break;
+						case "fields":
+							$dqGraph["reindex_method"] = DATA_QUERY_AUTOINDEX_FIELD_VERIFICATION;
+							break;
+						case "value":
+							$dqGraph["reindex_method"] = DATA_QUERY_AUTOINDEX_VALUE_CHANGE;
+							break;
+						default:
+							$check["err_msg"] = __("ERROR: You must supply a valid reindex method for all devices!") . "\n";
+							return $check;
+					}
+				}
+				break;
+			default:
+				# host array may contain "unknown" columns due to extensions made by any plugin
+				# in future, a validation hook may be implemented here
+				/* TODO: validation hook */
+		}
+
+	}
+}
+
+/* verifyGraphInputFields	- verifies Graph Input Fields
+ * @arg $cgInputFields		- input fields as given by user
+ * @arg $input_fields		- input fields related to the specific graph template
+ * returns					- value array as needed by graph creation function
+ */
+function verifyGraphInputFields($cgInputFields, $input_fields) {
+
+	$values = array();
+
+	# input fields given?
+	if (strlen($cgInputFields)) {
+		$fields = explode(" ", $cgInputFields);
+
+		if (sizeof($fields)) {
+			foreach ($fields as $option) {
+				$data_template_id = 0;
+				$option_value = explode("=", $option);
+
+				if (substr_count($option_value[0], ":")) {
+					$compound 			= explode(":", $option_value[0]);
+					$data_template_id 	= $compound[0];
+					$field_name       	= $compound[1];
+				}else{
+					$field_name       	= $option_value[0];
+				}
+
+				/* check for the input fields existance */
+				$field_found = FALSE;
+				if (sizeof($input_fields)) {
+					foreach ($input_fields as $key => $row) {
+						if (substr_count($key, $field_name)) {
+							if ($data_template_id == 0) {
+								$data_template_id = $row["data_template_id"];
+							}
+							$field_found = TRUE;
+							break;
+						}
+					}
+				}
+
+				if (!$field_found) {
+					echo __("ERROR: Unknown input-field (%s)", $field_name) . "\n";
+					echo __("Try php -q graph_list.php --list-input-fields") . "\n";
+					exit(1);
+				}
+
+				$value = $option_value[1];
+				$values["cg"][$templateId]["custom_data"][$data_template_id][$input_fields[$data_template_id . ":" . $field_name]["data_input_field_id"]] = $value;
+			}
+		}
+
+		return $values;
+	}
 }
 ?>

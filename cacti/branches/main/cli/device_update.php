@@ -57,6 +57,8 @@ if (sizeof($parms)) {
 			case "-d":
 			case "--debug":			$debug 							= TRUE; 		break;
 			case "--delim":			$delimiter						= trim($value);	break;
+
+			# to select the devices to act on, at least one parameter must be given
 			case "--device-id":		$device["id"] 					= trim($value);	break;
 			case "--site-id":		$device["site_id"] 				= trim($value);	break;
 			case "--poller-id":		$device["poller_id"]			= trim($value);	break;
@@ -81,12 +83,14 @@ if (sizeof($parms)) {
 			case "--ping-retries":	$device["ping_retries"] 		= trim($value);	break;
 			case "--ping-timeout":	$device["ping_timeout"] 		= trim($value);	break;
 			case "--max-oids":		$device["max_oids"] 			= trim($value);	break;
+
+			# miscellaneous
 			case "-V":
 			case "-H":
 			case "--help":
 			case "--version":		display_help($me);								exit(0);
 			case "--quiet":			$quietMode = TRUE;								break;
-			default:				print __("ERROR: Invalid Argument: (%s)\n\n", $arg); display_help($me); exit(1);
+			default:				echo __("ERROR: Invalid Argument: (%s)", $arg) . "\n\n"; display_help($me); exit(1);
 		}
 	}
 	#print "parms: "; print_r($device);
