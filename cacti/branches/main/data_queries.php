@@ -351,13 +351,13 @@ function data_query_item_remove() {
 	if ((read_config_option("deletion_verification") == "") || (isset($_GET["confirm"]))) {
 		$graph_template_id = db_fetch_cell("SELECT graph_template_id FROM snmp_query_graph WHERE id=" . $_GET["id"]);
 
-		if (!sizeof(db_fetch_assoc("SELECT * FROM graph_templates_graph WHERE graph_template_id=" . $graph_template_id))) {
+		if (!sizeof(db_fetch_assoc("SELECT * FROM graph_templates_graph WHERE graph_template_id=" . $graph_template_id . " AND local_graph_template_graph_id<>0"))) {
 			db_execute("delete from snmp_query_graph where id=" . $_GET["id"]);
 			db_execute("delete from snmp_query_graph_rrd where snmp_query_graph_id=" . $_GET["id"]);
 			db_execute("delete from snmp_query_graph_rrd_sv where snmp_query_graph_id=" . $_GET["id"]);
 			db_execute("delete from snmp_query_graph_sv where snmp_query_graph_id=" . $_GET["id"]);
 		}else{
-			$message = "<i>Graph Template " . $_GET["id"] . " is in use and can not be removed</i>\n";
+			$message = "<i>Graph Template " . $graph_template_id . " is in use and can not be removed</i>\n";
 			$_SESSION['sess_message_gt_ref_int'] = array('message' => "<font size=-2>$message</font>", 'type' => 'info');
 			raise_message('gt_ref_int');
 		}

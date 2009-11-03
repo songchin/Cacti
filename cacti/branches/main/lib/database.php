@@ -264,7 +264,7 @@ function array_to_sql_or($array, $sql_column) {
 		$sql_or = "($sql_column IN(";
 
 		for ($i=0;($i<count($array));$i++) {
-			$sql_or .= (($i == 0) ? "'":",'") . $array[$i]{$sql_column} . "'";
+			$sql_or .= (($i == 0) ? "'":",'") . $array[$i] . "'";
 		}
 
 		$sql_or .= "))";
