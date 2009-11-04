@@ -151,6 +151,10 @@ foreach($cacti_textdomains as $domain => $paths) {
 /* load standard wrappers */
 load_i18n_gettext_wrappers();
 
+define("CACTI_LOCALE", $cacti_locale);
+define("CACTI_COUNTRY", $cacti_country);
+define("CACTI_LANGUAGE", $lang2locale[CACTI_LOCALE]['language']);
+define("CACTI_LANGUAGE_FILE", $lang2locale[CACTI_LOCALE]['filename']);
 
 
 /**
@@ -159,7 +163,7 @@ load_i18n_gettext_wrappers();
  * @return
  */
 function load_fallback_procedure(){
-	global $cacti_textdomains, $cacti_locale, $cacti_country;
+	global $cacti_textdomains, $cacti_locale, $cacti_country, $lang2locale;
 
 	/* load wrappers if native gettext is not available */
 	load_i18n_fallback_wrappers();
@@ -168,8 +172,10 @@ function load_fallback_procedure(){
 	$_SESSION['language'] = "";
 
 	$cacti_textdomains = array();
-	$cacti_locale = "en";
-	$cacti_country = "us";
+	define("CACTI_LOCALE", "en");
+	define("CACTI_COUNTRY", "us");
+	define("CACTI_LANGUAGE", "English");
+	define("CACTI_LANGUAGE_FILE", "english_usa");
 }
 
 

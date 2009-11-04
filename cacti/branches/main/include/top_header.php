@@ -24,7 +24,7 @@
 
 include_once(CACTI_BASE_PATH . "/lib/time.php");
 
-global $colors, $config, $data_source_types, $cacti_locale, $cacti_country, $lang2locale;
+global $colors, $config, $data_source_types;
 
 $page_title = api_plugin_hook_function('page_title', 'Cacti');
 
@@ -74,7 +74,7 @@ api_plugin_hook('page_head');
 		</div>
 		<div style='float:right;'>
 			<a href="<?php echo CACTI_WIKI_URL . rtrim(basename($_SERVER["PHP_SELF"]), ".php");?>" target="_blank">
-			<img src='images/information.png' title="<?php print __("Help");?>" alt="<?php print __("Help");?>" align="top">
+			<img src="<?php echo URL_PATH; ?>images/information.png" title="<?php print __("Help");?>" alt="<?php print __("Help");?>" align="top">
 			</a>
 		</div>
 		<div style='float:right'><?php
@@ -84,7 +84,7 @@ api_plugin_hook('page_head');
 		<div id="codelist" style="float:right; list-style:none; display:inline;">
 			<span id="loading" style="display:none;"><img src="<?php echo URL_PATH; ?>images/load_small.gif" align="top" alt="<?php print __("loading");?>">LOADING</span>
 			<ul class="down-list" style="list-style:none; display:inline;">
-				<li><a href="#" class='languages'><img src="<?php echo URL_PATH; ?>images/flag_icons/<?php print $cacti_country;?>.gif" align="top" alt="<?php print __("loading");?>">&nbsp;<?php print $lang2locale[$cacti_locale]['language'];?></a></li>
+				<li><a href="#" class="languages" id="<?php echo URL_PATH; ?>"><img src="<?php echo URL_PATH; ?>images/flag_icons/<?php print CACTI_COUNTRY;?>.gif" align="top" alt="<?php print __("loading");?>">&nbsp;<?php print CACTI_LANGUAGE;?></a></li>
 			</ul>
 		</div>
 		<?php }?>

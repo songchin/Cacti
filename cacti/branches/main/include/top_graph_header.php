@@ -129,7 +129,7 @@ $page_title = api_plugin_hook_function('page_title', 'Cacti');
 	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/js/jquery/jquery.dropdown.js"></script>
 	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/js/jquery/jquery.dd.js"></script>
 	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/js/jscalendar/calendar.js"></script>
-	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/js/jscalendar/lang/<?php print (read_config_option('i18n_support') != 0) ? $lang2locale[$cacti_locale]['filename'] : "english_usa";?>.js"></script>
+	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/js/jscalendar/lang/<?php print (read_config_option('i18n_support') != 0) ? CACTI_LANGUAGE_FILE : "english_usa";?>.js"></script>
 	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/js/jscalendar/calendar-setup.js"></script>
 	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/js/jstree/css.js"></script>
 	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/js/jstree/tree_component.js"></script>
@@ -164,7 +164,7 @@ $page_title = api_plugin_hook_function('page_title', 'Cacti');
 		</div>
 		<div style='float:right'>
 			<a href="<?php echo CACTI_WIKI_URL . rtrim(basename($_SERVER["PHP_SELF"]), ".php");?>" target="_blank">
-			<img src='images/information.png' title="<?php print __("Help");?>" alt="<?php print __("Help");?>" align="top">
+			<img src="<?php echo URL_PATH; ?>images/information.png" title="<?php print __("Help");?>" alt="<?php print __("Help");?>" align="top">
 			</a>
 		</div>
 		<div style='float:right'><?php
@@ -174,7 +174,7 @@ $page_title = api_plugin_hook_function('page_title', 'Cacti');
 		<div id="codelist" style="float:right; list-style:none; display:inline;">
 			<span id="loading" style="display:none;"><img src="<?php echo URL_PATH; ?>images/load_small.gif" align="top" alt="<?php print __("loading");?>">LOADING</span>
 			<ul class="down-list" style="list-style:none; display:inline;">
-				<li><a href="#" class='languages'><img src="<?php echo URL_PATH; ?>images/flag_icons/<?php print $cacti_country;?>.gif" align="top" alt="<?php print __("loading");?>">&nbsp;<?php print $lang2locale[$cacti_locale]['language'];?></a></li>
+				<li><a href="#" class="languages" id="<?php echo URL_PATH; ?>"><img src="<?php echo URL_PATH; ?>images/flag_icons/<?php print CACTI_COUNTRY;?>.gif" align="top" alt="<?php print __("loading");?>">&nbsp;<?php print CACTI_LANGUAGE;?></a></li>
 			</ul>
 		</div>
 		<?php }?>
