@@ -503,16 +503,11 @@ function perm_remove() {
 }
 
 function graph_perms_edit() {
-	global $colors;
+	global $colors, $graph_policy_array;
 
 	/* ================= input validation ================= */
 	input_validate_input_number(get_request_var("id"));
 	/* ==================================================== */
-
-	$graph_policy_array = array(
-		1 => __("Allow"),
-		2 => __("Deny")
-	);
 
 	if (!empty($_GET["id"])) {
 		$policy = db_fetch_row("SELECT policy_graphs,policy_trees,policy_hosts,policy_graph_templates FROM user_auth WHERE id = " . get_request_var("id"));
@@ -575,7 +570,7 @@ function graph_perms_edit() {
 				if (sizeof($graphs) > 0) {
 					foreach ($graphs as $item) {
 						form_alternate_row_color("graph" . $item["id"], true);
-						print "<td><strong>" . $item["name"] . "</strong>" . (($policy["policy_graphs"] == "1") ? __(" - No Access") : __(" - Accessible")) . "</td>
+						print "<td><strong>" . $item["name"] . "</strong>" . (($policy["policy_graphs"] == POLICY_ALLOW) ? __(" - No Access") : __(" - Accessible")) . "</td>
 								<td align='right'><a href='" . htmlspecialchars("user_admin.php?action=perm_remove&type=graph&id=" . $item["id"] . "&user_id=" . $_GET["id"]) . "'><img class='buttonSmall' src='images/delete_icon.gif' alt='" . __("Delete") . "' align='absmiddle'></a>&nbsp;</td>\n";
 						form_end_row();
 					}
@@ -631,7 +626,7 @@ function graph_perms_edit() {
 				if (sizeof($hosts)) {
 					foreach ($hosts as $item) {
 						form_alternate_row_color("host" . $item["id"], true);
-						print "<td><strong>" . $item["name"] . "</strong>" . (($policy["policy_hosts"] == "1") ? __(" - No Access") : __(" - Accessible")) . "</td>
+						print "<td><strong>" . $item["name"] . "</strong>" . (($policy["policy_hosts"] == POLICY_ALLOW) ? __(" - No Access") : __(" - Accessible")) . "</td>
 								<td align='right'><a href='" . htmlspecialchars("user_admin.php?action=perm_remove&type=host&id=" . $item["id"] . "&user_id=" . $_GET["id"]) . "'><img class='buttonSmall' src='images/delete_icon.gif' alt='" . __("Delete") . "' align='absmiddle'></a>&nbsp;</td>\n";
 						form_end_row();
 					}
@@ -687,7 +682,7 @@ function graph_perms_edit() {
 				if (sizeof($graph_templates)) {
 					foreach ($graph_templates as $item) {
 						form_alternate_row_color("templates" . $item["id"], true);
-						print "<td><strong>" . $item["name"] . "</strong>" . (($policy["policy_graph_templates"] == "1") ? __(" - No Access") : __(" - Accessible")) . "</td>
+						print "<td><strong>" . $item["name"] . "</strong>" . (($policy["policy_graph_templates"] == POLICY_ALLOW) ? __(" - No Access") : __(" - Accessible")) . "</td>
 								<td align='right'><a href='" . htmlspecialchars("user_admin.php?action=perm_remove&type=graph_template&id=" . $item["id"] . "&user_id=" . $_GET["id"]) . "'><img class='buttonSmall' src='images/delete_icon.gif' alt='" . __("Delete") . "' align='absmiddle'></a>&nbsp;</td>\n";
 						form_end_row();
 					}
@@ -742,7 +737,7 @@ function graph_perms_edit() {
 				if (sizeof($trees)) {
 					foreach ($trees as $item) {
 						form_alternate_row_color("tree" . $item["id"], true);
-						print "<td><strong>" . $item["name"] . "</strong>" . (($policy["policy_trees"] == "1") ? __(" - No Access") : __(" - Accessible")) . "</td>
+						print "<td><strong>" . $item["name"] . "</strong>" . (($policy["policy_trees"] == POLICY_ALLOW) ? __(" - No Access") : __(" - Accessible")) . "</td>
 							<td align='right'><a href='" . htmlspecialchars("user_admin.php?action=perm_remove&type=tree&id=" . $item["id"] . "&user_id=" . $_GET["id"]) . "'><img class='buttonSmall' src='images/delete_icon.gif' alt='Delete' align='absmiddle'></a>&nbsp;</td>\n";
 						form_end_row();
 					}
@@ -1103,7 +1098,7 @@ function user() {
 			form_selectable_cell((strlen(get_request_var_request("filter")) ? preg_replace("/(" . preg_quote(get_request_var_request("filter")) . ")/i", "<span class=\"filter\">\\1</span>",  $user["full_name"]) : $user["full_name"]), $user["id"]);
 			form_selectable_cell($enabled, $user["id"]);
 			form_selectable_cell($auth_realms[$user["realm"]], $user["id"]);
-			if ($user["policy_graphs"] == "1") {
+			if ($user["policy_graphs"] == POLICY_ALLOW) {
 				form_selectable_cell( __("ALLOW"), $user["id"]);
 			}else{
 				form_selectable_cell( __("DENY"), $user["id"]);

@@ -170,7 +170,7 @@ function getDevices($input_parms) {
 					"* " .
 				"FROM " .
 					"host " .
-				$sql_where .
+	$sql_where .
 				"ORDER BY id");
 	#print $sql_stmt ."\n";
 
@@ -194,7 +194,7 @@ function getGraphs($device_selection, &$header) {
 			"LEFT JOIN graph_templates_graph ON (graph_local.id=graph_templates_graph.local_graph_id) " .
 			"LEFT JOIN graph_templates ON (graph_local.graph_template_id=graph_templates.id) " .
 			"LEFT JOIN host ON (graph_local.host_id=host.id) " .
-			$device_selection .
+	$device_selection .
 			" ORDER BY host_id ASC, gt_id ASC";
 
 	$tmpArray = db_fetch_assoc($sql);
@@ -275,7 +275,7 @@ function displayGenericArray($data, $req_fields=array(), $title="", $quietMode=F
 
 			foreach ($data as $row) {				# see, whether any data field is longer than the corresponding header
 				if (isset($row{$key}))
-					$req_fields{$key}["length"] = max($req_fields{$key}["length"],strlen($row{$key}));
+				$req_fields{$key}["length"] = max($req_fields{$key}["length"],strlen($row{$key}));
 			}
 		}
 
@@ -338,13 +338,13 @@ function getSNMPFields($hostId, $snmp_query_id = "") {
 		$sql_where
 		ORDER BY field_name");
 
-	if (sizeof($tmpArray)) {
-		foreach ($tmpArray as $f) {
-			$fieldNames[$f["field_name"]] = 1;
+		if (sizeof($tmpArray)) {
+			foreach ($tmpArray as $f) {
+				$fieldNames[$f["field_name"]] = 1;
+			}
 		}
-	}
 
-	return $fieldNames;
+		return $fieldNames;
 }
 
 function getSNMPValues($hostId, $field, $snmp_query_id = "") {
@@ -363,13 +363,13 @@ function getSNMPValues($hostId, $field, $snmp_query_id = "") {
 		$sql_where
 		ORDER BY field_value");
 
-	if (sizeof($tmpArray)) {
-		foreach ($tmpArray as $v) {
-			$values[$v["field_value"]] = 1;
+		if (sizeof($tmpArray)) {
+			foreach ($tmpArray as $v) {
+				$values[$v["field_value"]] = 1;
+			}
 		}
-	}
 
-	return $values;
+		return $values;
 }
 
 function getSNMPQueries() {
@@ -410,7 +410,7 @@ function getSNMPQueriesByDevices($devices, $snmp_query_id='', &$header) {
 				"FROM host " .
 				"LEFT JOIN host_snmp_query ON (host.id = host_snmp_query.host_id) " .
 				"LEFT JOIN snmp_query ON (host_snmp_query.snmp_query_id = snmp_query.id) " .
-				$sql_where .
+	$sql_where .
 				"ORDER by host.id, snmp_query.id";
 	#print $sql . "\n";
 
@@ -627,7 +627,7 @@ function displaySNMPValuesExtended($hostId, $fields, $snmpQueryId, $quietMode = 
 											"host_id=" . $hostId .
 										" AND " .
 											"snmp_query_id=" . $snmpQueryId .
-											$query_FieldSpec);
+		$query_FieldSpec);
 
 		/* build magic query */
 		$sql_query = "SELECT host_id, snmp_query_id, snmp_index";
@@ -644,9 +644,9 @@ function displaySNMPValuesExtended($hostId, $fields, $snmpQueryId, $quietMode = 
 		$sql_query .= 	" FROM host_snmp_cache " .
 						"WHERE host_id=" . $hostId .
 						" AND snmp_query_id=" . $snmpQueryId .
-						$query_FieldSpec .
+		$query_FieldSpec .
 						" GROUP BY host_id, snmp_query_id, snmp_index " .
-						$sql_order;
+		$sql_order;
 
 		$snmp_query_indexes = db_fetch_assoc($sql_query);
 
@@ -739,9 +739,9 @@ function displayInputFields($input_fields, $quietMode = FALSE) {
 	}
 
 	if (sizeof($input_fields)) {
-	foreach ($input_fields as $row) {
-		echo $row["data_template_id"] . ":" . $row["name"] . "\t" . $row["default"] . "\t" . $row["description"] . "\n";
-	}
+		foreach ($input_fields as $row) {
+			echo $row["data_template_id"] . ":" . $row["name"] . "\t" . $row["default"] . "\t" . $row["description"] . "\n";
+		}
 	}
 
 	if (!$quietMode) {
@@ -779,11 +779,46 @@ function displayDevices($hosts, $quietMode = FALSE) {
 	}
 }
 
+function displayRealms($user, $realm, $quietMode = FALSE) {
+	global $user_auth_realms;
+
+	if (!$quietMode) {
+		echo __("Realms: (userid, name, realm id, name)") . "\n";
+	}
+
+	$sql_where = "";
+	if ($realm > 0) {
+		$sql_where .= (strlen($sql_where) ? " AND " : " WHERE ") . " realm_id=" . $realm;
+	}
+	if ($user > 0) {
+		$sql_where .= (strlen($sql_where) ? " AND " : " WHERE ") . " user_id=" . $user;
+	}
+
+	$sql = "SELECT realm_id, user_id, user_auth.username " .
+		"FROM user_auth_realm " .
+		"LEFT JOIN user_auth ON (user_auth_realm.user_id = user_auth.id) " . $sql_where .
+		" ORDER BY user_id, realm_id";
+
+	$realms = db_fetch_assoc($sql);
+
+	if (sizeof($realms)) {
+		foreach ($realms as $realm) {
+			echo $realm["user_id"]."\t" . $realm["username"]."\t";
+			echo $realm["realm_id"]."\t";
+			echo $user_auth_realms{$realm["realm_id"]}."\n";
+		}
+	}
+
+	if (!$quietMode) {
+		echo "\n";
+	}
+}
+
 function displayTrees($quietMode = FALSE) {
 	global $tree_sort_types;
 
 	if (!$quietMode) {
-		echo __("Known Trees: (id, sort method, name") . "\n";
+		echo __("Known Trees: (id, sort method, name)") . "\n";
 	}
 
 	$trees = db_fetch_assoc("SELECT
@@ -918,7 +953,7 @@ function displayTreeNodes($tree_id, $nodeType = "", $parentNode = "", $quietMode
 							echo "\n";
 						}
 					}
-				break;
+					break;
 			}
 		}
 	}
@@ -988,16 +1023,39 @@ function displayHostGraphs($host_id, $quietMode = FALSE) {
 }
 
 function displayUsers($quietMode = FALSE) {
+	global $graph_policy_array;
+
 	if (!$quietMode) {
-		echo __("Known Users: (id, username, full_name)") . "\n";
+		echo __("Known Users: (id, username, full_name, graph policy, tree policy, host policy, graph templates policy)") . "\n";
 	}
 
-	$groups = db_fetch_assoc("SELECT
-				id,
-				username,
-				full_name
-				FROM user_auth
-				ORDER BY id");
+	$groups = db_fetch_assoc("SELECT id, username, full_name, policy_graphs, policy_trees, policy_hosts, policy_graph_templates " .
+				"FROM user_auth " .
+				"ORDER BY id");
+
+	if (sizeof($groups)) {
+		foreach ($groups as $group) {
+			echo $group["id"]."\t";
+			echo $group["username"]."\t";
+			echo $group["full_name"]."\t";
+			echo $graph_policy_array{$group["policy_graphs"]}."\t";
+			echo $graph_policy_array{$group["policy_trees"]}."\t";
+			echo $graph_policy_array{$group["policy_hosts"]}."\t";
+			echo $graph_policy_array{$group["policy_graph_templates"]}."\n";
+		}
+	}
+
+	if (!$quietMode) {
+		echo "\n";
+	}
+}
+
+function displayGroups($quietMode = FALSE) {
+	if (!$quietMode) {
+		echo __("Known Groups: (tbd...)") . "\n";
+	}
+
+	$groups = db_fetch_assoc("");
 
 	if (sizeof($groups)) {
 		foreach ($groups as $group) {
@@ -1279,8 +1337,8 @@ function verifyDataQuery(&$data_query, $ri_check=false) {
 				break;
 			case "reindex_method":
 				if ((((string) $value) === ((string)(int) $value)) &&
-					($value >= DATA_QUERY_AUTOINDEX_NONE) &&
-					($value <= DATA_QUERY_AUTOINDEX_VALUE_CHANGE)) {
+				($value >= DATA_QUERY_AUTOINDEX_NONE) &&
+				($value <= DATA_QUERY_AUTOINDEX_VALUE_CHANGE)) {
 					$data_query["reindex_method"] = $value;
 				} else {
 					switch (strtolower($value)) {
@@ -1326,11 +1384,11 @@ function verifyDataQuery(&$data_query, $ri_check=false) {
 function verifyDQGraph(&$dqGraph, $ri_check=false) {
 
 	if (($dqGraph["snmp_query_id"] == "") ||
-		($dqGraph["snmp_query_graph_id"] == "") ||
-		($dqGraph["snmp_field"] == "") ||
-		($dqGraph["snmp_value"] == "") ||
-		($dqGraph["host_id"] == "") ||
-		($dqGraph["graph_template_id"] == "")) {
+	($dqGraph["snmp_query_graph_id"] == "") ||
+	($dqGraph["snmp_field"] == "") ||
+	($dqGraph["snmp_value"] == "") ||
+	($dqGraph["host_id"] == "") ||
+	($dqGraph["graph_template_id"] == "")) {
 		$check["err_msg"] = __("ERROR: For graph type of 'ds' you must supply more options") . "\n";
 		return $check;
 	}
@@ -1413,8 +1471,8 @@ function verifyDQGraph(&$dqGraph, $ri_check=false) {
 				break;
 			case "reindex-method":
 				if ((((string) $value) === ((string)(int) $value)) &&
-					($value >= DATA_QUERY_AUTOINDEX_NONE) &&
-					($value <= DATA_QUERY_AUTOINDEX_VALUE_CHANGE)) {
+				($value >= DATA_QUERY_AUTOINDEX_NONE) &&
+				($value <= DATA_QUERY_AUTOINDEX_VALUE_CHANGE)) {
 					$dqGraph["reindex_method"] = $value;
 				} else {
 					switch (strtolower($value)) {
@@ -1502,4 +1560,93 @@ function verifyGraphInputFields($cgInputFields, $input_fields) {
 		return $values;
 	}
 }
+
+function verifyPermissions($perm, $delim, $ri_check=false) {
+
+	foreach($perm as $key => $value) {
+
+		switch ($key) {
+			case "user_id":
+				# non-null userids given?
+				if (strlen($value)) {
+					$user_ids = explode($delim, $value);
+					unset($perm["user_id"]);	# we have to rebuild an array, so first drop that value
+					if (sizeof($user_ids)) {
+						foreach ($user_ids as $id) {
+							if (!(((string) $id) === ((string)(int) $id))) {
+								$check["err_msg"] = __("ERROR: User id must be integer (%s)", $id);
+								return $check;
+							} elseif ($ri_check) {
+								$match = db_fetch_cell("SELECT COUNT(*)	FROM user_auth WHERE id=" . $id);
+								if ($match == 0) {
+									$check["err_msg"] = __("ERROR: This user id does not exist (%s)", $id);
+									return $check;
+								}
+							}
+							# if we arrive here, everything has been verified
+							$perm["user_id"]{$id} = $id;
+						}
+					}
+				}
+				break;
+			case "item_type":
+				$itemTypes = array('graph' => PERM_GRAPHS, 'tree' => PERM_TREES, 'host' => PERM_HOSTS, 'graph_template' => PERM_GRAPH_TEMPLATES);
+
+				if ( ($value == "graph") || ($value == "tree") || ($value == "host") || ($value == "graph_template")) {
+					$perm["item_type"] = $itemTypes[$itemType];
+				}else{
+					$check["err_msg"] = __("ERROR: Invalid Item Type: (%s)", $itemType);
+					return $check;
+				}
+				break;
+			case "item_id":
+				if (!(((string) $value) === ((string)(int) $value))) {
+					$check["err_msg"] = __("ERROR: Item id must be integer (%s)", $value);
+					return $check;
+				} elseif ($ri_check) {
+
+					switch ($perm["item_type"]) {
+						case "graph":
+						case PERM_GRAPHS: /* graph */
+							$match = db_fetch_cell("SELECT local_graph_id FROM graph_templates_graph WHERE local_graph_id=" . $value);
+							if ($match == 0) {
+								$check["err_msg"] = __("ERROR: Invalid Graph item id (%s)", $value);
+								return $check;
+							}
+							break;
+						case "tree":
+						case PERM_TREES: /* tree */
+							$match = db_fetch_cell("SELECT id FROM graph_tree WHERE id=" . $value);
+							if ($match == 0) {
+								$check["err_msg"] = __("ERROR: Invalid Tree item id (%s)", $value);
+								return $check;
+							}
+							break;
+						case "host":
+						case PERM_HOSTS: /* device */
+							$match = db_fetch_cell("SELECT id FROM host WHERE id=" . $value);
+							if ($match == 0) {
+								$check["err_msg"] = __("ERROR: Invalid device item id (%s)", $value);
+								return $check;
+							}
+							break;
+						case "graph_template":
+						case PERM_GRAPH_TEMPLATES: /* graph_template */
+							$match = db_fetch_cell("SELECT id FROM graph_templates WHERE id=" . $value);
+							if ($match == 0) {
+								$check["err_msg"] = __("ERROR: Invalid Graph Template item id (%s)", $value);
+								return $check;
+							}
+							break;
+					}
+				}
+			case "devices":
+				# has to be verified by verifyDevices()
+				break;
+			default:
+				# nothing
+		}
+	}
+}
+
 ?>

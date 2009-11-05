@@ -473,6 +473,11 @@ $page_refresh_interval = array(
 	9999999 => __("Never"),
 	);
 
+$graph_policy_array = array(
+	POLICY_ALLOW 	=> __("Allow"),
+	POLICY_DENY 	=> __("Deny"),
+	);
+
 $user_auth_realms = array(
 	1 => __("User Administration"),
 	2 => __("Data Input"),

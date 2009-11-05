@@ -194,28 +194,28 @@ function get_graph_permissions_sql($policy_graphs, $policy_hosts, $policy_graph_
 	$sql_policy_or = "";
 	$sql_policy_and = "";
 
-	if ($policy_graphs == "1") {
+	if ($policy_graphs == POLICY_ALLOW) {
 		$sql_policy_and .= "$sql_and(user_auth_perms.type != " . PERM_GRAPHS . " OR user_auth_perms.type is null)";
 		$sql_and = " AND ";
 		$sql_null = "is null";
-	}elseif ($policy_graphs == "2") {
+	}elseif ($policy_graphs == POLICY_DENY) {
 		$sql_policy_or .= "$sql_or(user_auth_perms.type = " . PERM_GRAPHS . " OR user_auth_perms.type is not null)";
 		$sql_or = " OR ";
 		$sql_null = "is not null";
 	}
 
-	if ($policy_hosts == "1") {
+	if ($policy_hosts == POLICY_ALLOW) {
 		$sql_policy_and .= "$sql_and((user_auth_perms.type != " . PERM_HOSTS . ") OR (user_auth_perms.type is null))";
 		$sql_and = " AND ";
-	}elseif ($policy_hosts == "2") {
+	}elseif ($policy_hosts == POLICY_DENY) {
 		$sql_policy_or .= "$sql_or((user_auth_perms.type = " . PERM_HOSTS . ") OR (user_auth_perms.type is not null))";
 		$sql_or = " OR ";
 	}
 
-	if ($policy_graph_templates == "1") {
+	if ($policy_graph_templates == POLICY_ALLOW) {
 		$sql_policy_and .= "$sql_and((user_auth_perms.type != " . PERM_GRAPH_TEMPLATES . ") OR (user_auth_perms.type is null))";
 		$sql_and = " AND ";
-	}elseif ($policy_graph_templates == "2") {
+	}elseif ($policy_graph_templates == POLICY_DENY) {
 		$sql_policy_or .= "$sql_or((user_auth_perms.type = " . PERM_GRAPH_TEMPLATES . ") OR (user_auth_perms.type is not null))";
 		$sql_or = " OR ";
 	}
@@ -279,16 +279,16 @@ function is_tree_allowed($tree_id) {
 		and item_id=$tree_id");
 
 	/* policy == allow AND matches = DENY */
-	if ((sizeof($trees) > 0) && ($current_user["policy_trees"] == "1")) {
+	if ((sizeof($trees) > 0) && ($current_user["policy_trees"] == POLICY_ALLOW)) {
 		return false;
 	/* policy == deny AND matches = ALLOW */
-	}elseif ((sizeof($trees) > 0) && ($current_user["policy_trees"] == "2")) {
+	}elseif ((sizeof($trees) > 0) && ($current_user["policy_trees"] == POLICY_DENY)) {
 		return true;
 	/* policy == allow AND no matches = ALLOW */
-	}elseif ((sizeof($trees) == 0) && ($current_user["policy_trees"] == "1")) {
+	}elseif ((sizeof($trees) == 0) && ($current_user["policy_trees"] == POLICY_ALLOW)) {
 		return true;
 	/* policy == deny AND no matches = DENY */
-	}elseif ((sizeof($trees) == 0) && ($current_user["policy_trees"] == "2")) {
+	}elseif ((sizeof($trees) == 0) && ($current_user["policy_trees"] == POLICY_DENY)) {
 		return false;
 	}
 }

@@ -176,8 +176,8 @@ if (sizeof($parms)) {
 		/* get devices matching criteria */
 		$devices = getDevices($device);
 		if (!sizeof($devices)) {
-			print __("ERROR: No matching Devices found\n");
-			print __("Try php -q device_list.php") . "\n";
+			echo __("ERROR: No matching Devices found") . "\n";
+			echo __("Try php -q device_list.php") . "\n";
 			exit(1);
 		}
 
@@ -191,8 +191,8 @@ if (sizeof($parms)) {
 		/* get devices matching criteria */
 		$devices = getDevices($device);
 		if (!sizeof($devices)) {
-			print __("ERROR: No matching Devices found\n");
-			print __("Try php -q device_list.php") . "\n";
+			echo __("ERROR: No matching Devices found") . "\n";
+			echo __("Try php -q device_list.php") . "\n";
 			exit(1);
 		}
 
