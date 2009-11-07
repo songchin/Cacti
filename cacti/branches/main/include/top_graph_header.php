@@ -164,7 +164,7 @@ $page_title = api_plugin_hook_function('page_title', 'Cacti');
 		</div>
 		<div style='float:right'>
 			<a href="<?php echo CACTI_WIKI_URL . rtrim(basename($_SERVER["PHP_SELF"]), ".php");?>" target="_blank">
-			<img src="<?php echo URL_PATH; ?>images/information.png" title="<?php print __("Help");?>" alt="<?php print __("Help");?>" align="top">
+			<img src="<?php echo URL_PATH; ?>images/help.gif" title="<?php print __("Help");?>" alt="<?php print __("Help");?>" align="top">
 			</a>
 		</div>
 		<div style='float:right'><?php
