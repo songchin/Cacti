@@ -779,7 +779,9 @@ function displayDevices($hosts, $quietMode = FALSE) {
 	}
 }
 
-function displayRealms($user, $realm, $quietMode = FALSE) {
+
+
+function displayRealms($perm, $quietMode = FALSE) {
 	global $user_auth_realms;
 
 	if (!$quietMode) {
@@ -787,12 +789,26 @@ function displayRealms($user, $realm, $quietMode = FALSE) {
 	}
 
 	$sql_where = "";
-	if ($realm > 0) {
-		$sql_where .= (strlen($sql_where) ? " AND " : " WHERE ") . " realm_id=" . $realm;
+	if (!isset($perm["realm_id"])) {
+		echo __("ERROR: Missing realm id") . "\n";
+		return (1);
+	} elseif (!(((string) $perm["realm_id"]) === ((string)(int) $perm["realm_id"]))) {
+		echo __("ERROR: Invalid realm id (%s)", $perm["realm_id"]) . "\n";
+		return (1);
+	} elseif ($perm["realm_id"] > 0) {
+		$sql_where .= (strlen($sql_where) ? " AND " : " WHERE ") . " realm_id=" . $perm["realm_id"];
 	}
-	if ($user > 0) {
-		$sql_where .= (strlen($sql_where) ? " AND " : " WHERE ") . " user_id=" . $user;
+
+	if (!isset($perm["user_id"])) {
+		echo __("ERROR: Missing user id") . "\n";
+		return (1);
+	} elseif (!(((string) $perm["user_id"]) === ((string)(int) $perm["user_id"]))) {
+		echo __("ERROR: Invalid user id (%s)", $perm["user_id"]) . "\n";
+		return (1);
+	} elseif ($perm["user_id"] > 0) {
+		$sql_where .= (strlen($sql_where) ? " AND " : " WHERE ") . " user_id=" . $perm["user_id"];
 	}
+
 
 	$sql = "SELECT realm_id, user_id, user_auth.username " .
 		"FROM user_auth_realm " .
@@ -813,6 +829,93 @@ function displayRealms($user, $realm, $quietMode = FALSE) {
 		echo "\n";
 	}
 }
+
+
+
+function displayPerms($perm, $quietMode = FALSE) {
+	global $perm_item_types;
+
+	if (!$quietMode) {
+		echo __("Permissions: (userid, username, item type, default policy, item id, item policy, item name)") . "\n";
+	}
+
+	$sql_where = "";
+	if (isset($perm["user_id"])) {
+		if (!(((string) $perm["user_id"]) === ((string)(int) $perm["user_id"]))) {
+			echo __("ERROR: Invalid user id (%s)", $perm["user_id"]) . "\n";
+			return (1);
+		} elseif ($perm["user_id"] > 0) {
+			$sql_where .= (strlen($sql_where) ? " AND " : " WHERE ") . " user_id=" . $perm["user_id"];
+		}
+	}
+
+	if (isset($perm["item_type_id"])) {
+		if (!(((string) $perm["item_type_id"]) === ((string)(int) $perm["item_type_id"]))) {
+			# print human readable text instead of id
+			echo __("ERROR: Invalid item type (%s)", $perm["item_type"]) . "\n";
+			return (1);
+		} elseif ($perm["item_type_id"] > 0) {
+			$sql_where .= (strlen($sql_where) ? " AND " : " WHERE ") . " `type`=" . $perm["item_type_id"];
+		}
+	}
+
+	if (isset($perm["item_id"])) {
+		if (!(((string) $perm["item_id"]) === ((string)(int) $perm["item_id"]))) {
+			echo __("ERROR: Invalid item id (%s)", $perm["item_id"]) . "\n";
+			return (1);
+		} elseif ($perm["item_id"] > 0) {
+			$sql_where .= (strlen($sql_where) ? " AND " : " WHERE ") . " item_id=" . $perm["item_id"];
+		}
+	}
+
+	$sql = "SELECT user_id, user_auth.username, " .
+		"policy_graphs, policy_trees, policy_hosts, policy_graph_templates, " .
+		"`type`, item_id " .
+		"FROM user_auth_perms " .
+		"LEFT JOIN user_auth ON (user_auth_perms.user_id = user_auth.id) " . $sql_where .
+		" ORDER BY user_id, `type`";
+
+	$perms = db_fetch_assoc($sql);
+
+	if (sizeof($perms)) {
+		foreach ($perms as $item) {
+			switch ($item["type"]) {
+				case PERM_GRAPHS:
+					$item["default_policy"] = (($item["policy_graphs"] == POLICY_ALLOW) ? __("Accessible") : __("No Access"));
+					$item["item_policy"] = (($item["policy_graphs"] == POLICY_ALLOW) ? __("No Access") : __("Accessible"));
+					$item["name"] = db_fetch_cell("SELECT title_cache FROM graph_templates_graph WHERE local_graph_id=" . $item["item_id"]);
+					break;
+				case PERM_TREES:
+					$item["default_policy"] = (($item["policy_trees"] == POLICY_ALLOW) ? __("Accessible") : __("No Access"));
+					$item["item_policy"] = (($item["policy_trees"] == POLICY_ALLOW) ? __("No Access") : __("Accessible"));
+					$item["name"] = db_fetch_cell("SELECT name FROM graph_tree WHERE id=" . $item["item_id"]);
+					break;
+				case PERM_DEVICES:
+					$item["default_policy"] = (($item["policy_hosts"] == POLICY_ALLOW) ? __("Accessible") : __("No Access"));
+					$item["item_policy"] = (($item["policy_hosts"] == POLICY_ALLOW) ? __("No Access") : __("Accessible"));
+					$item["name"] = db_fetch_cell("SELECT hostname FROM host WHERE id=" . $item["item_id"]);
+					break;
+				case PERM_GRAPH_TEMPLATES:
+					$item["default_policy"] = (($item["policy_graph_templates"] == POLICY_ALLOW) ? __("Accessible") : __("No Access"));
+					$item["item_policy"] = (($item["policy_graph_templates"] == POLICY_ALLOW) ? __("No Access") : __("Accessible"));
+					$item["name"] = db_fetch_cell("SELECT name FROM graph_templates WHERE id=" . $item["item_id"]);
+					break;
+			}
+			echo $item["user_id"]."\t" . $item["username"]."\t";
+			echo $perm_item_types[$item["type"]]."\t";
+			echo $item["default_policy"]."\t";
+			echo $item["item_id"]."\t";
+			echo $item["item_policy"]."\t";
+			echo $item["name"]."\n";
+		}
+	}
+
+	if (!$quietMode) {
+		echo "\n";
+	}
+}
+
+
 
 function displayTrees($quietMode = FALSE) {
 	global $tree_sort_types;
@@ -1561,7 +1664,8 @@ function verifyGraphInputFields($cgInputFields, $input_fields) {
 	}
 }
 
-function verifyPermissions($perm, $delim, $ri_check=false) {
+function verifyPermissions(&$perm, $delim, $ri_check=false) {
+	global $perm_item_types;
 
 	foreach($perm as $key => $value) {
 
@@ -1569,10 +1673,9 @@ function verifyPermissions($perm, $delim, $ri_check=false) {
 			case "user_id":
 				# non-null userids given?
 				if (strlen($value)) {
-					$user_ids = explode($delim, $value);
-					unset($perm["user_id"]);	# we have to rebuild an array, so first drop that value
-					if (sizeof($user_ids)) {
-						foreach ($user_ids as $id) {
+					$userids = explode($delim, $value);
+					if (sizeof($userids)) {
+						foreach ($userids as $id) {
 							if (!(((string) $id) === ((string)(int) $id))) {
 								$check["err_msg"] = __("ERROR: User id must be integer (%s)", $id);
 								return $check;
@@ -1584,18 +1687,22 @@ function verifyPermissions($perm, $delim, $ri_check=false) {
 								}
 							}
 							# if we arrive here, everything has been verified
-							$perm["user_id"]{$id} = $id;
+							$perm["userids"][$id] = $id;
 						}
 					}
 				}
 				break;
 			case "item_type":
-				$itemTypes = array('graph' => PERM_GRAPHS, 'tree' => PERM_TREES, 'host' => PERM_HOSTS, 'graph_template' => PERM_GRAPH_TEMPLATES);
-
-				if ( ($value == "graph") || ($value == "tree") || ($value == "host") || ($value == "graph_template")) {
-					$perm["item_type"] = $itemTypes[$itemType];
-				}else{
-					$check["err_msg"] = __("ERROR: Invalid Item Type: (%s)", $itemType);
+				if ($value == $perm_item_types[PERM_GRAPHS]) {
+					$perm["item_type_id"] = PERM_GRAPHS;
+				} elseif ($value == $perm_item_types[PERM_TREES]) {
+					$perm["item_type_id"] = PERM_TREES;
+				} elseif ($value == $perm_item_types[PERM_DEVICES]) {
+					$perm["item_type_id"] = PERM_DEVICES;
+				} elseif ($value == $perm_item_types[PERM_GRAPH_TEMPLATES]) {
+					$perm["item_type_id"] = PERM_GRAPH_TEMPLATES;
+				} else {
+					$check["err_msg"] = __("ERROR: Invalid Item Type: (%s)", $perm["item_type"]);
 					return $check;
 				}
 				break;
@@ -1603,7 +1710,7 @@ function verifyPermissions($perm, $delim, $ri_check=false) {
 				if (!(((string) $value) === ((string)(int) $value))) {
 					$check["err_msg"] = __("ERROR: Item id must be integer (%s)", $value);
 					return $check;
-				} elseif ($ri_check) {
+				} elseif ($ri_check && isset($perm["item_type"])) {
 
 					switch ($perm["item_type"]) {
 						case "graph":
@@ -1623,7 +1730,7 @@ function verifyPermissions($perm, $delim, $ri_check=false) {
 							}
 							break;
 						case "host":
-						case PERM_HOSTS: /* device */
+						case PERM_DEVICES: /* device */
 							$match = db_fetch_cell("SELECT id FROM host WHERE id=" . $value);
 							if ($match == 0) {
 								$check["err_msg"] = __("ERROR: Invalid device item id (%s)", $value);

@@ -1806,7 +1806,7 @@ function get_host_array() {
 			CONCAT_WS('',host.description,' (',host.hostname,')') as name,
 			user_auth_perms.user_id
 			from host
-			left join user_auth_perms on (host.id=user_auth_perms.item_id and user_auth_perms.type=" . PERM_HOSTS . " and user_auth_perms.user_id=" . $_SESSION["sess_user_id"] . ")
+			left join user_auth_perms on (host.id=user_auth_perms.item_id and user_auth_perms.type=" . PERM_DEVICES . " and user_auth_perms.user_id=" . $_SESSION["sess_user_id"] . ")
 			$sql_where
 			order by host.description,host.hostname");
 	}else{

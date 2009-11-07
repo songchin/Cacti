@@ -205,10 +205,10 @@ function get_graph_permissions_sql($policy_graphs, $policy_hosts, $policy_graph_
 	}
 
 	if ($policy_hosts == POLICY_ALLOW) {
-		$sql_policy_and .= "$sql_and((user_auth_perms.type != " . PERM_HOSTS . ") OR (user_auth_perms.type is null))";
+		$sql_policy_and .= "$sql_and((user_auth_perms.type != " . PERM_DEVICES . ") OR (user_auth_perms.type is null))";
 		$sql_and = " AND ";
 	}elseif ($policy_hosts == POLICY_DENY) {
-		$sql_policy_or .= "$sql_or((user_auth_perms.type = " . PERM_HOSTS . ") OR (user_auth_perms.type is not null))";
+		$sql_policy_or .= "$sql_or((user_auth_perms.type = " . PERM_DEVICES . ") OR (user_auth_perms.type is not null))";
 		$sql_or = " OR ";
 	}
 
@@ -252,7 +252,7 @@ function is_graph_allowed($local_graph_id) {
 		from (graph_templates_graph,graph_local)
 		left join host on (host.id=graph_local.host_id)
 		left join graph_templates on (graph_templates.id=graph_local.graph_template_id)
-		left join user_auth_perms on ((graph_templates_graph.local_graph_id=user_auth_perms.item_id and user_auth_perms.type=" . PERM_GRAPHS . " and user_auth_perms.user_id=" . $_SESSION["sess_user_id"] . ") OR (host.id=user_auth_perms.item_id and user_auth_perms.type=" . PERM_HOSTS . " and user_auth_perms.user_id=" . $_SESSION["sess_user_id"] . ") OR (graph_templates.id=user_auth_perms.item_id and user_auth_perms.type=" . PERM_GRAPH_TEMPLATES . " and user_auth_perms.user_id=" . $_SESSION["sess_user_id"] . "))
+		left join user_auth_perms on ((graph_templates_graph.local_graph_id=user_auth_perms.item_id and user_auth_perms.type=" . PERM_GRAPHS . " and user_auth_perms.user_id=" . $_SESSION["sess_user_id"] . ") OR (host.id=user_auth_perms.item_id and user_auth_perms.type=" . PERM_DEVICES . " and user_auth_perms.user_id=" . $_SESSION["sess_user_id"] . ") OR (graph_templates.id=user_auth_perms.item_id and user_auth_perms.type=" . PERM_GRAPH_TEMPLATES . " and user_auth_perms.user_id=" . $_SESSION["sess_user_id"] . "))
 		where graph_templates_graph.local_graph_id=graph_local.id
 		" . (empty($sql_where) ? "" : "and $sql_where") . "
 		and graph_templates_graph.local_graph_id=$local_graph_id

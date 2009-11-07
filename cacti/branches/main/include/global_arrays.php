@@ -478,6 +478,13 @@ $graph_policy_array = array(
 	POLICY_DENY 	=> __("Deny"),
 	);
 
+$perm_item_types = array(
+	PERM_GRAPHS 			=> __('graph'),
+	PERM_TREES 				=> __('tree'),
+	PERM_DEVICES			=> __('device'),
+	PERM_GRAPH_TEMPLATES 	=> __('graph_template'),
+	);
+
 $user_auth_realms = array(
 	1 => __("User Administration"),
 	2 => __("Data Input"),

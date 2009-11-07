@@ -323,7 +323,7 @@ function form_save() {
 		input_validate_input_number(get_request_var_post("id"));
 		input_validate_input_number(get_request_var_post("perm_graphs"));
 		input_validate_input_number(get_request_var_post("perm_trees"));
-		input_validate_input_number(get_request_var_post("perm_hosts"));
+		input_validate_input_number(get_request_var_post("PERM_DEVICES"));
 		input_validate_input_number(get_request_var_post("perm_graph_templates"));
 		input_validate_input_number(get_request_var_post("policy_graphs"));
 		input_validate_input_number(get_request_var_post("policy_trees"));
@@ -339,8 +339,8 @@ function form_save() {
 		}elseif (isset($_POST["add_tree_y"])) {
 			db_execute("REPLACE INTO user_auth_perms (user_id,item_id,type) VALUES (" . get_request_var_post("id") . "," . get_request_var_post("perm_trees") . "," . PERM_TREES . ")");
 			$add_button_clicked = true;
-		}elseif (isset($_POST["add_host_y"])) {
-			db_execute("REPLACE INTO user_auth_perms (user_id,item_id,type) VALUES (" . get_request_var_post("id") . "," . get_request_var_post("perm_hosts") . "," . PERM_HOSTS . ")");
+		}elseif (isset($_POST["add_device_y"])) {
+			db_execute("REPLACE INTO user_auth_perms (user_id,item_id,type) VALUES (" . get_request_var_post("id") . "," . get_request_var_post("PERM_DEVICES") . "," . PERM_DEVICES . ")");
 			$add_button_clicked = true;
 		}elseif (isset($_POST["add_graph_template_y"])) {
 			db_execute("REPLACE INTO user_auth_perms (user_id,item_id,type) VALUES (" . get_request_var_post("id") . "," . get_request_var_post("perm_graph_templates") . "," . PERM_GRAPH_TEMPLATES . ")");
@@ -493,7 +493,7 @@ function perm_remove() {
 	}elseif (get_request_var("type") == "tree") {
 		db_execute("DELETE FROM user_auth_perms WHERE type = " . PERM_TREES . " AND user_id = " . get_request_var("user_id") . " AND item_id = " . get_request_var("id"));
 	}elseif (get_request_var("type") == "host") {
-		db_execute("DELETE FROM user_auth_perms WHERE type = " . PERM_HOSTS . " AND user_id = " . get_request_var("user_id") . " AND item_id = " . get_request_var("id"));
+		db_execute("DELETE FROM user_auth_perms WHERE type = " . PERM_DEVICES . " AND user_id = " . get_request_var("user_id") . " AND item_id = " . get_request_var("id"));
 	}elseif (get_request_var("type") == "graph_template") {
 		db_execute("DELETE FROM user_auth_perms WHERE type = " . PERM_GRAPH_TEMPLATES . " AND user_id=" . get_request_var("user_id") . " and item_id = " . get_request_var("id"));
 	}
@@ -519,12 +519,12 @@ function graph_perms_edit() {
 	<script type="text/javascript">
 	<!--
 	$().ready(function() {
-		$("#host").autocomplete("./lib/ajax/get_hosts_detailed.php", { max: 8, highlight: false, scroll: true, scrollHeight: 300 });
-		$("#host").result(function(event, data, formatted) {
+		$("#device").autocomplete("./lib/ajax/get_hosts_detailed.php", { max: 8, highlight: false, scroll: true, scrollHeight: 300 });
+		$("#device").result(function(event, data, formatted) {
 			if (data) {
-				$(this).parent().find("#perm_hosts").val(data[1]);
+				$(this).parent().find("#perm_devices").val(data[1]);
 			}else{
-				$(this).parent().find("#perm_hosts").val(0);
+				$(this).parent().find("#perm_devices").val(0);
 			}
 		});
 		$("#graph").autocomplete("./lib/ajax/get_graphs_brief.php?id=<?php print get_request_var("id", 0);?>", { max: 8, highlight: false, scroll: true, scrollHeight: 300 });
@@ -570,7 +570,7 @@ function graph_perms_edit() {
 				if (sizeof($graphs) > 0) {
 					foreach ($graphs as $item) {
 						form_alternate_row_color("graph" . $item["id"], true);
-						print "<td><strong>" . $item["name"] . "</strong>" . (($policy["policy_graphs"] == POLICY_ALLOW) ? __(" - No Access") : __(" - Accessible")) . "</td>
+						print "<td><strong>" . $item["name"] . "</strong>" . __(" - ") . (($policy["policy_graphs"] == POLICY_ALLOW) ? __("No Access") : __("Accessible")) . "</td>
 								<td align='right'><a href='" . htmlspecialchars("user_admin.php?action=perm_remove&type=graph&id=" . $item["id"] . "&user_id=" . $_GET["id"]) . "'><img class='buttonSmall' src='images/delete_icon.gif' alt='" . __("Delete") . "' align='absmiddle'></a>&nbsp;</td>\n";
 						form_end_row();
 					}
@@ -606,7 +606,7 @@ function graph_perms_edit() {
 		host.id,
 		CONCAT('',host.description,' (',host.hostname,')') as name
 		FROM host
-		LEFT JOIN user_auth_perms ON (host.id = user_auth_perms.item_id AND user_auth_perms.type = " . PERM_HOSTS . ")
+		LEFT JOIN user_auth_perms ON (host.id = user_auth_perms.item_id AND user_auth_perms.type = " . PERM_DEVICES . ")
 		WHERE user_auth_perms.user_id = " . get_request_var("id", 0) . "
 		ORDER BY host.description,host.hostname");
 
@@ -626,7 +626,7 @@ function graph_perms_edit() {
 				if (sizeof($hosts)) {
 					foreach ($hosts as $item) {
 						form_alternate_row_color("host" . $item["id"], true);
-						print "<td><strong>" . $item["name"] . "</strong>" . (($policy["policy_hosts"] == POLICY_ALLOW) ? __(" - No Access") : __(" - Accessible")) . "</td>
+						print "<td><strong>" . $item["name"] . "</strong>" . __(" - ") . (($policy["policy_hosts"] == POLICY_ALLOW) ? __("No Access") : __("Accessible")) . "</td>
 								<td align='right'><a href='" . htmlspecialchars("user_admin.php?action=perm_remove&type=host&id=" . $item["id"] . "&user_id=" . $_GET["id"]) . "'><img class='buttonSmall' src='images/delete_icon.gif' alt='" . __("Delete") . "' align='absmiddle'></a>&nbsp;</td>\n";
 						form_end_row();
 					}
@@ -645,11 +645,11 @@ function graph_perms_edit() {
 	<table align='left'>
 		<tr>
 			<td width='40'>
-				&nbsp;<input type="submit" value="<?php print __("Add");?>" name="add_host_y">
+				&nbsp;<input type="submit" value="<?php print __("Add");?>" name="add_device_y">
 			</td>
 			<td align='left' width='1'>
-				<input class="ac_field" type="text" id="host" size="70" value="">
-				<input type="hidden" id="perm_hosts" name="perm_hosts">
+				<input class="ac_field" type="text" id="device" size="70" value="">
+				<input type="hidden" id="perm_devices" name="perm_devices">
 			</td>
 		</tr>
 	</table>
@@ -682,7 +682,7 @@ function graph_perms_edit() {
 				if (sizeof($graph_templates)) {
 					foreach ($graph_templates as $item) {
 						form_alternate_row_color("templates" . $item["id"], true);
-						print "<td><strong>" . $item["name"] . "</strong>" . (($policy["policy_graph_templates"] == POLICY_ALLOW) ? __(" - No Access") : __(" - Accessible")) . "</td>
+						print "<td><strong>" . $item["name"] . "</strong>" . __(" - ") . (($policy["policy_graph_templates"] == POLICY_ALLOW) ? __("No Access") : __("Accessible")) . "</td>
 								<td align='right'><a href='" . htmlspecialchars("user_admin.php?action=perm_remove&type=graph_template&id=" . $item["id"] . "&user_id=" . $_GET["id"]) . "'><img class='buttonSmall' src='images/delete_icon.gif' alt='" . __("Delete") . "' align='absmiddle'></a>&nbsp;</td>\n";
 						form_end_row();
 					}
@@ -737,7 +737,7 @@ function graph_perms_edit() {
 				if (sizeof($trees)) {
 					foreach ($trees as $item) {
 						form_alternate_row_color("tree" . $item["id"], true);
-						print "<td><strong>" . $item["name"] . "</strong>" . (($policy["policy_trees"] == POLICY_ALLOW) ? __(" - No Access") : __(" - Accessible")) . "</td>
+						print "<td><strong>" . $item["name"] . "</strong>" . __(" - ") . (($policy["policy_trees"] == POLICY_ALLOW) ? __("No Access") : __("Accessible")) . "</td>
 							<td align='right'><a href='" . htmlspecialchars("user_admin.php?action=perm_remove&type=tree&id=" . $item["id"] . "&user_id=" . $_GET["id"]) . "'><img class='buttonSmall' src='images/delete_icon.gif' alt='Delete' align='absmiddle'></a>&nbsp;</td>\n";
 						form_end_row();
 					}

@@ -36,6 +36,9 @@ include_once(CACTI_BASE_PATH."/lib/api_automation_tools.php");
 /* process calling arguments */
 $parms = $_SERVER["argv"];
 $me = array_shift($parms);
+$delimiter 	= ',';		# default delimiter, if not given by user
+$quietMode 	= FALSE;	# be verbose by default
+$perm	 	= array();
 
 if (sizeof($parms) == 0) {
 	display_help($me);
@@ -47,8 +50,7 @@ if (sizeof($parms) == 0) {
 	$displayUsers			= FALSE;
 	$displayTrees			= FALSE;
 	$displayRealms			= FALSE;
-	$perm["user_id"]		= 0;
-	$perm["realm_id"]		= 0;
+	$displayPerms			= FALSE;
 
 
 	foreach($parms as $parameter) {
@@ -57,10 +59,13 @@ if (sizeof($parms) == 0) {
 		switch ($arg) {
 			case "--user-id":		$perm["user_id"]				= trim($value);	break;
 			case "--realm-id":		$perm["realm_id"]				= trim($value);	break;
+			case "--item-type":		$perm["item_type"]				= trim($value);	break;
+			case "--item-id":		$perm["item_id"]				= trim($value);	break;
 			case "--list-groups":	$displayGroups 					= TRUE;	break;
 			case "--list-users":	$displayUsers 					= TRUE;	break;
 			case "--list-trees":	$displayTrees 					= TRUE;	break;
 			case "--list-realms":	$displayRealms 					= TRUE;	break;
+			case "--list-perms":	$displayPerms 					= TRUE;	break;
 			case "-V":
 			case "-H":
 			case "--help":
@@ -86,9 +91,26 @@ if (sizeof($parms) == 0) {
 	}
 
 	if ($displayRealms) {
-		displayRealms($perm["user_id"], $perm["realm_id"], $quietMode);
+		displayRealms($perm, $quietMode);
 		exit(1);
 	}
+
+
+	if ($displayPerms) {
+
+		# verify the parameters given, return user_id as array of verified userids
+		$verify = verifyPermissions($perm, $delimiter, true);
+		if (isset($verify["err_msg"])) {
+			print $verify["err_msg"] . "\n\n";
+			display_help($me);
+			exit(1);
+		}
+
+		displayPerms($perm, $quietMode);
+		exit(1);
+	}
+
+
 }
 
 function display_help($me) {
@@ -99,5 +121,7 @@ function display_help($me) {
 	echo "   --list-groups\n";
 	echo "   --list-users\n";
 	echo "   --list-trees\n";
+	echo "   --list-realms    [--user-id=]  [--realm-id=]\n";
+	echo "   --list-perms     [--user-id=]  [--item-id=]  [--item-type=[graph|tree|device|graph_template]]\n";
 	echo "   --quiet          " . __("batch mode value return") . "\n\n";
 }

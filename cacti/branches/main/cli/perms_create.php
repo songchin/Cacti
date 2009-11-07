@@ -134,29 +134,34 @@ if (sizeof($parms) == 0) {
 		exit(1);
 	}
 
-	if (sizeof($perm["user_id"])) {
-		foreach ($perm["user_id"] as $id) {
+	if (sizeof($perm["userids"])) {
+		foreach ($perm["userids"] as $id) {
 			$sql = "REPLACE INTO user_auth_perms " .
 				"(user_id, item_id, type) values (" .
 			$id . ", " .
-			$itemId . ", " .
-			$itemType .
+			$perm["item_id"] . ", " .
+			$perm["item_type_id"] .
 				")";
 			if ($debug) {
 				print $sql . "\n";
 			} else {
-				db_execute($sql);
+				$ok = db_execute($sql);
+				if ($ok) {
+					echo __("Success - Permission created for user (%s) item type (%s: %s) item id (%s)", $id, $perm["item_type_id"], $perm["item_type"], $perm["item_id"]) . "\n";
+				} else {
+					echo __("ERROR: Failed to create permission for user (%s) item type (%s: %s) item id (%s)", $id, $perm["item_type_id"], $perm["item_type"], $perm["item_id"]) . "\n";
+				}
 			}
 		}
 	}
 }
 
 function display_help($me) {
-	echo __("Add Permissions Script 1.0") . ", " . __("Copyright 2004-2009 - The Cacti Group") . "\n";
-	echo __("A simple command line utility to add permissions to tree items in Cacti") . "\n\n";
+	echo __("Add Permissions Script 1.1") . ", " . __("Copyright 2004-2009 - The Cacti Group") . "\n";
+	echo __("A simple command line utility to add permissions in Cacti") . "\n\n";
 	echo __("usage: ") . $me . "  [ --user-id=[ID] ]\n";
-	echo "   --item-type=[graph|tree|host|graph_template]\n";
-	echo "   --item-id [--quiet]\n\n";
-	echo __("Where %s1 is the id of the object of type %s2", "item-id", "item-type") . "\n";
+	echo "   --item-type=[graph|tree|device|graph_template]\n";
+	echo "   --item-id=[ID] [--quiet]\n";
+	echo __("Where %s is the id of the object of type %s", "item-id", "item-type") . "\n";
 	echo "   --quiet          " . __("batch mode value return") . "\n\n";
 }

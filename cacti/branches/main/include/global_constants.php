@@ -225,7 +225,7 @@ define("SNMP_WEBUI", 2);
 
 define("PERM_GRAPHS", 1);
 define("PERM_TREES", 2);
-define("PERM_HOSTS", 3);
+define("PERM_DEVICES", 3);
 define("PERM_GRAPH_TEMPLATES", 4);
 
 define("POLICY_ALLOW", 1);
