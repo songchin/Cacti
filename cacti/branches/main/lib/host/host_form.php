@@ -327,7 +327,7 @@ function api_host_form_actions() {
 				input_validate_input_number(get_request_var_post("tree_item_id"));
 				/* ==================================================== */
 
-				api_tree_item_save(0, get_request_var_post("tree_id"), TREE_ITEM_TYPE_HOST, get_request_var_post("tree_item_id"), "", 0, read_graph_config_option("default_rra_id"), $selected_items[$i], 1, 1, false);
+				api_tree_item_save(0, get_request_var_post("tree_id"), TREE_ITEM_TYPE_DEVICE, get_request_var_post("tree_item_id"), "", 0, read_graph_config_option("default_rra_id"), $selected_items[$i], 1, 1, false);
 			}
 		} else {
 			api_plugin_hook_function('device_action_execute', get_request_var_post('drp_action'));

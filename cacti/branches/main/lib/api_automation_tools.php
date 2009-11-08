@@ -214,6 +214,44 @@ function getGraphs($device_selection, &$header) {
 
 
 
+function getHostGraphs($devices, &$header) {
+
+	$header = array();	# provides header info for printout
+	$sql_where = "";
+
+	if (sizeof($devices)) {
+		$sql_where .= ((strlen($sql_where) === 0) ? "WHERE " : "AND ") . str_replace("id", "graph_local.host_id", array_to_sql_or($devices, "id")) . " ";
+	}
+
+	$sql = "SELECT " .
+		"graph_templates_graph.local_graph_id as id, " .
+		"graph_templates_graph.title_cache as name, " .
+		"graph_templates.name as template_name, " .
+		"graph_local.host_id as host_id, " .
+		"host.hostname as hostname " .
+		"FROM graph_local " .
+		"LEFT JOIN graph_templates ON (graph_local.graph_template_id=graph_templates.id) " .
+		"LEFT JOIN graph_templates_graph ON (graph_local.id=graph_templates_graph.local_graph_id) " .
+		"LEFT JOIN host ON (graph_local.host_id=host.id) " .
+	$sql_where .
+		" ORDER BY graph_templates_graph.local_graph_id";
+	#print $sql . "\n";
+
+	$tmpArray = db_fetch_assoc($sql);
+	if (sizeof($tmpArray)) {
+		# provide human readable column headers
+		$header["id"]["desc"] 				= __("Graph Id");
+		$header["name"]["desc"] 			= __("Graph Title");
+		$header["template_name"]["desc"] 	= __("Graph Template Name");
+		$header["host_id"]["desc"] 			= __("Host Id");
+		$header["hostname"]["desc"] 		= __("Hostname");
+	}
+
+	return $tmpArray;
+}
+
+
+
 function getInputFields($templateId) {
 	$fields    = array();
 
@@ -972,19 +1010,20 @@ function displayTreeNodes($tree_id, $nodeType = "", $parentNode = "", $quietMode
 			$current_type = TREE_ITEM_TYPE_HEADER;
 			if ($node["local_graph_id"] > 0) { $current_type = TREE_ITEM_TYPE_GRAPH; }
 			if ($node["title"] != "") { $current_type = TREE_ITEM_TYPE_HEADER; }
-			if ($node["host_id"] > 0) { $current_type = TREE_ITEM_TYPE_HOST; }
+			if ($node["host_id"] > 0) { $current_type = TREE_ITEM_TYPE_DEVICE; }
 
 			switch ($current_type) {
 				case TREE_ITEM_TYPE_HEADER:
 					$starting_tier = tree_tier($node["order_key"]);
 					if ($starting_tier == 1) {
+						$parent_tier = '';
 						$parentID = 0;
 					}else{
 						$parent_tier = substr($node["order_key"], 0, (($starting_tier - 1) * CHARS_PER_TIER));
 						$parentID = db_fetch_cell("SELECT id FROM graph_tree_items WHERE order_key LIKE '$parent_tier%%' AND graph_tree_id=$tree_id ORDER BY order_key LIMIT 1");
 					}
-
-					if ($nodeType == '' || $nodeType == 'header') {
+					$parent[$parent_tier] = $parentID;
+					if ($nodeType == '' || strtolower($nodeType) == strtolower($tree_item_types[TREE_ITEM_TYPE_HEADER])) {
 						if ($parentNode == '' || $parentNode == $parentID) {
 							echo $tree_item_types[$current_type]."\t";
 							echo $node["id"]."\t";
@@ -1004,7 +1043,14 @@ function displayTreeNodes($tree_id, $nodeType = "", $parentNode = "", $quietMode
 					break;
 
 				case TREE_ITEM_TYPE_GRAPH:
-					if ($nodeType == '' || $nodeType == 'graph') {
+					if ($nodeType == '' || strtolower($nodeType) == strtolower($tree_item_types[TREE_ITEM_TYPE_GRAPH])) {
+						$starting_tier = tree_tier($node["order_key"]);
+						if ($starting_tier == 1) {
+							$tier = '';
+						}else{
+							$tier = substr($node["order_key"], 0, (($starting_tier - 1) * CHARS_PER_TIER));
+						}
+						$parentID = $parent[$tier];
 						if ($parentNode == '' || $parentNode == $parentID) {
 							echo $tree_item_types[$current_type]."\t";
 							echo $node["id"]."\t";
@@ -1036,8 +1082,15 @@ function displayTreeNodes($tree_id, $nodeType = "", $parentNode = "", $quietMode
 					}
 					break;
 
-				case TREE_ITEM_TYPE_HOST:
-					if ($nodeType == '' || $nodeType == 'host') {
+				case TREE_ITEM_TYPE_DEVICE:
+					if ($nodeType == '' || strtolower($nodeType) == strtolower($tree_item_types[TREE_ITEM_TYPE_DEVICE])) {
+						$starting_tier = tree_tier($node["order_key"]);
+						if ($starting_tier == 1) {
+							$tier = '';
+						}else{
+							$tier = substr($node["order_key"], 0, (($starting_tier - 1) * CHARS_PER_TIER));
+						}
+						$parentID = $parent[$tier];
 						if ($parentNode == '' || $parentNode == $parentID) {
 							echo $tree_item_types[$current_type]."\t";
 							echo $node["id"]."\t";
@@ -1087,36 +1140,6 @@ function displayRRAs($quietMode = FALSE) {
 			echo $rra["rows"]."\t";
 			echo $rra["timespan"]."\t\t";
 			echo $rra["name"]."\n";
-		}
-	}
-
-	if (!$quietMode) {
-		echo "\n";
-	}
-}
-
-function displayHostGraphs($host_id, $quietMode = FALSE) {
-
-	if (!$quietMode) {
-		echo __("Known Host Graphs: (id, name, template)") . "\n";
-	}
-
-	$graphs = db_fetch_assoc("SELECT
-		graph_templates_graph.local_graph_id as id,
-		graph_templates_graph.title_cache as name,
-		graph_templates.name as template_name
-		FROM (graph_local,graph_templates_graph)
-		LEFT JOIN graph_templates ON (graph_local.graph_template_id=graph_templates.id)
-		WHERE graph_local.id=graph_templates_graph.local_graph_id
-		AND graph_local.host_id=" . $host_id . "
-		ORDER BY graph_templates_graph.local_graph_id");
-
-	if (sizeof($graphs)) {
-		foreach ($graphs as $graph) {
-			echo $graph["id"] . "\t";
-			echo $graph["name"] . "\t";
-			echo $graph["template_name"] . "\t";
-			echo "\n";
 		}
 	}
 
@@ -1747,8 +1770,71 @@ function verifyPermissions(&$perm, $delim, $ri_check=false) {
 							break;
 					}
 				}
+				break;
 			case "devices":
 				# has to be verified by verifyDevices()
+				break;
+			default:
+				# nothing
+		}
+	}
+}
+
+
+
+function verifyTree(&$tree, $ri_check=false) {
+	global $tree_sort_types_cli;
+
+	foreach($tree as $key => $value) {
+
+		switch ($key) {
+			case "id":
+				if (!(((string) $value) === ((string)(int) $value))) {
+					$check["err_msg"] = __("ERROR: Tree id must be integer (%s)", $value);
+					return $check;
+				} elseif ($ri_check) {
+					$match = db_fetch_cell("SELECT COUNT(*)	FROM graph_tree WHERE id=" . $value);
+					if ($match == 0) {
+						$check["err_msg"] = __("ERROR: This tree id does not exist (%s)", $value);
+						return $check;
+					}
+				}
+				break;
+			case "name":
+				break;
+			case "sort_type_cli":
+				if ($value == $tree_sort_types_cli[TREE_ORDERING_NONE]) {
+					$tree["sort_type"] = TREE_ORDERING_NONE;
+				} elseif ($value == $tree_sort_types_cli[TREE_ORDERING_ALPHABETIC]) {
+					$tree["sort_type"] = TREE_ORDERING_ALPHABETIC;
+				} elseif ($value == $tree_sort_types_cli[TREE_ORDERING_NATURAL]) {
+					$tree["sort_type"] = TREE_ORDERING_NATURAL;
+				} elseif ($value == $tree_sort_types_cli[TREE_ORDERING_NUMERIC]) {
+					$tree["sort_type"] = TREE_ORDERING_NUMERIC;
+				} else {
+					$check["err_msg"] = __("ERROR: Invalid Sort Type: (%s)", $tree["sort_type_cli"]);
+					return $check;
+				}
+				break;
+			case "parent_node":
+				if (isset($tree["id"])) {
+					if (!(((string) $value) === ((string)(int) $value))) {
+						$check["err_msg"] = __("ERROR: Parent node must be integer (%s)", $value);
+						return $check;
+					} elseif ($ri_check) {
+						$match = db_fetch_cell("SELECT COUNT(*)	" .
+											"FROM graph_tree_items " .
+											"WHERE graph_tree_id=" . $tree["id"] . " " .
+											"AND id=" . $value);
+						if ($match == 0) {
+							$check["err_msg"] = __("ERROR: This parent node does not exist (%s)", $value);
+							return $check;
+						}
+					}
+				} else {
+					$check["err_msg"] = __("ERROR: Tree id must be given id parent node is specified");
+					return $check;
+				}
 				break;
 			default:
 				# nothing

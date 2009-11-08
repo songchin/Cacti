@@ -316,7 +316,8 @@ $snmp_implementations = array(
 $rrdtool_versions = array(
 	"rrd-1.0.x" => "RRDTool 1.0.x",
 	"rrd-1.2.x" => "RRDTool 1.2.x",
-	"rrd-1.3.x" => "RRDTool 1.3.x");
+	"rrd-1.3.x" => "RRDTool 1.3.x",
+	"rrd-1.4.x" => "RRDTool 1.4.x");
 
 $i18n_modes = array(
 	0 => __("Disabled"),
@@ -353,10 +354,22 @@ $tree_sort_types = array(
 	TREE_ORDERING_NUMERIC => __("Numeric Ordering"),
 	);
 
+$tree_sort_types_cli = array(
+	TREE_ORDERING_NONE => __("manual"),
+	TREE_ORDERING_ALPHABETIC => __("alpha"),
+	TREE_ORDERING_NATURAL => __("natural"),
+	TREE_ORDERING_NUMERIC => __("numeric"),
+	);
+
+$tree_types = array(
+	TREE_TYPE_TREE => __("Tree"),
+	TREE_TYPE_NODE => __("Node"),
+	);
+
 $tree_item_types = array(
 	TREE_ITEM_TYPE_HEADER => __("Header"),
 	TREE_ITEM_TYPE_GRAPH => __("Graph"),
-	TREE_ITEM_TYPE_HOST => __("Host"),
+	TREE_ITEM_TYPE_DEVICE => __("Device"),
 	);
 
 $host_group_types = array(

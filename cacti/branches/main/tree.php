@@ -148,7 +148,7 @@ function item_edit() {
 
 		if ($tree_item["local_graph_id"] > 0) { $db_type = TREE_ITEM_TYPE_GRAPH; }
 		if ($tree_item["title"] != "") { $db_type = TREE_ITEM_TYPE_HEADER; }
-		if ($tree_item["host_id"] > 0) { $db_type = TREE_ITEM_TYPE_HOST; }
+		if ($tree_item["host_id"] > 0) { $db_type = TREE_ITEM_TYPE_DEVICE; }
 	}
 
 	if (isset($_GET["type_select"])) {
@@ -165,7 +165,8 @@ function item_edit() {
 
 	html_start_box("<strong>" . __("Tree Items") . "</strong>", "100", $colors["header"], "3", "center", "");
 
-	form_alternate_row_color("parent_item"); ?>
+	form_alternate_row_color("parent_item");
+	?>
 		<td width="50%">
 			<font class="textEditTitle"><?php print __("Parent Item");?></font><br>
 			<?php print __("Choose the parent for this header/graph.");?>
@@ -173,8 +174,10 @@ function item_edit() {
 		<td>
 			<?php grow_dropdown_tree($_GET["tree_id"], "parent_item_id", (isset($_GET["parent_id"]) ? $_GET["parent_id"] : get_parent_id($tree_item["id"], "graph_tree_items", "graph_tree_id=" . $_GET["tree_id"])));?>
 		</td>
-	</tr>
-	<?php form_alternate_row_color("tree_item"); ?>
+	<?php
+	form_end_row();
+	form_alternate_row_color("tree_item");
+	?>
 		<td width="50%">
 			<font class="textEditTitle"><?php print __("Tree Item Type");?></font><br>
 			<?php print __("Choose what type of tree item this is.");?>
@@ -188,10 +191,12 @@ function item_edit() {
 				?>
 			</select>
 		</td>
-	</tr>
-	<tr class='rowSubHeader'>
-		<td colspan="2" class='textSubHeaderDark'><?php print __("Tree Item Value");?></td>
-	</tr>
+	<?php
+	form_end_row();
+	?>
+		<tr class='rowSubHeader'>
+			<td colspan="2" class='textSubHeaderDark'><?php print __("Tree Item Value");?></td>
+		</tr>
 	<?php
 	switch ($current_type) {
 	case TREE_ITEM_TYPE_HEADER:
@@ -212,8 +217,8 @@ function item_edit() {
 			<td>
 				<?php form_text_box("title", (isset($tree_item["title"]) ? $tree_item["title"] : ""), "", "255", 30, "text", (isset($_GET["id"]) ? $_GET["id"] : "0"));?>
 			</td>
-		</tr>
 		<?php
+		form_end_row();
 		/* don't allow the user to change the tree item ordering if a tree order has been specified */
 		if ($tree_sort_type == TREE_ORDERING_NONE) {
 			form_alternate_row_color("sorting_type"); ?>
@@ -224,8 +229,8 @@ function item_edit() {
 				<td>
 					<?php form_dropdown("sort_children_type", $tree_sort_types, "", "", (isset($tree_item["sort_children_type"]) ? $tree_item["sort_children_type"] : $default_sorting_type), "", "");?>
 				</td>
-			</tr>
 			<?php
+			form_end_row();
 		}
 
 		if ((!empty($_GET["id"])) && ($tree_sort_type == TREE_ORDERING_NONE)) {
@@ -237,8 +242,8 @@ function item_edit() {
 				<td>
 					<?php form_checkbox("propagate_changes", "", __("Propagate Changes"), "", "", "", 0);?>
 				</td>
-			</tr>
 			<?php
+			form_end_row();
 		}
 		break;
 	case TREE_ITEM_TYPE_GRAPH:
@@ -250,8 +255,10 @@ function item_edit() {
 			<td>
 				<?php form_dropdown("local_graph_id", db_fetch_assoc("select graph_templates_graph.local_graph_id as id,graph_templates_graph.title_cache as name from (graph_templates_graph,graph_local) where graph_local.id=graph_templates_graph.local_graph_id and local_graph_id != 0 order by title_cache"), "name", "id", (isset($tree_item["local_graph_id"]) ? $tree_item["local_graph_id"] : ""), "", "");?>
 			</td>
-		</tr>
-		<?php form_alternate_row_color("rra"); ?>
+		<?php
+		form_end_row();
+		form_alternate_row_color("rra");
+		?>
 			<td width="50%">
 				<font class="textEditTitle"><?php print __("Round Robin Archive");?></font><br>
 				<?php print __("Choose a round robin archive to control how this graph is displayed.");?>
@@ -259,10 +266,10 @@ function item_edit() {
 			<td>
 				<?php form_dropdown("rra_id", db_fetch_assoc("select id,name from rra order by timespan"), "name", "id", (isset($tree_item["rra_id"]) ? $tree_item["rra_id"] : ""), "", "");?>
 			</td>
-		</tr>
 		<?php
+		form_end_row();
 		break;
-	case TREE_ITEM_TYPE_HOST:
+	case TREE_ITEM_TYPE_DEVICE:
 		form_alternate_row_color("host"); ?>
 			<td width="50%">
 				<font class="textEditTitle"><?php print __("Host");?></font><br>
@@ -271,8 +278,10 @@ function item_edit() {
 			<td>
 				<?php form_dropdown("host_id", db_fetch_assoc("select id,CONCAT_WS('',description,' (',hostname,')') as name from host order by description,hostname"), "name", "id", (isset($tree_item["host_id"]) ? $tree_item["host_id"] : ""), "", "");?>
 			</td>
-		</tr>
-		<?php form_alternate_row_color("graph_grouping"); ?>
+		<?php
+		form_end_row();
+		form_alternate_row_color("graph_grouping");
+		?>
 			<td width="50%">
 				<font class="textEditTitle"><?php print __("Graph Grouping Style");?></font><br>
 				<?php print __("Choose how graphs are grouped when drawn for this particular host on the tree.");?>
@@ -280,8 +289,8 @@ function item_edit() {
 			<td>
 				<?php form_dropdown("host_grouping_type", $host_group_types, "", "", (isset($tree_item["host_grouping_type"]) ? $tree_item["host_grouping_type"] : "1"), "", "");?>
 			</td>
-		</tr>
 		<?php
+		form_end_row();
 		break;
 	}
 
@@ -447,8 +456,8 @@ function tree() {
 			<td align="right">
 				<a href="<?php print htmlspecialchars("tree.php?action=remove&id=" . $tree["id"]);?>"><img class="buttonSmall" src="images/delete_icon.gif" alt="<?php print __("Delete");?>" align='middle'></a>
 			</td>
-		</tr>
-	<?php
+			<?php
+		form_end_row();
 	}
 	}else{
 		print "<tr><td><em>" . __("No Graphs Trees") . "</em></td></tr>\n";
