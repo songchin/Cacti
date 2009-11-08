@@ -95,6 +95,7 @@ Cacti CHANGELOG
 -feature: Add Alignment Attribute to Sortable Header Columns
 -feature: Do not repopulate the poller cache unless its required
 -feature: Reorganize Menu for clarity
+-feature: Add logging to SQL Save error handling
 
 0.8.7e
 
