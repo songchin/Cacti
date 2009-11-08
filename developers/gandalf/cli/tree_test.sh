@@ -17,20 +17,19 @@ echo -----------------------
 echo add and remove tree
 echo -----------------------
 php -q tree_create.php --help
-php -q tree_create.php --item-type=graph --item-id=54 --user-id=3,1
-php -q tree_list.php --list-tree --item-type=graph
-php -q tree_delete.php --item-type=graph --item-id=54 --user-id=3,1
-php -q tree_list.php --list-tree --item-type=graph
+php -q tree_create.php --type=tree --name='cli test' --sort-method=manual
+php -q tree_list.php --list-trees
+php -q tree_create.php --type=node --tree-id=1 --node-type=header --name='Header Test1'
+php -q tree_list.php  --list-nodes --tree-id=1 --node-type=header
 
-php -q tree_create.php --item-type=device --item-id=5 --user-id=3,1
-php -q tree_list.php --list-tree --item-type=device
-php -q tree_delete.php --item-type=device --item-id=5 --user-id=3,1
-php -q tree_list.php --list-tree --item-type=device
+echo use the node id of previous command as a parent node for the next test
+php -q tree_create.php --type=node --tree-id=1 --node-type=header --name='Header Test2' --parent-node=23
+php -q tree_list.php  --list-nodes --tree-id=1 --node-type=header
 
-php -q tree_create.php --item-type=graph_template --item-id=2 --user-id=3,1
-php -q tree_list.php --list-tree --item-type=graph_template
-php -q tree_delete.php --item-type=graph_template --item-id=2 --user-id=3,1
-php -q tree_list.php --list-tree --item-type=graph_template
+php -q tree_create.php --type=node --tree-id=1 --node-type=device --device-id=1 --device-group-style=2
+php -q tree_create.php --type=node --tree-id=1 --node-type=device --device-id=5 --parent-node=23 --device-group-style=1
+php -q tree_list.php  --list-nodes --tree-id=1 --node-type=device
+php -q tree_list.php  --list-nodes --tree-id=1
 
 
 clear
