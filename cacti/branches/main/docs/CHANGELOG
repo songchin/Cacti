@@ -96,6 +96,7 @@ Cacti CHANGELOG
 -feature: Do not repopulate the poller cache unless its required
 -feature: Reorganize Menu for clarity
 -feature: Add logging to SQL Save error handling
+-feature: Allow non-numeric form row ids in form API
 
 0.8.7e
 
