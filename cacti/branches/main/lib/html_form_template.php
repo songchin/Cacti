@@ -379,11 +379,11 @@ function draw_nontemplated_fields_data_source_item($data_template_id, &$values_a
 				if (($draw_any_items == false) && ($draw_title_for_each_item == false) && ($header_title != "")) {
 					$header_items = array($header_title, "");
 					print "<tr><td>";
-					html_header($header_items, 1, true, 'template_data_source_item');
+					html_header($header_items, 1, true, 'template_data_source_item_' . $form_field_name);
 				}elseif (($draw_any_items == false) && ($draw_title_for_each_item == true) && ($header_title != "")) {
 					$header_items = array($header_title ." [" . $rrd["data_source_name"] . "]", "");
 					print "<tr><td>";
-					html_header($header_items, 1, true, 'template_data_source_item');
+					html_header($header_items, 1, true, 'template_data_source_item_' . $form_field_name);
 				}
 
 				$draw_any_items = true;
@@ -406,6 +406,8 @@ function draw_nontemplated_fields_data_source_item($data_template_id, &$values_a
 			);
 
 		$num_fields_drawn += sizeof($form_array);
+
+		if (sizeof($form_array)) print "</table></td></tr>";		/* end of html_header */
 	}
 	}
 
