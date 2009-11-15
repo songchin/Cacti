@@ -824,7 +824,7 @@ function graph_edit() {
 				<td class="textInfo" colspan="2" valign="top">
 					<?php print get_graph_title(get_request_var("id"));?>
 				</td>
-				<td style="white-space:nowrap;" align="right" width="1"><a id='tooltip' class='popup_anchor' href='#' onMouseOver="Tip('<?php print $tip_text;?>', BGCOLOR, '#EEEEEE', FIX, ['tooltip', -45, 0], STICKY, true, SHADOW, true, CLICKCLOSE, true, FADEOUT, 400, WIDTH, 115, TEXTALIGN, 'right', BORDERCOLOR, '#F5F5F5')" onMouseOut="UnTip()">Graph Options</a></td>
+				<td style="white-space:nowrap;" align="right" width="1"><a id='tooltip' class='popup_anchor' href='#' onMouseOver="Tip('<?php print $tip_text;?>', BGCOLOR, '#EEEEEE', FIX, ['tooltip', -45, 0], STICKY, true, SHADOW, true, CLICKCLOSE, true, FADEOUT, 400, TEXTALIGN, 'right', BORDERCOLOR, '#F5F5F5')" onMouseOut="UnTip()">Graph Options</a></td>
 			</tr>
 		</table>
 		<?php

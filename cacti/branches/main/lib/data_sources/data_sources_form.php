@@ -706,7 +706,7 @@ function data_source_edit() {
 				<td class="textInfo" colspan="2" valign="top">
 					<?php print get_data_source_title(get_request_var("id"));?>
 				</td>
-				<td style="white-space:nowrap;" align="right" class="w1"><a id='tooltip' class='popup_anchor' href='#' onMouseOver="Tip('<?php print $tip_text;?>', BGCOLOR, '#EEEEEE', FIX, ['tooltip', -20, 0], STICKY, true, SHADOW, true, CLICKCLOSE, true, FADEOUT, 400, WIDTH, 125, TEXTALIGN, 'right', BORDERCOLOR, '#F5F5F5')" onMouseOut="UnTip()">Data Source Options</a></td>
+				<td style="white-space:nowrap;" align="right" class="w1"><a id='tooltip' class='popup_anchor' href='#' onMouseOver="Tip('<?php print $tip_text;?>', BGCOLOR, '#EEEEEE', FIX, ['tooltip', -20, 0], STICKY, true, SHADOW, true, CLICKCLOSE, true, FADEOUT, 400, TEXTALIGN, 'right', BORDERCOLOR, '#F5F5F5')" onMouseOut="UnTip()">Data Source Options</a></td>
 			</tr>
 		</table>
 		<?php
@@ -940,19 +940,10 @@ function data_source_edit() {
 	}
 
 	if ((isset($_SESSION["ds_info_mode"])) && (isset($_GET["id"]))) {
-		$data_source_path = get_data_source_path($_GET["id"], true);
-		$rrd_output = rrdtool_execute("info $data_source_path");
-		?>
-		<table width="100%" align="center">
-			<tr>
-				<td>
-					<span class="textInfo"><?php print __("RRD File Information");?></span><br>
-					<pre><?php print($rrd_output);?>
-				</pre>
-				</td>
-			</tr>
-		</table>
-		<?php
+		$rrd_info = rrdtool_function_info($_GET["id"]);
+		$diff = rrdtool_cacti_compare($_GET["id"], $rrd_info);
+		rrdtool_info2html($rrd_info, $diff);
+		rrdtool_tune($rrd_info["filename"], $diff, true);
 	}
 
 	if ((isset($_GET["id"])) || (isset($_GET["new"]))) {

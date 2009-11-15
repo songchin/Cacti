@@ -385,74 +385,6 @@ function rrdtool_function_update($update_cache_array, $rrd_struc) {
 	return $rrds_processed;
 }
 
-/* rrd_check - Given a data source id, check the rrdtool file to the data source definition
-   @arg $data_source_id - data source id
-   @rerturn - (array) an array containing issues with the rrdtool file definition vs data source */
-function rrd_check($data_source_id) {
-	global $config, $rrd_tune_array;
-
-	$data_source_name = get_data_source_item_name($rrd_tune_array["data_source_id"]);
-	$data_source_type = $data_source_types{$rrd_tune_array["data-source-type"]};
-	$data_source_path = get_data_source_path($rrd_tune_array["data_source_id"], true);
-
-
-}
-
-/* rrd_repair - Given a data source id, update the rrdtool file to match the data source definition
-   @arg $data_source_id - data source id
-   @rerturn - 1 success, 2 false */
-function rrd_repair($data_source_id) {
-	global $config, $rrd_tune_array;
-
-	$data_source_name = get_data_source_item_name($rrd_tune_array["data_source_id"]);
-	$data_source_type = $data_source_types{$rrd_tune_array["data-source-type"]};
-	$data_source_path = get_data_source_path($rrd_tune_array["data_source_id"], true);
-
-
-}
-
-/* rrdtool_function_info - given a data source id, return rrdtool info array
-   @arg $data_source_id - data source id
-   @returns - (array) an array containing all data from rrdtool info command */
-function rrdtool_function_info($data_source_id) {
-	global $config;
-
-	/* Get the path to rrdtool file */
-	$data_source_path = get_data_source_path($data_source_id, true);
-
-	/* Execute rrdtool info command */
-	$cmd_line = " info " . $data_source_path;
-	$output = rrdtool_execute($cmd_line, false, RRDTOOL_OUTPUT_STDOUT);
-	if (sizeof($output) == 0) {
-		return false;
-	}
-
-	/* Parse the output */
-	$matches = array();
-	$rrd_info = array( "rra" => array(), "ds" => array() );
-	$output = explode("\n", $output);
-	foreach ($output as $line) {
-		$line = trim($line);
-		if (preg_match("/^ds\[(\S+)\]\.(\S+) = (\S+)$/", $line, $matches)) {
-			$rrd_info["ds"][$matches[1]][$matches[2]] = $matches[3];
-		} elseif (preg_match("/^rra\[(\S+)\]\.(\S+)\[(\S+)\]\.(\S+) = (\S+)$/", $line, $matches)) {
-			$rrd_info["rra"][$matches[1]][$matches[2]][$matches[3]][$matches[4]] = $matches[5];
-		} elseif (preg_match("/^rra\[(\S+)\]\.(\S+) = (\S+)$/", $line, $matches)) {
-			$rrd_info["rra"][$matches[1]][$matches[2]] = $matches[3];
-		} elseif (preg_match("/^(\S+) = \"(\S+)\"$/", $line, $matches)) {
-			$rrd_info[$matches[1]] = $matches[2];
-		} elseif (preg_match("/^(\S+) = (\S+)$/", $line, $matches)) {
-			$rrd_info[$matches[1]] = $matches[2];
-		}
-	}
-	$output = "";
-	$matches = array();
-
-	/* Return parsed values */
-	return $rrd_info;
-
-}
-
 $rrd_fetch_cache = array();
 
 /* rrdtool_function_fetch - given a data source, return all of its data in an array
@@ -1346,6 +1278,9 @@ function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rr
 		/* to make things easier... if there is no text format set; set blank text */
 		if (!isset($graph_variables["text_format"][$graph_item_id])) {
 			$graph_variables["text_format"][$graph_item_id] = "";
+		} else {
+			$graph_variables["text_format"][$graph_item_id] = str_replace(':', '\:', $graph_variables["text_format"][$graph_item_id]); /* escape colons */
+			$graph_variables["text_format"][$graph_item_id] = str_replace('"', '\"', $graph_variables["text_format"][$graph_item_id]); /* escape doublequotes */
 		}
 
 		if (!isset($hardreturn[$graph_item_id])) {
@@ -1360,23 +1295,13 @@ function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rr
 		$need_rrd_nl = TRUE;
 
 		if ($graph_item_types{$graph_item["graph_type_id"]} == "COMMENT") {
-			if (read_config_option("rrdtool_version") != "rrd-1.0.x") {
-				$comment_string = $graph_item_types{$graph_item["graph_type_id"]} . ":\"" . str_replace(":", "\:", $graph_variables["text_format"][$graph_item_id]) . $hardreturn[$graph_item_id] . "\" ";
-				if (trim($comment_string) == 'COMMENT:"\n"') {
-					$txt_graph_items .= 'COMMENT:" \n"'; # rrdtool will skip a COMMENT that holds a NL only; so add a blank to make NL work
-				} else if (trim($comment_string) != "COMMENT:\"\"") {
-					$txt_graph_items .= rrd_substitute_host_query_data($comment_string, $graph, $graph_item);
-				}
-			}else {
-				$comment_string = $graph_item_types{$graph_item["graph_type_id"]} . ":\"" . $graph_variables["text_format"][$graph_item_id] . $hardreturn[$graph_item_id] . "\" ";
-				if (trim($comment_string) == 'COMMENT:"\n"') {
-					$txt_graph_items .= 'COMMENT:" \n"'; # rrdtool will skip a COMMENT that holds a NL only; so add a blank to make NL work
-				} else if (trim($comment_string) != "COMMENT:\"\"") {
-					$txt_graph_items .= rrd_substitute_host_query_data($comment_string, $graph, $graph_item);
-				}
+			$comment_string = $graph_item_types{$graph_item["graph_type_id"]} . ":\"" . $graph_variables["text_format"][$graph_item_id] . $hardreturn[$graph_item_id] . "\" ";
+			if (trim($comment_string) == 'COMMENT:"\n"') {
+				$txt_graph_items .= 'COMMENT:" \n"'; # rrdtool will skip a COMMENT that holds a NL only; so add a blank to make NL work
+			} else if (trim($comment_string) != "COMMENT:\"\"") {
+				$txt_graph_items .= rrd_substitute_host_query_data($comment_string, $graph, $graph_item);
 			}
 		}elseif (($graph_item_types{$graph_item["graph_type_id"]} == "GPRINT") && (!isset($graph_data_array["graph_nolegend"]))) {
-			$graph_variables["text_format"][$graph_item_id] = str_replace(":", "\:", $graph_variables["text_format"][$graph_item_id]); /* escape colons */
 			$txt_graph_items .= $graph_item_types{$graph_item["graph_type_id"]} . ":" . $data_source_name . ":" . $consolidation_functions{$graph_item["consolidation_function_id"]} . ":\"$text_padding" . $graph_variables["text_format"][$graph_item_id] . $graph_item["gprint_text"] . $hardreturn[$graph_item_id] . "\" ";
 		}elseif (ereg("^(AREA|LINE[123]|STACK|HRULE|VRULE)$", $graph_item_types{$graph_item["graph_type_id"]})) {
 
@@ -1392,18 +1317,14 @@ function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rr
 
 			if (ereg("^(AREA|LINE[123])$", $graph_item_types{$graph_item["graph_type_id"]})) {
 				$graph_item_stack_type = $graph_item_types{$graph_item["graph_type_id"]};
-				$graph_variables["text_format"][$graph_item_id] = str_replace(":", "\:", $graph_variables["text_format"][$graph_item_id]); /* escape colons */
 				$txt_graph_items .= $graph_item_types{$graph_item["graph_type_id"]} . ":" . $data_source_name . $graph_item_color_code . ":" . "\"" . $graph_variables["text_format"][$graph_item_id] . $hardreturn[$graph_item_id] . "\" ";
 			}elseif ($graph_item_types{$graph_item["graph_type_id"]} == "STACK") {
 				if (read_config_option("rrdtool_version") != "rrd-1.0.x") {
-					$graph_variables["text_format"][$graph_item_id] = str_replace(":", "\:", $graph_variables["text_format"][$graph_item_id]); /* escape colons */
 					$txt_graph_items .= $graph_item_stack_type . ":" . $data_source_name . $graph_item_color_code . ":" . "\"" . $graph_variables["text_format"][$graph_item_id] . $hardreturn[$graph_item_id] . "\":STACK";
 				}else {
-					$graph_variables["text_format"][$graph_item_id] = str_replace(":", "\:", $graph_variables["text_format"][$graph_item_id]); /* escape colons */
 					$txt_graph_items .= $graph_item_types{$graph_item["graph_type_id"]} . ":" . $data_source_name . $graph_item_color_code . ":" . "\"" . $graph_variables["text_format"][$graph_item_id] . $hardreturn[$graph_item_id] . "\" ";
 				}
 			}elseif ($graph_item_types{$graph_item["graph_type_id"]} == "HRULE") {
-				$graph_variables["text_format"][$graph_item_id] = str_replace(":", "\:", $graph_variables["text_format"][$graph_item_id]); /* escape colons */
 				$graph_variables["value"][$graph_item_id] = str_replace(":", "\:", $graph_variables["value"][$graph_item_id]); /* escape colons */
 				/* perform variable substitution; if this does not return a number, rrdtool will FAIL! */
 				$substitute = rrd_substitute_host_query_data($graph_variables["value"][$graph_item_id], $graph, $graph_item);
@@ -1412,7 +1333,6 @@ function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rr
 				}
 				$txt_graph_items .= $graph_item_types{$graph_item["graph_type_id"]} . ":" . $graph_variables["value"][$graph_item_id] . $graph_item_color_code . ":\"" . $graph_variables["text_format"][$graph_item_id] . $hardreturn[$graph_item_id] . "\" ";
 			}elseif ($graph_item_types{$graph_item["graph_type_id"]} == "VRULE") {
-				$graph_variables["text_format"][$graph_item_id] = str_replace(":", "\:", $graph_variables["text_format"][$graph_item_id]); /* escape colons */
 
 				if (substr_count($graph_item["value"], ":")) {
 					$value_array = explode(":", $graph_item["value"]);
@@ -2104,14 +2024,14 @@ function rrd_substitute_host_query_data($txt_graph_item, $graph, $graph_item) {
 
 /* rrdtool_cacti_compare 	compares cacti information to rrd file information
  * @arg $data_source_id		the id of the data source
- * returns					html code
+ * @arg $info				rrdtool info as an array
+ * returns					array build like $info defining html class in case of error
  */
-function rrdtool_cacti_compare($data_source_id) {
-	global $colors, $data_source_types, $consolidation_functions;
-	include_once(CACTI_BASE_PATH . "/lib/time.php");
+function rrdtool_cacti_compare($data_source_id, &$info) {
+	global $data_source_types, $consolidation_functions;
 
 	/* get cacti header information for given data source id */
-	$cacti_header = db_fetch_row("SELECT " .
+	$cacti_header_array = db_fetch_row("SELECT " .
 										"local_data_template_data_id, " .
 										"rrd_step " .
 									"FROM " .
@@ -2122,7 +2042,7 @@ function rrdtool_cacti_compare($data_source_id) {
 	$cacti_file = get_data_source_path($data_source_id, true);
 
 	/* get cacti DS information */
-	$cacti_ds = db_fetch_assoc("SELECT " .
+	$cacti_ds_array = db_fetch_assoc("SELECT " .
 									"data_source_name, " .
 									"data_source_type_id, " .
 									"rrd_heartbeat, " .
@@ -2134,7 +2054,7 @@ function rrdtool_cacti_compare($data_source_id) {
 									"local_data_id = $data_source_id");
 
 	/* get cacti RRA information */
-	$cacti_rra = db_fetch_assoc("SELECT " .
+	$cacti_rra_array = db_fetch_assoc("SELECT " .
 									"rra_cf.consolidation_function_id AS cf, " .
 									"rra.x_files_factor AS xff, " .
 									"rra.steps AS steps, " .
@@ -2144,177 +2064,370 @@ function rrdtool_cacti_compare($data_source_id) {
 									"rra_cf, " .
 									"data_template_data_rra " .
 								"WHERE " .
-									"data_template_data_rra.data_template_data_id = " . $cacti_header["local_data_template_data_id"] .	" AND " .
+									"data_template_data_rra.data_template_data_id = " . $cacti_header_array["local_data_template_data_id"] .	" AND " .
 									"data_template_data_rra.rra_id = rra.id AND " .
 									"rra_cf.rra_id = rra.id " .
 								"ORDER BY " .
 									"rra_cf.consolidation_function_id, " .
 									"rra.steps");
 
-	/* get the rrd file name */
-	$rrd_output = rrdtool_execute("info $cacti_file");
-	/* get rrdtool info for given file */
-	$rrd_dump = rrdtool_function_info($data_source_id);
-	/* reformat time-since-epoch to a more human readable format */
-	$date_fmt = date("D, " . date_time_format() . " T", $rrd_dump["last_update"]);
 
-	html_start_box("<strong>" . __("Compare Cacti to current RRD File") . " </strong> [$cacti_file]", "100", $colors["header"], "3", "center", "");
-
+	$diff = array();
 	/* -----------------------------------------------------------------------------------
 	 * header information
-	   -----------------------------------------------------------------------------------*/
-	$display_text = array(
-		__("Cacti Step Size"),
-		__("RRD File Step Size"),
-		__("RRD File Version"),
-		__("RRD File Last Update"));
-
-	html_header($display_text, 1, false);
-	form_alternate_row_color();
-	print "\t<td>" . $cacti_header["rrd_step"] . "</td>\n";
-	if ($cacti_header["rrd_step"] != $rrd_dump["step"]) {$error_class = " class=textError";} else {$error_class = "";}
-	print "\t<td$error_class>" . $rrd_dump["step"] . "</td>\n";
-	print "\t<td>" . $rrd_dump["rrd_version"] . "</td>\n";
-	print "\t<td>" . $rrd_dump["last_update"] . "<br>" . $date_fmt . "</td>\n";
-
-	form_end_row();
+	 -----------------------------------------------------------------------------------*/
+	if ($cacti_header_array["rrd_step"] != $info["step"]) {
+		$diff["step"] = __("required rrd step size is '%s'", $cacti_header_array["rrd_step"]);
+	}
 
 	/* -----------------------------------------------------------------------------------
 	 * data source information
-	   -----------------------------------------------------------------------------------*/
-	$display_text = array(
-		__("Name"),
-		__("Cacti DS Type"),
-		__("Cacti Heartbeat"),
-		__("Cacti Min"),
-		__("Cacti Max"),
-		__("RRD File DS Type"),
-		__("RRD File Heartbeat"),
-		__("RRD File Min"),
-		__("RRD File Max"));
-
-	html_header($display_text, 1, false);
-	/* print all data sources known to cacti and add those from matching rrd file */
-	if (sizeof($cacti_ds) > 0) {
-		foreach ($cacti_ds as $data_source) {
+	 -----------------------------------------------------------------------------------*/
+	if (sizeof($cacti_ds_array) > 0) {
+		foreach ($cacti_ds_array as $key => $data_source) {
 			$ds_name = $data_source["data_source_name"];
 
-			form_alternate_row_color();
-			print "\t<td>" . $data_source["data_source_name"] . "</td>\n";
-			print "\t<td>" . $data_source_types[$data_source["data_source_type_id"]] . "</td>\n";
-			print "\t<td>" . $data_source["rrd_heartbeat"] . "</td>\n";
-			print "\t<td>" . $data_source["rrd_minimum"] . "</td>\n";
-			print "\t<td>" . $data_source["rrd_maximum"] . "</td>\n";
 			/* try to print matching rrd file's ds information */
-			if (isset($rrd_dump["ds"][$ds_name]) ) {
-				$ds_type = trim($rrd_dump["ds"][$ds_name]["type"], '"');
-				if ($data_source_types[$data_source["data_source_type_id"]] != $ds_type) {$error_class = " class=textError";} else {$error_class = "";}
-				print "\t<td$error_class>$ds_type</td>\n";
+			if (isset($info["ds"][$ds_name]) ) {
+				if (!isset($info["ds"][$ds_name]["seen"])) {
+					$info["ds"][$ds_name]["seen"] = TRUE;
+				} else {
+					continue;
+				}
 
-				if ($data_source["rrd_heartbeat"] != $rrd_dump["ds"][$ds_name]["minimal_heartbeat"]) {$error_class = " class=textError";} else {$error_class = "";}
-				print "\t<td$error_class>" . $rrd_dump["ds"][$ds_name]["minimal_heartbeat"] . "</td>\n";
+				$ds_type = trim($info["ds"][$ds_name]["type"], '"');
+				if ($data_source_types[$data_source["data_source_type_id"]] != $ds_type) {
+					$diff["ds"][$ds_name]["type"] = __("type for data source '%s' should be '%s'", $ds_name, $data_source_types[$data_source["data_source_type_id"]]);
+					$diff["tune"][] = $info["filename"] . " " . "--data-source-type " . $ds_name . ":" . $data_source_types[$data_source["data_source_type_id"]];
+				}
 
-				if ($data_source["rrd_minimum"] != $rrd_dump["ds"][$ds_name]["min"]) {$error_class = " class=textError";} else {$error_class = "";}
-				print "\t<td$error_class>" . floatval($rrd_dump["ds"][$ds_name]["min"]) . "</td>\n";
+				if ($data_source["rrd_heartbeat"] != $info["ds"][$ds_name]["minimal_heartbeat"]) {
+					$diff["ds"][$ds_name]["minimal_heartbeat"] = __("heartbeat for data source '%s' should be '%s'", $ds_name, $data_source["rrd_heartbeat"]);
+					$diff["tune"][] = $info["filename"] . " " . "--heartbeat " . $ds_name . ":" . $data_source["rrd_heartbeat"];
+				}
 
-				if ($data_source["rrd_maximum"] != $rrd_dump["ds"][$ds_name]["max"]) {$error_class = " class=textError";} else {$error_class = "";}
-				print "\t<td$error_class>" . floatval($rrd_dump["ds"][$ds_name]["max"]) . "</td>\n";
-				/* remove this element to keep track of those that were already printed */
-				unset($rrd_dump["ds"][$ds_name]);
+				if ($data_source["rrd_minimum"] != $info["ds"][$ds_name]["min"]) {
+					$diff["ds"][$ds_name]["min"] = __("rrd minimum for data source '%s' should be '%s'", $ds_name, $data_source["rrd_minimum"]);
+					$diff["tune"][] = $info["filename"] . " " . "--maximum " . $ds_name . ":" . $data_source["rrd_minimum"];
+				}
+
+				if ($data_source["rrd_maximum"] != $info["ds"][$ds_name]["max"]) {
+					$diff["ds"][$ds_name]["max"] = __("rrd maximum for data source '%s' should be '%s'", $ds_name, $data_source["rrd_maximum"]);
+					$diff["tune"][] = $info["filename"] . " " . "--minimum " . $ds_name . ":" . $data_source["rrd_maximum"];
+				}
 			} else {
-				print "\t<td class=textError>n/a</td>\n";
-				print "\t<td class=textError>n/a</td>\n";
-				print "\t<td class=textError>n/a</td>\n";
-				print "\t<td class=textError>n/a</td>\n";
+				# cacti knows this ds, but the rrd file does not
+				$info["ds"][$ds_name]["type"] = $data_source_types[$data_source["data_source_type_id"]];
+				$info["ds"][$ds_name]["minimal_heartbeat"] = $data_source["rrd_heartbeat"];
+				$info["ds"][$ds_name]["min"] = $data_source["rrd_minimum"];
+				$info["ds"][$ds_name]["max"] = $data_source["rrd_maximum"];
+				$info["ds"][$ds_name]["seen"] = TRUE;
+				$diff["ds"][$ds_name]["error"] = __("DS '%s' missing in rrd file", $ds_name);
 			}
-			form_end_row();
-
 		}
 	}
 	/* print all data sources still known to the rrd file (no match to cacti ds will happen here) */
-	if (sizeof($rrd_dump["ds"]) > 0) {
-		foreach ($rrd_dump["ds"] as $ds_name => $data_source) {
-			form_alternate_row_color();
-			print "\t<td>" . $ds_name. "</td>\n";
-			print "\t<td class=textError>n/a</td>\n";
-			print "\t<td class=textError>n/a</td>\n";
-			print "\t<td class=textError>n/a</td>\n";
-			print "\t<td class=textError>n/a</td>\n";
-			print "\t<td>" . trim($rrd_dump["ds"][$ds_name]["type"], '"') . "</td>\n";
-			print "\t<td>" . $rrd_dump["ds"][$ds_name]["minimal_heartbeat"] . "</td>\n";
-			print "\t<td>" . floatval($rrd_dump["ds"][$ds_name]["min"]) . "</td>\n";
-			print "\t<td>" . floatval($rrd_dump["ds"][$ds_name]["max"]) . "</td>\n";
-			/* remove this element to keep track of those that were already printed */
-			unset($rrd_dump["ds"][$ds_name]);
-			form_end_row();
+	if (sizeof($info["ds"]) > 0) {
+		foreach ($info["ds"] as $ds_name => $data_source) {
+			if (!isset($data_source["seen"])) {
+				$diff["ds"][$ds_name]["error"] = __("DS '%s' missing in cacti definition", $ds_name);
+			}
 		}
 	}
 
 
 	/* -----------------------------------------------------------------------------------
 	 * RRA information
-	   -----------------------------------------------------------------------------------*/
-	$display_text = array(
-		__("Cacti CF"),
-		__("Cacti xff"),
-		__("Cacti Steps"),
-		__("Cacti Rows"),
-		__("RRD File CF"),
-		__("RRD File xff"),
-		__("RRD File Steps"),
-		__("RRD File Rows"));
-
-	html_header($display_text, 1, false);
-	/* print all RRAs known to cacti and add those from matching rrd file */
-	if (sizeof($cacti_rra) > 0) {
-		foreach($cacti_rra as $rra) {
-			form_alternate_row_color();
-			print "\t<td>" . $consolidation_functions{$rra["cf"]} . "</td>\n";
-			print "\t<td>" . $rra["xff"] . "</td>\n";
-			print "\t<td>" . $rra["steps"] . "</td>\n";
-			print "\t<td>" . $rra["rows"] . "</td>\n";
-			/* find matching rra info from rrd file
-			 * do NOT assume, that rra sequence is kept!
-			 * Match is assumed, if CF and STEPS/PDP_PER_ROW match; so go for it */
-			foreach ($rrd_dump["rra"] as $key => $file_rra) {
-				if ($consolidation_functions{$rra["cf"]} == trim($file_rra["cf"], '"') &&
-					$rra["steps"] == $file_rra["pdp_per_row"]) {
-					/* next element must match due to preceding if stmt */
-					print "\t<td>" . trim($file_rra["cf"], '"') . "</td>\n";
-
-					if ($rra["xff"] != $file_rra["xff"]) {$error_class = " class=textError";} else {$error_class = "";}
-					print "\t<td$error_class>" . floatval($file_rra["xff"]) . "</td>\n";
-
-					/* next element must match due to preceding if stmt */
-					print "\t<td>" . $file_rra["pdp_per_row"] . "</td>\n";
-
-					if ($rra["rows"] != $file_rra["rows"]) {$error_class = " class=textError";} else {$error_class = "";}
-					print "\t<td$error_class>" . $file_rra["rows"] . "</td>\n";
-					/* remove this element to keep track of those that were already printed */
-					unset($rrd_dump["rra"][$key]);
+	 -----------------------------------------------------------------------------------*/
+	$resize = TRUE;		# assume a resize operation as long as no rra duplicates are found
+	# scan cacti rra information for duplicates of (CF, STEPS)
+	if (sizeof($cacti_rra_array) > 0) {
+		for ($i=0; $i<= sizeof($cacti_rra_array); $i++) {
+			$cf = $cacti_rra_array{$i}["cf"];
+			$steps = $cacti_rra_array{$i}["steps"];
+			foreach($cacti_rra_array as $cacti_rra_id => $cacti_rra) {
+				if ($cf == $cacti_rra["cf"] && $steps == $cacti_rra["steps"] && ($i != $cacti_rra_id)) {
+					$diff['rra'][$i]["error"] = __("Cacti RRA '%s' has same cf/steps (%s, %s) as '%s'", $i, $consolidation_functions{$cf}, $steps, $cacti_rra_id);
+					$diff['rra'][$cacti_rra_id]["error"] = __("Cacti RRA '%s' has same cf/steps (%s, %s) as '%s'", $cacti_rra_id, $consolidation_functions{$cf}, $steps, $i);
+					$resize = FALSE;
 				}
 			}
-			form_end_row();
 		}
 	}
-	/* print all RRAs still known to the rrd file (no match to cacti rra will happen here) */
-	if (sizeof($rrd_dump["rra"]) > 0) {
-		foreach ($rrd_dump["rra"] as $rra_id => $file_rra) {
-			form_alternate_row_color();
-			print "\t<td class=textError>n/a</td>\n";
-			print "\t<td class=textError>n/a</td>\n";
-			print "\t<td class=textError>n/a</td>\n";
-			print "\t<td class=textError>n/a</td>\n";
-			print "\t<td>" . trim($file_rra["cf"], '"') . "</td>\n";
-			print "\t<td>" . floatval($file_rra["xff"]) . "</td>\n";
-			print "\t<td>" . $file_rra["pdp_per_row"] . "</td>\n";
-			print "\t<td>" . $file_rra["rows"] . "</td>\n";
-			/* remove this element to keep track of those that were already printed */
-			unset($rrd_dump["rra"][$rra_id]);
-			form_end_row();
+	# scan file rra information for duplicates of (CF, PDP_PER_ROWS)
+	if (sizeof($info['rra']) > 0) {
+		for ($i=0; $i<= sizeof($info['rra']); $i++) {
+			$cf = $info['rra']{$i}["cf"];
+			$steps = $info['rra']{$i}["pdp_per_row"];
+			foreach($info['rra'] as $file_rra_id => $file_rra) {
+				if (($cf == $file_rra["cf"]) && ($steps == $file_rra["pdp_per_row"]) && ($i != $file_rra_id)) {
+					$diff['rra'][$i]["error"] = __("File RRA '%s' has same cf/steps (%s, %s) as '%s'", $i, $cf, $steps, $file_rra_id);
+					$diff['rra'][$file_rra_id]["error"] = __("File RRA '%s' has same cf/steps (%s, %s) as '%s'", $file_rra_id, $cf, $steps, $i);
+					$resize = FALSE;
+				}
+			}
 		}
 	}
+
+	/* print all RRAs known to cacti and add those from matching rrd file */
+	if (sizeof($cacti_rra_array) > 0) {
+		foreach($cacti_rra_array as $cacti_rra_id => $cacti_rra) {
+			/* find matching rra info from rrd file
+			 * do NOT assume, that rra sequence is kept ($cacti_rra_id != $file_rra_id may happen)!
+			 * Match is assumed, if CF and STEPS/PDP_PER_ROW match; so go for it */
+			foreach ($info['rra'] as $file_rra_id => $file_rra) {
+
+				if ($consolidation_functions{$cacti_rra["cf"]} == trim($file_rra["cf"], '"') &&
+					$cacti_rra["steps"] == $file_rra["pdp_per_row"]) {
+
+					if (!isset($info['rra'][$file_rra_id]["seen"])) {
+						# mark both rra id's as seen to avoid printing them as non-matching
+						$info['rra'][$file_rra_id]["seen"] = TRUE;
+						$cacti_rra_array[$cacti_rra_id]["seen"] = TRUE;
+					} else {
+						continue;
+					}
+
+					if ($cacti_rra["xff"] != $file_rra["xff"]) {
+						$diff['rra'][$file_rra_id]["xff"] = __("xff for cacti rra id '%s' should be '%s'", $cacti_rra_id, $cacti_rra["xff"]);
+					}
+
+					if ($cacti_rra["rows"] != $file_rra["rows"] && $resize) {
+						$diff['rra'][$file_rra_id]["rows"] = __("number of rows for cacti rra id '%s' should be '%s'", $cacti_rra_id, $cacti_rra["rows"]);
+						if ($cacti_rra["rows"] > $file_rra["rows"]) {
+							$diff["resize"][] = $info["filename"] . " " . $cacti_rra_id . " GROW " . ($cacti_rra["rows"] - $file_rra["rows"]);
+						} else {
+							$diff["resize"][] = $info["filename"] . " " . $cacti_rra_id . " SHRINK " . ($file_rra["rows"] - $cacti_rra["rows"]);
+						}
+					}
+				}
+			}
+			# if cacti knows an rra that has no match, consider this as an error
+			if (!isset($cacti_rra_array[$cacti_rra_id]["seen"])) {
+				# add to info array for printing, the index $cacti_rra_id has no real meaning
+				$info['rra']["cacti_" . $cacti_rra_id]["cf"] = $consolidation_functions{$cacti_rra["cf"]};
+				$info['rra']["cacti_" . $cacti_rra_id]["steps"] = $cacti_rra["steps"];
+				$info['rra']["cacti_" . $cacti_rra_id]["xff"] = $cacti_rra["xff"];
+				$info['rra']["cacti_" . $cacti_rra_id]["rows"] = $cacti_rra["rows"];
+				$diff['rra']["cacti_" . $cacti_rra_id]["error"] = __("RRA '%s' missing in rrd file", $cacti_rra_id);
+			}
+		}
+	}
+
+	# if the rrd file has an rra that has no cacti match, consider this as an error
+	if (sizeof($info['rra']) > 0) {
+		foreach ($info['rra'] as $file_rra_id => $file_rra) {
+			if (!isset($info['rra'][$file_rra_id]["seen"])) {
+				$diff['rra'][$file_rra_id]["error"] = __("RRA '%s' missing in cacti definition", $file_rra_id);
+			}
+		}
+	}
+
+	return $diff;
+
+}
+
+/* rrdtool_tune			- create rrdtool tune/resize commands
+ * 						  html+cli enabled
+ * @arg $rrd_file		- rrd file name
+ * @arg $diff			- array of discrepancies between cacti setttings and rrd file info
+ * @arg $show_source	- only show text+commands or execute all commands, execute is for cli mode only!
+ */
+function rrdtool_tune($rrd_file, $diff, $show_source=TRUE) {
+
+	function print_leaves($array, $nl) {
+		foreach ($array as $key => $line) {
+			if (!is_array($line)) {
+				print $line . $nl;
+			} else {
+				if ($key === "tune") continue;
+				if ($key === "resize") continue;
+				print_leaves($line, $nl);
+			}
+		}
+
+	}
+
+
+	$cmd = array();
+	# for html/cli mode
+	if (!isset($_SERVER["argv"][0]) || isset($_SERVER['REQUEST_METHOD'])  || isset($_SERVER['REMOTE_ADDR'])) {
+		$nl = "<br/>";
+	} else {
+		$nl = "\n";
+	}
+
+	if ($show_source && sizeof($diff)) {
+		# print error descriptions
+		print_leaves($diff, $nl);
+	}
+
+	if (sizeof($diff["tune"])) {
+		# create tune commands
+		foreach ($diff["tune"] as $line) {
+			if ($show_source == true) {
+				print read_config_option("path_rrdtool") . " tune " . $line . $nl;
+			}else{
+				rrdtool_execute("tune $line", true, RRDTOOL_OUTPUT_STDOUT, array(), "POLLER");
+			}
+		}
+	}
+
+	if (sizeof($diff["resize"])) {
+		# each resize goes into an extra line
+		foreach ($diff["resize"] as $line) {
+			if ($show_source == true) {
+				print read_config_option("path_rrdtool") . " resize " . $line . $nl;
+				print __("rename %s to %s", dirname($rrd_file) . "/resize.rrd", $rrd_file) . $nl;
+			}else{
+				rrdtool_execute("resize $line", true, RRDTOOL_OUTPUT_STDOUT, array(), "POLLER");
+				rename(dirname($rrd_file) . "/resize.rrd", $rrd_file);
+			}
+		}
+	}
+}
+
+/* rrd_check - Given a data source id, check the rrdtool file to the data source definition
+   @arg $data_source_id - data source id
+   @rerturn - (array) an array containing issues with the rrdtool file definition vs data source */
+function rrd_check($data_source_id) {
+	global $config, $rrd_tune_array;
+
+	$data_source_name = get_data_source_item_name($rrd_tune_array["data_source_id"]);
+	$data_source_type = $data_source_types{$rrd_tune_array["data-source-type"]};
+	$data_source_path = get_data_source_path($rrd_tune_array["data_source_id"], true);
+
+
+}
+
+/* rrd_repair - Given a data source id, update the rrdtool file to match the data source definition
+   @arg $data_source_id - data source id
+   @rerturn - 1 success, 2 false */
+function rrd_repair($data_source_id) {
+	global $config, $rrd_tune_array;
+
+	$data_source_name = get_data_source_item_name($rrd_tune_array["data_source_id"]);
+	$data_source_type = $data_source_types{$rrd_tune_array["data-source-type"]};
+	$data_source_path = get_data_source_path($rrd_tune_array["data_source_id"], true);
+
+
+}
+
+/* rrdtool_function_info - given a data source id, return rrdtool info array
+   @arg $data_source_id - data source id
+   @returns - (array) an array containing all data from rrdtool info command */
+function rrdtool_function_info($data_source_id) {
+	global $config;
+
+	/* Get the path to rrdtool file */
+	$data_source_path = get_data_source_path($data_source_id, true);
+
+	/* Execute rrdtool info command */
+	$cmd_line = " info " . $data_source_path;
+	$output = rrdtool_execute($cmd_line, RRDTOOL_OUTPUT_NULL, RRDTOOL_OUTPUT_STDOUT);
+	if (sizeof($output) == 0) {
+		return false;
+	}
+
+	/* Parse the output */
+	$matches = array();
+	$rrd_info = array( 'rra' => array(), "ds" => array() );
+	$output = explode("\n", $output);
+	foreach ($output as $line) {
+		$line = trim($line);
+		if (preg_match("/^ds\[(\S+)\]\.(\S+) = (\S+)$/", $line, $matches)) {
+			$rrd_info["ds"][$matches[1]][$matches[2]] = $matches[3];
+		} elseif (preg_match("/^rra\[(\S+)\]\.(\S+)\[(\S+)\]\.(\S+) = (\S+)$/", $line, $matches)) {
+			$rrd_info['rra'][$matches[1]][$matches[2]][$matches[3]][$matches[4]] = $matches[5];
+		} elseif (preg_match("/^rra\[(\S+)\]\.(\S+) = (\S+)$/", $line, $matches)) {
+			$rrd_info['rra'][$matches[1]][$matches[2]] = $matches[3];
+		} elseif (preg_match("/^(\S+) = \"(\S+)\"$/", $line, $matches)) {
+			$rrd_info[$matches[1]] = $matches[2];
+		} elseif (preg_match("/^(\S+) = (\S+)$/", $line, $matches)) {
+			$rrd_info[$matches[1]] = $matches[2];
+		}
+	}
+	$output = "";
+	$matches = array();
+
+	/* Return parsed values */
+	return $rrd_info;
+
+}
+
+/* rrdtool_info2html	- take output from rrdtool info array and build html table
+ * returns				  html code
+ */
+function rrdtool_info2html($info_array, $diff=array()) {
+	global $colors;
+
+	html_start_box("<strong>" . __("RRD File Information") . "</strong>", "100", $colors["header"], 0, "center", "");
+
+	# header data
+	$header_items = array(__("Header"), '');
+	print "<tr><td>";
+	html_header($header_items, 1, false, 'info_header');
+	# add human readable timestamp
+	if (isset($info_array["last_update"])) {
+		$info_array["last_update"] .= " [" . date(date_time_format(), $info_array["last_update"]) . "]";
+	}
+	$loop = array(
+		"filename" 		=> $info_array["filename"],
+		"rrd_version"	=> $info_array["rrd_version"],
+		"step" 			=> $info_array["step"],
+		"last_update"	=> $info_array["last_update"]);
+	foreach ($loop as $key => $value) {
+		form_alternate_row_color($key, true);
+		form_selectable_cell($key, 'key');
+		form_selectable_cell($value, 'value', "", ((isset($diff[$key]) ? "textError" : "")));
+		form_end_row();
+	}
+	form_end_table();
+
+	# data sources
+	$header_items = array(__("Data Source Items"), __('Type'), __('Minimal Heartbeat'), __('Min'), __('Max'), __('Last DS'), __('Value'), __('Unkown Sec'));
+	print "<tr><td>";
+	html_header($header_items, 1, false, 'info_ds');
+	if (sizeof($info_array["ds"]) > 0) {
+		foreach ($info_array["ds"] as $key => $value) {
+			form_alternate_row_color('line' . $key, true);
+			form_selectable_cell($key, 																			'name', 				"", (isset($diff["ds"][$key]["error"]) 				? "textError" : ""));
+			form_selectable_cell((isset($value['type']) 				? $value['type'] : ''), 				'type', 				"", (isset($diff["ds"][$key]['type']) 				? "textError" : ""));
+			form_selectable_cell((isset($value['minimal_heartbeat']) 	? $value['minimal_heartbeat'] : ''), 	'minimal_heartbeat', 	"", (isset($diff["ds"][$key]['minimal_heartbeat'])	? "textError" : ""));
+			form_selectable_cell((isset($value['min']) 					? floatval($value['min']) : ''), 		'min', 					"", (isset($diff["ds"][$key]['min']) 				? "textError" : ""));
+			form_selectable_cell((isset($value['max']) 					? floatval($value['max']) : ''), 		'max', 					"", (isset($diff["ds"][$key]['max']) 				? "textError" : ""));
+			form_selectable_cell((isset($value['last_ds']) 				? $value['last_ds'] : ''), 				'last_ds');
+			form_selectable_cell((isset($value['value']) 				? floatval($value['value']) : ''), 		'value');
+			form_selectable_cell((isset($value['unknown_sec']) 			? $value['unknown_sec'] : ''), 			'unknown_sec');
+			form_end_row();
+		}
+		form_end_table();
+	}
+
+
+	# round robin archive
+	$header_items = array(__("Round Robin Archive"), __('Consolidation Function'), __('Rows'), __('Cur Row'), __('PDP per Row'), __('X Files Factor'), __('CDP Prep Value (0)'), __('CDP Unknown Datapoints (0)'));
+	print "<tr><td>";
+	html_header($header_items, 1, false, 'info_rra');
+	if (sizeof($info_array['rra']) > 0) {
+		foreach ($info_array['rra'] as $key => $value) {
+			form_alternate_row_color('line_' . $key, true);
+			form_selectable_cell($key, 																										'name', 			"", (isset($diff['rra'][$key]["error"]) ? "textError" : ""));
+			form_selectable_cell((isset($value['cf']) 								? $value['cf'] : ''), 									'cf');
+			form_selectable_cell((isset($value['rows']) 							? $value['rows'] : ''), 								'rows', 			"", (isset($diff['rra'][$key]['rows']) 	? "textError" : ""));
+			form_selectable_cell((isset($value['cur_row']) 							? $value['cur_row'] : ''), 								'cur_row');
+			form_selectable_cell((isset($value['pdp_per_row']) 						? $value['pdp_per_row'] : ''), 							'pdp_per_row');
+			form_selectable_cell((isset($value['xff']) 								? floatval($value['xff']) : ''), 						'xff', 				"", (isset($diff['rra'][$key]['xff']) 	? "textError" : ""));
+			form_selectable_cell((isset($value['cdp_prep'][0]['value']) 			? (strtolower($value['cdp_prep'][0]['value']) == "nan") ? $value['cdp_prep'][0]['value'] : floatval($value['cdp_prep'][0]['value']) : ''), 'value');
+			form_selectable_cell((isset($value['cdp_prep'][0]['unknown_datapoints'])? $value['cdp_prep'][0]['unknown_datapoints'] : ''), 	'unknown_datapoints');
+			form_end_row();
+		}
+		form_end_table();
+	}
+
+
+	print "</table></td></tr>";		/* end of html_header */
+
 
 	html_end_box();
-
 }
