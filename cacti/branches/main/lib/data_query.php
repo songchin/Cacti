@@ -198,14 +198,14 @@ function query_snmp_host($host_id, $snmp_query_id) {
 	}
 
 	/* the last octet of the oid is the index by default */
-	$index_parse_regexp = '.*\.([0-9]+)$';
+	$index_parse_regexp = '/.*\.([0-9]+)$/';
 
 	/* parse the index if required */
 	if (isset($snmp_queries["oid_index_parse"])) {
 		$index_parse_regexp = str_replace("OID/REGEXP:", "", $snmp_queries["oid_index_parse"]);
 
 		for ($i=0; $i<sizeof($snmp_indexes); $i++) {
-			$snmp_indexes[$i]["value"] = ereg_replace($index_parse_regexp, "\\1", $snmp_indexes[$i]["oid"]);
+			$snmp_indexes[$i]["value"] = preg_replace($index_parse_regexp, "\\1", $snmp_indexes[$i]["oid"]);
 			debug_log_insert("data_query", __("index_parse at OID: '%s' results: '%s'", $snmp_indexes[$i]["oid"], $snmp_indexes[$i]["value"]));
 		}
 	}

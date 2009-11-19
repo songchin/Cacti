@@ -26,7 +26,7 @@ define("RRD_NL", " \\\n");
 define("MAX_FETCH_CACHE_SIZE", 5);
 
 function escape_command($command) {
-	return ereg_replace("(\\\$|`)", "", $command);
+	return preg_replace("/(\\\$|`)/", "", $command);
 }
 
 function rrd_init($output_to_term = TRUE) {
