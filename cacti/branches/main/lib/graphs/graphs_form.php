@@ -239,7 +239,7 @@ function form_actions() {
 
 				graph_to_graph_template($selected_items[$i], get_request_var_post("title_format"));
 			}
-		}elseif (ereg("^tr_([0-9]+)$", get_request_var_post("drp_action"), $matches)) { /* place on tree */
+		}elseif (preg_match("/^tr_([0-9]+)$/", get_request_var_post("drp_action"), $matches)) { /* place on tree */
 			for ($i=0;($i<count($selected_items));$i++) {
 				/* ================= input validation ================= */
 				input_validate_input_number($selected_items[$i]);
@@ -303,7 +303,7 @@ function form_actions() {
 
 	/* loop through each of the graphs selected on the previous page and get more info about them */
 	while (list($var,$val) = each($_POST)) {
-		if (ereg("^chk_([0-9]+)$", $var, $matches)) {
+		if (preg_match("/^chk_([0-9]+)$/", $var, $matches)) {
 			/* ================= input validation ================= */
 			input_validate_input_number($matches[1]);
 			/* ==================================================== */
@@ -388,7 +388,7 @@ function form_actions() {
 					</td>
 				</tr>\n
 				";
-		}elseif (ereg("^tr_([0-9]+)$", get_request_var_post("drp_action"), $matches)) { /* place on tree */
+		}elseif (preg_match("/^tr_([0-9]+)$/", get_request_var_post("drp_action"), $matches)) { /* place on tree */
 			print "	<tr>
 					<td class='textArea'>
 						<p>" . __("When you click save, the following graphs will be placed under the branch selected below.") . "</p>
@@ -686,13 +686,13 @@ function graph_diff() {
 		if (empty($graph_preview_item_values["task_item_id"])) { $graph_preview_item_values["task_item_id"] = "No Task"; }
 
 		switch (true) {
-		case ereg("(AREA|STACK|GPRINT|LINE[123])", $_graph_type_name):
+		case preg_match("/(AREA|STACK|GPRINT|LINE[123])/", $_graph_type_name):
 			$matrix_title = "(" . $graph_preview_item_values["task_item_id"] . "): " . $graph_preview_item_values["text_format"];
 			break;
-		case ereg("(HRULE|VRULE)", $_graph_type_name):
+		case preg_match("/(HRULE|VRULE)/", $_graph_type_name):
 			$matrix_title = "HRULE: " . $graph_preview_item_values["value"];
 			break;
-		case ereg("(COMMENT)", $_graph_type_name):
+		case preg_match("/(COMMENT)/", $_graph_type_name):
 			$matrix_title = "COMMENT: " . $graph_preview_item_values["text_format"];
 			break;
 		}

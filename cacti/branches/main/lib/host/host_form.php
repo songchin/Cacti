@@ -35,7 +35,7 @@ function api_host_form_save() {
 	 */
 	$reindex_performed = false;
 	while (list($var,$val) = each($_POST)) {
-		if (ereg("^reindex_method_host_([0-9]+)_query_([0-9]+)_method_([0-9]+)$", $var, $matches)) {
+		if (preg_match("/^reindex_method_host_([0-9]+)_query_([0-9]+)_method_([0-9]+)$/", $var, $matches)) {
 			/* ================= input validation ================= */
 			input_validate_input_number(get_request_var_post("id"));
 			input_validate_input_number($matches[1]); # host
@@ -319,7 +319,7 @@ function api_host_form_actions() {
 			}
 
 			api_device_remove_multi($devices_to_act_on);
-		}elseif (ereg("^tr_([0-9]+)$", get_request_var_post("drp_action"), $matches)) { /* place on tree */
+		}elseif (preg_match("/^tr_([0-9]+)$/", get_request_var_post("drp_action"), $matches)) { /* place on tree */
 			for ($i=0;($i<count($selected_items));$i++) {
 				/* ================= input validation ================= */
 				input_validate_input_number($selected_items[$i]);
@@ -342,7 +342,7 @@ function api_host_form_actions() {
 
 	/* loop through each of the host templates selected on the previous page and get more info about them */
 	while (list($var,$val) = each($_POST)) {
-		if (ereg("^chk_([0-9]+)$", $var, $matches)) {
+		if (preg_match("/^chk_([0-9]+)$/", $var, $matches)) {
 			/* ================= input validation ================= */
 			input_validate_input_number($matches[1]);
 			/* ==================================================== */
@@ -387,7 +387,7 @@ function api_host_form_actions() {
 
 			$form_array = array();
 			while (list($field_name, $field_array) = each($fields_host_edit_availability)) {
-				if (ereg("(^snmp_|max_oids)", $field_name)) {
+				if (preg_match("/(^snmp_|max_oids)/", $field_name)) {
 					$form_array += array($field_name => $fields_host_edit_availability[$field_name]);
 
 					$form_array[$field_name]["value"] = "";
@@ -416,7 +416,7 @@ function api_host_form_actions() {
 
 			$form_array = array();
 			while (list($field_name, $field_array) = each($fields_host_edit_availability)) {
-				if (!ereg("(^snmp_|max_oids)", $field_name)) {
+				if (!preg_match("/(^snmp_|max_oids)/", $field_name)) {
 					$form_array += array($field_name => $fields_host_edit_availability[$field_name]);
 
 					$form_array[$field_name]["value"] = "";
@@ -491,7 +491,7 @@ function api_host_form_actions() {
 					"fields" => $form_array
 					)
 				);
-		}elseif (ereg("^tr_([0-9]+)$", get_request_var_post("drp_action"), $matches)) { /* place on tree */
+		}elseif (preg_match("/^tr_([0-9]+)$/", get_request_var_post("drp_action"), $matches)) { /* place on tree */
 			print "	<tr>
 					<td class='textArea'>
 						<p>" . __("When you click save, the following hosts will be placed under the branch selected below.") . "</p>
