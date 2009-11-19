@@ -51,7 +51,7 @@ if (read_config_option("auth_method") != 0) {
 if ((isset($_SESSION["sess_graph_view_url_cache"])) &&
 	(empty($_REQUEST["action"])) &&
 	(basename($_SERVER["PHP_SELF"]) == "graph_view.php") &&
-	(ereg("action=(tree|preview|list)", $_SESSION["sess_graph_view_url_cache"]))) {
+	(preg_match("/action=(tree|preview|list)/", $_SESSION["sess_graph_view_url_cache"]))) {
 
 	header("Location: " . $_SESSION["sess_graph_view_url_cache"]);
 }
@@ -67,7 +67,7 @@ if ($_REQUEST["action"] == "zoom") {
 }
 
 /* set the default action if none has been set */
-if ((!ereg('^(tree|list|preview)$', $_REQUEST["action"])) &&
+if ((!preg_match('/^(tree|list|preview)$/', $_REQUEST["action"])) &&
 	(basename($_SERVER["PHP_SELF"]) == "graph_view.php")) {
 
 	if (read_graph_config_option("default_view_mode") == "1") {

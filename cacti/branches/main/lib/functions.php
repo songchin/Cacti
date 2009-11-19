@@ -362,9 +362,9 @@ function form_input_validate($field_value, $field_name, $regexp_match, $allow_nu
 	}
 
 	/* php 4.2+ complains about empty regexps */
-	if (empty($regexp_match)) { $regexp_match = ".*"; }
+	if (empty($regexp_match)) { $regexp_match = "/.*/"; }
 
-	if ((!ereg($regexp_match, $field_value) || (($allow_nulls == false) && ($field_value == "")))) {
+	if ((!preg_match($regexp_match, $field_value) || (($allow_nulls == false) && ($field_value == "")))) {
 		raise_message($custom_message);
 
 		$_SESSION["sess_error_fields"][$field_name] = $field_name;
@@ -1577,7 +1577,7 @@ function get_graph_group($graph_template_item_id) {
 	}
 
 	/* a parent must NOT be the following graph item types */
-	if (ereg("(GPRINT|VRULE|HRULE|COMMENT)", $graph_item_types{$graph_item["graph_type_id"]})) {
+	if (preg_match("/(GPRINT|VRULE|HRULE|COMMENT)/", $graph_item_types{$graph_item["graph_type_id"]})) {
 		return;
 	}
 
@@ -2042,7 +2042,7 @@ function get_hash_graph_template($graph_template_id, $sub_type = "graph_template
 		$hash = db_fetch_cell("select hash from graph_template_input where id=$graph_template_id");
 	}
 
-	if (ereg("[a-fA-F0-9]{32}", $hash)) {
+	if (preg_match("/[a-fA-F0-9]{32}/", $hash)) {
 		return $hash;
 	}else{
 		return generate_hash();
@@ -2060,7 +2060,7 @@ function get_hash_data_template($data_template_id, $sub_type = "data_template") 
 		$hash = db_fetch_cell("select hash from data_template_rrd where id=$data_template_id");
 	}
 
-	if (ereg("[a-fA-F0-9]{32}", $hash)) {
+	if (preg_match("/[a-fA-F0-9]{32}/", $hash)) {
 		return $hash;
 	}else{
 		return generate_hash();
@@ -2078,7 +2078,7 @@ function get_hash_data_input($data_input_id, $sub_type = "data_input_method") {
 		$hash = db_fetch_cell("select hash from data_input_fields where id=$data_input_id");
 	}
 
-	if (ereg("[a-fA-F0-9]{32}", $hash)) {
+	if (preg_match("/[a-fA-F0-9]{32}/", $hash)) {
 		return $hash;
 	}else{
 		return generate_hash();
@@ -2096,7 +2096,7 @@ function get_hash_cdef($cdef_id, $sub_type = "cdef") {
 		$hash = db_fetch_cell("select hash from cdef_items where id=$cdef_id");
 	}
 
-	if (ereg("[a-fA-F0-9]{32}", $hash)) {
+	if (preg_match("/[a-fA-F0-9]{32}/", $hash)) {
 		return $hash;
 	}else{
 		return generate_hash();
@@ -2109,7 +2109,7 @@ function get_hash_cdef($cdef_id, $sub_type = "cdef") {
 function get_hash_gprint($gprint_id) {
 	$hash = db_fetch_cell("select hash from graph_templates_gprint where id=$gprint_id");
 
-	if (ereg("[a-fA-F0-9]{32}", $hash)) {
+	if (preg_match("/[a-fA-F0-9]{32}/", $hash)) {
 		return $hash;
 	}else{
 		return generate_hash();
@@ -2122,7 +2122,7 @@ function get_hash_gprint($gprint_id) {
 function get_hash_host_template($host_template_id) {
 	$hash = db_fetch_cell("select hash from host_template where id=$host_template_id");
 
-	if (ereg("[a-fA-F0-9]{32}", $hash)) {
+	if (preg_match("/[a-fA-F0-9]{32}/", $hash)) {
 		return $hash;
 	}else{
 		return generate_hash();
@@ -2144,7 +2144,7 @@ function get_hash_data_query($data_query_id, $sub_type = "data_query") {
 		$hash = db_fetch_cell("select hash from snmp_query_graph_sv where id=$data_query_id");
 	}
 
-	if (ereg("[a-fA-F0-9]{32}", $hash)) {
+	if (preg_match("/[a-fA-F0-9]{32}/", $hash)) {
 		return $hash;
 	}else{
 		return generate_hash();
@@ -2157,7 +2157,7 @@ function get_hash_data_query($data_query_id, $sub_type = "data_query") {
 function get_hash_round_robin_archive($rra_id) {
 	$hash = db_fetch_cell("select hash from rra where id=$rra_id");
 
-	if (ereg("[a-fA-F0-9]{32}", $hash)) {
+	if (preg_match("/[a-fA-F0-9]{32}/", $hash)) {
 		return $hash;
 	}else{
 		return generate_hash();
