@@ -699,7 +699,7 @@ function duplicate_host_template($_host_template_id, $host_template_title) {
 
 	reset($fields_host_template_edit);
 	while (list($field, $array) = each($fields_host_template_edit)) {
-		if (!ereg("^hidden", $array["method"])) {
+		if (!preg_match("/^hidden/", $array["method"])) {
 			$save[$field] = $host_template[$field];
 		}
 	}
@@ -736,7 +736,7 @@ function duplicate_cdef($_cdef_id, $cdef_title) {
 
 	reset($fields_cdef_edit);
 	while (list($field, $array) = each($fields_cdef_edit)) {
-		if (!ereg("^hidden", $array["method"])) {
+		if (!preg_match("/^hidden/", $array["method"])) {
 			$save[$field] = $cdef[$field];
 		}
 	}
