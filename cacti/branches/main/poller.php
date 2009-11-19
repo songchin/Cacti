@@ -81,7 +81,7 @@ foreach($parms as $parameter) {
 api_plugin_hook('poller_top');
 
 /* record the start time */
-list($micro,$seconds) = split(" ", microtime());
+list($micro,$seconds) = explode(" ", microtime());
 $poller_start         = $seconds + $micro;
 $overhead_time = 0;
 
@@ -192,7 +192,7 @@ $poller_items_total    = 0;
 
 while ($poller_runs_completed < $poller_runs) {
 	/* record the start time for this loop */
-	list($micro,$seconds) = split(" ", microtime());
+	list($micro,$seconds) = explode(" ", microtime());
 	$loop_start = $seconds + $micro;
 
 	/* calculate overhead time */
@@ -418,7 +418,7 @@ while ($poller_runs_completed < $poller_runs) {
 	$poller_runs_completed++;
 
 	/* record the start time for this loop */
-	list($micro,$seconds) = split(" ", microtime());
+	list($micro,$seconds) = explode(" ", microtime());
 	$loop_end = $seconds + $micro;
 
 	if (($loop_end - $loop_start) < $poller_interval) {
@@ -455,7 +455,7 @@ function log_cacti_stats($loop_start, $method, $concurrent_processes, $max_threa
 	global $poller_id;
 
 	/* take time and log performance data */
-	list($micro,$seconds) = split(" ", microtime());
+	list($micro,$seconds) = explode(" ", microtime());
 	$loop_end = $seconds + $micro;
 
 	$cacti_stats = sprintf(

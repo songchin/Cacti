@@ -57,7 +57,7 @@ if (CACTI_SERVER_OS == "win32") {
 }
 
 /* record the start time */
-list($micro,$seconds) = split(" ", microtime());
+list($micro,$seconds) = explode(" ", microtime());
 $start = $seconds + $micro;
 
 /* initialize the polling items */
@@ -481,7 +481,7 @@ if ((sizeof($polling_items) > 0) && (read_config_option("poller_enabled") == "on
 
 	if (($print_data_to_stdout) || (read_config_option("log_verbosity") >= POLLER_VERBOSITY_MEDIUM)) {
 		/* take time and log performance data */
-		list($micro,$seconds) = split(" ", microtime());
+		list($micro,$seconds) = explode(" ", microtime());
 		$end = $seconds + $micro;
 
 		if ($poller_id > 0) {

@@ -70,7 +70,7 @@ if (php_sapi_name() != "cli") {
 }
 
 /* record the script start time */
-list($micro,$seconds) = split(" ", microtime());
+list($micro,$seconds) = explode(" ", microtime());
 $start = $seconds + $micro;
 
 /* if multiple polling intervals are defined, compensate for them */
