@@ -429,7 +429,7 @@ function format_snmp_string($string, $snmp_oid_included) {
 		$string = eregi_replace("Hex-STRING: ?", "", $string);
 		$string = eregi_replace("Hex: ?", "", $string);
 
-		$string_array = split(" ", $string);
+		$string_array = explode(" ", $string);
 
 		/* loop through each string character and make ascii */
 		$string = "";
@@ -462,8 +462,8 @@ function format_snmp_string($string, $snmp_oid_included) {
 		/* strip of the 'hex:' */
 		$string = eregi_replace("hex: ?", "", $string);
 
-		/* split the hex on the delimiter */
-		$octets = preg_split("/\s|:/", $string);
+		/* explode the hex on the delimiter */
+		$octets = explode("\s|:", $string);
 
 		/* loop through each octet and format it accordingly */
 		for ($i=0;($i<count($octets));$i++) {

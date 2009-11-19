@@ -551,7 +551,7 @@ function array_rekey($array, $key, $key_value) {
 function timer_start() {
 	global $timer_start;
 
-	list($micro,$seconds) = split(" ", microtime());
+	list($micro,$seconds) = explode(" ", microtime());
 	$timer_start = $seconds + $micro;
 }
 
@@ -559,7 +559,7 @@ function timer_start() {
 function timer_end($message = "default") {
 	global $timer_start;
 
-	list($micro,$seconds) = split(" ", microtime());
+	list($micro,$seconds) = explode(" ", microtime());
 	$timer_end = $seconds + $micro;
 
 	echo "TIMER: '$message' Time:'" . ($timer_end - $timer_start) . "' seconds\n";
@@ -1932,7 +1932,7 @@ function draw_navigation_text() {
 
 	/* find the current page in the big array */
 	$current_array = $nav{$current_page . ":" . $current_action};
-	$current_mappings = split(",", $current_array["mapping"]);
+	$current_mappings = explode(",", $current_array["mapping"]);
 	$current_nav = "";
 
 	/* resolve all mappings to build the navigation string */
