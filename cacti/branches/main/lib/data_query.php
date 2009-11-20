@@ -263,10 +263,10 @@ function query_snmp_host($host_id, $snmp_query_id) {
  											$host["snmp_context"], $host["snmp_port"], $host["snmp_timeout"], SNMP_WEBUI);
 
  					if (substr($field_array["source"], 0, 13) == "VALUE/REGEXP:") {
-						$value = ereg_replace(str_replace("VALUE/REGEXP:", "", $field_array["source"]), "\\1", $value);
+						$value = preg_replace("/" . str_replace("VALUE/REGEXP:", "", $field_array["source"]) . "/", "\\1", $value);
 					}
 				} else if(substr($field_array["source"], 0, 11) == "OID/REGEXP:") {
-					$value = ereg_replace(str_replace("OID/REGEXP:", "", $field_array["source"]), "\\1", $oid);
+					$value = preg_replace("/" . str_replace("OID/REGEXP:", "", $field_array["source"]) . "/", "\\1", $oid);
 				}
 
 				debug_log_insert("data_query", __("Executing SNMP get for data") . " @ '$oid' [value='$value']");
@@ -286,7 +286,8 @@ function query_snmp_host($host_id, $snmp_query_id) {
 
 			if ($field_array["source"] == "value") {
 				for ($i=0; $i<sizeof($snmp_data); $i++) {
-					$snmp_index = ereg_replace(isset($field_array["oid_index_parse"]) ? $field_array["oid_index_parse"] : $index_parse_regexp, "\\1", $snmp_data[$i]["oid"]);
+					# Is this preg_replace functional? - JPP
+					$snmp_index = preg_replace(isset($field_array["oid_index_parse"]) ? $field_array["oid_index_parse"] : $index_parse_regexp, "\\1", $snmp_data[$i]["oid"]);
 
 					$oid = $field_array["oid"] . ".$snmp_index";
 
@@ -312,10 +313,10 @@ function query_snmp_host($host_id, $snmp_query_id) {
 				}
 			} elseif (substr($field_array["source"], 0, 11) == "OID/REGEXP:") {
 				for ($i=0; $i<sizeof($snmp_data); $i++) {
-					$value = ereg_replace(str_replace("OID/REGEXP:", "", $field_array["source"]), "\\1", $snmp_data[$i]["oid"]);
+					$value = preg_replace("/" . str_replace("OID/REGEXP:", "", $field_array["source"]) . "/", "\\1", $snmp_data[$i]["oid"]);
 
 					if (isset($snmp_queries["oid_index_parse"])) {
-						$snmp_index = ereg_replace($index_parse_regexp, "\\1", $snmp_data[$i]["oid"]);
+						$snmp_index = preg_replace("/" . $index_parse_regexp . "/", "\\1", $snmp_data[$i]["oid"]);
 					}else if ((isset($snmp_data[$i]["value"])) && ($snmp_data[$i]["value"] != "")) {
 						$snmp_index = $snmp_data[$i]["value"];
 					}
@@ -328,8 +329,8 @@ function query_snmp_host($host_id, $snmp_query_id) {
 				}
 			}elseif (substr($field_array["source"], 0, 13) == "VALUE/REGEXP:") {
 				for ($i=0; $i<sizeof($snmp_data); $i++) {
-					$value = ereg_replace(str_replace("VALUE/REGEXP:", "", $field_array["source"]), "\\1", $snmp_data[$i]["value"]);
-					$snmp_index = ereg_replace($index_parse_regexp, "\\1", $snmp_data[$i]["oid"]);
+					$value = preg_replace("/" . str_replace("VALUE/REGEXP:", "", $field_array["source"]) . "/", "\\1", $snmp_data[$i]["value"]);
+					$snmp_index = preg_replace("/" . $index_parse_regexp . "/", "\\1", $snmp_data[$i]["oid"]);
 					$oid = $field_array["oid"] .  "." . $value;
 
 					debug_log_insert("data_query", __("Found item [%s='%s'] index: %s [from regexp value parse]", $field_name, $value, $snmp_index));
