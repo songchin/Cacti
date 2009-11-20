@@ -800,7 +800,7 @@ function graphs_new() {
 							if ($field_array["direction"] == "input") {
 								if (in_array($field_name, $fields)) {
 									if (isset($row[$field_name])) {
-										print "<td style='line-height: 1.5em;padding:0px 5px 0px 5px;' onClick='dq_select_line(" . $snmp_query["id"] . ",\"" . encode_data_query_index($row["snmp_index"]) . "\");'><span id='text$query_row" . "_" . $column_counter . "'>" . (strlen($_REQUEST["filter"]) ? eregi_replace("(" . preg_quote($_REQUEST["filter"]) . ")", "<span class=\"filter\">\\1</span>", $row[$field_name]) : $row[$field_name]) . "</span></td>";
+										print "<td style='line-height: 1.5em;padding:0px 5px 0px 5px;' onClick='dq_select_line(" . $snmp_query["id"] . ",\"" . encode_data_query_index($row["snmp_index"]) . "\");'><span id='text$query_row" . "_" . $column_counter . "'>" . (strlen($_REQUEST["filter"]) ? preg_replace("/(" . preg_quote($_REQUEST["filter"]) . ")/i", "<span class=\"filter\">\\1</span>", $row[$field_name]) : $row[$field_name]) . "</span></td>";
 									}else{
 										print "<td style='line-height: 1.5em;padding:0px 5px 0px 5px;' onClick='dq_select_line(" . $snmp_query["id"] . ",\"" . encode_data_query_index($row["snmp_index"]) . "\");'><span id='text$query_row" . "_" . $column_counter . "'></span></td>";
 									}

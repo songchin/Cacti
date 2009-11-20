@@ -22,7 +22,7 @@
  +-------------------------------------------------------------------------+
 */
 
-define("REGEXP_SNMP_TRIM", "(hex|counter(32|64)|gauge|gauge(32|64)|float|ipaddress|string|integer):");
+define("REGEXP_SNMP_TRIM", "/(hex|counter(32|64)|gauge|gauge(32|64)|float|ipaddress|string|integer):/i");
 
 define("SNMP_METHOD_PHP", 1);
 define("SNMP_METHOD_BINARY", 2);
@@ -364,7 +364,7 @@ function cacti_snmp_walk($hostname, $community, $oid, $version, $username, $pass
 function format_snmp_string($string, $snmp_oid_included) {
 	global $banned_snmp_strings;
 
-	$string = eregi_replace(REGEXP_SNMP_TRIM, "", trim($string));
+	$string = preg_replace(REGEXP_SNMP_TRIM, "", trim($string));
 
 	if (substr($string, 0, 7) == "No Such") {
 		return "";
@@ -426,8 +426,8 @@ function format_snmp_string($string, $snmp_oid_included) {
 	if ((substr_count($string, "Hex-STRING:")) ||
 		(substr_count($string, "Hex:"))) {
 		/* strip of the 'Hex-STRING:' */
-		$string = eregi_replace("Hex-STRING: ?", "", $string);
-		$string = eregi_replace("Hex: ?", "", $string);
+		$string = preg_replace("/Hex-STRING: ?/i", "", $string);
+		$string = preg_replace("/Hex: ?/", "", $string);
 
 		$string_array = explode(" ", $string);
 
@@ -459,8 +459,8 @@ function format_snmp_string($string, $snmp_oid_included) {
 	}elseif (preg_match("/(hex:\?)?([a-fA-F0-9]{1,2}(:|\s)){5}/", $string)) {
 		$octet = "";
 
-		/* strip of the 'hex:' */
-		$string = eregi_replace("hex: ?", "", $string);
+		/* strip off the 'hex:' */
+		$string = preg_replace("/hex: ?/i", "", $string);
 
 		/* explode the hex on the delimiter */
 		$octets = explode("\s|:", $string);

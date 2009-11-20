@@ -1586,10 +1586,10 @@ function host() {
 		foreach ($hosts as $host) {
 			form_alternate_row_color('line' . $host["id"], true);
 			form_selectable_cell("<a style='white-space:nowrap;' class='linkEditMain' href='" . htmlspecialchars("host.php?action=edit&id=" . $host["id"]) . "'>" .
-				(strlen($_REQUEST["filter"]) ? eregi_replace("(" . preg_quote($_REQUEST["filter"]) . ")", "<span class=\"filter\">\\1</span>", $host["description"]) : $host["description"]) . "</a>", $host["id"]);
+				(strlen($_REQUEST["filter"]) ? preg_replace("/(" . preg_quote($_REQUEST["filter"]) . ")/i", "<span class=\"filter\">\\1</span>", $host["description"]) : $host["description"]) . "</a>", $host["id"]);
 			form_selectable_cell(($host["site"] == 0 ? __("Not Defined") : ($host["site"] == '' ? __("Unknown") : $host["site"])), $host["id"]);
 			form_selectable_cell(($host["poller"] == 0 ? __("System Default") : ($host["poller"] == '' ? __("Unknown") : $host["poller"])), $host["id"]);
-			form_selectable_cell((strlen($_REQUEST["filter"]) ? eregi_replace("(" . preg_quote($_REQUEST["filter"]) . ")", "<span class=\"filter\">\\1</span>", $host["hostname"]) : $host["hostname"]), $host["id"]);
+			form_selectable_cell((strlen($_REQUEST["filter"]) ? preg_replace("/(" . preg_quote($_REQUEST["filter"]) . ")/i", "<span class=\"filter\">\\1</span>", $host["hostname"]) : $host["hostname"]), $host["id"]);
 			form_selectable_cell(round(($host["id"]), 2), $host["id"]);
 			form_selectable_cell((isset($host_graphs[$host["id"]]) ? $host_graphs[$host["id"]] : 0), $host["id"]);
 			form_selectable_cell((isset($host_data_sources[$host["id"]]) ? $host_data_sources[$host["id"]] : 0), $host["id"]);
