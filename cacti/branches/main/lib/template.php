@@ -72,7 +72,7 @@ function push_out_data_source_custom_data($data_template_id) {
 		foreach ($input_fields as $input_field) {
 			if ($data_source["id"] == $input_field["data_template_data_id"]) {
 				/* do not push out "host fields" */
-				if (!eregi('^' . VALID_HOST_FIELDS . '$', $input_field["type_code"])) {
+				if (!preg_match('/^' . VALID_HOST_FIELDS . '$/i', $input_field["type_code"])) {
 					/* this is not a "host field", so we should either push out the value if it is templated
 					or leave it alone if the user checked "Use Per-Data Source Value". */
 					if ($input_field["t_value"] == "") { /* template this value */

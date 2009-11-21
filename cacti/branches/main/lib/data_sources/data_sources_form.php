@@ -552,7 +552,7 @@ function data_source_data_edit() {
 
 				form_alternate_row_color();
 
-				if ((!empty($host["id"])) && (eregi('^' . VALID_HOST_FIELDS . '$', $field["type_code"]))) {
+				if ((!empty($host["id"])) && (preg_match('/^' . VALID_HOST_FIELDS . '$/i', $field["type_code"]))) {
 					print "<td width='50%'><strong>" . $field["name"] . "</strong> (" . __("From Host:") . " " . $host["hostname"] . ")</td>\n";
 					print "<td><em>$old_value</em></td>\n";
 				}elseif (empty($can_template)) {
