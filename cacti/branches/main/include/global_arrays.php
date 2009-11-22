@@ -270,10 +270,10 @@ $cron_intervals = array(
 $registered_cacti_names = array(
 	"path_cacti");
 
-$graph_views = array(1 =>
-	__("Tree View"),
-	__("List View"),
-	__("Preview View"),
+$graph_views = array(
+	GRAPH_TREE_VIEW 	=> __("Tree View"),
+	GRAPH_LIST_VIEW 	=> __("List View"),
+	GRAPH_PREVIEW_VIEW 	=> __("Preview View"),
 	);
 
 $auth_methods = array(

@@ -987,7 +987,7 @@ $settings_graphs = array(
 			"description" => __("Which mode you want displayed when you visit 'graph_view.php'"),
 			"method" => "drop_array",
 			"array" => $graph_views,
-			"default" => "1"
+			"default" => GRAPH_TREE_VIEW
 			),
 		"default_timespan" => array(
 			"friendly_name" => __("Default Graph View Timespan"),

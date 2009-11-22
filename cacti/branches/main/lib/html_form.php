@@ -270,7 +270,7 @@ function draw_edit_control($field_name, &$field_array) {
 
 		if (sizeof($items) > 0) {
 		foreach ($items as $item) {
-			print $item["name"] . "<br>";
+			print htmlspecialchars($item["name"],ENT_QUOTES) . "<br>";
 		}
 		}
 
@@ -291,7 +291,7 @@ function draw_edit_control($field_name, &$field_array) {
 
 		break;
 	default:
-		print "<em>" . $field_array["value"] . "</em>";
+		print "<em>" . htmlspecialchars($field_array["value"],ENT_QUOTES) . "</em>";
 
 		form_hidden_box($field_name, $field_array["value"], "");
 
@@ -484,10 +484,10 @@ function form_hidden_box($form_name, $form_previous_value, $form_default_value, 
 		$form_previous_value = $form_default_value;
 	}
 
-	if ($echo) {
-		print "<div><input type='hidden' id='$form_name' name='$form_name' value='$form_previous_value'></div>";
+	if ($echo) { /* TODO: both times same action??? */
+		print "<input type='hidden' id='$form_name' name='$form_name' value='" . htmlspecialchars($form_previous_value, ENT_QUOTES) . "'>\n";
 	}else{
-		print "<div><input type='hidden' id='$form_name' name='$form_name' value='$form_previous_value'></div>";
+		print "<input type='hidden' id='$form_name' name='$form_name' value='" . htmlspecialchars($form_previous_value, ENT_QUOTES) . "'>\n";
 	}
 }
 
@@ -778,7 +778,7 @@ function form_multi_dropdown($form_name, $array_display, $sql_previous_values, $
 			}
 		}
 
-		print ">". $array_display[$id];
+		print ">". htmlspecialchars($array_display[$id],ENT_QUOTES);
 		print "</option>\n";
 	}
 

@@ -82,15 +82,15 @@ if (preg_match("/action=(tree|preview|list)/", get_browser_query_string())) {
 /* set default action */
 if (!isset($_REQUEST["action"])) {
 	switch (read_graph_config_option("default_view_mode")) {
-	case "1":
+	case GRAPH_TREE_VIEW:
 		$_REQUEST["action"] = "tree";
 
 		break;
-	case "2":
+	case GRAPH_LIST_VIEW:
 		$_REQUEST["action"] = "list";
 
 		break;
-	case "3":
+	case GRAPH_PREVIEW_VIEW:
 		$_REQUEST["action"] = "preview";
 
 		break;

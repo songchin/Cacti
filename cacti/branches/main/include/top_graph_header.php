@@ -70,11 +70,11 @@ if ($_REQUEST["action"] == "zoom") {
 if ((!preg_match('/^(tree|list|preview)$/', $_REQUEST["action"])) &&
 	(basename($_SERVER["PHP_SELF"]) == "graph_view.php")) {
 
-	if (read_graph_config_option("default_view_mode") == "1") {
+	if (read_graph_config_option("default_view_mode") == GRAPH_TREE_VIEW) {
 		$_REQUEST["action"] = "tree";
-	}elseif (read_graph_config_option("default_view_mode") == "2") {
+	}elseif (read_graph_config_option("default_view_mode") == GRAPH_LIST_VIEW) {
 		$_REQUEST["action"] = "list";
-	}elseif (read_graph_config_option("default_view_mode") == "3") {
+	}elseif (read_graph_config_option("default_view_mode") == GRAPH_PREVIEW_VIEW) {
 		$_REQUEST["action"] = "preview";
 	}
 }
@@ -107,7 +107,7 @@ $page_title = api_plugin_hook_function('page_title', 'Cacti');
 			$refresh = api_plugin_hook_function('top_graph_refresh', '0');
 
 			if ($refresh > 0) {
-				print "<meta http-equiv=refresh content='" . $refresh . "'>\r\n";
+				print "<meta http-equiv=refresh content='" . htmlspecialchars($refresh,ENT_QUOTES) . "'>\r\n";
 			}
 		}
 	}

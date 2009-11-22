@@ -1832,7 +1832,7 @@ function verifyTree(&$tree, $ri_check=false) {
 						}
 					}
 				} else {
-					$check["err_msg"] = __("ERROR: Tree id must be given id parent node is specified");
+					$check["err_msg"] = __("ERROR: Tree id must be given if parent node is specified");
 					return $check;
 				}
 				break;

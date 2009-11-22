@@ -37,6 +37,10 @@ define("TREE_ITEM_TYPE_HEADER", 1);
 define("TREE_ITEM_TYPE_GRAPH", 2);
 define("TREE_ITEM_TYPE_DEVICE", 3);
 
+define("GRAPH_TREE_VIEW", 1);
+define("GRAPH_LIST_VIEW", 2);
+define("GRAPH_PREVIEW_VIEW", 3);
+
 define("RRDTOOL_PIPE_CHILD_READ", 0);
 define("RRDTOOL_PIPE_CHILD_WRITE", 1);
 define("RRDTOOL_PIPE_STDERR_WRITE", 2);
