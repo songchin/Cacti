@@ -41,7 +41,15 @@ $me = array_shift($parms);
 $debug		= FALSE;	# no debug mode
 $quietMode 	= FALSE;	# be verbose by default
 $tree	 	= array();
+$tree_item 	= array();
 $error		= '';
+
+#$parms[] = "--type=node";
+#$parms[] = "--tree-id=1";
+#$parms[] = "--node-type=header";
+#$parms[] = "--name=Header Alpha";
+#$parms[] = "--sort-method=alpha";
+#$parms[] = "--parent-node=40";
 
 if (sizeof($parms)) {
 	/* setup defaults */
@@ -56,13 +64,14 @@ if (sizeof($parms)) {
 			case "--type":			$type 							= trim($value);	break;
 			case "--name":			$tree["name"]					= trim($value);	break;
 			case "--sort-method":	$tree["sort_type_cli"]			= trim($value);	break;
-			case "--parent-node":	$tree["parent_node"] 			= $value;		break;
 			case "--tree-id":		$tree["id"]						= $value;		break;
 			case "--node-type":		$nodeType 						= trim($value);	break;
-			case "--graph-id":		$graphId 						= $value;		break;
-			case "--rra-id":		$rra_id 						= $value;		break;
-			case "--device-id":		$device_id 						= $value;		break;
-			case "--device-group-style":$device_group_style 		= trim($value);	break;
+			case "--graph-id":		$tree_item["local_graph_id"] 	= $value;		break;
+			case "--rra-id":		$tree_item["rra_id"] 			= $value;		break;
+			case "--device-id":		$tree_item["host_id"] 			= $value;		break;
+			case "--device-group-type":$tree_item["host_grouping_type"] = trim($value);	break;
+			case "--sort-children-type":$tree_item["sort_children_type"] = trim($value);	break;
+			case "--parent-node":	$tree_item["parent_node"]		= $value;		break;
 
 			# miscellaneous
 			case "-V":
@@ -77,7 +86,7 @@ if (sizeof($parms)) {
 	if (isset($type)) {
 		switch (strtolower($type)) {
 			case strtolower($tree_types[TREE_TYPE_TREE]):
-				# at least one matching criteria for host(s) has to be defined
+				# at least one matching criteria for tree(s) has to be defined
 				if (!sizeof($tree)) {
 					print __("ERROR: No tree matching criteria found") . "\n\n";
 					exit(1);
@@ -91,12 +100,13 @@ if (sizeof($parms)) {
 					exit(1);
 				}
 
+				$tree["id"] = 0;				# create a new tree item
+				unset($tree["sort_type_cli"]);	# remove for save
+				reset($tree);
 				if ($debug) {
 					print __("Save Tree Array:") . "\n";
 					print_r($tree);
 				} else {
-					$tree["id"] = 0;				# create a new tree item
-					unset($tree["sort_type_cli"]);	# remove for save
 					$tree["id"] = sql_save($tree, "graph_tree");
 					if ($tree["id"] === 0) {
 						echo __("Failed to create Tree") . "\n";
@@ -110,14 +120,19 @@ if (sizeof($parms)) {
 
 			case (strtolower($tree_types[TREE_TYPE_NODE])):
 
-				# at least one matching criteria for host(s) has to be defined
-				if (!sizeof($tree)) {
+				# name is used both for tree and tree_items
+				if (isset($tree["name"])) $tree_item["title"] = $tree["name"];
+				if (isset($tree["sort_type_cli"])) $tree_item["sort_type_cli"] = $tree["sort_type_cli"];
+				if (isset($tree["id"])) $tree_item["graph_tree_id"] = $tree["id"];
+
+				# at least one matching criteria for tree item has to be defined
+				if (!sizeof($tree_item)) {
 					print __("ERROR: No tree matching criteria found") . "\n\n";
 					exit(1);
 				}
 
 				# now verify the parameters given
-				$verify = verifyTree($tree, true);
+				$verify = verifyTreeItem($tree_item, true);
 				if (isset($verify["err_msg"])) {
 					print $verify["err_msg"] . "\n\n";
 					display_help($me);
@@ -126,59 +141,39 @@ if (sizeof($parms)) {
 
 				switch (strtolower($nodeType)) {
 					case strtolower($tree_item_types[TREE_ITEM_TYPE_HEADER]):
-						$itemType = TREE_ITEM_TYPE_HEADER;
 						# Header --name must be given
-						if (empty($tree["name"])) {
-							echo __("ERROR: You must supply a name with --name") . "\n";
+						if (!isset($tree_item["title"])) {
+							echo __("ERROR: You must supply a header title with --name") . "\n";
 							display_help($me);
 							exit(1);
 						}
-
-						# Blank out the graphId, rra_id, hostID and host_grouping_style  fields
-						$graphId        	= 0;
-						$rra_id         	= 0;
-						$device_id         	= 0;
-						$device_group_style = HOST_GROUPING_GRAPH_TEMPLATE;
+						$itemType 							= TREE_ITEM_TYPE_HEADER;
+						$tree_item["local_graph_id"]    	= 0;
+						$tree_item["rra_id"]         		= 0;
+						$tree_item["host_id"]         		= 0;
+						$tree_item["host_grouping_type"] 	= HOST_GROUPING_GRAPH_TEMPLATE;
 						break;
 					case strtolower($tree_item_types[TREE_ITEM_TYPE_GRAPH]):
-						$itemType = TREE_ITEM_TYPE_GRAPH;
-						# Blank out name, hostID, host_grouping_style
-						$tree["name"]		= '';
-						$device_id         	= 0;
-						$device_group_style = HOST_GROUPING_GRAPH_TEMPLATE;
-
-						# verify rra-id
-						if (!is_numeric($rra_id)) {
-							echo __("ERROR: rra-id %s must be numeric > 0", $rra_id) . "\n";
+						if (!isset($tree_item["local_graph_id"])) {
+							echo __("ERROR: You must supply a valid graph id with --graph-id") . "\n";
 							display_help($me);
 							exit(1);
-						} elseif ($rra_id > 0 ) {
-							$rraExists = db_fetch_cell("SELECT id FROM rra WHERE id=$rra_id");
-
-							if (!isset($rraExists)) {
-								echo __("ERROR: rra-id %d does not exist", $rra_id) . "\n";
-								exit(1);
-							}
 						}
+						$itemType 							= TREE_ITEM_TYPE_GRAPH;
+						$tree_item["title"]					= '';
+						$tree_item["host_id"]         		= 0;
+						$tree_item["host_grouping_type"] 	= HOST_GROUPING_GRAPH_TEMPLATE;
 						break;
 					case strtolower($tree_item_types[TREE_ITEM_TYPE_DEVICE]):
-						$itemType = TREE_ITEM_TYPE_DEVICE;
-						# Blank out graphId, rra_id, name fields
-						$graphId        = 0;
-						$rra_id         = 0;
-						$tree["name"]	= '';
-
-						$device_exists = db_fetch_cell("SELECT COUNT(*) FROM host WHERE id=" . $device_id);
-						if (!($device_exists > 0)) {
-							echo __("ERROR: No such device-id (%d) exists. Try php -q device_list.php", $device_id) . "\n";
-							exit(1);
-						}
-
-						if (!isset($device_group_style) || ($device_group_style != HOST_GROUPING_GRAPH_TEMPLATE && $device_group_style != HOST_GROUPING_DATA_QUERY_INDEX)) {
-							echo __("ERROR: Host Group Style must be %d or %d (Graph Template or Data Query Index)", HOST_GROUPING_GRAPH_TEMPLATE, HOST_GROUPING_DATA_QUERY_INDEX) . "\n";
+						if (!isset($tree_item["host_id"])) {
+							echo __("ERROR: You must supply a valid device id with --device-id") . "\n";
 							display_help($me);
 							exit(1);
 						}
+						$itemType 							= TREE_ITEM_TYPE_DEVICE;
+						$tree_item["local_graph_id"] 		= 0;
+						$tree_item["rra_id"]         		= 0;
+						$tree_item["title"]					= '';
 						break;
 					default:
 						echo __("ERROR: Unknown node type: (%s)", $nodeType) . "\n";
@@ -188,19 +183,19 @@ if (sizeof($parms)) {
 
 
 				# optional parameters must be defined for api call
-				if (!isset($tree["parent_node"])) 	$tree["parent_node"] 	= 0;
-				if (!isset($tree["sort_type"])) 	$tree["sort_type"] 		= TREE_ORDERING_NONE;
-				if (!isset($graphId)) 				$graphId 				= 0;
-				if (!isset($rra_id)) 				$rra_id 				= 1;
-				if (!isset($device_id)) 			$device_id 				= 0;
-				if (!isset($device_group_style)) 	$device_group_style 	= HOST_GROUPING_GRAPH_TEMPLATE;
+				if (!isset($tree_item["parent_node"])) 			$tree_item["parent_node"] 			= 0;
+				if (!isset($tree_item["sort_children_type"]))	$tree_item["sort_children_type"]	= TREE_ORDERING_NONE;
+				if (!isset($tree_item["local_graph_id"])) 		$tree_item["local_graph_id"] 		= 0;
+				if (!isset($tree_item["rra_id"])) 				$tree_item["rra_id"] 				= 1;
+				if (!isset($tree_item["host_id"])) 				$tree_item["host_id"] 				= 0;
+				if (!isset($tree_item["host_grouping_type"])) 	$tree_item["host_grouping_type"] 	= HOST_GROUPING_GRAPH_TEMPLATE;
 
 				# $nodeId could be a Header Node, a Graph Node, or a Host node.
-				$nodeId = api_tree_item_save(0, $tree["id"], $itemType, $tree["parent_node"],
-											$tree["name"], $graphId, $rra_id, $device_id,
-											$device_group_style, $tree["sort_type"], false);
+				$nodeId = api_tree_item_save(0, $tree_item["graph_tree_id"], $itemType, $tree_item["parent_node"],
+											$tree_item["title"], $tree_item["local_graph_id"], $tree_item["rra_id"], $tree_item["host_id"],
+											$tree_item["host_grouping_type"], $tree_item["sort_children_type"], false);
 
-				echo __("Added Node node-id: (%d)", $nodeId) . "\n";
+				echo __("Added Node (Type: %s) node-id: (%d)", $nodeType, $nodeId) . "\n";
 
 				break;
 			default:
@@ -224,16 +219,21 @@ function display_help($me) {
 	echo __("usage: ") . $me . "  --type=[tree|node] [type-options] [--quiet]\n\n";
 	echo __("Tree options:") . "\n";
 	echo "   --name=[Tree Name]                            " . __("name of the Tree") . "\n";
-	echo "   --sort-method=[manual|alpha|natural|numeric]  " . __("Sort Method") . "\n\n";
+	echo "   --sort-method=[manual|alpha|numeric|natural]  " . __("Sort Method") . "\n\n";
 	echo __("Node options:") . "\n";
 	echo "   --node-type=[header|device|graph]             " . __("Node Type [header|device|graph]") . "\n";
 	echo "   --tree-id=[ID]                                " . __("Id of Tree") . "\n";
 	echo "  [--parent-node=[ID] [Node Type Options]]       " . __("Parent Node Id") . "\n\n";
 	echo __("Header node options:") . "\n";
-	echo "   --name=[Name]                                 " . __("Header Node Name") . "\n\n";
+	echo "   --name=[Name]                                 " . __("Header Node Name") . "\n";
+	echo "   --sort-children-type=[1|2|3|4]                " . __("Sort Children Type:") . "\n";
+	echo "     1 = " . __("Manual") . "\n";
+	echo "     2 = " . __("Alphabetic") . "\n";
+	echo "     3 = " . __("Numeric") . "\n";
+	echo "     4 = " . __("Natural") . "\n\n";
 	echo __("Device node options:") . "\n";
 	echo "   --device-id=[ID]                              " . __("Device Node Id") . "\n";
-	echo "   --device-group-style=[1|2]                    " . __("Device Group Style:") . "\n";
+	echo "   --device-group-type=[1|2]                     " . __("Device Group Style:") . "\n";
 	echo "     1 = " . __("Graph Template") . "\n";
 	echo "     2 = " . __("Data Query Index") . "\n\n";
 	echo __("Graph node options:") . "\n";

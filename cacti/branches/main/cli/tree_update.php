@@ -38,6 +38,8 @@ include_once(CACTI_BASE_PATH.'/lib/tree.php');
 /* process calling arguments */
 $parms = $_SERVER["argv"];
 $me = array_shift($parms);
+$debug		= FALSE;	# no debug mode
+$error		= '';
 
 if (sizeof($parms)) {
 	/* setup defaults */
@@ -66,270 +68,195 @@ if (sizeof($parms)) {
 		@list($arg, $value) = @explode("=", $parameter);
 
 		switch ($arg) {
-		case "--type":
-			$type = trim($value);
+			case "-d":
+			case "--debug":			$debug 							= TRUE; 		break;
 
-			break;
-		case "--name":
-			$name = trim($value);
+			case "--type":			$type 							= trim($value);	break;
+			case "--name":			$tree["name"]					= trim($value);	break;
+			case "--sort-method":	$tree["sort_type_cli"]			= trim($value);	break;
+			case "--id":			$tree["id"]						= $value;		break;
+			case "--node-type":		$nodeType 						= trim($value);	break;
+			case "--graph-id":		$tree_item["local_graph_id"]	= $value;		break;
+			case "--rra-id":		$tree_item["rra_id"]			= $value;		break;
+			case "--device-id":		$tree_item["host_id"]			= $value;		break;
+			case "--device-group-type":$tree_item["host_grouping_type"] = trim($value);	break;
+			case "--sort-children-type":$tree_item["sort_children_type"] = trim($value);	break;
+			case "--parent-node":	$tree_item["parent_node"]		= $value;		break;
 
-			break;
-		case "--sort-method":
-			$sortMethod = trim($value);
-
-			break;
-		case "--parent-node":
-			$parentNode = $value;
-
-			break;
-		case "--tree-id":
-			$treeId = $value;
-
-			break;
-		case "--node-type":
-			$nodeType = trim($value);
-
-			break;
-		case "--graph-id":
-			$graphId = $value;
-
-			break;
-		case "--rra-id":
-			$rra_id = $value;
-
-			break;
-		case "--device-id":
-			$hostId = $value;
-
-			break;
-		case "--quiet":
-			$quietMode = TRUE;
-
-			break;
-		case "--list-trees":
-			$displayTrees = TRUE;
-
-			break;
-		case "--list-nodes":
-			$displayNodes = TRUE;
-
-			break;
-		case "--list-rras":
-			$displayRRAs = TRUE;
-
-			break;
-		case "--list-graphs":
-			$displayGraphs = TRUE;
-
-			break;
-		case "--device-group-style":
-			$hostGroupStyle = trim($value);
-
-			break;
-		case "--quiet":
-			$quietMode = TRUE;
-
-			break;
-		case "--version":
-		case "-V":
-		case "-H":
-		case "--help":
-			display_help($me);
-			exit(0);
-		default:
-			printf(__("ERROR: Invalid Argument: (%s)\n\n"), $arg);
-			display_help($me);
-			exit(1);
+			# miscellaneous
+			case "-V":
+			case "-H":
+			case "--help":
+			case "--version":		display_help($me);								exit(0);
+			case "--quiet":			$quietMode 						= TRUE;			break;
+			default:				echo __("ERROR: Invalid Argument: (%s)", $arg) . "\n\n"; display_help($me); exit(1);
 		}
 	}
 
-	if ($displayTrees) {
-		displayTrees($quietMode);
-		exit(0);
-	}
-
-	if ($displayNodes) {
-		if (!isset($treeId)) {
-			echo __("ERROR: You must supply a tree_id before you can list its nodes") . "\n";
-			echo __("Try --list-trees") . "\n";
-			exit(1);
-		}
-
-		displayTreeNodes($treeId, $nodeType, $parentNode, $quietMode);
-		exit(0);
-	}
-
-	if ($displayRRAs) {
-		displayRRAs($quietMode);
-		exit(0);
-	}
-
-	if ($displayGraphs) {
-		if (!isset($hostId) || $hostId == 0) {
-			echo __("ERROR: You must supply a device-id before you can list its graphs") . "\n";
-			echo __("Try php -q device_list.php") . "\n";
-			exit(1);
-		}
-
-		displayHostGraphs($hostId, $quietMode);
-		exit(0);
-	}
-
-	if ($type == 'tree') {
-		# Add a new tree
-		if (empty($name)) {
-			echo __("ERROR: You must supply a name with --name") . "\n";
-			display_help($me);
-			exit(1);
-		}
-
-		$treeOpts = array();
-		$treeOpts["id"]        = 0; # Zero means create a new one rather than save over an existing one
-		$treeOpts["name"]      = $name;
-
-		if ($sortMethod == "manual"||
-			$sortMethod == "alpha" ||
-			$sortMethod == "numeric" ||
-			$sortMethod == "natural") {
-			$treeOpts["sort_type"] = $sortMethods[$sortMethod];
-		} else {
-			printf(__("ERROR: Invalid sort-method: (%s)\n"), $sortMethod);
-			display_help($me);
-			exit(1);
-		}
-
-		$existsAlready = db_fetch_cell("select id from graph_tree where name = '$name'");
-		if ($existsAlready) {
-			printf(__("ERROR: Not adding tree - it already exists - tree-id: (%s)\n"), $existsAlready);
-			exit(1);
-		}
-
-		$treeId = sql_save($treeOpts, "graph_tree");
-
-		sort_tree(SORT_TYPE_TREE, $treeId, $treeOpts["sort_type"]);
-
-		printf(__("Tree Created - tree-id: (%d)\n"), $treeId);
-
-		exit(0);
-	} elseif ($type == 'node') {
-		# Add a new node to a tree
-		if ($nodeType == "header"||
-			$nodeType == "graph" ||
-			$nodeType == "host") {
-			$itemType = $nodeTypes[$nodeType];
-		} else {
-			printf(__("ERROR: Invalid node-type: (%d)"), $nodeType);
-			display_help($me);
-			exit(1);
-		}
-
-		if (!is_numeric($parentNode)) {
-			printf(__("ERROR: parent-node %s must be numeric > 0\n"), $parentNode);
-			display_help($me);
-			exit(1);
-		} elseif ($parentNode > 0 ) {
-			$parentNodeExists = db_fetch_cell("SELECT id
-				FROM graph_tree_items
-				WHERE graph_tree_id=$treeId
-				AND id=$parentNode");
-
-			if (!isset($parentNodeExists)) {
-				printf(__("ERROR: parent-node %s does not exist\n"), $parentNode);
-				exit(1);
-			}
-		}
-
-		if ($nodeType == 'header') {
-			# Header --name must be given
-			if (empty($name)) {
-				echo __("ERROR: You must supply a name with --name") . "\n";
-				display_help($me);
-				exit(1);
-			}
-
-			# Blank out the graphId, rra_id, hostID and host_grouping_style  fields
-			$graphId        = 0;
-			$rra_id         = 0;
-			$hostId         = 0;
-			$hostGroupStyle = 1;
-		}else if($nodeType == 'graph') {
-			# Blank out name, hostID, host_grouping_style
-			$name           = '';
-			$hostId         = 0;
-			$hostGroupStyle = 1;
-
-			# verify rra-id
-			if (!is_numeric($rra_id)) {
-				printf(__("ERROR: rra-id %s must be numeric > 0\n"), $rra_id);
-				display_help($me);
-				exit(1);
-			} elseif ($rra_id > 0 ) {
-				$rraExists = db_fetch_cell("SELECT id FROM rra WHERE id=$rra_id");
-
-				if (!isset($rraExists)) {
-					printf(__("ERROR: rra-id %d does not exist\n"), $rra_id);
+	if (isset($type)) {
+		switch (strtolower($type)) {
+			case strtolower($tree_types[TREE_TYPE_TREE]):
+				if (!sizeof($tree)) {
+					print __("ERROR: No tree matching criteria found") . "\n\n";
 					exit(1);
 				}
-			}
-		}else if ($nodeType == 'host') {
-			# Blank out graphId, rra_id, name fields
-			$graphId        = 0;
-			$rra_id         = 0;
-			$name           = '';
+				# now verify the parameters given
+				$verify = verifyTree($tree, true);
+				if (isset($verify["err_msg"])) {
+					print $verify["err_msg"] . "\n\n";
+					display_help($me);
+					exit(1);
+				}
 
-			$host_exists = db_fetch_cell("SELECT COUNT(*) FROM host WHERE id=" . $hostId);
-			if (($host_exists > 0) || $hostId == 0) {
-				printf(__("ERROR: No such device-id (%d) exists. Try php -q device_list.php\n"), $hostId);
-				exit(1);
-			}
+				$sql = "UPDATE graph_tree SET ";
+				$sql_vars = "";
+				if (isset($tree["name"])) {
+					$sql_vars .= (strlen($sql_vars) ? "," : "");
+					$sql_vars .= "name='" . $tree["name"] . "'";
+				}
+				if (isset($tree["sort_type"])) {
+					$sql_vars .= (strlen($sql_vars) ? "," : "");
+					$sql_vars .= "sort_type=" . $tree["sort_type"];
+				}
+				if (!strlen($sql_vars)) {
+					print __("ERROR: No tree update criteria found") . "\n\n";
+					exit(1);
+				}
+				$sql .= $sql_vars . " WHERE id=" . $tree["id"];
 
-			if ($hostGroupStyle != 1 && $hostGroupStyle != 2) {
-				echo __("ERROR: Host Group Style must be 1 or 2 (Graph Template or Data Query Index)") . "\n";
+				if (!$debug) {
+					db_execute($sql);
+					echo __("Success - Tree updated (%s)", $tree["id"]) . "\n";
+				} else {
+					print $sql;
+				}
+
+				break;
+
+			case (strtolower($tree_types[TREE_TYPE_NODE])):
+
+				# id,name are used both for tree and tree_items
+				if (isset($tree["name"])) $tree_item["title"] = $tree["name"];
+				if (isset($tree["sort_type_cli"])) $tree_item["sort_type_cli"] = $tree["sort_type_cli"];
+				if (isset($tree["id"])) $tree_item["id"] = $tree["id"];
+
+				# at least one matching criteria for host(s) has to be defined
+				if (!sizeof($tree_item) || !isset($tree_item["id"])) {
+					print __("ERROR: No tree item matching criteria found") . "\n\n";
+					exit(1);
+				}
+
+				$item = db_fetch_row("SELECT * FROM graph_tree_items WHERE id=" . $tree_item["id"]);
+				if (isset($tree_item["parent_node"])) {	# fetch related graph tree id
+					$tree_item["graph_tree_id"] = $item["graph_tree_id"];
+				}
+
+				# now verify the parameters given
+				$verify = verifyTreeItem($tree_item, true);
+				if (isset($verify["err_msg"])) {
+					print $verify["err_msg"] . "\n\n";
+					display_help($me);
+					exit(1);
+				}
+
+				$current_type = "";
+				if ($item["local_graph_id"] > 0) 	{ $current_type = TREE_ITEM_TYPE_GRAPH; }
+				if ($item["title"] != "") 			{ $current_type = TREE_ITEM_TYPE_HEADER; }
+				if ($item["host_id"] > 0) 			{ $current_type = TREE_ITEM_TYPE_DEVICE; }
+
+				# create sql depending on node type
+				$sql = "UPDATE graph_tree_items SET ";
+				$sql_vars = "";
+				switch ($current_type) {
+					case TREE_ITEM_TYPE_HEADER:
+						if (isset($tree_item["title"])) {
+							$sql_vars .= (strlen($sql_vars) ? "," : "");
+							$sql_vars .= "title='" . $tree_item["title"] . "'";
+						}
+						if (isset($tree_item["sort_children_type"])) {
+							$sql_vars .= (strlen($sql_vars) ? "," : "");
+							$sql_vars .= "sort_children_type=" . $tree_item["sort_children_type"];
+						}
+						break;
+					case TREE_ITEM_TYPE_GRAPH:
+						if (isset($tree_item["rra_id"])) {
+							$sql_vars .= (strlen($sql_vars) ? "," : "");
+							$sql_vars .= "rra_id='" . $tree_item["rra_id"] . "'";
+						}
+						break;
+					case TREE_ITEM_TYPE_DEVICE:
+						if (isset($tree_item["host_grouping_type"])) {
+							$sql_vars .= (strlen($sql_vars) ? "," : "");
+							$sql_vars .= "host_grouping_type=" . $tree_item["host_grouping_type"];
+						}
+						break;
+					default:
+						echo __("ERROR: Unknown node type: (%s)", $nodeType) . "\n";
+						display_help($me);
+						exit(1);
+				}
+				if (!strlen($sql_vars)) {	# no sql updates required
+					$sql = "";
+				} else {
+					$sql .= $sql_vars . " WHERE id=" . $tree_item["id"];
+				}
+
+				if (!$debug) {
+					if (strlen($sql)) {	# if only reparent action required, sql may be empty
+						db_execute($sql);
+					}
+					/* re-parent the branch if the parent item has changed */
+					if (isset($tree_item["parent_node"])) {
+						$current_parent = get_parent_id($tree_item["id"], "graph_tree_items");
+						if ($tree_item["parent_node"] != $current_parent) {
+							reparent_branch($tree_item["parent_node"], $tree_item["id"]);
+						}
+					}
+					echo __("Success - Tree item updated (%s)", $tree_item["id"]) . "\n";
+				} else {
+					print $sql . "\n";
+				}
+
+				break;
+
+			default:
+				echo __("ERROR: Unknown type: (%s)", $type) . "\n";
 				display_help($me);
 				exit(1);
-			}
 		}
-
-		# $nodeId could be a Header Node, a Graph Node, or a Host node.
-		$nodeId = api_tree_item_save(0, $treeId, $itemType, $parentNode, $name, $graphId, $rra_id, $hostId, $hostGroupStyle, $sortMethods[$sortMethod], false);
-
-		printf(__("Added Node node-id: (%d)\n"), $nodeId);
-
-		exit(0);
 	} else {
-		printf(__("ERROR: Unknown type: (%s)\n"), $type);
+		echo __("ERROR: Missing type: (%s)", $type) . "\n";
 		display_help($me);
 		exit(1);
 	}
+
 } else {
 	display_help($me);
 	exit(0);
 }
 
 function display_help($me) {
-	echo __("Add Tree Script 1.0") . ", " . __("Copyright 2004-2009 - The Cacti Group") . "\n";
-	echo __("A simple command line utility to add objects to a tree in Cacti") . "\n\n";
-	echo __("usage: ") . $me . "  --type=[tree|node] [type-options] [--quiet]\n\n";
+	echo __("Update Tree Script 1.0") . ", " . __("Copyright 2004-2009 - The Cacti Group") . "\n";
+	echo __("A simple command line utility to update objects of a tree in Cacti") . "\n\n";
+	echo __("usage: ") . $me . "  --type=[tree|node] --id=[ID]\n\n";
+	echo "   --type=[tree|node]                              " . __("Type of object") . "\n";
+	echo "   --id=[ID]                                       " . __("Id of Tree|Node") . "\n";
 	echo __("Tree options:") . "\n";
-	echo "   --name=[Tree Name]  " . __("name of the Tree") . "\n";
-	echo "   --sort-method=[manual|alpha|natural|numeric]  " . __("Sort Method") . "\n\n";
+	echo "   [--name=[Tree Name]]                            " . __("name of the Tree") . "\n";
+	echo "   [--sort-method=[manual|alpha|natural|numeric]]  " . __("Sort Method") . "\n\n";
 	echo __("Node options:") . "\n";
-	echo "   --node-type=[header|device|graph]  " . __("Node Type [header|device|graph]") . "\n";
-	echo "   --tree-id=[ID]      " . __("Id of Tree") . "\n";
-	echo "  [--parent-node=[ID] [Node Type Options]]  " . __("Parent Node Id") . "\n\n";
+	echo "  [--parent-node=[ID] [Node Type Options]]         " . __("Parent Node Id") . "\n\n";
 	echo __("Header node options:") . "\n";
-	echo "   --name=[Name]       " . __("Header Node Name") . "\n\n";
+	echo "   [--name=[Name]]                                 " . __("Header Node Name") . "\n\n";
+	echo "   [--sort-children-type=[1|2|3|4]]                " . __("Sort Children Type:") . "\n";
+	echo "     1 = " . __("Manual") . "\n";
+	echo "     2 = " . __("Alphabetic") . "\n";
+	echo "     3 = " . __("Numeric") . "\n";
+	echo "     4 = " . __("Natural") . "\n\n";
 	echo __("Device node options:") . "\n";
-	echo "   --device-id=[ID]    " . __("Device Node Id") . "\n";
-	echo "  [--device-group-style=[1|2]]  " . __("Device Group Style:") . "\n";
+	echo "  --device-group-style=[1|2]                       " . __("Device Group Style:") . "\n";
 	echo "     1 = " . __("Graph Template") . "\n";
 	echo "     2 = " . __("Data Query Index") . "\n\n";
 	echo __("Graph node options:") . "\n";
-	echo "   --graph-id=[ID]     " . __("Graph Id") . "\n";
-	echo "  [--rra-id=[ID]]      " . __("RRA Id") . "\n\n";
-	echo __("List Options:") . "\n";
-	echo "   --list-trees" . "\n";
-	echo "   --list-nodes --tree-id=[ID]" . "\n";
-	echo "   --list-rras" . "\n";
-	echo "   --list-graphs --device-id=[ID]" . "\n";
+	echo "  --rra-id=[ID]                                    " . __("RRA Id") . "\n\n";
 }
