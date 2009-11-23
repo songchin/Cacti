@@ -78,7 +78,7 @@ $settings = array(
 			),
 		"path_rrdtool_default_font" => array(
 			"friendly_name" => __("RRDTool Default Font Path"),
-			"description" => __("The path to the rrdtool default true type font for version 1.2 and above."),
+			"description" => __("For RRDtool 1.2, the path to the True Type Font.  For RRDtool 1.3 and above, the font name conforming to the fontconfig naming convention."),
 			"method" => "font",
 			"max_length" => "255"
 			),
