@@ -325,6 +325,12 @@ if (CACTI_SERVER_OS != "win32") {
 		"rrd-1.2.x" => "RRDTool 1.2.x");
 }
 
+$i18n_modes = array(
+    0 => __("Disabled"),
+    1 => __("Enabled"),
+    2 => __("Enabled (strict mode)"),
+    );
+
 $cdef_item_types = array(
 	1 => __("Function"),
 	2 => __("Operator"),
