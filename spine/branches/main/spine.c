@@ -444,7 +444,6 @@ int main(int argc, char *argv[]) {
 
 	/* obtain the list of hosts to poll */
 	qp += sprintf(qp, "SELECT id FROM host");
-	qp += sprintf(qp, " LEFT JOIN poller_item ON poller_item.host_id=host.id");
 	qp += sprintf(qp, " WHERE disabled=''");
 	if (!strlen(set.host_id_list)) {
 		qp += append_hostrange(qp, "id");	/* AND id BETWEEN a AND b */
@@ -454,8 +453,7 @@ int main(int argc, char *argv[]) {
 	if (set.poller_id_exists) {
 		qp += sprintf(qp, " AND host.poller_id=%i", set.poller_id);
 	}
-	qp += sprintf(qp, " GROUP BY poller_item.host_id");
-	qp += sprintf(qp, " ORDER BY count(poller_item.host_id)*host.avg_time DESC, id ASC");
+	qp += sprintf(qp, " ORDER BY polling_time DESC, id ASC");
 
 	result = db_query(&mysql, querybuf);
 

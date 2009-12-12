@@ -1578,7 +1578,8 @@ function host() {
 		"status_event_count" => array(__("Event Count"), "ASC"),
 		"cur_time" => array(__("Current (ms)"), "DESC"),
 		"avg_time" => array(__("Average (ms)"), "DESC"),
-		"availability" => array(__("Availability"), "ASC"));
+		"availability" => array(__("Availability"), "ASC")
+		"polling_time" => array(__("Poll Time"), "DESC"));
 
 	html_header_sort_checkbox($display_text, get_request_var_request("sort_column"), get_request_var_request("sort_direction"));
 
@@ -1598,6 +1599,7 @@ function host() {
 			form_selectable_cell(round(($host["cur_time"]), 2), $host["id"]);
 			form_selectable_cell(round(($host["avg_time"]), 2), $host["id"]);
 			form_selectable_cell(round($host["availability"], 2), $host["id"]);
+			form_selectable_cell(round($host["polling_time"], 2), $host["id"]);
 			form_checkbox_cell($host["description"], $host["id"]);
 			form_end_row();
 		}

@@ -235,6 +235,7 @@ if ((sizeof($polling_items) > 0) && (read_config_option("poller_enabled") == "on
 	$new_host     = true;
 	$last_host    = "";
 	$current_host = "";
+	$poll_time    = 0;
 
 	/* create new ping socket for host pinging */
 	$ping = new Net_Ping;
@@ -271,6 +272,11 @@ if ((sizeof($polling_items) > 0) && (read_config_option("poller_enabled") == "on
 		$current_host = $item["host_id"];
 
 		if ($current_host != $last_host) {
+			/* record the host polling time */
+			list($micro,$seconds) = explode(" ", microtime());
+			$poll_time = ($seconds + $micro) - $poll_time;
+			db_execute("UPDATE host SET polling_time='$poll_time' WHERE id=$last_host");
+
 			$new_host = true;
 
 			/* assume the host is up */
@@ -285,6 +291,10 @@ if ((sizeof($polling_items) > 0) && (read_config_option("poller_enabled") == "on
 		$host_id = $item["host_id"];
 
 		if (($new_host) && (!empty($host_id))) {
+			/* record the start time to calculate host polling time */
+			list($micro,$seconds) = explode(" ", microtime());
+			$poll_time = $seconds + $micro;
+
 			$ping->host = $item;
 			$ping->port = $hosts[$host_id]["ping_port"];
 
@@ -468,6 +478,13 @@ if ((sizeof($polling_items) > 0) && (read_config_option("poller_enabled") == "on
 			}
 		} /* Next Cache Item */
 	} /* End foreach */
+
+	/* record the host polling time */
+	if ($last_host != "") {
+		list($micro,$seconds) = explode(" ", microtime());
+		$poll_time = ($seconds + $micro) - $poll_time;
+		db_execute("UPDATE host SET polling_time='$poll_time' WHERE id=$last_host");
+	}
 
 	if (($using_proc_function == true) && ($script_server_calls > 0)) {
 		// close php server process

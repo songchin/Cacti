@@ -343,5 +343,6 @@ function upgrade_to_0_8_8() {
 
 	db_install_execute("0.8.8", "UPDATE data_input_fields SET name='SNMP Authentication Protocol (v3)' WHERE name='SNMP Authenticaion Protocol (v3)'");
 
+	db_install_execute("0.8.8", "ALTER TABLE host ADD COLUMN polling_time decimal(10,5) NOT NULL DEFAULT '0.00000' AFTER `avg_time`");
 }
 
