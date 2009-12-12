@@ -1578,7 +1578,7 @@ function host() {
 		"status_event_count" => array(__("Event Count"), "ASC"),
 		"cur_time" => array(__("Current (ms)"), "DESC"),
 		"avg_time" => array(__("Average (ms)"), "DESC"),
-		"availability" => array(__("Availability"), "ASC")
+		"availability" => array(__("Availability"), "ASC"),
 		"polling_time" => array(__("Poll Time"), "DESC"));
 
 	html_header_sort_checkbox($display_text, get_request_var_request("sort_column"), get_request_var_request("sort_direction"));
