@@ -168,14 +168,14 @@ function cacti_ldap_auth($username,$password = "",$ldap_dn = "",$ldap_host = "",
 		/* Bind to the LDAP directory */
 		$ldap_response = @ldap_bind($ldap_conn,$ldap_dn,$password);
 		if ($ldap_response) {
-			if ($ldap_group_required == 1) {
+			if ($ldap_group_require == 1) {
 				/* Process group membership if required */
 				if ($ldap_group_member_type == 1) {
 					$ldap_group_response = @ldap_compare($ldap_conn,$ldap_group_dn,$ldap_group_attrib,$ldap_dn);
 				} else {
 					$ldap_group_response = @ldap_compare($ldap_conn,$ldap_group_dn,$ldap_group_attrib,$username);
 				}
-			        if ($ldap_group_response === true) {
+				if ($ldap_group_response === true) {
 					/* Auth ok */
 					$output["error_num"] = "0";
 					$output["error_text"] = "Authentication Success";
