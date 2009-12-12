@@ -240,7 +240,7 @@ function html_graph_area(&$graph_array, $no_graphs_message = "", $extra_url_args
 								<?php
 								if ($graph["image_format_id"] == IMAGE_TYPE_PNG || $graph["image_format_id"] == IMAGE_TYPE_GIF) {
 									?>
-									<div style="min-height: <?php echo (1.6 * read_config_option("export_default_height")) . "px"?>;">
+									<div style="min-height: <?php echo (1.6 * $graph["height"]) . "px"?>;">
 									<a href='<?php print htmlspecialchars("graph.php?action=view&local_graph_id=" . $graph["local_graph_id"] . "&rra_id=all");?>'>
 										<img class='graphimage' id='graph_<?php print $graph["local_graph_id"] ?>'
 											src='<?php print htmlspecialchars("graph_image.php?local_graph_id=" . $graph["local_graph_id"] . "&rra_id=0" . (($extra_url_args == "") ? "" : "&$extra_url_args"));?>'
@@ -249,7 +249,7 @@ function html_graph_area(&$graph_array, $no_graphs_message = "", $extra_url_args
 									<?php
 								} elseif ($graph["image_format_id"] == IMAGE_TYPE_SVG) {
 									?>
-									<div style="min-height: <?php echo (1.6 * read_config_option("export_default_height")) . "px"?>;">
+									<div style="min-height: <?php echo (1.6 * $graph["height"]) . "px"?>;">
 									<a href='<?php print htmlspecialchars("graph.php?action=view&local_graph_id=" . $graph["local_graph_id"] . "&rra_id=all");?>'>
 										<object class='graphimage' id='graph_<?php print $graph["local_graph_id"] ?>'
 											type='svg+xml'
@@ -385,26 +385,25 @@ function html_graph_thumbnail_area(&$graph_array, $no_graphs_message = "", $extr
 				<table align='center' cellpadding='0'>
 					<tr>
 						<td class='center'>
-							<a href='<?php print htmlspecialchars("graph.php?action=view&rra_id=all&local_graph_id=" . $graph["local_graph_id"]);?>'><img class='graphimage' id='graph_<?php print $graph["local_graph_id"] ?>' src='<?php print htmlspecialchars("graph_image.php?local_graph_id=". $graph["local_graph_id"] . "&rra_id=0&graph_height=" . read_graph_config_option("default_height") . "&graph_width=" . read_graph_config_option("default_width") . "&graph_nolegend=true" . (($extra_url_args == "") ? "" : "&$extra_url_args"));?>' border='0' alt='<?php print $graph["title_cache"];?>'></a>
 							<?php
 							if ($graph["image_format_id"] == IMAGE_TYPE_PNG || $graph["image_format_id"] == IMAGE_TYPE_GIF) {
 								?>
-								<a href='<?php print htmlspecialchars("graph.php?action=view&local_graph_id=" . $graph["local_graph_id"] . "&rra_id=all");?>'>
+								<div style="min-height: <?php echo (1.6 * read_graph_config_option("default_height")) . "px"?>;"><a href='<?php print htmlspecialchars("graph.php?action=view&local_graph_id=" . $graph["local_graph_id"] . "&rra_id=all");?>'>
 									<img class='graphimage' id='graph_<?php print $graph["local_graph_id"] ?>'
 										src='<?php print htmlspecialchars("graph_image.php?local_graph_id=" . $graph["local_graph_id"] . "&rra_id=0&graph_height=" . read_graph_config_option("default_height") . "&graph_width=" . read_graph_config_option("default_width") . "&graph_nolegend=true" . (($extra_url_args == "") ? "" : "&$extra_url_args"));?>'
 										border='0' alt='<?php print $graph["title_cache"];?>'>
-								</a>
+								</a></div>
 								<?php
 							} else if ($graph["image_format_id"] == IMAGE_TYPE_SVG) {
 								?>
-								<a href='<?php print htmlspecialchars("graph.php?action=view&local_graph_id=" . $graph["local_graph_id"] . "&rra_id=all");?>'>
+								<div style="min-height: <?php echo (1.6 * read_graph_config_option("default_height")) . "px"?>;"><a href='<?php print htmlspecialchars("graph.php?action=view&local_graph_id=" . $graph["local_graph_id"] . "&rra_id=all");?>'>
 									<object class='graphimage' id='graph_<?php print $graph["local_graph_id"] ?>'
 										type='svg+xml'
 										data='<?php print htmlspecialchars("graph_image.php?local_graph_id=" . $graph["local_graph_id"] . "&rra_id=0&graph_height=" . read_graph_config_option("default_height") . "&graph_width=" . read_graph_config_option("default_width") . "&graph_nolegend=true" . (($extra_url_args == "") ? "" : "&$extra_url_args"));?>'
 										border='0'>
 										Can't display SVG
 									</object>;
-								</a>
+								</a></div>
 								<?php
 								#print "<object class='graphimage' id='graph_" . $graph["local_graph_id"] . "' type='svg+xml' data='" . htmlspecialchars("graph_image.php?action=view&local_graph_id=" . $graph["local_graph_id"] . "&rra_id=" . $rra["id"]) . "' border='0'>Can't display SVG</object>";
 							}

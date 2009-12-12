@@ -1114,6 +1114,7 @@ function get_graph_tree_content($tree_id, $leaf_id, $host_group_data) {
 			graph_tree_items.local_graph_id,
 			graph_tree_items.rra_id,
 			graph_tree_items.order_key,
+			graph_templates_graph.height,
 			graph_templates_graph.title_cache as title_cache,
 			graph_templates_graph.image_format_id
 			FROM (graph_tree_items,graph_local)
@@ -1155,6 +1156,7 @@ function get_graph_tree_content($tree_id, $leaf_id, $host_group_data) {
 					$graphs = db_fetch_assoc("SELECT
 						graph_templates_graph.title_cache,
 						graph_templates_graph.local_graph_id,
+						graph_templates_graph.height,
 						graph_templates_graph.image_format_id
 						FROM (graph_local,graph_templates_graph)
 						$sql_join
@@ -1208,6 +1210,7 @@ function get_graph_tree_content($tree_id, $leaf_id, $host_group_data) {
 					$graphs = db_fetch_assoc("SELECT
 						graph_templates_graph.title_cache,
 						graph_templates_graph.local_graph_id,
+						graph_templates_graph.height,
 						graph_templates_graph.image_format_id,
 						graph_local.snmp_index
 						FROM (graph_local, graph_templates_graph)
@@ -1231,6 +1234,7 @@ function get_graph_tree_content($tree_id, $leaf_id, $host_group_data) {
 								"title_cache"		=> $graph["title_cache"],
 								"image_format_id"	=> $graph["image_format_id"],
 							);
+							$graphs_height[$graph["local_graph_id"]] = $graph["height"];
 						}
 					}
 
@@ -1242,11 +1246,12 @@ function get_graph_tree_content($tree_id, $leaf_id, $host_group_data) {
 							foreach ($snmp_index_to_graph as $graph) {
 								/* reformat the array so it's compatable with the html_graph* area functions */
 								array_push($graph_list, array(
-									"data_query_name" 	=> $data_query["name"],
+									"data_query_name"   => $data_query["name"],
 									"sort_field_value" 	=> $sort_field_value,
-									"local_graph_id" 	=> $graph["local_graph_id"],
-									"title_cache" 		=> $graph["title_cache"],
-									"image_format_id" 	=> $graph["image_format_id"],
+									"local_graph_id"    => $graph["local_graph_id"],
+									"title_cache"       => $graph["title_cache"],
+									"image_format_id"   => $graph["image_format_id"],
+									"height"            => $graphs_height[$graph["local_graph_id"]]
 								));
 							}
 						}
