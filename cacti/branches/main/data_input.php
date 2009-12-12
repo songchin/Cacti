@@ -550,7 +550,7 @@ function data() {
 	<tr class="rowAlternate2 noprint">
 		<td class="noprint">
 			<form name="form_graph_id" action="data_input.php">
-			<table cellpadding="0" cellspacing="0">
+			<table cellpadding="0" cellspacing="3">
 				<tr class="noprint">
 					<td class="nw50">
 						&nbsp;<?php print __("Search:");?>&nbsp;

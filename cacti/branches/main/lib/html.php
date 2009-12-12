@@ -80,13 +80,13 @@ function html_start_box($title, $width, $background_color, $cell_padding, $align
 			registerOnLoadFunction("<?php print basename($_SERVER['PHP_SELF']);?>", "htmlStartBoxFilterChange('<?php print $item_id;?>', true)");
 		-->
 		</script>
-		<table class="startBoxHeader <?php print "wp$width"?> startBox0" >
+		<table cellpadding=0 cellspacing=0 class="startBoxHeader <?php print "wp$width"?> startBox0" >
 			<?php if ($title != "") {?><tr class="rowHeader">
 				<td colspan="100">
-					<table class="startBox0">
+					<table cellpadding=0 cellspacing=1 class="startBox0">
 						<tr>
 							<td>
-								<table class="startBox0" <?php print $ani;?>>
+								<table cellpadding=0 cellspacing=1 class="startBox0" <?php print $ani;?>>
 									<tr>
 										<?php if ($collapsing) {?><td class="textHeaderDark nw9">
 											<img id="<?php print $item_id . '_twisty';?>" src="<?php print URL_PATH; ?>images/tw_open.gif" alt="<?php print __("Filter");?>" align="middle">
@@ -105,7 +105,7 @@ function html_start_box($title, $width, $background_color, $cell_padding, $align
 			</tr>
 			<?php }?><tr style='border: 0px;' id='<?php print $item_id;?>'>
 				<td>
-					<table <?php print $table_id;?> class="startBox<?php print $cell_padding;?>"><?php
+					<table cellpadding=0 cellspacing=1 <?php print $table_id;?> class="startBox<?php print $cell_padding;?>"><?php
 }
 
 function html_start_box_dq($query_name, $query_id, $host_id, $colspan, $width, $background_color, $cell_padding, $align) {
@@ -123,10 +123,10 @@ function html_start_box_dq($query_name, $query_id, $host_id, $colspan, $width, $
 	}
 
 	?>
-		<table class='startBoxHeader startBox0'>
+		<table cellpadding=0 cellspacing=0 class='startBoxHeader startBox0'>
 			<tr class='rowHeader'>
 				<td style='padding:0px 5px 0px 5px;' colspan='<?php print $colspan+1;?>'>
-					<table class="startBox0" >
+					<table cellpadding=0 cellspacing=1 class="startBox0" >
 						<tr>
 							<td class='textHeaderDark'>
 								<strong><?php print __("Data Query");?></strong> [<?php print $query_name; ?>]
@@ -140,7 +140,7 @@ function html_start_box_dq($query_name, $query_id, $host_id, $colspan, $width, $
 			</tr>
 			<tr style='border: 0px;' id='<?php print $item_id;?>'>
 				<td colspan='<?php print $colspan+1;?>'>
-					<table class="startBox<?php print $cell_padding;?>"><?php
+					<table cellpadding=0 cellspacing=1 class="startBox<?php print $cell_padding;?>"><?php
 }
 
 /* html_end_box - draws the end of an HTML box
@@ -465,7 +465,7 @@ function html_nav_bar($background_color, $colspan, $current_page, $rows_per_page
 	?>
 	<tr class='rowHeader noprint'>
 		<td colspan='<?php print $colspan;?>'>
-			<table class="startBox0">
+			<table cellpadding=0 cellspacing=1 class="startBox0">
 				<tr>
 					<td class='textHeaderDark wp15 right'>
 						<?php if ($current_page > 1) {
@@ -510,7 +510,7 @@ function html_header_sort($header_items, $sort_column, $sort_direction, $last_it
 		$selected_sort_class = "sort_desc";
 	}
 
-	print "\t\t<table class='resizable startBoxHeader startBox3'><tr class='rowSubHeader'>\n";
+	print "\t\t<table cellpadding=0 cellspacing=0 class='resizable startBoxHeader startBox3'><tr class='rowSubHeader'>\n";
 
 	$pathname = html_get_php_pathname();
 
@@ -580,7 +580,7 @@ function html_header_sort_checkbox($header_items, $sort_column, $sort_direction,
 	if ($form_action == "") { $form_action = basename($_SERVER["PHP_SELF"]); }
 
 	print "<form name='chk' method='post' action='$form_action'>\n";	# properly place form outside table
-	print "\t<table class='resizable startBoxHeader startBox3'>\n";
+	print "\t<table cellpadding=0 cellspacing=0 class='resizable startBoxHeader startBox3'>\n";
 	print "\t\t<tr class='rowSubHeader'>\n";
 
 	$pathname = html_get_php_pathname();
@@ -642,9 +642,9 @@ function html_header($header_items, $last_item_colspan = 1, $resizable = false, 
 	if ($resizable) {
 		$pathname = html_get_php_pathname();
 
-		print "\t\t<table $table_id class='resizable startBoxHeader startBox3 $tclass'><tr class='rowSubHeader nodrag nodrop $trclass'>\n";
+		print "\t\t<table cellpadding=0 cellspacing=0 $table_id class='resizable startBoxHeader startBox3 $tclass'><tr class='rowSubHeader nodrag nodrop $trclass'>\n";
 	}else{
-		print "\t\t<table $table_id class='startBoxHeader $tclass'><tr class='rowSubHeader nodrag nodrop $trclass'>\n";
+		print "\t\t<table cellpadding=0 cellspacing=0 $table_id class='startBoxHeader $tclass'><tr class='rowSubHeader nodrag nodrop $trclass'>\n";
 	}
 
 	for ($i=0; $i<count($header_items); $i++) {
@@ -679,9 +679,9 @@ function html_header_checkbox($header_items, $form_action = "", $resizable = fal
 
 	if ($resizable) {
 		$pathname = html_get_php_pathname();
-		print "\t\t<table class='resizable startBox0 $tclass'><tr class='rowSubHeader $trclass'>\n";
+		print "\t\t<table cellpadding=0 cellspacing=1 class='resizable startBox0 $tclass'><tr class='rowSubHeader $trclass'>\n";
 	}else{
-		print "\t\t<table class='startBox0 $tclass'><tr class='rowSubHeader $trclass'>\n";
+		print "\t\t<table cellpadding=0 cellspacing=1 class='startBox0 $tclass'><tr class='rowSubHeader $trclass'>\n";
 	}
 
 	for ($i=0; $i<count($header_items); $i++) {
@@ -797,7 +797,7 @@ function html_create_nav($current_page, $max_pages, $rows_per_page, $total_rows,
 		$nav = "
 			<tr class='rowHeader'>
 				<td colspan='$columns'>
-					<table class='startBox0'>
+					<table cellpadding=0 cellspacing=1 class='startBox0'>
 						<tr>
 							<td class='textHeaderDark wp15 left'>";
 								if ($current_page > 1) {
@@ -828,7 +828,7 @@ function html_create_nav($current_page, $max_pages, $rows_per_page, $total_rows,
 		$nav = "
 			<tr class='rowHeader'>
 				<td colspan='$columns'>
-					<table class='startBox0'>
+					<table cellpadding=0 cellspacing=1 class='startBox0'>
 						<tr>
 							<td class='textHeaderDark wp15 center'>No Rows Found</td>
 						</tr>

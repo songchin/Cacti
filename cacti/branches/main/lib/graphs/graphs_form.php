@@ -1135,7 +1135,7 @@ function graph() {
 	<tr class='rowAlternate2'>
 		<td>
 			<form name="form_graph_id" action="graphs.php">
-			<table cellpadding="1" cellspacing="0">
+			<table cellpadding="0" cellspacing="3">
 				<tr>
 					<td class="nw50">
 						&nbsp;<?php print __("Host:");?>&nbsp;
@@ -1188,7 +1188,7 @@ function graph() {
 					</td>
 				</tr>
 			</table>
-			<table cellpadding="1" cellspacing="0">
+			<table cellpadding="0" cellspacing="3">
 				<tr>
 					<td class="nw50">
 						&nbsp;<?php print __("Search:");?>&nbsp;

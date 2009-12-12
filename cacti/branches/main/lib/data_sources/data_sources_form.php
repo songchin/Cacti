@@ -1103,7 +1103,7 @@ function data_source() {
 	<tr class='rowAlternate2'>
 		<td>
 			<form action="data_sources.php" name="form_data_sources">
-			<table cellpadding="1" cellspacing="0">
+			<table cellpadding="0" cellspacing="3">
 				<tr>
 					<td class="nw50">
 						&nbsp;<?php print __("Host:");?>&nbsp;
@@ -1190,7 +1190,7 @@ function data_source() {
 					</td>
 				</tr>
 			</table>
-			<table cellpadding="1" cellspacing="0">
+			<table cellpadding="1" cellspacing="3">
 				<tr>
 					<td class="nw50">
 						&nbsp;<?php print __("Search:");?>&nbsp;

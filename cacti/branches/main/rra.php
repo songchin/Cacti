@@ -302,7 +302,7 @@ function rra() {
 	<tr class='rowAlternate2'>
 		<td>
 			<form name='form_rra' action="<?php print basename($_SERVER['PHP_SELF']);?>" method="post">
-			<table cellpadding="0" cellspacing="0">
+			<table cellpadding="0" cellspacing="3">
 				<tr>
 					<td class="nw50">
 						&nbsp;<?php print __("Search:");?>&nbsp;

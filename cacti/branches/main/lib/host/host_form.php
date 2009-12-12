@@ -1373,7 +1373,7 @@ function host() {
 	<tr class='rowAlternate2'>
 		<td>
 			<form action="host.php" name="form_devices" method="post">
-			<table cellpadding="0" cellspacing="1">
+			<table cellpadding="0" cellspacing="3">
 				<tr>
 					<td class="nw50">
 						&nbsp;<?php print __("Type:");?>&nbsp;
@@ -1425,7 +1425,7 @@ function host() {
 					</td>
 				</tr>
 			</table>
-			<table cellpadding="0" cellspacing="1">
+			<table cellpadding="0" cellspacing="3">
 				<tr>
 					<td class="nw50">
 						&nbsp;<?php print __("Site:");?>&nbsp;
@@ -1568,8 +1568,6 @@ function host() {
 
 	$display_text = array(
 		"description" => array(__("Description"), "ASC"),
-		"site" => array(__("Site"), "ASC"),
-		"poller" => array(__("Poller"), "ASC"),
 		"host.hostname" => array(__("Hostname"), "ASC"),
 		"id" => array(__("ID"), "ASC"),
 		"nosort1" => array(__("Graphs"), "ASC"),
@@ -1588,8 +1586,6 @@ function host() {
 			form_alternate_row_color('line' . $host["id"], true);
 			form_selectable_cell("<a style='white-space:nowrap;' class='linkEditMain' href='" . htmlspecialchars("host.php?action=edit&id=" . $host["id"]) . "'>" .
 				(strlen($_REQUEST["filter"]) ? preg_replace("/(" . preg_quote($_REQUEST["filter"]) . ")/i", "<span class=\"filter\">\\1</span>", $host["description"]) : $host["description"]) . "</a>", $host["id"]);
-			form_selectable_cell(($host["site"] == 0 ? __("Not Defined") : ($host["site"] == '' ? __("Unknown") : $host["site"])), $host["id"]);
-			form_selectable_cell(($host["poller"] == 0 ? __("System Default") : ($host["poller"] == '' ? __("Unknown") : $host["poller"])), $host["id"]);
 			form_selectable_cell((strlen($_REQUEST["filter"]) ? preg_replace("/(" . preg_quote($_REQUEST["filter"]) . ")/i", "<span class=\"filter\">\\1</span>", $host["hostname"]) : $host["hostname"]), $host["id"]);
 			form_selectable_cell(round(($host["id"]), 2), $host["id"]);
 			form_selectable_cell((isset($host_graphs[$host["id"]]) ? $host_graphs[$host["id"]] : 0), $host["id"]);

@@ -461,7 +461,7 @@ function site_filter() {
 	<tr class='rowAlternate2'>
 		<td>
 			<form method='get' action='<?php print basename($_SERVER["PHP_SELF"]);?>' name='site_edit'>
-			<table cellpadding="1" cellspacing="0">
+			<table cellpadding="0" cellspacing="3">
 				<tr>
 					<td class="nw50">
 						&nbsp;<?php print __("Search:");?>&nbsp;
@@ -498,7 +498,7 @@ function site_filter() {
 			<?php
 			if (!(get_request_var_request("detail") == "false")) { ?>
 			</table>
-			<table cellpadding="1" cellspacing="0">
+			<table cellpadding="0" cellspacing="3">
 				<tr>
 					<td class="nw50">
 						&nbsp;<?php print __("Site:");?>

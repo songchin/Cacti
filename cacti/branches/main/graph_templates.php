@@ -548,7 +548,7 @@ function template() {
 	<tr class='rowAlternate2'>
 		<td>
 			<form name="form_graph_template" method='request' action='<?php print basename($_SERVER["PHP_SELF"]);?>'>
-			<table cellpadding="0" cellspacing="0">
+			<table cellpadding="0" cellspacing="3">
 				<tr>
 					<td class="nw50">
 						&nbsp;<?php print __("Search:");?>&nbsp;

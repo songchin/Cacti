@@ -522,7 +522,7 @@ function cdef() {
 	<tr class='rowAlternate2'>
 		<td>
 			<form name="form_cdef" action="cdef.php">
-			<table cellpadding="0" cellspacing="0">
+			<table cellpadding="0" cellspacing="3">
 				<tr>
 					<td class="nw50">
 						&nbsp;<?php print __("Search:");?>&nbsp;
