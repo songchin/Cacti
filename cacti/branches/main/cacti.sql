@@ -2016,7 +2016,7 @@ CREATE TABLE host (
   max_time decimal(10,5) default '0.00000',
   cur_time decimal(10,5) default '0.00000',
   avg_time decimal(10,5) default '0.00000',
-  poller_time decimal(10,5) NOT NULL default '0.00000',
+  polling_time decimal(10,5) NOT NULL default '0.00000',
   total_polls int(12) unsigned default '0',
   failed_polls int(12) unsigned default '0',
   availability decimal(8,5) NOT NULL default '100.00000',
