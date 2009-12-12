@@ -98,14 +98,49 @@ function db_install_execute($cacti_version, $sql) {
 function find_best_path($binary_name) {
 	global $config;
 	if (CACTI_SERVER_OS == "win32") {
-		$search_paths = array("c:/usr/bin", "c:/cacti", "c:/rrdtool", "c:/spine", "c:/php", "c:/progra~1/php", "c:/net-snmp/bin", "c:/progra~1/net-snmp/bin", "d:/usr/bin", "d:/net-snmp/bin", "d:/progra~1/net-snmp/bin", "d:/cacti", "d:/rrdtool", "d:/spine", "d:/php", "d:/progra~1/php");
+		$pgf = getenv("ProgramFiles");
+		$pgf64 = getenv("ProgramW6432");
+
+		if (strlen($pgf64)) {
+			$search_paths[] = $pgf64 . "/php";
+			$search_paths[] = $pgf64 . "/rrdtool";
+			$search_paths[] = $pgf64 . "/net-snmp/bin";
+		}
+		$search_paths[] = $pgf . "/php";
+		$search_paths[] = $pgf . "/rrdtool";
+		$search_paths[] = $pgf . "/net-snmp/bin";
+		$search_paths[] = "c:/php";
+		$search_paths[] = "c:/cacti";
+		$search_paths[] = "c:/spine";
+		$search_paths[] = "c:/usr/bin";
+		$search_paths[] = "c:/usr/net-snmp/bin";
+		$search_paths[] = "c:/rrdtool";
+		$search_paths[] = "d:/php";
+		$search_paths[] = "d:/cacti";
+		$search_paths[] = "d:/spine";
+		$search_paths[] = "d:/usr/bin";
+		$search_paths[] = "d:/usr/net-snmp/bin";
+		$search_paths[] = "d:/rrdtool";
+
+		//$search_paths = array("c:/usr/bin", "c:/cacti", "c:/rrdtool", "c:/spine", "c:/php",
+		//	"c:/progra~1/php", "c:/progra~2/php", "c:/net-snmp/bin", "c:/progra~1/net-snmp/bin",
+		//	"c:/progra~2/net-snmp/bin", "d:/usr/bin", "d:/net-snmp/bin",
+		//	"d:/progra~1/net-snmp/bin", "d:/cacti", "d:/rrdtool",
+		//	"d:/spine", "d:/php", "d:/progra~1/php");
 	}else{
 		$search_paths = array("/bin", "/sbin", "/usr/bin", "/usr/sbin", "/usr/local/bin", "/usr/local/sbin");
 	}
 
 	for ($i=0; $i<count($search_paths); $i++) {
-		if ((file_exists($search_paths[$i] . "/" . $binary_name)) && (is_readable($search_paths[$i] . "/" . $binary_name))) {
-			return $search_paths[$i] . "/" . $binary_name;
+		if (CACTI_SERVER_OS == "win32") {
+			$path = dosPath($search_paths[$i]);
+		}else{
+			$path = $search_paths[$i];
+		}
+
+		if ((file_exists($path . "/" . $binary_name)) && (is_readable($path . "/" . $binary_name))) {
+
+			return $path . "/" . $binary_name;
 		}
 	}
 }

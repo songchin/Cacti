@@ -99,11 +99,17 @@ define("CACTI_SERVER_OS", (strstr(PHP_OS, "WIN")) ? "win32" : "unix");
 /* built-in snmp support */
 define("PHP_SNMP_SUPPORT", function_exists("snmpget"));
 
-/* used for includes */
-define("CACTI_BASE_PATH", preg_replace("/(.*)[\/]include/", "\\1", str_replace("\\","/", dirname(__FILE__))));
-$config["rra_path"] = CACTI_BASE_PATH . '/rra';
+/* define some path constants */
+if (CACTI_SERVER_OS == "win32") {
+	define("CACTI_BASE_PATH", dosPath(preg_replace("/(.*)[\/]include/", "\\1", str_replace("\\","/", dirname(__FILE__)))));
+}else{
+	define("CACTI_BASE_PATH", preg_replace("/(.*)[\/]include/", "\\1", str_replace("\\","/", dirname(__FILE__))));
+}
 
+define('RRA_PATH', CACTI_BASE_PATH . '/rra');
 define('URL_PATH', $config['url_path']);
+/* for backward compatibility */
+$config["rra_path"] = CACTI_BASE_PATH . '/rra';
 
 /* colors */
 $colors["dark_outline"] = "454E53";
@@ -245,4 +251,71 @@ if ((bool)ini_get("register_globals")) {
 	}
 
 	unset($input);
+}
+
+/* dosPath - converts a path with spaces to a dos 8.3 path
+    @arg $path - the path with spaces
+    @returns (un)modified path */
+function dosPath($path) {
+	$path = str_replace("\\", "/", $path);
+	if (substr_count($path, " ") || strlen($path) > 11) {
+		$path_parts = pathinfo($path);
+		$dir  = $path_parts['dirname'];
+		$base = $path_parts['basename'];
+		$ext  = (isset($path_parts['extension']) ? $path_parts['extension']:"");
+		if (isset($path_parts['filename'])) {
+			$file = $path_parts['filename'];
+		}else{
+			$file = str_replace("." . $ext, "", $base);
+		}
+		$npath = "";
+
+		if (is_dir($dir)) {
+			/* the pathinfo replaces the backslash if it's a base path */
+			$dir   = str_replace("\\", "", $dir);
+			$odir  = "";
+			$parts = explode("/", $dir);
+
+			foreach($parts as $part) {
+				if (strlen($part) > 8) {
+					$odir .= "/" . $part;
+					$part = substr($part, 0, 6);
+
+					for ($i = 0; $i < 10; $i++) {
+						$test = $npath . (strlen($npath) ? "/":"") . $part . "~" . $i;
+
+						if (is_dir($test) && is_dir($odir)) {
+							if (scandir($test) == scandir($odir)) {
+								$npath .= (strlen($npath) ? "/":"") . $part . "~" . $i;
+								break;
+							}
+						}
+					}
+				}else{
+					$npath .= (strlen($npath) ? "/":"") . $part;
+				}
+			}
+
+			if (strlen($file) > 8) {
+				$part = substr($file, 0, 6);
+
+				for ($i = 1; $i < 10; $i++) {
+					$test = $npath . (strlen($npath) ? "/":"") . $part . "~" . $i . (strlen($ext) ? "." . $ext:"");
+
+					if (is_file($test) || is_dir($test)) {
+						$npath = $test;
+						break;
+					}
+				}
+			}else{
+				$npath .= (strlen($npath) ? "/":"") . $base;
+			}
+
+			return $npath;
+		}else{
+			return $path;
+		}
+	}else{
+		return $path;
+	}
 }
