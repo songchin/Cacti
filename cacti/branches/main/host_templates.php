@@ -719,12 +719,9 @@ function template_edit() {
 	<?php
 
 	if (!empty($_GET["id"])) {
-		html_start_box("<strong>" . __("Associated Graph Templates") . "</strong>", "100", $colors["header"], "2", "center", "", true);
-
-		print "	<tr class='rowSubHeader'>
-			<td><span>" . __("Graph Template Name") . "</span></td>
-			<td></td>
-			</tr>";
+		html_start_box("<strong>" . __("Associated Graph Templates") . "</strong>", "100", $colors["header"], "3", "center", "", true);
+		print "<tr><td>";
+		html_header(array(__("Graph Template Name")), 3);
 
 		$selected_graph_templates = db_fetch_assoc("SELECT
 			graph_templates.id,

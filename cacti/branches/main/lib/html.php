@@ -644,7 +644,7 @@ function html_header($header_items, $last_item_colspan = 1, $resizable = false, 
 
 		print "\t\t<table cellpadding=0 cellspacing=0 $table_id class='resizable startBoxHeader startBox3 $tclass'><tr class='rowSubHeader nodrag nodrop $trclass'>\n";
 	}else{
-		print "\t\t<table cellpadding=0 cellspacing=0 $table_id class='startBoxHeader $tclass'><tr class='rowSubHeader nodrag nodrop $trclass'>\n";
+		print "\t\t<table cellpadding=0 cellspacing=0 $table_id class='startBoxHeader startBox3 $tclass'><tr class='rowSubHeader nodrag nodrop $trclass'>\n";
 	}
 
 	for ($i=0; $i<count($header_items); $i++) {

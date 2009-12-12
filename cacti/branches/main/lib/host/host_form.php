@@ -1152,7 +1152,7 @@ function host_display_general($host, $host_text) {
 					<?php print (($is_being_graphed == true) ? "<span class=\"success\">" . __("Is Being Graphed") . "</span> (<a href='graphs.php?action=graph_edit&id=" . db_fetch_cell("select id from graph_local where graph_template_id=" . $item["id"] . " and host_id=" . get_request_var("id") . " limit 0,1") . "'>" . __("Edit") . "</a>)" : "<span class=\"unknown\">" . __("Not Being Graphed") . "</span>");?>
 				</td>
 				<td align='right' nowrap>
-					<a href='host.php?action=gt_remove&amp;id=<?php print $item["id"];?>&amp;host_id=<?php print $_GET["id"];?>'><img class='buttonSmall' src='images/delete_icon_large.gif' title='<?php print __("Delete Graph Template Association");?>' alt='<?php print __("Delete");?>' align='middle'></a>
+					<a href='host.php?action=gt_remove&amp;id=<?php print $item["id"];?>&amp;host_id=<?php print $_GET["id"];?>'><img align='absmiddle' class='buttonSmall' src='images/delete_icon_large.gif' title='<?php print __("Delete Graph Template Association");?>' alt='<?php print __("Delete");?>' align='middle'></a>
 				</td>
 			<?php
 			form_end_row();
@@ -1238,8 +1238,8 @@ function host_display_general($host, $host_text) {
 						<?php print (($status == "success") ? "<span class=\"success\">" . __("Success") . "</span>" : "<span class=\"fail\">" . __("Fail") . "</span>");?> [<?php print $num_dq_items;?> <?php print __("Item", $num_dq_items);?>, <?php print $num_dq_rows;?> <?php print __("Row", $num_dq_rows);?>]
 					</td>
 					<td align='right' nowrap>
-						<a href='host.php?action=query_reload&amp;id=<?php print $item["id"];?>&amp;host_id=<?php print $_GET["id"];?>'><img class='buttonSmall' src='images/reload_icon_small.gif' title='<?php print __("Reload Data Query");?>' alt='<?php print __("Reload");?>' align='middle'></a>&nbsp;
-						<a href='host.php?action=query_remove&amp;id=<?php print $item["id"];?>&amp;host_id=<?php print $_GET["id"];?>'><img class='buttonSmall' src='images/delete_icon_large.gif' title='<?php print __("Delete Data Query Association");?>' alt='<?php print __("Delete");?>' align='middle'></a>
+						<a href='host.php?action=query_reload&amp;id=<?php print $item["id"];?>&amp;host_id=<?php print $_GET["id"];?>'><img align='absmiddle' class='buttonSmall' src='images/reload_icon_small.gif' title='<?php print __("Reload Data Query");?>' alt='<?php print __("Reload");?>' align='middle'></a>&nbsp;
+						<a href='host.php?action=query_remove&amp;id=<?php print $item["id"];?>&amp;host_id=<?php print $_GET["id"];?>'><img align='absmiddle' class='buttonSmall' src='images/delete_icon_large.gif' title='<?php print __("Delete Data Query Association");?>' alt='<?php print __("Delete");?>' align='middle'></a>
 					</td>
 				<?php
 				form_end_row();

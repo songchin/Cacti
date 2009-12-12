@@ -664,7 +664,7 @@ function data_query_edit() {
 			html_start_box("<strong>" . __("Associated Graph Templates") . "</strong>", "100", $colors["header"], "0", "center", "data_queries.php?action=item_edit&snmp_query_id=" . $snmp_query["id"]);
 			$header_items = array(__("Name"), __("Graph Template Name"));
 			print "<tr><td>";
-			html_header($header_items, 2, true, 'assoc_graph_templates', 'left wp60');
+			html_header($header_items, 2, true, 'assoc_graph_templates', 'left wp100');
 
 			$snmp_query_graphs = db_fetch_assoc("select
 				snmp_query_graph.id,
