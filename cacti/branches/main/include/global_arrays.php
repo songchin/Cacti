@@ -413,9 +413,9 @@ $menu = array(
 		"data_input.php" => __("Data Input Methods"),
 		),
 	__("Templates") => array(
-		"host_templates.php" => __("Devices"),
-		"graph_templates.php" => __("Graphs"),
-		"data_templates.php" => __("Data Sources"),
+		"host_templates.php" => __("Device"),
+		"graph_templates.php" => __("Graph"),
+		"data_templates.php" => __("Data Sources),
 		),
 	__("Presets") => array(
 		"cdef.php" => __("CDEFs"),
