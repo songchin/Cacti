@@ -415,7 +415,7 @@ $menu = array(
 	__("Templates") => array(
 		"host_templates.php" => __("Device"),
 		"graph_templates.php" => __("Graph"),
-		"data_templates.php" => __("Data Sources),
+		"data_templates.php" => __("Data Source"),
 		),
 	__("Presets") => array(
 		"cdef.php" => __("CDEFs"),
