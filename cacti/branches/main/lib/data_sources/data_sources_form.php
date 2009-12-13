@@ -941,9 +941,12 @@ function data_source_edit() {
 
 	if ((isset($_SESSION["ds_info_mode"])) && (isset($_GET["id"]))) {
 		$rrd_info = rrdtool_function_info($_GET["id"]);
-		$diff = rrdtool_cacti_compare($_GET["id"], $rrd_info);
-		rrdtool_info2html($rrd_info, $diff);
-		rrdtool_tune($rrd_info["filename"], $diff, true);
+
+		if (sizeof($rrd_info["rra"])) {
+			$diff = rrdtool_cacti_compare($_GET["id"], $rrd_info);
+			rrdtool_info2html($rrd_info, $diff);
+			rrdtool_tune($rrd_info["filename"], $diff, true);
+		}
 	}
 
 	if ((isset($_GET["id"])) || (isset($_GET["new"]))) {
