@@ -1037,8 +1037,12 @@ function form_save_button_alt($cancel_action = "", $action = "save", $force_type
 	if ($force_type != "import" && $force_type != "export") {
 		if (substr_count($cancel_action, "!")) {
 			$url = form_cancel_action_compose($cancel_action);
-		}else{
+			$action = "window.location.assign(\"" . htmlspecialchars($url) . "\")";
+		}elseif (isset($_SERVER['HTTP_REFERER'])) {
 			$url = $_SERVER['HTTP_REFERER'];
+			$action = "window.location.assign(\"" . htmlspecialchars($url) . "\")";
+		}else{
+			$action = "history.back()";
 		}
 	}
 
@@ -1047,7 +1051,7 @@ function form_save_button_alt($cancel_action = "", $action = "save", $force_type
 		<tr>
 			<td>
 				<input type='hidden' name='action' value='<?php print $action;?>'>
-				<?php if ($force_type != "import" && $force_type != "export") { ?><input id='cancel' type='button' value='<?php print $calt;?>' onClick='window.location.assign("<?php print htmlspecialchars($url);?>")' name='cancel'><?php } ?>
+				<?php if ($force_type != "import" && $force_type != "export") { ?><input id='cancel' type='button' value='<?php print $calt;?>' onClick='<?php print $action;?>' name='cancel'><?php } ?>
 				<input id='<?php print $sname;?>' type='submit' value='<?php print $salt;?>' name='<?php print $sname;?>'>
 			</td>
 		</tr>

@@ -688,10 +688,13 @@ function data_source_edit() {
 	</script>
 	<?php
 
-	$tip_text  = "<tr><td align=\\'right\\'><a class=\\'popup_item\\' id=\\'changeDSState\\' onClick=\\'changeDSState()\\' href=\\'#\\'>Unlock/Lock</a></td></tr>";
-	$tip_text .= "<tr><td align=\\'right\\'><a class=\\'popup_item\\' href=\\'" . htmlspecialchars('data_sources.php?action=data_source_toggle_status&id=' . (isset($_GET["id"]) ? $_GET["id"] : 0) . '&newstate=' . (($data["active"] == "on") ? "0" : "1")) . "\\'>" . (($data["active"] == "on") ? __("Disable") : __("Enable")) . "</a></td></tr>";
-	$tip_text .= "<tr><td align=\\'right\\'><a class=\\'popup_item\\' href=\\'" . htmlspecialchars('data_sources.php?action=data_source_edit&id=' . (isset($_GET["id"]) ? $_GET["id"] : 0) . '&debug=' . (isset($_SESSION["ds_debug_mode"]) ? "0" : "1")) . "\\'>" . __("Turn") . " <strong>" . (isset($_SESSION["ds_debug_mode"]) ? __("Off") : __("On")) . "</strong> " . __("Debug Mode") . "</a></td></tr>";
-	$tip_text .= "<tr><td align=\\'right\\'><a class=\\'popup_item\\' href=\\'" . htmlspecialchars('data_sources.php?action=data_source_edit&id=' . (isset($_GET["id"]) ? $_GET["id"] : 0) . '&info=' . (isset($_SESSION["ds_info_mode"]) ? "0" : "1")) . "\\'>" . __("Turn") . " <strong>" . (isset($_SESSION["ds_info_mode"]) ? __("Off") : __("On")) . "</strong> " . __("RRD Info Mode") . "</a><td></tr>";
+	$tip_text = "";
+	if (isset($data)) {
+		$tip_text .= "<tr><td align=\\'right\\'><a class=\\'popup_item\\' id=\\'changeDSState\\' onClick=\\'changeDSState()\\' href=\\'#\\'>Unlock/Lock</a></td></tr>";
+		$tip_text .= "<tr><td align=\\'right\\'><a class=\\'popup_item\\' href=\\'" . htmlspecialchars('data_sources.php?action=data_source_toggle_status&id=' . (isset($_GET["id"]) ? $_GET["id"] : 0) . '&newstate=' . (($data["active"] == "on") ? "0" : "1")) . "\\'>" . (($data["active"] == "on") ? __("Disable") : __("Enable")) . "</a></td></tr>";
+		$tip_text .= "<tr><td align=\\'right\\'><a class=\\'popup_item\\' href=\\'" . htmlspecialchars('data_sources.php?action=data_source_edit&id=' . (isset($_GET["id"]) ? $_GET["id"] : 0) . '&debug=' . (isset($_SESSION["ds_debug_mode"]) ? "0" : "1")) . "\\'>" . __("Turn") . " <strong>" . (isset($_SESSION["ds_debug_mode"]) ? __("Off") : __("On")) . "</strong> " . __("Debug Mode") . "</a></td></tr>";
+		$tip_text .= "<tr><td align=\\'right\\'><a class=\\'popup_item\\' href=\\'" . htmlspecialchars('data_sources.php?action=data_source_edit&id=' . (isset($_GET["id"]) ? $_GET["id"] : 0) . '&info=' . (isset($_SESSION["ds_info_mode"]) ? "0" : "1")) . "\\'>" . __("Turn") . " <strong>" . (isset($_SESSION["ds_info_mode"]) ? __("Off") : __("On")) . "</strong> " . __("RRD Info Mode") . "</a><td></tr>";
+	}
 	if (!empty($data_template["id"])) {
 		$tip_text .= "<tr><td align=\\'right\\'><a class=\\'popup_item\\' href=" . htmlspecialchars('data_templates.php?action=template_edit&id=' . (isset($data_template["id"]) ? $data_template["id"] : "0")) . "\\'>" . __("Edit Data Template") . "<br></a></td></td>";
 	}
