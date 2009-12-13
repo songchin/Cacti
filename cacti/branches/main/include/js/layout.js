@@ -88,7 +88,7 @@ function gt_update_deps(num_columns) {
 }
 
 function gt_reset_deps(num_columns) {
-	var prefix = 'cg_'
+	var prefix = 'cg_';
 
 	for (var i = 0; i < document.chk.elements.length; i++) {
 		if (document.chk.elements[i].name.substr( 0, prefix.length ) == prefix) {
@@ -175,7 +175,7 @@ function dq_select_line(snmp_query_id, snmp_index, update) {
 
 function dq_is_disabled(snmp_query_id, snmp_index) {
 	dropdown = document.getElementById('sgg_' + snmp_query_id);
-	var snmp_query_graph_id = dropdown.value
+	var snmp_query_graph_id = dropdown.value;
 
 	for (var i = 0; i < created_graphs[snmp_query_graph_id].length; i++) {
 		if (created_graphs[snmp_query_graph_id][i] == snmp_index) {
@@ -190,12 +190,12 @@ function dq_update_deps(snmp_query_id, num_columns) {
 	dq_reset_deps(snmp_query_id, num_columns);
 
 	dropdown = document.getElementById('sgg_' + snmp_query_id);
-	var snmp_query_graph_id = dropdown.value
+	var snmp_query_graph_id = dropdown.value;
 
 	for (var i = 0; i < created_graphs[snmp_query_graph_id].length; i++) {
 		for (var j = 0; j < num_columns; j++) {
 			lineid = document.getElementById('text' + snmp_query_id + '_' + created_graphs[snmp_query_graph_id][i] + '_' + j);
-			if ( lineid ) { lineid.style.color = '999999' };
+			if ( lineid ) { lineid.style.color = '999999'; };
 		}
 
 		chkbx = document.getElementById('sg_' + snmp_query_id + '_' + created_graphs[snmp_query_graph_id][i]);
@@ -205,12 +205,12 @@ function dq_update_deps(snmp_query_id, num_columns) {
 		}
 
 		lineid = document.getElementById('line' + snmp_query_id + '_' + created_graphs[snmp_query_graph_id][i]);
-		if ( lineid ) { lineid.style.backgroundColor = '' };
+		if ( lineid ) { lineid.style.backgroundColor = ''; };
 	}
 }
 
 function dq_reset_deps(snmp_query_id, num_columns) {
-	var prefix = 'sg_' + snmp_query_id + '_'
+	var prefix = 'sg_' + snmp_query_id + '_';
 
 	for (var i = 0; i < document.chk.elements.length; i++) {
 		if (document.chk.elements[i].name.substr( 0, prefix.length ) == prefix) {
@@ -342,7 +342,7 @@ function closeMenu(id) {
 
 	if (!aniInProgress) {
 		aniInProgress = true;
-		closeMe = setInterval(function() { moveUp(element) }, 10);
+		closeMe = setInterval(function() { moveUp(element); }, 10);
 		aniInProgress = false;
 	}
 }
@@ -352,7 +352,7 @@ function openMenu(id) {
 
 	if (!aniInProgress) {
 		aniInProgress = true;
-		openMe  = setInterval(function() { moveDown(element) }, 10);
+		openMe  = setInterval(function() { moveDown(element); }, 10);
 		aniInProgress = false;
 	}
 }
@@ -645,12 +645,12 @@ function MouseMove(event) {
 				document.getElementById("menu").style.width           = "0px";
 				document.getElementById("menu").style.marginLeft      = "-200px";
 				document.getElementById("content").style.left         = "2px";
-				document.getElementById("content").style.width        = parseInt(clWidth + 200) + "px"
+				document.getElementById("content").style.width        = parseInt(clWidth + 200) + "px";
 			}else{
 				document.getElementById("vsplitter").style.marginLeft     = "0px";
 				document.getElementById("graph_tree").style.width         = "0px";
 				document.getElementById("graph_tree").style.marginLeft    = "-200px";
-				document.getElementById("graph_tree_content").style.width = parseInt(clWidth + 200) + "px"
+				document.getElementById("graph_tree_content").style.width = parseInt(clWidth + 200) + "px";
 				document.getElementById("graph_tree_content").style.left  = "2px";
 			}
 		}
@@ -775,13 +775,13 @@ function vSplitterPos() {
 				document.getElementById("menu").style.width           = "0px";
 				document.getElementById("menu").style.marginLeft      = "-200px";
 				document.getElementById("content").style.left         = "2px";
-				document.getElementById("content").style.width        = parseInt(clWidth - 20) + "px"
+				document.getElementById("content").style.width        = parseInt(clWidth - 20) + "px";
 			}else{
 				document.getElementById("vsplitter").style.marginLeft     = "0px";
 				document.getElementById("graph_tree").style.width         = "0px";
 				document.getElementById("graph_tree").style.marginLeft    = "-200px";
 				document.getElementById("graph_tree_content").style.left  = "2px";
-				document.getElementById("graph_tree_content").style.width = parseInt(clWidth - 20) + "px"
+				document.getElementById("graph_tree_content").style.width = parseInt(clWidth - 20) + "px";
 			}
 		}else{
 			if (document.getElementById("menu") != null) {
@@ -789,13 +789,13 @@ function vSplitterPos() {
 				document.getElementById("menu").style.width           = menuWidth  + "px";
 				document.getElementById("menu").style.marginLeft      = "0px";
 				document.getElementById("content").style.left         = marginLeft + "px";
-				document.getElementById("content").style.width        = parseInt(clWidth - divSt - 20) + "px"
+				document.getElementById("content").style.width        = parseInt(clWidth - divSt - 20) + "px";
 			}else{
 				document.getElementById("vsplitter").style.marginLeft     = divSt      + "px";
 				document.getElementById("graph_tree").style.width         = menuWidth  + "px";
 				document.getElementById("graph_tree").style.marginLeft    = "0px";
 				document.getElementById("graph_tree_content").style.left  = marginLeft + "px";
-				document.getElementById("graph_tree_content").style.width = parseInt(clWidth - divSt - 20) + "px"
+				document.getElementById("graph_tree_content").style.width = parseInt(clWidth - divSt - 20) + "px";
 			}
 		}
 	}
