@@ -563,7 +563,7 @@ function html_header_sort($header_items, $sort_column, $sort_direction, $last_it
    @arg $sort_direction - the value the current sort direction.  The actual sort direction
         will be opposite this direction if the user selects the same named column.
    @arg $form_action - the url to post the 'select all' form to */
-function html_header_sort_checkbox($header_items, $sort_column, $sort_direction, $form_action = "") {
+function html_header_sort_checkbox($header_items, $sort_column, $sort_direction, $form_action = "", $table_id = "") {
 	global $colors;
 	static $rand_id = 0;
 
@@ -579,8 +579,10 @@ function html_header_sort_checkbox($header_items, $sort_column, $sort_direction,
 	/* default to the 'current' file */
 	if ($form_action == "") { $form_action = basename($_SERVER["PHP_SELF"]); }
 
+	$table_id = ($table_id != '') ? "id=\"$table_id\"" : "";
+
 	print "<form name='chk' method='post' action='$form_action'>\n";	# properly place form outside table
-	print "\t<table cellpadding=0 cellspacing=0 class='resizable startBoxHeader startBox3'>\n";
+	print "\t<table $table_id class='resizable startBoxHeader startBox3'>\n";
 	print "\t\t<tr class='rowSubHeader'>\n";
 
 	$pathname = html_get_php_pathname();
