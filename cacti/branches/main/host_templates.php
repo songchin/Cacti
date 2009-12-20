@@ -714,7 +714,7 @@ function template_edit() {
 
 	});
 
-	-->
+	//-->
 	</script>
 	<?php
 
@@ -789,6 +789,7 @@ function template_edit() {
 
 		<?php
 		form_end_row();
+		print "</table></td></tr>";		/* end of html_header */
 		html_end_box(FALSE);
 
 		html_start_box("<strong>" . __("Associated Data Queries") . "</strong>", "100", $colors["header"], "0", "center", "", true);
@@ -920,7 +921,7 @@ function template() {
 		strURL = strURL + '&filter=' + objForm.filter.value;
 		document.location = strURL;
 	}
-	-->
+	//-->
 	</script>
 	<?php
 
