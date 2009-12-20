@@ -165,18 +165,20 @@ $snmp_query_field_actions = array(1 =>
 	__("SNMP Output Type (Dropdown)"),
 	);
 
-$consolidation_functions = array(1 =>
-	"AVERAGE",
-	"MIN",
-	"MAX",
-	"LAST");
+$consolidation_functions = array(
+	RRD_CF_AVERAGE		=> "AVERAGE",
+	RRD_CF_MIN			=> "MIN",
+	RRD_CF_MAX			=> "MAX",
+	RRD_CF_LAST			=> "LAST",
+	);
 
 $data_source_types = array(
 	DATA_SOURCE_TYPE_GAUGE		=> "GAUGE",
 	DATA_SOURCE_TYPE_COUNTER	=> "COUNTER",
 	DATA_SOURCE_TYPE_DERIVE		=> "DERIVE",
 	DATA_SOURCE_TYPE_ABSOLUTE	=> "ABSOLUTE",
-	DATA_SOURCE_TYPE_COMPUTE	=> "COMPUTE");
+	DATA_SOURCE_TYPE_COMPUTE	=> "COMPUTE",
+	);
 
 $graph_item_types = array(
 	GRAPH_ITEM_TYPE_COMMENT => "COMMENT",

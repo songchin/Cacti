@@ -69,6 +69,11 @@ define("DATA_SOURCE_TYPE_DERIVE", 3);
 define("DATA_SOURCE_TYPE_ABSOLUTE", 4);
 define("DATA_SOURCE_TYPE_COMPUTE", 5);
 
+define("RRD_CF_AVERAGE", 1);
+define("RRD_CF_MIN", 2);
+define("RRD_CF_MAX", 3);
+define("RRD_CF_LAST", 4);
+
 define("GRAPH_ACTION_DELETE", 0);
 define("GRAPH_ACTION_CHANGE_TEMPLATE", 1);
 define("GRAPH_ACTION_DUPLICATE", 2);

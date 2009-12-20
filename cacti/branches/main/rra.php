@@ -368,6 +368,7 @@ function rra() {
 
 	$display_text = array(
 		"name" => array(__("Name"), "ASC"),
+		"xff" => array(__("X Files Factor"), "ASC"),
 		"steps" => array(__("Steps"), "ASC"),
 		"rows" => array(__("Rows"), "ASC"),
 		"timespan" => array(__("Timespan"), "ASC"));
@@ -378,6 +379,7 @@ function rra() {
 		foreach ($rra_list as $rra) {
 			form_alternate_row_color('line' . $rra["id"], true);
 			form_selectable_cell("<a class='linkEditMain' href='" . htmlspecialchars("rra.php?action=edit&id=" . $rra["id"]) . "'>" . (strlen($_REQUEST["filter"]) ? preg_replace("/(" . preg_quote($_REQUEST["filter"]) . ")/i", "<span class=\"filter\">\\1</span>", $rra["name"]) : $rra["name"]) . "</a>", $rra["id"]);
+			form_selectable_cell($rra["x_files_factor"], $rra["id"]);
 			form_selectable_cell($rra["steps"], $rra["id"]);
 			form_selectable_cell($rra["rows"], $rra["id"]);
 			form_selectable_cell($rra["timespan"], $rra["id"]);

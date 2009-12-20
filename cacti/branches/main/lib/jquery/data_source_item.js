@@ -7,7 +7,7 @@ $(document).ready(function(){
 
 function DS_Visibility() {
 
-	if ($('#data_source_type_id').val() == 5) {
+	if ($('#data_source_type_id').val() == <?php print DATA_SOURCE_TYPE_COMPUTE; ?>) {
 		$('.DS_compute').show();
 		$('.DS_std').hide();
 	} else {
@@ -15,5 +15,5 @@ function DS_Visibility() {
 		$('.DS_std').show();
 	}
 }
--->
+//-->
 </script>

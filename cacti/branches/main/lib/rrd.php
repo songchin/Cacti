@@ -1028,16 +1028,16 @@ function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rr
 		}else{
 		/* if there is not a DEF defined for the current data source/cf combination, then we will have to
 		improvise. choose the first available cf in the following order: AVERAGE, MAX, MIN, LAST */
-			if (isset($cf_ds_cache{$graph_item["data_template_rrd_id"]}[1])) {
-				$cf_id = 1; /* CF: AVERAGE */
-			}elseif (isset($cf_ds_cache{$graph_item["data_template_rrd_id"]}[3])) {
-				$cf_id = 3; /* CF: MAX */
-			}elseif (isset($cf_ds_cache{$graph_item["data_template_rrd_id"]}[2])) {
-				$cf_id = 2; /* CF: MIN */
-			}elseif (isset($cf_ds_cache{$graph_item["data_template_rrd_id"]}[4])) {
-				$cf_id = 4; /* CF: LAST */
+			if (isset($cf_ds_cache{$graph_item["data_template_rrd_id"]}[RRD_CF_AVERAGE])) {
+				$cf_id = RRD_CF_AVERAGE; /* CF: AVERAGE */
+			}elseif (isset($cf_ds_cache{$graph_item["data_template_rrd_id"]}[RRD_CF_MAX])) {
+				$cf_id = RRD_CF_MAX; /* CF: MAX */
+			}elseif (isset($cf_ds_cache{$graph_item["data_template_rrd_id"]}[RRD_CF_MIN])) {
+				$cf_id = RRD_CF_MIN; /* CF: MIN */
+			}elseif (isset($cf_ds_cache{$graph_item["data_template_rrd_id"]}[RRD_CF_LAST])) {
+				$cf_id = RRD_CF_LAST; /* CF: LAST */
 			}else{
-				$cf_id = 1; /* CF: AVERAGE */
+				$cf_id = RRD_CF_AVERAGE; /* CF: AVERAGE */
 			}
 		}
 		/* now remember the correct CF reference */
@@ -1698,16 +1698,16 @@ function rrdtool_function_xport($local_graph_id, $rra_id, $xport_data_array, &$x
 		}else{
 		/* if there is not a DEF defined for the current data source/cf combination, then we will have to
 		improvise. choose the first available cf in the following order: AVERAGE, MAX, MIN, LAST */
-			if (isset($cf_ds_cache{$xport_item["data_template_rrd_id"]}[1])) {
-				$cf_id = 1; /* CF: AVERAGE */
-			}elseif (isset($cf_ds_cache{$xport_item["data_template_rrd_id"]}[3])) {
-				$cf_id = 3; /* CF: MAX */
-			}elseif (isset($cf_ds_cache{$xport_item["data_template_rrd_id"]}[2])) {
-				$cf_id = 2; /* CF: MIN */
-			}elseif (isset($cf_ds_cache{$xport_item["data_template_rrd_id"]}[4])) {
-				$cf_id = 4; /* CF: LAST */
+			if (isset($cf_ds_cache{$xport_item["data_template_rrd_id"]}[RRD_CF_AVERAGE])) {
+				$cf_id = RRD_CF_AVERAGE; /* CF: AVERAGE */
+			}elseif (isset($cf_ds_cache{$xport_item["data_template_rrd_id"]}[RRD_CF_MAX])) {
+				$cf_id = RRD_CF_MAX; /* CF: MAX */
+			}elseif (isset($cf_ds_cache{$xport_item["data_template_rrd_id"]}[RRD_CF_MIN])) {
+				$cf_id = RRD_CF_MIN; /* CF: MIN */
+			}elseif (isset($cf_ds_cache{$xport_item["data_template_rrd_id"]}[RRD_CF_LAST])) {
+				$cf_id = RRD_CF_LAST; /* CF: LAST */
 			}else{
-				$cf_id = 1; /* CF: AVERAGE */
+				$cf_id = RRD_CF_AVERAGE; /* CF: AVERAGE */
 			}
 		}
 		/* now remember the correct CF reference */

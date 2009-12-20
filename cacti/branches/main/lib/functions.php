@@ -1427,20 +1427,7 @@ function get_rrd_cfs($local_data_id) {
 
 	if (sizeof($cfs)) {
 		foreach($cfs as $cf) {
-			switch($cf) {
-			case "AVG":
-				$new_cfs[] = array_search('AVERAGE', $consolidation_functions);
-				break;
-			case "MIN":
-				$new_cfs[] = array_search('MIN', $consolidation_functions);
-				break;
-			case "MAX":
-				$new_cfs[] = array_search('MAX', $consolidation_functions);
-				break;
-			case "LAST":
-				$new_cfs[] = array_search('LAST', $consolidation_functions);
-				break;
-			}
+			$new_cfs[] = array_search($cf, $consolidation_functions);
 		}
 	}
 

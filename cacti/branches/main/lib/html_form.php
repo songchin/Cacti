@@ -585,7 +585,7 @@ function form_dropdown_image($form_name, $form_path, $form_previous_value, $form
 		$("#designhtml select").msDropDown();
 		$("#dynamic").msDropDown();
 	});
-	-->
+	//-->
 	</script><?php
 }
 
@@ -630,7 +630,7 @@ function form_dropdown_cb($form_name, $form_sql, $form_sql_id, $form_previous_va
 			}
 		});
 	});
-	-->
+	//-->
 	</script>
 	<input class="ac_field" type="text" id="<?php print $form_name . '_cb';?>" size="70" value="<?php print $form_previous_text; ?>">
 	<input type="hidden" id="<?php print $form_name;?>" value='<?php print $form_previous_value;?>'>
@@ -931,8 +931,8 @@ function form_confirm_buttons($action_url, $cancel_url) {
  ?>
 	<tr>
 		<td bgcolor="#E1E1E1">
-			<a href="<?php print $cancel_url;?>"><img src="<?php print URL_PATH; ?>images/button_cancel.gif" alt="<?php print __("Cancel");?>" align="absmiddle"></a>
-			<a href="<?php print $action_url . "&confirm=yes";?>"><img src="<?php print URL_PATH ?>images/button_delete.gif" alt="<?php print __("Delete");?>" align="absmiddle"></a>
+			<a href="<?php print $cancel_url;?>"><img src="<?php print URL_PATH; ?>images/button_cancel.gif" alt="<?php print __("Cancel");?>" align="middle"></a>
+			<a href="<?php print $action_url . "&confirm=yes";?>"><img src="<?php print URL_PATH ?>images/button_delete.gif" alt="<?php print __("Delete");?>" align="middle"></a>
 		</td>
 	</tr>
 <?php }
