@@ -174,7 +174,7 @@ $page_title = api_plugin_hook_function('page_title', 'Cacti');
 		<div id="codelist" style="float:right; list-style:none; display:inline;">
 			<span id="loading" style="display:none;"><img src="<?php echo URL_PATH; ?>images/load_small.gif" align="top" alt="<?php print __("loading");?>">LOADING</span>
 			<ul class="down-list" style="list-style:none; display:inline;">
-				<li><a href="#" class="languages" id="<?php echo URL_PATH; ?>"><img src="<?php echo URL_PATH; ?>images/flag_icons/<?php print CACTI_COUNTRY;?>.gif" align="top" alt="<?php print __("loading");?>">&nbsp;<?php print CACTI_LANGUAGE;?></a></li>
+				<li><a href="#" class="languages" id="languages"><img src="<?php echo URL_PATH; ?>images/flag_icons/<?php print CACTI_COUNTRY;?>.gif" align="top" alt="<?php print __("loading");?>">&nbsp;<?php print CACTI_LANGUAGE;?></a></li>
 			</ul>
 		</div>
 		<?php }?>
