@@ -541,9 +541,8 @@ function form_dropdown($form_name, $form_data, $column_display, $column_id, $for
 
 function form_dropdown_image($form_name, $form_path, $form_previous_value, $form_default_value, $form_width = "120") {
 	if ($form_previous_value == "") {
-		$form_previous_value = $form_default_value;
+		$form_previous_value = $form_path . "/" . $form_default_value;
 	}
-
 	if (isset($_SESSION["sess_field_values"])) {
 		if (!empty($_SESSION["sess_field_values"][$form_name])) {
 			$form_previous_value = $_SESSION["sess_field_values"][$form_name];
@@ -558,7 +557,7 @@ function form_dropdown_image($form_name, $form_path, $form_previous_value, $form
 	$imgpath    = URL_PATH . $form_path;
 
 	if (!empty($form_none_entry)) {
-		print "<option style='width:" . $form_width . "px;' title='" . $imgpath . "/" . $form_previous_value . "' value='" . $imgpath . "/" . $form_previous_value . "'" . (empty($form_previous_value) ? " selected" : "") . ">&nbsp;$form_none_entry&nbsp;</option>\n";
+		print "<option style='width:" . $form_width . "px;' title='" . $form_previous_value . "' value='" . $form_previous_value . "'" . (empty($form_previous_value) ? " selected" : "") . ">&nbsp;$form_none_entry&nbsp;</option>\n";
 	}
 
 	$dh = opendir($path);
@@ -1150,4 +1149,42 @@ function html_simple_decode($string) {
 	}else{
 		return str_replace("&amp;", "&", str_replace("&quot;", "\"", str_replace("&#039;", "'", $string)));
 	}
+}
+
+function draw_template_edit_form ($table_id, $edit_struct, $edit_data, $use_template=false) {
+
+	$header_items = array(__("Field"), __("Value"));
+	print "<tr><td>";
+	html_header($header_items, 1, true, $table_id);
+
+	$form_array = array();
+
+	while (list($field_name, $field_array) = each($edit_struct)) {
+		$form_array += array($field_name => $edit_struct[$field_name]);
+
+		$form_array[$field_name]["value"] = (isset($edit_data) ? $edit_data[$field_name] : "");
+		$form_array[$field_name]["form_id"] = (isset($edit_data) ? $edit_data["id"] : "0");
+
+		if (!(($use_template == false) || ($edit_data{"t_" . $field_name} == "on"))) {
+			$form_array[$field_name]["method"] = "template_" . $form_array[$field_name]["method"];
+		}
+
+
+		$form_array[$field_name]["sub_checkbox"] = array(
+			"name" => "t_" . $field_name,
+			"friendly_name" => "<em>" . __("Use Per-Graph Value (Ignore this Value)") . "</em>",
+			"value" => (isset($edit_data) ? $edit_data{"t_" . $field_name} : ""),
+			"class" => (isset($form_array[$field_name]["class"]) ? $form_array[$field_name]["class"] : "")
+		);
+	}
+
+	draw_edit_form(
+		array(
+			"config" => array("no_form_tag" => true),
+			"fields" => $form_array
+			)
+		);
+
+	print "</table></td></tr>";		/* end of html_header */
+
 }
