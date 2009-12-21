@@ -1,4 +1,4 @@
-<?
+<?php
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2009 The Cacti Group                                 |
@@ -34,7 +34,7 @@ header("Pragma: no-cache");
 header("Expires: ". gmdate("D, d M Y H:i:s", mktime(date("H"), date("i"), date("s"), date("m")-1, date("d"), date("Y")))." GMT");
 header("Last-Modified: ". gmdate("D, d M Y H:i:s")." GMT");
 
-switch($_REQUEST["type"]) {
+switch(get_request_var_request("type")) {
 case "list":
 	/* parse the id string
 	 * prototypes:
