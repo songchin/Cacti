@@ -524,6 +524,13 @@ function form_dropdown($form_name, $form_data, $column_display, $column_id, $for
 		$class = " class='$class' ";
 	}
 
+	if (isset($_SESSION["sess_error_fields"])) {
+		if (!empty($_SESSION["sess_error_fields"][$form_name])) {
+			$class .= " class='txtErrorTextBox'";
+			unset($_SESSION["sess_error_fields"][$form_name]);
+		}
+	}
+
 	if (strlen($on_change)) {
 		$on_change = " onChange='$on_change' ";
 	}
