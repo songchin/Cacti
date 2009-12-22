@@ -22,6 +22,8 @@
  +-------------------------------------------------------------------------+
 */
 
+define("CHECKED", "on");
+
 define("HOST_GROUPING_GRAPH_TEMPLATE", 1);
 define("HOST_GROUPING_DATA_QUERY_INDEX", 2);
 
@@ -37,10 +39,6 @@ define("TREE_ITEM_TYPE_HEADER", 1);
 define("TREE_ITEM_TYPE_GRAPH", 2);
 define("TREE_ITEM_TYPE_DEVICE", 3);
 
-define("GRAPH_TREE_VIEW", 1);
-define("GRAPH_LIST_VIEW", 2);
-define("GRAPH_PREVIEW_VIEW", 3);
-
 define("RRDTOOL_PIPE_CHILD_READ", 0);
 define("RRDTOOL_PIPE_CHILD_WRITE", 1);
 define("RRDTOOL_PIPE_STDERR_WRITE", 2);
@@ -49,6 +47,23 @@ define("RRDTOOL_OUTPUT_NULL", 0);
 define("RRDTOOL_OUTPUT_STDOUT", 1);
 define("RRDTOOL_OUTPUT_STDERR", 2);
 define("RRDTOOL_OUTPUT_GRAPH_DATA", 3);
+
+define("RRD_CF_AVERAGE", 1);
+define("RRD_CF_MIN", 2);
+define("RRD_CF_MAX", 3);
+define("RRD_CF_LAST", 4);
+
+define("RRD_VERSION_1_0",	"rrd-1.0.x");
+define("RRD_VERSION_1_2",	"rrd-1.2.x");
+define("RRD_VERSION_1_3",	"rrd-1.3.x");
+define("RRD_VERSION_1_4",	"rrd-1.4.x");
+
+define("RRD_FONT_RENDER_NORMAL", "normal");
+define("RRD_FONT_RENDER_LIGHT","light");
+define("RRD_FONT_RENDER_MONO", "mono");
+
+define("RRD_GRAPH_RENDER_NORMAL", "normal");
+define("RRD_GRAPH_RENDER_MONO", "mono");
 
 define("DATA_QUERY_AUTOINDEX_NONE", 0);
 define("DATA_QUERY_AUTOINDEX_BACKWARDS_UPTIME", 1);
@@ -69,10 +84,9 @@ define("DATA_SOURCE_TYPE_DERIVE", 3);
 define("DATA_SOURCE_TYPE_ABSOLUTE", 4);
 define("DATA_SOURCE_TYPE_COMPUTE", 5);
 
-define("RRD_CF_AVERAGE", 1);
-define("RRD_CF_MIN", 2);
-define("RRD_CF_MAX", 3);
-define("RRD_CF_LAST", 4);
+define("GRAPH_TREE_VIEW", 1);
+define("GRAPH_LIST_VIEW", 2);
+define("GRAPH_PREVIEW_VIEW", 3);
 
 define("GRAPH_ACTION_DELETE", 0);
 define("GRAPH_ACTION_CHANGE_TEMPLATE", 1);
@@ -83,6 +97,11 @@ define("GRAPH_ACTION_REAPPLY_SUGGESTED_NAMES", 5);
 define("GRAPH_ACTION_RESIZE", 6);
 define("GRAPH_ACTION_ENABLE_EXPORT", 7);
 define("GRAPH_ACTION_DISABLE_EXPORT", 8);
+
+define("GRAPH_ALT_AUTOSCALE",			1);
+define("GRAPH_ALT_AUTOSCALE_MIN",		2);
+define("GRAPH_ALT_AUTOSCALE_MAX",		3);
+define("GRAPH_ALT_AUTOSCALE_LIMITS",	4);
 
 define("DEVICE_ACTION_DELETE", 0);
 define("DEVICE_ACTION_ENABLE", 1);

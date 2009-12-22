@@ -704,7 +704,7 @@ function graph_diff() {
 			}
 		}
 
-		if ($graph_preview_item_values["hard_return"] == "on") {
+		if ($graph_preview_item_values["hard_return"] == CHECKED) {
 			$hard_return = "<strong><font color=\"#FF0000\">&lt;HR&gt;</font></strong>";
 		}
 
@@ -750,7 +750,8 @@ function graph_diff() {
 }
 
 function graph_edit() {
-	global $colors, $struct_graph, $image_types, $consolidation_functions, $graph_item_types, $struct_graph_item;
+	global $colors, $image_types, $consolidation_functions, $graph_item_types, $struct_graph_item;
+	global $struct_graph_labels, $struct_graph_right_axis, $struct_graph_size, $struct_graph_limits, $struct_graph_grid, $struct_graph_color, $struct_graph_misc, $struct_graph_cacti;
 
 	/* ================= input validation ================= */
 	input_validate_input_number(get_request_var("id"));
@@ -804,12 +805,12 @@ function graph_edit() {
 			disabled = true;
 		}
 	}
-	-->
+	//-->
 	</script>
 	<?php
 
 	$tip_text  = "<tr><td align=\\'right\\'><a class=\\'popup_item\\' id=\\'changeGraphState\\' onClick=\\'changeGraphState()\\' href=\\'#\\'>Unlock/Lock</a></td></tr>";
-	$tip_text .= "<tr><td align=\\'right\\'><a class=\\'popup_item\\' href=\\'" . htmlspecialchars('graphs.php?action=graph_edit&id=' . (isset($_GET["id"]) ? $_GET["id"] : 0) . "&debug=" . (isset($_SESSION["graph_debug_mode"]) ? "0" : "1")) . "\\'>" . __("Turn") . " <strong>" . (isset($_SESSION["graph_debug_mode"]) ? __("Off") : __("On")) . "</strong> " . __("Debug Mode") . "</a></td></tr>";
+	$tip_text .= "<tr><td align=\\'right\\'><a class=\\'popup_item\\' href=\\'" . htmlspecialchars('graphs.php?action=graph_edit&id=' . (isset($_GET["id"]) ? $_GET["id"] : 0) . "&debug=" . (isset($_SESSION["graph_debug_mode"]) ? "0" : "1")) . "\\'>" . __("Turn") . " <strong>" . (isset($_SESSION["graph_debug_mode"]) ? __("Off") : __(CHECKED)) . "</strong> " . __("Debug Mode") . "</a></td></tr>";
 	if (!empty($graphs["graph_template_id"])) {
 		$tip_text .= "<tr><td align=\\'right\\'><a class=\\'popup_item\\' href=\\'" . htmlspecialchars('graph_templates.php?action=template_edit&id=' . (isset($graphs["graph_template_id"]) ? $graphs["graph_template_id"] : "0")) . "\\'>" . __("Edit Template") . "</a></td></tr>";
 	}
@@ -934,34 +935,30 @@ function graph_edit() {
 
 	if (((isset($_GET["id"])) || (isset($_GET["new"]))) && (empty($graphs["graph_template_id"]))) {
 		html_start_box("<strong>" . __("Graph Configuration") . "</strong>", "100", $colors["header"], "0", "center", "");
-		$header_items = array(__("Field"), __("Value"));
-		print "<tr><td>";
-		html_header($header_items, 1, true, 'template');
 
-		$form_array = array();
-
-		while (list($field_name, $field_array) = each($struct_graph)) {
-			$form_array += array($field_name => $struct_graph[$field_name]);
-
-			$form_array[$field_name]["value"] = (isset($graphs) ? $graphs[$field_name] : "");
-			$form_array[$field_name]["form_id"] = (isset($graphs) ? $graphs["id"] : "0");
-
-			if (!(($use_graph_template == false) || ($graphs_template{"t_" . $field_name} == "on"))) {
-				$form_array[$field_name]["method"] = "template_" . $form_array[$field_name]["method"];
-#				$form_array[$field_name]["description"] = "";
-			}
-		}
-
-		draw_edit_form(
-			array(
-				"config" => array(
-					"no_form_tag" => true
-					),
-				"fields" => $form_array
-				)
-			);
-
-		print "</table></td></tr>";		/* end of html_header */
+		############
+		html_start_box("<strong>" . __("Labels") . "</strong>", "100", $colors["header"], "0", "center", "", true);
+		draw_template_edit_form('header_graph_template', $struct_graph_labels, $graphs_template, $use_graph_template);
+		html_end_box(false);
+		html_start_box("<strong>" . __("Right Axis") . "</strong>", "100", $colors["header"], "0", "center", "", true);
+		draw_template_edit_form('header_graph_template', $struct_graph_right_axis, $graphs_template, $use_graph_template);
+		html_end_box(false);
+		html_start_box("<strong>" . __("Size") . "</strong>", "100", $colors["header"], "0", "center", "", true);
+		draw_template_edit_form('header_graph_template', $struct_graph_size, $graphs_template, $use_graph_template);
+		html_end_box(false);
+		html_start_box("<strong>" . __("Grid") . "</strong>", "100", $colors["header"], "0", "center", "", true);
+		draw_template_edit_form('header_graph_template', $struct_graph_grid, $graphs_template, $use_graph_template);
+		html_end_box(false);
+		html_start_box("<strong>" . __("Color") . "</strong>", "100", $colors["header"], "0", "center", "", true);
+		draw_template_edit_form('header_graph_template', $struct_graph_color, $graphs_template, $use_graph_template);
+		html_end_box(false);
+		html_start_box("<strong>" . __("Misc") . "</strong>", "100", $colors["header"], "0", "center", "", true);
+		draw_template_edit_form('header_graph_template', $struct_graph_misc, $graphs_template, $use_graph_template);
+		html_end_box(false);
+		html_start_box("<strong>" . __("Cacti Specifics") . "</strong>", "100", $colors["header"], "0", "center", "", true);
+		draw_template_edit_form('header_graph_template', $struct_graph_cacti, $graphs_template, $use_graph_template);
+		html_end_box(false);
+		############
 		html_end_box();
 	}
 

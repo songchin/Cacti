@@ -37,7 +37,9 @@ $tabs_graphs = array(
 	"tree" => __("Tree View Mode"),
 	"preview" => __("Preview Mode"),
 	"list" => __("List View Mode"),
-	"fonts" => "Graph Fonts (RRDtool 1.2.x and Above)");
+	"fonts" => "Graph Fonts (RRDtool 1.2.x and Above)",
+	"colortags" => "Graph Colortags (RRDtool 1.3.x and Above)",
+);
 
 /* setting information */
 $settings = array(
@@ -178,7 +180,7 @@ $settings = array(
 					),
 				"log_perror" => array(
 					"friendly_name" => __("Poller Errors"),
-					"default" => "on"
+					"default" => CHECKED
 					)
 				),
 			),
@@ -197,7 +199,7 @@ $settings = array(
 			"friendly_name" => __("RRDTool Utility Version"),
 			"description" => __("The version of RRDTool that you have installed."),
 			"method" => "drop_array",
-			"default" => "rrd-1.0.x",
+			"default" => RRD_VERSION_1_0,
 			"array" => $rrdtool_versions,
 			),
 		"snmp_header" => array(
@@ -297,7 +299,7 @@ $settings = array(
 		"deletion_verification" => array(
 			"friendly_name" => __("Deletion Verification"),
 			"description" => __("Prompt user before item deletion."),
-			"default" => "on",
+			"default" => CHECKED,
 			"method" => "checkbox"
 			),
 		"i18n_support" => array(
@@ -361,7 +363,7 @@ $settings = array(
 			"default" => "off",
 			"array" => array(
 						"off" => __("Single Tree Representation"),
-						"on" => __("Multiple Tree Representation"),
+						CHECKED => __("Multiple Tree Representation"),
 						),
 			),
 		"export_user_id" => array(
@@ -378,7 +380,7 @@ $settings = array(
 			"default" => "off",
 			"array" => array(
 						"off" => __("Off"),
-						"on" => __("On"),
+						CHECKED => __(CHECKED),
 						),
 			),
 		"export_thumb_options" => array(
@@ -614,7 +616,7 @@ $settings = array(
 			"array" => $page_refresh_interval,
 			),
 		"fonts_header" => array(
-			"friendly_name" => __("Default RRDtool 1.2 Fonts"),
+			"friendly_name" => __("Default RRDtool 1.2.x++ Fonts"),
 			"method" => "spacer",
 			),
 		"title_size" => array(
@@ -672,7 +674,91 @@ $settings = array(
 			"description" => __("The font file to be used for Graph Unit items"),
 			"method" => "font",
 			"max_length" => "100"
-			)
+			),
+		"colortags_header" => array(
+			"friendly_name" => __("Default RRDtool 1.3.x++ Colortags"),
+			"method" => "spacer",
+			),
+		"colortag_back" => array(
+			"friendly_name" => __("Background (--color BACK)"),
+			"method" => "textbox",
+			"max_length" => "8",
+			"default" => "",
+			"size" => "8",
+			"description" => __("Color tag of the background (rrggbb[aa])."),
+			),
+		"colortag_canvas" => array(
+			"friendly_name" => __("Canvas (--color CANVAS)"),
+			"method" => "textbox",
+			"max_length" => "8",
+			"default" => "",
+			"size" => "8",
+			"description" => __("Color tag of the background of the actual graph (rrggbb[aa])."),
+			),
+		"colortag_shadea" => array(
+			"friendly_name" => __("ShadeA (--color SHADEA)"),
+			"method" => "textbox",
+			"max_length" => "8",
+			"default" => "",
+			"size" => "8",
+			"description" => __("Color tag of the left and top border (rrggbb[aa])."),
+			),
+		"colortag_shadeb" => array(
+			"friendly_name" => __("ShadeB (--color SHADEB)"),
+			"method" => "textbox",
+			"max_length" => "8",
+			"default" => "",
+			"size" => "8",
+			"description" => __("Color tag of the right and bottom border (rrggbb[aa])."),
+			),
+		"colortag_grid" => array(
+			"friendly_name" => __("Grid (--color GRID)"),
+			"method" => "textbox",
+			"max_length" => "8",
+			"default" => "",
+			"size" => "8",
+			"description" => __("Color tag of the grid (rrggbb[aa])."),
+			),
+		"colortag_mgrid" => array(
+			"friendly_name" => __("Major Grid (--color MGRID)"),
+			"method" => "textbox",
+			"max_length" => "8",
+			"default" => "",
+			"size" => "8",
+			"description" => __("Color tag of the major grid (rrggbb[aa])."),
+			),
+		"colortag_font" => array(
+			"friendly_name" => __("Font (--color FONT)"),
+			"method" => "textbox",
+			"max_length" => "8",
+			"default" => "",
+			"size" => "8",
+			"description" => __("Color tag of the font (rrggbb[aa])."),
+			),
+		"colortag_axis" => array(
+			"friendly_name" => __("Axis (--color AXIS)"),
+			"method" => "textbox",
+			"max_length" => "8",
+			"default" => "",
+			"size" => "8",
+			"description" => __("Color tag of the axis (rrggbb[aa])."),
+			),
+		"colortag_frame" => array(
+			"friendly_name" => __("Frame (--color FRAME)"),
+			"method" => "textbox",
+			"max_length" => "8",
+			"default" => "",
+			"size" => "8",
+			"description" => __("Color tag of the frame (rrggbb[aa])."),
+			),
+		"colortag_arrow" => array(
+			"friendly_name" => __("Arrow (--color ARROW)"),
+			"method" => "textbox",
+			"max_length" => "8",
+			"default" => "",
+			"size" => "8",
+			"description" => __("Color tag of the arrow (rrggbb[aa])."),
+			),
 		),
 	"poller" => array(
 		"poller_header" => array(
@@ -683,7 +769,7 @@ $settings = array(
 			"friendly_name" => __("Enabled"),
 			"description" => __("If you wish to stop the polling process, uncheck this box."),
 			"method" => "checkbox",
-			"default" => "on",
+			"default" => CHECKED,
 			"tab" => "poller"
 			),
 		"poller_type" => array(
@@ -726,7 +812,7 @@ $settings = array(
 			"friendly_name" => __("Balance Process Load"),
 			"description" => __("If you choose this option, Cacti will attempt to balance the load of each poller process by equally distributing poller items per process."),
 			"method" => "checkbox",
-			"default" => "on"
+			"default" => CHECKED
 			),
 		"spine_header" => array(
 			"friendly_name" => __("Spine Specific Execution Parameters"),
@@ -1006,7 +1092,7 @@ $settings_graphs = array(
 			"friendly_name" => __("Display Graph View Timespan Selector"),
 			"description" => __("Choose if you want the time span selection box to be displayed."),
 			"method" => "checkbox",
-			"default" => "on"
+			"default" => CHECKED
 		),
 		"default_timeshift" => array(
 			"friendly_name" => __("Default Graph View Timeshift"),
@@ -1019,7 +1105,7 @@ $settings_graphs = array(
 			"friendly_name" => __("Allow Graph to extend to Future"),
 			"description" => __("When displaying Graphs, allow Graph Dates to extend 'to future'"),
 			"method" => "checkbox",
-			"default" => "on"
+			"default" => CHECKED
 		),
 		"first_weekdayid" => array(
 			"friendly_name" => __("First Day of the Week"),
@@ -1093,11 +1179,11 @@ $settings_graphs = array(
 			"items" => array(
 				"thumbnail_section_preview" => array(
 					"friendly_name" => __("Preview Mode"),
-					"default" => "on"
+					"default" => CHECKED
 					),
 				"thumbnail_section_tree_1" => array(
 					"friendly_name" => __("Tree View (Single Pane)"),
-					"default" => "on"
+					"default" => CHECKED
 					),
 				"thumbnail_section_tree_2" => array(
 					"friendly_name" => __("Tree View (Dual Pane)"),
@@ -1164,12 +1250,12 @@ $settings_graphs = array(
 			"friendly_name" => __("Use Custom Fonts"),
 			"description" => __("Choose whether to use your own custom fonts and font sizes or utilize the system defaults."),
 			"method" => "checkbox",
-			"on_change" => "graphSettings()",
 			"default" => ""
 			),
 		"title_size" => array(
 			"friendly_name" => __("Title Font Size"),
 			"description" => __("The size of the font used for Graph Titles"),
+			"class" => "custom_fonts",
 			"method" => "textbox",
 			"default" => "12",
 			"max_length" => "10"
@@ -1177,12 +1263,14 @@ $settings_graphs = array(
 		"title_font" => array(
 			"friendly_name" => __("Title Font File"),
 			"description" => __("The font file to use for Graph Titles"),
+			"class" => "custom_fonts",
 			"method" => "font",
 			"max_length" => "100"
 			),
 		"legend_size" => array(
 			"friendly_name" => __("Legend Font Size"),
 			"description" => __("The size of the font used for Graph Legend items"),
+			"class" => "custom_fonts",
 			"method" => "textbox",
 			"default" => "10",
 			"max_length" => "10"
@@ -1190,12 +1278,14 @@ $settings_graphs = array(
 		"legend_font" => array(
 			"friendly_name" => __("Legend Font File"),
 			"description" => __("The font file to be used for Graph Legend items"),
+			"class" => "custom_fonts",
 			"method" => "font",
 			"max_length" => "100"
 			),
 		"axis_size" => array(
 			"friendly_name" => __("Axis Font Size"),
 			"description" => __("The size of the font used for Graph Axis"),
+			"class" => "custom_fonts",
 			"method" => "textbox",
 			"default" => "8",
 			"max_length" => "10"
@@ -1203,12 +1293,14 @@ $settings_graphs = array(
 		"axis_font" => array(
 			"friendly_name" => __("Axis Font File"),
 			"description" => __("The font file to be used for Graph Axis items"),
+			"class" => "custom_fonts",
 			"method" => "font",
 			"max_length" => "100"
 			),
 		"unit_size" => array(
 			"friendly_name" => __("Unit Font Size"),
 			"description" => __("The size of the font used for Graph Units"),
+			"class" => "custom_fonts",
 			"method" => "textbox",
 			"default" => "8",
 			"max_length" => "10"
@@ -1216,8 +1308,107 @@ $settings_graphs = array(
 		"unit_font" => array(
 			"friendly_name" => __("Unit Font File"),
 			"description" => __("The font file to be used for Graph Unit items"),
+			"class" => "custom_fonts",
 			"method" => "font",
 			"max_length" => "100"
 			)
-		)
+		),
+	"colortags" => array(
+		"custom_colortags" => array(
+			"friendly_name" => __("Use Custom Colortags"),
+			"description" => __("Choose whether to use your own custom colortags or utilize the system defaults."),
+			"method" => "checkbox",
+			"default" => ""
+			),
+		"colortag_back" => array(
+			"friendly_name" => __("Background (--color BACK)"),
+			"method" => "textbox",
+			"max_length" => "8",
+			"default" => "",
+			"size" => "8",
+			"description" => __("Color tag of the background (rrggbb[aa])."),
+			"class" => "colortags",
+			),
+		"colortag_canvas" => array(
+			"friendly_name" => __("Canvas (--color CANVAS)"),
+			"method" => "textbox",
+			"max_length" => "8",
+			"default" => "",
+			"size" => "8",
+			"description" => __("Color tag of the background of the actual graph (rrggbb[aa])."),
+			"class" => "colortags",
+			),
+		"colortag_shadea" => array(
+			"friendly_name" => __("ShadeA (--color SHADEA)"),
+			"method" => "textbox",
+			"max_length" => "8",
+			"default" => "",
+			"size" => "8",
+			"description" => __("Color tag of the left and top border (rrggbb[aa])."),
+			"class" => "colortags",
+			),
+		"colortag_shadeb" => array(
+			"friendly_name" => __("ShadeB (--color SHADEB)"),
+			"method" => "textbox",
+			"max_length" => "8",
+			"default" => "",
+			"size" => "8",
+			"description" => __("Color tag of the right and bottom border (rrggbb[aa])."),
+			"class" => "colortags",
+			),
+		"colortag_grid" => array(
+			"friendly_name" => __("Grid (--color GRID)"),
+			"method" => "textbox",
+			"max_length" => "8",
+			"default" => "",
+			"size" => "8",
+			"description" => __("Color tag of the grid (rrggbb[aa])."),
+			"class" => "colortags",
+			),
+		"colortag_mgrid" => array(
+			"friendly_name" => __("Major Grid (--color MGRID)"),
+			"method" => "textbox",
+			"max_length" => "8",
+			"default" => "",
+			"size" => "8",
+			"description" => __("Color tag of the major grid (rrggbb[aa])."),
+			"class" => "colortags",
+			),
+		"colortag_font" => array(
+			"friendly_name" => __("Font (--color FONT)"),
+			"method" => "textbox",
+			"max_length" => "8",
+			"default" => "",
+			"size" => "8",
+			"description" => __("Color tag of the font (rrggbb[aa])."),
+			"class" => "colortags",
+			),
+		"colortag_axis" => array(
+			"friendly_name" => __("Axis (--color AXIS)"),
+			"method" => "textbox",
+			"max_length" => "8",
+			"default" => "",
+			"size" => "8",
+			"description" => __("Color tag of the axis (rrggbb[aa])."),
+			"class" => "colortags",
+			),
+		"colortag_frame" => array(
+			"friendly_name" => __("Frame (--color FRAME)"),
+			"method" => "textbox",
+			"max_length" => "8",
+			"default" => "",
+			"size" => "8",
+			"description" => __("Color tag of the frame (rrggbb[aa])."),
+			"class" => "colortags",
+			),
+		"colortag_arrow" => array(
+			"friendly_name" => __("Arrow (--color ARROW)"),
+			"method" => "textbox",
+			"max_length" => "8",
+			"default" => "",
+			"size" => "8",
+			"description" => __("Color tag of the arrow (rrggbb[aa])."),
+			"class" => "colortags",
+			),
+		),
 	);

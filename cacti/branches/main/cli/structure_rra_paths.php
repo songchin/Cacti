@@ -83,7 +83,7 @@ if ($poller_running == "1") {
 }
 
 /* turn on extended paths from in the database */
-set_config_option("extended_paths", "on");
+set_config_option("extended_paths", CHECKED);
 
 /* get the host ids and rrd paths from the poller_item table  */
 $rrd_info = db_fetch_assoc("SELECT DISTINCT local_data_id, host_id, rrd_path FROM poller_item");

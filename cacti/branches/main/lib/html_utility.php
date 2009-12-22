@@ -146,7 +146,7 @@ function form_end_table() {
    @arg $html_boolean - the value of the HTML checkbox
    @returns - true or false based on the value of the HTML checkbox */
 function html_boolean($html_boolean) {
-	if ($html_boolean == "on") {
+	if ($html_boolean == CHECKED) {
 		return true;
 	}else{
 		return false;
@@ -159,7 +159,7 @@ function html_boolean($html_boolean) {
    @returns - 'Selected' or 'Not Selected' based on the value of the HTML
      checkbox */
 function html_boolean_friendly($html_boolean) {
-	if ($html_boolean == "on") {
+	if ($html_boolean == CHECKED) {
 		return __("Selected");
 	}else{
 		return __("Not Selected");

@@ -95,7 +95,7 @@ function log_save ($message, $severity = SEV_INFO, $facility = FACIL_INTERFACE, 
 	}
 
 	/* Log to Cacti System Log */
-	if ((log_read_config_option("log_dest_cacti") == "on") && (log_read_config_option("log_status") != "suspended") && ($severity >= $log_severity)) {
+	if ((log_read_config_option("log_dest_cacti") == CHECKED) && (log_read_config_option("log_status") != "suspended") && ($severity >= $log_severity)) {
 		$sql = "insert into log
 			(logdate,facility,severity,poller_id,host_id,username,source,plugin,message) values
 			(SYSDATE(), " . $facility . "," . $severity . "," . $poller_id . "," .$host_id . ",'" . $username . "','" . $source . "','" . $plugin . "','". sql_sanitize($message) . "');";
@@ -105,14 +105,14 @@ function log_save ($message, $severity = SEV_INFO, $facility = FACIL_INTERFACE, 
 
 	/* Log to System Syslog/Eventlog */
 	/* Syslog is currently Unstable in Win32 */
-	if ((log_read_config_option("log_dest_system") == "on") && ($severity >= $log_severity)) {
+	if ((log_read_config_option("log_dest_system") == CHECKED) && ($severity >= $log_severity)) {
 		openlog("cacti", LOG_NDELAY | LOG_PID, log_read_config_option("log_system_facility"));
 		syslog(log_get_system_severity($severity), log_get_severity($severity) . ": " . log_get_facility($facility) . ": " . $message);
 		closelog();
 	}
 
 	/* Log to Syslog Server */
-	if ((log_read_config_option("log_dest_syslog") == "on") && ($severity >= $log_severity)) {
+	if ((log_read_config_option("log_dest_syslog") == CHECKED) && ($severity >= $log_severity)) {
 		log_save_syslog(log_read_config_option("log_syslog_server"), log_read_config_option("log_syslog_port"), log_read_config_option("log_syslog_facility"), log_get_severity_syslog($severity), log_get_severity($severity) . ": " . log_get_facility($facility) . ": " . $message);
 	}
 

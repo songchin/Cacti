@@ -48,7 +48,7 @@ function html_start_box($title, $width, $background_color, $cell_padding, $align
 			document.location = '<?php echo $add_text;?>';
 			return false;
 		}
-		-->
+		//-->
 		</script>
 		<?php
 	}
@@ -261,7 +261,7 @@ function html_graph_area(&$graph_array, $no_graphs_message = "", $extra_url_args
 									<?php
 									#print "<object class='graphimage' id='graph_" . $graph["local_graph_id"] . "' type='svg+xml' data='" . htmlspecialchars("graph_image.php?action=view&local_graph_id=" . $graph["local_graph_id"] . "&rra_id=" . $rra["id"]) . "' border='0'>Can't display SVG</object>";
 								}
-								print (read_graph_config_option("show_graph_title") == "on" ? "<p style='font-size: 10;' align='center'><strong>" . $graph["title_cache"] . "</strong></p>" : "");
+								print (read_graph_config_option("show_graph_title") == CHECKED ? "<p style='font-size: 10;' align='center'><strong>" . $graph["title_cache"] . "</strong></p>" : "");
 								?>
 							</td>
 							<td valign='top' style='align: left; padding: 3px;' class='noprint'>
@@ -407,7 +407,7 @@ function html_graph_thumbnail_area(&$graph_array, $no_graphs_message = "", $extr
 								<?php
 								#print "<object class='graphimage' id='graph_" . $graph["local_graph_id"] . "' type='svg+xml' data='" . htmlspecialchars("graph_image.php?action=view&local_graph_id=" . $graph["local_graph_id"] . "&rra_id=" . $rra["id"]) . "' border='0'>Can't display SVG</object>";
 							}
-							print (read_graph_config_option("show_graph_title") == "on" ? "<p style='font-size: 10;' align='center'><strong>" . $graph["title_cache"] . "</strong></p>" : "");
+							print (read_graph_config_option("show_graph_title") == CHECKED ? "<p style='font-size: 10;' align='center'><strong>" . $graph["title_cache"] . "</strong></p>" : "");
 							?>
 						</td>
 						<td valign='top' style='align: left; padding: 3px;'>
@@ -919,7 +919,7 @@ function draw_graph_items_list($item_list, $filename, $url_data, $disable_contro
 			break;
 		}
 
-		if ($item["hard_return"] == "on") {
+		if ($item["hard_return"] == CHECKED) {
 			$hard_return = "<strong><font color=\"#FF0000\">&lt;HR&gt;</font></strong>";
 		}
 

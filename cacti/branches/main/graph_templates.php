@@ -134,6 +134,58 @@ function form_save() {
 		$save2["t_unit_exponent_value"] = form_input_validate((isset($_POST["t_unit_exponent_value"]) ? $_POST["t_unit_exponent_value"] : ""), "t_unit_exponent_value", "", true, 3);
 		$save2["unit_exponent_value"] = form_input_validate($_POST["unit_exponent_value"], "unit_exponent_value", "^-?[0-9]+$", true, 3);
 
+		$save2["t_right_axis"] = form_input_validate((isset($_POST["t_right_axis"]) ? $_POST["t_right_axis"] : ""), "t_right_axis", "", true, 3);
+		$save2["right_axis"] = form_input_validate($_POST["right_axis"], "right_axis", "", true, 3);
+		$save2["t_right_axis_label"] = form_input_validate((isset($_POST["t_right_axis_label"]) ? $_POST["t_right_axis_label"] : ""), "t_right_axis_label", "", true, 3);
+		$save2["right_axis_label"] = form_input_validate($_POST["right_axis_label"], "right_axis_label", "", true, 3);
+		$save2["t_right_axis_format"] = form_input_validate((isset($_POST["t_right_axis_format"]) ? $_POST["t_right_axis_format"] : ""), "t_right_axis_format", "", true, 3);
+		$save2["right_axis_format"] = form_input_validate($_POST["right_axis_format"], "right_axis_format", "", true, 3);
+		$save2["t_only_graph"] = form_input_validate((isset($_POST["t_only_graph"]) ? $_POST["t_only_graph"] : ""), "t_only_graph", "", true, 3);
+		$save2["only_graph"] = form_input_validate((isset($_POST["only_graph"]) ? $_POST["only_graph"] : ""), "only_graph", "", true, 3);
+		$save2["t_full_size_mode"] = form_input_validate((isset($_POST["t_full_size_mode"]) ? $_POST["t_full_size_mode"] : ""), "t_full_size_mode", "", true, 3);
+		$save2["full_size_mode"] = form_input_validate((isset($_POST["full_size_mode"]) ? $_POST["full_size_mode"] : ""), "full_size_mode", "", true, 3);
+		$save2["t_no_gridfit"] = form_input_validate((isset($_POST["t_no_gridfit"]) ? $_POST["t_no_gridfit"] : ""), "t_no_gridfit", "", true, 3);
+		$save2["no_gridfit"] = form_input_validate((isset($_POST["no_gridfit"]) ? $_POST["no_gridfit"] : ""), "no_gridfit", "", true, 3);
+		$save2["t_x_grid"] = form_input_validate((isset($_POST["t_x_grid"]) ? $_POST["t_x_grid"] : ""), "t_x_grid", "", true, 3);
+		$save2["x_grid"] = form_input_validate($_POST["x_grid"], "x_grid", "", true, 3);
+		$save2["t_unit_length"] = form_input_validate((isset($_POST["t_unit_length"]) ? $_POST["t_unit_length"] : ""), "t_unit_length", "", true, 3);
+		$save2["unit_length"] = form_input_validate($_POST["unit_length"], "unit_length", "^-?[0-9]+$", true, 3);
+		$save2["t_colortag_back"] = form_input_validate((isset($_POST["t_colortag_back"]) ? $_POST["t_colortag_back"] : ""), "t_colortag_back", "", true, 3);
+		$save2["colortag_back"] = form_input_validate($_POST["colortag_back"], "colortag_back", "", true, 3);
+		$save2["t_colortag_canvas"] = form_input_validate((isset($_POST["t_colortag_canvas"]) ? $_POST["t_colortag_canvas"] : ""), "t_colortag_canvas", "", true, 3);
+		$save2["colortag_canvas"] = form_input_validate($_POST["colortag_canvas"], "colortag_canvas", "", true, 3);
+		$save2["t_colortag_shadea"] = form_input_validate((isset($_POST["t_colortag_shadea"]) ? $_POST["t_colortag_shadea"] : ""), "t_colortag_shadea", "", true, 3);
+		$save2["colortag_shadea"] = form_input_validate($_POST["colortag_shadea"], "colortag_shadea", "", true, 3);
+		$save2["t_colortag_shadeb"] = form_input_validate((isset($_POST["t_colortag_shadeb"]) ? $_POST["t_colortag_shadeb"] : ""), "t_colortag_shadeb", "", true, 3);
+		$save2["colortag_shadeb"] = form_input_validate($_POST["colortag_shadeb"], "colortag_shadeb", "", true, 3);
+		$save2["t_colortag_grid"] = form_input_validate((isset($_POST["t_colortag_grid"]) ? $_POST["t_colortag_grid"] : ""), "t_colortag_grid", "", true, 3);
+		$save2["colortag_grid"] = form_input_validate($_POST["colortag_grid"], "colortag_grid", "", true, 3);
+		$save2["t_colortag_mgrid"] = form_input_validate((isset($_POST["t_colortag_mgrid"]) ? $_POST["t_colortag_mgrid"] : ""), "t_colortag_mgrid", "", true, 3);
+		$save2["colortag_mgrid"] = form_input_validate($_POST["colortag_mgrid"], "colortag_mgrid", "", true, 3);
+		$save2["t_colortag_font"] = form_input_validate((isset($_POST["t_colortag_font"]) ? $_POST["t_colortag_font"] : ""), "t_colortag_font", "", true, 3);
+		$save2["colortag_font"] = form_input_validate($_POST["colortag_font"], "colortag_font", "", true, 3);
+		$save2["t_colortag_axis"] = form_input_validate((isset($_POST["t_colortag_axis"]) ? $_POST["t_colortag_axis"] : ""), "t_colortag_axis", "", true, 3);
+		$save2["colortag_axis"] = form_input_validate($_POST["colortag_axis"], "colortag_axis", "", true, 3);
+		$save2["t_colortag_frame"] = form_input_validate((isset($_POST["t_colortag_frame"]) ? $_POST["t_colortag_frame"] : ""), "t_colortag_frame", "", true, 3);
+		$save2["colortag_frame"] = form_input_validate($_POST["colortag_frame"], "colortag_frame", "", true, 3);
+		$save2["t_colortag_arrow"] = form_input_validate((isset($_POST["t_colortag_arrow"]) ? $_POST["t_colortag_arrow"] : ""), "t_colortag_arrow", "", true, 3);
+		$save2["colortag_arrow"] = form_input_validate($_POST["colortag_arrow"], "colortag_arrow", "", true, 3);
+		$save2["t_font_render_mode"] = form_input_validate((isset($_POST["t_font_render_mode"]) ? $_POST["t_font_render_mode"] : ""), "t_font_render_mode", "", true, 3);
+		$save2["font_render_mode"] = form_input_validate($_POST["font_render_mode"], "font_render_mode", "", true, 3);
+		$save2["t_font_smoothing_threshold"] = form_input_validate((isset($_POST["t_font_smoothing_threshold"]) ? $_POST["t_font_smoothing_threshold"] : ""), "t_font_smoothing_threshold", "", true, 3);
+		$save2["font_smoothing_threshold"] = form_input_validate($_POST["font_smoothing_threshold"], "font_smoothing_threshold", "^-?[0-9]+$", true, 3);
+		$save2["t_graph_render_mode"] = form_input_validate((isset($_POST["t_graph_render_mode"]) ? $_POST["t_graph_render_mode"] : ""), "t_graph_render_mode", "", true, 3);
+		$save2["graph_render_mode"] = form_input_validate($_POST["graph_render_mode"], "graph_render_mode", "", true, 3);
+		$save2["t_pango_markup"] = form_input_validate((isset($_POST["t_pango_markup"]) ? $_POST["t_pango_markup"] : ""), "t_pango_markup", "", true, 3);
+		$save2["pango_markup"] = form_input_validate($_POST["pango_markup"], "pango_markup", "", true, 3);
+		$save2["t_interlaced"] = form_input_validate((isset($_POST["t_interlaced"]) ? $_POST["t_interlaced"] : ""), "t_interlaced", "", true, 3);
+		$save2["interlaced"] = form_input_validate((isset($_POST["interlaced"]) ? $_POST["interlaced"] : ""), "interlaced", "", true, 3);
+		$save2["t_tab_width"] = form_input_validate((isset($_POST["t_tab_width"]) ? $_POST["t_tab_width"] : ""), "t_tab_width", "", true, 3);
+		$save2["tab_width"] = form_input_validate($_POST["tab_width"], "tab_width", "^-?[0-9]+$", true, 3);
+		$save2["t_watermark"] = form_input_validate((isset($_POST["t_watermark"]) ? $_POST["t_watermark"] : ""), "t_watermark", "", true, 3);
+		$save2["watermark"] = form_input_validate($_POST["watermark"], "watermark", "", true, 3);
+
+
 		if (!is_error_message()) {
 			$graph_template_id = sql_save($save1, "graph_templates");
 
@@ -370,7 +422,8 @@ function item() {
    ---------------------------- */
 
 function template_edit() {
-	global $colors, $struct_graph, $image_types, $fields_graph_template_template_edit;
+	global $colors, $image_types, $fields_graph_template_template_edit;
+	global $struct_graph_labels, $struct_graph_right_axis, $struct_graph_size, $struct_graph_limits, $struct_graph_grid, $struct_graph_color, $struct_graph_misc, $struct_graph_cacti;
 
 	/* ================= input validation ================= */
 	input_validate_input_number(get_request_var("id"));
@@ -406,34 +459,33 @@ function template_edit() {
 	html_end_box(false);
 
 	html_start_box("<strong>" . __("Graph Template") . "</strong>", "100", $colors["header"], "0", "center", "", true);
-	$header_items = array(__("Field"), __("Value"));
-	print "<tr><td>";
-	html_header($header_items, 1, true, 'header_graph_template');
 
-	$form_array = array();
+	############
+	html_start_box("<strong>" . __("Labels") . "</strong>", "100", $colors["header"], "0", "center", "", true);
+	draw_template_edit_form('header_graph_template', $struct_graph_labels, $template_graph, false);
+	html_end_box(false);
+	html_start_box("<strong>" . __("Right Axis") . "</strong>", "100", $colors["header"], "0", "center", "", true);
+	draw_template_edit_form('header_graph_template', $struct_graph_right_axis, $template_graph, false);
+	html_end_box(false);
+	html_start_box("<strong>" . __("Size") . "</strong>", "100", $colors["header"], "0", "center", "", true);
+	draw_template_edit_form('header_graph_template', $struct_graph_size, $template_graph, false);
+	html_end_box(false);
+	html_start_box("<strong>" . __("Limits") . "</strong>", "100", $colors["header"], "0", "center", "", true);
+	draw_template_edit_form('header_graph_limits', $struct_graph_limits, $template_graph, false);
+	html_start_box("<strong>" . __("Grid") . "</strong>", "100", $colors["header"], "0", "center", "", true);
+	draw_template_edit_form('header_graph_template', $struct_graph_grid, $template_graph, false);
+	html_end_box(false);
+	html_start_box("<strong>" . __("Color") . "</strong>", "100", $colors["header"], "0", "center", "", true);
+	draw_template_edit_form('header_graph_template', $struct_graph_color, $template_graph, false);
+	html_end_box(false);
+	html_start_box("<strong>" . __("Misc") . "</strong>", "100", $colors["header"], "0", "center", "", true);
+	draw_template_edit_form('header_graph_template', $struct_graph_misc, $template_graph, false);
+	html_end_box(false);
+	html_start_box("<strong>" . __("Cacti Specifics") . "</strong>", "100", $colors["header"], "0", "center", "", true);
+	draw_template_edit_form('header_graph_template', $struct_graph_cacti, $template_graph, false);
+	html_end_box(false);
+	############
 
-	while (list($field_name, $field_array) = each($struct_graph)) {
-		$form_array += array($field_name => $struct_graph[$field_name]);
-
-		$form_array[$field_name]["value"] = (isset($template_graph) ? $template_graph[$field_name] : "");
-		$form_array[$field_name]["form_id"] = (isset($template_graph) ? $template_graph["id"] : "0");
-#		$form_array[$field_name]["description"] = "";
-		$form_array[$field_name]["sub_checkbox"] = array(
-			"name" => "t_" . $field_name,
-			"friendly_name" => "<em>" . __("Use Per-Graph Value (Ignore this Value)") . "</em>",
-			"value" => (isset($template_graph) ? $template_graph{"t_" . $field_name} : ""),
-			"class" => (isset($form_array[$field_name]["class"]) ? $form_array[$field_name]["class"] : "")
-		);
-	}
-
-	draw_edit_form(
-		array(
-			"config" => array("no_form_tag" => true),
-			"fields" => $form_array
-			)
-		);
-
-	print "</table></td></tr>";		/* end of html_header */
 	form_hidden_box("rrdtool_version", read_config_option("rrdtool_version"), "");
 	html_end_box(false);
 
@@ -532,7 +584,7 @@ function template() {
 		strURL = strURL + '&filter=' + objForm.filter.value;
 		document.location = strURL;
 	}
-	-->
+	//-->
 	</script>
 	<?php
 
@@ -547,7 +599,7 @@ function template() {
 	?>
 	<tr class='rowAlternate2'>
 		<td>
-			<form name="form_graph_template" method='request' action='<?php print basename($_SERVER["PHP_SELF"]);?>'>
+			<form name="form_graph_template" action='<?php print basename($_SERVER["PHP_SELF"]);?>'>
 			<table cellpadding="0" cellspacing="3">
 				<tr>
 					<td class="nw50">

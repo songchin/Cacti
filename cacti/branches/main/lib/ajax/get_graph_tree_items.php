@@ -96,15 +96,15 @@ case "list":
 					break;
 				case "graph":
 					$children = false;
-					$icon     = "./images/tree_icons/graph.gif";
+					$icon     = CACTI_BASE_PATH . "/images/tree_icons/graph.gif";
 					break;
 				case "host":
-					if (read_graph_config_option("expand_hosts") == "on") {
+					if (read_graph_config_option("expand_hosts") == CHECKED) {
 						$children = true;
 					}else{
 						$children = false;
 					}
-					$icon     = "./images/tree_icons/host.gif";
+					$icon     = CACTI_BASE_PATH . "/images/tree_icons/host.gif";
 					break;
 				case "header":
 					$children = true;
@@ -114,7 +114,7 @@ case "list":
 					$children = true;
 					$icon     = "";
 					$node_id .= "_" . $item["type"] . "_" . $item["id"];
-					$icon     = "./images/tree_icons/dataquery.png";
+					$icon     = CACTI_BASE_PATH . "/images/tree_icons/dataquery.png";
 					break;
 				case "dqi":
 					$children = false;
@@ -124,7 +124,7 @@ case "list":
 				case "gt":
 					$children = false;
 					$node_id .= "_" . $item["type"] . "_" . $item["id"];
-					$icon     = "./images/tree_icons/template.png";
+					$icon     = CACTI_BASE_PATH . "/images/tree_icons/template.png";
 					break;
 				default:
 			}

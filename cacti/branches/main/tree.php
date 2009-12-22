@@ -330,7 +330,7 @@ function item_remove() {
 	input_validate_input_number(get_request_var("tree_id"));
 	/* ==================================================== */
 
-	if ((read_config_option("deletion_verification") == "on") && (!isset($_GET["confirm"]))) {
+	if ((read_config_option("deletion_verification") == CHECKED) && (!isset($_GET["confirm"]))) {
 		$graph_tree_item = db_fetch_row("select title,local_graph_id,host_id from graph_tree_items where id=" . $_GET["id"]);
 
 		if (!empty($graph_tree_item["local_graph_id"])) {
@@ -364,7 +364,7 @@ function tree_remove() {
 	input_validate_input_number(get_request_var("id"));
 	/* ==================================================== */
 
-	if ((read_config_option("deletion_verification") == "on") && (!isset($_GET["confirm"]))) {
+	if ((read_config_option("deletion_verification") == CHECKED) && (!isset($_GET["confirm"]))) {
 		include(CACTI_BASE_PATH . "/include/top_header.php");
 		form_confirm(__("Are You Sure?"), __("Are you sure you want to delete the tree") . " <strong>'" . db_fetch_cell("select name from graph_tree where id=" . $_GET["id"]) . "'</strong>?", "tree.php", "tree.php?action=remove&id=" . $_GET["id"]);
 		include(CACTI_BASE_PATH . "/include/bottom_footer.php");

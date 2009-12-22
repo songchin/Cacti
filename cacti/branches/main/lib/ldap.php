@@ -111,7 +111,7 @@ function cacti_ldap_auth($username,$password = "",$ldap_dn = "",$ldap_host = "",
 		$ldap_referrals = read_config_option("ldap_referrals");
 	}
 	if (empty($ldap_group_require)) {
-		if (read_config_option("ldap_group_require") == "on") {
+		if (read_config_option("ldap_group_require") == CHECKED) {
 			$ldap_group_require = 1;
 		}else{
 			$ldap_group_require = 0;

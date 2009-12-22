@@ -229,7 +229,7 @@ if (sizeof($parms) == 0) {
 	}
 }
 
-if ((sizeof($polling_items) > 0) && (read_config_option("poller_enabled") == "on")) {
+if ((sizeof($polling_items) > 0) && (read_config_option("poller_enabled") == CHECKED)) {
 	$failure_type = "";
 	$host_down    = false;
 	$new_host     = true;

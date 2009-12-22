@@ -36,7 +36,8 @@
    @arg $snmp_query_graph_id - if this graph template is part of a data query, specify the graph id here. this
      will be used to determine if a given field is using suggested values */
 function draw_nontemplated_fields_graph($graph_template_id, &$values_array, $field_name_format = "|field|", $header_title = "", $alternate_colors = true, $include_hidden_fields = true, $snmp_query_graph_id = 0) {
-	global $struct_graph, $colors;
+	global $colors;
+	global $struct_graph_labels, $struct_graph_right_axis, $struct_graph_size, $struct_graph_limits, $struct_graph_grid, $struct_graph_color, $struct_graph_misc, $struct_graph_cacti;
 
 	$form_array = array();
 	$draw_any_items = false;
@@ -44,6 +45,7 @@ function draw_nontemplated_fields_graph($graph_template_id, &$values_array, $fie
 	/* fetch information about the graph template */
 	$graph_template = db_fetch_row("select * from graph_templates_graph where graph_template_id=$graph_template_id and local_graph_id=0");
 
+	$struct_graph = $struct_graph_labels + $struct_graph_right_axis + $struct_graph_size + $struct_graph_limits + $struct_graph_grid + $struct_graph_color + $struct_graph_misc + $struct_graph_cacti;
 	reset($struct_graph);
 	while (list($field_name, $field_array) = each($struct_graph)) {
 		/* find our field name */
@@ -56,7 +58,7 @@ function draw_nontemplated_fields_graph($graph_template_id, &$values_array, $fie
 		$form_array[$form_field_name]["form_id"] = (isset($values_array["id"]) ? $values_array["id"] : "0");
 		unset($form_array[$form_field_name]["default"]);
 
-		if ($graph_template{"t_" . $field_name} != "on") {
+		if ($graph_template{"t_" . $field_name} != CHECKED) {
 			if ($include_hidden_fields == true) {
 				$form_array[$form_field_name]["method"] = "hidden";
 			}else{
@@ -250,9 +252,9 @@ function draw_nontemplated_fields_data_source($data_template_id, $local_data_id,
 		unset($form_array[$form_field_name]["default"]);
 
 		$current_flag = (isset($field_array["flags"]) ? $field_array["flags"] : "");
-		$current_template_flag = (isset($data_template{"t_" . $field_name}) ? $data_template{"t_" . $field_name} : "on");
+		$current_template_flag = (isset($data_template{"t_" . $field_name}) ? $data_template{"t_" . $field_name} : CHECKED);
 
-		if (($current_template_flag != "on") || ($current_flag == "ALWAYSTEMPLATE")) {
+		if (($current_template_flag != CHECKED) || ($current_flag == "ALWAYSTEMPLATE")) {
 			if ($include_hidden_fields == true) {
 				$form_array[$form_field_name]["method"] = "hidden";
 			}else{
@@ -363,7 +365,7 @@ function draw_nontemplated_fields_data_source_item($data_template_id, &$values_a
 				$form_array[$form_field_name]["friendly_name"] .= " [" . $rrd["data_source_name"] . "]";
 			}
 
-			if ($data_template_rrd{"t_" . $field_name} != "on") {
+			if ($data_template_rrd{"t_" . $field_name} != CHECKED) {
 				if ($include_hidden_fields == true) {
 					$form_array[$form_field_name]["method"] = "hidden";
 				}else{
@@ -456,7 +458,7 @@ function draw_nontemplated_fields_custom_data($data_template_data_id, $field_nam
 
 		/* if data template then get t_value from template, else always allow user input */
 		if (empty($data["data_template_id"])) {
-			$can_template = "on";
+			$can_template = CHECKED;
 		}else{
 			$can_template = db_fetch_cell("select t_value from data_input_data where data_template_data_id=" . $template_data["id"] . " and data_input_field_id=" . $field["id"]);
 		}

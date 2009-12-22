@@ -287,7 +287,9 @@ function draw_edit_control($field_name, &$field_array) {
 			((isset($field_array["default"])) ? $field_array["default"] : ""),
 			$field_array["max_length"],
 			((isset($field_array["size"])) ? $field_array["size"] : "40"), "text",
-			((isset($field_array["form_id"])) ? $field_array["form_id"] : ""));
+			((isset($field_array["form_id"])) ? $field_array["form_id"] : ""),
+			((isset($field_array["class"])) ? $field_array["class"] : ""),
+			((isset($field_array["on_change"])) ? $field_array["on_change"] : ""));
 
 		break;
 	default:
@@ -674,7 +676,7 @@ function form_checkbox($form_name, $form_previous_value, $form_caption, $form_de
 		$on_change = " onChange='$on_change'";
 	}
 
-	if ($form_previous_value == "on") {
+	if ($form_previous_value == CHECKED) {
 		$checked = " checked";
 	}else{
 		$checked = "";
@@ -857,7 +859,7 @@ function form_color_dropdown($form_name, $form_previous_value, $form_none_entry,
    @arg $current_id - used to determine if a current value for this form element
      exists or not. a $current_id of '0' indicates that no current value exists,
      a non-zero value indicates that a current value does exist */
-function form_font_box($form_name, $form_previous_value, $form_default_value, $form_max_length, $form_size = 30, $type = "text", $current_id = 0) {
+function form_font_box($form_name, $form_previous_value, $form_default_value, $form_max_length, $form_size = 30, $type = "text", $current_id = 0, $class = "", $on_change = "") {
 	if (($form_previous_value == "") && (empty($current_id))) {
 		$form_previous_value = $form_default_value;
 	}
@@ -880,7 +882,7 @@ function form_font_box($form_name, $form_previous_value, $form_default_value, $f
 	if (strlen($form_previous_value) == 0) { # no data: defaults are used; everythings fine
 			$extra_data = "";
 	} else {
-		if (read_config_option("rrdtool_version") == "rrd-1.3.x") {	# rrdtool 1.3 uses fontconfig
+		if (read_config_option("rrdtool_version") == RRD_VERSION_1_3) {	# rrdtool 1.3 uses fontconfig
 			$font = '"' . $form_previous_value . '"';
 			$out_array = array();
 			exec('fc-list ' . $font, $out_array);
@@ -889,8 +891,8 @@ function form_font_box($form_name, $form_previous_value, $form_default_value, $f
 			} else {
 				$extra_data = "<span class=\"success\"><br>[" . __("OK: FONT FOUND") . "]</span>";
 			}
-		} elseif (read_config_option("rrdtool_version") == "rrd-1.0.x" ||
-				  read_config_option("rrdtool_version") == "rrd-1.2.x") { # rrdtool 1.0 and 1.2 use font files
+		} elseif (read_config_option("rrdtool_version") == RRD_VERSION_1_0 ||
+				  read_config_option("rrdtool_version") == RRD_VERSION_1_2) { # rrdtool 1.0 and 1.2 use font files
 			if (is_file($form_previous_value)) {
 				$extra_data = "<span class=\"success\"><br>[" . __("OK: FILE FOUND") . "]</span>";
 			}else if (is_dir($form_previous_value)) {
@@ -901,7 +903,15 @@ function form_font_box($form_name, $form_previous_value, $form_default_value, $f
 		} # will be used for future versions of rrdtool
 	}
 
-	print " id='$form_name' name='$form_name' size='$form_size'" . (!empty($form_max_length) ? " maxlength='$form_max_length'" : "") . " value='" . htmlspecialchars($form_previous_value, ENT_QUOTES) . "'>" . $extra_data;
+	if (strlen($class)) {
+		$class = " class='$class' ";
+	}
+
+	if (strlen($on_change)) {
+		$on_change = " onChange='$on_change' ";
+	}
+
+	print " id='$form_name' name='$form_name'" . $on_change . $class ." size='$form_size'" . (!empty($form_max_length) ? " maxlength='$form_max_length'" : "") . " value='" . htmlspecialchars($form_previous_value, ENT_QUOTES) . "'>" . $extra_data;
 }
 
 /* form_confirm - draws a table presenting the user with some choice and allowing
@@ -1172,7 +1182,7 @@ function draw_template_edit_form ($table_id, $edit_struct, $edit_data, $use_temp
 		$form_array[$field_name]["value"] = (isset($edit_data) ? $edit_data[$field_name] : "");
 		$form_array[$field_name]["form_id"] = (isset($edit_data) ? $edit_data["id"] : "0");
 
-		if (!(($use_template == false) || ($edit_data{"t_" . $field_name} == "on"))) {
+		if (!(($use_template == false) || ($edit_data{"t_" . $field_name} == CHECKED))) {
 			$form_array[$field_name]["method"] = "template_" . $form_array[$field_name]["method"];
 		}
 

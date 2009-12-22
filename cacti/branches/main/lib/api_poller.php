@@ -56,7 +56,7 @@ function api_poller_cache_item_add($host_id, $host_field_override, $local_data_i
 
 	if (isset($host["id"]) || (isset($host_id))) {
 		if (isset($host)) {
-			if ($host["disabled"] == "on") {
+			if ($host["disabled"] == CHECKED) {
 				return;
 			}
 		} else {

@@ -301,7 +301,7 @@ function rrdtool_function_create($local_data_id, $show_source, $rrd_struc) {
 	/* check for structured path configuration, if in place verify directory
 	   exists and if not create it.
 	 */
-	if (read_config_option("extended_paths") == "on") {
+	if (read_config_option("extended_paths") == CHECKED) {
 		if (!is_dir(dirname($data_source_path))) {
 			if (mkdir(dirname($data_source_path), 0775)) {
 				if (CACTI_SERVER_OS != "win32") {
@@ -615,7 +615,32 @@ function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rr
 		graph_templates_graph.image_format_id,
 		graph_templates_graph.unit_value,
 		graph_templates_graph.unit_exponent_value,
-		graph_templates_graph.export
+		graph_templates_graph.export,
+		graph_templates_graph.right_axis,
+		graph_templates_graph.right_axis_label,
+		graph_templates_graph.right_axis_format,
+		graph_templates_graph.only_graph,
+		graph_templates_graph.full_size_mode,
+		graph_templates_graph.no_gridfit,
+		graph_templates_graph.x_grid,
+		graph_templates_graph.unit_length,
+		graph_templates_graph.colortag_back,
+		graph_templates_graph.colortag_canvas,
+		graph_templates_graph.colortag_shadea,
+		graph_templates_graph.colortag_shadeb,
+		graph_templates_graph.colortag_grid,
+		graph_templates_graph.colortag_mgrid,
+		graph_templates_graph.colortag_font,
+		graph_templates_graph.colortag_axis,
+		graph_templates_graph.colortag_frame,
+		graph_templates_graph.colortag_arrow,
+		graph_templates_graph.font_render_mode,
+		graph_templates_graph.font_smoothing_threshold,
+		graph_templates_graph.graph_render_mode,
+		graph_templates_graph.pango_markup,
+		graph_templates_graph.interlaced,
+		graph_templates_graph.tab_width,
+		graph_templates_graph.watermark
 		from (graph_templates_graph,graph_local)
 		where graph_local.id=graph_templates_graph.local_graph_id
 		and graph_templates_graph.local_graph_id=$local_graph_id");
@@ -647,136 +672,9 @@ function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rr
 
 	/* +++++++++++++++++++++++ GRAPH OPTIONS +++++++++++++++++++++++ */
 
-	/* define some variables */
-	$scale = "";
-	$rigid = "";
-	$alt_y_grid = "";
-	$unit_value = "";
-	$unit_exponent_value = "";
-	$graph_legend = "";
-	$graph_defs = "";
-	$txt_graph_items = "";
-	$text_padding = "";
-	$greatest_text_format = 0;
-	$last_graph_type = "";
+	$rrdtool_version = read_config_option("rrdtool_version");
 
-	/* do query_ substitions for upper and lower limit */
-	if (isset($graph["lower_limit"])) {
-		$graph["lower_limit"] = rrd_substitute_host_query_data($graph["lower_limit"], $graph, null);
-	}
-	if (isset($graph["upper_limit"])) {
-		$graph["upper_limit"] = rrd_substitute_host_query_data($graph["upper_limit"], $graph, null);
-	}
-
-	if ($graph["auto_scale"] == "on") {
-		switch ($graph["auto_scale_opts"]) {
-			case "1": /* autoscale ignores lower, upper limit */
-				$scale = "--alt-autoscale" . RRD_NL;
-				break;
-			case "2": /* autoscale-max, accepts a given lower limit */
-				$scale = "--alt-autoscale-max" . RRD_NL;
-				if ( is_numeric($graph["lower_limit"])) {
-					$scale .= "--lower-limit=" . $graph["lower_limit"] . RRD_NL;
-				}
-				break;
-			case "3": /* autoscale-min, accepts a given upper limit */
-				if (read_config_option("rrdtool_version") != "rrd-1.0.x") {
-					$scale = "--alt-autoscale-min" . RRD_NL;
-					if ( is_numeric($graph["upper_limit"])) {
-						$scale .= "--upper-limit=" . $graph["upper_limit"] . RRD_NL;
-					}
-				}
-				break;
-			case "4": /* auto_scale with limits */
-				$scale = "--alt-autoscale" . RRD_NL;
-				if ( is_numeric($graph["upper_limit"])) {
-					$scale .= "--upper-limit=" . $graph["upper_limit"] . RRD_NL;
-				}
-				if ( is_numeric($graph["lower_limit"])) {
-					$scale .= "--lower-limit=" . $graph["lower_limit"] . RRD_NL;
-				}
-				break;
-		}
-	}else{
-		if ( is_numeric($graph["upper_limit"])) {
-			$scale .= "--upper-limit=" . $graph["upper_limit"] . RRD_NL;
-		}
-		if ( is_numeric($graph["lower_limit"])) {
-			$scale .= "--lower-limit=" . $graph["lower_limit"] . RRD_NL;
-		}
-	}
-
-	if ($graph["auto_scale_log"] == "on") {
-		$scale .= "--logarithmic" . RRD_NL;
-	}
-
-	/* --units=si only defined for logarithmic y-axis scaling, even if it doesn't hurt on linear graphs */
-	if (($graph["scale_log_units"] == "on") &&
-		($graph["auto_scale_log"] == "on")) {
-		$scale .= "--units=si" . RRD_NL;
-	}
-
-	if ($graph["auto_scale_rigid"] == "on") {
-		$rigid = "--rigid" . RRD_NL;
-	}
-
-	if ($graph["alt_y_grid"] == "on") {
-		$alt_y_grid = "--alt-y-grid" . RRD_NL;
-	}
-
-	if (!empty($graph["unit_value"])) {
-		if (read_config_option("rrdtool_version") != "rrd-1.0.x") {
-			$unit_value = "--y-grid=" . $graph["unit_value"] . RRD_NL;
-		}else{
-			$unit_value = "--unit=" . $graph["unit_value"] . RRD_NL;
-		}
-	}
-
-	if (preg_match("/^[0-9]+$/", $graph["unit_exponent_value"])) {
-		$unit_exponent_value = "--units-exponent=" . $graph["unit_exponent_value"] . RRD_NL;
-	}
-
-	/*
-	 * optionally you can specify and array that overrides some of the db's values, lets set
-	 * that all up here
-	 */
-
-	/* override: graph start time */
-	if ((!isset($graph_data_array["graph_start"])) || ($graph_data_array["graph_start"] == "0")) {
-		$graph_start = -($rra["timespan"]);
-	}else{
-		$graph_start = $graph_data_array["graph_start"];
-	}
-
-	/* override: graph end time */
-	if ((!isset($graph_data_array["graph_end"])) || ($graph_data_array["graph_end"] == "0")) {
-		$graph_end = -($seconds_between_graph_updates);
-	}else{
-		$graph_end = $graph_data_array["graph_end"];
-	}
-
-	/* override: graph height (in pixels) */
-	if (isset($graph_data_array["graph_height"])) {
-		$graph_height = $graph_data_array["graph_height"];
-	}else{
-		$graph_height = $graph["height"];
-	}
-
-	/* override: graph width (in pixels) */
-	if (isset($graph_data_array["graph_width"])) {
-		$graph_width = $graph_data_array["graph_width"];
-	}else{
-		$graph_width = $graph["width"];
-	}
-
-	/* override: skip drawing the legend? */
-	if (isset($graph_data_array["graph_nolegend"])) {
-		$graph_legend = "--no-legend" . RRD_NL;
-	}else{
-		$graph_legend = "";
-	}
-
-	/* export options */
+	/* export options: either output to stream or to file */
 	if (isset($graph_data_array["export"])) {
 		$graph_opts = read_config_option("path_html_export") . "/" . $graph_data_array["export_filename"] . RRD_NL;
 	}else{
@@ -787,71 +685,47 @@ function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rr
 		}
 	}
 
+	# image format
+	$graph_opts .= rrdgraph_image_format($graph["image_format_id"], $rrdtool_version);
+
+	# start and end time
+	list($graph_start, $graph_end) = rrdgraph_start_end($graph_data_array, $rra, $seconds_between_graph_updates);
+	$graph_opts .= "--start=$graph_start" . RRD_NL . "--end=$graph_end" . RRD_NL;
+
+	$graph_opts .= rrdgraph_opts($graph, $graph_data_array, $rrdtool_version);
+
+	$graph_opts .= rrdgraph_scale($graph);
+
 	$graph_date = date_time_format();
 
 	/* display the timespan for zoomed graphs */
 	if ((isset($graph_data_array["graph_start"])) && (isset($graph_data_array["graph_end"]))) {
 		if (($graph_data_array["graph_start"] < 0) && ($graph_data_array["graph_end"] < 0)) {
-			if (read_config_option("rrdtool_version") != "rrd-1.0.x") {
-				$graph_legend .= "COMMENT:\"" . __("From") . " " . str_replace(":", "\:", date($graph_date, time()+$graph_data_array["graph_start"])) . " " . __("To") . " " . str_replace(":", "\:", date($graph_date, time()+$graph_data_array["graph_end"])) . "\\c\"" . RRD_NL . "COMMENT:\"  \\n\"" . RRD_NL;
+			if (read_config_option("rrdtool_version") != RRD_VERSION_1_0) {
+				$graph_opts .= "COMMENT:\"" . __("From") . " " . str_replace(":", "\:", date($graph_date, time()+$graph_data_array["graph_start"])) . " " . __("To") . " " . str_replace(":", "\:", date($graph_date, time()+$graph_data_array["graph_end"])) . "\\c\"" . RRD_NL . "COMMENT:\"  \\n\"" . RRD_NL;
 			}else {
-				$graph_legend .= "COMMENT:\"" . __("From") . " " . date($graph_date, time()+$graph_data_array["graph_start"]) . " " . __("To") . " " . date($graph_date, time()+$graph_data_array["graph_end"]) . "\\c\"" . RRD_NL . "COMMENT:\"  \\n\"" . RRD_NL;
+				$graph_opts .= "COMMENT:\"" . __("From") . " " . date($graph_date, time()+$graph_data_array["graph_start"]) . " " . __("To") . " " . date($graph_date, time()+$graph_data_array["graph_end"]) . "\\c\"" . RRD_NL . "COMMENT:\"  \\n\"" . RRD_NL;
 			}
 		}else if (($graph_data_array["graph_start"] >= 0) && ($graph_data_array["graph_end"] >= 0)) {
-			if (read_config_option("rrdtool_version") != "rrd-1.0.x") {
-				$graph_legend .= "COMMENT:\"" . __("From") . " " . str_replace(":", "\:", date($graph_date, $graph_data_array["graph_start"])) . " " . __("To") . " " . str_replace(":", "\:", date($graph_date, $graph_data_array["graph_end"])) . "\\c\"" . RRD_NL . "COMMENT:\"  \\n\"" . RRD_NL;
+			if (read_config_option("rrdtool_version") != RRD_VERSION_1_0) {
+				$graph_opts .= "COMMENT:\"" . __("From") . " " . str_replace(":", "\:", date($graph_date, $graph_data_array["graph_start"])) . " " . __("To") . " " . str_replace(":", "\:", date($graph_date, $graph_data_array["graph_end"])) . "\\c\"" . RRD_NL . "COMMENT:\"  \\n\"" . RRD_NL;
 			}else {
-				$graph_legend .= "COMMENT:\"" . __("From") . " " . date($graph_date, $graph_data_array["graph_start"]) . " " . __("To") . " " . date($graph_date, $graph_data_array["graph_end"]) . "\\c\"" . RRD_NL . "COMMENT:\"  \\n\"" . RRD_NL;
+				$graph_opts .= "COMMENT:\"" . __("From") . " " . date($graph_date, $graph_data_array["graph_start"]) . " " . __("To") . " " . date($graph_date, $graph_data_array["graph_end"]) . "\\c\"" . RRD_NL . "COMMENT:\"  \\n\"" . RRD_NL;
 			}
 		}
 	}
 
-	/* basic graph options */
-	$graph_opts .=
-		"--imgformat=" . $image_types{$graph["image_format_id"]} . RRD_NL .
-		"--start=$graph_start" . RRD_NL .
-		"--end=$graph_end" . RRD_NL .
-		"--title=\"" . str_replace("\"", "\\\"", $graph["title_cache"]) . "\"" . RRD_NL .
-		"$rigid" .
-		"$alt_y_grid" .
-		"--base=" . $graph["base_value"] . RRD_NL .
-		"--height=$graph_height" . RRD_NL .
-		"--width=$graph_width" . RRD_NL .
-		"$scale" .
-		"$unit_value" .
-		"$unit_exponent_value" .
-		"$graph_legend";
-
-	if (!empty($graph["vertical_label"])) {
-		$graph_opts .= "--vertical-label=\"" .
-			$graph["vertical_label"] . "\"" . RRD_NL;
-	}
 
 	/* Replace "|query_*|" in the graph command to replace e.g. vertical_label.  */
 	$graph_opts = rrd_substitute_host_query_data($graph_opts, $graph, NULL);
 
-	/* rrdtool 1.2.x, 1.3.x does not provide smooth lines, let's force it */
-	if (read_config_option("rrdtool_version") != "rrd-1.0.x") {
-		if ($graph["slope_mode"] == "on") {
-			$graph_opts .= "--slope-mode" . RRD_NL;
-		}
-	}
 
-	/* rrdtool 1.2.x, 1.3.x font options */
-	if (read_config_option("rrdtool_version") != "rrd-1.0.x") {
-		/* title fonts */
-		$graph_opts .= rrdtool_set_font("title", ((!empty($graph_data_array["graph_nolegend"])) ? $graph_data_array["graph_nolegend"] : ""));
-
-		/* axis fonts */
-		$graph_opts .= rrdtool_set_font("axis");
-
-		/* legend fonts */
-		$graph_opts .= rrdtool_set_font("legend");
-
-		/* unit fonts */
-		$graph_opts .= rrdtool_set_font("unit");
-	}
-
+	/* define some variables */
+	$graph_defs = "";
+	$txt_graph_items = "";
+	$text_padding = "";
+	$greatest_text_format = 0;
+	$last_graph_type = "";
 	$i = 0; $j = 0;
 	$last_graph_cf = array();
 	if (sizeof($graph_items) > 0) {
@@ -953,7 +827,7 @@ function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rr
 
 				/* date/time substitution */
 				if (strstr($graph_variables[$field_name][$graph_item_id], "|date_time|")) {
-					$graph_variables[$field_name][$graph_item_id] = str_replace("|date_time|", date('D d M H:i:s T Y', strtotime(db_fetch_cell("select value from settings where name='date'"))), $graph_variables[$field_name][$graph_item_id]);
+					$graph_variables[$field_name][$graph_item_id] = str_replace("|date_time|", date(date_time_format(), strtotime(db_fetch_cell("select value from settings where name='date'"))), $graph_variables[$field_name][$graph_item_id]);
 				}
 
 				/* data source title substitution */
@@ -983,7 +857,7 @@ function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rr
 			text format stuff. */
 			if (!isset($graph_data_array["graph_nolegend"])) {
 				/* set hard return variable if selected (\n) */
-				if ($graph_item["hard_return"] == "on") {
+				if ($graph_item["hard_return"] == CHECKED) {
 					$hardreturn[$graph_item_id] = "\\n";
 				}else{
 					$hardreturn[$graph_item_id] = "";
@@ -995,7 +869,7 @@ function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rr
 				AREA - GPRINT-CURRENT - GPRINT-AVERAGE - GPRINT-MAXIMUM \n
 				of course it can be used in other situations, however may not work as intended.
 				If you have any additions to this small peice of code, feel free to send them to me. */
-				if ($graph["auto_padding"] == "on") {
+				if ($graph["auto_padding"] == CHECKED) {
 					/* only applies to AREA, STACK and LINEs */
 					if (preg_match("/(AREA|STACK|LINE[123])/", $graph_item_types{$graph_item["graph_type_id"]})) {
 						$text_format_length = strlen($graph_variables["text_format"][$graph_item_id]);
@@ -1064,28 +938,28 @@ function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rr
 
 				/* now walk through each case to initialize array*/
 				if (preg_match("/ALL_DATA_SOURCES_DUPS/", $cdef_string)) {
-					$magic_item["/ALL_DATA_SOURCES_DUPS"] = "";
+					$magic_item["ALL_DATA_SOURCES_DUPS"] = "";
 				}
 				if (preg_match("/ALL_DATA_SOURCES_NODUPS/", $cdef_string)) {
-					$magic_item["/ALL_DATA_SOURCES_NODUPS"] = "";
+					$magic_item["ALL_DATA_SOURCES_NODUPS"] = "";
 				}
 				if (preg_match("/SIMILAR_DATA_SOURCES_DUPS/", $cdef_string)) {
-					$magic_item["/SIMILAR_DATA_SOURCES_DUPS"] = "";
+					$magic_item["SIMILAR_DATA_SOURCES_DUPS"] = "";
 				}
 				if (preg_match("/SIMILAR_DATA_SOURCES_NODUPS/", $cdef_string)) {
-					$magic_item["/SIMILAR_DATA_SOURCES_NODUPS"] = "";
+					$magic_item["SIMILAR_DATA_SOURCES_NODUPS"] = "";
 				}
 				if (preg_match("/COUNT_ALL_DS_DUPS/", $cdef_string)) {
-					$magic_item["/COUNT_ALL_DS_DUPS"] = "";
+					$magic_item["COUNT_ALL_DS_DUPS"] = "";
 				}
 				if (preg_match("/COUNT_ALL_DS_NODUPS/", $cdef_string)) {
-					$magic_item["/COUNT_ALL_DS_NODUPS"] = "";
+					$magic_item["COUNT_ALL_DS_NODUPS"] = "";
 				}
 				if (preg_match("/COUNT_SIMILAR_DS_DUPS/", $cdef_string)) {
-					$magic_item["/COUNT_SIMILAR_DS_DUPS"] = "";
+					$magic_item["COUNT_SIMILAR_DS_DUPS"] = "";
 				}
 				if (preg_match("/COUNT_SIMILAR_DS_NODUPS/", $cdef_string)) {
-					$magic_item["/COUNT_SIMILAR_DS_NODUPS"] = "";
+					$magic_item["COUNT_SIMILAR_DS_NODUPS"] = "";
 				}
 
 				/* loop over all graph items */
@@ -1238,7 +1112,7 @@ function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rr
 
 		/* if we are not displaying a legend there is no point in us even processing the auto padding,
 		text format stuff. */
-		if ((!isset($graph_data_array["graph_nolegend"])) && ($graph["auto_padding"] == "on")) {
+		if ((!isset($graph_data_array["graph_nolegend"])) && ($graph["auto_padding"] == CHECKED)) {
 			/* only applies to AREA, STACK and LINEs */
 			if (preg_match("/(AREA|STACK|LINE[123])/", $graph_item_types{$graph_item["graph_type_id"]})) {
 				$text_format_length = strlen($graph_variables["text_format"][$graph_item_id]);
@@ -1310,7 +1184,7 @@ function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rr
 				$graph_item_color_code = "";
 			}else{
 				$graph_item_color_code = "#" . $graph_item["hex"];
-				if (read_config_option("rrdtool_version") != "rrd-1.0.x") {
+				if (read_config_option("rrdtool_version") != RRD_VERSION_1_0) {
 					$graph_item_color_code .= $graph_item["alpha"];
 				}
 			}
@@ -1319,7 +1193,7 @@ function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rr
 				$graph_item_stack_type = $graph_item_types{$graph_item["graph_type_id"]};
 				$txt_graph_items .= $graph_item_types{$graph_item["graph_type_id"]} . ":" . $data_source_name . $graph_item_color_code . ":" . "\"" . $graph_variables["text_format"][$graph_item_id] . $hardreturn[$graph_item_id] . "\" ";
 			}elseif ($graph_item_types{$graph_item["graph_type_id"]} == "STACK") {
-				if (read_config_option("rrdtool_version") != "rrd-1.0.x") {
+				if (read_config_option("rrdtool_version") != RRD_VERSION_1_0) {
 					$txt_graph_items .= $graph_item_stack_type . ":" . $data_source_name . $graph_item_color_code . ":" . "\"" . $graph_variables["text_format"][$graph_item_id] . $hardreturn[$graph_item_id] . "\":STACK";
 				}else {
 					$txt_graph_items .= $graph_item_types{$graph_item["graph_type_id"]} . ":" . $data_source_name . $graph_item_color_code . ":" . "\"" . $graph_variables["text_format"][$graph_item_id] . $hardreturn[$graph_item_id] . "\" ";
@@ -1646,7 +1520,7 @@ function rrdtool_function_xport($local_graph_id, $rra_id, $xport_data_array, &$x
 
 				/* date/time substitution */
 				if (strstr($xport_variables[$field_name][$xport_item_id], "|date_time|")) {
-					$xport_variables[$field_name][$xport_item_id] = str_replace("|date_time|", date('D d M H:i:s T Y', strtotime(db_fetch_cell("select value from settings where name='date'"))), $xport_variables[$field_name][$xport_item_id]);
+					$xport_variables[$field_name][$xport_item_id] = str_replace("|date_time|", date(date_time_format(), strtotime(db_fetch_cell("select value from settings where name='date'"))), $xport_variables[$field_name][$xport_item_id]);
 				}
 
 				/* data query variables */
@@ -1735,28 +1609,28 @@ function rrdtool_function_xport($local_graph_id, $rra_id, $xport_data_array, &$x
 
 				/* now walk through each case to initialize array*/
 				if (preg_match("/ALL_DATA_SOURCES_DUPS/", $cdef_string)) {
-					$magic_item["/ALL_DATA_SOURCES_DUPS"] = "";
+					$magic_item["ALL_DATA_SOURCES_DUPS"] = "";
 				}
 				if (preg_match("/ALL_DATA_SOURCES_NODUPS/", $cdef_string)) {
-					$magic_item["/ALL_DATA_SOURCES_NODUPS"] = "";
+					$magic_item["ALL_DATA_SOURCES_NODUPS"] = "";
 				}
 				if (preg_match("/SIMILAR_DATA_SOURCES_DUPS/", $cdef_string)) {
-					$magic_item["/SIMILAR_DATA_SOURCES_DUPS"] = "";
+					$magic_item["SIMILAR_DATA_SOURCES_DUPS"] = "";
 				}
 				if (preg_match("/SIMILAR_DATA_SOURCES_NODUPS/", $cdef_string)) {
-					$magic_item["/SIMILAR_DATA_SOURCES_NODUPS"] = "";
+					$magic_item["SIMILAR_DATA_SOURCES_NODUPS"] = "";
 				}
 				if (preg_match("/COUNT_ALL_DS_DUPS/", $cdef_string)) {
-					$magic_item["/COUNT_ALL_DS_DUPS"] = "";
+					$magic_item["COUNT_ALL_DS_DUPS"] = "";
 				}
 				if (preg_match("/COUNT_ALL_DS_NODUPS/", $cdef_string)) {
-					$magic_item["/COUNT_ALL_DS_NODUPS"] = "";
+					$magic_item["COUNT_ALL_DS_NODUPS"] = "";
 				}
 				if (preg_match("/COUNT_SIMILAR_DS_DUPS/", $cdef_string)) {
-					$magic_item["/COUNT_SIMILAR_DS_DUPS"] = "";
+					$magic_item["COUNT_SIMILAR_DS_DUPS"] = "";
 				}
 				if (preg_match("/COUNT_SIMILAR_DS_NODUPS/", $cdef_string)) {
-					$magic_item["/COUNT_SIMILAR_DS_NODUPS"] = "";
+					$magic_item["COUNT_SIMILAR_DS_NODUPS"] = "";
 				}
 
 				/* loop over all graph items */
@@ -1961,7 +1835,7 @@ function rrdtool_function_xport($local_graph_id, $rra_id, $xport_data_array, &$x
 
 function rrdtool_set_font($type, $no_legend = "") {
 	global $config;
-	if (read_graph_config_option("custom_fonts") == "on") {
+	if (read_graph_config_option("custom_fonts") == CHECKED) {
 		$font = read_graph_config_option($type . "_font");
 		$size = read_graph_config_option($type . "_size");
 	}else{
@@ -1970,8 +1844,8 @@ function rrdtool_set_font($type, $no_legend = "") {
 	}
 
 	/* do some simple checks */
-	if (read_config_option("rrdtool_version") == "rrd-1.0.x" ||
-			  read_config_option("rrdtool_version") == "rrd-1.2.x") { # rrdtool 1.0 and 1.2 use font files
+	if (read_config_option("rrdtool_version") == RRD_VERSION_1_0 ||
+			  read_config_option("rrdtool_version") == RRD_VERSION_1_2) { # rrdtool 1.0 and 1.2 use font files
 		if (!file_exists($font)) {
 			$font = "";
 		}
@@ -1997,6 +1871,29 @@ function rrdtool_set_font($type, $no_legend = "") {
 	return "--font " . strtoupper($type) . ":" . $size . ":" . $font . RRD_NL;
 }
 
+
+function rrdtool_set_colortag($type, $colortag) {
+	global $config;
+
+	$tag = "";
+
+	if (!empty($colortag)) {
+		$tag = $colortag;													# graph specific tag is topmost priority
+	} elseif (read_graph_config_option("custom_colortags") == CHECKED) {
+		$colortag = read_graph_config_option("colortag_" . $type);
+		if (!empty($colortag)) {$tag = $colortag;}							# custom tag "for all graphs" is nextmost priority
+	}else{
+		$colortag = read_config_option("colortag_" . $type);
+		if (!empty($colortag)) {$tag = $colortag;}							# global tag is least priority
+	}
+
+	if (!empty($tag)) {
+		return "--color " . $type . "#" . $tag . RRD_NL;
+	} else {
+		return "";
+	}
+}
+
 /* rrd_substitute_host_query_data substitute |host*| and |query*| type variables
  * @arg $txt_graph_item 	the variable to be substituted
  * @arg $graph				from table graph_templates_graph
@@ -2020,6 +1917,392 @@ function rrd_substitute_host_query_data($txt_graph_item, $graph, $graph_item) {
 	}else{
 		return $txt_graph_item;
 	}
+}
+
+/* rrdgraph_scale		compute scaling parameters for rrd graphs
+ * @arg $graph			graph options
+ * returns				graph options prepared for use with rrdtool graph
+ */
+function rrdgraph_scale($graph) {
+
+	$scale = "";
+
+	/* do query_ substitions for upper and lower limit */
+	if (isset($graph["lower_limit"])) {
+		$graph["lower_limit"] = rrd_substitute_host_query_data($graph["lower_limit"], $graph, null);
+	}
+	if (isset($graph["upper_limit"])) {
+		$graph["upper_limit"] = rrd_substitute_host_query_data($graph["upper_limit"], $graph, null);
+	}
+
+	if ($graph["auto_scale"] == CHECKED) {
+		switch ($graph["auto_scale_opts"]) {
+			case GRAPH_ALT_AUTOSCALE: /* autoscale ignores lower, upper limit */
+				$scale = "--alt-autoscale" . RRD_NL;
+				break;
+			case GRAPH_ALT_AUTOSCALE_MIN: /* autoscale-max, accepts a given lower limit */
+				$scale = "--alt-autoscale-max" . RRD_NL;
+				if ( is_numeric($graph["lower_limit"])) {
+					$scale .= "--lower-limit=" . $graph["lower_limit"] . RRD_NL;
+				}
+				break;
+			case GRAPH_ALT_AUTOSCALE_MAX: /* autoscale-min, accepts a given upper limit */
+				if (read_config_option("rrdtool_version") != RRD_VERSION_1_0) {
+					$scale = "--alt-autoscale-min" . RRD_NL;
+					if ( is_numeric($graph["upper_limit"])) {
+						$scale .= "--upper-limit=" . $graph["upper_limit"] . RRD_NL;
+					}
+				}
+				break;
+			case GRAPH_ALT_AUTOSCALE_LIMITS: /* auto_scale with limits */
+				$scale = "--alt-autoscale" . RRD_NL;
+				if ( is_numeric($graph["upper_limit"])) {
+					$scale .= "--upper-limit=" . $graph["upper_limit"] . RRD_NL;
+				}
+				if ( is_numeric($graph["lower_limit"])) {
+					$scale .= "--lower-limit=" . $graph["lower_limit"] . RRD_NL;
+				}
+				break;
+		}
+	}else{
+		if ( is_numeric($graph["upper_limit"])) {
+			$scale .= "--upper-limit=" . $graph["upper_limit"] . RRD_NL;
+		}
+		if ( is_numeric($graph["lower_limit"])) {
+			$scale .= "--lower-limit=" . $graph["lower_limit"] . RRD_NL;
+		}
+	}
+
+	if ($graph["auto_scale_log"] == CHECKED) {
+		$scale .= "--logarithmic" . RRD_NL;
+	}
+
+	/* --units=si only defined for logarithmic y-axis scaling, even if it doesn't hurt on linear graphs */
+	if (($graph["scale_log_units"] == CHECKED) &&
+		($graph["auto_scale_log"] == CHECKED)) {
+		$scale .= "--units=si" . RRD_NL;
+	}
+
+	if ($graph["auto_scale_rigid"] == CHECKED) {
+		$scale .= "--rigid" . RRD_NL;
+	}
+
+	return $scale;
+}
+
+/* rrdgraph_image_format		determine image format for rrdtool graph statement
+ * @arg $image_format_id		the id of the wanted image format
+ * @arg $rrdtool_version		rrdtool version used for checks
+ * returns						--imgformat string
+ */
+function rrdgraph_image_format($image_format_id, $rrdtool_version) {
+	global $image_types;
+
+	$format = "--imgformat=";
+
+	switch($rrdtool_version) {
+		case RRD_VERSION_1_0:
+			if ($image_format_id == IMAGE_TYPE_PNG || $image_format_id == IMAGE_TYPE_GIF) {
+				$format .= $image_types{$image_format_id};
+			} else {
+				$format .= $image_types{IMAGE_TYPE_PNG};
+			}
+			break;
+
+		case RRD_VERSION_1_2:
+			if ($image_format_id == IMAGE_TYPE_PNG || $image_format_id == IMAGE_TYPE_GIF || $image_format_id == IMAGE_TYPE_SVG) {
+				$format .= $image_types{$image_format_id};
+			} else {
+				$format .= $image_types{IMAGE_TYPE_PNG};
+			}
+			break;
+
+		case RRD_VERSION_1_3:
+			if ($image_format_id == IMAGE_TYPE_PNG || $image_format_id == IMAGE_TYPE_GIF || $image_format_id == IMAGE_TYPE_SVG) {
+				$format .= $image_types{$image_format_id};
+			} else {
+				$format .= $image_types{IMAGE_TYPE_PNG};
+			}
+			break;
+
+		case RRD_VERSION_1_4:
+			if ($image_format_id == IMAGE_TYPE_PNG || $image_format_id == IMAGE_TYPE_GIF || $image_format_id == IMAGE_TYPE_SVG) {
+				$format .= $image_types{$image_format_id};
+			} else {
+				$format .= $image_types{IMAGE_TYPE_PNG};
+			}
+			break;
+
+		default:
+			$format .= $image_types{IMAGE_TYPE_PNG};
+			break;
+
+	}
+
+	$format .= RRD_NL;
+	return $format;
+}
+
+/* rrdgraph_start_end		computes start and end timestamps in unixtime format
+ * @arg $graph_data_array	override parameters for start, end, e.g. for zooming
+ * @arg $rra				rra parameters used for this graph
+ * @arg $seconds_between_graph_updates
+ * returns					array of start, end time
+ */
+function rrdgraph_start_end($graph_data_array, $rra, $seconds_between_graph_updates) {
+
+	/* override: graph start time */
+	if ((!isset($graph_data_array["graph_start"])) || ($graph_data_array["graph_start"] == "0")) {
+		$graph_start = -($rra["timespan"]);
+	}else{
+		$graph_start = $graph_data_array["graph_start"];
+	}
+
+	/* override: graph end time */
+	if ((!isset($graph_data_array["graph_end"])) || ($graph_data_array["graph_end"] == "0")) {
+		$graph_end = -($seconds_between_graph_updates);
+	}else{
+		$graph_end = $graph_data_array["graph_end"];
+	}
+
+	return array($graph_start, $graph_end);
+
+}
+
+
+function rrdgraph_opts($graph, $graph_data_array, $version) {
+
+	$option = "";
+
+	foreach ($graph as $key => $value) {
+		switch ($key) {
+			case "title_cache":
+				$option .= "--title=\"" . str_replace("\"", "\\\"", $value) . "\"" . RRD_NL;
+				break;
+
+			case "alt_y_grid":
+				if ($value == CHECKED) 	{$option .= "--alt-y-grid" . RRD_NL;}
+				break;
+
+			case "unit_value":
+				if (!empty($value)) {
+					if ($version != RRD_VERSION_1_0) {
+						$option .= "--y-grid=" . $value . RRD_NL;
+					}else{
+						$option .= "--unit=" . $value . RRD_NL;
+					}
+				}
+				break;
+
+			case "unit_exponent_value":
+				if (preg_match("/^[0-9]+$/", $value)) {
+					$option .= "--units-exponent=" . $value . RRD_NL;
+				}
+				break;
+
+			case "height":
+				/* override: graph height (in pixels) */
+				if (isset($graph_data_array["graph_height"])) {
+					$option .= "--height=" . $graph_data_array["graph_height"] . RRD_NL;
+				}else{
+					$option .= "--height=" . $value . RRD_NL;
+				}
+				break;
+
+			case "width":
+				/* override: graph width (in pixels) */
+				if (isset($graph_data_array["graph_width"])) {
+					$option .= "--width=" . $graph_data_array["graph_width"] . RRD_NL;
+				}else{
+					$option .= "--width=" . $value . RRD_NL;
+				}
+				break;
+
+			case "graph_nolegend":
+				/* override: skip drawing the legend? */
+				if (isset($graph_data_array["graph_nolegend"])) {
+					$option .= "--no-legend" . RRD_NL;
+				}else{
+					$option .= "";
+				}
+				break;
+
+			case "base_value":
+				$option .= "--base=" . $value . RRD_NL;
+				break;
+
+			case "vertical_label":
+				if (!empty($key)) {
+					$option .= "--vertical-label=\"" . $value . "\"" . RRD_NL;
+				}
+				break;
+
+			case "slope_mode":
+				/* rrdtool 1.2.x, 1.3.x does not provide smooth lines, let's force it */
+				if ($version != RRD_VERSION_1_0) {
+					if ($key == CHECKED) {
+						$option .= "--slope-mode" . RRD_NL;
+					}
+				}
+				break;
+
+			case "right_axis":
+				if ($version != RRD_VERSION_1_0 && $version != RRD_VERSION_1_2) {
+					if (!empty($key)) {
+						$option .= "--right-axis" . $value . RRD_NL;
+					}
+				}
+				break;
+
+			case "right_axis_label":
+				if ($version != RRD_VERSION_1_0 && $version != RRD_VERSION_1_2) {
+					if (!empty($key)) {
+						$option .= "--right-axis-label \"" . $value . "\"" . RRD_NL;
+					}
+				}
+				break;
+
+			case "right_axis_format":
+				if ($version != RRD_VERSION_1_0 && $version != RRD_VERSION_1_2) {
+					if (!empty($key)) {
+						$option .= "--right-axis-format \"" . $value . "\"" . RRD_NL;
+					}
+				}
+				break;
+
+			case "only_graph":
+				if ($version != RRD_VERSION_1_0 && $version != RRD_VERSION_1_2) {
+					if ($key == CHECKED) {
+						$option .= "--only-graph" . RRD_NL;
+					}
+				}
+				break;
+
+			case "full_size_mode":
+				if ($version != RRD_VERSION_1_0 && $version != RRD_VERSION_1_2) {
+					if ($key == CHECKED) {
+						$option .= "--full-size-mode" . RRD_NL;
+					}
+				}
+				break;
+
+			case "no_gridfit":
+				if ($version != RRD_VERSION_1_0 && $version != RRD_VERSION_1_2) {
+					if ($key == CHECKED) {
+						$option .= "--no-gridfit" . RRD_NL;
+					}
+				}
+				break;
+
+			case "x_grid":
+				if ($version != RRD_VERSION_1_0 && $version != RRD_VERSION_1_2) {
+					if (!empty($key)) {
+						$option .= "--x-grid \"" . $value . "\"" . RRD_NL;
+					}
+				}
+				break;
+
+			case "unit_length":
+				if ($version != RRD_VERSION_1_0 && $version != RRD_VERSION_1_2) {
+					if (!empty($key)) {
+						$option .= "--units-length " . $value . RRD_NL;
+					}
+				}
+				break;
+
+			case "font_render_mode":
+				if ($version != RRD_VERSION_1_0 && $version != RRD_VERSION_1_2) {
+					if (!empty($key)) {
+						$option .= "--font-render-mode " . $value . RRD_NL;
+					}
+				}
+				break;
+
+			case "font_smoothing_threshold":
+				if ($version != RRD_VERSION_1_0 && $version != RRD_VERSION_1_2) {
+					if (!empty($key)) {
+						$option .= "--font-smoothing-threshold " . $value . RRD_NL;
+					}
+				}
+				break;
+
+			case "graph_render_mode":
+				if ($version != RRD_VERSION_1_0 && $version != RRD_VERSION_1_2) {
+					if (!empty($key)) {
+						$option .= "--graph-render-mode " . $value . RRD_NL;
+					}
+				}
+				break;
+
+			case "pango_markup":
+				if ($version != RRD_VERSION_1_0 && $version != RRD_VERSION_1_2) {
+					if (!empty($key)) {
+						$option .= "--pango-markup \"" . $value . "\"" . RRD_NL;
+					}
+				}
+				break;
+
+			case "interlaced":
+				if ($version != RRD_VERSION_1_0 && $version != RRD_VERSION_1_2) {
+					if ($key == CHECKED) {
+						$option .= "--interlaced" . RRD_NL;
+					}
+				}
+				break;
+
+			case "tab_width":
+				if ($version != RRD_VERSION_1_0 && $version != RRD_VERSION_1_2) {
+					if (!empty($key)) {
+						$option .= "--tab-width " . $value . RRD_NL;
+					}
+				}
+				break;
+
+			case "watermark":
+				if ($version != RRD_VERSION_1_0 && $version != RRD_VERSION_1_2) {
+					if (!empty($key)) {
+						$option .= "--watermark \"" . $value . "\"" . RRD_NL;
+					}
+				}
+				break;
+
+		}
+	}
+
+
+
+	/* rrdtool 1.2.x++ font options */
+	if ($version != RRD_VERSION_1_0) {
+		/* title fonts */
+		$option .= rrdtool_set_font("title", ((!empty($graph_data_array["graph_nolegend"])) ? $graph_data_array["graph_nolegend"] : ""));
+
+		/* axis fonts */
+		$option .= rrdtool_set_font("axis");
+
+		/* legend fonts */
+		$option .= rrdtool_set_font("legend");
+
+		/* unit fonts */
+		$option .= rrdtool_set_font("unit");
+	}
+
+	/* rrdtool 1.3.x++ colortag options */
+	if ($version != RRD_VERSION_1_0 && $version != RRD_VERSION_1_2) {
+		/* title fonts */
+		$option .= rrdtool_set_colortag("BACK", $graph["colortag_back"]);
+		$option .= rrdtool_set_colortag("CANVAS", $graph["colortag_canvas"]);
+		$option .= rrdtool_set_colortag("SHADEA", $graph["colortag_shadea"]);
+		$option .= rrdtool_set_colortag("SHADEB", $graph["colortag_shadeb"]);
+		$option .= rrdtool_set_colortag("GRID", $graph["colortag_grid"]);
+		$option .= rrdtool_set_colortag("MGRID", $graph["colortag_mgrid"]);
+		$option .= rrdtool_set_colortag("FONT", $graph["colortag_font"]);
+		$option .= rrdtool_set_colortag("AXIS", $graph["colortag_axis"]);
+		$option .= rrdtool_set_colortag("FRAME", $graph["colortag_frame"]);
+		$option .= rrdtool_set_colortag("ARROW", $graph["colortag_arrow"]);
+	}
+
+
+	return $option;
 }
 
 /* rrdtool_cacti_compare 	compares cacti information to rrd file information

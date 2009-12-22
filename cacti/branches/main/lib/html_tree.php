@@ -53,7 +53,7 @@ function grow_graph_tree($tree_id, $start_branch, $user_id, $options) {
 	}
 
 	/* include time span selector */
-	if (read_graph_config_option("timespan_sel") == "on") {
+	if (read_graph_config_option("timespan_sel") == CHECKED) {
 		graph_view_timespan_selector();
 	}
 
@@ -520,7 +520,7 @@ function create_dhtml_tree() {
 							$i++;
 							$dhtml_tree[$i] = "\t\t\tou" . ($tier) . ".xID = \"tree_" . $tree["id"] . "_leaf_" . $leaf["id"] . "\"\n";
 
-							if (read_graph_config_option("expand_hosts") == "on") {
+							if (read_graph_config_option("expand_hosts") == CHECKED) {
 								if ($leaf["host_grouping_type"] == HOST_GROUPING_GRAPH_TEMPLATE) {
 									$graph_templates = db_fetch_assoc("select
 									graph_templates.id,
@@ -849,7 +849,7 @@ function get_tree_leaf_items($tree_id, $leaf_id, $host_group_type) {
 
 			return $items;
 		}elseif ($leaf_type == "host") {
-			if (read_graph_config_option("expand_hosts") == "on") {
+			if (read_graph_config_option("expand_hosts") == CHECKED) {
 				if ($leaf["host_grouping_type"] == HOST_GROUPING_GRAPH_TEMPLATE) {
 					if ((isset($host_group_type)) && ($host_group_type[0] != 'gt')) {
 						$items = get_host_grouping_graph_templates($leaf, $user);
@@ -1099,7 +1099,7 @@ function get_graph_tree_content($tree_id, $leaf_id, $host_group_data) {
 	load_current_session_value("page",   "sess_graph_view_page",   "1");
 	load_current_session_value("graphs", "sess_graph_view_graphs", read_graph_config_option("treeview_graphs_per_page"));
 	load_current_session_value("filter", "sess_graph_view_filter", "");
-	load_current_session_value("thumbnails", "sess_graph_view_thumbnails", (read_graph_config_option("thumbnail_section_tree_2") == "on" ? "true":""));
+	load_current_session_value("thumbnails", "sess_graph_view_thumbnails", (read_graph_config_option("thumbnail_section_tree_2") == CHECKED ? "true":""));
 
 	$graph_list = array();
 
@@ -1263,7 +1263,7 @@ function get_graph_tree_content($tree_id, $leaf_id, $host_group_data) {
 
 	$total_rows = sizeof($graph_list);
 
-	if (read_graph_config_option("timespan_sel") == "on") {
+	if (read_graph_config_option("timespan_sel") == CHECKED) {
 		graph_view_timespan_selector();
 	}
 
@@ -1434,8 +1434,8 @@ function draw_tree_graph_row($already_open, $graph_counter, $next_leaf_type, $cu
 	}
 
 	/* print out the actual graph html */
-	if (read_graph_config_option("thumbnail_section_tree_1") == "on") {
-		if (read_graph_config_option("timespan_sel") == "on") {
+	if (read_graph_config_option("thumbnail_section_tree_1") == CHECKED) {
+		if (read_graph_config_option("timespan_sel") == CHECKED) {
 			print "<td><a href='" . htmlspecialchars("graph.php?local_graph_id=$local_graph_id&rra_id=all") . "'><img align='middle' alt='$graph_title' class='graphimage' id='graph_$local_graph_id'
 				src='" . htmlspecialchars("graph_image.php?action=view&local_graph_id=$local_graph_id&rra_id=0&graph_start=" . get_current_graph_start() . "&graph_end=" . get_current_graph_end() . '&graph_height=' .
 			read_graph_config_option("default_height") . '&graph_width=' . read_graph_config_option("default_width") . "&graph_nolegend=true") . "' border='0'></a></td>\n";
@@ -1455,7 +1455,7 @@ function draw_tree_graph_row($already_open, $graph_counter, $next_leaf_type, $cu
 			}
 		}
 	}else{
-		if (read_graph_config_option("timespan_sel") == "on") {
+		if (read_graph_config_option("timespan_sel") == CHECKED) {
 			print "<td><a href='" . htmlspecialchars("graph.php?local_graph_id=$local_graph_id&rra_id=all") . "'><img class='graphimage' id='graph_$local_graph_id' src='" . htmlspecialchars("graph_image.php?action=view&local_graph_id=$local_graph_id&rra_id=0&graph_start=" . get_current_graph_start() . "&graph_end=" . get_current_graph_end()) . "' border='0' alt='$graph_title'></a></td>";
 			print "</tr><tr>\n";
 		}else{

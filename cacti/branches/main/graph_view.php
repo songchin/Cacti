@@ -68,7 +68,7 @@ input_validate_input_regex(get_request_var_request('graph_remove'), "/^([\,0-9]+
 if (isset($_GET["hide"])) {
 	if ((get_request_var("hide") == "0") || (get_request_var("hide") == "1")) {
 		/* only update expand/contract info is this user has rights to keep their own settings */
-		if ((isset($current_user)) && ($current_user["graph_settings"] == "on")) {
+		if ((isset($current_user)) && ($current_user["graph_settings"] == CHECKED)) {
 			db_execute("delete from settings_tree where graph_tree_item_id=" . $_GET["branch_id"] . " and user_id=" . $_SESSION["sess_user_id"]);
 			db_execute("insert into settings_tree (graph_tree_item_id,user_id,status) values (" . get_request_var("branch_id") . "," . $_SESSION["sess_user_id"] . "," . get_request_var("hide") . ")");
 		}

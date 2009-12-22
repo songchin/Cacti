@@ -150,59 +150,6 @@ function settings() {
 
 	html_graph_end_box();
 
-	?>
-	<script type="text/javascript">
-	<!--
-
-	function graphSettings() {
-		var custom_fonts = document.getElementById('custom_fonts').checked;
-
-		switch(custom_fonts) {
-		case true:
-			document.getElementById('row_title_size').style.display  = "";
-			document.getElementById('row_title_font').style.display  = "";
-			document.getElementById('row_legend_size').style.display = "";
-			document.getElementById('row_legend_font').style.display = "";
-			document.getElementById('row_axis_size').style.display   = "";
-			document.getElementById('row_axis_font').style.display   = "";
-			document.getElementById('row_unit_size').style.display   = "";
-			document.getElementById('row_unit_font').style.display   = "";
-
-			break;
-		case false:
-			document.getElementById('row_title_size').style.display  = "none";
-			document.getElementById('row_title_font').style.display  = "none";
-			document.getElementById('row_legend_size').style.display = "none";
-			document.getElementById('row_legend_font').style.display = "none";
-			document.getElementById('row_axis_size').style.display   = "none";
-			document.getElementById('row_axis_font').style.display   = "none";
-			document.getElementById('row_unit_size').style.display   = "none";
-			document.getElementById('row_unit_font').style.display   = "none";
-
-			break;
-		}
-	}
-
-	function addLoadEvent(func) {
-		var oldonload = window.onload;
-		if (typeof window.onload != 'function') {
-			window.onload = func;
-		} else {
-			window.onload = function() {
-				if (oldonload) {
-					oldonload();
-				}
-				func();
-			}
-		}
-	}
-
-	addLoadEvent(graphSettings);
-
-	-->
-	</script>
-	<?php
-
 	if (isset($_SERVER["HTTP_REFERER"])) {
 		$timespan_sel_pos = strpos($_SERVER["HTTP_REFERER"],"&predefined_timespan");
 		if ($timespan_sel_pos) {

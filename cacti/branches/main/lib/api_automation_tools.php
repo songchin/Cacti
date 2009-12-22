@@ -1364,7 +1364,7 @@ function verifyDevice(&$host, $ri_check=false) {
 					case 1:
 					case 'on':
 					case "'on'":
-						$host["disabled"]  = '"on"';
+						$host["disabled"]  = 'CHECKED';
 						break;
 					case 0:
 					case '':

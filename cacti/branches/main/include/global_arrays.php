@@ -172,6 +172,19 @@ $consolidation_functions = array(
 	RRD_CF_LAST			=> "LAST",
 	);
 
+$rrd_font_render_modes = array(
+	RRD_FONT_RENDER_NORMAL	=> __("Normal"),
+	RRD_FONT_RENDER_LIGHT	=> __("Light"),
+	RRD_FONT_RENDER_MONO	=> __("Mono"),
+	);
+
+$rrd_graph_render_modes = array(
+	RRD_GRAPH_RENDER_NORMAL	=> __("Normal"),
+	RRD_GRAPH_RENDER_MONO	=> __("Mono"),
+	);
+
+
+
 $data_source_types = array(
 	DATA_SOURCE_TYPE_GAUGE		=> "GAUGE",
 	DATA_SOURCE_TYPE_COUNTER	=> "COUNTER",
@@ -317,14 +330,14 @@ $snmp_implementations = array(
 
 if (CACTI_SERVER_OS != "win32") {
 	$rrdtool_versions = array(
-		"rrd-1.0.x" => "RRDTool 1.0.x",
-		"rrd-1.2.x" => "RRDTool 1.2.x",
-		"rrd-1.3.x" => "RRDTool 1.3.x",
-		"rrd-1.4.x" => "RRDTool 1.4.x");
+		RRD_VERSION_1_0 => "RRDTool 1.0.x",
+		RRD_VERSION_1_2 => "RRDTool 1.2.x",
+		RRD_VERSION_1_3 => "RRDTool 1.3.x",
+		RRD_VERSION_1_4 => "RRDTool 1.4.x");
 }else{
 	$rrdtool_versions = array(
-		"rrd-1.0.x" => "RRDTool 1.0.x",
-		"rrd-1.2.x" => "RRDTool 1.2.x");
+		RRD_VERSION_1_0 => "RRDTool 1.0.x",
+		RRD_VERSION_1_2 => "RRDTool 1.2.x");
 }
 
 $i18n_modes = array(

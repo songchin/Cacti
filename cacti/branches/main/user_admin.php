@@ -536,7 +536,7 @@ function graph_perms_edit() {
 			}
 		});
 	});
-	-->
+	//-->
 	</script>
 	<?php
 
@@ -794,7 +794,7 @@ function user_realms_edit() {
 						$i = 0;
 						while (list($realm_id, $realm_name) = each($user_auth_realms)) {
 							if (sizeof(db_fetch_assoc("SELECT realm_id FROM user_auth_realm WHERE user_id = " . get_request_var("id", 0) . " AND realm_id = " . $realm_id)) > 0) {
-								$old_value = "on";
+								$old_value = CHECKED;
 							}else{
 								$old_value = "";
 							}
@@ -871,6 +871,35 @@ function graph_settings_edit() {
 	}
 
 	html_end_box();
+
+	?>
+	<script type="text/javascript">
+	<!--
+	$(document).ready(function(){
+
+		Show_if_Checked('#custom_colortags', ".colortags");
+		Show_if_Checked('#custom_fonts', ".custom_fonts");
+
+		$('#custom_colortags').click( function() {
+			Show_if_Checked('#custom_colortags', ".colortags");
+		});
+		$('#custom_fonts').click( function() {
+			Show_if_Checked('#custom_fonts', ".custom_fonts");
+		});
+
+		function Show_if_Checked(findstring, match) {
+			if ($(findstring).is(':checked')) {
+				$(match).each(function() { $(this).show(); });
+			} else {
+				$(match).each(function() { $(this).hide(); });
+			}
+		}
+
+	});
+
+	//-->
+	</script>
+	<?php
 
 	form_hidden_box("id", get_request_var_request("id"), "");
 	form_hidden_box("save_component_graph_settings","1","");
@@ -1085,7 +1114,7 @@ function user() {
 			}else{
 				$last_login = strftime("%A, %B %d, %Y %H:%M:%S ", strtotime($user["dtime"]));;
 			}
-			if ($user["enabled"] == "on") {
+			if ($user["enabled"] == CHECKED) {
 				$enabled = __("Yes");
 			}else{
 				$enabled = __("No");

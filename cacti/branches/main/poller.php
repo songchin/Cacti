@@ -249,7 +249,7 @@ while ($poller_runs_completed < $poller_runs) {
 	}
 
 	/* mainline */
-	if (read_config_option("poller_enabled") == "on") {
+	if (read_config_option("poller_enabled") == CHECKED) {
 		/* determine the number of hosts to process per file */
 		$hosts_per_process = ceil(sizeof($polling_hosts) / $concurrent_processes );
 
@@ -293,7 +293,7 @@ while ($poller_runs_completed < $poller_runs) {
 				$first_host = $item["id"];
 			}
 
-			if ($process_leveling != "on") {
+			if ($process_leveling != CHECKED) {
 				if ($host_count == $hosts_per_process) {
 					$last_host    = $item["id"];
 					$change_proc  = true;

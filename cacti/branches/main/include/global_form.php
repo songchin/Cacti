@@ -136,7 +136,7 @@ $fields_data_input_field_edit = array(
 		"friendly_name" => __("Update RRD File"),
 		"description" => __("Whether data from this output field is to be entered into the rrd file."),
 		"value" => "|arg1:update_rra|",
-		"default" => "on",
+		"default" => CHECKED,
 		"form_id" => "|arg1:id|"
 		),
 	"regexp_match" => array(
@@ -268,7 +268,7 @@ $struct_data_source = array(
 	"active" => array(
 		"friendly_name" => __("Data Template Active"),
 		"method" => "checkbox",
-		"default" => "on",
+		"default" => CHECKED,
 		"description" => __("Whether Cacti should gather data for this class of Data Sources."),
 		"flags" => ""
 		)
@@ -363,14 +363,22 @@ $fields_grprint_presets_edit = array(
 	);
 
 /* file: (graphs.php|graph_templates.php), action: (graph|template)_edit */
-$struct_graph = array(
+$struct_graph_labels = array(
 	"title" => array(
 		"friendly_name" => __("Title (--title)"),
 		"method" => "textbox",
 		"max_length" => "255",
-		"size" => "70",
+		"size" => "50",
 		"default" => "",
 		"description" => __("The name that is printed on the graph."),
+		),
+	"vertical_label" => array(
+		"friendly_name" => __("Vertical Label (--vertical-label)"),
+		"method" => "textbox",
+		"max_length" => "255",
+		"default" => "",
+		"size" => "30",
+		"description" => __("The label vertically printed to the left of the graph."),
 		),
 	"image_format_id" => array(
 		"friendly_name" => __("Image Format (--imgformat)"),
@@ -379,6 +387,37 @@ $struct_graph = array(
 		"default" => IMAGE_TYPE_PNG,
 		"description" => __("The type of graph that is generated; PNG, GIF or SVG.  The selection of graph image type is very RRDtool dependent."),
 		),
+	);
+
+$struct_graph_right_axis = array(
+	"right_axis" => array(
+		"friendly_name" => __("Right Axis (--right-axis)"),
+		"method" => "textbox",
+		"max_length" => "20",
+		"default" => "",
+		"size" => "20",
+		"description" => __("Format: scale:shift") . "<br>" .
+						__("A second axis will be drawn to the right of the graph. It is tied to the left axis via the scale and shift parameters."),
+		),
+	"right_axis_label" => array(
+		"friendly_name" => __("Label (--right-axis-label)"),
+		"method" => "textbox",
+		"max_length" => "200",
+		"default" => "",
+		"size" => "30",
+		"description" => __("The label for the right axis."),
+		),
+	"right_axis_format" => array(
+		"friendly_name" => __("Format (--right-axis-format)"),
+		"method" => "textbox",
+		"max_length" => "200",
+		"default" => "",
+		"size" => "30",
+		"description" => __("By default the format of the axis lables gets determined automatically. If you want todo this your self, use this option with the same %lf arguments you know from the PRINT and GPRINT commands."),
+		),
+	);
+
+$struct_graph_size = array(
 	"height" => array(
 		"friendly_name" => __("Height (--height)"),
 		"method" => "textbox",
@@ -395,16 +434,25 @@ $struct_graph = array(
 		"size" => "10",
 		"description" => __("The width (in pixels) that the graph is."),
 		),
-	"slope_mode" => array(
-		"friendly_name" => __("Slope Mode (--slope-mode)"),
+	"only_graph" => array(
+		"friendly_name" => __("Only Graph (--only-graph)"),
 		"method" => "checkbox",
-		"default" => "on",
-		"description" => __("Using Slope Mode, in RRDtool 1.2.x and above, evens out the shape of the graphs at the expense of some on screen resolution."),
+		"default" => "",
+		"description" => __("If you specify the --only-graph option and set the height < 32 pixels you will get a tiny graph image (thumbnail) to use as an icon for use in an overview, for example. All labeling will be stripped off the graph."),
 		),
+	"full_size_mode" => array(
+		"friendly_name" => __("Full Size Mode (--full-size-mode)"),
+		"method" => "checkbox",
+		"default" => "",
+		"description" => __("The width and height specify the final dimensions of the output image and the canvas is automatically resized to fit."),
+		),
+	);
+
+$struct_graph_limits = array(
 	"auto_scale" => array(
 		"friendly_name" => __("Auto Scale"),
 		"method" => "checkbox",
-		"default" => "on",
+		"default" => CHECKED,
 		"description" => __("Auto scale the y-axis instead of defining an upper and lower limit.") . "<br>" .
 						"<strong>" . __("Note:") . " </strong>" . __("if this is checked, both the Upper and Lower limit will be ignored."),
 		),
@@ -418,62 +466,29 @@ $struct_graph = array(
 		    __("--alt-autoscale-min to scale to the minimum value, using a given upper limit") . "<br>" .
 			__("--alt-autoscale (with limits) to scale using both lower and upper limits (rrdtool default)"),
 		"items" => array(
-			0 => array(
-				"radio_value" => "1",
+			GRAPH_ALT_AUTOSCALE => array(
+				"radio_value" => GRAPH_ALT_AUTOSCALE,
 				"radio_caption" => __("Use") . " " . __("--alt-autoscale (ignoring given limits)"),
 				),
-			1 => array(
-				"radio_value" => "2",
+			GRAPH_ALT_AUTOSCALE_MIN => array(
+				"radio_value" => GRAPH_ALT_AUTOSCALE_MIN,
 				"radio_caption" => __("Use") . " " . __("--alt-autoscale-max (accepting a lower limit)"),
 				),
-			2 => array(
-				"radio_value" => "3",
+			GRAPH_ALT_AUTOSCALE_MAX => array(
+				"radio_value" => GRAPH_ALT_AUTOSCALE_MAX,
 				"radio_caption" => __("Use") . " " . __("--alt-autoscale-min (accepting an upper limit, requires rrdtool 1.2.x)"),
 				),
-			3 => array(
-				"radio_value" => "4",
+			GRAPH_ALT_AUTOSCALE_LIMITS => array(
+				"radio_value" => GRAPH_ALT_AUTOSCALE_LIMITS,
 				"radio_caption" => __("Use") . " " . __("--alt-autoscale (accepting both limits, rrdtool default)"),
 				)
 			)
-		),
-	"auto_scale_log" => array(
-		"friendly_name" => __("Logarithmic Scaling (--logarithmic)"),
-		"method" => "checkbox",
-		"default" => "",
-		"on_change" => "changeScaleLog()",
-		"description" => __("Use Logarithmic y-axis scaling"),
-		),
-	"scale_log_units" => array(
-		"friendly_name" => __("SI Units for Logarithmic Scaling (--units=si)"),
-		"method" => "checkbox",
-		"default" => "",
-		"description" => __("Use SI Units for Logarithmic Scaling instead of using exponential notation (not available for rrdtool-1.0.x).") . "<br>" .
-						"<strong>" . __("Note:") . " </strong>" . __("Linear graphs use SI notation by default."),
 		),
 	"auto_scale_rigid" => array(
 		"friendly_name" => __("Rigid Boundaries Mode (--rigid)"),
 		"method" => "checkbox",
 		"default" => "",
 		"description" => __("Do not expand the lower and upper limit if the graph contains a value outside the valid range."),
-		),
-	"alt_y_grid" => array(
-		"friendly_name" => __("Alternative Y Grid (--alt-y-grid)"),
-		"method" => "checkbox",
-		"default" => "",
-		"description" => __("The algorithm ensures that you always have a grid, that there are enough but not too many grid lines, and that the grid is metric. This parameter will also ensure that you get enough decimals displayed.") . "<br>" .
-						"<strong>" . __("Note:") . " </strong>" . __("This parameter may interfere with --alt-autoscale options."),
-		),
-	"auto_padding" => array(
-		"friendly_name" => __("Auto Padding"),
-		"method" => "checkbox",
-		"default" => "on",
-		"description" => __("Pad text so that legend and graph data always line up. Note: this could cause graphs to take longer to render because of the larger overhead. Also Auto Padding may not be accurate on all types of graphs, consistant labeling usually helps."),
-		),
-	"export" => array(
-		"friendly_name" => __("Allow Graph Export"),
-		"method" => "checkbox",
-		"default" => "on",
-		"description" => __("Choose whether this graph will be included in the static html/png export if you use cacti's export feature."),
 		),
 	"upper_limit" => array(
 		"friendly_name" => __("Upper Limit (--upper-limit)"),
@@ -491,21 +506,59 @@ $struct_graph = array(
 		"size" => "10",
 		"description" => __("The minimum vertical value for the rrd graph."),
 		),
-	"base_value" => array(
-		"friendly_name" => __("Base Value (--base)"),
-		"method" => "textbox",
-		"max_length" => "50",
-		"default" => "1000",
-		"size" => "10",
-		"description" => __("Should be set to 1024 for memory and 1000 for traffic measurements."),
+	"no_gridfit" => array(
+		"friendly_name" => __("No Gridfit (--no-gridfit)"),
+		"method" => "checkbox",
+		"default" => "",
+		"description" => __("In order to avoid anti-aliasing blurring effects rrdtool snaps points to device resolution pixels, this results in a crisper appearance. If this is not to your liking, you can use this switch to turn this behaviour off.") . "<br>" .
+						"<strong>" . __("Note:") . " </strong>" . __("Gridfitting is turned off for PDF, EPS, SVG output by default."),
 		),
-	"unit_value" => array(
-		"friendly_name" => __("Unit Grid Value (--unit/--y-grid)"),
+	);
+
+$struct_graph_grid = array(
+	"x_grid" => array(
+		"friendly_name" => __("X Grid (--x-grid)"),
+		"method" => "textbox",
+		"max_length" => "31",
+		"default" => "",
+		"size" => "31",
+		"description" => __("Format is GTM:GST:MTM:MST:LTM:LST:LPR:LFM") . "<br>" .
+						__("The grid is defined by specifying a certain amount of time in the ?TM positions. You can choose from 'SECOND', 'MINUTE', 'HOUR', 'DAY',
+           'WEEK', 'MONTH' or 'YEAR'. Then you define how many of these should pass between each line or label.  This pair (?TM:?ST) needs to be
+           specified for the base grid (G??), the major grid (M??) and the labels (L??). For the labels you also must define a precision in LPR and a
+           strftime format string in LFM.  LPR defines where each label will be placed. If it is zero, the label will be placed right under the
+           corresponding line (useful for hours, dates etcetera).  If you specify a number of seconds here the label is centered on this interval
+           (useful for Monday, January etcetera)."),
+		),
+	"unit_value" => array(		# TODO: shall we rename to y_grid?
+		"friendly_name" => __("Y Grid (--y-grid)"),
 		"method" => "textbox",
 		"max_length" => "50",
 		"default" => "",
 		"size" => "30",
-		"description" => __("Sets the xponent value on the Y-axis for numbers. Note: This option was added in rrdtool 1.0.36 and depricated in 1.2.x. In RRDtool 1.2.x, this value is replaced by the --y-grid option. In this option, Y-axis grid lines appear at each grid step interval. Labels are placed every label factor lines."),
+		"description" => __("Format is grid step:label factor") . "<br>" .
+						__("Y-axis grid lines appear at each grid step interval. Labels are placed every label factor lines. You can specify 'none' to suppress the grid and labels altogether."),
+		),
+	"alt_y_grid" => array(
+		"friendly_name" => __("Alternative Y Grid (--alt-y-grid)"),
+		"method" => "checkbox",
+		"default" => "",
+		"description" => __("The algorithm ensures that you always have a grid, that there are enough but not too many grid lines, and that the grid is metric. This parameter will also ensure that you get enough decimals displayed even if your graph goes from 69.998 to 70.001.") . "<br>" .
+						"<strong>" . __("Note:") . " </strong>" . __("This parameter may interfere with --alt-autoscale options."),
+		),
+	"auto_scale_log" => array(
+		"friendly_name" => __("Logarithmic Scaling (--logarithmic)"),
+		"method" => "checkbox",
+		"default" => "",
+		"on_change" => "changeScaleLog()",
+		"description" => __("Use Logarithmic y-axis scaling"),
+		),
+	"scale_log_units" => array(
+		"friendly_name" => __("SI Units for Logarithmic Scaling (--units=si)"),
+		"method" => "checkbox",
+		"default" => "",
+		"description" => __("Use SI Units for Logarithmic Scaling instead of using exponential notation (not available for rrdtool-1.0.x).") . "<br>" .
+						"<strong>" . __("Note:") . " </strong>" . __("Linear graphs use SI notation by default."),
 		),
 	"unit_exponent_value" => array(
 		"friendly_name" => __("Unit Exponent Value (--units-exponent)"),
@@ -515,14 +568,181 @@ $struct_graph = array(
 		"size" => "30",
 		"description" => __("What unit cacti should use on the Y-axis. Use 3 to display everything in 'k' or -6 to display everything in 'u' (micro)."),
 		),
-	"vertical_label" => array(
-		"friendly_name" => __("Vertical Label (--vertical-label)"),
+	"unit_length" => array(
+		"friendly_name" => __("Unit Length (--units-length)"),
+		"method" => "textbox",
+		"max_length" => "50",
+		"default" => "",
+		"size" => "30",
+		"description" => __("How many digits should rrdtool assume the y-axis labels to be? You may have to use this option to make enough space once you start fiddeling with the y-axis labeling."),
+		),
+	);
+
+$struct_graph_color = array(
+	"colortag_back" => array(
+		"friendly_name" => __("Background (--color BACK)"),
+		"method" => "textbox",
+		"max_length" => "8",
+		"default" => "",
+		"size" => "8",
+		"description" => __("Color tag of the background (rrggbb[aa])."),
+		),
+	"colortag_canvas" => array(
+		"friendly_name" => __("Canvas (--color CANVAS)"),
+		"method" => "textbox",
+		"max_length" => "8",
+		"default" => "",
+		"size" => "8",
+		"description" => __("Color tag of the background of the actual graph (rrggbb[aa])."),
+		),
+	"colortag_shadea" => array(
+		"friendly_name" => __("ShadeA (--color SHADEA)"),
+		"method" => "textbox",
+		"max_length" => "8",
+		"default" => "",
+		"size" => "8",
+		"description" => __("Color tag of the left and top border (rrggbb[aa])."),
+		),
+	"colortag_shadeb" => array(
+		"friendly_name" => __("ShadeB (--color SHADEB)"),
+		"method" => "textbox",
+		"max_length" => "8",
+		"default" => "",
+		"size" => "8",
+		"description" => __("Color tag of the right and bottom border (rrggbb[aa])."),
+		),
+	"colortag_grid" => array(
+		"friendly_name" => __("Grid (--color GRID)"),
+		"method" => "textbox",
+		"max_length" => "8",
+		"default" => "",
+		"size" => "8",
+		"description" => __("Color tag of the grid (rrggbb[aa])."),
+		),
+	"colortag_mgrid" => array(
+		"friendly_name" => __("Major Grid (--color MGRID)"),
+		"method" => "textbox",
+		"max_length" => "8",
+		"default" => "",
+		"size" => "8",
+		"description" => __("Color tag of the major grid (rrggbb[aa])."),
+		),
+	"colortag_font" => array(
+		"friendly_name" => __("Font (--color FONT)"),
+		"method" => "textbox",
+		"max_length" => "8",
+		"default" => "",
+		"size" => "8",
+		"description" => __("Color tag of the font (rrggbb[aa])."),
+		),
+	"colortag_axis" => array(
+		"friendly_name" => __("Axis (--color AXIS)"),
+		"method" => "textbox",
+		"max_length" => "8",
+		"default" => "",
+		"size" => "8",
+		"description" => __("Color tag of the axis (rrggbb[aa])."),
+		),
+	"colortag_frame" => array(
+		"friendly_name" => __("Frame (--color FRAME)"),
+		"method" => "textbox",
+		"max_length" => "8",
+		"default" => "",
+		"size" => "8",
+		"description" => __("Color tag of the frame (rrggbb[aa])."),
+		),
+	"colortag_arrow" => array(
+		"friendly_name" => __("Arrow (--color ARROW)"),
+		"method" => "textbox",
+		"max_length" => "8",
+		"default" => "",
+		"size" => "8",
+		"description" => __("Color tag of the arrow (rrggbb[aa])."),
+		),
+	);
+
+$struct_graph_misc = array(
+	"font_render_mode" => array(
+		"friendly_name" => __("Font Render Mode (--font-render-mode)"),
+		"method" => "drop_array",
+		"default" => RRD_FONT_RENDER_NORMAL,
+		"array" => $rrd_font_render_modes,
+		"description" => __("Mode for font rendering."),
+		),
+	"font_smoothing_threshold" => array(
+		"friendly_name" => __("Font Smoothing Threshold (--font-smoothing-threshold)"),
+		"method" => "textbox",
+		"max_length" => "8",
+		"default" => "",
+		"size" => "8",
+		"description" => __("This specifies the largest font size which will be rendered bitmapped, that is, without any font smoothing. By default, no text is rendered bitmapped."),
+		),
+	"graph_render_mode" => array(
+		"friendly_name" => __("Graph Render Mode (--graph-render-mode)"),
+		"method" => "drop_array",
+		"default" => RRD_GRAPH_RENDER_NORMAL,
+		"array" => $rrd_graph_render_modes,
+		"description" => __("Mode for graph rendering."),
+		),
+	"pango_markup" => array(
+		"friendly_name" => __("Pango Markup (--pango-markup)"),
 		"method" => "textbox",
 		"max_length" => "255",
 		"default" => "",
 		"size" => "30",
-		"description" => __("The label vertically printed to the left of the graph."),
-		)
+		"description" => __("With this option, all text will be processed by pango markup. This allows to embed some simple html like markup tags."),
+		),
+	"slope_mode" => array(
+		"friendly_name" => __("Slope Mode (--slope-mode)"),
+		"method" => "checkbox",
+		"default" => CHECKED,
+		"description" => __("Using Slope Mode, in RRDtool 1.2.x and above, evens out the shape of the graphs at the expense of some on screen resolution."),
+		),
+	"interlaced" => array(
+		"friendly_name" => __("Interlaced (--interlaced)"),
+		"method" => "checkbox",
+		"default" => "",
+		"description" => __("If images are interlaced they become visible on browsers more quickly (this gets ignored in 1.3 for now!)."),
+		),
+	"tab_width" => array(
+		"friendly_name" => __("Tabulator Width (--tabwidth)"),
+		"method" => "textbox",
+		"max_length" => "50",
+		"default" => "40",
+		"size" => "10",
+		"description" => __("Width of a tabulator in pixels."),
+		),
+	"base_value" => array(
+		"friendly_name" => __("Base Value (--base)"),
+		"method" => "textbox",
+		"max_length" => "50",
+		"default" => "1000",
+		"size" => "10",
+		"description" => __("Should be set to 1024 for memory and 1000 for traffic measurements."),
+		),
+	"watermark" => array(
+		"friendly_name" => __("Watermark (--watermark)"),
+		"method" => "textbox",
+		"max_length" => "50",
+		"default" => "",
+		"size" => "10",
+		"description" => __("Adds the given string as a watermark, horizontally centered, at the bottom of the graph."),
+		),
+	);
+
+$struct_graph_cacti = array(
+		"auto_padding" => array(
+		"friendly_name" => __("Auto Padding"),
+		"method" => "checkbox",
+		"default" => CHECKED,
+		"description" => __("Pad text so that legend and graph data always line up. Note: this could cause graphs to take longer to render because of the larger overhead. Also Auto Padding may not be accurate on all types of graphs, consistant labeling usually helps."),
+		),
+	"export" => array(
+		"friendly_name" => __("Allow Graph Export"),
+		"method" => "checkbox",
+		"default" => CHECKED,
+		"description" => __("Choose whether this graph will be included in the static html/png export if you use cacti's export feature."),
+		),
 	);
 
 /* file: (graphs.php|graph_templates.php), action: item_edit */
@@ -1428,7 +1648,7 @@ $fields_user_user_edit_host = array(
 				"value" => "|arg1:graph_settings|",
 				"friendly_name" => __("Allow this User to Keep Custom Graph Settings"),
 				"form_id" => "|arg1:id|",
-				"default" => "on"
+				"default" => CHECKED
 				)
 			)
 		),
@@ -1441,19 +1661,19 @@ $fields_user_user_edit_host = array(
 				"value" => "|arg1:show_tree|",
 				"friendly_name" => __("User Has Rights to Tree View"),
 				"form_id" => "|arg1:id|",
-				"default" => "on"
+				"default" => CHECKED
 				),
 			"show_list" => array(
 				"value" => "|arg1:show_list|",
 				"friendly_name" => __("User Has Rights to List View"),
 				"form_id" => "|arg1:id|",
-				"default" => "on"
+				"default" => CHECKED
 				),
 			"show_preview" => array(
 				"value" => "|arg1:show_preview|",
 				"friendly_name" => __("User Has Rights to Preview View"),
 				"form_id" => "|arg1:id|",
-				"default" => "on"
+				"default" => CHECKED
 				)
 			)
 		),

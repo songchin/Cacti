@@ -1251,7 +1251,7 @@ function clean_up_file_name($string) {
 function clean_up_path($path) {
 	global $config;
 
-	if (CACTI_SERVER_OS == "unix" or read_config_option("using_cygwin") == "on") {
+	if (CACTI_SERVER_OS == "unix" or read_config_option("using_cygwin") == CHECKED) {
 		$path = str_replace("\\", "/", $path);
 	}elseif (CACTI_SERVER_OS == "win32") {
 		$path = str_replace("/", "\\", $path);
@@ -1329,7 +1329,7 @@ function generate_data_source_path($local_data_id) {
 	$host_id   = $host["id"];
 
 	/* put it all together using the local_data_id at the end */
-	if ($extended_paths == "on") {
+	if ($extended_paths == CHECKED) {
 		$new_path = "<path_rra>/$host_id/$local_data_id.rrd";
 	}else{
 		if (!empty($host_name)) {

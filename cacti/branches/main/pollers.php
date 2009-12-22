@@ -117,7 +117,7 @@ function form_save() {
 		if (isset($_POST["disabled"])) {
 			$_POST["disabled"] = "";
 		}else{
-			$_POST["disabled"] = "on";
+			$_POST["disabled"] = CHECKED;
 		}
 
 		$save["disabled"]    = form_input_validate($_POST["disabled"], "disabled", "", false, 3);

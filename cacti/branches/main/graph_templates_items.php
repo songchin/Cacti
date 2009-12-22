@@ -103,7 +103,7 @@ function form_save() {
 					"graph_type_id" => "9",
 					"consolidation_function_id" => "3",
 					"text_format" => __("Maximum:"),
-					"hard_return" => "on"
+					"hard_return" => CHECKED
 					));
 		}
 

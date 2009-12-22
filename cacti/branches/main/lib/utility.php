@@ -95,7 +95,7 @@ function update_poller_cache($local_data_id, $commit = false) {
 			and data_template_rrd.local_data_id=$local_data_id");
 	}
 
-	if ($data_input["active"] == "on") {
+	if ($data_input["active"] == CHECKED) {
 		if (($data_input["type_id"] == DATA_INPUT_TYPE_SCRIPT) || ($data_input["type_id"] == DATA_INPUT_TYPE_PHP_SCRIPT_SERVER)) { /* script */
 			/* fall back to non-script server actions if the user is running a version of php older than 4.3 */
 			if (($data_input["type_id"] == DATA_INPUT_TYPE_PHP_SCRIPT_SERVER) && (function_exists("proc_open"))) {

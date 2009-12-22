@@ -325,11 +325,11 @@ if ((file_exists($input["path_rrdtool"]["default"])) && ((CACTI_SERVER_OS == "wi
 
 	if (sizeof($out_array) > 0) {
 		if (preg_match("/^RRDtool 1\.3/", $out_array[0])) {
-			$input["rrdtool_version"]["default"] = "rrd-1.3.x";
+			$input["rrdtool_version"]["default"] = RRD_VERSION_1_3;
 		}else if (preg_match("/^RRDtool 1\.2\./", $out_array[0])) {
-			$input["rrdtool_version"]["default"] = "rrd-1.2.x";
+			$input["rrdtool_version"]["default"] = RRD_VERSION_1_2;
 		}else if (preg_match("/^RRDtool 1\.0\./", $out_array[0])) {
-			$input["rrdtool_version"]["default"] = "rrd-1.0.x";
+			$input["rrdtool_version"]["default"] = RRD_VERSION_1_0;
 		}
 	}
 }

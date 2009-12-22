@@ -171,7 +171,7 @@ if ($action == 'login') {
 		db_execute("INSERT INTO user_log (username,user_id,result,ip,time) VALUES ('" . $username ."'," . $user["id"] . ",1,'" . $_SERVER["REMOTE_ADDR"] . "',NOW())");
 		/* is user enabled */
 		$user_enabled = $user["enabled"];
-		if ($user_enabled != "on") {
+		if ($user_enabled != CHECKED) {
 			/* Display error */
 			auth_display_custom_error_message(__("Access Denied, user account disabled."));
 			exit;
@@ -181,7 +181,7 @@ if ($action == 'login') {
 		$_SESSION["sess_user_id"] = $user["id"];
 
 		/* handle "force change password" */
-		if (($user["must_change_password"] == "on") && (read_config_option("auth_method") == 1)) {
+		if (($user["must_change_password"] == CHECKED) && (read_config_option("auth_method") == 1)) {
 			$_SESSION["sess_change_password"] = true;
 		}
 

@@ -327,7 +327,7 @@ function get_graph_list_content() {
 
 			registerOnLoadFunction("graph_view", "SetSelections();");
 
-			-->
+			//-->
 			</script>
 			<form name="form_graph_list" action="graph_view.php" method="post">
 			<input type='hidden' name='graph_add' value=''>
@@ -624,7 +624,7 @@ function get_graph_preview_content () {
 	load_current_session_value("graph_template_id", "sess_graph_view_graph_template", "0");
 	load_current_session_value("filter", "sess_graph_view_filter", "");
 	load_current_session_value("page", "sess_graph_view_current_page", "1");
-	load_current_session_value("thumbnails", "sess_graph_view_thumbnails", "on");
+	load_current_session_value("thumbnails", "sess_graph_view_thumbnails", CHECKED);
 	load_current_session_value("graphs", "sess_graph_view_graphs", read_graph_config_option("preview_graphs_per_page"));
 	load_current_session_value("graph_list", "sess_graph_view_list_graph_list", "");
 	load_current_session_value("graph_add", "sess_graph_view_list_graph_add", "");
@@ -711,7 +711,7 @@ function get_graph_preview_content () {
 	graph_view_filter_table("preview");
 
 	/* include time span selector */
-	if (read_graph_config_option("timespan_sel") == "on") {
+	if (read_graph_config_option("timespan_sel") == CHECKED) {
 		graph_view_timespan_selector("preview");
 	}
 
@@ -724,7 +724,7 @@ function get_graph_preview_content () {
 			$("#graph_content").html(data);
 		});
 	}
-	-->
+	//-->
 	</script>
 	<?php
 
@@ -769,7 +769,7 @@ function get_graph_preview_content () {
 
 	print $nav;
 
-	if (read_graph_config_option("thumbnail_section_preview") == "on") {
+	if (read_graph_config_option("thumbnail_section_preview") == CHECKED) {
 		html_graph_thumbnail_area($graphs, "","graph_start=" . get_current_graph_start() . "&graph_end=" . get_current_graph_end());
 	}else{
 		html_graph_area($graphs, "", "graph_start=" . get_current_graph_start() . "&graph_end=" . get_current_graph_end());
@@ -852,15 +852,15 @@ function get_graph_tree_items() {
 						break;
 					case "graph":
 						$children = false;
-						$icon     = "./images/tree_icons/graph.gif";
+						$icon     = CACTI_BASE_PATH . "/images/tree_icons/graph.gif";
 						break;
 					case "host":
-						if (read_graph_config_option("expand_hosts") == "on") {
+						if (read_graph_config_option("expand_hosts") == CHECKED) {
 							$children = true;
 						}else{
 							$children = false;
 						}
-						$icon     = "./images/tree_icons/host.gif";
+						$icon     = CACTI_BASE_PATH . "/images/tree_icons/host.gif";
 						break;
 					case "header":
 						$children = true;
@@ -870,7 +870,7 @@ function get_graph_tree_items() {
 						$children = true;
 						$icon     = "";
 						$node_id .= "_" . $item["type"] . "_" . $item["id"];
-						$icon     = "./images/tree_icons/dataquery.png";
+						$icon     = CACTI_BASE_PATH . "/images/tree_icons/dataquery.png";
 						break;
 					case "dqi":
 						$children = false;
@@ -880,7 +880,7 @@ function get_graph_tree_items() {
 					case "gt":
 						$children = false;
 						$node_id .= "_" . $item["type"] . "_" . $item["id"];
-						$icon     = "./images/tree_icons/template.png";
+						$icon     = CACTI_BASE_PATH . "/images/tree_icons/template.png";
 						break;
 					default:
 				}
@@ -1083,7 +1083,7 @@ function graph_view_timespan_selector($mode = "tree") {
 		<?php } ;?>
 	}
 
-	-->
+	//-->
 	</script>
 	<?php
 	html_start_box("", "100", $colors["header"], "0", "center", "");
@@ -1185,7 +1185,7 @@ function graph_view_search_filter() {
 		});
 	}
 
-	-->
+	//-->
 	</script>
 	<?php
 

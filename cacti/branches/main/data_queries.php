@@ -341,7 +341,7 @@ function data_query_item_remove() {
 	input_validate_input_number(get_request_var("snmp_query_id"));
 	/* ==================================================== */
 
-	if ((read_config_option("deletion_verification") == "on") && (!isset($_GET["confirm"]))) {
+	if ((read_config_option("deletion_verification") == CHECKED) && (!isset($_GET["confirm"]))) {
 		include(CACTI_BASE_PATH . "/include/top_header.php");
 		form_confirm(__("Are You Sure?"), __("Are you sure you want to delete the Data Query Graph") . " <strong>'" . db_fetch_cell("select name from snmp_query_graph where id=" . $_GET["id"]) . "'</strong>?", "data_queries.php?action=edit&id=" . $_GET["snmp_query_id"], "data_queries.php?action=item_remove&id=" . $_GET["id"] . "&snmp_query_id=" . $_GET["snmp_query_id"]);
 		include(CACTI_BASE_PATH . "/include/bottom_footer.php");
@@ -436,7 +436,7 @@ function data_query_item_edit() {
 						if (empty($data_template_rrd["snmp_query_graph_id"])) {
 							$old_value = "";
 						}else{
-							$old_value = "on";
+							$old_value = CHECKED;
 						}
 
 						form_alternate_row_color("data_template_rrd" . $data_template_rrd["id"]);

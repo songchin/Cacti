@@ -301,11 +301,11 @@ function display_general() {
 
 		if (sizeof($out_array) > 0) {
 			if (preg_match("/^RRDtool 1\.3/", $out_array[0])) {
-				$rrdtool_version = "rrd-1.3.x";
+				$rrdtool_version = RRD_VERSION_1_3;
 			}else if (preg_match("/^RRDtool 1\.2\./", $out_array[0])) {
-				$rrdtool_version = "rrd-1.2.x";
+				$rrdtool_version = RRD_VERSION_1_2;
 			}else if (preg_match("/^RRDtool 1\.0\./", $out_array[0])) {
-				$rrdtool_version = "rrd-1.0.x";
+				$rrdtool_version = RRD_VERSION_1_0;
 			}
 		}
 	}
@@ -322,7 +322,7 @@ function display_general() {
 		$rrdtool_error .= "<br><span class='warning'>" . __("ERROR: Installed RRDTool version does not match configured version.") . "<br>" . __("Please visit the") . " <a href='" . htmlspecialchars("settings.php?tab=general") . "'> " . __("Configuration Settings") . "</a>" . __("and select the correct RRDTool Utility Version.") . "</span><br>";
 	}
 	$graph_gif_count = db_fetch_cell("SELECT COUNT(*) FROM graph_templates_graph WHERE image_format_id = 2");
-	if (($graph_gif_count > 0) && (read_config_option("rrdtool_version") != "rrd-1.0.x")) {
+	if (($graph_gif_count > 0) && (read_config_option("rrdtool_version") != RRD_VERSION_1_0)) {
 		$rrdtool_error .= "<br><span class='warning'>" . sprintf(__("ERROR: RRDTool 1.2.x does not support the GIF images format, but %s graph(s) and/or templates have GIF set as the image format."), $graph_gif_count) . "</span><br>";
 	}
 

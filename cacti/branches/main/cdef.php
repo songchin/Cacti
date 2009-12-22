@@ -371,7 +371,7 @@ function cdef_remove() {
 	input_validate_input_number(get_request_var("id"));
 	/* ==================================================== */
 
-	if ((read_config_option("deletion_verification") == "on") && (!isset($_GET["confirm"]))) {
+	if ((read_config_option("deletion_verification") == CHECKED) && (!isset($_GET["confirm"]))) {
 		include(CACTI_BASE_PATH . "/include/top_header.php");
 		form_confirm(__("Are You Sure?"), __("Are you sure you want to delete the CDEF") . " <strong>'" . db_fetch_cell("select name from cdef where id=" . $_GET["id"]) . "'</strong>?", "cdef.php", "cdef.php?action=remove&id=" . $_GET["id"]);
 		include(CACTI_BASE_PATH . "/include/bottom_footer.php");

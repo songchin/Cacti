@@ -344,5 +344,57 @@ function upgrade_to_0_8_8() {
 	db_install_execute("0.8.8", "UPDATE data_input_fields SET name='SNMP Authentication Protocol (v3)' WHERE name='SNMP Authenticaion Protocol (v3)'");
 
 	db_install_execute("0.8.8", "ALTER TABLE host ADD COLUMN polling_time decimal(10,5) NOT NULL DEFAULT '0.00000' AFTER `avg_time`");
+
+	# graph_templates_graph
+	db_install_execute("0.8.8", "ALTER TABLE graph_templates_graph ADD COLUMN t_right_axis char(2) DEFAULT '0'");
+	db_install_execute("0.8.8", "ALTER TABLE graph_templates_graph ADD COLUMN right_axis varchar(20) DEFAULT NULL");
+	db_install_execute("0.8.8", "ALTER TABLE graph_templates_graph ADD COLUMN t_right_axis_label char(2) DEFAULT '0'");
+	db_install_execute("0.8.8", "ALTER TABLE graph_templates_graph ADD COLUMN right_axis_label varchar(200) DEFAULT NULL");
+	db_install_execute("0.8.8", "ALTER TABLE graph_templates_graph ADD COLUMN t_right_axis_format char(2) DEFAULT '0'");
+	db_install_execute("0.8.8", "ALTER TABLE graph_templates_graph ADD COLUMN right_axis_format varchar(200) DEFAULT NULL");
+	db_install_execute("0.8.8", "ALTER TABLE graph_templates_graph ADD COLUMN t_only_graph char(2) DEFAULT '0'");
+	db_install_execute("0.8.8", "ALTER TABLE graph_templates_graph ADD COLUMN only_graph char(2) DEFAULT NULL");
+	db_install_execute("0.8.8", "ALTER TABLE graph_templates_graph ADD COLUMN t_full_size_mode char(2) DEFAULT '0'");
+	db_install_execute("0.8.8", "ALTER TABLE graph_templates_graph ADD COLUMN full_size_mode char(2) DEFAULT NULL");
+	db_install_execute("0.8.8", "ALTER TABLE graph_templates_graph ADD COLUMN t_no_gridfit char(2) DEFAULT '0'");
+	db_install_execute("0.8.8", "ALTER TABLE graph_templates_graph ADD COLUMN no_gridfit char(2) DEFAULT NULL");
+	db_install_execute("0.8.8", "ALTER TABLE graph_templates_graph ADD COLUMN t_x_grid char(2) DEFAULT '0'");
+	db_install_execute("0.8.8", "ALTER TABLE graph_templates_graph ADD COLUMN x_grid varchar(31) DEFAULT NULL");
+	db_install_execute("0.8.8", "ALTER TABLE graph_templates_graph ADD COLUMN t_unit_length char(2) DEFAULT '0'");
+	db_install_execute("0.8.8", "ALTER TABLE graph_templates_graph ADD COLUMN unit_length varchar(10) DEFAULT NULL");
+	db_install_execute("0.8.8", "ALTER TABLE graph_templates_graph ADD COLUMN t_colortag_back char(2) DEFAULT '0'");
+	db_install_execute("0.8.8", "ALTER TABLE graph_templates_graph ADD COLUMN colortag_back char(8) DEFAULT NULL");
+	db_install_execute("0.8.8", "ALTER TABLE graph_templates_graph ADD COLUMN t_colortag_canvas char(2) DEFAULT '0'");
+	db_install_execute("0.8.8", "ALTER TABLE graph_templates_graph ADD COLUMN colortag_canvas char(8) DEFAULT NULL");
+	db_install_execute("0.8.8", "ALTER TABLE graph_templates_graph ADD COLUMN t_colortag_shadea char(2) DEFAULT '0'");
+	db_install_execute("0.8.8", "ALTER TABLE graph_templates_graph ADD COLUMN colortag_shadea char(8) DEFAULT NULL");
+	db_install_execute("0.8.8", "ALTER TABLE graph_templates_graph ADD COLUMN t_colortag_shadeb char(2) DEFAULT '0'");
+	db_install_execute("0.8.8", "ALTER TABLE graph_templates_graph ADD COLUMN colortag_shadeb char(8) DEFAULT NULL");
+	db_install_execute("0.8.8", "ALTER TABLE graph_templates_graph ADD COLUMN t_colortag_grid char(2) DEFAULT '0'");
+	db_install_execute("0.8.8", "ALTER TABLE graph_templates_graph ADD COLUMN colortag_grid char(8) DEFAULT NULL");
+	db_install_execute("0.8.8", "ALTER TABLE graph_templates_graph ADD COLUMN t_colortag_mgrid char(2) DEFAULT '0'");
+	db_install_execute("0.8.8", "ALTER TABLE graph_templates_graph ADD COLUMN colortag_mgrid char(8) DEFAULT NULL");
+	db_install_execute("0.8.8", "ALTER TABLE graph_templates_graph ADD COLUMN t_colortag_font char(2) DEFAULT '0'");
+	db_install_execute("0.8.8", "ALTER TABLE graph_templates_graph ADD COLUMN colortag_font char(8) DEFAULT NULL");
+	db_install_execute("0.8.8", "ALTER TABLE graph_templates_graph ADD COLUMN t_colortag_axis char(2) DEFAULT '0'");
+	db_install_execute("0.8.8", "ALTER TABLE graph_templates_graph ADD COLUMN colortag_axis char(8) DEFAULT NULL");
+	db_install_execute("0.8.8", "ALTER TABLE graph_templates_graph ADD COLUMN t_colortag_frame char(2) DEFAULT '0'");
+	db_install_execute("0.8.8", "ALTER TABLE graph_templates_graph ADD COLUMN colortag_frame char(8) DEFAULT NULL");
+	db_install_execute("0.8.8", "ALTER TABLE graph_templates_graph ADD COLUMN t_colortag_arrow char(2) DEFAULT '0'");
+	db_install_execute("0.8.8", "ALTER TABLE graph_templates_graph ADD COLUMN colortag_arrow char(8) DEFAULT NULL");
+	db_install_execute("0.8.8", "ALTER TABLE graph_templates_graph ADD COLUMN t_font_render_mode char(2) DEFAULT '0'");
+	db_install_execute("0.8.8", "ALTER TABLE graph_templates_graph ADD COLUMN font_render_mode char(10) DEFAULT NULL");
+	db_install_execute("0.8.8", "ALTER TABLE graph_templates_graph ADD COLUMN t_font_smoothing_threshold char(2) DEFAULT '0'");
+	db_install_execute("0.8.8", "ALTER TABLE graph_templates_graph ADD COLUMN font_smoothing_threshold int(8) DEFAULT NULL");
+	db_install_execute("0.8.8", "ALTER TABLE graph_templates_graph ADD COLUMN t_graph_render_mode char(2) DEFAULT '0'");
+	db_install_execute("0.8.8", "ALTER TABLE graph_templates_graph ADD COLUMN graph_render_mode char(10) DEFAULT NULL");
+	db_install_execute("0.8.8", "ALTER TABLE graph_templates_graph ADD COLUMN t_pango_markup char(2) DEFAULT '0'");
+	db_install_execute("0.8.8", "ALTER TABLE graph_templates_graph ADD COLUMN pango_markup varchar(255) DEFAULT NULL");
+	db_install_execute("0.8.8", "ALTER TABLE graph_templates_graph ADD COLUMN t_interlaced char(2) DEFAULT '0'");
+	db_install_execute("0.8.8", "ALTER TABLE graph_templates_graph ADD COLUMN interlaced char(2) DEFAULT NULL");
+	db_install_execute("0.8.8", "ALTER TABLE graph_templates_graph ADD COLUMN t_tab_width char(2) DEFAULT '0'");
+	db_install_execute("0.8.8", "ALTER TABLE graph_templates_graph ADD COLUMN tab_width mediumint(4) DEFAULT NULL");
+	db_install_execute("0.8.8", "ALTER TABLE graph_templates_graph ADD COLUMN t_watermark char(2) DEFAULT '0'");
+	db_install_execute("0.8.8", "ALTER TABLE graph_templates_graph ADD COLUMN watermark varchar(255) DEFAULT NULL");
 }
 

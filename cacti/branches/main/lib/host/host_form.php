@@ -568,7 +568,7 @@ function host_remove() {
 	input_validate_input_number(get_request_var("id"));
 	/* ==================================================== */
 
-	if ((read_config_option("deletion_verification") == "on") && (!isset($_GET["confirm"]))) {
+	if ((read_config_option("deletion_verification") == CHECKED) && (!isset($_GET["confirm"]))) {
 		include(CACTI_BASE_PATH . "/include/top_header.php");
 		form_confirm(__("Are You Sure?"), __("Are you sure you want to delete the host") . " <strong>'" . db_fetch_cell("select description from host where id=" . $_GET["id"]) . "'</strong>?", "host.php", "host.php?action=remove&id=" . $_GET["id"]);
 		include(CACTI_BASE_PATH . "/include/bottom_footer.php");
@@ -1590,7 +1590,7 @@ function host() {
 			form_selectable_cell(round(($host["id"]), 2), $host["id"]);
 			form_selectable_cell((isset($host_graphs[$host["id"]]) ? $host_graphs[$host["id"]] : 0), $host["id"]);
 			form_selectable_cell((isset($host_data_sources[$host["id"]]) ? $host_data_sources[$host["id"]] : 0), $host["id"]);
-			form_selectable_cell(get_colored_device_status(($host["disabled"] == "on" ? true : false), $host["status"]), $host["id"]);
+			form_selectable_cell(get_colored_device_status(($host["disabled"] == CHECKED ? true : false), $host["status"]), $host["id"]);
 			form_selectable_cell(round(($host["status_event_count"]), 2), $host["id"]);
 			form_selectable_cell(round(($host["cur_time"]), 2), $host["id"]);
 			form_selectable_cell(round(($host["avg_time"]), 2), $host["id"]);

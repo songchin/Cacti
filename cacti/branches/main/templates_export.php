@@ -118,7 +118,7 @@ function export() {
 			<?php print __("Some templates rely on other items in Cacti to function properly. It is highly recommended that you select this box or the resulting import may fail.");?>
 		</td>
 		<td>
-			<?php form_checkbox("include_deps", "on", __("Include Dependencies"), "on", "", true);?>
+			<?php form_checkbox("include_deps", CHECKED, __("Include Dependencies"), CHECKED, "", true);?>
 		</td>
 	</tr>
 

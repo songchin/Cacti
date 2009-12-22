@@ -318,7 +318,7 @@ function site_remove() {
 	$devices = db_fetch_cell("SELECT COUNT(*) FROM host WHERE site_id='" . $_REQUEST["site_id"] . "'");
 
 	if ($devices == 0) {
-		if ((read_config_option("remove_verification") == "on") && (!isset($_GET["confirm"]))) {
+		if ((read_config_option("remove_verification") == CHECKED) && (!isset($_GET["confirm"]))) {
 			include("./include/top_header.php");
 			form_confirm(__("Are You Sure?"), __("Are you sure you want to delete the site") . " <strong>'" . db_fetch_cell("select description from host where id=" . $_GET["device_id"]) . "'</strong>?", "sites.php", "sites.php?action=remove&id=" . $_GET["id"]);
 			include("./include/bottom_footer.php");
@@ -485,7 +485,7 @@ function site_filter() {
 						</select>
 					</td>
 					<td>
-						&nbsp;<input type="checkbox" id="detail" name="detail" <?php if ((get_request_var_request("detail") == "true") || (get_request_var_request("detail") == "on")) print ' checked="true"';?> onClick="applySiteFilterChange(document.form_sites)">
+						&nbsp;<input type="checkbox" id="detail" name="detail" <?php if ((get_request_var_request("detail") == "true") || (get_request_var_request("detail") == CHECKED)) print ' checked="true"';?> onClick="applySiteFilterChange(document.form_sites)">
 					</td>
 					<td>
 						<label for="detail"><?php print __("Show Device Details");?></label>

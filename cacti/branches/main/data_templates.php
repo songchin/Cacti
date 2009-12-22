@@ -149,9 +149,9 @@ function form_save() {
 
 				if ((isset($_POST[$form_value])) && ($input_field["type_code"] == "")) {
 					if ((isset($_POST["t_" . $form_value])) &&
-						(get_request_var_post("t_" . $form_value) == "on")) {
+						(get_request_var_post("t_" . $form_value) == CHECKED)) {
 						$not_required = true;
-					}else if ($input_field["allow_nulls"] == "on") {
+					}else if ($input_field["allow_nulls"] == CHECKED) {
 						$not_required = true;
 					}else{
 						$not_required = false;
@@ -229,7 +229,7 @@ function form_save() {
 					if (isset($_POST[$form_value])) {
 						/* save the data into the 'host_template_data' table */
 						if (isset($_POST{"t_value_" . $input_field["data_name"]})) {
-							$template_this_item = "on";
+							$template_this_item = CHECKED;
 						}else{
 							$template_this_item = "";
 						}
@@ -787,7 +787,7 @@ function template() {
 			form_selectable_cell("<a class='linkEditMain' href='" . htmlspecialchars("data_templates.php?action=template_edit&id=" . $template["id"]) . "'>" . (strlen($_REQUEST["filter"]) ? preg_replace("/(" . preg_quote($_REQUEST["filter"]) . ")/i", "<span class=\"filter\">\\1</span>", $template["name"]) : $template["name"]) . "</a>", $template["id"]);
 			form_selectable_cell("<a class='linkEditMain' href='" . htmlspecialchars("data_templates.php?action=template_edit&id=" . $template["id"]) . "'>" . (strlen($_REQUEST["filter"]) ? preg_replace("/(" . preg_quote($_REQUEST["filter"]) . ")/i", "<span class=\"filter\">\\1</span>", $template["description"]) : $template["description"]) . "</a>", $template["id"]);
 			form_selectable_cell((empty($template["data_input_method"]) ? "<em>" . __("None") . "</em>": $template["data_input_method"]), $template["id"]);
-			form_selectable_cell((($template["active"] == "on") ? __("Active") : __("Disabled")), $template["id"]);
+			form_selectable_cell((($template["active"] == CHECKED) ? __("Active") : __("Disabled")), $template["id"]);
 			form_checkbox_cell($template["name"], $template["id"]);
 			form_end_row();
 		}

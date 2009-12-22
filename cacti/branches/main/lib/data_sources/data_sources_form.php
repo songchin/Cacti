@@ -82,7 +82,7 @@ function data_source_form_save() {
 
 				if ($is_templated == "") {
 					$allow_nulls = true;
-				}elseif ($input_field["allow_nulls"] == "on") {
+				}elseif ($input_field["allow_nulls"] == CHECKED) {
 					$allow_nulls = true;
 				}elseif (empty($input_field["allow_nulls"])) {
 					$allow_nulls = false;
@@ -545,7 +545,7 @@ function data_source_data_edit() {
 
 				/* if data template then get t_value from template, else always allow user input */
 				if (empty($data["data_template_id"])) {
-					$can_template = "on";
+					$can_template = CHECKED;
 				}else{
 					$can_template = db_fetch_cell("select t_value from data_input_data where data_template_data_id=" . $template_data["id"] . " and data_input_field_id=" . $field["id"]);
 				}
@@ -691,9 +691,9 @@ function data_source_edit() {
 	$tip_text = "";
 	if (isset($data)) {
 		$tip_text .= "<tr><td align=\\'right\\'><a class=\\'popup_item\\' id=\\'changeDSState\\' onClick=\\'changeDSState()\\' href=\\'#\\'>Unlock/Lock</a></td></tr>";
-		$tip_text .= "<tr><td align=\\'right\\'><a class=\\'popup_item\\' href=\\'" . htmlspecialchars('data_sources.php?action=data_source_toggle_status&id=' . (isset($_GET["id"]) ? $_GET["id"] : 0) . '&newstate=' . (($data["active"] == "on") ? "0" : "1")) . "\\'>" . (($data["active"] == "on") ? __("Disable") : __("Enable")) . "</a></td></tr>";
-		$tip_text .= "<tr><td align=\\'right\\'><a class=\\'popup_item\\' href=\\'" . htmlspecialchars('data_sources.php?action=data_source_edit&id=' . (isset($_GET["id"]) ? $_GET["id"] : 0) . '&debug=' . (isset($_SESSION["ds_debug_mode"]) ? "0" : "1")) . "\\'>" . __("Turn") . " <strong>" . (isset($_SESSION["ds_debug_mode"]) ? __("Off") : __("On")) . "</strong> " . __("Debug Mode") . "</a></td></tr>";
-		$tip_text .= "<tr><td align=\\'right\\'><a class=\\'popup_item\\' href=\\'" . htmlspecialchars('data_sources.php?action=data_source_edit&id=' . (isset($_GET["id"]) ? $_GET["id"] : 0) . '&info=' . (isset($_SESSION["ds_info_mode"]) ? "0" : "1")) . "\\'>" . __("Turn") . " <strong>" . (isset($_SESSION["ds_info_mode"]) ? __("Off") : __("On")) . "</strong> " . __("RRD Info Mode") . "</a><td></tr>";
+		$tip_text .= "<tr><td align=\\'right\\'><a class=\\'popup_item\\' href=\\'" . htmlspecialchars('data_sources.php?action=data_source_toggle_status&id=' . (isset($_GET["id"]) ? $_GET["id"] : 0) . '&newstate=' . (($data["active"] == CHECKED) ? "0" : "1")) . "\\'>" . (($data["active"] == CHECKED) ? __("Disable") : __("Enable")) . "</a></td></tr>";
+		$tip_text .= "<tr><td align=\\'right\\'><a class=\\'popup_item\\' href=\\'" . htmlspecialchars('data_sources.php?action=data_source_edit&id=' . (isset($_GET["id"]) ? $_GET["id"] : 0) . '&debug=' . (isset($_SESSION["ds_debug_mode"]) ? "0" : "1")) . "\\'>" . __("Turn") . " <strong>" . (isset($_SESSION["ds_debug_mode"]) ? __("Off") : __(CHECKED)) . "</strong> " . __("Debug Mode") . "</a></td></tr>";
+		$tip_text .= "<tr><td align=\\'right\\'><a class=\\'popup_item\\' href=\\'" . htmlspecialchars('data_sources.php?action=data_source_edit&id=' . (isset($_GET["id"]) ? $_GET["id"] : 0) . '&info=' . (isset($_SESSION["ds_info_mode"]) ? "0" : "1")) . "\\'>" . __("Turn") . " <strong>" . (isset($_SESSION["ds_info_mode"]) ? __("Off") : __(CHECKED)) . "</strong> " . __("RRD Info Mode") . "</a><td></tr>";
 	}
 	if (!empty($data_template["id"])) {
 		$tip_text .= "<tr><td align=\\'right\\'><a class=\\'popup_item\\' href=" . htmlspecialchars('data_templates.php?action=template_edit&id=' . (isset($data_template["id"]) ? $data_template["id"] : "0")) . "\\'>" . __("Edit Data Template") . "<br></a></td></td>";
@@ -891,13 +891,13 @@ function data_source_edit() {
 		while (list($field_name, $field_array) = each($struct_data_source_item)) {
 			$form_array += array($field_name => $struct_data_source_item[$field_name]);
 
-#			if (!(($use_data_template == false) || ($rrd_template{"t_" . $field_name} == "on"))) {
+#			if (!(($use_data_template == false) || ($rrd_template{"t_" . $field_name} == CHECKED))) {
 #				$form_array[$field_name]["description"] = "";
 #			}
 
 			$form_array[$field_name]["value"] = (isset($rrd) ? $rrd[$field_name] : "");
 
-			if (!(($use_data_template == false) || ($rrd_template{"t_" . $field_name} == "on"))) {
+			if (!(($use_data_template == false) || ($rrd_template{"t_" . $field_name} == CHECKED))) {
 				$form_array[$field_name]["method"] = "template_" . $form_array[$field_name]["method"];
 			}
 		}
@@ -1339,7 +1339,7 @@ function data_source() {
 			form_selectable_cell($data_source['local_data_id'], $data_source['local_data_id']);
 			form_selectable_cell((($_REQUEST["filter"] != "") ? preg_replace("/(" . preg_quote($_REQUEST["filter"]) . ")/i", "<span class=\"filter\">\\1</span>", $data_input_name) : $data_input_name), $data_source["local_data_id"]);
 			form_selectable_cell(get_poller_interval($poller_interval), $data_source["local_data_id"]);
-			form_selectable_cell(($data_source['active'] == "on" ? "Yes" : "No"), $data_source["local_data_id"]);
+			form_selectable_cell(($data_source['active'] == CHECKED ? "Yes" : "No"), $data_source["local_data_id"]);
 			form_selectable_cell((($_REQUEST["filter"] != "") ? preg_replace("/(" . preg_quote($_REQUEST["filter"]) . ")/i", "<span class=\"filter\">\\1</span>", $data_source['data_template_name']) : $data_source['data_template_name']), $data_source["local_data_id"]);
 			form_checkbox_cell($data_source["name_cache"], $data_source["local_data_id"]);
 			form_end_row();
