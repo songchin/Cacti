@@ -107,13 +107,13 @@ function upgrade_to_0_8_8() {
 	/* Upgrade current users and permissions */
 
 	/* add the poller id for hosts to allow for multiple pollers */
-	db_install_execute("0.8.8", "ALTER TABLE `host`, ADD COLUMN `poller_id` SMALLINT(5) UNSIGNED NOT NULL DEFAULT '0' AFTER id, ADD INDEX `poller_id`(`poller_id`);");
+	db_install_execute("0.8.8", "ALTER TABLE `host` ADD COLUMN `poller_id` SMALLINT(5) UNSIGNED NOT NULL DEFAULT '0' AFTER id, ADD INDEX `poller_id`(`poller_id`);");
 
 	/* add the poller id for poller_output to allow for multiple pollers */
-	db_install_execute("0.8.8", "ALTER TABLE poller_output, ADD COLUMN `poller_id` SMALLINT(5) UNSIGNED NOT NULL DEFAULT '0' AFTER `time`, ADD INDEX `poller_id`(`poller_id`);");
+	db_install_execute("0.8.8", "ALTER TABLE poller_output ADD COLUMN `poller_id` SMALLINT(5) UNSIGNED NOT NULL DEFAULT '0' AFTER `time`, ADD INDEX `poller_id`(`poller_id`);");
 
 	/* add the poller id for hosts to allow for multiple pollers */
-	db_install_execute("0.8.8", "ALTER TABLE `poller`, ADD COLUMN `disabled` CHAR(2) DEFAULT '' AFTER `id`, ADD COLUMN `description` VARCHAR(45) NOT NULL DEFAULT '' AFTER `disabled`;");
+	db_install_execute("0.8.8", "ALTER TABLE `poller` ADD COLUMN `disabled` CHAR(2) DEFAULT '' AFTER `id`, ADD COLUMN `description` VARCHAR(45) NOT NULL DEFAULT '' AFTER `disabled`;");
 
 	/* add rrd_compute_rpn for data source items */
 	db_install_execute("0.8.8", "ALTER TABLE `data_template_rrd` ADD COLUMN `t_rrd_compute_rpn` CHAR(2) DEFAULT NULL AFTER `rrd_minimum`, ADD COLUMN `rrd_compute_rpn` VARCHAR(150) DEFAULT '' AFTER `t_rrd_compute_rpn`;");
