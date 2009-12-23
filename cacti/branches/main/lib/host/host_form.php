@@ -1605,14 +1605,16 @@ function host() {
 		/* put the nav bar on the bottom as well */
 		print $nav;
 	}else{
-		print "<tr><td><em>" . __("No Hosts") . "</em></td></tr></table>";
+		print "<tr><td><em>" . __("No Hosts") . "</em></td></tr>";
 	}
 
-	print "</table></form>\n";	# end form and table of html_header_sort_checkbox
+	print "</table>\n";
 
 	/* add a list of tree names to the actions dropdown */
 	$device_actions = array_merge($device_actions, api_tree_add_tree_names_to_actions_array());
 
 	/* draw the dropdown containing a list of available actions for this form */
 	draw_actions_dropdown($device_actions);
+
+	print "</form>\n";
 }
