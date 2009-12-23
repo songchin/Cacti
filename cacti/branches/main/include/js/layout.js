@@ -502,7 +502,7 @@ function getBaseName() {
 	var pathname = location.pathname;
 
 	while (pathname.indexOf("/") >= 0) {
-		pathname = pathname.substring(pathname.indexOf("/")+1);
+		pathname = "ui_" + pathname.substring(pathname.indexOf("/")+1);
 	}
 
 	return pathname.replace(".php", "");
