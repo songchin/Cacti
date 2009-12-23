@@ -472,6 +472,7 @@ function template_edit() {
 	html_end_box(false);
 	html_start_box("<strong>" . __("Limits") . "</strong>", "100", $colors["header"], "0", "center", "", true);
 	draw_template_edit_form('header_graph_limits', $struct_graph_limits, $template_graph, false);
+	html_end_box(false);
 	html_start_box("<strong>" . __("Grid") . "</strong>", "100", $colors["header"], "0", "center", "", true);
 	draw_template_edit_form('header_graph_template', $struct_graph_grid, $template_graph, false);
 	html_end_box(false);
