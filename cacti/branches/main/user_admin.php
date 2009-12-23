@@ -871,6 +871,8 @@ function graph_settings_edit() {
 
 	html_end_box();
 
+	include_once(CACTI_BASE_PATH . "/lib/jquery/colorpicker.js");
+
 	?>
 	<script type="text/javascript">
 	<!--

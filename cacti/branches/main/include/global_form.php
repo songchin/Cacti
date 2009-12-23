@@ -55,6 +55,7 @@ $fields_color_edit = array(
 		"description" => __("The hex value for this color; valid range: 000000-FFFFFF."),
 		"value" => "|arg1:hex|",
 		"max_length" => "6",
+		"class" => "colortags",
 		),
 	"id" => array(
 		"method" => "hidden_zero",
@@ -586,6 +587,7 @@ $struct_graph_color = array(
 		"default" => "",
 		"size" => "8",
 		"description" => __("Color tag of the background (rrggbb[aa])."),
+		"class" => "colortags",
 		),
 	"colortag_canvas" => array(
 		"friendly_name" => __("Canvas (--color CANVAS)"),
@@ -594,6 +596,7 @@ $struct_graph_color = array(
 		"default" => "",
 		"size" => "8",
 		"description" => __("Color tag of the background of the actual graph (rrggbb[aa])."),
+		"class" => "colortags",
 		),
 	"colortag_shadea" => array(
 		"friendly_name" => __("ShadeA (--color SHADEA)"),
@@ -602,6 +605,7 @@ $struct_graph_color = array(
 		"default" => "",
 		"size" => "8",
 		"description" => __("Color tag of the left and top border (rrggbb[aa])."),
+		"class" => "colortags",
 		),
 	"colortag_shadeb" => array(
 		"friendly_name" => __("ShadeB (--color SHADEB)"),
@@ -610,6 +614,7 @@ $struct_graph_color = array(
 		"default" => "",
 		"size" => "8",
 		"description" => __("Color tag of the right and bottom border (rrggbb[aa])."),
+		"class" => "colortags",
 		),
 	"colortag_grid" => array(
 		"friendly_name" => __("Grid (--color GRID)"),
@@ -618,6 +623,7 @@ $struct_graph_color = array(
 		"default" => "",
 		"size" => "8",
 		"description" => __("Color tag of the grid (rrggbb[aa])."),
+		"class" => "colortags",
 		),
 	"colortag_mgrid" => array(
 		"friendly_name" => __("Major Grid (--color MGRID)"),
@@ -626,6 +632,7 @@ $struct_graph_color = array(
 		"default" => "",
 		"size" => "8",
 		"description" => __("Color tag of the major grid (rrggbb[aa])."),
+		"class" => "colortags",
 		),
 	"colortag_font" => array(
 		"friendly_name" => __("Font (--color FONT)"),
@@ -634,6 +641,7 @@ $struct_graph_color = array(
 		"default" => "",
 		"size" => "8",
 		"description" => __("Color tag of the font (rrggbb[aa])."),
+		"class" => "colortags",
 		),
 	"colortag_axis" => array(
 		"friendly_name" => __("Axis (--color AXIS)"),
@@ -642,6 +650,7 @@ $struct_graph_color = array(
 		"default" => "",
 		"size" => "8",
 		"description" => __("Color tag of the axis (rrggbb[aa])."),
+		"class" => "colortags",
 		),
 	"colortag_frame" => array(
 		"friendly_name" => __("Frame (--color FRAME)"),
@@ -650,6 +659,7 @@ $struct_graph_color = array(
 		"default" => "",
 		"size" => "8",
 		"description" => __("Color tag of the frame (rrggbb[aa])."),
+		"class" => "colortags",
 		),
 	"colortag_arrow" => array(
 		"friendly_name" => __("Arrow (--color ARROW)"),
@@ -658,6 +668,7 @@ $struct_graph_color = array(
 		"default" => "",
 		"size" => "8",
 		"description" => __("Color tag of the arrow (rrggbb[aa])."),
+		"class" => "colortags",
 		),
 	);
 

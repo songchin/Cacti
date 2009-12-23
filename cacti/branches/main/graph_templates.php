@@ -492,46 +492,74 @@ function template_edit() {
 	form_save_button_alt("return");
 //	form_save_button_alt();
 ?>
-<script type="text/javascript">
+	<script type="text/javascript">
+	<!--
+	$(document).ready(function(){
+
+		// set background color before page load
+		$('.colortags').each(function() {
+			$(this).css('backgroundColor', '#' + this.value);
+		});
+
+		$('.colortags').ColorPicker({
+			livePreview: true,
+			onShow: function(picker) {
+				$(picker).fadeIn(500);
+				return false;
+			},
+			onBeforeShow: function() {
+				$(this).ColorPickerSetColor(this.value);
+				$(this).css('backgroundColor', '#' + this.value);
+			},
+			onHide: function(picker) {
+				$(picker).fadeOut(500);
+				return false;
+			},
+			onSubmit: function(hsb, hex, rgb, el) {
+				$(el).val(hex);
+				$(el).ColorPickerHide();
+				$(el).css('backgroundColor', '#' + hex);
+			}
+		})
+		.bind('keyup', function() {
+			$(this).ColorPickerSetColor(this.value);
+		});
+	});
+
 	$('#graph_item').tableDnD({
 		onDrop: function(table, row) {
 //			alert($.tableDnD.serialize());
 			$('#AjaxResult').load("lib/ajax/jquery.tablednd/graph_templates_item.ajax.php?id=<?php print $_GET["id"];?>&"+$.tableDnD.serialize());
 		}
 	});
-</script>
-<?php
 
-	include_once(CACTI_BASE_PATH . "/lib/jquery/field_description_hover.js");
+	dynamic();
 
-//Now we need some javascript to make it dynamic
-?>
-<script type="text/javascript">
-
-dynamic();
-
-function dynamic() {
-	//alert("RRDTool Version is '" + document.getElementById('rrdtool_version').value + "'");
-	//alert("Log is '" + document.getElementById('auto_scale_log').checked + "'");
-	document.getElementById('t_scale_log_units').disabled=true;
-	document.getElementById('scale_log_units').disabled=true;
-	if ((document.getElementById('rrdtool_version').value != 'rrd-1.0.x') &&
-		(document.getElementById('auto_scale_log').checked)) {
-		document.getElementById('t_scale_log_units').disabled=false;
-		document.getElementById('scale_log_units').disabled=false;
+	function dynamic() {
+		//alert("RRDTool Version is '" + document.getElementById('rrdtool_version').value + "'");
+		//alert("Log is '" + document.getElementById('auto_scale_log').checked + "'");
+		document.getElementById('t_scale_log_units').disabled=true;
+		document.getElementById('scale_log_units').disabled=true;
+		if ((document.getElementById('rrdtool_version').value != 'rrd-1.0.x') &&
+			(document.getElementById('auto_scale_log').checked)) {
+			document.getElementById('t_scale_log_units').disabled=false;
+			document.getElementById('scale_log_units').disabled=false;
+		}
 	}
-}
 
-function changeScaleLog() {
-	//alert("Log changed to '" + document.getElementById('auto_scale_log').checked + "'");
-	document.getElementById('t_scale_log_units').disabled=true;
-	document.getElementById('scale_log_units').disabled=true;
-	if ((document.getElementById('rrdtool_version').value != 'rrd-1.0.x') &&
-		(document.getElementById('auto_scale_log').checked)) {
-		document.getElementById('t_scale_log_units').disabled=false;
-		document.getElementById('scale_log_units').disabled=false;
+	function changeScaleLog() {
+		//alert("Log changed to '" + document.getElementById('auto_scale_log').checked + "'");
+		document.getElementById('t_scale_log_units').disabled=true;
+		document.getElementById('scale_log_units').disabled=true;
+		if ((document.getElementById('rrdtool_version').value != 'rrd-1.0.x') &&
+			(document.getElementById('auto_scale_log').checked)) {
+			document.getElementById('t_scale_log_units').disabled=false;
+			document.getElementById('scale_log_units').disabled=false;
+		}
 	}
-}
+
+	//-->
+
 </script>
 <?php
 

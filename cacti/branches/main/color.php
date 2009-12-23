@@ -467,6 +467,8 @@ function color_edit() {
 	print "</table></td></tr>";		/* end of html_header */
 	html_end_box();
 
+	include_once(CACTI_BASE_PATH . "/lib/jquery/colorpicker.js");
+
 	form_save_button_alt();
 }
 
@@ -574,7 +576,7 @@ function color() {
 					<td class="w1">
 						<select name="rorder" onChange="applyFilterChange(document.form_color)">
 							<option value="-1"<?php if (get_request_var_request("rorder") == "-1") {?> selected<?php }?>><?php print __("None");?></option>
-							<option value="a"<?php if (get_request_var_request("rorder") == "a") {?> selected<?php }?>><?php print __("Acending");?></option>
+							<option value="a"<?php if (get_request_var_request("rorder") == "a") {?> selected<?php }?>><?php print __("Ascending");?></option>
 							<option value="d"<?php if (get_request_var_request("rorder") == "d") {?> selected<?php }?>><?php print __("Descending");?></option>
 						</select>
 					</td>
@@ -584,7 +586,7 @@ function color() {
 					<td class="w1">
 						<select name="gorder" onChange="applyFilterChange(document.form_color)">
 							<option value="-1"<?php if (get_request_var_request("gorder") == "-1") {?> selected<?php }?>><?php print __("None");?></option>
-							<option value="a"<?php if (get_request_var_request("gorder") == "a") {?> selected<?php }?>><?php print __("Acending");?></option>
+							<option value="a"<?php if (get_request_var_request("gorder") == "a") {?> selected<?php }?>><?php print __("Ascending");?></option>
 							<option value="d"<?php if (get_request_var_request("gorder") == "d") {?> selected<?php }?>><?php print __("Descending");?></option>
 						</select>
 					</td>
@@ -594,7 +596,7 @@ function color() {
 					<td width="1">
 						<select name="border" onChange="applyFilterChange(document.form_color)">
 							<option value="-1"<?php if (get_request_var_request("border") == "-1") {?> selected<?php }?>><?php print __("None");?></option>
-							<option value="a"<?php if (get_request_var_request("border") == "a") {?> selected<?php }?>><?php print __("Acending");?></option>
+							<option value="a"<?php if (get_request_var_request("border") == "a") {?> selected<?php }?>><?php print __("Ascending");?></option>
 							<option value="d"<?php if (get_request_var_request("border") == "d") {?> selected<?php }?>><?php print __("Descending");?></option>
 						</select>
 					</td>
