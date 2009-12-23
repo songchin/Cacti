@@ -1990,6 +1990,7 @@ INSERT INTO graph_templates_item VALUES (410,'03e5bd2151fea3c90843eb1130b84458',
 
 CREATE TABLE graph_tree (
   id smallint(5) unsigned NOT NULL auto_increment,
+  user_id integer(10) unsigned NOT NULL default '0',
   sort_type tinyint(3) unsigned NOT NULL default '1',
   name varchar(255) NOT NULL default '',
   PRIMARY KEY  (id)
@@ -1999,7 +2000,7 @@ CREATE TABLE graph_tree (
 -- Dumping data for table `graph_tree`
 --
 
-INSERT INTO graph_tree VALUES (1,1,'Default Tree');
+INSERT INTO graph_tree VALUES (1,0,1,'Default Tree');
 
 --
 -- Table structure for table `graph_tree_items`
@@ -2007,6 +2008,7 @@ INSERT INTO graph_tree VALUES (1,1,'Default Tree');
 
 CREATE TABLE graph_tree_items (
   id mediumint(8) unsigned NOT NULL auto_increment,
+  parent_id mediumint(8) unsigned NOT NULL DEFAULT '0',
   graph_tree_id smallint(5) unsigned NOT NULL default '0',
   local_graph_id mediumint(8) unsigned NOT NULL default '0',
   rra_id smallint(8) unsigned NOT NULL default '0',
