@@ -169,7 +169,7 @@ $consolidation_functions = array(
 	RRD_CF_AVERAGE		=> "AVERAGE",
 	RRD_CF_MIN			=> "MIN",
 	RRD_CF_MAX			=> "MAX",
-	RRD_CF_LAST			=> "LAST",
+	RRD_CF_LAST			=> "LAST"
 	);
 
 $rrd_font_render_modes = array(
@@ -190,7 +190,7 @@ $data_source_types = array(
 	DATA_SOURCE_TYPE_COUNTER	=> "COUNTER",
 	DATA_SOURCE_TYPE_DERIVE		=> "DERIVE",
 	DATA_SOURCE_TYPE_ABSOLUTE	=> "ABSOLUTE",
-	DATA_SOURCE_TYPE_COMPUTE	=> "COMPUTE",
+	DATA_SOURCE_TYPE_COMPUTE	=> "COMPUTE"
 	);
 
 $graph_item_types = array(
@@ -519,23 +519,34 @@ $perm_item_types = array(
 	PERM_GRAPH_TEMPLATES 	=> __('graph_template'),
 	);
 
+$user_auth_realm_categories = array(
+	"general" => array(__("General"), array(7,8)),
+	"management" => array(__("Management"), array(4, 18, 5, 3)),
+	"datacollect" => array(__("Data Collection"), array(19, 2, 13)),
+	"templates" => array(__("Templates"), array(12, 10, 11)),
+	"presets" => array(__("Presets"), array(14, 9)),
+	"impexp" => array(__("Import/Export"), array(17,16)),
+	"system" => array(__("System"), array(1, 15)));
+
 $user_auth_realms = array(
-	1 => __("User Administration"),
-	2 => __("Data Input"),
-	3 => __("Update Data Sources"),
-	4 => __("Update Graph Trees"),
-	5 => __("Update Graphs"),
-	7 => __("View Graphs"),
-	8 => __("Console Access"),
-	9 => __("Update Round Robin Archives"),
-	10 => __("Update Graph Templates"),
-	11 => __("Update Data Templates"),
-	12 => __("Update Host Templates"),
-	13 => __("Data Queries"),
-	14 => __("Update CDEF's"),
-	15 => __("Global Settings"),
-	16 => __("Export Data"),
-	17 => __("Import Data"),
+	7    => __("View Graphs"),
+	8    => __("Console Access"),
+	3    => __("Update Data Sources"),
+	4    => __("Update System Trees"),
+	18   => __("Update User Tees"),
+	5    => __("Update Graphs"),
+	19   => __("Pollers"),
+	2    => __("Data Input"),
+	13   => __("Data Queries"),
+	12   => __("Update Host Templates"),
+	10   => __("Update Graph Templates"),
+	11   => __("Update Data Templates"),
+	14   => __("Update CDEF's"),
+	9    => __("Update Round Robin Archives"),
+	16   => __("Export Data"),
+	17   => __("Import Data"),
+	1    => __("User Administration"),
+	15   => __("Global Settings")
 	);
 
 $user_auth_realm_filenames = array(

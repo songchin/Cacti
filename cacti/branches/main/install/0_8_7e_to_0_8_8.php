@@ -396,5 +396,33 @@ function upgrade_to_0_8_8() {
 	db_install_execute("0.8.8", "ALTER TABLE graph_templates_graph ADD COLUMN tab_width mediumint(4) DEFAULT NULL");
 	db_install_execute("0.8.8", "ALTER TABLE graph_templates_graph ADD COLUMN t_watermark char(2) DEFAULT '0'");
 	db_install_execute("0.8.8", "ALTER TABLE graph_templates_graph ADD COLUMN watermark varchar(255) DEFAULT NULL");
+
+	/* upgrade to the graph trees */
+	db_install_execute("0.8.8", "ALTER TABLE `graph_tree_items`
+		ADD COLUMN `parent_id` MEDIUMINT UNSIGNED NOT NULL DEFAULT '0' AFTER `id`,
+		ADD COLUMN `site_id` MEDIUMINT UNSIGNED NOT NULL DEFAULT '0' AFTER `title`;");
+
+	/* make tree's a per user object.  System tree's have a user_id of 0 */
+	db_install_execute("0.8.8", "ALTER TABLE `graph_tree` ADD COLUMN `user_id` INTEGER UNSIGNED NOT NULL DEFAULT '0' AFTER `id`, ADD INDEX `user_id`(`user_id`);");
+
+	/* get all nodes whose parent_id is not 0 */
+	$tree_items = db_fetch_assoc("SELECT * FROM graph_tree_items WHERE order_key NOT LIKE '___000%';");
+	if (sizeof($tree_items)) {
+	foreach($tree_items AS $item) {
+		$translated_key = rtrim($item["order_key"], "0\r\n");
+		$missing_len    = strlen($translated_key) % CHARS_PER_TIER;
+		if ($missing_len > 0) {
+			$translated_key .= substr("000", 0, $missing_len);
+		}
+		$parent_key_len = strlen($translated_key) - CHARS_PER_TIER;
+		$parent_key     = substr($translated_key, 0, $parent_key_len);
+		$parent_id      = db_fetch_cell("SELECT id FROM graph_tree_items WHERE graph_tree_id=" . $item["graph_tree_id"] . " AND order_key LIKE '" . $parent_key . "000%'");
+		if ($parent_id != "") {
+			db_execute("UPDATE graph_tree_items SET parent_id=$parent_id WHERE id=" . $item["id"]);
+		}else{
+			cacti_log("Some error occurred processing children", false);
+		}
+	}
+	}
 }
 

@@ -22,12 +22,6 @@
  +-------------------------------------------------------------------------+
 */
 
-define("CHARS_PER_TIER", 3);
-define("MAX_TREE_DEPTH", 30);
-
-define("SORT_TYPE_TREE", 1);
-define("SORT_TYPE_TREE_ITEM", 2);
-
 /* get_tree_item_type - gets the type of tree item
    @arg $tree_item_id - the id of the tree item to fetch the type for
    @returns - a string reprenting the type of the tree item. valid return

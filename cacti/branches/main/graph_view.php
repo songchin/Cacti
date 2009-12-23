@@ -105,8 +105,70 @@ case 'tree':
 		print "<strong><font size='+1' color='FF0000'>" . __("YOU DO NOT HAVE RIGHTS FOR TREE VIEW") . "</font></strong>"; exit;
 	}
 
+	if (!isset($_REQUEST["tree_id"])) {
+		$_REQUEST["tree_id"] = "-2";
+	}
+
 	?>
-	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/js/jstree/cactiTree.js"></script>
+	<script type="text/javascript">
+	<!--
+	$(function () {
+		Panel = {};
+
+		Panel.jsTree = $.tree.create();
+		Panel.jsTree.init($("#graph_tree .tree"),{
+			data : { type : "json", async : true,
+				opts : {
+					method : "GET",
+					url : "lib/ajax/get_graph_tree_items.php?type=list&tree_id=<?php print $_REQUEST["tree_id"];?>" }
+				},
+			languages : [ "en" ],
+			callback : {
+				onselect : function(node, tree) {
+					Panel.loadContent(node.id);
+				}
+			},
+			types : {
+				"default" : {
+					clickable    : true,
+					renameable   : false,
+					deletable    : false,
+					creatable    : false,
+					draggable    : false,
+					max_children : -1,
+					max_depth    : -1,
+					valid_children	: "all",
+					icon : {
+						image : false,
+						position : false
+					}
+				}
+			}
+		});
+		Panel.creating = 0;
+
+		// Functions
+		Panel.loadContent = function(id) {
+			$.get("lib/ajax/get_graph_tree_content.php?id=" + id, function (data) {
+				$("#graphs").html(data);
+			});
+		}
+
+		// Initial Page
+		<?php
+		if ($_REQUEST["tree_id"] <= 0) {
+			$tree_id = read_graph_config_option("default_tree_id");
+		}else{
+			$tree_id = $_REQUEST["tree_id"];
+		}
+		$tree_id = "tree_" . $tree_id . "_leaf_0";
+		?>
+		$.get("lib/ajax/get_graph_tree_content.php?id=<?php print $tree_id;?>", function (data) {
+			$("#graphs").html(data);
+		});
+	});
+	-->
+	</script>
 	<?php
 
 	/* if cacti's builtin authentication is turned on then make sure to take

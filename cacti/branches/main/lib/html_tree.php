@@ -695,12 +695,23 @@ function template_authorized($graph_template_id, $user) {
 	}
 }
 
-function get_trees() {
+function get_trees($tree_id) {
 	global $current_user, $config;
 
 	$trees_where = "";
 	$sql_where   = "";
 	$items       = array();
+
+	if ($tree_id == 0 || $tree_id == "-2") {
+		/* all system trees */
+		$sql_where .= "WHERE gt.user_id=0";
+	}elseif ($tree_id == "-1") {
+		/* all user trees */
+		$sql_where .= "WHERE gt.user_id=" . $_SESSION["sess_user_id"];
+	}else{
+		/* specific tree */
+		$sql_where .= "WHERE gt.id=" . $tree_id;
+	}
 
 	if (read_config_option("auth_method") != 0) {
 		$tree_policy = db_fetch_cell("SELECT policy_trees FROM user_auth WHERE id=" . $_SESSION["sess_user_id"]);
@@ -720,10 +731,12 @@ function get_trees() {
 		}
 	}
 
-	$trees = db_fetch_assoc("SELECT *
+	$sql = "SELECT *
 		FROM graph_tree AS gt
 		$sql_where
-		ORDER BY gt.name");
+		ORDER BY gt.name";
+
+	$trees = db_fetch_assoc($sql);
 
 	if (sizeof($trees)) {
 	foreach($trees as $tree) {
@@ -740,7 +753,7 @@ function get_trees() {
 	return $items;
 }
 
-function get_tree_leaf_items($tree_id, $leaf_id, $host_group_type) {
+function get_tree_leaf_items($tree_id, $leaf_id, $host_group_type, $include_parent = false) {
 	global $current_user, $config;
 
 	// prototype
@@ -761,16 +774,20 @@ function get_tree_leaf_items($tree_id, $leaf_id, $host_group_type) {
 	/* get the trees that the user has access to */
 	$items = array();
 
-	if ($tree_id == 0) {
-		return get_trees();
+	if ($tree_id <= 0) {
+		return get_trees($tree_id);
 	}elseif (tree_authorized($tree_id)) {
+		if ($include_parent) {
+			return get_trees($tree_id);
+		}
+
 		$search_key = "";
 
 		if ($leaf_id > 0) {
 			/* return leaf, site, host, graph template or data query items */
-			$leaf      = db_fetch_row("SELECT *
-							FROM graph_tree_items
-							WHERE id=$leaf_id");
+			$leaf = db_fetch_row("SELECT *
+				FROM graph_tree_items
+				WHERE id=$leaf_id");
 
 			$leaf_type = get_tree_item_type($leaf_id);
 
@@ -818,33 +835,33 @@ function get_tree_leaf_items($tree_id, $leaf_id, $host_group_type) {
 			}
 
 			if (sizeof($tree_items)) {
-			foreach($tree_items as $item) {
-				if ($item["local_graph_id"] > 0) {
-					$items[] = array(
-						"tree_id" => $tree_id,
-						"leaf_id" => $item["id"],
-						"type" => 'graph',
-						"id" => $item["local_graph_id"],
-						"name" => get_graph_title($item["local_graph_id"])
-					);
-				}elseif ($item["host_id"] > 0) {
-					$items[] = array(
-						"tree_id" => $tree_id,
-						"leaf_id" => $item["id"],
-						"type" => 'host',
-						"id" => $item["host_id"],
-						"name" => get_host_description($item["host_id"])
-					);
-				}else{
-					$items[] = array(
-						"tree_id" => $tree_id,
-						"leaf_id" => $item["id"],
-						"type" => 'header',
-						"id" => $item["id"],
-						"name" => $item["title"]
-					);
+				foreach($tree_items as $item) {
+					if ($item["local_graph_id"] > 0) {
+						$items[] = array(
+							"tree_id" => $tree_id,
+							"leaf_id" => $item["id"],
+							"type" => 'graph',
+							"id" => $item["local_graph_id"],
+							"name" => get_graph_title($item["local_graph_id"])
+						);
+					}elseif ($item["host_id"] > 0) {
+						$items[] = array(
+							"tree_id" => $tree_id,
+							"leaf_id" => $item["id"],
+							"type" => 'host',
+							"id" => $item["host_id"],
+							"name" => get_host_description($item["host_id"])
+						);
+					}else{
+						$items[] = array(
+							"tree_id" => $tree_id,
+							"leaf_id" => $item["id"],
+							"type" => 'header',
+							"id" => $item["id"],
+							"name" => $item["title"]
+						);
+					}
 				}
-			}
 			}
 
 			return $items;

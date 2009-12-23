@@ -34,6 +34,8 @@ header("Pragma: no-cache");
 header("Expires: ". gmdate("D, d M Y H:i:s", mktime(date("H"), date("i"), date("s"), date("m")-1, date("d"), date("Y")))." GMT");
 header("Last-Modified: ". gmdate("D, d M Y H:i:s")." GMT");
 
+input_validate_input_number(get_request_var("tree_id"));
+
 switch(get_request_var_request("type")) {
 case "list":
 	/* parse the id string
@@ -41,7 +43,12 @@ case "list":
 	 * tree_id, tree_id_leaf_id, tree_id_leaf_id_hgd_dq
 	 * tree_id_leaf_id_hgd_dqi, tree_id_leaf_id_hgd_gt
 	 */
-	$tree_id         = 0;
+	if (!isset($_REQUEST["tree_id"])) {
+		$tree_id = 0;
+	}else{
+		$tree_id = $_REQUEST["tree_id"];
+	}
+
 	$leaf_id         = 0;
 	$host_group_type = array('na', 0);
 
@@ -78,17 +85,23 @@ case "list":
 		}
 	}
 
-	cacti_log("tree_id: '" . $tree_id . ", leaf_id: '" . $leaf_id . ", hgt: '" . $host_group_type[0] . "," . $host_group_type[1] . "'", false);
-	$tree_items = get_tree_leaf_items($tree_id, $leaf_id, $host_group_type);
+	//cacti_log("tree_id: '" . $tree_id . ", leaf_id: '" . $leaf_id . ", hgt: '" . $host_group_type[0] . "," . $host_group_type[1] . "'", false);
+	if (is_numeric($_REQUEST["id"]) || $tree_id <= 0) {
+		$tree_items = get_tree_leaf_items($tree_id, $leaf_id, $host_group_type, true);
+	}else{
+		$tree_items = get_tree_leaf_items($tree_id, $leaf_id, $host_group_type);
+	}
 
 	if (sizeof($tree_items)) {
 		$total_items = sizeof($tree_items);
 
 		$i = 0;
 		echo "[\n";
+
 		foreach($tree_items as $item) {
 			$node_id  = "tree_" . $item["tree_id"];
 			$node_id .= "_leaf_" . $item["leaf_id"];
+			$display  = true;
 			switch ($item["type"]) {
 				case "tree":
 					$children = true;
@@ -97,6 +110,7 @@ case "list":
 				case "graph":
 					$children = false;
 					$icon     = CACTI_BASE_PATH . "/images/tree_icons/graph.gif";
+					$display  = false;
 					break;
 				case "host":
 					if (read_graph_config_option("expand_hosts") == CHECKED) {
@@ -128,18 +142,20 @@ case "list":
 					break;
 				default:
 			}
-			echo "{\n";
-			echo "\tattributes: {\n";
-			echo "\t\tid :  '" . $node_id . "'\n";
-			echo "\t},\n";
-			if($children) echo "\tstate: 'closed', \n";
-			echo "\tdata: {\n";
-			echo "\t\t'en' : { title : '".$item["name"] ."'" . ($icon != '' ? ", icon : '" . $icon . "'" : "") ." }";
-			echo "\n";
-			echo "\t}\n";
-			echo "}";
-			if(++$i < $total_items) echo ",";
-			echo "\n";
+			if ($display) {
+				echo "{\n";
+				echo "\tattributes: {\n";
+				echo "\t\tid :  '" . $node_id . "'\n";
+				echo "\t},\n";
+				if($children) echo "\tstate: 'closed', \n";
+				echo "\tdata: {\n";
+				echo "\t\t'en' : { title : '".$item["name"] ."'" . ($icon != '' ? ", icon : '" . $icon . "'" : "") ." }";
+				echo "\n";
+				echo "\t}\n";
+				echo "}";
+				if(++$i < $total_items) echo ",";
+				echo "\n";
+			}
 		}
 	}
 	echo "\n]";

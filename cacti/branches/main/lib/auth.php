@@ -181,6 +181,30 @@ function user_enable($user_id) {
 }
 
 
+/* user_authorized - validate if a user has access to a realm
+   @arg int $realm - the realm to check
+   @arg int $user_id - the id of the user
+   @returns boolean true or false */
+function user_authorized($realm_id, $user_id = 0) {
+	/* ================= input validation ================= */
+	input_validate_input_number($user_id);
+	input_validate_input_number($realm_id);
+	/* ==================================================== */
+
+	if ($user_id == 0) {
+		$user_id = $_SESSION["sess_user_id"];
+	}
+
+	$authorized = db_fetch_cell("SELECT realm_id FROM user_auth_realm WHERE realm_id=$realm_id");
+
+	if ($authorized == $realm_id) {
+		return true;
+	}else{
+		return false;
+	}
+}
+
+
 /* get_graph_permissions_sql - creates SQL that reprents the current graph, host and graph
      template policies
    @arg $policy_graphs - (int) the current graph policy

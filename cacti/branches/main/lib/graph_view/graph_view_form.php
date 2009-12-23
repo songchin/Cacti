@@ -834,7 +834,7 @@ function get_graph_tree_items() {
 			}
 		}
 
-		cacti_log("tree_id: '" . $tree_id . ", leaf_id: '" . $leaf_id . ", hgt: '" . $host_group_type[0] . "," . $host_group_type[1] . "'", false);
+		//cacti_log("tree_id: '" . $tree_id . ", leaf_id: '" . $leaf_id . ", hgt: '" . $host_group_type[0] . "," . $host_group_type[1] . "'", false);
 		$tree_items = get_tree_leaf_items($tree_id, $leaf_id, $host_group_type);
 
 		if (sizeof($tree_items)) {
@@ -1159,6 +1159,55 @@ function graph_view_timespan_selector($mode = "tree") {
 	<?php
 
 	html_graph_end_box(FALSE);
+}
+
+function graph_view_tree_filter() {
+	global $colors;
+
+	load_current_session_value("tree_id", "sess_graph_view_tree_id", "-2");
+
+	$trees = db_fetch_assoc("SELECT * FROM graph_tree WHERE user_id=" . $_SESSION["sess_user_id"] . " OR user_id=0 ORDER BY user_id, name");
+
+	?>
+	<table class="startBoxHeader wp100 startBox0"  cellspacing=0 cellpadding=0>
+		<tr class="rowGraphFilter noprint">
+			<td class="noprint">
+				<form name="form_graph_tree" method="get" action="graph_view.php">
+					<table cellspacing="1" cellpadding="0">
+						<tr>
+							<td class="w1">
+								&nbsp;<?php print __("Trees:");?>&nbsp;
+							</td>
+							<td class="w1">
+								<select id='tree' onchange='window.location.assign("graph_view.php?parent=true&tree_id="+document.getElementById("tree").value)' name='tree'>
+									<option value='-2'<?php if ($_REQUEST["tree_id"] == "-2") {?> selected<?php }?>>System Trees</option><?php
+									if (sizeof($trees)) {
+										if (user_authorized("19")) {
+											print "<option value='-1'" . ($_REQUEST["tree_id"] == "-1" ? " selected":"") . ">User Trees</option>";
+										}
+										foreach($trees as $tree) {
+											print "<option value='" . $tree["id"] . "'" . ($_REQUEST["tree_id"] == $tree["id"] ? " selected":"") . ">" . $tree["name"] . ($tree["user_id"] == 0 ? " (System)":" (User)") . "</option>";
+										}
+									}?>
+								</select>
+							</td>
+							<td class='nw'><?php if (user_authorized("19")) {?>
+								<input type='button' value='Manage' onclick='window.location.assign("tree_manage.php?tree_id=<?php print $tree["id"];?>")'><?php }?>
+							</td>
+						</tr>
+					</table>
+					<table valign='top' cellpadding=0 cellspacing=0 width='100%'>
+						<tr class="rowHeader">
+							<td class="textHeaderDark">
+								&nbsp;<?php print __("Items");?>&nbsp;
+							</td>
+						</tr>
+					</table>
+				</form>
+			</td>
+		</tr>
+	</table>
+	<?php
 }
 
 function graph_view_search_filter() {

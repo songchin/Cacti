@@ -265,3 +265,9 @@ define("POLICY_DENY", 2);
 define('OPER_MODE_NATIVE', 0);
 define('OPER_MODE_RESKIN', 1);
 define('OPER_MODE_IFRAME_NONAV', 2);
+
+define("CHARS_PER_TIER", 3);
+define("MAX_TREE_DEPTH", 30);
+
+define("SORT_TYPE_TREE", 1);
+define("SORT_TYPE_TREE_ITEM", 2);

@@ -784,7 +784,6 @@ function user_realms_edit() {
 		</tr>\n";
 
 	?>
-
 	<tr>
 		<td colspan="2" width="100%">
 			<table width="100%">

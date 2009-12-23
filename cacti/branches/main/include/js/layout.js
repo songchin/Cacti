@@ -473,7 +473,7 @@ function doColResize(object, event){
 	return overColumn;
 }
 
-function doneColResize(){
+function doneColResize() {
 	overColumn = false;
 
 	if (resizedColumn) {
@@ -669,7 +669,7 @@ function MouseUp(event) {
 	if (objTh) {
 		if ((browser == 'IE') && (document.selection)) {
 			document.selection.empty();
-		} else if(window.getSelection) {
+		} else if (window.getSelection) {
 			window.getSelection().removeAllRanges();
 		}
 
@@ -848,6 +848,9 @@ function pageInitialize() {
 	/* size the content divs */
 	sizeContentDivs();
 
+	/* restore column widths */
+	initColumnWidths();
+
 	/* restore the page visibility */
 	transitionPage();
 }
@@ -874,16 +877,13 @@ function transitionPage() {
 			document.getElementById("graph_tree").style.opacity         = 1;
 			document.getElementById("graph_tree_content").style.opacity = 1;
 			document.getElementById("wrapper").style.opacity            = 1;
-//			transition = setInterval(function() { fadeIn(document.getElementById("graph_tree_content")) }, 25);
 		}else if (document.getElementById("graph_content")) {
 			document.getElementById("graph_content").style.opacity      = 1;
 			document.getElementById("wrapper").style.opacity            = 1;
-//			transition = setInterval(function() { fadeIn(document.getElementById("graph_content")) }, 25);
 		}else {
 			document.getElementById("menu").style.opacity    = 1;
 			document.getElementById("content").style.opacity = 1;
 			document.getElementById("wrapper").style.opacity = 1;
-//			transition = setInterval(function() { fadeIn(document.getElementById("content")) }, 25);
 		}
 	}
 }
@@ -1031,10 +1031,10 @@ function readCookieElement(name, element) {
 	if (elements) {
 		var start_location = elements.indexOf(search_for);
 
-		if (start_location > 0) {
+		if (start_location >= 0) {
 			end_location = elements.indexOf("!", start_location);
 
-			if (end_location > 0) {
+			if (end_location >= 0) {
 				return_value = elements.substring(start_location + search_for.length, end_location);
 			}else{
 				return_value = elements.substring(start_location + search_for.length);
@@ -1075,7 +1075,7 @@ function updateCookieElement(name, element, value) {
 		start_location = elements.indexOf(element + "@@");
 
 		if (start_location >= 0) {
-			new_elements = new_elements + elements.substring(0, start_location);
+			new_elements = elements.substring(0, start_location);
 
 			if (new_elements.substring(new_elements.length - 1) == "!") {
 				new_elements = new_elements.substring(0, new_elements.length - 1);

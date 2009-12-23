@@ -118,10 +118,11 @@ $page_title = api_plugin_hook_function('page_title', 'Cacti');
 	<link type="text/css" href="<?php echo URL_PATH; ?>include/main.css" rel="stylesheet">
 	<link type="text/css" href="<?php echo URL_PATH; ?>include/dd.css" rel="stylesheet">
 	<link type="text/css" href="<?php echo URL_PATH; ?>include/jquery.autocomplete.css" rel="stylesheet">
-	<link rel="stylesheet" type="text/css" href="<?php echo URL_PATH; ?>include/js/jstree/tree_component.css" />
 	<link href="<?php echo URL_PATH; ?>images/favicon.ico" rel="shortcut icon">
 	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/js/layout.js"></script>
 	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/js/jquery/jquery.js"></script>
+	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/js/jstree/jquery.tree.js"></script>
+	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/js/jquery/jquery.cookie.js"></script>
 	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/js/jquery/jquery.autocomplete.js"></script>
 	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/js/jquery/jquery.bgiframe.js"></script>
 	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/js/jquery/jquery.ajaxQueue.js"></script>
@@ -131,8 +132,7 @@ $page_title = api_plugin_hook_function('page_title', 'Cacti');
 	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/js/jscalendar/calendar.js"></script>
 	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/js/jscalendar/lang/<?php print (read_config_option('i18n_support') != 0) ? CACTI_LANGUAGE_FILE : "english_usa";?>.js"></script>
 	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/js/jscalendar/calendar-setup.js"></script>
-	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/js/jstree/css.js"></script>
-	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/js/jstree/tree_component.js"></script>
+	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/js/jstree/plugins/jquery.tree.cookie.js"></script>
 	<?php api_plugin_hook('page_head'); ?>
 </head>
 <body class='body' onLoad='pageInitialize()'>
@@ -183,14 +183,15 @@ $page_title = api_plugin_hook_function('page_title', 'Cacti');
 <div id='wrapper' style='opacity:0;'>
 	<?php if (($_REQUEST["action"] == "tree") || ((isset($_REQUEST["view_type"]) ? $_REQUEST["view_type"] : "") == "tree")) { ?>
 	<div id='graph_tree'>
-		<div class="tree">&nbsp;</div>
+		<div id='tree_filter'>
+			<?php graph_view_tree_filter();?>
+		</div>
+		<div class="tree"></div>
 	</div>
 	<div id='vsplitter' onMouseout='doneDivResize()' onMouseover='doDivResize(this,event)' onMousemove='doDivResize(this,event)'>
 		<div id='vsplitter_toggle' onClick='vSplitterToggle()' onMouseover='vSplitterEm()' onMouseout='vSplitterUnEm()' title='<?php print __("Hide/Unhide Menu");?>'></div>
 	</div>
 	<div id='graph_tree_content'>
-		<div id='graph_tree_filter'>
-		</div>
 		<div id='graphs'>
 		</div>
 	<?php }else{ ?>

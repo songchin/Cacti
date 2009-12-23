@@ -572,6 +572,8 @@ function display_database_processes() {
 function display_languages() {
 	global $colors, $config, $cacti_textdomains, $lang2locale, $i18n_modes, $cacti_locale;
 
+	$loaded_extensions = get_loaded_extensions();
+
 	$language = $lang2locale[$cacti_locale]["language"];
 
 	/* rebuild $lang2locale array to find country and language codes easier */
