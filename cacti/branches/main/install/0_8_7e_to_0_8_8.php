@@ -166,7 +166,7 @@ function upgrade_to_0_8_8() {
 			) ENGINE=MyISAM;");
 
 	/* add a site column to the host table */
-	db_install_execute("0.8.8", "ALTER TABLE `host`, ADD COLUMN `site_id` INT(10) UNSIGNED NOT NULL DEFAULT '0' AFTER id, ADD INDEX `site_id`(`site_id`);");
+	db_install_execute("0.8.8", "ALTER TABLE `host` ADD COLUMN `site_id` INT(10) UNSIGNED NOT NULL DEFAULT '0' AFTER id, ADD INDEX `site_id`(`site_id`);");
 
 	/*
 	 * now update current entries of table host_template
