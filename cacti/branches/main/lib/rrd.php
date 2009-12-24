@@ -2077,7 +2077,9 @@ function rrdgraph_opts($graph, $graph_data_array, $version) {
 	foreach ($graph as $key => $value) {
 		switch ($key) {
 			case "title_cache":
-				$option .= "--title=\"" . str_replace("\"", "\\\"", $value) . "\"" . RRD_NL;
+				if (!empty($value)) {
+					$option .= "--title=\"" . str_replace("\"", "\\\"", $value) . "\"" . RRD_NL;
+				}
 				break;
 
 			case "alt_y_grid":
@@ -2102,7 +2104,7 @@ function rrdgraph_opts($graph, $graph_data_array, $version) {
 
 			case "height":
 				/* override: graph height (in pixels) */
-				if (isset($graph_data_array["graph_height"])) {
+				if (isset($graph_data_array["graph_height"]) && preg_match("/^[0-9]+$/", $graph_data_array["graph_height"])) {
 					$option .= "--height=" . $graph_data_array["graph_height"] . RRD_NL;
 				}else{
 					$option .= "--height=" . $value . RRD_NL;
@@ -2111,7 +2113,7 @@ function rrdgraph_opts($graph, $graph_data_array, $version) {
 
 			case "width":
 				/* override: graph width (in pixels) */
-				if (isset($graph_data_array["graph_width"])) {
+				if (isset($graph_data_array["graph_width"]) && preg_match("/^[0-9]+$/", $graph_data_array["graph_width"])) {
 					$option .= "--width=" . $graph_data_array["graph_width"] . RRD_NL;
 				}else{
 					$option .= "--width=" . $value . RRD_NL;
@@ -2128,11 +2130,13 @@ function rrdgraph_opts($graph, $graph_data_array, $version) {
 				break;
 
 			case "base_value":
-				$option .= "--base=" . $value . RRD_NL;
+				if (preg_match("/^[0-9]+$/", $value)) {
+					$option .= "--base=" . $value . RRD_NL;
+				}
 				break;
 
 			case "vertical_label":
-				if (!empty($key)) {
+				if (!empty($value)) {
 					$option .= "--vertical-label=\"" . $value . "\"" . RRD_NL;
 				}
 				break;
@@ -2140,7 +2144,7 @@ function rrdgraph_opts($graph, $graph_data_array, $version) {
 			case "slope_mode":
 				/* rrdtool 1.2.x, 1.3.x does not provide smooth lines, let's force it */
 				if ($version != RRD_VERSION_1_0) {
-					if ($key == CHECKED) {
+					if ($value == CHECKED) {
 						$option .= "--slope-mode" . RRD_NL;
 					}
 				}
@@ -2148,7 +2152,7 @@ function rrdgraph_opts($graph, $graph_data_array, $version) {
 
 			case "right_axis":
 				if ($version != RRD_VERSION_1_0 && $version != RRD_VERSION_1_2) {
-					if (!empty($key)) {
+					if (!empty($value)) {
 						$option .= "--right-axis" . $value . RRD_NL;
 					}
 				}
@@ -2156,7 +2160,7 @@ function rrdgraph_opts($graph, $graph_data_array, $version) {
 
 			case "right_axis_label":
 				if ($version != RRD_VERSION_1_0 && $version != RRD_VERSION_1_2) {
-					if (!empty($key)) {
+					if (!empty($value)) {
 						$option .= "--right-axis-label \"" . $value . "\"" . RRD_NL;
 					}
 				}
@@ -2164,7 +2168,7 @@ function rrdgraph_opts($graph, $graph_data_array, $version) {
 
 			case "right_axis_format":
 				if ($version != RRD_VERSION_1_0 && $version != RRD_VERSION_1_2) {
-					if (!empty($key)) {
+					if (!empty($value)) {
 						$option .= "--right-axis-format \"" . $value . "\"" . RRD_NL;
 					}
 				}
@@ -2172,7 +2176,7 @@ function rrdgraph_opts($graph, $graph_data_array, $version) {
 
 			case "only_graph":
 				if ($version != RRD_VERSION_1_0 && $version != RRD_VERSION_1_2) {
-					if ($key == CHECKED) {
+					if ($value == CHECKED) {
 						$option .= "--only-graph" . RRD_NL;
 					}
 				}
@@ -2180,7 +2184,7 @@ function rrdgraph_opts($graph, $graph_data_array, $version) {
 
 			case "full_size_mode":
 				if ($version != RRD_VERSION_1_0 && $version != RRD_VERSION_1_2) {
-					if ($key == CHECKED) {
+					if ($value == CHECKED) {
 						$option .= "--full-size-mode" . RRD_NL;
 					}
 				}
@@ -2188,7 +2192,7 @@ function rrdgraph_opts($graph, $graph_data_array, $version) {
 
 			case "no_gridfit":
 				if ($version != RRD_VERSION_1_0 && $version != RRD_VERSION_1_2) {
-					if ($key == CHECKED) {
+					if ($value == CHECKED) {
 						$option .= "--no-gridfit" . RRD_NL;
 					}
 				}
@@ -2196,7 +2200,7 @@ function rrdgraph_opts($graph, $graph_data_array, $version) {
 
 			case "x_grid":
 				if ($version != RRD_VERSION_1_0 && $version != RRD_VERSION_1_2) {
-					if (!empty($key)) {
+					if (!empty($value)) {
 						$option .= "--x-grid \"" . $value . "\"" . RRD_NL;
 					}
 				}
@@ -2204,7 +2208,7 @@ function rrdgraph_opts($graph, $graph_data_array, $version) {
 
 			case "unit_length":
 				if ($version != RRD_VERSION_1_0 && $version != RRD_VERSION_1_2) {
-					if (!empty($key)) {
+					if (!empty($value)) {
 						$option .= "--units-length " . $value . RRD_NL;
 					}
 				}
@@ -2212,7 +2216,7 @@ function rrdgraph_opts($graph, $graph_data_array, $version) {
 
 			case "font_render_mode":
 				if ($version != RRD_VERSION_1_0 && $version != RRD_VERSION_1_2) {
-					if (!empty($key)) {
+					if (!empty($value)) {
 						$option .= "--font-render-mode " . $value . RRD_NL;
 					}
 				}
@@ -2220,7 +2224,7 @@ function rrdgraph_opts($graph, $graph_data_array, $version) {
 
 			case "font_smoothing_threshold":
 				if ($version != RRD_VERSION_1_0 && $version != RRD_VERSION_1_2) {
-					if (!empty($key)) {
+					if (!empty($value)) {
 						$option .= "--font-smoothing-threshold " . $value . RRD_NL;
 					}
 				}
@@ -2228,7 +2232,7 @@ function rrdgraph_opts($graph, $graph_data_array, $version) {
 
 			case "graph_render_mode":
 				if ($version != RRD_VERSION_1_0 && $version != RRD_VERSION_1_2) {
-					if (!empty($key)) {
+					if (!empty($value)) {
 						$option .= "--graph-render-mode " . $value . RRD_NL;
 					}
 				}
@@ -2236,7 +2240,7 @@ function rrdgraph_opts($graph, $graph_data_array, $version) {
 
 			case "pango_markup":
 				if ($version != RRD_VERSION_1_0 && $version != RRD_VERSION_1_2) {
-					if (!empty($key)) {
+					if (!empty($value)) {
 						$option .= "--pango-markup \"" . $value . "\"" . RRD_NL;
 					}
 				}
@@ -2244,7 +2248,7 @@ function rrdgraph_opts($graph, $graph_data_array, $version) {
 
 			case "interlaced":
 				if ($version != RRD_VERSION_1_0 && $version != RRD_VERSION_1_2) {
-					if ($key == CHECKED) {
+					if ($value == CHECKED) {
 						$option .= "--interlaced" . RRD_NL;
 					}
 				}
@@ -2252,7 +2256,7 @@ function rrdgraph_opts($graph, $graph_data_array, $version) {
 
 			case "tab_width":
 				if ($version != RRD_VERSION_1_0 && $version != RRD_VERSION_1_2) {
-					if (!empty($key)) {
+					if (!empty($value)) {
 						$option .= "--tab-width " . $value . RRD_NL;
 					}
 				}
@@ -2260,7 +2264,7 @@ function rrdgraph_opts($graph, $graph_data_array, $version) {
 
 			case "watermark":
 				if ($version != RRD_VERSION_1_0 && $version != RRD_VERSION_1_2) {
-					if (!empty($key)) {
+					if (!empty($value)) {
 						$option .= "--watermark \"" . $value . "\"" . RRD_NL;
 					}
 				}

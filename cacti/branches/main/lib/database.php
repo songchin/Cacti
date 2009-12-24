@@ -286,6 +286,10 @@ function array_to_sql_or($array, $sql_column) {
 function db_replace($table_name, $array_items, $keyCols, $db_conn = FALSE) {
 	global $cnn_id;
 
+	if (read_config_option("log_verbosity") == POLLER_VERBOSITY_DEVDBG) {
+		cacti_log("DEVEL: SQL Replace on table '$table_name': \"" . serialize($array_items) . "\"", FALSE);
+	}
+
 	/* check for a connection being passed, if not use legacy behavior */
 	if (!$db_conn) {
 		$db_conn = $cnn_id;
@@ -303,6 +307,10 @@ function db_replace($table_name, $array_items, $keyCols, $db_conn = FALSE) {
    @returns - the auto incriment id column (if applicable) */
 function sql_save($array_items, $table_name, $key_cols = "id", $autoinc = TRUE, $db_conn = FALSE) {
 	global $cnn_id;
+
+	if (read_config_option("log_verbosity") == POLLER_VERBOSITY_DEVDBG) {
+		cacti_log("DEVEL: SQL Save on table '$table_name': \"" . serialize($array_items) . "\"", FALSE);
+	}
 
 	/* check for a connection being passed, if not use legacy behavior */
 	if (!$db_conn) {

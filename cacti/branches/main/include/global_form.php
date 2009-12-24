@@ -537,7 +537,7 @@ $struct_graph_grid = array(
 		"max_length" => "50",
 		"default" => "",
 		"size" => "30",
-		"description" => __("Format is grid step:label factor") . "<br>" .
+		"description" => __("Format is ") . "<strong>" . __("grid step:label factor") . "</strong><br>" .
 						__("Y-axis grid lines appear at each grid step interval. Labels are placed every label factor lines. You can specify 'none' to suppress the grid and labels altogether."),
 		),
 	"alt_y_grid" => array(
