@@ -430,10 +430,8 @@ function form_save() {
 		db_execute("DELETE FROM user_auth_realm WHERE user_id = " . $user_id);
 
 		while (list($var, $val) = each($_POST)) {
-			if (eregi("^[section]", $var)) {
-				if (substr($var, 0, 7) == "section") {
-				    db_execute("REPLACE INTO user_auth_realm (user_id,realm_id) VALUES (" . $user_id . "," . substr($var, 7) . ")");
-				}
+			if (substr($var, 0, 7) == "section") {
+			    db_execute("REPLACE INTO user_auth_realm (user_id,realm_id) VALUES (" . $user_id . "," . substr($var, 7) . ")");
 			}
 		}
 	}elseif (isset($_POST["save_component_graph_settings"])) {

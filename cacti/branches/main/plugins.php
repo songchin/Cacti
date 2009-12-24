@@ -143,8 +143,8 @@ function plugins_show($status = 'all') {
 
 	/* validate contents of the plugin directory */
 	while (($file = readdir($dh)) !== false) {
-		/* only scan directories */
-		if (is_dir("$path/$file") && $file != "." && $file != "..") {
+		/* only scan directories, ignore unix hidden directories */
+		if (is_dir("$path/$file") && (! preg_match("/^\..*/", $file))) {
 			/* is a plugin directory */
 			if (file_exists("$path/$file/setup.php")) {
 				/* the plugin is not installed */
