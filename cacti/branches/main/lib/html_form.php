@@ -1023,7 +1023,7 @@ function form_save_button_alt($cancel_action = "", $action = "save", $force_type
 
 	if ((empty($force_type)) || (substr_count($cancel_action,"return"))) {
 		if (empty($_GET[$key_field])) {
-			$sname = "create";
+			$sname = "save";
 			$salt  = __("Create");
 		}else{
 			$sname = "save";
@@ -1040,7 +1040,7 @@ function form_save_button_alt($cancel_action = "", $action = "save", $force_type
 		$sname = "save";
 		$salt  = __("Save");
 	}elseif ($force_type == "create") {
-		$sname = "create";
+		$sname = "save";
 		$salt  = __("Create");
 	}elseif ($force_type == "import") {
 		$sname = "create";
