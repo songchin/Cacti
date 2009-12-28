@@ -171,11 +171,11 @@ function form_save() {
 		$save2["t_colortag_arrow"] = form_input_validate((isset($_POST["t_colortag_arrow"]) ? $_POST["t_colortag_arrow"] : ""), "t_colortag_arrow", "", true, 3);
 		$save2["colortag_arrow"] = form_input_validate($_POST["colortag_arrow"], "colortag_arrow", "^[0-9a-fA-F]{0,8}$", true, 3);
 		$save2["t_font_render_mode"] = form_input_validate((isset($_POST["t_font_render_mode"]) ? $_POST["t_font_render_mode"] : ""), "t_font_render_mode", "", true, 3);
-		$save2["font_render_mode"] = form_input_validate($_POST["font_render_mode"], "font_render_mode", "^[0-9]+$", true, 3);
+		$save2["font_render_mode"] = form_input_validate($_POST["font_render_mode"], "font_render_mode", "", true, 3);
 		$save2["t_font_smoothing_threshold"] = form_input_validate((isset($_POST["t_font_smoothing_threshold"]) ? $_POST["t_font_smoothing_threshold"] : ""), "t_font_smoothing_threshold", "", true, 3);
 		$save2["font_smoothing_threshold"] = form_input_validate($_POST["font_smoothing_threshold"], "font_smoothing_threshold", "^[0-9]*$", true, 3);
 		$save2["t_graph_render_mode"] = form_input_validate((isset($_POST["t_graph_render_mode"]) ? $_POST["t_graph_render_mode"] : ""), "t_graph_render_mode", "", true, 3);
-		$save2["graph_render_mode"] = form_input_validate($_POST["graph_render_mode"], "graph_render_mode", "^[0-9]+$", true, 3);
+		$save2["graph_render_mode"] = form_input_validate($_POST["graph_render_mode"], "graph_render_mode", "", true, 3);
 		$save2["t_pango_markup"] = form_input_validate((isset($_POST["t_pango_markup"]) ? $_POST["t_pango_markup"] : ""), "t_pango_markup", "", true, 3);
 		$save2["pango_markup"] = form_input_validate($_POST["pango_markup"], "pango_markup", "", true, 3);
 		$save2["t_interlaced"] = form_input_validate((isset($_POST["t_interlaced"]) ? $_POST["t_interlaced"] : ""), "t_interlaced", "", true, 3);
