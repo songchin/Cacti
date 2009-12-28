@@ -81,6 +81,7 @@ img_filter {
 	left: 0px;
 	top: 5.4em;
 	width: 100%;
+	height: 98%;
 }
 
 #vsplitter {
@@ -115,6 +116,7 @@ img_filter {
 	padding-left: 10px;
 	padding-right: 8px;
 	width: auto;
+	height: 86%;
 }
 
 #graph_tree {
@@ -127,6 +129,7 @@ img_filter {
 	padding-left: 3px;
 	padding-right: 3px;
 	padding-top: 8px;
+	height: 100%;
 	z-index: 1;
 }
 
@@ -141,6 +144,7 @@ img_filter {
 	padding-left: 8px;
 	padding-right: 8px;
 	width: auto;
+	height: 86%;
 }
 
 #graph_content {
@@ -155,6 +159,7 @@ img_filter {
 	padding-left: 5px;
 	padding-right: 18px;
 	width: 98.5%;
+	height: 86%;
 }
 
 /* menu classes */
@@ -169,6 +174,7 @@ img_filter {
 	padding-right: 3px;
 	padding-top: 8px;
 	width: 165px;
+	height: 100%;
 	z-index: 1;
 }
 
