@@ -862,7 +862,9 @@ function sizeContentDivs() {
 	/* IE6 will enter infinite loop here */
 	if (browser != "IE" || (browser == "IE" && browserVersion != 6)) {
 		/* size the menu first */
-		document.getElementById("menu").style.height = parseInt(bottom-top) + "px";
+		if (document.getElementById("menu")) {
+			document.getElementById("menu").style.height = parseInt(bottom-top) + "px";
+		}
 
 		/* size the remaining content */
 		if (document.getElementById("content")) {
