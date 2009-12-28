@@ -612,14 +612,6 @@ $struct_graph_color = array(
 		"description" => __("Color tag of the background."),
 		"class" => "colortags",
 		),
-#	"colortag_back_alpha" => array(
-#		"friendly_name" => __("Opacity/Alpha Channel for Background"),
-#		"method" => "drop_array",
-#		"default" => "FF",
-#		"array" => $graph_color_alpha,
-#		"description" => __("The opacity/alpha channel of the color. Not available for rrdtool-1.0.x."),
-#		"class" => "colortag_alpha not_RRD_1_0_x",
-#		),
 	"colortag_canvas" => array(
 		"friendly_name" => __("Canvas (--color CANVAS &lt;rrggbb[aa]&gt;)"),
 		"method" => "textbox",
@@ -629,14 +621,6 @@ $struct_graph_color = array(
 		"description" => __("Color tag of the background of the actual graph."),
 		"class" => "colortags",
 		),
-#	"colortag_canvas_alpha" => array(
-#		"friendly_name" => __("Opacity/Alpha Channel for Canvas"),
-#		"method" => "drop_array",
-#		"default" => "FF",
-#		"array" => $graph_color_alpha,
-#		"description" => __("The opacity/alpha channel of the color. Not available for rrdtool-1.0.x."),
-#		"class" => "colortag_alpha not_RRD_1_0_x",
-#		),
 	"colortag_shadea" => array(
 		"friendly_name" => __("ShadeA (--color SHADEA &lt;rrggbb[aa]&gt;)"),
 		"method" => "textbox",
@@ -646,14 +630,6 @@ $struct_graph_color = array(
 		"description" => __("Color tag of the left and top border."),
 		"class" => "colortags",
 		),
-#	"colortag_shadea_alpha" => array(
-#		"friendly_name" => __("Opacity/Alpha Channel for ShadeA"),
-#		"method" => "drop_array",
-#		"default" => "FF",
-#		"array" => $graph_color_alpha,
-#		"description" => __("The opacity/alpha channel of the color. Not available for rrdtool-1.0.x."),
-#		"class" => "colortag_alpha not_RRD_1_0_x",
-#		),
 	"colortag_shadeb" => array(
 		"friendly_name" => __("ShadeB (--color SHADEB &lt;rrggbb[aa]&gt;)"),
 		"method" => "textbox",
@@ -663,14 +639,6 @@ $struct_graph_color = array(
 		"description" => __("Color tag of the right and bottom border."),
 		"class" => "colortags",
 		),
-#	"colortag_shadeb_alpha" => array(
-#		"friendly_name" => __("Opacity/Alpha Channel for ShadeB"),
-#		"method" => "drop_array",
-#		"default" => "FF",
-#		"array" => $graph_color_alpha,
-#		"description" => __("The opacity/alpha channel of the color. Not available for rrdtool-1.0.x."),
-#		"class" => "colortag_alpha not_RRD_1_0_x",
-#		),
 	"colortag_grid" => array(
 		"friendly_name" => __("Grid (--color GRID &lt;rrggbb[aa]&gt;)"),
 		"method" => "textbox",
@@ -680,14 +648,6 @@ $struct_graph_color = array(
 		"description" => __("Color tag of the grid."),
 		"class" => "colortags",
 		),
-#	"colortag_grid_alpha" => array(
-#		"friendly_name" => __("Opacity/Alpha Channel for Grid"),
-#		"method" => "drop_array",
-#		"default" => "FF",
-#		"array" => $graph_color_alpha,
-#		"description" => __("The opacity/alpha channel of the color. Not available for rrdtool-1.0.x."),
-#		"class" => "colortag_alpha not_RRD_1_0_x",
-#		),
 	"colortag_mgrid" => array(
 		"friendly_name" => __("Major Grid (--color MGRID &lt;rrggbb[aa]&gt;)"),
 		"method" => "textbox",
@@ -697,14 +657,6 @@ $struct_graph_color = array(
 		"description" => __("Color tag of the major grid."),
 		"class" => "colortags",
 		),
-#	"colortag_mgrid_alpha" => array(
-#		"friendly_name" => __("Opacity/Alpha Channel for MGrid"),
-#		"method" => "drop_array",
-#		"default" => "FF",
-#		"array" => $graph_color_alpha,
-#		"description" => __("The opacity/alpha channel of the color. Not available for rrdtool-1.0.x."),
-#		"class" => "colortag_alpha not_RRD_1_0_x",
-#		),
 	"colortag_font" => array(
 		"friendly_name" => __("Font (--color FONT &lt;rrggbb[aa]&gt;)"),
 		"method" => "textbox",
@@ -714,14 +666,6 @@ $struct_graph_color = array(
 		"description" => __("Color tag of the font."),
 		"class" => "colortags",
 		),
-#	"colortag_font_alpha" => array(
-#		"friendly_name" => __("Opacity/Alpha Channel for Font"),
-#		"method" => "drop_array",
-#		"default" => "FF",
-#		"array" => $graph_color_alpha,
-#		"description" => __("The opacity/alpha channel of the color. Not available for rrdtool-1.0.x."),
-#		"class" => "colortag_alpha not_RRD_1_0_x",
-#		),
 	"colortag_axis" => array(
 		"friendly_name" => __("Axis (--color AXIS &lt;rrggbb[aa]&gt;)"),
 		"method" => "textbox",
@@ -731,14 +675,6 @@ $struct_graph_color = array(
 		"description" => __("Color tag of the axis."),
 		"class" => "colortags",
 		),
-#	"colortag_axis_alpha" => array(
-#		"friendly_name" => __("Opacity/Alpha Channel for Axis"),
-#		"method" => "drop_array",
-#		"default" => "FF",
-#		"array" => $graph_color_alpha,
-#		"description" => __("The opacity/alpha channel of the color. Not available for rrdtool-1.0.x."),
-#		"class" => "colortag_alpha not_RRD_1_0_x",
-#		),
 	"colortag_frame" => array(
 		"friendly_name" => __("Frame (--color FRAME &lt;rrggbb[aa]&gt;)"),
 		"method" => "textbox",
@@ -748,14 +684,6 @@ $struct_graph_color = array(
 		"description" => __("Color tag of the frame."),
 		"class" => "colortags",
 		),
-#	"colortag_frame_alpha" => array(
-#		"friendly_name" => __("Opacity/Alpha Channel for Frame"),
-#		"method" => "drop_array",
-#		"default" => "FF",
-#		"array" => $graph_color_alpha,
-#		"description" => __("The opacity/alpha channel of the color. Not available for rrdtool-1.0.x."),
-#		"class" => "colortag_alpha not_RRD_1_0_x",
-#		),
 	"colortag_arrow" => array(
 		"friendly_name" => __("Arrow (--color ARROW &lt;rrggbb[aa]&gt;)"),
 		"method" => "textbox",
@@ -765,14 +693,6 @@ $struct_graph_color = array(
 		"description" => __("Color tag of the arrow."),
 		"class" => "colortags",
 		),
-#	"colortag_arrow_alpha" => array(
-#		"friendly_name" => __("Opacity/Alpha Channel for Arrow"),
-#		"method" => "drop_array",
-#		"default" => "FF",
-#		"array" => $graph_color_alpha,
-#		"description" => __("The opacity/alpha channel of the color. Not available for rrdtool-1.0.x."),
-#		"class" => "colortag_alpha not_RRD_1_0_x",
-#		),
 	);
 
 $struct_graph_misc = array(
