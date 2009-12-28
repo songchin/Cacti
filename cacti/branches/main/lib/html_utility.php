@@ -277,6 +277,23 @@ function get_colored_device_status($disabled, $status) {
 	}
 }
 
+/* get_colored_poller_status - given a poller's status, return the colored text in HTML
+     format suitable for display
+   @arg $disabled (bool) - true if the device is disabled, false is it is not
+   @arg $last_update - the time which this poller was last updated in timestamp format
+   @returns - a string containing html that represents the device's current status */
+function get_colored_poller_status($disabled, $last_update) {
+	if ($disabled) {
+		return "<span class=\"disabled\"" . __("Disabled") . "</span>";
+	}elseif (strtotime($last_update) == 0) {
+		return "<span class=\"new\">" . __("Unknown") . "</span>";
+	}elseif (time() - strtotime($last_update) > read_config_option("poller_interval") + 10) {
+		return "<span class=\"down\">" . __("Down") . "</span>";
+	}else{
+		return "<span class=\"up\">" . __("Up") . "</span>";
+	}
+}
+
 /* get_current_graph_start - determine the correct graph start time selected using
      the timespan selector
    @returns - the number of seconds relative to now where the graph should begin */

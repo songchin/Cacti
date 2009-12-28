@@ -424,5 +424,17 @@ function upgrade_to_0_8_8() {
 		}
 	}
 	}
+
+	/* make the poller's ip address varchar() */
+	db_install_execute("0.8.8", "ALTER TABLE poller CHANGE COLUMN ip_address varchar(30) not null default ''");
+
+	/* insert the default poller into the database */
+	db_install_execute("0.8.8", "INSERT INTO `poller` VALUES (1,'','Main Cacti Poller','localhost','127.0.0.1','0000-00-00 00:00:00');");
+
+	/* update all devices to use poller 1, or the main poller */
+	db_install_execute("0.8.8", "UPDATE host SET poller_id=1 WHERE poller_id=0");
+
+	/* update the poller_items table to reflect the host change */
+	db_install_execute("0.8.8", "UPDATE poller_item SET poller_id=1 WHERE poller_id=0");
 }
 

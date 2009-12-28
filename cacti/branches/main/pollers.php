@@ -64,8 +64,7 @@ $fields_poller_edit = array(
 		"friendly_name" => __("Disabled"),
 		"description" => __("Check this box if you wish for this poller to be disabled."),
 		"value" => "|arg1:disabled|",
-		"default" => "",
-		"form_id" => "|arg1:id|"
+		"default" => ""
 		),
 	"id" => array(
 		"method" => "hidden_zero",
@@ -114,16 +113,10 @@ function form_save() {
 	if (isset($_POST["save_component_poller"])) {
 		$save["id"]          = $_POST["id"];
 
-		if (isset($_POST["disabled"])) {
-			$_POST["disabled"] = "";
-		}else{
-			$_POST["disabled"] = CHECKED;
-		}
-
-		$save["disabled"]    = form_input_validate($_POST["disabled"], "disabled", "", false, 3);
-		$save["description"] = form_input_validate($_POST["description"], "description", "", false, 3);
-		$save["hostname"]    = form_input_validate($_POST["hostname"], "hostname", "", true, 3);
-		$save["ip_address"]  = form_input_validate($_POST["ip_address"], "ip_address", "", true, 3);
+		$save["disabled"]    = form_input_validate((isset($_POST["disabled"]) ? get_request_var_post("disabled"):""), "disabled", "", true, 3);
+		$save["description"] = form_input_validate(get_request_var_post("description"), "description", "", false, 3);
+		$save["hostname"]    = form_input_validate(get_request_var_post("hostname"), "hostname", "", true, 3);
+		$save["ip_address"]  = form_input_validate(get_request_var_post("ip_address"), "ip_address", "", true, 3);
 
 		if (!is_error_message()) {
 			$poller_id = sql_save($save, "poller");
@@ -163,7 +156,7 @@ function form_actions() {
 				input_validate_input_number($poller_id);
 				/* ==================================================== */
 
-				if (sizeof(db_fetch_assoc("SELECT * FROM host WHERE poller_id=$poller_id LIMIT 1"))) {
+				if (sizeof(db_fetch_assoc("SELECT * FROM host WHERE poller_id=$poller_id LIMIT 1")) || $poller_id == 1) {
 					$bad_ids[] = $poller_id;
 				}else{
 					$poller_ids[] = $poller_id;
@@ -174,7 +167,7 @@ function form_actions() {
 			if (isset($bad_ids)) {
 				$message = "";
 				foreach($bad_ids as $poller_id) {
-					$message .= (strlen($message) ? "<br>":"") . "<i>Poller " . $rra_id . " is in use and can not be removed</i>\n";
+					$message .= (strlen($message) ? "<br>":"") . "<i>" . sprintf(__("Poller '%s' is in use or is the system poller and can not be removed"), $poller_id) . "</i>\n";
 				}
 
 				$_SESSION['sess_message_poller_ref_int'] = array('message' => "<font size=-2>$message</font>", 'type' => 'info');
@@ -415,7 +408,11 @@ function poller() {
 	html_end_box(false);
 
 	/* form the 'where' clause for our main sql query */
-	$sql_where = "WHERE (poller.description LIKE '%%" . $_REQUEST["filter"] . "%%')";
+	if ($_REQUEST["filter"] != "") {
+		$sql_where = "WHERE (p.description LIKE '%%" . $_REQUEST["filter"] . "%%')";
+	}else{
+		$sql_where = "";
+	}
 
 	html_start_box("", "100", $colors["header"], "0", "center", "");
 
@@ -430,9 +427,12 @@ function poller() {
 		$rows = get_request_var_request("rows");
 	}
 
-	$poller_list = db_fetch_assoc("SELECT *
-		FROM poller
+	$poller_list = db_fetch_assoc("SELECT p.*,
+		sum(CASE WHEN h.poller_id IS NOT NULL THEN 1 ELSE NULL END) AS total_devices
+		FROM poller AS p
+		LEFT JOIN host AS h ON h.poller_id=p.id
 		$sql_where
+		GROUP BY p.id
 		ORDER BY " . get_request_var_request('sort_column') . " " . get_request_var_request('sort_direction') .
 		" LIMIT " . ($rows*(get_request_var_request("page")-1)) . "," . $rows);
 
@@ -445,21 +445,23 @@ function poller() {
 	$display_text = array(
 		"description" => array(__("Description"), "ASC"),
 		"id" => array(__("ID"), "ASC"),
+		"total_devices" => array(__("Devices"), "DESC"),
+		"nosort2" => array(__("Poller Items"), "DESC"),
 		"hostname" => array(__("Hostname"), "ASC"),
 		"nosort1" => array(__("Status"), ""),
 		"last_update" => array(__("Last Updated"), "ASC"));
 
 	html_header_sort_checkbox($display_text, get_request_var_request("sort_column"), get_request_var_request("sort_direction"));
 
-	$status = "Howdie";
-
 	if (sizeof($poller_list) > 0) {
 		foreach ($poller_list as $poller) {
 			form_alternate_row_color('line' . $poller["id"], true);
 			form_selectable_cell("<a class='linkEditMain' href='" . htmlspecialchars("pollers.php?action=edit&id=" . $poller["id"]) . "'>" . (strlen($_REQUEST["filter"]) ? preg_replace("/(" . preg_quote($_REQUEST["filter"]) . ")/i", "<span class=\"filter\">\\1</span>", $poller["description"]) : $poller["description"]) . "</a>", $poller["id"]);
 			form_selectable_cell($poller["id"], $poller["id"]);
+			form_selectable_cell($poller["total_devices"], $poller["id"]);
+			form_selectable_cell(db_fetch_cell("SELECT count(*) FROM poller_item WHERE poller_id=" . $poller["id"]), $poller["id"]);
 			form_selectable_cell($poller["hostname"], $poller["id"]);
-			form_selectable_cell($status, $poller["id"]);
+			form_selectable_cell(get_colored_poller_status(($poller["disabled"] == CHECKED ? true : false), $poller["last_update"]), $poller["id"]);
 			form_selectable_cell($poller["last_update"], $poller["id"]);
 			form_checkbox_cell($poller["description"], $poller["id"]);
 			form_end_row();

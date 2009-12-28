@@ -223,7 +223,7 @@ while ($poller_runs_completed < $poller_runs) {
 	$max_threads = read_config_option("max_threads");
 
 	/* initialize poller_time and poller_output tables, check poller_output for issues */
-	db_execute("TRUNCATE TABLE poller_time");
+	db_execute("DELETE FROM poller_time WHERE poller_id=$poller_id");
 
 	$issues = db_fetch_assoc("SELECT local_data_id, rrd_name FROM poller_output" . ($poller_id == 0 ? "" : " WHERE poller_id=$poller_id "));
 	if (sizeof($issues)) {
@@ -245,7 +245,7 @@ while ($poller_runs_completed < $poller_runs) {
 		}
 
 		cacti_log("WARNING: Poller Output Table not Empty.  Poller ID: '$poller_id', Issues: '$count', Data Sources: $issue_list", FALSE, "POLLER");
-		db_execute("TRUNCATE TABLE poller_output");
+		db_execute("DELETE FROM poller_output WHERE poller_id=$poller_id");
 	}
 
 	/* mainline */
@@ -350,7 +350,7 @@ while ($poller_runs_completed < $poller_runs) {
 
 		$rrds_processed = 0;
 		while (1) {
-			$polling_items = db_fetch_assoc("select poller_id, end_time from poller_time where poller_id=$poller_id");
+			$polling_items = db_fetch_assoc("SELECT poller_id, end_time FROM poller_time WHERE poller_id=$poller_id");
 
 			if (sizeof($polling_items) >= $process_number) {
 				$rrds_processed = $rrds_processed + process_poller_output($rrdtool_pipe, TRUE);

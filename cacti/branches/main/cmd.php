@@ -70,7 +70,7 @@ $polling_interval = read_config_option("poller_interval");
 $parms = $_SERVER["argv"];
 array_shift($parms);
 
-/* initialize the poller id to 0 */
+/* initialize the poller id to 0 without a poller specified */
 $poller_id = 0;
 
 if (sizeof($parms) == 0) {
@@ -524,13 +524,15 @@ if ((sizeof($polling_items) > 0) && (read_config_option("poller_enabled") == CHE
 record_cmdphp_done($poller_id);
 
 function record_cmdphp_done($poller_id) {
+	global $start;
+
 	/* let the poller server know about cmd.php being finished */
-	db_execute("insert into poller_time (poller_id, start_time, end_time) values ($poller_id, NOW(), NOW())");
+	db_execute("INSERT INTO poller_time (pid, poller_id, start_time, end_time) values (" . getmypid() . ", $poller_id, '$start', NOW())");
 }
 
 function display_help() {
 	echo "Cacti cmd.php Data Collector, Copyright 2007-2009 - The Cacti Group\n\n";
-	echo "The slower, yet easier to run Data Collector for Cacti\n\n";
+	echo "The slower, yet easier to use Data Collector for Cacti\n\n";
 	echo "usage: cmd.php [--poller=n] [--first=n] [--last=n]\n\n";
 	echo "Optional:\n";
 	echo "    --poller=n     0, Defines which Cacti poller will be handles the polling of this device.\n";

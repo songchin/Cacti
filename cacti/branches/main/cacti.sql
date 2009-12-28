@@ -2333,14 +2333,15 @@ CREATE TABLE poller (
   disabled char(2) default '',
   description varchar(45) NOT NULL default '',
   hostname varchar(250) NOT NULL default '',
-  ip_address int(11) unsigned NOT NULL default '0',
+  ip_address varchar(30) NOT NULL default '',
   last_update datetime NOT NULL default '0000-00-00 00:00:00',
   PRIMARY KEY  (id)
-) TYPE=MyISAM;
+) TYPE=MyISAM AUTO_INCREMENT=2;
 
 --
 -- Dumping data for table `poller`
 --
+INSERT INTO `poller` VALUES (1,'','Main Cacti Poller','localhost','127.0.0.1','0000-00-00 00:00:00');
 
 
 --
