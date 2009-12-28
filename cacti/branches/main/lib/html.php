@@ -967,13 +967,13 @@ function html_selected_tab($name, $location) {
 						return true;
 				}
 			}
+		}else if ($name == "console" && $_COOKIE["navbar_id"] == "console") {
+			return true;
 		}else if (substr_count($_SERVER["REQUEST_URI"], $location)) {
 			return true;
 		}
-	}else{
-		if ($name == "console") {
-			return true;
-		}
+	}elseif ($name == "console") {
+		return true;
 	}
 
 	return false;
