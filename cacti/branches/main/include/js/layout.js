@@ -833,9 +833,6 @@ function pageInitialize() {
 	document.onmousemove = MouseMove;
 	document.onmouseup   = MouseUp;
 
-	/* initialize the page splitter as required */
-	vSplitterPos();
-
 	/* set document focus */
 	setFocus();
 
@@ -847,6 +844,9 @@ function pageInitialize() {
 
 	/* size the content divs */
 	sizeContentDivs();
+
+	/* initialize the page splitter as required */
+	vSplitterPos();
 
 	/* restore column widths */
 	initColumnWidths();
