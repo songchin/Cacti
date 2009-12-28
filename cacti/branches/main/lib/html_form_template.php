@@ -36,8 +36,7 @@
    @arg $snmp_query_graph_id - if this graph template is part of a data query, specify the graph id here. this
      will be used to determine if a given field is using suggested values */
 function draw_nontemplated_fields_graph($graph_template_id, &$values_array, $field_name_format = "|field|", $header_title = "", $alternate_colors = true, $include_hidden_fields = true, $snmp_query_graph_id = 0) {
-	global $colors;
-	global $struct_graph_labels, $struct_graph_right_axis, $struct_graph_size, $struct_graph_limits, $struct_graph_grid, $struct_graph_color, $struct_graph_misc, $struct_graph_cacti;
+	global $colors, $struct_graph;
 
 	$form_array = array();
 	$draw_any_items = false;
@@ -45,7 +44,6 @@ function draw_nontemplated_fields_graph($graph_template_id, &$values_array, $fie
 	/* fetch information about the graph template */
 	$graph_template = db_fetch_row("select * from graph_templates_graph where graph_template_id=$graph_template_id and local_graph_id=0");
 
-	$struct_graph = $struct_graph_labels + $struct_graph_right_axis + $struct_graph_size + $struct_graph_limits + $struct_graph_grid + $struct_graph_color + $struct_graph_misc + $struct_graph_cacti;
 	reset($struct_graph);
 	while (list($field_name, $field_array) = each($struct_graph)) {
 		/* find our field name */

@@ -2010,7 +2010,7 @@ function rrdgraph_image_format($image_format_id, $rrdtool_version) {
 			break;
 
 		case RRD_VERSION_1_2:
-			if ($image_format_id == IMAGE_TYPE_PNG || $image_format_id == IMAGE_TYPE_GIF || $image_format_id == IMAGE_TYPE_SVG) {
+			if ($image_format_id == IMAGE_TYPE_PNG || $image_format_id == IMAGE_TYPE_SVG) {
 				$format .= $image_types{$image_format_id};
 			} else {
 				$format .= $image_types{IMAGE_TYPE_PNG};
@@ -2018,7 +2018,7 @@ function rrdgraph_image_format($image_format_id, $rrdtool_version) {
 			break;
 
 		case RRD_VERSION_1_3:
-			if ($image_format_id == IMAGE_TYPE_PNG || $image_format_id == IMAGE_TYPE_GIF || $image_format_id == IMAGE_TYPE_SVG) {
+			if ($image_format_id == IMAGE_TYPE_PNG || $image_format_id == IMAGE_TYPE_SVG) {
 				$format .= $image_types{$image_format_id};
 			} else {
 				$format .= $image_types{IMAGE_TYPE_PNG};
@@ -2026,7 +2026,7 @@ function rrdgraph_image_format($image_format_id, $rrdtool_version) {
 			break;
 
 		case RRD_VERSION_1_4:
-			if ($image_format_id == IMAGE_TYPE_PNG || $image_format_id == IMAGE_TYPE_GIF || $image_format_id == IMAGE_TYPE_SVG) {
+			if ($image_format_id == IMAGE_TYPE_PNG || $image_format_id == IMAGE_TYPE_SVG) {
 				$format .= $image_types{$image_format_id};
 			} else {
 				$format .= $image_types{IMAGE_TYPE_PNG};
@@ -2153,7 +2153,7 @@ function rrdgraph_opts($graph, $graph_data_array, $version) {
 			case "right_axis":
 				if ($version != RRD_VERSION_1_0 && $version != RRD_VERSION_1_2) {
 					if (!empty($value)) {
-						$option .= "--right-axis" . $value . RRD_NL;
+						$option .= "--right-axis " . $value . RRD_NL;
 					}
 				}
 				break;
@@ -2169,7 +2169,8 @@ function rrdgraph_opts($graph, $graph_data_array, $version) {
 			case "right_axis_format":
 				if ($version != RRD_VERSION_1_0 && $version != RRD_VERSION_1_2) {
 					if (!empty($value)) {
-						$option .= "--right-axis-format \"" . $value . "\"" . RRD_NL;
+						$format = db_fetch_cell('SELECT gprint_text from graph_templates_gprint WHERE id=' . $value);
+						$option .= "--right-axis-format \"" . $format . "\"" . RRD_NL;
 					}
 				}
 				break;

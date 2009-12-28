@@ -351,7 +351,7 @@ function upgrade_to_0_8_8() {
 	db_install_execute("0.8.8", "ALTER TABLE graph_templates_graph ADD COLUMN t_right_axis_label char(2) DEFAULT '0'");
 	db_install_execute("0.8.8", "ALTER TABLE graph_templates_graph ADD COLUMN right_axis_label varchar(200) DEFAULT NULL");
 	db_install_execute("0.8.8", "ALTER TABLE graph_templates_graph ADD COLUMN t_right_axis_format char(2) DEFAULT '0'");
-	db_install_execute("0.8.8", "ALTER TABLE graph_templates_graph ADD COLUMN right_axis_format varchar(200) DEFAULT NULL");
+	db_install_execute("0.8.8", "ALTER TABLE graph_templates_graph ADD COLUMN right_axis_format mediumint(8) DEFAULT NULL");
 	db_install_execute("0.8.8", "ALTER TABLE graph_templates_graph ADD COLUMN t_only_graph char(2) DEFAULT '0'");
 	db_install_execute("0.8.8", "ALTER TABLE graph_templates_graph ADD COLUMN only_graph char(2) DEFAULT NULL");
 	db_install_execute("0.8.8", "ALTER TABLE graph_templates_graph ADD COLUMN t_full_size_mode char(2) DEFAULT '0'");
@@ -359,7 +359,7 @@ function upgrade_to_0_8_8() {
 	db_install_execute("0.8.8", "ALTER TABLE graph_templates_graph ADD COLUMN t_no_gridfit char(2) DEFAULT '0'");
 	db_install_execute("0.8.8", "ALTER TABLE graph_templates_graph ADD COLUMN no_gridfit char(2) DEFAULT NULL");
 	db_install_execute("0.8.8", "ALTER TABLE graph_templates_graph ADD COLUMN t_x_grid char(2) DEFAULT '0'");
-	db_install_execute("0.8.8", "ALTER TABLE graph_templates_graph ADD COLUMN x_grid varchar(31) DEFAULT NULL");
+	db_install_execute("0.8.8", "ALTER TABLE graph_templates_graph ADD COLUMN x_grid varchar(100) DEFAULT NULL");
 	db_install_execute("0.8.8", "ALTER TABLE graph_templates_graph ADD COLUMN t_unit_length char(2) DEFAULT '0'");
 	db_install_execute("0.8.8", "ALTER TABLE graph_templates_graph ADD COLUMN unit_length varchar(10) DEFAULT NULL");
 	db_install_execute("0.8.8", "ALTER TABLE graph_templates_graph ADD COLUMN t_colortag_back char(2) DEFAULT '0'");

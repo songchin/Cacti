@@ -363,10 +363,30 @@ $fields_grprint_presets_edit = array(
 		)
 	);
 
-/* file: (graphs.php|graph_templates.php), action: (graph|template)_edit */
+/* file: (graphs.php|graph_templates.php), action: (graph|template)_edit
+ *
+ * struct_graph was split into different parts to group options as man rrdgrapg suggests
+ * by using array merge, all parts are added again at last
+ * class options are used to allow display modification, e.g. inter-dependencies
+ *
+ * some options are available only with certain RRDTool Versions
+ * most of them are upwards compatible (only know exception for now is GIF support)
+ * TODO: Here's the deal:
+ * To be prepared for complete database driven rrdtool option support,
+ * we will handle RRDTool support data-centric, that is: here.
+ * For ease of use with jQuery, we will use css class to tag version dependant options.
+ * For upward compatibility, we will use negative tags, e.g.
+ * class = not_RRD_1_0
+ * This way, we are prepared for new RRDTool versions to show up.
+ *
+ * Current drawback:
+ * If all options of a $struct_graph* are disabled, the user will see an empty table.
+ * Due to html_start_box, we don't have an id (or better: a class) to catch those empty tables.
+ * It is possible to solve this code-wise, but this would weaken the data-driven approach.
+ *  * */
 $struct_graph_labels = array(
 	"title" => array(
-		"friendly_name" => __("Title (--title)"),
+		"friendly_name" => __("Title (--title &lt;string&gt;)"),
 		"method" => "textbox",
 		"max_length" => "255",
 		"size" => "50",
@@ -374,7 +394,7 @@ $struct_graph_labels = array(
 		"description" => __("The name that is printed on the graph."),
 		),
 	"vertical_label" => array(
-		"friendly_name" => __("Vertical Label (--vertical-label)"),
+		"friendly_name" => __("Vertical Label (--vertical-label &lt;string&gt;)"),
 		"method" => "textbox",
 		"max_length" => "255",
 		"default" => "",
@@ -382,45 +402,46 @@ $struct_graph_labels = array(
 		"description" => __("The label vertically printed to the left of the graph."),
 		),
 	"image_format_id" => array(
-		"friendly_name" => __("Image Format (--imgformat)"),
+		"friendly_name" => __("Image Format (--imgformat &lt;format&gt;)"),
 		"method" => "drop_array",
 		"array" => $image_types,
 		"default" => IMAGE_TYPE_PNG,
-		"description" => __("The type of graph that is generated; PNG, GIF or SVG.  The selection of graph image type is very RRDtool dependent."),
+		"description" => __("The type of graph that is generated; PNG, GIF or SVG. The selection of graph image type is very RRDtool dependent."),
 		),
 	);
 
 $struct_graph_right_axis = array(
 	"right_axis" => array(
-		"friendly_name" => __("Right Axis (--right-axis)"),
+		"friendly_name" => __("Right Axis (--right-axis &lt;scale:shift&gt;)"),
 		"method" => "textbox",
 		"max_length" => "20",
 		"default" => "",
 		"size" => "20",
-		"description" => __("Format: scale:shift") . "<br>" .
-						__("A second axis will be drawn to the right of the graph. It is tied to the left axis via the scale and shift parameters."),
+		"description" => __("A second axis will be drawn to the right of the graph. It is tied to the left axis via the scale and shift parameters."),
+		"class" => "not_RRD_1_0_x not_RRD_1_2_x",
 		),
 	"right_axis_label" => array(
-		"friendly_name" => __("Label (--right-axis-label)"),
+		"friendly_name" => __("Right Axis Label (--right-axis-label &lt;string&gt;)"),
 		"method" => "textbox",
 		"max_length" => "200",
 		"default" => "",
 		"size" => "30",
 		"description" => __("The label for the right axis."),
+		"class" => "not_RRD_1_0_x not_RRD_1_2_x",
 		),
 	"right_axis_format" => array(
-		"friendly_name" => __("Format (--right-axis-format)"),
-		"method" => "textbox",
-		"max_length" => "200",
-		"default" => "",
-		"size" => "30",
-		"description" => __("By default the format of the axis lables gets determined automatically. If you want todo this your self, use this option with the same %lf arguments you know from the PRINT and GPRINT commands."),
+		"friendly_name" => __("Right Axis Format (--right-axis-format &lt;format&gt;)"),
+		"method" => "drop_sql",
+		"sql" => "select id,name from graph_templates_gprint order by name",
+		"default" => "3",
+		"description" => __("By default the format of the axis lables gets determined automatically. If you want to do this yourself, use this option with the same %lf arguments you know from the PRINT and GPRINT commands."),
+		"class" => "not_RRD_1_0_x not_RRD_1_2_x",
 		),
 	);
 
 $struct_graph_size = array(
 	"height" => array(
-		"friendly_name" => __("Height (--height)"),
+		"friendly_name" => __("Height (--height) &lt;pixels>"),
 		"method" => "textbox",
 		"max_length" => "50",
 		"default" => "120",
@@ -428,7 +449,7 @@ $struct_graph_size = array(
 		"description" => __("The height (in pixels) that the graph is."),
 		),
 	"width" => array(
-		"friendly_name" => __("Width (--width)"),
+		"friendly_name" => __("Width (--width) &lt;pixels>"),
 		"method" => "textbox",
 		"max_length" => "50",
 		"default" => "500",
@@ -439,13 +460,14 @@ $struct_graph_size = array(
 		"friendly_name" => __("Only Graph (--only-graph)"),
 		"method" => "checkbox",
 		"default" => "",
-		"description" => __("If you specify the --only-graph option and set the height < 32 pixels you will get a tiny graph image (thumbnail) to use as an icon for use in an overview, for example. All labeling will be stripped off the graph."),
+		"description" => __("If you specify the --only-graph option and set the height &lt; 32 pixels you will get a tiny graph image (thumbnail) to use as an icon for use in an overview, for example. All labeling will be stripped off the graph."),
 		),
 	"full_size_mode" => array(
 		"friendly_name" => __("Full Size Mode (--full-size-mode)"),
 		"method" => "checkbox",
 		"default" => "",
 		"description" => __("The width and height specify the final dimensions of the output image and the canvas is automatically resized to fit."),
+		"class" => "not_RRD_1_0_x not_RRD_1_2_x",
 		),
 	);
 
@@ -460,7 +482,7 @@ $struct_graph_limits = array(
 	"auto_scale_opts" => array(
 		"friendly_name" => __("Auto Scale Options"),
 		"method" => "radio",
-		"default" => "2",
+		"default" => GRAPH_ALT_AUTOSCALE_MIN,
 		"description" => __("Use") . "<br>" .
 			__("--alt-autoscale to scale to the absolute minimum and maximum") . "<br>" .
 		    __("--alt-autoscale-max to scale to the maximum value, using a given lower limit") . "<br>" .
@@ -471,14 +493,15 @@ $struct_graph_limits = array(
 				"radio_value" => GRAPH_ALT_AUTOSCALE,
 				"radio_caption" => __("Use") . " " . __("--alt-autoscale (ignoring given limits)"),
 				),
-			GRAPH_ALT_AUTOSCALE_MIN => array(
-				"radio_value" => GRAPH_ALT_AUTOSCALE_MIN,
-				"radio_caption" => __("Use") . " " . __("--alt-autoscale-max (accepting a lower limit)"),
-				),
 			GRAPH_ALT_AUTOSCALE_MAX => array(
 				"radio_value" => GRAPH_ALT_AUTOSCALE_MAX,
+				"radio_caption" => __("Use") . " " . __("--alt-autoscale-max (accepting a lower limit)"),
+			),
+			GRAPH_ALT_AUTOSCALE_MIN => array(
+				"radio_value" => GRAPH_ALT_AUTOSCALE_MIN,
 				"radio_caption" => __("Use") . " " . __("--alt-autoscale-min (accepting an upper limit, requires rrdtool 1.2.x)"),
-				),
+				"class" => "not_RRD_1_0_x not_RRD_1_2_x",
+			),
 			GRAPH_ALT_AUTOSCALE_LIMITS => array(
 				"radio_value" => GRAPH_ALT_AUTOSCALE_LIMITS,
 				"radio_caption" => __("Use") . " " . __("--alt-autoscale (accepting both limits, rrdtool default)"),
@@ -492,7 +515,7 @@ $struct_graph_limits = array(
 		"description" => __("Do not expand the lower and upper limit if the graph contains a value outside the valid range."),
 		),
 	"upper_limit" => array(
-		"friendly_name" => __("Upper Limit (--upper-limit)"),
+		"friendly_name" => __("Upper Limit (--upper-limit &lt;limit&gt;)"),
 		"method" => "textbox",
 		"max_length" => "50",
 		"default" => "100",
@@ -500,7 +523,7 @@ $struct_graph_limits = array(
 		"description" => __("The maximum vertical value for the rrd graph."),
 		),
 	"lower_limit" => array(
-		"friendly_name" => __("Lower Limit (--lower-limit)"),
+		"friendly_name" => __("Lower Limit (--lower-limit &lt;limit&gt;)"),
 		"method" => "textbox",
 		"max_length" => "255",
 		"default" => "0",
@@ -513,32 +536,32 @@ $struct_graph_limits = array(
 		"default" => "",
 		"description" => __("In order to avoid anti-aliasing blurring effects rrdtool snaps points to device resolution pixels, this results in a crisper appearance. If this is not to your liking, you can use this switch to turn this behaviour off.") . "<br>" .
 						"<strong>" . __("Note:") . " </strong>" . __("Gridfitting is turned off for PDF, EPS, SVG output by default."),
+		"class" => "not_RRD_1_0_x",
 		),
 	);
 
 $struct_graph_grid = array(
 	"x_grid" => array(
-		"friendly_name" => __("X Grid (--x-grid)"),
+		"friendly_name" => __("X Grid (--x-grid &lt;GTM:GST:MTM:MST:LTM:LST:LPR:LFM&gt;)"),
 		"method" => "textbox",
-		"max_length" => "31",
+		"max_length" => "100",
 		"default" => "",
-		"size" => "31",
-		"description" => __("Format is GTM:GST:MTM:MST:LTM:LST:LPR:LFM") . "<br>" .
-						__("The grid is defined by specifying a certain amount of time in the ?TM positions. You can choose from 'SECOND', 'MINUTE', 'HOUR', 'DAY',
-           'WEEK', 'MONTH' or 'YEAR'. Then you define how many of these should pass between each line or label.  This pair (?TM:?ST) needs to be
-           specified for the base grid (G??), the major grid (M??) and the labels (L??). For the labels you also must define a precision in LPR and a
-           strftime format string in LFM.  LPR defines where each label will be placed. If it is zero, the label will be placed right under the
-           corresponding line (useful for hours, dates etcetera).  If you specify a number of seconds here the label is centered on this interval
-           (useful for Monday, January etcetera)."),
+		"size" => "40",
+		"description" => __("The grid is defined by specifying a certain amount of time in the ?TM positions. You can choose from 'SECOND', 'MINUTE', 'HOUR', 'DAY', 'WEEK', 'MONTH' or 'YEAR'.") . "<br/>" .
+			__("Then you define how many of these should pass between each line or label.") . "<br/>" .
+			__("This pair (?TM:?ST) needs to be specified for the base grid (G??), the major grid (M??) and the labels (L??).") . "<br/>" .
+			__("For the labels you also must define a precision in LPR and a strftime format string in LFM.") . " " .
+			__("LPR defines where each label will be placed.") . " " .
+			__("If it is zero, the label will be placed right under the corresponding line (useful for hours, dates etcetera).") . " " .
+			__("If you specify a number of seconds here the label is centered on this interval (useful for Monday, January etcetera)."),
 		),
 	"unit_value" => array(		# TODO: shall we rename to y_grid?
-		"friendly_name" => __("Y Grid (--y-grid)"),
+		"friendly_name" => __("Y Grid (--y-grid &lt;grid step:label factor&gt;)"),
 		"method" => "textbox",
 		"max_length" => "50",
 		"default" => "",
 		"size" => "30",
-		"description" => __("Format is ") . "<strong>" . __("grid step:label factor") . "</strong><br>" .
-						__("Y-axis grid lines appear at each grid step interval. Labels are placed every label factor lines. You can specify 'none' to suppress the grid and labels altogether."),
+		"description" => __("Y-axis grid lines appear at each grid step interval. Labels are placed every label factor lines. You can specify 'none' to suppress the grid and labels altogether."),
 		),
 	"alt_y_grid" => array(
 		"friendly_name" => __("Alternative Y Grid (--alt-y-grid)"),
@@ -551,7 +574,6 @@ $struct_graph_grid = array(
 		"friendly_name" => __("Logarithmic Scaling (--logarithmic)"),
 		"method" => "checkbox",
 		"default" => "",
-		"on_change" => "changeScaleLog()",
 		"description" => __("Use Logarithmic y-axis scaling"),
 		),
 	"scale_log_units" => array(
@@ -560,9 +582,10 @@ $struct_graph_grid = array(
 		"default" => "",
 		"description" => __("Use SI Units for Logarithmic Scaling instead of using exponential notation (not available for rrdtool-1.0.x).") . "<br>" .
 						"<strong>" . __("Note:") . " </strong>" . __("Linear graphs use SI notation by default."),
+		"class" => "scale_log_units not_RRD_1_0_x",
 		),
 	"unit_exponent_value" => array(
-		"friendly_name" => __("Unit Exponent Value (--units-exponent)"),
+		"friendly_name" => __("Unit Exponent Value (--units-exponent &lt;exponent&gt;)"),
 		"method" => "textbox",
 		"max_length" => "50",
 		"default" => "",
@@ -570,7 +593,7 @@ $struct_graph_grid = array(
 		"description" => __("What unit cacti should use on the Y-axis. Use 3 to display everything in 'k' or -6 to display everything in 'u' (micro)."),
 		),
 	"unit_length" => array(
-		"friendly_name" => __("Unit Length (--units-length)"),
+		"friendly_name" => __("Unit Length (--units-length &lt;length&gt;)"),
 		"method" => "textbox",
 		"max_length" => "50",
 		"default" => "",
@@ -581,133 +604,218 @@ $struct_graph_grid = array(
 
 $struct_graph_color = array(
 	"colortag_back" => array(
-		"friendly_name" => __("Background (--color BACK)"),
+		"friendly_name" => __("Background (--color BACK &lt;rrggbb[aa]&gt;)"),
 		"method" => "textbox",
-		"max_length" => "8",
+		"max_length" => "6",
 		"default" => "",
-		"size" => "8",
-		"description" => __("Color tag of the background (rrggbb[aa])."),
+		"size" => "6",
+		"description" => __("Color tag of the background."),
 		"class" => "colortags",
 		),
+#	"colortag_back_alpha" => array(
+#		"friendly_name" => __("Opacity/Alpha Channel for Background"),
+#		"method" => "drop_array",
+#		"default" => "FF",
+#		"array" => $graph_color_alpha,
+#		"description" => __("The opacity/alpha channel of the color. Not available for rrdtool-1.0.x."),
+#		"class" => "colortag_alpha not_RRD_1_0_x",
+#		),
 	"colortag_canvas" => array(
-		"friendly_name" => __("Canvas (--color CANVAS)"),
+		"friendly_name" => __("Canvas (--color CANVAS &lt;rrggbb[aa]&gt;)"),
 		"method" => "textbox",
-		"max_length" => "8",
+		"max_length" => "6",
 		"default" => "",
-		"size" => "8",
-		"description" => __("Color tag of the background of the actual graph (rrggbb[aa])."),
+		"size" => "6",
+		"description" => __("Color tag of the background of the actual graph."),
 		"class" => "colortags",
 		),
+#	"colortag_canvas_alpha" => array(
+#		"friendly_name" => __("Opacity/Alpha Channel for Canvas"),
+#		"method" => "drop_array",
+#		"default" => "FF",
+#		"array" => $graph_color_alpha,
+#		"description" => __("The opacity/alpha channel of the color. Not available for rrdtool-1.0.x."),
+#		"class" => "colortag_alpha not_RRD_1_0_x",
+#		),
 	"colortag_shadea" => array(
-		"friendly_name" => __("ShadeA (--color SHADEA)"),
+		"friendly_name" => __("ShadeA (--color SHADEA &lt;rrggbb[aa]&gt;)"),
 		"method" => "textbox",
-		"max_length" => "8",
+		"max_length" => "6",
 		"default" => "",
-		"size" => "8",
-		"description" => __("Color tag of the left and top border (rrggbb[aa])."),
+		"size" => "6",
+		"description" => __("Color tag of the left and top border."),
 		"class" => "colortags",
 		),
+#	"colortag_shadea_alpha" => array(
+#		"friendly_name" => __("Opacity/Alpha Channel for ShadeA"),
+#		"method" => "drop_array",
+#		"default" => "FF",
+#		"array" => $graph_color_alpha,
+#		"description" => __("The opacity/alpha channel of the color. Not available for rrdtool-1.0.x."),
+#		"class" => "colortag_alpha not_RRD_1_0_x",
+#		),
 	"colortag_shadeb" => array(
-		"friendly_name" => __("ShadeB (--color SHADEB)"),
+		"friendly_name" => __("ShadeB (--color SHADEB &lt;rrggbb[aa]&gt;)"),
 		"method" => "textbox",
-		"max_length" => "8",
+		"max_length" => "6",
 		"default" => "",
-		"size" => "8",
-		"description" => __("Color tag of the right and bottom border (rrggbb[aa])."),
+		"size" => "6",
+		"description" => __("Color tag of the right and bottom border."),
 		"class" => "colortags",
 		),
+#	"colortag_shadeb_alpha" => array(
+#		"friendly_name" => __("Opacity/Alpha Channel for ShadeB"),
+#		"method" => "drop_array",
+#		"default" => "FF",
+#		"array" => $graph_color_alpha,
+#		"description" => __("The opacity/alpha channel of the color. Not available for rrdtool-1.0.x."),
+#		"class" => "colortag_alpha not_RRD_1_0_x",
+#		),
 	"colortag_grid" => array(
-		"friendly_name" => __("Grid (--color GRID)"),
+		"friendly_name" => __("Grid (--color GRID &lt;rrggbb[aa]&gt;)"),
 		"method" => "textbox",
-		"max_length" => "8",
+		"max_length" => "6",
 		"default" => "",
-		"size" => "8",
-		"description" => __("Color tag of the grid (rrggbb[aa])."),
+		"size" => "6",
+		"description" => __("Color tag of the grid."),
 		"class" => "colortags",
 		),
+#	"colortag_grid_alpha" => array(
+#		"friendly_name" => __("Opacity/Alpha Channel for Grid"),
+#		"method" => "drop_array",
+#		"default" => "FF",
+#		"array" => $graph_color_alpha,
+#		"description" => __("The opacity/alpha channel of the color. Not available for rrdtool-1.0.x."),
+#		"class" => "colortag_alpha not_RRD_1_0_x",
+#		),
 	"colortag_mgrid" => array(
-		"friendly_name" => __("Major Grid (--color MGRID)"),
+		"friendly_name" => __("Major Grid (--color MGRID &lt;rrggbb[aa]&gt;)"),
 		"method" => "textbox",
-		"max_length" => "8",
+		"max_length" => "6",
 		"default" => "",
-		"size" => "8",
-		"description" => __("Color tag of the major grid (rrggbb[aa])."),
+		"size" => "6",
+		"description" => __("Color tag of the major grid."),
 		"class" => "colortags",
 		),
+#	"colortag_mgrid_alpha" => array(
+#		"friendly_name" => __("Opacity/Alpha Channel for MGrid"),
+#		"method" => "drop_array",
+#		"default" => "FF",
+#		"array" => $graph_color_alpha,
+#		"description" => __("The opacity/alpha channel of the color. Not available for rrdtool-1.0.x."),
+#		"class" => "colortag_alpha not_RRD_1_0_x",
+#		),
 	"colortag_font" => array(
-		"friendly_name" => __("Font (--color FONT)"),
+		"friendly_name" => __("Font (--color FONT &lt;rrggbb[aa]&gt;)"),
 		"method" => "textbox",
-		"max_length" => "8",
+		"max_length" => "6",
 		"default" => "",
-		"size" => "8",
-		"description" => __("Color tag of the font (rrggbb[aa])."),
+		"size" => "6",
+		"description" => __("Color tag of the font."),
 		"class" => "colortags",
 		),
+#	"colortag_font_alpha" => array(
+#		"friendly_name" => __("Opacity/Alpha Channel for Font"),
+#		"method" => "drop_array",
+#		"default" => "FF",
+#		"array" => $graph_color_alpha,
+#		"description" => __("The opacity/alpha channel of the color. Not available for rrdtool-1.0.x."),
+#		"class" => "colortag_alpha not_RRD_1_0_x",
+#		),
 	"colortag_axis" => array(
-		"friendly_name" => __("Axis (--color AXIS)"),
+		"friendly_name" => __("Axis (--color AXIS &lt;rrggbb[aa]&gt;)"),
 		"method" => "textbox",
-		"max_length" => "8",
+		"max_length" => "6",
 		"default" => "",
-		"size" => "8",
-		"description" => __("Color tag of the axis (rrggbb[aa])."),
+		"size" => "6",
+		"description" => __("Color tag of the axis."),
 		"class" => "colortags",
 		),
+#	"colortag_axis_alpha" => array(
+#		"friendly_name" => __("Opacity/Alpha Channel for Axis"),
+#		"method" => "drop_array",
+#		"default" => "FF",
+#		"array" => $graph_color_alpha,
+#		"description" => __("The opacity/alpha channel of the color. Not available for rrdtool-1.0.x."),
+#		"class" => "colortag_alpha not_RRD_1_0_x",
+#		),
 	"colortag_frame" => array(
-		"friendly_name" => __("Frame (--color FRAME)"),
+		"friendly_name" => __("Frame (--color FRAME &lt;rrggbb[aa]&gt;)"),
 		"method" => "textbox",
-		"max_length" => "8",
+		"max_length" => "6",
 		"default" => "",
-		"size" => "8",
-		"description" => __("Color tag of the frame (rrggbb[aa])."),
+		"size" => "6",
+		"description" => __("Color tag of the frame."),
 		"class" => "colortags",
 		),
+#	"colortag_frame_alpha" => array(
+#		"friendly_name" => __("Opacity/Alpha Channel for Frame"),
+#		"method" => "drop_array",
+#		"default" => "FF",
+#		"array" => $graph_color_alpha,
+#		"description" => __("The opacity/alpha channel of the color. Not available for rrdtool-1.0.x."),
+#		"class" => "colortag_alpha not_RRD_1_0_x",
+#		),
 	"colortag_arrow" => array(
-		"friendly_name" => __("Arrow (--color ARROW)"),
+		"friendly_name" => __("Arrow (--color ARROW &lt;rrggbb[aa]&gt;)"),
 		"method" => "textbox",
-		"max_length" => "8",
+		"max_length" => "6",
 		"default" => "",
-		"size" => "8",
-		"description" => __("Color tag of the arrow (rrggbb[aa])."),
+		"size" => "6",
+		"description" => __("Color tag of the arrow."),
 		"class" => "colortags",
 		),
+#	"colortag_arrow_alpha" => array(
+#		"friendly_name" => __("Opacity/Alpha Channel for Arrow"),
+#		"method" => "drop_array",
+#		"default" => "FF",
+#		"array" => $graph_color_alpha,
+#		"description" => __("The opacity/alpha channel of the color. Not available for rrdtool-1.0.x."),
+#		"class" => "colortag_alpha not_RRD_1_0_x",
+#		),
 	);
 
 $struct_graph_misc = array(
 	"font_render_mode" => array(
-		"friendly_name" => __("Font Render Mode (--font-render-mode)"),
+		"friendly_name" => __("Font Render Mode (--font-render-mode &lt;mode&gt;)"),
 		"method" => "drop_array",
 		"default" => RRD_FONT_RENDER_NORMAL,
 		"array" => $rrd_font_render_modes,
 		"description" => __("Mode for font rendering."),
+		"class" => "not_RRD_1_0_x",
 		),
 	"font_smoothing_threshold" => array(
-		"friendly_name" => __("Font Smoothing Threshold (--font-smoothing-threshold)"),
+		"friendly_name" => __("Font Smoothing Threshold (--font-smoothing-threshold &lt;threshold&gt;)"),
 		"method" => "textbox",
 		"max_length" => "8",
 		"default" => "",
 		"size" => "8",
 		"description" => __("This specifies the largest font size which will be rendered bitmapped, that is, without any font smoothing. By default, no text is rendered bitmapped."),
+		"class" => "not_RRD_1_0_x",
 		),
 	"graph_render_mode" => array(
-		"friendly_name" => __("Graph Render Mode (--graph-render-mode)"),
+		"friendly_name" => __("Graph Render Mode (--graph-render-mode &lt;mode&gt;)"),
 		"method" => "drop_array",
 		"default" => RRD_GRAPH_RENDER_NORMAL,
 		"array" => $rrd_graph_render_modes,
 		"description" => __("Mode for graph rendering."),
+		"class" => "not_RRD_1_0_x not_RRD_1_2_x",
 		),
 	"pango_markup" => array(
-		"friendly_name" => __("Pango Markup (--pango-markup)"),
+		"friendly_name" => __("Pango Markup (--pango-markup &lt;markup&gt;)"),
 		"method" => "textbox",
 		"max_length" => "255",
 		"default" => "",
 		"size" => "30",
 		"description" => __("With this option, all text will be processed by pango markup. This allows to embed some simple html like markup tags."),
+		"class" => "not_RRD_1_0_x not_RRD_1_2_x",
 		),
 	"slope_mode" => array(
 		"friendly_name" => __("Slope Mode (--slope-mode)"),
 		"method" => "checkbox",
 		"default" => CHECKED,
 		"description" => __("Using Slope Mode, in RRDtool 1.2.x and above, evens out the shape of the graphs at the expense of some on screen resolution."),
+		"class" => "not_RRD_1_0_x",
 		),
 	"interlaced" => array(
 		"friendly_name" => __("Interlaced (--interlaced)"),
@@ -716,28 +824,31 @@ $struct_graph_misc = array(
 		"description" => __("If images are interlaced they become visible on browsers more quickly (this gets ignored in 1.3 for now!)."),
 		),
 	"tab_width" => array(
-		"friendly_name" => __("Tabulator Width (--tabwidth)"),
+		"friendly_name" => __("Tabulator Width (--tabwidth &lt;pixels&gt;)"),
 		"method" => "textbox",
 		"max_length" => "50",
-		"default" => "40",
+		"default" => "",
 		"size" => "10",
 		"description" => __("Width of a tabulator in pixels."),
+		"class" => "not_RRD_1_0_x",
 		),
 	"base_value" => array(
-		"friendly_name" => __("Base Value (--base)"),
+		"friendly_name" => __("Base Value (--base &lt;[1000|1024]&gt;)"),
 		"method" => "textbox",
 		"max_length" => "50",
 		"default" => "1000",
 		"size" => "10",
 		"description" => __("Should be set to 1024 for memory and 1000 for traffic measurements."),
+		"class" => "not_RRD_1_0_x",
 		),
 	"watermark" => array(
-		"friendly_name" => __("Watermark (--watermark)"),
+		"friendly_name" => __("Watermark (--watermark &lt;string&gt;)"),
 		"method" => "textbox",
 		"max_length" => "50",
 		"default" => "",
 		"size" => "10",
 		"description" => __("Adds the given string as a watermark, horizontally centered, at the bottom of the graph."),
+		"class" => "not_RRD_1_0_x",
 		),
 	);
 
@@ -755,6 +866,9 @@ $struct_graph_cacti = array(
 		"description" => __("Choose whether this graph will be included in the static html/png export if you use cacti's export feature."),
 		),
 	);
+# for use with existing modules
+$struct_graph = $struct_graph_labels + $struct_graph_right_axis + $struct_graph_size + $struct_graph_limits + $struct_graph_grid + $struct_graph_color + $struct_graph_misc + $struct_graph_cacti;
+
 
 /* file: (graphs.php|graph_templates.php), action: item_edit */
 $struct_graph_item = array(
