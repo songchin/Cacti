@@ -860,7 +860,11 @@ function sizeContentDivs() {
 	var bottom = document.getElementById("wrapper").clientHeight;
 
 	/* IE6 will enter infinite loop here */
-	if (browser != "IE" && browserVersion != 6) {
+	if (browser != "IE" || (browser == "IE" && browserVersion != 6)) {
+		/* size the menu first */
+		document.getElementById("menu").style.height = parseInt(bottom-top) + "px";
+
+		/* size the remaining content */
 		if (document.getElementById("content")) {
 			document.getElementById("content").style.height = parseInt(bottom-top) + "px";
 		}else if(document.getElementById("graph_tree_content")) {
