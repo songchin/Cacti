@@ -4,13 +4,9 @@ $(document).ready(function(){
 
 	// set background color before page load
 	$('.colortags').each(function() {
-		var alpha = "#" + this.id + "_alpha";		// additional input selection for alpha/opacity
-		var t_alpha = "#t_" + this.id + "_alpha";	// we want to find the template checkbox
 		var background_color_hex = this.value;
 		var color_hex = invertColor(background_color_hex);
 		$(this).css('background-color', '#' + background_color_hex).attr('title', background_color_hex).css('color', color_hex);
-		$(alpha).css('background-color', '#' + background_color_hex).css('color', color_hex);	// show opacity field in same color
-		$(t_alpha).hide().next().hide();	// but hide the template checkbox and label
 	});
 
 	$('.colortags').ColorPicker({
@@ -31,9 +27,7 @@ $(document).ready(function(){
 			$(el).val(hex);
 			$(el).ColorPickerHide();
 			var color_hex = invertColor(hex);
-			var alpha = "#" + el.id + "_alpha";
 			$(el).css('background-color', '#' + hex).attr('title', hex).css('color', color_hex);
-			$(alpha).css('background-color', '#' + hex).css('color', color_hex);
 		}
 	})
 	.bind('keyup', function() {
