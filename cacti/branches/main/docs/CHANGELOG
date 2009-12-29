@@ -1,4 +1,5 @@
 Cacti CHANGELOG
+-bug#0001024: Can't create two devices via CLI with the same IP-Address
 -bug#0001085: LDAP enabled status not maintained on upgrade from 0.8.6j to 0.8.7
 -bug#0001100: spine hangs on unreachable hosts
 -bug#0001105: add_graphs.php --list-snmp-values for all available host snmp-fields
@@ -10,23 +11,27 @@ Cacti CHANGELOG
 -bug#0001209: Content-type incorrect for the SVG graphs (Graph Management still does not display SVG, but rest does)
 -bug#0001279: php warning when installing specific plugins (if no "keys" were defined for a plugin table)
 -bug#0001306: Empty COMMENT + <HR> gives you a blank legend line (was: Add Blank Line to Graph via Pull down menu)
+-bug#0001319: when adding a host using cli add_device that already exist in the database, both descriptions are updated
 -bug#0001335: <oid_index_parse> does not work as expected; requires changes to XML for e.g. EMC Cellera
 -bug#0001349: Graphs with Multiple Data Template Items don't show all required non-templated fields
 -bug#0001354: 0.8.7c to 0.8.8 update script bugs
 -bug#0001359: Better error checking in rrd.php
 -bug#0001366: Exported data templates do not import the special characters properly
+-bug#0001397: Never use "Delete" as default action in any drop-list in cacti to avoid disaster 
 -bug#0001414: COMMENT field can cause rrdtool to report "Legend too long"
 -bug#0001428: segfault when database tables not present
 -bug#0001429: PHP does not support SNMP V3 Contexts and Cacti needs to act accordingly
 -bug#0001432: array_merge breaks dropdown handling with hardcoded (array-)keys
 -bug#0001452: Missing "<" and ">" in "Collection Methods=>Data Input Methods=>"Input String", When Import Template 
 -bug#0001461: (Data Query) Export/Import fails
+-bug#0001479: cli/add_device.php will modify existing devices
 -bug#0001492: RRDTool 1.3 series fonts (fontconfig) support
 -bug#0001506: Reindexing fails in snmp.php
 -bug#0001508: More min-height'ed divs when showing graphs 
 -bug#0001522: Special(?) charakters break parsing of template data.
 -bug#0001528: ICMP Ping availabilty broken in UI for Windows Servers using IIS
 -bug#0001532: Various crashes in early stages of installation with no database populated.
+-bug#0001534: IP:PORT Granularity issue in cli/add_device.php
 -bug#0001535: Tree Automation Difficult Due to Lack of Parent ID in Tree Nodes 
 -bug#0001549: Database crashes with use of array_to_sql_or
 -bug#0001557: Quotes in Text Format graph template field breaks graph
@@ -42,6 +47,7 @@ Cacti CHANGELOG
 -documentation: Explaining Cacti Special Data Sources used on CDEFs, lots of CDEF examples using Special data Sources
 -documentation: Documentation of specific rrdtool feature
 -documentation: Use of SNMP exec option up to net-snmp 5.3
+-feature#0000475: Add RRDTool options currently not settable within Cacti
 -feature#0000967: Option to force users to use SSL
 -feature#0000954: implement --alt-y-grid graph option
 -feature#0001009: XML Syntax enhancements (as a dup of 1225 only)
@@ -60,13 +66,16 @@ Cacti CHANGELOG
 -feature#0001406: Dynamically display field description for templates
 -feature#0001408: Hide templated input fields
 -feature#0001409: Add context sensitive page help linking to cacti dokuwiki
+-feature#0001418: changing the graph backround via graph templates 
 -feature#0001341: SNMP query: add oid_suffix for weird SNMP queries
 -feature#0001372: Add Custom SNMP context for datasources 
 -feature#0001438: Allow for drag and drop reordering of graph template items
 -feature#0001439: New pseudo variable |host_template|, support all pseudo variable derived from host table
+-feature#0001457: Support for rrdtool graph options, was: Extra settings field in graph template
 -feature#0001483: (OID|VALUE)/REGEXP for get input fields 
 -feature#0001450: Template import script
 -feature#0001525: add rebuild_poller_cache --host-id=[ID]
+-feature#0001536: small patch to allow plugins to change the x-axis labels
 -feature#0001542: Rewriting SNMP values of data queries
 -feature#0001550: Record the polling time for each host to optimize polling times
 -feature#0001588: Add pango-markup options to simple html markup in graphed text (title, legend etc) 
