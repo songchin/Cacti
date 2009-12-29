@@ -40,6 +40,7 @@ if ($template_perms == 1) {
 		name
 		FROM graph_templates
 		WHERE id NOT IN (SELECT item_id FROM user_auth_perms WHERE user_auth_perms.type=4 AND user_auth_perms.user_id=". $_SESSION["sess_user_id"] . ")
+		AND (name LIKE '%$q%')
 		ORDER BY name";
 }else{
 	$sql = "SELECT
@@ -47,6 +48,7 @@ if ($template_perms == 1) {
 		name
 		FROM graph_templates
 		WHERE id IN (SELECT item_id FROM user_auth_perms WHERE user_auth_perms.type=4 AND user_auth_perms.user_id=". $_SESSION["sess_user_id"] . ")
+		AND (name LIKE '%$q%')
 		ORDER BY name";
 }
 
