@@ -1168,11 +1168,13 @@ function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rr
 		$need_rrd_nl = TRUE;
 
 		if ($graph_item_types{$graph_item["graph_type_id"]} == "COMMENT") {
-			$comment_string = $graph_item_types{$graph_item["graph_type_id"]} . ":\"" . $graph_variables["text_format"][$graph_item_id] . $hardreturn[$graph_item_id] . "\" ";
+			$comment_string = $graph_item_types{$graph_item["graph_type_id"]} . ":\"" .
+					substr(rrd_substitute_host_query_data(str_replace(":", "\:", $graph_variables["text_format"][$graph_item_id]), $graph, $graph_item),0,198) .
+					$hardreturn[$graph_item_id] . "\" ";
 			if (trim($comment_string) == 'COMMENT:"\n"') {
 				$txt_graph_items .= 'COMMENT:" \n"'; # rrdtool will skip a COMMENT that holds a NL only; so add a blank to make NL work
 			} else if (trim($comment_string) != "COMMENT:\"\"") {
-				$txt_graph_items .= rrd_substitute_host_query_data($comment_string, $graph, $graph_item);
+				$txt_graph_items .= $comment_string;
 			}
 		}elseif (($graph_item_types{$graph_item["graph_type_id"]} == "GPRINT") && (!isset($graph_data_array["graph_nolegend"]))) {
 			$txt_graph_items .= $graph_item_types{$graph_item["graph_type_id"]} . ":" . $data_source_name . ":" . $consolidation_functions{$graph_item["consolidation_function_id"]} . ":\"$text_padding" . $graph_variables["text_format"][$graph_item_id] . $graph_item["gprint_text"] . $hardreturn[$graph_item_id] . "\" ";

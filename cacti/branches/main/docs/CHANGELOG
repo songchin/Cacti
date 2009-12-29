@@ -15,6 +15,7 @@ Cacti CHANGELOG
 -bug#0001354: 0.8.7c to 0.8.8 update script bugs
 -bug#0001359: Better error checking in rrd.php
 -bug#0001366: Exported data templates do not import the special characters properly
+-bug#0001414: COMMENT field can cause rrdtool to report "Legend too long"
 -bug#0001428: segfault when database tables not present
 -bug#0001429: PHP does not support SNMP V3 Contexts and Cacti needs to act accordingly
 -bug#0001432: array_merge breaks dropdown handling with hardcoded (array-)keys
