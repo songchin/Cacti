@@ -2129,11 +2129,7 @@ function rrdgraph_opts($graph, $graph_data_array, $version) {
 
 			case "unit_value":
 				if (!empty($value)) {
-					if ($version != RRD_VERSION_1_0) {
-						$option .= "--y-grid=" . $value . RRD_NL;
-					}else{
-						$option .= "--unit=" . $value . RRD_NL;
-					}
+					$option .= "--y-grid=" . $value . RRD_NL;
 				}
 				break;
 
@@ -2171,7 +2167,7 @@ function rrdgraph_opts($graph, $graph_data_array, $version) {
 				break;
 
 			case "base_value":
-				if (preg_match("/^[0-9]+$/", $value)) {
+				if ($value == 1000 || $value == 1024) {
 					$option .= "--base=" . $value . RRD_NL;
 				}
 				break;
@@ -2217,10 +2213,8 @@ function rrdgraph_opts($graph, $graph_data_array, $version) {
 				break;
 
 			case "only_graph":
-				if ($version != RRD_VERSION_1_0 && $version != RRD_VERSION_1_2) {
-					if ($value == CHECKED) {
-						$option .= "--only-graph" . RRD_NL;
-					}
+				if ($value == CHECKED) {
+					$option .= "--only-graph" . RRD_NL;
 				}
 				break;
 
@@ -2233,7 +2227,7 @@ function rrdgraph_opts($graph, $graph_data_array, $version) {
 				break;
 
 			case "no_gridfit":
-				if ($version != RRD_VERSION_1_0 && $version != RRD_VERSION_1_2) {
+				if ($version != RRD_VERSION_1_0) {
 					if ($value == CHECKED) {
 						$option .= "--no-gridfit" . RRD_NL;
 					}
@@ -2241,23 +2235,19 @@ function rrdgraph_opts($graph, $graph_data_array, $version) {
 				break;
 
 			case "x_grid":
-				if ($version != RRD_VERSION_1_0 && $version != RRD_VERSION_1_2) {
-					if (!empty($value)) {
-						$option .= "--x-grid \"" . $value . "\"" . RRD_NL;
-					}
+				if (!empty($value)) {
+					$option .= "--x-grid \"" . $value . "\"" . RRD_NL;
 				}
 				break;
 
 			case "unit_length":
-				if ($version != RRD_VERSION_1_0 && $version != RRD_VERSION_1_2) {
-					if (!empty($value)) {
-						$option .= "--units-length " . $value . RRD_NL;
-					}
+				if (!empty($value)) {
+					$option .= "--units-length " . $value . RRD_NL;
 				}
 				break;
 
 			case "font_render_mode":
-				if ($version != RRD_VERSION_1_0 && $version != RRD_VERSION_1_2) {
+				if ($version != RRD_VERSION_1_0) {
 					if (!empty($value)) {
 						$option .= "--font-render-mode " . $value . RRD_NL;
 					}
@@ -2265,7 +2255,7 @@ function rrdgraph_opts($graph, $graph_data_array, $version) {
 				break;
 
 			case "font_smoothing_threshold":
-				if ($version != RRD_VERSION_1_0 && $version != RRD_VERSION_1_2) {
+				if ($version != RRD_VERSION_1_0) {
 					if (!empty($value)) {
 						$option .= "--font-smoothing-threshold " . $value . RRD_NL;
 					}
@@ -2289,23 +2279,21 @@ function rrdgraph_opts($graph, $graph_data_array, $version) {
 				break;
 
 			case "interlaced":
-				if ($version != RRD_VERSION_1_0 && $version != RRD_VERSION_1_2) {
-					if ($value == CHECKED) {
-						$option .= "--interlaced" . RRD_NL;
-					}
+				if ($value == CHECKED) {
+					$option .= "--interlaced" . RRD_NL;
 				}
 				break;
 
 			case "tab_width":
-				if ($version != RRD_VERSION_1_0 && $version != RRD_VERSION_1_2) {
+				if ($version != RRD_VERSION_1_0) {
 					if (!empty($value)) {
-						$option .= "--tab-width " . $value . RRD_NL;
+						$option .= "--tabwidth " . $value . RRD_NL;
 					}
 				}
 				break;
 
 			case "watermark":
-				if ($version != RRD_VERSION_1_0 && $version != RRD_VERSION_1_2) {
+				if ($version != RRD_VERSION_1_0) {
 					if (!empty($value)) {
 						$option .= "--watermark \"" . $value . "\"" . RRD_NL;
 					}

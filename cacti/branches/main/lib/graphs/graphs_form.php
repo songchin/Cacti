@@ -749,6 +749,8 @@ function graph_diff() {
 	form_save_button_alt("action!graph_edit|id!" . get_request_var("id"));
 }
 
+
+
 function graph_edit() {
 	global $colors, $image_types, $consolidation_functions, $graph_item_types, $struct_graph_item;
 	global $struct_graph_labels, $struct_graph_right_axis, $struct_graph_size, $struct_graph_limits, $struct_graph_grid, $struct_graph_color, $struct_graph_misc, $struct_graph_cacti;
@@ -940,9 +942,11 @@ function graph_edit() {
 		html_start_box("<strong>" . __("Labels") . "</strong>", "100", $colors["header"], "0", "center", "", true);
 		draw_template_edit_form('header_graph_template', $struct_graph_labels, $graphs_template, $use_graph_template);
 		html_end_box(false);
-		html_start_box("<strong>" . __("Right Axis") . "</strong>", "100", $colors["header"], "0", "center", "", true);
-		draw_template_edit_form('header_graph_template', $struct_graph_right_axis, $graphs_template, $use_graph_template);
-		html_end_box(false);
+		/* TODO: we should not use rrd version in the code, when going data-driven */
+		if ( read_config_option("rrdtool_version") != RRD_VERSION_1_0 && read_config_option("rrdtool_version") != RRD_VERSION_1_2) {
+			html_start_box("<strong>" . __("Right Axis Settings") . "</strong>", "100", $colors["header"], "0", "center", "", true, "table_graph_template_right_axis");
+			draw_template_edit_form('header_graph_right_axis', $struct_graph_right_axis, $template_graph, false);
+		}
 		html_start_box("<strong>" . __("Size") . "</strong>", "100", $colors["header"], "0", "center", "", true);
 		draw_template_edit_form('header_graph_template', $struct_graph_size, $graphs_template, $use_graph_template);
 		html_end_box(false);
@@ -971,50 +975,22 @@ function graph_edit() {
 
 	form_hidden_box("hidden_rrdtool_version", read_config_option("rrdtool_version"), "");
 	form_save_button_alt();
+
+	include_once(CACTI_BASE_PATH . "/lib/jquery/colorpicker.js");
+	include_once(CACTI_BASE_PATH . "/lib/jquery/graph_template_options.js");
+
 ?>
 <script type="text/javascript">
 	$('#graph_item').tableDnD({
 		onDrop: function(table, row) {
-//			alert("lib/ajax/jquery.tablednd/graph_item.ajax.php?id=<?php print $_GET["id"];?>&"+$.tableDnD.serialize());
-			$('#AjaxResult').load("lib/ajax/jquery.tablednd/graphs_item.ajax.php?id=<?php print $_GET["id"];?>&"+$.tableDnD.serialize());
+			$('#AjaxResult').load("lib/ajax/jquery.tablednd/graphs_item.ajax.php?id=<?php isset($_GET["id"]) ? print $_GET["id"] : print "";?>&"+$.tableDnD.serialize());
 //			location.reload();
 		}
 	});
 </script>
 <?php
-
-//Now we need some javascript to make it dynamic
-?>
-<script type="text/javascript">
-
-dynamic();
-
-function dynamic() {
-	//alert("RRDTool Version is '" + document.getElementById('hidden_rrdtool_version').value + "'");
-	//alert("Log is '" + document.getElementById('auto_scale_log').checked + "'");
-	if (document.getElementById('scale_log_units')) {
-		document.getElementById('scale_log_units').disabled=true;
-		if ((document.getElementById('hidden_rrdtool_version').value != 'rrd-1.0.x') &&
-			(document.getElementById('auto_scale_log').checked)) {
-			document.getElementById('scale_log_units').disabled=false;
-		}
-	}
 }
 
-function changeScaleLog() {
-	//alert("Log changed to '" + document.getElementById('auto_scale_log').checked + "'");
-	if (document.getElementById('scale_log_units')) {
-		document.getElementById('scale_log_units').disabled=true;
-		if ((document.getElementById('hidden_rrdtool_version').value != 'rrd-1.0.x') &&
-			(document.getElementById('auto_scale_log').checked)) {
-			document.getElementById('scale_log_units').disabled=false;
-		}
-	}
-}
-</script>
-<?php
-
-}
 
 function graph() {
 	global $colors, $graph_actions, $item_rows;
@@ -1127,7 +1103,7 @@ function graph() {
 	</script>
 	<?php
 
-	html_start_box("<strong>" . __("Graph Management") . "</strong>", "100", $colors["header"], "3", "center", "graphs.php?action=graph_edithost_id=" . $_REQUEST["host_id"], true);
+	html_start_box("<strong>" . __("Graph Management") . "</strong>", "100", $colors["header"], "3", "center", "graphs.php?action=graph_edit&host_id=" . $_REQUEST["host_id"], true);
 	?>
 	<tr class='rowAlternate2'>
 		<td>
@@ -1147,6 +1123,7 @@ function graph() {
 						?>
 						<input class="ac_field" type="text" id="host" size="30" value="<?php print $hostname; ?>">
 						<input type="hidden" id="host_id">
+					</td>
 					<td width="70">
 						&nbsp;<?php print __("Template:");?>&nbsp;
 					</td>

@@ -764,9 +764,9 @@ $struct_graph_misc = array(
 	"watermark" => array(
 		"friendly_name" => __("Watermark (--watermark &lt;string&gt;)"),
 		"method" => "textbox",
-		"max_length" => "50",
+		"max_length" => "255",
 		"default" => "",
-		"size" => "10",
+		"size" => "30",
 		"description" => __("Adds the given string as a watermark, horizontally centered, at the bottom of the graph."),
 		"class" => "not_RRD_1_0_x",
 		),
