@@ -88,7 +88,6 @@ function rrdtool_execute($command_line, $log_to_stdout, $output_flag, $rrd_struc
 	if (($output_flag == RRDTOOL_OUTPUT_STDERR) && (!isset($rrd_struc["fd"]) || (sizeof($rrd_struc["fd"]) == 0))) {
 		$command_line .= " 2>&1";
 	}
-	cacti_log("CACTI2RRD: " . read_config_option("path_rrdtool") . " $command_line", true, "TEST");
 
 	/* use popen to eliminate the zombie issue */
 	if (CACTI_SERVER_OS == "unix") {
