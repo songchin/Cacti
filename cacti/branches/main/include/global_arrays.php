@@ -451,6 +451,14 @@ $menu = array(
 		"logout.php" => __("Logout User"),
 	));
 
+$colortag_sequence = array(
+	COLORTAGS_GLOBAL 	=> __("Accept global colortags only, if any"),
+	COLORTAGS_USER	 	=> __("Accept user colortags only, if any"),
+	COLORTAGS_TEMPLATE 	=> __("Accept graph template colortags only, if any"),
+	COLORTAGS_UTG	 	=> __("Accept user colortags, template next, global last"),
+	COLORTAGS_TUG	 	=> __("Accept template colortags, user next, global last"),
+	);
+
 $log_tail_lines = array(
 	-1 => __("All Lines"),
 	10 => __("%d Lines", 10),

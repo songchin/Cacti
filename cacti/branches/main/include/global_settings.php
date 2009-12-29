@@ -38,7 +38,7 @@ $tabs_graphs = array(
 	"preview" => __("Preview Mode"),
 	"list" => __("List View Mode"),
 	"fonts" => "Graph Fonts (RRDtool 1.2.x and Above)",
-	"colortags" => "Graph Colortags (RRDtool 1.3.x and Above)",
+	"colortags" => "Graph Colortags",
 );
 
 /* setting information */
@@ -80,7 +80,7 @@ $settings = array(
 			),
 		"path_rrdtool_default_font" => array(
 			"friendly_name" => __("RRDTool Default Font Path"),
-			"description" => __("For RRDtool 1.2, the path to the True Type Font.  For RRDtool 1.3 and above, the font name conforming to the fontconfig naming convention."),
+			"description" => __("For RRDtool 1.2, the path to the True Type Font. For RRDtool 1.3 and above, the font name conforming to the fontconfig naming convention."),
 			"method" => "font",
 			"max_length" => "255"
 			),
@@ -625,13 +625,15 @@ $settings = array(
 			"method" => "textbox",
 			"default" => "12",
 			"max_length" => "10",
-			"size" => "5"
+			"size" => "5",
+			"class" => "not_RRD_1_0_x",
 			),
 		"title_font" => array(
 			"friendly_name" => __("Title Font File"),
 			"description" => __("The font file to use for Graph Titles"),
 			"method" => "font",
-			"max_length" => "100"
+			"max_length" => "100",
+			"class" => "not_RRD_1_0_x",
 			),
 		"legend_size" => array(
 			"friendly_name" => __("Legend Font Size"),
@@ -639,13 +641,15 @@ $settings = array(
 			"method" => "textbox",
 			"default" => "10",
 			"max_length" => "10",
-			"size" => "5"
+			"size" => "5",
+			"class" => "not_RRD_1_0_x",
 			),
 		"legend_font" => array(
 			"friendly_name" => __("Legend Font File"),
 			"description" => __("The font file to be used for Graph Legend items"),
 			"method" => "font",
-			"max_length" => "100"
+			"max_length" => "100",
+			"class" => "not_RRD_1_0_x",
 			),
 		"axis_size" => array(
 			"friendly_name" => __("Axis Font Size"),
@@ -653,13 +657,15 @@ $settings = array(
 			"method" => "textbox",
 			"default" => "8",
 			"max_length" => "10",
-			"size" => "5"
+			"size" => "5",
+			"class" => "not_RRD_1_0_x",
 			),
 		"axis_font" => array(
 			"friendly_name" => __("Axis Font File"),
 			"description" => __("The font file to be used for Graph Axis items"),
 			"method" => "font",
-			"max_length" => "100"
+			"max_length" => "100",
+			"class" => "not_RRD_1_0_x",
 			),
 		"unit_size" => array(
 			"friendly_name" => __("Unit Font Size"),
@@ -667,17 +673,42 @@ $settings = array(
 			"method" => "textbox",
 			"default" => "8",
 			"max_length" => "10",
-			"size" => "5"
+			"size" => "5",
+			"class" => "not_RRD_1_0_x",
 			),
 		"unit_font" => array(
 			"friendly_name" => __("Unit Font File"),
 			"description" => __("The font file to be used for Graph Unit items"),
 			"method" => "font",
-			"max_length" => "100"
+			"max_length" => "100",
+			"class" => "not_RRD_1_0_x",
+			),
+		"watermark_size" => array(
+			"friendly_name" => __("Watermark Font Size"),
+			"description" => __("The size of the font used for Graph Watermarks"),
+			"method" => "textbox",
+			"default" => "8",
+			"max_length" => "10",
+			"size" => "5",
+			"class" => "not_RRD_1_0_x",
+			),
+		"watermark_font" => array(
+			"friendly_name" => __("Watermark Font File"),
+			"description" => __("The font file to be used for Graph Watermarks"),
+			"method" => "font",
+			"max_length" => "100",
+			"class" => "not_RRD_1_0_x",
 			),
 		"colortags_header" => array(
-			"friendly_name" => __("Default RRDtool 1.3.x++ Colortags"),
+			"friendly_name" => __("Default RRDtool Colortags"),
 			"method" => "spacer",
+			),
+		"colortag_sequence" => array(
+			"friendly_name" => __("Sequence for using Colortags"),
+			"description" => __("Colortags are available for Global/Custom/Template settings. Select the sequence to decide the priority of each"),
+			"method" => "drop_array",
+			"default" => COLORTAGS_UTG,
+			"array" => $colortag_sequence,
 			),
 		"colortag_back" => array(
 			"friendly_name" => __("Background (--color BACK)"),
@@ -686,7 +717,6 @@ $settings = array(
 			"default" => "",
 			"size" => "8",
 			"description" => __("Color tag of the background (rrggbb[aa])."),
-			"class" => "colortags",
 			),
 		"colortag_canvas" => array(
 			"friendly_name" => __("Canvas (--color CANVAS)"),
@@ -695,7 +725,6 @@ $settings = array(
 			"default" => "",
 			"size" => "8",
 			"description" => __("Color tag of the background of the actual graph (rrggbb[aa])."),
-			"class" => "colortags",
 			),
 		"colortag_shadea" => array(
 			"friendly_name" => __("ShadeA (--color SHADEA)"),
@@ -704,7 +733,6 @@ $settings = array(
 			"default" => "",
 			"size" => "8",
 			"description" => __("Color tag of the left and top border (rrggbb[aa])."),
-			"class" => "colortags",
 			),
 		"colortag_shadeb" => array(
 			"friendly_name" => __("ShadeB (--color SHADEB)"),
@@ -713,7 +741,6 @@ $settings = array(
 			"default" => "",
 			"size" => "8",
 			"description" => __("Color tag of the right and bottom border (rrggbb[aa])."),
-			"class" => "colortags",
 			),
 		"colortag_grid" => array(
 			"friendly_name" => __("Grid (--color GRID)"),
@@ -722,7 +749,6 @@ $settings = array(
 			"default" => "",
 			"size" => "8",
 			"description" => __("Color tag of the grid (rrggbb[aa])."),
-			"class" => "colortags",
 			),
 		"colortag_mgrid" => array(
 			"friendly_name" => __("Major Grid (--color MGRID)"),
@@ -731,7 +757,6 @@ $settings = array(
 			"default" => "",
 			"size" => "8",
 			"description" => __("Color tag of the major grid (rrggbb[aa])."),
-			"class" => "colortags",
 			),
 		"colortag_font" => array(
 			"friendly_name" => __("Font (--color FONT)"),
@@ -740,7 +765,6 @@ $settings = array(
 			"default" => "",
 			"size" => "8",
 			"description" => __("Color tag of the font (rrggbb[aa])."),
-			"class" => "colortags",
 			),
 		"colortag_axis" => array(
 			"friendly_name" => __("Axis (--color AXIS)"),
@@ -749,7 +773,6 @@ $settings = array(
 			"default" => "",
 			"size" => "8",
 			"description" => __("Color tag of the axis (rrggbb[aa])."),
-			"class" => "colortags",
 			),
 		"colortag_frame" => array(
 			"friendly_name" => __("Frame (--color FRAME)"),
@@ -758,7 +781,6 @@ $settings = array(
 			"default" => "",
 			"size" => "8",
 			"description" => __("Color tag of the frame (rrggbb[aa])."),
-			"class" => "colortags",
 			),
 		"colortag_arrow" => array(
 			"friendly_name" => __("Arrow (--color ARROW)"),
@@ -767,7 +789,6 @@ $settings = array(
 			"default" => "",
 			"size" => "8",
 			"description" => __("Color tag of the arrow (rrggbb[aa])."),
-			"class" => "colortags",
 			),
 		),
 	"poller" => array(
@@ -1260,7 +1281,8 @@ $settings_graphs = array(
 			"friendly_name" => __("Use Custom Fonts"),
 			"description" => __("Choose whether to use your own custom fonts and font sizes or utilize the system defaults."),
 			"method" => "checkbox",
-			"default" => ""
+			"default" => "",
+			"class" => "not_RRD_1_0_x",
 			),
 		"title_size" => array(
 			"friendly_name" => __("Title Font Size"),
@@ -1268,14 +1290,17 @@ $settings_graphs = array(
 			"class" => "custom_fonts",
 			"method" => "textbox",
 			"default" => "12",
-			"max_length" => "10"
+			"max_length" => "10",
+			"size" => "5",
+			"class" => "not_RRD_1_0_x",
 			),
 		"title_font" => array(
 			"friendly_name" => __("Title Font File"),
 			"description" => __("The font file to use for Graph Titles"),
 			"class" => "custom_fonts",
 			"method" => "font",
-			"max_length" => "100"
+			"max_length" => "100",
+			"class" => "not_RRD_1_0_x",
 			),
 		"legend_size" => array(
 			"friendly_name" => __("Legend Font Size"),
@@ -1283,14 +1308,17 @@ $settings_graphs = array(
 			"class" => "custom_fonts",
 			"method" => "textbox",
 			"default" => "10",
-			"max_length" => "10"
+			"max_length" => "10",
+			"size" => "5",
+			"class" => "not_RRD_1_0_x",
 			),
 		"legend_font" => array(
 			"friendly_name" => __("Legend Font File"),
 			"description" => __("The font file to be used for Graph Legend items"),
 			"class" => "custom_fonts",
 			"method" => "font",
-			"max_length" => "100"
+			"max_length" => "100",
+			"class" => "not_RRD_1_0_x",
 			),
 		"axis_size" => array(
 			"friendly_name" => __("Axis Font Size"),
@@ -1298,14 +1326,17 @@ $settings_graphs = array(
 			"class" => "custom_fonts",
 			"method" => "textbox",
 			"default" => "8",
-			"max_length" => "10"
+			"max_length" => "10",
+			"size" => "5",
+			"class" => "not_RRD_1_0_x",
 			),
 		"axis_font" => array(
 			"friendly_name" => __("Axis Font File"),
 			"description" => __("The font file to be used for Graph Axis items"),
 			"class" => "custom_fonts",
 			"method" => "font",
-			"max_length" => "100"
+			"max_length" => "100",
+			"class" => "not_RRD_1_0_x",
 			),
 		"unit_size" => array(
 			"friendly_name" => __("Unit Font Size"),
@@ -1313,15 +1344,34 @@ $settings_graphs = array(
 			"class" => "custom_fonts",
 			"method" => "textbox",
 			"default" => "8",
-			"max_length" => "10"
+			"max_length" => "10",
+			"size" => "5",
+			"class" => "not_RRD_1_0_x",
 			),
 		"unit_font" => array(
 			"friendly_name" => __("Unit Font File"),
 			"description" => __("The font file to be used for Graph Unit items"),
 			"class" => "custom_fonts",
 			"method" => "font",
-			"max_length" => "100"
-			)
+			"max_length" => "100",
+			"class" => "not_RRD_1_0_x",
+			),
+		"watermark_size" => array(
+			"friendly_name" => __("Watermark Font Size"),
+			"description" => __("The size of the font used for Graph Watermarks"),
+			"method" => "textbox",
+			"default" => "8",
+			"max_length" => "10",
+			"size" => "5",
+			"class" => "not_RRD_1_0_x",
+			),
+		"watermark_font" => array(
+			"friendly_name" => __("Watermark Font File"),
+			"description" => __("The font file to be used for Graph Watermarks"),
+			"method" => "font",
+			"max_length" => "100",
+			"class" => "not_RRD_1_0_x",
+			),
 		),
 	"colortags" => array(
 		"custom_colortags" => array(

@@ -869,7 +869,11 @@ function graph_settings_edit() {
 
 	html_end_box();
 
+	# the id tag is required for our js code!
+	form_hidden_box("hidden_rrdtool_version", read_config_option("rrdtool_version"), "");
+
 	include_once(CACTI_BASE_PATH . "/lib/jquery/colorpicker.js");
+	include_once(CACTI_BASE_PATH . "/lib/jquery/graph_template_options.js");
 
 	?>
 	<script type="text/javascript">

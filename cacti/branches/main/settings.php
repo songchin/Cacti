@@ -117,8 +117,11 @@ default:
 	html_end_box();
 
 	include_once(CACTI_BASE_PATH . "/lib/jquery/colorpicker.js");
+	include_once(CACTI_BASE_PATH . "/lib/jquery/graph_template_options.js");
 
 	form_hidden_box("tab", $current_tab, "");
+	# the id tag is required for our js code!
+	form_hidden_box("hidden_rrdtool_version", read_config_option("rrdtool_version"), "");
 
 	form_save_button_alt("url!index.php", "save", "save");
 

@@ -493,7 +493,7 @@ function template_edit() {
 	############
 
 	# the id tag is required for our js code!
-	form_hidden_box("rrdtool_version", read_config_option("rrdtool_version"), "");
+	form_hidden_box("hidden_rrdtool_version", read_config_option("rrdtool_version"), "");
 	html_end_box(false);
 
 	form_save_button_alt("return");

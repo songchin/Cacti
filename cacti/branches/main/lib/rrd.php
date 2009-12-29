@@ -1833,6 +1833,12 @@ function rrdtool_function_xport($local_graph_id, $rra_id, $xport_data_array, &$x
 	return $xport_array;
 }
 
+
+/* rrdtool_set_font		- set the rrdtool font option
+ * @arg $type			- the type of font: DEFAULT, TITLE, AXIS, UNIT, LEGEND, WATERMARK
+ * @arg $no_legend		- special handling for TITLE if legend is suppressed
+ * returns				- rrdtool --font option for the given font type
+ */
 function rrdtool_set_font($type, $no_legend = "") {
 	global $config;
 	if (read_graph_config_option("custom_fonts") == CHECKED) {
@@ -1845,7 +1851,7 @@ function rrdtool_set_font($type, $no_legend = "") {
 
 	/* do some simple checks */
 	if (read_config_option("rrdtool_version") == RRD_VERSION_1_0 ||
-			  read_config_option("rrdtool_version") == RRD_VERSION_1_2) { # rrdtool 1.0 and 1.2 use font files
+		read_config_option("rrdtool_version") == RRD_VERSION_1_2) { # rrdtool 1.0 and 1.2 use font files
 		if (!file_exists($font)) {
 			$font = "";
 		}
@@ -1876,15 +1882,50 @@ function rrdtool_set_colortag($type, $colortag) {
 	global $config;
 
 	$tag = "";
+	$sequence = read_config_option("colortag_sequence");
 
-	if (!empty($colortag)) {
-		$tag = $colortag;													# graph specific tag is topmost priority
-	} elseif (read_graph_config_option("custom_colortags") == CHECKED) {
-		$colortag = read_graph_config_option("colortag_" . $type);
-		if (!empty($colortag)) {$tag = $colortag;}							# custom tag "for all graphs" is nextmost priority
-	}else{
-		$colortag = read_config_option("colortag_" . $type);
-		if (!empty($colortag)) {$tag = $colortag;}							# global tag is least priority
+	switch ($sequence) {
+		case COLORTAGS_GLOBAL:
+			$colortag = read_config_option("colortag_" . $type);
+			if (!empty($colortag)) {$tag = $colortag;}
+			break;
+
+		case COLORTAGS_USER:
+			$colortag = read_graph_config_option("colortag_" . $type);
+			if (!empty($colortag)) {$tag = $colortag;}
+			break;
+
+		case COLORTAGS_TEMPLATE:
+			if (!empty($colortag)) {$tag = $colortag;}
+			break;
+
+		case COLORTAGS_UTG:
+			if (read_graph_config_option("custom_colortags") == CHECKED) {		# user tag "for all graphs" comes first
+				$colortag = read_graph_config_option("colortag_" . $type);
+				if (!empty($colortag)) {$tag = $colortag;}
+			}
+			if (empty($tag) && !empty($colortag)) {								# graph specific tag comes next
+				$tag = $colortag;
+			}
+			if (empty($tag)) {													# global tag is least priority
+				$colortag = read_config_option("colortag_" . $type);
+				if (!empty($colortag)) {$tag = $colortag;}
+			}
+			break;
+
+		case COLORTAGS_TUG:
+			if (empty($tag) && !empty($colortag)) {								# graph specific tag comes first
+				$tag = $colortag;
+			}
+			if (read_graph_config_option("custom_colortags") == CHECKED) {		# user tag "for all graphs" comes next
+				$colortag = read_graph_config_option("colortag_" . $type);
+				if (!empty($colortag)) {$tag = $colortag;}
+			}
+			if (empty($tag)) {													# global tag is least priority
+				$colortag = read_config_option("colortag_" . $type);
+				if (!empty($colortag)) {$tag = $colortag;}
+			}
+			break;
 	}
 
 	if (!empty($tag)) {

@@ -65,6 +65,12 @@ define("RRD_FONT_RENDER_MONO", "mono");
 define("RRD_GRAPH_RENDER_NORMAL", "normal");
 define("RRD_GRAPH_RENDER_MONO", "mono");
 
+define("COLORTAGS_GLOBAL",		1);
+define("COLORTAGS_USER",		2);
+define("COLORTAGS_TEMPLATE",	3);
+define("COLORTAGS_UTG",			4);
+define("COLORTAGS_TUG",			5);
+
 define("DATA_QUERY_AUTOINDEX_NONE", 0);
 define("DATA_QUERY_AUTOINDEX_BACKWARDS_UPTIME", 1);
 define("DATA_QUERY_AUTOINDEX_INDEX_COUNT_CHANGE", 2);

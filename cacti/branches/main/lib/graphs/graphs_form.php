@@ -969,7 +969,7 @@ function graph_edit() {
 		form_hidden_box("save_component_graph_new","1","");
 	}
 
-	form_hidden_box("rrdtool_version", read_config_option("rrdtool_version"), "");
+	form_hidden_box("hidden_rrdtool_version", read_config_option("rrdtool_version"), "");
 	form_save_button_alt();
 ?>
 <script type="text/javascript">
@@ -990,11 +990,11 @@ function graph_edit() {
 dynamic();
 
 function dynamic() {
-	//alert("RRDTool Version is '" + document.getElementById('rrdtool_version').value + "'");
+	//alert("RRDTool Version is '" + document.getElementById('hidden_rrdtool_version').value + "'");
 	//alert("Log is '" + document.getElementById('auto_scale_log').checked + "'");
 	if (document.getElementById('scale_log_units')) {
 		document.getElementById('scale_log_units').disabled=true;
-		if ((document.getElementById('rrdtool_version').value != 'rrd-1.0.x') &&
+		if ((document.getElementById('hidden_rrdtool_version').value != 'rrd-1.0.x') &&
 			(document.getElementById('auto_scale_log').checked)) {
 			document.getElementById('scale_log_units').disabled=false;
 		}
@@ -1005,7 +1005,7 @@ function changeScaleLog() {
 	//alert("Log changed to '" + document.getElementById('auto_scale_log').checked + "'");
 	if (document.getElementById('scale_log_units')) {
 		document.getElementById('scale_log_units').disabled=true;
-		if ((document.getElementById('rrdtool_version').value != 'rrd-1.0.x') &&
+		if ((document.getElementById('hidden_rrdtool_version').value != 'rrd-1.0.x') &&
 			(document.getElementById('auto_scale_log').checked)) {
 			document.getElementById('scale_log_units').disabled=false;
 		}
