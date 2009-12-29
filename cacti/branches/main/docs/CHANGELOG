@@ -29,6 +29,7 @@ Cacti CHANGELOG
 -bug#0001535: Tree Automation Difficult Due to Lack of Parent ID in Tree Nodes 
 -bug#0001549: Database crashes with use of array_to_sql_or
 -bug#0001557: Quotes in Text Format graph template field breaks graph
+-bug#0001580: Extra newline in api_automation_tools.php breaks custom scripts
 -bug#0001600: Default action on lists should be "None" 
 -bug: remove graph permissions if graph is removed
 -bug: remove host permissions if host is removed
@@ -66,7 +67,8 @@ Cacti CHANGELOG
 -feature#0001450: Template import script
 -feature#0001525: add rebuild_poller_cache --host-id=[ID]
 -feature#0001542: Rewriting SNMP values of data queries
--feature:0001550: Record the polling time for each host to optimize polling times
+-feature#0001550: Record the polling time for each host to optimize polling times
+-feature#0001588: Add pango-markup options to simple html markup in graphed text (title, legend etc) 
 -feature: jQuery "TableDnd" used for cdef item sort (courtesy Browniebraun)
 -feature: jQuery "TableDnd" for Graph Template Item
 -feature: jQuery "TableDnd" for Data Queries Suggested Values
