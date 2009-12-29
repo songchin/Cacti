@@ -641,7 +641,7 @@ function form_dropdown_cb($form_name, $form_sql, $form_sql_id, $form_previous_va
 	//-->
 	</script>
 	<input class="ac_field" type="text" id="<?php print $form_name . '_cb';?>" size="70" value="<?php print $form_previous_text; ?>">
-	<input type="hidden" id="<?php print $form_name;?>" value='<?php print $form_previous_value;?>'>
+	<input type="hidden" id="<?php print $form_name;?>" name="<?php print $form_name;?>" value='<?php print $form_previous_value;?>'>
 	<?php
 }
 
