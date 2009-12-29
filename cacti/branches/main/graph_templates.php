@@ -311,7 +311,13 @@ function form_actions() {
 	print "<form action='graph_templates.php' method='post'>\n";
 
 	if (sizeof($graph_array)) {
-		if (get_request_var_post("drp_action") == "1") { /* delete */
+		if (get_request_var_post("drp_action") == ACTION_NONE) { /* NONE */
+			print "	<tr>
+						<td class='textArea'>
+							<p>" . __("You did not select a valid action. Please select 'Return' to return to the previous menu.") . "</p>
+						</td>
+					</tr>\n";
+		}elseif (get_request_var_post("drp_action") == "1") { /* delete */
 			print "	<tr>
 					<td class='textArea'>
 						<p>" . __("Are you sure you want to delete the following graph templates? Any graphs attached to these templates will become individual graphs.") . "</p>
@@ -337,7 +343,7 @@ function form_actions() {
 			</tr>\n";
 	}
 
-	if (!sizeof($graph_array)) {
+	if (!sizeof($graph_array) || get_request_var_post("drp_action") == ACTION_NONE) {
 		form_return_button_alt();
 	}else{
 		form_yesno_button_alt(serialize($graph_array), get_request_var_post("drp_action"));

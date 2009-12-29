@@ -364,7 +364,13 @@ function data_source_form_actions() {
 	print "<form action='data_sources.php' method='post'>\n";
 
 	if (sizeof($ds_array)) {
-		if (get_request_var_post("drp_action") == DS_ACTION_DELETE) { /* delete */
+		if (get_request_var_post("drp_action") == ACTION_NONE) { /* NONE */
+			print "	<tr>
+						<td class='textArea'>
+							<p>" . __("You did not select a valid action. Please select 'Return' to return to the previous menu.") . "</p>
+						</td>
+					</tr>\n";
+		}elseif (get_request_var_post("drp_action") == DS_ACTION_DELETE) { /* delete */
 			$graphs = array();
 
 			/* find out which (if any) graphs are using this data source, so we can tell the user */
@@ -474,7 +480,7 @@ function data_source_form_actions() {
 			</tr>\n";
 	}
 
-	if (!sizeof($ds_array)) {
+	if (!sizeof($ds_array) || get_request_var_post("drp_action") == ACTION_NONE) {
 		form_return_button_alt();
 	}else{
 		form_yesno_button_alt(serialize($ds_array), get_request_var_post("drp_action"));

@@ -129,7 +129,13 @@ function form_actions() {
 	print "<form action='gprint_presets.php' method='post'>\n";
 
 	if (isset($gprint_array)) {
-		if (get_request_var_post("drp_action") == "1") { /* delete */
+		if (get_request_var_post("drp_action") == ACTION_NONE) { /* NONE */
+			print "	<tr>
+						<td class='textArea'>
+							<p>" . __("You did not select a valid action. Please select 'Return' to return to the previous menu.") . "</p>
+						</td>
+					</tr>\n";
+		}elseif (get_request_var_post("drp_action") == "1") { /* delete */
 			print "	<tr>
 					<td class='textArea' bgcolor='#" . $colors["form_alternate1"]. "'>
 						<p>" . __("Are you sure you want to delete the following GPRINT presets?") . "</p>
@@ -146,7 +152,7 @@ function form_actions() {
 	print "<div><input type='hidden' name='selected_items' value='" . (isset($gprint_array) ? serialize($gprint_array) : '') . "'></div>";
 	print "<div><input type='hidden' name='drp_action' value='" . $_POST["drp_action"] . "'></div>";
 
-	if (!isset($gprint_array)) {
+	if (!isset($gprint_array) || get_request_var_post("drp_action") == ACTION_NONE) {
 		form_return_button_alt();
 	}else{
 		form_yesno_button_alt(serialize($gprint_array), get_request_var_post("drp_action"));

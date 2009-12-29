@@ -198,6 +198,14 @@ function form_actions() {
 
 	print "<form action='user_admin.php' method='post'>\n";
 
+	if (get_request_var_post("drp_action") == ACTION_NONE) { /* NONE */
+		print "	<tr>
+					<td class='textArea'>
+						<p>" . __("You did not select a valid action. Please select 'Return' to return to the previous menu.") . "</p>
+					</td>
+				</tr>\n";
+	}
+
 	if ((get_request_var_post("drp_action") == "1") && (sizeof($user_array))) { /* delete */
 		print "
 			<tr>
@@ -282,7 +290,7 @@ function form_actions() {
 			</tr>\n";
 	}
 
-	if (sizeof($user_array) == 0) {
+	if (!sizeof($user_array) || get_request_var_post("drp_action") == ACTION_NONE) {
 		print "<tr><td bgcolor='#" . $colors["form_alternate1"]. "'><span class='textError'>You must select at least one user.</span></td></tr>\n";
 		$save_html = "<a href='user_admin.php'><img src='images/button_cancel.gif' alt='Cancel' align='middle' border='0'></a>";
 

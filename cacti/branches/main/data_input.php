@@ -225,7 +225,13 @@ function form_actions() {
 	print "<form action='data_input.php' method='post'>\n";
 
 	if (sizeof($di_array)) {
-		if (get_request_var_post("drp_action") == "1") { /* delete */
+		if (get_request_var_post("drp_action") == ACTION_NONE) { /* NONE */
+			print "	<tr>
+						<td class='textArea'>
+							<p>" . __("You did not select a valid action. Please select 'Return' to return to the previous menu.") . "</p>
+						</td>
+					</tr>\n";
+		}elseif (get_request_var_post("drp_action") == "1") { /* delete */
 			$graphs = array();
 
 			print "
@@ -244,7 +250,7 @@ function form_actions() {
 			</tr>\n";
 	}
 
-	if (!sizeof($di_array)) {
+	if (!sizeof($di_array) || get_request_var_post("drp_action") == ACTION_NONE) {
 		form_return_button_alt();
 	}else{
 		form_yesno_button_alt(serialize($di_array), get_request_var_post("drp_action"));

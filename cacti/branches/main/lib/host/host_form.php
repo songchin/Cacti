@@ -363,7 +363,13 @@ function api_host_form_actions() {
 	html_start_box("<strong>" . $device_actions{get_request_var_post("drp_action")} . "</strong>", "60", $colors["header_panel"], "3", "center", "");
 
 	if (sizeof($host_array)) {
-		if (get_request_var_post("drp_action") == DEVICE_ACTION_ENABLE) { /* Enable Devices */
+		if (get_request_var_post("drp_action") == ACTION_NONE) { /* NONE */
+			print "	<tr>
+						<td class='textArea'>
+							<p>" . __("You did not select a valid action. Please select 'Return' to return to the previous menu.") . "</p>
+						</td>
+					</tr>\n";
+		}elseif (get_request_var_post("drp_action") == DEVICE_ACTION_ENABLE) { /* Enable Devices */
 			print "	<tr>
 					<td colspan='2' class='textArea'>
 						<p>" . __("To enable the following devices, press the \"yes\" button below.") . "</p>
@@ -515,7 +521,7 @@ function api_host_form_actions() {
 			</tr>\n";
 	}
 
-	if (!sizeof($host_array)) {
+	if (!sizeof($host_array) || get_request_var_post("drp_action") == ACTION_NONE) {
 		form_return_button_alt();
 	}else{
 		form_yesno_button_alt(serialize($host_array), get_request_var_post("drp_action"));

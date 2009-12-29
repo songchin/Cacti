@@ -21,6 +21,9 @@
  | http://www.cacti.net/                                                   |
  +-------------------------------------------------------------------------+
 */
+$actions_none = array(
+	ACTION_NONE => __("None"),
+	);
 
 $graph_actions = array(
 	GRAPH_ACTION_DELETE => __("Delete"),

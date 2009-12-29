@@ -1158,7 +1158,7 @@ function draw_menu($user_menu = "") {
    @arg $actions_array - an array that contains a list of possible actions. this array should
      be compatible with the form_dropdown() function */
 function draw_actions_dropdown($actions_array) {
-	global $config;
+	global $config, $actions_none;
 	?>
 	<table class='saveBoxAction'>
 		<tr>
@@ -1167,7 +1167,7 @@ function draw_actions_dropdown($actions_array) {
 			</td>
 			<td class='right'>
 				<?php print __("Choose an action:");?>
-				<?php form_dropdown("drp_action",$actions_array,"","","1","","");?>
+				<?php form_dropdown("drp_action",$actions_none+$actions_array,"","",ACTION_NONE,"","");?>
 			</td>
 			<td class='w1 right'>
 				<input type='submit' value='<?php print __("Go");?>' name='go'>

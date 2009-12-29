@@ -130,7 +130,13 @@ function form_actions() {
 	print "<form action='rra.php' method='post'>\n";
 
 	if (isset($rra_array)) {
-		if (get_request_var_post("drp_action") == "1") { /* delete */
+		if (get_request_var_post("drp_action") == ACTION_NONE) { /* NONE */
+			print "	<tr>
+						<td class='textArea'>
+							<p>" . __("You did not select a valid action. Please select 'Return' to return to the previous menu.") . "</p>
+						</td>
+					</tr>\n";
+		}elseif (get_request_var_post("drp_action") == "1") { /* delete */
 			print "	<tr>
 					<td class='textArea' bgcolor='#" . $colors["form_alternate1"]. "'>
 						<p>" . __("Are you sure you want to delete the following RRAs?") . "</p>
@@ -147,7 +153,7 @@ function form_actions() {
 	print "<div><input type='hidden' name='selected_items' value='" . (isset($rra_array) ? serialize($rra_array) : '') . "'></div>";
 	print "<div><input type='hidden' name='drp_action' value='" . $_POST["drp_action"] . "'></div>";
 
-	if (!isset($rra_array)) {
+	if (!isset($rra_array) || get_request_var_post("drp_action") == ACTION_NONE) {
 		form_return_button_alt();
 	}else{
 		form_yesno_button_alt(serialize($rra_array), get_request_var_post("drp_action"));

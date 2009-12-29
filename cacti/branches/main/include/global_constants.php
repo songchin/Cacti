@@ -23,6 +23,7 @@
 */
 
 define("CHECKED", "on");
+define("ACTION_NONE", -1);
 
 define("HOST_GROUPING_GRAPH_TEMPLATE", 1);
 define("HOST_GROUPING_DATA_QUERY_INDEX", 2);

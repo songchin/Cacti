@@ -218,7 +218,13 @@ function form_actions() {
 	print "<form action='pollers.php' method='post'>\n";
 
 	if (sizeof($poller_array)) {
-		if (get_request_var_post("drp_action") == "1") { /* delete */
+		if (get_request_var_post("drp_action") == ACTION_NONE) { /* NONE */
+			print "	<tr>
+						<td class='textArea'>
+							<p>" . __("You did not select a valid action. Please select 'Return' to return to the previous menu.") . "</p>
+						</td>
+					</tr>\n";
+		}elseif (get_request_var_post("drp_action") == "1") { /* delete */
 			print "	<tr>
 					<td class='textArea'>
 						<p>". __("Are you sure you want to delete the following pollers? All devices currently attached this these pollers will be reassigned to the default poller.") . "</p>
@@ -243,7 +249,7 @@ function form_actions() {
 			</tr>\n";
 	}
 
-	if (!sizeof($poller_array)) {
+	if (!sizeof($poller_array) || get_request_var_post("drp_action") == ACTION_NONE) {
 		form_return_button_alt();
 	}else{
 		form_yesno_button_alt(serialize($poller_array), get_request_var_post("drp_action"));

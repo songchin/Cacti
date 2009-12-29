@@ -318,7 +318,13 @@ function form_actions() {
 	print "<form action='host_templates.php' method='post'>\n";
 
 	if (sizeof($host_array)) {
-		if (get_request_var_post("drp_action") == "1") { /* delete */
+		if (get_request_var_post("drp_action") == ACTION_NONE) { /* NONE */
+			print "	<tr>
+						<td class='textArea'>
+							<p>" . __("You did not select a valid action. Please select 'Return' to return to the previous menu.") . "</p>
+						</td>
+					</tr>\n";
+		}elseif (get_request_var_post("drp_action") == "1") { /* delete */
 			print "	<tr>
 					<td class='textArea'>
 						<p>" . __("Are you sure you want to delete the following host templates? All devices currently attached this these host templates will lose their template assocation.") . "</p>
@@ -344,7 +350,7 @@ function form_actions() {
 			</tr>\n";
 	}
 
-	if (!sizeof($host_array)) {
+	if (!sizeof($host_array) || get_request_var_post("drp_action") == ACTION_NONE) {
 		form_return_button_alt();
 	}else{
 		form_yesno_button_alt(serialize($host_array), get_request_var_post("drp_action"));

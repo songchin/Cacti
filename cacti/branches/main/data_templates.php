@@ -348,7 +348,13 @@ function form_actions() {
 	print "<form action='data_templates.php' method='post'>\n";
 
 	if (sizeof($ds_array)) {
-		if (get_request_var_post("drp_action") == "1") { /* delete */
+		if (get_request_var_post("drp_action") == ACTION_NONE) { /* NONE */
+			print "	<tr>
+						<td class='textArea'>
+							<p>" . __("You did not select a valid action. Please select 'Return' to return to the previous menu.") . "</p>
+						</td>
+					</tr>\n";
+		}elseif (get_request_var_post("drp_action") == "1") { /* delete */
 			print "	<tr>
 					<td class='textArea'>
 						<p>" . __("Are you sure you want to delete the following data templates? Any data sources attached to these templates will become individual data sources.") . "</p>
@@ -374,7 +380,7 @@ function form_actions() {
 			</tr>\n";
 	}
 
-	if (!sizeof($ds_array)) {
+	if (!sizeof($ds_array) || get_request_var_post("drp_action") == ACTION_NONE) {
 		form_return_button_alt();
 	}else{
 		form_yesno_button_alt(serialize($ds_array), get_request_var_post("drp_action"));

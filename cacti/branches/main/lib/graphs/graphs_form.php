@@ -323,7 +323,13 @@ function form_actions() {
 	print "<form action='graphs.php' method='post'>\n";
 
 	if (sizeof($graph_array)) {
-		if (get_request_var_post("drp_action") == GRAPH_ACTION_DELETE) { /* delete */
+		if (get_request_var_post("drp_action") == ACTION_NONE) { /* NONE */
+			print "	<tr>
+						<td class='textArea'>
+							<p>" . __("You did not select a valid action. Please select 'Return' to return to the previous menu.") . "</p>
+						</td>
+					</tr>\n";
+		}elseif (get_request_var_post("drp_action") == GRAPH_ACTION_DELETE) { /* delete */
 			$graphs = array();
 
 			/* find out which (if any) data sources are being used by this graph, so we can tell the user */
@@ -455,7 +461,7 @@ function form_actions() {
 			</tr>\n";
 	}
 
-	if (!sizeof($graph_array)) {
+	if (!sizeof($graph_array) || get_request_var_post("drp_action") == ACTION_NONE) {
 		form_return_button_alt();
 	}else{
 		form_yesno_button_alt(serialize($graph_array), get_request_var_post("drp_action"));
