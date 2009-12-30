@@ -536,7 +536,7 @@ function displayQueryTypes($types, $quietMode = FALSE) {
 
 function displayHostTemplates($host_templates, $quietMode = FALSE) {
 	if (!$quietMode) {
-		echo __("Valid Host Templates: (id, name)") . "\n";
+		echo __("Valid Device Templates: (id, name)") . "\n";
 	}
 
 	if (sizeof($host_templates)) {
@@ -1213,12 +1213,12 @@ function verifyDevice(&$host, $ri_check=false) {
 				break;
 			case "host_template_id":
 				if (!(((string) $value) === ((string)(int) $value))) {
-					$check["err_msg"] = __("ERROR: Host Template Id must be integer (%s)", $value);
+					$check["err_msg"] = __("ERROR: Device Template Id must be integer (%s)", $value);
 					return $check;
 				} elseif ($ri_check) {
 					$match = db_fetch_cell("SELECT COUNT(*) FROM host_template WHERE id=" . $value);
 					if ($match == 0) {
-						$check["err_msg"] = __("ERROR: This host template id does not exist (%s)", $value);
+						$check["err_msg"] = __("ERROR: This Device template id does not exist (%s)", $value);
 						return $check;
 					}
 				}

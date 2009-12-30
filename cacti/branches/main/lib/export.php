@@ -509,7 +509,7 @@ function host_template_to_xml($host_template_id) {
 	$host_template_snmp_query = db_fetch_assoc("select * from host_template_snmp_query where host_template_id=$host_template_id");
 
 	if (empty($host_template["id"])) {
-		$err_msg = "Invalid host template.";
+		$err_msg = "Invalid Device Template.";
 		return $err_msg;
 	}
 

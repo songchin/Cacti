@@ -1876,9 +1876,9 @@ function draw_navigation_text() {
 		"pollers.php:actions" => array("title" => __("Actions"), "mapping" => "index.php:,pollers.php:", "url" => "", "level" => "2"),
 		"pollers.php:" => array("title" => __("Pollers"), "mapping" => "index.php:", "url" => "pollers.php", "level" => "1"),
 		"pollers.php:edit" => array("title" => __("(Edit)"), "mapping" => "index.php:,pollers.php:", "url" => "", "level" => "2"),
-		"host_templates.php:actions" => array("title" => __("Actions"), "mapping" => "index.php:,host_templates.php:", "url" => "", "level" => "2"),
-		"host_templates.php:" => array("title" => __("Host Templates"), "mapping" => "index.php:", "url" => "host_templates.php", "level" => "1"),
-		"host_templates.php:edit" => array("title" => __("(Edit)"), "mapping" => "index.php:,host_templates.php:", "url" => "", "level" => "2"),
+		"device_templates.php:actions" => array("title" => __("Actions"), "mapping" => "index.php:,device_templates.php:", "url" => "", "level" => "2"),
+		"device_templates.php:" => array("title" => __("Device Templates"), "mapping" => "index.php:", "url" => "device_templates.php", "level" => "1"),
+		"device_templates.php:edit" => array("title" => __("(Edit)"), "mapping" => "index.php:,device_templates.php:", "url" => "", "level" => "2"),
 		"index.php:" => array("title" => __("Console"), "mapping" => "", "url" => URL_PATH . "index.php", "level" => "0"),
 		"index.php:login" => array("title" => __("Console"), "mapping" => "", "url" => URL_PATH . "index.php", "level" => "0"),
 		"rra.php:" => array("title" => __("Round Robin Archives"), "mapping" => "index.php:", "url" => "rra.php", "level" => "1"),
@@ -2128,7 +2128,7 @@ function get_hash_xaxis($xaxis_id, $sub_type = "xaxis") {
 }
 
 /* get_hash_host_template - returns the current unique hash for a gprint preset
-   @arg $host_template_id - (int) the ID of the host template to return a hash for
+   @arg $host_template_id - (int) the ID of the device template to return a hash for
    @returns - a 128-bit, hexadecimal hash */
 function get_hash_host_template($host_template_id) {
 	$hash = db_fetch_cell("select hash from host_template where id=$host_template_id");

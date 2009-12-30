@@ -48,12 +48,12 @@ switch (get_request_var_request("action")) {
 	case 'item_remove_gt':
 		template_item_remove_gt();
 
-		header("Location: host_templates.php?action=edit&id=" . $_GET["host_template_id"]);
+		header("Location: device_templates.php?action=edit&id=" . $_GET["host_template_id"]);
 		break;
 	case 'item_remove_dq':
 		template_item_remove_dq();
 
-		header("Location: host_templates.php?action=edit&id=" . $_GET["host_template_id"]);
+		header("Location: device_templates.php?action=edit&id=" . $_GET["host_template_id"]);
 		break;
 	case 'edit':
 		include_once(CACTI_BASE_PATH . "/include/top_header.php");
@@ -141,7 +141,7 @@ function form_save() {
 					input_validate_input_number(get_request_var_post("graph_template_id"));
 					/* ==================================================== */
 					db_execute("replace into host_template_graph (host_template_id,graph_template_id) values($host_template_id," . get_request_var_post("graph_template_id") . ")");
-					/* associate this new Graph Template with all hosts that are using the current Host Template
+					/* associate this new Graph Template with all hosts that are using the current Device Template
 					   but leave those hosts that have this template already */
 					$new_gt_host_entries = db_fetch_assoc("
 								SELECT 	host.id AS host_id,
@@ -181,7 +181,7 @@ function form_save() {
 					input_validate_input_number(get_request_var_post("reindex_method"));
 					/* ==================================================== */
 					db_execute("replace into host_template_snmp_query (host_template_id,snmp_query_id, reindex_method) values($host_template_id," . get_request_var_post("snmp_query_id") . ", " . get_request_var_post("reindex_method") . ")");
-					/* associate this new Data Query with all hosts that are using the current Host Template
+					/* associate this new Data Query with all hosts that are using the current Device Template
 					   but leave those hosts that have this Data Query already.
 					   Reindex all those Hosts */
 					$new_dq_host_entries = db_fetch_assoc("
@@ -226,9 +226,9 @@ function form_save() {
 		}
 
 		if ((is_error_message()) || (empty($_POST["id"])) || ($redirect_back == true) || $reindex_performed) {
-			header("Location: host_templates.php?action=edit&id=" . (empty($host_template_id) ? $_POST["id"] : $host_template_id));
+			header("Location: device_templates.php?action=edit&id=" . (empty($host_template_id) ? $_POST["id"] : $host_template_id));
 		}else{
-			header("Location: host_templates.php");
+			header("Location: device_templates.php");
 		}
 		exit;
 	}
@@ -264,7 +264,7 @@ function form_actions() {
 			if (isset($bad_ids)) {
 				$message = "";
 				foreach($bad_ids as $template_id) {
-					$message .= (strlen($message) ? "<br>":"") . "<i>Host Template " . $template_id . " is in use and can not be removed</i>\n";
+					$message .= (strlen($message) ? "<br>":"") . "<i>Device Template " . $template_id . " is in use and can not be removed</i>\n";
 				}
 
 				$_SESSION['sess_message_dt_ref_int'] = array('message' => "<font size=-2>$message</font>", 'type' => 'info');
@@ -290,7 +290,7 @@ function form_actions() {
 			}
 		}
 
-		header("Location: host_templates.php");
+		header("Location: device_templates.php");
 		exit;
 	}
 
@@ -315,7 +315,7 @@ function form_actions() {
 
 	html_start_box("<strong>" . $host_actions{get_request_var_post("drp_action")} . "</strong>", "60", $colors["header_panel"], "3", "center", "");
 
-	print "<form action='host_templates.php' method='post'>\n";
+	print "<form action='device_templates.php' method='post'>\n";
 
 	if (sizeof($host_array)) {
 		if (get_request_var_post("drp_action") == ACTION_NONE) { /* NONE */
@@ -327,7 +327,7 @@ function form_actions() {
 		}elseif (get_request_var_post("drp_action") == "1") { /* delete */
 			print "	<tr>
 					<td class='textArea'>
-						<p>" . __("Are you sure you want to delete the following host templates? All devices currently attached this these host templates will lose their template assocation.") . "</p>
+						<p>" . __("Are you sure you want to delete the following Device Templates? All devices currently attached this these Device Templates will lose their template assocation.") . "</p>
 						<p>$host_list</p>
 					</td>
 				</tr>\n
@@ -335,7 +335,7 @@ function form_actions() {
 		}elseif (get_request_var_post("drp_action") == "2") { /* duplicate */
 			print "	<tr>
 					<td class='textArea'>
-						<p>" . __("When you click save, the following host templates will be duplicated. You can optionally change the title format for the new host templates.") . "</p>
+						<p>" . __("When you click save, the following Device Templates will be duplicated. You can optionally change the title format for the new Device Templates.") . "</p>
 						<p>$host_list</p>
 						<p><strong>" . __("Title Format:") . "</strong><br>"; form_text_box("title_format", "<template_title> (1)", "", "255", "30", "text"); print "</p>
 					</td>
@@ -416,7 +416,7 @@ function template_edit() {
 	}
 
 	print "<form method='post' action='" .  basename($_SERVER["PHP_SELF"]) . "' name='host_template_edit'>\n";
-	html_start_box("<strong>" . __("Host Templates") . "</strong> $header_label", "100", $colors["header"], "0", "center", "", true);
+	html_start_box("<strong>" . __("Device Templates") . "</strong> $header_label", "100", $colors["header"], "0", "center", "", true);
 	$header_items = array(__("Field"), __("Value"));
 	print "<tr><td>";
 	html_header($header_items, 1, true, 'host_template');
@@ -712,7 +712,7 @@ function template_edit() {
 						$("#reindex_method option[value=" + reindex_reboot + "]").removeAttr("disabled");
 						$("#reindex_method option[value=" + reindex_reboot + "]").attr('title', '');
 						/* select this again as default reindex method */
-						/* TODO: this ignores the default reindex method of the associated host template
+						/* TODO: this ignores the default reindex method of the associated Device Template
 						   to get it, an AJAX call is required */
 						$("#reindex_method option[value=" + reindex_reboot + "]").attr('selected', 'true');
 			}
@@ -769,7 +769,7 @@ function template_edit() {
 						<strong><?php print $i;?>)</strong> <?php print $item["name"];?>
 					</td>
 					<td align='right' nowrap>
-						<a href='<?php print htmlspecialchars("host_templates.php?action=item_remove_gt&id=" . $item["id"] . "&host_template_id=" . $_GET["id"]);?>'><img class="buttonSmall" src='images/delete_icon_large.gif' title='<?php print __("Delete Graph Template Association");?>' alt='<?php print __("Delete");?>' align='middle'></a>
+						<a href='<?php print htmlspecialchars("device_templates.php?action=item_remove_gt&id=" . $item["id"] . "&host_template_id=" . $_GET["id"]);?>'><img class="buttonSmall" src='images/delete_icon_large.gif' title='<?php print __("Delete Graph Template Association");?>' alt='<?php print __("Delete");?>' align='middle'></a>
 					</td>
 				<?php
 				form_end_row();
@@ -846,7 +846,7 @@ function template_edit() {
 						<?php form_dropdown("reindex_method_host_template_".get_request_var("id")."_query_".$item["id"]."_method_".$item["reindex_method"],$reindex_types,"","",$item["reindex_method"],"","","","");?>
 					</td>
 					<td align='right'>
-						<a href='<?php print htmlspecialchars("host_templates.php?action=item_remove_dq&id=" . $item["id"] . "&host_template_id=" . $_GET["id"]);?>'><img class='buttonSmall' src='images/delete_icon_large.gif' title='Delete Data Query Association' alt='Delete' align='middle'></a>
+						<a href='<?php print htmlspecialchars("device_templates.php?action=item_remove_dq&id=" . $item["id"] . "&host_template_id=" . $_GET["id"]);?>'><img class='buttonSmall' src='images/delete_icon_large.gif' title='Delete Data Query Association' alt='Delete' align='middle'></a>
 					</td>
 				<?php
 				form_end_row();
@@ -940,11 +940,11 @@ function template() {
 
 	display_output_messages();
 
-	html_start_box("<strong>" . __("Host Templates") . "</strong>", "100", $colors["header"], "3", "center", "host_templates.php?action=edit", true);
+	html_start_box("<strong>" . __("Device Templates") . "</strong>", "100", $colors["header"], "3", "center", "device_templates.php?action=edit", true);
 	?>
 	<tr class='rowAlternate2'>
 		<td>
-			<form name="form_host_template" action="host_templates.php">
+			<form name="form_host_template" action="device_templates.php">
 			<table cellpadding="0" cellspacing="3">
 				<tr>
 					<td class="nw50">
@@ -1009,7 +1009,7 @@ function template() {
 		" LIMIT " . ($rows*(get_request_var_request("page")-1)) . "," . $rows);
 
 	/* generate page list navigation */
-	$nav = html_create_nav($_REQUEST["page"], MAX_DISPLAY_PAGES, $rows, $total_rows, 7, "host_templates.php");
+	$nav = html_create_nav($_REQUEST["page"], MAX_DISPLAY_PAGES, $rows, $total_rows, 7, "device_templates.php");
 
 	print $nav;
 	html_end_box(false);
@@ -1025,8 +1025,8 @@ function template() {
 	if (sizeof($template_list) > 0) {
 		foreach ($template_list as $template) {
 			form_alternate_row_color('line' . $template["id"], true);
-			form_selectable_cell("<a class='linkEditMain' href='" . htmlspecialchars("host_templates.php?action=edit&id=" . $template["id"]) . "'>" . (strlen($_REQUEST["filter"]) ? preg_replace("/(" . preg_quote($_REQUEST["filter"]) . ")/i", "<span class=\"filter\">\\1</span>", $template["name"]) : $template["name"]) . "</a>", $template["id"]);
-			form_selectable_cell("<a class='linkEditMain' href='" . htmlspecialchars("host_templates.php?action=edit&id=" . $template["id"]) . "'>" . (strlen($_REQUEST["filter"]) ? preg_replace("/(" . preg_quote($_REQUEST["filter"]) . ")/i", "<span class=\"filter\">\\1</span>", $template["description"]) : $template["description"]) . "</a>", $template["id"]);
+			form_selectable_cell("<a class='linkEditMain' href='" . htmlspecialchars("device_templates.php?action=edit&id=" . $template["id"]) . "'>" . (strlen($_REQUEST["filter"]) ? preg_replace("/(" . preg_quote($_REQUEST["filter"]) . ")/i", "<span class=\"filter\">\\1</span>", $template["name"]) : $template["name"]) . "</a>", $template["id"]);
+			form_selectable_cell("<a class='linkEditMain' href='" . htmlspecialchars("device_templates.php?action=edit&id=" . $template["id"]) . "'>" . (strlen($_REQUEST["filter"]) ? preg_replace("/(" . preg_quote($_REQUEST["filter"]) . ")/i", "<span class=\"filter\">\\1</span>", $template["description"]) : $template["description"]) . "</a>", $template["id"]);
 			form_selectable_cell("<img src='" . $template["image"] . "'>", $template["id"]);
 			form_checkbox_cell($template["name"], $template["id"]);
 			form_end_row();
@@ -1037,7 +1037,7 @@ function template() {
 		/* put the nav bar on the bottom as well */
 		print $nav;
 	}else{
-		print "<tr><td><em>" . __("No Host Templates") . "</em></td></tr>\n";
+		print "<tr><td><em>" . __("No Device Templates") . "</em></td></tr>\n";
 	}
 
 	print "</table>\n";	# end table of html_header_sort_checkbox

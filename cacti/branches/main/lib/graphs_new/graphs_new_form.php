@@ -35,7 +35,7 @@ function api_graphs_new_form_save() {
 
 
 	if (isset($_POST["save_component_graph"])) {
-		/* summarize the 'create graph from host template/snmp index' stuff into an array */
+		/* summarize the 'create graph from device template/snmp index' stuff into an array */
 		while (list($var, $val) = each($_POST)) {
 			if (preg_match('/^cg_(\d+)$/', $var, $matches)) {
 				$selected_graphs["cg"]{$matches[1]}{$matches[1]} = true;
@@ -554,7 +554,7 @@ function graphs_new() {
 				<td class='rowSubHeader' width='1%' align='center' style='" . get_checkbox_style() . "'><input type='checkbox' style='margin: 0px;' name='all_cg' title='" . __("Select All") . "' onClick='SelectAll(\"cg\",this.checked);gt_update_selection_indicators();'></td>\n
 			</tr>\n";
 
-		/* create a row for each graph template associated with the host template */
+		/* create a row for each graph template associated with the device template */
 		if (sizeof($graph_templates) > 0) {
 		foreach ($graph_templates as $graph_template) {
 			$query_row = $graph_template["graph_template_id"];

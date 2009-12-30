@@ -86,12 +86,12 @@ function api_host_form_save() {
 
 	/* save basic host information during first run, host_template should have bee selected */
 	if (isset($_POST["save_basic_host"])) {
-		/* host template was given, so fetch defaults from it */
+		/* device template was given, so fetch defaults from it */
 		if ($_POST["host_template_id"] != 0) {
 			$host_template = db_fetch_row("SELECT *
 				FROM host_template
 				WHERE id=" . $_POST["host_template_id"]);
-		} else { /* no host template given, so fetch system defaults */
+		} else { /* no device template given, so fetch system defaults */
 			$host_template["snmp_community"]        = read_config_option("snmp_community");
 			$host_template["snmp_version"]          = read_config_option("snmp_ver");
 			$host_template["snmp_username"]         = read_config_option("snmp_username");
@@ -110,8 +110,8 @@ function api_host_form_save() {
 			$host_template["max_oids"]              = read_config_option("max_get_size");
 		}
 
-		$host_template["notes"]    = ""; /* no support for notes in a host template */
-		$host_template["disabled"] = ""; /* no support for disabling in a host template */
+		$host_template["notes"]    = ""; /* no support for notes in a device template */
+		$host_template["disabled"] = ""; /* no support for disabling in a device template */
 		$host_id = api_device_save($_POST["id"], $_POST["site_id"], $_POST["poller_id"], $_POST["host_template_id"], $_POST["description"],
 			get_request_var_post("hostname"), $host_template["snmp_community"], $host_template["snmp_version"],
 			$host_template["snmp_username"], $host_template["snmp_password"],
@@ -340,7 +340,7 @@ function api_host_form_actions() {
 	/* setup some variables */
 	$host_list = ""; $i = 0; $host_array = array();
 
-	/* loop through each of the host templates selected on the previous page and get more info about them */
+	/* loop through each of the device templates selected on the previous page and get more info about them */
 	while (list($var,$val) = each($_POST)) {
 		if (preg_match("/^chk_([0-9]+)$/", $var, $matches)) {
 			/* ================= input validation ================= */
@@ -806,7 +806,7 @@ function host_display_general($host, $host_text) {
 	print "<tr><td>";
 	html_header($header_items, 1, true, 'host');
 
-	/* preserve the host template id if passed in via a GET variable */
+	/* preserve the device template id if passed in via a GET variable */
 	if (!empty($_GET["host_template_id"])) {
 		$fields_host_edit["host_template_id"]["value"] = $_GET["host_template_id"];
 		$fields_host_edit["host_template_id"]["method"] = "hidden";

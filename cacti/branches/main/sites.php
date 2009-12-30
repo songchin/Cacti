@@ -133,7 +133,7 @@ function form_actions() {
 	/* setup some variables */
 	$site_list = ""; $i = 0;
 
-	/* loop through each of the host templates selected on the previous page and get more info about them */
+	/* loop through each of the sites selected on the previous page and get more info about them */
 	while (list($var,$val) = each($_POST)) {
 		if (preg_match("/^chk_([0-9]+)$/", $var, $matches)) {
 			/* ================= input validation ================= */
@@ -523,7 +523,7 @@ function site_filter() {
 						</select>
 					</td>
 					<td nowrap style='white-space: nowrap;' width="70">
-						&nbsp;<?php print __("Host Template:");?>
+						&nbsp;<?php print __("Device Template:");?>
 					</td>
 					<td class="w1">
 						<select name="host_template_id" onChange="applySiteFilterChange(document.form_sites)">

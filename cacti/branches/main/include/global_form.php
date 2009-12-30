@@ -254,7 +254,7 @@ $fields_data_input_field_edit = array(
 	"type_code" => array(
 		"method" => "textbox",
 		"friendly_name" => __("Special Type Code"),
-		"description" => __("If this field should be treated specially by host templates, indicate so here. Valid keywords for this field are 'hostname', 'snmp_community', 'snmp_username', 'snmp_password', 'snmp_auth_protocol', 'snmp_priv_passphrase', 'snmp_priv_protocol', 'snmp_context', 'snmp_port', 'snmp_timeout', and 'snmp_version'."),
+		"description" => __("If this field should be treated specially by Device Templates, indicate so here. Valid keywords for this field are 'hostname', 'snmp_community', 'snmp_username', 'snmp_password', 'snmp_auth_protocol', 'snmp_priv_passphrase', 'snmp_priv_protocol', 'snmp_context', 'snmp_port', 'snmp_timeout', and 'snmp_version'."),
 		"value" => "|arg1:type_code|",
 		"max_length" => "40"
 		),
@@ -992,7 +992,7 @@ $fields_graph_template_template_edit = array(
 		"method" => "drop_image",
 		"path" => "images/tree_icons",
 		"friendly_name" => __("Image"),
-		"description" => __("A useful icon to use to associate with this host template."),
+		"description" => __("A useful icon to use to associate with this Device Template."),
 		"default" => "graph.gif",
 		"width" => "120",
 		"value" => "|arg1:image|"
@@ -1362,7 +1362,7 @@ $fields_host_edit_availability = array(
 		)
 	);
 
-/* file: host_templates.php, action: edit */
+/* file: device_templates.php, action: edit */
 $fields_host_template_edit = array(
 	"host_header" => array(
 		"method" => "spacer",
@@ -1389,7 +1389,7 @@ $fields_host_template_edit = array(
 		"method" => "drop_image",
 		"path" => "images/tree_icons",
 		"friendly_name" => __("Image"),
-		"description" => __("A useful icon to use to associate with this host template."),
+		"description" => __("A useful icon to use to associate with this Device Template."),
 		"width" => "120",
 		"default" => "host.gif",
 		"value" => "|arg1:image|"
@@ -1638,7 +1638,7 @@ $fields_data_query_edit = array(
 		"method" => "drop_image",
 		"path" => "images/tree_icons",
 		"friendly_name" => __("Image"),
-		"description" => __("A useful icon to use to associate with this host template."),
+		"description" => __("A useful icon to use to associate with this Device Template."),
 		"default" => "dataquery.png",
 		"width" => "120",
 		"value" => "|arg1:image|"

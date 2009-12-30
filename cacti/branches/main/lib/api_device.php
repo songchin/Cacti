@@ -198,7 +198,7 @@ function api_device_save($id, $site_id, $poller_id, $host_template_id, $descript
 			}
 		}
 
-		/* if the user changes the host template, add each snmp query associated with it */
+		/* if the user changes the device template, add each snmp query associated with it */
 		if (($host_template_id != $_host_template_id) && (!empty($host_template_id))) {
 			$snmp_queries = db_fetch_assoc("select snmp_query_id, reindex_method from host_template_snmp_query where host_template_id=$host_template_id");
 

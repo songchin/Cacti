@@ -160,7 +160,7 @@ function display_help($me) {
 	echo "    --quiet              " . __("batch mode value return") . "\n\n";
 	echo __("Examples:") . "\n";
 	echo "   php -q " . $me . " --template=1\n";
-	echo "   " . __("  lists all devices related to a host template id of 1") . "\n";
+	echo "   " . __("  lists all devices related to a device template id of 1") . "\n";
 	echo "   php -q " . $me . " --port=161 --timeout=500\n";
 	echo "   " . __("  lists all devices using SNMP port of 161 and timeout of 500") . "\n";
 }

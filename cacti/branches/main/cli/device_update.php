@@ -117,7 +117,7 @@ if (sizeof($parms)) {
 		exit(1);
 	}
 	if (isset($new["host_template_id"])) {
-		echo(__("ERROR: Update of host template id not permitted\n"));
+		echo(__("ERROR: Update of device template id not permitted\n"));
 		exit(1);
 	}
 	# at least one matching criteria has to be defined
@@ -329,5 +329,5 @@ function display_help($me) {
 	echo "   php -q " . $me . " --community=public#secret --delim=#\n";
 	echo "   " . __("   changes the SNMP community string for all (matching) devices from 'public' to 'secret' using a custom delimiter of '#'") . "\n";
 	echo "   php -q " . $me . " --template=7 --version=:1 --timeout=:1000\n";
-	echo "   " . __("   changes both SNMP version and timeout for all devices related to the host template id of 7") . "\n";
+	echo "   " . __("   changes both SNMP version and timeout for all devices related to the device template id of 7") . "\n";
 }

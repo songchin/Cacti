@@ -336,7 +336,7 @@ function display_help($me) {
 	echo "    --quiet                " . __("batch mode value return") . "\n\n";
 	echo __("Examples:") . "\n";
 	echo "   php -q " . $me . " --ip=example.company.com --description=foobar --template=1\n";
-	echo "   " . __("  creates a new device using ip 'example.company.com' with a description of 'foobar' and host template id of 1") . "\n";
+	echo "   " . __("  creates a new device using ip 'example.company.com' with a description of 'foobar' and device template id of 1") . "\n";
 	echo "   php -q " . $me . " --ip=example.company.com --description=foobar --template=1 --community=secret\n";
 	echo "   " . __("  same as above but overriding SNMP comunity with the value of 'secret'") . "\n";
 	echo "   php -q " . $me . " --ip=example.company.com --description=foobar --template=1 --site-id=1 --poller-id=3\n";
