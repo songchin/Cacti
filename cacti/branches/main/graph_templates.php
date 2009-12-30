@@ -445,12 +445,13 @@ function template_edit() {
 	if (!empty($_GET["id"])) {
 		$template = db_fetch_row("select * from graph_templates where id=" . $_GET["id"]);
 		$template_graph = db_fetch_row("select * from graph_templates_graph where graph_template_id=" . $_GET["id"] . " and local_graph_id=0");
-
 		$header_label = __("[edit: ") . $template["name"] . "]";
 	}else{
 		$header_label = __("[new]");
 	}
 
+
+	# the template header
 	html_start_box("<strong>" . __("Template") . "</strong> $header_label", "100", $colors["header"], "0", "center", "", true);
 	$header_items = array(__("Field"), __("Value"));
 	print "<tr><td>";
@@ -463,43 +464,46 @@ function template_edit() {
 
 	print "</table></td></tr>";		/* end of html_header */
 	html_end_box(false);
+	form_hidden_box("graph_template_id", $template_graph["graph_template_id"], "0");
+	form_hidden_box("graph_template_graph_id", $template_graph["id"], "0");
+	form_hidden_box("save_component_template", 1, "");
 
-	html_start_box("<strong>" . __("Graph Template") . "</strong>", "100", $colors["header"], "0", "center", "", true, "table_graph_template");
 
-	############
+	# the global graph template fields go here
+#	html_start_box("<strong>" . __("Graph Template") . "</strong>", "100", $colors["header"], "0", "center", "", true, "table_graph_template");
+
 	/* id tags of tables (set via html_start_box) required for initial js on load */
-	html_start_box("<strong>" . __("Labels") . "</strong>", "100", $colors["header"], "0", "center", "", true, "table_graph_template_labels");
+	html_start_box("<strong>" . __("Graph Template Labels") . "</strong>", "100", $colors["header"], "0", "center", "", true, "table_graph_template_labels");
 	draw_template_edit_form('header_graph_labels', $struct_graph_labels, $template_graph, false);
 	html_end_box(false);
 	/* TODO: we should not use rrd version in the code, when going data-driven */
 	if ( read_config_option("rrdtool_version") != RRD_VERSION_1_0 && read_config_option("rrdtool_version") != RRD_VERSION_1_2) {
-		html_start_box("<strong>" . __("Right Axis Settings") . "</strong>", "100", $colors["header"], "0", "center", "", true, "table_graph_template_right_axis");
+		html_start_box("<strong>" . __("Graph Template Right Axis Settings") . "</strong>", "100", $colors["header"], "0", "center", "", true, "table_graph_template_right_axis");
 		draw_template_edit_form('header_graph_right_axis', $struct_graph_right_axis, $template_graph, false);
 	}
 	html_end_box(false);
-	html_start_box("<strong>" . __("Size") . "</strong>", "100", $colors["header"], "0", "center", "", true, "table_graph_template_size");
+	html_start_box("<strong>" . __("Graph Template Size") . "</strong>", "100", $colors["header"], "0", "center", "", true, "table_graph_template_size");
 	draw_template_edit_form('header_graph_size', $struct_graph_size, $template_graph, false);
 	html_end_box(false);
-	html_start_box("<strong>" . __("Limits") . "</strong>", "100", $colors["header"], "0", "center", "", true, "table_graph_template_limits");
+	html_start_box("<strong>" . __("Graph Template Limits") . "</strong>", "100", $colors["header"], "0", "center", "", true, "table_graph_template_limits");
 	draw_template_edit_form('header_graph_limits', $struct_graph_limits, $template_graph, false);
 	html_end_box(false);
-	html_start_box("<strong>" . __("Grid") . "</strong>", "100", $colors["header"], "0", "center", "", true, "table_graph_template_grid");
+	html_start_box("<strong>" . __("Graph Template Grid") . "</strong>", "100", $colors["header"], "0", "center", "", true, "table_graph_template_grid");
 	draw_template_edit_form('header_graph_grid', $struct_graph_grid, $template_graph, false);
 	html_end_box(false);
-	html_start_box("<strong>" . __("Color") . "</strong>", "100", $colors["header"], "0", "center", "", true, "table_graph_template_color");
+	html_start_box("<strong>" . __("Graph Template Color") . "</strong>", "100", $colors["header"], "0", "center", "", true, "table_graph_template_color");
 	draw_template_edit_form('header_graph_color', $struct_graph_color, $template_graph, false);
 	html_end_box(false);
-	html_start_box("<strong>" . __("Misc") . "</strong>", "100", $colors["header"], "0", "center", "", true, "table_graph_template_misc");
+	html_start_box("<strong>" . __("Graph Template Misc") . "</strong>", "100", $colors["header"], "0", "center", "", true, "table_graph_template_misc");
 	draw_template_edit_form('header_graph_misc', $struct_graph_misc, $template_graph, false);
 	html_end_box(false);
-	html_start_box("<strong>" . __("Cacti Specifics") . "</strong>", "100", $colors["header"], "0", "center", "", true, "table_graph_template_cacti");
+	html_start_box("<strong>" . __("Graph Template Cacti Specifics") . "</strong>", "100", $colors["header"], "0", "center", "", true, "table_graph_template_cacti");
 	draw_template_edit_form('header_graph_cacti', $struct_graph_cacti, $template_graph, false);
 	html_end_box(false);
-	############
 
 	# the id tag is required for our js code!
 	form_hidden_box("hidden_rrdtool_version", read_config_option("rrdtool_version"), "");
-	html_end_box(false);
+#	html_end_box(false);
 
 	form_save_button_alt("return");
 

@@ -993,18 +993,6 @@ $fields_graph_template_template_edit = array(
 		"width" => "120",
 		"value" => "|arg1:image|"
 		),
-	"graph_template_id" => array(
-		"method" => "hidden_zero",
-		"value" => "|arg2:graph_template_id|"
-		),
-	"graph_template_graph_id" => array(
-		"method" => "hidden_zero",
-		"value" => "|arg2:id|"
-		),
-	"save_component_template" => array(
-		"method" => "hidden",
-		"value" => "1"
-		)
 	);
 
 /* file: graph_templates.php, action: input_edit */
