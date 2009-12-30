@@ -498,17 +498,17 @@ function round_robin_archive_to_xml($round_robin_archive_id) {
 	return $xml_text;
 }
 
-function host_template_to_xml($host_template_id) {
-	global $fields_host_template_edit;
+function host_template_to_xml($device_template_id) {
+	global $fields_device_template_edit;
 
-	$hash = get_hash_version("host_template") . get_hash_host_template($host_template_id);
+	$hash = get_hash_version("host_template") . get_hash_host_template($device_template_id);
 	$xml_text = "";
 
-	$host_template = db_fetch_row("select * from host_template where id=$host_template_id");
-	$host_template_graph = db_fetch_assoc("select * from host_template_graph where host_template_id=$host_template_id");
-	$host_template_snmp_query = db_fetch_assoc("select * from host_template_snmp_query where host_template_id=$host_template_id");
+	$device_template = db_fetch_row("select * from host_template where id=$device_template_id");
+	$device_template_graph = db_fetch_assoc("select * from host_template_graph where host_template_id=$device_template_id");
+	$device_template_snmp_query = db_fetch_assoc("select * from host_template_snmp_query where host_template_id=$device_template_id");
 
-	if (empty($host_template["id"])) {
+	if (empty($device_template["id"])) {
 		$err_msg = "Invalid Device Template.";
 		return $err_msg;
 	}
@@ -516,10 +516,10 @@ function host_template_to_xml($host_template_id) {
 	$xml_text .= "<hash_$hash>\n";
 
 	/* XML Branch: <> */
-	reset($fields_host_template_edit);
-	while (list($field_name, $field_array) = each($fields_host_template_edit)) {
+	reset($fields_device_template_edit);
+	while (list($field_name, $field_array) = each($fields_device_template_edit)) {
 		if (($field_array["method"] != "hidden_zero") && ($field_array["method"] != "hidden") && ($field_array["method"] != "spacer")) {
-			$xml_text .= "\t<$field_name>" . xml_character_encode($host_template{$field_name}) . "</$field_name>\n";
+			$xml_text .= "\t<$field_name>" . xml_character_encode($device_template{$field_name}) . "</$field_name>\n";
 		}
 	}
 
@@ -527,11 +527,11 @@ function host_template_to_xml($host_template_id) {
 	$xml_text .= "\t<graph_templates>";
 
 	$j = 0;
-	if (sizeof($host_template_graph) > 0) {
-	foreach ($host_template_graph as $item) {
+	if (sizeof($device_template_graph) > 0) {
+	foreach ($device_template_graph as $item) {
 		$xml_text .= "hash_" . get_hash_version("graph_template") . get_hash_graph_template($item["graph_template_id"]);
 
-		if (($j+1) < sizeof($host_template_graph)) {
+		if (($j+1) < sizeof($device_template_graph)) {
 			$xml_text .= "|";
 		}
 
@@ -545,11 +545,11 @@ function host_template_to_xml($host_template_id) {
 	$xml_text .= "\t<data_queries>";
 
 	$j = 0;
-	if (sizeof($host_template_snmp_query) > 0) {
-	foreach ($host_template_snmp_query as $item) {
+	if (sizeof($device_template_snmp_query) > 0) {
+	foreach ($device_template_snmp_query as $item) {
 		$xml_text .= "hash_" . get_hash_version("data_query") . get_hash_data_query($item["snmp_query_id"]);
 
-		if (($j+1) < sizeof($host_template_snmp_query)) {
+		if (($j+1) < sizeof($device_template_snmp_query)) {
 			$xml_text .= "|";
 		}
 
@@ -790,10 +790,10 @@ function resolve_dependencies($type, $id, $dep_array) {
 		break;
 	case 'host_template':
 		/* dep: graph template */
-		$host_template_graph = db_fetch_assoc("select graph_template_id from host_template_graph where host_template_id=$id and graph_template_id > 0 group by graph_template_id");
+		$device_template_graph = db_fetch_assoc("select graph_template_id from host_template_graph where host_template_id=$id and graph_template_id > 0 group by graph_template_id");
 
-		if (sizeof($host_template_graph) > 0) {
-		foreach ($host_template_graph as $item) {
+		if (sizeof($device_template_graph) > 0) {
+		foreach ($device_template_graph as $item) {
 			if (!isset($dep_array["graph_template"]{$item["graph_template_id"]})) {
 				$dep_array = resolve_dependencies("graph_template", $item["graph_template_id"], $dep_array);
 			}
@@ -801,10 +801,10 @@ function resolve_dependencies($type, $id, $dep_array) {
 		}
 
 		/* dep: data query */
-		$host_template_snmp_query = db_fetch_assoc("select snmp_query_id from host_template_snmp_query where host_template_id=$id and snmp_query_id > 0 group by snmp_query_id");
+		$device_template_snmp_query = db_fetch_assoc("select snmp_query_id from host_template_snmp_query where host_template_id=$id and snmp_query_id > 0 group by snmp_query_id");
 
-		if (sizeof($host_template_snmp_query) > 0) {
-		foreach ($host_template_snmp_query as $item) {
+		if (sizeof($device_template_snmp_query) > 0) {
+		foreach ($device_template_snmp_query as $item) {
 			if (!isset($dep_array["data_query"]{$item["snmp_query_id"]})) {
 				$dep_array = resolve_dependencies("data_query", $item["snmp_query_id"], $dep_array);
 			}

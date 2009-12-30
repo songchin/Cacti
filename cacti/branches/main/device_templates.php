@@ -131,16 +131,16 @@ function form_save() {
 		$save["max_oids"]				= form_input_validate($_POST["max_oids"], "max_oids", "^[0-9]+$", true, 3);
 
 		if (!is_error_message()) {
-			$host_template_id = sql_save($save, "host_template");
+			$device_template_id = sql_save($save, "host_template");
 
-			if ($host_template_id) {
+			if ($device_template_id) {
 				raise_message(1);
 
 				if (isset($_POST["add_gt_y"])) {
 					/* ================= input validation ================= */
 					input_validate_input_number(get_request_var_post("graph_template_id"));
 					/* ==================================================== */
-					db_execute("replace into host_template_graph (host_template_id,graph_template_id) values($host_template_id," . get_request_var_post("graph_template_id") . ")");
+					db_execute("replace into host_template_graph (host_template_id,graph_template_id) values($device_template_id," . get_request_var_post("graph_template_id") . ")");
 					/* associate this new Graph Template with all hosts that are using the current Device Template
 					   but leave those hosts that have this template already */
 					$new_gt_host_entries = db_fetch_assoc("
@@ -180,7 +180,7 @@ function form_save() {
 					input_validate_input_number(get_request_var_post("snmp_query_id"));
 					input_validate_input_number(get_request_var_post("reindex_method"));
 					/* ==================================================== */
-					db_execute("replace into host_template_snmp_query (host_template_id,snmp_query_id, reindex_method) values($host_template_id," . get_request_var_post("snmp_query_id") . ", " . get_request_var_post("reindex_method") . ")");
+					db_execute("replace into host_template_snmp_query (host_template_id,snmp_query_id, reindex_method) values($device_template_id," . get_request_var_post("snmp_query_id") . ", " . get_request_var_post("reindex_method") . ")");
 					/* associate this new Data Query with all hosts that are using the current Device Template
 					   but leave those hosts that have this Data Query already.
 					   Reindex all those Hosts */
@@ -226,7 +226,7 @@ function form_save() {
 		}
 
 		if ((is_error_message()) || (empty($_POST["id"])) || ($redirect_back == true) || $reindex_performed) {
-			header("Location: device_templates.php?action=edit&id=" . (empty($host_template_id) ? $_POST["id"] : $host_template_id));
+			header("Location: device_templates.php?action=edit&id=" . (empty($device_template_id) ? $_POST["id"] : $device_template_id));
 		}else{
 			header("Location: device_templates.php");
 		}
@@ -297,7 +297,7 @@ function form_actions() {
 	/* setup some variables */
 	$host_list = ""; $i = 0; $host_array = array();
 
-	/* loop through each of the host templates selected on the previous page and get more info about them */
+	/* loop through each of the device templates selected on the previous page and get more info about them */
 	while (list($var,$val) = each($_POST)) {
 		if (preg_match("/^chk_([0-9]+)$/", $var, $matches)) {
 			/* ================= input validation ================= */
@@ -384,7 +384,7 @@ function template_item_remove_dq() {
 }
 
 function template_edit() {
-	global $colors, $fields_host_template_edit, $reindex_types;
+	global $colors, $fields_device_template_edit, $reindex_types;
 
 	/* ================= input validation ================= */
 	input_validate_input_number(get_request_var("id"));
@@ -408,8 +408,8 @@ function template_edit() {
 	}
 
 	if (!empty($_GET["id"])) {
-		$host_template = db_fetch_row("select * from host_template where id=" . $_GET["id"]);
-		$header_label = __("[edit: ") . $host_template["name"] . "]";
+		$device_template = db_fetch_row("select * from host_template where id=" . $_GET["id"]);
+		$header_label = __("[edit: ") . $device_template["name"] . "]";
 	}else{
 		$header_label = __("[new]");
 		$_GET["id"] = 0;
@@ -423,7 +423,7 @@ function template_edit() {
 
 	draw_edit_form(array(
 		"config" => array(),
-		"fields" => inject_form_variables($fields_host_template_edit, (isset($host_template) ? $host_template : array()))
+		"fields" => inject_form_variables($fields_device_template_edit, (isset($device_template) ? $device_template : array()))
 		));
 
 	print "</table></td></tr>";		/* end of html_header */

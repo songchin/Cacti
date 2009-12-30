@@ -683,40 +683,40 @@ function duplicate_data_source($_local_data_id, $_data_template_id, $data_source
 	}
 }
 
-function duplicate_host_template($_host_template_id, $host_template_title) {
-	global $fields_host_template_edit;
+function duplicate_host_template($_host_template_id, $device_template_title) {
+	global $fields_device_template_edit;
 
-	$host_template = db_fetch_row("select * from host_template where id=$_host_template_id");
-	$host_template_graphs = db_fetch_assoc("select * from host_template_graph where host_template_id=$_host_template_id");
-	$host_template_data_queries = db_fetch_assoc("select * from host_template_snmp_query where host_template_id=$_host_template_id");
+	$device_template = db_fetch_row("select * from host_template where id=$_host_template_id");
+	$device_template_graphs = db_fetch_assoc("select * from host_template_graph where host_template_id=$_host_template_id");
+	$device_template_data_queries = db_fetch_assoc("select * from host_template_snmp_query where host_template_id=$_host_template_id");
 
 	/* substitute the title variable */
-	$host_template["name"] = str_replace(__("<template_title>"), $host_template["name"], $host_template_title);
+	$device_template["name"] = str_replace(__("<template_title>"), $device_template["name"], $device_template_title);
 
 	/* create new entry: host_template */
 	$save["id"] = 0;
 	$save["hash"] = get_hash_host_template(0);
 
-	reset($fields_host_template_edit);
-	while (list($field, $array) = each($fields_host_template_edit)) {
+	reset($fields_device_template_edit);
+	while (list($field, $array) = each($fields_device_template_edit)) {
 		if (!preg_match("/^hidden/", $array["method"])) {
-			$save[$field] = $host_template[$field];
+			$save[$field] = $device_template[$field];
 		}
 	}
 
-	$host_template_id = sql_save($save, "host_template");
+	$device_template_id = sql_save($save, "host_template");
 
 	/* create new entry(s): host_template_graph */
-	if (sizeof($host_template_graphs) > 0) {
-	foreach ($host_template_graphs as $host_template_graph) {
-		db_execute("insert into host_template_graph (host_template_id,graph_template_id) values ($host_template_id," . $host_template_graph["graph_template_id"] . ")");
+	if (sizeof($device_template_graphs) > 0) {
+	foreach ($device_template_graphs as $device_template_graph) {
+		db_execute("insert into host_template_graph (host_template_id,graph_template_id) values ($device_template_id," . $device_template_graph["graph_template_id"] . ")");
 	}
 	}
 
 	/* create new entry(s): host_template_snmp_query */
-	if (sizeof($host_template_data_queries) > 0) {
-	foreach ($host_template_data_queries as $host_template_data_query) {
-		db_execute("insert into host_template_snmp_query (host_template_id,snmp_query_id) values ($host_template_id," . $host_template_data_query["snmp_query_id"] . ")");
+	if (sizeof($device_template_data_queries) > 0) {
+	foreach ($device_template_data_queries as $device_template_data_query) {
+		db_execute("insert into host_template_snmp_query (host_template_id,snmp_query_id) values ($device_template_id," . $device_template_data_query["snmp_query_id"] . ")");
 	}
 	}
 }

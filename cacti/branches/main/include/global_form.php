@@ -1363,7 +1363,7 @@ $fields_host_edit_availability = array(
 	);
 
 /* file: device_templates.php, action: edit */
-$fields_host_template_edit = array(
+$fields_device_template_edit = array(
 	"host_header" => array(
 		"method" => "spacer",
 		"friendly_name" => __("General Device Template Options"),

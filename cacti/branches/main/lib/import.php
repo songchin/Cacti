@@ -575,24 +575,24 @@ function xml_to_round_robin_archive($hash, &$xml_array, &$hash_cache) {
 }
 
 function xml_to_host_template($hash, &$xml_array, &$hash_cache) {
-	global $fields_host_template_edit;
+	global $fields_device_template_edit;
 
 	/* import into: graph_templates_gprint */
 	$_host_template_id = db_fetch_cell("select id from host_template where hash='$hash'");
 	$save["id"] = (empty($_host_template_id) ? "0" : $_host_template_id);
 	$save["hash"] = $hash;
 
-	reset($fields_host_template_edit);
-	while (list($field_name, $field_array) = each($fields_host_template_edit)) {
+	reset($fields_device_template_edit);
+	while (list($field_name, $field_array) = each($fields_device_template_edit)) {
 		/* make sure this field exists in the xml array first */
 		if (isset($xml_array[$field_name])) {
 			$save[$field_name] = addslashes(xml_character_decode($xml_array[$field_name]));
 		}
 	}
 
-	$host_template_id = sql_save($save, "host_template");
+	$device_template_id = sql_save($save, "host_template");
 
-	$hash_cache["host_template"][$hash] = $host_template_id;
+	$hash_cache["host_template"][$hash] = $device_template_id;
 
 	/* import into: host_template_graph */
 	$hash_items = explode("|", $xml_array["graph_templates"]);
@@ -606,7 +606,7 @@ function xml_to_host_template($hash, &$xml_array, &$hash_cache) {
 			if ($parsed_hash == false) { return false; }
 
 			if (isset($hash_cache["graph_template"]{$parsed_hash["hash"]})) {
-				db_execute("replace into host_template_graph (host_template_id,graph_template_id) values ($host_template_id," . $hash_cache["graph_template"]{$parsed_hash["hash"]} . ")");
+				db_execute("replace into host_template_graph (host_template_id,graph_template_id) values ($device_template_id," . $hash_cache["graph_template"]{$parsed_hash["hash"]} . ")");
 			}
 		}
 	}
@@ -623,7 +623,7 @@ function xml_to_host_template($hash, &$xml_array, &$hash_cache) {
 			if ($parsed_hash == false) { return false; }
 
 			if (isset($hash_cache["data_query"]{$parsed_hash["hash"]})) {
-				db_execute("replace into host_template_snmp_query (host_template_id,snmp_query_id) values ($host_template_id," . $hash_cache["data_query"]{$parsed_hash["hash"]} . ")");
+				db_execute("replace into host_template_snmp_query (host_template_id,snmp_query_id) values ($device_template_id," . $hash_cache["data_query"]{$parsed_hash["hash"]} . ")");
 			}
 		}
 	}
@@ -631,7 +631,7 @@ function xml_to_host_template($hash, &$xml_array, &$hash_cache) {
 	/* status information that will be presented to the user */
 	$_SESSION["import_debug_info"]["type"] = (empty($_host_template_id) ? "new" : "update");
 	$_SESSION["import_debug_info"]["title"] = $xml_array["name"];
-	$_SESSION["import_debug_info"]["result"] = (empty($host_template_id) ? "fail" : "success");
+	$_SESSION["import_debug_info"]["result"] = (empty($device_template_id) ? "fail" : "success");
 
 	return $hash_cache;
 }
