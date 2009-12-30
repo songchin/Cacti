@@ -1094,7 +1094,9 @@ function host_display_general($host, $host_text) {
 		}
 	}
 
-	registerOnLoadFunction("host", "changeHostForm();");
+	$().ready(function() {
+		changeHostForm();
+	});
 
 	-->
 	</script>
