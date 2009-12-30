@@ -72,6 +72,14 @@ define("COLORTAGS_TEMPLATE",	3);
 define("COLORTAGS_UTG",			4);
 define("COLORTAGS_TUG",			5);
 
+define("RRD_XAXIS_SECOND",		1);
+define("RRD_XAXIS_MINUTE",		2);
+define("RRD_XAXIS_HOUR",		3);
+define("RRD_XAXIS_DAY",			4);
+define("RRD_XAXIS_WEEK",		5);
+define("RRD_XAXIS_MONTH",		6);
+define("RRD_XAXIS_YEAR",		7);
+
 define("DATA_QUERY_AUTOINDEX_NONE", 0);
 define("DATA_QUERY_AUTOINDEX_BACKWARDS_UPTIME", 1);
 define("DATA_QUERY_AUTOINDEX_INDEX_COUNT_CHANGE", 2);

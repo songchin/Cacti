@@ -85,6 +85,9 @@ function import_xml_data(&$xml_data, $import_custom_rra_settings) {
 				case 'cdef':
 					$hash_cache += xml_to_cdef($dep_hash_cache[$type][$i]["hash"], $hash_array, $hash_cache);
 					break;
+				case 'xaxis':
+					$hash_cache += xml_to_xaxis($dep_hash_cache[$type][$i]["hash"], $hash_array, $hash_cache);
+					break;
 				case 'round_robin_archive':
 					if ($import_custom_rra_settings === true) {
 						$hash_cache += xml_to_round_robin_archive($dep_hash_cache[$type][$i]["hash"], $hash_array, $hash_cache);
@@ -692,6 +695,63 @@ function xml_to_cdef($hash, &$xml_array, &$hash_cache) {
 	$_SESSION["import_debug_info"]["type"] = (empty($_cdef_id) ? "new" : "update");
 	$_SESSION["import_debug_info"]["title"] = $xml_array["name"];
 	$_SESSION["import_debug_info"]["result"] = (empty($cdef_id) ? "fail" : "success");
+
+	return $hash_cache;
+}
+
+function xml_to_xaxis($hash, &$xml_array, &$hash_cache) {
+	global $fields_xaxis_edit, $fields_xaxis_item_edit;
+
+	/* import into: xaxis */
+	$_xaxis_id = db_fetch_cell("select id from graph_templates_xaxis where hash='$hash'");
+	$save["id"] = (empty($_xaxis_id) ? "0" : $_xaxis_id);
+	$save["hash"] = $hash;
+
+	reset($fields_xaxis_edit);
+	while (list($field_name, $field_array) = each($fields_xaxis_edit)) {
+		/* make sure this field exists in the xml array first */
+		if (isset($xml_array[$field_name])) {
+			$save[$field_name] = addslashes(xml_character_decode($xml_array[$field_name]));
+		}
+	}
+
+	$xaxis_id = sql_save($save, "graph_templates_xaxis");
+
+	$hash_cache["xaxis"][$hash] = $xaxis_id;
+
+	/* import into: xaxis_items */
+	if (is_array($xml_array["items"])) {
+		while (list($item_hash, $item_array) = each($xml_array["items"])) {
+			/* parse information from the hash */
+			$parsed_hash = parse_xml_hash($item_hash);
+
+			/* invalid/wrong hash */
+			if ($parsed_hash == false) { return false; }
+
+			unset($save);
+			$_xaxis_item_id = db_fetch_cell("select id from graph_templates_xaxis_items where hash='" . $parsed_hash["hash"] . "' and xaxis_id=$xaxis_id");
+			$save["id"] = (empty($_xaxis_item_id) ? "0" : $_xaxis_item_id);
+			$save["hash"] = $parsed_hash["hash"];
+			$save["xaxis_id"] = $xaxis_id;
+
+			reset($fields_xaxis_item_edit);
+			while (list($field_name, $field_array) = each($fields_xaxis_item_edit)) {
+				/* make sure this field exists in the xml array first */
+				if (isset($item_array[$field_name])) {
+					$save[$field_name] = addslashes(xml_character_decode($item_array[$field_name]));
+				}
+			}
+
+			$xaxis_item_id = sql_save($save, "graph_templates_xaxis_items");
+
+			$hash_cache["xaxis_item"]{$parsed_hash["hash"]} = $xaxis_item_id;
+		}
+	}
+
+	/* status information that will be presented to the user */
+	$_SESSION["import_debug_info"]["type"] = (empty($_xaxis_id) ? "new" : "update");
+	$_SESSION["import_debug_info"]["title"] = $xml_array["name"];
+	$_SESSION["import_debug_info"]["result"] = (empty($xaxis_id) ? "fail" : "success");
 
 	return $hash_cache;
 }

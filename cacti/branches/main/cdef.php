@@ -457,7 +457,7 @@ function cdef_edit() {
 <script type="text/javascript">
 	$('#cdef_item').tableDnD({
 		onDrop: function(table, row) {
-			$('#AjaxResult').load("lib/ajax/jquery.tablednd/cdef.ajax.php?id=<?php print $_GET["id"];?>&"+$.tableDnD.serialize());
+			$('#AjaxResult').load("lib/ajax/jquery.tablednd/cdef.ajax.php?id=<?php isset($_GET["id"]) ? print $_GET["id"] : print 0;?>&"+$.tableDnD.serialize());
 		}
 	});
 </script>

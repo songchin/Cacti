@@ -47,6 +47,100 @@ $fields_cdef_edit = array(
 		)
 	);
 
+/* file: xaxis.php, action: edit */
+$fields_xaxis_edit = array(
+	"name" => array(
+		"method" => "textbox",
+		"friendly_name" => __("Name"),
+		"description" => __("A useful name for this X-Axis Preset."),
+		"value" => "|arg1:name|",
+		"max_length" => "100",
+		"size" => "60"
+		),
+	);
+
+/* file: xaxis.php, action: item_edit */
+$fields_xaxis_item_edit = array(
+	"item_name" => array(
+		"method" => "textbox",
+		"friendly_name" => __("Item Name"),
+		"description" => __("Item name, just for your convenience."),
+		"value" => "|arg1:item_name|",
+		"max_length" => "100",
+		"size" => "30"
+		),
+	"timespan" => array(
+		"method" => "textbox",
+		"friendly_name" => __("Timespan"),
+		"description" => __("If the Graph's Timespan is lower than this value, the related set of X-Axis Parameters will be applied."),
+		"value" => "|arg1:timespan|",
+		"max_length" => "12",
+		"size" => "12"
+		),
+	"gtm" => array(
+		"method" => "drop_array",
+		"friendly_name" => __("Global Grid Timespan (--x-axis GTM)"),
+		"description" => __("The Timespan which applies to the global grid."),
+		"value" => "|arg1:gtm|",
+		"array" => $rrd_xaxis_timespans,
+		),
+	"gst" => array(
+		"method" => "textbox",
+		"friendly_name" => __("Global Grid Steps (--x-axis GST)"),
+		"description" => __("Steps for global grid."),
+		"value" => "|arg1:gst|",
+		"max_length" => "4",
+		"size" => "4"
+		),
+	"mtm" => array(
+		"method" => "drop_array",
+		"friendly_name" => __("Major Grid Timespan (--x-axis MTM)"),
+		"description" => __("The Timespan which applies to the major grid."),
+		"value" => "|arg1:mtm|",
+		"array" => $rrd_xaxis_timespans,
+		),
+	"mst" => array(
+		"method" => "textbox",
+		"friendly_name" => __("Major Grid Steps (--x-axis MST)"),
+		"description" => __("Steps for major grid."),
+		"value" => "|arg1:mst|",
+		"max_length" => "4",
+		"size" => "4"
+		),
+	"ltm" => array(
+		"method" => "drop_array",
+		"friendly_name" => __("Label Grid Timespan (--x-axis LTM)"),
+		"description" => __("The Timespan which applies to the label grid."),
+		"value" => "|arg1:ltm|",
+		"array" => $rrd_xaxis_timespans,
+		),
+	"lst" => array(
+		"method" => "textbox",
+		"friendly_name" => __("Label Grid Steps (--x-axis LST)"),
+		"description" => __("Steps for label grid."),
+		"value" => "|arg1:lst|",
+		"max_length" => "4",
+		"size" => "4"
+		),
+	"lpr" => array(
+		"method" => "textbox",
+		"friendly_name" => __("Relative Label Position (--x-axis LPR)"),
+		"description" => __("The position of the label with respect to the label grid."),
+		"value" => "|arg1:lpr|",
+		"default" => 0,
+		"max_length" => "12",
+		"size" => "12"
+		),
+	"lfm" => array(
+		"method" => "textbox",
+		"friendly_name" => __("Label Format (--x-axis LFM)"),
+		"description" => __("A format string for the label."),
+		"value" => "|arg1:lfm|",
+		"max_length" => "100",
+		"size" => "30"
+		),
+	);
+
 /* file: color.php, action: edit */
 $fields_color_edit = array(
 	"hex" => array(
@@ -433,7 +527,8 @@ $struct_graph_right_axis = array(
 		"friendly_name" => __("Right Axis Format (--right-axis-format &lt;format&gt;)"),
 		"method" => "drop_sql",
 		"sql" => "select id,name from graph_templates_gprint order by name",
-		"default" => "3",
+		"default" => "0",
+		"none_value" => "None",
 		"description" => __("By default the format of the axis lables gets determined automatically. If you want to do this yourself, use this option with the same %lf arguments you know from the PRINT and GPRINT commands."),
 		"class" => "not_RRD_1_0_x not_RRD_1_2_x",
 		),
@@ -543,17 +638,11 @@ $struct_graph_limits = array(
 $struct_graph_grid = array(
 	"x_grid" => array(
 		"friendly_name" => __("X Grid (--x-grid &lt;GTM:GST:MTM:MST:LTM:LST:LPR:LFM&gt;)"),
-		"method" => "textbox",
-		"max_length" => "100",
-		"default" => "",
-		"size" => "40",
-		"description" => __("The grid is defined by specifying a certain amount of time in the ?TM positions. You can choose from 'SECOND', 'MINUTE', 'HOUR', 'DAY', 'WEEK', 'MONTH' or 'YEAR'.") . "<br/>" .
-			__("Then you define how many of these should pass between each line or label.") . "<br/>" .
-			__("This pair (?TM:?ST) needs to be specified for the base grid (G??), the major grid (M??) and the labels (L??).") . "<br/>" .
-			__("For the labels you also must define a precision in LPR and a strftime format string in LFM.") . " " .
-			__("LPR defines where each label will be placed.") . " " .
-			__("If it is zero, the label will be placed right under the corresponding line (useful for hours, dates etcetera).") . " " .
-			__("If you specify a number of seconds here the label is centered on this interval (useful for Monday, January etcetera)."),
+		"description" => __("This parameter allows to specify a different grid layout (Global, Major, Label Grid). We refer to the X-Axis Presets here."),
+		"method" => "drop_sql",
+		"sql" => "select id,name from graph_templates_xaxis order by name",
+		"default" => "0",
+		"none_value" => "None",
 		),
 	"unit_value" => array(		# TODO: shall we rename to y_grid?
 		"friendly_name" => __("Y Grid (--y-grid &lt;grid step:label factor&gt;)"),

@@ -367,6 +367,60 @@ function cdef_to_xml($cdef_id) {
 	return $xml_text;
 }
 
+function xaxis_to_xml($xaxis_id) {
+	global $fields_xaxis_edit, $fields_xaxis_item_edit;
+
+	$hash["xaxis"] = get_hash_version("xaxis") . get_hash_xaxis($xaxis_id);
+	$xml_text = "";
+
+	$xaxis = db_fetch_row("SELECT * FROM graph_templates_xaxis WHERE id=$xaxis_id");
+	$xaxis_items = db_fetch_assoc("SELECT * FROM graph_templates_xaxis_items WHERE xaxis_id=$xaxis_id ORDER BY timespan");
+
+	if (empty($xaxis["id"])) {
+		$err_msg = "Invalid X-Axis.";
+		return $err_msg;
+	}
+
+	$xml_text .= "<hash_" . $hash["xaxis"] . ">\n";
+
+	/* XML Branch: <> */
+	reset($fields_xaxis_edit);
+	while (list($field_name, $field_array) = each($fields_xaxis_edit)) {
+		if (($field_array["method"] != "hidden_zero") && ($field_array["method"] != "hidden") && ($field_array["method"] != "spacer")) {
+			$xml_text .= "\t<$field_name>" . xml_character_encode($xaxis{$field_name}) . "</$field_name>\n";
+		}
+	}
+
+	/* XML Branch: <items> */
+
+	$xml_text .= "\t<items>\n";
+
+	$i = 0;
+	if (sizeof($xaxis_items) > 0) {
+	foreach ($xaxis_items as $item) {
+		$hash["xaxis_item"] = get_hash_version("xaxis_item") . get_hash_xaxis($item["id"], "xaxis_item");
+
+		$xml_text .= "\t\t<hash_" . $hash["xaxis_item"] . ">\n";
+
+		reset($fields_xaxis_item_edit);
+		while (list($field_name, $field_array) = each($fields_xaxis_item_edit)) {
+			if (($field_array["method"] != "hidden_zero") && ($field_array["method"] != "hidden") && ($field_array["method"] != "spacer")) {
+				$xml_text .= "\t\t\t<$field_name>" . xml_character_encode($item{$field_name}) . "</$field_name>\n";
+			}
+		}
+
+		$xml_text .= "\t\t</hash_" . $hash["xaxis_item"] . ">\n";
+
+		$i++;
+	}
+	}
+
+	$xml_text .= "\t</items>\n";
+	$xml_text .= "</hash_" . $hash["xaxis"] . ">";
+
+	return $xml_text;
+}
+
 function gprint_preset_to_xml($gprint_preset_id) {
 	global $fields_grprint_presets_edit;
 
@@ -802,6 +856,9 @@ function get_item_xml($type, $id, $follow_deps) {
 					break;
 				case 'cdef':
 					$xml_text .= "\n" . cdef_to_xml($dep_id);
+					break;
+				case 'xaxis':
+					$xml_text .= "\n" . xaxis_to_xml($dep_id);
 					break;
 				case 'round_robin_archive':
 					$xml_text .= "\n" . round_robin_archive_to_xml($dep_id);

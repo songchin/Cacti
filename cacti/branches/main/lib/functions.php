@@ -1909,7 +1909,11 @@ function draw_navigation_text() {
 		"utilities.php:view_snmp_cache" => array("title" => __("View SNMP Cache"), "mapping" => "index.php:,utilities.php:", "url" => "utilities.php", "level" => "2"),
 		"utilities.php:view_tech" => array("title" => __("Technical Support"), "mapping" => "index.php:,utilities.php:", "url" => "utilities.php", "level" => "2"),
 		"utilities.php:view_user_log" => array("title" => __("View User Log File"), "mapping" => "index.php:,utilities.php:", "url" => "utilities.php", "level" => "2"),
-		);
+		"xaxis_presets.php:" => array("title" => __("X-Axis Presets"), "mapping" => "index.php:", "url" => "xaxis_presets.php", "level" => "1"),
+		"xaxis_presets.php:edit" => array("title" => __("(Edit)"), "mapping" => "index.php:,xaxis_presets.php:", "url" => "", "level" => "2"),
+		"xaxis_presets.php:item_edit" => array("title" => __("X-Axis Items"), "mapping" => "index.php:,xaxis_presets.php:,xaxis_presets.php:edit", "url" => "", "level" => "3"),
+		"xaxis_presets.php:actions" => array("title" => __("Actions"), "mapping" => "index.php:,xaxis_presets.php:", "url" => "", "level" => "2"),
+	);
 
 	$nav = api_plugin_hook_function('draw_navigation_text', $nav);
 
@@ -2097,6 +2101,24 @@ function get_hash_cdef($cdef_id, $sub_type = "cdef") {
    @returns - a 128-bit, hexadecimal hash */
 function get_hash_gprint($gprint_id) {
 	$hash = db_fetch_cell("select hash from graph_templates_gprint where id=$gprint_id");
+
+	if (preg_match("/[a-fA-F0-9]{32}/", $hash)) {
+		return $hash;
+	}else{
+		return generate_hash();
+	}
+}
+
+/* get_hash_xaxis - returns the current unique hash for a xaxis
+   @arg $graph_template_id - (int) the ID of the xaxis to return a hash for
+   @arg $sub_type (optional) return the hash for a particlar sub-type of this type
+   @returns - a 128-bit, hexadecimal hash */
+function get_hash_xaxis($xaxis_id, $sub_type = "xaxis") {
+	if ($sub_type == "xaxis") {
+		$hash = db_fetch_cell("select hash from graph_templates_xaxis where id=$xaxis_id");
+	}elseif ($sub_type == "xaxis_item") {
+		$hash = db_fetch_cell("select hash from graph_templates_xaxis_items where id=$xaxis_id");
+	}
 
 	if (preg_match("/[a-fA-F0-9]{32}/", $hash)) {
 		return $hash;

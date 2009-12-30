@@ -186,7 +186,15 @@ $rrd_graph_render_modes = array(
 	RRD_GRAPH_RENDER_MONO	=> __("Mono"),
 	);
 
-
+$rrd_xaxis_timespans = array( # keep strings verbatim, no translation allowed
+	RRD_XAXIS_SECOND		=> "Second",
+	RRD_XAXIS_MINUTE		=> "Minute",
+	RRD_XAXIS_HOUR			=> "Hour",
+	RRD_XAXIS_DAY			=> "Day",
+	RRD_XAXIS_WEEK			=> "Week",
+	RRD_XAXIS_MONTH			=> "Month",
+	RRD_XAXIS_YEAR			=> "Year",
+);
 
 $data_source_types = array(
 	DATA_SOURCE_TYPE_GAUGE		=> "GAUGE",
@@ -439,6 +447,7 @@ $menu = array(
 		"cdef.php" => __("CDEFs"),
 		"color.php" => __("Colors"),
 		"gprint_presets.php" => __("GPRINT Presets"),
+		"xaxis_presets.php" => __("X-Axis Presets"),
 		"rra.php" => __("RRAs"),
 		),
 	__("Import/Export") => array(
@@ -602,7 +611,8 @@ $user_auth_realm_filenames = array(
 	"event_queue.php" => 8,
 	"smtp_queue.php" => 8,
 	"logout.php" => 7,
-	);
+	"xaxis_presets.php" => 5,
+);
 
 $hash_type_codes = array(
 	"round_robin_archive" => "15",
@@ -620,7 +630,9 @@ $hash_type_codes = array(
 	"data_query_graph" => "11",
 	"data_query_sv_graph" => "12",
 	"data_query_sv_data_source" => "13",
-	"host_template" => "02"
+	"host_template" => "02",
+	"xaxis" => "16",
+	"xaxis_item" => "17",
 	);
 
 $hash_version_codes = array(
@@ -660,7 +672,9 @@ $hash_type_names = array(
 	"graph_template_input" => "Graph Template Input",
 	"data_query" => "Data Query",
 	"host_template" => "Host Template",
-	"round_robin_archive" => "Round Robin Archive"
+	"round_robin_archive" => "Round Robin Archive",
+	"xaxis" => "X-Axis Preset",
+	"xaxis_item" => "X-Axis Preset Item",
 	);
 
 $host_struc = array(

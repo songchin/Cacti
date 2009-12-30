@@ -759,3 +759,37 @@ function duplicate_cdef($_cdef_id, $cdef_title) {
 		}
 	}
 }
+
+function duplicate_xaxis($_xaxis_id, $xaxis_title) {
+	global $fields_xaxis_item_edit;
+
+	$xaxis = db_fetch_row("select * from graph_templates_xaxis where id=$_xaxis_id");
+	$xaxis_items = db_fetch_assoc("select * from graph_templates_xaxis_items where xaxis_id=$_xaxis_id ORDER BY timespan");
+
+	/* create new entry: host_template */
+	$save["id"] = 0;
+	$save["hash"] = get_hash_xaxis(0);
+	/* substitute the title variable */
+	$save["name"] = str_replace(__("<xaxis_title>"), $xaxis["name"], $xaxis_title);
+
+	$xaxis_id = sql_save($save, "graph_templates_xaxis");
+
+	/* create new entry(s): xaxis_items */
+	if (sizeof($xaxis_items) > 0) {
+		foreach ($xaxis_items as $xaxis_item) {
+			unset($save);
+
+			$save["id"] = 0;
+			$save["hash"] = get_hash_xaxis(0, "xaxis_item");
+			$save["xaxis_id"] = $xaxis_id;
+			reset($fields_xaxis_item_edit);
+			while (list($field, $array) = each($fields_xaxis_item_edit)) {
+				if (!preg_match("/^hidden/", $array["method"])) {
+					$save[$field] = $xaxis_item[$field];
+				}
+			}
+
+			sql_save($save, "graph_templates_xaxis_items");
+		}
+	}
+}

@@ -689,6 +689,8 @@ function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rr
 
 	# start and end time
 	list($graph_start, $graph_end) = rrdgraph_start_end($graph_data_array, $rra, $seconds_between_graph_updates);
+	$graph["graph_start"] = $graph_start;
+	$graph["graph_end"] = $graph_end;
 	$graph_opts .= "--start=$graph_start" . RRD_NL . "--end=$graph_end" . RRD_NL;
 
 	$graph_opts .= rrdgraph_opts($graph, $graph_data_array, $rrdtool_version);
@@ -1936,6 +1938,35 @@ function rrdtool_set_colortag($type, $colortag) {
 	}
 }
 
+function rrdtool_set_x_grid($xaxis_id, $start, $end) {
+	global $rrd_xaxis_timespans;
+
+	$format = "";
+	$xaxis_items = db_fetch_assoc("SELECT timespan, gtm, gst, mtm, mst, ltm, lst, lpr, lfm " .
+					"FROM graph_templates_xaxis_items WHERE xaxis_id=" . $xaxis_id .
+					" AND timespan > " . ($end - $start) .
+					" ORDER BY timespan ASC LIMIT 1");
+	# find best matching timestamp
+	if (sizeof($xaxis_items)) {
+		foreach ($xaxis_items as $xaxis_item) { # there's only one matching entry due to LIMIT 1
+			$format .= strtoupper($rrd_xaxis_timespans[$xaxis_item["gtm"]]) . ":";
+			$format .= $xaxis_item["gst"] . ":";
+			$format .= strtoupper($rrd_xaxis_timespans[$xaxis_item["mtm"]]) . ":";
+			$format .= $xaxis_item["mst"] . ":";
+			$format .= strtoupper($rrd_xaxis_timespans[$xaxis_item["ltm"]]) . ":";
+			$format .= $xaxis_item["lst"] . ":";
+			$format .= $xaxis_item["lpr"] . ":";
+			$format .= $xaxis_item["lfm"];
+		}
+	}
+
+	if (!empty($format)) {
+		$format = "--x-grid \"" . $format . "\"" . RRD_NL;
+	}
+
+	return $format;
+}
+
 /* rrd_substitute_host_query_data substitute |host*| and |query*| type variables
  * @arg $txt_graph_item 	the variable to be substituted
  * @arg $graph				from table graph_templates_graph
@@ -2237,7 +2268,7 @@ function rrdgraph_opts($graph, $graph_data_array, $version) {
 
 			case "x_grid":
 				if (!empty($value)) {
-					$option .= "--x-grid \"" . $value . "\"" . RRD_NL;
+					$option .= rrdtool_set_x_grid($value, $graph["graph_start"], $graph["graph_end"]);
 				}
 				break;
 

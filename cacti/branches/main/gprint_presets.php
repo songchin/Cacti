@@ -78,7 +78,7 @@ function form_actions() {
 				input_validate_input_number($gprint_id);
 				/* ==================================================== */
 
-				if (sizeof(db_fetch_assoc("SELECT * FROM graph_templates_item WHERE gprint_id=$gprint_id LIMIT 1"))) {
+				if (sizeof(db_fetch_assoc("SELECT gprint_id FROM graph_templates_item WHERE gprint_id=$gprint_id LIMIT 1 UNION (SELECT right_axis_format AS gprint_id FROM graph_templates_graph WHERE right_axis_format=$gprint_id LIMIT 1)"))) {
 					$bad_ids[] = $gprint_id;
 				}else{
 					$gprint_ids[] = $gprint_id;
