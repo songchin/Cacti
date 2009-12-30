@@ -233,10 +233,10 @@ function html_graph_area(&$graph_array, $no_graphs_message = "", $extra_url_args
 
 			?>
 			<tr align='center' style='background-color: #<?php print ($i % 2 == 0 ? "f9f9f9" : "ffffff");?>;'>
-				<td class='center'>
-					<table class='center' cellpadding='0'>
+				<td>
+					<table cellpadding='0'>
 						<tr>
-							<td class='center'>
+							<td>
 								<?php
 								if ($graph["image_format_id"] == IMAGE_TYPE_PNG || $graph["image_format_id"] == IMAGE_TYPE_GIF) {
 									?>
