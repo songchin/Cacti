@@ -330,7 +330,7 @@ function item_remove() {
 	input_validate_input_number(get_request_var("tree_id"));
 	/* ==================================================== */
 
-	if ((read_config_option("deletion_verification") == CHECKED) && (!isset($_GET["confirm"]))) {
+	if ((read_config_option("deletion_verification") == "on") && (!isset($_GET["confirm"]))) {
 		$graph_tree_item = db_fetch_row("select title,local_graph_id,host_id from graph_tree_items where id=" . $_GET["id"]);
 
 		if (!empty($graph_tree_item["local_graph_id"])) {
@@ -364,7 +364,7 @@ function tree_remove() {
 	input_validate_input_number(get_request_var("id"));
 	/* ==================================================== */
 
-	if ((read_config_option("deletion_verification") == CHECKED) && (!isset($_GET["confirm"]))) {
+	if ((read_config_option("deletion_verification") == "on") && (!isset($_GET["confirm"]))) {
 		include(CACTI_BASE_PATH . "/include/top_header.php");
 		form_confirm(__("Are You Sure?"), __("Are you sure you want to delete the tree") . " <strong>'" . db_fetch_cell("select name from graph_tree where id=" . $_GET["id"]) . "'</strong>?", "tree.php", "tree.php?action=remove&id=" . $_GET["id"]);
 		include(CACTI_BASE_PATH . "/include/bottom_footer.php");
@@ -411,24 +411,26 @@ function tree_edit() {
 	html_end_box(FALSE);
 
 	if (!empty($_GET["id"])) {
-		html_start_box("<strong>" . __("Tree Items") . "</strong>", "100", $colors["header"], "3", "center", "tree.php?action=item_edit&tree_id=" . $tree["id"] . "&parent_id=0");
-
-		?>
-		<tr>
-		<td>
-		<a href='<?php print htmlspecialchars("tree.php?action=edit&id=" . $_GET["id"] . "&subaction=expand_all");?>'><img src='images/button_expand_all.gif' alt='<?php print __("Expand All");?>'></a>
-		<a href='<?php print htmlspecialchars("tree.php?action=edit&id=" . $_GET["id"] . "&subaction=colapse_all");?>'><img src='images/button_colapse_all.gif' alt='<?php print __("Collapse All");?>'></a>
-		</td>
-		</tr>
-		<?php
-
+		/* setup the tree div's */
+		echo "<div id='tree' style='float:left;width:50%;'>";
+		html_start_box("<strong>" . __("Tree Items") . "</strong>", "100", $colors["header"], "3", "center", "");
 		$header_items = array(__("Item"), __("Value"));
 		print "<tr><td>";
 		html_header($header_items, 3, true, 'tree');
-
 		grow_edit_graph_tree(get_request_var("id"), "", "");
 		print "</table></td></tr>";		/* end of html_header */
 		html_end_box();
+		echo "</div>";
+
+		/* setup the graph items div */
+		echo "<div id='items' style='float:right;width:50%';>";
+		html_start_box("<strong>" . __("Item Filter") . "</strong>", "100", $colors["header"], "3", "center", "");
+		$header_items = array(__("Item"), __("Value"));
+		print "<tr><td>";
+		html_header($header_items, 3, true, 'tree');
+		print "</table></td></tr>";		/* end of html_header */
+		html_end_box();
+		echo "</div>";
 	}
 
 	form_save_button_alt("path!tree.php");
