@@ -178,12 +178,14 @@ $fields_data_input_edit = array(
 		"array" => $input_types,
 		),
 	"input_string" => array(
-		"method" => "textbox",
+		"method" => "textarea",
 		"friendly_name" => __("Input String"),
 		"description" => __("The data that is sent to the script, which includes the complete path to the script and input sources in &lt;&gt; brackets."),
 		"value" => "|arg1:input_string|",
 		"max_length" => "255",
-		"size" => "120"
+		"textarea_rows" => "4",
+		"textarea_cols" => "80",
+		"class" => "textAreaNotes"
 		),
 	"id" => array(
 		"method" => "hidden_zero",
@@ -293,7 +295,8 @@ $fields_data_template_template_edit = array(
 		"description" => __("Additional details relative this template."),
 		"value" => "|arg1:description|",
 		"textarea_rows" => "5",
-		"textarea_cols" => "60"
+		"textarea_cols" => "60",
+		"class" => "textAreaNotes"
 		),
 	"data_template_id" => array(
 		"method" => "hidden_zero",
@@ -982,7 +985,8 @@ $fields_graph_template_template_edit = array(
 		"description" => __("Additional details relative this template."),
 		"value" => "|arg1:description|",
 		"textarea_rows" => "5",
-		"textarea_cols" => "60"
+		"textarea_cols" => "60",
+		"class" => "textAreaNotes"
 		),
 	"image" => array(
 		"method" => "drop_image",
@@ -1010,7 +1014,8 @@ $fields_graph_template_input_edit = array(
 		"description" => __("Enter a description for this graph item input to describe what this input is used for."),
 		"value" => "|arg1:description|",
 		"textarea_rows" => "5",
-		"textarea_cols" => "40"
+		"textarea_cols" => "40",
+		"class" => "textAreaNotes"
 		),
 	"column_name" => array(
 		"method" => "drop_array",
@@ -1101,7 +1106,8 @@ $fields_site_edit = array(
 		"textarea_rows" => "3",
 		"textarea_cols" => "70",
 		"value" => "|arg1:notes|",
-		"max_length" => "255"
+		"max_length" => "255",
+		"class" => "textAreaNotes"
 		),
 	"id" => array(
 		"method" => "hidden_zero",
@@ -1170,7 +1176,8 @@ $fields_host_edit = array(
 		"class" => "textAreaNotes",
 		"value" => "|arg1:notes|",
 		"textarea_rows" => "5",
-		"textarea_cols" => "50"
+		"textarea_cols" => "50",
+		"class" => "textAreaNotes"
 		),
 	"disabled" => array(
 		"method" => "checkbox",
@@ -1375,7 +1382,8 @@ $fields_host_template_edit = array(
 		"description" => __("Additional details relative this template."),
 		"value" => "|arg1:description|",
 		"textarea_rows" => "5",
-		"textarea_cols" => "60"
+		"textarea_cols" => "60",
+		"class" => "textAreaNotes"
 		),
 	"image" => array(
 		"method" => "drop_image",
@@ -1623,7 +1631,8 @@ $fields_data_query_edit = array(
 		"description" => __("Additional details relative this template."),
 		"value" => "|arg1:description|",
 		"textarea_rows" => "5",
-		"textarea_cols" => "60"
+		"textarea_cols" => "60",
+		"class" => "textAreaNotes"
 		),
 	"image" => array(
 		"method" => "drop_image",
