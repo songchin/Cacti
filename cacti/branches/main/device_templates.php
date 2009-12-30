@@ -113,6 +113,9 @@ function form_save() {
 		$save["name"]					= form_input_validate($_POST["name"], "name", "", false, 3);
 		$save["description"]			= form_input_validate($_POST["description"], "description", "", true, 3);
 		$save["image"]					= form_input_validate($_POST["image"], "image", "", true, 3);
+		$save["override_defaults"]		= form_input_validate((isset($_POST["override_defaults"]) ? "on":""), "override_defaults", "", true, 3);
+		$save["override_permitted"]		= form_input_validate((isset($_POST["override_permitted"]) ? "on":""), "override_permitted", "", true, 3);
+		$save["snmp_version"]			= form_input_validate($_POST["snmp_version"], "snmp_version", "", true, 3);
 		$save["snmp_version"]			= form_input_validate($_POST["snmp_version"], "snmp_version", "", true, 3);
 		$save["snmp_community"]			= form_input_validate($_POST["snmp_community"], "snmp_community", "", true, 3);
 		$save["snmp_username"]			= form_input_validate($_POST["snmp_username"], "snmp_username", "", true, 3);
@@ -451,6 +454,7 @@ function template_edit() {
 	var ping_timeout   = document.getElementById('ping_timeout').value;
 	var ping_retries   = document.getElementById('ping_retries').value;
 
+	// default availability methods
 	var availability_methods = document.getElementById('availability_method').options;
 	var num_methods          = document.getElementById('availability_method').length;
 	var selectedIndex        = document.getElementById('availability_method').selectedIndex;
@@ -602,7 +606,7 @@ function template_edit() {
 
 				break;
 			case "1": // ping and snmp
-			case 3: // ping
+			case "3": // ping
 				if ((document.getElementById('row_ping_method').style.display == "none") ||
 					(document.getElementById('row_ping_method').style.display == undefined)) {
 					document.getElementById('ping_method').value=ping_method;
@@ -686,10 +690,60 @@ function template_edit() {
 		}
 	}
 
-	registerOnLoadFunction("host_templates", "changeHostForm();");
+	function toggleAvailabilityAndSnmp(show) {
+		if (show) {
+			$('#row_override_permitted').show();
+			$('#row_availability_header').show();
+			$('#row_availability_method').show();
+			$('#row_ping_method').show();
+			$('#row_ping_port').show();
+			$('#row_ping_timeout').show();
+			$('#row_ping_retries').show();
+			$('#row_snmp_spacer').show();
+			$('#row_snmp_version').show();
+			$('#row_snmp_username').show();
+			$('#row_snmp_password').show();
+			$('#row_snmp_community').show();
+			$('#row_snmp_auth_protocol').show();
+			$('#row_snmp_priv_passphrase').show();
+			$('#row_snmp_priv_protocol').show();
+			$('#row_snmp_context').show();
+			$('#row_snmp_port').show();
+			$('#row_snmp_timeout').
+			$('#row_max_oids').show();
+
+			changeHostForm();
+		}else{
+			$('#row_override_permitted').hide();
+			$('#row_availability_header').hide();
+			$('#row_availability_method').hide();
+			$('#row_ping_method').hide();
+			$('#row_ping_port').hide();
+			$('#row_ping_timeout').hide();
+			$('#row_ping_retries').hide();
+			$('#row_snmp_spacer').hide();
+			$('#row_snmp_version').hide();
+			$('#row_snmp_username').hide();
+			$('#row_snmp_password').hide();
+			$('#row_snmp_community').hide();
+			$('#row_snmp_auth_protocol').hide();
+			$('#row_snmp_priv_passphrase').hide();
+			$('#row_snmp_priv_protocol').hide();
+			$('#row_snmp_context').hide();
+			$('#row_snmp_port').hide();
+			$('#row_snmp_timeout').hide()
+			$('#row_max_oids').hide();
+		}
+	}
 
 	/* jQuery stuff */
 	$().ready(function() {
+		toggleAvailabilityAndSnmp($('#override_defaults').checked);
+
+		/* Hide options when override is turned off */
+		$("#override_defaults").change(function () {
+			toggleAvailabilityAndSnmp(this.checked);
+		});
 
 		/* Hide "Uptime Goes Backwards" if snmp_version has been set to "None" */
 		$("#snmp_version").change(function () {
@@ -717,7 +771,6 @@ function template_edit() {
 						$("#reindex_method option[value=" + reindex_reboot + "]").attr('selected', 'true');
 			}
 		});
-
 	});
 
 	//-->

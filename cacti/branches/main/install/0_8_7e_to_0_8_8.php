@@ -324,7 +324,8 @@ function upgrade_to_0_8_8() {
 	db_install_execute("0.8.8", "ALTER TABLE `snmp_query` ADD COLUMN `image` varchar(64) NOT NULL AFTER `description`;");
 	db_install_execute("0.8.8", "ALTER TABLE `host_template` ADD COLUMN `description` varchar(255) NOT NULL AFTER `name`;");
 	db_install_execute("0.8.8", "ALTER TABLE `host_template` ADD COLUMN `image` varchar(64) NOT NULL AFTER `description`;");
-
+	db_install_execute("0.8.8", "ALTER TABLE `host_template` ADD COLUMN `override_defaults` CHAR(2) NOT NULL DEFAULT '' AFTER `image`;");
+	db_install_execute("0.8.8", "ALTER TABLE `host_template` ADD COLUMN `override_permitted` CHAR(2) NOT NULL DEFAULT 'on' AFTER `override_defaults`;");
 
 	/* Add SNMPv3 Context to SNMP Input Methods */
 	/* first we must see if the user was smart enough to add it themselves */

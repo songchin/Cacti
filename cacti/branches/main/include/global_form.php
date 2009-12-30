@@ -1394,7 +1394,21 @@ $fields_device_template_edit = array(
 		"default" => "host.gif",
 		"value" => "|arg1:image|"
 		),
-	"avalaibility_header" => array(
+	"override_defaults" => array(
+		"method" => "checkbox",
+		"friendly_name" => __("Override Defaults"),
+		"description" => __("Check this box to have the Device Template override the System default Availability and SNMP Settings."),
+		"value" => "|arg1:override_defaults|",
+		"default" => ""
+		),
+	"override_permitted" => array(
+		"method" => "checkbox",
+		"friendly_name" => __("Allow Override"),
+		"description" => __("Check this box to have the allow the user to override the Device Template Availability and SNMP Settings."),
+		"value" => "|arg1:override_permitted|",
+		"default" => "on"
+		),
+	"availability_header" => array(
 		"method" => "spacer",
 		"friendly_name" => __("Availability/Reachability Options"),
 		),

@@ -2158,6 +2158,8 @@ CREATE TABLE host_template (
   name varchar(100) NOT NULL default '',
   description varchar(255) NOT NULL default '',
   image varchar(64) NOT NULL default '',
+  override_defaults char(2) NOT NULL default '',
+  override_permitted char(2) NOT NULL default 'on',
   snmp_community varchar(100) default NULL,
   snmp_version tinyint(1) unsigned NOT NULL default '1',
   snmp_username varchar(50) default NULL,
@@ -2181,13 +2183,13 @@ CREATE TABLE host_template (
 -- Dumping data for table `host_template`
 --
 
-INSERT INTO host_template VALUES (1,'4855b0e3e553085ed57219690285f91f','Generic SNMP-enabled Host', '', '', 'public', 0, '', '', 'MD5', '', 'DES', '', 161, 500, 3, 2, 23, 400, 1, 10);
-INSERT INTO host_template VALUES (3,'07d3fe6a52915f99e642d22e27d967a4','ucd/net SNMP Host', '', '', 'public', 0, '', '', 'MD5', '', 'DES', '', 161, 500, 3, 2, 23, 400, 1, 10);
-INSERT INTO host_template VALUES (4,'4e5dc8dd115264c2e9f3adb725c29413','Karlnet Wireless Bridge', '', '', 'public', 0, '', '', 'MD5', '', 'DES', '', 161, 500, 3, 2, 23, 400, 1, 10);
-INSERT INTO host_template VALUES (5,'cae6a879f86edacb2471055783bec6d0','Cisco Router', '', '', 'public', 0, '', '', 'MD5', '', 'DES', '', 161, 500, 3, 2, 23, 400, 1, 10);
-INSERT INTO host_template VALUES (6,'9ef418b4251751e09c3c416704b01b01','Netware 4/5 Server', '', '', 'public', 0, '', '', 'MD5', '', 'DES', '', 161, 500, 3, 2, 23, 400, 1, 10);
-INSERT INTO host_template VALUES (7,'5b8300be607dce4f030b026a381b91cd','Windows 2000/XP Host', '', '', 'public', 0, '', '', 'MD5', '', 'DES', '', 161, 500, 3, 2, 23, 400, 1, 10);
-INSERT INTO host_template VALUES (8,'2d3e47f416738c2d22c87c40218cc55e','Local Linux Machine', '', '', 'public', 0, '', '', 'MD5', '', 'DES', '', 161, 500, 3, 2, 23, 400, 1, 10);
+INSERT INTO host_template VALUES (1,'4855b0e3e553085ed57219690285f91f','Generic SNMP-enabled Host', '', '', '', 'on', 'public', 0, '', '', 'MD5', '', 'DES', '', 161, 500, 3, 2, 23, 400, 1, 10);
+INSERT INTO host_template VALUES (3,'07d3fe6a52915f99e642d22e27d967a4','ucd/net SNMP Host', '', '', '', 'on', 'public', 0, '', '', 'MD5', '', 'DES', '', 161, 500, 3, 2, 23, 400, 1, 10);
+INSERT INTO host_template VALUES (4,'4e5dc8dd115264c2e9f3adb725c29413','Karlnet Wireless Bridge', '', '', '', 'on', 'public', 0, '', '', 'MD5', '', 'DES', '', 161, 500, 3, 2, 23, 400, 1, 10);
+INSERT INTO host_template VALUES (5,'cae6a879f86edacb2471055783bec6d0','Cisco Router', '', '', '', 'on', 'public', 0, '', '', 'MD5', '', 'DES', '', 161, 500, 3, 2, 23, 400, 1, 10);
+INSERT INTO host_template VALUES (6,'9ef418b4251751e09c3c416704b01b01','Netware 4/5 Server', '', '', '', 'on', 'public', 0, '', '', 'MD5', '', 'DES', '', 161, 500, 3, 2, 23, 400, 1, 10);
+INSERT INTO host_template VALUES (7,'5b8300be607dce4f030b026a381b91cd','Windows 2000/XP Host', '', '', '', 'on', 'public', 0, '', '', 'MD5', '', 'DES', '', 161, 500, 3, 2, 23, 400, 1, 10);
+INSERT INTO host_template VALUES (8,'2d3e47f416738c2d22c87c40218cc55e','Local Linux Machine', '', '', '', 'on', 'public', 0, '', '', 'MD5', '', 'DES', '', 161, 500, 3, 2, 23, 400, 1, 10);
 
 --
 -- Table structure for table `host_template_graph`
