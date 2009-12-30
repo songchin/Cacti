@@ -413,7 +413,7 @@ function data_edit() {
 	html_start_box("<strong>" . __("Data Input Methods") . "</strong> $header_label", "100", $colors["header"], 0, "center", "");
 	$header_items = array(__("Field"), __("Value"));
 	print "<tr><td>";
-	html_header($header_items, 1, false, 'data_input','left wp100');
+	html_header($header_items, 1, true, 'data_input','left wp100');
 
 	draw_edit_form(array(
 		"config" => array(),
@@ -427,7 +427,7 @@ function data_edit() {
 		html_start_box("<strong>" . __("Input Fields") . "</strong>", "100", $colors["header"], 0, "center", "data_input.php?action=field_edit&type=in&data_input_id=" . $_GET["id"]);
 		$header_items = array(__("Name"), __("Field Order"), __("Friendly Name"));
 		print "<tr><td>";
-		html_header($header_items, 2, false, 'data_input_fields', 'left wp60');
+		html_header($header_items, 2, true, 'data_input_fields', 'left wp100');
 
 		$fields = db_fetch_assoc("select id,data_name,name,sequence from data_input_fields where data_input_id=" . $_GET["id"] . " and input_output='in' order by sequence, data_name");
 
@@ -445,7 +445,9 @@ function data_edit() {
 					<?php print $field["name"];?>
 				</td>
 				<td align="right">
-					<a href="<?php print htmlspecialchars("data_input.php?action=field_remove&id=" . $field["id"] . "&data_input_id=" . $_GET["id"]);?>"><img class="buttonSmall" src="images/delete_icon.gif" alt="<?php print __("Delete");?>" align='middle'></a>
+					<a href="<?php print htmlspecialchars("data_input.php?action=field_remove&id=" . $field["id"] . "&data_input_id=" . $_GET["id"]);?>">
+						<img class="buttonSmall" src="images/delete_icon.gif" alt="<?php print __("Delete");?>" align='right'>
+					</a>
 				</td>
 		<?php
 		form_end_row();
@@ -459,7 +461,7 @@ function data_edit() {
 		html_start_box("<strong>" . __("Output Fields"). "</strong>", "100", $colors["header"], 0, "center", "data_input.php?action=field_edit&type=out&data_input_id=" . $_GET["id"]);
 		$header_items = array(__("Name"), __("Field Order"), __("Friendly Name"), __("Update RRA"));
 		print "<tr><td>";
-		html_header($header_items, 2, true, 'data_output_fields', 'left wp60');
+		html_header($header_items, 2, true, 'data_output_fields', 'left wp100');
 
 		$fields = db_fetch_assoc("select id,name,data_name,update_rra,sequence from data_input_fields where data_input_id=" . $_GET["id"] . " and input_output='out' order by sequence, data_name");
 		if (sizeof($fields) > 0) {
@@ -479,7 +481,9 @@ function data_edit() {
 					<?php print html_boolean_friendly($field["update_rra"]);?>
 				</td>
 				<td align="right">
-					<a href="<?php print htmlspecialchars("data_input.php?action=field_remove&id=" . $field["id"] . "&data_input_id=" . $_GET["id"]);?>"><img class="buttonSmall" src="images/delete_icon.gif" alt="<?php print __("Delete");?>" align='middle'></a>
+					<a href="<?php print htmlspecialchars("data_input.php?action=field_remove&id=" . $field["id"] . "&data_input_id=" . $_GET["id"]);?>">
+						<img class="buttonSmall" src="images/delete_icon.gif" alt="<?php print __("Delete");?>" align='right'>
+					</a>
 				</td>
 		<?php
 		form_end_row();

@@ -403,7 +403,7 @@ function data_query_item_edit() {
 		html_start_box("<strong>" . __("Associated Data Source Templates") . "</strong>", "100", $colors["header"], "0", "center", "", false, "assoc_data_templates");
 		$header_items = array(__("Data Source Name"), __("Associated XML Field"), __("Use this Field"));
 		print "<tr><td>";
-		html_header($header_items, 1, false, 'data_templates', 'left wp60');
+		html_header($header_items, 1, true, 'data_templates', 'left wp100');
 
 		$data_templates = db_fetch_assoc("select
 			data_template.id,
@@ -481,7 +481,7 @@ function data_query_item_edit() {
 
 				$header_items = array(__("Data Source Template") . " - " . $data_template["name"], "&nbsp;");
 				print "<tr><td>";
-				html_header($header_items, 2, true, 'data_template_suggested_values_' . $data_template["id"], 'left wp60');
+				html_header($header_items, 2, true, 'data_template_suggested_values_' . $data_template["id"], 'left wp100');
 
 				$suggested_values = db_fetch_assoc("select
 					text,
@@ -503,7 +503,9 @@ function data_query_item_edit() {
 								<?php print $suggested_value["text"];?>
 							</td>
 							<td align="right">
-								<a href="<?php print htmlspecialchars("data_queries.php?action=item_remove_dssv&snmp_query_graph_id=" . $_GET["id"] . "&id=" . $suggested_value["id"] . "&snmp_query_id=" . $_GET["snmp_query_id"]. "&data_template_id=" . $data_template["id"]);?>"><img class="buttonSmall" src="images/delete_icon.gif" alt="<?php print __("Delete");?>" align='middle'></a>
+								<a href="<?php print htmlspecialchars("data_queries.php?action=item_remove_dssv&snmp_query_graph_id=" . $_GET["id"] . "&id=" . $suggested_value["id"] . "&snmp_query_id=" . $_GET["snmp_query_id"]. "&data_template_id=" . $data_template["id"]);?>">
+									<img class="buttonSmall" src="images/delete_icon.gif" alt="<?php print __("Delete");?>" align='right'>
+								</a>
 							</td>
 						<?php
 						form_end_row();
@@ -553,7 +555,7 @@ function data_query_item_edit() {
 		html_start_box("<strong>" . __("Suggested Values: Graph Templates") . "</strong>", "100", $colors["header"], 0, "center", "");
 		$header_items = array(__("Graph Template") . " - " . db_fetch_cell("select name from graph_templates where id=" . $snmp_query_item["graph_template_id"]), "&nbsp;");
 		print "<tr><td>";
-		html_header($header_items, 2, true, 'graph_template_suggested_values_' . get_request_var("id"), 'left wp60');
+		html_header($header_items, 2, true, 'graph_template_suggested_values_' . get_request_var("id"), 'left wp100');
 
 		if (sizeof($suggested_values) > 0) {
 			foreach ($suggested_values as $suggested_value) {
@@ -566,7 +568,9 @@ function data_query_item_edit() {
 						<?php print $suggested_value["text"];?>
 					</td>
 					<td align="right">
-						<a href="<?php print htmlspecialchars("data_queries.php?action=item_remove_gsv&snmp_query_graph_id=" . $_GET["id"] . "&id=" . $suggested_value["id"] . "&snmp_query_id=" . $_GET["snmp_query_id"]);?>"><img class="buttonSmall" src="images/delete_icon.gif" alt="<?php print __("Delete");?>" align='middle'></a>
+						<a href="<?php print htmlspecialchars("data_queries.php?action=item_remove_gsv&snmp_query_graph_id=" . $_GET["id"] . "&id=" . $suggested_value["id"] . "&snmp_query_id=" . $_GET["snmp_query_id"]);?>">
+							<img class="buttonSmall" src="images/delete_icon.gif" alt="<?php print __("Delete");?>" align='right'>
+						</a>
 					</td>
 				<?php
 				form_end_row();
@@ -692,7 +696,9 @@ function data_query_edit() {
 						<?php print $snmp_query_graph["graph_template_name"];?>
 					</td>
 					<td align="right">
-						<a href="<?php print htmlspecialchars("data_queries.php?action=item_remove&id=" . $snmp_query_graph["id"] . "&snmp_query_id=" . $snmp_query["id"]);?>"><img class="buttonSmall" src="images/delete_icon.gif" alt="<?php print __("Delete");?>" align='middle'></a>
+						<a href="<?php print htmlspecialchars("data_queries.php?action=item_remove&id=" . $snmp_query_graph["id"] . "&snmp_query_id=" . $snmp_query["id"]);?>">
+							<img class="buttonSmall" src="images/delete_icon.gif" alt="<?php print __("Delete");?>" align='right'>
+						</a>
 					</td>
 				<?php
 				form_end_row();
