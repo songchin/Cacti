@@ -255,7 +255,7 @@ function item_edit() {
 
 	draw_edit_form(
 		array(
-			"config" => array(),
+			"config" => array("no_form_tag" => true),
 			"fields" => inject_form_variables($fields_xaxis_item_edit, (isset($xaxis_items) ? $xaxis_items : array()))
 			)
 		);
@@ -293,7 +293,7 @@ function xaxis_edit() {
 	html_header($header_items, 2, false, 'header_xaxis_edit','left wp100');
 
 	draw_edit_form(array(
-		"config" => array(),
+		"config" => array("no_form_tag" => true),
 		"fields" => inject_form_variables($fields_xaxis_edit, (isset($xaxis) ? $xaxis : array()))
 	));
 
@@ -338,7 +338,6 @@ function xaxis_edit() {
 				$i++;
 				form_end_row();
 			}
-			form_end_table();
 		}else{
 			print "<tr><td><em>" . __("No X-Axis Preset Items") . "</em></td></tr>";
 		}
