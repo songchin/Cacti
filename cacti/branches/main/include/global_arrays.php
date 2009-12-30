@@ -429,7 +429,7 @@ $menu = array(
 	__("Management") => array(
 		"tree.php" => __("Trees"),
 		"sites.php" => __("Sites"),
-		"host.php" => __("Devices"),
+		"devices.php" => __("Devices"),
 		"graphs.php" => __("Graphs"),
 		"data_sources.php" => __("Data Sources"),
 		),
@@ -591,7 +591,7 @@ $user_auth_realm_filenames = array(
 	"graphs_items.php" => 5,
 	"graphs_item.ajax.php" => 5,
 	"graphs_new.php" => 5,
-	"host.php" => 3,
+	"devices.php" => 3,
 	"sites.php" => 3,
 	"pollers.php" => 3,
 	"host_templates.php" => 12,

@@ -68,7 +68,7 @@ function api_host_form_save() {
 		/* recache snmp data */
 		run_data_query(get_request_var_post("id"), get_request_var_post("snmp_query_id"));
 
-		header("Location: host.php?action=edit&id=" . $_POST["id"]);
+		header("Location: devices.php?action=edit&id=" . $_POST["id"]);
 		exit;
 	}
 
@@ -80,7 +80,7 @@ function api_host_form_save() {
 
 		db_execute("replace into host_graph (host_id,graph_template_id) values (" . get_request_var_post("id") . "," . get_request_var_post("graph_template_id") . ")");
 
-		header("Location: host.php?action=edit&id=" . $_POST["id"]);
+		header("Location: devices.php?action=edit&id=" . $_POST["id"]);
 		exit;
 	}
 
@@ -123,7 +123,7 @@ function api_host_form_save() {
 			$host_template["snmp_auth_protocol"], $host_template["snmp_priv_passphrase"],
 			$host_template["snmp_priv_protocol"], $host_template["snmp_context"], $host_template["max_oids"]);
 
-		header("Location: host.php?action=edit&id=" . (empty($host_id) ? $_POST["id"] : $host_id));
+		header("Location: devices.php?action=edit&id=" . (empty($host_id) ? $_POST["id"] : $host_id));
 		exit;
 	}
 
@@ -144,9 +144,9 @@ function api_host_form_save() {
 		}
 
 		if ((is_error_message()) || ($_POST["host_template_id"] != $_POST["_host_template_id"]) || $reindex_performed) {
-			header("Location: host.php?action=edit&id=" . (empty($host_id) ? $_POST["id"] : $host_id));
+			header("Location: devices.php?action=edit&id=" . (empty($host_id) ? $_POST["id"] : $host_id));
 		}else{
-			header("Location: host.php");
+			header("Location: devices.php");
 		}
 		exit;
 	}
@@ -333,7 +333,7 @@ function api_host_form_actions() {
 			api_plugin_hook_function('device_action_execute', get_request_var_post('drp_action'));
 		}
 
-		header("Location: host.php");
+		header("Location: devices.php");
 		exit;
 	}
 
@@ -576,7 +576,7 @@ function host_remove() {
 
 	if ((read_config_option("deletion_verification") == CHECKED) && (!isset($_GET["confirm"]))) {
 		include(CACTI_BASE_PATH . "/include/top_header.php");
-		form_confirm(__("Are You Sure?"), __("Are you sure you want to delete the host") . " <strong>'" . db_fetch_cell("select description from host where id=" . $_GET["id"]) . "'</strong>?", "host.php", "host.php?action=remove&id=" . $_GET["id"]);
+		form_confirm(__("Are You Sure?"), __("Are you sure you want to delete the host") . " <strong>'" . db_fetch_cell("select description from host where id=" . $_GET["id"]) . "'</strong>?", "devices.php", "devices.php?action=remove&id=" . $_GET["id"]);
 		include(CACTI_BASE_PATH . "/include/bottom_footer.php");
 		exit;
 	}
@@ -633,7 +633,7 @@ function host_edit() {
 
 	if (sizeof($host_tabs) > 0) {
 	foreach (array_keys($host_tabs) as $tab_short_name) {
-		print "<div class='tabDefault'><a " . (($tab_short_name == $current_tab) ? "class='tabSelected'" : "class='tabDefault'") . " href='" . htmlspecialchars("host.php?action=edit" . (isset($_REQUEST['id']) ? "&id=" . $_REQUEST['id'] . "&host_id=" . $_REQUEST['id']: "") . "&tab=$tab_short_name") . "'>$host_tabs[$tab_short_name]</a></div>";
+		print "<div class='tabDefault'><a " . (($tab_short_name == $current_tab) ? "class='tabSelected'" : "class='tabDefault'") . " href='" . htmlspecialchars("devices.php?action=edit" . (isset($_REQUEST['id']) ? "&id=" . $_REQUEST['id'] . "&host_id=" . $_REQUEST['id']: "") . "&tab=$tab_short_name") . "'>$host_tabs[$tab_short_name]</a></div>";
 
 		if (!isset($_REQUEST["id"])) break;
 	}
@@ -1160,7 +1160,7 @@ function host_display_general($host, $host_text) {
 					<?php print (($is_being_graphed == true) ? "<span class=\"success\">" . __("Is Being Graphed") . "</span> (<a href='graphs.php?action=graph_edit&id=" . db_fetch_cell("select id from graph_local where graph_template_id=" . $item["id"] . " and host_id=" . get_request_var("id") . " limit 0,1") . "'>" . __("Edit") . "</a>)" : "<span class=\"unknown\">" . __("Not Being Graphed") . "</span>");?>
 				</td>
 				<td align='right' nowrap>
-					<a href='host.php?action=gt_remove&amp;id=<?php print $item["id"];?>&amp;host_id=<?php print $_GET["id"];?>'><img align='absmiddle' class='buttonSmall' src='images/delete_icon_large.gif' title='<?php print __("Delete Graph Template Association");?>' alt='<?php print __("Delete");?>' align='middle'></a>
+					<a href='devices.php?action=gt_remove&amp;id=<?php print $item["id"];?>&amp;host_id=<?php print $_GET["id"];?>'><img align='absmiddle' class='buttonSmall' src='images/delete_icon_large.gif' title='<?php print __("Delete Graph Template Association");?>' alt='<?php print __("Delete");?>' align='middle'></a>
 				</td>
 			<?php
 			form_end_row();
@@ -1237,7 +1237,7 @@ function host_display_general($host, $host_text) {
 						<strong><?php print $i;?>)</strong> <?php print $item["name"];?>
 					</td>
 					<td>
-						(<a href="host.php?action=query_verbose&amp;id=<?php print $item["id"];?>&amp;host_id=<?php print $_GET["id"];?>"><?php print __("Verbose Query");?></a>)
+						(<a href="devices.php?action=query_verbose&amp;id=<?php print $item["id"];?>&amp;host_id=<?php print $_GET["id"];?>"><?php print __("Verbose Query");?></a>)
 					</td>
 					<td>
 						<?php form_dropdown("reindex_method_host_".get_request_var("id")."_query_".$item["id"]."_method_".$item["reindex_method"],$reindex_types,"","",$item["reindex_method"],"","","","");?>
@@ -1246,8 +1246,8 @@ function host_display_general($host, $host_text) {
 						<?php print (($status == "success") ? "<span class=\"success\">" . __("Success") . "</span>" : "<span class=\"fail\">" . __("Fail") . "</span>");?> [<?php print $num_dq_items;?> <?php print __("Item", $num_dq_items);?>, <?php print $num_dq_rows;?> <?php print __("Row", $num_dq_rows);?>]
 					</td>
 					<td align='right' nowrap>
-						<a href='host.php?action=query_reload&amp;id=<?php print $item["id"];?>&amp;host_id=<?php print $_GET["id"];?>'><img align='absmiddle' class='buttonSmall' src='images/reload_icon_small.gif' title='<?php print __("Reload Data Query");?>' alt='<?php print __("Reload");?>' align='middle'></a>&nbsp;
-						<a href='host.php?action=query_remove&amp;id=<?php print $item["id"];?>&amp;host_id=<?php print $_GET["id"];?>'><img align='absmiddle' class='buttonSmall' src='images/delete_icon_large.gif' title='<?php print __("Delete Data Query Association");?>' alt='<?php print __("Delete");?>' align='middle'></a>
+						<a href='devices.php?action=query_reload&amp;id=<?php print $item["id"];?>&amp;host_id=<?php print $_GET["id"];?>'><img align='absmiddle' class='buttonSmall' src='images/reload_icon_small.gif' title='<?php print __("Reload Data Query");?>' alt='<?php print __("Reload");?>' align='middle'></a>&nbsp;
+						<a href='devices.php?action=query_remove&amp;id=<?php print $item["id"];?>&amp;host_id=<?php print $_GET["id"];?>'><img align='absmiddle' class='buttonSmall' src='images/delete_icon_large.gif' title='<?php print __("Delete Data Query Association");?>' alt='<?php print __("Delete");?>' align='middle'></a>
 					</td>
 				<?php
 				form_end_row();
@@ -1376,11 +1376,11 @@ function host() {
 	</script>
 	<?php
 
-	html_start_box("<strong>" . __("Devices") . "</strong>", "100", $colors["header"], "3", "center", "host.php?action=edit&template_id=" . $_REQUEST["template_id"] . "&status=" . $_REQUEST["status"], true);
+	html_start_box("<strong>" . __("Devices") . "</strong>", "100", $colors["header"], "3", "center", "devices.php?action=edit&template_id=" . $_REQUEST["template_id"] . "&status=" . $_REQUEST["status"], true);
 	?>
 	<tr class='rowAlternate2'>
 		<td>
-			<form action="host.php" name="form_devices" method="post">
+			<form action="devices.php" name="form_devices" method="post">
 			<table cellpadding="0" cellspacing="3">
 				<tr>
 					<td class="nw50">
@@ -1569,7 +1569,7 @@ function host() {
 	$hosts = db_fetch_assoc($sql_query);
 
 	/* generate page list navigation */
-	$nav = html_create_nav($_REQUEST["page"], MAX_DISPLAY_PAGES, $rows, $total_rows, 13, "host.php");
+	$nav = html_create_nav($_REQUEST["page"], MAX_DISPLAY_PAGES, $rows, $total_rows, 13, "devices.php");
 
 	print $nav;
 	html_end_box(false);
@@ -1592,7 +1592,7 @@ function host() {
 	if (sizeof($hosts) > 0) {
 		foreach ($hosts as $host) {
 			form_alternate_row_color('line' . $host["id"], true);
-			form_selectable_cell("<a style='white-space:nowrap;' class='linkEditMain' href='" . htmlspecialchars("host.php?action=edit&id=" . $host["id"]) . "'>" .
+			form_selectable_cell("<a style='white-space:nowrap;' class='linkEditMain' href='" . htmlspecialchars("devices.php?action=edit&id=" . $host["id"]) . "'>" .
 				(strlen($_REQUEST["filter"]) ? preg_replace("/(" . preg_quote($_REQUEST["filter"]) . ")/i", "<span class=\"filter\">\\1</span>", $host["description"]) : $host["description"]) . "</a>", $host["id"]);
 			form_selectable_cell((strlen($_REQUEST["filter"]) ? preg_replace("/(" . preg_quote($_REQUEST["filter"]) . ")/i", "<span class=\"filter\">\\1</span>", $host["hostname"]) : $host["hostname"]), $host["id"]);
 			form_selectable_cell(round(($host["id"]), 2), $host["id"]);

@@ -241,10 +241,10 @@ function grow_edit_graph_tree($tree_id, $user_id, $options) {
 				}
 			}elseif ($leaf["host_id"] > 0) {
 				if ($visible) {
-					#				print "<td bgcolor='#$row_color' bgcolor='#" . $colors["panel"] . "'>$transparent_indent<a href='" . htmlspecialchars("tree.php?action=item_edit&tree_id=" . $_GET["id"] . "&id=" . $leaf["id"]) . "'><strong>Host:</strong> " . $leaf["hostname"] . "</a>&nbsp;<a href='" . htmlspecialchars("host.php?action=edit&id=" . $leaf["host_id"]) . "'>(Edit host)</a></td>\n";
+					#				print "<td bgcolor='#$row_color' bgcolor='#" . $colors["panel"] . "'>$transparent_indent<a href='" . htmlspecialchars("tree.php?action=item_edit&tree_id=" . $_GET["id"] . "&id=" . $leaf["id"]) . "'><strong>Host:</strong> " . $leaf["hostname"] . "</a>&nbsp;<a href='" . htmlspecialchars("devices.php?action=edit&id=" . $leaf["host_id"]) . "'>(Edit host)</a></td>\n";
 					#				print "<td bgcolor='#$row_color' bgcolor='#" . $colors["panel"] . "'>Host</td>";
 					print "<tr>";
-					print "<td bgcolor='#$row_color'>$transparent_indent<a href='" . htmlspecialchars("tree.php?action=item_edit&tree_id=" . $_GET["id"] . "&id=" . $leaf["id"]) . "'><strong>Host:</strong> " . $leaf["hostname"] . "</a>&nbsp;<a href='" . htmlspecialchars("host.php?action=edit&id=" . $leaf["host_id"]) . "'>(Edit host)</a></td>\n";
+					print "<td bgcolor='#$row_color'>$transparent_indent<a href='" . htmlspecialchars("tree.php?action=item_edit&tree_id=" . $_GET["id"] . "&id=" . $leaf["id"]) . "'><strong>Host:</strong> " . $leaf["hostname"] . "</a>&nbsp;<a href='" . htmlspecialchars("devices.php?action=edit&id=" . $leaf["host_id"]) . "'>(Edit host)</a></td>\n";
 					print "<td bgcolor='#$row_color'>Host</td>";
 				}
 			}
@@ -1223,7 +1223,7 @@ function get_graph_tree_content($tree_id, $leaf_id, $host_group_data) {
 						$sql_where = "AND (title_cache LIKE '%" . $_REQUEST["filter"] . "%')";
 					}
 
-					/* grab a list of all graphs for this host/data query combination */
+					/* grab a list of all graphs for this device/data query combination */
 					$graphs = db_fetch_assoc("SELECT
 						graph_templates_graph.title_cache,
 						graph_templates_graph.local_graph_id,

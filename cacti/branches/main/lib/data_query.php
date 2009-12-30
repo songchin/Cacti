@@ -486,7 +486,7 @@ function decode_data_query_index($encoded_index, $data_query_id, $host_id) {
 }
 
 /* update_data_query_cache - updates the local data query cache for each graph and data
-	source tied to this host/data query
+	source tied to this device/data query
    @arg $host_id - the id of the host to refresh
    @arg $data_query_id - the id of the data query to refresh */
 function update_data_query_cache($host_id, $data_query_id) {
@@ -560,7 +560,7 @@ function update_data_source_data_query_cache($local_data_id) {
 	}
 }
 
-/* get_formatted_data_query_indexes - obtains a list of indexes for a host/data query that
+/* get_formatted_data_query_indexes - obtains a list of indexes for a device/data query that
 	is sorted by the chosen index field and formatted using the data query index title
 	format
    @arg $host_id - the id of the host which contains the data query
@@ -605,7 +605,7 @@ function get_formatted_data_query_indexes($host_id, $data_query_id) {
 	return $sorted_results;
 }
 
-/* get_formatted_data_query_index - obtains a single index for a host/data query/data query
+/* get_formatted_data_query_index - obtains a single index for a device/data query/data query
 	index that is formatted using the data query index title format
    @arg $host_id - the id of the host which contains the data query
    @arg $data_query_id - the id of the data query which contains the data query index
@@ -693,7 +693,7 @@ function get_ordered_index_type_list($host_id, $data_query_id, $data_query_index
 	return $return_array;
 }
 
-/* update_data_query_sort_cache - updates the sort cache for a particular host/data query
+/* update_data_query_sort_cache - updates the sort cache for a particular device/data query
 	combination. this works by fetching a list of valid data query index types and choosing
 	the first one in the list. the user can optionally override how the cache is updated
 	in the data query xml file

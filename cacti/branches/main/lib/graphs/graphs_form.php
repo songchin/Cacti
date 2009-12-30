@@ -797,7 +797,7 @@ function graph_edit() {
 		$tip_text .= "<tr><td align=\\'right\\'><a class=\\'popup_item\\' href=\\'" . htmlspecialchars('graph_templates.php?action=template_edit&id=' . (isset($graphs["graph_template_id"]) ? $graphs["graph_template_id"] : "0")) . "\\'>" . __("Edit Template") . "</a></td></tr>";
 	}
 	if (!empty($_GET["host_id"]) || !empty($host_id)) {
-		$tip_text .= "<tr><td align=\\'right\\'><a class=\\'popup_item\\' href=\\'" . htmlspecialchars('host.php?action=edit&id=' . (isset($_GET["host_id"]) ? $_GET["host_id"] : $host_id)) . "\\'>" . __("Edit Host") . "</a></td></tr>";
+		$tip_text .= "<tr><td align=\\'right\\'><a class=\\'popup_item\\' href=\\'" . htmlspecialchars('devices.php?action=edit&id=' . (isset($_GET["host_id"]) ? $_GET["host_id"] : $host_id)) . "\\'>" . __("Edit Host") . "</a></td></tr>";
 	}
 
 	if (!empty($_GET["id"])) {
@@ -1028,7 +1028,7 @@ function graph() {
 		kill_session_var("sess_graph_sort_column");
 		kill_session_var("sess_graph_sort_direction");
 
-		if (!substr_count($_SERVER["REQUEST_URI"], "/host.php")) {
+		if (!substr_count($_SERVER["REQUEST_URI"], "/devices.php")) {
 			kill_session_var("sess_graph_host_id");
 		}
 
@@ -1040,7 +1040,7 @@ function graph() {
 		unset($_REQUEST["sort_column"]);
 		unset($_REQUEST["sort_direction"]);
 
-		if (!substr_count($_SERVER["REQUEST_URI"], "/host.php")) {
+		if (!substr_count($_SERVER["REQUEST_URI"], "/devices.php")) {
 			unset($_REQUEST["host_id"]);
 		}
 

@@ -1855,7 +1855,7 @@ function utilities() {
 			<a href='<?php print htmlspecialchars("utilities.php?action=clear_poller_cache");?>'><?php print __("Rebuild Poller Cache");?></a>
 		</td>
 		<td class="textAreaNotes">
-			<?php print __("The poller cache will be cleared and re-generated if you select this option. Sometimes host/data source data can get out of sync with the cache in which case it makes sense to clear the cache and start over.");?>
+			<?php print __("The poller cache will be cleared and re-generated if you select this option. Sometimes device/data source data can get out of sync with the cache in which case it makes sense to clear the cache and start over.");?>
 		</td>
 	</tr>
 

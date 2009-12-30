@@ -27,8 +27,8 @@
    -------------------------- */
 
 function api_graphs_new_form_save() {
-	if (substr_count($_SERVER["REQUEST_URI"], "/host.php")) {
-		$file = "host.php?action=edit&tab=newgraphs&id=" . $_REQUEST["host_id"];
+	if (substr_count($_SERVER["REQUEST_URI"], "/devices.php")) {
+		$file = "devices.php?action=edit&tab=newgraphs&id=" . $_REQUEST["host_id"];
 	}else{
 		$file = "graphs_new.php?host_id=". $_REQUEST["host_id"];
 	}
@@ -211,9 +211,9 @@ function host_new_graphs_save() {
 function host_new_graphs($host_id, $host_template_id, $selected_graphs_array) {
 	global $colors;
 
-	if (substr_count($_SERVER["REQUEST_URI"], "/host.php")) {
-		$file = "host.php?action=edit&tab=newgraphs&id=" . $_REQUEST["host_id"];
-		$file2 = "host.php";
+	if (substr_count($_SERVER["REQUEST_URI"], "/devices.php")) {
+		$file = "devices.php?action=edit&tab=newgraphs&id=" . $_REQUEST["host_id"];
+		$file2 = "devices.php";
 	}else{
 		$file = "graphs_new.php?host_id=". $_REQUEST["host_id"];
 		$file2 = "graphs_new.php";
@@ -359,14 +359,14 @@ function graphs_new() {
 
 	/* if the user pushed the 'clear' button */
 	if (isset($_REQUEST["clear_x"])) {
-		if (!substr_count($_SERVER["REQUEST_URI"], "/host.php")) {
+		if (!substr_count($_SERVER["REQUEST_URI"], "/devices.php")) {
 			kill_session_var("sess_graphs_new_host_id");
 		}
 
 		kill_session_var("sess_graphs_new_graph_type");
 		kill_session_var("sess_graphs_new_filter");
 
-		if (!substr_count($_SERVER["REQUEST_URI"], "/host.php")) {
+		if (!substr_count($_SERVER["REQUEST_URI"], "/devices.php")) {
 			unset($_REQUEST["host_id"]);
 		}
 
@@ -386,9 +386,9 @@ function graphs_new() {
 	load_current_session_value("graph_type", "sess_graphs_new_graph_type", read_config_option("default_graphs_new_dropdown"));
 	load_current_session_value("filter",     "sess_graphs_new_filter",     "");
 
-	if (substr_count($_SERVER["REQUEST_URI"], "/host.php")) {
-		$file = "host.php?action=edit&tab=newgraphs&id=" . $_REQUEST["host_id"];
-		$file2 = "host.php";
+	if (substr_count($_SERVER["REQUEST_URI"], "/devices.php")) {
+		$file = "devices.php?action=edit&tab=newgraphs&id=" . $_REQUEST["host_id"];
+		$file2 = "devices.php";
 	}else{
 		$file = "graphs_new.php?host_id=". $_REQUEST["host_id"];
 		$file2 = "graphs_new.php";
@@ -465,7 +465,7 @@ function graphs_new() {
 						</select>
 					</td>
 					<td style="white-space:nowrap;width:1%;" class="textInfo" align="center" valign="top">
-						<?php if (!isset($_REQUEST["tab"])) { ?><span class="tabedit">*</span><a href="host.php?action=edit&id=<?php print $_REQUEST["host_id"];?>"><?php print __("Edit this Host");?></a><br><?php } ?>
+						<?php if (!isset($_REQUEST["tab"])) { ?><span class="tabedit">*</span><a href="devices.php?action=edit&id=<?php print $_REQUEST["host_id"];?>"><?php print __("Edit this Host");?></a><br><?php } ?>
 						<?php api_plugin_hook('graphs_new_top_links'); ?>
 					</td>
 				</tr>
@@ -757,9 +757,9 @@ function graphs_new() {
 						load_current_session_value("page" . $query["id"], "sess_graphs_new_page" . $query["id"], "1");
 					}
 
-					if (substr_count($_SERVER["REQUEST_URI"], "/host.php")) {
-						$file = "host.php?action=edit&tab=newgraphs&id=" . $_REQUEST["host_id"];
-						$file2 = "host.php";
+					if (substr_count($_SERVER["REQUEST_URI"], "/devices.php")) {
+						$file = "devices.php?action=edit&tab=newgraphs&id=" . $_REQUEST["host_id"];
+						$file2 = "devices.php";
 					}else{
 						$file = "graphs_new.php?host_id=". $_REQUEST["host_id"];
 						$file2 = "graphs_new.php";
@@ -785,7 +785,7 @@ function graphs_new() {
 					}
 
 					if (!sizeof($snmp_query_indexes)) {
-						print "<tr class='rowAlternate1'><td>" . __("This data query returned 0 rows, perhaps there was a problem executing this data query. You can %s run this data query in debug mode %s to get more information.", "<a href='" . htmlspecialchars("host.php?action=query_verbose&id=" . $snmp_query["id"] . "&host_id=" . $host["id"]) . "'>", "</a>") . "</td></tr>\n";
+						print "<tr class='rowAlternate1'><td>" . __("This data query returned 0 rows, perhaps there was a problem executing this data query. You can %s run this data query in debug mode %s to get more information.", "<a href='" . htmlspecialchars("devices.php?action=query_verbose&id=" . $snmp_query["id"] . "&host_id=" . $host["id"]) . "'>", "</a>") . "</td></tr>\n";
 					}else{
 						print "<tr class='rowSubHeader'>
 								$html_dq_header

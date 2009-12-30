@@ -1123,7 +1123,7 @@ $fields_site_edit = array(
 		)
 	);
 
-/* file: host.php, action: edit */
+/* file: devices.php, action: edit */
 $fields_host_edit = array(
 	"host_header" => array(
 		"method" => "spacer",
@@ -1201,7 +1201,7 @@ $fields_host_edit = array(
 		)
 	);
 
-/* file: host.php, action: edit */
+/* file: devices.php, action: edit */
 $fields_host_edit_availability = array(
 	"availability_header" => array(
 		"method" => "spacer",

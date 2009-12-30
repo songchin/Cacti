@@ -681,7 +681,7 @@ function data_source_edit() {
 		$tip_text .= "<tr><td align=\\'right\\'><a class=\\'popup_item\\' href=" . htmlspecialchars('data_templates.php?action=template_edit&id=' . (isset($data_template["id"]) ? $data_template["id"] : "0")) . "\\'>" . __("Edit Data Source Template") . "<br></a></td></td>";
 	}
 	if (!empty($_GET["host_id"]) || !empty($data_local["host_id"])) {
-		$tip_text .= "<tr><td align=\\'right\\'><a class=\\'popup_item\\' href=\\'" . htmlspecialchars('host.php?action=edit&id=' . (isset($_GET["host_id"]) ? $_GET["host_id"] : $data_local["host_id"])) . "\\'>" . __("Edit Host") . "</a></td></tr>";
+		$tip_text .= "<tr><td align=\\'right\\'><a class=\\'popup_item\\' href=\\'" . htmlspecialchars('devices.php?action=edit&id=' . (isset($_GET["host_id"]) ? $_GET["host_id"] : $data_local["host_id"])) . "\\'>" . __("Edit Host") . "</a></td></tr>";
 	}
 
 	if (!empty($_GET["id"])) {
@@ -1021,7 +1021,7 @@ function data_source() {
 		kill_session_var("sess_ds_sort_direction");
 		kill_session_var("sess_ds_rows");
 
-		if (!substr_count($_SERVER["REQUEST_URI"], "/host.php")) {
+		if (!substr_count($_SERVER["REQUEST_URI"], "/devices.php")) {
 			kill_session_var("sess_ds_host_id");
 		}
 
@@ -1034,7 +1034,7 @@ function data_source() {
 		unset($_REQUEST["sort_direction"]);
 		unset($_REQUEST["rows"]);
 
-		if (!substr_count($_SERVER["REQUEST_URI"], "/host.php")) {
+		if (!substr_count($_SERVER["REQUEST_URI"], "/devices.php")) {
 			unset($_REQUEST["host_id"]);
 		}
 

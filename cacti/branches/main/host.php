@@ -25,7 +25,7 @@
 include("./include/auth.php");
 include_once(CACTI_BASE_PATH . "/lib/utility.php");
 include_once(CACTI_BASE_PATH . "/lib/api_data_source.php");
-include_once(CACTI_BASE_PATH . "/lib/host/host_form.php");
+include_once(CACTI_BASE_PATH . "/lib/device/device_form.php");
 include_once(CACTI_BASE_PATH . "/lib/graphs_new/graphs_new_form.php");
 include_once(CACTI_BASE_PATH . "/lib/graphs/graphs_form.php");
 include_once(CACTI_BASE_PATH . "/lib/data_sources/data_sources_form.php");
