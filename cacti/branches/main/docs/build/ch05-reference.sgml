@@ -20,9 +20,9 @@
 				<title>Data Source Title</title>
 				<screen><userinput>|data_source_title|</userinput></screen>
 				<para>
-					This variable, |data_source_title|, gets replaced with the name of the data source associated with a particular 
-					graph item in a graph template. This change allows the creation of generic 
-					graph templates (2-variable line graph, 3-variable stack, etc.) 
+					This variable, |data_source_title|, gets replaced with the name of the data source associated with a particular
+					graph item in a graph template. This change allows the creation of generic
+					graph templates (2-variable line graph, 3-variable stack, etc.)
 					which can be reused with large numbers of data sources.
 					See attached examples to understand usage.
 				</para>
@@ -467,7 +467,7 @@
 					</tgroup>
 				</table>
 				<para>While the <parameter>All Data Sources/Similar Data Sources</parameter> pseudo CDEF variables
-				perform <emphasis>totaling</emphasis>, the <parameter>Count All Data Sources/Count Similar Data Sources</parameter> 
+				perform <emphasis>totaling</emphasis>, the <parameter>Count All Data Sources/Count Similar Data Sources</parameter>
 				pseudo CDEF Variables simply <emphasis>count</emphasis> the occurences of the related data sources.
 				Thus, it is easy to compute e.g. an average of all similar data sources by creating the CDEF
 				</para>
@@ -480,7 +480,7 @@
 					<title>Sum up all Data Sources Omitting Duplicates</title>
 					<para>This is the list of graph items defined. Please note,
 					that Item#17-20 are duplicates of Item#1-4. Even if it usually does not make sense, for this
-					discussion it is very valuable. Item#21-24 are related to a 
+					discussion it is very valuable. Item#21-24 are related to a
 					<emphasis>cdef=ALL_DATA_SOURCES_NODUPS</emphasis></para>
 					<screen>
 Graph Item  Data Source                         Graph Item Type  CF Type
@@ -561,14 +561,14 @@ GPRINT:cdefca:MAX:"Maximum\:%8.2lf%s\n"</screen>
 					<para>The data sources are denoted by the letters <guilabel>a</guilabel> to <guilabel>h</guilabel>.
 					<guilabel>cdefca</guilabel> represents the important part. You surely notice, that
 					all data sources using consolidation function AVERAGE are taken into account while MAX is skipped.
-					Please pay attention to the data source denoted by <guilabel>a</guilabel>. Even though the data source appears twice, 
+					Please pay attention to the data source denoted by <guilabel>a</guilabel>. Even though the data source appears twice,
 					the cdef shows it only once. This is due to the duplicate suppression.</para>
 				</example>
 				<example>
 					<title>Sum up all Data Sources Including Duplicates</title>
 					<para>This is the list of graph items defined. Please note,
 					that Item#17-20 are duplicates of Item#1-4. Even if it usually does not make sense, for this
-					discussion it is very valuable. Item#21-24 are related to a 
+					discussion it is very valuable. Item#21-24 are related to a
 					<emphasis>cdef=ALL_DATA_SOURCES_DUPS</emphasis></para>
 					<screen>
 Graph Item  Data Source                         Graph Item Type  CF Type
@@ -647,15 +647,15 @@ GPRINT:cdefca:LAST:"                 Current\:%8.2lf%s"  \
 GPRINT:cdefca:AVERAGE:"Average\:%8.2lf%s"  \
 GPRINT:cdefca:MAX:"Maximum\:%8.2lf%s\n"</screen>
 					<para>Again, the data sources are denoted by the letters <guilabel>a</guilabel> to <guilabel>h</guilabel> and
-					<guilabel>cdefca</guilabel> represents the important part. Please pay attention to the data source 
-					denoted by <guilabel>a</guilabel> appearing twice in this cdef. 
+					<guilabel>cdefca</guilabel> represents the important part. Please pay attention to the data source
+					denoted by <guilabel>a</guilabel> appearing twice in this cdef.
 					This is, because it appears twice (Item#17-20) in the graph item list
 					and duplicate suppression is not in effect.</para>
 				</example>
 				<example>
 					<title>Sum up Similar Data Sources Omitting Duplicates</title>
 					<para>Everything is very much like the above; again
-					Item#17-20 are duplicates of Item#1-4. Item#21-24 are related to a 
+					Item#17-20 are duplicates of Item#1-4. Item#21-24 are related to a
 					<emphasis>cdef=SIMILAR_DATA_SOURCES_NODUPS</emphasis> and are associated with the
 					data source <emphasis>traffic_in</emphasis> of the 1. target (it does not matter, which target is chosen,
 					as long as you only choose a traffic_in data source)</para>
@@ -738,13 +738,13 @@ GPRINT:cdefca:AVERAGE:"Average\:%8.2lf%s"  \
 GPRINT:cdefcd:MAX:"Maximum\:%8.2lf%s\n" </screen>
 					<para><guilabel>cdefca</guilabel> calculates the SUM of all traffic_in data sources, but
 					pays attention only to consolidation function AVERAGE. Duplicate suppression makes sure, that the second
-					occurrence of the 1. target is not taken into account. So it's only summing data source 
+					occurrence of the 1. target is not taken into account. So it's only summing data source
 					<guilabel>a</guilabel> and <guilabel>c</guilabel>. <guilabel>cdefca</guilabel> is used the the LINE1
 					graph item with exact match for consolidation function AVERAGE as well as for the best matched
 					consolidation functions LAST and MIN.</para>
 					<para><guilabel>cdefcd</guilabel> calculates the SUM of all traffic_in data sources, but
-					pays attention only to consolidation function MAX. Again, duplicate suppression is in effect. 
-					So it's only summing data source 
+					pays attention only to consolidation function MAX. Again, duplicate suppression is in effect.
+					So it's only summing data source
 					<guilabel>b</guilabel> and <guilabel>d</guilabel>. <guilabel>cdefcd</guilabel> is used for the
 					graph item with exact match for consolidation function MAX only. This is, because my rra settings
 					only define AVERAGE and MAX, where LAST and MIN are omitted. This may differ for installations
@@ -753,7 +753,7 @@ GPRINT:cdefcd:MAX:"Maximum\:%8.2lf%s\n" </screen>
 				<example>
 					<title>Sum up Similar Data Sources Including Duplicates</title>
 					<para>Again, please note,
-					that Item#17-20 are duplicates of Item#1-4. Item#21-24 are related to a 
+					that Item#17-20 are duplicates of Item#1-4. Item#21-24 are related to a
 					<emphasis>cdef=SIMILAR_DATA_SOURCES_DUPS</emphasis> and are associated with the
 					data source <emphasis>traffic_in</emphasis> of the 1. target (it does not matter, which target is chosen,
 					as long as you only choose a traffic_in data source)</para>
@@ -850,7 +850,7 @@ GPRINT:cdefcd:MAX:"Maximum\:%8.2lf%s\n" </screen>
 					Often, users complain about the fact, tha tthis template prints free and used space as absolute figures only.
 					But instead of knowing, that your data partition has about 10GB used space, you may be interested in the
 					percentage used. So let's create a simple example to show the power of the recently introduced special data sources.</para>
-					<para>To make it work, we need two new CDEFs. The first one may come in useful for a bunch of 
+					<para>To make it work, we need two new CDEFs. The first one may come in useful for a bunch of
 					different graph templates. It's named <emphasis>Make Current Data Source 0</emphasis>. On a first glance,
 					you may wonder why this CDEF is needed. It is used for those data sources, that will be used
 					for calculations but shall not show up themselves. Here's the definition</para>
@@ -858,7 +858,7 @@ GPRINT:cdefcd:MAX:"Maximum\:%8.2lf%s\n" </screen>
 					<para>Now, the other one, named <emphasis>Current DS as Percentage of all DS</emphasis></para>
 					<screen>cdef=CURRENT_DATA_SOURCE,ALL_DATA_SOURCES_NODUPS,/,100,*</screen>
 					<para>Here's a short discussion. The first three elements read: Take the current data source and
-					divide it by "The Sum of All Data Sources (Don't include Duplicates)". To form a percentage, you will have 
+					divide it by "The Sum of All Data Sources (Don't include Duplicates)". To form a percentage, you will have
 					to multiply by 100. This is done by adding the elements four and five.</para>
 					<para>Now, let's build up the new graph</para>
 					<screen>
@@ -869,7 +869,7 @@ Graph Item   Data Source         Graph Item Type  CF Type  Item Color
 </screen>
 					<para>Item#1+2 in most cases will exceed the maximum percentage of 100 by magnitudes.
 					So they are associated with the CDEF named <emphasis>Make Current Data Source 0</emphasis> to make them zero.
-					This adds the data sources to the graph but avoids them showing up. The pseudo-color of "None" is associated to 
+					This adds the data sources to the graph but avoids them showing up. The pseudo-color of "None" is associated to
 					both of them.</para>
 					<para>Iten#3 is associated to the data source <emphasis>hdd_used</emphasis> as we want to print the
 					"% Used" of the partition. The CDEF is <emphasis>Current DS as Percentage of all DS</emphasis>, the
@@ -900,7 +900,7 @@ CDEF:cdefc=a,TIME,1203272123,GT,a,a,UN,0,a,IF,IF,TIME,1203272123,GT,b,b,UN,0,b,I
 LINE1:cdefa:""  \
 LINE1:cdefb:""  \
 AREA:cdefc#FF0000FF:"% Used"</screen>
-					<para><guilabel>cdefa</guilabel> and <guilabel>cdefb</guilabel> are used to make the according graph 
+					<para><guilabel>cdefa</guilabel> and <guilabel>cdefb</guilabel> are used to make the according graph
 					items zero. <guilabel>cdefc</guilabel> performs the percentage calculation.</para>
 					<para>You may of cource add GPRINT legends as usual. If you do this for the "% Used" entry only, you
 					will get surprising results, if your rrd file holds either MAXIMUM, LAST and/or MINIMUM
@@ -922,7 +922,7 @@ AREA:cdefc#FF0000FF:"% Used"</screen>
 					assumed at 18:00. Please replace those values if required. For weekends, same logic applies.</para>
 					<para>Now, let's apply those new CDEFs to a Graph Template. For this example, I've chosen the <emphasis>Unix - Processes</emphasis>
 					that applies to localhost only. In turn, please create three new graph items, associate the processes data source,
-					make them AREAs, select	a color and opacity. Choose the daytime , nighttime and weekend CDEF in this sequence. 
+					make them AREAs, select	a color and opacity. Choose the daytime , nighttime and weekend CDEF in this sequence.
 					As a last step, move those three new graph items to the top. I've chosen opacity of 20% for Item#1 to 3.</para>
 					<screen>
 Graph Item  Data Source                Graph Item Type  CF Type  Item Color
@@ -932,7 +932,7 @@ Item # 3    (proc):                    AREA             AVERAGE  2E3127
 Item # 4    (proc): Running Processes  AREA             AVERAGE  F51D30
 Item # 5    (proc): Current:           GPRINT           LAST
 Item # 6    (proc): Average:           GPRINT           AVERAGE
-Item # 7    (proc): Maximum:           GPRINT           MAX</screen> 	  	
+Item # 7    (proc): Maximum:           GPRINT           MAX</screen>
 				</example>
 			</sect2>
 		</sect1>
@@ -944,7 +944,7 @@ Item # 7    (proc): Maximum:           GPRINT           MAX</screen>
 			As of current, following scripts are supported:</para>
 			<screen>add_device.php
 add_data_query.php
-add_graph_template.php			
+add_graph_template.php
 add_graphs.php
 add_perms.php
 add_tree.php
@@ -1333,8 +1333,8 @@ snmp-get</screen>
 			<title>Create a New Device</title>
 				<para>Now, let's set up the most basic command to add a new device. The description shall be
 				<userinput>"Device Add Test"</userinput>, the ip will be given as a FQDN, <userinput>router.mydomain.com</userinput>.
-				We will use the <parameter>Host Template Id</parameter> of <emphasis>3</emphasis> which refers to a 
-				<parameter>ucd/net SNMP Host</parameter>. All avalability options, SNMP paremeters and stuff will be
+				We will use the <parameter>Host Template Id</parameter> of <emphasis>3</emphasis> which refers to a
+				<parameter>ucd/net SNMP Host</parameter>. All availability options, SNMP paremeters and stuff will be
 				taken from that very host template.
 				In total, this makes the following command</para>
 				<screen><prompt>shell&gt;</prompt>php -q add_device.php --description="Device Add Test" --ip="router.mydomain.com" --template=3
@@ -1343,7 +1343,7 @@ Adding Device Add Test (router.mydomain.com) as "ucd/net SNMP Host", Availabilit
 Success - new device-id: (11)</screen>
 				<para>Please visit <guimenu>Devices</guimenu> to see the result:</para>
 				<screen>
-Description      ID  Graphs  Data Sources   Status  Event Count             Hostname  Current (ms)  Average (ms)  Availability   	
+Description      ID  Graphs  Data Sources   Status  Event Count             Hostname  Current (ms)  Average (ms)  Availability
 Device Add Test  49       0             0  Unknown            0  router.mydomain.com             0             0           100</screen>
 				<para>Please use any other combination of parameters in the same way
 				as via the web browser console. You may want to remember the new device id, <userinput>11</userinput>
@@ -1358,7 +1358,7 @@ Device Add Test  49       0             0  Unknown            0  router.mydomain
 			host template. The data query will be executed as well; this way the
 			snmp cache will be filled with all values related to that query.</para>
 			<para>Nevertheless, it is sometimes suitable to manually associate a certain
-			data query with a single host only without changing any host template. 
+			data query with a single host only without changing any host template.
 			This is, where the script <filename>add_data_query.php</filename>
 			comes in. First, let's have a look at the whole list of features
 			it provides. Calling the script with the parameter <userinput>--help</userinput> yields</para>
@@ -1425,7 +1425,7 @@ Success - Host (11: router.mydomain.com) data query (1: SNMP - Interface Statist
 			it will automatically associated with all hosts related to that very
 			host template.</para>
 			<para>Nevertheless, it is sometimes suitable to manually associate a certain
-			graph template with a single host only without changing any host template. 
+			graph template with a single host only without changing any host template.
 			This is, where the script <filename>add_graph_template.php</filename>
 			comes in. First, let's have a look at the whole list of features
 			it provides. Calling the script with the parameter <userinput>--help</userinput> yields</para>
@@ -1521,7 +1521,7 @@ List Options:
     --list-snmp-fields  --host-id=[ID] [--snmp-query-id=[ID]]
     --list-snmp-values  --host-id=[ID] [--snmp-query-id=[ID]] --snmp-field=[Field]
 
-'cg' graphs are for things like CPU temp/fan speed, while 
+'cg' graphs are for things like CPU temp/fan speed, while
 'ds' graphs are for data-source based graphs (interface stats etc.)
 </screen>
 			<para>Like the graph creation from the console, this task is split
@@ -1648,22 +1648,22 @@ Up</screen>
 				<screen><prompt>shell&gt;</prompt>php -q add_graphs.php --list-snmp-values --host-id=11 --snmp-query-id=1
 
 Known values for  for host 11: (name)
-ifIndex ifOperStatus ifDescr     ifName        ifAlias        ifType               ifSpeed   ifHwAddr             ifIP         
-Index   Status       Description Name (IF-MIB) Alias (IF-MIB) Type                 Speed     Hardware Address     IP Address   
-1       Up           lo          lo                           softwareLoopback(24) 10000000                       127.0.0.1    
-2       Up           eth0        eth0                         ethernetCsmacd(6)    100000000 00:00:09:6B:86:FE:89 192.168.1.62 
+ifIndex ifOperStatus ifDescr     ifName        ifAlias        ifType               ifSpeed   ifHwAddr             ifIP
+Index   Status       Description Name (IF-MIB) Alias (IF-MIB) Type                 Speed     Hardware Address     IP Address
+1       Up           lo          lo                           softwareLoopback(24) 10000000                       127.0.0.1
+2       Up           eth0        eth0                         ethernetCsmacd(6)    100000000 00:00:09:6B:86:FE:89 192.168.1.62
 3       Down         irda0       irda0                        other(1)             0</screen>
 				<para>Please notice, that the column width is calculated dynamically. So your screen layout
 				may differ due to different snmp values for your device. The headers show both the XML file's field
-				identfiers as well as their long names.</para> 
+				identfiers as well as their long names.</para>
 				<para>For parsing with external scripts, you may like the <parameter>--quiet</parameter> option</para>
 				<screen><prompt>shell&gt;</prompt>php -q add_graphs.php --list-snmp-values --host-id=11 --snmp-query-id=1 --quiet
 
-1 Up   lo    lo     softwareLoopback(24) 10000000                       127.0.0.1    
-2 Up   eth0  eth0   ethernetCsmacd(6)    100000000 00:00:09:6B:86:FE:89 192.168.1.62 
+1 Up   lo    lo     softwareLoopback(24) 10000000                       127.0.0.1
+2 Up   eth0  eth0   ethernetCsmacd(6)    100000000 00:00:09:6B:86:FE:89 192.168.1.62
 3 Down irda0 irda0  other(1)             0</screen>
 				<para>Omitting headers results in a smaller column layout. Please be aware of the fact, that
-				e.g. column <parameter>ifAlias</parameter> does not carry any value in this examples. The first one shows clearly 
+				e.g. column <parameter>ifAlias</parameter> does not carry any value in this examples. The first one shows clearly
 				an empty column (you only notice the column header). Even the second example shows this behaviour.
 				When watching very closely, you will notice an extra space between columns 4 and 5. This may become
 				an important fact when parsing for words.</para>
@@ -1675,10 +1675,10 @@ Index   Status       Description Name (IF-MIB) Alias (IF-MIB) Type              
 				<screen><prompt>shell&gt;</prompt>php -q add_graphs.php --list-snmp-values --host-id=11 --snmp-query-id=1 --snmp-field-spec=ifIndex,ifOperStatus,ifSpeed,ifIP
 
 Known values for ifIndex,ifOperStatus,ifSpeed,ifIP for host 11: (name)
-ifIndex ifOperStatus ifSpeed   ifIP         
-Index   Status       Speed     IP Address   
-1       Up           10000000  127.0.0.1    
-2       Up           100000000 192.168.1.62 
+ifIndex ifOperStatus ifSpeed   ifIP
+Index   Status       Speed     IP Address
+1       Up           10000000  127.0.0.1
+2       Up           100000000 192.168.1.62
 3       Down         0</screen>
 				 <para>The sequence of columns is always governed by the sequence of fields in the XML description.
 				 The <parameter>--quiet</parameter> option is supported as well.</para>
@@ -1753,22 +1753,22 @@ Device Add Test - CPU Usage 		ucd/net - CPU Usage 			120x500
 Device Add Test - Traffic - lo  	Interface - Traffic (bits/sec)  	120x500</screen>
 				<para>If the data query was not associated with that host before, it is now added
 				to the list of <guimenu>Associated Graph Templates</guimenu>. In this case, the
-				<guimenu>Re-Index Method</guimenu> of <parameter>Uptime Goes Backwards</parameter> 
+				<guimenu>Re-Index Method</guimenu> of <parameter>Uptime Goes Backwards</parameter>
 				is defaulted if not given otherwise. You may provide a different <guimenu>Re-Index Method</guimenu>
 				by entering the optional parameter <parameter>--reindex-method</parameter>.</para>
 				<para>With <emphasis>Indexed Graphs</emphasis> it is surely possible to add multiple graphs in a single run.</para>
 				<itemizedlist>
 					<listitem><para>Assume a host with multiple interfaces.</para></listitem>
-					<listitem><para>Assume, at least 3 of them are ifSpeed=100M.</para></listitem> 
+					<listitem><para>Assume, at least 3 of them are ifSpeed=100M.</para></listitem>
 					<listitem><para>Assume, you've already created a single graph for one of those interfaces.</para></listitem>
 				</itemizedlist>
-				<para><emphasis>Goal:</emphasis> Run <filename>add_graph.php</filename> to make sure, 
-				that for this host ALL interfaces of ifSpeed=100M are graphed. 
-				In other words: Don't care if any of this graphs already exists or if any interface 
+				<para><emphasis>Goal:</emphasis> Run <filename>add_graph.php</filename> to make sure,
+				that for this host ALL interfaces of ifSpeed=100M are graphed.
+				In other words: Don't care if any of this graphs already exists or if any interface
 				meets this condition.</para>
-				<para>In this case, <filename>add_graphs.php</filename>  does not care about any graphs 
-				previously created; it simply skips them silently. 
-				Cacti will create missing graphs only. In this case, even if not a single graph is created, 
+				<para>In this case, <filename>add_graphs.php</filename>  does not care about any graphs
+				previously created; it simply skips them silently.
+				Cacti will create missing graphs only. In this case, even if not a single graph is created,
 				this will be considered successful.</para>
 			</sect2>
 		</sect1>
@@ -2174,7 +2174,7 @@ Removing graph but keeping resources for graph id 170. Success - removed graph-i
 			<title>Remove a Graph and all Resources</title>
 				<para>In order to delete all data sources related to that graph as well
 				please provide the optional parameter <parameter>--force</parameter>.
-				All data sources will be deleted without any confirmation request. 
+				All data sources will be deleted without any confirmation request.
 				So be careful when running this script!</para>
 				<screen><prompt>shell&gt;</prompt>php -q remove_graph.php --graph-id=171 --force
 
