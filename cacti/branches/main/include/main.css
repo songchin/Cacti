@@ -295,12 +295,12 @@ img_filter {
 
 /* header tabs */
 #header div#navbar {
-	background: #3f4d6b url("../images/header_backdrop.gif") right -8px no-repeat;
+	background: #3f4d6b url("../images/header_backdrop.gif") right -7px no-repeat;
 	position: relative;
 	top: 0px; left: 0px;
 	padding: 0px;
 	border-bottom: 2px solid #6ea533;
-	height: 6em;
+	height: 4.0em;
 	font-size:100%;
 }
 
