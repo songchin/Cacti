@@ -441,10 +441,9 @@ function tree() {
 
 	html_start_box("<strong>" . __("Graph Trees") . "</strong>", "100", $colors["header"], "3", "center", "tree.php?action=edit");
 
-	print "<tr class='rowSubHeader'>";
-		DrawMatrixHeaderItem(__("Name"),$colors["header_text"],1);
-		DrawMatrixHeaderItem("&nbsp;",$colors["header_text"],1);
-	print "</tr>";
+	print "<tr><td>";
+	html_header(array(__("Name")), 2,'','','left wp100'); 
+	print "</td></tr>";
 
 	$trees = db_fetch_assoc("SELECT * FROM graph_tree ORDER BY name");
 
@@ -456,7 +455,7 @@ function tree() {
 				<a class="linkEditMain" href="<?php print htmlspecialchars("tree.php?action=edit&id=" . $tree["id"]);?>"><?php print $tree["name"];?></a>
 			</td>
 			<td align="right">
-				<a href="<?php print htmlspecialchars("tree.php?action=remove&id=" . $tree["id"]);?>"><img class="buttonSmall" src="images/delete_icon.gif" alt="<?php print __("Delete");?>" align='middle'></a>
+				<a href="<?php print htmlspecialchars("tree.php?action=remove&id=" . $tree["id"]);?>"><img class="buttonSmall" src="images/delete_icon.gif" alt="<?php print __("Delete");?>" align='right'></a>
 			</td>
 			<?php
 		form_end_row();

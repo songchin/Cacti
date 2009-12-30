@@ -397,9 +397,9 @@ function item() {
 
 	html_start_box("<strong>" . __("Graph Item Inputs") . "</strong>", "100", $colors["header"], "3", "center", "graph_templates_inputs.php?action=input_edit&graph_template_id=" . $_GET["id"], true);
 
-	print "<tr class='rowSubHeader'>";
-		DrawMatrixHeaderItem(__("Name"), $colors["header_text"], 2);
-	print "</tr>";
+	print "<tr><td>";
+	html_header(array(__("Name")), 2,'','','left wp100');
+	print "</td></tr>";
 
 	$template_item_list = db_fetch_assoc("select id,name from graph_template_input where graph_template_id=" . $_GET["id"] . " order by name");
 
@@ -411,7 +411,7 @@ function item() {
 				<a class="linkEditMain" href='<?php print htmlspecialchars("graph_templates_inputs.php?action=input_edit&id=" . $item["id"] . "&graph_template_id=" . $_GET["id"]);?>'><?php print $item["name"];?></a>
 			</td>
 			<td align="right">
-				<a href='<?php print htmlspecialchars("graph_templates_inputs.php?action=input_remove&id=" . $item["id"] . "&graph_template_id=" . $_GET["id"]);?>'><img class="buttonSmall" src="images/delete_icon.gif" alt="<?php print __("Delete");?>" align='middle'></a>
+				<a href='<?php print htmlspecialchars("graph_templates_inputs.php?action=input_remove&id=" . $item["id"] . "&graph_template_id=" . $_GET["id"]);?>'><img class="buttonSmall" src="images/delete_icon.gif" alt="<?php print __("Delete");?>" align='right'></a>
 			</td>
 		<?php
 		form_end_row();

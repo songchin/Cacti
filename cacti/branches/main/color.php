@@ -635,9 +635,9 @@ function color() {
 	$i = 0;
 
 	while ($i < get_request_var_request("columns")) {
-		DrawMatrixHeaderItem(__("Hex"),    $colors["header_text"], 1, "center");
-		DrawMatrixHeaderItem(__("Color"),  $colors["header_text"], 1, "center");
-		DrawMatrixHeaderItem("&nbsp;", $colors["header_text"], 1);
+		print "<th id='Hex' class='textSubHeaderDark'>" . __("Hex") . "</th>" 
+		. "<th id='Class' class='textSubHeaderDark'>" . __("Color") . "</th>" 
+		. "<th id='spacer' class='textSubHeaderDark'>&nbsp;</th>"; 
 		$i++;
 	}
 
