@@ -309,6 +309,31 @@ if (config_value_exists("path_cactilog")) {
 	$input["path_cactilog"]["default"] = CACTI_BASE_PATH . "/log/cacti.log";
 }
 
+/* spine Binary Path */
+$input["path_spine"] = $settings["path"]["path_spine"];
+
+if (CACTI_SERVER_OS == "unix") {
+	$which_spine = find_best_path("spine");
+
+	if (config_value_exists("path_spine")) {
+		$input["path_spine"]["default"] = read_config_option("path_spine");
+	}else if (!empty($which_spine)) {
+		$input["path_spine"]["default"] = $which_spine;
+	}else{
+		$input["path_spine"]["default"] = "/usr/local/bin/spine";
+	}
+}elseif (CACTI_SERVER_OS == "win32") {
+	$which_spine = find_best_path("spine.exe");
+
+	if (config_value_exists("path_spine")) {
+		$input["path_spine"]["default"] = read_config_option("path_spine");
+	}else if (!empty($which_spine)) {
+		$input["path_spine"]["default"] = $which_spine;
+	}else{
+		$input["path_spine"]["default"] = "c:/spine/spine.exe";
+	}
+}
+
 /* SNMP Version */
 if (CACTI_SERVER_OS == "unix") {
 	$input["snmp_version"] = $settings["general"]["snmp_version"];
@@ -324,7 +349,9 @@ if ((file_exists($input["path_rrdtool"]["default"])) && ((CACTI_SERVER_OS == "wi
 	exec($input["path_rrdtool"]["default"], $out_array);
 
 	if (sizeof($out_array) > 0) {
-		if (preg_match("/^RRDtool 1\.3/", $out_array[0])) {
+		if (preg_match("/^RRDtool 1\.4/", $out_array[0])) {
+			$input["rrdtool_version"]["default"] = RRD_VERSION_1_4;
+		}else if (preg_match("/^RRDtool 1\.3/", $out_array[0])) {
 			$input["rrdtool_version"]["default"] = RRD_VERSION_1_3;
 		}else if (preg_match("/^RRDtool 1\.2\./", $out_array[0])) {
 			$input["rrdtool_version"]["default"] = RRD_VERSION_1_2;
