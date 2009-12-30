@@ -57,11 +57,11 @@ function xaxis_form_save() {
 		$save["item_name"] = form_input_validate($_POST["item_name"], "item_name", "", true, 3);
 		$save["xaxis_id"] = form_input_validate($_POST["xaxis_id"], "xaxis_id", "^[0-9]+$", false, 3);
 		$save["timespan"] = form_input_validate($_POST["timespan"], "timespan", "^[0-9]+$", false, 3);
-		$save["gtm"] = form_input_validate($_POST["gtm"], "gtm", "^[0-9]+$", false, 3);
+		$save["gtm"] = form_input_validate($_POST["gtm"], "gtm", "", false, 3);
 		$save["gst"] = form_input_validate($_POST["gst"], "gst", "^[0-9]+$", false, 3);
-		$save["mtm"] = form_input_validate($_POST["mtm"], "mtm", "^[0-9]+$", false, 3);
+		$save["mtm"] = form_input_validate($_POST["mtm"], "mtm", "", false, 3);
 		$save["mst"] = form_input_validate($_POST["mst"], "mst", "^[0-9]+$", false, 3);
-		$save["ltm"] = form_input_validate($_POST["ltm"], "ltm", "^[0-9]+$", false, 3);
+		$save["ltm"] = form_input_validate($_POST["ltm"], "ltm", "", false, 3);
 		$save["lst"] = form_input_validate($_POST["lst"], "lst", "^[0-9]+$", false, 3);
 		$save["lpr"] = form_input_validate($_POST["lpr"], "lpr", "^[0-9]+$", false, 3);
 		$save["lfm"] = form_input_validate($_POST["lfm"], "lfm", "", true, 3);

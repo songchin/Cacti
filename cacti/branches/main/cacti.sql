@@ -3026,11 +3026,11 @@ CREATE TABLE `graph_templates_xaxis_items` (
   `item_name` varchar(100) NOT NULL COMMENT 'Name of this Item',
   `xaxis_id` int(12) unsigned NOT NULL DEFAULT '0' COMMENT 'Id of related X-Axis Preset',
   `timespan` int(12) unsigned NOT NULL DEFAULT '0' COMMENT 'Graph Timespan that shall match this Item',
-  `gtm` tinyint(2) unsigned NOT NULL COMMENT 'Global Grid Timespan Index',
+  `gtm` VARCHAR( 10 ) NOT NULL DEFAULT '' COMMENT 'Global Grid Timespan',
   `gst` smallint(4) unsigned NOT NULL COMMENT 'Global Grid Timespan Steps',
-  `mtm` tinyint(2) unsigned NOT NULL COMMENT 'Major Grid Timespan Index',
+  `mtm` VARCHAR( 10 ) NOT NULL DEFAULT '' COMMENT 'Major Grid Timespan',
   `mst` smallint(4) unsigned NOT NULL COMMENT 'Major Grid Timespan Steps',
-  `ltm` tinyint(2) unsigned NOT NULL COMMENT 'Label Grid Timespan Index',
+  `ltm` VARCHAR( 10 ) NOT NULL DEFAULT '' COMMENT 'Label Grid Timespan',
   `lst` smallint(4) unsigned NOT NULL COMMENT 'Label Grid Timespan Steps',
   `lpr` int(12) unsigned NOT NULL COMMENT 'Label Placement Relative',
   `lfm` varchar(100) NOT NULL COMMENT 'Label Format',
@@ -3041,8 +3041,8 @@ CREATE TABLE `graph_templates_xaxis_items` (
 -- Dumping data for table `graph_templates_xaxis_items`
 --
 
-INSERT INTO `graph_templates_xaxis_items` VALUES(1, '60c2066a1c45fab021d32fe72cbf4f49', 'Day', 1, 86400, 3, 4, 3, 2, 3, 2, 23200, '%H');
-INSERT INTO `graph_templates_xaxis_items` VALUES(2, 'd867f8fc2730af212d0fd6708385cf89', 'Week', 1, 604800, 4, 1, 4, 1, 4, 1, 259200, '%d');
-INSERT INTO `graph_templates_xaxis_items` VALUES(3, '06304a1840da88f3e0438ac147219003', 'Month', 1, 2678400, 5, 1, 5, 1, 5, 1, 1296000, '%W');
-INSERT INTO `graph_templates_xaxis_items` VALUES(4, '33ac10e60fd855e74736bee43bda4134', 'Year', 1, 31622400, 6, 2, 6, 1, 6, 2, 15811200, '%m');
+INSERT INTO `graph_templates_xaxis_items` VALUES(1, '60c2066a1c45fab021d32fe72cbf4f49', 'Day', 1, 86400, 'HOUR', 4, 'HOUR', 2, 'HOUR', 2, 23200, '%H');
+INSERT INTO `graph_templates_xaxis_items` VALUES(2, 'd867f8fc2730af212d0fd6708385cf89', 'Week', 1, 604800, 'DAY', 1, 'DAY', 1, 'DAY', 1, 259200, '%d');
+INSERT INTO `graph_templates_xaxis_items` VALUES(3, '06304a1840da88f3e0438ac147219003', 'Month', 1, 2678400, 'WEEK', 1, 'WEEK', 1, 'WEEK', 1, 1296000, '%W');
+INSERT INTO `graph_templates_xaxis_items` VALUES(4, '33ac10e60fd855e74736bee43bda4134', 'Year', 1, 31622400, 'MONTH', 2, 'MONTH', 1, 'MONTH', 2, 15811200, '%m');
 

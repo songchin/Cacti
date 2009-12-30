@@ -186,14 +186,14 @@ $rrd_graph_render_modes = array(
 	RRD_GRAPH_RENDER_MONO	=> __("Mono"),
 	);
 
-$rrd_xaxis_timespans = array( # keep strings verbatim, no translation allowed
-	RRD_XAXIS_SECOND		=> "Second",
-	RRD_XAXIS_MINUTE		=> "Minute",
-	RRD_XAXIS_HOUR			=> "Hour",
-	RRD_XAXIS_DAY			=> "Day",
-	RRD_XAXIS_WEEK			=> "Week",
-	RRD_XAXIS_MONTH			=> "Month",
-	RRD_XAXIS_YEAR			=> "Year",
+$rrd_xaxis_timespans = array(
+	RRD_XAXIS_SECOND		=> __("Second"),
+	RRD_XAXIS_MINUTE		=> __("Minute"),
+	RRD_XAXIS_HOUR			=> __("Hour"),
+	RRD_XAXIS_DAY			=> __("Day"),
+	RRD_XAXIS_WEEK			=> __("Week"),
+	RRD_XAXIS_MONTH			=> __("Month"),
+	RRD_XAXIS_YEAR			=> __("Year"),
 );
 
 $data_source_types = array(

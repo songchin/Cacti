@@ -1939,7 +1939,6 @@ function rrdtool_set_colortag($type, $colortag) {
 }
 
 function rrdtool_set_x_grid($xaxis_id, $start, $end) {
-	global $rrd_xaxis_timespans;
 
 	$format = "";
 	$xaxis_items = db_fetch_assoc("SELECT timespan, gtm, gst, mtm, mst, ltm, lst, lpr, lfm " .
@@ -1949,11 +1948,11 @@ function rrdtool_set_x_grid($xaxis_id, $start, $end) {
 	# find best matching timestamp
 	if (sizeof($xaxis_items)) {
 		foreach ($xaxis_items as $xaxis_item) { # there's only one matching entry due to LIMIT 1
-			$format .= strtoupper($rrd_xaxis_timespans[$xaxis_item["gtm"]]) . ":";
+			$format .= $xaxis_item["gtm"] . ":";
 			$format .= $xaxis_item["gst"] . ":";
-			$format .= strtoupper($rrd_xaxis_timespans[$xaxis_item["mtm"]]) . ":";
+			$format .= $xaxis_item["mtm"] . ":";
 			$format .= $xaxis_item["mst"] . ":";
-			$format .= strtoupper($rrd_xaxis_timespans[$xaxis_item["ltm"]]) . ":";
+			$format .= $xaxis_item["ltm"] . ":";
 			$format .= $xaxis_item["lst"] . ":";
 			$format .= $xaxis_item["lpr"] . ":";
 			$format .= $xaxis_item["lfm"];
