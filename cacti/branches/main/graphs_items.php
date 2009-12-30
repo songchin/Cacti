@@ -237,7 +237,7 @@ function item_edit() {
 				</tr>
 				<tr>
 					<td class="nw100">
-						<?php print __("Data Template:");?>&nbsp;
+						<?php print __("Data Source Template:");?>&nbsp;
 					</td>
 					<td>
 						<select name="cbo_data_template_id" onChange="window.location=document.form_graph_items.cbo_data_template_id.options[document.form_graph_items.cbo_data_template_id.selectedIndex].value">

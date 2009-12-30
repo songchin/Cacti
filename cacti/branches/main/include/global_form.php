@@ -267,7 +267,7 @@ $struct_data_source = array(
 		"flags" => ""
 		),
 	"active" => array(
-		"friendly_name" => __("Data Template Active"),
+		"friendly_name" => __("Data Source Template Active"),
 		"method" => "checkbox",
 		"default" => CHECKED,
 		"description" => __("Whether Cacti should gather data for this class of Data Sources."),
@@ -1788,7 +1788,7 @@ $export_types = array(
 		"dropdown_sql" => "select id,name from graph_templates order by name"
 		),
 	"data_template" => array(
-		"name" => __("Data Template"),
+		"name" => __("Data Source Template"),
 		"title_sql" => "select name from data_template where id=|id|",
 		"dropdown_sql" => "select id,name from data_template order by name"
 		),

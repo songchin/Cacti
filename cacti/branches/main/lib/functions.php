@@ -1837,7 +1837,7 @@ function draw_navigation_text() {
 		"data_sources.php:ds_edit" => array("title" => __("(Edit)"), "mapping" => "index.php:,data_sources.php:", "url" => "", "level" => "2"),
 		"data_sources.php:ds_toggle_status" => array("title" => "(Disable)", "mapping" => "index.php:,data_sources.php:", "url" => "", "level" => "2"),
 		"data_templates.php:actions" => array("title" => __("Actions"), "mapping" => "index.php:,data_templates.php:", "url" => "", "level" => "2"),
-		"data_templates.php:" => array("title" => __("Data Templates"), "mapping" => "index.php:", "url" => "data_templates.php", "level" => "1"),
+		"data_templates.php:" => array("title" => __("Data Source Templates"), "mapping" => "index.php:", "url" => "data_templates.php", "level" => "1"),
 		"data_templates.php:template_edit" => array("title" => __("(Edit)"), "mapping" => "index.php:,data_templates.php:", "url" => "", "level" => "2"),
 		"gprint_presets.php:" => array("title" => __("GPRINT Presets"), "mapping" => "index.php:", "url" => "gprint_presets.php", "level" => "1"),
 		"gprint_presets.php:edit" => array("title" => __("(Edit)"), "mapping" => "index.php:,gprint_presets.php:", "url" => "", "level" => "2"),

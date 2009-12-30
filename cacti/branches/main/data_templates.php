@@ -282,7 +282,7 @@ function form_actions() {
 			if (isset($bad_ids)) {
 				$message = "";
 				foreach($bad_ids as $template_id) {
-					$message .= (strlen($message) ? "<br>":"") . "<i>Data Template " . $template_id . " is in use and can not be removed</i>\n";
+					$message .= (strlen($message) ? "<br>":"") . "<i>Data Source Template " . $template_id . " is in use and can not be removed</i>\n";
 				}
 
 				$_SESSION['sess_message_dt_ref_int'] = array('message' => "<font size=-2>$message</font>", 'type' => 'info');
@@ -375,7 +375,7 @@ function form_actions() {
 	} else {
 		print "	<tr>
 				<td class='textArea'>
-					<p>" . __("You must first select a Data Template.  Please select 'Return' to return to the previous menu.") . "</p>
+					<p>" . __("You must first select a Data Source Template.  Please select 'Return' to return to the previous menu.") . "</p>
 				</td>
 			</tr>\n";
 	}
@@ -392,7 +392,7 @@ function form_actions() {
 }
 
 /* ----------------------------
-    template - Data Templates
+    template - Data Source Templates
    ---------------------------- */
 
 function template_rrd_remove() {
@@ -459,7 +459,7 @@ function template_edit() {
 	}
 
 	print "<form method='post' action='" .  basename($_SERVER["PHP_SELF"]) . "' name='data_template_edit'>\n";
-	html_start_box("<strong>" . __("Data Template") . "</strong> $header_label", "100", $colors["header"], 0, "center", "", true);
+	html_start_box("<strong>" . __("Data Source Template") . "</strong> $header_label", "100", $colors["header"], 0, "center", "", true);
 	$header_items = array(__("Field"), __("Value"));
 	print "<tr><td>";
 	html_header($header_items, 2, true, 'header_data_template');
@@ -696,7 +696,7 @@ function template() {
 	load_current_session_value("sort_column", "sess_data_template_sort_column", "name");
 	load_current_session_value("sort_direction", "sess_data_template_sort_direction", "ASC");
 
-	html_start_box("<strong>Data Templates</strong>", "100", $colors["header"], "3", "center", "data_templates.php?action=template_edit", true);
+	html_start_box("<strong>Data Source Templates</strong>", "100", $colors["header"], "3", "center", "data_templates.php?action=template_edit", true);
 	?>
 	<tr class='rowAlternate2'>
 		<td>
@@ -803,7 +803,7 @@ function template() {
 		/* put the nav bar on the bottom as well */
 		print $nav;
 	}else{
-		print "<tr><td><em>" . __("No Data Templates") . "</em></td></tr>\n";
+		print "<tr><td><em>" . __("No Data Source Templates") . "</em></td></tr>\n";
 	}
 
 	print "</table>\n";	# end table of html_header_sort_checkbox

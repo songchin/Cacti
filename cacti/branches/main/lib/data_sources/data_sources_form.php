@@ -416,7 +416,7 @@ function data_source_form_actions() {
 					<td class='textArea'>
 						<p>" . __("Choose a data template and click save to change the data template for the following data souces. Be aware that all warnings will be suppressed during the conversion, so graph data loss is possible.") . "</p>
 						<p>$ds_list</p>
-						<p><strong>". __("New Data Template:") . "</strong><br>"; form_dropdown("data_template_id",db_fetch_assoc("select data_template.id,data_template.name from data_template order by data_template.name"),"name","id","","","0"); print "</p>
+						<p><strong>". __("New Data Source Template:") . "</strong><br>"; form_dropdown("data_template_id",db_fetch_assoc("select data_template.id,data_template.name from data_template order by data_template.name"),"name","id","","","0"); print "</p>
 					</td>
 				</tr>\n
 				";
@@ -562,7 +562,7 @@ function data_source_data_edit() {
 					print "<td width='50%'><strong>" . $field["name"] . "</strong> (" . __("From Host:") . " " . $host["hostname"] . ")</td>\n";
 					print "<td><em>$old_value</em></td>\n";
 				}elseif (empty($can_template)) {
-					print "<td width='50%'><strong>" . $field["name"] . "</strong> (" . __("From Data Template") . ")</td>\n";
+					print "<td width='50%'><strong>" . $field["name"] . "</strong> (" . __("From Data Source Template") . ")</td>\n";
 					print "<td><em>" . (empty($old_value) ? __("Nothing Entered") : $old_value) . "</em></td>\n";
 				}else{
 					print "<td width='50%'><strong>" . $field["name"] . "</strong></td>\n";
@@ -702,7 +702,7 @@ function data_source_edit() {
 		$tip_text .= "<tr><td align=\\'right\\'><a class=\\'popup_item\\' href=\\'" . htmlspecialchars('data_sources.php?action=data_source_edit&id=' . (isset($_GET["id"]) ? $_GET["id"] : 0) . '&info=' . (isset($_SESSION["ds_info_mode"]) ? "0" : "1")) . "\\'>" . __("Turn") . " <strong>" . (isset($_SESSION["ds_info_mode"]) ? __("Off") : __(CHECKED)) . "</strong> " . __("RRD Info Mode") . "</a><td></tr>";
 	}
 	if (!empty($data_template["id"])) {
-		$tip_text .= "<tr><td align=\\'right\\'><a class=\\'popup_item\\' href=" . htmlspecialchars('data_templates.php?action=template_edit&id=' . (isset($data_template["id"]) ? $data_template["id"] : "0")) . "\\'>" . __("Edit Data Template") . "<br></a></td></td>";
+		$tip_text .= "<tr><td align=\\'right\\'><a class=\\'popup_item\\' href=" . htmlspecialchars('data_templates.php?action=template_edit&id=' . (isset($data_template["id"]) ? $data_template["id"] : "0")) . "\\'>" . __("Edit Data Source Template") . "<br></a></td></td>";
 	}
 	if (!empty($_GET["host_id"]) || !empty($data_local["host_id"])) {
 		$tip_text .= "<tr><td align=\\'right\\'><a class=\\'popup_item\\' href=\\'" . htmlspecialchars('host.php?action=edit&id=' . (isset($_GET["host_id"]) ? $_GET["host_id"] : $data_local["host_id"])) . "\\'>" . __("Edit Host") . "</a></td></tr>";
@@ -722,7 +722,7 @@ function data_source_edit() {
 	}
 
 	print "<form method='post' action='" .  basename($_SERVER["PHP_SELF"]) . "' name='data_source_edit'>\n";
-	html_start_box("<strong>" . __("Data Template Selection") . "</strong> $header_label", "100", $colors["header"], 0, "center", "");
+	html_start_box("<strong>" . __("Data Source Template Selection") . "</strong> $header_label", "100", $colors["header"], 0, "center", "");
 	$header_items = array(__("Field"), __("Value"));
 	print "<tr><td>";
 	html_header($header_items, 1, true, 'template');
@@ -731,7 +731,7 @@ function data_source_edit() {
 		"data_template_id" => array(
 			"method" => "autocomplete",
 			"callback_function" => "./lib/ajax/get_data_templates.php",
-			"friendly_name" => __("Selected Data Template"),
+			"friendly_name" => __("Selected Data Source Template"),
 			"description" => __("The name given to this data template."),
 			"id" => (isset($data_template) ? $data_template["id"] : "0"),
 			"name" => db_fetch_cell("SELECT name FROM data_template WHERE id=" . (isset($data_template) ? $data_template['id'] : "0"))
@@ -784,7 +784,7 @@ function data_source_edit() {
 	if (!empty($data["data_template_id"])) {
 		$template_data_rrds = db_fetch_assoc("select * from data_template_rrd where local_data_id=" . $_GET["id"] . " order by data_source_name");
 
-		html_start_box("<strong>" . __("Supplemental Data Template Data") . "</strong>", "100", $colors["header"], 0, "center", "");
+		html_start_box("<strong>" . __("Supplemental Data Source Template Data") . "</strong>", "100", $colors["header"], 0, "center", "");
 
 		draw_nontemplated_fields_data_source($data["data_template_id"], $data["local_data_id"], $data, "|field|", "<strong>" . __("Data Source Fields") . "</strong>", true, true, 0);
 		draw_nontemplated_fields_data_source_item($data["data_template_id"], $template_data_rrds, "|field|_|id|", "<strong>" . __("Data Source Item Fields") . "</strong>", true, true, true, 0);

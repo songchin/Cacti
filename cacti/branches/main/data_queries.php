@@ -386,7 +386,7 @@ function data_query_item_edit() {
 	$header_label = __("[edit: ") . $snmp_query["name"] . "]";
 
 	print "<form method='post' action='" .  basename($_SERVER["PHP_SELF"]) . "' name='data_query_item_edit'>\n";
-	html_start_box("<strong>" . __("Associated Graph/Data Templates") . "</strong> $header_label", "100", $colors["header"], 0, "center", "");
+	html_start_box("<strong>" . __("Associated Graph/Data Source Templates") . "</strong> $header_label", "100", $colors["header"], 0, "center", "");
 	$header_items = array(__("Field"), __("Value"));
 	print "<tr><td>";
 	html_header($header_items, 1, false, 'assoc_templates', 'left wp100');
@@ -400,7 +400,7 @@ function data_query_item_edit() {
 	html_end_box(true);
 
 	if (!empty($snmp_query_item["id"])) {
-		html_start_box("<strong>" . __("Associated Data Templates") . "</strong>", "100", $colors["header"], "0", "center", "", false, "assoc_data_templates");
+		html_start_box("<strong>" . __("Associated Data Source Templates") . "</strong>", "100", $colors["header"], "0", "center", "", false, "assoc_data_templates");
 		$header_items = array(__("Data Source Name"), __("Associated XML Field"), __("Use this Field"));
 		print "<tr><td>";
 		html_header($header_items, 1, false, 'data_templates', 'left wp60');
@@ -421,7 +421,7 @@ function data_query_item_edit() {
 		if (sizeof($data_templates) > 0) {
 			foreach ($data_templates as $data_template) {
 				print "	<tr class='rowHeader'>
-							<td><span>Data Template - " . $data_template["name"] . "</span></td>
+							<td><span>Data Source Template - " . $data_template["name"] . "</span></td>
 							<td></td>
 							<td></td>
 						</tr>";
@@ -471,7 +471,7 @@ function data_query_item_edit() {
 		print "</table></td></tr>";		/* end of html_header */
 		html_end_box();
 
-		html_start_box("<strong>" . __("Suggested Values: Data Templates") . "</strong>", "100", $colors["header"], 0, "center", "");
+		html_start_box("<strong>" . __("Suggested Values: Data Source Templates") . "</strong>", "100", $colors["header"], 0, "center", "");
 
 		reset($data_templates);
 
@@ -479,7 +479,7 @@ function data_query_item_edit() {
 		if (sizeof($data_templates) > 0) {
 			foreach ($data_templates as $data_template) {
 
-				$header_items = array(__("Data Template") . " - " . $data_template["name"], "&nbsp;");
+				$header_items = array(__("Data Source Template") . " - " . $data_template["name"], "&nbsp;");
 				print "<tr><td>";
 				html_header($header_items, 2, true, 'data_template_suggested_values_' . $data_template["id"], 'left wp60');
 
@@ -858,7 +858,7 @@ function data_query() {
 		foreach ($snmp_queries as $snmp_query) {
 			form_alternate_row_color('line' . $snmp_query["id"], true);
 			form_selectable_cell("<a class='linkEditMain' href='" . htmlspecialchars("data_queries.php?action=edit&id=" . $snmp_query["id"]) . "'>" . (strlen($_REQUEST["filter"]) ? preg_replace("/(" . preg_quote($_REQUEST["filter"]) . ")/i", "<span class=\"filter\">\\1</span>", $snmp_query["name"]) : $snmp_query["name"]) . "</a>", $snmp_query["id"]);
-			form_selectable_cell("<a class='linkEditMain' href='" . htmlspecialchars("data_queries.php?action=edit&id=" . $snmp_query["id"]) . "'>" . (strlen($_REQUEST["filter"]) ? preg_replace("/(" . preg_quote($_REQUEST["filter"]) . ")/i", "<span class=\"filter\">\\1</span>", $snmp_query["description"]) : $snmp_query["description"]) . "</a>", $snmp_query["id"]);
+			form_selectable_cell((strlen($_REQUEST["filter"]) ? preg_replace("/(" . preg_quote($_REQUEST["filter"]) . ")/i", "<span class=\"filter\">\\1</span>", $snmp_query["description"]) : $snmp_query["description"]), $snmp_query["id"]);
 			form_selectable_cell("<img src='" . $snmp_query["image"] . "'>", $snmp_query["id"]);
 			form_selectable_cell((strlen($_REQUEST["filter"]) ? preg_replace("/(" . preg_quote($_REQUEST["filter"]) . ")/i", "<span class=\"filter\">\\1</span>", $snmp_query["data_input_method"]) : $snmp_query["data_input_method"]), $snmp_query["id"]);
 			form_checkbox_cell($snmp_query["name"], $snmp_query["id"]);

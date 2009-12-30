@@ -67,23 +67,23 @@ if ($execute) {
 	echo "NOTE: Performing Check of Templates\n";
 }
 
-/* repair data templates first */
+/* repair data source templates first */
 if ($execute) {
-	echo "NOTE: Repairing Data Templates\n";
+	echo "NOTE: Repairing Data Source Templates\n";
 } else {
-	echo "NOTE: Performing Check of Data Templates\n";
+	echo "NOTE: Performing Check of Data Source Templates\n";
 }
 
 $damaged_template_ids = db_fetch_assoc("SELECT DISTINCT data_template_id FROM data_template_rrd WHERE hash='' AND local_data_id=0");
 if (sizeof($damaged_template_ids)) {
 	foreach($damaged_template_ids as $id) {
 		$template_name = db_fetch_cell("SELECT name FROM data_template WHERE id=" . $id["data_template_id"]);
-		echo "NOTE: Data Template '$template_name' is Damaged and can be repaired\n";
+		echo "NOTE: Data Source Template '$template_name' is Damaged and can be repaired\n";
 	}
 
 	$damaged_templates = db_fetch_assoc("SELECT * FROM data_template_rrd WHERE hash='' AND local_data_id=0");
 	if (sizeof($damaged_templates)) {
-		echo "NOTE: -- Damaged Data Templates Objects Found is '" . sizeof($damaged_templates) . "'\n";
+		echo "NOTE: -- Damaged Data Source Templates Objects Found is '" . sizeof($damaged_templates) . "'\n";
 		if ($execute) {
 			foreach($damaged_templates as $template) {
 				$hash = get_hash_data_template($template["local_data_template_rrd_id"], "data_template_item");
@@ -92,7 +92,7 @@ if (sizeof($damaged_template_ids)) {
 		}
 	}
 } else {
-	echo "NOTE: No Damaged Data Templates Found\n";
+	echo "NOTE: No Damaged Data Source Templates Found\n";
 }
 
 /* reset the array */
