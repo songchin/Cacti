@@ -1297,10 +1297,10 @@ List Options:
 			<para>Wow, that's quite a lot of options. To better understand it's use,
 			let's first stick to the listing options</para>
 			<sect2 id="cli_add_device_list_host_template">
-			<title>List all Host Templates</title>
+			<title>List all Device Templates</title>
 				<screen><prompt>shell&gt;</prompt>php -q add_device.php --list-host-templates
 
-Valid Host Templates: (id, name)
+Valid Device Templates: (id, name)
 1       Generic SNMP-enabled Host
 3       ucd/net SNMP Host
 4       Karlnet Wireless Bridge
@@ -1308,15 +1308,15 @@ Valid Host Templates: (id, name)
 6       Netware 4/5 Server
 7       Windows 2000/XP Host
 8       Local Linux Machine</screen>
-				<para>Why are those <userinput>Host Templates</userinput> of such importance for this
+				<para>Why are those <userinput>Device Templates</userinput> of such importance for this
 				script? Well, when using this script to add a new device, there are 3 required
 				parameters. The <userinput>description</userinput> and the <userinput>device ip address</userinput>
-				are of course left to you. But for assigning the correct <userinput>Host Template Id</userinput>,
+				are of course left to you. But for assigning the correct <userinput>Device Template Id</userinput>,
 				you should first know the correct id of that very parameter. For the purpose of this
 				chapter we assume to add a device that will be associated to a <userinput>ucd/net SNMP Host</userinput>,
 				so the id of <userinput>3</userinput> is required.</para>
-				<para>If you do not want to associate the host to any <userinput>Host Template Id</userinput>, known
-				as host template <guimenuitem>None</guimenuitem>, please provide the parameter
+				<para>If you do not want to associate the host to any <userinput>Device Template Id</userinput>, known
+				as Device Template <guimenuitem>None</guimenuitem>, please provide the parameter
 				<userinput>--template=0</userinput></para>
 			</sect2>
 			<sect2 id="cli_add_device_list_communities">
@@ -1333,9 +1333,9 @@ snmp-get</screen>
 			<title>Create a New Device</title>
 				<para>Now, let's set up the most basic command to add a new device. The description shall be
 				<userinput>"Device Add Test"</userinput>, the ip will be given as a FQDN, <userinput>router.mydomain.com</userinput>.
-				We will use the <parameter>Host Template Id</parameter> of <emphasis>3</emphasis> which refers to a
+				We will use the <parameter>Device Template Id</parameter> of <emphasis>3</emphasis> which refers to a
 				<parameter>ucd/net SNMP Host</parameter>. All availability options, SNMP paremeters and stuff will be
-				taken from that very host template.
+				taken from that very Device Template.
 				In total, this makes the following command</para>
 				<screen><prompt>shell&gt;</prompt>php -q add_device.php --description="Device Add Test" --ip="router.mydomain.com" --template=3
 
@@ -1353,12 +1353,12 @@ Device Add Test  49       0             0  Unknown            0  router.mydomain
 		<sect1 id="cli_add_data_query">
 		<title>Associate a Data Query to an existing Host</title>
 			<para>It is recommended to maintain data query associations by maintaining
-			host templates. Each time, a data query is added to a host template,
+			Device Templates. Each time, a data query is added to a Device Template,
 			it will automatically associated with all hosts related to that very
-			host template. The data query will be executed as well; this way the
+			Device Template. The data query will be executed as well; this way the
 			snmp cache will be filled with all values related to that query.</para>
 			<para>Nevertheless, it is sometimes suitable to manually associate a certain
-			data query with a single host only without changing any host template.
+			data query with a single host only without changing any Device Template.
 			This is, where the script <filename>add_data_query.php</filename>
 			comes in. First, let's have a look at the whole list of features
 			it provides. Calling the script with the parameter <userinput>--help</userinput> yields</para>
@@ -1421,11 +1421,11 @@ Success - Host (11: router.mydomain.com) data query (1: SNMP - Interface Statist
 		<sect1 id="cli_add_graph_template">
 		<title>Associate a Graph Template to an existing Host</title>
 			<para>It is recommended to maintain graph template associations by maintaining
-			host templates. Each time, a graph template is added to a host template,
+			Device Templates. Each time, a graph template is added to a Device Template,
 			it will automatically associated with all hosts related to that very
-			host template.</para>
+			Device Template.</para>
 			<para>Nevertheless, it is sometimes suitable to manually associate a certain
-			graph template with a single host only without changing any host template.
+			graph template with a single host only without changing any Device Template.
 			This is, where the script <filename>add_graph_template.php</filename>
 			comes in. First, let's have a look at the whole list of features
 			it provides. Calling the script with the parameter <userinput>--help</userinput> yields</para>
@@ -1571,7 +1571,7 @@ Known Graph Templates:(id, name)
 				template later. So note the number <userinput>4</userinput> for it.</para>
 
 				<para>It is possible to reduce the listing to the graph templates associated with
-				a specific host template by using <userinput>--list-graph-templates --host-template-id=[id]</userinput>.
+				a specific Device Template by using <userinput>--list-graph-templates --host-template-id=[id]</userinput>.
 				For a "ucd/net SNMP Host" this yields</para>
 				<screen><prompt>shell&gt;</prompt>php -q add_graphs.php --list-graph-templates --host-template-id=3
 

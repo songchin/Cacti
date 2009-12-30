@@ -121,7 +121,7 @@
 				To manage devices within Cacti, click on the <guilabel>Devices</guilabel> menu item.
 				Clicking <guilabel>Add</guilabel>  will bring up a new device form. The first two fields,
 				<guilabel>Description</guilabel> and <guilabel>Hostname</guilabel> are the only two fields that
-				require your input beyond the defaults. If your host type is defined under the host template
+				require your input beyond the defaults. If your host type is defined under the Device Template
 				dropdown, be sure to select it here. You can always choose "Generic SNMP-enabled Host" if you are
 				just graphing traffic or "None" if you are unsure. It is important to remember that the host
 				template you choose will not lock you into any particular configuration, it will just provide
@@ -163,8 +163,8 @@
 							e.g. Dynamic Name Services (DNS)</entry>
 						</row>
 						<row>
-							<entry>Host Template</entry>
-							<entry>A Host Template is a container for a list of graph templates
+							<entry>Device Template</entry>
+							<entry>A Device Template is a container for a list of graph templates
 							that will be related to this host.</entry>
 						</row>
 						<row>

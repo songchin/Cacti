@@ -660,7 +660,7 @@ subfunction     enumerated for each subfunction within each funtion: 1, 2, 3, ..
 generic id      e.g. abbreviated company name
 function        name of function, e.g. dhcp, dns, radius, ...
 subfunction     name of subfunction within each function, e.g. for dhcp: ack, nack, ...</screen>
-			
+
 			<para>This is a very simple example counting all occurences of the string STRING
 			in the file <filename>/var/log/FILE</filename></para>
 			<programlisting>
@@ -669,7 +669,7 @@ subfunction     name of subfunction within each function, e.g. for dhcp: ack, na
 			</programlisting>
 
 			<para>Remember to refresh the snmp daemon after eaqch change to <filename>/etc/snmp/snmpd.conf</filename>.
-			Now execute this script by</para> 
+			Now execute this script by</para>
 <screen><prompt>shell&gt;</prompt>snmpwalk -c &lt;read community&gt; -v1 &lt;target&gt; .1.3.6.1.4.1.2021.999.1.1
 UCD-SNMP-MIB::ucdavis.999.1.1.1.1 = INTEGER: 1
 UCD-SNMP-MIB::ucdavis.999.1.1.2.1 = STRING: "example1.sh"
@@ -709,7 +709,7 @@ UCD-SNMP-MIB::ucdavis.999.1.1.102.1 = INTEGER: 0</screen>
 								<para>Click <guilabel>Add</guilabel> to add a new device.</para>
 							</listitem>
 							<listitem>
-								<para>Type a description, hostname, management IP, and SNMP community. Make sure to select "Generic SNMP-enabled Host" under <guilabel>Host Template</guilabel> and click <guilabel>Create</guilabel>.</para>
+								<para>Type a description, hostname, management IP, and SNMP community. Make sure to select "Generic SNMP-enabled Host" under <guilabel>Device Template</guilabel> and click <guilabel>Create</guilabel>.</para>
 							</listitem>
 							<listitem>
 								<para>Click <guilabel>Create Graphs for this Host</guilabel> at the top of the page.</para>
@@ -954,10 +954,10 @@ disk /</userinput></screen>
 					</question>
 					<answer>
 						<para>
-							This is caused because newer versions of PHP 
+							This is caused because newer versions of PHP
 							<ulink url="http://www.php.net/manual/en/faq.databases.php#faq.databases.mysql.php5">no longer support</ulink>
 							the new client libraries for MySQL 4.1.0 and beyond. The universal fix is to apply the
-							<ulink url="http://dev.mysql.com/doc/mysql/en/old-client.html">old client</ulink> 
+							<ulink url="http://dev.mysql.com/doc/mysql/en/old-client.html">old client</ulink>
 							hack, outlined in the MySQL section above.
 						</para>
 					</answer>
@@ -972,14 +972,14 @@ disk /</userinput></screen>
 					</question>
 					<answer>
 						<para>
-							This is occurring because your Cacti scheduled task is using the same user name 
+							This is occurring because your Cacti scheduled task is using the same user name
 							you've logged onto the computer with. There are two possible fixes: </para>
 							<orderedlist>
 								<listitem><para>Use a different user name to run the Cacti scheduled task</para></listitem>
-								<listitem><para>Use a windows script to hide the command windows. Only do this after your 
+								<listitem><para>Use a windows script to hide the command windows. Only do this after your
 								cacti installation is fully functional!</para>
 								<orderedlist numeration=loweralpha>
-									<listitem><para>Create a file called <filename>invisible.vbs</filename>. 
+									<listitem><para>Create a file called <filename>invisible.vbs</filename>.
 									Place it where ever you like.</para></listitem>
 									<listitem><para>Edit <filename>invisible.vbs</filename> and paste the following</para>
 									<screen><userinput>Set objWSHShell = WScript.CreateObject("WScript.Shell")
@@ -1000,10 +1000,10 @@ objWSHShell.Run "poller.php", 0, False</userinput></screen></listitem>
 					</question>
 					<answer>
 						<para>
-							Turn up the logging level in Cacti. In Cacti go to <guibutton>Settings</guibutton> 
-							and change the <guilabel>Poller Logging Level</guilabel> to Debug for 
-							<emphasis>one cycle</emphasis>. If you notice your log file is filled with WEBLOG entries, 
-							which makes it hard to follow what is going on, then uncheck all of the 
+							Turn up the logging level in Cacti. In Cacti go to <guibutton>Settings</guibutton>
+							and change the <guilabel>Poller Logging Level</guilabel> to Debug for
+							<emphasis>one cycle</emphasis>. If you notice your log file is filled with WEBLOG entries,
+							which makes it hard to follow what is going on, then uncheck all of the
 							<guilabel>Web Events</guilabel>, save and wait for the next polling cycle.
 						</para>
 					</answer>
@@ -1018,7 +1018,7 @@ objWSHShell.Run "poller.php", 0, False</userinput></screen></listitem>
 					</question>
 					<answer>
 						<para>
-							No. But they are handy to have around when making custom scripts in conjunction 
+							No. But they are handy to have around when making custom scripts in conjunction
 							with Net-SNMP or GetIF.
 						</para>
 					</answer>
@@ -1034,8 +1034,8 @@ objWSHShell.Run "poller.php", 0, False</userinput></screen></listitem>
 					<answer>
 						<para>
 							The easiest tools are either <ulink url="http://www.wtcs.org/snmp4tpc/getif.htm">GetIf</ulink> or <ulink url="http://net-snmp.sourceforge.net/">Net-SNMP</ulink>.
-							GetIf is fairly self explanatory since it has a GUI. Using the MBrowser 
-							tab is handy for navigating the SNMP trees and OIDs. 
+							GetIf is fairly self explanatory since it has a GUI. Using the MBrowser
+							tab is handy for navigating the SNMP trees and OIDs.
 							Net-SNMP is comprised of several tools. You'll want to use snmpget and snmpwalk.
 							An example of parsing the interfaces on a device would be:</para>
 
@@ -1054,7 +1054,7 @@ objWSHShell.Run "poller.php", 0, False</userinput></screen></listitem>
 					</question>
 					<answer>
 						<para>
-							Open up the SNMP Service and click on the Agent tab. Make sure all the 
+							Open up the SNMP Service and click on the Agent tab. Make sure all the
 							service checkboxes are marked (they are not by default). Restart the SNMP service.
 						</para>
 					</answer>
@@ -1069,12 +1069,12 @@ objWSHShell.Run "poller.php", 0, False</userinput></screen></listitem>
 					</question>
 					<answer>
 						<para>
-							A little modification needs to be done to the 
+							A little modification needs to be done to the
 							<ulink url="http://phplens.com/phpeverywhere/node/view/13">existing documentation</ulink>.</para>
 							<orderedlist>
-								<listitem><para>Make sure IIS_WPG account has read/execute rights on 
+								<listitem><para>Make sure IIS_WPG account has read/execute rights on
 								the PHP and Cacti folders.</para></listitem>
-								<listitem><para>Use the following modified <filename>fastcgi.reg</filename> file 
+								<listitem><para>Use the following modified <filename>fastcgi.reg</filename> file
 								(assumes you're using PHP5)</para>
 								<screen><userinput>Windows Registry Editor Version 5.00
 [HKEY_LOCAL_MACHINE\SOFTWARE\FASTCGI]
@@ -1086,14 +1086,14 @@ objWSHShell.Run "poller.php", 0, False</userinput></screen></listitem>
 [HKEY_LOCAL_MACHINE\SOFTWARE\FASTCGI\.php]
 "AppPath"="c:\\php\\php-cgi.exe"
 "BindPath"="php-fcgi"</userinput></screen></listitem>
-								<listitem><para>Create a web site extension called <userinput>fastcgi</userinput>. 
+								<listitem><para>Create a web site extension called <userinput>fastcgi</userinput>.
 								Add <filename>isapi_fcgi.dll</filename> and <filename>php-cgi.exe</filename>.</para></listitem>
-								<listitem><para>In the <guilabel>Default Website</guilabel>, under 
-								<guilabel>ISAPI filters</guilabel>, create a new filter in addition to the PHP one. 
-								Call it<userinput>fastcgi</userinput> and point it to 
+								<listitem><para>In the <guilabel>Default Website</guilabel>, under
+								<guilabel>ISAPI filters</guilabel>, create a new filter in addition to the PHP one.
+								Call it<userinput>fastcgi</userinput> and point it to
 								<filename>isapi_fcgi.dll</filename>.</para></listitem>
-								<listitem><para>Under the <guilabel>Home Directory</guilabel> tab, 
-								select <guilabel>Configuration</guilabel> and, change the .php 
+								<listitem><para>Under the <guilabel>Home Directory</guilabel> tab,
+								select <guilabel>Configuration</guilabel> and, change the .php
 								extension to use <filename>isapi_fcgi.dll</filename>.</para></listitem>
 							</orderedlist>
 					</answer>
@@ -1108,7 +1108,7 @@ objWSHShell.Run "poller.php", 0, False</userinput></screen></listitem>
 					</question>
 					<answer>
 						<para>
-							This error message occurs when you use the Win32 version of rrdtool instead of 
+							This error message occurs when you use the Win32 version of rrdtool instead of
 							the Cygwin one. RRDTool 1.2.15 and later work with the Win32 build.
 						</para>
 					</answer>
@@ -1118,19 +1118,19 @@ objWSHShell.Run "poller.php", 0, False</userinput></screen></listitem>
 				<qandaentry>
 					<question>
 						<para>
-							When attempting to run poller.php or cmd.php you get, 
+							When attempting to run poller.php or cmd.php you get,
 							<emphasis>This script is only meant to run at the command line</emphasis>
 						</para>
 					</question>
 					<answer>
 						<para>
-							Most likely caused by a misconfiguration in your <filename>php.ini</filename> file. 
+							Most likely caused by a misconfiguration in your <filename>php.ini</filename> file.
 							Make sure the following is set in it:</para>
 							<screen><userinput>register_argc_argv = On
 safe_mode = Off</userinput></screen>
 
-							<para>Another possibility is a logic bug in cmd.php only present in Cacti 0.8.6j and 
-							PHP 5.2. Open cmd.php and go to line 49. 
+							<para>Another possibility is a logic bug in cmd.php only present in Cacti 0.8.6j and
+							PHP 5.2. Open cmd.php and go to line 49.
 							Change it to:</para>
 							<screen><userinput>if (version_compare(&quot;5.2.0&quot;, PHP_VERSION, &quot;&gt;=&quot;)) {</userinput></screen>
 					</answer>
@@ -1147,13 +1147,13 @@ safe_mode = Off</userinput></screen>
 						<para>
 							There are several things one needs to do to accomplish this:</para>
 							<orderedlist>
-								<listitem><para>Open a hole in the firewall for DCOM. For the 
-								Windows XP SP2 or Windows 2003 SP1 firewall, do the following:</para> 
+								<listitem><para>Open a hole in the firewall for DCOM. For the
+								Windows XP SP2 or Windows 2003 SP1 firewall, do the following:</para>
 								<orderedlist numeration=loweralpha>
 									<listitem><para>Open up the Windows Firewall control panel</para></listitem>
 									<listitem><para>Click on <guibutton>Add Port</guibutton>.</para></listitem>
 									<listitem><para><emphasis>Name:</emphasis> DCOM <emphasis>Port:</emphasis> 135 <emphasis>Type:</emphasis> TCP</para></listitem>
-									<listitem><para>You might need to change the scope of the rule, depending on where you will be 
+									<listitem><para>You might need to change the scope of the rule, depending on where you will be
 									remotely querying the server from.</para></listitem>
 									<listitem><para>Start | Run: <filename>gpedit.msc</filename></para></listitem>
 									<listitem><para>Navigate to: <guilabel>Computer Configuration</guilabel> | <guilabel>Administrative Templates</guilabel> | <guilabel>Network</guilabel> | <guilabel>Network Connections</guilabel> | <guilabel>Windows Firewall</guilabel></para></listitem>
@@ -1166,13 +1166,13 @@ Allow local port exceptions</userinput></screen></listitem>
 									<listitem><para>Start | Run: <filename>wmimgmt.msc</filename>.</para></listitem>
 									<listitem><para>Get properties on <guilabel>WMI Control</guilabel>.</para></listitem>
 									<listitem><para>Go to the <guibutton>Security</guibutton> tab</para></listitem>
-									<listitem><para>Click on the <guilabel>Root</guilabel> folder, then the 
+									<listitem><para>Click on the <guilabel>Root</guilabel> folder, then the
 									<guibutton>security</guibutton> button at the bottom</para></listitem>
 									<listitem><para>Click on <guilabel>Advanced</guilabel></para></listitem>
 									<listitem><para>Add the cactiuser account that's going to be used. Assign the following rights:</para>
 									<screen><userinput>Enable Account
 Enable Remote</userinput></screen></listitem>
-									<listitem><para>Change the <guilabel>Apply onto</guilabel> to: 
+									<listitem><para>Change the <guilabel>Apply onto</guilabel> to:
 									<userinput>This namespace and subnamespaces</userinput>.</para></listitem>
 									<listitem><para>Click OK several times and close the WMI window.</para></listitem>
 								</orderedlist></listitem>
@@ -1200,7 +1200,7 @@ Enable Remote</userinput></screen></listitem>
 					</question>
 					<answer>
 						<para>
-							It's possible you need to run <ulink url="http://msdn.microsoft.com/library/default.asp?url=/library/en-us/wmisdk/wmi/wmiadap.asp">wmiadap /f</ulink> 
+							It's possible you need to run <ulink url="http://msdn.microsoft.com/library/default.asp?url=/library/en-us/wmisdk/wmi/wmiadap.asp">wmiadap /f</ulink>
 							which will re-parse all the performance libraries on the system.
 						</para>
 					</answer>
@@ -1210,14 +1210,14 @@ Enable Remote</userinput></screen></listitem>
 				<qandaentry>
 					<question>
 						<para>
-							I don't see any graphs on the main graph page, but when I click on one, 
+							I don't see any graphs on the main graph page, but when I click on one,
 							I see 4 graphs with data.
 						</para>
 					</question>
 					<answer>
 						<para>
-							This happens because you have the wrong version of RRDTool selected in Cacti. 
-							Set it by going to Settings and applying the proper 
+							This happens because you have the wrong version of RRDTool selected in Cacti.
+							Set it by going to Settings and applying the proper
 							<guilabel>RRDTool Utility Version.</guilabel>
 						</para>
 					</answer>
@@ -1227,14 +1227,14 @@ Enable Remote</userinput></screen></listitem>
 				<qandaentry>
 					<question>
 						<para>
-							Why do my graphs <emphasis>randomly</emphasis> not have any text while the 
+							Why do my graphs <emphasis>randomly</emphasis> not have any text while the
 							data is properly displayed?
 						</para>
 					</question>
 					<answer>
 						<para>
-							It seems there is a bug in newer versions of PHP 4, specifically in <filename>php4ts.dll</filename>. 
-							Get <filename>php4ts.dll</filename> from PHP 4.3.11 and replace the current one in your PHP directory. 
+							It seems there is a bug in newer versions of PHP 4, specifically in <filename>php4ts.dll</filename>.
+							Get <filename>php4ts.dll</filename> from PHP 4.3.11 and replace the current one in your PHP directory.
 							<emphasis>*WARNING* </emphasis>not responsible for any adverse affects this might have on your system.
 						</para>
 					</answer>
@@ -1249,12 +1249,12 @@ Enable Remote</userinput></screen></listitem>
 					</question>
 					<answer>
 						<para>
-							It seems there is a bug in Cacti were even though the logging level is set to DEBUG, you do not 
-							truly get debugging output. If your log file is filled with something like the following which 
+							It seems there is a bug in Cacti were even though the logging level is set to DEBUG, you do not
+							truly get debugging output. If your log file is filled with something like the following which
 							constantly repeats, Cacti is NOT in debugging mode:</para>
 							<screen><userinput>CMDPHP: Poller[0] DEBUG: SQL Assoc: "select  poller_output.output,  poller_output.time,  poller_output.local_data_id,  poller_item.rrd_path,  &lt;snip&gt;
 CMDPHP: Poller[0] DEBUG: SQL Assoc: "select poller_id,end_time from poller_time where poller_id = 0"</userinput></screen>
-							<para>If your log file contains things like the following, then debugging logging 
+							<para>If your log file contains things like the following, then debugging logging
 							is properly enabled:</para>
 							<screen><userinput>CMDPHP: Poller[0] Host[1] SNMP: Host responded to SNMP
 CMDPHP: Poller[0] DEBUG: SQL Exec: &quot;update host set  status = '3',  status_event_count = '0',  status_fail_date = '2006-01-19 02:20:10',  &lt;snip&gt;
@@ -1274,7 +1274,7 @@ POLLER: Poller[0] CACTI2RRD: c:/rrdtool/rrdtool.exe update c:\cacti\rra\ares_pro
 				<qandaentry>
 					<question>
 						<para>
-							What are all the NTFS permissions that need to be set for Cacti to 
+							What are all the NTFS permissions that need to be set for Cacti to
 function?
 						</para>
 					</question>
@@ -1385,7 +1385,7 @@ function?
 	</TGroup>
 </table>
 <Note><para>* TaskUser is the user account that runs the scheduled task for Cacti.
-* IUSR_<emphasis>COMPUTERNAME</emphasis> is the user account that Windows uses for anonymous 
+* IUSR_<emphasis>COMPUTERNAME</emphasis> is the user account that Windows uses for anonymous
 access for the web server.
 * IIS_WPG account is only present on Windows 2003.</para></Note>
 					</answer>
@@ -1409,15 +1409,15 @@ access for the web server.
 				<qandaentry>
 					<question>
 						<para>
-							I&#39;m getting errors with something like: 
+							I&#39;m getting errors with something like:
 							<emphasis>Warning: fgets(): supplied argument is not a valid stream resource: &lt;filename&gt;</emphasis>
 						</para>
 					</question>
 					<answer>
 						<para>
-							This is most likely due to incorrect NTFS permissions 
-							on that file/folder. This prevents Cacti from accessing the file(s) to execute 
-							the code. Read up above in the installation guide on what NTFS permissions 
+							This is most likely due to incorrect NTFS permissions
+							on that file/folder. This prevents Cacti from accessing the file(s) to execute
+							the code. Read up above in the installation guide on what NTFS permissions
 							need to be set.
 						</para>
 					</answer>

@@ -583,7 +583,7 @@
 		<para>
 			The real strength of Cacti is unleashed by using templates.
 			There are three different types of templates with the basic Cacti installation:
-			<emphasis>Data Templates</emphasis>, <emphasis>Graph Templates</emphasis> and <emphasis>Host Templates</emphasis>.
+			<emphasis>Data Templates</emphasis>, <emphasis>Graph Templates</emphasis> and <emphasis>Device Templates</emphasis>.
 			While it is perfectly fine to define all data sources and graphs without using
 			Templates at all, the burden of this approach is high. In most installations,
 			there are lots of devices of the same kind. And there are lots of data of the
@@ -598,12 +598,12 @@
 			are copied to all Graphs that are created using this Template.
 		</para>
 		<para>
-			The last type of Templates are the <emphasis>Host Templates</emphasis>.
-			They are not related to some rrdtool stuff. The purpose of <emphasis>Host Templates</emphasis>
+			The last type of Templates are the <emphasis>Device Templates</emphasis>.
+			They are not related to some rrdtool stuff. The purpose of <emphasis>Device Templates</emphasis>
 			is to group all Graph Templates and Data Queries (these are explained later)
-			for a given device type. So you will make up a <emphasis>Host Template</emphasis>
+			for a given device type. So you will make up a <emphasis>Device Template</emphasis>
 			e.g. for a specific type of router, switch, host and the like.
-			By assigning the correct <emphasis>Host Template</emphasis> to each new Device,
+			By assigning the correct <emphasis>Device Template</emphasis> to each new Device,
 			you'll never forget to create all needed Graphs.
 		</para>
 		<para>There's no need to create all Templates on your own! Apart from the fact,
@@ -756,9 +756,9 @@
 									</para><para>DERIVE: like COUNTER but without overflow checks
 									</para><para>COMPUTE: You may enter a RPN formulae. It may contain any data source name that is defined within this Data Template.
 											E.g. assuming <emphasis>traffic_in</emphasis> and <emphasis>traffic_out</emphasis> are given, the RPN of
-											<emphasis>traffic_in,traffic_out,+</emphasis> would add both values. 
+											<emphasis>traffic_in,traffic_out,+</emphasis> would add both values.
 											Threshold checks will now be available against this data source.
-											In most cases, graph templates using CDEF RPNs is the recommended method instead of COMPUTE. 
+											In most cases, graph templates using CDEF RPNs is the recommended method instead of COMPUTE.
 									</para></entry>
 								</row>
 								<row>
@@ -959,7 +959,7 @@
 								<entry>Upper Limit</entry>
 								<entry>The maximum value that will be displayed on the y-axis.
 								|query_*| variables will be replaced by their respective values.
-								E.g. for an "Interface - Traffic" graph template, 
+								E.g. for an "Interface - Traffic" graph template,
 								|query_ifSpeed| will be replaced by the ifSpeed value for that very interface.</entry>
 							</row>
 							<row>
@@ -1143,27 +1143,27 @@
 			</sect2>
 		</sect1>
 		<sect1 id="host_templates">
-			<title>Host Templates</title>
+			<title>Device Templates</title>
 			<para>
-				Host templates in Cacti serve a different purpose then data and graph templates. Instead of
-				abstracting the fields of a host, a host template allows you to associate graph templates and
-				data queries with a given host type. This way when you assign a host template to a host, all
+				Device Templates in Cacti serve a different purpose then data and graph templates. Instead of
+				abstracting the fields of a host, a Device Template allows you to associate graph templates and
+				data queries with a given host type. This way when you assign a Device Template to a host, all
 				of the relevant graphs to that host type are only one click away from the user.
 			</para>
 			<sect2 id="host_template_new">
-				<title>Adding a Host Template</title>
+				<title>Adding a Device Template</title>
 				<para>
-					To create a new host template in Cacti, select the <guilabel>Host Templates</guilabel>
+					To create a new Device Template in Cacti, select the <guilabel>Device Templates</guilabel>
 					option under the <guilabel>Templates</guilabel> heading. Once on that screen, click
-					<guilabel>Add</guilabel> on the right. Type a unique name for the host template and
+					<guilabel>Add</guilabel> on the right. Type a unique name for the Device Template and
 					click the <guilabel>Create</guilabel> button. You will be redirected back to the edit
 					page with the <guilabel>Associated Graph Templates</guilabel> and <guilabel>Associated
 					Data Queries</guilabel> boxes. These two boxes allow you to associate certain graph
-					templates or data queries with the host template. Simply select something from the
-					dropdown menu and click <guilabel>Add</guilabel> to associate it with your host template.
+					templates or data queries with the Device Template. Simply select something from the
+					dropdown menu and click <guilabel>Add</guilabel> to associate it with your Device Template.
 				</para>
 				<figure id="img_host_template_new">
-					<title>Adding a Host Template</title>
+					<title>Adding a Device Template</title>
 
 					<mediaobject>
 						<imageobject>
@@ -1181,7 +1181,7 @@
 			<ulink url="http://forums.cacti.net/forum-12.html">Scripts and Templates Forum</ulink>.
 			The set of templates is usually provided as a single XML file holding all
 			required definitions for a data template and a graph template. Depending on
-			the goal of the original author, he/she may have provided a host template
+			the goal of the original author, he/she may have provided a Device Template
 			as well as part of this XML file.</para>
 				<figure id="img_import_templates">
 					<title>Import Templates</title>
@@ -1222,8 +1222,8 @@
 						</imageobject>
 					</mediaobject>
 				</figure>
-			<para>You may select to export a graph template, a data template, a host template
-			or a data query. When selecting <userinput>Include Dependencies</userinput>, e.g. a host template
+			<para>You may select to export a graph template, a data template, a Device Template
+			or a data query. When selecting <userinput>Include Dependencies</userinput>, e.g. a Device Template
 			will include all referred templates (graph template, data template and, if defined,
 			data query). Output may be written to the browser or to a file for uploading.</para>
 		</sect1>
@@ -1424,8 +1424,8 @@ print $b;
 	Return $b;
 }</programlisting>
 						<para>
-							Be careful, when writing <guilabel>Script Server Data Queries</guilabel>. 
-							Use the RETURN function for returning results of the GET operation. 
+							Be careful, when writing <guilabel>Script Server Data Queries</guilabel>.
+							Use the RETURN function for returning results of the GET operation.
 							But use PRINT for INDEX and QUERY operations, e.g.
 						</para>
 						<programlisting>	if (($cmd == "index")) {
@@ -1439,7 +1439,7 @@ print $b;
 		...
 		result $some_get_data;
 }
-						</programlisting>						
+						</programlisting>
 
 					</listitem>
 				</orderedlist>
