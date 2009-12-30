@@ -130,6 +130,7 @@ img_filter {
 	padding-right: 3px;
 	padding-top: 8px;
 	z-index: 1;
+	height:98%;
 }
 
 #graph_tree_content {

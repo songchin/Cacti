@@ -670,30 +670,6 @@ function data_source_edit() {
 
 	include_once(CACTI_BASE_PATH . "/include/top_header.php");
 
-	?>
-	<script type="text/javascript">
-	<!--
-	var disabled = true;
-
-	$().ready(function() {
-		$("input").attr("disabled","disabled")
-		$("#cancel").removeAttr("disabled");
-	});
-
-	function changeDSState() {
-		if (disabled) {
-			$("input").removeAttr("disabled");
-			$("#cancel").removeAttr("disabled");
-			disabled = false;
-		}else{
-			$("input").attr("disabled","disabled")
-			disabled = true;
-		}
-	}
-	-->
-	</script>
-	<?php
-
 	$tip_text = "";
 	if (isset($data)) {
 		$tip_text .= "<tr><td align=\\'right\\'><a class=\\'popup_item\\' id=\\'changeDSState\\' onClick=\\'changeDSState()\\' href=\\'#\\'>Unlock/Lock</a></td></tr>";
@@ -710,6 +686,30 @@ function data_source_edit() {
 
 	if (!empty($_GET["id"])) {
 		?>
+		<script type="text/javascript">
+		<!--
+		var disabled = true;
+
+		$().ready(function() {
+			$("input").attr("disabled","disabled")
+			$("select").attr("disabled","disabled")
+			$("#cancel").removeAttr("disabled");
+		});
+
+		function changeDSState() {
+			if (disabled) {
+				$("input").removeAttr("disabled");
+				$("select").removeAttr("disabled");
+				$("#cancel").removeAttr("disabled");
+				disabled = false;
+			}else{
+				$("input").attr("disabled","disabled")
+				$("select").attr("disabled","disabled")
+				disabled = true;
+			}
+		}
+		-->
+		</script>
 		<table width="100%" align="center">
 			<tr>
 				<td class="textInfo" colspan="2" valign="top">

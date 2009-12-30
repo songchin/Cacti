@@ -755,8 +755,6 @@ function graph_diff() {
 	form_save_button_alt("action!graph_edit|id!" . get_request_var("id"));
 }
 
-
-
 function graph_edit() {
 	global $colors, $image_types, $consolidation_functions, $graph_item_types, $struct_graph_item;
 	global $struct_graph_labels, $struct_graph_right_axis, $struct_graph_size, $struct_graph_limits, $struct_graph_grid, $struct_graph_color, $struct_graph_misc, $struct_graph_cacti;
@@ -793,30 +791,6 @@ function graph_edit() {
 		}
 	}
 
-	?>
-	<script type="text/javascript">
-	<!--
-	var disabled = true;
-
-	$().ready(function() {
-		$("input").attr("disabled","disabled")
-		$("#cancel").removeAttr("disabled");
-	});
-
-	function changeGraphState() {
-		if (disabled) {
-			$("input").removeAttr("disabled");
-			disabled = false;
-		}else{
-			$("input").attr("disabled","disabled")
-			$("#cancel").removeAttr("disabled");
-			disabled = true;
-		}
-	}
-	//-->
-	</script>
-	<?php
-
 	$tip_text  = "<tr><td align=\\'right\\'><a class=\\'popup_item\\' id=\\'changeGraphState\\' onClick=\\'changeGraphState()\\' href=\\'#\\'>Unlock/Lock</a></td></tr>";
 	$tip_text .= "<tr><td align=\\'right\\'><a class=\\'popup_item\\' href=\\'" . htmlspecialchars('graphs.php?action=graph_edit&id=' . (isset($_GET["id"]) ? $_GET["id"] : 0) . "&debug=" . (isset($_SESSION["graph_debug_mode"]) ? "0" : "1")) . "\\'>" . __("Turn") . " <strong>" . (isset($_SESSION["graph_debug_mode"]) ? __("Off") : __(CHECKED)) . "</strong> " . __("Debug Mode") . "</a></td></tr>";
 	if (!empty($graphs["graph_template_id"])) {
@@ -828,6 +802,30 @@ function graph_edit() {
 
 	if (!empty($_GET["id"])) {
 		?>
+		<script type="text/javascript">
+		<!--
+		var disabled = true;
+
+		$().ready(function() {
+			$("input").attr("disabled","disabled");
+			$("select").attr("disabled","disabled");
+			$("#cancel").removeAttr("disabled");
+		});
+
+		function changeGraphState() {
+			if (disabled) {
+				$("input").removeAttr("disabled");
+				$("select").removeAttr("disabled");
+				disabled = false;
+			}else{
+				$("input").attr("disabled","disabled");
+				$("select").attr("disabled","disabled");
+				$("#cancel").removeAttr("disabled");
+				disabled = true;
+			}
+		}
+		//-->
+		</script>
 		<table width="100%" align="center">
 			<tr>
 				<td class="textInfo" colspan="2" valign="top">
