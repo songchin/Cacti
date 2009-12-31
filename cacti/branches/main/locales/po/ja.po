@@ -3527,7 +3527,7 @@ msgstr ""
 #: ../include/global_form.php:144
 msgid ""
 "If you want to require a certain regular expression to be matched againt "
-"input data, enter it here (ereg format)."
+"input data, enter it here (PCRE format)."
 msgstr ""
 
 #: ../include/global_settings.php:670

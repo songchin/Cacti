@@ -239,7 +239,7 @@ $fields_data_input_field_edit = array(
 	"regexp_match" => array(
 		"method" => "textbox",
 		"friendly_name" => __("Regular Expression Match"),
-		"description" => __("If you want to require a certain regular expression to be matched againt input data, enter it here (ereg format)."),
+		"description" => __("If you want to require a certain regular expression to be matched againt input data, enter it here (PCRE format)."),
 		"value" => "|arg1:regexp_match|",
 		"max_length" => "200"
 		),

@@ -3558,10 +3558,10 @@ msgstr ""
 #: ../include/global_form.php:144
 msgid ""
 "If you want to require a certain regular expression to be matched againt "
-"input data, enter it here (ereg format)."
+"input data, enter it here (PCRC format)."
 msgstr ""
 "Si vous désirer rendre obligatoire la correspondance des données en entrée "
-"avec une expression régulière, saisissez la ici (au format ereg)."
+"avec une expression régulière, saisissez la ici (au format PCRE)."
 
 #: ../include/global_settings.php:670
 msgid "If you wish to stop the polling process, uncheck this box."

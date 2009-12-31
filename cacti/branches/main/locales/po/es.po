@@ -3743,10 +3743,10 @@ msgstr ""
 #: ../include/global_form.php:144
 msgid ""
 "If you want to require a certain regular expression to be matched againt "
-"input data, enter it here (ereg format)."
+"input data, enter it here (PCRE format)."
 msgstr ""
 "Si desea requerir que una cierta cantidad de expresiones regulares "
-"coincidancon la información de entrada, captúrelas aqui (en formato ereg)."
+"coincidancon la información de entrada, captúrelas aqui (en formato PCRE)."
 
 #: ../include/global_settings.php:670
 #, fuzzy

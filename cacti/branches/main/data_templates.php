@@ -620,7 +620,7 @@ function template_edit() {
 				</td>
 				<td>
 					<?php form_text_box("value_" . $field["data_name"],$old_value,"","");?>
-					<?php if ((eregi('^' . VALID_HOST_FIELDS . '$', $field["type_code"])) && ($data_input_data["t_value"] == "")) { print "<br><em>Value will be derived from the host if this field is left empty.</em>\n"; } ?>
+					<?php if ((preg_match('/^' . VALID_HOST_FIELDS . '$/i', $field["type_code"])) && ($data_input_data["t_value"] == "")) { print "<br><em>Value will be derived from the host if this field is left empty.</em>\n"; } ?>
 				</td>
 			<?php
 			form_end_row();
