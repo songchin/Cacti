@@ -87,27 +87,37 @@ function api_host_form_save() {
 	/* save basic host information during first run, host_template should have bee selected */
 	if (isset($_POST["save_basic_host"])) {
 		/* device template was given, so fetch defaults from it */
+		$use_template = false;
 		if ($_POST["host_template_id"] != 0) {
 			$host_template = db_fetch_row("SELECT *
 				FROM host_template
 				WHERE id=" . $_POST["host_template_id"]);
-		} else { /* no device template given, so fetch system defaults */
-			$host_template["snmp_community"]        = read_config_option("snmp_community");
-			$host_template["snmp_version"]          = read_config_option("snmp_ver");
-			$host_template["snmp_username"]         = read_config_option("snmp_username");
-			$host_template["snmp_password"]         = read_config_option("snmp_password");
-			$host_template["snmp_port"]             = read_config_option("snmp_port");
-			$host_template["snmp_timeout"]          = read_config_option("snmp_timeout");
-			$host_template["availability_method"]   = read_config_option("availability_method");
-			$host_template["ping_method"]           = read_config_option("ping_method");
-			$host_template["ping_port"]             = read_config_option("ping_port");
-			$host_template["ping_timeout"]          = read_config_option("ping_timeout");
-			$host_template["ping_retries"]          = read_config_option("ping_retries");
-			$host_template["snmp_auth_protocol"]    = read_config_option("snmp_auth_protocol");
-			$host_template["snmp_priv_passphrase"]  = read_config_option("snmp_priv_passphrase");
-			$host_template["snmp_priv_protocol"]    = read_config_option("snmp_priv_protocol");
-			$host_template["snmp_context"]          = read_config_option("snmp_context");
-			$host_template["max_oids"]              = read_config_option("max_get_size");
+			if (($host_template["override_defaults"] == CHECKED) &&
+				(($host_template["override_permitted"] == CHECKED) &&
+				($_POST["template_enabled"] == CHECKED)) || ($host_template["override_permitted"] != CHECKED)) {
+				$use_template = true;
+				$host_template["template_enabled"] = CHECKED;
+			}
+		}
+
+		if (!$use_template) {
+			$host_template["snmp_community"]        = get_request_var_post("snmp_community");
+			$host_template["snmp_version"]          = get_request_var_post("snmp_version");
+			$host_template["snmp_username"]         = get_request_var_post("snmp_username");
+			$host_template["snmp_password"]         = get_request_var_post("snmp_password");
+			$host_template["snmp_port"]             = get_request_var_post("snmp_port");
+			$host_template["snmp_timeout"]          = get_request_var_post("snmp_timeout");
+			$host_template["availability_method"]   = get_request_var_post("availability_method");
+			$host_template["ping_method"]           = get_request_var_post("ping_method");
+			$host_template["ping_port"]             = get_request_var_post("ping_port");
+			$host_template["ping_timeout"]          = get_request_var_post("ping_timeout");
+			$host_template["ping_retries"]          = get_request_var_post("ping_retries");
+			$host_template["snmp_auth_protocol"]    = get_request_var_post("snmp_auth_protocol");
+			$host_template["snmp_priv_passphrase"]  = get_request_var_post("snmp_priv_passphrase");
+			$host_template["snmp_priv_protocol"]    = get_request_var_post("snmp_priv_protocol");
+			$host_template["snmp_context"]          = get_request_var_post("snmp_context");
+			$host_template["max_oids"]              = get_request_var_post("max_oids");
+			$host_template["template_enabled"]      = "";
 		}
 
 		$host_template["notes"]    = ""; /* no support for notes in a device template */
@@ -121,7 +131,7 @@ function api_host_form_save() {
 			$host_template["ping_port"], $host_template["ping_timeout"],
 			$host_template["ping_retries"], $host_template["notes"],
 			$host_template["snmp_auth_protocol"], $host_template["snmp_priv_passphrase"],
-			$host_template["snmp_priv_protocol"], $host_template["snmp_context"], $host_template["max_oids"]);
+			$host_template["snmp_priv_protocol"], $host_template["snmp_context"], $host_template["max_oids"], $host_template["template_enabled"]);
 
 		header("Location: devices.php?action=edit&id=" . (empty($host_id) ? $_POST["id"] : $host_id));
 		exit;
@@ -135,12 +145,14 @@ function api_host_form_save() {
 				trim(get_request_var_post("hostname")), get_request_var_post("snmp_community"), get_request_var_post("snmp_version"),
 				get_request_var_post("snmp_username"), get_request_var_post("snmp_password"),
 				get_request_var_post("snmp_port"), get_request_var_post("snmp_timeout"),
-				(isset($_POST["disabled"]) ? $_POST["disabled"] : ""),
+				(isset($_POST["disabled"]) ? get_request_var_post("disabled") : ""),
 				get_request_var_post("availability_method"), get_request_var_post("ping_method"),
 				get_request_var_post("ping_port"), get_request_var_post("ping_timeout"),
 				get_request_var_post("ping_retries"), get_request_var_post("notes"),
 				get_request_var_post("snmp_auth_protocol"), get_request_var_post("snmp_priv_passphrase"),
-				get_request_var_post("snmp_priv_protocol"), get_request_var_post("snmp_context"), get_request_var_post("max_oids"));
+				get_request_var_post("snmp_priv_protocol"), get_request_var_post("snmp_context"),
+				get_request_var_post("max_oids"),
+				(isset($_POST["template_enabled"]) ? get_request_var_post("template_enabled") : ""));
 		}
 
 		if ((is_error_message()) || ($_POST["host_template_id"] != $_POST["_host_template_id"]) || $reindex_performed) {
@@ -1161,8 +1173,6 @@ function host_display_general($host, $host_text) {
 			$('#snmp_port').removeAttr("disabled");
 			$('#snmp_timeout').removeAttr("disabled");
 			$('#max_oids').removeAttr("disabled");
-
-			changeHostForm();
 		}else{
 			$('#override_permitted').attr("disabled","disabled");
 			$('#availability_header').attr("disabled","disabled");
@@ -1185,6 +1195,8 @@ function host_display_general($host, $host_text) {
 			$('#snmp_timeout').attr("disabled","disabled");
 			$('#max_oids').attr("disabled","disabled");
 		}
+
+		changeHostForm();
 
 		if ($('#override_permitted').val() == 'false') {
 			$('#template_enabled').attr("checked","checked");
