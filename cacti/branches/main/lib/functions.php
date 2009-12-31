@@ -159,6 +159,25 @@ function read_default_config_option($config_name) {
 	}
 }
 
+/* updateCookieChanges - set's session variables and stores to database any user changes to the ui that
+   are tracked by various Cacti specific cookies.
+   @returns          - void */
+function updateCookieChanges() {
+	if (isset($_SESSION["sess_user_id"]) && $_SESSION["sess_user_id"] != read_config_option("guest_user")) {
+		if (sizeof($_COOKIE)) {
+		foreach($_COOKIE as $key => $data) {
+			if ($key == "menu" || $key == "formvis" || substr($key, 0, 3) == "ui_") {
+				if ((!isset($_SESSION["sess_cacti_ui_" . $key])) &&
+					($data != $_SESSION["sess_cacti_ui_" . $key])) {
+					set_user_config_option("sess_cacti_ui_" . $key, $data);
+					$_SESSION["sess_cacti_ui_" . $key] = $data;
+				}
+			}
+		}
+		}
+	}
+}
+
 /* set_user_config_option - sets/updates a cacti config option with the given value.
    @arg $config_name - the name of the configuration setting as specified $settings array
    @arg $value       - the values to be saveda
@@ -167,7 +186,6 @@ function read_default_config_option($config_name) {
    @arg $plugin_id   - plugin id *optional*
    @returns          - void */
 function set_user_config_option($config_name, $value, $category = "SYSTEM", $user_id = 0, $plugin_id = 0) {
-
 	/* get the session user id if one is not passed */
 	if ((empty($user_id)) || (! is_numeric($user_id))) {
 		if (isset($_SESSION["sess_user_id"])) {
@@ -205,7 +223,6 @@ function set_user_config_option($config_name, $value, $category = "SYSTEM", $use
    @arg $plugin_id = plugin id *optional*
    @returns - the current value of the configuration option */
 function read_user_config_option($config_name, $category = "SYSTEM", $user_id = 0, $plugin_id = 0) {
-
 	/* get the session user id if one is not passed */
 	if ((empty($user_id)) || (! is_numeric($user_id))) {
 		if (isset($_SESSION["sess_user_id"])) {
@@ -240,7 +257,6 @@ function read_user_config_option($config_name, $category = "SYSTEM", $user_id = 
    @arg $plugin_id = plugin id *optional*
    @returns  */
 function remove_user_config_option($config_name, $category = "SYSTEM", $user_id = 0, $plugin_id = 0) {
-
 	/* get the session user id if one is not passed */
 	if ((empty($user_id)) || (! is_numeric($user_id))) {
 		if (isset($_SESSION["sess_user_id"])) {

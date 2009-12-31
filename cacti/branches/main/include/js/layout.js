@@ -271,13 +271,13 @@ function navigation_select(name, location) {
 }
 
 function htmlStartBoxFilterChange(id, initialize) {
-	filter = readCookieElement("fs", id);
+	filter = readCookieElement("formvis", id);
 
 	if (filter == "o") {
 		if (initialize != null) {
 			/* do nothing we want to stay the same */
 		}else{
-			createCookieElement("fs", id, "c");
+			createCookieElement("formvis", id, "c");
 			filter = "c";
 		}
 	}else{
@@ -285,11 +285,11 @@ function htmlStartBoxFilterChange(id, initialize) {
 			if (filter == "c") {
 				/* do nothing we want to stay the same */
 			}else{
-				createCookieElement("fs", id, "o");
+				createCookieElement("formvis", id, "o");
 				filter = "o";
 			}
 		}else{
-			createCookieElement("fs", id, "o");
+			createCookieElement("formvis", id, "o");
 			filter = "o";
 		}
 	}

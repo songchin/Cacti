@@ -226,6 +226,8 @@ if ((!in_array(basename($_SERVER["PHP_SELF"]), $no_http_header_files, true)) && 
 			session_destroy();
 		}
 	}
+
+	updateCookieChanges();
 }
 
 /* emulate 'register_globals' = 'off' if turned on */
