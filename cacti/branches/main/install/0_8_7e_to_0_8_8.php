@@ -324,8 +324,11 @@ function upgrade_to_0_8_8() {
 	db_install_execute("0.8.8", "ALTER TABLE `snmp_query` ADD COLUMN `image` varchar(64) NOT NULL AFTER `description`;");
 	db_install_execute("0.8.8", "ALTER TABLE `host_template` ADD COLUMN `description` varchar(255) NOT NULL AFTER `name`;");
 	db_install_execute("0.8.8", "ALTER TABLE `host_template` ADD COLUMN `image` varchar(64) NOT NULL AFTER `description`;");
+
+	/* changes for template propagation */
 	db_install_execute("0.8.8", "ALTER TABLE `host_template` ADD COLUMN `override_defaults` CHAR(2) NOT NULL DEFAULT '' AFTER `image`;");
 	db_install_execute("0.8.8", "ALTER TABLE `host_template` ADD COLUMN `override_permitted` CHAR(2) NOT NULL DEFAULT 'on' AFTER `override_defaults`;");
+	db_install_execute("0.8.8", "ALTER TABLE `host` ADD COLUMN `template_enabled` CHAR(2) NOT NULL DEFAULT '' AFTER `host_template_id`;");
 
 	/* Add SNMPv3 Context to SNMP Input Methods */
 	/* first we must see if the user was smart enough to add it themselves */
@@ -461,7 +464,7 @@ function upgrade_to_0_8_8() {
 	db_install_execute("0.8.8", "ALTER TABLE poller CHANGE COLUMN ip_address varchar(30) not null default ''");
 
 	/* insert the default poller into the database */
-	db_install_execute("0.8.8", "INSERT INTO `poller` VALUES (1,'','Main Cacti Poller','localhost','127.0.0.1','0000-00-00 00:00:00');");
+	db_install_execute("0.8.8", "INSERT INTO `poller` VALUES (1,'','Main Poller','localhost','127.0.0.1','0000-00-00 00:00:00');");
 
 	/* update all devices to use poller 1, or the main poller */
 	db_install_execute("0.8.8", "UPDATE host SET poller_id=1 WHERE poller_id=0");

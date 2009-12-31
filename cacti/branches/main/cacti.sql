@@ -2039,6 +2039,7 @@ CREATE TABLE host (
   site_id int(10) unsigned NOT NULL default '0',
   poller_id smallint(5) unsigned NOT NULL default '0',
   host_template_id mediumint(8) unsigned NOT NULL default '0',
+  template_enabled CHAR(2) NOT NULL DEFAULT '',
   description varchar(150) NOT NULL default '',
   hostname varchar(250) default NULL,
   notes text,
@@ -2082,7 +2083,7 @@ CREATE TABLE host (
 -- Dumping data for table `host`
 --
 
-INSERT INTO `host` VALUES (1, 0, 0, 8, 'Localhost', '127.0.0.1', '', 'public', 0, '', '', 'MD5', '', 'DES', '', 161, 500, 3, 2, 23, 400, 1, 10, '', 0, 0, '0000-00-00 00:00:00', '0000-00-00 00:00:00', '', 9.99999, 0.00000, 0.00000, 0.00000, 0.00000, 0, 0, 100.00000);
+INSERT INTO `host` VALUES (1, 0, 0, 8, 'Localhost', '127.0.0.1', '', '', 'public', 0, '', '', 'MD5', '', 'DES', '', 161, 500, 3, 2, 23, 400, 1, 10, '', 0, 0, '0000-00-00 00:00:00', '0000-00-00 00:00:00', '', 9.99999, 0.00000, 0.00000, 0.00000, 0.00000, 0, 0, 100.00000);
 
 --
 -- Table structure for table `host_graph`

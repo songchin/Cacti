@@ -1124,7 +1124,7 @@ $fields_site_edit = array(
 	);
 
 /* file: devices.php, action: edit */
-$fields_host_edit = array(
+$fields_device_edit = array(
 	"host_header" => array(
 		"method" => "spacer",
 		"friendly_name" => __("General Device Options"),
@@ -1187,6 +1187,14 @@ $fields_host_edit = array(
 		"default" => "",
 		"form_id" => false
 		),
+	"template_enabled" => array(
+		"method" => "checkbox",
+		"friendly_name" => __("Enable Template Propagation"),
+		"description" => __("Check this box to maintain Availability and SNMP settings at the Device Template."),
+		"value" => "|arg1:template_enabled|",
+		"default" => "",
+		"form_id" => false
+		),
 	"id" => array(
 		"method" => "hidden_zero",
 		"value" => "|arg1:id|"
@@ -1202,7 +1210,7 @@ $fields_host_edit = array(
 	);
 
 /* file: devices.php, action: edit */
-$fields_host_edit_availability = array(
+$fields_device_edit_availability = array(
 	"availability_header" => array(
 		"method" => "spacer",
 		"friendly_name" => __("Availability/Reachability Options"),

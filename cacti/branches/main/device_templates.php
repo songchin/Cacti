@@ -1081,7 +1081,7 @@ function template() {
 			form_alternate_row_color('line' . $template["id"], true);
 			form_selectable_cell("<a class='linkEditMain' href='" . htmlspecialchars("device_templates.php?action=edit&id=" . $template["id"]) . "'>" . (strlen($_REQUEST["filter"]) ? preg_replace("/(" . preg_quote($_REQUEST["filter"]) . ")/i", "<span class=\"filter\">\\1</span>", $template["name"]) : $template["name"]) . "</a>", $template["id"]);
 			form_selectable_cell("<a class='linkEditMain' href='" . htmlspecialchars("device_templates.php?action=edit&id=" . $template["id"]) . "'>" . (strlen($_REQUEST["filter"]) ? preg_replace("/(" . preg_quote($_REQUEST["filter"]) . ")/i", "<span class=\"filter\">\\1</span>", $template["description"]) : $template["description"]) . "</a>", $template["id"]);
-			form_selectable_cell(($template["override_defaults"] == "on" ? "Availability and SNMP Defined" . ($template["override_permitted"] == "on" ? ", User can override":""):"System Defaults") , $template["id"]);
+			form_selectable_cell(($template["override_defaults"] == "on" ? __("Template controls Availability and SNMP") . ($template["override_permitted"] == "on" ? __(", User can override"):__(", Template propagation is forced")):__("Using System Defaults")) , $template["id"]);
 			form_selectable_cell("<img src='" . $template["image"] . "'>", $template["id"]);
 			form_checkbox_cell($template["name"], $template["id"]);
 			form_end_row();

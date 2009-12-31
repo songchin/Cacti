@@ -157,7 +157,7 @@ function api_host_form_save() {
    ------------------------ */
 
 function api_host_form_actions() {
-	global $colors, $device_actions, $fields_host_edit, $fields_host_edit_availability;
+	global $colors, $device_actions, $fields_device_edit, $fields_device_edit_availability;
 
 	/* if we are to save this form, instead of display it */
 	if (isset($_POST["selected_items"])) {
@@ -202,8 +202,8 @@ function api_host_form_actions() {
 				input_validate_input_number($selected_items[$i]);
 				/* ==================================================== */
 
-				reset($fields_host_edit);
-				while (list($field_name, $field_array) = each($fields_host_edit)) {
+				reset($fields_device_edit);
+				while (list($field_name, $field_array) = each($fields_device_edit)) {
 					if (isset($_POST["t_$field_name"])) {
 						db_execute("update host set $field_name = '" . $_POST[$field_name] . "' where id='" . $selected_items[$i] . "'");
 					}
@@ -227,8 +227,8 @@ function api_host_form_actions() {
 				input_validate_input_number($selected_items[$i]);
 				/* ==================================================== */
 
-				reset($fields_host_edit);
-				while (list($field_name, $field_array) = each($fields_host_edit)) {
+				reset($fields_device_edit);
+				while (list($field_name, $field_array) = each($fields_device_edit)) {
 					if (isset($_POST["t_$field_name"])) {
 						db_execute("update host set $field_name = '" . $_POST[$field_name] . "' where id='" . $selected_items[$i] . "'");
 					}
@@ -242,8 +242,8 @@ function api_host_form_actions() {
 				input_validate_input_number($selected_items[$i]);
 				/* ==================================================== */
 
-				reset($fields_host_edit);
-				while (list($field_name, $field_array) = each($fields_host_edit)) {
+				reset($fields_device_edit);
+				while (list($field_name, $field_array) = each($fields_device_edit)) {
 					if (isset($_POST["$field_name"])) {
 						db_execute("update host set $field_name = '" . $_POST[$field_name] . "' where id='" . $selected_items[$i] . "'");
 					}
@@ -257,8 +257,8 @@ function api_host_form_actions() {
 				input_validate_input_number($selected_items[$i]);
 				/* ==================================================== */
 
-				reset($fields_host_edit);
-				while (list($field_name, $field_array) = each($fields_host_edit)) {
+				reset($fields_device_edit);
+				while (list($field_name, $field_array) = each($fields_device_edit)) {
 					if (isset($_POST["$field_name"])) {
 						db_execute("update host set $field_name = '" . $_POST[$field_name] . "' where id='" . $selected_items[$i] . "'");
 					}
@@ -392,9 +392,9 @@ function api_host_form_actions() {
 					</tr>";
 
 			$form_array = array();
-			while (list($field_name, $field_array) = each($fields_host_edit_availability)) {
+			while (list($field_name, $field_array) = each($fields_device_edit_availability)) {
 				if (preg_match("/(^snmp_|max_oids)/", $field_name)) {
-					$form_array += array($field_name => $fields_host_edit_availability[$field_name]);
+					$form_array += array($field_name => $fields_device_edit_availability[$field_name]);
 
 					$form_array[$field_name]["value"] = "";
 					$form_array[$field_name]["form_id"] = 0;
@@ -421,9 +421,9 @@ function api_host_form_actions() {
 					</tr>";
 
 			$form_array = array();
-			while (list($field_name, $field_array) = each($fields_host_edit_availability)) {
+			while (list($field_name, $field_array) = each($fields_device_edit_availability)) {
 				if (!preg_match("/(^snmp_|max_oids)/", $field_name)) {
-					$form_array += array($field_name => $fields_host_edit_availability[$field_name]);
+					$form_array += array($field_name => $fields_device_edit_availability[$field_name]);
 
 					$form_array[$field_name]["value"] = "";
 					$form_array[$field_name]["form_id"] = 0;
@@ -469,7 +469,7 @@ function api_host_form_actions() {
 
 			$form_array = array();
 			$field_name = "poller_id";
-			$form_array += array($field_name => $fields_host_edit["poller_id"]);
+			$form_array += array($field_name => $fields_device_edit["poller_id"]);
 			$form_array[$field_name]["description"] = __("Please select the new poller for the selected device(s).");
 
 			draw_edit_form(
@@ -488,7 +488,7 @@ function api_host_form_actions() {
 
 			$form_array = array();
 			$field_name = "site_id";
-			$form_array += array($field_name => $fields_host_edit["site_id"]);
+			$form_array += array($field_name => $fields_device_edit["site_id"]);
 			$form_array[$field_name]["description"] = __("Please select the new site for the selected device(s).");
 
 			draw_edit_form(
@@ -587,7 +587,7 @@ function host_remove() {
 }
 
 function host_edit() {
-	global $colors, $fields_host_edit, $fields_host_edit_availability, $reindex_types;
+	global $colors, $fields_device_edit, $fields_device_edit_availability, $reindex_types;
 
 	/* ================= input validation ================= */
 	input_validate_input_number(get_request_var("id"));
@@ -692,7 +692,7 @@ function host_edit() {
 }
 
 function host_display_general($host, $host_text) {
-	global $colors, $fields_host_edit, $fields_host_edit_availability, $reindex_types;
+	global $colors, $fields_device_edit, $fields_device_edit_availability, $reindex_types;
 
 	if (isset($host["id"])) {
 		html_start_box($host_text, "100", $colors["header"], "3", "center", "", true);
@@ -807,24 +807,60 @@ function host_display_general($host, $host_text) {
 	html_header($header_items, 1, true, 'host');
 
 	/* preserve the device template id if passed in via a GET variable */
-	if (!empty($_GET["host_template_id"])) {
-		$fields_host_edit["host_template_id"]["value"] = $_GET["host_template_id"];
-		$fields_host_edit["host_template_id"]["method"] = "hidden";
+	if (!empty($_GET["template_id"])) {
+//		$fields_device_edit["host_template_id"]["value"] = $_GET["template_id"];
+//		$fields_device_edit["host_template_id"]["method"] = "hidden";
+	}
+
+	/* if we are creating a device and have changed templates set that value */
+	if (!isset($host["id"])) {
+		if (!empty($_GET["template_id"])) {
+			$host["host_template_id"] = $_GET["template_id"];
+		}
 	}
 
 	/* draw basic fields only on first run for a new host */
 	draw_edit_form(array(
 		"config" => array("form_name" => "chk"),
-		"fields" => inject_form_variables($fields_host_edit, (is_array($host) ? $host : array()))
+		"fields" => inject_form_variables($fields_device_edit, (is_array($host) ? $host : array()))
 		));
 
-	/* for a given host, display all availability options as well */
-	if (isset($host["id"])) {
-		draw_edit_form(array(
-			"config" => array("form_name" => "chk"),
-			"fields" => inject_form_variables($fields_host_edit_availability, (is_array($host) ? $host : array()))
-			));
+	/* if the host is new, check/set the $host array with some template values */
+	$override_permitted = true;
+	if (!isset($host["id"])) {
+		$template_settings = db_fetch_row("SELECT * FROM host_template WHERE id=" . $_REQUEST["template_id"]);
+		if (sizeof($template_settings)) {
+		foreach($template_settings as $key => $value) {
+			switch($key) {
+				case "id":
+				case "name":
+				case "description":
+				case "hash":
+				case "image":
+					unset($template_settings[$key]);
+					break;
+				case "override_defaults":
+					unset($template_settings[$key]);
+					break;
+				case "override_permitted":
+					if ($value != CHECKED) {
+						$override_permitted = false;
+					}
+					break;
+				default:
+					break;
+			}
+		}
+		}
 	}
+
+	form_hidden_box("override_permitted", ($override_permitted ? "true":"false"), "");
+
+	/* for a given host, display all availability options as well */
+	draw_edit_form(array(
+		"config" => array("form_name" => "chk"),
+		"fields" => inject_form_variables($fields_device_edit_availability, (isset($template_settings) ? $template_settings : $host))
+		));
 
 	print "</table></td></tr>";		/* end of html_header */
 	html_end_box(!isset($host["id"]));
@@ -1094,8 +1130,70 @@ function host_display_general($host, $host_text) {
 		}
 	}
 
+	function toggleAvailabilityAndSnmp(template_enabled) {
+		if (!template_enabled && $('#override_permitted').val() == 'true') {
+			$('#row_override_permitted').show();
+			$('#row_availability_header').show();
+			$('#row_availability_method').show();
+			$('#row_ping_method').show();
+			$('#row_ping_port').show();
+			$('#row_ping_timeout').show();
+			$('#row_ping_retries').show();
+			$('#row_snmp_spacer').show();
+			$('#row_snmp_version').show();
+			$('#row_snmp_username').show();
+			$('#row_snmp_password').show();
+			$('#row_snmp_community').show();
+			$('#row_snmp_auth_protocol').show();
+			$('#row_snmp_priv_passphrase').show();
+			$('#row_snmp_priv_protocol').show();
+			$('#row_snmp_context').show();
+			$('#row_snmp_port').show();
+			$('#row_snmp_timeout').show();
+			$('#row_max_oids').show();
+
+			changeHostForm();
+		}else{
+			$('#row_override_permitted').hide();
+			$('#row_availability_header').hide();
+			$('#row_availability_method').hide();
+			$('#row_ping_method').hide();
+			$('#row_ping_port').hide();
+			$('#row_ping_timeout').hide();
+			$('#row_ping_retries').hide();
+			$('#row_snmp_spacer').hide();
+			$('#row_snmp_version').hide();
+			$('#row_snmp_username').hide();
+			$('#row_snmp_password').hide();
+			$('#row_snmp_community').hide();
+			$('#row_snmp_auth_protocol').hide();
+			$('#row_snmp_priv_passphrase').hide();
+			$('#row_snmp_priv_protocol').hide();
+			$('#row_snmp_context').hide();
+			$('#row_snmp_port').hide();
+			$('#row_snmp_timeout').hide()
+			$('#row_max_oids').hide();
+		}
+
+		if ($('#override_permitted').val() == 'false') {
+			$('#template_enabled').attr("checked","checked");
+			$('#template_enabled').attr("disabled","disabled");
+		}
+	}
+
 	$().ready(function() {
-		changeHostForm();
+		toggleAvailabilityAndSnmp(document.getElementById('template_enabled').checked);
+
+		/* Hide options when override is turned off */
+		$("#template_enabled").change(function () {
+			toggleAvailabilityAndSnmp(this.checked);
+		});
+
+		if ($('#id').val() == 0) {
+			$('#host_template_id').change(function() {
+				document.location='devices.php?action=edit&template_id='+this.value+'&status=-1'
+			});
+		}
 	});
 
 	-->
