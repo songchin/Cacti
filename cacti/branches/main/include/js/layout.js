@@ -491,7 +491,7 @@ function initColumnWidths() {
 		for (i = 0; i < columns.length; i++) {
 			cur_value = readCookieElement(pathname, columns[i].id);
 
-			if (cur_value) {
+			if (cur_value && cur_value != "NaN") {
 				columns[i].style.width = cur_value + "px";
 			}
 		}
