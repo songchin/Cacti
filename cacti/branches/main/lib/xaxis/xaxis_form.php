@@ -305,7 +305,7 @@ function xaxis_edit() {
 		$xaxis_items = db_fetch_assoc($sql_query);
 
 		html_start_box("<strong>" . __("X-Axis Items") . "</strong>", "100", $colors["header"], 0, "center", "xaxis_presets.php?action=item_edit&xaxis_id=" . $_GET["id"], false, "xaxis");
-		$header_items = array(__("Item"), __("Item Name"), __("Timespan"),
+		$header_items = array(__("Item"), __("Name"), __("Timespan"),
 		__("Global Grid Span"), __("Steps"),
 		__("Major Grid Span"), __("Steps"),
 		__("Label Grid Span"), __("Steps"),
@@ -317,7 +317,7 @@ function xaxis_edit() {
 			$i = 0;
 			foreach ($xaxis_items as $xaxis_item) {
 				form_alternate_row_color('line' . $xaxis_item["id"], true);
-				form_selectable_cell("<a style='white-space:nowrap;' class='linkEditMain' href='" . htmlspecialchars("xaxis_presets.php?action=item_edit&id=" . $xaxis_item["id"] . "&xaxis_id=" . $_GET["id"]) . "'>Item#$i</a>", $xaxis_item["id"]);
+				form_selectable_cell("<a style='white-space:nowrap;' class='linkEditMain' href='" . htmlspecialchars("xaxis_presets.php?action=item_edit&id=" . $xaxis_item["id"] . "&xaxis_id=" . $_GET["id"]) . "'>Item# $i</a>", $xaxis_item["id"]);
 				form_selectable_cell((isset($xaxis_item["item_name"]) ? $xaxis_item["item_name"] : ''), $xaxis_item["id"]);
 				form_selectable_cell((isset($xaxis_item["timespan"]) ? $xaxis_item["timespan"] : 0), $xaxis_item["id"]);
 				form_selectable_cell((isset($rrd_xaxis_timespans[$xaxis_item["gtm"]]) ? $rrd_xaxis_timespans[$xaxis_item["gtm"]] : __("None")), $xaxis_item["id"]);
