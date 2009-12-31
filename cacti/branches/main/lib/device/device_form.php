@@ -1152,6 +1152,7 @@ function host_display_general($host, $host_text) {
 			$('#snmp_version').removeAttr("disabled");
 			$('#snmp_username').removeAttr("disabled");
 			$('#snmp_password').removeAttr("disabled");
+			$('#snmp_password_confirm').removeAttr("disabled");
 			$('#snmp_community').removeAttr("disabled");
 			$('#snmp_auth_protocol').removeAttr("disabled");
 			$('#snmp_priv_passphrase').removeAttr("disabled");
@@ -1174,6 +1175,7 @@ function host_display_general($host, $host_text) {
 			$('#snmp_version').attr("disabled","disabled");
 			$('#snmp_username').attr("disabled","disabled");
 			$('#snmp_password').attr("disabled","disabled");
+			$('#snmp_password_confirm').attr("disabled","disabled");
 			$('#snmp_community').attr("disabled","disabled");
 			$('#snmp_auth_protocol').attr("disabled","disabled");
 			$('#snmp_priv_passphrase').attr("disabled","disabled");
