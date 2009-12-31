@@ -35,11 +35,11 @@ html_start_box("<strong>" . __("About Cacti") . "</strong>", "100", $colors["hea
 </tr>
 <tr>
 	<td valign="top" class="textArea">
-		<a href="http://www.cacti.net/index.php?version=" . CACTI_VERSION><img align="right" src="images/cacti_about_logo.gif" alt="raXnet"></a>
+		<a href="http://www.cacti.net/index.php?version=<?php print CACTI_VERSION;?><img align="right" src="images/cacti_about_logo.gif" alt="raXnet"></a>
 
 		<?php print __("Cacti is designed to be a complete graphing solution based on the RRDTool's framework. Its goal is to make a network administrator's job easier by taking care of all the necessary details necessary to create meaningful graphs.");?>
 
-		<p><?php print __("Please see the");?> <a href="http://www.cacti.net/"><?php print __("official Cacti website");?></a> <?php print __("for information, support, and updates.");?></p>
+		<p><?php print __("Please see the");?> <a href="http://www.cacti.net/index.php?version=<?php print CACTI_VERSION;?>"><?php print __("official Cacti website");?></a> <?php print __("for information, support, and updates.");?></p>
 
 		<p><strong><?php print __("Current Cacti Developers");?></strong><br></p>
 		<ul type="disc">
