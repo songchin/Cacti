@@ -119,8 +119,8 @@ $page_title = api_plugin_hook_function('page_title', 'Cacti');
 	<link type="text/css" href="<?php echo URL_PATH; ?>include/dd.css" rel="stylesheet">
 	<link type="text/css" href="<?php echo URL_PATH; ?>include/jquery.autocomplete.css" rel="stylesheet">
 	<link href="<?php echo URL_PATH; ?>images/favicon.ico" rel="shortcut icon">
-	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/js/layout.js"></script>
 	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/js/jquery/jquery.js"></script>
+	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/js/layout.js"></script>
 	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/js/jstree/jquery.tree.js"></script>
 	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/js/jquery/jquery.cookie.js"></script>
 	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/js/jquery/jquery.autocomplete.js"></script>
@@ -133,9 +133,9 @@ $page_title = api_plugin_hook_function('page_title', 'Cacti');
 	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/js/jscalendar/lang/<?php print (read_config_option('i18n_support') != 0) ? CACTI_LANGUAGE_FILE : "english_usa";?>.js"></script>
 	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/js/jscalendar/calendar-setup.js"></script>
 	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/js/jstree/plugins/jquery.tree.cookie.js"></script>
-	<?php api_plugin_hook('page_head'); ?>
+	<?php initializeCookieVariable(); api_plugin_hook('page_head'); ?>
 </head>
-<body class='body' onLoad='pageInitialize()'>
+<body class='body'>
 <script type="text/javascript" src="<?php echo URL_PATH; ?>include/js/wztooltip/wz_tooltip.js"></script>
 <div id='header'>
 	<div id='logobar'></div>

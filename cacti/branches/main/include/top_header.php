@@ -41,8 +41,8 @@ $page_title = api_plugin_hook_function('page_title', 'Cacti');
 	<link type="text/css" href="<?php echo URL_PATH; ?>include/dd.css" rel="stylesheet">
 	<link type="text/css" media="screen" href="<?php echo URL_PATH; ?>include/css/colorpicker.css" rel="stylesheet">
 	<link href="<?php echo URL_PATH; ?>images/favicon.ico" rel="shortcut icon">
-	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/js/layout.js"></script>
 	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/js/jquery/jquery.js"></script>
+	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/js/layout.js"></script>
 	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/js/jquery/jquery.autocomplete.js"></script>
 	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/js/jquery/jquery.bgiframe.js"></script>
 	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/js/jquery/jquery.ajaxQueue.js"></script>
@@ -52,12 +52,11 @@ $page_title = api_plugin_hook_function('page_title', 'Cacti');
 	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/js/jquery/colorpicker.js"></script>
 
 <?php if (isset($refresh)) { print "\t<meta http-equiv=refresh content=\"" . $refresh["seconds"] . "; url='" . $refresh["page"] . "'\">\n"; }
-
+initializeCookieVariable();
 api_plugin_hook('page_head');
-
 ?>
 </head>
-<body id='body' onLoad='pageInitialize()'>
+<body id='body'>
 <script type="text/javascript" src="<?php echo URL_PATH; ?>include/js/wztooltip/wz_tooltip.js"></script>
 <div id='header'>
 	<div id='logobar' class='logobar'></div>

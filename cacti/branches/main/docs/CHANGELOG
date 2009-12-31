@@ -114,6 +114,7 @@ Cacti CHANGELOG
 -feature: Reorganize Menu for clarity
 -feature: Add logging to SQL Save error handling
 -feature: Allow non-numeric form row ids in form API
+-feature: User UI Visual Settings Saved Between Login Sessions
 
 0.8.7e
 

@@ -491,9 +491,22 @@ function initColumnWidths() {
 		for (i = 0; i < columns.length; i++) {
 			cur_value = readCookieElement(pathname, columns[i].id);
 
-			if (cur_value && cur_value != "NaN") {
-				columns[i].style.width = cur_value + "px";
+			if (cur_value) {
+				if (cur_value != "NaN") {
+					columns[i].style.width = cur_value + "px";
+				}
+			} else {
+				try { eval("value=sess_cacti_ui_"+pathname); }
+				catch(err) { value = null }
+				if (value) {
+					cur_value = readVariableAsCookie(value, columns[i].id);
+
+					if (cur_value && cur_value != "NaN") {
+						columns[i].style.width = cur_value + "px";
+					}
+				}
 			}
+
 		}
 	}
 }
@@ -813,7 +826,7 @@ function vSplitterPos() {
 	}
 }
 
-function pageResize() {
+$(window).resize(function() {
 	/* initialize the page splitter as required */
 	vSplitterPos();
 
@@ -822,9 +835,9 @@ function pageResize() {
 
 	/* size the content divs */
 	sizeContentDivs();
-}
+});
 
-function pageInitialize() {
+$().ready(function() {
 	/* detect the browser type */
 	detectBrowser();
 
@@ -850,7 +863,7 @@ function pageInitialize() {
 
 	/* restore the page visibility */
 	transitionPage();
-}
+});
 
 function sizeContentDivs() {
 	var top    = document.getElementById("wrapper").offsetTop;
@@ -887,24 +900,6 @@ function transitionPage() {
 			document.getElementById("menu").style.opacity    = 1;
 			document.getElementById("content").style.opacity = 1;
 			document.getElementById("wrapper").style.opacity = 1;
-		}
-	}
-}
-
-function fadeIn(object) {
-	if (browser != "IE") {
-		newEM = Number(object.style.opacity);
-
-		if ((newEM + 0.2) > 1) {
-			newEM = 1;
-		}else{
-			newEM = newEM + 0.4;
-		}
-
-		object.style.opacity = newEM;
-
-		if (newEM >= 1) {
-			clearInterval(transition);
 		}
 	}
 }
@@ -1005,6 +1000,28 @@ function eraseCookie(name) {
 }
 
 /* cookie container functions */
+function readVariableAsCookie(elements, element) {
+	var search_for     = element + "@@";
+	var return_value   = null;
+	var end_location   = -1;
+
+	if (elements) {
+		var start_location = elements.indexOf(search_for);
+
+		if (start_location >= 0) {
+			end_location = elements.indexOf("!", start_location);
+
+			if (end_location >= 0) {
+				return_value = elements.substring(start_location + search_for.length, end_location);
+			}else{
+				return_value = elements.substring(start_location + search_for.length);
+			}
+		}
+	}
+
+	return return_value;
+}
+
 function readCookieElement(name, element) {
 	elements           = readCookie(name);
 	var search_for     = element + "@@";

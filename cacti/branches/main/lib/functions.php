@@ -167,7 +167,7 @@ function updateCookieChanges() {
 		if (sizeof($_COOKIE)) {
 		foreach($_COOKIE as $key => $data) {
 			if ($key == "menu" || $key == "formvis" || substr($key, 0, 3) == "ui_") {
-				if ((!isset($_SESSION["sess_cacti_ui_" . $key])) &&
+				if ((!isset($_SESSION["sess_cacti_ui_" . $key])) ||
 					($data != $_SESSION["sess_cacti_ui_" . $key])) {
 					set_user_config_option("sess_cacti_ui_" . $key, $data);
 					$_SESSION["sess_cacti_ui_" . $key] = $data;
@@ -175,6 +175,27 @@ function updateCookieChanges() {
 			}
 		}
 		}
+	}
+}
+
+function initializeCookieVariable($variable_name = "") {
+	if ($variable_name == "") {
+		$variable_name = "ui_" . str_replace(".php", "", basename($_SERVER["PHP_SELF"]));
+	}
+
+	$value = read_user_config_option($variable_name);
+
+	if ($value != '') {
+		$_SESSION["sess_cacti_ui_" . $variable_name] = $value;
+
+		?>
+		<script type="text/javascript">
+		<!--
+		alert(<?php print $variable_name;?>);
+		var sess_cacti_ui_<?php print $variable_name . "=\"" . $value . "\"";?>;
+		-->
+		</script>
+		<?php
 	}
 }
 
