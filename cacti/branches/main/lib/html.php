@@ -1074,7 +1074,9 @@ function draw_menu($user_menu = "") {
 			?>
 			<script type="text/javascript">
 			<!--
-				registerOnLoadFunction("menu", "changeMenuState('<?php print $id;?>', true)");
+			$().ready(function() {
+				changeMenuState('<?php print $id;?>', true);
+			});
 			-->
 			</script>
 			<?php

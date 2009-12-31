@@ -839,9 +839,6 @@ function pageInitialize() {
 	/* fix browser quirks */
 	fixBrowserQuirks();
 
-	/* run page onLoad functions */
-	runOnLoadFunctions();
-
 	/* size the content divs */
 	sizeContentDivs();
 
@@ -908,26 +905,6 @@ function fadeIn(object) {
 
 		if (newEM >= 1) {
 			clearInterval(transition);
-		}
-	}
-}
-
-function registerOnLoadFunction(page, function_name) {
-	windowOnLoadReg[windowOnLoadCt] = page + ":" + function_name;
-	windowOnLoadCt++;
-}
-
-function runOnLoadFunctions() {
-	var myPage = getBaseName();
-	var valArray = "";
-
-	for (var i = 0; i < windowOnLoadCt; i++) {
-		valArray = windowOnLoadReg[i].split(":");
-
-		if (myPage == valArray[0]) {
-			eval(valArray[1]);
-		}else if (document.getElementById("content") && valArray[0] == "menu") {
-			eval(valArray[1]);
 		}
 	}
 }

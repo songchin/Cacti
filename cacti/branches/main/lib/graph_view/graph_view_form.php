@@ -260,6 +260,7 @@ function get_graph_list_content() {
 						applyGraphListFilterChange(document.form_graph_list);
 					}
 				});
+				SetSelections();
 			});
 
 			function applyGraphListFilterChange(objForm, strURL) {
@@ -324,8 +325,6 @@ function get_graph_list_content() {
 					$("#graph_content").html(data);
 				});
 			}
-
-			registerOnLoadFunction("graph_view", "SetSelections();");
 
 			//-->
 			</script>
