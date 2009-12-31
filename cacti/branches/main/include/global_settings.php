@@ -25,8 +25,10 @@
 /* tab information */
 $tabs = array(
 	"general" => __("General"),
-	"path" => __("Paths"),
+	"snmp" => __("SNMP"),
+	"avail" => __("Availability"),
 	"poller" => __("Poller"),
+	"path" => __("Paths"),
 	"export" => __("Graph Export"),
 	"visual" => __("Visual"),
 	"authentication" => "Authentication");
@@ -202,6 +204,52 @@ $settings = array(
 			"default" => RRD_VERSION_1_0,
 			"array" => $rrdtool_versions,
 			),
+		"other_header" => array(
+			"friendly_name" => __("Other Defaults"),
+			"method" => "spacer",
+			),
+		"reindex_method" => array(
+			"friendly_name" => __("Reindex Method for Data Queries"),
+			"description" => __("The default reindex method to use for all Data Queries."),
+			"method" => "drop_array",
+			"default" => "1",
+			"array" => $reindex_types,
+			),
+		"require_ssl" => array(
+			"friendly_name" => __("Require SSL Encryption"),
+			"description" => __("Redirect all HTTP connections to HTTPS."),
+			"default" => "off",
+			"method" => "checkbox"
+			),
+		"deletion_verification" => array(
+			"friendly_name" => __("Deletion Verification"),
+			"description" => __("Prompt user before item deletion."),
+			"default" => CHECKED,
+			"method" => "checkbox"
+			),
+		"i18n_support" => array(
+			"friendly_name" => __("Language Support"),
+			"description" => __("Choose \"enabled\" to allow the localization of Cacti. The strict mode requires that the requested language will also be supported by all plugins being installed at your system. If that's not the fact everything will be displayed in English."),
+			"method" => "drop_array",
+			"default" => "0",
+			"array" => $i18n_modes
+			),
+		"i18n_default_language" => array(
+			"friendly_name" => __("Default language"),
+			"description" => __("Default language for this system."),
+			"method" => "drop_array",
+			"default" => "us",
+			"array" => get_installed_locales()
+			),
+		"i18n_auto_detection" => array(
+			"friendly_name" => __("Auto detection"),
+			"description" => __("Allow to automatically determine the \"default\" language of the user and provide it at login time if that language is supported by Cacti. If disabled, the default language will be in force until the user elects another language. "),
+			"method" => "drop_array",
+			"default" => "0",
+			"array" => array( "0" => __("Disabled"), "1" => __("Enabled"))
+			)
+		),
+	"snmp" => array(
 		"snmp_header" => array(
 			"friendly_name" => __("SNMP Defaults"),
 			"method" => "spacer",
@@ -278,50 +326,6 @@ $settings = array(
 			"default" => "3",
 			"max_length" => "10",
 			"size" => "5"
-			),
-		"other_header" => array(
-			"friendly_name" => __("Other Defaults"),
-			"method" => "spacer",
-			),
-		"reindex_method" => array(
-			"friendly_name" => __("Reindex Method for Data Queries"),
-			"description" => __("The default reindex method to use for all Data Queries."),
-			"method" => "drop_array",
-			"default" => "1",
-			"array" => $reindex_types,
-			),
-		"require_ssl" => array(
-			"friendly_name" => __("Require SSL Encryption"),
-			"description" => __("Redirect all HTTP connections to HTTPS."),
-			"default" => "off",
-			"method" => "checkbox"
-			),
-		"deletion_verification" => array(
-			"friendly_name" => __("Deletion Verification"),
-			"description" => __("Prompt user before item deletion."),
-			"default" => CHECKED,
-			"method" => "checkbox"
-			),
-		"i18n_support" => array(
-			"friendly_name" => __("Language Support"),
-			"description" => __("Choose \"enabled\" to allow the localization of Cacti. The strict mode requires that the requested language will also be supported by all plugins being installed at your system. If that's not the fact everything will be displayed in English."),
-			"method" => "drop_array",
-			"default" => "0",
-			"array" => $i18n_modes
-			),
-		"i18n_default_language" => array(
-			"friendly_name" => __("Default language"),
-			"description" => __("Default language for this system."),
-			"method" => "drop_array",
-			"default" => "us",
-			"array" => get_installed_locales()
-			),
-		"i18n_auto_detection" => array(
-			"friendly_name" => __("Auto detection"),
-			"description" => __("Allow to automatically determine the \"default\" language of the user and provide it at login time if that language is supported by Cacti. If disabled, the default language will be in force until the user elects another language. "),
-			"method" => "drop_array",
-			"default" => "0",
-			"array" => array( "0" => __("Disabled"), "1" => __("Enabled"))
 			)
 		),
 	"export" => array(
@@ -881,6 +885,8 @@ $settings = array(
 			"max_length" => "10",
 			"size" => "5"
 			),
+		),
+	"avail" => array(
 		"availability_header" => array(
 			"friendly_name" => __("Device Availability Settings"),
 			"method" => "spacer",

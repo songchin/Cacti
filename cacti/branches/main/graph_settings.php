@@ -103,18 +103,24 @@ function settings() {
 		$settings_graphs["tree"]["default_tree_id"]["sql"] = get_graph_tree_array(true);
 	}
 
-	html_start_box("<strong>" . __("Graph Settings") . "</strong>", "100", $colors["header_panel"], "3", "center", "");
+	/* draw the categories tabs on the top of the page */
+	print "<table width='100%' cellspacing='0' cellpadding='0' align='center'><tr>";
+	print "<td><div class='tabs'>";
 
+	if (sizeof($settings_graphs) > 0) {
+	foreach (array_keys($settings_graphs) as $tab_short_name) {
+		print "<div><a id='tab_" . clean_up_name($tabs_graphs[$tab_short_name]) . "' " . (($tab_short_name == "General") ? "class='tab tabSelected'" : "class='tab tabDefault'") . " onClick='selectTab(\"" . clean_up_name($tabs_graphs[$tab_short_name]) . "\")' href='#'>$tabs_graphs[$tab_short_name]</a></div>";
+	}
+	}
+	print "</div></td></tr></table>\n";
 	print "<form method='post' action='graph_settings.php'>\n";
 
 	while (list($tab_short_name, $tab_fields) = each($settings_graphs)) {
-		?>
-		<tr class='rowSubHeader'>
-			<td colspan='2' class='textSubHeaderDark' style='padding: 3px;'>
-				<?php print $tabs_graphs[$tab_short_name];?>
-			</td>
-		</tr>
-		<?php
+		print "<tr><td><div class='tab_settings' id='settings_" . clean_up_name($tabs_graphs[$tab_short_name]) . "'><table cellpadding='0' cellspacing='0' width='100%'>";
+		html_start_box("<strong>" . __("Graph Settings") . " (" . $tabs_graphs[$tab_short_name] . ")</strong>", "100", $colors["header"], 0, "center", "");
+		$header_items = array(__("Field"), __("Value"));
+		print "<tr><td>";
+		html_header($header_items, 2, true, 'settings','left wp100');
 
 		$form_array = array();
 
@@ -145,7 +151,12 @@ function settings() {
 					),
 				"fields" => $form_array
 				)
-			);
+		);
+
+		print "</table></td></tr>";		/* end of html_header */
+		html_end_box();
+
+		print "</table></div></td></tr>";
 	}
 
 	html_graph_end_box();
@@ -157,8 +168,33 @@ function settings() {
 		}
 	}
 
-	form_hidden_box("referer",(isset($_SERVER["HTTP_REFERER"]) ? $_SERVER["HTTP_REFERER"] : ""),"");
+	form_hidden_box("referer", "graph_view.php","");
 	form_hidden_box("save_component_graph_config","1","");
 
 	form_save_button_alt("", "save", "save");
+
+	?>
+	<script type="text/javascript">
+	<!--
+
+	function selectTab(tab) {
+		$('.tab_settings').hide();
+		$('.tab').removeClass("tabSelected");
+		$('.tab').addClass("tabDefault");
+		$('#settings_'+tab).show();
+		$('#tab_'+tab).removeClass("tabDefault");
+		$('#tab_'+tab).addClass("tabSelected");
+	}
+
+	$().ready(function() {
+		selectTab('General');
+	});
+
+	//-->
+	</script>
+	<?php
+
+	include(CACTI_BASE_PATH . "/include/bottom_footer.php");
+
+	break;
 }
