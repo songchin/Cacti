@@ -44,8 +44,11 @@ $cacti_session_name = "Cacti";
 /* Do not edit this line */
 $config = array();
 
+/* Default url path */
+$config['url_path'] = "";
+
 /* Include configuration */
-include(dirname(__FILE__) . "/config.php");
+@include(dirname(__FILE__) . "/config.php");
 
 if (isset($config["cacti_version"])) {
 	die("Invalid include/config.php file detected.");
