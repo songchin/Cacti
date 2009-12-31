@@ -77,7 +77,9 @@ function html_start_box($title, $width, $background_color, $cell_padding, $align
 	?>
 		<script type="text/javascript">
 		<!--
-			registerOnLoadFunction("<?php print basename($_SERVER['PHP_SELF']);?>", "htmlStartBoxFilterChange('<?php print $item_id;?>', true)");
+		$().ready(function() {
+			htmlStartBoxFilterChange('<?php print $item_id;?>', true);
+		});
 		-->
 		</script>
 		<table cellpadding=0 cellspacing=0 class="startBoxHeader <?php print "wp$width"?> startBox0" >

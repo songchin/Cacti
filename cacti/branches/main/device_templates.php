@@ -709,7 +709,7 @@ function template_edit() {
 			$('#row_snmp_priv_protocol').show();
 			$('#row_snmp_context').show();
 			$('#row_snmp_port').show();
-			$('#row_snmp_timeout').
+			$('#row_snmp_timeout').show();
 			$('#row_max_oids').show();
 
 			changeHostForm();
@@ -738,7 +738,7 @@ function template_edit() {
 
 	/* jQuery stuff */
 	$().ready(function() {
-		toggleAvailabilityAndSnmp($('#override_defaults').checked);
+		toggleAvailabilityAndSnmp(document.getElementById('override_defaults').checked);
 
 		/* Hide options when override is turned off */
 		$("#override_defaults").change(function () {
@@ -1070,7 +1070,8 @@ function template() {
 	$display_text = array(
 		"name" => array(__("Template Title"), "ASC"),
 		"description" => array(__("Description"), "ASC"),
-		"nosort" => array(__("Image"), "")
+		"nosort1" => array(__("Availbility/SNMP Settings"), "ASC"),
+		"nosort2" => array(__("Image"), "")
 	);
 
 	html_header_sort_checkbox($display_text, get_request_var_request("sort_column"), get_request_var_request("sort_direction"));
@@ -1080,6 +1081,7 @@ function template() {
 			form_alternate_row_color('line' . $template["id"], true);
 			form_selectable_cell("<a class='linkEditMain' href='" . htmlspecialchars("device_templates.php?action=edit&id=" . $template["id"]) . "'>" . (strlen($_REQUEST["filter"]) ? preg_replace("/(" . preg_quote($_REQUEST["filter"]) . ")/i", "<span class=\"filter\">\\1</span>", $template["name"]) : $template["name"]) . "</a>", $template["id"]);
 			form_selectable_cell("<a class='linkEditMain' href='" . htmlspecialchars("device_templates.php?action=edit&id=" . $template["id"]) . "'>" . (strlen($_REQUEST["filter"]) ? preg_replace("/(" . preg_quote($_REQUEST["filter"]) . ")/i", "<span class=\"filter\">\\1</span>", $template["description"]) : $template["description"]) . "</a>", $template["id"]);
+			form_selectable_cell(($template["override_defaults"] == "on" ? "Availability and SNMP Defined" . ($template["override_permitted"] == "on" ? ", User can override":""):"System Defaults") , $template["id"]);
 			form_selectable_cell("<img src='" . $template["image"] . "'>", $template["id"]);
 			form_checkbox_cell($template["name"], $template["id"]);
 			form_end_row();
