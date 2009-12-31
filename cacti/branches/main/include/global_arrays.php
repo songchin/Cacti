@@ -446,8 +446,8 @@ $menu = array(
 	__("Presets") => array(
 		"cdef.php" => __("CDEFs"),
 		"color.php" => __("Colors"),
-		"gprint_presets.php" => __("GPRINT Presets"),
-		"xaxis_presets.php" => __("X-Axis Presets"),
+		"gprint_presets.php" => __("GPRINT"),
+		"xaxis_presets.php" => __("X-Axis"),
 		"rra.php" => __("RRAs"),
 		),
 	__("Import/Export") => array(
