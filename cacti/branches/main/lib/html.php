@@ -74,7 +74,7 @@ function html_start_box($title, $width, $background_color, $cell_padding, $align
 
 	$table_id = ($table_id != '') ? "id=\"$table_id\"" : "";
 
-	?>
+	if ($collapsing) { ?>
 		<script type="text/javascript">
 		<!--
 		$().ready(function() {
@@ -82,6 +82,7 @@ function html_start_box($title, $width, $background_color, $cell_padding, $align
 		});
 		-->
 		</script>
+	<?php } ?>
 		<table cellpadding=0 cellspacing=0 class="startBoxHeader <?php print "wp$width"?> startBox0" >
 			<?php if ($title != "") {?><tr class="rowHeader">
 				<td colspan="100">
