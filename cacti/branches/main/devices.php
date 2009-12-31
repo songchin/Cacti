@@ -65,22 +65,22 @@ switch (get_request_var_request("action")) {
 	case 'gt_remove':
 		host_remove_gt();
 
-		header("Location: host.php?action=edit&id=" . $_GET["host_id"]);
+		header("Location: devices.php?action=edit&id=" . $_GET["host_id"]);
 		break;
 	case 'query_remove':
 		host_remove_query();
 
-		header("Location: host.php?action=edit&id=" . $_GET["host_id"]);
+		header("Location: devices.php?action=edit&id=" . $_GET["host_id"]);
 		break;
 	case 'query_reload':
 		host_reload_query();
 
-		header("Location: host.php?action=edit&id=" . $_GET["host_id"]);
+		header("Location: devices.php?action=edit&id=" . $_GET["host_id"]);
 		break;
 	case 'query_verbose':
 		host_reload_query();
 
-		header("Location: host.php?action=edit&id=" . $_GET["host_id"] . "&display_dq_details=true");
+		header("Location: devices.php?action=edit&id=" . $_GET["host_id"] . "&display_dq_details=true");
 		break;
 	case 'edit':
 		include_once(CACTI_BASE_PATH . "/include/top_header.php");

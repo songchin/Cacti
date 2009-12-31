@@ -35,7 +35,7 @@ api_plugin_hook('console_before');
 			started.');?></strong>
 
 			<ul>
-				<li><strong><?php print __('<a href="host.php">Create devices</a> for network');?></strong></li>
+				<li><strong><?php print __('<a href="devices.php">Create devices</a> for network');?></strong></li>
 				<li><strong><?php print __('<a href="graphs_new.php">Create graphs</a> for your new devices');?></strong></li>
 				<li><strong><?php print __('<a href="graph_view.php">View</a> your new graphs');?></strong></li>
 			</ul>

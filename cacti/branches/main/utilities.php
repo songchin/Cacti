@@ -1138,7 +1138,7 @@ function utilities_view_logfile() {
 			while ($host_start) {
 				$host_end   = strpos($item, "]", $host_start);
 				$host_id    = substr($item, $host_start+5, $host_end-($host_start+5));
-				$new_item   = $new_item . substr($item, 0, $host_start + 5) . "<a href='" . htmlspecialchars("host.php?action=edit&id=" . $host_id) . "'>" . substr($item, $host_start + 5, $host_end-($host_start + 5)) . "</a>";
+				$new_item   = $new_item . substr($item, 0, $host_start + 5) . "<a href='" . htmlspecialchars("devices.php?action=edit&id=" . $host_id) . "'>" . substr($item, $host_start + 5, $host_end-($host_start + 5)) . "</a>";
 				$item       = substr($item, $host_end);
 				$host_start = strpos($item, "Host[");
 			}
