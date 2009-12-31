@@ -1404,17 +1404,21 @@ $fields_device_template_edit = array(
 		),
 	"override_defaults" => array(
 		"method" => "checkbox",
-		"friendly_name" => __("Override Defaults"),
-		"description" => __("Check this box to have the Device Template override the System default Availability and SNMP Settings."),
+		"friendly_name" => __("Template Based Availability and SNMP"),
+		"description" => __("Check this box to have the Device Template control the defaults for Availability and SNMP Settings."),
 		"value" => "|arg1:override_defaults|",
-		"default" => ""
+		"default" => "",
+		"form_id" => "|arg1:id|"
 		),
 	"override_permitted" => array(
 		"method" => "checkbox",
 		"friendly_name" => __("Allow Override"),
-		"description" => __("Check this box to have the allow the user to override the Device Template Availability and SNMP Settings."),
+		"description" => __("Check this box to have the allow the user to override the Device Template Availability and SNMP Settings. If unchecked,
+		the user will not be able to change either Availability or SNMP settings when editing the device.  However, for legacy purposes, this will only
+		apply to new devices and legacy devices where the user has requested that template propagation be enabled."),
 		"value" => "|arg1:override_permitted|",
-		"default" => "on"
+		"default" => "on",
+		"form_id" => "|arg1:id|"
 		),
 	"availability_header" => array(
 		"method" => "spacer",
