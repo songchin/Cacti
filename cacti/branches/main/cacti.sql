@@ -2343,7 +2343,7 @@ CREATE TABLE poller (
 --
 -- Dumping data for table `poller`
 --
-INSERT INTO `poller` VALUES (1,'','Main Cacti Poller','localhost','127.0.0.1','0000-00-00 00:00:00');
+INSERT INTO `poller` VALUES (1,'','Main Poller','localhost','127.0.0.1','0000-00-00 00:00:00');
 
 
 --
