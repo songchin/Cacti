@@ -195,6 +195,4 @@ function settings() {
 	<?php
 
 	include(CACTI_BASE_PATH . "/include/bottom_footer.php");
-
-	break;
 }
