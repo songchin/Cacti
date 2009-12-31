@@ -826,7 +826,8 @@ function host_display_general($host, $host_text) {
 		));
 
 	/* if the host is new, check/set the $host array with some template values */
-	$override_permitted = true;
+	$override_permitted  = true;
+	$propagation_allowed = false;
 	if (!isset($host["id"])) {
 		$template_settings = db_fetch_row("SELECT * FROM host_template WHERE id=" . $_REQUEST["template_id"]);
 		if (sizeof($template_settings)) {
@@ -840,6 +841,9 @@ function host_display_general($host, $host_text) {
 					unset($template_settings[$key]);
 					break;
 				case "override_defaults":
+					if ($value == CHECKED) {
+						$propagation_allowed = true;
+					}
 					unset($template_settings[$key]);
 					break;
 				case "override_permitted":
@@ -852,9 +856,14 @@ function host_display_general($host, $host_text) {
 			}
 		}
 		}
+	}else{
+		if (db_fetch_cell("SELECT override_defaults FROM host_template WHERE id=" . $host["host_template_id"]) == CHECKED) {
+			$propagation_allowed = true;
+		}
 	}
 
 	form_hidden_box("override_permitted", ($override_permitted ? "true":"false"), "");
+	form_hidden_box("propagation_allowed", ($propagation_allowed ? "true":"false"), "");
 
 	/* for a given host, display all availability options as well */
 	draw_edit_form(array(
@@ -1132,52 +1141,58 @@ function host_display_general($host, $host_text) {
 
 	function toggleAvailabilityAndSnmp(template_enabled) {
 		if (!template_enabled && $('#override_permitted').val() == 'true') {
-			$('#row_override_permitted').show();
-			$('#row_availability_header').show();
-			$('#row_availability_method').show();
-			$('#row_ping_method').show();
-			$('#row_ping_port').show();
-			$('#row_ping_timeout').show();
-			$('#row_ping_retries').show();
-			$('#row_snmp_spacer').show();
-			$('#row_snmp_version').show();
-			$('#row_snmp_username').show();
-			$('#row_snmp_password').show();
-			$('#row_snmp_community').show();
-			$('#row_snmp_auth_protocol').show();
-			$('#row_snmp_priv_passphrase').show();
-			$('#row_snmp_priv_protocol').show();
-			$('#row_snmp_context').show();
-			$('#row_snmp_port').show();
-			$('#row_snmp_timeout').show();
-			$('#row_max_oids').show();
+			$('#override_permitted').removeAttr("disabled");
+			$('#availability_header').removeAttr("disabled");
+			$('#availability_method').removeAttr("disabled");
+			$('#ping_method').removeAttr("disabled");
+			$('#ping_port').removeAttr("disabled");
+			$('#ping_timeout').removeAttr("disabled");
+			$('#ping_retries').removeAttr("disabled");
+			$('#snmp_spacer').removeAttr("disabled");
+			$('#snmp_version').removeAttr("disabled");
+			$('#snmp_username').removeAttr("disabled");
+			$('#snmp_password').removeAttr("disabled");
+			$('#snmp_community').removeAttr("disabled");
+			$('#snmp_auth_protocol').removeAttr("disabled");
+			$('#snmp_priv_passphrase').removeAttr("disabled");
+			$('#snmp_priv_protocol').removeAttr("disabled");
+			$('#snmp_context').removeAttr("disabled");
+			$('#snmp_port').removeAttr("disabled");
+			$('#snmp_timeout').removeAttr("disabled");
+			$('#max_oids').removeAttr("disabled");
 
 			changeHostForm();
 		}else{
-			$('#row_override_permitted').hide();
-			$('#row_availability_header').hide();
-			$('#row_availability_method').hide();
-			$('#row_ping_method').hide();
-			$('#row_ping_port').hide();
-			$('#row_ping_timeout').hide();
-			$('#row_ping_retries').hide();
-			$('#row_snmp_spacer').hide();
-			$('#row_snmp_version').hide();
-			$('#row_snmp_username').hide();
-			$('#row_snmp_password').hide();
-			$('#row_snmp_community').hide();
-			$('#row_snmp_auth_protocol').hide();
-			$('#row_snmp_priv_passphrase').hide();
-			$('#row_snmp_priv_protocol').hide();
-			$('#row_snmp_context').hide();
-			$('#row_snmp_port').hide();
-			$('#row_snmp_timeout').hide()
-			$('#row_max_oids').hide();
+			$('#override_permitted').attr("disabled","disabled");
+			$('#availability_header').attr("disabled","disabled");
+			$('#availability_method').attr("disabled","disabled");
+			$('#ping_method').attr("disabled","disabled");
+			$('#ping_port').attr("disabled","disabled");
+			$('#ping_timeout').attr("disabled","disabled");
+			$('#ping_retries').attr("disabled","disabled");
+			$('#snmp_spacer').attr("disabled","disabled");
+			$('#snmp_version').attr("disabled","disabled");
+			$('#snmp_username').attr("disabled","disabled");
+			$('#snmp_password').attr("disabled","disabled");
+			$('#snmp_community').attr("disabled","disabled");
+			$('#snmp_auth_protocol').attr("disabled","disabled");
+			$('#snmp_priv_passphrase').attr("disabled","disabled");
+			$('#snmp_priv_protocol').attr("disabled","disabled");
+			$('#snmp_context').attr("disabled","disabled");
+			$('#snmp_port').attr("disabled","disabled");
+			$('#snmp_timeout').attr("disabled","disabled");
+			$('#max_oids').attr("disabled","disabled");
 		}
 
 		if ($('#override_permitted').val() == 'false') {
 			$('#template_enabled').attr("checked","checked");
 			$('#template_enabled').attr("disabled","disabled");
+		}
+
+		if ($('#propagation_allowed').val() == 'false') {
+			$('#row_template_enabled').hide();
+		}else{
+			$('#row_template_enabled').show();
 		}
 	}
 
