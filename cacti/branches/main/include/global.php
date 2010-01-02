@@ -90,8 +90,7 @@ $no_http_header_files = array(
 	"tree_add.php",
 	"user_copy.php",
 	"repair_database.php",
-	"structure_rra_paths.php",
-	"rrd_util.php" #remove me!
+	"structure_rra_paths.php"
 );
 
 $colors = array();
@@ -109,28 +108,8 @@ if (CACTI_SERVER_OS == "win32") {
 	define("CACTI_BASE_PATH", preg_replace("/(.*)[\/]include/", "\\1", str_replace("\\","/", dirname(__FILE__))));
 }
 
-define('RRA_PATH', CACTI_BASE_PATH . '/rra');
-define('URL_PATH', $config['url_path']);
-/* for backward compatibility */
-$config["rra_path"] = CACTI_BASE_PATH . '/rra';
-
-/* colors */
-$colors["dark_outline"] = "454E53";
-$colors["dark_bar"] = "AEB4B7";
-$colors["panel"] = "E5E5E5";
-$colors["panel_text"] = "000000";
-$colors["panel_link"] = "000000";
-$colors["light"] = "F5F5F5";
-$colors["alternate"] = "E7E9F2";
-$colors["panel_dark"] = "C5C5C5";
-
-$colors["header"] = "00438C";
-$colors["header_panel"] = "6d88ad";
-$colors["header_text"] = "ffffff";
-$colors["form_background_dark"] = "E1E1E1";
-
-$colors["form_alternate1"] = "F5F5F5";
-$colors["form_alternate2"] = "E5E5E5";
+define('CACTI_RRA_PATH', CACTI_BASE_PATH . '/rra');
+define('CACTI_URL_PATH', $config['url_path']);
 
 /* display ALL errors */
 error_reporting(E_ALL);
@@ -170,7 +149,7 @@ include_once(CACTI_BASE_PATH . "/include/global_constants.php");
 include_once(CACTI_BASE_PATH . "/include/global_language.php");
 include_once(CACTI_BASE_PATH . "/include/global_arrays.php");
 include_once(CACTI_BASE_PATH . "/include/global_settings.php");
-if(!$database_empty) {
+if(! $database_empty) {
 	// avoid running read_config_option against an empty DB - this isn't needed during the install process anyway
 	include_once(CACTI_BASE_PATH . "/include/global_form.php");
 }
@@ -257,6 +236,26 @@ if ((bool)ini_get("register_globals")) {
 
 	unset($input);
 }
+
+
+/* colors - depercated */
+$colors["dark_outline"] = "454E53";
+$colors["dark_bar"] = "AEB4B7";
+$colors["panel"] = "E5E5E5";
+$colors["panel_text"] = "000000";
+$colors["panel_link"] = "000000";
+$colors["light"] = "F5F5F5";
+$colors["alternate"] = "E7E9F2";
+$colors["panel_dark"] = "C5C5C5";
+
+$colors["header"] = "00438C";
+$colors["header_panel"] = "6d88ad";
+$colors["header_text"] = "ffffff";
+$colors["form_background_dark"] = "E1E1E1";
+
+$colors["form_alternate1"] = "F5F5F5";
+$colors["form_alternate2"] = "E5E5E5";
+
 
 /* dosPath - converts a path with spaces to a dos 8.3 path
     @arg $path - the path with spaces

@@ -115,45 +115,45 @@ $page_title = api_plugin_hook_function('page_title', 'Cacti');
 	<meta http-equiv="Content-Type" content="text/html;charset=utf-8" >
 	<meta http-equiv="Content-Script-Type" content="text/javascript" >
 	<meta http-equiv="Content-Style-Type" content="text/css">
-	<link type="text/css" href="<?php echo URL_PATH; ?>include/main.css" rel="stylesheet">
-	<link type="text/css" href="<?php echo URL_PATH; ?>include/dd.css" rel="stylesheet">
-	<link type="text/css" href="<?php echo URL_PATH; ?>include/jquery.autocomplete.css" rel="stylesheet">
-	<link href="<?php echo URL_PATH; ?>images/favicon.ico" rel="shortcut icon">
-	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/js/jquery/jquery.js"></script>
-	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/js/layout.js"></script>
-	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/js/jstree/jquery.tree.js"></script>
-	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/js/jquery/jquery.cookie.js"></script>
-	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/js/jquery/jquery.autocomplete.js"></script>
-	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/js/jquery/jquery.bgiframe.js"></script>
-	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/js/jquery/jquery.ajaxQueue.js"></script>
-	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/js/jquery/jquery.tablednd.js"></script>
-	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/js/jquery/jquery.dropdown.js"></script>
-	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/js/jquery/jquery.dd.js"></script>
-	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/js/jscalendar/calendar.js"></script>
-	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/js/jscalendar/lang/<?php print (read_config_option('i18n_support') != 0) ? CACTI_LANGUAGE_FILE : "english_usa";?>.js"></script>
-	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/js/jscalendar/calendar-setup.js"></script>
-	<script type="text/javascript" src="<?php echo URL_PATH; ?>include/js/jstree/plugins/jquery.tree.cookie.js"></script>
+	<link type="text/css" href="<?php echo CACTI_URL_PATH; ?>include/main.css" rel="stylesheet">
+	<link type="text/css" href="<?php echo CACTI_URL_PATH; ?>include/dd.css" rel="stylesheet">
+	<link type="text/css" href="<?php echo CACTI_URL_PATH; ?>include/jquery.autocomplete.css" rel="stylesheet">
+	<link href="<?php echo CACTI_URL_PATH; ?>images/favicon.ico" rel="shortcut icon">
+	<script type="text/javascript" src="<?php echo CACTI_URL_PATH; ?>include/js/jquery/jquery.js"></script>
+	<script type="text/javascript" src="<?php echo CACTI_URL_PATH; ?>include/js/layout.js"></script>
+	<script type="text/javascript" src="<?php echo CACTI_URL_PATH; ?>include/js/jstree/jquery.tree.js"></script>
+	<script type="text/javascript" src="<?php echo CACTI_URL_PATH; ?>include/js/jquery/jquery.cookie.js"></script>
+	<script type="text/javascript" src="<?php echo CACTI_URL_PATH; ?>include/js/jquery/jquery.autocomplete.js"></script>
+	<script type="text/javascript" src="<?php echo CACTI_URL_PATH; ?>include/js/jquery/jquery.bgiframe.js"></script>
+	<script type="text/javascript" src="<?php echo CACTI_URL_PATH; ?>include/js/jquery/jquery.ajaxQueue.js"></script>
+	<script type="text/javascript" src="<?php echo CACTI_URL_PATH; ?>include/js/jquery/jquery.tablednd.js"></script>
+	<script type="text/javascript" src="<?php echo CACTI_URL_PATH; ?>include/js/jquery/jquery.dropdown.js"></script>
+	<script type="text/javascript" src="<?php echo CACTI_URL_PATH; ?>include/js/jquery/jquery.dd.js"></script>
+	<script type="text/javascript" src="<?php echo CACTI_URL_PATH; ?>include/js/jscalendar/calendar.js"></script>
+	<script type="text/javascript" src="<?php echo CACTI_URL_PATH; ?>include/js/jscalendar/lang/<?php print (read_config_option('i18n_support') != 0) ? CACTI_LANGUAGE_FILE : "english_usa";?>.js"></script>
+	<script type="text/javascript" src="<?php echo CACTI_URL_PATH; ?>include/js/jscalendar/calendar-setup.js"></script>
+	<script type="text/javascript" src="<?php echo CACTI_URL_PATH; ?>include/js/jstree/plugins/jquery.tree.cookie.js"></script>
 	<?php initializeCookieVariable(); api_plugin_hook('page_head'); ?>
 </head>
 <body class='body'>
-<script type="text/javascript" src="<?php echo URL_PATH; ?>include/js/wztooltip/wz_tooltip.js"></script>
+<script type="text/javascript" src="<?php echo CACTI_URL_PATH; ?>include/js/wztooltip/wz_tooltip.js"></script>
 <div id='header'>
 	<div id='logobar'></div>
 	<div id='navbar'>
 		<div id='navbar_l'>
 			<ul>
-				<?php echo draw_header_tab("console", __("Console"), URL_PATH . "index.php");?>
-				<?php echo draw_header_tab("graphs", __("Graphs"), URL_PATH . "graph_view.php");?>
+				<?php echo draw_header_tab("console", __("Console"), CACTI_URL_PATH . "index.php");?>
+				<?php echo draw_header_tab("graphs", __("Graphs"), CACTI_URL_PATH . "graph_view.php");?>
 				<?php api_plugin_hook('top_graph_header_tabs');?>
 			</ul>
 		</div>
 		<div id='navbar_r'>
 			<ul>
 				<?php if (substr_count($_SERVER["REQUEST_URI"], "graph_view.php")) { ?>
-				<?php echo draw_header_tab("graph_settings", __("Settings"), URL_PATH . "graph_settings.php");?>
-				<?php echo draw_header_tab("tree", __("Tree"), URL_PATH . "graph_view.php?action=tree", URL_PATH . "images/tab_mode_tree_new.gif");?>
-				<?php echo draw_header_tab("list", __("List"), URL_PATH . "graph_view.php?action=list", URL_PATH . "images/tab_mode_list_new.gif");?>
-				<?php echo draw_header_tab("preview", __("Preview"), URL_PATH . "graph_view.php?action=preview", URL_PATH . "images/tab_mode_preview_new.gif");?>
+				<?php echo draw_header_tab("graph_settings", __("Settings"), CACTI_URL_PATH . "graph_settings.php");?>
+				<?php echo draw_header_tab("tree", __("Tree"), CACTI_URL_PATH . "graph_view.php?action=tree", CACTI_URL_PATH . "images/tab_mode_tree_new.gif");?>
+				<?php echo draw_header_tab("list", __("List"), CACTI_URL_PATH . "graph_view.php?action=list", CACTI_URL_PATH . "images/tab_mode_list_new.gif");?>
+				<?php echo draw_header_tab("preview", __("Preview"), CACTI_URL_PATH . "graph_view.php?action=preview", CACTI_URL_PATH . "images/tab_mode_preview_new.gif");?>
 				<?php }else{ api_plugin_hook('top_graph_header_tabs_right'); }?>
 			</ul>
 		</div>
@@ -164,17 +164,17 @@ $page_title = api_plugin_hook_function('page_title', 'Cacti');
 		</div>
 		<div style='float:right'>
 			<a href="<?php echo CACTI_WIKI_URL . rtrim(basename($_SERVER["PHP_SELF"]), ".php");?>" target="_blank">
-			<img src="<?php echo URL_PATH; ?>images/help.gif" title="<?php print __("Help");?>" alt="<?php print __("Help");?>" align="top">
+			<img src="<?php echo CACTI_URL_PATH; ?>images/help.gif" title="<?php print __("Help");?>" alt="<?php print __("Help");?>" align="top">
 			</a>
 		</div>
 		<div style='float:right'><?php
-			if (read_config_option("auth_method") != 0) { $date = date_time_format();?><strong><?php echo __date("D, " . $date . " T");?></strong>&nbsp;&nbsp;&nbsp;<?php print __("Logged in as");?> <strong><?php print db_fetch_cell("select username from user_auth where id=" . $_SESSION["sess_user_id"]);?></strong> (<a href="<?php echo URL_PATH; ?>logout.php"><?php print __("Logout");?></a>)<?php } ?>
+			if (read_config_option("auth_method") != 0) { $date = date_time_format();?><strong><?php echo __date("D, " . $date . " T");?></strong>&nbsp;&nbsp;&nbsp;<?php print __("Logged in as");?> <strong><?php print db_fetch_cell("select username from user_auth where id=" . $_SESSION["sess_user_id"]);?></strong> (<a href="<?php echo CACTI_URL_PATH; ?>logout.php"><?php print __("Logout");?></a>)<?php } ?>
 		</div>
 		<?php if(read_config_option('i18n_support') != 0) {?>
 		<div id="codelist" style="float:right; list-style:none; display:inline;">
-			<span id="loading" style="display:none;"><img src="<?php echo URL_PATH; ?>images/load_small.gif" align="top" alt="<?php print __("loading");?>">LOADING</span>
+			<span id="loading" style="display:none;"><img src="<?php echo CACTI_URL_PATH; ?>images/load_small.gif" align="top" alt="<?php print __("loading");?>">LOADING</span>
 			<ul class="down-list" style="list-style:none; display:inline;">
-				<li><a href="#" class="languages" id="languages"><img src="<?php echo URL_PATH; ?>images/flag_icons/<?php print CACTI_COUNTRY;?>.gif" align="top" alt="<?php print __("loading");?>">&nbsp;<?php print CACTI_LANGUAGE;?></a></li>
+				<li><a href="#" class="languages" id="languages"><img src="<?php echo CACTI_URL_PATH; ?>images/flag_icons/<?php print CACTI_COUNTRY;?>.gif" align="top" alt="<?php print __("loading");?>">&nbsp;<?php print CACTI_LANGUAGE;?></a></li>
 			</ul>
 		</div>
 		<?php }?>

@@ -304,8 +304,8 @@ function rrdtool_function_create($local_data_id, $show_source, $rrd_struc) {
 		if (!is_dir(dirname($data_source_path))) {
 			if (mkdir(dirname($data_source_path), 0775)) {
 				if (CACTI_SERVER_OS != "win32") {
-					$owner_id      = fileowner($config["rra_path"]);
-					$group_id      = filegroup($config["rra_path"]);
+					$owner_id      = fileowner(CACTI_RRA_PATH);
+					$group_id      = filegroup(CACTI_RRA_PATH);
 
 					if ((chown(dirname($data_source_path), $owner_id)) &&
 						(chgrp(dirname($data_source_path), $group_id))) {

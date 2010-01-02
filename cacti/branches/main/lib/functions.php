@@ -1219,7 +1219,7 @@ function get_data_source_path($local_data_id, $expand_paths) {
 
 		/* whether to show the "actual" path or the <path_rra> variable name (for edit boxes) */
 		if ($expand_paths == true) {
-			$data_source_path = str_replace('<path_rra>', $config['rra_path'], $data_source_path);
+			$data_source_path = str_replace('<path_rra>', CACTI_RRA_PATH, $data_source_path);
 		}
 
 		return $data_source_path;
@@ -1916,8 +1916,8 @@ function draw_navigation_text() {
 		"device_templates.php:actions" => array("title" => __("Actions"), "mapping" => "index.php:,device_templates.php:", "url" => "", "level" => "2"),
 		"device_templates.php:" => array("title" => __("Device Templates"), "mapping" => "index.php:", "url" => "device_templates.php", "level" => "1"),
 		"device_templates.php:edit" => array("title" => __("(Edit)"), "mapping" => "index.php:,device_templates.php:", "url" => "", "level" => "2"),
-		"index.php:" => array("title" => __("Console"), "mapping" => "", "url" => URL_PATH . "index.php", "level" => "0"),
-		"index.php:login" => array("title" => __("Console"), "mapping" => "", "url" => URL_PATH . "index.php", "level" => "0"),
+		"index.php:" => array("title" => __("Console"), "mapping" => "", "url" => CACTI_URL_PATH . "index.php", "level" => "0"),
+		"index.php:login" => array("title" => __("Console"), "mapping" => "", "url" => CACTI_URL_PATH . "index.php", "level" => "0"),
 		"rra.php:" => array("title" => __("Round Robin Archives"), "mapping" => "index.php:", "url" => "rra.php", "level" => "1"),
 		"rra.php:edit" => array("title" => __("(Edit)"), "mapping" => "index.php:,rra.php:", "url" => "", "level" => "2"),
 		"rra.php:actions" => array("title" => __("Actions"), "mapping" => "index.php:,rra.php:", "url" => "", "level" => "2"),

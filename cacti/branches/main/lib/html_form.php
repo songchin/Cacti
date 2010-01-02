@@ -563,7 +563,7 @@ function form_dropdown_image($form_name, $form_path, $form_previous_value, $form
 	$form_none_entry = ucfirst(str_replace("_", " ", str_replace(".gif", "", str_replace(".jpg", "", str_replace(".png", "", $form_default_value)))));
 
 	$path       = CACTI_BASE_PATH . "/". $form_path;
-	$imgpath    = URL_PATH . $form_path;
+	$imgpath    = CACTI_URL_PATH . $form_path;
 
 	if (!empty($form_none_entry)) {
 		print "<option style='width:" . $form_width . "px;' title='" . $form_previous_value . "' value='" . $form_previous_value . "'" . (empty($form_previous_value) ? " selected" : "") . ">&nbsp;$form_none_entry&nbsp;</option>\n";
@@ -947,8 +947,8 @@ function form_confirm_buttons($action_url, $cancel_url) {
  ?>
 	<tr>
 		<td bgcolor="#E1E1E1">
-			<a href="<?php print $cancel_url;?>"><img src="<?php print URL_PATH; ?>images/button_cancel.gif" alt="<?php print __("Cancel");?>" align="middle"></a>
-			<a href="<?php print $action_url . "&confirm=yes";?>"><img src="<?php print URL_PATH ?>images/button_delete.gif" alt="<?php print __("Delete");?>" align="middle"></a>
+			<a href="<?php print $cancel_url;?>"><img src="<?php print CACTI_URL_PATH; ?>images/button_cancel.gif" alt="<?php print __("Cancel");?>" align="middle"></a>
+			<a href="<?php print $action_url . "&confirm=yes";?>"><img src="<?php print CACTI_URL_PATH ?>images/button_delete.gif" alt="<?php print __("Delete");?>" align="middle"></a>
 		</td>
 	</tr>
 <?php }
@@ -980,8 +980,8 @@ function form_save_button($cancel_url, $force_type = "", $key_field = "id") {
 		<tr>
 			<td>
 				<input type='hidden' name='action' value='save'>
-				<a href='<?php print $cancel_url;?>'><img src='<?php echo URL_PATH; ?>images/button_cancel2.gif' alt='<?php print __("Cancel");?>' align='middle' border='0'></a>
-				<input type='image' src='<?php echo URL_PATH; ?>images/<?php print $img;?>' alt='<?php print $alt;?>' align='middle'>
+				<a href='<?php print $cancel_url;?>'><img src='<?php echo CACTI_URL_PATH; ?>images/button_cancel2.gif' alt='<?php print __("Cancel");?>' align='middle' border='0'></a>
+				<input type='image' src='<?php echo CACTI_URL_PATH; ?>images/<?php print $img;?>' alt='<?php print $alt;?>' align='middle'>
 			</td>
 		</tr>
 	</table>

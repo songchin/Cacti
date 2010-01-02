@@ -92,7 +92,7 @@ function html_start_box($title, $width, $background_color, $cell_padding, $align
 								<table cellpadding=0 cellspacing=1 class="startBox0" <?php print $ani;?>>
 									<tr>
 										<?php if ($collapsing) {?><td class="textHeaderDark nw9">
-											<img id="<?php print $item_id . '_twisty';?>" src="<?php print URL_PATH; ?>images/tw_open.gif" alt="<?php print __("Filter");?>" align="middle">
+											<img id="<?php print $item_id . '_twisty';?>" src="<?php print CACTI_URL_PATH; ?>images/tw_open.gif" alt="<?php print __("Filter");?>" align="middle">
 										</td><?php } ?>
 										<td onMouseDown='return false' class="textHeaderDark"><?php print $title;?>
 										</td>
@@ -1104,7 +1104,7 @@ function draw_menu($user_menu = "") {
 					}
 
 					while (list($item_sub_url, $item_sub_title) = each($item_title)) {
-						$item_sub_url = URL_PATH . $item_sub_url;
+						$item_sub_url = CACTI_URL_PATH . $item_sub_url;
 
 						/* indent sub-items */
 						if ($i > 0) {
@@ -1115,7 +1115,7 @@ function draw_menu($user_menu = "") {
 
 						/* do not put a line between each sub-item */
 						if (($i == 0) || ($draw_sub_items == false)) {
-							$background = URL_PATH . "images/menu_line.gif";
+							$background = CACTI_URL_PATH . "images/menu_line.gif";
 						}else{
 							$background = "";
 						}
@@ -1144,7 +1144,7 @@ function draw_menu($user_menu = "") {
 			}else{
 				if ((isset($user_realms[$current_realm_id])) || (!isset($user_auth_realm_filenames{basename($item_url)}))) {
 					/* draw normal (non sub-item) menu item */
-					$item_url = URL_PATH . $item_url;
+					$item_url = CACTI_URL_PATH . $item_url;
 					if (basename($_SERVER["PHP_SELF"]) == basename($item_url)) {
 						print "<li class='menuSubMainSelected'><a href='$item_url'>$item_title</a></li>";
 					}else{
@@ -1168,7 +1168,7 @@ function draw_actions_dropdown($actions_array) {
 	<table class='saveBoxAction'>
 		<tr>
 			<td class='w1 left' valign='top'>
-				<img src='<?php echo URL_PATH; ?>images/arrow.gif' alt='' align='middle'>&nbsp;
+				<img src='<?php echo CACTI_URL_PATH; ?>images/arrow.gif' alt='' align='middle'>&nbsp;
 			</td>
 			<td class='right'>
 				<?php print __("Choose an action:");?>
