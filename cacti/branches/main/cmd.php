@@ -275,7 +275,7 @@ if ((sizeof($polling_items) > 0) && (read_config_option("poller_enabled") == CHE
 			/* record the host polling time */
 			list($micro,$seconds) = explode(" ", microtime());
 			$poll_time = ($seconds + $micro) - $poll_time;
-			db_execute("UPDATE host SET polling_time='$poll_time' WHERE id=$last_host");
+			db_execute("UPDATE host SET polling_time='$poll_time' WHERE id='$last_host'");
 
 			$new_host = true;
 
@@ -483,7 +483,7 @@ if ((sizeof($polling_items) > 0) && (read_config_option("poller_enabled") == CHE
 	if ($last_host != "") {
 		list($micro,$seconds) = explode(" ", microtime());
 		$poll_time = ($seconds + $micro) - $poll_time;
-		db_execute("UPDATE host SET polling_time='$poll_time' WHERE id=$last_host");
+		db_execute("UPDATE host SET polling_time='$poll_time' WHERE id='$last_host'");
 	}
 
 	if (($using_proc_function == true) && ($script_server_calls > 0)) {
