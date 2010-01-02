@@ -1,0 +1,19 @@
+Summary
+
+This document outlines then changes to Cacti that can and do affect plugin developers.
+
+Version 0.8.8 Changes
+
+ * General 
+   - New authenication system 
+   - New Logging function
+
+
+ * Functions
+
+   - Add blah blah
+   - Removed blah blah
+   - Change functionality of blah blah
+
+
+
