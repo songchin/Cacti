@@ -1,7 +1,8 @@
+#!/usr/bin/php -q
 <?php
 /*
  +-------------------------------------------------------------------------+
- | Copyright (C) 2004-2009 The Cacti Group                                 |
+ | Copyright (C) 2004-2010 The Cacti Group                                 |
  |                                                                         |
  | This program is free software; you can redistribute it and/or           |
  | modify it under the terms of the GNU General Public License             |
@@ -149,7 +150,7 @@ if (db_fetch_cell("SELECT id FROM host_template WHERE id=$template") > 0) {
 
 /*	display_help - displays the usage of the function */
 function display_help ($me) {
-	echo __("Cacti Device Template Update Script 1.0") . ", " . __("Copyright 2004-2009 - The Cacti Group") . "\n";
+	echo __("Cacti Device Template Update Script 1.0") . ", " . __("Copyright 2004-2010 - The Cacti Group") . "\n";
 	echo __("usage: ") . $me . " -device-id=[device-id|All] [--device-template=[ID]] [-d] [-h] [--help] [-v] [--version]\n\n";
 	echo "   --device-id        " . __("the numerical ID of the device") . "\n";
 	echo "   --device-template  " . __("The Device Template to Refresh") . "\n\n";

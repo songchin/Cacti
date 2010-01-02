@@ -1,7 +1,7 @@
 <?php
 /*
  +-------------------------------------------------------------------------+
- | Copyright (C) 2004-2009 The Cacti Group                                 |
+ | Copyright (C) 2004-2010 The Cacti Group                                 |
  |                                                                         |
  | This program is free software; you can redistribute it and/or           |
  | modify it under the terms of the GNU General Public License             |
@@ -22,8 +22,8 @@
  +-------------------------------------------------------------------------+
 */
 $no_http_headers = true;
-include(dirname(__FILE__) . "/../../include/global.php");
-include_once(dirname(__FILE__) . "/../../lib/functions.php");
+require(dirname(__FILE__) . "/../../include/global.php");
+require_once(dirname(__FILE__) . "/../../lib/functions.php");
 
 /* rebuild $lang2locale array to find country and language codes easier */
 $locations = array();

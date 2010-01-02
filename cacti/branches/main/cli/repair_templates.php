@@ -1,8 +1,8 @@
+#!/usr/bin/php -q
 <?php
 /*
- ex: set tabstop=4 shiftwidth=4 autoindent:
  +-------------------------------------------------------------------------+
- | Copyright (C) 2004-2009 The Cacti Group                                 |
+ | Copyright (C) 2004-2010 The Cacti Group                                 |
  |                                                                         |
  | This program is free software; you can redistribute it and/or           |
  | modify it under the terms of the GNU General Public License             |
@@ -129,7 +129,7 @@ if (sizeof($damaged_template_ids)) {
 
 /*	display_help - displays the usage of the function */
 function display_help () {
-	print "Cacti Database Template Repair Tool v1.0, Copyright 2004-2009 - The Cacti Group\n\n";
+	print "Cacti Database Template Repair Tool v1.0, Copyright 2004-2010 - The Cacti Group\n\n";
 	print "usage: repair_templates.php --execute [--help]\n\n";
 	print "--execute        - Perform the repair\n";
 	print "--help           - display this help message\n";

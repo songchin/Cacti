@@ -1,7 +1,8 @@
+#!/usr/bin/php -q
 <?php
 /*
  +-------------------------------------------------------------------------+
- | Copyright (C) 2004-2009 The Cacti Group                                 |
+ | Copyright (C) 2004-2010 The Cacti Group                                 |
  |                                                                         |
  | This program is free software; you can redistribute it and/or           |
  | modify it under the terms of the GNU General Public License             |
@@ -83,7 +84,7 @@ rrd_close($rrdtool_pipe);
 
 /*	display_help - displays the usage of the function */
 function display_help($me) {
-	echo __("Cacti Empty Poller Output Table Script 1.0") . ", " . __("Copyright 2004-2009 - The Cacti Group") . "\n";
+	echo __("Cacti Empty Poller Output Table Script 1.0") . ", " . __("Copyright 2004-2010 - The Cacti Group") . "\n";
 	echo __("usage: ") . $me . " [-h] [--help] [-v] [--version]\n\n";
 	echo "   -v --version  " . __("Display this help message") . "\n";
 	echo "   -h --help     " . __("Display this help message") . "\n";

@@ -1,9 +1,8 @@
 #!/usr/bin/php -q
 <?php
-
 /*
  +-------------------------------------------------------------------------+
- | Copyright (C) 2004-2009 The Cacti Group                                 |
+ | Copyright (C) 2004-2010 The Cacti Group                                 |
  |                                                                         |
  | This program is free software; you can redistribute it and/or           |
  | modify it under the terms of the GNU General Public License             |
@@ -189,7 +188,7 @@ function remove_data_source($data_source_id, $dry_run) {
 }
 
 function display_help($me) {
-	echo __("Remove Data Source Script 1.0") . ", " . __("Copyright 2004-2009 - The Cacti Group") . "\n";
+	echo __("Remove Data Source Script 1.0") . ", " . __("Copyright 2004-2010 - The Cacti Group") . "\n";
 	echo __("A simple command line utility to remove a data source from Cacti") . "\n\n";
 	echo __("usage: ") . $me . " [--data-source-id=[ID]|--device-id=[ID]] [--dry-run]\n\n";
 	echo __("Required is either of:") . "\n";

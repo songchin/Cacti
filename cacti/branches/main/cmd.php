@@ -1,7 +1,7 @@
 <?php
 /*
  +-------------------------------------------------------------------------+
- | Copyright (C) 2004-2009 The Cacti Group                                 |
+ | Copyright (C) 2004-2010 The Cacti Group                                 |
  |                                                                         |
  | This program is free software; you can redistribute it and/or           |
  | modify it under the terms of the GNU General Public License             |
@@ -531,7 +531,7 @@ function record_cmdphp_done($poller_id) {
 }
 
 function display_help() {
-	echo "Cacti cmd.php Data Collector, Copyright 2007-2009 - The Cacti Group\n\n";
+	echo "Cacti cmd.php Data Collector, Copyright 2007-2010 - The Cacti Group\n\n";
 	echo "The slower, yet easier to use Data Collector for Cacti\n\n";
 	echo "usage: cmd.php [--poller=n] [--first=n] [--last=n]\n\n";
 	echo "Optional:\n";

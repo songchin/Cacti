@@ -1,7 +1,8 @@
+#!/usr/bin/php -q
 <?php
 /*
  +-------------------------------------------------------------------------+
- | Copyright (C) 2004-2009 The Cacti Group                                 |
+ | Copyright (C) 2004-2010 The Cacti Group                                 |
  |                                                                         |
  | This program is free software; you can redistribute it and/or           |
  | modify it under the terms of the GNU General Public License             |
@@ -126,7 +127,7 @@ if (sizeof($data_queries)) {
 
 /*	display_help - displays the usage of the function */
 function display_help($me) {
-	echo __("Cacti Reindex Device Script 1.2") . ", " . __("Copyright 2004-2009 - The Cacti Group") . "\n";
+	echo __("Cacti Reindex Device Script 1.2") . ", " . __("Copyright 2004-2010 - The Cacti Group") . "\n";
 	echo __("usage: ") . $me . " --id=[device-id|All] [--qid=[ID|All]] [--host-descr=[description]]\n";
 	echo "              [-d] [-h] [--help] [-v] [--version]\n\n";
 	echo "   --id          " . __("The device-id to have data queries reindexed or 'All' to reindex all devices") . "\n";

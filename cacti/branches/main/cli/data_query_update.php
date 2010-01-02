@@ -2,7 +2,7 @@
 <?php
 /*
  +-------------------------------------------------------------------------+
- | Copyright (C) 2004-2009 The Cacti Group                                 |
+ | Copyright (C) 2004-2010 The Cacti Group                                 |
  |                                                                         |
  | This program is free software; you can redistribute it and/or           |
  | modify it under the terms of the GNU General Public License             |
@@ -225,7 +225,7 @@ if (sizeof($parms)) {
 }
 
 function display_help($me) {
-	echo __("Update Data Query Script 1.0") . ", " . __("Copyright 2004-2009 - The Cacti Group") . "\n";
+	echo __("Update Data Query Script 1.0") . ", " . __("Copyright 2004-2010 - The Cacti Group") . "\n";
 	echo __("A simple command line utility to update data queries in Cacti") . "\n\n";
 	echo __("usage: ") . $me . " [--data-query-id=] [--reindex-method=] [--device-id=] [--site-id=] [--poller-id=]\n";
 	echo "       [--description=] [--ip=] [--template=] [--notes=\"[]\"] [--disabled]\n";

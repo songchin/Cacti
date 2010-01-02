@@ -2,7 +2,7 @@
 <?php
 /*
  +-------------------------------------------------------------------------+
- | Copyright (C) 2004-2009 The Cacti Group                                 |
+ | Copyright (C) 2004-2010 The Cacti Group                                 |
  |                                                                         |
  | This program is free software; you can redistribute it and/or           |
  | modify it under the terms of the GNU General Public License             |
@@ -351,7 +351,7 @@ function createDQGraph($snmp_query_array, $graphTitle, $force) {
 
 
 function display_help($me) {
-	echo __("Add Graphs Script 1.3") . ", " . __("Copyright 2004-2009 - The Cacti Group") . "\n";
+	echo __("Add Graphs Script 1.3") . ", " . __("Copyright 2004-2010 - The Cacti Group") . "\n";
 	echo __("A simple command line utility to add graphs in Cacti") . "\n\n";
 	echo __("usage: ") . $me . " --graph-type=[cg|ds] --graph-template-id=[ID]\n";
 	echo "       [--graph-title=title] [graph options] [--force]\n";

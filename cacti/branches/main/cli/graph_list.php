@@ -2,7 +2,7 @@
 <?php
 /*
  +-------------------------------------------------------------------------+
- | Copyright (C) 2004-2009 The Cacti Group                                 |
+ | Copyright (C) 2004-2010 The Cacti Group                                 |
  |                                                                         |
  | This program is free software; you can redistribute it and/or           |
  | modify it under the terms of the GNU General Public License             |
@@ -277,7 +277,7 @@ if (sizeof($parms)) {
 }
 
 function display_help($me) {
-	echo __("List Graphs Script 1.0") . ", " . __("Copyright 2004-2009 - The Cacti Group") . "\n";
+	echo __("List Graphs Script 1.0") . ", " . __("Copyright 2004-2010 - The Cacti Group") . "\n";
 	echo __("A simple command line utility to list graphs in Cacti") . "\n\n";
 	echo __("usage: ") . $me . " --device-id=[ID] --graph-template-id=[ID] [--graph-id=]\n\n";
 	echo __("List Options:") . "\n";
