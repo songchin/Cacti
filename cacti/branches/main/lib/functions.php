@@ -611,6 +611,10 @@ function strip_newlines($string) {
 	return strtr(strtr($string, "\n", "\0"), "\r","\0");
 }
 
+function format_logdate() {
+	return date(str_replace("%", "", read_config_option("datetime_setting")));
+}
+
 /* cacti_log - logs a string to Cacti's log file or optionally to the browser
    @arg $string - the string to append to the log file
    @arg $output - (bool) whether to output the log line to the browser using print() or not
@@ -624,7 +628,7 @@ function cacti_log($string, $output = false, $environ = "CMDPHP") {
 	}
 
 	/* fill in the current date for printing in the log */
-	$date = date(read_config_option("datetime_setting"));
+	$date = format_logdate();
 
 	/* determine how to log data */
 	$logdestination = read_config_option("log_destination");

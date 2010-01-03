@@ -892,9 +892,9 @@ $lang2locale = array(
 );
 
 $datetime_format = array(
-	"m/d/Y h:i:s A" => __("Default (m/d/Y h:i:s A)"),
-    "m/d/Y H:i:s"   => __("24 Hour (m/d/Y H:i:s)"),
-    "Y-m-d H:i:s"   => __("24 Hour Alt (Y-m-d H:i:s)"),
-    "Y/m/d H:i:s"   => __("24 Hour Alt2 (Y/m/d H:i:s)"),
-    "M j H:i:s"     => __("Syslog Style (M j H:i:s)")
+	"%m/%d/%Y %h:%i:%s %A" => __("Default (m/d/Y h:i:s A)"),
+    "%m/%d/%Y %H:%i:%s"   => __("24 Hour (m/d/Y H:i:s)"),
+    "%Y-%m-%d %H:%i:%s"   => __("24 Hour Alt (Y-m-d H:i:s)"),
+    "%Y/%m/%d %H:%i:%s"   => __("24 Hour Alt2 (Y/m/d H:i:s)"),
+    "%M %j %H:%i:%s"     => __("Syslog Style (M j H:i:s)")
 );

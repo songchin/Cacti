@@ -1222,7 +1222,7 @@ function utilities_clear_logfile() {
 	html_start_box("<strong>" . __("Clear Cacti Log File") . "</strong>", "100", $colors["header"], "1", "center", "");
 	if (file_exists($logfile)) {
 		if (is_writable($logfile)) {
-			$timestamp = date(read_config_option("datetime_setting"));
+			$timestamp = format_logdate();
 			$log_fh = fopen($logfile, "w");
 			fwrite($log_fh, $timestamp . " - WEBUI: Cacti Log Cleared from Web Management Interface\n");
 			fclose($log_fh);
