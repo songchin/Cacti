@@ -214,7 +214,7 @@ $settings = array(
 			"friendly_name" => __("Date/Time setting for logs"),
 			"description" => __("The date/time setting for logs"),
 			"method" => "drop_array",
-			"default" => "m/d/Y h:i:s A",
+			"default" => "%m/%d/%Y %I:%M:%S %p",
 			"array" => $datetime_format,
 			),
     

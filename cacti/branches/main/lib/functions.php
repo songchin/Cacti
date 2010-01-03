@@ -610,9 +610,9 @@ function timer_end($message = "default") {
 function strip_newlines($string) {
 	return strtr(strtr($string, "\n", "\0"), "\r","\0");
 }
-
-function format_logdate() {
-	return date(str_replace("%", "", read_config_option("datetime_setting")));
+/* format_date - formats a date depending on system datatime_setting */
+function format_date() {
+	return strftime(read_config_option("datetime_setting"));
 }
 
 /* cacti_log - logs a string to Cacti's log file or optionally to the browser
@@ -628,7 +628,7 @@ function cacti_log($string, $output = false, $environ = "CMDPHP") {
 	}
 
 	/* fill in the current date for printing in the log */
-	$date = format_logdate();
+	$date = format_date();
 
 	/* determine how to log data */
 	$logdestination = read_config_option("log_destination");

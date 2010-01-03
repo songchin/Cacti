@@ -891,10 +891,11 @@ $lang2locale = array(
 	"uk"	=> array("language"=>__("Vietnamese"),		"country" => "vn", "filename" => "vietnamese_vietnam")
 );
 
+/* as per http://php.net/manual/en/function.strftime.php */
 $datetime_format = array(
-	"%m/%d/%Y %h:%i:%s %A" => __("Default (m/d/Y h:i:s A)"),
-    "%m/%d/%Y %H:%i:%s"   => __("24 Hour (m/d/Y H:i:s)"),
-    "%Y-%m-%d %H:%i:%s"   => __("24 Hour Alt (Y-m-d H:i:s)"),
-    "%Y/%m/%d %H:%i:%s"   => __("24 Hour Alt2 (Y/m/d H:i:s)"),
-    "%M %j %H:%i:%s"     => __("Syslog Style (M j H:i:s)")
+	"%m/%d/%Y %I:%M:%S %p"  => __("Default (m/d/Y I:M:S p)"),
+    "%m/%d/%Y %H:%M:%S"     => __("24 Hour (m/d/Y H:M:S)"),
+    "%Y-%m-%d %H:%M:%S"     => __("24 Hour Alt (Y-m-d H:M:S)"),
+    "%Y/%m/%d %H:%M:%S"     => __("24 Hour Alt2 (Y/m/d H:M:S)"),
+    "%h %e %H:%M:%S"        => __("Syslog Style (h e H:M:S)")
 );
