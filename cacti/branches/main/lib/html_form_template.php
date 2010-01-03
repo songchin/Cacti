@@ -121,20 +121,20 @@ function draw_nontemplated_fields_graph_item($graph_template_id, $local_graph_id
 
 	/* modifications to the default graph items array */
 	if (!empty($local_graph_id)) {
-		$host_id = db_fetch_cell("SELECT host_id FROM graph_local WHERE id=$local_graph_id");
+		$device_id = db_fetch_cell("SELECT device_id FROM graph_local WHERE id=$local_graph_id");
 
 		$struct_graph_item["task_item_id"]["sql"] = "SELECT
 			CONCAT_WS('',
 			CASE
-			WHEN host.description IS NULL THEN 'No Host - '
-			WHEN host.description IS NOT NULL THEN ''
+			WHEN device.description IS NULL THEN 'No Host - '
+			WHEN device.description IS NOT NULL THEN ''
 			end,data_template_data.name_cache,' (',data_template_rrd.data_source_name,')') AS name,
 			data_template_rrd.id
 			FROM (data_template_data,data_template_rrd,data_local)
-			LEFT JOIN host ON (data_local.host_id=host.id)
+			LEFT JOIN device ON (data_local.device_id=device.id)
 			WHERE data_template_rrd.local_data_id=data_local.id
 			AND data_template_data.local_data_id=data_local.id
-			" . (empty($host_id) ? "" : " AND data_local.host_id=$host_id") . "
+			" . (empty($device_id) ? "" : " AND data_local.device_id=$device_id") . "
 			ORDER BY name";
 	}
 
@@ -434,7 +434,7 @@ function draw_nontemplated_fields_custom_data($data_template_data_id, $field_nam
 	global $colors;
 
 	$data = db_fetch_row("select id,data_input_id,data_template_id,name,local_data_id from data_template_data where id=$data_template_data_id");
-	$host_id = db_fetch_cell("select host.id from (data_local,host) where data_local.host_id=host.id and data_local.id=" . $data["local_data_id"]);
+	$device_id = db_fetch_cell("select device.id from (data_local,device) where data_local.device_id=device.id and data_local.id=" . $data["local_data_id"]);
 	$template_data = db_fetch_row("select id,data_input_id from data_template_data where data_template_id=" . $data["data_template_id"] . " and local_data_id=0");
 
 	$draw_any_items = false;
@@ -464,7 +464,7 @@ function draw_nontemplated_fields_custom_data($data_template_data_id, $field_nam
 		/* find our field name */
 		$form_field_name = str_replace("|id|", $field["id"], $field_name_format);
 
-		if ((!empty($host_id)) && (preg_match('/^' . VALID_HOST_FIELDS . '$/i', $field["type_code"])) && (empty($can_template))) { /* no host fields */
+		if ((!empty($device_id)) && (preg_match('/^' . VALID_HOST_FIELDS . '$/i', $field["type_code"])) && (empty($can_template))) { /* no device fields */
 			if ($include_hidden_fields == true) {
 				form_hidden_box($form_field_name, $old_value, "");
 			}
@@ -521,12 +521,12 @@ function draw_custom_data_row($field_name, $data_input_field_id, $data_template_
 
 	if (($field["type_code"] == "index_type") && (db_fetch_cell("select local_data_id from data_template_data where id=$data_template_data_id") > 0)) {
 		$index_type = db_fetch_assoc("select
-			host_snmp_cache.field_name
-			from (data_template_data,data_local,host_snmp_cache)
+			device_snmp_cache.field_name
+			from (data_template_data,data_local,device_snmp_cache)
 			where data_template_data.local_data_id=data_local.id
-			and data_local.snmp_query_id=host_snmp_cache.snmp_query_id
+			and data_local.snmp_query_id=device_snmp_cache.snmp_query_id
 			and data_template_data.id=$data_template_data_id
-			group by host_snmp_cache.field_name");
+			group by device_snmp_cache.field_name");
 
 		if (sizeof($index_type) == 0) {
 			print "<em>" . __("Data query data sources must be created through %sNew Graphs%s.", "<a href='graphs_new.php'>", "</a>") . "</em>\n";

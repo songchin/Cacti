@@ -266,7 +266,7 @@ function form_actions() {
 				db_execute("delete from graph_template_input where " . array_to_sql_or($template_ids, "graph_template_id"));
 				db_execute("delete from graph_templates_graph where " . array_to_sql_or($template_ids, "graph_template_id") . " and local_graph_id=0");
 				db_execute("delete from graph_templates_item where " . array_to_sql_or($template_ids, "graph_template_id") . " and local_graph_id=0");
-				db_execute("delete from host_template_graph where " . array_to_sql_or($template_ids, "graph_template_id"));
+				db_execute("delete from device_template_graph where " . array_to_sql_or($template_ids, "graph_template_id"));
 
 				/* "undo" any graph that is currently using this template */
 				db_execute("update graph_templates_graph set local_graph_template_graph_id=0,graph_template_id=0 where " . array_to_sql_or($template_ids, "graph_template_id"));

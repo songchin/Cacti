@@ -48,35 +48,35 @@ $poller_commands = db_fetch_assoc("select
 	from poller_command
 	where poller_command.poller_id=0");
 
-$last_host_id = 0;
-$first_host = true;
-$recached_hosts = 0;
+$last_device_id = 0;
+$first_device = true;
+$recached_devices = 0;
 
 if (sizeof($poller_commands) > 0) {
 	foreach ($poller_commands as $command) {
 		switch ($command["action"]) {
 		case POLLER_COMMAND_REINDEX:
-			list($host_id, $data_query_id) = explode(":", $command["command"]);
-				if ($last_host_id != $host_id) {
-				$last_host_id = $host_id;
-				$first_host = true;
-				$recached_hosts++;
+			list($device_id, $data_query_id) = explode(":", $command["command"]);
+				if ($last_device_id != $device_id) {
+				$last_device_id = $device_id;
+				$first_device = true;
+				$recached_devices++;
 			} else {
-				$first_host = false;
+				$first_device = false;
 			}
 
-			if ($first_host) {
-				cacti_log("Host[$host_id] WARNING: Recache Event Detected for Host", true, "PCOMMAND");
+			if ($first_device) {
+				cacti_log("Host[$device_id] WARNING: Recache Event Detected for Host", true, "PCOMMAND");
 			}
 
 			if (read_config_option("log_verbosity") == POLLER_VERBOSITY_DEBUG) {
-				cacti_log("Host[$host_id] RECACHE: Re-cache for Host, data query #$data_query_id", true, "PCOMMAND");
+				cacti_log("Host[$device_id] RECACHE: Re-cache for Host, data query #$data_query_id", true, "PCOMMAND");
 			}
 
-			run_data_query($host_id, $data_query_id);
+			run_data_query($device_id, $data_query_id);
 
 			if (read_config_option("log_verbosity") == POLLER_VERBOSITY_DEBUG) {
-				cacti_log("Host[$host_id] RECACHE: Re-cache successful.", true, "PCOMMAND");
+				cacti_log("Host[$device_id] RECACHE: Re-cache successful.", true, "PCOMMAND");
 			}
 			break;
 		default:
@@ -101,9 +101,9 @@ if (sizeof($poller_commands) > 0) {
 list($micro,$seconds) = explode(" ", microtime());
 $recache = $seconds + $micro;
 
-$recache_stats = sprintf("RecacheTime:%01.4f HostsRecached:%s",	round($recache - $start, 4), $recached_hosts);
+$recache_stats = sprintf("RecacheTime:%01.4f HostsRecached:%s",	round($recache - $start, 4), $recached_devices);
 
-if ($recached_hosts > 0) {
+if ($recached_devices > 0) {
 	cacti_log("STATS: " . $recache_stats, true, "RECACHE");
 }
 

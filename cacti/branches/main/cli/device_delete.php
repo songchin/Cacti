@@ -57,8 +57,8 @@ if (sizeof($parms)) {
 			case "--site-id":		$device["site_id"] 				= trim($value);	break;
 			case "--poller-id":		$device["poller_id"]			= trim($value);	break;
 			case "--description":	$device["description"] 			= trim($value);	break;
-			case "--ip":			$device["hostname"] 			= trim($value);	break;
-			case "--template":		$device["host_template_id"]	 	= trim($value);	break;
+			case "--ip":			$device["devicename"] 			= trim($value);	break;
+			case "--template":		$device["device_template_id"]	 	= trim($value);	break;
 			case "--community":		$device["snmp_community"] 		= trim($value);	break;
 			case "--version":		$device["snmp_version"] 		= trim($value);	break;
 			case "--notes":			$device["notes"] 				= trim($value);	break;
@@ -120,7 +120,7 @@ if (sizeof($parms)) {
 		$data_sources = db_fetch_assoc("select
 			data_local.id as local_data_id
 			from data_local
-			where data_local.host_id =" . $item["id"]);
+			where data_local.device_id =" . $item["id"]);
 
 		if (sizeof($data_sources) > 0) {
 			foreach ($data_sources as $data_source) {
@@ -132,7 +132,7 @@ if (sizeof($parms)) {
 			$graphs = db_fetch_assoc("select
 				graph_local.id as local_graph_id
 				from graph_local
-				where graph_local.host_id =" . $item["id"]);
+				where graph_local.device_id =" . $item["id"]);
 
 			if (sizeof($graphs) > 0) {
 				foreach ($graphs as $graph) {

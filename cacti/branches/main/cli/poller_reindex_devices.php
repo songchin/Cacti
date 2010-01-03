@@ -49,9 +49,9 @@ if (sizeof($parms) == 0) {
 }
 
 $debug    = FALSE;
-$host_id	= "";
+$device_id	= "";
 $query_id	= "All";		/* just to mimic the old behaviour */
-$host_descr	= "";
+$device_descr	= "";
 
 foreach($parms as $parameter) {
 	@list($arg, $value) = @explode("=", $parameter);
@@ -59,15 +59,15 @@ foreach($parms as $parameter) {
 	switch ($arg) {
 	case "-id":
 	case "--id":
-		$host_id = $value;
+		$device_id = $value;
 		break;
 	case "-qid":
 	case "--qid":
 		$query_id = $value;
 		break;
-	case "-host-descr":
-	case "--host-descr":
-		$host_descr = $value;
+	case "-device-descr":
+	case "--device-descr":
+		$device_descr = $value;
 		break;
 	case "-d":
 	case "--debug":
@@ -87,10 +87,10 @@ foreach($parms as $parameter) {
 }
 
 /* determine the devices to reindex */
-if ($host_id == "All") {
+if ($device_id == "All") {
 	$sql_where = "";
-}else if (is_numeric($host_id)) {
-	$sql_where = " WHERE host_id = '$host_id'";
+}else if (is_numeric($device_id)) {
+	$sql_where = " WHERE device_id = '$device_id'";
 }else{
 	echo __("ERROR: You must specify either a device-id or 'All' to proceed.") . "\n";
 	display_help($me);
@@ -103,11 +103,11 @@ if ($query_id != "") {
 }
 
 /* allow for additional filtering on device description */
-if (strlen($host_descr)) {
-	$sql_where .= (strlen($sql_where) ? " AND host.description like '%%" . $host_descr . "%%' AND host.id=host_snmp_query.host_id" : " WHERE host.description like '%%" . $host_descr . "%%' AND host.id=host_snmp_query.host_id");
-	$data_queries = db_fetch_assoc("SELECT host_id, snmp_query_id FROM host_snmp_query,host" . $sql_where);
+if (strlen($device_descr)) {
+	$sql_where .= (strlen($sql_where) ? " AND device.description like '%%" . $device_descr . "%%' AND device.id=device_snmp_query.device_id" : " WHERE device.description like '%%" . $device_descr . "%%' AND device.id=device_snmp_query.device_id");
+	$data_queries = db_fetch_assoc("SELECT device_id, snmp_query_id FROM device_snmp_query,device" . $sql_where);
 } else {
-	$data_queries = db_fetch_assoc("SELECT host_id, snmp_query_id FROM host_snmp_query" . $sql_where);
+	$data_queries = db_fetch_assoc("SELECT device_id, snmp_query_id FROM device_snmp_query" . $sql_where);
 }
 
 /* issue warnings and start message if applicable */
@@ -119,8 +119,8 @@ if (sizeof($data_queries)) {
 	foreach ($data_queries as $data_query) {
 		if (!$debug) print ".";
 		debug("Data query number '" . $i . "' device: '".$data_query["device_id"]."' SNMP Query Id: '".$data_query["snmp_query_id"]."' starting");
-		run_data_query($data_query["host_id"], $data_query["snmp_query_id"]);
-		debug("Data query number '" . $i . "' device: '".$data_query["host_id"]."' SNMP Query Id: '".$data_query["snmp_query_id"]."' ending");
+		run_data_query($data_query["device_id"], $data_query["snmp_query_id"]);
+		debug("Data query number '" . $i . "' device: '".$data_query["device_id"]."' SNMP Query Id: '".$data_query["snmp_query_id"]."' ending");
 		$i++;
 	}
 }
@@ -128,11 +128,11 @@ if (sizeof($data_queries)) {
 /*	display_help - displays the usage of the function */
 function display_help($me) {
 	echo __("Cacti Reindex Device Script 1.2") . ", " . __("Copyright 2004-2010 - The Cacti Group") . "\n";
-	echo __("usage: ") . $me . " --id=[device-id|All] [--qid=[ID|All]] [--host-descr=[description]]\n";
+	echo __("usage: ") . $me . " --id=[device-id|All] [--qid=[ID|All]] [--device-descr=[description]]\n";
 	echo "              [-d] [-h] [--help] [-v] [--version]\n\n";
 	echo "   --id          " . __("The device-id to have data queries reindexed or 'All' to reindex all devices") . "\n";
 	echo "   --qid         " . __("Only index on a specific data query id; defaults to 'All'") . "\n";
-	echo "   --host-descr  " . __("The device description to filter by (SQL filters acknowledged)") . "\n";
+	echo "   --device-descr  " . __("The device description to filter by (SQL filters acknowledged)") . "\n";
 	echo "   --debug       " . __("Display verbose output during execution") . "\n";
 	echo "   -v --version  " . __("Display this help message") . "\n";
 	echo "   -h --help     " . __("Display this help message") . "\n";

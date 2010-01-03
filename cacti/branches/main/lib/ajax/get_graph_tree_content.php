@@ -42,7 +42,7 @@ header("Last-Modified: ". gmdate("D, d M Y H:i:s")." GMT");
  */
 $tree_id         = 0;
 $leaf_id         = 0;
-$host_group_type = array('na', 0);
+$device_group_type = array('na', 0);
 
 if (!isset($_REQUEST["id"])) {
 	if (isset($_SESSION["sess_graph_navigation"])) {
@@ -66,13 +66,13 @@ if (isset($_REQUEST["id"])) {
 						$leaf_id = $part;
 						break;
 					case "dqi":
-						$host_group_type = array("dqi", $part);
+						$device_group_type = array("dqi", $part);
 						break;
 					case "dq":
-						$host_group_type = array("dq", $part);
+						$device_group_type = array("dq", $part);
 						break;
 					case "gt":
-						$host_group_type = array("gt", $part);
+						$device_group_type = array("gt", $part);
 						break;
 					default:
 						break;
@@ -84,6 +84,6 @@ if (isset($_REQUEST["id"])) {
 	}
 }
 
-get_graph_tree_content($tree_id, $leaf_id, $host_group_type);
+get_graph_tree_content($tree_id, $leaf_id, $device_group_type);
 
 exit();

@@ -23,7 +23,7 @@
 */
 
 /* push_out_data_source_custom_data - pushes out the "custom data" associated with a data
-	template to all of its children. this includes all fields inhereted from the host
+	template to all of its children. this includes all fields inhereted from the device
 	and the data template
    @arg $data_template_id - the id of the data template to push out values for */
 function push_out_data_source_custom_data($data_template_id) {
@@ -71,9 +71,9 @@ function push_out_data_source_custom_data($data_template_id) {
 		if (sizeof($input_fields) > 0) {
 		foreach ($input_fields as $input_field) {
 			if ($data_source["id"] == $input_field["data_template_data_id"]) {
-				/* do not push out "host fields" */
+				/* do not push out "device fields" */
 				if (!preg_match('/^' . VALID_HOST_FIELDS . '$/i', $input_field["type_code"])) {
-					/* this is not a "host field", so we should either push out the value if it is templated
+					/* this is not a "device field", so we should either push out the value if it is templated
 					or leave it alone if the user checked "Use Per-Data Source Value". */
 					if ($input_field["t_value"] == "") { /* template this value */
 						db_execute("REPLACE INTO data_input_data
@@ -81,8 +81,8 @@ function push_out_data_source_custom_data($data_template_id) {
 							VALUES (" . $input_field["id"] . ", " . $data_source["id"] . ", '" . addslashes($input_field["value"]) . "')");
 					}
 				}elseif (($input_field["t_value"] == "") && ($input_field["value"] != "")) {
-					/* we only template a "host field" when the user types something in the field. this way the data
-					template always overides the host if the user chooses to do so */
+					/* we only template a "device field" when the user types something in the field. this way the data
+					template always overides the device if the user chooses to do so */
 					db_execute("REPLACE INTO data_input_data
 						(data_input_field_id,data_template_data_id,value)
 						VALUES (" . $input_field["id"] . ", " . $data_source["id"] . ", '" . addslashes($input_field["value"]) . "')");
@@ -557,7 +557,7 @@ function data_source_to_data_template($local_data_id, $data_source_title) {
 	graph template
    @arg $graph_template_id - the id of the graph template that will be used to create the new
 	graph
-   @arg $host_id - the id of the host to associate the new graph and data sources with
+   @arg $device_id - the id of the device to associate the new graph and data sources with
    @arg $snmp_query_array - if the new data sources are to be based on a data query, specify the
 	necessary data query information here. it must contain the following information:
 	  $snmp_query_array["snmp_query_id"]
@@ -574,7 +574,7 @@ function data_source_to_data_template($local_data_id, $data_source_title) {
 	  $values["sg"][data_query_id][graph_template_id]["graph_template_item"][graph_template_item_id][field_name] = $value  // graph template item (w/ data query)
 	  $values["sg"][data_query_id][data_template_id]["data_template"][field_name] = $value  // data template (w/ data query)
 	  $values["sg"][data_query_id][data_template_id]["data_template_item"][data_template_item_id][field_name] = $value  // data template item (w/ data query) */
-function create_complete_graph_from_template($graph_template_id, $host_id, $snmp_query_array, &$suggested_values_array) {
+function create_complete_graph_from_template($graph_template_id, $device_id, $snmp_query_array, &$suggested_values_array) {
 	global $config;
 
 	include_once(CACTI_BASE_PATH . "/lib/data_query.php");
@@ -582,7 +582,7 @@ function create_complete_graph_from_template($graph_template_id, $host_id, $snmp
 	/* create the graph */
 	$save["id"] = 0;
 	$save["graph_template_id"] = $graph_template_id;
-	$save["host_id"] = $host_id;
+	$save["device_id"] = $device_id;
 
 	$cache_array["local_graph_id"] = sql_save($save, "graph_local");
 	change_graph_template($cache_array["local_graph_id"], $graph_template_id, true);
@@ -595,7 +595,7 @@ function create_complete_graph_from_template($graph_template_id, $host_id, $snmp
 		foreach ($suggested_values as $suggested_value) {
 			/* once we find a match; don't try to find more */
 			if (!isset($suggested_values_graph[$graph_template_id]{$suggested_value["field_name"]})) {
-				$subs_string = substitute_snmp_query_data($suggested_value["text"], $host_id, $snmp_query_array["snmp_query_id"], $snmp_query_array["snmp_index"], read_config_option("max_data_query_field_length"));
+				$subs_string = substitute_snmp_query_data($suggested_value["text"], $device_id, $snmp_query_array["snmp_query_id"], $snmp_query_array["snmp_index"], read_config_option("max_data_query_field_length"));
 				/* if there are no '|' characters, all of the substitutions were successful */
 				if (!strstr($subs_string, "|query")) {
 					db_execute("update graph_templates_graph set " . $suggested_value["field_name"] . "='" . addslashes($subs_string) . "' where local_graph_id=" . $cache_array["local_graph_id"]);
@@ -647,7 +647,7 @@ function create_complete_graph_from_template($graph_template_id, $host_id, $snmp
 
 		$save["id"] = 0;
 		$save["data_template_id"] = $data_template["id"];
-		$save["host_id"] = $host_id;
+		$save["device_id"] = $device_id;
 
 		$cache_array["local_data_id"]{$data_template["id"]} = sql_save($save, "data_local");
 		change_data_template($cache_array["local_data_id"]{$data_template["id"]}, $data_template["id"]);
@@ -662,7 +662,7 @@ function create_complete_graph_from_template($graph_template_id, $host_id, $snmp
 			foreach ($suggested_values as $suggested_value) {
 				/* once we find a match; don't try to find more */
 				if (!isset($suggested_values_ds{$data_template["id"]}{$suggested_value["field_name"]})) {
-					$subs_string = substitute_snmp_query_data($suggested_value["text"], $host_id, $snmp_query_array["snmp_query_id"], $snmp_query_array["snmp_index"], read_config_option("max_data_query_field_length"));
+					$subs_string = substitute_snmp_query_data($suggested_value["text"], $device_id, $snmp_query_array["snmp_query_id"], $snmp_query_array["snmp_index"], read_config_option("max_data_query_field_length"));
 
 					/* if there are no '|' characters, all of the substitutions were successful */
 					if (!strstr($subs_string, "|query")) {
@@ -696,8 +696,8 @@ function create_complete_graph_from_template($graph_template_id, $host_id, $snmp
 				AND snmp_query.id=" . $snmp_query_array["snmp_query_id"]), "type_code", "id");
 
 			$snmp_cache_value = db_fetch_cell("SELECT field_value
-				FROM host_snmp_cache
-				WHERE host_id='$host_id'
+				FROM device_snmp_cache
+				WHERE device_id='$device_id'
 				AND snmp_query_id='" . $snmp_query_array["snmp_query_id"] . "'
 				AND field_name='" . $snmp_query_array["snmp_index_on"] . "'
 				AND snmp_index='" . $snmp_query_array["snmp_index"] . "'");

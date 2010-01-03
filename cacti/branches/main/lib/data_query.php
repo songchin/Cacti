@@ -22,7 +22,7 @@
  +-------------------------------------------------------------------------+
 */
 
-function run_data_query($host_id, $snmp_query_id) {
+function run_data_query($device_id, $snmp_query_id) {
 	global $config;
 
 	include_once(CACTI_BASE_PATH . "/lib/poller.php");
@@ -33,28 +33,28 @@ function run_data_query($host_id, $snmp_query_id) {
 
 	if ($type_id == DATA_INPUT_TYPE_SNMP_QUERY) {
 		debug_log_insert("data_query", __("Found type") . " = '3' [snmp query].");
-		$result = query_snmp_host($host_id, $snmp_query_id);
+		$result = query_snmp_device($device_id, $snmp_query_id);
 	}elseif ($type_id == DATA_INPUT_TYPE_SCRIPT_QUERY) {
 		debug_log_insert("data_query", __("Found type") . " = '4 '[script query].");
-		$result = query_script_host($host_id, $snmp_query_id);
+		$result = query_script_device($device_id, $snmp_query_id);
 	}elseif ($type_id == DATA_INPUT_TYPE_QUERY_SCRIPT_SERVER) {
 		debug_log_insert("data_query", __("Found type") . " = '6 '[script query].");
-		$result = query_script_host($host_id, $snmp_query_id);
+		$result = query_script_device($device_id, $snmp_query_id);
 	}else{
 		debug_log_insert("data_query", __("Unknown type") . " = '$type_id'");
 	}
 
 	/* update the sort cache */
-	update_data_query_sort_cache($host_id, $snmp_query_id);
+	update_data_query_sort_cache($device_id, $snmp_query_id);
 
 	/* update the auto reindex cache */
-	update_reindex_cache($host_id, $snmp_query_id);
+	update_reindex_cache($device_id, $snmp_query_id);
 
 	/* update the the "local" data query cache */
-	update_data_query_cache($host_id, $snmp_query_id);
+	update_data_query_cache($device_id, $snmp_query_id);
 
 	/* update the poller cache */
-	update_poller_cache_from_query($host_id, $snmp_query_id);
+	update_poller_cache_from_query($device_id, $snmp_query_id);
 
 	return (isset($result) ? $result : true);
 }
@@ -87,7 +87,7 @@ function get_data_query_array($snmp_query_id) {
 	return $data_query_xml_arrays[$snmp_query_id];
 }
 
-function query_script_host($host_id, $snmp_query_id) {
+function query_script_device($device_id, $snmp_query_id) {
 	$script_queries = get_data_query_array($snmp_query_id);
 
 	/* invalid xml check */
@@ -102,7 +102,7 @@ function query_script_host($host_id, $snmp_query_id) {
 		$script_queries["script_path"] = "|path_php_binary| -q " . $script_queries["script_path"];
 	}
 
-	$script_path = get_script_query_path((isset($script_queries["arg_prepend"]) ? $script_queries["arg_prepend"] . " ": "") . $script_queries["arg_index"], $script_queries["script_path"], $host_id);
+	$script_path = get_script_query_path((isset($script_queries["arg_prepend"]) ? $script_queries["arg_prepend"] . " ": "") . $script_queries["arg_index"], $script_queries["script_path"], $device_id);
 
 	/* fetch specified index at specified OID */
 	$script_index_array = exec_into_array($script_path);
@@ -114,7 +114,7 @@ function query_script_host($host_id, $snmp_query_id) {
 
 	while (list($field_name, $field_array) = each($script_queries["fields"])) {
 		if ($field_array["direction"] == "input") {
-			$script_path = get_script_query_path((isset($script_queries["arg_prepend"]) ? $script_queries["arg_prepend"] . " ": "") . $script_queries["arg_query"] . " " . $field_array["query_name"], $script_queries["script_path"], $host_id);
+			$script_path = get_script_query_path((isset($script_queries["arg_prepend"]) ? $script_queries["arg_prepend"] . " ": "") . $script_queries["arg_query"] . " " . $field_array["query_name"], $script_queries["script_path"], $device_id);
 
 			$script_data_array = exec_into_array($script_path);
 
@@ -125,7 +125,7 @@ function query_script_host($host_id, $snmp_query_id) {
 					$script_index = $matches[1];
 					$field_value  = $matches[2];
 
-					$output_array[] = data_query_format_record($host_id, $snmp_query_id, $field_name, $field_value, $script_index, '');
+					$output_array[] = data_query_format_record($device_id, $snmp_query_id, $field_name, $field_value, $script_index, '');
 
 					debug_log_insert("data_query", __("Found item [%s='%s'] index: %s", $field_name, $field_value, $script_index));
 				}
@@ -134,19 +134,19 @@ function query_script_host($host_id, $snmp_query_id) {
 	}
 
 	if (sizeof($output_array)) {
-		data_query_update_host_cache_from_buffer($host_id, $snmp_query_id, $output_array);
+		data_query_update_device_cache_from_buffer($device_id, $snmp_query_id, $output_array);
 	}
 
 	return true;
 }
 
-function query_snmp_host($host_id, $snmp_query_id) {
+function query_snmp_device($device_id, $snmp_query_id) {
 	global $config;
 
 	include_once(CACTI_BASE_PATH . "/lib/snmp.php");
 
-	$host = db_fetch_row("SELECT
-		hostname,
+	$device = db_fetch_row("SELECT
+		devicename,
 		snmp_community,
 		snmp_version,
 		snmp_username,
@@ -159,13 +159,13 @@ function query_snmp_host($host_id, $snmp_query_id) {
 		snmp_timeout,
 		ping_retries,
 		max_oids
-		FROM host
-		WHERE id='$host_id'");
+		FROM device
+		WHERE id='$device_id'");
 
 	$snmp_queries = get_data_query_array($snmp_query_id);
 
-	if ($host["hostname"] == "") {
-		debug_log_insert("data_query", __("Invalid host_id:") . " $host_id");
+	if ($device["devicename"] == "") {
+		debug_log_insert("data_query", __("Invalid device_id:") . " $device_id");
 		return false;
 	}
 
@@ -178,11 +178,11 @@ function query_snmp_host($host_id, $snmp_query_id) {
 	debug_log_insert("data_query", __("XML file parsed ok."));
 
 	/* fetch specified index at specified OID */
-	$snmp_indexes = cacti_snmp_walk($host["hostname"], $host["snmp_community"], $snmp_queries["oid_index"],
-									$host["snmp_version"], $host["snmp_username"], $host["snmp_password"],
-									$host["snmp_auth_protocol"], $host["snmp_priv_passphrase"], $host["snmp_priv_protocol"],
-									$host["snmp_context"], $host["snmp_port"], $host["snmp_timeout"],
-									$host["ping_retries"], $host["max_oids"], SNMP_WEBUI);
+	$snmp_indexes = cacti_snmp_walk($device["devicename"], $device["snmp_community"], $snmp_queries["oid_index"],
+									$device["snmp_version"], $device["snmp_username"], $device["snmp_password"],
+									$device["snmp_auth_protocol"], $device["snmp_priv_passphrase"], $device["snmp_priv_protocol"],
+									$device["snmp_context"], $device["snmp_port"], $device["snmp_timeout"],
+									$device["ping_retries"], $device["max_oids"], SNMP_WEBUI);
 
 	debug_log_insert("data_query", __("Executing SNMP walk for list of indexes @ '%s'", $snmp_queries["oid_index"]));
 
@@ -234,7 +234,7 @@ function query_snmp_host($host_id, $snmp_query_id) {
 
 			$rewritten_indexes = array();
 			if (isset($field_array["rewrite_index"])) {
-				$rewritten_indexes = data_query_rewrite_indexes($errmsg, $host_id, $snmp_query_id, $field_array["rewrite_index"], $snmp_indexes, $fields_processed);
+				$rewritten_indexes = data_query_rewrite_indexes($errmsg, $device_id, $snmp_query_id, $field_array["rewrite_index"], $snmp_indexes, $fields_processed);
 				if(sizeof($errmsg)){
 					foreach($errmsg as $message){
 						debug_log_insert("data_query", "Field '$field_name'" . $message);
@@ -257,10 +257,10 @@ function query_snmp_host($host_id, $snmp_query_id) {
 				$oid .= isset($field_array["oid_suffix"]) ? ("." . $field_array["oid_suffix"]) : "";
 				$value = NULL;
 				if (substr($field_array["source"], 0, 13) == "VALUE/REGEXP:" || $field_array["source"] == "value") {
-					$value = cacti_snmp_get($host["hostname"], $host["snmp_community"], $oid,
-	 										$host["snmp_version"], $host["snmp_username"], $host["snmp_password"],
- 											$host["snmp_auth_protocol"], $host["snmp_priv_passphrase"], $host["snmp_priv_protocol"],
- 											$host["snmp_context"], $host["snmp_port"], $host["snmp_timeout"], SNMP_WEBUI);
+					$value = cacti_snmp_get($device["devicename"], $device["snmp_community"], $oid,
+	 										$device["snmp_version"], $device["snmp_username"], $device["snmp_password"],
+ 											$device["snmp_auth_protocol"], $device["snmp_priv_passphrase"], $device["snmp_priv_protocol"],
+ 											$device["snmp_context"], $device["snmp_port"], $device["snmp_timeout"], SNMP_WEBUI);
 
  					if (substr($field_array["source"], 0, 13) == "VALUE/REGEXP:") {
 						$value = preg_replace("/" . str_replace("VALUE/REGEXP:", "", $field_array["source"]) . "/", "\\1", $value);
@@ -277,10 +277,10 @@ function query_snmp_host($host_id, $snmp_query_id) {
 			debug_log_insert("data_query", __("Located input field '%s' [walk]", $field_name));
 
 			$snmp_data = array();
-			$snmp_data = cacti_snmp_walk($host["hostname"], $host["snmp_community"], $field_array["oid"],
-				$host["snmp_version"], $host["snmp_username"], $host["snmp_password"],
-				$host["snmp_auth_protocol"], $host["snmp_priv_passphrase"], $host["snmp_priv_protocol"],
-				$host["snmp_context"], $host["snmp_port"], $host["snmp_timeout"], $host["ping_retries"], $host["max_oids"], SNMP_WEBUI);
+			$snmp_data = cacti_snmp_walk($device["devicename"], $device["snmp_community"], $field_array["oid"],
+				$device["snmp_version"], $device["snmp_username"], $device["snmp_password"],
+				$device["snmp_auth_protocol"], $device["snmp_priv_passphrase"], $device["snmp_priv_protocol"],
+				$device["snmp_context"], $device["snmp_port"], $device["snmp_timeout"], $device["ping_retries"], $device["max_oids"], SNMP_WEBUI);
 
 			debug_log_insert("data_query", __("Executing SNMP walk for data @ '%s'", $field_array["oid"]));
 
@@ -345,30 +345,30 @@ function query_snmp_host($host_id, $snmp_query_id) {
 				if(isset($field_array["rewrite_value"])) {
 					$item["value"] = rewrite_snmp_enum_value($field_name, $item["value"], $field_array["rewrite_value"]);
 				}
-				$output_array[] = data_query_format_record($host_id, $snmp_query_id, $field_name, $item["value"], $item["index"], $item["oid"]);
+				$output_array[] = data_query_format_record($device_id, $snmp_query_id, $field_name, $item["value"], $item["index"], $item["oid"]);
 			}
 			$fields_processed[] = $field_name;
 		}
 	}
 
 	if (sizeof($output_array)) {
-		data_query_update_host_cache_from_buffer($host_id, $snmp_query_id, $output_array);
+		data_query_update_device_cache_from_buffer($device_id, $snmp_query_id, $output_array);
 	}
 	return true;
 }
 
-function data_query_format_record($host_id, $snmp_query_id, $field_name, $value, $snmp_index, $oid) {
+function data_query_format_record($device_id, $snmp_query_id, $field_name, $value, $snmp_index, $oid) {
 	global $cnn_id;
 
-	return "($host_id, $snmp_query_id, " . $cnn_id->qstr($field_name) . ", " . $cnn_id->qstr($value) . ", " . $cnn_id->qstr($snmp_index) . ", " . $cnn_id->qstr($oid) . ", 1)";
+	return "($device_id, $snmp_query_id, " . $cnn_id->qstr($field_name) . ", " . $cnn_id->qstr($value) . ", " . $cnn_id->qstr($snmp_index) . ", " . $cnn_id->qstr($oid) . ", 1)";
 }
 
-function data_query_update_host_cache_from_buffer($host_id, $snmp_query_id, &$output_array) {
+function data_query_update_device_cache_from_buffer($device_id, $snmp_query_id, &$output_array) {
 	/* set all fields present value to 0, to mark the outliers when we are all done */
-	db_execute("UPDATE host_snmp_cache SET present=0 WHERE host_id='$host_id' AND snmp_query_id='$snmp_query_id'");
+	db_execute("UPDATE device_snmp_cache SET present=0 WHERE device_id='$device_id' AND snmp_query_id='$snmp_query_id'");
 
 	/* setup the database call */
-	$sql_prefix   = "INSERT INTO host_snmp_cache (host_id, snmp_query_id, field_name, field_value, snmp_index, oid, present) VALUES";
+	$sql_prefix   = "INSERT INTO device_snmp_cache (device_id, snmp_query_id, field_name, field_value, snmp_index, oid, present) VALUES";
 	$sql_suffix   = " ON DUPLICATE KEY UPDATE field_value=VALUES(field_value), oid=VALUES(oid), present=VALUES(present)";
 
 	/* use a reasonable insert buffer, the default is 1MByte */
@@ -406,25 +406,25 @@ function data_query_update_host_cache_from_buffer($host_id, $snmp_query_id, &$ou
 		db_execute($sql_prefix . $buffer . $sql_suffix);
 	}
 
-	/* remove stale records from the host cache */
-	db_execute("DELETE FROM host_snmp_cache WHERE host_id='$host_id' AND snmp_query_id='$snmp_query_id' AND present='0'");
+	/* remove stale records from the device cache */
+	db_execute("DELETE FROM device_snmp_cache WHERE device_id='$device_id' AND snmp_query_id='$snmp_query_id' AND present='0'");
 }
 
 /* data_query_index - returns an array containing the data query ID and index value given
-	a data query index type/value combination and a host ID
+	a data query index type/value combination and a device ID
    @arg $index_type - the name of the index to match
    @arg $index_value - the value of the index to match
-   @arg $host_id - (int) the host ID to match
+   @arg $device_id - (int) the device ID to match
    @arg $data_query_id - (int) the data query ID to match
    @returns - (array) the data query ID and index that matches the three arguments */
-function data_query_index($index_type, $index_value, $host_id, $data_query_id) {
+function data_query_index($index_type, $index_value, $device_id, $data_query_id) {
 	return db_fetch_cell("select
-		host_snmp_cache.snmp_index
-		from host_snmp_cache
-		where host_snmp_cache.field_name='$index_type'
-		and host_snmp_cache.field_value='" . addslashes($index_value) . "'
-		and host_snmp_cache.host_id='$host_id'
-		and host_snmp_cache.snmp_query_id='$data_query_id'");
+		device_snmp_cache.snmp_index
+		from device_snmp_cache
+		where device_snmp_cache.field_name='$index_type'
+		and device_snmp_cache.field_value='" . addslashes($index_value) . "'
+		and device_snmp_cache.device_id='$device_id'
+		and device_snmp_cache.snmp_query_id='$data_query_id'");
 }
 
 /* data_query_field_list - returns an array containing data query information for a given data source
@@ -469,12 +469,12 @@ function encode_data_query_index($index) {
 	a form
    @arg $encoded_index - the index that was encoded with encode_data_query_index()
    @arg $data_query_id - the id of the data query that this index belongs to
-   @arg $encoded_index - the id of the host that this index belongs to
+   @arg $encoded_index - the id of the device that this index belongs to
    @returns - the decoded data query index */
-function decode_data_query_index($encoded_index, $data_query_id, $host_id) {
+function decode_data_query_index($encoded_index, $data_query_id, $device_id) {
 	/* yes, i know MySQL has a MD5() function that would make this a bit quicker. however i would like to
 	keep things abstracted for now so Cacti works with ADODB fully when i get around to porting my db calls */
-	$indexes = db_fetch_assoc("select snmp_index from host_snmp_cache where host_id=$host_id and snmp_query_id=$data_query_id  group by snmp_index");
+	$indexes = db_fetch_assoc("select snmp_index from device_snmp_cache where device_id=$device_id and snmp_query_id=$data_query_id  group by snmp_index");
 
 	if (sizeof($indexes) > 0) {
 	foreach ($indexes as $index) {
@@ -487,10 +487,10 @@ function decode_data_query_index($encoded_index, $data_query_id, $host_id) {
 
 /* update_data_query_cache - updates the local data query cache for each graph and data
 	source tied to this device/data query
-   @arg $host_id - the id of the host to refresh
+   @arg $device_id - the id of the device to refresh
    @arg $data_query_id - the id of the data query to refresh */
-function update_data_query_cache($host_id, $data_query_id) {
-	$graphs = db_fetch_assoc("select id from graph_local where host_id = '$host_id' and snmp_query_id = '$data_query_id'");
+function update_data_query_cache($device_id, $data_query_id) {
+	$graphs = db_fetch_assoc("select id from graph_local where device_id = '$device_id' and snmp_query_id = '$data_query_id'");
 
 	if (sizeof($graphs) > 0) {
 		foreach ($graphs as $graph) {
@@ -498,7 +498,7 @@ function update_data_query_cache($host_id, $data_query_id) {
 		}
 	}
 
-	$data_sources = db_fetch_assoc("select id from data_local where host_id = '$host_id' and snmp_query_id = '$data_query_id'");
+	$data_sources = db_fetch_assoc("select id from data_local where device_id = '$device_id' and snmp_query_id = '$data_query_id'");
 
 	if (sizeof($data_sources) > 0) {
 		foreach ($data_sources as $data_source) {
@@ -511,7 +511,7 @@ function update_data_query_cache($host_id, $data_query_id) {
 	graph
    @arg $local_graph_id - the id of the graph to update the data query cache for */
 function update_graph_data_query_cache($local_graph_id) {
-	$host_id = db_fetch_cell("select host_id from graph_local where id=$local_graph_id");
+	$device_id = db_fetch_cell("select device_id from graph_local where id=$local_graph_id");
 
 	$field = data_query_field_list(db_fetch_cell("select
 		data_template_data.id
@@ -525,7 +525,7 @@ function update_graph_data_query_cache($local_graph_id) {
 
 	$data_query_id = db_fetch_cell("select snmp_query_id from snmp_query_graph where id='" . $field["output_type"] . "'");
 
-	$index = data_query_index($field["index_type"], $field["index_value"], $host_id, $data_query_id);
+	$index = data_query_index($field["index_type"], $field["index_value"], $device_id, $data_query_id);
 
 	if (($data_query_id != "0") && ($index != "")) {
 		db_execute("update graph_local set snmp_query_id='$data_query_id',snmp_index='$index' where id=$local_graph_id");
@@ -539,7 +539,7 @@ function update_graph_data_query_cache($local_graph_id) {
 	data source
    @arg $local_data_id - the id of the data source to update the data query cache for */
 function update_data_source_data_query_cache($local_data_id) {
-	$host_id = db_fetch_cell("select host_id from data_local where id=$local_data_id");
+	$device_id = db_fetch_cell("select device_id from data_local where id=$local_data_id");
 
 	$field = data_query_field_list(db_fetch_cell("select
 		data_template_data.id
@@ -550,7 +550,7 @@ function update_data_source_data_query_cache($local_data_id) {
 
 	$data_query_id = db_fetch_cell("select snmp_query_id from snmp_query_graph where id='" . $field["output_type"] . "'");
 
-	$index = data_query_index($field["index_type"], $field["index_value"], $host_id, $data_query_id);
+	$index = data_query_index($field["index_type"], $field["index_value"], $device_id, $data_query_id);
 
 	if (($data_query_id != "0") && ($index != "")) {
 		db_execute("update data_local set snmp_query_id='$data_query_id',snmp_index='$index' where id='$local_data_id'");
@@ -563,11 +563,11 @@ function update_data_source_data_query_cache($local_data_id) {
 /* get_formatted_data_query_indexes - obtains a list of indexes for a device/data query that
 	is sorted by the chosen index field and formatted using the data query index title
 	format
-   @arg $host_id - the id of the host which contains the data query
+   @arg $device_id - the id of the device which contains the data query
    @arg $data_query_id - the id of the data query to retrieve a list of indexes for
    @returns - an array formatted like the following:
 	$arr[snmp_index] = "formatted data query index string" */
-function get_formatted_data_query_indexes($host_id, $data_query_id) {
+function get_formatted_data_query_indexes($device_id, $data_query_id) {
 	global $config;
 
 	include_once(CACTI_BASE_PATH . "/lib/sort.php");
@@ -576,21 +576,21 @@ function get_formatted_data_query_indexes($host_id, $data_query_id) {
 		return array("" => __("Unknown Index"));
 	}
 
-	/* from the xml; cached in 'host_snmp_query' */
-	$sort_cache = db_fetch_row("select sort_field,title_format from host_snmp_query where host_id='$host_id' and snmp_query_id='$data_query_id'");
+	/* from the xml; cached in 'device_snmp_query' */
+	$sort_cache = db_fetch_row("select sort_field,title_format from device_snmp_query where device_id='$device_id' and snmp_query_id='$data_query_id'");
 
 	/* get a list of data query indexes and the field value that we are supposed
 	to sort */
 	$sort_field_data = array_rekey(db_fetch_assoc("select
 		graph_local.snmp_index,
-		host_snmp_cache.field_value
-		from (graph_local,host_snmp_cache)
-		where graph_local.host_id=host_snmp_cache.host_id
-		and graph_local.snmp_query_id=host_snmp_cache.snmp_query_id
-		and graph_local.snmp_index=host_snmp_cache.snmp_index
+		device_snmp_cache.field_value
+		from (graph_local,device_snmp_cache)
+		where graph_local.device_id=device_snmp_cache.device_id
+		and graph_local.snmp_query_id=device_snmp_cache.snmp_query_id
+		and graph_local.snmp_index=device_snmp_cache.snmp_index
 		and graph_local.snmp_query_id=$data_query_id
-		and graph_local.host_id=$host_id
-		and host_snmp_cache.field_name='" . $sort_cache["sort_field"] . "'
+		and graph_local.device_id=$device_id
+		and device_snmp_cache.field_name='" . $sort_cache["sort_field"] . "'
 		group by graph_local.snmp_index"), "snmp_index", "field_value");
 
 	/* sort the data using the "data query index" sort algorithm */
@@ -599,7 +599,7 @@ function get_formatted_data_query_indexes($host_id, $data_query_id) {
 	$sorted_results = array();
 
 	while (list($snmp_index, $sort_field_value) = each($sort_field_data)) {
-		$sorted_results[$snmp_index] = substitute_snmp_query_data($sort_cache["title_format"], $host_id, $data_query_id, $snmp_index);
+		$sorted_results[$snmp_index] = substitute_snmp_query_data($sort_cache["title_format"], $device_id, $data_query_id, $snmp_index);
 	}
 
 	return $sorted_results;
@@ -607,28 +607,28 @@ function get_formatted_data_query_indexes($host_id, $data_query_id) {
 
 /* get_formatted_data_query_index - obtains a single index for a device/data query/data query
 	index that is formatted using the data query index title format
-   @arg $host_id - the id of the host which contains the data query
+   @arg $device_id - the id of the device which contains the data query
    @arg $data_query_id - the id of the data query which contains the data query index
    @arg $data_query_index - the index to retrieve the formatted name for
    @returns - a string containing the formatted name for the given data query index */
-function get_formatted_data_query_index($host_id, $data_query_id, $data_query_index) {
-	/* from the xml; cached in 'host_snmp_query' */
-	$sort_cache = db_fetch_row("select sort_field,title_format from host_snmp_query where host_id='$host_id' and snmp_query_id='$data_query_id'");
+function get_formatted_data_query_index($device_id, $data_query_id, $data_query_index) {
+	/* from the xml; cached in 'device_snmp_query' */
+	$sort_cache = db_fetch_row("select sort_field,title_format from device_snmp_query where device_id='$device_id' and snmp_query_id='$data_query_id'");
 
-	return substitute_snmp_query_data($sort_cache["title_format"], $host_id, $data_query_id, $data_query_index);
+	return substitute_snmp_query_data($sort_cache["title_format"], $device_id, $data_query_id, $data_query_index);
 }
 
 /* get_ordered_index_type_list - builds an ordered list of data query index types that are
 	valid given a list of data query indexes that will be checked against the data query
 	cache
-   @arg $host_id - the id of the host which contains the data query
+   @arg $device_id - the id of the device which contains the data query
    @arg $data_query_id - the id of the data query to build the type list from
    @arg $data_query_index_array - an array containing each data query index to use when checking
 	each data query type for validity. a valid data query type will contain no empty or duplicate
 	values for each row in the cache that matches one of the $data_query_index_array
    @returns - an array of data query types either ordered or unordered depending on whether
 	the xml file has a manual ordering preference specified */
-function get_ordered_index_type_list($host_id, $data_query_id, $data_query_index_array = array()) {
+function get_ordered_index_type_list($device_id, $data_query_id, $data_query_index_array = array()) {
 	$raw_xml = get_data_query_array($data_query_id);
 
 	/* invalid xml check */
@@ -657,9 +657,9 @@ function get_ordered_index_type_list($host_id, $data_query_id, $data_query_index
 		if ($field_array["direction"] == "input") {
 			/* create a list of all values for this index */
 			if (sizeof($data_query_index_array) == 0) {
-				$field_values = db_fetch_assoc("select field_value from host_snmp_cache where host_id=$host_id and snmp_query_id=$data_query_id and field_name='$field_name'");
+				$field_values = db_fetch_assoc("select field_value from device_snmp_cache where device_id=$device_id and snmp_query_id=$data_query_id and field_name='$field_name'");
 			}else{
-				$field_values = db_fetch_assoc("select field_value from host_snmp_cache where host_id=$host_id and snmp_query_id=$data_query_id and field_name='$field_name' and $sql_or");
+				$field_values = db_fetch_assoc("select field_value from device_snmp_cache where device_id=$device_id and snmp_query_id=$data_query_id and field_name='$field_name' and $sql_or");
 			}
 
 			/* aggregate the above list so there is no duplicates */
@@ -697,13 +697,13 @@ function get_ordered_index_type_list($host_id, $data_query_id, $data_query_index
 	combination. this works by fetching a list of valid data query index types and choosing
 	the first one in the list. the user can optionally override how the cache is updated
 	in the data query xml file
-   @arg $host_id - the id of the host which contains the data query
+   @arg $device_id - the id of the device which contains the data query
    @arg $data_query_id - the id of the data query update the sort cache for */
-function update_data_query_sort_cache($host_id, $data_query_id) {
+function update_data_query_sort_cache($device_id, $data_query_id) {
 	$raw_xml = get_data_query_array($data_query_id);
 
 	/* get a list of valid data query types */
-	$valid_index_types = get_ordered_index_type_list($host_id, $data_query_id);
+	$valid_index_types = get_ordered_index_type_list($device_id, $data_query_id);
 
 	/* something is probably wrong with the data query */
 	if (sizeof($valid_index_types) == 0) {
@@ -721,46 +721,46 @@ function update_data_query_sort_cache($host_id, $data_query_id) {
 	}
 
 	/* update the cache */
-	db_execute("update host_snmp_query set sort_field = '$sort_field', title_format = '$title_format' where host_id = '$host_id' and snmp_query_id = '$data_query_id'");
+	db_execute("update device_snmp_query set sort_field = '$sort_field', title_format = '$title_format' where device_id = '$device_id' and snmp_query_id = '$data_query_id'");
 }
 
-/* update_data_query_sort_cache_by_host - updates the sort cache for all data queries associated
-	with a particular host. see update_data_query_sort_cache() for details about updating the cache
-   @arg $host_id - the id of the host to update the cache for */
-function update_data_query_sort_cache_by_host($host_id) {
-	$data_queries = db_fetch_assoc("select snmp_query_id from host_snmp_query where host_id = '$host_id'");
+/* update_data_query_sort_cache_by_device - updates the sort cache for all data queries associated
+	with a particular device. see update_data_query_sort_cache() for details about updating the cache
+   @arg $device_id - the id of the device to update the cache for */
+function update_data_query_sort_cache_by_device($device_id) {
+	$data_queries = db_fetch_assoc("select snmp_query_id from device_snmp_query where device_id = '$device_id'");
 
 	if (sizeof($data_queries) > 0) {
 		foreach ($data_queries as $data_query) {
-			update_data_query_sort_cache($host_id, $data_query["snmp_query_id"]);
+			update_data_query_sort_cache($device_id, $data_query["snmp_query_id"]);
 		}
 	}
 }
 
 /* get_best_data_query_index_type - returns the best available data query index type using the
 	sort cache
-   @arg $host_id - the id of the host which contains the data query
+   @arg $device_id - the id of the device which contains the data query
    @arg $data_query_id - the id of the data query to fetch the best data query index type for
    @returns - a string containing containing best data query index type. this will be one of the
 	valid input field names as specified in the data query xml file */
-function get_best_data_query_index_type($host_id, $data_query_id) {
-	return db_fetch_cell("select sort_field from host_snmp_query where host_id = '$host_id' and snmp_query_id = '$data_query_id'");
+function get_best_data_query_index_type($device_id, $data_query_id) {
+	return db_fetch_cell("select sort_field from device_snmp_query where device_id = '$device_id' and snmp_query_id = '$data_query_id'");
 }
 
 /* get_script_query_path - builds the complete script query executable path
    @arg $args - the variable that contains any arguments to be appended to the argument
 	list (variables will be substituted in this function)
    @arg $script_path - the path on the disk to the script file
-   @arg $host_id - the id of the host that this script query belongs to
+   @arg $device_id - the id of the device that this script query belongs to
    @returns - a full path to the script query script containing all arguments */
-function get_script_query_path($args, $script_path, $host_id) {
+function get_script_query_path($args, $script_path, $device_id) {
 	global $config;
 
 	include_once(CACTI_BASE_PATH . "/lib/variables.php");
 
 	/* get any extra arguments that need to be passed to the script */
 	if (!empty($args)) {
-		$extra_arguments = substitute_host_data($args, "|", "|", $host_id);
+		$extra_arguments = substitute_device_data($args, "|", "|", $device_id);
 	}else{
 		$extra_arguments = "";
 	}
@@ -771,15 +771,15 @@ function get_script_query_path($args, $script_path, $host_id) {
 
 /* data_query_rewrite_indexes - returns array of rewritten indexes
 	@arg $errmsg 			- array that will contain warnings if any
-	@arg $host_id
+	@arg $device_id
 	@arg $snmp_query_id
 	@arg $rewrite_index 	- value of <rewrite_index> from data query XML
-	@arg $snmp_indexes 		- array of snmp indexes as it used in query_snmp_host() or single index
-	@arg $fields_processed  - array of field names that are already processed in query_snmp_host(),
+	@arg $snmp_indexes 		- array of snmp indexes as it used in query_snmp_device() or single index
+	@arg $fields_processed  - array of field names that are already processed in query_snmp_device(),
 							  refusing non-processed (e.g. stale) fields to be used as index rewrite source
 	@returns 				- (array) of original snmp indexes associated with rewritten ones
 */
-function data_query_rewrite_indexes(&$errmsg, $host_id, $snmp_query_id, $rewrite_index, $snmp_indexes, $fields_processed = FALSE) {
+function data_query_rewrite_indexes(&$errmsg, $device_id, $snmp_query_id, $rewrite_index, $snmp_indexes, $fields_processed = FALSE) {
 	$errmsg = array();
 	$oid_items = explode(".", $rewrite_index);
 	$chain_indexes = array();
@@ -795,8 +795,8 @@ function data_query_rewrite_indexes(&$errmsg, $host_id, $snmp_query_id, $rewrite
 				}
 
 				$traw_indexes = db_fetch_assoc("SELECT snmp_index,field_value
-									FROM host_snmp_cache
-									WHERE host_id='$host_id'
+									FROM device_snmp_cache
+									WHERE device_id='$device_id'
 									AND snmp_query_id='$snmp_query_id'
 									AND field_name='$iv'");
 				if (sizeof($traw_indexes) && !isset($chain_indexes[$iv])) {

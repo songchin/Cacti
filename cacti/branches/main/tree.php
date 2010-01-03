@@ -116,8 +116,8 @@ function form_save() {
 			(isset($_POST["title"]) ? $_POST["title"] : ""),
 			(isset($_POST["local_graph_id"]) ? $_POST["local_graph_id"] : "0"),
 			(isset($_POST["rra_id"]) ? $_POST["rra_id"] : "0"),
-			(isset($_POST["host_id"]) ? $_POST["host_id"] : "0"),
-			(isset($_POST["host_grouping_type"]) ? $_POST["host_grouping_type"] : "1"),
+			(isset($_POST["device_id"]) ? $_POST["device_id"] : "0"),
+			(isset($_POST["device_grouping_type"]) ? $_POST["device_grouping_type"] : "1"),
 			(isset($_POST["sort_children_type"]) ? $_POST["sort_children_type"] : "1"),
 			(isset($_POST["propagate_changes"]) ? true : false));
 
@@ -136,7 +136,7 @@ function form_save() {
 
 function item_edit() {
 	global $colors, $tree_sort_types;
-	global $tree_item_types, $host_group_types;
+	global $tree_item_types, $device_group_types;
 
 	/* ================= input validation ================= */
 	input_validate_input_number(get_request_var("id"));
@@ -148,7 +148,7 @@ function item_edit() {
 
 		if ($tree_item["local_graph_id"] > 0) { $db_type = TREE_ITEM_TYPE_GRAPH; }
 		if ($tree_item["title"] != "") { $db_type = TREE_ITEM_TYPE_HEADER; }
-		if ($tree_item["host_id"] > 0) { $db_type = TREE_ITEM_TYPE_DEVICE; }
+		if ($tree_item["device_id"] > 0) { $db_type = TREE_ITEM_TYPE_DEVICE; }
 	}
 
 	if (isset($_GET["type_select"])) {
@@ -270,13 +270,13 @@ function item_edit() {
 		form_end_row();
 		break;
 	case TREE_ITEM_TYPE_DEVICE:
-		form_alternate_row_color("host"); ?>
+		form_alternate_row_color("device"); ?>
 			<td width="50%">
 				<font class="textEditTitle"><?php print __("Host");?></font><br>
-				<?php print __("Choose a host here to add it to the tree.");?>
+				<?php print __("Choose a device here to add it to the tree.");?>
 			</td>
 			<td>
-				<?php form_dropdown("host_id", db_fetch_assoc("select id,CONCAT_WS('',description,' (',hostname,')') as name from host order by description,hostname"), "name", "id", (isset($tree_item["host_id"]) ? $tree_item["host_id"] : ""), "", "");?>
+				<?php form_dropdown("device_id", db_fetch_assoc("select id,CONCAT_WS('',description,' (',devicename,')') as name from device order by description,devicename"), "name", "id", (isset($tree_item["device_id"]) ? $tree_item["device_id"] : ""), "", "");?>
 			</td>
 		<?php
 		form_end_row();
@@ -284,10 +284,10 @@ function item_edit() {
 		?>
 			<td width="50%">
 				<font class="textEditTitle"><?php print __("Graph Grouping Style");?></font><br>
-				<?php print __("Choose how graphs are grouped when drawn for this particular host on the tree.");?>
+				<?php print __("Choose how graphs are grouped when drawn for this particular device on the tree.");?>
 			</td>
 			<td>
-				<?php form_dropdown("host_grouping_type", $host_group_types, "", "", (isset($tree_item["host_grouping_type"]) ? $tree_item["host_grouping_type"] : "1"), "", "");?>
+				<?php form_dropdown("device_grouping_type", $device_group_types, "", "", (isset($tree_item["device_grouping_type"]) ? $tree_item["device_grouping_type"] : "1"), "", "");?>
 			</td>
 		<?php
 		form_end_row();
@@ -331,14 +331,14 @@ function item_remove() {
 	/* ==================================================== */
 
 	if ((read_config_option("deletion_verification") == "on") && (!isset($_GET["confirm"]))) {
-		$graph_tree_item = db_fetch_row("select title,local_graph_id,host_id from graph_tree_items where id=" . $_GET["id"]);
+		$graph_tree_item = db_fetch_row("select title,local_graph_id,device_id from graph_tree_items where id=" . $_GET["id"]);
 
 		if (!empty($graph_tree_item["local_graph_id"])) {
 			$text = __("Are you sure you want to delete the graph item") . " <strong>'" . db_fetch_cell("select title_cache from graph_templates_graph where local_graph_id=" . $graph_tree_item["local_graph_id"]) . "'</strong>?";
 		}elseif ($graph_tree_item["title"] != "") {
 			$text = __("Are you sure you want to delete the header item") . " <strong>'" . $graph_tree_item["title"] . "'</strong>?";
-		}elseif (!empty($graph_tree_item["host_id"])) {
-			$text = __("Are you sure you want to delete the host item") . " <strong>'" . db_fetch_cell("select CONCAT_WS('',description,' (',hostname,')') as hostname from host where id=" . $graph_tree_item["host_id"]) . "'</strong>?";
+		}elseif (!empty($graph_tree_item["device_id"])) {
+			$text = __("Are you sure you want to delete the device item") . " <strong>'" . db_fetch_cell("select CONCAT_WS('',description,' (',devicename,')') as devicename from device where id=" . $graph_tree_item["device_id"]) . "'</strong>?";
 		}
 
 		include(CACTI_BASE_PATH . "/include/top_header.php");

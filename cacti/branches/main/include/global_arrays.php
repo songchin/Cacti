@@ -404,7 +404,7 @@ $tree_item_types = array(
 	TREE_ITEM_TYPE_DEVICE => __("Device"),
 	);
 
-$host_group_types = array(
+$device_group_types = array(
 	HOST_GROUPING_GRAPH_TEMPLATE => __("Graph Template"),
 	HOST_GROUPING_DATA_QUERY_INDEX => __("Data Query Index"),
 	);
@@ -630,7 +630,7 @@ $hash_type_codes = array(
 	"data_query_graph" => "11",
 	"data_query_sv_graph" => "12",
 	"data_query_sv_data_source" => "13",
-	"host_template" => "02",
+	"device_template" => "02",
 	"xaxis" => "16",
 	"xaxis_item" => "17",
 	);
@@ -671,16 +671,16 @@ $hash_type_names = array(
 	"graph_template_item" => "Graph Template Item",
 	"graph_template_input" => "Graph Template Input",
 	"data_query" => "Data Query",
-	"host_template" => "Device Template",
+	"device_template" => "Device Template",
 	"round_robin_archive" => "Round Robin Archive",
 	"xaxis" => "X-Axis Preset",
 	"xaxis_item" => "X-Axis Preset Item",
 	);
 
-$host_struc = array(
-	"host_template_id",
+$device_struc = array(
+	"device_template_id",
 	"description",
-	"hostname",
+	"devicename",
 	"notes",
 	"snmp_community",
 	"snmp_version",

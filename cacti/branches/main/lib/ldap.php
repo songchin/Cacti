@@ -30,7 +30,7 @@ LDAP functions
   @arg $username - username of the user
   @arg $password - password of the user
   @arg $ldap_dn - LDAP DN for binding
-  @arg $ldap_host - Hostname or IP of LDAP server, Default = Configured settings value
+  @arg $ldap_device - Hostname or IP of LDAP server, Default = Configured settings value
   @arg $ldap_port - Port of the LDAP server uses, Default = Configured settings value
   @arg $ldap_port_ssl - Port of the LDAP server uses for SSL, Default = Configured settings value
   @arg $ldap_version - '2' or '3', LDAP protocol version, Default = Configured settings value
@@ -65,7 +65,7 @@ Error codes:
 99	PHP LDAP not enabled
 
 */
-function cacti_ldap_auth($username,$password = "",$ldap_dn = "",$ldap_host = "",$ldap_port = "",$ldap_port_ssl = "",$ldap_version = "",$ldap_encryption = "",$ldap_referrals = "",$ldap_group_require = "",$ldap_group_dn = "",$ldap_group_attrib = "",$ldap_group_member_type = "") {
+function cacti_ldap_auth($username,$password = "",$ldap_dn = "",$ldap_device = "",$ldap_port = "",$ldap_port_ssl = "",$ldap_version = "",$ldap_encryption = "",$ldap_referrals = "",$ldap_group_require = "",$ldap_group_dn = "",$ldap_group_attrib = "",$ldap_group_member_type = "") {
 
 	$output = array();
 
@@ -92,8 +92,8 @@ function cacti_ldap_auth($username,$password = "",$ldap_dn = "",$ldap_host = "",
 		$ldap_dn = read_config_option("ldap_dn");
 	}
 	$ldap_dn = str_replace("<username>",$username,$ldap_dn);
-	if (empty($ldap_host)) {
-		$ldap_host = read_config_option("ldap_server");
+	if (empty($ldap_device)) {
+		$ldap_device = read_config_option("ldap_server");
 	}
 	if (empty($ldap_port)) {
 		$ldap_port = read_config_option("ldap_port");
@@ -130,9 +130,9 @@ function cacti_ldap_auth($username,$password = "",$ldap_dn = "",$ldap_host = "",
 	/* Determine connection method and create LDAP Object */
 	if ($ldap_encryption == "1") {
 		/* This only works with OpenLDAP, I'm pretty sure this will not work with Solaris, Tony */
-		$ldap_conn = @ldap_connect("ldaps://" . $ldap_host . ":" . $ldap_port_ssl);
+		$ldap_conn = @ldap_connect("ldaps://" . $ldap_device . ":" . $ldap_port_ssl);
 	}else{
-		$ldap_conn = @ldap_connect($ldap_host,$ldap_port);
+		$ldap_conn = @ldap_connect($ldap_device,$ldap_port);
 	}
 
 	if ($ldap_conn) {
@@ -247,7 +247,7 @@ function cacti_ldap_auth($username,$password = "",$ldap_dn = "",$ldap_host = "",
 /* cacti_ldap_search_dn
   @arg $username - username to search for in the LDAP directory
   @arg $ldap_dn - configured LDAP DN for binding, "<username>" will be replaced with $username
-  @arg $ldap_host - Hostname or IP of LDAP server, Default = Configured settings value
+  @arg $ldap_device - Hostname or IP of LDAP server, Default = Configured settings value
   @arg $ldap_port - Port of the LDAP server uses, Default = Configured settings value
   @arg $ldap_port_ssl - Port of the LDAP server uses for SSL, Default = Configured settings value
   @arg $ldap_version - '2' or '3', LDAP protocol version, Default = Configured settings value
@@ -285,7 +285,7 @@ Error codes:
 99	PHP LDAP not enabled
 
 */
-function cacti_ldap_search_dn($username,$ldap_dn = "",$ldap_host = "",$ldap_port = "",$ldap_port_ssl = "",$ldap_version = "",$ldap_encryption = "",$ldap_referrals = "", $ldap_mode = "",$ldap_search_base = "", $ldap_search_filter = "",$ldap_specific_dn = "",$ldap_specific_password = "") {
+function cacti_ldap_search_dn($username,$ldap_dn = "",$ldap_device = "",$ldap_port = "",$ldap_port_ssl = "",$ldap_version = "",$ldap_encryption = "",$ldap_referrals = "", $ldap_mode = "",$ldap_search_base = "", $ldap_search_filter = "",$ldap_specific_dn = "",$ldap_specific_password = "") {
 
 	$output = array();
 
@@ -324,8 +324,8 @@ function cacti_ldap_search_dn($username,$ldap_dn = "",$ldap_host = "",$ldap_port
 		$ldap_dn = read_config_option("ldap_dn");
 	}
 	$ldap_dn = str_replace("<username>",$username,$ldap_dn);
-	if (empty($ldap_host)) {
-		$ldap_host = read_config_option("ldap_server");
+	if (empty($ldap_device)) {
+		$ldap_device = read_config_option("ldap_server");
 	}
 	if (empty($ldap_port)) {
 		$ldap_port = read_config_option("ldap_port");
@@ -347,10 +347,10 @@ function cacti_ldap_search_dn($username,$ldap_dn = "",$ldap_host = "",$ldap_port
 	}
 
 	if ($ldap_encryption == "1") {
-		$ldap_host = "ldaps://" . $ldap_host;
+		$ldap_device = "ldaps://" . $ldap_device;
 		$ldap_port = $ldap_port_ssl;
 	}else{
-		$ldap_host = "ldap://" . $ldap_host;
+		$ldap_device = "ldap://" . $ldap_device;
 	}
 
 	if ($ldap_mode == "0") {
@@ -387,7 +387,7 @@ function cacti_ldap_search_dn($username,$ldap_dn = "",$ldap_host = "",$ldap_port
 
 	/* Searching mode */
         /* Setup connection to LDAP server */
-        $ldap_conn = @ldap_connect($ldap_host,$ldap_port);
+        $ldap_conn = @ldap_connect($ldap_device,$ldap_port);
 
 	if ($ldap_conn) {
 		/* Set protocol version */

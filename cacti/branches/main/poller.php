@@ -111,28 +111,28 @@ $concurrent_processes = read_config_option("concurrent_processes");
 /* assume a scheduled task of either 60 or 300 seconds */
 if (isset($poller_interval)) {
 	$num_polling_items = db_fetch_cell("SELECT COUNT(*) FROM poller_item WHERE rrd_next_step<=0" . ($poller_id == 0 ? "" : " AND poller_id=$poller_id "));
-	$items_perhost     = array_rekey(db_fetch_assoc("SELECT host_id, COUNT(*) AS data_sources
+	$items_perdevice     = array_rekey(db_fetch_assoc("SELECT device_id, COUNT(*) AS data_sources
 							FROM poller_item
 							WHERE rrd_next_step<=0 " .
 							($poller_id == 0 ? "" : "AND poller_id=$poller_id ") . "
-							GROUP BY host_id
-							ORDER BY host_id"), "host_id", "data_sources");
+							GROUP BY device_id
+							ORDER BY device_id"), "device_id", "data_sources");
 	$poller_runs       = $cron_interval / $poller_interval;
 
 	define("MAX_POLLER_RUNTIME", $poller_runs * $poller_interval - 2);
 }else{
 	$num_polling_items = db_fetch_cell("SELECT COUNT(*) FROM poller_item" . ($poller_id == 0 ? "" : " WHERE poller_id=$poller_id "));
-	$items_perhost     = array_rekey(db_fetch_assoc("SELECT host_id, COUNT(*) AS data_sources
+	$items_perdevice     = array_rekey(db_fetch_assoc("SELECT device_id, COUNT(*) AS data_sources
 							FROM poller_item " .
 							($poller_id == 0 ? "" : "WHERE poller_id=$poller_id ") . "
-							GROUP BY host_id
-							ORDER BY host_id"), "host_id", "data_sources");
+							GROUP BY device_id
+							ORDER BY device_id"), "device_id", "data_sources");
 	$poller_runs       = 1;
 
 	define("MAX_POLLER_RUNTIME", 298);
 }
 
-if (sizeof($items_perhost)) {
+if (sizeof($items_perdevice)) {
 	$items_per_process   = floor($num_polling_items / $concurrent_processes);
 }else{
 	$process_leveling    = "off";
@@ -200,18 +200,18 @@ while ($poller_runs_completed < $poller_runs) {
 		$overhead_time = $loop_start - $poller_start;
 	}
 
-	$polling_hosts = array_merge(array(0 => array("id" => "0")), db_fetch_assoc("SELECT id FROM host WHERE disabled = '' " . ($poller_id == 0 ? "" : "AND poller_id=$poller_id ") . " ORDER BY id"));
+	$polling_devices = array_merge(array(0 => array("id" => "0")), db_fetch_assoc("SELECT id FROM device WHERE disabled = '' " . ($poller_id == 0 ? "" : "AND poller_id=$poller_id ") . " ORDER BY id"));
 
 	/* initialize counters for script file handling */
-	$host_count = 1;
+	$device_count = 1;
 
 	/* initialize file creation flags */
 	$change_proc = false;
 
-	/* initialize file and host count pointers */
+	/* initialize file and device count pointers */
 	$process_number = 0;
-	$first_host     = 0;
-	$last_host      = 0;
+	$first_device     = 0;
+	$last_device      = 0;
 
 	/* update web paths for the poller */
 	if ($poller_id == 0) {
@@ -250,8 +250,8 @@ while ($poller_runs_completed < $poller_runs) {
 
 	/* mainline */
 	if (read_config_option("poller_enabled") == CHECKED) {
-		/* determine the number of hosts to process per file */
-		$hosts_per_process = ceil(sizeof($polling_hosts) / $concurrent_processes );
+		/* determine the number of devices to process per file */
+		$devices_per_process = ceil(sizeof($polling_devices) / $concurrent_processes );
 
 		$items_launched    = 0;
 
@@ -288,49 +288,49 @@ while ($poller_runs_completed < $poller_runs) {
 		$extra_args = api_plugin_hook_function ('poller_command_args', $extra_args);
 
 		/* Populate each execution file with appropriate information */
-		foreach ($polling_hosts as $item) {
-			if ($host_count == 1) {
-				$first_host = $item["id"];
+		foreach ($polling_devices as $item) {
+			if ($device_count == 1) {
+				$first_device = $item["id"];
 			}
 
 			if ($process_leveling != CHECKED) {
-				if ($host_count == $hosts_per_process) {
-					$last_host    = $item["id"];
+				if ($device_count == $devices_per_process) {
+					$last_device    = $item["id"];
 					$change_proc  = true;
 				}
 			}else{
-				if (isset($items_perhost[$item["id"]])) {
-					$items_launched += $items_perhost[$item["id"]];
+				if (isset($items_perdevice[$item["id"]])) {
+					$items_launched += $items_perdevice[$item["id"]];
 				}
 
 				if (($items_launched >= $items_per_process) ||
-					(sizeof($items_perhost) == $concurrent_processes)) {
-					$last_host      = $item["id"];
+					(sizeof($items_perdevice) == $concurrent_processes)) {
+					$last_device      = $item["id"];
 					$change_proc    = true;
 					$items_launched = 0;
 				}
 			}
 
-			$host_count ++;
+			$device_count ++;
 
 			if ($change_proc) {
-				exec_background($command_string, "$extra_args --first=$first_host --last=$last_host");
+				exec_background($command_string, "$extra_args --first=$first_device --last=$last_device");
 				usleep(100000);
 
-				$host_count   = 1;
+				$device_count   = 1;
 				$change_proc  = false;
-				$first_host   = 0;
-				$last_host    = 0;
+				$first_device   = 0;
+				$last_device    = 0;
 
 				$process_number++;
 			} /* end change_process */
 		} /* end for each */
 
 		/* launch the last process */
-		if ($host_count > 1) {
-			$last_host = $item["id"];
+		if ($device_count > 1) {
+			$last_device = $item["id"];
 
-			exec_background($command_string, "$extra_args --first=$first_host --last=$last_host");
+			exec_background($command_string, "$extra_args --first=$first_device --last=$last_device");
 			usleep(100000);
 
 			$process_number++;
@@ -356,7 +356,7 @@ while ($poller_runs_completed < $poller_runs) {
 				$rrds_processed = $rrds_processed + process_poller_output($rrdtool_pipe, TRUE);
 
 				log_cacti_stats($loop_start, $method, $concurrent_processes, $max_threads,
-					sizeof($polling_hosts), $hosts_per_process, $num_polling_items, $rrds_processed);
+					sizeof($polling_devices), $devices_per_process, $num_polling_items, $rrds_processed);
 
 				break;
 			}else {
@@ -371,7 +371,7 @@ while ($poller_runs_completed < $poller_runs) {
 					cacti_log("Maximum runtime of " . MAX_POLLER_RUNTIME . " seconds exceeded. Exiting.", true, "POLLER");
 
 					log_cacti_stats($loop_start, $method, $concurrent_processes, $max_threads,
-						sizeof($polling_hosts), $hosts_per_process, $num_polling_items, $rrds_processed);
+						sizeof($polling_devices), $devices_per_process, $num_polling_items, $rrds_processed);
 
 					break;
 				}else{
@@ -450,8 +450,8 @@ while ($poller_runs_completed < $poller_runs) {
 	}
 }
 
-function log_cacti_stats($loop_start, $method, $concurrent_processes, $max_threads, $num_hosts,
-	$hosts_per_process, $num_polling_items, $rrds_processed) {
+function log_cacti_stats($loop_start, $method, $concurrent_processes, $max_threads, $num_devices,
+	$devices_per_process, $num_polling_items, $rrds_processed) {
 	global $poller_id;
 
 	/* take time and log performance data */
@@ -473,8 +473,8 @@ function log_cacti_stats($loop_start, $method, $concurrent_processes, $max_threa
 		$method,
 		$concurrent_processes,
 		$max_threads,
-		$num_hosts,
-		$hosts_per_process,
+		$num_devices,
+		$devices_per_process,
 		$num_polling_items,
 		$rrds_processed);
 

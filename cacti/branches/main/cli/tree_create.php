@@ -68,8 +68,8 @@ if (sizeof($parms)) {
 			case "--node-type":		$nodeType 						= trim($value);	break;
 			case "--graph-id":		$tree_item["local_graph_id"] 	= $value;		break;
 			case "--rra-id":		$tree_item["rra_id"] 			= $value;		break;
-			case "--device-id":		$tree_item["host_id"] 			= $value;		break;
-			case "--device-group-type":$tree_item["host_grouping_type"] = trim($value);	break;
+			case "--device-id":		$tree_item["device_id"] 			= $value;		break;
+			case "--device-group-type":$tree_item["device_grouping_type"] = trim($value);	break;
 			case "--sort-children-type":$tree_item["sort_children_type"] = trim($value);	break;
 			case "--parent-node":	$tree_item["parent_node"]		= $value;		break;
 
@@ -150,8 +150,8 @@ if (sizeof($parms)) {
 						$itemType 							= TREE_ITEM_TYPE_HEADER;
 						$tree_item["local_graph_id"]    	= 0;
 						$tree_item["rra_id"]         		= 0;
-						$tree_item["host_id"]         		= 0;
-						$tree_item["host_grouping_type"] 	= HOST_GROUPING_GRAPH_TEMPLATE;
+						$tree_item["device_id"]         		= 0;
+						$tree_item["device_grouping_type"] 	= HOST_GROUPING_GRAPH_TEMPLATE;
 						break;
 					case strtolower($tree_item_types[TREE_ITEM_TYPE_GRAPH]):
 						if (!isset($tree_item["local_graph_id"])) {
@@ -161,11 +161,11 @@ if (sizeof($parms)) {
 						}
 						$itemType 							= TREE_ITEM_TYPE_GRAPH;
 						$tree_item["title"]					= '';
-						$tree_item["host_id"]         		= 0;
-						$tree_item["host_grouping_type"] 	= HOST_GROUPING_GRAPH_TEMPLATE;
+						$tree_item["device_id"]         		= 0;
+						$tree_item["device_grouping_type"] 	= HOST_GROUPING_GRAPH_TEMPLATE;
 						break;
 					case strtolower($tree_item_types[TREE_ITEM_TYPE_DEVICE]):
-						if (!isset($tree_item["host_id"])) {
+						if (!isset($tree_item["device_id"])) {
 							echo __("ERROR: You must supply a valid device id with --device-id") . "\n";
 							display_help($me);
 							exit(1);
@@ -187,13 +187,13 @@ if (sizeof($parms)) {
 				if (!isset($tree_item["sort_children_type"]))	$tree_item["sort_children_type"]	= TREE_ORDERING_NONE;
 				if (!isset($tree_item["local_graph_id"])) 		$tree_item["local_graph_id"] 		= 0;
 				if (!isset($tree_item["rra_id"])) 				$tree_item["rra_id"] 				= 1;
-				if (!isset($tree_item["host_id"])) 				$tree_item["host_id"] 				= 0;
-				if (!isset($tree_item["host_grouping_type"])) 	$tree_item["host_grouping_type"] 	= HOST_GROUPING_GRAPH_TEMPLATE;
+				if (!isset($tree_item["device_id"])) 				$tree_item["device_id"] 				= 0;
+				if (!isset($tree_item["device_grouping_type"])) 	$tree_item["device_grouping_type"] 	= HOST_GROUPING_GRAPH_TEMPLATE;
 
 				# $nodeId could be a Header Node, a Graph Node, or a Host node.
 				$nodeId = api_tree_item_save(0, $tree_item["graph_tree_id"], $itemType, $tree_item["parent_node"],
-											$tree_item["title"], $tree_item["local_graph_id"], $tree_item["rra_id"], $tree_item["host_id"],
-											$tree_item["host_grouping_type"], $tree_item["sort_children_type"], false);
+											$tree_item["title"], $tree_item["local_graph_id"], $tree_item["rra_id"], $tree_item["device_id"],
+											$tree_item["device_grouping_type"], $tree_item["sort_children_type"], false);
 
 				echo __("Added Node (Type: %s) node-id: (%d)", $nodeType, $nodeId) . "\n";
 

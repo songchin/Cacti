@@ -48,15 +48,15 @@ if (sizeof($parms) == 0) {
 }
 
 $debug = FALSE;
-$host_id = "";
+$device_id = "";
 $filter = "";
 
 foreach($parms as $parameter) {
 	@list($arg, $value) = @explode("=", $parameter);
 
 	switch ($arg) {
-	case "-host-id":
-		$host_id = $value;
+	case "-device-id":
+		$device_id = $value;
 		break;
 	case "-s":
 		$filter = $value;
@@ -91,25 +91,25 @@ if (strlen($filter)) {
 	$sql_where = "";
 }
 
-if ($host_id == "All") {
+if ($device_id == "All") {
 	/* Act on all graphs */
-}elseif (substr_count($host_id, "|")) {
-	$hosts = explode("|", $host_id);
-	$host_str = "";
+}elseif (substr_count($device_id, "|")) {
+	$devices = explode("|", $device_id);
+	$device_str = "";
 
-	foreach($hosts as $host) {
-		if (strlen($host_str)) {
-			$host_str .= ", '" . $host . "'";
+	foreach($devices as $device) {
+		if (strlen($device_str)) {
+			$device_str .= ", '" . $device . "'";
 		}else{
-			$host_str .= "'" . $host . "'";
+			$device_str .= "'" . $device . "'";
 		}
 	}
 
-	$sql_where .= " AND graph_local.host_id IN ($host_str)";
-}elseif ($host_id == "0") {
-	$sql_where .= " AND graph_local.host_id=0";
-}elseif (!empty($host_id)) {
-	$sql_where .= " AND graph_local.host_id=" . $host_id;
+	$sql_where .= " AND graph_local.device_id IN ($device_str)";
+}elseif ($device_id == "0") {
+	$sql_where .= " AND graph_local.device_id=0";
+}elseif (!empty($device_id)) {
+	$sql_where .= " AND graph_local.device_id=" . $device_id;
 }else{
 	echo __("ERROR: You must specify either a device-id or 'All' to proceed.") . "\n";
 	display_help($me);
@@ -123,7 +123,7 @@ $graph_list = db_fetch_assoc("SELECT
 	graph_templates_graph.width,
 	graph_templates_graph.title_cache,
 	graph_templates.name,
-	graph_local.host_id
+	graph_local.device_id
 	FROM (graph_local,graph_templates_graph)
 	LEFT JOIN graph_templates ON (graph_local.graph_template_id=graph_templates.id)
 	WHERE graph_local.id=graph_templates_graph.local_graph_id

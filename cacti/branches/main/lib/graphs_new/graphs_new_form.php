@@ -28,9 +28,9 @@
 
 function api_graphs_new_form_save() {
 	if (substr_count($_SERVER["REQUEST_URI"], "/devices.php")) {
-		$file = "devices.php?action=edit&tab=newgraphs&id=" . $_REQUEST["host_id"];
+		$file = "devices.php?action=edit&tab=newgraphs&id=" . $_REQUEST["device_id"];
 	}else{
-		$file = "graphs_new.php?host_id=". $_REQUEST["host_id"];
+		$file = "graphs_new.php?device_id=". $_REQUEST["device_id"];
 	}
 
 
@@ -49,7 +49,7 @@ function api_graphs_new_form_save() {
 		}
 
 		if (isset($selected_graphs)) {
-			host_new_graphs(get_request_var_post("host_id"), get_request_var_post("host_template_id"), $selected_graphs);
+			device_new_graphs(get_request_var_post("device_id"), get_request_var_post("device_template_id"), $selected_graphs);
 			exit;
 		}
 
@@ -58,7 +58,7 @@ function api_graphs_new_form_save() {
 	}
 
 	if (isset($_POST["save_component_new_graphs"])) {
-		host_new_graphs_save();
+		device_new_graphs_save();
 
 		header("Location: " . $file);
 		exit;
@@ -90,14 +90,14 @@ function draw_edit_form_row($field_array, $field_name, $previous_value) {
    ------------------- */
 
 function api_graphs_new_reload_query() {
-	run_data_query(get_request_var("host_id"), get_request_var("id"));
+	run_data_query(get_request_var("device_id"), get_request_var("id"));
 }
 
 /* -------------------
     New Graph Functions
    ------------------- */
 
-function host_new_graphs_save() {
+function device_new_graphs_save() {
 	$selected_graphs_array = unserialize(stripslashes($_POST["selected_graphs_array"]));
 
 	$values = array();
@@ -166,7 +166,7 @@ function host_new_graphs_save() {
 					$snmp_index_array = $form_array3;
 
 					$snmp_query_array["snmp_query_id"] = $form_id1;
-					$snmp_query_array["snmp_index_on"] = get_best_data_query_index_type($_POST["host_id"], $form_id1);
+					$snmp_query_array["snmp_index_on"] = get_best_data_query_index_type($_POST["device_id"], $form_id1);
 					$snmp_query_array["snmp_query_graph_id"] = $form_id2;
 				}
 
@@ -174,30 +174,30 @@ function host_new_graphs_save() {
 			}
 
 			if ($current_form_type == "cg") {
-				$return_array = create_complete_graph_from_template($graph_template_id, $_POST["host_id"], "", $values["cg"]);
+				$return_array = create_complete_graph_from_template($graph_template_id, $_POST["device_id"], "", $values["cg"]);
 
 				debug_log_insert("new_graphs", "Created graph: " . get_graph_title($return_array["local_graph_id"]));
 
-				/* lastly push host-specific information to our data sources */
+				/* lastly push device-specific information to our data sources */
 				if (sizeof($return_array["local_data_id"])) { # we expect at least one data source associated
 					foreach($return_array["local_data_id"] as $item) {
-						push_out_host(get_request_var_post("host_id"), $item);
+						push_out_device(get_request_var_post("device_id"), $item);
 					}
 				} else {
 					debug_log_insert("new_graphs", "ERROR: no Data Source associated. Check Template");
 				}
 			}elseif ($current_form_type == "sg") {
 				while (list($snmp_index, $true) = each($snmp_index_array)) {
-					$snmp_query_array["snmp_index"] = decode_data_query_index($snmp_index, $snmp_query_array["snmp_query_id"], $_POST["host_id"]);
+					$snmp_query_array["snmp_index"] = decode_data_query_index($snmp_index, $snmp_query_array["snmp_query_id"], $_POST["device_id"]);
 
-					$return_array = create_complete_graph_from_template($graph_template_id, $_POST["host_id"], $snmp_query_array, $values["sg"]{$snmp_query_array["snmp_query_id"]});
+					$return_array = create_complete_graph_from_template($graph_template_id, $_POST["device_id"], $snmp_query_array, $values["sg"]{$snmp_query_array["snmp_query_id"]});
 
 					debug_log_insert("new_graphs", "Created graph: " . get_graph_title($return_array["local_graph_id"]));
 
-					/* lastly push host-specific information to our data sources */
+					/* lastly push device-specific information to our data sources */
 					if (sizeof($return_array["local_data_id"])) { # we expect at least one data source associated
 						foreach($return_array["local_data_id"] as $item) {
-							push_out_host(get_request_var_post("host_id"), $item);
+							push_out_device(get_request_var_post("device_id"), $item);
 						}
 					} else {
 						debug_log_insert("new_graphs", "ERROR: no Data Source associated. Check Template");
@@ -208,14 +208,14 @@ function host_new_graphs_save() {
 	}
 }
 
-function host_new_graphs($host_id, $host_template_id, $selected_graphs_array) {
+function device_new_graphs($device_id, $device_template_id, $selected_graphs_array) {
 	global $colors;
 
 	if (substr_count($_SERVER["REQUEST_URI"], "/devices.php")) {
-		$file = "devices.php?action=edit&tab=newgraphs&id=" . $_REQUEST["host_id"];
+		$file = "devices.php?action=edit&tab=newgraphs&id=" . $_REQUEST["device_id"];
 		$file2 = "devices.php";
 	}else{
-		$file = "graphs_new.php?host_id=". $_REQUEST["host_id"];
+		$file = "graphs_new.php?device_id=". $_REQUEST["device_id"];
 		$file2 = "graphs_new.php";
 	}
 
@@ -316,12 +316,12 @@ function host_new_graphs($host_id, $host_template_id, $selected_graphs_array) {
 
 		/* since the user didn't actually click "Create" to POST the data; we have to
 		pretend like they did here */
-		$_POST["host_template_id"] = $host_template_id;
-		$_POST["host_id"] = $host_id;
+		$_POST["device_template_id"] = $device_template_id;
+		$_POST["device_id"] = $device_id;
 		$_POST["save_component_new_graphs"] = "1";
 		$_POST["selected_graphs_array"] = serialize($selected_graphs_array);
 
-		host_new_graphs_save();
+		device_new_graphs_save();
 
 		header("Location: " . $file);
 		exit;
@@ -330,12 +330,12 @@ function host_new_graphs($host_id, $host_template_id, $selected_graphs_array) {
 	/* flush the current output buffer to the browser */
 	ob_end_flush();
 
-	form_hidden_box("host_template_id", $host_template_id, "0");
-	form_hidden_box("host_id", $host_id, "0");
+	form_hidden_box("device_template_id", $device_template_id, "0");
+	form_hidden_box("device_id", $device_id, "0");
 	form_hidden_box("save_component_new_graphs", "1", "");
 	print "<input type='hidden' name='selected_graphs_array' value='" . serialize($selected_graphs_array) . "'>\n";
 
-	form_save_button_alt("host_id!$host_id");
+	form_save_button_alt("device_id!$device_id");
 
 	include_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
 }
@@ -348,7 +348,7 @@ function graphs_new() {
 	global $colors;
 
 	/* ================= input validation ================= */
-	input_validate_input_number(get_request_var_request("host_id"));
+	input_validate_input_number(get_request_var_request("device_id"));
 	input_validate_input_number(get_request_var_request("graph_type"));
 	/* ==================================================== */
 
@@ -360,14 +360,14 @@ function graphs_new() {
 	/* if the user pushed the 'clear' button */
 	if (isset($_REQUEST["clear_x"])) {
 		if (!substr_count($_SERVER["REQUEST_URI"], "/devices.php")) {
-			kill_session_var("sess_graphs_new_host_id");
+			kill_session_var("sess_graphs_new_device_id");
 		}
 
 		kill_session_var("sess_graphs_new_graph_type");
 		kill_session_var("sess_graphs_new_filter");
 
 		if (!substr_count($_SERVER["REQUEST_URI"], "/devices.php")) {
-			unset($_REQUEST["host_id"]);
+			unset($_REQUEST["device_id"]);
 		}
 
 		unset($_REQUEST["graph_type"]);
@@ -377,24 +377,24 @@ function graphs_new() {
 	}else{
 		/* if any of the settings changed, reset the page number */
 		$changed = 0;
-		$changed += check_changed("host_id",    "sess_graphs_new_host_id");
+		$changed += check_changed("device_id",    "sess_graphs_new_device_id");
 		$changed += check_changed("graph_type", "sess_graphs_new_graph_type");
 		$changed += check_changed("filter",     "sess_graphs_new_filter");
 	}
 
-	load_current_session_value("host_id",    "sess_graphs_new_host_id",    db_fetch_cell("select id from host order by description,hostname limit 1"));
+	load_current_session_value("device_id",    "sess_graphs_new_device_id",    db_fetch_cell("select id from device order by description,devicename limit 1"));
 	load_current_session_value("graph_type", "sess_graphs_new_graph_type", read_config_option("default_graphs_new_dropdown"));
 	load_current_session_value("filter",     "sess_graphs_new_filter",     "");
 
 	if (substr_count($_SERVER["REQUEST_URI"], "/devices.php")) {
-		$file = "devices.php?action=edit&tab=newgraphs&id=" . $_REQUEST["host_id"];
+		$file = "devices.php?action=edit&tab=newgraphs&id=" . $_REQUEST["device_id"];
 		$file2 = "devices.php";
 	}else{
-		$file = "graphs_new.php?host_id=". $_REQUEST["host_id"];
+		$file = "graphs_new.php?device_id=". $_REQUEST["device_id"];
 		$file2 = "graphs_new.php";
 	}
 
-	$host      = db_fetch_row("select id,description,hostname,host_template_id from host where id=" . $_REQUEST["host_id"]);
+	$device      = db_fetch_row("select id,description,devicename,device_template_id from device where id=" . $_REQUEST["device_id"]);
 	$row_limit = read_config_option("num_rows_data_query");
 	$debug_log = debug_log_return("new_graphs");
 
@@ -404,7 +404,7 @@ function graphs_new() {
 	function applyGraphsNewFilterChange(objForm) {
 		strURL = '?action=edit&tab=newgraphs';
 		strURL = strURL + '&graph_type=' + objForm.graph_type.value;
-		strURL = strURL + '&host_id=' + objForm.host_id.value;
+		strURL = strURL + '&device_id=' + objForm.device_id.value;
 		strURL = strURL + '&filter=' + objForm.filter.value;;
 		document.location = strURL;
 	}
@@ -412,7 +412,7 @@ function graphs_new() {
 	</script>
 	<?php
 
-	html_start_box("<strong>" . $host["description"] . "(" . $host["hostname"] . ")</strong> " . db_fetch_cell("select name from host_template where id=" . $host["host_template_id"]), "100", $colors["header"], "3", "center", "");
+	html_start_box("<strong>" . $device["description"] . "(" . $device["devicename"] . ")</strong> " . db_fetch_cell("select name from device_template where id=" . $device["device_template_id"]), "100", $colors["header"], "3", "center", "");
 
 	?>
 	<tr class='rowAlternate2'>
@@ -425,13 +425,13 @@ function graphs_new() {
 						&nbsp;Host:&nbsp;
 					</td>
 					<td width="1">
-						<select name="host_id" onChange="applyGraphsNewFilterChange(document.form_graphs_new)">
+						<select name="device_id" onChange="applyGraphsNewFilterChange(document.form_graphs_new)">
 						<?php
-						$hosts = db_fetch_assoc("select id,CONCAT_WS('',description,' (',hostname,')') as name from host order by description,hostname");
+						$devices = db_fetch_assoc("select id,CONCAT_WS('',description,' (',devicename,')') as name from device order by description,devicename");
 
-						if (sizeof($hosts) > 0) {
-						foreach ($hosts as $item) {
-							print "<option value='" . $item["id"] . "'"; if (get_request_var_request("host_id") == $item["id"]) { print " selected"; } print ">" . $item["name"] . "</option>\n";
+						if (sizeof($devices) > 0) {
+						foreach ($devices as $item) {
+							print "<option value='" . $item["id"] . "'"; if (get_request_var_request("device_id") == $item["id"]) { print " selected"; } print ">" . $item["name"] . "</option>\n";
 						}
 						}
 						?>
@@ -451,9 +451,9 @@ function graphs_new() {
 							snmp_query.id,
 							snmp_query.name,
 							snmp_query.xml_path
-							FROM (snmp_query,host_snmp_query)
-							WHERE host_snmp_query.snmp_query_id=snmp_query.id
-							AND host_snmp_query.host_id=" . $host["id"] . "
+							FROM (snmp_query,device_snmp_query)
+							WHERE device_snmp_query.snmp_query_id=snmp_query.id
+							AND device_snmp_query.device_id=" . $device["id"] . "
 							ORDER BY snmp_query.name");
 
 						if (sizeof($snmp_queries) > 0) {
@@ -465,7 +465,7 @@ function graphs_new() {
 						</select>
 					</td>
 					<td style="white-space:nowrap;width:1%;" class="textInfo" align="center" valign="top">
-						<?php if (!isset($_REQUEST["tab"])) { ?><span class="tabedit">*</span><a href="devices.php?action=edit&id=<?php print $_REQUEST["host_id"];?>"><?php print __("Edit this Host");?></a><br><?php } ?>
+						<?php if (!isset($_REQUEST["tab"])) { ?><span class="tabedit">*</span><a href="devices.php?action=edit&id=<?php print $_REQUEST["device_id"];?>"><?php print __("Edit this Host");?></a><br><?php } ?>
 						<?php api_plugin_hook('graphs_new_top_links'); ?>
 					</td>
 				</tr>
@@ -497,7 +497,7 @@ function graphs_new() {
 
 	html_end_box(false);
 
-	$total_rows = sizeof(db_fetch_assoc("select graph_template_id from host_graph where host_id=" . $_REQUEST["host_id"]));
+	$total_rows = sizeof(db_fetch_assoc("select graph_template_id from device_graph where device_id=" . $_REQUEST["device_id"]));
 
 	$i = 0;
 
@@ -515,17 +515,17 @@ function graphs_new() {
 		$graph_templates = db_fetch_assoc("SELECT
 			graph_templates.id AS graph_template_id,
 			graph_templates.name AS graph_template_name
-			FROM (host_graph,graph_templates)
-			WHERE host_graph.graph_template_id=graph_templates.id
-			AND host_graph.host_id=" . $_REQUEST["host_id"] . "
+			FROM (device_graph,graph_templates)
+			WHERE device_graph.graph_template_id=graph_templates.id
+			AND device_graph.device_id=" . $_REQUEST["device_id"] . "
 			ORDER BY graph_templates.name");
 
 		$template_graphs = db_fetch_assoc("SELECT
 			graph_local.graph_template_id
-			FROM (graph_local,host_graph)
-			WHERE graph_local.graph_template_id=host_graph.graph_template_id
-			AND graph_local.host_id=host_graph.host_id
-			AND graph_local.host_id=" . $host["id"] . "
+			FROM (graph_local,device_graph)
+			WHERE graph_local.graph_template_id=device_graph.graph_template_id
+			AND graph_local.device_id=device_graph.device_id
+			AND graph_local.device_id=" . $device["id"] . "
 			GROUP BY graph_local.graph_template_id");
 
 		if (sizeof($template_graphs) > 0) {
@@ -593,9 +593,9 @@ function graphs_new() {
 			snmp_query.id,
 			snmp_query.name,
 			snmp_query.xml_path
-			FROM (snmp_query,host_snmp_query)
-			WHERE host_snmp_query.snmp_query_id=snmp_query.id
-			AND host_snmp_query.host_id=" . $host["id"] .
+			FROM (snmp_query,device_snmp_query)
+			WHERE device_snmp_query.snmp_query_id=snmp_query.id
+			AND device_snmp_query.device_id=" . $device["id"] .
 			($_REQUEST["graph_type"] != -2 ? " AND snmp_query.id=" . $_REQUEST["graph_type"] : '') . "
 			ORDER BY snmp_query.name");
 
@@ -624,7 +624,7 @@ function graphs_new() {
 						$num_input_fields++;
 
 						if (!isset($total_rows)) {
-							$total_rows = db_fetch_cell("SELECT count(*) FROM host_snmp_cache WHERE host_id=" . $host["id"] . " and snmp_query_id=" . $snmp_query["id"] . " AND field_name='$field_name'");
+							$total_rows = db_fetch_cell("SELECT count(*) FROM device_snmp_cache WHERE device_id=" . $device["id"] . " and snmp_query_id=" . $snmp_query["id"] . " AND field_name='$field_name'");
 						}
 					}
 				}
@@ -648,7 +648,7 @@ function graphs_new() {
 						WHERE data_local.id=data_template_data.local_data_id
 						AND data_input_fields.type_code='output_type'
 						AND data_input_data.value='" . $snmp_query_graph["id"] . "'
-						AND data_local.host_id=" . $host["id"]);
+						AND data_local.device_id=" . $device["id"]);
 
 					print "created_graphs[" . $snmp_query_graph["id"] . "] = new Array(";
 
@@ -667,7 +667,7 @@ function graphs_new() {
 				print "//-->\n</script>\n";
 			}
 
-			html_start_box_dq($snmp_query["name"], $snmp_query["id"], $host["id"], $num_input_fields+1, "100", $colors["header"], "0", "center");
+			html_start_box_dq($snmp_query["name"], $snmp_query["id"], $device["id"], $num_input_fields+1, "100", $colors["header"], "0", "center");
 
 			if ($xml_array != false) {
 				$html_dq_header = "";
@@ -680,10 +680,10 @@ function graphs_new() {
 				if (strlen(get_request_var_request("filter"))) {
 					$sql_where = "";
 					$indexes = db_fetch_assoc("SELECT DISTINCT snmp_index
-						FROM host_snmp_cache
+						FROM device_snmp_cache
 						WHERE field_value LIKE '%%" . get_request_var_request("filter") . "%%'
 						AND snmp_query_id=" . $snmp_query["id"] . "
-						AND host_id=" . $host["id"]);
+						AND device_id=" . $device["id"]);
 
 					if (sizeof($indexes)) {
 						foreach($indexes as $index) {
@@ -717,12 +717,12 @@ function graphs_new() {
 
 					/* get the unique field values from the database */
 					$field_names = db_fetch_assoc("SELECT DISTINCT field_name
-						FROM host_snmp_cache
-						WHERE host_id=" . $host["id"] . "
+						FROM device_snmp_cache
+						WHERE device_id=" . $device["id"] . "
 						AND snmp_query_id=" . $snmp_query["id"]);
 
 					/* build magic query */
-					$sql_query  = "SELECT host_id, snmp_query_id, snmp_index";
+					$sql_query  = "SELECT device_id, snmp_query_id, snmp_index";
 					$num_visible_fields = sizeof($field_names);
 					$i = 0;
 					if (sizeof($field_names) > 0) {
@@ -733,19 +733,19 @@ function graphs_new() {
 						}
 					}
 
-					$sql_query .= " FROM host_snmp_cache
-						WHERE host_id=" . $host["id"] . "
+					$sql_query .= " FROM device_snmp_cache
+						WHERE device_id=" . $device["id"] . "
 						AND snmp_query_id=" . $snmp_query["id"] . "
 						$sql_where
-						GROUP BY host_id, snmp_query_id, snmp_index
+						GROUP BY device_id, snmp_query_id, snmp_index
 						$sql_order
 						LIMIT " . ($row_limit*($page-1)) . "," . $row_limit;
 
-					$rows_query = "SELECT host_id, snmp_query_id, snmp_index FROM host_snmp_cache
-						WHERE host_id=" . $host["id"] . "
+					$rows_query = "SELECT device_id, snmp_query_id, snmp_index FROM device_snmp_cache
+						WHERE device_id=" . $device["id"] . "
 						AND snmp_query_id=" . $snmp_query["id"] . "
 						$sql_where
-						GROUP BY host_id, snmp_query_id, snmp_index";
+						GROUP BY device_id, snmp_query_id, snmp_index";
 
 					$snmp_query_indexes = db_fetch_assoc($sql_query);
 
@@ -758,10 +758,10 @@ function graphs_new() {
 					}
 
 					if (substr_count($_SERVER["REQUEST_URI"], "/devices.php")) {
-						$file = "devices.php?action=edit&tab=newgraphs&id=" . $_REQUEST["host_id"];
+						$file = "devices.php?action=edit&tab=newgraphs&id=" . $_REQUEST["device_id"];
 						$file2 = "devices.php";
 					}else{
-						$file = "graphs_new.php?host_id=". $_REQUEST["host_id"];
+						$file = "graphs_new.php?device_id=". $_REQUEST["device_id"];
 						$file2 = "graphs_new.php";
 					}
 
@@ -785,7 +785,7 @@ function graphs_new() {
 					}
 
 					if (!sizeof($snmp_query_indexes)) {
-						print "<tr class='rowAlternate1'><td>" . __("This data query returned 0 rows, perhaps there was a problem executing this data query. You can %s run this data query in debug mode %s to get more information.", "<a href='" . htmlspecialchars("devices.php?action=query_verbose&id=" . $snmp_query["id"] . "&host_id=" . $host["id"]) . "'>", "</a>") . "</td></tr>\n";
+						print "<tr class='rowAlternate1'><td>" . __("This data query returned 0 rows, perhaps there was a problem executing this data query. You can %s run this data query in debug mode %s to get more information.", "<a href='" . htmlspecialchars("devices.php?action=query_verbose&id=" . $snmp_query["id"] . "&device_id=" . $device["id"]) . "'>", "</a>") . "</td></tr>\n";
 					}else{
 						print "<tr class='rowSubHeader'>
 								$html_dq_header
@@ -868,8 +868,8 @@ function graphs_new() {
 	}
 
 	form_hidden_box("save_component_graph", "1", "");
-	form_hidden_box("host_id", $host["id"], "0");
-	form_hidden_box("host_template_id", $host["host_template_id"], "0");
+	form_hidden_box("device_id", $device["id"], "0");
+	form_hidden_box("device_template_id", $device["device_template_id"], "0");
 
 	form_save_button_alt("url!" . (isset($_SERVER["HTTP_REFERER"]) ? $_SERVER["HTTP_REFERER"] : ""));
 

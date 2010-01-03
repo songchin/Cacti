@@ -41,7 +41,7 @@ $me = array_shift($parms);
 
 if (sizeof($parms)) {
 	$sortMethods = array('manual' => 1, 'alpha' => 2, 'natural' => 4, 'numeric' => 3);
-	$nodeTypes   = array('header' => 1, 'graph' => 2, 'host' => 3);
+	$nodeTypes   = array('header' => 1, 'graph' => 2, 'device' => 3);
 
 	$quietMode      = FALSE;
 	$displayTrees   = FALSE;

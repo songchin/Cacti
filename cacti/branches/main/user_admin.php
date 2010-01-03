@@ -335,7 +335,7 @@ function form_save() {
 		input_validate_input_number(get_request_var_post("perm_graph_templates"));
 		input_validate_input_number(get_request_var_post("policy_graphs"));
 		input_validate_input_number(get_request_var_post("policy_trees"));
-		input_validate_input_number(get_request_var_post("policy_hosts"));
+		input_validate_input_number(get_request_var_post("policy_devices"));
 		input_validate_input_number(get_request_var_post("policy_graph_templates"));
 		/* ==================================================== */
 
@@ -359,7 +359,7 @@ function form_save() {
 			SET
 				policy_graphs=" . get_request_var_post("policy_graphs") . ",
 				policy_trees="  . get_request_var_post("policy_trees"). ",
-				policy_hosts="  . get_request_var_post("policy_hosts"). ",
+				policy_devices="  . get_request_var_post("policy_devices"). ",
 				policy_graph_templates=" . get_request_var_post("policy_graph_templates") . "
 			WHERE id=" . get_request_var_post("id"));
 
@@ -418,7 +418,7 @@ function form_save() {
 		$save["login_opts"] = form_input_validate(get_request_var_post("login_opts"), "login_opts", "", true, 3);
 		$save["policy_graphs"] = form_input_validate(get_request_var_post("policy_graphs", get_request_var_post("_policy_graphs")), "policy_graphs", "", true, 3);
 		$save["policy_trees"] = form_input_validate(get_request_var_post("policy_trees", get_request_var_post("_policy_trees")), "policy_trees", "", true, 3);
-		$save["policy_hosts"] = form_input_validate(get_request_var_post("policy_hosts", get_request_var_post("_policy_hosts")), "policy_hosts", "", true, 3);
+		$save["policy_devices"] = form_input_validate(get_request_var_post("policy_devices", get_request_var_post("_policy_devices")), "policy_devices", "", true, 3);
 		$save["policy_graph_templates"] = form_input_validate(get_request_var_post("policy_graph_templates", get_request_var_post("_policy_graph_templates")), "policy_graph_templates", "", true, 3);
 		$save["realm"] = get_request_var_post("realm", 0);
 		$save["enabled"] = form_input_validate(get_request_var_post("enabled", ""), "enabled", "", true, 3);
@@ -462,7 +462,7 @@ function form_save() {
 		db_execute("UPDATE user_auth SET
 			policy_graphs = " . get_request_var_post("policy_graphs") . ",
 			policy_trees = " . get_request_var_post("policy_trees") . ",
-			policy_hosts = " . get_request_var_post("policy_hosts") . ",
+			policy_devices = " . get_request_var_post("policy_devices") . ",
 			policy_graph_templates = " . get_request_var_post("policy_graph_templates") . "
 			WHERE id = " . get_request_var_post("id"));
 	} else {
@@ -498,7 +498,7 @@ function perm_remove() {
 		db_execute("DELETE FROM user_auth_perms WHERE type = " . PERM_GRAPHS . " AND user_id = " . get_request_var("user_id") . " AND item_id = " . get_request_var("id"));
 	}elseif (get_request_var("type") == "tree") {
 		db_execute("DELETE FROM user_auth_perms WHERE type = " . PERM_TREES . " AND user_id = " . get_request_var("user_id") . " AND item_id = " . get_request_var("id"));
-	}elseif (get_request_var("type") == "host") {
+	}elseif (get_request_var("type") == "device") {
 		db_execute("DELETE FROM user_auth_perms WHERE type = " . PERM_DEVICES . " AND user_id = " . get_request_var("user_id") . " AND item_id = " . get_request_var("id"));
 	}elseif (get_request_var("type") == "graph_template") {
 		db_execute("DELETE FROM user_auth_perms WHERE type = " . PERM_GRAPH_TEMPLATES . " AND user_id=" . get_request_var("user_id") . " and item_id = " . get_request_var("id"));
@@ -516,7 +516,7 @@ function graph_perms_edit() {
 	/* ==================================================== */
 
 	if (!empty($_GET["id"])) {
-		$policy = db_fetch_row("SELECT policy_graphs,policy_trees,policy_hosts,policy_graph_templates FROM user_auth WHERE id = " . get_request_var("id"));
+		$policy = db_fetch_row("SELECT policy_graphs,policy_trees,policy_devices,policy_graph_templates FROM user_auth WHERE id = " . get_request_var("id"));
 
 		$header_label = __("[edit: ") . db_fetch_cell("SELECT username FROM user_auth WHERE id = " . get_request_var("id")) . "]";
 	}
@@ -525,7 +525,7 @@ function graph_perms_edit() {
 	<script type="text/javascript">
 	<!--
 	$().ready(function() {
-		$("#device").autocomplete("./lib/ajax/get_hosts_detailed.php", { max: 8, highlight: false, scroll: true, scrollHeight: 300 });
+		$("#device").autocomplete("./lib/ajax/get_devices_detailed.php", { max: 8, highlight: false, scroll: true, scrollHeight: 300 });
 		$("#device").result(function(event, data, formatted) {
 			if (data) {
 				$(this).parent().find("#perm_devices").val(data[1]);
@@ -608,13 +608,13 @@ function graph_perms_edit() {
 	/* box: device permissions */
 	html_start_box("<strong>" . __("Graph Permissions (By Device)") . "</strong>", "100", $colors["header"], "3", "center", "");
 
-	$hosts = db_fetch_assoc("SELECT
-		host.id,
-		CONCAT('',host.description,' (',host.hostname,')') as name
-		FROM host
-		LEFT JOIN user_auth_perms ON (host.id = user_auth_perms.item_id AND user_auth_perms.type = " . PERM_DEVICES . ")
+	$devices = db_fetch_assoc("SELECT
+		device.id,
+		CONCAT('',device.description,' (',device.devicename,')') as name
+		FROM device
+		LEFT JOIN user_auth_perms ON (device.id = user_auth_perms.item_id AND user_auth_perms.type = " . PERM_DEVICES . ")
 		WHERE user_auth_perms.user_id = " . get_request_var("id", 0) . "
-		ORDER BY host.description,host.hostname");
+		ORDER BY device.description,device.devicename");
 
 	?>
 	<tr bgcolor="#<?php print $colors['form_alternate1'];?>">
@@ -622,18 +622,18 @@ function graph_perms_edit() {
 			<font class="textEditTitle" title="<?php print __("The default allow/deny graph policy for this user");?>"><?php print __("Default Policy");?></font>
 		</td>
 		<td align="left">
-			<?php form_dropdown("policy_hosts",$graph_policy_array,"","",$policy["policy_hosts"],"",""); ?>
+			<?php form_dropdown("policy_devices",$graph_policy_array,"","",$policy["policy_devices"],"",""); ?>
 		</td>
 	</tr>
 	<tr>
 		<td colspan="2">
 			<table width="100%" cellpadding="1" cellspacing="0">
 				<?php
-				if (sizeof($hosts)) {
-					foreach ($hosts as $item) {
-						form_alternate_row_color("host" . $item["id"], true);
-						print "<td><strong>" . $item["name"] . "</strong>" . __(" - ") . (($policy["policy_hosts"] == POLICY_ALLOW) ? __("No Access") : __("Accessible")) . "</td>
-								<td align='right'><a href='" . htmlspecialchars("user_admin.php?action=perm_remove&type=host&id=" . $item["id"] . "&user_id=" . $_GET["id"]) . "'><img class='buttonSmall' src='images/delete_icon.gif' alt='" . __("Delete") . "' align='absmiddle'></a>&nbsp;</td>\n";
+				if (sizeof($devices)) {
+					foreach ($devices as $item) {
+						form_alternate_row_color("device" . $item["id"], true);
+						print "<td><strong>" . $item["name"] . "</strong>" . __(" - ") . (($policy["policy_devices"] == POLICY_ALLOW) ? __("No Access") : __("Accessible")) . "</td>
+								<td align='right'><a href='" . htmlspecialchars("user_admin.php?action=perm_remove&type=device&id=" . $item["id"] . "&user_id=" . $_GET["id"]) . "'><img class='buttonSmall' src='images/delete_icon.gif' alt='" . __("Delete") . "' align='absmiddle'></a>&nbsp;</td>\n";
 						form_end_row();
 					}
 				}else{
@@ -921,7 +921,7 @@ function graph_settings_edit() {
    -------------------------- */
 
 function user_edit() {
-	global $colors, $fields_user_user_edit_host;
+	global $colors, $fields_user_user_edit_device;
 
 	/* ================= input validation ================= */
 	input_validate_input_number(get_request_var("id"));
@@ -974,7 +974,7 @@ function user_edit() {
 
 		draw_edit_form(array(
 			"config" => array("form_name" => "chk"),
-			"fields" => inject_form_variables($fields_user_user_edit_host, (isset($user) ? $user : array()))
+			"fields" => inject_form_variables($fields_user_user_edit_device, (isset($user) ? $user : array()))
 		));
 		print "</table></td></tr>";		/* end of html_header */
 		html_end_box();
@@ -984,7 +984,7 @@ function user_edit() {
 #		html_start_box("", "100%", $colors["header"], "3", "center");
 #		draw_edit_form(array(
 #			"config" => array("form_name" => "chk"),
-#			"fields" => inject_form_variables($fields_user_user_edit_host, (isset($user) ? $user : array()))
+#			"fields" => inject_form_variables($fields_user_user_edit_device, (isset($user) ? $user : array()))
 #		));
 #		html_end_box();
 #

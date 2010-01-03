@@ -74,9 +74,9 @@ if (sizeof($parms)) {
 			case "--site-id":		$device["site_id"] 				= trim($value);	break;
 			case "--poller-id":		$device["poller_id"]			= trim($value);	break;
 			case "--description":	$device["description"] 			= trim($value);	break;
-			case "--ip":			$device["hostname"] 			= trim($value);	break;
-			case "--host_template_id":
-			case "--template":		$device["host_template_id"]	 	= trim($value);	break;
+			case "--ip":			$device["devicename"] 			= trim($value);	break;
+			case "--device_template_id":
+			case "--template":		$device["device_template_id"]	 	= trim($value);	break;
 			case "--community":		$device["snmp_community"] 		= trim($value);	break;
 			case "--version":		$device["snmp_version"] 		= trim($value);	break;
 			case "--notes":			$device["notes"] 				= trim($value);	break;
@@ -129,12 +129,12 @@ if (sizeof($parms)) {
 
 	if ($listGraphTemplates) {		# list graph templates
 		$graph_templates = array();
-		if (isset($device["host_template_id"]) && !($device["host_template_id"] === 0)) {
-			if (db_fetch_cell("SELECT id FROM host_template WHERE id=" . $device["host_template_id"])) {
+		if (isset($device["device_template_id"]) && !($device["device_template_id"] === 0)) {
+			if (db_fetch_cell("SELECT id FROM device_template WHERE id=" . $device["device_template_id"])) {
 				/* if a device Template Id is given, print the related Graph Templates */
-				$graph_templates = getGraphTemplatesByHostTemplate($device["host_template_id"]);
+				$graph_templates = getGraphTemplatesByHostTemplate($device["device_template_id"]);
 			} else {
-				echo __("ERROR: Invalid host-template-id (%d) given", $device["host_template_id"]) . "\n";
+				echo __("ERROR: Invalid device-template-id (%d) given", $device["device_template_id"]) . "\n";
 				echo __("Try -php -q device_template_list.php") . "\n";
 				exit(1);
 			}
@@ -168,7 +168,7 @@ if (sizeof($parms)) {
 
 
 	} elseif ($listSNMPFields) {	# list SNMP Fields
-		if (isset($device["id"]) && !($device["id"] === 0) && (db_fetch_cell("SELECT id FROM host WHERE id=" . $device["id"]))) {
+		if (isset($device["id"]) && !($device["id"] === 0) && (db_fetch_cell("SELECT id FROM device WHERE id=" . $device["id"]))) {
 			$snmpFields = getSNMPFields($device["id"], $ds_graph["snmpQueryId"]);
 			displaySNMPFields($snmpFields, $device["id"], $quietMode);
 			exit(0);
@@ -180,7 +180,7 @@ if (sizeof($parms)) {
 
 
 	} elseif ($listSNMPValues)  {	# list SNMP Values
-		if (isset($device["id"]) && !($device["id"] === 0) && (db_fetch_cell("SELECT id FROM host WHERE id=" . $device["id"]))) {
+		if (isset($device["id"]) && !($device["id"] === 0) && (db_fetch_cell("SELECT id FROM device WHERE id=" . $device["id"]))) {
 
 			$snmpValues = array();
 			if ($ds_graph["snmpField"] != "") {
@@ -227,7 +227,7 @@ if (sizeof($parms)) {
 			$columns = array();
 			$graphs = getGraphs($selection, $columns);
 			$title = __("List graph");
-			/* display matching hosts */
+			/* display matching devices */
 			displayGenericArray($graphs, $columns, $title, $quietMode);
 		}
 
@@ -253,20 +253,20 @@ if (sizeof($parms)) {
 				exit(1);
 			}
 
-			/* form a valid sql statement for host_id */
-			$selection = "WHERE " . str_replace("id", "host_id", array_to_sql_or($devices, "id")) . " ";
+			/* form a valid sql statement for device_id */
+			$selection = "WHERE " . str_replace("id", "device_id", array_to_sql_or($devices, "id")) . " ";
 		}
 
 
 		if (isset($graph_template_id) && !($graph_template_id === 0) && (db_fetch_cell("SELECT id FROM graph_templates WHERE id=$graph_template_id"))) {
-			/* form a valid sql statement for host_id */
+			/* form a valid sql statement for device_id */
 			$selection .= (strlen($selection) ? " AND " : " WHERE ") . " graph_templates.id=" . $graph_template_id;
 		}
 
 		$columns = array();
 		$graphs = getGraphs($selection, $columns);
 		$title = __("List of existing graphs for given device selection");
-		/* display matching hosts */
+		/* display matching devices */
 		displayGenericArray($graphs, $columns, $title, $quietMode);
 	}
 
@@ -281,7 +281,7 @@ function display_help($me) {
 	echo __("A simple command line utility to list graphs in Cacti") . "\n\n";
 	echo __("usage: ") . $me . " --device-id=[ID] --graph-template-id=[ID] [--graph-id=]\n\n";
 	echo __("List Options:") . "\n";
-	echo "   --list-graph-templates [--host-template-id=[ID]]\n";
+	echo "   --list-graph-templates [--device-template-id=[ID]]\n";
 	echo "   --list-input-fields  --graph-template-id=[ID]\n";
 	echo __("More list Options for 'ds' graphs only:") . "\n";
 	echo "   --list-query-types   --snmp-query-id=[ID]\n";

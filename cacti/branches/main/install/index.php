@@ -412,13 +412,13 @@ if (get_request_var_request("step") == "4") {
 	setcookie(session_name(),"",time() - 3600,"/");
 
 	kill_session_var("sess_config_array");
-	kill_session_var("sess_host_cache_array");
+	kill_session_var("sess_device_cache_array");
 
 	/* just in case we have hard drive graphs to deal with */
-	$host_id = db_fetch_cell("select id from host where hostname='127.0.0.1'");
+	$device_id = db_fetch_cell("select id from device where devicename='127.0.0.1'");
 
-	if (!empty($host_id)) {
-		run_data_query($host_id, 6);
+	if (!empty($device_id)) {
+		run_data_query($device_id, 6);
 	}
 
 	/* it's not always a good idea to re-populate the poller cache to make sure everything is

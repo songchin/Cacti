@@ -23,7 +23,7 @@
 */
 
 if (!defined('VALID_HOST_FIELDS')) {
-	$string = do_hook_function('valid_host_fields', '(hostname|snmp_community|snmp_username|snmp_password|snmp_auth_protocol|snmp_priv_passphrase|snmp_priv_protocol|snmp_context|snmp_version|snmp_port|snmp_timeout)');
+	$string = do_hook_function('valid_device_fields', '(devicename|snmp_community|snmp_username|snmp_password|snmp_auth_protocol|snmp_priv_passphrase|snmp_priv_protocol|snmp_context|snmp_version|snmp_port|snmp_timeout)');
 	define('VALID_HOST_FIELDS', $string);
 }
 
@@ -254,7 +254,7 @@ $fields_data_input_field_edit = array(
 	"type_code" => array(
 		"method" => "textbox",
 		"friendly_name" => __("Special Type Code"),
-		"description" => __("If this field should be treated specially by Device Templates, indicate so here. Valid keywords for this field are 'hostname', 'snmp_community', 'snmp_username', 'snmp_password', 'snmp_auth_protocol', 'snmp_priv_passphrase', 'snmp_priv_protocol', 'snmp_context', 'snmp_port', 'snmp_timeout', and 'snmp_version'."),
+		"description" => __("If this field should be treated specially by Device Templates, indicate so here. Valid keywords for this field are 'devicename', 'snmp_community', 'snmp_username', 'snmp_password', 'snmp_auth_protocol', 'snmp_priv_passphrase', 'snmp_priv_protocol', 'snmp_context', 'snmp_port', 'snmp_timeout', and 'snmp_version'."),
 		"value" => "|arg1:type_code|",
 		"max_length" => "40"
 		),
@@ -888,10 +888,10 @@ $struct_graph_item = array(
 		"friendly_name" => __("Data Source"),
 		"method" => "drop_sql",
 		"sql" => "select
-			CONCAT_WS('', CASE WHEN host.description IS NULL THEN 'No Host' WHEN host.description IS NOT NULL THEN host.description end,' - ',data_template_data.name,' (',data_template_rrd.data_source_name,')') AS name,
+			CONCAT_WS('', CASE WHEN device.description IS NULL THEN 'No Host' WHEN device.description IS NOT NULL THEN device.description end,' - ',data_template_data.name,' (',data_template_rrd.data_source_name,')') AS name,
 			data_template_rrd.id
 			FROM (data_template_data,data_template_rrd,data_local)
-			LEFT JOIN host ON (data_local.host_id=host.id)
+			LEFT JOIN device ON (data_local.device_id=device.id)
 			WHERE data_template_rrd.local_data_id=data_local.id
 			AND data_template_data.local_data_id=data_local.id
 			ORDER BY name",
@@ -1125,7 +1125,7 @@ $fields_site_edit = array(
 
 /* file: devices.php, action: edit */
 $fields_device_edit = array(
-	"host_header" => array(
+	"device_header" => array(
 		"method" => "spacer",
 		"friendly_name" => __("General Device Options"),
 		),
@@ -1137,11 +1137,11 @@ $fields_device_edit = array(
 		"max_length" => "250",
 		"size" => "70"
 		),
-	"hostname" => array(
+	"devicename" => array(
 		"method" => "textbox",
 		"friendly_name" => __("Hostname"),
-		"description" => __("Fully qualified hostname or IP address for this device."),
-		"value" => "|arg1:hostname|",
+		"description" => __("Fully qualified devicename or IP address for this device."),
+		"value" => "|arg1:devicename|",
 		"max_length" => "250",
 		"size" => "70"
 		),
@@ -1161,13 +1161,13 @@ $fields_device_edit = array(
 		"none_value" => "N/A",
 		"sql" => "select id,name from sites order by name",
 		),
-	"host_template_id" => array(
+	"device_template_id" => array(
 		"method" => "drop_sql",
 		"friendly_name" => __("Device Template"),
 		"description" => __("Choose what type of device, device template this is. The device template will govern what kinds of data should be gathered from this type of device."),
-		"value" => "|arg1:host_template_id|",
+		"value" => "|arg1:device_template_id|",
 		"none_value" => "None",
-		"sql" => "select id,name from host_template order by name",
+		"sql" => "select id,name from device_template order by name",
 		),
 	"notes" => array(
 		"method" => "textarea",
@@ -1199,11 +1199,11 @@ $fields_device_edit = array(
 		"method" => "hidden_zero",
 		"value" => "|arg1:id|"
 		),
-	"_host_template_id" => array(
+	"_device_template_id" => array(
 		"method" => "hidden_zero",
-		"value" => "|arg1:host_template_id|"
+		"value" => "|arg1:device_template_id|"
 		),
-	"save_basic_host" => array(
+	"save_basic_device" => array(
 		"method" => "hidden",
 		"value" => "1"
 		)
@@ -1364,7 +1364,7 @@ $fields_device_edit_availability = array(
 		"default" => read_config_option("max_get_size"),
 		"size" => "15"
 		),
-	"save_component_host" => array(
+	"save_component_device" => array(
 		"method" => "hidden",
 		"value" => "1"
 		)
@@ -1372,7 +1372,7 @@ $fields_device_edit_availability = array(
 
 /* file: device_templates.php, action: edit */
 $fields_device_template_edit = array(
-	"host_header" => array(
+	"device_header" => array(
 		"method" => "spacer",
 		"friendly_name" => __("General Device Template Options"),
 		),
@@ -1399,7 +1399,7 @@ $fields_device_template_edit = array(
 		"friendly_name" => __("Image"),
 		"description" => __("A useful icon to use to associate with this Device Template."),
 		"width" => "120",
-		"default" => "host.gif",
+		"default" => "device.gif",
 		"value" => "|arg1:image|"
 		),
 	"override_defaults" => array(
@@ -1757,8 +1757,8 @@ $fields_tree_edit = array(
 		)
 	);
 
-/* file: user_admin.php, action: user_edit (host) */
-$fields_user_user_edit_host = array(
+/* file: user_admin.php, action: user_edit (device) */
+$fields_user_user_edit_device = array(
 	"username" => array(
 		"method" => "textbox",
 		"friendly_name" => __("User Name"),
@@ -1877,10 +1877,10 @@ $fields_user_user_edit_host = array(
 		"default" => "2",
 		"value" => "|arg1:policy_trees|"
 		),
-	"_policy_hosts" => array(
+	"_policy_devices" => array(
 		"method" => "hidden",
 		"default" => "2",
-		"value" => "|arg1:policy_hosts|"
+		"value" => "|arg1:policy_devices|"
 		),
 	"_policy_graph_templates" => array(
 		"method" => "hidden",
@@ -1904,10 +1904,10 @@ $export_types = array(
 		"title_sql" => "select name from data_template where id=|id|",
 		"dropdown_sql" => "select id,name from data_template order by name"
 		),
-	"host_template" => array(
+	"device_template" => array(
 		"name" => __("Device Template"),
-		"title_sql" => "select name from host_template where id=|id|",
-		"dropdown_sql" => "select id,name from host_template order by name"
+		"title_sql" => "select name from device_template where id=|id|",
+		"dropdown_sql" => "select id,name from device_template order by name"
 		),
 	"data_query" => array(
 		"name" => __("Data Query"),

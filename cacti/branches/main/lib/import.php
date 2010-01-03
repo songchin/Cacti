@@ -70,8 +70,8 @@ function import_xml_data(&$xml_data, $import_custom_rra_settings) {
 				case 'data_template':
 					$hash_cache += xml_to_data_template($dep_hash_cache[$type][$i]["hash"], $hash_array, $hash_cache, $import_custom_rra_settings);
 					break;
-				case 'host_template':
-					$hash_cache += xml_to_host_template($dep_hash_cache[$type][$i]["hash"], $hash_array, $hash_cache);
+				case 'device_template':
+					$hash_cache += xml_to_device_template($dep_hash_cache[$type][$i]["hash"], $hash_array, $hash_cache);
 					break;
 				case 'data_input_method':
 					$hash_cache += xml_to_data_input_method($dep_hash_cache[$type][$i]["hash"], $hash_array, $hash_cache);
@@ -574,12 +574,12 @@ function xml_to_round_robin_archive($hash, &$xml_array, &$hash_cache) {
 	return $hash_cache;
 }
 
-function xml_to_host_template($hash, &$xml_array, &$hash_cache) {
+function xml_to_device_template($hash, &$xml_array, &$hash_cache) {
 	global $fields_device_template_edit;
 
 	/* import into: graph_templates_gprint */
-	$_host_template_id = db_fetch_cell("select id from host_template where hash='$hash'");
-	$save["id"] = (empty($_host_template_id) ? "0" : $_host_template_id);
+	$_device_template_id = db_fetch_cell("select id from device_template where hash='$hash'");
+	$save["id"] = (empty($_device_template_id) ? "0" : $_device_template_id);
 	$save["hash"] = $hash;
 
 	reset($fields_device_template_edit);
@@ -590,11 +590,11 @@ function xml_to_host_template($hash, &$xml_array, &$hash_cache) {
 		}
 	}
 
-	$device_template_id = sql_save($save, "host_template");
+	$device_template_id = sql_save($save, "device_template");
 
-	$hash_cache["host_template"][$hash] = $device_template_id;
+	$hash_cache["device_template"][$hash] = $device_template_id;
 
-	/* import into: host_template_graph */
+	/* import into: device_template_graph */
 	$hash_items = explode("|", $xml_array["graph_templates"]);
 
 	if (!empty($hash_items[0])) {
@@ -606,12 +606,12 @@ function xml_to_host_template($hash, &$xml_array, &$hash_cache) {
 			if ($parsed_hash == false) { return false; }
 
 			if (isset($hash_cache["graph_template"]{$parsed_hash["hash"]})) {
-				db_execute("replace into host_template_graph (host_template_id,graph_template_id) values ($device_template_id," . $hash_cache["graph_template"]{$parsed_hash["hash"]} . ")");
+				db_execute("replace into device_template_graph (device_template_id,graph_template_id) values ($device_template_id," . $hash_cache["graph_template"]{$parsed_hash["hash"]} . ")");
 			}
 		}
 	}
 
-	/* import into: host_template_snmp_query */
+	/* import into: device_template_snmp_query */
 	$hash_items = explode("|", $xml_array["data_queries"]);
 
 	if (!empty($hash_items[0])) {
@@ -623,13 +623,13 @@ function xml_to_host_template($hash, &$xml_array, &$hash_cache) {
 			if ($parsed_hash == false) { return false; }
 
 			if (isset($hash_cache["data_query"]{$parsed_hash["hash"]})) {
-				db_execute("replace into host_template_snmp_query (host_template_id,snmp_query_id) values ($device_template_id," . $hash_cache["data_query"]{$parsed_hash["hash"]} . ")");
+				db_execute("replace into device_template_snmp_query (device_template_id,snmp_query_id) values ($device_template_id," . $hash_cache["data_query"]{$parsed_hash["hash"]} . ")");
 			}
 		}
 	}
 
 	/* status information that will be presented to the user */
-	$_SESSION["import_debug_info"]["type"] = (empty($_host_template_id) ? "new" : "update");
+	$_SESSION["import_debug_info"]["type"] = (empty($_device_template_id) ? "new" : "update");
 	$_SESSION["import_debug_info"]["title"] = $xml_array["name"];
 	$_SESSION["import_debug_info"]["result"] = (empty($device_template_id) ? "fail" : "success");
 
@@ -848,8 +848,8 @@ function hash_to_friendly_name($hash, $display_type_name) {
 		return $prepend . db_fetch_cell("select name from data_template where hash='" . $parsed_hash["hash"] . "'");
 	case 'data_template_item':
 		return $prepend . db_fetch_cell("select data_source_name from data_template_rrd where hash='" . $parsed_hash["hash"] . "'");
-	case 'host_template':
-		return $prepend . db_fetch_cell("select name from host_template where hash='" . $parsed_hash["hash"] . "'");
+	case 'device_template':
+		return $prepend . db_fetch_cell("select name from device_template where hash='" . $parsed_hash["hash"] . "'");
 	case 'data_input_method':
 		return $prepend . db_fetch_cell("select name from data_input where hash='" . $parsed_hash["hash"] . "'");
 	case 'data_input_field':

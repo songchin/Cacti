@@ -23,7 +23,7 @@
 */
 
 /* db_connect_real - makes a connection to the database server
-   @arg $host - the hostname of the database server, 'localhost' if the database server is running
+   @arg $device - the devicename of the database server, 'localhost' if the database server is running
       on this machine
    @arg $user - the username to connect to the database server as
    @arg $pass - the password to connect to the database server with
@@ -31,16 +31,16 @@
    @arg $db_type - the type of database server to connect to, only 'mysql' is currently supported
    @arg $retries - the number a time the server should attempt to connect before failing
    @returns - (bool) '1' for success, '0' for error */
-function db_connect_real($host, $user, $pass, $db_name, $db_type, $port = "3306", $retries = 20) {
+function db_connect_real($device, $user, $pass, $db_name, $db_type, $port = "3306", $retries = 20) {
 	global $cnn_id;
 
 	$i = 0;
 	$cnn_id = NewADOConnection($db_type);
 
-	$hostport = $host . ":" . $port;
+	$deviceport = $device . ":" . $port;
 
 	while ($i <= $retries) {
-		if ($cnn_id->PConnect($hostport,$user,$pass,$db_name)) {
+		if ($cnn_id->PConnect($deviceport,$user,$pass,$db_name)) {
 			return($cnn_id);
 		}
 
@@ -49,7 +49,7 @@ function db_connect_real($host, $user, $pass, $db_name, $db_type, $port = "3306"
 		usleep(40000);
 	}
 
-	die("FATAL: Cannot connect to MySQL server on '$host'. Please make sure you have specified a valid MySQL database name in 'include/config.php'\n");
+	die("FATAL: Cannot connect to MySQL server on '$device'. Please make sure you have specified a valid MySQL database name in 'include/config.php'\n");
 
 	return(0);
 }

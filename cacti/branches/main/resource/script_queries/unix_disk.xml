@@ -1,6 +1,6 @@
 <interface>
 	<name>Linux Localhost - df - Hard Drive Space</name>
-	<description>Queries a list of mounted partitions on a unix-based host with the 'df' command.</description>
+	<description>Queries a list of mounted partitions on a unix-based device with the 'df' command.</description>
 	<script_path>perl |path_cacti|/scripts/query_unix_partitions.pl</script_path>
 	<arg_index>index</arg_index>
 	<arg_query>query</arg_query>

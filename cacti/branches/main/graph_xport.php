@@ -103,7 +103,7 @@ if (is_array($xport_array["meta"])) {
 	print '"Step:","'           . $xport_array["meta"]["step"]                       . '"' . "\n";
 	print '"Total Rows:","'     . $xport_array["meta"]["rows"]                       . '"' . "\n";
 	print '"Graph ID:","'       . $xport_array["meta"]["local_graph_id"]             . '"' . "\n";
-	print '"Host ID:","'        . $xport_array["meta"]["host_id"]                    . '"' . "\n";
+	print '"Host ID:","'        . $xport_array["meta"]["device_id"]                    . '"' . "\n";
 
 	if (isset($xport_meta["NthPercentile"])) {
 		foreach($xport_meta["NthPercentile"] as $item) {

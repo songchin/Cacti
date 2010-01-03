@@ -192,22 +192,22 @@ function item_edit() {
 
 	/* ================= input validation ================= */
 	input_validate_input_number(get_request_var_request("id"));
-	input_validate_input_number(get_request_var_request("host_id"));
+	input_validate_input_number(get_request_var_request("device_id"));
 	input_validate_input_number(get_request_var_request("graph_template_id"));
 	input_validate_input_number(get_request_var_request("local_graph_id"));
-	input_validate_input_number(get_request_var_request("host_id"));
+	input_validate_input_number(get_request_var_request("device_id"));
 	input_validate_input_number(get_request_var_request("data_template_id"));
 	/* ==================================================== */
 
 	/* remember these search fields in session vars so we don't have to keep passing them around */
 	load_current_session_value("local_graph_id", "sess_local_graph_id", "");
-	load_current_session_value("host_id", "sess_ds_host_id", "-1");
+	load_current_session_value("device_id", "sess_ds_device_id", "-1");
 	load_current_session_value("data_template_id", "sess_data_template_id", "-1");
 
 	$id = (!empty($_REQUEST["id"]) ? "&id=" . $_REQUEST["id"] : "");
-	$host = db_fetch_row("select hostname from host where id=" . get_request_var_request("host_id"));
+	$device = db_fetch_row("select devicename from device where id=" . get_request_var_request("device_id"));
 
-	html_start_box("<strong>" . __("Data Sources") . "</strong> " . __("[host: ") . (empty($host["hostname"]) ? __("No Host") : $host["hostname"]) . "]", "100", $colors["header"], "3", "center", "");
+	html_start_box("<strong>" . __("Data Sources") . "</strong> " . __("[device: ") . (empty($device["devicename"]) ? __("No Host") : $device["devicename"]) . "]", "100", $colors["header"], "3", "center", "");
 
 	?>
 	<tr>
@@ -219,15 +219,15 @@ function item_edit() {
 						<?php print __("Host");?>:&nbsp;
 					</td>
 					<td>
-						<select name="cbo_host_id" onChange="window.location=document.form_graph_items.cbo_host_id.options[document.form_graph_items.cbo_host_id.selectedIndex].value">
-							<option value="<?php print htmlspecialchars("graphs_items.php?action=item_edit" . $id . "&local_graph_id=" . get_request_var_request("local_graph_id") . "&host_id=-1&data_template_id=" . get_request_var_request("data_template_id"));?>"<?php if (get_request_var_request("host_id") == "-1") {?> selected<?php }?>>Any</option>
-							<option value="<?php print htmlspecialchars("graphs_items.php?action=item_edit" . $id . "&local_graph_id=" . get_request_var_request("local_graph_id") . "&host_id=0&data_template_id=" . get_request_var_request("data_template_id"));?>"<?php if (get_request_var_request("host_id") == "0") {?> selected<?php }?>>None</option>
+						<select name="cbo_device_id" onChange="window.location=document.form_graph_items.cbo_device_id.options[document.form_graph_items.cbo_device_id.selectedIndex].value">
+							<option value="<?php print htmlspecialchars("graphs_items.php?action=item_edit" . $id . "&local_graph_id=" . get_request_var_request("local_graph_id") . "&device_id=-1&data_template_id=" . get_request_var_request("data_template_id"));?>"<?php if (get_request_var_request("device_id") == "-1") {?> selected<?php }?>>Any</option>
+							<option value="<?php print htmlspecialchars("graphs_items.php?action=item_edit" . $id . "&local_graph_id=" . get_request_var_request("local_graph_id") . "&device_id=0&data_template_id=" . get_request_var_request("data_template_id"));?>"<?php if (get_request_var_request("device_id") == "0") {?> selected<?php }?>>None</option>
 							<?php
-							$hosts = db_fetch_assoc("select id,CONCAT_WS('',description,' (',hostname,')') as name from host order by description,hostname");
+							$devices = db_fetch_assoc("select id,CONCAT_WS('',description,' (',devicename,')') as name from device order by description,devicename");
 
-							if (sizeof($hosts) > 0) {
-								foreach ($hosts as $host) {
-									print "<option value='" . htmlspecialchars("graphs_items.php?action=item_edit" . $id . "&local_graph_id=" . get_request_var_request("local_graph_id") . "&host_id=" . $host["id"] . "&data_template_id=" . get_request_var_request("data_template_id")) . "'"; if (get_request_var_request("host_id") == $host["id"]) { print " selected"; } print ">" . $host["name"] . "</option>\n";
+							if (sizeof($devices) > 0) {
+								foreach ($devices as $device) {
+									print "<option value='" . htmlspecialchars("graphs_items.php?action=item_edit" . $id . "&local_graph_id=" . get_request_var_request("local_graph_id") . "&device_id=" . $device["id"] . "&data_template_id=" . get_request_var_request("data_template_id")) . "'"; if (get_request_var_request("device_id") == $device["id"]) { print " selected"; } print ">" . $device["name"] . "</option>\n";
 								}
 							}
 							?>
@@ -241,14 +241,14 @@ function item_edit() {
 					</td>
 					<td>
 						<select name="cbo_data_template_id" onChange="window.location=document.form_graph_items.cbo_data_template_id.options[document.form_graph_items.cbo_data_template_id.selectedIndex].value">
-							<option value="graphs_items.php?action=item_edit<?php print $id; ?>&local_graph_id=<?php print get_request_var_request("local_graph_id");?>&data_template_id=-1&host_id=<?php print get_request_var_request("host_id");?>"<?php if (get_request_var_request("data_template_id") == "-1") {?> selected<?php }?>>Any</option>
-							<option value="graphs_items.php?action=item_edit<?php print $id; ?>&local_graph_id=<?php print get_request_var_request("local_graph_id");?>&data_template_id=0&host_id=<?php print get_request_var_request("host_id");?>"<?php if (get_request_var_request("data_template_id") == "0") {?> selected<?php }?>>None</option>
+							<option value="graphs_items.php?action=item_edit<?php print $id; ?>&local_graph_id=<?php print get_request_var_request("local_graph_id");?>&data_template_id=-1&device_id=<?php print get_request_var_request("device_id");?>"<?php if (get_request_var_request("data_template_id") == "-1") {?> selected<?php }?>>Any</option>
+							<option value="graphs_items.php?action=item_edit<?php print $id; ?>&local_graph_id=<?php print get_request_var_request("local_graph_id");?>&data_template_id=0&device_id=<?php print get_request_var_request("device_id");?>"<?php if (get_request_var_request("data_template_id") == "0") {?> selected<?php }?>>None</option>
 							<?php
 							$data_templates = db_fetch_assoc("select id, name from data_template order by name");
 
 							if (sizeof($data_templates) > 0) {
 								foreach ($data_templates as $data_template) {
-									print "<option value='graphs_items.php?action=item_edit" . $id . "&local_graph_id=" . get_request_var_request("local_graph_id") . "&data_template_id=" . $data_template["id"]. "&host_id=" . get_request_var_request("host_id") . "'"; if (get_request_var_request("data_template_id") == $data_template["id"]) { print " selected"; } print ">" . $data_template["name"] . "</option>\n";
+									print "<option value='graphs_items.php?action=item_edit" . $id . "&local_graph_id=" . get_request_var_request("local_graph_id") . "&data_template_id=" . $data_template["id"]. "&device_id=" . get_request_var_request("device_id") . "'"; if (get_request_var_request("data_template_id") == $data_template["id"]) { print " selected"; } print ">" . $data_template["name"] . "</option>\n";
 								}
 							}
 							?>
@@ -263,12 +263,12 @@ function item_edit() {
 	<?php
 	html_end_box();
 
-	if (get_request_var_request("host_id") == "-1") {
+	if (get_request_var_request("device_id") == "-1") {
 		$sql_where = "";
-	}elseif (get_request_var_request("host_id") == "0") {
-		$sql_where = " data_local.host_id=0 and ";
-	}elseif (!empty($_REQUEST["host_id"])) {
-		$sql_where = " data_local.host_id=" . $_REQUEST["host_id"] . " and ";
+	}elseif (get_request_var_request("device_id") == "0") {
+		$sql_where = " data_local.device_id=0 and ";
+	}elseif (!empty($_REQUEST["device_id"])) {
+		$sql_where = " data_local.device_id=" . $_REQUEST["device_id"] . " and ";
 	}
 
 	if (get_request_var_request("data_template_id") == "-1") {
@@ -281,7 +281,7 @@ function item_edit() {
 
 	if (!empty($_REQUEST["id"])) {
 		$template_item = db_fetch_row("select * from graph_templates_item where id=" . $_REQUEST["id"]);
-		$host_id = db_fetch_cell("select host_id from graph_local where id=" . $_REQUEST["local_graph_id"]);
+		$device_id = db_fetch_cell("select device_id from graph_local where id=" . $_REQUEST["local_graph_id"]);
 	}
 
 	$header_label = __("[edit graph: ") . db_fetch_cell("select title_cache from graph_templates_graph where local_graph_id=" . $_REQUEST["local_graph_id"]) . "]";
@@ -303,7 +303,7 @@ function item_edit() {
 			CONCAT_WS('',data_template_data.name_cache,' (',data_template_rrd.data_source_name,')') as name,
 			data_template_rrd.id
 			from (data_template_data,data_template_rrd,data_local)
-			left join host on (data_local.host_id=host.id)
+			left join device on (data_local.device_id=device.id)
 			where data_template_rrd.local_data_id=data_local.id
 			and data_template_data.local_data_id=data_local.id ";
 		/* Make sure we don't limit the list so that the selected DS isn't in the list in edit mode */

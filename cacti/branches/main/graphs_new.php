@@ -43,7 +43,7 @@ switch (get_request_var_request("action")) {
 	case 'query_reload':
 		api_graphs_new_reload_query();
 
-		header("Location: graphs_new.php?host_id=" . $_GET["host_id"]);
+		header("Location: graphs_new.php?device_id=" . $_GET["device_id"]);
 		break;
 	default:
 		include_once(CACTI_BASE_PATH . "/include/top_header.php");

@@ -59,9 +59,9 @@ if (sizeof($parms)) {
 			case "--site-id":		$device["site_id"] 				= trim($value);	break;
 			case "--poller-id":		$device["poller_id"]			= trim($value);	break;
 			case "--description":	$device["description"] 			= trim($value);	break;
-			case "--ip":			$device["hostname"] 			= trim($value);	break;
-			case "--host_template_id":
-			case "--template":		$device["host_template_id"]	 	= trim($value);	break;
+			case "--ip":			$device["devicename"] 			= trim($value);	break;
+			case "--device_template_id":
+			case "--template":		$device["device_template_id"]	 	= trim($value);	break;
 			case "--community":		$device["snmp_community"] 		= trim($value);	break;
 			case "--version":		$device["snmp_version"] 		= trim($value);	break;
 			case "--notes":			$device["notes"] 				= trim($value);	break;
@@ -133,12 +133,12 @@ if (sizeof($parms)) {
 				echo __("Try php -q device_list.php") . "\n";
 				exit(1);
 			}
-			/* form a valid sql statement for host_id */
-			$selection = "WHERE " . str_replace("id", "host_id", array_to_sql_or($devices, "id")) . " ";
+			/* form a valid sql statement for device_id */
+			$selection = "WHERE " . str_replace("id", "device_id", array_to_sql_or($devices, "id")) . " ";
 		}
 
 		if (isset($graph_template_id) && !($graph_template_id === 0) && (db_fetch_cell("SELECT id FROM graph_templates WHERE id=$graph_template_id"))) {
-			/* form a valid sql statement for host_id */
+			/* form a valid sql statement for device_id */
 			$selection .= (strlen($selection) ? " AND " : " WHERE ") . " graph_templates.id=" . $graph_template_id;
 		}
 

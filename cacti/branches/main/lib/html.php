@@ -111,7 +111,7 @@ function html_start_box($title, $width, $background_color, $cell_padding, $align
 					<table cellpadding=0 cellspacing=1 <?php print $table_id;?> class="startBox<?php print $cell_padding;?>"><?php
 }
 
-function html_start_box_dq($query_name, $query_id, $host_id, $colspan, $width, $background_color, $cell_padding, $align) {
+function html_start_box_dq($query_name, $query_id, $device_id, $colspan, $width, $background_color, $cell_padding, $align) {
 	global $colors;
 
 	$temp_string = str_replace("strong", "", $query_name);
@@ -135,7 +135,7 @@ function html_start_box_dq($query_name, $query_id, $host_id, $colspan, $width, $
 								<strong><?php print __("Data Query");?></strong> [<?php print $query_name; ?>]
 							</td>
 							<td class='right nw'>
-								<a href='graphs_new.php?action=query_reload&amp;id=<?php print $query_id;?>&amp;host_id=<?php print $host_id;?>'><img class='buttonSmall' src='images/reload_icon_small.gif' alt='<?php print __("Reload");?>' title='<?php print __("Reload Associated Query");?>' align='middle'></a>
+								<a href='graphs_new.php?action=query_reload&amp;id=<?php print $query_id;?>&amp;device_id=<?php print $device_id;?>'><img class='buttonSmall' src='images/reload_icon_small.gif' alt='<?php print __("Reload");?>' title='<?php print __("Reload Associated Query");?>' align='middle'></a>
 							</td>
 						</tr>
 					</table>
@@ -735,7 +735,7 @@ function html_create_list($form_data, $column_display, $column_id, $form_previou
 					print " selected";
 				}
 
-				if (isset($row["host_id"])) {
+				if (isset($row["device_id"])) {
 					print ">" . title_trim($row[$column_display], 75) . "</option>\n";
 				}else{
 					print ">" . title_trim(null_out_substitutions($row[$column_display]), 75) . "</option>\n";

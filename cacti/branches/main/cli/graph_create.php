@@ -87,8 +87,8 @@ if (sizeof($parms)) {
 			case "--site-id":		$device["site_id"] 				= trim($value);	break;
 			case "--poller-id":		$device["poller_id"]			= trim($value);	break;
 			case "--description":	$device["description"] 			= trim($value);	break;
-			case "--ip":			$device["hostname"] 			= trim($value);	break;
-			case "--template":		$device["host_template_id"]	 	= trim($value);	break;
+			case "--ip":			$device["devicename"] 			= trim($value);	break;
+			case "--template":		$device["device_template_id"]	 	= trim($value);	break;
 			case "--community":		$device["snmp_community"] 		= trim($value);	break;
 			case "--version":		$device["snmp_version"] 		= trim($value);	break;
 			case "--notes":			$device["notes"] 				= trim($value);	break;
@@ -136,7 +136,7 @@ if (sizeof($parms)) {
 	}
 
 
-	# at least one matching criteria for host(s) has to be defined
+	# at least one matching criteria for device(s) has to be defined
 	if (!sizeof($device)) {
 		print __("ERROR: No device matching criteria found") . "\n\n";
 		exit(1);
@@ -198,7 +198,7 @@ if (sizeof($parms)) {
 
 		$dqGraph["graph_template_id"] = $graph_template["id"];
 		foreach ($devices as $device) {
-			$dqGraph["host_id"] = $device["id"];
+			$dqGraph["device_id"] = $device["id"];
 			if (sizeof($dqGraph)) {
 				# verify the parameters given
 				$verify = verifyDQGraph($dqGraph, true);
@@ -226,7 +226,7 @@ if (sizeof($parms)) {
 
 function createDIGraph($device, $graph_template, $input_values, $graphTitle, $force) {
 
-	$existsAlready = db_fetch_cell("SELECT id FROM graph_local WHERE graph_template_id=" . $graph_template["id"] . " AND host_id=" . $device["id"]);
+	$existsAlready = db_fetch_cell("SELECT id FROM graph_local WHERE graph_template_id=" . $graph_template["id"] . " AND device_id=" . $device["id"]);
 
 	if ((isset($existsAlready)) &&
 	($existsAlready > 0) &&
@@ -238,7 +238,7 @@ function createDIGraph($device, $graph_template, $input_values, $graphTitle, $fo
 				AND graph_templates_item.task_item_id = data_template_rrd.id
 				LIMIT 1");
 
-		echo __("NOTE: Not Adding Graph - this graph already exists - host-id: (%d) - graph-id: (%s) - data-source-id: (%d)", $device["id"], $existsAlready, $dataSourceId) . "\n";
+		echo __("NOTE: Not Adding Graph - this graph already exists - device-id: (%d) - graph-id: (%s) - data-source-id: (%d)", $device["id"], $existsAlready, $dataSourceId) . "\n";
 		exit(1);
 	}else{
 		$dataSourceId = "";
@@ -253,14 +253,14 @@ function createDIGraph($device, $graph_template, $input_values, $graphTitle, $fo
 		}
 
 		foreach($returnArray["local_data_id"] as $item) {
-			push_out_host($device["id"], $item);
+			push_out_device($device["id"], $item);
 			$dataSourceId .= (strlen($dataSourceId) ? ", " : "") . $item;
 		}
 
 		/* add this graph template to the list of associated graph templates for this device, if not yet present */
-		db_execute("REPLACE INTO host_graph (host_id,graph_template_id) VALUES (" . $device["id"] . "," . $graph_template["id"] . ")");
+		db_execute("REPLACE INTO device_graph (device_id,graph_template_id) VALUES (" . $device["id"] . "," . $graph_template["id"] . ")");
 
-		echo __("Graph Added - host-id: (%d) - graph-id: (%d) - data-source-ids: (%d)", $device["id"], $returnArray["local_graph_id"], $dataSourceId) . "\n";
+		echo __("Graph Added - device-id: (%d) - graph-id: (%d) - data-source-ids: (%d)", $device["id"], $returnArray["local_graph_id"], $dataSourceId) . "\n";
 	}
 }
 
@@ -269,14 +269,14 @@ function createDIGraph($device, $graph_template, $input_values, $graphTitle, $fo
 function createDQGraph($snmp_query_array, $graphTitle, $force) {
 
 	/* is this data query already associated (independent of the reindex method) */
-	$exists_already = db_fetch_cell("SELECT COUNT(host_id) FROM host_snmp_query WHERE host_id=" . $snmp_query_array["host_id"] . " AND snmp_query_id=" . $snmp_query_array["snmp_query_id"]);
+	$exists_already = db_fetch_cell("SELECT COUNT(device_id) FROM device_snmp_query WHERE device_id=" . $snmp_query_array["device_id"] . " AND snmp_query_id=" . $snmp_query_array["snmp_query_id"]);
 	if ((isset($exists_already)) &&
 	($exists_already > 0)) {
 		/* yes: do nothing, everything's fine */
 	}else{
-		db_execute("REPLACE INTO host_snmp_query (host_id,snmp_query_id,reindex_method) " .
+		db_execute("REPLACE INTO device_snmp_query (device_id,snmp_query_id,reindex_method) " .
 					   "VALUES (" .
-		$snmp_query_array["host_id"] . "," .
+		$snmp_query_array["device_id"] . "," .
 		$snmp_query_array["snmp_query_id"] . "," .
 		$snmp_query_array["reindex_method"] .
 						")");
@@ -284,14 +284,14 @@ function createDQGraph($snmp_query_array, $graphTitle, $force) {
 		 * but should happen only once even if multiple graphs
 		 * are added for the same data query
 		 * because we checked above, if dq was already associated */
-		run_data_query($snmp_query_array["host_id"], $snmp_query_array["snmp_query_id"]);
+		run_data_query($snmp_query_array["device_id"], $snmp_query_array["snmp_query_id"]);
 	}
 
-	$snmp_query_array["snmp_index_on"] = get_best_data_query_index_type($snmp_query_array["host_id"], $snmp_query_array["snmp_query_id"]);
+	$snmp_query_array["snmp_index_on"] = get_best_data_query_index_type($snmp_query_array["device_id"], $snmp_query_array["snmp_query_id"]);
 
 	$snmp_indexes = db_fetch_assoc("SELECT snmp_index " .
-										"FROM host_snmp_cache " .
-										"WHERE host_id=" . $snmp_query_array["host_id"] . " " .
+										"FROM device_snmp_cache " .
+										"WHERE device_id=" . $snmp_query_array["device_id"] . " " .
 										"AND snmp_query_id=" . $snmp_query_array["snmp_query_id"] . " " .
 										"AND field_name='" . $snmp_query_array["snmp_field"] . "' " .
 										"AND field_value='" . $snmp_query_array["snmp_value"] . "'");
@@ -303,7 +303,7 @@ function createDQGraph($snmp_query_array, $graphTitle, $force) {
 			$existsAlready = db_fetch_cell("SELECT id " .
 												"FROM graph_local " .
 												"WHERE graph_template_id=" . $snmp_query_array["graph_template_id"] . " " .
-												"AND host_id=" . $snmp_query_array["host_id"] . " " .
+												"AND device_id=" . $snmp_query_array["device_id"] . " " .
 												"AND snmp_query_id=" . $snmp_query_array["snmp_query_id"] . " " .
 												"AND snmp_index='" . $snmp_query_array["snmp_index"] . "'");
 
@@ -319,7 +319,7 @@ function createDQGraph($snmp_query_array, $graphTitle, $force) {
 			}
 
 			$empty = array(); /* Suggested Values are not been implemented */
-			$returnArray = create_complete_graph_from_template($snmp_query_array["graph_template_id"], $snmp_query_array["host_id"], $snmp_query_array, $empty);
+			$returnArray = create_complete_graph_from_template($snmp_query_array["graph_template_id"], $snmp_query_array["device_id"], $snmp_query_array, $empty);
 
 			if ($graphTitle != "") {
 				db_execute("UPDATE graph_templates_graph " .
@@ -336,15 +336,15 @@ function createDQGraph($snmp_query_array, $graphTitle, $force) {
 					"LIMIT 1");
 
 			foreach($returnArray["local_data_id"] as $item) {
-				push_out_host($snmp_query_array["host_id"], $item);
+				push_out_device($snmp_query_array["device_id"], $item);
 				$dataSourceId .= (strlen($dataSourceId) ? ", " : "") . $item;
 			}
 
 			echo __("Graph Added - graph-id: (%d) - data-source-ids: (%d)", $returnArray["local_graph_id"], $dataSourceId) . "\n";
 		}
 	}else{
-		echo __("ERROR: Could not find snmp-field %s (%d) for device-id %d (%s)", $snmp_query_array["snmp_field"], $snmp_query_array["snmp_value"], $snmp_query_array["host_id"], $hosts[$snmp_query_array["host_id"]]["hostname"]) . "\n";
-		echo __("Try php -q graph_list.php --device-id=%s --list-snmp-fields", $snmp_query_array["host_id"]) . "\n";
+		echo __("ERROR: Could not find snmp-field %s (%d) for device-id %d (%s)", $snmp_query_array["snmp_field"], $snmp_query_array["snmp_value"], $snmp_query_array["device_id"], $devices[$snmp_query_array["device_id"]]["devicename"]) . "\n";
+		echo __("Try php -q graph_list.php --device-id=%s --list-snmp-fields", $snmp_query_array["device_id"]) . "\n";
 		exit(1);
 	}
 }

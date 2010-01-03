@@ -36,7 +36,7 @@ $auth_control_data_user_fields = array(
 	"login_opts" => "0",
 	"policy_graphs" => AUTH_CONTROL_DATA_POLICY_ALLOW,
 	"policy_trees" => AUTH_CONTROL_DATA_POLICY_ALLOW,
-	"policy_hosts" => AUTH_CONTROL_DATA_POLICY_ALLOW,
+	"policy_devices" => AUTH_CONTROL_DATA_POLICY_ALLOW,
 	"policy_graph_templates" => AUTH_CONTROL_DATA_POLICY_ALLOW,
 	"password_expire_length" => read_config_option("password_expire_length"),
 	"password_change_last" => "",
@@ -52,7 +52,7 @@ $auth_control_data_group_fields = array(
 	"login_opts" => "0",
 	"policy_graphs" => AUTH_CONTROL_DATA_POLICY_ALLOW,
 	"policy_trees" => AUTH_CONTROL_DATA_POLICY_ALLOW,
-	"policy_hosts" => AUTH_CONTROL_DATA_POLICY_ALLOW,
+	"policy_devices" => AUTH_CONTROL_DATA_POLICY_ALLOW,
 	"policy_graph_templates" => AUTH_CONTROL_DATA_POLICY_ALLOW
 );
 

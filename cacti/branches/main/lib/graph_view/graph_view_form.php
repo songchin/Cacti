@@ -32,27 +32,27 @@ function graph_view_filter_table($mode = "mode") {
 	<!--
 
 	$().ready(function() {
-		$("#host").autocomplete("./lib/ajax/get_hosts_brief.php", { max: 8, highlight: false, scroll: true, scrollHeight: 300 });
-		$("#host").result(function(event, data, formatted) {
+		$("#device").autocomplete("./lib/ajax/get_devices_brief.php", { max: 8, highlight: false, scroll: true, scrollHeight: 300 });
+		$("#device").result(function(event, data, formatted) {
 			if (data) {
-				$(this).parent().find("#host_id").val(data[1]);
+				$(this).parent().find("#device_id").val(data[1]);
 				applyGraphFilter(document.form_graph_view);
 			}else{
-				$(this).parent().find("#host_id").val(0);
+				$(this).parent().find("#device_id").val(0);
 			}
 		});
 	});
 
 	function applyGraphFilter(objForm) {
 		<?php if ($mode == 'tree') { ?>
-		strURL = '?action=ajax_tree_graphs&host_id=' + objForm.host_id.value;
+		strURL = '?action=ajax_tree_graphs&device_id=' + objForm.device_id.value;
 		strURL = strURL + '&graph_template_id=' + objForm.graph_template_id.value;
 		strURL = strURL + '&filter=' + objForm.filter.value;
 		$.get("graph_view.php" + strURL, function (data) {
 			$("#graphs").html(data);
 		});
 		<?php }else{ ;?>
-		strURL = '?action=ajax_preview&host_id=' + objForm.host_id.value;
+		strURL = '?action=ajax_preview&device_id=' + objForm.device_id.value;
 		strURL = strURL + '&graph_template_id=' + objForm.graph_template_id.value;
 		strURL = strURL + '&filter=' + objForm.filter.value;
 		$.get("graph_view.php" + strURL, function (data) {
@@ -92,14 +92,14 @@ function graph_view_filter_table($mode = "mode") {
 					</td>
 					<td class='w1'>
 						<?php
-						if (isset($_REQUEST["host_id"])) {
-							$hostname = db_fetch_cell("SELECT description as name FROM host WHERE id=".$_REQUEST["host_id"]." ORDER BY description,hostname");
+						if (isset($_REQUEST["device_id"])) {
+							$devicename = db_fetch_cell("SELECT description as name FROM device WHERE id=".$_REQUEST["device_id"]." ORDER BY description,devicename");
 						} else {
-							$hostname = "";
+							$devicename = "";
 						}
 						?>
-						<input class="ac_field" type="text" id="host" size="30" value="<?php print $hostname; ?>">
-						<input type="hidden" id="host_id">
+						<input class="ac_field" type="text" id="device" size="30" value="<?php print $devicename; ?>">
+						<input type="hidden" id="device_id">
 					</td>
 					<td class='w1'>
 						&nbsp;<?php print __("Template:");?>&nbsp;
@@ -110,12 +110,12 @@ function graph_view_filter_table($mode = "mode") {
 							if (read_config_option("auth_method") != 0) {
 								$graph_templates = db_fetch_assoc("SELECT DISTINCT graph_templates.* " .
 										"FROM (graph_templates_graph,graph_local) " .
-										"LEFT JOIN host ON (host.id=graph_local.host_id) " .
+										"LEFT JOIN device ON (device.id=graph_local.device_id) " .
 										"LEFT JOIN graph_templates ON (graph_templates.id=graph_local.graph_template_id) " .
-										"LEFT JOIN user_auth_perms ON ((graph_templates_graph.local_graph_id=user_auth_perms.item_id and user_auth_perms.type=1 and user_auth_perms.user_id=" . $_SESSION["sess_user_id"] . ") OR (host.id=user_auth_perms.item_id and user_auth_perms.type=3 and user_auth_perms.user_id=" . $_SESSION["sess_user_id"] . ") OR (graph_templates.id=user_auth_perms.item_id and user_auth_perms.type=4 and user_auth_perms.user_id=" . $_SESSION["sess_user_id"] . ")) " .
+										"LEFT JOIN user_auth_perms ON ((graph_templates_graph.local_graph_id=user_auth_perms.item_id and user_auth_perms.type=1 and user_auth_perms.user_id=" . $_SESSION["sess_user_id"] . ") OR (device.id=user_auth_perms.item_id and user_auth_perms.type=3 and user_auth_perms.user_id=" . $_SESSION["sess_user_id"] . ") OR (graph_templates.id=user_auth_perms.item_id and user_auth_perms.type=4 and user_auth_perms.user_id=" . $_SESSION["sess_user_id"] . ")) " .
 										"WHERE graph_templates_graph.local_graph_id=graph_local.id " .
 										"AND graph_templates_graph.graph_template_id > 0 " .
-										(($_REQUEST["host_id"] > 0) ? " and graph_local.host_id=" . $_REQUEST["host_id"] :" and graph_local.host_id > 0 ") .
+										(($_REQUEST["device_id"] > 0) ? " and graph_local.device_id=" . $_REQUEST["device_id"] :" and graph_local.device_id > 0 ") .
 										(empty($sql_where) ? "" : "and $sql_where") .
 										" ORDER BY name");
 							}else{
@@ -123,7 +123,7 @@ function graph_view_filter_table($mode = "mode") {
 										"FROM graph_templates " .
 										"INNER JOIN graph_local " .
 										"ON graph_templates.id=graph_local.graph_template_id" .
-										(($_REQUEST["host_id"] > 0) ? " WHERE host_id=" . $_REQUEST["host_id"] :"") .
+										(($_REQUEST["device_id"] > 0) ? " WHERE device_id=" . $_REQUEST["device_id"] :"") .
 										" GROUP BY graph_templates.name " .
 										" ORDER BY name");
 							}
@@ -171,7 +171,7 @@ function get_graph_list_content() {
 	define("MAX_DISPLAY_PAGES", 21);
 
 	/* ================= input validation ================= */
-	input_validate_input_number(get_request_var_request("host_id"));
+	input_validate_input_number(get_request_var_request("device_id"));
 	input_validate_input_number(get_request_var_request("graph_template_id"));
 	input_validate_input_regex(get_request_var_request('graph_list'), "/^([\,0-9]+)$/");
 	input_validate_input_regex(get_request_var_request('graph_add'), "/^([\,0-9]+)$/");
@@ -191,7 +191,7 @@ function get_graph_list_content() {
 	if (isset($_REQUEST["clear_x"])) {
 		kill_session_var("sess_graph_view_list_current_page");
 		kill_session_var("sess_graph_view_list_filter");
-		kill_session_var("sess_graph_view_list_host");
+		kill_session_var("sess_graph_view_list_device");
 		kill_session_var("sess_graph_view_list_graph_template");
 		kill_session_var("sess_graph_view_list_graphs");
 		kill_session_var("sess_graph_view_list_graph_list");
@@ -200,7 +200,7 @@ function get_graph_list_content() {
 
 		unset($_REQUEST["page"]);
 		unset($_REQUEST["filter"]);
-		unset($_REQUEST["host_id"]);
+		unset($_REQUEST["device_id"]);
 		unset($_REQUEST["graph_template_id"]);
 		unset($_REQUEST["graphs"]);
 		unset($_REQUEST["graph_list"]);
@@ -217,7 +217,7 @@ function get_graph_list_content() {
 		$graph_list = array();
 	}
 
-	load_current_session_value("host_id", "sess_graph_view_list_host", "0");
+	load_current_session_value("device_id", "sess_graph_view_list_device", "0");
 	load_current_session_value("graph_template_id", "sess_graph_view_list_graph_template", "0");
 	load_current_session_value("filter", "sess_graph_view_list_filter", "");
 	load_current_session_value("page", "sess_graph_view_list_current_page", "1");
@@ -253,10 +253,10 @@ function get_graph_list_content() {
 			<script type="text/javascript">
 			<!--
 			$().ready(function() {
-				$("#host").autocomplete("./lib/ajax/get_hosts_brief.php", { max: 12, highlight: false, scroll: true, scrollHeight: 300 });
-				$("#host").result(function(event, data, formatted) {
+				$("#device").autocomplete("./lib/ajax/get_devices_brief.php", { max: 12, highlight: false, scroll: true, scrollHeight: 300 });
+				$("#device").result(function(event, data, formatted) {
 					if (data) {
-						$(this).parent().find("#host_id").val(data[1]);
+						$(this).parent().find("#device_id").val(data[1]);
 						applyGraphListFilterChange(document.form_graph_list);
 					}
 				});
@@ -272,7 +272,7 @@ function get_graph_list_content() {
 					strURL = strURL + "&action=ajax_list&";
 				}
 
-				strURL = strURL + 'host_id=' + objForm.host_id.value;
+				strURL = strURL + 'device_id=' + objForm.device_id.value;
 				strURL = strURL + '&graph_template_id=' + objForm.graph_template_id.value;
 				strURL = strURL + '&graphs=' + objForm.graphs.value;
 				strURL = strURL + '&filter=' + objForm.filter.value;
@@ -338,31 +338,31 @@ function get_graph_list_content() {
 					</td>
 					<td class="w1">
 						<?php
-						if (isset($_REQUEST["host_id"])) {
-							$hostname = db_fetch_cell("SELECT description as name FROM host WHERE id=".$_REQUEST["host_id"]." ORDER BY description,hostname");
+						if (isset($_REQUEST["device_id"])) {
+							$devicename = db_fetch_cell("SELECT description as name FROM device WHERE id=".$_REQUEST["device_id"]." ORDER BY description,devicename");
 						} else {
-							$hostname = "";
+							$devicename = "";
 						}
 						?>
-						<input class="ac_field" type="text" id="host" size="30" value="<?php print $hostname; ?>">
-						<input type="hidden" id="host_id">
+						<input class="ac_field" type="text" id="device" size="30" value="<?php print $devicename; ?>">
+						<input type="hidden" id="device_id">
 					</td>
 					<td class='w1'>
 						&nbsp;<?php print __("Template:");?>&nbsp;
 					</td>
 					<td class='w1'>
 						<select name="graph_template_id" onChange="applyGraphListFilterChange(document.form_graph_list)">
-							<option value="0"<?php print get_request_var_request("filter");?><?php if (get_request_var_request("host_id") == "0") {?> selected<?php }?>><?php print __("Any");?></option>
+							<option value="0"<?php print get_request_var_request("filter");?><?php if (get_request_var_request("device_id") == "0") {?> selected<?php }?>><?php print __("Any");?></option>
 							<?php
 							if (read_config_option("auth_method") != 0) {
 								$graph_templates = db_fetch_assoc("SELECT DISTINCT graph_templates.*
 									FROM (graph_templates_graph,graph_local)
-									LEFT JOIN host ON (host.id=graph_local.host_id)
+									LEFT JOIN device ON (device.id=graph_local.device_id)
 									LEFT JOIN graph_templates ON (graph_templates.id=graph_local.graph_template_id)
-									LEFT JOIN user_auth_perms ON ((graph_templates_graph.local_graph_id=user_auth_perms.item_id and user_auth_perms.type=" . PERM_GRAPHS . " and user_auth_perms.user_id=" . $_SESSION["sess_user_id"] . ") OR (host.id=user_auth_perms.item_id and user_auth_perms.type=" . PERM_DEVICES . " and user_auth_perms.user_id=" . $_SESSION["sess_user_id"] . ") OR (graph_templates.id=user_auth_perms.item_id and user_auth_perms.type=" . PERM_GRAPH_TEMPLATES . " and user_auth_perms.user_id=" . $_SESSION["sess_user_id"] . "))
+									LEFT JOIN user_auth_perms ON ((graph_templates_graph.local_graph_id=user_auth_perms.item_id and user_auth_perms.type=" . PERM_GRAPHS . " and user_auth_perms.user_id=" . $_SESSION["sess_user_id"] . ") OR (device.id=user_auth_perms.item_id and user_auth_perms.type=" . PERM_DEVICES . " and user_auth_perms.user_id=" . $_SESSION["sess_user_id"] . ") OR (graph_templates.id=user_auth_perms.item_id and user_auth_perms.type=" . PERM_GRAPH_TEMPLATES . " and user_auth_perms.user_id=" . $_SESSION["sess_user_id"] . "))
 									WHERE graph_templates_graph.local_graph_id=graph_local.id " .
 									"AND graph_templates_graph.graph_template_id > 0 " .
-									(($_REQUEST["host_id"] > 0) ? " and graph_local.host_id=" . $_REQUEST["host_id"] :" and graph_local.host_id > 0 ") . "
+									(($_REQUEST["device_id"] > 0) ? " and graph_local.device_id=" . $_REQUEST["device_id"] :" and graph_local.device_id > 0 ") . "
 									" . (empty($sql_where) ? "" : "and $sql_where") . "
 									ORDER BY name");
 							}else{
@@ -370,7 +370,7 @@ function get_graph_list_content() {
 										"FROM graph_templates " .
 										"INNER JOIN graph_local " .
 										"ON graph_templates.id=graph_local.graph_template_id" .
-										(($_REQUEST["host_id"] > 0) ? " WHERE host_id=" . $_REQUEST["host_id"] :"") .
+										(($_REQUEST["device_id"] > 0) ? " WHERE device_id=" . $_REQUEST["device_id"] :"") .
 										" GROUP BY graph_templates.name " .
 										" ORDER BY name");
 							}
@@ -418,16 +418,16 @@ function get_graph_list_content() {
 	/* create filter for sql */
 	$sql_filter = "";
 	$sql_filter .= (empty($_REQUEST["filter"]) ? "" : " graph_templates_graph.title_cache like '%" . $_REQUEST["filter"] . "%'");
-	$sql_filter .= (empty($_REQUEST["host_id"]) ? "" : (empty($sql_filter) ? "" : " and") . " graph_local.host_id=" . $_REQUEST["host_id"]);
+	$sql_filter .= (empty($_REQUEST["device_id"]) ? "" : (empty($sql_filter) ? "" : " and") . " graph_local.device_id=" . $_REQUEST["device_id"]);
 	$sql_filter .= (empty($_REQUEST["graph_template_id"]) ? "" : (empty($sql_filter) ? "" : " and") . " graph_local.graph_template_id=" . $_REQUEST["graph_template_id"]);
 
 	/* graph permissions */
 	if (read_config_option("auth_method") != 0) {
 		/* get policy information for the sql where clause */
-		$sql_where = "where " . get_graph_permissions_sql($current_user["policy_graphs"], $current_user["policy_hosts"], $current_user["policy_graph_templates"]);
-		$sql_join = "left join host on (host.id=graph_local.host_id)
+		$sql_where = "where " . get_graph_permissions_sql($current_user["policy_graphs"], $current_user["policy_devices"], $current_user["policy_graph_templates"]);
+		$sql_join = "left join device on (device.id=graph_local.device_id)
 			left join graph_templates on (graph_templates.id=graph_local.graph_template_id)
-			left join user_auth_perms on ((graph_templates_graph.local_graph_id=user_auth_perms.item_id and user_auth_perms.type=" . PERM_GRAPHS . " and user_auth_perms.user_id=" . $_SESSION["sess_user_id"] . ") OR (host.id=user_auth_perms.item_id and user_auth_perms.type=" . PERM_DEVICES . " and user_auth_perms.user_id=" . $_SESSION["sess_user_id"] . ") OR (graph_templates.id=user_auth_perms.item_id and user_auth_perms.type=" . PERM_GRAPH_TEMPLATES . " and user_auth_perms.user_id=" . $_SESSION["sess_user_id"] . "))";
+			left join user_auth_perms on ((graph_templates_graph.local_graph_id=user_auth_perms.item_id and user_auth_perms.type=" . PERM_GRAPHS . " and user_auth_perms.user_id=" . $_SESSION["sess_user_id"] . ") OR (device.id=user_auth_perms.item_id and user_auth_perms.type=" . PERM_DEVICES . " and user_auth_perms.user_id=" . $_SESSION["sess_user_id"] . ") OR (graph_templates.id=user_auth_perms.item_id and user_auth_perms.type=" . PERM_GRAPH_TEMPLATES . " and user_auth_perms.user_id=" . $_SESSION["sess_user_id"] . "))";
 
 	}else{
 		$sql_where = "";
@@ -440,7 +440,7 @@ function get_graph_list_content() {
 		" . (empty($sql_where) ? "where" : "and") . " graph_templates_graph.local_graph_id > 0
 		and graph_templates_graph.local_graph_id=graph_local.id
 		and graph_templates_graph.title_cache like '%" . get_request_var_request("filter") . "%'
-		" . (empty($_REQUEST["host_id"]) ? "" : " and graph_local.host_id=" . $_REQUEST["host_id"]) . "
+		" . (empty($_REQUEST["device_id"]) ? "" : " and graph_local.device_id=" . $_REQUEST["device_id"]) . "
 		" . (empty($_REQUEST["graph_template_id"]) ? "" : " and graph_local.graph_template_id=" . $_REQUEST["graph_template_id"]);
 
 	$total_rows = count(db_fetch_assoc("select
@@ -566,7 +566,7 @@ function get_graph_preview_content () {
 
 	/* ================= input validation ================= */
 	input_validate_input_number(get_request_var("graphs"));
-	input_validate_input_number(get_request_var_request("host_id"));
+	input_validate_input_number(get_request_var_request("device_id"));
 	input_validate_input_number(get_request_var_request("graph_template_id"));
 	input_validate_input_number(get_request_var_request("page"));
 	/* ==================================================== */
@@ -592,7 +592,7 @@ function get_graph_preview_content () {
 		kill_session_var("sess_graph_view_current_page");
 		kill_session_var("sess_graph_view_filter");
 		kill_session_var("sess_graph_view_graph_template");
-		kill_session_var("sess_graph_view_host");
+		kill_session_var("sess_graph_view_device");
 		kill_session_var("sess_graph_view_graphs");
 		kill_session_var("sess_graph_view_thumbnails");
 		kill_session_var("sess_graph_view_list_graph_list");
@@ -601,7 +601,7 @@ function get_graph_preview_content () {
 
 		unset($_REQUEST["page"]);
 		unset($_REQUEST["filter"]);
-		unset($_REQUEST["host_id"]);
+		unset($_REQUEST["device_id"]);
 		unset($_REQUEST["graphs"]);
 		unset($_REQUEST["thumbnails"]);
 		unset($_REQUEST["graph_template_id"]);
@@ -619,7 +619,7 @@ function get_graph_preview_content () {
 		$graph_list = array();
 	}
 
-	load_current_session_value("host_id", "sess_graph_view_host", "0");
+	load_current_session_value("device_id", "sess_graph_view_device", "0");
 	load_current_session_value("graph_template_id", "sess_graph_view_graph_template", "0");
 	load_current_session_value("filter", "sess_graph_view_filter", "");
 	load_current_session_value("page", "sess_graph_view_current_page", "1");
@@ -631,11 +631,11 @@ function get_graph_preview_content () {
 
 	/* graph permissions */
 	if (read_config_option("auth_method") != 0) {
-		$sql_where = "where " . get_graph_permissions_sql($current_user["policy_graphs"], $current_user["policy_hosts"], $current_user["policy_graph_templates"]);
+		$sql_where = "where " . get_graph_permissions_sql($current_user["policy_graphs"], $current_user["policy_devices"], $current_user["policy_graph_templates"]);
 
-		$sql_join = "left join host on (host.id=graph_local.host_id)
+		$sql_join = "left join device on (device.id=graph_local.device_id)
 			left join graph_templates on (graph_templates.id=graph_local.graph_template_id)
-			left join user_auth_perms on ((graph_templates_graph.local_graph_id=user_auth_perms.item_id and user_auth_perms.type=" . PERM_GRAPHS . " and user_auth_perms.user_id=" . $_SESSION["sess_user_id"] . ") OR (host.id=user_auth_perms.item_id and user_auth_perms.type=" . PERM_DEVICES . " and user_auth_perms.user_id=" . $_SESSION["sess_user_id"] . ") OR (graph_templates.id=user_auth_perms.item_id and user_auth_perms.type=" . PERM_GRAPH_TEMPLATES . " and user_auth_perms.user_id=" . $_SESSION["sess_user_id"] . "))";
+			left join user_auth_perms on ((graph_templates_graph.local_graph_id=user_auth_perms.item_id and user_auth_perms.type=" . PERM_GRAPHS . " and user_auth_perms.user_id=" . $_SESSION["sess_user_id"] . ") OR (device.id=user_auth_perms.item_id and user_auth_perms.type=" . PERM_DEVICES . " and user_auth_perms.user_id=" . $_SESSION["sess_user_id"] . ") OR (graph_templates.id=user_auth_perms.item_id and user_auth_perms.type=" . PERM_GRAPH_TEMPLATES . " and user_auth_perms.user_id=" . $_SESSION["sess_user_id"] . "))";
 	}else{
 		$sql_where = "";
 		$sql_join = "";
@@ -671,7 +671,7 @@ function get_graph_preview_content () {
 
 			/* clear the filter vars so they don't affect our results */
 			$_REQUEST["filter"]  = "";
-			$_REQUEST["host_id"] = "0";
+			$_REQUEST["device_id"] = "0";
 
 			/* Fix to avoid error in 'preview' after selection in 'list' : Notice: Undefined index: rra_id in C:\apache2\htdocs\cacti\graph_view.php on line 142 */
 			$set_rra_id = empty($rra_id) ? read_graph_config_option("default_rra_id") : $_REQUEST["rra_id"];
@@ -684,7 +684,7 @@ function get_graph_preview_content () {
 		" . (empty($sql_where) ? "WHERE" : "AND") . "   graph_templates_graph.local_graph_id > 0
 		AND graph_templates_graph.local_graph_id=graph_local.id
 		AND graph_templates_graph.title_cache like '%%" . get_request_var_request("filter") . "%%'
-		" . (empty($_REQUEST["host_id"]) ? "" : " and graph_local.host_id=" . $_REQUEST["host_id"]) . "
+		" . (empty($_REQUEST["device_id"]) ? "" : " and graph_local.device_id=" . $_REQUEST["device_id"]) . "
 		" . (empty($_REQUEST["graph_template_id"]) ? "" : " and graph_local.graph_template_id=" . $_REQUEST["graph_template_id"]) . "
 		$sql_or";
 
@@ -798,7 +798,7 @@ function get_graph_tree_items() {
 		 */
 		$tree_id         = 0;
 		$leaf_id         = 0;
-		$host_group_type = array('na', 0);
+		$device_group_type = array('na', 0);
 
 		if (isset($_REQUEST["id"])) {
 			$id_array = explode("_", $_REQUEST["id"]);
@@ -815,13 +815,13 @@ function get_graph_tree_items() {
 								$leaf_id = $part;
 								break;
 							case "dqi":
-								$host_group_type = array("dqi", $part);
+								$device_group_type = array("dqi", $part);
 								break;
 							case "dq":
-								$host_group_type = array("dq", $part);
+								$device_group_type = array("dq", $part);
 								break;
 							case "gt":
-								$host_group_type = array("gt", $part);
+								$device_group_type = array("gt", $part);
 								break;
 							default:
 								break;
@@ -833,8 +833,8 @@ function get_graph_tree_items() {
 			}
 		}
 
-		//cacti_log("tree_id: '" . $tree_id . ", leaf_id: '" . $leaf_id . ", hgt: '" . $host_group_type[0] . "," . $host_group_type[1] . "'", false);
-		$tree_items = get_tree_leaf_items($tree_id, $leaf_id, $host_group_type);
+		//cacti_log("tree_id: '" . $tree_id . ", leaf_id: '" . $leaf_id . ", hgt: '" . $device_group_type[0] . "," . $device_group_type[1] . "'", false);
+		$tree_items = get_tree_leaf_items($tree_id, $leaf_id, $device_group_type);
 
 		if (sizeof($tree_items)) {
 			$total_items = sizeof($tree_items);
@@ -853,13 +853,13 @@ function get_graph_tree_items() {
 						$children = false;
 						$icon     = CACTI_BASE_PATH . "/images/tree_icons/graph.gif";
 						break;
-					case "host":
-						if (read_graph_config_option("expand_hosts") == CHECKED) {
+					case "device":
+						if (read_graph_config_option("expand_devices") == CHECKED) {
 							$children = true;
 						}else{
 							$children = false;
 						}
-						$icon     = CACTI_BASE_PATH . "/images/tree_icons/host.gif";
+						$icon     = CACTI_BASE_PATH . "/images/tree_icons/device.gif";
 						break;
 					case "header":
 						$children = true;
@@ -926,7 +926,7 @@ function get_graph_tree_graphs() {
 	 */
 	$tree_id         = 0;
 	$leaf_id         = 0;
-	$host_group_type = array('na', 0);
+	$device_group_type = array('na', 0);
 
 	if (!isset($_REQUEST["id"])) {
 		if (isset($_SESSION["sess_graph_navigation"])) {
@@ -950,13 +950,13 @@ function get_graph_tree_graphs() {
 							$leaf_id = $part;
 							break;
 						case "dqi":
-							$host_group_type = array("dqi", $part);
+							$device_group_type = array("dqi", $part);
 							break;
 						case "dq":
-							$host_group_type = array("dq", $part);
+							$device_group_type = array("dq", $part);
 							break;
 						case "gt":
-							$host_group_type = array("gt", $part);
+							$device_group_type = array("gt", $part);
 							break;
 						default:
 							break;
@@ -968,7 +968,7 @@ function get_graph_tree_graphs() {
 		}
 	}
 
-	get_graph_tree_content($tree_id, $leaf_id, $host_group_type);
+	get_graph_tree_content($tree_id, $leaf_id, $device_group_type);
 
 	exit();
 }

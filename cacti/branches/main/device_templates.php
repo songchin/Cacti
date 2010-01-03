@@ -27,7 +27,7 @@ include_once(CACTI_BASE_PATH . "/lib/utility.php");
 
 define("MAX_DISPLAY_PAGES", 21);
 
-$host_actions = array(
+$device_actions = array(
 	1 => __("Delete"),
 	2 => __("Duplicate")
 	);
@@ -48,12 +48,12 @@ switch (get_request_var_request("action")) {
 	case 'item_remove_gt':
 		template_item_remove_gt();
 
-		header("Location: device_templates.php?action=edit&id=" . $_GET["host_template_id"]);
+		header("Location: device_templates.php?action=edit&id=" . $_GET["device_template_id"]);
 		break;
 	case 'item_remove_dq':
 		template_item_remove_dq();
 
-		header("Location: device_templates.php?action=edit&id=" . $_GET["host_template_id"]);
+		header("Location: device_templates.php?action=edit&id=" . $_GET["device_template_id"]);
 		break;
 	case 'edit':
 		include_once(CACTI_BASE_PATH . "/include/top_header.php");
@@ -82,15 +82,15 @@ function form_save() {
 	/*
 	 * loop for all possible changes of reindex_method
 	 * post variable is build like this
-	 * 		reindex_method_host_template_<host_id>_query_<snmp_query_id>_method_<old_reindex_method>
+	 * 		reindex_method_device_template_<device_id>_query_<snmp_query_id>_method_<old_reindex_method>
 	 * if values of this variable differs from <old_reindex_method>, we will have to update
 	 */
 	$reindex_performed = false;
 	while (list($var,$val) = each($_POST)) {
-		if (preg_match("/^reindex_method_host_template_([0-9]+)_query_([0-9]+)_method_([0-9]+)$/", $var, $matches)) {
+		if (preg_match("/^reindex_method_device_template_([0-9]+)_query_([0-9]+)_method_([0-9]+)$/", $var, $matches)) {
 			/* ================= input validation ================= */
 			input_validate_input_number(get_request_var_post("id"));
-			input_validate_input_number($matches[1]); # host_template
+			input_validate_input_number($matches[1]); # device_template
 			input_validate_input_number($matches[2]); # snmp_query_id
 			input_validate_input_number($matches[3]); # old reindex method
 			$reindex_method = $val;
@@ -99,7 +99,7 @@ function form_save() {
 
 			# change reindex method of this very item
 			if ( $reindex_method != $matches[3]) {
-				db_execute("replace into host_template_snmp_query (host_template_id,snmp_query_id,reindex_method) values (" . $matches[1] . "," . $matches[2] . "," . $reindex_method . ")");
+				db_execute("replace into device_template_snmp_query (device_template_id,snmp_query_id,reindex_method) values (" . $matches[1] . "," . $matches[2] . "," . $reindex_method . ")");
 				$reindex_performed = true;
 			}
 		}
@@ -109,7 +109,7 @@ function form_save() {
 		$redirect_back = false;
 
 		$save["id"] 					= $_POST["id"];
-		$save["hash"]					= get_hash_host_template($_POST["id"]);
+		$save["hash"]					= get_hash_device_template($_POST["id"]);
 		$save["name"]					= form_input_validate($_POST["name"], "name", "", false, 3);
 		$save["description"]			= form_input_validate($_POST["description"], "description", "", true, 3);
 		$save["image"]					= form_input_validate($_POST["image"], "image", "", true, 3);
@@ -134,7 +134,7 @@ function form_save() {
 		$save["max_oids"]				= form_input_validate($_POST["max_oids"], "max_oids", "^[0-9]+$", true, 3);
 
 		if (!is_error_message()) {
-			$device_template_id = sql_save($save, "host_template");
+			$device_template_id = sql_save($save, "device_template");
 
 			if ($device_template_id) {
 				raise_message(1);
@@ -143,38 +143,38 @@ function form_save() {
 					/* ================= input validation ================= */
 					input_validate_input_number(get_request_var_post("graph_template_id"));
 					/* ==================================================== */
-					db_execute("replace into host_template_graph (host_template_id,graph_template_id) values($device_template_id," . get_request_var_post("graph_template_id") . ")");
-					/* associate this new Graph Template with all hosts that are using the current Device Template
-					   but leave those hosts that have this template already */
-					$new_gt_host_entries = db_fetch_assoc("
-								SELECT 	host.id AS host_id,
-										host.description AS description,
-										host.hostname AS hostname
-								FROM 	host,
-									 	host_template_graph
-								WHERE	host.host_template_id 					= host_template_graph.host_template_id
-								AND		host_template_graph.graph_template_id 	= " . $_POST["graph_template_id"] . "
-								AND		host.id NOT
+					db_execute("replace into device_template_graph (device_template_id,graph_template_id) values($device_template_id," . get_request_var_post("graph_template_id") . ")");
+					/* associate this new Graph Template with all devices that are using the current Device Template
+					   but leave those devices that have this template already */
+					$new_gt_device_entries = db_fetch_assoc("
+								SELECT 	device.id AS device_id,
+										device.description AS description,
+										device.devicename AS devicename
+								FROM 	device,
+									 	device_template_graph
+								WHERE	device.device_template_id 					= device_template_graph.device_template_id
+								AND		device_template_graph.graph_template_id 	= " . $_POST["graph_template_id"] . "
+								AND		device.id NOT
 								IN (
-									SELECT host_graph.host_id
-									FROM   host_graph
-									WHERE  host_graph.graph_template_id = " . $_POST["graph_template_id"] . "
+									SELECT device_graph.device_id
+									FROM   device_graph
+									WHERE  device_graph.graph_template_id = " . $_POST["graph_template_id"] . "
 									)"
 								);
-					if (sizeof($new_gt_host_entries) > 0) {
-						/* notify the user of changes to hosts */
-						debug_log_clear("host_template");
+					if (sizeof($new_gt_device_entries) > 0) {
+						/* notify the user of changes to devices */
+						debug_log_clear("device_template");
 						$template_name = db_fetch_cell("SELECT name FROM graph_templates WHERE id = " . $_POST["graph_template_id"]);
-						debug_log_insert("host_template", __("Adding Graph Template: ") . $template_name . " to ");
+						debug_log_insert("device_template", __("Adding Graph Template: ") . $template_name . " to ");
 
-						foreach($new_gt_host_entries as $entry) {
+						foreach($new_gt_device_entries as $entry) {
 							/* add the Graph Template */
-							db_execute("REPLACE INTO host_graph ( host_id, graph_template_id )
-									VALUES (" . $entry["host_id"] . ","
+							db_execute("REPLACE INTO device_graph ( device_id, graph_template_id )
+									VALUES (" . $entry["device_id"] . ","
 											  . get_request_var_post("graph_template_id") . "
 											)"
 									);
-							debug_log_insert("host_template", $entry["hostname"] . ", " . $entry["description"]);
+							debug_log_insert("device_template", $entry["devicename"] . ", " . $entry["description"]);
 						}
 					}
 					$redirect_back = true;
@@ -183,42 +183,42 @@ function form_save() {
 					input_validate_input_number(get_request_var_post("snmp_query_id"));
 					input_validate_input_number(get_request_var_post("reindex_method"));
 					/* ==================================================== */
-					db_execute("replace into host_template_snmp_query (host_template_id,snmp_query_id, reindex_method) values($device_template_id," . get_request_var_post("snmp_query_id") . ", " . get_request_var_post("reindex_method") . ")");
-					/* associate this new Data Query with all hosts that are using the current Device Template
-					   but leave those hosts that have this Data Query already.
+					db_execute("replace into device_template_snmp_query (device_template_id,snmp_query_id, reindex_method) values($device_template_id," . get_request_var_post("snmp_query_id") . ", " . get_request_var_post("reindex_method") . ")");
+					/* associate this new Data Query with all devices that are using the current Device Template
+					   but leave those devices that have this Data Query already.
 					   Reindex all those Hosts */
-					$new_dq_host_entries = db_fetch_assoc("
-								SELECT 	host.id AS host_id,
-										host.description AS description,
-										host.hostname AS hostname
-								FROM  	host,
-										host_template_snmp_query
-								WHERE	host.host_template_id					= host_template_snmp_query.host_template_id
-								AND		host_template_snmp_query.snmp_query_id	= " . $_POST["snmp_query_id"] . "
-								AND		host.id NOT
+					$new_dq_device_entries = db_fetch_assoc("
+								SELECT 	device.id AS device_id,
+										device.description AS description,
+										device.devicename AS devicename
+								FROM  	device,
+										device_template_snmp_query
+								WHERE	device.device_template_id					= device_template_snmp_query.device_template_id
+								AND		device_template_snmp_query.snmp_query_id	= " . $_POST["snmp_query_id"] . "
+								AND		device.id NOT
 								IN (
-									SELECT host_snmp_query.host_id
-									FROM   host_snmp_query
-									WHERE  host_snmp_query.snmp_query_id = " . $_POST["snmp_query_id"] . "
+									SELECT device_snmp_query.device_id
+									FROM   device_snmp_query
+									WHERE  device_snmp_query.snmp_query_id = " . $_POST["snmp_query_id"] . "
 									)"
 								);
-					if (sizeof($new_dq_host_entries) > 0) {
-						/* notify the user of changes to hosts */
-						debug_log_clear("host_template");
+					if (sizeof($new_dq_device_entries) > 0) {
+						/* notify the user of changes to devices */
+						debug_log_clear("device_template");
 						$template_name = db_fetch_cell("SELECT name FROM snmp_query WHERE id = " . $_POST["snmp_query_id"]);
-						debug_log_insert("host_template", __("Adding Data Query: ") . $template_name . " to ");
+						debug_log_insert("device_template", __("Adding Data Query: ") . $template_name . " to ");
 
-						foreach($new_dq_host_entries as $entry) {
+						foreach($new_dq_device_entries as $entry) {
 							/* add the Data Query */
-							db_execute("REPLACE INTO host_snmp_query (host_id,snmp_query_id,reindex_method)
-										VALUES (". $entry["host_id"] . ","
+							db_execute("REPLACE INTO device_snmp_query (device_id,snmp_query_id,reindex_method)
+										VALUES (". $entry["device_id"] . ","
 												 . get_request_var_post("snmp_query_id") . ","
 												 . get_request_var_post("reindex_method") . "
 												)"
 										);
 							/* recache snmp data */
-							run_data_query($entry["host_id"], get_request_var_post("snmp_query_id"));
-							debug_log_insert("host_template", $entry["hostname"] . ", " . $entry["description"]);
+							run_data_query($entry["device_id"], get_request_var_post("snmp_query_id"));
+							debug_log_insert("device_template", $entry["devicename"] . ", " . $entry["description"]);
 						}
 					}
 					$redirect_back = true;
@@ -242,7 +242,7 @@ function form_save() {
    ------------------------ */
 
 function form_actions() {
-	global $colors, $host_actions;
+	global $colors, $device_actions;
 
 	/* if we are to save this form, instead of display it */
 	if (isset($_POST["selected_items"])) {
@@ -256,7 +256,7 @@ function form_actions() {
 				input_validate_input_number($template_id);
 				/* ==================================================== */
 
-				if (sizeof(db_fetch_assoc("SELECT * FROM host WHERE host_template_id=$template_id LIMIT 1"))) {
+				if (sizeof(db_fetch_assoc("SELECT * FROM device WHERE device_template_id=$template_id LIMIT 1"))) {
 					$bad_ids[] = $template_id;
 				}else{
 					$template_ids[] = $template_id;
@@ -276,12 +276,12 @@ function form_actions() {
 			}
 
 			if (isset($template_ids)) {
-				db_execute("delete from host_template where " . array_to_sql_or($template_ids, "id"));
-				db_execute("delete from host_template_snmp_query where " . array_to_sql_or($template_ids, "host_template_id"));
-				db_execute("delete from host_template_graph where " . array_to_sql_or($template_ids, "host_template_id"));
+				db_execute("delete from device_template where " . array_to_sql_or($template_ids, "id"));
+				db_execute("delete from device_template_snmp_query where " . array_to_sql_or($template_ids, "device_template_id"));
+				db_execute("delete from device_template_graph where " . array_to_sql_or($template_ids, "device_template_id"));
 
 				/* "undo" any device that is currently using this template */
-				db_execute("update host set host_template_id=0 where " . array_to_sql_or($template_ids, "host_template_id"));
+				db_execute("update device set device_template_id=0 where " . array_to_sql_or($template_ids, "device_template_id"));
 			}
 		}elseif (get_request_var_post("drp_action") == "2") { /* duplicate */
 			for ($i=0;($i<count($selected_items));$i++) {
@@ -289,7 +289,7 @@ function form_actions() {
 				input_validate_input_number($selected_items[$i]);
 				/* ==================================================== */
 
-				duplicate_host_template($selected_items[$i], get_request_var_post("title_format"));
+				duplicate_device_template($selected_items[$i], get_request_var_post("title_format"));
 			}
 		}
 
@@ -298,7 +298,7 @@ function form_actions() {
 	}
 
 	/* setup some variables */
-	$host_list = ""; $i = 0; $host_array = array();
+	$device_list = ""; $i = 0; $device_array = array();
 
 	/* loop through each of the device templates selected on the previous page and get more info about them */
 	while (list($var,$val) = each($_POST)) {
@@ -307,8 +307,8 @@ function form_actions() {
 			input_validate_input_number($matches[1]);
 			/* ==================================================== */
 
-			$host_list .= "<li>" . db_fetch_cell("select name from host_template where id=" . $matches[1]) . "<br>";
-			$host_array[$i] = $matches[1];
+			$device_list .= "<li>" . db_fetch_cell("select name from device_template where id=" . $matches[1]) . "<br>";
+			$device_array[$i] = $matches[1];
 		}
 
 		$i++;
@@ -316,11 +316,11 @@ function form_actions() {
 
 	include_once(CACTI_BASE_PATH . "/include/top_header.php");
 
-	html_start_box("<strong>" . $host_actions{get_request_var_post("drp_action")} . "</strong>", "60", $colors["header_panel"], "3", "center", "");
+	html_start_box("<strong>" . $device_actions{get_request_var_post("drp_action")} . "</strong>", "60", $colors["header_panel"], "3", "center", "");
 
 	print "<form action='device_templates.php' method='post'>\n";
 
-	if (sizeof($host_array)) {
+	if (sizeof($device_array)) {
 		if (get_request_var_post("drp_action") == ACTION_NONE) { /* NONE */
 			print "	<tr>
 						<td class='textArea'>
@@ -331,7 +331,7 @@ function form_actions() {
 			print "	<tr>
 					<td class='textArea'>
 						<p>" . __("Are you sure you want to delete the following Device Templates? All devices currently attached this these Device Templates will lose their template assocation.") . "</p>
-						<p>$host_list</p>
+						<p>$device_list</p>
 					</td>
 				</tr>\n
 				";
@@ -339,7 +339,7 @@ function form_actions() {
 			print "	<tr>
 					<td class='textArea'>
 						<p>" . __("When you click save, the following Device Templates will be duplicated. You can optionally change the title format for the new Device Templates.") . "</p>
-						<p>$host_list</p>
+						<p>$device_list</p>
 						<p><strong>" . __("Title Format:") . "</strong><br>"; form_text_box("title_format", "<template_title> (1)", "", "255", "30", "text"); print "</p>
 					</td>
 				</tr>\n
@@ -353,10 +353,10 @@ function form_actions() {
 			</tr>\n";
 	}
 
-	if (!sizeof($host_array) || get_request_var_post("drp_action") == ACTION_NONE) {
+	if (!sizeof($device_array) || get_request_var_post("drp_action") == ACTION_NONE) {
 		form_return_button_alt();
 	}else{
-		form_yesno_button_alt(serialize($host_array), get_request_var_post("drp_action"));
+		form_yesno_button_alt(serialize($device_array), get_request_var_post("drp_action"));
 	}
 
 	html_end_box();
@@ -371,19 +371,19 @@ function form_actions() {
 function template_item_remove_gt() {
 	/* ================= input validation ================= */
 	input_validate_input_number(get_request_var("id"));
-	input_validate_input_number(get_request_var("host_template_id"));
+	input_validate_input_number(get_request_var("device_template_id"));
 	/* ==================================================== */
 
-	db_execute("delete from host_template_graph where graph_template_id=" . $_GET["id"] . " and host_template_id=" . $_GET["host_template_id"]);
+	db_execute("delete from device_template_graph where graph_template_id=" . $_GET["id"] . " and device_template_id=" . $_GET["device_template_id"]);
 }
 
 function template_item_remove_dq() {
 	/* ================= input validation ================= */
 	input_validate_input_number(get_request_var("id"));
-	input_validate_input_number(get_request_var("host_template_id"));
+	input_validate_input_number(get_request_var("device_template_id"));
 	/* ==================================================== */
 
-	db_execute("delete from host_template_snmp_query where snmp_query_id=" . $_GET["id"] . " and host_template_id=" . $_GET["host_template_id"]);
+	db_execute("delete from device_template_snmp_query where snmp_query_id=" . $_GET["id"] . " and device_template_id=" . $_GET["device_template_id"]);
 }
 
 function template_edit() {
@@ -394,10 +394,10 @@ function template_edit() {
 	/* ==================================================== */
 
 	/* remember if there's something we want to show to the user */
-	$debug_log = debug_log_return("host_template");
+	$debug_log = debug_log_return("device_template");
 
 	if (!empty($debug_log)) {
-		debug_log_clear("host_template");
+		debug_log_clear("device_template");
 		?>
 		<table class='topBoxAlt'>
 			<tr bgcolor="<?php print $colors["light"];?>">
@@ -411,18 +411,18 @@ function template_edit() {
 	}
 
 	if (!empty($_GET["id"])) {
-		$device_template = db_fetch_row("select * from host_template where id=" . $_GET["id"]);
+		$device_template = db_fetch_row("select * from device_template where id=" . $_GET["id"]);
 		$header_label = __("[edit: ") . $device_template["name"] . "]";
 	}else{
 		$header_label = __("[new]");
 		$_GET["id"] = 0;
 	}
 
-	print "<form method='post' action='" .  basename($_SERVER["PHP_SELF"]) . "' name='host_template_edit'>\n";
+	print "<form method='post' action='" .  basename($_SERVER["PHP_SELF"]) . "' name='device_template_edit'>\n";
 	html_start_box("<strong>" . __("Device Templates") . "</strong> $header_label", "100", $colors["header"], "0", "center", "", true);
 	$header_items = array(__("Field"), __("Value"));
 	print "<tr><td>";
-	html_header($header_items, 1, true, 'host_template');
+	html_header($header_items, 1, true, 'device_template');
 
 	draw_edit_form(array(
 		"config" => array(),
@@ -785,24 +785,24 @@ function template_edit() {
 		$selected_graph_templates = db_fetch_assoc("SELECT
 			graph_templates.id,
 			graph_templates.name
-			FROM (graph_templates,host_template_graph)
-			WHERE graph_templates.id=host_template_graph.graph_template_id
-			AND host_template_graph.host_template_id=" . $_GET["id"] . "
+			FROM (graph_templates,device_template_graph)
+			WHERE graph_templates.id=device_template_graph.graph_template_id
+			AND device_template_graph.device_template_id=" . $_GET["id"] . "
 			ORDER BY graph_templates.name");
 
 		$available_graph_templates = db_fetch_assoc("SELECT
 			graph_templates.id,
 			graph_templates.name
-			FROM graph_templates LEFT JOIN host_template_graph
-			ON (graph_templates.id=host_template_graph.graph_template_id AND host_template_graph.host_template_id=" . $_GET["id"] . ")
-			WHERE host_template_graph.host_template_id IS NULL
+			FROM graph_templates LEFT JOIN device_template_graph
+			ON (graph_templates.id=device_template_graph.graph_template_id AND device_template_graph.device_template_id=" . $_GET["id"] . ")
+			WHERE device_template_graph.device_template_id IS NULL
 			ORDER BY graph_templates.name");
 
 		/* omit those graph_templates, that have already been associated */
 		$keeper = array();
 		foreach ($available_graph_templates as $item) {
-			if (sizeof(db_fetch_assoc("SELECT graph_template_id FROM host_template_graph " .
-					" WHERE ((host_template_id=" . $_GET["id"] . ")" .
+			if (sizeof(db_fetch_assoc("SELECT graph_template_id FROM device_template_graph " .
+					" WHERE ((device_template_id=" . $_GET["id"] . ")" .
 					" AND (graph_template_id=" . $item["id"] ."))")) > 0) {
 				/* do nothing */
 			} else {
@@ -822,7 +822,7 @@ function template_edit() {
 						<strong><?php print $i;?>)</strong> <?php print $item["name"];?>
 					</td>
 					<td align='right' nowrap>
-						<a href='<?php print htmlspecialchars("device_templates.php?action=item_remove_gt&id=" . $item["id"] . "&host_template_id=" . $_GET["id"]);?>'><img class="buttonSmall" src='images/delete_icon_large.gif' title='<?php print __("Delete Graph Template Association");?>' alt='<?php print __("Delete");?>' align='middle'></a>
+						<a href='<?php print htmlspecialchars("device_templates.php?action=item_remove_gt&id=" . $item["id"] . "&device_template_id=" . $_GET["id"]);?>'><img class="buttonSmall" src='images/delete_icon_large.gif' title='<?php print __("Delete Graph Template Association");?>' alt='<?php print __("Delete");?>' align='middle'></a>
 					</td>
 				<?php
 				form_end_row();
@@ -858,25 +858,25 @@ function template_edit() {
 		$selected_data_queries = db_fetch_assoc("SELECT
 			snmp_query.id,
 			snmp_query.name,
-			host_template_snmp_query.reindex_method
-			FROM (snmp_query,host_template_snmp_query)
-			WHERE snmp_query.id=host_template_snmp_query.snmp_query_id
-			AND host_template_snmp_query.host_template_id=" . $_GET["id"] . "
+			device_template_snmp_query.reindex_method
+			FROM (snmp_query,device_template_snmp_query)
+			WHERE snmp_query.id=device_template_snmp_query.snmp_query_id
+			AND device_template_snmp_query.device_template_id=" . $_GET["id"] . "
 			ORDER BY snmp_query.name");
 
 		$available_data_queries = db_fetch_assoc("SELECT
 			snmp_query.id,
 			snmp_query.name
-			FROM snmp_query LEFT JOIN host_template_snmp_query
-			ON (snmp_query.id=host_template_snmp_query.snmp_query_id AND host_template_snmp_query.host_template_id=" . $_GET["id"] . ")
-			WHERE host_template_snmp_query.host_template_id IS NULL
+			FROM snmp_query LEFT JOIN device_template_snmp_query
+			ON (snmp_query.id=device_template_snmp_query.snmp_query_id AND device_template_snmp_query.device_template_id=" . $_GET["id"] . ")
+			WHERE device_template_snmp_query.device_template_id IS NULL
 			ORDER BY snmp_query.name");
 
 		/* omit those data_queries, that have already been associated */
 		$keeper = array();
 		foreach ($available_data_queries as $item) {
-			if (sizeof(db_fetch_assoc("SELECT snmp_query_id FROM host_template_snmp_query " .
-					" WHERE ((host_template_id=" . $_GET["id"] . ")" .
+			if (sizeof(db_fetch_assoc("SELECT snmp_query_id FROM device_template_snmp_query " .
+					" WHERE ((device_template_id=" . $_GET["id"] . ")" .
 					" AND (snmp_query_id=" . $item["id"] ."))")) > 0) {
 				/* do nothing */
 			} else {
@@ -896,10 +896,10 @@ function template_edit() {
 						<strong><?php print $i;?>)</strong> <?php print $item["name"];?>
 					</td>
 					<td>
-						<?php form_dropdown("reindex_method_host_template_".get_request_var("id")."_query_".$item["id"]."_method_".$item["reindex_method"],$reindex_types,"","",$item["reindex_method"],"","","","");?>
+						<?php form_dropdown("reindex_method_device_template_".get_request_var("id")."_query_".$item["id"]."_method_".$item["reindex_method"],$reindex_types,"","",$item["reindex_method"],"","","","");?>
 					</td>
 					<td align='right'>
-						<a href='<?php print htmlspecialchars("device_templates.php?action=item_remove_dq&id=" . $item["id"] . "&host_template_id=" . $_GET["id"]);?>'><img class='buttonSmall' src='images/delete_icon_large.gif' title='Delete Data Query Association' alt='Delete' align='middle'></a>
+						<a href='<?php print htmlspecialchars("device_templates.php?action=item_remove_dq&id=" . $item["id"] . "&device_template_id=" . $_GET["id"]);?>'><img class='buttonSmall' src='images/delete_icon_large.gif' title='Delete Data Query Association' alt='Delete' align='middle'></a>
 					</td>
 				<?php
 				form_end_row();
@@ -935,7 +935,7 @@ function template_edit() {
 }
 
 function template() {
-	global $colors, $host_actions, $item_rows;
+	global $colors, $device_actions, $item_rows;
 
 	/* ================= input validation ================= */
 	input_validate_input_number(get_request_var_request("page"));
@@ -959,11 +959,11 @@ function template() {
 
 	/* if the user pushed the 'clear' button */
 	if (isset($_REQUEST["clear_x"])) {
-		kill_session_var("sess_host_template_current_page");
-		kill_session_var("sess_host_template_rows");
-		kill_session_var("sess_host_template_filter");
-		kill_session_var("sess_host_template_sort_column");
-		kill_session_var("sess_host_template_sort_direction");
+		kill_session_var("sess_device_template_current_page");
+		kill_session_var("sess_device_template_rows");
+		kill_session_var("sess_device_template_filter");
+		kill_session_var("sess_device_template_sort_column");
+		kill_session_var("sess_device_template_sort_direction");
 
 		unset($_REQUEST["page"]);
 		unset($_REQUEST["rows"]);
@@ -985,11 +985,11 @@ function template() {
 	<?php
 
 	/* remember these search fields in session vars so we don't have to keep passing them around */
-	load_current_session_value("page", "sess_host_template_current_page", "1");
-	load_current_session_value("rows", "sess_host_template_rows", "-1");
-	load_current_session_value("filter", "sess_host_template_filter", "");
-	load_current_session_value("sort_column", "sess_host_template_sort_column", "name");
-	load_current_session_value("sort_direction", "sess_host_template_sort_direction", "ASC");
+	load_current_session_value("page", "sess_device_template_current_page", "1");
+	load_current_session_value("rows", "sess_device_template_rows", "-1");
+	load_current_session_value("filter", "sess_device_template_filter", "");
+	load_current_session_value("sort_column", "sess_device_template_sort_column", "name");
+	load_current_session_value("sort_direction", "sess_device_template_sort_direction", "ASC");
 
 	display_output_messages();
 
@@ -997,7 +997,7 @@ function template() {
 	?>
 	<tr class='rowAlternate2'>
 		<td>
-			<form name="form_host_template" action="device_templates.php">
+			<form name="form_device_template" action="device_templates.php">
 			<table cellpadding="0" cellspacing="3">
 				<tr>
 					<td class="nw50">
@@ -1010,7 +1010,7 @@ function template() {
 						&nbsp;<?php print __("Rows:");?>&nbsp;
 					</td>
 					<td width="1">
-						<select name="rows" onChange="applyFilterChange(document.form_host_template)">
+						<select name="rows" onChange="applyFilterChange(document.form_device_template)">
 							<option value="-1"<?php if (get_request_var_request("rows") == "-1") {?> selected<?php }?>>Default</option>
 							<?php
 							if (sizeof($item_rows) > 0) {
@@ -1036,8 +1036,8 @@ function template() {
 
 	/* form the 'where' clause for our main sql query */
 	if (strlen(get_request_var_request("filter"))) {
-		$sql_where = "WHERE (host_template.name LIKE '%%" . $_REQUEST["filter"] . "%%')
-			OR (host_template.description LIKE '%%" . get_request_var_request("filter") . "%%')";
+		$sql_where = "WHERE (device_template.name LIKE '%%" . $_REQUEST["filter"] . "%%')
+			OR (device_template.description LIKE '%%" . get_request_var_request("filter") . "%%')";
 	}else{
 		$sql_where = "";
 	}
@@ -1045,8 +1045,8 @@ function template() {
 	html_start_box("", "100", $colors["header"], "0", "center", "");
 
 	$total_rows = db_fetch_cell("SELECT
-		COUNT(host_template.id)
-		FROM host_template
+		COUNT(device_template.id)
+		FROM device_template
 		$sql_where");
 
 	if (get_request_var_request("rows") == "-1") {
@@ -1056,7 +1056,7 @@ function template() {
 	}
 
 	$template_list = db_fetch_assoc("SELECT *
-		FROM host_template
+		FROM device_template
 		$sql_where
 		ORDER BY " . get_request_var_request('sort_column') . " " . get_request_var_request('sort_direction') .
 		" LIMIT " . ($rows*(get_request_var_request("page")-1)) . "," . $rows);
@@ -1098,6 +1098,6 @@ function template() {
 	print "</table>\n";	# end table of html_header_sort_checkbox
 
 	/* draw the dropdown containing a list of available actions for this form */
-	draw_actions_dropdown($host_actions);
+	draw_actions_dropdown($device_actions);
 	print "</form>\n";	# end form of html_header_sort_checkbox
 }

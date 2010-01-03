@@ -145,10 +145,10 @@ function file_exists_2gb($filename) {
 }
 
 /* update_reindex_cache - builds a cache that is used by the poller to determine if the
-     indexes for a particular data query/host have changed
-   @arg $host_id - the id of the host to which the data query belongs
+     indexes for a particular data query/device have changed
+   @arg $device_id - the id of the device to which the data query belongs
    @arg $data_query_id - the id of the data query to rebuild the reindex cache for */
-function update_reindex_cache($host_id, $data_query_id) {
+function update_reindex_cache($device_id, $data_query_id) {
 	global $config;
 
 	include_once(CACTI_BASE_PATH . "/lib/data_query.php");
@@ -157,8 +157,8 @@ function update_reindex_cache($host_id, $data_query_id) {
 	/* will be used to keep track of sql statements to execute later on */
 	$recache_stack = array();
 
-	$host            = db_fetch_row("select hostname, snmp_community, snmp_version, snmp_username, snmp_password, snmp_auth_protocol, snmp_priv_passphrase, snmp_priv_protocol, snmp_context, snmp_port, snmp_timeout from host where id=$host_id");
-	$data_query      = db_fetch_row("select reindex_method, sort_field from host_snmp_query where host_id=$host_id and snmp_query_id=$data_query_id");
+	$device            = db_fetch_row("select devicename, snmp_community, snmp_version, snmp_username, snmp_password, snmp_auth_protocol, snmp_priv_passphrase, snmp_priv_protocol, snmp_context, snmp_port, snmp_timeout from device where id=$device_id");
+	$data_query      = db_fetch_row("select reindex_method, sort_field from device_snmp_query where device_id=$device_id and snmp_query_id=$data_query_id");
 	$data_query_type = db_fetch_cell("select data_input.type_id from (data_input,snmp_query) where data_input.id=snmp_query.data_input_id and snmp_query.id=$data_query_id");
 	$data_query_xml  = get_data_query_array($data_query_id);
 
@@ -168,7 +168,7 @@ function update_reindex_cache($host_id, $data_query_id) {
 		case DATA_QUERY_AUTOINDEX_BACKWARDS_UPTIME:
 			/* the uptime backwards method requires snmp, so make sure snmp is actually enabled
 			 * on this device first */
-			if ($host["snmp_community"] != "") {
+			if ($device["snmp_community"] != "") {
 				if (isset($data_query_xml["oid_uptime"])) {
 					$oid_uptime = $data_query_xml["oid_uptime"];
 				}elseif (isset($data_query_xml["uptime_oid"])) {
@@ -177,66 +177,66 @@ function update_reindex_cache($host_id, $data_query_id) {
 					$oid_uptime = ".1.3.6.1.2.1.1.3.0";
 				}
 
-				$assert_value = cacti_snmp_get($host["hostname"],
-					$host["snmp_community"],
+				$assert_value = cacti_snmp_get($device["devicename"],
+					$device["snmp_community"],
 					$oid_uptime,
-					$host["snmp_version"],
-					$host["snmp_username"],
-					$host["snmp_password"],
-					$host["snmp_auth_protocol"],
-					$host["snmp_priv_passphrase"],
-					$host["snmp_priv_protocol"],
-					$host["snmp_context"],
-					$host["snmp_port"],
-					$host["snmp_timeout"],
+					$device["snmp_version"],
+					$device["snmp_username"],
+					$device["snmp_password"],
+					$device["snmp_auth_protocol"],
+					$device["snmp_priv_passphrase"],
+					$device["snmp_priv_protocol"],
+					$device["snmp_context"],
+					$device["snmp_port"],
+					$device["snmp_timeout"],
 					SNMP_POLLER);
 
-				$recache_stack[] = "('$host_id', '$data_query_id', '0', '<', '$assert_value', '$oid_uptime', '1')";
+				$recache_stack[] = "('$device_id', '$data_query_id', '0', '<', '$assert_value', '$oid_uptime', '1')";
 			}
 
 			break;
 		case DATA_QUERY_AUTOINDEX_INDEX_COUNT_CHANGE:
 			/* this method requires that some command/oid can be used to determine the
 			 * current number of indexes in the data query */
-			$assert_value = sizeof(db_fetch_assoc("select snmp_index from host_snmp_cache where host_id=$host_id and snmp_query_id=$data_query_id group by snmp_index"));
+			$assert_value = sizeof(db_fetch_assoc("select snmp_index from device_snmp_cache where device_id=$device_id and snmp_query_id=$data_query_id group by snmp_index"));
 
 			if ($data_query_type == DATA_INPUT_TYPE_SNMP_QUERY) {
 				if (isset($data_query_xml["oid_num_indexes"])) {
-					$recache_stack[] = "($host_id, $data_query_id, 0, '=', '$assert_value', '" . $data_query_xml["oid_num_indexes"] . "', '1')";
+					$recache_stack[] = "($device_id, $data_query_id, 0, '=', '$assert_value', '" . $data_query_xml["oid_num_indexes"] . "', '1')";
 				}
 			}else if ($data_query_type == DATA_INPUT_TYPE_SCRIPT_QUERY) {
 				if (isset($data_query_xml["arg_num_indexes"])) {
-					$recache_stack[] = "($host_id, $data_query_id, 1, '=', '$assert_value', '" . get_script_query_path((isset($data_query_xml["arg_prepend"]) ? $data_query_xml["arg_prepend"] . " ": "") . $data_query_xml["arg_num_indexes"], $data_query_xml["script_path"], $host_id) . "', '1')";
+					$recache_stack[] = "($device_id, $data_query_id, 1, '=', '$assert_value', '" . get_script_query_path((isset($data_query_xml["arg_prepend"]) ? $data_query_xml["arg_prepend"] . " ": "") . $data_query_xml["arg_num_indexes"], $data_query_xml["script_path"], $device_id) . "', '1')";
 				}
 			}
 
 			break;
 		case DATA_QUERY_AUTOINDEX_VALUE_CHANGE:
 			/* this method uses the value of the index OID to determine if a re-index is required */
-			$assert_value = db_fetch_cell("select assert_value from poller_reindex where host_id=$host_id and data_query_id=$data_query_id");
+			$assert_value = db_fetch_cell("select assert_value from poller_reindex where device_id=$device_id and data_query_id=$data_query_id");
 
 			if ($data_query_type == DATA_INPUT_TYPE_SNMP_QUERY) {
 				if (isset($data_query_xml["oid_num_indexes"])) {
-					$recache_stack[] = "($host_id, $data_query_id, 0, '=', '$assert_value', '" . $data_query_xml["oid_num_indexes"] . "', '1')";
+					$recache_stack[] = "($device_id, $data_query_id, 0, '=', '$assert_value', '" . $data_query_xml["oid_num_indexes"] . "', '1')";
 				}
 			}else if ($data_query_type == DATA_INPUT_TYPE_SCRIPT_QUERY) {
 				if (isset($data_query_xml["arg_num_indexes"])) {
-					$recache_stack[] = "($host_id, $data_query_id, 1, '=', '$assert_value', '" . get_script_query_path((isset($data_query_xml["arg_prepend"]) ? $data_query_xml["arg_prepend"] . " ": "") . $data_query_xml["arg_num_indexes"], $data_query_xml["script_path"], $host_id) . "', '1')";
+					$recache_stack[] = "($device_id, $data_query_id, 1, '=', '$assert_value', '" . get_script_query_path((isset($data_query_xml["arg_prepend"]) ? $data_query_xml["arg_prepend"] . " ": "") . $data_query_xml["arg_num_indexes"], $data_query_xml["script_path"], $device_id) . "', '1')";
 				}
 			}
 
 			break;
 		case DATA_QUERY_AUTOINDEX_FIELD_VERIFICATION:
-			$primary_indexes = db_fetch_assoc("select snmp_index,oid,field_value from host_snmp_cache where host_id=$host_id and snmp_query_id=$data_query_id and field_name='" . $data_query["sort_field"] . "'");
+			$primary_indexes = db_fetch_assoc("select snmp_index,oid,field_value from device_snmp_cache where device_id=$device_id and snmp_query_id=$data_query_id and field_name='" . $data_query["sort_field"] . "'");
 
 			if (sizeof($primary_indexes) > 0) {
 				foreach ($primary_indexes as $index) {
 					$assert_value = $index["field_value"];
 
 					if ($data_query_type == DATA_INPUT_TYPE_SNMP_QUERY) {
-						$recache_stack[] = "($host_id, $data_query_id, 0, '=', '$assert_value', '" . $data_query_xml["fields"]{$data_query["sort_field"]}["oid"] . "." . $index["snmp_index"] . "', '1')";
+						$recache_stack[] = "($device_id, $data_query_id, 0, '=', '$assert_value', '" . $data_query_xml["fields"]{$data_query["sort_field"]}["oid"] . "." . $index["snmp_index"] . "', '1')";
 					}else if ($data_query_type == DATA_INPUT_TYPE_SCRIPT_QUERY) {
-						$recache_stack[] = "('$host_id', '$data_query_id', '1', '=', '$assert_value', '" . get_script_query_path((isset($data_query_xml["arg_prepend"]) ? $data_query_xml["arg_prepend"] . " ": "") . $data_query_xml["arg_get"] . " " . $data_query_xml["fields"]{$data_query["sort_field"]}["query_name"] . " " . $index["snmp_index"], $data_query_xml["script_path"], $host_id) . "', '1')";
+						$recache_stack[] = "('$device_id', '$data_query_id', '1', '=', '$assert_value', '" . get_script_query_path((isset($data_query_xml["arg_prepend"]) ? $data_query_xml["arg_prepend"] . " ": "") . $data_query_xml["arg_get"] . " " . $data_query_xml["fields"]{$data_query["sort_field"]}["query_name"] . " " . $index["snmp_index"], $data_query_xml["script_path"], $device_id) . "', '1')";
 					}
 				}
 			}
@@ -245,16 +245,16 @@ function update_reindex_cache($host_id, $data_query_id) {
 	}
 
 	if (sizeof($recache_stack)) {
-		poller_update_poller_reindex_from_buffer($host_id, $data_query_id, $recache_stack);
+		poller_update_poller_reindex_from_buffer($device_id, $data_query_id, $recache_stack);
 	}
 }
 
-function poller_update_poller_reindex_from_buffer($host_id, $data_query_id, &$recache_stack) {
+function poller_update_poller_reindex_from_buffer($device_id, $data_query_id, &$recache_stack) {
 	/* set all fields present value to 0, to mark the outliers when we are all done */
-	db_execute("UPDATE poller_reindex SET present=0 WHERE host_id='$host_id' AND data_query_id='$data_query_id'");
+	db_execute("UPDATE poller_reindex SET present=0 WHERE device_id='$device_id' AND data_query_id='$data_query_id'");
 
 	/* setup the database call */
-	$sql_prefix   = "INSERT INTO poller_reindex (host_id, data_query_id, action, op, assert_value, arg1, present) VALUES";
+	$sql_prefix   = "INSERT INTO poller_reindex (device_id, data_query_id, action, op, assert_value, arg1, present) VALUES";
 	$sql_suffix   = " ON DUPLICATE KEY UPDATE action=VALUES(action), op=VALUES(op), assert_value=VALUES(assert_value), present=VALUES(present)";
 
 	/* use a reasonable insert buffer, the default is 1MByte */
@@ -293,7 +293,7 @@ function poller_update_poller_reindex_from_buffer($host_id, $data_query_id, &$re
 	}
 
 	/* remove stale records from the poller reindex */
-	db_execute("DELETE FROM poller_reindex WHERE host_id='$host_id' AND data_query_id='$data_query_id' AND present='0'");
+	db_execute("DELETE FROM poller_reindex WHERE device_id='$device_id' AND data_query_id='$data_query_id' AND present='0'");
 }
 
 /* process_poller_output - grabs data from the 'poller_output' table and feeds the *completed*

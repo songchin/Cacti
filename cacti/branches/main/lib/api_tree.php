@@ -36,7 +36,7 @@ function api_tree_add_tree_names_to_actions_array() {
 }
 
 function api_tree_item_save($id, $tree_id, $type, $parent_tree_item_id, $title, $local_graph_id, $rra_id,
-	$host_id, $host_grouping_type, $sort_children_type, $propagate_changes) {
+	$device_id, $device_grouping_type, $sort_children_type, $propagate_changes) {
 	global $config;
 
 	input_validate_input_number($tree_id);
@@ -68,9 +68,9 @@ function api_tree_item_save($id, $tree_id, $type, $parent_tree_item_id, $title, 
 		}
 	}
 
-	/* Duplicate host check */
-	if (($type == TREE_ITEM_TYPE_DEVICE) && (sizeof(db_fetch_assoc("select id from graph_tree_items where host_id='$host_id' and local_graph_id='$local_graph_id' and graph_tree_id='$tree_id' and order_key like '$search_key" . str_repeat('_', CHARS_PER_TIER) . str_repeat('0', (MAX_TREE_DEPTH * CHARS_PER_TIER) - (strlen($search_key) + CHARS_PER_TIER)) . "'")) > 0)) {
-			return db_fetch_cell("select id from graph_tree_items where host_id='$host_id' and local_graph_id='$local_graph_id' and graph_tree_id='$tree_id' and order_key like '$search_key" . str_repeat('_', CHARS_PER_TIER) . str_repeat('0', (MAX_TREE_DEPTH * CHARS_PER_TIER) - (strlen($search_key) + CHARS_PER_TIER)) . "'");
+	/* Duplicate device check */
+	if (($type == TREE_ITEM_TYPE_DEVICE) && (sizeof(db_fetch_assoc("select id from graph_tree_items where device_id='$device_id' and local_graph_id='$local_graph_id' and graph_tree_id='$tree_id' and order_key like '$search_key" . str_repeat('_', CHARS_PER_TIER) . str_repeat('0', (MAX_TREE_DEPTH * CHARS_PER_TIER) - (strlen($search_key) + CHARS_PER_TIER)) . "'")) > 0)) {
+			return db_fetch_cell("select id from graph_tree_items where device_id='$device_id' and local_graph_id='$local_graph_id' and graph_tree_id='$tree_id' and order_key like '$search_key" . str_repeat('_', CHARS_PER_TIER) . str_repeat('0', (MAX_TREE_DEPTH * CHARS_PER_TIER) - (strlen($search_key) + CHARS_PER_TIER)) . "'");
 	}
 
 	$save["id"] 				= $id;
@@ -79,8 +79,8 @@ function api_tree_item_save($id, $tree_id, $type, $parent_tree_item_id, $title, 
 	$save["order_key"] 			= $order_key;
 	$save["local_graph_id"] 	= form_input_validate($local_graph_id, "local_graph_id", "", true, 3);
 	$save["rra_id"]				= form_input_validate($rra_id, "rra_id", "", true, 3);
-	$save["host_id"] 			= form_input_validate($host_id, "host_id", "", true, 3);
-	$save["host_grouping_type"] = form_input_validate($host_grouping_type, "host_grouping_type", "", true, 3);
+	$save["device_id"] 			= form_input_validate($device_id, "device_id", "", true, 3);
+	$save["device_grouping_type"] = form_input_validate($device_grouping_type, "device_grouping_type", "", true, 3);
 	$save["sort_children_type"] = form_input_validate($sort_children_type, "sort_children_type", "", true, 3);
 
 	$tree_item_id = 0;
@@ -127,7 +127,7 @@ function api_tree_item_save($id, $tree_id, $type, $parent_tree_item_id, $title, 
 				$tree_items = db_fetch_assoc("select
 					graph_tree_items.id
 					from graph_tree_items
-					where graph_tree_items.host_id = 0
+					where graph_tree_items.device_id = 0
 					and graph_tree_items.local_graph_id = 0
 					and graph_tree_items.title != ''
 					and graph_tree_items.order_key like '$search_key%%'

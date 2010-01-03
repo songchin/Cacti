@@ -41,7 +41,7 @@ require_once(CACTI_BASE_PATH . "/include/log/arrays.php");
  * @return bool true
  */
 function log_save ($message, $severity = SEV_INFO, $facility = FACIL_INTERFACE, $parameters = array() ) {
-#function log_save ($message, $severity = SEV_INFO, $facility = FACIL_INTERFACE, $plugin = "", $poller_id = 0, $host_id = 0, $output = false) {
+#function log_save ($message, $severity = SEV_INFO, $facility = FACIL_INTERFACE, $plugin = "", $poller_id = 0, $device_id = 0, $output = false) {
 	global $cnn_id;
 
 	/* setup parameters array */
@@ -97,8 +97,8 @@ function log_save ($message, $severity = SEV_INFO, $facility = FACIL_INTERFACE, 
 	/* Log to Cacti System Log */
 	if ((log_read_config_option("log_dest_cacti") == CHECKED) && (log_read_config_option("log_status") != "suspended") && ($severity >= $log_severity)) {
 		$sql = "insert into log
-			(logdate,facility,severity,poller_id,host_id,username,source,plugin,message) values
-			(SYSDATE(), " . $facility . "," . $severity . "," . $poller_id . "," .$host_id . ",'" . $username . "','" . $source . "','" . $plugin . "','". sql_sanitize($message) . "');";
+			(logdate,facility,severity,poller_id,device_id,username,source,plugin,message) values
+			(SYSDATE(), " . $facility . "," . $severity . "," . $poller_id . "," .$device_id . ",'" . $username . "','" . $source . "','" . $plugin . "','". sql_sanitize($message) . "');";
 		/* DO NOT USE db_execute, function looping can occur when in SEV_DEV mode */
 		$cnn_id->Execute($sql);
 	}
@@ -478,7 +478,7 @@ function log_save_syslog ($syslog_server, $syslog_server_port, $syslog_facility,
 	}
 
 	/* Make syslog packet */
-	$host = $_SERVER["SERVER_NAME"];
+	$device = $_SERVER["SERVER_NAME"];
 	$time = time();
 	if (strlen(date("j", $time)) < 2) {
 		$time = date("M  j H H:i:s", $time);
@@ -486,7 +486,7 @@ function log_save_syslog ($syslog_server, $syslog_server_port, $syslog_facility,
 		$time = date("M j H H:i:s", $time);
 	}
 	$priority = ($syslog_facility * 8) + $syslog_severity;
-	#$packet = "<" . $priority . ">" . $time . " " . $host . " " . $syslog_tag . "[" . $pid  . "]:" . $syslog_message;
+	#$packet = "<" . $priority . ">" . $time . " " . $device . " " . $syslog_tag . "[" . $pid  . "]:" . $syslog_message;
 	$packet = "<" . $priority . ">" . $syslog_tag . "[" . $pid  . "]: " . $syslog_message;
 	if (strlen($packet) > 1024) {
 		$packet = substr($packet, 0, 1024);
@@ -501,7 +501,7 @@ function log_save_syslog ($syslog_server, $syslog_server_port, $syslog_facility,
 	}else{
 		/* socket error - log to database */
 		$sql = "insert into log
-			(logdate,facility,severity,poller_id,host_id,username,source,plugin,message) values
+			(logdate,facility,severity,poller_id,device_id,username,source,plugin,message) values
 			(SYSDATE(), " . FACIL_WEBUI . "," . SEV_ERROR . ",0,0,'SYSTEM','SYSLOG','N/A','". sql_sanitize("Syslog error[" . $error_number ."]: " . $error_string) . "');";
 		/* DO NOT USE db_execute, function looping can occur when in SEV_DEV mode */
 		$cnn_id->Execute($sql);

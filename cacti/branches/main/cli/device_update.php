@@ -63,8 +63,8 @@ if (sizeof($parms)) {
 			case "--site-id":		$device["site_id"] 				= trim($value);	break;
 			case "--poller-id":		$device["poller_id"]			= trim($value);	break;
 			case "--description":	$device["description"] 			= trim($value);	break;
-			case "--ip":			$device["hostname"] 			= trim($value);	break;
-			case "--template":		$device["host_template_id"]	 	= trim($value);	break;
+			case "--ip":			$device["devicename"] 			= trim($value);	break;
+			case "--template":		$device["device_template_id"]	 	= trim($value);	break;
 			case "--community":		$device["snmp_community"] 		= trim($value);	break;
 			case "--version":		$device["snmp_version"] 		= trim($value);	break;
 			case "--notes":			$device["notes"] 				= trim($value);	break;
@@ -111,12 +111,12 @@ if (sizeof($parms)) {
 		}
 	}
 
-	# we do not want to change the host["id"] because that's the autoincremented table index
+	# we do not want to change the device["id"] because that's the autoincremented table index
 	if (isset($new["id"])) {
 		echo(__("ERROR: Update of device id not permitted\n"));
 		exit(1);
 	}
-	if (isset($new["host_template_id"])) {
+	if (isset($new["device_template_id"])) {
 		echo(__("ERROR: Update of device template id not permitted\n"));
 		exit(1);
 	}
@@ -158,7 +158,7 @@ if (sizeof($parms)) {
 
 	#print "devices: "; print_r($devices);
 	/* build raw SQL update command */
-	$sql_upd1 = "UPDATE host SET ";
+	$sql_upd1 = "UPDATE device SET ";
 	$sql_upd2 = "";
 	$sql_upd3 = " WHERE " . array_to_sql_or($devices, "id");
 
@@ -170,7 +170,7 @@ if (sizeof($parms)) {
 	/*	if (isset($template_id) && $template_id == 0) { # allow for a template of "None"
 		$device_template["name"] = "None";
 		} else {
-		$device_template = db_fetch_row("SELECT name FROM host_template WHERE id = " . $template_id);
+		$device_template = db_fetch_row("SELECT name FROM device_template WHERE id = " . $template_id);
 		if (!isset($device_template["name"])) {
 		printf(__("ERROR: Unknown template id (%d)\n"), $template_id);
 		exit(1);
@@ -183,25 +183,25 @@ if (sizeof($parms)) {
 	 */
 	/*	if ($template_id != 0) { # fetch values from a valid device_template
 		$device_template = db_fetch_row("SELECT
-		host_template.id,
-		host_template.name,
-		host_template.snmp_community,
-		host_template.snmp_version,
-		host_template.snmp_username,
-		host_template.snmp_password,
-		host_template.snmp_port,
-		host_template.snmp_timeout,
-		host_template.availability_method,
-		host_template.ping_method,
-		host_template.ping_port,
-		host_template.ping_timeout,
-		host_template.ping_retries,
-		host_template.snmp_auth_protocol,
-		host_template.snmp_priv_passphrase,
-		host_template.snmp_priv_protocol,
-		host_template.snmp_context,
-		host_template.max_oids
-		FROM host_template
+		device_template.id,
+		device_template.name,
+		device_template.snmp_community,
+		device_template.snmp_version,
+		device_template.snmp_username,
+		device_template.snmp_password,
+		device_template.snmp_port,
+		device_template.snmp_timeout,
+		device_template.availability_method,
+		device_template.ping_method,
+		device_template.ping_port,
+		device_template.ping_timeout,
+		device_template.ping_retries,
+		device_template.snmp_auth_protocol,
+		device_template.snmp_priv_passphrase,
+		device_template.snmp_priv_protocol,
+		device_template.snmp_context,
+		device_template.max_oids
+		FROM device_template
 		WHERE id=" . $template_id);
 		} else { # no device template given, so fetch system defaults
 		$device_template["snmp_community"]		= read_config_option("snmp_community");
@@ -290,7 +290,7 @@ function display_help($me) {
 	echo "       [--quiet] [-d] [--delim]\n\n";
 	echo __("All Parameters are optional. Any parameters given must match. A non-empty selection is required.") . "\n";
 	echo "   " . __("Values are given in format [<old>][:<new>]") . "\n";
-	echo "   " . __("If <old> is given, all hosts matching the selection will be acted upon. Multiple <old> parameters are allowed") . "\n";
+	echo "   " . __("If <old> is given, all devices matching the selection will be acted upon. Multiple <old> parameters are allowed") . "\n";
 	echo "   " . __("All new values must be seperated by a delimiter (defaults to ':') from <old>. Multiple <new> parameters are allowed") . "\n";
 	echo __("Optional:") . "\n";
 	echo "   --device-id                 " . __("the numerical ID of the device") . "\n";

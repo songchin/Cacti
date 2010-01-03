@@ -96,8 +96,8 @@ function api_reapply_suggested_graph_title($local_graph_id) {
 		return;
 	}
 
-	/* get the host associated with this graph */
-	$graph_local = db_fetch_row("select host_id, graph_template_id, snmp_query_id, snmp_index from graph_local where id=" . $local_graph_id);
+	/* get the device associated with this graph */
+	$graph_local = db_fetch_row("select device_id, graph_template_id, snmp_query_id, snmp_index from graph_local where id=" . $local_graph_id);
 	$snmp_query_graph_id = db_fetch_cell("select id from snmp_query_graph where graph_template_id=" . $graph_local["graph_template_id"] .
 										" and snmp_query_id=" . $graph_local["snmp_query_id"]);
 
@@ -108,7 +108,7 @@ function api_reapply_suggested_graph_title($local_graph_id) {
 	foreach ($suggested_values as $suggested_value) {
 		/* once we find a match; don't try to find more */
 		if (!isset($suggested_values_graph[$graph_template_id]{$suggested_value["field_name"]})) {
-			$subs_string = substitute_snmp_query_data($suggested_value["text"], $graph_local["host_id"], $graph_local["snmp_query_id"], $graph_local["snmp_index"], read_config_option("max_data_query_field_length"));
+			$subs_string = substitute_snmp_query_data($suggested_value["text"], $graph_local["device_id"], $graph_local["snmp_query_id"], $graph_local["snmp_index"], read_config_option("max_data_query_field_length"));
 			/* if there are no '|' characters, all of the substitutions were successful */
 			if ((!substr_count($subs_string, "|query")) && ($suggested_value["field_name"] == "title")) {
 				db_execute("update graph_templates_graph set " . $suggested_value["field_name"] . "='" . $suggested_value["text"] . "' where local_graph_id=" . $local_graph_id);

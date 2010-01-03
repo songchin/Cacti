@@ -56,8 +56,8 @@ if (sizeof($parms)) {
 			case "--site-id":		$device["site_id"] 				= trim($value);	break;
 			case "--poller-id":		$device["poller_id"]			= trim($value);	break;
 			case "--description":	$device["description"] 			= trim($value);	break;
-			case "--ip":			$device["hostname"] 			= trim($value);	break;
-			case "--template":		$device["host_template_id"]	 	= trim($value);	break;
+			case "--ip":			$device["devicename"] 			= trim($value);	break;
+			case "--template":		$device["device_template_id"]	 	= trim($value);	break;
 			case "--community":		$device["snmp_community"] 		= trim($value);	break;
 			case "--version":		$device["snmp_version"] 		= trim($value);	break;
 			case "--notes":			$device["notes"] 				= trim($value);	break;
@@ -98,7 +98,7 @@ if (sizeof($parms)) {
 		exit(1);
 	}
 
-	# at least one matching criteria for host(s) has to be defined
+	# at least one matching criteria for device(s) has to be defined
 	if (!sizeof($device)) {
 		print __("ERROR: No device matching criteria found\n");
 		exit(1);
@@ -139,14 +139,14 @@ if (sizeof($parms)) {
 
 	/* Now, add the data query and run it once to get the cache filled */
 	foreach ($devices as $device) {
-		$current_reindex_method = db_fetch_cell("SELECT reindex_method FROM host_snmp_query WHERE host_id=" . $device["id"] .
+		$current_reindex_method = db_fetch_cell("SELECT reindex_method FROM device_snmp_query WHERE device_id=" . $device["id"] .
 										" AND snmp_query_id=" . $dq["snmp_query_id"]);
 		if (isset($current_reindex_method)) {
-			echo __("ERROR: Data Query is already associated for device: (%s: %s) data query (%s: %s) using reindex method of (%s: %s)", $device["id"], $device["hostname"], $dq["snmp_query_id"], $data_query_name, $current_reindex_method, $reindex_types{$current_reindex_method}) . "\n";
+			echo __("ERROR: Data Query is already associated for device: (%s: %s) data query (%s: %s) using reindex method of (%s: %s)", $device["id"], $device["devicename"], $dq["snmp_query_id"], $data_query_name, $current_reindex_method, $reindex_types{$current_reindex_method}) . "\n";
 			continue;
 		}else{
-			$sql = "REPLACE INTO host_snmp_query " .
-					"(host_id,snmp_query_id,reindex_method) " .
+			$sql = "REPLACE INTO device_snmp_query " .
+					"(device_id,snmp_query_id,reindex_method) " .
 					"VALUES (".
 						$device["id"] . "," .
 						$dq["snmp_query_id"] . "," .
@@ -162,12 +162,12 @@ if (sizeof($parms)) {
 						/* recache snmp data */
 						run_data_query($device["id"], $dq["snmp_query_id"]);
 						if (is_error_message()) {
-							echo __("ERROR: Failed to add this data query for device (%s: %s) data query (%s: %s) reindex method (%s: %s)", $device["id"], $device["hostname"], $dq["snmp_query_id"], $data_query_name, $dq["reindex_method"], $reindex_types[$dq["reindex_method"]]) . "\n";
+							echo __("ERROR: Failed to add this data query for device (%s: %s) data query (%s: %s) reindex method (%s: %s)", $device["id"], $device["devicename"], $dq["snmp_query_id"], $data_query_name, $dq["reindex_method"], $reindex_types[$dq["reindex_method"]]) . "\n";
 						} else {
-							echo __("Success - Device (%s: %s) data query (%s: %s) reindex method (%s: %s)", $device["id"], $device["hostname"], $dq["snmp_query_id"], $data_query_name, $dq["reindex_method"], $reindex_types{$dq["reindex_method"]}) . "\n";
+							echo __("Success - Device (%s: %s) data query (%s: %s) reindex method (%s: %s)", $device["id"], $device["devicename"], $dq["snmp_query_id"], $data_query_name, $dq["reindex_method"], $reindex_types{$dq["reindex_method"]}) . "\n";
 						}
 					} else {
-						echo __("ERROR: Failed to add this data query for device (%s: %s) data query (%s: %s) reindex method (%s: %s)", $device["id"], $device["hostname"], $dq["snmp_query_id"], $data_query_name, $dq["reindex_method"], $reindex_types[$dq["reindex_method"]]) . "\n";
+						echo __("ERROR: Failed to add this data query for device (%s: %s) data query (%s: %s) reindex method (%s: %s)", $device["id"], $device["devicename"], $dq["snmp_query_id"], $data_query_name, $dq["reindex_method"], $reindex_types[$dq["reindex_method"]]) . "\n";
 					}
 				}
 			}

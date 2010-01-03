@@ -38,7 +38,7 @@ $parms = $_SERVER["argv"];
 $me = array_shift($parms);
 
 $debug   = FALSE;
-$host_id = 0;
+$device_id = 0;
 
 foreach($parms as $parameter) {
 	@list($arg, $value) = @explode("=", $parameter);
@@ -48,11 +48,11 @@ foreach($parms as $parameter) {
 	case "--debug":
 		$debug = TRUE;
 		break;
-	case "--host-id":
-		$host_id = trim($value);
+	case "--device-id":
+		$device_id = trim($value);
 
-		if (!is_numeric($host_id)) {
-			echo __("ERROR: You must supply a valid host-id to run this script!\n");
+		if (!is_numeric($device_id)) {
+			echo __("ERROR: You must supply a valid device-id to run this script!\n");
 			exit(1);
 		}
 
@@ -78,8 +78,8 @@ $max_execution = ini_get("max_execution_time");
 ini_set("max_execution_time", "0");
 
 /* get the data_local Id's for the poller cache */
-if ($host_id > 0) {
-	$poller_data  = db_fetch_assoc("SELECT id FROM data_local WHERE host_id=$host_id");
+if ($device_id > 0) {
+	$poller_data  = db_fetch_assoc("SELECT id FROM data_local WHERE device_id=$device_id");
 } else {
 	$poller_data  = db_fetch_assoc("SELECT id FROM data_local");
 }
@@ -116,7 +116,7 @@ ini_set("max_execution_time", $max_execution);
 /*	display_help - displays the usage of the function */
 function display_help($me) {
 	echo __("Cacti Rebuild Poller Cache Script 1.0") . ", " . __("Copyright 2004-2010 - The Cacti Group") . "\n";
-	echo __("usage: ") . $me . " [--host-id=ID] [-d | --debug] [-h | --help | -v | --version]\n\n";
+	echo __("usage: ") . $me . " [--device-id=ID] [-d | --debug] [-h | --help | -v | --version]\n\n";
 	echo "   -d            " . __("Display verbose output during execution") . "\n";
 	echo "   -v --version  " . __("Display this help message") . "\n";
 	echo "   -h --help     " . __("Display this help message") . "\n";

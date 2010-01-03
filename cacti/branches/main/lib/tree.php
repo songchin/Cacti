@@ -25,16 +25,16 @@
 /* get_tree_item_type - gets the type of tree item
    @arg $tree_item_id - the id of the tree item to fetch the type for
    @returns - a string reprenting the type of the tree item. valid return
-     values are 'header', 'graph', and 'host' */
+     values are 'header', 'graph', and 'device' */
 function get_tree_item_type($tree_item_id) {
-	$tree_item = db_fetch_row("select title,local_graph_id,host_id from graph_tree_items where id=$tree_item_id");
+	$tree_item = db_fetch_row("select title,local_graph_id,device_id from graph_tree_items where id=$tree_item_id");
 
 	if ($tree_item["local_graph_id"] > 0) {
 		return "graph";
 	}elseif ($tree_item["title"] != "") {
 		return "header";
-	}elseif ($tree_item["host_id"] > 0) {
-		return "host";
+	}elseif ($tree_item["device_id"] > 0) {
+		return "device";
 	}
 
 	return "";
@@ -144,7 +144,7 @@ function move_branch($dir, $order_key, $table, $field, $where) {
 	$order = $dir == 'up' ? 'DESC' : 'ASC';
 
 	/* take a peek at the current tree structure */
-	$pre_tree = db_fetch_assoc("SELECT * FROM graph_tree_items WHERE local_graph_id='0' AND host_id='0' $tree_order");
+	$pre_tree = db_fetch_assoc("SELECT * FROM graph_tree_items WHERE local_graph_id='0' AND device_id='0' $tree_order");
 
 	$sql = "SELECT * FROM $table WHERE $field $arrow '$order_key' AND $field LIKE '%" . substr($order_key, ($tier * CHARS_PER_TIER))."'
 		AND $field NOT LIKE '%" . str_repeat('0', CHARS_PER_TIER) . substr($order_key, ($tier * CHARS_PER_TIER)) . "' $where ORDER BY $field $order";
@@ -239,13 +239,13 @@ function sort_tree($sort_type, $item_id, $sort_style) {
 		graph_tree_items.id,
 		graph_tree_items.title,
 		graph_tree_items.local_graph_id,
-		graph_tree_items.host_id,
+		graph_tree_items.device_id,
 		graph_tree_items.order_key,
 		graph_templates_graph.title_cache as graph_title,
-		CONCAT_WS('',description,' (',hostname,')') as hostname
+		CONCAT_WS('',description,' (',devicename,')') as devicename
 		from graph_tree_items
 		left join graph_templates_graph on (graph_tree_items.local_graph_id=graph_templates_graph.local_graph_id and graph_tree_items.local_graph_id>0)
-		left join host on (host.id=graph_tree_items.host_id)
+		left join device on (device.id=graph_tree_items.device_id)
 		$sql_where
 		order by graph_tree_items.order_key");
 
@@ -258,8 +258,8 @@ function sort_tree($sort_type, $item_id, $sort_style) {
 				$leaf_sort_array{strlen($_search_key) / CHARS_PER_TIER}[$_search_key]{$leaf["order_key"]} = $leaf["graph_title"];
 			}elseif ($leaf["title"] != "") {
 				$leaf_sort_array{strlen($_search_key) / CHARS_PER_TIER}[$_search_key]{$leaf["order_key"]} = $leaf["title"];
-			}elseif ($leaf["host_id"] > 0) {
-				$leaf_sort_array{strlen($_search_key) / CHARS_PER_TIER}[$_search_key]{$leaf["order_key"]} = $leaf["hostname"];
+			}elseif ($leaf["device_id"] > 0) {
+				$leaf_sort_array{strlen($_search_key) / CHARS_PER_TIER}[$_search_key]{$leaf["order_key"]} = $leaf["devicename"];
 			}
 		}
 	}
@@ -346,11 +346,11 @@ function reparent_branch($new_parent_id, $tree_item_id) {
 function delete_branch($tree_item_id) {
 	if (empty($tree_item_id)) { return 0; }
 
-	$tree_item = db_fetch_row("select order_key,local_graph_id,host_id,graph_tree_id from graph_tree_items where id=$tree_item_id");
+	$tree_item = db_fetch_row("select order_key,local_graph_id,device_id,graph_tree_id from graph_tree_items where id=$tree_item_id");
 
-	/* if this item is a graph/host, it will have NO children, so we can just delete the
+	/* if this item is a graph/device, it will have NO children, so we can just delete the
 	graph and exit. */
-	if ((!empty($tree_item["local_graph_id"])) || (!empty($tree_item["host_id"]))) {
+	if ((!empty($tree_item["local_graph_id"])) || (!empty($tree_item["device_id"]))) {
 		db_execute("delete from graph_tree_items where id=$tree_item_id");
 		return 0;
 	}

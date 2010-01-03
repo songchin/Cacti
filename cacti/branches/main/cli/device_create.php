@@ -60,8 +60,8 @@ if (sizeof($parms)) {
 			case "--site-id":		$device["site_id"] 				= trim($value);	break;
 			case "--poller-id":		$device["poller_id"]			= trim($value);	break;
 			case "--description":	$device["description"] 			= trim($value);	break;
-			case "--ip":			$device["hostname"] 			= trim($value);	break;
-			case "--template":		$device["host_template_id"]	 	= trim($value);	break;
+			case "--ip":			$device["devicename"] 			= trim($value);	break;
+			case "--template":		$device["device_template_id"]	 	= trim($value);	break;
 			case "--community":		$device["snmp_community"] 		= trim($value);	break;
 			case "--version":		$device["snmp_version"] 		= trim($value);	break;
 			case "--notes":			$device["notes"] 				= trim($value);	break;
@@ -98,20 +98,20 @@ if (sizeof($parms)) {
 		exit(1);
 	} # no need for description to be unique
 
-	if (!isset($device["hostname"])) {
+	if (!isset($device["devicename"])) {
 		echo __("ERROR: You must supply a valid [devicename|IP address] for all devices!") . "\n";
 		exit(1);
-	} # no need for hostname to be unique
+	} # no need for devicename to be unique
 
-	if (!isset($device["host_template_id"])) {
+	if (!isset($device["device_template_id"])) {
 		echo __("ERROR: You must supply a valid device template id for all devices!") . "\n";
 		exit(1);
-	} elseif ($device["host_template_id"] == 0) { /* allow for a template of "None" */
+	} elseif ($device["device_template_id"] == 0) { /* allow for a template of "None" */
 		$device_template["name"] = "None";
 	} else {
-		$device_template = db_fetch_row("SELECT name FROM host_template WHERE id = " . $device["host_template_id"]);
+		$device_template = db_fetch_row("SELECT name FROM device_template WHERE id = " . $device["device_template_id"]);
 		if (!isset($device_template["name"])) {
-			printf(__("ERROR: Unknown template id (%d)\n"), $device["host_template_id"]);
+			printf(__("ERROR: Unknown template id (%d)\n"), $device["device_template_id"]);
 			exit(1);
 		}
 	}
@@ -128,31 +128,31 @@ if (sizeof($parms)) {
 	 * now, either fetch device_template parameters for given template_id
 	 * or use Cacti system defaults
 	 */
-	/* TODO: shall poller_id and/or site_id be part of a host_template? */
+	/* TODO: shall poller_id and/or site_id be part of a device_template? */
 	if (!isset($device["poller_id"])) 	{$device["poller_id"] = 1;}
 	if (!isset($device["site_id"])) 	{$device["site_id"] = 1;}
-	if ($device["host_template_id"] != 0) { /* fetch values from a valid device_template */
+	if ($device["device_template_id"] != 0) { /* fetch values from a valid device_template */
 		$device_template = db_fetch_row("SELECT
-			host_template.id,
-			host_template.name,
-			host_template.snmp_community,
-			host_template.snmp_version,
-			host_template.snmp_username,
-			host_template.snmp_password,
-			host_template.snmp_port,
-			host_template.snmp_timeout,
-			host_template.availability_method,
-			host_template.ping_method,
-			host_template.ping_port,
-			host_template.ping_timeout,
-			host_template.ping_retries,
-			host_template.snmp_auth_protocol,
-			host_template.snmp_priv_passphrase,
-			host_template.snmp_priv_protocol,
-			host_template.snmp_context,
-			host_template.max_oids
-			FROM host_template
-			WHERE id=" . $device["host_template_id"]);
+			device_template.id,
+			device_template.name,
+			device_template.snmp_community,
+			device_template.snmp_version,
+			device_template.snmp_username,
+			device_template.snmp_password,
+			device_template.snmp_port,
+			device_template.snmp_timeout,
+			device_template.availability_method,
+			device_template.ping_method,
+			device_template.ping_port,
+			device_template.ping_timeout,
+			device_template.ping_retries,
+			device_template.snmp_auth_protocol,
+			device_template.snmp_priv_passphrase,
+			device_template.snmp_priv_protocol,
+			device_template.snmp_context,
+			device_template.max_oids
+			FROM device_template
+			WHERE id=" . $device["device_template_id"]);
 	} else { /* no device template given, so fetch system defaults */
 		/* TODO: is there a system wide default for poller_id and/or site_id? */
 		$device_template["snmp_community"]		= read_config_option("snmp_community");
@@ -200,7 +200,7 @@ if (sizeof($parms)) {
 	/*
 	 * perform some nice printout
 
-	 echo printf(__("Adding %1s (%2s) as '%3s'"), $device["description"], $device["hostname"], $device_template["name"]);
+	 echo printf(__("Adding %1s (%2s) as '%3s'"), $device["description"], $device["devicename"], $device_template["name"]);
 
 	 switch($device_template["availability_method"]) {
 		case AVAIL_NONE:
@@ -253,8 +253,8 @@ if (sizeof($parms)) {
 	 * associated to the given device template id
 	 */
 	if ($debug) {
-		print("api_device_save(0, ".$device['site_id'].", ".$device['poller_id'].", ".$device['host_template_id'].", ".
-		$device['description'].", ".$device['hostname'].", ".$device_template['snmp_community'].", ".
+		print("api_device_save(0, ".$device['site_id'].", ".$device['poller_id'].", ".$device['device_template_id'].", ".
+		$device['description'].", ".$device['devicename'].", ".$device_template['snmp_community'].", ".
 		$device_template['snmp_version'].", ". $device_template['snmp_username'].", ".
 		$device_template['snmp_password'].", ".	$device_template['snmp_port'].", ".
 		$device_template['snmp_timeout'].", ". $device_template['disabled'].", ".
@@ -264,8 +264,8 @@ if (sizeof($parms)) {
 		$device_template['snmp_auth_protocol'].", ". $device_template['snmp_priv_passphrase'].", ".
 		$device_template['snmp_priv_protocol'].", ". $device_template['snmp_context'].", ". $device_template['max_oids'].")\n");
 	} else {
-		$device_id = api_device_save(0, $device["site_id"], $device["poller_id"], $device["host_template_id"],
-		$device["description"], $device["hostname"],
+		$device_id = api_device_save(0, $device["site_id"], $device["poller_id"], $device["device_template_id"],
+		$device["description"], $device["devicename"],
 		$device_template["snmp_community"], $device_template["snmp_version"],
 		$device_template["snmp_username"], $device_template["snmp_password"],
 		$device_template["snmp_port"], $device_template["snmp_timeout"],

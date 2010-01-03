@@ -498,15 +498,15 @@ function round_robin_archive_to_xml($round_robin_archive_id) {
 	return $xml_text;
 }
 
-function host_template_to_xml($device_template_id) {
+function device_template_to_xml($device_template_id) {
 	global $fields_device_template_edit;
 
-	$hash = get_hash_version("host_template") . get_hash_host_template($device_template_id);
+	$hash = get_hash_version("device_template") . get_hash_device_template($device_template_id);
 	$xml_text = "";
 
-	$device_template = db_fetch_row("select * from host_template where id=$device_template_id");
-	$device_template_graph = db_fetch_assoc("select * from host_template_graph where host_template_id=$device_template_id");
-	$device_template_snmp_query = db_fetch_assoc("select * from host_template_snmp_query where host_template_id=$device_template_id");
+	$device_template = db_fetch_row("select * from device_template where id=$device_template_id");
+	$device_template_graph = db_fetch_assoc("select * from device_template_graph where device_template_id=$device_template_id");
+	$device_template_snmp_query = db_fetch_assoc("select * from device_template_snmp_query where device_template_id=$device_template_id");
 
 	if (empty($device_template["id"])) {
 		$err_msg = "Invalid Device Template.";
@@ -788,9 +788,9 @@ function resolve_dependencies($type, $id, $dep_array) {
 		}
 
 		break;
-	case 'host_template':
+	case 'device_template':
 		/* dep: graph template */
-		$device_template_graph = db_fetch_assoc("select graph_template_id from host_template_graph where host_template_id=$id and graph_template_id > 0 group by graph_template_id");
+		$device_template_graph = db_fetch_assoc("select graph_template_id from device_template_graph where device_template_id=$id and graph_template_id > 0 group by graph_template_id");
 
 		if (sizeof($device_template_graph) > 0) {
 		foreach ($device_template_graph as $item) {
@@ -801,7 +801,7 @@ function resolve_dependencies($type, $id, $dep_array) {
 		}
 
 		/* dep: data query */
-		$device_template_snmp_query = db_fetch_assoc("select snmp_query_id from host_template_snmp_query where host_template_id=$id and snmp_query_id > 0 group by snmp_query_id");
+		$device_template_snmp_query = db_fetch_assoc("select snmp_query_id from device_template_snmp_query where device_template_id=$id and snmp_query_id > 0 group by snmp_query_id");
 
 		if (sizeof($device_template_snmp_query) > 0) {
 		foreach ($device_template_snmp_query as $item) {
@@ -842,8 +842,8 @@ function get_item_xml($type, $id, $follow_deps) {
 				case 'data_template':
 					$xml_text .= "\n" . data_template_to_xml($dep_id);
 					break;
-				case 'host_template':
-					$xml_text .= "\n" . host_template_to_xml($dep_id);
+				case 'device_template':
+					$xml_text .= "\n" . device_template_to_xml($dep_id);
 					break;
 				case 'data_input_method':
 					$xml_text .= "\n" . data_input_method_to_xml($dep_id);

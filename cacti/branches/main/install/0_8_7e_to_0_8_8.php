@@ -471,5 +471,78 @@ function upgrade_to_0_8_8() {
 
 	/* update the poller_items table to reflect the host change */
 	db_install_execute("0.8.8", "UPDATE poller_item SET poller_id=1 WHERE poller_id=0");
+
+	/* rename host -> device for tables and columns
+	 * we have some updates to those tables in this file already
+	 * so please take care not to change sequence */
+	db_install_execute("0.8.8", "ALTER TABLE data_local DROP INDEX `host_id`, CHANGE `host_id` `device_id` MEDIUMINT(8) UNSIGNED NOT NULL, ADD INDEX `device_id` ( `device_id` )");
+	db_install_execute("0.8.8", "ALTER TABLE graph_local DROP INDEX `host_id`, CHANGE `host_id` `device_id` MEDIUMINT(8) UNSIGNED NOT NULL, ADD INDEX `device_id` ( `device_id` )");
+	db_install_execute("0.8.8", "ALTER TABLE graph_tree_items DROP INDEX `host_id`, CHANGE `host_id` `device_id` MEDIUMINT(8) UNSIGNED NOT NULL, ADD INDEX `device_id` ( `device_id` ), CHANGE `host_grouping_type` `device_grouping_type` TINYINT(3) UNSIGNED NOT NULL DEFAULT 1");
+	db_install_execute("0.8.8", "RENAME TABLE `host`  TO `device`");
+	db_install_execute("0.8.8", "ALTER TABLE device CHANGE `host_template_id` `device_template_id` MEDIUMINT(8) UNSIGNED NOT NULL, CHANGE `hostname` `devicename` VARCHAR(250) NOT NULL");
+	db_install_execute("0.8.8", "RENAME TABLE `host_graph`  TO `device_graph`");
+	db_install_execute("0.8.8", "ALTER TABLE device_graph CHANGE `host_id` `device_id` MEDIUMINT(8) UNSIGNED NOT NULL");
+	db_install_execute("0.8.8", "RENAME TABLE `host_snmp_cache`  TO `device_snmp_cache`");
+	db_install_execute("0.8.8", "ALTER TABLE device_snmp_cache DROP INDEX `host_id`, CHANGE `host_id` `device_id` MEDIUMINT(8) UNSIGNED NOT NULL, ADD INDEX `device_id` ( `device_id` )");
+	db_install_execute("0.8.8", "RENAME TABLE `host_snmp_query`  TO `device_snmp_query`");
+	db_install_execute("0.8.8", "ALTER TABLE device_snmp_query DROP INDEX `host_id`, CHANGE `host_id` `device_id` MEDIUMINT(8) UNSIGNED NOT NULL, ADD INDEX `device_id` ( `device_id` )");
+	db_install_execute("0.8.8", "RENAME TABLE `host_template`  TO `device_template`");
+	db_install_execute("0.8.8", "RENAME TABLE `host_template_graph`  TO `device_template_graph`");
+	db_install_execute("0.8.8", "ALTER TABLE device_template_graph DROP INDEX `host_template_id`, CHANGE `host_template_id` `device_template_id` MEDIUMINT(8) UNSIGNED NOT NULL, ADD INDEX `device_template_id` ( `device_template_id` )");
+	db_install_execute("0.8.8", "RENAME TABLE `host_template_snmp_query`  TO `device_template_snmp_query`");
+	db_install_execute("0.8.8", "ALTER TABLE device_template_snmp_query DROP INDEX `host_template_id`, CHANGE `host_template_id` `device_template_id` MEDIUMINT(8) UNSIGNED NOT NULL, ADD INDEX `device_template_id` ( `device_template_id` )");
+	db_install_execute("0.8.8", "ALTER TABLE poller CHANGE `hostname` `devicename` VARCHAR(250) NOT NULL");
+	db_install_execute("0.8.8", "ALTER TABLE poller_item DROP INDEX `host_id`, CHANGE `host_id` `device_id` MEDIUMINT(8) UNSIGNED NOT NULL, ADD INDEX `device_id` ( `device_id` ), CHANGE `hostname` `devicename` VARCHAR(250) NOT NULL");
+	db_install_execute("0.8.8", "ALTER TABLE poller_reindex CHANGE `host_id` `device_id` MEDIUMINT(8) UNSIGNED NOT NULL");
+	db_install_execute("0.8.8", "ALTER TABLE user_auth CHANGE `policy_hosts` `policy_devices` TINYINT(1) UNSIGNED NOT NULL DEFAULT 1");
+
+	# table column updates using REPLACE
+	db_install_execute("0.8.8", "UPDATE data_input_fields SET type_code='devicename' WHERE type_code='hostname'");
+	db_install_execute("0.8.8", "UPDATE data_template_data SET name=REPLACE(name,'|host_','|device_') WHERE name like '%%|host_%%'");
+	db_install_execute("0.8.8", "UPDATE graph_templates_graph SET title=REPLACE(title,'|host_','|device_') WHERE title like '%%|host_%%'");
+	db_install_execute("0.8.8", "UPDATE graph_templates_graph SET upper_limit=REPLACE(upper_limit,'|host_','|device_') WHERE upper_limit like '%%|host_%%'");
+	db_install_execute("0.8.8", "UPDATE graph_templates_graph SET lower_limit=REPLACE(lower_limit,'|host_','|device_') WHERE lower_limit like '%%|host_%%'");
+	db_install_execute("0.8.8", "UPDATE graph_templates_graph SET vertical_label=REPLACE(vertical_label,'|host_','|device_') WHERE vertical_label like '%%|host_%%'");
+	db_install_execute("0.8.8", "UPDATE snmp_query SET xml_path=REPLACE(xml_path,'host_disk.xml','device_disk.xml') WHERE xml_path like '%%host_disk.xml%%'");
+	db_install_execute("0.8.8", "UPDATE snmp_query SET xml_path=REPLACE(xml_path,'host_cpu.xml','device_cpu.xml') WHERE xml_path like '%%host_cpu.xml%%'");
+	db_install_execute("0.8.8", "UPDATE snmp_query_graph_rrd_sv SET `text`=REPLACE(`text`,'|host_','|device_') WHERE `text` like '%%|host_%%'");
+	db_install_execute("0.8.8", "UPDATE snmp_query_graph_sv SET `text`=REPLACE(`text`,'|host_','|device_') WHERE `text` like '%%|host_%%'");
+
+	/* Create new tables */
+	db_install_execute("0.8.8","
+		CREATE TABLE user_log (
+			username varchar(50) NOT NULL default '0',
+			user_id mediumint(8) NOT NULL default '0',
+			time datetime NOT NULL default '0000-00-00 00:00:00',
+			result tinyint(1) NOT NULL default '0',
+			ip varchar(40) NOT NULL default '',
+			PRIMARY KEY  (username,user_id,time),
+			KEY username (username)
+			) TYPE=MyISAM");
+	db_install_execute("0.8.8","
+		CREATE TABLE `log` (
+			`id` bigint(20) unsigned NOT NULL default '0',
+			`timestamp` datetime NOT NULL default '0000-00-00 00:00:00',
+			`facility` tinyint(1) unsigned NOT NULL default '0',
+			`severity` int(1) NOT NULL default '0',
+			`poller_id` smallint(5) unsigned NOT NULL default '0',
+			`device_id` mediumint(8) unsigned NOT NULL default '0',
+			`data_id` mediumint(8) unsigned NOT NULL default '0',
+			`username` varchar(100) NOT NULL default 'system',
+			`source` varchar(50) NOT NULL default 'localhost',
+			`plugin_name` varchar(64) NOT NULL default '',
+			`message` text NOT NULL,
+			PRIMARY KEY  (`id`),
+			KEY `facility` (`facility`),
+			KEY `severity` (`severity`),
+			KEY `device_id` (`device_id`),
+			KEY `data_id` (`data_id`),
+			KEY `poller_id` (`poller_id`),
+			KEY `username` (`username`),
+			KEY `timestamp` (`timestamp`),
+			KEY `plugin_name` (`plugin_name`)
+			) TYPE=MyISAM");
+
+
 }
 

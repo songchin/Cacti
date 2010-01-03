@@ -100,7 +100,7 @@ function form_actions() {
 				input_validate_input_number($site_id);
 				/* ==================================================== */
 
-				if (sizeof(db_fetch_assoc("SELECT * FROM host WHERE site_id=$site_id LIMIT 1"))) {
+				if (sizeof(db_fetch_assoc("SELECT * FROM device WHERE site_id=$site_id LIMIT 1"))) {
 					$bad_ids[] = $site_id;
 				}else{
 					$site_ids[] = $site_id;
@@ -222,7 +222,7 @@ function site_export() {
 	load_current_session_value("page", "sess_sites_current_page", "1");
 	load_current_session_value("detail", "sess_sites_detail", "false");
 	load_current_session_value("id", "sess_sites_site_id", "-1");
-	load_current_session_value("id", "sess_sites_host_template_id", "-1");
+	load_current_session_value("id", "sess_sites_device_template_id", "-1");
 	load_current_session_value("filter", "sess_sites_filter", "");
 	load_current_session_value("sort_column", "sess_sites_sort_column", "name");
 	load_current_session_value("sort_direction", "sess_sites_sort_direction", "ASC");
@@ -301,7 +301,7 @@ function api_site_save($id, $name, $alternate_id, $address1, $address2, $city, $
 }
 
 function api_site_remove($id) {
-	$devices = db_fetch_cell("SELECT COUNT(*) FROM host WHERE site_id='" . $id . "'");
+	$devices = db_fetch_cell("SELECT COUNT(*) FROM device WHERE site_id='" . $id . "'");
 
 	if ($devices == 0) {
 		db_execute("DELETE FROM sites WHERE id='" . $id . "'");
@@ -321,12 +321,12 @@ function site_remove() {
 	input_validate_input_number(get_request_var("id"));
 	/* ==================================================== */
 
-	$devices = db_fetch_cell("SELECT COUNT(*) FROM host WHERE site_id='" . $_REQUEST["site_id"] . "'");
+	$devices = db_fetch_cell("SELECT COUNT(*) FROM device WHERE site_id='" . $_REQUEST["site_id"] . "'");
 
 	if ($devices == 0) {
 		if ((read_config_option("remove_verification") == CHECKED) && (!isset($_GET["confirm"]))) {
 			include("./include/top_header.php");
-			form_confirm(__("Are You Sure?"), __("Are you sure you want to delete the site") . " <strong>'" . db_fetch_cell("select description from host where id=" . $_GET["device_id"]) . "'</strong>?", "sites.php", "sites.php?action=remove&id=" . $_GET["id"]);
+			form_confirm(__("Are You Sure?"), __("Are you sure you want to delete the site") . " <strong>'" . db_fetch_cell("select description from device where id=" . $_GET["device_id"]) . "'</strong>?", "sites.php", "sites.php?action=remove&id=" . $_GET["id"]);
 			include("./include/bottom_footer.php");
 			exit;
 		}
@@ -341,7 +341,7 @@ function site_remove() {
 
 function site_get_site_records(&$sql_where, $rows = 30, $apply_limits = TRUE) {
 	/* create SQL where clause */
-	$device_type_info = db_fetch_row("SELECT * FROM host_template WHERE id='" . $_REQUEST["host_template_id"] . "'");
+	$device_type_info = db_fetch_row("SELECT * FROM device_template WHERE id='" . $_REQUEST["device_template_id"] . "'");
 
 	$sql_where = "";
 
@@ -350,24 +350,24 @@ function site_get_site_records(&$sql_where, $rows = 30, $apply_limits = TRUE) {
 		if (get_request_var_request("detail") == "false") {
 			$sql_where = "WHERE (sites.name LIKE '%%" . $_REQUEST["filter"] . "%%')";
 		}else{
-			$sql_where = "WHERE (host_template.name LIKE '%%" . $_REQUEST["filter"] . "%%' OR " .
+			$sql_where = "WHERE (device_template.name LIKE '%%" . $_REQUEST["filter"] . "%%' OR " .
 				"sites.name LIKE '%%" . get_request_var_request("filter") . "%%')";
 		}
 	}
 
 	if (sizeof($device_type_info)) {
 		if (!strlen($sql_where)) {
-			$sql_where = "WHERE (host.host_template_id=" . $device_type_info["id"] . ")";
+			$sql_where = "WHERE (device.device_template_id=" . $device_type_info["id"] . ")";
 		}else{
-			$sql_where .= " AND (host.host_template_id=" . $device_type_info["id"] . ")";
+			$sql_where .= " AND (device.device_template_id=" . $device_type_info["id"] . ")";
 		}
 	}
 
 	if (($_REQUEST["site_id"] != "-1") && ($_REQUEST["detail"])){
 		if (!strlen($sql_where)) {
-			$sql_where = "WHERE (host.site_id='" . $_REQUEST["site_id"] . "')";
+			$sql_where = "WHERE (device.site_id='" . $_REQUEST["site_id"] . "')";
 		}else{
-			$sql_where .= " AND (host.site_id='" . $_REQUEST["site_id"] . "')";
+			$sql_where .= " AND (device.site_id='" . $_REQUEST["site_id"] . "')";
 		}
 	}
 
@@ -389,13 +389,13 @@ function site_get_site_records(&$sql_where, $rows = 30, $apply_limits = TRUE) {
 			sites.city,
 			sites.state,
 			sites.country,
-			Count(host_template.id) AS total_devices,
-			host_template.name as host_template_name
-			FROM (host_template
-			RIGHT JOIN host ON (host_template.id=host.host_template_id))
-			RIGHT JOIN sites ON (host.site_id=sites.id)
+			Count(device_template.id) AS total_devices,
+			device_template.name as device_template_name
+			FROM (device_template
+			RIGHT JOIN device ON (device_template.id=device.device_template_id))
+			RIGHT JOIN sites ON (device.site_id=sites.id)
 			$sql_where
-			GROUP BY sites.name, host_template.name
+			GROUP BY sites.name, device_template.name
 			ORDER BY " . get_request_var_request("sort_column") . " " . get_request_var_request("sort_direction");
 
 		if ($apply_limits) {
@@ -449,11 +449,11 @@ function site_filter() {
 	<!--
 	function applySiteFilterChange(objForm) {
 		strURL = '?report=sites';
-		if (objForm.hidden_host_template_id) {
-			strURL = strURL + '&host_template_id=-1';
+		if (objForm.hidden_device_template_id) {
+			strURL = strURL + '&device_template_id=-1';
 			strURL = strURL + '&site_id=-1';
 		}else{
-			strURL = strURL + '&host_template_id=' + objForm.host_template_id.value;
+			strURL = strURL + '&device_template_id=' + objForm.device_template_id.value;
 			strURL = strURL + '&site_id=' + objForm.site_id.value;
 		}
 		strURL = strURL + '&detail=' + objForm.detail.checked;
@@ -526,17 +526,17 @@ function site_filter() {
 						&nbsp;<?php print __("Device Template:");?>
 					</td>
 					<td class="w1">
-						<select name="host_template_id" onChange="applySiteFilterChange(document.form_sites)">
-						<option value="-1"<?php if (get_request_var_request("host_template_id") == "-1") {?> selected<?php }?>><?php print __("Any");?></option>
+						<select name="device_template_id" onChange="applySiteFilterChange(document.form_sites)">
+						<option value="-1"<?php if (get_request_var_request("device_template_id") == "-1") {?> selected<?php }?>><?php print __("Any");?></option>
 						<?php
-						$host_templates = db_fetch_assoc("SELECT DISTINCT host_template.id,
-							host_template.name
-							FROM host_template
-							INNER JOIN host ON (host_template.id = host.host_template_id)
-							ORDER BY host_template.name");
-						if (sizeof($host_templates) > 0) {
-						foreach ($host_templates as $host_template) {
-							print '<option value="' . $host_template["id"] . '"'; if (get_request_var_request("host_template_id") == $host_template["id"]) { print " selected"; } print ">" . $host_template["name"] . "</option>";
+						$device_templates = db_fetch_assoc("SELECT DISTINCT device_template.id,
+							device_template.name
+							FROM device_template
+							INNER JOIN device ON (device_template.id = device.device_template_id)
+							ORDER BY device_template.name");
+						if (sizeof($device_templates) > 0) {
+						foreach ($device_templates as $device_template) {
+							print '<option value="' . $device_template["id"] . '"'; if (get_request_var_request("device_template_id") == $device_template["id"]) { print " selected"; } print ">" . $device_template["name"] . "</option>";
 						}
 						}
 						?>
@@ -550,7 +550,7 @@ function site_filter() {
 				<input type='hidden' name='report' value='sites'>
 				<?php
 				if (get_request_var_request("detail") == "false") { ?>
-				<input type='hidden' name='hidden_host_template_id' value='-1'>
+				<input type='hidden' name='hidden_device_template_id' value='-1'>
 				<?php }?>
 			</div>
 			</form>
@@ -565,7 +565,7 @@ function site() {
 
 	/* ================= input validation ================= */
 	input_validate_input_number(get_request_var_request("site_id"));
-	input_validate_input_number(get_request_var_request("host_template_id"));
+	input_validate_input_number(get_request_var_request("device_template_id"));
 	input_validate_input_number(get_request_var_request("page"));
 	input_validate_input_number(get_request_var_request("rows"));
 	/* ==================================================== */
@@ -595,7 +595,7 @@ function site() {
 		kill_session_var("sess_sites_current_page");
 		kill_session_var("sess_sites_detail");
 		kill_session_var("sess_sites_site_id");
-		kill_session_var("sess_sites_host_template_id");
+		kill_session_var("sess_sites_device_template_id");
 		kill_session_var("sess_sites_filter");
 		kill_session_var("sess_sites_rows");
 		kill_session_var("sess_sites_sort_column");
@@ -605,7 +605,7 @@ function site() {
 		unset($_REQUEST["filter"]);
 		unset($_REQUEST["rows"]);
 		unset($_REQUEST["site_id"]);
-		unset($_REQUEST["host_template_id"]);
+		unset($_REQUEST["device_template_id"]);
 		unset($_REQUEST["detail"]);
 		unset($_REQUEST["sort_column"]);
 		unset($_REQUEST["sort_direction"]);
@@ -613,7 +613,7 @@ function site() {
 		/* if any of the settings changed, reset the page number */
 		$changed = 0;
 		$changed += check_changed("site_id", "sess_sites_site_id");
-		$changed += check_changed("host_template_id", "sess_sites_host_template_id");
+		$changed += check_changed("device_template_id", "sess_sites_device_template_id");
 		$changed += check_changed("filter", "sess_sites_filter");
 		$changed += check_changed("rows", "sess_sites_rows");
 		$changed += check_changed("detail", "sess_sites_detail");
@@ -627,7 +627,7 @@ function site() {
 	load_current_session_value("rows", "sess_sites_rows", "-1");
 	load_current_session_value("detail", "sess_sites_detail", "false");
 	load_current_session_value("site_id", "sess_sites_site_id", "-1");
-	load_current_session_value("host_template_id", "sess_sites_host_template_id", "-1");
+	load_current_session_value("device_template_id", "sess_sites_device_template_id", "-1");
 	load_current_session_value("filter", "sess_sites_filter", "");
 	load_current_session_value("rows", "sess_sites_rows", read_config_option("num_rows_devices"));
 	load_current_session_value("sort_column", "sess_sites_sort_column", "name");
@@ -654,12 +654,12 @@ function site() {
 			$sql_where");
 	}else{
 		$total_rows = sizeof(db_fetch_assoc("SELECT
-			host_template.id, sites.name
-			FROM (host_template
-			RIGHT JOIN host ON (host_template.id=host.host_template_id))
-			RIGHT JOIN sites ON (host.site_id=sites.id)
+			device_template.id, sites.name
+			FROM (device_template
+			RIGHT JOIN device ON (device_template.id=device.device_template_id))
+			RIGHT JOIN sites ON (device.site_id=sites.id)
 			$sql_where
-			GROUP BY sites.name, host_template.id"));
+			GROUP BY sites.name, device_template.id"));
 	}
 
 	/* generate page list */
@@ -710,7 +710,7 @@ function site() {
 
 		$display_text = array(
 			"name" => array(__("Site Name"), "ASC"),
-			"host_template_name" => array(__("Device Type"), "ASC"),
+			"device_template_name" => array(__("Device Type"), "ASC"),
 			"total_devices" => array(__("Devices"), "DESC"),
 			"address1" => array(__("Address"), "ASC"),
 			"city" => array(__("City"), "ASC"),
@@ -725,7 +725,7 @@ function site() {
 				form_alternate_row_color($site["id"], true); $i++;
 				form_selectable_cell("<a class='linkEditMain' href='sites.php?action=edit&id=" . $site["id"] . "'>" .
 					(strlen($_REQUEST["filter"]) ? preg_replace("/(" . preg_quote($_REQUEST["filter"]) . ")/i", "<span class=\"filter\">\\1</span>", $site["name"]) : $site["name"]) . "</a>", $site["id"], "20%");
-				form_selectable_cell(preg_replace("/(" . preg_quote($_REQUEST["filter"]) . ")/i", "<span class=\"filter\">\\1</span>", $site["host_template_name"]), $site["id"]);
+				form_selectable_cell(preg_replace("/(" . preg_quote($_REQUEST["filter"]) . ")/i", "<span class=\"filter\">\\1</span>", $site["device_template_name"]), $site["id"]);
 				form_selectable_cell($site["total_devices"], $site["id"]);
 				form_selectable_cell($site["address1"], $site["id"]);
 				form_selectable_cell($site["city"], $site["id"]);

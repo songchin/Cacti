@@ -288,7 +288,7 @@ function display_general() {
 	$poller_item = db_fetch_assoc("SELECT action, count(action) as total FROM poller_item GROUP BY action");
 
 	/* Get system stats */
-	$host_count  = db_fetch_cell("SELECT COUNT(*) FROM host");
+	$device_count  = db_fetch_cell("SELECT COUNT(*) FROM device");
 	$graph_count = db_fetch_cell("SELECT COUNT(*) FROM graph_local");
 	$data_count  = db_fetch_assoc("SELECT i.type_id, COUNT(i.type_id) AS total FROM data_template_data AS d, data_input AS i WHERE d.data_input_id = i.id AND local_data_id <> 0 GROUP BY i.type_id");
 
@@ -353,7 +353,7 @@ function display_general() {
 	print "</tr>\n";
 	print "<tr class='rowAlternate2'>\n";
 	print "		<td class='textAreaNotes e'>" . __("Hosts") . "</td>\n";
-	print "		<td class='textAreaNotes v'>" . $host_count . "</td>\n";
+	print "		<td class='textAreaNotes v'>" . $device_count . "</td>\n";
 	print "</tr>\n";
 	print "<tr class='rowAlternate1'>\n";
 	print "		<td class='textAreaNotes e'>" . __("Graphs") . "</td>\n";
@@ -817,7 +817,7 @@ function utilities_view_user_log() {
 
 	$sql_where = "";
 
-	/* filter by host */
+	/* filter by device */
 	if (get_request_var_request("username") == "-1") {
 		/* Show all items */
 	}elseif (get_request_var_request("username") == "-2") {
@@ -1127,20 +1127,20 @@ function utilities_view_logfile() {
 	$j = 0;
 	$linecolor = false;
 	foreach ($logcontents as $item) {
-		$host_start = strpos($item, "Host[");
+		$device_start = strpos($item, "Host[");
 		$ds_start   = strpos($item, "DS[");
 
 		$new_item = "";
 
-		if ((!$host_start) && (!$ds_start)) {
+		if ((!$device_start) && (!$ds_start)) {
 			$new_item = $item;
 		}else{
-			while ($host_start) {
-				$host_end   = strpos($item, "]", $host_start);
-				$host_id    = substr($item, $host_start+5, $host_end-($host_start+5));
-				$new_item   = $new_item . substr($item, 0, $host_start + 5) . "<a href='" . htmlspecialchars("devices.php?action=edit&id=" . $host_id) . "'>" . substr($item, $host_start + 5, $host_end-($host_start + 5)) . "</a>";
-				$item       = substr($item, $host_end);
-				$host_start = strpos($item, "Host[");
+			while ($device_start) {
+				$device_end   = strpos($item, "]", $device_start);
+				$device_id    = substr($item, $device_start+5, $device_end-($device_start+5));
+				$new_item   = $new_item . substr($item, 0, $device_start + 5) . "<a href='" . htmlspecialchars("devices.php?action=edit&id=" . $device_id) . "'>" . substr($item, $device_start + 5, $device_end-($device_start + 5)) . "</a>";
+				$item       = substr($item, $device_end);
+				$device_start = strpos($item, "Host[");
 			}
 
 			$ds_start = strpos($item, "DS[");
@@ -1241,7 +1241,7 @@ function utilities_view_snmp_cache() {
 	define("MAX_DISPLAY_PAGES", 21);
 
 	/* ================= input validation ================= */
-	input_validate_input_number(get_request_var_request("host_id"));
+	input_validate_input_number(get_request_var_request("device_id"));
 	input_validate_input_number(get_request_var_request("snmp_query_id"));
 	input_validate_input_number(get_request_var_request("page"));
 	input_validate_input_number(get_request_var_request("rows"));
@@ -1257,21 +1257,21 @@ function utilities_view_snmp_cache() {
 	if (isset($_REQUEST["clear_x"])) {
 		kill_session_var("sess_snmp_current_page");
 		kill_session_var("sess_snmp_rows");
-		kill_session_var("sess_snmp_host_id");
+		kill_session_var("sess_snmp_device_id");
 		kill_session_var("sess_snmp_snmp_query_id");
 		kill_session_var("sess_snmp_filter");
 
 		unset($_REQUEST["page"]);
 		unset($_REQUEST["rows"]);
 		unset($_REQUEST["filter"]);
-		unset($_REQUEST["host_id"]);
+		unset($_REQUEST["device_id"]);
 		unset($_REQUEST["snmp_query_id"]);
 	}
 
 	/* remember these search fields in session vars so we don't have to keep passing them around */
 	load_current_session_value("page", "sess_snmp_current_page", "1");
 	load_current_session_value("rows", "sess_snmp_rows", "-1");
-	load_current_session_value("host_id", "sess_snmp_host_id", "-1");
+	load_current_session_value("device_id", "sess_snmp_device_id", "-1");
 	load_current_session_value("snmp_query_id", "sess_snmp_snmp_query_id", "-1");
 	load_current_session_value("filter", "sess_snmp_filter", "");
 
@@ -1282,20 +1282,20 @@ function utilities_view_snmp_cache() {
 	<script type="text/javascript">
 	<!--
 	$().ready(function() {
-		$("#host").autocomplete("./lib/ajax/get_hosts_brief.php", { max: 8, highlight: false, scroll: true, scrollHeight: 300 });
-		$("#host").result(function(event, data, formatted) {
+		$("#device").autocomplete("./lib/ajax/get_devices_brief.php", { max: 8, highlight: false, scroll: true, scrollHeight: 300 });
+		$("#device").result(function(event, data, formatted) {
 			if (data) {
-				$(this).parent().find("#host_id").val(data[1]);
+				$(this).parent().find("#device_id").val(data[1]);
 				applyViewSNMPFilterChange(document.form_snmpcache);
 			}else{
-				$(this).parent().find("#host_id").val(0);
+				$(this).parent().find("#device_id").val(0);
 			}
 		});
 	});
 
 	function applyViewSNMPFilterChange(objForm) {
-		if (objForm.host_id.value) {
-			strURL = '?host_id=' + objForm.host_id.value;
+		if (objForm.device_id.value) {
+			strURL = '?device_id=' + objForm.device_id.value;
 			strURL = strURL + '&filter=' + objForm.filter.value;
 		}else{
 			strURL = '?filter=' + objForm.filter.value;
@@ -1323,38 +1323,38 @@ function utilities_view_snmp_cache() {
 					</td>
 					<td class="w1">
 						<?php
-						if (isset($_REQUEST["host_id"])) {
-							$hostname = db_fetch_cell("SELECT description as name FROM host WHERE id=".$_REQUEST["host_id"]." ORDER BY description,hostname");
+						if (isset($_REQUEST["device_id"])) {
+							$devicename = db_fetch_cell("SELECT description as name FROM device WHERE id=".$_REQUEST["device_id"]." ORDER BY description,devicename");
 						} else {
-							$hostname = "";
+							$devicename = "";
 						}
 						?>
-						<input class="ac_field" type="text" id="host" size="30" value="<?php print $hostname; ?>">
-						<input type="hidden" id="host_id">
+						<input class="ac_field" type="text" id="device" size="30" value="<?php print $devicename; ?>">
+						<input type="hidden" id="device_id">
 					</td>
 					<td class="nw90">
 						&nbsp;<?php print __("Query Name:");?>&nbsp;
 					</td>
 					<td class="w1">
 						<select name="snmp_query_id" onChange="applyViewSNMPFilterChange(document.form_snmpcache)">
-							<option value="-1"<?php if (get_request_var_request("host_id") == "-1") {?> selected<?php }?>><?php print __("Any");?></option>
+							<option value="-1"<?php if (get_request_var_request("device_id") == "-1") {?> selected<?php }?>><?php print __("Any");?></option>
 							<?php
-							if (get_request_var_request("host_id") == -1) {
+							if (get_request_var_request("device_id") == -1) {
 								$snmp_queries = db_fetch_assoc("SELECT DISTINCT
 											snmp_query.id,
 											snmp_query.name
-											FROM (host_snmp_cache,snmp_query,host)
-											WHERE host_snmp_cache.host_id=host.id
-											AND host_snmp_cache.snmp_query_id=snmp_query.id
+											FROM (device_snmp_cache,snmp_query,device)
+											WHERE device_snmp_cache.device_id=device.id
+											AND device_snmp_cache.snmp_query_id=snmp_query.id
 											ORDER by snmp_query.name");
 							}else{
 								$snmp_queries = db_fetch_assoc("SELECT DISTINCT
 											snmp_query.id,
 											snmp_query.name
-											FROM (host_snmp_cache,snmp_query,host)
-											WHERE host_snmp_cache.host_id=host.id
-											AND host_snmp_cache.host_id='" . $_REQUEST["host_id"] . "'
-											AND host_snmp_cache.snmp_query_id=snmp_query.id
+											FROM (device_snmp_cache,snmp_query,device)
+											WHERE device_snmp_cache.device_id=device.id
+											AND device_snmp_cache.device_id='" . $_REQUEST["device_id"] . "'
+											AND device_snmp_cache.snmp_query_id=snmp_query.id
 											ORDER by snmp_query.name");
 							}
 							if (sizeof($snmp_queries) > 0) {
@@ -1406,38 +1406,38 @@ function utilities_view_snmp_cache() {
 
 	$sql_where = "";
 
-	/* filter by host */
-	if (get_request_var_request("host_id") == "-1") {
+	/* filter by device */
+	if (get_request_var_request("device_id") == "-1") {
 		/* Show all items */
-	}elseif (get_request_var_request("host_id") == "0") {
-		$sql_where .= " AND host.id=0";
-	}elseif (!empty($_REQUEST["host_id"])) {
-		$sql_where .= " AND host.id=" . $_REQUEST["host_id"];
+	}elseif (get_request_var_request("device_id") == "0") {
+		$sql_where .= " AND device.id=0";
+	}elseif (!empty($_REQUEST["device_id"])) {
+		$sql_where .= " AND device.id=" . $_REQUEST["device_id"];
 	}
 
 	/* filter by query name */
 	if (get_request_var_request("snmp_query_id") == "-1") {
 		/* Show all items */
 	}elseif (!empty($_REQUEST["snmp_query_id"])) {
-		$sql_where .= " AND host_snmp_cache.snmp_query_id=" . $_REQUEST["snmp_query_id"];
+		$sql_where .= " AND device_snmp_cache.snmp_query_id=" . $_REQUEST["snmp_query_id"];
 	}
 
 	/* filter by search string */
 	if (get_request_var_request("filter") <> "") {
-		$sql_where .= " AND (host.description LIKE '%%" . $_REQUEST["filter"] . "%%'
+		$sql_where .= " AND (device.description LIKE '%%" . $_REQUEST["filter"] . "%%'
 			OR snmp_query.name LIKE '%%" . get_request_var_request("filter") . "%%'
-			OR host_snmp_cache.field_name LIKE '%%" . get_request_var_request("filter") . "%%'
-			OR host_snmp_cache.field_value LIKE '%%" . get_request_var_request("filter") . "%%'
-			OR host_snmp_cache.oid LIKE '%%" . get_request_var_request("filter") . "%%')";
+			OR device_snmp_cache.field_name LIKE '%%" . get_request_var_request("filter") . "%%'
+			OR device_snmp_cache.field_value LIKE '%%" . get_request_var_request("filter") . "%%'
+			OR device_snmp_cache.oid LIKE '%%" . get_request_var_request("filter") . "%%')";
 	}
 
 	html_start_box("", "100", $colors["header"], "0", "center", "");
 
 	$total_rows = db_fetch_cell("SELECT
 		COUNT(*)
-		FROM (host_snmp_cache,snmp_query,host)
-		WHERE host_snmp_cache.host_id=host.id
-		AND host_snmp_cache.snmp_query_id=snmp_query.id
+		FROM (device_snmp_cache,snmp_query,device)
+		WHERE device_snmp_cache.device_id=device.id
+		AND device_snmp_cache.snmp_query_id=snmp_query.id
 		$sql_where");
 
 	if (get_request_var_request("rows") == "-1") {
@@ -1447,12 +1447,12 @@ function utilities_view_snmp_cache() {
 	}
 
 	$snmp_cache_sql = "SELECT
-		host_snmp_cache.*,
-		host.description,
+		device_snmp_cache.*,
+		device.description,
 		snmp_query.name
-		FROM (host_snmp_cache,snmp_query,host)
-		WHERE host_snmp_cache.host_id=host.id
-		AND host_snmp_cache.snmp_query_id=snmp_query.id
+		FROM (device_snmp_cache,snmp_query,device)
+		WHERE device_snmp_cache.device_id=device.id
+		AND device_snmp_cache.snmp_query_id=snmp_query.id
 		$sql_where
 		LIMIT " . ($rows*(get_request_var_request("page")-1)) . "," . $rows;
 
@@ -1506,7 +1506,7 @@ function utilities_view_poller_cache() {
 	define("MAX_DISPLAY_PAGES", 21);
 
 	/* ================= input validation ================= */
-	input_validate_input_number(get_request_var_request("host_id"));
+	input_validate_input_number(get_request_var_request("device_id"));
 	input_validate_input_number(get_request_var_request("page"));
 	input_validate_input_number(get_request_var_request("rows"));
 	input_validate_input_number(get_request_var_request("poller_action"));
@@ -1531,14 +1531,14 @@ function utilities_view_poller_cache() {
 	if (isset($_REQUEST["clear_x"])) {
 		kill_session_var("sess_poller_cache_current_page");
 		kill_session_var("sess_poller_cache_rows");
-		kill_session_var("sess_poller_cache_host_id");
+		kill_session_var("sess_poller_cache_device_id");
 		kill_session_var("sess_poller_cache_poller_action");
 		kill_session_var("sess_poller_cache_filter");
 
 		unset($_REQUEST["page"]);
 		unset($_REQUEST["rows"]);
 		unset($_REQUEST["filter"]);
-		unset($_REQUEST["host_id"]);
+		unset($_REQUEST["device_id"]);
 		unset($_REQUEST["poller_action"]);
 	}
 
@@ -1551,7 +1551,7 @@ function utilities_view_poller_cache() {
 	/* remember these search fields in session vars so we don't have to keep passing them around */
 	load_current_session_value("page", "sess_poller_cache_current_page", "1");
 	load_current_session_value("rows", "sess_poller_cache_rows", "-1");
-	load_current_session_value("host_id", "sess_poller_cache_host_id", "-1");
+	load_current_session_value("device_id", "sess_poller_cache_device_id", "-1");
 	load_current_session_value("poller_action", "sess_poller_cache_poller_action", "-1");
 	load_current_session_value("filter", "sess_poller_cache_filter", "");
 	load_current_session_value("sort_column", "sess_poller_cache_sort_column", "data_template_data.name_cache");
@@ -1564,20 +1564,20 @@ function utilities_view_poller_cache() {
 	<script type="text/javascript">
 	<!--
 	$().ready(function() {
-		$("#host").autocomplete("./lib/ajax/get_hosts_brief.php", { max: 8, highlight: false, scroll: true, scrollHeight: 300 });
-		$("#host").result(function(event, data, formatted) {
+		$("#device").autocomplete("./lib/ajax/get_devices_brief.php", { max: 8, highlight: false, scroll: true, scrollHeight: 300 });
+		$("#device").result(function(event, data, formatted) {
 			if (data) {
-				$(this).parent().find("#host_id").val(data[1]);
+				$(this).parent().find("#device_id").val(data[1]);
 				applyPItemFilterChange(document.form_pollercache);
 			}else{
-				$(this).parent().find("#host_id").val(0);
+				$(this).parent().find("#device_id").val(0);
 			}
 		});
 	});
 
 	function applyPItemFilterChange(objForm) {
-		if (objForm.host_id.value) {
-			strURL = '?host_id=' + objForm.host_id.value;
+		if (objForm.device_id.value) {
+			strURL = '?device_id=' + objForm.device_id.value;
 			strURL = strURL + '&filter=' + objForm.filter.value;
 		}else{
 			strURL = '?filter=' + objForm.filter.value;
@@ -1605,14 +1605,14 @@ function utilities_view_poller_cache() {
 					</td>
 					<td class="w1">
 						<?php
-						if (isset($_REQUEST["host_id"])) {
-							$hostname = db_fetch_cell("SELECT description as name FROM host WHERE id=".$_REQUEST["host_id"]." ORDER BY description,hostname");
+						if (isset($_REQUEST["device_id"])) {
+							$devicename = db_fetch_cell("SELECT description as name FROM device WHERE id=".$_REQUEST["device_id"]." ORDER BY description,devicename");
 						} else {
-							$hostname = "";
+							$devicename = "";
 						}
 						?>
-						<input class="ac_field" type="text" id="host" size="30" value="<?php print $hostname; ?>">
-						<input type="hidden" id="host_id">
+						<input class="ac_field" type="text" id="device" size="30" value="<?php print $devicename; ?>">
+						<input type="hidden" id="device_id">
 					</td>
 					<td class="nw50">
 						&nbsp;<?php print __("Action:");?>&nbsp;
@@ -1673,19 +1673,19 @@ function utilities_view_poller_cache() {
 		$sql_where .= " AND poller_item.action='" . $_REQUEST["poller_action"] . "'";
 	}
 
-	if (get_request_var_request("host_id") == "-1") {
+	if (get_request_var_request("device_id") == "-1") {
 		/* Show all items */
-	}elseif (get_request_var_request("host_id") == "0") {
-		$sql_where .= " AND poller_item.host_id=0";
-	}elseif (!empty($_REQUEST["host_id"])) {
-		$sql_where .= " AND poller_item.host_id=" . $_REQUEST["host_id"];
+	}elseif (get_request_var_request("device_id") == "0") {
+		$sql_where .= " AND poller_item.device_id=0";
+	}elseif (!empty($_REQUEST["device_id"])) {
+		$sql_where .= " AND poller_item.device_id=" . $_REQUEST["device_id"];
 	}
 
 	if (strlen(get_request_var_request("filter"))) {
 		$sql_where .= " AND (data_template_data.name_cache LIKE '%%" . $_REQUEST["filter"] . "%%'
-			OR host.description LIKE '%%" . get_request_var_request("filter") . "%%'
+			OR device.description LIKE '%%" . get_request_var_request("filter") . "%%'
 			OR poller_item.arg1 LIKE '%%" . get_request_var_request("filter") . "%%'
-			OR poller_item.hostname LIKE '%%" . get_request_var_request("filter") . "%%'
+			OR poller_item.devicename LIKE '%%" . get_request_var_request("filter") . "%%'
 			OR poller_item.rrd_path  LIKE '%%" . get_request_var_request("filter") . "%%')";
 	}
 
@@ -1695,8 +1695,8 @@ function utilities_view_poller_cache() {
 		COUNT(*)
 		FROM data_template_data
 		RIGHT JOIN (poller_item
-		LEFT JOIN host
-		ON poller_item.host_id=host.id)
+		LEFT JOIN device
+		ON poller_item.device_id=device.id)
 		ON data_template_data.local_data_id=poller_item.local_data_id
 		$sql_where");
 
@@ -1709,11 +1709,11 @@ function utilities_view_poller_cache() {
 	$poller_sql = "SELECT
 		poller_item.*,
 		data_template_data.name_cache,
-		host.description
+		device.description
 		FROM data_template_data
 		RIGHT JOIN (poller_item
-		LEFT JOIN host
-		ON poller_item.host_id=host.id)
+		LEFT JOIN device
+		ON poller_item.device_id=device.id)
 		ON data_template_data.local_data_id=poller_item.local_data_id
 		$sql_where
 		ORDER BY " . get_request_var_request("sort_column") . " " . get_request_var_request("sort_direction") . ", action ASC
@@ -1847,7 +1847,7 @@ function utilities() {
 			<a href='<?php print htmlspecialchars("utilities.php?action=view_snmp_cache");?>'><?php print __("View SNMP Cache");?></a>
 		</td>
 		<td class="textAreaNotes">
-			<?php print __("The SNMP cache stores information gathered from SNMP queries. It is used by cacti to determine the OID to use when gathering information from an SNMP-enabled host.");?>
+			<?php print __("The SNMP cache stores information gathered from SNMP queries. It is used by cacti to determine the OID to use when gathering information from an SNMP-enabled device.");?>
 		</td>
 	</tr>
 	<tr class="rowAlternate1">

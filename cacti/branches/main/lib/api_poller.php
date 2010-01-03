@@ -22,41 +22,41 @@
  +-------------------------------------------------------------------------+
 */
 
-function api_poller_cache_item_add($host_id, $host_field_override, $local_data_id, $rrd_step, $poller_action_id, $data_source_item_name, $num_rrd_items, $arg1 = "", $arg2 = "", $arg3 = "") {
-	static $hosts = array();
+function api_poller_cache_item_add($device_id, $device_field_override, $local_data_id, $rrd_step, $poller_action_id, $data_source_item_name, $num_rrd_items, $arg1 = "", $arg2 = "", $arg3 = "") {
+	static $devices = array();
 
-	if (!isset($hosts[$host_id])) {
-		$host = db_fetch_row("select
-			host.id,
-			host.poller_id,
-			host.hostname,
-			host.snmp_community,
-			host.snmp_version,
-			host.snmp_username,
-			host.snmp_password,
-			host.snmp_auth_protocol,
-			host.snmp_priv_passphrase,
-			host.snmp_priv_protocol,
-			host.snmp_context,
-			host.snmp_port,
-			host.snmp_timeout,
-			host.disabled
-			from host
-			where host.id=$host_id");
+	if (!isset($devices[$device_id])) {
+		$device = db_fetch_row("select
+			device.id,
+			device.poller_id,
+			device.devicename,
+			device.snmp_community,
+			device.snmp_version,
+			device.snmp_username,
+			device.snmp_password,
+			device.snmp_auth_protocol,
+			device.snmp_priv_passphrase,
+			device.snmp_priv_protocol,
+			device.snmp_context,
+			device.snmp_port,
+			device.snmp_timeout,
+			device.disabled
+			from device
+			where device.id=$device_id");
 
-		$hosts[$host_id] = $host;
+		$devices[$device_id] = $device;
 	} else {
-		$host = $hosts[$host_id];
+		$device = $devices[$device_id];
 	}
 
-	/* the $host_field_override array can be used to override certain host fields in the poller cache */
-	if (isset($host)) {
-		$host = array_merge($host, $host_field_override);
+	/* the $device_field_override array can be used to override certain device fields in the poller cache */
+	if (isset($device)) {
+		$device = array_merge($device, $device_field_override);
 	}
 
-	if (isset($host["id"]) || (isset($host_id))) {
-		if (isset($host)) {
-			if ($host["disabled"] == CHECKED) {
+	if (isset($device["id"]) || (isset($device_id))) {
+		if (isset($device)) {
+			if ($device["disabled"] == CHECKED) {
 				return;
 			}
 		} else {
@@ -64,35 +64,35 @@ function api_poller_cache_item_add($host_id, $host_field_override, $local_data_i
 				return;
 			}
 
-			$host["id"] = 0;
-			$host["poller_id"] = 0;
-			$host["snmp_community"] = "";
-			$host["snmp_timeout"] = "";
-			$host["snmp_username"] = "";
-			$host["snmp_password"] = "";
-			$host["snmp_auth_protocol"] = "";
-			$host["snmp_priv_passphrase"] = "";
-			$host["snmp_priv_protocol"] = "";
-			$host["snmp_context"] = "";
-			$host["snmp_version"] = "";
-			$host["snmp_port"] = "";
-			$host["hostname"] = "None";
+			$device["id"] = 0;
+			$device["poller_id"] = 0;
+			$device["snmp_community"] = "";
+			$device["snmp_timeout"] = "";
+			$device["snmp_username"] = "";
+			$device["snmp_password"] = "";
+			$device["snmp_auth_protocol"] = "";
+			$device["snmp_priv_passphrase"] = "";
+			$device["snmp_priv_protocol"] = "";
+			$device["snmp_context"] = "";
+			$device["snmp_version"] = "";
+			$device["snmp_port"] = "";
+			$device["devicename"] = "None";
 		}
 
 		if ($poller_action_id == 0) {
-			if (($host["snmp_version"] < 1) || ($host["snmp_version"] > 3) ||
-				($host["snmp_community"] == "" && $host["snmp_version"] != 3)) {
+			if (($device["snmp_version"] < 1) || ($device["snmp_version"] > 3) ||
+				($device["snmp_community"] == "" && $device["snmp_version"] != 3)) {
 				return;
 			}
 		}
 
 		$rrd_next_step = api_poller_get_rrd_next_step($rrd_step, $num_rrd_items);
 
-		return "($local_data_id, " . $host["poller_id"] . ", " . $host["id"] . ", $poller_action_id,'" . $host["hostname"] . "',
-			'" . $host["snmp_community"]       . "', '" . $host["snmp_version"]       . "', '" . $host["snmp_timeout"] . "',
-			'" . $host["snmp_username"]        . "', '" . $host["snmp_password"]      . "', '" . $host["snmp_auth_protocol"] . "',
-			'" . $host["snmp_priv_passphrase"] . "', '" . $host["snmp_priv_protocol"] . "', '" . $host["snmp_context"] . "',
-			'" . $host["snmp_port"]            . "', '$data_source_item_name', '"     . addslashes(clean_up_path(get_data_source_path($local_data_id, true))) . "',
+		return "($local_data_id, " . $device["poller_id"] . ", " . $device["id"] . ", $poller_action_id,'" . $device["devicename"] . "',
+			'" . $device["snmp_community"]       . "', '" . $device["snmp_version"]       . "', '" . $device["snmp_timeout"] . "',
+			'" . $device["snmp_username"]        . "', '" . $device["snmp_password"]      . "', '" . $device["snmp_auth_protocol"] . "',
+			'" . $device["snmp_priv_passphrase"] . "', '" . $device["snmp_priv_protocol"] . "', '" . $device["snmp_context"] . "',
+			'" . $device["snmp_port"]            . "', '$data_source_item_name', '"     . addslashes(clean_up_path(get_data_source_path($local_data_id, true))) . "',
 			'$num_rrd_items', '$rrd_step', '$rrd_next_step', '$arg1', '$arg2', '$arg3', '1')";
 	}
 }

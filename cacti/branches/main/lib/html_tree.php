@@ -45,11 +45,11 @@ function grow_graph_tree($tree_id, $start_branch, $user_id, $options) {
 	/* graph permissions */
 	if (read_config_option("auth_method") != 0) {
 		/* get policy information for the sql where clause */
-		$sql_where = get_graph_permissions_sql($current_user["policy_graphs"], $current_user["policy_hosts"], $current_user["policy_graph_templates"]);
+		$sql_where = get_graph_permissions_sql($current_user["policy_graphs"], $current_user["policy_devices"], $current_user["policy_graph_templates"]);
 		$sql_where = (empty($sql_where) ? "" : "and (" . $sql_where . " OR graph_tree_items.local_graph_id=0)");
 		$sql_join = "left join graph_local on (graph_templates_graph.local_graph_id=graph_local.id)
 			left join graph_templates on (graph_templates.id=graph_local.graph_template_id)
-			left join user_auth_perms on ((graph_templates_graph.local_graph_id=user_auth_perms.item_id and user_auth_perms.type=" . PERM_GRAPHS . " and user_auth_perms.user_id=" . $_SESSION["sess_user_id"] . ") OR (host.id=user_auth_perms.item_id and user_auth_perms.type=" . PERM_DEVICES . " and user_auth_perms.user_id=" . $_SESSION["sess_user_id"] . ") OR (graph_templates.id=user_auth_perms.item_id and user_auth_perms.type=" . PERM_GRAPH_TEMPLATES . " and user_auth_perms.user_id=" . $_SESSION["sess_user_id"] . "))";
+			left join user_auth_perms on ((graph_templates_graph.local_graph_id=user_auth_perms.item_id and user_auth_perms.type=" . PERM_GRAPHS . " and user_auth_perms.user_id=" . $_SESSION["sess_user_id"] . ") OR (device.id=user_auth_perms.item_id and user_auth_perms.type=" . PERM_DEVICES . " and user_auth_perms.user_id=" . $_SESSION["sess_user_id"] . ") OR (graph_templates.id=user_auth_perms.item_id and user_auth_perms.type=" . PERM_GRAPH_TEMPLATES . " and user_auth_perms.user_id=" . $_SESSION["sess_user_id"] . "))";
 	}
 
 	/* include time span selector */
@@ -62,15 +62,15 @@ function grow_graph_tree($tree_id, $start_branch, $user_id, $options) {
 		graph_tree_items.title,
 		graph_tree_items.local_graph_id,
 		graph_tree_items.rra_id,
-		graph_tree_items.host_id,
+		graph_tree_items.device_id,
 		graph_tree_items.order_key,
 		graph_templates_graph.title_cache as graph_title,
-		CONCAT_WS('',host.description,' (',host.hostname,')') as hostname,
+		CONCAT_WS('',device.description,' (',device.devicename,')') as devicename,
 		settings_tree.status
 		from graph_tree_items
 		left join graph_templates_graph on (graph_tree_items.local_graph_id=graph_templates_graph.local_graph_id and graph_tree_items.local_graph_id>0)
 		left join settings_tree on (graph_tree_items.id=settings_tree.graph_tree_item_id and settings_tree.user_id=$user_id)
-		left join host on (graph_tree_items.host_id=host.id)
+		left join device on (graph_tree_items.device_id=device.id)
 		$sql_join
 		where graph_tree_items.graph_tree_id=$tree_id
 		and graph_tree_items.order_key like '$search_key%'
@@ -94,31 +94,31 @@ function grow_graph_tree($tree_id, $start_branch, $user_id, $options) {
 				$tier = tree_tier($leaf["order_key"]);
 
 				/* find the type of the current branch */
-				if ($leaf["title"] != "") { $current_leaf_type = "heading"; }elseif (!empty($leaf["local_graph_id"])) { $current_leaf_type = "graph"; }else{ $current_leaf_type = "host"; }
+				if ($leaf["title"] != "") { $current_leaf_type = "heading"; }elseif (!empty($leaf["local_graph_id"])) { $current_leaf_type = "graph"; }else{ $current_leaf_type = "device"; }
 
 				/* find the type of the next branch. make sure the next item exists first */
 				if (isset($hierarchy{$i+1})) {
-					if ($hierarchy{$i+1}["title"] != "") { $next_leaf_type = "heading"; }elseif (!empty($hierarchy{$i+1}["local_graph_id"])) { $next_leaf_type = "graph"; }else{ $next_leaf_type = "host"; }
+					if ($hierarchy{$i+1}["title"] != "") { $next_leaf_type = "heading"; }elseif (!empty($hierarchy{$i+1}["local_graph_id"])) { $next_leaf_type = "graph"; }else{ $next_leaf_type = "device"; }
 				}else{
 					$next_leaf_type = "";
 				}
 
-				if ((($current_leaf_type == 'heading') || ($current_leaf_type == 'host')) && (($tier <= $hide_until_tier) || ($hide_until_tier == false))) {
-					$current_title = (($current_leaf_type == "heading") ? $leaf["title"] : $leaf["hostname"]);
+				if ((($current_leaf_type == 'heading') || ($current_leaf_type == 'device')) && (($tier <= $hide_until_tier) || ($hide_until_tier == false))) {
+					$current_title = (($current_leaf_type == "heading") ? $leaf["title"] : $leaf["devicename"]);
 
 					/* draw heading */
 					draw_tree_header_row($tree_id, $leaf["id"], $tier, $current_title, true, $leaf["status"], true);
 
-					/* this is an open host, lets expand a bit */
-					if (($current_leaf_type == "host") && (empty($leaf["status"]))) {
-						/* get a list of all graph templates in use by this host */
+					/* this is an open device, lets expand a bit */
+					if (($current_leaf_type == "device") && (empty($leaf["status"]))) {
+						/* get a list of all graph templates in use by this device */
 						$graph_templates = db_fetch_assoc("select
 					graph_templates.id,
 					graph_templates.name
 					from (graph_local,graph_templates,graph_templates_graph)
 					where graph_local.id=graph_templates_graph.local_graph_id
 					and graph_templates_graph.graph_template_id=graph_templates.id
-					and graph_local.host_id=" . $leaf["host_id"] . "
+					and graph_local.device_id=" . $leaf["device_id"] . "
 					group by graph_templates.id
 					order by graph_templates.name");
 
@@ -126,7 +126,7 @@ function grow_graph_tree($tree_id, $start_branch, $user_id, $options) {
 							foreach ($graph_templates as $graph_template) {
 								draw_tree_header_row($tree_id, $leaf["id"], ($tier+1), $graph_template["name"], false, $leaf["status"], false);
 
-								/* get a list of each graph using this graph template for this particular host */
+								/* get a list of each graph using this graph template for this particular device */
 								$graphs = db_fetch_assoc("select
 						graph_templates_graph.title_cache,
 						graph_templates_graph.local_graph_id
@@ -134,7 +134,7 @@ function grow_graph_tree($tree_id, $start_branch, $user_id, $options) {
 						where graph_local.id=graph_templates_graph.local_graph_id
 						and graph_templates_graph.graph_template_id=graph_templates.id
 						and graph_local.graph_template_id=" . $graph_template["id"] . "
-						and graph_local.host_id=" . $leaf["host_id"] . "
+						and graph_local.device_id=" . $leaf["device_id"] . "
 						order by graph_templates_graph.title_cache");
 
 								$graph_ct = 0;
@@ -193,14 +193,14 @@ function grow_edit_graph_tree($tree_id, $user_id, $options) {
 		graph_tree_items.title,
 		graph_tree_items.graph_tree_id,
 		graph_tree_items.local_graph_id,
-		graph_tree_items.host_id,
+		graph_tree_items.device_id,
 		graph_tree_items.order_key,
 		graph_tree_items.sort_children_type,
 		graph_templates_graph.title_cache as graph_title,
-		CONCAT_WS('',description,' (',hostname,')') as hostname
+		CONCAT_WS('',description,' (',devicename,')') as devicename
 		from graph_tree_items
 		left join graph_templates_graph on (graph_tree_items.local_graph_id=graph_templates_graph.local_graph_id and graph_tree_items.local_graph_id>0)
-		left join host on (host.id=graph_tree_items.host_id)
+		left join device on (device.id=graph_tree_items.device_id)
 		where graph_tree_items.graph_tree_id=$tree_id
 		order by graph_tree_id, graph_tree_items.order_key");
 
@@ -239,12 +239,12 @@ function grow_edit_graph_tree($tree_id, $user_id, $options) {
 					print "<td bgcolor='#$row_color'>$transparent_indent<a href='" . htmlspecialchars("tree.php?action=edit&id=" . $_GET["id"] . "&leaf_id=" . $leaf["id"] . "&subaction=change") . "'><img src='" . $icon . "' alt=''></a><a href='" . htmlspecialchars("tree.php?action=item_edit&tree_id=" . $_GET["id"] . "&id=" . $leaf["id"]) . "'>&nbsp;<strong>" . $leaf["title"] . "</strong></a> (<a href='" . htmlspecialchars("tree.php?action=item_edit&tree_id=" . $_GET["id"] . "&parent_id=" . $leaf["id"]) . "'>Add</a>)</td>\n";
 					print "<td bgcolor='#$row_color'>Heading</td>";
 				}
-			}elseif ($leaf["host_id"] > 0) {
+			}elseif ($leaf["device_id"] > 0) {
 				if ($visible) {
-					#				print "<td bgcolor='#$row_color' bgcolor='#" . $colors["panel"] . "'>$transparent_indent<a href='" . htmlspecialchars("tree.php?action=item_edit&tree_id=" . $_GET["id"] . "&id=" . $leaf["id"]) . "'><strong>Host:</strong> " . $leaf["hostname"] . "</a>&nbsp;<a href='" . htmlspecialchars("devices.php?action=edit&id=" . $leaf["host_id"]) . "'>(Edit host)</a></td>\n";
+					#				print "<td bgcolor='#$row_color' bgcolor='#" . $colors["panel"] . "'>$transparent_indent<a href='" . htmlspecialchars("tree.php?action=item_edit&tree_id=" . $_GET["id"] . "&id=" . $leaf["id"]) . "'><strong>Host:</strong> " . $leaf["devicename"] . "</a>&nbsp;<a href='" . htmlspecialchars("devices.php?action=edit&id=" . $leaf["device_id"]) . "'>(Edit device)</a></td>\n";
 					#				print "<td bgcolor='#$row_color' bgcolor='#" . $colors["panel"] . "'>Host</td>";
 					print "<tr>";
-					print "<td bgcolor='#$row_color'>$transparent_indent<a href='" . htmlspecialchars("tree.php?action=item_edit&tree_id=" . $_GET["id"] . "&id=" . $leaf["id"]) . "'><strong>Host:</strong> " . $leaf["hostname"] . "</a>&nbsp;<a href='" . htmlspecialchars("devices.php?action=edit&id=" . $leaf["host_id"]) . "'>(Edit host)</a></td>\n";
+					print "<td bgcolor='#$row_color'>$transparent_indent<a href='" . htmlspecialchars("tree.php?action=item_edit&tree_id=" . $_GET["id"] . "&id=" . $leaf["id"]) . "'><strong>Host:</strong> " . $leaf["devicename"] . "</a>&nbsp;<a href='" . htmlspecialchars("devices.php?action=edit&id=" . $leaf["device_id"]) . "'>(Edit device)</a></td>\n";
 					print "<td bgcolor='#$row_color'>Host</td>";
 				}
 			}
@@ -271,7 +271,7 @@ function grow_edit_graph_tree($tree_id, $user_id, $options) {
 
 function set_tree_visibility_status() {
 	if (!isset($_REQUEST["subaction"])) {
-		$headers = db_fetch_assoc("SELECT graph_tree_id, order_key FROM graph_tree_items WHERE host_id='0' AND local_graph_id='0' AND graph_tree_id='" . $_REQUEST["id"] . "'");
+		$headers = db_fetch_assoc("SELECT graph_tree_id, order_key FROM graph_tree_items WHERE device_id='0' AND local_graph_id='0' AND graph_tree_id='" . $_REQUEST["id"] . "'");
 
 		foreach ($headers as $header) {
 			$variable = "sess_tree_leaf_expand_" . $header["graph_tree_id"] . "_" . tree_tier_string($header["order_key"]);
@@ -283,7 +283,7 @@ function set_tree_visibility_status() {
 	}else if ((get_request_var_request("subaction") == "expand_all") ||
 	(get_request_var_request("subaction") == "colapse_all")) {
 
-		$headers = db_fetch_assoc("SELECT graph_tree_id, order_key FROM graph_tree_items WHERE host_id='0' AND local_graph_id='0' AND graph_tree_id='" . $_REQUEST["id"] . "'");
+		$headers = db_fetch_assoc("SELECT graph_tree_id, order_key FROM graph_tree_items WHERE device_id='0' AND local_graph_id='0' AND graph_tree_id='" . $_REQUEST["id"] . "'");
 
 		foreach ($headers as $header) {
 			$variable = "sess_tree_leaf_expand_" . $header["graph_tree_id"] . "_" . tree_tier_string($header["order_key"]);
@@ -431,14 +431,14 @@ function grow_dhtml_trees() {
 	/* get current time */
 	list($micro,$seconds) = explode(" ", microtime());
 	$current_time = $seconds + $micro;
-	$expand_hosts = read_graph_config_option("expand_hosts");
+	$expand_devices = read_graph_config_option("expand_devices");
 
 	if (!isset($_SESSION['dhtml_tree'])) {
 		$dhtml_tree = create_dhtml_tree();
 		$_SESSION['dhtml_tree'] = $dhtml_tree;
 	}else{
 		$dhtml_tree = $_SESSION['dhtml_tree'];
-		if (($dhtml_tree[0] + read_graph_config_option("page_refresh") < $current_time) || ($expand_hosts != $dhtml_tree[1])) {
+		if (($dhtml_tree[0] + read_graph_config_option("page_refresh") < $current_time) || ($expand_devices != $dhtml_tree[1])) {
 			$dhtml_tree = create_dhtml_tree();
 			$_SESSION['dhtml_tree'] = $dhtml_tree;
 		}else{
@@ -465,23 +465,23 @@ function create_dhtml_tree() {
 	$dhtml_tree = array();
 
 	$dhtml_tree[0] = $start;
-	$dhtml_tree[1] = read_graph_config_option("expand_hosts");
+	$dhtml_tree[1] = read_graph_config_option("expand_devices");
 	$dhtml_tree[2] = "\t\tfoldersTree = gFld(\"\", \"\")\n";
 	$dhtml_tree[3] = "\t\t\tfoldersTree.xID = \"root\"\n";
 	$i = 3;
 
 	$tree_list = get_graph_tree_array();
 
-	/* auth check for hosts on the trees */
+	/* auth check for devices on the trees */
 	if (read_config_option("auth_method") != 0) {
-		$current_user = db_fetch_row("select policy_hosts from user_auth where id=" . $_SESSION["sess_user_id"]);
+		$current_user = db_fetch_row("select policy_devices from user_auth where id=" . $_SESSION["sess_user_id"]);
 
-		$sql_join = "left join user_auth_perms on (host.id=user_auth_perms.item_id and user_auth_perms.type=3 and user_auth_perms.user_id=" . $_SESSION["sess_user_id"] . ")";
+		$sql_join = "left join user_auth_perms on (device.id=user_auth_perms.item_id and user_auth_perms.type=3 and user_auth_perms.user_id=" . $_SESSION["sess_user_id"] . ")";
 
-		if ($current_user["policy_hosts"] == "1") {
-			$sql_where = "and !(user_auth_perms.user_id is not null and graph_tree_items.host_id > 0)";
-		}elseif ($current_user["policy_hosts"] == "2") {
-			$sql_where = "and !(user_auth_perms.user_id is null and graph_tree_items.host_id > 0)";
+		if ($current_user["policy_devices"] == "1") {
+			$sql_where = "and !(user_auth_perms.user_id is not null and graph_tree_items.device_id > 0)";
+		}elseif ($current_user["policy_devices"] == "2") {
+			$sql_where = "and !(user_auth_perms.user_id is null and graph_tree_items.device_id > 0)";
 		}
 	}else{
 		$sql_join  = "";
@@ -495,11 +495,11 @@ function create_dhtml_tree() {
 				graph_tree_items.id,
 				graph_tree_items.title,
 				graph_tree_items.order_key,
-				graph_tree_items.host_id,
-				graph_tree_items.host_grouping_type,
-				host.description as hostname
+				graph_tree_items.device_id,
+				graph_tree_items.device_grouping_type,
+				device.description as devicename
 				from graph_tree_items
-				left join host on (host.id=graph_tree_items.host_id)
+				left join device on (device.id=graph_tree_items.device_id)
 				$sql_join
 				where graph_tree_items.graph_tree_id=" . $tree["id"] . "
 				$sql_where
@@ -515,38 +515,38 @@ function create_dhtml_tree() {
 						$i++;
 						$tier = tree_tier($leaf["order_key"]);
 
-						if ($leaf["host_id"] > 0) {
-							$dhtml_tree[$i] = "\t\t\tou" . ($tier) . " = insFld(ou" . abs(($tier-1)) . ", gFld(\"<strong>Host:<\/strong> " . addslashes($leaf["hostname"]) . "\", \"graph_view.php?action=tree&tree_id=" . $tree["id"] . "&leaf_id=" . $leaf["id"] . "\"))\n";
+						if ($leaf["device_id"] > 0) {
+							$dhtml_tree[$i] = "\t\t\tou" . ($tier) . " = insFld(ou" . abs(($tier-1)) . ", gFld(\"<strong>Host:<\/strong> " . addslashes($leaf["devicename"]) . "\", \"graph_view.php?action=tree&tree_id=" . $tree["id"] . "&leaf_id=" . $leaf["id"] . "\"))\n";
 							$i++;
 							$dhtml_tree[$i] = "\t\t\tou" . ($tier) . ".xID = \"tree_" . $tree["id"] . "_leaf_" . $leaf["id"] . "\"\n";
 
-							if (read_graph_config_option("expand_hosts") == CHECKED) {
-								if ($leaf["host_grouping_type"] == HOST_GROUPING_GRAPH_TEMPLATE) {
+							if (read_graph_config_option("expand_devices") == CHECKED) {
+								if ($leaf["device_grouping_type"] == HOST_GROUPING_GRAPH_TEMPLATE) {
 									$graph_templates = db_fetch_assoc("select
 									graph_templates.id,
 									graph_templates.name
 									from (graph_local,graph_templates,graph_templates_graph)
 									where graph_local.id=graph_templates_graph.local_graph_id
 									and graph_templates_graph.graph_template_id=graph_templates.id
-									and graph_local.host_id=" . $leaf["host_id"] . "
+									and graph_local.device_id=" . $leaf["device_id"] . "
 									group by graph_templates.id
 									order by graph_templates.name");
 
 									if (sizeof($graph_templates) > 0) {
 										foreach ($graph_templates as $graph_template) {
 											$i++;
-											$dhtml_tree[$i] = "\t\t\tou" . ($tier+1) . " = insFld(ou" . ($tier) . ", gFld(\" " . addslashes($graph_template["name"]) . "\", \"graph_view.php?action=tree&tree_id=" . $tree["id"] . "&leaf_id=" . $leaf["id"] . "&host_group_data=graph_template:" . $graph_template["id"] . "\"))\n";
+											$dhtml_tree[$i] = "\t\t\tou" . ($tier+1) . " = insFld(ou" . ($tier) . ", gFld(\" " . addslashes($graph_template["name"]) . "\", \"graph_view.php?action=tree&tree_id=" . $tree["id"] . "&leaf_id=" . $leaf["id"] . "&device_group_data=graph_template:" . $graph_template["id"] . "\"))\n";
 											$i++;
 											$dhtml_tree[$i] = "\t\t\tou" . ($tier+1) . ".xID = \"tree_" . $tree["id"] . "_leaf_" . $leaf["id"] . "_hgd_gt_" . $graph_template["id"] . "\"\n";
 										}
 									}
-								}else if ($leaf["host_grouping_type"] == HOST_GROUPING_DATA_QUERY_INDEX) {
+								}else if ($leaf["device_grouping_type"] == HOST_GROUPING_DATA_QUERY_INDEX) {
 									$data_queries = db_fetch_assoc("select
 									snmp_query.id,
 									snmp_query.name
 									from (graph_local,snmp_query)
 									where graph_local.snmp_query_id=snmp_query.id
-									and graph_local.host_id=" . $leaf["host_id"] . "
+									and graph_local.device_id=" . $leaf["device_id"] . "
 									group by snmp_query.id
 									order by snmp_query.name");
 
@@ -558,9 +558,9 @@ function create_dhtml_tree() {
 									if (sizeof($data_queries) > 0) {
 										foreach ($data_queries as $data_query) {
 											/* fetch a list of field names that are sorted by the preferred sort field */
-											$sort_field_data = get_formatted_data_query_indexes($leaf["host_id"], $data_query["id"]);
+											$sort_field_data = get_formatted_data_query_indexes($leaf["device_id"], $data_query["id"]);
 											if ($data_query["id"] == 0) {
-												$non_template_graphs = db_fetch_cell("SELECT COUNT(*) FROM graph_local WHERE host_id='" . $leaf["host_id"] . "' AND snmp_query_id='0'");
+												$non_template_graphs = db_fetch_cell("SELECT COUNT(*) FROM graph_local WHERE device_id='" . $leaf["device_id"] . "' AND snmp_query_id='0'");
 											}else{
 												$non_template_graphs = 0;
 											}
@@ -568,14 +568,14 @@ function create_dhtml_tree() {
 											if ((($data_query["id"] == 0) && ($non_template_graphs > 0)) ||
 											(($data_query["id"] > 0) && (sizeof($sort_field_data) > 0))) {
 												$i++;
-												$dhtml_tree[$i] = "\t\t\tou" . ($tier+1) . " = insFld(ou" . ($tier) . ", gFld(\" " . addslashes($data_query["name"]) . "\", \"graph_view.php?action=tree&tree_id=" . $tree["id"] . "&leaf_id=" . $leaf["id"] . "&host_group_data=data_query:" . $data_query["id"] . "\"))\n";
+												$dhtml_tree[$i] = "\t\t\tou" . ($tier+1) . " = insFld(ou" . ($tier) . ", gFld(\" " . addslashes($data_query["name"]) . "\", \"graph_view.php?action=tree&tree_id=" . $tree["id"] . "&leaf_id=" . $leaf["id"] . "&device_group_data=data_query:" . $data_query["id"] . "\"))\n";
 												$i++;
 												$dhtml_tree[$i] = "\t\t\tou" . ($tier+1) . ".xID = \"tree_" . $tree["id"] . "_leaf_" . $leaf["id"] . "_hgd_dq_" . $data_query["id"] . "\"\n";
 
 												if ($data_query["id"] > 0) {
 													while (list($snmp_index, $sort_field_value) = each($sort_field_data)) {
 														$i++;
-														$dhtml_tree[$i] = "\t\t\tou" . ($tier+2) . " = insFld(ou" . ($tier+1) . ", gFld(\" " . addslashes($sort_field_value) . "\", \"graph_view.php?action=tree&tree_id=" . $tree["id"] . "&leaf_id=" . $leaf["id"] . "&host_group_data=data_query_index:" . $data_query["id"] . ":" . urlencode($snmp_index) . "\"))\n";
+														$dhtml_tree[$i] = "\t\t\tou" . ($tier+2) . " = insFld(ou" . ($tier+1) . ", gFld(\" " . addslashes($sort_field_value) . "\", \"graph_view.php?action=tree&tree_id=" . $tree["id"] . "&leaf_id=" . $leaf["id"] . "&device_group_data=data_query_index:" . $data_query["id"] . ":" . urlencode($snmp_index) . "\"))\n";
 														$i++;
 														$dhtml_tree[$i] = "\t\t\tou" . ($tier+2) . ".xID = \"tree_" . $tree["id"] . "_leaf_" . $leaf["id"] . "_hgd_dqi" . $data_query["id"] . "_" . urlencode($snmp_index) . "\"\n";
 													}
@@ -629,14 +629,14 @@ function tree_authorized($tree_id) {
 	}
 }
 
-function host_authorized($host_id, $user) {
+function device_authorized($device_id, $user) {
 	$auth_sql = db_fetch_cell("SELECT item_id
 		FROM user_auth_perms
 		WHERE type=3
 		AND user_id=" . $user["id"] . "
-		AND item_id=$host_id");
+		AND item_id=$device_id");
 
-	if ($user["policy_hosts"] == 1) {
+	if ($user["policy_devices"] == 1) {
 		if (empty($auth_sql)) {
 			return TRUE;
 		}else{
@@ -753,17 +753,17 @@ function get_trees($tree_id) {
 	return $items;
 }
 
-function get_tree_leaf_items($tree_id, $leaf_id, $host_group_type, $include_parent = false) {
+function get_tree_leaf_items($tree_id, $leaf_id, $device_group_type, $include_parent = false) {
 	global $current_user, $config;
 
 	// prototype
 	// $items = array($tree_id, $leaf_id, $type, $id, $name);
 	// $tree_id = 'Tree where item exists'
 	// $leaf_id = 'Leaf where item exists'
-	// $type = 'graph|host|site|leaf|dqn|dqi|gtn';
-	// $id   = 'local_graph_id|host_id|site_id|leaf_id|dqn_id|dqi_id|gtn_id'
+	// $type = 'graph|device|site|leaf|dqn|dqi|gtn';
+	// $id   = 'local_graph_id|device_id|site_id|leaf_id|dqn_id|dqi_id|gtn_id'
 
-	// the following types are only valid if $host_group_data = true
+	// the following types are only valid if $device_group_data = true
 	// dqn|dqi|gtn
 
 	include(CACTI_BASE_PATH . "/include/global_arrays.php");
@@ -784,7 +784,7 @@ function get_tree_leaf_items($tree_id, $leaf_id, $host_group_type, $include_pare
 		$search_key = "";
 
 		if ($leaf_id > 0) {
-			/* return leaf, site, host, graph template or data query items */
+			/* return leaf, site, device, graph template or data query items */
 			$leaf = db_fetch_row("SELECT *
 				FROM graph_tree_items
 				WHERE id=$leaf_id");
@@ -815,8 +815,8 @@ function get_tree_leaf_items($tree_id, $leaf_id, $host_group_type, $include_pare
 							if (graph_authorized($item["local_graph_id"], $user)) {
 								$new_tree_items[] = $item;
 							}
-						}elseif ($item["host_id"]) {
-							if (host_authorized($item["host_id"], $user)) {
+						}elseif ($item["device_id"]) {
+							if (device_authorized($item["device_id"], $user)) {
 								$new_tree_items[] = $item;
 							}
 						}else{
@@ -844,13 +844,13 @@ function get_tree_leaf_items($tree_id, $leaf_id, $host_group_type, $include_pare
 							"id" => $item["local_graph_id"],
 							"name" => get_graph_title($item["local_graph_id"])
 						);
-					}elseif ($item["host_id"] > 0) {
+					}elseif ($item["device_id"] > 0) {
 						$items[] = array(
 							"tree_id" => $tree_id,
 							"leaf_id" => $item["id"],
-							"type" => 'host',
-							"id" => $item["host_id"],
-							"name" => get_host_description($item["host_id"])
+							"type" => 'device',
+							"id" => $item["device_id"],
+							"name" => get_device_description($item["device_id"])
 						);
 					}else{
 						$items[] = array(
@@ -865,18 +865,18 @@ function get_tree_leaf_items($tree_id, $leaf_id, $host_group_type, $include_pare
 			}
 
 			return $items;
-		}elseif ($leaf_type == "host") {
-			if (read_graph_config_option("expand_hosts") == CHECKED) {
-				if ($leaf["host_grouping_type"] == HOST_GROUPING_GRAPH_TEMPLATE) {
-					if ((isset($host_group_type)) && ($host_group_type[0] != 'gt')) {
-						$items = get_host_grouping_graph_templates($leaf, $user);
+		}elseif ($leaf_type == "device") {
+			if (read_graph_config_option("expand_devices") == CHECKED) {
+				if ($leaf["device_grouping_type"] == HOST_GROUPING_GRAPH_TEMPLATE) {
+					if ((isset($device_group_type)) && ($device_group_type[0] != 'gt')) {
+						$items = get_device_grouping_graph_templates($leaf, $user);
 					}
 				}else{
-					if (isset($host_group_type)) {
-						if (($host_group_type[0] != 'dqi') && ($host_group_type[0] != 'dq')) {
-							$items = get_host_grouping_data_queries($leaf);
-						}elseif ($host_group_type[0] != 'dqi') {
-							$items = get_host_grouping_data_query_items($leaf, $host_group_type);
+					if (isset($device_group_type)) {
+						if (($device_group_type[0] != 'dqi') && ($device_group_type[0] != 'dq')) {
+							$items = get_device_grouping_data_queries($leaf);
+						}elseif ($device_group_type[0] != 'dqi') {
+							$items = get_device_grouping_data_query_items($leaf, $device_group_type);
 						}
 					}
 				}
@@ -891,14 +891,14 @@ function get_tree_leaf_items($tree_id, $leaf_id, $host_group_type, $include_pare
 	}
 }
 
-function get_host_grouping_graph_templates($leaf, $user) {
+function get_device_grouping_graph_templates($leaf, $user) {
 	$graph_templates = db_fetch_assoc("SELECT
 		graph_templates.id,
 		graph_templates.name
 		FROM (graph_local,graph_templates,graph_templates_graph)
 		WHERE graph_local.id=graph_templates_graph.local_graph_id
 		AND graph_templates_graph.graph_template_id=graph_templates.id
-		AND graph_local.host_id=" . $leaf["host_id"] . "
+		AND graph_local.device_id=" . $leaf["device_id"] . "
 		" . (empty($_REQUEST["graph_template_id"]) ? "" : "AND graph_templates.id=$graph_template_id") . "
 		GROUP BY graph_templates.id
 		ORDER BY graph_templates.name");
@@ -929,13 +929,13 @@ function get_host_grouping_graph_templates($leaf, $user) {
 	return $items;
 }
 
-function get_host_grouping_data_queries($leaf) {
+function get_device_grouping_data_queries($leaf) {
 	$data_queries = db_fetch_assoc("SELECT
 		snmp_query.id,
 		snmp_query.name
 		FROM (graph_local,snmp_query)
 		WHERE graph_local.snmp_query_id=snmp_query.id
-		AND graph_local.host_id=" . $leaf["host_id"] . "
+		AND graph_local.device_id=" . $leaf["device_id"] . "
 		" . (!isset($_REQUEST["data_query_id"]) ? "" : "and snmp_query.id=$data_query_id") . "
 		GROUP BY snmp_query.id
 		ORDER BY snmp_query.name");
@@ -963,8 +963,8 @@ function get_host_grouping_data_queries($leaf) {
 	return $items;
 }
 
-function get_host_grouping_data_query_items($leaf, $host_group_data) {
-	$data_query_id = $host_group_data[1];
+function get_device_grouping_data_query_items($leaf, $device_group_data) {
+	$data_query_id = $device_group_data[1];
 	$items = array();
 
 	if ($data_query_id > 0) {
@@ -973,7 +973,7 @@ function get_host_grouping_data_query_items($leaf, $host_group_data) {
 			snmp_query.name
 			FROM (graph_local,snmp_query)
 			WHERE graph_local.snmp_query_id=snmp_query.id
-			AND graph_local.host_id=" . $leaf["host_id"] . "
+			AND graph_local.device_id=" . $leaf["device_id"] . "
 			AND snmp_query.id=$data_query_id
 			GROUP BY snmp_query.id
 			ORDER BY snmp_query.name");
@@ -982,7 +982,7 @@ function get_host_grouping_data_query_items($leaf, $host_group_data) {
 	if (sizeof($data_queries) > 0) {
 	foreach ($data_queries as $data_query) {
 		/* fetch a list of field names that are sorted by the preferred sort field */
-		$sort_field_data = get_formatted_data_query_indexes($leaf["host_id"], $data_query["id"]);
+		$sort_field_data = get_formatted_data_query_indexes($leaf["device_id"], $data_query["id"]);
 
 		if (($data_query["id"] > 0) && (sizeof($sort_field_data) > 0)) {
 			while (list($snmp_index, $sort_field_value) = each($sort_field_data)) {
@@ -1000,7 +1000,7 @@ function get_host_grouping_data_query_items($leaf, $host_group_data) {
 	return $items;
 }
 
-function get_graph_tree_content($tree_id, $leaf_id, $host_group_data) {
+function get_graph_tree_content($tree_id, $leaf_id, $device_group_data) {
 	global $current_user, $colors, $config, $graphs_per_page;
 
 	include(CACTI_BASE_PATH . "/include/global_arrays.php");
@@ -1018,7 +1018,7 @@ function get_graph_tree_content($tree_id, $leaf_id, $host_group_data) {
 	$title_delimeter = "";
 	$search_key      = "";
 
-	$leaf      = db_fetch_row("SELECT order_key, title, host_id, host_grouping_type
+	$leaf      = db_fetch_row("SELECT order_key, title, device_id, device_grouping_type
 					FROM graph_tree_items
 					WHERE id=$leaf_id");
 
@@ -1032,37 +1032,37 @@ function get_graph_tree_content($tree_id, $leaf_id, $host_group_data) {
 	/* graph permissions */
 	if (read_config_option("auth_method") != 0) {
 		/* get policy information for the sql where clause */
-		$sql_where = get_graph_permissions_sql($current_user["policy_graphs"], $current_user["policy_hosts"], $current_user["policy_graph_templates"]);
+		$sql_where = get_graph_permissions_sql($current_user["policy_graphs"], $current_user["policy_devices"], $current_user["policy_graph_templates"]);
 		$sql_where = (empty($sql_where) ? "" : "AND $sql_where");
 		$sql_join = "
-			LEFT JOIN host ON (host.id=graph_local.host_id)
+			LEFT JOIN device ON (device.id=graph_local.device_id)
 			LEFT JOIN graph_templates ON (graph_templates.id=graph_local.graph_template_id)
-			LEFT JOIN user_auth_perms ON ((graph_templates_graph.local_graph_id=user_auth_perms.item_id AND user_auth_perms.type=1 AND user_auth_perms.user_id=" . $_SESSION["sess_user_id"] . ") OR (host.id=user_auth_perms.item_id and user_auth_perms.type=3 and user_auth_perms.user_id=" . $_SESSION["sess_user_id"] . ") OR (graph_templates.id=user_auth_perms.item_id AND user_auth_perms.type=4 AND user_auth_perms.user_id=" . $_SESSION["sess_user_id"] . "))";
+			LEFT JOIN user_auth_perms ON ((graph_templates_graph.local_graph_id=user_auth_perms.item_id AND user_auth_perms.type=1 AND user_auth_perms.user_id=" . $_SESSION["sess_user_id"] . ") OR (device.id=user_auth_perms.item_id and user_auth_perms.type=3 and user_auth_perms.user_id=" . $_SESSION["sess_user_id"] . ") OR (graph_templates.id=user_auth_perms.item_id AND user_auth_perms.type=4 AND user_auth_perms.user_id=" . $_SESSION["sess_user_id"] . "))";
 	}
 
 	/* get information for the headers */
 	if (!empty($tree_id)) { $tree_name = db_fetch_cell("SELECT name FROM graph_tree WHERE id=$tree_id"); }
 	if (!empty($leaf_id)) { $leaf_name = $leaf["title"]; }
-	if (!empty($leaf_id)) { $host_name = db_fetch_cell("SELECT host.description FROM (graph_tree_items,host) WHERE graph_tree_items.host_id=host.id AND graph_tree_items.id=$leaf_id"); }
+	if (!empty($leaf_id)) { $device_name = db_fetch_cell("SELECT device.description FROM (graph_tree_items,device) WHERE graph_tree_items.device_id=device.id AND graph_tree_items.id=$leaf_id"); }
 
-	$host_group_data_array = $host_group_data;
+	$device_group_data_array = $device_group_data;
 
-	if ($host_group_data_array[0] == "gt") {
-		$host_group_data_name = "Graph Template: " . db_fetch_cell("select name from graph_templates where id=" . $host_group_data_array[1]);
-		$graph_template_id = $host_group_data_array[1];
-	}elseif ($host_group_data_array[0] == "dq") {
-		$host_group_data_name = "Graph Template: " . (empty($host_group_data_array[1]) ? "Non Query Based" : db_fetch_cell("select name from snmp_query where id=" . $host_group_data_array[1]));
-		$data_query_id = $host_group_data_array[1];
-	}elseif ($host_group_data_array[0] == "dqi") {
-		$host_group_data_name = "Graph Template: " . (empty($host_group_data_array[1]) ? "Non Query Based" : db_fetch_cell("select name from snmp_query where id=" . $host_group_data_array[1])) . "-> " . (empty($host_group_data_array[2]) ? "Template Based" : get_formatted_data_query_index($leaf["host_id"], $host_group_data_array[1], $host_group_data_array[2]));
-		$data_query_id = $host_group_data_array[1];
-		$data_query_index = $host_group_data_array[2];
+	if ($device_group_data_array[0] == "gt") {
+		$device_group_data_name = "Graph Template: " . db_fetch_cell("select name from graph_templates where id=" . $device_group_data_array[1]);
+		$graph_template_id = $device_group_data_array[1];
+	}elseif ($device_group_data_array[0] == "dq") {
+		$device_group_data_name = "Graph Template: " . (empty($device_group_data_array[1]) ? "Non Query Based" : db_fetch_cell("select name from snmp_query where id=" . $device_group_data_array[1]));
+		$data_query_id = $device_group_data_array[1];
+	}elseif ($device_group_data_array[0] == "dqi") {
+		$device_group_data_name = "Graph Template: " . (empty($device_group_data_array[1]) ? "Non Query Based" : db_fetch_cell("select name from snmp_query where id=" . $device_group_data_array[1])) . "-> " . (empty($device_group_data_array[2]) ? "Template Based" : get_formatted_data_query_index($leaf["device_id"], $device_group_data_array[1], $device_group_data_array[2]));
+		$data_query_id = $device_group_data_array[1];
+		$data_query_index = $device_group_data_array[2];
 	}
 
 	if (!empty($tree_name)) { $title .= $title_delimeter . "<strong>Tree:</strong> $tree_name"; $title_delimeter = "-> "; }
 	if (!empty($leaf_name)) { $title .= $title_delimeter . "<strong.Leaf:</strong> $leaf_name"; $title_delimeter = "-> "; }
-	if (!empty($host_name)) { $title .= $title_delimeter . "<strong>Host:</strong> $host_name"; $title_delimeter = "-> "; }
-	if (!empty($host_group_data_name)) { $title .= $title_delimeter . " $host_group_data_name"; $title_delimeter = "-> "; }
+	if (!empty($device_name)) { $title .= $title_delimeter . "<strong>Host:</strong> $device_name"; $title_delimeter = "-> "; }
+	if (!empty($device_group_data_name)) { $title .= $title_delimeter . " $device_group_data_name"; $title_delimeter = "-> "; }
 
 	/* ================= input validation ================= */
 	input_validate_input_number(get_request_var_request("graphs"));
@@ -1102,12 +1102,12 @@ function get_graph_tree_content($tree_id, $leaf_id, $host_group_data) {
 	}
 	$_SESSION["sess_graph_view_leaf_id"] = $leaf_id;
 
-	if (isset($_SESSION["sess_graph_view_host_group_data"])) {
-		if ($_SESSION["sess_graph_view_host_group_data"] != $host_group_data) {
+	if (isset($_SESSION["sess_graph_view_device_group_data"])) {
+		if ($_SESSION["sess_graph_view_device_group_data"] != $device_group_data) {
 			$changed += 1;
 		}
 	}
-	$_SESSION["sess_graph_view_host_group_data"] = $host_group_data;
+	$_SESSION["sess_graph_view_device_group_data"] = $device_group_data;
 
 	if ($changed) {
 		$_REQUEST["page"] = 1;
@@ -1144,16 +1144,16 @@ function get_graph_tree_content($tree_id, $leaf_id, $host_group_data) {
 			$sql_where
 			GROUP BY graph_tree_items.id
 			ORDER BY graph_tree_items.order_key");
-	}elseif ($leaf_type == "host") {
+	}elseif ($leaf_type == "device") {
 		/* graph template grouping */
-		if ($leaf["host_grouping_type"] == HOST_GROUPING_GRAPH_TEMPLATE) {
+		if ($leaf["device_grouping_type"] == HOST_GROUPING_GRAPH_TEMPLATE) {
 			$graph_templates = db_fetch_assoc("SELECT
 				graph_templates.id,
 				graph_templates.name
 				FROM (graph_local,graph_templates,graph_templates_graph)
 				WHERE graph_local.id=graph_templates_graph.local_graph_id
 				AND graph_templates_graph.graph_template_id=graph_templates.id
-				AND graph_local.host_id=" . $leaf["host_id"] . "
+				AND graph_local.device_id=" . $leaf["device_id"] . "
 				" . (empty($graph_template_id) ? "" : "AND graph_templates.id=$graph_template_id") . "
 				GROUP BY graph_templates.id
 				ORDER BY graph_templates.name");
@@ -1179,7 +1179,7 @@ function get_graph_tree_content($tree_id, $leaf_id, $host_group_data) {
 						$sql_join
 						WHERE graph_local.id=graph_templates_graph.local_graph_id
 						AND graph_local.graph_template_id=" . $graph_template["id"] . "
-						AND graph_local.host_id=" . $leaf["host_id"] . "
+						AND graph_local.device_id=" . $leaf["device_id"] . "
 						$sql_where
 						ORDER BY graph_templates_graph.title_cache");
 
@@ -1195,13 +1195,13 @@ function get_graph_tree_content($tree_id, $leaf_id, $host_group_data) {
 				}
 			}
 			/* data query index grouping */
-		}elseif ($leaf["host_grouping_type"] == HOST_GROUPING_DATA_QUERY_INDEX) {
+		}elseif ($leaf["device_grouping_type"] == HOST_GROUPING_DATA_QUERY_INDEX) {
 			$data_queries = db_fetch_assoc("SELECT
 				snmp_query.id,
 				snmp_query.name
 				FROM (graph_local,snmp_query)
 				WHERE graph_local.snmp_query_id=snmp_query.id
-				AND graph_local.host_id=" . $leaf["host_id"] . "
+				AND graph_local.device_id=" . $leaf["device_id"] . "
 				" . (!isset($data_query_id) ? "" : "and snmp_query.id=$data_query_id") . "
 				GROUP BY snmp_query.id
 				ORDER BY snmp_query.name");
@@ -1217,7 +1217,7 @@ function get_graph_tree_content($tree_id, $leaf_id, $host_group_data) {
 			if (sizeof($data_queries) > 0) {
 				foreach ($data_queries as $data_query) {
 					/* fetch a list of field names that are sorted by the preferred sort field */
-					$sort_field_data = get_formatted_data_query_indexes($leaf["host_id"], $data_query["id"]);
+					$sort_field_data = get_formatted_data_query_indexes($leaf["device_id"], $data_query["id"]);
 
 					if (strlen(get_request_var_request("filter"))) {
 						$sql_where = "AND (title_cache LIKE '%" . $_REQUEST["filter"] . "%')";
@@ -1234,7 +1234,7 @@ function get_graph_tree_content($tree_id, $leaf_id, $host_group_data) {
 						$sql_join
 						WHERE graph_local.id=graph_templates_graph.local_graph_id
 						AND graph_local.snmp_query_id=" . $data_query["id"] . "
-						AND graph_local.host_id=" . $leaf["host_id"] . "
+						AND graph_local.device_id=" . $leaf["device_id"] . "
 						" . (empty($data_query_index) ? "" : "and graph_local.snmp_index='$data_query_index'") . "
 						$sql_where
 						GROUP BY graph_templates_graph.local_graph_id
@@ -1379,7 +1379,7 @@ function find_first_folder_url() {
 		/* find the first clickable item in the tree */
 		$hierarchy = db_fetch_assoc("select
 			graph_tree_items.id,
-			graph_tree_items.host_id
+			graph_tree_items.device_id
 			from graph_tree_items
 			where graph_tree_items.graph_tree_id=$use_tree_id
 			and graph_tree_items.local_graph_id = 0

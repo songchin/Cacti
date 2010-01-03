@@ -21,7 +21,7 @@ if (!isset($called_by_script_server)) {
 }
 //End header.
 
-function ss_fping($hostname, $ping_sweeps=6, $ping_type="ICMP", $port=80) {
+function ss_fping($devicename, $ping_sweeps=6, $ping_type="ICMP", $port=80) {
 	/* record start time */
 	list($micro,$seconds) = explode(" ", microtime());
 	$ss_fping_start = $seconds + $micro;
@@ -32,7 +32,7 @@ function ss_fping($hostname, $ping_sweeps=6, $ping_type="ICMP", $port=80) {
 	$total_time = 0;
 	$failed_results = 0;
 
-	$ping->host["hostname"] = gethostbyname($hostname);
+	$ping->device["devicename"] = gethostbyname($devicename);
 	$ping->retries = 1;
 	$ping->port = $port;
 	$max = 0.0;

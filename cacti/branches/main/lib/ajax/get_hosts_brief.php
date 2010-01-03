@@ -30,29 +30,29 @@ if (isset($_REQUEST["q"])) {
 	$q = strtolower(sanitize_search_string(get_request_var("q")));
 } else return;
 
-$host_perms = db_fetch_cell("SELECT policy_hosts FROM user_auth WHERE id=" . $_SESSION["sess_user_id"]);
+$device_perms = db_fetch_cell("SELECT policy_devices FROM user_auth WHERE id=" . $_SESSION["sess_user_id"]);
 
-if ($host_perms == 1) {
+if ($device_perms == 1) {
 	$sql = "SELECT id, description as name
-		FROM host
-		WHERE (hostname LIKE '%$q%'
+		FROM device
+		WHERE (devicename LIKE '%$q%'
 		OR description LIKE '%$q%')
 		AND id NOT IN (SELECT item_id FROM user_auth_perms WHERE user_auth_perms.type=3 AND user_auth_perms.user_id=" . $_SESSION["sess_user_id"] . ")
-		ORDER BY description,hostname";
+		ORDER BY description,devicename";
 }else{
 	$sql = "SELECT id, description as name
-		FROM host
-		WHERE (hostname LIKE '%$q%'
+		FROM device
+		WHERE (devicename LIKE '%$q%'
 		OR description LIKE '%$q%')
 		AND id IN (SELECT item_id FROM user_auth_perms WHERE user_auth_perms.type=3 AND user_auth_perms.user_id=" . $_SESSION["sess_user_id"] . ")
-		ORDER BY description,hostname";
+		ORDER BY description,devicename";
 }
 
 
-$hosts = db_fetch_assoc($sql);
+$devices = db_fetch_assoc($sql);
 
-if (sizeof($hosts) > 0) {
-	foreach ($hosts as $host) {
-		print $host["name"] . "|" . $host["id"] . "\n";
+if (sizeof($devices) > 0) {
+	foreach ($devices as $device) {
+		print $device["name"] . "|" . $device["id"] . "\n";
 	}
 }

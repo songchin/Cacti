@@ -622,9 +622,9 @@ function data_query_remove($id) {
 
 	db_execute("delete from snmp_query where id=" . $id);
 	db_execute("delete from snmp_query_graph where snmp_query_id=" . $id);
-	db_execute("delete from host_template_snmp_query where snmp_query_id=" . $id);
-	db_execute("delete from host_snmp_query where snmp_query_id=" . $id);
-	db_execute("delete from host_snmp_cache where snmp_query_id=" . $id);
+	db_execute("delete from device_template_snmp_query where snmp_query_id=" . $id);
+	db_execute("delete from device_snmp_query where snmp_query_id=" . $id);
+	db_execute("delete from device_snmp_cache where snmp_query_id=" . $id);
 }
 
 function data_query_edit() {

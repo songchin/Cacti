@@ -37,8 +37,8 @@ function repopulate_poller_cache() {
 	}
 }
 
-function update_poller_cache_from_query($host_id, $data_query_id) {
-	$poller_data = db_fetch_assoc("select id from data_local where host_id = '$host_id' and snmp_query_id = '$data_query_id'");
+function update_poller_cache_from_query($device_id, $data_query_id) {
+	$poller_data = db_fetch_assoc("select id from data_local where device_id = '$device_id' and snmp_query_id = '$data_query_id'");
 
 	$poller_items = array();
 
@@ -71,7 +71,7 @@ function update_poller_cache($local_data_id, $commit = false) {
 		where data_template_data.data_input_id=data_input.id
 		and data_template_data.local_data_id=$local_data_id");
 
-	$data_source = db_fetch_row("select host_id,snmp_query_id,snmp_index from data_local where id=$local_data_id");
+	$data_source = db_fetch_row("select device_id,snmp_query_id,snmp_index from data_local where id=$local_data_id");
 
 	/* we have to perform some additional sql queries if this is a "query" */
 	if (($data_input["type_id"] == DATA_INPUT_TYPE_SNMP_QUERY) ||
@@ -118,19 +118,19 @@ function update_poller_cache($local_data_id, $commit = false) {
 				$data_source_item_name = "";
 			}
 
-			$poller_items[] = api_poller_cache_item_add($data_source["host_id"], array(), $local_data_id, $data_input["rrd_step"], $action, $data_source_item_name, 1, addslashes($script_path));
+			$poller_items[] = api_poller_cache_item_add($data_source["device_id"], array(), $local_data_id, $data_input["rrd_step"], $action, $data_source_item_name, 1, addslashes($script_path));
 		}else if ($data_input["type_id"] == DATA_INPUT_TYPE_SNMP) { /* snmp */
-			/* get the host override fields */
+			/* get the device override fields */
 			$data_template_id = db_fetch_cell("SELECT data_template_id FROM data_template_data WHERE local_data_id=$local_data_id");
 
-			/* get host fields first */
-			$host_fields = array_rekey(db_fetch_assoc("SELECT
+			/* get device fields first */
+			$device_fields = array_rekey(db_fetch_assoc("SELECT
 				data_input_fields.type_code,
 				data_input_data.value
 				FROM data_input_fields
 				LEFT JOIN data_input_data
 				ON (data_input_fields.id=data_input_data.data_input_field_id and data_input_data.data_template_data_id=" . $data_input["data_template_data_id"] . ")
-				WHERE ((type_code LIKE 'snmp_%') OR (type_code='hostname'))
+				WHERE ((type_code LIKE 'snmp_%') OR (type_code='devicename'))
 				AND data_input_data.value != ''"), "type_code", "value");
 
 			$data_template_fields = array_rekey(db_fetch_assoc("SELECT
@@ -139,39 +139,39 @@ function update_poller_cache($local_data_id, $commit = false) {
 				FROM data_input_fields
 				LEFT JOIN data_input_data
 				ON (data_input_fields.id=data_input_data.data_input_field_id and data_input_data.data_template_data_id=$data_template_id)
-				WHERE ((type_code LIKE 'snmp_%') OR (type_code='hostname'))
+				WHERE ((type_code LIKE 'snmp_%') OR (type_code='devicename'))
 				AND data_template_data_id=$data_template_id
 				AND data_input_data.value != ''"), "type_code", "value");
 
-			if (sizeof($host_fields)) {
+			if (sizeof($device_fields)) {
 				if (sizeof($data_template_fields)) {
 				foreach($data_template_fields as $key => $value) {
-					if (!isset($host_fields[$key])) {
-						$host_fields[$key] = $value;
+					if (!isset($device_fields[$key])) {
+						$device_fields[$key] = $value;
 					}
 				}
 				}
 			} elseif (sizeof($data_template_fields)) {
-				$host_fields = $data_template_fields;
+				$device_fields = $data_template_fields;
 			}
 
 			$data_template_rrd_id = db_fetch_cell("select id from data_template_rrd where local_data_id=$local_data_id");
 
-			$poller_items[] = api_poller_cache_item_add($data_source["host_id"], $host_fields, $local_data_id, $data_input["rrd_step"], 0, get_data_source_item_name($data_template_rrd_id), 1, (isset($host_fields["snmp_oid"]) ? $host_fields["snmp_oid"] : ""));
+			$poller_items[] = api_poller_cache_item_add($data_source["device_id"], $device_fields, $local_data_id, $data_input["rrd_step"], 0, get_data_source_item_name($data_template_rrd_id), 1, (isset($device_fields["snmp_oid"]) ? $device_fields["snmp_oid"] : ""));
 		}else if ($data_input["type_id"] == DATA_INPUT_TYPE_SNMP_QUERY) { /* snmp query */
 			$snmp_queries = get_data_query_array($data_source["snmp_query_id"]);
 
-			/* get the host override fields */
+			/* get the device override fields */
 			$data_template_id = db_fetch_cell("SELECT data_template_id FROM data_template_data WHERE local_data_id=$local_data_id");
 
-			/* get host fields first */
-			$host_fields = array_rekey(db_fetch_assoc("SELECT
+			/* get device fields first */
+			$device_fields = array_rekey(db_fetch_assoc("SELECT
 				data_input_fields.type_code,
 				data_input_data.value
 				FROM data_input_fields
 				LEFT JOIN data_input_data
 				ON (data_input_fields.id=data_input_data.data_input_field_id and data_input_data.data_template_data_id=" . $data_input["data_template_data_id"] . ")
-				WHERE ((type_code LIKE 'snmp_%') OR (type_code='hostname'))
+				WHERE ((type_code LIKE 'snmp_%') OR (type_code='devicename'))
 				AND data_input_data.value != ''"), "type_code", "value");
 
 			$data_template_fields = array_rekey(db_fetch_assoc("SELECT
@@ -180,20 +180,20 @@ function update_poller_cache($local_data_id, $commit = false) {
 				FROM data_input_fields
 				LEFT JOIN data_input_data
 				ON (data_input_fields.id=data_input_data.data_input_field_id and data_input_data.data_template_data_id=$data_template_id)
-				WHERE ((type_code LIKE 'snmp_%') OR (type_code='hostname'))
+				WHERE ((type_code LIKE 'snmp_%') OR (type_code='devicename'))
 				AND data_template_data_id=$data_template_id
 				AND data_input_data.value != ''"), "type_code", "value");
 
-			if (sizeof($host_fields)) {
+			if (sizeof($device_fields)) {
 				if (sizeof($data_template_fields)) {
 				foreach($data_template_fields as $key => $value) {
-					if (!isset($host_fields[$key])) {
-						$host_fields[$key] = $value;
+					if (!isset($device_fields[$key])) {
+						$device_fields[$key] = $value;
 					}
 				}
 				}
 			} elseif (sizeof($data_template_fields)) {
-				$host_fields = $data_template_fields;
+				$device_fields = $data_template_fields;
 			}
 
 			if (sizeof($outputs) > 0) {
@@ -201,7 +201,7 @@ function update_poller_cache($local_data_id, $commit = false) {
 				if (isset($snmp_queries["fields"]{$output["snmp_field_name"]}["oid"])) {
 					$oid_suffix = $data_source["snmp_index"];
 					if(isset($snmp_queries["fields"]{$output["snmp_field_name"]}["rewrite_index"])){
-						$oid_suffix = data_query_rewrite_indexes($errmsg, $data_source["host_id"], $data_source["snmp_query_id"], $snmp_queries["fields"]{$output["snmp_field_name"]}["rewrite_index"], $oid_suffix);
+						$oid_suffix = data_query_rewrite_indexes($errmsg, $data_source["device_id"], $data_source["snmp_query_id"], $snmp_queries["fields"]{$output["snmp_field_name"]}["rewrite_index"], $oid_suffix);
 						if($oid_suffix == NULL){ // rewriting index failed for some reason
 							if(sizeof($errmsg)){
 								foreach($errmsg as $message){
@@ -219,24 +219,24 @@ function update_poller_cache($local_data_id, $commit = false) {
 				}
 
 				if (!empty($oid)) {
-					$poller_items[] = api_poller_cache_item_add($data_source["host_id"], $host_fields, $local_data_id, $data_input["rrd_step"], 0, get_data_source_item_name($output["data_template_rrd_id"]), sizeof($outputs), $oid);
+					$poller_items[] = api_poller_cache_item_add($data_source["device_id"], $device_fields, $local_data_id, $data_input["rrd_step"], 0, get_data_source_item_name($output["data_template_rrd_id"]), sizeof($outputs), $oid);
 				}
 			}
 			}
 		}else if (($data_input["type_id"] == DATA_INPUT_TYPE_SCRIPT_QUERY) || ($data_input["type_id"] == DATA_INPUT_TYPE_QUERY_SCRIPT_SERVER)) { /* script query */
 			$script_queries = get_data_query_array($data_source["snmp_query_id"]);
 
-			/* get the host override fields */
+			/* get the device override fields */
 			$data_template_id = db_fetch_cell("SELECT data_template_id FROM data_template_data WHERE local_data_id=$local_data_id");
 
-			/* get host fields first */
-			$host_fields = array_rekey(db_fetch_assoc("SELECT
+			/* get device fields first */
+			$device_fields = array_rekey(db_fetch_assoc("SELECT
 				data_input_fields.type_code,
 				data_input_data.value
 				FROM data_input_fields
 				LEFT JOIN data_input_data
 				ON (data_input_fields.id=data_input_data.data_input_field_id and data_input_data.data_template_data_id=" . $data_input["data_template_data_id"] . ")
-				WHERE ((type_code LIKE 'snmp_%') OR (type_code='hostname'))
+				WHERE ((type_code LIKE 'snmp_%') OR (type_code='devicename'))
 				AND data_input_data.value != ''"), "type_code", "value");
 
 			$data_template_fields = array_rekey(db_fetch_assoc("SELECT
@@ -245,20 +245,20 @@ function update_poller_cache($local_data_id, $commit = false) {
 				FROM data_input_fields
 				LEFT JOIN data_input_data
 				ON (data_input_fields.id=data_input_data.data_input_field_id and data_input_data.data_template_data_id=$data_template_id)
-				WHERE ((type_code LIKE 'snmp_%') OR (type_code='hostname'))
+				WHERE ((type_code LIKE 'snmp_%') OR (type_code='devicename'))
 				AND data_template_data_id=$data_template_id
 				AND data_input_data.value != ''"), "type_code", "value");
 
-			if (sizeof($host_fields)) {
+			if (sizeof($device_fields)) {
 				if (sizeof($data_template_fields)) {
 				foreach($data_template_fields as $key => $value) {
-					if (!isset($host_fields[$key])) {
-						$host_fields[$key] = $value;
+					if (!isset($device_fields[$key])) {
+						$device_fields[$key] = $value;
 					}
 				}
 				}
 			} elseif (sizeof($data_template_fields)) {
-				$host_fields = $data_template_fields;
+				$device_fields = $data_template_fields;
 			}
 
 			if (sizeof($outputs) > 0) {
@@ -269,18 +269,18 @@ function update_poller_cache($local_data_id, $commit = false) {
 						/* fall back to non-script server actions if the user is running a version of php older than 4.3 */
 						if (($data_input["type_id"] == DATA_INPUT_TYPE_QUERY_SCRIPT_SERVER) && (function_exists("proc_open"))) {
 							$action = POLLER_ACTION_SCRIPT_PHP;
-							$script_path = get_script_query_path((isset($script_queries["arg_prepend"]) ? $script_queries["arg_prepend"] : "") . " " . $script_queries["arg_get"] . " " . $identifier . " " . $data_source["snmp_index"], $script_queries["script_path"] . " " . $script_queries["script_function"], $data_source["host_id"]);
+							$script_path = get_script_query_path((isset($script_queries["arg_prepend"]) ? $script_queries["arg_prepend"] : "") . " " . $script_queries["arg_get"] . " " . $identifier . " " . $data_source["snmp_index"], $script_queries["script_path"] . " " . $script_queries["script_function"], $data_source["device_id"]);
 						}else if (($data_input["type_id"] == DATA_INPUT_TYPE_QUERY_SCRIPT_SERVER) && (!function_exists("proc_open"))) {
 							$action = POLLER_ACTION_SCRIPT;
-							$script_path = read_config_option("path_php_binary") . " -q " . get_script_query_path((isset($script_queries["arg_prepend"]) ? $script_queries["arg_prepend"] : "") . " " . $script_queries["arg_get"] . " " . $identifier . " " . $data_source["snmp_index"], $script_queries["script_path"], $data_source["host_id"]);
+							$script_path = read_config_option("path_php_binary") . " -q " . get_script_query_path((isset($script_queries["arg_prepend"]) ? $script_queries["arg_prepend"] : "") . " " . $script_queries["arg_get"] . " " . $identifier . " " . $data_source["snmp_index"], $script_queries["script_path"], $data_source["device_id"]);
 						}else{
 							$action = POLLER_ACTION_SCRIPT;
-							$script_path = get_script_query_path((isset($script_queries["arg_prepend"]) ? $script_queries["arg_prepend"] : "") . " " . $script_queries["arg_get"] . " " . $identifier . " " . $data_source["snmp_index"], $script_queries["script_path"], $data_source["host_id"]);
+							$script_path = get_script_query_path((isset($script_queries["arg_prepend"]) ? $script_queries["arg_prepend"] : "") . " " . $script_queries["arg_get"] . " " . $identifier . " " . $data_source["snmp_index"], $script_queries["script_path"], $data_source["device_id"]);
 						}
 					}
 
 					if (isset($script_path)) {
-						$poller_items[] = api_poller_cache_item_add($data_source["host_id"], $host_fields, $local_data_id, $data_input["rrd_step"], $action, get_data_source_item_name($output["data_template_rrd_id"]), sizeof($outputs), addslashes($script_path));
+						$poller_items[] = api_poller_cache_item_add($data_source["device_id"], $device_fields, $local_data_id, $data_input["rrd_step"], $action, get_data_source_item_name($output["data_template_rrd_id"]), sizeof($outputs), addslashes($script_path));
 					}
 				}
 			}
@@ -331,13 +331,13 @@ function poller_update_poller_cache_from_buffer($local_data_ids, &$poller_items)
 	}
 
 	/* setup the database call */
-	$sql_prefix   = "INSERT INTO poller_item (local_data_id, poller_id, host_id, action, hostname, " .
+	$sql_prefix   = "INSERT INTO poller_item (local_data_id, poller_id, device_id, action, devicename, " .
 			"snmp_community, snmp_version, snmp_timeout, snmp_username, snmp_password, " .
 			"snmp_auth_protocol, snmp_priv_passphrase, snmp_priv_protocol, snmp_context, " .
 			"snmp_port, rrd_name, rrd_path, rrd_num, rrd_step, rrd_next_step, arg1, arg2, arg3, present) " .
 			"VALUES";
 
-	$sql_suffix   = " ON DUPLICATE KEY UPDATE poller_id=VALUES(poller_id), host_id=VALUES(host_id), action=VALUES(action), hostname=VALUES(hostname), " .
+	$sql_suffix   = " ON DUPLICATE KEY UPDATE poller_id=VALUES(poller_id), device_id=VALUES(device_id), action=VALUES(action), devicename=VALUES(devicename), " .
 		"snmp_community=VALUES(snmp_community), snmp_version=VALUES(snmp_version), snmp_timeout=VALUES(snmp_timeout), " .
 		"snmp_username=VALUES(snmp_username), snmp_password=VALUES(snmp_password), snmp_auth_protocol=VALUES(snmp_auth_protocol), " .
 		"snmp_priv_passphrase=VALUES(snmp_priv_passphrase), snmp_priv_protocol=VALUES(snmp_priv_protocol), " .
@@ -387,22 +387,22 @@ function poller_update_poller_cache_from_buffer($local_data_ids, &$poller_items)
 	db_execute("DELETE FROM poller_item WHERE present='0'");
 }
 
-function push_out_host($host_id, $local_data_id = 0, $data_template_id = 0) {
-	/* ok here's the deal: first we need to find every data source that uses this host.
+function push_out_device($device_id, $local_data_id = 0, $data_template_id = 0) {
+	/* ok here's the deal: first we need to find every data source that uses this device.
 	then we go through each of those data sources, finding each one using a data input method
-	with "special fields". if we find one, fill it will the data here from this host */
+	with "special fields". if we find one, fill it will the data here from this device */
 	/* setup the poller items array */
 	$poller_items   = array();
 	$local_data_ids = array();
-	$hosts          = array();
+	$devices          = array();
 	$sql_where      = "";
 
-	/* setup the sql where, and if using a host, get it's host information */
-	if ($host_id != 0) {
-		/* get all information about this host so we can write it to the data source */
-		$hosts[$host_id] = db_fetch_row("select * from host where id=$host_id");
+	/* setup the sql where, and if using a device, get it's device information */
+	if ($device_id != 0) {
+		/* get all information about this device so we can write it to the data source */
+		$devices[$device_id] = db_fetch_row("select * from device where id=$device_id");
 
-		$sql_where .= " AND data_local.host_id=$host_id";
+		$sql_where .= " AND data_local.device_id=$device_id";
 	}
 
 	/* sql where fom local_data_id */
@@ -420,7 +420,7 @@ function push_out_host($host_id, $local_data_id = 0, $data_template_id = 0) {
 		data_template_data.data_input_id,
 		data_template_data.local_data_id,
 		data_template_data.local_data_template_data_id,
-		data_local.host_id
+		data_local.device_id
 		FROM (data_local, data_template_data)
 		WHERE data_local.id=data_template_data.local_data_id
 		AND data_template_data.data_input_id>0
@@ -429,11 +429,11 @@ function push_out_host($host_id, $local_data_id = 0, $data_template_id = 0) {
 	/* loop through each matching data source */
 	if (sizeof($data_sources) > 0) {
 	foreach ($data_sources as $data_source) {
-		/* set the host information */
-		if (!isset($hosts[$data_source["host_id"]])) {
-			$hosts[$data_source["host_id"]] = db_fetch_row("select * from host where id=" . $data_source["host_id"]);
+		/* set the device information */
+		if (!isset($devices[$data_source["device_id"]])) {
+			$devices[$data_source["device_id"]] = db_fetch_row("select * from device where id=" . $data_source["device_id"]);
 		}
-		$host = $hosts[$data_source["host_id"]];
+		$device = $devices[$data_source["device_id"]];
 
 		/* get field information from the data template */
 		if (!isset($template_fields{$data_source["local_data_template_data_id"]})) {
@@ -451,14 +451,14 @@ function push_out_host($host_id, $local_data_id = 0, $data_template_id = 0) {
 
 		reset($template_fields{$data_source["local_data_template_data_id"]});
 
-		/* loop through each field contained in the data template and push out a host value if:
-		 - the field is a valid "host field"
+		/* loop through each field contained in the data template and push out a device value if:
+		 - the field is a valid "device field"
 		 - the value of the field is empty
 		 - the field is set to 'templated' */
 		if (sizeof($template_fields{$data_source["local_data_template_data_id"]})) {
 		foreach ($template_fields{$data_source["local_data_template_data_id"]} as $template_field) {
 			if ((preg_match('/^' . VALID_HOST_FIELDS . '$/i', $template_field["type_code"])) && ($template_field["value"] == "") && ($template_field["t_value"] == "")) {
-				db_execute("replace into data_input_data (data_input_field_id,data_template_data_id,value) values (" . $template_field["id"] . "," . $data_source["id"] . ",'" . $host{$template_field["type_code"]} . "')");
+				db_execute("replace into data_input_data (data_input_field_id,data_template_data_id,value) values (" . $template_field["id"] . "," . $data_source["id"] . ",'" . $device{$template_field["type_code"]} . "')");
 			}
 		}
 		}
@@ -485,7 +485,7 @@ function duplicate_graph($_local_graph_id, $_graph_template_id, $graph_title) {
 		/* create new entry: graph_local */
 		$save["id"] = 0;
 		$save["graph_template_id"] = $graph_local["graph_template_id"];
-		$save["host_id"] = $graph_local["host_id"];
+		$save["device_id"] = $graph_local["device_id"];
 		$save["snmp_query_id"] = $graph_local["snmp_query_id"];
 		$save["snmp_index"] = $graph_local["snmp_index"];
 
@@ -592,7 +592,7 @@ function duplicate_data_source($_local_data_id, $_data_template_id, $data_source
 		/* create new entry: data_local */
 		$save["id"] = 0;
 		$save["data_template_id"] = $data_local["data_template_id"];
-		$save["host_id"] = $data_local["host_id"];
+		$save["device_id"] = $data_local["device_id"];
 		$save["snmp_query_id"] = $data_local["snmp_query_id"];
 		$save["snmp_index"] = $data_local["snmp_index"];
 
@@ -683,19 +683,19 @@ function duplicate_data_source($_local_data_id, $_data_template_id, $data_source
 	}
 }
 
-function duplicate_host_template($_host_template_id, $device_template_title) {
+function duplicate_device_template($_device_template_id, $device_template_title) {
 	global $fields_device_template_edit;
 
-	$device_template = db_fetch_row("select * from host_template where id=$_host_template_id");
-	$device_template_graphs = db_fetch_assoc("select * from host_template_graph where host_template_id=$_host_template_id");
-	$device_template_data_queries = db_fetch_assoc("select * from host_template_snmp_query where host_template_id=$_host_template_id");
+	$device_template = db_fetch_row("select * from device_template where id=$_device_template_id");
+	$device_template_graphs = db_fetch_assoc("select * from device_template_graph where device_template_id=$_device_template_id");
+	$device_template_data_queries = db_fetch_assoc("select * from device_template_snmp_query where device_template_id=$_device_template_id");
 
 	/* substitute the title variable */
 	$device_template["name"] = str_replace(__("<template_title>"), $device_template["name"], $device_template_title);
 
-	/* create new entry: host_template */
+	/* create new entry: device_template */
 	$save["id"] = 0;
-	$save["hash"] = get_hash_host_template(0);
+	$save["hash"] = get_hash_device_template(0);
 
 	reset($fields_device_template_edit);
 	while (list($field, $array) = each($fields_device_template_edit)) {
@@ -704,19 +704,19 @@ function duplicate_host_template($_host_template_id, $device_template_title) {
 		}
 	}
 
-	$device_template_id = sql_save($save, "host_template");
+	$device_template_id = sql_save($save, "device_template");
 
-	/* create new entry(s): host_template_graph */
+	/* create new entry(s): device_template_graph */
 	if (sizeof($device_template_graphs) > 0) {
 	foreach ($device_template_graphs as $device_template_graph) {
-		db_execute("insert into host_template_graph (host_template_id,graph_template_id) values ($device_template_id," . $device_template_graph["graph_template_id"] . ")");
+		db_execute("insert into device_template_graph (device_template_id,graph_template_id) values ($device_template_id," . $device_template_graph["graph_template_id"] . ")");
 	}
 	}
 
-	/* create new entry(s): host_template_snmp_query */
+	/* create new entry(s): device_template_snmp_query */
 	if (sizeof($device_template_data_queries) > 0) {
 	foreach ($device_template_data_queries as $device_template_data_query) {
-		db_execute("insert into host_template_snmp_query (host_template_id,snmp_query_id) values ($device_template_id," . $device_template_data_query["snmp_query_id"] . ")");
+		db_execute("insert into device_template_snmp_query (device_template_id,snmp_query_id) values ($device_template_id," . $device_template_data_query["snmp_query_id"] . ")");
 	}
 	}
 }
@@ -730,7 +730,7 @@ function duplicate_cdef($_cdef_id, $cdef_title) {
 	/* substitute the title variable */
 	$cdef["name"] = str_replace(__("<cdef_title>"), $cdef["name"], $cdef_title);
 
-	/* create new entry: host_template */
+	/* create new entry: device_template */
 	$save["id"] = 0;
 	$save["hash"] = get_hash_cdef(0);
 
@@ -766,7 +766,7 @@ function duplicate_xaxis($_xaxis_id, $xaxis_title) {
 	$xaxis = db_fetch_row("select * from graph_templates_xaxis where id=$_xaxis_id");
 	$xaxis_items = db_fetch_assoc("select * from graph_templates_xaxis_items where xaxis_id=$_xaxis_id ORDER BY timespan");
 
-	/* create new entry: host_template */
+	/* create new entry: device_template */
 	$save["id"] = 0;
 	$save["hash"] = get_hash_xaxis(0);
 	/* substitute the title variable */

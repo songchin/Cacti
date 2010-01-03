@@ -42,7 +42,7 @@ $me = array_shift($parms);
 
 if (sizeof($parms)) {
 	$dry_run = "";
-	$host_id = 0;
+	$device_id = 0;
 
 	foreach ($parms as $parameter) {
 		@ list ($arg, $value) = @ explode("=", $parameter);
@@ -53,7 +53,7 @@ if (sizeof($parms)) {
 
 				break;
 			case "--device-id" :
-				$host_id = $value;
+				$device_id = $value;
 
 				break;
 			case "--data-source-id" :
@@ -91,7 +91,7 @@ if (sizeof($parms)) {
 		exit (0);
 	}
 
-	if (isset ($host_id) && ($host_id > 0)) {
+	if (isset ($device_id) && ($device_id > 0)) {
 		if (!isset($snmp_field) || ($snmp_field === 0)) {
 			echo __("ERROR: You must supply a valid --snmp-field") . "\n";
 			echo __("Try php -q graph_list.php --list-snmp-fields") . "\n";
@@ -103,25 +103,25 @@ if (sizeof($parms)) {
 			exit (1);
 		}
 		$data_sources = db_fetch_assoc("SELECT data_local.id " .
-				"FROM      host_snmp_cache " .
-				"LEFT JOIN data_local USING (host_id, snmp_query_id, snmp_index) " .
+				"FROM      device_snmp_cache " .
+				"LEFT JOIN data_local USING (device_id, snmp_query_id, snmp_index) " .
 				"LEFT JOIN data_template_data ON (data_local.id=data_template_data.local_data_id) " .
-				"WHERE     host_snmp_cache.host_id=$host_id " .
-				"AND       host_snmp_cache.field_name='$snmp_field' " .
-				"AND       host_snmp_cache.field_value='$snmp_value' " .
+				"WHERE     device_snmp_cache.device_id=$device_id " .
+				"AND       device_snmp_cache.field_name='$snmp_field' " .
+				"AND       device_snmp_cache.field_value='$snmp_value' " .
 				"AND       data_local.id > 0 " .
 				"ORDER BY  data_local.id");
 
 		if (sizeof($data_sources) > 0) {
 			echo $dry_run;
-		       	printf(__("Removing all Data Sources for Device=%1s, SNMP Field=%2s, SNMP Value=%3d\n"), $host_id, $snmp_field, $snmp_value);
+		       	printf(__("Removing all Data Sources for Device=%1s, SNMP Field=%2s, SNMP Value=%3d\n"), $device_id, $snmp_field, $snmp_value);
 			$i = 0;
 			foreach ($data_sources as $data_source) {
 				remove_data_source($data_source["id"], $dry_run);
 				$i++;
 			}
 			echo $dry_run;
-			printf(__("Removed %4d Data Sources for Device=%1s, SNMP Field=%2s, SNMP Value=%3d\n"), $host_id, $snmp_field, $snmp_value, $i);
+			printf(__("Removed %4d Data Sources for Device=%1s, SNMP Field=%2s, SNMP Value=%3d\n"), $device_id, $snmp_field, $snmp_value, $i);
 		}
 		exit (0);
 	}

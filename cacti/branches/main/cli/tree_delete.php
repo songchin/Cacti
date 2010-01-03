@@ -48,15 +48,15 @@ if (sizeof($parms)) {
 	$sortMethod = 'alpha'; # manual, alpha, natural, numeric
 	$parentNode = 0;   # When creating a node, the parent node of this node (or zero for root-node)
 	$treeId     = 0;   # When creating a node, it has to go in a tree
-	$nodeType   = '';  # Should be 'header', 'graph' or 'host' when creating a node
+	$nodeType   = '';  # Should be 'header', 'graph' or 'device' when creating a node
 	$graphId    = 0;   # The ID of the graph to add (gets added to parentNode)
 	$rra_id     = 1;   # The rra_id for the graph to display: 1 = daily, 2 = weekly, 3 = monthly, 4 = yearly
 
 	$sortMethods = array('manual' => 1, 'alpha' => 2, 'natural' => 4, 'numeric' => 3);
-	$nodeTypes   = array('header' => 1, 'graph' => 2, 'host' => 3);
+	$nodeTypes   = array('header' => 1, 'graph' => 2, 'device' => 3);
 
-	$hostId         = 0;
-	$hostGroupStyle = 1; # 1 = Graph Template,  2 = Data Query Index
+	$deviceId         = 0;
+	$deviceGroupStyle = 1; # 1 = Graph Template,  2 = Data Query Index
 
 	$quietMode      = FALSE;
 	$displayTrees   = FALSE;

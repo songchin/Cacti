@@ -51,7 +51,7 @@ if (sizeof($parms) == 0) {
 
 $debug    = FALSE;
 $template = "";
-$hostid   = "";
+$deviceid   = "";
 
 foreach($parms as $parameter) {
 	@list($arg, $value) = @explode("=", $parameter);
@@ -61,7 +61,7 @@ foreach($parms as $parameter) {
 		$template = $value;
 		break;
 	case "--device-id":
-		$host_id = $value;
+		$device_id = $value;
 		break;
 	case "--list-device-templates":
 		displayHostTemplates(getHostTemplates());
@@ -89,10 +89,10 @@ foreach($parms as $parameter) {
 }
 
 /* determine the devices to reindex */
-if (strtolower($host_id) == "all") {
+if (strtolower($device_id) == "all") {
 	$sql_where = "";
-}else if (is_numeric($host_id)) {
-	$sql_where = " WHERE host_id='$host_id'";
+}else if (is_numeric($device_id)) {
+	$sql_where = " WHERE device_id='$device_id'";
 }else{
 	print "ERROR: You must specify either a --device-id or 'all' to proceed.\n\n";
 	display_help($me);
@@ -101,7 +101,7 @@ if (strtolower($host_id) == "all") {
 
 /* determine data queries to rerun */
 if (is_numeric($template)) {
-	$sql_where .= (strlen($sql_where) ? " AND host_template_id=$template": "WHERE host_template_id=$template");
+	$sql_where .= (strlen($sql_where) ? " AND device_template_id=$template": "WHERE device_template_id=$template");
 }else{
 	print "ERROR: You must specify a Device Template to proceed.\n\n";
 	display_help($me);
@@ -109,35 +109,35 @@ if (is_numeric($template)) {
 }
 
 /* verify that the device template is accurate */
-if (db_fetch_cell("SELECT id FROM host_template WHERE id=$template") > 0) {
-	$hosts = db_fetch_assoc("SELECT * FROM host $sql_where");
+if (db_fetch_cell("SELECT id FROM device_template WHERE id=$template") > 0) {
+	$devices = db_fetch_assoc("SELECT * FROM device $sql_where");
 
-	if (sizeof($hosts)) {
-	foreach($hosts as $host) {
-		echo __("NOTE: Updating Device '") . $host["description"] . "'\n";
+	if (sizeof($devices)) {
+	foreach($devices as $device) {
+		echo __("NOTE: Updating Device '") . $device["description"] . "'\n";
 		$snmp_queries = db_fetch_assoc("SELECT snmp_query_id
-			FROM host_template_snmp_query
-			WHERE host_template_id=" . $host["host_template_id"]);
+			FROM device_template_snmp_query
+			WHERE device_template_id=" . $device["device_template_id"]);
 
 		if (sizeof($snmp_queries) > 0) {
 			echo __("NOTE: Updating Data Queries. There were %d found)", sizeof($snmp_queries)) . "\n";
 			foreach ($snmp_queries as $snmp_query) {
 				echo __("NOTE: Updating Data Query ID ", $snmp_query["snmp_query_id"]) . "'\n";
-				db_execute("REPLACE INTO host_snmp_query (host_id,snmp_query_id,reindex_method)
-					VALUES (" . $host["id"] . ", " . $snmp_query["snmp_query_id"] . "," . DATA_QUERY_AUTOINDEX_BACKWARDS_UPTIME . ")");
+				db_execute("REPLACE INTO device_snmp_query (device_id,snmp_query_id,reindex_method)
+					VALUES (" . $device["id"] . ", " . $snmp_query["snmp_query_id"] . "," . DATA_QUERY_AUTOINDEX_BACKWARDS_UPTIME . ")");
 
 				/* recache snmp data */
-				run_data_query($host["id"], $snmp_query["snmp_query_id"]);
+				run_data_query($device["id"], $snmp_query["snmp_query_id"]);
 			}
 		}
 
-		$graph_templates = db_fetch_assoc("SELECT graph_template_id FROM host_template_graph WHERE host_template_id=" . $host["host_template_id"]);
+		$graph_templates = db_fetch_assoc("SELECT graph_template_id FROM device_template_graph WHERE device_template_id=" . $device["device_template_id"]);
 
 		if (sizeof($graph_templates) > 0) {
 			echo __("NOTE: Updating Graph Templates. There were %d found", sizeof($graph_templates)) . "\n";
 
 			foreach ($graph_templates as $graph_template) {
-				db_execute("REPLACE INTO host_graph (host_id, graph_template_id) VALUES (" . $host["id"] . ", " . $graph_template["graph_template_id"] . ")");
+				db_execute("REPLACE INTO device_graph (device_id, graph_template_id) VALUES (" . $device["id"] . ", " . $graph_template["graph_template_id"] . ")");
 			}
 		}
 	}

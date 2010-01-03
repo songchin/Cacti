@@ -88,7 +88,7 @@ The command line interface scripts are as follows:
   copy_cacti_user.php - Copies users
   poller_output_empty.php - Process orphaned items in the poller_output
                             table
-  poller_reindex_hosts.php - Cause data query reindex on hosts
+  poller_reindex_devices.php - Cause data query reindex on devices
   rebuild_poller_cache.php - Rebuilds the poller cache
   repiar_templates.php     - Certain templates, when created using the "duplicate"
       function in Cacti, do not import/export well.  This utility repairs 
@@ -113,11 +113,11 @@ cacti will then gather this data in a cron-job and populate a MySQL
 database/the round robin archives.
 
 Data Sources can also be created, which correspond to actual data on the
-graph. For instance, if a user would want to graph the ping times to a host,
-you could create a data source utilizing a script that pings a host and returns
+graph. For instance, if a user would want to graph the ping times to a device,
+you could create a data source utilizing a script that pings a device and returns
 it's value in milliseconds. After defining options for RRDTool such as how to
 store the data you will be able to define any additional information that the
-data input source requires, such as a host to ping in this case. Once a data
+data input source requires, such as a device to ping in this case. Once a data
 source is created, it is automatically maintained at 5 minute intervals.
 
 Graphs
@@ -146,8 +146,8 @@ Templating
 Lastly, cacti is able to scale to a large number of data sources and graphs
 through the use of templates. This allows the creation of a single graph or
 data source template which defines any graph or data source associated with it.
-Host templates enable you to define the capabilities of a host so cacti can
-poll it for information upon the addition of a new host.
+Host templates enable you to define the capabilities of a device so cacti can
+poll it for information upon the addition of a new device.
 
 
 

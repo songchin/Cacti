@@ -593,7 +593,7 @@ function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rr
 	$seconds_between_graph_updates = ($ds_step * $rra["steps"]);
 
 	$graph = db_fetch_row("select
-		graph_local.host_id,
+		graph_local.device_id,
 		graph_local.snmp_query_id,
 		graph_local.snmp_index,
 		graph_templates_graph.title_cache,
@@ -718,7 +718,7 @@ function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rr
 
 
 	/* Replace "|query_*|" in the graph command to replace e.g. vertical_label.  */
-	$graph_opts = rrd_substitute_host_query_data($graph_opts, $graph, NULL);
+	$graph_opts = rrd_substitute_device_query_data($graph_opts, $graph, NULL);
 
 
 	/* define some variables */
@@ -837,7 +837,7 @@ function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rr
 				}
 
 				/* data query variables */
-				$graph_variables[$field_name][$graph_item_id] = rrd_substitute_host_query_data($graph_variables[$field_name][$graph_item_id], $graph, $graph_item);
+				$graph_variables[$field_name][$graph_item_id] = rrd_substitute_device_query_data($graph_variables[$field_name][$graph_item_id], $graph, $graph_item);
 
 				/* Nth percentile */
 				if (preg_match_all("/\|([0-9]{1,2}):(bits|bytes):(\d):(current|total|max|total_peak|all_max_current|all_max_peak|aggregate_max|aggregate_sum|aggregate_current|aggregate):(\d)?\|/", $graph_variables[$field_name][$graph_item_id], $matches, PREG_SET_ORDER)) {
@@ -1094,7 +1094,7 @@ function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rr
 			$cdef_string = str_replace("CURRENT_GRAPH_MAXIMUM_VALUE", (empty($graph["upper_limit"]) ? "0" : $graph["upper_limit"]), $cdef_string);
 
 			/* replace query variables in cdefs */
-			$cdef_string = rrd_substitute_host_query_data($cdef_string, $graph, $graph_item);
+			$cdef_string = rrd_substitute_device_query_data($cdef_string, $graph, $graph_item);
 
 			/* make the initial "virtual" cdef name: 'cdef' + [a,b,c,d...] */
 			$cdef_graph_defs .= "CDEF:cdef" . generate_graph_def_name(strval($i)) . "=";
@@ -1171,7 +1171,7 @@ function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rr
 
 		if ($graph_item_types{$graph_item["graph_type_id"]} == "COMMENT") {
 			$comment_string = $graph_item_types{$graph_item["graph_type_id"]} . ":\"" .
-					substr(rrd_substitute_host_query_data(str_replace(":", "\:", $graph_variables["text_format"][$graph_item_id]), $graph, $graph_item),0,198) .
+					substr(rrd_substitute_device_query_data(str_replace(":", "\:", $graph_variables["text_format"][$graph_item_id]), $graph, $graph_item),0,198) .
 					$hardreturn[$graph_item_id] . "\" ";
 			if (trim($comment_string) == 'COMMENT:"\n"') {
 				$txt_graph_items .= 'COMMENT:" \n"'; # rrdtool will skip a COMMENT that holds a NL only; so add a blank to make NL work
@@ -1204,7 +1204,7 @@ function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rr
 			}elseif ($graph_item_types{$graph_item["graph_type_id"]} == "HRULE") {
 				$graph_variables["value"][$graph_item_id] = str_replace(":", "\:", $graph_variables["value"][$graph_item_id]); /* escape colons */
 				/* perform variable substitution; if this does not return a number, rrdtool will FAIL! */
-				$substitute = rrd_substitute_host_query_data($graph_variables["value"][$graph_item_id], $graph, $graph_item);
+				$substitute = rrd_substitute_device_query_data($graph_variables["value"][$graph_item_id], $graph, $graph_item);
 				if (is_numeric($substitute)) {
 					$graph_variables["value"][$graph_item_id] = $substitute;
 				}
@@ -1350,7 +1350,7 @@ function rrdtool_function_xport($local_graph_id, $rra_id, $xport_data_array, &$x
 	}
 
 	$graph = db_fetch_row("select
-		graph_local.host_id,
+		graph_local.device_id,
 		graph_local.snmp_query_id,
 		graph_local.snmp_index,
 		graph_templates_graph.title_cache,
@@ -1527,7 +1527,7 @@ function rrdtool_function_xport($local_graph_id, $rra_id, $xport_data_array, &$x
 				}
 
 				/* data query variables */
-				$xport_variables[$field_name][$xport_item_id] = rrd_substitute_host_query_data($xport_variables[$field_name][$xport_item_id], $graph, $xport_item);
+				$xport_variables[$field_name][$xport_item_id] = rrd_substitute_device_query_data($xport_variables[$field_name][$xport_item_id], $graph, $xport_item);
 
 				/* Nth percentile */
 				if (preg_match_all("/\|([0-9]{1,2}):(bits|bytes):(\d):(current|total|max|total_peak|all_max_current|all_max_peak|aggregate_max|aggregate_sum|aggregate_current|aggregate):(\d)?\|/", $xport_variables[$field_name][$xport_item_id], $matches, PREG_SET_ORDER)) {
@@ -1767,7 +1767,7 @@ function rrdtool_function_xport($local_graph_id, $rra_id, $xport_data_array, &$x
 			$cdef_string = str_replace("CURRENT_GRAPH_MAXIMUM_VALUE", (empty($graph["upper_limit"]) ? "0" : $graph["upper_limit"]), $cdef_string);
 
 			/* replace query variables in cdefs */
-			$cdef_string = rrd_substitute_host_query_data($cdef_string, $graph, $xport_item);
+			$cdef_string = rrd_substitute_device_query_data($cdef_string, $graph, $xport_item);
 
 			/* make the initial "virtual" cdef name: 'cdef' + [a,b,c,d...] */
 			$cdef_xport_defs .= "CDEF:cdef" . generate_graph_def_name(strval($i)) . "=";
@@ -1826,12 +1826,12 @@ function rrdtool_function_xport($local_graph_id, $rra_id, $xport_data_array, &$x
 
 	$xport_array = rrdxport2array(rrdtool_execute("xport $xport_opts$xport_defs$txt_xport_items", false, $output_flag, $rrd_struc));
 
-	/* add host and graph information */
+	/* add device and graph information */
 	$xport_array["meta"]["stacked_columns"]= $stacked_columns;
 	$xport_array["meta"]["title_cache"]    = $graph["title_cache"];
 	$xport_array["meta"]["vertical_label"] = $graph["vertical_label"];
 	$xport_array["meta"]["local_graph_id"] = $local_graph_id;
-	$xport_array["meta"]["host_id"]        = $graph["host_id"];
+	$xport_array["meta"]["device_id"]        = $graph["device_id"];
 
 	return $xport_array;
 }
@@ -1966,25 +1966,25 @@ function rrdtool_set_x_grid($xaxis_id, $start, $end) {
 	return $format;
 }
 
-/* rrd_substitute_host_query_data substitute |host*| and |query*| type variables
+/* rrd_substitute_device_query_data substitute |device*| and |query*| type variables
  * @arg $txt_graph_item 	the variable to be substituted
  * @arg $graph				from table graph_templates_graph
  * @arg $graph_item			from table graph.templates_item
  * returns					variable substituted by value
  */
-function rrd_substitute_host_query_data($txt_graph_item, $graph, $graph_item) {
-	/* replace host variables in graph elements */
-	$txt_graph_item = substitute_host_data($txt_graph_item, '|','|', $graph["host_id"]);
+function rrd_substitute_device_query_data($txt_graph_item, $graph, $graph_item) {
+	/* replace device variables in graph elements */
+	$txt_graph_item = substitute_device_data($txt_graph_item, '|','|', $graph["device_id"]);
 
 	/* replace query variables in graph elements */
 	if (preg_match("/\|query_[a-zA-Z0-9_]+\|/", $txt_graph_item)) {
 		/* default to the graph data query information from the graph */
 		if (empty($graph_item["local_data_id"])) {
-			return substitute_snmp_query_data($txt_graph_item, $graph["host_id"], $graph["snmp_query_id"], $graph["snmp_index"]);
+			return substitute_snmp_query_data($txt_graph_item, $graph["device_id"], $graph["snmp_query_id"], $graph["snmp_index"]);
 		/* use the data query information from the data source if possible */
 		}else{
-			$data_local = db_fetch_row("select snmp_index,snmp_query_id,host_id from data_local where id='" . $graph_item["local_data_id"] . "'");
-			return substitute_snmp_query_data($txt_graph_item, $data_local["host_id"], $data_local["snmp_query_id"], $data_local["snmp_index"]);
+			$data_local = db_fetch_row("select snmp_index,snmp_query_id,device_id from data_local where id='" . $graph_item["local_data_id"] . "'");
+			return substitute_snmp_query_data($txt_graph_item, $data_local["device_id"], $data_local["snmp_query_id"], $data_local["snmp_index"]);
 		}
 	}else{
 		return $txt_graph_item;
@@ -2001,10 +2001,10 @@ function rrdgraph_scale($graph) {
 
 	/* do query_ substitions for upper and lower limit */
 	if (isset($graph["lower_limit"])) {
-		$graph["lower_limit"] = rrd_substitute_host_query_data($graph["lower_limit"], $graph, null);
+		$graph["lower_limit"] = rrd_substitute_device_query_data($graph["lower_limit"], $graph, null);
 	}
 	if (isset($graph["upper_limit"])) {
-		$graph["upper_limit"] = rrd_substitute_host_query_data($graph["upper_limit"], $graph, null);
+		$graph["upper_limit"] = rrd_substitute_device_query_data($graph["upper_limit"], $graph, null);
 	}
 
 	if ($graph["auto_scale"] == CHECKED) {

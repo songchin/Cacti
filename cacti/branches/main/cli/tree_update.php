@@ -48,15 +48,15 @@ if (sizeof($parms)) {
 	$sortMethod = 'alpha'; # manual, alpha, natural, numeric
 	$parentNode = 0;   # When creating a node, the parent node of this node (or zero for root-node)
 	$treeId     = 0;   # When creating a node, it has to go in a tree
-	$nodeType   = '';  # Should be 'header', 'graph' or 'host' when creating a node
+	$nodeType   = '';  # Should be 'header', 'graph' or 'device' when creating a node
 	$graphId    = 0;   # The ID of the graph to add (gets added to parentNode)
 	$rra_id     = 1;   # The rra_id for the graph to display: 1 = daily, 2 = weekly, 3 = monthly, 4 = yearly
 
 	$sortMethods = array('manual' => 1, 'alpha' => 2, 'natural' => 4, 'numeric' => 3);
-	$nodeTypes   = array('header' => 1, 'graph' => 2, 'host' => 3);
+	$nodeTypes   = array('header' => 1, 'graph' => 2, 'device' => 3);
 
-	$hostId         = 0;
-	$hostGroupStyle = 1; # 1 = Graph Template,  2 = Data Query Index
+	$deviceId         = 0;
+	$deviceGroupStyle = 1; # 1 = Graph Template,  2 = Data Query Index
 
 	$quietMode      = FALSE;
 	$displayTrees   = FALSE;
@@ -78,8 +78,8 @@ if (sizeof($parms)) {
 			case "--node-type":		$nodeType 						= trim($value);	break;
 			case "--graph-id":		$tree_item["local_graph_id"]	= $value;		break;
 			case "--rra-id":		$tree_item["rra_id"]			= $value;		break;
-			case "--device-id":		$tree_item["host_id"]			= $value;		break;
-			case "--device-group-type":$tree_item["host_grouping_type"] = trim($value);	break;
+			case "--device-id":		$tree_item["device_id"]			= $value;		break;
+			case "--device-group-type":$tree_item["device_grouping_type"] = trim($value);	break;
 			case "--sort-children-type":$tree_item["sort_children_type"] = trim($value);	break;
 			case "--parent-node":	$tree_item["parent_node"]		= $value;		break;
 
@@ -140,7 +140,7 @@ if (sizeof($parms)) {
 				if (isset($tree["sort_type_cli"])) $tree_item["sort_type_cli"] = $tree["sort_type_cli"];
 				if (isset($tree["id"])) $tree_item["id"] = $tree["id"];
 
-				# at least one matching criteria for host(s) has to be defined
+				# at least one matching criteria for device(s) has to be defined
 				if (!sizeof($tree_item) || !isset($tree_item["id"])) {
 					print __("ERROR: No tree item matching criteria found") . "\n\n";
 					exit(1);
@@ -162,7 +162,7 @@ if (sizeof($parms)) {
 				$current_type = "";
 				if ($item["local_graph_id"] > 0) 	{ $current_type = TREE_ITEM_TYPE_GRAPH; }
 				if ($item["title"] != "") 			{ $current_type = TREE_ITEM_TYPE_HEADER; }
-				if ($item["host_id"] > 0) 			{ $current_type = TREE_ITEM_TYPE_DEVICE; }
+				if ($item["device_id"] > 0) 			{ $current_type = TREE_ITEM_TYPE_DEVICE; }
 
 				# create sql depending on node type
 				$sql = "UPDATE graph_tree_items SET ";
@@ -185,9 +185,9 @@ if (sizeof($parms)) {
 						}
 						break;
 					case TREE_ITEM_TYPE_DEVICE:
-						if (isset($tree_item["host_grouping_type"])) {
+						if (isset($tree_item["device_grouping_type"])) {
 							$sql_vars .= (strlen($sql_vars) ? "," : "");
-							$sql_vars .= "host_grouping_type=" . $tree_item["host_grouping_type"];
+							$sql_vars .= "device_grouping_type=" . $tree_item["device_grouping_type"];
 						}
 						break;
 					default:

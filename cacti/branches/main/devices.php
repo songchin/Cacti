@@ -54,45 +54,45 @@ switch (get_request_var_request("action")) {
 		if (isset($_REQUEST["save_component_graph"])) {
 			api_graphs_new_form_save();
 		}else{
-			api_host_form_save();
+			api_device_form_save();
 		}
 
 		break;
 	case 'actions':
-		api_host_form_actions();
+		api_device_form_actions();
 
 		break;
 	case 'gt_remove':
-		host_remove_gt();
+		device_remove_gt();
 
-		header("Location: devices.php?action=edit&id=" . $_GET["host_id"]);
+		header("Location: devices.php?action=edit&id=" . $_GET["device_id"]);
 		break;
 	case 'query_remove':
-		host_remove_query();
+		device_remove_query();
 
-		header("Location: devices.php?action=edit&id=" . $_GET["host_id"]);
+		header("Location: devices.php?action=edit&id=" . $_GET["device_id"]);
 		break;
 	case 'query_reload':
-		host_reload_query();
+		device_reload_query();
 
-		header("Location: devices.php?action=edit&id=" . $_GET["host_id"]);
+		header("Location: devices.php?action=edit&id=" . $_GET["device_id"]);
 		break;
 	case 'query_verbose':
-		host_reload_query();
+		device_reload_query();
 
-		header("Location: devices.php?action=edit&id=" . $_GET["host_id"] . "&display_dq_details=true");
+		header("Location: devices.php?action=edit&id=" . $_GET["device_id"] . "&display_dq_details=true");
 		break;
 	case 'edit':
 		include_once(CACTI_BASE_PATH . "/include/top_header.php");
 
-		host_edit();
+		device_edit();
 
 		include_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
 		break;
 	default:
 		include_once(CACTI_BASE_PATH . "/include/top_header.php");
 
-		host();
+		device();
 
 		include_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
 		break;

@@ -136,12 +136,12 @@ function log_list ($filter_array,$limit = -1,$offset = -1) {
                 log.severity,
                 poller.name as poller_name,
                 poller.id as poller_id,
-                host.description as host,
+                device.description as device,
                 log.username,
 		log.plugin,
 		log.source,
                 log.message
-                FROM (log LEFT JOIN host ON log.host_id = host.id)
+                FROM (log LEFT JOIN device ON log.device_id = device.id)
                 LEFT JOIN poller ON log.poller_id = poller.id
                 $sql_where
                 order by log.logdate desc",$limit,$offset);
@@ -243,11 +243,11 @@ function logi_list_poller () {
 
 	$poller = array();
 
-	$pollers = db_fetch_assoc("select id, hostname from poller order by hostname");
+	$pollers = db_fetch_assoc("select id, devicename from poller order by devicename");
 
 	$poller["0"] = "SYSTEM";
 	while (list($poller_id,$poller_record) = each($pollers)) {
-		$poller[$poller_record["id"]] = $poller_record["hostname"];
+		$poller[$poller_record["id"]] = $poller_record["devicename"];
 	}
 
 	return $poller;
@@ -256,24 +256,24 @@ function logi_list_poller () {
 
 
 /**
- * List of hosts
+ * List of devices
  *
- * Returns list of hosts on the system for use by log viewer
+ * Returns list of devices on the system for use by log viewer
  *
  * @return array record array
  */
-function log_list_host () {
+function log_list_device () {
 
-	$host = array();
+	$device = array();
 
-	$hosts = db_fetch_assoc("select id, hostname from host order by hostname");
+	$devices = db_fetch_assoc("select id, devicename from device order by devicename");
 
-	$host["0"] = "SYSTEM";
-	while (list($id,$hostname) = each($hosts)) {
-		$host[$hostname["id"]] = $hostname["hostname"];
+	$device["0"] = "SYSTEM";
+	while (list($id,$devicename) = each($devices)) {
+		$device[$devicename["id"]] = $devicename["devicename"];
 	}
 
-	return $host;
+	return $device;
 
 }
 

@@ -118,7 +118,7 @@ $settings = array(
 			"method" => "spacer",
 			),
 		"extended_paths" => array(
-			"friendly_name" => __("Structured RRA Path (/host_id/local_data_id.rrd)"),
+			"friendly_name" => __("Structured RRA Path (/device_id/local_data_id.rrd)"),
 			"description" => __("Use a seperate subfolder for each devices RRD files."),
 			"method" => "checkbox"
  			)
@@ -385,7 +385,7 @@ $settings = array(
 			"sql" => "SELECT id, username AS name FROM user_auth ORDER BY name",
 			"default" => "1"
 			),
-		"export_tree_expand_hosts" => array(
+		"export_tree_expand_devices" => array(
 			"friendly_name" => __("Expand Tree devices"),
 			"description" => __("This settings determines if the tree devices will be expanded or not.  If set to expanded, each device will have a sub-folder containing either data templates or data query items."),
 			"method" => "drop_array",
@@ -486,9 +486,9 @@ $settings = array(
 			"method" => "checkbox",
 			"max_length" => "255"
 			),
-		"export_ftp_host" => array(
+		"export_ftp_device" => array(
 			"friendly_name" => __("FTP Host"),
-			"description" => __("Denotes the host to upload your graphs by ftp."),
+			"description" => __("Denotes the device to upload your graphs by ftp."),
 			"method" => "textbox",
 			"max_length" => "255"
 			),
@@ -1259,7 +1259,7 @@ $settings_graphs = array(
 			"max_length" => "5",
 			"default" => "200"
 			),
-		"expand_hosts" => array(
+		"expand_devices" => array(
 			"friendly_name" => __("Expand Devices"),
 			"description" => __("Choose whether to expand the graph templates used for a device on the dual pane tree."),
 			"method" => "checkbox",

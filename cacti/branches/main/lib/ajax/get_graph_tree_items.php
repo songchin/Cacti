@@ -50,7 +50,7 @@ case "list":
 	}
 
 	$leaf_id         = 0;
-	$host_group_type = array('na', 0);
+	$device_group_type = array('na', 0);
 
 	if (isset($_REQUEST["id"])) {
 		$id_array = explode("_", $_REQUEST["id"]);
@@ -67,13 +67,13 @@ case "list":
 							$leaf_id = $part;
 							break;
 						case "dqi":
-							$host_group_type = array("dqi", $part);
+							$device_group_type = array("dqi", $part);
 							break;
 						case "dq":
-							$host_group_type = array("dq", $part);
+							$device_group_type = array("dq", $part);
 							break;
 						case "gt":
-							$host_group_type = array("gt", $part);
+							$device_group_type = array("gt", $part);
 							break;
 						default:
 							break;
@@ -85,11 +85,11 @@ case "list":
 		}
 	}
 
-	//cacti_log("tree_id: '" . $tree_id . ", leaf_id: '" . $leaf_id . ", hgt: '" . $host_group_type[0] . "," . $host_group_type[1] . "'", false);
+	//cacti_log("tree_id: '" . $tree_id . ", leaf_id: '" . $leaf_id . ", hgt: '" . $device_group_type[0] . "," . $device_group_type[1] . "'", false);
 	if (is_numeric($_REQUEST["id"]) || $tree_id <= 0) {
-		$tree_items = get_tree_leaf_items($tree_id, $leaf_id, $host_group_type, true);
+		$tree_items = get_tree_leaf_items($tree_id, $leaf_id, $device_group_type, true);
 	}else{
-		$tree_items = get_tree_leaf_items($tree_id, $leaf_id, $host_group_type);
+		$tree_items = get_tree_leaf_items($tree_id, $leaf_id, $device_group_type);
 	}
 
 	if (sizeof($tree_items)) {
@@ -112,13 +112,13 @@ case "list":
 					$icon     = CACTI_URL_PATH . "/images/tree_icons/graph.gif";
 					$display  = false;
 					break;
-				case "host":
-					if (read_graph_config_option("expand_hosts") == CHECKED) {
+				case "device":
+					if (read_graph_config_option("expand_devices") == CHECKED) {
 						$children = true;
 					}else{
 						$children = false;
 					}
-					$icon     = CACTI_URL_PATH . "/images/tree_icons/host.gif";
+					$icon     = CACTI_URL_PATH . "/images/tree_icons/device.gif";
 					break;
 				case "header":
 					$children = true;

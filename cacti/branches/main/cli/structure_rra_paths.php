@@ -86,8 +86,8 @@ if ($poller_running == "1") {
 /* turn on extended paths from in the database */
 set_config_option("extended_paths", CHECKED);
 
-/* get the host ids and rrd paths from the poller_item table  */
-$rrd_info = db_fetch_assoc("SELECT DISTINCT local_data_id, host_id, rrd_path FROM poller_item");
+/* get the device ids and rrd paths from the poller_item table  */
+$rrd_info = db_fetch_assoc("SELECT DISTINCT local_data_id, device_id, rrd_path FROM poller_item");
 
 /* setup some counters */
 $done_count   = 0;
@@ -96,11 +96,11 @@ $warn_count   = 0;
 
 /* scan all poller_items */
 foreach ($rrd_info as $info) {
-	$new_base_path = "$base_rra_path" . "/" . $info["host_id"];
+	$new_base_path = "$base_rra_path" . "/" . $info["device_id"];
 	$new_rrd_path  = $new_base_path . "/" . $info["local_data_id"] . ".rrd";
 	$old_rrd_path  = $info["rrd_path"];
 
-	/* create one subfolder for every host */
+	/* create one subfolder for every device */
 	if (!is_dir($new_base_path)) {
 		/* see if we can create the dirctory for the new file */
 		if (mkdir($new_base_path, 0775)) {
@@ -190,7 +190,7 @@ function update_database($info) {
 
 	/* update table data_template_data */
 	db_execute("UPDATE data_template_data
-		SET data_source_path='<path_rra>/" . $info["host_id"] . "/" . $info["local_data_id"] . ".rrd'
+		SET data_source_path='<path_rra>/" . $info["device_id"] . "/" . $info["local_data_id"] . ".rrd'
 		WHERE local_data_id=" . $info["local_data_id"]);
 
 	printf(__("NOTE: Database Changes Complete for File '%s'"), $info["rrd_path"]);

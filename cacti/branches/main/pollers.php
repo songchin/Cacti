@@ -34,7 +34,7 @@ $poller_actions = array(
 
 /* file: pollers.php, action: edit */
 $fields_poller_edit = array(
-	"host_header" => array(
+	"device_header" => array(
 		"method" => "spacer",
 		"friendly_name" => __("General Poller Options")
 		),
@@ -45,11 +45,11 @@ $fields_poller_edit = array(
 		"value" => "|arg1:description|",
 		"max_length" => "250",
 		),
-	"hostname" => array(
+	"devicename" => array(
 		"method" => "textbox",
 		"friendly_name" => __("Hostname"),
-		"description" => __("Fully qualified hostname of the poller device."),
-		"value" => "|arg1:hostname|",
+		"description" => __("Fully qualified devicename of the poller device."),
+		"value" => "|arg1:devicename|",
 		"max_length" => "250",
 		),
 	"ip_address" => array(
@@ -115,7 +115,7 @@ function form_save() {
 
 		$save["disabled"]    = form_input_validate((isset($_POST["disabled"]) ? get_request_var_post("disabled"):""), "disabled", "", true, 3);
 		$save["description"] = form_input_validate(get_request_var_post("description"), "description", "", false, 3);
-		$save["hostname"]    = form_input_validate(get_request_var_post("hostname"), "hostname", "", true, 3);
+		$save["devicename"]    = form_input_validate(get_request_var_post("devicename"), "devicename", "", true, 3);
 		$save["ip_address"]  = form_input_validate(get_request_var_post("ip_address"), "ip_address", "", true, 3);
 
 		if (!is_error_message()) {
@@ -156,7 +156,7 @@ function form_actions() {
 				input_validate_input_number($poller_id);
 				/* ==================================================== */
 
-				if (sizeof(db_fetch_assoc("SELECT * FROM host WHERE poller_id=$poller_id LIMIT 1")) || $poller_id == 1) {
+				if (sizeof(db_fetch_assoc("SELECT * FROM device WHERE poller_id=$poller_id LIMIT 1")) || $poller_id == 1) {
 					$bad_ids[] = $poller_id;
 				}else{
 					$poller_ids[] = $poller_id;
@@ -178,7 +178,7 @@ function form_actions() {
 			if (isset($poller_ids)) {
 				db_execute("delete from poller where " . array_to_sql_or($poller_ids, "id"));
 				db_execute("update poller_item set poller_id=0 where " . array_to_sql_or($poller_ids, "poller_id"));
-				db_execute("update host set poller_id=0 where " . array_to_sql_or($poller_ids, "poller_id"));
+				db_execute("update device set poller_id=0 where " . array_to_sql_or($poller_ids, "poller_id"));
 			}
 		}elseif (get_request_var_post("drp_action") == "2") { /* disable */
 			for ($i=0;($i<count($selected_items));$i++) {
@@ -436,7 +436,7 @@ function poller() {
 	$poller_list = db_fetch_assoc("SELECT p.*,
 		sum(CASE WHEN h.poller_id IS NOT NULL THEN 1 ELSE NULL END) AS total_devices
 		FROM poller AS p
-		LEFT JOIN host AS h ON h.poller_id=p.id
+		LEFT JOIN device AS h ON h.poller_id=p.id
 		$sql_where
 		GROUP BY p.id
 		ORDER BY " . get_request_var_request('sort_column') . " " . get_request_var_request('sort_direction') .
@@ -453,7 +453,7 @@ function poller() {
 		"id" => array(__("ID"), "ASC"),
 		"total_devices" => array(__("Devices"), "DESC"),
 		"nosort2" => array(__("Poller Items"), "DESC"),
-		"hostname" => array(__("Hostname"), "ASC"),
+		"devicename" => array(__("Hostname"), "ASC"),
 		"nosort1" => array(__("Status"), ""),
 		"last_update" => array(__("Last Updated"), "ASC"));
 
@@ -466,7 +466,7 @@ function poller() {
 			form_selectable_cell($poller["id"], $poller["id"]);
 			form_selectable_cell($poller["total_devices"], $poller["id"]);
 			form_selectable_cell(db_fetch_cell("SELECT count(*) FROM poller_item WHERE poller_id=" . $poller["id"]), $poller["id"]);
-			form_selectable_cell($poller["hostname"], $poller["id"]);
+			form_selectable_cell($poller["devicename"], $poller["id"]);
 			form_selectable_cell(get_colored_poller_status(($poller["disabled"] == CHECKED ? true : false), $poller["last_update"]), $poller["id"]);
 			form_selectable_cell($poller["last_update"], $poller["id"]);
 			form_checkbox_cell($poller["description"], $poller["id"]);

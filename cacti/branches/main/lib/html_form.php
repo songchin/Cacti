@@ -1130,14 +1130,14 @@ function form_return_button_alt() {
      an html edit form
    @arg $action - if specified, will direct the system what to do if "No"
      is selected */
-function form_yesno_button_alt($host_list, $drp_action = "none") {
+function form_yesno_button_alt($device_list, $drp_action = "none") {
 	global $config;
 
 	?>
 	<tr>
 		<td align="right">
 			<div><input type='hidden' name='action' value='actions'></div>
-			<div><input type='hidden' name='selected_items' value='<?php print $host_list;?>'></div>
+			<div><input type='hidden' name='selected_items' value='<?php print $device_list;?>'></div>
 			<div><input type='hidden' name='drp_action' value='<?php print $drp_action;?>'></div>
 			<input type='button' value='<?php print __("No");?>' onClick='window.location.assign("<?php print htmlspecialchars($_SERVER['HTTP_REFERER']);?>")' name='cancel'>
 			<input type='submit' value='<?php print __("Yes");?>' name='yes'>

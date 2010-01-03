@@ -29,13 +29,13 @@
 function data_source_form_save() {
 	if ((isset($_POST["save_component_data_source_new"])) && (!empty($_POST["data_template_id"]))) {
 		/* ================= input validation ================= */
-		input_validate_input_number(get_request_var_post("host_id"));
+		input_validate_input_number(get_request_var_post("device_id"));
 		input_validate_input_number(get_request_var_post("data_template_id"));
 		/* ==================================================== */
 
 		$save["id"] = $_POST["local_data_id"];
 		$save["data_template_id"] = $_POST["data_template_id"];
-		$save["host_id"] = $_POST["host_id"];
+		$save["device_id"] = $_POST["device_id"];
 
 		$local_data_id = sql_save($save, "data_local");
 
@@ -44,9 +44,9 @@ function data_source_form_save() {
 		/* update the title cache */
 		update_data_source_title_cache($local_data_id);
 
-		/* update host data */
-		if (!empty($_POST["host_id"])) {
-			push_out_host(get_request_var_post("host_id"), $local_data_id);
+		/* update device data */
+		if (!empty($_POST["device_id"])) {
+			push_out_device(get_request_var_post("device_id"), $local_data_id);
 		}
 	}
 
@@ -58,7 +58,7 @@ function data_source_form_save() {
 		/* ok, first pull out all 'input' values so we know how much to save */
 		$input_fields = db_fetch_assoc("select
 			data_template_data.data_input_id,
-			data_local.host_id,
+			data_local.device_id,
 			data_input_fields.id,
 			data_input_fields.input_output,
 			data_input_fields.data_name,
@@ -105,12 +105,12 @@ function data_source_form_save() {
 		input_validate_input_number(get_request_var_post("local_data_id"));
 		input_validate_input_number(get_request_var_post("current_rrd"));
 		input_validate_input_number(get_request_var_post("data_template_id"));
-		input_validate_input_number(get_request_var_post("host_id"));
+		input_validate_input_number(get_request_var_post("device_id"));
 		/* ==================================================== */
 
 		$save1["id"] = $_POST["local_data_id"];
 		$save1["data_template_id"] = $_POST["data_template_id"];
-		$save1["host_id"] = $_POST["host_id"];
+		$save1["device_id"] = $_POST["device_id"];
 
 		$save2["id"] = $_POST["data_template_data_id"];
 		$save2["local_data_template_data_id"] = $_POST["local_data_template_data_id"];
@@ -199,12 +199,12 @@ function data_source_form_save() {
 				update_data_source_data_query_cache($local_data_id);
 			}
 
-			if ($_POST["host_id"] != $_POST["_host_id"]) {
-				/* push out all necessary host information */
-				push_out_host(get_request_var_post("host_id"), $local_data_id);
+			if ($_POST["device_id"] != $_POST["_device_id"]) {
+				/* push out all necessary device information */
+				push_out_device(get_request_var_post("device_id"), $local_data_id);
 
-				/* reset current host for display purposes */
-				$_SESSION["sess_data_source_current_host_id"] = $_POST["host_id"];
+				/* reset current device for display purposes */
+				$_SESSION["sess_data_source_current_device_id"] = $_POST["device_id"];
 			}
 
 			/* if no data source path has been entered, generate one */
@@ -223,9 +223,9 @@ function data_source_form_save() {
 	}
 
 	if ((isset($_POST["save_component_data_source_new"])) && (empty($_POST["data_template_id"]))) {
-		header("Location: data_sources.php?action=data_source_edit&host_id=" . $_POST["host_id"] . "&new=1");
-	}elseif ((is_error_message()) || ($_POST["data_template_id"] != $_POST["_data_template_id"]) || ($_POST["data_input_id"] != $_POST["_data_input_id"]) || ($_POST["host_id"] != $_POST["_host_id"])) {
-		header("Location: data_sources.php?action=data_source_edit&id=" . (empty($local_data_id) ? $_POST["local_data_id"] : $local_data_id) . "&host_id=" . $_POST["host_id"] . "&view_rrd=" . (isset($_POST["current_rrd"]) ? $_POST["current_rrd"] : "0"));
+		header("Location: data_sources.php?action=data_source_edit&device_id=" . $_POST["device_id"] . "&new=1");
+	}elseif ((is_error_message()) || ($_POST["data_template_id"] != $_POST["_data_template_id"]) || ($_POST["data_input_id"] != $_POST["_data_input_id"]) || ($_POST["device_id"] != $_POST["_device_id"])) {
+		header("Location: data_sources.php?action=data_source_edit&id=" . (empty($local_data_id) ? $_POST["local_data_id"] : $local_data_id) . "&device_id=" . $_POST["device_id"] . "&view_rrd=" . (isset($_POST["current_rrd"]) ? $_POST["current_rrd"] : "0"));
 	}else{
 		header("Location: data_sources.php");
 	}
@@ -293,15 +293,15 @@ function data_source_form_actions() {
 
 				change_data_template($selected_items[$i], get_request_var_post("data_template_id"));
 			}
-		}elseif (get_request_var_post("drp_action") == DS_ACTION_CHANGE_HOST) { /* change host */
+		}elseif (get_request_var_post("drp_action") == DS_ACTION_CHANGE_HOST) { /* change device */
 			for ($i=0;($i<count($selected_items));$i++) {
 				/* ================= input validation ================= */
 				input_validate_input_number($selected_items[$i]);
-				input_validate_input_number(get_request_var_post("host_id"));
+				input_validate_input_number(get_request_var_post("device_id"));
 				/* ==================================================== */
 
-				db_execute("update data_local set host_id=" . $_POST["host_id"] . " where id=" . $selected_items[$i]);
-				push_out_host(get_request_var_post("host_id"), $selected_items[$i]);
+				db_execute("update data_local set device_id=" . $_POST["device_id"] . " where id=" . $selected_items[$i]);
+				push_out_device(get_request_var_post("device_id"), $selected_items[$i]);
 				update_data_source_title_cache($selected_items[$i]);
 			}
 		}elseif (get_request_var_post("drp_action") == DS_ACTION_DUPLICATE) { /* duplicate */
@@ -420,12 +420,12 @@ function data_source_form_actions() {
 					</td>
 				</tr>\n
 				";
-		}elseif (get_request_var_post("drp_action") == DS_ACTION_CHANGE_HOST) { /* change host */
+		}elseif (get_request_var_post("drp_action") == DS_ACTION_CHANGE_HOST) { /* change device */
 			print "	<tr>
 					<td class='textArea'>
-						<p>" . __("Choose a new host for these data sources.") . "</p>
+						<p>" . __("Choose a new device for these data sources.") . "</p>
 						<p>$ds_list</p>
-						<p><strong>" . __("New Host:") . "</strong><br>"; form_dropdown("host_id",db_fetch_assoc("select id,CONCAT_WS('',description,' (',hostname,')') as name from host order by description,hostname"),"name","id","","","0"); print "</p>
+						<p><strong>" . __("New Host:") . "</strong><br>"; form_dropdown("device_id",db_fetch_assoc("select id,CONCAT_WS('',description,' (',devicename,')') as name from device order by description,devicename"),"name","id","","","0"); print "</p>
 					</td>
 				</tr>\n
 				";
@@ -522,7 +522,7 @@ function data_source_data_edit() {
 		$data = db_fetch_row("select id,data_input_id,data_template_id,name,local_data_id from data_template_data where local_data_id=" . $_GET["id"]);
 		$template_data = db_fetch_row("select id,data_input_id from data_template_data where data_template_id=" . $data["data_template_id"] . " and local_data_id=0");
 
-		$host = db_fetch_row("select host.id,host.hostname from (data_local,host) where data_local.host_id=host.id and data_local.id=" . $_GET["id"]);
+		$device = db_fetch_row("select device.id,device.devicename from (data_local,device) where data_local.device_id=device.id and data_local.id=" . $_GET["id"]);
 
 		$header_label = __("[edit: ") . $data["name"] . "]";
 	}else{
@@ -558,8 +558,8 @@ function data_source_data_edit() {
 
 				form_alternate_row_color();
 
-				if ((!empty($host["id"])) && (preg_match('/^' . VALID_HOST_FIELDS . '$/i', $field["type_code"]))) {
-					print "<td width='50%'><strong>" . $field["name"] . "</strong> (" . __("From Host:") . " " . $host["hostname"] . ")</td>\n";
+				if ((!empty($device["id"])) && (preg_match('/^' . VALID_HOST_FIELDS . '$/i', $field["type_code"]))) {
+					print "<td width='50%'><strong>" . $field["name"] . "</strong> (" . __("From Host:") . " " . $device["devicename"] . ")</td>\n";
 					print "<td><em>$old_value</em></td>\n";
 				}elseif (empty($can_template)) {
 					print "<td width='50%'><strong>" . $field["name"] . "</strong> (" . __("From Data Source Template") . ")</td>\n";
@@ -624,10 +624,10 @@ function data_source_edit() {
 	/* ==================================================== */
 
 	$use_data_template = true;
-	$host_id = 0;
+	$device_id = 0;
 
 	if (!empty($_GET["id"])) {
-		$data_local = db_fetch_row("select host_id,data_template_id from data_local where id='" . $_GET["id"] . "'");
+		$data_local = db_fetch_row("select device_id,data_template_id from data_local where id='" . $_GET["id"] . "'");
 		$data       = db_fetch_row("select * from data_template_data where local_data_id='" . $_GET["id"] . "'");
 
 		if (isset($data_local["data_template_id"]) && $data_local["data_template_id"] >= 0) {
@@ -680,8 +680,8 @@ function data_source_edit() {
 	if (!empty($data_template["id"])) {
 		$tip_text .= "<tr><td align=\\'right\\'><a class=\\'popup_item\\' href=" . htmlspecialchars('data_templates.php?action=template_edit&id=' . (isset($data_template["id"]) ? $data_template["id"] : "0")) . "\\'>" . __("Edit Data Source Template") . "<br></a></td></td>";
 	}
-	if (!empty($_GET["host_id"]) || !empty($data_local["host_id"])) {
-		$tip_text .= "<tr><td align=\\'right\\'><a class=\\'popup_item\\' href=\\'" . htmlspecialchars('devices.php?action=edit&id=' . (isset($_GET["host_id"]) ? $_GET["host_id"] : $data_local["host_id"])) . "\\'>" . __("Edit Host") . "</a></td></tr>";
+	if (!empty($_GET["device_id"]) || !empty($data_local["device_id"])) {
+		$tip_text .= "<tr><td align=\\'right\\'><a class=\\'popup_item\\' href=\\'" . htmlspecialchars('devices.php?action=edit&id=' . (isset($_GET["device_id"]) ? $_GET["device_id"] : $data_local["device_id"])) . "\\'>" . __("Edit Host") . "</a></td></tr>";
 	}
 
 	if (!empty($_GET["id"])) {
@@ -736,21 +736,21 @@ function data_source_edit() {
 			"id" => (isset($data_template) ? $data_template["id"] : "0"),
 			"name" => db_fetch_cell("SELECT name FROM data_template WHERE id=" . (isset($data_template) ? $data_template['id'] : "0"))
 			),
-		"host_id" => array(
+		"device_id" => array(
 			"method" => "autocomplete",
-			"callback_function" => "./lib/ajax/get_hosts_detailed.php",
+			"callback_function" => "./lib/ajax/get_devices_detailed.php",
 			"friendly_name" => __("Host"),
-			"description" => __("Choose the host that this graph belongs to."),
-			"id" => (isset($_GET["host_id"]) ? $_GET["host_id"] : $data_local["host_id"]),
-			"name" => db_fetch_cell("SELECT CONCAT_WS('',description,' (',hostname,')') FROM host WHERE id=" . (isset($_GET['host_id']) ? $_GET['host_id'] : $data_local["host_id"]))
+			"description" => __("Choose the device that this graph belongs to."),
+			"id" => (isset($_GET["device_id"]) ? $_GET["device_id"] : $data_local["device_id"]),
+			"name" => db_fetch_cell("SELECT CONCAT_WS('',description,' (',devicename,')') FROM device WHERE id=" . (isset($_GET['device_id']) ? $_GET['device_id'] : $data_local["device_id"]))
 			),
 		"_data_template_id" => array(	/* TODO: input id's must NOT start with an underscore */
 			"method" => "hidden",
 			"value" => (isset($data_template) ? $data_template["id"] : "0")
 			),
-		"_host_id" => array(
+		"_device_id" => array(
 			"method" => "hidden",
-			"value" => (empty($data_local["host_id"]) ? (isset($_GET["host_id"]) ? $_GET["host_id"] : "0") : $data_local["host_id"])
+			"value" => (empty($data_local["device_id"]) ? (isset($_GET["device_id"]) ? $_GET["device_id"] : "0") : $data_local["device_id"])
 			),
 		"_data_input_id" => array(
 			"method" => "hidden",
@@ -985,7 +985,7 @@ function get_poller_interval($seconds) {
 function data_source_validate() {
 	/* ================= input validation ================= */
 	input_validate_input_number(get_request_var_request("rows"));
-	input_validate_input_number(get_request_var_request("host_id"));
+	input_validate_input_number(get_request_var_request("device_id"));
 	input_validate_input_number(get_request_var_request("template_id"));
 	input_validate_input_number(get_request_var_request("method_id"));
 	input_validate_input_number(get_request_var_request("page"));
@@ -1022,7 +1022,7 @@ function data_source() {
 		kill_session_var("sess_ds_rows");
 
 		if (!substr_count($_SERVER["REQUEST_URI"], "/devices.php")) {
-			kill_session_var("sess_ds_host_id");
+			kill_session_var("sess_ds_device_id");
 		}
 
 		kill_session_var("sess_ds_template_id");
@@ -1035,7 +1035,7 @@ function data_source() {
 		unset($_REQUEST["rows"]);
 
 		if (!substr_count($_SERVER["REQUEST_URI"], "/devices.php")) {
-			unset($_REQUEST["host_id"]);
+			unset($_REQUEST["device_id"]);
 		}
 
 		unset($_REQUEST["template_id"]);
@@ -1047,7 +1047,7 @@ function data_source() {
 		$changed  = FALSE;
 		$changed += check_changed("filter",      "sess_ds_filter");
 		$changed += check_changed("rows",        "sess_ds_rows");
-		$changed += check_changed("host_id",     "sess_ds_host_id");
+		$changed += check_changed("device_id",     "sess_ds_device_id");
 		$changed += check_changed("template_id", "sess_ds_template_id");
 		$changed += check_changed("method_id",   "sess_ds_method_id");
 
@@ -1062,29 +1062,29 @@ function data_source() {
 	load_current_session_value("sort_column", "sess_ds_sort_column", "name_cache");
 	load_current_session_value("sort_direction", "sess_ds_sort_direction", "ASC");
 	load_current_session_value("rows", "sess_ds_rows", "-1");
-	load_current_session_value("host_id", "sess_ds_host_id", "-1");
+	load_current_session_value("device_id", "sess_ds_device_id", "-1");
 	load_current_session_value("template_id", "sess_ds_template_id", "-1");
 	load_current_session_value("method_id", "sess_ds_method_id", "-1");
 
-	$host = db_fetch_row("select hostname from host where id=" . $_REQUEST["host_id"]);
+	$device = db_fetch_row("select devicename from device where id=" . $_REQUEST["device_id"]);
 
 	?>
 	<script type="text/javascript">
 	<!--
 	$().ready(function() {
-		$("#host").autocomplete("./lib/ajax/get_hosts_brief.php", { max: 8, highlight: false, scroll: true, scrollHeight: 300 });
-		$("#host").result(function(event, data, formatted) {
+		$("#device").autocomplete("./lib/ajax/get_devices_brief.php", { max: 8, highlight: false, scroll: true, scrollHeight: 300 });
+		$("#device").result(function(event, data, formatted) {
 			if (data) {
-				$(this).parent().find("#host_id").val(data[1]);
+				$(this).parent().find("#device_id").val(data[1]);
 				applyDSFilterChange(document.form_data_sources);
 			}else{
-				$(this).parent().find("#host_id").val(0);
+				$(this).parent().find("#device_id").val(0);
 			}
 		});
 	});
 
 	function clearDSFilterChange(objForm) {
-		<?php print (isset($_REQUEST["tab"]) ? "strURL = '?host_id=" . $_REQUEST["host_id"] . "&id=" . $_REQUEST["host_id"] . "&action=edit&action=edit&tab=" . $_REQUEST["tab"] . "';" : "strURL = '?host_id=-1';");?>
+		<?php print (isset($_REQUEST["tab"]) ? "strURL = '?device_id=" . $_REQUEST["device_id"] . "&id=" . $_REQUEST["device_id"] . "&action=edit&action=edit&tab=" . $_REQUEST["tab"] . "';" : "strURL = '?device_id=-1';");?>
 		strURL = strURL + '&filter=';
 		strURL = strURL + '&rows=-1';
 		strURL = strURL + '&template_id=-1';
@@ -1093,8 +1093,8 @@ function data_source() {
 	}
 
 	function applyDSFilterChange(objForm) {
-		if (objForm.host_id.value) {
-			strURL = '?host_id=' + objForm.host_id.value;
+		if (objForm.device_id.value) {
+			strURL = '?device_id=' + objForm.device_id.value;
 			strURL = strURL + '&filter=' + objForm.filter.value;
 		}else{
 			strURL = '?filter=' + objForm.filter.value;
@@ -1103,14 +1103,14 @@ function data_source() {
 		strURL = strURL + '&rows=' + objForm.rows.value;
 		strURL = strURL + '&template_id=' + objForm.template_id.value;
 		strURL = strURL + '&method_id=' + objForm.method_id.value;
-		<?php print (isset($_REQUEST["tab"]) ? "strURL = strURL + '&id=' + objForm.host_id.value + '&action=edit&action=edit&tab=" . $_REQUEST["tab"] . "';" : "");?>
+		<?php print (isset($_REQUEST["tab"]) ? "strURL = strURL + '&id=' + objForm.device_id.value + '&action=edit&action=edit&tab=" . $_REQUEST["tab"] . "';" : "");?>
 		document.location = strURL;
 	}
 	-->
 	</script>
 	<?php
 
-	html_start_box("<strong>" . __("Data Sources") . "</strong> " . __("[host:") . " " . (empty($host["hostname"]) ? __("No Host") : $host["hostname"]) . "]", "100", $colors["header"], "3", "center", "data_sources.php?action=data_source_edit&host_id=" . $_REQUEST["host_id"], true);
+	html_start_box("<strong>" . __("Data Sources") . "</strong> " . __("[device:") . " " . (empty($device["devicename"]) ? __("No Host") : $device["devicename"]) . "]", "100", $colors["header"], "3", "center", "data_sources.php?action=data_source_edit&device_id=" . $_REQUEST["device_id"], true);
 	?>
 	<tr class='rowAlternate2'>
 		<td>
@@ -1122,14 +1122,14 @@ function data_source() {
 					</td>
 					<td class="w1">
 						<?php
-						if (isset($_REQUEST["host_id"])) {
-							$hostname = db_fetch_cell("SELECT description as name FROM host WHERE id=".$_REQUEST["host_id"]." ORDER BY description,hostname");
+						if (isset($_REQUEST["device_id"])) {
+							$devicename = db_fetch_cell("SELECT description as name FROM device WHERE id=".$_REQUEST["device_id"]." ORDER BY description,devicename");
 						} else {
-							$hostname = "";
+							$devicename = "";
 						}
 						?>
-						<input class="ac_field" type="text" id="host" size="30" value="<?php print $hostname; ?>">
-						<input type="hidden" id="host_id">
+						<input class="ac_field" type="text" id="device" size="30" value="<?php print $devicename; ?>">
+						<input type="hidden" id="device_id">
 					</td>
 					<td class="nw50">
 						&nbsp;<?php print __("Template:");?>&nbsp;
@@ -1240,14 +1240,14 @@ function data_source() {
 		$sql_where2 = "";
 	}
 
-	if (get_request_var_request("host_id") == "-1") {
+	if (get_request_var_request("device_id") == "-1") {
 		/* Show all items */
-	}elseif (get_request_var_request("host_id") == "0") {
-		$sql_where1 .= " AND data_local.host_id=0";
-		$sql_where2 .= " AND data_local.host_id=0";
+	}elseif (get_request_var_request("device_id") == "0") {
+		$sql_where1 .= " AND data_local.device_id=0";
+		$sql_where2 .= " AND data_local.device_id=0";
 	}else {
-		$sql_where1 .= " AND data_local.host_id=" . $_REQUEST["host_id"];
-		$sql_where2 .= " AND data_local.host_id=" . $_REQUEST["host_id"];
+		$sql_where1 .= " AND data_local.device_id=" . $_REQUEST["device_id"];
+		$sql_where2 .= " AND data_local.device_id=" . $_REQUEST["device_id"];
 	}
 
 	if (get_request_var_request("template_id") == "-1") {
@@ -1302,7 +1302,7 @@ function data_source() {
 		data_template_data.active,
 		data_input.name as data_input_name,
 		data_template.name as data_template_name,
-		data_local.host_id
+		data_local.device_id
 		FROM (data_local,data_template_data)
 		LEFT JOIN data_input
 		ON (data_input.id=data_template_data.data_input_id)

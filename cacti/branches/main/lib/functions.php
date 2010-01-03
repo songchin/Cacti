@@ -804,89 +804,89 @@ function tail_file($file_name, $number_of_lines, $message_type = -1, $filter = "
 	return $file_array;
 }
 
-/* update_host_status - updates the host table with informaton about it's status.
+/* update_device_status - updates the device table with informaton about it's status.
 	  It will also output to the appropriate log file when an event occurs.
 
-	@arg $status - (int constant) the status of the host (Up/Down)
-		  $host_id - (int) the host ID for the results
-	     $hosts - (array) a memory resident host table for speed
+	@arg $status - (int constant) the status of the device (Up/Down)
+		  $device_id - (int) the device ID for the results
+	     $devices - (array) a memory resident device table for speed
 		  $ping - (class array) results of the ping command			*/
-function update_host_status($status, $host_id, &$hosts, &$ping, $ping_availability, $print_data_to_stdout) {
+function update_device_status($status, $device_id, &$devices, &$ping, $ping_availability, $print_data_to_stdout) {
 	$issue_log_message   = false;
 	$ping_failure_count  = read_config_option("ping_failure_count");
 	$ping_recovery_count = read_config_option("ping_recovery_count");
 
 	if ($status == HOST_DOWN) {
 		/* update total polls, failed polls and availability */
-		$hosts[$host_id]["failed_polls"]++;
-		$hosts[$host_id]["total_polls"]++;
-		$hosts[$host_id]["availability"] = 100 * ($hosts[$host_id]["total_polls"] - $hosts[$host_id]["failed_polls"]) / $hosts[$host_id]["total_polls"];
+		$devices[$device_id]["failed_polls"]++;
+		$devices[$device_id]["total_polls"]++;
+		$devices[$device_id]["availability"] = 100 * ($devices[$device_id]["total_polls"] - $devices[$device_id]["failed_polls"]) / $devices[$device_id]["total_polls"];
 
 		/* determine the error message to display */
 		if (($ping_availability == AVAIL_SNMP_AND_PING) || ($ping_availability == AVAIL_SNMP_OR_PING)) {
-			if (($hosts[$host_id]["snmp_community"] == "") && ($hosts[$host_id]["snmp_version"] != 3)) {
+			if (($devices[$device_id]["snmp_community"] == "") && ($devices[$device_id]["snmp_version"] != 3)) {
 				/* snmp version 1/2 without community string assume SNMP test to be successful
 				   due to backward compatibility issues */
-				$hosts[$host_id]["status_last_error"] = $ping->ping_response;
+				$devices[$device_id]["status_last_error"] = $ping->ping_response;
 			}else {
-				$hosts[$host_id]["status_last_error"] = $ping->snmp_response . ", " . $ping->ping_response;
+				$devices[$device_id]["status_last_error"] = $ping->snmp_response . ", " . $ping->ping_response;
 			}
 		}elseif ($ping_availability == AVAIL_SNMP) {
-			if (($hosts[$host_id]["snmp_community"] == "") && ($hosts[$host_id]["snmp_version"] != 3)) {
-				$hosts[$host_id]["status_last_error"] = "Device does not require SNMP";
+			if (($devices[$device_id]["snmp_community"] == "") && ($devices[$device_id]["snmp_version"] != 3)) {
+				$devices[$device_id]["status_last_error"] = "Device does not require SNMP";
 			}else {
-				$hosts[$host_id]["status_last_error"] = $ping->snmp_response;
+				$devices[$device_id]["status_last_error"] = $ping->snmp_response;
 			}
 		}else {
-			$hosts[$host_id]["status_last_error"] = $ping->ping_response;
+			$devices[$device_id]["status_last_error"] = $ping->ping_response;
 		}
 
 		/* determine if to send an alert and update remainder of statistics */
-		if ($hosts[$host_id]["status"] == HOST_UP) {
+		if ($devices[$device_id]["status"] == HOST_UP) {
 			/* increment the event failure count */
-			$hosts[$host_id]["status_event_count"]++;
+			$devices[$device_id]["status_event_count"]++;
 
 			/* if it's time to issue an error message, indicate so */
-			if ($hosts[$host_id]["status_event_count"] >= $ping_failure_count) {
-				/* host is now down, flag it that way */
-				$hosts[$host_id]["status"] = HOST_DOWN;
+			if ($devices[$device_id]["status_event_count"] >= $ping_failure_count) {
+				/* device is now down, flag it that way */
+				$devices[$device_id]["status"] = HOST_DOWN;
 
 				$issue_log_message = true;
 
 				/* update the failure date only if the failure count is 1 */
 				if ($ping_failure_count == 1) {
-					$hosts[$host_id]["status_fail_date"] = date("Y-m-d H:i:s");
+					$devices[$device_id]["status_fail_date"] = date("Y-m-d H:i:s");
 				}
-			/* host is down, but not ready to issue log message */
+			/* device is down, but not ready to issue log message */
 			} else {
-				/* host down for the first time, set event date */
-				if ($hosts[$host_id]["status_event_count"] == 1) {
-					$hosts[$host_id]["status_fail_date"] = date("Y-m-d H:i:s");
+				/* device down for the first time, set event date */
+				if ($devices[$device_id]["status_event_count"] == 1) {
+					$devices[$device_id]["status_fail_date"] = date("Y-m-d H:i:s");
 				}
 			}
-		/* host is recovering, put back in failed state */
-		} elseif ($hosts[$host_id]["status"] == HOST_RECOVERING) {
-			$hosts[$host_id]["status_event_count"] = 1;
-			$hosts[$host_id]["status"] = HOST_DOWN;
+		/* device is recovering, put back in failed state */
+		} elseif ($devices[$device_id]["status"] == HOST_RECOVERING) {
+			$devices[$device_id]["status_event_count"] = 1;
+			$devices[$device_id]["status"] = HOST_DOWN;
 
-		/* host was unknown and now is down */
-		} elseif ($hosts[$host_id]["status"] == HOST_UNKNOWN) {
-			$hosts[$host_id]["status"] = HOST_DOWN;
-			$hosts[$host_id]["status_event_count"] = 0;
+		/* device was unknown and now is down */
+		} elseif ($devices[$device_id]["status"] == HOST_UNKNOWN) {
+			$devices[$device_id]["status"] = HOST_DOWN;
+			$devices[$device_id]["status_event_count"] = 0;
 		} else {
-			$hosts[$host_id]["status_event_count"]++;
+			$devices[$device_id]["status_event_count"]++;
 		}
-	/* host is up!! */
+	/* device is up!! */
 	} else {
 		/* update total polls and availability */
-		$hosts[$host_id]["total_polls"]++;
-		$hosts[$host_id]["availability"] = 100 * ($hosts[$host_id]["total_polls"] - $hosts[$host_id]["failed_polls"]) / $hosts[$host_id]["total_polls"];
+		$devices[$device_id]["total_polls"]++;
+		$devices[$device_id]["availability"] = 100 * ($devices[$device_id]["total_polls"] - $devices[$device_id]["failed_polls"]) / $devices[$device_id]["total_polls"];
 
 		if ((($ping_availability == AVAIL_SNMP_AND_PING) ||
 			($ping_availability == AVAIL_SNMP_OR_PING) ||
 			($ping_availability == AVAIL_SNMP)) &&
 			(!is_numeric($ping->snmp_status))) {
-			cacti_log("WARNING: Poller[0] Host[$host_id] SNMP Time was not numeric", TRUE, "POLLER");
+			cacti_log("WARNING: Poller[0] Host[$device_id] SNMP Time was not numeric", TRUE, "POLLER");
 			$ping->snmp_status = 0.000;
 		}
 
@@ -894,20 +894,20 @@ function update_host_status($status, $host_id, &$hosts, &$ping, $ping_availabili
 			($ping_availability == AVAIL_SNMP_OR_PING) ||
 			($ping_availability == AVAIL_PING)) &&
 			(!is_numeric($ping->ping_status))) {
-			cacti_log("WARNING: Poller[0] Host[$host_id] Ping Time was not numeric", TRUE, "POLLER");
+			cacti_log("WARNING: Poller[0] Host[$device_id] Ping Time was not numeric", TRUE, "POLLER");
 			$ping->ping_status = 0.000;
 		}
 		/* determine the ping statistic to set and do so */
 		if (($ping_availability == AVAIL_SNMP_AND_PING) ||
 			($ping_availability == AVAIL_SNMP_OR_PING)) {
-			if (($hosts[$host_id]["snmp_community"] == "") && ($hosts[$host_id]["snmp_version"] != 3)) {
+			if (($devices[$device_id]["snmp_community"] == "") && ($devices[$device_id]["snmp_version"] != 3)) {
 				$ping_time = 0.000;
 			}else {
 				/* calculate the average of the two times */
 				$ping_time = ($ping->snmp_status + $ping->ping_status) / 2;
 			}
 		}elseif ($ping_availability == AVAIL_SNMP) {
-			if (($hosts[$host_id]["snmp_community"] == "") && ($hosts[$host_id]["snmp_version"] != 3)) {
+			if (($devices[$device_id]["snmp_community"] == "") && ($devices[$device_id]["snmp_version"] != 3)) {
 				$ping_time = 0.000;
 			}else {
 				$ping_time = $ping->snmp_status;
@@ -919,108 +919,108 @@ function update_host_status($status, $host_id, &$hosts, &$ping, $ping_availabili
 		}
 
 		/* update times as required */
-		$hosts[$host_id]["cur_time"] = $ping_time;
+		$devices[$device_id]["cur_time"] = $ping_time;
 
 		/* maximum time */
-		if ($ping_time > $hosts[$host_id]["max_time"])
-			$hosts[$host_id]["max_time"] = $ping_time;
+		if ($ping_time > $devices[$device_id]["max_time"])
+			$devices[$device_id]["max_time"] = $ping_time;
 
 		/* minimum time */
-		if ($ping_time < $hosts[$host_id]["min_time"])
-			$hosts[$host_id]["min_time"] = $ping_time;
+		if ($ping_time < $devices[$device_id]["min_time"])
+			$devices[$device_id]["min_time"] = $ping_time;
 
 		/* average time */
-		$hosts[$host_id]["avg_time"] = (($hosts[$host_id]["total_polls"]-1-$hosts[$host_id]["failed_polls"])
-			* $hosts[$host_id]["avg_time"] + $ping_time) / ($hosts[$host_id]["total_polls"]-$hosts[$host_id]["failed_polls"]);
+		$devices[$device_id]["avg_time"] = (($devices[$device_id]["total_polls"]-1-$devices[$device_id]["failed_polls"])
+			* $devices[$device_id]["avg_time"] + $ping_time) / ($devices[$device_id]["total_polls"]-$devices[$device_id]["failed_polls"]);
 
-		/* the host was down, now it's recovering */
-		if (($hosts[$host_id]["status"] == HOST_DOWN) || ($hosts[$host_id]["status"] == HOST_RECOVERING )) {
+		/* the device was down, now it's recovering */
+		if (($devices[$device_id]["status"] == HOST_DOWN) || ($devices[$device_id]["status"] == HOST_RECOVERING )) {
 			/* just up, change to recovering */
-			if ($hosts[$host_id]["status"] == HOST_DOWN) {
-				$hosts[$host_id]["status"] = HOST_RECOVERING;
-				$hosts[$host_id]["status_event_count"] = 1;
+			if ($devices[$device_id]["status"] == HOST_DOWN) {
+				$devices[$device_id]["status"] = HOST_RECOVERING;
+				$devices[$device_id]["status_event_count"] = 1;
 			} else {
-				$hosts[$host_id]["status_event_count"]++;
+				$devices[$device_id]["status_event_count"]++;
 			}
 
 			/* if it's time to issue a recovery message, indicate so */
-			if ($hosts[$host_id]["status_event_count"] >= $ping_recovery_count) {
-				/* host is up, flag it that way */
-				$hosts[$host_id]["status"] = HOST_UP;
+			if ($devices[$device_id]["status_event_count"] >= $ping_recovery_count) {
+				/* device is up, flag it that way */
+				$devices[$device_id]["status"] = HOST_UP;
 
 				$issue_log_message = true;
 
 				/* update the recovery date only if the recovery count is 1 */
 				if ($ping_recovery_count == 1) {
-					$hosts[$host_id]["status_rec_date"] = date("Y-m-d H:i:s");
+					$devices[$device_id]["status_rec_date"] = date("Y-m-d H:i:s");
 				}
 
 				/* reset the event counter */
-				$hosts[$host_id]["status_event_count"] = 0;
-			/* host is recovering, but not ready to issue log message */
+				$devices[$device_id]["status_event_count"] = 0;
+			/* device is recovering, but not ready to issue log message */
 			} else {
-				/* host recovering for the first time, set event date */
-				if ($hosts[$host_id]["status_event_count"] == 1) {
-					$hosts[$host_id]["status_rec_date"] = date("Y-m-d H:i:s");
+				/* device recovering for the first time, set event date */
+				if ($devices[$device_id]["status_event_count"] == 1) {
+					$devices[$device_id]["status_rec_date"] = date("Y-m-d H:i:s");
 				}
 			}
 		} else {
-		/* host was unknown and now is up */
-			$hosts[$host_id]["status"] = HOST_UP;
-			$hosts[$host_id]["status_event_count"] = 0;
+		/* device was unknown and now is up */
+			$devices[$device_id]["status"] = HOST_UP;
+			$devices[$device_id]["status_event_count"] = 0;
 		}
 	}
 	/* if the user wants a flood of information then flood them */
 	if (read_config_option("log_verbosity") >= POLLER_VERBOSITY_HIGH) {
-		if (($hosts[$host_id]["status"] == HOST_UP) || ($hosts[$host_id]["status"] == HOST_RECOVERING)) {
+		if (($devices[$device_id]["status"] == HOST_UP) || ($devices[$device_id]["status"] == HOST_RECOVERING)) {
 			/* log ping result if we are to use a ping for reachability testing */
 			if ($ping_availability == AVAIL_SNMP_AND_PING) {
-				cacti_log("Host[$host_id] PING: " . $ping->ping_response, $print_data_to_stdout);
-				cacti_log("Host[$host_id] SNMP: " . $ping->snmp_response, $print_data_to_stdout);
+				cacti_log("Host[$device_id] PING: " . $ping->ping_response, $print_data_to_stdout);
+				cacti_log("Host[$device_id] SNMP: " . $ping->snmp_response, $print_data_to_stdout);
 			} elseif ($ping_availability == AVAIL_SNMP) {
-				if (($hosts[$host_id]["snmp_community"] == "") && ($hosts[$host_id]["snmp_version"] != 3)) {
-					cacti_log("Host[$host_id] SNMP: Device does not require SNMP", $print_data_to_stdout);
+				if (($devices[$device_id]["snmp_community"] == "") && ($devices[$device_id]["snmp_version"] != 3)) {
+					cacti_log("Host[$device_id] SNMP: Device does not require SNMP", $print_data_to_stdout);
 				}else{
-					cacti_log("Host[$host_id] SNMP: " . $ping->snmp_response, $print_data_to_stdout);
+					cacti_log("Host[$device_id] SNMP: " . $ping->snmp_response, $print_data_to_stdout);
 				}
 			} else {
-				cacti_log("Host[$host_id] PING: " . $ping->ping_response, $print_data_to_stdout);
+				cacti_log("Host[$device_id] PING: " . $ping->ping_response, $print_data_to_stdout);
 			}
 		} else {
 			if ($ping_availability == AVAIL_SNMP_AND_PING) {
-				cacti_log("Host[$host_id] PING: " . $ping->ping_response, $print_data_to_stdout);
-				cacti_log("Host[$host_id] SNMP: " . $ping->snmp_response, $print_data_to_stdout);
+				cacti_log("Host[$device_id] PING: " . $ping->ping_response, $print_data_to_stdout);
+				cacti_log("Host[$device_id] SNMP: " . $ping->snmp_response, $print_data_to_stdout);
 			} elseif ($ping_availability == AVAIL_SNMP) {
-				cacti_log("Host[$host_id] SNMP: " . $ping->snmp_response, $print_data_to_stdout);
+				cacti_log("Host[$device_id] SNMP: " . $ping->snmp_response, $print_data_to_stdout);
 			} else {
-				cacti_log("Host[$host_id] PING: " . $ping->ping_response, $print_data_to_stdout);
+				cacti_log("Host[$device_id] PING: " . $ping->ping_response, $print_data_to_stdout);
 			}
 		}
 	}
 
 	/* if there is supposed to be an event generated, do it */
 	if ($issue_log_message) {
-		if ($hosts[$host_id]["status"] == HOST_DOWN) {
-			cacti_log("Host[$host_id] ERROR: HOST EVENT: Host is DOWN Message: " . $hosts[$host_id]["status_last_error"], $print_data_to_stdout);
+		if ($devices[$device_id]["status"] == HOST_DOWN) {
+			cacti_log("Host[$device_id] ERROR: HOST EVENT: Host is DOWN Message: " . $devices[$device_id]["status_last_error"], $print_data_to_stdout);
 		} else {
-			cacti_log("Host[$host_id] NOTICE: HOST EVENT: Host Returned from DOWN State: ", $print_data_to_stdout);
+			cacti_log("Host[$device_id] NOTICE: HOST EVENT: Host Returned from DOWN State: ", $print_data_to_stdout);
 		}
 	}
 
-	db_execute("update host set
-		status = '" . $hosts[$host_id]["status"] . "',
-		status_event_count = '" . $hosts[$host_id]["status_event_count"] . "',
-		status_fail_date = '" . $hosts[$host_id]["status_fail_date"] . "',
-		status_rec_date = '" . $hosts[$host_id]["status_rec_date"] . "',
-		status_last_error = '" . $hosts[$host_id]["status_last_error"] . "',
-		min_time = '" . $hosts[$host_id]["min_time"] . "',
-		max_time = '" . $hosts[$host_id]["max_time"] . "',
-		cur_time = '" . $hosts[$host_id]["cur_time"] . "',
-		avg_time = '" . $hosts[$host_id]["avg_time"] . "',
-		total_polls = '" . $hosts[$host_id]["total_polls"] . "',
-		failed_polls = '" . $hosts[$host_id]["failed_polls"] . "',
-		availability = '" . $hosts[$host_id]["availability"] . "'
-		where hostname = '" . $hosts[$host_id]["hostname"] . "'");
+	db_execute("update device set
+		status = '" . $devices[$device_id]["status"] . "',
+		status_event_count = '" . $devices[$device_id]["status_event_count"] . "',
+		status_fail_date = '" . $devices[$device_id]["status_fail_date"] . "',
+		status_rec_date = '" . $devices[$device_id]["status_rec_date"] . "',
+		status_last_error = '" . $devices[$device_id]["status_last_error"] . "',
+		min_time = '" . $devices[$device_id]["min_time"] . "',
+		max_time = '" . $devices[$device_id]["max_time"] . "',
+		cur_time = '" . $devices[$device_id]["cur_time"] . "',
+		avg_time = '" . $devices[$device_id]["avg_time"] . "',
+		total_polls = '" . $devices[$device_id]["total_polls"] . "',
+		failed_polls = '" . $devices[$device_id]["failed_polls"] . "',
+		availability = '" . $devices[$device_id]["availability"] . "'
+		where devicename = '" . $devices[$device_id]["devicename"] . "'");
 }
 
 /* strip_quotes - Strip single and double quotes from a string
@@ -1304,7 +1304,7 @@ function clean_up_path($path) {
    @returns - the data source title */
 function get_data_source_title($local_data_id) {
 	$data = db_fetch_row("select
-		data_local.host_id,
+		data_local.device_id,
 		data_local.snmp_query_id,
 		data_local.snmp_index,
 		data_template_data.name
@@ -1312,8 +1312,8 @@ function get_data_source_title($local_data_id) {
 		where data_template_data.local_data_id=data_local.id
 		and data_local.id=$local_data_id");
 
-	if ((strstr($data["name"], "|")) && (!empty($data["host_id"]))) {
-		return expand_title($data["host_id"], $data["snmp_query_id"], $data["snmp_index"], $data["name"]);
+	if ((strstr($data["name"], "|")) && (!empty($data["device_id"]))) {
+		return expand_title($data["device_id"], $data["snmp_query_id"], $data["snmp_index"], $data["name"]);
 	}else{
 		return $data["name"];
 	}
@@ -1324,7 +1324,7 @@ function get_data_source_title($local_data_id) {
    @returns - the graph title */
 function get_graph_title($local_graph_id) {
 	$graph = db_fetch_row("select
-		graph_local.host_id,
+		graph_local.device_id,
 		graph_local.snmp_query_id,
 		graph_local.snmp_index,
 		graph_templates_graph.title
@@ -1332,15 +1332,15 @@ function get_graph_title($local_graph_id) {
 		where graph_templates_graph.local_graph_id=graph_local.id
 		and graph_local.id=$local_graph_id");
 
-	if ((strstr($graph["title"], "|")) && (!empty($graph["host_id"]))) {
-		return expand_title($graph["host_id"], $graph["snmp_query_id"], $graph["snmp_index"], $graph["title"]);
+	if ((strstr($graph["title"], "|")) && (!empty($graph["device_id"]))) {
+		return expand_title($graph["device_id"], $graph["snmp_query_id"], $graph["snmp_index"], $graph["title"]);
 	}else{
 		return $graph["title"];
 	}
 }
 
-function get_host_description($host_id) {
-	return db_fetch_cell("SELECT description FROM host WHERE id=$host_id");
+function get_device_description($device_id) {
+	return db_fetch_cell("SELECT description FROM device WHERE id=$device_id");
 }
 
 /* generate_data_source_path - creates a new data source path from scratch using the first data source
@@ -1350,28 +1350,28 @@ function get_host_description($host_id) {
 function generate_data_source_path($local_data_id) {
 	global $config;
 
-	$host_part = ""; $ds_part = "";
+	$device_part = ""; $ds_part = "";
 
 	$extended_paths = read_config_option("extended_paths");
 
-	/* try any prepend the name with the host description */
-	$host = db_fetch_row("SELECT
-		host.id,
-		host.description
-		FROM (host, data_local)
-		WHERE data_local.host_id=host.id
+	/* try any prepend the name with the device description */
+	$device = db_fetch_row("SELECT
+		device.id,
+		device.description
+		FROM (device, data_local)
+		WHERE data_local.device_id=device.id
 		AND data_local.id=$local_data_id
 		LIMIT 1");
 
-	$host_name = $host["description"];
-	$host_id   = $host["id"];
+	$device_name = $device["description"];
+	$device_id   = $device["id"];
 
 	/* put it all together using the local_data_id at the end */
 	if ($extended_paths == CHECKED) {
-		$new_path = "<path_rra>/$host_id/$local_data_id.rrd";
+		$new_path = "<path_rra>/$device_id/$local_data_id.rrd";
 	}else{
-		if (!empty($host_name)) {
-			$host_part = strtolower(clean_up_file_name($host_name)) . "_";
+		if (!empty($device_name)) {
+			$device_part = strtolower(clean_up_file_name($device_name)) . "_";
 		}
 
 		/* then try and use the internal DS name to identify it */
@@ -1386,7 +1386,7 @@ function generate_data_source_path($local_data_id) {
 			$ds_part = "ds";
 		}
 
-		$new_path = "<path_rra>/$host_part$ds_part" . "_" . "$local_data_id.rrd";
+		$new_path = "<path_rra>/$device_part$ds_part" . "_" . "$local_data_id.rrd";
 	}
 
 	/* update our changes to the db */
@@ -1814,31 +1814,31 @@ function get_graph_tree_array($return_sql = false, $force_refresh = false) {
 	}
 }
 
-/* get_host_array - returns a list of hosts taking permissions into account if necessary
-   @returns - (array) an array containing a list of hosts */
-function get_host_array() {
+/* get_device_array - returns a list of devices taking permissions into account if necessary
+   @returns - (array) an array containing a list of devices */
+function get_device_array() {
 	if (read_config_option("auth_method") != 0) {
-		$current_user = db_fetch_row("select policy_hosts from user_auth where id=" . $_SESSION["sess_user_id"]);
+		$current_user = db_fetch_row("select policy_devices from user_auth where id=" . $_SESSION["sess_user_id"]);
 
-		if ($current_user["policy_hosts"] == "1") {
+		if ($current_user["policy_devices"] == "1") {
 			$sql_where = "where user_auth_perms.user_id is null";
-		}elseif ($current_user["policy_hosts"] == "2") {
+		}elseif ($current_user["policy_devices"] == "2") {
 			$sql_where = "where user_auth_perms.user_id is not null";
 		}
 
-		$host_list = db_fetch_assoc("select
-			host.id,
-			CONCAT_WS('',host.description,' (',host.hostname,')') as name,
+		$device_list = db_fetch_assoc("select
+			device.id,
+			CONCAT_WS('',device.description,' (',device.devicename,')') as name,
 			user_auth_perms.user_id
-			from host
-			left join user_auth_perms on (host.id=user_auth_perms.item_id and user_auth_perms.type=" . PERM_DEVICES . " and user_auth_perms.user_id=" . $_SESSION["sess_user_id"] . ")
+			from device
+			left join user_auth_perms on (device.id=user_auth_perms.item_id and user_auth_perms.type=" . PERM_DEVICES . " and user_auth_perms.user_id=" . $_SESSION["sess_user_id"] . ")
 			$sql_where
-			order by host.description,host.hostname");
+			order by device.description,device.devicename");
 	}else{
-		$host_list = db_fetch_assoc("select id,CONCAT_WS('',description,' (',hostname,')') as name from host order by description,hostname");
+		$device_list = db_fetch_assoc("select id,CONCAT_WS('',description,' (',devicename,')') as name from device order by description,devicename");
 	}
 
-	return $host_list;
+	return $device_list;
 }
 
 /* draw_navigation_text - determines the top header navigation text for the current page and displays it to
@@ -2164,11 +2164,11 @@ function get_hash_xaxis($xaxis_id, $sub_type = "xaxis") {
 	}
 }
 
-/* get_hash_host_template - returns the current unique hash for a gprint preset
-   @arg $host_template_id - (int) the ID of the device template to return a hash for
+/* get_hash_device_template - returns the current unique hash for a gprint preset
+   @arg $device_template_id - (int) the ID of the device template to return a hash for
    @returns - a 128-bit, hexadecimal hash */
-function get_hash_host_template($host_template_id) {
-	$hash = db_fetch_cell("select hash from host_template where id=$host_template_id");
+function get_hash_device_template($device_template_id) {
+	$hash = db_fetch_cell("select hash from device_template where id=$device_template_id");
 
 	if (preg_match("/[a-fA-F0-9]{32}/", $hash)) {
 		return $hash;
@@ -2214,7 +2214,7 @@ function get_hash_round_robin_archive($rra_id) {
 
 /* get_hash_version - returns the item type and cacti version in a hash format
    @arg $type - the type of item to represent ('graph_template','data_template',
-     'data_input_method','cdef','gprint_preset','data_query','host_template')
+     'data_input_method','cdef','gprint_preset','data_query','device_template')
    @returns - a 24-bit hexadecimal hash (8-bits for type, 16-bits for version) */
 function get_hash_version($type) {
 	global $hash_type_codes, $hash_version_codes;

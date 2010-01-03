@@ -48,7 +48,7 @@ if (sizeof($parms) == 0) {
 }
 
 $debug = FALSE;
-$host_id = "";
+$device_id = "";
 $filter = "";
 
 foreach ($parms as $parameter) {
@@ -56,8 +56,8 @@ foreach ($parms as $parameter) {
 
 	switch ($arg) {
 		case "-id" :
-		case "--host-id" :
-			$host_id = $value;
+		case "--device-id" :
+			$device_id = $value;
 			break;
 		case "-s" :
 		case "--filter" :
@@ -91,28 +91,28 @@ if (strlen($filter)) {
 	$sql_where = "";
 }
 
-if (strtolower($host_id) == "all") {
+if (strtolower($device_id) == "all") {
 	/* Act on all graphs */
 }
-elseif (substr_count($host_id, "|")) {
-	$hosts = explode("|", $host_id);
-	$host_str = "";
+elseif (substr_count($device_id, "|")) {
+	$devices = explode("|", $device_id);
+	$device_str = "";
 
-	foreach ($hosts as $host) {
-		if (strlen($host_str)) {
-			$host_str .= ", '" . $host . "'";
+	foreach ($devices as $device) {
+		if (strlen($device_str)) {
+			$device_str .= ", '" . $device . "'";
 		} else {
-			$host_str .= "'" . $host . "'";
+			$device_str .= "'" . $device . "'";
 		}
 	}
 
-	$sql_where .= " AND data_local.host_id IN ($host_str)";
+	$sql_where .= " AND data_local.device_id IN ($device_str)";
 }
-elseif ($host_id == "0") {
-	$sql_where .= " AND data_local.host_id=0";
+elseif ($device_id == "0") {
+	$sql_where .= " AND data_local.device_id=0";
 }
-elseif (!empty ($host_id)) {
-	$sql_where .= " AND data_local.host_id=" . $host_id;
+elseif (!empty ($device_id)) {
+	$sql_where .= " AND data_local.device_id=" . $device_id;
 } else {
 	echo __("ERROR: You must specify either a device-id or 'All' to proceed.") . "\n";
 	display_help($me);
@@ -125,7 +125,7 @@ $data_source_list = db_fetch_assoc("SELECT
 		data_template_data.active,
 		data_input.name as data_input_name,
 		data_template.name as data_template_name,
-		data_local.host_id
+		data_local.device_id
 		FROM (data_local,data_template_data)
 		LEFT JOIN data_input
 		ON (data_input.id=data_template_data.data_input_id)
@@ -152,9 +152,9 @@ foreach ($data_source_list as $data_source) {
 /*	display_help - displays the usage of the function */
 function display_help($me) {
 	echo __("Cacti Reapply Data Sources Names Script 1.0") . ", " . __("Copyright 2004-2010 - The Cacti Group") . "\n";
-	echo __("usage: ") . $me . " --id=[host_id|All][host_id1|host_id2|...]\n";
+	echo __("usage: ") . $me . " --id=[device_id|All][device_id1|device_id2|...]\n";
 	echo "       [--filter=[search_string] [--debug] [-h] [--help] [-v] [--version]\n\n";
-	echo "   --id          " . __("The device_id or 'All' or a pipe delimited list of host_id's") . "\n";
+	echo "   --id          " . __("The device_id or 'All' or a pipe delimited list of device_id's") . "\n";
 	echo "   --filter      " . __("A data template name or data source title to search for") . "\n";
 	echo "   --debug       " . __("Display verbose output during execution") . "\n";
 	echo "   -v --version  " . __("Display this help message") . "\n";

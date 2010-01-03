@@ -41,7 +41,7 @@ $me = array_shift($parms);
 if (sizeof($parms)) {
 	$displayGraphTemplates 	= FALSE;
 	$quietMode				= FALSE;
-	unset($host_id);
+	unset($device_id);
 	unset($graph_template_id);
 
 	foreach($parms as $parameter) {
@@ -53,8 +53,8 @@ if (sizeof($parms)) {
 
 			break;
 		case "--device-id":
-			$host_id = trim($value);
-			if (!is_numeric($host_id)) {
+			$device_id = trim($value);
+			if (!is_numeric($device_id)) {
 				echo __("ERROR: You must supply a valid device-id to run this script!") . "\n";
 				exit(1);
 			}
@@ -98,7 +98,7 @@ if (sizeof($parms)) {
 	 * verify required parameters
 	 * for update / insert options
 	 */
-	if (!isset($host_id)) {
+	if (!isset($device_id)) {
 		echo __("ERROR: You must supply a valid device-id for all devices!") . "\n";
 		exit(1);
 	}
@@ -109,11 +109,11 @@ if (sizeof($parms)) {
 	}
 
 	/*
-	 * verify valid host id and get a name for it
+	 * verify valid device id and get a name for it
 	 */
-	$host_name = db_fetch_cell("SELECT hostname FROM host WHERE id = " . $host_id);
-	if (!isset($host_name)) {
-		printf(__("ERROR: Unknown Device ID (%d)\n"), $host_id);
+	$device_name = db_fetch_cell("SELECT devicename FROM device WHERE id = " . $device_id);
+	if (!isset($device_name)) {
+		printf(__("ERROR: Unknown Device ID (%d)\n"), $device_id);
 		exit(1);
 	}
 
@@ -127,20 +127,20 @@ if (sizeof($parms)) {
 	}
 
 	/* check, if graph template was already associated */
-	$exists_already = db_fetch_cell("SELECT host_id FROM host_graph WHERE graph_template_id=$graph_template_id AND host_id=$host_id");
+	$exists_already = db_fetch_cell("SELECT device_id FROM device_graph WHERE graph_template_id=$graph_template_id AND device_id=$device_id");
 	if ((isset($exists_already)) &&
 		($exists_already > 0)) {
-		printf(__("ERROR: Graph Template is already associated for device: (%1d: %2s) - graph-template: (%3d: %4s)\n"), $host_id, $host_name, $graph_template_id, $graph_template_name);
+		printf(__("ERROR: Graph Template is already associated for device: (%1d: %2s) - graph-template: (%3d: %4s)\n"), $device_id, $device_name, $graph_template_id, $graph_template_name);
 		exit(1);
 	}else{
-		db_execute("replace into host_graph (host_id,graph_template_id) values (" . $host_id . "," . $graph_template_id . ")");
+		db_execute("replace into device_graph (device_id,graph_template_id) values (" . $device_id . "," . $graph_template_id . ")");
 	}
 
 	if (is_error_message()) {
-		printf(__("ERROR: Failed to add this graph template for device: (%1d: %2s) - graph-template: (%3d: %4s)\n"), $host_id, $host_name, $graph_template_id, $graph_template_name);
+		printf(__("ERROR: Failed to add this graph template for device: (%1d: %2s) - graph-template: (%3d: %4s)\n"), $device_id, $device_name, $graph_template_id, $graph_template_name);
 		exit(1);
 	} else {
-		printf(__("Success: Graph Template associated for device: (%1d: %2s) - graph-template: (%3d: %4s)\n"), $host_id, $host_name, $graph_template_id, $graph_template_name);
+		printf(__("Success: Graph Template associated for device: (%1d: %2s) - graph-template: (%3d: %4s)\n"), $device_id, $device_name, $graph_template_id, $graph_template_name);
 		exit(0);
 	}
 }else{

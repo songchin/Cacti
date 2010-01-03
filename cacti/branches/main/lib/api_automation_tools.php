@@ -23,25 +23,25 @@
  */
 
 function getHostTemplates() {
-	$tmpArray = db_fetch_assoc("select id, name from host_template order by id");
+	$tmpArray = db_fetch_assoc("select id, name from device_template order by id");
 
-	$host_templates[0] = __("None");
+	$device_templates[0] = __("None");
 
 	if (sizeof($tmpArray)) {
 		foreach ($tmpArray as $template) {
-			$host_templates[$template["id"]] = $template["name"];
+			$device_templates[$template["id"]] = $template["name"];
 		}
 	}
 
-	return $host_templates;
+	return $device_templates;
 }
 
-/* getDevices				get all matching hosts for given selection criteria
+/* getDevices				get all matching devices for given selection criteria
  * @arg $input_parms	array of selection criteria
- * returns				array of hosts, indexed by host_id
+ * returns				array of devices, indexed by device_id
  */
 function getDevices($input_parms) {
-	$hosts    = array();
+	$devices    = array();
 
 	$sql_where = "";
 
@@ -65,14 +65,14 @@ function getDevices($input_parms) {
 		$sql_where .= 'description like "%%' . $input_parms["description"] . '%%" ';
 	}
 
-	if (isset($input_parms["hostname"])) {
+	if (isset($input_parms["devicename"])) {
 		strlen($sql_where) ? ($sql_where .= ' AND ') : ($sql_where .= ' WHERE ');
-		$sql_where .= 'hostname like "%%' . $input_parms["hostname"] . '%%" ';
+		$sql_where .= 'devicename like "%%' . $input_parms["devicename"] . '%%" ';
 	}
 
-	if (isset($input_parms["host_template_id"])) {
+	if (isset($input_parms["device_template_id"])) {
 		strlen($sql_where) ? ($sql_where .= ' AND ') : ($sql_where .= ' WHERE ');
-		$sql_where .= 'host_template_id = ' . $input_parms["host_template_id"] . ' ';
+		$sql_where .= 'device_template_id = ' . $input_parms["device_template_id"] . ' ';
 	}
 
 	if (isset($input_parms["notes"])) {
@@ -168,7 +168,7 @@ function getDevices($input_parms) {
 	$sql_stmt = ("SELECT " .
 					"* " .
 				"FROM " .
-					"host " .
+					"device " .
 	$sql_where .
 				"ORDER BY id");
 	#print $sql_stmt ."\n";
@@ -178,31 +178,31 @@ function getDevices($input_parms) {
 
 /* getGraphs				- get all Graphs related to a given device selection
  * @arg $device_selection	- sql selection of device(s), empty for all devices
- * 							  e.g. WHERE host_id = <id>
- * 							       WHERE (host_id IN (...))
+ * 							  e.g. WHERE device_id = <id>
+ * 							       WHERE (device_id IN (...))
  */
 function getGraphs($device_selection, &$header) {
 	$sql = "SELECT " .
 			"graph_local.id as local_graph_id, " .
-			"graph_local.host_id, " .
-			"host.hostname, " .
+			"graph_local.device_id, " .
+			"device.devicename, " .
 			"graph_templates.id as gt_id, " .
 			"graph_templates.name, " .
 			"graph_templates_graph.title_cache  " .
 			"FROM graph_local " .
 			"LEFT JOIN graph_templates_graph ON (graph_local.id=graph_templates_graph.local_graph_id) " .
 			"LEFT JOIN graph_templates ON (graph_local.graph_template_id=graph_templates.id) " .
-			"LEFT JOIN host ON (graph_local.host_id=host.id) " .
+			"LEFT JOIN device ON (graph_local.device_id=device.id) " .
 	$device_selection .
-			" ORDER BY host_id ASC, gt_id ASC";
+			" ORDER BY device_id ASC, gt_id ASC";
 
 	$tmpArray = db_fetch_assoc($sql);
 
 	if (sizeof($tmpArray)) {
 		# provide human readable column headers
 		$header["local_graph_id"]["desc"]		= __("Local Graph Id");
-		$header["host_id"]["desc"] 				= __("Host Id");
-		$header["hostname"]["desc"] 			= __("Hostname");
+		$header["device_id"]["desc"] 				= __("Host Id");
+		$header["devicename"]["desc"] 			= __("Hostname");
 		$header["gt_id"]["desc"]		 		= __("Graph Template Id");
 		$header["name"]["desc"]			 		= __("Graph Template Name");
 		$header["title_cache"]["desc"] 			= __("Graph Title");
@@ -219,19 +219,19 @@ function getHostGraphs($devices, &$header) {
 	$sql_where = "";
 
 	if (sizeof($devices)) {
-		$sql_where .= ((strlen($sql_where) === 0) ? "WHERE " : "AND ") . str_replace("id", "graph_local.host_id", array_to_sql_or($devices, "id")) . " ";
+		$sql_where .= ((strlen($sql_where) === 0) ? "WHERE " : "AND ") . str_replace("id", "graph_local.device_id", array_to_sql_or($devices, "id")) . " ";
 	}
 
 	$sql = "SELECT " .
 		"graph_templates_graph.local_graph_id as id, " .
 		"graph_templates_graph.title_cache as name, " .
 		"graph_templates.name as template_name, " .
-		"graph_local.host_id as host_id, " .
-		"host.hostname as hostname " .
+		"graph_local.device_id as device_id, " .
+		"device.devicename as devicename " .
 		"FROM graph_local " .
 		"LEFT JOIN graph_templates ON (graph_local.graph_template_id=graph_templates.id) " .
 		"LEFT JOIN graph_templates_graph ON (graph_local.id=graph_templates_graph.local_graph_id) " .
-		"LEFT JOIN host ON (graph_local.host_id=host.id) " .
+		"LEFT JOIN device ON (graph_local.device_id=device.id) " .
 	$sql_where .
 		" ORDER BY graph_templates_graph.local_graph_id";
 	#print $sql . "\n";
@@ -242,8 +242,8 @@ function getHostGraphs($devices, &$header) {
 		$header["id"]["desc"] 				= __("Graph Id");
 		$header["name"]["desc"] 			= __("Graph Title");
 		$header["template_name"]["desc"] 	= __("Graph Template Name");
-		$header["host_id"]["desc"] 			= __("Host Id");
-		$header["hostname"]["desc"] 		= __("Hostname");
+		$header["device_id"]["desc"] 			= __("Host Id");
+		$header["devicename"]["desc"] 		= __("Hostname");
 	}
 
 	return $tmpArray;
@@ -349,18 +349,18 @@ function displayGenericArray($data, $req_fields=array(), $title="", $quietMode=F
 
 function getAddresses() {
 	$addresses = array();
-	$tmpArray  = db_fetch_assoc("SELECT id, hostname FROM host ORDER BY hostname");
+	$tmpArray  = db_fetch_assoc("SELECT id, devicename FROM device ORDER BY devicename");
 
 	if (sizeof($tmpArray)) {
 		foreach ($tmpArray as $tmp) {
-			$addresses[$tmp["hostname"]] = $tmp["id"];
+			$addresses[$tmp["devicename"]] = $tmp["id"];
 		}
 	}
 
 	return $addresses;
 }
 
-function getSNMPFields($hostId, $snmp_query_id = "") {
+function getSNMPFields($deviceId, $snmp_query_id = "") {
 	$fieldNames = array();
 
 	if ($snmp_query_id != "") {
@@ -370,8 +370,8 @@ function getSNMPFields($hostId, $snmp_query_id = "") {
 	}
 
 	$tmpArray   = db_fetch_assoc("SELECT DISTINCT field_name
-		FROM host_snmp_cache
-		WHERE host_id = " . $hostId . "
+		FROM device_snmp_cache
+		WHERE device_id = " . $deviceId . "
 		$sql_where
 		ORDER BY field_name");
 
@@ -384,7 +384,7 @@ function getSNMPFields($hostId, $snmp_query_id = "") {
 		return $fieldNames;
 }
 
-function getSNMPValues($hostId, $field, $snmp_query_id = "") {
+function getSNMPValues($deviceId, $field, $snmp_query_id = "") {
 	$values   = array();
 
 	if ($snmp_query_id != "") {
@@ -394,8 +394,8 @@ function getSNMPValues($hostId, $field, $snmp_query_id = "") {
 	}
 
 	$tmpArray = db_fetch_assoc("SELECT field_value
-		FROM host_snmp_cache
-		WHERE host_id=" . $hostId . "
+		FROM device_snmp_cache
+		WHERE device_id=" . $deviceId . "
 		AND field_name='" . $field . "'
 		$sql_where
 		ORDER BY field_value");
@@ -431,24 +431,24 @@ function getSNMPQueriesByDevices($devices, $snmp_query_id='', &$header) {
 	$sql_where = "";
 
 	if (sizeof($devices)) {
-		$sql_where .= ((strlen($sql_where) === 0) ? "WHERE " : "AND ") . str_replace("id", "host_id", array_to_sql_or($devices, "id")) . " ";
+		$sql_where .= ((strlen($sql_where) === 0) ? "WHERE " : "AND ") . str_replace("id", "device_id", array_to_sql_or($devices, "id")) . " ";
 	}
 	if ($snmp_query_id != '') {
 		$sql_where .= ((strlen($sql_where) === 0) ? "WHERE " : "AND ") . " snmp_query.id =" . $snmp_query_id . " ";
 	}
 	$sql = "SELECT " .
-				"host.id as host_id, " .
-				"host.hostname as hostname, " .
+				"device.id as device_id, " .
+				"device.devicename as devicename, " .
 				"snmp_query.id as snmp_query_id, " .
 				"snmp_query.name as snmp_query_name, " .
-				"host_snmp_query.sort_field, " .
-				"host_snmp_query.title_format, " .
-				"host_snmp_query.reindex_method " .
-				"FROM host " .
-				"LEFT JOIN host_snmp_query ON (host.id = host_snmp_query.host_id) " .
-				"LEFT JOIN snmp_query ON (host_snmp_query.snmp_query_id = snmp_query.id) " .
+				"device_snmp_query.sort_field, " .
+				"device_snmp_query.title_format, " .
+				"device_snmp_query.reindex_method " .
+				"FROM device " .
+				"LEFT JOIN device_snmp_query ON (device.id = device_snmp_query.device_id) " .
+				"LEFT JOIN snmp_query ON (device_snmp_query.snmp_query_id = snmp_query.id) " .
 	$sql_where .
-				"ORDER by host.id, snmp_query.id";
+				"ORDER by device.id, snmp_query.id";
 	#print $sql . "\n";
 
 	$tmpArray = db_fetch_assoc($sql);
@@ -457,8 +457,8 @@ function getSNMPQueriesByDevices($devices, $snmp_query_id='', &$header) {
 			$tmpArray{$key}["human_reindex_method"] = $reindex_types[$tmpArray{$key}["reindex_method"]];
 		}
 		# provide human readable column headers
-		$header["host_id"]["desc"] 				= __("Host Id");
-		$header["hostname"]["desc"] 			= __("Hostname");
+		$header["device_id"]["desc"] 				= __("Host Id");
+		$header["devicename"]["desc"] 			= __("Hostname");
 		$header["snmp_query_id"]["desc"] 		= __("Query Id");
 		$header["snmp_query_name"]["desc"] 		= __("Query Name");
 		$header["sort_field"]["desc"] 			= __("Sort Field");
@@ -501,15 +501,15 @@ function getGraphTemplates() {
 	return $graph_templates;
 }
 
-function getGraphTemplatesByHostTemplate($host_template_id) {
+function getGraphTemplatesByHostTemplate($device_template_id) {
 	$graph_templates = array();
 	$tmpArray 		 = db_fetch_assoc("SELECT " .
-										"host_template_graph.graph_template_id AS id, " .
+										"device_template_graph.graph_template_id AS id, " .
 										"graph_templates.name AS name " .
-									"FROM host_template_graph " .
+									"FROM device_template_graph " .
 									"LEFT JOIN graph_templates " .
-										"ON (host_template_graph.graph_template_id = graph_templates.id) " .
-									"WHERE host_template_id = $host_template_id");
+										"ON (device_template_graph.graph_template_id = graph_templates.id) " .
+									"WHERE device_template_id = $device_template_id");
 
 	if (sizeof($tmpArray)) {
 		foreach ($tmpArray as $t) {
@@ -534,13 +534,13 @@ function displayQueryTypes($types, $quietMode = FALSE) {
 	}
 }
 
-function displayHostTemplates($host_templates, $quietMode = FALSE) {
+function displayHostTemplates($device_templates, $quietMode = FALSE) {
 	if (!$quietMode) {
 		echo __("Valid Device Templates: (id, name)") . "\n";
 	}
 
-	if (sizeof($host_templates)) {
-		foreach ($host_templates as $id => $name) {
+	if (sizeof($device_templates)) {
+		foreach ($device_templates as $id => $name) {
 			echo "$id\t$name\n";
 		}
 	}
@@ -557,7 +557,7 @@ function displayCommunities($quietMode = FALSE) {
 
 	$communities = db_fetch_assoc("SELECT DISTINCT
 		snmp_community
-		FROM host
+		FROM device
 		ORDER BY snmp_community");
 
 	if (sizeof($communities)) {
@@ -571,9 +571,9 @@ function displayCommunities($quietMode = FALSE) {
 	}
 }
 
-function displaySNMPFields($fields, $hostId, $quietMode = FALSE) {
+function displaySNMPFields($fields, $deviceId, $quietMode = FALSE) {
 	if (!$quietMode) {
-		echo __("Known SNMP Fields for host-id $hostId: (name)") . "\n";
+		echo __("Known SNMP Fields for device-id $deviceId: (name)") . "\n";
 	}
 
 	while (list($field, $values) = each ($fields)) {
@@ -585,9 +585,9 @@ function displaySNMPFields($fields, $hostId, $quietMode = FALSE) {
 	}
 }
 
-function displaySNMPValues($values, $hostId, $field, $quietMode = FALSE) {
+function displaySNMPValues($values, $deviceId, $field, $quietMode = FALSE) {
 	if (!$quietMode) {
-		echo __("Known values for $field for host $hostId: (name)") . "\n";
+		echo __("Known values for $field for device $deviceId: (name)") . "\n";
 	}
 
 	while (list($value, $foo) = each($values)) {
@@ -599,7 +599,7 @@ function displaySNMPValues($values, $hostId, $field, $quietMode = FALSE) {
 	}
 }
 
-function displaySNMPValuesExtended($hostId, $fields, $snmpQueryId, $quietMode = FALSE) {
+function displaySNMPValuesExtended($deviceId, $fields, $snmpQueryId, $quietMode = FALSE) {
 	$exit_code = 1; # assume an error until we've printed sth
 
 	$req_fields = array();
@@ -633,7 +633,7 @@ function displaySNMPValuesExtended($hostId, $fields, $snmpQueryId, $quietMode = 
 				$req_fields[$field_name]["length"] = $quietMode ? 0 : max(strlen($field_array["name"]), strlen($field_name));
 
 				if (!isset ($total_rows)) {
-					$total_rows = db_fetch_cell("SELECT COUNT(*) FROM host_snmp_cache WHERE host_id=" . $hostId . " AND snmp_query_id=" . $snmpQueryId . " AND field_name='$field_name'");
+					$total_rows = db_fetch_cell("SELECT COUNT(*) FROM device_snmp_cache WHERE device_id=" . $deviceId . " AND snmp_query_id=" . $snmpQueryId . " AND field_name='$field_name'");
 				}
 			}
 		}
@@ -659,15 +659,15 @@ function displaySNMPValuesExtended($hostId, $fields, $snmpQueryId, $quietMode = 
 		$field_names = db_fetch_assoc("SELECT DISTINCT " .
 											"field_name " .
 										"FROM " .
-											"host_snmp_cache " .
+											"device_snmp_cache " .
 										"WHERE " .
-											"host_id=" . $hostId .
+											"device_id=" . $deviceId .
 										" AND " .
 											"snmp_query_id=" . $snmpQueryId .
 		$query_FieldSpec);
 
 		/* build magic query */
-		$sql_query = "SELECT host_id, snmp_query_id, snmp_index";
+		$sql_query = "SELECT device_id, snmp_query_id, snmp_index";
 		if (sizeof($field_names) > 0) {
 			foreach ($field_names as $column) {
 				$field_name = $column["field_name"];
@@ -678,11 +678,11 @@ function displaySNMPValuesExtended($hostId, $fields, $snmpQueryId, $quietMode = 
 			return (1);
 		}
 
-		$sql_query .= 	" FROM host_snmp_cache " .
-						"WHERE host_id=" . $hostId .
+		$sql_query .= 	" FROM device_snmp_cache " .
+						"WHERE device_id=" . $deviceId .
 						" AND snmp_query_id=" . $snmpQueryId .
 		$query_FieldSpec .
-						" GROUP BY host_id, snmp_query_id, snmp_index " .
+						" GROUP BY device_id, snmp_query_id, snmp_index " .
 		$sql_order;
 
 		$snmp_query_indexes = db_fetch_assoc($sql_query);
@@ -707,9 +707,9 @@ function displaySNMPValuesExtended($hostId, $fields, $snmpQueryId, $quietMode = 
 
 		if (!$quietMode) {
 			if ($fields === "") {
-				echo __("Known values for host-id") . " " . $hostId . ":\n";
+				echo __("Known values for device-id") . " " . $deviceId . ":\n";
 			} else {
-				echo __("Known values for host-id") . " " . $hostId . ": (" . $fields . ")\n";
+				echo __("Known values for device-id") . " " . $deviceId . ": (" . $fields . ")\n";
 			}
 			# now print headers: field identifier and field names
 			reset($req_fields);
@@ -800,14 +800,14 @@ function displayGraphTemplates($templates, $quietMode = FALSE) {
 	}
 }
 
-function displayDevices($hosts, $quietMode = FALSE) {
+function displayDevices($devices, $quietMode = FALSE) {
 	if (!$quietMode) {
-		echo __("Known Hosts: (id, hostname, template, description)") . "\n";
+		echo __("Known Hosts: (id, devicename, template, description)") . "\n";
 	}
 
-	if (sizeof($hosts)) {
-		foreach($hosts as $host) {
-			echo $host["id"] . "\t" . $host["hostname"] . "\t" . $host["host_template_id"] . "\t" . $host["description"] . "\n";
+	if (sizeof($devices)) {
+		foreach($devices as $device) {
+			echo $device["id"] . "\t" . $device["devicename"] . "\t" . $device["device_template_id"] . "\t" . $device["description"] . "\n";
 		}
 	}
 
@@ -906,7 +906,7 @@ function displayPerms($perm, $quietMode = FALSE) {
 	}
 
 	$sql = "SELECT user_id, user_auth.username, " .
-		"policy_graphs, policy_trees, policy_hosts, policy_graph_templates, " .
+		"policy_graphs, policy_trees, policy_devices, policy_graph_templates, " .
 		"`type`, item_id " .
 		"FROM user_auth_perms " .
 		"LEFT JOIN user_auth ON (user_auth_perms.user_id = user_auth.id) " . $sql_where .
@@ -928,9 +928,9 @@ function displayPerms($perm, $quietMode = FALSE) {
 					$item["name"] = db_fetch_cell("SELECT name FROM graph_tree WHERE id=" . $item["item_id"]);
 					break;
 				case PERM_DEVICES:
-					$item["default_policy"] = (($item["policy_hosts"] == POLICY_ALLOW) ? __("Accessible") : __("No Access"));
-					$item["item_policy"] = (($item["policy_hosts"] == POLICY_ALLOW) ? __("No Access") : __("Accessible"));
-					$item["name"] = db_fetch_cell("SELECT hostname FROM host WHERE id=" . $item["item_id"]);
+					$item["default_policy"] = (($item["policy_devices"] == POLICY_ALLOW) ? __("Accessible") : __("No Access"));
+					$item["item_policy"] = (($item["policy_devices"] == POLICY_ALLOW) ? __("No Access") : __("Accessible"));
+					$item["name"] = db_fetch_cell("SELECT devicename FROM device WHERE id=" . $item["item_id"]);
 					break;
 				case PERM_GRAPH_TEMPLATES:
 					$item["default_policy"] = (($item["policy_graph_templates"] == POLICY_ALLOW) ? __("Accessible") : __("No Access"));
@@ -982,7 +982,7 @@ function displayTrees($quietMode = FALSE) {
 }
 
 function displayTreeNodes($tree_id, $nodeType = "", $parentNode = "", $quietMode = FALSE) {
-	global $tree_sort_types, $tree_item_types, $host_group_types;
+	global $tree_sort_types, $tree_item_types, $device_group_types;
 
 	if (!$quietMode) {
 		echo __("Known Tree Nodes: (type, id, parentid, text)") . "\n";
@@ -995,8 +995,8 @@ function displayTreeNodes($tree_id, $nodeType = "", $parentNode = "", $quietMode
 		local_graph_id,
 		rra_id,
 		title,
-		host_id,
-		host_grouping_type,
+		device_id,
+		device_grouping_type,
 		order_key,
 		sort_children_type
 		FROM graph_tree_items
@@ -1021,7 +1021,7 @@ function displayTreeNodes($tree_id, $nodeType = "", $parentNode = "", $quietMode
 			$current_type = TREE_ITEM_TYPE_HEADER;
 			if ($node["local_graph_id"] > 0) 	{ $current_type = TREE_ITEM_TYPE_GRAPH; }
 			if ($node["title"] != "") 			{ $current_type = TREE_ITEM_TYPE_HEADER; }
-			if ($node["host_id"] > 0) 			{ $current_type = TREE_ITEM_TYPE_DEVICE; }
+			if ($node["device_id"] > 0) 			{ $current_type = TREE_ITEM_TYPE_DEVICE; }
 
 			switch ($current_type) {
 				case TREE_ITEM_TYPE_HEADER:
@@ -1069,11 +1069,11 @@ function displayTreeNodes($tree_id, $nodeType = "", $parentNode = "", $quietMode
 						echo $node["parent_id"]."\t";
 
 						$name = db_fetch_cell("SELECT
-												hostname
-												FROM host
-												WHERE id = " . $node["host_id"]);
+												devicename
+												FROM device
+												WHERE id = " . $node["device_id"]);
 						echo $name . "\t";
-						echo $host_group_types[$node["host_grouping_type"]]."\t";
+						echo $device_group_types[$node["device_grouping_type"]]."\t";
 						echo "\n";
 					}
 					break;
@@ -1119,10 +1119,10 @@ function displayUsers($quietMode = FALSE) {
 	global $graph_policy_array;
 
 	if (!$quietMode) {
-		echo __("Known Users: (id, username, full_name, graph policy, tree policy, host policy, graph templates policy)") . "\n";
+		echo __("Known Users: (id, username, full_name, graph policy, tree policy, device policy, graph templates policy)") . "\n";
 	}
 
-	$groups = db_fetch_assoc("SELECT id, username, full_name, policy_graphs, policy_trees, policy_hosts, policy_graph_templates " .
+	$groups = db_fetch_assoc("SELECT id, username, full_name, policy_graphs, policy_trees, policy_devices, policy_graph_templates " .
 				"FROM user_auth " .
 				"ORDER BY id");
 
@@ -1133,7 +1133,7 @@ function displayUsers($quietMode = FALSE) {
 			echo $group["full_name"]."\t";
 			echo $graph_policy_array{$group["policy_graphs"]}."\t";
 			echo $graph_policy_array{$group["policy_trees"]}."\t";
-			echo $graph_policy_array{$group["policy_hosts"]}."\t";
+			echo $graph_policy_array{$group["policy_devices"]}."\t";
 			echo $graph_policy_array{$group["policy_graph_templates"]}."\n";
 		}
 	}
@@ -1164,15 +1164,15 @@ function displayGroups($quietMode = FALSE) {
 }
 
 /*
- * verifyDevice		- verifies all array items for a host array
- * 					  recodes the host array, if necessary
- * @arg $host		- host array (part of host table)
+ * verifyDevice		- verifies all array items for a device array
+ * 					  recodes the device array, if necessary
+ * @arg $device		- device array (part of device table)
  * @arg $ri_check	- request a referential integrity test
  * returns			- if ok, returns true with array recoded; otherwise array containg error message
  */
-function verifyDevice(&$host, $ri_check=false) {
+function verifyDevice(&$device, $ri_check=false) {
 
-	foreach($host as $key => $value) {
+	foreach($device as $key => $value) {
 
 		switch ($key) {
 			case "id":
@@ -1180,7 +1180,7 @@ function verifyDevice(&$host, $ri_check=false) {
 					$check["err_msg"] = __("ERROR: Id must be integer (%s)", $value);
 					return $check;
 				} elseif ($ri_check) {
-					$match = db_fetch_cell("SELECT COUNT(*) FROM host WHERE id=" . $value);
+					$match = db_fetch_cell("SELECT COUNT(*) FROM device WHERE id=" . $value);
 					if ($match == 0) {
 						$check["err_msg"] = __("ERROR: This device id does not exist (%s)", $value);
 						return $check;
@@ -1211,12 +1211,12 @@ function verifyDevice(&$host, $ri_check=false) {
 					}
 				}
 				break;
-			case "host_template_id":
+			case "device_template_id":
 				if (!(((string) $value) === ((string)(int) $value))) {
 					$check["err_msg"] = __("ERROR: Device Template Id must be integer (%s)", $value);
 					return $check;
 				} elseif ($ri_check) {
-					$match = db_fetch_cell("SELECT COUNT(*) FROM host_template WHERE id=" . $value);
+					$match = db_fetch_cell("SELECT COUNT(*) FROM device_template WHERE id=" . $value);
 					if ($match == 0) {
 						$check["err_msg"] = __("ERROR: This Device template id does not exist (%s)", $value);
 						return $check;
@@ -1225,7 +1225,7 @@ function verifyDevice(&$host, $ri_check=false) {
 				break;
 			case "description":
 				break;
-			case "hostname":
+			case "devicename":
 				break;
 			case "notes":
 				break;
@@ -1245,11 +1245,11 @@ function verifyDevice(&$host, $ri_check=false) {
 				break;
 			case "snmp_auth_protocol":
 				if (strtoupper($value) == SNMP_AUTH_PROTOCOL_MD5) {
-					$host{$key} = SNMP_AUTH_PROTOCOL_MD5;
+					$device{$key} = SNMP_AUTH_PROTOCOL_MD5;
 				} elseif (strtoupper($value) == SNMP_AUTH_PROTOCOL_SHA) {
-					$host{$key} = SNMP_AUTH_PROTOCOL_SHA;
+					$device{$key} = SNMP_AUTH_PROTOCOL_SHA;
 				} elseif (strtoupper($value) == SNMP_AUTH_PROTOCOL_NONE) {
-					$host{$key} = SNMP_AUTH_PROTOCOL_NONE;
+					$device{$key} = SNMP_AUTH_PROTOCOL_NONE;
 				} else {
 					$check["err_msg"] = __("ERROR: Invalid SNMP Authentication Protocol: (%s)", $value);
 					return $check;
@@ -1260,11 +1260,11 @@ function verifyDevice(&$host, $ri_check=false) {
 				break;
 			case "snmp_priv_protocol":
 				if (strtoupper($value) == SNMP_PRIV_PROTOCOL_DES) {
-					$host{$key} = SNMP_PRIV_PROTOCOL_DES;
+					$device{$key} = SNMP_PRIV_PROTOCOL_DES;
 				} elseif (strtoupper($value) == SNMP_PRIV_PROTOCOL_AES128) {
-					$host{$key} = SNMP_PRIV_PROTOCOL_AES128;
+					$device{$key} = SNMP_PRIV_PROTOCOL_AES128;
 				} elseif (strtoupper($value) == SNMP_PRIV_PROTOCOL_NONE) {
-					$host{$key} = SNMP_PRIV_PROTOCOL_NONE;
+					$device{$key} = SNMP_PRIV_PROTOCOL_NONE;
 				} else {
 					$check["err_msg"] = __("ERROR: Invalid SNMP Privacy Protocol: (%s)", $value);
 					return $check;
@@ -1307,7 +1307,7 @@ function verifyDevice(&$host, $ri_check=false) {
 						$check["err_msg"] = __("ERROR: Invalid Availability Parameter: (%s)", $value);
 						return $check;
 				}
-				$host{$key} = $availability_method;
+				$device{$key} = $availability_method;
 				break;
 			case "ping_method":
 				switch(strtolower($value)) {
@@ -1324,7 +1324,7 @@ function verifyDevice(&$host, $ri_check=false) {
 						$check["err_msg"] = __("ERROR: Invalid Ping Method: (%s)", $value);
 						return $check;
 				}
-				$host{$key} = $ping_method;
+				$device{$key} = $ping_method;
 				break;
 			case "ping_port":
 				if ($value > 0) {
@@ -1363,14 +1363,14 @@ function verifyDevice(&$host, $ri_check=false) {
 					case 1:
 					case 'on':
 					case "'on'":
-						$host["disabled"]  = CHECKED;
+						$device["disabled"]  = CHECKED;
 						break;
 					case 0:
 					case '':
 					case "''":
 					case 'off':
 					case "'off'":
-						$host["disabled"]  = '""';
+						$device["disabled"]  = '""';
 						break;
 					default:
 						$check["err_msg"] = __("ERROR: Invalid disabled flag (%s)", $value);
@@ -1378,7 +1378,7 @@ function verifyDevice(&$host, $ri_check=false) {
 				}
 				break;
 			default:
-				# host array may contain "unknown" columns due to extensions made by any plugin
+				# device array may contain "unknown" columns due to extensions made by any plugin
 				# in future, a validation hook may be implemented here
 				/* TODO: validation hook */
 		}
@@ -1391,7 +1391,7 @@ function verifyDevice(&$host, $ri_check=false) {
 /*
  * verifyDataQuery	- verifies all array items for a data query array
  * 					  recodes the array, if necessary
- * @arg $data_query	- data query array (part of host_snmp_query)
+ * @arg $data_query	- data query array (part of device_snmp_query)
  * @arg $ri_check	- request a referential integrity test
  * returns			- if ok, returns true with array recoded; otherwise array containg error message
  */
@@ -1400,14 +1400,14 @@ function verifyDataQuery(&$data_query, $ri_check=false) {
 	foreach($data_query as $key => $value) {
 
 		switch ($key) {
-			case "host_id":
+			case "device_id":
 				if (!(((string) $value) === ((string)(int) $value))) {
 					$check["err_msg"] = __("ERROR: Id must be integer (%s)", $value);
 					return $check;
 				} elseif ($ri_check) {
-					$match = db_fetch_cell("SELECT COUNT(*) FROM host WHERE id=" . $value);
+					$match = db_fetch_cell("SELECT COUNT(*) FROM device WHERE id=" . $value);
 					if ($match == 0) {
-						$check["err_msg"] = __("ERROR: This host id does not exist (%s)", $value);
+						$check["err_msg"] = __("ERROR: This device id does not exist (%s)", $value);
 						return $check;
 					}
 				}
@@ -1457,7 +1457,7 @@ function verifyDataQuery(&$data_query, $ri_check=false) {
 				}
 				break;
 			default:
-				# host array may contain "unknown" columns due to extensions made by any plugin
+				# device array may contain "unknown" columns due to extensions made by any plugin
 				# in future, a validation hook may be implemented here
 				/* TODO: validation hook */
 		}
@@ -1480,7 +1480,7 @@ function verifyDQGraph(&$dqGraph, $ri_check=false) {
 	($dqGraph["snmp_query_graph_id"] == "") ||
 	($dqGraph["snmp_field"] == "") ||
 	($dqGraph["snmp_value"] == "") ||
-	($dqGraph["host_id"] == "") ||
+	($dqGraph["device_id"] == "") ||
 	($dqGraph["graph_template_id"] == "")) {
 		$check["err_msg"] = __("ERROR: For graph type of 'ds' you must supply more options") . "\n";
 		return $check;
@@ -1489,12 +1489,12 @@ function verifyDQGraph(&$dqGraph, $ri_check=false) {
 	foreach($dqGraph as $key => $value) {
 
 		switch ($key) {
-			case "host_id":
+			case "device_id":
 				if (!(((string) $value) === ((string)(int) $value))) {
 					$check["err_msg"] = __("ERROR: Device id must be integer (%s)", $value);
 					return $check;
 				} elseif ($ri_check) {
-					$match = db_fetch_cell("SELECT COUNT(*) FROM host WHERE id=" . $value);
+					$match = db_fetch_cell("SELECT COUNT(*) FROM device WHERE id=" . $value);
 					if ($match == 0) {
 						$check["err_msg"] = __("ERROR: This Host id does not exist (%s)", $value);
 						return $check;
@@ -1541,23 +1541,23 @@ function verifyDQGraph(&$dqGraph, $ri_check=false) {
 				break;
 			case "snmp-field":
 				if ($ri_check) {
-					$match = db_fetch_cell("SELECT COUNT(*)	FROM host_snmp_cache WHERE host_id=" . $dqGraph["host_id"] .
+					$match = db_fetch_cell("SELECT COUNT(*)	FROM device_snmp_cache WHERE device_id=" . $dqGraph["device_id"] .
 											" AND snmp_query_id=" . $dqGraph["snmp_query_id"] .
 											" AND field_name='" . $value . "'");
 					if ($match == 0) {
-						$check["err_msg"] = __("ERROR: This SNMP field name does not exist (%s) for SNMP query %s, host id %s", $value, $dqGraph["snmp_query_id"], $dqGraph["host_id"]);
+						$check["err_msg"] = __("ERROR: This SNMP field name does not exist (%s) for SNMP query %s, device id %s", $value, $dqGraph["snmp_query_id"], $dqGraph["device_id"]);
 						return $check;
 					}
 				}
 				break;
 			case "snmp-value":
 				if ($ri_check) {
-					$match = db_fetch_cell("SELECT COUNT(*)	FROM host_snmp_cache WHERE host_id=" . $dqGraph["host_id"] .
+					$match = db_fetch_cell("SELECT COUNT(*)	FROM device_snmp_cache WHERE device_id=" . $dqGraph["device_id"] .
 											" AND snmp_query_id=" . $dqGraph["snmp_query_id"] .
 											" AND field_name='" . $dqGraph["snmp-field"] . "'" .
 											" AND field_value='" . $value . "'");
 					if ($match == 0) {
-						$check["err_msg"] = __("ERROR: This SNMP field value does not exist (%s) for SNMP query %s, host id %s, SNMP field %s", $value, $dqGraph["snmp_query_id"], $dqGraph["host_id"], $dqGraph["snmp-field"]);
+						$check["err_msg"] = __("ERROR: This SNMP field value does not exist (%s) for SNMP query %s, device id %s, SNMP field %s", $value, $dqGraph["snmp_query_id"], $dqGraph["device_id"], $dqGraph["snmp-field"]);
 						return $check;
 					}
 				}
@@ -1591,7 +1591,7 @@ function verifyDQGraph(&$dqGraph, $ri_check=false) {
 				}
 				break;
 			default:
-				# host array may contain "unknown" columns due to extensions made by any plugin
+				# device array may contain "unknown" columns due to extensions made by any plugin
 				# in future, a validation hook may be implemented here
 				/* TODO: validation hook */
 		}
@@ -1719,9 +1719,9 @@ function verifyPermissions(&$perm, $delim, $ri_check=false) {
 								return $check;
 							}
 							break;
-						case "host":
+						case "device":
 						case PERM_DEVICES: /* device */
-							$match = db_fetch_cell("SELECT id FROM host WHERE id=" . $value);
+							$match = db_fetch_cell("SELECT id FROM device WHERE id=" . $value);
 							if ($match == 0) {
 								$check["err_msg"] = __("ERROR: Invalid device item id (%s)", $value);
 								return $check;
@@ -1846,12 +1846,12 @@ function verifyTreeItem(&$tree_item, $ri_check=false) {
 				break;
 			case "title":
 				break;
-			case "host_id":
+			case "device_id":
 				if (!(((string) $value) === ((string)(int) $value))) {
 					$check["err_msg"] = __("ERROR: Id must be integer (%s)", $value);
 					return $check;
 				} elseif ($ri_check) {
-					$match = db_fetch_cell("SELECT COUNT(*) FROM host WHERE id=" . $value);
+					$match = db_fetch_cell("SELECT COUNT(*) FROM device WHERE id=" . $value);
 					if ($match == 0) {
 						$check["err_msg"] = __("ERROR: This device id does not exist (%s)", $value);
 						return $check;
@@ -1878,7 +1878,7 @@ function verifyTreeItem(&$tree_item, $ri_check=false) {
 					return $check;
 				}
 				break;
-			case "host_grouping_type":
+			case "device_grouping_type":
 				if ($value != HOST_GROUPING_GRAPH_TEMPLATE && $value != HOST_GROUPING_DATA_QUERY_INDEX) {
 					$check["err_msg"] = __("ERROR: Host Group Type must be %d or %d (Graph Template or Data Query Index)", HOST_GROUPING_GRAPH_TEMPLATE, HOST_GROUPING_DATA_QUERY_INDEX) . "\n";
 					return $check;

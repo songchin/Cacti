@@ -1,6 +1,6 @@
 <interface>
 	<name>Get SNMP Interfaces</name>
-	<description>Queries a host for a list of monitorable interfaces</description>
+	<description>Queries a device for a list of monitorable interfaces</description>
 	<oid_index>.1.3.6.1.2.1.2.2.1.1</oid_index>
 	<oid_num_indexes>.1.3.6.1.2.1.2.1.0</oid_num_indexes>
 	<index_order>ifDescr:ifName:ifHwAddr:ifIndex</index_order>

@@ -183,7 +183,7 @@ function form_save() {
 			}
 		}
 
-		/* update actual device template information for live hosts */
+		/* update actual device template information for live devices */
 		if ((!is_error_message()) && ($save2["id"] > 0)) {
 			db_execute("update data_template_data set data_input_id = '" . $_POST["data_input_id"] . "' where data_template_id = " . $_POST["data_template_id"] . ";");
 		}
@@ -227,7 +227,7 @@ function form_save() {
 					$form_value = "value_" . $input_field["data_name"];
 
 					if (isset($_POST[$form_value])) {
-						/* save the data into the 'host_template_data' table */
+						/* save the data into the 'device_template_data' table */
 						if (isset($_POST{"t_value_" . $input_field["data_name"]})) {
 							$template_this_item = CHECKED;
 						}else{
@@ -244,7 +244,7 @@ function form_save() {
 
 				/* push out all "custom data" for this data source template */
 				push_out_data_source_custom_data($data_template_id);
-				push_out_host(0, 0, $data_template_id);
+				push_out_device(0, 0, $data_template_id);
 			}
 		}
 
@@ -620,7 +620,7 @@ function template_edit() {
 				</td>
 				<td>
 					<?php form_text_box("value_" . $field["data_name"],$old_value,"","");?>
-					<?php if ((preg_match('/^' . VALID_HOST_FIELDS . '$/i', $field["type_code"])) && ($data_input_data["t_value"] == "")) { print "<br><em>Value will be derived from the host if this field is left empty.</em>\n"; } ?>
+					<?php if ((preg_match('/^' . VALID_HOST_FIELDS . '$/i', $field["type_code"])) && ($data_input_data["t_value"] == "")) { print "<br><em>Value will be derived from the device if this field is left empty.</em>\n"; } ?>
 				</td>
 			<?php
 			form_end_row();

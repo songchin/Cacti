@@ -57,8 +57,8 @@ if (sizeof($parms)) {
 			case "--site-id":		$device["site_id"] 				= trim($value);	break;
 			case "--poller-id":		$device["poller_id"]			= trim($value);	break;
 			case "--description":	$device["description"] 			= trim($value);	break;
-			case "--ip":			$device["hostname"] 			= trim($value);	break;
-			case "--template":		$device["host_template_id"]	 	= trim($value);	break;
+			case "--ip":			$device["devicename"] 			= trim($value);	break;
+			case "--template":		$device["device_template_id"]	 	= trim($value);	break;
 			case "--community":		$device["snmp_community"] 		= trim($value);	break;
 			case "--version":		$device["snmp_version"] 		= trim($value);	break;
 			case "--notes":			$device["notes"] 				= trim($value);	break;
@@ -164,13 +164,13 @@ if (sizeof($parms)) {
 		exit(1);
 	}
 
-	# restrict further processing to those hosts only, that are associated with the given data query
-	$sql = "SELECT host.id, " .
-			"host.hostname, " .
-			"host_snmp_query.reindex_method " .
-			"FROM host_snmp_query " .
-			"LEFT JOIN host ON (host_snmp_query.host_id = host.id) ".
-			"WHERE " . str_replace("id", "host_id", array_to_sql_or($devices, "id")) . " " .
+	# restrict further processing to those devices only, that are associated with the given data query
+	$sql = "SELECT device.id, " .
+			"device.devicename, " .
+			"device_snmp_query.reindex_method " .
+			"FROM device_snmp_query " .
+			"LEFT JOIN device ON (device_snmp_query.device_id = device.id) ".
+			"WHERE " . str_replace("id", "device_id", array_to_sql_or($devices, "id")) . " " .
 			"AND snmp_query_id=" . $old["snmp_query_id"];
 	if ($debug) {
 		print $sql . "\n";
@@ -178,9 +178,9 @@ if (sizeof($parms)) {
 	$verified_devices = db_fetch_assoc($sql);
 
 	/* build raw SQL update command */
-	$sql_upd1 = "UPDATE host_snmp_query SET ";
+	$sql_upd1 = "UPDATE device_snmp_query SET ";
 	$sql_upd2 = "";
-	$sql_upd3 = " WHERE " . str_replace("id", "host_id", array_to_sql_or($verified_devices, "id")) . " AND snmp_query_id=" . $old["snmp_query_id"];
+	$sql_upd3 = " WHERE " . str_replace("id", "device_id", array_to_sql_or($verified_devices, "id")) . " AND snmp_query_id=" . $old["snmp_query_id"];
 
 	# verify each parameter given and append it to the SQL update command
 	$first = true;
@@ -211,9 +211,9 @@ if (sizeof($parms)) {
 					run_data_query($verified_device["id"], $old["snmp_query_id"]);
 					if (!$quietMode) {
 						if (is_error_message()) {
-							echo __("ERROR: Rerun of this data query failed for device (%s: %s) data query (%s: %s) reindex method (%s: %s)", $verified_device["id"], $verified_device["hostname"], $old["snmp_query_id"], $old["snmp_query_name"], $new["reindex_method"], $reindex_types[$new["reindex_method"]]) . "\n";
+							echo __("ERROR: Rerun of this data query failed for device (%s: %s) data query (%s: %s) reindex method (%s: %s)", $verified_device["id"], $verified_device["devicename"], $old["snmp_query_id"], $old["snmp_query_name"], $new["reindex_method"], $reindex_types[$new["reindex_method"]]) . "\n";
 						} else {
-							echo __("Data Query (%s: %s) reindex method (%s: %s) rerun for Device (%s: %s)", $old["snmp_query_id"], $old["snmp_query_name"], $new["reindex_method"], $reindex_types{$new["reindex_method"]}, $verified_device["id"], $verified_device["hostname"]) . "\n";
+							echo __("Data Query (%s: %s) reindex method (%s: %s) rerun for Device (%s: %s)", $old["snmp_query_id"], $old["snmp_query_name"], $new["reindex_method"], $reindex_types{$new["reindex_method"]}, $verified_device["id"], $verified_device["devicename"]) . "\n";
 						}
 					}
 				}
@@ -235,7 +235,7 @@ function display_help($me) {
 	echo "       [--quiet] [-d] [--delim]\n\n";
 	echo __("Required:") . "\n";
 	echo "   " . __("Values are given in format [<old>][:<new>]") . "\n";
-	#echo "   " . __("If <old> is given, all hosts matching the selection will be acted upon. Multiple <old> parameters are allowed") . "\n";
+	#echo "   " . __("If <old> is given, all devices matching the selection will be acted upon. Multiple <old> parameters are allowed") . "\n";
 	#echo "   " . __("All new values must be seperated by a delimiter (defaults to ':') from <old>. Multiple <new> parameters are allowed") . "\n";
 	echo "   --data-query-id  " . __("the numerical ID of the data_query to be listed") . "\n";
 	echo "   --reindex-method " . __("the reindex method to be used for that data query") . "\n";
