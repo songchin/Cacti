@@ -208,7 +208,15 @@ $settings = array(
 			"friendly_name" => __("Other Defaults"),
 			"method" => "spacer",
 			),
-		"reindex_method" => array(
+        "datetime_setting" => array(
+			"friendly_name" => __("Date/Time setting for logs"),
+			"description" => __("The date/time setting for logs"),
+			"method" => "drop_array",
+			"default" => "m/d/Y h:i:s A",
+			"array" => $datetime_format,
+			),
+    
+        "reindex_method" => array(
 			"friendly_name" => __("Reindex Method for Data Queries"),
 			"description" => __("The default reindex method to use for all Data Queries."),
 			"method" => "drop_array",

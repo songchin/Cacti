@@ -624,7 +624,7 @@ function cacti_log($string, $output = false, $environ = "CMDPHP") {
 	}
 
 	/* fill in the current date for printing in the log */
-	$date = date("m/d/Y h:i:s A");
+	$date = date(read_config_option("datetime_setting"));
 
 	/* determine how to log data */
 	$logdestination = read_config_option("log_destination");
