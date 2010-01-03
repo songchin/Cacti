@@ -12,6 +12,7 @@ SVN
 -bug: MySQL client auto reconnect default in MySQL 5.0.71 causes spine to crash
 -bug: Inconsistent behavior when the poller interval has not been set
 -feature:0001550: Record the polling time for each host to optimize polling times
+-feature: Implement new file based datetime format in the spine log function
 
 0.8.7e
 -bug: Not all configuration paths are searched for spine.conf
@@ -218,6 +219,6 @@ Not released.  Syncing with Cacti distribution again.
 -feature: added some compiler directives for better compatibility with cygwin
 
 0.8.6b
--bug: fixed issue that prevented multi ds item RRD�s from updating
+-bug: fixed issue that prevented multi ds item RRD?s from updating
 -bug: fixed invalid string length calculation that was truncating output over 4 characters
 -bug: small log file reformatting

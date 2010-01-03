@@ -430,6 +430,16 @@ void read_config_options() {
 	/* log the snmp_max_get_size variable */
 	SPINE_LOG_DEBUG(("DEBUG: The Maximum SNMP OID Get Size is %i", set.snmp_max_get_size));
 
+	/* get the log file data format */
+	if ((res = getsetting(&mysql, "datetime_setting")) != 0 ) {
+		set.datetime_setting = snprintf(set.datetime_setting, SMALL_BUFSIZE, "%s", res);
+	}else{
+		set.datetime_setting = "Y-m-d H:i:s";
+	}
+
+	/* log the script timeout value */
+	SPINE_LOG_DEBUG(("DEBUG: The datatime settings is is %s", set.datetime_setting));
+
 	mysql_free_result(result);
 	db_disconnect(&mysql);
 }
@@ -563,6 +573,7 @@ int spine_log(const char *format, ...) {
 	/* keep track of an errored log file */
 	static int log_error = FALSE;
 
+	char dateformat[SMALL_BUFSIZE]; /* Formatted Date for Log */
 	char logprefix[SMALL_BUFSIZE]; /* Formatted Log Prefix */
 	char ulogmessage[LOGSIZE];     /* Un-Formatted Log Message */
 	char flogmessage[LOGSIZE];     /* Formatted Log Message */
@@ -574,41 +585,29 @@ int spine_log(const char *format, ...) {
 	/* default for "console" messages to go to stdout */
 	fp = stdout;
 
-	/* append a line feed to the log message if needed */
-	if (!strstr(ulogmessage, "\n")) {
-		strncat(ulogmessage, "\n", 1);
-	}
-
-	/* log message prefix */
-	snprintf(logprefix, SMALL_BUFSIZE, "SPINE: Poller[%i] ", set.poller_id);
-
-	if (IS_LOGGING_TO_STDOUT()) {
-		puts(ulogmessage);
-		return TRUE;
-	}
-
 	/* get time for poller_output table */
 	nowbin = time(&nowbin);
 
 	localtime_r(&nowbin,&now_time);
 	now_ptr = &now_time;
 
-	if (strftime(flogmessage, 50, "%m/%d/%Y %I:%M:%S %p - ", now_ptr) == (size_t) 0) {
-		#ifdef DISABLE_STDERR
-		fp = stdout;
-		#else
-		fp = stderr;
-		#endif
-
-		if ((set.stderr_notty) && (fp == stderr)) {
-			/* do nothing stderr does not exist */
-		}else if ((set.stdout_notty) && (fp == stdout)) {
-			/* do nothing stdout does not exist */
-		}else{
-			fprintf(fp, "ERROR: Could not get string from strftime()\n");
-		}
+	/* append a line feed to the log message if needed */
+	if (!strstr(ulogmessage, "\n")) {
+		strncat(ulogmessage, "\n", 1);
 	}
 
+	/* date format  */
+	strftime(dateformat, SMALL_BUFSIZE, set.datetime_setting, now_ptr);
+
+	/* log message prefix */
+	snprintf(logprefix, SMALL_BUFSIZE, ", SPINE: Poller[%i] ", set.poller_id);
+
+	if (IS_LOGGING_TO_STDOUT()) {
+		puts(ulogmessage);
+		return TRUE;
+	}
+
+	strncat(flogmessage, dateformat,  sizeof(dateformat)-1);
 	strncat(flogmessage, logprefix,   sizeof(flogmessage)-1);
 	strncat(flogmessage, ulogmessage, sizeof(flogmessage)-1);
 
