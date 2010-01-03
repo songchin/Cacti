@@ -124,7 +124,7 @@ include(CACTI_BASE_PATH . "/lib/database.php");
 
 /* check that the absolute necessary mysql PHP module is loaded  (install checks the rest), and report back if not */
 if (!function_exists('mysql_data_seek')) {
-	die ("\n\nNo 'mysql' PHP extension is loaded. This is required by Cacti. Check your php.ini file.\n");
+	die ("\n\nRequired 'mysql' PHP extension not loaded. Check your php.ini file.\n");
 }
 
 /* connect to the database server */
@@ -147,6 +147,7 @@ include_once(CACTI_BASE_PATH . "/lib/functions.php");
 include_once(CACTI_BASE_PATH . "/lib/plugins.php");
 include_once(CACTI_BASE_PATH . "/include/global_constants.php");
 include_once(CACTI_BASE_PATH . "/include/global_language.php");
+include_once(CACTI_BASE_PATH . "/lib/log/update.php");
 include_once(CACTI_BASE_PATH . "/include/global_arrays.php");
 include_once(CACTI_BASE_PATH . "/include/global_settings.php");
 if(!$database_empty) {

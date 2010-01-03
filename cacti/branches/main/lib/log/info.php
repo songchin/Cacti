@@ -288,14 +288,14 @@ function log_list_device () {
 function log_list_facility () {
 
 	$facility = array();
-	$facility[FACIL_CMDPHP] = "CMDPHP";
-	$facility[FACIL_CACTID] = "CACTID";
-	$facility[FACIL_POLLER] = "POLLER";
-	$facility[FACIL_SCPTSVR] = "SCPTSVR";
-	$facility[FACIL_WEBUI] = "WEBUI";
-	$facility[FACIL_EXPORT] = "EXPORT";
-	$facility[FACIL_AUTH] = "AUTH";
-	$facility[FACIL_EVENT] = "EVENT";
+	$facility[CACTI_LOG_FAC_CMDPHP] = "CMDPHP";
+	$facility[CACTI_LOG_FAC_CACTID] = "CACTID";
+	$facility[CACTI_LOG_FAC_POLLER] = "POLLER";
+	$facility[CACTI_LOG_FAC_SCPTSVR] = "SCPTSVR";
+	$facility[CACTI_LOG_FAC_WEBUI] = "WEBUI";
+	$facility[CACTI_LOG_FAC_EXPORT] = "EXPORT";
+	$facility[CACTI_LOG_FAC_AUTH] = "AUTH";
+	$facility[CACTI_LOG_FAC_EVENT] = "EVENT";
 
 	return $facility;
 }
@@ -311,15 +311,15 @@ function log_list_facility () {
 function log_list_severity () {
 
 	$severity = array();
-	$severity[SEV_EMERGENCY] = "EMERGENCY";
-	$severity[SEV_ALERT] = "ALERT";
-	$severity[SEV_CRITICAL] = "CRITICAL";
-	$severity[SEV_ERROR] = "ERROR";
-	$severity[SEV_WARNING] = "WARNING";
-	$severity[SEV_NOTICE] = "NOTICE";
-	$severity[SEV_INFO] = "INFO";
-	$severity[SEV_DEBUG] = "DEBUG";
-	$severity[SEV_DEV] = "DEV";
+	$severity[CACTI_LOG_SEV_EMERGENCY] = "EMERGENCY";
+	$severity[CACTI_LOG_SEV_ALERT] = "ALERT";
+	$severity[CACTI_LOG_SEV_CRITICAL] = "CRITICAL";
+	$severity[CACTI_LOG_SEV_ERROR] = "ERROR";
+	$severity[CACTI_LOG_SEV_WARNING] = "WARNING";
+	$severity[CACTI_LOG_SEV_NOTICE] = "NOTICE";
+	$severity[CACTI_LOG_SEV_INFO] = "INFO";
+	$severity[CACTI_LOG_SEV_DEBUG] = "DEBUG";
+	$severity[CACTI_LOG_SEV_DEV] = "DEV";
 
 	return $severity;
 }

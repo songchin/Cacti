@@ -23,23 +23,23 @@
 */
 
 $log_control_options = array(
-	LOG_MSG_ASNEEDED 	=> __("Overwrite events as needed"),
-	LOG_MSG_DAYSOLD 	=> __("Overwrite events older than the maximum days"),
-	LOG_MSG_STOPLOG 	=> __("Stop logging if maximum log size is exceeded"),
-	LOG_MSG_NONE 		=> __("None (Not Recommended)")
+	CACTI_LOG_CLEANUP_ASNEEDED => __("Overwrite events as needed"),
+	CACTI_LOG_CLEANUP_DAYSOLD  => __("Overwrite events older than the maximum days"),
+	CACTI_LOG_CLEANUP_STOPLOG  => __("Stop logging if maximum log size is exceeded"),
+	CACTI_LOG_CLEANUP_NONE     => __("None (Not Recommended)")
 );
 
 $log_level = array(
-	SEV_DEV 		=> "(0) " . __("Developer Debug"),
-	SEV_DEBUG 		=> "(1) " . __("Debug"),
-	SEV_INFO 		=> "(2) " . __("Informational"),
-	SEV_NOTICE 		=> "(3) " . __("Notice "),
-	SEV_WARNING 	=> "(4) " . __("Warning"),
-	SEV_ERROR 		=> "(5) " . __("Error"),
-	SEV_CRITICAL	=> "(6) " . __("Critical"),
-	SEV_ALERT 		=> "(7) " . __("Alert"),
-	SEV_EMERGENCY 	=> "(8) " . __("Emergency")
-	);
+	CACTI_LOG_SEV_DEV       => "(0) " . __("Developer Debug"),
+	CACTI_LOG_SEV_DEBUG     => "(1) " . __("Debug"),
+	CACTI_LOG_SEV_INFO      => "(2) " . __("Informational"),
+	CACTI_LOG_SEV_NOTICE    => "(3) " . __("Notice "),
+	CACTI_LOG_SEV_WARNING   => "(4) " . __("Warning"),
+	CACTI_LOG_SEV_ERROR     => "(5) " . __("Error"),
+	CACTI_LOG_SEV_CRITICAL  => "(6) " . __("Critical"),
+	CACTI_LOG_SEV_ALERT     => "(7) " . __("Alert"),
+	CACTI_LOG_SEV_EMERGENCY	=> "(8) " . __("Emergency")
+);
 
 if (CACTI_SERVER_OS == "unix") {
 	$log_system_facility = array(
@@ -50,26 +50,19 @@ if (CACTI_SERVER_OS == "unix") {
 		LOG_LOCAL4 => "LOCAL4",
 		LOG_LOCAL5 => "LOCAL5",
 		LOG_LOCAL6 => "LOCAL6",
-		LOG_LOCAL7 => "LOCAL7",
-		LOG_USER => "USER"
-	);
-}else{
-	$log_system_facility = array(
-		LOG_USER => "USER"
+		LOG_LOCAL7 => "LOCAL7"
 	);
 }
+$log_system_facility[LOG_USER] = "USER";
 
 $log_syslog_facility = array(
-	SYSLOG_LOCAL0 => "LOCAL0",
-	SYSLOG_LOCAL1 => "LOCAL1",
-	SYSLOG_LOCAL2 => "LOCAL2",
-	SYSLOG_LOCAL3 => "LOCAL3",
-	SYSLOG_LOCAL4 => "LOCAL4",
-	SYSLOG_LOCAL5 => "LOCAL5",
-	SYSLOG_LOCAL6 => "LOCAL6",
-	SYSLOG_LOCAL7 => "LOCAL7",
-	SYSLOG_USER => "USER"
+	LOG_LOCAL0 => "LOCAL0",
+	LOG_LOCAL1 => "LOCAL1",
+	LOG_LOCAL2 => "LOCAL2",
+	LOG_LOCAL3 => "LOCAL3",
+	LOG_LOCAL4 => "LOCAL4",
+	LOG_LOCAL5 => "LOCAL5",
+	LOG_LOCAL6 => "LOCAL6",
+	LOG_LOCAL7 => "LOCAL7",
+	LOG_USER => "USER"
 );
-
-
-?>

@@ -36,12 +36,11 @@ require_once(CACTI_BASE_PATH . "/include/log/arrays.php");
  * This function is designed to handle logging for the cacti system.
  *
  * @param string $message the message your would like to log
- * @param int $severity the severity you would like to log at, check logging constants for values, Default = SEV_INFO
- * @param int $facility the facility you would like to log in, check logging constants for values. Default = FACIL_INTERFACE
+ * @param int $severity the severity you would like to log at, check logging constants for values, Default = CACTI_LOG_SEV_INFO
+ * @param int $facility the facility you would like to log in, check logging constants for values. Default = CACTI_LOG_FAC_SYSTEM
  * @return bool true
  */
-function log_save ($message, $severity = SEV_INFO, $facility = FACIL_INTERFACE, $parameters = array() ) {
-#function log_save ($message, $severity = SEV_INFO, $facility = FACIL_INTERFACE, $plugin = "", $poller_id = 0, $device_id = 0, $output = false) {
+function log_insert ($message, $severity = CACTI_LOG_SEV_INFO, $facility = CACTI_LOG_FAC_SYSTEM, $parameters = array() ) {
 	global $cnn_id;
 
 	/* setup parameters array */
@@ -58,7 +57,7 @@ function log_save ($message, $severity = SEV_INFO, $facility = FACIL_INTERFACE, 
 	$log_severity = log_read_config_option("log_severity");
 
 	/* get username */
-	if ($severity == SEV_DEV) {
+	if ($severity == CACTI_LOG_SEV_DEV) {
 		$username = "DEV";
 	}else{
 		if (isset($_SESSION["sess_user_id"])) {
@@ -75,11 +74,11 @@ function log_save ($message, $severity = SEV_INFO, $facility = FACIL_INTERFACE, 
 	if (isset($_SERVER["REMOTE_ADDR"])) {
 		$source = $_SERVER["REMOTE_ADDR"];
 	}else {
-		$source = "System";
+		$source = "0.0.0.0";
 	}
 
-	/* Format message for developer if SEV_DEV is allowed */
-	if (($severity >= $log_severity) && ($severity == SEV_DEV)) {
+	/* Format message for developer if CACTI_LOG_SEV_DEV is allowed */
+	if (($severity >= $log_severity) && ($severity == CACTI_LOG_SEV_DEV)) {
 		/* get a backtrace so we can derive the current filename/line#/function */
 		$backtrace = debug_backtrace();
 		if (sizeof($backtrace) == 1) {
@@ -99,7 +98,7 @@ function log_save ($message, $severity = SEV_INFO, $facility = FACIL_INTERFACE, 
 		$sql = "insert into log
 			(logdate,facility,severity,poller_id,device_id,username,source,plugin,message) values
 			(SYSDATE(), " . $facility . "," . $severity . "," . $poller_id . "," .$device_id . ",'" . $username . "','" . $source . "','" . $plugin . "','". sql_sanitize($message) . "');";
-		/* DO NOT USE db_execute, function looping can occur when in SEV_DEV mode */
+		/* DO NOT USE db_execute, function looping can occur when in CACTI_LOG_SEV_DEV mode */
 		$cnn_id->Execute($sql);
 	}
 
@@ -155,22 +154,22 @@ function log_maintain ($print_data_to_stdout) {
 		case SYSLOG_MNG_ASNEEDED:
 			$records_to_delete = $total_records - $syslog_size;
 			db_execute("DELETE FROM log ORDER BY logdate LIMIT " . $records_to_delete);
-			log_save("Log control removed " . $records_to_delete . " log entires.", SEV_NOTICE, FACIL_POLLER, "", 0, 0, $print_data_to_stdout);
+			log_save("Log control removed " . $records_to_delete . " log entires.", CACTI_LOG_SEV_NOTICE, CACTI_LOG_FAC_POLLER, "", 0, 0, $print_data_to_stdout);
 			break;
 		case SYSLOG_MNG_DAYSOLD:
 			db_execute("delete from log where logdate <= '" . date("Y-m-d H:i:s", strtotime("-" . $syslog_maxdays * 24 * 3600 . " Seconds"))."'");
-			log_save("Log control removed log entries older than " . $syslog_maxdays . " days.", SEV_NOTICE, FACIL_POLLER, "", 0, 0, $print_data_to_stdout);
+			log_save("Log control removed log entries older than " . $syslog_maxdays . " days.", CACTI_LOG_SEV_NOTICE, CACTI_LOG_FAC_POLLER, "", 0, 0, $print_data_to_stdout);
 
 			break;
 		case SYSLOG_MNG_STOPLOG:
 			if (read_config_option("log_status") != "suspended") {
-				log_save("Log control suspended logging due to the log being full.  Please purge your logs manually.", SEV_CRITICAL,FACIL_POLLER, "", 0, 0, 0, $print_data_to_stdout);
+				log_save("Log control suspended logging due to the log being full.  Please purge your logs manually.", CACTI_LOG_SEV_CRITICAL, CACTI_LOG_FAC_POLLER, "", 0, 0, 0, $print_data_to_stdout);
 				db_execute("REPLACE INTO settings (name,value) VALUES('log_status','suspended')");
 			}
 
 			break;
 		case SYSLOG_MNG_NONE:
-			log_save("The cacti log control mechanism is set to None.  This is not recommended, please purge your logs on a manual basis.", SEV_WARNING, FACIL_POLLER, "", 0, 0, $print_data_to_stdout);
+			log_save("The cacti log control mechanism is set to None.  This is not recommended, please purge your logs on a manual basis.", CACTI_LOG_SEV_WARNING, CACTI_LOG_FAC_POLLER, "", 0, 0, $print_data_to_stdout);
 			break;
 		}
 	}
@@ -190,7 +189,7 @@ function log_maintain ($print_data_to_stdout) {
 function log_clear () {
 	db_execute("TRUNCATE TABLE log");
 	db_execute("REPLACE INTO settings (name,value) VALUES('log_status','active')");
-	log_save("Log truncated", SEV_NOTICE, FACIL_WEBUI);
+	log_save("Log truncated", CACTI_LOG_SEV_NOTICE, CACTI_LOG_FAC_INTERFACE);
 
 	return true;
 
@@ -203,7 +202,7 @@ function log_clear () {
  */
 
 /**
- * Reads cacti configuration settings, without this Developer debug can cause database looping
+ * Reads cacti configuration settings, without this developer debug can cause database looping
  *
  * Finds the current value of a cacti configuration setting
  *
@@ -265,38 +264,27 @@ function log_get_system_severity ($severity) {
 		return LOG_WARNING;
 	} else {
 		switch ($severity) {
-			case SEV_EMERGENCY:
+			case CACTI_LOG_SEV_EMERGENCY:
 				return LOG_EMERG;
-				break;
-			case SEV_ALERT:
+			case CACTI_LOG_SEV_ALERT:
 				return LOG_ALERT;
-				break;
-			case SEV_CRITICAL:
+			case CACTI_LOG_SEV_CRITICAL:
 				return LOG_CRIT;
-				break;
-			case SEV_ERROR:
+			case CACTI_LOG_SEV_ERROR:
 				return LOG_ERR;
-				break;
-			case SEV_WARNING:
+			case CACTI_LOG_SEV_WARNING:
 				return LOG_WARNING;
-				break;
-			case SEV_NOTICE:
+			case CACTI_LOG_SEV_NOTICE:
 				return LOG_NOTICE;
-				break;
-			case SEV_INFO:
+			case CACTI_LOG_SEV_INFO:
 				return LOG_INFO;
-				break;
-			case SEV_DEBUG:
+			case CACTI_LOG_SEV_DEBUG:
 				return LOG_DEBUG;
-				break;
 			case SEV_DEV:
 				return LOG_DEBUG;
-				break;
-			default:
-				return LOG_INFO;
-				break;
 		}
 	}
+	return LOG_INFO;
 }
 
 
@@ -309,33 +297,36 @@ function log_get_system_severity ($severity) {
  * @return string cacti facility in human readable text
  */
 function log_get_facility ($facility) {
+
+	//FIXME: Update to use list function to get array
+
 	switch ($facility) {
-		case FACIL_CMDPHP:
+		case CACTI_LOG_FAC_CMDPHP:
 			return "CMDPHP";
 			break;
-		case FACIL_SPINE:
+		case CACTI_LOG_FAC_SPINE:
 			return "SPINE";
 			break;
-		case FACIL_POLLER:
+		case CACTI_LOG_FAC_POLLER:
 			return "POLLER";
 			break;
-		case FACIL_SCPTSVR:
+		case CACTI_LOG_FAC_SCPTSVR:
 			return "SCPTSVR";
 			break;
-		case FACIL_INTERFACE:
+		case CACTI_LOG_FAC_INTERFACE:
 			return "INTERFACE";
 			break;
-		case FACIL_EXPORT:
+		case CACTI_LOG_FAC_EXPORT:
 			return "EXPORT";
 			break;
-		case FACIL_AUTH:
+		case CACTI_LOG_FAC_AUTH:
 			return "AUTH";
 			break;
-		case FACIL_EVENT:
+		case CACTI_LOG_FAC_EVENT:
 			return "EVENT";
 			break;
 		default:
-			return "UNKNOWN";
+			return "SYSTEM";
 			break;
 	}
 }
@@ -350,32 +341,35 @@ function log_get_facility ($facility) {
  * @return string cacti severity in human readable text
  */
 function log_get_severity ($severity) {
+
+	//FIXME: Update to use list function to get array
+
 	switch ($severity) {
-		case SEV_EMERGENCY:
+		case CACTI_LOG_SEV_EMERGENCY:
 			return "EMERGENCY";
 			break;
-		case SEV_ALERT:
+		case CACTI_LOG_SEV_ALERT:
 			return "ALERT";
 			break;
-		case SEV_CRITICAL:
+		case CACTI_LOG_SEV_CRITICAL:
 			return "CRITICAL";
 			break;
-		case SEV_ERROR:
+		case CACTI_LOG_SEV_ERROR:
 			return "ERROR";
 			break;
-		case SEV_WARNING:
+		case CACTI_LOG_SEV_WARNING:
 			return "WARNING";
 			break;
-		case SEV_NOTICE:
+		case CACTI_LOG_SEV_NOTICE:
 			return "NOTICE";
 			break;
-		case SEV_INFO:
+		case CACTI_LOG_SEV_INFO:
 			return "INFO";
 			break;
-		case SEV_DEBUG:
+		case CACTI_LOG_SEV_DEBUG:
 			return "DEBUG";
 			break;
-		case SEV_DEV:
+		case CACTI_LOG_SEV_DEV:
 			return "DEV";
 			break;
 		default:
@@ -395,39 +389,29 @@ function log_get_severity ($severity) {
  */
 function log_get_severity_syslog ($severity) {
 
-	switch ($severity) {
-		case SEV_EMERGENCY:
-			return SYSLOG_EMERGENCY;
-			break;
-		case SEV_ALERT:
-			return SYSLOG_ALERT;
-			break;
-		case SEV_CRITICAL:
-			return SYSLOG_CRITICAL;
-			break;
-		case SEV_ERROR:
-			return SYSLOG_ERROR;
-			break;
-		case SEV_WARNING:
-			return SYSLOG_WARNING;
-			break;
-		case SEV_NOTICE:
-			return SYSLOG_NOTICE;
-			break;
-		case SEV_INFO:
-			return SYSLOG_INFO;
-			break;
-		case SEV_DEBUG:
-			return SYSLOG_DEBUG;
-			break;
-		case SEV_DEV:
-			return SYSLOG_DEBUG;
-			break;
-		default:
-			return SYSLOG_INFO;
-			break;
-	}
+	//FIXME: Update to use list function to get array
 
+	switch ($severity) {
+		case CACTI_LOG_SEV_EMERGENCY:
+			return SYSLOG_LEVEL_EMERG;
+		case CACTI_LOG_SEV_ALERT:
+			return SYSLOG_LEVEL_ALERT;
+		case CACTI_LOG_SEV_CRITICAL:
+			return SYSLOG_LEVEL_CRIT;
+		case CACTI_LOG_SEV_ERROR:
+			return SYSLOG_LEVEL_ERR;
+		case CACTI_LOG_SEV_WARNING:
+			return SYSLOG_LEVEL_WARNING;
+		case CACTI_LOG_SEV_NOTICE:
+			return SYSLOG_LEVEL_NOTICE;
+		case CACTI_LOG_SEV_INFO:
+			return SYSLOG_LEVEL_INFO;
+		case CACTI_LOG_SEV_DEBUG:
+			return SYSLOG_LEVEL_DEBUG;
+		case CACTI_LOG_SEV_DEV:
+			return SYSLOG_LEVEL_DEBUG;
+	}
+	return SYSLOG_LEVEL_INFO;
 }
 
 
@@ -486,7 +470,6 @@ function log_save_syslog ($syslog_server, $syslog_server_port, $syslog_facility,
 		$time = date("M j H H:i:s", $time);
 	}
 	$priority = ($syslog_facility * 8) + $syslog_severity;
-	#$packet = "<" . $priority . ">" . $time . " " . $device . " " . $syslog_tag . "[" . $pid  . "]:" . $syslog_message;
 	$packet = "<" . $priority . ">" . $syslog_tag . "[" . $pid  . "]: " . $syslog_message;
 	if (strlen($packet) > 1024) {
 		$packet = substr($packet, 0, 1024);
@@ -501,9 +484,9 @@ function log_save_syslog ($syslog_server, $syslog_server_port, $syslog_facility,
 	}else{
 		/* socket error - log to database */
 		$sql = "insert into log
-			(logdate,facility,severity,poller_id,device_id,username,source,plugin,message) values
-			(SYSDATE(), " . FACIL_WEBUI . "," . SEV_ERROR . ",0,0,'SYSTEM','SYSLOG','N/A','". sql_sanitize("Syslog error[" . $error_number ."]: " . $error_string) . "');";
-		/* DO NOT USE db_execute, function looping can occur when in SEV_DEV mode */
+			(logdate,facility,severity,poller_id,host_id,username,source,plugin,message) values
+			(SYSDATE(), " . CACTI_LOG_FAC_SYSTEM . "," . CACTI_LOG_SEV_ERROR . ",0,0,'SYSTEM','SYSLOG','N/A','". sql_sanitize("Syslog error[" . $error_number ."]: " . $error_string) . "');";
+		/* DO NOT USE db_execute, function looping can occur when in CACTI_LOG_SEV_DEV mode */
 		$cnn_id->Execute($sql);
 		return false;
 	}
