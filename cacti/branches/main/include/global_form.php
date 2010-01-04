@@ -23,7 +23,7 @@
 */
 
 if (!defined('VALID_HOST_FIELDS')) {
-	$string = do_hook_function('valid_device_fields', '(hostname|snmp_community|snmp_username|snmp_password|snmp_auth_protocol|snmp_priv_passphrase|snmp_priv_protocol|snmp_context|snmp_version|snmp_port|snmp_timeout)');
+	$string = do_hook_function('valid_device_fields', '(devicename|snmp_community|snmp_username|snmp_password|snmp_auth_protocol|snmp_priv_passphrase|snmp_priv_protocol|snmp_context|snmp_version|snmp_port|snmp_timeout)');
 	define('VALID_HOST_FIELDS', $string);
 }
 
@@ -254,7 +254,7 @@ $fields_data_input_field_edit = array(
 	"type_code" => array(
 		"method" => "textbox",
 		"friendly_name" => __("Special Type Code"),
-		"description" => __("If this field should be treated specially by Device Templates, indicate so here. Valid keywords for this field are 'hostname', 'snmp_community', 'snmp_username', 'snmp_password', 'snmp_auth_protocol', 'snmp_priv_passphrase', 'snmp_priv_protocol', 'snmp_context', 'snmp_port', 'snmp_timeout', and 'snmp_version'."),
+		"description" => __("If this field should be treated specially by Device Templates, indicate so here. Valid keywords for this field are 'devicename', 'snmp_community', 'snmp_username', 'snmp_password', 'snmp_auth_protocol', 'snmp_priv_passphrase', 'snmp_priv_protocol', 'snmp_context', 'snmp_port', 'snmp_timeout', and 'snmp_version'."),
 		"value" => "|arg1:type_code|",
 		"max_length" => "40"
 		),
@@ -1137,11 +1137,11 @@ $fields_device_edit = array(
 		"max_length" => "250",
 		"size" => "70"
 		),
-	"hostname" => array(
+	"devicename" => array(
 		"method" => "textbox",
 		"friendly_name" => __("Hostname"),
-		"description" => __("Fully qualified hostname or IP address for this device."),
-		"value" => "|arg1:hostname|",
+		"description" => __("Fully qualified devicename or IP address for this device."),
+		"value" => "|arg1:devicename|",
 		"max_length" => "250",
 		"size" => "70"
 		),

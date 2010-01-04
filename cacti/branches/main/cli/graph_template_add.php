@@ -111,7 +111,7 @@ if (sizeof($parms)) {
 	/*
 	 * verify valid device id and get a name for it
 	 */
-	$device_name = db_fetch_cell("SELECT hostname FROM device WHERE id = " . $device_id);
+	$device_name = db_fetch_cell("SELECT devicename FROM device WHERE id = " . $device_id);
 	if (!isset($device_name)) {
 		printf(__("ERROR: Unknown Device ID (%d)\n"), $device_id);
 		exit(1);

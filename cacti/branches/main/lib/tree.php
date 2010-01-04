@@ -242,7 +242,7 @@ function sort_tree($sort_type, $item_id, $sort_style) {
 		graph_tree_items.device_id,
 		graph_tree_items.order_key,
 		graph_templates_graph.title_cache as graph_title,
-		CONCAT_WS('',description,' (',hostname,')') as hostname
+		CONCAT_WS('',description,' (',devicename,')') as devicename
 		from graph_tree_items
 		left join graph_templates_graph on (graph_tree_items.local_graph_id=graph_templates_graph.local_graph_id and graph_tree_items.local_graph_id>0)
 		left join device on (device.id=graph_tree_items.device_id)
@@ -259,7 +259,7 @@ function sort_tree($sort_type, $item_id, $sort_style) {
 			}elseif ($leaf["title"] != "") {
 				$leaf_sort_array{strlen($_search_key) / CHARS_PER_TIER}[$_search_key]{$leaf["order_key"]} = $leaf["title"];
 			}elseif ($leaf["device_id"] > 0) {
-				$leaf_sort_array{strlen($_search_key) / CHARS_PER_TIER}[$_search_key]{$leaf["order_key"]} = $leaf["hostname"];
+				$leaf_sort_array{strlen($_search_key) / CHARS_PER_TIER}[$_search_key]{$leaf["order_key"]} = $leaf["devicename"];
 			}
 		}
 	}

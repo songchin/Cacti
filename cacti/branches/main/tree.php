@@ -276,7 +276,7 @@ function item_edit() {
 				<?php print __("Choose a device here to add it to the tree.");?>
 			</td>
 			<td>
-				<?php form_dropdown("device_id", db_fetch_assoc("select id,CONCAT_WS('',description,' (',hostname,')') as name from device order by description,hostname"), "name", "id", (isset($tree_item["device_id"]) ? $tree_item["device_id"] : ""), "", "");?>
+				<?php form_dropdown("device_id", db_fetch_assoc("select id,CONCAT_WS('',description,' (',devicename,')') as name from device order by description,devicename"), "name", "id", (isset($tree_item["device_id"]) ? $tree_item["device_id"] : ""), "", "");?>
 			</td>
 		<?php
 		form_end_row();
@@ -338,7 +338,7 @@ function item_remove() {
 		}elseif ($graph_tree_item["title"] != "") {
 			$text = __("Are you sure you want to delete the header item") . " <strong>'" . $graph_tree_item["title"] . "'</strong>?";
 		}elseif (!empty($graph_tree_item["device_id"])) {
-			$text = __("Are you sure you want to delete the device item") . " <strong>'" . db_fetch_cell("select CONCAT_WS('',description,' (',hostname,')') as hostname from device where id=" . $graph_tree_item["device_id"]) . "'</strong>?";
+			$text = __("Are you sure you want to delete the device item") . " <strong>'" . db_fetch_cell("select CONCAT_WS('',description,' (',devicename,')') as devicename from device where id=" . $graph_tree_item["device_id"]) . "'</strong>?";
 		}
 
 		include(CACTI_BASE_PATH . "/include/top_header.php");
@@ -442,7 +442,7 @@ function tree() {
 	html_start_box("<strong>" . __("Graph Trees") . "</strong>", "100", $colors["header"], "3", "center", "tree.php?action=edit");
 
 	print "<tr><td>";
-	html_header(array(__("Name")), 2,'','','left wp100');
+	html_header(array(__("Name")), 2,'','','left wp100'); 
 	print "</td></tr>";
 
 	$trees = db_fetch_assoc("SELECT * FROM graph_tree ORDER BY name");

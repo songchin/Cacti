@@ -409,7 +409,7 @@ function form_actions() {
 					<td class='textArea'>
 						<p>" . __("Choose a new device for these graphs:") . "</p>
 						<p>$graph_list</p>
-						<p><strong>" . __("New Host:") . "</strong><br>"; form_dropdown("device_id",db_fetch_assoc("select id,CONCAT_WS('',description,' (',hostname,')') as name from device order by description,hostname"),"name","id","","","0"); print "</p>
+						<p><strong>" . __("New Host:") . "</strong><br>"; form_dropdown("device_id",db_fetch_assoc("select id,CONCAT_WS('',description,' (',devicename,')') as name from device order by description,devicename"),"name","id","","","0"); print "</p>
 					</td>
 				</tr>\n
 				";
@@ -858,7 +858,7 @@ function graph_edit() {
 			"friendly_name" => __("Host"),
 			"description" => __("Choose the device that this graph belongs to."),
 			"id" => (isset($_GET["device_id"]) ? $_GET["device_id"] : $device_id),
-			"name" => db_fetch_cell("SELECT CONCAT_WS('',description,' (',hostname,')') FROM device WHERE id=" . (isset($_GET['device_id']) ? $_GET['device_id'] : $device_id))
+			"name" => db_fetch_cell("SELECT CONCAT_WS('',description,' (',devicename,')') FROM device WHERE id=" . (isset($_GET['device_id']) ? $_GET['device_id'] : $device_id))
 			),
 		"graph_template_graph_id" => array(
 			"method" => "hidden",
@@ -1120,12 +1120,12 @@ function graph() {
 					<td width="1">
 						<?php
 						if (isset($_REQUEST["device_id"])) {
-							$hostname = db_fetch_cell("SELECT description as name FROM device WHERE id=".$_REQUEST["device_id"]." ORDER BY description,hostname");
+							$devicename = db_fetch_cell("SELECT description as name FROM device WHERE id=".$_REQUEST["device_id"]." ORDER BY description,devicename");
 						} else {
-							$hostname = "";
+							$devicename = "";
 						}
 						?>
-						<input class="ac_field" type="text" id="device" size="30" value="<?php print $hostname; ?>">
+						<input class="ac_field" type="text" id="device" size="30" value="<?php print $devicename; ?>">
 						<input type="hidden" id="device_id">
 					</td>
 					<td width="70">

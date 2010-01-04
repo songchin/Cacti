@@ -243,11 +243,11 @@ function logi_list_poller () {
 
 	$poller = array();
 
-	$pollers = db_fetch_assoc("select id, hostname from poller order by hostname");
+	$pollers = db_fetch_assoc("select id, devicename from poller order by devicename");
 
 	$poller["0"] = "SYSTEM";
 	while (list($poller_id,$poller_record) = each($pollers)) {
-		$poller[$poller_record["id"]] = $poller_record["hostname"];
+		$poller[$poller_record["id"]] = $poller_record["devicename"];
 	}
 
 	return $poller;
@@ -266,11 +266,11 @@ function log_list_device () {
 
 	$device = array();
 
-	$devices = db_fetch_assoc("select id, hostname from device order by hostname");
+	$devices = db_fetch_assoc("select id, devicename from device order by devicename");
 
 	$device["0"] = "SYSTEM";
-	while (list($id,$hostname) = each($devices)) {
-		$device[$hostname["id"]] = $hostname["hostname"];
+	while (list($id,$devicename) = each($devices)) {
+		$device[$devicename["id"]] = $devicename["devicename"];
 	}
 
 	return $device;

@@ -93,7 +93,7 @@ function api_device_gt_remove($device_id, $graph_template_id) {
 	db_execute("delete from device_graph where graph_template_id=$graph_template_id and device_id=$device_id");
 }
 
-function api_device_save($id, $site_id, $poller_id, $device_template_id, $description, $hostname, $snmp_community, $snmp_version,
+function api_device_save($id, $site_id, $poller_id, $device_template_id, $description, $devicename, $snmp_community, $snmp_version,
 	$snmp_username, $snmp_password, $snmp_port, $snmp_timeout, $disabled,
 	$availability_method, $ping_method, $ping_port, $ping_timeout, $ping_retries,
 	$notes, $snmp_auth_protocol, $snmp_priv_passphrase, $snmp_priv_protocol, $snmp_context, $max_oids, $template_enabled) {
@@ -110,7 +110,7 @@ function api_device_save($id, $site_id, $poller_id, $device_template_id, $descri
 	$save["poller_id"]        = form_input_validate($poller_id, "poller_id", "^[0-9]+$", false, 3);
 	$save["device_template_id"] = form_input_validate($device_template_id, "device_template_id", "^[0-9]+$", false, 3);
 	$save["description"]      = form_input_validate($description, "description", "", false, 3);
-	$save["hostname"]         = form_input_validate(trim($hostname), "hostname", "", false, 3);
+	$save["devicename"]         = form_input_validate(trim($devicename), "devicename", "", false, 3);
 	$save["notes"]            = form_input_validate($notes, "notes", "", true, 3);
 	$save["disabled"]         = form_input_validate($disabled, "disabled", "", true, 3);
 	$save["template_enabled"] = form_input_validate($template_enabled, "template_enabled", "", true, 3);

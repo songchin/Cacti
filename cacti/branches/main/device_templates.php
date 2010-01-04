@@ -149,7 +149,7 @@ function form_save() {
 					$new_gt_device_entries = db_fetch_assoc("
 								SELECT 	device.id AS device_id,
 										device.description AS description,
-										device.hostname AS hostname
+										device.devicename AS devicename
 								FROM 	device,
 									 	device_template_graph
 								WHERE	device.device_template_id 					= device_template_graph.device_template_id
@@ -174,7 +174,7 @@ function form_save() {
 											  . get_request_var_post("graph_template_id") . "
 											)"
 									);
-							debug_log_insert("device_template", $entry["hostname"] . ", " . $entry["description"]);
+							debug_log_insert("device_template", $entry["devicename"] . ", " . $entry["description"]);
 						}
 					}
 					$redirect_back = true;
@@ -190,7 +190,7 @@ function form_save() {
 					$new_dq_device_entries = db_fetch_assoc("
 								SELECT 	device.id AS device_id,
 										device.description AS description,
-										device.hostname AS hostname
+										device.devicename AS devicename
 								FROM  	device,
 										device_template_snmp_query
 								WHERE	device.device_template_id					= device_template_snmp_query.device_template_id
@@ -218,7 +218,7 @@ function form_save() {
 										);
 							/* recache snmp data */
 							run_data_query($entry["device_id"], get_request_var_post("snmp_query_id"));
-							debug_log_insert("device_template", $entry["hostname"] . ", " . $entry["description"]);
+							debug_log_insert("device_template", $entry["devicename"] . ", " . $entry["description"]);
 						}
 					}
 					$redirect_back = true;

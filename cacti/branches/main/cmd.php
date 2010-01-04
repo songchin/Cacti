@@ -321,7 +321,7 @@ if ((sizeof($polling_items) > 0) && (read_config_option("poller_enabled") == CHE
 
 				if ((sizeof($reindex) > 0) && (!$device_down)) {
 					if (read_config_option("log_verbosity") == POLLER_VERBOSITY_DEBUG) {
-						cacti_log("Host[$device_id] RECACHE: Processing " . sizeof($reindex) . " items in the auto reindex cache for '" . $item["hostname"] . "'.",$print_data_to_stdout);
+						cacti_log("Host[$device_id] RECACHE: Processing " . sizeof($reindex) . " items in the auto reindex cache for '" . $item["devicename"] . "'.",$print_data_to_stdout);
 					}
 
 					foreach ($reindex as $index_item) {
@@ -330,7 +330,7 @@ if ((sizeof($polling_items) > 0) && (read_config_option("poller_enabled") == CHE
 						/* do the check */
 						switch ($index_item["action"]) {
 						case POLLER_ACTION_SNMP: /* snmp */
-							$output = cacti_snmp_get($item["hostname"], $item["snmp_community"], $index_item["arg1"],
+							$output = cacti_snmp_get($item["devicename"], $item["snmp_community"], $index_item["arg1"],
 								$item["snmp_version"], $item["snmp_username"], $item["snmp_password"],
 								$item["snmp_auth_protocol"], $item["snmp_priv_passphrase"], $item["snmp_priv_protocol"],
 								$item["snmp_context"], $item["snmp_port"], $item["snmp_timeout"], read_config_option("snmp_retries"), SNMP_CMDPHP);
@@ -342,15 +342,15 @@ if ((sizeof($polling_items) > 0) && (read_config_option("poller_enabled") == CHE
 
 						/* assert the result with the expected value in the db; recache if the assert fails */
 						if (($index_item["op"] == "=") && ($index_item["assert_value"] != trim($output))) {
-							cacti_log("ASSERT: '" . $index_item["assert_value"] . "=" . trim($output) . "' failed. Recaching device '" . $item["hostname"] . "', data query #" . $index_item["data_query_id"], $print_data_to_stdout);
+							cacti_log("ASSERT: '" . $index_item["assert_value"] . "=" . trim($output) . "' failed. Recaching device '" . $item["devicename"] . "', data query #" . $index_item["data_query_id"], $print_data_to_stdout);
 							db_execute("replace into poller_command (poller_id, time, action, command) values ($poller_id, NOW(), " . POLLER_COMMAND_REINDEX . ", '" . $item["device_id"] . ":" . $index_item["data_query_id"] . "')");
 							$assert_fail = true;
 						}else if (($index_item["op"] == ">") && ($index_item["assert_value"] < trim($output))) {
-							cacti_log("ASSERT: '" . $index_item["assert_value"] . ">" . trim($output) . "' failed. Recaching device '" . $item["hostname"] . "', data query #" . $index_item["data_query_id"], $print_data_to_stdout);
+							cacti_log("ASSERT: '" . $index_item["assert_value"] . ">" . trim($output) . "' failed. Recaching device '" . $item["devicename"] . "', data query #" . $index_item["data_query_id"], $print_data_to_stdout);
 							db_execute("replace into poller_command (poller_id, time, action, command) values ($poller_id, NOW(), " . POLLER_COMMAND_REINDEX . ", '" . $item["device_id"] . ":" . $index_item["data_query_id"] . "')");
 							$assert_fail = true;
 						}else if (($index_item["op"] == "<") && ($index_item["assert_value"] > trim($output))) {
-							cacti_log("ASSERT: '" . $index_item["assert_value"] . "<" . trim($output) . "' failed. Recaching device '" . $item["hostname"] . "', data query #" . $index_item["data_query_id"], $print_data_to_stdout);
+							cacti_log("ASSERT: '" . $index_item["assert_value"] . "<" . trim($output) . "' failed. Recaching device '" . $item["devicename"] . "', data query #" . $index_item["data_query_id"], $print_data_to_stdout);
 							db_execute("replace into poller_command (poller_id, time, action, command) values ($poller_id, NOW(), " . POLLER_COMMAND_REINDEX . ", '" . $item["device_id"] . ":" . $index_item["data_query_id"] . "')");
 							$assert_fail = true;
 						}
@@ -370,7 +370,7 @@ if ((sizeof($polling_items) > 0) && (read_config_option("poller_enabled") == CHE
 									$set_spike_kill = true;
 
 									if (read_config_option("log_verbosity") == POLLER_VERBOSITY_DEBUG) {
-										cacti_log("Host[$device_id] NOTICE: Spike Kill in Effect for '" . $item["hostname"] . "'.", $print_data_to_stdout);
+										cacti_log("Host[$device_id] NOTICE: Spike Kill in Effect for '" . $item["devicename"] . "'.", $print_data_to_stdout);
 									}
 								}
 							}
@@ -390,7 +390,7 @@ if ((sizeof($polling_items) > 0) && (read_config_option("poller_enabled") == CHE
 					cacti_log("Host[$device_id] DS[$data_source] ERROR: Invalid SNMP Data Source.  Please either delete it from the database, or correct it.", $print_data_to_stdout);
 					$output = "U";
 				}else {
-					$output = cacti_snmp_get($item["hostname"], $item["snmp_community"], $item["arg1"],
+					$output = cacti_snmp_get($item["devicename"], $item["snmp_community"], $item["arg1"],
 						$item["snmp_version"], $item["snmp_username"], $item["snmp_password"],
 						$item["snmp_auth_protocol"], $item["snmp_priv_passphrase"], $item["snmp_priv_protocol"],
 						$item["snmp_context"], $item["snmp_port"], $item["snmp_timeout"], read_config_option("snmp_retries"), SNMP_CMDPHP);
@@ -411,7 +411,7 @@ if ((sizeof($polling_items) > 0) && (read_config_option("poller_enabled") == CHE
 				}
 
 				if (read_config_option("log_verbosity") >= POLLER_VERBOSITY_MEDIUM) {
-					cacti_log("Host[$device_id] DS[$data_source] SNMP: v" . $item["snmp_version"] . ": " . $item["hostname"] . ", dsname: " . $item["rrd_name"] . ", oid: " . $item["arg1"] . ", output: $output",$print_data_to_stdout);
+					cacti_log("Host[$device_id] DS[$data_source] SNMP: v" . $item["snmp_version"] . ": " . $item["devicename"] . ", dsname: " . $item["rrd_name"] . ", oid: " . $item["arg1"] . ", output: $output",$print_data_to_stdout);
 				}
 
 				break;

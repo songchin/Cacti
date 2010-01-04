@@ -35,17 +35,17 @@ $device_perms = db_fetch_cell("SELECT policy_devices FROM user_auth WHERE id=" .
 if ($device_perms == 1) {
 	$sql = "SELECT id, description as name
 		FROM device
-		WHERE (hostname LIKE '%$q%'
+		WHERE (devicename LIKE '%$q%'
 		OR description LIKE '%$q%')
 		AND id NOT IN (SELECT item_id FROM user_auth_perms WHERE user_auth_perms.type=3 AND user_auth_perms.user_id=" . $_SESSION["sess_user_id"] . ")
-		ORDER BY description,hostname";
+		ORDER BY description,devicename";
 }else{
 	$sql = "SELECT id, description as name
 		FROM device
-		WHERE (hostname LIKE '%$q%'
+		WHERE (devicename LIKE '%$q%'
 		OR description LIKE '%$q%')
 		AND id IN (SELECT item_id FROM user_auth_perms WHERE user_auth_perms.type=3 AND user_auth_perms.user_id=" . $_SESSION["sess_user_id"] . ")
-		ORDER BY description,hostname";
+		ORDER BY description,devicename";
 }
 
 

@@ -208,7 +208,7 @@ function export_ftp_php_execute($stExportDir, $stFtpType = "ftp_php") {
 		$oFtpConnection = ftp_connect($aFtpExport['server'], $aFtpExport['port']);
 
 		if (!$oFtpConnection) {
-			export_fatal("FTP Connection failed! Check hostname and port.  Export can not continue.");
+			export_fatal("FTP Connection failed! Check devicename and port.  Export can not continue.");
 		}else {
 			export_log("Conection to remote server was successful.");
 		}
@@ -217,7 +217,7 @@ function export_ftp_php_execute($stExportDir, $stFtpType = "ftp_php") {
 		$oFtpConnection = ftp_ssl_connect($aFtpExport['server'], $aFtpExport['port']);
 
 		if (!$oFtpConnection) {
-			export_fatal("SFTP Connection failed! Check hostname and port.  Export can not continue.");
+			export_fatal("SFTP Connection failed! Check devicename and port.  Export can not continue.");
 		}else {
 			export_log("Conection to remote server was successful.");
 		}
@@ -751,7 +751,7 @@ function export_tree_html($path, $filename, $tree_id, $parent_tree_item_id) {
 		graph_tree_items.order_key,
 		graph_tree_items.device_id,
 		graph_tree_items.device_grouping_type,
-		device.description AS hostname
+		device.description AS devicename
 		FROM graph_tree
 		LEFT JOIN (graph_tree_items
 		LEFT JOIN device ON (graph_tree_items.device_id=device.id)
@@ -915,7 +915,7 @@ function build_html_file($leaf, $type = "", $array_data = array(), $snmp_index =
 			AND graph_local.device_id=" . $leaf["device_id"] . "
 			AND graph_templates_graph.export='on'";
 
-		$filename = clean_up_export_name($leaf["hostname"]) . "_" . $leaf["id"] . ".html";
+		$filename = clean_up_export_name($leaf["devicename"]) . "_" . $leaf["id"] . ".html";
 
 		break;
 	case "gt":
@@ -925,7 +925,7 @@ function build_html_file($leaf, $type = "", $array_data = array(), $snmp_index =
 			AND graph_templates_graph.export='on'
 			AND graph_templates_graph.graph_template_id=" . $array_data["id"];
 
-		$filename = clean_up_export_name($leaf["hostname"]) . "_gt_" . $leaf["id"] . "_" . $array_data["id"] . ".html";
+		$filename = clean_up_export_name($leaf["devicename"]) . "_gt_" . $leaf["id"] . "_" . $array_data["id"] . ".html";
 
 		break;
 	case "dq":
@@ -935,7 +935,7 @@ function build_html_file($leaf, $type = "", $array_data = array(), $snmp_index =
 			AND graph_local.snmp_query_id=" . $array_data["id"] . "
 			AND graph_templates_graph.export='on'";
 
-		$filename = clean_up_export_name($leaf["hostname"]) . "_dq_" . $leaf["id"] . "_" . $array_data["id"] . ".html";
+		$filename = clean_up_export_name($leaf["devicename"]) . "_dq_" . $leaf["id"] . "_" . $array_data["id"] . ".html";
 
 		break;
 	case "dqi":
@@ -946,7 +946,7 @@ function build_html_file($leaf, $type = "", $array_data = array(), $snmp_index =
 			AND graph_local.snmp_index=" . $snmp_index . "
 			AND graph_templates_graph.export='on'";
 
-		$filename = clean_up_export_name($leaf["hostname"]) . "_dqi_" . $leaf["id"] . "_" . $array_data["id"] . "_" . $snmp_index . ".html";
+		$filename = clean_up_export_name($leaf["devicename"]) . "_dqi_" . $leaf["id"] . "_" . $array_data["id"] . "_" . $snmp_index . ".html";
 
 		break;
 	}
@@ -1035,16 +1035,16 @@ function build_html_file($leaf, $type = "", $array_data = array(), $snmp_index =
 		fwrite($fp, "<strong>Tree:</strong> " . get_tree_name($leaf["tree_id"]) . "</td></tr><tr bgcolor='#a9b7cb'><td colspan='3' class='textHeaderDark'><strong>Leaf:</strong> " . $leaf["title"] . " - Associated Graphs" . "</td></tr><tr>");
 		break;
 	case "device":
-		fwrite($fp, "<strong>Host:</strong> " . $leaf["hostname"] . " - Associated Graphs" . "</td></tr><tr>");
+		fwrite($fp, "<strong>Host:</strong> " . $leaf["devicename"] . " - Associated Graphs" . "</td></tr><tr>");
 		break;
 	case "gt":
-		fwrite($fp, "<strong>Host:</strong> " . $leaf["hostname"] . "</td></tr><tr bgcolor='#a9b7cb'><td colspan='3' class='textHeaderDark'><strong>Graph Template:</strong> " . $array_data["name"] . " - Associated Graphs" . "</td></tr><tr>");
+		fwrite($fp, "<strong>Host:</strong> " . $leaf["devicename"] . "</td></tr><tr bgcolor='#a9b7cb'><td colspan='3' class='textHeaderDark'><strong>Graph Template:</strong> " . $array_data["name"] . " - Associated Graphs" . "</td></tr><tr>");
 		break;
 	case "dq":
-		fwrite($fp, "<strong>Host:</strong> " . $leaf["hostname"] . "</td></tr><tr bgcolor='#a9b7cb'><td colspan='3' class='textHeaderDark'><strong>Data Query:</strong> " . $array_data["name"] . " - Associated Graphs" . "</td></tr><tr>");
+		fwrite($fp, "<strong>Host:</strong> " . $leaf["devicename"] . "</td></tr><tr bgcolor='#a9b7cb'><td colspan='3' class='textHeaderDark'><strong>Data Query:</strong> " . $array_data["name"] . " - Associated Graphs" . "</td></tr><tr>");
 		break;
 	case "dqi":
-		fwrite($fp, "<strong>Host:</strong> " . $leaf["hostname"] . "</td></tr><tr bgcolor='#a9b7cb'><td colspan='3' class='textHeaderDark'><strong>Data Query Index:</strong> " . $array_data["name"] . " " . $snmp_index . " - Graph" . "</td></tr><tr>");
+		fwrite($fp, "<strong>Host:</strong> " . $leaf["devicename"] . "</td></tr><tr bgcolor='#a9b7cb'><td colspan='3' class='textHeaderDark'><strong>Data Query Index:</strong> " . $array_data["name"] . " " . $snmp_index . " - Graph" . "</td></tr><tr>");
 		break;
 	}
 
@@ -1478,7 +1478,7 @@ function create_dhtml_tree_export($tree_id) {
 					graph_tree_items.order_key,
 					graph_tree_items.device_id,
 					graph_tree_items.device_grouping_type,
-					device.description as hostname
+					device.description as devicename
 					FROM (graph_tree_items, graph_templates_graph)
 					LEFT JOIN device ON (device.id=graph_tree_items.device_id)
 					LEFT JOIN graph_templates ON (graph_templates_graph.graph_template_id=graph_templates.id)
@@ -1503,7 +1503,7 @@ function create_dhtml_tree_export($tree_id) {
 					$tier = tree_tier($leaf["order_key"]);
 
 					if ($leaf["device_id"] > 0) {  //It's a device
-						$dhtml_tree[$i] = "ou" . ($tier) . " = insFld(ou" . ($tier-1) . ", gFld(\"<strong>Host:</strong> " . $leaf["hostname"] . "\", \"" . clean_up_export_name($leaf["hostname"] . "_" . $leaf["id"]) . ".html\"))\n";
+						$dhtml_tree[$i] = "ou" . ($tier) . " = insFld(ou" . ($tier-1) . ", gFld(\"<strong>Host:</strong> " . $leaf["devicename"] . "\", \"" . clean_up_export_name($leaf["devicename"] . "_" . $leaf["id"]) . ".html\"))\n";
 
 						if (read_config_option("export_tree_expand_devices") == CHECKED) {
 							if ($leaf["device_grouping_type"] == HOST_GROUPING_GRAPH_TEMPLATE) {
@@ -1522,7 +1522,7 @@ function create_dhtml_tree_export($tree_id) {
 							 	if (sizeof($graph_templates) > 0) {
 									foreach ($graph_templates as $graph_template) {
 										$i++;
-										$dhtml_tree[$i] = "ou" . ($tier+1) . " = insFld(ou" . ($tier) . ", gFld(\" " . $graph_template["name"] . "\", \"" . clean_up_export_name($leaf["hostname"] . "_gt_" . $leaf["id"]) . "_" . $graph_template["id"] . ".html\"))\n";
+										$dhtml_tree[$i] = "ou" . ($tier+1) . " = insFld(ou" . ($tier) . ", gFld(\" " . $graph_template["name"] . "\", \"" . clean_up_export_name($leaf["devicename"] . "_gt_" . $leaf["id"]) . "_" . $graph_template["id"] . ".html\"))\n";
 									}
 								}
 							}else if ($leaf["device_grouping_type"] == HOST_GROUPING_DATA_QUERY_INDEX) {
@@ -1544,7 +1544,7 @@ function create_dhtml_tree_export($tree_id) {
 								foreach ($data_queries as $data_query) {
 									$i++;
 
-									$dhtml_tree[$i] = "ou" . ($tier+1) . " = insFld(ou" . ($tier) . ", gFld(\" " . $data_query["name"] . "\", \"" . clean_up_export_name($leaf["hostname"] . "_dq_" . $leaf["title"] . "_" . $leaf["id"]) . "_" . $data_query["id"] . ".html\"))\n";
+									$dhtml_tree[$i] = "ou" . ($tier+1) . " = insFld(ou" . ($tier) . ", gFld(\" " . $data_query["name"] . "\", \"" . clean_up_export_name($leaf["devicename"] . "_dq_" . $leaf["title"] . "_" . $leaf["id"]) . "_" . $data_query["id"] . ".html\"))\n";
 
 									/* fetch a list of field names that are sorted by the preferred sort field */
 									$sort_field_data = get_formatted_data_query_indexes($leaf["device_id"], $data_query["id"]);
@@ -1552,7 +1552,7 @@ function create_dhtml_tree_export($tree_id) {
 									if ($data_query["id"] > 0) {
 										while (list($snmp_index, $sort_field_value) = each($sort_field_data)) {
 											$i++;
-											$dhtml_tree[$i] = "ou" . ($tier+2) . " = insFld(ou" . ($tier+1) . ", gFld(\" " . $sort_field_value . "\", \"" . clean_up_export_name($leaf["hostname"] . "_dqi_" . $leaf["title"] . "_" . $leaf["id"]) . "_" . $data_query["id"] . "_" . $snmp_index . ".html\"))\n";
+											$dhtml_tree[$i] = "ou" . ($tier+2) . " = insFld(ou" . ($tier+1) . ", gFld(\" " . $sort_field_value . "\", \"" . clean_up_export_name($leaf["devicename"] . "_dqi_" . $leaf["title"] . "_" . $leaf["id"]) . "_" . $data_query["id"] . "_" . $snmp_index . ".html\"))\n";
 										}
 									}
 								}

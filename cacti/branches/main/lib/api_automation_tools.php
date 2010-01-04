@@ -65,9 +65,9 @@ function getDevices($input_parms) {
 		$sql_where .= 'description like "%%' . $input_parms["description"] . '%%" ';
 	}
 
-	if (isset($input_parms["hostname"])) {
+	if (isset($input_parms["devicename"])) {
 		strlen($sql_where) ? ($sql_where .= ' AND ') : ($sql_where .= ' WHERE ');
-		$sql_where .= 'hostname like "%%' . $input_parms["hostname"] . '%%" ';
+		$sql_where .= 'devicename like "%%' . $input_parms["devicename"] . '%%" ';
 	}
 
 	if (isset($input_parms["device_template_id"])) {
@@ -185,7 +185,7 @@ function getGraphs($device_selection, &$header) {
 	$sql = "SELECT " .
 			"graph_local.id as local_graph_id, " .
 			"graph_local.device_id, " .
-			"device.hostname, " .
+			"device.devicename, " .
 			"graph_templates.id as gt_id, " .
 			"graph_templates.name, " .
 			"graph_templates_graph.title_cache  " .
@@ -202,7 +202,7 @@ function getGraphs($device_selection, &$header) {
 		# provide human readable column headers
 		$header["local_graph_id"]["desc"]		= __("Local Graph Id");
 		$header["device_id"]["desc"] 				= __("Host Id");
-		$header["hostname"]["desc"] 			= __("Hostname");
+		$header["devicename"]["desc"] 			= __("Hostname");
 		$header["gt_id"]["desc"]		 		= __("Graph Template Id");
 		$header["name"]["desc"]			 		= __("Graph Template Name");
 		$header["title_cache"]["desc"] 			= __("Graph Title");
@@ -227,7 +227,7 @@ function getHostGraphs($devices, &$header) {
 		"graph_templates_graph.title_cache as name, " .
 		"graph_templates.name as template_name, " .
 		"graph_local.device_id as device_id, " .
-		"device.hostname as hostname " .
+		"device.devicename as devicename " .
 		"FROM graph_local " .
 		"LEFT JOIN graph_templates ON (graph_local.graph_template_id=graph_templates.id) " .
 		"LEFT JOIN graph_templates_graph ON (graph_local.id=graph_templates_graph.local_graph_id) " .
@@ -243,7 +243,7 @@ function getHostGraphs($devices, &$header) {
 		$header["name"]["desc"] 			= __("Graph Title");
 		$header["template_name"]["desc"] 	= __("Graph Template Name");
 		$header["device_id"]["desc"] 			= __("Host Id");
-		$header["hostname"]["desc"] 		= __("Hostname");
+		$header["devicename"]["desc"] 		= __("Hostname");
 	}
 
 	return $tmpArray;
@@ -349,11 +349,11 @@ function displayGenericArray($data, $req_fields=array(), $title="", $quietMode=F
 
 function getAddresses() {
 	$addresses = array();
-	$tmpArray  = db_fetch_assoc("SELECT id, hostname FROM device ORDER BY hostname");
+	$tmpArray  = db_fetch_assoc("SELECT id, devicename FROM device ORDER BY devicename");
 
 	if (sizeof($tmpArray)) {
 		foreach ($tmpArray as $tmp) {
-			$addresses[$tmp["hostname"]] = $tmp["id"];
+			$addresses[$tmp["devicename"]] = $tmp["id"];
 		}
 	}
 
@@ -438,7 +438,7 @@ function getSNMPQueriesByDevices($devices, $snmp_query_id='', &$header) {
 	}
 	$sql = "SELECT " .
 				"device.id as device_id, " .
-				"device.hostname as hostname, " .
+				"device.devicename as devicename, " .
 				"snmp_query.id as snmp_query_id, " .
 				"snmp_query.name as snmp_query_name, " .
 				"device_snmp_query.sort_field, " .
@@ -458,7 +458,7 @@ function getSNMPQueriesByDevices($devices, $snmp_query_id='', &$header) {
 		}
 		# provide human readable column headers
 		$header["device_id"]["desc"] 				= __("Host Id");
-		$header["hostname"]["desc"] 			= __("Hostname");
+		$header["devicename"]["desc"] 			= __("Hostname");
 		$header["snmp_query_id"]["desc"] 		= __("Query Id");
 		$header["snmp_query_name"]["desc"] 		= __("Query Name");
 		$header["sort_field"]["desc"] 			= __("Sort Field");
@@ -802,12 +802,12 @@ function displayGraphTemplates($templates, $quietMode = FALSE) {
 
 function displayDevices($devices, $quietMode = FALSE) {
 	if (!$quietMode) {
-		echo __("Known Hosts: (id, hostname, template, description)") . "\n";
+		echo __("Known Hosts: (id, devicename, template, description)") . "\n";
 	}
 
 	if (sizeof($devices)) {
 		foreach($devices as $device) {
-			echo $device["id"] . "\t" . $device["hostname"] . "\t" . $device["device_template_id"] . "\t" . $device["description"] . "\n";
+			echo $device["id"] . "\t" . $device["devicename"] . "\t" . $device["device_template_id"] . "\t" . $device["description"] . "\n";
 		}
 	}
 
@@ -930,7 +930,7 @@ function displayPerms($perm, $quietMode = FALSE) {
 				case PERM_DEVICES:
 					$item["default_policy"] = (($item["policy_devices"] == POLICY_ALLOW) ? __("Accessible") : __("No Access"));
 					$item["item_policy"] = (($item["policy_devices"] == POLICY_ALLOW) ? __("No Access") : __("Accessible"));
-					$item["name"] = db_fetch_cell("SELECT hostname FROM device WHERE id=" . $item["item_id"]);
+					$item["name"] = db_fetch_cell("SELECT devicename FROM device WHERE id=" . $item["item_id"]);
 					break;
 				case PERM_GRAPH_TEMPLATES:
 					$item["default_policy"] = (($item["policy_graph_templates"] == POLICY_ALLOW) ? __("Accessible") : __("No Access"));
@@ -1069,7 +1069,7 @@ function displayTreeNodes($tree_id, $nodeType = "", $parentNode = "", $quietMode
 						echo $node["parent_id"]."\t";
 
 						$name = db_fetch_cell("SELECT
-												hostname
+												devicename
 												FROM device
 												WHERE id = " . $node["device_id"]);
 						echo $name . "\t";
@@ -1225,7 +1225,7 @@ function verifyDevice(&$device, $ri_check=false) {
 				break;
 			case "description":
 				break;
-			case "hostname":
+			case "devicename":
 				break;
 			case "notes":
 				break;

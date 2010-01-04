@@ -479,6 +479,7 @@ function upgrade_to_0_8_8() {
 	db_install_execute("0.8.8", "ALTER TABLE graph_local DROP INDEX `host_id`, CHANGE `host_id` `device_id` MEDIUMINT(8) UNSIGNED NOT NULL, ADD INDEX `device_id` ( `device_id` )");
 	db_install_execute("0.8.8", "ALTER TABLE graph_tree_items DROP INDEX `host_id`, CHANGE `host_id` `device_id` MEDIUMINT(8) UNSIGNED NOT NULL, ADD INDEX `device_id` ( `device_id` ), CHANGE `host_grouping_type` `device_grouping_type` TINYINT(3) UNSIGNED NOT NULL DEFAULT 1");
 	db_install_execute("0.8.8", "RENAME TABLE `host`  TO `device`");
+	db_install_execute("0.8.8", "ALTER TABLE device CHANGE `host_template_id` `device_template_id` MEDIUMINT(8) UNSIGNED NOT NULL, CHANGE `hostname` `devicename` VARCHAR(250) NOT NULL");
 	db_install_execute("0.8.8", "RENAME TABLE `host_graph`  TO `device_graph`");
 	db_install_execute("0.8.8", "ALTER TABLE device_graph CHANGE `host_id` `device_id` MEDIUMINT(8) UNSIGNED NOT NULL");
 	db_install_execute("0.8.8", "RENAME TABLE `host_snmp_cache`  TO `device_snmp_cache`");
@@ -491,7 +492,7 @@ function upgrade_to_0_8_8() {
 	db_install_execute("0.8.8", "RENAME TABLE `host_template_snmp_query`  TO `device_template_snmp_query`");
 	db_install_execute("0.8.8", "ALTER TABLE device_template_snmp_query DROP INDEX `host_template_id`, CHANGE `host_template_id` `device_template_id` MEDIUMINT(8) UNSIGNED NOT NULL, ADD INDEX `device_template_id` ( `device_template_id` )");
 	db_install_execute("0.8.8", "ALTER TABLE poller CHANGE `hostname` `devicename` VARCHAR(250) NOT NULL");
-	db_install_execute("0.8.8", "ALTER TABLE poller_item DROP INDEX `host_id`, CHANGE `host_id` `device_id` MEDIUMINT(8) UNSIGNED NOT NULL, ADD INDEX `device_id` ( `device_id` )");
+	db_install_execute("0.8.8", "ALTER TABLE poller_item DROP INDEX `host_id`, CHANGE `host_id` `device_id` MEDIUMINT(8) UNSIGNED NOT NULL, ADD INDEX `device_id` ( `device_id` ), CHANGE `hostname` `devicename` VARCHAR(250) NOT NULL");
 	db_install_execute("0.8.8", "ALTER TABLE poller_reindex CHANGE `host_id` `device_id` MEDIUMINT(8) UNSIGNED NOT NULL");
 	db_install_execute("0.8.8", "ALTER TABLE user_auth CHANGE `policy_hosts` `policy_devices` TINYINT(1) UNSIGNED NOT NULL DEFAULT 1");
 

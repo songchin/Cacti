@@ -123,7 +123,7 @@ function api_device_form_save() {
 		$device_template["notes"]    = ""; /* no support for notes in a device template */
 		$device_template["disabled"] = ""; /* no support for disabling in a device template */
 		$device_id = api_device_save($_POST["id"], $_POST["site_id"], $_POST["poller_id"], $_POST["device_template_id"], $_POST["description"],
-			get_request_var_post("hostname"), $device_template["snmp_community"], $device_template["snmp_version"],
+			get_request_var_post("devicename"), $device_template["snmp_community"], $device_template["snmp_version"],
 			$device_template["snmp_username"], $device_template["snmp_password"],
 			$device_template["snmp_port"], $device_template["snmp_timeout"],
 			$device_template["disabled"],
@@ -142,7 +142,7 @@ function api_device_form_save() {
 			raise_message(4);
 		}else{
 			$device_id = api_device_save($_POST["id"], $_POST["site_id"], $_POST["poller_id"], $_POST["device_template_id"], $_POST["description"],
-				trim(get_request_var_post("hostname")), get_request_var_post("snmp_community"), get_request_var_post("snmp_version"),
+				trim(get_request_var_post("devicename")), get_request_var_post("snmp_community"), get_request_var_post("snmp_version"),
 				get_request_var_post("snmp_username"), get_request_var_post("snmp_password"),
 				get_request_var_post("snmp_port"), get_request_var_post("snmp_timeout"),
 				(isset($_POST["disabled"]) ? get_request_var_post("disabled") : ""),
@@ -617,12 +617,12 @@ function device_edit() {
 
 	if (!empty($_REQUEST["id"])) {
 		$device         = db_fetch_row("select * from device where id=" . $_REQUEST["id"]);
-		$device_text    = "<strong>" . $device["description"] . "(" . $device["hostname"] . ")</strong>";
+		$device_text    = "<strong>" . $device["description"] . "(" . $device["devicename"] . ")</strong>";
 		$header_label = __("[edit: ") . $device["description"] . "]";
 	}elseif (!empty($_GET["device_id"])) {
 		$_REQUEST["id"]   = $_REQUEST["device_id"];
 		$device         = db_fetch_row("select * from device where id=" . $_REQUEST["id"]);
-		$device_text    = "<strong>" . $device["description"] . "(" . $device["hostname"] . ")</strong>";
+		$device_text    = "<strong>" . $device["description"] . "(" . $device["devicename"] . ")</strong>";
 		$header_label = __("[edit: ") . $device["description"] . "]";
 	}else{
 		$header_label = __("[new]");
@@ -721,7 +721,7 @@ function device_display_general($device, $device_text) {
 						($device["snmp_version"] == 0)) {
 						print "<span class=\"info\">SNMP not in use</span>\n";
 					}else{
-						$snmp_system = cacti_snmp_get($device["hostname"], $device["snmp_community"], ".1.3.6.1.2.1.1.1.0", $device["snmp_version"],
+						$snmp_system = cacti_snmp_get($device["devicename"], $device["snmp_community"], ".1.3.6.1.2.1.1.1.0", $device["snmp_version"],
 							$device["snmp_username"], $device["snmp_password"],
 							$device["snmp_auth_protocol"], $device["snmp_priv_passphrase"], $device["snmp_priv_protocol"],
 							$device["snmp_context"], $device["snmp_port"], $device["snmp_timeout"], read_config_option("snmp_retries"),SNMP_WEBUI);
@@ -736,22 +736,22 @@ function device_display_general($device, $device_text) {
 						if ($snmp_system == "") {
 							print "<span class=\"warning\">SNMP error</span>\n";
 						}else{
-							$snmp_uptime   = cacti_snmp_get($device["hostname"], $device["snmp_community"], ".1.3.6.1.2.1.1.3.0", $device["snmp_version"],
+							$snmp_uptime   = cacti_snmp_get($device["devicename"], $device["snmp_community"], ".1.3.6.1.2.1.1.3.0", $device["snmp_version"],
 								$device["snmp_username"], $device["snmp_password"],
 								$device["snmp_auth_protocol"], $device["snmp_priv_passphrase"], $device["snmp_priv_protocol"],
 								$device["snmp_context"], $device["snmp_port"], $device["snmp_timeout"], read_config_option("snmp_retries"), SNMP_WEBUI);
 
-							$snmp_hostname = cacti_snmp_get($device["hostname"], $device["snmp_community"], ".1.3.6.1.2.1.1.5.0", $device["snmp_version"],
+							$snmp_devicename = cacti_snmp_get($device["devicename"], $device["snmp_community"], ".1.3.6.1.2.1.1.5.0", $device["snmp_version"],
 								$device["snmp_username"], $device["snmp_password"],
 								$device["snmp_auth_protocol"], $device["snmp_priv_passphrase"], $device["snmp_priv_protocol"],
 								$device["snmp_context"], $device["snmp_port"], $device["snmp_timeout"], read_config_option("snmp_retries"), SNMP_WEBUI);
 
-							$snmp_location = cacti_snmp_get($device["hostname"], $device["snmp_community"], ".1.3.6.1.2.1.1.6.0", $device["snmp_version"],
+							$snmp_location = cacti_snmp_get($device["devicename"], $device["snmp_community"], ".1.3.6.1.2.1.1.6.0", $device["snmp_version"],
 								$device["snmp_username"], $device["snmp_password"],
 								$device["snmp_auth_protocol"], $device["snmp_priv_passphrase"], $device["snmp_priv_protocol"],
 								$device["snmp_context"], $device["snmp_port"], $device["snmp_timeout"], read_config_option("snmp_retries"), SNMP_WEBUI);
 
-							$snmp_contact  = cacti_snmp_get($device["hostname"], $device["snmp_community"], ".1.3.6.1.2.1.1.4.0", $device["snmp_version"],
+							$snmp_contact  = cacti_snmp_get($device["devicename"], $device["snmp_community"], ".1.3.6.1.2.1.1.4.0", $device["snmp_version"],
 								$device["snmp_username"], $device["snmp_password"],
 								$device["snmp_auth_protocol"], $device["snmp_priv_passphrase"], $device["snmp_priv_protocol"],
 								$device["snmp_context"], $device["snmp_port"], $device["snmp_timeout"], read_config_option("snmp_retries"), SNMP_WEBUI);
@@ -764,7 +764,7 @@ function device_display_general($device, $device_text) {
 							$minutes   = intval($remainder / (60*100));
 							print "<strong>" . __("Uptime:")   . " </strong> $snmp_uptime";
 							print "&nbsp;($days days, $hours hours, $minutes minutes)<br>\n";
-							print "<strong>" . __("Hostname:") . " </strong> $snmp_hostname<br>\n";
+							print "<strong>" . __("Hostname:") . " </strong> $snmp_devicename<br>\n";
 							print "<strong>" . __("Location:") . " </strong> $snmp_location<br>\n";
 							print "<strong>" . __("Contact:")  . " </strong> $snmp_contact<br>\n";
 						}
@@ -1619,7 +1619,7 @@ function device() {
 
 	/* form the 'where' clause for our main sql query */
 	if (strlen(get_request_var_request("filter"))) {
-		$sql_where = "where (device.hostname like '%%" . $_REQUEST["filter"] . "%%' OR device.description like '%%" . $_REQUEST["filter"] . "%%')";
+		$sql_where = "where (device.devicename like '%%" . $_REQUEST["filter"] . "%%' OR device.description like '%%" . $_REQUEST["filter"] . "%%')";
 	}else{
 		$sql_where = "";
 	}
@@ -1674,8 +1674,8 @@ function device() {
 	}
 
 	$sortby = $_REQUEST["sort_column"];
-	if ($sortby=="hostname") {
-		$sortby = "INET_ATON(hostname)";
+	if ($sortby=="devicename") {
+		$sortby = "INET_ATON(devicename)";
 	}
 
 	$device_graphs       = array_rekey(db_fetch_assoc("SELECT device_id, count(*) as graphs FROM graph_local GROUP BY device_id"), "device_id", "graphs");
@@ -1703,7 +1703,7 @@ function device() {
 
 	$display_text = array(
 		"description" => array(__("Description"), "ASC"),
-		"device.hostname" => array(__("Hostname"), "ASC"),
+		"device.devicename" => array(__("Hostname"), "ASC"),
 		"id" => array(__("ID"), "ASC"),
 		"nosort1" => array(__("Graphs"), "ASC"),
 		"nosort2" => array(__("Data Sources"), "ASC"),
@@ -1721,7 +1721,7 @@ function device() {
 			form_alternate_row_color('line' . $device["id"], true);
 			form_selectable_cell("<a style='white-space:nowrap;' class='linkEditMain' href='" . htmlspecialchars("devices.php?action=edit&id=" . $device["id"]) . "'>" .
 				(strlen($_REQUEST["filter"]) ? preg_replace("/(" . preg_quote($_REQUEST["filter"]) . ")/i", "<span class=\"filter\">\\1</span>", $device["description"]) : $device["description"]) . "</a>", $device["id"]);
-			form_selectable_cell((strlen($_REQUEST["filter"]) ? preg_replace("/(" . preg_quote($_REQUEST["filter"]) . ")/i", "<span class=\"filter\">\\1</span>", $device["hostname"]) : $device["hostname"]), $device["id"]);
+			form_selectable_cell((strlen($_REQUEST["filter"]) ? preg_replace("/(" . preg_quote($_REQUEST["filter"]) . ")/i", "<span class=\"filter\">\\1</span>", $device["devicename"]) : $device["devicename"]), $device["id"]);
 			form_selectable_cell(round(($device["id"]), 2), $device["id"]);
 			form_selectable_cell((isset($device_graphs[$device["id"]]) ? $device_graphs[$device["id"]] : 0), $device["id"]);
 			form_selectable_cell((isset($device_data_sources[$device["id"]]) ? $device_data_sources[$device["id"]] : 0), $device["id"]);

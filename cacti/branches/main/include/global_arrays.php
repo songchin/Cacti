@@ -680,7 +680,7 @@ $hash_type_names = array(
 $device_struc = array(
 	"device_template_id",
 	"description",
-	"hostname",
+	"devicename",
 	"notes",
 	"snmp_community",
 	"snmp_version",

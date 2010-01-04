@@ -1024,7 +1024,7 @@ function update_device_status($status, $device_id, &$devices, &$ping, $ping_avai
 		total_polls = '" . $devices[$device_id]["total_polls"] . "',
 		failed_polls = '" . $devices[$device_id]["failed_polls"] . "',
 		availability = '" . $devices[$device_id]["availability"] . "'
-		where hostname = '" . $devices[$device_id]["hostname"] . "'");
+		where devicename = '" . $devices[$device_id]["devicename"] . "'");
 }
 
 /* strip_quotes - Strip single and double quotes from a string
@@ -1832,14 +1832,14 @@ function get_device_array() {
 
 		$device_list = db_fetch_assoc("select
 			device.id,
-			CONCAT_WS('',device.description,' (',device.hostname,')') as name,
+			CONCAT_WS('',device.description,' (',device.devicename,')') as name,
 			user_auth_perms.user_id
 			from device
 			left join user_auth_perms on (device.id=user_auth_perms.item_id and user_auth_perms.type=" . PERM_DEVICES . " and user_auth_perms.user_id=" . $_SESSION["sess_user_id"] . ")
 			$sql_where
-			order by device.description,device.hostname");
+			order by device.description,device.devicename");
 	}else{
-		$device_list = db_fetch_assoc("select id,CONCAT_WS('',description,' (',hostname,')') as name from device order by description,hostname");
+		$device_list = db_fetch_assoc("select id,CONCAT_WS('',description,' (',devicename,')') as name from device order by description,devicename");
 	}
 
 	return $device_list;

@@ -57,7 +57,7 @@ if (sizeof($parms)) {
 			case "--site-id":		$device["site_id"] 				= trim($value);	break;
 			case "--poller-id":		$device["poller_id"]			= trim($value);	break;
 			case "--description":	$device["description"] 			= trim($value);	break;
-			case "--ip":			$device["hostname"] 			= trim($value);	break;
+			case "--ip":			$device["devicename"] 			= trim($value);	break;
 			case "--template":		$device["device_template_id"]	 	= trim($value);	break;
 			case "--community":		$device["snmp_community"] 		= trim($value);	break;
 			case "--version":		$device["snmp_version"] 		= trim($value);	break;
@@ -166,7 +166,7 @@ if (sizeof($parms)) {
 
 	# restrict further processing to those devices only, that are associated with the given data query
 	$sql = "SELECT device.id, " .
-			"device.hostname, " .
+			"device.devicename, " .
 			"device_snmp_query.reindex_method " .
 			"FROM device_snmp_query " .
 			"LEFT JOIN device ON (device_snmp_query.device_id = device.id) ".
@@ -211,9 +211,9 @@ if (sizeof($parms)) {
 					run_data_query($verified_device["id"], $old["snmp_query_id"]);
 					if (!$quietMode) {
 						if (is_error_message()) {
-							echo __("ERROR: Rerun of this data query failed for device (%s: %s) data query (%s: %s) reindex method (%s: %s)", $verified_device["id"], $verified_device["hostname"], $old["snmp_query_id"], $old["snmp_query_name"], $new["reindex_method"], $reindex_types[$new["reindex_method"]]) . "\n";
+							echo __("ERROR: Rerun of this data query failed for device (%s: %s) data query (%s: %s) reindex method (%s: %s)", $verified_device["id"], $verified_device["devicename"], $old["snmp_query_id"], $old["snmp_query_name"], $new["reindex_method"], $reindex_types[$new["reindex_method"]]) . "\n";
 						} else {
-							echo __("Data Query (%s: %s) reindex method (%s: %s) rerun for Device (%s: %s)", $old["snmp_query_id"], $old["snmp_query_name"], $new["reindex_method"], $reindex_types{$new["reindex_method"]}, $verified_device["id"], $verified_device["hostname"]) . "\n";
+							echo __("Data Query (%s: %s) reindex method (%s: %s) rerun for Device (%s: %s)", $old["snmp_query_id"], $old["snmp_query_name"], $new["reindex_method"], $reindex_types{$new["reindex_method"]}, $verified_device["id"], $verified_device["devicename"]) . "\n";
 						}
 					}
 				}

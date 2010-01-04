@@ -1324,12 +1324,12 @@ function utilities_view_snmp_cache() {
 					<td class="w1">
 						<?php
 						if (isset($_REQUEST["device_id"])) {
-							$hostname = db_fetch_cell("SELECT description as name FROM device WHERE id=".$_REQUEST["device_id"]." ORDER BY description,hostname");
+							$devicename = db_fetch_cell("SELECT description as name FROM device WHERE id=".$_REQUEST["device_id"]." ORDER BY description,devicename");
 						} else {
-							$hostname = "";
+							$devicename = "";
 						}
 						?>
-						<input class="ac_field" type="text" id="device" size="30" value="<?php print $hostname; ?>">
+						<input class="ac_field" type="text" id="device" size="30" value="<?php print $devicename; ?>">
 						<input type="hidden" id="device_id">
 					</td>
 					<td class="nw90">
@@ -1606,12 +1606,12 @@ function utilities_view_poller_cache() {
 					<td class="w1">
 						<?php
 						if (isset($_REQUEST["device_id"])) {
-							$hostname = db_fetch_cell("SELECT description as name FROM device WHERE id=".$_REQUEST["device_id"]." ORDER BY description,hostname");
+							$devicename = db_fetch_cell("SELECT description as name FROM device WHERE id=".$_REQUEST["device_id"]." ORDER BY description,devicename");
 						} else {
-							$hostname = "";
+							$devicename = "";
 						}
 						?>
-						<input class="ac_field" type="text" id="device" size="30" value="<?php print $hostname; ?>">
+						<input class="ac_field" type="text" id="device" size="30" value="<?php print $devicename; ?>">
 						<input type="hidden" id="device_id">
 					</td>
 					<td class="nw50">
@@ -1685,7 +1685,7 @@ function utilities_view_poller_cache() {
 		$sql_where .= " AND (data_template_data.name_cache LIKE '%%" . $_REQUEST["filter"] . "%%'
 			OR device.description LIKE '%%" . get_request_var_request("filter") . "%%'
 			OR poller_item.arg1 LIKE '%%" . get_request_var_request("filter") . "%%'
-			OR poller_item.hostname LIKE '%%" . get_request_var_request("filter") . "%%'
+			OR poller_item.devicename LIKE '%%" . get_request_var_request("filter") . "%%'
 			OR poller_item.rrd_path  LIKE '%%" . get_request_var_request("filter") . "%%')";
 	}
 

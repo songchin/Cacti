@@ -65,7 +65,7 @@ function grow_graph_tree($tree_id, $start_branch, $user_id, $options) {
 		graph_tree_items.device_id,
 		graph_tree_items.order_key,
 		graph_templates_graph.title_cache as graph_title,
-		CONCAT_WS('',device.description,' (',device.hostname,')') as hostname,
+		CONCAT_WS('',device.description,' (',device.devicename,')') as devicename,
 		settings_tree.status
 		from graph_tree_items
 		left join graph_templates_graph on (graph_tree_items.local_graph_id=graph_templates_graph.local_graph_id and graph_tree_items.local_graph_id>0)
@@ -104,7 +104,7 @@ function grow_graph_tree($tree_id, $start_branch, $user_id, $options) {
 				}
 
 				if ((($current_leaf_type == 'heading') || ($current_leaf_type == 'device')) && (($tier <= $hide_until_tier) || ($hide_until_tier == false))) {
-					$current_title = (($current_leaf_type == "heading") ? $leaf["title"] : $leaf["hostname"]);
+					$current_title = (($current_leaf_type == "heading") ? $leaf["title"] : $leaf["devicename"]);
 
 					/* draw heading */
 					draw_tree_header_row($tree_id, $leaf["id"], $tier, $current_title, true, $leaf["status"], true);
@@ -197,7 +197,7 @@ function grow_edit_graph_tree($tree_id, $user_id, $options) {
 		graph_tree_items.order_key,
 		graph_tree_items.sort_children_type,
 		graph_templates_graph.title_cache as graph_title,
-		CONCAT_WS('',description,' (',hostname,')') as hostname
+		CONCAT_WS('',description,' (',devicename,')') as devicename
 		from graph_tree_items
 		left join graph_templates_graph on (graph_tree_items.local_graph_id=graph_templates_graph.local_graph_id and graph_tree_items.local_graph_id>0)
 		left join device on (device.id=graph_tree_items.device_id)
@@ -241,10 +241,10 @@ function grow_edit_graph_tree($tree_id, $user_id, $options) {
 				}
 			}elseif ($leaf["device_id"] > 0) {
 				if ($visible) {
-					#				print "<td bgcolor='#$row_color' bgcolor='#" . $colors["panel"] . "'>$transparent_indent<a href='" . htmlspecialchars("tree.php?action=item_edit&tree_id=" . $_GET["id"] . "&id=" . $leaf["id"]) . "'><strong>Host:</strong> " . $leaf["hostname"] . "</a>&nbsp;<a href='" . htmlspecialchars("devices.php?action=edit&id=" . $leaf["device_id"]) . "'>(Edit device)</a></td>\n";
+					#				print "<td bgcolor='#$row_color' bgcolor='#" . $colors["panel"] . "'>$transparent_indent<a href='" . htmlspecialchars("tree.php?action=item_edit&tree_id=" . $_GET["id"] . "&id=" . $leaf["id"]) . "'><strong>Host:</strong> " . $leaf["devicename"] . "</a>&nbsp;<a href='" . htmlspecialchars("devices.php?action=edit&id=" . $leaf["device_id"]) . "'>(Edit device)</a></td>\n";
 					#				print "<td bgcolor='#$row_color' bgcolor='#" . $colors["panel"] . "'>Host</td>";
 					print "<tr>";
-					print "<td bgcolor='#$row_color'>$transparent_indent<a href='" . htmlspecialchars("tree.php?action=item_edit&tree_id=" . $_GET["id"] . "&id=" . $leaf["id"]) . "'><strong>Host:</strong> " . $leaf["hostname"] . "</a>&nbsp;<a href='" . htmlspecialchars("devices.php?action=edit&id=" . $leaf["device_id"]) . "'>(Edit device)</a></td>\n";
+					print "<td bgcolor='#$row_color'>$transparent_indent<a href='" . htmlspecialchars("tree.php?action=item_edit&tree_id=" . $_GET["id"] . "&id=" . $leaf["id"]) . "'><strong>Host:</strong> " . $leaf["devicename"] . "</a>&nbsp;<a href='" . htmlspecialchars("devices.php?action=edit&id=" . $leaf["device_id"]) . "'>(Edit device)</a></td>\n";
 					print "<td bgcolor='#$row_color'>Host</td>";
 				}
 			}
@@ -497,7 +497,7 @@ function create_dhtml_tree() {
 				graph_tree_items.order_key,
 				graph_tree_items.device_id,
 				graph_tree_items.device_grouping_type,
-				device.description as hostname
+				device.description as devicename
 				from graph_tree_items
 				left join device on (device.id=graph_tree_items.device_id)
 				$sql_join
@@ -516,7 +516,7 @@ function create_dhtml_tree() {
 						$tier = tree_tier($leaf["order_key"]);
 
 						if ($leaf["device_id"] > 0) {
-							$dhtml_tree[$i] = "\t\t\tou" . ($tier) . " = insFld(ou" . abs(($tier-1)) . ", gFld(\"<strong>Host:<\/strong> " . addslashes($leaf["hostname"]) . "\", \"graph_view.php?action=tree&tree_id=" . $tree["id"] . "&leaf_id=" . $leaf["id"] . "\"))\n";
+							$dhtml_tree[$i] = "\t\t\tou" . ($tier) . " = insFld(ou" . abs(($tier-1)) . ", gFld(\"<strong>Host:<\/strong> " . addslashes($leaf["devicename"]) . "\", \"graph_view.php?action=tree&tree_id=" . $tree["id"] . "&leaf_id=" . $leaf["id"] . "\"))\n";
 							$i++;
 							$dhtml_tree[$i] = "\t\t\tou" . ($tier) . ".xID = \"tree_" . $tree["id"] . "_leaf_" . $leaf["id"] . "\"\n";
 
