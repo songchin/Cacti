@@ -425,7 +425,7 @@ function data_source_form_actions() {
 					<td class='textArea'>
 						<p>" . __("Choose a new device for these data sources.") . "</p>
 						<p>$ds_list</p>
-						<p><strong>" . __("New Host:") . "</strong><br>"; form_dropdown("device_id",db_fetch_assoc("select id,CONCAT_WS('',description,' (',devicename,')') as name from device order by description,devicename"),"name","id","","","0"); print "</p>
+						<p><strong>" . __("New Host:") . "</strong><br>"; form_dropdown("device_id",db_fetch_assoc("select id,CONCAT_WS('',description,' (',hostname,')') as name from device order by description,hostname"),"name","id","","","0"); print "</p>
 					</td>
 				</tr>\n
 				";
@@ -522,7 +522,7 @@ function data_source_data_edit() {
 		$data = db_fetch_row("select id,data_input_id,data_template_id,name,local_data_id from data_template_data where local_data_id=" . $_GET["id"]);
 		$template_data = db_fetch_row("select id,data_input_id from data_template_data where data_template_id=" . $data["data_template_id"] . " and local_data_id=0");
 
-		$device = db_fetch_row("select device.id,device.devicename from (data_local,device) where data_local.device_id=device.id and data_local.id=" . $_GET["id"]);
+		$device = db_fetch_row("select device.id,device.hostname from (data_local,device) where data_local.device_id=device.id and data_local.id=" . $_GET["id"]);
 
 		$header_label = __("[edit: ") . $data["name"] . "]";
 	}else{
@@ -559,7 +559,7 @@ function data_source_data_edit() {
 				form_alternate_row_color();
 
 				if ((!empty($device["id"])) && (preg_match('/^' . VALID_HOST_FIELDS . '$/i', $field["type_code"]))) {
-					print "<td width='50%'><strong>" . $field["name"] . "</strong> (" . __("From Host:") . " " . $device["devicename"] . ")</td>\n";
+					print "<td width='50%'><strong>" . $field["name"] . "</strong> (" . __("From Host:") . " " . $device["hostname"] . ")</td>\n";
 					print "<td><em>$old_value</em></td>\n";
 				}elseif (empty($can_template)) {
 					print "<td width='50%'><strong>" . $field["name"] . "</strong> (" . __("From Data Source Template") . ")</td>\n";
@@ -742,7 +742,7 @@ function data_source_edit() {
 			"friendly_name" => __("Host"),
 			"description" => __("Choose the device that this graph belongs to."),
 			"id" => (isset($_GET["device_id"]) ? $_GET["device_id"] : $data_local["device_id"]),
-			"name" => db_fetch_cell("SELECT CONCAT_WS('',description,' (',devicename,')') FROM device WHERE id=" . (isset($_GET['device_id']) ? $_GET['device_id'] : $data_local["device_id"]))
+			"name" => db_fetch_cell("SELECT CONCAT_WS('',description,' (',hostname,')') FROM device WHERE id=" . (isset($_GET['device_id']) ? $_GET['device_id'] : $data_local["device_id"]))
 			),
 		"_data_template_id" => array(	/* TODO: input id's must NOT start with an underscore */
 			"method" => "hidden",
@@ -1066,7 +1066,7 @@ function data_source() {
 	load_current_session_value("template_id", "sess_ds_template_id", "-1");
 	load_current_session_value("method_id", "sess_ds_method_id", "-1");
 
-	$device = db_fetch_row("select devicename from device where id=" . $_REQUEST["device_id"]);
+	$device = db_fetch_row("select hostname from device where id=" . $_REQUEST["device_id"]);
 
 	?>
 	<script type="text/javascript">
@@ -1110,7 +1110,7 @@ function data_source() {
 	</script>
 	<?php
 
-	html_start_box("<strong>" . __("Data Sources") . "</strong> " . __("[device:") . " " . (empty($device["devicename"]) ? __("No Host") : $device["devicename"]) . "]", "100", $colors["header"], "3", "center", "data_sources.php?action=data_source_edit&device_id=" . $_REQUEST["device_id"], true);
+	html_start_box("<strong>" . __("Data Sources") . "</strong> " . __("[device:") . " " . (empty($device["hostname"]) ? __("No Host") : $device["hostname"]) . "]", "100", $colors["header"], "3", "center", "data_sources.php?action=data_source_edit&device_id=" . $_REQUEST["device_id"], true);
 	?>
 	<tr class='rowAlternate2'>
 		<td>
@@ -1123,12 +1123,12 @@ function data_source() {
 					<td class="w1">
 						<?php
 						if (isset($_REQUEST["device_id"])) {
-							$devicename = db_fetch_cell("SELECT description as name FROM device WHERE id=".$_REQUEST["device_id"]." ORDER BY description,devicename");
+							$hostname = db_fetch_cell("SELECT description as name FROM device WHERE id=".$_REQUEST["device_id"]." ORDER BY description,hostname");
 						} else {
-							$devicename = "";
+							$hostname = "";
 						}
 						?>
-						<input class="ac_field" type="text" id="device" size="30" value="<?php print $devicename; ?>">
+						<input class="ac_field" type="text" id="device" size="30" value="<?php print $hostname; ?>">
 						<input type="hidden" id="device_id">
 					</td>
 					<td class="nw50">

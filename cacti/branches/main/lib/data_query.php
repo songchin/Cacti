@@ -146,7 +146,7 @@ function query_snmp_device($device_id, $snmp_query_id) {
 	include_once(CACTI_BASE_PATH . "/lib/snmp.php");
 
 	$device = db_fetch_row("SELECT
-		devicename,
+		hostname,
 		snmp_community,
 		snmp_version,
 		snmp_username,
@@ -164,7 +164,7 @@ function query_snmp_device($device_id, $snmp_query_id) {
 
 	$snmp_queries = get_data_query_array($snmp_query_id);
 
-	if ($device["devicename"] == "") {
+	if ($device["hostname"] == "") {
 		debug_log_insert("data_query", __("Invalid device_id:") . " $device_id");
 		return false;
 	}
@@ -178,7 +178,7 @@ function query_snmp_device($device_id, $snmp_query_id) {
 	debug_log_insert("data_query", __("XML file parsed ok."));
 
 	/* fetch specified index at specified OID */
-	$snmp_indexes = cacti_snmp_walk($device["devicename"], $device["snmp_community"], $snmp_queries["oid_index"],
+	$snmp_indexes = cacti_snmp_walk($device["hostname"], $device["snmp_community"], $snmp_queries["oid_index"],
 									$device["snmp_version"], $device["snmp_username"], $device["snmp_password"],
 									$device["snmp_auth_protocol"], $device["snmp_priv_passphrase"], $device["snmp_priv_protocol"],
 									$device["snmp_context"], $device["snmp_port"], $device["snmp_timeout"],
@@ -257,7 +257,7 @@ function query_snmp_device($device_id, $snmp_query_id) {
 				$oid .= isset($field_array["oid_suffix"]) ? ("." . $field_array["oid_suffix"]) : "";
 				$value = NULL;
 				if (substr($field_array["source"], 0, 13) == "VALUE/REGEXP:" || $field_array["source"] == "value") {
-					$value = cacti_snmp_get($device["devicename"], $device["snmp_community"], $oid,
+					$value = cacti_snmp_get($device["hostname"], $device["snmp_community"], $oid,
 	 										$device["snmp_version"], $device["snmp_username"], $device["snmp_password"],
  											$device["snmp_auth_protocol"], $device["snmp_priv_passphrase"], $device["snmp_priv_protocol"],
  											$device["snmp_context"], $device["snmp_port"], $device["snmp_timeout"], SNMP_WEBUI);
@@ -277,7 +277,7 @@ function query_snmp_device($device_id, $snmp_query_id) {
 			debug_log_insert("data_query", __("Located input field '%s' [walk]", $field_name));
 
 			$snmp_data = array();
-			$snmp_data = cacti_snmp_walk($device["devicename"], $device["snmp_community"], $field_array["oid"],
+			$snmp_data = cacti_snmp_walk($device["hostname"], $device["snmp_community"], $field_array["oid"],
 				$device["snmp_version"], $device["snmp_username"], $device["snmp_password"],
 				$device["snmp_auth_protocol"], $device["snmp_priv_passphrase"], $device["snmp_priv_protocol"],
 				$device["snmp_context"], $device["snmp_port"], $device["snmp_timeout"], $device["ping_retries"], $device["max_oids"], SNMP_WEBUI);

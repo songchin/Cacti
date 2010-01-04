@@ -23,7 +23,7 @@
 */
 
 /* db_connect_real - makes a connection to the database server
-   @arg $device - the devicename of the database server, 'localhost' if the database server is running
+   @arg $device - the hostname of the database server, 'localhost' if the database server is running
       on this machine
    @arg $user - the username to connect to the database server as
    @arg $pass - the password to connect to the database server with

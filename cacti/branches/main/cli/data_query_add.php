@@ -56,7 +56,7 @@ if (sizeof($parms)) {
 			case "--site-id":		$device["site_id"] 				= trim($value);	break;
 			case "--poller-id":		$device["poller_id"]			= trim($value);	break;
 			case "--description":	$device["description"] 			= trim($value);	break;
-			case "--ip":			$device["devicename"] 			= trim($value);	break;
+			case "--ip":			$device["hostname"] 			= trim($value);	break;
 			case "--template":		$device["device_template_id"]	 	= trim($value);	break;
 			case "--community":		$device["snmp_community"] 		= trim($value);	break;
 			case "--version":		$device["snmp_version"] 		= trim($value);	break;
@@ -142,7 +142,7 @@ if (sizeof($parms)) {
 		$current_reindex_method = db_fetch_cell("SELECT reindex_method FROM device_snmp_query WHERE device_id=" . $device["id"] .
 										" AND snmp_query_id=" . $dq["snmp_query_id"]);
 		if (isset($current_reindex_method)) {
-			echo __("ERROR: Data Query is already associated for device: (%s: %s) data query (%s: %s) using reindex method of (%s: %s)", $device["id"], $device["devicename"], $dq["snmp_query_id"], $data_query_name, $current_reindex_method, $reindex_types{$current_reindex_method}) . "\n";
+			echo __("ERROR: Data Query is already associated for device: (%s: %s) data query (%s: %s) using reindex method of (%s: %s)", $device["id"], $device["hostname"], $dq["snmp_query_id"], $data_query_name, $current_reindex_method, $reindex_types{$current_reindex_method}) . "\n";
 			continue;
 		}else{
 			$sql = "REPLACE INTO device_snmp_query " .
@@ -162,12 +162,12 @@ if (sizeof($parms)) {
 						/* recache snmp data */
 						run_data_query($device["id"], $dq["snmp_query_id"]);
 						if (is_error_message()) {
-							echo __("ERROR: Failed to add this data query for device (%s: %s) data query (%s: %s) reindex method (%s: %s)", $device["id"], $device["devicename"], $dq["snmp_query_id"], $data_query_name, $dq["reindex_method"], $reindex_types[$dq["reindex_method"]]) . "\n";
+							echo __("ERROR: Failed to add this data query for device (%s: %s) data query (%s: %s) reindex method (%s: %s)", $device["id"], $device["hostname"], $dq["snmp_query_id"], $data_query_name, $dq["reindex_method"], $reindex_types[$dq["reindex_method"]]) . "\n";
 						} else {
-							echo __("Success - Device (%s: %s) data query (%s: %s) reindex method (%s: %s)", $device["id"], $device["devicename"], $dq["snmp_query_id"], $data_query_name, $dq["reindex_method"], $reindex_types{$dq["reindex_method"]}) . "\n";
+							echo __("Success - Device (%s: %s) data query (%s: %s) reindex method (%s: %s)", $device["id"], $device["hostname"], $dq["snmp_query_id"], $data_query_name, $dq["reindex_method"], $reindex_types{$dq["reindex_method"]}) . "\n";
 						}
 					} else {
-						echo __("ERROR: Failed to add this data query for device (%s: %s) data query (%s: %s) reindex method (%s: %s)", $device["id"], $device["devicename"], $dq["snmp_query_id"], $data_query_name, $dq["reindex_method"], $reindex_types[$dq["reindex_method"]]) . "\n";
+						echo __("ERROR: Failed to add this data query for device (%s: %s) data query (%s: %s) reindex method (%s: %s)", $device["id"], $device["hostname"], $dq["snmp_query_id"], $data_query_name, $dq["reindex_method"], $reindex_types[$dq["reindex_method"]]) . "\n";
 					}
 				}
 			}

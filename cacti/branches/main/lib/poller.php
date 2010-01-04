@@ -157,7 +157,7 @@ function update_reindex_cache($device_id, $data_query_id) {
 	/* will be used to keep track of sql statements to execute later on */
 	$recache_stack = array();
 
-	$device            = db_fetch_row("select devicename, snmp_community, snmp_version, snmp_username, snmp_password, snmp_auth_protocol, snmp_priv_passphrase, snmp_priv_protocol, snmp_context, snmp_port, snmp_timeout from device where id=$device_id");
+	$device            = db_fetch_row("select hostname, snmp_community, snmp_version, snmp_username, snmp_password, snmp_auth_protocol, snmp_priv_passphrase, snmp_priv_protocol, snmp_context, snmp_port, snmp_timeout from device where id=$device_id");
 	$data_query      = db_fetch_row("select reindex_method, sort_field from device_snmp_query where device_id=$device_id and snmp_query_id=$data_query_id");
 	$data_query_type = db_fetch_cell("select data_input.type_id from (data_input,snmp_query) where data_input.id=snmp_query.data_input_id and snmp_query.id=$data_query_id");
 	$data_query_xml  = get_data_query_array($data_query_id);
@@ -177,7 +177,7 @@ function update_reindex_cache($device_id, $data_query_id) {
 					$oid_uptime = ".1.3.6.1.2.1.1.3.0";
 				}
 
-				$assert_value = cacti_snmp_get($device["devicename"],
+				$assert_value = cacti_snmp_get($device["hostname"],
 					$device["snmp_community"],
 					$oid_uptime,
 					$device["snmp_version"],
