@@ -15,8 +15,16 @@
 			<direction>input</direction>
 			<oid>.1.3.6.1.2.1.2.2.1.1</oid>
 		</ifIndex>
+		<ifAdminStatus>
+			<name>Admin Status</name>
+			<method>walk</method>
+			<source>value</source>
+			<direction>input</direction>
+			<oid>.1.3.6.1.2.1.2.2.1.7</oid>
+			<rewrite_value>a:7:{s:21:"REGEXPNC:^.*(up|1).*$";s:2:"Up";s:23:"REGEXPNC:^.*(down|2).*$";s:4:"Down";s:26:"REGEXPNC:^.*(testing|3).*$";s:7:"Testing";}</rewrite_value>
+		</ifAdminStatus>
 		<ifOperStatus>
-			<name>Status</name>
+			<name>Oper Status</name>
 			<method>walk</method>
 			<source>value</source>
 			<direction>input</direction>
@@ -58,6 +66,13 @@
 			<direction>input</direction>
 			<oid>.1.3.6.1.2.1.2.2.1.5</oid>
 		</ifSpeed>
+		<ifHighSpeed>
+			<name>High Speed</name>
+			<method>walk</method>
+			<source>value</source>
+			<direction>input</direction>
+			<oid>.1.3.6.1.2.1.31.1.1.1.15</oid>
+		</ifHighSpeed>
 		<ifHwAddr>
 			<name>Hardware Address</name>
 			<method>walk</method>
