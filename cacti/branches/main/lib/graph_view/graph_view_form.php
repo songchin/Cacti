@@ -93,12 +93,12 @@ function graph_view_filter_table($mode = "mode") {
 					<td class='w1'>
 						<?php
 						if (isset($_REQUEST["device_id"])) {
-							$devicename = db_fetch_cell("SELECT description as name FROM device WHERE id=".$_REQUEST["device_id"]." ORDER BY description,devicename");
+							$hostname = db_fetch_cell("SELECT description as name FROM device WHERE id=".$_REQUEST["device_id"]." ORDER BY description,hostname");
 						} else {
-							$devicename = "";
+							$hostname = "";
 						}
 						?>
-						<input class="ac_field" type="text" id="device" size="30" value="<?php print $devicename; ?>">
+						<input class="ac_field" type="text" id="device" size="30" value="<?php print $hostname; ?>">
 						<input type="hidden" id="device_id">
 					</td>
 					<td class='w1'>
@@ -339,12 +339,12 @@ function get_graph_list_content() {
 					<td class="w1">
 						<?php
 						if (isset($_REQUEST["device_id"])) {
-							$devicename = db_fetch_cell("SELECT description as name FROM device WHERE id=".$_REQUEST["device_id"]." ORDER BY description,devicename");
+							$hostname = db_fetch_cell("SELECT description as name FROM device WHERE id=".$_REQUEST["device_id"]." ORDER BY description,hostname");
 						} else {
-							$devicename = "";
+							$hostname = "";
 						}
 						?>
-						<input class="ac_field" type="text" id="device" size="30" value="<?php print $devicename; ?>">
+						<input class="ac_field" type="text" id="device" size="30" value="<?php print $hostname; ?>">
 						<input type="hidden" id="device_id">
 					</td>
 					<td class='w1'>

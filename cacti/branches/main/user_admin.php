@@ -610,11 +610,11 @@ function graph_perms_edit() {
 
 	$devices = db_fetch_assoc("SELECT
 		device.id,
-		CONCAT('',device.description,' (',device.devicename,')') as name
+		CONCAT('',device.description,' (',device.hostname,')') as name
 		FROM device
 		LEFT JOIN user_auth_perms ON (device.id = user_auth_perms.item_id AND user_auth_perms.type = " . PERM_DEVICES . ")
 		WHERE user_auth_perms.user_id = " . get_request_var("id", 0) . "
-		ORDER BY device.description,device.devicename");
+		ORDER BY device.description,device.hostname");
 
 	?>
 	<tr bgcolor="#<?php print $colors['form_alternate1'];?>">

@@ -60,7 +60,7 @@ if (sizeof($parms)) {
 			case "--site-id":		$device["site_id"] 				= trim($value);	break;
 			case "--poller-id":		$device["poller_id"]			= trim($value);	break;
 			case "--description":	$device["description"] 			= trim($value);	break;
-			case "--ip":			$device["devicename"] 			= trim($value);	break;
+			case "--ip":			$device["hostname"] 			= trim($value);	break;
 			case "--template":		$device["device_template_id"]	 	= trim($value);	break;
 			case "--community":		$device["snmp_community"] 		= trim($value);	break;
 			case "--version":		$device["snmp_version"] 		= trim($value);	break;
@@ -98,10 +98,10 @@ if (sizeof($parms)) {
 		exit(1);
 	} # no need for description to be unique
 
-	if (!isset($device["devicename"])) {
-		echo __("ERROR: You must supply a valid [devicename|IP address] for all devices!") . "\n";
+	if (!isset($device["hostname"])) {
+		echo __("ERROR: You must supply a valid [hostname|IP address] for all devices!") . "\n";
 		exit(1);
-	} # no need for devicename to be unique
+	} # no need for hostname to be unique
 
 	if (!isset($device["device_template_id"])) {
 		echo __("ERROR: You must supply a valid device template id for all devices!") . "\n";
@@ -200,7 +200,7 @@ if (sizeof($parms)) {
 	/*
 	 * perform some nice printout
 
-	 echo printf(__("Adding %1s (%2s) as '%3s'"), $device["description"], $device["devicename"], $device_template["name"]);
+	 echo printf(__("Adding %1s (%2s) as '%3s'"), $device["description"], $device["hostname"], $device_template["name"]);
 
 	 switch($device_template["availability_method"]) {
 		case AVAIL_NONE:
@@ -254,7 +254,7 @@ if (sizeof($parms)) {
 	 */
 	if ($debug) {
 		print("api_device_save(0, ".$device['site_id'].", ".$device['poller_id'].", ".$device['device_template_id'].", ".
-		$device['description'].", ".$device['devicename'].", ".$device_template['snmp_community'].", ".
+		$device['description'].", ".$device['hostname'].", ".$device_template['snmp_community'].", ".
 		$device_template['snmp_version'].", ". $device_template['snmp_username'].", ".
 		$device_template['snmp_password'].", ".	$device_template['snmp_port'].", ".
 		$device_template['snmp_timeout'].", ". $device_template['disabled'].", ".
@@ -265,7 +265,7 @@ if (sizeof($parms)) {
 		$device_template['snmp_priv_protocol'].", ". $device_template['snmp_context'].", ". $device_template['max_oids'].")\n");
 	} else {
 		$device_id = api_device_save(0, $device["site_id"], $device["poller_id"], $device["device_template_id"],
-		$device["description"], $device["devicename"],
+		$device["description"], $device["hostname"],
 		$device_template["snmp_community"], $device_template["snmp_version"],
 		$device_template["snmp_username"], $device_template["snmp_password"],
 		$device_template["snmp_port"], $device_template["snmp_timeout"],

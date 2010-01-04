@@ -87,7 +87,7 @@ if (sizeof($parms)) {
 			case "--site-id":		$device["site_id"] 				= trim($value);	break;
 			case "--poller-id":		$device["poller_id"]			= trim($value);	break;
 			case "--description":	$device["description"] 			= trim($value);	break;
-			case "--ip":			$device["devicename"] 			= trim($value);	break;
+			case "--ip":			$device["hostname"] 			= trim($value);	break;
 			case "--template":		$device["device_template_id"]	 	= trim($value);	break;
 			case "--community":		$device["snmp_community"] 		= trim($value);	break;
 			case "--version":		$device["snmp_version"] 		= trim($value);	break;
@@ -343,7 +343,7 @@ function createDQGraph($snmp_query_array, $graphTitle, $force) {
 			echo __("Graph Added - graph-id: (%d) - data-source-ids: (%d)", $returnArray["local_graph_id"], $dataSourceId) . "\n";
 		}
 	}else{
-		echo __("ERROR: Could not find snmp-field %s (%d) for device-id %d (%s)", $snmp_query_array["snmp_field"], $snmp_query_array["snmp_value"], $snmp_query_array["device_id"], $devices[$snmp_query_array["device_id"]]["devicename"]) . "\n";
+		echo __("ERROR: Could not find snmp-field %s (%d) for device-id %d (%s)", $snmp_query_array["snmp_field"], $snmp_query_array["snmp_value"], $snmp_query_array["device_id"], $devices[$snmp_query_array["device_id"]]["hostname"]) . "\n";
 		echo __("Try php -q graph_list.php --device-id=%s --list-snmp-fields", $snmp_query_array["device_id"]) . "\n";
 		exit(1);
 	}

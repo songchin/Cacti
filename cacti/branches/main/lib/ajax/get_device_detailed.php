@@ -33,19 +33,19 @@ if (isset($_REQUEST["q"])) {
 $device_perms = db_fetch_cell("SELECT policy_devices FROM user_auth WHERE id=" . $_SESSION["sess_user_id"]);
 
 if ($device_perms == 1) {
-	$sql = "SELECT id, CONCAT_WS('',description,' (',devicename,')') as name
+	$sql = "SELECT id, CONCAT_WS('',description,' (',hostname,')') as name
 		FROM device
-		WHERE (devicename LIKE '%$q%'
+		WHERE (hostname LIKE '%$q%'
 		OR description LIKE '%$q%')
 		AND id NOT IN (SELECT item_id FROM user_auth_perms WHERE user_auth_perms.type=3 AND user_auth_perms.user_id=" . $_SESSION["sess_user_id"] . ")
-		ORDER BY description,devicename";
+		ORDER BY description,hostname";
 }else{
-	$sql = "SELECT id, CONCAT_WS('',description,' (',devicename,')') as name
+	$sql = "SELECT id, CONCAT_WS('',description,' (',hostname,')') as name
 		FROM device
-		WHERE (devicename LIKE '%$q%'
+		WHERE (hostname LIKE '%$q%'
 		OR description LIKE '%$q%')
 		AND id IN (SELECT item_id FROM user_auth_perms WHERE user_auth_perms.type=3 AND user_auth_perms.user_id=" . $_SESSION["sess_user_id"] . ")
-		ORDER BY description,devicename";
+		ORDER BY description,hostname";
 }
 
 $devices = db_fetch_assoc($sql);

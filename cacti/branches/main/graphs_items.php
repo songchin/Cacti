@@ -205,9 +205,9 @@ function item_edit() {
 	load_current_session_value("data_template_id", "sess_data_template_id", "-1");
 
 	$id = (!empty($_REQUEST["id"]) ? "&id=" . $_REQUEST["id"] : "");
-	$device = db_fetch_row("select devicename from device where id=" . get_request_var_request("device_id"));
+	$device = db_fetch_row("select hostname from device where id=" . get_request_var_request("device_id"));
 
-	html_start_box("<strong>" . __("Data Sources") . "</strong> " . __("[device: ") . (empty($device["devicename"]) ? __("No Host") : $device["devicename"]) . "]", "100", $colors["header"], "3", "center", "");
+	html_start_box("<strong>" . __("Data Sources") . "</strong> " . __("[device: ") . (empty($device["hostname"]) ? __("No Host") : $device["hostname"]) . "]", "100", $colors["header"], "3", "center", "");
 
 	?>
 	<tr>
@@ -223,7 +223,7 @@ function item_edit() {
 							<option value="<?php print htmlspecialchars("graphs_items.php?action=item_edit" . $id . "&local_graph_id=" . get_request_var_request("local_graph_id") . "&device_id=-1&data_template_id=" . get_request_var_request("data_template_id"));?>"<?php if (get_request_var_request("device_id") == "-1") {?> selected<?php }?>>Any</option>
 							<option value="<?php print htmlspecialchars("graphs_items.php?action=item_edit" . $id . "&local_graph_id=" . get_request_var_request("local_graph_id") . "&device_id=0&data_template_id=" . get_request_var_request("data_template_id"));?>"<?php if (get_request_var_request("device_id") == "0") {?> selected<?php }?>>None</option>
 							<?php
-							$devices = db_fetch_assoc("select id,CONCAT_WS('',description,' (',devicename,')') as name from device order by description,devicename");
+							$devices = db_fetch_assoc("select id,CONCAT_WS('',description,' (',hostname,')') as name from device order by description,hostname");
 
 							if (sizeof($devices) > 0) {
 								foreach ($devices as $device) {

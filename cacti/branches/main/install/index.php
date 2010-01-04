@@ -415,7 +415,7 @@ if (get_request_var_request("step") == "4") {
 	kill_session_var("sess_device_cache_array");
 
 	/* just in case we have hard drive graphs to deal with */
-	$device_id = db_fetch_cell("select id from device where devicename='127.0.0.1'");
+	$device_id = db_fetch_cell("select id from device where hostname='127.0.0.1'");
 
 	if (!empty($device_id)) {
 		run_data_query($device_id, 6);

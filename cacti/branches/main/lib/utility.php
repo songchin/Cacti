@@ -130,7 +130,7 @@ function update_poller_cache($local_data_id, $commit = false) {
 				FROM data_input_fields
 				LEFT JOIN data_input_data
 				ON (data_input_fields.id=data_input_data.data_input_field_id and data_input_data.data_template_data_id=" . $data_input["data_template_data_id"] . ")
-				WHERE ((type_code LIKE 'snmp_%') OR (type_code='devicename'))
+				WHERE ((type_code LIKE 'snmp_%') OR (type_code='hostname'))
 				AND data_input_data.value != ''"), "type_code", "value");
 
 			$data_template_fields = array_rekey(db_fetch_assoc("SELECT
@@ -139,7 +139,7 @@ function update_poller_cache($local_data_id, $commit = false) {
 				FROM data_input_fields
 				LEFT JOIN data_input_data
 				ON (data_input_fields.id=data_input_data.data_input_field_id and data_input_data.data_template_data_id=$data_template_id)
-				WHERE ((type_code LIKE 'snmp_%') OR (type_code='devicename'))
+				WHERE ((type_code LIKE 'snmp_%') OR (type_code='hostname'))
 				AND data_template_data_id=$data_template_id
 				AND data_input_data.value != ''"), "type_code", "value");
 
@@ -171,7 +171,7 @@ function update_poller_cache($local_data_id, $commit = false) {
 				FROM data_input_fields
 				LEFT JOIN data_input_data
 				ON (data_input_fields.id=data_input_data.data_input_field_id and data_input_data.data_template_data_id=" . $data_input["data_template_data_id"] . ")
-				WHERE ((type_code LIKE 'snmp_%') OR (type_code='devicename'))
+				WHERE ((type_code LIKE 'snmp_%') OR (type_code='hostname'))
 				AND data_input_data.value != ''"), "type_code", "value");
 
 			$data_template_fields = array_rekey(db_fetch_assoc("SELECT
@@ -180,7 +180,7 @@ function update_poller_cache($local_data_id, $commit = false) {
 				FROM data_input_fields
 				LEFT JOIN data_input_data
 				ON (data_input_fields.id=data_input_data.data_input_field_id and data_input_data.data_template_data_id=$data_template_id)
-				WHERE ((type_code LIKE 'snmp_%') OR (type_code='devicename'))
+				WHERE ((type_code LIKE 'snmp_%') OR (type_code='hostname'))
 				AND data_template_data_id=$data_template_id
 				AND data_input_data.value != ''"), "type_code", "value");
 
@@ -236,7 +236,7 @@ function update_poller_cache($local_data_id, $commit = false) {
 				FROM data_input_fields
 				LEFT JOIN data_input_data
 				ON (data_input_fields.id=data_input_data.data_input_field_id and data_input_data.data_template_data_id=" . $data_input["data_template_data_id"] . ")
-				WHERE ((type_code LIKE 'snmp_%') OR (type_code='devicename'))
+				WHERE ((type_code LIKE 'snmp_%') OR (type_code='hostname'))
 				AND data_input_data.value != ''"), "type_code", "value");
 
 			$data_template_fields = array_rekey(db_fetch_assoc("SELECT
@@ -245,7 +245,7 @@ function update_poller_cache($local_data_id, $commit = false) {
 				FROM data_input_fields
 				LEFT JOIN data_input_data
 				ON (data_input_fields.id=data_input_data.data_input_field_id and data_input_data.data_template_data_id=$data_template_id)
-				WHERE ((type_code LIKE 'snmp_%') OR (type_code='devicename'))
+				WHERE ((type_code LIKE 'snmp_%') OR (type_code='hostname'))
 				AND data_template_data_id=$data_template_id
 				AND data_input_data.value != ''"), "type_code", "value");
 
@@ -331,13 +331,13 @@ function poller_update_poller_cache_from_buffer($local_data_ids, &$poller_items)
 	}
 
 	/* setup the database call */
-	$sql_prefix   = "INSERT INTO poller_item (local_data_id, poller_id, device_id, action, devicename, " .
+	$sql_prefix   = "INSERT INTO poller_item (local_data_id, poller_id, device_id, action, hostname, " .
 			"snmp_community, snmp_version, snmp_timeout, snmp_username, snmp_password, " .
 			"snmp_auth_protocol, snmp_priv_passphrase, snmp_priv_protocol, snmp_context, " .
 			"snmp_port, rrd_name, rrd_path, rrd_num, rrd_step, rrd_next_step, arg1, arg2, arg3, present) " .
 			"VALUES";
 
-	$sql_suffix   = " ON DUPLICATE KEY UPDATE poller_id=VALUES(poller_id), device_id=VALUES(device_id), action=VALUES(action), devicename=VALUES(devicename), " .
+	$sql_suffix   = " ON DUPLICATE KEY UPDATE poller_id=VALUES(poller_id), device_id=VALUES(device_id), action=VALUES(action), hostname=VALUES(hostname), " .
 		"snmp_community=VALUES(snmp_community), snmp_version=VALUES(snmp_version), snmp_timeout=VALUES(snmp_timeout), " .
 		"snmp_username=VALUES(snmp_username), snmp_password=VALUES(snmp_password), snmp_auth_protocol=VALUES(snmp_auth_protocol), " .
 		"snmp_priv_passphrase=VALUES(snmp_priv_passphrase), snmp_priv_protocol=VALUES(snmp_priv_protocol), " .

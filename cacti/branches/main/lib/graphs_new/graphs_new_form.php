@@ -382,7 +382,7 @@ function graphs_new() {
 		$changed += check_changed("filter",     "sess_graphs_new_filter");
 	}
 
-	load_current_session_value("device_id",    "sess_graphs_new_device_id",    db_fetch_cell("select id from device order by description,devicename limit 1"));
+	load_current_session_value("device_id",    "sess_graphs_new_device_id",    db_fetch_cell("select id from device order by description,hostname limit 1"));
 	load_current_session_value("graph_type", "sess_graphs_new_graph_type", read_config_option("default_graphs_new_dropdown"));
 	load_current_session_value("filter",     "sess_graphs_new_filter",     "");
 
@@ -394,7 +394,7 @@ function graphs_new() {
 		$file2 = "graphs_new.php";
 	}
 
-	$device      = db_fetch_row("select id,description,devicename,device_template_id from device where id=" . $_REQUEST["device_id"]);
+	$device      = db_fetch_row("select id,description,hostname,device_template_id from device where id=" . $_REQUEST["device_id"]);
 	$row_limit = read_config_option("num_rows_data_query");
 	$debug_log = debug_log_return("new_graphs");
 
@@ -412,7 +412,7 @@ function graphs_new() {
 	</script>
 	<?php
 
-	html_start_box("<strong>" . $device["description"] . "(" . $device["devicename"] . ")</strong> " . db_fetch_cell("select name from device_template where id=" . $device["device_template_id"]), "100", $colors["header"], "3", "center", "");
+	html_start_box("<strong>" . $device["description"] . "(" . $device["hostname"] . ")</strong> " . db_fetch_cell("select name from device_template where id=" . $device["device_template_id"]), "100", $colors["header"], "3", "center", "");
 
 	?>
 	<tr class='rowAlternate2'>
@@ -427,7 +427,7 @@ function graphs_new() {
 					<td width="1">
 						<select name="device_id" onChange="applyGraphsNewFilterChange(document.form_graphs_new)">
 						<?php
-						$devices = db_fetch_assoc("select id,CONCAT_WS('',description,' (',devicename,')') as name from device order by description,devicename");
+						$devices = db_fetch_assoc("select id,CONCAT_WS('',description,' (',hostname,')') as name from device order by description,hostname");
 
 						if (sizeof($devices) > 0) {
 						foreach ($devices as $item) {

@@ -107,7 +107,7 @@ class Net_Ping
 
 	function ping_icmp() {
 		/* ping me */
-		if ($this->device["devicename"]) {
+		if ($this->device["hostname"]) {
 			/* initialize variables */
 			$this->ping_status   = "down";
 			$this->ping_response = "ICMP Ping timed out";
@@ -116,19 +116,19 @@ class Net_Ping
 			$to_sec  = floor($this->timeout/1000);
 			$to_usec = ($this->timeout%1000)*1000;
 
-			/* clean up devicename if specifying snmp_transport */
-			$this->device["devicename"] = str_replace("tcp:", "", strtolower($this->device["devicename"]));
-			$this->device["devicename"] = str_replace("udp:", "", strtolower($this->device["devicename"]));
+			/* clean up hostname if specifying snmp_transport */
+			$this->device["hostname"] = str_replace("tcp:", "", strtolower($this->device["hostname"]));
+			$this->device["hostname"] = str_replace("udp:", "", strtolower($this->device["hostname"]));
 
 			/* determine the device's ip address */
-			if ($this->is_ipaddress($this->device["devicename"])) {
-				$device_ip = $this->device["devicename"];
+			if ($this->is_ipaddress($this->device["hostname"])) {
+				$device_ip = $this->device["hostname"];
 			}else{
-				$device_ip = gethostbyname($this->device["devicename"]);
+				$device_ip = gethostbyname($this->device["hostname"]);
 
 				if (!$this->is_ipaddress($device_ip)) {
-					cacti_log("WARNING: ICMP Ping Error: gethostbyname failed for " . $this->device["devicename"]);
-					$this->response = "ICMP Ping Error: gethostbyname failed for " . $this->device["devicename"];
+					cacti_log("WARNING: ICMP Ping Error: gethostbyname failed for " . $this->device["hostname"]);
+					$this->response = "ICMP Ping Error: gethostbyname failed for " . $this->device["hostname"];
 					return false;
 				}
 			}
@@ -238,23 +238,23 @@ class Net_Ping
 
 			/* device timeout given in ms, recalculate to sec, but make it an integer */
 			if (substr_count(strtolower(PHP_OS), "sun")) {
-				$result = shell_exec("ping " . $this->device["devicename"]);
+				$result = shell_exec("ping " . $this->device["hostname"]);
 			}else if (substr_count(strtolower(PHP_OS), "hpux")) {
-				$result = shell_exec("ping -m " . ceil($this->timeout/1000) . " -n " . $this->retries . " " . $this->device["devicename"]);
+				$result = shell_exec("ping -m " . ceil($this->timeout/1000) . " -n " . $this->retries . " " . $this->device["hostname"]);
 			}else if (substr_count(strtolower(PHP_OS), "mac")) {
-				$result = shell_exec("ping -t " . ceil($this->timeout/1000) . " -c " . $this->retries . " " . $this->device["devicename"]);
+				$result = shell_exec("ping -t " . ceil($this->timeout/1000) . " -c " . $this->retries . " " . $this->device["hostname"]);
 			}else if (substr_count(strtolower(PHP_OS), "freebsd")) {
-				$result = shell_exec("ping -t " . ceil($this->timeout/1000) . " -c " . $this->retries . " " . $this->device["devicename"]);
+				$result = shell_exec("ping -t " . ceil($this->timeout/1000) . " -c " . $this->retries . " " . $this->device["hostname"]);
 			}else if (substr_count(strtolower(PHP_OS), "darwin")) {
-				$result = shell_exec("ping -t " . ceil($this->timeout/1000) . " -c " . $this->retries . " " . $this->device["devicename"]);
+				$result = shell_exec("ping -t " . ceil($this->timeout/1000) . " -c " . $this->retries . " " . $this->device["hostname"]);
 			}else if (substr_count(strtolower(PHP_OS), "bsd")) {
-				$result = shell_exec("ping -w " . ceil($this->timeout/1000) . " -c " . $this->retries . " " . $this->device["devicename"]);
+				$result = shell_exec("ping -w " . ceil($this->timeout/1000) . " -c " . $this->retries . " " . $this->device["hostname"]);
 			}else if (substr_count(strtolower(PHP_OS), "aix")) {
-				$result = shell_exec("ping -i " . ceil($this->timeout/1000) . " -c " . $this->retries . " " . $this->device["devicename"]);
+				$result = shell_exec("ping -i " . ceil($this->timeout/1000) . " -c " . $this->retries . " " . $this->device["hostname"]);
 			}else if (substr_count(strtolower(PHP_OS), "winnt")) {
-				$result = shell_exec("ping -w " . $this->timeout . " -n " . $this->retries . " " . $this->device["devicename"]);
+				$result = shell_exec("ping -w " . $this->timeout . " -n " . $this->retries . " " . $this->device["hostname"]);
 			}else{
-				$result = shell_exec("ping -W " . ceil($this->timeout/1000) . " -c " . $this->retries . " -p " . $pattern . " " . $this->device["devicename"]);
+				$result = shell_exec("ping -W " . ceil($this->timeout/1000) . " -c " . $this->retries . " -p " . $pattern . " " . $this->device["hostname"]);
 			}
 
 			if (strtolower(PHP_OS) != "winnt") {
@@ -355,7 +355,7 @@ class Net_Ping
 
 			/* getnext does not work in php versions less than 5 */
 			if (version_compare("5", phpversion(), "<")) {
-				$output = cacti_snmp_getnext($this->device["devicename"],
+				$output = cacti_snmp_getnext($this->device["hostname"],
 					$this->device["snmp_community"],
 					$oid,
 					$this->device["snmp_version"],
@@ -369,7 +369,7 @@ class Net_Ping
 					$this->device["snmp_timeout"],
 					SNMP_CMDPHP);
 			}else{
-				$output = cacti_snmp_get($this->device["devicename"],
+				$output = cacti_snmp_get($this->device["hostname"],
 					$this->device["snmp_community"],
 					$oid,
 					$this->device["snmp_version"],
@@ -408,7 +408,7 @@ class Net_Ping
 
 	function ping_udp() {
 		/* Host must be nonblank */
-		if ($this->device["devicename"]) {
+		if ($this->device["hostname"]) {
 			/* initialize variables */
 			$this->ping_status   = "down";
 			$this->ping_response = "default";
@@ -417,19 +417,19 @@ class Net_Ping
 			$to_sec  = floor($this->timeout/1000);
 			$to_usec = ($this->timeout%1000)*1000;
 
-			/* clean up devicename if specifying snmp_transport */
-			$this->device["devicename"] = str_replace("tcp:", "", strtolower($this->device["devicename"]));
-			$this->device["devicename"] = str_replace("udp:", "", strtolower($this->device["devicename"]));
+			/* clean up hostname if specifying snmp_transport */
+			$this->device["hostname"] = str_replace("tcp:", "", strtolower($this->device["hostname"]));
+			$this->device["hostname"] = str_replace("udp:", "", strtolower($this->device["hostname"]));
 
 			/* determine the device's ip address */
-			if ($this->is_ipaddress($this->device["devicename"])) {
-				$device_ip = $this->device["devicename"];
+			if ($this->is_ipaddress($this->device["hostname"])) {
+				$device_ip = $this->device["hostname"];
 			}else{
-				$device_ip = gethostbyname($this->device["devicename"]);
+				$device_ip = gethostbyname($this->device["hostname"]);
 
 				if (!$this->is_ipaddress($device_ip)) {
-					cacti_log("WARNING: UDP Ping Error: gethostbyname failed for " . $this->device["devicename"]);
-					$this->response = "UDP Ping Error: gethostbyname failed for " . $this->device["devicename"];
+					cacti_log("WARNING: UDP Ping Error: gethostbyname failed for " . $this->device["hostname"]);
+					$this->response = "UDP Ping Error: gethostbyname failed for " . $this->device["hostname"];
 					return false;
 				}
 			}
@@ -516,7 +516,7 @@ class Net_Ping
 
 	function ping_tcp() {
 		/* Host must be nonblank */
-		if ($this->device["devicename"]) {
+		if ($this->device["hostname"]) {
 			/* initialize variables */
 			$this->ping_status   = "down";
 			$this->ping_response = "default";
@@ -525,19 +525,19 @@ class Net_Ping
 			$to_sec  = floor($this->timeout/1000);
 			$to_usec = ($this->timeout%1000)*1000;
 
-			/* clean up devicename if specifying snmp_transport */
-			$this->device["devicename"] = str_replace("tcp:", "", strtolower($this->device["devicename"]));
-			$this->device["devicename"] = str_replace("udp:", "", strtolower($this->device["devicename"]));
+			/* clean up hostname if specifying snmp_transport */
+			$this->device["hostname"] = str_replace("tcp:", "", strtolower($this->device["hostname"]));
+			$this->device["hostname"] = str_replace("udp:", "", strtolower($this->device["hostname"]));
 
 			/* determine the device's ip address */
-			if ($this->is_ipaddress($this->device["devicename"])) {
-				$device_ip = $this->device["devicename"];
+			if ($this->is_ipaddress($this->device["hostname"])) {
+				$device_ip = $this->device["hostname"];
 			}else{
-				$device_ip = gethostbyname($this->device["devicename"]);
+				$device_ip = gethostbyname($this->device["hostname"]);
 
 				if (!$this->is_ipaddress($device_ip)) {
-					cacti_log("WARNING: TCP Ping Error: gethostbyname failed for " . $this->device["devicename"]);
-					$this->response = "TCP Ping Error: gethostbyname failed for " . $this->device["devicename"];
+					cacti_log("WARNING: TCP Ping Error: gethostbyname failed for " . $this->device["hostname"]);
+					$this->response = "TCP Ping Error: gethostbyname failed for " . $this->device["hostname"];
 					return false;
 				}
 			}

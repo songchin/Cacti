@@ -45,11 +45,11 @@ $fields_poller_edit = array(
 		"value" => "|arg1:description|",
 		"max_length" => "250",
 		),
-	"devicename" => array(
+	"hostname" => array(
 		"method" => "textbox",
 		"friendly_name" => __("Hostname"),
-		"description" => __("Fully qualified devicename of the poller device."),
-		"value" => "|arg1:devicename|",
+		"description" => __("Fully qualified hostname of the poller device."),
+		"value" => "|arg1:hostname|",
 		"max_length" => "250",
 		),
 	"ip_address" => array(
@@ -115,7 +115,7 @@ function form_save() {
 
 		$save["disabled"]    = form_input_validate((isset($_POST["disabled"]) ? get_request_var_post("disabled"):""), "disabled", "", true, 3);
 		$save["description"] = form_input_validate(get_request_var_post("description"), "description", "", false, 3);
-		$save["devicename"]    = form_input_validate(get_request_var_post("devicename"), "devicename", "", true, 3);
+		$save["hostname"]    = form_input_validate(get_request_var_post("hostname"), "hostname", "", true, 3);
 		$save["ip_address"]  = form_input_validate(get_request_var_post("ip_address"), "ip_address", "", true, 3);
 
 		if (!is_error_message()) {
@@ -453,7 +453,7 @@ function poller() {
 		"id" => array(__("ID"), "ASC"),
 		"total_devices" => array(__("Devices"), "DESC"),
 		"nosort2" => array(__("Poller Items"), "DESC"),
-		"devicename" => array(__("Hostname"), "ASC"),
+		"hostname" => array(__("Hostname"), "ASC"),
 		"nosort1" => array(__("Status"), ""),
 		"last_update" => array(__("Last Updated"), "ASC"));
 
@@ -466,7 +466,7 @@ function poller() {
 			form_selectable_cell($poller["id"], $poller["id"]);
 			form_selectable_cell($poller["total_devices"], $poller["id"]);
 			form_selectable_cell(db_fetch_cell("SELECT count(*) FROM poller_item WHERE poller_id=" . $poller["id"]), $poller["id"]);
-			form_selectable_cell($poller["devicename"], $poller["id"]);
+			form_selectable_cell($poller["hostname"], $poller["id"]);
 			form_selectable_cell(get_colored_poller_status(($poller["disabled"] == CHECKED ? true : false), $poller["last_update"]), $poller["id"]);
 			form_selectable_cell($poller["last_update"], $poller["id"]);
 			form_checkbox_cell($poller["description"], $poller["id"]);

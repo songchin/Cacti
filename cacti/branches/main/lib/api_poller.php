@@ -29,7 +29,7 @@ function api_poller_cache_item_add($device_id, $device_field_override, $local_da
 		$device = db_fetch_row("select
 			device.id,
 			device.poller_id,
-			device.devicename,
+			device.hostname,
 			device.snmp_community,
 			device.snmp_version,
 			device.snmp_username,
@@ -76,7 +76,7 @@ function api_poller_cache_item_add($device_id, $device_field_override, $local_da
 			$device["snmp_context"] = "";
 			$device["snmp_version"] = "";
 			$device["snmp_port"] = "";
-			$device["devicename"] = "None";
+			$device["hostname"] = "None";
 		}
 
 		if ($poller_action_id == 0) {
@@ -88,7 +88,7 @@ function api_poller_cache_item_add($device_id, $device_field_override, $local_da
 
 		$rrd_next_step = api_poller_get_rrd_next_step($rrd_step, $num_rrd_items);
 
-		return "($local_data_id, " . $device["poller_id"] . ", " . $device["id"] . ", $poller_action_id,'" . $device["devicename"] . "',
+		return "($local_data_id, " . $device["poller_id"] . ", " . $device["id"] . ", $poller_action_id,'" . $device["hostname"] . "',
 			'" . $device["snmp_community"]       . "', '" . $device["snmp_version"]       . "', '" . $device["snmp_timeout"] . "',
 			'" . $device["snmp_username"]        . "', '" . $device["snmp_password"]      . "', '" . $device["snmp_auth_protocol"] . "',
 			'" . $device["snmp_priv_passphrase"] . "', '" . $device["snmp_priv_protocol"] . "', '" . $device["snmp_context"] . "',
