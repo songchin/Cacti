@@ -490,13 +490,13 @@ function upgrade_to_0_8_8() {
 	db_install_execute("0.8.8", "ALTER TABLE device_template_graph DROP INDEX `host_template_id`, CHANGE `host_template_id` `device_template_id` MEDIUMINT(8) UNSIGNED NOT NULL, ADD INDEX `device_template_id` ( `device_template_id` )");
 	db_install_execute("0.8.8", "RENAME TABLE `host_template_snmp_query`  TO `device_template_snmp_query`");
 	db_install_execute("0.8.8", "ALTER TABLE device_template_snmp_query DROP INDEX `host_template_id`, CHANGE `host_template_id` `device_template_id` MEDIUMINT(8) UNSIGNED NOT NULL, ADD INDEX `device_template_id` ( `device_template_id` )");
-	db_install_execute("0.8.8", "ALTER TABLE poller CHANGE `hostname` `devicename` VARCHAR(250) NOT NULL");
+	db_install_execute("0.8.8", "ALTER TABLE poller CHANGE `hostname` `hostname` VARCHAR(250) NOT NULL");
 	db_install_execute("0.8.8", "ALTER TABLE poller_item DROP INDEX `host_id`, CHANGE `host_id` `device_id` MEDIUMINT(8) UNSIGNED NOT NULL, ADD INDEX `device_id` ( `device_id` )");
 	db_install_execute("0.8.8", "ALTER TABLE poller_reindex CHANGE `host_id` `device_id` MEDIUMINT(8) UNSIGNED NOT NULL");
 	db_install_execute("0.8.8", "ALTER TABLE user_auth CHANGE `policy_hosts` `policy_devices` TINYINT(1) UNSIGNED NOT NULL DEFAULT 1");
 
 	# table column updates using REPLACE
-	db_install_execute("0.8.8", "UPDATE data_input_fields SET type_code='devicename' WHERE type_code='hostname'");
+	db_install_execute("0.8.8", "UPDATE data_input_fields SET type_code='hostname' WHERE type_code='hostname'");
 	db_install_execute("0.8.8", "UPDATE data_template_data SET name=REPLACE(name,'|host_','|device_') WHERE name like '%%|host_%%'");
 	db_install_execute("0.8.8", "UPDATE graph_templates_graph SET title=REPLACE(title,'|host_','|device_') WHERE title like '%%|host_%%'");
 	db_install_execute("0.8.8", "UPDATE graph_templates_graph SET upper_limit=REPLACE(upper_limit,'|host_','|device_') WHERE upper_limit like '%%|host_%%'");
