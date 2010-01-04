@@ -2617,8 +2617,8 @@ INSERT INTO snmp_query VALUES (3,'59aab7b0feddc7860002ed9303085ba5','<path_cacti
 INSERT INTO snmp_query VALUES (4,'ad06f46e22e991cb47c95c7233cfaee8','<path_cacti>/resource/snmp_queries/netware_disk.xml','Netware - Get Available Volumes','Retrieves a list of volumes from a Netware server.','',0,2);
 INSERT INTO snmp_query VALUES (6,'8ffa36c1864124b38bcda2ae9bd61f46','<path_cacti>/resource/script_queries/unix_disk.xml','Linux Localhost - df - Hard Drive Space','Queries a list of mounted partitions on a unix-based device with the','',0,11);
 INSERT INTO snmp_query VALUES (7,'30ec734bc0ae81a3d995be82c73f46c1','<path_cacti>/resource/snmp_queries/netware_cpu.xml','Netware - Get Processor Information','Gets information about running processors in a Netware server','',0,2);
-INSERT INTO snmp_query VALUES (8,'9343eab1f4d88b0e61ffc9d020f35414','<path_cacti>/resource/script_server/device_disk.xml','HOST-RESOURCES - hrStorageTable - Hard Drive Space','Gets a list of partitions using SNMP','',0,12);
-INSERT INTO snmp_query VALUES (9,'0d1ab53fe37487a5d0b9e1d3ee8c1d0d','<path_cacti>/resource/script_server/device_cpu.xml','HOST-RESOURCES - hrProcessorTable - CPU Utilization','Gets usage for each processor in the system using the host MIB.','',0,12);
+INSERT INTO snmp_query VALUES (8,'9343eab1f4d88b0e61ffc9d020f35414','<path_cacti>/resource/script_server/host_disk.xml','HOST-RESOURCES - hrStorageTable - Hard Drive Space','Gets a list of partitions using SNMP','',0,12);
+INSERT INTO snmp_query VALUES (9,'0d1ab53fe37487a5d0b9e1d3ee8c1d0d','<path_cacti>/resource/script_server/host_cpu.xml','HOST-RESOURCES - hrProcessorTable - CPU Utilization','Gets usage for each processor in the system using the host MIB.','',0,12);
 
 --
 -- Table structure for table `snmp_query_graph`

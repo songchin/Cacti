@@ -1,7 +1,7 @@
 <interface>
 	<name>HOST-RESSOURCES - hrStorageTable - Hard Drive Space</name>
-	<script_path>|path_cacti|/scripts/ss_device_disk.php</script_path>
-	<script_function>ss_device_disk</script_function>
+	<script_path>|path_cacti|/scripts/ss_host_disk.php</script_path>
+	<script_function>ss_host_disk</script_function>
 	<script_server>php</script_server>
 	<arg_prepend>|device_hostname| |device_id| |device_snmp_version|:|device_snmp_port|:|device_snmp_timeout|:|device_ping_retries|:|device_max_oids|:|device_snmp_community|:|device_snmp_username|:|device_snmp_password|:|device_snmp_auth_protocol|:|device_snmp_priv_passphrase|:|device_snmp_priv_protocol|:|device_snmp_context|</arg_prepend>
 	<arg_index>index</arg_index>

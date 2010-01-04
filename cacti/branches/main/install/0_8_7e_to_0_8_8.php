@@ -502,8 +502,6 @@ function upgrade_to_0_8_8() {
 	db_install_execute("0.8.8", "UPDATE graph_templates_graph SET upper_limit=REPLACE(upper_limit,'|host_','|device_') WHERE upper_limit like '%%|host_%%'");
 	db_install_execute("0.8.8", "UPDATE graph_templates_graph SET lower_limit=REPLACE(lower_limit,'|host_','|device_') WHERE lower_limit like '%%|host_%%'");
 	db_install_execute("0.8.8", "UPDATE graph_templates_graph SET vertical_label=REPLACE(vertical_label,'|host_','|device_') WHERE vertical_label like '%%|host_%%'");
-	db_install_execute("0.8.8", "UPDATE snmp_query SET xml_path=REPLACE(xml_path,'host_disk.xml','device_disk.xml') WHERE xml_path like '%%host_disk.xml%%'");
-	db_install_execute("0.8.8", "UPDATE snmp_query SET xml_path=REPLACE(xml_path,'host_cpu.xml','device_cpu.xml') WHERE xml_path like '%%host_cpu.xml%%'");
 	db_install_execute("0.8.8", "UPDATE snmp_query_graph_rrd_sv SET `text`=REPLACE(`text`,'|host_','|device_') WHERE `text` like '%%|host_%%'");
 	db_install_execute("0.8.8", "UPDATE snmp_query_graph_sv SET `text`=REPLACE(`text`,'|host_','|device_') WHERE `text` like '%%|host_%%'");
 
