@@ -434,7 +434,7 @@ void read_config_options() {
 	if ((res = getsetting(&mysql, "datetime_setting")) != 0 ) {
 		snprintf(set.datetime_setting, SMALL_BUFSIZE, "%s", res);
 	}else{
-		snprintf(set.datetime_setting, SMALL_BUFSIZE, "Y-m-d H:i:s");
+		snprintf(set.datetime_setting, SMALL_BUFSIZE, "\%m/\%d/\%Y \%I:\%M:\%S \%p");
 	}
 
 	/* log the script timeout value */
