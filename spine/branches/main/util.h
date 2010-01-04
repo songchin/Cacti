@@ -69,5 +69,5 @@ extern char *reverse(char *str);
 /* get highres time as double */
 extern double get_time_as_double(void);
 
-/* get host polling time */
-extern char *get_host_poll_time(void);
+/* get device polling time */
+extern char *get_device_poll_time(void);

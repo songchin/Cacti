@@ -127,17 +127,17 @@ void snmp_spine_close(void) {
 	snmp_shutdown("spine");
 }
 
-/*! \fn void *snmp_host_init(int host_id, char *hostname, int snmp_version,
+/*! \fn void *snmp_host_init(int device_id, char *hostname, int snmp_version,
  * char *snmp_community, char *snmp_username, char *snmp_password,
  * char *snmp_auth_protocol, char *snmp_priv_passphrase, char *snmp_priv_protocol,
  * char *snmp_context, int snmp_port, int snmp_timeout)
- *  \brief initializes an snmp_session object for a Spine host
+ *  \brief initializes an snmp_session object for a Spine device
  *
- *	This function will initialize NET-SNMP or UCD-SNMP for the Spine host
+ *	This function will initialize NET-SNMP or UCD-SNMP for the Spine device
  *  in question.
  *
  */
-void *snmp_host_init(int host_id, char *hostname, int snmp_version, char *snmp_community,
+void *snmp_host_init(int device_id, char *hostname, int snmp_version, char *snmp_community,
 					char *snmp_username, char *snmp_password, char *snmp_auth_protocol,
 					char *snmp_priv_passphrase, char *snmp_priv_protocol,
 					char *snmp_context, int snmp_port, int snmp_timeout) {
@@ -197,7 +197,7 @@ void *snmp_host_init(int host_id, char *hostname, int snmp_version, char *snmp_c
 		session.version       = SNMP_VERSION_3;
 		session.securityModel = USM_SEC_MODEL_NUMBER;
 	}else {
-		SPINE_LOG(("Host[%i] ERROR: SNMP Version Error for Host '%s'", host_id, hostname));
+		SPINE_LOG(("Device[%i] ERROR: SNMP Version Error for Device '%s'", device_id, hostname));
 		return 0;
 	}
 
@@ -302,7 +302,7 @@ void *snmp_host_init(int host_id, char *hostname, int snmp_version, char *snmp_c
  *  \brief closes an established snmp session
  *
  *	This function performs cleanup of the snmp sessions once polling is completed
- *  for a host.
+ *  for a device.
  *
  */
 void snmp_host_cleanup(void *snmp_session) {
@@ -311,17 +311,17 @@ void snmp_host_cleanup(void *snmp_session) {
 	}
 }
 
-/*! \fn char *snmp_get(host_t *current_host, char *snmp_oid)
+/*! \fn char *snmp_get(device_t *current_device, char *snmp_oid)
  *  \brief performs a single snmp_get for a specific snmp OID
  *
- *	This function will poll a specific snmp OID for a host.  The host snmp
+ *	This function will poll a specific snmp OID for a device.  The device snmp
  *  session must already be established.
  *
  *  \return returns the character representaton of the snmp OID, or "U" if
  *  unsuccessful.
  *
  */
-char *snmp_get(host_t *current_host, char *snmp_oid) {
+char *snmp_get(device_t *current_device, char *snmp_oid) {
 	struct snmp_pdu *pdu       = NULL;
 	struct snmp_pdu *response  = NULL;
 	struct variable_list *vars = NULL;
@@ -337,7 +337,7 @@ char *snmp_get(host_t *current_host, char *snmp_oid) {
 
 	status = STAT_DESCRIP_ERROR;
 
-	if (current_host->snmp_session != NULL) {
+	if (current_device->snmp_session != NULL) {
 		anOID_len = MAX_OID_LEN;
 		pdu = snmp_pdu_create(SNMP_MSG_GET);
 
@@ -349,8 +349,8 @@ char *snmp_get(host_t *current_host, char *snmp_oid) {
 			snmp_add_null_var(pdu, anOID, anOID_len);
 		}
 
-		/* poll host */
-		status = snmp_sess_synch_response(current_host->snmp_session, pdu, &response);
+		/* poll device */
+		status = snmp_sess_synch_response(current_device->snmp_session, pdu, &response);
 
 		/* liftoff, successful poll, process it!! */
 		if (status == STAT_SUCCESS) {
@@ -381,7 +381,7 @@ char *snmp_get(host_t *current_host, char *snmp_oid) {
 	}
 
 	if (status != STAT_SUCCESS) {
-		current_host->ignore_host = TRUE;
+		current_device->ignore_device = TRUE;
 
 		SET_UNDEFINED(result_string);
 	}
@@ -389,17 +389,17 @@ char *snmp_get(host_t *current_host, char *snmp_oid) {
 	return result_string;
 }
 
-/*! \fn char *snmp_getnext(host_t *current_host, char *snmp_oid)
+/*! \fn char *snmp_getnext(device_t *current_device, char *snmp_oid)
  *  \brief performs a single snmp_getnext for a specific snmp OID
  *
- *	This function will poll a specific snmp OID for a host.  The host snmp
+ *	This function will poll a specific snmp OID for a device.  The device snmp
  *  session must already be established.
  *
  *  \return returns the character representaton of the snmp OID, or "U" if
  *  unsuccessful.
  *
  */
-char *snmp_getnext(host_t *current_host, char *snmp_oid) {
+char *snmp_getnext(device_t *current_device, char *snmp_oid) {
 	struct snmp_pdu *pdu       = NULL;
 	struct snmp_pdu *response  = NULL;
 	struct variable_list *vars = NULL;
@@ -415,7 +415,7 @@ char *snmp_getnext(host_t *current_host, char *snmp_oid) {
 
 	status           = STAT_DESCRIP_ERROR;
 
-	if (current_host->snmp_session != NULL) {
+	if (current_device->snmp_session != NULL) {
 		anOID_len = MAX_OID_LEN;
 		pdu       = snmp_pdu_create(SNMP_MSG_GETNEXT);
 
@@ -427,8 +427,8 @@ char *snmp_getnext(host_t *current_host, char *snmp_oid) {
 			snmp_add_null_var(pdu, anOID, anOID_len);
 		}
 
-		/* poll host */
-		status = snmp_sess_synch_response(current_host->snmp_session, pdu, &response);
+		/* poll device */
+		status = snmp_sess_synch_response(current_device->snmp_session, pdu, &response);
 
 		/* liftoff, successful poll, process it!! */
 		if (status == STAT_SUCCESS) {
@@ -464,7 +464,7 @@ char *snmp_getnext(host_t *current_host, char *snmp_oid) {
 	}
 
 	if (status != STAT_SUCCESS) {
-		current_host->ignore_host = TRUE;
+		current_device->ignore_device = TRUE;
 
 		SET_UNDEFINED(result_string);
 	}
@@ -499,15 +499,15 @@ void snmp_snprint_value(char *obuf, size_t buf_len, const oid *objid, size_t obj
 	free(buf);
 }
 
-/*! \fn char *snmp_get_multi(host_t *current_host, snmp_oids_t *snmp_oids, int num_oids)
+/*! \fn char *snmp_get_multi(device_t *current_device, snmp_oids_t *snmp_oids, int num_oids)
  *  \brief performs multiple OID snmp_get's in a single network call
  *
- *	This function will a group of snmp OID's for a host.  The host snmp
+ *	This function will a group of snmp OID's for a device.  The device snmp
  *  session must already be established.  The function will modify elements of
  *  the snmp_oids array with the results from the snmp api call.
  *
  */
-void snmp_get_multi(host_t *current_host, snmp_oids_t *snmp_oids, int num_oids) {
+void snmp_get_multi(device_t *current_device, snmp_oids_t *snmp_oids, int num_oids) {
 	struct snmp_pdu *pdu       = NULL;
 	struct snmp_pdu *response  = NULL;
 	struct variable_list *vars = NULL;
@@ -528,7 +528,7 @@ void snmp_get_multi(host_t *current_host, snmp_oids_t *snmp_oids, int num_oids) 
 		namep->name_len = MAX_OID_LEN;
 
 		if (!snmp_parse_oid(snmp_oids[i].oid, namep->name, &namep->name_len)) {
- 			SPINE_LOG(("Host[%i] ERROR: Problems parsing Multi SNMP OID! (oid: %s), Set MAX_OIDS to 1 for this host to isolate bad OID", current_host->id, snmp_oids[i].oid));
+ 			SPINE_LOG(("Device[%i] ERROR: Problems parsing Multi SNMP OID! (oid: %s), Set MAX_OIDS to 1 for this device to isolate bad OID", current_device->id, snmp_oids[i].oid));
 
  			/* Mark this OID as "bad" */
 			SET_UNDEFINED(snmp_oids[i].result);
@@ -543,7 +543,7 @@ void snmp_get_multi(host_t *current_host, snmp_oids_t *snmp_oids, int num_oids) 
 
 	/* execute the multi-get request */
 	retry:
-	status = snmp_sess_synch_response(current_host->snmp_session, pdu, &response);
+	status = snmp_sess_synch_response(current_device->snmp_session, pdu, &response);
 
 	/* liftoff, successful poll, process it!! */
 	if (status == STAT_SUCCESS) {
@@ -609,7 +609,7 @@ void snmp_get_multi(host_t *current_host, snmp_oids_t *snmp_oids, int num_oids) 
 	}
 
 	if (status != STAT_SUCCESS) {
-		current_host->ignore_host = 1;
+		current_device->ignore_device = 1;
 		for (i = 0; i < num_oids; i++) {
 			SET_UNDEFINED(snmp_oids[i].result);
 		}

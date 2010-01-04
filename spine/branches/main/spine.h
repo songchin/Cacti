@@ -51,8 +51,8 @@
 #define DISABLE_STDERR
 #endif
 
-/* if a host is legal, return TRUE */
-#define HOSTID_DEFINED(x)	((x) >= 0)
+/* if a device is legal, return TRUE */
+#define DEVICEID_DEFINED(x)	((x) >= 0)
 
 /* warning-suppression macros
  *
@@ -215,7 +215,7 @@
 #define POLLER_VERBOSITY_DEBUG 5
 #define POLLER_VERBOSITY_DEVDBG 6
 
-/* host availability statics */
+/* device availability statics */
 #define AVAIL_NONE 0
 #define AVAIL_SNMP_AND_PING 1
 #define AVAIL_SNMP 2
@@ -226,10 +226,10 @@
 #define PING_UDP 2
 #define PING_TCP 3
 
-#define HOST_UNKNOWN 0
-#define HOST_DOWN 1
-#define HOST_RECOVERING 2
-#define HOST_UP 3
+#define DEVICE_UNKNOWN 0
+#define DEVICE_DOWN 1
+#define DEVICE_RECOVERING 2
+#define DEVICE_UP 3
 
 /* required for ICMP and UDP ping */
 #define ICMP_ECHO 8
@@ -301,10 +301,10 @@ typedef struct config_struct {
 	/* debugging options */
 	int    snmponly;
 	int    SQL_readonly;
-	/* host range to be poller with this spine process */
-	int    start_host_id;
-	int    end_host_id;
-	char   host_id_list[BIG_BUFSIZE];
+	/* device range to be poller with this spine process */
+	int    start_device_id;
+	int    end_device_id;
+	char   device_id_list[BIG_BUFSIZE];
 	/* database connection information */
 	char   dbhost[SMALL_BUFSIZE];
 	char   dbdb[SMALL_BUFSIZE];
@@ -400,13 +400,13 @@ typedef struct php_processes {
 	int    php_read_fd;
 } php_t;
 
-/*! Host Structure
+/*! Device Structure
  *
- * This structure holds host information from the host table and is used throughout
+ * This structure holds device information from the device table and is used throughout
  * the application.
  *
  */
-typedef struct host_struct {
+typedef struct device_struct {
 	int    id;
 	char   hostname[250];
 	char   snmp_community[100];
@@ -438,16 +438,16 @@ typedef struct host_struct {
 	int    total_polls;
 	int    failed_polls;
 	double availability;
-	int    ignore_host;
+	int    ignore_device;
 	void   *snmp_session;
-} host_t;
+} device_t;
 
-/*! Host Reindex Structure
+/*! Device Reindex Structure
  *
- * This structure holds the results of the host re-index checks and values.
+ * This structure holds the results of the device re-index checks and values.
  *
  */
-typedef struct host_reindex_struct {
+typedef struct device_reindex_struct {
 	char   op[4];
 	char   assert_value[100];
 	char   arg1[512];
@@ -457,7 +457,7 @@ typedef struct host_reindex_struct {
 
 /*! Ping Result Struction
  *
- * This structure holds the results of a host ping.
+ * This structure holds the results of a device ping.
  *
  */
 typedef struct ping_results {

@@ -36,4 +36,4 @@ extern MYSQL_RES *db_query(MYSQL *mysql, const char *query);
 extern void db_connect(const char *database, MYSQL *mysql);
 extern void db_disconnect(MYSQL *mysql);
 
-extern int append_hostrange(char *obuf, const char *colname);
+extern int append_devicerange(char *obuf, const char *colname);

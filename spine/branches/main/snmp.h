@@ -32,8 +32,8 @@
 */
 
 extern void snmp_spine_init(void);
-extern void *snmp_host_init(int host_id, char *hostname, int snmp_version, char *snmp_community, char *snmp_username, char *snmp_password, char *snmp_auth_protocol, char *snmp_priv_passphrase, char *snmp_priv_protocol, char *snmp_context, int snmp_port, int snmp_timeout);
+extern void *snmp_host_init(int device_id, char *hostname, int snmp_version, char *snmp_community, char *snmp_username, char *snmp_password, char *snmp_auth_protocol, char *snmp_priv_passphrase, char *snmp_priv_protocol, char *snmp_context, int snmp_port, int snmp_timeout);
 extern void snmp_host_cleanup(void *snmp_session);
-extern char *snmp_get(host_t *current_host, char *snmp_oid);
-extern char *snmp_getnext(host_t *current_host, char *snmp_oid);
-extern void snmp_get_multi(host_t *current_host, snmp_oids_t *snmp_oids, int num_oids);
+extern char *snmp_get(device_t *current_device, char *snmp_oid);
+extern char *snmp_getnext(device_t *current_device, char *snmp_oid);
+extern void snmp_get_multi(device_t *current_device, snmp_oids_t *snmp_oids, int num_oids);

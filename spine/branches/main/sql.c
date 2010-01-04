@@ -232,13 +232,13 @@ void db_disconnect(MYSQL *mysql) {
 	mysql_close(mysql);
 }
 
-/*! \fn int append_hostrange(char *obuf, const char *colname, const config_t *set)
- *  \brief appends a host range to a sql select statement
- *  \param obuf the sql select statment to have the host range appended
- *  \param colname the sql column name that will have the host range checked
+/*! \fn int append_devicerange(char *obuf, const char *colname, const config_t *set)
+ *  \brief appends a device range to a sql select statement
+ *  \param obuf the sql select statment to have the device range appended
+ *  \param colname the sql column name that will have the device range checked
  *  \param set global runtime settings
  *
- *	Several places in the code need to limit the range of hosts to
+ *	Several places in the code need to limit the range of devices to
  *	those with a certain ID range, but only if those range values
  *	are actually nonzero.
  *
@@ -248,12 +248,12 @@ void db_disconnect(MYSQL *mysql) {
  *  \return the number of characters added to the end of the character buffer
  *
  */
-int append_hostrange(char *obuf, const char *colname) {
-	if (HOSTID_DEFINED(set.start_host_id) && HOSTID_DEFINED(set.end_host_id)) {
+int append_devicerange(char *obuf, const char *colname) {
+	if (DEVICEID_DEFINED(set.start_device_id) && DEVICEID_DEFINED(set.end_device_id)) {
 		return sprintf(obuf, " AND %s BETWEEN %d AND %d",
 			colname,
-			set.start_host_id,
-			set.end_host_id);
+			set.start_device_id,
+			set.end_device_id);
 	}else{
 		return 0;
 	}

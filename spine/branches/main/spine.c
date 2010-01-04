@@ -51,9 +51,9 @@
  *
  *	Stop polling after device <ID> (else ends with the last one)
  *
- * -H | --hostlist="hostid1,hostid2,hostid3,...,hostidn"
+ * -H | --devicelist="deviceid1,deviceid2,deviceid3,...,deviceidn"
  *
- *	Override the expected first host, last host behavior with a list of hostids.
+ *	Override the expected first device, last device behavior with a list of deviceids.
  *
  * -O | --option=setting:value
  *
@@ -77,7 +77,7 @@
  * Set the debug logging verbosity to <V>. Can be 1..5 or
  *	NONE/LOW/MEDIUM/HIGH/DEBUG (case insensitive).
  *
- * The First/Last device IDs are all relative to the "hosts" table in the
+ * The First/Last device IDs are all relative to the "device" table in the
  * Cacti database, and this mechanism allows us to split up the polling
  * duties across multiple "spine" instances: each one gets a subset of
  * the polling range.
@@ -91,7 +91,7 @@
 
 /* Global Variables */
 int entries = 0;
-int num_hosts = 0;
+int num_devices = 0;
 int active_threads = 0;
 int active_scripts = 0;
 
@@ -113,8 +113,8 @@ static void display_help(void);
  *  3) Process runtime parameters from the settings table
  *  4) Initialize the runtime threads and mutexes for the threaded environment
  *  5) Initialize Net-SNMP, MySQL, and the PHP Script Server (if required)
- *  6) Spawns X threads in order to process hosts
- *  7) Loop until either all hosts have been processed or until the poller runtime
+ *  6) Spawns X threads in order to process devices
+ *  7) Loop until either all devices have been processed or until the poller runtime
  *     has been exceeded
  *  8) Close database and free variables
  *  9) Log poller process statistics if required
@@ -147,7 +147,7 @@ int main(int argc, char *argv[]) {
 	MYSQL_RES *result = NULL;
 	MYSQL_ROW mysql_row;
 	int canexit = 0;
-	int host_id;
+	int device_id;
 	int i;
 	int mutex_status = 0;
 	int thread_status = 0;
@@ -226,9 +226,9 @@ int main(int argc, char *argv[]) {
 
 	/* initialize some global variables */
 	set.poller_id         = 0;
-	set.start_host_id     = -1;
-	set.end_host_id       = -1;
-	set.host_id_list[0]   = '\0';
+	set.start_device_id     = -1;
+	set.end_device_id       = -1;
+	set.device_id_list[0]   = '\0';
 	set.php_initialized   = FALSE;
 	set.logfile_processed = FALSE;
 	set.parent_fork       = SPINE_PARENT;
@@ -241,27 +241,27 @@ int main(int argc, char *argv[]) {
 
 		if (STRMATCH(arg, "-f") ||
 			STRMATCH(arg, "--first")) {
-			if (HOSTID_DEFINED(set.start_host_id)) {
+			if (DEVICEID_DEFINED(set.start_device_id)) {
 				die("ERROR: %s can only be used once", arg);
 			}
 
-			set.start_host_id = atoi(opt = getarg(opt, &argv));
+			set.start_device_id = atoi(opt = getarg(opt, &argv));
 
-			if (!HOSTID_DEFINED(set.start_host_id)) {
-				die("ERROR: '%s=%s' is invalid first-host ID", arg, opt);
+			if (!DEVICEID_DEFINED(set.start_device_id)) {
+				die("ERROR: '%s=%s' is invalid first-device ID", arg, opt);
 			}
 		}
 
 		else if (STRMATCH(arg, "-l") ||
 				 STRIMATCH(arg, "--last")) {
-			if (HOSTID_DEFINED(set.end_host_id)) {
+			if (DEVICEID_DEFINED(set.end_device_id)) {
 				die("ERROR: %s can only be used once", arg);
 			}
 
-			set.end_host_id = atoi(opt = getarg(opt, &argv));
+			set.end_device_id = atoi(opt = getarg(opt, &argv));
 
-			if (!HOSTID_DEFINED(set.end_host_id)) {
-				die("ERROR: '%s=%s' is invalid last-host ID", arg, opt);
+			if (!DEVICEID_DEFINED(set.end_device_id)) {
+				die("ERROR: '%s=%s' is invalid last-device ID", arg, opt);
 			}
 		}
 
@@ -271,8 +271,8 @@ int main(int argc, char *argv[]) {
 		}
 
 		else if (STRMATCH(arg, "-H") ||
-				 STRIMATCH(arg, "--hostlist")) {
-			snprintf(set.host_id_list, BIG_BUFSIZE, getarg(opt, &argv));
+				 STRIMATCH(arg, "--devicelist")) {
+			snprintf(set.device_id_list, BIG_BUFSIZE, getarg(opt, &argv));
 		}
 
 		else if (STRMATCH(arg, "-h") ||
@@ -329,12 +329,12 @@ int main(int argc, char *argv[]) {
 			set.snmponly = TRUE;
 		}
 
-		else if (!HOSTID_DEFINED(set.start_host_id) && all_digits(arg)) {
-			set.start_host_id = atoi(arg);
+		else if (!DEVICEID_DEFINED(set.start_device_id) && all_digits(arg)) {
+			set.start_device_id = atoi(arg);
 		}
 
-		else if (!HOSTID_DEFINED(set.end_host_id) && all_digits(arg)) {
-			set.end_host_id = atoi(arg);
+		else if (!DEVICEID_DEFINED(set.end_device_id) && all_digits(arg)) {
+			set.end_device_id = atoi(arg);
 		}
 
 		else {
@@ -342,14 +342,14 @@ int main(int argc, char *argv[]) {
 		}
 	}
 
-	/* we require either both the first and last hosts, or niether host */
-	if ((HOSTID_DEFINED(set.start_host_id) != HOSTID_DEFINED(set.end_host_id)) &&
-		(!strlen(set.host_id_list))) {
-		die("ERROR: must provide both -f/-l, a hostlist (-H/--hostlist), or neither");
+	/* we require either both the first and last devices, or niether device */
+	if ((DEVICEID_DEFINED(set.start_device_id) != DEVICEID_DEFINED(set.end_device_id)) &&
+		(!strlen(set.device_id_list))) {
+		die("ERROR: must provide both -f/-l, a devicelist (-H/--devicelist), or neither");
 	}
 
-	if (set.start_host_id > set.end_host_id) {
-		die("ERROR: Invalid row spec; first host_id must be less than the second");
+	if (set.start_device_id > set.end_device_id) {
+		die("ERROR: Invalid row spec; first device_id must be less than the second");
 	}
 
 	/* read configuration file to establish local environment */
@@ -430,37 +430,37 @@ int main(int argc, char *argv[]) {
 		set.php_current_server = 0;
 	}
 
-	/* determine if the poller_id field exists in the host table */
-	result = db_query(&mysql, "SHOW COLUMNS FROM host LIKE 'poller_id'");
+	/* determine if the poller_id field exists in the device table */
+	result = db_query(&mysql, "SHOW COLUMNS FROM device LIKE 'poller_id'");
 	if (mysql_num_rows(result)) {
 		set.poller_id_exists = TRUE;
 	}else{
 		set.poller_id_exists = FALSE;
 
 		if (set.poller_id > 0) {
-			SPINE_LOG(("WARNING: PollerID > 0, but 'host' table does NOT contain the poller_id column!!"));
+			SPINE_LOG(("WARNING: PollerID > 0, but 'device' table does NOT contain the poller_id column!!"));
 		}
 	}
 
-	/* obtain the list of hosts to poll */
-	qp += sprintf(qp, "SELECT id FROM host");
+	/* obtain the list of devices to poll */
+	qp += sprintf(qp, "SELECT id FROM device");
 	qp += sprintf(qp, " WHERE disabled=''");
-	if (!strlen(set.host_id_list)) {
-		qp += append_hostrange(qp, "id");	/* AND id BETWEEN a AND b */
+	if (!strlen(set.device_id_list)) {
+		qp += append_devicerange(qp, "id");	/* AND id BETWEEN a AND b */
 	}else{
-		qp += sprintf(qp, " AND id IN(%s)", set.host_id_list);
+		qp += sprintf(qp, " AND id IN(%s)", set.device_id_list);
 	}
 	if (set.poller_id_exists) {
-		qp += sprintf(qp, " AND host.poller_id=%i", set.poller_id);
+		qp += sprintf(qp, " AND device.poller_id=%i", set.poller_id);
 	}
 	qp += sprintf(qp, " ORDER BY polling_time DESC, id ASC");
 
 	result = db_query(&mysql, querybuf);
 
 	if (set.poller_id == 0) {
-		num_rows = mysql_num_rows(result) + 1; /* add 1 for host = 0 */
+		num_rows = mysql_num_rows(result) + 1; /* add 1 for device = 0 */
 	}else{
-		num_rows = mysql_num_rows(result); /* pollerid 0 takes care of not host based data sources */
+		num_rows = mysql_num_rows(result); /* pollerid 0 takes care of not device based data sources */
 	}
 
 	if (!(threads = (pthread_t *)malloc(num_rows * sizeof(pthread_t)))) {
@@ -468,7 +468,7 @@ int main(int argc, char *argv[]) {
 	}
 
 	if (!(ids = (int *)malloc(num_rows * sizeof(int)))) {
-		die("ERROR: Fatal malloc error: spine.c host id's!");
+		die("ERROR: Fatal malloc error: spine.c device id's!");
 	}
 
 	/* initialize threads and mutexes */
@@ -494,15 +494,15 @@ int main(int argc, char *argv[]) {
 				if (set.poller_id == 0) {
 					if (device_counter > 0) {
 						mysql_row = mysql_fetch_row(result);
-						host_id = atoi(mysql_row[0]);
-						ids[device_counter] = host_id;
+						device_id = atoi(mysql_row[0]);
+						ids[device_counter] = device_id;
 					}else{
 						ids[device_counter] = 0;
 					}
 				}else{
 					mysql_row = mysql_fetch_row(result);
-					host_id = atoi(mysql_row[0]);
-					ids[device_counter] = host_id;
+					device_id = atoi(mysql_row[0]);
+					ids[device_counter] = device_id;
 				}
 
 				/* create child process */
@@ -538,7 +538,7 @@ int main(int argc, char *argv[]) {
 					current_time = get_time_as_double();
 
 					if ((current_time - begin_time + .2) > set.poller_interval) {
-						SPINE_LOG(("ERROR: Spine Timed Out While Processing Hosts Internal"));
+						SPINE_LOG(("ERROR: Spine Timed Out While Processing Devices Internal"));
 						canexit = 1;
 						break;
 					}
@@ -575,7 +575,7 @@ int main(int argc, char *argv[]) {
 			current_time = get_time_as_double();
 
 			if ((current_time - begin_time + .2) > set.poller_interval) {
-				SPINE_LOG(("ERROR: Spine Timed Out While Processing Hosts Internal"));
+				SPINE_LOG(("ERROR: Spine Timed Out While Processing Devices Internal"));
 				canexit = 1;
 				break;
 			}
@@ -605,7 +605,7 @@ int main(int argc, char *argv[]) {
 			current_time = get_time_as_double();
 
 			if ((current_time - begin_time + .2) > set.poller_interval) {
-				SPINE_LOG(("ERROR: Spine Timed Out While Processing Hosts Internal"));
+				SPINE_LOG(("ERROR: Spine Timed Out While Processing Devices Internal"));
 				canexit = 1;
 				break;
 			}
@@ -655,11 +655,11 @@ int main(int argc, char *argv[]) {
 	end_time = TIMEVAL_TO_DOUBLE(now);
 
 	if (set.log_level >= POLLER_VERBOSITY_MEDIUM) {
-		SPINE_LOG(("Time: %.4f s, Threads: %i, Hosts: %i", (end_time - begin_time), set.threads, num_rows));
+		SPINE_LOG(("Time: %.4f s, Threads: %i, Devices: %i", (end_time - begin_time), set.threads, num_rows));
 	}else{
 		/* provide output if running from command line */
 		if (!set.stdout_notty) {
-			fprintf(stdout,"SPINE: Time: %.4f s, Threads: %i, Hosts: %i\n", (end_time - begin_time), set.threads, num_rows);
+			fprintf(stdout,"SPINE: Time: %.4f s, Threads: %i, Devices: %i\n", (end_time - begin_time), set.threads, num_rows);
 		}
 	}
 
@@ -680,13 +680,13 @@ int main(int argc, char *argv[]) {
 static void display_help(void) {
 	static const char *const *p;
 	static const char * const helptext[] = {
-		"Usage: spine [options] [[firstid lastid] || [-H/--hostlist='hostid1, hostid2,...,hostidn']]",
+		"Usage: spine [options] [[firstid lastid] || [-H/--devicelist='deviceid1, deviceid2,...,deviceidn']]",
 		"",
 		"Options:",
 		"  -h/--help          Show this brief help listing",
-		"  -f/--first=X       Start polling with host id X",
-		"  -l/--last=X        End polling with host id X",
-		"  -H/--hostlist=X    Poll the list of host ids, separated by comma's",
+		"  -f/--first=X       Start polling with device id X",
+		"  -l/--last=X        End polling with device id X",
+		"  -H/--devicelist=X    Poll the list of device ids, separated by comma's",
 		"  -p/--poller=X      Set the poller id to X",
 		"  -C/--conf=F        Read spine configuration from file F",
 		"  -O/--option=S:V    Override DB settings 'set' with value 'V'",
@@ -695,8 +695,8 @@ static void display_help(void) {
 		"  -V/--verbosity=V   Set logging verbosity to <V>",
 		"  --snmponly         Only do SNMP polling: no scripts",
 		"",
-		"Either both of --first/--last must be provided, a valid hostlist must be provided.",
-        "In their absense, all hosts are processed.",
+		"Either both of --first/--last must be provided, a valid devicelist must be provided.",
+        "In their absense, all devices are processed.",
 		"",
 		"Without the --conf parameter, spine searches for its spine.conf",
 		"file in the usual places.",
