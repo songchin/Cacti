@@ -55,14 +55,16 @@ if (CACTI_SERVER_OS == "unix") {
 }
 $log_system_facility[LOG_USER] = "USER";
 
-$log_syslog_facility = array(
-	LOG_LOCAL0 => "LOCAL0",
-	LOG_LOCAL1 => "LOCAL1",
-	LOG_LOCAL2 => "LOCAL2",
-	LOG_LOCAL3 => "LOCAL3",
-	LOG_LOCAL4 => "LOCAL4",
-	LOG_LOCAL5 => "LOCAL5",
-	LOG_LOCAL6 => "LOCAL6",
-	LOG_LOCAL7 => "LOCAL7",
-	LOG_USER => "USER"
-);
+if (CACTI_SERVER_OS == "unix") {
+	$log_syslog_facility = array(
+		LOG_LOCAL0 => "LOCAL0",
+		LOG_LOCAL1 => "LOCAL1",
+		LOG_LOCAL2 => "LOCAL2",
+		LOG_LOCAL3 => "LOCAL3",
+		LOG_LOCAL4 => "LOCAL4",
+		LOG_LOCAL5 => "LOCAL5",
+		LOG_LOCAL6 => "LOCAL6",
+		LOG_LOCAL7 => "LOCAL7"
+	);
+}
+$log_syslog_facility[LOG_USER] = "USER";

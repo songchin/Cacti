@@ -217,7 +217,7 @@ $settings = array(
 			"default" => "%m/%d/%Y %I:%M:%S %p",
 			"array" => $datetime_format,
 			),
-    
+
         "reindex_method" => array(
 			"friendly_name" => __("Reindex Method for Data Queries"),
 			"description" => __("The default reindex method to use for all Data Queries."),
@@ -967,7 +967,13 @@ $settings = array(
 			),
 		"auth_method" => array(
 			"friendly_name" => __("Authentication Method"),
-			"description" => __("<blockquote><i>None</i> - No authentication will be used, all users will have full access.<br><br><i>Builtin Authentication</i> - Cacti handles user authentication, which allows you to create users and give them rights to different areas within Cacti.<br><br><i>Web Basic Authentication</i> - Authentication is handled by the web server. Users can be added or created automatically on first login if the Template User is defined, otherwise the defined guest permissions will be used.<br><br><i>LDAP Authentication</i> - Allows for authentication against a LDAP server. Users will be created automatically on first login if the Template User is defined, otherwise the defined guest permissions will be used.  If PHP's LDAP module is not enabled, LDAP Authentication will not appear as a selectable option.</blockquote>"),
+			"description" => __("<blockquote><i>None</i> - No authentication will be used, all users will have full access.<br><br><i>Builtin
+			Authentication</i> - Cacti handles user authentication, which allows you to create users and give them rights to different areas
+			within Cacti.<br><br><i>Web Basic Authentication</i> - Authentication is handled by the web server. Users can be added or created
+			automatically on first login if the Template User is defined, otherwise the defined guest permissions will be used.<br><br><i>LDAP
+			Authentication</i> - Allows for authentication against a LDAP server. Users will be created automatically on first login if the
+			Template User is defined, otherwise the defined guest permissions will be used.  If PHP's LDAP module is not enabled, LDAP
+			Authentication will not appear as a selectable option.</blockquote>"),
 			"method" => "drop_array",
 			"default" => 1,
 			"array" => $auth_methods
@@ -1112,110 +1118,110 @@ $settings = array(
 		),
 	"logging" => array(
 		"log_header" => array(
-			"friendly_name" => _("Event Logging"),
+			"friendly_name" => __("Event Logging"),
 			"method" => "spacer"
 			),
 		"log_destination" => array(
-			"friendly_name" => _("Log Destination"),
-					"description" => _("<blockquote><i>Cacti System Log</i> - Internal cacti system log utilizing the database.<br><br><i>Localhost System Log</i> - Utilizing PHP syslog to log to the localhosts logs.<br><br><i>Syslog Server</i> - Syslog to local or remote syslog server</blockquote>"),
+			"friendly_name" => __("Log Destination"),
+					"description" => __("<blockquote><i>Cacti System Log</i> - Internal cacti system log utilizing the database.<br><br><i>Localhost System Log</i> - Utilizing PHP syslog to log to the localhosts logs.<br><br><i>Syslog Server</i> - Syslog to local or remote syslog server</blockquote>"),
 			"method" => "checkbox_group",
 			"items" => array(
 				"log_dest_cacti" => array(
-					"friendly_name" => _("Cacti System Log"),
+					"friendly_name" => __("Cacti System Log"),
 					"default" => "on"
 				),
 				"log_dest_system" => array(
-					"friendly_name" => _("Localhost System Log"),
+					"friendly_name" => __("Localhost System Log"),
 					"default" => ""
 					),
 				"log_dest_syslog" => array(
-					"friendly_name" => _("Syslog Server"),
+					"friendly_name" => __("Syslog Server"),
 					"default" => ""
 					)
 				)
 			),
 		"log_severity" => array(
-			"friendly_name" => _("Severity Logging Level"),
-			"description" => _("Level of detail to send to log.  When selecting a severity level, every level above that will be logged as well."),
+			"friendly_name" => __("Severity Logging Level"),
+			"description" => __("Level of detail to send to log.  When selecting a severity level, every level above that will be logged as well."),
 			"method" => "drop_array",
 			"default" => CACTI_LOG_SEV_NOTICE,
 			"array" => $log_level
 			),
 		"log_control_header" => array(
-			"friendly_name" => _("Cacti System Log Size and Control"),
+			"friendly_name" => __("Cacti System Log Size and Control"),
 			"method" => "spacer"
 			),
 		"log_size" => array(
-			"friendly_name" => _("Maximum Log Size"),
-			"description" => _("The maximum number of records to store in the Cacti log.  The log will be pruned after each polling cycle.  The maximum number of records is an approximate value due to the nature of the record count check."),
+			"friendly_name" => __("Maximum Log Size"),
+			"description" => __("The maximum number of records to store in the Cacti log.  The log will be pruned after each polling cycle.  The maximum number of records is an approximate value due to the nature of the record count check."),
 			"default" => "1000000",
 			"method" => "textbox",
 			"max_length" => "10"
 			),
 		"log_control" => array(
-			"friendly_name" => _("Log Control Mechanism"),
-			"description" => _("How Cacti controls the log size.  The default is to overwrite as needed."),
+			"friendly_name" => __("Log Control Mechanism"),
+			"description" => __("How Cacti controls the log size.  The default is to overwrite as needed."),
 			"method" => "drop_array",
 			"default" => 1,
 			"array" => $log_control_options
 			),
 		"log_maxdays" => array(
-			"friendly_name" => _("Maximum Retention Period"),
-			"description" => _("All events older than the specified number of days will be discarded if the maximum number of recrods in the Cacti System Log is reached."),
+			"friendly_name" => __("Maximum Retention Period"),
+			"description" => __("All events older than the specified number of days will be discarded if the maximum number of recrods in the Cacti System Log is reached."),
 			"method" => "textbox",
 			"default" => "7",
 			"max_length" => "3"
 			),
 		"log_system_header" => array(
-			"friendly_name" => _("System Log Settings"),
+			"friendly_name" => __("System Log Settings"),
 			"method" => "spacer"
 			),
 		"log_system_facility" => array(
-			"friendly_name" => _("System Syslog Facility"),
-			"description" => _("Facility to utilize when using syslog. For Windows enviroments set to USER."),
+			"friendly_name" => __("System Syslog Facility"),
+			"description" => __("Facility to utilize when using syslog. For Windows enviroments set to USER."),
 			"method" => "drop_array",
 			"default" => LOG_USER,
 			"array" => $log_system_facility
 			),
 		"log_syslog_header" => array(
-			"friendly_name" => _("Syslog Server Settings"),
+			"friendly_name" => __("Syslog Server Settings"),
 			"method" => "spacer"
 			),
 		"log_syslog_server" => array(
-			"friendly_name" => _("Syslog Server"),
-			"description" => _("Syslog Server to send syslog message to. To use TCP port, proceed server with \"tcp://\"."),
+			"friendly_name" => __("Syslog Server"),
+			"description" => __("Syslog Server to send syslog message to. To use TCP port, proceed server with \"tcp://\"."),
 			"method" => "textbox",
 			"default" => "localhost",
 			"max_length" => "255"
 			),
 		"log_syslog_port" => array(
-			"friendly_name" => _("Syslog Server Port"),
-			"description" => _("Syslog Server port to send syslog message to."),
+			"friendly_name" => __("Syslog Server Port"),
+			"description" => __("Syslog Server port to send syslog message to."),
 			"method" => "textbox",
 			"default" => "514",
 			"max_length" => "5"
 			),
 		"log_syslog_facility" => array(
-			"friendly_name" => _("Syslog Facility"),
-			"description" => _("Facility to utilize when using syslog. For Windows enviroments set to USER."),
+			"friendly_name" => __("Syslog Facility"),
+			"description" => __("Facility to utilize when using syslog. For Windows enviroments set to USER."),
 			"method" => "drop_array",
 			"default" => LOG_USER,
 			"array" => $log_syslog_facility
 			),
 		"log_email_header" => array(
-			"friendly_name" => _("Event Log Emailing"),
+			"friendly_name" => __("Event Log Emailing"),
 			"method" => "spacer"
 			),
 		"log_email_level" => array(
-			"friendly_name" => _("Log Email Level"),
-			"description" => _("Level of detail to send in email.  When selecting a severity level, every level above that will be logged as well."),
+			"friendly_name" => __("Log Email Level"),
+			"description" => __("Level of detail to send in email.  When selecting a severity level, every level above that will be logged as well."),
 			"method" => "drop_array",
 			"default" => CACTI_LOG_SEV_CRITICAL,
 			"array" => $log_level
 			),
 		"log_email_group" => array(
-			"friendly_name" => _("Email Group"),
-			"description" => _("Events will be emailed in batches to the assigned user group."),
+			"friendly_name" => __("Email Group"),
+			"description" => __("Events will be emailed in batches to the assigned user group."),
 			"method" => "drop_array",
 			"default" => "",
 			"array" => array()

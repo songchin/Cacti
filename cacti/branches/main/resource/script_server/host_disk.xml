@@ -1,5 +1,5 @@
 <interface>
-	<name>HOST-RESSOURCES - hrStorageTable - Hard Drive Space</name>
+	<name>HOST-RESOURCES - hrStorageTable - Hard Drive Space</name>
 	<script_path>|path_cacti|/scripts/ss_host_disk.php</script_path>
 	<script_function>ss_host_disk</script_function>
 	<script_server>php</script_server>
