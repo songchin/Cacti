@@ -145,6 +145,18 @@ $cdef_functions = array(1 =>
 	"TIME",
 	"LTIME");
 
+$vdef_functions = array(1 =>
+	"MAXIMUM",
+	"MINIMUM",
+	"AVERAGE",
+	"LAST",
+	"FIRST",
+	"TOTAL",
+	"PERCENT",
+	"LSLSLOPE",
+	"LSLINT",
+	"LSLCORREL");
+
 $input_types = array(
 	DATA_INPUT_TYPE_SNMP => "SNMP", // Action 0:
 	DATA_INPUT_TYPE_SNMP_QUERY => "SNMP Query",
@@ -205,16 +217,17 @@ $data_source_types = array(
 	);
 
 $graph_item_types = array(
-	GRAPH_ITEM_TYPE_COMMENT => "COMMENT",
-	GRAPH_ITEM_TYPE_HRULE   => "HRULE",
-	GRAPH_ITEM_TYPE_VRULE   => "VRULE",
-	GRAPH_ITEM_TYPE_LINE1   => "LINE1",
-	GRAPH_ITEM_TYPE_LINE2   => "LINE2",
-	GRAPH_ITEM_TYPE_LINE3   => "LINE3",
-	GRAPH_ITEM_TYPE_AREA    => "AREA",
-	GRAPH_ITEM_TYPE_STACK   => "STACK",
-	GRAPH_ITEM_TYPE_GPRINT  => "GPRINT",
-	GRAPH_ITEM_TYPE_LEGEND  => "LEGEND",
+	GRAPH_ITEM_TYPE_COMMENT		=> "COMMENT",
+	GRAPH_ITEM_TYPE_HRULE		=> "HRULE",
+	GRAPH_ITEM_TYPE_VRULE		=> "VRULE",
+	GRAPH_ITEM_TYPE_LINE1		=> "LINE1",
+	GRAPH_ITEM_TYPE_LINE2		=> "LINE2",
+	GRAPH_ITEM_TYPE_LINE3		=> "LINE3",
+	GRAPH_ITEM_TYPE_AREA		=> "AREA",
+	GRAPH_ITEM_TYPE_STACK		=> "STACK",
+	GRAPH_ITEM_TYPE_GPRINT		=> "GPRINT",
+	GRAPH_ITEM_TYPE_LEGEND		=> "LEGEND",
+	GRAPH_ITEM_TYPE_VDEF_LEGEND	=> "VDEF-LEGEND",
 	);
 
 $image_types = array(
@@ -358,11 +371,17 @@ $i18n_modes = array(
     );
 
 $cdef_item_types = array(
-	1 => __("Function"),
-	2 => __("Operator"),
-	4 => __("Special Data Source"),
-	5 => __("Another CDEF"),
-	6 => __("Custom String"),
+	CVDEF_ITEM_TYPE_FUNCTION	=> __("Function"),
+	CVDEF_ITEM_TYPE_OPERATOR	=> __("Operator"),
+	CVDEF_ITEM_TYPE_SPEC_DS		=> __("Special Data Source"),
+	CVDEF_ITEM_TYPE_CDEF		=> __("Another CDEF"),
+	CVDEF_ITEM_TYPE_STRING		=> __("Custom String"),
+	);
+
+$vdef_item_types = array(
+	CVDEF_ITEM_TYPE_FUNCTION	=> __("Function"),
+	CVDEF_ITEM_TYPE_SPEC_DS		=> __("Special Data Source"),
+	CVDEF_ITEM_TYPE_STRING		=> __("Custom String"),
 	);
 
 $graph_color_alpha = array(
@@ -425,6 +444,10 @@ $custom_data_source_types = array(
 	"COUNT_SIMILAR_DS_DUPS"		 		=> __("Count of All Similar Data Sources (Include Duplicates)"),
 	);
 
+$custom_vdef_data_source_types = array( # this may change as soon as RRDTool supports math in VDEF, until then only reference to CDEF may help
+	"CURRENT_DATA_SOURCE"				=> __("Current Graph Item Data Source"),
+	);
+
 $menu = array(
 	__("Management") => array(
 		"tree.php" => __("Trees"),
@@ -445,6 +468,7 @@ $menu = array(
 		),
 	__("Presets") => array(
 		"cdef.php" => __("CDEFs"),
+		"vdef.php" => __("VDEFs"),
 		"color.php" => __("Colors"),
 		"gprint_presets.php" => __("GPRINT"),
 		"xaxis_presets.php" => __("X-Axis"),
@@ -561,7 +585,7 @@ $user_auth_realms = array(
 	12   => __("Update Device Templates"),
 	10   => __("Update Graph Templates"),
 	11   => __("Update Data Source Templates"),
-	14   => __("Update CDEF's"),
+	14   => __("Update CDEF's and VDEF's"),
 	9    => __("Update Round Robin Archives"),
 	16   => __("Export Data"),
 	17   => __("Import Data"),
@@ -575,8 +599,15 @@ $user_auth_realm_filenames = array(
 	"cdef.ajax.php" => 14,
 	"color.php" => 5,
 	"data_input.php" => 2,
+	"data_queries.php" => 13,
+	"data_query_dt_sv.ajax.php" => 13,
+	"data_query_gt_sv.ajax.php" => 13,
 	"data_sources.php" => 3,
 	"data_templates.php" => 11,
+	"devices.php" => 3,
+	"device_templates.php" => 12,
+	"email_templates.php" => 8,
+	"event_queue.php" => 8,
 	"gprint_presets.php" => 5,
 	"graph.php" => 7,
 	"graph_image.php" => 7,
@@ -591,46 +622,42 @@ $user_auth_realm_filenames = array(
 	"graphs_items.php" => 5,
 	"graphs_item.ajax.php" => 5,
 	"graphs_new.php" => 5,
-	"devices.php" => 3,
-	"sites.php" => 3,
-	"pollers.php" => 3,
-	"device_templates.php" => 12,
 	"index.php" => 8,
+	"logout.php" => 7,
+	"pollers.php" => 3,
 	"rra.php" => 9,
 	"settings.php" => 15,
-	"data_queries.php" => 13,
-	"data_query_dt_sv.ajax.php" => 13,
-	"data_query_gt_sv.ajax.php" => 13,
+	"sites.php" => 3,
+	"smtp_servers.php" => 8,
+	"smtp_queue.php" => 8,
 	"templates_export.php" => 16,
 	"templates_import.php" => 17,
 	"tree.php" => 4,
 	"user_admin.php" => 1,
 	"utilities.php" => 15,
-	"smtp_servers.php" => 8,
-	"email_templates.php" => 8,
-	"event_queue.php" => 8,
-	"smtp_queue.php" => 8,
-	"logout.php" => 7,
+	"vdef.php" => 14,
 	"xaxis_presets.php" => 5,
 );
 
 $hash_type_codes = array(
-	"round_robin_archive" => "15",
 	"cdef" => "05",
 	"cdef_item" => "14",
-	"gprint_preset" => "06",
 	"data_input_method" => "03",
 	"data_input_field" => "07",
-	"data_template" => "01",
-	"data_template_item" => "08",
-	"graph_template" => "00",
-	"graph_template_item" => "10",
-	"graph_template_input" => "09",
 	"data_query" => "04",
 	"data_query_graph" => "11",
 	"data_query_sv_graph" => "12",
 	"data_query_sv_data_source" => "13",
+	"data_template" => "01",
+	"data_template_item" => "08",
 	"device_template" => "02",
+	"gprint_preset" => "06",
+	"graph_template" => "00",
+	"graph_template_item" => "10",
+	"graph_template_input" => "09",
+	"round_robin_archive" => "15",
+	"vdef" => "18",
+	"vdef_item" => "19",
 	"xaxis" => "16",
 	"xaxis_item" => "17",
 	);
@@ -662,17 +689,19 @@ $hash_version_codes = array(
 $hash_type_names = array(
 	"cdef" => "CDEF",
 	"cdef_item" => "CDEF Item",
-	"gprint_preset" => "GPRINT Preset",
 	"data_input_method" => "Data Input Method",
 	"data_input_field" => "Data Input Field",
+	"data_query" => "Data Query",
 	"data_template" => "Data Source Template",
 	"data_template_item" => "Data Source Template Item",
+	"device_template" => "Device Template",
+	"gprint_preset" => "GPRINT Preset",
 	"graph_template" => "Graph Template",
 	"graph_template_item" => "Graph Template Item",
 	"graph_template_input" => "Graph Template Input",
-	"data_query" => "Data Query",
-	"device_template" => "Device Template",
 	"round_robin_archive" => "Round Robin Archive",
+	"vdef" => "VDEF",
+	"vdef_item" => "VDEF Item",
 	"xaxis" => "X-Axis Preset",
 	"xaxis_item" => "X-Axis Preset Item",
 	);

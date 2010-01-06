@@ -352,25 +352,20 @@ function item_edit() {
 
 //Now we need some javascript to make it dynamic
 ?>
-<script language="JavaScript">
+<script type="text/javascript">
 
-dynamic();
-
-function dynamic() {
-	//alert("RRDTool Version is '" + document.getElementById('hidden_rrdtool_version').value + "'");
-	//alert("Color is '" + document.getElementById('color_id').value + "'");
-	document.getElementById('alpha').disabled=true;
-	if ((document.getElementById('hidden_rrdtool_version').value != 'rrd-1.0.x') &&
-		(document.getElementById('color_id').value != 0)) {
-		document.getElementById('alpha').disabled=false;
-	}
+// RRDTool dependencies
+var hidden_rrdtool_version = $('#hidden_rrdtool_version').val();
+if (hidden_rrdtool_version == '<?php print RRD_VERSION_1_0;?>') {
+	$('.not_RRD_1_0_x').each(function() { $(this).attr('disabled', 'disabled'); });
 }
-
-function changeColorId() {
-	//alert("Selected Color Index is '" + document.getElementById('color_id').selectedIndex + "'");
-	if ((document.getElementById('hidden_rrdtool_version').value != 'rrd-1.0.x') &&
-		(document.getElementById('color_id').selectedIndex != 0)) {
-		document.getElementById('alpha').disabled=false;
-	}
+if (hidden_rrdtool_version == '<?php print RRD_VERSION_1_2;?>x') {
+	$('.not_RRD_1_2_x').each(function() { $(this).attr('disabled', 'disabled'); });
+}
+if (hidden_rrdtool_version == '<?php print RRD_VERSION_1_3;?>') {
+	$('.not_RRD_1_3_x').each(function() { $(this).attr('disabled', 'disabled'); });
+}
+if (hidden_rrdtool_version == '<?php print RRD_VERSION_1_4;?>') {
+	$('.not_RRD_1_4_x').each(function() { $(this).attr('disabled', 'disabled'); });
 }
 </script>

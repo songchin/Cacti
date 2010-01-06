@@ -1950,6 +1950,10 @@ function draw_navigation_text() {
 		"utilities.php:view_snmp_cache" => array("title" => __("View SNMP Cache"), "mapping" => "index.php:,utilities.php:", "url" => "utilities.php", "level" => "2"),
 		"utilities.php:view_tech" => array("title" => __("Technical Support"), "mapping" => "index.php:,utilities.php:", "url" => "utilities.php", "level" => "2"),
 		"utilities.php:view_user_log" => array("title" => __("View User Log File"), "mapping" => "index.php:,utilities.php:", "url" => "utilities.php", "level" => "2"),
+		"vdef.php:" => array("title" => __("VDEF's"), "mapping" => "index.php:", "url" => "vdef.php", "level" => "1"),
+		"vdef.php:edit" => array("title" => __("(Edit)"), "mapping" => "index.php:,vdef.php:", "url" => "", "level" => "2"),
+		"vdef.php:remove" => array("title" => __("(Remove)"), "mapping" => "index.php:,vdef.php:", "url" => "", "level" => "2"),
+		"vdef.php:item_edit" => array("title" => __("VDEF Items"), "mapping" => "index.php:,vdef.php:,vdef.php:edit", "url" => "", "level" => "3"),
 		"xaxis_presets.php:" => array("title" => __("X-Axis Presets"), "mapping" => "index.php:", "url" => "xaxis_presets.php", "level" => "1"),
 		"xaxis_presets.php:edit" => array("title" => __("(Edit)"), "mapping" => "index.php:,xaxis_presets.php:", "url" => "", "level" => "2"),
 		"xaxis_presets.php:item_edit" => array("title" => __("X-Axis Items"), "mapping" => "index.php:,xaxis_presets.php:,xaxis_presets.php:edit", "url" => "", "level" => "3"),
@@ -2168,6 +2172,24 @@ function get_hash_xaxis($xaxis_id, $sub_type = "xaxis") {
 	}
 }
 
+/* get_hash_vdef - returns the current unique hash for a vdef
+   @arg $graph_template_id - (int) the ID of the vdef to return a hash for
+   @arg $sub_type (optional) return the hash for a particlar sub-type of this type
+   @returns - a 128-bit, hexadecimal hash */
+function get_hash_vdef($vdef_id, $sub_type = "vdef") {
+	if ($sub_type == "vdef") {
+		$hash = db_fetch_cell("select hash from vdef where id=$vdef_id");
+	}elseif ($sub_type == "vdef_item") {
+		$hash = db_fetch_cell("select hash from vdef_items where id=$vdef_id");
+	}
+
+	if (ereg("[a-fA-F0-9]{32}", $hash)) {
+		return $hash;
+	}else{
+		return generate_hash();
+	}
+}
+
 /* get_hash_device_template - returns the current unique hash for a gprint preset
    @arg $device_template_id - (int) the ID of the device template to return a hash for
    @returns - a 128-bit, hexadecimal hash */
@@ -2218,7 +2240,7 @@ function get_hash_round_robin_archive($rra_id) {
 
 /* get_hash_version - returns the item type and cacti version in a hash format
    @arg $type - the type of item to represent ('graph_template','data_template',
-     'data_input_method','cdef','gprint_preset','data_query','device_template')
+     'data_input_method','cdef','vdef','gprint_preset','data_query','device_template')
    @returns - a 24-bit hexadecimal hash (8-bits for type, 16-bits for version) */
 function get_hash_version($type) {
 	global $hash_type_codes, $hash_version_codes;

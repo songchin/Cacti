@@ -107,6 +107,32 @@ function form_save() {
 					));
 		}
 
+		if ($graph_item_types{$_POST["graph_type_id"]} == "VDEF-LEGEND") {
+			/* this can be a major time saver when creating lots of graphs with the typical VDEFs */
+			$items = array(
+				0 => array(
+					"color_id" => "0",
+					"graph_type_id" => "9",
+					"consolidation_function_id" => "4",
+					"text_format" => "Last:",
+					"hard_return" => ""
+					),
+				1 => array(
+					"color_id" => "0",
+					"graph_type_id" => "9",
+					"consolidation_function_id" => "1",
+					"text_format" => "Avg:",
+					"hard_return" => ""
+					),
+				2 => array(
+					"color_id" => "0",
+					"graph_type_id" => "9",
+					"consolidation_function_id" => "3",
+					"text_format" => "Max:",
+					"hard_return" => CHECKED
+					));
+		}
+
 		foreach ($items as $item) {
 			/* generate a new sequence if needed */
 			if (empty($_POST["sequence"])) {
@@ -124,6 +150,7 @@ function form_save() {
 			$save["alpha"] = form_input_validate((isset($item["alpha"]) ? $item["alpha"] : $_POST["alpha"]), "alpha", "", true, 3);
 			$save["graph_type_id"] = form_input_validate((isset($item["graph_type_id"]) ? $item["graph_type_id"] : $_POST["graph_type_id"]), "graph_type_id", "", true, 3);
 			$save["cdef_id"] = form_input_validate($_POST["cdef_id"], "cdef_id", "", true, 3);
+			$save["vdef_id"] = form_input_validate($_POST["vdef_id"], "vdef_id", "", true, 3);
 			$save["consolidation_function_id"] = form_input_validate((isset($item["consolidation_function_id"]) ? $item["consolidation_function_id"] : $_POST["consolidation_function_id"]), "consolidation_function_id", "", true, 3);
 			$save["text_format"] = form_input_validate((isset($item["text_format"]) ? $item["text_format"] : $_POST["text_format"]), "text_format", "", true, 3);
 			$save["value"] = form_input_validate($_POST["value"], "value", "", true, 3);
@@ -379,26 +406,21 @@ echo "</form>";
 
 //Now we need some javascript to make it dynamic
 ?>
-<script language="JavaScript">
+<script type="text/javascript">
 
-dynamic();
-
-function dynamic() {
-	//alert("RRDTool Version is '" + document.getElementById('hidden_rrdtool_version').value + "'");
-	//alert("Color is '" + document.getElementById('color_id').value + "'");
-	document.getElementById('alpha').disabled=true;
-	if ((document.getElementById('hidden_rrdtool_version').value != 'rrd-1.0.x') &&
-		(document.getElementById('color_id').value != 0)) {
-		document.getElementById('alpha').disabled=false;
-	}
+// RRDTool dependencies
+var hidden_rrdtool_version = $('#hidden_rrdtool_version').val();
+if (hidden_rrdtool_version == '<?php print RRD_VERSION_1_0;?>') {
+	$('.not_RRD_1_0_x').each(function() { $(this).attr('disabled', 'disabled'); });
 }
-
-function changeColorId() {
-	//alert("Selected Color Index is '" + document.getElementById('color_id').selectedIndex + "'");
-	if ((document.getElementById('hidden_rrdtool_version').value != 'rrd-1.0.x') &&
-		(document.getElementById('color_id').selectedIndex != 0)) {
-		document.getElementById('alpha').disabled=false;
-	}
+if (hidden_rrdtool_version == '<?php print RRD_VERSION_1_2;?>x') {
+	$('.not_RRD_1_2_x').each(function() { $(this).attr('disabled', 'disabled'); });
+}
+if (hidden_rrdtool_version == '<?php print RRD_VERSION_1_3;?>') {
+	$('.not_RRD_1_3_x').each(function() { $(this).attr('disabled', 'disabled'); });
+}
+if (hidden_rrdtool_version == '<?php print RRD_VERSION_1_4;?>') {
+	$('.not_RRD_1_4_x').each(function() { $(this).attr('disabled', 'disabled'); });
 }
 </script>
 <?php

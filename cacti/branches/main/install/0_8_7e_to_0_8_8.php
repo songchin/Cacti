@@ -538,6 +538,53 @@ function upgrade_to_0_8_8() {
 			KEY `plugin_name` (`plugin_name`)
 			) TYPE=MyISAM");
 
+	/* changes to insert VDEF into table graph_templates_item just behind CDEF */
+	db_install_execute("0.8.8", "ALTER TABLE `graph_templates_item` ADD `vdef_id` MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT 0 AFTER `cdef_id`");
 
+	/* create new table VDEF */
+	db_install_execute("0.8.8", "CREATE TABLE vdef (
+  		id mediumint(8) unsigned NOT NULL auto_increment,
+  		hash varchar(32) NOT NULL default '',
+  		name varchar(255) NOT NULL default '',
+  		PRIMARY KEY  (id)
+		) TYPE=MyISAM;");
+
+	/* fill table VDEF */
+	db_install_execute("0.8.8", "INSERT INTO `vdef` VALUES (1, 'e06ed529238448773038601afb3cf278', 'Maximum');");
+	db_install_execute("0.8.8", "INSERT INTO `vdef` VALUES (2, 'e4872dda82092393d6459c831a50dc3b', 'Minimum');");
+	db_install_execute("0.8.8", "INSERT INTO `vdef` VALUES (3, '5ce1061a46bb62f36840c80412d2e629', 'Average');");
+	db_install_execute("0.8.8", "INSERT INTO `vdef` VALUES (4, '06bd3cbe802da6a0745ea5ba93af554a', 'Last (Current)');");
+	db_install_execute("0.8.8", "INSERT INTO `vdef` VALUES (5, '631c1b9086f3979d6dcf5c7a6946f104', 'First');");
+	db_install_execute("0.8.8", "INSERT INTO `vdef` VALUES (6, '6b5335843630b66f858ce6b7c61fc493', 'Total: Current Data Source');");
+	db_install_execute("0.8.8", "INSERT INTO `vdef` VALUES (7, 'c80d12b0f030af3574da68b28826cd39', '95th Percentage: Current Data Source');");
+
+	/* create new table VDEF_ITEMS */
+	db_install_execute("0.8.8", "CREATE TABLE vdef_items (
+  		id mediumint(8) unsigned NOT NULL auto_increment,
+  		hash varchar(32) NOT NULL default '',
+  		vdef_id mediumint(8) unsigned NOT NULL default 0,
+  		sequence mediumint(8) unsigned NOT NULL default 0,
+  		type tinyint(2) NOT NULL default 0,
+  		value varchar(150) NOT NULL default '',
+  		PRIMARY KEY  (id),
+  		KEY vdef_id (vdef_id)
+		) TYPE=MyISAM;");
+
+	/* fill table VDEF */
+	db_install_execute("0.8.8", "INSERT INTO `vdef_items` VALUES (1, '88d33bf9271ac2bdf490cf1784a342c1', 1, 1, 4, 'CURRENT_DATA_SOURCE');");
+	db_install_execute("0.8.8", "INSERT INTO `vdef_items` VALUES (2, 'a307afab0c9b1779580039e3f7c4f6e5', 1, 2, 1, '1');");
+	db_install_execute("0.8.8", "INSERT INTO `vdef_items` VALUES (3, '0945a96068bb57c80bfbd726cf1afa02', 2, 1, 4, 'CURRENT_DATA_SOURCE');");
+	db_install_execute("0.8.8", "INSERT INTO `vdef_items` VALUES (4, '95a8df2eac60a89e8a8ca3ea3d019c44', 2, 2, 1, '2');");
+	db_install_execute("0.8.8", "INSERT INTO `vdef_items` VALUES (5, 'cc2e1c47ec0b4f02eb13708cf6dac585', 3, 1, 4, 'CURRENT_DATA_SOURCE');");
+	db_install_execute("0.8.8", "INSERT INTO `vdef_items` VALUES (6, 'a2fd796335b87d9ba54af6a855689507', 3, 2, 1, '3');");
+	db_install_execute("0.8.8", "INSERT INTO `vdef_items` VALUES (7, 'a1d7974ee6018083a2053e0d0f7cb901', 4, 1, 4, 'CURRENT_DATA_SOURCE');");
+	db_install_execute("0.8.8", "INSERT INTO `vdef_items` VALUES (8, '26fccba1c215439616bc1b83637ae7f3', 4, 2, 1, '4');");
+	db_install_execute("0.8.8", "INSERT INTO `vdef_items` VALUES (9, 'a8993b265f4c5398f4a47c44b5b37a07', 5, 1, 4, 'CURRENT_DATA_SOURCE');");
+	db_install_execute("0.8.8", "INSERT INTO `vdef_items` VALUES (10, '5a380d469d611719057c3695ce1e4eee', 5, 2, 1, '5');");
+	db_install_execute("0.8.8", "INSERT INTO `vdef_items` VALUES (11, '65cfe546b17175fad41fcca98c057feb', 6, 1, 4, 'CURRENT_DATA_SOURCE');");
+	db_install_execute("0.8.8", "INSERT INTO `vdef_items` VALUES (12, 'f330b5633c3517d7c62762cef091cc9e', 6, 2, 1, '6');");
+	db_install_execute("0.8.8", "INSERT INTO `vdef_items` VALUES (13, 'f1bf2ecf54ca0565cf39c9c3f7e5394b', 7, 1, 4, 'CURRENT_DATA_SOURCE');");
+	db_install_execute("0.8.8", "INSERT INTO `vdef_items` VALUES (14, '11a26f18feba3919be3af426670cba95', 7, 2, 6, '95');");
+	db_install_execute("0.8.8", "INSERT INTO `vdef_items` VALUES (15, 'e7ae90275bc1efada07c19ca3472d9db', 7, 3, 1, '7');");
 }
 

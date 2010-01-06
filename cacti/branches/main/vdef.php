@@ -24,11 +24,11 @@
 
 include("./include/auth.php");
 include_once(CACTI_BASE_PATH . "/lib/utility.php");
-include_once(CACTI_BASE_PATH . "/lib/cdef.php");
+include_once(CACTI_BASE_PATH . "/lib/vdef.php");
 
 define("MAX_DISPLAY_PAGES", 21);
 
-$cdef_actions = array(
+$vdef_actions = array(
 	1 => __("Delete"),
 	2 => __("Duplicate")
 	);
@@ -36,7 +36,7 @@ $cdef_actions = array(
 /* set default action */
 if (!isset($_REQUEST["action"])) { $_REQUEST["action"] = ""; }
 
-switch (get_request_var_request("action")) {
+switch ($_REQUEST["action"]) {
 	case 'save':
 		form_save();
 
@@ -48,7 +48,7 @@ switch (get_request_var_request("action")) {
 	case 'item_remove':
 		item_remove();
 
-		header("Location: cdef.php?action=edit&id=" . $_GET["cdef_id"]);
+		header("Location: vdef.php?action=edit&id=" . $_GET["vdef_id"]);
 		break;
 	case 'item_edit':
 		include_once(CACTI_BASE_PATH . "/include/top_header.php");
@@ -58,21 +58,21 @@ switch (get_request_var_request("action")) {
 		include_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
 		break;
 	case 'remove':
-		cdef_remove();
+		vdef_remove();
 
-		header ("Location: cdef.php");
+		header ("Location: vdef.php");
 		break;
 	case 'edit':
 		include_once(CACTI_BASE_PATH . "/include/top_header.php");
 
-		cdef_edit();
+		vdef_edit();
 
 		include_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
 		break;
 	default:
 		include_once(CACTI_BASE_PATH . "/include/top_header.php");
 
-		cdef();
+		vdef();
 
 		include_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
 		break;
@@ -82,11 +82,11 @@ switch (get_request_var_request("action")) {
     Global Form Functions
    -------------------------- */
 
-function draw_cdef_preview($cdef_id) {
+function draw_vdef_preview($vdef_id) {
 	global $colors; ?>
-	<tr>
+	<tr bgcolor='#<?php print $colors["panel"];?>'>
 		<td>
-			<pre>cdef=<?php print get_cdef($cdef_id, true);?></pre>
+			<pre>vdef=<?php print get_vdef($vdef_id, true);?></pre>
 		</td>
 	</tr>
 <?php }
@@ -97,15 +97,15 @@ function draw_cdef_preview($cdef_id) {
    -------------------------- */
 
 function form_save() {
-	if (isset($_POST["save_component_cdef"])) {
-		$save["id"]   = $_POST["id"];
-		$save["hash"] = get_hash_cdef($_POST["id"]);
+	if (isset($_POST["save_component_vdef"])) {
+		$save["id"] = $_POST["id"];
+		$save["hash"] = get_hash_vdef($_POST["id"]);
 		$save["name"] = form_input_validate($_POST["name"], "name", "", false, 3);
 
 		if (!is_error_message()) {
-			$cdef_id = sql_save($save, "cdef");
+			$vdef_id = sql_save($save, "vdef");
 
-			if ($cdef_id) {
+			if ($vdef_id) {
 				raise_message(1);
 			}else{
 				raise_message(2);
@@ -113,25 +113,24 @@ function form_save() {
 		}
 
 		if ((is_error_message()) || (empty($_POST["id"]))) {
-			header("Location: cdef.php?action=edit&id=" . (empty($cdef_id) ? $_POST["id"] : $cdef_id));
+			header("Location: vdef.php?action=edit&id=" . (empty($vdef_id) ? $_POST["id"] : $vdef_id));
 		}else{
-			header("Location: cdef.php");
+			header("Location: vdef.php");
 		}
-		exit;
 	}elseif (isset($_POST["save_component_item"])) {
-		$sequence = get_sequence($_POST["id"], "sequence", "cdef_items", "cdef_id=" . $_POST["cdef_id"]);
+		$sequence = get_sequence($_POST["id"], "sequence", "vdef_items", "vdef_id=" . $_POST["vdef_id"]);
 
-		$save["id"]       = $_POST["id"];
-		$save["hash"]     = get_hash_cdef($_POST["id"], "cdef_item");
-		$save["cdef_id"]  = $_POST["cdef_id"];
-		$save["sequence"] = $sequence;
-		$save["type"]     = $_POST["type"];
-		$save["value"]    = $_POST["value"];
+		$save["id"] 		= $_POST["id"];
+		$save["hash"] 		= get_hash_vdef($_POST["id"], "vdef_item");
+		$save["vdef_id"] 	= $_POST["vdef_id"];
+		$save["sequence"] 	= $sequence;
+		$save["type"] 		= $_POST["type"];
+		$save["value"] 		= $_POST["value"];
 
 		if (!is_error_message()) {
-			$cdef_item_id = sql_save($save, "cdef_items");
+			$vdef_item_id = sql_save($save, "vdef_items");
 
-			if ($cdef_item_id) {
+			if ($vdef_item_id) {
 				raise_message(1);
 			}else{
 				raise_message(2);
@@ -139,11 +138,10 @@ function form_save() {
 		}
 
 		if (is_error_message()) {
-			header("Location: cdef.php?action=item_edit&cdef_id=" . $_POST["cdef_id"] . "&id=" . (empty($cdef_item_id) ? $_POST["id"] : $cdef_item_id));
+			header("Location: vdef.php?action=item_edit&vdef_id=" . $_POST["vdef_id"] . "&id=" . (empty($vdef_item_id) ? $_POST["id"] : $vdef_item_id));
 		}else{
-			header("Location: cdef.php?action=edit&id=" . $_POST["cdef_id"]);
+			header("Location: vdef.php?action=edit&id=" . $_POST["vdef_id"]);
 		}
-		exit;
 	}
 }
 
@@ -152,7 +150,7 @@ function form_save() {
    ------------------------ */
 
 function form_actions() {
-	global $colors, $cdef_actions;
+	global $colors, $vdef_actions;
 
 	/* if we are to save this form, instead of display it */
 	if (isset($_POST["selected_items"])) {
@@ -161,33 +159,33 @@ function form_actions() {
 		if (get_request_var_post("drp_action") == "1") { /* delete */
 			/* do a referential integrity check */
 			if (sizeof($selected_items)) {
-			foreach($selected_items as $cdef_id) {
+			foreach($selected_items as $vdef_id) {
 				/* ================= input validation ================= */
-				input_validate_input_number($cdef_id);
+				input_validate_input_number($vdef_id);
 				/* ==================================================== */
 
-				if (sizeof(db_fetch_assoc("SELECT * FROM graph_templates_item WHERE cdef_id=$cdef_id LIMIT 1"))) {
-					$bad_ids[] = $cdef_id;
+				if (sizeof(db_fetch_assoc("SELECT * FROM graph_templates_item WHERE vdef_id=$vdef_id LIMIT 1"))) {
+					$bad_ids[] = $vdef_id;
 				}else{
-					$cdef_ids[] = $cdef_id;
+					$vdef_ids[] = $vdef_id;
 				}
 			}
 			}
 
 			if (isset($bad_ids)) {
 				$message = "";
-				foreach($bad_ids as $cdef_id) {
-					$message .= (strlen($message) ? "<br>":"") . "<i>CDEF " . $cdef_id . " is in use and can not be removed</i>\n";
+				foreach($bad_ids as $vdef_id) {
+					$message .= (strlen($message) ? "<br>":"") . "<i>VDEF " . $vdef_id . " is in use and can not be removed</i>\n";
 				}
 
-				$_SESSION['sess_message_cdef_ref_int'] = array('message' => "<font size=-2>$message</font>", 'type' => 'info');
+				$_SESSION['sess_message_vdef_ref_int'] = array('message' => "<font size=-2>$message</font>", 'type' => 'info');
 
-				raise_message('cdef_ref_int');
+				raise_message('vdef_ref_int');
 			}
 
-			if (isset($cdef_ids)) {
-				db_execute("delete from cdef where " . array_to_sql_or($cdef_ids, "id"));
-				db_execute("delete from cdef_items where " . array_to_sql_or($cdef_ids, "cdef_id"));
+			if (isset($vdef_ids)) {
+				db_execute("delete from vdef where " . array_to_sql_or($vdef_ids, "id"));
+				db_execute("delete from vdef_items where " . array_to_sql_or($vdef_ids, "vdef_id"));
 			}
 		}elseif (get_request_var_post("drp_action") == "2") { /* duplicate */
 			for ($i=0;($i<count($selected_items));$i++) {
@@ -195,16 +193,16 @@ function form_actions() {
 				input_validate_input_number($selected_items[$i]);
 				/* ==================================================== */
 
-				duplicate_cdef($selected_items[$i], get_request_var_post("title_format"));
+				duplicate_vdef($selected_items[$i], get_request_var_post("title_format"));
 			}
 		}
 
-		header("Location: cdef.php");
+		header("Location: vdef.php");
 		exit;
 	}
 
 	/* setup some variables */
-	$cdef_list = ""; $i = 0;
+	$vdef_list = ""; $i = 0;
 
 	/* loop through each of the graphs selected on the previous page and get more info about them */
 	while (list($var,$val) = each($_POST)) {
@@ -213,8 +211,8 @@ function form_actions() {
 			input_validate_input_number($matches[1]);
 			/* ==================================================== */
 
-			$cdef_list .= "<li>" . db_fetch_cell("select name from cdef where id=" . $matches[1]) . "<br>";
-			$cdef_array[$i] = $matches[1];
+			$vdef_list .= "<li>" . db_fetch_cell("select name from vdef where id=" . $matches[1]) . "<br>";
+			$vdef_array[$i] = $matches[1];
 		}
 
 		$i++;
@@ -222,11 +220,11 @@ function form_actions() {
 
 	include_once("./include/top_header.php");
 
-	html_start_box("<strong>" . $cdef_actions{get_request_var_post("drp_action")} . "</strong>", "60", $colors["header_panel"], "3", "center", "");
+	html_start_box("<strong>" . $vdef_actions{get_request_var_post("drp_action")} . "</strong>", "60", $colors["header_panel"], "3", "center", "");
 
-	print "<form action='cdef.php' method='post'>\n";
+	print "<form action='vdef.php' method='post'>\n";
 
-	if (isset($cdef_array)) {
+	if (isset($vdef_array)) {
 		if (get_request_var_post("drp_action") == ACTION_NONE) { /* NONE */
 			print "	<tr>
 						<td class='textArea'>
@@ -236,33 +234,33 @@ function form_actions() {
 		}elseif (get_request_var_post("drp_action") == "1") { /* delete */
 			print "	<tr>
 					<td class='textArea' bgcolor='#" . $colors["form_alternate1"]. "'>
-						<p>" . __("Are you sure you want to delete the following CDEFs?") . "</p>
-						<p><ul>$cdef_list</ul></p>
+						<p>" . __("Are you sure you want to delete the following VDEFs?") . "</p>
+						<p><ul>$vdef_list</ul></p>
 					</td>
 				</tr>\n
 				";
 		}elseif (get_request_var_post("drp_action") == "2") { /* duplicate */
 			print "	<tr>
 					<td class='textArea' bgcolor='#" . $colors["form_alternate1"]. "'>
-						<p>" . __("When you click save, the following CDEFs will be duplicated. You can optionally change the title format for the new CDEFs.") . "</p>
-						<p><ul>$cdef_list</ul></p>
-						<p><strong>" . __("Title Format:") . "</strong><br>"; form_text_box("title_format", "<cdef_title> (1)", "", "255", "30", "text"); print "</p>
+						<p>" . __("When you click save, the following VDEFs will be duplicated. You can optionally change the title format for the new VDEFs.") . "</p>
+						<p><ul>$vdef_list</ul></p>
+						<p><strong>" . __("Title Format:") . "</strong><br>"; form_text_box("title_format", "<vdef_title> (1)", "", "255", "30", "text"); print "</p>
 					</td>
 				</tr>\n
 				";
 		}
 	}else{
-		print "<tr><td bgcolor='#" . $colors["form_alternate1"]. "'><span class='textError'>" . __("You must select at least one CDEF.") . "</span></td></tr>\n";
+		print "<tr><td bgcolor='#" . $colors["form_alternate1"]. "'><span class='textError'>" . __("You must select at least one VDEF.") . "</span></td></tr>\n";
 	}
 
 	print "<div><input type='hidden' name='action' value='actions'></div>";
-	print "<div><input type='hidden' name='selected_items' value='" . (isset($cdef_array) ? serialize($cdef_array) : '') . "'></div>";
+	print "<div><input type='hidden' name='selected_items' value='" . (isset($vdef_array) ? serialize($vdef_array) : '') . "'></div>";
 	print "<div><input type='hidden' name='drp_action' value='" . $_POST["drp_action"] . "'></div>";
 
-	if (!isset($cdef_array) || get_request_var_post("drp_action") == ACTION_NONE) {
+	if (!isset($vdef_array) || get_request_var_post("drp_action") == ACTION_NONE) {
 		form_return_button_alt();
 	}else{
-		form_yesno_button_alt(serialize($cdef_array), get_request_var_post("drp_action"));
+		form_yesno_button_alt(serialize($vdef_array), get_request_var_post("drp_action"));
 	}
 
 	html_end_box();
@@ -271,86 +269,85 @@ function form_actions() {
 }
 
 /* --------------------------
-    CDEF Item Functions
+    VDEF Item Functions
    -------------------------- */
 
 function item_remove() {
 	/* ================= input validation ================= */
 	input_validate_input_number(get_request_var("id"));
-	input_validate_input_number(get_request_var("cdef_id"));
+	input_validate_input_number(get_request_var("vdef_id"));
 	/* ==================================================== */
 
-	db_execute("delete from cdef_items where id=" . $_GET["id"]);
+	db_execute("delete from vdef_items where id=" . get_request_var("vdef_id"));
 }
 
 function item_edit() {
-	global $colors, $cdef_item_types, $cdef_functions, $cdef_operators, $custom_data_source_types;
+	global $colors, $vdef_item_types, $vdef_functions, $vdef_operators, $custom_vdef_data_source_types;
 
 	/* ================= input validation ================= */
 	input_validate_input_number(get_request_var("id"));
-	input_validate_input_number(get_request_var("cdef_id"));
+	input_validate_input_number(get_request_var("vdef_id"));
 	/* ==================================================== */
 
-	if (!empty($_GET["id"])) {
-		$cdef = db_fetch_row("select * from cdef_items where id=" . $_GET["id"]);
-		$current_type = $cdef["type"];
-		$values[$current_type] = $cdef["value"];
+	if (!empty($_GET["vdef_id"])) {
+		$vdef = db_fetch_row("select * from vdef_items where id=" . get_request_var("vdef_id"));
+		$current_type = $vdef["type"];
+		$values[$current_type] = $vdef["value"];
 	}
 
 	html_start_box("", "100", "aaaaaa", "3", "center", "");
-	draw_cdef_preview(get_request_var("cdef_id"));
+	draw_vdef_preview(get_request_var("vdef_id"));
 	html_end_box();
 
-	print "<form action='cdef.php' name='form_cdef' method='post'>\n";
-	html_start_box("<strong>" . __("CDEF Items") . "</strong> [edit: " . db_fetch_cell("select name from cdef where id=" . $_GET["cdef_id"]) . "]", "100", $colors["header"], "3", "center", "");
+	print "<form action='vdef.php' name='form_vdef' method='post'>\n";
+	html_start_box("<strong>VDEF Items</strong> [edit: " . db_fetch_cell("select name from vdef where id=" . get_request_var("vdef_id")) . "]", "98%", $colors["header"], "3", "center", "");
 
 	if (isset($_GET["type_select"])) {
 		$current_type = $_GET["type_select"];
-	}elseif (isset($cdef["type"])) {
-		$current_type = $cdef["type"];
+	}elseif (isset($vdef["type"])) {
+		$current_type = $vdef["type"];
 	}else{
 		$current_type = CVDEF_ITEM_TYPE_FUNCTION;
 	}
-
-	form_alternate_row_color("cdef_item_type"); ?>
+	form_alternate_row_color("vdef_item_type"); ?>
 		<td width="50%">
-			<font class="textEditTitle"><?php print __("CDEF Item Type");?></font><br>
-			<?php print __("Choose what type of CDEF item this is.");?>
+			<font class="textEditTitle"><?php print __("VDEF Item Type");?></font><br>
+			<?php print __("Choose what type of VDEF item this is.");?>
 		</td>
 		<td>
-			<select name="type_select" onChange="window.location=document.form_cdef.type_select.options[document.form_cdef.type_select.selectedIndex].value">
+			<select name="type_select" onChange="window.location=document.form_vdef.type_select.options[document.form_vdef.type_select.selectedIndex].value">
 				<?php
-				while (list($var, $val) = each($cdef_item_types)) {
-					print "<option value='" . htmlspecialchars("cdef.php?action=item_edit" . (isset($_GET["id"]) ? "&id=" . $_GET["id"] : "") . "&cdef_id=" . $_GET["cdef_id"] . "&type_select=$var") . "'"; if ($var == $current_type) { print " selected"; } print ">$val</option>\n";
+				while (list($var, $val) = each($vdef_item_types)) {
+					print "<option value='" . htmlspecialchars("vdef.php?action=item_edit" . (isset($_GET["id"]) ? "&id=" . get_request_var("id") : "") . "&vdef_id=" . $_GET["vdef_id"] . "&type_select=$var") . "'"; if ($var == $current_type) { print " selected"; } print ">$val</option>\n";
 				}
 				?>
 			</select>
 		</td>
 	<?php
 	form_end_row();
-	form_alternate_row_color("cdef_item_value");
+	form_alternate_row_color("vdef_item_value");
 	?>
 		<td width="50%">
-			<font class="textEditTitle"><?php print __("CDEF Item Value");?></font><br>
-			<?php print __("Enter a value for this CDEF item.");?>
+			<font class="textEditTitle"><?php print __("VDEF Item Value");?></font><br>
+			<?php print __("Enter a value for this VDEF item.");?>
 		</td>
 		<td>
 			<?php
 			switch ($current_type) {
 			case '1':
-				form_dropdown("value", $cdef_functions, "", "", (isset($cdef["value"]) ? $cdef["value"] : ""), "", "");
+				form_dropdown("value", $vdef_functions, "", "", (isset($vdef["value"]) ? $vdef["value"] : ""), "", "");
 				break;
-			case '2':
-				form_dropdown("value", $cdef_operators, "", "", (isset($cdef["value"]) ? $cdef["value"] : ""), "", "");
-				break;
+#			case '2':
+#				form_dropdown("value", $vdef_operators, "", "", (isset($vdef["value"]) ? $vdef["value"] : ""), "", "");
+#				break;
 			case '4':
-				form_dropdown("value", $custom_data_source_types, "", "", (isset($cdef["value"]) ? $cdef["value"] : ""), "", "");
+				form_dropdown("value", $custom_vdef_data_source_types, "", "", (isset($vdef["value"]) ? $vdef["value"] : ""), "", "");
 				break;
-			case '5':
-				form_dropdown("value", db_fetch_assoc("select name,id from cdef order by name"), "name", "id", (isset($cdef["value"]) ? $cdef["value"] : ""), "", "");
-				break;
+#			case '5':
+#				form_dropdown("value", db_fetch_assoc("select name,id from vdef order by name"), "name", "id", (isset($vdef["value"]) ? $vdef["value"] : ""), "", "");
+#				break;
 			case '6':
-				form_text_box("value", (isset($cdef["value"]) ? $cdef["value"] : ""), "", "255", 60, "text", (isset($_GET["id"]) ? $_GET["id"] : "0"));
+				form_text_box("value", (isset($vdef["value"]) ? $vdef["value"] : ""), "", "255", 30, "text", (isset($_GET["id"]) ? get_request_var("id") : "0"));
 				break;
 			}
 			?>
@@ -360,59 +357,60 @@ function item_edit() {
 
 	html_end_box();
 
-	form_hidden_box("id", (isset($_GET["id"]) ? $_GET["id"] : "0"), "");
+	form_hidden_box("id", (isset($_GET["id"]) ? get_request_var("id") : "0"), "");
 	form_hidden_box("type", $current_type, "");
-	form_hidden_box("cdef_id", get_request_var("cdef_id"), "");
+	form_hidden_box("vdef_id", $_GET["vdef_id"], "");
 	form_hidden_box("save_component_item", "1", "");
 
-	form_save_button_alt("path!cdef.php|action!edit|id!" . get_request_var("cdef_id"));
+	form_save_button_alt("path!vdef.php|action!edit|id!" . get_request_var("vdef_id"));
 }
 
 /* ---------------------
-    CDEF Functions
+    VDEF Functions
    --------------------- */
 
-function cdef_remove() {
+function vdef_remove() {
 	/* ================= input validation ================= */
 	input_validate_input_number(get_request_var("id"));
 	/* ==================================================== */
 
 	if ((read_config_option("deletion_verification") == CHECKED) && (!isset($_GET["confirm"]))) {
 		include(CACTI_BASE_PATH . "/include/top_header.php");
-		form_confirm(__("Are You Sure?"), __("Are you sure you want to delete the CDEF") . " <strong>'" . db_fetch_cell("select name from cdef where id=" . $_GET["id"]) . "'</strong>?", "cdef.php", "cdef.php?action=remove&id=" . $_GET["id"]);
+		form_confirm("Are You Sure?", "Are you sure you want to delete the VDEF <strong>'" . db_fetch_cell("select name from vdef where id=" . get_request_var("id")) . "'</strong>?", "vdef.php", "vdef.php?action=remove&id=" . get_request_var("id"));
 		include(CACTI_BASE_PATH . "/include/bottom_footer.php");
 		exit;
 	}
 
 	if ((read_config_option("deletion_verification") == "") || (isset($_GET["confirm"]))) {
-		db_execute("delete from cdef where id=" . $_GET["id"]);
-		db_execute("delete from cdef_items where cdef_id=" . $_GET["id"]);
+		db_execute("delete from vdef where id=" . get_request_var("vdef_id"));
+		db_execute("delete from vdef_items where vdef_id=" . get_request_var("vdef_id"));
 	}
 }
 
-function cdef_edit() {
-	global $colors, $cdef_item_types, $fields_cdef_edit;
+function vdef_edit() {
+	global $colors, $vdef_item_types, $fields_vdef_edit;
 
 	/* ================= input validation ================= */
 	input_validate_input_number(get_request_var("id"));
 	/* ==================================================== */
+#print "<pre>GET: "; print_r($_GET); print "Request: "; print_r($_REQUEST); print get_request_var("id"); print "<pre>";
 
 	if (!empty($_GET["id"])) {
-		$cdef = db_fetch_row("select * from cdef where id=" . $_GET["id"]);
-		$header_label = __("[edit: ") . $cdef["name"] . "]";
+		$vdef = db_fetch_row("select * from vdef where id=" . get_request_var("id"));
+		$header_label = __("[edit: ") . $vdef["name"] . "]";
 	}else{
 		$header_label = __("[new]");
 	}
 
-	print "<form method='post' action='" .  basename($_SERVER["PHP_SELF"]) . "' name='cdef_edit'>\n";
-	html_start_box("<strong>". __("CDEF's") . "</strong> $header_label", "100", $colors["header"], 0, "center", "");
+	print "<form method='post' action='" .  basename($_SERVER["PHP_SELF"]) . "' name='vdef_edit'>\n";
+	html_start_box("<strong>". __("VDEF's") . "</strong> $header_label", "100", $colors["header"], 0, "center", "");
 	$header_items = array(__("Field"), __("Value"));
 	print "<tr><td>";
-	html_header($header_items, 2, false, 'header_cdef_edit','left wp100');
+	html_header($header_items, 2, false, 'header_vdef_edit','left wp100');
 
 	draw_edit_form(array(
 		"config" => array(),
-		"fields" => inject_form_variables($fields_cdef_edit, (isset($cdef) ? $cdef : array()))
+		"fields" => inject_form_variables($fields_vdef_edit, (isset($vdef) ? $vdef : array()))
 		));
 
 	print "</table></td></tr>";		/* end of html_header */
@@ -420,29 +418,28 @@ function cdef_edit() {
 
 	if (!empty($_GET["id"])) {
 		html_start_box("", "100", "aaaaaa", "3", "center", "");
-		draw_cdef_preview(get_request_var("id"));
+		draw_vdef_preview(get_request_var("id"));
 		html_end_box();
 
-		html_start_box("<strong>" . __("CDEF Items") . "</strong>", "100", $colors["header"], 0, "center", "cdef.php?action=item_edit&cdef_id=" . $cdef["id"], false, "cdef");
+		html_start_box("<strong>" . __("VDEF Items") . "</strong>", "100", $colors["header"], 0, "center", "vdef.php?action=item_edit&vdef_id=" . $vdef["id"], false, "vdef");
 		$header_items = array(__("Item"), __("Item Value"));
 		print "<tr><td>";
-		html_header($header_items, 2, true, 'cdef_item','left wp100');
+		html_header($header_items, 2, true, 'vdef_item','left wp100');
 
-		$cdef_items = db_fetch_assoc("select * from cdef_items where cdef_id=" . $_GET["id"] . " order by sequence");
-
+		$vdef_items = db_fetch_assoc("select * from vdef_items where vdef_id=" . get_request_var("id") . " order by sequence");
 		$i = 0;
-		if (sizeof($cdef_items) > 0) {
-			foreach ($cdef_items as $cdef_item) {
-				form_alternate_row_color($cdef_item["id"], true);
+		if (sizeof($vdef_items) > 0) {
+			foreach ($vdef_items as $vdef_item) {
+				form_alternate_row_color($vdef_item["id"], true);
 					?>
 					<td>
-						<a class="linkEditMain" href="<?php print htmlspecialchars("cdef.php?action=item_edit&id=" . $cdef_item["id"] . "&cdef_id=" . $cdef["id"]);?>">Item #<?php print $i;?></a>
+						<a class="linkEditMain" href="<?php print htmlspecialchars("vdef.php?action=item_edit&id=" . $vdef_item["id"] . "&vdef_id=" . $vdef["id"]);?>">Item #<?php print $i;?></a>
 					</td>
 					<td>
-						<em><?php $cdef_item_type = $cdef_item["type"]; print $cdef_item_types[$cdef_item_type];?></em>: <strong><?php print get_cdef_item_name($cdef_item["id"]);?></strong>
+						<em><?php $vdef_item_type = $vdef_item["type"]; print $vdef_item_types[$vdef_item_type];?></em>: <strong><?php print get_vdef_item_name($vdef_item["id"]);?></strong>
 					</td>
 					<td align="right">
-						<a href="<?php print htmlspecialchars("cdef.php?action=item_remove&id=" . $cdef_item["id"] . "&cdef_id=" . $cdef["id"]);?>"><img class="buttonSmall" src="images/delete_icon.gif" alt="<?php print __("Delete");?>" align='middle'></a>
+						<a href="<?php print htmlspecialchars("vdef.php?action=item_remove&id=" . $vdef_item["id"] . "&vdef_id=" . $vdef["id"]);?>"><img class="buttonSmall" src="images/delete_icon.gif" alt="<?php print __("Delete");?>" align='middle'></a>
 					</td>
 			<?php
 			form_end_row();
@@ -452,12 +449,12 @@ function cdef_edit() {
 		print "</table></td></tr>";		/* end of html_header */
 		html_end_box();
 	}
-	form_save_button_alt("path!cdef.php");
+	form_save_button_alt("path!vdef.php");
 ?>
 <script type="text/javascript">
-	$('#cdef_item').tableDnD({
+	$('#vdef_item').tableDnD({
 		onDrop: function(table, row) {
-			$('#AjaxResult').load("lib/ajax/jquery.tablednd/cdef.ajax.php?id=<?php isset($_GET["id"]) ? print $_GET["id"] : print 0;?>&"+$.tableDnD.serialize());
+			$('#AjaxResult').load("lib/ajax/jquery.tablednd/vdef.ajax.php?id=<?php isset($_GET["id"]) ? print get_request_var("id") : print 0;?>&"+$.tableDnD.serialize());
 		}
 	});
 </script>
@@ -465,8 +462,8 @@ function cdef_edit() {
 
 }
 
-function cdef() {
-	global $colors, $cdef_actions, $item_rows;
+function vdef() {
+	global $colors, $vdef_actions, $item_rows;
 
 	/* ================= input validation ================= */
 	input_validate_input_number(get_request_var_request("page"));
@@ -490,11 +487,11 @@ function cdef() {
 
 	/* if the user pushed the 'clear' button */
 	if (isset($_REQUEST["clear_x"])) {
-		kill_session_var("sess_cdef_current_page");
-		kill_session_var("sess_cdef_rows");
-		kill_session_var("sess_cdef_filter");
-		kill_session_var("sess_cdef_sort_column");
-		kill_session_var("sess_cdef_sort_direction");
+		kill_session_var("sess_vdef_current_page");
+		kill_session_var("sess_vdef_rows");
+		kill_session_var("sess_vdef_filter");
+		kill_session_var("sess_vdef_sort_column");
+		kill_session_var("sess_vdef_sort_direction");
 
 		unset($_REQUEST["page"]);
 		unset($_REQUEST["rows"]);
@@ -517,17 +514,17 @@ function cdef() {
 	<?php
 
 	/* remember these search fields in session vars so we don't have to keep passing them around */
-	load_current_session_value("page", "sess_cdef_current_page", "1");
-	load_current_session_value("rows", "sess_cdef_rows", "-1");
-	load_current_session_value("filter", "sess_cdef_filter", "");
-	load_current_session_value("sort_column", "sess_cdef_sort_column", "name");
-	load_current_session_value("sort_direction", "sess_cdef_sort_direction", "ASC");
+	load_current_session_value("page", "sess_vdef_current_page", "1");
+	load_current_session_value("rows", "sess_vdef_rows", "-1");
+	load_current_session_value("filter", "sess_vdef_filter", "");
+	load_current_session_value("sort_column", "sess_vdef_sort_column", "name");
+	load_current_session_value("sort_direction", "sess_vdef_sort_direction", "ASC");
 
-	html_start_box("<strong>" . __("CDEF's") . "</strong>", "100", $colors["header"], "3", "center", "cdef.php?action=edit", true);
+	html_start_box("<strong>" . __("VDEF's") . "</strong>", "100", $colors["header"], "3", "center", "vdef.php?action=edit", true);
 	?>
 	<tr class='rowAlternate2'>
 		<td>
-			<form name="form_cdef" action="cdef.php">
+			<form name="form_vdef" action="vdef.php">
 			<table cellpadding="0" cellspacing="3">
 				<tr>
 					<td class="nw50">
@@ -540,7 +537,7 @@ function cdef() {
 						&nbsp;<?php print __("Rows:");?>&nbsp;
 					</td>
 					<td class="w1">
-						<select name="rows" onChange="applyFilterChange(document.form_cdef)">
+						<select name="rows" onChange="applyFilterChange(document.form_vdef)">
 							<option value="-1"<?php if (get_request_var_request("rows") == "-1") {?> selected<?php }?>>Default</option>
 							<?php
 							if (sizeof($item_rows) > 0) {
@@ -565,13 +562,13 @@ function cdef() {
 	html_end_box(false);
 
 	/* form the 'where' clause for our main sql query */
-	$sql_where = "WHERE (cdef.name LIKE '%%" . $_REQUEST["filter"] . "%%')";
+	$sql_where = "WHERE (vdef.name LIKE '%%" . $_REQUEST["filter"] . "%%')";
 
 	html_start_box("", "100", $colors["header"], "0", "center", "");
 
 	$total_rows = db_fetch_cell("SELECT
-		COUNT(cdef.id)
-		FROM cdef
+		COUNT(vdef.id)
+		FROM vdef
 		$sql_where");
 
 	if (get_request_var_request("rows") == "-1") {
@@ -580,29 +577,29 @@ function cdef() {
 		$rows = get_request_var_request("rows");
 	}
 
-	$cdef_list = db_fetch_assoc("SELECT
-		cdef.id,cdef.name
-		FROM cdef
+	$vdef_list = db_fetch_assoc("SELECT
+		vdef.id,vdef.name
+		FROM vdef
 		$sql_where
 		ORDER BY " . get_request_var_request('sort_column') . " " . get_request_var_request('sort_direction') .
 		" LIMIT " . ($rows*(get_request_var_request("page")-1)) . "," . $rows);
 
 	/* generate page list navigation */
-	$nav = html_create_nav($_REQUEST["page"], MAX_DISPLAY_PAGES, $rows, $total_rows, 11, "cdef.php?filter=" . $_REQUEST["filter"]);
+	$nav = html_create_nav($_REQUEST["page"], MAX_DISPLAY_PAGES, $rows, $total_rows, 11, "vdef.php?filter=" . $_REQUEST["filter"]);
 
 	print $nav;
 	html_end_box(false);
 
 	$display_text = array(
-		"name" => array(__("CDEF Title"), "ASC"));
+		"name" => array(__("VDEF Title"), "ASC"));
 
 	html_header_sort_checkbox($display_text, get_request_var_request("sort_column"), get_request_var_request("sort_direction"));
 
-	if (sizeof($cdef_list) > 0) {
-		foreach ($cdef_list as $cdef) {
-			form_alternate_row_color('line' . $cdef["id"], true);
-			form_selectable_cell("<a class='linkEditMain' href='" . htmlspecialchars("cdef.php?action=edit&id=" . $cdef["id"]) . "'>" . (strlen($_REQUEST["filter"]) ? preg_replace("/(" . preg_quote($_REQUEST["filter"]) . ")/i", "<span class=\"filter\">\\1</span>", $cdef["name"]) : $cdef["name"]) . "</a>", $cdef["id"]);
-			form_checkbox_cell($cdef["name"], $cdef["id"]);
+	if (sizeof($vdef_list) > 0) {
+		foreach ($vdef_list as $vdef) {
+			form_alternate_row_color('line' . $vdef["id"], true);
+			form_selectable_cell("<a class='linkEditMain' href='" . htmlspecialchars("vdef.php?action=edit&id=" . $vdef["id"]) . "'>" . (strlen($_REQUEST["filter"]) ? preg_replace("/(" . preg_quote($_REQUEST["filter"]) . ")/i", "<span class=\"filter\">\\1</span>", $vdef["name"]) : $vdef["name"]) . "</a>", $vdef["id"]);
+			form_checkbox_cell($vdef["name"], $vdef["id"]);
 			form_end_row();
 		}
 
@@ -610,12 +607,12 @@ function cdef() {
 
 		print $nav;
 	}else{
-		print "<tr><td><em>" . __("No CDEF's") . "</em></td></tr>\n";
+		print "<tr><td><em>" . __("No VDEF's") . "</em></td></tr>\n";
 	}
 
 	print "</table>\n";	# end table of html_header_sort_checkbox
 
 	/* draw the dropdown containing a list of available actions for this form */
-	draw_actions_dropdown($cdef_actions);
+	draw_actions_dropdown($vdef_actions);
 	print "</form>\n";	# end form of html_header_sort_checkbox
 }

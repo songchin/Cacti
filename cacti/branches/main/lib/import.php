@@ -85,6 +85,9 @@ function import_xml_data(&$xml_data, $import_custom_rra_settings) {
 				case 'cdef':
 					$hash_cache += xml_to_cdef($dep_hash_cache[$type][$i]["hash"], $hash_array, $hash_cache);
 					break;
+				case 'vdef':
+					$hash_cache += xml_to_vdef($dep_hash_cache[$type][$i]["hash"], $hash_array, $hash_cache);
+					break;
 				case 'xaxis':
 					$hash_cache += xml_to_xaxis($dep_hash_cache[$type][$i]["hash"], $hash_array, $hash_cache);
 					break;
@@ -699,6 +702,69 @@ function xml_to_cdef($hash, &$xml_array, &$hash_cache) {
 	return $hash_cache;
 }
 
+function xml_to_vdef($hash, &$xml_array, &$hash_cache) {
+	global $fields_vdef_edit;
+
+	$fields_vdef_item_edit = array(
+		"sequence" => "sequence",
+		"type" => "type",
+		"value" => "value"
+		);
+
+	/* import into: vdef */
+	$_vdef_id = db_fetch_cell("select id from vdef where hash='$hash'");
+	$save["id"] = (empty($_vdef_id) ? "0" : $_vdef_id);
+	$save["hash"] = $hash;
+
+	reset($fields_vdef_edit);
+	while (list($field_name, $field_array) = each($fields_vdef_edit)) {
+		/* make sure this field exists in the xml array first */
+		if (isset($xml_array[$field_name])) {
+			$save[$field_name] = addslashes(xml_character_decode($xml_array[$field_name]));
+		}
+	}
+
+	$vdef_id = sql_save($save, "vdef");
+
+	$hash_cache["vdef"][$hash] = $vdef_id;
+
+	/* import into: vdef_items */
+	if (is_array($xml_array["items"])) {
+		while (list($item_hash, $item_array) = each($xml_array["items"])) {
+			/* parse information from the hash */
+			$parsed_hash = parse_xml_hash($item_hash);
+
+			/* invalid/wrong hash */
+			if ($parsed_hash == false) { return false; }
+
+			unset($save);
+			$_vdef_item_id = db_fetch_cell("select id from vdef_items where hash='" . $parsed_hash["hash"] . "' and vdef_id=$vdef_id");
+			$save["id"] = (empty($_vdef_item_id) ? "0" : $_vdef_item_id);
+			$save["hash"] = $parsed_hash["hash"];
+			$save["vdef_id"] = $vdef_id;
+
+			reset($fields_vdef_item_edit);
+			while (list($field_name, $field_array) = each($fields_vdef_item_edit)) {
+				/* make sure this field exists in the xml array first */
+				if (isset($item_array[$field_name])) {
+					$save[$field_name] = addslashes(xml_character_decode($item_array[$field_name]));
+				}
+			}
+
+			$vdef_item_id = sql_save($save, "vdef_items");
+
+			$hash_cache["vdef_item"]{$parsed_hash["hash"]} = $vdef_item_id;
+		}
+	}
+
+	/* status information that will be presented to the user */
+	$_SESSION["import_debug_info"]["type"] = (empty($_vdef_id) ? "new" : "update");
+	$_SESSION["import_debug_info"]["title"] = $xml_array["name"];
+	$_SESSION["import_debug_info"]["result"] = (empty($vdef_id) ? "fail" : "success");
+
+	return $hash_cache;
+}
+
 function xml_to_xaxis($hash, &$xml_array, &$hash_cache) {
 	global $fields_xaxis_edit, $fields_xaxis_item_edit;
 
@@ -860,6 +926,8 @@ function hash_to_friendly_name($hash, $display_type_name) {
 		return $prepend . db_fetch_cell("select name from graph_templates_gprint where hash='" . $parsed_hash["hash"] . "'");
 	case 'cdef':
 		return $prepend . db_fetch_cell("select name from cdef where hash='" . $parsed_hash["hash"] . "'");
+	case 'vdef':
+		return $prepend . db_fetch_cell("select name from vdef where hash='" . $parsed_hash["hash"] . "'");
 	case 'round_robin_archive':
 		return $prepend . db_fetch_cell("select name from rra where hash='" . $parsed_hash["hash"] . "'");
 	}

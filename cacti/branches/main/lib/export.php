@@ -68,6 +68,8 @@ function graph_template_to_xml($graph_template_id) {
 				$xml_text .= "\t\t\t<$field_name>hash_" . get_hash_version("data_template_item") . get_hash_data_template($item{$field_name}, "data_template_item") . "</$field_name>\n";
 			}elseif (($field_name == "cdef_id") && (!empty($item{$field_name}))) {
 				$xml_text .= "\t\t\t<$field_name>hash_" . get_hash_version("cdef") . get_hash_cdef($item{$field_name}) . "</$field_name>\n";
+			}elseif (($field_name == "vdef_id") && (!empty($item{$field_name}))) {
+				$xml_text .= "\t\t\t<$field_name>hash_" . get_hash_version("vdef") . get_hash_vdef($item{$field_name}) . "</$field_name>\n";
 			}elseif (($field_name == "gprint_id") && (!empty($item{$field_name}))) {
 				$xml_text .= "\t\t\t<$field_name>hash_" . get_hash_version("gprint_preset") . get_hash_gprint($item{$field_name}) . "</$field_name>\n";
 			}elseif (($field_name == "color_id") && (!empty($item{$field_name}))) {
@@ -363,6 +365,66 @@ function cdef_to_xml($cdef_id) {
 
 	$xml_text .= "\t</items>\n";
 	$xml_text .= "</hash_" . $hash["cdef"] . ">";
+
+	return $xml_text;
+}
+
+function vdef_to_xml($vdef_id) {
+	global $fields_vdef_edit;
+
+	$fields_vdef_item_edit = array(
+		"sequence" => "sequence",
+		"type" => "type",
+		"value" => "value"
+		);
+
+	$hash["vdef"] = get_hash_version("vdef") . get_hash_vdef($vdef_id);
+	$xml_text = "";
+
+	$vdef = db_fetch_row("select * from vdef where id=$vdef_id");
+	$vdef_items = db_fetch_assoc("select * from vdef_items where vdef_id=$vdef_id order by sequence");
+
+	if (empty($vdef["id"])) {
+		$err_msg = "Invalid VDEF.";
+		return $err_msg;
+	}
+
+	$xml_text .= "<hash_" . $hash["vdef"] . ">\n";
+
+	/* XML Branch: <> */
+	reset($fields_vdef_edit);
+	while (list($field_name, $field_array) = each($fields_vdef_edit)) {
+		if (($field_array["method"] != "hidden_zero") && ($field_array["method"] != "hidden") && ($field_array["method"] != "spacer")) {
+			$xml_text .= "\t<$field_name>" . xml_character_encode($vdef{$field_name}) . "</$field_name>\n";
+		}
+	}
+
+	/* XML Branch: <items> */
+
+	$xml_text .= "\t<items>\n";
+
+	$i = 0;
+	if (sizeof($vdef_items) > 0) {
+	foreach ($vdef_items as $item) {
+		$hash["vdef_item"] = get_hash_version("vdef_item") . get_hash_vdef($item["id"], "vdef_item");
+
+		$xml_text .= "\t\t<hash_" . $hash["vdef_item"] . ">\n";
+
+		reset($fields_vdef_item_edit);
+		while (list($field_name, $field_array) = each($fields_vdef_item_edit)) {
+			if (($field_array["method"] != "hidden_zero") && ($field_array["method"] != "hidden") && ($field_array["method"] != "spacer")) {
+				$xml_text .= "\t\t\t<$field_name>" . xml_character_encode($item{$field_name}) . "</$field_name>\n";
+			}
+		}
+
+		$xml_text .= "\t\t</hash_" . $hash["vdef_item"] . ">\n";
+
+		$i++;
+	}
+	}
+
+	$xml_text .= "\t</items>\n";
+	$xml_text .= "</hash_" . $hash["vdef"] . ">";
 
 	return $xml_text;
 }
@@ -736,6 +798,17 @@ function resolve_dependencies($type, $id, $dep_array) {
 		}
 		}
 
+		/* dep: vdef */
+		$graph_template_items = db_fetch_assoc("select vdef_id from graph_templates_item where graph_template_id=$id and local_graph_id=0 and vdef_id > 0 group by vdef_id");
+
+		if (sizeof($graph_template_items) > 0) {
+		foreach ($graph_template_items as $item) {
+			if (!isset($dep_array["vdef"]{$item["vdef_id"]})) {
+				$dep_array = resolve_dependencies("vdef", $item["vdef_id"], $dep_array);
+			}
+		}
+		}
+
 		/* dep: gprint preset */
 		$graph_template_items = db_fetch_assoc("select gprint_id from graph_templates_item where graph_template_id=$id and local_graph_id=0 and gprint_id > 0 group by gprint_id");
 
@@ -856,6 +929,9 @@ function get_item_xml($type, $id, $follow_deps) {
 					break;
 				case 'cdef':
 					$xml_text .= "\n" . cdef_to_xml($dep_id);
+					break;
+				case 'vdef':
+					$xml_text .= "\n" . vdef_to_xml($dep_id);
 					break;
 				case 'xaxis':
 					$xml_text .= "\n" . xaxis_to_xml($dep_id);

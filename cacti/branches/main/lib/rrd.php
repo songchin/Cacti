@@ -520,6 +520,7 @@ function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rr
 	global $config, $consolidation_functions;
 
 	include_once(CACTI_BASE_PATH . "/lib/cdef.php");
+	include_once(CACTI_BASE_PATH . "/lib/vdef.php");
 	include_once(CACTI_BASE_PATH . "/lib/graph_variables.php");
 	include_once(CACTI_BASE_PATH . "/lib/time.php");
 	include(CACTI_BASE_PATH . "/include/global_arrays.php");
@@ -648,6 +649,7 @@ function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rr
 	$graph_items = db_fetch_assoc("select
 		graph_templates_item.id as graph_templates_item_id,
 		graph_templates_item.cdef_id,
+		graph_templates_item.vdef_id,
 		graph_templates_item.text_format,
 		graph_templates_item.value,
 		graph_templates_item.hard_return,
@@ -798,6 +800,16 @@ function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rr
 				$graph_items[$j]["cdef_cache"] = get_cdef($graph_item["cdef_id"]);
 			}
 
+			/* cache vdef value here */
+			if (empty($graph_item["vdef_id"])) {
+				$graph_item["vdef_cache"] = "";
+				$graph_items[$j]["vdef_cache"] = "";
+			}else{
+				$graph_item["vdef_cache"] = get_vdef($graph_item["vdef_id"]);
+				$graph_items[$j]["vdef_cache"] = get_vdef($graph_item["vdef_id"]);
+			}
+
+
 			/* +++++++++++++++++++++++ LEGEND: TEXT SUBSTITUTION (<>'s) +++++++++++++++++++++++ */
 
 			/* note the current item_id for easy access */
@@ -812,6 +824,9 @@ function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rr
 					"process_no_legend" => true
 					),
 				"cdef_cache" => array(
+					"process_no_legend" => true
+					),
+				"vdef_cache" => array(
 					"process_no_legend" => true
 					)
 				);
@@ -1108,6 +1123,40 @@ function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rr
 		/* add the cdef string to the end of the def string */
 		$graph_defs .= $cdef_graph_defs;
 
+		/* +++++++++++++++++++++++ GRAPH ITEMS: VDEF's +++++++++++++++++++++++ */
+
+		/* make vdef string here, merely copied from cdef stuff, lvm */
+		$vdef_graph_defs = "";
+
+		if ((!empty($graph_item["vdef_id"])) && (!isset($vdef_cache{$graph_item["vdef_id"]}{$graph_item["cdef_id"]}{$graph_item["data_template_rrd_id"]}[$cf_id]))) {
+			$vdef_string = $graph_variables["vdef_cache"]{$graph_item["graph_templates_item_id"]};
+			if ($graph_item["cdef_id"] != "0") {
+				/* "calculated" VDEF: use (cached) CDEF as base, only way to get calculations into VDEFs, lvm */
+				$vdef_string = "cdef" . str_replace("CURRENT_DATA_SOURCE", generate_graph_def_name(strval(isset($cdef_cache{$graph_item["cdef_id"]}{$graph_item["data_template_rrd_id"]}[$cf_id]) ? $cdef_cache{$graph_item["cdef_id"]}{$graph_item["data_template_rrd_id"]}[$cf_id] : "0")), $vdef_string);
+		 	} else {
+				/* "pure" VDEF: use DEF as base */
+				$vdef_string = str_replace("CURRENT_DATA_SOURCE", generate_graph_def_name(strval(isset($cf_ds_cache{$graph_item["data_template_rrd_id"]}[$cf_id]) ? $cf_ds_cache{$graph_item["data_template_rrd_id"]}[$cf_id] : "0")), $vdef_string);
+			}
+# TODO: It would be possible to refer to a CDEF, but that's all. So ALL_DATA_SOURCES_NODUPS and stuff can't be used directly!
+#			$vdef_string = str_replace("ALL_DATA_SOURCES_NODUPS", $magic_item["ALL_DATA_SOURCES_NODUPS"], $vdef_string);
+#			$vdef_string = str_replace("ALL_DATA_SOURCES_DUPS", $magic_item["ALL_DATA_SOURCES_DUPS"], $vdef_string);
+#			$vdef_string = str_replace("SIMILAR_DATA_SOURCES_NODUPS", $magic_item["SIMILAR_DATA_SOURCES_NODUPS"], $vdef_string);
+#			$vdef_string = str_replace("SIMILAR_DATA_SOURCES_DUPS", $magic_item["SIMILAR_DATA_SOURCES_DUPS"], $vdef_string);
+
+			/* make the initial "virtual" vdef name */
+			$vdef_graph_defs .= "VDEF:vdef" . generate_graph_def_name(strval($i)) . "=";
+			$vdef_graph_defs .= $vdef_string;
+			$vdef_graph_defs .= " \\\n";
+
+			/* the VDEF cache is so we do not create duplicate VDEF's on a graph,
+			 * but take info account, that same VDEF may use different CDEFs
+			 * so index over VDEF_ID, CDEF_ID per DATA_TEMPLATE_RRD_ID, lvm */
+			$vdef_cache{$graph_item["vdef_id"]}{$graph_item["cdef_id"]}{$graph_item["data_template_rrd_id"]}[$cf_id] = "$i";
+		}
+
+		/* add the cdef string to the end of the def string */
+		$graph_defs .= $vdef_graph_defs;
+
 		/* note the current item_id for easy access */
 		$graph_item_id = $graph_item["graph_templates_item_id"];
 
@@ -1150,6 +1199,14 @@ function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rr
 			$data_source_name = "cdef" . generate_graph_def_name(strval($cdef_cache{$graph_item["cdef_id"]}{$graph_item["data_template_rrd_id"]}[$cf_id]));
 		}
 
+		/* IF this graph item has a data source... get a DEF name for it, or the vdef if that applies
+		to this graph item */
+		if ($graph_item["vdef_id"] == "0") {
+			/* do not overwrite $data_source_name that stems from cdef above */
+		}else{
+			$data_source_name = "vdef" . generate_graph_def_name(strval($vdef_cache{$graph_item["vdef_id"]}{$graph_item["cdef_id"]}{$graph_item["data_template_rrd_id"]}[$cf_id]));
+		}
+
 		/* to make things easier... if there is no text format set; set blank text */
 		if (!isset($graph_variables["text_format"][$graph_item_id])) {
 			$graph_variables["text_format"][$graph_item_id] = "";
@@ -1179,7 +1236,16 @@ function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rr
 				$txt_graph_items .= $comment_string;
 			}
 		}elseif (($graph_item_types{$graph_item["graph_type_id"]} == "GPRINT") && (!isset($graph_data_array["graph_nolegend"]))) {
-			$txt_graph_items .= $graph_item_types{$graph_item["graph_type_id"]} . ":" . $data_source_name . ":" . $consolidation_functions{$graph_item["consolidation_function_id"]} . ":\"$text_padding" . $graph_variables["text_format"][$graph_item_id] . $graph_item["gprint_text"] . $hardreturn[$graph_item_id] . "\" ";
+			/* rrdtool 1.2.x VDEFs must suppress the consolidation function on GPRINTs, lvm */
+			if (read_config_option("rrdtool_version") != RRD_VERSION_1_0) {
+				if ($graph_item["vdef_id"] == "0") {
+					$txt_graph_items .= $graph_item_types{$graph_item["graph_type_id"]} . ":" . $data_source_name . ":" . $consolidation_functions{$graph_item["consolidation_function_id"]} . ":\"$text_padding" . $graph_variables["text_format"][$graph_item_id] . $graph_item["gprint_text"] . $hardreturn[$graph_item_id] . "\" ";
+				}else{
+					$txt_graph_items .= $graph_item_types{$graph_item["graph_type_id"]} . ":" . $data_source_name . ":\"$text_padding" . $graph_variables["text_format"][$graph_item_id] . $graph_item["gprint_text"] . $hardreturn[$graph_item_id] . "\" ";
+				}
+			}else {
+				$txt_graph_items .= $graph_item_types{$graph_item["graph_type_id"]} . ":" . $data_source_name . ":" . $consolidation_functions{$graph_item["consolidation_function_id"]} . ":\"$text_padding" . $graph_variables["text_format"][$graph_item_id] . $graph_item["gprint_text"] . $hardreturn[$graph_item_id] . "\" ";
+			}
 		}elseif (preg_match("/^(AREA|LINE[123]|STACK|HRULE|VRULE)$/", $graph_item_types{$graph_item["graph_type_id"]})) {
 
 			/* initialize any color syntax for graph item */

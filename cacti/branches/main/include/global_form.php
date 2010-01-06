@@ -47,6 +47,25 @@ $fields_cdef_edit = array(
 		)
 	);
 
+/* file: vdef.php, action: edit */
+$fields_vdef_edit = array(
+	"name" => array(
+		"method" => "textbox",
+		"friendly_name" => __("Name"),
+		"description" => __("A useful name for this VDEF."),
+		"value" => "|arg1:name|",
+		"max_length" => "255",
+		),
+	"id" => array(
+		"method" => "hidden_zero",
+		"value" => "|arg1:id|"
+		),
+	"save_component_vdef" => array(
+		"method" => "hidden",
+		"value" => "1"
+		)
+	);
+
 /* file: xaxis.php, action: edit */
 $fields_xaxis_edit = array(
 	"name" => array(
@@ -912,6 +931,7 @@ $struct_graph_item = array(
 		"default" => "FF",
 		"array" => $graph_color_alpha,
 		"description" => __("The opacity/alpha channel of the color. Not available for rrdtool-1.0.x."),
+		"class" => "not_RRD_1_0_x",
 		),
 	"graph_type_id" => array(
 		"friendly_name" => __("Graph Item Type"),
@@ -934,6 +954,15 @@ $struct_graph_item = array(
 		"default" => "0",
 		"none_value" => "None",
 		"description" => __("A CDEF (math) function to apply to this item on the graph."),
+		),
+	"vdef_id" => array(
+		"friendly_name" => __("VDEF Function. Not available for rrdtool-1.0.x."),
+		"method" => "drop_sql",
+		"sql" => "select id,name from vdef order by name",
+		"default" => "0",
+		"none_value" => "None",
+		"description" => __("A VDEF (math) function to apply to this item on the legend."),
+		"class" => "not_RRD_1_0_x",
 		),
 	"value" => array(
 		"friendly_name" => __("Value"),

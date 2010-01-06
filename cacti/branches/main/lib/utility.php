@@ -760,6 +760,45 @@ function duplicate_cdef($_cdef_id, $cdef_title) {
 	}
 }
 
+function duplicate_vdef($_vdef_id, $vdef_title) {
+	global $fields_vdef_edit;
+
+	$vdef = db_fetch_row("select * from vdef where id=$_vdef_id");
+	$vdef_items = db_fetch_assoc("select * from vdef_items where vdef_id=$_vdef_id");
+
+	/* substitute the title variable */
+	$vdef["name"] = str_replace(__("<vdef_title>"), $vdef["name"], $vdef_title);
+
+	/* create new entry: device_template */
+	$save["id"] = 0;
+	$save["hash"] = get_hash_vdef(0);
+
+	reset($fields_vdef_edit);
+	while (list($field, $array) = each($fields_vdef_edit)) {
+		if (!preg_match("/^hidden/", $array["method"])) {
+			$save[$field] = $vdef[$field];
+		}
+	}
+
+	$vdef_id = sql_save($save, "vdef");
+
+	/* create new entry(s): vdef_items */
+	if (sizeof($vdef_items) > 0) {
+		foreach ($vdef_items as $vdef_item) {
+			unset($save);
+
+			$save["id"] = 0;
+			$save["hash"] = get_hash_vdef(0, "vdef_item");
+			$save["vdef_id"] = $vdef_id;
+			$save["sequence"] = $vdef_item["sequence"];
+			$save["type"] = $vdef_item["type"];
+			$save["value"] = $vdef_item["value"];
+
+			sql_save($save, "vdef_items");
+		}
+	}
+}
+
 function duplicate_xaxis($_xaxis_id, $xaxis_title) {
 	global $fields_xaxis_item_edit;
 

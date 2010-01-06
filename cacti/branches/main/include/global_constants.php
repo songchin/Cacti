@@ -136,16 +136,24 @@ define("DS_ACTION_ENABLE", 5);
 define("DS_ACTION_DISABLE", 6);
 define("DS_ACTION_REAPPLY_SUGGESTED_NAMES", 7);
 
-define("GRAPH_ITEM_TYPE_COMMENT", 1);
-define("GRAPH_ITEM_TYPE_HRULE",   2);
-define("GRAPH_ITEM_TYPE_VRULE",   3);
-define("GRAPH_ITEM_TYPE_LINE1",   4);
-define("GRAPH_ITEM_TYPE_LINE2",   5);
-define("GRAPH_ITEM_TYPE_LINE3",   6);
-define("GRAPH_ITEM_TYPE_AREA",    7);
-define("GRAPH_ITEM_TYPE_STACK",   8);
-define("GRAPH_ITEM_TYPE_GPRINT",  9);
-define("GRAPH_ITEM_TYPE_LEGEND", 10);
+define("GRAPH_ITEM_TYPE_COMMENT",		1);
+define("GRAPH_ITEM_TYPE_HRULE",			2);
+define("GRAPH_ITEM_TYPE_VRULE",			3);
+define("GRAPH_ITEM_TYPE_LINE1",			4);
+define("GRAPH_ITEM_TYPE_LINE2",			5);
+define("GRAPH_ITEM_TYPE_LINE3",			6);
+define("GRAPH_ITEM_TYPE_AREA",			7);
+define("GRAPH_ITEM_TYPE_STACK",			8);
+define("GRAPH_ITEM_TYPE_GPRINT",		9);
+define("GRAPH_ITEM_TYPE_LEGEND", 		10);
+define("GRAPH_ITEM_TYPE_VDEF_LEGEND",	11);
+
+define("CVDEF_ITEM_TYPE_FUNCTION",		1);
+define("CVDEF_ITEM_TYPE_OPERATOR",		2);
+define("CVDEF_ITEM_TYPE_SPEC_DS",		4);
+define("CVDEF_ITEM_TYPE_CDEF",			5);
+define("CVDEF_ITEM_TYPE_STRING",		6);
+
 
 define("IMAGE_TYPE_PNG", 1);
 define("IMAGE_TYPE_GIF", 2);
