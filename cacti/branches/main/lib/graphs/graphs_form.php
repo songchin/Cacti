@@ -691,16 +691,24 @@ function graph_diff() {
 
 		if (empty($graph_preview_item_values["task_item_id"])) { $graph_preview_item_values["task_item_id"] = "No Task"; }
 
-		switch (true) {
-		case preg_match("/(AREA|STACK|GPRINT|LINE[123])/", $_graph_type_name):
-			$matrix_title = "(" . $graph_preview_item_values["task_item_id"] . "): " . $graph_preview_item_values["text_format"];
-			break;
-		case preg_match("/(HRULE|VRULE)/", $_graph_type_name):
-			$matrix_title = "HRULE: " . $graph_preview_item_values["value"];
-			break;
-		case preg_match("/(COMMENT)/", $_graph_type_name):
-			$matrix_title = "COMMENT: " . $graph_preview_item_values["text_format"];
-			break;
+		switch ($graph_type_id) {
+			case GRAPH_ITEM_TYPE_AREA:
+			case GRAPH_ITEM_TYPE_STACK:
+			case GRAPH_ITEM_TYPE_GPRINT:
+			case GRAPH_ITEM_TYPE_LINE1:
+			case GRAPH_ITEM_TYPE_LINE2:
+			case GRAPH_ITEM_TYPE_LINE3:
+				$matrix_title = "(" . $graph_preview_item_values["task_item_id"] . "): " . $graph_preview_item_values["text_format"];
+				break;
+			case GRAPH_ITEM_TYPE_HRULE:
+				$matrix_title = "VRULE: " . $graph_preview_item_values["value"];
+				break;
+				case GRAPH_ITEM_TYPE_VRULE:
+				$matrix_title = "HRULE: " . $graph_preview_item_values["value"];
+				break;
+			case GRAPH_ITEM_TYPE_COMMENT:
+				$matrix_title = "COMMENT: " . $graph_preview_item_values["text_format"];
+				break;
 		}
 
 		/* use the cdef name (if in use) if all else fails */
