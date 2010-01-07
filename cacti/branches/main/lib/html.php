@@ -907,19 +907,24 @@ function draw_graph_items_list($item_list, $filename, $url_data, $disable_contro
 
 		if (empty($item["data_source_name"])) { $item["data_source_name"] = __("No Task"); }
 
-		switch (true) {
-		case preg_match("/(AREA|STACK|GPRINT|LINE[123])/", $_graph_type_name):
-			$matrix_title = "(" . $item["data_source_name"] . "): " . $item["text_format"];
-			break;
-		case preg_match("/(HRULE)/", $_graph_type_name):
-			$matrix_title = "HRULE: " . $item["value"];
-			break;
-		case preg_match("/(VRULE)/", $_graph_type_name):
-			$matrix_title = "VRULE: " . $item["value"];
-			break;
-		case preg_match("/(COMMENT)/", $_graph_type_name):
-			$matrix_title = "COMMENT: " . $item["text_format"];
-			break;
+		switch ($item["graph_type_id"]) {
+			case GRAPH_ITEM_TYPE_AREA:
+			case GRAPH_ITEM_TYPE_STACK:
+			case GRAPH_ITEM_TYPE_GPRINT:
+			case GRAPH_ITEM_TYPE_LINE1:
+			case GRAPH_ITEM_TYPE_LINE2:
+			case GRAPH_ITEM_TYPE_LINE3:
+				$matrix_title = "(" . $item["data_source_name"] . "): " . $item["text_format"];
+				break;
+			case GRAPH_ITEM_TYPE_HRULE:
+				$matrix_title = "VRULE: " . $item["value"];
+				break;
+				case GRAPH_ITEM_TYPE_VRULE:
+				$matrix_title = "HRULE: " . $item["value"];
+				break;
+			case GRAPH_ITEM_TYPE_COMMENT:
+				$matrix_title = "COMMENT: " . $item["text_format"];
+				break;
 		}
 
 		if ($item["hard_return"] == CHECKED) {

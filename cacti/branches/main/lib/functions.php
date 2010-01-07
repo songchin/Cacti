@@ -1595,7 +1595,6 @@ function move_graph_group($graph_template_item_id, $graph_group_array, $target_i
    @arg $graph_template_item_id - (int) the ID of the graph item to return the group of
    @returns - (array) an array containing each item in the graph group */
 function get_graph_group($graph_template_item_id) {
-	global $graph_item_types;
 
 	$graph_item = db_fetch_row("select graph_type_id,sequence,local_graph_id,graph_template_id from graph_templates_item where id=$graph_template_item_id");
 
@@ -1606,7 +1605,10 @@ function get_graph_group($graph_template_item_id) {
 	}
 
 	/* a parent must NOT be the following graph item types */
-	if (preg_match("/(GPRINT|VRULE|HRULE|COMMENT)/", $graph_item_types{$graph_item["graph_type_id"]})) {
+	if ($graph_item["graph_type_id"] == GRAPH_ITEM_TYPE_GPRINT ||
+		$graph_item["graph_type_id"] == GRAPH_ITEM_TYPE_HRULE ||
+		$graph_item["graph_type_id"] == GRAPH_ITEM_TYPE_VRULE ||
+		$graph_item["graph_type_id"] == GRAPH_ITEM_TYPE_COMMENT) {
 		return;
 	}
 

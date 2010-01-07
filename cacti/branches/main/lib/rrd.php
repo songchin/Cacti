@@ -736,11 +736,11 @@ function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rr
 		/* we need to add a new column "cf_reference", so unless PHP 5 is used, this foreach syntax is required */
 		foreach ($graph_items as $key => $graph_item) {
 			/* mimic the old behavior: LINE[123], AREA and STACK items use the CF specified in the graph item */
-			if (($graph_item["graph_type_id"] == GRAPH_ITEM_TYPE_LINE1) ||
-				($graph_item["graph_type_id"] == GRAPH_ITEM_TYPE_LINE2) ||
-				($graph_item["graph_type_id"] == GRAPH_ITEM_TYPE_LINE3) ||
-				($graph_item["graph_type_id"] == GRAPH_ITEM_TYPE_AREA)  ||
-				($graph_item["graph_type_id"] == GRAPH_ITEM_TYPE_STACK)) {
+			if ($graph_item["graph_type_id"] == GRAPH_ITEM_TYPE_AREA  ||
+				$graph_item["graph_type_id"] == GRAPH_ITEM_TYPE_STACK ||
+				$graph_item["graph_type_id"] == GRAPH_ITEM_TYPE_LINE1 ||
+				$graph_item["graph_type_id"] == GRAPH_ITEM_TYPE_LINE2 ||
+				$graph_item["graph_type_id"] == GRAPH_ITEM_TYPE_LINE3) {
 				$graph_cf = $graph_item["consolidation_function_id"];
 				/* remember the last CF for this data source for use with GPRINT
 				 * if e.g. an AREA/AVERAGE and a LINE/MAX is used
@@ -887,7 +887,11 @@ function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rr
 				If you have any additions to this small peice of code, feel free to send them to me. */
 				if ($graph["auto_padding"] == CHECKED) {
 					/* only applies to AREA, STACK and LINEs */
-					if (preg_match("/(AREA|STACK|LINE[123])/", $graph_item_types{$graph_item["graph_type_id"]})) {
+					if ($graph_item["graph_type_id"] == GRAPH_ITEM_TYPE_AREA ||
+						$graph_item["graph_type_id"] == GRAPH_ITEM_TYPE_STACK ||
+						$graph_item["graph_type_id"] == GRAPH_ITEM_TYPE_LINE1 ||
+						$graph_item["graph_type_id"] == GRAPH_ITEM_TYPE_LINE2 ||
+						$graph_item["graph_type_id"] == GRAPH_ITEM_TYPE_LINE3) {
 						$text_format_length = strlen($graph_variables["text_format"][$graph_item_id]);
 
 						if ($text_format_length > $greatest_text_format) {
@@ -982,7 +986,12 @@ function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rr
 				for ($t=0;($t<count($graph_items));$t++) {
 
 					/* only work on graph items, omit GRPINTs, COMMENTs and stuff */
-					if ((preg_match("/(AREA|STACK|LINE[123])/", $graph_item_types{$graph_items[$t]["graph_type_id"]})) && (!empty($graph_items[$t]["data_template_rrd_id"]))) {
+					if (($graph_items[$t]["graph_type_id"] == GRAPH_ITEM_TYPE_AREA ||
+						$graph_items[$t]["graph_type_id"] == GRAPH_ITEM_TYPE_STACK ||
+						$graph_items[$t]["graph_type_id"] == GRAPH_ITEM_TYPE_LINE1 ||
+						$graph_items[$t]["graph_type_id"] == GRAPH_ITEM_TYPE_LINE2 ||
+						$graph_items[$t]["graph_type_id"] == GRAPH_ITEM_TYPE_LINE3) &&
+						(!empty($graph_items[$t]["data_template_rrd_id"]))) {
 						/* if the user screws up CF settings, PHP will generate warnings if left unchecked */
 
 						/* matching consolidation function? */
@@ -1164,7 +1173,11 @@ function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rr
 		text format stuff. */
 		if ((!isset($graph_data_array["graph_nolegend"])) && ($graph["auto_padding"] == CHECKED)) {
 			/* only applies to AREA, STACK and LINEs */
-			if (preg_match("/(AREA|STACK|LINE[123])/", $graph_item_types{$graph_item["graph_type_id"]})) {
+			if ($graph_item["graph_type_id"] == GRAPH_ITEM_TYPE_AREA ||
+				$graph_item["graph_type_id"] == GRAPH_ITEM_TYPE_STACK ||
+				$graph_item["graph_type_id"] == GRAPH_ITEM_TYPE_LINE1 ||
+				$graph_item["graph_type_id"] == GRAPH_ITEM_TYPE_LINE2 ||
+				$graph_item["graph_type_id"] == GRAPH_ITEM_TYPE_LINE3) {
 				$text_format_length = strlen($graph_variables["text_format"][$graph_item_id]);
 
 				/* we are basing how much to pad on area and stack text format,
@@ -1226,7 +1239,7 @@ function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rr
 
 		$need_rrd_nl = TRUE;
 
-		if ($graph_item_types{$graph_item["graph_type_id"]} == "COMMENT") {
+		if ($graph_item["graph_type_id"] == GRAPH_ITEM_TYPE_COMMENT) {
 			$comment_string = $graph_item_types{$graph_item["graph_type_id"]} . ":\"" .
 					substr(rrd_substitute_device_query_data(str_replace(":", "\:", $graph_variables["text_format"][$graph_item_id]), $graph, $graph_item),0,198) .
 					$hardreturn[$graph_item_id] . "\" ";
@@ -1235,7 +1248,7 @@ function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rr
 			} else if (trim($comment_string) != "COMMENT:\"\"") {
 				$txt_graph_items .= $comment_string;
 			}
-		}elseif (($graph_item_types{$graph_item["graph_type_id"]} == "GPRINT") && (!isset($graph_data_array["graph_nolegend"]))) {
+		}elseif (($graph_item["graph_type_id"] == GRAPH_ITEM_TYPE_GPRINT) && (!isset($graph_data_array["graph_nolegend"]))) {
 			/* rrdtool 1.2.x VDEFs must suppress the consolidation function on GPRINTs, lvm */
 			if (read_config_option("rrdtool_version") != RRD_VERSION_1_0) {
 				if ($graph_item["vdef_id"] == "0") {
@@ -1246,7 +1259,13 @@ function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rr
 			}else {
 				$txt_graph_items .= $graph_item_types{$graph_item["graph_type_id"]} . ":" . $data_source_name . ":" . $consolidation_functions{$graph_item["consolidation_function_id"]} . ":\"$text_padding" . $graph_variables["text_format"][$graph_item_id] . $graph_item["gprint_text"] . $hardreturn[$graph_item_id] . "\" ";
 			}
-		}elseif (preg_match("/^(AREA|LINE[123]|STACK|HRULE|VRULE)$/", $graph_item_types{$graph_item["graph_type_id"]})) {
+		}elseif ($graph_item["graph_type_id"] == GRAPH_ITEM_TYPE_AREA ||
+				$graph_item["graph_type_id"] == GRAPH_ITEM_TYPE_STACK ||
+				$graph_item["graph_type_id"] == GRAPH_ITEM_TYPE_LINE1 ||
+				$graph_item["graph_type_id"] == GRAPH_ITEM_TYPE_LINE2 ||
+				$graph_item["graph_type_id"] == GRAPH_ITEM_TYPE_LINE3 ||
+				$graph_item["graph_type_id"] == GRAPH_ITEM_TYPE_HRULE ||
+				$graph_item["graph_type_id"] == GRAPH_ITEM_TYPE_VRULE) {
 
 			/* initialize any color syntax for graph item */
 			if (empty($graph_item["hex"])) {
@@ -1258,16 +1277,19 @@ function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rr
 				}
 			}
 
-			if (preg_match("/^(AREA|LINE[123])$/", $graph_item_types{$graph_item["graph_type_id"]})) {
+			if ($graph_item["graph_type_id"] == GRAPH_ITEM_TYPE_AREA ||
+				$graph_item["graph_type_id"] == GRAPH_ITEM_TYPE_LINE1 ||
+				$graph_item["graph_type_id"] == GRAPH_ITEM_TYPE_LINE2 ||
+				$graph_item["graph_type_id"] == GRAPH_ITEM_TYPE_LINE3) {
 				$graph_item_stack_type = $graph_item_types{$graph_item["graph_type_id"]};
 				$txt_graph_items .= $graph_item_types{$graph_item["graph_type_id"]} . ":" . $data_source_name . $graph_item_color_code . ":" . "\"" . $graph_variables["text_format"][$graph_item_id] . $hardreturn[$graph_item_id] . "\" ";
-			}elseif ($graph_item_types{$graph_item["graph_type_id"]} == "STACK") {
+			}elseif ($graph_item["graph_type_id"] == GRAPH_ITEM_TYPE_STACK) {
 				if (read_config_option("rrdtool_version") != RRD_VERSION_1_0) {
 					$txt_graph_items .= $graph_item_stack_type . ":" . $data_source_name . $graph_item_color_code . ":" . "\"" . $graph_variables["text_format"][$graph_item_id] . $hardreturn[$graph_item_id] . "\":STACK";
 				}else {
 					$txt_graph_items .= $graph_item_types{$graph_item["graph_type_id"]} . ":" . $data_source_name . $graph_item_color_code . ":" . "\"" . $graph_variables["text_format"][$graph_item_id] . $hardreturn[$graph_item_id] . "\" ";
 				}
-			}elseif ($graph_item_types{$graph_item["graph_type_id"]} == "HRULE") {
+			}elseif ($graph_item["graph_type_id"] == GRAPH_ITEM_TYPE_HRULE) {
 				$graph_variables["value"][$graph_item_id] = str_replace(":", "\:", $graph_variables["value"][$graph_item_id]); /* escape colons */
 				/* perform variable substitution; if this does not return a number, rrdtool will FAIL! */
 				$substitute = rrd_substitute_device_query_data($graph_variables["value"][$graph_item_id], $graph, $graph_item);
@@ -1275,7 +1297,7 @@ function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rr
 					$graph_variables["value"][$graph_item_id] = $substitute;
 				}
 				$txt_graph_items .= $graph_item_types{$graph_item["graph_type_id"]} . ":" . $graph_variables["value"][$graph_item_id] . $graph_item_color_code . ":\"" . $graph_variables["text_format"][$graph_item_id] . $hardreturn[$graph_item_id] . "\" ";
-			}elseif ($graph_item_types{$graph_item["graph_type_id"]} == "VRULE") {
+			}elseif ($graph_item["graph_type_id"] == GRAPH_ITEM_TYPE_VRULE) {
 
 				if (substr_count($graph_item["value"], ":")) {
 					$value_array = explode(":", $graph_item["value"]);
@@ -1497,11 +1519,11 @@ function rrdtool_function_xport($local_graph_id, $rra_id, $xport_data_array, &$x
 		/* we need to add a new column "cf_reference", so unless PHP 5 is used, this foreach syntax is required */
 		foreach ($xport_items as $key => $xport_item) {
 			/* mimic the old behavior: LINE[123], AREA, STACK and GPRINT items use the CF specified in the graph item */
-			if (($xport_item["graph_type_id"] == GRAPH_ITEM_TYPE_LINE1) ||
-				($xport_item["graph_type_id"] == GRAPH_ITEM_TYPE_LINE2) ||
-				($xport_item["graph_type_id"] == GRAPH_ITEM_TYPE_LINE3) ||
-				($xport_item["graph_type_id"] == GRAPH_ITEM_TYPE_AREA)  ||
-				($xport_item["graph_type_id"] == GRAPH_ITEM_TYPE_STACK)) {
+			if ($xport_item["graph_type_id"] == GRAPH_ITEM_TYPE_AREA  ||
+				$xport_item["graph_type_id"] == GRAPH_ITEM_TYPE_STACK ||
+				$xport_item["graph_type_id"] == GRAPH_ITEM_TYPE_LINE1 ||
+				$xport_item["graph_type_id"] == GRAPH_ITEM_TYPE_LINE2 ||
+				$xport_item["graph_type_id"] == GRAPH_ITEM_TYPE_LINE3) {
 				$xport_cf = $xport_item["consolidation_function_id"];
 				$last_xport_cf["data_source_name"]["local_data_template_rrd_id"] = $xport_cf;
 				/* remember this for second foreach loop */
@@ -1706,7 +1728,12 @@ function rrdtool_function_xport($local_graph_id, $rra_id, $xport_data_array, &$x
 				for ($t=0;($t<count($xport_items));$t++) {
 
 					/* only work on graph items, omit GRPINTs, COMMENTs and stuff */
-					if ((preg_match("/(AREA|STACK|LINE[123])/", $graph_item_types{$xport_items[$t]["graph_type_id"]})) && (!empty($xport_items[$t]["data_template_rrd_id"]))) {
+					if (($xport_items[$t]["graph_type_id"] == GRAPH_ITEM_TYPE_AREA ||
+						$xport_items[$t]["graph_type_id"] == GRAPH_ITEM_TYPE_STACK ||
+						$xport_items[$t]["graph_type_id"] == GRAPH_ITEM_TYPE_LINE1 ||
+						$xport_items[$t]["graph_type_id"] == GRAPH_ITEM_TYPE_LINE2 ||
+						$xport_items[$t]["graph_type_id"] == GRAPH_ITEM_TYPE_LINE3) &&
+						(!empty($xport_items[$t]["data_template_rrd_id"]))) {
 						/* if the user screws up CF settings, PHP will generate warnings if left unchecked */
 
 						/* matching consolidation function? */
@@ -1865,14 +1892,18 @@ function rrdtool_function_xport($local_graph_id, $rra_id, $xport_data_array, &$x
 		/* +++++++++++++++++++++++ XPORT ITEMS +++++++++++++++++++++++ */
 
 		$need_rrd_nl = TRUE;
-		if (preg_match("/^(AREA|LINE[123]|STACK)$/", $graph_item_types{$xport_item["graph_type_id"]})) {
+		if ($xport_item["graph_type_id"] == GRAPH_ITEM_TYPE_AREA ||
+			$xport_item["graph_type_id"] == GRAPH_ITEM_TYPE_STACK ||
+			$xport_item["graph_type_id"] == GRAPH_ITEM_TYPE_LINE1 ||
+			$xport_item["graph_type_id"] == GRAPH_ITEM_TYPE_LINE2 ||
+			$xport_item["graph_type_id"] == GRAPH_ITEM_TYPE_LINE3) {
 			/* give all export items a name */
 			if (trim($xport_variables["text_format"][$xport_item_id]) == "") {
 				$legend_name = "col" . $j . "-" . $data_source_name;
 			}else{
 				$legend_name = $xport_variables["text_format"][$xport_item_id];
 			}
-			$stacked_columns["col" . $j] = ($graph_item_types{$xport_item["graph_type_id"]} == "STACK") ? 1 : 0;
+			$stacked_columns["col" . $j] = ($xport_item["graph_type_id"] == GRAPH_ITEM_TYPE_STACK) ? 1 : 0;
 			$j++;
 
 			$txt_xport_items .= "XPORT:" . $data_source_name . ":" . "\"" . str_replace(":", "", $legend_name) . "\"";

@@ -265,9 +265,13 @@ function item_movedown() {
 	$arr = get_graph_group($_GET["id"]);
 	$next_id = get_graph_parent($_GET["id"], "next");
 
+	$graph_type_id = db_fetch_cell("select graph_type_id from graph_templates_item where id=" . $_GET["id"]);
 	if ((!empty($next_id)) && (isset($arr{$_GET["id"]}))) {
 		move_graph_group(get_request_var("id"), $arr, $next_id, "next");
-	}elseif (preg_match("/(GPRINT|VRULE|HRULE|COMMENT)/", $graph_item_types{db_fetch_cell("select graph_type_id from graph_templates_item where id=" . $_GET["id"])})) {
+	}elseif ($graph_type_id == GRAPH_ITEM_TYPE_GPRINT ||
+			$graph_type_id == GRAPH_ITEM_TYPE_HRULE ||
+			$graph_type_id == GRAPH_ITEM_TYPE_VRULE ||
+			$graph_type_id == GRAPH_ITEM_TYPE_COMMENT) {
 		/* this is so we know the "other" graph item to propagate the changes to */
 		$next_item = get_item("graph_templates_item", "sequence", $_GET["id"], "graph_template_id=" . $_GET["graph_template_id"] . " and local_graph_id=0", "next");
 
@@ -289,9 +293,13 @@ function item_moveup() {
 	$arr = get_graph_group($_GET["id"]);
 	$next_id = get_graph_parent($_GET["id"], "previous");
 
+	$graph_type_id = db_fetch_cell("select graph_type_id from graph_templates_item where id=" . $_GET["id"]);
 	if ((!empty($next_id)) && (isset($arr{$_GET["id"]}))) {
 		move_graph_group(get_request_var("id"), $arr, $next_id, "previous");
-	}elseif (preg_match("/(GPRINT|VRULE|HRULE|COMMENT)/", $graph_item_types{db_fetch_cell("select graph_type_id from graph_templates_item where id=" . $_GET["id"])})) {
+	}elseif ($graph_type_id == GRAPH_ITEM_TYPE_GPRINT ||
+			$graph_type_id == GRAPH_ITEM_TYPE_HRULE ||
+			$graph_type_id == GRAPH_ITEM_TYPE_VRULE ||
+			$graph_type_id == GRAPH_ITEM_TYPE_COMMENT) {
 		/* this is so we know the "other" graph item to propagate the changes to */
 		$last_item = get_item("graph_templates_item", "sequence", $_GET["id"], "graph_template_id=" . $_GET["graph_template_id"] . " and local_graph_id=0", "previous");
 
