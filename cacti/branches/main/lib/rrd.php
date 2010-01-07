@@ -1249,7 +1249,7 @@ function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rr
 				$txt_graph_items .= $comment_string;
 			}
 		}elseif (($graph_item["graph_type_id"] == GRAPH_ITEM_TYPE_GPRINT) && (!isset($graph_data_array["graph_nolegend"]))) {
-			/* rrdtool 1.2.x VDEFs must suppress the consolidation function on GPRINTs, lvm */
+			/* rrdtool 1.2.x VDEFs must suppress the consolidation function on GPRINTs */
 			if (read_config_option("rrdtool_version") != RRD_VERSION_1_0) {
 				if ($graph_item["vdef_id"] == "0") {
 					$txt_graph_items .= $graph_item_types{$graph_item["graph_type_id"]} . ":" . $data_source_name . ":" . $consolidation_functions{$graph_item["consolidation_function_id"]} . ":\"$text_padding" . $graph_variables["text_format"][$graph_item_id] . $graph_item["gprint_text"] . $hardreturn[$graph_item_id] . "\" ";

@@ -873,7 +873,7 @@ function draw_graph_items_list($item_list, $filename, $url_data, $disable_contro
 		/* graph grouping display logic */
 		$this_row_style = ""; $use_custom_row_color = false; $hard_return = "";
 
-		if ($graph_item_types{$item["graph_type_id"]} != "GPRINT") {
+		if ($item["graph_type_id"] != GRAPH_ITEM_TYPE_GPRINT) {
 			$this_row_style = "font-weight: bold;"; $use_custom_row_color = true;
 
 			if ($group_counter % 2 == 0) {

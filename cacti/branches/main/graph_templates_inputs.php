@@ -204,7 +204,7 @@ function input_edit() {
 				$any_selected_item = $item["graph_templates_item_id"];
 			}
 
-			if ($graph_item_types{$item["graph_type_id"]} == "GPRINT") {
+			if ($item["graph_type_id"] == GRAPH_ITEM_TYPE_GPRINT) {
 				$start_bold = "";
 				$end_bold = "";
 			}else{

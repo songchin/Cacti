@@ -641,7 +641,7 @@ function graph_diff() {
 		$graph_type_id = $graph_preview_item_values["graph_type_id"];
 
 		/* color logic */
-		if (($graph_item_types[$graph_type_id] != "GPRINT") && ($graph_item_types[$graph_type_id] != $_graph_type_name)) {
+		if (($graph_type_id != GRAPH_ITEM_TYPE_GPRINT) && ($graph_item_types[$graph_type_id] != $_graph_type_name)) {
 			$bold_this_row = true; $use_custom_row_color = true; $hard_return = "";
 
 			if ($group_counter % 2 == 0) {

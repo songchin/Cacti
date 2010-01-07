@@ -1621,7 +1621,7 @@ function get_graph_group($graph_template_item_id) {
 
 	if (sizeof($graph_items) > 0) {
 	foreach ($graph_items as $item) {
-		if ($graph_item_types{$item["graph_type_id"]} == "GPRINT") {
+		if ($item["graph_type_id"] == GRAPH_ITEM_TYPE_GPRINT) {
 			/* a child must be a GPRINT */
 			$graph_item_children_array{$item["id"]} = $item["id"];
 		}else{
