@@ -120,6 +120,7 @@ Cacti CHANGELOG
 -feature: Add logging to SQL Save error handling
 -feature: Allow non-numeric form row ids in form API
 -feature: User UI Visual Settings Saved Between Login Sessions
+-feature: Custom Legend: customize the entries added in one go to your liking
 
 0.8.7e
 

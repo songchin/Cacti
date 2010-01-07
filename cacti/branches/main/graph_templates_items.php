@@ -80,57 +80,72 @@ function form_save() {
 
 		$items[0] = array();
 
-		if ($graph_item_types{get_request_var_post("graph_type_id")} == "LEGEND") {
+		if (get_request_var_post("graph_type_id") == GRAPH_ITEM_TYPE_LEGEND) {
 			/* this can be a major time saver when creating lots of graphs with the typical
 			GPRINT LAST/AVERAGE/MAX legends */
 			$items = array(
 				0 => array(
 					"color_id" => "0",
-					"graph_type_id" => "9",
-					"consolidation_function_id" => "4",
+					"graph_type_id" => GRAPH_ITEM_TYPE_GPRINT,
+					"consolidation_function_id" => RRD_CF_LAST,
 					"text_format" => __("Current:"),
 					"hard_return" => ""
 					),
 				1 => array(
 					"color_id" => "0",
-					"graph_type_id" => "9",
-					"consolidation_function_id" => "1",
+					"graph_type_id" => GRAPH_ITEM_TYPE_GPRINT,
+					"consolidation_function_id" => RRD_CF_AVERAGE,
 					"text_format" => __("Average:"),
 					"hard_return" => ""
 					),
 				2 => array(
 					"color_id" => "0",
-					"graph_type_id" => "9",
-					"consolidation_function_id" => "3",
+					"graph_type_id" => GRAPH_ITEM_TYPE_GPRINT,
+					"consolidation_function_id" => RRD_CF_MAX,
 					"text_format" => __("Maximum:"),
 					"hard_return" => CHECKED
 					));
 		}
 
-		if ($graph_item_types{$_POST["graph_type_id"]} == "VDEF-LEGEND") {
+		if ($_POST["graph_type_id"] == GRAPH_ITEM_TYPE_CUSTOM_LEGEND) {
 			/* this can be a major time saver when creating lots of graphs with the typical VDEFs */
 			$items = array(
 				0 => array(
 					"color_id" => "0",
-					"graph_type_id" => "9",
-					"consolidation_function_id" => "4",
-					"text_format" => "Last:",
-					"hard_return" => ""
+					"graph_type_id" => GRAPH_ITEM_TYPE_GPRINT,
+					"consolidation_function_id" => read_config_option("cl1_cf_id"),
+					"vdef_id" => read_config_option("cl1_vdef_id"),
+					"text_format" => read_config_option("cl1_text_format"),
+					"hard_return" => read_config_option("cl1_hard_return")
 					),
 				1 => array(
 					"color_id" => "0",
-					"graph_type_id" => "9",
-					"consolidation_function_id" => "1",
-					"text_format" => "Avg:",
-					"hard_return" => ""
+					"graph_type_id" => GRAPH_ITEM_TYPE_GPRINT,
+					"consolidation_function_id" => read_config_option("cl2_cf_id"),
+					"vdef_id" => read_config_option("cl2_vdef_id"),
+					"text_format" => read_config_option("cl2_text_format"),
+					"hard_return" => read_config_option("cl2_hard_return")
 					),
 				2 => array(
 					"color_id" => "0",
-					"graph_type_id" => "9",
-					"consolidation_function_id" => "3",
-					"text_format" => "Max:",
-					"hard_return" => CHECKED
-					));
+					"graph_type_id" => GRAPH_ITEM_TYPE_GPRINT,
+					"consolidation_function_id" => read_config_option("cl3_cf_id"),
+					"vdef_id" => read_config_option("cl3_vdef_id"),
+					"text_format" => read_config_option("cl3_text_format"),
+					"hard_return" => read_config_option("cl3_hard_return")
+					),
+				3 => array(
+					"color_id" => "0",
+					"graph_type_id" => GRAPH_ITEM_TYPE_GPRINT,
+					"consolidation_function_id" => read_config_option("cl4_cf_id"),
+					"vdef_id" => read_config_option("cl4_vdef_id"),
+					"text_format" => read_config_option("cl4_text_format"),
+					"hard_return" => read_config_option("cl4_hard_return")
+					),
+				);
+			foreach ($items as $key => $item) { #drop "empty" custom legend items
+				if (empty($item["text_format"])) unset($items[$key]);
+			}
 		}
 
 		foreach ($items as $item) {
@@ -143,19 +158,19 @@ function form_save() {
 			$save["hash"] = get_hash_graph_template($_POST["graph_template_item_id"], "graph_template_item");
 			$save["graph_template_id"] = $_POST["graph_template_id"];
 			$save["local_graph_id"] = 0;
-			$save["task_item_id"] = form_input_validate($_POST["task_item_id"], "task_item_id", "", true, 3);
-			$save["color_id"] = form_input_validate((isset($item["color_id"]) ? $item["color_id"] : $_POST["color_id"]), "color_id", "", true, 3);
+			$save["task_item_id"] = form_input_validate($_POST["task_item_id"], "task_item_id", "^[0-9]+$", true, 3);
+			$save["color_id"] = form_input_validate((isset($item["color_id"]) ? $item["color_id"] : $_POST["color_id"]), "color_id", "^[0-9]+$", true, 3);
 			/* if alpha is disabled, use invisible_alpha instead */
 			if (!isset($_POST["alpha"])) {$_POST["alpha"] = $_POST["invisible_alpha"];}
 			$save["alpha"] = form_input_validate((isset($item["alpha"]) ? $item["alpha"] : $_POST["alpha"]), "alpha", "", true, 3);
-			$save["graph_type_id"] = form_input_validate((isset($item["graph_type_id"]) ? $item["graph_type_id"] : $_POST["graph_type_id"]), "graph_type_id", "", true, 3);
-			$save["cdef_id"] = form_input_validate($_POST["cdef_id"], "cdef_id", "", true, 3);
-			$save["vdef_id"] = form_input_validate($_POST["vdef_id"], "vdef_id", "", true, 3);
-			$save["consolidation_function_id"] = form_input_validate((isset($item["consolidation_function_id"]) ? $item["consolidation_function_id"] : $_POST["consolidation_function_id"]), "consolidation_function_id", "", true, 3);
+			$save["graph_type_id"] = form_input_validate((isset($item["graph_type_id"]) ? $item["graph_type_id"] : $_POST["graph_type_id"]), "graph_type_id", "^[0-9]+$", true, 3);
+			$save["cdef_id"] = form_input_validate($_POST["cdef_id"], "cdef_id", "^[0-9]+$", true, 3);
+			$save["vdef_id"] = form_input_validate((isset($item["vdef_id"]) ? $item["vdef_id"] : $_POST["vdef_id"]), "vdef_id", "^[0-9]+$", true, 3);
+			$save["consolidation_function_id"] = form_input_validate((isset($item["consolidation_function_id"]) ? $item["consolidation_function_id"] : $_POST["consolidation_function_id"]), "consolidation_function_id", "^[0-9]+$", true, 3);
 			$save["text_format"] = form_input_validate((isset($item["text_format"]) ? $item["text_format"] : $_POST["text_format"]), "text_format", "", true, 3);
 			$save["value"] = form_input_validate($_POST["value"], "value", "", true, 3);
 			$save["hard_return"] = form_input_validate(((isset($item["hard_return"]) ? $item["hard_return"] : (isset($_POST["hard_return"]) ? $_POST["hard_return"] : ""))), "hard_return", "", true, 3);
-			$save["gprint_id"] = form_input_validate($_POST["gprint_id"], "gprint_id", "", true, 3);
+			$save["gprint_id"] = form_input_validate($_POST["gprint_id"], "gprint_id", "^[0-9]+$", true, 3);
 			$save["sequence"] = $_POST["sequence"];
 
 			if (!is_error_message()) {

@@ -67,7 +67,7 @@ function form_save() {
 
 		$items[0] = array();
 
-		if ($graph_item_types{get_request_var_post("graph_type_id")} == "LEGEND") {
+		if (get_request_var_post("graph_type_id") == GRAPH_ITEM_TYPE_LEGEND) {
 			/* this can be a major time saver when creating lots of graphs with the typical
 			GPRINT LAST/AVERAGE/MAX legends */
 			$items = array(
@@ -92,6 +92,47 @@ function form_save() {
 					"text_format" => __("Maximum:"),
 					"hard_return" => CHECKED
 					));
+		}
+
+		if ($_POST["graph_type_id"] == GRAPH_ITEM_TYPE_CUSTOM_LEGEND) {
+			/* this can be a major time saver when creating lots of graphs with the typical VDEFs */
+			$items = array(
+				0 => array(
+					"color_id" => "0",
+					"graph_type_id" => GRAPH_ITEM_TYPE_GPRINT,
+					"consolidation_function_id" => read_config_option("cl1_cf_id"),
+					"vdef_id" => read_config_option("cl1_vdef_id"),
+					"text_format" => read_config_option("cl1_text_format"),
+					"hard_return" => read_config_option("cl1_hard_return")
+					),
+				1 => array(
+					"color_id" => "0",
+					"graph_type_id" => GRAPH_ITEM_TYPE_GPRINT,
+					"consolidation_function_id" => read_config_option("cl2_cf_id"),
+					"vdef_id" => read_config_option("cl2_vdef_id"),
+					"text_format" => read_config_option("cl2_text_format"),
+					"hard_return" => read_config_option("cl2_hard_return")
+					),
+				2 => array(
+					"color_id" => "0",
+					"graph_type_id" => GRAPH_ITEM_TYPE_GPRINT,
+					"consolidation_function_id" => read_config_option("cl3_cf_id"),
+					"vdef_id" => read_config_option("cl3_vdef_id"),
+					"text_format" => read_config_option("cl3_text_format"),
+					"hard_return" => read_config_option("cl3_hard_return")
+					),
+				3 => array(
+					"color_id" => "0",
+					"graph_type_id" => GRAPH_ITEM_TYPE_GPRINT,
+					"consolidation_function_id" => read_config_option("cl4_cf_id"),
+					"vdef_id" => read_config_option("cl4_vdef_id"),
+					"text_format" => read_config_option("cl4_text_format"),
+					"hard_return" => read_config_option("cl4_hard_return")
+					),
+				);
+			foreach ($items as $key => $item) { #drop "empty" custom legend items
+				if (empty($item["text_format"])) unset($items[$key]);
+			}
 		}
 
 		foreach ($items as $item) {
