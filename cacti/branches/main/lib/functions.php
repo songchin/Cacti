@@ -1953,6 +1953,7 @@ function draw_navigation_text() {
 		"utilities.php:view_tech" => array("title" => __("Technical Support"), "mapping" => "index.php:,utilities.php:", "url" => "utilities.php", "level" => "2"),
 		"utilities.php:view_user_log" => array("title" => __("View User Log File"), "mapping" => "index.php:,utilities.php:", "url" => "utilities.php", "level" => "2"),
 		"vdef.php:" => array("title" => __("VDEF's"), "mapping" => "index.php:", "url" => "vdef.php", "level" => "1"),
+		"vdef.php:actions" => array("title" => __("Actions"), "mapping" => "index.php:,vdef.php:", "url" => "", "level" => "2"),
 		"vdef.php:edit" => array("title" => __("(Edit)"), "mapping" => "index.php:,vdef.php:", "url" => "", "level" => "2"),
 		"vdef.php:remove" => array("title" => __("(Remove)"), "mapping" => "index.php:,vdef.php:", "url" => "", "level" => "2"),
 		"vdef.php:item_edit" => array("title" => __("VDEF Items"), "mapping" => "index.php:,vdef.php:,vdef.php:edit", "url" => "", "level" => "3"),
