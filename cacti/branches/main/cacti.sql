@@ -1696,6 +1696,7 @@ CREATE TABLE graph_templates_item (
   color_id mediumint(8) unsigned NOT NULL default '0',
   alpha char(2) default 'FF',
   graph_type_id tinyint(3) NOT NULL default '0',
+  line_width decimal(4,2) default 0,  
   cdef_id mediumint(8) unsigned NOT NULL default '0',
   vdef_id mediumint(8) unsigned NOT NULL default '0',
   consolidation_function_id tinyint(2) NOT NULL default '0',

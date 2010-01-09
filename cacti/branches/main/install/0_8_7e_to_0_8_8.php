@@ -596,5 +596,15 @@ function upgrade_to_0_8_8() {
 	db_install_execute("0.8.8", "INSERT INTO `vdef_items` VALUES (13, 'f1bf2ecf54ca0565cf39c9c3f7e5394b', 7, 1, 4, 'CURRENT_DATA_SOURCE');");
 	db_install_execute("0.8.8", "INSERT INTO `vdef_items` VALUES (14, '11a26f18feba3919be3af426670cba95', 7, 2, 6, '95');");
 	db_install_execute("0.8.8", "INSERT INTO `vdef_items` VALUES (15, 'e7ae90275bc1efada07c19ca3472d9db', 7, 3, 1, '7');");
+
+
+
+	# graph_templates_items: split LINEx into LINE and a line_width of x
+	db_install_execute("0.8.8", "ALTER TABLE graph_templates_item ADD COLUMN line_width DECIMAL(4,2) DEFAULT 0 AFTER graph_type_id");
+	db_install_execute("0.8.8", "UPDATE graph_templates_item SET `line_width`=1 WHERE `graph_type_id`=4"); # LINE1
+	db_install_execute("0.8.8", "UPDATE graph_templates_item SET `line_width`=2 WHERE `graph_type_id`=5"); # LINE2
+	db_install_execute("0.8.8", "UPDATE graph_templates_item SET `line_width`=3 WHERE `graph_type_id`=6"); # LINE3
+
+
 }
 

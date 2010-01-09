@@ -180,11 +180,33 @@ function xml_to_graph_template($hash, &$xml_array, &$hash_cache) {
 						}
 
 						$save[$field_name] = $color_id;
+					}elseif (($field_name == "graph_type_id") && (get_version_index($parsed_hash["version"]) < get_version_index("0.8.8"))) { /* backwards compatability */
+						$save[$field_name] = addslashes(xml_character_decode($item_array[$field_name])); # save graph_type_id as is TODO: may recode to LINE instead of LINEx
+						# additionally, save line_width as numeric value in intermediate field
+						switch ($item_array[$field_name]) {
+							case GRAPH_ITEM_TYPE_LINE1:
+								$save["_line_width"] = 1;
+								break;
+							case GRAPH_ITEM_TYPE_LINE2:
+								$save["_line_width"] = 2;
+								break;
+							case GRAPH_ITEM_TYPE_LINE3:
+								$save["_line_width"] = 3;
+								break;
+							default:
+								$save["_line_width"] = 0;
+						}
 					}else{
 						$save[$field_name] = addslashes(xml_character_decode($item_array[$field_name]));
 					}
 				}
 			}
+
+			if (!array_key_exists($save, "line_width") && array_key_exists($save, "_line_width")) {
+				# no explicit line_width given, but implicit one available
+				$save["line_width"] = $save["_line_width"];
+			}
+			unset($save["_line_width"]); # we won't save the intermediate
 
 			$graph_template_item_id = sql_save($save, "graph_templates_item");
 

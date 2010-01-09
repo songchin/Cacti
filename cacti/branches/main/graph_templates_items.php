@@ -154,16 +154,33 @@ function form_save() {
 				$_POST["sequence"] = get_sequence($_POST["sequence"], "sequence", "graph_templates_item", "graph_template_id=" . $_POST["graph_template_id"] . " and local_graph_id=0");
 			}
 
-			$save["id"] = $_POST["graph_template_item_id"];
+			$save["id"] = form_input_validate($_POST["id"], "id", "^[0-9]+$", false, 3);
 			$save["hash"] = get_hash_graph_template($_POST["graph_template_item_id"], "graph_template_item");
-			$save["graph_template_id"] = $_POST["graph_template_id"];
+			$save["graph_template_id"] = form_input_validate($_POST["graph_template_id"], "graph_template_id", "^[0-9]+$", false, 3);
 			$save["local_graph_id"] = 0;
 			$save["task_item_id"] = form_input_validate($_POST["task_item_id"], "task_item_id", "^[0-9]+$", true, 3);
 			$save["color_id"] = form_input_validate((isset($item["color_id"]) ? $item["color_id"] : $_POST["color_id"]), "color_id", "^[0-9]+$", true, 3);
-			/* if alpha is disabled, use invisible_alpha instead */
-			if (!isset($_POST["alpha"])) {$_POST["alpha"] = $_POST["invisible_alpha"];}
-			$save["alpha"] = form_input_validate((isset($item["alpha"]) ? $item["alpha"] : $_POST["alpha"]), "alpha", "", true, 3);
+			/* if alpha is disabled, use alpha=FF instead */
+			if (!isset($_POST["alpha"])) {$_POST["alpha"] = "FF";}
+			$save["alpha"] = form_input_validate((isset($item["alpha"]) ? $item["alpha"] : $_POST["alpha"]), "alpha", "^[a-fA-F0-9]+$", true, 3);
 			$save["graph_type_id"] = form_input_validate((isset($item["graph_type_id"]) ? $item["graph_type_id"] : $_POST["graph_type_id"]), "graph_type_id", "^[0-9]+$", true, 3);
+			if (isset($_POST["line_width"]) || isset($item["line_width"])) {
+				$save["line_width"] = form_input_validate((isset($item["line_width"]) ? $item["line_width"] : $_POST["line_width"]), "line_width", "^[0-9]+[\.,]+[0-9]+$", true, 3);
+			}else { # make sure to transfer old LINEx style into line_width on save
+				switch ($save["graph_type_id"]) {
+					case GRAPH_ITEM_TYPE_LINE1:
+						$save["line_width"] = 1;
+						break;
+					case GRAPH_ITEM_TYPE_LINE2:
+						$save["line_width"] = 2;
+						break;
+					case GRAPH_ITEM_TYPE_LINE3:
+						$save["line_width"] = 3;
+						break;
+					default:
+						$save["line_width"] = 0;
+				}
+			}
 			$save["cdef_id"] = form_input_validate($_POST["cdef_id"], "cdef_id", "^[0-9]+$", true, 3);
 			$save["vdef_id"] = form_input_validate((isset($item["vdef_id"]) ? $item["vdef_id"] : $_POST["vdef_id"]), "vdef_id", "^[0-9]+$", true, 3);
 			$save["consolidation_function_id"] = form_input_validate((isset($item["consolidation_function_id"]) ? $item["consolidation_function_id"] : $_POST["consolidation_function_id"]), "consolidation_function_id", "^[0-9]+$", true, 3);
@@ -171,7 +188,7 @@ function form_save() {
 			$save["value"] = form_input_validate($_POST["value"], "value", "", true, 3);
 			$save["hard_return"] = form_input_validate(((isset($item["hard_return"]) ? $item["hard_return"] : (isset($_POST["hard_return"]) ? $_POST["hard_return"] : ""))), "hard_return", "", true, 3);
 			$save["gprint_id"] = form_input_validate($_POST["gprint_id"], "gprint_id", "^[0-9]+$", true, 3);
-			$save["sequence"] = $_POST["sequence"];
+			$save["sequence"] = form_input_validate($_POST["sequence"], "sequence", "^[0-9]+$", false, 3);
 
 			if (!is_error_message()) {
 				/* Before we save the item, let's get a look at task_item_id <-> input associations */
@@ -421,7 +438,6 @@ function item_edit() {
 	form_hidden_box("_graph_type_id", (isset($template_item) ? $template_item["graph_type_id"] : "0"), "");
 	form_hidden_box("_task_item_id", (isset($template_item) ? $template_item["task_item_id"] : "0"), "");
 	form_hidden_box("save_component_item", "1", "");
-	form_hidden_box("invisible_alpha", $form_array["alpha"]["value"], "FF");
 	form_hidden_box("hidden_rrdtool_version", read_config_option("rrdtool_version"), "");
 
 	form_save_button_alt("url!" . (isset($_SERVER["HTTP_REFERER"]) ? $_SERVER["HTTP_REFERER"] : ""));

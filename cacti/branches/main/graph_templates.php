@@ -382,6 +382,7 @@ function item() {
 			graph_templates_item.value,
 			graph_templates_item.hard_return,
 			graph_templates_item.graph_type_id,
+			graph_templates_item.line_width,
 			graph_templates_item.consolidation_function_id,
 			CONCAT_WS(' - ',data_template_data.name,data_template_rrd.data_source_name) as data_source_name,
 			cdef.name as cdef_name,
@@ -392,6 +393,7 @@ function item() {
 			left join data_local on (data_template_rrd.local_data_id=data_local.id)
 			left join data_template_data on (data_local.id=data_template_data.local_data_id)
 			left join cdef on (cdef_id=cdef.id)
+			left join vdef on (vdef_id=vdef.id)
 			left join colors on (color_id=colors.id)
 			left join graph_templates_gprint on (gprint_id=graph_templates_gprint.id)
 			where graph_templates_item.graph_template_id=" . $_GET["id"] . "

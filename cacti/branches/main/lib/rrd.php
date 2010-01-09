@@ -660,6 +660,7 @@ function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rr
 		graph_templates_item.hard_return,
 		graph_templates_item.consolidation_function_id,
 		graph_templates_item.graph_type_id,
+		graph_templates_item.line_width,
 		graph_templates_gprint.gprint_text,
 		colors.hex,
 		graph_templates_item.alpha,
@@ -1196,16 +1197,16 @@ function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rr
 				$text_padding = str_pad("", $pad_number);
 
 			/* two GPRINT's in a row screws up the padding, lets not do that */
-			} else if (($graph_item_types{$graph_item["graph_type_id"]} == "GPRINT") && ($last_graph_type == "GPRINT")) {
+			} else if (($graph_item["graph_type_id"] == GRAPH_ITEM_TYPE_GPRINT) && ($last_graph_type == GRAPH_ITEM_TYPE_GPRINT)) {
 				$text_padding = "";
 			}
 
-			$last_graph_type = $graph_item_types{$graph_item["graph_type_id"]};
+			$last_graph_type = $graph_item["graph_type_id"];
 		}
 
 		/* we put this in a variable so it can be manipulated before mainly used
 		if we want to skip it, like below */
-		$current_graph_item_type = $graph_item_types{$graph_item["graph_type_id"]};
+		$current_graph_item_type = $graph_item["graph_type_id"];
 
 		/* IF this graph item has a data source... get a DEF name for it, or the cdef if that applies
 		to this graph item */
@@ -1284,18 +1285,29 @@ function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rr
 				}
 			}
 
-			if ($graph_item["graph_type_id"] == GRAPH_ITEM_TYPE_AREA ||
-				$graph_item["graph_type_id"] == GRAPH_ITEM_TYPE_LINE1 ||
-				$graph_item["graph_type_id"] == GRAPH_ITEM_TYPE_LINE2 ||
-				$graph_item["graph_type_id"] == GRAPH_ITEM_TYPE_LINE3) {
+			if ($graph_item["graph_type_id"] == GRAPH_ITEM_TYPE_AREA) {
 				$graph_item_stack_type = $graph_item_types{$graph_item["graph_type_id"]};
 				$txt_graph_items .= $graph_item_types{$graph_item["graph_type_id"]} . ":" . $data_source_name . $graph_item_color_code . ":" . "\"" . $graph_variables["text_format"][$graph_item_id] . $hardreturn[$graph_item_id] . "\" ";
+
+			}elseif ($graph_item["graph_type_id"] == GRAPH_ITEM_TYPE_LINE1 ||
+					$graph_item["graph_type_id"] == GRAPH_ITEM_TYPE_LINE2 ||
+					$graph_item["graph_type_id"] == GRAPH_ITEM_TYPE_LINE3) {
+				$graph_item_stack_type = $graph_item_types{$graph_item["graph_type_id"]};
+				if (read_config_option("rrdtool_version") == RRD_VERSION_1_0) {
+					# round line_width to 1 <= line_width <= 3
+					if ($graph_item["line_width"] < 1) {$graph_item["line_width"] = 1;}
+					if ($graph_item["line_width"] > 3) {$graph_item["line_width"] = 3;}
+					$graph_item["line_width"] = intval($graph_item["line_width"]);
+				}
+				$txt_graph_items .= "LINE" . $graph_item["line_width"] . ":" . $data_source_name . $graph_item_color_code . ":" . "\"" . $graph_variables["text_format"][$graph_item_id] . $hardreturn[$graph_item_id] . "\" ";
+
 			}elseif ($graph_item["graph_type_id"] == GRAPH_ITEM_TYPE_STACK) {
 				if (read_config_option("rrdtool_version") != RRD_VERSION_1_0) {
 					$txt_graph_items .= $graph_item_stack_type . ":" . $data_source_name . $graph_item_color_code . ":" . "\"" . $graph_variables["text_format"][$graph_item_id] . $hardreturn[$graph_item_id] . "\":STACK";
 				}else {
 					$txt_graph_items .= $graph_item_types{$graph_item["graph_type_id"]} . ":" . $data_source_name . $graph_item_color_code . ":" . "\"" . $graph_variables["text_format"][$graph_item_id] . $hardreturn[$graph_item_id] . "\" ";
 				}
+
 			}elseif ($graph_item["graph_type_id"] == GRAPH_ITEM_TYPE_HRULE) {
 				$graph_variables["value"][$graph_item_id] = str_replace(":", "\:", $graph_variables["value"][$graph_item_id]); /* escape colons */
 				/* perform variable substitution; if this does not return a number, rrdtool will FAIL! */
@@ -1304,6 +1316,7 @@ function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rr
 					$graph_variables["value"][$graph_item_id] = $substitute;
 				}
 				$txt_graph_items .= $graph_item_types{$graph_item["graph_type_id"]} . ":" . $graph_variables["value"][$graph_item_id] . $graph_item_color_code . ":\"" . $graph_variables["text_format"][$graph_item_id] . $hardreturn[$graph_item_id] . "\" ";
+
 			}elseif ($graph_item["graph_type_id"] == GRAPH_ITEM_TYPE_VRULE) {
 
 				if (substr_count($graph_item["value"], ":")) {
@@ -1480,6 +1493,7 @@ function rrdtool_function_xport($local_graph_id, $rra_id, $xport_data_array, &$x
 		graph_templates_item.hard_return,
 		graph_templates_item.consolidation_function_id,
 		graph_templates_item.graph_type_id,
+		graph_templates_item.line_width,
 		graph_templates_gprint.gprint_text,
 		colors.hex,
 		graph_templates_item.alpha,
