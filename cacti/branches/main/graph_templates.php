@@ -184,6 +184,16 @@ function form_save() {
 		$save2["tab_width"] = form_input_validate((isset($_POST["tab_width"]) ? $_POST["tab_width"] : ""), "tab_width", "^[0-9]*$", true, 3);
 		$save2["t_watermark"] = form_input_validate((isset($_POST["t_watermark"]) ? $_POST["t_watermark"] : ""), "t_watermark", "", true, 3);
 		$save2["watermark"] = form_input_validate((isset($_POST["watermark"]) ? $_POST["watermark"] : ""), "watermark", "", true, 3);
+		$save2["t_force_rules_legend"] = form_input_validate((isset($_POST["t_force_rules_legend"]) ? $_POST["t_force_rules_legend"] : ""), "t_force_rules_legend", "", true, 3);
+		$save2["force_rules_legend"] = form_input_validate((isset($_POST["force_rules_legend"]) ? $_POST["force_rules_legend"] : ""), "force_rules_legend", "", true, 3);
+		$save2["t_legend_position"] = form_input_validate((isset($_POST["t_legend_position"]) ? $_POST["t_legend_position"] : ""), "t_legend_position", "", true, 3);
+		$save2["legend_position"] = form_input_validate((isset($_POST["legend_position"]) ? $_POST["legend_position"] : ""), "legend_position", "", true, 3);
+		$save2["t_legend_direction"] = form_input_validate((isset($_POST["t_legend_direction"]) ? $_POST["t_legend_direction"] : ""), "t_legend_direction", "", true, 3);
+		$save2["legend_direction"] = form_input_validate((isset($_POST["legend_direction"]) ? $_POST["legend_direction"] : ""), "legend_direction", "", true, 3);
+		$save2["t_grid_dash"] = form_input_validate((isset($_POST["t_grid_dash"]) ? $_POST["t_grid_dash"] : ""), "t_grid_dash", "", true, 3);
+		$save2["grid_dash"] = form_input_validate((isset($_POST["grid_dash"]) ? $_POST["grid_dash"] : ""), "grid_dash", "^[0-9]*:[0-9]*$", true, 3);
+		$save2["t_border"] = form_input_validate((isset($_POST["t_border"]) ? $_POST["t_border"] : ""), "t_border", "", true, 3);
+		$save2["border"] = form_input_validate((isset($_POST["border"]) ? $_POST["border"] : ""), "border", "^[0-9]*$", true, 3);
 
 
 		if (!is_error_message()) {
@@ -429,7 +439,7 @@ function item() {
 
 function template_edit() {
 	global $colors, $image_types, $fields_graph_template_template_edit;
-	global $struct_graph_labels, $struct_graph_right_axis, $struct_graph_size, $struct_graph_limits, $struct_graph_grid, $struct_graph_color, $struct_graph_misc, $struct_graph_cacti;
+	global $struct_graph_labels, $struct_graph_right_axis, $struct_graph_size, $struct_graph_limits, $struct_graph_grid, $struct_graph_color, $struct_graph_legend, $struct_graph_misc, $struct_graph_cacti;
 
 	/* ================= input validation ================= */
 	input_validate_input_number(get_request_var("id"));
@@ -493,6 +503,9 @@ function template_edit() {
 	html_end_box(false);
 	html_start_box("<strong>" . __("Graph Template Color") . "</strong>", "100", $colors["header"], "0", "center", "", true, "table_graph_template_color");
 	draw_template_edit_form('header_graph_color', $struct_graph_color, $template_graph, false);
+	html_end_box(false);
+	html_start_box("<strong>" . __("Graph Template Legend") . "</strong>", "100", $colors["header"], "0", "center", "", true, "table_graph_template_misc");
+	draw_template_edit_form('header_graph_legend', $struct_graph_legend, $template_graph, false);
 	html_end_box(false);
 	html_start_box("<strong>" . __("Graph Template Misc") . "</strong>", "100", $colors["header"], "0", "center", "", true, "table_graph_template_misc");
 	draw_template_edit_form('header_graph_misc', $struct_graph_misc, $template_graph, false);

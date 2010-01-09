@@ -80,6 +80,14 @@ define("RRD_XAXIS_WEEK",		"WEEK");
 define("RRD_XAXIS_MONTH",		"MONTH");
 define("RRD_XAXIS_YEAR",		"YEAR");
 
+define("RRD_LEGEND_POS_NORTH",	"north");
+define("RRD_LEGEND_POS_SOUTH",	"south");
+define("RRD_LEGEND_POS_WEST",	"west");
+define("RRD_LEGEND_POS_EAST",	"east");
+
+define("RRD_LEGEND_DIR_TOPDOWN",	"topdown");
+define("RRD_LEGEND_DIR_BOTTOMUP",	"bottomup");
+
 define("DATA_QUERY_AUTOINDEX_NONE", 0);
 define("DATA_QUERY_AUTOINDEX_BACKWARDS_UPTIME", 1);
 define("DATA_QUERY_AUTOINDEX_INDEX_COUNT_CHANGE", 2);

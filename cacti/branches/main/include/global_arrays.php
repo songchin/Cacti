@@ -208,6 +208,18 @@ $rrd_xaxis_timespans = array(
 	RRD_XAXIS_YEAR			=> __("Year"),
 );
 
+$rrd_legend_position = array(
+	RRD_LEGEND_POS_NORTH	=> __("North"),
+	RRD_LEGEND_POS_SOUTH	=> __("South"),
+	RRD_LEGEND_POS_WEST		=> __("West"),
+	RRD_LEGEND_POS_EAST		=> __("East"),
+);
+
+$rrd_legend_direction = array(
+	RRD_LEGEND_DIR_TOPDOWN	=> __("Top -> Down"),
+	RRD_LEGEND_DIR_BOTTOMUP	=> __("Bottom -> Up"),
+);
+
 $data_source_types = array(
 	DATA_SOURCE_TYPE_GAUGE		=> "GAUGE",
 	DATA_SOURCE_TYPE_COUNTER	=> "COUNTER",

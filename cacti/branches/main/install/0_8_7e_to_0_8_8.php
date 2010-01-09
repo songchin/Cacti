@@ -387,11 +387,11 @@ function upgrade_to_0_8_8() {
 	db_install_execute("0.8.8", "ALTER TABLE graph_templates_graph ADD COLUMN t_colortag_arrow char(2) DEFAULT '0'");
 	db_install_execute("0.8.8", "ALTER TABLE graph_templates_graph ADD COLUMN colortag_arrow char(8) DEFAULT NULL");
 	db_install_execute("0.8.8", "ALTER TABLE graph_templates_graph ADD COLUMN t_font_render_mode char(2) DEFAULT '0'");
-	db_install_execute("0.8.8", "ALTER TABLE graph_templates_graph ADD COLUMN font_render_mode char(10) DEFAULT NULL");
+	db_install_execute("0.8.8", "ALTER TABLE graph_templates_graph ADD COLUMN font_render_mode varchar(10) DEFAULT NULL");
 	db_install_execute("0.8.8", "ALTER TABLE graph_templates_graph ADD COLUMN t_font_smoothing_threshold char(2) DEFAULT '0'");
 	db_install_execute("0.8.8", "ALTER TABLE graph_templates_graph ADD COLUMN font_smoothing_threshold int(8) DEFAULT NULL");
 	db_install_execute("0.8.8", "ALTER TABLE graph_templates_graph ADD COLUMN t_graph_render_mode char(2) DEFAULT '0'");
-	db_install_execute("0.8.8", "ALTER TABLE graph_templates_graph ADD COLUMN graph_render_mode char(10) DEFAULT NULL");
+	db_install_execute("0.8.8", "ALTER TABLE graph_templates_graph ADD COLUMN graph_render_mode varchar(10) DEFAULT NULL");
 	db_install_execute("0.8.8", "ALTER TABLE graph_templates_graph ADD COLUMN t_pango_markup char(2) DEFAULT '0'");
 	db_install_execute("0.8.8", "ALTER TABLE graph_templates_graph ADD COLUMN pango_markup varchar(255) DEFAULT NULL");
 	db_install_execute("0.8.8", "ALTER TABLE graph_templates_graph ADD COLUMN t_interlaced char(2) DEFAULT '0'");
@@ -400,6 +400,16 @@ function upgrade_to_0_8_8() {
 	db_install_execute("0.8.8", "ALTER TABLE graph_templates_graph ADD COLUMN tab_width mediumint(4) DEFAULT NULL");
 	db_install_execute("0.8.8", "ALTER TABLE graph_templates_graph ADD COLUMN t_watermark char(2) DEFAULT '0'");
 	db_install_execute("0.8.8", "ALTER TABLE graph_templates_graph ADD COLUMN watermark varchar(255) DEFAULT NULL");
+	db_install_execute("0.8.8", "ALTER TABLE graph_templates_graph ADD COLUMN t_force_rules_legend char(2) DEFAULT '0'");
+	db_install_execute("0.8.8", "ALTER TABLE graph_templates_graph ADD COLUMN force_rules_legend char(2) DEFAULT NULL");
+	db_install_execute("0.8.8", "ALTER TABLE graph_templates_graph ADD COLUMN t_legend_position char(2) DEFAULT '0'");
+	db_install_execute("0.8.8", "ALTER TABLE graph_templates_graph ADD COLUMN legend_position varchar(10) DEFAULT NULL");
+	db_install_execute("0.8.8", "ALTER TABLE graph_templates_graph ADD COLUMN t_legend_direction char(2) DEFAULT '0'");
+	db_install_execute("0.8.8", "ALTER TABLE graph_templates_graph ADD COLUMN legend_direction varchar(10) DEFAULT NULL");
+	db_install_execute("0.8.8", "ALTER TABLE graph_templates_graph ADD COLUMN t_grid_dash char(2) DEFAULT '0'");
+	db_install_execute("0.8.8", "ALTER TABLE graph_templates_graph ADD COLUMN grid_dash varchar(10) DEFAULT NULL");
+	db_install_execute("0.8.8", "ALTER TABLE graph_templates_graph ADD COLUMN t_border char(2) DEFAULT '0'");
+	db_install_execute("0.8.8", "ALTER TABLE graph_templates_graph ADD COLUMN border char(2) DEFAULT NULL");
 	# create new table graph_templates_xaxis
 	db_install_execute("0.8.8","
 		CREATE TABLE `graph_templates_xaxis` (

@@ -640,7 +640,12 @@ function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rr
 		graph_templates_graph.pango_markup,
 		graph_templates_graph.interlaced,
 		graph_templates_graph.tab_width,
-		graph_templates_graph.watermark
+		graph_templates_graph.watermark,
+		graph_templates_graph.force_rules_legend,
+		graph_templates_graph.legend_position,
+		graph_templates_graph.legend_direction,
+		graph_templates_graph.grid_dash,
+		graph_templates_graph.border
 		from (graph_templates_graph,graph_local)
 		where graph_local.id=graph_templates_graph.local_graph_id
 		and graph_templates_graph.local_graph_id=$local_graph_id");
@@ -1133,38 +1138,40 @@ function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rr
 		$graph_defs .= $cdef_graph_defs;
 
 		/* +++++++++++++++++++++++ GRAPH ITEMS: VDEF's +++++++++++++++++++++++ */
+		if (read_config_option("rrdtool_version") != RRD_VERSION_1_0) {
 
-		/* make vdef string here, merely copied from cdef stuff, lvm */
-		$vdef_graph_defs = "";
+			/* make vdef string here, copied from cdef stuff */
+			$vdef_graph_defs = "";
 
-		if ((!empty($graph_item["vdef_id"])) && (!isset($vdef_cache{$graph_item["vdef_id"]}{$graph_item["cdef_id"]}{$graph_item["data_template_rrd_id"]}[$cf_id]))) {
-			$vdef_string = $graph_variables["vdef_cache"]{$graph_item["graph_templates_item_id"]};
-			if ($graph_item["cdef_id"] != "0") {
-				/* "calculated" VDEF: use (cached) CDEF as base, only way to get calculations into VDEFs, lvm */
-				$vdef_string = "cdef" . str_replace("CURRENT_DATA_SOURCE", generate_graph_def_name(strval(isset($cdef_cache{$graph_item["cdef_id"]}{$graph_item["data_template_rrd_id"]}[$cf_id]) ? $cdef_cache{$graph_item["cdef_id"]}{$graph_item["data_template_rrd_id"]}[$cf_id] : "0")), $vdef_string);
-		 	} else {
-				/* "pure" VDEF: use DEF as base */
-				$vdef_string = str_replace("CURRENT_DATA_SOURCE", generate_graph_def_name(strval(isset($cf_ds_cache{$graph_item["data_template_rrd_id"]}[$cf_id]) ? $cf_ds_cache{$graph_item["data_template_rrd_id"]}[$cf_id] : "0")), $vdef_string);
-			}
+			if ((!empty($graph_item["vdef_id"])) && (!isset($vdef_cache{$graph_item["vdef_id"]}{$graph_item["cdef_id"]}{$graph_item["data_template_rrd_id"]}[$cf_id]))) {
+				$vdef_string = $graph_variables["vdef_cache"]{$graph_item["graph_templates_item_id"]};
+				if ($graph_item["cdef_id"] != "0") {
+					/* "calculated" VDEF: use (cached) CDEF as base, only way to get calculations into VDEFs, lvm */
+					$vdef_string = "cdef" . str_replace("CURRENT_DATA_SOURCE", generate_graph_def_name(strval(isset($cdef_cache{$graph_item["cdef_id"]}{$graph_item["data_template_rrd_id"]}[$cf_id]) ? $cdef_cache{$graph_item["cdef_id"]}{$graph_item["data_template_rrd_id"]}[$cf_id] : "0")), $vdef_string);
+			 	} else {
+					/* "pure" VDEF: use DEF as base */
+					$vdef_string = str_replace("CURRENT_DATA_SOURCE", generate_graph_def_name(strval(isset($cf_ds_cache{$graph_item["data_template_rrd_id"]}[$cf_id]) ? $cf_ds_cache{$graph_item["data_template_rrd_id"]}[$cf_id] : "0")), $vdef_string);
+				}
 # TODO: It would be possible to refer to a CDEF, but that's all. So ALL_DATA_SOURCES_NODUPS and stuff can't be used directly!
-#			$vdef_string = str_replace("ALL_DATA_SOURCES_NODUPS", $magic_item["ALL_DATA_SOURCES_NODUPS"], $vdef_string);
-#			$vdef_string = str_replace("ALL_DATA_SOURCES_DUPS", $magic_item["ALL_DATA_SOURCES_DUPS"], $vdef_string);
-#			$vdef_string = str_replace("SIMILAR_DATA_SOURCES_NODUPS", $magic_item["SIMILAR_DATA_SOURCES_NODUPS"], $vdef_string);
-#			$vdef_string = str_replace("SIMILAR_DATA_SOURCES_DUPS", $magic_item["SIMILAR_DATA_SOURCES_DUPS"], $vdef_string);
+#				$vdef_string = str_replace("ALL_DATA_SOURCES_NODUPS", $magic_item["ALL_DATA_SOURCES_NODUPS"], $vdef_string);
+#				$vdef_string = str_replace("ALL_DATA_SOURCES_DUPS", $magic_item["ALL_DATA_SOURCES_DUPS"], $vdef_string);
+#				$vdef_string = str_replace("SIMILAR_DATA_SOURCES_NODUPS", $magic_item["SIMILAR_DATA_SOURCES_NODUPS"], $vdef_string);
+#				$vdef_string = str_replace("SIMILAR_DATA_SOURCES_DUPS", $magic_item["SIMILAR_DATA_SOURCES_DUPS"], $vdef_string);
 
-			/* make the initial "virtual" vdef name */
-			$vdef_graph_defs .= "VDEF:vdef" . generate_graph_def_name(strval($i)) . "=";
-			$vdef_graph_defs .= $vdef_string;
-			$vdef_graph_defs .= " \\\n";
+				/* make the initial "virtual" vdef name */
+				$vdef_graph_defs .= "VDEF:vdef" . generate_graph_def_name(strval($i)) . "=";
+				$vdef_graph_defs .= $vdef_string;
+				$vdef_graph_defs .= " \\\n";
 
-			/* the VDEF cache is so we do not create duplicate VDEF's on a graph,
-			 * but take info account, that same VDEF may use different CDEFs
-			 * so index over VDEF_ID, CDEF_ID per DATA_TEMPLATE_RRD_ID, lvm */
-			$vdef_cache{$graph_item["vdef_id"]}{$graph_item["cdef_id"]}{$graph_item["data_template_rrd_id"]}[$cf_id] = "$i";
+				/* the VDEF cache is so we do not create duplicate VDEF's on a graph,
+				 * but take info account, that same VDEF may use different CDEFs
+				 * so index over VDEF_ID, CDEF_ID per DATA_TEMPLATE_RRD_ID, lvm */
+				$vdef_cache{$graph_item["vdef_id"]}{$graph_item["cdef_id"]}{$graph_item["data_template_rrd_id"]}[$cf_id] = "$i";
+			}
+
+			/* add the cdef string to the end of the def string */
+			$graph_defs .= $vdef_graph_defs;
 		}
-
-		/* add the cdef string to the end of the def string */
-		$graph_defs .= $vdef_graph_defs;
 
 		/* note the current item_id for easy access */
 		$graph_item_id = $graph_item["graph_templates_item_id"];
@@ -2244,6 +2251,7 @@ function rrdgraph_opts($graph, $graph_data_array, $version) {
 	$option = "";
 
 	foreach ($graph as $key => $value) {
+		#cacti_log("Parameter: " . $key . " value: " . $value . " RRDTool: " . $version, true, "TEST");
 		switch ($key) {
 			case "title_cache":
 				if (!empty($value)) {
@@ -2424,6 +2432,44 @@ function rrdgraph_opts($graph, $graph_data_array, $version) {
 				if ($version != RRD_VERSION_1_0) {
 					if (!empty($value)) {
 						$option .= "--watermark \"" . $value . "\"" . RRD_NL;
+					}
+				}
+				break;
+
+			case "force_rules_legend":
+				if ($value == CHECKED) {
+					$option .= "--force-rules-legend" . RRD_NL;
+				}
+				break;
+
+			case "legend_position":
+				if ($version != RRD_VERSION_1_0 && $version != RRD_VERSION_1_2 && $version != RRD_VERSION_1_3) {
+					if (!empty($value)) {
+						$option .= "--legend-position " . $value . RRD_NL;
+					}
+				}
+				break;
+
+			case "legend_direction":
+				if ($version != RRD_VERSION_1_0 && $version != RRD_VERSION_1_2 && $version != RRD_VERSION_1_3) {
+					if (!empty($value)) {
+						$option .= "--legend-direction " . $value . RRD_NL;
+					}
+				}
+				break;
+
+			case "grid_dash":
+				if ($version != RRD_VERSION_1_0 && $version != RRD_VERSION_1_2 && $version != RRD_VERSION_1_3) {
+					if (!empty($value)) {
+						$option .= "--grid-dash " . $value . RRD_NL;
+					}
+				}
+				break;
+
+			case "border":
+				if ($version != RRD_VERSION_1_0 && $version != RRD_VERSION_1_2 && $version != RRD_VERSION_1_3) {
+					if (preg_match("/^[0-9]+$/", $value)) { # stored as string, do not use ===; border=0 is valid but != empty border!
+						$option .= "--border " . $value . RRD_NL;
 					}
 				}
 				break;

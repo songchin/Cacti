@@ -806,12 +806,53 @@ $struct_graph_color = array(
 		),
 	);
 
+$struct_graph_legend = array(
+	"force_rules_legend" => array(
+		"friendly_name" => __("Force Rules Legend (--force-rules-legend)"),
+		"method" => "checkbox",
+		"default" => "",
+		"description" => __("Force the generation of HRULE and VRULE legends."),
+		),
+	"legend_position" => array(
+		"friendly_name" => __("Legend Position (--legend-position=&lt;position&gt;)"),
+		"method" => "drop_array",
+		"array" => $rrd_legend_position,
+		"none_value" => "None",
+		"description" => __("Place the legend at the given side of the graph."),
+		"class" => "not_RRD_1_0_x not_RRD_1_2_x not_RRD_1_3_x",
+		),
+	"legend_direction" => array(
+		"friendly_name" => __("Legend Direction (--legend-direction=&lt;direction&gt;)"),
+		"method" => "drop_array",
+		"array" => $rrd_legend_direction,
+		"none_value" => "None",
+		"description" => __("Place the legend items in the given vertical order."),
+		"class" => "not_RRD_1_0_x not_RRD_1_2_x not_RRD_1_3_x",
+		),
+	);
+
 $struct_graph_misc = array(
+	"grid_dash" => array(
+		"friendly_name" => __("Grid Dash (--grid-dash &lt;on:off&gt;)"),
+		"method" => "textbox",
+		"max_length" => "10",
+		"default" => "",
+		"size" => "10",
+		"description" => __("By default the grid is drawn in a 1 on, 1 off pattern."),
+		),
+	"border" => array(
+		"friendly_name" => __("Border (--border &lt;width&gt;)"),
+		"method" => "textbox",
+		"max_length" => "10",
+		"default" => "",
+		"size" => "10",
+		"description" => __("Width in pixels for the 3rd border drawn around the image. 0 disables the border."),
+		),
 	"font_render_mode" => array(
 		"friendly_name" => __("Font Render Mode (--font-render-mode &lt;mode&gt;)"),
 		"method" => "drop_array",
-		"default" => RRD_FONT_RENDER_NORMAL,
 		"array" => $rrd_font_render_modes,
+		"none_value" => "None",
 		"description" => __("Mode for font rendering."),
 		"class" => "not_RRD_1_0_x",
 		),
@@ -827,8 +868,8 @@ $struct_graph_misc = array(
 	"graph_render_mode" => array(
 		"friendly_name" => __("Graph Render Mode (--graph-render-mode &lt;mode&gt;)"),
 		"method" => "drop_array",
-		"default" => RRD_GRAPH_RENDER_NORMAL,
 		"array" => $rrd_graph_render_modes,
+		"none_value" => "None",
 		"description" => __("Mode for graph rendering."),
 		"class" => "not_RRD_1_0_x not_RRD_1_2_x",
 		),
@@ -898,7 +939,7 @@ $struct_graph_cacti = array(
 		),
 	);
 # for use with existing modules
-$struct_graph = $struct_graph_labels + $struct_graph_right_axis + $struct_graph_size + $struct_graph_limits + $struct_graph_grid + $struct_graph_color + $struct_graph_misc + $struct_graph_cacti;
+$struct_graph = $struct_graph_labels + $struct_graph_right_axis + $struct_graph_size + $struct_graph_limits + $struct_graph_grid + $struct_graph_color + $struct_graph_legend + $struct_graph_misc + $struct_graph_cacti;
 
 
 /* file: (graphs.php|graph_templates.php), action: item_edit */
