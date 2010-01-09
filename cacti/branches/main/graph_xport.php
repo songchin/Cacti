@@ -95,7 +95,7 @@ header("Content-type: application/vnd.ms-excel");
 header("Cache-Control: max-age=15");
 header("Content-Disposition: attachment; filename=\"" . $filename . "\"");
 
-if (is_array($xport_array["meta"])) {
+if (isset($xport_array["meta"]) && is_array($xport_array["meta"]) && isset($xport_array["meta"]["start"])) {
 	print '"Title:","'          . $xport_array["meta"]["title_cache"]                . '"' . "\n";
 	print '"Vertical Label:","' . $xport_array["meta"]["vertical_label"]             . '"' . "\n";
 	print '"Start Date:","'     . date("Y-m-d H:i:s", $xport_array["meta"]["start"]) . '"' . "\n";
@@ -125,7 +125,7 @@ if (is_array($xport_array["meta"])) {
 	print $header . "\n";
 }
 
-if (is_array($xport_array["data"])) {
+if (isset($xport_array["data"]) && is_array($xport_array["data"])) {
 	foreach($xport_array["data"] as $row) {
 		$data = '"' . date("Y-m-d H:i:s", $row["timestamp"]) . '"';
 		for($i=1;$i<=$xport_array["meta"]["columns"];$i++) {

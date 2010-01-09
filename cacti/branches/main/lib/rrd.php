@@ -1669,7 +1669,9 @@ function rrdtool_function_xport($local_graph_id, $rra_id, $xport_data_array, &$x
 
 	$i = 0;
 	$j = 1;
-	reset($xport_items);
+	if (is_array($xport_items)) {
+		reset($xport_items);
+	}
 
 	$xport_item_stack_type = "";
 	$txt_xport_items       = "";
