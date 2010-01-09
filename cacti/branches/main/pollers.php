@@ -28,6 +28,7 @@ include_once(CACTI_BASE_PATH . "/lib/utility.php");
 define("MAX_DISPLAY_PAGES", 21);
 
 $poller_actions = array(
+	ACTION_NONE => __("None"),
 	1 => __("Delete"),
 	2 => __("Duplicate")
 	);

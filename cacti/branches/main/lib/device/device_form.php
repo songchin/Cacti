@@ -371,6 +371,8 @@ function api_device_form_actions() {
 	/* add a list of tree names to the actions dropdown */
 	$device_actions = array_merge($device_actions, api_tree_add_tree_names_to_actions_array());
 
+	$device_actions[ACTION_NONE] = __("None");
+
 	print "<form method='post' action='" .  basename($_SERVER["PHP_SELF"]) . "' name='device_edit_actions'>\n";
 	html_start_box("<strong>" . $device_actions{get_request_var_post("drp_action")} . "</strong>", "60", $colors["header_panel"], "3", "center", "");
 

@@ -379,6 +379,8 @@ function form_actions() {
 	/* add a list of tree names to the actions dropdown */
 	$graph_actions = array_merge($graph_actions, api_tree_add_tree_names_to_actions_array());
 
+	$graph_actions[ACTION_NONE] = __("None");
+
 	html_start_box("<strong>" . $graph_actions{get_request_var_post("drp_action")} . "</strong>", "60", $colors["header_panel"], "3", "center", "");
 
 	print "<form action='graphs.php' method='post'>\n";

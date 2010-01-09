@@ -25,6 +25,7 @@
 include("./include/auth.php");
 
 $rra_actions = array(
+	ACTION_NONE => __("None"),
 	1 => __("Delete")
 	);
 

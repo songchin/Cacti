@@ -31,6 +31,7 @@ include_once(CACTI_BASE_PATH . "/lib/template.php");
 define("MAX_DISPLAY_PAGES", 21);
 
 $ds_actions = array(
+	ACTION_NONE => __("None"),
 	1 => __("Delete"),
 	2 => __("Duplicate")
 	);

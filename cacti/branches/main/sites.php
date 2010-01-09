@@ -27,6 +27,7 @@ include("./include/auth.php");
 define("MAX_DISPLAY_PAGES", 21);
 
 $site_actions = array(
+	ACTION_NONE => __("None"),
 	1 => __("Delete")
 	);
 

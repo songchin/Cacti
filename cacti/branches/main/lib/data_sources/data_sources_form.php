@@ -356,6 +356,8 @@ function data_source_form_actions() {
 			$ds_array[$i++] = $matches[1];
 		}
 	}
+	
+	$ds_actions[ACTION_NONE] = __("None");
 
 	include_once(CACTI_BASE_PATH . "/include/top_header.php");
 

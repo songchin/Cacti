@@ -170,6 +170,8 @@ function xaxis_form_actions() {
 		$i++;
 	}
 
+	$xaxis_actions[ACTION_NONE] = __("None");
+
 	include_once("./include/top_header.php");
 
 	html_start_box("<strong>" . $xaxis_actions{get_request_var_post("drp_action")} . "</strong>", "60", $colors["header_panel"], "3", "center", "");
