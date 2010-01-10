@@ -38,7 +38,8 @@ function graph_interdependencies(graph_type) {
 	case <?php print GRAPH_ITEM_TYPE_AREA;?>:
 		$('.not_RRD_TYPE_AREA').each(function() { $(this).attr('disabled', 'disabled'); });
 		break;
-	case <?php print GRAPH_ITEM_TYPE_STACK;?>:
+	case <?php print GRAPH_ITEM_TYPE_AREASTACK;?>:
+	case <?php print GRAPH_ITEM_TYPE_LINESTACK;?>:
 		$('.not_RRD_TYPE_STACK').each(function() { $(this).attr('disabled', 'disabled'); });
 		break;
 	case <?php print GRAPH_ITEM_TYPE_GPRINT;?>:

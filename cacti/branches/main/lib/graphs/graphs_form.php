@@ -757,11 +757,12 @@ function graph_diff() {
 
 		switch ($graph_type_id) {
 			case GRAPH_ITEM_TYPE_AREA:
-			case GRAPH_ITEM_TYPE_STACK:
+			case GRAPH_ITEM_TYPE_AREASTACK:
 			case GRAPH_ITEM_TYPE_GPRINT:
 			case GRAPH_ITEM_TYPE_LINE1:
 			case GRAPH_ITEM_TYPE_LINE2:
 			case GRAPH_ITEM_TYPE_LINE3:
+			case GRAPH_ITEM_TYPE_LINESTACK:
 				$matrix_title = "(" . $graph_preview_item_values["task_item_id"] . "): " . $graph_preview_item_values["text_format"];
 				break;
 			case GRAPH_ITEM_TYPE_HRULE:

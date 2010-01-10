@@ -909,11 +909,12 @@ function draw_graph_items_list($item_list, $filename, $url_data, $disable_contro
 
 		switch ($item["graph_type_id"]) {
 			case GRAPH_ITEM_TYPE_AREA:
-			case GRAPH_ITEM_TYPE_STACK:
+			case GRAPH_ITEM_TYPE_AREASTACK:
 			case GRAPH_ITEM_TYPE_GPRINT:
 			case GRAPH_ITEM_TYPE_LINE1:
 			case GRAPH_ITEM_TYPE_LINE2:
 			case GRAPH_ITEM_TYPE_LINE3:
+			case GRAPH_ITEM_TYPE_LINESTACK:
 				$matrix_title = "(" . $item["data_source_name"] . "): " . $item["text_format"];
 				break;
 			case GRAPH_ITEM_TYPE_HRULE:
