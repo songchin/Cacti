@@ -149,10 +149,12 @@ $vdef_functions = array(1 =>
 	"MAXIMUM",
 	"MINIMUM",
 	"AVERAGE",
+	"STDEV",
 	"LAST",
 	"FIRST",
 	"TOTAL",
 	"PERCENT",
+	"PERCENTNAN",
 	"LSLSLOPE",
 	"LSLINT",
 	"LSLCORREL");

@@ -26,7 +26,7 @@
    @arg $vdef_item_id - the id of the individual vdef item
    @returns - a text-based representation of the vdef item */
 function get_vdef_item_name($vdef_item_id) 	{
-	global $config, $vdef_functions, $vdef_operators;;
+	global $config, $vdef_functions, $vdef_operators;
 
 	$vdef_item = db_fetch_row("select type,value from vdef_items where id=$vdef_item_id");
 	$current_vdef_value = $vdef_item["value"];

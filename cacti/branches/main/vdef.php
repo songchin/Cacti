@@ -289,8 +289,8 @@ function item_edit() {
 	input_validate_input_number(get_request_var("vdef_id"));
 	/* ==================================================== */
 
-	if (!empty($_GET["vdef_id"])) {
-		$vdef = db_fetch_row("select * from vdef_items where id=" . get_request_var("vdef_id"));
+	if (!empty($_GET["id"])) {
+		$vdef = db_fetch_row("select * from vdef_items where id=" . get_request_var("id"));
 		$current_type = $vdef["type"];
 		$values[$current_type] = $vdef["value"];
 	}
@@ -299,8 +299,17 @@ function item_edit() {
 	draw_vdef_preview(get_request_var("vdef_id"));
 	html_end_box();
 
-	print "<form action='vdef.php' name='form_vdef' method='post'>\n";
-	html_start_box("<strong>VDEF Items</strong> [edit: " . db_fetch_cell("select name from vdef where id=" . get_request_var("vdef_id")) . "]", "98%", $colors["header"], "3", "center", "");
+	if (!empty($_GET["vdef_id"])) {
+		$header_label = "[edit: " . db_fetch_cell("select name from vdef where id=" . get_request_var("vdef_id")) . "]";
+	}else {
+		$header_label = "[new]";
+	}
+
+	print "<form method='post' action='" .  basename($_SERVER["PHP_SELF"]) . "' name='form_vdef'>\n";
+	html_start_box("<strong>" . __("VDEF Items") . "</strong> $header_label", "100", $colors["header"], 0, "center", "", true);
+	$header_items = array(__("Field"), __("Value"));
+	print "<tr><td>";
+	html_header($header_items, 2, true, 'header_vdef_edit');
 
 	if (isset($_GET["type_select"])) {
 		$current_type = $_GET["type_select"];
@@ -355,6 +364,7 @@ function item_edit() {
 	<?php
 	form_end_row();
 
+	print "</table></td></tr>";		/* end of html_header */
 	html_end_box();
 
 	form_hidden_box("id", (isset($_GET["id"]) ? get_request_var("id") : "0"), "");
@@ -409,12 +419,14 @@ function vdef_edit() {
 	html_header($header_items, 2, false, 'header_vdef_edit','left wp100');
 
 	draw_edit_form(array(
-		"config" => array(),
+		"config" => array("no_form_tag" => true),
 		"fields" => inject_form_variables($fields_vdef_edit, (isset($vdef) ? $vdef : array()))
 		));
 
 	print "</table></td></tr>";		/* end of html_header */
 	html_end_box();
+	form_hidden_box("id", (isset($vdef["id"]) ? $vdef["id"] : "0"), "");
+	form_hidden_box("save_component_vdef", "1", "");
 
 	if (!empty($_GET["id"])) {
 		html_start_box("", "100", "aaaaaa", "3", "center", "");

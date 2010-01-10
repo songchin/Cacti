@@ -56,14 +56,6 @@ $fields_vdef_edit = array(
 		"value" => "|arg1:name|",
 		"max_length" => "255",
 		),
-	"id" => array(
-		"method" => "hidden_zero",
-		"value" => "|arg1:id|"
-		),
-	"save_component_vdef" => array(
-		"method" => "hidden",
-		"value" => "1"
-		)
 	);
 
 /* file: xaxis.php, action: edit */
