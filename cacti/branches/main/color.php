@@ -467,7 +467,7 @@ function color_edit() {
 	print "</table></td></tr>";		/* end of html_header */
 	html_end_box();
 
-	include_once(CACTI_BASE_PATH . "/lib/jquery/colorpicker.js");
+	include_once(CACTI_BASE_PATH . "/access/js/colorpicker.js");
 
 	form_save_button_alt();
 }

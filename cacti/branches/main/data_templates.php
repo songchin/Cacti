@@ -636,8 +636,8 @@ function template_edit() {
 
 	form_save_button_alt("return");
 
-	include_once(CACTI_BASE_PATH . "/lib/jquery/data_source_item.js");
-	include_once(CACTI_BASE_PATH . "/lib/jquery/field_description_hover.js");
+	include_once(CACTI_BASE_PATH . "/access/js/data_source_item.js");
+	include_once(CACTI_BASE_PATH . "/access/js/field_description_hover.js");
 }
 
 function template() {

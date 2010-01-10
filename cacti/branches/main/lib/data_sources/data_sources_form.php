@@ -968,7 +968,7 @@ function data_source_edit() {
 
 	form_save_button_alt();
 
-	include_once(CACTI_BASE_PATH . "/lib/jquery/data_source_item.js");
+	include_once(CACTI_BASE_PATH . "/access/js/data_source_item.js");
 	include_once(CACTI_BASE_PATH . "/include/bottom_footer.php");
 }
 

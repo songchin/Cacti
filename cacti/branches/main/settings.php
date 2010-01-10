@@ -116,8 +116,8 @@ default:
 	print "</table></td></tr>";		/* end of html_header */
 	html_end_box();
 
-	include_once(CACTI_BASE_PATH . "/lib/jquery/colorpicker.js");
-	include_once(CACTI_BASE_PATH . "/lib/jquery/graph_template_options.js");
+	include_once(CACTI_BASE_PATH . "/access/js/colorpicker.js");
+	include_once(CACTI_BASE_PATH . "/access/js/graph_template_options.js");
 
 	form_hidden_box("tab", $current_tab, "");
 	# the id tag is required for our js code!
