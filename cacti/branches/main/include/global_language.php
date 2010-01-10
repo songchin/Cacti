@@ -22,18 +22,18 @@
  +-------------------------------------------------------------------------+
 */
 
-/* use a fallback if i18n is disabled (default) */
-if (read_config_option('i18n_support') == 0) {
-	load_fallback_procedure();
-	return;
-}
-
 /* default localization of Cacti */
 $cacti_locale = "en";
 $cacti_country = "us";
 
 /* an array that will contains all textdomains being in use. */
 $cacti_textdomains = array();
+
+/* use a fallback if i18n is disabled (default) */
+if (read_config_option('i18n_support') == 0) {
+	load_fallback_procedure();
+	return;
+}
 
 /* get a list of locale settings */
 $lang2locale = get_list_of_locales();
