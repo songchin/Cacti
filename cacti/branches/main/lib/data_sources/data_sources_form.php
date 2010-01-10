@@ -356,7 +356,7 @@ function data_source_form_actions() {
 			$ds_array[$i++] = $matches[1];
 		}
 	}
-	
+
 	$ds_actions[ACTION_NONE] = __("None");
 
 	include_once(CACTI_BASE_PATH . "/include/top_header.php");
@@ -740,7 +740,7 @@ function data_source_edit() {
 			),
 		"device_id" => array(
 			"method" => "autocomplete",
-			"callback_function" => "./lib/ajax/get_devices_detailed.php",
+			"callback_function" => "./lib/ajax/get_device_detailed.php",
 			"friendly_name" => __("Host"),
 			"description" => __("Choose the device that this graph belongs to."),
 			"id" => (isset($_GET["device_id"]) ? $_GET["device_id"] : $data_local["device_id"]),
@@ -847,7 +847,7 @@ function data_source_edit() {
 
 			$header_label = __("[edit: ") . $rrd["data_source_name"] . "]";
 		}else{
-			$header_label = "";
+			$header_label = "[new]";
 		}
 
 		$i = 0;

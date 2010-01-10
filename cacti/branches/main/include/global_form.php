@@ -958,6 +958,7 @@ $struct_graph_item = array(
 		"default" => "0",
 		"none_value" => "None",
 		"description" => __("The data source to use for this graph item."),
+		"class" => "not_RRD_TYPE_COMMENT not_RRD_TYPE_HRULE not_RRD_TYPE_VRULE",
 		),
 	"consolidation_function_id" => array(
 		"friendly_name" => __("Consolidation Function"),
@@ -965,6 +966,7 @@ $struct_graph_item = array(
 		"array" => $consolidation_functions,
 		"default" => "0",
 		"description" => __("How data for this item is represented statistically on the graph."),
+		"class" => "not_RRD_TYPE_COMMENT not_RRD_TYPE_HRULE not_RRD_TYPE_VRULE",
 		),
 	"graph_type_id" => array(
 		"friendly_name" => __("Graph Item Type"),
@@ -980,7 +982,7 @@ $struct_graph_item = array(
 		"default" => "",
 		"size" => "5",
 		"description" => __("In case LINE was chosen, specify width of line here. Not available for rrdtool-1.0.x."),
-		"class" => "not_RRD_1_0_x",
+		"class" => "not_RRD_1_0_x not_RRD_TYPE_COMMENT not_RRD_TYPE_HRULE not_RRD_TYPE_VRULE not_RRD_TYPE_GPRINT",
 		),
 	"color_id" => array(
 		"friendly_name" => __("Color"),
@@ -988,6 +990,7 @@ $struct_graph_item = array(
 		"default" => "0",
 		"on_change" => "changeColorId()",
 		"description" => __("The color to use for the legend."),
+		"class" => "not_RRD_TYPE_COMMENT not_RRD_TYPE_GPRINT",
 		),
 	"alpha" => array(
 		"friendly_name" => __("Opacity/Alpha Channel"),
@@ -995,7 +998,7 @@ $struct_graph_item = array(
 		"default" => "FF",
 		"array" => $graph_color_alpha,
 		"description" => __("The opacity/alpha channel of the color. Not available for rrdtool-1.0.x."),
-		"class" => "not_RRD_1_0_x",
+		"class" => "not_RRD_1_0_x not_RRD_TYPE_COMMENT not_RRD_TYPE_GPRINT",
 		),
 	"cdef_id" => array(
 		"friendly_name" => __("CDEF Function"),
@@ -1004,6 +1007,7 @@ $struct_graph_item = array(
 		"default" => "0",
 		"none_value" => "None",
 		"description" => __("A CDEF (math) function to apply to this item on the graph."),
+		"class" => "not_RRD_TYPE_COMMENT",
 		),
 	"vdef_id" => array(
 		"friendly_name" => __("VDEF Function"),
@@ -1012,7 +1016,7 @@ $struct_graph_item = array(
 		"default" => "0",
 		"none_value" => "None",
 		"description" => __("A VDEF (math) function to apply to this item on the legend. Not available for rrdtool-1.0.x."),
-		"class" => "not_RRD_1_0_x",
+		"class" => "not_RRD_1_0_x not_RRD_TYPE_COMMENT",
 		),
 	"value" => array(
 		"friendly_name" => __("Value"),
@@ -1021,6 +1025,7 @@ $struct_graph_item = array(
 		"default" => "",
 		"size" => "10",
 		"description" => __("The value of an HRULE or VRULE graph item."),
+		"class" => "not_RRD_TYPE_COMMENT not_RRD_TYPE_LINE not_RRD_TYPE_AREA not_RRD_TYPE_STACK not_RRD_TYPE_GPRINT",
 		),
 	"gprint_id" => array(
 		"friendly_name" => __("GPRINT Type"),
@@ -1028,6 +1033,7 @@ $struct_graph_item = array(
 		"sql" => "select id,name from graph_templates_gprint order by name",
 		"default" => "2",
 		"description" => __("If this graph item is a GPRINT, you can optionally choose another format here. You can define additional types under 'GPRINT Presets'."),
+		"class" => "not_RRD_TYPE_COMMENT not_RRD_TYPE_HRULE not_RRD_TYPE_VRULE not_RRD_TYPE_LINE not_RRD_TYPE_AREA not_RRD_TYPE_STACK",
 		),
 	"text_format" => array(
 		"friendly_name" => __("Text Format"),

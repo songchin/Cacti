@@ -917,10 +917,10 @@ function draw_graph_items_list($item_list, $filename, $url_data, $disable_contro
 				$matrix_title = "(" . $item["data_source_name"] . "): " . $item["text_format"];
 				break;
 			case GRAPH_ITEM_TYPE_HRULE:
-				$matrix_title = "VRULE: " . $item["value"];
+				$matrix_title = "HRULE: " . $item["value"];
 				break;
 				case GRAPH_ITEM_TYPE_VRULE:
-				$matrix_title = "HRULE: " . $item["value"];
+				$matrix_title = "VRULE: " . $item["value"];
 				break;
 			case GRAPH_ITEM_TYPE_COMMENT:
 				$matrix_title = "COMMENT: " . $item["text_format"];
@@ -933,7 +933,7 @@ function draw_graph_items_list($item_list, $filename, $url_data, $disable_contro
 
 		print "<td style='$this_row_style'>" . htmlspecialchars($matrix_title) . $hard_return . "</td>\n";
 		print "<td style='$this_row_style'>" . $graph_item_types{$item["graph_type_id"]} . "</td>\n";
-		print "<td style='$this_row_style'>" . $consolidation_functions{$item["consolidation_function_id"]} . "</td>\n";
+		print "<td style='$this_row_style'>" . ((!empty($item["consolidation_function_id"])) ? $consolidation_functions{$item["consolidation_function_id"]} : __("None")) . "</td>\n";
 		print "<td style='$this_row_style'>" . ((strlen($item["cdef_name"]) > 0) ? substr($item["cdef_name"],0,30) : __("None")) . "</td>\n";
 		print "<td style='$this_row_style'>" . ((strlen($item["cdef_name"]) > 0) ? substr($item["gprint_name"],0,30) : __("None")) . "</td>\n";
 		print "<td" . ((!empty($item["hex"])) ? " bgcolor='#" . $item["hex"] . "'" : "") . " width='1%'>&nbsp;</td>\n";

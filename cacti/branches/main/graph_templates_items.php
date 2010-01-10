@@ -37,17 +37,17 @@ switch (get_request_var_request("action")) {
 	case 'item_remove':
 		item_remove();
 
-		header("Location: graph_templates.php?action=template_edit&id=" . $_GET["graph_template_id"]);
+		header("Location: graph_templates.php?action=template_edit&id=" . get_request_var("graph_template_id"));
 		break;
 	case 'item_movedown':
 		item_movedown();
 
-		header("Location: graph_templates.php?action=template_edit&id=" . $_GET["graph_template_id"]);
+		header("Location: graph_templates.php?action=template_edit&id=" . get_request_var("graph_template_id"));
 		break;
 	case 'item_moveup':
 		item_moveup();
 
-		header("Location: graph_templates.php?action=template_edit&id=" . $_GET["graph_template_id"]);
+		header("Location: graph_templates.php?action=template_edit&id=" . get_request_var("graph_template_id"));
 		break;
 	case 'item_edit':
 		include_once(CACTI_BASE_PATH . "/include/top_header.php");
@@ -149,23 +149,16 @@ function form_save() {
 		}
 
 		foreach ($items as $item) {
-			/* generate a new sequence if needed */
-			if (empty($_POST["sequence"])) {
-				$_POST["sequence"] = get_sequence($_POST["sequence"], "sequence", "graph_templates_item", "graph_template_id=" . $_POST["graph_template_id"] . " and local_graph_id=0");
-			}
-
-			$save["id"] = form_input_validate($_POST["graph_template_item_id"], "graph_template_item_id", "^[0-9]+$", false, 3);
-			$save["hash"] = get_hash_graph_template($_POST["graph_template_item_id"], "graph_template_item");
-			$save["graph_template_id"] = form_input_validate($_POST["graph_template_id"], "graph_template_id", "^[0-9]+$", false, 3);
-			$save["local_graph_id"] = 0;
-			$save["task_item_id"] = form_input_validate($_POST["task_item_id"], "task_item_id", "^[0-9]+$", true, 3);
-			$save["color_id"] = form_input_validate((isset($item["color_id"]) ? $item["color_id"] : $_POST["color_id"]), "color_id", "^[0-9]+$", true, 3);
-			/* if alpha is disabled, use alpha=FF instead */
-			if (!isset($_POST["alpha"])) {$_POST["alpha"] = "FF";}
-			$save["alpha"] = form_input_validate((isset($item["alpha"]) ? $item["alpha"] : $_POST["alpha"]), "alpha", "^[a-fA-F0-9]+$", true, 3);
-			$save["graph_type_id"] = form_input_validate((isset($item["graph_type_id"]) ? $item["graph_type_id"] : $_POST["graph_type_id"]), "graph_type_id", "^[0-9]+$", true, 3);
+			$save["id"] 				= form_input_validate($_POST["graph_template_item_id"], "graph_template_item_id", "^[0-9]+$", false, 3);
+			$save["hash"] 				= get_hash_graph_template($_POST["graph_template_item_id"], "graph_template_item");
+			$save["graph_template_id"] 	= form_input_validate($_POST["graph_template_id"], "graph_template_id", "^[0-9]+$", false, 3);
+			$save["local_graph_id"] 	= 0;
+			$save["task_item_id"] 		= form_input_validate(((isset($item["task_item_id"]) ? $item["task_item_id"] : (isset($_POST["task_item_id"]) ? $_POST["task_item_id"] : 0))), "task_item_id", "^[0-9]+$", true, 3);
+			$save["color_id"] 			= form_input_validate(((isset($item["color_id"]) ? $item["color_id"] : (isset($_POST["color_id"]) ? $_POST["color_id"] : 0))), "color_id", "^[0-9]+$", true, 3);
+			$save["alpha"] 				= form_input_validate(((isset($item["alpha"]) ? $item["alpha"] : (isset($_POST["alpha"]) ? $_POST["alpha"] : "FF"))), "alpha", "^[a-fA-F0-9]+$", true, 3);
+			$save["graph_type_id"]		= form_input_validate(((isset($item["graph_type_id"]) ? $item["graph_type_id"] : (isset($_POST["graph_type_id"]) ? $_POST["graph_type_id"] : 0))), "graph_type_id", "^[0-9]+$", true, 3);
 			if (isset($_POST["line_width"]) || isset($item["line_width"])) {
-				$save["line_width"] = form_input_validate((isset($item["line_width"]) ? $item["line_width"] : $_POST["line_width"]), "line_width", "^[0-9]+[\.,]+[0-9]+$", true, 3);
+				$save["line_width"] 	= form_input_validate((isset($item["line_width"]) ? $item["line_width"] : $_POST["line_width"]), "line_width", "^[0-9]+[\.,]+[0-9]+$", true, 3);
 			}else { # make sure to transfer old LINEx style into line_width on save
 				switch ($save["graph_type_id"]) {
 					case GRAPH_ITEM_TYPE_LINE1:
@@ -181,14 +174,18 @@ function form_save() {
 						$save["line_width"] = 0;
 				}
 			}
-			$save["cdef_id"] = form_input_validate($_POST["cdef_id"], "cdef_id", "^[0-9]+$", true, 3);
-			$save["vdef_id"] = form_input_validate((isset($item["vdef_id"]) ? $item["vdef_id"] : $_POST["vdef_id"]), "vdef_id", "^[0-9]+$", true, 3);
-			$save["consolidation_function_id"] = form_input_validate((isset($item["consolidation_function_id"]) ? $item["consolidation_function_id"] : $_POST["consolidation_function_id"]), "consolidation_function_id", "^[0-9]+$", true, 3);
-			$save["text_format"] = form_input_validate((isset($item["text_format"]) ? $item["text_format"] : $_POST["text_format"]), "text_format", "", true, 3);
-			$save["value"] = form_input_validate($_POST["value"], "value", "", true, 3);
-			$save["hard_return"] = form_input_validate(((isset($item["hard_return"]) ? $item["hard_return"] : (isset($_POST["hard_return"]) ? $_POST["hard_return"] : ""))), "hard_return", "", true, 3);
-			$save["gprint_id"] = form_input_validate($_POST["gprint_id"], "gprint_id", "^[0-9]+$", true, 3);
-			$save["sequence"] = form_input_validate($_POST["sequence"], "sequence", "^[0-9]+$", false, 3);
+			$save["cdef_id"] 			= form_input_validate(((isset($item["cdef_id"]) ? $item["cdef_id"] : (isset($_POST["cdef_id"]) ? $_POST["cdef_id"] : 0))), "cdef_id", "^[0-9]+$", true, 3);
+			$save["vdef_id"] 			= form_input_validate(((isset($item["vdef_id"]) ? $item["vdef_id"] : (isset($_POST["vdef_id"]) ? $_POST["vdef_id"] : 0))), "vdef_id", "^[0-9]+$", true, 3);
+			$save["consolidation_function_id"] = form_input_validate(((isset($item["consolidation_function_id"]) ? $item["consolidation_function_id"] : (isset($_POST["consolidation_function_id"]) ? $_POST["consolidation_function_id"] : 0))), "consolidation_function_id", "^[0-9]+$", true, 3);
+			$save["text_format"] 		= form_input_validate(((isset($item["text_format"]) ? $item["text_format"] : (isset($_POST["text_format"]) ? $_POST["text_format"] : ""))), "text_format", "", true, 3);
+			$save["value"] 				= form_input_validate((isset($_POST["value"]) ? $_POST["value"] : ""), "value", "", true, 3);
+			$save["hard_return"] 		= form_input_validate(((isset($item["hard_return"]) ? $item["hard_return"] : (isset($_POST["hard_return"]) ? $_POST["hard_return"] : ""))), "hard_return", "", true, 3);
+			$save["gprint_id"] 			= form_input_validate(((isset($item["gprint_id"]) ? $item["gprint_id"] : (isset($_POST["gprint_id"]) ? $_POST["gprint_id"] : 0))), "gprint_id", "^[0-9]+$", true, 3);
+			/* generate a new sequence if needed */
+			if (empty($_POST["sequence"])) {
+				$_POST["sequence"] 		= get_sequence($_POST["sequence"], "sequence", "graph_templates_item", "graph_template_id=" . $_POST["graph_template_id"] . " and local_graph_id=0");
+			}
+			$save["sequence"] 			= form_input_validate($_POST["sequence"], "sequence", "^[0-9]+$", false, 3);
 
 			if (!is_error_message()) {
 				/* Before we save the item, let's get a look at task_item_id <-> input associations */
@@ -212,7 +209,7 @@ function form_save() {
 
 					if (!empty($save["task_item_id"])) {
 						/* old item clean-up.  Don't delete anything if the item <-> task_item_id association remains the same. */
-						if ($_POST["_task_item_id"] != $_POST["task_item_id"]) {
+						if ($_POST["hidden_task_item_id"] != $_POST["task_item_id"]) {
 							/* It changed.  Delete any old associations */
 							db_execute("delete from graph_template_input_defs where graph_template_item_id=$graph_template_item_id");
 
@@ -246,7 +243,8 @@ function form_save() {
 
 					push_out_graph_item($graph_template_item_id);
 
-					if (isset($orig_data_source_to_input{$_POST["task_item_id"]})) {
+
+					if (isset($_POST["task_item_id"]) && isset($orig_data_source_to_input{$_POST["task_item_id"]})) {
 						/* make sure all current graphs using this graph input are aware of this change */
 						push_out_graph_input($orig_data_source_to_input{$_POST["task_item_id"]}, $graph_template_item_id, array($graph_template_item_id => $graph_template_item_id));
 					}
@@ -279,10 +277,10 @@ function item_movedown() {
 
 	global $graph_item_types;
 
-	$arr = get_graph_group($_GET["id"]);
-	$next_id = get_graph_parent($_GET["id"], "next");
+	$arr = get_graph_group(get_request_var("id"));
+	$next_id = get_graph_parent(get_request_var("id"), "next");
 
-	$graph_type_id = db_fetch_cell("select graph_type_id from graph_templates_item where id=" . $_GET["id"]);
+	$graph_type_id = db_fetch_cell("select graph_type_id from graph_templates_item where id=" . get_request_var("id"));
 	if ((!empty($next_id)) && (isset($arr{$_GET["id"]}))) {
 		move_graph_group(get_request_var("id"), $arr, $next_id, "next");
 	}elseif ($graph_type_id == GRAPH_ITEM_TYPE_GPRINT ||
@@ -290,11 +288,11 @@ function item_movedown() {
 			$graph_type_id == GRAPH_ITEM_TYPE_VRULE ||
 			$graph_type_id == GRAPH_ITEM_TYPE_COMMENT) {
 		/* this is so we know the "other" graph item to propagate the changes to */
-		$next_item = get_item("graph_templates_item", "sequence", $_GET["id"], "graph_template_id=" . $_GET["graph_template_id"] . " and local_graph_id=0", "next");
+		$next_item = get_item("graph_templates_item", "sequence", get_request_var("id"), "graph_template_id=" . get_request_var("graph_template_id") . " and local_graph_id=0", "next");
 
-		move_item_down("graph_templates_item", $_GET["id"], "graph_template_id=" . $_GET["graph_template_id"] . " and local_graph_id=0");
+		move_item_down("graph_templates_item", get_request_var("id"), "graph_template_id=" . get_request_var("graph_template_id") . " and local_graph_id=0");
 
-		db_execute("update graph_templates_item set sequence=" . db_fetch_cell("select sequence from graph_templates_item where id=" . $_GET["id"]) . " where local_graph_template_item_id=" . $_GET["id"]);
+		db_execute("update graph_templates_item set sequence=" . db_fetch_cell("select sequence from graph_templates_item where id=" . get_request_var("id")) . " where local_graph_template_item_id=" . get_request_var("id"));
 		db_execute("update graph_templates_item set sequence=" . db_fetch_cell("select sequence from graph_templates_item where id=" . $next_item). " where local_graph_template_item_id=" . $next_item);
 	}
 }
@@ -307,10 +305,10 @@ function item_moveup() {
 
 	global $graph_item_types;
 
-	$arr = get_graph_group($_GET["id"]);
-	$next_id = get_graph_parent($_GET["id"], "previous");
+	$arr = get_graph_group(get_request_var("id"));
+	$next_id = get_graph_parent(get_request_var("id"), "previous");
 
-	$graph_type_id = db_fetch_cell("select graph_type_id from graph_templates_item where id=" . $_GET["id"]);
+	$graph_type_id = db_fetch_cell("select graph_type_id from graph_templates_item where id=" . get_request_var("id"));
 	if ((!empty($next_id)) && (isset($arr{$_GET["id"]}))) {
 		move_graph_group(get_request_var("id"), $arr, $next_id, "previous");
 	}elseif ($graph_type_id == GRAPH_ITEM_TYPE_GPRINT ||
@@ -318,11 +316,11 @@ function item_moveup() {
 			$graph_type_id == GRAPH_ITEM_TYPE_VRULE ||
 			$graph_type_id == GRAPH_ITEM_TYPE_COMMENT) {
 		/* this is so we know the "other" graph item to propagate the changes to */
-		$last_item = get_item("graph_templates_item", "sequence", $_GET["id"], "graph_template_id=" . $_GET["graph_template_id"] . " and local_graph_id=0", "previous");
+		$last_item = get_item("graph_templates_item", "sequence", get_request_var("id"), "graph_template_id=" . get_request_var("graph_template_id") . " and local_graph_id=0", "previous");
 
-		move_item_up("graph_templates_item", $_GET["id"], "graph_template_id=" . $_GET["graph_template_id"] . " and local_graph_id=0");
+		move_item_up("graph_templates_item", get_request_var("id"), "graph_template_id=" . get_request_var("graph_template_id") . " and local_graph_id=0");
 
-		db_execute("update graph_templates_item set sequence=" . db_fetch_cell("select sequence from graph_templates_item where id=" . $_GET["id"]) . " where local_graph_template_item_id=" . $_GET["id"]);
+		db_execute("update graph_templates_item set sequence=" . db_fetch_cell("select sequence from graph_templates_item where id=" . get_request_var("id")) . " where local_graph_template_item_id=" . get_request_var("id"));
 		db_execute("update graph_templates_item set sequence=" . db_fetch_cell("select sequence from graph_templates_item where id=" . $last_item). " where local_graph_template_item_id=" . $last_item);
 	}
 }
@@ -333,16 +331,16 @@ function item_remove() {
 	input_validate_input_number(get_request_var("graph_template_id"));
 	/* ==================================================== */
 
-	db_execute("delete from graph_templates_item where id=" . $_GET["id"]);
-	db_execute("delete from graph_templates_item where local_graph_template_item_id=" . $_GET["id"]);
+	db_execute("delete from graph_templates_item where id=" . get_request_var("id"));
+	db_execute("delete from graph_templates_item where local_graph_template_item_id=" . get_request_var("id"));
 
 	/* delete the graph item input if it is empty */
 	$graph_item_inputs = db_fetch_assoc("select
 		graph_template_input.id
 		from (graph_template_input,graph_template_input_defs)
 		where graph_template_input.id=graph_template_input_defs.graph_template_input_id
-		and graph_template_input.graph_template_id=" . $_GET["graph_template_id"] . "
-		and graph_template_input_defs.graph_template_item_id=" . $_GET["id"] . "
+		and graph_template_input.graph_template_id=" . get_request_var("graph_template_id") . "
+		and graph_template_input_defs.graph_template_item_id=" . get_request_var("id") . "
 		group by graph_template_input.id");
 
 	if (sizeof($graph_item_inputs) > 0) {
@@ -353,7 +351,7 @@ function item_remove() {
 	}
 	}
 
-	db_execute("delete from graph_template_input_defs where graph_template_item_id=" . $_GET["id"]);
+	db_execute("delete from graph_template_input_defs where graph_template_item_id=" . get_request_var("id"));
 }
 
 function item_edit() {
@@ -364,17 +362,13 @@ function item_edit() {
 	input_validate_input_number(get_request_var("graph_template_id"));
 	/* ==================================================== */
 
-	$header_label = __("[edit graph: ") . db_fetch_cell("select name from graph_templates where id=" . $_GET["graph_template_id"]) . "]";
-
-	html_start_box("<strong>" . __("Graph Template Items") . "</strong> $header_label", "100", $colors["header"], "3", "center", "");
-
 	if (!empty($_GET["id"])) {
-		$template_item = db_fetch_row("select * from graph_templates_item where id=" . $_GET["id"]);
+		$template_item = db_fetch_row("select * from graph_templates_item where id=" . get_request_var("id"));
 	}
 
 	/* by default, select the LAST DS chosen to make everyone's lives easier */
 	if (!empty($_GET["graph_template_id"])) {
-		$default = db_fetch_row("select task_item_id from graph_templates_item where graph_template_id=" . $_GET["graph_template_id"] . " and local_graph_id=0 order by sequence DESC");
+		$default = db_fetch_row("select task_item_id from graph_templates_item where graph_template_id=" . get_request_var("graph_template_id") . " and local_graph_id=0 order by sequence DESC");
 
 		if (sizeof($default) > 0) {
 			$struct_graph_item["task_item_id"]["default"] = $default["task_item_id"];
@@ -411,57 +405,51 @@ function item_edit() {
 			graph_template_input.column_name
 			from (graph_template_input,graph_template_input_defs)
 			where graph_template_input.id=graph_template_input_defs.graph_template_input_id
-			and graph_template_input.graph_template_id=" . $_GET["graph_template_id"] . "
-			and graph_template_input_defs.graph_template_item_id=" . $_GET["id"] . "
+			and graph_template_input.graph_template_id=" . get_request_var("graph_template_id") . "
+			and graph_template_input_defs.graph_template_item_id=" . get_request_var("id") . "
 			group by graph_template_input.column_name");
 
 		if (sizeof($graph_item_input_fields) > 0) {
 		foreach ($graph_item_input_fields as $field) {
-			$form_array{$field["column_name"]}["friendly_name"] .= " [<a href='" . htmlspecialchars("graph_templates_inputs.php?action=input_edit&id=" . $field["id"] . "&graph_template_id=" . $_GET["graph_template_id"]) . "'>Field Not Templated</a>]";
+			$form_array{$field["column_name"]}["friendly_name"] .= " [<a href='" . htmlspecialchars("graph_templates_inputs.php?action=input_edit&id=" . $field["id"] . "&graph_template_id=" . get_request_var("graph_template_id")) . "'>Field Not Templated</a>]";
 		}
 		}
 	}
 
+
+	if (!empty($_GET["graph_template_id"])) {
+		$header_label = __("[edit graph: ") . db_fetch_cell("select name from graph_templates where id=" . get_request_var("graph_template_id")) . "]";
+	}else{
+		$header_label = __("[new]");
+	}
+
+	print "<form method='post' action='" .  basename($_SERVER["PHP_SELF"]) . "' name='graph_template_item_edit'>\n";
+	html_start_box("<strong>" . __("Graph Template Items") . "</strong> $header_label", "100", $colors["header"], 0, "center", "", true);
+	$header_items = array(__("Field"), __("Value"));
+	print "<tr><td>";
+	html_header($header_items, 2, true, 'header_graph_template_item_edit');
+
 	draw_edit_form(
 		array(
-			"config" => array(
-				),
+			"config" => array("no_form_tag" => true),
 			"fields" => $form_array
 			)
 		);
 
+	print "</table></td></tr>";		/* end of html_header */
 	html_end_box();
 
 	form_hidden_box("graph_template_item_id", (isset($template_item) ? $template_item["id"] : "0"), "");
 	form_hidden_box("graph_template_id", get_request_var("graph_template_id"), "0");
-	form_hidden_box("sequence", (isset($template_item) ? $template_item["sequence"] : "0"), "");
-	form_hidden_box("_graph_type_id", (isset($template_item) ? $template_item["graph_type_id"] : "0"), "");
-	form_hidden_box("_task_item_id", (isset($template_item) ? $template_item["task_item_id"] : "0"), "");
+#	form_hidden_box("hidden_graph_type_id", (isset($template_item) ? $template_item["graph_type_id"] : "0"), "");
+	form_hidden_box("hidden_task_item_id", (isset($template_item) ? $template_item["task_item_id"] : "0"), "");
 	form_hidden_box("save_component_item", "1", "");
 	form_hidden_box("hidden_rrdtool_version", read_config_option("rrdtool_version"), "");
 
 	form_save_button_alt("url!" . (isset($_SERVER["HTTP_REFERER"]) ? $_SERVER["HTTP_REFERER"] : ""));
-echo "</form>";
 
-//Now we need some javascript to make it dynamic
-?>
-<script type="text/javascript">
+	include_once(CACTI_BASE_PATH . "/access/js/graph_item_dependencies.js");	# this one modifies attr("disabled")
+	include_once(CACTI_BASE_PATH . "/access/js/line_width.js");
+	include_once(CACTI_BASE_PATH . "/access/js/rrdtool_version.js");			# this one sets attr("disabled) and comes last!
 
-// RRDTool dependencies
-var hidden_rrdtool_version = $('#hidden_rrdtool_version').val();
-if (hidden_rrdtool_version == '<?php print RRD_VERSION_1_0;?>') {
-	$('.not_RRD_1_0_x').each(function() { $(this).attr('disabled', 'disabled'); });
 }
-if (hidden_rrdtool_version == '<?php print RRD_VERSION_1_2;?>x') {
-	$('.not_RRD_1_2_x').each(function() { $(this).attr('disabled', 'disabled'); });
-}
-if (hidden_rrdtool_version == '<?php print RRD_VERSION_1_3;?>') {
-	$('.not_RRD_1_3_x').each(function() { $(this).attr('disabled', 'disabled'); });
-}
-if (hidden_rrdtool_version == '<?php print RRD_VERSION_1_4;?>') {
-	$('.not_RRD_1_4_x').each(function() { $(this).attr('disabled', 'disabled'); });
-}
-</script>
-<?php
-}
-

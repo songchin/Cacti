@@ -151,6 +151,12 @@ function input_edit() {
 
 	$header_label = __("[edit graph: ") . db_fetch_cell("select name from graph_templates where id=" . $_GET["graph_template_id"]) . "]";
 
+	if (!empty($_GET["local_graph_id"])) {
+		$header_label = __("[edit graph: ") . db_fetch_cell("select name from graph_templates where id=" . $_GET["graph_template_id"]) . "]";
+	}else{
+		$header_label = __("[new]");
+	}
+
 	/* get a list of all graph item field names and populate an array for user display */
 	while (list($field_name, $field_array) = each($struct_graph_item)) {
 		if ($field_array["method"] != "view") {

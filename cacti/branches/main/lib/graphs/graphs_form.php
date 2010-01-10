@@ -50,31 +50,32 @@ function form_save() {
 		input_validate_input_number(get_request_var_post("_graph_template_id"));
 		/* ==================================================== */
 
-		$save1["id"] = $_POST["local_graph_id"];
-		$save1["device_id"] = $_POST["device_id"];
-		$save1["graph_template_id"] = $_POST["graph_template_id"];
+		$save1["id"] = form_input_validate($_POST["local_graph_id"], "local_graph_id", "^[0-9]+$", false, 3);
+		$save1["device_id"] = form_input_validate($_POST["device_id"], "device_id", "^[0-9]+$", false, 3);
+		$save1["graph_template_id"] = form_input_validate($_POST["graph_template_id"], "graph_template_id", "^[0-9]+$", false, 3);
 
-		$save2["id"] = $_POST["graph_template_graph_id"];
-		$save2["local_graph_template_graph_id"] = $_POST["local_graph_template_graph_id"];
-		$save2["graph_template_id"] = $_POST["graph_template_id"];
-		$save2["image_format_id"] = form_input_validate($_POST["image_format_id"], "image_format_id", "", true, 3);
-		$save2["title"] = form_input_validate($_POST["title"], "title", "", false, 3);
-		$save2["height"] = form_input_validate($_POST["height"], "height", "^[0-9]+$", false, 3);
-		$save2["width"] = form_input_validate($_POST["width"], "width", "^[0-9]+$", false, 3);
-		$save2["upper_limit"] = form_input_validate($_POST["upper_limit"], "", false, 3);
-		$save2["lower_limit"] = form_input_validate($_POST["lower_limit"], "", false, 3);
-		$save2["vertical_label"] = form_input_validate($_POST["vertical_label"], "vertical_label", "", true, 3);
+		$save2["id"] = form_input_validate($_POST["graph_template_graph_id"], "graph_template_graph_id", "^[0-9]+$", false, 3);
+		$save2["local_graph_template_graph_id"] = form_input_validate($_POST["local_graph_template_graph_id"], "local_graph_template_graph_id", "^[0-9]+$", false, 3);
+		$save2["graph_template_id"] = form_input_validate($_POST["graph_template_id"], "graph_template_id", "^[0-9]+$", false, 3);
+		$save2["image_format_id"] = form_input_validate((isset($_POST["image_format_id"]) ? $_POST["image_format_id"] : ""), "image_format_id", "", true, 3);
+		$save2["title"] = form_input_validate((isset($_POST["title"]) ? $_POST["title"] : ""), "title", "", (isset($_POST["t_title"]) ? true : false), 3);
+		$save2["height"] = form_input_validate((isset($_POST["height"]) ? $_POST["height"] : ""), "height", "^[0-9]+$", (isset($_POST["t_height"]) ? true : false), 3);
+		$save2["width"] = form_input_validate((isset($_POST["width"]) ? $_POST["width"] : ""), "width", "^[0-9]+$", (isset($_POST["t_width"]) ? true : false), 3);
+		$save2["upper_limit"] = form_input_validate((isset($_POST["upper_limit"]) ? $_POST["upper_limit"] : ""), "upper_limit", "", (isset($_POST["t_upper_limit"]) ? true : false), 3);
+		$save2["lower_limit"] = form_input_validate((isset($_POST["lower_limit"]) ? $_POST["lower_limit"] : ""), "lower_limit", "", (isset($_POST["t_lower_limit"]) ? true : false), 3);
+		$save2["vertical_label"] = form_input_validate((isset($_POST["vertical_label"]) ? $_POST["vertical_label"] : ""), "vertical_label", "", true, 3);
 		$save2["slope_mode"] = form_input_validate((isset($_POST["slope_mode"]) ? $_POST["slope_mode"] : ""), "slope_mode", "", true, 3);
 		$save2["auto_scale"] = form_input_validate((isset($_POST["auto_scale"]) ? $_POST["auto_scale"] : ""), "auto_scale", "", true, 3);
-		$save2["auto_scale_opts"] = form_input_validate($_POST["auto_scale_opts"], "auto_scale_opts", "", true, 3);
+		$save2["auto_scale_opts"] = form_input_validate((isset($_POST["auto_scale_opts"]) ? $_POST["auto_scale_opts"] : ""), "auto_scale_opts", "", true, 3);
 		$save2["auto_scale_log"] = form_input_validate((isset($_POST["auto_scale_log"]) ? $_POST["auto_scale_log"] : ""), "auto_scale_log", "", true, 3);
 		$save2["scale_log_units"] = form_input_validate((isset($_POST["scale_log_units"]) ? $_POST["scale_log_units"] : ""), "scale_log_units", "", true, 3);
 		$save2["auto_scale_rigid"] = form_input_validate((isset($_POST["auto_scale_rigid"]) ? $_POST["auto_scale_rigid"] : ""), "auto_scale_rigid", "", true, 3);
+		$save2["alt_y_grid"] = form_input_validate((isset($_POST["alt_y_grid"]) ? $_POST["alt_y_grid"] : ""), "alt_y_grid", "", true, 3);
 		$save2["auto_padding"] = form_input_validate((isset($_POST["auto_padding"]) ? $_POST["auto_padding"] : ""), "auto_padding", "", true, 3);
-		$save2["base_value"] = form_input_validate($_POST["base_value"], "base_value", "^[0-9]+$", false, 3);
+		$save2["base_value"] = form_input_validate((isset($_POST["base_value"]) ? $_POST["base_value"] : ""), "base_value", "^(1000|1024)$", (isset($_POST["t_base_value"]) ? true : false), 3);
 		$save2["export"] = form_input_validate((isset($_POST["export"]) ? $_POST["export"] : ""), "export", "", true, 3);
-		$save2["unit_value"] = form_input_validate($_POST["unit_value"], "unit_value", "", true, 3);
-		$save2["unit_exponent_value"] = form_input_validate($_POST["unit_exponent_value"], "unit_exponent_value", "^-?[0-9]+$", true, 3);
+		$save2["unit_value"] = form_input_validate((isset($_POST["unit_value"]) ? $_POST["unit_value"] : ""), "unit_value", "^(none|NONE|[0-9]+:[0-9]+$)", true, 3);
+		$save2["unit_exponent_value"] = form_input_validate((isset($_POST["unit_exponent_value"]) ? $_POST["unit_exponent_value"] : ""), "unit_exponent_value", "^-?[0-9]+$", true, 3);
 
 		$save2["t_right_axis"] = form_input_validate((isset($_POST["t_right_axis"]) ? $_POST["t_right_axis"] : ""), "t_right_axis", "", true, 3);
 		$save2["right_axis"] = form_input_validate((isset($_POST["right_axis"]) ? $_POST["right_axis"] : ""), "right_axis", "^[.0-9]+:-?[.0-9]+$", true, 3);
@@ -567,23 +568,23 @@ function item() {
 			left join data_template_data on (data_local.id=data_template_data.local_data_id)
 			left join cdef on (cdef_id=cdef.id)
 			left join colors on (color_id=colors.id)
-			where graph_templates_item.local_graph_id=" . $_GET["id"] . "
+			where graph_templates_item.local_graph_id=" . get_request_var("id") . "
 			order by graph_templates_item.sequence");
 
-		$device_id = db_fetch_cell("select device_id from graph_local where id=" . $_GET["id"]);
-		$header_label = __("[edit: %s]", get_graph_title($_GET["id"]));
+		$device_id = db_fetch_cell("select device_id from graph_local where id=" . get_request_var("id"));
+		$header_label = __("[edit: %s]", get_graph_title(get_request_var("id")));
 	}
 
-	$graph_template_id = db_fetch_cell("select graph_template_id from graph_local where id=" . $_GET["id"]);
+	$graph_template_id = db_fetch_cell("select graph_template_id from graph_local where id=" . get_request_var("id"));
 
 	if (empty($graph_template_id)) {
-		$add_text = "graphs_items.php?action=item_edit&amp;local_graph_id=" . $_GET["id"] . "&amp;device_id=$device_id";
+		$add_text = "graphs_items.php?action=item_edit&amp;local_graph_id=" . get_request_var("id") . "&amp;device_id=$device_id";
 	}else{
 		$add_text = "";
 	}
 
 	html_start_box("<strong>" . __("Graph Items") . "</strong> $header_label", "100", $colors["header"], "3", "center", $add_text);
-	draw_graph_items_list($template_item_list, "graphs_items.php", "local_graph_id=" . $_GET["id"], (empty($graph_template_id) ? false : true));
+	draw_graph_items_list($template_item_list, "graphs_items.php", "local_graph_id=" . get_request_var("id"), (empty($graph_template_id) ? false : true));
 	html_end_box();
 }
 
@@ -620,14 +621,14 @@ function graph_diff() {
 	graph after */
 	$graph_template_items = db_fetch_assoc("
 		$template_query
-		where graph_templates_item.graph_template_id=" . $_GET["graph_template_id"] . "
+		where graph_templates_item.graph_template_id=" . get_request_var("graph_template_id") . "
 		and graph_templates_item.local_graph_id=0
 		order by graph_templates_item.sequence");
 
 	/* next, get information about the current graph so we can make the appropriate comparisons */
 	$graph_items = db_fetch_assoc("
 		$template_query
-		where graph_templates_item.local_graph_id=" . $_GET["id"] . "
+		where graph_templates_item.local_graph_id=" . get_request_var("id") . "
 		order by graph_templates_item.sequence");
 
 	$graph_template_inputs = db_fetch_assoc("select
@@ -635,7 +636,7 @@ function graph_diff() {
 		graph_template_input_defs.graph_template_item_id
 		from (graph_template_input,graph_template_input_defs)
 		where graph_template_input.id=graph_template_input_defs.graph_template_input_id
-		and graph_template_input.graph_template_id=" . $_GET["graph_template_id"]);
+		and graph_template_input.graph_template_id=" . get_request_var("graph_template_id"));
 
 	/* ok, we want to loop through the array with the GREATEST number of items so we don't have to worry
 	about tacking items on the end */
@@ -819,8 +820,8 @@ function graph_diff() {
 
 	<input type="hidden" name="action" value="save">
 	<input type="hidden" name="save_component_graph_diff" value="1">
-	<input type="hidden" name="local_graph_id" value="<?php print $_GET["id"];?>">
-	<input type="hidden" name="graph_template_id" value="<?php print $_GET["graph_template_id"];?>">
+	<input type="hidden" name="local_graph_id" value="<?php print get_request_var("id");?>">
+	<input type="hidden" name="graph_template_id" value="<?php print get_request_var("graph_template_id");?>">
 	<?php
 
 	form_save_button_alt("action!graph_edit|id!" . get_request_var("id"));
@@ -837,13 +838,13 @@ function graph_edit() {
 	$use_graph_template = true;
 
 	if (!empty($_GET["id"])) {
-		$local_graph_template_graph_id = db_fetch_cell("select local_graph_template_graph_id from graph_templates_graph where local_graph_id=" . $_GET["id"]);
+		$local_graph_template_graph_id = db_fetch_cell("select local_graph_template_graph_id from graph_templates_graph where local_graph_id=" . get_request_var("id"));
 
-		$graphs = db_fetch_row("select * from graph_templates_graph where local_graph_id=" . $_GET["id"]);
+		$graphs = db_fetch_row("select * from graph_templates_graph where local_graph_id=" . get_request_var("id"));
 		$graphs_template = db_fetch_row("select * from graph_templates_graph where id=$local_graph_template_graph_id");
 
-		$device_id = db_fetch_cell("select device_id from graph_local where id=" . $_GET["id"]);
-		$header_label = __("[edit: ") . get_graph_title($_GET["id"]) . "]";
+		$device_id = db_fetch_cell("select device_id from graph_local where id=" . get_request_var("id"));
+		$header_label = __("[edit: ") . get_graph_title(get_request_var("id")) . "]";
 
 		if ($graphs["graph_template_id"] == "0") {
 			$use_graph_template = false;
@@ -863,12 +864,12 @@ function graph_edit() {
 	}
 
 	$tip_text  = "<tr><td align=\\'right\\'><a class=\\'popup_item\\' id=\\'changeGraphState\\' onClick=\\'changeGraphState()\\' href=\\'#\\'>Unlock/Lock</a></td></tr>";
-	$tip_text .= "<tr><td align=\\'right\\'><a class=\\'popup_item\\' href=\\'" . htmlspecialchars('graphs.php?action=graph_edit&id=' . (isset($_GET["id"]) ? $_GET["id"] : 0) . "&debug=" . (isset($_SESSION["graph_debug_mode"]) ? "0" : "1")) . "\\'>" . __("Turn") . " <strong>" . (isset($_SESSION["graph_debug_mode"]) ? __("Off") : __(CHECKED)) . "</strong> " . __("Debug Mode") . "</a></td></tr>";
+	$tip_text .= "<tr><td align=\\'right\\'><a class=\\'popup_item\\' href=\\'" . htmlspecialchars('graphs.php?action=graph_edit&id=' . (isset($_GET["id"]) ? get_request_var("id") : 0) . "&debug=" . (isset($_SESSION["graph_debug_mode"]) ? "0" : "1")) . "\\'>" . __("Turn") . " <strong>" . (isset($_SESSION["graph_debug_mode"]) ? __("Off") : __(CHECKED)) . "</strong> " . __("Debug Mode") . "</a></td></tr>";
 	if (!empty($graphs["graph_template_id"])) {
 		$tip_text .= "<tr><td align=\\'right\\'><a class=\\'popup_item\\' href=\\'" . htmlspecialchars('graph_templates.php?action=template_edit&id=' . (isset($graphs["graph_template_id"]) ? $graphs["graph_template_id"] : "0")) . "\\'>" . __("Edit Template") . "</a></td></tr>";
 	}
 	if (!empty($_GET["device_id"]) || !empty($device_id)) {
-		$tip_text .= "<tr><td align=\\'right\\'><a class=\\'popup_item\\' href=\\'" . htmlspecialchars('devices.php?action=edit&id=' . (isset($_GET["device_id"]) ? $_GET["device_id"] : $device_id)) . "\\'>" . __("Edit Host") . "</a></td></tr>";
+		$tip_text .= "<tr><td align=\\'right\\'><a class=\\'popup_item\\' href=\\'" . htmlspecialchars('devices.php?action=edit&id=' . (isset($_GET["device_id"]) ? get_request_var("device_id") : $device_id)) . "\\'>" . __("Edit Host") . "</a></td></tr>";
 	}
 
 	if (!empty($_GET["id"])) {
@@ -888,6 +889,7 @@ function graph_edit() {
 				$("input").removeAttr("disabled");
 				$("select").removeAttr("disabled");
 				disabled = false;
+				rrdtool_graph_dependencies(); // even when unlocking, disable distinct rrdtool options
 			}else{
 				$("input").attr("disabled","disabled");
 				$("select").attr("disabled","disabled");
@@ -925,10 +927,10 @@ function graph_edit() {
 			),
 		"device_id" => array(
 			"method" => "autocomplete",
-			"callback_function" => "./lib/ajax/get_devices_detailed.php",
+			"callback_function" => "./lib/ajax/get_device_detailed.php",
 			"friendly_name" => __("Host"),
 			"description" => __("Choose the device that this graph belongs to."),
-			"id" => (isset($_GET["device_id"]) ? $_GET["device_id"] : $device_id),
+			"id" => (isset($_GET["device_id"]) ? get_request_var("device_id") : $device_id),
 			"name" => db_fetch_cell("SELECT CONCAT_WS('',description,' (',hostname,')') FROM device WHERE id=" . (isset($_GET['device_id']) ? $_GET['device_id'] : $device_id))
 			),
 		"graph_template_graph_id" => array(
@@ -1015,34 +1017,34 @@ function graph_edit() {
 
 		############
 		html_start_box("<strong>" . __("Labels") . "</strong>", "100", $colors["header"], "0", "center", "", true);
-		draw_template_edit_form('header_graph_labels', $struct_graph_labels, $graphs_template, $use_graph_template);
+		draw_template_edit_form('header_graph_labels', $struct_graph_labels, $graphs, $use_graph_template);
 		html_end_box(false);
 		/* TODO: we should not use rrd version in the code, when going data-driven */
 		if ( read_config_option("rrdtool_version") != RRD_VERSION_1_0 && read_config_option("rrdtool_version") != RRD_VERSION_1_2) {
 			html_start_box("<strong>" . __("Right Axis Settings") . "</strong>", "100", $colors["header"], "0", "center", "", true, "table_graph_template_right_axis");
-			draw_template_edit_form('header_graph_right_axis', $struct_graph_right_axis, $graphs_template, $use_graph_template);
+			draw_template_edit_form('header_graph_right_axis', $struct_graph_right_axis, $graphs, $use_graph_template);
 		}
 		html_end_box(false);
 		html_start_box("<strong>" . __("Graph Template Size") . "</strong>", "100", $colors["header"], "0", "center", "", true, "table_graph_template_size");
-		draw_template_edit_form('header_graph_size', $struct_graph_size, $graphs_template, $use_graph_template);
+		draw_template_edit_form('header_graph_size', $struct_graph_size, $graphs, $use_graph_template);
 		html_end_box(false);
 		html_start_box("<strong>" . __("Graph Template Limits") . "</strong>", "100", $colors["header"], "0", "center", "", true, "table_graph_template_limits");
-		draw_template_edit_form('header_graph_limits', $struct_graph_limits, $graphs_template, $use_graph_template);
+		draw_template_edit_form('header_graph_limits', $struct_graph_limits, $graphs, $use_graph_template);
 		html_end_box(false);
 		html_start_box("<strong>" . __("Graph Template Grid") . "</strong>", "100", $colors["header"], "0", "center", "", true, "table_graph_template_grid");
-		draw_template_edit_form('header_graph_grid', $struct_graph_grid, $graphs_template, $use_graph_template);
+		draw_template_edit_form('header_graph_grid', $struct_graph_grid, $graphs, $use_graph_template);
 		html_end_box(false);
 		html_start_box("<strong>" . __("Graph Template Color") . "</strong>", "100", $colors["header"], "0", "center", "", true, "table_graph_template_color");
-		draw_template_edit_form('header_graph_color', $struct_graph_color, $graphs_template, $use_graph_template);
+		draw_template_edit_form('header_graph_color', $struct_graph_color, $graphs, $use_graph_template);
 		html_end_box(false);
 		html_start_box("<strong>" . __("Graph Template Legend") . "</strong>", "100", $colors["header"], "0", "center", "", true, "table_graph_template_misc");
-		draw_template_edit_form('header_graph_legend', $struct_graph_legend, $graphs_template, $use_graph_template);
+		draw_template_edit_form('header_graph_legend', $struct_graph_legend, $graphs, $use_graph_template);
 		html_end_box(false);
 		html_start_box("<strong>" . __("Graph Template Misc") . "</strong>", "100", $colors["header"], "0", "center", "", true, "table_graph_template_misc");
-		draw_template_edit_form('header_graph_misc', $struct_graph_misc, $graphs_template, $use_graph_template);
+		draw_template_edit_form('header_graph_misc', $struct_graph_misc, $graphs, $use_graph_template);
 		html_end_box(false);
 		html_start_box("<strong>" . __("Graph Template Cacti Specifics") . "</strong>", "100", $colors["header"], "0", "center", "", true, "table_graph_template_cacti");
-		draw_template_edit_form('header_graph_cacti', $struct_graph_cacti, $graphs_template, $use_graph_template);
+		draw_template_edit_form('header_graph_cacti', $struct_graph_cacti, $graphs, $use_graph_template);
 		html_end_box(false);
 	}
 
@@ -1063,7 +1065,7 @@ function graph_edit() {
 <script type="text/javascript">
 	$('#graph_item').tableDnD({
 		onDrop: function(table, row) {
-			$('#AjaxResult').load("lib/ajax/jquery.tablednd/graphs_item.ajax.php?id=<?php isset($_GET["id"]) ? print $_GET["id"] : print "";?>&"+$.tableDnD.serialize());
+			$('#AjaxResult').load("lib/ajax/jquery.tablednd/graphs_item.ajax.php?id=<?php isset($_GET["id"]) ? print get_request_var("id") : print "";?>&"+$.tableDnD.serialize());
 //			location.reload();
 		}
 	});

@@ -136,22 +136,16 @@ function form_save() {
 		}
 
 		foreach ($items as $item) {
-			/* generate a new sequence if needed */
-			if (empty($_POST["sequence"])) {
-				$_POST["sequence"] = get_sequence($_POST["sequence"], "sequence", "graph_templates_item", "local_graph_id=" . $_POST["local_graph_id"]);
-			}
-			$save["id"] = form_input_validate($_POST["id"], "id", "^[0-9]+$", false, 3);
-			$save["graph_template_id"] = form_input_validate($_POST["graph_template_id"], "graph_template_id", "^[0-9]+$", false, 3);
+			$save["id"] 				= form_input_validate($_POST["graph_template_item_id"], "graph_template_item_id", "^[0-9]+$", false, 3);
+			$save["graph_template_id"] 	= form_input_validate($_POST["graph_template_id"], "graph_template_id", "^[0-9]+$", false, 3);
 			$save["local_graph_template_item_id"] = form_input_validate($_POST["local_graph_template_item_id"], "local_graph_template_item_id", "^[0-9]+$", false, 3);
-			$save["local_graph_id"] = form_input_validate($_POST["local_graph_id"], "local_graph_id", "^[0-9]+$", false, 3);
-			$save["task_item_id"] = form_input_validate($_POST["task_item_id"], "task_item_id", "^[0-9]+$", true, 3);
-			$save["color_id"] = form_input_validate((isset($item["color_id"]) ? $item["color_id"] : $_POST["color_id"]), "color_id", "^[0-9]+$", true, 3);
-			/* if alpha is disabled, use opacity=FF instead */
-			if (!isset($_POST["alpha"])) {$_POST["alpha"] = "FF";}
-			$save["alpha"] = form_input_validate((isset($item["alpha"]) ? $item["alpha"] : $_POST["alpha"]), "alpha", "^[a-fA-F0-9]+$", true, 3);
-			$save["graph_type_id"] = form_input_validate((isset($item["graph_type_id"]) ? $item["graph_type_id"] : $_POST["graph_type_id"]), "graph_type_id", "", true, 3);
+			$save["local_graph_id"] 	= form_input_validate($_POST["local_graph_id"], "local_graph_id", "^[0-9]+$", false, 3);
+			$save["task_item_id"] 		= form_input_validate(((isset($item["task_item_id"]) ? $item["task_item_id"] : (isset($_POST["task_item_id"]) ? $_POST["task_item_id"] : 0))), "task_item_id", "^[0-9]+$", true, 3);
+			$save["color_id"] 			= form_input_validate(((isset($item["color_id"]) ? $item["color_id"] : (isset($_POST["color_id"]) ? $_POST["color_id"] : 0))), "color_id", "^[0-9]+$", true, 3);
+			$save["alpha"] 				= form_input_validate(((isset($item["alpha"]) ? $item["alpha"] : (isset($_POST["alpha"]) ? $_POST["alpha"] : "FF"))), "alpha", "^[a-fA-F0-9]+$", true, 3);
+			$save["graph_type_id"]		= form_input_validate(((isset($item["graph_type_id"]) ? $item["graph_type_id"] : (isset($_POST["graph_type_id"]) ? $_POST["graph_type_id"] : 0))), "graph_type_id", "^[0-9]+$", true, 3);
 			if (isset($_POST["line_width"]) || isset($item["line_width"])) {
-				$save["line_width"] = form_input_validate((isset($item["line_width"]) ? $item["line_width"] : $_POST["line_width"]), "line_width", "^[0-9]+[\.,]+[0-9]+$", true, 3);
+				$save["line_width"] 	= form_input_validate((isset($item["line_width"]) ? $item["line_width"] : $_POST["line_width"]), "line_width", "^[0-9]+[\.,]+[0-9]+$", true, 3);
 			}else { # make sure to transfer old LINEx style into line_width on save
 				switch ($save["graph_type_id"]) {
 					case GRAPH_ITEM_TYPE_LINE1:
@@ -167,14 +161,18 @@ function form_save() {
 						$save["line_width"] = 0;
 				}
 			}
-			$save["cdef_id"] = form_input_validate($_POST["cdef_id"], "cdef_id", "^[0-9]+$", true, 3);
-			$save["vdef_id"] = form_input_validate($_POST["vdef_id"], "vdef_id", "^[0-9]+$", true, 3);
-			$save["consolidation_function_id"] = form_input_validate((isset($item["consolidation_function_id"]) ? $item["consolidation_function_id"] : $_POST["consolidation_function_id"]), "consolidation_function_id", "^[0-9]+$", true, 3);
-			$save["text_format"] = form_input_validate((isset($item["text_format"]) ? $item["text_format"] : $_POST["text_format"]), "text_format", "", true, 3);
-			$save["value"] = form_input_validate($_POST["value"], "value", "", true, 3);
-			$save["hard_return"] = form_input_validate(((isset($item["hard_return"]) ? $item["hard_return"] : (isset($_POST["hard_return"]) ? $_POST["hard_return"] : ""))), "hard_return", "", true, 3);
-			$save["gprint_id"] = form_input_validate($_POST["gprint_id"], "gprint_id", "^[0-9]+$", true, 3);
-			$save["sequence"] = form_input_validate($_POST["sequence"], "sequence", "^[0-9]+$", false, 3);
+			$save["cdef_id"] 			= form_input_validate(((isset($item["cdef_id"]) ? $item["cdef_id"] : (isset($_POST["cdef_id"]) ? $_POST["cdef_id"] : 0))), "cdef_id", "^[0-9]+$", true, 3);
+			$save["vdef_id"] 			= form_input_validate(((isset($item["vdef_id"]) ? $item["vdef_id"] : (isset($_POST["vdef_id"]) ? $_POST["vdef_id"] : 0))), "vdef_id", "^[0-9]+$", true, 3);
+			$save["consolidation_function_id"] = form_input_validate(((isset($item["consolidation_function_id"]) ? $item["consolidation_function_id"] : (isset($_POST["consolidation_function_id"]) ? $_POST["consolidation_function_id"] : 0))), "consolidation_function_id", "^[0-9]+$", true, 3);
+			$save["text_format"] 		= form_input_validate(((isset($item["text_format"]) ? $item["text_format"] : (isset($_POST["text_format"]) ? $_POST["text_format"] : ""))), "text_format", "", true, 3);
+			$save["value"] 				= form_input_validate((isset($_POST["value"]) ? $_POST["value"] : ""), "value", "", true, 3);
+			$save["hard_return"] 		= form_input_validate(((isset($item["hard_return"]) ? $item["hard_return"] : (isset($_POST["hard_return"]) ? $_POST["hard_return"] : ""))), "hard_return", "", true, 3);
+			$save["gprint_id"] 			= form_input_validate(((isset($item["gprint_id"]) ? $item["gprint_id"] : (isset($_POST["gprint_id"]) ? $_POST["gprint_id"] : 0))), "gprint_id", "^[0-9]+$", true, 3);
+			/* generate a new sequence if needed */
+			if (empty($_POST["sequence"])) {
+				$_POST["sequence"] 		= get_sequence($_POST["sequence"], "sequence", "graph_templates_item", "graph_template_id=" . $_POST["graph_template_id"] . " and local_graph_id=0");
+			}
+			$save["sequence"] 			= form_input_validate($_POST["sequence"], "sequence", "^[0-9]+$", false, 3);
 
 			if (!is_error_message()) {
 				$graph_template_item_id = sql_save($save, "graph_templates_item");
@@ -271,7 +269,7 @@ function item_edit() {
 	load_current_session_value("device_id", "sess_ds_device_id", "-1");
 	load_current_session_value("data_template_id", "sess_data_template_id", "-1");
 
-	$id = (!empty($_REQUEST["id"]) ? "&id=" . $_REQUEST["id"] : "");
+	$id = (!empty($_REQUEST["id"]) ? "&id=" . get_request_var_request("id") : "");
 	$device = db_fetch_row("select hostname from device where id=" . get_request_var_request("device_id"));
 
 	html_start_box("<strong>" . __("Data Sources") . "</strong> " . __("[device: ") . (empty($device["hostname"]) ? __("No Host") : $device["hostname"]) . "]", "100", $colors["header"], "3", "center", "");
@@ -335,7 +333,7 @@ function item_edit() {
 	}elseif (get_request_var_request("device_id") == "0") {
 		$sql_where = " data_local.device_id=0 and ";
 	}elseif (!empty($_REQUEST["device_id"])) {
-		$sql_where = " data_local.device_id=" . $_REQUEST["device_id"] . " and ";
+		$sql_where = " data_local.device_id=" . get_request_var_request("device_id") . " and ";
 	}
 
 	if (get_request_var_request("data_template_id") == "-1") {
@@ -343,21 +341,17 @@ function item_edit() {
 	}elseif (get_request_var_request("data_template_id") == "0") {
 		$sql_where .= " data_local.data_template_id=0 and ";
 	}elseif (!empty($_REQUEST["data_template_id"])) {
-		$sql_where .= " data_local.data_template_id=" . $_REQUEST["data_template_id"] . " and ";
+		$sql_where .= " data_local.data_template_id=" . get_request_var_request("data_template_id") . " and ";
 	}
 
 	if (!empty($_REQUEST["id"])) {
-		$template_item = db_fetch_row("select * from graph_templates_item where id=" . $_REQUEST["id"]);
-		$device_id = db_fetch_cell("select device_id from graph_local where id=" . $_REQUEST["local_graph_id"]);
+		$template_item = db_fetch_row("select * from graph_templates_item where id=" . get_request_var_request("id"));
+		$device_id = db_fetch_cell("select device_id from graph_local where id=" . get_request_var_request("local_graph_id"));
 	}
-
-	$header_label = __("[edit graph: ") . db_fetch_cell("select title_cache from graph_templates_graph where local_graph_id=" . $_REQUEST["local_graph_id"]) . "]";
-
-	html_start_box("<strong>" . __("Graph Items") . "</strong> $header_label", "100", $colors["header"], "3", "center", "");
 
 	/* by default, select the LAST DS chosen to make everyone's lives easier */
 	if (!empty($_REQUEST["local_graph_id"])) {
-		$default = db_fetch_row("select task_item_id from graph_templates_item where local_graph_id=" . $_REQUEST["local_graph_id"] . " order by sequence DESC");
+		$default = db_fetch_row("select task_item_id from graph_templates_item where local_graph_id=" . get_request_var_request("local_graph_id") . " order by sequence DESC");
 
 		if (sizeof($default) > 0) {
 			$struct_graph_item["task_item_id"]["default"] = $default["task_item_id"];
@@ -394,10 +388,21 @@ function item_edit() {
 		$form_array[$field_name]["form_id"] = (isset($template_item) ? $template_item["id"] : "0");
 	}
 
+
+	if (!empty($_GET["local_graph_id"])) {
+		$header_label = __("[edit: ") . db_fetch_cell("select title_cache from graph_templates_graph where local_graph_id=" . get_request_var_request("local_graph_id")) . "]";
+	}else{
+		$header_label = __("[new]");
+	}
+
+	print "<form method='post' action='" .  basename($_SERVER["PHP_SELF"]) . "' name='graph_item_edit'>\n";
+	html_start_box("<strong>" . __("Graph Items") . "</strong> $header_label", "100", $colors["header"], 0, "center", "", true);
+	$header_items = array(__("Field"), __("Value"));
+	print "<tr><td>";
+	html_header($header_items, 2, true, 'header_graph_item_edit');
 	draw_edit_form(
 		array(
-			"config" => array(
-				),
+			"config" => array("no_form_tag" => true),
 			"fields" => $form_array
 			)
 		);
@@ -406,32 +411,18 @@ function item_edit() {
 	form_hidden_box("graph_template_item_id", (isset($template_item) ? $template_item["id"] : "0"), "");
 	form_hidden_box("local_graph_template_item_id", (isset($template_item) ? $template_item["local_graph_template_item_id"] : "0"), "");
 	form_hidden_box("graph_template_id", (isset($template_item) ? $template_item["graph_template_id"] : "0"), "");
-	form_hidden_box("sequence", (isset($template_item) ? $template_item["sequence"] : "0"), "");
-	form_hidden_box("_graph_type_id", (isset($template_item) ? $template_item["graph_type_id"] : "0"), "");
+#	form_hidden_box("sequence", (isset($template_item) ? $template_item["sequence"] : "0"), "");
+#	form_hidden_box("_graph_type_id", (isset($template_item) ? $template_item["graph_type_id"] : "0"), "");
+#	form_hidden_box("hidden_task_item_id", (isset($template_item) ? $template_item["task_item_id"] : "0"), "");
 	form_hidden_box("save_component_item", "1", "");
 	form_hidden_box("hidden_rrdtool_version", read_config_option("rrdtool_version"), "");
 
+	print "</table></td></tr>";		/* end of html_header */
 	html_end_box();
 
 	form_save_button_alt("path!graphs.php|action!graph_edit|id!" . get_request_var_request("local_graph_id"));
-}
 
-//Now we need some javascript to make it dynamic
-?>
-<script type="text/javascript">
-
-// RRDTool dependencies
-var hidden_rrdtool_version = $('#hidden_rrdtool_version').val();
-if (hidden_rrdtool_version == '<?php print RRD_VERSION_1_0;?>') {
-	$('.not_RRD_1_0_x').each(function() { $(this).attr('disabled', 'disabled'); });
+	include_once(CACTI_BASE_PATH . "/access/js/graph_item_dependencies.js");	# this one modifies attr("disabled")
+	include_once(CACTI_BASE_PATH . "/access/js/line_width.js");
+	include_once(CACTI_BASE_PATH . "/access/js/rrdtool_version.js");			# this one sets attr("disabled) and comes last!
 }
-if (hidden_rrdtool_version == '<?php print RRD_VERSION_1_2;?>x') {
-	$('.not_RRD_1_2_x').each(function() { $(this).attr('disabled', 'disabled'); });
-}
-if (hidden_rrdtool_version == '<?php print RRD_VERSION_1_3;?>') {
-	$('.not_RRD_1_3_x').each(function() { $(this).attr('disabled', 'disabled'); });
-}
-if (hidden_rrdtool_version == '<?php print RRD_VERSION_1_4;?>') {
-	$('.not_RRD_1_4_x').each(function() { $(this).attr('disabled', 'disabled'); });
-}
-</script>

@@ -519,13 +519,15 @@ function graph_perms_edit() {
 		$policy = db_fetch_row("SELECT policy_graphs,policy_trees,policy_devices,policy_graph_templates FROM user_auth WHERE id = " . get_request_var("id"));
 
 		$header_label = __("[edit: ") . db_fetch_cell("SELECT username FROM user_auth WHERE id = " . get_request_var("id")) . "]";
+	}else{
+		$header_label = __("[new]");
 	}
 
 	?>
 	<script type="text/javascript">
 	<!--
 	$().ready(function() {
-		$("#device").autocomplete("./lib/ajax/get_devices_detailed.php", { max: 8, highlight: false, scroll: true, scrollHeight: 300 });
+		$("#device").autocomplete("./lib/ajax/get_device_detailed.php", { max: 8, highlight: false, scroll: true, scrollHeight: 300 });
 		$("#device").result(function(event, data, formatted) {
 			if (data) {
 				$(this).parent().find("#perm_devices").val(data[1]);

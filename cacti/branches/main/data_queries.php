@@ -383,8 +383,12 @@ function data_query_item_edit() {
 		$snmp_query_item = db_fetch_row("select * from snmp_query_graph where id=" . $_GET["id"]);
 	}
 
-	$snmp_query = db_fetch_row("select name,xml_path from snmp_query where id=" . $_GET["snmp_query_id"]);
-	$header_label = __("[edit: ") . $snmp_query["name"] . "]";
+	if (!empty($_GET["snmp_query_id"])) {
+		$snmp_query = db_fetch_row("select name,xml_path from snmp_query where id=" . get_request_var("snmp_query_id"));
+		$header_label = __("[edit: ") . $snmp_query["name"] . "]";
+	}else{
+		$header_label = __("[new]");
+	}
 
 	print "<form method='post' action='" .  basename($_SERVER["PHP_SELF"]) . "' name='data_query_item_edit'>\n";
 	html_start_box("<strong>" . __("Associated Graph/Data Source Templates") . "</strong> $header_label", "100", $colors["header"], 0, "center", "");
