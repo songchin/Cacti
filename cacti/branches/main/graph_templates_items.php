@@ -154,7 +154,7 @@ function form_save() {
 				$_POST["sequence"] = get_sequence($_POST["sequence"], "sequence", "graph_templates_item", "graph_template_id=" . $_POST["graph_template_id"] . " and local_graph_id=0");
 			}
 
-			$save["id"] = form_input_validate($_POST["id"], "id", "^[0-9]+$", false, 3);
+			$save["id"] = form_input_validate($_POST["graph_template_item_id"], "graph_template_item_id", "^[0-9]+$", false, 3);
 			$save["hash"] = get_hash_graph_template($_POST["graph_template_item_id"], "graph_template_item");
 			$save["graph_template_id"] = form_input_validate($_POST["graph_template_id"], "graph_template_id", "^[0-9]+$", false, 3);
 			$save["local_graph_id"] = 0;
