@@ -1186,18 +1186,6 @@ $fields_site_edit = array(
 		"max_length" => "255",
 		"class" => "textAreaNotes"
 		),
-	"id" => array(
-		"method" => "hidden_zero",
-		"value" => "|arg1:id|"
-		),
-	"_id" => array(
-		"method" => "hidden_zero",
-		"value" => "|arg1:id|"
-		),
-	"save_component_site" => array(
-		"method" => "hidden",
-		"value" => "1"
-		)
 	);
 
 /* file: devices.php, action: edit */

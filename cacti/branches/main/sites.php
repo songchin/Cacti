@@ -73,7 +73,7 @@ function form_save() {
 		get_request_var_post("address2"), get_request_var_post("city"), get_request_var_post("state"), get_request_var_post("postal_code"),
 		get_request_var_post("country"), get_request_var_post("notes"));
 
-		if ((is_error_message()) || ($_POST["id"] != $_POST["_id"])) {
+		if ((is_error_message()) || ($_POST["id"] != $_POST["hidden_id"])) {
 			header("Location: sites.php?action=edit&id=" . (empty($id) ? $_POST["id"] : $id));
 		}else{
 			header("Location: sites.php");
@@ -327,7 +327,7 @@ function site_remove() {
 	if ($devices == 0) {
 		if ((read_config_option("remove_verification") == CHECKED) && (!isset($_GET["confirm"]))) {
 			include("./include/top_header.php");
-			form_confirm(__("Are You Sure?"), __("Are you sure you want to delete the site") . " <strong>'" . db_fetch_cell("select description from device where id=" . $_GET["device_id"]) . "'</strong>?", "sites.php", "sites.php?action=remove&id=" . $_GET["id"]);
+			form_confirm(__("Are You Sure?"), __("Are you sure you want to delete the site") . " <strong>'" . db_fetch_cell("select description from device where id=" . get_request_var("device_id")) . "'</strong>?", "sites.php", "sites.php?action=remove&id=" . get_request_var("id"));
 			include("./include/bottom_footer.php");
 			exit;
 		}
@@ -419,7 +419,7 @@ function site_edit() {
 	display_output_messages();
 
 	if (!empty($_GET["id"])) {
-		$site = db_fetch_row("select * from sites where id=" . $_GET["id"]);
+		$site = db_fetch_row("select * from sites where id=" . get_request_var("id"));
 		$header_label = "[edit: " . $site["name"] . "]";
 	}else{
 		$header_label = "[new]";
@@ -432,12 +432,15 @@ function site_edit() {
 	html_header($header_items, 1, true, 'site_edit');
 
 	draw_edit_form(array(
-		"config" => array("form_name" => "chk"),
+		"config" => array("form_name" => "chk", "no_form_tag" => true),
 		"fields" => inject_form_variables($fields_site_edit, (isset($site) ? $site : array()))
 		));
 
 	print "</table></td></tr>";		/* end of html_header */
 	html_end_box();
+	form_hidden_box("id", (isset($site["id"]) ? $site["id"] : "0"), "");
+	form_hidden_box("hidden_id", (isset($site["hidden_id"]) ? $site["hidden_id"] : "0"), "");
+	form_hidden_box("save_component_site", "1", "");
 
 	form_save_button_alt();
 }
@@ -668,7 +671,7 @@ function site() {
 
 	if (get_request_var_request("detail") == "false") {
 		/* generate page list navigation */
-		$nav = html_create_nav($_REQUEST["page"], MAX_DISPLAY_PAGES, read_config_option("num_rows_device"), $total_rows, 9, "sites.php");
+		$nav = html_create_nav($_REQUEST["page"], MAX_DISPLAY_PAGES, read_config_option("num_rows_device"), $total_rows, 6, "sites.php");
 
 		print $nav;
 		html_end_box(false);
@@ -684,7 +687,7 @@ function site() {
 
 		if (sizeof($sites) > 0) {
 			foreach ($sites as $site) {
-				form_alternate_row_color($site["id"], true);
+				form_alternate_row_color('line' . $site["id"], true);
 				form_selectable_cell("<a class='linkEditMain' href='" . htmlspecialchars("sites.php?action=edit&id=" . $site["id"]) . "'>" .
 					(strlen($_REQUEST["filter"]) ? preg_replace("/(" . preg_quote($_REQUEST["filter"]) . ")/i", "<span class=\"filter\">\\1</span>", $site["name"]) : $site["name"]) . "</a>", $site["id"], "20%");
 				form_selectable_cell($site["address1"], $site["id"]);
