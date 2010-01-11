@@ -418,6 +418,9 @@ function rrdtool_function_fetch($local_data_id, $start_time, $end_time, $resolut
 
 	$data_source_path = get_data_source_path($local_data_id, true);
 
+	/* update the rrd from boost if applicable */
+	api_plugin_hook_function('rrdtool_function_fetch_cache_check', $local_data_id);
+
 	/* build and run the rrdtool fetch command with all of our data */
 	$cmd_line = "fetch $data_source_path AVERAGE -s $start_time -e $end_time";
 	if ($resolution > 0) {
