@@ -1260,18 +1260,6 @@ $fields_device_edit = array(
 		"default" => "",
 		"form_id" => false
 		),
-	"id" => array(
-		"method" => "hidden_zero",
-		"value" => "|arg1:id|"
-		),
-	"_device_template_id" => array(
-		"method" => "hidden_zero",
-		"value" => "|arg1:device_template_id|"
-		),
-	"save_basic_device" => array(
-		"method" => "hidden",
-		"value" => "1"
-		)
 	);
 
 /* file: devices.php, action: edit */
@@ -1429,10 +1417,6 @@ $fields_device_edit_availability = array(
 		"default" => read_config_option("max_get_size"),
 		"size" => "15"
 		),
-	"save_component_device" => array(
-		"method" => "hidden",
-		"value" => "1"
-		)
 	);
 
 /* file: device_templates.php, action: edit */

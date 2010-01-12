@@ -155,7 +155,7 @@ function api_device_form_save() {
 				(isset($_POST["template_enabled"]) ? get_request_var_post("template_enabled") : ""));
 		}
 
-		if ((is_error_message()) || ($_POST["device_template_id"] != $_POST["_device_template_id"]) || $reindex_performed) {
+		if ((is_error_message()) || ($_POST["device_template_id"] != $_POST["hidden_device_template_id"]) || $reindex_performed) {
 			header("Location: devices.php?action=edit&id=" . (empty($device_id) ? $_POST["id"] : $device_id));
 		}else{
 			header("Location: devices.php");
@@ -835,7 +835,7 @@ function device_display_general($device, $device_text) {
 
 	/* draw basic fields only on first run for a new device */
 	draw_edit_form(array(
-		"config" => array("form_name" => "chk"),
+		"config" => array("form_name" => "chk", "no_form_tag" => true),
 		"fields" => inject_form_variables($fields_device_edit, (is_array($device) ? $device : array()))
 		));
 
@@ -876,17 +876,20 @@ function device_display_general($device, $device_text) {
 		}
 	}
 
-	form_hidden_box("override_permitted", ($override_permitted ? "true":"false"), "");
-	form_hidden_box("propagation_allowed", ($propagation_allowed ? "true":"false"), "");
-
 	/* for a given device, display all availability options as well */
 	draw_edit_form(array(
-		"config" => array("form_name" => "chk"),
+		"config" => array("form_name" => "chk", "no_form_tag" => true),
 		"fields" => inject_form_variables($fields_device_edit_availability, (isset($template_settings) ? $template_settings : $device))
 		));
 
 	print "</table></td></tr>";		/* end of html_header */
 	html_end_box(!isset($device["id"]));
+	form_hidden_box("id", (isset($device["id"]) ? $device["id"] : "0"), "");
+	form_hidden_box("hidden_device_template_id", (isset($device["device_template_id"]) ? $device["device_template_id"] : "0"), "");
+	form_hidden_box("save_basic_device", "1", "");
+	form_hidden_box("save_component_device", "1", "");
+	form_hidden_box("override_permitted", ($override_permitted ? "true":"false"), "");
+	form_hidden_box("propagation_allowed", ($propagation_allowed ? "true":"false"), "");
 
 	/* javascript relates to availability options, so include it only for existing devices */
 	?>
@@ -1286,10 +1289,10 @@ function device_display_general($device, $device_text) {
 					<strong><?php print $i;?>)</strong> <?php print $item["name"];?>
 				</td>
 				<td>
-					<?php print (($is_being_graphed == true) ? "<span class=\"success\">" . __("Is Being Graphed") . "</span> (<a href='graphs.php?action=graph_edit&id=" . db_fetch_cell("select id from graph_local where graph_template_id=" . $item["id"] . " and device_id=" . get_request_var("id") . " limit 0,1") . "'>" . __("Edit") . "</a>)" : "<span class=\"unknown\">" . __("Not Being Graphed") . "</span>");?>
+					<?php print (($is_being_graphed == true) ? "<span class=\"success\">" . __("Is Being Graphed") . "</span> (<a href='" . htmlspecialchars("graphs.php?action=graph_edit&id=" . db_fetch_cell("select id from graph_local where graph_template_id=" . $item["id"] . " and device_id=" . get_request_var("id") . " limit 0,1")) . "'>" . __("Edit") . "</a>)" : "<span class=\"unknown\">" . __("Not Being Graphed") . "</span>");?>
 				</td>
 				<td align='right' nowrap>
-					<a href='devices.php?action=gt_remove&amp;id=<?php print $item["id"];?>&amp;device_id=<?php print $_GET["id"];?>'><img align='absmiddle' class='buttonSmall' src='images/delete_icon_large.gif' title='<?php print __("Delete Graph Template Association");?>' alt='<?php print __("Delete");?>' align='middle'></a>
+					<a href='devices.php?action=gt_remove&amp;id=<?php print $item["id"];?>&amp;device_id=<?php print $_GET["id"];?>'><img align='middle' class='buttonSmall' src='images/delete_icon_large.gif' title='<?php print __("Delete Graph Template Association");?>' alt='<?php print __("Delete");?>'></a>
 				</td>
 			<?php
 			form_end_row();
@@ -1375,8 +1378,8 @@ function device_display_general($device, $device_text) {
 						<?php print (($status == "success") ? "<span class=\"success\">" . __("Success") . "</span>" : "<span class=\"fail\">" . __("Fail") . "</span>");?> [<?php print $num_dq_items;?> <?php print __("Item", $num_dq_items);?>, <?php print $num_dq_rows;?> <?php print __("Row", $num_dq_rows);?>]
 					</td>
 					<td align='right' nowrap>
-						<a href='devices.php?action=query_reload&amp;id=<?php print $item["id"];?>&amp;device_id=<?php print $_GET["id"];?>'><img align='absmiddle' class='buttonSmall' src='images/reload_icon_small.gif' title='<?php print __("Reload Data Query");?>' alt='<?php print __("Reload");?>' align='middle'></a>&nbsp;
-						<a href='devices.php?action=query_remove&amp;id=<?php print $item["id"];?>&amp;device_id=<?php print $_GET["id"];?>'><img align='absmiddle' class='buttonSmall' src='images/delete_icon_large.gif' title='<?php print __("Delete Data Query Association");?>' alt='<?php print __("Delete");?>' align='middle'></a>
+						<a href='devices.php?action=query_reload&amp;id=<?php print $item["id"];?>&amp;device_id=<?php print $_GET["id"];?>'><img align='middle' class='buttonSmall' src='images/reload_icon_small.gif' title='<?php print __("Reload Data Query");?>' alt='<?php print __("Reload");?>'></a>&nbsp;
+						<a href='devices.php?action=query_remove&amp;id=<?php print $item["id"];?>&amp;device_id=<?php print $_GET["id"];?>'><img align='middle' class='buttonSmall' src='images/delete_icon_large.gif' title='<?php print __("Delete Data Query Association");?>' alt='<?php print __("Delete");?>'></a>
 					</td>
 				<?php
 				form_end_row();

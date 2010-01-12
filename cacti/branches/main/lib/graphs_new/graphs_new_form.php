@@ -421,7 +421,7 @@ function graphs_new() {
 			<table cellpadding="0" align="left">
 				<tr>
 					<?php if (!isset($_REQUEST["tab"])) { ?>
-					<td class="nw50" class='textGraphFilter'>
+					<td class="nw50 textGraphFilter">
 						&nbsp;Host:&nbsp;
 					</td>
 					<td width="1">
@@ -438,7 +438,7 @@ function graphs_new() {
 						</select>
 					</td>
 					<?php } ?>
-					<td class="nw50" class='textGraphFilter'>
+					<td class="nw50 textGraphFilter">
 						&nbsp;<?php print __("Type:");?>&nbsp;
 					</td>
 					<td width="1">
@@ -473,7 +473,7 @@ function graphs_new() {
 			<?php if (get_request_var_request("graph_type") > 0) {?>
 			<table cellpadding="0" align="left">
 				<tr>
-					<td class="nw50" class='textGraphFilter'>
+					<td class="nw50 textGraphFilter">
 						&nbsp;Search:&nbsp;
 					</td>
 					<td class="nw200">
