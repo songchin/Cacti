@@ -47,13 +47,14 @@ require_once('./include/auth.php');
 	}else {
 		exit;
 	}
-	if(sizeof(array_diff($new_order, $old_order))>0) exit;
 
-	/* the set of sequence numbers has to be the same too */
-	if(sizeof(array_diff_key($new_order, $old_order))>0) exit;
+	# compute difference of arrays
+	$diff = array_diff_assoc($new_order, $old_order);
+	# nothing to do?
+	if(sizeof($diff) == 0) exit;
 /* ==================================================== */
 
-foreach($new_order as $sequence => $cdef_id) {
+foreach($diff as $sequence => $cdef_id) {
 	$sql = "UPDATE cdef_items SET sequence = $sequence WHERE id = $cdef_id";
 	db_execute($sql);
 }

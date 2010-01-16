@@ -47,17 +47,9 @@ require_once('./include/auth.php');
 		exit;
 	}
 
-	#if(sizeof(array_diff($new_order, $old_order)) > 0) exit;
-
 	# compute difference of arrays
 	$diff = array_diff_assoc($new_order, $old_order);
 	# nothing to do?
-print "<pre>";
-print_r($old_order);
-print_r($new_order);
-print_r($diff);
-print "</pre>";
-
 	if(sizeof($diff) == 0) exit;
 /* ==================================================== */
 
