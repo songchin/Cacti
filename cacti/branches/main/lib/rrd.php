@@ -664,6 +664,8 @@ function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rr
 		graph_templates_item.consolidation_function_id,
 		graph_templates_item.graph_type_id,
 		graph_templates_item.line_width,
+		graph_templates_item.dashes,
+		graph_templates_item.dash_offset,
 		graph_templates_gprint.gprint_text,
 		colors.hex,
 		graph_templates_item.alpha,
@@ -713,13 +715,13 @@ function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rr
 	/* display the timespan for zoomed graphs */
 	if ((isset($graph_data_array["graph_start"])) && (isset($graph_data_array["graph_end"]))) {
 		if (($graph_data_array["graph_start"] < 0) && ($graph_data_array["graph_end"] < 0)) {
-			if (read_config_option("rrdtool_version") != RRD_VERSION_1_0) {
+			if ($rrdtool_version != RRD_VERSION_1_0) {
 				$graph_opts .= "COMMENT:\"" . __("From") . " " . str_replace(":", "\:", date($graph_date, time()+$graph_data_array["graph_start"])) . " " . __("To") . " " . str_replace(":", "\:", date($graph_date, time()+$graph_data_array["graph_end"])) . "\\c\"" . RRD_NL . "COMMENT:\"  \\n\"" . RRD_NL;
 			}else {
 				$graph_opts .= "COMMENT:\"" . __("From") . " " . date($graph_date, time()+$graph_data_array["graph_start"]) . " " . __("To") . " " . date($graph_date, time()+$graph_data_array["graph_end"]) . "\\c\"" . RRD_NL . "COMMENT:\"  \\n\"" . RRD_NL;
 			}
 		}else if (($graph_data_array["graph_start"] >= 0) && ($graph_data_array["graph_end"] >= 0)) {
-			if (read_config_option("rrdtool_version") != RRD_VERSION_1_0) {
+			if ($rrdtool_version != RRD_VERSION_1_0) {
 				$graph_opts .= "COMMENT:\"" . __("From") . " " . str_replace(":", "\:", date($graph_date, $graph_data_array["graph_start"])) . " " . __("To") . " " . str_replace(":", "\:", date($graph_date, $graph_data_array["graph_end"])) . "\\c\"" . RRD_NL . "COMMENT:\"  \\n\"" . RRD_NL;
 			}else {
 				$graph_opts .= "COMMENT:\"" . __("From") . " " . date($graph_date, $graph_data_array["graph_start"]) . " " . __("To") . " " . date($graph_date, $graph_data_array["graph_end"]) . "\\c\"" . RRD_NL . "COMMENT:\"  \\n\"" . RRD_NL;
@@ -1142,7 +1144,7 @@ function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rr
 		$graph_defs .= $cdef_graph_defs;
 
 		/* +++++++++++++++++++++++ GRAPH ITEMS: VDEF's +++++++++++++++++++++++ */
-		if (read_config_option("rrdtool_version") != RRD_VERSION_1_0) {
+		if ($rrdtool_version != RRD_VERSION_1_0) {
 
 			/* make vdef string here, copied from cdef stuff */
 			$vdef_graph_defs = "";
@@ -1248,85 +1250,120 @@ function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rr
 
 		/* most of the calculations have been done above. now we have for print everything out
 		in an RRDTool-friendly fashion */
-
 		$need_rrd_nl = TRUE;
 
-		if ($graph_item["graph_type_id"] == GRAPH_ITEM_TYPE_COMMENT) {
-			$comment_string = $graph_item_types{$graph_item["graph_type_id"]} . ":\"" .
-					substr(rrd_substitute_device_query_data(str_replace(":", "\:", $graph_variables["text_format"][$graph_item_id]), $graph, $graph_item),0,198) .
-					$hardreturn[$graph_item_id] . "\" ";
-			if (trim($comment_string) == 'COMMENT:"\n"') {
-				$txt_graph_items .= 'COMMENT:" \n"'; # rrdtool will skip a COMMENT that holds a NL only; so add a blank to make NL work
-			} else if (trim($comment_string) != "COMMENT:\"\"") {
-				$txt_graph_items .= $comment_string;
-			}
-		}elseif (($graph_item["graph_type_id"] == GRAPH_ITEM_TYPE_GPRINT) && (!isset($graph_data_array["graph_nolegend"]))) {
-			/* rrdtool 1.2.x VDEFs must suppress the consolidation function on GPRINTs */
-			if (read_config_option("rrdtool_version") != RRD_VERSION_1_0) {
-				if ($graph_item["vdef_id"] == "0") {
-					$txt_graph_items .= $graph_item_types{$graph_item["graph_type_id"]} . ":" . $data_source_name . ":" . $consolidation_functions{$graph_item["consolidation_function_id"]} . ":\"$text_padding" . $graph_variables["text_format"][$graph_item_id] . $graph_item["gprint_text"] . $hardreturn[$graph_item_id] . "\" ";
-				}else{
-					$txt_graph_items .= $graph_item_types{$graph_item["graph_type_id"]} . ":" . $data_source_name . ":\"$text_padding" . $graph_variables["text_format"][$graph_item_id] . $graph_item["gprint_text"] . $hardreturn[$graph_item_id] . "\" ";
-				}
-			}else {
-				$txt_graph_items .= $graph_item_types{$graph_item["graph_type_id"]} . ":" . $data_source_name . ":" . $consolidation_functions{$graph_item["consolidation_function_id"]} . ":\"$text_padding" . $graph_variables["text_format"][$graph_item_id] . $graph_item["gprint_text"] . $hardreturn[$graph_item_id] . "\" ";
-			}
-		}elseif ($graph_item["graph_type_id"] == GRAPH_ITEM_TYPE_AREA ||
-				$graph_item["graph_type_id"] == GRAPH_ITEM_TYPE_AREASTACK ||
-				$graph_item["graph_type_id"] == GRAPH_ITEM_TYPE_LINE1 ||
-				$graph_item["graph_type_id"] == GRAPH_ITEM_TYPE_LINE2 ||
-				$graph_item["graph_type_id"] == GRAPH_ITEM_TYPE_LINE3 ||
-				$graph_item["graph_type_id"] == GRAPH_ITEM_TYPE_LINESTACK ||
-				$graph_item["graph_type_id"] == GRAPH_ITEM_TYPE_HRULE ||
-				$graph_item["graph_type_id"] == GRAPH_ITEM_TYPE_VRULE) {
+		/* initialize line width support */
+		if ($graph_item["graph_type_id"] == GRAPH_ITEM_TYPE_LINE1 ||
+			$graph_item["graph_type_id"] == GRAPH_ITEM_TYPE_LINE2 ||
+			$graph_item["graph_type_id"] == GRAPH_ITEM_TYPE_LINE3) {
+			if ($rrdtool_version == RRD_VERSION_1_0) {
+				# round line_width to 1 <= line_width <= 3
+				if ($graph_item["line_width"] < 1) {$graph_item["line_width"] = 1;}
+				if ($graph_item["line_width"] > 3) {$graph_item["line_width"] = 3;}
 
-			/* initialize any color syntax for graph item */
-			if (empty($graph_item["hex"])) {
-				$graph_item_color_code = "";
-			}else{
-				$graph_item_color_code = "#" . $graph_item["hex"];
-				if (read_config_option("rrdtool_version") != RRD_VERSION_1_0) {
-					$graph_item_color_code .= $graph_item["alpha"];
+				$graph_item["line_width"] = intval($graph_item["line_width"]);
+			}
+		}
+
+		/* initialize color support */
+		$graph_item_color_code = "";
+		if (!empty($graph_item["hex"])) {
+			$graph_item_color_code = "#" . $graph_item["hex"];
+			if ($rrdtool_version != RRD_VERSION_1_0) {
+				$graph_item_color_code .= $graph_item["alpha"];
+			}
+		}
+
+
+		/* initialize dash support */
+		$dash = "";
+		if ($graph_item["graph_type_id"] == GRAPH_ITEM_TYPE_LINE1 ||
+			$graph_item["graph_type_id"] == GRAPH_ITEM_TYPE_LINE2 ||
+			$graph_item["graph_type_id"] == GRAPH_ITEM_TYPE_LINE3 ||
+			$graph_item["graph_type_id"] == GRAPH_ITEM_TYPE_LINESTACK ||
+			$graph_item["graph_type_id"] == GRAPH_ITEM_TYPE_HRULE ||
+			$graph_item["graph_type_id"] == GRAPH_ITEM_TYPE_VRULE) {
+			if ($rrdtool_version != RRD_VERSION_1_0 &&
+				$rrdtool_version != RRD_VERSION_1_2) {
+				if (!empty($graph_item["dashes"])) {
+					$dash .= ":dashes=" . $graph_item["dashes"];
+				}
+				if (!empty($graph_item["dash_offset"])) {
+					$dash .= ":dash-offset=" . $graph_item["dash_offset"];
 				}
 			}
+		}
 
-			if ($graph_item["graph_type_id"] == GRAPH_ITEM_TYPE_AREA) {
+
+		switch($graph_item["graph_type_id"]) {
+			case GRAPH_ITEM_TYPE_COMMENT:
+				$comment_string = $graph_item_types{$graph_item["graph_type_id"]} . ":\"" .
+						substr(rrd_substitute_device_query_data(str_replace(":", "\:", $graph_variables["text_format"][$graph_item_id]), $graph, $graph_item),0,198) .
+						$hardreturn[$graph_item_id] . "\" ";
+				if (trim($comment_string) == 'COMMENT:"\n"') {
+					$txt_graph_items .= $graph_item_types{$graph_item["graph_type_id"]} . ':" \n"'; # rrdtool will skip a COMMENT that holds a NL only; so add a blank to make NL work
+				}elseif (trim($comment_string) != "COMMENT:\"\"") {
+					$txt_graph_items .= $comment_string;
+				}
+				break;
+
+
+			case GRAPH_ITEM_TYPE_GPRINT:
+				if (!isset($graph_data_array["graph_nolegend"])) {
+					/* rrdtool 1.2.x VDEFs must suppress the consolidation function on GPRINTs */
+					if ($rrdtool_version != RRD_VERSION_1_0) {
+						if ($graph_item["vdef_id"] == "0") {
+							$txt_graph_items .= $graph_item_types{$graph_item["graph_type_id"]} . ":" . $data_source_name . ":" . $consolidation_functions{$graph_item["consolidation_function_id"]} . ":\"$text_padding" . $graph_variables["text_format"][$graph_item_id] . $graph_item["gprint_text"] . $hardreturn[$graph_item_id] . "\" ";
+						}else{
+							$txt_graph_items .= $graph_item_types{$graph_item["graph_type_id"]} . ":" . $data_source_name . ":\"$text_padding" . $graph_variables["text_format"][$graph_item_id] . $graph_item["gprint_text"] . $hardreturn[$graph_item_id] . "\" ";
+						}
+					}else {
+						$txt_graph_items .= $graph_item_types{$graph_item["graph_type_id"]} . ":" . $data_source_name . ":" . $consolidation_functions{$graph_item["consolidation_function_id"]} . ":\"$text_padding" . $graph_variables["text_format"][$graph_item_id] . $graph_item["gprint_text"] . $hardreturn[$graph_item_id] . "\" ";
+					}
+				}
+				break;
+
+
+			case GRAPH_ITEM_TYPE_AREA:
 				$txt_graph_items .= $graph_item_types{$graph_item["graph_type_id"]} . ":" . $data_source_name . $graph_item_color_code . ":" . "\"" . $graph_variables["text_format"][$graph_item_id] . $hardreturn[$graph_item_id] . "\" ";
+				break;
 
-			}elseif ($graph_item["graph_type_id"] == GRAPH_ITEM_TYPE_LINE1 ||
-					$graph_item["graph_type_id"] == GRAPH_ITEM_TYPE_LINE2 ||
-					$graph_item["graph_type_id"] == GRAPH_ITEM_TYPE_LINE3) {
-				if (read_config_option("rrdtool_version") == RRD_VERSION_1_0) {
-					# round line_width to 1 <= line_width <= 3
-					if ($graph_item["line_width"] < 1) {$graph_item["line_width"] = 1;}
-					if ($graph_item["line_width"] > 3) {$graph_item["line_width"] = 3;}
-					$graph_item["line_width"] = intval($graph_item["line_width"]);
-				}
-				$txt_graph_items .= "LINE" . $graph_item["line_width"] . ":" . $data_source_name . $graph_item_color_code . ":" . "\"" . $graph_variables["text_format"][$graph_item_id] . $hardreturn[$graph_item_id] . "\" ";
 
-			}elseif ($graph_item["graph_type_id"] == GRAPH_ITEM_TYPE_AREASTACK) {
-				if (read_config_option("rrdtool_version") != RRD_VERSION_1_0) {
+			case GRAPH_ITEM_TYPE_AREASTACK:
+				if ($rrdtool_version != RRD_VERSION_1_0) {
 					$txt_graph_items .= "AREA:" . $data_source_name . $graph_item_color_code . ":" . "\"" . $graph_variables["text_format"][$graph_item_id] . $hardreturn[$graph_item_id] . "\":STACK";
 				}else {
 					$txt_graph_items .= $graph_item_types{$graph_item["graph_type_id"]} . ":" . $data_source_name . $graph_item_color_code . ":" . "\"" . $graph_variables["text_format"][$graph_item_id] . $hardreturn[$graph_item_id] . "\" ";
 				}
+				break;
 
-			}elseif ($graph_item["graph_type_id"] == GRAPH_ITEM_TYPE_LINESTACK) {
-				if (read_config_option("rrdtool_version") != RRD_VERSION_1_0) {
-					$txt_graph_items .= "LINE" . $graph_item["line_width"] . ":" . $data_source_name . $graph_item_color_code . ":" . "\"" . $graph_variables["text_format"][$graph_item_id] . $hardreturn[$graph_item_id] . "\":STACK";
+
+			case GRAPH_ITEM_TYPE_LINE1:
+			case GRAPH_ITEM_TYPE_LINE2:
+			case GRAPH_ITEM_TYPE_LINE3:
+				$txt_graph_items .= "LINE" . $graph_item["line_width"] . ":" . $data_source_name . $graph_item_color_code . ":" . "\"" . $graph_variables["text_format"][$graph_item_id] . $hardreturn[$graph_item_id] . "\"" . $dash;
+				break;
+
+
+			case GRAPH_ITEM_TYPE_LINESTACK:
+				if ($rrdtool_version != RRD_VERSION_1_0) {
+					$txt_graph_items .= "LINE" . $graph_item["line_width"] . ":" . $data_source_name . $graph_item_color_code . ":" . "\"" . $graph_variables["text_format"][$graph_item_id] . $hardreturn[$graph_item_id] . "\":STACK" . $dash;
 				}
+				break;
 
-			}elseif ($graph_item["graph_type_id"] == GRAPH_ITEM_TYPE_HRULE) {
+
+			case GRAPH_ITEM_TYPE_HRULE:
 				$graph_variables["value"][$graph_item_id] = str_replace(":", "\:", $graph_variables["value"][$graph_item_id]); /* escape colons */
 				/* perform variable substitution; if this does not return a number, rrdtool will FAIL! */
 				$substitute = rrd_substitute_device_query_data($graph_variables["value"][$graph_item_id], $graph, $graph_item);
 				if (is_numeric($substitute)) {
 					$graph_variables["value"][$graph_item_id] = $substitute;
 				}
-				$txt_graph_items .= $graph_item_types{$graph_item["graph_type_id"]} . ":" . $graph_variables["value"][$graph_item_id] . $graph_item_color_code . ":\"" . $graph_variables["text_format"][$graph_item_id] . $hardreturn[$graph_item_id] . "\" ";
+				$txt_graph_items .= $graph_item_types{$graph_item["graph_type_id"]} . ":" . $graph_variables["value"][$graph_item_id] . $graph_item_color_code . ":\"" . $graph_variables["text_format"][$graph_item_id] . $hardreturn[$graph_item_id] . "\"" . $dash;
+				break;
 
-			}elseif ($graph_item["graph_type_id"] == GRAPH_ITEM_TYPE_VRULE) {
 
+			case GRAPH_ITEM_TYPE_VRULE:
 				if (substr_count($graph_item["value"], ":")) {
 					$value_array = explode(":", $graph_item["value"]);
 
@@ -1339,10 +1376,13 @@ function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rr
 					$value = $graph_item["value"];
 				}
 
-				$txt_graph_items .= $graph_item_types{$graph_item["graph_type_id"]} . ":" . $value . $graph_item_color_code . ":\"" . $graph_variables["text_format"][$graph_item_id] . $hardreturn[$graph_item_id] . "\" ";
-			}
-		}else{
-			$need_rrd_nl = FALSE;
+				$txt_graph_items .= $graph_item_types{$graph_item["graph_type_id"]} . ":" . $value . $graph_item_color_code . ":\"" . $graph_variables["text_format"][$graph_item_id] . $hardreturn[$graph_item_id] . "\"" . $dash;
+				break;
+
+
+			default:
+				$need_rrd_nl = FALSE;
+
 		}
 
 		$i++;
@@ -2536,6 +2576,16 @@ function rrdgraph_opts($graph, $graph_data_array, $version) {
 		$option .= rrdtool_set_colortag("FRAME", $graph["colortag_frame"]);
 		$option .= rrdtool_set_colortag("ARROW", $graph["colortag_arrow"]);
 	}
+
+
+	return $option;
+}
+
+
+function rrdgraph_item_opts($graph_item, $graph_data_array, $hardreturn, $graph_variables, $version) {
+
+	$option = "";
+
 
 
 	return $option;

@@ -39,8 +39,10 @@ function graph_interdependencies(graph_type) {
 		$('.not_RRD_TYPE_AREA').each(function() { $(this).attr('disabled', 'disabled'); });
 		break;
 	case <?php print GRAPH_ITEM_TYPE_AREASTACK;?>:
+		$('.not_RRD_TYPE_AREASTACK').each(function() { $(this).attr('disabled', 'disabled'); });
+	break;
 	case <?php print GRAPH_ITEM_TYPE_LINESTACK;?>:
-		$('.not_RRD_TYPE_STACK').each(function() { $(this).attr('disabled', 'disabled'); });
+		$('.not_RRD_TYPE_LINESTACK').each(function() { $(this).attr('disabled', 'disabled'); });
 		break;
 	case <?php print GRAPH_ITEM_TYPE_GPRINT;?>:
 		$('.not_RRD_TYPE_GPRINT').each(function() { $(this).attr('disabled', 'disabled'); });

@@ -125,6 +125,7 @@ Cacti CHANGELOG
 -feature: Custom Legend: customize the entries added in one go to your liking
 -feature: support LINE<width> using decimal xx.xx line widths for RRDTool > 1.0.x
 -feature: disable graph item fields that are not related to the chosen graph item type
+-feature: add support for [:dashes] and [:dash-offset]
 
 0.8.7e
 

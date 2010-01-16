@@ -973,8 +973,26 @@ $struct_graph_item = array(
 		"max_length" => "5",
 		"default" => "",
 		"size" => "5",
-		"description" => __("In case LINE was chosen, specify width of line here. Not available for rrdtool-1.0.x."),
+		"description" => __("In case LINE was chosen, specify width of line here."),
 		"class" => "not_RRD_1_0_x not_RRD_TYPE_COMMENT not_RRD_TYPE_HRULE not_RRD_TYPE_VRULE not_RRD_TYPE_GPRINT",
+		),
+	"dashes" => array(
+		"friendly_name" => __("Dashes (dashes[=on_s[,off_s[,on_s,off_s]...]])"),
+		"method" => "textbox",
+		"max_length" => "20",
+		"default" => "",
+		"size" => "10",
+		"description" => __("The dashes modifier enables dashed line style."),
+		"class" => "not_RRD_1_0_x not_RRD_1_2_x not_RRD_TYPE_COMMENT not_RRD_TYPE_AREA not_RRD_TYPE_AREASTACK not_RRD_TYPE_GPRINT",
+		),
+	"dash_offset" => array(
+		"friendly_name" => __("Dash Offset (dash-offset=offset)"),
+		"method" => "textbox",
+		"max_length" => "4",
+		"default" => "",
+		"size" => "4",
+		"description" => __("The dash-offset parameter specifies an offset into the pattern at which the stroke begins."),
+		"class" => "not_RRD_1_0_x not_RRD_1_2_x not_RRD_TYPE_COMMENT not_RRD_TYPE_AREA not_RRD_TYPE_AREASTACK not_RRD_TYPE_GPRINT",
 		),
 	"color_id" => array(
 		"friendly_name" => __("Color"),
@@ -989,7 +1007,7 @@ $struct_graph_item = array(
 		"method" => "drop_array",
 		"default" => "FF",
 		"array" => $graph_color_alpha,
-		"description" => __("The opacity/alpha channel of the color. Not available for rrdtool-1.0.x."),
+		"description" => __("The opacity/alpha channel of the color."),
 		"class" => "not_RRD_1_0_x not_RRD_TYPE_COMMENT not_RRD_TYPE_GPRINT",
 		),
 	"cdef_id" => array(
@@ -1007,7 +1025,7 @@ $struct_graph_item = array(
 		"sql" => "select id,name from vdef order by name",
 		"default" => "0",
 		"none_value" => "None",
-		"description" => __("A VDEF (math) function to apply to this item on the legend. Not available for rrdtool-1.0.x."),
+		"description" => __("A VDEF (math) function to apply to this item on the legend."),
 		"class" => "not_RRD_1_0_x not_RRD_TYPE_COMMENT",
 		),
 	"value" => array(
@@ -1017,7 +1035,7 @@ $struct_graph_item = array(
 		"default" => "",
 		"size" => "10",
 		"description" => __("The value of an HRULE or VRULE graph item."),
-		"class" => "not_RRD_TYPE_COMMENT not_RRD_TYPE_LINE not_RRD_TYPE_AREA not_RRD_TYPE_STACK not_RRD_TYPE_GPRINT",
+		"class" => "not_RRD_TYPE_COMMENT not_RRD_TYPE_LINE not_RRD_TYPE_LINESTACK not_RRD_TYPE_AREA not_RRD_TYPE_AREASTACK not_RRD_TYPE_GPRINT",
 		),
 	"gprint_id" => array(
 		"friendly_name" => __("GPRINT Type"),
@@ -1025,7 +1043,7 @@ $struct_graph_item = array(
 		"sql" => "select id,name from graph_templates_gprint order by name",
 		"default" => "2",
 		"description" => __("If this graph item is a GPRINT, you can optionally choose another format here. You can define additional types under 'GPRINT Presets'."),
-		"class" => "not_RRD_TYPE_COMMENT not_RRD_TYPE_HRULE not_RRD_TYPE_VRULE not_RRD_TYPE_LINE not_RRD_TYPE_AREA not_RRD_TYPE_STACK",
+		"class" => "not_RRD_TYPE_COMMENT not_RRD_TYPE_HRULE not_RRD_TYPE_VRULE not_RRD_TYPE_LINE not_RRD_TYPE_LINESTACK not_RRD_TYPE_AREA not_RRD_TYPE_AREASTACK",
 		),
 	"text_format" => array(
 		"friendly_name" => __("Text Format"),
