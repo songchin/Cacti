@@ -22,7 +22,8 @@
  +-------------------------------------------------------------------------+
 */
 
-require_once(dirname(__FILE__) . "../../../include/auth.php");
+chdir('../../../');
+require_once('./include/auth.php');
 
 /* ================= Input validation ================= */
 	input_validate_input_number(get_request_var("id"));
