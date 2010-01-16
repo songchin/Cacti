@@ -117,6 +117,7 @@ function api_device_form_save() {
 			$device_template["snmp_priv_protocol"]    = get_request_var_post("snmp_priv_protocol");
 			$device_template["snmp_context"]          = get_request_var_post("snmp_context");
 			$device_template["max_oids"]              = get_request_var_post("max_oids");
+			$device_template["device_threads"]        = get_request_var_post("device_threads");
 			$device_template["template_enabled"]      = "";
 		}
 
@@ -131,7 +132,8 @@ function api_device_form_save() {
 			$device_template["ping_port"], $device_template["ping_timeout"],
 			$device_template["ping_retries"], $device_template["notes"],
 			$device_template["snmp_auth_protocol"], $device_template["snmp_priv_passphrase"],
-			$device_template["snmp_priv_protocol"], $device_template["snmp_context"], $device_template["max_oids"], $device_template["template_enabled"]);
+			$device_template["snmp_priv_protocol"], $device_template["snmp_context"], $device_template["max_oids"],
+			$device_template["device_threads"], $device_template["template_enabled"]);
 
 		header("Location: devices.php?action=edit&id=" . (empty($device_id) ? $_POST["id"] : $device_id));
 		exit;
@@ -151,7 +153,7 @@ function api_device_form_save() {
 				get_request_var_post("ping_retries"), get_request_var_post("notes"),
 				get_request_var_post("snmp_auth_protocol"), get_request_var_post("snmp_priv_passphrase"),
 				get_request_var_post("snmp_priv_protocol"), get_request_var_post("snmp_context"),
-				get_request_var_post("max_oids"),
+				get_request_var_post("max_oids"), get_request_var_post("device_threads"),
 				(isset($_POST["template_enabled"]) ? get_request_var_post("template_enabled") : ""));
 		}
 
@@ -1178,6 +1180,7 @@ function device_display_general($device, $device_text) {
 			$('#snmp_port').removeAttr("disabled");
 			$('#snmp_timeout').removeAttr("disabled");
 			$('#max_oids').removeAttr("disabled");
+			$('#device_threads').removeAttr("disabled");
 		}else{
 			$('#override_permitted').attr("disabled","disabled");
 			$('#availability_header').attr("disabled","disabled");
@@ -1199,6 +1202,7 @@ function device_display_general($device, $device_text) {
 			$('#snmp_port').attr("disabled","disabled");
 			$('#snmp_timeout').attr("disabled","disabled");
 			$('#max_oids').attr("disabled","disabled");
+			$('#device_threads').attr("disabled","disabled");
 		}
 
 		changeHostForm();

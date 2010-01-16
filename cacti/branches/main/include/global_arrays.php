@@ -332,6 +332,15 @@ $poller_intervals = array(
 	300 => __("Every %d Minutes", 5),
 	);
 
+$device_threads = array(
+	1 => "1 Thread (default)",
+	2 => "2 Threads",
+	3 => "3 Threads",
+	4 => "4 Threads",
+	5 => "5 Threads",
+	6 => "6 Threads"
+	);
+
 $cron_intervals = array(
 	60 => __("Every Minute"),
 	300 => __("Every %d Minutes", 5),

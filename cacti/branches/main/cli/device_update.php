@@ -83,6 +83,7 @@ if (sizeof($parms)) {
 			case "--ping-retries":	$device["ping_retries"] 		= trim($value);	break;
 			case "--ping-timeout":	$device["ping_timeout"] 		= trim($value);	break;
 			case "--max-oids":		$device["max_oids"] 			= trim($value);	break;
+			case "--device-threads":$device["device_threads"] 		= trim($value);	break;
 
 			# miscellaneous
 			case "-V":
@@ -200,7 +201,8 @@ if (sizeof($parms)) {
 		device_template.snmp_priv_passphrase,
 		device_template.snmp_priv_protocol,
 		device_template.snmp_context,
-		device_template.max_oids
+		device_template.max_oids,
+		device_template.device_threads
 		FROM device_template
 		WHERE id=" . $template_id);
 		} else { # no device template given, so fetch system defaults
@@ -220,6 +222,7 @@ if (sizeof($parms)) {
 		$device_template["snmp_priv_protocol"]	= read_config_option("snmp_priv_protocol");
 		$device_template["snmp_context"]		= read_config_option("snmp_context");
 		$device_template["max_oids"]			= read_config_option("max_get_size");
+		$device_template["device_threads"]		= read_config_option("device_threads");
 		}
 		*/
 	/*
@@ -242,6 +245,7 @@ if (sizeof($parms)) {
 	 if (isset($snmp_priv_protocol)) 	{$device_template["snmp_priv_protocol"]		= $snmp_priv_protocol;}
 	 if (isset($snmp_context)) 			{$device_template["snmp_context"]			= $snmp_context;}
 	 if (isset($max_oids))	 			{$device_template["max_oids"]				= $max_oids;}
+	 if (isset($device_threads))		{$device_template["device_threads"]			= $device_threads;}
 
 	 $device_template["notes"]		= (isset($notes)) ? $notes : "";
 	 $device_template["disabled"]	= (isset($disabled)) ? disabled : "";

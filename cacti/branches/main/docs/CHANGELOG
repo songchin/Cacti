@@ -4,7 +4,7 @@ Cacti CHANGELOG
 -bug#0001085: LDAP enabled status not maintained on upgrade from 0.8.6j to 0.8.7
 -bug#0001100: spine hangs on unreachable hosts
 -bug#0001105: add_graphs.php --list-snmp-values for all available host snmp-fields
--bug#0001125: XML parse error on template import with degree symbol 
+-bug#0001125: XML parse error on template import with degree symbol
 -bug#0001147: Cactid doesn't trim white space from data template OIDs
 -bug#0001159: Template names are confusing/archaic (Graph, Data Templates, Data Queries are renamed).
 -bug#0001160: In Suggested Values editor, name and field are reversed. Include column headers
@@ -18,27 +18,27 @@ Cacti CHANGELOG
 -bug#0001354: 0.8.7c to 0.8.8 update script bugs
 -bug#0001359: Better error checking in rrd.php
 -bug#0001366: Exported data templates do not import the special characters properly
--bug#0001397: Never use "Delete" as default action in any drop-list in cacti to avoid disaster 
+-bug#0001397: Never use "Delete" as default action in any drop-list in cacti to avoid disaster
 -bug#0001414: COMMENT field can cause rrdtool to report "Legend too long"
 -bug#0001428: segfault when database tables not present
 -bug#0001429: PHP does not support SNMP V3 Contexts and Cacti needs to act accordingly
 -bug#0001432: array_merge breaks dropdown handling with hardcoded (array-)keys
--bug#0001452: Missing "<" and ">" in "Collection Methods=>Data Input Methods=>"Input String", When Import Template 
+-bug#0001452: Missing "<" and ">" in "Collection Methods=>Data Input Methods=>"Input String", When Import Template
 -bug#0001461: (Data Query) Export/Import fails
 -bug#0001479: cli/add_device.php will modify existing devices
 -bug#0001492: RRDTool 1.3 series fonts (fontconfig) support
 -bug#0001506: Reindexing fails in snmp.php
--bug#0001508: More min-height'ed divs when showing graphs 
+-bug#0001508: More min-height'ed divs when showing graphs
 -bug#0001522: Special(?) charakters break parsing of template data.
 -bug#0001528: ICMP Ping availabilty broken in UI for Windows Servers using IIS
 -bug#0001532: Various crashes in early stages of installation with no database populated.
 -bug#0001534: IP:PORT Granularity issue in cli/add_device.php
--bug#0001535: Tree Automation Difficult Due to Lack of Parent ID in Tree Nodes 
+-bug#0001535: Tree Automation Difficult Due to Lack of Parent ID in Tree Nodes
 -bug#0001549: Database crashes with use of array_to_sql_or
 -bug#0001557: Quotes in Text Format graph template field breaks graph
 -bug#0001568: Cacti currently gives a lot of warnings of deprecated functions on PHP 5.3
 -bug#0001580: Extra newline in api_automation_tools.php breaks custom scripts
--bug#0001600: Default action on lists should be "None" 
+-bug#0001600: Default action on lists should be "None"
 -bug: remove graph permissions if graph is removed
 -bug: remove host permissions if host is removed
 -bug: add_tree.php did not allow nodes with propagating sort options
@@ -68,23 +68,24 @@ Cacti CHANGELOG
 -feature#0001341: SNMP query: add oid_suffix for weird SNMP queries
 -feature#0001350: Compare Cacti Data Source Info to current RRD File Info
 -feature#0001371: Support for LINE:STACK, was: Stacked LINE
--feature#0001372: Add Custom SNMP context for datasources 
+-feature#0001372: Add Custom SNMP context for datasources
 -feature#0001401: allow "|query_foo|" substitution for graphing a --vertical-label
 -feature#0001406: Dynamically display field description for templates
 -feature#0001408: Hide templated input fields
 -feature#0001409: Add context sensitive page help linking to cacti dokuwiki
 -feature#0001418: changing the graph backround via graph templates
--feature#0001434: Nth percentile handling causes excessive memory usage (OOMs php); Use VDEF instead 
+-feature#0001434: Nth percentile handling causes excessive memory usage (OOMs php); Use VDEF instead
 -feature#0001438: Allow for drag and drop reordering of graph template items
 -feature#0001439: New pseudo variable |host_template|, support all pseudo variable derived from host table
 -feature#0001450: Template import script
 -feature#0001457: Support for rrdtool graph options, was: Extra settings field in graph template
--feature#0001483: (OID|VALUE)/REGEXP for get input fields 
+-feature#0001483: (OID|VALUE)/REGEXP for get input fields
+-feature#0001519: spine enhancement for parallel collection of data at device level
 -feature#0001525: add rebuild_poller_cache --host-id=[ID]
 -feature#0001536: small patch to allow plugins to change the x-axis labels
 -feature#0001542: Rewriting SNMP values of data queries
 -feature#0001550: Record the polling time for each host to optimize polling times
--feature#0001588: Add pango-markup options to simple html markup in graphed text (title, legend etc) 
+-feature#0001588: Add pango-markup options to simple html markup in graphed text (title, legend etc)
 -feature: jQuery "TableDnd" used for cdef item sort (courtesy Browniebraun)
 -feature: jQuery "TableDnd" for Graph Template Item
 -feature: jQuery "TableDnd" for Data Queries Suggested Values
@@ -128,26 +129,26 @@ Cacti CHANGELOG
 0.8.7e
 
 -bug#0001044: Creating a DS, Output field can't be selected for DT with a DIM when "Use Per-Data Source Value" is on
--bug#0001341: SNMP query: add oid_suffix for weird SNMP queries 
+-bug#0001341: SNMP query: add oid_suffix for weird SNMP queries
 -bug#0001345: Overwriting $snmp_index in query_snmp_host() breaks SNMP Data query if using get method
--bug#0001346: Strip out noisy 'No Such Instance currently exists at this OID' 
+-bug#0001346: Strip out noisy 'No Such Instance currently exists at this OID'
 -bug#0001404: timeout in "function ping_icmp" (lib/ping.php)
 -bug#0001405: Spaces in DS when .rrd file is created, so it fails
 -bug#0001407: Place graph thumbnail into div to lower page length changes on load graphs
 -bug#0001410: Thumbnail Columns is not honored for host display with snmp index group style
 -bug#0001411: Graph searching issue
--bug#0001413: strip_quotes fails 
--bug#0001426: multiple form opening due to bug in draw_edit_form() 
--bug#0001436: CSV Export Start Date and End Date are always 1970-01-01 01:00:00 
--bug#0001443: format_snmp_string can return a number with a leading space 
--bug#0001446: Wrong dates override in CSV export 
--bug#0001456: oid_uptime is not parsed correctly 
+-bug#0001413: strip_quotes fails
+-bug#0001426: multiple form opening due to bug in draw_edit_form()
+-bug#0001436: CSV Export Start Date and End Date are always 1970-01-01 01:00:00
+-bug#0001443: format_snmp_string can return a number with a leading space
+-bug#0001446: Wrong dates override in CSV export
+-bug#0001456: oid_uptime is not parsed correctly
 -bug#0001460: Skipping input parameters in data_query_field_list() may lead to SQL errors
--bug#0001464: Typo in install/index.php 
+-bug#0001464: Typo in install/index.php
 -bug#0001467: Customisable oid index parse regexp for weird MIBs
 -bug#0001468: Tree is not expanded correctly
 -bug#0001469: Tree is not being expanded if user followed link outside of cacti
--bug#0001476: Mark stacked columns in rrdtool_function_xport() output 
+-bug#0001476: Mark stacked columns in rrdtool_function_xport() output
 -bug#0001477: Spelling error in a variable in html_tree.php
 -bug#0001478: Combo boxes on Graph Management page produce URLs with leading spaces
 -bug: Top Graph Header Breaks When Plugins Used
@@ -157,21 +158,21 @@ Cacti CHANGELOG
 
 0.8.7d
 -bug#0001336: Allow to specify on_change handler for checkbox_group
--bug#0001338: When Using Web Basic Authentication HTML Bookmarks Do Not Work 
+-bug#0001338: When Using Web Basic Authentication HTML Bookmarks Do Not Work
 -bug#0001351: Deleting 1000 graphs along with their Data Sources crashes the Server
--bug#0001361: SNMP query: 'No more variables left in this MIB View' instead of value of input field 
+-bug#0001361: SNMP query: 'No more variables left in this MIB View' instead of value of input field
 -bug#0001374: ss_host_disk.php etc. error corrected when using SNMP V3 (index off by 1)
 -bug#0001376: graph_items.php variable $id defined in wrong place
 -bug#0001377: Several bugs in new cli script "structured_rra_paths"
--bug#0001378: ping.pl script fails when using tcp:hostname    
+-bug#0001378: ping.pl script fails when using tcp:hostname
 -bug#0001382: cdef.php error due to wrong function name
 -bug#0001383: syntax error in lib/rrd.php with PHP 4.4.4
 -bug#0001384: utilities.php does not handle view_snmp_cache when host_id = -1 (Any)
 -bug#0001385: LDAP Error: Group DN could not be found
--bug#0001388: Spine uses illegal flag for ping on Mac OS X 
+-bug#0001388: Spine uses illegal flag for ping on Mac OS X
 -bug#0001391: parsing snmp string with "=" ?? --> WARNING: Result from SNMP not valid
--bug#0001392: Problem on CDEF function ALL|SIMILAR_DATA_SOURCES_(NO)?DUPS 
--bug#0001394: Error of variable in lib/html_tree.php 
+-bug#0001392: Problem on CDEF function ALL|SIMILAR_DATA_SOURCES_(NO)?DUPS
+-bug#0001394: Error of variable in lib/html_tree.php
 -bug#0001398: Cross site scripting checking is overly protective on search filters
 -bug#0001400: LDAP authentication results in PHP warning message
 -bug: Resolved issue with reapply suggested names not working for data sources under certain conditions
@@ -180,11 +181,11 @@ Cacti CHANGELOG
 -feature: SNMP cli version information added to tech support page
 
 0.8.7c
--bug#0000157: Dual pane tree does not have the option of not rendering all trees in one page 
+-bug#0000157: Dual pane tree does not have the option of not rendering all trees in one page
 -bug#0000486: RRA template edit allows invalid XFF values
 -bug#0000626: Setting "Default Graph Tree" does not work with dual pane view
 -bug#0000828: Truncated IOS description in |query_ifAlias|
--bug#0000909: ALL_DATA_SOURCES_NODUPS breaks graphing when using "Consolidation Function" MAX 
+-bug#0000909: ALL_DATA_SOURCES_NODUPS breaks graphing when using "Consolidation Function" MAX
 -bug#0000943: scripts/ping.pl has incorrect response when "icmp hop redirect" occurs
 -bug#0000948: Exporting graphs to a local path does not work correctly in some cases
 -bug#0000986: Graphs that are done by graph type are not exported when using the tree view
@@ -195,50 +196,50 @@ Cacti CHANGELOG
 -bug#0001138: Lack of error checking causes graphs to not update when rrdtool crashes
 -bug#0001141: Script server appears broken for "index" and "query" requests (Documentation Fix)
 -bug#0001145: Save Failed error when changing Graph Details
--bug#0001153: Undefined variable: local_graph_id in graphs.php on line 201 
+-bug#0001153: Undefined variable: local_graph_id in graphs.php on line 201
 -bug#0001166: Installer does not properly handle disabled guest_user conversion
 -bug#0001174: Unidentified index warning
 -bug#0001175: Hide hosts in Graph Permissions that you already have access to
 -bug#0001176: Problem validating IPv6 addresses
 -bug#0001180: Graph Export to CSV failed by using IE 6 SP2
--bug#0001188: Graph export issues in tree mode 
+-bug#0001188: Graph export issues in tree mode
 -bug#0001191: Faulty IP address validation by ping.php script
 -bug#0001194: RRDtool URL is incorrect on the about page
 -bug#0001204: Since upgrade to 0.87b the hosts with ip address with 255 are down and have no datas
 -bug#0001206: Graphs are not zoom-able with PHP warnings turned on
 -bug#0001211: Allow use of "REMOTE_USER" if "PHP_AUTH_USER" is not set for authentication
--bug#0001213: Template Copy does not hash copied template_items 
+-bug#0001213: Template Copy does not hash copied template_items
 -bug#0001215: Impossible to define a none availability with the client cli/add_device.php
 -bug#0001216: CSV Export for zoomed graph, results in Validation error
 -bug#0001217: Default Graph Tree is not reflected in Left Pane of the graph page
 -bug#0001223: Missing Hard return on last GPRINT causes bad formatting
--bug#0001228: LDAP server port not honored 
+-bug#0001228: LDAP server port not honored
 -bug#0001230: Poller stops updating rrd files
 -bug#0001236: Set 'stats_recache' to zero when no re-index is present
 -bug#0001238: Guest user has access to change password
--bug#0001239: Using the TOTAL_ALL_DATA_SOURCES in a graph where all item are using the MAX CF yields an invalid(empty) CDEF 
+-bug#0001239: Using the TOTAL_ALL_DATA_SOURCES in a graph where all item are using the MAX CF yields an invalid(empty) CDEF
 -bug#0001240: SNMP string cleanup removes too many '=' signs
 -bug#0001244: Missing closing </form> on host.php
 -bug#0001247: Snmp ping won't work for snmp v3
--bug#0001256: Spine-poller.c : Bug in size string sysUptime 
+-bug#0001256: Spine-poller.c : Bug in size string sysUptime
 -bug#0001258: "Remove Verification" is an ambiguous definition, leads to data loss
 -bug#0001259: LDAP Authentication using Solaris 10 standard ldap client fails
 -bug#0001262: Do not allow deletion of Graph Export User
--bug#0001264: CDEFs can't recognize |query_*| 
+-bug#0001264: CDEFs can't recognize |query_*|
 -bug#0001268: resource/snmp_queries/net-snmp_disk.xml has incorrect name for "Percent Available"
 -bug#0001271: Hex string to decimal conversion for proper RRDtool storage
 -bug#0001273: Escape windows paths to accommodate spaces
 -bug#0001281: ICMP Ping fails if an octet == 255
 -bug#0001283: graph_image.php causes PHP Notice errors on view
--bug#0001286: poller_item cache is not updated when "Data Input Method" is changed 
+-bug#0001286: poller_item cache is not updated when "Data Input Method" is changed
 -bug#0001288: A host with ICMP ping selected as method does not properly perform ping
 -bug#0001291: Reapply Suggested Names fails on Script Queries
 -bug#0001293: When Creating Data Query Graphs, Performing Search will Cause List to Disappear
 -bug#0001294: Stack overflow if database is not correctly initialized
 -bug#0001295: Division by zero when rrd_step < poller_interval
--bug#0001296: add_graphs.php does not add the graph template to the host 
+-bug#0001296: add_graphs.php does not add the graph template to the host
 -bug#0001299: When creating graphs the entire poller cache is recreated for a host
--bug#0001314: Use Data Query variables as HRULE input for graph templates  
+-bug#0001314: Use Data Query variables as HRULE input for graph templates
 -bug#0001318: Graph Export with 1 minute poller re-exports graphs 5 times
 -bug#0001320: Invalid PHP_SELF Path
 -bug#0001326: If a user's password contains a single quote the login fails

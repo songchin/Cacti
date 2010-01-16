@@ -76,6 +76,7 @@ if (sizeof($parms)) {
 			case "--ping-retries":	$device["ping_retries"] 		= trim($value);	break;
 			case "--ping-timeout":	$device["ping_timeout"] 		= trim($value);	break;
 			case "--max-oids":		$device["max_oids"] 			= trim($value);	break;
+			case "--device-threads":$device["device_threads"] 		= trim($value);	break;
 			case "--data-query-id":	$dq["snmp_query_id"] 			= trim($value);	break;
 			#case "--reindex-method":$dq["reindex_method"] 			= trim($value);	break;
 			case "-V":

@@ -107,6 +107,7 @@ if (sizeof($parms)) {
 			case "--ping-retries":	$device["ping_retries"] 		= trim($value);	break;
 			case "--ping-timeout":	$device["ping_timeout"] 		= trim($value);	break;
 			case "--max-oids":		$device["max_oids"] 			= trim($value);	break;
+			case "--device-threads":$device["device_threads"] 		= trim($value);	break;
 
 			# required for specifying the graph to be added
 			case "--graph-type":	$graph_type 					= trim($value);	break;

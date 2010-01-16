@@ -133,6 +133,7 @@ function form_save() {
 		$save["ping_timeout"]			= form_input_validate($_POST["ping_timeout"], "ping_timeout", "^[0-9]+$", true, 3);
 		$save["ping_retries"]			= form_input_validate($_POST["ping_retries"], "ping_retries", "^[0-9]+$", true, 3);
 		$save["max_oids"]				= form_input_validate($_POST["max_oids"], "max_oids", "^[0-9]+$", true, 3);
+		$save["device_threads"]			= form_input_validate($_POST["device_threads"], "device_threads", "^[0-9]+$", true, 3);
 
 		if (!is_error_message()) {
 			$device_template_id = sql_save($save, "device_template");
@@ -448,6 +449,7 @@ function template_edit() {
 	var snmp_port            = document.getElementById('snmp_port').value;
 	var snmp_timeout         = document.getElementById('snmp_timeout').value;
 	var max_oids             = document.getElementById('max_oids').value;
+	var device_threads       = document.getElementById('device_threads').value;
 
 	// default ping methods
 	var ping_method    = document.getElementById('ping_method').value;
@@ -712,6 +714,7 @@ function template_edit() {
 			$('#row_snmp_port').show();
 			$('#row_snmp_timeout').show();
 			$('#row_max_oids').show();
+			$('#row_device_threads').show();
 
 			changeHostForm();
 		}else{
@@ -734,6 +737,7 @@ function template_edit() {
 			$('#row_snmp_port').hide();
 			$('#row_snmp_timeout').hide()
 			$('#row_max_oids').hide();
+			$('#row_device_threads').hide();
 		}
 	}
 

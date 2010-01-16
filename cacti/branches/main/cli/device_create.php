@@ -80,6 +80,7 @@ if (sizeof($parms)) {
 			case "--ping-retries":	$device["ping_retries"] 		= trim($value);	break;
 			case "--ping-timeout":	$device["ping_timeout"] 		= trim($value);	break;
 			case "--max-oids":		$device["max_oids"] 			= trim($value);	break;
+			case "--device-threads":$device["device_threads"] 		= trim($value);	break;
 			case "-V":
 			case "-H":
 			case "--help":
@@ -150,7 +151,8 @@ if (sizeof($parms)) {
 			device_template.snmp_priv_passphrase,
 			device_template.snmp_priv_protocol,
 			device_template.snmp_context,
-			device_template.max_oids
+			device_template.max_oids,
+			device_template.device_threads
 			FROM device_template
 			WHERE id=" . $device["device_template_id"]);
 	} else { /* no device template given, so fetch system defaults */
@@ -171,6 +173,7 @@ if (sizeof($parms)) {
 		$device_template["snmp_priv_protocol"]	= read_config_option("snmp_priv_protocol");
 		$device_template["snmp_context"]		= read_config_option("snmp_context");
 		$device_template["max_oids"]			= read_config_option("max_get_size");
+		$device_template["device_threads"]		= "1";
 	}
 
 	/*
@@ -193,6 +196,7 @@ if (sizeof($parms)) {
 	if (isset($device["snmp_priv_protocol"])) 	{$device_template["snmp_priv_protocol"]		= $device["snmp_priv_protocol"];}
 	if (isset($device["snmp_context"])) 		{$device_template["snmp_context"]			= $device["snmp_context"];}
 	if (isset($device["max_oids"]))	 			{$device_template["max_oids"]				= $device["max_oids"];}
+	if (isset($device["device_threads"]))		{$device_template["device_threads"]			= $device["device_threads"];}
 
 	$device_template["notes"]		= (isset($device["notes"])) 	? $device["notes"] : "";
 	$device_template["disabled"]	= (isset($device["disabled"])) 	? disabled : "";
@@ -262,7 +266,7 @@ if (sizeof($parms)) {
 		$device_template['ping_port'].", ". $device_template['ping_timeout'].", ".
 		$device_template['ping_retries'].", ". $device_template['notes'].", ".
 		$device_template['snmp_auth_protocol'].", ". $device_template['snmp_priv_passphrase'].", ".
-		$device_template['snmp_priv_protocol'].", ". $device_template['snmp_context'].", ". $device_template['max_oids'].")\n");
+		$device_template['snmp_priv_protocol'].", ". $device_template['snmp_context'].", ". $device_template['max_oids']. ", ". $device_template['device_threads'].")\n");
 	} else {
 		$device_id = api_device_save(0, $device["site_id"], $device["poller_id"], $device["device_template_id"],
 		$device["description"], $device["hostname"],
@@ -274,7 +278,7 @@ if (sizeof($parms)) {
 		$device_template["ping_port"], $device_template["ping_timeout"],
 		$device_template["ping_retries"], $device_template["notes"],
 		$device_template["snmp_auth_protocol"], $device_template["snmp_priv_passphrase"],
-		$device_template["snmp_priv_protocol"], $device_template["snmp_context"], $device_template["max_oids"]);
+		$device_template["snmp_priv_protocol"], $device_template["snmp_context"], $device_template["max_oids"], $device_template["device_threads"]);
 
 		if (is_error_message()) {
 			echo __("ERROR: Failed to add this device") . "\n";

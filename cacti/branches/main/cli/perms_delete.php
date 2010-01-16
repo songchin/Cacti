@@ -87,6 +87,7 @@ if (sizeof($parms) == 0) {
 			case "--ping-retries":	$device["ping_retries"] 		= trim($value);	break;
 			case "--ping-timeout":	$device["ping_timeout"] 		= trim($value);	break;
 			case "--max-oids":		$device["max_oids"] 			= trim($value);	break;
+			case "--device0threads":$device["device_threads"]		= trim($value);	break;
 
 			# miscellaneous
 			case "-V":

@@ -160,6 +160,11 @@ function getDevices($input_parms) {
 		$sql_where .= 'max_oids = ' . $input_parms["max_oids"] . ' ';
 	}
 
+	if (isset($input_parms["device_threads"])) {
+		strlen($sql_where) ? ($sql_where .= ' AND ') : ($sql_where .= ' WHERE ');
+		$sql_where .= 'device_threads = ' . $input_parms["device_threads"] . ' ';
+	}
+
 	if (isset($input_parms["disabled"])) {
 		strlen($sql_where) ? ($sql_where .= ' AND ') : ($sql_where .= ' WHERE ');
 		$sql_where .= 'disabled = ' . $input_parms["disabled"] . ' ';
@@ -1355,6 +1360,14 @@ function verifyDevice(&$device, $ri_check=false) {
 					# fine
 				}else{
 					$check["err_msg"] = __("ERROR: Invalid Max OIDs: (%s)", $value);
+					return $check;
+				}
+				break;
+			case "device_threads":
+				if ($value > 0) {
+					# fine
+				}else{
+					$check["err_msg"] = __("ERROR: Invalid Device Threads: (%s)", $value);
 					return $check;
 				}
 				break;

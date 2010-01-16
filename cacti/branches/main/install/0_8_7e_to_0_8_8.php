@@ -605,6 +605,8 @@ function upgrade_to_0_8_8() {
 	db_install_execute("0.8.8", "UPDATE graph_templates_item SET `line_width`=2 WHERE `graph_type_id`=5"); # LINE2
 	db_install_execute("0.8.8", "UPDATE graph_templates_item SET `line_width`=3 WHERE `graph_type_id`=6"); # LINE3
 
-
+	/* implement per device threads setting for spine */
+	db_install_execute("0.8.8", "ALTER TABLE device ADD COLUMN device_threads tinyint(2) unsigned NOT NULL default '1' AFTER max_oids");
+	db_install_execute("0.8.8", "ALTER TABLE device_template ADD COLUMN device_threads tinyint(2) unsigned NOT NULL default '1' AFTER max_oids");
 }
 

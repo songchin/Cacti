@@ -95,6 +95,7 @@ if (sizeof($parms)) {
 			case "--ping-retries":	$device["ping_retries"] 		= trim($value);	break;
 			case "--ping-timeout":	$device["ping_timeout"] 		= trim($value);	break;
 			case "--max-oids":		$device["max_oids"] 			= trim($value);	break;
+			case "--device-threads":$device["device_threads"]		= trim($value);	break;
 
 			# various paramaters for list options
 			#case "--graph-type":	$graph_type 					= strtolower(trim($value));	break;

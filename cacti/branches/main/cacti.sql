@@ -2070,6 +2070,7 @@ CREATE TABLE device (
   ping_timeout int(12) unsigned default '500',
   ping_retries int(12) unsigned default '2',
   max_oids int(12) unsigned default '10',
+  device_threads tinyint(2) unsigned not null default '1',
   disabled char(2) default NULL,
   status tinyint(2) NOT NULL default '0',
   status_event_count mediumint(8) unsigned NOT NULL default '0',
@@ -2188,6 +2189,7 @@ CREATE TABLE device_template (
   ping_timeout int(12) unsigned default '500',
   ping_retries int(12) unsigned default '2',
   max_oids int(12) unsigned default '10',
+  device_threads tinyint(2) unsigned not null default '1',
   PRIMARY KEY  (id)
 ) TYPE=MyISAM;
 

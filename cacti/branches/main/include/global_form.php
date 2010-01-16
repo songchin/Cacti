@@ -1234,6 +1234,14 @@ $fields_device_edit = array(
 		"none_value" => "None",
 		"sql" => "select id,name from device_template order by name",
 		),
+	"device_threads" => array(
+		"method" => "drop_array",
+		"friendly_name" => __("Number of Collection Threads"),
+		"description" => __("The number of concurrent threads to use for polling this device.  This applies to the Spine poller only."),
+		"value" => "|arg1:device_threads|",
+		"default" => "1",
+		"array" => $device_threads
+		),
 	"notes" => array(
 		"method" => "textarea",
 		"friendly_name" => __("Notes"),
@@ -1441,6 +1449,14 @@ $fields_device_template_edit = array(
 		"textarea_rows" => "5",
 		"textarea_cols" => "60",
 		"class" => "textAreaNotes"
+		),
+	"device_threads" => array(
+		"method" => "drop_array",
+		"friendly_name" => __("Number of Collection Threads"),
+		"description" => __("The number of concurrent threads to use for polling this device type.  This applies to the Spine poller only."),
+		"value" => "|arg1:device_threads|",
+		"default" => "1",
+		"array" => $device_threads
 		),
 	"image" => array(
 		"method" => "drop_image",
