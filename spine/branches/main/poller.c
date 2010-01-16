@@ -1330,7 +1330,6 @@ char *exec_poll(device_t *current_device, char *command) {
 	SPINE_LOG_DEBUG(("Device[%i] DEBUG: The NIFTY POPEN returned the following File Descriptor %i", current_device->id, cmd_fd));
 	#endif
 
-
 	if (cmd_fd > 0) {
 		/* Initialize File Descriptors to Review for Input/Output */
 		FD_ZERO(&fds);
@@ -1346,7 +1345,6 @@ char *exec_poll(device_t *current_device, char *command) {
 				SET_UNDEFINED(result_string);
 				close_fd = FALSE;
 				break;
-			case EAGAIN:
 			case EINTR:
 				#ifndef SOLAR_THREAD
 				/* take a moment */
