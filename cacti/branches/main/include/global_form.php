@@ -866,11 +866,9 @@ $struct_graph_misc = array(
 		"class" => "not_RRD_1_0_x not_RRD_1_2_x",
 		),
 	"pango_markup" => array(
-		"friendly_name" => __("Pango Markup (--pango-markup &lt;markup&gt;)"),
-		"method" => "textbox",
-		"max_length" => "255",
+		"friendly_name" => __("Pango Markup (--pango-markup)"),
+		"method" => "checkbox",
 		"default" => "",
-		"size" => "30",
 		"description" => __("With this option, all text will be processed by pango markup. This allows to embed some simple html like markup tags."),
 		"class" => "not_RRD_1_0_x not_RRD_1_2_x",
 		),

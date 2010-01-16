@@ -1428,7 +1428,8 @@ function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rr
 
 	/* either print out the source or pass the source onto rrdtool to get us a nice graph */
 	if (isset($graph_data_array["print_source"])) {
-		print "<PRE>" . read_config_option("path_rrdtool") . " graph $graph_opts$graph_defs$txt_graph_items</PRE>";
+		# since pango markup allows for <span> tags, we need to escape this stuff using htmlspecialchars
+		print htmlspecialchars(read_config_option("path_rrdtool") . " graph $graph_opts$graph_defs$txt_graph_items");
 	}else{
 		if (isset($graph_data_array["export"])) {
 			rrdtool_execute("graph $graph_opts$graph_defs$txt_graph_items", false, RRDTOOL_OUTPUT_NULL, $rrd_struc);
@@ -2503,7 +2504,7 @@ function rrdgraph_opts($graph, $graph_data_array, $version) {
 			case "pango_markup":
 				if ($version != RRD_VERSION_1_0 && $version != RRD_VERSION_1_2) {
 					if (!empty($value)) {
-						$option .= "--pango-markup \"" . $value . "\"" . RRD_NL;
+						$option .= "--pango-markup" . RRD_NL;
 					}
 				}
 				break;

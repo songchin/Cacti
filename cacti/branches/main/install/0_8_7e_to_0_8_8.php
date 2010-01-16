@@ -393,7 +393,7 @@ function upgrade_to_0_8_8() {
 	db_install_execute("0.8.8", "ALTER TABLE graph_templates_graph ADD COLUMN t_graph_render_mode char(2) DEFAULT '0'");
 	db_install_execute("0.8.8", "ALTER TABLE graph_templates_graph ADD COLUMN graph_render_mode varchar(10) DEFAULT NULL");
 	db_install_execute("0.8.8", "ALTER TABLE graph_templates_graph ADD COLUMN t_pango_markup char(2) DEFAULT '0'");
-	db_install_execute("0.8.8", "ALTER TABLE graph_templates_graph ADD COLUMN pango_markup varchar(255) DEFAULT NULL");
+	db_install_execute("0.8.8", "ALTER TABLE graph_templates_graph ADD COLUMN pango_markup char(2) DEFAULT NULL");
 	db_install_execute("0.8.8", "ALTER TABLE graph_templates_graph ADD COLUMN t_interlaced char(2) DEFAULT '0'");
 	db_install_execute("0.8.8", "ALTER TABLE graph_templates_graph ADD COLUMN interlaced char(2) DEFAULT NULL");
 	db_install_execute("0.8.8", "ALTER TABLE graph_templates_graph ADD COLUMN t_tab_width char(2) DEFAULT '0'");

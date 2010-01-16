@@ -1675,7 +1675,7 @@ CREATE TABLE graph_templates_graph (
   t_graph_render_mode char(2) DEFAULT '0',
   graph_render_mode varchar(10) DEFAULT NULL,
   t_pango_markup char(2) DEFAULT '0',
-  pango_markup varchar(255) DEFAULT NULL,
+  pango_markup char(2) DEFAULT NULL,
   t_interlaced char(2) DEFAULT '0',
   interlaced char(2) DEFAULT NULL,
   t_tab_width char(2) DEFAULT '0',
