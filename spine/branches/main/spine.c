@@ -191,13 +191,13 @@ int main(int argc, char *argv[]) {
 
 	/* we attempt to support scripts better in cygwin */
 	#if defined(__CYGWIN__)
-    if (file_exists("./sh.exe")) {
+	if (file_exists("./sh.exe")) {
 		set.cygwinshloc = 0;
 		printf("NOTE: The Shell Command Exists in the current directory\n");
-    }else{
-   		set.cygwinshloc = 1;
+	}else{
+		set.cygwinshloc = 1;
 		printf("NOTE: The Shell Command Exists in the /bin directory\n");
-    }
+	}
 	#endif
 
 	/* get static defaults for system */
@@ -565,7 +565,9 @@ int main(int argc, char *argv[]) {
 					case 0:
 						SPINE_LOG_DEBUG(("DEBUG: Valid Thread to be Created"));
 
-						device_counter++;
+						if (device_threads == 1 || thread > device_threads) {
+							device_counter++;
+						}
 						active_threads++;
 
 						SPINE_LOG_DEBUG(("DEBUG: The Value of Active Threads is %i", active_threads));
