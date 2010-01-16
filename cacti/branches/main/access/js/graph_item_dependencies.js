@@ -50,6 +50,9 @@ function graph_interdependencies(graph_type) {
 	case <?php print GRAPH_ITEM_TYPE_GPRINT;?>:
 		$('.not_RRD_TYPE_GPRINT').each(function() { $(this).attr('disabled', 'disabled'); });
 		break;
+	case <?php print GRAPH_ITEM_TYPE_TICK;?>:
+		$('.not_RRD_TYPE_TICK').each(function() { $(this).attr('disabled', 'disabled'); });
+		break;
 
 	}
 }

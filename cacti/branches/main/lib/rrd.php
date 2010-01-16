@@ -753,7 +753,8 @@ function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rr
 				$graph_item["graph_type_id"] == GRAPH_ITEM_TYPE_LINE1 ||
 				$graph_item["graph_type_id"] == GRAPH_ITEM_TYPE_LINE2 ||
 				$graph_item["graph_type_id"] == GRAPH_ITEM_TYPE_LINE3 ||
-				$graph_item["graph_type_id"] == GRAPH_ITEM_TYPE_LINESTACK) {
+				$graph_item["graph_type_id"] == GRAPH_ITEM_TYPE_LINESTACK ||
+				$graph_item["graph_type_id"] == GRAPH_ITEM_TYPE_TICK) {
 				$graph_cf = $graph_item["consolidation_function_id"];
 				/* remember the last CF for this data source for use with GPRINT
 				 * if e.g. an AREA/AVERAGE and a LINE/MAX is used
@@ -905,7 +906,8 @@ function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rr
 						$graph_item["graph_type_id"] == GRAPH_ITEM_TYPE_LINE1 ||
 						$graph_item["graph_type_id"] == GRAPH_ITEM_TYPE_LINE2 ||
 						$graph_item["graph_type_id"] == GRAPH_ITEM_TYPE_LINE3 ||
-						$graph_item["graph_type_id"] == GRAPH_ITEM_TYPE_LINESTACK) {
+						$graph_item["graph_type_id"] == GRAPH_ITEM_TYPE_LINESTACK ||
+				$graph_item["graph_type_id"] == GRAPH_ITEM_TYPE_TICK) {
 						$text_format_length = strlen($graph_variables["text_format"][$graph_item_id]);
 
 						if ($text_format_length > $greatest_text_format) {
@@ -1192,7 +1194,8 @@ function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rr
 				$graph_item["graph_type_id"] == GRAPH_ITEM_TYPE_LINE1 ||
 				$graph_item["graph_type_id"] == GRAPH_ITEM_TYPE_LINE2 ||
 				$graph_item["graph_type_id"] == GRAPH_ITEM_TYPE_LINE3 ||
-				$graph_item["graph_type_id"] == GRAPH_ITEM_TYPE_LINESTACK) {
+				$graph_item["graph_type_id"] == GRAPH_ITEM_TYPE_LINESTACK ||
+				$graph_item["graph_type_id"] == GRAPH_ITEM_TYPE_TICK) {
 				$text_format_length = strlen($graph_variables["text_format"][$graph_item_id]);
 
 				/* we are basing how much to pad on area and stack text format,
@@ -1358,6 +1361,15 @@ function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rr
 			case GRAPH_ITEM_TYPE_LINESTACK:
 				if ($rrdtool_version != RRD_VERSION_1_0) {
 					$txt_graph_items .= "LINE" . $graph_item["line_width"] . ":" . $data_source_name . $graph_item_color_code . ":" . "\"" . $graph_variables["text_format"][$graph_item_id] . $hardreturn[$graph_item_id] . "\":STACK" . $dash;
+				}
+				break;
+
+
+			case GRAPH_ITEM_TYPE_TICK:
+				if ($rrdtool_version != RRD_VERSION_1_0) {
+					$_fraction 	= (empty($graph_item["graph_type_id"]) 						? "" : (":" . $graph_item["value"]));
+					$_legend 	= (empty($graph_variables["text_format"][$graph_item_id]) 	? "" : (":" . "\"" . $graph_variables["text_format"][$graph_item_id] . $hardreturn[$graph_item_id] . "\""));
+					$txt_graph_items .= $graph_item_types{$graph_item["graph_type_id"]} . ":" . $data_source_name . $graph_item_color_code . $_fraction . $_legend;
 				}
 				break;
 
