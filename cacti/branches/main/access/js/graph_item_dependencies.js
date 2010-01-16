@@ -24,6 +24,9 @@ function graph_interdependencies(graph_type) {
 	case <?php print GRAPH_ITEM_TYPE_COMMENT;?>:
 		$('.not_RRD_TYPE_COMMENT').each(function() { $(this).attr('disabled', 'disabled'); });
 		break;
+	case <?php print GRAPH_ITEM_TYPE_TEXTALIGN;?>:
+		$('.not_RRD_TYPE_TEXTALIGN').each(function() { $(this).attr('disabled', 'disabled'); });
+		break;
 	case <?php print GRAPH_ITEM_TYPE_HRULE;?>:
 		$('.not_RRD_TYPE_HRULE').each(function() { $(this).attr('disabled', 'disabled'); });
 		break;

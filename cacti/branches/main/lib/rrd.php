@@ -666,6 +666,7 @@ function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rr
 		graph_templates_item.line_width,
 		graph_templates_item.dashes,
 		graph_templates_item.dash_offset,
+		graph_templates_item.textalign,
 		graph_templates_gprint.gprint_text,
 		colors.hex,
 		graph_templates_item.alpha,
@@ -1305,6 +1306,15 @@ function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rr
 				}elseif (trim($comment_string) != "COMMENT:\"\"") {
 					$txt_graph_items .= $comment_string;
 				}
+				break;
+
+
+			case GRAPH_ITEM_TYPE_TEXTALIGN:
+				if (!empty($graph_item["textalign"]) &&
+					$rrdtool_version != RRD_VERSION_1_0 &&
+					$rrdtool_version != RRD_VERSION_1_2) {
+						$txt_graph_items .= $graph_item_types{$graph_item["graph_type_id"]} . ":" . $graph_item["textalign"];
+					}
 				break;
 
 

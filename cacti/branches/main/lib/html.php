@@ -854,7 +854,7 @@ function html_create_nav($current_page, $max_pages, $rows_per_page, $total_rows,
      external url
    @arg $disable_controls - whether to hide all edit/delete functionality on this form */
 function draw_graph_items_list($item_list, $filename, $url_data, $disable_controls) {
-	global $colors, $config;
+	global $colors, $config, $graph_item_types, $rrd_textalign;
 
 	include(CACTI_BASE_PATH . "/include/global_arrays.php");
 
@@ -925,6 +925,9 @@ function draw_graph_items_list($item_list, $filename, $url_data, $disable_contro
 				break;
 			case GRAPH_ITEM_TYPE_COMMENT:
 				$matrix_title = "COMMENT: " . $item["text_format"];
+				break;
+			case GRAPH_ITEM_TYPE_TEXTALIGN:
+				$matrix_title = "TEXTALIGN: " . $rrd_textalign{$item["textalign"]};
 				break;
 		}
 

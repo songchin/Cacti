@@ -85,6 +85,11 @@ define("RRD_LEGEND_POS_SOUTH",	"south");
 define("RRD_LEGEND_POS_WEST",	"west");
 define("RRD_LEGEND_POS_EAST",	"east");
 
+define("RRD_ALIGN_LEFT", 		"left");
+define("RRD_ALIGN_RIGHT",		"right");
+define("RRD_ALIGN_JUSTIFIED",	"justified");
+define("RRD_ALIGN_CENTER",		"center");
+
 define("RRD_LEGEND_DIR_TOPDOWN",	"topdown");
 define("RRD_LEGEND_DIR_BOTTOMUP",	"bottomup");
 
@@ -154,8 +159,10 @@ define("GRAPH_ITEM_TYPE_AREA",			7);
 define("GRAPH_ITEM_TYPE_AREASTACK",		8);
 define("GRAPH_ITEM_TYPE_GPRINT",		9);
 define("GRAPH_ITEM_TYPE_LINESTACK",		10);
-define("GRAPH_ITEM_TYPE_LEGEND", 		11);
-define("GRAPH_ITEM_TYPE_CUSTOM_LEGEND",	12);
+define("GRAPH_ITEM_TYPE_TICK",			11);
+define("GRAPH_ITEM_TYPE_TEXTALIGN",		12);
+define("GRAPH_ITEM_TYPE_LEGEND", 		98);
+define("GRAPH_ITEM_TYPE_CUSTOM_LEGEND",	99);
 
 define("CVDEF_ITEM_TYPE_FUNCTION",		1);
 define("CVDEF_ITEM_TYPE_OPERATOR",		2);

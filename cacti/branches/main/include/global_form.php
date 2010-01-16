@@ -950,7 +950,7 @@ $struct_graph_item = array(
 		"default" => "0",
 		"none_value" => "None",
 		"description" => __("The data source to use for this graph item."),
-		"class" => "not_RRD_TYPE_COMMENT not_RRD_TYPE_HRULE not_RRD_TYPE_VRULE",
+		"class" => "not_RRD_TYPE_COMMENT not_RRD_TYPE_TEXTALIGN not_RRD_TYPE_HRULE not_RRD_TYPE_VRULE",
 		),
 	"consolidation_function_id" => array(
 		"friendly_name" => __("Consolidation Function"),
@@ -958,7 +958,7 @@ $struct_graph_item = array(
 		"array" => $consolidation_functions,
 		"default" => "0",
 		"description" => __("How data for this item is represented statistically on the graph."),
-		"class" => "not_RRD_TYPE_COMMENT not_RRD_TYPE_HRULE not_RRD_TYPE_VRULE",
+		"class" => "not_RRD_TYPE_COMMENT not_RRD_TYPE_TEXTALIGN not_RRD_TYPE_HRULE not_RRD_TYPE_VRULE",
 		),
 	"graph_type_id" => array(
 		"friendly_name" => __("Graph Item Type"),
@@ -974,7 +974,7 @@ $struct_graph_item = array(
 		"default" => "",
 		"size" => "5",
 		"description" => __("In case LINE was chosen, specify width of line here."),
-		"class" => "not_RRD_1_0_x not_RRD_TYPE_COMMENT not_RRD_TYPE_HRULE not_RRD_TYPE_VRULE not_RRD_TYPE_GPRINT",
+		"class" => "not_RRD_1_0_x not_RRD_TYPE_COMMENT not_RRD_TYPE_TEXTALIGN not_RRD_TYPE_HRULE not_RRD_TYPE_VRULE not_RRD_TYPE_GPRINT",
 		),
 	"dashes" => array(
 		"friendly_name" => __("Dashes (dashes[=on_s[,off_s[,on_s,off_s]...]])"),
@@ -983,7 +983,7 @@ $struct_graph_item = array(
 		"default" => "",
 		"size" => "10",
 		"description" => __("The dashes modifier enables dashed line style."),
-		"class" => "not_RRD_1_0_x not_RRD_1_2_x not_RRD_TYPE_COMMENT not_RRD_TYPE_AREA not_RRD_TYPE_AREASTACK not_RRD_TYPE_GPRINT",
+		"class" => "not_RRD_1_0_x not_RRD_1_2_x not_RRD_TYPE_COMMENT not_RRD_TYPE_TEXTALIGN not_RRD_TYPE_AREA not_RRD_TYPE_AREASTACK not_RRD_TYPE_GPRINT",
 		),
 	"dash_offset" => array(
 		"friendly_name" => __("Dash Offset (dash-offset=offset)"),
@@ -992,7 +992,7 @@ $struct_graph_item = array(
 		"default" => "",
 		"size" => "4",
 		"description" => __("The dash-offset parameter specifies an offset into the pattern at which the stroke begins."),
-		"class" => "not_RRD_1_0_x not_RRD_1_2_x not_RRD_TYPE_COMMENT not_RRD_TYPE_AREA not_RRD_TYPE_AREASTACK not_RRD_TYPE_GPRINT",
+		"class" => "not_RRD_1_0_x not_RRD_1_2_x not_RRD_TYPE_COMMENT not_RRD_TYPE_TEXTALIGN not_RRD_TYPE_AREA not_RRD_TYPE_AREASTACK not_RRD_TYPE_GPRINT",
 		),
 	"color_id" => array(
 		"friendly_name" => __("Color"),
@@ -1000,7 +1000,7 @@ $struct_graph_item = array(
 		"default" => "0",
 		"on_change" => "changeColorId()",
 		"description" => __("The color to use for the legend."),
-		"class" => "not_RRD_TYPE_COMMENT not_RRD_TYPE_GPRINT",
+		"class" => "not_RRD_TYPE_COMMENT not_RRD_TYPE_TEXTALIGN not_RRD_TYPE_GPRINT",
 		),
 	"alpha" => array(
 		"friendly_name" => __("Opacity/Alpha Channel"),
@@ -1008,7 +1008,7 @@ $struct_graph_item = array(
 		"default" => "FF",
 		"array" => $graph_color_alpha,
 		"description" => __("The opacity/alpha channel of the color."),
-		"class" => "not_RRD_1_0_x not_RRD_TYPE_COMMENT not_RRD_TYPE_GPRINT",
+		"class" => "not_RRD_1_0_x not_RRD_TYPE_COMMENT not_RRD_TYPE_TEXTALIGN not_RRD_TYPE_GPRINT",
 		),
 	"cdef_id" => array(
 		"friendly_name" => __("CDEF Function"),
@@ -1017,7 +1017,7 @@ $struct_graph_item = array(
 		"default" => "0",
 		"none_value" => "None",
 		"description" => __("A CDEF (math) function to apply to this item on the graph."),
-		"class" => "not_RRD_TYPE_COMMENT",
+		"class" => "not_RRD_TYPE_COMMENT not_RRD_TYPE_TEXTALIGN",
 		),
 	"vdef_id" => array(
 		"friendly_name" => __("VDEF Function"),
@@ -1026,7 +1026,7 @@ $struct_graph_item = array(
 		"default" => "0",
 		"none_value" => "None",
 		"description" => __("A VDEF (math) function to apply to this item on the legend."),
-		"class" => "not_RRD_1_0_x not_RRD_TYPE_COMMENT",
+		"class" => "not_RRD_1_0_x not_RRD_TYPE_COMMENT not_RRD_TYPE_TEXTALIGN",
 		),
 	"value" => array(
 		"friendly_name" => __("Value"),
@@ -1035,7 +1035,7 @@ $struct_graph_item = array(
 		"default" => "",
 		"size" => "10",
 		"description" => __("The value of an HRULE or VRULE graph item."),
-		"class" => "not_RRD_TYPE_COMMENT not_RRD_TYPE_LINE not_RRD_TYPE_LINESTACK not_RRD_TYPE_AREA not_RRD_TYPE_AREASTACK not_RRD_TYPE_GPRINT",
+		"class" => "not_RRD_TYPE_COMMENT not_RRD_TYPE_TEXTALIGN not_RRD_TYPE_LINE not_RRD_TYPE_LINESTACK not_RRD_TYPE_AREA not_RRD_TYPE_AREASTACK not_RRD_TYPE_GPRINT",
 		),
 	"gprint_id" => array(
 		"friendly_name" => __("GPRINT Type"),
@@ -1043,7 +1043,22 @@ $struct_graph_item = array(
 		"sql" => "select id,name from graph_templates_gprint order by name",
 		"default" => "2",
 		"description" => __("If this graph item is a GPRINT, you can optionally choose another format here. You can define additional types under 'GPRINT Presets'."),
-		"class" => "not_RRD_TYPE_COMMENT not_RRD_TYPE_HRULE not_RRD_TYPE_VRULE not_RRD_TYPE_LINE not_RRD_TYPE_LINESTACK not_RRD_TYPE_AREA not_RRD_TYPE_AREASTACK",
+		"class" => "not_RRD_TYPE_COMMENT not_RRD_TYPE_TEXTALIGN not_RRD_TYPE_HRULE not_RRD_TYPE_VRULE not_RRD_TYPE_LINE not_RRD_TYPE_LINESTACK not_RRD_TYPE_AREA not_RRD_TYPE_AREASTACK",
+		),
+	"textalign" => array(
+		"friendly_name" => __("Text Alignment (TEXTALIGN)"),
+		"method" => "drop_array",
+		"value" => "|arg1:textalign|",
+		"array" => $rrd_textalign,
+		"none_value" => "None",
+		"description" => __("All subsequent legend line(s) will be aligned as given here.") .
+						__("You may use this command multiple times in a single graph.") .
+						__("This command does not produce tabular layout.") . "<br/>" .
+						"<strong>" . __("Note: ") . "</strong>" .
+						__("You may want to insert a &lt;HR&gt; on the preceding graph item.") . "<br/>" .
+						"<strong>" . __("Note: ") . "</strong>" .
+						__("A &lt;HR&gt; on this legend line will obsolete this setting!"),
+						"class" => "not_RRD_1_0_x not_RRD_1_2_x not_RRD_TYPE_COMMENT not_RRD_TYPE_GPRINT not_RRD_TYPE_HRULE not_RRD_TYPE_VRULE not_RRD_TYPE_LINE not_RRD_TYPE_LINESTACK not_RRD_TYPE_AREA not_RRD_TYPE_AREASTACK",
 		),
 	"text_format" => array(
 		"friendly_name" => __("Text Format"),
@@ -1051,12 +1066,14 @@ $struct_graph_item = array(
 		"max_length" => "255",
 		"default" => "",
 		"description" => __("Text that will be displayed on the legend for this graph item."),
+		"class" => "not_RRD_TYPE_TEXTALIGN",
 		),
 	"hard_return" => array(
 		"friendly_name" => __("Insert Hard Return"),
 		"method" => "checkbox",
 		"default" => "",
 		"description" => __("Forces the legend to the next line after this item."),
+		"class" => "not_RRD_TYPE_TEXTALIGN",
 		),
 	"sequence" => array(
 		"friendly_name" => __("Sequence"),

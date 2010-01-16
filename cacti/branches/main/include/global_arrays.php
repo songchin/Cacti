@@ -233,6 +233,13 @@ $rrd_legend_position = array(
 	RRD_LEGEND_POS_EAST		=> __("East"),
 );
 
+$rrd_textalign = array(
+	RRD_ALIGN_LEFT			=> __("Left"),
+	RRD_ALIGN_RIGHT			=> __("Right"),
+	RRD_ALIGN_JUSTIFIED		=> __("Justified"),
+	RRD_ALIGN_CENTER		=> __("Center"),
+);
+
 $rrd_legend_direction = array(
 	RRD_LEGEND_DIR_TOPDOWN	=> __("Top -> Down"),
 	RRD_LEGEND_DIR_BOTTOMUP	=> __("Bottom -> Up"),
@@ -257,6 +264,8 @@ $graph_item_types = array(
 	GRAPH_ITEM_TYPE_AREASTACK		=> "AREA:STACK",
 	GRAPH_ITEM_TYPE_GPRINT			=> "GPRINT",
 	GRAPH_ITEM_TYPE_LINESTACK		=> "LINE:STACK",
+	GRAPH_ITEM_TYPE_TICK			=> "TICK",
+	GRAPH_ITEM_TYPE_TEXTALIGN		=> "TEXTALIGN",
 	GRAPH_ITEM_TYPE_LEGEND			=> __("Legend"),
 	GRAPH_ITEM_TYPE_CUSTOM_LEGEND	=> __("Custom Legend"),
 	);
@@ -676,6 +685,7 @@ $user_auth_realm_filenames = array(
 	"user_admin.php" => 1,
 	"utilities.php" => 15,
 	"vdef.php" => 14,
+	"vdef.ajax.php" => 14,
 	"xaxis_presets.php" => 5,
 );
 

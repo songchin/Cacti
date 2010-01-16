@@ -66,6 +66,7 @@ Cacti CHANGELOG
 -feature#0001290: Modify how 'Index Count Changed' re-index is used
 -feature#0001332: non SNMP Hosts' Reindex Method should not default to "Uptime goes backwards"
 -feature#0001341: SNMP query: add oid_suffix for weird SNMP queries
+-feature#0001343: Add TEXTALIGN functionality to graph templates
 -feature#0001350: Compare Cacti Data Source Info to current RRD File Info
 -feature#0001371: Support for LINE:STACK, was: Stacked LINE
 -feature#0001372: Add Custom SNMP context for datasources
@@ -126,6 +127,7 @@ Cacti CHANGELOG
 -feature: support LINE<width> using decimal xx.xx line widths for RRDTool > 1.0.x
 -feature: disable graph item fields that are not related to the chosen graph item type
 -feature: add support for [:dashes] and [:dash-offset]
+-feature: add support for TICK on rrdtool graphs
 
 0.8.7e
 
