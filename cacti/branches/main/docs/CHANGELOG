@@ -128,6 +128,7 @@ Cacti CHANGELOG
 -feature: disable graph item fields that are not related to the chosen graph item type
 -feature: add support for [:dashes] and [:dash-offset]
 -feature: add support for TICK on rrdtool graphs
+-feature: TIME_SHIFT_START and _END as specific data sources for CDEFs (e.g. graph colorization)
 
 0.8.7e
 

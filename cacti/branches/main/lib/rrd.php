@@ -1130,6 +1130,10 @@ function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rr
 			$cdef_string = str_replace("CURRENT_DS_MAXIMUM_VALUE", (empty($graph_item["rrd_maximum"]) ? "0" : $graph_item["rrd_maximum"]), $cdef_string);
 			$cdef_string = str_replace("CURRENT_GRAPH_MINIMUM_VALUE", (empty($graph["lower_limit"]) ? "0" : $graph["lower_limit"]), $cdef_string);
 			$cdef_string = str_replace("CURRENT_GRAPH_MAXIMUM_VALUE", (empty($graph["upper_limit"]) ? "0" : $graph["upper_limit"]), $cdef_string);
+			$_time_shift_start = strtotime(read_graph_config_option("day_shift_start")) - strtotime("00:00");
+			$_time_shift_end = strtotime(read_graph_config_option("day_shift_end")) - strtotime("00:00");
+			$cdef_string = str_replace("TIME_SHIFT_START", (empty($_time_shift_start) ? "64800" : $_time_shift_start), $cdef_string);
+			$cdef_string = str_replace("TIME_SHIFT_END", (empty($_time_shift_end) ? "28800" : $_time_shift_end), $cdef_string);
 
 			/* replace query variables in cdefs */
 			$cdef_string = rrd_substitute_device_query_data($cdef_string, $graph, $graph_item);

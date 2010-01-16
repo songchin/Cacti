@@ -491,7 +491,9 @@ $custom_data_source_types = array(
 	"COUNT_ALL_DS_DUPS"					=> __("Count of All Data Sources (Include Duplicates)"),
 	"COUNT_SIMILAR_DS_NODUPS"			=> __("Count of All Similar Data Sources (Don't Include Duplicates)"),
 	"COUNT_SIMILAR_DS_DUPS"		 		=> __("Count of All Similar Data Sources (Include Duplicates)"),
-	);
+	"TIME_SHIFT_START"					=> __("Graph: Shift Start Time"),
+	"TIME_SHIFT_END"					=> __("Graph: Shift End Time"),
+);
 
 $custom_vdef_data_source_types = array( # this may change as soon as RRDTool supports math in VDEF, until then only reference to CDEF may help
 	"CURRENT_DATA_SOURCE"				=> __("Current Graph Item Data Source"),
