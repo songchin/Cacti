@@ -915,6 +915,7 @@ function draw_graph_items_list($item_list, $filename, $url_data, $disable_contro
 			case GRAPH_ITEM_TYPE_LINE2:
 			case GRAPH_ITEM_TYPE_LINE3:
 			case GRAPH_ITEM_TYPE_LINESTACK:
+			case GRAPH_ITEM_TYPE_TICK:
 				$matrix_title = "(" . $item["data_source_name"] . "): " . $item["text_format"];
 				break;
 			case GRAPH_ITEM_TYPE_HRULE:

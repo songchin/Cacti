@@ -145,12 +145,15 @@ CREATE TABLE cdef (
 -- Dumping data for table `cdef`
 --
 
-INSERT INTO cdef VALUES (3,'3d352eed9fa8f7b2791205b3273708c7','Make Stack Negative');
-INSERT INTO cdef VALUES (4,'e961cc8ec04fda6ed4981cf5ad501aa5','Make Per 5 Minutes');
-INSERT INTO cdef VALUES (12,'f1ac79f05f255c02f914c920f1038c54','Total All Data Sources');
-INSERT INTO cdef VALUES (2,'73f95f8b77b5508157d64047342c421e','Turn Bytes into Bits');
-INSERT INTO cdef VALUES (14,'634a23af5e78af0964e8d33b1a4ed26b','Multiply by 1024');
-INSERT INTO cdef VALUES (15,'068984b5ccdfd2048869efae5166f722','Total All Data Sources, Multiply by 1024');
+INSERT INTO `cdef` VALUES(3, '3d352eed9fa8f7b2791205b3273708c7', 'Make Stack Negative');
+INSERT INTO `cdef` VALUES(4, 'e961cc8ec04fda6ed4981cf5ad501aa5', 'Make Per 5 Minutes');
+INSERT INTO `cdef` VALUES(12, 'f1ac79f05f255c02f914c920f1038c54', 'Total All Data Sources');
+INSERT INTO `cdef` VALUES(2, '73f95f8b77b5508157d64047342c421e', 'Turn Bytes into Bits');
+INSERT INTO `cdef` VALUES(14, '634a23af5e78af0964e8d33b1a4ed26b', 'Multiply by 1024');
+INSERT INTO `cdef` VALUES(15, '068984b5ccdfd2048869efae5166f722', 'Total All Data Sources, Multiply by 1024');
+INSERT INTO `cdef` VALUES(16, '2544acefc5fef30366c71336166ed141', 'Time: Daytime');
+INSERT INTO `cdef` VALUES(17, '8bd388f585b624a7bbad97101a2b7ee9', 'Time: Nighttime');
+INSERT INTO `cdef` VALUES(18, 'b4ef0a1c5e471dc6bae6a13ace5c57e7', 'Time: Weekend');
 
 --
 -- Table structure for table `cdef_items`
@@ -187,6 +190,61 @@ INSERT INTO cdef_items VALUES (20,'5d7a7941ec0440b257e5598a27dd1688',14,3,2,'3')
 INSERT INTO cdef_items VALUES (21,'44fd595c60539ff0f5817731d9f43a85',15,1,4,'ALL_DATA_SOURCES_NODUPS');
 INSERT INTO cdef_items VALUES (22,'aa38be265e5ac31783e57ce6f9314e9a',15,2,6,'1024');
 INSERT INTO cdef_items VALUES (23,'204423d4b2598f1f7252eea19458345c',15,3,2,'3');
+INSERT INTO `cdef_items` VALUES(24, 'ac0dea239ef3279c9b5ee04990fd4ec0', 16, 1, 1, '42');
+INSERT INTO `cdef_items` VALUES(25, '12f2bd71d5cbc078b9712c54d21c4f59', 16, 2, 6, '86400');
+INSERT INTO `cdef_items` VALUES(26, 'bf35d7e5ae6df56398ea0f34a77311fc', 16, 3, 2, '5');
+INSERT INTO `cdef_items` VALUES(27, '31a9b3ff3b402f0446e6f6454b4d47c2', 16, 4, 4, 'TIME_SHIFT_START');
+INSERT INTO `cdef_items` VALUES(28, '996b718fc70353deb676e9037af9eadd', 16, 5, 1, '23');
+INSERT INTO `cdef_items` VALUES(29, '9c48bd2133670fd5158264ac25df6bb6', 16, 6, 1, '42');
+INSERT INTO `cdef_items` VALUES(30, '50c205e8bd5bb19b7fbee0ec2dee44cb', 16, 7, 6, '86400');
+INSERT INTO `cdef_items` VALUES(31, '14ee4ad2c7f91ab6406e1ecec6f4bcdc', 16, 8, 2, '5');
+INSERT INTO `cdef_items` VALUES(32, '38023f18060f2586e3504bbdd2634cc3', 16, 9, 4, 'TIME_SHIFT_END');
+INSERT INTO `cdef_items` VALUES(33, '1dbfee1b96a11492e58128ee8de93925', 16, 10, 1, '21');
+INSERT INTO `cdef_items` VALUES(34, '6979b0680858c8d153530d9390f6a4e9', 16, 11, 1, '37');
+INSERT INTO `cdef_items` VALUES(35, 'f9d37c6480c3555c9d6d2d8910ef2da7', 16, 12, 1, '36');
+INSERT INTO `cdef_items` VALUES(36, '6c2604fd53780532c93c16d82c0337fd', 16, 13, 4, 'CURRENT_DATA_SOURCE');
+INSERT INTO `cdef_items` VALUES(37, 'c2652379ba1c6523dc036e0a312536c4', 16, 14, 2, '3');
+INSERT INTO `cdef_items` VALUES(38, '63bf07a965b64fc41faa4bf01ae8a39d', 16, 15, 1, '29');
+INSERT INTO `cdef_items` VALUES(39, '2a9dea57a4f5d12cd0e2e66a31186a35', 16, 16, 1, '36');
+INSERT INTO `cdef_items` VALUES(40, '014839ebf8261c501d1da6c2c5217a0c', 16, 17, 4, 'CURRENT_DATA_SOURCE');
+INSERT INTO `cdef_items` VALUES(41, '01c946b79d68fad871e6e9437cba924f', 16, 18, 2, '3');
+INSERT INTO `cdef_items` VALUES(42, '4d0879e3c65c5af4e35d41a1631dcbe5', 16, 19, 1, '29');
+INSERT INTO `cdef_items` VALUES(43, '1c9452055499efaddded29c74ee21880', 17, 1, 1, '42');
+INSERT INTO `cdef_items` VALUES(44, '36af4d7c5a8acf09bda1a3a5f1409979', 17, 2, 6, '86400');
+INSERT INTO `cdef_items` VALUES(45, '74cf8897d5ada9da271c64e82a1384ac', 17, 3, 2, '5');
+INSERT INTO `cdef_items` VALUES(46, '053c5efacd6787b6e41ed109043ba256', 17, 4, 4, 'TIME_SHIFT_START');
+INSERT INTO `cdef_items` VALUES(47, 'da39b6410ab37833842511f46182717d', 17, 5, 1, '21');
+INSERT INTO `cdef_items` VALUES(48, '652afbee7025a256b8dc3c49e75b27fc', 17, 6, 1, '37');
+INSERT INTO `cdef_items` VALUES(49, '26a63ba997e1f904c71bb7c9eb5e76e5', 17, 7, 1, '42');
+INSERT INTO `cdef_items` VALUES(50, '6f83ed61e0743176f03dd790f31521ea', 17, 8, 6, '86400');
+INSERT INTO `cdef_items` VALUES(51, '6b49d9dc72576a7ada160f0befc77c85', 17, 9, 2, '5');
+INSERT INTO `cdef_items` VALUES(52, '22f0dd9a5e0e189424ea29fe1383e29d', 17, 10, 4, 'TIME_SHIFT_END');
+INSERT INTO `cdef_items` VALUES(53, 'd3f3a319e8fcfac10bd06fb247d236af', 17, 11, 1, '23');
+INSERT INTO `cdef_items` VALUES(54, '1cf7208bfa84c61f788f327500b712a6', 17, 12, 1, '37');
+INSERT INTO `cdef_items` VALUES(55, 'c29025779a287d2f7b946e9ffbba3c24', 17, 13, 1, '36');
+INSERT INTO `cdef_items` VALUES(56, '690852ea78bf45796ef21947e27528be', 17, 14, 4, 'CURRENT_DATA_SOURCE');
+INSERT INTO `cdef_items` VALUES(57, '09061dcd9762280ffd3994c8274b19f8', 17, 15, 2, '3');
+INSERT INTO `cdef_items` VALUES(58, '60be0afe23bef9fdb7e6cabd9067eb32', 17, 16, 1, '29');
+INSERT INTO `cdef_items` VALUES(59, 'f4a6609839d199ecb12c2f05b5d3a7b6', 17, 17, 1, '29');
+INSERT INTO `cdef_items` VALUES(60, 'd4f93d57657e6c3ae2053a4a760a0c7b', 18, 1, 1, '42');
+INSERT INTO `cdef_items` VALUES(61, '00a793341980c41728c6ee665718001c', 18, 2, 6, '604800');
+INSERT INTO `cdef_items` VALUES(62, '0a7eaf7192e5e44a425f5e8986850190', 18, 3, 2, '5');
+INSERT INTO `cdef_items` VALUES(63, 'ceb07e26bf15c561b12004c5e32d7f1f', 18, 4, 6, '172800');
+INSERT INTO `cdef_items` VALUES(64, '3a3bfafebd173fdbbd8c07d2e2dd661f', 18, 5, 1, '23');
+INSERT INTO `cdef_items` VALUES(65, '4c080ecaaa7260886ea148869d4d0456', 18, 6, 1, '42');
+INSERT INTO `cdef_items` VALUES(66, 'bd57afcd9879e29e29bb796ba8d6188d', 18, 7, 6, '604800');
+INSERT INTO `cdef_items` VALUES(67, 'cd14cd9adfbae04973a75b90880e7d64', 18, 8, 2, '5');
+INSERT INTO `cdef_items` VALUES(68, '3bed46dd43a64d54acc4f0723cff0bc7', 18, 9, 6, '345600');
+INSERT INTO `cdef_items` VALUES(69, '6fa62ee12bb8ba8936e39ea4303f92fd', 18, 10, 1, '21');
+INSERT INTO `cdef_items` VALUES(70, 'f26848c08c2fb385126f90107494ce64', 18, 11, 1, '37');
+INSERT INTO `cdef_items` VALUES(71, 'b8a5dde83327cac6705cdaa58300153b', 18, 12, 1, '36');
+INSERT INTO `cdef_items` VALUES(72, 'f6aa118b35e269101ca3049cc4a323db', 18, 13, 4, 'CURRENT_DATA_SOURCE');
+INSERT INTO `cdef_items` VALUES(73, '967beb159b1ea744460ff3439ab205eb', 18, 14, 2, '3');
+INSERT INTO `cdef_items` VALUES(74, 'f30028a71a1f4333703c70f8e499b03a', 18, 15, 1, '29');
+INSERT INTO `cdef_items` VALUES(75, '6888be191630a0964fdb9eaeb01cecaf', 18, 16, 1, '36');
+INSERT INTO `cdef_items` VALUES(76, '77c456204e43a9053c68b51750d5df75', 18, 17, 4, 'CURRENT_DATA_SOURCE');
+INSERT INTO `cdef_items` VALUES(77, 'ce271b7a9809646a1fe4a7cd286fd98a', 18, 18, 2, '3');
+INSERT INTO `cdef_items` VALUES(78, '8bcd193850b37953ffe940fdf2a26aa6', 18, 19, 1, '29');
 
 --
 -- Table structure for table `colors`
