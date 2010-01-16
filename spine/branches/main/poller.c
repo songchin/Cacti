@@ -44,11 +44,11 @@
  *
  */
 void *child(void *arg) {
-	int device_id = *(int *) arg;
+	poller_thread_t poller_details = *(poller_thread_t*) arg;
 
 	SPINE_LOG_DEBUG(("DEBUG: In Poller, About to Start Polling of Device"));
 
-	poll_device(device_id);
+	poll_device(poller_details);
 
 	thread_mutex_lock(LOCK_THREAD);
 
@@ -64,7 +64,7 @@ void *child(void *arg) {
 	exit(0);
 }
 
-/*! \fn void poll_device(int device_id)
+/*! \fn void poll_device(poller_thread_t poller_instructions)
  *  \brief core Spine function that polls a device
  *  \param device_id integer value for the device_id from the devices table in Cacti
  *
@@ -86,7 +86,7 @@ void *child(void *arg) {
  *  as the device poller_items table dictates.
  *
  */
-void poll_device(int device_id) {
+void poll_device(poller_thread_t poller_instructions) {
 	char query1[BUFSIZE];
 	char query2[BUFSIZE];
 	char *query3 = NULL;
@@ -115,10 +115,12 @@ void poll_device(int device_id) {
 	int    snmp_poller_items = 0;
 	size_t out_buffer;
 	int    php_process;
+	int    device_id;
 
 	char *poll_result = NULL;
 	char *device_time   = NULL;
 	char update_sql[BUFSIZE];
+	char limits[SMALL_BUFSIZE];
 
 	int  num_snmp_agents   = 0;
 	int  last_snmp_version = 0;
@@ -167,6 +169,15 @@ void poll_device(int device_id) {
 	memset(reindex, 0, sizeof(reindex_t));
 
 	sysUptime[0] = '\0';
+	device_id      = poller_instructions.device_id;
+
+	/* determine the SQL limits using the poller instructions */
+	if (poller_instructions.device_data_ids > 0) {
+		snprintf(limits, SMALL_BUFSIZE, "LIMIT %i, %i", poller_instructions.device_data_ids * (poller_instructions.host_thread - 1), poller_instructions.device_data_ids);
+	}else{
+		limits[0] = '\0';
+	}
+
 
 	/* single polling interval query for items */
 	if (set.poller_id == 0) {
@@ -178,7 +189,7 @@ void poll_device(int device_id) {
 				"snmp_auth_protocol, snmp_priv_passphrase, snmp_priv_protocol, snmp_context "
 			" FROM poller_item"
 			" WHERE device_id=%i"
-			" ORDER BY snmp_port", device_id);
+			" ORDER BY snmp_port %s", device_id, limits);
 
 		/* device structure for uptime checks */
 		snprintf(query2, BUFSIZE,
@@ -208,7 +219,7 @@ void poll_device(int device_id) {
 				"snmp_auth_protocol, snmp_priv_passphrase, snmp_priv_protocol, snmp_context "
 			" FROM poller_item"
 			" WHERE device_id=%i and rrd_next_step <=0"
-			" ORDER by snmp_port", device_id);
+			" ORDER by snmp_port %s", device_id, limits);
 
 		/* query to setup the next polling interval in cacti */
 		snprintf(query6, BUFSIZE,
@@ -233,7 +244,7 @@ void poll_device(int device_id) {
 			"SELECT snmp_port, count(snmp_port)"
 			" FROM poller_item"
 			" WHERE device_id=%i"
-			" GROUP BY snmp_port", device_id);
+			" GROUP BY snmp_port %s", device_id, limits);
 
 		/* number of agent's count for multiple polling intervals */
 		snprintf(query10, BUFSIZE,
@@ -241,7 +252,7 @@ void poll_device(int device_id) {
 			" FROM poller_item"
 			" WHERE device_id=%i"
 			" AND rrd_next_step < 0"
-			" GROUP BY snmp_port", device_id);
+			" GROUP BY snmp_port %s", device_id, limits);
 	}else{
 		snprintf(query1, BUFSIZE,
 			"SELECT action, hostname, snmp_community, "
@@ -251,7 +262,7 @@ void poll_device(int device_id) {
 				"snmp_auth_protocol, snmp_priv_passphrase, snmp_priv_protocol, snmp_context "
 			" FROM poller_item"
 			" WHERE device_id=%i AND poller_id=%i"
-			" ORDER BY snmp_port", device_id, set.poller_id);
+			" ORDER BY snmp_port %s", device_id, set.poller_id, limits);
 
 		/* device structure for uptime checks */
 		snprintf(query2, BUFSIZE,
@@ -281,7 +292,7 @@ void poll_device(int device_id) {
 				"snmp_auth_protocol, snmp_priv_passphrase, snmp_priv_protocol, snmp_context "
 			" FROM poller_item"
 			" WHERE device_id=%i AND rrd_next_step <=0 AND poller_id=%i"
-			" ORDER by snmp_port", device_id, set.poller_id);
+			" ORDER by snmp_port %s", device_id, set.poller_id, limits);
 
 		/* query to setup the next polling interval in cacti */
 		snprintf(query6, BUFSIZE,
@@ -307,7 +318,7 @@ void poll_device(int device_id) {
 			" FROM poller_item"
 			" WHERE device_id=%i"
 			" AND poller_id=%i"
-			" GROUP BY snmp_port", device_id, set.poller_id);
+			" GROUP BY snmp_port %s", device_id, set.poller_id, limits);
 
 		/* number of agent's count for multiple polling intervals */
 		snprintf(query10, BUFSIZE,
@@ -316,7 +327,7 @@ void poll_device(int device_id) {
 			" WHERE device_id=%i"
 			" AND rrd_next_step < 0"
 			" AND poller_id=%i"
-			" GROUP BY snmp_port", device_id, set.poller_id);
+			" GROUP BY snmp_port" %s, device_id, set.poller_id, limits);
 	}
 
 	/* query to add output records to the poller output table */
@@ -473,35 +484,41 @@ void poll_device(int device_id) {
 				}else{
 					if (ping_device(device, ping) == DEVICE_UP) {
 						device->ignore_device = FALSE;
-						update_device_status(DEVICE_UP, device, ping, device->availability_method);
+						if (poller_instructions.device_thread == 1) {
+							update_device_status(DEVICE_UP, device, ping, device->availability_method);
+						}
 					}else{
 						device->ignore_device = TRUE;
-						update_device_status(DEVICE_DOWN, device, ping, device->availability_method);
+						if (poller_instructions.device_thread == 1) {
+							update_device_status(DEVICE_DOWN, device, ping, device->availability_method);
+						}
 					}
 				}
 
 				/* update device table */
-				snprintf(update_sql, BUFSIZE, "UPDATE device "
-					"SET status='%i', status_event_count='%i', status_fail_date='%s',"
-						" status_rec_date='%s', status_last_error='%s', min_time='%f',"
-						" max_time='%f', cur_time='%f', avg_time='%f', total_polls='%i',"
-						" failed_polls='%i', availability='%.4f' "
-					"WHERE id='%i'",
-					device->status,
-					device->status_event_count,
-					device->status_fail_date,
-					device->status_rec_date,
-					device->status_last_error,
-					device->min_time,
-					device->max_time,
-					device->cur_time,
-					device->avg_time,
-					device->total_polls,
-					device->failed_polls,
-					device->availability,
-					device->id);
-
-				db_insert(&mysql, update_sql);
+				if (poller_instructions.device_thread == 1) {
+					snprintf(update_sql, BUFSIZE, "UPDATE device "
+						"SET status='%i', status_event_count='%i', status_fail_date='%s',"
+							" status_rec_date='%s', status_last_error='%s', min_time='%f',"
+							" max_time='%f', cur_time='%f', avg_time='%f', total_polls='%i',"
+							" failed_polls='%i', availability='%.4f' "
+						"WHERE id='%i'",
+						device->status,
+						device->status_event_count,
+						device->status_fail_date,
+						device->status_rec_date,
+						device->status_last_error,
+						device->min_time,
+						device->max_time,
+						device->cur_time,
+						device->avg_time,
+						device->total_polls,
+						device->failed_polls,
+						device->availability,
+						device->id);
+	
+					db_insert(&mysql, update_sql);
+				}
 			}else{
 				SPINE_LOG(("Device[%i] ERROR: Could MySQL Returned a Null Device Result", device->id));
 				num_rows = 0;
@@ -606,15 +623,19 @@ void poll_device(int device_id) {
 							}else if ((!strcmp(reindex->op, "=")) && (strcmp(reindex->assert_value,poll_result))) {
 								SPINE_LOG_HIGH(("Device[%i] ASSERT: '%s' .eq. '%s' failed. Recaching device '%s', data query #%i", device->id, reindex->assert_value, poll_result, device->hostname, reindex->data_query_id));
 
-								snprintf(query3, BUFSIZE, "REPLACE INTO poller_command (poller_id, time, action,command) values (0, NOW(), %i, '%i:%i')", POLLER_COMMAND_REINDEX, device->id, reindex->data_query_id);
-								db_insert(&mysql, query3);
+								if (poller_instructions.device_thread == 1) {
+									snprintf(query3, BUFSIZE, "REPLACE INTO poller_command (poller_id, time, action,command) values (0, NOW(), %i, '%i:%i')", POLLER_COMMAND_REINDEX, device->id, reindex->data_query_id);
+									db_insert(&mysql, query3);
+								}
 								assert_fail = TRUE;
 								previous_assert_failure = TRUE;
 							}else if ((!strcmp(reindex->op, ">")) && (strtoll(reindex->assert_value, (char **)NULL, 10) < strtoll(poll_result, (char **)NULL, 10))) {
 								SPINE_LOG_HIGH(("Device[%i] ASSERT: '%s' .gt. '%s' failed. Recaching device '%s', data query #%i", device->id, reindex->assert_value, poll_result, device->hostname, reindex->data_query_id));
 
-								snprintf(query3, BUFSIZE, "REPLACE INTO poller_command (poller_id, time, action, command) values (0, NOW(), %i, '%i:%i')", POLLER_COMMAND_REINDEX, device->id, reindex->data_query_id);
-								db_insert(&mysql, query3);
+								if (poller_instructions.device_thread == 1) {
+									snprintf(query3, BUFSIZE, "REPLACE INTO poller_command (poller_id, time, action, command) values (0, NOW(), %i, '%i:%i')", POLLER_COMMAND_REINDEX, device->id, reindex->data_query_id);
+									db_insert(&mysql, query3);
+								}
 								assert_fail = TRUE;
 								previous_assert_failure = TRUE;
 							/* if uptime is set to '0' don't fail out */
@@ -622,8 +643,10 @@ void poll_device(int device_id) {
 								if ((!strcmp(reindex->op, "<")) && (strtoll(reindex->assert_value, (char **)NULL, 10) > strtoll(poll_result, (char **)NULL, 10))) {
 									SPINE_LOG_HIGH(("Device[%i] ASSERT: '%s' .lt. '%s' failed. Recaching device '%s', data query #%i", device->id, reindex->assert_value, poll_result, device->hostname, reindex->data_query_id));
 
-									snprintf(query3, BUFSIZE, "REPLACE INTO poller_command (poller_id, time, action, command) values (0, NOW(), %i, '%i:%i')", POLLER_COMMAND_REINDEX, device->id, reindex->data_query_id);
-									db_insert(&mysql, query3);
+									if (poller_instructions.device_thread == 1) {
+										snprintf(query3, BUFSIZE, "REPLACE INTO poller_command (poller_id, time, action, command) values (0, NOW(), %i, '%i:%i')", POLLER_COMMAND_REINDEX, device->id, reindex->data_query_id);
+										db_insert(&mysql, query3);
+									}
 									assert_fail = TRUE;
 									previous_assert_failure = TRUE;
 								}
@@ -634,8 +657,10 @@ void poll_device(int device_id) {
 							 * 2) the OP code is > or < meaning the current value could have changed without causing
 							 *     the assert to fail */
 							if ((assert_fail) || (!strcmp(reindex->op, ">")) || (!strcmp(reindex->op, "<"))) {
-								snprintf(query3, BUFSIZE, "UPDATE poller_reindex SET assert_value='%s' WHERE device_id='%i' AND data_query_id='%i' and arg1='%s'", poll_result, device_id, reindex->data_query_id, reindex->arg1);
-								db_insert(&mysql, query3);
+								if (poller_instructions.device_thread == 1) {
+									snprintf(query3, BUFSIZE, "UPDATE poller_reindex SET assert_value='%s' WHERE device_id='%i' AND data_query_id='%i' and arg1='%s'", poll_result, device_id, reindex->data_query_id, reindex->arg1);
+									db_insert(&mysql, query3);
+								}
 
 								if ((assert_fail) &&
 									((!strcmp(reindex->op, "<")) || (!strcmp(reindex->arg1,".1.3.6.1.2.1.1.3.0")))) {
@@ -786,105 +811,48 @@ void poll_device(int device_id) {
 
 		i = 0;
 		while ((i < num_rows) && (!device->ignore_device)) {
-			if (!device->ignore_device) {
-				switch(poller_items[i].action) {
-				case POLLER_ACTION_SNMP: /* raw SNMP poll */
-					/* initialize or reinitialize snmp as required */
-					if (!device->snmp_session) {
-						last_snmp_port = poller_items[i].snmp_port;
-						last_snmp_version = poller_items[i].snmp_version;
+			SPINE_LOG_DEBUG(("Device[%i] DEBUG: Processing item '%i'", i));
+			switch(poller_items[i].action) {
+			case POLLER_ACTION_SNMP: /* raw SNMP poll */
+				/* initialize or reinitialize snmp as required */
+				if (!device->snmp_session) {
+					last_snmp_port = poller_items[i].snmp_port;
+					last_snmp_version = poller_items[i].snmp_version;
 
-						STRNCOPY(last_snmp_community,       poller_items[i].snmp_community);
-						STRNCOPY(last_snmp_username,        poller_items[i].snmp_username);
-						STRNCOPY(last_snmp_password,        poller_items[i].snmp_password);
-						STRNCOPY(last_snmp_auth_protocol,   poller_items[i].snmp_auth_protocol);
-						STRNCOPY(last_snmp_priv_passphrase, poller_items[i].snmp_priv_passphrase);
-						STRNCOPY(last_snmp_priv_protocol,   poller_items[i].snmp_priv_protocol);
-						STRNCOPY(last_snmp_context,         poller_items[i].snmp_context);
+					STRNCOPY(last_snmp_community,       poller_items[i].snmp_community);
+					STRNCOPY(last_snmp_username,        poller_items[i].snmp_username);
+					STRNCOPY(last_snmp_password,        poller_items[i].snmp_password);
+					STRNCOPY(last_snmp_auth_protocol,   poller_items[i].snmp_auth_protocol);
+					STRNCOPY(last_snmp_priv_passphrase, poller_items[i].snmp_priv_passphrase);
+					STRNCOPY(last_snmp_priv_protocol,   poller_items[i].snmp_priv_protocol);
+					STRNCOPY(last_snmp_context,         poller_items[i].snmp_context);
 
-						device->snmp_session = snmp_host_init(device->id, poller_items[i].hostname,
-							poller_items[i].snmp_version, poller_items[i].snmp_community,
-							poller_items[i].snmp_username, poller_items[i].snmp_password,
-							poller_items[i].snmp_auth_protocol, poller_items[i].snmp_priv_passphrase,
-							poller_items[i].snmp_priv_protocol, poller_items[i].snmp_context,
-							poller_items[i].snmp_port, poller_items[i].snmp_timeout);
-					}
+					device->snmp_session = snmp_host_init(device->id, poller_items[i].hostname,
+						poller_items[i].snmp_version, poller_items[i].snmp_community,
+						poller_items[i].snmp_username, poller_items[i].snmp_password,
+						poller_items[i].snmp_auth_protocol, poller_items[i].snmp_priv_passphrase,
+						poller_items[i].snmp_priv_protocol, poller_items[i].snmp_context,
+						poller_items[i].snmp_port, poller_items[i].snmp_timeout);
+				}
 
-					/* catch snmp initialization issues */
-					if (!device->snmp_session) {
-						device->ignore_device = TRUE;
-						break;
-					}
+				/* catch snmp initialization issues */
+				if (!device->snmp_session) {
+					device->ignore_device = TRUE;
+					break;
+				}
 
-					/* some snmp data changed from poller item to poller item.  therefore, poll device and store data */
-					if ((last_snmp_port != poller_items[i].snmp_port) ||
-						(last_snmp_version != poller_items[i].snmp_version) ||
-						(strcmp(last_snmp_community,       poller_items[i].snmp_community)       != 0) ||
-						(strcmp(last_snmp_username,        poller_items[i].snmp_username)        != 0) ||
-						(strcmp(last_snmp_password,        poller_items[i].snmp_password)        != 0) ||
-						(strcmp(last_snmp_auth_protocol,   poller_items[i].snmp_auth_protocol)   != 0) ||
-						(strcmp(last_snmp_priv_passphrase, poller_items[i].snmp_priv_passphrase) != 0) ||
-						(strcmp(last_snmp_priv_protocol,   poller_items[i].snmp_priv_protocol)   != 0) ||
-						(strcmp(last_snmp_context,         poller_items[i].snmp_context)         != 0)) {
+				/* some snmp data changed from poller item to poller item.  therefore, poll device and store data */
+				if ((last_snmp_port != poller_items[i].snmp_port) ||
+					(last_snmp_version != poller_items[i].snmp_version) ||
+					(strcmp(last_snmp_community,       poller_items[i].snmp_community)       != 0) ||
+					(strcmp(last_snmp_username,        poller_items[i].snmp_username)        != 0) ||
+					(strcmp(last_snmp_password,        poller_items[i].snmp_password)        != 0) ||
+					(strcmp(last_snmp_auth_protocol,   poller_items[i].snmp_auth_protocol)   != 0) ||
+					(strcmp(last_snmp_priv_passphrase, poller_items[i].snmp_priv_passphrase) != 0) ||
+					(strcmp(last_snmp_priv_protocol,   poller_items[i].snmp_priv_protocol)   != 0) ||
+					(strcmp(last_snmp_context,         poller_items[i].snmp_context)         != 0)) {
 
-						if (num_oids > 0) {
-							snmp_get_multi(device, snmp_oids, num_oids);
-
-							for (j = 0; j < num_oids; j++) {
-								if (device->ignore_device) {
-									SPINE_LOG(("Device[%i] DS[%i] WARNING: SNMP timeout detected [%i ms], ignoring device '%s'", device_id, poller_items[snmp_oids[j].array_position].local_data_id, device->snmp_timeout, device->hostname));
-									SET_UNDEFINED(snmp_oids[j].result);
-								}else if ((is_numeric(snmp_oids[j].result)) ||
-									(is_multipart_output(snmp_oids[j].result)) ||
-									(is_hexadecimal(snmp_oids[j].result, TRUE))) {
-									/* continue */
-								}else if ((STRIMATCH(snmp_oids[j].result, "U")) ||
-									(STRIMATCH(snmp_oids[j].result, "Nan"))) {
-									/* is valid output, continue */
-								}else{
-									/* remove double or single quotes from string */
-									snprintf(temp_result, RESULTS_BUFFER, "%s", strip_alpha(trim(snmp_oids[j].result)));
-									snprintf(snmp_oids[j].result , RESULTS_BUFFER, "%s", temp_result);
-
-									/* detect erroneous non-numeric result */
-									if (!validate_result(snmp_oids[j].result)) {
-										SET_UNDEFINED(snmp_oids[j].result);
-									}
-								}
-
-								snprintf(poller_items[snmp_oids[j].array_position].result, RESULTS_BUFFER, "%s", snmp_oids[j].result);
-
-								SPINE_LOG_MEDIUM(("Device[%i] DS[%i] SNMP: v%i: %s, dsname: %s, oid: %s, value: %s", device_id, poller_items[snmp_oids[j].array_position].local_data_id, device->snmp_version, device->hostname, poller_items[snmp_oids[j].array_position].rrd_name, poller_items[snmp_oids[j].array_position].arg1, poller_items[snmp_oids[j].array_position].result));
-							}
-
-							/* reset num_snmps */
-							num_oids = 0;
-
-							/* initialize all the memory to insure we don't get issues */
-							memset(snmp_oids, 0, sizeof(snmp_oids_t)*device->max_oids);
-						}
-
-						snmp_host_cleanup(device->snmp_session);
-						device->snmp_session = snmp_host_init(device->id, poller_items[i].hostname,
-												poller_items[i].snmp_version, poller_items[i].snmp_community,
-												poller_items[i].snmp_username, poller_items[i].snmp_password,
-												poller_items[i].snmp_auth_protocol, poller_items[i].snmp_priv_passphrase,
-												poller_items[i].snmp_priv_protocol, poller_items[i].snmp_context,
-												poller_items[i].snmp_port, poller_items[i].snmp_timeout);
-
-						last_snmp_port    = poller_items[i].snmp_port;
-						last_snmp_version = poller_items[i].snmp_version;
-
-						STRNCOPY(last_snmp_community,       poller_items[i].snmp_community);
-						STRNCOPY(last_snmp_username,        poller_items[i].snmp_username);
-						STRNCOPY(last_snmp_password,        poller_items[i].snmp_password);
-						STRNCOPY(last_snmp_auth_protocol,   poller_items[i].snmp_auth_protocol);
-						STRNCOPY(last_snmp_priv_passphrase, poller_items[i].snmp_priv_passphrase);
-						STRNCOPY(last_snmp_priv_protocol,   poller_items[i].snmp_priv_protocol);
-						STRNCOPY(last_snmp_context,         poller_items[i].snmp_context);
-					}
-
-					if (num_oids >= device->max_oids) {
+					if (num_oids > 0) {
 						snmp_get_multi(device, snmp_oids, num_oids);
 
 						for (j = 0; j < num_oids; j++) {
@@ -912,13 +880,6 @@ void poll_device(int device_id) {
 							snprintf(poller_items[snmp_oids[j].array_position].result, RESULTS_BUFFER, "%s", snmp_oids[j].result);
 
 							SPINE_LOG_MEDIUM(("Device[%i] DS[%i] SNMP: v%i: %s, dsname: %s, oid: %s, value: %s", device_id, poller_items[snmp_oids[j].array_position].local_data_id, device->snmp_version, device->hostname, poller_items[snmp_oids[j].array_position].rrd_name, poller_items[snmp_oids[j].array_position].arg1, poller_items[snmp_oids[j].array_position].result));
-
-							if (poller_items[snmp_oids[j].array_position].result != NULL) {
-								/* insert a NaN in place of the actual value if the snmp agent restarts */
-								if ((spike_kill) && (!strstr(poller_items[snmp_oids[j].array_position].result,":"))) {
-									SET_UNDEFINED(poller_items[snmp_oids[j].array_position].result);
-								}
-							}
 						}
 
 						/* reset num_snmps */
@@ -928,80 +889,143 @@ void poll_device(int device_id) {
 						memset(snmp_oids, 0, sizeof(snmp_oids_t)*device->max_oids);
 					}
 
-					snprintf(snmp_oids[num_oids].oid, sizeof(snmp_oids[num_oids].oid), "%s", poller_items[i].arg1);
-					snmp_oids[num_oids].array_position = i;
-					num_oids++;
+					snmp_host_cleanup(device->snmp_session);
+					device->snmp_session = snmp_host_init(device->id, poller_items[i].hostname,
+											poller_items[i].snmp_version, poller_items[i].snmp_community,
+											poller_items[i].snmp_username, poller_items[i].snmp_password,
+											poller_items[i].snmp_auth_protocol, poller_items[i].snmp_priv_passphrase,
+											poller_items[i].snmp_priv_protocol, poller_items[i].snmp_context,
+											poller_items[i].snmp_port, poller_items[i].snmp_timeout);
 
-					break;
-				case POLLER_ACTION_SCRIPT: /* execute script file */
-					poll_result = exec_poll(device, poller_items[i].arg1);
+					last_snmp_port    = poller_items[i].snmp_port;
+					last_snmp_version = poller_items[i].snmp_version;
 
-					/* remove double or single quotes from string */
-					if ((is_numeric(poll_result)) ||
-						(is_multipart_output(poll_result)) ||
-						(is_hexadecimal(poll_result, TRUE))) {
-						snprintf(poller_items[i].result, RESULTS_BUFFER, "%s", poll_result);
-					}else{
-						/* remove double or single quotes from string */
-						snprintf(temp_result, RESULTS_BUFFER, "%s", strip_alpha(trim(poll_result)));
-						snprintf(poller_items[i].result , RESULTS_BUFFER, "%s", temp_result);
-
-						/* detect erroneous result. can be non-numeric */
-						if (!validate_result(poller_items[i].result)) {
-							SET_UNDEFINED(poller_items[i].result);
-						}
-					}
-
-					free(poll_result);
-
-					SPINE_LOG_MEDIUM(("Device[%i] DS[%i] SCRIPT: %s, output: %s", device_id, poller_items[i].local_data_id, poller_items[i].arg1, poller_items[i].result));
-
-					if (poller_items[i].result != NULL) {
-						/* insert a NaN in place of the actual value if the snmp agent restarts */
-						if ((spike_kill) && (!strstr(poller_items[i].result,":"))) {
-							SET_UNDEFINED(poller_items[i].result);
-						}
-					}
-
-					break;
-				case POLLER_ACTION_PHP_SCRIPT_SERVER: /* execute script server */
-					php_process = php_get_process();
-
-					poll_result = php_cmd(poller_items[i].arg1, php_process);
-
-					/* remove double or single quotes from string */
-					if ((is_numeric(poll_result)) ||
-						(is_multipart_output(poll_result)) ||
-						(is_hexadecimal(poll_result, TRUE))) {
-						snprintf(poller_items[i].result, RESULTS_BUFFER, "%s", poll_result);
-					}else{
-						/* remove double or single quotes from string */
-						snprintf(temp_result, RESULTS_BUFFER, "%s", strip_alpha(trim(poll_result)));
-						snprintf(poller_items[i].result , RESULTS_BUFFER, "%s", temp_result);
-
-						/* detect erroneous result. can be non-numeric */
-						if (!validate_result(poller_items[i].result)) {
-							SET_UNDEFINED(poller_items[i].result);
-						}
-					}
-
-					free(poll_result);
-
-					SPINE_LOG_MEDIUM(("Device[%i] DS[%i] SS[%i] SERVER: %s, output: %s", device_id, poller_items[i].local_data_id, php_process, poller_items[i].arg1, poller_items[i].result));
-
-					if (poller_items[i].result != NULL) {
-						/* insert a NaN in place of the actual value if the snmp agent restarts */
-						if ((spike_kill) && (!strstr(poller_items[i].result,":"))) {
-							SET_UNDEFINED(poller_items[i].result);
-						}
-					}
-
-					break;
-				default: /* unknown action, generate error */
-					SPINE_LOG(("Device[%i] DS[%i] ERROR: Unknown Poller Action: %s", device_id, poller_items[i].local_data_id, poller_items[i].arg1));
-
-					break;
+					STRNCOPY(last_snmp_community,       poller_items[i].snmp_community);
+					STRNCOPY(last_snmp_username,        poller_items[i].snmp_username);
+					STRNCOPY(last_snmp_password,        poller_items[i].snmp_password);
+					STRNCOPY(last_snmp_auth_protocol,   poller_items[i].snmp_auth_protocol);
+					STRNCOPY(last_snmp_priv_passphrase, poller_items[i].snmp_priv_passphrase);
+					STRNCOPY(last_snmp_priv_protocol,   poller_items[i].snmp_priv_protocol);
+					STRNCOPY(last_snmp_context,         poller_items[i].snmp_context);
 				}
+
+				if (num_oids >= device->max_oids) {
+					snmp_get_multi(device, snmp_oids, num_oids);
+
+					for (j = 0; j < num_oids; j++) {
+						if (device->ignore_device) {
+							SPINE_LOG(("Device[%i] DS[%i] WARNING: SNMP timeout detected [%i ms], ignoring device '%s'", device_id, poller_items[snmp_oids[j].array_position].local_data_id, device->snmp_timeout, device->hostname));
+							SET_UNDEFINED(snmp_oids[j].result);
+						}else if ((is_numeric(snmp_oids[j].result)) ||
+							(is_multipart_output(snmp_oids[j].result)) ||
+							(is_hexadecimal(snmp_oids[j].result, TRUE))) {
+							/* continue */
+						}else if ((STRIMATCH(snmp_oids[j].result, "U")) ||
+							(STRIMATCH(snmp_oids[j].result, "Nan"))) {
+							/* is valid output, continue */
+						}else{
+							/* remove double or single quotes from string */
+							snprintf(temp_result, RESULTS_BUFFER, "%s", strip_alpha(trim(snmp_oids[j].result)));
+							snprintf(snmp_oids[j].result , RESULTS_BUFFER, "%s", temp_result);
+
+							/* detect erroneous non-numeric result */
+							if (!validate_result(snmp_oids[j].result)) {
+								SET_UNDEFINED(snmp_oids[j].result);
+							}
+						}
+
+						snprintf(poller_items[snmp_oids[j].array_position].result, RESULTS_BUFFER, "%s", snmp_oids[j].result);
+
+						SPINE_LOG_MEDIUM(("Device[%i] DS[%i] SNMP: v%i: %s, dsname: %s, oid: %s, value: %s", device_id, poller_items[snmp_oids[j].array_position].local_data_id, device->snmp_version, device->hostname, poller_items[snmp_oids[j].array_position].rrd_name, poller_items[snmp_oids[j].array_position].arg1, poller_items[snmp_oids[j].array_position].result));
+
+						if (poller_items[snmp_oids[j].array_position].result != NULL) {
+							/* insert a NaN in place of the actual value if the snmp agent restarts */
+							if ((spike_kill) && (!strstr(poller_items[snmp_oids[j].array_position].result,":"))) {
+								SET_UNDEFINED(poller_items[snmp_oids[j].array_position].result);
+							}
+						}
+					}
+
+					/* reset num_snmps */
+					num_oids = 0;
+
+					/* initialize all the memory to insure we don't get issues */
+					memset(snmp_oids, 0, sizeof(snmp_oids_t)*device->max_oids);
+				}
+
+				snprintf(snmp_oids[num_oids].oid, sizeof(snmp_oids[num_oids].oid), "%s", poller_items[i].arg1);
+				snmp_oids[num_oids].array_position = i;
+				num_oids++;
+
+				break;
+			case POLLER_ACTION_SCRIPT: /* execute script file */
+				poll_result = exec_poll(device, poller_items[i].arg1);
+
+				/* remove double or single quotes from string */
+				if ((is_numeric(poll_result)) ||
+					(is_multipart_output(poll_result)) ||
+					(is_hexadecimal(poll_result, TRUE))) {
+					snprintf(poller_items[i].result, RESULTS_BUFFER, "%s", poll_result);
+				}else{
+					/* remove double or single quotes from string */
+					snprintf(temp_result, RESULTS_BUFFER, "%s", strip_alpha(trim(poll_result)));
+					snprintf(poller_items[i].result , RESULTS_BUFFER, "%s", temp_result);
+
+					/* detect erroneous result. can be non-numeric */
+					if (!validate_result(poller_items[i].result)) {
+						SET_UNDEFINED(poller_items[i].result);
+					}
+				}
+
+				free(poll_result);
+
+				SPINE_LOG_MEDIUM(("Device[%i] DS[%i] SCRIPT: %s, output: %s", device_id, poller_items[i].local_data_id, poller_items[i].arg1, poller_items[i].result));
+
+				if (poller_items[i].result != NULL) {
+					/* insert a NaN in place of the actual value if the snmp agent restarts */
+					if ((spike_kill) && (!strstr(poller_items[i].result,":"))) {
+						SET_UNDEFINED(poller_items[i].result);
+					}
+				}
+
+				break;
+			case POLLER_ACTION_PHP_SCRIPT_SERVER: /* execute script server */
+				php_process = php_get_process();
+
+				poll_result = php_cmd(poller_items[i].arg1, php_process);
+
+				/* remove double or single quotes from string */
+				if ((is_numeric(poll_result)) ||
+					(is_multipart_output(poll_result)) ||
+					(is_hexadecimal(poll_result, TRUE))) {
+					snprintf(poller_items[i].result, RESULTS_BUFFER, "%s", poll_result);
+				}else{
+					/* remove double or single quotes from string */
+					snprintf(temp_result, RESULTS_BUFFER, "%s", strip_alpha(trim(poll_result)));
+					snprintf(poller_items[i].result , RESULTS_BUFFER, "%s", temp_result);
+
+					/* detect erroneous result. can be non-numeric */
+					if (!validate_result(poller_items[i].result)) {
+						SET_UNDEFINED(poller_items[i].result);
+					}
+				}
+
+				free(poll_result);
+
+				SPINE_LOG_MEDIUM(("Device[%i] DS[%i] SS[%i] SERVER: %s, output: %s", device_id, poller_items[i].local_data_id, php_process, poller_items[i].arg1, poller_items[i].result));
+
+				if (poller_items[i].result != NULL) {
+					/* insert a NaN in place of the actual value if the snmp agent restarts */
+					if ((spike_kill) && (!strstr(poller_items[i].result,":"))) {
+						SET_UNDEFINED(poller_items[i].result);
+					}
+				}
+
+				break;
+			default: /* unknown action, generate error */
+				SPINE_LOG(("Device[%i] DS[%i] ERROR: Unknown Poller Action: %s", device_id, poller_items[i].local_data_id, poller_items[i].arg1));
+
+				break;
 			}
 
 			i++;

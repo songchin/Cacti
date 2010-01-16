@@ -1,18 +1,22 @@
 ﻿The Cacti Group | spine
 
 SVN
+-feature:0001550: Record the polling time for each host to optimize polling times
+-feature: Implement new file based datetime format in the spine log function
+
+0.8.7f
 
 -bug#0001465: Don't check micro version when comparing installed net-snmp version to version used when building 
 -bug#0001497: Prevent constant reindexes if snmp agent continually returns uptime of 0
 -bug#0001510: Speedup spine resorting hosts by estimated polling time
+-bug#0001519: spine enhancement for parallel collection of data at host level
+-bug#0001541: Spine snmp bulk get incorrect assumes that the server SNMP Agent returns variables in same order
 -bug#0001551: Spine compile problem on AIX 5
 -bug#0001563: Spine Compilation Problem on sql.c
 -bug: Add new option to enable Net-SNMP library vs. header versions
 -bug: ICMP fails on some platforms
 -bug: MySQL client auto reconnect default in MySQL 5.0.71 causes spine to crash
 -bug: Inconsistent behavior when the poller interval has not been set
--feature:0001550: Record the polling time for each host to optimize polling times
--feature: Implement new file based datetime format in the spine log function
 
 0.8.7e
 -bug: Not all configuration paths are searched for spine.conf

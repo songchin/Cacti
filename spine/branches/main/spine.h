@@ -289,6 +289,7 @@ typedef struct config_struct {
 	/* general configuration/runtime settings */
 	int    poller_id;
 	int    poller_id_exists;
+	int    device_threads_exists;
 	int    poller_interval;
 	int    parent_fork;
 	int    num_parent_processes;
@@ -386,6 +387,17 @@ typedef struct snmp_oids {
 	char   oid[512];
 	char   result[RESULTS_BUFFER];
 } snmp_oids_t;
+
+/*! Poller Structure
+ *
+ * This structure holds thread polling instructions.
+ *
+ */
+typedef struct poller_thread {
+	int device_id;
+	int device_thread;
+	int device_data_ids;
+} poller_thread_t;
 
 /*! PHP Script Server Structure
  *
