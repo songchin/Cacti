@@ -218,7 +218,7 @@ function query_snmp_device($device_id, $snmp_query_id) {
 	while (list($field_name, $field_array) = each($snmp_queries["fields"])) {
 		if ($field_array["direction"] == "input" && $field_array["method"] != "get" &&
 			(isset($field_array["rewrite_index"]) || isset($field_array["oid_suffix"]) )){
-			#$field_array["method"] = "get";
+			#$field_array["method"] = "get"; # do NOT change method, only create error message
 			debug_log_insert("data_query", __("FIXME: wrong 'method' defined for '%s' while using 'rewrite_index' or 'oid_suffix'. Please change XML to use 'get' instead.", $field_name));
 		}
 
@@ -239,7 +239,8 @@ function query_snmp_device($device_id, $snmp_query_id) {
 					foreach($errmsg as $message){
 						debug_log_insert("data_query", "Field '$field_name'" . $message);
 					}
-				}			}
+				}
+			}
 
 			for ($i=0; $i<sizeof($snmp_indexes); $i++) {
 				$oid = $field_array["oid"];
@@ -859,7 +860,20 @@ function rewrite_snmp_enum_value($field_name, $value=NULL, $map=NULL) {
 		return NULL;
 	}
 
-	$map = unserialize($map);
+	if(is_array($map)){ # produced from XML, needs to be reformatted
+		$newmap = array();
+		foreach($map as $index => $item){
+			if(!isset($item['match']) || !isset($item['replace'])){
+				debug_log_insert("data_query", "Bogus rewrite_value item found, index='$index'");
+				continue;
+			}
+			$newmap[$item['match']] = $item['replace'];
+		}
+		$map = $newmap;
+	}else{ # XML contains serialized filter set
+		$map = unserialize($map);
+	}
+
 	if ($map === FALSE || !is_array($map)) {
 		debug_log_insert("data_query", __("Cannot parse translation map (rewrite_value)"));
 		return $value;

@@ -21,7 +21,20 @@
 			<source>value</source>
 			<direction>input</direction>
 			<oid>.1.3.6.1.2.1.2.2.1.7</oid>
-			<rewrite_value>a:7:{s:21:"REGEXPNC:^.*(up|1).*$";s:2:"Up";s:23:"REGEXPNC:^.*(down|2).*$";s:4:"Down";s:26:"REGEXPNC:^.*(testing|3).*$";s:7:"Testing";}</rewrite_value>
+			<rewrite_value>
+				<i1>
+					<match>REGEXPNC:^.*(up|1).*$</match>
+					<replace>Up</replace>
+				</i1>
+				<i2>
+					<match>REGEXPNC:^.*(down|2).*$</match>
+					<replace>Down</replace>
+				</i2>
+				<i3>
+					<match>REGEXPNC:^.*(testing|3).*$</match>
+					<replace>Testing</replace>
+				</i3>
+			</rewrite_value>
 		</ifAdminStatus>
 		<ifOperStatus>
 			<name>Oper Status</name>
@@ -29,7 +42,36 @@
 			<source>value</source>
 			<direction>input</direction>
 			<oid>.1.3.6.1.2.1.2.2.1.8</oid>
-			<rewrite_value>a:7:{s:21:"REGEXPNC:^.*(up|1).*$";s:2:"Up";s:23:"REGEXPNC:^.*(down|2).*$";s:4:"Down";s:26:"REGEXPNC:^.*(testing|3).*$";s:7:"Testing";s:26:"REGEXPNC:^.*(unknown|4).*$";s:7:"Unknown";s:26:"REGEXPNC:^.*(dormant|5).*$";s:7:"Dormant";s:29:"REGEXPNC:^.*(notPresent|6).*$";s:10:"notPresent";s:33:"REGEXPNC:^.*(lowerLayerDown|7).*$";s:14:"lowerLayerDown";}</rewrite_value>
+			<rewrite_value>
+				<i1>
+					<match>REGEXPNC:^.*(up|1).*$</match>
+					<replace>Up</replace>
+				</i1>
+				<i2>
+					<match>REGEXPNC:^.*(down|2).*$</match>
+					<replace>Down</replace>
+				</i2>
+				<i3>
+					<match>REGEXPNC:^.*(testing|3).*$</match>
+					<replace>Testing</replace>
+				</i3>
+				<i4>
+					<match>REGEXPNC:^.*(unknown|4).*$</match>
+					<replace>Unknown</replace>
+				</i4>
+				<i5>
+					<match>REGEXPNC:^.*(dormant|5).*$</match>
+					<replace>Dormant</replace>
+				</i5>
+				<i6>
+					<match>REGEXPNC:^.*(notPresent|6).*$</match>
+					<replace>notPresent</replace>
+				</i6>
+				<i7>
+					<match>REGEXPNC:^.*(lowerLayerDown|7).*$</match>
+					<replace>lowerLayerDown</replace>
+				</i7>
+			</rewrite_value>
 		</ifOperStatus>
 		<ifDescr>
 			<name>Description</name>
