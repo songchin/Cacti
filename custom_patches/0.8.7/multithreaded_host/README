@@ -1,0 +1,57 @@
+--------------------------------------------------------------------
+MultiThreaded Host Patch for Cacti 0.8.7e
+--------------------------------------------------------------------
+
+Description:
+--------------------------------------------------------------------
+This patch add the following functionality to Cacti.  First it adds
+a field to Cacti that allows each host to be polled with from one
+to many threads.  Second, it provides the ability for spine to
+leverage that value and poll the host directly using the number of
+threads specified.
+
+This patch does not work with cmd.php.  It is only designed to work
+with the Spine poller.
+
+Caution is advised on using this patch with SNMP devices.  You have
+been warned.
+
+Installation:
+--------------------------------------------------------------------
+There are three components to this change.  The first is the database
+change.  This is accomplised by running the command below.  It will
+modify the host table structure in Cacti.
+
+mysql cacti < install.sql
+
+The second step is to apply the patch below to the Cacti web site.
+The patch will modify the following files:
+
+cli/add_device.php
+include/global_arrays.php
+include/global_form.php
+lib/api_device.php
+host.php
+
+There is no way to specify the hosts threads from the Cacti CLI.
+The default will always be 1 thread per host.
+
+The third component of this change is to patch install the latest
+version of Spine 0.8.7f which exposes the capability to perform
+this type of polling.
+
+Notes:
+--------------------------------------------------------------------
+This patch is designed for 0.8.7e version of Cacti and no 
+other releases.  Please keep this in mind before you try.  Also
+it's always a good idea to make a backup and test in your test
+environment first.  If you don't have one of those, get one.
+
+This patch "might" work with other versions of Cacti.  However,
+you may have to hand edit or apply the patches.
+
+Also, please note, if you have installed other "custom" patches
+you must closely evaluate those patches as they have not been
+tested together and modify some of the same files.  So,
+please be cautious.
+

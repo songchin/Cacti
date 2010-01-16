@@ -1,0 +1,117 @@
+Index: cacti.sql
+===================================================================
+--- cacti.sql	(revision 5594)
++++ cacti.sql	(working copy)
+@@ -1864,6 +1864,7 @@
+   ping_timeout int(12) unsigned default '500',
+   ping_retries int(12) unsigned default '2',
+   max_oids int(12) unsigned default '10',
++  device_threads tinyint(2) unsigned not null default '1',
+   disabled char(2) default NULL,
+   status tinyint(2) NOT NULL default '0',
+   status_event_count mediumint(8) unsigned NOT NULL default '0',
+Index: cli/add_device.php
+===================================================================
+--- cli/add_device.php	(revision 5594)
++++ cli/add_device.php	(working copy)
+@@ -64,12 +64,13 @@
+ 	$snmp_port            = read_config_option("snmp_port");
+ 	$snmp_timeout         = read_config_option("snmp_timeout");
+ 
+-	$avail        = 1;
+-	$ping_method  = read_config_option("ping_method");
+-	$ping_port    = read_config_option("ping_port");
+-	$ping_timeout = read_config_option("ping_timeout");
+-	$ping_retries = read_config_option("ping_retries");
+-	$max_oids     = read_config_option("max_get_size");
++	$avail          = 1;
++	$ping_method    = read_config_option("ping_method");
++	$ping_port      = read_config_option("ping_port");
++	$ping_timeout   = read_config_option("ping_timeout");
++	$ping_retries   = read_config_option("ping_retries");
++	$max_oids       = read_config_option("max_get_size");
++	$device_threads = 1;
+ 
+ 	$displayHostTemplates = FALSE;
+ 	$displayCommunities   = FALSE;
+Index: host.php
+===================================================================
+--- host.php	(revision 5594)
++++ host.php	(working copy)
+@@ -155,7 +155,7 @@
+ 				$_POST["ping_port"], $_POST["ping_timeout"],
+ 				$_POST["ping_retries"], $_POST["notes"],
+ 				$_POST["snmp_auth_protocol"], $_POST["snmp_priv_passphrase"],
+-				$_POST["snmp_priv_protocol"], $_POST["snmp_context"], $_POST["max_oids"]);
++				$_POST["snmp_priv_protocol"], $_POST["snmp_context"], $_POST["max_oids"], $_POST["device_threads"]);
+ 		}
+ 
+ 		if ((is_error_message()) || ($_POST["host_template_id"] != $_POST["_host_template_id"])) {
+Index: include/global_arrays.php
+===================================================================
+--- include/global_arrays.php	(revision 5594)
++++ include/global_arrays.php	(working copy)
+@@ -215,6 +215,15 @@
+ 	60 => "Every Minute",
+ 	300 => "Every 5 Minutes");
+ 
++$device_threads = array(
++	1 => "1 Thread (default)",
++	2 => "2 Threads",
++	3 => "3 Threads",
++	4 => "4 Threads",
++	5 => "5 Threads",
++	6 => "6 Threads"
++	);
++
+ $cron_intervals = array(
+ 	60 => "Every Minute",
+ 	300 => "Every 5 Minutes");
+@@ -555,6 +564,7 @@
+ 	"snmp_port",
+ 	"snmp_timeout",
+ 	"max_oids",
++	"device_threads",
+ 	"availability_method",
+ 	"ping_method",
+ 	"ping_port",
+Index: include/global_form.php
+===================================================================
+--- include/global_form.php	(revision 5594)
++++ include/global_form.php	(working copy)
+@@ -669,6 +669,14 @@
+ 		"none_value" => "None",
+ 		"sql" => "select id,name from host_template order by name",
+ 		),
++	"device_threads" => array(
++		"method" => "drop_array",
++		"friendly_name" => __("Number of Collection Threads"),
++		"description" => __("The number of concurrent threads to use for polling this device.  This applies to the Spine poller only."),
++		"value" => "|arg1:device_threads|",
++		"default" => "1",
++		"array" => $device_threads
++		),
+ 	"disabled" => array(
+ 		"method" => "checkbox",
+ 		"friendly_name" => "Disable Host",
+Index: lib/api_device.php
+===================================================================
+--- lib/api_device.php	(revision 5594)
++++ lib/api_device.php	(working copy)
+@@ -94,7 +94,7 @@
+ function api_device_save($id, $host_template_id, $description, $hostname, $snmp_community, $snmp_version,
+ 	$snmp_username, $snmp_password, $snmp_port, $snmp_timeout, $disabled,
+ 	$availability_method, $ping_method, $ping_port, $ping_timeout, $ping_retries,
+-	$notes, $snmp_auth_protocol, $snmp_priv_passphrase, $snmp_priv_protocol, $snmp_context, $max_oids) {
++	$notes, $snmp_auth_protocol, $snmp_priv_passphrase, $snmp_priv_protocol, $snmp_context, $max_oids, $device_threads) {
+ 	global $config;
+ 
+ 	/* fetch some cache variables */
+@@ -136,6 +136,7 @@
+ 	$save["ping_timeout"]         = form_input_validate($ping_timeout, "ping_timeout", "^[0-9]+$", true, 3);
+ 	$save["ping_retries"]         = form_input_validate($ping_retries, "ping_retries", "^[0-9]+$", true, 3);
+ 	$save["max_oids"]             = form_input_validate($max_oids, "max_oids", "^[0-9]+$", true, 3);
++	$save["device_threads"]       = form_input_validate($device_threads, "device_threads", "^[0-9]+$", true, 3);
+ 
+ 	$host_id = 0;
+ 
