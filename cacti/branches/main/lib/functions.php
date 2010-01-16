@@ -392,6 +392,7 @@ function unset_config_option($config_name) {
      $messages array in 'include/global_arrays.php'
    @returns - the original $field_value */
 function form_input_validate($field_value, $field_name, $regexp_match, $allow_nulls, $custom_message = 3) {
+	global $messages;
 	/* write current values to the "field_values" array so we can retain them */
 	$_SESSION["sess_field_values"][$field_name] = $field_value;
 
@@ -404,7 +405,7 @@ function form_input_validate($field_value, $field_name, $regexp_match, $allow_nu
 
 	if ((!preg_match('/' . $regexp_match . '/', $field_value) || (($allow_nulls == false) && ($field_value == "")))) {
 		raise_message($custom_message);
-
+		cacti_log("Validation Error on field '".$field_name."', value '".$field_value."': " . $messages[$custom_message]["message"], false);
 		$_SESSION["sess_error_fields"][$field_name] = $field_name;
 	}else{
 		$_SESSION["sess_field_values"][$field_name] = $field_value;
