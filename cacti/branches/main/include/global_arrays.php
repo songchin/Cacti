@@ -342,12 +342,12 @@ $poller_intervals = array(
 	);
 
 $device_threads = array(
-	1 => "1 Thread (default)",
-	2 => "2 Threads",
-	3 => "3 Threads",
-	4 => "4 Threads",
-	5 => "5 Threads",
-	6 => "6 Threads"
+	1 => __("1 Thread (default)"),
+	2 => __("%s Threads", 2),
+	3 => __("%s Threads", 3),
+	4 => __("%s Threads", 4),
+	5 => __("%s Threads", 5),
+	6 => __("%s Threads", 6)
 	);
 
 $cron_intervals = array(
