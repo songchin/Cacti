@@ -29,6 +29,7 @@ Cacti CHANGELOG
 -bug#0001492: RRDTool 1.3 series fonts (fontconfig) support
 -bug#0001506: Reindexing fails in snmp.php
 -bug#0001508: More min-height'ed divs when showing graphs
+-bug#0001511: Speed up the processing of poller through bulk deletes
 -bug#0001522: Special(?) charakters break parsing of template data.
 -bug#0001528: ICMP Ping availabilty broken in UI for Windows Servers using IIS
 -bug#0001532: Various crashes in early stages of installation with no database populated.

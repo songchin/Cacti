@@ -378,16 +378,24 @@ function process_poller_output($rrdtool_pipe, $remainder = FALSE) {
 
 		/* make sure each .rrd file has complete data */
 		reset($results);
+		$sql_wheres = array();
 		foreach ($results as $item) {
 			$unix_time = strtotime($item["time"]);
 
 			if (isset($rrd_update_array{$item["rrd_path"]}["times"][$unix_time])) {
 				if ($item["rrd_num"] <= sizeof($rrd_update_array{$item["rrd_path"]}["times"][$unix_time])) {
-					db_execute("delete from poller_output where local_data_id='" . $item["local_data_id"] . "' and rrd_name='" . $item["rrd_name"] . "' and time='" . $item["time"] . "'");
+					$sql_wheres[] = " ( local_data_id='{$item['local_data_id']}' AND rrd_name='{$item['rrd_name']}' AND time='{$item['time']}' ) ";
+					if (count($sql_wheres) > 100) {
+						db_execute("DELETE FROM poller_output WHERE " . implode(" OR ", $sql_wheres));
+						$sql_wheres = array();
+					}
 				}else{
 					unset($rrd_update_array{$item["rrd_path"]}["times"][$unix_time]);
 				}
 			}
+		}
+		if (count($sql_wheres) > 100) {
+			db_execute("DELETE FROM poller_output WHERE " . implode(" OR ", $sql_wheres));
 		}
 		api_plugin_hook_function('poller_output', $rrd_update_array);
 

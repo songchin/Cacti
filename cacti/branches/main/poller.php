@@ -210,8 +210,8 @@ while ($poller_runs_completed < $poller_runs) {
 
 	/* initialize file and device count pointers */
 	$process_number = 0;
-	$first_device     = 0;
-	$last_device      = 0;
+	$first_device   = 0;
+	$last_device    = 0;
 
 	/* update web paths for the poller */
 	if ($poller_id == 0) {
@@ -364,7 +364,8 @@ while ($poller_runs_completed < $poller_runs) {
 					print "Waiting on " . ($process_number - sizeof($polling_items)) . "/$process_number pollers.\n";
 				}
 
-				$rrds_processed = $rrds_processed + process_poller_output($rrdtool_pipe);
+				$mtb = microtime(TRUE);
+				$rrds_processed = $rrds_processed + process_poller_output($rrdtool_pipe, TRUE);
 
 				/* end the process if the runtime exceeds MAX_POLLER_RUNTIME */
 				if (($poller_start + MAX_POLLER_RUNTIME) < time()) {
@@ -375,7 +376,9 @@ while ($poller_runs_completed < $poller_runs) {
 
 					break;
 				}else{
-					sleep(1);
+					if((microtime(TRUE) - $mtb) < 1){
+						sleep(1);
+					}
 				}
 			}
 		}
