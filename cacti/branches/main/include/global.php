@@ -45,7 +45,9 @@ $cacti_session_name = "Cacti";
 $config = array();
 
 /* Default url path */
-$config['url_path'] = "";
+if (!isset($config['url_path'])) {
+	$config['url_path'] = "";
+}
 
 /* Include configuration */
 @include(dirname(__FILE__) . "/config.php");
@@ -53,6 +55,13 @@ $config['url_path'] = "";
 if (isset($config["cacti_version"])) {
 	die("Invalid include/config.php file detected.");
 	exit;
+}
+
+/* set script memory limits */
+if (isset($config['memory_limit']) && $config['memory_limit'] != '') {
+	ini_set('memory_limit', $config['memory_limit']);
+}else{
+	ini_set('memory_limit', '512M');
 }
 
 /* Files that do not need http header information - Command line scripts */

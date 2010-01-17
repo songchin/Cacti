@@ -185,7 +185,6 @@ if ($poller_id == 0) {
 
 /* let PHP only run 1 second longer than the max runtime, plus the poller needs lot's of memory */
 ini_set("max_execution_time", MAX_POLLER_RUNTIME + 1);
-ini_set("memory_limit", "256M");
 
 $poller_runs_completed = 0;
 $poller_items_total    = 0;

@@ -39,6 +39,7 @@ Cacti CHANGELOG
 -bug#0001557: Quotes in Text Format graph template field breaks graph
 -bug#0001568: Cacti currently gives a lot of warnings of deprecated functions on PHP 5.3
 -bug#0001580: Extra newline in api_automation_tools.php breaks custom scripts
+-bug#0001583: Crash on Large Deployments -> ini_set used to overwrite global php-config locally
 -bug#0001600: Default action on lists should be "None"
 -bug: remove graph permissions if graph is removed
 -bug: remove host permissions if host is removed
