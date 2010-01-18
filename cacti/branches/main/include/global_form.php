@@ -972,7 +972,7 @@ $struct_graph_item = array(
 		"default" => "",
 		"size" => "5",
 		"description" => __("In case LINE was chosen, specify width of line here."),
-		"class" => "not_RRD_1_0_x not_RRD_TYPE_COMMENT not_RRD_TYPE_TEXTALIGN not_RRD_TYPE_HRULE not_RRD_TYPE_VRULE not_RRD_TYPE_GPRINT not_RRD_TYPE_TICK",
+		"class" => "not_RRD_1_0_x not_RRD_TYPE_COMMENT not_RRD_TYPE_TEXTALIGN not_RRD_TYPE_HRULE not_RRD_TYPE_VRULE not_RRD_TYPE_AREA not_RRD_TYPE_AREASTACK not_RRD_TYPE_GPRINT not_RRD_TYPE_TICK",
 		),
 	"dashes" => array(
 		"friendly_name" => __("Dashes (dashes[=on_s[,off_s[,on_s,off_s]...]])"),
@@ -1026,15 +1026,23 @@ $struct_graph_item = array(
 		"description" => __("A VDEF (math) function to apply to this item on the legend."),
 		"class" => "not_RRD_1_0_x not_RRD_TYPE_COMMENT not_RRD_TYPE_TEXTALIGN",
 		),
+	"shift" => array(
+		"friendly_name" => __("Shift Data"),
+		"method" => "checkbox",
+		"default" => "",
+		"description" => __("Offset your data on the time axis (x-axis) by the amount specified in the 'value' field."),
+		"class" => "not_RRD_1_0_x not_RRD_TYPE_COMMENT not_RRD_TYPE_TEXTALIGN not_RRD_TYPE_GPRINT not_RRD_TYPE_HRULE not_RRD_TYPE_VRULE",
+		),
 	"value" => array(
 		"friendly_name" => __("Value"),
 		"method" => "textbox",
 		"max_length" => "50",
 		"default" => "",
 		"size" => "10",
-		"description" => __("[HRULE|VRULE]: the value of the graph item") . "<br/>" .
-						__("[TICK]: the fraction for the tick line."),
-		"class" => "not_RRD_TYPE_COMMENT not_RRD_TYPE_TEXTALIGN not_RRD_TYPE_LINE not_RRD_TYPE_LINESTACK not_RRD_TYPE_AREA not_RRD_TYPE_AREASTACK not_RRD_TYPE_GPRINT",
+		"description" => __("[HRULE|VRULE]: The value of the graph item") . "<br/>" .
+						__("[TICK]: The fraction for the tick line.") . "<br/>" .
+						__("[SHIFT]: The time offset in seconds."),
+		"class" => "not_RRD_TYPE_COMMENT not_RRD_TYPE_TEXTALIGN not_RRD_TYPE_LINE not_RRD_TYPE_LINESTACK not_RRD_TYPE_AREA not_RRD_TYPE_AREASTACK not_RRD_TYPE_GPRINT RRD_TYPE_SHIFT",
 		),
 	"gprint_id" => array(
 		"friendly_name" => __("GPRINT Type"),

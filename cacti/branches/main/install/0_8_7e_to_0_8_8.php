@@ -603,12 +603,15 @@ function upgrade_to_0_8_8() {
 	db_install_execute("0.8.8", "UPDATE graph_templates_item SET `line_width`=2 WHERE `graph_type_id`=5"); # LINE2
 	db_install_execute("0.8.8", "UPDATE graph_templates_item SET `line_width`=3 WHERE `graph_type_id`=6"); # LINE3
 
-	# graph_templates_items: add dashes and dash_offset
+	# graph_templates_items: add DASHES and DASH-OFFSET
 	db_install_execute("0.8.8", "ALTER TABLE graph_templates_item ADD COLUMN dashes varchar(20) DEFAULT NULL AFTER line_width");
 	db_install_execute("0.8.8", "ALTER TABLE graph_templates_item ADD COLUMN dash_offset mediumint(4) DEFAULT NULL AFTER dashes");
 
-	# graph_templates_items: add textalign
+	# graph_templates_items: add TEXTALIGN
 	db_install_execute("0.8.8", "ALTER TABLE graph_templates_item ADD COLUMN textalign varchar(10) default NULL AFTER consolidation_function_id");
+
+	# graph_templates_items: add SHIFT
+	db_install_execute("0.8.8", "ALTER TABLE graph_templates_item ADD COLUMN shift char(2) default NULL AFTER vdef_id");
 
 	/* implement per device threads setting for spine */
 	db_install_execute("0.8.8", "ALTER TABLE device ADD COLUMN device_threads tinyint(2) unsigned NOT NULL default '1' AFTER max_oids");

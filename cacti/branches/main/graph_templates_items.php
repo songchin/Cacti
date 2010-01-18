@@ -178,6 +178,7 @@ function form_save() {
 			$save["dash_offset"] 		= form_input_validate((isset($_POST["dash_offset"]) ? $_POST["dash_offset"] : ""), "dash_offset", "^[0-9]+$", true, 3);
 			$save["cdef_id"] 			= form_input_validate(((isset($item["cdef_id"]) ? $item["cdef_id"] : (isset($_POST["cdef_id"]) ? $_POST["cdef_id"] : 0))), "cdef_id", "^[0-9]+$", true, 3);
 			$save["vdef_id"] 			= form_input_validate(((isset($item["vdef_id"]) ? $item["vdef_id"] : (isset($_POST["vdef_id"]) ? $_POST["vdef_id"] : 0))), "vdef_id", "^[0-9]+$", true, 3);
+			$save["shift"] 				= form_input_validate((isset($_POST["shift"]) ? $_POST["shift"] : ""), "shift", "^((on)|)$", true, 3);
 			$save["consolidation_function_id"] = form_input_validate(((isset($item["consolidation_function_id"]) ? $item["consolidation_function_id"] : (isset($_POST["consolidation_function_id"]) ? $_POST["consolidation_function_id"] : 0))), "consolidation_function_id", "^[0-9]+$", true, 3);
 			$save["textalign"] 			= form_input_validate((isset($_POST["textalign"]) ? $_POST["textalign"] : ""), "textalign", "^[a-z]+$", true, 3);
 			$save["text_format"] 		= form_input_validate(((isset($item["text_format"]) ? $item["text_format"] : (isset($_POST["text_format"]) ? $_POST["text_format"] : ""))), "text_format", "", true, 3);
@@ -218,9 +219,12 @@ function form_save() {
 
 							/* Input for current data source exists and has changed.  Update the association */
 							if (isset($orig_data_source_to_input{$save["task_item_id"]})) {
-								db_execute("replace into graph_template_input_defs (graph_template_input_id,
-								graph_template_item_id) values (" . $orig_data_source_to_input{$save["task_item_id"]}
-								. ",$graph_template_item_id)");
+								db_execute("REPLACE INTO graph_template_input_defs " .
+											"(graph_template_input_id, graph_template_item_id) " .
+											"VALUES (" .
+											$orig_data_source_to_input{$save["task_item_id"]} . "," .
+											$graph_template_item_id .
+											")");
 							}
 						}
 
@@ -228,18 +232,28 @@ function form_save() {
 						if (!isset($orig_data_source_to_input{$save["task_item_id"]})) {
 							$ds_name = db_fetch_cell("select data_source_name from data_template_rrd where id=" . $_POST["task_item_id"]);
 
-							db_execute("replace into graph_template_input (hash,graph_template_id,name,column_name) values (
-								'" . get_hash_graph_template(0, "graph_template_input") . "'," . $save["graph_template_id"] . ",
-								__('Data Source') . ' [$ds_name]','task_item_id')");
+							db_execute("REPLACE INTO graph_template_input " .
+										"(hash,graph_template_id,name,column_name) " .
+										"VALUES ('" .
+										get_hash_graph_template(0, "graph_template_input") . "'," .
+										$save["graph_template_id"] . "," .
+										"'Data Source [" . $ds_name . "]'," .
+										'task_item_id' .
+										")");
 
 							$graph_template_input_id = db_fetch_insert_id();
 
 							$graph_items = db_fetch_assoc("select id from graph_templates_item where graph_template_id=" . $save["graph_template_id"] . " and task_item_id=" . $_POST["task_item_id"]);
 
 							if (sizeof($graph_items) > 0) {
-							foreach ($graph_items as $graph_item) {
-								db_execute("replace into graph_template_input_defs (graph_template_input_id,graph_template_item_id) values ($graph_template_input_id," . $graph_item["id"] . ")");
-							}
+								foreach ($graph_items as $graph_item) {
+									db_execute("REPLACE INTO graph_template_input_defs " .
+												"(graph_template_input_id,graph_template_item_id) " .
+												"VALUES (" .
+												$graph_template_input_id . "," .
+												$graph_item["id"] .
+												")");
+								}
 							}
 						}
 					}

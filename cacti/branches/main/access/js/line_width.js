@@ -1,7 +1,7 @@
 <script type="text/javascript">
 <!--
 $(document).ready(function(){
-	$('#graph_type_id').click( function() {
+	$('#graph_type_id').change( function() {
 		var graph_type = $(this).val();
 		var line_width = $('#line_width').val();
 		switch (parseInt(graph_type)) {

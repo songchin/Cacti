@@ -666,6 +666,7 @@ function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rr
 		graph_templates_item.line_width,
 		graph_templates_item.dashes,
 		graph_templates_item.dash_offset,
+		graph_templates_item.shift,
 		graph_templates_item.textalign,
 		graph_templates_gprint.gprint_text,
 		colors.hex,
@@ -797,7 +798,12 @@ function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rr
 					to a function that matches the digits with letters. rrdtool likes letters instead
 					of numbers in DEF names; especially with CDEF's. cdef's are created
 					the same way, except a 'cdef' is put on the beginning of the hash */
-					$graph_defs .= "DEF:" . generate_graph_def_name(strval($i)) . "=\"$data_source_path\":" . $graph_item["data_source_name"] . ":" . $consolidation_functions[$graph_cf] . RRD_NL;
+					$graph_defs .= "DEF:" . generate_graph_def_name(strval($i)) . "=\"$data_source_path\":" . $graph_item["data_source_name"] . ":" . $consolidation_functions[$graph_cf];
+					if ($graph_item["shift"] == CHECKED && $graph_item["value"] > 0) {	# create a SHIFTed DEF
+						$graph_defs .= ":start=" . $graph["graph_start"] . "-" . $graph_item["value"];
+						$graph_defs .= ":end=" . $graph["graph_end"] . "-" . $graph_item["value"];
+					}
+					$graph_defs .= RRD_NL;
 
 					$cf_ds_cache{$graph_item["data_template_rrd_id"]}[$graph_cf] = "$i";
 
@@ -907,7 +913,7 @@ function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rr
 						$graph_item["graph_type_id"] == GRAPH_ITEM_TYPE_LINE2 ||
 						$graph_item["graph_type_id"] == GRAPH_ITEM_TYPE_LINE3 ||
 						$graph_item["graph_type_id"] == GRAPH_ITEM_TYPE_LINESTACK ||
-				$graph_item["graph_type_id"] == GRAPH_ITEM_TYPE_TICK) {
+						$graph_item["graph_type_id"] == GRAPH_ITEM_TYPE_TICK) {
 						$text_format_length = strlen($graph_variables["text_format"][$graph_item_id]);
 
 						if ($text_format_length > $greatest_text_format) {
@@ -1343,6 +1349,9 @@ function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rr
 
 			case GRAPH_ITEM_TYPE_AREA:
 				$txt_graph_items .= $graph_item_types{$graph_item["graph_type_id"]} . ":" . $data_source_name . $graph_item_color_code . ":" . "\"" . $graph_variables["text_format"][$graph_item_id] . $hardreturn[$graph_item_id] . "\" ";
+				if ($graph_item["shift"] == CHECKED && $graph_item["value"] > 0) {	# create a SHIFT statement
+					$txt_graph_items .= RRD_NL . "SHIFT:" . $data_source_name . ":" . $graph_item["value"];
+				}
 				break;
 
 
@@ -1352,6 +1361,9 @@ function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rr
 				}else {
 					$txt_graph_items .= $graph_item_types{$graph_item["graph_type_id"]} . ":" . $data_source_name . $graph_item_color_code . ":" . "\"" . $graph_variables["text_format"][$graph_item_id] . $hardreturn[$graph_item_id] . "\" ";
 				}
+				if ($graph_item["shift"] == CHECKED && $graph_item["value"] > 0) {	# create a SHIFT statement
+					$txt_graph_items .= RRD_NL . "SHIFT:" . $data_source_name . ":" . $graph_item["value"];
+				}
 				break;
 
 
@@ -1359,12 +1371,18 @@ function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rr
 			case GRAPH_ITEM_TYPE_LINE2:
 			case GRAPH_ITEM_TYPE_LINE3:
 				$txt_graph_items .= "LINE" . $graph_item["line_width"] . ":" . $data_source_name . $graph_item_color_code . ":" . "\"" . $graph_variables["text_format"][$graph_item_id] . $hardreturn[$graph_item_id] . "\"" . $dash;
+				if ($graph_item["shift"] == CHECKED && $graph_item["value"] > 0) {	# create a SHIFT statement
+					$txt_graph_items .= RRD_NL . "SHIFT:" . $data_source_name . ":" . $graph_item["value"];
+				}
 				break;
 
 
 			case GRAPH_ITEM_TYPE_LINESTACK:
 				if ($rrdtool_version != RRD_VERSION_1_0) {
 					$txt_graph_items .= "LINE" . $graph_item["line_width"] . ":" . $data_source_name . $graph_item_color_code . ":" . "\"" . $graph_variables["text_format"][$graph_item_id] . $hardreturn[$graph_item_id] . "\":STACK" . $dash;
+				}
+				if ($graph_item["shift"] == CHECKED && $graph_item["value"] > 0) {	# create a SHIFT statement
+					$txt_graph_items .= RRD_NL . "SHIFT:" . $data_source_name . ":" . $graph_item["value"];
 				}
 				break;
 
@@ -1563,12 +1581,17 @@ function rrdtool_function_xport($local_graph_id, $rra_id, $xport_data_array, &$x
 	$xport_items = db_fetch_assoc("select
 		graph_templates_item.id as graph_templates_item_id,
 		graph_templates_item.cdef_id,
+		graph_templates_item.vdef_id,
 		graph_templates_item.text_format,
 		graph_templates_item.value,
 		graph_templates_item.hard_return,
 		graph_templates_item.consolidation_function_id,
 		graph_templates_item.graph_type_id,
 		graph_templates_item.line_width,
+		graph_templates_item.dashes,
+		graph_templates_item.dash_offset,
+		graph_templates_item.shift,
+		graph_templates_item.textalign,
 		graph_templates_gprint.gprint_text,
 		colors.hex,
 		graph_templates_item.alpha,

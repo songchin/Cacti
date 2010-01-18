@@ -387,6 +387,7 @@ function item() {
 			graph_templates_item.dashes,
 			graph_templates_item.dash_offset,
 			graph_templates_item.textalign,
+			graph_templates_item.shift,
 			graph_templates_item.consolidation_function_id,
 			CONCAT_WS(' - ',data_template_data.name,data_template_rrd.data_source_name) as data_source_name,
 			cdef.name as cdef_name,
