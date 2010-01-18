@@ -340,7 +340,19 @@ function process_poller_output($rrdtool_pipe, $remainder = FALSE) {
 				$rrd_update_array{$item["rrd_path"]}["times"][$unix_time]{$item["rrd_name"]} = $value;
 			/* special case of one value output: hexadecimal to decimal conversion */
 			}elseif (is_hexadecimal($value)) {
-				$rrd_update_array{$item["rrd_path"]}["times"][$unix_time]{$item["rrd_name"]} = hexdec($value);
+				/* attempt to accomodate 32bit and 64bit systems */
+				$value = str_replace(' ', '', $value);
+				if (strlen($value) <= 8 || ((2147483647+1) == intval(2147483647+1))) {
+					$rrd_update_array{$item["rrd_path"]}["times"][$unix_time]{$item["rrd_name"]} = hexdec($value);
+				}elseif (function_exists("bcpow")) {
+					$dec = 0;
+					for ($i = 1; $i <= $vallen; $i++) {
+						$dec = bcadd($dec, bcmul(strval(hexdec($value[$i - 1])), bcpow('16', strval($vallen - $i))));
+					}
+					$rrd_update_array{$item["rrd_path"]}["times"][$unix_time]{$item["rrd_name"]} = $dec;
+				}else{
+					$rrd_update_array{$item["rrd_path"]}["times"][$unix_time]{$item["rrd_name"]} = "U";
+				}
 			/* multiple value output */
 			}else{
 				$values = explode(" ", $value);
