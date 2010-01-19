@@ -3083,15 +3083,14 @@ INSERT INTO `vdef_items` VALUES(4, '95a8df2eac60a89e8a8ca3ea3d019c44', 2, 2, 1, 
 INSERT INTO `vdef_items` VALUES(5, 'cc2e1c47ec0b4f02eb13708cf6dac585', 3, 1, 4, 'CURRENT_DATA_SOURCE');
 INSERT INTO `vdef_items` VALUES(6, 'a2fd796335b87d9ba54af6a855689507', 3, 2, 1, '3');
 INSERT INTO `vdef_items` VALUES(7, 'a1d7974ee6018083a2053e0d0f7cb901', 4, 1, 4, 'CURRENT_DATA_SOURCE');
-INSERT INTO `vdef_items` VALUES(8, '26fccba1c215439616bc1b83637ae7f3', 4, 2, 1, '4');
+INSERT INTO `vdef_items` VALUES(8, '26fccba1c215439616bc1b83637ae7f3', 4, 2, 1, '5');
 INSERT INTO `vdef_items` VALUES(9, 'a8993b265f4c5398f4a47c44b5b37a07', 5, 1, 4, 'CURRENT_DATA_SOURCE');
-INSERT INTO `vdef_items` VALUES(10, '5a380d469d611719057c3695ce1e4eee', 5, 2, 1, '5');
+INSERT INTO `vdef_items` VALUES(10, '5a380d469d611719057c3695ce1e4eee', 5, 2, 1, '6');
 INSERT INTO `vdef_items` VALUES(11, '65cfe546b17175fad41fcca98c057feb', 6, 1, 4, 'CURRENT_DATA_SOURCE');
-INSERT INTO `vdef_items` VALUES(12, 'f330b5633c3517d7c62762cef091cc9e', 6, 2, 1, '6');
+INSERT INTO `vdef_items` VALUES(12, 'f330b5633c3517d7c62762cef091cc9e', 6, 2, 1, '7');
 INSERT INTO `vdef_items` VALUES(13, 'f1bf2ecf54ca0565cf39c9c3f7e5394b', 7, 1, 4, 'CURRENT_DATA_SOURCE');
 INSERT INTO `vdef_items` VALUES(14, '11a26f18feba3919be3af426670cba95', 7, 2, 6, '95');
-INSERT INTO `vdef_items` VALUES(15, 'e7ae90275bc1efada07c19ca3472d9db', 7, 3, 1, '7');
-
+INSERT INTO `vdef_items` VALUES(15, 'e7ae90275bc1efada07c19ca3472d9db', 7, 3, 1, '8');
 
 --
 -- Table structure for table `version`
