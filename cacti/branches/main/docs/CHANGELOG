@@ -72,6 +72,7 @@ Cacti CHANGELOG
 -feature#0001332: non SNMP Hosts' Reindex Method should not default to "Uptime goes backwards"
 -feature#0001341: SNMP query: add oid_suffix for weird SNMP queries
 -feature#0001343: Add TEXTALIGN functionality to graph templates
+-feature#0001347: Add 'down since' as tooltip to host.php listing, where device is down.
 -feature#0001350: Compare Cacti Data Source Info to current RRD File Info
 -feature#0001371: Support for LINE:STACK, was: Stacked LINE
 -feature#0001372: Add Custom SNMP context for datasources

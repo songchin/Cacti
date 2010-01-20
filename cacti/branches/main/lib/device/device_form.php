@@ -1727,6 +1727,12 @@ function device() {
 
 	if (sizeof($devices) > 0) {
 		foreach ($devices as $device) {
+			$spanextra = "";
+			if($device["disabled"] != CHECKED && $device["status"] == DEVICE_DOWN) {
+				$date = __date("D, " . date_time_format() . " T", strtotime($device['status_fail_date']));
+				$spanextra = 'title="' . __("Down since %s with error: '%s'", $date, $device['status_last_error']) . '"';
+			}
+
 			form_alternate_row_color('line' . $device["id"], true);
 			form_selectable_cell("<a style='white-space:nowrap;' class='linkEditMain' href='" . htmlspecialchars("devices.php?action=edit&id=" . $device["id"]) . "'>" .
 				(strlen($_REQUEST["filter"]) ? preg_replace("/(" . preg_quote($_REQUEST["filter"]) . ")/i", "<span class=\"filter\">\\1</span>", $device["description"]) : $device["description"]) . "</a>", $device["id"]);
@@ -1734,7 +1740,7 @@ function device() {
 			form_selectable_cell(round(($device["id"]), 2), $device["id"]);
 			form_selectable_cell((isset($device_graphs[$device["id"]]) ? $device_graphs[$device["id"]] : 0), $device["id"]);
 			form_selectable_cell((isset($device_data_sources[$device["id"]]) ? $device_data_sources[$device["id"]] : 0), $device["id"]);
-			form_selectable_cell(get_colored_device_status(($device["disabled"] == CHECKED ? true : false), $device["status"]), $device["id"]);
+			form_selectable_cell( "<span $spanextra>".get_colored_device_status(($device["disabled"] == CHECKED ? true : false), $device["status"]), $device["id"] . "</span>" );
 			form_selectable_cell(round(($device["status_event_count"]), 2), $device["id"]);
 			form_selectable_cell(round(($device["cur_time"]), 2), $device["id"]);
 			form_selectable_cell(round(($device["avg_time"]), 2), $device["id"]);
