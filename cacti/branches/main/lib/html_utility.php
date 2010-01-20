@@ -263,13 +263,13 @@ function get_colored_device_status($disabled, $status) {
 		return "<span class=\"disabled\"" . __("Disabled") . "</span>";
 	}else{
 		switch ($status) {
-			case HOST_DOWN:
+			case DEVICE_DOWN:
 				return "<span class=\"down\">" . __("Down") . "</span>"; break;
-			case HOST_RECOVERING:
+			case DEVICE_RECOVERING:
 				return "<span class=\"recovering\">" . __("Recovering") . "</span>"; break;
-			case HOST_UP:
+			case DEVICE_UP:
 				return "<span class=\"up\">" . __("Up") . "</span>"; break;
-			case HOST_ERROR:
+			case DEVICE_ERROR:
 				return "<span class=\"error\">" . __("Error")  . "</span>"; break;
 			default:
 				return "<span class=\"new\">" . __("Unknown") . "</span>"; break;

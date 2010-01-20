@@ -301,10 +301,10 @@ if ((sizeof($polling_items) > 0) && (read_config_option("poller_enabled") == CHE
 			if ($ping->ping($devices[$device_id]["availability_method"], $devices[$device_id]["ping_method"],
 				$devices[$device_id]["ping_timeout"], $devices[$device_id]["ping_retries"])) {
 				$device_down = false;
-				update_device_status(HOST_UP, $device_id, $devices, $ping, $devices[$device_id]["availability_method"], $print_data_to_stdout);
+				update_device_status(DEVICE_UP, $device_id, $devices, $ping, $devices[$device_id]["availability_method"], $print_data_to_stdout);
 			}else{
 				$device_down = true;
-				update_device_status(HOST_DOWN, $device_id, $devices, $ping, $devices[$device_id]["availability_method"], $print_data_to_stdout);
+				update_device_status(DEVICE_DOWN, $device_id, $devices, $ping, $devices[$device_id]["availability_method"], $print_data_to_stdout);
 			}
 
 			if (!$device_down) {

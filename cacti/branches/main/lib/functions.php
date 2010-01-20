@@ -821,7 +821,7 @@ function update_device_status($status, $device_id, &$devices, &$ping, $ping_avai
 	$ping_failure_count  = read_config_option("ping_failure_count");
 	$ping_recovery_count = read_config_option("ping_recovery_count");
 
-	if ($status == HOST_DOWN) {
+	if ($status == DEVICE_DOWN) {
 		/* update total polls, failed polls and availability */
 		$devices[$device_id]["failed_polls"]++;
 		$devices[$device_id]["total_polls"]++;
@@ -847,14 +847,14 @@ function update_device_status($status, $device_id, &$devices, &$ping, $ping_avai
 		}
 
 		/* determine if to send an alert and update remainder of statistics */
-		if ($devices[$device_id]["status"] == HOST_UP) {
+		if ($devices[$device_id]["status"] == DEVICE_UP) {
 			/* increment the event failure count */
 			$devices[$device_id]["status_event_count"]++;
 
 			/* if it's time to issue an error message, indicate so */
 			if ($devices[$device_id]["status_event_count"] >= $ping_failure_count) {
 				/* device is now down, flag it that way */
-				$devices[$device_id]["status"] = HOST_DOWN;
+				$devices[$device_id]["status"] = DEVICE_DOWN;
 
 				$issue_log_message = true;
 
@@ -870,13 +870,13 @@ function update_device_status($status, $device_id, &$devices, &$ping, $ping_avai
 				}
 			}
 		/* device is recovering, put back in failed state */
-		} elseif ($devices[$device_id]["status"] == HOST_RECOVERING) {
+		} elseif ($devices[$device_id]["status"] == DEVICE_RECOVERING) {
 			$devices[$device_id]["status_event_count"] = 1;
-			$devices[$device_id]["status"] = HOST_DOWN;
+			$devices[$device_id]["status"] = DEVICE_DOWN;
 
 		/* device was unknown and now is down */
-		} elseif ($devices[$device_id]["status"] == HOST_UNKNOWN) {
-			$devices[$device_id]["status"] = HOST_DOWN;
+		} elseif ($devices[$device_id]["status"] == DEVICE_UNKNOWN) {
+			$devices[$device_id]["status"] = DEVICE_DOWN;
 			$devices[$device_id]["status_event_count"] = 0;
 		} else {
 			$devices[$device_id]["status_event_count"]++;
@@ -939,10 +939,10 @@ function update_device_status($status, $device_id, &$devices, &$ping, $ping_avai
 			* $devices[$device_id]["avg_time"] + $ping_time) / ($devices[$device_id]["total_polls"]-$devices[$device_id]["failed_polls"]);
 
 		/* the device was down, now it's recovering */
-		if (($devices[$device_id]["status"] == HOST_DOWN) || ($devices[$device_id]["status"] == HOST_RECOVERING )) {
+		if (($devices[$device_id]["status"] == DEVICE_DOWN) || ($devices[$device_id]["status"] == DEVICE_RECOVERING )) {
 			/* just up, change to recovering */
-			if ($devices[$device_id]["status"] == HOST_DOWN) {
-				$devices[$device_id]["status"] = HOST_RECOVERING;
+			if ($devices[$device_id]["status"] == DEVICE_DOWN) {
+				$devices[$device_id]["status"] = DEVICE_RECOVERING;
 				$devices[$device_id]["status_event_count"] = 1;
 			} else {
 				$devices[$device_id]["status_event_count"]++;
@@ -951,7 +951,7 @@ function update_device_status($status, $device_id, &$devices, &$ping, $ping_avai
 			/* if it's time to issue a recovery message, indicate so */
 			if ($devices[$device_id]["status_event_count"] >= $ping_recovery_count) {
 				/* device is up, flag it that way */
-				$devices[$device_id]["status"] = HOST_UP;
+				$devices[$device_id]["status"] = DEVICE_UP;
 
 				$issue_log_message = true;
 
@@ -971,13 +971,13 @@ function update_device_status($status, $device_id, &$devices, &$ping, $ping_avai
 			}
 		} else {
 		/* device was unknown and now is up */
-			$devices[$device_id]["status"] = HOST_UP;
+			$devices[$device_id]["status"] = DEVICE_UP;
 			$devices[$device_id]["status_event_count"] = 0;
 		}
 	}
 	/* if the user wants a flood of information then flood them */
 	if (read_config_option("log_verbosity") >= POLLER_VERBOSITY_HIGH) {
-		if (($devices[$device_id]["status"] == HOST_UP) || ($devices[$device_id]["status"] == HOST_RECOVERING)) {
+		if (($devices[$device_id]["status"] == DEVICE_UP) || ($devices[$device_id]["status"] == DEVICE_RECOVERING)) {
 			/* log ping result if we are to use a ping for reachability testing */
 			if ($ping_availability == AVAIL_SNMP_AND_PING) {
 				cacti_log("Host[$device_id] PING: " . $ping->ping_response, $print_data_to_stdout);
@@ -1005,7 +1005,7 @@ function update_device_status($status, $device_id, &$devices, &$ping, $ping_avai
 
 	/* if there is supposed to be an event generated, do it */
 	if ($issue_log_message) {
-		if ($devices[$device_id]["status"] == HOST_DOWN) {
+		if ($devices[$device_id]["status"] == DEVICE_DOWN) {
 			cacti_log("Host[$device_id] ERROR: HOST EVENT: Host is DOWN Message: " . $devices[$device_id]["status_last_error"], $print_data_to_stdout);
 		} else {
 			cacti_log("Host[$device_id] NOTICE: HOST EVENT: Host Returned from DOWN State: ", $print_data_to_stdout);
