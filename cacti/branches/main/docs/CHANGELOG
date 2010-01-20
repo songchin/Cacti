@@ -23,6 +23,7 @@ Cacti CHANGELOG
 -bug#0001428: segfault when database tables not present
 -bug#0001429: PHP does not support SNMP V3 Contexts and Cacti needs to act accordingly
 -bug#0001432: array_merge breaks dropdown handling with hardcoded (array-)keys
+-bug#0001444: ss_host_disk.php may return 0 instead of U when a host is not reachable
 -bug#0001452: Missing "<" and ">" in "Collection Methods=>Data Input Methods=>"Input String", When Import Template
 -bug#0001461: (Data Query) Export/Import fails
 -bug#0001479: cli/add_device.php will modify existing devices

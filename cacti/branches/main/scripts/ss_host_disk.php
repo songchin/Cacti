@@ -75,9 +75,13 @@ function ss_host_disk($hostname, $device_id, $snmp_auth, $cmd, $arg1 = "", $arg2
 		$arg = $arg1;
 		$index = $arg2;
 
+		if (!array_key_exists($arg, $oids)) {
+			return "ERROR: Invalid get parameter";
+		}
 		if (($arg == "total") || ($arg == "used")) {
 			$sau = preg_replace("/[^0-9]/i", "", db_fetch_cell("select field_value from device_snmp_cache where device_id=$device_id and field_name='hrStorageAllocationUnits' and snmp_index='$index'"));
-			return cacti_snmp_get($hostname, $snmp_community, $oids[$arg] . ".$index", $snmp_version, $snmp_auth_username, $snmp_auth_password, $snmp_auth_protocol,$snmp_priv_passphrase,$snmp_priv_protocol, $snmp_context, $snmp_port, $snmp_timeout, $ping_retries, SNMP_POLLER)* $sau;
+			$value = cacti_snmp_get($hostname, $snmp_community, $oids[$arg] . ".$index", $snmp_version, $snmp_auth_username, $snmp_auth_password, $snmp_auth_protocol,$snmp_priv_passphrase,$snmp_priv_protocol, $snmp_context, $snmp_port, $snmp_timeout, $ping_retries, SNMP_POLLER);
+			return (strlen($value) > 0) ? $value * $sau : "U";
 		}else{
 			return cacti_snmp_get($hostname, $snmp_community, $oids[$arg] . ".$index", $snmp_version, $snmp_auth_username, $snmp_auth_password, $snmp_auth_protocol,$snmp_priv_passphrase,$snmp_priv_protocol, $snmp_context, $snmp_port, $snmp_timeout, $ping_retries, SNMP_POLLER);
 		}
